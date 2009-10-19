@@ -1,15 +1,3 @@
-# Title
-Artwork
-
-
-# 1688
-Backdrop
-
-
-# 1733
-Bezel
-
-
 # 2762
 CP Graphics
 Graphismes CP
@@ -22,11 +10,23 @@ Carte Inst.
 Lamps or LEDs
 Lampes ou LEDs
 
-# 3570
-Marquee
-
-
 # 3786
 Overlay
 Transparence
+
+# Title
+Artwork
+
+
+# 1688
+Backdrop
+
+
+# 1733
+Bezel
+
+
+# 3570
+Marquee
+
 

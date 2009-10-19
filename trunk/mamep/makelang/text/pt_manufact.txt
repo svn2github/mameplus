@@ -1,4 +1,4 @@
-# Conquer
+# Chewing Gum
 <unknown>
 <desconhecido>
 
@@ -262,10 +262,6 @@ Blastar
 Bonanza Enterprises, Ltd
 Bonanza Enterprises, Ltd
 
-# Super Glob (Pac-Man hardware) German
-Bootleg
-Bootleg
-
 # Sky Lancer (Bordun, ver.U450C)
 Bordun International
 Bordun International
@@ -510,7 +506,7 @@ Dong Sung
 Dongsung
 Dongsung
 
-# Gun Dealer (set 1)
+# Gun Dealer
 Dooyong
 Dooyong
 
@@ -578,7 +574,7 @@ ESD
 ETM
 ETM
 
-# Shooting Master (EVG, 8751 315-5159)
+# Shooting Master (EVG, 8751 315-5159a)
 EVG
 EVG
 
@@ -806,7 +802,7 @@ Game Room
 Game-A-Tron
 Game-A-Tron
 
-# Space Laser
+# Intruder
 GamePlan
 GamePlan
 
@@ -850,7 +846,7 @@ Gremlim
 Gremlin
 Gremlin
 
-# Trivia (Version 1.03a)
+# Trivia (Questions Series 8)
 Greyhound Electronics
 Greyhound Electronics
 
@@ -1002,7 +998,7 @@ JMA
 JMK
 JMK
 
-# Give us a Break (6th edition)
+# Give us a Break (3rd edition)
 JPM
 JPM
 
@@ -1198,15 +1194,15 @@ Meadows Games, Inc.
 Media
 Media
 
-# Rapid Hero (Japan?)
+# Rapid Hero
 Media Trading Corp
 Media Trading Corp
 
-# Metal Slug 4
+# Metal Slug 4 (set 1)
 Mega
 Mega
 
-# Merit Poker
+# The Pit Boss (Set 1)
 Merit
 Merit
 
@@ -1302,7 +1298,7 @@ Nakanihon
 Nakasawa
 Nakasawa
 
-# PuckMan (Japan set 1, Probably Bootleg)
+# PuckMan (Japan set 1)
 Namco
 Namco
 
@@ -1350,7 +1346,7 @@ Nihon
 Nihon System
 Nihon System
 
-# Space Fever (set 1)
+# Space Fever (New Ver.)
 Nintendo
 Nintendo
 
@@ -1586,7 +1582,7 @@ Rene Pierre
 Rock-Ola
 Rock-Ola
 
-# Jump Bug
+# Levers
 Rock-ola
 Rock-ola
 
@@ -1642,7 +1638,7 @@ Sai-Mate
 Sammy
 Sammy
 
-# Sokonuke Taisen Game (Japan)
+# Kero Kero Keroppi no Issyoni Asobou (Japan)
 Sammy Industries
 Sammy Industries
 
@@ -1794,7 +1790,7 @@ Soft Art Co.
 Soft Design
 Soft Design
 
-# Dambusters (UK)
+# Dambusters (US, set 1)
 South West Research
 South West Research
 
@@ -1838,7 +1834,7 @@ Subelectro
 Subsino
 Subsino
 
-# Psyvariar -Medium Unit- (V2.04J)
+# Otenami Haiken (V2.04J)
 Success
 Success
 
@@ -2122,7 +2118,7 @@ Universal Video Spiel
 Uniwang
 Uniwang
 
-# Saloon (french, encrypted)
+# Draw Poker Hi-Lo (alt)
 Unknown
 Unknown
 
@@ -2214,7 +2210,7 @@ WAVE
 WSAC Systems?
 WSAC Systems?
 
-# Shanghai Shoryu Sairin (V2.03J)
+# Otenami Haiken Final (V2.07JC)
 Warashi
 Warashi
 
@@ -2277,10 +2273,6 @@ Yang Cheng
 # Moeyo Gonta!! (Japan)
 Yanyaka
 Yanyaka
-
-# Spectrum 2000 (Euro)
-Yonatech
-Yonatech
 
 # Mahjong Yoshimoto Gekijou (Japan)
 Yoshimoto Kougyou
@@ -2366,16 +2358,16 @@ dgPIX Entertainment Inc.
 hack
 hack
 
-# Chewing Gum
-unknown
-desconhecido
-
 # Grand Prix
 4fun
 
 
 # Wizard (Ver 1.0)
 A.A.
+
+
+# Triple Star 2000
+A.M.
 
 
 # Hot Slot (ver. 05.01)
@@ -2390,8 +2382,20 @@ AMT
 AMT Co. Ltd.
 
 
+# MSX
+ASCII & Microsoft
+
+
 # Chaos Field (GDL-0025)
 Able
+
+
+# Mayjinsen 3
+Able Corporation
+
+
+# Hit Poker (Bulgaria)
+Accept Ltd.
 
 
 # Shikigami no Shiro (V2.03J)
@@ -2406,19 +2410,19 @@ Alpha
 Alpha System
 
 
-# Moeru Casinyo (GDL-0013)
+# Danchi de Quiz Okusan Yontaku Desuyo! (J 001128 V1.200)
 Altron
+
+
+# Amatic Unknown Slots Game
+Amatic Trading GMBH
 
 
 # Skill '98 (ver. s98-1.33)
 Amcoe
 
 
-# Quiz Keitai Q mode (GDL-0017)
-Amedio
-
-
-# Guilty Gear XX (GDL-0011)
+# Guilty Gear X (JPN)
 Arc System Works
 
 
@@ -2426,16 +2430,8 @@ Arc System Works
 Aristocrat
 
 
-# Hi Pai Paradise
-Aruze?
-
-
 # Show Hand (Italy)
 Astro Corp.
-
-
-# Jingi Storm - The Arcade (GDL-0037)
-Atrativa Japan
 
 
 # Galaxi (v2.0)
@@ -2446,16 +2442,24 @@ B.R.L.
 Best System
 
 
-# American Poker II (iamp2 v28)
-Bootleg?
+# Doctor PC Jr
+Bung
 
 
-# Cal Omega - Game 7.6 (Arcade Poker)
+# Cal Omega - Game 7.4 (Gaming Poker, W.Export)
 Cal Omega Inc.
 
 
+# Pirati
+Cin
+
+
+# Colorama (english)
+Coinmaster-Gaming, Ltd.
+
+
 # Galaxy Games (BIOS v1.90)
-Creative Electonics & Software
+Creative Electronics & Software
 
 
 # Black Touch '96
@@ -2474,8 +2478,20 @@ DUTECH Inc.
 Danbi
 
 
+# Triple Draw Poker
+Design Labs
+
+
+# Royal Card v2.0 Professional
+Digital Dreams
+
+
 # X Se Dae Quiz
 Dream Island
+
+
+# Skeet Shot
+Dynamo
 
 
 # Janshi
@@ -2484,6 +2500,10 @@ Eagle
 
 # Gekisou (Japan)
 Eastern Corp.
+
+
+# Death Crimson OX (JPN, USA, EXP, KOR, AUS)
+Ecole
 
 
 # Musapey's Choco Marker (Rev A) (GDL-0014A)
@@ -2526,12 +2546,12 @@ G-Rev
 G.G.I
 
 
-# Super Free Kick
+# Super Free Kick (set 1)
 HJ Corp
 
 
-# CPS Changer - Street Fighter Alpha (Brazil 950727)
-Hack
+# Super Free Kick (set 2)
+Haesung
 
 
 # Himeshikibu (Japan)
@@ -2546,12 +2566,20 @@ High Video
 Hudson Soft
 
 
-# Multi Fish (040308, set 1)
+# Skimaxx
+ICE
+
+
+# Multi Fish (021124, set 1)
 Igro
 
 
 # Crazy Monkey (031110)
 Igrosoft
+
+
+# Multipede (V1.00)
+Infogrames
 
 
 # Video Poker
@@ -2560,6 +2588,14 @@ InterFlip
 
 # Squash (Itisa)
 Itisa
+
+
+# Quake Arcade Tournament (Release Beta 2)
+Lazer-Tron
+
+
+# Draw Poker Hi-Lo (M.Kramer)
+M. Kramer Manufacturing.
 
 
 # Mystery Number
@@ -2578,6 +2614,14 @@ Mahjong Kobo/Taito
 Marian Electronics Ltd.
 
 
+# Dengen Tenshi Taisen Janshi Shangri-la (JPN, USA, EXP, KOR, AUS)
+Marvelous Ent.
+
+
+# Mahjong Private (Japan)
+Matoba
+
+
 # Screen Play (ver. 4.0)
 Maygay
 
@@ -2586,12 +2630,24 @@ Maygay
 Maygay Machines Ltd.
 
 
+# Multi-Poker
+Merit Industries
+
+
+# Turbo Poker 2
+Micro Manufacturing, Inc.
+
+
 # F-15 Strike Eagle (rev. 2.2 02/25/91)
 Microprose Games Inc.
 
 
 # Radirgy (GDL-0032)
 Milestone
+
+
+# New Fruit Machine (Ming-Yang Electronic)
+Ming-Yang Electronic
 
 
 # Flip Maze (V2.04J)
@@ -2630,12 +2686,24 @@ Noraut Ltd.
 Nova Desitec
 
 
+# PMA Poker
+PMA
+
+
+# Johnny Nero Action Hero
+Play Mechanix
+
+
 # Number Dieci (Poker)
 PlayMark Srl
 
 
 # Demolish Fist
 Polygon Magic
+
+
+# New Double Bet Mahjong (Japan)
+Ps Ltd.
 
 
 # M-79 Ambush
@@ -2650,7 +2718,7 @@ Recreativos Franco
 Romtec Co. LTD
 
 
-# Country Girl (Japan)
+# Country Girl (Japan set 1)
 Royal Denshi
 
 
@@ -2666,6 +2734,10 @@ SSI
 STG
 
 
+# Sports Shooting USA
+Sammy USA
+
+
 # Gam*Boy II (Korea)
 Samsung
 
@@ -2678,16 +2750,12 @@ Sandii'
 Sanki Denshi Kogyo
 
 
-# Multi Game III
+# Multi Game 2
 Seo Jin
 
 
 # Hec's Spinkick
 Seojin
-
-
-# Mayjinsen 3
-Seta?
 
 
 # Hana Awase
@@ -2722,8 +2790,16 @@ Spale-Soft
 Starfish
 
 
+# Dendy Classic
+Steepler
+
+
 # Funny Land de Luxe
 Stella
+
+
+# Shanghai Sangokuhai Tougi (Ver 2.01J)
+Sunsoft/Taito
 
 
 # Millennium Nuovo 4000 (Version 2.0)
@@ -2750,6 +2826,10 @@ Triangle Service
 Uniana
 
 
+# Puzzlet (Japan)
+Unies Corporation
+
+
 # Virtual Combat
 VR8 Inc.
 
@@ -2762,12 +2842,12 @@ Video Klein
 Videojet/Timlex/Cougar
 
 
+# Videotronics Poker
+Videotronics
+
+
 # Honey Money
 Vivid
-
-
-# Jack Potten's Poker (set 2)
-W
 
 
 # Lucky 74 (bootleg, set 1)
@@ -2782,16 +2862,16 @@ Wing Co.Ltd
 Xex
 
 
+# Spectrum 2000 (Euro)
+YONA Tech
+
+
 # Black Touch (Korea)
 Yang Gi Co Ltd.
 
 
 # Grudge Match (Yankee Game Technology)
 Yankee Game Technology
-
-
-# Puzzlet (Japan)
-Yunizu Corporation
 
 
 # Kkoj Noli (Kill the Bees)

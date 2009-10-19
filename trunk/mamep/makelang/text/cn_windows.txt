@@ -1,12 +1,12 @@
-# mess/osd/windows/dialog.c: 1332
+# mess/osd/windows/dialog.c: 1331
  Analog
  类比
 
-# mess/osd/windows/dialog.c: 1337
+# mess/osd/windows/dialog.c: 1336
  Dec
  减
 
-# mess/osd/windows/dialog.c: 1342
+# mess/osd/windows/dialog.c: 1341
  Inc
  加
 
@@ -18,7 +18,7 @@
 &Configuration...
 配置(&C)...
 
-# mess/osd/windows/menu.c: 1330
+# mess/osd/windows/menu.c: 1307
 &Configure...
 配置(&C)...
 
@@ -34,11 +34,11 @@
 &Exit
 退出(&E)
 
-# mess/osd/windows/menu.c: 1541 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1518 mess/osd/windows/mess.rc: 30 
 &File
 文件(&F)
 
-# mess/osd/windows/menu.c: 2152 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2129 mess/osd/windows/mess.rc: 70
 &Frameskip
 跳帧(&F)
 
@@ -50,11 +50,11 @@
 &Hide Menubar\tScrLk
 隐藏设置菜单(&H)\tScrLk
 
-# mess/osd/windows/menu.c: 1303 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1280 mess/osd/windows/mess.rc: 46
 &Input
 输入(&I)
 
-# mess/osd/windows/menu.c: 1303 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1280 mess/osd/windows/mess.rc: 55
 &Joysticks
 游戏杆(&J)
 
@@ -82,27 +82,27 @@
 &Save State
 保存游戏进度(&S)
 
-# mess/osd/windows/menu.c: 1520, 1520, 2152 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1497, 1497, 2129 mess/osd/windows/mess.rc: 59, 61
 &Video
 视频(&V)
 
-# osd/windows/video.c: 257
+# osd/windows/video.c: 289
 (primary)
 (主显示器)
 
-# mess/osd/windows/menu.c: 2162
+# mess/osd/windows/menu.c: 2139
 About %s (%s)...
 关于 %s (%s)...
 
-# mess/osd/windows/menu.c: 952
+# mess/osd/windows/menu.c: 929
 All files (*.*)|*.*|
 所有文件 (*.*)|*.*|
 
-# mess/osd/windows/dialog.c: 136
+# mess/osd/windows/dialog.c: 135
 Apply
 应用
 
-# osd/windows/input.c: 1197
+# osd/windows/input.c: 1227
 Assign joystick %s to player %d\n
 分配游戏杆 %s 到玩家 %d\n
 
@@ -110,15 +110,15 @@ Assign joystick %s to player %d\n
 Auto
 自动
 
-# mess/osd/windows/dialog.c: 137 
+# mess/osd/windows/dialog.c: 136 
 Cancel
 取消
 
-# mess/osd/windows/menu.c: 943
+# mess/osd/windows/menu.c: 926
 Common image types
 通用镜像类型
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 933
 Compressed Images (*.zip)|*.zip|
 压缩镜像 (*.zip)|*.zip|
 
@@ -126,387 +126,387 @@ Compressed Images (*.zip)|*.zip|
 Customize Emulated Keyboard...
 自定义模拟键盘...
 
-# osd/windows/winmain.c: 155
+# osd/windows/winmain.c: 187
 DIRECT3D-SPECIFIC OPTIONS
 DIRECT3D 特定选项
 
-# osd/windows/winmain.c: 151
+# osd/windows/winmain.c: 183
 DIRECTDRAW-SPECIFIC OPTIONS
 DIRECTDRAW 特定选项
 
-# osd/windows/drawd3d.c: 1172
+# osd/windows/drawd3d.c: 1203
 Device %s currently in an unsupported mode\n
 设备 %s 当前处于未支持的模式\n
 
-# osd/windows/drawd3d.c: 1142
+# osd/windows/drawd3d.c: 1173
 Direct3D: Configuring adapter #%d = %s\n
 Direct3D: 正在设置界面卡 #%d = %s\n
 
-# osd/windows/drawd3d.c: 766
+# osd/windows/drawd3d.c: 797
 Direct3D: Device created at %dx%d\n
 Direct3D: 设备创建在 %dx%d\n
 
-# osd/windows/drawd3d.c: 625, 2415
+# osd/windows/drawd3d.c: 656, 2445
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: 设备 begin_scene 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 1640, 2464
+# osd/windows/drawd3d.c: 1671, 2494
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: 设备 draw_primitive 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 654, 2468
+# osd/windows/drawd3d.c: 685, 2498
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: 设备 end_scene 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2408
+# osd/windows/drawd3d.c: 2438
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: 设备 get_render_target 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 660
+# osd/windows/drawd3d.c: 691
 Direct3D: Error %08X during device present call\n
 Direct3D: 设备提交调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 362, 369, 376, 383
+# osd/windows/drawd3d.c: 394, 401, 408, 415
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: 设备 set_render_state 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2410, 2472
+# osd/windows/drawd3d.c: 2440, 2502
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: 设备 set_render_target 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 1612, 2462
+# osd/windows/drawd3d.c: 1643, 2492
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: 设备 set_stream_source 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 294, 2421
+# osd/windows/drawd3d.c: 326, 2451
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: 设备 set_texture 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 306, 308, 320, 322, 334
+# osd/windows/drawd3d.c: 338, 340, 352, 354, 366
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: 设备 set_texture_stage_state 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2396
+# osd/windows/drawd3d.c: 2426
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: 设备 stretct_rect 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 938, 940, 942, 944, 948, 962, 976, 990, 1016, 1040, 1054, 1067, 1074
+# osd/windows/drawd3d.c: 969, 971, 973, 975, 979, 993, 1007, 1021, 1047, 1071, 1085, 1098, 1105
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: get_caps_dword 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2375
+# osd/windows/drawd3d.c: 2405
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: 材质 get_surface_level 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2351
+# osd/windows/drawd3d.c: 2381
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: 材质 unlock_rect 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2425
+# osd/windows/drawd3d.c: 2455
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: 顶点缓冲 lock 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 1607, 2457
+# osd/windows/drawd3d.c: 1638, 2487
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: 顶点缓冲解锁调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 1003
+# osd/windows/drawd3d.c: 1034
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 Direct3D: 错误 - 设备不支持 alpha blending 搭配 inverted source alpha\n
 
-# osd/windows/drawd3d.c: 998
+# osd/windows/drawd3d.c: 1029
 Direct3D: Error - Device does not support dest alpha blending with one\n
 Direct3D: 错误 - 设备不支持 alpha blending 搭配系数 1\n
 
-# osd/windows/drawd3d.c: 993
+# osd/windows/drawd3d.c: 1024
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 Direct3D: 错误 - 设备不支持 alpha blending 搭配系数 0\n
 
-# osd/windows/drawd3d.c: 951
+# osd/windows/drawd3d.c: 982
 Direct3D: Error - Device does not support immediate presentations\n
 Direct3D: 错误 - 设备不支持立即演示\n
 
-# osd/windows/drawd3d.c: 956
+# osd/windows/drawd3d.c: 987
 Direct3D: Error - Device does not support per-refresh presentations\n
 Direct3D: 错误 - 设备不支持每个更新频率演示\n
 
-# osd/windows/drawd3d.c: 984
+# osd/windows/drawd3d.c: 1015
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 Direct3D: 错误 - 设备不支持 source alpha blending 搭配目标颜色\n
 
-# osd/windows/drawd3d.c: 979
+# osd/windows/drawd3d.c: 1010
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 Direct3D: 错误 - 设备不支持 source alpha blending 搭配 source alpha\n
 
-# osd/windows/drawd3d.c: 1010
+# osd/windows/drawd3d.c: 1041
 Direct3D: Error - Device does not support texture alpha\n
 Direct3D: 错误 - 设备不支持材质 alpha\n
 
-# osd/windows/d3d8intf.c: 100
+# osd/windows/d3d8intf.c: 132
 Direct3D: Error attempting to initialize Direct3D8\n
 Direct3D: 试图初始化 Direct3D8 时发生错误\n
 
-# osd/windows/d3d9intf.c: 98
+# osd/windows/d3d9intf.c: 130
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: 试图初始化 Direct3D9 时发生错误\n
 
-# osd/windows/drawd3d.c: 770
+# osd/windows/drawd3d.c: 801
 Direct3D: Max texture size = %dx%d\n
 Direct3D: 最大材质大小 = %dx%d\n
 
-# osd/windows/drawd3d.c: 1330
+# osd/windows/drawd3d.c: 1361
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 模式选定 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawd3d.c: 1274
+# osd/windows/drawd3d.c: 1305
 Direct3D: Selecting video mode...\n
 Direct3D: 正在选定视频模式...\n
 
-# osd/windows/d3d8intf.c: 82
+# osd/windows/d3d8intf.c: 114
 Direct3D: Unable to access d3d8.dll\n
 Direct3D: 不能访问 d3d8.dll\n
 
-# osd/windows/d3d9intf.c: 80
+# osd/windows/d3d9intf.c: 112
 Direct3D: Unable to access d3d9.dll\n
 Direct3D: 不能访问 d3d9.dll\n
 
-# osd/windows/d3d8intf.c: 90
+# osd/windows/d3d8intf.c: 122
 Direct3D: Unable to find Direct3DCreate8\n
 Direct3D: 无法找到 Direct3DCreate8\n
 
-# osd/windows/d3d9intf.c: 88
+# osd/windows/d3d9intf.c: 120
 Direct3D: Unable to find Direct3DCreate9\n
 Direct3D: 无法找到 Direct3DCreate9\n
 
-# osd/windows/d3d8intf.c: 113
+# osd/windows/d3d8intf.c: 145
 Direct3D: Using Direct3D 8\n
 Direct3D: 正在使用 Direct3D 8\n
 
-# osd/windows/d3d9intf.c: 111
+# osd/windows/d3d9intf.c: 143
 Direct3D: Using Direct3D 9\n
 Direct3D: 正在使用 Direct3D 9\n
 
-# osd/windows/drawd3d.c: 1076
+# osd/windows/drawd3d.c: 1107
 Direct3D: Using StretchRect for prescaling\n
 Direct3D: 正在使用 StretchRect 于预缩放\n
 
-# osd/windows/drawd3d.c: 1070
+# osd/windows/drawd3d.c: 1101
 Direct3D: Using dynamic textures\n
 Direct3D: 正在使用动态材质\n
 
-# osd/windows/drawd3d.c: 1024
+# osd/windows/drawd3d.c: 1055
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 Direct3D: 警告 - 设备不支持放大双线材质过滤\n
 
-# osd/windows/drawd3d.c: 1034
+# osd/windows/drawd3d.c: 1065
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 Direct3D: 警告 - 设备不支持缩小双线性材质过滤\n
 
-# osd/windows/drawd3d.c: 970
+# osd/windows/drawd3d.c: 1001
 Direct3D: Warning - Device does not support hardware rasterization\n
 Direct3D: 警告 - 设备不支持硬件位图化\n
 
-# osd/windows/drawd3d.c: 1019
+# osd/windows/drawd3d.c: 1050
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 Direct3D: 警告 - 设备不支持放大抽样材质过滤\n
 
-# osd/windows/drawd3d.c: 1029
+# osd/windows/drawd3d.c: 1060
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 Direct3D: 警告 - 设备不支持缩小抽样材质过滤\n
 
-# osd/windows/drawd3d.c: 965
+# osd/windows/drawd3d.c: 996
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 Direct3D: 警告 - 设备不支持在伫列描绘后页面翻转\n
 
-# osd/windows/drawd3d.c: 1043
+# osd/windows/drawd3d.c: 1074
 Direct3D: Warning - Device does not support texture clamping\n
 Direct3D: 警告 - 设备不支持材质嵌位\n
 
-# osd/windows/drawd3d.c: 1057
+# osd/windows/drawd3d.c: 1088
 Direct3D: Warning - Device does not support texture modulation\n
 Direct3D: 警告 - 设备不支持材质调节\n
 
-# osd/windows/drawd3d.c: 1048
+# osd/windows/drawd3d.c: 1079
 Direct3D: Warning - Device does not support texture wrapping\n
 Direct3D: 警告 - 设备不支持材质包装\n
 
-# osd/windows/drawd3d.c: 783
+# osd/windows/drawd3d.c: 814
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: 警告 - 设备不支持全屏幕灰度修正。\n
 
-# osd/windows/drawd3d.c: 708
+# osd/windows/drawd3d.c: 739
 Direct3D: YUV format = %s\n
 Direct3D: YUV 格式 = %s\n
 
-# osd/windows/drawd3d.c: 1712
+# osd/windows/drawd3d.c: 1742
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: 调整预缩放由 %dx%d 到 %dx%d\n
 
-# osd/windows/drawd3d.c: 1112
+# osd/windows/drawd3d.c: 1143
 Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: 无法重新创建设备资源; 永久失败\n
 
-# osd/windows/drawd3d.c: 1099
+# osd/windows/drawd3d.c: 1130
 Direct3D: resetting device\n
 Direct3D: 正在重设设备\n
 
-# osd/windows/drawdd.c: 792
+# osd/windows/drawdd.c: 823
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %s 已创建界面: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1129
+# osd/windows/drawdd.c: 1160
 DirectDraw: Configuring device %s\n
 Direct3D: 正在设置设备 %s\n
 
-# osd/windows/drawdd.c: 619
+# osd/windows/drawdd.c: 650
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: 试图设置灰度修正时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 498
+# osd/windows/drawdd.c: 529
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 试图设置视频模式 %dx%d@%d 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 1089
+# osd/windows/drawdd.c: 1120
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: blit 到画面时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 1056, 1065, 1074, 1083
+# osd/windows/drawdd.c: 1087, 1096, 1105, 1114
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 清除画面时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 777
+# osd/windows/drawdd.c: 808
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: 创建 %s 界面时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 818
+# osd/windows/drawdd.c: 849
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: 创建 clipper 时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 463, 1118
+# osd/windows/drawdd.c: 494, 1149
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 1215
+# osd/windows/drawdd.c: 1246
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: DirectDrawEnumerateEx 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 1337
+# osd/windows/drawdd.c: 1368
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 719
+# osd/windows/drawdd.c: 750
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 488
+# osd/windows/drawdd.c: 519
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 482
+# osd/windows/drawdd.c: 513
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) 调用时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 785
+# osd/windows/drawdd.c: 816
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: 取得 %s 界面描述时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 547
+# osd/windows/drawdd.c: 578
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: 取得附加列块界面时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 1137
+# osd/windows/drawdd.c: 1168
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: 取得当前显示模式时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 356
+# osd/windows/drawdd.c: 387
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: 锁定 blit 界面时发生错 %08X\n
 
-# osd/windows/drawdd.c: 826
+# osd/windows/drawdd.c: 857
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: 设置 clipper hwnd 时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 834
+# osd/windows/drawdd.c: 865
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: 设置主要界面的 clipper 时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 429
+# osd/windows/drawdd.c: 460
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: 解锁 blit 界面时发生错 %08X\n
 
-# osd/windows/drawdd.c: 435, 1095
+# osd/windows/drawdd.c: 466, 1126
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: 等待 VBLANK 时发生错误 %08X\n
 
-# osd/windows/drawdd.c: 471
+# osd/windows/drawdd.c: 502
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: 警告 - 设备不符合 DirectDraw 描绘的最低要求\n
 
-# osd/windows/drawdd.c: 350
+# osd/windows/drawdd.c: 381
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: 遗失界面; 正在删除并再试下一个帧\n
 
-# osd/windows/drawdd.c: 1338
+# osd/windows/drawdd.c: 1369
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 模式选定 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 930
+# osd/windows/drawdd.c: 961
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 新的 blit 大小 = %dx%d\n
 
-# osd/windows/drawdd.c: 1335
+# osd/windows/drawdd.c: 1366
 DirectDraw: Selecting video mode...\n
 DirectDraw: 正在选定视频模式...\n
 
-# osd/windows/drawdd.c: 196
+# osd/windows/drawdd.c: 228
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: 无法访问 ddraw.dll\n
 
-# osd/windows/drawdd.c: 204
+# osd/windows/drawdd.c: 236
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: 无法找到 DirectDrawCreateEx\n
 
-# osd/windows/drawdd.c: 214
+# osd/windows/drawdd.c: 246
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: 无法找到 DirectDrawEnumerateExA\n
 
-# osd/windows/drawdd.c: 385, 421, 1171
+# osd/windows/drawdd.c: 416, 452, 1202
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 未知的目标模式: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 227
+# osd/windows/drawdd.c: 259
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: 正在使用 DirectDraw 7\n
 
-# osd/windows/drawdd.c: 726
+# osd/windows/drawdd.c: 757
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 警告 - 设备不支持硬件拉伸\n
 
-# osd/windows/drawdd.c: 475
+# osd/windows/drawdd.c: 506
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 警告 - 设备可能无法正常配合 DirectDraw 描绘\n
 
-# osd/windows/drawdd.c: 602
+# osd/windows/drawdd.c: 633
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告 - 设备不支持全屏幕灰度修正。\n
 
-# osd/windows/input.c: 1181
+# osd/windows/input.c: 1211
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: 无法列举游戏杆 (result=%08X)\n
 
-# osd/windows/input.c: 1166
+# osd/windows/input.c: 1196
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: 无法列举键盘 (result=%08X)\n
 
-# osd/windows/input.c: 1175
+# osd/windows/input.c: 1205
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: 无法列举鼠标 (result=%08X)\n
 
-# osd/windows/input.c: 1155
+# osd/windows/input.c: 1185
 DirectInput: Using DirectInput %d\n
 DirectInput: 正在使用 DirectInput %d\n
 
-# osd/windows/sound.c: 363
+# osd/windows/sound.c: 398
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 主要缓冲: %d Hz, %d 位, %d 声道\n
 
@@ -518,99 +518,99 @@ Emulated
 Emulated Keyboard
 模拟键盘
 
-# osd/windows/sound.c: 377
+# osd/windows/sound.c: 412
 Error creating DirectSound stream buffer: %08x\n
 创建 DirectSound 流式缓冲时发生错误: %08x\n
 
-# osd/windows/sound.c: 252
+# osd/windows/sound.c: 287
 Error creating DirectSound: %08x\n
 创建 DirectSound 时发生错误: %08x\n
 
-# osd/windows/sound.c: 344
+# osd/windows/sound.c: 379
 Error creating primary DirectSound buffer: %08x\n
 创建主要 DirectSound 缓冲时发生错误: %08x\n
 
-# osd/windows/window.c: 626
+# osd/windows/window.c: 657
 Error creating render target for window %d
 创建描绘目标于窗口 %d 时发生错误
 
-# osd/windows/drawd3d.c: 817
+# osd/windows/drawd3d.c: 848
 Error creating vertex buffer (%08X)
 创建顶点缓冲时发生错误 (%08X)
 
-# osd/windows/sound.c: 261
+# osd/windows/sound.c: 296
 Error getting DirectSound capabilities: %08x\n
 获取 DirectSound 能力时发生错误: %08x\n
 
-# osd/windows/drawd3d.c: 1139
+# osd/windows/drawd3d.c: 1170
 Error getting identifier for adapter #%d\n
 为界面卡取得标识信息时发生错误 #%d\n
 
-# osd/windows/drawdd.c: 1126
+# osd/windows/drawdd.c: 1157
 Error getting identifier for device\n
 为设备取得标识信息时发生错误 \n
 
-# osd/windows/drawd3d.c: 1148
+# osd/windows/drawd3d.c: 1179
 Error getting mode for adapter #%d\n
 为界面卡取得模式时发生错误 #%d\n
 
-# osd/windows/sound.c: 360
+# osd/windows/sound.c: 395
 Error getting primary DirectSound buffer format: %08x\n
 取得主要 DirectSound 缓冲格式时发生错误: %08x\n
 
-# osd/windows/sound.c: 385
+# osd/windows/sound.c: 420
 Error locking DirectSound stream buffer: %08x\n
 锁定 DirectSound 流式缓冲时发生错误: %08x\n
 
-# osd/windows/sound.c: 298
+# osd/windows/sound.c: 333
 Error playing: %08x\n
 播放时发生错误: %08x\n
 
-# osd/windows/sound.c: 269
+# osd/windows/sound.c: 304
 Error setting DirectSound cooperative level: %08x\n
 设置 DirectSound cooperative level 时发生错误: %08x\n
 
-# osd/windows/sound.c: 352
+# osd/windows/sound.c: 387
 Error setting primary DirectSound buffer format: %08x\n
 设置主要 DirectSound 缓冲格式时发生错误: %08x\n
 
-# osd/windows/drawd3d.c: 825
+# osd/windows/drawd3d.c: 856
 Error setting vertex shader (%08X)
 设置顶点 shader 时发生错误 (%08X)
 
-# mess/osd/windows/menu.c: 1031
+# mess/osd/windows/menu.c: 1008
 Error when %s the image: %s
 %s 镜像文件时发生错误: %s
 
-# osd/windows/drawd3d.c: 694
+# osd/windows/drawd3d.c: 725
 Error: A8R8G8B8 format textures not supported\n
 错误: 未支持 A8R8G8B8 格式的材质\n
 
-# osd/windows/drawd3d.c: 684
+# osd/windows/drawd3d.c: 715
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 错误: 设备未达到 Direct3D 描绘的最低要求\n
 
-# osd/windows/drawd3d.c: 726
+# osd/windows/drawd3d.c: 757
 Error: unable to configure a screen texture format\n
 错误: 未能配置画面材质格式\n
 
-# osd/windows/winmain.c: 187
+# osd/windows/winmain.c: 219
 FULL SCREEN OPTIONS
 全屏幕选项
 
-# osd/windows/window.c: 230
+# osd/windows/window.c: 262
 Failed to create pause event
 无法创建暂停事件
 
-# osd/windows/window.c: 845
+# osd/windows/window.c: 876
 Failed to create window class
 无法创建窗口类别
 
-# osd/windows/window.c: 244
+# osd/windows/window.c: 276
 Failed to create window thread
 无法创建窗口线程
 
-# osd/windows/window.c: 238
+# osd/windows/window.c: 270
 Failed to create window thread ready event
 无法创建窗口线程预备事件
 
@@ -618,15 +618,15 @@ Failed to create window thread ready event
 Ha&rd Reset
 硬重启(&R)
 
-# osd/windows/winmain.c: 199
+# osd/windows/winmain.c: 232
 INPUT DEVICE OPTIONS
 输入设备选项
 
-# osd/windows/video.c: 523
+# osd/windows/video.c: 554
 Illegal aspect ratio value for %s = %s\n
 非法的外观比例值 %s = %s\n
 
-# osd/windows/video.c: 546
+# osd/windows/video.c: 577
 Illegal resolution value for %s = %s\n
 非法的分辨率值 %s = %s\n
 
@@ -634,11 +634,11 @@ Illegal resolution value for %s = %s\n
 Input
 输入
 
-# osd/windows/video.c: 441
+# osd/windows/video.c: 472
 Invalid video value %s; reverting to gdi\n
 无效的 %s 视频值; 还原成 gdi\n
 
-# mess/osd/windows/menu.c: 1347
+# mess/osd/windows/menu.c: 1324
 Joystick %i
 游戏杆 %i
 
@@ -646,7 +646,7 @@ Joystick %i
 Joysticks/Controllers
 游戏杆/控制器
 
-# osd/windows/window.c: 641
+# osd/windows/window.c: 672
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - 屏幕 %d
 
@@ -662,15 +662,15 @@ Miscellaneous Input
 Natural
 自然
 
-# mess/osd/windows/dialog.c: 135 
+# mess/osd/windows/dialog.c: 134 
 OK
 确定
 
-# osd/windows/winmain.c: 754
+# osd/windows/winmain.c: 787
 Out of memory
 内存溢出
 
-# osd/windows/winmain.c: 160
+# osd/windows/winmain.c: 192
 PER-WINDOW VIDEO OPTIONS
 各个画面的视频选项
 
@@ -682,11 +682,11 @@ Pause
 Play
 运行
 
-# osd/windows/drawd3d.c: 1200
+# osd/windows/drawd3d.c: 1231
 Proposed video mode not supported on device %s\n
 建议的视频模式无法支持设备 %s\n
 
-# osd/windows/input.c: 1745
+# osd/windows/input.c: 1775
 RawInput: APIs detected\n
 RawInput: 检测出 API\n
 
@@ -726,11 +726,11 @@ Show P&rofiler
 Soft &Reset
 软重启(&R)
 
-# osd/windows/sound.c: 111
+# osd/windows/sound.c: 147
 Sound buffer: overflows=%d underflows=%d\n
 声音缓冲: 上限溢位=%d 下限溢位=%d\n
 
-# osd/windows/sound.c: 109
+# osd/windows/sound.c: 145
 Sound: buffer overflows=%d underflows=%d\n
 声音: 缓冲 overflows=%d underflows=%d\n
 
@@ -742,7 +742,7 @@ State Files (*.sta)|*.sta|All Files (*.*)|*.*
 Stop
 停止
 
-# osd/windows/winmain.c: 750
+# osd/windows/winmain.c: 783
 Symbol table full
 所有符号表
 
@@ -750,47 +750,47 @@ Symbol table full
 Tape Control
 磁带控制
 
-# osd/windows/drawd3d.c: 1868
+# osd/windows/drawd3d.c: 1898
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 材质太大! (要求: %dx%d, 最大 %dx%d)\n
 
-# osd/windows/input.c: 796
+# osd/windows/input.c: 827
 Toggle Fullscreen
 切换全屏幕
 
-# osd/windows/input.c: 805
+# osd/windows/input.c: 836
 Toggle Menubar
 切换设置菜单
 
-# osd/windows/ledutil.c: 571, 577
+# osd/windows/ledutil.c: 603, 609
 Unable to close the keyboard device. (error %d)\n
 无法关闭键盘设备。(错误 %d)\n
 
-# osd/windows/window.c: 661
+# osd/windows/window.c: 692
 Unable to complete window creation
 无法完成窗口创建
 
-# osd/windows/drawd3d.c: 762
+# osd/windows/drawd3d.c: 793
 Unable to create the Direct3D device (%08X)\n
 无法创建 Direct3D 设备 (%08X)\n
 
-# osd/windows/drawd3d.c: 467, 528
+# osd/windows/drawd3d.c: 499, 559
 Unable to initialize Direct3D.\n
 无法初始化 Direct3D\n
 
-# osd/windows/drawdd.c: 270
+# osd/windows/drawdd.c: 301
 Unable to initialize DirectDraw.\n
 无法初始化 DirectDraw\n
 
-# osd/windows/video.c: 492
+# osd/windows/video.c: 523
 Unable to load PNG file '%s'\n
 无法载入 PNG 文件 '%s'\n
 
-# osd/windows/ledutil.c: 535, 543
+# osd/windows/ledutil.c: 567, 575
 Unable to open the keyboard device. (error %d)\n
 无法打开键盘设备 (错误 %d)\n
 
-# osd/windows/drawd3d.c: 2338
+# osd/windows/drawd3d.c: 2368
 Unknown texture blendmode=%d format=%d\n
 未知的材质混和模式=%d 格式=%d\\
 
@@ -798,263 +798,267 @@ Unknown texture blendmode=%d format=%d\n
 Unlimited
 无限
 
-# osd/windows/video.c: 402
+# osd/windows/video.c: 433
 Using %s scale effect\n
 正在使用 %s 图像增强\n
 
-# osd/windows/video.c: 257
+# osd/windows/video.c: 289
 Video: Monitor %p = \"%s\" %s\n
 视频: 显示器 %p = \"%s\" %s\n
 
-# osd/windows/winmain.c: 127
+# osd/windows/winmain.c: 159
 WINDOWS DEBUGGING OPTIONS
 WINDOWS 调试器选项
 
-# mess/osd/windows/configms.c: 30
+# mess/osd/windows/configms.c: 29
 WINDOWS MESS SPECIFIC OPTIONS
 WINDOWS MESS 特定选项
 
-# osd/windows/winmain.c: 134
+# osd/windows/winmain.c: 166
 WINDOWS PERFORMANCE OPTIONS
 WUNDOWS 效能选项
 
-# osd/windows/winmain.c: 195
+# osd/windows/winmain.c: 227
 WINDOWS SOUND OPTIONS
 WINDOWS 声音选项
 
-# osd/windows/winmain.c: 139
+# osd/windows/winmain.c: 171
 WINDOWS VIDEO OPTIONS
 WINDOWS 视频选项
 
-# osd/windows/video.c: 437
+# osd/windows/video.c: 468
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video 参数为 none 时无法判断 -seconds_to_run 选项\n
 
-# osd/windows/drawd3d.c: 688
+# osd/windows/drawd3d.c: 719
 Warning: Device may not perform well for Direct3D rendering\n
 警告: 设备可能无法正常配合 Direct3D 描绘\n
 
-# osd/windows/winmain.c: 162
+# osd/windows/winmain.c: 194
 aspect ratio for all screens; 'auto' here will try to make a best guess
 所有屏幕的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 167
+# osd/windows/winmain.c: 199
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 第一个屏幕的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 182
+# osd/windows/winmain.c: 214
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 第四个屏幕的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 172
+# osd/windows/winmain.c: 204
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 第二个个屏幕的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 177
+# osd/windows/winmain.c: 209
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 第三个屏幕的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 190
+# osd/windows/winmain.c: 222
 brightness value in full screen mode
 全屏幕模式亮度
 
-# osd/windows/winmain.c: 144
+# osd/windows/winmain.c: 176
 constrain to the proper aspect ratio
 全屏幕模式外观比例
 
-# osd/windows/winmain.c: 191
+# osd/windows/winmain.c: 223
 contrast value in full screen mode
 全屏幕模式对比度
 
-# mess/osd/windows/menu.c: 1032
+# mess/osd/windows/menu.c: 1009
 creating
 正在创建
 
-# osd/windows/winmain.c: 143
+# osd/windows/winmain.c: 175
 default to maximized windows; otherwise, windows will be minimized
 默认成窗口最大化; 否则将采用窗口最小化模式
 
-# osd/windows/winmain.c: 157
+# osd/windows/winmain.c: 189
 enable bilinear filtering on screen output
 启用双线性过滤的画面输出
 
-# osd/windows/winmain.c: 200
+# osd/windows/winmain.c: 233
 enable dual lightgun input
 启用双光枪输入
 
-# osd/windows/winmain.c: 152
+# osd/windows/winmain.c: 184
 enable hardware stretching
 启用硬件拉伸
 
-# osd/windows/winmain.c: 136
+# osd/windows/winmain.c: 168
 enable multithreading; this enables rendering and blitting on a separate thread
 启用多线程; 可以将描绘和 blit 分开处理
 
-# osd/windows/winmain.c: 189
+# osd/windows/winmain.c: 221
 enable resolution switching
 启用分辨率切换
 
-# osd/windows/winmain.c: 188
+# osd/windows/winmain.c: 220
 enable triple buffering
 启用三重缓冲
 
-# osd/windows/winmain.c: 148
+# osd/windows/winmain.c: 180
 enable using the start of VBLANK for throttling instead of the game time
 启用 VBLANK 开始限制速度替换游戏时间
 
-# osd/windows/winmain.c: 147
+# osd/windows/winmain.c: 179
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 启用画面翻转之前等待 VBLANK 开始; 降低破损效果
 
-# osd/windows/winmain.c: 142
+# osd/windows/winmain.c: 174
 enable window mode; otherwise, full screen mode is assumed
 启用窗口模式; 否则将采用全屏幕模式
 
-# osd/windows/winmain.c: 161
+# osd/windows/winmain.c: 193
 explicit name of all screens; 'auto' here will try to make a best guess
 所有屏幕的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 166
+# osd/windows/winmain.c: 198
 explicit name of the first screen; 'auto' here will try to make a best guess
 第一个屏幕的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 181
+# osd/windows/winmain.c: 213
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 第四个屏幕的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 171
+# osd/windows/winmain.c: 203
 explicit name of the second screen; 'auto' here will try to make a best guess
 第二个屏幕的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 176
+# osd/windows/winmain.c: 208
 explicit name of the third screen; 'auto' here will try to make a best guess
 第三个屏幕的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 129
+# osd/windows/winmain.c: 161
 force the program to terminate if no updates within specified number of seconds
 如果在指定的秒数内没有更新就强制终止程序
 
-# osd/windows/winmain.c: 192
+# osd/windows/winmain.c: 224
 gamma value in full screen mode
 全屏幕模式灰度
 
-# mess/osd/windows/menu.c: 1032
+# mess/osd/windows/menu.c: 1009
 loading
 正在载入
 
-# osd/windows/winmain.c: 146
+# osd/windows/winmain.c: 178
 name of a PNG file to use for visual effects, or 'none'
 设置要使用的视觉效果 PNG 文件名，或设为 none
 
-# osd/windows/winmain.c: 141
+# osd/windows/winmain.c: 173
 number of screens to create; usually, you want just one
 创建的屏幕总数; 通常设为一个
 
-# osd/windows/winmain.c: 128
+# osd/windows/winmain.c: 160
 output error.log data to the system debugger
 输出 error.log 数据到系统调试器
 
-# osd/windows/winmain.c: 163
+# osd/windows/winmain.c: 195
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 所有屏幕的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
 
-# osd/windows/winmain.c: 168
+# osd/windows/winmain.c: 200
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第一个屏幕的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
 
-# osd/windows/winmain.c: 183
+# osd/windows/winmain.c: 215
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第四个屏幕的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
 
-# osd/windows/winmain.c: 173
+# osd/windows/winmain.c: 205
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第二个屏幕的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
 
-# osd/windows/winmain.c: 178
+# osd/windows/winmain.c: 210
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第三个屏幕的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
 
-# osd/windows/winmain.c: 164
+# osd/windows/winmain.c: 196
 preferred view for all screens
 所有屏幕的查看方式
 
-# osd/windows/winmain.c: 169
+# osd/windows/winmain.c: 201
 preferred view for the first screen
 第一个屏幕的查看方式
 
-# osd/windows/winmain.c: 184
+# osd/windows/winmain.c: 216
 preferred view for the fourth screen
 第四个屏幕的查看方式
 
-# osd/windows/winmain.c: 174
+# osd/windows/winmain.c: 206
 preferred view for the second screen
 第二个屏幕的查看方式
 
-# osd/windows/winmain.c: 179
+# osd/windows/winmain.c: 211
 preferred view for the third screen
 第三个屏幕的查看方式
 
-# osd/windows/winmain.c: 145
+# osd/windows/winmain.c: 177
 scale screen rendering by this amount in software
 以此倍数运行软件缩放画面描绘
 
-# osd/windows/winmain.c: 196
+# osd/windows/winmain.c: 228
 set audio latency (increase to reduce glitches)
 设置音频等待时间 (增加值可减少破损)
 
-# osd/windows/winmain.c: 202
+# osd/windows/winmain.c: 235
 set joystick ID (Player1)
 设置游戏杆标识码 (P1)
 
-# osd/windows/winmain.c: 203
+# osd/windows/winmain.c: 236
 set joystick ID (Player2)
 设置游戏杆标识码 (P2)
 
-# osd/windows/winmain.c: 204
+# osd/windows/winmain.c: 237
 set joystick ID (Player3)
 设置游戏杆标识码 (P3)
 
-# osd/windows/winmain.c: 205
+# osd/windows/winmain.c: 238
 set joystick ID (Player4)
 设置游戏杆标识码 (P4)
 
-# osd/windows/winmain.c: 206
+# osd/windows/winmain.c: 239
 set joystick ID (Player5)
 设置游戏杆标识码 (P5)
 
-# osd/windows/winmain.c: 207
+# osd/windows/winmain.c: 240
 set joystick ID (Player6)
 设置游戏杆标识码 (P6)
 
-# osd/windows/winmain.c: 208
+# osd/windows/winmain.c: 241
 set joystick ID (Player7)
 设置游戏杆标识码 (P7)
 
-# osd/windows/winmain.c: 209
+# osd/windows/winmain.c: 242
 set joystick ID (Player8)
 设置游戏杆标识码 (P8)
 
-# osd/windows/winmain.c: 131
+# osd/windows/winmain.c: 163
 specifies the font size to use for debugging; defaults to 9 pt
 指定调试器的字体大小; 默认是 9 pt
 
-# osd/windows/winmain.c: 130
+# osd/windows/winmain.c: 162
 specifies the font to use for debugging; defaults to Lucida Console
 指定调试器的字体; 默认是 Lucida Console
 
-# osd/windows/winmain.c: 156
+# osd/windows/winmain.c: 188
 specify the preferred Direct3D version (8 or 9)
 指定 Direct3D 版本 (8 或 9)
 
-# osd/windows/winmain.c: 135
+# osd/windows/winmain.c: 167
 thread priority for the main game thread; range from -15 to 1
 主要游戏的线程优先级; 范围是 -15 至 1
 
-# mess/osd/windows/configms.c: 31
+# mess/osd/windows/configms.c: 30
 use the new MESS UI
 使用新的 MESS 菜单
 
-# osd/windows/winmain.c: 140
+# osd/windows/winmain.c: 172
 video output method: none, gdi, ddraw, or d3d
 视频输出方式: none, gdi, ddraw 或 d3d
+
+# osd/windows/winmain.c: 229
+enable audio sync
+
 
