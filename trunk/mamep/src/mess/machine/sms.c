@@ -179,7 +179,7 @@ static TIMER_CALLBACK( lightgun_tick )
 
 /* FIXME: this function is a hack. For Light Phaser X pos sms_vdp_hcount_latch
  function should be used instead, but emulation (timming?) needs to improve. */
-void sms_vdp_hcount_lphaser( running_machine *machine, int hpos)
+static void sms_vdp_hcount_lphaser( running_machine *machine, int hpos)
 {
 	UINT8 tmp = ((hpos - 46) >> 1) & 0xff;
 	const device_config *smsvdp = devtag_get_device(machine, "sms_vdp");
@@ -1197,15 +1197,34 @@ DEVICE_IMAGE_LOAD( sms_cart )
 
 	if (strcmp(image->tag,"cart2") == 0)
 		index = 1;
-
 	if (strcmp(image->tag,"cart3") == 0)
 		index = 2;
-
 	if (strcmp(image->tag,"cart4") == 0)
 		index = 3;
-
 	if (strcmp(image->tag,"cart5") == 0)
 		index = 4;
+	if (strcmp(image->tag,"cart6") == 0)
+		index = 5;
+	if (strcmp(image->tag,"cart7") == 0)
+		index = 6;
+	if (strcmp(image->tag,"cart8") == 0)
+		index = 7;
+	if (strcmp(image->tag,"cart9") == 0)
+		index = 8;
+	if (strcmp(image->tag,"cart10") == 0)
+		index = 9;
+	if (strcmp(image->tag,"cart11") == 0)
+		index = 10;
+	if (strcmp(image->tag,"cart12") == 0)
+		index = 11;
+	if (strcmp(image->tag,"cart13") == 0)
+		index = 12;
+	if (strcmp(image->tag,"cart14") == 0)
+		index = 13;
+	if (strcmp(image->tag,"cart15") == 0)
+		index = 14;
+	if (strcmp(image->tag,"cart16") == 0)
+		index = 15;
 
 	/* Check for 512-byte header */
 	if ((size / 512) & 1)
@@ -1486,15 +1505,15 @@ WRITE8_HANDLER( sms_store_control_w )
 	else
 	{
 		/* Pull reset line of CPU #0 low */
-		cputag_suspend(space->machine, "maincpu", SUSPEND_REASON_HALT, 1);
 		device_reset(cputag_get_cpu(space->machine, "maincpu"));
+		cputag_suspend(space->machine, "maincpu", SUSPEND_REASON_HALT, 1);
 	}
 	sms_state.store_control = data;
 }
 
 void sms_store_int_callback( running_machine *machine, int state )
 {
-	cputag_set_input_line(machine, "maincpu", sms_state.store_control & 0x01 ? 1 : 0, state);
+	cputag_set_input_line(machine, sms_state.store_control & 0x01 ? "control" : "maincpu", 0, state);
 }
 
 
