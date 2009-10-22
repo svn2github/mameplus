@@ -517,7 +517,8 @@ static void draw_sprites(bitmap_t *bitmap, int scanline)
 
 			attr_and_code_offs = (sprite_number << 6) | (tile << 1);
 			attr = neogeo_videoram[attr_and_code_offs + 1];
-			code = ((attr << 12) & 0x70000) | neogeo_videoram[attr_and_code_offs];
+			//mamep: extended tile # to access C ROMs over 64M for kof98ae, kf2k2ps2 hacks
+			code = ((attr << 12) & 0xf0000) | neogeo_videoram[attr_and_code_offs];
 
 			/* substitute auto animation bits */
 			if (!auto_animation_disabled)

@@ -55,9 +55,12 @@ const game_driver * const homebrewdrivers[] =
 	DRIVER( cnbe )
 	DRIVER( ltorb1 )
 	DRIVER( beast )
-		
-	DRIVER( kof96ae )
+
+	/* Neo Geo hack */
 	DRIVER( kof96c )
-	DRIVER( kof97cn )
+	DRIVER( kof96ae )	/* 0214 (c) 2007 EGHT */
+	DRIVER( kof97c )
 	DRIVER( kof97xt )
+//	DRIVER( kof98ae )	/* 0242 (c) 2009 EGHT */
+	DRIVER( kf2k2ps2 )	/* 0265 (c) 2007 EGHT */
 #endif	/* DRIVER_RECURSIVE */
