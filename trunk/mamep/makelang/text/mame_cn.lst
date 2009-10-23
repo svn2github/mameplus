@@ -1049,7 +1049,7 @@ nss_fzer	零式赛车 (超级任天堂系统)	零式赛车 (超级任天堂系统)	Nintendo
 nss_sten	超级网球 (超级任天堂系统)	超级网球 (超级任天堂系统)	Nintendo
 kinstb	杀手学堂 (SNES 盗版)	杀手学堂 (SNES 盗版)	bootleg
 ffight2b	快打旋风 2 (SNES 盗版)	快打旋风 2 (SNES 盗版)	bootleg
-sblast2b	音速超人 2 - 加速版 (SNES 盗版)	音速超人 2 - 加速版 (SNES 盗版)	bootleg
+sblast2b	音速超人 2 特别加速版 (SNES 盗版)	音速超人 2 特别加速版 (SNES 盗版)	bootleg
 seawolf	海狼	海狼	Midway
 gunfight	枪战	枪战	Midway
 tornbase	旋风棒球 / 棒球场	旋风棒球 / 棒球场	Midway / Taito
@@ -1365,7 +1365,7 @@ newapunk	炸弹人世界 (美版)	炸弹人世界 (美版)	Irem America
 quizf1	问答 一级方程式问答 (日版)	问答 一级方程式问答 (日版)	Irem
 riskchal	小迷糊闯天关	小迷糊闯天关	Irem
 gussun	小迷糊闯天关 (日版)	小迷糊闯天关 (日版)	Irem
-matchit2	四川省 Ⅱ	四川省 Ⅱ	Tamtex
+matchit2	四川省 II	四川省 II	Tamtex
 shisen2	四川省 II	四川省 II	Tamtex
 gunforce	钢炮部队 (世界版)	钢炮部队 (世界版)	Irem
 gunforceu	钢炮部队 (美版)	钢炮部队 (美版)	Irem America
@@ -2011,7 +2011,7 @@ cookbib3	曲吉鼠解谜 3	曲吉鼠解谜 3	SemiCom
 moremore	益智迷你游戏	益智迷你游戏	SemiCom / Exit
 moremorp	益智迷你游戏 加强版	益智迷你游戏 加强版	SemiCom / Exit
 4in1boot	益智游戏王 (includes bootleg of Snow Bros.)	益智游戏王 (includes bootleg of Snow Bros.)	K1 Soft
-snowbros3	雪人兄弟 3 不可思议的冒险	雪人兄弟 3 不可思议的冒险	Syrmex (bootleg/hack)
+snowbros3	雪人兄弟 3 - 不可思议的冒险	雪人兄弟 3 - 不可思议的冒险	Syrmex (bootleg/hack)
 finalttr	俄罗斯方块终结者 - 对战篇	俄罗斯方块终结者 - 对战篇	Jeil Computer System
 tekipaki	机器人方块	机器人方块	Toaplan
 ghox	打砖块飞行台 (Spinner with Up/Down Axis)	打砖块飞行台 (Spinner with Up/Down Axis)	Toaplan
@@ -2032,7 +2032,7 @@ grindstma	飞鹰风暴 (旧版)	飞鹰风暴 (旧版)	Toaplan
 batsugun	疯狂枪支 (第1套)	疯狂枪支 (第1套)	Toaplan
 batsuguna	疯狂枪支 (第2套)	疯狂枪支 (第2套)	Toaplan
 batsugunsp	疯狂枪支 (特别版)	疯狂枪支 (特别版)	Toaplan
-snowbro2	雪人兄弟 2 With New Elves	雪人兄弟 2 With New Elves	[Toaplan] Hanafram
+snowbro2	雪人兄弟 2 - With New Elves	雪人兄弟 2 - With New Elves	[Toaplan] Hanafram
 sstriker	魔法大作战 (世界版)	魔法大作战 (世界版)	Raizing
 sstrikera	魔法大作战 (世界版, 替换版)	魔法大作战 (世界版, 替换版)	Raizing
 mahoudai	魔法大作战 (日版)	魔法大作战 (日版)	Raizing (Able license)
@@ -2529,15 +2529,15 @@ sgemfh	超级口袋战士 (西班牙版 970904)	超级口袋战士 (西班牙版 970904)	Capcom
 vhunt2r1	恶魔猎人 2 - 恶魔的复仇 (日版 970913)	恶魔猎人 2 - 恶魔的复仇 (日版 970913)	Capcom
 vhunt2	恶魔猎人 2 - 恶魔的复仇 (日版 970929)	恶魔猎人 2 - 恶魔的复仇 (日版 970929)	Capcom
 vsav2	恶魔救世主 2 - 吸血鬼贵族 (日版 970913)	恶魔救世主 2 - 吸血鬼贵族 (日版 970913)	Capcom
-mvsc	漫画英雄 对 Capcom (欧洲版 980123)	漫画英雄 对 Capcom (欧洲版 980123)	Capcom
-mvscr1	漫画英雄 对 Capcom (欧洲版 980112)	漫画英雄 对 Capcom (欧洲版 980112)	Capcom
-mvscu	漫画英雄 对 Capcom (美版 980123)	漫画英雄 对 Capcom (美版 980123)	Capcom
-mvscj	漫画英雄 对 Capcom (日版 980123)	漫画英雄 对 Capcom (日版 980123)	Capcom
-mvscjr1	漫画英雄 对 Capcom (日版 980112)	漫画英雄 对 Capcom (日版 980112)	Capcom
-mvsca	漫画英雄 对 Capcom (亚洲版 980123)	漫画英雄 对 Capcom (亚洲版 980123)	Capcom
-mvscar1	漫画英雄 对 Capcom (亚洲版 980112)	漫画英雄 对 Capcom (亚洲版 980112)	Capcom
-mvsch	漫画英雄 对 Capcom (西班牙版 980123)	漫画英雄 对 Capcom (西班牙版 980123)	Capcom
-mvscb	漫画英雄 对 Capcom (巴西版 980123)	漫画英雄 对 Capcom (巴西版 980123)	Capcom
+mvsc	漫画英雄 对 Capcom - 超级英雄的冲突 (欧洲版 980123)	漫画英雄 对 Capcom - 超级英雄的冲突 (欧洲版 980123)	Capcom
+mvscr1	漫画英雄 对 Capcom - 超级英雄的冲突 (欧洲版 980112)	漫画英雄 对 Capcom - 超级英雄的冲突 (欧洲版 980112)	Capcom
+mvscu	漫画英雄 对 Capcom - 超级英雄的冲突 (美版 980123)	漫画英雄 对 Capcom - 超级英雄的冲突 (美版 980123)	Capcom
+mvscj	漫画英雄 对 Capcom - 超级英雄的冲突 (日版 980123)	漫画英雄 对 Capcom - 超级英雄的冲突 (日版 980123)	Capcom
+mvscjr1	漫画英雄 对 Capcom - 超级英雄的冲突 (日版 980112)	漫画英雄 对 Capcom - 超级英雄的冲突 (日版 980112)	Capcom
+mvsca	漫画英雄 对 Capcom - 超级英雄的冲突 (亚洲版 980123)	漫画英雄 对 Capcom - 超级英雄的冲突 (亚洲版 980123)	Capcom
+mvscar1	漫画英雄 对 Capcom - 超级英雄的冲突 (亚洲版 980112)	漫画英雄 对 Capcom - 超级英雄的冲突 (亚洲版 980112)	Capcom
+mvsch	漫画英雄 对 Capcom - 超级英雄的冲突 (西班牙版 980123)	漫画英雄 对 Capcom - 超级英雄的冲突 (西班牙版 980123)	Capcom
+mvscb	漫画英雄 对 Capcom - 超级英雄的冲突 (巴西版 980123)	漫画英雄 对 Capcom - 超级英雄的冲突 (巴西版 980123)	Capcom
 sfa3	少年街霸 3 (欧洲版 980904)	少年街霸 3 (欧洲版 980904)	Capcom
 sfa3u	少年街霸 3 (美版 980904)	少年街霸 3 (美版 980904)	Capcom
 sfa3ur1	少年街霸 3 (美版 980629)	少年街霸 3 (美版 980629)	Capcom
@@ -2589,7 +2589,7 @@ sfz2ald	少年街霸 2 Alpha (亚洲版 960826 凤凰版) (盗版)	少年街霸 2 Alpha (亚洲版 
 xmvsfu1d	X - 战警 对 街头霸王 (美版 961004 凤凰版) (盗版)	X - 战警 对 街头霸王 (美版 961004 凤凰版) (盗版)	bootleg
 batcird	战斗回路 (欧洲版 970319 凤凰版) (盗版)	战斗回路 (欧洲版 970319 凤凰版) (盗版)	bootleg
 vsavd	恶魔救世主 - 吸血鬼贵族 (欧洲版 970519 凤凰版) (盗版)	恶魔救世主 - 吸血鬼贵族 (欧洲版 970519 凤凰版) (盗版)	bootleg
-mvscud	漫画英雄 对 Capcom (美版 980123 凤凰版) (盗版)	漫画英雄 对 Capcom (美版 980123 凤凰版) (盗版)	bootleg
+mvscud	漫画英雄 对 Capcom - 超级英雄的冲突 (美版 980123 凤凰版) (盗版)	漫画英雄 对 Capcom - 超级英雄的冲突 (美版 980123 凤凰版) (盗版)	bootleg
 sfa3ud	少年街霸 3 (美版 980904 凤凰版) (盗版)	少年街霸 3 (美版 980904 凤凰版) (盗版)	bootleg
 gwingjd	雷鸟之翼 (日版 990223 凤凰版) (盗版)	雷鸟之翼 (日版 990223 凤凰版) (盗版)	bootleg
 1944d	1944 - 征服世界 (美版 000620 凤凰版) (盗版)	1944 - 征服世界 (美版 000620 凤凰版) (盗版)	bootleg
@@ -3555,7 +3555,7 @@ puyosun	魔法水滴狂热版 (J 961115 V0.001)	魔法水滴狂热版 (J 961115 V0.001)	Compil
 colmns97	魔法宝石 '97 (JET 961209 V1.000)	魔法宝石 '97 (JET 961209 V1.000)	Sega
 shienryu	紫炎龙 (JUET 961226 V1.000)	紫炎龙 (JUET 961226 V1.000)	Warashi
 vmahjong	VR 麻将 (J 961214 V1.000)	VR 麻将 (J 961214 V1.000)	Micronet
-groovef	豪血寺一族 3 (J 970416 V1.001)	豪血寺一族 3 (J 970416 V1.001)	Atlus
+groovef	豪血寺一族 3 - Groove On Fight (J 970416 V1.001)	豪血寺一族 3 - Groove On Fight (J 970416 V1.001)	Atlus
 nclubv3	南梦宫俱乐部 Ver.3 (J 970723 V1.000)	南梦宫俱乐部 Ver.3 (J 970723 V1.000)	Sega
 thunt	寻宝记 - 解谜与行动 (JUET 970901 V2.00E)	寻宝记 - 解谜与行动 (JUET 970901 V2.00E)	Sega
 thuntk	寻宝记 - 解谜与行动 (JUET 970125 V2.00K)	寻宝记 - 解谜与行动 (JUET 970125 V2.00K)	Sega / Deniam
@@ -3657,7 +3657,7 @@ fvipers2	格斗之蛇 2 (校正版 A)	格斗之蛇 2 (校正版 A)	Sega
 vs298	VR 射手 2 - 98 (Step 2.0)	VR 射手 2 - 98 (Step 2.0)	Sega
 vs299	VR 射手 2 - 99	VR 射手 2 - 99	Sega
 vs2v991	VR 射手 2 '99.1 (校正版 B)	VR 射手 2 '99.1 (校正版 B)	Sega
-von254g	电脑战机 2 (ver 5.4g)	电脑战机 2 (ver 5.4g)	Sega
+von254g	电脑战机 2: Oratorio Tangram (ver 5.4g)	电脑战机 2: Oratorio Tangram (ver 5.4g)	Sega
 daytona2	梦游美国 2 (校正版 A)	梦游美国 2 (校正版 A)	Sega
 spikeout	锐击 - 战斗街头 (校正版 C)	锐击 - 战斗街头 (校正版 C)	Sega
 dirtdvls	越野障碍赛 (校正版 A)	越野障碍赛 (校正版 A)	Sega
@@ -3750,7 +3750,7 @@ mt_srage	怒之铁拳 (Mega-Tech)	怒之铁拳 (Mega-Tech)	Sega
 mt_sonic	索尼克 (Mega-Tech, 第1套)	索尼克 (Mega-Tech, 第1套)	Sega
 mt_sonia	索尼克 (Mega-Tech, 第2套)	索尼克 (Mega-Tech, 第2套)	Sega
 mt_fshrk	鲛! 鲛! 鲛! (Mega-Tech)	鲛! 鲛! 鲛! (Mega-Tech)	Toaplan / Sega
-mt_gaxe2	战斧 2 (Mega-Tech)	战斧 2 (Mega-Tech)	Sega
+mt_gaxe2	战斧 II (Mega-Tech)	战斧 II (Mega-Tech)	Sega
 mt_stf	蒙大拿足球 2 (Mega-Tech)	蒙大拿足球 2 (Mega-Tech)	Sega
 mt_mlh	职业冰球 (Mega-Tech)	职业冰球 (Mega-Tech)	Sega
 mt_kcham	变色龙小子 (Mega-Tech)	变色龙小子 (Mega-Tech)	Sega
@@ -3797,7 +3797,7 @@ spawn	闪灵悍将 (JPN, USA, EUR, ASI, AUS)	闪灵悍将 (JPN, USA, EUR, ASI, AUS)	Capc
 doa2m	死或生 2 千禧版 (JPN, USA, EXP, KOR, AUS)	死或生 2 千禧版 (JPN, USA, EXP, KOR, AUS)	Tecmo
 virnba	VR 篮球 NBA (JPN, USA, EXP, KOR, AUS)	VR 篮球 NBA (JPN, USA, EXP, KOR, AUS)	Sega
 virnbao	VR 篮球 NBA (JPN, USA, EXP, KOR, AUS) (初版)	VR 篮球 NBA (JPN, USA, EXP, KOR, AUS) (初版)	Sega
-mvsc2	漫画英雄 对 Capcom 2 (JPN, USA, EUR, ASI, AUS)	漫画英雄 对 Capcom 2 (JPN, USA, EUR, ASI, AUS)	Capcom
+mvsc2	漫画英雄 对 Capcom 2 - 新英雄年代 (JPN, USA, EUR, ASI, AUS)	漫画英雄 对 Capcom 2 - 新英雄年代 (JPN, USA, EUR, ASI, AUS)	Capcom
 smarinef	世嘉海上钓鱼	世嘉海上钓鱼	Sega
 pstone2	能量宝石 2 (JPN, USA, EUR, ASI, AUS)	能量宝石 2 (JPN, USA, EUR, ASI, AUS)	Capcom
 qmegamis	问答魔法学园 (JPN, USA, EXP, KOR, AUS)	问答魔法学园 (JPN, USA, EXP, KOR, AUS)	Sega
@@ -3826,7 +3826,7 @@ spkrbtl	致命一击 (GDS-0005)	致命一击 (GDS-0005)	Sega
 gunsur2	枪下游魂 2: 生化危机 代号 - 维罗尼卡	枪下游魂 2: 生化危机 代号 - 维罗尼卡	Capcom / Namco
 cvs2gd	Capcom 对 SNK 千禧格斗 2001 (Rev A) (GDL-0007A)	Capcom 对 SNK 千禧格斗 2001 (Rev A) (GDL-0007A)	Capcom / SNK
 gundmxgd	机动战士高达 - 联邦 VS 吉翁 DX (GDL-0006)	机动战士高达 - 联邦 VS 吉翁 DX (GDL-0006)	Capcom
-hmgeo	重金属格 - 斗游技 (JPN, USA, EUR, ASI, AUS)	重金属格 - 斗游技 (JPN, USA, EUR, ASI, AUS)	Capcom
+hmgeo	重金属格斗游技 (JPN, USA, EUR, ASI, AUS)	重金属格斗游技 (JPN, USA, EUR, ASI, AUS)	Capcom
 derbyoc2	赛马者俱乐部 II (JPN, USA, EXP, KOR, AUS)	赛马者俱乐部 II (JPN, USA, EXP, KOR, AUS)	Sega
 vtennis2	VR 网球 2 (Rev A) (GDS-0015A)	VR 网球 2 (Rev A) (GDS-0015A)	Sega
 keyboard	武装键盘 (GDS-0017)	武装键盘 (GDS-0017)	Sega
@@ -6730,7 +6730,7 @@ gogomile	鸡蛋小子大接龙	鸡蛋小子大接龙	Fuuki
 gogomilej	鸡蛋小子大接龙 (日版)	鸡蛋小子大接龙 (日版)	Fuuki
 pbancho	番长大逆转方块 (日版)	番长大逆转方块 (日版)	Fuuki
 asurabld	血剑王朝 - 魔刃降临 (日版)	血剑王朝 - 魔刃降临 (日版)	Fuuki
-asurabus	血剑王朝 II (日版)	血剑王朝 II (日版)	Fuuki
+asurabus	血剑王朝 2 - 永恒的战士 (日版)	血剑王朝 2 - 永恒的战士 (日版)	Fuuki
 drgnmst	龙圣	龙圣	Unico
 burglarx	夜盗 X	夜盗 X	Unico
 zeropnt	零式枪战 (第1套)	零式枪战 (第1套)	Unico
@@ -6949,8 +6949,8 @@ orlegend105k	西游释厄传 (ver. 105, 韩文基板)	西游释厄传 (ver. 105, 韩文基板)	IGS
 drgw2	中国龙 II (ver. 110X, 海外版)	中国龙 II (ver. 110X, 海外版)	IGS
 drgw2c	中国龙 II (ver. 100C, 中国版)	中国龙 II (ver. 100C, 中国版)	IGS
 drgw2j	中国龙 II (ver. 100J, 日版)	中国龙 II (ver. 100J, 日版)	IGS
-drgw3	中国龙 III (ver. 100)	中国龙 III (ver. 100)	IGS
-drgw3k	中国龙 III (ver. 106, 韩文基板)	中国龙 III (ver. 106, 韩文基板)	IGS
+drgw3	中国龙 3 (ver. 100)	中国龙 3 (ver. 100)	IGS
+drgw3k	中国龙 3 (ver. 106, 韩文基板)	中国龙 3 (ver. 106, 韩文基板)	IGS
 kov	三国战纪 (ver. 117)	三国战纪 (ver. 117)	IGS
 kovplus	三国战纪 正宗 Plus (ver. 119)	三国战纪 正宗 Plus (ver. 119)	IGS
 kovplusa	三国战纪 正宗 Plus (ver. 119 替换版)	三国战纪 正宗 Plus (ver. 119 替换版)	IGS
@@ -8397,10 +8397,11 @@ ngem2k	智力符号 2000 (Homebrew 060118, Beta)	智力符号 2000 (Homebrew 060118, Bet
 cnbe	空战代号 - 血腥天使 (Homebrew 060119)	空战代号 - 血腥天使 (Homebrew 060119)	Homebrew
 ltorb1	印第安娜琼斯 (Homebrew 050717)	印第安娜琼斯 (Homebrew 050717)	Blastar
 beast	野兽之瞳 (Neo Demo, Homebrew)	野兽之瞳 (Neo Demo, Homebrew)	Psygnosis
-kof96ae	拳皇 '96 十周年纪念版 (hack)	拳皇 '96 十周年纪念版 (hack)	hack
-kof96c	拳皇 '96 中文版 1.00 (hack)	拳皇 '96 中文版 1.00 (hack)	hack
-kof97cn	拳皇 '97 十周年中文版 (hack)	拳皇 '97 十周年中文版 (hack)	hack
-kof97xt	拳皇 '97 最终の决战 (hack)	拳皇 '97 最终の决战 (hack)	hack
+kof96ae	拳皇 '96 十周年纪念版 (hack)	拳皇 '96 十周年纪念版 (hack)	EGHT
+kof96cn	拳皇 '96 中文版 (ver 1.0, hack)	拳皇 '96 中文版 (ver 1.0, hack)	hack
+kof97cn	拳皇 '97 十周年中文版 (hack)	拳皇 '97 十周年中文版 (hack)	FCHT (EGHT)
+kof97xt	拳皇 '97 - 最终の决战 (hack)	拳皇 '97 - 最终の决战 (hack)	hack
+kf2k2ps2	拳皇 2002 - 终极挑战 PlayStation 2 (ver 0.4, hack)	拳皇 2002 - 终极挑战 PlayStation 2 (ver 0.4, hack)	EGHT
 zupapad	星星大作战! (custom C 解密)	星星大作战! (custom C 解密)	SNK
 kof99d	拳皇 '99 - 千年之战 (P 未加密, C 解密)	拳皇 '99 - 千年之战 (P 未加密, C 解密)	SNK
 ganryud	武藏严流记 (C 解密)	武藏严流记 (C 解密)	Visco
