@@ -550,9 +550,6 @@ const WCHAR *GetIPSDir(void);
 void SetIPSDir(const WCHAR *path);
 #endif /* USE_IPS */
 
-void SetDefaultBIOS(const char *bios); 
-int GetSystemBiosInfo(int bios_index);
-
 #ifdef UI_COLOR_PALETTE
 const char *GetUIPaletteString(int n);
 void SetUIPaletteString(int n, const char *s);

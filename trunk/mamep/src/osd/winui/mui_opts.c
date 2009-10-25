@@ -498,9 +498,6 @@ int size_folder_filters;
 int num_folder_filters;
 #endif
 
-// default bios setting
-static int default_bios[MAX_SYSTEM_BIOS];
-
 /***************************************************************************
     External functions
  ***************************************************************************/
@@ -2246,18 +2243,6 @@ void SetIPSDir(const WCHAR* path)
 	options_set_wstring(global, OPTION_IPSPATH, path, OPTION_PRIORITY_CMDLINE);
 }
 #endif /* USE_IPS */
-
-void SetDefaultBIOS(const char *bios)
-{
-	options_set_string(global, OPTION_BIOS, bios, OPTION_PRIORITY_CMDLINE);
-}
-
-int GetSystemBiosInfo(int bios_index)
-{
-	assert (0 <= bios_index && bios_index < MAX_SYSTEM_BIOS);
-
-	return default_bios[bios_index];
-}
 
 #ifdef UI_COLOR_PALETTE
 struct ui_palette_assign

@@ -43,7 +43,6 @@ const game_driver * const homebrewdrivers[] =
 
 	/* Neo Geo homebrew */
 	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
-	DRIVER( columnsn )
 	DRIVER( poknight )
 	DRIVER( neodemo )
 	DRIVER( neo2500 )
@@ -61,6 +60,7 @@ const game_driver * const homebrewdrivers[] =
 	DRIVER( kof96ae )	/* 0214 (c) 2007 EGHT */
 	DRIVER( kof97c )
 	DRIVER( kof97xt )
-//	DRIVER( kof98ae )	/* 0242 (c) 2009 EGHT */
 	DRIVER( kf2k2ps2 )	/* 0265 (c) 2007 EGHT */
+	DRIVER( columnsh )	/* http://www.neobitz.com */
+
 #endif	/* DRIVER_RECURSIVE */

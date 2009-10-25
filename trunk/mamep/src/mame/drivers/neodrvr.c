@@ -8284,7 +8284,7 @@ ROM_START( beast )
 
 	NEO_SFIX_128K( "2002-s1.bin", CRC(05a417f5) SHA1(932eeab5ba06f654ed39112c71a4e5a1f78c70bd) )
 
-//  use neopong rom
+	// this game is no sound edition, so use neonopon roms (nnp-m1.rom, nnp-v1.rom)
 	NEO_BIOS_AUDIO_64K( "nnp-m1.rom", CRC(7669de64) SHA1(caa170b561df4f68000beaad41d942c66a4a10ee) )
 
 	ROM_REGION( 0x080000, "ym", 0 )
@@ -8297,13 +8297,13 @@ ROM_START( beast )
 	ROM_LOAD16_BYTE( "2002-c2.bin", 0x000001, 0x80000, CRC(9f5b9cf6) SHA1(857595fc93bfec069c8b1cf647ab9feedce56f1f) ) /* Plane 2,3 */
 ROM_END
 
-ROM_START( columnsn )
+ROM_START( columnsh )
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "2000-p1.bin", 0x000000, 0x080000, CRC(c6c9888d) SHA1(5a2ec1071872c817bf82053ca7b7d5d63fab6755) )
 
 	NEO_SFIX_128K( "2000-s1.bin", CRC(089a28a8) SHA1(b38b5c42eb909c57c16b016addffcd4e930806ce) )
 
-//  use neopong rom
+	// this game is no sound edition, so use neonopon roms (nnp-m1.rom, nnp-v1.rom)
 	NEO_BIOS_AUDIO_64K( "nnp-m1.rom", CRC(7669de64) SHA1(caa170b561df4f68000beaad41d942c66a4a10ee) )
 
 	ROM_REGION( 0x080000, "ym", 0 )
@@ -8322,7 +8322,7 @@ ROM_START( poknight )
 
 	NEO_SFIX_128K( "2003-s1.bin", CRC(a26d2f09) SHA1(e7da6005a66e52f5479f9fe9f0cc67527dcb5d04) )
 
-//  use neopong rom
+	// this game is no sound edition, so use neonopon roms (nnp-m1.rom, nnp-v1.rom)
 	NEO_BIOS_AUDIO_64K( "nnp-m1.rom", CRC(7669de64) SHA1(caa170b561df4f68000beaad41d942c66a4a10ee) )
 
 	ROM_REGION( 0x080000, "ym", 0 )
@@ -10091,9 +10091,8 @@ GAME( 2005, kogd,     kof97,    neogeo,   kog,      neogeo,   ROT0, "bootleg", "
 GAME( 2003, pnyaad,   pnyaa,    neogeo,   neogeo,   pnyaad,   ROT0, "Aiky / Taito", "Pochi and Nyaa (decrypted C)" , 0 ) /* Encrypted Sound */
 
 /* Neo Geo homebrew */
-GAME( 1989, beast,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Psygnosis", "Shadow of the Beast (Neo Demo, Homebrew)", GAME_NO_SOUND )
-GAME( 1990, columnsn, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Sega / hack", "Columns (Neo-Geo, Homebrew)", GAME_NO_SOUND )
-GAME( 200?, poknight, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "JMK", "Poker Night (Homebrew)", GAME_NO_SOUND )
+GAME( 1989, beast,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Psygnosis", "Shadow of the Beast (Homebrew, No sound edition)", 0 )
+GAME( 2003, poknight, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "JMK", "Poker Night (Homebrew, No sound edition)", 0 )
 GAME( 2002, neonopon, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo No Panepon (Beta, Homebrew)", 0 )
 GAME( 2002, neopong,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Neodev", "Neo Pong (ver 1.1, Homebrew)", 0 )
 GAME( 2002, neoponga, neopong,  neogeo,   neogeo,   neogeo,   ROT0, "Neodev", "Neo Pong (ver 1.0, Homebrew)", 0 )
@@ -10101,16 +10100,17 @@ GAME( 200?, syscheck, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "
 GAME( 2006, frogfest, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Rastersoft", "Frog Feast (Homebrew)", 0 )
 GAME( 2005, ltorb1,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Jonas Indiana and the Lost Temple of RA (050717, Homebrew)" , 0 )
 GAME( 2002, neodemo,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Chaos", "Neo-Demo (Homebrew)", 0 )
-GAME( 2006, cnbe,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Homebrew", "Codename - Blut Engel (060119, Homebrew)", 0 )
-GAME( 2006, ngem2k,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Homebrew", "NGEM2K (Beta 060118, Homebrew)", 0 )
+GAME( 2006, cnbe,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Codename: Blut Engel (060119, Homebrew)", 0 )
+GAME( 2006, ngem2k,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "NGEM2K (Beta 060118, Homebrew)", 0 )
 GAME( 2004, neo2500,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo 2500 Demo (Homebrew)", 0 )
 
 /* Neo Geo hack */
 GAME( 200?, kof96c,   kof96,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 - Chinese Edition (ver 1.0, hack)", 0 )
-GAME( 2007, kof96ae,  kof96,    neogeo,   neogeo,   neogeo,   ROT0, "EGHT", "The King of Fighters '96 - Anniversary Edition (hack)", 0 )
+GAME( 2007, kof96ae,  kof96,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 - Anniversary Edition (hack)", 0 )
 GAME( 2007, kof97c,   kof97,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '97 - Chinese Edition (hack)", 0 )
 GAME( 2007, kof97xt,  kof97,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '97 - Final Battle (hack)", 0 )
-GAME( 2007, kf2k2ps2, kof2002,	neogeo,   neogeo,   kf2k2ps2, ROT0, "EGHT", "The King of Fighters 2002 - PlayStation II (hack)", 0 )
+GAME( 2007, kf2k2ps2, kof2002,	neogeo,   neogeo,   kf2k2ps2, ROT0, "hack", "The King of Fighters 2002 - PlayStation II (hack)", 0 )
+GAME( 1990, columnsh, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "hack", "Columns (Sega hardware hack, No sound edition)", 0 )
 
 /* Neo Print */
 GAME( 1998, 98best44, 0,        neogeo,   neogeo,   neogeo,   ROT0, "SNK", "'98 NeoPri Best 44 (Neo Print)", GAME_NOT_WORKING )

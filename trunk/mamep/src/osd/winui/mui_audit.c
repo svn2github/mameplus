@@ -223,13 +223,7 @@ int MameUIVerifyRomSet(int game, BOOL isComplete)
 {
 	audit_record *audit;
 	int audit_records;
-	core_options *game_options;
 	int res;
-
-	// mamep: apply selecting BIOS
-	game_options = load_options(OPTIONS_GAME, game);
-	SetDefaultBIOS(options_get_string(game_options, OPTION_BIOS));
-	options_free(game_options);
 
 	// mamep: if rom file doesn't exist, don't verify it
 	if (!isComplete && RomsetNotExist(game))
