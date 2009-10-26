@@ -42,25 +42,26 @@ const game_driver * const homebrewdrivers[] =
 #endif /* !NEOCPSPGM */
 
 	/* Neo Geo homebrew */
-	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
-	DRIVER( poknight )
-	DRIVER( neodemo )
-	DRIVER( neo2500 )
-	DRIVER( syscheck )	/* xxxx (c) 2004 Blastar */
-	DRIVER( neonopon )	/* xxxx (c) 2002 Blastar */
-	DRIVER( neopong )	/* xxxx (c) 2002 Neodev */
-	DRIVER( neoponga )	/* xxxx (c) 2002 Neodev */
-	DRIVER( ngem2k )
-	DRIVER( cnbe )
-	DRIVER( ltorb1 )
-	DRIVER( beast )
+	DRIVER( frogfest )	/* (c) 2005 Rastersoft */
+	DRIVER( poknight )	/* http://www.neobitz.com */
+	DRIVER( neodemo )	/* (c) 2002 Chaos */
+	DRIVER( neo2500 )	/* (c) 2004 Blastar */
+	DRIVER( syscheck )	/* (c) 200? Blastar */
+	DRIVER( neonopon )	/* (c) 2002 Blastar */
+	DRIVER( neopong )	/* (c) 2002 Neodev */
+	DRIVER( neoponga )	/* (c) 2002 Neodev */
+	DRIVER( ngem2k )	/* (c) 2006 Blastar */
+	DRIVER( cnbe )	/* (c) 2006 Blastar */
+	DRIVER( ltorb1 )	/* (c) 2005 Blastar */
+	DRIVER( beast )	/* http://www.neobitz.com */
 
 	/* Neo Geo hack */
-	DRIVER( kof96c )
-	DRIVER( kof96ae )	/* 0214 (c) 2007 EGHT */
-	DRIVER( kof97c )
+	DRIVER( kof96cn )
+	DRIVER( kof96ae )	/* 2007 EGHT hack */
+	DRIVER( kof97cn )	/* 2007 EGHT hack */
 	DRIVER( kof97xt )
-	DRIVER( kf2k2ps2 )	/* 0265 (c) 2007 EGHT */
+	DRIVER( kof98ae )	/* 2009 EGHT hack */
+	DRIVER( kf2k2ps2 )	/* 2007 EGHT hack */
 	DRIVER( columnsh )	/* http://www.neobitz.com */
 
 #endif	/* DRIVER_RECURSIVE */

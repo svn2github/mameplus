@@ -7740,7 +7740,6 @@ ROM_START( ltorb1 )
 
 	NEO_SFIX_64K( "ltor1-s1.rom", CRC(8224d8b7) SHA1(2e7b176e5dffd8a44fa813b928155801d80b1ee6) )
 
-//  use neopong rom
 	NEO_BIOS_AUDIO_64K( "ltor1-m1.rom", CRC(6847fd52) SHA1(6e6d9045299966d41e3f193b3aff032d5b5e135d) )
 
 	ROM_REGION( 0x080000, "ym", 0 )
@@ -10139,12 +10138,12 @@ GAME( 2006, ngem2k,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "
 GAME( 2004, neo2500,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo 2500 Demo (Homebrew)", 0 )
 
 /* Neo Geo hack */
-GAME( 200?, kof96cn,  kof96,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 Chinese Edition (ver 1.0, hack)", 0 )
-GAME( 2007, kof96ae,  kof96,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 Anniversary Edition (EGHT hack)", 0 )
-GAME( 2007, kof97cn,  kof97,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '97 10th Anniversary Chinese Edition (EGHT hack)", 0 )
+GAME( 200?, kof96cn,  kof96,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 (Chinese Edition ver 1.0, hack)", 0 )
+GAME( 2007, kof96ae,  kof96,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 (Anniversary Edition, EGHT hack)", 0 )
+GAME( 2007, kof97cn,  kof97,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '97 (10th Anniversary Chinese Edition, EGHT hack)", 0 )
 GAME( 2007, kof97xt,  kof97,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '97 - Final Battle (hack)", 0 )
-GAME( 2009, kof98ae,  kof98,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '98 Anniversary Edition (EGHT hack)", GAME_NOT_WORKING )
-GAME( 2007, kf2k2ps2, kof2002,	neogeo,   neogeo,   kf2k2ps2, ROT0, "hack", "The King of Fighters 2002 PlayStation 2 (ver 0.4, EGHT hack)", 0 )
+GAME( 2009, kof98ae,  kof98,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '98 (Anniversary Edition, EGHT hack)", GAME_NOT_WORKING )
+GAME( 2007, kf2k2ps2, kof2002,	neogeo,   neogeo,   kf2k2ps2, ROT0, "hack", "The King of Fighters 2002 (PlayStation 2 ver 0.4, EGHT hack)", 0 )
 GAME( 1990, columnsh, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "hack", "Columns (Sega hardware hack, No sound edition)", 0 )
 
 /* Neo Print */
