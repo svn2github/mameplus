@@ -786,6 +786,23 @@ static void render_load(running_machine *machine, int config_type, xml_data_node
 
 		/* set the new values */
 		render_container_set_user_settings(container, &settings);
+
+		//mamep: load refresh
+		{
+			const device_config *screen = (const device_config *)container->screen;
+			const screen_config *scrconfig = (const screen_config *)screen->inline_config;
+			double defrefresh = ATTOSECONDS_TO_HZ(scrconfig->refresh);
+			double refresh = (double)xml_get_attribute_float(screennode, "refresh", defrefresh);
+
+			if (floor((refresh - defrefresh) * 1000.0f + 0.5f) != 0)
+			{
+				int width = video_screen_get_width(screen);
+				int height = video_screen_get_height(screen);
+				const rectangle *visarea = video_screen_get_visible_area(screen);
+
+				video_screen_configure(screen, width, height, visarea, HZ_TO_ATTOSECONDS(refresh));
+			}
+		}
 	}
 }
 
@@ -938,7 +955,20 @@ static void render_save(running_machine *machine, int config_type, xml_data_node
 				xml_set_attribute_float(screennode, "vstretch", container->yscale);
 				changed = TRUE;
 			}
+			
+			//mamep: save refresh
+			{
+				const screen_config *scrconfig = (const screen_config *)container->screen->inline_config;
+				double defrefresh = ATTOSECONDS_TO_HZ(scrconfig->refresh);
+				double refresh = ATTOSECONDS_TO_HZ(video_screen_get_frame_period(container->screen).attoseconds);
 
+				if (floor((refresh - defrefresh) * 1000.0f + 0.5f) != 0)
+				{
+					xml_set_attribute_float(screennode, "refresh", refresh);
+					changed = TRUE;
+				}
+			}
+			
 			/* if nothing changed, kill the node */
 			if (!changed)
 				xml_delete_node(screennode);
