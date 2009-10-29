@@ -129,7 +129,7 @@ pacmanbl	小精灵 Pac-Man (Galaxian 硬件, 第1套)	小精灵 Pac-Man (Galaxian 硬件, 第
 pacmanbla	小精灵 Pac-Man (Galaxian 硬件, 第2套)	小精灵 Pac-Man (Galaxian 硬件, 第2套)	bootleg
 phoenxp2	凤凰角色 2	凤凰角色 2	bootleg
 atlantisb	亚特兰蒂斯大作战 (盗版)	亚特兰蒂斯大作战 (盗版)	bootleg
-tenspot	Ten Spot	Ten Spot	Thomas Automatics
+tenspot	十场	十场	Thomas Automatics
 devilfsg	魔神鱼类 (Galaxian 硬件, 盗版?)	魔神鱼类 (Galaxian 硬件, 盗版?)	Vision / Artic
 zigzag	挖金子 (Galaxian 硬件, 第1套)	挖金子 (Galaxian 硬件, 第1套)	LAX
 zigzag2	挖金子 (Galaxian 硬件, 第2套)	挖金子 (Galaxian 硬件, 第2套)	LAX
@@ -7066,7 +7066,7 @@ hanaroku	花六	花六	Alba
 yumefuda	梦札 [BET]	梦札 [BET]	Alba
 hourouki	麻雀放浪记青春编 (日版)	麻雀放浪记青春编 (日版)	Home Data
 mhgaiden	麻雀放浪记外传 (日版)	麻雀放浪记外传 (日版)	Home Data
-mirderby	Miracle Derby - Ascot	Miracle Derby - Ascot	Home Data?
+mirderby	奇迹德比郡 - 阿斯科特	奇迹德比郡 - 阿斯科特	Home Data?
 mjhokite	放浪记掟 (日版)	放浪记掟 (日版)	Home Data
 mjclinic	麻雀诊所 (日版)	麻雀诊所 (日版)	Home Data
 mrokumei	麻雀鹿鸣馆 (日版)	麻雀鹿鸣馆 (日版)	Home Data
@@ -7873,7 +7873,7 @@ gamecstl	游戏羽冠	游戏羽冠	Cristaltec
 gamecst2	游戏羽冠 (版本 2.613)	游戏羽冠 (版本 2.613)	Cristaltec
 drw80pkr	扑克牌 -  八十分	扑克牌 -  八十分	IGT - International Gaming Technology
 blazlaz	炙热战机	炙热战机	Hudson Soft
-ggconnie	Go! Go! Connie chan Jaka Jaka Janken	Go! Go! Connie chan Jaka Jaka Janken	Capcom
+ggconnie	走! 走! Connie chan Jaka Jaka Janken	走! 走! Connie chan Jaka Jaka Janken	Capcom
 paranoia	偏执狂	偏执狂	Naxat Soft
 vcombat	虚拟战斗	虚拟战斗	VR8 Inc.
 shadfgtr	暗影战士	暗影战士	DUTECH Inc.
@@ -8408,23 +8408,23 @@ fr2ch	偶像麻雀 - 最终罗曼史 2 (CD to MVS Conversion, Hack)	偶像麻雀 - 最终罗曼史
 spclone	沙罗曼蛇 (版本 YY 克隆版)	沙罗曼蛇 (版本 YY 克隆版)	Konami
 vantris	先锋号 (Vanguard hardware, Homebrew)	先锋号 (Vanguard hardware, Homebrew)	SNK / N. Kehrer
 frogfest	小青蛙 (Homebrew)	小青蛙 (Homebrew)	Rastersoft
-poknight	扑克之夜 (Homebrew)	扑克之夜 (Homebrew)	JMK
+poknight	扑克之夜 (Homebrew, 没有声音)	扑克之夜 (Homebrew, 没有声音)	JMK
 neodemo	Chaos 演示 (Homebrew)	Chaos 演示 (Homebrew)	Chaos
 neo2500	Neo 2500 演示 (Homebrew)	Neo 2500 演示 (Homebrew)	Blastar
-syscheck	Neo 系统测试 (Ver 1.0b, Homebrew)	Neo 系统测试 (Ver 1.0b, Homebrew)	Blastar
+syscheck	Neo 系统测试 (ver 1.0b, Homebrew)	Neo 系统测试 (ver 1.0b, Homebrew)	Blastar
 neonopon	Neo 智力方块 (Beta, Homebrew)	Neo 智力方块 (Beta, Homebrew)	Blastar
-neopong	机皇弹球 (Ver 1.1, Homebrew)	机皇弹球 (Ver 1.1, Homebrew)	Neodev
-neoponga	机皇弹球 (Ver 1.0, Homebrew)	机皇弹球 (Ver 1.0, Homebrew)	Neodev
-ngem2k	智力符号 2000 (Homebrew 060118, Beta)	智力符号 2000 (Homebrew 060118, Beta)	Blastar
-cnbe	空战代号 - 血腥天使 (Homebrew 060119)	空战代号 - 血腥天使 (Homebrew 060119)	Blastar
-ltorb1	印第安娜琼斯 (Homebrew 050717)	印第安娜琼斯 (Homebrew 050717)	Blastar
-beast	野兽之瞳 (Neo Demo, Homebrew)	野兽之瞳 (Neo Demo, Homebrew)	Psygnosis
-kof96cn	拳皇 '96 中文版 (ver 1.0, hack)	拳皇 '96 中文版 (ver 1.0, hack)	hack
-kof96ae	拳皇 '96 十周年纪念版 (EGHT hack)	拳皇 '96 十周年纪念版 (EGHT hack)	hack
-kof97cn	拳皇 '97 十周年中文版 (EGHT hack)	拳皇 '97 十周年中文版 (EGHT hack)	hack
+neopong	机皇弹球 (ver 1.1, Homebrew)	机皇弹球 (ver 1.1, Homebrew)	Neodev
+neoponga	机皇弹球 (ver 1.0, Homebrew)	机皇弹球 (ver 1.0, Homebrew)	Neodev
+ngem2k	智力符号 2000 (Beta 060118, Homebrew)	智力符号 2000 (Beta 060118, Homebrew)	Blastar
+cnbe	空战代号 - 血腥天使 (060119, Homebrew)	空战代号 - 血腥天使 (060119, Homebrew)	Blastar
+ltorb1	印第安娜琼斯 (050717, Homebrew)	印第安娜琼斯 (050717, Homebrew)	Blastar
+beast	野兽之瞳 (Homebrew, 没有声音)	野兽之瞳 (Homebrew, 没有声音)	Psygnosis
+kof96cn	拳皇 '96 (中文版 1.0, hack)	拳皇 '96 (中文版 1.0, hack)	hack
+kof96ae	拳皇 '96 (十周年纪念版, EGHT hack)	拳皇 '96 (十周年纪念版, EGHT hack)	hack
+kof97cn	拳皇 '97 (十周年中文版, EGHT hack)	拳皇 '97 (十周年中文版, EGHT hack)	hack
 kof97xt	拳皇 '97 - 最终の决战 (hack)	拳皇 '97 - 最终の决战 (hack)	hack
-kof98ae	拳皇 '98 十周年纪念版 (EGHT hack)	拳皇 '98 十周年纪念版 (EGHT hack)	hack
-kf2k2ps2	拳皇 2002 - 终极挑战 PlayStation 2 (ver 0.4, EGHT hack)	拳皇 2002 - 终极挑战 PlayStation 2 (ver 0.4, EGHT hack)	hack
+kof98ae	拳皇 '98 - 梦战斗未结束 (Anniversary Edition, EGHT hack)	拳皇 '98 - 梦战斗未结束 (Anniversary Edition, EGHT hack)	hack
+kf2k2ps2	拳皇 2002 - 终极挑战 (PlayStation 2 ver 0.4, EGHT hack)	拳皇 2002 - 终极挑战 (PlayStation 2 ver 0.4, EGHT hack)	hack
 columnsh	宝石方块 (Sega 硬件 hack, 没有声音)	宝石方块 (Sega 硬件 hack, 没有声音)	hack
 zupapad	星星大作战! (custom C 解密)	星星大作战! (custom C 解密)	SNK
 kof99d	拳皇 '99 - 千年之战 (P 未加密, C 解密)	拳皇 '99 - 千年之战 (P 未加密, C 解密)	SNK
