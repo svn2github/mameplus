@@ -2110,13 +2110,17 @@ static slider_state *slider_init(running_machine *machine)
 	/* add CPU overclocking (cheat only) */
 	if (options_get_bool(mame_options(), OPTION_CHEAT))
 	{
+		//mamep: certain system has default clockscale other than 1.0f
+		extern float default_clockscales[];
+		int cpunum = 0;
 		for (device = machine->firstcpu; device != NULL; device = cpu_next(device))
 		{
 			void *param = (void *)device;
 			astring_printf(string, _("Overclock CPU %s"), device->tag);
 			//mamep: 4x overclock
-			*tailptr = slider_alloc(machine, astring_c(string), 10, 1000, 4000, 50, slider_overclock, param);
+			*tailptr = slider_alloc(machine, astring_c(string), 10, floor(default_clockscales[cpunum] * 1000.0f), 4000, 50, slider_overclock, param);
 			tailptr = &(*tailptr)->next;
+			cpunum ++;
 		}
 	}
 
@@ -2290,6 +2294,7 @@ static INT32 slider_overclock(running_machine *machine, void *arg, astring *stri
 		cpu_set_clockscale(cpu, (float)newval * 0.001f);
 	if (string != NULL)
 		astring_printf(string, "%3.0f%%", floor(cpu_get_clockscale(cpu) * 100.0f + 0.5f));
+
 	return floor(cpu_get_clockscale(cpu) * 1000.0f + 0.5f);
 }
 
@@ -2574,7 +2579,7 @@ static INT32 slider_overyoffset(running_machine *machine, void *arg, astring *st
 -------------------------------------------------*/
 
 static INT32 slider_flicker(running_machine *machine, void *arg, astring *string, INT32 newval)
-	{
+{
 	if (newval != SLIDER_NOCHANGE)
 		vector_set_flicker((float)newval * 0.1f);
 	if (string != NULL)
@@ -2589,7 +2594,7 @@ static INT32 slider_flicker(running_machine *machine, void *arg, astring *string
 -------------------------------------------------*/
 
 static INT32 slider_beam(running_machine *machine, void *arg, astring *string, INT32 newval)
-	{
+{
 	if (newval != SLIDER_NOCHANGE)
 		vector_set_beam((float)newval * 0.01f);
 	if (string != NULL)

@@ -13,6 +13,7 @@
 #include "profiler.h"
 #include "eminline.h"
 #include "debugger.h"
+#include "config.h"
 
 
 /***************************************************************************
@@ -122,6 +123,8 @@ struct _cpuexec_private
 static void update_clock_information(const device_config *device);
 static void compute_perfect_interleave(running_machine *machine);
 static void on_vblank(const device_config *device, void *param, int vblank_state);
+static void cpu_load(running_machine *machine, int config_type, xml_data_node *parentnode);
+static void cpu_save(running_machine *machine, int config_type, xml_data_node *parentnode);
 static TIMER_CALLBACK( trigger_partial_frame_interrupt );
 static TIMER_CALLBACK( trigger_periodic_interrupt );
 static TIMER_CALLBACK( triggertime_callback );
@@ -241,6 +244,9 @@ void cpuexec_init(running_machine *machine)
 	}
 	assert(min_quantum.seconds == 0);
 	timer_add_scheduling_quantum(machine, min_quantum.attoseconds, attotime_never);
+
+	/* register callbacks */
+	config_register(machine, "cpu", cpu_load, cpu_save);
 }
 
 
@@ -388,6 +394,91 @@ void cpuexec_boost_interleave(running_machine *machine, attotime timeslice_time,
 	if (timeslice_time.seconds > 0)
 		return;
 	timer_add_scheduling_quantum(machine, timeslice_time.attoseconds, boost_duration);
+}
+
+
+/***************************************************************************
+    CPU SAVE/LOAD
+***************************************************************************/
+
+float default_clockscales[32];
+
+/*-------------------------------------------------
+    cpu_load - read and apply data from the
+    configuration file
+-------------------------------------------------*/
+
+static void cpu_load(running_machine *machine, int config_type, xml_data_node *parentnode)
+{
+	const device_config *cpu;
+	xml_data_node *cpunode;
+	int cpunum;
+
+	//init default_clockscales table
+	if (default_clockscales[0] == 0)
+	{
+		cpunum = 0;
+		for (cpu = machine->firstcpu; cpu != NULL; cpu = cpu_next(cpu))
+		{
+			default_clockscales[cpunum] = cpu_get_clockscale(cpu);
+			cpunum ++;
+		}
+	}
+
+	/* we only care about game files */
+	if (config_type != CONFIG_TYPE_GAME)
+		return;
+
+	/* might not have any data */
+	if (parentnode == NULL)
+		return;
+
+	/* iterate over cpu nodes */
+	for (cpunode = xml_get_sibling(parentnode->child, "clock"); cpunode; cpunode = xml_get_sibling(cpunode->next, "clock"))
+	{
+		cpunum = xml_get_attribute_int(cpunode, "index", -1);
+
+		if (cpunum >= 0 && cpunum < cpu_count(machine->config))
+		{
+			float clockscale = xml_get_attribute_float(cpunode, "value", -1.0);
+			if (clockscale > 0)
+				cpu_set_clockscale(device_list_find_by_index(machine->config->devicelist, CPU, cpunum), clockscale);
+		}
+	}
+}
+
+
+/*-------------------------------------------------
+    cpu_save - save data to the configuration
+    file
+-------------------------------------------------*/
+
+static void cpu_save(running_machine *machine, int config_type, xml_data_node *parentnode)
+{
+	int cpunum = 0;
+	const device_config *cpu;
+
+	/* we only care about game files */
+	if (config_type != CONFIG_TYPE_GAME)
+		return;
+
+	/* iterate over mixer channels */
+	if (parentnode != NULL)
+		for (cpu = machine->firstcpu; cpu != NULL; cpu = cpu_next(cpu))
+		{
+			float clockscale = cpu_get_clockscale(cpu);
+
+			if (floor((default_clockscales[cpunum] - clockscale) * 1000.0f + 0.5f) != 0)
+			{
+				xml_data_node *channelnode = xml_add_child(parentnode, "clock", NULL);
+				if (channelnode != NULL)
+				{
+					xml_set_attribute_int(channelnode, "index", cpunum);
+					xml_set_attribute_float(channelnode, "value", clockscale);
+				}
+			}
+			cpunum ++;
+		}
 }
 
 
