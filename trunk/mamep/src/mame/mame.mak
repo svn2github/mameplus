@@ -1591,6 +1591,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/pangofun.o \
 	$(DRIVERS)/pasha2.o \
 	$(DRIVERS)/pass.o $(VIDEO)/pass.o \
+	$(DRIVERS)/pcat_dyn.o \
 	$(DRIVERS)/pcat_nit.o \
 	$(DRIVERS)/pcxt.o \
 	$(DRIVERS)/peplus.o \
@@ -1878,3 +1879,5 @@ $(MACHINE)/snes.o: 		$(MAMESRC)/machine/snesdsp1.c \
 				$(MAMESRC)/machine/snessdd1.c \
 				$(MAMESRC)/machine/snes7110.c \
 				$(MAMESRC)/machine/snesst10.c
+$(VIDEO)/model2.o: 		$(MAMESRC)/video/model2rd.c
+$(VIDEO)/model3.o: 		$(MAMESRC)/video/m3raster.c
