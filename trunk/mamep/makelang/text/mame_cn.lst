@@ -96,10 +96,10 @@ galaxiana	小蜜蜂 (Namco 第2套)	小蜜蜂 (Namco 第2套)	Namco
 galaxianm	小蜜蜂 (Midway 第1套)	小蜜蜂 (Midway 第1套)	[Namco] (Midway license)
 galaxianmo	小蜜蜂 (Midway 第2套)	小蜜蜂 (Midway 第2套)	[Namco] (Midway license)
 galaxiant	小蜜蜂 (Taito)	小蜜蜂 (Taito)	[Namco] (Taito license)
-superg	超级小蜜蜂 (galaxiaj hack)	超级小蜜蜂 (galaxiaj hack)	hack
+superg	超级小蜜蜂 (galaxiana hack)	超级小蜜蜂 (galaxiana hack)	hack
 galapx	小蜜蜂 PX (moonaln hack)	小蜜蜂 PX (moonaln hack)	hack
 moonaln	小蜜蜂 - 月球异形	小蜜蜂 - 月球异形	[Nichibutsu] (Karateco license)
-galap1	小蜜蜂 P1 (galaxiaj hack)	小蜜蜂 P1 (galaxiaj hack)	hack
+galap1	小蜜蜂 P1 (galaxiana hack)	小蜜蜂 P1 (galaxiana hack)	hack
 galap4	小蜜蜂 P4 (hack)	小蜜蜂 P4 (hack)	G.G.I
 galturbo	小蜜蜂 - 极速版 (superg hack)	小蜜蜂 - 极速版 (superg hack)	hack
 swarm	小蜜蜂 (盗版?)	小蜜蜂 (盗版?)	Subelectro
@@ -198,6 +198,7 @@ tdpgal	三合扑克	三合扑克	Design Labs / Thomas Automatics
 rockclim	攀岩者	攀岩者	Taito
 scramble	紧急起飞 混乱	紧急起飞 混乱	Konami
 scrambles	紧急起飞 混乱 (Stern)	紧急起飞 混乱 (Stern)	[Konami] (Stern license)
+scramblebf	紧急起飞 混乱 (Karateko, 法国 盗版)	紧急起飞 混乱 (Karateko, 法国 盗版)	Karateko (bootleg)
 scramblb	紧急起飞 混乱 (Galaxian 硬件)	紧急起飞 混乱 (Galaxian 硬件)	bootleg
 scramb2	紧急起飞 混乱 (盗版)	紧急起飞 混乱 (盗版)	bootleg
 explorer	紧急起飞 探测器	紧急起飞 探测器	bootleg
@@ -622,6 +623,7 @@ topracrb	顶尖赛手 (第3套)	顶尖赛手 (第3套)	bootleg
 polepos2	顶尖赛手 2	顶尖赛手 2	Namco
 polepos2a	顶尖赛手 2 (雅达利)	顶尖赛手 2 (雅达利)	Namco (Atari license)
 polepos2b	顶尖赛手 2 (盗版)	顶尖赛手 2 (盗版)	bootleg
+polepos2bi	Gran Premio F1 (意大利盗版 顶尖赛手 II)	Gran Premio F1 (意大利盗版 顶尖赛手 II)	bootleg
 pacland	小精灵世界 (世界版)	小精灵世界 (世界版)	Namco
 pacland2	小精灵世界 (日版 新版)	小精灵世界 (日版 新版)	Namco
 pacland3	小精灵世界 (日版 旧版)	小精灵世界 (日版 旧版)	Namco
@@ -2402,6 +2404,7 @@ dstlk	恶魔战士 - 午夜斗士 (欧洲版 940705)	恶魔战士 - 午夜斗士 (欧洲版 940705)	Ca
 dstlku	恶魔战士 - 午夜斗士 (美版 940818)	恶魔战士 - 午夜斗士 (美版 940818)	Capcom
 dstlkur1	恶魔战士 - 午夜斗士 (美版 940705)	恶魔战士 - 午夜斗士 (美版 940705)	Capcom
 dstlka	恶魔战士 - 午夜斗士 (亚洲版 940705)	恶魔战士 - 午夜斗士 (亚洲版 940705)	Capcom
+dstlkh	恶魔战士 - 午夜斗士 (西班牙版 940818)	恶魔战士 - 午夜斗士 (西班牙版 940818)	Capcom
 vampj	恶魔战士 - 午夜斗士 (日版 940705)	恶魔战士 - 午夜斗士 (日版 940705)	Capcom
 vampja	恶魔战士 - 午夜斗士 (日版 940705 alt)	恶魔战士 - 午夜斗士 (日版 940705 alt)	Capcom
 vampjr1	恶魔战士 - 午夜斗士 (日版 940630)	恶魔战士 - 午夜斗士 (日版 940630)	Capcom
@@ -3788,6 +3791,8 @@ smlg99	超级职业联盟 '99	超级职业联盟 '99	Sega
 pstone	能量宝石 (JPN, USA, EUR, ASI, AUS)	能量宝石 (JPN, USA, EUR, ASI, AUS)	Capcom
 crzytaxi	疯狂出租车 (JPN, USA, EXP, KOR, AUS)	疯狂出租车 (JPN, USA, EXP, KOR, AUS)	Sega
 zombrvn	僵尸复仇 (JPN, USA, EXP, KOR, AUS)	僵尸复仇 (JPN, USA, EXP, KOR, AUS)	Sega
+airlbios	Naomi Airline Pilots Deluxe Bios	Naomi Airline Pilots Deluxe Bios	Sega
+alpiltdx	航空驾驶员豪华版	航空驾驶员豪华版	Sega
 ggram2	全日本职业摔角 (JPN, USA, EXP, KOR, AUS)	全日本职业摔角 (JPN, USA, EXP, KOR, AUS)	Sega
 f355bios	Naomi Ferrari F355 Challenge Bios	Naomi Ferrari F355 Challenge Bios	Sega
 f355	法拉利 F355 挑战赛	法拉利 F355 挑战赛	Sega
@@ -4264,6 +4269,7 @@ pbaction	弹珠台 (第1套)	弹珠台 (第1套)	Tehkan
 pbaction2	弹珠台 (第2套)	弹珠台 (第2套)	Tehkan
 pbaction3	弹珠台 (第3套, 加密版)	弹珠台 (第3套, 加密版)	Tehkan
 pbaction4	弹珠台 (第4套, 加密版)	弹珠台 (第4套, 加密版)	Tehkan
+pbaction5	弹珠台 (第5套, 加密版)	弹珠台 (第5套, 加密版)	Tehkan
 ponttehk	益智扑克 (Tehkan)	益智扑克 (Tehkan)	Tehkan
 lvpoker	可爱扑克 [BET]	可爱扑克 [BET]	Tehkan
 lvcards	美女 5PK	美女 5PK	Tehkan
@@ -4350,6 +4356,7 @@ tp84	时空大战 '84 (第1套)	时空大战 '84 (第1套)	Konami
 tp84a	时空大战 '84 (第2套)	时空大战 '84 (第2套)	Konami
 tp84b	时空大战 '84 (第3套)	时空大战 '84 (第3套)	Konami
 hyperspt	84 柯拿米运动会	84 柯拿米运动会	Konami (Centuri license)
+hypersptb	84 柯拿米运动会	84 (盗版)	84 柯拿米运动会	84 (盗版)	bootleg
 hpolym84	84 柯拿米运动会 - 疯狂奥运 84	84 柯拿米运动会 - 疯狂奥运 84	Konami
 sbasketb	超级篮球 (版本 I, 加密)	超级篮球 (版本 I, 加密)	Konami
 sbasketh	超级篮球 (版本 H, 未保护)	超级篮球 (版本 H, 未保护)	Konami
@@ -4804,7 +4811,8 @@ avalnche	雪崩	雪崩	Atari
 cascade	雪崩 Cascade	雪崩 Cascade	Sidam
 firetrk	消防车	消防车	Atari
 skydiver	定点跳伞	定点跳伞	Atari
-sbrkout	超级打砖王	超级打砖王	Atari
+sbrkout3	超级打砖王 (rev 03)	超级打砖王 (rev 03)	Atari
+sbrkout	超级打砖王 (rev 04)	超级打砖王 (rev 04)	Atari
 atarifb	雅达利橄榄球 78 (校正版 2)	雅达利橄榄球 78 (校正版 2)	Atari
 atarifb1	雅达利橄榄球 78 (校正版 1)	雅达利橄榄球 78 (校正版 1)	Atari
 orbit	太空轨道	太空轨道	Atari
@@ -6064,7 +6072,7 @@ heatbrlo	狂热印地安 (世界版 旧版)	狂热印地安 (世界版 旧版)	Tad
 heatbrlu	狂热印地安 (美版)	狂热印地安 (美版)	Tad
 godzilla	酷斯拉	酷斯拉	Banpresto
 denjinmk	电神魔傀	电神魔傀	Banpresto
-sdgndmrb	SD 高达 三国志 - 彩虹大陆战记	SD 高达 三国志 - 彩虹大陆战记	Banpresto
+grainbow	SD 高达 三国志 - 彩虹大陆战记	SD 高达 三国志 - 彩虹大陆战记	Banpresto
 cupsoc	西武杯英式足球 (第1套)	西武杯英式足球 (第1套)	Seibu
 cupsoca	西武杯英式足球 (第2套)	西武杯英式足球 (第2套)	Seibu
 cupsocs	西武杯足球 (第1套)	西武杯足球 (第1套)	Seibu
@@ -6367,8 +6375,8 @@ sandscrpa	沙漠之蝎 (早期版)	沙漠之蝎 (早期版)	Face
 sandscrpb	沙漠之蝎 (Revised Hardware)	沙漠之蝎 (Revised Hardware)	Face
 explbrkr	爆裂战机 Explosive	爆裂战机 Explosive	Kaneko
 bakubrkr	爆裂战机	爆裂战机	Kaneko
-shogwarr	幕府快打 (美版)	幕府快打 (美版)	Kaneko
-shogwarre	幕府快打 (世界版)	幕府快打 (世界版)	Kaneko
+shogwarr	幕府快打 (世界版)	幕府快打 (世界版)	Kaneko
+shogwarru	幕府快打 (美版)	幕府快打 (美版)	Kaneko
 fjbuster	幕府快打 - 富士山 BUSTER (日版)	幕府快打 - 富士山 BUSTER (日版)	Kaneko
 brapboys	嘻哈男孩 (世界版)	嘻哈男孩 (世界版)	Kaneko
 brapboysj	嘻哈男孩 特别版 (日版)	嘻哈男孩 特别版 (日版)	Kaneko
@@ -6868,6 +6876,7 @@ ddenlovr	决战于黑白之间 Vol.1 (香港版)	决战于黑白之间 Vol.1 (香港版)	Dynax
 ddenlovb	决战于黑白之间 Vol. 1 (韩国版, 盗版)	决战于黑白之间 Vol. 1 (韩国版, 盗版)	[Dynax] (bootleg)
 hanakanz	花扎华簪 (日版)	花扎华簪 (日版)	Dynax
 akamaru	问答 - 中日本艺能竞猜游戏	问答 - 中日本艺能竞猜游戏	Dynax (Nakanihon licence)
+sryudens	麻雀 - 圣龙传说 (日版, NM502)	麻雀 - 圣龙传说 (日版, NM502)	Dynax / Face
 mjflove	麻雀幻想的爱 (日版)	麻雀幻想的爱 (日版)	Nakanihon
 hkagerou	花扎华阳炎 [BET] (日版)	花扎华阳炎 [BET] (日版)	Nakanihon + Dynax
 realbrk	超真实撞球 - 撞球学园 (欧洲版)	超真实撞球 - 撞球学园 (欧洲版)	Nakanihon
@@ -6878,6 +6887,7 @@ mjchuuka	麻雀中华儿女 (中国版)	麻雀中华儿女 (中国版)	Dynax
 mjreach1	麻雀立直一发 (日版)	麻雀立直一发 (日版)	Nihon System
 cafebrk	麻雀咖啡屋	麻雀咖啡屋	Nakanihon / Dynax
 jongtei	麻雀 - 雀帝 (日版, ver. NM532-01)	麻雀 - 雀帝 (日版, ver. NM532-01)	Dynax
+daimyojn	麻雀 - 大明神 (日版, T017-PB-00)	麻雀 - 大明神 (日版, T017-PB-00)	Dynax / Techno-Top / Techno-Planning
 pkgnsh	柏青哥银玉胜负 (日版)	柏青哥银玉胜负 (日版)	Nakanihon / Dynax
 pkgnshdx	柏青哥银玉胜负 DX (日版)	柏青哥银玉胜负 DX (日版)	Nakanihon / Dynax
 hjingi	华仁义 (日版, Bet)	华仁义 (日版, Bet)	Dynax
@@ -7085,6 +7095,7 @@ cheesech	干酪追逐	干酪追逐	Art & Magic
 stonebal	石头球 (4 Players)	石头球 (4 Players)	Art & Magic
 stonebal2	石头球 (2 Players)	石头球 (2 Players)	Art & Magic
 skeetsht	街头射击	街头射击	Dynamo
+toursol	Tournament Solitaire	Tournament Solitaire	Dynamo
 dynamski	动态滑雪	动态滑雪	Taiyo
 chinhero	中华英雄	中华英雄	Taiyo
 chinhero2	中华英雄 (旧版)	中华英雄 (旧版)	Taiyo
@@ -7989,6 +8000,7 @@ lucky74	幸运 74 (盗版, 第1套)	幸运 74 (盗版, 第1套)	Wing Co.,Ltd.
 lucky74a	幸运 74 (盗版, 第2套)	幸运 74 (盗版, 第2套)	Wing Co.,Ltd.
 lucky8	新幸运 8 线 (第1套)	新幸运 8 线 (第1套)	Wing Co.Ltd / GEI
 lucky8a	新幸运 8 线 (第2套)	新幸运 8 线 (第2套)	Wing Co.Ltd / GEI
+lucky8b	新幸运 8 线 (第3套, extended gfx)	新幸运 8 线 (第3套, extended gfx)	Wing Co.Ltd / GEI
 luckgrln	幸运女孩 (基于新 Z180 硬件)	幸运女孩 (基于新 Z180 硬件)	Wing
 skill98	冠军 '98 (ver. s98-1.33)	冠军 '98 (ver. s98-1.33)	Amcoe
 match98	运动竞赛 '98 (ver. 1.33)	运动竞赛 '98 (ver. 1.33)	Amcoe
