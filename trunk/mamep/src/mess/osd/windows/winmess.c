@@ -68,7 +68,7 @@ file_error osd_get_temp_filename(char *buffer, size_t buffer_len, const char *ba
 	if (!basename)
 		basename = "tempfile.tmp";
 
-	GetTempPath(sizeof(tempbuf) / sizeof(tempbuf[0]), tempbuf);
+	GetTempPath(ARRAY_LENGTH(tempbuf), tempbuf);
 	t_filename = tstring_from_utf8(basename);
 	_tcscat(tempbuf, t_filename);
 	free(t_filename);
@@ -481,7 +481,7 @@ int osd_num_devices(void)
 	char *p;
 	int i;
 
-	GetLogicalDriveStringsA(sizeof(szBuffer) / sizeof(szBuffer[0]), szBuffer);
+	GetLogicalDriveStringsA(ARRAY_LENGTH(szBuffer), szBuffer);
 
 	i = 0;
 	for (p = szBuffer; *p; p += (strlen(p) + 1))
@@ -494,7 +494,7 @@ const char *osd_get_device_name(int idx)
 	static char szBuffer[128];
 	const char *p;
 
-	GetLogicalDriveStringsA(sizeof(szBuffer) / sizeof(szBuffer[0]), szBuffer);
+	GetLogicalDriveStringsA(ARRAY_LENGTH(szBuffer), szBuffer);
 
 	p = szBuffer;
 	while(idx--)

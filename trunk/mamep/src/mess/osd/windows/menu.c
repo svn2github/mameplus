@@ -212,7 +212,7 @@ static void customize_input(running_machine *machine, HWND wnd, const char *titl
 	/* check to see if there is any custom artwork for this configure dialog,
 	 * and if so, retrieve the info */
 	portslot_count = artwork_get_inputscreen_customizations(&png, cust_type, section,
-		customizations, sizeof(customizations) / sizeof(customizations[0]));
+		customizations, ARRAY_LENGTH(customizations));
 
 	/* zero out the portslots that correspond to customizations */
 	memset(portslots, 0, sizeof(portslots[0]) * portslot_count);
@@ -266,7 +266,7 @@ static void customize_input(running_machine *machine, HWND wnd, const char *titl
 					 * want to reorder the tab order */
 					if (customizations[i].ipt == IPT_END)
 						i = portslot_count++;
-					if (i < (sizeof(portslots) / sizeof(portslots[0])))
+					if (i < ARRAY_LENGTH(portslots))
 					{
 						portslots[i].field = field;
 						portslots[i].pr = pr;
@@ -277,8 +277,8 @@ static void customize_input(running_machine *machine, HWND wnd, const char *titl
 	}
 
 	/* finally add the portselects to the dialog */
-	if (portslot_count > (sizeof(portslots) / sizeof(portslots[0])))
-		portslot_count = sizeof(portslots) / sizeof(portslots[0]);
+	if (portslot_count > ARRAY_LENGTH(portslots))
+		portslot_count = ARRAY_LENGTH(portslots);
 	for (i = 0; i < portslot_count; i++)
 	{
 		if (portslots[i].field)
@@ -531,17 +531,17 @@ static void customize_analogcontrols(running_machine *machine, HWND wnd)
 				input_field_get_user_settings(field, &settings);
 				name = _(input_field_name(field));
 
-				_snprintf(buf, sizeof(buf) / sizeof(buf[0]),
+				_snprintf(buf, ARRAY_LENGTH(buf),
 					"%s %s", name, _("Digital Speed"));
 				if (win_dialog_add_adjuster(dlg, buf, settings.delta, 1, 255, FALSE, store_delta, (void *) field))
 					goto done;
 
-				_snprintf(buf, sizeof(buf) / sizeof(buf[0]),
+				_snprintf(buf, ARRAY_LENGTH(buf),
 					"%s %s", name, _("Autocenter Speed"));
 				if (win_dialog_add_adjuster(dlg, buf, settings.centerdelta, 1, 255, FALSE, store_centerdelta, (void *) field))
 					goto done;
 
-				_snprintf(buf, sizeof(buf) / sizeof(buf[0]),
+				_snprintf(buf, ARRAY_LENGTH(buf),
 					"%s %s", name, _("Reverse"));
 				if (win_dialog_add_combobox(dlg, buf, settings.reverse ? 1 : 0, store_reverse, (void *) field))
 					goto done;
@@ -550,7 +550,7 @@ static void customize_analogcontrols(running_machine *machine, HWND wnd)
 				if (win_dialog_add_combobox_item(dlg, ui_getstring(UI_on), 1))
 					goto done;
 
-				_snprintf(buf, sizeof(buf) / sizeof(buf[0]),
+				_snprintf(buf, ARRAY_LENGTH(buf),
 					"%s %s", name, _("Sensitivity"));
 				if (win_dialog_add_adjuster(dlg, buf, settings.sensitivity, 1, 255, TRUE, store_sensitivity, (void *) field))
 					goto done;
@@ -590,7 +590,7 @@ static void state_dialog(HWND wnd, win_file_dialog_type dlgtype,
 	}
 	else
 	{
-		snprintf(state_filename, sizeof(state_filename) / sizeof(state_filename[0]),
+		snprintf(state_filename, ARRAY_LENGTH(state_filename),
 			_WINDOWS("%s State.sta"), _LST(machine->gamedrv->description));
 		dir = NULL;
 
@@ -688,7 +688,7 @@ static void format_combo_changed(dialog_box *dialog, HWND dlgwnd, NMHDR *notific
 	while((wnd = FindWindowEx(dlgwnd, wnd, NULL, NULL)) != NULL)
 	{
 		// get label text, removing trailing NULL
-		GetWindowText(wnd, t_buf1, sizeof(t_buf1) / sizeof(t_buf1[0]));
+		GetWindowText(wnd, t_buf1, ARRAY_LENGTH(t_buf1));
 		buf1 = utf8_from_tstring(t_buf1);
 		assert(buf1[strlen(buf1)-1] == ':');
 		buf1[strlen(buf1)-1] = '\0';
@@ -749,7 +749,7 @@ static void storeval_option_resolution(void *storeval_param, int val)
 		*(params->fdparams->create_args) = resolution;
 	}
 
-	snprintf(buf, sizeof(buf) / sizeof(buf[0]), "%d", val);
+	snprintf(buf, ARRAY_LENGTH(buf), "%d", val);
 	option_resolution_add_param(resolution, params->guide_entry->identifier, buf);
 }
 
@@ -820,7 +820,7 @@ static dialog_box *build_option_dialog(const device_config *dev, char *filter, s
 			switch(guide_entry->option_type)
 			{
 				case OPTIONTYPE_INT:
-					snprintf(buf, sizeof(buf) / sizeof(buf[0]), "%s:", guide_entry->display_name);
+					snprintf(buf, ARRAY_LENGTH(buf), "%s:", guide_entry->display_name);
 					if (win_dialog_add_combobox(dialog, buf, 0, storeval_option_resolution, storeval_params))
 						goto error;
 					break;
@@ -980,19 +980,19 @@ static void change_device(HWND wnd, const device_config *device, int is_save)
 		&& (image_device_get_creation_option_guide(device) != NULL)
 		&& (image_device_get_creatable_formats(device) != NULL))
 	{
-		dialog = build_option_dialog(device, filter, sizeof(filter) / sizeof(filter[0]), &create_format, &create_args);
+		dialog = build_option_dialog(device, filter, ARRAY_LENGTH(filter), &create_format, &create_args);
 		if (!dialog)
 			goto done;
 	}
 	else
 	{
 		// build a normal filter
-		build_generic_filter(device, is_save, filter, sizeof(filter) / sizeof(filter[0]));
+		build_generic_filter(device, is_save, filter, ARRAY_LENGTH(filter));
 	}
 
 	// display the dialog
 	result = win_file_dialog(device->machine, wnd, is_save ? WIN_FILE_DIALOG_SAVE : WIN_FILE_DIALOG_OPEN,
-		dialog, filter, initial_dir, filename, sizeof(filename) / sizeof(filename[0]));
+		dialog, filter, initial_dir, filename, ARRAY_LENGTH(filename));
 	if (result)
 	{
 		// mount the image
@@ -1321,7 +1321,7 @@ static void setup_joystick_menu(running_machine *machine, HMENU menu_bar)
 		{
 			for(i = 0; i < joystick_count; i++)
 			{
-				snprintf(buf, sizeof(buf) / sizeof(buf[0]), _WINDOWS("Joystick %i"), i + 1);
+				snprintf(buf, ARRAY_LENGTH(buf), _WINDOWS("Joystick %i"), i + 1);
 				append_menu_utf8(joystick_menu, MF_STRING, ID_JOYSTICK_0 + i, buf);
 				child_count++;
 			}
@@ -1557,7 +1557,7 @@ static void prepare_menus(HWND wnd)
 		s = image_exists(img) ? image_filename(img) : ui_getstring(UI_emptyslot);
 		flags = MF_POPUP;
 
-		snprintf(buf, sizeof(buf) / sizeof(buf[0]), "%s: %s", image_typename_id(img), s);
+		snprintf(buf, ARRAY_LENGTH(buf), "%s: %s", image_typename_id(img), s);
 		append_menu_by_pos_utf8(file_menu, pos++, flags, 0, sub_menu, buf);
 	}
 	if (pos)
@@ -1749,7 +1749,7 @@ static void help_about_mess(HWND wnd)
 static void help_about_thissystem(running_machine *machine, HWND wnd)
 {
 	char buf[256];
-	snprintf(buf, sizeof(buf) / sizeof(buf[0]), "mess.chm::/sysinfo/%s.htm", machine->gamedrv->name);
+	snprintf(buf, ARRAY_LENGTH(buf), "mess.chm::/sysinfo/%s.htm", machine->gamedrv->name);
 	help_display(wnd, buf);
 }
 
@@ -2105,7 +2105,7 @@ int win_setup_menus(running_machine *machine, HMODULE module, HMENU menu_bar)
 
 	// get the device icons
 	memset(device_icons, 0, sizeof(device_icons));
-	for (i = 0; i < sizeof(bitmap_ids) / sizeof(bitmap_ids[0]); i++)
+	for (i = 0; i < ARRAY_LENGTH(bitmap_ids); i++)
 		device_icons[bitmap_ids[i][0]] = LoadIcon(module, MAKEINTRESOURCE(bitmap_ids[i][1]));
 
 	// remove the profiler menu item if it doesn't exist
@@ -2132,12 +2132,12 @@ int win_setup_menus(running_machine *machine, HMODULE module, HMENU menu_bar)
 		return 1;
 	for(i = 0; i < frameskip_level_count(); i++)
 	{
-		snprintf(buf, sizeof(buf) / sizeof(buf[0]), "%i", i);
+		snprintf(buf, ARRAY_LENGTH(buf), "%i", i);
 		append_menu_utf8(frameskip_menu, MF_STRING, ID_FRAMESKIP_0 + i, buf);
 	}
 
 	// set the help menu to refer to this machine
-	snprintf(buf, sizeof(buf) / sizeof(buf[0]), _WINDOWS("About %s (%s)..."), _LST(machine->gamedrv->description), machine->gamedrv->name);
+	snprintf(buf, ARRAY_LENGTH(buf), _WINDOWS("About %s (%s)..."), _LST(machine->gamedrv->description), machine->gamedrv->name);
 	set_menu_text(menu_bar, ID_HELP_ABOUTSYSTEM, buf);
 	translate_menu(menu_bar);
 	return 0;
