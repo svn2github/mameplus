@@ -68,27 +68,42 @@ DC00      - Selection buttons #2, 9-16 (R)
 #include "video/smsvdp.h"
 #include "devices/cartslot.h"
 
+#include "sms1.lh"
+
 #define MASTER_CLOCK_PAL	53203400	/* This might be a tiny bit too low */
 
+
+static ADDRESS_MAP_START( sms1_mem, ADDRESS_SPACE_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0x03ff) AM_ROMBANK(1)					/* First 0x0400 part always points to first page */
+	AM_RANGE(0x0400, 0x3fff) AM_ROMBANK(2)					/* switchable rom bank */
+	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK(3)					/* switchable rom bank */
+	AM_RANGE(0x8000, 0x9fff) AM_READWRITE(SMH_BANK(4), sms_cartram_w)	/* ROM bank / on-cart RAM */
+	AM_RANGE(0xa000, 0xbfff) AM_READWRITE(SMH_BANK(5), sms_cartram2_w)	/* ROM bank / on-cart RAM */
+	AM_RANGE(0xc000, 0xdff7) AM_MIRROR(0x2000) AM_RAM			/* RAM (mirror at 0xE000) */
+	AM_RANGE(0xdff8, 0xdfff) AM_RAM						/* RAM "underneath" frame registers */
+	AM_RANGE(0xfff8, 0xfffb) AM_READWRITE(sms_sscope_r, sms_sscope_w)	/* 3-D glasses */
+	AM_RANGE(0xfffc, 0xffff) AM_READWRITE(sms_mapper_r, sms_mapper_w)	/* Bankswitch control */
+ADDRESS_MAP_END
+
 static ADDRESS_MAP_START( sms_mem, ADDRESS_SPACE_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x03FF) AM_ROMBANK(1)					/* First 0x0400 part always points to first page */
-	AM_RANGE(0x0400, 0x3FFF) AM_ROMBANK(2)					/* switchable rom bank */
-	AM_RANGE(0x4000, 0x7FFF) AM_ROMBANK(3)					/* switchable rom bank */
-	AM_RANGE(0x8000, 0x9FFF) AM_READWRITE(SMH_BANK(4), sms_cartram_w)	/* ROM bank / on-cart RAM */
-	AM_RANGE(0xA000, 0xBFFF) AM_READWRITE(SMH_BANK(5), sms_cartram2_w)	/* ROM bank / on-cart RAM */
-	AM_RANGE(0xC000, 0xDFFB) AM_MIRROR(0x2000) AM_RAM			/* RAM (mirror at 0xE000) */
-	AM_RANGE(0xDFFC, 0xDFFF) AM_RAM						/* RAM "underneath" frame registers */
-	AM_RANGE(0xFFFC, 0xFFFF) AM_READWRITE(sms_mapper_r, sms_mapper_w)	/* Bankswitch control */
+	AM_RANGE(0x0000, 0x03ff) AM_ROMBANK(1)					/* First 0x0400 part always points to first page */
+	AM_RANGE(0x0400, 0x3fff) AM_ROMBANK(2)					/* switchable rom bank */
+	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK(3)					/* switchable rom bank */
+	AM_RANGE(0x8000, 0x9fff) AM_READWRITE(SMH_BANK(4), sms_cartram_w)	/* ROM bank / on-cart RAM */
+	AM_RANGE(0xa000, 0xbfff) AM_READWRITE(SMH_BANK(5), sms_cartram2_w)	/* ROM bank / on-cart RAM */
+	AM_RANGE(0xc000, 0xdffb) AM_MIRROR(0x2000) AM_RAM			/* RAM (mirror at 0xE000) */
+	AM_RANGE(0xdffc, 0xdfff) AM_RAM						/* RAM "underneath" frame registers */
+	AM_RANGE(0xfffc, 0xffff) AM_READWRITE(sms_mapper_r, sms_mapper_w)	/* Bankswitch control */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sms_store_mem, ADDRESS_SPACE_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x3FFF) AM_ROM						/* BIOS */
-	AM_RANGE(0x4000, 0x47FF) AM_RAM						/* RAM */
-	AM_RANGE(0x6000, 0x7FFF) AM_ROMBANK(10)					/* Cartridge/card peek area */
+	AM_RANGE(0x0000, 0x3fff) AM_ROM						/* BIOS */
+	AM_RANGE(0x4000, 0x47ff) AM_RAM						/* RAM */
+	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK(10)					/* Cartridge/card peek area */
 	AM_RANGE(0x8000, 0x8000) AM_READWRITE(sms_store_control_r, sms_store_control_w)	/* Control */
-	AM_RANGE(0xC000, 0xC000) AM_READWRITE(sms_store_cart_select_r, sms_store_cart_select_w) 	/* cartridge/card slot selector */
-	AM_RANGE(0xD800, 0xD800) AM_READ(sms_store_select1)			/* Game selector port #1 */
-	AM_RANGE(0xDC00, 0xDC00) AM_READ(sms_store_select2)			/* Game selector port #2 */
+	AM_RANGE(0xc000, 0xc000) AM_READWRITE(sms_store_cart_select_r, sms_store_cart_select_w) 	/* cartridge/card slot selector */
+	AM_RANGE(0xd800, 0xd800) AM_READ(sms_store_select1)			/* Game selector port #1 */
+	AM_RANGE(0xdc00, 0xdc00) AM_READ(sms_store_select2)			/* Game selector port #2 */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sms_io, ADDRESS_SPACE_IO, 8 )
@@ -96,30 +111,30 @@ static ADDRESS_MAP_START( sms_io, ADDRESS_SPACE_IO, 8 )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x3e) AM_WRITE(sms_bios_w)
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x3e) AM_WRITE(sms_io_control_w)
-	AM_RANGE(0x40, 0x7F)                 AM_READ(sms_count_r)
-	AM_RANGE(0x40, 0x7F)                 AM_DEVWRITE("smsiii", sn76496_w)
+	AM_RANGE(0x40, 0x7f)                 AM_READ(sms_count_r)
+	AM_RANGE(0x40, 0x7f)                 AM_DEVWRITE("smsiii", sn76496_w)
 	AM_RANGE(0x80, 0x80) AM_MIRROR(0x3e) AM_DEVREADWRITE("sms_vdp", sms_ms_vdp_data_r, sms_ms_vdp_data_w)
 	AM_RANGE(0x81, 0x81) AM_MIRROR(0x3e) AM_DEVREADWRITE("sms_vdp", sms_ms_vdp_ctrl_r, sms_ms_vdp_ctrl_w)
-	AM_RANGE(0xC0, 0xC0) AM_MIRROR(0x1e) AM_READ(sms_input_port_0_r)
-	AM_RANGE(0xC1, 0xC1) AM_MIRROR(0x1e) AM_READ(sms_input_port_1_r)
-	AM_RANGE(0xE0, 0xE0) AM_MIRROR(0x0e) AM_READ(sms_input_port_0_r)
-	AM_RANGE(0xE1, 0xE1) AM_MIRROR(0x0e) AM_READ(sms_input_port_1_r)
-	AM_RANGE(0xF0, 0xF0)				 AM_READWRITE(sms_input_port_0_r, sms_ym2413_register_port_0_w)
-	AM_RANGE(0xF1, 0xF1)                 AM_READWRITE(sms_input_port_1_r, sms_ym2413_data_port_0_w)
-	AM_RANGE(0xF2, 0xF2)				 AM_READWRITE(sms_fm_detect_r, sms_fm_detect_w)
-	AM_RANGE(0xF3, 0xF3)                 AM_READ(sms_input_port_1_r)
-	AM_RANGE(0xF4, 0xF4) AM_MIRROR(0x02) AM_READ(sms_input_port_0_r)
-	AM_RANGE(0xF5, 0xF5) AM_MIRROR(0x02) AM_READ(sms_input_port_1_r)
-	AM_RANGE(0xF8, 0xF8) AM_MIRROR(0x06) AM_READ(sms_input_port_0_r)
-	AM_RANGE(0xF9, 0xF9) AM_MIRROR(0x06) AM_READ(sms_input_port_1_r)
+	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x1e) AM_READ(sms_input_port_0_r)
+	AM_RANGE(0xc1, 0xc1) AM_MIRROR(0x1e) AM_READ(sms_input_port_1_r)
+	AM_RANGE(0xe0, 0xe0) AM_MIRROR(0x0e) AM_READ(sms_input_port_0_r)
+	AM_RANGE(0xe1, 0xe1) AM_MIRROR(0x0e) AM_READ(sms_input_port_1_r)
+	AM_RANGE(0xf0, 0xf0)                 AM_READWRITE(sms_input_port_0_r, sms_ym2413_register_port_0_w)
+	AM_RANGE(0xf1, 0xf1)                 AM_READWRITE(sms_input_port_1_r, sms_ym2413_data_port_0_w)
+	AM_RANGE(0xf2, 0xf2)                 AM_READWRITE(sms_fm_detect_r, sms_fm_detect_w)
+	AM_RANGE(0xf3, 0xf3)                 AM_READ(sms_input_port_1_r)
+	AM_RANGE(0xf4, 0xf4) AM_MIRROR(0x02) AM_READ(sms_input_port_0_r)
+	AM_RANGE(0xf5, 0xf5) AM_MIRROR(0x02) AM_READ(sms_input_port_1_r)
+	AM_RANGE(0xf8, 0xf8) AM_MIRROR(0x06) AM_READ(sms_input_port_0_r)
+	AM_RANGE(0xf9, 0xf9) AM_MIRROR(0x06) AM_READ(sms_input_port_1_r)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( gg_io, ADDRESS_SPACE_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	ADDRESS_MAP_UNMAP_HIGH
-	AM_RANGE(0x00, 0x00)				 AM_READ(gg_input_port_2_r)
-	AM_RANGE(0x01, 0x05)				 AM_READWRITE(gg_sio_r, gg_sio_w)
-	AM_RANGE(0x06, 0x06)				 AM_READWRITE(gg_psg_r, gg_psg_w)
+	AM_RANGE(0x00, 0x00)                 AM_READ(gg_input_port_2_r)
+	AM_RANGE(0x01, 0x05)                 AM_READWRITE(gg_sio_r, gg_sio_w)
+	AM_RANGE(0x06, 0x06)                 AM_READWRITE(gg_psg_r, gg_psg_w)
 	AM_RANGE(0x07, 0x07)                 AM_WRITE(sms_io_control_w)
 	AM_RANGE(0x08, 0x08) AM_MIRROR(0x06) AM_WRITE(sms_bios_w)
 	AM_RANGE(0x09, 0x09) AM_MIRROR(0x06) AM_WRITE(sms_io_control_w)
@@ -127,14 +142,14 @@ static ADDRESS_MAP_START( gg_io, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x11, 0x11) AM_MIRROR(0x0e) AM_WRITE(sms_io_control_w)
 	AM_RANGE(0x20, 0x20) AM_MIRROR(0x1e) AM_WRITE(sms_bios_w)
 	AM_RANGE(0x21, 0x21) AM_MIRROR(0x1e) AM_WRITE(sms_io_control_w)
-	AM_RANGE(0x40, 0x7F)                 AM_READ(sms_count_r)
-	AM_RANGE(0x40, 0x7F)                 AM_DEVWRITE("gamegear", sn76496_w)
+	AM_RANGE(0x40, 0x7f)                 AM_READ(sms_count_r)
+	AM_RANGE(0x40, 0x7f)                 AM_DEVWRITE("gamegear", sn76496_w)
 	AM_RANGE(0x80, 0x80) AM_MIRROR(0x3e) AM_DEVREADWRITE("sms_vdp", sms_ms_vdp_data_r, sms_ms_vdp_data_w)
 	AM_RANGE(0x81, 0x81) AM_MIRROR(0x3e) AM_DEVREADWRITE("sms_vdp", sms_ms_vdp_ctrl_r, sms_ms_vdp_ctrl_w)
-	AM_RANGE(0xC0, 0xC0)				 AM_READ_PORT("PORT_DC")
-	AM_RANGE(0xC1, 0xC1)				 AM_READ_PORT("PORT_DD")
-	AM_RANGE(0xDC, 0xDC)				 AM_READ_PORT("PORT_DC")
-	AM_RANGE(0xDD, 0xDD)				 AM_READ_PORT("PORT_DD")
+	AM_RANGE(0xc0, 0xc0)                 AM_READ_PORT("PORT_DC")
+	AM_RANGE(0xc1, 0xc1)                 AM_READ_PORT("PORT_DD")
+	AM_RANGE(0xdc, 0xdc)                 AM_READ_PORT("PORT_DC")
+	AM_RANGE(0xdd, 0xdd)                 AM_READ_PORT("PORT_DD")
 ADDRESS_MAP_END
 
 
@@ -169,23 +184,23 @@ static INPUT_PORTS_START( sms )
 	PORT_START("LPHASER1")	/* Light phaser Y - player 1 */
 	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR( Y, 1.0, 0.0, 0 ) PORT_SENSITIVITY(50) PORT_KEYDELTA(15) PORT_CATEGORY(11) PORT_PLAYER(1)
 
-	PORT_START("LPHASER2")	/* Light phaser X - player 2 */
+	PORT_START("LPHASER2")	/* Light phaser X - player 2 */	
 	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_CROSSHAIR( X, 1.0, 0.0, 0 ) PORT_SENSITIVITY(50) PORT_KEYDELTA(15) PORT_CATEGORY(21) PORT_PLAYER(2)
 
 	PORT_START("LPHASER3")	/* Light phaser Y - player 2 */
 	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR( Y, 1.0, 0.0, 0 ) PORT_SENSITIVITY(50) PORT_KEYDELTA(25) PORT_CATEGORY(21) PORT_PLAYER(2)
 
 	PORT_START("RFU")	/* Rapid Fire Unit */
-	PORT_DIPNAME( 0x03, 0x00, "Rapid Fire Unit - Player 1" )
-	PORT_DIPSETTING(	0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(	0x01, "Button A" )
-	PORT_DIPSETTING(	0x02, "Button B" )
-	PORT_DIPSETTING(	0x03, "Button A+B" )
-	PORT_DIPNAME( 0x0c, 0x00, "Rapid Fire Unit - Player 2" )
-	PORT_DIPSETTING(	0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(	0x04, "Button A" )
-	PORT_DIPSETTING(	0x08, "Button B" )
-	PORT_DIPSETTING(	0x0C, "Button A+B" )
+	PORT_CONFNAME( 0x03, 0x00, "Rapid Fire Unit - Player 1" )
+	PORT_CONFSETTING(	0x00, DEF_STR( Off ) )
+	PORT_CONFSETTING(	0x01, "Button A" )
+	PORT_CONFSETTING(	0x02, "Button B" )
+	PORT_CONFSETTING(	0x03, "Button A + B" )
+	PORT_CONFNAME( 0x0c, 0x00, "Rapid Fire Unit - Player 2" )
+	PORT_CONFSETTING(	0x00, DEF_STR( Off ) )
+	PORT_CONFSETTING(	0x04, "Button A" )
+	PORT_CONFSETTING(	0x08, "Button B" )
+	PORT_CONFSETTING(	0x0c, "Button A + B" )
 
 	PORT_START("PADDLE0")	/* Paddle player 1 */
 	PORT_BIT( 0xff, 0x80, IPT_PADDLE) PORT_SENSITIVITY(40) PORT_KEYDELTA(20) PORT_CENTERDELTA(0) PORT_MINMAX(0,255) PORT_CATEGORY(12) PORT_PLAYER(1)
@@ -228,6 +243,35 @@ static INPUT_PORTS_START( sms )
 	PORT_BIT( 0xff, 0x00, IPT_TRACKBALL_Y ) PORT_SENSITIVITY(50) PORT_KEYDELTA(40) PORT_RESET PORT_REVERSE PORT_CATEGORY(23) PORT_PLAYER(2)
 INPUT_PORTS_END
 
+static INPUT_PORTS_START( sms1 )
+	PORT_INCLUDE( sms )
+
+	PORT_START("SEGASCOPE")
+	PORT_CONFNAME( 0x01, 0x00, "SegaScope (3-D Glasses)" )
+	PORT_CONFSETTING( 0x00, DEF_STR( Off ) )
+	PORT_CONFSETTING( 0x01, DEF_STR( On ) )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( smsj )
+	PORT_INCLUDE( sms1 )
+
+	PORT_START("TVDRAW")
+	PORT_CONFNAME( 0x01, 0x00, "Terebi Oekaki Graphics Tablet" )
+	PORT_CONFSETTING( 0x00, DEF_STR( Off ) )
+	PORT_CONFSETTING( 0x01, DEF_STR( On ) )
+
+	PORT_START("TVDRAW_X")
+	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_NAME("Tablet - X Axis") PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_PLAYER(1) 
+		PORT_CONDITION("TVDRAW", 0x01, PORTCOND_EQUALS, 0x01)
+
+	PORT_START("TVDRAW_Y")
+	PORT_BIT( 0xff, 0x60, IPT_LIGHTGUN_Y ) PORT_NAME("Tablet - Y Axis") PORT_CROSSHAIR(Y, 1.0, 0.0, 0) PORT_MINMAX(0, 191) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_PLAYER(1) 
+		PORT_CONDITION("TVDRAW", 0x01, PORTCOND_EQUALS, 0x01)
+
+	PORT_START("TVDRAW_PEN")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Tablet - Pen") PORT_CONDITION("TVDRAW", 0x01, PORTCOND_EQUALS, 0x01)
+INPUT_PORTS_END
+
 static INPUT_PORTS_START( gg )
 	PORT_START("PORT_DC")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(1) PORT_8WAY
@@ -246,44 +290,44 @@ static INPUT_PORTS_START( gg )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START ) PORT_NAME("Start") /* Game Gear START */
 INPUT_PORTS_END
 
-static PALETTE_INIT( sms ) 
+static PALETTE_INIT( sms )
 {
 	int i;
-	for( i = 0; i < 64; i++ ) 
+	for (i = 0; i < 64; i++)
 	{
 		int r = i & 0x03;
 		int g = (i & 0x0c) >> 2;
-		int b = ( i & 0x30 ) >> 4;
-		palette_set_color_rgb(machine, i, r << 6, g << 6, b << 6 );
+		int b = (i & 0x30) >> 4;
+		palette_set_color_rgb(machine, i, r << 6, g << 6, b << 6);
 	}
 	/* TMS9918 palette */
-	palette_set_color_rgb(machine, 64+ 0,   0,   0,   0 );
-	palette_set_color_rgb(machine, 64+ 1,   0,   0,   0 );
-	palette_set_color_rgb(machine, 64+ 2,  33, 200,  66 );
-	palette_set_color_rgb(machine, 64+ 3,  94, 220, 120 );
-	palette_set_color_rgb(machine, 64+ 4,  84,  85, 237 );
-	palette_set_color_rgb(machine, 64+ 5, 125, 118, 252 );
-	palette_set_color_rgb(machine, 64+ 6, 212,  82,  77 );
-	palette_set_color_rgb(machine, 64+ 7,  66, 235, 245 );
-	palette_set_color_rgb(machine, 64+ 8, 252,  85,  84 );
-	palette_set_color_rgb(machine, 64+ 9, 255, 121, 120 );
-	palette_set_color_rgb(machine, 64+10, 212, 193,  84 );
-	palette_set_color_rgb(machine, 64+11, 230, 206, 128 );
-	palette_set_color_rgb(machine, 64+12,  33, 176,  59 );
-	palette_set_color_rgb(machine, 64+13, 201,  91, 186 );
-	palette_set_color_rgb(machine, 64+14, 204, 204, 204 );
-	palette_set_color_rgb(machine, 64+15, 255, 255, 255 );
+	palette_set_color_rgb(machine, 64+ 0,   0,   0,   0);
+	palette_set_color_rgb(machine, 64+ 1,   0,   0,   0);
+	palette_set_color_rgb(machine, 64+ 2,  33, 200,  66);
+	palette_set_color_rgb(machine, 64+ 3,  94, 220, 120);
+	palette_set_color_rgb(machine, 64+ 4,  84,  85, 237);
+	palette_set_color_rgb(machine, 64+ 5, 125, 118, 252);
+	palette_set_color_rgb(machine, 64+ 6, 212,  82,  77);
+	palette_set_color_rgb(machine, 64+ 7,  66, 235, 245);
+	palette_set_color_rgb(machine, 64+ 8, 252,  85,  84);
+	palette_set_color_rgb(machine, 64+ 9, 255, 121, 120);
+	palette_set_color_rgb(machine, 64+10, 212, 193,  84);
+	palette_set_color_rgb(machine, 64+11, 230, 206, 128);
+	palette_set_color_rgb(machine, 64+12,  33, 176,  59);
+	palette_set_color_rgb(machine, 64+13, 201,  91, 186);
+	palette_set_color_rgb(machine, 64+14, 204, 204, 204);
+	palette_set_color_rgb(machine, 64+15, 255, 255, 255);
 }
 
-static PALETTE_INIT( gamegear ) 
+static PALETTE_INIT( gamegear )
 {
 	int i;
-	for( i = 0; i < 4096; i++ ) 
+	for (i = 0; i < 4096; i++)
 	{
 		int r = i & 0x000f;
 		int g = (i & 0x00f0) >> 4;
 		int b = (i & 0x0f00) >> 8;
-		palette_set_color_rgb(machine, i, r << 4, g << 4, b << 4 );
+		palette_set_color_rgb(machine, i, r << 4, g << 4, b << 4);
 	}
 }
 
@@ -322,14 +366,6 @@ static const smsvdp_interface sms_store_intf =
 	sms_pause_callback 
 };
 
-static VIDEO_UPDATE(sms)
-{
-	const device_config *smsvdp = devtag_get_device(screen->machine, "sms_vdp");
-	smsvdp_update(smsvdp, bitmap, cliprect);
-
-	return 0;
-}
-
 static MACHINE_DRIVER_START( sms_cartslot )
 	MDRV_CARTSLOT_ADD("cart1")
 	MDRV_CARTSLOT_EXTENSION_LIST("sms,bin")
@@ -338,7 +374,7 @@ static MACHINE_DRIVER_START( sms_cartslot )
 	MDRV_CARTSLOT_LOAD(sms_cart)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START(sms1ntsc)
+static MACHINE_DRIVER_START( sms_ntsc_base )
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", Z80, XTAL_53_693175MHz/15)
 	MDRV_CPU_PROGRAM_MAP(sms_mem)
@@ -348,6 +384,17 @@ static MACHINE_DRIVER_START(sms1ntsc)
 
 	MDRV_MACHINE_START(sms)
 	MDRV_MACHINE_RESET(sms_mess)
+
+	/* sound hardware */
+	MDRV_SPEAKER_STANDARD_MONO("mono")
+	MDRV_SOUND_ADD("smsiii", SMSIII, XTAL_53_693175MHz/15)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
+
+	MDRV_IMPORT_FROM( sms_cartslot )
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( sms2_ntsc )
+	MDRV_IMPORT_FROM( sms_ntsc_base )
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
@@ -359,25 +406,41 @@ static MACHINE_DRIVER_START(sms1ntsc)
 
 	MDRV_VIDEO_UPDATE(sms)
 
-	MDRV_SMSVDP_ADD("sms_vdp", _315_5124_intf)
-
-	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_MONO("mono")
-	MDRV_SOUND_ADD("smsiii", SMSIII, XTAL_53_693175MHz/15)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
-	
-	MDRV_IMPORT_FROM( sms_cartslot )
-MACHINE_DRIVER_END
-
-static MACHINE_DRIVER_START(sms2ntsc)
-	MDRV_IMPORT_FROM(sms1ntsc)
-
-	MDRV_DEVICE_REMOVE("sms_vdp")
 	MDRV_SMSVDP_ADD("sms_vdp", _315_5246_intf)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START(smssdisp)
-	MDRV_IMPORT_FROM(sms1ntsc)
+static MACHINE_DRIVER_START(sms1_ntsc)
+	MDRV_IMPORT_FROM( sms_ntsc_base )
+
+	MDRV_CPU_MODIFY("maincpu")
+	MDRV_CPU_PROGRAM_MAP(sms1_mem)	// This adds the SegaScope handlers for 3-D glasses
+	MDRV_CPU_IO_MAP(sms_io)
+
+	/* video hardware */
+	MDRV_SCREEN_ADD("screen", RASTER)
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
+	MDRV_SCREEN_RAW_PARAMS(XTAL_53_693175MHz/10, SMS_X_PIXELS, LBORDER_START + LBORDER_X_PIXELS - 2, LBORDER_START + LBORDER_X_PIXELS + 256 + 10, NTSC_Y_PIXELS, TBORDER_START + NTSC_224_TBORDER_Y_PIXELS, TBORDER_START + NTSC_224_TBORDER_Y_PIXELS + 224)
+
+	MDRV_SCREEN_ADD("left_lcd", LCD)	// This is needed for SegaScope Left LCD
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
+	MDRV_SCREEN_RAW_PARAMS(XTAL_53_693175MHz/10, SMS_X_PIXELS, LBORDER_START + LBORDER_X_PIXELS - 2, LBORDER_START + LBORDER_X_PIXELS + 256 + 10, NTSC_Y_PIXELS, TBORDER_START + NTSC_224_TBORDER_Y_PIXELS, TBORDER_START + NTSC_224_TBORDER_Y_PIXELS + 224)
+
+	MDRV_SCREEN_ADD("right_lcd", LCD)	// This is needed for SegaScope Right LCD
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
+	MDRV_SCREEN_RAW_PARAMS(XTAL_53_693175MHz/10, SMS_X_PIXELS, LBORDER_START + LBORDER_X_PIXELS - 2, LBORDER_START + LBORDER_X_PIXELS + 256 + 10, NTSC_Y_PIXELS, TBORDER_START + NTSC_224_TBORDER_Y_PIXELS, TBORDER_START + NTSC_224_TBORDER_Y_PIXELS + 224)
+
+	MDRV_DEFAULT_LAYOUT(layout_sms1)
+
+	MDRV_PALETTE_LENGTH(64+16)
+	MDRV_PALETTE_INIT(sms)
+
+	MDRV_VIDEO_UPDATE(sms1)
+
+	MDRV_SMSVDP_ADD("sms_vdp", _315_5124_intf)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( sms_sdisp )
+	MDRV_IMPORT_FROM( sms2_ntsc )
 
 	MDRV_DEVICE_REMOVE("sms_vdp")
 	MDRV_SMSVDP_ADD("sms_vdp", sms_store_intf)
@@ -482,10 +545,9 @@ static MACHINE_DRIVER_START(smssdisp)
 	MDRV_CARTSLOT_NOT_MANDATORY
 	MDRV_CARTSLOT_START(sms_cart)
 	MDRV_CARTSLOT_LOAD(sms_cart)
-
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START(sms1pal)
+static MACHINE_DRIVER_START( sms_pal_base )
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", Z80, MASTER_CLOCK_PAL/15)
 	MDRV_CPU_PROGRAM_MAP(sms_mem)
@@ -495,6 +557,17 @@ static MACHINE_DRIVER_START(sms1pal)
 
 	MDRV_MACHINE_START(sms)
 	MDRV_MACHINE_RESET(sms_mess)
+
+	/* sound hardware */
+	MDRV_SPEAKER_STANDARD_MONO("mono")
+	MDRV_SOUND_ADD("smsiii", SMSIII, MASTER_CLOCK_PAL/15)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
+
+	MDRV_IMPORT_FROM( sms_cartslot )
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( sms2_pal )
+	MDRV_IMPORT_FROM( sms_pal_base )
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
@@ -506,32 +579,48 @@ static MACHINE_DRIVER_START(sms1pal)
 
 	MDRV_VIDEO_UPDATE(sms)
 
-	MDRV_SMSVDP_ADD("sms_vdp", _315_5124_intf)
-
-	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_MONO("mono")
-	MDRV_SOUND_ADD("smsiii", SMSIII, MASTER_CLOCK_PAL/15)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
-	
-	MDRV_IMPORT_FROM( sms_cartslot )
-MACHINE_DRIVER_END
-
-static MACHINE_DRIVER_START(sms2pal)
-	MDRV_IMPORT_FROM(sms1pal)
-
-	MDRV_DEVICE_REMOVE("sms_vdp")
 	MDRV_SMSVDP_ADD("sms_vdp", _315_5246_intf)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START(smsfm)
-	MDRV_IMPORT_FROM(sms1ntsc)
+static MACHINE_DRIVER_START( sms1_pal )
+	MDRV_IMPORT_FROM( sms_pal_base )
+
+	MDRV_CPU_MODIFY("maincpu")
+	MDRV_CPU_PROGRAM_MAP(sms1_mem)	// This adds the SegaScope handlers for 3-D glasses
+	MDRV_CPU_IO_MAP(sms_io)
+
+	/* video hardware */
+	MDRV_SCREEN_ADD("screen", RASTER)
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
+	MDRV_SCREEN_RAW_PARAMS(MASTER_CLOCK_PAL/10, SMS_X_PIXELS, LBORDER_START + LBORDER_X_PIXELS - 2, LBORDER_START + LBORDER_X_PIXELS + 256 + 10, PAL_Y_PIXELS, TBORDER_START + PAL_240_TBORDER_Y_PIXELS, TBORDER_START + PAL_240_TBORDER_Y_PIXELS + 240)
+
+	MDRV_SCREEN_ADD("left_lcd", LCD)	// This is needed for SegaScope Left LCD
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
+	MDRV_SCREEN_RAW_PARAMS(MASTER_CLOCK_PAL/10, SMS_X_PIXELS, LBORDER_START + LBORDER_X_PIXELS - 2, LBORDER_START + LBORDER_X_PIXELS + 256 + 10, PAL_Y_PIXELS, TBORDER_START + PAL_240_TBORDER_Y_PIXELS, TBORDER_START + PAL_240_TBORDER_Y_PIXELS + 240)
+
+	MDRV_SCREEN_ADD("right_lcd", LCD)	// This is needed for SegaScope Right LCD
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
+	MDRV_SCREEN_RAW_PARAMS(MASTER_CLOCK_PAL/10, SMS_X_PIXELS, LBORDER_START + LBORDER_X_PIXELS - 2, LBORDER_START + LBORDER_X_PIXELS + 256 + 10, PAL_Y_PIXELS, TBORDER_START + PAL_240_TBORDER_Y_PIXELS, TBORDER_START + PAL_240_TBORDER_Y_PIXELS + 240)
+
+	MDRV_PALETTE_LENGTH(64+16)
+	MDRV_PALETTE_INIT(sms)
+
+	MDRV_VIDEO_UPDATE(sms1)
+
+	MDRV_DEFAULT_LAYOUT(layout_sms1)
+
+	MDRV_SMSVDP_ADD("sms_vdp", _315_5124_intf)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( sms_fm )
+	MDRV_IMPORT_FROM(sms1_ntsc)
 
 	MDRV_SOUND_ADD("ym2413", YM2413, XTAL_53_693175MHz/15)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START(sg1000m3)
-	MDRV_IMPORT_FROM(smsfm)
+static MACHINE_DRIVER_START( sg1000m3 )
+	MDRV_IMPORT_FROM(sms_fm)
 
 	MDRV_CARTSLOT_MODIFY("cart1")
 	MDRV_CARTSLOT_EXTENSION_LIST("sms,bin,sg")
@@ -540,14 +629,14 @@ static MACHINE_DRIVER_START(sg1000m3)
 	MDRV_CARTSLOT_LOAD(sms_cart)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START(sms2fm)
-	MDRV_IMPORT_FROM(sms2ntsc)
+static MACHINE_DRIVER_START( sms2_fm )
+	MDRV_IMPORT_FROM(sms2_ntsc)
 
 	MDRV_SOUND_ADD("ym2413", YM2413, XTAL_53_693175MHz/15)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START(gamegear)
+static MACHINE_DRIVER_START( gamegear )
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", Z80, XTAL_53_693175MHz/15)
 	MDRV_CPU_PROGRAM_MAP(sms_mem)
@@ -582,6 +671,7 @@ static MACHINE_DRIVER_START(gamegear)
 	MDRV_CARTSLOT_LOAD(sms_cart)
 MACHINE_DRIVER_END
 
+
 ROM_START(sms1)
 	ROM_REGION(0x4000, "maincpu", 0)
 	ROM_FILL(0x0000, 0x4000, 0xff)
@@ -610,7 +700,7 @@ ROM_END
 
 ROM_START(smssdisp)
 	ROM_REGION(0x4000, "maincpu", 0)
-	ROM_FILL(0x0000,0x4000,0x00)
+	ROM_FILL(0x0000, 0x4000, 0x00)
 
 	ROM_REGION(0x4000, "user1", 0)
 	ROM_FILL(0x0000, 0x4000, 0xff)
@@ -624,7 +714,7 @@ ROM_START(sms1pal)
 	ROM_FILL(0x0000, 0x4000, 0xff)
 
 	ROM_REGION(0x20000, "user1", 0)
-    ROM_SYSTEM_BIOS( 0, "bios13", "US/European BIOS v1.3 (1986)" )
+	ROM_SYSTEM_BIOS( 0, "bios13", "US/European BIOS v1.3 (1986)" )
 	ROMX_LOAD("bios13fx.rom", 0x0000, 0x2000, CRC(0072ED54) SHA1(c315672807d8ddb8d91443729405c766dd95cae7), ROM_BIOS(1))
 	ROM_SYSTEM_BIOS( 1, "hangonsh", "US/European BIOS v2.4 with Hang On and Safari Hunt (1988)" )
 	ROMX_LOAD("hshbios.rom", 0x0000, 0x20000, CRC(91E93385) SHA1(9e179392cd416af14024d8f31c981d9ee9a64517), ROM_BIOS(2))
@@ -647,7 +737,7 @@ ROM_END
 
 ROM_START(sg1000m3)
 	ROM_REGION(0x4000, "maincpu", 0)
-	ROM_FILL(0x0000,0x4000,0x00)
+	ROM_FILL(0x0000, 0x4000, 0x00)
 ROM_END
 
 ROM_START(smsj)
@@ -655,7 +745,7 @@ ROM_START(smsj)
 	ROM_FILL(0x0000, 0x4000, 0xff)
 
 	ROM_REGION(0x4000, "user1", 0)
-    ROM_SYSTEM_BIOS( 0, "jbios21", "Japanese BIOS v2.1 (1987)" )
+	ROM_SYSTEM_BIOS( 0, "jbios21", "Japanese BIOS v2.1 (1987)" )
 	ROMX_LOAD("jbios21.rom", 0x0000, 0x2000, CRC(48D44A13) SHA1(a8c1b39a2e41137835eda6a5de6d46dd9fadbaf2), ROM_BIOS(1))
 ROM_END
 
@@ -669,8 +759,8 @@ ROM_START(sms2kr)
 ROM_END
 
 ROM_START(gamegear)
-	ROM_REGION(0x4000, "maincpu",0)
-	ROM_FILL(0x0000,0x4000,0x00)
+	ROM_REGION(0x4000, "maincpu", 0)
+	ROM_FILL(0x0000, 0x4000, 0x00)
 
 	ROM_REGION(0x0400, "user1", 0)
 	ROM_SYSTEM_BIOS( 0, "none", "No BIOS" ) /* gamegear */
@@ -725,15 +815,15 @@ ROM_END
 
 ***************************************************************************/
 
-/*    YEAR  NAME        PARENT      COMPAT  MACHINE     INPUT   INIT    CONFIG      COMPANY     FULLNAME                            FLAGS */
-CONS( 1984, sg1000m3,   sms,        0,      sg1000m3,   sms,    sg1000m3, 0,        "Sega",     "SG-1000 Mark III",                 0 )
-CONS( 1986, sms1,       sms,        0,      sms1ntsc,   sms,    sms1,     0,        "Sega",     "Master System I",                  0 )
-CONS( 1986, sms1pal,    sms,        0,      sms1pal,    sms,    sms1,     0,        "Sega",     "Master System I (PAL)" ,           0 )
-CONS( 1986, smssdisp,   sms,        0,      smssdisp,   sms,    smssdisp, 0,        "Sega",     "Master System Store Display Unit", GAME_NOT_WORKING )
-CONS( 1987, smsj,       sms,        0,      smsfm,      sms,    smsj,     0,        "Sega",     "Master System (Japan)",            0 )
-CONS( 1990, sms,        0,          0,      sms2ntsc,   sms,    sms1,     0,        "Sega",     "Master System II",                 0 )
-CONS( 1990, smspal,     sms,        0,      sms2pal,    sms,    sms1,     0,        "Sega",     "Master System II (PAL)",           0 )
-CONS( 1990, sms2kr,     sms,        0,      sms2fm,     sms,    sms2kr,   0,        "Samsung",  "Gam*Boy II (Korea)",               0 )
+/*    YEAR  NAME        PARENT      COMPAT  MACHINE      INPUT   INIT      CONFIG    COMPANY     FULLNAME                            FLAGS */
+CONS( 1984, sg1000m3,   sms,        0,      sg1000m3,    smsj,   sg1000m3, 0,        "Sega",     "SG-1000 Mark III",                 0 )
+CONS( 1986, sms1,       sms,        0,      sms1_ntsc,   sms1,   sms1,     0,        "Sega",     "Master System I",                  0 )
+CONS( 1986, sms1pal,    sms,        0,      sms1_pal,    sms1,   sms1,     0,        "Sega",     "Master System I (PAL)" ,           0 )
+CONS( 1986, smssdisp,   sms,        0,      sms_sdisp,   sms,    smssdisp, 0,        "Sega",     "Master System Store Display Unit", GAME_NOT_WORKING )
+CONS( 1987, smsj,       sms,        0,      sms_fm,      smsj,   smsj,     0,        "Sega",     "Master System (Japan)",            0 )
+CONS( 1990, sms,        0,          0,      sms2_ntsc,   sms,    sms1,     0,        "Sega",     "Master System II",                 0 )
+CONS( 1990, smspal,     sms,        0,      sms2_pal,    sms,    sms1,     0,        "Sega",     "Master System II (PAL)",           0 )
+CONS( 1990, sms2kr,     sms,        0,      sms2_fm,     sms,    sms2kr,   0,        "Samsung",  "Gam*Boy II (Korea)",               0 )
 
-CONS( 1990, gamegear,   0,          sms,    gamegear,   gg,     gamegear, 0,        "Sega",     "Game Gear (Europe/America)",       0 )
-CONS( 1990, gamegeaj,   gamegear,   0,      gamegear,   gg,     gamegeaj, 0,        "Sega",     "Game Gear (Japan)",                0 )
+CONS( 1990, gamegear,   0,          sms,    gamegear,    gg,     gamegear, 0,        "Sega",     "Game Gear (Europe/America)",       0 )
+CONS( 1990, gamegeaj,   gamegear,   0,      gamegear,    gg,     gamegeaj, 0,        "Sega",     "Game Gear (Japan)",                0 )
