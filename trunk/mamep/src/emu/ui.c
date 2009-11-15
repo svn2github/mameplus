@@ -2138,7 +2138,7 @@ static slider_state *slider_init(running_machine *machine)
 		if (options_get_bool(mame_options(), OPTION_CHEAT))
 		{
 			astring_printf(string, _("%s Refresh Rate"), slider_get_screen_desc(device));
-			*tailptr = slider_alloc(machine, astring_c(string), -10000, 0, 10000, 1000, slider_refresh, param);
+			*tailptr = slider_alloc(machine, astring_c(string), -33000, 0, 33000, 1000, slider_refresh, param);
 			tailptr = &(*tailptr)->next;
 		}
 
