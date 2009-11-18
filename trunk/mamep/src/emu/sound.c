@@ -692,7 +692,7 @@ static void sound_save(running_machine *machine, int config_type, xml_data_node 
 			float defvol = sound_get_default_gain(machine, mixernum);
 			float newvol = sound_get_user_gain(machine, mixernum);
 
-			if (defvol != newvol)
+			if (floor((defvol - newvol) * 1000.0f + 0.5f) != 0)
 			{
 				xml_data_node *channelnode = xml_add_child(parentnode, "channel", NULL);
 				if (channelnode != NULL)

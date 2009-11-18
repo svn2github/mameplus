@@ -9818,11 +9818,11 @@ Other Sun games
 
 	/* Play Mechanix */
 	DRIVER( jnero )		/* (c) 2004 */
-#endif /* !NEOCPSPGM */
 
 	/* Amatic Trading GMBH */
 	DRIVER( am_uslot )	/* (c) Amatic 1996 */
 	DRIVER( am_mg24 )	/* (c) Amatic 2000 */
 	DRIVER( am_mg3 )	/* (c) Amatic 2000 */
 
+#endif /* !NEOCPSPGM */
 #endif	/* DRIVER_RECURSIVE */
