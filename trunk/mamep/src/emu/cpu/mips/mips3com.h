@@ -26,7 +26,7 @@
 #define MIPS3_MIN_PAGE_SIZE			(1 << MIPS3_MIN_PAGE_SHIFT)
 #define MIPS3_MIN_PAGE_MASK			(MIPS3_MIN_PAGE_SIZE - 1)
 #define MIPS3_MAX_PADDR_SHIFT		32
-#define MIPS3_TLB_ENTRIES			48
+#define MIPS3_MAX_TLB_ENTRIES		48
 
 /* cycle parameters */
 #define MIPS3_COUNT_READ_CYCLES		250
@@ -205,6 +205,10 @@ struct _mips3_state
 	UINT32			compare_armed;
 	emu_timer *		compare_int_timer;
 
+	/* derived info based on flavor */
+	UINT32			pfnmask;
+	UINT8			tlbentries;
+
 	/* memory accesses */
 	UINT8			bigendian;
 	data_accessors	memory;
@@ -215,7 +219,7 @@ struct _mips3_state
 
 	/* MMU */
 	vtlb_state *	vtlb;
-	mips3_tlb_entry tlb[MIPS3_TLB_ENTRIES];
+	mips3_tlb_entry tlb[MIPS3_MAX_TLB_ENTRIES];
 
 	/* for use by specific implementations */
 	mips3imp_state *impstate;

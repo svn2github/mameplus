@@ -1,5 +1,3 @@
-#ifndef __MACH_KONAMIGX_H
-#define __MACH_KONAMIGX_H
 
 // 2nd-Tier GX/MW Hardware Functions
 void K053247GP_set_SpriteOffset(int offsx, int offsy);
@@ -72,14 +70,13 @@ void konamigx_le2_sprite_callback(int *code, int *color, int *priority);
 void konamigx_mixer(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect,
 					tilemap *sub1, int sub1flags,
 					tilemap *sub2, int sub2flags,
-					int mixerflags);
+					int mixerflags, bitmap_t* extra_bitmap, int rushingheroes_hack);
 
 void konamigx_mixer_init(running_machine *machine, int objdma);
 void konamigx_mixer_primode(int mode);
 
 
 void konamigx_objdma(void);
-
 
 // K055550/K053990/ESC protection devices handlers
 READ16_HANDLER ( K055550_word_r );
@@ -90,4 +87,5 @@ void konamigx_esc_alert(UINT32 *srcbase, int srcoffs, int count, int mode);
 void fantjour_dma_install(running_machine *machine);
 WRITE32_HANDLER(fantjour_dma_w);
 
-#endif
+extern UINT16 *K053247_ram;
+
