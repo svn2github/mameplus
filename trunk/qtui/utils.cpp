@@ -600,6 +600,9 @@ procCount(0)
 
 int ProcessManager::start(QString &command, QStringList &arguments, bool autoConnect)
 {
+	stdOut.clear();
+	stdErr.clear();
+
 	QProcess *proc = new QProcess(this);
 	if (autoConnect)
 	{
@@ -656,30 +659,36 @@ void ProcessManager::kill(ushort index)
 void ProcessManager::readyReadStandardOutput()
 {
 	QProcess *proc = (QProcess *)sender();
-
-	QString s = proc->readAllStandardOutput();
+	QString s = QString::fromLocal8Bit(proc->readAllStandardOutput().data());
 	QStringList sl = s.split("\n");
 	int i;
+
 	for (i = 0; i < sl.count(); i++)
 	{
 		s = sl[i].simplified();
 		if ( !s.isEmpty() )
-			win->log(QString("stdout[#%1]: ").arg(procMap[proc]) + s);
+		{
+			stdOut.append(s + "\n");
+			win->log(QString("stdout[#%1]: ").arg(procMap[proc]) + s);\
+		}
 	}
 }
 
 void ProcessManager::readyReadStandardError()
 {
 	QProcess *proc = (QProcess *)sender();
-
-	QString s = proc->readAllStandardError();
+	QString s = QString::fromLocal8Bit(proc->readAllStandardError().data());
 	QStringList sl = s.split("\n");
 	int i;
+
 	for (i = 0; i < sl.count(); i++)
 	{
 		s = sl[i].simplified();
 		if ( !s.isEmpty() )
+		{
+			stdErr.append(s + "\n");
 			win->log(QString("stderr[#%1]: ").arg(procMap[proc]) + s);
+		}
 	}
 }
 
@@ -694,7 +703,6 @@ void ProcessManager::finished(int exitCode, QProcess::ExitStatus exitStatus)
 void ProcessManager::started()
 {
 	QProcess *proc = (QProcess *)sender();
-
 	win->log(QString("proc #%1 started, active: %3").arg(procMap[proc]).arg(procMap.count()));
 }
 

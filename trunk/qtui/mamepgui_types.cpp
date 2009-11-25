@@ -55,7 +55,7 @@ cocktail(64),
 protection(64),
 isExtRom(false),
 isHorz(true),
-available(0)
+available(GAME_MISSING)
 {
 	//	win->log("# GameInfo()");
 }
@@ -797,7 +797,7 @@ int MameDat::load()
 		games.insert(gameName, gameInfo);
 	}
 
-	win->log(QString("load %1 games from cache.").arg(gamecount));
+	win->log(QString("loaded %1 games from cache.").arg(gamecount));
 
 	// verify MAME Version
 	if (version != mameVersion0)
@@ -839,8 +839,9 @@ void MameDat::parseListXml(int method)
 			{
 				gameInfo0 = pTempDat->games[gameName];
 
+				//if successfully loaded results, dont auto refresh game list
 				_gameInfo->available = gameInfo0->available;
-				if (_gameInfo->available)
+				if (_gameInfo->available == GAME_COMPLETE)
 					noAutoAudit = true;
 				
 				if (!gameInfo0->icondata.isEmpty())
@@ -872,7 +873,7 @@ void MameDat::parseListXml(int method)
 					_gameInfo->isExtRom = true;
 					_gameInfo->romof = gameInfo0->romof;
 					_gameInfo->sourcefile = gameInfo0->sourcefile;
-					_gameInfo->available = 1;
+					_gameInfo->available = GAME_COMPLETE;
 					games[gameName] = _gameInfo;
 				}
 			}

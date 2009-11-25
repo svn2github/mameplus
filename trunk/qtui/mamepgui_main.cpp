@@ -46,7 +46,7 @@ QStringList validGuiSettings;
 /* internal */
 QDockWidget *dwHistory = NULL;
 
-#define MPGUI_VER "1.4.9a"
+#define MPGUI_VER "1.4.9c"
 
 void MainWindow::log(QString message)
 {

@@ -67,7 +67,7 @@ void RomAuditor::exportDat()
 		{
 			gameInfo = pMameDat->games[gameName];
 
-			if (method == AUDIT_EXPORT_COMPLETE && !gameInfo->isExtRom || gameInfo->available == 0)
+			if (method == AUDIT_EXPORT_COMPLETE && !gameInfo->isExtRom || gameInfo->available == GAME_MISSING)
 			{
 				GameInfo *gameInfo2 = NULL, *gameBiosInfo = NULL;
 				RomInfo *romInfo;
@@ -361,7 +361,7 @@ void RomAuditor::run()
 
 			//if game rom file exists, default to passed, if not, skip and fail it
 			if (auditedGames.contains(gameName))
-				gameInfo->available = 1;
+				gameInfo->available = GAME_COMPLETE;
 			else
 			{
 				//fail unless: 1. all roms are nodump; 2. all roms are available in parent
@@ -387,14 +387,14 @@ void RomAuditor::run()
 					}
 				}
 
-				gameInfo->available = (!allNoDump && !allinParent && gameInfo->disks.isEmpty()) ? 0 : 1;
+				gameInfo->available = (!allNoDump && !allinParent && gameInfo->disks.isEmpty()) ? GAME_MISSING : GAME_COMPLETE;
 			}
 
 			//iterate disks
 			foreach (DiskInfo *diskInfo, gameInfo->disks)
 			{
 				if (!diskInfo->available)
-					gameInfo->available = 0;
+					gameInfo->available = GAME_MISSING;
 			}
 
 			//iterate roms
@@ -433,7 +433,7 @@ void RomAuditor::run()
 				}
 
 				//failed audit
-				gameInfo->available = 0;
+				gameInfo->available = GAME_MISSING;
 			}
 		}
 	}
@@ -505,7 +505,7 @@ void RomAuditor::auditConsole(QString consoleName)
 				gameInfo->isExtRom = true;
 				gameInfo->romof = consoleName;
 				gameInfo->sourcefile = sourcefile;
-				gameInfo->available = 1;
+				gameInfo->available = GAME_COMPLETE;
 				
 				QString key = dirPath + fileName + "/" + zipFileName;
 				pMameDat->games[key] = gameInfo;
@@ -520,7 +520,7 @@ void RomAuditor::auditConsole(QString consoleName)
 			gameInfo->isExtRom = true;
 			gameInfo->romof = consoleName;
 			gameInfo->sourcefile = sourcefile;
-			gameInfo->available = 1;
+			gameInfo->available = GAME_COMPLETE;
 
 			pMameDat->games[dirPath + fileName] = gameInfo;
 		}

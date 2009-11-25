@@ -89,6 +89,8 @@ public:
 	QMap<QProcess *, ushort> procMap;
 	ushort procCount;
 	QString lastCommand;
+	QString stdOut;
+	QString stdErr;
 
 	ProcessManager(QWidget *parent = 0);
 

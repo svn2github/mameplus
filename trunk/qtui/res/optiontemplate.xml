@@ -28,7 +28,7 @@
 	<option name="ctrlrpath" guiname="controller definitions directory" type="dir" />
 	<option name="inipath" guiname="ini files directory" type="dirs" />
 	<option name="fontpath" guiname="font files directory" type="dirs" />
-	<option name="cheatpath" guiname="cheat files directory" type="dir" />
+	<option name="cheatpath" guiname="cheat files directory" type="dirs" />
 	<option name="crsshairpath" guiname="crosshair files directory" type="dir" />
 	<option name="langpath" guiname="language files directory" type="dir" />
 	<option name="ipspath" guiname="IPS files directory" type="dir" />

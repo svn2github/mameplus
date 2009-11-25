@@ -909,7 +909,7 @@ void GameListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 		p.drawPixmap(3, 3, 32, 32, pmIcon);
 
 	// paint the unavailable icon on top of original icon
-	if(!gameInfo->available)
+	if(gameInfo->available != GAME_COMPLETE)
 	{
 		int offset = 8;
 		if (currentGame == gameName && isLargeIcon && isZooming)
@@ -1263,12 +1263,6 @@ void Gamelist::init(bool toggleState, int initMethod)
 	//have to init here instead of in the constructor, after isMESS has been assigned
 	if (!hasInitd)
 	{
-		//filters
-		filterFlags = pGuiSettings->value("folder_flag").toInt();
-		win->actionFilterClones->setChecked(F_CLONES & filterFlags);
-		win->actionFilterNonWorking->setChecked(F_NONWORKING & filterFlags);
-		win->actionFilterUnavailable->setChecked(F_UNAVAILABLE & filterFlags);
-
 		intFolderNames0
 			<< QT_TR_NOOP("All Games")
 			<< (isMESS ? QT_TR_NOOP("All Systems") : QT_TR_NOOP("All Arcades"))
@@ -1431,6 +1425,12 @@ void Gamelist::init(bool toggleState, int initMethod)
 		win->tvGameList->header()->restoreState(column_state);
 		restoreFolderSelection();
 	}
+
+	//restore filters
+	filterFlags = pGuiSettings->value("folder_flag").toInt();
+	win->actionFilterClones->setChecked((F_CLONES & filterFlags) != 0);
+	win->actionFilterNonWorking->setChecked((F_NONWORKING & filterFlags) != 0);
+	win->actionFilterUnavailable->setChecked((F_UNAVAILABLE & filterFlags) != 0);
 
 	//sorting
 	win->tvGameList->setSortingEnabled(true);
@@ -3162,10 +3162,13 @@ void Gamelist::runMame(int method, QStringList playArgs)
 	win->toggleTrayIcon(0, QProcess::NormalExit, true);
 }
 
-void Gamelist::runMameFinished(int, QProcess::ExitStatus)
+void Gamelist::runMameFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
 	QFile tmpNvFile(utils->getPath(QDir::tempPath()) + currentGame + ".nv");
 	tmpNvFile.remove();
+
+	if (exitCode != 0 || exitStatus != QProcess::NormalExit)
+		win->poplog(procMan->stdErr);
 }
 
 
@@ -3206,7 +3209,7 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	if (F_NONWORKING & gameList->filterFlags&& !isExtRom)
 		result = result && gameInfo->status;
 	if (F_UNAVAILABLE & gameList->filterFlags&& !isExtRom)
-		result = result && gameInfo->available == 1;
+		result = result && gameInfo->available == GAME_COMPLETE;
 
 	// apply search filter
 	if (!searchText.isEmpty())
@@ -3231,14 +3234,14 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 
 	case Qt::UserRole + FOLDER_AVAILABLE:
 		result = result && !isBIOS && !isExtRom
-			&& (gameInfo->available == 1);
+			&& (gameInfo->available == GAME_COMPLETE);
 		if (!isMESS)
 			result = result && !isConsole;		
 		break;
 
 	case Qt::UserRole + FOLDER_UNAVAILABLE:
 		result = result && !isBIOS && !isExtRom
-			&& (gameInfo->available != 1);
+			&& (gameInfo->available != GAME_COMPLETE);
 		if (!isMESS)
 			result = result && !isConsole;
 		break;
