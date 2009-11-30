@@ -16,10 +16,12 @@
 
 #include <time.h>
 
+#include "devcb.h"
 #include "memory.h"
 #include "inputseq.h"
 #include "tokenize.h"
 #include "unicode.h"
+#include "tagmap.h"
 
 
 
@@ -378,6 +380,7 @@ enum
 
 	/* special meaning handled by custom code */
 	IPT_SPECIAL,
+	IPT_OUTPUT,
 
 	__ipt_max
 };
@@ -439,7 +442,9 @@ enum
 	INPUT_TOKEN_CHAR,
 	INPUT_TOKEN_CATEGORY,
 	INPUT_TOKEN_CATEGORY_NAME,
-	INPUT_TOKEN_CATEGORY_SETTING
+	INPUT_TOKEN_CATEGORY_SETTING,
+	INPUT_TOKEN_READ_LINE_DEVICE,
+	INPUT_TOKEN_WRITE_LINE_DEVICE,
 };
 
 
@@ -604,6 +609,8 @@ union _input_port_token
 	input_field_custom_func 	customptr;
 	input_field_changed_func 	changedptr;
 	input_field_crossmap_func 	crossmapptr;
+	read_line_device_func 		read_line_device;
+	write_line_device_func 		write_line_device;
 };
 
 
@@ -658,6 +665,10 @@ struct _input_field_config
 	UINT8						impulse;		/* number of frames before reverting to defvalue */
 	const char *				name;			/* user-friendly name to display */
 	input_seq					seq[SEQ_TYPE_TOTAL];/* sequences of all types */
+	read_line_device_func		read_line_device;	/* input device handler */
+	const char *				read_device_name;	/* input device name */
+	write_line_device_func		write_line_device;	/* output device handler */
+	const char *				write_device_name;	/* input device name */
 	input_field_custom_func		custom;			/* custom callback routine */
 	void *						custom_param;	/* parameter for custom callback routine */
 	input_field_changed_func 	changed;		/* changed callback routine */
@@ -712,6 +723,15 @@ struct _input_port_config
 	/* these two fields are only valid if the port is live */
 	input_port_state *			state;			/* live state of port (NULL if not live) */
 	running_machine *			machine;		/* machine if port is live */
+};
+
+
+/* an object that contains a list of port configurations */
+typedef struct _input_port_list input_port_list;
+struct _input_port_list
+{
+	const input_port_config *	head;			/* head of the list */
+	tagmap *					map;			/* map for fast lookups */
 };
 
 
@@ -925,6 +945,18 @@ struct _inp_header
 	TOKEN_PTR(changedptr, _callback), \
 	TOKEN_PTR(voidptr, _param),
 
+/* input device handler */
+#define PORT_READ_LINE_DEVICE(_device, _read_line_device) \
+	TOKEN_UINT32_PACK1(INPUT_TOKEN_READ_LINE_DEVICE, 8), \
+	TOKEN_STRING(_device), \
+	TOKEN_PTR(read_line_device, _read_line_device),
+
+/* output device handler */
+#define PORT_WRITE_LINE_DEVICE(_device, _write_line_device) \
+	TOKEN_UINT32_PACK1(INPUT_TOKEN_WRITE_LINE_DEVICE, 8), \
+	TOKEN_STRING(_device), \
+	TOKEN_PTR(write_line_device, _write_line_device),
+
 /* dip switch definition */
 #define PORT_DIPNAME(_mask, _default, _name) \
 	TOKEN_UINT32_PACK1(INPUT_TOKEN_DIPNAME, 8), \
@@ -1046,20 +1078,20 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 
 /* ----- port configurations ----- */
 
-/* allocate a list of input ports from the given token list */
-const input_port_config *input_port_config_alloc(const input_port_token *tokens, char *errorbuf, int errorbuflen);
+/* initialize an input port list structure and allocate ports according to the given tokens */
+void input_port_list_init(input_port_list *portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap);
 
-/* free memory allocated from input_port_alloc */
-void input_port_config_free(const input_port_config *portlist);
-
-/* return the config that matches the given tag */
-const input_port_config *input_port_by_tag(const input_port_config *portlist, const char *tag);
+/* free memory attached to an input port list and clear out the structure */
+void input_port_list_deinit(input_port_list *portlist);
 
 /* return the config that matches the given tag */
-const input_port_config *input_port_by_index(const input_port_config *portlist, int index);
+const input_port_config *input_port_by_tag_slow(const input_port_list *portlist, const char *tag);
+
+/* return the config that matches the given tag */
+const input_port_config *input_port_by_index(const input_port_list *portlist, int index);
 
 /* return the field that matches the given tag and mask */
-const input_field_config *input_field_by_tag_and_mask(const input_port_config *portlist, const char *tag, input_port_value mask);
+const input_field_config *input_field_by_tag_and_mask(const input_port_list *portlist, const char *tag, input_port_value mask);
 
 
 
@@ -1142,6 +1174,19 @@ void input_port_update_defaults(running_machine *machine);
 
 
 
+/* ----- port writing ----- */
+
+/* write a value to a port */
+void input_port_write_direct(const input_port_config *port, input_port_value value, input_port_value mask);
+
+/* write a value to a port specified by tag */
+void input_port_write(running_machine *machine, const char *tag, input_port_value value, input_port_value mask);
+
+/* write a value to a port, ignore if the port does not exist */
+void input_port_write_safe(running_machine *machine, const char *tag, input_port_value value, input_port_value mask);
+
+
+
 /* ----- misc helper functions ----- */
 
 /* return the TRUE if the given condition attached is true */
@@ -1153,5 +1198,26 @@ const char *input_port_string_from_token(const input_port_token token);
 /* autofire functions */
 int get_autofiredelay(int player);
 void set_autofiredelay(int player, int delay);
+
+
+/***************************************************************************
+    INLINE FUNCTIONS
+***************************************************************************/
+
+/*-------------------------------------------------
+    input_port_by_tag - return the config that
+    matches the given tag
+-------------------------------------------------*/
+
+INLINE const input_port_config *input_port_by_tag(const input_port_list *portlist, const char *tag)
+{
+	/* use the map if we have it */
+	if (portlist->map != NULL)
+		return tagmap_find_hash_only(portlist->map, tag);
+
+	/* otherwise, do it the slow way */
+	return input_port_by_tag_slow(portlist, tag);
+}
+
 
 #endif	/* __INPTPORT_H__ */

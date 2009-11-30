@@ -72,12 +72,15 @@ enum
 	ADDRMAP_TOKEN_DEVICE_READ,
 	ADDRMAP_TOKEN_DEVICE_WRITE,
 	ADDRMAP_TOKEN_READ_PORT,
+	ADDRMAP_TOKEN_WRITE_PORT,
 	ADDRMAP_TOKEN_REGION,
 	ADDRMAP_TOKEN_SHARE,
 	ADDRMAP_TOKEN_BASEPTR,
 	ADDRMAP_TOKEN_BASE_MEMBER,
+	ADDRMAP_TOKEN_BASE_GENERIC,
 	ADDRMAP_TOKEN_SIZEPTR,
-	ADDRMAP_TOKEN_SIZE_MEMBER
+	ADDRMAP_TOKEN_SIZE_MEMBER,
+	ADDRMAP_TOKEN_SIZE_GENERIC
 };
 
 
@@ -225,6 +228,7 @@ struct _address_map_entry
 	const char *			read_name;			/* read handler callback name */
 	const char *			read_devtag;		/* read tag for the relevant device */
 	const char *			read_porttag;		/* tag for input port reading */
+	const char *			write_porttag;		/* tag for output port writing */
 	write_handler 			write;				/* write handler callback */
 	UINT8					write_bits;			/* bits for the write handler callback (0=default, 1=8, 2=16, 3=32) */
 	UINT8					write_mask;			/* mask bits indicating which subunits to process */
@@ -235,6 +239,8 @@ struct _address_map_entry
 	size_t *				sizeptr;			/* receives size of area in bytes (optional) */
 	UINT32					baseptroffs_plus1;	/* offset of base pointer within driver_data, plus 1 */
 	UINT32					sizeptroffs_plus1;	/* offset of size pointer within driver_data, plus 1 */
+	UINT32					genbaseptroffs_plus1;/* offset of base pointer within generic_pointers, plus 1 */
+	UINT32					gensizeptroffs_plus1;/* offset of size pointer within generic_pointers, plus 1 */
 	const char *			region;				/* tag of region containing the memory backing this entry */
 	offs_t					rgnoffs;			/* offset within the region */
 
@@ -494,6 +500,8 @@ union _addrmap64_token
 #define memory_install_read64_device_handler(space, device, start, end, mask, mirror, rhandler) \
 	_memory_install_device_handler64(space, device, start, end, mask, mirror, rhandler, NULL, #rhandler, NULL)
 
+#define memory_install_read_port_handler(space, start, end, mask, mirror, rtag) \
+	_memory_install_port_handler(space, start, end, mask, mirror, rtag, NULL)
 
 /* wrappers for dynamic write handler installation */
 #define memory_install_write_handler(space, start, end, mask, mirror, whandler) \
@@ -518,6 +526,8 @@ union _addrmap64_token
 #define memory_install_write64_device_handler(space, device, start, end, mask, mirror, whandler) \
 	_memory_install_device_handler64(space, device, start, end, mask, mirror, NULL, whandler, NULL, #whandler)
 
+#define memory_install_write_port_handler(space, start, end, mask, mirror, wtag) \
+	_memory_install_port_handler(space, start, end, mask, mirror, NULL, wtag)
 
 /* wrappers for dynamic read/write handler installation */
 #define memory_install_readwrite_handler(space, start, end, mask, mirror, rhandler, whandler) \
@@ -541,6 +551,9 @@ union _addrmap64_token
 	_memory_install_device_handler32(space, device, start, end, mask, mirror, rhandler, whandler, #rhandler, #whandler)
 #define memory_install_readwrite64_device_handler(space, device, start, end, mask, mirror, rhandler, whandler) \
 	_memory_install_device_handler64(space, device, start, end, mask, mirror, rhandler, whandler, #rhandler, #whandler)
+
+#define memory_install_readwrite_port_handler(space, start, end, mask, mirror, rtag, wtag) \
+	_memory_install_port_handler(space, start, end, mask, mirror, rtag, wtag)
 
 
 /* macros for accessing bytes and words within larger chunks */
@@ -738,6 +751,10 @@ union _addrmap64_token
 	TOKEN_UINT32_PACK3(ADDRMAP_TOKEN_READ_PORT, 8, 0, 8, 0, 8), \
 	TOKEN_STRING(_tag),
 
+#define AM_WRITE_PORT(_tag) \
+	TOKEN_UINT32_PACK3(ADDRMAP_TOKEN_WRITE_PORT, 8, 0, 8, 0, 8), \
+	TOKEN_STRING(_tag),
+
 #define AM_REGION(_tag, _offs) \
 	TOKEN_UINT64_PACK2(ADDRMAP_TOKEN_REGION, 8, _offs, 32), \
 	TOKEN_STRING(_tag),
@@ -752,12 +769,18 @@ union _addrmap64_token
 #define AM_BASE_MEMBER(_struct, _member) \
 	TOKEN_UINT32_PACK2(ADDRMAP_TOKEN_BASE_MEMBER, 8, offsetof(_struct, _member), 24),
 
+#define AM_BASE_GENERIC(_member) \
+	TOKEN_UINT32_PACK2(ADDRMAP_TOKEN_BASE_GENERIC, 8, offsetof(generic_pointers, _member), 24),
+
 #define AM_SIZE(_size) \
 	TOKEN_UINT32_PACK1(ADDRMAP_TOKEN_SIZEPTR, 8), \
 	TOKEN_PTR(sizeptr, _size),
 
 #define AM_SIZE_MEMBER(_struct, _member) \
 	TOKEN_UINT32_PACK2(ADDRMAP_TOKEN_SIZE_MEMBER, 8, offsetof(_struct, _member), 24),
+
+#define AM_SIZE_GENERIC(_member) \
+	TOKEN_UINT32_PACK2(ADDRMAP_TOKEN_SIZE_GENERIC, 8, offsetof(generic_pointers, _member##_size), 24),
 
 
 /* common shortcuts */
@@ -783,6 +806,9 @@ union _addrmap64_token
 #define AM_NOP								AM_READWRITE(SMH_NOP, SMH_NOP)
 #define AM_READNOP							AM_READ(SMH_NOP)
 #define AM_WRITENOP							AM_WRITE(SMH_NOP)
+
+#define AM_BASE_SIZE_MEMBER(_struct, _base, _size)	AM_BASE_MEMBER(_struct, _base) AM_SIZE_MEMBER(_struct, _size)
+#define AM_BASE_SIZE_GENERIC(_member)		AM_BASE_GENERIC(_member) AM_SIZE_GENERIC(_member)
 
 
 
@@ -892,8 +918,8 @@ UINT32 *_memory_install_device_handler32(const address_space *space, const devic
 /* same as above but explicitly for 64-bit handlers */
 UINT64 *_memory_install_device_handler64(const address_space *space, const device_config *device, offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read64_device_func rhandler, write64_device_func whandler, const char *rhandler_name, const char *whandler_name) ATTR_NONNULL(1, 2);
 
-/* install a new input port handler into the given address space */
-void memory_install_read_port_handler(const address_space *space, offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, const char *tag) ATTR_NONNULL(1, 6);
+/* install a new port handler into the given address space */
+void _memory_install_port_handler(const address_space *space, offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, const char *rtag, const char *wtag) ATTR_NONNULL(1);
 
 
 

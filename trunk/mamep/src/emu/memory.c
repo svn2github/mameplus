@@ -368,6 +368,12 @@ static UINT16 input_port_read16(const input_port_config *port, offs_t offset, UI
 static UINT32 input_port_read32(const input_port_config *port, offs_t offset, UINT32 mem_mask);
 static UINT64 input_port_read64(const input_port_config *port, offs_t offset, UINT64 mem_mask);
 
+/* output port handlers */
+static void input_port_write8(const input_port_config *port, offs_t offset, UINT8 data);
+static void input_port_write16(const input_port_config *port, offs_t offset, UINT16 data, UINT16 mem_mask);
+static void input_port_write32(const input_port_config *port, offs_t offset, UINT32 data, UINT32 mem_mask);
+static void input_port_write64(const input_port_config *port, offs_t offset, UINT64 data, UINT64 mem_mask);
+
 
 
 /***************************************************************************
@@ -1347,27 +1353,43 @@ UINT64 *_memory_install_device_handler64(const address_space *space, const devic
 
 
 /*-------------------------------------------------
-    memory_install_read_port_handler - install a
-    new 8-bit input port handler into the given
-    address space
+    _memory_install_port_handler - install a
+    new port handler into the given address space
 -------------------------------------------------*/
 
-void memory_install_read_port_handler(const address_space *space, offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, const char *tag)
+void _memory_install_port_handler(const address_space *space, offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, const char *rtag, const char *wtag)
 {
-	const input_port_config *port = input_port_by_tag(space->machine->portconfig, tag);
 	address_space *spacerw = (address_space *)space;
-	genf *handler = NULL;
+	genf *rhandler = NULL;
+	genf *whandler = NULL;
 
-	if (port == NULL)
-		fatalerror("Non-existent port referenced: '%s'\n", tag);
 	switch (space->dbits)
 	{
-		case 8:		handler = (genf *)input_port_read8; 	break;
-		case 16:	handler = (genf *)input_port_read16; 	break;
-		case 32:	handler = (genf *)input_port_read32; 	break;
-		case 64:	handler = (genf *)input_port_read64; 	break;
+		case 8:		rhandler = (genf *)input_port_read8;	whandler = (genf *)input_port_write8; 	break;
+		case 16:	rhandler = (genf *)input_port_read16; 	whandler = (genf *)input_port_write16; break;
+		case 32:	rhandler = (genf *)input_port_read32; 	whandler = (genf *)input_port_write32; break;
+		case 64:	rhandler = (genf *)input_port_read64; 	whandler = (genf *)input_port_write64; break;
 	}
-	space_map_range(spacerw, ROW_READ, space->dbits, 0, addrstart, addrend, addrmask, addrmirror, handler, (void *)port, tag);
+
+	if (rtag != NULL)
+	{
+		const input_port_config *port = input_port_by_tag(&space->machine->portlist, rtag);
+		if (port == NULL)
+			fatalerror("Non-existent port referenced: '%s'\n", rtag);
+
+		space_map_range(spacerw, ROW_READ, space->dbits, 0, addrstart, addrend, addrmask, addrmirror, rhandler, (void *)port, rtag);
+	}
+
+	if (wtag != NULL)
+	{
+		const input_port_config *port = input_port_by_tag(&space->machine->portlist, wtag);
+		if (port == NULL)
+			fatalerror("Non-existent port referenced: '%s'\n", wtag);
+
+		space_map_range(spacerw, ROW_WRITE, space->dbits, 0, addrstart, addrend, addrmask, addrmirror, whandler, (void *)port, wtag);
+	}
+
+	mem_dump(space->machine);
 }
 
 
@@ -1519,7 +1541,7 @@ static void memory_init_spaces(running_machine *machine)
 	memset(memdata->wptable, STATIC_WATCHPOINT, 1 << LEVEL1_BITS);
 
 	/* loop over devices */
-	for (device = machine->config->devicelist; device != NULL; device = device->next)
+	for (device = machine->config->devicelist.head; device != NULL; device = device->next)
 		for (spacenum = 0; spacenum < ADDRESS_SPACES; spacenum++)
 			if (device_get_addrbus_width(device, spacenum) > 0)
 			{
@@ -1728,7 +1750,7 @@ static void memory_init_populate(running_machine *machine)
 				/* if we have a read port tag, look it up */
 				if (entry->read_porttag != NULL)
 				{
-					const input_port_config *port = input_port_by_tag(machine->portconfig, entry->read_porttag);
+					const input_port_config *port = input_port_by_tag(&machine->portlist, entry->read_porttag);
 					int bits = (entry->read_bits == 0) ? space->dbits : entry->read_bits;
 					genf *handler = NULL;
 
@@ -1744,6 +1766,25 @@ static void memory_init_populate(running_machine *machine)
 					space_map_range_private(space, ROW_READ, bits, entry->read_mask, entry->addrstart, entry->addrend, entry->addrmask, entry->addrmirror, handler, (void *)port, entry->read_porttag);
 				}
 
+				/* if we have a write port tag, look it up */
+				if (entry->write_porttag != NULL)
+				{
+					const input_port_config *port = input_port_by_tag(&machine->portlist, entry->write_porttag);
+					int bits = (entry->write_bits == 0) ? space->dbits : entry->write_bits;
+					genf *handler = NULL;
+
+					if (port == NULL)
+						fatalerror("Non-existent port referenced: '%s'\n", entry->write_porttag);
+					switch (bits)
+					{
+						case 8:		handler = (genf *)input_port_write8; 	break;
+						case 16:	handler = (genf *)input_port_write16; 	break;
+						case 32:	handler = (genf *)input_port_write32; 	break;
+						case 64:	handler = (genf *)input_port_write64; 	break;
+					}
+					space_map_range_private(space, ROW_WRITE, bits, entry->write_mask, entry->addrstart, entry->addrend, entry->addrmask, entry->addrmirror, handler, (void *)port, entry->write_porttag);
+				}
+
 				/* install the read handler if present */
 				if (rhandler.generic != NULL)
 				{
@@ -1751,7 +1792,7 @@ static void memory_init_populate(running_machine *machine)
 					void *object = space;
 					if (entry->read_devtag != NULL)
 					{
-						object = (void *)device_list_find_by_tag(machine->config->devicelist, entry->read_devtag);
+						object = (void *)device_list_find_by_tag(&machine->config->devicelist, entry->read_devtag);
 						if (object == NULL)
 							fatalerror("Unidentified object in memory map: tag=%s\n", entry->read_devtag);
 					}
@@ -1765,7 +1806,7 @@ static void memory_init_populate(running_machine *machine)
 					void *object = space;
 					if (entry->write_devtag != NULL)
 					{
-						object = (void *)device_list_find_by_tag(machine->config->devicelist, entry->write_devtag);
+						object = (void *)device_list_find_by_tag(&machine->config->devicelist, entry->write_devtag);
 						if (object == NULL)
 							fatalerror("Unidentified object in memory map: tag=%s\n", entry->write_devtag);
 					}
@@ -1881,10 +1922,14 @@ static void memory_init_locate(running_machine *machine)
 				*entry->baseptr = entry->memory;
 			if (entry->baseptroffs_plus1 != 0)
 				*(void **)((UINT8 *)machine->driver_data + entry->baseptroffs_plus1 - 1) = entry->memory;
+			if (entry->genbaseptroffs_plus1 != 0)
+				*(void **)((UINT8 *)&machine->generic + entry->genbaseptroffs_plus1 - 1) = entry->memory;
 			if (entry->sizeptr != NULL)
 				*entry->sizeptr = entry->byteend - entry->bytestart + 1;
 			if (entry->sizeptroffs_plus1 != 0)
 				*(size_t *)((UINT8 *)machine->driver_data + entry->sizeptroffs_plus1 - 1) = entry->byteend - entry->bytestart + 1;
+			if (entry->gensizeptroffs_plus1 != 0)
+				*(size_t *)((UINT8 *)&machine->generic + entry->gensizeptroffs_plus1 - 1) = entry->byteend - entry->bytestart + 1;
 		}
 	}
 
@@ -2134,6 +2179,11 @@ static void map_detokenize(address_map *map, const game_driver *driver, const ch
 				entry->read_porttag = TOKEN_GET_STRING(tokens);
 				break;
 
+			case ADDRMAP_TOKEN_WRITE_PORT:
+				check_entry_field(write_porttag);
+				entry->write_porttag = TOKEN_GET_STRING(tokens);
+				break;
+
 			case ADDRMAP_TOKEN_REGION:
 				check_entry_field(region);
 				TOKEN_UNGET_UINT32(tokens);
@@ -2161,6 +2211,13 @@ static void map_detokenize(address_map *map, const game_driver *driver, const ch
 				entry->baseptroffs_plus1++;
 				break;
 
+			case ADDRMAP_TOKEN_BASE_GENERIC:
+				check_entry_field(genbaseptroffs_plus1);
+				TOKEN_UNGET_UINT32(tokens);
+				TOKEN_GET_UINT32_UNPACK2(tokens, entrytype, 8, entry->genbaseptroffs_plus1, 24);
+				entry->genbaseptroffs_plus1++;
+				break;
+
 			case ADDRMAP_TOKEN_SIZEPTR:
 				check_entry_field(sizeptr);
 				entry->sizeptr = TOKEN_GET_PTR(tokens, sizeptr);
@@ -2171,6 +2228,13 @@ static void map_detokenize(address_map *map, const game_driver *driver, const ch
 				TOKEN_UNGET_UINT32(tokens);
 				TOKEN_GET_UINT32_UNPACK2(tokens, entrytype, 8, entry->sizeptroffs_plus1, 24);
 				entry->sizeptroffs_plus1++;
+				break;
+
+			case ADDRMAP_TOKEN_SIZE_GENERIC:
+				check_entry_field(gensizeptroffs_plus1);
+				TOKEN_UNGET_UINT32(tokens);
+				TOKEN_GET_UINT32_UNPACK2(tokens, entrytype, 8, entry->gensizeptroffs_plus1, 24);
+				entry->gensizeptroffs_plus1++;
 				break;
 
 			default:
@@ -2333,7 +2397,7 @@ static int space_needs_backing_store(const address_space *space, const address_m
 {
 	FPTR handler;
 
-	if (entry->baseptr != NULL || entry->baseptroffs_plus1 != 0)
+	if (entry->baseptr != NULL || entry->baseptroffs_plus1 != 0 || entry->genbaseptroffs_plus1 != 0)
 		return TRUE;
 
 	handler = (FPTR)entry->write.generic;
@@ -3536,6 +3600,32 @@ static UINT32 input_port_read32(const input_port_config *port, offs_t offset, UI
 static UINT64 input_port_read64(const input_port_config *port, offs_t offset, UINT64 mem_mask)
 {
 	return input_port_read_direct(port);
+}
+
+
+
+/*-------------------------------------------------
+    output port handlers
+-------------------------------------------------*/
+
+static void input_port_write8(const input_port_config *port, offs_t offset, UINT8 data)
+{
+	input_port_write_direct(port, data, 0xff);
+}
+
+static void input_port_write16(const input_port_config *port, offs_t offset, UINT16 data, UINT16 mem_mask)
+{
+	input_port_write_direct(port, data, mem_mask);
+}
+
+static void input_port_write32(const input_port_config *port, offs_t offset, UINT32 data, UINT32 mem_mask)
+{
+	input_port_write_direct(port, data, mem_mask);
+}
+
+static void input_port_write64(const input_port_config *port, offs_t offset, UINT64 data, UINT64 mem_mask)
+{
+	input_port_write_direct(port, data, mem_mask);
 }
 
 
