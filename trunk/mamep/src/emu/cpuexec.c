@@ -442,7 +442,7 @@ static void cpu_load(running_machine *machine, int config_type, xml_data_node *p
 		{
 			float clockscale = xml_get_attribute_float(cpunode, "value", -1.0);
 			if (clockscale > 0)
-				cpu_set_clockscale(device_list_find_by_index(machine->config->devicelist, CPU, cpunum), clockscale);
+				cpu_set_clockscale(device_list_find_by_index(&machine->config->devicelist, CPU, cpunum), clockscale);
 		}
 	}
 }
