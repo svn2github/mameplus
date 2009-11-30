@@ -214,7 +214,7 @@ DEVICE_IMAGE_LOAD (msx_cart)
 		else /*if (size <= 0xc000) */ {
 			if (page) {
 				/* shift up 16kB; custom memcpy so overlapping memory
-				   isn't corrupted. ROM starts in page 1 (0x4000) */
+                   isn't corrupted. ROM starts in page 1 (0x4000) */
 				UINT8 *m;
 
 				page = 1;
@@ -474,7 +474,7 @@ DRIVER_INIT( msx )
 
 	memset (&msx1, 0, sizeof (MSX));
 	/* LOAD_DEVICE is called before DRIVER_INIT */
-	for (i=0; i<MSX_MAX_CARTS; i++) 
+	for (i=0; i<MSX_MAX_CARTS; i++)
 	{
 		msx1.cart_state[i] = cart_state[i];
 	}
@@ -589,7 +589,7 @@ WRITE8_HANDLER ( msx_psg_port_b_w )
 {
 	/* Arabic or kana mode led */
 	if ( (data ^ msx1.psg_b) & 0x80)
-		set_led_status (2, !(data & 0x80) );
+		set_led_status (space->machine, 2, !(data & 0x80) );
 
 	if ( (msx1.psg_b ^ data) & 0x10)
 	{
@@ -690,11 +690,11 @@ WD1793 or wd2793 registers
 
 adress
 
-7FF8H read	status register
-	  write command register
-7FF9H  r/w	track register (r/o on NMS 8245 and Sony)
-7FFAH  r/w	sector register (r/o on NMS 8245 and Sony)
-7FFBH  r/w	data register
+7FF8H read  status register
+      write command register
+7FF9H  r/w  track register (r/o on NMS 8245 and Sony)
+7FFAH  r/w  sector register (r/o on NMS 8245 and Sony)
+7FFBH  r/w  data register
 
 
 hardware registers
@@ -703,7 +703,7 @@ adress
 
 7FFCH r/w  bit 0 side select
 7FFDH r/w  b7>M-on , b6>in-use , b1>ds1 , b0>ds0  (all neg. logic)
-7FFEH		  not used
+7FFEH         not used
 7FFFH read b7>drq , b6>intrq
 
 set on 7FFDH bit 2 always to 0 (some use it as disk change reset)
@@ -767,7 +767,7 @@ static WRITE8_DEVICE_HANDLER ( msx_ppi_port_c_w )
 
 	/* caps lock */
 	if ( (old_val ^ data) & 0x40)
-		set_led_status (1, !(data & 0x40) );
+		set_led_status (device->machine,1, !(data & 0x40) );
 
 	/* key click */
 	if ( (old_val ^ data) & 0x80)
