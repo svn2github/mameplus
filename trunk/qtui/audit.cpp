@@ -106,7 +106,7 @@ void RomAuditor::exportDat()
 				//start iterating all roms
 				foreach (quint32 crc, gameInfo->roms.keys())
 				{
-					romInfo = gameInfo->roms[crc];
+					romInfo = gameInfo->roms.value(crc);
 
 					if (romInfo->status == "nodump")
 						nodumpCount++;
@@ -115,7 +115,7 @@ void RomAuditor::exportDat()
 					{
 						//to reduce redundant data, continue loop if parent is also missing this rom
 						if (gameInfo2 != NULL && 
-							gameInfo2->roms.contains(crc) && !gameInfo2->roms[crc]->available)
+							gameInfo2->roms.contains(crc) && !gameInfo2->roms.value(crc)->available)
 						{
 							//dont count bioses #1
 							if (/*!gameInfo2->isBios && */ (gameBiosInfo == NULL || !gameBiosInfo->roms.contains(crc)))
@@ -164,7 +164,7 @@ void RomAuditor::exportDat()
 
 				foreach (quint32 crc, missingRoms)
 				{
-					romInfo = gameInfo->roms[crc];
+					romInfo = gameInfo->roms.value(crc);
 
 					out.writeStartElement("rom");
 					out.writeAttribute("name", romInfo->name);
@@ -334,7 +334,7 @@ void RomAuditor::run()
 
 					//fill rom available status if crc recognized
 					if (gameInfo->roms.contains(zipFileInfo.crc))
-						gameInfo->roms[zipFileInfo.crc]->available = true;
+						gameInfo->roms.value(zipFileInfo.crc)->available = true;
 
 					//check if rom belongs to a clone
 					foreach (QString cloneName, gameInfo->clones)
@@ -342,7 +342,7 @@ void RomAuditor::run()
 						auditedGames.insert(cloneName);
 						gameInfo2 = pMameDat->games[cloneName];
 						if (gameInfo2->roms.contains(zipFileInfo.crc))
-							gameInfo2->roms[zipFileInfo.crc]->available = true;
+							gameInfo2->roms.value(zipFileInfo.crc)->available = true;
 					}
 				}
 			}
@@ -400,7 +400,7 @@ void RomAuditor::run()
 			//iterate roms
 			foreach (quint32 crc, gameInfo->roms.keys())
 			{
-				romInfo = gameInfo->roms[crc];
+				romInfo = gameInfo->roms.value(crc);
 
 				//game rom passed
 				if (romInfo->available)
@@ -412,7 +412,7 @@ void RomAuditor::run()
 					gameInfo2 = pMameDat->games[gameInfo->romof];
 
 					//parent rom passed
-					if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
+					if (gameInfo2->roms.contains(crc) && gameInfo2->roms.value(crc)->available)
 					{
 						romInfo->available = true;
 						continue;
@@ -424,7 +424,7 @@ void RomAuditor::run()
 						gameInfo2 = pMameDat->games[gameInfo2->romof];
 
 						//bios rom passed
-						if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
+						if (gameInfo2->roms.contains(crc) && gameInfo2->roms.value(crc)->available)
 						{
 							romInfo->available = true;
 							continue;

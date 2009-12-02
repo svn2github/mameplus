@@ -129,7 +129,7 @@ public:
 	QHash<QString /*name*/, BiosSet *> biosSets;
 
 	/* rom */
-	QHash<quint32 /*crc*/, RomInfo *> roms;
+	QMultiHash<quint32 /*crc*/, RomInfo *> roms;
 
 	/* disk */
 	QHash<QString /*sha1*/, DiskInfo *> disks;

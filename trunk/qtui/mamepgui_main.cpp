@@ -46,7 +46,7 @@ QStringList validGuiSettings;
 /* internal */
 QDockWidget *dwHistory = NULL;
 
-#define MPGUI_VER "1.4.9c"
+#define MPGUI_VER "1.4.9d"
 
 void MainWindow::log(QString message)
 {
@@ -910,6 +910,12 @@ void MainWindow::on_actionJapanese_activated()
 	showRestartDialog();
 }
 
+void MainWindow::on_actionFrench_activated()
+{
+	language = "fr_FR";
+	showRestartDialog();
+}
+
 void MainWindow::on_actionHungarian_activated()
 {
 	language = "hu_HU";
@@ -1052,6 +1058,8 @@ void MainWindow::loadLayout()
 		actionChinese_Taiwan->setChecked(true);
 	else if (language == "ja_JP")
 		actionJapanese->setChecked(true);
+	else if (language == "fr_FR")
+		actionFrench->setChecked(true);
 	else if (language == "hu_HU")
 		actionHungarian->setChecked(true);
 	else if (language == "ko_KR")

@@ -197,8 +197,9 @@ public:
 			romInfo->region = attributes.value("region");
 			romInfo->status = attributes.value("status");
 
+			//it's a multihash, use insert instead of []
 			bool ok;
-			gameInfo->roms[attributes.value("crc").toUInt(&ok, 16)] = romInfo;
+			gameInfo->roms.insert(attributes.value("crc").toUInt(&ok, 16), romInfo);
 		}
 		else if (qName == "disk")
 		{
@@ -436,7 +437,7 @@ void MameDat::save()
 		out << gameInfo->roms.count();
 		foreach (quint32 crc, gameInfo->roms.keys())
 		{
-			RomInfo *romInfo = gameInfo->roms[crc];
+			RomInfo *romInfo = gameInfo->roms.value(crc);
 			out << crc;
 			out << romInfo->name;
 			out << romInfo->size;
@@ -679,7 +680,7 @@ int MameDat::load()
 				in >> romInfo->merge;
 				in >> romInfo->region;
 			}
-			gameInfo->roms[crc] = romInfo;
+			gameInfo->roms.insert(crc, romInfo);
 		}
 
 		if (!gameInfo->isExtRom)
