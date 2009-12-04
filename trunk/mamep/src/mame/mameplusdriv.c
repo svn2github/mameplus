@@ -70,13 +70,13 @@ const game_driver * const plusdrivers[] =
 	DRIVER( dinohb )	/* hack */
 
 	/* Neo Geo bootleg */
-	DRIVER( kof96ep )	/* 0214 bootleg */
+	DRIVER( kof96ep )	/* 0214 (c) 1996 bootleg */
 	DRIVER( kof97pla )	/* 0232 (c) 2003 bootleg */
 	DRIVER( kf2k1pls )	/* 0262 (c) 2001 bootleg */
 	DRIVER( kf2k1pa )	/* 0262 (c) 2001 bootleg */
 	DRIVER( cthd2k3a )	/* bootleg of kof2001*/
-	DRIVER( kf2k2plb )	/* bootleg */
-	DRIVER( kf2k2plc )	/* bootleg */
+	DRIVER( kf2k2plb )	/* 0265 (c) 2002 bootleg */
+	DRIVER( kf2k2plc )	/* 0265 (c) 2002 bootleg */
 	DRIVER( kf2k4pls )	/* bootleg of kof2002 */
 	DRIVER( mslug5b )	/* 0268 (c) 2003 bootleg */
 
@@ -85,7 +85,8 @@ const game_driver * const plusdrivers[] =
 
 	/* CD to MVS Conversion */
 	DRIVER( zintrkcd )	/* 0211 hack - CD to MVS Conversion by Razoola */
-	DRIVER( fr2ch )		/* hack - CD to MVS Conversion */
+	DRIVER( fr2ch )		/* 0098 hack - CD to MVS Conversion */
+	DRIVER( ironclad )	/* 0220 (c) 1996 Saurus - Wii virtual console release */
 
 	/* IGS PGM System Games */
 	DRIVER( kovqhsgs )	/* (c) 2008 */

@@ -3802,6 +3802,24 @@ ROM_START( pgoal )
 	ROM_LOAD16_BYTE( "219-c6.bin", 0x0800001, 0x200000, CRC(f57b4a1c) SHA1(875ca69afbc5304ec23f4bc9186abe92f477f6c8) ) /* Plane 2,3 */
 ROM_END
 
+ROM_START( ironclad )
+	ROM_REGION( 0x200000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "220-p1.bin", 0x000000, 0x200000, CRC(65849961) SHA1(2846081bb1451a209412159991bfac95d394fe3a) )
+
+	NEO_SFIX_128K( "220-s1.bin", CRC(372fe217) SHA1(493433e682f519bf647e1481c8bdd3a980830ffb) )
+
+	NEO_BIOS_AUDIO_128K( "220-m1.bin", CRC(3a08bb63) SHA1(d8fbbf42a006ccafc3cd99808d28c82dbaac4590) )
+
+	ROM_REGION( 0x400000, "ymsnd", 0 )
+	ROM_LOAD( "220-v1.bin", 0x000000, 0x400000, CRC(8f30a215) SHA1(0ee866a468c4c3608d55df2b5cb9243c8016d77c) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x1000000, "sprites", 0 )
+	ROM_LOAD16_BYTE( "220-c1.bin", 0x0000000, 0x800000, CRC(621f4a09) SHA1(117a8e8bea5f880d8315b48bc5884eb805c5e678) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "220-c2.bin", 0x0000001, 0x800000, CRC(7fec83e8) SHA1(769c2cb4ed4a9d7c29e3aad3f4601f1d24c96640) ) /* Plane 2,3 */
+ROM_END
+
 ROM_START( magdrop2 )
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "221-p1.bin", 0x000000, 0x80000, CRC(7be82353) SHA1(08ab39f52b893591c13a7d7aa26b20ce86e9ddf5) )
@@ -10003,6 +10021,7 @@ GAME( 1995, quizkof,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Q
 GAME( 1995, stakwin,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Stakes Winner / Stakes Winner - GI kinzen seihae no michi", 0 )
 GAME( 1996, ragnagrd, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Ragnagard / Shin-Oh-Ken", 0 )
 GAME( 1996, pgoal,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Pleasure Goal / Futsal - 5 on 5 Mini Soccer", 0 )
+GAME( 1996, ironclad, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Ironclad / Choutetsu Brikin'ger (Wii virtual console release)", 0 )
 GAME( 1996, stakwin2, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Stakes Winner 2", 0 )
 GAME( 1997, shocktro, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Shock Troopers (set 1)", 0 )
 GAME( 1997, shocktra, shocktro, neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Shock Troopers (set 2)", 0 )
