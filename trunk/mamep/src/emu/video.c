@@ -16,7 +16,6 @@
 #include "rendutil.h"
 #include "ui.h"
 #include "aviio.h"
-#include "deprecat.h"
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */

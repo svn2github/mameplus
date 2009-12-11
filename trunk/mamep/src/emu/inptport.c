@@ -2590,7 +2590,7 @@ static void port_config_detokenize(input_port_list *portlist, const input_port_t
 				curport->tag = TOKEN_GET_STRING(ipt);
 				if (portlist->map != NULL)
 				{
-					tagmap_error err = tagmap_add_unique_hash(portlist->map, curport->tag, curport);
+					tagmap_error err = tagmap_add_unique_hash(portlist->map, curport->tag, curport, FALSE);
 					if (err == TMERR_DUPLICATE)
 					{
 						const input_port_config *match = tagmap_find_hash_only(portlist->map, curport->tag);
@@ -4621,6 +4621,7 @@ void input_port_config_custom(input_port_list *portlist, const input_port_token 
 	if (errorbuf != NULL)
 		*errorbuf = 0;
 
+	/* detokenize into the list */
 	port_config_detokenize(portlist, tokens, errorbuf, errorbuflen);
 
 	// calc total players
@@ -4648,8 +4649,6 @@ void input_port_config_custom(input_port_list *portlist, const input_port_token 
 		port_config_detokenize(portlist, ipt_custom7p, errorbuf, errorbuflen);
 	if (nplayer > 7)
 		port_config_detokenize(portlist, ipt_custom8p, errorbuf, errorbuflen);
-
-	return;
 }
 
 static int auto_pressed(running_machine *machine, const input_field_config *field)
