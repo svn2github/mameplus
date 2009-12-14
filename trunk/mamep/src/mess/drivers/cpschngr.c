@@ -1,13 +1,13 @@
 /***************************************************************************
 
-	CPS Changer
+    CPS Changer
 
-	Although this is split off from MAME, it still uses machine/kabuki.c
-	This in turn includes cps1.h.
-	Therefore we must call our include by the same name, in order to
-	override the mame include, and thereby remove any compilation errors.
-	It also means we can get rid of the various bodges of the past, and
-	no more ifdefs are needed in the mame code.
+    Although this is split off from MAME, it still uses machine/kabuki.c
+    This in turn includes cps1.h.
+    Therefore we must call our include by the same name, in order to
+    override the mame include, and thereby remove any compilation errors.
+    It also means we can get rid of the various bodges of the past, and
+    no more ifdefs are needed in the mame code.
 
 ***************************************************************************/
 
@@ -18,8 +18,7 @@
 #include "sound/2151intf.h"
 #include "sound/okim6295.h"
 #include "sound/qsound.h"
-//mamep: locate correct header
-#include "../includes/cps1.h"
+#include "includes/cpschngr.h"
 
 static READ16_HANDLER( cps1_dsw_r )
 {
@@ -58,10 +57,10 @@ static WRITE16_HANDLER( cps1_coinctrl_w )
 {
 	if (ACCESSING_BITS_8_15)
 	{
-		coin_counter_w(space->machine, 0,data & 0x0100);
-		coin_counter_w(space->machine, 1,data & 0x0200);
-		coin_lockout_w(space->machine, 0,~data & 0x0400);
-		coin_lockout_w(space->machine, 1,~data & 0x0800);
+		coin_counter_w(space->machine,0,data & 0x0100);
+		coin_counter_w(space->machine,1,data & 0x0200);
+		coin_lockout_w(space->machine,0,~data & 0x0400);
+		coin_lockout_w(space->machine,1,~data & 0x0800);
 	}
 }
 
@@ -69,10 +68,10 @@ static WRITE16_HANDLER( cpsq_coinctrl2_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		coin_counter_w(space->machine, 2,data & 0x01);
-		coin_lockout_w(space->machine, 2,~data & 0x02);
-		coin_counter_w(space->machine, 3,data & 0x04);
-		coin_lockout_w(space->machine, 3,~data & 0x08);
+		coin_counter_w(space->machine,2,data & 0x01);
+		coin_lockout_w(space->machine,2,~data & 0x02);
+		coin_counter_w(space->machine,3,data & 0x04);
+		coin_lockout_w(space->machine,3,~data & 0x08);
 	}
 }
 
@@ -195,7 +194,7 @@ static WRITE16_HANDLER( cps1_eeprom_port_w )
 
 /***************************************
 
-	Address Maps
+    Address Maps
 
 ****************************************/
 
@@ -255,7 +254,7 @@ ADDRESS_MAP_END
 
 /***********************************************************
 
-	Inputs and Dips
+    Inputs and Dips
 
 ***********************************************************/
 
@@ -311,7 +310,7 @@ INPUT_PORTS_END
 
 /***************************************
 
-	Graphics Decode
+    Graphics Decode
 
 ****************************************/
 
@@ -442,7 +441,7 @@ MACHINE_DRIVER_END
 
 /***************************************
 
-	Driver Initialisation
+    Driver Initialisation
 
 ****************************************/
 
@@ -455,7 +454,7 @@ static DRIVER_INIT( wof )
 
 /***************************************
 
-	Roms
+    Roms
 
 ***************************************/
 
@@ -600,7 +599,7 @@ ROM_END
 
 /***************************************************************************
 
-	Game driver(s)
+    Game driver(s)
 
 ***************************************************************************/
 
