@@ -86,7 +86,9 @@ const game_driver * const plusdrivers[] =
 	/* CD to MVS Conversion */
 	DRIVER( zintrkcd )	/* 0211 hack - CD to MVS Conversion by Razoola */
 	DRIVER( fr2ch )		/* 0098 hack - CD to MVS Conversion */
-	DRIVER( ironclad )	/* 0220 (c) 1996 Saurus - Wii virtual console release */
+
+	/* Wii Virtual Console to MVS Conversion */
+	DRIVER( ironclad )	/* 0220 (c) 1996 Saurus - Wii Virtual Console to MVS Conversion */
 
 	/* IGS PGM System Games */
 	DRIVER( kovqhsgs )	/* (c) 2008 */

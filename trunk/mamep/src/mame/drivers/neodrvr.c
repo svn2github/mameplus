@@ -9608,7 +9608,7 @@ static DRIVER_INIT( kf2k3pcd ) // decrypted C & decrypted Bios
 	neogeo_fixed_layer_bank_type = 2;
 	DRIVER_INIT_CALL(neogeo);
 	install_pvc_protection(machine);
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xc00000, 0xc7ffff, 0, 0, (read16_space_func)SMH_BANK(6) );  // 512k bios
+	memory_install_read_bank(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xc00000, 0xc7ffff, 0, 0, "bank6" );  // 512k bios
 }
 
 static DRIVER_INIT( samsh5sp )
@@ -9772,11 +9772,7 @@ static DRIVER_INIT( jckeygpd )
 	extra_ram = auto_alloc_array(machine, UINT16, 0x2000/2);
 	state_save_register_global_pointer(machine, extra_ram, 0x2000 / 2);
 
-	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x200000, 0x201fff, 0, 0, (read16_space_func)SMH_BANK(8), (write16_space_func)SMH_BANK(8));
-	memory_set_bankptr(machine, NEOGEO_BANK_EXTRA_RAM, extra_ram);
-
-//  memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x280000, 0x280001, 0, 0, input_port_read_handler16(machine->portconfig, "IN5") );
-//  memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x2c0000, 0x2c0001, 0, 0, input_port_read_handler16(machine->portconfig, "IN6") );
+	memory_install_ram(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x200000, 0x201fff, 0, 0, NULL);
 
 	DRIVER_INIT_CALL(neogeo);
 }
@@ -10008,7 +10004,6 @@ GAME( 1995, quizkof,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Q
 GAME( 1995, stakwin,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Stakes Winner / Stakes Winner - GI kinzen seihae no michi", 0 )
 GAME( 1996, ragnagrd, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Ragnagard / Shin-Oh-Ken", 0 )
 GAME( 1996, pgoal,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Pleasure Goal / Futsal - 5 on 5 Mini Soccer", 0 )
-GAME( 1996, ironclad, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Ironclad / Choutetsu Brikin'ger (Wii virtual console release)", 0 )
 GAME( 1996, stakwin2, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Stakes Winner 2", 0 )
 GAME( 1997, shocktro, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Shock Troopers (set 1)", 0 )
 GAME( 1997, shocktra, shocktro, neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Shock Troopers (set 2)", 0 )
@@ -10098,6 +10093,9 @@ GAME( 2000, bangbedp, bangbead, neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Ba
 /* CD to MVS Conversion */
 GAME( 1996, zintrkcd, zintrckb, neogeo,   neogeo,   neogeo,   ROT0, "hack", "Zintrick / Oshidashi Zentrix (CD to MVS Conversion, Hack)", 0 )
 GAME( 1995, fr2ch,    neogeo,   neogeo,   neogeo,   fr2ch,    ROT0, "hack", "Idol Mahjong - final romance 2 (CD to MVS Conversion, Hack)", 0 )
+
+/* Wii Virtual Console to MVS Conversion */
+GAME( 1996, ironclad, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Ironclad / Choutetsu Brikin'ger (Wii Virtual Console to MVS Conversion)", 0 )
 
 /* Neo Geo decrypted */
 GAME( 1999, kof99d,   kof99,    neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (not encrypted P, decrypted C)", 0 )
