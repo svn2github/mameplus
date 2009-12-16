@@ -339,29 +339,6 @@ static TIMER_CALLBACK(floppy_drive_index_callback)
 /*************************************************************************/
 /* IO_FLOPPY device functions */
 
-/* return and set current status
-  use for setting:-
-  1) write protect/enable
-  2) drive present/missing
-*/
-
-int	floppy_status(const device_config *img, int new_status)
-{
-	/* return current status only? */
-	if (new_status!=-1)
-	{
-		/* we don't set the flags directly.
-        The flags are "cooked" when we do a floppy_drive_get_flag_state depending on
-        if drive is connected etc. So if we wrote the flags back it would
-        corrupt this information. Therefore we update the flags depending on new_status */
-
-		floppy_drive_set_flag_state(img, FLOPPY_DRIVE_DISK_WRITE_PROTECTED, (new_status & FLOPPY_DRIVE_DISK_WRITE_PROTECTED));
-	}
-
-	/* return current status */
-	return floppy_drive_get_flag_state(img,0x0ff);
-}
-
 /* set flag state */
 void floppy_drive_set_flag_state(const device_config *img, int flag, int state)
 {
@@ -496,27 +473,6 @@ int	floppy_drive_get_flag_state(const device_config *img, int flag)
 	/* these flags are independant of a real drive/disk image */
     flags |= drive_flags & (FLOPPY_DRIVE_READY | FLOPPY_DRIVE_MOTOR_ON | FLOPPY_DRIVE_INDEX);
 
-	flags |= drive_flags & FLOPPY_DRIVE_HEAD_AT_TRACK_0;
-
-	/* if disk image is read-only return write protected all the time */
-	if (!image_is_writable(img))
-	{
-		flags |= FLOPPY_DRIVE_DISK_WRITE_PROTECTED;
-	}
-	else
-	{
-		/* return real state of write protected flag */
-		flags |= drive_flags & FLOPPY_DRIVE_DISK_WRITE_PROTECTED;
-	}
-
-	/* drive present not */
-	if (!image_slotexists(img))
-	{
-		/* adjust some flags if drive is not present */
-		flags &= ~FLOPPY_DRIVE_HEAD_AT_TRACK_0;
-		flags |= FLOPPY_DRIVE_DISK_WRITE_PROTECTED;
-	}
-
     flags &= flag;
 
 	return flags;
@@ -545,15 +501,7 @@ void floppy_drive_seek(const device_config *img, signed int signed_tracks)
 	}
 
 	/* set track 0 flag */
-	pDrive->tk00 = ASSERT_LINE;
-	pDrive->flags &= ~FLOPPY_DRIVE_HEAD_AT_TRACK_0;
-
-	if (pDrive->current_track==0)
-	{
-		pDrive->tk00 = CLEAR_LINE;
-		pDrive->flags |= FLOPPY_DRIVE_HEAD_AT_TRACK_0;
-	}
-
+	pDrive->tk00 = (pDrive->current_track == 0) ? CLEAR_LINE : ASSERT_LINE;
 	devcb_call_write_line(&pDrive->out_tk00_func, pDrive->tk00);
 
 	/* inform disk image of step operation so it can cache information */
@@ -727,6 +675,12 @@ DEVICE_START( floppy )
 
 	floppy->drive_id = floppy_get_drive(device);
 	floppy->active = FALSE;
+
+	/* by default we are write-protected */
+	floppy->wpt = CLEAR_LINE;
+
+	/* not at track 0 */
+	floppy->tk00 = ASSERT_LINE;
 
 	/* resolve callbacks */
 	devcb_resolve_write_line(&floppy->out_idx_func, &floppy->config->out_idx_func, device);
@@ -1001,7 +955,23 @@ WRITE_LINE_DEVICE_HANDLER( floppy_wtg_w )
 READ_LINE_DEVICE_HANDLER( floppy_wpt_r )
 {
 	floppy_drive *drive = get_safe_token(device);
+
+	if (image_slotexists(device))
+	{
+		if (image_is_writable(device))
+			drive->wpt = ASSERT_LINE;
+		else
+			drive->wpt = CLEAR_LINE;
+	}
+
 	return drive->wpt;
+}
+
+/* track 0 detect */
+READ_LINE_DEVICE_HANDLER( floppy_tk00_r )
+{
+	floppy_drive *drive = get_safe_token(device);
+	return drive->tk00;
 }
 
 

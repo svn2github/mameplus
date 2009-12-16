@@ -59,30 +59,30 @@ The relation between block number and flash chip is as follows:
  8 | 080000-01ffff | 80000-8ffff | 78000-79fff
  9 | 090000-01ffff | 90000-9ffff | 7a000-7bfff
 10 | 0a0000-01ffff | a0000-affff | 7c000-7ffff
-11 | 0b0000-01ffff | b0000-bffff | 
-12 | 0c0000-01ffff | c0000-cffff | 
-13 | 0d0000-01ffff | d0000-dffff | 
-14 | 0e0000-01ffff | e0000-effff | 
-15 | 0f0000-01ffff | f0000-f7fff | 
-16 | 100000-10ffff | f8000-f9fff | 
-17 | 110000-11ffff | fa000-fbfff | 
-18 | 120000-12ffff | fc000-fffff | 
-19 | 130000-13ffff |             | 
+11 | 0b0000-01ffff | b0000-bffff |
+12 | 0c0000-01ffff | c0000-cffff |
+13 | 0d0000-01ffff | d0000-dffff |
+14 | 0e0000-01ffff | e0000-effff |
+15 | 0f0000-01ffff | f0000-f7fff |
+16 | 100000-10ffff | f8000-f9fff |
+17 | 110000-11ffff | fa000-fbfff |
+18 | 120000-12ffff | fc000-fffff |
+19 | 130000-13ffff |             |
 20 | 140000-14ffff |             |
-21 | 150000-15ffff |             | 
-22 | 160000-16ffff |             | 
-23 | 170000-17ffff |             | 
-24 | 180000-18ffff |             | 
-25 | 190000-19ffff |             | 
-26 | 1a0000-1affff |             | 
-27 | 1b0000-1bffff |             | 
-28 | 1c0000-1cffff |             | 
-29 | 1d0000-1dffff |             | 
-30 | 1e0000-1effff |             | 
-31 | 1f0000-1f7fff |             | 
-32 | 1f8000-1f9fff |             | 
-33 | 1fa000-1fbfff |             | 
-34 | 1fc000-1fffff |             | 
+21 | 150000-15ffff |             |
+22 | 160000-16ffff |             |
+23 | 170000-17ffff |             |
+24 | 180000-18ffff |             |
+25 | 190000-19ffff |             |
+26 | 1a0000-1affff |             |
+27 | 1b0000-1bffff |             |
+28 | 1c0000-1cffff |             |
+29 | 1d0000-1dffff |             |
+30 | 1e0000-1effff |             |
+31 | 1f0000-1f7fff |             |
+32 | 1f8000-1f9fff |             |
+33 | 1fa000-1fbfff |             |
+34 | 1fc000-1fffff |             |
 
 The last block is always reserved for use by the system. The Neogeo Pocket Color
 bios does some tests on this last block to see if the flash functionality is
@@ -484,7 +484,7 @@ static WRITE8_HANDLER( flash1_w )
 static ADDRESS_MAP_START( ngp_mem, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE( 0x000080, 0x0000bf )	AM_READWRITE( ngp_io_r, ngp_io_w )								/* ngp/c specific i/o */
 	AM_RANGE( 0x004000, 0x006fff )	AM_RAM															/* work ram */
-	AM_RANGE( 0x007000, 0x007fff )	AM_RAM AM_SHARE(1)												/* shared with sound cpu */
+	AM_RANGE( 0x007000, 0x007fff )	AM_RAM AM_SHARE("share1")										/* shared with sound cpu */
 	AM_RANGE( 0x008000, 0x0087ff )	AM_DEVREADWRITE( "k1ge", k1ge_r, k1ge_w )						/* video registers */
 	AM_RANGE( 0x008800, 0x00bfff )	AM_RAM AM_REGION("vram", 0x800 )								/* Video RAM area */
 	AM_RANGE( 0x200000, 0x3fffff )	AM_ROM AM_WRITE( flash0_w ) AM_REGION( "cart", 0 )				/* cart area #1 */
@@ -518,7 +518,7 @@ static WRITE8_HANDLER( ngp_z80_signal_main_w )
 
 
 static ADDRESS_MAP_START( z80_mem, ADDRESS_SPACE_PROGRAM, 8 )
-	AM_RANGE( 0x0000, 0x0FFF )	AM_RAM AM_SHARE(1)								/* shared with tlcs900 */
+	AM_RANGE( 0x0000, 0x0FFF )	AM_RAM AM_SHARE("share1")								/* shared with tlcs900 */
 	AM_RANGE( 0x4000, 0x4001 )	AM_DEVWRITE( "t6w28", t6w28_w )					/* sound chip (right, left) */
 	AM_RANGE( 0x8000, 0x8000 )	AM_READWRITE( ngp_z80_comm_r, ngp_z80_comm_w )	/* main-sound communication */
 	AM_RANGE( 0xc000, 0xc000 )	AM_WRITE( ngp_z80_signal_main_w )				/* signal irq to main cpu */

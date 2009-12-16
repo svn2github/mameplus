@@ -137,5 +137,6 @@ $(MESS_MACHINE)/nes_mmc.o: 	$(MESSSRC)/machine/nes_ines.c \
 #-------------------------------------------------
 
 $(MESSOBJ)/mess.o:	$(MESS_LAYOUT)/lcd.lh
+$(MESSOBJ)/mess.o:	$(MESS_LAYOUT)/lcd_rot.lh
 
 $(MESS_DRIVERS)/sms.o:		$(MESS_LAYOUT)/sms1.lh

@@ -538,7 +538,7 @@ static void wd17xx_command_restore(const device_config *device)
 	if (image_slotexists(w->drive))
 	{
 		/* keep stepping until track 0 is received or 255 steps have been done */
-		while (!(floppy_drive_get_flag_state(w->drive, FLOPPY_DRIVE_HEAD_AT_TRACK_0)) && (step_counter!=0))
+		while (floppy_tk00_r(w->drive) && (step_counter != 0))
 		{
 			/* update time to simulate seek time busy signal */
 			w->busy_count++;
@@ -560,10 +560,10 @@ static void wd17xx_command_restore(const device_config *device)
 }
 
 
-/* 
-	Write an entire track. Formats which do not define a write_track 
-	function pointer will cause a silent return. 
-*/ 
+/*
+    Write an entire track. Formats which do not define a write_track
+    function pointer will cause a silent return.
+*/
 static void write_track(const device_config *device)
 {
 	wd1770_state *w = get_safe_token(device);
@@ -1078,7 +1078,7 @@ static TIMER_CALLBACK(wd17xx_write_sector_callback)
 	{
 
 		/* drive write protected? */
-		if (floppy_drive_get_flag_state(w->drive,FLOPPY_DRIVE_DISK_WRITE_PROTECTED))
+		if (floppy_wpt_r(w->drive) == CLEAR_LINE)
 		{
 			w->status |= STA_2_WRITE_PRO;
 
@@ -1167,7 +1167,12 @@ void wd17xx_set_drive(const device_config *device, UINT8 drive)
 		logerror("wd17xx_set_drive: $%02x\n", drive);
 
 	if (w->intf->floppy_drive_tags[drive] != NULL)
-		w->drive = devtag_get_device(device->machine, w->intf->floppy_drive_tags[drive]);
+	{
+		if (device->owner != NULL)
+			w->drive = device_find_child_by_tag(device->owner, w->intf->floppy_drive_tags[drive]);
+		else
+			w->drive = devtag_get_device(device->machine, w->intf->floppy_drive_tags[drive]);
+	}
 }
 
 void wd17xx_set_side(const device_config *device, UINT8 head)
@@ -1295,7 +1300,7 @@ READ8_DEVICE_HANDLER( wd17xx_status_r )
 
 		/* set track 0 state */
 		result &=~STA_1_TRACK0;
-		if (floppy_drive_get_flag_state(w->drive, FLOPPY_DRIVE_HEAD_AT_TRACK_0))
+		if (floppy_tk00_r(w->drive) == CLEAR_LINE)
 			result |= STA_1_TRACK0;
 
 	//  floppy_drive_set_ready_state(w->drive, 1,1);
@@ -1548,7 +1553,7 @@ WRITE8_DEVICE_HANDLER( wd17xx_command_w )
 			{
 
 				/* drive write protected? */
-				if (floppy_drive_get_flag_state(w->drive,FLOPPY_DRIVE_DISK_WRITE_PROTECTED))
+				if (floppy_wpt_r(w->drive) == CLEAR_LINE)
 				{
 				/* yes */
 					w->status |= STA_2_WRITE_PRO;
@@ -1957,7 +1962,13 @@ static DEVICE_RESET( wd1770 )
 	for (i = 0; i < 4; i++)
 	{
 		if(w->intf->floppy_drive_tags[i]!=NULL) {
-			const device_config *img = devtag_get_device(device->machine,w->intf->floppy_drive_tags[i]);
+			const device_config *img;
+
+			if (device->owner != NULL)
+				img = device_find_child_by_tag(device->owner, w->intf->floppy_drive_tags[i]);
+			else
+				img = devtag_get_device(device->machine, w->intf->floppy_drive_tags[i]);
+
 			if (img!=NULL) {
 				floppy_drive_set_controller(img,device);
 				floppy_drive_set_index_pulse_callback(img, wd17xx_index_pulse_callback);
