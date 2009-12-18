@@ -214,7 +214,7 @@ static MACHINE_DRIVER_START( snes )
 	MDRV_CPU_ADD("soundcpu", SPC700, 1024000)	/* 1.024 MHz */
 	MDRV_CPU_PROGRAM_MAP(spc_map)
 
-//	MDRV_QUANTUM_TIME(HZ(48000))
+	//MDRV_QUANTUM_TIME(HZ(48000))
 	MDRV_QUANTUM_PERFECT_CPU("maincpu")
 
 	MDRV_MACHINE_START( snes_mess )
@@ -234,7 +234,7 @@ static MACHINE_DRIVER_START( snes )
 	MDRV_SOUND_ADD("custom", SNES, 0)
 	MDRV_SOUND_ROUTE(0, "lspeaker", 1.00)
 	MDRV_SOUND_ROUTE(1, "rspeaker", 1.00)
-	
+
 	MDRV_IMPORT_FROM(snes_cartslot)
 MACHINE_DRIVER_END
 
@@ -334,7 +334,7 @@ ROM_END
 
 ***************************************************************************/
 
-/*     YEAR  NAME     PARENT  COMPAT  MACHINE  INPUT  INIT  CONFIG  COMPANY     FULLNAME                                      FLAGS */
+/*    YEAR  NAME     PARENT  COMPAT  MACHINE  INPUT  INIT  CONFIG  COMPANY     FULLNAME                                      FLAGS */
 CONS( 1989, snes,    0,      0,      snes,    snes,  0,    0,   "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 CONS( 1989, snessfx, snes,   0,      snessfx, snes,  0,    0,   "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC), SuperFX", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 CONS( 1991, snespal, snes,   0,      snespal, snes,  0,    0,   "Nintendo", "Super Nintendo Entertainment System (PAL)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

@@ -1,6 +1,6 @@
 /***************************************************************************
 
-	messopts.c - MESS specific option handling
+    messopts.c - MESS specific option handling
 
 ****************************************************************************/
 
@@ -51,7 +51,7 @@ const options_entry mess_core_options[] =
 
 /*-------------------------------------------------
     mess_get_device_option - accesses a device
-	option, by device and index
+    option, by device and index
 -------------------------------------------------*/
 
 const char *mess_get_device_option(const image_device_info *info)
@@ -70,7 +70,7 @@ const char *mess_get_device_option(const image_device_info *info)
 
 /*-------------------------------------------------
     mess_enumerate_devices - runs a specified proc
-	for all devices on a driver
+    for all devices on a driver
 -------------------------------------------------*/
 
 static void mess_enumerate_devices(core_options *opts, const machine_config *config, const game_driver *gamedrv,
@@ -90,7 +90,7 @@ static void mess_enumerate_devices(core_options *opts, const machine_config *con
 
 /*-------------------------------------------------
     add_device_options_for_device - adds options
-	for this device on a driver
+    for this device on a driver
 -------------------------------------------------*/
 
 static void add_device_options_for_device(core_options *opts, const game_driver *gamedrv,
@@ -124,7 +124,7 @@ static void add_device_options_for_device(core_options *opts, const game_driver 
 
 /*-------------------------------------------------
     mess_add_device_options - add all of the device
-	options for a specified device
+    options for a specified device
 -------------------------------------------------*/
 
 void mess_add_device_options(core_options *opts, const game_driver *driver)
@@ -148,8 +148,8 @@ void mess_add_device_options(core_options *opts, const game_driver *driver)
 
 /*-------------------------------------------------
     mess_driver_name_callback - called when we
-	parse the driver name, so we can add options
-	specific to that driver
+    parse the driver name, so we can add options
+    specific to that driver
 -------------------------------------------------*/
 
 static void mess_driver_name_callback(core_options *opts, const char *arg)
@@ -171,7 +171,7 @@ static void mess_driver_name_callback(core_options *opts, const char *arg)
 
 /*-------------------------------------------------
     mess_options_init - called from core to add
-	MESS specific options
+    MESS specific options
 -------------------------------------------------*/
 
 void mess_options_init(core_options *opts)
@@ -190,7 +190,7 @@ void mess_options_init(core_options *opts)
 
 /*-------------------------------------------------
     extract_device_options_for_device - extracts
-	options for this device on a driver
+    options for this device on a driver
 -------------------------------------------------*/
 
 static void extract_device_options_for_device(core_options *opts, const game_driver *gamedrv,
@@ -215,7 +215,7 @@ static void extract_device_options_for_device(core_options *opts, const game_dri
 
 /*-------------------------------------------------
     write_config - emit current option statuses as
-	INI files
+    INI files
 -------------------------------------------------*/
 
 static int write_config(const char *filename, const game_driver *gamedrv)
@@ -248,7 +248,7 @@ done:
 
 /*-------------------------------------------------
     mess_options_extract - extract device options
-	out of core into the options
+    out of core into the options
 -------------------------------------------------*/
 
 void mess_options_extract(running_machine *machine)

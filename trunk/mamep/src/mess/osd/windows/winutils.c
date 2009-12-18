@@ -1,6 +1,6 @@
 //============================================================
 //
-//	winutils.c - Generic Win32 utility code
+//  winutils.c - Generic Win32 utility code
 //
 //============================================================
 #define UNICODE
@@ -31,8 +31,8 @@
 
 
 //============================================================
-//	win_get_file_name_dialog - sanitize all of the ugliness
-//	in invoking GetOpenFileName() and GetSaveFileName()
+//  win_get_file_name_dialog - sanitize all of the ugliness
+//  in invoking GetOpenFileName() and GetSaveFileName()
 //============================================================
 
 BOOL win_get_file_name_dialog(win_open_file_name *ofn)
@@ -165,7 +165,7 @@ done:
 
 
 //============================================================
-//	win_scroll_window
+//  win_scroll_window
 //============================================================
 
 void win_scroll_window(HWND window, WPARAM wparam, int scroll_bar, int scroll_delta_line)
@@ -225,7 +225,7 @@ void win_scroll_window(HWND window, WPARAM wparam, int scroll_bar, int scroll_de
 
 
 //============================================================
-//	win_get_file_attributes_utf8
+//  win_get_file_attributes_utf8
 //============================================================
 
 DWORD win_get_file_attributes_utf8(const char *filename)
