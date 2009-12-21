@@ -450,10 +450,7 @@ QByteArray UpdateSelectionThread::getScreenshot(const QString &_dirPaths, const 
 	}
 
 	QHash<QString, MameFileInfo *> mameFileInfoList = 
-		utils->iterateMameFile(dirPaths, 
-		zipName, 
-		fileNameFilters,
-		MAMEFILE_READ);
+ 		utils->iterateMameFile(dirPaths, zipName, fileNameFilters, MAMEFILE_READ);
 
 	if (mameFileInfoList.size() > 0)
 		snapdata = mameFileInfoList[mameFileInfoList.keys().first()]->data;
@@ -1391,6 +1388,12 @@ void Gamelist::init(bool toggleState, int initMethod)
 		return;
 	}
 
+	//restore filters
+	filterFlags = pGuiSettings->value("folder_flag").toInt();
+	win->actionFilterClones->setChecked((F_CLONES & filterFlags) != 0);
+	win->actionFilterNonWorking->setChecked((F_NONWORKING & filterFlags) != 0);
+	win->actionFilterUnavailable->setChecked((F_UNAVAILABLE & filterFlags) != 0);
+
 	// connect gameListModel/gameListPModel signals after the view init completed
 	// connect gameListModel/gameListPModel signals after mameOpts init
 	if (isLView)
@@ -1425,12 +1428,6 @@ void Gamelist::init(bool toggleState, int initMethod)
 		win->tvGameList->header()->restoreState(column_state);
 		restoreFolderSelection();
 	}
-
-	//restore filters
-	filterFlags = pGuiSettings->value("folder_flag").toInt();
-	win->actionFilterClones->setChecked((F_CLONES & filterFlags) != 0);
-	win->actionFilterNonWorking->setChecked((F_NONWORKING & filterFlags) != 0);
-	win->actionFilterUnavailable->setChecked((F_UNAVAILABLE & filterFlags) != 0);
 
 	//sorting
 	win->tvGameList->setSortingEnabled(true);
@@ -3054,9 +3051,11 @@ void Gamelist::runMame(int method, QStringList playArgs)
 			QFileInfo fileInfo(archName);
 			
 			currentTempROM = QDir::tempPath() + "/" + romFileName;
+			
 			QHash<QString, MameFileInfo *> mameFileInfoList = 
 				utils->iterateMameFile(fileInfo.path(), fileInfo.completeBaseName(), romFileName, MAMEFILE_EXTRACT);
 			utils->clearMameFileInfoList(mameFileInfoList);
+			
 			runMame(RUNMAME_EXTROM);
 			return;
 		}

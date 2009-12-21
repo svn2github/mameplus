@@ -310,7 +310,8 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 
 	QStringList archNames = _archNames.split(";");
 	QStringList fileNameFilters = _fileNameFilters.split(";");
-	if (fileNameFilters.first().startsWith("*"))
+	if (fileNameFilters.size() > 1 || 
+		fileNameFilters.first().startsWith("*"))
 		isSingleFile = false;
 
 	MameFileInfo *mameFileInfo;

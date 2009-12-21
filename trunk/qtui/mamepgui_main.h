@@ -51,6 +51,7 @@ public:
 	bool isDockTabVisible(QString);
 	void setVersion();
 	void enableCtrls(bool);
+	void log(QString);
 
 	RomAuditor romAuditor;
 	MameExeRomAuditor *mameAuditor;
@@ -70,6 +71,9 @@ public:
 	QStringList dockCtrlNames;
 	QDockWidget* dockCtrls[DOCK_LAST];
 	QTextBrowser *tbHistory, *tbMameinfo, *tbDriverinfo, *tbStory, *tbCommand;
+
+signals:
+	void logUpdated(QString);
 
 public slots:
 	void on_actionExitStop_activated();
@@ -115,7 +119,7 @@ public slots:
 	void toggleGameListColumn();
 	void on_trayIconActivated(QSystemTrayIcon::ActivationReason);
 
-    void log(QString);
+    void updateLog(QString);
 	void poplog(QString);
 	void logStatus(QString);
 	void logStatus(GameInfo *);

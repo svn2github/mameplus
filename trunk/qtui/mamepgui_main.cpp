@@ -46,9 +46,14 @@ QStringList validGuiSettings;
 /* internal */
 QDockWidget *dwHistory = NULL;
 
-#define MPGUI_VER "1.4.9d"
+#define MPGUI_VER "1.4.9e"
 
 void MainWindow::log(QString message)
+{
+	emit logUpdated(message);
+}
+
+void MainWindow::updateLog(QString message)
 {
 	QString timeString = QTime::currentTime().toString("hh:mm:ss.zzz");
 
@@ -371,6 +376,9 @@ void MainWindow::initSnap(int snapType)
 
 void MainWindow::init()
 {
+	// Log
+	connect(this, SIGNAL(logUpdated(QString)), this, SLOT(updateLog(QString)));
+
 	enableCtrls(false);
 
 	for (int i = DOCK_SNAP; i <= DOCK_PCB; i ++)
@@ -643,7 +651,7 @@ void MainWindow::setVersion()
 		.arg(MPGUI_VER)
 		.arg(mameString)
 		.arg(m1VerString)
-		.arg("<a href=\"http://www.qtsoftware.com\">Qt</a> " QT_VERSION_STR " &copy; Nokia Corporation<br>")
+		.arg("<a href=\"http://qt.nokia.com\">Qt</a> " QT_VERSION_STR " &copy; Nokia Corporation<br>")
 		.arg(sdlVerString)
 		.arg("<a href=\"http://www.7-zip.org\">LZMA SDK</a> " MY_VERSION_COPYRIGHT_DATE)
 		;

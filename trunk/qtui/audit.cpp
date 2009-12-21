@@ -496,8 +496,6 @@ void RomAuditor::auditConsole(QString consoleName)
 
 			foreach (QString zipFileName, mameFileInfoList.keys())
 			{
-				mameFileInfoList[zipFileName]->size;
-
 				QFileInfo zipFileInfo(zipFileName);
 
 				gameInfo = new GameInfo(pMameDat);

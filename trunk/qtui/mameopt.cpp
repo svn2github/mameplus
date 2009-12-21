@@ -1327,9 +1327,9 @@ const QString OptionUtils::getLongValue(const QString &optname, const QString &o
 	return optval;
 }
 
-const QString OptionUtils::getShortValue(const QString &optname, const QString &optval)
+const QString OptionUtils::getShortValue(const QString &optName, const QString &optval)
 {
-	const MameOption *pMameOpt = mameOpts[optname];
+	const MameOption *pMameOpt = mameOpts[optName];
 
 	if (pMameOpt->type == MAMEOPT_TYPE_BOOL)
 		return (optval=="true") ? "1" : "0";
