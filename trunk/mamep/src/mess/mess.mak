@@ -97,6 +97,7 @@ $(MESSOBJ)/nintendo.a:			\
 	$(MESS_MACHINE)/nes_mmc.o	\
 	$(MAME_VIDEO)/ppu2c0x.o		\
 	$(MESS_VIDEO)/nes.o			\
+	$(MESS_FORMATS)/nes_dsk.o	\
 	$(MESS_MACHINE)/nes.o		\
 	$(MESS_DRIVERS)/nes.o		\
 	$(MESS_MACHINE)/snescart.o	\

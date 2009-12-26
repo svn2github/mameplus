@@ -1985,7 +1985,7 @@ static int invoke_command(HWND wnd, UINT command)
 				// change frameskip
 				video_set_frameskip(command - ID_FRAMESKIP_0);
 			}
-			else if ((command >= ID_DEVICE_0) && (command < ID_DEVICE_0 + (MAX_DEV_INSTANCES*IO_COUNT*DEVOPTION_MAX)))
+			else if ((command >= ID_DEVICE_0) && (command < ID_DEVICE_0 + (IO_COUNT*DEVOPTION_MAX)))
 			{
 				// change device
 				img = decode_deviceoption(window->machine, command, &dev_command);
@@ -2098,7 +2098,7 @@ int win_setup_menus(running_machine *machine, HMODULE module, HMENU menu_bar)
 	};
 
 	// verify that our magic numbers work
-	assert((ID_DEVICE_0 + IO_COUNT * MAX_DEV_INSTANCES * DEVOPTION_MAX) < ID_JOYSTICK_0);
+	assert((ID_DEVICE_0 + IO_COUNT * DEVOPTION_MAX) < ID_JOYSTICK_0);
 
 	// initialize critical values
 	joystick_menu_setup = 0;

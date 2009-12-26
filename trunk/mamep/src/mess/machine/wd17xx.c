@@ -202,22 +202,6 @@
 /* Type IV commands */
 #define FDC_FORCE_INT	0xd0	/* force interrupt */
 
-/* enumeration to specify the type of FDC; there are subtle differences */
-typedef enum
-{
-	WD_TYPE_1770,
-	WD_TYPE_1771,
-	WD_TYPE_1772,
-	WD_TYPE_1773,
-	WD_TYPE_179X,
-	WD_TYPE_1793,
-	WD_TYPE_2793,
-
-	/* duplicate constants */
-	WD_TYPE_177X = WD_TYPE_1770,
-	WD_TYPE_MB8877 = WD_TYPE_179X
-} wd17xx_type_t;
-
 /* structure describing a double density track */
 #define TRKSIZE_DD		6144
 #if 0
@@ -263,12 +247,6 @@ static const UINT8 track_SD[][2] = {
 };
 #endif
 
-enum
-{
-	MISCCALLBACK_COMMAND = 0,
-	MISCCALLBACK_DATA
-};
-
 
 /***************************************************************************
     TYPE DEFINITIONS
@@ -307,7 +285,7 @@ struct _wd1770_state
 
 
 	DENSITY   density;				/* FM/MFM, single / double density */
-	wd17xx_type_t type;
+
 	UINT8	track_reg;				/* value of track register */
 	UINT8	command_type;			/* last command type */
 	UINT8	head;					/* current head # */
@@ -332,12 +310,12 @@ struct _wd1770_state
 
 	UINT8	ddam;					/* ddam of sector found - used when reading */
 	UINT8	sector_data_id;
-	emu_timer	*timer, *timer_rs, *timer_ws, *timer_rid;
 	int		data_direction;
 
 	int     hld_count;				/* head loaded counter */
 
-	emu_timer *busy_timer;
+	/* timers to delay execution/completion of commands */
+	emu_timer *timer_cmd, *timer_data, *timer_rs, *timer_ws;
 
 	/* this is the drive currently selected */
 	const device_config *drive;
@@ -374,10 +352,7 @@ const wd17xx_interface default_wd17xx_interface_2_drives =
 
 static void wd17xx_complete_command(const device_config *device, int delay);
 static void wd17xx_timed_data_request(const device_config *device);
-static TIMER_CALLBACK(wd17xx_misc_timer_callback);
-static TIMER_CALLBACK(wd17xx_read_sector_callback);
-static TIMER_CALLBACK(wd17xx_write_sector_callback);
-static void wd17xx_index_pulse_callback(const device_config *controller,const device_config *img, int state);
+static void wd17xx_index_pulse_callback(const device_config *controller, const device_config *img, int state);
 
 
 /*****************************************************************************
@@ -422,8 +397,7 @@ static void calc_crc(UINT16 *crc, UINT8 value)
 
 static int wd17xx_has_side_select(const device_config *device)
 {
-	wd1770_state *w = get_safe_token(device);
-	return (w->type == WD_TYPE_1773) || (w->type == WD_TYPE_1793) || (w->type == WD_TYPE_2793);
+	return (device->type == WD1773 || device->type == WD1793 || device->type == WD2793);
 }
 
 static int wd17xx_get_datarate_in_us(DENSITY density)
@@ -488,16 +462,19 @@ static void	wd17xx_set_intrq(const device_config *device)
 	devcb_call_write_line(&w->out_intrq_func, w->intrq);
 }
 
-
-
-static TIMER_CALLBACK( wd17xx_busy_callback )
+/* set intrq after delay */
+static TIMER_CALLBACK( wd17xx_command_callback )
 {
 	const device_config *device = ptr;
-	wd1770_state *w = get_safe_token(device);
 	wd17xx_set_intrq(device);
-	timer_reset(w->busy_timer, attotime_never);
 }
 
+/* set drq after delay */
+static TIMER_CALLBACK( wd17xx_data_callback )
+{
+	const device_config *device = ptr;
+	wd17xx_set_drq(device);
+}
 
 
 static void wd17xx_set_busy(const device_config *device, attotime duration)
@@ -505,9 +482,9 @@ static void wd17xx_set_busy(const device_config *device, attotime duration)
 	wd1770_state *w = get_safe_token(device);
 
 	w->status |= STA_1_BUSY;
-	timer_adjust_oneshot(w->busy_timer, duration, 0);
-}
 
+	timer_adjust_oneshot(w->timer_cmd, duration, 0);
+}
 
 
 /* BUSY COUNT DOESN'T WORK PROPERLY! */
@@ -588,7 +565,7 @@ static void write_track(const device_config *device)
 	}
 #endif
 
-	if (w->type == WD_TYPE_1771)
+	if (device->type == WD1771)
 		w->data_count = TRKSIZE_SD;
 	else
 		w->data_count = (w->density) ? TRKSIZE_DD : TRKSIZE_SD;
@@ -726,7 +703,7 @@ static void read_track(const device_config *device)
 	}
 #endif
 
-	if (w->type == WD_TYPE_1771)
+	if (device->type == WD1771)
 		w->data_count = TRKSIZE_SD;
 	else
 		w->data_count = (w->density) ? TRKSIZE_DD : TRKSIZE_SD;
@@ -909,31 +886,6 @@ static void wd17xx_read_sector(const device_config *device)
 }
 
 
-
-static TIMER_CALLBACK(wd17xx_misc_timer_callback)
-{
-	const device_config *device = ptr;
-	int callback_type = param;
-	wd1770_state *w = get_safe_token(device);
-
-	switch(callback_type) {
-	case MISCCALLBACK_COMMAND:
-		/* command callback */
-		wd17xx_set_intrq(device);
-		break;
-
-	case MISCCALLBACK_DATA:
-		/* data callback */
-		/* ok, trigger data request now */
-		wd17xx_set_drq(device);
-		break;
-	}
-
-	/* stop it, but don't allow it to be free'd */
-	timer_reset(w->timer, attotime_never);
-}
-
-
 /* called on error, or when command is actually completed */
 /* KT - I have used a timer for systems that use interrupt driven transfers.
 A interrupt occurs after the last byte has been read. If it occurs at the time
@@ -963,7 +915,7 @@ static void wd17xx_complete_command(const device_config *device, int delay)
 	usecs = 12;
 
 	/* set new timer */
-	timer_adjust_oneshot(w->timer, ATTOTIME_IN_USEC(usecs), MISCCALLBACK_COMMAND);
+	timer_adjust_oneshot(w->timer_cmd, ATTOTIME_IN_USEC(usecs), 0);
 }
 
 
@@ -1053,9 +1005,6 @@ static TIMER_CALLBACK( wd17xx_read_sector_callback )
 		wd17xx_complete_command(device, DELAY_NOTREADY);
 	else
 		wd17xx_read_sector(device);
-
-	/* stop it, but don't allow it to be free'd */
-	timer_reset(w->timer_rs, attotime_never);
 }
 
 
@@ -1105,9 +1054,6 @@ static TIMER_CALLBACK(wd17xx_write_sector_callback)
 			}
 		}
 	}
-
-	/* stop it, but don't allow it to be free'd */
-	timer_reset(w->timer_ws, attotime_never);
 }
 
 
@@ -1121,7 +1067,7 @@ static void wd17xx_timed_data_request(const device_config *device)
 	usecs = wd17xx_get_datarate_in_us(w->density);
 
 	/* set new timer */
-	timer_adjust_oneshot(w->timer, ATTOTIME_IN_USEC(usecs), MISCCALLBACK_DATA);
+	timer_adjust_oneshot(w->timer_data, ATTOTIME_IN_USEC(usecs), 0);
 }
 
 
@@ -1135,7 +1081,7 @@ static void wd17xx_timed_read_sector_request(const device_config *device)
 	usecs = w->pause_time; /* How long should we wait? How about 40 micro seconds? */
 
 	/* set new timer */
-	timer_reset(w->timer_rs, ATTOTIME_IN_USEC(usecs));
+	timer_adjust_oneshot(w->timer_rs, ATTOTIME_IN_USEC(usecs), 0);
 }
 
 
@@ -1149,7 +1095,7 @@ static void wd17xx_timed_write_sector_request(const device_config *device)
 	usecs = w->pause_time; /* How long should we wait? How about 40 micro seconds? */
 
 	/* set new timer */
-	timer_reset(w->timer_ws, ATTOTIME_IN_USEC(usecs));
+	timer_adjust_oneshot(w->timer_ws, ATTOTIME_IN_USEC(usecs), 0);
 }
 
 
@@ -1570,7 +1516,7 @@ WRITE8_DEVICE_HANDLER( wd17xx_command_w )
 				{
 				w->command = data & ~FDC_MASK_TYPE_III;
 				w->data_offset = 0;
-				if (w->type == WD_TYPE_1771)
+				if (device->type == WD1771)
 					w->data_count = TRKSIZE_SD;
 				else
 					w->data_count = (w->density) ? TRKSIZE_DD : TRKSIZE_SD;
@@ -1857,18 +1803,17 @@ static DEVICE_START( wd1770 )
 
 	w->status = STA_1_TRACK0;
 	w->density = DEN_MFM_LO;
-	w->busy_timer = timer_alloc(device->machine, wd17xx_busy_callback, (void*)device);
-	w->timer = timer_alloc(device->machine, wd17xx_misc_timer_callback, (void*)device);
-	w->timer_rs = timer_alloc(device->machine, wd17xx_read_sector_callback, (void*)device);
-	w->timer_ws = timer_alloc(device->machine, wd17xx_write_sector_callback, (void*)device);
 	w->pause_time = 40;
+
+	/* allocate timers */
+	w->timer_cmd = timer_alloc(device->machine, wd17xx_command_callback, (void *)device);
+	w->timer_data = timer_alloc(device->machine, wd17xx_data_callback, (void *)device);
+	w->timer_rs = timer_alloc(device->machine, wd17xx_read_sector_callback, (void *)device);
+	w->timer_ws = timer_alloc(device->machine, wd17xx_write_sector_callback, (void *)device);
 
 	/* resolve callbacks */
 	devcb_resolve_write_line(&w->out_intrq_func, &w->intf->out_intrq_func, device);
 	devcb_resolve_write_line(&w->out_drq_func, &w->intf->out_drq_func, device);
-
-	/* model specific values */
-	w->type = WD_TYPE_1770;
 
 	/* stepping rate depends on the clock */
 	w->stepping_rate[0] = 6;
@@ -1877,82 +1822,17 @@ static DEVICE_START( wd1770 )
 	w->stepping_rate[3] = 30;
 }
 
-static DEVICE_START( wd1771 )
-{
-	wd1770_state *w = get_safe_token(device);
-
-	DEVICE_START_CALL(wd1770);
-
-	w->type = WD_TYPE_1771;
-}
-
 static DEVICE_START( wd1772 )
 {
 	wd1770_state *w = get_safe_token(device);
 
 	DEVICE_START_CALL(wd1770);
 
-	w->type = WD_TYPE_1772;
-
 	/* the 1772 has faster track stepping rates */
 	w->stepping_rate[0] = 6;
 	w->stepping_rate[1] = 12;
 	w->stepping_rate[2] = 2;
 	w->stepping_rate[3] = 3;
-}
-
-static DEVICE_START( wd1773 )
-{
-	wd1770_state *w = get_safe_token(device);
-
-	DEVICE_START_CALL(wd1770);
-
-	w->type = WD_TYPE_1773;
-}
-
-static DEVICE_START( wd179x )
-{
-	wd1770_state *w = get_safe_token(device);
-
-	DEVICE_START_CALL(wd1770);
-
-	w->type = WD_TYPE_179X;
-}
-
-static DEVICE_START( wd1793 )
-{
-	wd1770_state *w = get_safe_token(device);
-
-	DEVICE_START_CALL(wd1770);
-
-	w->type = WD_TYPE_1793;
-}
-
-static DEVICE_START( wd2793 )
-{
-	wd1770_state *w = get_safe_token(device);
-
-	DEVICE_START_CALL(wd1770);
-
-	w->type = WD_TYPE_2793;
-}
-
-static DEVICE_START( wd177x )
-{
-	wd1770_state *w = get_safe_token(device);
-
-	DEVICE_START_CALL(wd1770);
-
-	w->type = WD_TYPE_177X;
-}
-
-static DEVICE_START( mb8877 )
-{
-	wd1770_state *w = get_safe_token(device);
-
-	DEVICE_START_CALL(wd1770);
-
-	w->type = WD_TYPE_MB8877;
 }
 
 static DEVICE_RESET( wd1770 )
@@ -2012,7 +1892,7 @@ static const char DEVTEMPLATE_SOURCE[] = __FILE__;
 #include "devtempl.h"
 
 #define DEVTEMPLATE_DERIVED_ID(p,s)		p##wd1771##s
-#define DEVTEMPLATE_DERIVED_FEATURES	DT_HAS_START
+#define DEVTEMPLATE_DERIVED_FEATURES	0
 #define DEVTEMPLATE_DERIVED_NAME		"WD1771"
 #include "devtempl.h"
 
@@ -2022,31 +1902,31 @@ static const char DEVTEMPLATE_SOURCE[] = __FILE__;
 #include "devtempl.h"
 
 #define DEVTEMPLATE_DERIVED_ID(p,s)		p##wd1773##s
-#define DEVTEMPLATE_DERIVED_FEATURES	DT_HAS_START
+#define DEVTEMPLATE_DERIVED_FEATURES	0
 #define DEVTEMPLATE_DERIVED_NAME		"WD1773"
 #include "devtempl.h"
 
 #define DEVTEMPLATE_DERIVED_ID(p,s)		p##wd179x##s
-#define DEVTEMPLATE_DERIVED_FEATURES	DT_HAS_START
+#define DEVTEMPLATE_DERIVED_FEATURES	0
 #define DEVTEMPLATE_DERIVED_NAME		"WD179x"
 #include "devtempl.h"
 
 #define DEVTEMPLATE_DERIVED_ID(p,s)		p##wd1793##s
-#define DEVTEMPLATE_DERIVED_FEATURES	DT_HAS_START
+#define DEVTEMPLATE_DERIVED_FEATURES	0
 #define DEVTEMPLATE_DERIVED_NAME		"WD1793"
 #include "devtempl.h"
 
 #define DEVTEMPLATE_DERIVED_ID(p,s)		p##wd2793##s
-#define DEVTEMPLATE_DERIVED_FEATURES	DT_HAS_START
+#define DEVTEMPLATE_DERIVED_FEATURES	0
 #define DEVTEMPLATE_DERIVED_NAME		"WD2793"
 #include "devtempl.h"
 
 #define DEVTEMPLATE_DERIVED_ID(p,s)		p##wd177x##s
-#define DEVTEMPLATE_DERIVED_FEATURES	DT_HAS_START
+#define DEVTEMPLATE_DERIVED_FEATURES	0
 #define DEVTEMPLATE_DERIVED_NAME		"WD179x"
 #include "devtempl.h"
 
 #define DEVTEMPLATE_DERIVED_ID(p,s)		p##mb8877##s
-#define DEVTEMPLATE_DERIVED_FEATURES	DT_HAS_START
+#define DEVTEMPLATE_DERIVED_FEATURES	0
 #define DEVTEMPLATE_DERIVED_NAME		"MB8877"
 #include "devtempl.h"

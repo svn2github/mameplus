@@ -16,12 +16,12 @@
 #include "image.h"
 #include "hash.h"
 #include "unzip.h"
-#include "devices/flopdrv.h"
 #include "utils.h"
 #include "hashfile.h"
 #include "mamecore.h"
 #include "messopts.h"
 #include "ui.h"
+#include "device.h"
 #include "zippath.h"
 
 
@@ -327,8 +327,7 @@ void image_unload_all(running_machine *machine)
 
 static int is_image_device(const device_config *device)
 {
-    return (device->type == MESS_DEVICE)
-        || (device_get_info_int_offline(device, DEVINFO_INT_IMAGE_READABLE) != 0)
+    return (device_get_info_int_offline(device, DEVINFO_INT_IMAGE_READABLE) != 0)
         || (device_get_info_int_offline(device, DEVINFO_INT_IMAGE_WRITEABLE) != 0);
 }
 
