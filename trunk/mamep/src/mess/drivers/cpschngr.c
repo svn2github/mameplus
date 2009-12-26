@@ -204,11 +204,11 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)			/* System input ports / Dip Switches */
 	AM_RANGE(0x800020, 0x800021) AM_READNOP
 	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
-	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE(&cps1_cps_a_regs)	/* CPS-A custom */
-	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE(&cps1_cps_b_regs)
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_mess_cps_a_w) AM_BASE(&cps1_cps_a_regs)	/* CPS-A custom */
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_mess_cps_b_r, cps1_mess_cps_b_w) AM_BASE(&cps1_cps_b_regs)
 	AM_RANGE(0x800180, 0x800187) AM_WRITE(cps1_soundlatch_w)	/* Sound command */
 	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)	/* Sound timer fade */
-	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE(&cps1_gfxram) AM_SIZE(&cps1_gfxram_size)	/* SF2CE executes code from here */
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_mess_gfxram_w) AM_BASE(&cps1_gfxram) AM_SIZE(&cps1_gfxram_size)	/* SF2CE executes code from here */
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -229,9 +229,9 @@ static ADDRESS_MAP_START( qsound_main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800000, 0x800007) AM_READ_PORT("IN1")			/* Player input ports */
 	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)			/* System input ports / Dip Switches */
 	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
-	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE(&cps1_cps_a_regs)	/* CPS-A custom */
-	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE(&cps1_cps_b_regs)	/* CPS-B custom (mapped by LWIO/IOB1 PAL on B-board) */
-	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE(&cps1_gfxram) AM_SIZE(&cps1_gfxram_size)	/* SF2CE executes code from here */
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_mess_cps_a_w) AM_BASE(&cps1_cps_a_regs)	/* CPS-A custom */
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_mess_cps_b_r, cps1_mess_cps_b_w) AM_BASE(&cps1_cps_b_regs)	/* CPS-B custom (mapped by LWIO/IOB1 PAL on B-board) */
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_mess_gfxram_w) AM_BASE(&cps1_gfxram) AM_SIZE(&cps1_gfxram_size)	/* SF2CE executes code from here */
 	AM_RANGE(0xf00000, 0xf0ffff) AM_READ(qsound_rom_r)			/* Slammasters protection */
 	AM_RANGE(0xf18000, 0xf19fff) AM_READWRITE(qsound_sharedram1_r, qsound_sharedram1_w)  /* Q RAM */
 	AM_RANGE(0xf1c000, 0xf1c001) AM_READ_PORT("IN2")			/* Player 3 controls (later games) */
@@ -387,9 +387,9 @@ static MACHINE_DRIVER_START( cps1_10MHz )
 	MDRV_GFXDECODE(cps1)
 	MDRV_PALETTE_LENGTH(0xc00)
 
-	MDRV_VIDEO_START(cps1)
-	MDRV_VIDEO_EOF(cps1)
-	MDRV_VIDEO_UPDATE(cps1)
+	MDRV_VIDEO_START(cps1_mess)
+	MDRV_VIDEO_EOF(cps1_mess)
+	MDRV_VIDEO_UPDATE(cps1_mess)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
@@ -449,7 +449,7 @@ MACHINE_DRIVER_END
 static DRIVER_INIT( wof )
 {
 	wof_decode(machine);
-	DRIVER_INIT_CALL(cps1);
+	DRIVER_INIT_CALL(cps1_mess);
 }
 
 /***************************************
@@ -604,7 +604,7 @@ ROM_END
 ***************************************************************************/
 
 /*    YEAR  NAME      PARENT    COMPAT  MACHINE     INPUT     INIT     COMPANY     FULLNAME */
-CONS( 1995, sfach,    sfzch,    0,	cps1_10MHz, sfzch,    cps1,        "Capcom", "CPS Changer - Street Fighter Alpha - Warriors' Dreams (Publicity US 950727)", 0 )
-CONS( 1995, sfzch,    0,        0,	cps1_10MHz, sfzch,    cps1,        "Capcom", "CPS Changer - Street Fighter Zero (Japan 951020)", 0 )
-CONS( 1995, sfzbch,   sfzch,    0,	cps1_10MHz, sfzch,    cps1,        "Capcom", "CPS Changer - Street Fighter Zero (Brazil 950727)", 0 )
+CONS( 1995, sfach,    sfzch,    0,	cps1_10MHz, sfzch,    cps1_mess,   "Capcom", "CPS Changer - Street Fighter Alpha - Warriors' Dreams (Publicity US 950727)", 0 )
+CONS( 1995, sfzch,    0,        0,	cps1_10MHz, sfzch,    cps1_mess,   "Capcom", "CPS Changer - Street Fighter Zero (Japan 951020)", 0 )
+CONS( 1995, sfzbch,   sfzch,    0,	cps1_10MHz, sfzch,    cps1_mess,   "Capcom", "CPS Changer - Street Fighter Zero (Brazil 950727)", 0 )
 CONS( 1995, wofch,    0,        0,	qsound,     sfzch,    wof,         "Capcom", "CPS Changer - Tenchi Wo Kurau II (Japan 921031)", 0 )

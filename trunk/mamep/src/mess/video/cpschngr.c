@@ -194,7 +194,7 @@ INLINE UINT16 *cps1_base(int offset,int boundary)
 
 
 
-WRITE16_HANDLER( cps1_cps_a_w )
+WRITE16_HANDLER( cps1_mess_cps_a_w )
 {
 	data = COMBINE_DATA(&cps1_cps_a_regs[offset]);
 
@@ -203,7 +203,7 @@ WRITE16_HANDLER( cps1_cps_a_w )
 }
 
 
-READ16_HANDLER( cps1_cps_b_r )
+READ16_HANDLER( cps1_mess_cps_b_r )
 {
 	/* Some games interrogate a couple of registers on bootup. */
 	/* These are CPS1 board B self test checks. They wander from game to */
@@ -231,7 +231,7 @@ READ16_HANDLER( cps1_cps_b_r )
 }
 
 
-WRITE16_HANDLER( cps1_cps_b_w )
+WRITE16_HANDLER( cps1_mess_cps_b_w )
 {
 	data = COMBINE_DATA(&cps1_cps_b_regs[offset]);
 
@@ -316,7 +316,7 @@ static void unshuffle(UINT64 *buf,int len)
 #endif
 
 
-DRIVER_INIT( cps1 )
+DRIVER_INIT( cps1_mess )
 {
 	cps1_gfx_decode(machine);
 }
@@ -384,7 +384,7 @@ static void cps1_get_video_base(void )
 }
 
 
-WRITE16_HANDLER( cps1_gfxram_w )
+WRITE16_HANDLER( cps1_mess_gfxram_w )
 {
 	int page = (offset >> 7) & 0x3c0;
 	COMBINE_DATA(&cps1_gfxram[offset]);
@@ -552,7 +552,7 @@ static void cps1_update_transmasks(void)
 	}
 }
 
-VIDEO_START( cps1 )
+VIDEO_START( cps1_mess )
 {
 	int i;
 
@@ -909,7 +909,7 @@ static void cps1_render_high_layer(bitmap_t *bitmap, const rectangle *cliprect, 
 
 ***************************************************************************/
 
-VIDEO_UPDATE( cps1 )
+VIDEO_UPDATE( cps1_mess )
 {
 	int layercontrol,l0,l1,l2,l3;
 	int videocontrol = cps1_cps_a_regs[CPS1_VIDEOCONTROL];
@@ -974,7 +974,7 @@ VIDEO_UPDATE( cps1 )
 	return 0;
 }
 
-VIDEO_EOF( cps1 )
+VIDEO_EOF( cps1_mess )
 {
 	/* Get video memory base registers */
 	cps1_get_video_base();
