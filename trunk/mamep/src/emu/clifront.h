@@ -55,6 +55,7 @@ int cli_info_listbrothers(core_options *options, const char *gamename);
 int cli_info_listcrc(core_options *options, const char *gamename);
 int cli_info_listroms(core_options *options, const char *gamename);
 int cli_info_listsamples(core_options *options, const char *gamename);
+int cli_info_listdevices(core_options *options, const char *gamename);
 int cli_info_listgames(core_options *options, const char *gamename);
 
 #ifdef DRIVER_SWITCH

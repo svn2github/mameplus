@@ -91,10 +91,10 @@ const game_driver * const plusdrivers[] =
 	DRIVER( ironclad )	/* 0220 (c) 1996 Saurus - Wii Virtual Console to MVS Conversion */
 
 	/* IGS PGM System Games */
-	DRIVER( kovqhsgs )	/* (c) 2008 */
-	DRIVER( kovlsjb )	/* (c) 2009 */
-	DRIVER( kovlsjba )	/* (c) 2009 */
-	DRIVER( kovlsqh2 )	/* (c) 2009 */
+//	DRIVER( kovqhsgs )	/* (c) 2008 */
+//	DRIVER( kovlsjb )	/* (c) 2009 */
+//	DRIVER( kovlsjba )	/* (c) 2009 */
+//	DRIVER( kovlsqh2 )	/* (c) 2009 */
 
 #ifndef NEOCPSPGM
 	/* Konami "Nemesis hardware" games */

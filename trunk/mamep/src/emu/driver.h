@@ -183,12 +183,7 @@ struct _game_driver
 	const input_port_token *ipt;					/* pointer to array of input port tokens */
 	void				(*driver_init)(running_machine *machine); /* DRIVER_INIT callback */
 	const rom_entry *	rom;						/* pointer to list of ROMs for the game */
-
-#ifdef MAMEMESS
-	void (*sysconfig_ctor)(struct SystemConfigurationParamBlock *cfg);
 	const char *		compatible_with;
-#endif
-
 	UINT32				flags;						/* orientation and other flags; see defines below */
 	const char *		default_layout;				/* default internally defined layout */
 };
@@ -205,24 +200,6 @@ struct _game_driver
 #define GAME(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS)	\
 	GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,((const char *)0))
 
-#ifndef MAMEMESS
-#define GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,LAYOUT)	\
-const game_driver GAME_NAME(NAME) =			\
-{											\
-	__FILE__,								\
-	#PARENT,								\
-	#NAME,									\
-	FULLNAME,								\
-	#YEAR,									\
-	COMPANY,								\
-	MACHINE_DRIVER_NAME(MACHINE),				\
-	INPUT_PORTS_NAME(INPUT),							\
-	DRIVER_INIT_NAME(INIT),						\
-	ROM_NAME(NAME),								\
-	(MONITOR)|(FLAGS),						\
-	&LAYOUT[0]								\
-};
-#else /* MAMEMESS */
 #define GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,LAYOUT)	\
 const game_driver GAME_NAME(NAME) =			\
 {											\
@@ -237,11 +214,9 @@ const game_driver GAME_NAME(NAME) =			\
 	DRIVER_INIT_NAME(INIT),						\
 	ROM_NAME(NAME),								\
 	NULL,									\
-	NULL,									\
 	(MONITOR)|(FLAGS),						\
 	&LAYOUT[0]								\
 };
-#endif /* MAMEMESS */
 
 
 

@@ -596,6 +596,7 @@ void decrypt_ct2k3sp( running_machine *machine )
 #define MATRIMBLFIX(i) (i^(BITSWAP8(i&0x3,4,3,1,2,0,7,6,5)<<8))
 void decrypt_matrimbl(running_machine *machine)
 {
+	neogeo_state *state = (neogeo_state *)machine->driver_data;
 	UINT8 *src2 = memory_region(machine, "audiocpu")+0x10000;
 	UINT8 *dst2 = malloc(0x20000);
 	int i, j=0;
@@ -633,7 +634,7 @@ void decrypt_matrimbl(running_machine *machine)
 	kof2002_decrypt_68k(machine);
 	cthd2003_c(machine, 0);
 	neogeo_sfix_decrypt(machine);
-	neogeo_fixed_layer_bank_type = 2;
+	state->fixed_layer_bank_type = 2;
 }
 
 
