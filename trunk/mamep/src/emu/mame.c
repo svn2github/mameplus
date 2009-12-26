@@ -1562,6 +1562,9 @@ static void init_machine(running_machine *machine)
 	cpuexec_init(machine);
 	watchdog_init(machine);
 
+	/* allocate the gfx elements prior to device initialization */
+	gfx_init(machine);
+
 #ifdef MESS
 	/* first MESS initialization */
 	mess_predevice_init(machine);
@@ -1609,6 +1612,9 @@ static void init_machine(running_machine *machine)
 #endif /* USE_HISCORE */
 	if (options_get_bool(mame_options(), OPTION_CHEAT))
 		cheat_init(machine);
+
+	/* disallow save state registrations starting here */
+	state_save_allow_registration(machine, FALSE);
 }
 
 
@@ -1632,9 +1638,6 @@ static TIMER_CALLBACK( soft_reset )
 	end_resource_tracking();
 	begin_resource_tracking();
 
-	/* allow save state registrations during the reset */
-	state_save_allow_registration(machine, TRUE);
-
 	/* call all registered reset callbacks */
 	for (cb = machine->mame_data->reset_callback_list; cb; cb = cb->next)
 		(*cb->func.reset)(machine);
@@ -1646,9 +1649,6 @@ static TIMER_CALLBACK( soft_reset )
 		(*machine->config->sound_reset)(machine);
 	if (machine->config->video_reset != NULL)
 		(*machine->config->video_reset)(machine);
-
-	/* disallow save state registrations starting here */
-	state_save_allow_registration(machine, FALSE);
 
 	/* now we're running */
 	mame->current_phase = MAME_PHASE_RUNNING;

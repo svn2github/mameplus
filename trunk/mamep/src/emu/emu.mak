@@ -162,6 +162,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/ldpr8210.o \
 	$(EMUMACHINE)/ldv1000.o \
 	$(EMUMACHINE)/ldvp931.o \
+	$(EMUMACHINE)/mb14241.o \
 	$(EMUMACHINE)/mb3773.o \
 	$(EMUMACHINE)/mb87078.o \
 	$(EMUMACHINE)/mc146818.o \
@@ -200,6 +201,7 @@ EMUVIDEOOBJS = \
 	$(EMUVIDEO)/resnet.o \
 	$(EMUVIDEO)/rgbutil.o \
 	$(EMUVIDEO)/s2636.o \
+	$(EMUVIDEO)/saa5050.o \
 	$(EMUVIDEO)/tlc34076.o \
 	$(EMUVIDEO)/tms34061.o \
  	$(EMUVIDEO)/tms9927.o \
