@@ -2064,7 +2064,8 @@ dogyuunk	雷射战机 (Licensed to Unite Trading For 韩国版)	雷射战机 (Licensed to U
 kbash	猫王	猫王	Toaplan
 kbash2	猫王 2 (盗版)	猫王 2 (盗版)	bootleg
 truxton2	达人王 II	达人王 II	Toaplan
-pipibibs	皮皮与比比 / Whoopee!! (Z80 sound cpu)	皮皮与比比 / Whoopee!! (Z80 sound cpu)	Toaplan
+pipibibs	皮皮与比比 / Whoopee!! (Z80 sound cpu, 第1套)	皮皮与比比 / Whoopee!! (Z80 sound cpu, 第1套)	Toaplan
+pipibibsa	皮皮与比比 / Whoopee!! (Z80 sound cpu, 第2套)	皮皮与比比 / Whoopee!! (Z80 sound cpu, 第2套)	Toaplan
 whoopee	皮皮与比比 / Whoopee!!	皮皮与比比 / Whoopee!!	Toaplan
 pipibibi	皮皮与比比 / Whoopee!! (盗版?)	皮皮与比比 / Whoopee!! (盗版?)	[Toaplan] Ryouta Kikaku
 fixeight	地狱英雄传说	地狱英雄传说	Toaplan
@@ -2622,8 +2623,9 @@ progeara	能源之岚 (亚洲版 010117)	能源之岚 (亚洲版 010117)	Capcom, supported by 
 pzloop2	谜球回路 2 (欧洲版 010302)	谜球回路 2 (欧洲版 010302)	Mitchell, distributed by Capcom
 pzloop2j	谜球回路 2 (日版 010205)	谜球回路 2 (日版 010205)	Mitchell, distributed by Capcom
 choko	日本益智麻将牌 - 长江 (日版 010820)	日本益智麻将牌 - 长江 (日版 010820)	Mitchell, distributed by Capcom
+hsf2	终极街头霸王 II: 十五周年纪念版 (美版 040202)	终极街头霸王 II: 十五周年纪念版 (美版 040202)	Capcom
 hsf2j	终极街头霸王 II: 十五周年纪念版 (日版 031222)	终极街头霸王 II: 十五周年纪念版 (日版 031222)	Capcom
-hsf2	终极街头霸王 II: 十五周年纪念版 (亚洲版 040202)	终极街头霸王 II: 十五周年纪念版 (亚洲版 040202)	Capcom
+hsf2a	终极街头霸王 II: 十五周年纪念版 (亚洲版 040202)	终极街头霸王 II: 十五周年纪念版 (亚洲版 040202)	Capcom
 ssf2ud	超级街头霸王 II - 新的来者 (美版 930911 凤凰版) (盗版)	超级街头霸王 II - 新的来者 (美版 930911 凤凰版) (盗版)	bootleg
 ddtodd	龙与地下城 - 毁灭之塔 (欧洲版 940412 凤凰版) (盗版)	龙与地下城 - 毁灭之塔 (欧洲版 940412 凤凰版) (盗版)	bootleg
 avspd	异形 对 铁血战士 (欧洲版 940520 凤凰版) (盗版)	异形 对 铁血战士 (欧洲版 940520 凤凰版) (盗版)	bootleg
@@ -4211,7 +4213,8 @@ cninja	战斗原始人 (世界版 ver 4)	战斗原始人 (世界版 ver 4)	Data East Corporation
 cninja1	战斗原始人 (世界版 ver 1)	战斗原始人 (世界版 ver 1)	Data East Corporation
 cninjau	战斗原始人 (美版 ver 4)	战斗原始人 (美版 ver 4)	Data East Corporation
 joemac	战斗原始人 (日版 ver 1)	战斗原始人 (日版 ver 1)	Data East Corporation
-stoneage	战斗原始人 - 石器时代	战斗原始人 - 石器时代	bootleg
+cninjabl	战斗原始人 (盗版)	战斗原始人 (盗版)	bootleg
+stoneage	石器时代 (盗版 战斗原始人)	石器时代 (盗版 战斗原始人)	bootleg
 robocop2	铁甲威龙 2 (欧洲版/亚洲版 v0.10)	铁甲威龙 2 (欧洲版/亚洲版 v0.10)	Data East Corporation
 robocop2u	铁甲威龙 2 (美版 v0.05)	铁甲威龙 2 (美版 v0.05)	Data East Corporation
 robocop2j	铁甲威龙 2 (日版 v0.11)	铁甲威龙 2 (日版 v0.11)	Data East Corporation
@@ -4456,11 +4459,11 @@ contraj	魂斗罗 (日版)	魂斗罗 (日版)	Konami
 contrajb	魂斗罗 (日版 盗版)	魂斗罗 (日版 盗版)	bootleg
 gryzor	魂斗罗 (第1套)	魂斗罗 (第1套)	Konami
 gryzora	魂斗罗 (第2套)	魂斗罗 (第2套)	Konami
-combasc	战斗学校 (操纵杆)	战斗学校 (操纵杆)	Konami
-combasct	战斗学校 (轨迹球)	战斗学校 (轨迹球)	Konami
-combascj	战斗学校 (日版 轨迹球)	战斗学校 (日版 轨迹球)	Konami
+combatsc	战斗学校 (操纵杆)	战斗学校 (操纵杆)	Konami
+combatsct	战斗学校 (轨迹球)	战斗学校 (轨迹球)	Konami
+combatscj	战斗学校 (日版 轨迹球)	战斗学校 (日版 轨迹球)	Konami
 bootcamp	战斗学校 Boot Camp	战斗学校 Boot Camp	Konami
-combascb	战斗学校 (盗版)	战斗学校 (盗版)	bootleg
+combatscb	战斗学校 (盗版)	战斗学校 (盗版)	bootleg
 rockrage	恋爱热摇滚 (世界版)	恋爱热摇滚 (世界版)	Konami
 rockragea	恋爱热摇滚 (工程版?)	恋爱热摇滚 (工程版?)	Konami
 rockragej	恋爱热摇滚 (日版)	恋爱热摇滚 (日版)	Konami
@@ -5888,6 +5891,7 @@ offroadc1	越野车队 (v1.10)	越野车队 (v1.10)	Midway
 wargods	斗神传说	斗神传说	Midway
 mk4	真人快打 4 (版本 3.0)	真人快打 4 (版本 3.0)	Midway
 mk4a	真人快打 4 (版本 2.1)	真人快打 4 (版本 2.1)	Midway
+mk4b	真人快打 4 (版本 1.0)	真人快打 4 (版本 1.0)	Midway
 invasnab	入侵 - 绑架者 (版本 5.0)	入侵 - 绑架者 (版本 5.0)	Midway
 invasnv4	入侵 - 绑架者 (版本 4.0)	入侵 - 绑架者 (版本 4.0)	Midway
 crusnexo	异族事务 (版本 2.4)	异族事务 (版本 2.4)	Midway
@@ -6125,6 +6129,7 @@ juju	JUJU 传说 (日版)	JUJU 传说 (日版)	Tad
 jujub	JUJU 传说 (日版, 盗版)	JUJU 传说 (日版, 盗版)	bootleg
 bloodbro	勇士们 - 血兄弟 (第1套)	勇士们 - 血兄弟 (第1套)	Tad
 bloodbroa	勇士们 - 血兄弟 (第2套)	勇士们 - 血兄弟 (第2套)	Tad
+bloodbrob	勇士们 - 血兄弟 (第3套)	勇士们 - 血兄弟 (第3套)	Tad
 weststry	勇士们 - 血兄弟	勇士们 - 血兄弟	bootleg
 skysmash	空中打击	空中打击	Nihon System
 legionna	格斗贵族 (世界版)	格斗贵族 (世界版)	Tad
@@ -6650,7 +6655,7 @@ blocken	美少女战士砖块 (日版)	美少女战士砖块 (日版)	KID / Visco
 goindol	砖块弹珠台 1987 (世界版)	砖块弹珠台 1987 (世界版)	Sun a Electronics
 goindolu	砖块弹珠台 1987 (US)	砖块弹珠台 1987 (US)	Sun a Electronics
 goindolk	砖块弹珠台 (韩国版)	砖块弹珠台 (韩国版)	Sun a Electronics
-rranger	英雄救美 (v2.0)	英雄救美 (v2.0)	SunA (Sharp Image license)
+rranger	英雄救美 (v2.0, 未保护, 盗版?)	英雄救美 (v2.0, 未保护, 盗版?)	SunA (Sharp Image license)
 sranger	英雄救美 (v2.0)	英雄救美 (v2.0)	SunA
 srangerb	英雄救美 (盗版)	英雄救美 (盗版)	bootleg
 srangerw	英雄救美 (WDK)	英雄救美 (WDK)	SunA (WDK license)
@@ -7078,6 +7083,7 @@ dmnfrnta	魔域战线 (ver. 105)	魔域战线 (ver. 105)	IGS
 kovshp	三国战纪 - 乱世枭雄 (ver. 100)	三国战纪 - 乱世枭雄 (ver. 100)	IGS
 oldsplus	西游释厄传 - 群魔乱舞	西游释厄传 - 群魔乱舞	IGS
 killbldp	傲剑狂刀 加强版 (ver. 300)	傲剑狂刀 加强版 (ver. 300)	IGS
+happy6	欢乐六合一 (ver. 101CN)	欢乐六合一 (ver. 101CN)	IGS
 svg	圣魔世纪 (ver. 200)	圣魔世纪 (ver. 200)	IGS
 dunhuang	麻雀 敦煌	麻雀 敦煌	Spirit
 hitme	扑克 21 点	扑克 21 点	RamTek
@@ -7788,10 +7794,10 @@ go2000	射门 2000	射门 2000	SA
 mirax	鲸鱼星座	鲸鱼星座	Current Technologies
 miraxa	鲸鱼星座 (第2套)	鲸鱼星座 (第2套)	Current Technologies
 victor5	征服者 5	征服者 5	Subsino
-victor21	征服者 21	征服者 21	Subsino
-crsbingo	十字牌	十字牌	Subsino
-sharkpy	狂鲨任务	狂鲨任务	Subsino
-sharkpya	狂鲨任务 (alt)	狂鲨任务 (alt)	Subsino
+victor21	征服者 21	征服者 21	Subsino / Buffy
+crsbingo	扑克狂欢节	扑克狂欢节	Subsino
+sharkpy	狂鲨任务 (意大利, v1.3)	狂鲨任务 (意大利, v1.3)	Subsino
+sharkpya	狂鲨任务 (意大利, v1.6)	狂鲨任务 (意大利, v1.6)	Subsino
 smoto20	超级骑士 (意大利, v2.0)	超级骑士 (意大利, v2.0)	Subsino
 smoto16	超级摩托 (意大利, v1.6)	超级摩托 (意大利, v1.6)	Subsino
 saklove	樱花恋 2.0 (中国 1.02)	樱花恋 2.0 (中国 1.02)	Subsino
