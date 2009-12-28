@@ -257,9 +257,15 @@ static READ16_HANDLER( cps1_hack_dsw_r )
 	return (in << 8) | in;
 }
 
-READ16_HANDLER( cps1_in1_r )
+static READ16_HANDLER( cps1_in1_r )
 {
 	return input_port_read(space->machine, "IN1");
+}
+
+static READ16_HANDLER( cps1_hack_in2_r )
+{
+	int in = input_port_read(space->machine, "IN2");
+	return (in << 8) | in;
 }
 
 static READ16_HANDLER( forgottn_dial_0_r )
@@ -300,29 +306,29 @@ static WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w )
 static WRITE16_HANDLER( cps1_soundlatch_w )
 {
 	if (ACCESSING_BITS_0_7)
-		soundlatch_w(space,0,data & 0xff);
-}
-
-static WRITE16_HANDLER( cps1_soundlatch2_w )
-{
-	if (ACCESSING_BITS_0_7)
-		soundlatch2_w(space,0,data & 0xff);
+		soundlatch_w(space, 0, data & 0xff);
 }
 
 static WRITE16_HANDLER( cps1hack_soundlatch_w )
 {
 	if (ACCESSING_BITS_8_15)
-		soundlatch_w(space,0,data >> 8);
+		soundlatch_w(space, 0, data & 0xff);
+}
+
+static WRITE16_HANDLER( cps1_soundlatch2_w )
+{
+	if (ACCESSING_BITS_0_7)
+		soundlatch2_w(space, 0, data & 0xff);
 }
 
 WRITE16_HANDLER( cps1_coinctrl_w )
 {
 	if (ACCESSING_BITS_8_15)
 	{
-		coin_counter_w(space->machine, 0,data & 0x0100);
-		coin_counter_w(space->machine, 1,data & 0x0200);
-		coin_lockout_w(space->machine, 0,~data & 0x0400);
-		coin_lockout_w(space->machine, 1,~data & 0x0800);
+		coin_counter_w(space->machine, 0, data & 0x0100);
+		coin_counter_w(space->machine, 1, data & 0x0200);
+		coin_lockout_w(space->machine, 0, ~data & 0x0400);
+		coin_lockout_w(space->machine, 1, ~data & 0x0800);
 
 		// bit 15 = CPS-A custom reset?
 	}
@@ -416,8 +422,9 @@ static WRITE8_HANDLER( qsound_banksw_w )
 
 static WRITE16_HANDLER( dinoh_sound_command_w )
 {
-	/* Pass the Sound Code to the Q-Sound Shared Ram */
 	cps_state *state = (cps_state *)space->machine->driver_data;
+
+	/* Pass the Sound Code to the Q-Sound Shared Ram */
 	state->qsound_sharedram1[0x0001] = data;
 }
 
@@ -647,17 +654,16 @@ static ADDRESS_MAP_START( wofh_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
 	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
 	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE_MEMBER(cps_state, cps_a_regs)	/* CPS-A custom */
-	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)	/* CPS-B custom */
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE_MEMBER(cps_state, cps_b_regs)	/* CPS-B custom (mapped by LWIO/IOB1 PAL on B-board) */
 	AM_RANGE(0x880000, 0x880001) AM_READ_PORT("IN1") /* Player input ports */
 	AM_RANGE(0x880006, 0x88000f) AM_READ_PORT("IN0") /* Player 3 controls (later games) + Input ports */
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE_SIZE_MEMBER(cps_state, gfxram, gfxram_size)	/* SF2CE executes code from here */
 	AM_RANGE(0xf18000, 0xf19fff) AM_READWRITE(qsound_sharedram1_r, qsound_sharedram1_w)  /* Q RAM */
-	AM_RANGE(0xf1c004, 0xf1c005) AM_WRITE(cpsq_coinctrl2_w)     /* Coin control2 (later games) */
+	AM_RANGE(0xf1c004, 0xf1c005) AM_WRITE(cpsq_coinctrl2_w)		/* Coin control2 (later games) */
 	AM_RANGE(0xf1c006, 0xf1c007) AM_READ_PORT("EEPROMIN") AM_WRITE_PORT("EEPROMOUT")
 	AM_RANGE(0xf1e000, 0xf1ffff) AM_READWRITE(qsound_sharedram2_r, qsound_sharedram2_w)  /* Q RAM */
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
-
 
 /***********************************************************
              INPUT PORTS, DIPs
@@ -2731,6 +2737,14 @@ static INPUT_PORTS_START( wofhfh )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 ) PORT_NAME("Coin 3 (P3 Button 3 in-game)")
 INPUT_PORTS_END
 
+static INPUT_PORTS_START( ffighth )
+	PORT_INCLUDE(ffight)
+
+	PORT_MODIFY("IN1")
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
+INPUT_PORTS_END
+
 static INPUT_PORTS_START( kodh )
 	PORT_INCLUDE( kod )
 
@@ -3413,14 +3427,6 @@ static MACHINE_DRIVER_START( sf2mdt )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_DRIVER_END
 
-//mamep: no valid audio rom dump, hack it to run on qsound hw
-static MACHINE_DRIVER_START( wofh )
-	MDRV_IMPORT_FROM(qsound)
-
-	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_PROGRAM_MAP(wofh_map)
-MACHINE_DRIVER_END
-
 /*
 
 CPU:
@@ -3507,6 +3513,14 @@ static MACHINE_DRIVER_START( knightsb )
 	MDRV_SOUND_ADD("msm2", MSM5205, 24000000/64)	/* ? */
 	MDRV_SOUND_CONFIG(msm5205_interface2)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+MACHINE_DRIVER_END
+
+//mamep: no valid audio rom dump, hack it to run on qsound hw
+static MACHINE_DRIVER_START( wofh )
+	MDRV_IMPORT_FROM(qsound)
+
+	MDRV_CPU_MODIFY("maincpu")
+	MDRV_CPU_PROGRAM_MAP(wofh_map)
 MACHINE_DRIVER_END
 
 
@@ -9110,6 +9124,26 @@ ROM_START( daimakb )
 	ROM_REGION( 0x40000, "oki", ROMREGION_ERASEFF )	/* Samples (not present) */
 ROM_END
 
+ROM_START( ffighth )
+	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "ff.23.bin", 0x00000, 0x80000, CRC(ae3dda7f) SHA1(5f08ce1e6b6b0d45994d3354d59ef79f489c7ad7) )
+	ROM_LOAD16_WORD_SWAP( "ff.22.bin", 0x80000, 0x80000, CRC(b2d5a3aa) SHA1(b60f7480d3d3ceebad4c21025394bacc154d7042) )
+
+	ROM_REGION( 0x200000, "gfx", 0 )
+	ROMX_LOAD( "ff.01.bin", 0x000000, 0x80000, CRC(969d18e2) SHA1(7a30b7434e34ec98838a9ab8d953b2ef467d562e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "ff.02.bin", 0x000002, 0x80000, CRC(02b59f99) SHA1(c1cb2bbf95c2006baad58b0a5a7278f1a8999901) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "ff.03.bin", 0x000004, 0x80000, CRC(01d507ae) SHA1(d7813daa5bd74bebdbbea578acb20ad3c8816997) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "ff.04.bin", 0x000006, 0x80000, CRC(f7c4ceb0) SHA1(3e9cf6379f06c5a736b4a0aadb7fbda914b91190) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "ff.09.bin",  0x00000, 0x08000, CRC(b8367eb5) SHA1(ec3db29fdd6200e9a8f4f8073a7e34aef731354f) )
+	ROM_CONTINUE(           0x10000, 0x08000 )
+
+	ROM_REGION( 0x40000, "oki", 0 )	/* Samples */
+	ROM_LOAD( "ff.18.bin",  0x00000, 0x20000, CRC(375c66e7) SHA1(36189e23209ce4ae5d9cbabd1574540d0591e7b3) )
+	ROM_LOAD( "ff.19.bin",  0x20000, 0x20000, CRC(1ef137f9) SHA1(974b5e72aa28b87ebfa7438efbdfeda769dedf5e) )
+ROM_END
+
 ROM_START( knightsb2 )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "040-z.02",   0x00000, 0x80000, CRC(95d00a7e) SHA1(2da1c47aa15d44aa842a8d79e030e7e7b69bec19) )
@@ -9883,28 +9917,6 @@ ROM_END
 
 #ifndef MESS
 
-static READ16_HANDLER( cps1_hack_in2_r )
-{
-	int in = input_port_read(space->machine, "IN2");
-	return (in << 8) | in;
-}
-
-static DRIVER_INIT( captcomb )
-{
-	UINT8 *mem8 = (UINT8 *)memory_region(machine, "maincpu");
-	mem8[0x4B8A] = 0x91;
-	mem8[0x4B8D] = 0x0;
-	mem8[0x4B8E] = 0x2D;
-	mem8[0x4B8F] = 0x8;
-	mem8[0x4F22] = 0x6D;
-	mem8[0x4F23] = 0x8;
-	mem8[0x4F24] = 0x6;
-	mem8[0x4F26] = 0x1B;
-	mem8[0x4F27] = 0x28;
-
-	DRIVER_INIT_CALL(cps1);
-}
-
 static DRIVER_INIT( forgottn )
 {
 	cps_state *state = (cps_state *)machine->driver_data;
@@ -9997,6 +10009,22 @@ static DRIVER_INIT( pang3j )
 	}
 
 	DRIVER_INIT_CALL(pang3);
+}
+
+static DRIVER_INIT( captcomb )
+{
+	UINT8 *mem8 = (UINT8 *)memory_region(machine, "maincpu");
+	mem8[0x4B8A] = 0x91;
+	mem8[0x4B8D] = 0x0;
+	mem8[0x4B8E] = 0x2D;
+	mem8[0x4B8F] = 0x8;
+	mem8[0x4F22] = 0x6D;
+	mem8[0x4F23] = 0x8;
+	mem8[0x4F24] = 0x6;
+	mem8[0x4F26] = 0x1B;
+	mem8[0x4F27] = 0x28;
+
+	DRIVER_INIT_CALL(cps1);
 }
 
 static DRIVER_INIT( sf2m1 )
@@ -10681,16 +10709,16 @@ GAME( 1992, sf2accp2, sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg
 GAME( 1992, sf2dkot2, sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Double K.O. Turbo II, bootleg)", GAME_SUPPORTS_SAVE )  // 902140 - ???
 GAME( 1992, sf2m1,    sf2ce,    cps1_12MHz, sf2,      sf2m1,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2m2,    sf2ce,    cps1_12MHz, sf2m2,    sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M2, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2m3,    sf2ce,    cps1_12MHz, sf2,      sf2m3,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M3, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE)
+GAME( 1992, sf2m3,    sf2ce,    cps1_12MHz, sf2,      sf2m3,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M3, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2m4,    sf2ce,    cps1_12MHz, sf2m4,    sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M4, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2m5,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M5, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2m6,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition: Xiang Long (Chinese bootleg set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2m6,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Xiang Long, Chinese bootleg set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2m7,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M7, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2yyc,   sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (YYC, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2koryu, sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition: Xiang Long (Chinese bootleg set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2koryu, sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Xiang Long, Chinese bootleg set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1992, sf2mdt,   sf2ce,    sf2mdt,     sf2hack,  sf2mdt,   ROT0,   "bootleg","Street Fighter II' - Champion Edition (Magic Delta Turbo, bootleg)", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_SUPPORTS_SAVE ); // heavily modified, different sound & gfx hardware
-GAME( 1992, varth,    0,        cps1_12MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920714)" , GAME_SUPPORTS_SAVE)		// "ETC"    12MHz verified
-GAME( 1992, varthr1,  varth,    cps1_12MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)" , GAME_SUPPORTS_SAVE)		// "ETC"
+GAME( 1992, varth,    0,        cps1_12MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920714)", GAME_SUPPORTS_SAVE )		// "ETC"    12MHz verified
+GAME( 1992, varthr1,  varth,    cps1_12MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)", GAME_SUPPORTS_SAVE )		// "ETC"
 GAME( 1992, varthu,   varth,    cps1_12MHz, varth,    cps1,     ROT270, "Capcom (Romstar license)", "Varth - Operation Thunderstorm (US 920612)", GAME_SUPPORTS_SAVE )
 GAME( 1992, varthj,   varth,    cps1_12MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (Japan 920714)", GAME_SUPPORTS_SAVE )
 GAME( 1992, cworld2j, 0,        cps1_12MHz, cworld2j, cps1,     ROT0,   "Capcom", "Capcom World 2 (Japan 920611)", GAME_SUPPORTS_SAVE )
@@ -10702,12 +10730,12 @@ GAME( 1994, qadj,     qad,      cps1_12MHz, qadj,     cps1,     ROT0,   "Capcom"
 GAME( 1995, qtono2,   0,        cps1_12MHz, qtono2,   cps1,     ROT0,   "Capcom", "Quiz Tonosama no Yabou 2 Zenkoku-ban (Japan 950123)", GAME_SUPPORTS_SAVE )
 GAME( 1995, megaman,  0,        cps1_12MHz, megaman,  cps1,     ROT0,   "Capcom", "Mega Man - The Power Battle (CPS1 Asia 951006)", GAME_SUPPORTS_SAVE )
 GAME( 1995, rockmanj, megaman,  cps1_12MHz, rockmanj, cps1,     ROT0,   "Capcom", "Rockman - The Power Battle (CPS1 Japan 950922)", GAME_SUPPORTS_SAVE )
-GAME( 1992, wof,      0,        qsound,     wof,      wof,      ROT0,   "Capcom", "Warriors of Fate (World 921002)" , GAME_SUPPORTS_SAVE)		// "ETC"
-GAME( 1992, wofa,     wof,      qsound,     wof,      wof,      ROT0,   "Capcom", "Sangokushi II (Asia 921005)" , GAME_SUPPORTS_SAVE)		// World "warning"
-GAME( 1992, wofu,     wof,      qsound,     wof,      wof,      ROT0,   "Capcom", "Warriors of Fate (US 921031)" , GAME_SUPPORTS_SAVE)		// World "warning"
+GAME( 1992, wof,      0,        qsound,     wof,      wof,      ROT0,   "Capcom", "Warriors of Fate (World 921002)", GAME_SUPPORTS_SAVE )		// "ETC"
+GAME( 1992, wofa,     wof,      qsound,     wof,      wof,      ROT0,   "Capcom", "Sangokushi II (Asia 921005)", GAME_SUPPORTS_SAVE )		// World "warning"
+GAME( 1992, wofu,     wof,      qsound,     wof,      wof,      ROT0,   "Capcom", "Warriors of Fate (US 921031)", GAME_SUPPORTS_SAVE )		// World "warning"
 GAME( 1992, wofj,     wof,      qsound,     wof,      wof,      ROT0,   "Capcom", "Tenchi wo Kurau II - Sekiheki no Tatakai (Japan 921031)", GAME_SUPPORTS_SAVE )
 GAME( 1999, wofhfh,   wof,      wofhfh,     wofhfh,   cps1,     ROT0,   "bootleg","Sangokushi II: Huo Fenghuang (Chinese bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1993, dino,     0,        qsound,     dino,     dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (World 930201)", GAME_SUPPORTS_SAVE)			// "ETC"
+GAME( 1993, dino,     0,        qsound,     dino,     dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (World 930201)", GAME_SUPPORTS_SAVE )		// "ETC"
 GAME( 1993, dinou,    dino,     qsound,     dino,     dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (US 930201)", GAME_SUPPORTS_SAVE )
 GAME( 1993, dinoj,    dino,     qsound,     dino,     dino,     ROT0,   "Capcom", "Cadillacs Kyouryuu-Shinseiki (Japan 930201)", GAME_SUPPORTS_SAVE )
 GAME( 1993, dinopic,  dino,     cpspicb,    dinopic,  dino,     ROT0,   "bootleg", "Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
@@ -10731,32 +10759,33 @@ GAME( 1995, pang3,    0,        pang3,      pang3,    pang3,    ROT0,   "Mitchel
 GAME( 1995, pang3j,   pang3,    pang3,      pang3,    pang3j,   ROT0,   "Mitchell", "Pang! 3 (Japan 950511)", GAME_SUPPORTS_SAVE )
 
 /* bootleg */
-GAME( 1991, kodh,     kod,      cps1_10MHz, kodh,     cps1,     ROT0,   "bootleg", "The King of Dragons (hack)", GAME_SUPPORTS_SAVE )
-GAME( 1991, knightsb2,knights,  cps1_10MHz, knights,  cps1,     ROT0,   "bootleg", "Knights of the Round (bootleg set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1991, knightsh, knights,  cps1_10MHz, knightsh, cps1,     ROT0,   "bootleg", "Knights of the Round (hack)", GAME_SUPPORTS_SAVE )
-GAME( 1992, wofb,     wof,      qsound,     wof,      wofb,     ROT0,   "bootleg", "Warriors of Fate (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1995, wofsj,    wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg", "Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 1)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1995, wofsja,   wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg", "Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 2)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1995, wofsjb,   wof,      qsound,     wof,      wofsjb,   ROT0,   "bootleg", "Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 3)", GAME_SUPPORTS_SAVE )
-GAME( 1997, wof3js,   wof,      qsound,     wof3js,   wof3js,   ROT0,   "bootleg", "Sangokushi II: San Jian Sheng (Chinese bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1997, wof3sj,   wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg", "Sangokushi II: San Sheng Jian (Chinese bootleg set 1)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1997, wof3sja,  wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg", "Sangokushi II: San Sheng Jian (Chinese bootleg set 2)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1999, wofh,     wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 1)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1999, wofha,    wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg", "Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 2)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1990, cawingb,  cawing,   cps1_10MHz, cawing,   cawingb,  ROT0,   "bootleg", "Carrier Air Wing (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1988, daimakb,  ghouls,   cps1_10MHz, daimakai, daimakb,  ROT0,   "bootleg", "Dai Makai-Mura (Japan, bootleg)" , GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )		// Wed.26.10.1988 in the ROMS
-GAME( 1992, sf2m8,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg", "Street Fighter II' - Champion Edition (M8, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2m9,    sf2ce,    cps1_12MHz, sf2m2,    sf2hack,  ROT0,   "bootleg", "Street Fighter II' - Champion Edition (M9, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2m10,   sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg", "Street Fighter II' - Champion Edition (M10, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2m11,   sf2ce,    cps1_12MHz, sf2m4,    sf2hack,  ROT0,   "bootleg", "Street Fighter II' - Champion Edition (M11, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2m12,   sf2ce,    cps1_12MHz, sf2m4,    sf2hack,  ROT0,   "bootleg", "Street Fighter II' - Champion Edition (M12, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2m13,   sf2ce,    cps1_12MHz, sf2m4,    sf2m13,   ROT0,   "bootleg", "Street Fighter II' Turbo - Hyper Fighting (M13, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2tlona, sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg", "Street Fighter II' - Champion Edition: Tu Long (Chinese bootleg set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2tlonb, sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg", "Street Fighter II' - Champion Edition: Tu Long (Chinese bootleg set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1992, sf2th,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg", "Street Fighter II' - Champion Edition (Turbo hack, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1991, sf2b,     sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "bootleg", "Street Fighter II - The World Warrior (bootleg)" , GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1993, dinoh,    dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg", "Cadillacs and Dinosaurs (hack set 1)", GAME_SUPPORTS_SAVE)
-GAME( 1997, dinoha,   dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg", "Cadillacs and Dinosaurs (hack set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1997, dinohb,   dino,     qsound,     dinohb,   dinohb,   ROT0,   "bootleg", "Cadillacs and Dinosaurs (hack set 3)", GAME_SUPPORTS_SAVE )
-GAME( 1993, dinohc,   dino,     qsound,     dinoh,    dinohc,   ROT0,   "bootleg", "Cadillacs and Dinosaurs: Dinosaur Hunter (hack set 4)", GAME_SUPPORTS_SAVE )
-GAME( 2002, punishrh, punisher, wofhfh,     punishrh, cps1,     ROT0,   "bootleg", "The Punisher: Biaofeng Zhanjing (Chinese bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ffighth,  ffight,   cps1_10MHz, ffighth,  cps1,     ROT0,   "bootleg", "Final Fight (hack)", GAME_SUPPORTS_SAVE )
+GAME( 1991, kodh,     kod,      cps1_10MHz, kodh,     cps1,     ROT0,   "bootleg","The King of Dragons (hack)", GAME_SUPPORTS_SAVE )
+GAME( 1991, knightsb2,knights,  cps1_10MHz, knights,  cps1,     ROT0,   "bootleg","Knights of the Round (bootleg set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1991, knightsh, knights,  cps1_10MHz, knightsh, cps1,     ROT0,   "bootleg","Knights of the Round (hack)" , GAME_SUPPORTS_SAVE )
+GAME( 1992, wofb,     wof,      qsound,     wof,      wofb,     ROT0,   "bootleg","Warriors of Fate (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1995, wofsj,    wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 1)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1995, wofsja,   wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 2)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1995, wofsjb,   wof,      qsound,     wof,      wofsjb,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 3)", GAME_SUPPORTS_SAVE )
+GAME( 1997, wof3js,   wof,      qsound,     wof3js,   wof3js,   ROT0,   "bootleg","Sangokushi II: San Jian Sheng (Chinese bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1997, wof3sj,   wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II: San Sheng Jian (Chinese bootleg set 1)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1997, wof3sja,  wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II: San Sheng Jian (Chinese bootleg set 2)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1999, wofh,     wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 1)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1999, wofha,    wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 2)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1990, cawingb,  cawing,   cps1_10MHz, cawing,   cawingb,  ROT0,   "bootleg","Carrier Air Wing (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1988, daimakb,  ghouls,   cps1_10MHz, daimakai, daimakb,  ROT0,   "bootleg","Dai Makai-Mura (Japan, bootleg)" , GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )		// Wed.26.10.1988 in the ROMS
+GAME( 1992, sf2m8,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M8, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2m9,    sf2ce,    cps1_12MHz, sf2m2,    sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M9, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2m10,   sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M10, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2m11,   sf2ce,    cps1_12MHz, sf2m4,    sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M11, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2m12,   sf2ce,    cps1_12MHz, sf2m4,    sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M12, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2m13,   sf2ce,    cps1_12MHz, sf2m4,    sf2m13,   ROT0,   "bootleg","Street Fighter II' Turbo - Hyper Fighting (M13, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2tlona, sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition: Tu Long (Chinese bootleg set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2tlonb, sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition: Tu Long (Chinese bootleg set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1992, sf2th,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Turbo hack, bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1991, sf2b,     sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II - The World Warrior (bootleg)" , GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1993, dinoh,    dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1997, dinoha,   dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1997, dinohb,   dino,     qsound,     dinohb,   dinohb,   ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 3)", GAME_SUPPORTS_SAVE )
+GAME( 1993, dinohc,   dino,     qsound,     dinoh,    dinohc,   ROT0,   "bootleg","Cadillacs and Dinosaurs: Dinosaur Hunter (hack set 4)", GAME_SUPPORTS_SAVE )
+GAME( 2002, punishrh, punisher, wofhfh,     punishrh, cps1,     ROT0,   "bootleg","The Punisher: Biaofeng Zhanjing (Chinese bootleg)", GAME_SUPPORTS_SAVE )

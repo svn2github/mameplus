@@ -1189,6 +1189,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"ghoulsu",  CPS_B_01,     mapper_DM620 },
 	{"daimakai", CPS_B_01,     mapper_DM22A },	// equivalent to DM620
 	{"daimakair",CPS_B_21_DEF, mapper_DAM63B },	// equivalent to DM620, also CPS_B_21_DEF is equivalent to CPS_B_01
+	{"daimakb",  CPS_B_01,     mapper_DM22A },	// equivalent to DM620
 	{"strider",  CPS_B_01,     mapper_ST24M1 },
 	{"striderua",CPS_B_01,     mapper_ST24M1 },
 	{"striderj", CPS_B_01,     mapper_ST22B },	// equivalent to ST24M1
@@ -1206,6 +1207,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"ffightj",  CPS_B_04,     mapper_S224B },
 	{"ffightj1", CPS_B_02,     mapper_S224B },
 	{"ffightj2", CPS_B_01,     mapper_S224B },
+	{"ffightb",  CPS_B_21_DEF, mapper_S224B },
 	{"1941",     CPS_B_05,     mapper_YI24B },
 	{"1941j",    CPS_B_05,     mapper_YI24B },
 	{"unsquad",  CPS_B_11,     mapper_AR24B },	/* CPSB ID not checked, but it's the same as sf2eg */
@@ -1226,6 +1228,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"cawingr1", CPS_B_16,     mapper_CA24B },
 	{"cawingu",  CPS_B_16,     mapper_CA24B },
 	{"cawingj",  CPS_B_16,     mapper_CA22B },	// equivalent to CA24B
+	{"cawingb",  CPS_B_16,     mapper_CA24B, 0, 0, 0, 3 },
 	{"sf2",      CPS_B_11,     mapper_STF29,  0x36 },
 	{"sf2eb",    CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2ebbl",  CPS_B_17,     mapper_STF29,  0x36, 0, 0, 1  },
@@ -1240,6 +1243,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2ja",    CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2jc",    CPS_B_12,     mapper_STF29,  0x36 },
 	{"sf2qp1",   CPS_B_17,     mapper_STF29,  0x36 },
+	{"sf2b",     CPS_B_17,     mapper_STF29,  0x36 },
 	/* from here onwards the CPS-B board has suicide battery and multiply protection */
 	{"3wonders", CPS_B_21_BT1, mapper_RT24B },
 	{"3wondersu",CPS_B_21_BT1, mapper_RT24B },
@@ -1273,11 +1277,9 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2acc",   CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2accp2", CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2dkot2", CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2b",     CPS_B_17,     mapper_STF29, 0x36 },
 	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 5 },
 	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m3",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0, 6 },
-	{"sf2th",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m4",    HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m5",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m6",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1290,7 +1292,8 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2m13",   HACK_B_4,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2yyc",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2koryu", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2mdt",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0 },
+	{"sf2mdt",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2th",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2tlona", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2tlonb", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"varth",    CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
@@ -1303,17 +1306,31 @@ static const struct CPS1config cps1_config_table[]=
 	{"wofu",     CPS_B_21_QS1, mapper_TK263B },
 	{"wofj",     CPS_B_21_QS1, mapper_TK263B },
 	{"wofhfh",   CPS_B_21_DEF, mapper_TK263B, 0x36 }, /* Chinese bootleg */
+	{"wofh",     HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
+	{"wofha",    HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
+	{"wof3js",   CPS_B_21_DEF, mapper_TK263B },
+	{"wofsj",    HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
+	{"wofsja",   HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
+	{"wofsjb",   CPS_B_21_DEF, mapper_TK263B },
+	{"wof3sj",   HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
+	{"wof3sja",  HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
+	{"wofb",     CPS_B_21_DEF, mapper_TK263B },
 	{"dino",     CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
 	{"dinou",    CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
 	{"dinoj",    CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
 	{"dinopic",  CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
 	{"dinopic2", CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
+	{"dinoh",    CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
+	{"dinoha",   CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
+	{"dinohb",   CPS_B_21_QS2, mapper_CD63B, 0, 0, 0, 5 },	/* layer enable never used */
+	{"dinohc",   CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
 	{"punisher", CPS_B_21_QS3, mapper_PS63B },
 	{"punisheru",CPS_B_21_QS3, mapper_PS63B },
 	{"punisherj",CPS_B_21_QS3, mapper_PS63B },
 	{"punipic",  CPS_B_21_QS3, mapper_PS63B },
 	{"punipic2", CPS_B_21_QS3, mapper_PS63B },
 	{"punipic3", CPS_B_21_QS3, mapper_PS63B },
+	{"punishrh", CPS_B_21_DEF, mapper_PS63B },
 	{"slammast", CPS_B_21_QS4, mapper_MB63B },
 	{"slammastu",CPS_B_21_QS4, mapper_MB63B },
 	{"mbomberj", CPS_B_21_QS4, mapper_MB63B },
@@ -1330,22 +1347,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"pnickj",   CPS_B_21_DEF, mapper_pnickj },
 	{"pang3",    CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */
 	{"pang3j",   CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */
-	{"cawingb",  CPS_B_16,     mapper_CA24B, 0, 0, 0, 3 },
-	{"daimakb",  CPS_B_01,     mapper_DM22A },	// equivalent to DM620
-	{"dinoh",    CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
-	{"dinoha",   CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
-	{"dinohb",   CPS_B_21_QS2, mapper_CD63B, 0, 0, 0, 5 },	/* layer enable never used */
-	{"dinohc",   CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
-	{"punishrh", CPS_B_21_DEF, mapper_PS63B },
-	{"wofh",     HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wofha",    HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wof3js",   CPS_B_21_DEF, mapper_TK263B },
-	{"wofsj",    HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wofsja",   HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wofsjb",   CPS_B_21_DEF, mapper_TK263B },
-	{"wof3sj",   HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wof3sja",  HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
-	{"wofb",     CPS_B_21_DEF, mapper_TK263B },
 	#ifdef MESS
 	{"sfach",    CPS_B_21_DEF, mapper_sfzch },
 	{"sfzbch",   CPS_B_21_DEF, mapper_sfzch },
@@ -1399,11 +1400,6 @@ CPS1 VIDEO RENDERER
 #define CPS2_OBJ_YOFFS	0x0a	/* Y offset (always 0x0010) */
 
 
-int cps1_scanline1;
-int cps1_scanline2;
-int cps1_scancalls;
-
-
 static void cps1_build_palette(running_machine *machine, const UINT16* const palette_base);
 
 
@@ -1446,38 +1442,38 @@ static MACHINE_RESET( cps )
 		rom[0xe5464 / 2] = 0x6012;
 	}
 
-	if (strcmp(gamename, "sf2rb2" )==0)
+	if (strcmp(gamename, "sf2rb2") == 0)
 	{
 		/* Patch out protection check */
 		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
-		rom[0xe5332/2] = 0x6014;
+		rom[0xe5332 / 2] = 0x6014;
 	}
-	if ((strcmp(gamename, "dinoh" )==0) ||
-		(strcmp(gamename, "dinoha" )==0) ||
-		(strcmp(gamename, "dinohc" )==0))
+	if ((strcmp(gamename, "dinoh") == 0) ||
+		(strcmp(gamename, "dinoha") == 0) ||
+		(strcmp(gamename, "dinohc") == 0))
 	{
 		/* Patch out Q-Sound test */
 		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
-		rom[0xaacf4/2] = 0x4e71;
+		rom[0xaacf4 / 2] = 0x4e71;
 	}
 
 #if 0
-	if (strcmp(gamename, "sf2accp2" )==0)
+	if (strcmp(gamename, "sf2accp2") == 0)
 	{
 		/* Patch out a odd branch which would be incorrectly interpreted
            by the cpu core as a 32-bit branch. This branch would make the
            game crash (address error, since it would branch to an odd address)
            if location 180ca6 (outside ROM space) isn't 0. Protection check? */
 		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
-		rom[0x11756/2] = 0x4e71;
+		rom[0x11756 / 2] = 0x4e71;
 	}
-	else if (strcmp(gamename, "ghouls" )==0)
+	else if (strcmp(gamename, "ghouls") == 0)
 	{
 		/* Patch out self-test... it takes forever */
 		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
-		rom[0x61964/2] = 0x4ef9;
-		rom[0x61966/2] = 0x0000;
-		rom[0x61968/2] = 0x0400;
+		rom[0x61964 / 2] = 0x4ef9;
+		rom[0x61966 / 2] = 0x0000;
+		rom[0x61968 / 2] = 0x0400;
 	}
 #endif
 }
@@ -1522,8 +1518,8 @@ WRITE16_HANDLER( cps1_cps_a_w )
 	if (offset == 0x24 / 2 && state->cps_version == 2)
 		return;
 
-	if (offset > CPS1_VIDEOCONTROL)
-		popmessage("write to CPS-A register %02x contact MAMEDEV", offset * 2);
+//	if (offset > CPS1_VIDEOCONTROL)
+//		popmessage("write to CPS-A register %02x contact MAMEDEV", offset * 2);
 }
 
 
@@ -1565,7 +1561,7 @@ READ16_HANDLER( cps1_cps_b_r )
 			return state->cps_b_regs[0x12 / 2];
 	}
 
-	popmessage("CPS-B read port %02x contact MAMEDEV", offset * 2);
+//	popmessage("CPS-B read port %02x contact MAMEDEV", offset * 2);
 
 	return 0xffff;
 }
@@ -1604,20 +1600,20 @@ WRITE16_HANDLER( cps1_cps_b_w )
 		{
 			if (state->game_config->cpsb_value == 0x0402)	// Mercs (CN2 connector)
 			{
-				coin_lockout_w(space->machine, 2,~data & 0x01);
-				set_led_status(space->machine, 0,data & 0x02);
-				set_led_status(space->machine, 1,data & 0x04);
-				set_led_status(space->machine, 2,data & 0x08);
+				coin_lockout_w(space->machine, 2, ~data & 0x01);
+				set_led_status(space->machine, 0, data & 0x02);
+				set_led_status(space->machine, 1, data & 0x04);
+				set_led_status(space->machine, 2, data & 0x08);
 			}
 			else	// kod, captcomm, knights
 			{
-				coin_lockout_w(space->machine, 2,~data & 0x02);
-				coin_lockout_w(space->machine, 3,~data & 0x08);
+				coin_lockout_w(space->machine, 2, ~data & 0x02);
+				coin_lockout_w(space->machine, 3, ~data & 0x08);
 			}
 		}
 	}
 
-
+/*
 	if (offset != state->game_config->cpsb_addr / 2 &&	// only varth writes here
 			offset != state->game_config->mult_factor1 / 2 &&
 			offset != state->game_config->mult_factor2 / 2 &&
@@ -1632,7 +1628,8 @@ WRITE16_HANDLER( cps1_cps_b_w )
 			offset != state->game_config->palette_control / 2 &&
 			offset != state->game_config->out2_addr / 2 &&
 			!state->game_config->bootleg_kludge)
-		popmessage("CPS-B write %04x to port %02x contact MAMEDEV", data, offset*2);
+		popmessage("CPS-B write %04x to port %02x contact MAMEDEV", data, offset * 2);
+*/
 }
 
 
@@ -1644,20 +1641,20 @@ INLINE int cps2_port( running_machine *machine, int offset )
 }
 
 
-static void cps1_gfx_decode(running_machine *machine)
+static void cps1_gfx_decode( running_machine *machine )
 {
-	int size=memory_region_length(machine, "gfx");
-	int i,j,gfxsize;
+	int size = memory_region_length(machine, "gfx");
+	int i, j, gfxsize;
 	UINT8 *cps1_gfx = memory_region(machine, "gfx");
 
-	gfxsize=size/4;
+	gfxsize = size / 4;
 
-	for (i = 0;i < gfxsize;i++)
+	for (i = 0; i < gfxsize; i++)
 	{
-		UINT32 src = cps1_gfx[4*i] + (cps1_gfx[4*i+1]<<8) + (cps1_gfx[4*i+2]<<16) + (cps1_gfx[4*i+3]<<24);
+		UINT32 src = cps1_gfx[4 * i] + (cps1_gfx[4 * i + 1] << 8) + (cps1_gfx[4 * i + 2] << 16) + (cps1_gfx[4 * i + 3] << 24);
 		UINT32 dwval = 0;
 
-		for (j = 0;j < 8;j++)
+		for (j = 0; j < 8; j++)
 		{
 			int n = 0;
 			UINT32 mask = (0x80808080 >> j) & src;
@@ -1847,18 +1844,18 @@ void cps1_get_video_base( running_machine *machine )
 	if (state->game_config->layer_enable_mask[1] == state->game_config->layer_enable_mask[2])
 		enablemask = state->game_config->layer_enable_mask[1];
 
-	if (enablemask)
-	{
-		if (((layercontrol & enablemask) && (layercontrol & enablemask) != enablemask))
-			popmessage("layer %02x contact MAMEDEV", layercontrol & 0xc03f);
-	}
+//	if (enablemask)
+//	{
+//		if (((layercontrol & enablemask) && (layercontrol & enablemask) != enablemask))
+//			popmessage("layer %02x contact MAMEDEV", layercontrol & 0xc03f);
+//	}
 
 	enablemask = state->game_config->layer_enable_mask[0] | state->game_config->layer_enable_mask[1]
 			| state->game_config->layer_enable_mask[2]
 			| state->game_config->layer_enable_mask[3] | state->game_config->layer_enable_mask[4];
 
-	if (((layercontrol & ~enablemask) & 0x003e) != 0)
-		popmessage("layer %02x contact MAMEDEV", layercontrol & 0xc03f);
+//	if (((layercontrol & ~enablemask) & 0x003e) != 0)
+//		popmessage("layer %02x contact MAMEDEV", layercontrol & 0xc03f);
 }
 
 }
@@ -1958,7 +1955,7 @@ static TILE_GET_INFO( get_tile0_info )
 	int attr = state->scroll1[2 * tile_index + 1];
 	int gfxset;
 
-	if (!strcmp(machine->gamedrv->name,"sf2m8"))
+	if (state->game_config->bootleg_kludge == 1)
 	{
 		code &= 0x4fff;
 	}
@@ -2009,7 +2006,7 @@ static TILE_GET_INFO( get_tile2_info )
 	int code = state->scroll3[2 * tile_index] & 0x3fff;
 	int attr = state->scroll3[2 * tile_index + 1];
 
-	if (!strcmp(machine->gamedrv->name,"sf2m8"))
+	if (state->game_config->bootleg_kludge == 1)
 	{
 		code &= 0x1fff;
 	}
@@ -2292,14 +2289,14 @@ static void cps1_render_sprites( running_machine *machine, bitmap_t *bitmap, con
 				CODE,												\
 				COLOR,												\
 				!(FLIPX),!(FLIPY),									\
-				511-16-(SX),255-16-(SY),							machine->priority_bitmap,0x02,15);					\
+				511-16-(SX),255-16-(SY),	machine->priority_bitmap,0x02,15);					\
 	else															\
 		pdrawgfx_transpen(bitmap,\
 				cliprect,machine->gfx[2],							\
 				CODE,												\
 				COLOR,												\
 				FLIPX,FLIPY,										\
-				SX,SY,												machine->priority_bitmap,0x02,15);					\
+				SX,SY,				machine->priority_bitmap,0x02,15);					\
 }
 
 

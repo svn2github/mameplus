@@ -280,7 +280,11 @@ static void asic3_compute_hold(running_machine *machine)
 
 	// The mode is dependent on the region
 	static const int modes[4] = { 1, 1, 3, 2 };
-	int mode = modes[input_port_read(machine, "Region") & 3];
+	int mode;
+	if (!strcmp(machine->gamedrv->name,"orlegend111c"))
+		mode = modes[input_port_read(machine, "Region") & 3];
+	else
+		mode = modes[2 & 3];
 
 	switch (mode)
 	{
@@ -319,9 +323,23 @@ READ16_HANDLER( pgm_asic3_r )
 
 	switch (state->asic3_reg)
 	{
-	case 0x00: res = (state->asic3_latch[0] & 0xf7) | ((input_port_read(space->machine, "Region") << 3) & 0x08); break;
+	case 0x00:
+		{
+			if (!strcmp(space->machine->gamedrv->name,"orlegend111c"))
+				res = (state->asic3_latch[0] & 0xf7) | ((input_port_read(space->machine, "Region") << 3) & 0x08);
+			else
+				res = (state->asic3_latch[0] & 0xf7) | ((2 << 3) & 0x08);
+		}
+		break;
 	case 0x01: res = state->asic3_latch[1]; break;
-	case 0x02: res = (state->asic3_latch[2] & 0x7f) | ((input_port_read(space->machine, "Region") << 6) & 0x80); break;
+	case 0x02:
+		{
+			if (!strcmp(space->machine->gamedrv->name,"orlegend111c"))
+				res = (state->asic3_latch[2] & 0x7f) | ((input_port_read(space->machine, "Region") << 6) & 0x80);
+			else
+				res = (state->asic3_latch[2] & 0x7f) | ((2 << 6) & 0x80);
+		}
+		break;
 	case 0x03:
 		res = (BIT(state->asic3_hold, 15) << 0)
 			| (BIT(state->asic3_hold, 12) << 1)
