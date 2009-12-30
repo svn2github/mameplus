@@ -156,7 +156,9 @@ LPWSTR GetSearchText(void);
 #define UI_MSG_UI	UI_MSG_OSD1
 #define UI_MSG_EXTRA	UI_MSG_OSD2
 
+#ifndef MAME_DEBUG
 #undef _
+#endif
 #undef _LST
 #undef _READINGS
 #undef _MANUFACT
