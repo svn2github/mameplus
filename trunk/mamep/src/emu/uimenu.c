@@ -112,10 +112,10 @@ struct _ui_menu_pool
 typedef struct _ui_menu_item ui_menu_item;
 struct _ui_menu_item
 {
-   const char *			text;
-   const char *			subtext;
-   UINT32 				flags;
-   void *				ref;
+	const char *			text;
+	const char *			subtext;
+	UINT32				flags;
+	void *				ref;
 };
 
 
@@ -153,8 +153,8 @@ struct _input_item_data
 	input_seq			seq;				/* copy of the live sequence */
 	const input_seq *	defseq;				/* pointer to the default sequence */
 	const char *		name;				/* pointer to the base name of the item */
-	UINT16 				sortorder;			/* sorting information */
-	UINT8 				type;				/* type of port */
+	UINT16				sortorder;			/* sorting information */
+	UINT8				type;				/* type of port */
 };
 
 
@@ -175,7 +175,7 @@ typedef struct _dip_descriptor dip_descriptor;
 struct _dip_descriptor
 {
 	dip_descriptor *	next;
-	const char *	 	name;
+	const char *		name;
 	UINT32				mask;
 	UINT32				state;
 };
@@ -193,11 +193,11 @@ struct _settings_menu_state
 typedef struct _input_menu_state input_menu_state;
 struct _input_menu_state
 {
-	UINT16 				last_sortorder;
+	UINT16				last_sortorder;
 	const void *		pollingref;
 	input_item_data *	pollingitem;
 	UINT8				record_next;
-	input_seq 			starting_seq;
+	input_seq			starting_seq;
 };
 
 
@@ -1527,7 +1527,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 		ui_menu_item_append(menu, _("Analog Controls"), NULL, 0, (void *)menu_analog);
 
 #ifndef MESS
-  	/* add bookkeeping menu */
+	/* add bookkeeping menu */
 	ui_menu_item_append(menu, _("Bookkeeping Info"), NULL, 0, (void *)menu_bookkeeping);
 #endif
 
@@ -2188,7 +2188,7 @@ static void menu_settings_custom_render_one(float x1, float y1, float x2, float 
 	numtoggles = 32 - count_leading_zeros(dip->mask);
 
 	/* center based on the number of switches */
- 	x1 += (x2 - x1 - numtoggles * switch_field_width) / 2;
+	x1 += (x2 - x1 - numtoggles * switch_field_width) / 2;
 
 	/* draw the dip switch name */
 	ui_draw_text_full(	dip->name,
@@ -3170,8 +3170,8 @@ static void menu_video_options_populate(running_machine *machine, ui_menu *menu,
 	{
 		case ROT0:		subtext = _("None");					break;
 		case ROT90:		subtext = _("CW 90" UTF8_DEGREES); 	break;
-		case ROT180:	subtext = _("180" UTF8_DEGREES); 		break;
-		case ROT270:	subtext = _("CCW 90" UTF8_DEGREES); 	break;
+		case ROT180:	subtext = _("180" UTF8_DEGREES);		break;
+		case ROT270:	subtext = _("CCW 90" UTF8_DEGREES);	break;
 	}
 	ui_menu_item_append(menu, _("Rotate"), subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_ROTATE);
 

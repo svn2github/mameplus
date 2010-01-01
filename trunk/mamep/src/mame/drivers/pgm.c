@@ -4274,7 +4274,7 @@ static DRIVER_INIT( pstar )
 
 	pgm_basic_init(machine);
 	pgm_pstar_decrypt(machine);
- 	kovsh_latch_init(machine);
+	kovsh_latch_init(machine);
 
 	state->pstars_key = 0;
 	state->pstars_int[0] = 0;
@@ -4302,28 +4302,28 @@ static DRIVER_INIT( djlzz )
 {
 	pgm_basic_init(machine);
 	pgm_djlzz_decrypt(machine);
- 	kovsh_latch_init(machine);
+	kovsh_latch_init(machine);
 }
 
 static DRIVER_INIT( kovsh )
 {
 	pgm_basic_init(machine);
 	pgm_kovsh_decrypt(machine);
- 	kovsh_latch_init(machine);
+	kovsh_latch_init(machine);
 }
 
 static DRIVER_INIT( kovshp )
 {
 	pgm_basic_init(machine);
 	pgm_kovshp_decrypt(machine);
- 	kovsh_latch_init(machine);
+	kovsh_latch_init(machine);
 }
 
 static DRIVER_INIT( oldsplus )
 {
 	pgm_basic_init(machine);
 	pgm_oldsplus_decrypt(machine);
- 	kovsh_latch_init(machine);
+	kovsh_latch_init(machine);
 }
 
 static void kov2_latch_init( running_machine *machine )
@@ -4341,7 +4341,7 @@ static DRIVER_INIT( kov2 )
 {
 	pgm_basic_init(machine);
 	pgm_kov2_decrypt(machine);
- 	kov2_latch_init(machine);
+	kov2_latch_init(machine);
 }
 
 static DRIVER_INIT( kov2p )
@@ -4351,7 +4351,7 @@ static DRIVER_INIT( kov2p )
 #endif
 	pgm_basic_init(machine);
 	pgm_kov2p_decrypt(machine);
- 	kov2_latch_init(machine);
+	kov2_latch_init(machine);
 
 #if PGMREGIONHACK
 // this hacks the identification of the kov2 rom to return the string required for kov2p
@@ -4410,28 +4410,28 @@ static DRIVER_INIT( theglad )
 {
 	svg_basic_init(machine);
 	pgm_theglad_decrypt(machine);
- 	kov2_latch_init(machine);
+	kov2_latch_init(machine);
 }
 
 static DRIVER_INIT( svg )
 {
 	svg_basic_init(machine);
 	pgm_svg_decrypt(machine);
- 	kov2_latch_init(machine);
+	kov2_latch_init(machine);
 }
 
 static DRIVER_INIT( killbldp )
 {
 	svg_basic_init(machine);
 	pgm_killbldp_decrypt(machine);
- 	kov2_latch_init(machine);
+	kov2_latch_init(machine);
 }
 
 static DRIVER_INIT( dmnfrnt )
 {
 	svg_basic_init(machine);
 	pgm_dfront_decrypt(machine);
- 	kov2_latch_init(machine);
+	kov2_latch_init(machine);
 }
 
 static DRIVER_INIT( dw3 )
@@ -4440,7 +4440,7 @@ static DRIVER_INIT( dw3 )
 
 //  memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xda0000, 0xdaffff, 0, 0, dw3_prot_r, dw3_prot_w);
 
- 	pgm_dw3_decrypt(machine);
+	pgm_dw3_decrypt(machine);
 }
 
 /* Killing Blade uses some kind of DMA protection device which can copy data from a data rom.  The
@@ -4654,7 +4654,7 @@ static DRIVER_INIT( killbld )
 	UINT16 *mem16 = (UINT16 *)memory_region(machine, "maincpu");
 
 	pgm_basic_init(machine);
- 	pgm_killbld_decrypt(machine);
+	pgm_killbld_decrypt(machine);
 
 	/* this isn't a hack.. doing a rom dump while the game is running shows the
        rom space to look like this.. there may be more overlays / enables tho */
@@ -4700,7 +4700,7 @@ static DRIVER_INIT( puzzli2 )
 	UINT16 *mem16 = (UINT16 *)memory_region(machine, "maincpu");
 
 	pgm_basic_init(machine);
- 	kovsh_latch_init(machine);
+	kovsh_latch_init(machine);
 
 	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x500000, 0x500003, 0, 0, asic28_r, asic28_w);
 
@@ -4708,7 +4708,7 @@ static DRIVER_INIT( puzzli2 )
       the protection device provides the region code */
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x4f0000, 0x4fffff, 0, 0, sango_protram_r);
 
- 	pgm_puzzli2_decrypt(machine);
+	pgm_puzzli2_decrypt(machine);
 
 	/* protection related? */
 	mem16[0x1548ec / 2] = 0x4e71;

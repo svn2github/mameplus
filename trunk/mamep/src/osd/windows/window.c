@@ -857,8 +857,8 @@ static void create_window_class(void)
 		WNDCLASS wc = { 0 };
 
 		// initialize the description of the window class
-		wc.lpszClassName 	= TEXT("MAME");
-		wc.hInstance 		= GetModuleHandle(NULL);
+		wc.lpszClassName	= TEXT("MAME");
+		wc.hInstance		= GetModuleHandle(NULL);
 #ifdef MESS
 		wc.lpfnWndProc		= win_mess_window_proc;
 #else
@@ -1246,8 +1246,8 @@ LRESULT CALLBACK winwindow_video_window_proc(HWND wnd, UINT message, WPARAM wpar
 			PAINTSTRUCT pstruct;
 			HDC hdc = BeginPaint(wnd, &pstruct);
 			draw_video_contents(window, hdc, TRUE);
- 			if (win_has_menu(window))
- 				DrawMenuBar(window->hwnd);
+			if (win_has_menu(window))
+				DrawMenuBar(window->hwnd);
 			EndPaint(wnd, &pstruct);
 			break;
 		}

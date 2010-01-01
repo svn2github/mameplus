@@ -281,7 +281,7 @@ struct _romload_private
 #define ROM_CONTINUE(offset,length)					{ NULL, NULL, offset, length, ROMENTRYTYPE_CONTINUE | ROM_INHERITFLAGS },
 #define ROM_IGNORE(length)							{ NULL, NULL, 0,      length, ROMENTRYTYPE_IGNORE | ROM_INHERITFLAGS },
 #define ROM_FILL(offset,length,value)				{ NULL, (const char *)value, offset, length, ROMENTRYTYPE_FILL },
-#define ROM_COPY(srctag,srcoffs,offset,length) 		{ srctag, (const char *)srcoffs, offset, length, ROMENTRYTYPE_COPY },
+#define ROM_COPY(srctag,srcoffs,offset,length)		{ srctag, (const char *)srcoffs, offset, length, ROMENTRYTYPE_COPY },
 
 
 /* ----- system BIOS macros ----- */

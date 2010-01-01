@@ -238,6 +238,9 @@ void osd_update(running_machine *machine, int skip_redraw)
 {
 	win_window_info *window;
 
+	// ping the watchdog on each update
+	winmain_watchdog_ping();
+
 	// if we're not skipping this redraw, update all windows
 	if (!skip_redraw)
 	{

@@ -28,7 +28,7 @@
 ***************************************************************************/
 
 #define REPORT_TIMES				(0)
-#define DETECT_OVERLAPPING_MEMORY 	(0)
+#define DETECT_OVERLAPPING_MEMORY	(0)
 
 
 
@@ -327,7 +327,7 @@ static int validate_driver(int drivnum, const machine_config *config, tagmap *na
 	/* check for duplicate names */
 	if (tagmap_add(names, driver->name, (void *)driver, FALSE) == TMERR_DUPLICATE)
 	{
-		const game_driver *match = tagmap_find(names, driver->name);
+		const game_driver *match = (const game_driver *)tagmap_find(names, driver->name);
 		mame_printf_error("%s: %s is a duplicate name (%s, %s)\n", driver->source_file, driver->name, match->source_file, match->name);
 		error = TRUE;
 	}
@@ -335,7 +335,7 @@ static int validate_driver(int drivnum, const machine_config *config, tagmap *na
 	/* check for duplicate descriptions */
 	if (tagmap_add(descriptions, driver->description, (void *)driver, FALSE) == TMERR_DUPLICATE)
 	{
-		const game_driver *match = tagmap_find(descriptions, driver->description);
+		const game_driver *match = (const game_driver *)tagmap_find(descriptions, driver->description);
 		mame_printf_error("%s: %s is a duplicate description (%s, %s)\n", driver->source_file, driver->description, match->source_file, match->description);
 		error = TRUE;
 	}
@@ -421,7 +421,7 @@ static int validate_roms(int drivnum, const machine_config *config, region_info 
 		sprintf(romaddr, "%p", driver->rom);
 		if (tagmap_add(roms, romaddr, (void *)driver, FALSE) == TMERR_DUPLICATE)
 		{
-			const game_driver *match = tagmap_find(roms, romaddr);
+			const game_driver *match = (const game_driver *)tagmap_find(roms, romaddr);
 			mame_printf_error("%s: %s uses the same ROM set as (%s, %s)\n", driver->source_file, driver->description, match->source_file, match->name);
 			error = TRUE;
 		}

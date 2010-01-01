@@ -254,7 +254,9 @@ endif
 LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
 
 ifdef CPP_COMPILE
+ifndef MSVC_BUILD
 LIBS += -lsupc++
+endif
 endif
 
 ifeq ($(DIRECTINPUT),8)
@@ -332,7 +334,7 @@ OSDOBJS += $(WINOBJ)/d3d8intf.o
 endif
 
 # extra dependencies
-$(WINOBJ)/drawdd.o : 	$(SRC)/emu/rendersw.c
+$(WINOBJ)/drawdd.o :	$(SRC)/emu/rendersw.c
 $(WINOBJ)/drawgdi.o :	$(SRC)/emu/rendersw.c
 
 # add debug-specific files

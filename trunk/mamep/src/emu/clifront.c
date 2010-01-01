@@ -875,21 +875,21 @@ int cli_info_listdevices(core_options *options, const char *gamename)
 
 			if (count != 0)
 				printf("\n");
-			printf(_("Driver %s (%s):\n"), drivers[drvindex]->name, drivers[drvindex]->description);
+			printf(_("Driver %s (%s):\n"), drivers[drvindex]->name, _LST(drivers[drvindex]->description));
 
 			/* iterate through devices */
 			for (device = config->devicelist.head; device != NULL; device = device->next)
 			{
 				switch (device->devclass)
 				{
-					case DEVICE_CLASS_AUDIO:		printf("  Audio: ");	break;
-					case DEVICE_CLASS_VIDEO:		printf("  Video: ");	break;
-					case DEVICE_CLASS_CPU_CHIP:		printf("    CPU: ");	break;
-					case DEVICE_CLASS_SOUND_CHIP:	printf("  Sound: ");	break;
-					case DEVICE_CLASS_TIMER:		printf("  Timer: ");	break;
-					default:						printf("  Other: ");	break;
+					case DEVICE_CLASS_AUDIO:		printf(_("  Audio: "));	break;
+					case DEVICE_CLASS_VIDEO:		printf(_("  Video: "));	break;
+					case DEVICE_CLASS_CPU_CHIP:		printf(_("    CPU: "));	break;
+					case DEVICE_CLASS_SOUND_CHIP:	printf(_("  Sound: "));	break;
+					case DEVICE_CLASS_TIMER:		printf(_("  Timer: "));	break;
+					default:						printf(_("  Other: "));	break;
 				}
-				printf(_("%s ('%s')"), device_get_name(device), device->tag);
+				printf("%s ('%s')", _(device_get_name(device)), device->tag);
 				if (device->clock >= 1000000000)
 					printf(" @ %d.%02d GHz\n", device->clock / 1000000000, (device->clock / 10000000) % 100);
 				else if (device->clock >= 1000000)
@@ -1375,7 +1375,7 @@ static void match_roms(const char *hash, int length, int *found)
 						/* output information about the match */
 						if (*found != 0)
 							mame_printf_info("                    ");
-						mame_printf_info("= %s%-20s  %-10s %s\n", baddump ? "(BAD) " : "", ROM_GETNAME(rom), drivers[drvindex]->name, drivers[drvindex]->description);
+						mame_printf_info("= %s%-20s  %-10s %s\n", baddump ? _("(BAD) ") : "", ROM_GETNAME(rom), drivers[drvindex]->name, _LST(drivers[drvindex]->description));
 						(*found)++;
 					}
 
