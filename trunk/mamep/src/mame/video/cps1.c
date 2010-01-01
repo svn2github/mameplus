@@ -1207,6 +1207,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"ffightj",  CPS_B_04,     mapper_S224B },
 	{"ffightj1", CPS_B_02,     mapper_S224B },
 	{"ffightj2", CPS_B_01,     mapper_S224B },
+	{"ffightjh", CPS_B_01,     mapper_S224B },
 	{"ffighth",  CPS_B_21_DEF, mapper_S224B },
 	{"1941",     CPS_B_05,     mapper_YI24B },
 	{"1941j",    CPS_B_05,     mapper_YI24B },
@@ -1493,7 +1494,7 @@ INLINE UINT16 *cps1_base( running_machine *machine, int offset, int boundary )
     Mask out the irrelevant bits.
     */
 	base &= ~(boundary - 1);
- 	return &state->gfxram[(base & 0x3ffff) / 2];
+	return &state->gfxram[(base & 0x3ffff) / 2];
 }
 
 
