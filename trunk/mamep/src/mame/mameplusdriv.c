@@ -63,7 +63,6 @@ const game_driver * const plusdrivers[] =
 //	DRIVER( punishrh )	/* bootleg, Biaofeng Zhanjing */
 
 	/* Capcom CPS1 hack */
-	DRIVER( ffighth )	/* hack */
 	DRIVER( knightsh )	/* hack */
 	DRIVER( kodh )		/* hack */
 	DRIVER( dinoh )		/* hack */

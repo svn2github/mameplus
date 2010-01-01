@@ -2737,14 +2737,6 @@ static INPUT_PORTS_START( wofhfh )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 ) PORT_NAME("Coin 3 (P3 Button 3 in-game)")
 INPUT_PORTS_END
 
-static INPUT_PORTS_START( ffighth )
-	PORT_INCLUDE(ffight)
-
-	PORT_MODIFY("IN1")
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
-INPUT_PORTS_END
-
 static INPUT_PORTS_START( kodh )
 	PORT_INCLUDE( kod )
 
@@ -9157,26 +9149,6 @@ ROM_START( daimakb )
 	ROM_REGION( 0x40000, "oki", ROMREGION_ERASEFF )	/* Samples (not present) */
 ROM_END
 
-ROM_START( ffighth )
-	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "ff.23.bin", 0x00000, 0x80000, CRC(ae3dda7f) SHA1(5f08ce1e6b6b0d45994d3354d59ef79f489c7ad7) )
-	ROM_LOAD16_WORD_SWAP( "ff.22.bin", 0x80000, 0x80000, CRC(b2d5a3aa) SHA1(b60f7480d3d3ceebad4c21025394bacc154d7042) )
-
-	ROM_REGION( 0x200000, "gfx", 0 )
-	ROMX_LOAD( "ff.01.bin", 0x000000, 0x80000, CRC(969d18e2) SHA1(7a30b7434e34ec98838a9ab8d953b2ef467d562e) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "ff.02.bin", 0x000002, 0x80000, CRC(02b59f99) SHA1(c1cb2bbf95c2006baad58b0a5a7278f1a8999901) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "ff.03.bin", 0x000004, 0x80000, CRC(01d507ae) SHA1(d7813daa5bd74bebdbbea578acb20ad3c8816997) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "ff.04.bin", 0x000006, 0x80000, CRC(f7c4ceb0) SHA1(3e9cf6379f06c5a736b4a0aadb7fbda914b91190) , ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( 0x18000, "audiocpu", 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "ff.09.bin",  0x00000, 0x08000, CRC(b8367eb5) SHA1(ec3db29fdd6200e9a8f4f8073a7e34aef731354f) )
-	ROM_CONTINUE(           0x10000, 0x08000 )
-
-	ROM_REGION( 0x40000, "oki", 0 )	/* Samples */
-	ROM_LOAD( "ff.18.bin",  0x00000, 0x20000, CRC(375c66e7) SHA1(36189e23209ce4ae5d9cbabd1574540d0591e7b3) )
-	ROM_LOAD( "ff.19.bin",  0x20000, 0x20000, CRC(1ef137f9) SHA1(974b5e72aa28b87ebfa7438efbdfeda769dedf5e) )
-ROM_END
-
 ROM_START( knightsb2 )
 	ROM_REGION( CODE_SIZE, "maincpu", 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "040-z.02",   0x00000, 0x80000, CRC(95d00a7e) SHA1(2da1c47aa15d44aa842a8d79e030e7e7b69bec19) )
@@ -10793,7 +10765,6 @@ GAME( 1995, pang3,    0,        pang3,      pang3,    pang3,    ROT0,   "Mitchel
 GAME( 1995, pang3j,   pang3,    pang3,      pang3,    pang3j,   ROT0,   "Mitchell", "Pang! 3 (Japan 950511)", GAME_SUPPORTS_SAVE )
 
 /* bootleg */
-GAME( 1989, ffighth,  ffight,   cps1_10MHz, ffighth,  cps1,     ROT0,   "bootleg", "Final Fight (hack)", GAME_SUPPORTS_SAVE )
 GAME( 1991, kodh,     kod,      cps1_10MHz, kodh,     cps1,     ROT0,   "bootleg","The King of Dragons (hack)", GAME_SUPPORTS_SAVE )
 GAME( 1991, knightsb2,knights,  cps1_10MHz, knights,  cps1,     ROT0,   "bootleg","Knights of the Round (bootleg set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1991, knightsh, knights,  cps1_10MHz, knightsh, cps1,     ROT0,   "bootleg","Knights of the Round (hack)" , GAME_SUPPORTS_SAVE )
