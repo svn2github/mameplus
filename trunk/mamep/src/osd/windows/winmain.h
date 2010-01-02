@@ -154,11 +154,10 @@ extern int osd_num_processors;
 //  FUNCTION PROTOTYPES
 //============================================================
 
-// mamep: function mame_printf_verbose() is not in osd core
-#if 0
 // use if you want to print something with the verbose flag
 void CLIB_DECL mame_printf_verbose(const char *text, ...) ATTR_PRINTF(1,2);
-#endif
 
 // use this to ping the watchdog
 void winmain_watchdog_ping(void);
+
+#endif

@@ -75,14 +75,17 @@ extern UINT8 sgb_tile_map[2048];	/* 32x32 tile map data (0-tile,1-attribute) */
 extern UINT8 sgb_window_mask;		/* Current GB screen mask               */
 extern UINT8 sgb_hack;				/* Flag set if we're using a hack       */
 
+extern MACHINE_START( sgb );
 extern MACHINE_RESET( sgb );
 extern WRITE8_HANDLER ( sgb_io_w );
 
+MACHINE_START( gbc );
 MACHINE_RESET( gbc );
 
 
 /* -- Megaduck specific -- */
 extern DEVICE_IMAGE_LOAD(megaduck_cart);
+extern MACHINE_START( megaduck );
 extern MACHINE_RESET( megaduck );
 extern  READ8_HANDLER( megaduck_video_r );
 extern WRITE8_HANDLER( megaduck_video_w );
@@ -120,7 +123,9 @@ PALETTE_INIT( megaduck );
 
 READ8_HANDLER( gb_video_r );
 WRITE8_HANDLER( gb_video_w );
-void gb_video_init( running_machine *machine, int mode );
+MACHINE_START( gb_video );
+MACHINE_START( gbc_video );
+void gb_video_reset( running_machine *machine, int mode );
 UINT8 *gb_get_vram_ptr(running_machine *machine);
 
 
