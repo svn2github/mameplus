@@ -1090,6 +1090,10 @@ Door Interlock
 Double Up
 比倍
 
+# emu/clifront.c: 878
+Driver %s (%s):\n
+驱动 %s (%s):\n
+
 # emu/uimenu.c: 1523 mess/mslegacy.c: 20 
 Driver Configuration
 驱动设置
@@ -5448,10 +5452,6 @@ Discrete
 
 # mame/drivers/cclimber.c: 567 mame/drivers/nmk16.c: 1331 mame/drivers/pacman.c: 3054 
 Display
-
-
-# emu/clifront.c: 878
-Driver %s (%s):\n
 
 
 # emu/layout/dualhovu.lay: 27 emu/layout/dualhsxs.lay: 45

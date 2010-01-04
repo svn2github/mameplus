@@ -882,6 +882,10 @@ Decrypting %d%%
 Default
 デフォルト
 
+# mess/inputx.c: 322 
+Delete
+Delete
+
 # emu/inptport.c: 346 mame/drivers/dreamwld.c: 365
 Demo Sounds
 デモサウンド
@@ -1417,6 +1421,10 @@ Input: デフォルトのジョイスティックマップを変更しています
 # emu/input.c: 621
 Input: Default joystick map
 Input: デフォルトのジョイスティックマップです
+
+# mame/drivers/funworld.c: 1246, 1670 mess/inputx.c: 321 
+Insert
+Insert
 
 # emu/inptport.c: 395
 International
@@ -5138,10 +5146,6 @@ Deal
 Debug Lamps
 
 
-# mess/inputx.c: 322 
-Delete
-
-
 # emu/sound/discrete.c: 1083
 Discrete
 
@@ -5276,10 +5280,6 @@ IPS: parsing ips \"%s/%s%s\"\n
 
 # emu/cheat.c: 1080
 Ignoring duplicate cheat '%s' from file %s\n
-
-
-# mame/drivers/funworld.c: 1246, 1670 mess/inputx.c: 321 
-Insert
 
 
 # emu/state.h: 67

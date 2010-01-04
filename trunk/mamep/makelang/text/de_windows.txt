@@ -962,6 +962,10 @@ loading
 name of a PNG file to use for visual effects, or 'none'
 
 
+# osd/windows/winmain.c: 172
+number of processors; this overrides the number the system reports
+
+
 # osd/windows/winmain.c: 177
 number of screens to create; usually, you want just one
 

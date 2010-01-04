@@ -1684,7 +1684,7 @@ Not working
 
 # osd/winui/mameui.rc: 552
 Number of screens to create:
-建立的畫面總數:
+建立的畫面數量:
 
 # osd/winui/mameui.rc: 455, 481, 1172
 OK
@@ -1988,7 +1988,7 @@ Reset all Playcounts
 
 # osd/winui/mameui.rc: 1543
 Reset number of plays for selected item
-重置選定項目的執行總數
+重置選定項目的執行數量
 
 # osd/winui/mameui.rc: 1543
 Reset time played for selected item
@@ -2568,7 +2568,7 @@ Toggle full screen mode
 
 # osd/winui/mameui.rc: 423, 432
 Total:
-總數:
+合計:
 
 # osd/winui/layout.c: 78 osd/winui/properties.c: 966 osd/winui/treeview.c: 1369 osd/winui/winui.c: 928
 Trackball

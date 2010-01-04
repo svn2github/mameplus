@@ -950,9 +950,13 @@ loading
 name of a PNG file to use for visual effects, or 'none'
 設定要使用的視覺效果 PNG 檔名，或設為 none
 
+# osd/windows/winmain.c: 172
+number of processors; this overrides the number the system reports
+設定處理器數量; 將覆寫系統回報的數量
+
 # osd/windows/winmain.c: 177
 number of screens to create; usually, you want just one
-建立的畫面總數; 通常設為一個
+建立的畫面數量; 通常設為一個
 
 # osd/windows/winmain.c: 163
 output error.log data to the system debugger

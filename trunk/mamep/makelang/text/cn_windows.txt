@@ -874,6 +874,10 @@ creating
 default to maximized windows; otherwise, windows will be minimized
 默认成窗口最大化; 否则将采用窗口最小化模式
 
+# osd/windows/winmain.c: 233
+enable audio sync
+启用音频同步
+
 # osd/windows/winmain.c: 193
 enable bilinear filtering on screen output
 启用双线性过滤的画面输出
@@ -946,9 +950,13 @@ loading
 name of a PNG file to use for visual effects, or 'none'
 设置要使用的视觉效果 PNG 文件名，或设为 none
 
+# osd/windows/winmain.c: 172
+number of processors; this overrides the number the system reports
+设置处理器数量; 将覆盖系统回报的数量
+
 # osd/windows/winmain.c: 177
 number of screens to create; usually, you want just one
-创建的屏幕总数; 通常设为一个
+创建的屏幕数量; 通常设为一个
 
 # osd/windows/winmain.c: 163
 output error.log data to the system debugger
@@ -1057,8 +1065,4 @@ use the new MESS UI
 # osd/windows/winmain.c: 176
 video output method: none, gdi, ddraw, or d3d
 视频输出方式: none, gdi, ddraw 或 d3d
-
-# osd/windows/winmain.c: 233
-enable audio sync
-
 

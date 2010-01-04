@@ -1062,3 +1062,7 @@ video output method: none, gdi, ddraw, or d3d
 enable audio sync
 
 
+# osd/windows/winmain.c: 172
+number of processors; this overrides the number the system reports
+
+

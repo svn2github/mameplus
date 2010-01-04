@@ -1250,6 +1250,10 @@ Game lacks sound
 Game protection isn't fully emulated
 游戏的保护尚未完全模拟
 
+# osd/winui/properties.c: 1090, 1143, 1214
+Game requires external artwork files
+游戏需要外部装饰图文件
+
 # osd/winui/winui.c: 3499
 Game search %d%% complete
 游戏搜索 %d%% 完成
@@ -1488,7 +1492,7 @@ Joystick saturation
 
 # osd/winui/mameui.rc: 875
 Joystickmap
-游戏杆映射档
+游戏杆映射文件
 
 # osd/winui/properties.c: 413
 Keyboard
@@ -1680,7 +1684,7 @@ Not working
 
 # osd/winui/mameui.rc: 552
 Number of screens to create:
-创建的屏幕总数:
+创建的屏幕数量:
 
 # osd/winui/mameui.rc: 455, 481, 1172
 OK
@@ -1946,6 +1950,10 @@ Remove selected item from this folder
 Rename this folder
 重命名这个文件夹
 
+# osd/winui/treeview.c: 999
+Requires Artwork
+需要装饰图
+
 # osd/winui/mameui.rc: 210
 Rese&t Playcount
 重设运行次数(&T)
@@ -1960,7 +1968,7 @@ Reset Debugscript
 
 # osd/winui/mameui.rc: 880
 Reset Joystickmap
-重设游戏杆映射档
+重设游戏杆映射文件
 
 # osd/winui/mameui.rc: 1053
 Reset Options
@@ -2078,6 +2086,10 @@ Screen setting
 Screen:
 屏幕:
 
+# osd/winui/properties.c: 902
+Screenless Game
+游戏无画面
+
 # osd/winui/layout.c: 70
 Screens
 画面数
@@ -2136,7 +2148,7 @@ Select Item
 
 # osd/winui/mameui.rc: 878
 Select Joystickmap
-选定游戏杆映射档
+选定游戏杆映射文件
 
 # osd/winui/mameui.rc: 1555
 Select Marquee tab
@@ -2485,6 +2497,10 @@ The game has protection which isn't fully emulated.\n
 # osd/winui/datafile.c: 1077
 The game lacks sound.\n
 这个游戏尚未支持声音。\n
+
+# osd/winui/datafile.c: 1086
+The game requires external artwork files\n
+游戏需要外部装饰图文件\n
 
 # osd/winui/mui_util.c: 241
 The operating system is out of memory or resources.
@@ -2868,7 +2884,7 @@ mameinfo (*.dat)
 
 # osd/winui/winui.c: 6389
 maps (*.map,*.txt)
-映射档 (*.map,*.txt)
+映射文件 (*.map,*.txt)
 
 # osd/winui/dialogs.c: 149
 requires exiting 
@@ -2897,20 +2913,4 @@ videos (*.avi)
 # osd/winui/winui.c: 6374
 videos (*.mng)
 视频文件 (*.mng)
-
-# osd/winui/properties.c: 1090, 1143, 1214
-Game requires external artwork files
-
-
-# osd/winui/treeview.c: 999
-Requires Artwork
-
-
-# osd/winui/properties.c: 902
-Screenless Game
-
-
-# osd/winui/datafile.c: 1086
-The game requires external artwork files\n
-
 

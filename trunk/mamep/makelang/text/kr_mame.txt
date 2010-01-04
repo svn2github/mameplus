@@ -966,6 +966,10 @@ Decrypting %d%%
 Default
 기본값
 
+# mess/inputx.c: 322 
+Delete
+Delete
+
 # emu/inptport.c: 346 mame/drivers/dreamwld.c: 365
 Demo Sounds
 데모화면 음악
@@ -1541,6 +1545,10 @@ Input: Changing default joystick map
 # emu/input.c: 621
 Input: Default joystick map
 입력: 기본 조이스틱 배치
+
+# mame/drivers/funworld.c: 1246, 1670 mess/inputx.c: 321 
+Insert
+Insert
 
 # emu/inptport.c: 395
 International
@@ -5374,10 +5382,6 @@ DMD Output Only
 Deal
 
 
-# mess/inputx.c: 322 
-Delete
-
-
 # emu/sound/discrete.c: 1083
 Discrete
 
@@ -5472,10 +5476,6 @@ IPS: parsing ips \"%s/%s%s\"\n
 
 # emu/cheat.c: 1080
 Ignoring duplicate cheat '%s' from file %s\n
-
-
-# mame/drivers/funworld.c: 1246, 1670 mess/inputx.c: 321 
-Insert
 
 
 # emu/inpttype.h: 111 mame/drivers/bishjan.c: 689, 700, 703 mame/drivers/d9final.c: 223 mame/drivers/goldstar.c: 2454, 2610, 2767, 2801 mame/drivers/igs017.c: 1476 mame/drivers/jackie.c: 399 mame/drivers/slotcarn.c: 213 mame/drivers/witch.c: 492

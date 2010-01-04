@@ -1050,6 +1050,10 @@ force the program to terminate if no updates within specified number of seconds
 loading
 
 
+# osd/windows/winmain.c: 172
+number of processors; this overrides the number the system reports
+
+
 # osd/windows/winmain.c: 166
 specifies the font size to use for debugging; defaults to 9 pt
 

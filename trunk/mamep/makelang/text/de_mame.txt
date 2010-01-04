@@ -246,6 +246,10 @@ Custom
 Custom Buttons
 Benutzerdefinierte Buttons
 
+# mess/inputx.c: 322 
+Delete
+Delete
+
 # emu/inptport.c: 346 mame/drivers/dreamwld.c: 365
 Demo Sounds
 Demo Sounds
@@ -433,6 +437,10 @@ Eingabe (Generell)
 # emu/uimenu.c: 1513
 Input (this Game)
 Eingabe (dieses Spiel)
+
+# mame/drivers/funworld.c: 1246, 1670 mess/inputx.c: 321 
+Insert
+Insert
 
 # mame/drivers/ajax.c: 106 mame/drivers/taito_z.c: 2642, 2659
 Inverted
@@ -2174,10 +2182,6 @@ Decrypting %d%%
 Default
 
 
-# mess/inputx.c: 322 
-Delete
-
-
 # emu/inpttype.h: 532
 Dial 5
 
@@ -2660,10 +2664,6 @@ Input: Changing default joystick map
 
 # emu/input.c: 621
 Input: Default joystick map
-
-
-# mame/drivers/funworld.c: 1246, 1670 mess/inputx.c: 321 
-Insert
 
 
 # emu/inptport.c: 395

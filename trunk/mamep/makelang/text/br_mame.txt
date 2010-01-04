@@ -802,6 +802,10 @@ Decriptando %d%%
 Default
 Padrão
 
+# mess/inputx.c: 322 
+Delete
+Delete
+
 # emu/inptport.c: 346 mame/drivers/dreamwld.c: 365
 Demo Sounds
 Sons Demonstrativos
@@ -1289,6 +1293,10 @@ Entrada: Mudando mapa padrão de joystick
 # emu/input.c: 621
 Input: Default joystick map
 Entrada: Mapa padrão de joystick
+
+# mame/drivers/funworld.c: 1246, 1670 mess/inputx.c: 321 
+Insert
+Insert
 
 # emu/inptport.c: 395
 International
@@ -4906,10 +4914,6 @@ Deal
 Debug Lamps
 
 
-# mess/inputx.c: 322 
-Delete
-
-
 # mess/mslegacy.c: 22 
 Digital Speed
 
@@ -5092,10 +5096,6 @@ Input file: %s\n
 
 # emu/inptport.c: 717
 Input port errors:\n%s
-
-
-# mame/drivers/funworld.c: 1246, 1670 mess/inputx.c: 321 
-Insert
 
 
 # emu/state.h: 67
