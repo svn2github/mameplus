@@ -230,7 +230,7 @@ Bally Midway
 Bandai
 Bandai
 
-# Pretty Soldier Sailor Moon (JUEHTK, Ver. 95/03/22B)
+# Mobile Suit Z-Gundam: A.E.U.G. vs Titans (ZGA1 Ver. A)
 Banpresto
 Banpresto
 
@@ -710,13 +710,9 @@ Evona Electronic
 ExPotato
 ExPotato
 
-# Grand Cross
+# Dream 9 Final (v2.24)
 Excellent System
 Excellent System
-
-# Varia Metal
-Excellent Systems
-Excellent Systems
 
 # Bandido
 Exidy
@@ -886,10 +882,6 @@ Hollow Corp
 Home Data
 Home Data
 
-# NGEM2K (Homebrew 060118, Beta)
-Homebrew
-caseiro
-
 # Schmeiser Robo (Japan)
 Hot B
 Hot B
@@ -994,7 +986,7 @@ Pirata Italiano
 JMA
 JMA
 
-# Poker Night (Homebrew)
+# Poker Night (Homebrew, No sound edition)
 JMK
 JMK
 
@@ -1314,7 +1306,7 @@ Nasco Japan
 Nazca
 Nazca
 
-# Neo Pong (Ver 1.1, Homebrew)
+# Neo Pong (ver 1.1, Homebrew)
 Neodev
 Neodev
 
@@ -1378,7 +1370,7 @@ Nova Games of Canada
 Nova?
 Nova?
 
-# Rallys (bootleg?)
+# Rallys (bootleg of Spectar)
 Novar
 Novar
 
@@ -1522,7 +1514,7 @@ Promat
 Psikyo
 Psikyo
 
-# Shadow of the Beast (Neo Demo, Homebrew)
+# Shadow of the Beast (Homebrew, No sound edition)
 Psygnosis
 Psygnosis
 
@@ -1778,7 +1770,7 @@ Signatron USA
 Sisteme
 Sisteme
 
-# Cannon Ball (bootleg on Crazy Climber hardware, set 1)
+# Cannon Ball (bootleg on Crazy Kong hardware) (set 1, buggy)
 Soft
 Soft
 
@@ -1858,7 +1850,7 @@ Sun Mixing
 Sun a Electronics
 Sun a Electronics
 
-# Rough Ranger (v2.0)
+# Rough Ranger (v2.0, unprotected, bootleg?)
 SunA
 SunA
 
@@ -1922,7 +1914,7 @@ TDS
 TDS & Mints
 TDS & Mints
 
-# Cannon Ball (bootleg on Crazy Climber hardware, set 2)
+# Cannon Ball (bootleg on Crazy Kong hardware) (set 2, buggy)
 TV Game Gruenberg
 TV Game Gruenberg
 
@@ -2117,10 +2109,6 @@ Universal Video Spiel
 # Taiwan Chess Legend
 Uniwang
 Uniwang
-
-# Draw Poker Hi-Lo (alt)
-Unknown
-Desconhecido
 
 # Rabio Lepus (Japan)
 V-System Co.
@@ -2434,6 +2422,10 @@ Aristocrat
 Astro Corp.
 
 
+# Jingi Storm - The Arcade (GDL-0037)
+Atrativa Japan
+
+
 # Galaxi (v2.0)
 B.R.L.
 
@@ -2442,8 +2434,16 @@ B.R.L.
 Best System
 
 
+# Shao-lin's Road (bootleg)
+Bootleg
+
+
 # Doctor PC Jr
 Bung
+
+
+# Credit Poker (ver.30c, standard)
+CGI
 
 
 # Cal Omega - Game 7.4 (Gaming Poker, W.Export)
@@ -2454,8 +2454,16 @@ Cal Omega Inc.
 Cin
 
 
+# Sports Authority
+Classic Games
+
+
 # Colorama (english)
 Coinmaster-Gaming, Ltd.
+
+
+# Video Stars
+Competitive Video?
 
 
 # Galaxy Games (BIOS v1.90)
@@ -2478,6 +2486,10 @@ DUTECH Inc.
 Danbi
 
 
+# Double Joker Poker (45%-75% payout)
+DellFern Ltd.
+
+
 # Triple Draw Poker
 Design Labs
 
@@ -2490,8 +2502,16 @@ Digital Dreams
 Dream Island
 
 
+# DRHL Poker (v.2.89)
+Drews Inc.
+
+
 # Skeet Shot
 Dynamo
+
+
+# Wild Cat 3
+E.A.I.
 
 
 # Janshi
@@ -2562,15 +2582,15 @@ Hi-Soft
 High Video
 
 
+# Miracle Derby - Ascot
+Home Data?
+
+
 # Blazing Lazers
 Hudson Soft
 
 
-# Skimaxx
-ICE
-
-
-# Multi Fish (021124, set 1)
+# Multi Fish (021124)
 Igro
 
 
@@ -2590,12 +2610,20 @@ InterFlip
 Itisa
 
 
+# Scramble (Karateko, French bootleg)
+Karateko
+
+
+# Kimble Double HI-LO (z80 version)
+Kimble Ireland
+
+
 # Quake Arcade Tournament (Release Beta 2)
 Lazer-Tron
 
 
-# Draw Poker Hi-Lo (M.Kramer)
-M. Kramer Manufacturing.
+# Poker / Black Jack (Model 7521)
+M.Kramer Manufacturing.
 
 
 # Mystery Number
@@ -2608,6 +2636,10 @@ M.P.
 
 # Mahjong Oh (V2.06J)
 Mahjong Kobo/Taito
+
+
+# Mainline Double Joker Poker
+Mainline London
 
 
 # Buster
@@ -2635,7 +2667,7 @@ Merit Industries
 
 
 # Turbo Poker 2
-Micro Manufacturing, Inc.
+Micro Manufacturing Inc.
 
 
 # F-15 Strike Eagle (rev. 2.2 02/25/91)
@@ -2702,6 +2734,14 @@ PlayMark Srl
 Polygon Magic
 
 
+# Panzer (bootleg of Spectar)
+Proel
+
+
+# Noraut Joker Poker (Prologic HW)
+Prologic
+
+
 # New Double Bet Mahjong (Japan)
 Ps Ltd.
 
@@ -2726,6 +2766,10 @@ Royal Denshi
 SGS
 
 
+# HI-LO Double Up Joker Poker
+SMS Manufacturing Corp.
+
+
 # SSI Poker (v2.4)
 SSI
 
@@ -2748,6 +2792,10 @@ Sandii'
 
 # Pachi Fever
 Sanki Denshi Kogyo
+
+
+# Fast Draw (poker conversion kit)?
+Seeburg?
 
 
 # Multi Game 2
@@ -2812,6 +2860,10 @@ TAB Austria
 
 # King Derby
 Tazmi
+
+
+# Ten Spot
+Thomas Automatics
 
 
 # Magical Tonic?

@@ -2086,6 +2086,10 @@ Screen setting
 Screen:
 
 
+# osd/winui/properties.c: 902
+Screenless Game
+
+
 # osd/winui/layout.c: 70
 Screens
 

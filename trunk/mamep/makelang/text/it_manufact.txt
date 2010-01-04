@@ -14,10 +14,6 @@ AV Giappone
 Capcom, supported by Takumi
 Capcom, supportato da Takumi
 
-# NGEM2K (Homebrew 060118, Beta)
-Homebrew
-Fatto in casa
-
 # Mighty! Pang (Euro 001010)
 Mitchell, distributed by Capcom
 Mitchell, distribuito da Capcom
@@ -41,10 +37,6 @@ SNK America
 # Jungle Hunt (Brazil)
 Taito do Brasil
 Taito Brasiliana
-
-# Draw Poker Hi-Lo (alt)
-Unknown
-Sconosciuto
 
 # Crush Roller (bootleg)
 bootleg
@@ -330,6 +322,10 @@ Athena
 Atlus
 
 
+# Jingi Storm - The Arcade (GDL-0037)
+Atrativa Japan
+
+
 # Galaxi (v2.0)
 B.R.L.
 
@@ -358,7 +354,7 @@ Bally Midway
 Bandai
 
 
-# Pretty Soldier Sailor Moon (JUEHTK, Ver. 95/03/22B)
+# Mobile Suit Z-Gundam: A.E.U.G. vs Titans (ZGA1 Ver. A)
 Banpresto
 
 
@@ -394,6 +390,10 @@ Blastar
 Bonanza Enterprises, Ltd
 
 
+# Shao-lin's Road (bootleg)
+Bootleg
+
+
 # Sky Lancer (Bordun, ver.U450C)
 Bordun International
 
@@ -416,6 +416,10 @@ C.M.C.
 
 # Candy Puzzle (v1.0)
 CD Express
+
+
+# Credit Poker (ver.30c, standard)
+CGI
 
 
 # Herbie at the Olympics (DK conversion)
@@ -486,6 +490,10 @@ Cin
 Cinematronics
 
 
+# Sports Authority
+Classic Games
+
+
 # Fred Flintstones' Memory Match (World?, Ticket version, 3/17/95)
 Coastal Amusements
 
@@ -512,6 +520,10 @@ Comad Industry Co Ltd
 
 # Amiga CD32 Bios
 Commodore
+
+
+# Video Stars
+Competitive Video?
 
 
 # Puyo Puyo Sun (J 961115 V0.001)
@@ -630,6 +642,10 @@ Data East USA
 Datel SAS
 
 
+# Double Joker Poker (45%-75% payout)
+DellFern Ltd.
+
+
 # Logic Pro (Japan)
 Deniam
 
@@ -690,6 +706,10 @@ Dorneer
 Dream Island
 
 
+# DRHL Poker (v.2.89)
+Drews Inc.
+
+
 # The Masters of Kin
 Du Tech
 
@@ -728,6 +748,10 @@ Dynax
 
 # 9-Ball Shootout (set 1)
 E-Scape EnterMedia
+
+
+# Wild Cat 3
+E.A.I.
 
 
 # Hot Shocker
@@ -922,12 +946,8 @@ Evona Electronic
 ExPotato
 
 
-# Grand Cross
+# Dream 9 Final (v2.24)
 Excellent System
-
-
-# Varia Metal
-Excellent Systems
 
 
 # Bandido
@@ -1134,6 +1154,10 @@ Hollow Corp
 Home Data
 
 
+# Miracle Derby - Ascot
+Home Data?
+
+
 # Schmeiser Robo (Japan)
 Hot B
 
@@ -1170,10 +1194,6 @@ I'Max
 I.G.R.
 
 
-# Skimaxx
-ICE
-
-
 # 4 En Raya
 IDSA
 
@@ -1194,7 +1214,7 @@ IGT - International Gaming Technology
 Icarus
 
 
-# Multi Fish (021124, set 1)
+# Multi Fish (021124)
 Igro
 
 
@@ -1266,7 +1286,7 @@ Itisa
 JMA
 
 
-# Poker Night (Homebrew)
+# Poker Night (Homebrew, No sound edition)
 JMK
 
 
@@ -1330,8 +1350,16 @@ Kaneko
 Karateco
 
 
+# Scramble (Karateko, French bootleg)
+Karateko
+
+
 # Mahjong Circuit no Mehyou (Japan)
 Kawakusu
+
+
+# Kimble Double HI-LO (z80 version)
+Kimble Ireland
 
 
 # Sexual Trivia (Version 1.02SB, set 1)
@@ -1426,8 +1454,8 @@ Logitec
 LucasArts
 
 
-# Draw Poker Hi-Lo (M.Kramer)
-M. Kramer Manufacturing.
+# Poker / Black Jack (Model 7521)
+M.Kramer Manufacturing.
 
 
 # Mystery Number
@@ -1456,6 +1484,10 @@ Maboroshi Ware
 
 # Mahjong Oh (V2.06J)
 Mahjong Kobo/Taito
+
+
+# Mainline Double Joker Poker
+Mainline London
 
 
 # Mahjong Doukyuusei
@@ -1531,7 +1563,7 @@ Meyco Games
 
 
 # Turbo Poker 2
-Micro Manufacturing, Inc.
+Micro Manufacturing Inc.
 
 
 # The Return of Lady Frog (set 1)
@@ -1658,7 +1690,7 @@ Nazca
 Nazionale Elettronica
 
 
-# Neo Pong (Ver 1.1, Homebrew)
+# Neo Pong (ver 1.1, Homebrew)
 Neodev
 
 
@@ -1734,7 +1766,7 @@ Nova Games Ltd.
 Nova?
 
 
-# Rallys (bootleg?)
+# Rallys (bootleg of Spectar)
 Novar
 
 
@@ -1882,6 +1914,14 @@ Primetek Investments
 Prince Co.
 
 
+# Panzer (bootleg of Spectar)
+Proel
+
+
+# Noraut Joker Poker (Prologic HW)
+Prologic
+
+
 # Ozon I
 Proma
 
@@ -1898,7 +1938,7 @@ Ps Ltd.
 Psikyo
 
 
-# Shadow of the Beast (Neo Demo, Homebrew)
+# Shadow of the Beast (Homebrew, No sound edition)
 Psygnosis
 
 
@@ -1998,6 +2038,10 @@ SGS
 SMS MFG CORP
 
 
+# HI-LO Double Up Joker Poker
+SMS Manufacturing Corp.
+
+
 # Safari Rally (Japan)
 SNK
 
@@ -2084,6 +2128,10 @@ Sculptured Software Inc.
 
 # Eight Ball Action (Pac-Man conversion)
 Seatongrove Ltd
+
+
+# Fast Draw (poker conversion kit)?
+Seeburg?
 
 
 # Ali Baba and 40 Thieves
@@ -2210,7 +2258,7 @@ Sipem license
 Sisteme
 
 
-# Cannon Ball (bootleg on Crazy Climber hardware, set 1)
+# Cannon Ball (bootleg on Crazy Kong hardware) (set 1, buggy)
 Soft
 
 
@@ -2318,7 +2366,7 @@ Sun Mixing
 Sun a Electronics
 
 
-# Rough Ranger (v2.0)
+# Rough Ranger (v2.0, unprotected, bootleg?)
 SunA
 
 
@@ -2394,7 +2442,7 @@ TDS
 TDS & Mints
 
 
-# Cannon Ball (bootleg on Crazy Climber hardware, set 2)
+# Cannon Ball (bootleg on Crazy Kong hardware) (set 2, buggy)
 TV Game Gruenberg
 
 
@@ -2512,6 +2560,10 @@ Test ROM
 
 # Lethal Justice
 The Game Room
+
+
+# Ten Spot
+Thomas Automatics
 
 
 # Trivia Madness

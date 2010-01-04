@@ -83,7 +83,7 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 	UINT8 buffer[8];
 	int len;
 
-	mame_printf_verbose("IPS: loading ips \"%s/%s%s\"\n", ips_dir, ips_name, IPS_EXT);
+	mame_printf_verbose(_("IPS: loading ips \"%s/%s%s\"\n"), ips_dir, ips_name, IPS_EXT);
 
 	fname = astring_assemble_4(astring_alloc(), ips_dir, PATH_SEPARATOR, ips_name, IPS_EXT);
 	filerr = mame_fopen(SEARCHPATH_IPS, astring_c(fname), OPEN_FLAG_READ, &file);
@@ -102,7 +102,7 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 	if (mame_fread(file, buffer, len) != len || strncmp(buffer, IPS_SIGNATURE, len) != 0)
 	{
 		astring_catprintf(romdata->errorstring,
-			_("ERROR: %s/%s: incorrent IPS header\n"), ips_dir, ips_name);
+			_("ERROR: %s/%s: incorrect IPS header\n"), ips_dir, ips_name);
 		goto load_ips_file_fail;
 	}
 
@@ -139,7 +139,7 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 
 		if (!*p || !(*p)->data)
 		{
-			astring_catc(romdata->errorstring, _("ERROR: IPS: not enough memory\n"));
+			astring_catc(romdata->errorstring, _("ERROR: IPS is not enough memory\n"));
 			goto load_ips_file_fail;
 		}
 
@@ -217,7 +217,7 @@ static int parse_ips_patch(running_machine *machine, ips_entry **ips_p, const ch
 	astring *fname;
 	int result = 0;
 
-	mame_printf_verbose("IPS: parsing ips \"%s/%s%s\"\n", machine->gamedrv->name, patch_name, INDEX_EXT);
+	mame_printf_verbose(_("IPS: parsing ips \"%s/%s%s\"\n"), machine->gamedrv->name, patch_name, INDEX_EXT);
 
 	fname = astring_assemble_4(astring_alloc(), machine->gamedrv->name, PATH_SEPARATOR, patch_name, INDEX_EXT);
 	filerr = mame_fopen(SEARCHPATH_IPS, astring_c(fname), OPEN_FLAG_READ, &fpDat);
@@ -302,7 +302,7 @@ static int parse_ips_patch(running_machine *machine, ips_entry **ips_p, const ch
 			entry->ips_name = mame_strdup(ips_name);
 			if (!entry->rom_name || !entry->ips_name)
 			{
-				astring_catc(romdata->errorstring, _("ERROR: IPS: not enough memory\n"));
+				astring_catc(romdata->errorstring, _("ERROR: IPS is not enough memory\n"));
 				goto parse_ips_patch_fail;
 			}
 
@@ -384,7 +384,7 @@ int close_ips_entry(rom_load_data *romdata)
 		if (p->current.data)
 		{
 			astring_catprintf(romdata->errorstring,
-				_("ERROR: %s: ips is not applied correctly to ROM entry \"%s\"\n"), p->ips_name, p->rom_name);
+				_("ERROR: %s: IPS is not applied correctly to ROM entry \"%s\"\n"), p->ips_name, p->rom_name);
 			romdata->warnings++;
 
 			result = 0;

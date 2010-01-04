@@ -2086,6 +2086,10 @@ Screen setting
 Screen:
 畫面:
 
+# osd/winui/properties.c: 902
+Screenless Game
+遊戲無畫面
+
 # osd/winui/layout.c: 70
 Screens
 畫面數

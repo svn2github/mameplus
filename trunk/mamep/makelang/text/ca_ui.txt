@@ -2614,6 +2614,10 @@ Resetting the User Interface options\n
 Screen flipping in cocktail mode is not supported.\n
 
 
+# osd/winui/properties.c: 902
+Screenless Game
+
+
 # osd/winui/layout.c: 70
 Screens
 
