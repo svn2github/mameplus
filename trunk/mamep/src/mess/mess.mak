@@ -16,6 +16,9 @@
 
 DRVLIBS += \
 	$(MESSOBJ)/messdriv.o \
+	$(MESSOBJ)/messsoft.o \
+	$(MESSOBJ)/softlist.o \
+	$(MESSOBJ)/software.a \
 	$(MESSOBJ)/ascii.a \
 	$(MESSOBJ)/atari.a \
 	$(MESSOBJ)/bandai.a \
@@ -139,3 +142,14 @@ $(MESSOBJ)/mess.o:	$(MESS_LAYOUT)/lcd.lh
 $(MESSOBJ)/mess.o:	$(MESS_LAYOUT)/lcd_rot.lh
 
 $(MESS_DRIVERS)/sms.o:		$(MESS_LAYOUT)/sms1.lh
+
+
+#-------------------------------------------------
+# software information
+#-------------------------------------------------
+
+$(MESSOBJ)/software.a:					\
+	$(MESS_SOFTWARE)/gamegear_cart.o	\
+	$(MESS_SOFTWARE)/megadriv_cart.o	\
+	$(MESS_SOFTWARE)/sms_cart.o	\
+
