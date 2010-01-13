@@ -86,7 +86,6 @@ EMUOBJS += \
 	$(MESSOBJ)/utils.o		\
 	$(MESSOBJ)/eventlst.o	\
 	$(MESSOBJ)/mslegacy.o	\
-	$(MESSOBJ)/tagpool.o	\
 	$(MESSOBJ)/cheatms.o	\
 	$(MESSOBJ)/opresolv.o	\
 	$(MESSOBJ)/infomess.o	\

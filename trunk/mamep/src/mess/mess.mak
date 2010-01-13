@@ -151,5 +151,7 @@ $(MESS_DRIVERS)/sms.o:		$(MESS_LAYOUT)/sms1.lh
 $(MESSOBJ)/software.a:					\
 	$(MESS_SOFTWARE)/gamegear_cart.o	\
 	$(MESS_SOFTWARE)/megadriv_cart.o	\
+	$(MESS_SOFTWARE)/ngp_cart.o	\
+	$(MESS_SOFTWARE)/pico_cart.o	\
 	$(MESS_SOFTWARE)/sms_cart.o	\
-
+	$(MESS_SOFTWARE)/wswan_cart.o	\
