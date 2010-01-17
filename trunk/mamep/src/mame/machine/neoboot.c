@@ -598,7 +598,7 @@ void decrypt_matrimbl(running_machine *machine)
 {
 	neogeo_state *state = (neogeo_state *)machine->driver_data;
 	UINT8 *src2 = memory_region(machine, "audiocpu")+0x10000;
-	UINT8 *dst2 = malloc(0x20000);
+	UINT8 *dst2 = global_alloc_array(UINT8, 0x20000);
 	int i, j=0;
 	memcpy(dst2,src2,0x20000);
 	for(i=0x00000;i<0x20000;i++)

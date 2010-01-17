@@ -467,7 +467,7 @@ void assign_drivers(core_options *options)
 
 	if (drivers)
 		free(drivers);
-	drivers = malloc((n + 1) * sizeof (game_driver*));
+	drivers = (const game_driver**) malloc((n + 1) * sizeof (game_driver*));
 
 	n = 0;
 	for (i = 0; drivers_table[i].name; i++)
@@ -591,7 +591,8 @@ int cli_info_listfull(core_options *options, const char *gamename)
 
 			/* print the additional description only if we are listing clones */
 			{
-				char *pdest = pdest = strstr(drivers[drvindex]->description, " (");
+				char *pdest = pdest;
+				pdest = strstr(drivers[drvindex]->description, " (");
 
 				if (pdest != NULL && pdest > drivers[drvindex]->description)
 					mame_printf_info("%s", pdest);

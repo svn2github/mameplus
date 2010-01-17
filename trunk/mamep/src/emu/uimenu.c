@@ -3292,7 +3292,7 @@ static void menu_autofire(running_machine *machine, ui_menu *menu, void *paramet
 			//anything else is a toggle item
 			else
 			{
-				const input_field_config *field = event->itemref;
+				const input_field_config *field = (const input_field_config *)event->itemref;
 				input_field_user_settings settings;
 				int selected_value;
 				input_field_get_user_settings(field, &settings);

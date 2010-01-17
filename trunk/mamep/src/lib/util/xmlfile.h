@@ -199,7 +199,7 @@ xml_attribute_node *xml_set_attribute_float(xml_data_node *node, const char *nam
 const char *xml_normalize_string(const char *string);
 
 
-INLINE void utf8_decode_string(const unsigned char *s, unsigned char *buffer, int maxlen)
+INLINE void utf8_decode_string(const char *s, char *buffer, int maxlen)
 {
 	char *d = &buffer[0];
 
@@ -272,7 +272,7 @@ INLINE void utf8_decode_string(const unsigned char *s, unsigned char *buffer, in
 	*d++ = 0;
 }
 
-INLINE void xml_encode_string(const unsigned char *s, unsigned char *buffer, int maxlen)
+INLINE void xml_encode_string(const char *s, char *buffer, int maxlen)
 {
 	char *d = &buffer[0];
 

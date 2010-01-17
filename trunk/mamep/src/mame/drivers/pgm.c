@@ -859,11 +859,11 @@ ADDRESS_MAP_END
 /* Kov Superheroes */
 
 #if PGMSPEEDHACK
-#define KOVSH_68K_SUSPEND	if(cpu_is_executing(cputag_get_cpu(space->machine, "maincpu"))==TRUE) cpu_suspend(cputag_get_cpu(space->machine, "maincpu"),SUSPEND_REASON_SPIN,1)
-#define KOVSH_ARM_SUSPEND	if(cpu_is_executing(cputag_get_cpu(space->machine, "prot"))==TRUE) cpu_suspend(cputag_get_cpu(space->machine, "prot"),SUSPEND_REASON_SPIN,1)
+#define KOVSH_68K_SUSPEND	if(cpu_is_executing(devtag_get_device(space->machine, "maincpu"))==TRUE) cpu_suspend(devtag_get_device(space->machine, "maincpu"),SUSPEND_REASON_SPIN,1)
+#define KOVSH_ARM_SUSPEND	if(cpu_is_executing(devtag_get_device(space->machine, "prot"))==TRUE) cpu_suspend(devtag_get_device(space->machine, "prot"),SUSPEND_REASON_SPIN,1)
 
-#define KOVSH_68K_RESUME	if(cpu_is_executing(cputag_get_cpu(space->machine, "maincpu"))==FALSE) cpu_resume(cputag_get_cpu(space->machine, "maincpu"),SUSPEND_REASON_SPIN)
-#define KOVSH_ARM_RESUME	if(cpu_is_executing(cputag_get_cpu(space->machine, "prot"))==FALSE) cpu_resume(cputag_get_cpu(space->machine, "prot"),SUSPEND_REASON_SPIN)
+#define KOVSH_68K_RESUME	if(cpu_is_executing(devtag_get_device(space->machine, "maincpu"))==FALSE) cpu_resume(devtag_get_device(space->machine, "maincpu"),SUSPEND_REASON_SPIN)
+#define KOVSH_ARM_RESUME	if(cpu_is_executing(devtag_get_device(space->machine, "prot"))==FALSE) cpu_resume(devtag_get_device(space->machine, "prot"),SUSPEND_REASON_SPIN)
 
 #define KOVSH_68K_2_ARM		do { KOVSH_68K_SUSPEND; KOVSH_ARM_RESUME; } while (0)
 #define KOVSH_ARM_2_68K		do { KOVSH_ARM_SUSPEND; KOVSH_68K_RESUME; } while (0)
@@ -4937,7 +4937,7 @@ static void pgm_decode_kovlsqh2_tiles( running_machine *machine )
 {
 	int i, j;
 	UINT16 *src = (UINT16 *)(memory_region(machine, "gfx1") + 0x400000);
-	UINT16 *dst = alloc_array_or_die( UINT16, 0x800000 );
+	UINT16 *dst = auto_alloc_array(machine, UINT16, 0x800000);
 
 	for (i = 0; i < 0x800000 / 2; i++)
 	{
@@ -4954,7 +4954,8 @@ static void pgm_decode_kovlsqh2_tiles( running_machine *machine )
 static void pgm_decode_kovlsqh2_sprites( UINT8 *src )
 {
 	int i, j;
-	UINT8 *dst = alloc_array_or_die( UINT8, 0x800000 );
+	running_machine *machine;
+	UINT8 *dst = auto_alloc_array(machine, UINT8, 0x800000);
 
 	for (i = 0; i < 0x800000; i++)
 	{
@@ -4984,7 +4985,7 @@ static void pgm_decode_kovqhsgs_program( running_machine *machine )
 {
 	int i;
 	UINT16 *src = (UINT16 *)(memory_region(machine, "maincpu") + 0x100000);
-	UINT16 *dst = alloc_array_or_die( UINT16, 0x400000 );
+	UINT16 *dst = auto_alloc_array(machine, UINT16, 0x400000);
 
 	for (i = 0; i < 0x400000 / 2; i++)
 	{

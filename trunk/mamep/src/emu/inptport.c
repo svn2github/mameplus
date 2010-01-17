@@ -4568,13 +4568,6 @@ void input_port_config_custom(input_port_list *portlist, const input_port_token 
 
 	/* initialize fields */
 	portlist->head = NULL;
-	portlist->map = NULL;
-	if (allocmap)
-	{
-		portlist->map = tagmap_alloc();
-		if (portlist->map == NULL)
-			fatalerror("Out of memory for input port map");
-	}
 
 	/* no tokens, no list */
 	if (tokens == NULL)

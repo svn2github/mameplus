@@ -15,11 +15,7 @@
 #define __FILEIO_H__
 
 #include <stdarg.h>
-#include "mamecore.h"
-#include "osdcore.h"
 #include "corefile.h"
-#include "mame.h"
-#include "emuopts.h"
 
 
 

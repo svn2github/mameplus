@@ -9,10 +9,11 @@
 
 *********************************************************************/
 
-#include "fileio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "emu.h"
+#include "emuopts.h"
 
 extern const UINT8 uifontdata_cp932[];
 extern const UINT16 uifontmap_cp932[];
@@ -168,7 +169,7 @@ static void load_mmo(int msgcat)
 	if (p->header.version != 3)
 		goto mmo_readerr;
 
-	p->mmo_index = malloc(p->header.num_msg * sizeof p->mmo_index[0]);
+	p->mmo_index = (mmo_data *)malloc(p->header.num_msg * sizeof p->mmo_index[0]);
 	if (!p->mmo_index)
 		goto mmo_readerr;
 
@@ -180,7 +181,7 @@ static void load_mmo(int msgcat)
 	if (mame_fread(file, &str_size, size) != size)
 		goto mmo_readerr;
 
-	p->mmo_str = malloc(str_size);
+	p->mmo_str = (char *)malloc(str_size);
 	if (!p->mmo_str)
 		goto mmo_readerr;
 
@@ -191,10 +192,10 @@ static void load_mmo(int msgcat)
 
 	for (i = 0; i < p->header.num_msg; i++)
 	{
-		p->mmo_index[i].uid = p->mmo_str + (unsigned long)p->mmo_index[i].uid;
-		p->mmo_index[i].ustr = p->mmo_str + (unsigned long)p->mmo_index[i].ustr;
-		p->mmo_index[i].wid = p->mmo_str + (unsigned long)p->mmo_index[i].wid;
-		p->mmo_index[i].wstr = p->mmo_str + (unsigned long)p->mmo_index[i].wstr;
+		p->mmo_index[i].uid = (const unsigned char *)p->mmo_str + (unsigned long)p->mmo_index[i].uid;
+		p->mmo_index[i].ustr = (const unsigned char *)p->mmo_str + (unsigned long)p->mmo_index[i].ustr;
+		p->mmo_index[i].wid = (const unsigned char *)p->mmo_str + (unsigned long)p->mmo_index[i].wid;
+		p->mmo_index[i].wstr = (const unsigned char *)p->mmo_str + (unsigned long)p->mmo_index[i].wstr;
 	}
 
 	p->status = MMO_READY;
@@ -220,7 +221,7 @@ mmo_readerr:
 
 static int mmo_cmpu(const void *a, const void *b)
 {
-	return strcmp(((struct mmo_data *)a)->uid, ((struct mmo_data *)b)->uid);
+	return strcmp((const char *)((struct mmo_data *)a)->uid, (const char *)((struct mmo_data *)b)->uid);
 }
 
 static int (*mmocmp)(const void *, const void *);
@@ -252,8 +253,8 @@ char *lang_message(int msgcat, const char *str)
 				break;
 
 		case MMO_READY:
-			q.uid = str;
-			mmo = bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmpu);
+			q.uid = (const unsigned char*)str;
+			mmo = (mmo_data *)bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmpu);
 			if (mmo)
 				return (char *)mmo->ustr;
 			break;
@@ -281,7 +282,7 @@ void *lang_messagew(int msgcat, const void *str, int (*cmpw)(const void *, const
 		case MMO_READY:
 			q.wid = str;
 			mmocmp = cmpw;
-			mmo = bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmpw);
+			mmo = (mmo_data *)bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmpw);
 			if (mmo)
 				return (void *)mmo->wstr;
 			break;

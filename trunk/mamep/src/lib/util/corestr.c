@@ -153,7 +153,7 @@ char *core_strdup(const char *str)
 
 char *core_strtrim(const char *str)
 {
-	const unsigned char *start = str;
+	const char *start = str;
 	int len;
 	char *s;
 
@@ -165,7 +165,7 @@ char *core_strtrim(const char *str)
 		if (!isspace(start[len - 1]))
 			break;
 
-	s = malloc(len + 1);
+	s = (char *)malloc(len + 1);
 	strncpy(s, start, len);
 	s[len] = '\0';
 

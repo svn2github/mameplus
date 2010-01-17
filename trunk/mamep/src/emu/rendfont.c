@@ -145,7 +145,7 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 		//mamep: make table for command glyph
 		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
 		{
-			chtable = alloc_array_clear_or_die(render_font_char, 256);
+			chtable = global_alloc_array_clear(render_font_char, 256);
 			font->chars[chnum / 256] = chtable;
 		}
 		else
@@ -204,7 +204,7 @@ static render_font *render_font_alloc_command_glyph(int height)
 	render_font *font;
 
 	/* allocate and clear memory */
-	font = alloc_clear_or_die(render_font);
+	font = global_alloc_clear(render_font);
 
 	if (height >= 14)
 		filerr = mame_fopen_ram(font_uicmd14, sizeof(font_uicmd14), OPEN_FLAG_READ, &ramfile);
@@ -247,7 +247,7 @@ render_font *render_font_alloc(const char *filename)
 		{
 			/* if we failed, clean up and realloc */
 			render_font_free(font);
-			font = alloc_clear_or_die(render_font);
+			font = global_alloc_clear(render_font);
 
 			if (render_font_load_cached_bdf(font, filename) == 0)
 				loaded++;
@@ -1018,7 +1018,7 @@ void convert_command_glyph(char *s, int buflen)
 
 #include "cmd_plus.c"
 
-	d = malloc(buflen * sizeof (*d));
+	d = (char *)malloc(buflen * sizeof (*d));
 	if (d == NULL)
 	{
 		*s = '\0';

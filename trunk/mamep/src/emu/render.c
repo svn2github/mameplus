@@ -1251,9 +1251,9 @@ const char *render_target_get_view_name(render_target *target, int viewindex)
 
 const char *render_target_get_translated_view_name(render_target *target, int viewindex)
 {
-	const unsigned char *s = render_target_get_view_name(target, viewindex);
-	const unsigned char *idx[8];
-	const unsigned char **pp;
+	const char *s = render_target_get_view_name(target, viewindex);
+	const char *idx[8];
+	const char **pp;
 	astring *temp, *res;
 
 	if (!s)

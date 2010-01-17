@@ -1408,7 +1408,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 	/* if we have at least one warning flag, print the general header */
 	if (machine->gamedrv->flags & WARNING_FLAGS)
 	{
-		string.cat("There are known problems with this game\n\n"));
+		string.cat(_("There are known problems with this game\n\n"));
 
 		/* add one line per warning flag */
 #ifdef MESS

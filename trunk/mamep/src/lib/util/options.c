@@ -506,7 +506,7 @@ int options_parse_ini_file(core_options *opts, core_file *inifile, int priority)
 	/* loop over data */
 	while (core_fgets(buffer, ARRAY_LENGTH(buffer), inifile) != NULL)
 	{
-		unsigned char *optionname, *optiondata, *temp;
+		char *optionname, *optiondata, *temp;
 		options_data *data;
 		int inquotes = FALSE;
 
@@ -1123,8 +1123,8 @@ static options_data *find_entry_data(core_options *opts, const char *string, int
 
 static void update_data(core_options *opts, options_data *data, const char *newdata, int priority)
 {
-	const unsigned char *dataend = newdata + strlen(newdata) - 1;
-	const unsigned char *datastart = newdata;
+	const char *dataend = newdata + strlen(newdata) - 1;
+	const char *datastart = newdata;
 	float f;
 	int i;
 

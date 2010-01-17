@@ -1,7 +1,7 @@
 #ifndef __INTERP_INC
 #define __INTERP_INC
 
-#include "driver.h"
+#include "emuopts.h"
 
 //#define USE_INTERP_MASK_1
 //#define USE_INTERP_MASK_2

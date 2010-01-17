@@ -256,17 +256,17 @@ static file_error fopen_internal(core_options *opts, path_iterator *iterator, co
 			{
 			    astring *zipped_fullname;
 			    int offset = 0;
-			    int n = astring_rchr((*file)->filename, offset, '.');
+			    int n = (*file)->filename.rchr(offset, '.');
     
 			    if (n > 0)
 				    offset = n;
     
 			    zipped_fullname = astring_alloc();
-			    astring_cpych(zipped_fullname, astring_c((*file)->filename), offset);
+			    astring_cpych(zipped_fullname, (*file)->filename, offset);
 			    astring_catc(zipped_fullname, PATH_SEPARATOR);
 			    astring_catc(zipped_fullname, filename);
     
-			    filerr = fopen_attempt_zipped(zipped_fullname, crc, openflags, *file);
+			    filerr = fopen_attempt_zipped((*file)->filename, crc, openflags, *file);
 			    astring_free(zipped_fullname);
 
 			if (filerr == FILERR_NONE)
@@ -639,7 +639,7 @@ int mame_fputs(mame_file *file, const char *s)
     mame_vfprintf - vfprintf to a text file
 -------------------------------------------------*/
 
-static int CLIB_DECL mame_vfprintf(mame_file *file, const char *fmt, va_list va)
+int CLIB_DECL mame_vfprintf(mame_file *file, const char *fmt, va_list va)
 {
 	/* write the data if we can */
 	return (file->file != NULL) ? core_vfprintf(file->file, fmt, va) : 0;

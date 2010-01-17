@@ -693,9 +693,9 @@ static TIMER_CALLBACK( fastboot_timer_callback )
 	if (cps3_altEncryption) rom = (UINT32*)memory_region(machine, "user4");
 
 	//  printf("fastboot callback %08x %08x", rom[0], rom[1]);
-	cpu_set_reg(cputag_get_cpu(machine, "maincpu"), SH2_PC, rom[0]);
-	cpu_set_reg(cputag_get_cpu(machine, "maincpu"), SH2_R15, rom[1]);
-	cpu_set_reg(cputag_get_cpu(machine, "maincpu"), SH2_VBR, 0x6000000);
+	cpu_set_reg(devtag_get_device(machine, "maincpu"), SH2_PC, rom[0]);
+	cpu_set_reg(devtag_get_device(machine, "maincpu"), SH2_R15, rom[1]);
+	cpu_set_reg(devtag_get_device(machine, "maincpu"), SH2_VBR, 0x6000000);
 }
 
 

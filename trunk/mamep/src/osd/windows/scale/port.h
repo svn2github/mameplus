@@ -4,7 +4,6 @@
 #include <limits.h>
 
 #ifndef STORM
-#include <memory.h>
 #include <string.h>
 #else
 #include <strings.h>

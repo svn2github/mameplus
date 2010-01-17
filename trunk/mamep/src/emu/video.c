@@ -610,7 +610,7 @@ static void realloc_screen_bitmaps(const device_config *screen)
 static void realloc_scale_bitmaps(const device_config *screen)
 {
 	screen_state *state = get_safe_token(screen);
-	screen_config *config = screen->inline_config;
+	screen_config *config = (screen_config *)screen->inline_config;
 
 	mame_printf_verbose("realloc_scale_bitmaps()\n");
 
