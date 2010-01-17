@@ -9,8 +9,7 @@
 
 ***************************************************************************/
 
-#include "driver.h"
-#include "ips.h"
+#include "emuopts.h"
 #include "hash.h"
 
 
@@ -49,7 +48,7 @@ typedef struct _ips_entry
 } ips_entry;
 
 
-static ips_entry *ips_list;
+ips_entry *ips_list;
 
 
 static const rom_entry *find_rom_entry(const rom_entry *romp, const char *name)

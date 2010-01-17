@@ -9,7 +9,8 @@
 
 ***************************************************************************/
 
-#include "driver.h"
+#include "emu.h"
+#include "emuopts.h"
 #include "hiscore.h"
 
 #define MAX_CONFIG_LINE_SIZE 48
@@ -54,8 +55,7 @@ static int is_highscore_enabled(running_machine *machine)
 
 static void copy_to_memory (running_machine *machine, int cpunum, int addr, const UINT8 *source, int num_bytes)
 {
-//	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
-	const address_space *space = cpu_get_address_space(cputag_get_cpu(machine, "maincpu"), ADDRESS_SPACE_PROGRAM);
+	const address_space *space = cpu_get_address_space(devtag_get_device(machine, "maincpu"), ADDRESS_SPACE_PROGRAM);
 	int i;
 	for (i=0; i<num_bytes; i++)
 	{
@@ -65,8 +65,7 @@ static void copy_to_memory (running_machine *machine, int cpunum, int addr, cons
 
 static void copy_from_memory (running_machine *machine, int cpunum, int addr, UINT8 *dest, int num_bytes)
 {
-//	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
-	const address_space *space = cpu_get_address_space(cputag_get_cpu(machine, "maincpu"), ADDRESS_SPACE_PROGRAM);
+	const address_space *space = cpu_get_address_space(devtag_get_device(machine, "maincpu"), ADDRESS_SPACE_PROGRAM);
 	int i;
 	for (i=0; i<num_bytes; i++)
 	{
@@ -158,9 +157,7 @@ static int matching_game_name (const char *pBuf, const char *name)
 static int safe_to_load (running_machine *machine)
 {
 	memory_range *mem_range = state.mem_range;
-//	int cpunum = mem_range->cpunum;
-//	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
-	const address_space *space = cpu_get_address_space(cputag_get_cpu(machine, "maincpu"), ADDRESS_SPACE_PROGRAM);
+	const address_space *space = cpu_get_address_space(devtag_get_device(machine, "maincpu"), ADDRESS_SPACE_PROGRAM);
 	while (mem_range)
 	{
 		if (memory_read_byte (space, mem_range->addr) != mem_range->start_value)
@@ -207,7 +204,7 @@ static void hiscore_load (running_machine *machine)
 			LOG(("loading...\n"));
 			while (mem_range)
 			{
-				UINT8 *data = malloc (mem_range->num_bytes);
+				UINT8 *data = global_alloc_array(UINT8, mem_range->num_bytes);
 				if (data)
 				{
 					/* this buffer will almost certainly be small
@@ -241,7 +238,7 @@ static void hiscore_save (running_machine *machine)
 			LOG(("saving...\n"));
 			while (mem_range)
 			{
-				UINT8 *data = malloc (mem_range->num_bytes);
+				UINT8 *data = global_alloc_array(UINT8, mem_range->num_bytes);
 				if (data)
 				{
 					/* this buffer will almost certainly be small
@@ -331,7 +328,7 @@ void hiscore_init (running_machine *machine)
 			else if (is_mem_range (buffer))
 			{
 				const char *pBuf = buffer;
-				memory_range *mem_range = malloc(sizeof(memory_range));
+				memory_range *mem_range = (memory_range *)malloc(sizeof(memory_range));
 				if (mem_range)
 				{
 					mem_range->cpunum = hexstr2num (&pBuf);

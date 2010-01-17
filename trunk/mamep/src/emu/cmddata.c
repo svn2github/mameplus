@@ -14,7 +14,8 @@
 
 #include <assert.h>
 #include <ctype.h>
-#include "driver.h"
+#include "emu.h"
+#include "emuopts.h"
 #include "cmddata.h"
 
 
@@ -165,7 +166,7 @@ static int GetGameNameIndex(const char *name)
 	}
 
 	/* uses our sorted array of driver names to get the index in log time */
-	driver_index_info = bsearch(&key, sorted_drivers,num_games, sizeof(driver_data_type),
+	driver_index_info = (driver_data_type *)bsearch(&key, sorted_drivers,num_games, sizeof(driver_data_type),
 	                            DriverDataCompareFunc);
 
 	if (driver_index_info == NULL)
@@ -675,7 +676,7 @@ static int index_datafile (struct tDatafileIndex **_index)
 	if (ParseSeek (0L, SEEK_SET)) return 0;
 
 	/* allocate index */
-        idx = *_index = malloc ((num_games + 1) * sizeof (struct tDatafileIndex));
+        idx = *_index = (tDatafileIndex *)malloc ((num_games + 1) * sizeof (struct tDatafileIndex));
 	if (NULL == idx) return 0;
 
 	/* loop through datafile */
@@ -777,7 +778,7 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 	if (ParseSeek (gd_idx->offset, SEEK_SET)) return 0;
 
 	/* allocate index */
-	m_idx = *_index = malloc(MAX_MENUIDX_ENTRIES * sizeof (struct tMenuIndex));
+	m_idx = *_index = (tMenuIndex *)malloc(MAX_MENUIDX_ENTRIES * sizeof (struct tMenuIndex));
 	if (NULL == m_idx) return 0;
 
 	/* loop through between $cmd= */
@@ -801,7 +802,7 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 					token = GetNextToken_ex (&s, &tell);
 			}
 
-			m_idx->menuitem = malloc(strlen((char *)s)+1);
+			m_idx->menuitem = (char *)malloc(strlen((char *)s)+1);
 			strcpy(m_idx->menuitem, (char *)s);
 
 			m_idx->offset = cmdtag_offset;

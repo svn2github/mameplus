@@ -686,7 +686,7 @@ include $(SRC)/tools/tools.mak
 include $(SRC)/emu/emu.mak
 
 # combine the various definitions to one
-CDEFS = $(DEFS) $(ASMDEFS)
+CDEFS = $(DEFS)
 
 
 
