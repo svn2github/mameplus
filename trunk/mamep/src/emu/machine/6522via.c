@@ -22,7 +22,7 @@
    timer init, reset, read changed
  */
 
-#include "driver.h"
+#include "emu.h"
 #include "6522via.h"
 
 
@@ -306,7 +306,7 @@ static void via_set_int (const device_config *device, int data)
 
 	v->ifr |= data;
 	if (TRACE_VIA)
-		logerror("%s:6522VIA chip %s: IFR = %02X\n", cpuexec_describe_context(device->machine), device->tag, v->ifr);
+		logerror("%s:6522VIA chip %s: IFR = %02X\n", cpuexec_describe_context(device->machine), device->tag.cstr(), v->ifr);
 
 	if (v->ier & v->ifr)
     {
@@ -327,7 +327,7 @@ static void via_clear_int (const device_config *device, int data)
 	v->ifr = (v->ifr & ~data) & 0x7f;
 
 	if (TRACE_VIA)
-		logerror("%s:6522VIA chip %s: IFR = %02X\n", cpuexec_describe_context(device->machine), device->tag, v->ifr);
+		logerror("%s:6522VIA chip %s: IFR = %02X\n", cpuexec_describe_context(device->machine), device->tag.cstr(), v->ifr);
 
 	if (v->ifr & v->ier)
 		v->ifr |= INT_ANY;
@@ -521,7 +521,7 @@ READ8_DEVICE_HANDLER(via_r)
 			if (v->in_b_func.read != NULL)
 				v->in_b = devcb_call_read8(&v->in_b_func, 0);
 			else
-				logerror("%s:6522VIA chip %s: Port B is being read but has no handler\n", cpuexec_describe_context(device->machine), device->tag);
+				logerror("%s:6522VIA chip %s: Port B is being read but has no handler\n", cpuexec_describe_context(device->machine), device->tag.cstr());
 		}
 
 		CLR_PB_INT(device);
@@ -540,7 +540,7 @@ READ8_DEVICE_HANDLER(via_r)
 			if (v->in_a_func.read != NULL)
 				v->in_a = devcb_call_read8(&v->in_a_func, 0);
 			else
-				logerror("%s:6522VIA chip %s: Port A is being read but has no handler\n", cpuexec_describe_context(device->machine), device->tag);
+				logerror("%s:6522VIA chip %s: Port A is being read but has no handler\n", cpuexec_describe_context(device->machine), device->tag.cstr());
 		}
 
 		/* combine input and output values */
@@ -571,7 +571,7 @@ READ8_DEVICE_HANDLER(via_r)
 			if (v->in_a_func.read != NULL)
 				v->in_a = devcb_call_read8(&v->in_a_func, 0);
 			else
-				logerror("%s:6522VIA chip %s: Port A is being read but has no handler\n", cpuexec_describe_context(device->machine), device->tag);
+				logerror("%s:6522VIA chip %s: Port A is being read but has no handler\n", cpuexec_describe_context(device->machine), device->tag.cstr());
 		}
 
 		/* combine input and output values */
@@ -839,7 +839,7 @@ WRITE8_DEVICE_HANDLER(via_w)
 		v->pcr = data;
 
 		if (TRACE_VIA)
-			logerror("%s:6522VIA chip %s: PCR = %02X\n", cpuexec_describe_context(device->machine), device->tag, data);
+			logerror("%s:6522VIA chip %s: PCR = %02X\n", cpuexec_describe_context(device->machine), device->tag.cstr(), data);
 
 		if (CA2_FIX_OUTPUT(data) && CA2_OUTPUT_LEVEL(data) ^ v->out_ca2)
 		{
@@ -931,7 +931,7 @@ WRITE8_DEVICE_HANDLER(via_porta_w)
     CA1 input
 -------------------------------------------------*/
 
-READ8_DEVICE_HANDLER(via_ca1_r)
+READ_LINE_DEVICE_HANDLER(via_ca1_r)
 {
 	via6522_t *v = get_token(device);
 	return v->in_ca1;
@@ -943,27 +943,24 @@ READ8_DEVICE_HANDLER(via_ca1_r)
     CA1 input
 -------------------------------------------------*/
 
-WRITE8_DEVICE_HANDLER(via_ca1_w)
+WRITE_LINE_DEVICE_HANDLER(via_ca1_w)
 {
 	via6522_t *v = get_token(device);
 
-	/* limit the data to 0 or 1 */
-	data = data ? 1 : 0;
-
 	/* handle the active transition */
-	if (data != v->in_ca1)
+	if (state != v->in_ca1)
     {
 		if (TRACE_VIA)
-			logerror("%s:6522VIA chip %s: CA1 = %02X\n", cpuexec_describe_context(device->machine), device->tag, data);
+			logerror("%s:6522VIA chip %s: CA1 = %02X\n", cpuexec_describe_context(device->machine), device->tag.cstr(), state);
 
-		if ((CA1_LOW_TO_HIGH(v->pcr) && data) || (CA1_HIGH_TO_LOW(v->pcr) && !data))
+		if ((CA1_LOW_TO_HIGH(v->pcr) && state) || (CA1_HIGH_TO_LOW(v->pcr) && !state))
 		{
 			if (PA_LATCH_ENABLE(v->acr))
 			{
 				if (v->in_a_func.read != NULL)
 					v->in_a = devcb_call_read8(&v->in_a_func, 0);
 				else
-					logerror("%s:6522VIA chip %s: Port A is being read but has no handler\n", cpuexec_describe_context(device->machine), device->tag);
+					logerror("%s:6522VIA chip %s: Port A is being read but has no handler\n", cpuexec_describe_context(device->machine), device->tag.cstr());
 			}
 
 			via_set_int (device, INT_CA1);
@@ -983,7 +980,7 @@ WRITE8_DEVICE_HANDLER(via_ca1_w)
 			}
 		}
 
-		v->in_ca1 = data;
+		v->in_ca1 = state;
     }
 }
 
@@ -993,7 +990,7 @@ WRITE8_DEVICE_HANDLER(via_ca1_w)
     CA2 input
 -------------------------------------------------*/
 
-READ8_DEVICE_HANDLER(via_ca2_r)
+READ_LINE_DEVICE_HANDLER(via_ca2_r)
 {
 	via6522_t *v = get_token(device);
 	return v->in_ca2;
@@ -1005,27 +1002,24 @@ READ8_DEVICE_HANDLER(via_ca2_r)
     CA2 input
 -------------------------------------------------*/
 
-WRITE8_DEVICE_HANDLER(via_ca2_w)
+WRITE_LINE_DEVICE_HANDLER(via_ca2_w)
 {
 	via6522_t *v = get_token(device);
-
-	/* limit the data to 0 or 1 */
-	data = data ? 1 : 0;
 
 	/* CA2 is in input mode */
 	if (CA2_INPUT(v->pcr))
     {
 		/* the new state has caused a transition */
-		if (v->in_ca2 != data)
+		if (v->in_ca2 != state)
 		{
 			/* handle the active transition */
-			if ((data && CA2_LOW_TO_HIGH(v->pcr)) || (!data && CA2_HIGH_TO_LOW(v->pcr)))
+			if ((state && CA2_LOW_TO_HIGH(v->pcr)) || (!state && CA2_HIGH_TO_LOW(v->pcr)))
 			{
 				/* mark the IRQ */
 				via_set_int (device, INT_CA2);
 			}
 			/* set the new value for CA2 */
-			v->in_ca2 = data;
+			v->in_ca2 = state;
 		}
     }
 
@@ -1064,7 +1058,7 @@ WRITE8_DEVICE_HANDLER(via_portb_w)
     CB1 input
 -------------------------------------------------*/
 
-READ8_DEVICE_HANDLER(via_cb1_r)
+READ_LINE_DEVICE_HANDLER(via_cb1_r)
 {
 	via6522_t *v = get_token(device);
 	return v->in_cb1;
@@ -1076,24 +1070,21 @@ READ8_DEVICE_HANDLER(via_cb1_r)
     CB1 input
 -------------------------------------------------*/
 
-WRITE8_DEVICE_HANDLER(via_cb1_w)
+WRITE_LINE_DEVICE_HANDLER(via_cb1_w)
 {
 	via6522_t *v = get_token(device);
 
-	/* limit the data to 0 or 1 */
-	data = data ? 1 : 0;
-
 	/* handle the active transition */
-	if (data != v->in_cb1)
+	if (state != v->in_cb1)
     {
-		if ((CB1_LOW_TO_HIGH(v->pcr) && data) || (CB1_HIGH_TO_LOW(v->pcr) && !data))
+		if ((CB1_LOW_TO_HIGH(v->pcr) && state) || (CB1_HIGH_TO_LOW(v->pcr) && !state))
 		{
 			if (PB_LATCH_ENABLE(v->acr))
 			{
 				if (v->in_b_func.read != NULL)
 					v->in_b = devcb_call_read8(&v->in_b_func, 0);
 				else
-					logerror("%s:6522VIA chip %s: Port B is being read but has no handler\n", cpuexec_describe_context(device->machine), device->tag);
+					logerror("%s:6522VIA chip %s: Port B is being read but has no handler\n", cpuexec_describe_context(device->machine), device->tag.cstr());
 			}
 			if (SO_EXT_CONTROL(v->acr) || SI_EXT_CONTROL(v->acr))
 				via_shift (device);
@@ -1114,7 +1105,7 @@ WRITE8_DEVICE_HANDLER(via_cb1_w)
 				}
 			}
 		}
-		v->in_cb1 = data;
+		v->in_cb1 = state;
     }
 }
 
@@ -1124,7 +1115,7 @@ WRITE8_DEVICE_HANDLER(via_cb1_w)
     CB2 input
 -------------------------------------------------*/
 
-READ8_DEVICE_HANDLER(via_cb2_r)
+READ_LINE_DEVICE_HANDLER(via_cb2_r)
 {
 	via6522_t *v = get_token(device);
 	return v->in_cb2;
@@ -1136,27 +1127,24 @@ READ8_DEVICE_HANDLER(via_cb2_r)
     CB2 input
 -------------------------------------------------*/
 
-WRITE8_DEVICE_HANDLER(via_cb2_w)
+WRITE_LINE_DEVICE_HANDLER(via_cb2_w)
 {
 	via6522_t *v = get_token(device);
-
-	/* limit the data to 0 or 1 */
-	data = data ? 1 : 0;
 
 	/* CB2 is in input mode */
 	if (CB2_INPUT(v->pcr))
     {
 		/* the new state has caused a transition */
-		if (v->in_cb2 != data)
+		if (v->in_cb2 != state)
 		{
 			/* handle the active transition */
-			if ((data && CB2_LOW_TO_HIGH(v->pcr)) || (!data && CB2_HIGH_TO_LOW(v->pcr)))
+			if ((state && CB2_LOW_TO_HIGH(v->pcr)) || (!state && CB2_HIGH_TO_LOW(v->pcr)))
 			{
 				/* mark the IRQ */
 				via_set_int (device, INT_CB2);
 			}
 			/* set the new value for CB2 */
-			v->in_cb2 = data;
+			v->in_cb2 = state;
 		}
     }
 }

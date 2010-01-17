@@ -4,7 +4,6 @@
 #define __I386_H__
 
 #include "i386.h"
-#include "cpuintrf.h"
 
 #define I386OP(XX)		i386_##XX
 #define I486OP(XX)		i486_##XX
@@ -188,6 +187,7 @@ struct _i386_state
 	UINT32 pc;
 	UINT32 prev_eip;
 	UINT32 eflags;
+	UINT32 eflags_mask;
 	UINT8 CF;
 	UINT8 DF;
 	UINT8 SF;

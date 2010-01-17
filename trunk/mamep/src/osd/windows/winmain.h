@@ -126,6 +126,8 @@
 #define WINOPTION_JOYID8			"joyid8"
 #endif /* JOYSTICK_ID */
 
+#include "options.h"
+
 
 
 //============================================================

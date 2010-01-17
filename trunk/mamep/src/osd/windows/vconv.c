@@ -157,6 +157,8 @@ static const translation_info ld_translate[] =
 	{ 0,		"-WO",						"" },
 	{ 0,		"-mconsole",				"/subsystem:console" },
 	{ 0,		"-mwindows",				"/subsystem:windows" },
+	{ 0,		"-municode",				"" },
+	{ 0,		"-static-libgcc",			"" },
 	{ 0,		"-shared",					"/dll" },
 	{ 0,		"-L*",					"" },
 	{ 0,		"*.dll",					"*.lib" },

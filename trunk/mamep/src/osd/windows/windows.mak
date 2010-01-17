@@ -54,14 +54,6 @@
 # uncomment next line to use cygwin compiler
 # CYGWIN_BUILD = 1
 
-# uncomment next line to enable multi-monitor stubs on Windows 95/NT
-# you will need to find multimon.h and put it into your include
-# path in order to make this work
-# WIN95_MULTIMON = 1
-
-# uncomment next line to enable a Unicode build
-# UNICODE = 1
-
 # set this to the minimum Direct3D version to support (8 or 9)
 # DIRECT3D = 9
 
@@ -246,18 +238,16 @@ endif
 # add our prefix files to the mix
 CCOMFLAGS += -include $(WINSRC)/winprefix.h
 
-ifdef WIN95_MULTIMON
-CCOMFLAGS += -DWIN95_MULTIMON
+# for 32-bit apps, add unicows for Unicode support on Win9x
+ifndef PTR64
+LIBS += -lunicows
 endif
+
+# ensure we statically link the gcc runtime lib
+LDFLAGS += -static-libgcc
 
 # add the windows libraries
-LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
-
-ifdef CPP_COMPILE
-ifndef MSVC_BUILD
-LIBS += -lsupc++
-endif
-endif
+LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi -ldinput8
 
 ifeq ($(DIRECTINPUT),8)
 LIBS += -ldinput8
@@ -265,14 +255,6 @@ CCOMFLAGS += -DDIRECTINPUT_VERSION=0x0800
 else
 LIBS += -ldinput
 CCOMFLAGS += -DDIRECTINPUT_VERSION=0x0700
-endif
-
-ifdef PTR64
-ifdef MSVC_BUILD
-LIBS += -lbufferoverflowu
-else
-DEFS += -D_COM_interface=struct
-endif
 endif
 
 
@@ -300,13 +282,7 @@ OSDCOREOBJS = \
 	$(WINOBJ)/wintime.o \
 	$(WINOBJ)/winutf8.o \
 	$(WINOBJ)/winutil.o \
-	$(WINOBJ)/winwork.o \
-
-# if malloc debugging is enabled, include the necessary code
-ifneq ($(findstring MALLOC_DEBUG,$(DEFS)),)
-OSDCOREOBJS += \
-	$(WINOBJ)/winalloc.o
-endif
+	$(WINOBJ)/winwork.o
 
 
 
@@ -424,4 +400,3 @@ $(VERSIONRES): $(WINOBJ)/mamevers.rc
 $(WINOBJ)/mamevers.rc: $(BUILDOUT)/verinfo$(BUILD_EXE) $(SRC)/version.c
 	@echo Emitting $@...
 	@"$(BUILDOUT)/verinfo$(BUILD_EXE)" -b windows $(SRC)/version.c > $@
-

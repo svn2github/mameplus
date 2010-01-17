@@ -22,7 +22,7 @@
 
 **********************************************************************/
 
-#include "driver.h"
+#include "emu.h"
 #include "mc6845.h"
 
 
@@ -860,7 +860,6 @@ static void common_start(const device_config *device, int device_type)
 
 	/* validate arguments */
 	assert(device != NULL);
-	assert(device->tag != NULL);
 
 	mc6845->intf = (const mc6845_interface *)device->static_config;
 	mc6845->device_type = device_type;
@@ -881,7 +880,7 @@ static void common_start(const device_config *device, int device_type)
 		mc6845->hpixels_per_column = mc6845->intf->hpixels_per_column;
 
 		/* get the screen device */
-		mc6845->screen = devtag_get_device(device->machine, mc6845->intf->screen_tag);
+		mc6845->screen = device->machine->device(mc6845->intf->screen_tag);
 		assert(mc6845->screen != NULL);
 
 		/* create the timers */
