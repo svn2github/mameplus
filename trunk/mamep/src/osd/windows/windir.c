@@ -41,8 +41,6 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define UNICODE
-#define _UNICODE
 #include <windows.h>
 #include <shlwapi.h>
 #include <tchar.h>

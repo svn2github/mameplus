@@ -1,5 +1,5 @@
 @echo off
-set MINGW_ROOT=..\mingw64-w32
+set MINGW_ROOT=..\mingw\mingw64-w32
 set PATH=%MINGW_ROOT%\bin;extra\bin;%PATH%
 
 set C_INCLUDE_PATH=extra\include

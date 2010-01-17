@@ -43,17 +43,15 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-// standard C headers
-#include <math.h>
-
 // Windows 95/NT4 multimonitor stubs
 #ifdef WIN95_MULTIMON
 #include "multidef.h"
 #endif
 
 // MAME headers
+#include "emu.h"
+#include "emuopts.h"
 #include "osdepend.h"
-#include "driver.h"
 #include "video/vector.h"
 #include "render.h"
 #include "rendutil.h"
@@ -171,7 +169,7 @@ static void winvideo_exit(running_machine *machine)
 	{
 		win_monitor_info *temp = win_monitor_list;
 		win_monitor_list = temp->next;
-		free(temp);
+		global_free(temp);
 	}
 }
 
@@ -290,7 +288,7 @@ static void init_monitors(void)
 			if (utf8_device != NULL)
 			{
 				mame_printf_verbose(_WINDOWS("Video: Monitor %p = \"%s\" %s\n"), monitor->handle, utf8_device, (monitor == primary_monitor) ? _WINDOWS("(primary)") : "");
-				free(utf8_device);
+				global_free(utf8_device);
 			}
 		}
 	}
@@ -315,7 +313,7 @@ static BOOL CALLBACK monitor_enum_callback(HMONITOR handle, HDC dc, LPRECT rect,
 	assert(result);
 
 	// allocate a new monitor info
-	monitor = alloc_clear_or_die(win_monitor_info);
+	monitor = global_alloc_clear(win_monitor_info);
 
 	// copy in the data
 	monitor->handle = handle;
@@ -376,7 +374,7 @@ static win_monitor_info *pick_monitor(int index)
 			if (utf8_device != NULL)
 			{
 				rc = strcmp(scrname, utf8_device);
-				free(utf8_device);
+				global_free(utf8_device);
 			}
 			if (rc == 0)
 				goto finishit;
@@ -509,7 +507,7 @@ static void extract_video_config(running_machine *machine)
 static void load_effect_overlay(running_machine *machine, const char *filename)
 {
 	const device_config *screen;
-	char *tempstr = alloc_array_or_die(char, strlen(filename) + 5);
+	char *tempstr = global_alloc_array(char, strlen(filename) + 5);
 	char *dest;
 
 	// append a .PNG extension
@@ -524,7 +522,7 @@ static void load_effect_overlay(running_machine *machine, const char *filename)
 	if (effect_bitmap == NULL)
 	{
 		mame_printf_error(_WINDOWS("Unable to load PNG file '%s'\n"), tempstr);
-		free(tempstr);
+		global_free(tempstr);
 		return;
 	}
 
@@ -532,7 +530,7 @@ static void load_effect_overlay(running_machine *machine, const char *filename)
 	for (screen = video_screen_first(machine->config); screen != NULL; screen = video_screen_next(screen))
 		render_container_set_overlay(render_container_get_screen(screen), effect_bitmap);
 
-	free(tempstr);
+	global_free(tempstr);
 }
 
 

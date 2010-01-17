@@ -502,7 +502,6 @@ CCOMFLAGS += \
 	-Wundef \
 	-Wno-format-security \
 	-Wwrite-strings \
-	-Wno-pointer-sign \
 	-Wno-sign-compare
 
 # warnings only applicable to C compiles

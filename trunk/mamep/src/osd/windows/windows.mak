@@ -68,19 +68,6 @@
 
 
 #-------------------------------------------------
-# overrides
-#-------------------------------------------------
-
-# turn on unicode for all 64-bit builds regardless
-ifndef UNICODE
-ifdef PTR64
-#UNICODE = 1
-endif
-endif
-
-
-
-#-------------------------------------------------
 # object and source roots
 #-------------------------------------------------
 
@@ -128,50 +115,57 @@ endif
 ifdef MSVC_BUILD
 
     VCONV = $(WINOBJ)/vconv$(EXE)
+    VCONVPREFIX = $(subst /,\,$(VCONV))
 
     # append a 'v' prefix if nothing specified
     ifndef PREFIX
     PREFIX = v
     endif
-    
+
     # replace the various compilers with vconv.exe prefixes
-    CC = @$(VCONV) gcc -I.
-    LD = @$(VCONV) ld /profile
-    AR = @$(VCONV) ar
-    RC = @$(VCONV) windres
-    
+    CC = @$(VCONVPREFIX) gcc -I.
+    LD = @$(VCONVPREFIX) ld /profile
+    AR = @$(VCONVPREFIX) ar
+    RC = @$(VCONVPREFIX) windres
+
     # make sure we use the multithreaded runtime
     ifdef DEBUG
     CCOMFLAGS += /MTd
     else
     CCOMFLAGS += /MT
     endif
-    
+
     # turn on link-time codegen if the MAXOPT flag is also set
     ifdef MAXOPT
     CCOMFLAGS += /GL
     LDFLAGS += /LTCG
     AR += /LTCG
     endif
-    
+
     # /O2 (Maximize Speed) equals /Og /Oi /Ot /Oy /Ob2 /Gs /GF /Gy
     # /GA optimize for Windows Application
     CCOMFLAGS += /GA
-    
+
+    # disable warnings and link against bufferoverflowu for 64-bit targets
     ifdef PTR64
     CCOMFLAGS += /wd4267
+    LIBS += -lbufferoverflowu
     endif
+
+    # enable exception handling for C++
+    CPPONLYFLAGS += /EHsc
 
     # disable function pointer warnings in C++ which are evil to work around
     CPPONLYFLAGS += /wd4191 /wd4060 /wd4065 /wd4640
     
+    # disable warning about exception specifications
+    CPPONLYFLAGS += /wd4290
+
     # explicitly set the entry point for UNICODE builds
-    ifdef UNICODE
     LDFLAGS += /ENTRY:wmainCRTStartup
-    endif
 
     # add some VC++-specific defines
-DEFS += -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DXML_STATIC -D__inline__=__inline -Dsnprintf=_snprintf
+    DEFS += -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DXML_STATIC -Dsnprintf=_snprintf
     
     # make msvcprep into a pre-build step
     OSPREBUILD = $(VCONV)
@@ -214,19 +208,16 @@ CURPATH = ./
 # define the x64 ABI to be Windows
 DEFS += -DX64_WINDOWS_ABI
 
+# enable UNICODE flags
+DEFS += -DUNICODE -D_UNICODE
+LDFLAGS += -municode
+
 # map all instances of "main" to "utf8_main"
 DEFS += -Dmain=utf8_main
 
 # debug build: enable guard pages on all memory allocations
 ifdef DEBUG
-# mamep: disable malloc debug
-#DEFS += -DMALLOC_DEBUG
-#LDFLAGS += -Wl,--allow-multiple-definition
-endif
-
-# enable UNICODE flags for unicode builds
-ifdef UNICODE
-DEFS += -DUNICODE -D_UNICODE
+DEFS += -DMALLOC_DEBUG
 endif
 
 

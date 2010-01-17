@@ -68,7 +68,10 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
+typedef struct _mame_file mame_file;
 typedef struct _mame_path mame_path;
+
+typedef struct _core_options core_options;
 
 
 
@@ -179,7 +182,7 @@ void mame_closepath(mame_path *path);
 core_file *mame_core_file(mame_file *file);
 
 /* return the full filename for a given mame_file */
-const char *mame_file_full_name(mame_file *file);
+const astring &mame_file_full_name(mame_file *file);
 
 /* return a hash string for the file with the given functions */
 const char *mame_fhash(mame_file *file, UINT32 functions);
