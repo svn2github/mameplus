@@ -306,7 +306,7 @@ static WRITE16_HANDLER( pgm_videoram_w )
 	else if (offset < 0x7000 / 2)
 		pgm_tx_videoram_w(space, offset - 0x4000 / 2, data, mem_mask);
 	else
-		COMBINE_DATA(&state->videoram[offset / 2]);
+		COMBINE_DATA(&state->videoram[offset]);
 }
 
 static READ16_HANDLER ( z80_ram_r )
