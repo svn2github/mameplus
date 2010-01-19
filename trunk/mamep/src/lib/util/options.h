@@ -172,7 +172,9 @@ int options_parse_ini_file(core_options *opts, core_file *inifile, int priority)
 /* ----- options output ----- */
 
 /* output option data to command line string */
+#if 0
 int options_output_diff_command_line(core_options *opts, core_options *baseopts, char *buf);
+#endif
 
 /* output option data to an INI file */
 void options_output_ini_file(core_options *opts, core_file *inifile);
@@ -203,7 +205,9 @@ int options_get_int(core_options *opts, const char *name);
 float options_get_float(core_options *opts, const char *name);
 
 /* read an default option value as a string */
+#if 0
 const char *options_get_option_default_value(core_options *opts, const char *name);
+#endif
 
 /* read an option as a string */
 UINT32 options_get_seqid(core_options *opts, const char *name);

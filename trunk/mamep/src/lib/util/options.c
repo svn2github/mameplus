@@ -589,6 +589,7 @@ static const char *translate_description(const options_data *data)
     command line string
 -------------------------------------------------*/
 
+#if 0
 int options_output_diff_command_line(core_options *opts, core_options *baseopts, char *buf)
 {
 	options_data *data;
@@ -669,6 +670,8 @@ int options_output_diff_command_line(core_options *opts, core_options *baseopts,
 
 	return total;
 }
+#endif
+
 
 /*-------------------------------------------------
     options_output_diff_ini_file - output the diff
@@ -903,6 +906,7 @@ float options_get_float(core_options *opts, const char *name)
     as a string
 -------------------------------------------------*/
 
+#if 0
 const char *options_get_option_default_value(core_options *opts, const char *name)
 {
 	options_data *data = find_entry_data(opts, name, FALSE);
@@ -918,6 +922,7 @@ const char *options_get_option_default_value(core_options *opts, const char *nam
 
 	return value;
 }
+#endif
 
 
 /*-------------------------------------------------

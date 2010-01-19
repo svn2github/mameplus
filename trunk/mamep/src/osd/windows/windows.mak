@@ -216,9 +216,9 @@ LDFLAGS += -municode
 DEFS += -Dmain=utf8_main
 
 # debug build: enable guard pages on all memory allocations
-ifdef DEBUG
+#ifdef DEBUG
 DEFS += -DMALLOC_DEBUG
-endif
+#endif
 
 
 

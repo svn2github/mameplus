@@ -61,14 +61,14 @@ static int ansi_codepage = CP_ACP;
 
 void set_osdcore_acp(int cp)
 {
-	// TODO: check specified cp is valid
+	//TODO: check specified cp is valid
 	//ansi_codepage = cp;
 	ansi_codepage = CP_OEMCP;
 }
 
 
 //============================================================
-//  astring_from_utf8
+//  get_osdcore_acp
 //============================================================
 
 int get_osdcore_acp(void)

@@ -1254,12 +1254,11 @@ const char *render_target_get_translated_view_name(render_target *target, int vi
 	const char *s = render_target_get_view_name(target, viewindex);
 	const char *idx[8];
 	const char **pp;
-	astring *temp, *res;
+	astring temp, res;
 
 	if (!s)
 		return NULL;
 
-	temp = astring_alloc();
 	pp = idx;
 	while (*s)
 	{
@@ -1267,20 +1266,19 @@ const char *render_target_get_translated_view_name(render_target *target, int vi
 		{
 			*pp++ = s;
 
-			astring_catc(temp, "%");
-			astring_catc(temp, "d");
+			temp.cat("%");
+			temp.cat("d");
 
 			for (s++; *s; s++)
 				if (!isdigit(*s))
 					break;
 		}
 		else
-			astring_catch(temp, s++, 1);
+			temp.cat(s++, 1);
 	}
 
-	s = _(astring_c(temp));
+	s = _(temp);
 
-	res = astring_alloc();
 	pp = idx;
 	while (*s)
 	{
@@ -1289,17 +1287,14 @@ const char *render_target_get_translated_view_name(render_target *target, int vi
 			s += 2;
 
 			while (isdigit(**pp))
-				astring_catch(res, (*pp)++, 1);
+				res.cat((*pp)++, 1);
 			pp++;
 		}
 		else
-			astring_catch(res, s++, 1);
+			res.cat(s++, 1);
 	}
 
-	s = mame_strdup(astring_c(res));
-
-	astring_free(res);
-	astring_free(temp);
+	s = mame_strdup(res);
 
 	return s;
 }

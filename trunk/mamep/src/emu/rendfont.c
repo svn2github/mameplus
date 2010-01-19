@@ -1113,5 +1113,5 @@ process_next:
 	d[j] = '\0';
 
 	strcpy(s, d);
-	free(d);
+	global_free(d);
 }
