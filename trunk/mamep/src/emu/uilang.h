@@ -9,8 +9,8 @@
 
 *********************************************************************/
 
-#ifndef UI_LANG_H
-#define UI_LANG_H
+#ifndef UILANG_H
+#define UILANG_H
 
 #include "options.h"
 
