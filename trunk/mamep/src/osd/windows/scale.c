@@ -138,8 +138,8 @@ void scale2x_32_mmx(UINT32* dst0, UINT32* dst1, const UINT32* src0, const UINT32
 void scale3x_16_def(UINT16* dst0, UINT16* dst1, UINT16* dst2, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
 void scale3x_32_def(UINT32* dst0, UINT32* dst1, UINT32* dst2, const UINT32* src0, const UINT32* src1, const UINT32* src2, unsigned count);
 
-void hq2x_32_def(UINT32*, UINT32*, UINT32*, UINT32*, UINT32*, int);
-void hq3x_32_def(UINT32*, UINT32*, UINT32*, UINT32*, UINT32*, UINT32*, int);
+void hq2x_32_def(UINT32*, UINT32*, const UINT32*, const UINT32*, const UINT32*, unsigned);
+void hq3x_32_def(UINT32*, UINT32*, UINT32*, const UINT32*, const UINT32*, const UINT32*, unsigned);
 static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 static int scale_perform_hq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 
