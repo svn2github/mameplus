@@ -254,20 +254,18 @@ static file_error fopen_internal(core_options *opts, path_iterator *iterator, co
 
 #if 1	// mamep: load zipped inp file
 			{
-			    astring *zipped_fullname;
+			    astring zipped_fullname;
 			    int offset = 0;
 			    int n = (*file)->filename.rchr(offset, '.');
     
 			    if (n > 0)
 				    offset = n;
     
-			    zipped_fullname = astring_alloc();
-			    astring_cpych(zipped_fullname, (*file)->filename, offset);
-			    astring_catc(zipped_fullname, PATH_SEPARATOR);
-			    astring_catc(zipped_fullname, filename);
+			    zipped_fullname.cpy((*file)->filename, offset);
+			    zipped_fullname.cat(PATH_SEPARATOR);
+			    zipped_fullname.cat(filename);
     
 			    filerr = fopen_attempt_zipped((*file)->filename, crc, openflags, *file);
-			    astring_free(zipped_fullname);
 
 			if (filerr == FILERR_NONE)
 				break;

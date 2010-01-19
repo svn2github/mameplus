@@ -3328,8 +3328,8 @@ static void menu_autofire(running_machine *machine, ui_menu *menu, void *paramet
 
 static void menu_autofire_populate(running_machine *machine, ui_menu *menu)
 {
-	astring *subtext = astring_alloc();
-	astring *text = astring_alloc();
+	astring subtext;
+	astring text;
 	const input_field_config *field;
 	const input_port_config *port;
 	int players = 0;
@@ -3358,27 +3358,23 @@ static void menu_autofire_populate(running_machine *machine, ui_menu *menu)
 				/* add an autofire item */
 				switch (settings.autofire)
 				{
-					case 0:	astring_cpyc(subtext, _("Off"));	break;
-					case 1:	astring_cpyc(subtext, _("On"));		break;
-					case 2:	astring_cpyc(subtext, _("Toggle"));	break;
+					case 0:	subtext.cpy(_("Off"));	break;
+					case 1:	subtext.cpy(_("On"));		break;
+					case 2:	subtext.cpy(_("Toggle"));	break;
 				}
-				ui_menu_item_append(menu, _(input_field_name(field)), astring_c(subtext), MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)field);
+				ui_menu_item_append(menu, _(input_field_name(field)), subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)field);
 			}
 		}
 	
 	/* add autofire delay items */
 	for (i = 0; i < players; i++)
 	{
-		astring_printf(text, _("P%d %s"), i + 1, _("Autofire Delay"));
-		astring_printf(subtext, "%d", get_autofiredelay(i));
+		text.printf(_("P%d %s"), i + 1, _("Autofire Delay"));
+		subtext.printf("%d", get_autofiredelay(i));
 
 		/* append a menu item */
-		ui_menu_item_append(menu, astring_c(text), astring_c(subtext), MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)(i + AUTOFIRE_ITEM_P1_DELAY));
+		ui_menu_item_append(menu, text, subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)(i + AUTOFIRE_ITEM_P1_DELAY));
 	}
-
-	/* release our temporary strings */
-	astring_free(subtext);
-	astring_free(text);
 }
 #undef AUTOFIRE_ITEM_P1_DELAY
 
@@ -3452,8 +3448,8 @@ static void menu_custom_button(running_machine *machine, ui_menu *menu, void *pa
 
 static void menu_custom_button_populate(running_machine *machine, ui_menu *menu)
 {
-	astring *subtext = astring_alloc();
-	astring *text = astring_alloc();
+	astring subtext;
+	astring text;
 	const input_field_config *field;
 	const input_port_config *port;
 	int menu_items = 0;
@@ -3478,28 +3474,24 @@ static void menu_custom_button_populate(running_machine *machine, ui_menu *menu)
 				static char commandbuf[256];
 
 				type -= IPT_CUSTOM1;
-				astring_cpyc(subtext, "");
+				subtext.cpy("");
 
 				//unpack the custom button value
 				for (i = 0; i < MAX_NORMAL_BUTTONS; i++, n <<= 1)
 					if (custom_button[player][type] & n)
 					{
-						if (astring_len(subtext) > 0)
-							astring_catc(subtext, "_+");
-						astring_catprintf(subtext, "_%c", colorbutton1 + i);
+						if (subtext.len() > 0)
+							subtext.cat("_+");
+						subtext.catprintf("_%c", colorbutton1 + i);
 					}
 
-				strcpy(commandbuf, astring_c(subtext));
+				strcpy(commandbuf, subtext);
 				convert_command_glyph(commandbuf, ARRAY_LENGTH(commandbuf));
 				ui_menu_item_append(menu, _(name), commandbuf, 0, (void *)(FPTR)&custom_button[player][type]);
 
 				menu_items++;
 			}
 		}
-
-	/* release our temporary strings */
-	astring_free(subtext);
-	astring_free(text);
 }
 #endif /* USE_CUSTOM_BUTTON */
 
