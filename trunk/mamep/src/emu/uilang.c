@@ -146,7 +146,7 @@ static void load_mmo(int msgcat)
 	int size;
 	int i;
 
-	if (p->status != MMO_NOT_LOADED)
+	if (p->status != mmo::MMO_NOT_LOADED)
 		return;
 
 	if (!mmo_config[msgcat].filename)
@@ -198,7 +198,7 @@ static void load_mmo(int msgcat)
 		p->mmo_index[i].wstr = (const unsigned char *)p->mmo_str + (unsigned long)p->mmo_index[i].wstr;
 	}
 
-	p->status = MMO_READY;
+	p->status = mmo::MMO_READY;
 	return;
 
 mmo_readerr:
@@ -216,7 +216,7 @@ mmo_readerr:
 	if (file)
 		mame_fclose(file);
 
-	p->status = MMO_NOT_FOUND;
+	p->status = mmo::MMO_NOT_FOUND;
 }
 
 static int mmo_cmpu(const void *a, const void *b)
@@ -247,12 +247,12 @@ char *lang_message(int msgcat, const char *str)
 
 	switch (p->status)
 	{
-		case MMO_NOT_LOADED:
+		case mmo::MMO_NOT_LOADED:
 			load_mmo(msgcat);
-			if (p->status != MMO_READY)
+			if (p->status != mmo::MMO_READY)
 				break;
 
-		case MMO_READY:
+		case mmo::MMO_READY:
 			q.uid = (const unsigned char*)str;
 			mmo = (mmo_data *)bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmpu);
 			if (mmo)
@@ -274,12 +274,12 @@ void *lang_messagew(int msgcat, const void *str, int (*cmpw)(const void *, const
 
 	switch (p->status)
 	{
-		case MMO_NOT_LOADED:
+		case mmo::MMO_NOT_LOADED:
 			load_mmo(msgcat);
-			if (p->status != MMO_READY)
+			if (p->status != mmo::MMO_READY)
 				break;
 
-		case MMO_READY:
+		case mmo::MMO_READY:
 			q.wid = str;
 			mmocmp = cmpw;
 			mmo = (mmo_data *)bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmpw);
