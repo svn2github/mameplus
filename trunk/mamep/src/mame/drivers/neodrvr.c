@@ -9306,7 +9306,7 @@ static DRIVER_INIT( kf2k4pls )
 		memcpy(src+0x0A0000,dst+0x0A0000,0x020000);
 		memcpy(src+0x0C0000,dst+0x100000,0x020000);
 		memcpy(src+0x0E0000,dst+0x040000,0x020000);
-		free(dst);
+		auto_free(machine, dst);
 	}
 	neogeo_bootleg_sx_decrypt(machine, 1);
 	DRIVER_INIT_CALL(neogeo);

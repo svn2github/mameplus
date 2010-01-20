@@ -497,7 +497,7 @@ static void build_command_line(int argc, char *argv[])
 				*dst++ = ' ';
 
 				if (temp)
-					free(temp);
+					global_free(temp);
 			}
 		}
 	}

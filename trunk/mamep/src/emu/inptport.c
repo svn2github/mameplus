@@ -4181,7 +4181,7 @@ static time_t playback_init(running_machine *machine)
 		{
 			strcpy(fname + strlen(fname) - 4, ".cap");
 			filerr = mame_fopen(SEARCHPATH_INPUTLOG, fname, OPEN_FLAG_READ, &portdata->caption_file);
-			free(fname);
+			global_free(fname);
 		}
 	}
 #endif /* INP_CAPTION */

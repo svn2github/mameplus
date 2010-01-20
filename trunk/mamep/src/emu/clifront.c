@@ -216,20 +216,20 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	}
 	catch (emu_exception &)
 	{
-		fprintf(stderr, "Caught unhandled emulator exception\n");
+		fprintf(stderr, _("Caught unhandled emulator exception\n"));
 	}
 	catch (std::bad_alloc &)
 	{
-		fprintf(stderr, "Out of memory!\n");
+		fprintf(stderr, _("Out of memory!\n"));
 	}
 	catch (...)
 	{
-		fprintf(stderr, "Caught unhandled exception\n");
+		fprintf(stderr, _("Caught unhandled exception\n"));
 	}
 
 error:
 #ifdef DRIVER_SWITCH
-	free(drivers);
+	global_free(drivers);
 #endif /* DRIVER_SWITCH */ 
 
 	/* free our options and exit */
@@ -444,10 +444,10 @@ void assign_drivers(core_options *options)
 					if (!drivers_table[i].name)
 						mame_printf_warning(_("Illegal value for %s = %s\n"), OPTION_DRIVER_CONFIG, s);
 				}
-				free(s);
+				global_free(s);
  				p = strtok(NULL, ",");
 			}
- 			free(temp);
+ 			global_free(temp);
 		}
 	}
 #endif /* !TINY_BUILD */
@@ -466,7 +466,7 @@ void assign_drivers(core_options *options)
 		}
 
 	if (drivers)
-		free(drivers);
+		global_free(drivers);
 	drivers = (const game_driver**) malloc((n + 1) * sizeof (game_driver*));
 
 	n = 0;

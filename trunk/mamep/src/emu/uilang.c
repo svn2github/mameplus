@@ -202,13 +202,13 @@ static void load_mmo(int msgcat)
 mmo_readerr:
 	if (p->mmo_str)
 	{
-		free(p->mmo_str);
+		global_free(p->mmo_str);
 		p->mmo_str = NULL;
 	}
 
 	if (p->mmo_index)
 	{
-		free(p->mmo_index);
+		global_free(p->mmo_index);
 		p->mmo_index = NULL;
 	}
 	if (file)
@@ -316,20 +316,20 @@ void ui_lang_shutdown(void)
 
 			if (p->mmo_index)
 			{
-				free(p->mmo_index);
+				global_free(p->mmo_index);
 				p->mmo_index = NULL;
 			}
 
 			if (p->mmo_str)
 			{
-				free(p->mmo_str);
+				global_free(p->mmo_str);
 				p->mmo_str = NULL;
 			}
 		}
 
 		if (!mmo_config[i].dont_free && mmo_config[i].filename)
 		{
-			free((char *)mmo_config[i].filename);
+			global_free((char *)mmo_config[i].filename);
 			mmo_config[i].filename = NULL;
 		}
 	}

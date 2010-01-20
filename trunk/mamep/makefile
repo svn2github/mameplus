@@ -675,13 +675,13 @@ endif
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
-ifdef MAMEMESS
-include $(SRC)/mess/mess.mak
-endif
 include $(SRC)/lib/lib.mak
 include $(SRC)/build/build.mak
 -include $(SRC)/osd/$(CROSS_BUILD_OSD)/build.mak
 include $(SRC)/tools/tools.mak
+ifdef MAMEMESS
+include $(SRC)/mess/mess.mak
+endif
 # mamep: must stay at the end for png2bdc
 include $(SRC)/emu/emu.mak
 

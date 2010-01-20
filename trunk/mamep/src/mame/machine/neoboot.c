@@ -629,7 +629,7 @@ void decrypt_matrimbl(running_machine *machine)
 		}
 		src2[j]=dst2[i];
 	}
-	free(dst2);
+	auto_free(machine, dst2);
 	memcpy(src2-0x10000,src2,0x10000);
 	kof2002_decrypt_68k(machine);
 	cthd2003_c(machine, 0);
@@ -1208,7 +1208,7 @@ void kf2k2mp_px_decrypt(running_machine *machine)
 			memcpy(src + i, dst, 0x80);
 		}
 	}
-	free(dst);
+	auto_free(machine, dst);
 }
 
 void cthd2003_AES_protection(running_machine *machine)

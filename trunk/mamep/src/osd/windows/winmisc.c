@@ -178,4 +178,3 @@ int osd_get_default_codepage(void)
 {
 	return GetOEMCP();
 }
-

@@ -119,7 +119,7 @@ void datafile_exit(void)
 {
 	if (sorted_drivers == NULL)
 	{
-		free(sorted_drivers);
+		global_free(sorted_drivers);
 		sorted_drivers = NULL;
 	}
 }
@@ -828,11 +828,11 @@ static void free_menuidx(struct tMenuIndex **_index)
 
 		while(m_idx->menuitem != NULL)
 		{
-			free(m_idx->menuitem);
+			global_free(m_idx->menuitem);
 			m_idx++;
 		}
 
-		free(*_index);
+		global_free(*_index);
 		*_index = NULL;
 	}
 }
@@ -935,7 +935,7 @@ static int find_command (const game_driver *drv)
 	int i;
 
 	if (menu_filename)
-		free(menu_filename);
+		global_free(menu_filename);
 
 	for (where = 0; where <= FILE_ROOT; where += FILE_ROOT)
 	{
@@ -1001,7 +1001,7 @@ static int find_command (const game_driver *drv)
 
 					if (cmnd_idx[i])
 					{
-						free(cmnd_idx[i]);
+						global_free(cmnd_idx[i]);
 						cmnd_idx[i] = 0;
 					}
 

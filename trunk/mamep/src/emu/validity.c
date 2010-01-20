@@ -1233,7 +1233,7 @@ static int validate_sound(int drivnum, const machine_config *config)
 				/* if we didn't find one, it's an error */
 				if (checksound == NULL)
 				{
-					mame_printf_error("%s: %s attempting to route sound to non-existant speaker '%s'\n", driver->source_file, driver->name, route->target);
+					mame_printf_error(_("%s: %s attempting to route sound to non-existant speaker '%s'\n"), driver->source_file, driver->name, route->target);
 					error = TRUE;
 				}
 			}

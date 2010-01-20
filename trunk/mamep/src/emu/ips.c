@@ -355,7 +355,7 @@ int open_ips_entry(running_machine *machine, const char *patch_name, rom_load_da
 			list = &(*list)->next;
 	}
 
-	free(s);
+	global_free(s);
 
 	if (!result)
 	{
@@ -390,17 +390,17 @@ int close_ips_entry(rom_load_data *romdata)
 		for (chunk = p->chunk; chunk; chunk = next_chunk)
 		{
 			next_chunk = chunk->next;
-			free(chunk);
+			global_free(chunk);
 		}
 
 		if (p->ips_name)
-			free(p->ips_name);
+			global_free(p->ips_name);
 
 		if (p->rom_name)
-			free(p->rom_name);
+			global_free(p->rom_name);
 
 		next = p->next;
-		free(p);
+		global_free(p);
 	}
 
 	ips_list = NULL;

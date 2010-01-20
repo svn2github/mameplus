@@ -105,13 +105,6 @@ endif
 # overrides for the MSVC compiler
 #-------------------------------------------------
 
-ifneq ($(MSVC_BUILD),)
-	COMPILER_SUFFIX = -vc
-	VCONVDEFS =
-else
-	CFLAGS += -Iextra/include
-endif
-
 ifdef MSVC_BUILD
 
     VCONV = $(WINOBJ)/vconv$(EXE)
@@ -142,10 +135,6 @@ ifdef MSVC_BUILD
     AR += /LTCG
     endif
 
-    # /O2 (Maximize Speed) equals /Og /Oi /Ot /Oy /Ob2 /Gs /GF /Gy
-    # /GA optimize for Windows Application
-    CCOMFLAGS += /GA
-
     # disable warnings and link against bufferoverflowu for 64-bit targets
     ifdef PTR64
     CCOMFLAGS += /wd4267
@@ -170,6 +159,7 @@ ifdef MSVC_BUILD
     # make msvcprep into a pre-build step
     OSPREBUILD = $(VCONV)
     
+ifneq ($(CROSS_BUILD),1)
     # add VCONV to the build tools
     BUILD += $(VCONV)
     
@@ -179,7 +169,7 @@ ifdef MSVC_BUILD
     
     $(WINOBJ)/vconv.o: $(WINSRC)/vconv.c
 	    @echo Compiling $<...
-	    @cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE $(VCONVDEFS) -c $< /Fo$@
+	@cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE -c $< /Fo$@
 
 OSDCLEAN = msvcclean
 
@@ -189,6 +179,7 @@ msvcclean:
 	$(RM) *.lib
 	$(RM) *.exp
 
+endif
 endif
 
 
@@ -216,9 +207,9 @@ LDFLAGS += -municode
 DEFS += -Dmain=utf8_main
 
 # debug build: enable guard pages on all memory allocations
-#ifdef DEBUG
+ifdef DEBUG
 DEFS += -DMALLOC_DEBUG
-#endif
+endif
 
 
 
@@ -311,14 +302,6 @@ OSDOBJS += \
 # add a stub resource file
 CLIRESFILE = $(WINOBJ)/mame.res
 VERSIONRES = $(WINOBJ)/version.res
-
-
-
-ifdef MSVC_BUILD
-DLLLINK = lib
-else
-DLLLINK = dll
-endif
 
 
 
