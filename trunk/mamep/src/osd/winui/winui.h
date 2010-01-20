@@ -17,8 +17,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <commctrl.h>
 #include <commdlg.h>
-#include <driver.h>
-#include "pool.h"
+#include "emu.h"
+#include "driver.h"
 #include "screenshot.h"
 
 #if !defined(MAMEUINAME)

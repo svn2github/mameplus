@@ -51,7 +51,7 @@ UI_RCFLAGS = -O coff --include-dir $(UISRC) --include-dir $(UIOBJ)
 
 DEFS += \
 	-DWINVER=0x0500 \
-	-D_WIN32_IE=0x0500
+	-D_WIN32_IE=0x0501
 
 
 
