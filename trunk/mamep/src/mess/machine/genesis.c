@@ -22,7 +22,8 @@
 #include "cpu/m68000/m68000.h"
 
 #include "devices/cartslot.h"
-#include "includes/genesis.h"
+//mamep: locate correct header
+#include "../includes/genesis.h"
 
 
 #define MAX_MD_CART_SIZE 0x500000
