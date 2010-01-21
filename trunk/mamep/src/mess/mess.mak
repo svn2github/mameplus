@@ -16,17 +16,17 @@
 
 DRVLIBS += \
 	$(MESSOBJ)/messdriv.o \
-	$(MESSOBJ)/messsoft.o \
-	$(MESSOBJ)/softlist.o \
-	$(MESSOBJ)/software.a \
 	$(MESSOBJ)/ascii.a \
 	$(MESSOBJ)/atari.a \
 	$(MESSOBJ)/bandai.a \
 	$(MESSOBJ)/capcom.a \
+	$(MESSOBJ)/messsoft.o \
 	$(MESSOBJ)/nec.a \
 	$(MESSOBJ)/nintendo.a \
 	$(MESSOBJ)/sega.a \
 	$(MESSOBJ)/snk.a \
+	$(MESSOBJ)/softlist.o \
+	$(MESSOBJ)/software.a \
 	$(MESSOBJ)/shared.a \
 
 #-------------------------------------------------

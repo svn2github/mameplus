@@ -92,6 +92,11 @@
 #include "state.h"
 
 // the running machine
+#ifdef MAMEMESS
+#include "mess.h"
+#include "uimess.h"
+#include "image.h"
+#endif /* MESS */
 #include "mame.h"
 
 // video-related
@@ -108,5 +113,9 @@
 #include "audio/generic.h"
 #include "machine/generic.h"
 #include "video/generic.h"
+
+#ifdef MAMEMESS
+#include "messdrv.h"
+#endif /* MESS */
 
 #endif	/* __EMU_H__ */

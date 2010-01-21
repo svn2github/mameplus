@@ -107,68 +107,68 @@ endif
 
 ifdef MSVC_BUILD
 
-    VCONV = $(WINOBJ)/vconv$(EXE)
-    VCONVPREFIX = $(subst /,\,$(VCONV))
+VCONV = $(WINOBJ)/vconv$(EXE)
+VCONVPREFIX = $(subst /,\,$(VCONV))
 
-    # append a 'v' prefix if nothing specified
-    ifndef PREFIX
-    PREFIX = v
-    endif
+# append a 'v' prefix if nothing specified
+ifndef PREFIX
+PREFIX = v
+endif
 
-    # replace the various compilers with vconv.exe prefixes
-    CC = @$(VCONVPREFIX) gcc -I.
-    LD = @$(VCONVPREFIX) ld /profile
-    AR = @$(VCONVPREFIX) ar
-    RC = @$(VCONVPREFIX) windres
+# replace the various compilers with vconv.exe prefixes
+CC = @$(VCONVPREFIX) gcc -I.
+LD = @$(VCONVPREFIX) ld /profile
+AR = @$(VCONVPREFIX) ar
+RC = @$(VCONVPREFIX) windres
 
-    # make sure we use the multithreaded runtime
-    ifdef DEBUG
-    CCOMFLAGS += /MTd
-    else
-    CCOMFLAGS += /MT
-    endif
+# make sure we use the multithreaded runtime
+ifdef DEBUG
+CCOMFLAGS += /MTd
+else
+CCOMFLAGS += /MT
+endif
 
-    # turn on link-time codegen if the MAXOPT flag is also set
-    ifdef MAXOPT
-    CCOMFLAGS += /GL
-    LDFLAGS += /LTCG
-    AR += /LTCG
-    endif
+# turn on link-time codegen if the MAXOPT flag is also set
+ifdef MAXOPT
+CCOMFLAGS += /GL
+LDFLAGS += /LTCG
+AR += /LTCG
+endif
 
-    # disable warnings and link against bufferoverflowu for 64-bit targets
-    ifdef PTR64
-    CCOMFLAGS += /wd4267
-    LIBS += -lbufferoverflowu
-    endif
+# disable warnings and link against bufferoverflowu for 64-bit targets
+ifdef PTR64
+CCOMFLAGS += /wd4267
+LIBS += -lbufferoverflowu
+endif
 
-    # enable exception handling for C++
-    CPPONLYFLAGS += /EHsc
+# enable exception handling for C++
+CPPONLYFLAGS += /EHsc
 
-    # disable function pointer warnings in C++ which are evil to work around
-    CPPONLYFLAGS += /wd4191 /wd4060 /wd4065 /wd4640
-    
-    # disable warning about exception specifications
-    CPPONLYFLAGS += /wd4290
+# disable function pointer warnings in C++ which are evil to work around
+CPPONLYFLAGS += /wd4191 /wd4060 /wd4065 /wd4640
 
-    # explicitly set the entry point for UNICODE builds
-    LDFLAGS += /ENTRY:wmainCRTStartup
+# disable warning about exception specifications
+CPPONLYFLAGS += /wd4290
 
-    # add some VC++-specific defines
-    DEFS += -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DXML_STATIC -Dsnprintf=_snprintf
-    
-    # make msvcprep into a pre-build step
-    OSPREBUILD = $(VCONV)
-    
+# explicitly set the entry point for UNICODE builds
+LDFLAGS += /ENTRY:wmainCRTStartup
+
+# add some VC++-specific defines
+DEFS += -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DXML_STATIC -Dsnprintf=_snprintf
+
+# make msvcprep into a pre-build step
+OSPREBUILD = $(VCONV)
+
 ifneq ($(CROSS_BUILD),1)
-    # add VCONV to the build tools
-    BUILD += $(VCONV)
-    
-    $(VCONV): $(WINOBJ)/vconv.o
-	    @echo Linking $@...
-	    @link.exe /nologo $^ version.lib /out:$@
-    
-    $(WINOBJ)/vconv.o: $(WINSRC)/vconv.c
-	    @echo Compiling $<...
+# add VCONV to the build tools
+BUILD += $(VCONV)
+
+$(VCONV): $(WINOBJ)/vconv.o
+	@echo Linking $@...
+	@link.exe /nologo $^ version.lib /out:$@
+
+$(WINOBJ)/vconv.o: $(WINSRC)/vconv.c
+	@echo Compiling $<...
 	@cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE -c $< /Fo$@
 
 OSDCLEAN = msvcclean

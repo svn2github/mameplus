@@ -102,7 +102,9 @@ static const options_entry cli_options[] =
 	{ "romident",                 "0",        OPTION_COMMAND,    "compare files with known MAME roms" },
 	{ "listdevices;ld",           "0",        OPTION_COMMAND,    "list available devices" },
 	{ "listgames",                "0",        OPTION_COMMAND,    "year, manufacturer and full name" },
-
+#ifdef MESS
+	{ "listmedia;lm",             "0",        OPTION_COMMAND,    "list available media for the system" },
+#endif
 	{ NULL }
 };
 
@@ -315,6 +317,9 @@ static int execute_commands(core_options *options, const char *exename, const ga
 		{ CLIOPTION_LISTSAMPLES,	cli_info_listsamples },
 		{ CLIOPTION_VERIFYROMS,		info_verifyroms },
 		{ CLIOPTION_VERIFYSAMPLES,	info_verifysamples },
+#ifdef MESS
+		{ CLIOPTION_LISTMEDIA,		info_listmedia },
+#endif
 		{ CLIOPTION_ROMIDENT,		info_romident }
 	};
 	int i;

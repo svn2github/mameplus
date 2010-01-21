@@ -1,6 +1,6 @@
 /*********************************************************************
 
-    cmd_plus.c
+    cmdplus.c
 
     Defined Game Commnad Font Convert.
 

@@ -275,7 +275,7 @@ PCB Layouts missing
 
 */
 
-#include "driver.h"
+#include "emu.h"
 #include "cpu/z80/z80.h"
 #include "deprecat.h"
 #include "machine/i8255a.h"
@@ -1011,7 +1011,7 @@ static const cassette_config msx_cassette_config =
 {
 	fmsx_cassette_formats,
 	NULL,
-	CASSETTE_PLAY
+	(cassette_state)(CASSETTE_PLAY)
 };
 
 static const floppy_config msx_floppy_config =
@@ -3913,7 +3913,7 @@ COMP(1987, hbf12,    msx2,	0,  msx2,     msx2jp,   msx,     "Sony", "HB-F1II (Ja
 COMP(1987, hbf1xd,   msx2,	0,  msx2,     msx2jp,   msx,     "Sony", "HB-F1XD (Japan)", 0)
 COMP(1988, hbf1xdm2, msx2,	0,  msx2,     msx2jp,   msx,     "Sony", "HB-F1XDMK2 (Japan)", 0)
 COMP(1988, phc23,    msx2,	0,  msx2,     msx2jp,   msx,     "Sanyo", "WAVY PHC-23 (Japan)", 0)
-
+                                                             
 COMP(1986, cpc300,   msx2,	0,	msx2,	  msx2kr,   msx,     "Daewoo", "IQ-2000 CPC-300 (Korea)", 0)
 COMP(1986, cpc300e,  msx2,	0,	msx2,	  msx2kr,   msx,     "Daewoo", "IQ-2000 CPC-300E (Korea)", 0)
 COMP(1986, cpc400,   msx2,	0,	msx2,	  msx2kr,   msx,     "Daewoo", "X-II CPC-400 (Korea)", 0 )

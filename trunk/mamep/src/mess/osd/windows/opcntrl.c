@@ -7,8 +7,6 @@
 //  started to have dynamic controls
 //
 //============================================================
-#define UNICODE
-#define _UNICODE
 
 #include <windows.h>
 #include <commctrl.h>
@@ -191,7 +189,9 @@ static BOOL check_editbox(HWND control)
 	const char *optspec;
 	optreserr_t err;
 	HANDLE h;
-	FPTR val;
+	void *val;
+	int i_val;
+	
 
 	guide = (const option_guide *) GetProp(control, guide_prop);
 	optspec = (const char *) GetProp(control, spec_prop);
@@ -201,18 +201,18 @@ static BOOL check_editbox(HWND control)
 	switch(guide->option_type)
 	{
 		case OPTIONTYPE_INT:
-			val = atoi(buf);
-			err = option_resolution_isvalidvalue(optspec, guide->parameter, val);
+			i_val = atoi(buf);
+			err = option_resolution_isvalidvalue(optspec, guide->parameter, i_val);
 			if (err)
 			{
 				h = GetProp(control, value_prop);
-				val = (FPTR) h;
+				val = (void*) h;
 				_snprintf(buf, ARRAY_LENGTH(buf), "%d", val);
 				win_set_window_text_utf8(control, buf);
 			}
 			else
 			{
-				SetProp(control, value_prop, (HANDLE) val);
+				SetProp(control, value_prop, (HANDLE) i_val);
 			}
 			break;
 

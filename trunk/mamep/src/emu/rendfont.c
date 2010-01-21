@@ -158,7 +158,7 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 	{
 //mamep: color glyph
 #ifdef UI_COLOR_DISPLAY
-		#include "cmd_table.c"
+		#include "cmdtable.c"
 
 		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + COLOR_BUTTONS)
 			ch->color = color_table[chnum - COMMAND_UNICODE];
@@ -1014,7 +1014,7 @@ void convert_command_glyph(char *s, int buflen)
 	int len;
 	int i, j;
 
-#include "cmd_plus.c"
+#include "cmdplus.c"
 
 	d = (char *)malloc(buflen * sizeof (*d));
 	if (d == NULL)

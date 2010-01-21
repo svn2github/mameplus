@@ -1,6 +1,6 @@
 /*********************************************************************
 
-    cmd_table.c
+    cmdtable.c
 
     Defined Game Commnad Font Color Array.
 
