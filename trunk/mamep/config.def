@@ -1,5 +1,4 @@
 TARGET=mame
-EXTRA_SUFFIX=p
 
 #
 # CORE FUNCTIONS

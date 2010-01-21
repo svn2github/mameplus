@@ -190,10 +190,10 @@ static void load_mmo(int msgcat)
 
 	for (i = 0; i < p->header.num_msg; i++)
 	{
-		p->mmo_index[i].uid = (const unsigned char *)p->mmo_str + (unsigned long)p->mmo_index[i].uid;
-		p->mmo_index[i].ustr = (const unsigned char *)p->mmo_str + (unsigned long)p->mmo_index[i].ustr;
-		p->mmo_index[i].wid = (const unsigned char *)p->mmo_str + (unsigned long)p->mmo_index[i].wid;
-		p->mmo_index[i].wstr = (const unsigned char *)p->mmo_str + (unsigned long)p->mmo_index[i].wstr;
+		p->mmo_index[i].uid = (const unsigned char *)p->mmo_str + (unsigned long long)p->mmo_index[i].uid;
+		p->mmo_index[i].ustr = (const unsigned char *)p->mmo_str + (unsigned long long)p->mmo_index[i].ustr;
+		p->mmo_index[i].wid = (const unsigned char *)p->mmo_str + (unsigned long long)p->mmo_index[i].wid;
+		p->mmo_index[i].wstr = (const unsigned char *)p->mmo_str + (unsigned long long)p->mmo_index[i].wstr;
 	}
 
 	p->status = mmo::MMO_READY;

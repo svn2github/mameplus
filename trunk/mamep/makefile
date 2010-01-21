@@ -56,14 +56,15 @@ endif
 
 ifneq ($(NO_DLL),)
   ifneq ($(WINUI),)
-    SUFFIX = uinodll
+    EXTRA_SUFFIX = plusui
   else
-    SUFFIX = nodll
+    EXTRA_SUFFIX = plus
   endif
-# no dll version
+  # always define DONT_USE_DLL=1 for no dll version
   DONT_USE_DLL=1
 else
-# always define WINUI = 1 for mamelib.dll
+  EXTRA_SUFFIX=p
+  # always define WINUI=1 for mameplib.dll version
   WINUI=1
 endif
 
