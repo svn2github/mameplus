@@ -13,7 +13,7 @@
 
 #ifndef MUI_UTIL_H
 #define MUI_UTIL_H
-#include "mamecore.h"
+#include "emucore.h"
 
 extern void __cdecl ErrorMsg(const char* fmt, ...);
 extern void __cdecl dprintf(const char* fmt, ...);

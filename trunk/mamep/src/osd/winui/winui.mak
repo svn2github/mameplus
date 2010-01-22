@@ -38,7 +38,7 @@ CFLAGS += -I $(UISRC)
 
 UI_RC = @windres --use-temp-file
 
-UI_RCDEFS = -DNDEBUG -D_WIN32_IE=0x0400
+UI_RCDEFS = -DNDEBUG -D_WIN32_IE=0x0501
 
 # include UISRC direcotry
 UI_RCFLAGS = -O coff --include-dir $(UISRC) --include-dir $(UIOBJ)

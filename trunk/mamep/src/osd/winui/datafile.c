@@ -28,7 +28,8 @@
 
 // MAME/MAMEUI headers
 #include "osdcomm.h"
-#include "driver.h"
+#include "emu.h"
+#include "emuopts.h"
 #include "datafile.h"
 #include "mui_opts.h" // For MameUIGlobal()
 
@@ -138,13 +139,13 @@ void winui_datafile_exit(void)
 
 	if (sorted_drivers == NULL)
 	{
-		free(sorted_drivers);
+		global_free(sorted_drivers);
 		sorted_drivers = NULL;
 	}
 
 	if (sorted_srcdrivers)
 	{
-		free(sorted_srcdrivers);
+		global_free(sorted_srcdrivers);
 		sorted_srcdrivers = NULL;
 	}
 }
@@ -191,7 +192,7 @@ static int GetGameNameIndex(const char *name)
 	}
 
 	/* uses our sorted array of driver names to get the index in log time */
-	driver_index_info = bsearch(&key, sorted_drivers,num_games, sizeof(driver_data_type),
+	driver_index_info = (driver_data_type *)bsearch(&key, sorted_drivers,num_games, sizeof(driver_data_type),
 	                            DriverDataCompareFunc);
 
 	if (driver_index_info == NULL)
@@ -217,7 +218,7 @@ static int GetSrcDriverIndex(const char *srcdriver)
 {
 	srcdriver_data_type *srcdriver_index_info;
 	srcdriver_data_type key;
-	unsigned char *s = mame_strdup(srcdriver);
+	unsigned char *s = (unsigned char *)mame_strdup(srcdriver);
 	int i;
 
 	if (s == NULL)
@@ -240,10 +241,10 @@ static int GetSrcDriverIndex(const char *srcdriver)
 		qsort(sorted_srcdrivers,num_games,sizeof(srcdriver_data_type),SrcDriverDataCompareFunc);
 	}
 
-	key.srcdriver = s;
-	srcdriver_index_info = bsearch(&key, sorted_srcdrivers, num_games, sizeof(srcdriver_data_type),
+	key.srcdriver = (const char *)s;
+	srcdriver_index_info = (srcdriver_data_type *)bsearch(&key, sorted_srcdrivers, num_games, sizeof(srcdriver_data_type),
 	                               SrcDriverDataCompareFunc);
-	free(s);
+	global_free(s);
 
 	if (srcdriver_index_info == NULL)
 		return -1;
@@ -510,7 +511,7 @@ static int index_datafile (struct tDatafileIndex **_index)
 	if (ParseSeek (0L, SEEK_SET)) return 0;
 
 	/* allocate index */
-        idx = *_index = malloc ((num_games + 1) * sizeof (struct tDatafileIndex));
+        idx = *_index = (tDatafileIndex *)malloc ((num_games + 1) * sizeof (struct tDatafileIndex));
 	if (NULL == idx) return 0;
 
 	/* loop through datafile */
@@ -579,21 +580,21 @@ static void flush_index(void)
 
 		if (hist_idx[i])
 		{
-			free(hist_idx[i]);
+			global_free(hist_idx[i]);
 			hist_idx[i] = 0;
 		}
 
 #ifdef STORY_DATAFILE
 		if (story_idx[i])
 		{
-			free(story_idx[i]);
+			global_free(story_idx[i]);
 			story_idx[i] = 0;
 		}
 #endif /* STORY_DATAFILE */
 
 		if (mame_idx[i])
 		{
-			free(mame_idx[i]);
+			global_free(mame_idx[i]);
 			mame_idx[i] = 0;
 		}
 	}
@@ -609,7 +610,7 @@ static int index_datafile_drivinfo (struct tDatafileIndex **_index)
 	if (ParseSeek (0L, SEEK_SET)) return 0;
 
 	/* allocate index */
-	idx = *_index = malloc ((num_games + 1) * sizeof (struct tDatafileIndex));
+	idx = *_index = (tDatafileIndex *)malloc ((num_games + 1) * sizeof (struct tDatafileIndex));
 	if (NULL == idx) return 0;
 
 	/* loop through datafile */
@@ -633,7 +634,7 @@ static int index_datafile_drivinfo (struct tDatafileIndex **_index)
 				while (count < num_games && !done && TOKEN_SYMBOL == token)
 				{
 					int src_index;
-					src_index = GetSrcDriverIndex(s);
+					src_index = GetSrcDriverIndex((const char*)s);
 					if (src_index >= 0)
 					{
 						idx->driver = drivers[src_index];
@@ -933,7 +934,7 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 				/* create index */
 				if (idx[i])
 				{
-					free(idx[i]);
+					global_free(idx[i]);
 					idx[i] = 0;
 				}
 

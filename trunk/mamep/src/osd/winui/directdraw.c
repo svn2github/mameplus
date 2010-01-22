@@ -21,9 +21,6 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#undef _UNICODE
-#undef UNICODE
-
 #include <windows.h>
 
 // standard C headers
@@ -158,7 +155,7 @@ BOOL DirectDraw_Initialize(void)
 	if (g_hDLL == NULL)
 		return FALSE;
 
-	ddc = (ddc_proc)GetProcAddress(g_hDLL, "DirectDrawCreate");
+	ddc = (ddc_proc)GetProcAddress((HINSTANCE)g_hDLL, "DirectDrawCreate");
 	if (ddc == NULL)
 		return FALSE;
 
@@ -172,11 +169,11 @@ BOOL DirectDraw_Initialize(void)
 		return FALSE;
 	}
 
-	hr = IDirectDraw_QueryInterface(pDirectDraw1, &IID_IDirectDraw4, (void**)&g_pDirectDraw4);
+	hr = IDirectDraw_QueryInterface(pDirectDraw1, IID_IDirectDraw4, (void**)&g_pDirectDraw4);
 	if (FAILED(hr))
 	{
 		g_pDirectDraw4 = NULL;
-		hr = IDirectDraw_QueryInterface(pDirectDraw1, &IID_IDirectDraw2, (void**)&g_pDirectDraw2);
+		hr = IDirectDraw_QueryInterface(pDirectDraw1, IID_IDirectDraw2, (void**)&g_pDirectDraw2);
 		if (FAILED(hr))
 		{
 			ErrorMsg("Query Interface for DirectDraw 2 failed: %s", DirectXDecodeError(hr));
@@ -205,7 +202,7 @@ BOOL DirectDraw_Initialize(void)
 	   function to retrieve (see the following text).
 	   For this example, we use the ANSI version.
 	 */
-	pDDEnumEx = (LPDIRECTDRAWENUMERATEEX) GetProcAddress(g_hDLL, SDirectDrawEnumerateEx);
+	pDDEnumEx = (LPDIRECTDRAWENUMERATEEX) GetProcAddress((HINSTANCE)g_hDLL, SDirectDrawEnumerateEx);
 
 	/*
 	   If the function is there, call it to enumerate all display devices
@@ -220,7 +217,7 @@ BOOL DirectDraw_Initialize(void)
 	{
 		LPDIRECTDRAWENUMERATE lpDDEnum;
 
-		lpDDEnum = (LPDIRECTDRAWENUMERATE) GetProcAddress(g_hDLL, SDirectDrawEnumerate);
+		lpDDEnum = (LPDIRECTDRAWENUMERATE) GetProcAddress((HINSTANCE)g_hDLL, SDirectDrawEnumerate);
 		/*
 		 * We must be running on an old version of ddraw. Therefore, 
 		 * by definiton, multimon isn't supported. Fall back on
@@ -254,16 +251,16 @@ void DirectDraw_Close(void)
 	
 	for (i = 0; i < g_nNumDisplays; i++)
 	{
-		free(g_Displays[i].name);
+		global_free(g_Displays[i].name);
 		g_Displays[i].name = NULL;
 
 		if (g_Displays[i].lpguid != NULL)
 		{
-			free(g_Displays[i].lpguid);
+			global_free(g_Displays[i].lpguid);
 			g_Displays[i].lpguid = NULL;
 		}
 
-		free(g_Displays[i].driver);
+		global_free(g_Displays[i].driver);
 		g_Displays[i].driver = NULL;
 	}
 	g_nNumDisplays = 0;
@@ -285,7 +282,7 @@ void DirectDraw_Close(void)
 
 	if (g_hDLL)
 	{
-		FreeLibrary(g_hDLL);
+		FreeLibrary((HINSTANCE)g_hDLL);
 		g_hDLL = NULL;
 	}
 }
@@ -341,14 +338,14 @@ static BOOL WINAPI DDEnumInfo(GUID FAR *lpGUID,
 	if (lpGUID == NULL)
 		return DDENUMRET_OK;
 
-	g_Displays[g_nNumDisplays].name = malloc((_tcslen(lpDriverDescription) + 1) * sizeof(TCHAR));
+	g_Displays[g_nNumDisplays].name = (TCHAR*)malloc((_tcslen(lpDriverDescription) + 1) * sizeof(TCHAR));
 	_tcscpy(g_Displays[g_nNumDisplays].name, lpDriverDescription);
 
 	g_Displays[g_nNumDisplays].lpguid = (LPGUID)malloc(sizeof(GUID));
 	memcpy(g_Displays[g_nNumDisplays].lpguid, lpGUID, sizeof(GUID));
 
 	// mamep: use more infomational lpDriverName
-	g_Displays[g_nNumDisplays].driver = malloc((_tcslen(lpDriverName) + 1) * sizeof(TCHAR));
+	g_Displays[g_nNumDisplays].driver = (TCHAR*)malloc((_tcslen(lpDriverName) + 1) * sizeof(TCHAR));
 	_tcscpy(g_Displays[g_nNumDisplays].driver, lpDriverName);
 
 	g_nNumDisplays++;

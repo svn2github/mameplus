@@ -20,8 +20,6 @@
 ***************************************************************************/
 
 #define WIN32_LEAN_AND_MEAN
-#define _UNICODE
-#define UNICODE
 
 #ifdef _MSC_VER
 #ifndef NONAMELESSUNION
@@ -44,7 +42,6 @@
 // MAMEUI headers
 #include "bitmask.h"
 #include "treeview.h"
-#include "mui_util.h"
 #include "resource.h"
 #include "mui_opts.h"
 #include "help.h"
@@ -112,7 +109,7 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 	case WM_HELP:
 		/* User clicked the ? from the upper right on a control */
-		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, MAMEUICONTEXTHELP, HH_TP_HELP_WM_HELP, GetHelpIDs());
+		HelpFunction((HWND)((LPHELPINFO)lParam)->hItemHandle, MAMEUICONTEXTHELP, HH_TP_HELP_WM_HELP, GetHelpIDs());
 		break;
 
 	case WM_CONTEXTMENU:
@@ -303,7 +300,7 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 
 	case WM_HELP:
 		/* User clicked the ? from the upper right on a control */
-		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, MAMEUICONTEXTHELP, HH_TP_HELP_WM_HELP, GetHelpIDs());
+		HelpFunction((HWND)((LPHELPINFO)lParam)->hItemHandle, MAMEUICONTEXTHELP, HH_TP_HELP_WM_HELP, GetHelpIDs());
 		break;
 
 	case WM_CONTEXTMENU:
@@ -604,7 +601,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 	}
 	case WM_HELP:
 		// User clicked the ? from the upper right on a control
-		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, MAMEUICONTEXTHELP,
+		HelpFunction((HWND)((LPHELPINFO)lParam)->hItemHandle, MAMEUICONTEXTHELP,
 					 HH_TP_HELP_WM_HELP, GetHelpIDs());
 		break;
 
@@ -697,6 +694,7 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 {
     static LPTREEFOLDER default_selection = NULL;
 	static int driver_index;
+	HRESULT res;
 
 	switch (Msg)
 	{
@@ -777,14 +775,14 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 #endif							
 							hti_child = TreeView_InsertItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),&tvis);
 							if (folders[jj] == default_selection)
-							    TreeView_SelectItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),hti_child);
+							    res = TreeView_SelectItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),hti_child);
 						}
 					}
 
 					/*TreeView_Expand(GetDlgItem(hDlg,IDC_CUSTOM_TREE),hti,TVE_EXPAND);*/
 					if (first_entry || folders[i] == default_selection)
 					{
-					    TreeView_SelectItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),hti);
+					    res = TreeView_SelectItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),hti);
 						first_entry = FALSE;
 					}
 
@@ -930,13 +928,13 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 
 			stemp = utf8_from_wstring(buf);
 			filerr = mame_fopen_options(MameUISettings(), NULL, stemp, OPEN_FLAG_READ, &mfile);
-			free(stemp);
+			global_free(stemp);
 			if (filerr != FILERR_NONE)
 			{
 				swprintf(buf, TEXT("%s\\pcbinfo\\%s.txt"), szDir, szGame);
 				stemp = utf8_from_wstring(buf);
 				filerr = mame_fopen_options(MameUISettings(), NULL, stemp, OPEN_FLAG_READ, &mfile);
-				free(stemp);
+				global_free(stemp);
 			}
 
 			if (filerr == FILERR_NONE)
@@ -991,7 +989,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 
 //					ShowWindow(GetDlgItem(hDlg, IDC_PCBINFO), SW_SHOW);
 
-					free(PcbData);
+					global_free(PcbData);
 				}
 
 				mame_fclose(mfile);

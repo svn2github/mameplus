@@ -20,12 +20,11 @@
 ***************************************************************************/
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define UNICODE
 #include <windows.h>
 #include <stdio.h>
 
 // MAME/MAMEUI headers
-#include "driver.h"
+#include "emu.h"
 #include "mui_util.h"
 #include "datafile.h"
 #include "history.h"

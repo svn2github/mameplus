@@ -9,9 +9,12 @@
 // to wrap it
 #define MAMELIB
 #undef main
+#undef wmain
 #define main mame_main
+#define wmain mame_main
 #include "windows/main.c"
 #undef main
+#undef wmain
 
 //============================================================
 //  mame_cli_main - main entry proc for CLI MAME
@@ -19,7 +22,7 @@
 
 int __declspec(dllexport) mame_cli_main(int argc, char **argv)
 {
-	return mame_main(argc, argv);
+	return mame_main(argc, (TCHAR **)argv);
 }
 
 

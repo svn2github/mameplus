@@ -20,12 +20,11 @@
  ***************************************************************************/
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define UNICODE
 #include <windows.h>
 
 // MAME/MAMEUI headers
 #include "directinput.h"
-#include "driver.h"
+#include "emu.h"
 #include "mui_util.h" // For ErrorMsg
 
 /***************************************************************************
@@ -86,9 +85,9 @@ BOOL DirectInputInitialize()
 		return FALSE;
 
 #ifdef UNICODE
-	dic = (dic_proc)GetProcAddress(hDLL, "DirectInputCreateW");
+	dic = (dic_proc)GetProcAddress((HINSTANCE)hDLL, "DirectInputCreateW");
 #else
-	dic = (dic_proc)GetProcAddress(hDLL, "DirectInputCreateA");
+	dic = (dic_proc)GetProcAddress((HINSTANCE)hDLL, "DirectInputCreateA");
 #endif
 	if (dic == NULL)
 		return FALSE;

@@ -20,8 +20,6 @@
 // standard windows headers
 #define COBJMACROS
 #define WIN32_LEAN_AND_MEAN
-#define _UNICODE
-#define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <shlobj.h>
@@ -167,7 +165,7 @@ static void DirInfo_SetDir(tDirInfo *pInfo, int nType, int nItem, LPCTSTR pText)
 			return;
 		pOldText = pInfo[nType].m_Directory;
 		if (pOldText)
-			free(pOldText);
+			global_free(pOldText);
 		pInfo[nType].m_Directory = s;
 	}
 }
@@ -219,10 +217,11 @@ static void UpdateDirectoryList(HWND hDlg)
 	LV_ITEM Item;
 	HWND	hList  = GetDlgItem(hDlg, IDC_DIR_LIST);
 	HWND	hCombo = GetDlgItem(hDlg, IDC_DIR_COMBO);
+	HRESULT res;
 
 	/* Remove previous */
 
-	ListView_DeleteAllItems(hList);
+	res = ListView_DeleteAllItems(hList);
 
 	/* Update list */
 
@@ -233,17 +232,17 @@ static void UpdateDirectoryList(HWND hDlg)
 	if (IsMultiDir(nType))
 	{
 		Item.pszText = (TCHAR*) TEXT(DIRLIST_NEWENTRYTEXT);
-		ListView_InsertItem(hList, &Item);
+		res = ListView_InsertItem(hList, &Item);
 		for (i = DirInfo_NumDir(g_pDirInfo, nType) - 1; 0 <= i; i--)
 		{
 			Item.pszText = DirInfo_Path(g_pDirInfo, nType, i);
-			ListView_InsertItem(hList, &Item);
+			res = ListView_InsertItem(hList, &Item);
 		}
 	}
 	else
 	{
 		Item.pszText = DirInfo_Dir(g_pDirInfo, nType);
-		ListView_InsertItem(hList, &Item);
+		res = ListView_InsertItem(hList, &Item);
 	}
 
 	/* select first one */
@@ -282,6 +281,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 	TCHAR       *token;
 	TCHAR       buf[MAX_PATH * MAX_DIRS];
 	//TCHAR*      t_s = NULL;
+	HRESULT 	res;
 
 	/* count how many dirinfos there are */
 	nDirInfoCount = 0;
@@ -299,7 +299,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 		//if( !t_s )
 		//	return FALSE;
 		(void)ComboBox_InsertString(GetDlgItem(hDlg, IDC_DIR_COMBO), 0, _UIW(g_directoryInfo[i].lpName));
-		//free(t_s);
+		//global_free(t_s);
 		//t_s = NULL;
 	}
 
@@ -311,7 +311,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 	LVCol.mask	  = LVCF_WIDTH;
 	LVCol.cx	  = rectClient.right - rectClient.left - GetSystemMetrics(SM_CXHSCROLL);
 	
-	ListView_InsertColumn(GetDlgItem(hDlg, IDC_DIR_LIST), 0, &LVCol);
+	res = ListView_InsertColumn(GetDlgItem(hDlg, IDC_DIR_LIST), 0, &LVCol);
 
 	/* Keep a temporary copy of the directory strings in g_pDirInfo. */
 	for (i = 0; i < nDirInfoCount; i++)
@@ -325,7 +325,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 			/* Copy the string to our own buffer so that we can mutilate it */
 			_tcscpy(buf, s);
 
-			g_pDirInfo[i].m_Path = malloc(sizeof(tPath));
+			g_pDirInfo[i].m_Path = (tPath*)malloc(sizeof(tPath));
 			if (!g_pDirInfo[i].m_Path)
 				goto error;
 
@@ -343,7 +343,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 		{
 			DirInfo_SetDir(g_pDirInfo, i, -1, s);
 		}
-		//free(t_s);
+		//global_free(t_s);
 		//t_s = NULL;
 	}
 
@@ -352,7 +352,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 
 error:
 	//if( t_s )
-	//	free(t_s);
+	//	global_free(t_s);
 	Directories_OnDestroy(hDlg);
 	EndDialog(hDlg, -1);
 	return FALSE;
@@ -372,11 +372,11 @@ static void Directories_OnDestroy(HWND hDlg)
 		for (i = 0; i < nDirInfoCount; i++)
 		{
 			if (g_pDirInfo[i].m_Path)
-				free(g_pDirInfo[i].m_Path);
+				global_free(g_pDirInfo[i].m_Path);
 			if (g_pDirInfo[i].m_Directory)
-				free(g_pDirInfo[i].m_Directory);			
+				global_free(g_pDirInfo[i].m_Directory);			
 		}
-		free(g_pDirInfo);
+		global_free(g_pDirInfo);
 		g_pDirInfo = NULL;
 	}
 }
@@ -407,7 +407,7 @@ static int RetrieveDirList(int nDir, int nFlagResult, void (*SetTheseDirs)(const
 		}
 		//utf8_buf = utf8_from_tstring(buf);
 		SetTheseDirs(buf);
-		//free(utf8_buf);
+		//global_free(utf8_buf);
 
 		nResult |= nFlagResult;
     }
@@ -432,7 +432,7 @@ static void Directories_OnOk(HWND hDlg)
 			s = FixSlash(DirInfo_Dir(g_pDirInfo, i));
 			//utf8_s = utf8_from_tstring(s);
 			g_directoryInfo[i].pfnSetTheseDirs(s);
-			//free(utf8_s);
+			//global_free(utf8_s);
 		}
 	}
 	EndDialog(hDlg, nResult);
@@ -765,14 +765,14 @@ BOOL BrowseForDirectory(HWND hwnd, LPCTSTR pStartDir, TCHAR* pResult)
 			_sntprintf(pResult, MAX_PATH, TEXT("%s"), buf);
 			bResult = TRUE;
 		}
-		IMalloc_Free(piMalloc, pItemIDList);
+//		IMalloc_Free(piMalloc, pItemIDList);
 	}
 	else
 	{
 		bResult = FALSE;
 	}
 
-	IMalloc_Release(piMalloc);
+//	IMalloc_Release(piMalloc);
 	return bResult;
 }
 

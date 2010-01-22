@@ -13,8 +13,6 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define _UNICODE
-#define UNICODE
 #include <windows.h>
 
 // standard C headers
@@ -23,7 +21,7 @@
 
 // MAME/MAMEUI headers
 #include "dirwatch.h"
-#include "driver.h"
+#include "emu.h"
 #include "mui_util.h"
 #include "strconv.h"
 
@@ -98,7 +96,7 @@ static void DirWatcher_FreeEntry(struct DirWatcherEntry *pEntry)
 {
 	if (pEntry->hDir)
 		CloseHandle(pEntry->hDir);
-	free(pEntry);
+	global_free(pEntry);
 }
 
 
@@ -109,7 +107,7 @@ static BOOL DirWatcher_WatchDirectory(PDIRWATCHER pWatcher, int nIndex, int nSub
 	struct DirWatcherEntry *pEntry;
 	HANDLE hDir;
 
-	pEntry = malloc(sizeof(*pEntry) + strlen(pszPath));
+	pEntry = (DirWatcherEntry *)malloc(sizeof(*pEntry) + strlen(pszPath));
 	if (!pEntry)
 		goto error;
 	memset(pEntry, 0, sizeof(*pEntry));
@@ -193,7 +191,7 @@ static void DirWatcher_Signal(PDIRWATCHER pWatcher, struct DirWatcherEntry *pEnt
 			pWatcher->nMessage,
 			(pEntry->nIndex << 16) | (pEntry->nSubIndex << 0),
 			(LPARAM)(LPCTSTR) win_tstring_strdup(t_filename));
-		free(t_filename);
+		global_free(t_filename);
 	}
 
 	DirWatcher_SetupWatch(pWatcher, pEntry);
@@ -285,7 +283,7 @@ PDIRWATCHER DirWatcher_Init(HWND hwndTarget, UINT nMessage)
 	if (GetVersion() >= 0x80000000)
 		goto error;
 
-	pWatcher = malloc(sizeof(struct DirWatcher));
+	pWatcher = (DirWatcher *)malloc(sizeof(struct DirWatcher));
 	if (!pWatcher)
 		goto error;
 	memset(pWatcher, 0, sizeof(*pWatcher));
@@ -328,7 +326,7 @@ BOOL DirWatcher_Watch(PDIRWATCHER pWatcher, WORD nIndex, LPCWSTR pszPathList, BO
 	EnterCriticalSection(&pWatcher->crit);
 
 	pWatcher->nIndex = nIndex;
-	pWatcher->pszPathList = (void *)pszPathList;
+	pWatcher->pszPathList = (const char *)pszPathList;
 	pWatcher->bWatchSubtree = bWatchSubtrees;
 	SetEvent(pWatcher->hRequestEvent);
 
@@ -370,7 +368,7 @@ void DirWatcher_Free(PDIRWATCHER pWatcher)
 		CloseHandle(pWatcher->hRequestEvent);
 	if (pWatcher->hResponseEvent)
 		CloseHandle(pWatcher->hResponseEvent);
-	free(pWatcher);
+	global_free(pWatcher);
 }
 
 

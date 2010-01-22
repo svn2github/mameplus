@@ -13,7 +13,6 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <shellapi.h>
@@ -25,7 +24,7 @@
 #include "winui.h"
 #include "translate.h"
 #include "tabview.h"
-#include "driver.h"
+#include "emu.h"
 #include "mui_util.h"
 #include "strconv.h"
 
@@ -78,7 +77,7 @@ static LRESULT CALLBACK TabViewWndProc(HWND hWnd, UINT message, WPARAM wParam, L
 	switch(message)
 	{
 		case WM_DESTROY:
-			free(pTabViewInfo);
+			global_free(pTabViewInfo);
 			SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR) pfnParentWndProc);
 			SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR) NULL);
 			break;
@@ -215,7 +214,8 @@ static int TabView_GetCurrentTabIndex(HWND hwndTabView)
 
 void TabView_UpdateSelection(HWND hwndTabView)
 {
-	TabCtrl_SetCurSel(hwndTabView, TabView_GetCurrentTabIndex(hwndTabView));
+	HRESULT res;
+	res = TabCtrl_SetCurSel(hwndTabView, TabView_GetCurrentTabIndex(hwndTabView));
 }
 
 
@@ -277,10 +277,11 @@ void TabView_Reset(HWND hwndTabView)
 	TC_ITEM tci;
 	int i;
 	//TCHAR* t_text;
+	HRESULT res;
 
 	pTabViewInfo = GetTabViewInfo(hwndTabView);
 
-	TabCtrl_DeleteAllItems(hwndTabView);
+	res = TabCtrl_DeleteAllItems(hwndTabView);
 
 	memset(&tci, 0, sizeof(tci));
 	tci.mask = TCIF_TEXT;
@@ -294,8 +295,8 @@ void TabView_Reset(HWND hwndTabView)
 			//if( !t_text )
 			//	return;
 			tci.pszText = _UIW(pTabViewInfo->pCallbacks->pfnGetTabLongName(i));
-			TabCtrl_InsertItem(hwndTabView, i, &tci);
-			//free(t_text);
+			res = TabCtrl_InsertItem(hwndTabView, i, &tci);
+			//global_free(t_text);
 		}
 	}
 	TabView_UpdateSelection(hwndTabView);

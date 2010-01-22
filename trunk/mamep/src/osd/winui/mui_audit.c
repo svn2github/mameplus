@@ -21,9 +21,6 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define _UNICODE
-#define UNICODE
-
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>
@@ -42,6 +39,7 @@
 #include "mui_opts.h"
 #include "mui_util.h"
 #include "properties.h"
+#include "emuopts.h"
 #include "translate.h"
 
 
@@ -237,7 +235,7 @@ int MameUIVerifyRomSet(int game, BOOL isComplete)
 	audit_records = audit_images(MameUIGlobal(), drivers[game], AUDIT_VALIDATE_FAST, &audit);
 	res = ProcessAuditResults(game, audit, audit_records, isComplete);
 	if (audit_records > 0)
-		free(audit);
+		global_free(audit);
 
 	SetRomAuditResults(game, res);
 	return res;
@@ -254,7 +252,7 @@ int MameUIVerifySampleSet(int game, BOOL isComplete)
 	audit_records = audit_samples(MameUIGlobal(), drivers[game], &audit);
 	res = ProcessAuditResults(game, audit, audit_records, isComplete);
 	if (audit_records > 0)
-		free(audit);
+		global_free(audit);
 
 	SetSampleAuditResults(game, res);
 	return res;
@@ -272,7 +270,7 @@ static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
 			{
 				WCHAR *descw = driversw[rom_index]->description; swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")), 
 					driversw[rom_index]->name, UseLangList() ? _LSTW(descw) : descw);
-				SetWindowText(hDlg, buffer);
+				SetWindowText((HWND)hDlg, buffer);
 				ProcessNextRom();
 			}
 			else
@@ -281,13 +279,13 @@ static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
 				{
 					WCHAR *descw = driversw[sample_index]->description; swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")),
 						driversw[sample_index]->name, UseLangList() ? _LSTW(descw) : descw);
-					SetWindowText(hDlg, buffer);
+					SetWindowText((HWND)hDlg, buffer);
 					ProcessNextSample();
 				}
 				else
 				{
-					SetWindowText(hDlg, _UIW(TEXT("File Audit")));
-					EnableWindow(GetDlgItem(hDlg, IDPAUSE), FALSE);
+					SetWindowText((HWND)hDlg, _UIW(TEXT("File Audit")));
+					EnableWindow(GetDlgItem((HWND)hDlg, IDPAUSE), FALSE);
 					ExitThread(1);
 				}
 			}
@@ -520,7 +518,7 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	Edit_SetSel(hEdit, textLength, textLength);
 	SendMessage( hEdit, EM_REPLACESEL, FALSE, (LPARAM)buffer);
 
-	//free(t_s);
+	//global_free(t_s);
 }
 
 static const WCHAR *StatusString(int iStatus)

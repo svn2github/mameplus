@@ -20,7 +20,6 @@
 ***************************************************************************/
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <shellapi.h>
@@ -34,7 +33,7 @@
 // MAME/MAMEUI headers
 #include "bitmask.h"
 #include "treeview.h"
-#include "driver.h"
+#include "emu.h"
 #include "mui_util.h"
 #include "resource.h"
 #include "directories.h"
@@ -149,14 +148,14 @@ DIRECTORYINFO g_directoryInfo[] =
 	{ NULL }
 };
 
-const SPLITTERINFO g_splitterInfo[] =
+extern const SPLITTERINFO g_splitterInfo[] =
 {
 	{ 0.25,	IDC_SPLITTER,	IDC_TREE,	IDC_LIST,		AdjustSplitter1Rect },
 	{ 0.5,	IDC_SPLITTER2,	IDC_LIST,	IDC_SSFRAME,	AdjustSplitter2Rect },
 	{ -1 }
 };
 
-const MAMEHELPINFO g_helpInfo[] =
+extern const MAMEHELPINFO g_helpInfo[] =
 {
 	{ ID_HELP_CONTENTS,		TRUE,	MAMEUIHELP "::/html/mameui_overview.htm" },
 	{ ID_HELP_WHATS_NEWUI,	TRUE,	MAMEUIHELP "::/html/mameui_changes.txt" },
@@ -166,7 +165,7 @@ const MAMEHELPINFO g_helpInfo[] =
 	{ -1 }
 };
 
-const PROPERTYSHEETINFO g_propSheets[] =
+extern const PROPERTYSHEETINFO g_propSheets[] =
 {
 	{ FALSE,	NULL,					IDD_PROP_GAME,			GamePropertiesDialogProc },
 	{ FALSE,	NULL,					IDD_PROP_AUDIT,			GameAuditDialogProc },
@@ -182,7 +181,7 @@ const PROPERTYSHEETINFO g_propSheets[] =
 	{ FALSE }
 };
 
-const ICONDATA g_iconData[] =
+extern const ICONDATA g_iconData[] =
 {
 	{ IDI_WIN_NOROMS,			"noroms" },
 	{ IDI_WIN_ROMS,				"roms" },
@@ -199,10 +198,10 @@ EXTFOLDER_TEMPLATE extFavorite =
 	"cust2"
 };
 
-const TCHAR g_szPlayGameString[] = TEXT("&Play %s");
-const char g_szGameCountString[] = "%d games";
-const char g_szHistoryFileName[] = "history.dat";
-const char g_szMameInfoFileName[] = "mameinfo.dat";
+extern const TCHAR g_szPlayGameString[] = TEXT("&Play %s");
+extern const char g_szGameCountString[] = "%d games";
+extern const char g_szHistoryFileName[] = "history.dat";
+extern const char g_szMameInfoFileName[] = "mameinfo.dat";
 
 static BOOL FilterAvailable(int driver_index)
 {

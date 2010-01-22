@@ -18,7 +18,7 @@
 #include <commctrl.h>
 #include <commdlg.h>
 #include "emu.h"
-#include "driver.h"
+#include "pool.h"
 #include "screenshot.h"
 
 #if !defined(MAMEUINAME)
@@ -145,7 +145,7 @@ void SetStatusBarText(int part_index, const WCHAR *message);
 void SetStatusBarTextF(int part_index, const WCHAR *fmt, ...);
 
 int MameUIMain(HINSTANCE	hInstance,
-                   LPSTR    lpCmdLine,
+                   LPWSTR    lpCmdLine,
                    int      nCmdShow);
 
 BOOL MouseHasBeenMoved(void);

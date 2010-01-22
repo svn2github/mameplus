@@ -19,8 +19,6 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define _UNICODE
-#define UNICODE
 #include <windows.h>
 #include <shellapi.h>
 #include <shlwapi.h>
@@ -32,8 +30,7 @@
 
 // MAME/MAMEUI headers
 #include "unzip.h"
-#include "devintrf.h"
-#include "sndintrf.h"
+#include "emu.h"
 #include "sound/samples.h"
 #include "winutf8.h"
 #include "strconv.h"
@@ -231,7 +228,7 @@ void DisplayTextFile(HWND hWnd, const char *cName)
 	hErr = ShellExecute(hWnd, NULL, tName, NULL, NULL, SW_SHOWNORMAL);
 	if ((FPTR)hErr > 32) 
 	{
-		free(tName);
+		global_free(tName);
 		return;
 	}
 
@@ -267,7 +264,7 @@ void DisplayTextFile(HWND hWnd, const char *cName)
  
 	MessageBox(NULL, msg, tName, MB_OK);
 	
-	free(tName);
+	global_free(tName);
 }
 
 LPWSTR MyStrStrI(LPCWSTR pFirst, LPCWSTR pSrch)
@@ -331,7 +328,7 @@ BOOL isDriverVector(const machine_config *config)
 	const device_config *screen = video_screen_first(config);
 
 	if (screen != NULL) {
-		const screen_config *scrconfig = screen->inline_config;
+		const screen_config *scrconfig = (const screen_config *)screen->inline_config;
 
 		/* parse "vector.ini" for vector games */
 		if (SCREEN_TYPE_VECTOR == scrconfig->type)
@@ -378,7 +375,7 @@ static void UpdateController(void)
 	int p = 0;
 	int i;
 
-	cache = malloc(sizeof (*cache) * nGames);
+	cache = (control_cache_t *)malloc(sizeof (*cache) * nGames);
 	if (cache == NULL)
 		return;
 
@@ -514,7 +511,7 @@ static void UpdateController(void)
 		memcpy(gameinfo->usesController, flags, sizeof gameinfo->usesController);
 	}
 
-	free(cache);
+	global_free(cache);
 }
 
 int numberOfSpeakers(const machine_config *config)
@@ -528,7 +525,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 	if (drivers_info == NULL)
 	{
 		int ndriver;
-		drivers_info = malloc(sizeof(struct DriversInfo) * GetNumGames());
+		drivers_info = (DriversInfo*)malloc(sizeof(struct DriversInfo) * GetNumGames());
 		for (ndriver = 0; ndriver < GetNumGames(); ndriver++)
 		{
 			const game_driver *gamedrv = drivers[ndriver];
@@ -586,7 +583,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			}
 			gameinfo->usesSamples = FALSE;
 			
-			if (HAS_SAMPLES || HAS_VLM5030)
 			{
 				const device_config *sound;
 				const char * const * samplenames = NULL;
@@ -595,10 +591,8 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				{
 
 					{
-#if (HAS_SAMPLES)
 						if( sound_get_type(sound) == SOUND_SAMPLES )
 							samplenames = ((const samples_interface *)sound->static_config)->samplenames;
-#endif
 					}
 
 					if (samplenames != 0 && samplenames[0] != 0)
@@ -810,7 +804,7 @@ void FlushFileCaches(void)
 void FreeIfAllocated(char **s)
 {
 	if (*s)
-		free(*s);
+		global_free(*s);
 	*s = NULL;
 }
 
@@ -844,7 +838,7 @@ BOOL SafeIsAppThemed(void)
 void FreeIfAllocatedW(WCHAR **s)
 {
 	if (*s)
-		free(*s);
+		global_free(*s);
 	*s = NULL;
 }
 
@@ -934,7 +928,7 @@ static LPWSTR GetPatchDescByLangcode(FILE *fp, int langcode)
 					if (desc)
 					{
 						result = _UTF8Unicode(desc);
-						free(desc);
+						global_free(desc);
 						return result;
 					}
 					else
@@ -957,7 +951,7 @@ static LPWSTR GetPatchDescByLangcode(FILE *fp, int langcode)
 					int len = strlen(desc);
 
 					len += strlen(s) + 2;
-					p = malloc(len + 1);
+					p = (char *)malloc(len + 1);
 					sprintf(p, "%s\r\n%s", desc, s);
 					FreeIfAllocated(&desc);
 					desc = p;
@@ -973,7 +967,7 @@ static LPWSTR GetPatchDescByLangcode(FILE *fp, int langcode)
 	if (desc)
 	{
 		result = _UTF8Unicode(desc);
-		free(desc);
+		global_free(desc);
 		return result;
 	}
 	else
@@ -1019,7 +1013,7 @@ HICON win_extract_icon_utf8(HINSTANCE inst, const char* exefilename, UINT iconin
 	
 	icon = ExtractIcon(inst, t_exefilename, iconindex);
 	
-	free(t_exefilename);
+	global_free(t_exefilename);
 	
 	return icon;
 }
@@ -1035,7 +1029,7 @@ TCHAR* win_tstring_strdup(LPCTSTR str)
 	TCHAR *cpy = NULL;
 	if (str != NULL)
 	{
-		cpy = malloc((_tcslen(str) + 1) * sizeof(TCHAR));
+		cpy = (TCHAR*)malloc((_tcslen(str) + 1) * sizeof(TCHAR));
 		if (cpy != NULL)
 			_tcscpy(cpy, str);
 	}
@@ -1058,7 +1052,7 @@ HANDLE win_create_file_utf8(const char* filename, DWORD desiredmode, DWORD share
 	result = CreateFile(t_filename, desiredmode, sharemode, securityattributes, creationdisposition,
 						flagsandattributes, templatehandle);
 
-	free(t_filename);
+	global_free(t_filename);
 						
 	return result;
 }
@@ -1074,7 +1068,7 @@ DWORD win_get_current_directory_utf8(DWORD bufferlength, char* buffer)
 	char* utf8_buffer = NULL;
 	
 	if( bufferlength > 0 ) {
-		t_buffer = malloc((bufferlength * sizeof(TCHAR)) + 1);
+		t_buffer = (TCHAR*)malloc((bufferlength * sizeof(TCHAR)) + 1);
 		if( !t_buffer )
 			return result;
 	}
@@ -1084,7 +1078,7 @@ DWORD win_get_current_directory_utf8(DWORD bufferlength, char* buffer)
 	if( bufferlength > 0 ) {
 		utf8_buffer = utf8_from_tstring(t_buffer);
 		if( !utf8_buffer ) {
-			free(t_buffer);
+			global_free(t_buffer);
 			return result;
 		}
 	}
@@ -1092,10 +1086,10 @@ DWORD win_get_current_directory_utf8(DWORD bufferlength, char* buffer)
 	strncpy(buffer, utf8_buffer, bufferlength);
 
 	if( utf8_buffer )
-		free(utf8_buffer);
+		global_free(utf8_buffer);
 	
 	if( t_buffer )
-		free(t_buffer);
+		global_free(t_buffer);
 	
 	return result;
 }
@@ -1113,7 +1107,7 @@ HANDLE win_find_first_file_utf8(const char* filename, LPWIN32_FIND_DATA findfile
 	
 	result = FindFirstFile(t_filename, findfiledata);
 	
-	free(t_filename);
+	global_free(t_filename);
 
 	return result;
 }

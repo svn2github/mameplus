@@ -19,8 +19,6 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define _UNICODE
-#define UNICODE
 #include <windows.h>
 
 // standard C headers
@@ -354,12 +352,12 @@ static BOOL DIJoystick_Available(void)
 	}
 
 	/* Are there any joysticks attached? */
-	if (IsEqualGUID(&guidDevice, &guidNULL))
+	if (IsEqualGUID(guidDevice, guidNULL))
 	{
 		return FALSE;
 	}
 
-	hr = IDirectInput_CreateDevice(di, &guidDevice, &didTemp, NULL);
+	hr = IDirectInput_CreateDevice(di, guidDevice, &didTemp, NULL);
 	if (FAILED(hr))
 	{
 		return FALSE;
@@ -367,7 +365,7 @@ static BOOL DIJoystick_Available(void)
 
 	/* Determine if DX5 is available by a QI for a DX5 interface. */
 	hr = IDirectInputDevice_QueryInterface(didTemp,
-										   &IID_IDirectInputDevice2,
+										   IID_IDirectInputDevice2,
 										   (void**)&didJoystick);
 	if (FAILED(hr))
 	{
@@ -450,7 +448,7 @@ static BOOL CALLBACK DIJoystick_EnumAxisObjectsProc(LPCDIDEVICEOBJECTINSTANCE lp
 	hr = IDirectInputDevice2_SetProperty(joystick->did, DIPROP_RANGE, &diprg.diph);
 	if (FAILED(hr)) /* if this fails, don't use this axis */
 	{
-		free(joystick->axes[joystick->num_axes].name);
+		global_free(joystick->axes[joystick->num_axes].name);
 		joystick->axes[joystick->num_axes].name = NULL;
 		return DIENUM_CONTINUE;
 	}
@@ -529,7 +527,7 @@ static void InitJoystick(joystick_type *joystick)
 	joystick->is_light_gun = (_tcscmp(joystick->name, TEXT("ACT LABS GS (ACT LABS GS)")) == 0);
 
 	/* get a did1 interface first... */
-	hr = IDirectInput_CreateDevice(di, &joystick->guidDevice, &didTemp, NULL);
+	hr = IDirectInput_CreateDevice(di, joystick->guidDevice, &didTemp, NULL);
 	if (FAILED(hr))
 	{
 		ErrorMsg("DirectInput CreateDevice() joystick failed: %s\n", DirectXDecodeError(hr));
@@ -538,7 +536,7 @@ static void InitJoystick(joystick_type *joystick)
 	
 	/* get a did2 interface to work with polling (most) joysticks */
 	hr = IDirectInputDevice_QueryInterface(didTemp,
-										   &IID_IDirectInputDevice2,
+										   IID_IDirectInputDevice2,
 										   (void**)&joystick->did);
 
 	/* dispose of the temp interface */
@@ -651,13 +649,13 @@ static void ExitJoystick(joystick_type *joystick)
 	for (i = 0; i < joystick->num_axes; i++)
 	{
 		if (joystick->axes[i].name)
-			free(joystick->axes[i].name);
+			global_free(joystick->axes[i].name);
 		joystick->axes[i].name = NULL;
 	}
 	
 	if (joystick->name != NULL)
 	{
-		free(joystick->name);
+		global_free(joystick->name);
 		joystick->name = NULL;
 	}
 }

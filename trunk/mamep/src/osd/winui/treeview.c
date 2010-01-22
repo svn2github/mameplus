@@ -21,8 +21,6 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define _UNICODE
-#define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <shellapi.h>
@@ -43,7 +41,7 @@
 #include <io.h>
 
 // MAME/MAMEUI headers
-#include "driver.h"
+#include "emu.h"
 #include "hash.h"
 #include "mui_util.h"
 #include "bitmask.h"
@@ -203,7 +201,7 @@ void FreeFolders(void)
 			treeFolders[i] = NULL;
 			numFolders--;
 		}
-		free(treeFolders);
+		global_free(treeFolders);
 		treeFolders = NULL;
 	}
 	numFolders = 0;
@@ -896,7 +894,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 
 
 
-static void CreateDeviceFolders(int parent_index, device_class class, UINT icon_id)
+static void CreateDeviceFolders(int parent_index, device_class dev_class, int icon_id)
 {
 	int i, j, device_folder_count = 0;
 	LPTREEFOLDER device_folders[512];
@@ -918,8 +916,8 @@ static void CreateDeviceFolders(int parent_index, device_class class, UINT icon_
 		}
 
 		// enumerate through all devices
-		for (device = device_list_class_first(&config->devicelist, class); device != NULL;
-			device = device_list_class_next(device, class))
+		for (device = device_list_class_first(&config->devicelist, dev_class); device != NULL;
+			device = device_list_class_next(device, dev_class))
 		{
 			// get the name
 			const TCHAR *dev_name = _Unicode(device_get_name(device));
@@ -1209,7 +1207,7 @@ void CreateResolutionFolders(int parent_index)
 		screen = video_screen_first(config);
 		if (screen != NULL)
 		{
-			scrconfig = screen->inline_config;
+			scrconfig = (screen_config *)screen->inline_config;
 
 			if (isDriverVector(config))
 			{
@@ -1279,7 +1277,7 @@ void CreateFPSFolders(int parent_index)
 		screen = video_screen_first(config);
 		if (screen != NULL)
 		{
-			scrconfig = screen->inline_config;
+			scrconfig = (screen_config *)screen->inline_config;
 
 			f = ATTOSECONDS_TO_HZ(scrconfig->refresh);
 
@@ -1521,6 +1519,7 @@ void ResetTreeViewFolders(void)
 	int i;
 	TVITEM tvi;
 	TVINSERTSTRUCT	tvs;
+	HRESULT res;
 
 	HTREEITEM shti; // for current child branches
 
@@ -1528,7 +1527,7 @@ void ResetTreeViewFolders(void)
 	HTREEITEM hti_parent = NULL;
 	int index_parent = -1;			
 
-	TreeView_DeleteAllItems(hTreeView);
+	res = TreeView_DeleteAllItems(hTreeView);
 
 	//dprintf("Adding folders to tree ui indices %i to %i",start_index,end_index);
 
@@ -1584,7 +1583,7 @@ void ResetTreeViewFolders(void)
 
 				tvi.hItem = hti_parent;
 				tvi.mask = TVIF_PARAM;
-				TreeView_GetItem(hTreeView,&tvi);
+				res= TreeView_GetItem(hTreeView,&tvi);
 				if (((LPTREEFOLDER)tvi.lParam) == treeFolders[treeFolders[i]->m_nParent])
 					break;
 
@@ -1621,6 +1620,7 @@ void SelectTreeViewFolder(int folder_id)
 	HWND hTreeView = GetTreeView();
 	HTREEITEM hti;
 	TVITEM tvi;
+	HRESULT res;
 
 	memset(&tvi,0,sizeof(tvi));
 
@@ -1632,11 +1632,11 @@ void SelectTreeViewFolder(int folder_id)
 
 		tvi.hItem = hti;
 		tvi.mask = TVIF_PARAM;
-		TreeView_GetItem(hTreeView,&tvi);
+		res = TreeView_GetItem(hTreeView,&tvi);
 
 		if (((LPTREEFOLDER)tvi.lParam)->m_nFolderId == folder_id)
 		{
-			TreeView_SelectItem(hTreeView,tvi.hItem);
+			res = TreeView_SelectItem(hTreeView,tvi.hItem);
 			SetCurrentFolder((LPTREEFOLDER)tvi.lParam);
 			return;
 		}
@@ -1659,9 +1659,9 @@ void SelectTreeViewFolder(int folder_id)
 	// make sure we select something
 	tvi.hItem = TreeView_GetRoot(hTreeView);
 	tvi.mask = TVIF_PARAM;
-	TreeView_GetItem(hTreeView,&tvi);
+	res = TreeView_GetItem(hTreeView,&tvi);
 
-	TreeView_SelectItem(hTreeView,tvi.hItem);
+	res = TreeView_SelectItem(hTreeView,tvi.hItem);
 	SetCurrentFolder((LPTREEFOLDER)tvi.lParam);
 
 }
@@ -1687,10 +1687,15 @@ static BOOL FolderHasIni(LPTREEFOLDER lpFolder) {
 /* Add a folder to the list.  Does not allocate */
 static BOOL AddFolder(LPTREEFOLDER lpFolder)
 {
+	TREEFOLDER **tmpTree = NULL;
+	UINT oldFolderArrayLength = folderArrayLength;
 	if (numFolders + 1 >= folderArrayLength)
 	{
 		folderArrayLength += 500;
-		treeFolders = realloc(treeFolders,sizeof(TREEFOLDER **) * folderArrayLength);
+		tmpTree = (TREEFOLDER **)malloc(sizeof(TREEFOLDER **) * folderArrayLength);
+		memcpy(tmpTree,treeFolders,sizeof(TREEFOLDER **) * oldFolderArrayLength);
+		if (treeFolders) global_free(treeFolders);
+		treeFolders = tmpTree;
 	}
 
 	/* Is there an folder.ini that can be edited? */
@@ -1717,14 +1722,14 @@ static LPTREEFOLDER NewFolder(const TCHAR *lpTitle, UINT nCategoryID, BOOL bTran
 	{
 		int len = 1 + strlen(title) + 1;
 
-		lpFolder->m_lpPath = malloc(len * sizeof (*lpFolder->m_lpPath));
+		lpFolder->m_lpPath = (char *)malloc(len * sizeof (*lpFolder->m_lpPath));
 		snprintf(lpFolder->m_lpPath, len, "/%s", title);
 	}
 	else
 	{
 		int len = strlen(treeFolders[nParent]->m_lpPath) + 1 + strlen(title) + 1;
 
-		lpFolder->m_lpPath = malloc(len * sizeof (*lpFolder->m_lpPath));
+		lpFolder->m_lpPath = (char *)malloc(len * sizeof (*lpFolder->m_lpPath));
 		snprintf(lpFolder->m_lpPath, len, "%s/%s", treeFolders[nParent]->m_lpPath, title);
 	}
 
@@ -1761,7 +1766,7 @@ static void DeleteFolder(LPTREEFOLDER lpFolder)
 		FreeIfAllocatedW(&lpFolder->m_lpOriginalTitle);
 		FreeIfAllocated(&lpFolder->m_lpPath);
 
-		free(lpFolder);
+		global_free(lpFolder);
 	}
 }
 
@@ -1824,7 +1829,7 @@ BOOL InitFolders(void)
 		char *rootname = mame_strdup(extFavorite.root_icon);
 		char *subname = mame_strdup(extFavorite.sub_icon);
 
-		filename = malloc(wcslen(title) * sizeof (*filename) + sizeof (TEXT(".ini")));
+		filename = (TCHAR *)malloc(wcslen(title) * sizeof (*filename) + sizeof (TEXT(".ini")));
 		_tcscpy(filename, title);
 		wcscat(filename, TEXT(".ini"));
 
@@ -1836,9 +1841,9 @@ BOOL InitFolders(void)
 		else
 			doCreateFavorite = FALSE;
 
-		free(filename);
-		free(rootname);
-		free(subname);
+		global_free(filename);
+		global_free(rootname);
+		global_free(subname);
 	}
 
 	for (i = 0; i < numExtraFolders; i++)
@@ -1927,7 +1932,7 @@ static BOOL CreateTreeIcons()
 	if (ImageList_GetImageCount (hTreeSmall) < ICON_MAX)
 	{
 		ErrorMsg("Error with icon list--too few images.  %i < %i",
-				 ImageList_GetImageCount(hTreeSmall),ICON_MAX);
+				 ImageList_GetImageCount(hTreeSmall),(INT)ICON_MAX);
 		return FALSE;
 	}
 
@@ -1961,7 +1966,7 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Select a compatible bitmap into the memory DC
 	bitmap = CreateCompatibleBitmap(hDC, rcClient.right - rcClient.left,
 									rcClient.bottom - rcClient.top);
-	hOldBitmap = SelectObject(memDC, bitmap);
+	hOldBitmap = (HBITMAP)SelectObject(memDC, bitmap);
 
 	// First let the control do its default drawing.
 	CallWindowProc(g_lpTreeWndProc, hWnd, uMsg, (WPARAM)memDC, 0);
@@ -1989,7 +1994,7 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 								  rcClient.bottom - rcClient.top, 
 								  1, 1, NULL);
 
-		hOldMaskBitmap = SelectObject(maskDC, maskBitmap);
+		hOldMaskBitmap = (HBITMAP)SelectObject(maskDC, maskBitmap);
 		SetBkColor(memDC, GetSysColor(COLOR_WINDOW));
 
 		// Create the mask from the memory DC
@@ -1998,13 +2003,13 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			   rcClient.left, rcClient.top, SRCCOPY);
 
 		tempDC = CreateCompatibleDC(hDC);
-		hOldHBitmap = SelectObject(tempDC, hBackground);
+		hOldHBitmap = (HBITMAP)SelectObject(tempDC, hBackground);
 
 		imageDC = CreateCompatibleDC(hDC);
 		bmpImage = CreateCompatibleBitmap(hDC,
 										  rcClient.right - rcClient.left, 
 										  rcClient.bottom - rcClient.top);
-		hOldBmpImage = SelectObject(imageDC, bmpImage);
+		hOldBmpImage = (HBITMAP)SelectObject(imageDC, bmpImage);
 
 		hPAL = GetBackgroundPalette();
 		if (hPAL == NULL)
@@ -2180,7 +2185,7 @@ static BOOL RegistExtraFolder(const TCHAR *name, LPEXFOLDERDATA *fExData, int ms
 
 	if (ext && !wcsicmp(ext, TEXT(".ini")))
 	{
-		*fExData = malloc(sizeof(EXFOLDERDATA));
+		*fExData = (EXFOLDERDATA *)malloc(sizeof(EXFOLDERDATA));
 		if (*fExData)
 		{
 			char *utf8title;
@@ -2194,14 +2199,14 @@ static BOOL RegistExtraFolder(const TCHAR *name, LPEXFOLDERDATA *fExData, int ms
 			for (i = 0; utf8title[i]; i++)
 				if (utf8title[i] & 0x80)
 				{
-					free(*fExData);
-					free(utf8title);
+					global_free(*fExData);
+					global_free(utf8title);
 					*fExData = NULL;
 					return FALSE;
 				}
 
 			assign_msg_catategory(msgcat, utf8title);
-			free(utf8title);
+			global_free(utf8title);
 
 			memset(*fExData, 0, sizeof(EXFOLDERDATA));
 
@@ -2322,14 +2327,14 @@ void FreeExtraFolders(void)
 	{
 		if (ExtraFolderData[i])
 		{
-			free(ExtraFolderData[i]);
+			global_free(ExtraFolderData[i]);
 			ExtraFolderData[i] = NULL;
 		}
 	}
 
 	for (i = 0; i < numExtraIcons; i++)
     {
-		free(ExtraFolderIcons[i]);
+		global_free(ExtraFolderIcons[i]);
     }
 
 	numExtraIcons = 0;
@@ -2344,7 +2349,7 @@ static void SetExtraIcons(char *name, int *id)
 	if (p != NULL)
 		*p = '\0';
 
-	ExtraFolderIcons[numExtraIcons] = malloc(strlen(name) + 1);
+	ExtraFolderIcons[numExtraIcons] = (char*)malloc(strlen(name) + 1);
 	if (ExtraFolderIcons[numExtraIcons])
 	{
 		*id = ICON_MAX + numExtraIcons;
@@ -2538,13 +2543,13 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const TCHAR *new_name)
 		if (TrySaveExtraFolder(lpFolder) == FALSE)
 		{
 			// failed, so free newly allocated title and restore old
-			free(lpFolder->m_lpTitle);
+			global_free(lpFolder->m_lpTitle);
 			lpFolder->m_lpTitle = old_title;
 			return FALSE;
 		}
 		TryRenameCustomFolderIni(lpFolder, old_title, new_name);
 		// successful, so free old title
-		free(old_title);
+		global_free(old_title);
 		return TRUE;
 	}
 	
@@ -2560,7 +2565,7 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const TCHAR *new_name)
 	if (retval)
 	{
 		TryRenameCustomFolderIni(lpFolder, lpFolder->m_lpTitle, new_name);
-		free(lpFolder->m_lpTitle);
+		global_free(lpFolder->m_lpTitle);
 		lpFolder->m_lpTitle = wcsdup(new_name);
 	}
 	else

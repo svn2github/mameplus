@@ -53,12 +53,12 @@ BOOL InitSplitters(void)
 
 	nSplitterCount = GetSplitterCount();
 
-	splitter = malloc(sizeof(HZSPLITTER) * nSplitterCount);
+	splitter = (HZSPLITTER*)malloc(sizeof(HZSPLITTER) * nSplitterCount);
 	if (!splitter)
 		goto error;		
 	memset(splitter, 0, sizeof(HZSPLITTER) * nSplitterCount);
 
-	nSplitterOffset = malloc(sizeof(int) * nSplitterCount);
+	nSplitterOffset = (int*)malloc(sizeof(int) * nSplitterCount);
 	if (!nSplitterOffset)
 		goto error;		
 	memset(nSplitterOffset, 0, sizeof(int) * nSplitterCount);	
@@ -74,12 +74,12 @@ void SplittersExit(void)
 {
 	if (splitter)
 	{
-		free(splitter);
+		global_free(splitter);
 		splitter = NULL;
 	}
 	if (nSplitterOffset)
 	{
-		free(nSplitterOffset);
+		global_free(nSplitterOffset);
 		nSplitterOffset = NULL;
 	}
 }

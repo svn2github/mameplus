@@ -45,7 +45,6 @@
 //  TYPE DEFINITIONS
 //============================================================
 
-typedef enum _control_type control_type;
 enum _control_type
 {
 	CT_UNKNOWN,
@@ -57,6 +56,7 @@ enum _control_type
 	CT_LISTVIEW
 };
 
+typedef enum _control_type control_type;
 
 
 typedef struct _datamap_entry datamap_entry;
@@ -115,7 +115,7 @@ static void populate_control(datamap *map, HWND control, core_options *opts, dat
 
 datamap *datamap_create(void)
 {
-	datamap *map = malloc(sizeof(*map));
+	datamap *map = (datamap *)malloc(sizeof(*map));
 	if (!map)
 		return NULL;
 
@@ -149,9 +149,9 @@ void datamap_add(datamap *map, int dlgitem, datamap_entry_type type, const char 
 		map->entry_size += 32;
 
 		if (map->entries)
-			map->entries = realloc(map->entries, map->entry_size * sizeof (*map->entries));
+			map->entries = (datamap_entry *)realloc(map->entries, map->entry_size * sizeof (*map->entries));
 		else
-			map->entries = malloc(map->entry_size * sizeof (*map->entries));
+			map->entries = (datamap_entry *)malloc(map->entry_size * sizeof (*map->entries));
 
 		assert (map->entries);
 	}

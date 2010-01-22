@@ -4,30 +4,30 @@
 //
 
 //mamep: conflict symbols with winui/resource.h
-#ifndef ID_FILE_LOADSTATE
-#define ID_FILE_LOADSTATE               40095
-#endif /* !ID_FILE_LOADSTATE */
+#ifndef ID_FILE_LOADSTATE_NEWUI    
+#define ID_FILE_LOADSTATE_NEWUI         40095
+#endif /* !ID_FILE_LOADSTATE_NEWUI */
 
-#ifndef ID_FILE_EXIT
-#define ID_FILE_EXIT                    40001
-#endif /* !ID_FILE_EXIT */
+#ifndef ID_FILE_EXIT_NEWUI
+#define ID_FILE_EXIT_NEWUI              40001
+#endif /* !ID_FILE_EXIT_NEWUI */
 
-#ifndef ID_HELP_ABOUT
-#define ID_HELP_ABOUT                   40006
-#endif /* !ID_HELP_ABOUT */
+#ifndef ID_HELP_ABOUT_NEWUI
+#define ID_HELP_ABOUT_NEWUI             40006
+#endif /* !ID_HELP_ABOUT_NEWUI */
 
-#ifndef IDC_PLAY
-#define IDC_PLAY                        1001
-#endif /* !IDC_PLAY */
+#ifndef IDC_PLAY_NEWUI
+#define IDC_PLAY_NEWUI                  1001
+#endif /* !IDC_PLAY_NEWUI */
 //mamep: end of conflict symbols with winui/resource.h
 
 
 //mamep: leave id from winui/resource.h
-//**#define ID_FILE_LOADSTATE               2101
+//**#define ID_FILE_LOADSTATE_NEWUI     2101
 #define ID_FILE_SAVESTATE               2102
 #define ID_FILE_SAVESTATE_AS            2103
 #define ID_FILE_SAVESCREENSHOT          2104
-//**#define ID_FILE_EXIT                    2105
+//**#define ID_FILE_EXIT_NEWUI          2105
 #define ID_EDIT_PASTE                   2106
 #define ID_OPTIONS_HIDEMENUBAR          2107
 #define ID_OPTIONS_KEYBOARD             2108
@@ -61,7 +61,7 @@
 #define ID_THROTTLE_UNTHROTTLED         2136
 #define ID_FRAMESKIP_AUTO               2137
 #define ID_DEVICES                      2138
-//**#define ID_HELP_ABOUT                   2139
+//**#define ID_HELP_ABOUT_NEWUI         2139
 #define ID_HELP_ABOUTSYSTEM             2140
 #define IDD_TAPEDIALOG                  2200
 #define IDI_ICON_CART                   2300
@@ -73,7 +73,7 @@
 #define IDI_ICON_SNAP                   2306
 #define IDR_RUNTIME_MENU                2400
 #define IDC_SLIDER                      2400
-//**#define IDC_PLAY                        2401
+//**#define IDC_PLAY_NEWUI              2401
 #define IDC_STOP                        2402
 #define IDC_PAUSE                       2403
 #define IDC_CAPTION                     2404

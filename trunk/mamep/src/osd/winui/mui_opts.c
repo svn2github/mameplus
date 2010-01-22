@@ -21,8 +21,6 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define _UNICODE
-#define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <winreg.h>
@@ -34,7 +32,8 @@
 #include <sys/stat.h>
 #include <math.h>
 #include <direct.h>
-#include <driver.h>
+#include <emu.h>
+#include <emuopts.h>
 #include <stddef.h>
 #include <tchar.h>
 
@@ -602,7 +601,7 @@ core_options *CreateGameOptions(int driver_index)
 BOOL OptionsInit()
 {
 	// create a memory pool for our data
-	options_memory_pool = pool_alloc(memory_error);
+	options_memory_pool = pool_alloc_lib(memory_error);
 	if (!options_memory_pool)
 		return FALSE;
 
@@ -626,10 +625,10 @@ BOOL OptionsInit()
 			game_option_count++;
 
 #if 1
-		driver_per_game_options = (options_entry *) pool_malloc(options_memory_pool,
+		driver_per_game_options = (options_entry *) pool_malloc_lib(options_memory_pool,
 			(game_option_count * driver_list_get_count(drivers) + 1) * (sizeof(*driver_per_game_options) + 1));
 #else
-		driver_per_game_options = (options_entry *) pool_malloc(options_memory_pool,
+		driver_per_game_options = (options_entry *) pool_malloc_lib(options_memory_pool,
 			(game_option_count * driver_list_get_count(drivers) + 1) * sizeof(*driver_per_game_options));
 #endif
 
@@ -660,7 +659,7 @@ BOOL OptionsInit()
 				snprintf(buffer, ARRAY_LENGTH(buffer), "%s%s", drivers[i]->name, perGameOptions[j].name);
 
 				memset(ent, 0, sizeof(*ent));
-				ent->name = pool_strdup(options_memory_pool, buffer);
+				ent->name = pool_strdup_lib(options_memory_pool, buffer);
 				ent->defvalue = perGameOptions[j].defvalue;
 				ent->flags = perGameOptions[j].flags;
 				ent->description = perGameOptions[j].description;
@@ -682,7 +681,7 @@ BOOL OptionsInit()
 	// set up folders
 	size_folder_filters = 1;
 	num_folder_filters = 0;
-	folder_filters = (folder_filter_type *) pool_malloc(options_memory_pool, size_folder_filters * sizeof(*folder_filters));
+	folder_filters = (folder_filter_type *) pool_malloc_lib(options_memory_pool, size_folder_filters * sizeof(*folder_filters));
 #endif
 	// now load the options and settings
 	LoadOptionsAndSettings();
@@ -702,7 +701,7 @@ void OptionsExit(void)
 	settings = NULL;
 
 	// free the memory pool
-	pool_free(options_memory_pool);
+	pool_free_lib(options_memory_pool);
 	options_memory_pool = NULL;
 }
 
@@ -2321,7 +2320,7 @@ static void set_folder_flag(f_flag *flag, const char *path, DWORD dwFlags)
 
 	if (flag->entry == NULL)
 	{
-		flag->entry = malloc(ALLOC_FOLDERFLAG * sizeof (*flag->entry));
+		flag->entry = (f_flag_entry *)malloc(ALLOC_FOLDERFLAG * sizeof (*flag->entry));
 		if (!flag->entry)
 		{
 			dprintf("error: malloc failed in set_folder_flag\n");
@@ -2337,7 +2336,7 @@ static void set_folder_flag(f_flag *flag, const char *path, DWORD dwFlags)
 		{
 			if (dwFlags == 0)
 			{
-				free(flag->entry[i].name);
+				global_free(flag->entry[i].name);
 				flag->entry[i].name = NULL;
 			}
 			else
@@ -2357,7 +2356,7 @@ static void set_folder_flag(f_flag *flag, const char *path, DWORD dwFlags)
 	{
 		f_flag_entry *tmp;
 
-		tmp = realloc(flag->entry, (flag->num + ALLOC_FOLDERFLAG) * sizeof (*tmp));
+		tmp = (f_flag_entry *)realloc(flag->entry, (flag->num + ALLOC_FOLDERFLAG) * sizeof (*tmp));
 		if (!tmp)
 		{
 			dprintf("error: realloc failed in set_folder_flag\n");
@@ -2381,7 +2380,7 @@ static void free_folder_flag(f_flag *flag)
 		FreeIfAllocated(&flag->entry[i].name);
 
 	if (flag->entry)
-		free(flag->entry);
+		global_free(flag->entry);
 	flag->entry = NULL;
 	flag->num = 0;
 }
@@ -2441,7 +2440,7 @@ static void options_set_folder_flag(core_options *opts, const char *name, const 
 	int i;
 
 	size = 1024;
-	buf = malloc(size * sizeof (*buf));
+	buf = (char *)malloc(size * sizeof (*buf));
 	*buf = '\0';
 	len = 0;
 
@@ -2455,7 +2454,7 @@ static void options_set_folder_flag(core_options *opts, const char *name, const 
 			if (len + strlen(flags->entry[i].name) + 16 > size)
 			{
 				size += 1024;
-				buf = realloc(buf, size * sizeof (*buf));
+				buf = (char *)realloc(buf, size * sizeof (*buf));
 			}
 
 			if (len)
@@ -2465,7 +2464,7 @@ static void options_set_folder_flag(core_options *opts, const char *name, const 
 		}
 
 	options_set_string(opts, name, buf, priority);
-	free(buf);
+	global_free(buf);
 }
 
 static f_flag settings_folder_flag;
@@ -2686,7 +2685,7 @@ static void FontDecodeString(const char* str, LOGFONTW *f)
 		if( !w_ptr )
 			return;
 		wcscpy(f->lfFaceName, w_ptr);
-		free(w_ptr);
+		global_free(w_ptr);
 	}
 }
 
@@ -2713,7 +2712,7 @@ static void FontEncodeString(const LOGFONTW *f, char *str)
 			f->lfPitchAndFamily);
 	//		utf8_FaceName);
         //
-	//free(utf8_FaceName);
+	//global_free(utf8_FaceName);
 }
 
 static void TabFlagsEncodeString(int data, char *str)
@@ -2824,8 +2823,8 @@ static void GetSettingsFileName(char *filename, size_t filename_size)
 	char *s = _strdup(UI_INI_FILENAME);
 	_strlwr(s);
 	snprintf(filename, filename_size, "%s\\%s", inidir, s);
-	free(inidir);
-	free(s);
+	global_free(inidir);
+	global_free(s);
 }
 
 /* Register access functions below */
@@ -3109,7 +3108,7 @@ static void ui_parse_ini_file(core_options *opts, const char *name)
 	/* open the file; if we fail, that's ok */
 	char *inidir = utf8_from_wstring(GetIniDir());
 	fname = astring_assemble_4(astring_alloc(), inidir, PATH_SEPARATOR, name, ".ini");
-	free(inidir);
+	global_free(inidir);
 	LoadSettingsFile(opts, astring_c(fname));
 	astring_free(fname);
 }
@@ -3245,10 +3244,10 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 		if (OPTIONS_VERTICAL == opt_type) {
 			//since VERTICAL and HORIZONTAL are equally ranked
 			//we need to subtract 2 from vertical to also get to global
-			baseopts = load_options(opt_type - 2, game_num);
+			baseopts = load_options((OPTIONS_TYPE)(opt_type - 2), game_num);
 		}
 		else {
-			baseopts = load_options(opt_type - 1, game_num);
+			baseopts = load_options((OPTIONS_TYPE)(opt_type - 1), game_num);
 		}
 	}
 
@@ -3308,7 +3307,7 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 		{
 			char *inidir = utf8_from_wstring(GetIniDir());
 			filepath = astring_assemble_4(astring_alloc(), inidir, PATH_SEPARATOR, astring_c(filename), ".ini");
-			free(inidir);
+			global_free(inidir);
 		}
 		astring_free(filename);
 
@@ -3334,14 +3333,14 @@ static void remove_all_source_options(void) {
 	 */
 	char *inidir = utf8_from_wstring(GetIniDir());
 	pathname = astring_assemble_3(astring_alloc(), inidir, PATH_SEPARATOR, "source");
-	free(inidir);
+	global_free(inidir);
 	match = astring_assemble_3(astring_alloc(), astring_c(pathname), PATH_SEPARATOR, "*.ini");
 	if ((hFindFile = win_find_first_file_utf8(astring_c(match), &findFileData)) != INVALID_HANDLE_VALUE)
 	{
 		astring_free(match);
 		utf8_filename = utf8_from_tstring(findFileData.cFileName);
 		match = astring_assemble_3(astring_alloc(), astring_c(pathname), PATH_SEPARATOR, utf8_filename );
-		free(utf8_filename);
+		global_free(utf8_filename);
 		osd_rmfile(astring_c(match));
 		astring_free(match);
 
@@ -3349,7 +3348,7 @@ static void remove_all_source_options(void) {
 		{
 			utf8_filename = utf8_from_tstring(findFileData.cFileName);
 			match = astring_assemble_3(astring_alloc(), astring_c(pathname), PATH_SEPARATOR, utf8_filename );
-			free(utf8_filename);
+			global_free(utf8_filename);
 			osd_rmfile(astring_c(match));
 			astring_free(match);
 		}
@@ -3394,7 +3393,7 @@ void options_set_wstring(core_options *opts, const char *name, const WCHAR *valu
 
 	options_set_string(opts, name, utf8_value, priority);
 
-	free(utf8_value);
+	global_free(utf8_value);
 }
 
 

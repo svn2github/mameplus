@@ -110,8 +110,6 @@ b) Exit the dialog.
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-#define UNICODE
-
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>
@@ -125,7 +123,8 @@ b) Exit the dialog.
 //#include <tchar.h>
 
 // MAME/MAMEUI headers
-#include "driver.h"
+#include "emu.h"
+#include "emuopts.h"
 #include "info.h"
 #include "audit.h"
 #include "mui_audit.h"
@@ -472,8 +471,8 @@ void PropertiesInit(void)
 
 	for (i = 0; i < iMonitors; i++)
 	{
-		g_sMonitorDeviceString[i + 1] = wstring_from_utf8(DirectDraw_GetDisplayName(i));
-		g_sMonitorDeviceName[i + 1] = mame_strdup(DirectDraw_GetDisplayDriver(i));
+		g_sMonitorDeviceString[i + 1] = wstring_from_utf8((const char *)DirectDraw_GetDisplayName(i));
+		g_sMonitorDeviceName[i + 1] = mame_strdup((const char *)DirectDraw_GetDisplayDriver(i));
 	}
 
 	g_sMonitorDeviceString[i + 1] = NULL;
@@ -525,7 +524,7 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 
 	possiblePropSheets = (isGame) ? i + 1 : i - 1;
 
-	pspages = malloc(sizeof(PROPSHEETPAGE) * possiblePropSheets);
+	pspages = (PROPSHEETPAGE *)malloc(sizeof(PROPSHEETPAGE) * possiblePropSheets);
 	if (!pspages)
 		return NULL;
 
@@ -628,7 +627,7 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 		MessageBox(0, temp, _UIW(TEXT("Error")), IDOK);
 	}
 
-	free(pspage);
+	global_free(pspage);
 }
 
 /* Initilize the property pages for anything but the Default option set */
@@ -658,11 +657,11 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	// Load the default options, pickup the next lower options set than the current level.
 	if (opt_type > OPTIONS_GLOBAL)
 	{
-		default_type -= 1;
+		default_type = (OPTIONS_TYPE)(default_type-1);
 		if (OPTIONS_VERTICAL == opt_type) {
 			//since VERTICAL and HORIZONTAL are equally ranked
 			//we need to subtract 2 from vertical to also get to correct default
-			default_type -= 1;
+			default_type = (OPTIONS_TYPE)(default_type-1);
 		}
 
 	}
@@ -763,8 +762,8 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	}
 
 	//mamep: it doesn't allocate w_description from heap
-	//free(w_description);
-	free(pspage);
+	//global_free(w_description);
+	global_free(pspage);
 }
 
 
@@ -883,7 +882,7 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 	if (isDriverVector(config))
 	{
 		const device_config *screen = video_screen_first(config);
-		const screen_config *scrconfig = screen->inline_config;
+		const screen_config *scrconfig = (const screen_config *)screen->inline_config;
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
 			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
@@ -903,7 +902,7 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 		}
 		else {
 			for (; screen != NULL; screen = video_screen_next(screen)) {
-				const screen_config *scrconfig = screen->inline_config;
+				const screen_config *scrconfig = (const screen_config *)screen->inline_config;
 				WCHAR tmpbuf[256];
 
 				if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
@@ -1325,7 +1324,7 @@ INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LP
 		}
 #endif
 
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE),         GameInfoTitle(g_nPropertyMode, g_nGame));
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE),         GameInfoTitle((OPTIONS_TYPE)g_nPropertyMode, g_nGame));
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_MANUFACTURED),  GameInfoManufactured(g_nGame));
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_STATUS),        GameInfoStatus(g_nGame, FALSE));
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_CPU),           GameInfoCPU(g_nGame));
@@ -1373,7 +1372,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 #endif /* TREE_SHEET */
 
 		/* Fill in the Game info at the top of the sheet */
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE), GameInfoTitle(g_nPropertyMode, g_nGame));
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE), GameInfoTitle((OPTIONS_TYPE)g_nPropertyMode, g_nGame));
 		InitializeOptions(hDlg);
 		InitializeMisc(hDlg);
 
@@ -1650,7 +1649,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
 
 				// Save or remove the current options
-				save_options(g_nPropertyMode, (g_bUseDefaults) ? NULL : pCurrentOpts, g_nGame);
+				save_options((OPTIONS_TYPE)g_nPropertyMode, (g_bUseDefaults) ? NULL : pCurrentOpts, g_nGame);
 
 				// Disable apply button
 				PropSheet_UnChanged(GetParent(hDlg), hDlg);
@@ -1785,7 +1784,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 	case WM_HELP:
 		/* User clicked the ? from the upper right on a control */
-		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, MAMEUICONTEXTHELP, HH_TP_HELP_WM_HELP, GetHelpIDs());
+		HelpFunction((HWND)((LPHELPINFO)lParam)->hItemHandle, MAMEUICONTEXTHELP, HH_TP_HELP_WM_HELP, GetHelpIDs());
 		break;
 
 	case WM_CONTEXTMENU: 
@@ -2001,7 +2000,7 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 
 		SendMessage(hTempTab, TCM_INSERTITEM, 0, (LPARAM)&item);
 
-		free(wstr);
+		global_free(wstr);
 	}
 
 	DestroyWindow(hTempTab);
@@ -2288,12 +2287,12 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 					if (!drivers_table[i].name)
 						dwprintf(_WINDOWSW(TEXT("Illegal value for %s = %s\n")), TEXT(OPTION_DRIVER_CONFIG), _Unicode(s));
 				}
-				free(s);
+				global_free(s);
 
 				p = strtok(NULL, ",");
 			}
 
-			free(temp);
+			global_free(temp);
 		}
 
 		if (enabled == 0)
@@ -2868,13 +2867,13 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 	//if( !t_ctrldir )
 	//{
 	//	if( buf )
-	//		free(buf);
+	//		global_free(buf);
 	//	return FALSE;
 	//}
 
 	swprintf (path, TEXT("%s\\*.*"), GetCtrlrDir());
 
-	//free(t_ctrldir);
+	//global_free(t_ctrldir);
 	
 	hFind = FindFirstFileW(path, &FindFileData);
 
@@ -2914,7 +2913,7 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 	(void)ComboBox_SetCurSel(control, selected);
 	
 	if( buf )
-		free(buf);
+		global_free(buf);
 
 	return FALSE;
 }
@@ -3045,7 +3044,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 				}
 			}
 		}
-		//free(t_screen);
+		//global_free(t_screen);
 
 		(void)ComboBox_SetCurSel(sizes_control, sizes_selection);
 		(void)ComboBox_SetCurSel(refresh_control, refresh_selection);
@@ -3442,12 +3441,8 @@ static void SetYM3812Enabled(HWND hWnd, int nIndex)
 			sound = device_list_class_next(sound, DEVICE_CLASS_SOUND_CHIP))
 		{
 			if (nIndex <= -1
-#if HAS_YM3812
 				||  sound->type == SOUND_YM3812
-#endif
-#if HAS_YM2413
 				||  sound->type == SOUND_YM2413
-#endif
 			)
 				enabled = TRUE;
 		}
@@ -3463,7 +3458,6 @@ static void SetYM3812Enabled(HWND hWnd, int nIndex)
 static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 {
 	machine_config *config = NULL;
-#if (HAS_SAMPLES == 1) || (HAS_VLM5030 == 1)
 	BOOL enabled = FALSE;
 	HWND hCtrl;
 
@@ -3481,9 +3475,7 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 			for (sound = sound_first(config); sound != NULL; sound = sound_next(sound))
 			{
 				if (sound_get_type(sound) == SOUND_SAMPLES
-#if HAS_VLM5030
-					||  sound_get_type(sound) == SOUND_VLM5030
-#endif
+//					||  sound_get_type(sound) == SOUND_VLM5030
 					)
 				{
 					enabled = TRUE;
@@ -3494,7 +3486,6 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 		enabled = enabled && bSoundEnabled;
 		EnableWindow(hCtrl, enabled);
 	}
-#endif
 	if (config != NULL)
 	{
 		machine_config_free(config);
@@ -3866,7 +3857,7 @@ static void InitializeBIOSUI(HWND hwnd)
 							return;
 						(void)ComboBox_InsertString(hCtrl, i, win_tstring_strdup(t_s));
 						(void)ComboBox_SetItemData( hCtrl, i++, biosname);
-						free(t_s);
+						global_free(t_s);
 					}
 				}
 			}
@@ -3895,7 +3886,7 @@ static void InitializeBIOSUI(HWND hwnd)
 						return;
 					(void)ComboBox_InsertString(hCtrl, i, win_tstring_strdup(t_s));
 					(void)ComboBox_SetItemData( hCtrl, i++, biosname);
-					free(t_s);
+					global_free(t_s);
 				}
 			}
 		}

@@ -18,13 +18,13 @@
 ***************************************************************************/
 
 #define WIN32_LEAN_AND_MEAN
-#define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>
 
+#include "emu.h"
+#include "emuopts.h"
 #include "winui.h"
-#include "driver.h"
 #include "bitmask.h"
 #include "mui_opts.h"
 #include "resource.h"
@@ -200,7 +200,7 @@ static void PaletteView(HWND hwnd)
 
 	GetClientRect(hWnd, &rt);
 	hPen = CreatePen(PS_INSIDEFRAME, 100, RGB(palette_rgb[0], palette_rgb[1], palette_rgb[2]));
-	hOldPen = SelectObject(hDC, hPen);
+	hOldPen = (HPEN)SelectObject(hDC, hPen);
 	SelectObject(hDC, hPen);
 	Rectangle(hDC, rt.left, rt.top, rt.right, rt.bottom);
 	SelectObject(hDC, hOldPen);

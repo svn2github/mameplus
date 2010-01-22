@@ -12,7 +12,6 @@
  ***************************************************************************/
 
 #define WIN32_LEAN_AND_MEAN
-#define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>
@@ -381,7 +380,7 @@ static void translate_tree_folder_items(HWND hWnd, HTREEITEM hti)
 			p = wcsdup(translated);
 			if (p)
 			{
-				free(lpFolder->m_lpTitle);
+				global_free(lpFolder->m_lpTitle);
 				lpFolder->m_lpTitle = p;
 			}
 
@@ -427,9 +426,9 @@ LPWSTR _Unicode(const char *s)
 	if (len >= tmp_string_pool_alloc_len[tmp_string_pool_index])
 	{
 		if (tmp_string_pool[tmp_string_pool_index])
-			free(tmp_string_pool[tmp_string_pool_index]);
+			global_free(tmp_string_pool[tmp_string_pool_index]);
 
-		tmp_string_pool[tmp_string_pool_index] = malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
+		tmp_string_pool[tmp_string_pool_index] = (WCHAR *)malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
 		if (!tmp_string_pool[tmp_string_pool_index])
 		{
 			tmp_string_pool_alloc_len[tmp_string_pool_index] = 0;
@@ -459,9 +458,9 @@ LPWSTR _UTF8Unicode(const char *s)
 	if (len >= tmp_string_pool_alloc_len[tmp_string_pool_index])
 	{
 		if (tmp_string_pool[tmp_string_pool_index])
-			free(tmp_string_pool[tmp_string_pool_index]);
+			global_free(tmp_string_pool[tmp_string_pool_index]);
 
-		tmp_string_pool[tmp_string_pool_index] = malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
+		tmp_string_pool[tmp_string_pool_index] = (WCHAR *)malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
 		if (!tmp_string_pool[tmp_string_pool_index])
 		{
 			tmp_string_pool_alloc_len[tmp_string_pool_index] = 0;
@@ -492,9 +491,9 @@ char *_String(const WCHAR *ws)
 	if (len >= tmp_string_pool_alloc_len[tmp_string_pool_index])
 	{
 		if (tmp_string_pool[tmp_string_pool_index])
-			free(tmp_string_pool[tmp_string_pool_index]);
+			global_free(tmp_string_pool[tmp_string_pool_index]);
 
-		tmp_string_pool[tmp_string_pool_index] = malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
+		tmp_string_pool[tmp_string_pool_index] = (char *)malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
 		if (!tmp_string_pool[tmp_string_pool_index])
 		{
 			tmp_string_pool_alloc_len[tmp_string_pool_index] = 0;
@@ -534,8 +533,8 @@ void ListView_GetItemTextA(HWND hwndCtl, int nIndex, int isitem, LPSTR lpch, int
 	char *p;
 
 	if (buf)
-		free(buf);
-	buf = malloc((cchMax + 1) * sizeof (*buf));
+		global_free(buf);
+	buf = (WCHAR *)malloc((cchMax + 1) * sizeof (*buf));
 	buf[0] = '\0';
 
 	ListView_GetItemText(hwndCtl, nIndex, isitem, buf, cchMax);
@@ -565,8 +564,8 @@ int ComboBox_GetLBTextA(HWND hwndCtl, int nIndex, LPSTR lpszBuffer)
 	static LPWSTR buf;
 
 	if (buf)
-		free(buf);
-	buf = malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (*buf));
+		global_free(buf);
+	buf = (WCHAR *)malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (*buf));
 
 	ret = ComboBox_GetLBTextW(hwndCtl, nIndex, buf);
 	if (!ret)
@@ -581,8 +580,8 @@ int ComboBox_GetLBTextLenA(HWND hwndCtl, int nIndex)
 	static WCHAR *buf;
 
 	if (buf)
-		free(buf);
-	buf = malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (*buf));
+		global_free(buf);
+	buf = (WCHAR *)malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (*buf));
 
 	ComboBox_GetLBTextW(hwndCtl, nIndex, buf);
 	return strlen(_String(buf));
@@ -595,8 +594,8 @@ int ComboBox_GetTextA(HWND hwndCtl, LPSTR lpch, int cchMax)
 	static LPWSTR buf;
 
 	if (buf)
-		free(buf);
-	buf = malloc((cchMax + 1) * sizeof (*buf));
+		global_free(buf);
+	buf = (WCHAR *)malloc((cchMax + 1) * sizeof (*buf));
 
 	ret = GetWindowTextW(hwndCtl, buf, cchMax);
 	buf[cchMax] = '\0';
@@ -669,12 +668,12 @@ FILE *wfopen(const WCHAR *fname, const WCHAR *mode)
 
 static int wcmp(const void *p1, const void *p2)
 {
-	return wcscmp(p1, p2);
+	return wcscmp((const wchar_t *)p1, (const wchar_t *)p2);
 }
 
 WCHAR *w_lang_message(int msgcat, const WCHAR *str)
 {
-	return lang_messagew(msgcat, str, wcmp);
+	return (WCHAR *)lang_messagew(msgcat, str, wcmp);
 }
 
 
