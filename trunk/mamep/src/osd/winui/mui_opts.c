@@ -51,9 +51,12 @@
 #include "translate.h"
 
 #ifdef MAMEMESS
-#define MESS
 #include "../mess/osd/windows/configms.h"
-#endif /* MAMEMESS */
+#endif // MAMEMESS
+
+#ifdef MESS
+#include "optionsms.h"
+#endif // MESS
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -221,7 +224,7 @@ static void remove_all_source_options(void);
 #define MUIOPTION_HIDE_MOUSE					"hide_mouse"
 #define MUIOPTION_FULL_SCREEN					"full_screen"
 
-#if 0 //def MESS
+#ifdef MESS
 // Options names
 #define MUIOPTION_DEFAULT_GAME					"default_system"
 #define MUIOPTION_HISTORY_FILE					"sysinfo_file"
@@ -284,7 +287,7 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_SHOW_TOOLBAR,				"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_SHOW_STATUS_BAR,			"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_HIDE_FOLDERS,				"",         0,                 NULL },
-#if 0 //def MESS
+#ifdef MESS
 	{ MUIOPTION_SHOW_FOLDER_SECTION,		"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_SHOW_TABS,					"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_HIDE_TABS,					"flyer, cabinet, marquee, title, cpanel, pcb", 0, NULL },
@@ -589,9 +592,9 @@ core_options *CreateGameOptions(int driver_index)
 	if (is_global)
 		options_set_option_default_value(opts, OPTION_INIPATH, "ini");
 
-#ifdef MESS
+#ifdef MAMEMESS
 	MessSetupGameOptions(opts, driver_index);
-#endif // MESS
+#endif // MAMEMESS
 
 	return opts;
 }
@@ -608,7 +611,7 @@ BOOL OptionsInit()
 	// set up the MAME32 settings (these get placed in MAME32ui.ini
 	settings = options_create(memory_error);
 	options_add_entries(settings, regSettings);
-#if 0 //def MESS
+#ifdef MESS
 	MessSetupSettings(settings);
 #endif
 
@@ -817,7 +820,6 @@ static input_seq *options_get_input_seq(core_options *opts, const char *name)
 	const char *seq_string;
 
 	seq_string = options_get_string(opts, name);
-//	input_seq_from_tokens(seq_string, &seq);
 	input_seq_from_tokens(NULL, seq_string, &seq);   // HACK
 	return &seq;
 }
@@ -981,7 +983,7 @@ BOOL GetShowFolderList(void)
 static void GetsShowFolderFlags(LPBITS bits)
 {
 	char s[2000];
-	extern FOLDERDATA g_folderData[];
+	extern const FOLDERDATA g_folderData[];
 	char *token;
 
 	snprintf(s, ARRAY_LENGTH(s), "%s", options_get_string(settings, MUIOPTION_HIDE_FOLDERS));
@@ -1021,7 +1023,7 @@ void SetShowFolder(int folder,BOOL show)
 	int i;
 	int num_saved = 0;
 	char str[10000];
-	extern FOLDERDATA g_folderData[];
+	extern const FOLDERDATA g_folderData[];
 
 	GetsShowFolderFlags(show_folder_flags);
 
@@ -2798,7 +2800,8 @@ static file_error SaveSettingsFile(core_options *opts, core_options *baseopts, c
 		filerr = core_fopen(filename, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &file);
 		if (filerr == FILERR_NONE)
 		{
-			options_output_diff_ini_file(opts, baseopts, file);
+			options_output_ini_file(opts, file);	/* required for MESS */
+//			options_output_diff_ini_file(opts, baseopts, file);
 			core_fclose(file);
 		}
 	}
@@ -3033,9 +3036,9 @@ BOOL IsGlobalOption(const char *option_name)
 	static const char *global_options[] =
 	{
 		OPTION_ROMPATH,
-#ifdef MESS
+#ifdef MAMEMESS
 		OPTION_HASHPATH,
-#endif // MESS
+#endif // MAMEMESS
 		OPTION_SAMPLEPATH,
 		OPTION_ARTPATH,
 		OPTION_CTRLRPATH,

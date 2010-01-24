@@ -785,7 +785,7 @@ static HIMAGELIST   hSmall = NULL;
 static HIMAGELIST   hHeaderImages = NULL;
 static int          *icon_index = NULL; /* for custom per-game icons */
 
-static TBBUTTON tbb[] =
+static const TBBUTTON tbb[] =
 {
 	{0, ID_VIEW_FOLDERS,    TBSTATE_ENABLED, TBSTYLE_CHECK,      {0, 0}, 0, 0},
 	{1, ID_VIEW_PICTURE_AREA,TBSTATE_ENABLED, TBSTYLE_CHECK,      {0, 0}, 0, 1},
@@ -867,6 +867,10 @@ static ResizeItem main_resize_items[] =
 	{ RA_ID,   { IDC_SSPICTURE },FALSE,	RA_RIGHT | RA_BOTTOM | RA_TOP,     NULL },
 	{ RA_ID,   { IDC_HISTORY },  TRUE,	RA_RIGHT | RA_BOTTOM | RA_TOP,     NULL },
 	{ RA_ID,   { IDC_SSTAB },    FALSE,	RA_RIGHT | RA_TOP,                 NULL },
+#ifdef MESS
+	{ RA_ID,   { IDC_SWLIST },    TRUE,	RA_RIGHT | RA_BOTTOM | RA_TOP,     NULL },
+	{ RA_ID,   { IDC_SPLITTER3 },FALSE,	RA_RIGHT | RA_BOTTOM | RA_TOP,     NULL },
+#endif /* MESS */
 	{ RA_END,  { 0 },            FALSE, 0,                                 NULL }
 };
 
@@ -915,9 +919,13 @@ static HDC              hMemoryDC;
 #endif /* USE_SHOW_SPLASH_SCREEN */
 
 /* List view Column text */
-LPCTSTR column_names[COLUMN_MAX] =
+extern const LPCTSTR column_names[COLUMN_MAX] =
 {
+#ifdef MESS
+	TEXT("System"),
+#else
 	TEXT("Description"),
+#endif
 	TEXT("Screen"),
 	TEXT("ROMs"),
 	TEXT("Samples"),
@@ -1013,6 +1021,11 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 	// Tell mame were to get the INIs
 	//mamep: we want parse MAME.ini in root directory with all INIs in inipath. not only parse inipath
 	//options_set_string(mame_opts, OPTION_INIPATH, GetIniDir(), OPTION_PRIORITY_CMDLINE);
+
+#ifdef MESS
+	// add MESS specific device options
+	mess_add_device_options(mame_opts, drivers[nGameIndex]);
+#endif // MESS
 
 	// set any specified play options
 	if (playopts != NULL)
@@ -1495,8 +1508,12 @@ void UpdateScreenShot(void)
 
 	if (have_selection)
 	{
-#ifdef USE_IPS
+#ifdef MESS
+		if (!g_szSelectedItem[0] || !LoadScreenShotEx(Picker_GetSelectedItem(hwndList), g_szSelectedItem,
+			TabView_GetCurrentTab(hTabCtrl)))
+#endif
 		// load and set image, or empty it if we don't have one
+#ifdef USE_IPS
 		if (g_IPSMenuSelectName)
 			LoadScreenShot(Picker_GetSelectedItem(hwndList), g_IPSMenuSelectName, TAB_IPS);
 		else
@@ -2160,8 +2177,8 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	WNDCLASS wndclass;
 	RECT     rect;
 	int      i, nSplitterCount;
-	extern FOLDERDATA g_folderData[];
-	extern FILTER_ITEM g_filterList[];
+	extern const FOLDERDATA g_folderData[];
+	extern const FILTER_ITEM g_filterList[];
 	//extern const char *history_filename;
 	//extern const char *mameinfo_filename;
 	LONG     common_control_version = GetCommonControlVersion();
@@ -2238,6 +2255,10 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 
 	RegisterClass(&wndclass);
 
+#ifdef MESS
+	DevView_RegisterClass();
+#endif //MESS
+
 	InitCommonControls();
 
 	// Are we using an Old comctl32.dll?
@@ -2310,7 +2331,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	{
 		struct TabViewOptions opts;
 
-		static struct TabViewCallbacks s_tabviewCallbacks =
+		static const struct TabViewCallbacks s_tabviewCallbacks =
 		{
 			GetShowTabCtrl,			// pfnGetShowTabCtrl
 			SetCurrentTab,			// pfnSetCurrentTab
@@ -2452,6 +2473,9 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	PropertiesInit();
 
 	/* Initialize listview columns */
+#ifdef MESS
+	InitMessPicker();
+#endif
 	InitListView();
 	SetFocus(hwndList);
 
@@ -3934,7 +3958,10 @@ static void EnableSelection(int nGame)
 	//TCHAR*          t_description;
 	int             bios_driver;
 
-	
+#ifdef MESS
+	MyFillSoftwareList(nGame, FALSE);
+#endif
+
 	//t_description = tstring_from_utf8(ConvertAmpersandString(ModifyThe(drivers[nGame]->description)));
 	//if( !t_description )
 	//	return;
@@ -5296,6 +5323,15 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		{
 			folder = GetFolderByName(FOLDER_SOURCE, GetDriverFilename(Picker_GetSelectedItem(hwndList)) );
 			InitPropertyPage(hInst, hwnd, GetSelectedPickItemIcon(), OPTIONS_GAME, folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
+#ifdef MESS
+			{
+				extern BOOL g_bModifiedSoftwarePaths;
+				if (g_bModifiedSoftwarePaths) {
+					g_bModifiedSoftwarePaths = FALSE;
+					MessUpdateSoftwareList();
+				}
+			}
+#endif
 		}
 		/* Just in case the toggle MMX on/off */
 		UpdateStatusBar();
@@ -5304,18 +5340,8 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_FOLDER_PROPERTIES:
 		if (!oldControl)
 		{
-			OPTIONS_TYPE curOptType = OPTIONS_SOURCE;
 			folder = GetSelectedFolder();
-			if(folder->m_nFolderId == FOLDER_VECTOR) {
-				curOptType = OPTIONS_VECTOR;
-			}
-			else if(folder->m_nFolderId == FOLDER_HORIZONTAL) {
-				curOptType = OPTIONS_HORIZONTAL;
-			}
-			else if(folder->m_nFolderId == FOLDER_VERTICAL) {
-				curOptType = OPTIONS_VERTICAL;
-			}
-			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), curOptType, folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
+			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), (folder->m_nFolderId == FOLDER_VECTOR) ? OPTIONS_VECTOR : OPTIONS_SOURCE, folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
 			//SaveFolderOptions(folder->m_nFolderId, Picker_GetSelectedItem(hwndList) );
 		}
 		/* Just in case the toggle MMX on/off */
@@ -5405,6 +5431,9 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			int  nResult;
 			BOOL bUpdateRoms;
 			BOOL bUpdateSamples;
+#ifdef MESS
+			BOOL bUpdateSoftware;
+#endif
 
 			nResult = DialogBox(GetModuleHandle(NULL),
 								MAKEINTRESOURCE(IDD_DIRECTORIES),
@@ -5415,6 +5444,12 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 			bUpdateRoms    = ((nResult & DIRDLG_ROMS)	 == DIRDLG_ROMS)	? TRUE : FALSE;
 			bUpdateSamples = ((nResult & DIRDLG_SAMPLES) == DIRDLG_SAMPLES) ? TRUE : FALSE;
+#ifdef MESS
+			bUpdateSoftware = ((nResult & DIRDLG_SOFTWARE) == DIRDLG_SOFTWARE) ? TRUE : FALSE;
+
+			if (bUpdateSoftware)
+				MessUpdateSoftwareList();
+#endif /* MESS */
 
 			if (s_pWatcher)
 			{
@@ -5470,11 +5505,12 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_OPTIONS_BG:
 		{
 			OPENFILENAME OpenFileName;
-			static TCHAR szFile[MAX_PATH] = TEXT("\0");
+			TCHAR szFile[MAX_PATH];
 			//TCHAR*       t_bgdir = tstring_from_utf8(GetBgDir());
 			//if( !t_bgdir )
 			//	return FALSE;
 
+			szFile[0] = 0;
 			OpenFileName.lStructSize       = sizeof(OPENFILENAME);
 			OpenFileName.hwndOwner         = hMain;
 			OpenFileName.hInstance         = 0;
@@ -5694,7 +5730,11 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 				return FALSE;
 			}
 		}
+#ifdef MESS
+		return MessCommand(hwnd, id, hwndCtl, codeNotify);
+#else
 		break;
+#endif
 	}
 
 	return FALSE;
@@ -6108,6 +6148,11 @@ static void CreateIcons(void)
 	int icon_count;
 	DWORD dwStyle;
 	int i;
+#ifdef MESS
+	int grow = 3000;
+#else
+	int grow = 5000;
+#endif
 
 	icon_count = 0;
 	while(g_iconData[icon_count].icon_name)
@@ -6125,9 +6170,9 @@ static void CreateIcons(void)
 	SetWindowLong(hwndList,GWL_STYLE,(dwStyle & ~LVS_TYPEMASK) | LVS_ICON);
 
 	hSmall = ImageList_Create(GetShellSmallIconSize(),GetShellSmallIconSize(),
-							  ILC_COLORDDB | ILC_MASK, icon_count, icon_count + 5000);
+							  ILC_COLORDDB | ILC_MASK, icon_count, icon_count + grow);
 	hLarge = ImageList_Create(dwLargeIconSize, dwLargeIconSize,
-							  ILC_COLORDDB | ILC_MASK, icon_count, icon_count + 5000);
+							  ILC_COLORDDB | ILC_MASK, icon_count, icon_count + grow);
 
 	if (NULL == hSmall || NULL == hLarge) {
 		win_message_box_utf8(hwndList, "Cannot allocate Icon lists", "Allocation error - Exiting", IDOK);
@@ -6142,6 +6187,10 @@ static void CreateIcons(void)
 
 	// restore our view
 	SetWindowLong(hwndList,GWL_STYLE,dwStyle);
+
+#ifdef MESS
+	CreateMessIcons();
+#endif
 
 	// Now set up header specific stuff
 	hHeaderImages = ImageList_Create(8,8,ILC_COLORDDB | ILC_MASK,2,2);
@@ -6820,6 +6869,7 @@ static void MameLoadState()
 		if (path[wcslen(path)-1] == '\\')
 			path[wcslen(path)-1] = 0; // take off trailing back slash
 
+
 #ifdef MESS
 		{
 			state_fname = filename;
@@ -7004,6 +7054,11 @@ static void MamePlayGameWithOptions(int nGame, const play_options *playopts)
 {
 	DWORD dwExitCode;
 	HRESULT res;
+
+#ifdef MESS
+	if (!MessApproveImageList(hMain, nGame))
+		return;
+#endif
 
 	if (g_pJoyGUI != NULL)
 		KillTimer(hMain, JOYGUI_TIMER);
@@ -7592,7 +7647,7 @@ void InitTreeContextMenu(HMENU hTreeMenu)
 	MENUITEMINFO mii;
 	HMENU hMenu;
 	int i;
-	extern FOLDERDATA g_folderData[];
+	extern const FOLDERDATA g_folderData[];
 
 	ZeroMemory(&mii,sizeof(mii));
 	mii.cbSize = sizeof(mii);

@@ -774,7 +774,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 /* Build CPU info string */
 static LPCWSTR GameInfoCPU(UINT nIndex)
 {
-	static WCHAR buf[1024] = TEXT("");
+	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 	const device_config *cpu;
 
@@ -1146,7 +1146,7 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 		else
 		{
 			// audit result is no
-#if 0 //def MESS
+#ifdef MESS
 			wcscpy(buffer, _UIW(TEXT("BIOS missing")));
 #else
 			wcscpy(buffer, _UIW(TEXT("ROMs missing")));
@@ -1552,7 +1552,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				}
 				break;
 			default:
-#if 0 //def MESS
+#ifdef MESS
 				if (MessPropertiesCommand(hDlg, wNotifyCode, wID, &changed))
 					break;
 #endif // MESS
@@ -3365,7 +3365,7 @@ static void BuildDataMap(void)
 	datamap_set_trackbar_range(properties_datamap, IDC_TRANSPARENCY, 0, 255, 1);
 #endif /* TRANS_UI */
 
-#if 0 //def MESS
+#ifdef MESS
 	// MESS specific stuff
 	MessBuildDataMap(properties_datamap);
 #endif // MESS
@@ -3475,7 +3475,7 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 			for (sound = sound_first(config); sound != NULL; sound = sound_next(sound))
 			{
 				if (sound_get_type(sound) == SOUND_SAMPLES
-//					||  sound_get_type(sound) == SOUND_VLM5030
+					//||  sound_get_type(sound) == SOUND_VLM5030
 					)
 				{
 					enabled = TRUE;

@@ -660,6 +660,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			{
 				const input_port_config *port;
 				input_port_list portlist;
+				
 				input_port_list_init(&portlist, gamedrv->ipt, NULL, 0, FALSE);
 				
 				for (port = portlist.head; port != NULL; port = port->next)

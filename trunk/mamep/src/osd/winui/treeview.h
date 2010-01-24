@@ -58,6 +58,8 @@ typedef struct
 	BOOL        m_bExpectedResult;                       // Expected query result
 } FOLDERDATA, *LPFOLDERDATA;
 
+typedef const FOLDERDATA *LPCFOLDERDATA;
+
 typedef struct
 {
 	DWORD m_dwFilterType;				/* Filter value */
@@ -66,18 +68,14 @@ typedef struct
 	BOOL m_bExpectedResult;				/* Expected query result */
 } FILTER_ITEM, *LPFILTER_ITEM;
 
+typedef const FILTER_ITEM *LPCFILTER_ITEM;
+
 typedef struct
 {
 	const WCHAR *title;
 	const char  *root_icon;
 	const char  *sub_icon;
 } EXTFOLDER_TEMPLATE;
-
-/* in layout.c */
-extern FOLDERDATA g_folderData[];
-extern FILTER_ITEM g_filterList[];
-extern EXTFOLDER_TEMPLATE extFavorite;
-
 
 /***************************************************************************
     Functions to build builtin folder lists
@@ -198,7 +196,7 @@ typedef struct
 
 void FreeFolders(void);
 void ResetFilters(void);
-void InitTree(LPFOLDERDATA lpFolderData, LPFILTER_ITEM lpFilterList);
+void InitTree(LPCFOLDERDATA lpFolderData, LPCFILTER_ITEM lpFilterList);
 void SetCurrentFolder(LPTREEFOLDER lpFolder);
 UINT GetCurrentFolderID(void);
 
@@ -213,12 +211,12 @@ int  FindGame(LPTREEFOLDER lpFolder, int nGame);
 
 void ResetWhichGamesInFolders(void);
 
-LPFOLDERDATA FindFilter(DWORD folderID);
+LPCFOLDERDATA FindFilter(DWORD folderID);
 
 BOOL GameFiltered(int nGame, DWORD dwFlags);
 BOOL GetParentFound(int nGame);
 
-LPFILTER_ITEM GetFilterList(void);
+LPCFILTER_ITEM GetFilterList(void);
 
 void SetTreeIconSize(HWND hWnd, BOOL bLarge);
 BOOL GetTreeIconSize(void);

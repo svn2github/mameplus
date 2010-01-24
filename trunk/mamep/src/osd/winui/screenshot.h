@@ -22,14 +22,14 @@ typedef struct _mybitmapinfo
 } MYBITMAPINFO, *LPMYBITMAPINFO;
 
 #ifdef MESS
-extern BOOL LoadScreenShotEx(int nGame, LPCWSTR lpSoftwareName, int nType);
-#else /* !MESS */
+extern BOOL LoadScreenShotEx(int nGame, LPCSTR lpSoftwareName, int nType);
+#endif /* MESS */
+
 #ifdef USE_IPS
 extern BOOL LoadScreenShot(int nGame, LPCWSTR lpIPSName, int nType);
 #else /* USE_IPS */
 extern BOOL LoadScreenShot(int nGame, int nType);
 #endif /* USE_IPS */
-#endif /* MESS */
 extern HANDLE GetScreenShotHandle(void);
 extern int GetScreenShotWidth(void);
 extern int GetScreenShotHeight(void);

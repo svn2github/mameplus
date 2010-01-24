@@ -1214,7 +1214,7 @@ int Picker_GetNumColumns(HWND hWnd)
 	pPickerInfo->pCallbacks->pfnGetColumnShown(shown);
 	hwndHeader = ListView_GetHeader(hWnd);
 
-	if (GetUseOldControl() || (nColumnCount = Header_GetItemCount(hWnd)) < 1)
+	if (GetUseOldControl() || (nColumnCount = Header_GetItemCount(hwndHeader)) < 1)
 	{
 		nColumnCount = 0;
 		for (i = 0; i < pPickerInfo->nColumnCount ; i++ )
@@ -1632,6 +1632,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	SetBkColor(hDC, clrBkSave);
 	global_free(order);
 }
+
 
 
 

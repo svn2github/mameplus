@@ -253,7 +253,6 @@ void DirectDraw_Close(void)
 	{
 		global_free(g_Displays[i].name);
 		g_Displays[i].name = NULL;
-
 		if (g_Displays[i].lpguid != NULL)
 		{
 			global_free(g_Displays[i].lpguid);

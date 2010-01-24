@@ -121,8 +121,8 @@ static int          numExtraIcons = 0;
 static char         *ExtraFolderIcons[MAX_EXTRA_FOLDERS];
 
 // built in folders and filters
-static LPFOLDERDATA  g_lpFolderData;
-static LPFILTER_ITEM g_lpFilterList;	
+static LPCFOLDERDATA  g_lpFolderData;
+static LPCFILTER_ITEM g_lpFilterList;
 
 /***************************************************************************
     private function prototypes
@@ -182,6 +182,7 @@ static int ci_strncmp (const char *s1, const char *s2, int n)
 #endif
 
 
+
 /* De-allocate all folder memory */
 void FreeFolders(void)
 {
@@ -224,7 +225,7 @@ void ResetFilters(void)
 	}
 }
 
-void InitTree(LPFOLDERDATA lpFolderData, LPFILTER_ITEM lpFilterList)
+void InitTree(LPCFOLDERDATA lpFolderData, LPCFILTER_ITEM lpFilterList)
 {
 	LONG_PTR l;
 
@@ -313,7 +314,6 @@ void ResetWhichGamesInFolders(void)
 	for (i = 0; i < numFolders; i++)
 	{
 		LPTREEFOLDER lpFolder = treeFolders[i];
-
 		// setup the games in our built-in folders
 		for (k = 0; g_lpFolderData[k].m_lpTitle; k++)
 		{
@@ -439,7 +439,7 @@ BOOL GetParentFound(int nGame)
 	return FALSE;
 }
 
-LPFILTER_ITEM GetFilterList(void)
+LPCFILTER_ITEM GetFilterList(void)
 {
 	return g_lpFilterList;
 }
@@ -1473,7 +1473,7 @@ void CreateAllChildFolders(void)
 	for (i = 0; i < num_top_level_folders; i++)
 	{
 		LPTREEFOLDER lpFolder = treeFolders[i];
-		LPFOLDERDATA lpFolderData = NULL;
+		LPCFOLDERDATA lpFolderData = NULL;
 		UINT start_folder = numFolders;
 
 		for (j = 0; g_lpFolderData[j].m_lpTitle; j++)
@@ -1705,7 +1705,6 @@ static BOOL AddFolder(LPTREEFOLDER lpFolder)
 
 	treeFolders[numFolders] = lpFolder;
 	numFolders++;
-
 	return TRUE;
 }
 
@@ -1775,8 +1774,7 @@ BOOL InitFolders(void)
 {
 	int 			i = 0;
 	BOOL            doCreateFavorite;
-	LPFOLDERDATA	fData = 0;
-
+	LPCFOLDERDATA	fData = 0;
 	if (treeFolders != NULL)
 	{
 		for (i = numFolders - 1; i >= 0; i--)
@@ -1811,6 +1809,7 @@ BOOL InitFolders(void)
 	}
 
 	numExtraFolders = InitExtraFolders();
+	extern const EXTFOLDER_TEMPLATE extFavorite;
 	doCreateFavorite = TRUE;
 
 	for (i = 0; i < numExtraFolders; i++)
@@ -1869,15 +1868,10 @@ BOOL InitFolders(void)
 	}
 
 	CreateAllChildFolders();
-
 	CreateTreeIcons();
-
 	ResetWhichGamesInFolders();
-
 	ResetTreeViewFolders();
-
 	SelectTreeViewFolder(GetSavedFolderID());
-
 	return TRUE;
 }
 
@@ -1889,7 +1883,6 @@ static BOOL CreateTreeIcons()
 	HINSTANCE hInst = GetModuleHandle(0);
 
 	int numIcons = ICON_MAX + numExtraIcons;
-
 	hTreeSmall = ImageList_Create (16, 16, ILC_COLORDDB | ILC_MASK, numIcons, numIcons);
 
 	//dprintf("Trying to load %i normal icons",ICON_MAX);
@@ -2127,7 +2120,7 @@ static LRESULT CALLBACK TreeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
  */
 
 /* find a FOLDERDATA by folderID */
-LPFOLDERDATA FindFilter(DWORD folderID)
+LPCFOLDERDATA FindFilter(DWORD folderID)
 {
 	int i;
 

@@ -528,7 +528,7 @@ BOOL AllocatePNG(png_info *p, HGLOBAL *phDIB, HPALETTE *pPal)
 		
 		*pPal = CreatePalette(pLP);
 		
-		free (pLP);
+		global_free (pLP);
 	}
 	
 	copy_size = dibSize;
