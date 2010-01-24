@@ -889,13 +889,14 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			TEXTMETRIC tm;
 			int nLines, nLineHeight;
 			SCROLLINFO ScrollBar;
+			HRESULT res;
 
 			TranslateDialog(hDlg, lParam, FALSE);
 
 			hPcbInfo = hDlg;
 
 			g_lpPcbInfoWndProc = (WNDPROC)(LONG)(int)GetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWLP_WNDPROC);
-			SetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWLP_WNDPROC, (LONG)PcbInfoWndProc);
+			SetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWLP_WNDPROC, (LONG_PTR)PcbInfoWndProc);
 
 			memset((void *)&font, 0, sizeof(font));
 			font.lfHeight = -13;
@@ -915,7 +916,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 
 			lvi.iSubItem = 0;
 			lvi.mask	 = LVIF_PARAM;
-			ListView_GetItem(hWndList, &lvi);
+			res = ListView_GetItem(hWndList, &lvi);
 
 			nGame = lvi.lParam;
 			nParentIndex = GetParentRomSetIndex(drivers[nGame]);

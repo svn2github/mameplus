@@ -180,7 +180,7 @@ static void hiscore_free (void)
 	while (mem_range)
 	{
 		memory_range *next = mem_range->next;
-		free (mem_range);
+		global_free(mem_range);
 		mem_range = next;
 	}
 	state.mem_range = NULL;
@@ -210,7 +210,7 @@ static void hiscore_load (running_machine *machine)
 					avoid memory trashing just in case */
 					mame_fread (f, data, mem_range->num_bytes);
 					copy_to_memory (machine, mem_range->cpunum, mem_range->addr, data, mem_range->num_bytes);
-					free (data);
+					global_free(data);
 				}
 				mem_range = mem_range->next;
 			}
@@ -242,7 +242,7 @@ static void hiscore_save (running_machine *machine)
 					avoid memory trashing just in case */
 					copy_from_memory (machine, mem_range->cpunum, mem_range->addr, data, mem_range->num_bytes);
 					mame_fwrite(f, data, mem_range->num_bytes);
-					free (data);
+					global_free(data);
 				}
 				mem_range = mem_range->next;
 			}
@@ -284,7 +284,7 @@ void hiscore_close (running_machine *machine)
 /* call hiscore_open once after loading a game */
 void hiscore_init (running_machine *machine)
 {
-	//memory_range *mem_range = state.mem_range;
+	memory_range *mem_range = state.mem_range;
 	//int cpunum = mem_range->cpunum;
 	//const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	file_error filerr;
@@ -324,7 +324,7 @@ void hiscore_init (running_machine *machine)
 			else if (is_mem_range (buffer))
 			{
 				const char *pBuf = buffer;
-				memory_range *mem_range = (memory_range *)malloc(sizeof(memory_range));
+				mem_range = (memory_range *)malloc(sizeof(memory_range));
 				if (mem_range)
 				{
 					mem_range->cpunum = hexstr2num (&pBuf);

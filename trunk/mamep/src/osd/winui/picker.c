@@ -190,6 +190,7 @@ static BOOL ListViewNeedToolTipText(HWND hWnd, LPTOOLTIPTEXT lpttt)
 	int iItem;
 	int nColumn;
 	static WCHAR szBuffer[1024];
+	HRESULT res;
 
 	dwPos = GetMessagePos();
 	pt.x = LOWORD(dwPos);
@@ -206,7 +207,7 @@ static BOOL ListViewNeedToolTipText(HWND hWnd, LPTOOLTIPTEXT lpttt)
 
 	lvi.iItem = lvht.iItem;
 	lvi.mask = LVIF_PARAM;
-	ListView_GetItem(hWnd, &lvi);
+	res = ListView_GetItem(hWnd, &lvi);
 
 	iItem = lvi.lParam;
 	nColumn = Picker_GetRealColumnFromViewColumn(hWnd, lvht.iSubItem);

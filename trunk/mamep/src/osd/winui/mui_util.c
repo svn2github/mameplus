@@ -353,7 +353,7 @@ int numberOfScreens(const machine_config *config)
 
 struct control_cache_t
 {
-	const input_port_token *ipt;
+	input_port_token *ipt;
 	int num;
 };
 
@@ -362,7 +362,7 @@ static int cmp_ipt(const void *m1, const void *m2)
 	struct control_cache_t *p1 = (struct control_cache_t *)m1;
 	struct control_cache_t *p2 = (struct control_cache_t *)m2;
 
-	return (int)p1->ipt - (int)p2->ipt;
+	return p1->ipt - p2->ipt;
 }
 
 static void UpdateController(void)
@@ -381,7 +381,7 @@ static void UpdateController(void)
 
 	for (i = 0; i < nGames; i++)
 	{
-		cache[i].ipt = drivers[i]->ipt;
+		cache[i].ipt = (input_port_token *)drivers[i]->ipt;
 		cache[i].num = i;
 	}
 	qsort(cache, nGames, sizeof (*cache), cmp_ipt);

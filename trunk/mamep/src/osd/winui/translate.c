@@ -309,18 +309,19 @@ static void TranslateTabControl(HWND hControl)
 		TC_ITEM  tci;
 		WCHAR    buffer[1024];
 		WCHAR    *p;
+		HRESULT res;
 
 		tci.mask = TCIF_TEXT;
 		tci.pszText = buffer;
 		tci.cchTextMax = ARRAY_LENGTH(buffer);
-		TabCtrl_GetItem(hControl, i, &tci);
+		res = TabCtrl_GetItem(hControl, i, &tci);
 
 		p = _UIW(buffer);
 		if (p != buffer)
 		{
 			tci.mask = TCIF_TEXT;
 			tci.pszText = p;
-			TabCtrl_SetItem(hControl, i, &tci);
+			res = TabCtrl_SetItem(hControl, i, &tci);
 		}
 	}
 }
@@ -374,6 +375,7 @@ static void translate_tree_folder_items(HWND hWnd, HTREEITEM hti)
 		{
 			WCHAR *translated;
 			WCHAR *p;
+			HRESULT res;
 
 			translated = w_lang_message(lpFolder->m_nCategoryID, lpFolder->m_lpOriginalTitle);
 
@@ -388,7 +390,7 @@ static void translate_tree_folder_items(HWND hWnd, HTREEITEM hti)
 			tvi.mask = TVIF_HANDLE | TVIF_TEXT;
 			tvi.hItem = hti;
 			tvi.pszText = lpFolder->m_lpTitle;
-			TreeView_SetItem(hWnd, &tvi);
+			res = TreeView_SetItem(hWnd, &tvi);
 		}
 
 		translate_tree_folder_items(hWnd, TreeView_GetNextItem(hWnd, hti, TVGN_CHILD));

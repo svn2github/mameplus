@@ -1777,7 +1777,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 		else
 				SetBkColor((HDC)wParam,RGB(255,255,255) );
 			UnrealizeObject(background_brush);
-			return (DWORD)background_brush;
+			return (DWORD_PTR)background_brush;
 			break;
 	}
 #endif // 0 Not sure what to do here

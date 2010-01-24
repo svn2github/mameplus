@@ -281,7 +281,7 @@ static void             Win32UI_exit(void);
 static BOOL             PumpMessage(void);
 static BOOL             OnIdle(HWND hWnd);
 static void             OnSize(HWND hwnd, UINT state, int width, int height);
-static LRESULT CALLBACK MameWindowProc(HWND hwnd,UINT message,UINT wParam,LONG lParam);
+static LRESULT CALLBACK MameWindowProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam);
 
 static void             SetView(int menu_id);
 static void             ResetListView(void);
@@ -7377,7 +7377,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 					{
 						hSubMenu = CreateMenu();
 						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_IPS + patch_count, ConvertAmpersandString(wp + 1));
-						InsertMenu(hMenu, 1, MF_BYPOSITION | MF_POPUP, (UINT)hSubMenu, ConvertAmpersandString(wbuf));
+						InsertMenu(hMenu, 1, MF_BYPOSITION | MF_POPUP, (UINT_PTR)hSubMenu, ConvertAmpersandString(wbuf));
 					}
 					else
 						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_IPS + patch_count, ConvertAmpersandString(wp + 1));

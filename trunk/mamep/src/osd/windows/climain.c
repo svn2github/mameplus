@@ -1,4 +1,5 @@
 #include <windows.h>
+#include "guimain.c" //FIXME: remove it, a wWinMain link error has occured
 
 #ifdef main
 #undef main
@@ -9,12 +10,4 @@ int __declspec(dllimport) mame_cli_main(int argc, char **argv);
 int main(int argc, char *argv[])
 {
 	return mame_cli_main(argc, argv);
-}
-
-int WINAPI wWinMain(HINSTANCE    hInstance,
-                   HINSTANCE    hPrevInstance,
-                   LPWSTR       lpCmdLine,
-                   int          nCmdShow)
-{
-	return mame_cli_main(0, 0);
 }
