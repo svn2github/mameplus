@@ -32,7 +32,7 @@
 #include "translate.h"
 
 /* Game history variables */
-#define MAX_HISTORY_LEN     (400 * 1024)
+#define MAX_HISTORY_LEN     (1024 * 1024)
 
 
 static WCHAR  historyBuf[MAX_HISTORY_LEN];

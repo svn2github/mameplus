@@ -51,7 +51,7 @@
 
 
 // MAME/MAMEUI headers
-//#include "emu.h"
+#include "emu.h"
 #include "emuopts.h"
 #include "osdepend.h"
 #include "unzip.h"
@@ -1073,8 +1073,30 @@ int MameUIMain(HINSTANCE    hInstance,
 	if (__argc != 1)
 	{
 		/* Rename main because gcc will use it instead of WinMain even with -mwindows */
-		extern int /*DECL_SPEC*/ mame_main(int, char**);
-		exit(mame_main(__argc, __argv));
+		extern int /*DECL_SPEC*/ utf8_main(int, char**);
+		char **utf8_argv;
+		int i, rc;
+
+		/* convert arguments to UTF-8 */
+		utf8_argv = (char **) malloc(__argc * sizeof(*__targv));
+		if (utf8_argv == NULL)
+			return 999;
+		for (i = 0; i < __argc; i++)
+		{
+			utf8_argv[i] = utf8_from_tstring(__targv[i]);
+			if (utf8_argv[i] == NULL)
+				return 999;
+		}
+
+		/* run utf8_main */
+		rc = utf8_main(__argc, utf8_argv);
+
+		/* free arguments */
+		for (i = 0; i < __argc; i++)
+			global_free(utf8_argv[i]);
+		global_free(utf8_argv);
+		
+		exit(rc);
 	}
 	if (!Win32UI_init(hInstance, lpCmdLine, nCmdShow))
 		return 1;
@@ -2462,6 +2484,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 		/* clear keyboard state */
 		KeyboardStateClear();
 
+#if 0 //crash
 	for (i = 0; i < NUM_GUI_SEQUENCES; i++)
 	{
 		const input_seq *is1;
@@ -2472,6 +2495,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 		//input_seq_copy(is1, is2);
 		//dprintf("seq =%s is: %4i %4i %4i %4i\n",GUISequenceControl[i].name, (*is1)[0], (*is1)[1], (*is1)[2], (*is1)[3]);
 	}
+#endif
 
 	if (GetJoyGUI() == TRUE)
 	{

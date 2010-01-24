@@ -55,7 +55,6 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#define NOWINRES
 #include "windows.h"
 #include "commctrl.h"
 #ifdef __GNUC__

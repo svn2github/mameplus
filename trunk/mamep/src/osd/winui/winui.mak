@@ -136,7 +136,7 @@ $(LIBOSD): $(UIOBJS)
 #-------------------------------------------------
 
 $(UISRC)/helpids.c : $(UIOBJ)/mkhelp$(EXE) $(UISRC)/resource.h $(UISRC)/resource.hm $(UISRC)/mameui.rc
-	$(UIOBJ)/mkhelp$(EXE) $(UISRC)/mameui.rc >$@
+	@"$(UIOBJ)/mkhelp$(EXE)" $(UISRC)/mameui.rc >$@
 
 # rule to build the generator
 $(UIOBJ)/mkhelp$(EXE): $(UIOBJ)/mkhelp.o $(LIBOCORE)
@@ -185,7 +185,7 @@ $(GUIRESFILE): $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
 
 $(UIOBJ)/mamevers.rc: $(VERINFO) $(SRC)/version.c
 	@echo Emitting $@...
-	@$(VERINFO) $(SRC)/version.c > $@
+	@"$(VERINFO)" $(SRC)/version.c > $@
 
 
 

@@ -6,7 +6,7 @@
 #include "resource.h"
 #include "resource.hm"
 
-const DWORD dwHelpIDs[] =
+extern const DWORD dwHelpIDs[] =
 {
 	IDC_ADSTICK                   ,HIDC_ADSTICK,
 	IDC_ANTIALIAS                 ,HIDC_ANTIALIAS,

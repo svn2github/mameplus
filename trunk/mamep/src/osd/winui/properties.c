@@ -203,7 +203,7 @@ static void save_options_ex(OPTIONS_TYPE opt_type, core_options *opts, int game_
 		OPTIONS_TYPE type = opt_type;
 
 		if (type > OPTIONS_GLOBAL)
-			type--;
+			type = (OPTIONS_TYPE)(type-1);
 
 		opts = load_options(type, game_num);
 	}
@@ -435,7 +435,7 @@ static struct ComboBoxSnapView
 static const struct
 {
 	const char *name;
-	const UINT ctrl;
+	UINT ctrl;
 } drivers_table[] =
 {
 	{"mame",        IDC_DRV_MAME},

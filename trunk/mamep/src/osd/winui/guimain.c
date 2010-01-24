@@ -10,12 +10,12 @@
 
 int __declspec(dllimport) mame_gui_main(HINSTANCE    hInstance,
                    HINSTANCE    hPrevInstance,
-                   LPSTR        lpCmdLine,
+                   LPWSTR        lpCmdLine,
                    int          nCmdShow);
 
-int WINAPI WinMain(HINSTANCE    hInstance,
+int WINAPI wWinMain(HINSTANCE    hInstance,
                    HINSTANCE    hPrevInstance,
-                   LPSTR        lpCmdLine,
+                   LPWSTR       lpCmdLine,
                    int          nCmdShow)
 {
 	return mame_gui_main(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
