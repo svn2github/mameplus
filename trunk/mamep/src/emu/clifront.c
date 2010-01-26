@@ -596,8 +596,7 @@ int cli_info_listfull(core_options *options, const char *gamename)
 
 			/* print the additional description only if we are listing clones */
 			{
-				char *pdest = pdest;
-				pdest = strstr(drivers[drvindex]->description, " (");
+				const char *pdest = strstr(drivers[drvindex]->description, " (");
 
 				if (pdest != NULL && pdest > drivers[drvindex]->description)
 					mame_printf_info("%s", pdest);
@@ -1142,7 +1141,7 @@ int cli_info_listgames(core_options *options, const char *gamename)
 
 			/* print the additional description only if we are listing clones */
 			{
-				char *pdest = strstr(drivers[drvindex]->description, " (");
+				const char *pdest = strstr(drivers[drvindex]->description, " (");
 
 				if (pdest != NULL && pdest > drivers[drvindex]->description)
 					mame_printf_info("%s", pdest);

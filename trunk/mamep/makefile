@@ -56,9 +56,9 @@ endif
 
 ifneq ($(NO_DLL),)
   ifneq ($(WINUI),)
-    EXTRA_SUFFIX = plusui
+    EXTRA_SUFFIX = pui
   else
-    EXTRA_SUFFIX = plus
+    EXTRA_SUFFIX = p
   endif
   # always define DONT_USE_DLL=1 for no dll version
   DONT_USE_DLL=1

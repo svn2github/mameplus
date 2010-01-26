@@ -120,13 +120,8 @@ static const translation_info gcc_translate[] =
 	{ 0,		"-march=athlon",			"/G7" },
 	{ 0,		"-march=pentium4",			"/G7" },
 	{ 0,		"-march=athlon64",			"/G7" },
-//============================================================
-	{ 0,		"-mmmx",					"" },
-//============================================================
-	{ 0,		"-msse",					"/arch:SSE" },
 	{ VS71,		"-msse2",					"/arch:SSE2" },
 	{ 0,		"-msse2",					"" },
-	{ VS71,		"-msse3",					"/arch:SSE2" },
 	{ 0,		"-msse3",					"" },
 	{ 0,		"-mwindows",				"" },
 	{ 0,		"-mno-cygwin",				"" },
@@ -160,8 +155,7 @@ static const translation_info ld_translate[] =
 	{ 0,		"-municode",				"" },
 	{ 0,		"-static-libgcc",			"" },
 	{ 0,		"-shared",					"/dll" },
-	{ 0,		"-L*",					"" },
-	{ 0,		"*.dll",					"*.lib" },
+	{ 0,		"-L*",						"" },
 	{ 0 }
 };
 
@@ -337,90 +331,87 @@ static void build_command_line(int argc, char *argv[])
 		int i;
 
 		// find a match
-		if (firstchar == '-')
+		for (i = 0; !matched && transtable[i].gcc_option != NULL; i++)
 		{
-			for (i = 0; !matched && transtable[i].gcc_option != NULL; i++)
+			const char *compare = transtable[i].gcc_option;
+			const char *replace;
+			int j;
+
+			// check version number
+			if (exe_version < transtable[i].vc_version)
+				continue;
+
+			// find a match
+			for (j = 0; j < srclen; j++)
+				if (src[j] != compare[j])
+					break;
+
+			// if we hit an asterisk, we're ok
+			if (compare[j] == '*')
 			{
-				const char *compare = transtable[i].gcc_option;
-				const char *replace;
-				int j;
+				// if this is the end of the parameter, use the next one
+				if (src[j] == 0)
+					src = argv[++param];
+				else
+					src += j;
 
-				// check version number
-				if (exe_version < transtable[i].vc_version)
-					continue;
-
-				// find a match
-				for (j = 0; j < srclen; j++)
-					if (src[j] != compare[j])
-						break;
-
-				// if we hit an asterisk, we're ok
-				if (compare[j] == '*')
+				// copy the replacement up to the asterisk
+				replace = transtable[i].vc_option;
+				while (*replace && *replace != '*')
 				{
-					// if this is the end of the parameter, use the next one
-					if (src[j] == 0)
-						src = argv[++param];
-					else
-						src += j;
-
-					// copy the replacement up to the asterisk
-					replace = transtable[i].vc_option;
-					while (*replace && *replace != '*')
-					{
-						if (*replace == '~')
-						{
-							dst += sprintf(dst, "%s", outstring);
-							replace++;
-						}
-						else
-							*dst++ = *replace++;
-					}
-
-					// if we have an asterisk in the replacement, copy the rest of the source
-					if (*replace == '*')
-					{
-						int addquote = (strchr(src, ' ') != NULL);
-
-						if (addquote)
-							*dst++ = '"';
-						while (*src)
-						{
-							*dst++ = (*src == '/') ? '\\' : *src;
-							src++;
-						}
-						if (addquote)
-							*dst++ = '"';
-
-						// if there's stuff after the asterisk, copy that
-						replace++;
-						while (*replace)
-							*dst++ = *replace++;
-					}
-
-					// append a final space
-					*dst++ = ' ';
-				matched = TRUE;
-				}
-
-				// if we hit the end, we're also ok
-				else if (compare[j] == 0 && j == srclen)
-				{
-					// copy the replacement up to the tilde
-					replace = transtable[i].vc_option;
-					while (*replace && *replace != '~')
-						*dst++ = *replace++;
-
-					// if we hit a tilde, set the new output
 					if (*replace == '~')
-						outstring = replace + 1;
-
-					// append a final space
-					*dst++ = ' ';
-				matched = TRUE;
+					{
+						dst += sprintf(dst, "%s", outstring);
+						replace++;
+					}
+					else
+						*dst++ = *replace++;
 				}
 
-				// else keep looking
+				// if we have an asterisk in the replacement, copy the rest of the source
+				if (*replace == '*')
+				{
+					int addquote = (strchr(src, ' ') != NULL);
+
+					if (addquote)
+						*dst++ = '"';
+					while (*src)
+					{
+						*dst++ = (*src == '/') ? '\\' : *src;
+						src++;
+					}
+					if (addquote)
+						*dst++ = '"';
+
+					// if there's stuff after the asterisk, copy that
+					replace++;
+					while (*replace)
+						*dst++ = *replace++;
+				}
+
+				// append a final space
+				*dst++ = ' ';
+				matched = TRUE;
 			}
+
+			// if we hit the end, we're also ok
+			else if (compare[j] == 0 && j == srclen)
+			{
+				// copy the replacement up to the tilde
+				replace = transtable[i].vc_option;
+				while (*replace && *replace != '~')
+					*dst++ = *replace++;
+
+				// if we hit a tilde, set the new output
+				if (*replace == '~')
+					outstring = replace + 1;
+
+				// append a final space
+				*dst++ = ' ';
+				matched = TRUE;
+			}
+
+			// else keep looking
 		}
 
 		// if we didn't match, process
@@ -430,56 +421,11 @@ static void build_command_line(int argc, char *argv[])
 			if (transtable[i].gcc_option == NULL && firstchar == '-')
 				fprintf(stderr, "Unable to match parameter '%s'\n", src);
 
-		// otherwise, assume it's a filename and copy translating slashes
-		// it can also be a Windows-specific option which is passed through unscathed
+			// otherwise, assume it's a filename and copy translating slashes
+			// it can also be a Windows-specific option which is passed through unscathed
 			else if (firstchar != '-')
 			{
-				char *temp = NULL;
-				int dotrans;
-
-				for (i = 0; transtable[i].gcc_option; i++)
-				{
-					const char *compare = transtable[i].gcc_option;
-					int clen, slen;
-
-					// check version number
-					if (exe_version < transtable[i].vc_version)
-						continue;
-
-					if (*compare++ != '*')
-						continue;
-
-					clen = strlen(compare);
-					slen = strlen(src);
-
-					if (clen > slen)
-						continue;
-
-					if (strcmp(src + slen - clen, compare) == 0)
-					{
-						const char *replace = transtable[i].vc_option;
-						int j;
-
-						temp = malloc(slen + strlen(replace));
-
-						for (j = 0; replace[j]; j++)
-						{
-							if (replace[j] == '*')
-							{
-								strcpy(temp + j, src);
-								strcpy(temp + j + slen - clen, replace + j + 1);
-								break;
-							}
-
-							temp[j] = replace[j];
-						}
-
-						src = temp;
-						break;
-					}
-				}
-
-				dotrans = (*src != '/');
+				int dotrans = (*src != '/');
 
 				// if the output filename is implicitly first, append the out parameter
 				if (output_is_first)
@@ -495,9 +441,6 @@ static void build_command_line(int argc, char *argv[])
 					src++;
 				}
 				*dst++ = ' ';
-
-				if (temp)
-					global_free(temp);
 			}
 		}
 	}

@@ -33,17 +33,17 @@ DEFS += -DNEOCPSPGM
 
 #-------------------------------------------------
 # specify available CPU cores; some of these are
-# only for MESS and so aren't included
+# only for MESS, but are included so that they get
+# updated with any MAME core changes
 #-------------------------------------------------
 
 CPUS += Z80
+CPUS += I386
 CPUS += MCS48
 CPUS += M680X0
 CPUS += ARM7
 CPUS += SH2
 CPUS += PIC16C5X
-
-CPUS += I386
 
 
 #-------------------------------------------------
@@ -54,6 +54,7 @@ CPUS += I386
 SOUNDS += CUSTOM
 SOUNDS += YM2151
 SOUNDS += YM2203
+SOUNDS += YM2608
 SOUNDS += YM2610
 SOUNDS += YM2610B
 SOUNDS += YMF278B

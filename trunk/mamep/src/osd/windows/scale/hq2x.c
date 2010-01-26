@@ -130,7 +130,7 @@ void hq2x_16_def(interp_uint16* restrict volatile dst0, interp_uint16* restrict 
 }
 #endif
 
-void hq2x_32_def(interp_uint32* restrict volatile dst0, interp_uint32* restrict volatile dst1, const interp_uint32* restrict src0, const interp_uint32* restrict src1, const interp_uint32* restrict src2, unsigned count)
+void hq2x_32_def(interp_uint32* restrict dst0, interp_uint32* restrict dst1, const interp_uint32* restrict src0, const interp_uint32* restrict src1, const interp_uint32* restrict src2, unsigned count)
 {
 	unsigned i;
 
