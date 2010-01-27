@@ -241,15 +241,6 @@ endif
 
 
 
-DEFS += -DMAMENAME=APPNAME
-
-DEFS+= -DDIRECTSOUND_VERSION=0x0300
-DEFS+= -DDIRECTDRAW_VERSION=0x0300
-DEFS+= -DCLIB_DECL=__cdecl
-DEFS+= -DDECL_SPEC=
-
-
-
 #-------------------------------------------------
 # OSD core library
 #-------------------------------------------------
@@ -306,27 +297,6 @@ VERSIONRES = $(WINOBJ)/version.res
 
 
 #-------------------------------------------------
-# extra scale effects, include the scale.mak
-#-------------------------------------------------
-
-ifneq ($(USE_SCALE_EFFECTS),)
-OSDOBJS += $(WINOBJ)/scale.o
-include $(SRC)/osd/windows/scale/scale.mak
-endif
-
-
-
-#-------------------------------------------------
-# if building with a UI, include the ui.mak
-#-------------------------------------------------
-
-ifdef WINUI
-include $(SRC)/osd/winui/winui.mak
-endif
-
-
-
-#-------------------------------------------------
 # rules for building the libaries
 #-------------------------------------------------
 
@@ -374,3 +344,24 @@ $(VERSIONRES): $(WINOBJ)/mamevers.rc
 $(WINOBJ)/mamevers.rc: $(BUILDOUT)/verinfo$(BUILD_EXE) $(SRC)/version.c
 	@echo Emitting $@...
 	@"$(BUILDOUT)/verinfo$(BUILD_EXE)" -b windows $(SRC)/version.c > $@
+
+
+
+#-------------------------------------------------
+# extra scale effects, include the scale.mak
+#-------------------------------------------------
+
+ifneq ($(USE_SCALE_EFFECTS),)
+OSDOBJS += $(WINOBJ)/scale.o
+include $(SRC)/osd/windows/scale/scale.mak
+endif
+
+
+
+#-------------------------------------------------
+# For building UI include ui.mak
+#-------------------------------------------------
+
+ifdef WINUI
+include $(SRC)/osd/winui/winui.mak
+endif

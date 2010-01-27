@@ -156,7 +156,7 @@ static int GetGameNameIndex(const char *name)
 		/* initialize array of game names/indices */
 		int i;
 
-		sorted_drivers = (driver_data_type *)malloc(sizeof(driver_data_type) * num_games);
+		sorted_drivers = global_alloc_array(driver_data_type, sizeof(driver_data_type) * num_games);
 		for (i = 0; i < num_games; i++)
 		{
 			sorted_drivers[i].name = drivers[i]->name;
@@ -676,7 +676,7 @@ static int index_datafile (struct tDatafileIndex **_index)
 	if (ParseSeek (0L, SEEK_SET)) return 0;
 
 	/* allocate index */
-        idx = *_index = (tDatafileIndex *)malloc ((num_games + 1) * sizeof (struct tDatafileIndex));
+        idx = *_index = global_alloc_array(tDatafileIndex, (num_games + 1) * sizeof (struct tDatafileIndex));
 	if (NULL == idx) return 0;
 
 	/* loop through datafile */
@@ -778,7 +778,7 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 	if (ParseSeek (gd_idx->offset, SEEK_SET)) return 0;
 
 	/* allocate index */
-	m_idx = *_index = (tMenuIndex *)malloc(MAX_MENUIDX_ENTRIES * sizeof (struct tMenuIndex));
+	m_idx = *_index = global_alloc_array(tMenuIndex, MAX_MENUIDX_ENTRIES * sizeof (struct tMenuIndex));
 	if (NULL == m_idx) return 0;
 
 	/* loop through between $cmd= */
@@ -802,7 +802,7 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 					token = GetNextToken_ex (&s, &tell);
 			}
 
-			m_idx->menuitem = (char *)malloc(strlen((char *)s)+1);
+			m_idx->menuitem = global_alloc_array(char, strlen((char *)s)+1);
 			strcpy(m_idx->menuitem, (char *)s);
 
 			m_idx->offset = cmdtag_offset;

@@ -132,9 +132,9 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 			bRLE = 1;
 		}
 
-		*p = (ips_chunk *)malloc(sizeof (ips_chunk));
+		*p = global_alloc_array(ips_chunk, sizeof (ips_chunk));
 		if (*p)
-			(*p)->data = (char *)malloc(size);
+			(*p)->data = global_alloc_array(char, size);
 
 		if (!*p || !(*p)->data)
 		{
@@ -290,7 +290,7 @@ static int parse_ips_patch(running_machine *machine, ips_entry **ips_p, const ch
 				ips_dir = machine->gamedrv->name;
 			}
 
-			entry = (ips_entry *)malloc(sizeof (*entry));
+			entry = global_alloc_array(ips_entry, sizeof (*entry));
 			memset(entry, 0, sizeof (*entry));
 			*ips_p = entry;
 			ips_p = &entry->next;

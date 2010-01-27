@@ -76,17 +76,19 @@ BOOL ScreenShotLoaded(void)
 }
 
 #ifdef MESS
-static BOOL LoadSoftwareScreenShot(const WCHAR *drv_name, LPCWSTR lpSoftwareName, int nType)
+static BOOL LoadSoftwareScreenShot(const game_driver *drv, LPCSTR lpSoftwareName, int nType)
 {
-	WCHAR *s = (char*)alloca((wcslen(drv_name) + 1 + wcslen(lpSoftwareName) + 5) * sizeof (*s));
-	swprintf(s, TEXT("%s/%s.png"), drv_name, lpSoftwareName);
-	return LoadDIB(s, &m_hDIB, &m_hPal, nType);
+	BOOL result;
+	char *s = (char*)alloca(strlen(drv->name) + 1 + strlen(lpSoftwareName) + 5);
+	sprintf(s, "%s/%s.png", drv->name, lpSoftwareName);
+	result = LoadDIB(s, &m_hDIB, &m_hPal, nType);
+	return result;
 }
 #endif /* MESS */
 
 /* Allow us to pre-load the DIB once for future draws */
 #ifdef MESS
-BOOL LoadScreenShotEx(int nGame, LPCWSTR lpSoftwareName, int nType)
+BOOL LoadScreenShotEx(int nGame, LPCSTR lpSoftwareName, int nType)
 #else /* !MESS */
 #ifdef USE_IPS
 BOOL LoadScreenShot(int nGame, LPCWSTR lpIPSName, int nType)
@@ -111,11 +113,12 @@ BOOL LoadScreenShot(int nGame, int nType)
 #ifdef MESS
 	if (lpSoftwareName)
 	{
-		loaded = LoadSoftwareScreenShot(driversw[nIndex]->name, lpSoftwareName, nType);
-		if (!loaded && DriverIsClone(nIndex) == TRUE)
+		int nParentIndex = -1;
+		loaded = LoadSoftwareScreenShot(drivers[nGame], lpSoftwareName, nType);
+		if (!loaded && DriverIsClone(nGame) == TRUE)
 		{
-			nIndex = GetParentIndex(drivers[nIndex]);
-			loaded = LoadSoftwareScreenShot(driversw[nIndex]->name, lpSoftwareName, nType);
+			nParentIndex = GetParentIndex(drivers[nGame]);
+			loaded = LoadSoftwareScreenShot(drivers[nParentIndex], lpSoftwareName, nType);
 		}
 	}
 	if (!loaded)

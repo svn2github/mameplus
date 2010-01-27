@@ -8,7 +8,6 @@
 
 
 # build the executable names
-CFLAGS += -DEMULATORDLL=\"$(EMULATORDLL)\"
 RCFLAGS += -DMESS
 
 LIBS += -lcomdlg32
@@ -44,16 +43,10 @@ $(LIBOCORE_NOMAIN): $(OSDCOREOBJS:$(WINOBJ)/main.o=)
 # rules for resource file
 #-------------------------------------------------
 
-ifeq ($(NO_DLL),)
-    $(MESS_WINOBJ)/messlib.res: $(MESS_WINSRC)/mess.rc $(WINOBJ)/mamevers.rc
-    LIBOSD += $(MESS_WINOBJ)/messlib.res
-else
-    ifeq ($(WINUI),)
-        $(MESS_WINOBJ)/messcli.res: $(MESS_WINSRC)/mess.rc $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
-        CLIRESFILE = $(MESS_WINOBJ)/messcli.res
-    endif
+ifeq ($(WINUI),)
+	$(MESS_WINOBJ)/messcli.res: $(MESS_WINSRC)/mess.rc $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
+	CLIRESFILE = $(MESS_WINOBJ)/messcli.res
 endif
-
 
 
 #-------------------------------------------------

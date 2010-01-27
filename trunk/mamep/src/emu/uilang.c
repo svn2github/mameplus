@@ -167,7 +167,7 @@ static void load_mmo(int msgcat)
 	if (p->header.version != 3)
 		goto mmo_readerr;
 
-	p->mmo_index = (mmo_data *)malloc(p->header.num_msg * sizeof p->mmo_index[0]);
+	p->mmo_index = global_alloc_array(mmo_data, p->header.num_msg * sizeof p->mmo_index[0]);
 	if (!p->mmo_index)
 		goto mmo_readerr;
 
@@ -179,7 +179,7 @@ static void load_mmo(int msgcat)
 	if (mame_fread(file, &str_size, size) != size)
 		goto mmo_readerr;
 
-	p->mmo_str = (char *)malloc(str_size);
+	p->mmo_str = global_alloc_array(char, str_size);
 	if (!p->mmo_str)
 		goto mmo_readerr;
 

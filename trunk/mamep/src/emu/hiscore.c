@@ -324,7 +324,7 @@ void hiscore_init (running_machine *machine)
 			else if (is_mem_range (buffer))
 			{
 				const char *pBuf = buffer;
-				mem_range = (memory_range *)malloc(sizeof(memory_range));
+				mem_range = global_alloc_array(memory_range, sizeof(memory_range));
 				if (mem_range)
 				{
 					mem_range->cpunum = hexstr2num (&pBuf);

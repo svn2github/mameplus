@@ -5340,8 +5340,18 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_FOLDER_PROPERTIES:
 		if (!oldControl)
 		{
+			OPTIONS_TYPE curOptType = OPTIONS_SOURCE;
 			folder = GetSelectedFolder();
-			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), (folder->m_nFolderId == FOLDER_VECTOR) ? OPTIONS_VECTOR : OPTIONS_SOURCE, folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
+			if(folder->m_nFolderId == FOLDER_VECTOR) {
+				curOptType = OPTIONS_VECTOR;
+			}
+			else if(folder->m_nFolderId == FOLDER_HORIZONTAL) {
+				curOptType = OPTIONS_HORIZONTAL;
+			}
+			else if(folder->m_nFolderId == FOLDER_VERTICAL) {
+				curOptType = OPTIONS_VERTICAL;
+			}
+			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), curOptType, folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
 			//SaveFolderOptions(folder->m_nFolderId, Picker_GetSelectedItem(hwndList) );
 		}
 		/* Just in case the toggle MMX on/off */

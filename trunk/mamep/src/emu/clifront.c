@@ -472,7 +472,7 @@ void assign_drivers(core_options *options)
 
 	if (drivers)
 		global_free(drivers);
-	drivers = (const game_driver**) malloc((n + 1) * sizeof (game_driver*));
+	drivers = global_alloc_array(const game_driver *, (n + 1) * sizeof (game_driver*));
 
 	n = 0;
 	for (i = 0; drivers_table[i].name; i++)

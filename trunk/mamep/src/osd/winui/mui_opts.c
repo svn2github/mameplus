@@ -2358,8 +2358,7 @@ static void set_folder_flag(f_flag *flag, const char *path, DWORD dwFlags)
 	{
 		f_flag_entry *tmp;
 
-		global_free(flag->entry);
-		tmp = (f_flag_entry *)global_alloc_array(UINT8, (flag->num + ALLOC_FOLDERFLAG) * sizeof (*tmp));
+		tmp = global_alloc_array(f_flag_entry, (flag->num + ALLOC_FOLDERFLAG) * sizeof (*tmp));
 		if (!tmp)
 		{
 			dprintf("error: realloc failed in set_folder_flag\n");
@@ -2457,8 +2456,7 @@ static void options_set_folder_flag(core_options *opts, const char *name, const 
 			if (len + strlen(flags->entry[i].name) + 16 > size)
 			{
 				size += 1024;
-				global_free(buf);
-				buf = (char *)global_alloc_array(UINT8, size * sizeof (*buf));
+				buf = global_alloc_array(char, size * sizeof (*buf));
 			}
 
 			if (len)

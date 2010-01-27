@@ -54,17 +54,6 @@ ifndef CROSS_BUILD_OSD
 CROSS_BUILD_OSD = $(OSD)
 endif
 
-ifneq ($(NO_DLL),)
-  ifneq ($(WINUI),)
-    EXTRA_SUFFIX := $(EXTRA_SUFFIX)ui
-  endif
-  # always define DONT_USE_DLL=1 for no dll version
-  DONT_USE_DLL=1
-else
-  # always define WINUI=1 for mameplib.dll version
-  WINUI=1
-endif
-
 
 
 #-------------------------------------------------
@@ -298,19 +287,14 @@ endif
 
 # fullname is prefix+name+suffix+suffix64+suffixdebug
 FULLNAME = $(PREFIX)$(PREFIXSDL)$(NAME)$(SUFFIX)$(SUFFIX64)$(SUFFIXDEBUG)
+ifdef WINUI
+MAMEUINAME = $(TARGET)$(EXTRA_SUFFIX)ui
+MAMEUIEXE = $(PREFIX)$(PREFIXSDL)$(MAMEUINAME)$(SUFFIX)$(SUFFIX64)$(SUFFIXDEBUG)$(EXE)
+BUILD += $(MAMEUIEXE)
+endif
 
-ifeq ($(NO_DLL),)
-DEFS += -DWIN32 -DWINNT
-
-EMULATORDLL = $(FULLNAME)lib.dll
-EMULATORCLI = $(FULLNAME)$(EXE)
-EMULATORGUI = $(FULLNAME)ui$(EXE)
-EMULATORALL = $(EMULATORDLL) $(EMULATORCLI) $(EMULATORGUI)
-else
 # add an EXE suffix to get the final emulator name
 EMULATOR = $(FULLNAME)$(EXE)
-EMULATORALL = $(EMULATOR)
-endif
 
 
 
@@ -561,19 +545,8 @@ endif
 endif
 
 # output a map file (emulator only)
-ifneq ($(MAP),)
-    ifeq ($(NO_DLL),)
-        MAPCLIFLAGS = -Wl,-Map,$(FULLNAME).map
-        MAPDLLFLAGS = -Wl,-Map,$(FULLNAME)lib.map
-        MAPGUIFLAGS = -Wl,-Map,$(FULLNAME)ui.map
-    else
-        MAPFLAGS = -Wl,-Map,$(FULLNAME).map
-    endif
-else
-    MAPFLAGS =
-    MAPCLIFLAGS =
-    MAPDLLFLAGS =
-    MAPGUIFLAGS =
+ifdef MAP
+LDFLAGSEMULATOR += -Wl,-Map,$(FULLNAME).map
 endif
 
 
@@ -658,9 +631,8 @@ BUILDOUT = $(BUILDOBJ)
 # include the various .mak files
 #-------------------------------------------------
 
-# mamep: must stay before MAME OSD
 ifdef MAMEMESS
-# include MESS core defines
+# mamep: must stay before MAME OSD for include MESS core defines
 include $(SRC)/mess/messcore.mak
 endif
 
@@ -692,7 +664,7 @@ CDEFS = $(DEFS)
 # primary targets
 #-------------------------------------------------
 
-emulator: maketree $(BUILD) $(EMULATORALL)
+emulator: maketree $(BUILD) $(EMULATOR)
 
 buildtools: maketree $(BUILD)
 
@@ -703,8 +675,8 @@ maketree: $(sort $(OBJDIRS))
 clean: $(OSDCLEAN)
 	@echo Deleting object tree $(OBJ)...
 	$(RM) -r $(OBJ)
-	@echo Deleting $(EMULATORALL)...
-	$(RM) $(EMULATORALL)
+	@echo Deleting $(EMULATOR)...
+	$(RM) $(EMULATOR)
 	@echo Deleting $(TOOLS)...
 	$(RM) $(TOOLS)
 ifdef MAP
@@ -732,32 +704,14 @@ ifndef EXECUTABLE_DEFINED
 # always recompile the version string
 $(VERSIONOBJ): $(DRVLIBS) $(LIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 
-ifeq ($(NO_DLL),)
-$(EMULATORDLL): $(VERSIONOBJ) $(OBJ)/osd/windows/mamelib.o $(DRVLIBS) $(LIBOSD) $(LIBEMU) $(LIBCPU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+$(EMULATOR): $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(CLIRESFILE) $(LIBEMU) $(LIBCPU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 	@echo Linking $@...
-	$(LD) -shared $(LDFLAGS) $(LDFLAGSEMULATOR) $^ $(LIBS) -o $@ $(MAPDLLFLAGS)
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@
 
-# cli target
-$(EMULATORCLI):	$(EMULATORDLL) $(OBJ)/osd/windows/climain.o $(CLIRESFILE)
+ifdef WINUI
+$(MAMEUIEXE): $(OBJ)/osd/winui/mui_main.o $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(GUIRESFILE) $(LIBEMU) $(LIBCPU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE_NOMAIN)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $(FULLNAME)lib.dll $(OBJ)/osd/windows/climain.o $(CLIRESFILE) $(LIBS) -o $@ $(MAPCLIFLAGS)
-
-# gui target
-$(EMULATORGUI):	$(EMULATORDLL) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $(FULLNAME)lib.dll $(OBJ)/osd/winui/guimain.o $(GUIRESFILE) $(LIBS) -o $@ $(MAPGUIFLAGS)
-else
-  ifdef WINUI
-  # gui target
-  $(EMULATOR):	$(OBJ)/osd/winui/mui_main.o $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(GUIRESFILE) $(LIBEMU) $(LIBCPU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE_NOMAIN)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@ $(MAPFLAGS)
-  else
-  # cli target
-  $(EMULATOR):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(CLIRESFILE) $(LIBEMU) $(LIBCPU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@ $(MAPFLAGS)
-  endif
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@
 endif
 
 endif

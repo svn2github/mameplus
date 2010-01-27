@@ -1016,7 +1016,7 @@ void convert_command_glyph(char *s, int buflen)
 
 #include "cmdplus.c"
 
-	d = (char *)malloc(buflen * sizeof (*d));
+	d = global_alloc_array(char, buflen * sizeof (*d));
 	if (d == NULL)
 	{
 		*s = '\0';
