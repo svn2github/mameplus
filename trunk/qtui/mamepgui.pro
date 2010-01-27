@@ -21,7 +21,7 @@ build_static {
 
 build_sdl {
   win32 {
-  LIBS += -Llib/Win32 -lSDLmain
+  LIBS += -Llib/Win32
   }
   unix {
   LIBS += -Llib/Linux

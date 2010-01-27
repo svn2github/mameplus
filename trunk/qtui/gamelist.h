@@ -170,6 +170,7 @@ Q_OBJECT
 public:
 		GameListTreeView(QWidget * = 0);
 		void paintEvent(QPaintEvent *);
+		QModelIndex moveCursor(QAbstractItemView::CursorAction, Qt::KeyboardModifiers);
 };
 
 class GameListDelegate : public QItemDelegate
@@ -207,6 +208,7 @@ public:
 	void loadIcon();
 	void disableCtrls();
 	void restoreFolderSelection(bool = false);
+	void centerGameSelection(QModelIndex);
 	bool isAuditConsoleFolder(const QString&);
 	bool isConsoleFolder();
 	QString getResolution(GameInfo *, int);
@@ -241,6 +243,9 @@ private:
 	QList<QTreeWidgetItem *> intFolderItems;
 	QStringList extFolderNames;
 
+	QTimer timerJoy;
+	QTime timeJoyRepeatDelay;
+
 	void initFolders();
 	int parseExtFolders(const QString &);
 	void initExtFolders(const QString &, const QString &);
@@ -252,6 +257,8 @@ private:
 	void addDeleteCfgMenu(const QString &, const QString &);
 	void loadMMO(int);
 	void loadIconWorkder();
+	void openJoysticks();
+	void closeJoysticks();
 
 private slots:
 	void showContextMenu(const QPoint &);
@@ -265,6 +272,7 @@ private slots:
 	void addToExtFolder();
 	void removeFromExtFolder();
 	void postLoadIcon();
+	void processJoyEvents();
 };
 
 class GameListSortFilterProxyModel : public QSortFilterProxyModel

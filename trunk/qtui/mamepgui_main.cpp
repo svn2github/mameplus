@@ -12,6 +12,7 @@
 #include "m1.h"
 
 #ifdef USE_SDL
+#undef main
 #include "SDL.h"
 #undef main
 #endif /* USE_SDL */
@@ -46,7 +47,7 @@ QStringList validGuiSettings;
 /* internal */
 QDockWidget *dwHistory = NULL;
 
-#define MPGUI_VER "1.4.9e"
+#define MPGUI_VER "1.5.0"
 
 void MainWindow::log(QString message)
 {
@@ -65,7 +66,9 @@ void MainWindow::updateLog(QString message)
 
 void MainWindow::poplog(QString message)
 {
-	QMessageBox::critical(this, "Warning", message); 
+	//explicitly declare the dialog so that it can be closed by joystick
+	pop->setText(message);
+	pop->exec(); 
 }
 
 void MainWindow::logStatus(QString message)
@@ -274,6 +277,9 @@ QMainWindow(parent)
 	progressBarGamelist->setMaximumHeight(16);
 	progressBarGamelist->hide();
 
+	pop = new QMessageBox(this);
+	pop->setObjectName("msgWarning");
+
 	QAction *actionFolderList = dwFolderList->toggleViewAction();
 	actionFolderList->setIcon(QIcon(":/res/mame32-show-tree.png"));
 	menuShowFolders->addAction(actionFolderList);
@@ -303,9 +309,12 @@ QMainWindow(parent)
 MainWindow::~MainWindow()
 {
 #ifdef USE_SDL
-#ifdef Q_OS_WIN
+//	if (joystick == NULL)
+//		;
+//	else
+//		SDL_JoystickClose(joystick);
+
 	SDL_Quit();
-#endif
 #endif /* USE_SDL */
 }
 
@@ -643,7 +652,8 @@ void MainWindow::setVersion()
 		"</head>"
 		"<body>"
 		"<strong>M+GUI</strong> %1 &copy; 2008-2009 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
-		"A Qt implementation of <a href=\"http://mameui.classicgaming.gamespy.com\">MameUI</a>"
+		"A Qt implementation of <a href=\"http://mameui.classicgaming.gamespy.com\">MameUI</a><br>"
+		"Source code released under <a href=\"http://sam.zoy.org/wtfpl/COPYING\">WTFPL</a>"
 		"<hr>"
 		"%2%3%4%5%6"
 		"</body>"
@@ -1584,7 +1594,7 @@ void Screenshot::updateScreenshotLabel(bool isLoading)
 int main(int argc, char *argv[])
 {
 #ifdef USE_SDL
-	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) >= 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_NOPARACHUTE) >= 0)
 		sdlInited = true;
 #endif /* USE_SDL */
 
@@ -1624,10 +1634,7 @@ int main(int argc, char *argv[])
 	return myApp.exec();
 
 #ifdef USE_SDL
-	if(SDL_WasInit(SDL_INIT_VIDEO) != 0)
-	{
-		SDL_QuitSubSystem(SDL_INIT_VIDEO);
-	}
+	SDL_Quit();
 #endif /* USE_SDL */
 }
 

@@ -7,6 +7,11 @@
 #include "m1.h"
 #include "dialogs.h"
 
+#ifdef USE_SDL
+#undef main
+#include "SDL.h"
+#endif /* USE_SDL */
+
 /* global */
 Gamelist *gameList = NULL;
 QString currentGame, currentFolder;
@@ -33,6 +38,8 @@ QByteArray defIconDataRed;
 
 QByteArray defMameSnapData;
 QByteArray defMessSnapData;
+
+QList<SDL_Joystick *> joysticks;
 
 static QRegExp emptyRegex("");
 
@@ -822,6 +829,13 @@ void GameListTreeView::paintEvent(QPaintEvent *e)
 		painter.drawPixmap(_decoRect, gameList->pmDeco);
 }
 
+QModelIndex GameListTreeView::moveCursor(QAbstractItemView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers)
+{
+	QModelIndex index = QTreeView::moveCursor(cursorAction, modifiers);
+	gameList->centerGameSelection(index);
+	return index;
+}
+
 
 GameListDelegate::GameListDelegate(QObject *parent) : 
 QItemDelegate(parent)
@@ -970,6 +984,10 @@ autoAudit(false),
 hasInitd(false),
 defaultGameListDelegate(NULL)
 {
+	//init joystick
+	connect(&timerJoy, SIGNAL(timeout()), this, SLOT(processJoyEvents()));
+	openJoysticks();
+
 	connect(&selectionThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
 }
 
@@ -978,6 +996,8 @@ Gamelist::~Gamelist()
 //	win->log("DEBUG: Gamelist::~Gamelist()");
 	if (loadProc)
 		loadProc->terminate();
+
+	closeJoysticks();
 }
 
 void Gamelist::updateProgress(int progress)
@@ -1113,41 +1133,34 @@ void Gamelist::restoreGameSelection()
 		return;
 
 	//fixme: should consider other columns
-	// select current game
 	GameInfo *gameInfo = pMameDat->games[currentGame];
+	QModelIndex currIndex, proxyIndex;
 
-	QModelIndex i, pi;
-	i = gameListModel->index(COL_DESC, gameInfo->pModItem);
+	// select current game
+	currIndex = gameListModel->index(COL_DESC, gameInfo->pModItem);
 
-	if (i.isValid())
-		pi = gameListPModel->mapFromSource(i);
+	if (currIndex.isValid())
+		proxyIndex = gameListPModel->mapFromSource(currIndex);
 
 	// select first row otherwise
-	if (!pi.isValid())
-		pi = gameListPModel->index(0, 0, QModelIndex());
+	if (!proxyIndex.isValid())
+		proxyIndex = gameListPModel->index(0, 0, QModelIndex());
 
-	if (!pi.isValid())
+	if (!proxyIndex.isValid())
 		return;
 
-//	win->log("restore callback: " + currentGame);
-
-	bool isLView = false;
-//	if (win->actionLargeIcons->isChecked())
-//		isLView = true;
-
-	//fixme: time consuming
-	if (isLView)
+/*
+	//offset
+	if (method != 0)
 	{
-		win->lvGameList->setCurrentIndex(pi);
-		win->lvGameList->scrollTo(pi, QAbstractItemView::PositionAtCenter);
-		win->lvGameList->setFocus();
+		proxyIndex = proxyIndex.sibling(proxyIndex.row() + method, proxyIndex.column());
+
+		if (!proxyIndex.isValid())
+			return;
 	}
-	else
-	{
-		win->tvGameList->setCurrentIndex(pi);
-		win->tvGameList->scrollTo(pi, QAbstractItemView::PositionAtCenter);
-		win->tvGameList->setFocus();
-	}
+//*/
+
+	centerGameSelection(proxyIndex);
 
 	win->labelGameCount->setText(tr("%1 games").arg(visibleGames.size()));
 
@@ -1170,6 +1183,27 @@ void Gamelist::restoreGameSelection()
 			win->treeFolders->collapseItem(*it);
 		}
 		++it;
+	}
+}
+
+void Gamelist::centerGameSelection(QModelIndex index)
+{
+	bool isLView = false;
+//	if (win->actionLargeIcons->isChecked())
+//		isLView = true;
+
+	//fixme: time consuming?
+	if (isLView)
+	{
+		win->lvGameList->setCurrentIndex(index);
+		win->lvGameList->scrollTo(index, QAbstractItemView::PositionAtCenter);
+		win->lvGameList->setFocus();
+	}
+	else
+	{
+		win->tvGameList->setCurrentIndex(index);
+		win->tvGameList->scrollTo(index, QAbstractItemView::PositionAtCenter);
+		win->tvGameList->setFocus();
 	}
 }
 
@@ -3012,11 +3046,120 @@ bool Gamelist::isConsoleFolder()
 	return false;
 }
 
+//enable GUI joystick listener
+void Gamelist::openJoysticks()
+{
+#ifdef USE_SDL
+	//only enable when MAME is not active
+	if (procMan->procMap.count() == 0)
+	{
+		for (int i = 0; i < SDL_NumJoysticks(); ++i)
+			joysticks.append(SDL_JoystickOpen(i));
+
+		timerJoy.start(50);
+	}
+#endif /* USE_SDL */
+}
+
+//disable GUI joystick listener
+void Gamelist::closeJoysticks()
+{
+#ifdef USE_SDL
+	timerJoy.stop();
+
+	foreach (SDL_Joystick *joystick, joysticks)
+		SDL_JoystickClose(joystick);
+
+	joysticks.clear();
+#endif /* USE_SDL */
+}
+
+void Gamelist::processJoyEvents()
+{
+#ifdef USE_SDL
+	SDL_Event event;
+	static int key = 0;	//invalid key code
+	bool isRepeatEvent = true;
+
+	while (SDL_PollEvent(&event))
+	{
+		switch (event.type)
+		{
+		case SDL_JOYAXISMOTION:
+		{
+			/*
+			win->log(QString("Joystick %1 axis %2 value: %3")
+				   .arg(event.jaxis.which)
+				   .arg(event.jaxis.axis)
+				   .arg(event.jaxis.value));
+			//*/
+
+			//joy up / down
+			if (event.jaxis.axis == 0)
+			{
+				if (event.jaxis.value < 0)
+					key = Qt::Key_Up;
+				else if(event.jaxis.value > 0)
+					key = Qt::Key_Down;
+				//centered, so we clear the repeat state
+				else
+					key = 0;
+			}
+			//joy left / right
+			else
+			{
+				if (event.jaxis.value < 0)
+					key = Qt::Key_PageUp;
+				else if (event.jaxis.value > 0)
+					key = Qt::Key_PageDown;
+				else
+					key = 0;
+			}
+
+			timeJoyRepeatDelay.restart();
+			isRepeatEvent = false;
+
+			break;
+		}
+		case SDL_JOYBUTTONDOWN:
+		{
+			//close poplog message box
+			if (win->pop != NULL && win->pop->isVisible())
+				win->pop->close();
+			else
+			{
+				QKeyEvent keyEvent (QEvent::KeyPress, Qt::Key_Enter, Qt::NoModifier);
+				QApplication::sendEvent(win->tvGameList, &keyEvent);
+			}
+
+			/*
+			win->log(QString("Joystick %1 button %2 down")
+				   .arg(event.jbutton.which)
+				   .arg(event.jbutton.button));
+			//*/
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
+	//if button has been pressed for more than 500 ms, send the KeyPress event
+	if (key != 0 && (!isRepeatEvent || timeJoyRepeatDelay.elapsed() >= 500))
+	{
+		QKeyEvent keyEvent(QEvent::KeyPress, key, Qt::NoModifier);
+		QApplication::sendEvent(win->tvGameList, &keyEvent);
+	}
+#endif /* USE_SDL */
+}
+
 void Gamelist::runMame(int method, QStringList playArgs)
 {
 	//block multi mame session for now
 	//if (procMan->procCount > 0)
 	//	return;
+
+	closeJoysticks();
 
 	//block process during M1 loading
 	if (currentAppDir != QDir::currentPath())
@@ -3153,16 +3296,20 @@ void Gamelist::runMame(int method, QStringList playArgs)
 	}
 
 	loadProc = procMan->process(procMan->start(mame_binary, args, method != RUNMAME_EXTROM));
+
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMameFinished(int, QProcess::ExitStatus)));
 	// delete the extracted rom
 	if (method == RUNMAME_EXTROM)
 		connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMergedFinished(int, QProcess::ExitStatus)));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), win, SLOT(toggleTrayIcon(int, QProcess::ExitStatus)));
+
 	win->toggleTrayIcon(0, QProcess::NormalExit, true);
 }
 
 void Gamelist::runMameFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
+	openJoysticks();
+
 	QFile tmpNvFile(utils->getPath(QDir::tempPath()) + currentGame + ".nv");
 	tmpNvFile.remove();
 

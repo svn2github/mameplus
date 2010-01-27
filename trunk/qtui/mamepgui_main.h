@@ -56,7 +56,7 @@ public:
 	RomAuditor romAuditor;
 	MameExeRomAuditor *mameAuditor;
 
-	QTreeView *tvGameList;
+	GameListTreeView *tvGameList;
 	QListView *lvGameList;
 	
 	QLineEdit *lineEditSearch;
@@ -71,6 +71,8 @@ public:
 	QStringList dockCtrlNames;
 	QDockWidget* dockCtrls[DOCK_LAST];
 	QTextBrowser *tbHistory, *tbMameinfo, *tbDriverinfo, *tbStory, *tbCommand;
+
+	QMessageBox *pop;
 
 signals:
 	void logUpdated(QString);
@@ -133,7 +135,7 @@ public slots:
 	void setBgTile();
 	void setBgPixmap(QString = NULL);
 	void toggleTrayIcon(int, QProcess::ExitStatus, bool = false);
-	
+
 protected:
 	void resizeEvent(QResizeEvent *);
     void closeEvent(QCloseEvent *);

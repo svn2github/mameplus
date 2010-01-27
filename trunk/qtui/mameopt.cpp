@@ -5,8 +5,8 @@
 #include "dialogs.h"
 
 #ifdef USE_SDL
-#include "SDL.h"
 #undef main
+#include "SDL.h"
 #endif /* USE_SDL */
 
 /* global */
