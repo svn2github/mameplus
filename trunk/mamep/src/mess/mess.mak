@@ -24,6 +24,7 @@ DRVLIBS += \
 	$(MESSOBJ)/nec.a \
 	$(MESSOBJ)/nintendo.a \
 	$(MESSOBJ)/sega.a \
+	$(MESSOBJ)/skeleton.a \
 	$(MESSOBJ)/snk.a \
 	$(MESSOBJ)/softlist.o \
 	$(MESSOBJ)/software.a \
