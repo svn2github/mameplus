@@ -19,6 +19,9 @@
 #define __INPTPORT_H__
 
 #include <time.h>
+#ifdef INP_CAPTION
+#include "render.h"
+#endif /* INP_CAPTION */
 
 
 
@@ -583,8 +586,12 @@ typedef struct _input_field_state input_field_state;
 
 
 /* forward declarations */
-typedef struct _input_port_config input_port_config;
+class input_port_config;
 typedef struct _input_field_config input_field_config;
+
+
+/* template specializations */
+typedef tagged_list<input_port_config> ioport_list;
 
 
 /* custom input port callback function */
@@ -711,24 +718,21 @@ struct _input_field_user_settings
 
 
 /* a single input port configuration */
-struct _input_port_config
+class input_port_config
 {
-	const input_port_config *	next;			/* pointer to next port */
+	DISABLE_COPYING(input_port_config);
+
+public:
+	input_port_config(const char *tag);
+	~input_port_config();
+
+	input_port_config *			next;			/* pointer to next port */
 	const char *				tag;			/* pointer to this port's tag */
 	const input_field_config *	fieldlist;		/* list of input_field_configs */
 
 	/* these two fields are only valid if the port is live */
 	input_port_state *			state;			/* live state of port (NULL if not live) */
 	running_machine *			machine;		/* machine if port is live */
-};
-
-
-/* an object that contains a list of port configurations */
-typedef struct _input_port_list input_port_list;
-struct _input_port_list
-{
-	const input_port_config *	head;			/* head of the list */
-	tagmap_t<const input_port_config *> map;	/* map for fast lookups */
 };
 
 
@@ -1057,7 +1061,7 @@ extern int show_input_log;
 
 
 #ifdef INP_CAPTION
-void draw_caption(running_machine *machine);
+void draw_caption(running_machine *machine, render_container *container);
 #endif /* INP_CAPTION */
 
 
@@ -1076,16 +1080,10 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 /* ----- port configurations ----- */
 
 /* initialize an input port list structure and allocate ports according to the given tokens */
-void input_port_list_init(input_port_list *portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap);
-
-/* free memory attached to an input port list and clear out the structure */
-void input_port_list_deinit(input_port_list *portlist);
-
-/* return the config that matches the given tag */
-const input_port_config *input_port_by_tag_slow(const input_port_list *portlist, const char *tag);
+void input_port_list_init(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap);
 
 /* return the field that matches the given tag and mask */
-const input_field_config *input_field_by_tag_and_mask(const input_port_list *portlist, const char *tag, input_port_value mask);
+const input_field_config *input_field_by_tag_and_mask(const ioport_list &portlist, const char *tag, input_port_value mask);
 
 
 
@@ -1192,22 +1190,5 @@ const char *input_port_string_from_token(const input_port_token token);
 /* autofire functions */
 int get_autofiredelay(int player);
 void set_autofiredelay(int player, int delay);
-
-
-/***************************************************************************
-    INLINE FUNCTIONS
-***************************************************************************/
-
-/*-------------------------------------------------
-    input_port_by_tag - return the config that
-    matches the given tag
--------------------------------------------------*/
-
-INLINE const input_port_config *input_port_by_tag(const input_port_list *portlist, const char *tag)
-{
-	/* use the map if we have it */
-	return portlist->map.find_hash_only(tag);
-}
-
 
 #endif	/* __INPTPORT_H__ */

@@ -396,7 +396,7 @@ static void UpdateController(void)
 		if (cache[i].ipt != last_ipt)
 		{
 			const input_port_config *port;
-			input_port_list portlist;
+			ioport_list portlist;
 
 			int w = CONTROLLER_JOY8WAY;
 			BOOL lr = FALSE;
@@ -408,9 +408,9 @@ static void UpdateController(void)
 			b = 0;
 			p = 0;
 
-			input_port_list_init(&portlist, last_ipt, NULL, 0, FALSE);
+			input_port_list_init(portlist, last_ipt, NULL, 0, FALSE);
 
-			for (port = portlist.head; port != NULL; port = port->next)
+			for (port = portlist.first(); port != NULL; port = port->next)
 			{
 				const input_field_config *field;
 				for (field = port->fieldlist; field != NULL; field = field->next)
@@ -489,7 +489,7 @@ static void UpdateController(void)
 				    }
 				}
 			}
-			input_port_list_deinit(&portlist);
+//			input_port_list_deinit(&portlist);
 
 			if (lr || ud)
 			{
@@ -659,11 +659,11 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			if (gamedrv->ipt != NULL)
 			{
 				const input_port_config *port;
-				input_port_list portlist;
+				ioport_list portlist;
 				
-				input_port_list_init(&portlist, gamedrv->ipt, NULL, 0, FALSE);
+				input_port_list_init(portlist, gamedrv->ipt, NULL, 0, FALSE);
 				
-				for (port = portlist.head; port != NULL; port = port->next)
+				for (port = portlist.first(); port != NULL; port = port->next)
 				{
 					const input_field_config *field;
 					for (field = port->fieldlist; field != NULL; field = field->next)
@@ -682,7 +682,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 							gameinfo->usesMouse = TRUE;
 					}
 				}
-				input_port_list_deinit(&portlist);
+//				input_port_list_deinit(&portlist);
 			}
 		}
 		UpdateController();

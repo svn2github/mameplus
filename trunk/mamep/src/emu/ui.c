@@ -14,16 +14,16 @@
 #include "video/vector.h"
 #include "machine/laserdsc.h"
 #include "profiler.h"
-#include "cheat.h"
-#ifdef CMD_LIST
-#include "cmddata.h"
-#endif /* CMD_LIST */
 #include "render.h"
+#include "cheat.h"
 #include "rendfont.h"
 #include "ui.h"
 #include "uiinput.h"
 #include "uimenu.h"
 #include "uigfx.h"
+#ifdef CMD_LIST
+#include "cmddata.h"
+#endif /* CMD_LIST */
 
 #ifdef MAMEMESS
 #define MESS
@@ -89,7 +89,7 @@ static int auto_pause;
 static int scroll_reset;
 
 /* current UI handler */
-static UINT32 (*ui_handler_callback)(running_machine *, UINT32);
+static UINT32 (*ui_handler_callback)(running_machine *, render_container *, UINT32);
 static UINT32 ui_handler_param;
 
 /* flag to track single stepping */
@@ -118,7 +118,7 @@ static int ui_transparency;
 #endif /* UI_COLOR_DISPLAY */
 
 #ifdef USE_SHOW_INPUT_LOG
-static void display_input_log(running_machine *machine);
+static void display_input_log(running_machine *machine, render_container *container);
 #endif /* USE_SHOW_INPUT_LOG */
 
 
@@ -134,12 +134,12 @@ static astring &disclaimer_string(running_machine *machine, astring &buffer);
 static astring &warnings_string(running_machine *machine, astring &buffer);
 
 /* UI handlers */
-static UINT32 handler_messagebox(running_machine *machine, UINT32 state);
-static UINT32 handler_messagebox_ok(running_machine *machine, UINT32 state);
-static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state);
-static UINT32 handler_ingame(running_machine *machine, UINT32 state);
-static UINT32 handler_load_save(running_machine *machine, UINT32 state);
-static UINT32 handler_confirm_quit(running_machine *machine, UINT32 state);
+static UINT32 handler_messagebox(running_machine *machine, render_container *container, UINT32 state);
+static UINT32 handler_messagebox_ok(running_machine *machine, render_container *container, UINT32 state);
+static UINT32 handler_messagebox_anykey(running_machine *machine, render_container *container, UINT32 state);
+static UINT32 handler_ingame(running_machine *machine, render_container *container, UINT32 state);
+static UINT32 handler_load_save(running_machine *machine, render_container *container, UINT32 state);
+static UINT32 handler_confirm_quit(running_machine *machine, render_container *container, UINT32 state);
 
 /* slider controls */
 static slider_state *slider_alloc(running_machine *machine, const char *title, INT32 minval, INT32 defval, INT32 maxval, INT32 incval, slider_update update, void *arg);
@@ -162,8 +162,8 @@ static INT32 slider_overxoffset(running_machine *machine, void *arg, astring *st
 static INT32 slider_overyoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_flicker(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_beam(running_machine *machine, void *arg, astring *string, INT32 newval);
-static char *slider_get_screen_desc(const device_config *screen);
-static char *slider_get_laserdisc_desc(const device_config *screen);
+static char *slider_get_screen_desc(running_device *screen);
+static char *slider_get_laserdisc_desc(running_device *screen);
 #ifdef MAME_DEBUG
 static INT32 slider_crossscale(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_crossoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
@@ -181,7 +181,7 @@ static void free_bgtexture(running_machine *machine);
     pair for the current UI handler
 -------------------------------------------------*/
 
-INLINE UINT32 ui_set_handler(UINT32 (*callback)(running_machine *, UINT32), UINT32 param)
+INLINE UINT32 ui_set_handler(UINT32 (*callback)(running_machine *, render_container *, UINT32), UINT32 param)
 {
 	ui_handler_callback = callback;
 	ui_handler_param = param;
@@ -553,10 +553,10 @@ void ui_set_startup_text(running_machine *machine, const char *text, int force)
     render it; called by video.c
 -------------------------------------------------*/
 
-void ui_update_and_render(running_machine *machine)
+void ui_update_and_render(running_machine *machine, render_container *container)
 {
 	/* always start clean */
-	render_container_empty(render_container_get_ui());
+	render_container_empty(container);
 
 	if (auto_pause)
 	{
@@ -573,19 +573,19 @@ void ui_update_and_render(running_machine *machine)
 		if (alpha > 255)
 			alpha = 255;
 		if (alpha >= 0)
-			render_ui_add_rect(0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(alpha,0x00,0x00,0x00), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+			render_container_add_rect(container, 0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(alpha,0x00,0x00,0x00), PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	}
 
 	/* render any cheat stuff at the bottom */
-	cheat_render_text(machine);
+	cheat_render_text(machine, container);
 
 	/* call the current UI handler */
 	assert(ui_handler_callback != NULL);
-	ui_handler_param = (*ui_handler_callback)(machine, ui_handler_param);
+	ui_handler_param = (*ui_handler_callback)(machine, container, ui_handler_param);
 
 	/* display any popup messages */
 	if (osd_ticks() < popup_text_end)
-		ui_draw_text_box(messagebox_text, JUSTIFY_CENTER, 0.5f, 0.9f, messagebox_backcolor);
+		ui_draw_text_box(container, messagebox_text, JUSTIFY_CENTER, 0.5f, 0.9f, messagebox_backcolor);
 	else
 		popup_text_end = 0;
 
@@ -709,14 +709,14 @@ float ui_get_string_width(const char *s)
     a box with the given background color
 -------------------------------------------------*/
 
-void ui_draw_box(float x0, float y0, float x1, float y1, rgb_t backcolor)
+void ui_draw_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t backcolor)
 {
 #ifdef UI_COLOR_DISPLAY
 	if (backcolor == UI_BACKGROUND_COLOR)
-		render_ui_add_quad(x0, y0, x1, y1, MAKE_ARGB(0xff, 0xff, 0xff, 0xff), bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+		render_container_add_quad(container, x0, y0, x1, y1, MAKE_ARGB(0xff, 0xff, 0xff, 0xff), bgtexture, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 	else
 #endif /* UI_COLOR_DISPLAY */
-		render_ui_add_rect(x0, y0, x1, y1, backcolor, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+		render_container_add_rect(container, x0, y0, x1, y1, backcolor, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 }
 
 
@@ -726,13 +726,13 @@ void ui_draw_box(float x0, float y0, float x1, float y1, rgb_t backcolor)
     color
 -------------------------------------------------*/
 
-void ui_draw_outlined_box(float x0, float y0, float x1, float y1, rgb_t backcolor)
+void ui_draw_outlined_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t backcolor)
 {
-	ui_draw_box(x0, y0, x1, y1, backcolor);
-	render_ui_add_line(x0, y0, x1, y0, UI_LINE_WIDTH, UI_BORDER_COLOR, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	render_ui_add_line(x1, y0, x1, y1, UI_LINE_WIDTH, UI_BORDER_COLOR, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	render_ui_add_line(x1, y1, x0, y1, UI_LINE_WIDTH, UI_BORDER_COLOR, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
-	render_ui_add_line(x0, y1, x0, y0, UI_LINE_WIDTH, UI_BORDER_COLOR, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	ui_draw_box(container, x0, y0, x1, y1, backcolor);
+	render_container_add_line(container, x0, y0, x1, y0, UI_LINE_WIDTH, UI_BORDER_COLOR, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	render_container_add_line(container, x1, y0, x1, y1, UI_LINE_WIDTH, UI_BORDER_COLOR, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	render_container_add_line(container, x1, y1, x0, y1, UI_LINE_WIDTH, UI_BORDER_COLOR, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
+	render_container_add_line(container, x0, y1, x0, y0, UI_LINE_WIDTH, UI_BORDER_COLOR, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA));
 }
 
 
@@ -740,14 +740,14 @@ void ui_draw_outlined_box(float x0, float y0, float x1, float y1, rgb_t backcolo
     ui_draw_text - simple text renderer
 -------------------------------------------------*/
 
-void ui_draw_text(const char *buf, float x, float y)
+void ui_draw_text(render_container *container, const char *buf, float x, float y)
 {
-	ui_draw_text_full(buf, x, y, 1.0f - x, JUSTIFY_LEFT, WRAP_WORD, DRAW_NORMAL, UI_TEXT_COLOR, UI_TEXT_BG_COLOR, NULL, NULL);
+	ui_draw_text_full(container, buf, x, y, 1.0f - x, JUSTIFY_LEFT, WRAP_WORD, DRAW_NORMAL, UI_TEXT_COLOR, UI_TEXT_BG_COLOR, NULL, NULL);
 }
 
-void ui_draw_text_bk(const char *buf, float x, float y, int col)
+void ui_draw_text_bk(render_container *container, const char *buf, float x, float y, int col)
 {
-	ui_draw_text_full(buf, x, y, 1.0f - x, JUSTIFY_LEFT, WRAP_WORD, DRAW_NORMAL, UI_TEXT_COLOR, col, NULL, NULL);
+	ui_draw_text_full(container, buf, x, y, 1.0f - x, JUSTIFY_LEFT, WRAP_WORD, DRAW_NORMAL, UI_TEXT_COLOR, col, NULL, NULL);
 }
 
 
@@ -757,7 +757,7 @@ void ui_draw_text_bk(const char *buf, float x, float y, int col)
     and full size computation
 -------------------------------------------------*/
 
-void ui_draw_text_full(const char *origs, float x, float y, float origwrapwidth, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
+void ui_draw_text_full(render_container *container, const char *origs, float x, float y, float origwrapwidth, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
 {
 	float lineheight = ui_get_line_height();
 	const char *ends = origs + strlen(origs);
@@ -970,7 +970,7 @@ void ui_draw_text_full(const char *origs, float x, float y, float origwrapwidth,
 
 		/* if opaque, add a black box */
 		if (draw == DRAW_OPAQUE)
-			ui_draw_box(curx, cury, curx + curwidth, cury + lineheight, bgcolor);
+			ui_draw_box(container, curx, cury, curx + curwidth, cury + lineheight, bgcolor);
 
 		/* loop from the line start and add the characters */
 
@@ -991,12 +991,12 @@ void ui_draw_text_full(const char *origs, float x, float y, float origwrapwidth,
 					float width = ui_get_char_fixed_width(linechar, fontwidth_halfwidth, fontwidth_fullwidth);
 					float xmargin = (width - ui_get_char_width(linechar)) / 2.0f;
 
-					render_ui_add_char(curx + xmargin, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, linechar);
+					render_container_add_char(container, curx + xmargin, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, linechar);
 					curx += width;
 				}
 				else
 				{
-					render_ui_add_char(curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, linechar);
+					render_container_add_char(container, curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, linechar);
 					curx += ui_get_char_width(linechar);
 				}
 			}
@@ -1006,11 +1006,11 @@ void ui_draw_text_full(const char *origs, float x, float y, float origwrapwidth,
 		/* append ellipses if needed */
 		if (wrap == WRAP_TRUNCATE && *s != 0 && draw != DRAW_NONE)
 		{
-			render_ui_add_char(curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, '.');
+			render_container_add_char(container, curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, '.');
 			curx += ui_get_char_width('.');
-			render_ui_add_char(curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, '.');
+			render_container_add_char(container, curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, '.');
 			curx += ui_get_char_width('.');
-			render_ui_add_char(curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, '.');
+			render_container_add_char(container, curx, cury, lineheight, render_get_ui_aspect(), fgcolor, ui_font, '.');
 			curx += ui_get_char_width('.');
 		}
 
@@ -1069,20 +1069,20 @@ int ui_draw_text_set_fixed_width_mode(int mode)
 	return mode_save;
 }
 
-void ui_draw_text_full_fixed_width(const char *origs, float x, float y, float wrapwidth, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
+void ui_draw_text_full_fixed_width(render_container *container, const char *origs, float x, float y, float wrapwidth, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
 {
 	int mode_save = ui_draw_text_set_fixed_width_mode(TRUE);
 
-	ui_draw_text_full(origs, x, y, wrapwidth, justify, wrap, draw, fgcolor, bgcolor, totalwidth, totalheight);
+	ui_draw_text_full(container, origs, x, y, wrapwidth, justify, wrap, draw, fgcolor, bgcolor, totalwidth, totalheight);
 	ui_draw_text_set_fixed_width_mode(mode_save);
 }
 
-void ui_draw_text_full_scroll(const char *origs, float x, float y, float wrapwidth, int offset, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
+void ui_draw_text_full_scroll(render_container *container, const char *origs, float x, float y, float wrapwidth, int offset, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
 {
 	int offset_save = draw_text_scroll_offset;
 
 	draw_text_scroll_offset = offset;
-	ui_draw_text_full(origs, x, y, wrapwidth, justify, wrap, draw, fgcolor, bgcolor, totalwidth, totalheight);
+	ui_draw_text_full(container, origs, x, y, wrapwidth, justify, wrap, draw, fgcolor, bgcolor, totalwidth, totalheight);
 
 	draw_text_scroll_offset = offset_save;
 }
@@ -1093,13 +1093,13 @@ void ui_draw_text_full_scroll(const char *origs, float x, float y, float wrapwid
     message with a box around it
 -------------------------------------------------*/
 
-void ui_draw_text_box_scroll(const char *text, int offset, int justify, float xpos, float ypos, rgb_t backcolor)
+void ui_draw_text_box_scroll(render_container *container, const char *text, int offset, int justify, float xpos, float ypos, rgb_t backcolor)
 {
 	float target_width, target_height;
 	float target_x, target_y;
 
 	/* compute the multi-line target width/height */
-	ui_draw_text_full(text, 0, 0, 1.0f - 2.0f * UI_BOX_LR_BORDER,
+	ui_draw_text_full(container, text, 0, 0, 1.0f - 2.0f * UI_BOX_LR_BORDER,
 				justify, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &target_width, &target_height);
 
 	multiline_text_box_target_lines = (int)(target_height / ui_get_line_height() + 0.5f);
@@ -1122,30 +1122,30 @@ void ui_draw_text_box_scroll(const char *text, int offset, int justify, float xp
 		target_y = 1.0f - UI_BOX_TB_BORDER - target_height;
 
 	/* add a box around that */
-	ui_draw_outlined_box(target_x - UI_BOX_LR_BORDER,
+	ui_draw_outlined_box(container, target_x - UI_BOX_LR_BORDER,
 					 target_y - UI_BOX_TB_BORDER,
 					 target_x + target_width + UI_BOX_LR_BORDER,
 					 target_y + target_height + UI_BOX_TB_BORDER, backcolor);
-	ui_draw_text_full_scroll(text, target_x, target_y, target_width, offset,
+	ui_draw_text_full_scroll(container, text, target_x, target_y, target_width, offset,
 				justify, WRAP_WORD, DRAW_NORMAL, UI_TEXT_COLOR, UI_TEXT_BG_COLOR, NULL, NULL);
 }
 
-
-void ui_draw_text_box(const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
+void ui_draw_text_box(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
 {
-	ui_draw_text_box_scroll(text, message_window_scroll, justify, xpos, ypos, backcolor);
+	ui_draw_text_box_scroll(container, text, message_window_scroll, justify, xpos, ypos, backcolor);
 }
 
 
-void ui_draw_text_box_fixed_width(const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
+void ui_draw_text_box_fixed_width(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
 {
 	int mode_save = draw_text_fixed_mode;
 
 	draw_text_fixed_mode = 1;
-	ui_draw_text_box_scroll(text, message_window_scroll, justify, xpos, ypos, backcolor);
+	ui_draw_text_box_scroll(container, text, message_window_scroll, justify, xpos, ypos, backcolor);
 
 	draw_text_fixed_mode = mode_save;
 }
+
 
 void ui_draw_text_box_reset_scroll(void)
 {
@@ -1487,7 +1487,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 
 
 #ifdef USE_SHOW_INPUT_LOG
-static void display_input_log(running_machine *machine)
+static void display_input_log(running_machine *machine, render_container *container)
 {
 	double time_now = attotime_to_double(timer_get_time(machine));
 	double time_display = attotime_to_double(ATTOTIME_IN_MSEC(1000));
@@ -1529,7 +1529,7 @@ static void display_input_log(running_machine *machine)
 		curx += ui_get_char_width(command_buffer[i].code);
 	}
 
-	ui_draw_box(0.0f, 1.0f - ui_get_line_height(), 1.0f, 1.0f, UI_BACKGROUND_COLOR);
+	ui_draw_box(container, 0.0f, 1.0f - ui_get_line_height(), 1.0f, 1.0f, UI_BACKGROUND_COLOR);
 
 	for (; command_buffer[i].code; i++)
 	{
@@ -1545,7 +1545,7 @@ static void display_input_log(running_machine *machine)
 
 			fgcolor = MAKE_ARGB(255, level, level, level);
 
-			render_ui_add_char(curx, 1.0f - ui_get_line_height(), ui_get_line_height(), render_get_ui_aspect(), fgcolor, ui_font, command_buffer[i].code);
+			render_container_add_char(container, curx, 1.0f - ui_get_line_height(), ui_get_line_height(), render_get_ui_aspect(), fgcolor, ui_font, command_buffer[i].code);
 		}
 		curx += ui_get_char_width(command_buffer[i].code);
 	}
@@ -1561,8 +1561,8 @@ static void display_input_log(running_machine *machine)
 astring &game_info_astring(running_machine *machine, astring &string)
 {
 	int scrcount = video_screen_count(machine->config);
-	const device_config *scandevice;
-	const device_config *device;
+	running_device *scandevice;
+	running_device *device;
 	int found_sound = FALSE;
 	int count;
 
@@ -1577,7 +1577,7 @@ astring &game_info_astring(running_machine *machine, astring &string)
 
 		/* count how many identical CPUs we have */
 		count = 1;
-		for (scandevice = device->typenext; scandevice != NULL; scandevice = scandevice->typenext)
+		for (scandevice = device->typenext(); scandevice != NULL; scandevice = scandevice->typenext())
 		{
 			if (cpu_get_type(device) != cpu_get_type(scandevice) || device->clock != scandevice->clock)
 				break;
@@ -1587,7 +1587,7 @@ astring &game_info_astring(running_machine *machine, astring &string)
 		/* if more than one, prepend a #x in front of the CPU name */
 		if (count > 1)
 			string.catprintf("%d" UTF8_MULTIPLY, count);
-		string.cat(cpu_get_name(device));
+		string.cat(device->name());
 
 		/* display clock in kHz or MHz */
 		if (clock >= 1000000)
@@ -1597,7 +1597,7 @@ astring &game_info_astring(running_machine *machine, astring &string)
 	}
 
 	/* loop over all sound chips */
-	for (device = sound_first(machine->config); device != NULL; device = scandevice)
+	for (device = sound_first(machine); device != NULL; device = scandevice)
 	{
 		/* append the Sound: string */
 		if (!found_sound)
@@ -1606,7 +1606,7 @@ astring &game_info_astring(running_machine *machine, astring &string)
 
 		/* count how many identical sound chips we have */
 		count = 1;
-		for (scandevice = device->typenext; scandevice != NULL; scandevice = scandevice->typenext)
+		for (scandevice = device->typenext(); scandevice != NULL; scandevice = scandevice->typenext())
 		{
 			if (sound_get_type(device) != sound_get_type(scandevice) || device->clock != scandevice->clock)
 				break;
@@ -1616,7 +1616,7 @@ astring &game_info_astring(running_machine *machine, astring &string)
 		/* if more than one, prepend a #x in front of the CPU name */
 		if (count > 1)
 			string.catprintf("%d" UTF8_MULTIPLY, count);
-		string.cat(device_get_name(device));
+		string.cat(device->name());
 
 		/* display clock in kHz or MHz */
 		if (device->clock >= 1000000)
@@ -1633,11 +1633,9 @@ astring &game_info_astring(running_machine *machine, astring &string)
 		string.cat(_("None\n"));
 	else
 	{
-		const device_config *screen;
-
-		for (screen = video_screen_first(machine->config); screen != NULL; screen = video_screen_next(screen))
+		for (running_device *screen = video_screen_first(machine); screen != NULL; screen = video_screen_next(screen))
 		{
-			const screen_config *scrconfig = (const screen_config *)screen->inline_config;
+			const screen_config *scrconfig = (const screen_config *)screen->baseconfig().inline_config;
 
 			if (scrcount > 1)
 			{
@@ -1674,9 +1672,9 @@ astring &game_info_astring(running_machine *machine, astring &string)
     messagebox_text string but handles no input
 -------------------------------------------------*/
 
-static UINT32 handler_messagebox(running_machine *machine, UINT32 state)
+static UINT32 handler_messagebox(running_machine *machine, render_container *container, UINT32 state)
 {
-	ui_draw_text_box(messagebox_text, JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
+	ui_draw_text_box(container, messagebox_text, JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
 	return 0;
 }
 
@@ -1686,12 +1684,12 @@ static UINT32 handler_messagebox(running_machine *machine, UINT32 state)
     messagebox_text string and waits for an OK
 -------------------------------------------------*/
 
-static UINT32 handler_messagebox_ok(running_machine *machine, UINT32 state)
+static UINT32 handler_messagebox_ok(running_machine *machine, render_container *container, UINT32 state)
 {
 	int res;
 
 	/* draw a standard message window */
-	ui_draw_text_box(messagebox_text, JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
+	ui_draw_text_box(container, messagebox_text, JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
 
 	res = ui_window_scroll_keys(machine);
 	if (res == 0)
@@ -1722,12 +1720,12 @@ static UINT32 handler_messagebox_ok(running_machine *machine, UINT32 state)
     any keypress
 -------------------------------------------------*/
 
-static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state)
+static UINT32 handler_messagebox_anykey(running_machine *machine, render_container *container, UINT32 state)
 {
 	int res = ui_window_scroll_keys(machine);
 
 	/* draw a standard message window */
-	ui_draw_text_box(messagebox_text, JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
+	ui_draw_text_box(container, messagebox_text, JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
 
 	/* if the user cancels, exit out completely */
 	if (res == 2)
@@ -1752,14 +1750,14 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state)
     of the standard keypresses
 -------------------------------------------------*/
 
-static UINT32 handler_ingame(running_machine *machine, UINT32 state)
+static UINT32 handler_ingame(running_machine *machine, render_container *container, UINT32 state)
 {
 	int is_paused = mame_is_paused(machine);
 
 	/* first draw the FPS counter */
 	if (showfps || osd_ticks() < showfps_end)
 	{
-		ui_draw_text_full_fixed_width(video_get_speed_text(machine), 0.0f, 0.0f, 1.0f,
+		ui_draw_text_full_fixed_width(container, video_get_speed_text(machine), 0.0f, 0.0f, 1.0f,
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 	}
 	else
@@ -1770,7 +1768,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 	{
 		astring profilertext;
 		profiler_get_text(machine, profilertext);
-		ui_draw_text_full(profilertext, 0.0f, 0.0f, 1.0f, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
+		ui_draw_text_full(container, profilertext, 0.0f, 0.0f, 1.0f, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 	}
 
 	/* if we're single-stepping, pause now */
@@ -1831,7 +1829,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 		video_save_active_screen_snapshots(machine);
 
 #ifdef INP_CAPTION
-	draw_caption(machine);
+	draw_caption(machine, container);
 #endif /* INP_CAPTION */
 
 	/* toggle pause */
@@ -1856,7 +1854,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 
 	/* show popup message if input exist any log */
 	if (show_input_log)
-		display_input_log(machine);
+		display_input_log(machine, container);
 #endif /* USE_SHOW_INPUT_LOG */
 
 	/* handle a toggle cheats request */
@@ -1934,7 +1932,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
     specifying a game to save or load
 -------------------------------------------------*/
 
-static UINT32 handler_load_save(running_machine *machine, UINT32 state)
+static UINT32 handler_load_save(running_machine *machine, render_container *container, UINT32 state)
 {
 	char filename[20];
 	input_code code;
@@ -1946,9 +1944,9 @@ static UINT32 handler_load_save(running_machine *machine, UINT32 state)
 
 	/* okay, we're waiting for a key to select a slot; display a message */
 	if (state == LOADSAVE_SAVE)
-		ui_draw_message_window(_("Select position to save to"));
+		ui_draw_message_window(container, _("Select position to save to"));
 	else
-		ui_draw_message_window(_("Select position to load from"));
+		ui_draw_message_window(container, _("Select position to load from"));
 
 	/* check for cancel key */
 	if (ui_input_pressed(machine, IPT_UI_CANCEL))
@@ -1999,7 +1997,7 @@ static UINT32 handler_load_save(running_machine *machine, UINT32 state)
 
 
 
-static UINT32 handler_confirm_quit(running_machine *machine, UINT32 state)
+static UINT32 handler_confirm_quit(running_machine *machine, render_container *container, UINT32 state)
 {
 	const char *quit_message =
 		"Quit the game?\n\n"
@@ -2012,7 +2010,7 @@ static UINT32 handler_confirm_quit(running_machine *machine, UINT32 state)
 		return ui_set_handler(ui_menu_ui_handler, 0);
 	}
 
-	ui_draw_message_window(_(quit_message));
+	ui_draw_message_window(container, _(quit_message));
 
 	if (ui_input_pressed(machine, IPT_UI_SELECT))
 	{
@@ -2073,7 +2071,7 @@ static slider_state *slider_init(running_machine *machine)
 {
 	const input_field_config *field;
 	const input_port_config *port;
-	const device_config *device;
+	running_device *device;
 	slider_state *listhead = NULL;
 	slider_state **tailptr = &listhead;
 	astring string;
@@ -2099,7 +2097,7 @@ static slider_state *slider_init(running_machine *machine)
 	}
 
 	/* add analog adjusters */
-	for (port = machine->portlist.head; port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next)
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (field->type == IPT_ADJUSTER)
 			{
@@ -2126,9 +2124,9 @@ static slider_state *slider_init(running_machine *machine)
 	}
 
 	/* add screen parameters */
-	for (device = video_screen_first(machine->config); device != NULL; device = video_screen_next(device))
+	for (device = video_screen_first(machine); device != NULL; device = video_screen_next(device))
 	{
-		const screen_config *scrconfig = (const screen_config *)device->inline_config;
+		const screen_config *scrconfig = (const screen_config *)device->baseconfig().inline_config;
 		int defxscale = floor(scrconfig->xscale * 1000.0f + 0.5f);
 		int defyscale = floor(scrconfig->yscale * 1000.0f + 0.5f);
 		int defxoffset = floor(scrconfig->xoffset * 1000.0f + 0.5f);
@@ -2169,9 +2167,9 @@ static slider_state *slider_init(running_machine *machine)
 		tailptr = &(*tailptr)->next;
 	}
 
-	for (device = device_list_first(&machine->config->devicelist, LASERDISC); device != NULL; device = device_list_next(device, LASERDISC))
+	for (device = machine->devicelist.first(LASERDISC); device != NULL; device = device->typenext())
 	{
-		const laserdisc_config *config = (const laserdisc_config *)device->inline_config;
+		const laserdisc_config *config = (const laserdisc_config *)device->baseconfig().inline_config;
 		if (config->overupdate != NULL)
 		{
 			int defxscale = floor(config->overscalex * 1000.0f + 0.5f);
@@ -2196,9 +2194,9 @@ static slider_state *slider_init(running_machine *machine)
 		}
 	}
 
-	for (device = video_screen_first(machine->config); device != NULL; device = video_screen_next(device))
+	for (device = video_screen_first(machine); device != NULL; device = video_screen_next(device))
 	{
-		const screen_config *scrconfig = (const screen_config *)device->inline_config;
+		const screen_config *scrconfig = (const screen_config *)device->baseconfig().inline_config;
 		if (scrconfig->type == SCREEN_TYPE_VECTOR)
 		{
 			/* add flicker control */
@@ -2212,7 +2210,7 @@ static slider_state *slider_init(running_machine *machine)
 
 #ifdef MAME_DEBUG
 	/* add crosshair adjusters */
-	for (port = machine->portlist.head; port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next)
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (field->crossaxis != CROSSHAIR_AXIS_NONE && field->player == 0)
 			{
@@ -2289,7 +2287,7 @@ static INT32 slider_adjuster(running_machine *machine, void *arg, astring *strin
 
 static INT32 slider_overclock(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *cpu = (const device_config *)arg;
+	running_device *cpu = (running_device *)arg;
 	if (newval != SLIDER_NOCHANGE)
 		cpu_set_clockscale(cpu, (float)newval * 0.001f);
 	if (string != NULL)
@@ -2304,8 +2302,8 @@ static INT32 slider_overclock(running_machine *machine, void *arg, astring *stri
 
 static INT32 slider_refresh(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *screen = (const device_config *)arg;
-	const screen_config *scrconfig = (const screen_config *)screen->inline_config;
+	running_device *screen = (running_device *)arg;
+	const screen_config *scrconfig = (const screen_config *)screen->baseconfig().inline_config;
 	double defrefresh = ATTOSECONDS_TO_HZ(scrconfig->refresh);
 	double refresh;
 
@@ -2331,7 +2329,7 @@ static INT32 slider_refresh(running_machine *machine, void *arg, astring *string
 
 static INT32 slider_brightness(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *screen = (const device_config *)arg;
+	running_device *screen = (running_device *)arg;
 	render_container *container = render_container_get_screen(screen);
 	render_container_user_settings settings;
 
@@ -2354,7 +2352,7 @@ static INT32 slider_brightness(running_machine *machine, void *arg, astring *str
 
 static INT32 slider_contrast(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *screen = (const device_config *)arg;
+	running_device *screen = (running_device *)arg;
 	render_container *container = render_container_get_screen(screen);
 	render_container_user_settings settings;
 
@@ -2376,7 +2374,7 @@ static INT32 slider_contrast(running_machine *machine, void *arg, astring *strin
 
 static INT32 slider_gamma(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *screen = (const device_config *)arg;
+	running_device *screen = (running_device *)arg;
 	render_container *container = render_container_get_screen(screen);
 	render_container_user_settings settings;
 
@@ -2399,7 +2397,7 @@ static INT32 slider_gamma(running_machine *machine, void *arg, astring *string, 
 
 static INT32 slider_xscale(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *screen = (const device_config *)arg;
+	running_device *screen = (running_device *)arg;
 	render_container *container = render_container_get_screen(screen);
 	render_container_user_settings settings;
 
@@ -2422,7 +2420,7 @@ static INT32 slider_xscale(running_machine *machine, void *arg, astring *string,
 
 static INT32 slider_yscale(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *screen = (const device_config *)arg;
+	running_device *screen = (running_device *)arg;
 	render_container *container = render_container_get_screen(screen);
 	render_container_user_settings settings;
 
@@ -2445,7 +2443,7 @@ static INT32 slider_yscale(running_machine *machine, void *arg, astring *string,
 
 static INT32 slider_xoffset(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *screen = (const device_config *)arg;
+	running_device *screen = (running_device *)arg;
 	render_container *container = render_container_get_screen(screen);
 	render_container_user_settings settings;
 
@@ -2468,7 +2466,7 @@ static INT32 slider_xoffset(running_machine *machine, void *arg, astring *string
 
 static INT32 slider_yoffset(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *screen = (const device_config *)arg;
+	running_device *screen = (running_device *)arg;
 	render_container *container = render_container_get_screen(screen);
 	render_container_user_settings settings;
 
@@ -2491,7 +2489,7 @@ static INT32 slider_yoffset(running_machine *machine, void *arg, astring *string
 
 static INT32 slider_overxscale(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *laserdisc = (const device_config *)arg;
+	running_device *laserdisc = (running_device *)arg;
 	laserdisc_config settings;
 
 	laserdisc_get_config(laserdisc, &settings);
@@ -2513,7 +2511,7 @@ static INT32 slider_overxscale(running_machine *machine, void *arg, astring *str
 
 static INT32 slider_overyscale(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *laserdisc = (const device_config *)arg;
+	running_device *laserdisc = (running_device *)arg;
 	laserdisc_config settings;
 
 	laserdisc_get_config(laserdisc, &settings);
@@ -2535,7 +2533,7 @@ static INT32 slider_overyscale(running_machine *machine, void *arg, astring *str
 
 static INT32 slider_overxoffset(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *laserdisc = (const device_config *)arg;
+	running_device *laserdisc = (running_device *)arg;
 	laserdisc_config settings;
 
 	laserdisc_get_config(laserdisc, &settings);
@@ -2557,7 +2555,7 @@ static INT32 slider_overxoffset(running_machine *machine, void *arg, astring *st
 
 static INT32 slider_overyoffset(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	const device_config *laserdisc = (const device_config *)arg;
+	running_device *laserdisc = (running_device *)arg;
 	laserdisc_config settings;
 
 	laserdisc_get_config(laserdisc, &settings);
@@ -2607,7 +2605,7 @@ static INT32 slider_beam(running_machine *machine, void *arg, astring *string, I
     description for a given screen
 -------------------------------------------------*/
 
-static char *slider_get_screen_desc(const device_config *screen)
+static char *slider_get_screen_desc(running_device *screen)
 {
 	int screen_count = video_screen_count(screen->machine->config);
 	static char descbuf[256];
@@ -2626,9 +2624,9 @@ static char *slider_get_screen_desc(const device_config *screen)
     description for a given laseridsc
 -------------------------------------------------*/
 
-static char *slider_get_laserdisc_desc(const device_config *laserdisc)
+static char *slider_get_laserdisc_desc(running_device *laserdisc)
 {
-	int ldcount = device_list_items(&laserdisc->machine->config->devicelist, LASERDISC);
+	int ldcount = laserdisc->machine->devicelist.count(LASERDISC);
 	static char descbuf[256];
 
 	if (ldcount > 1)

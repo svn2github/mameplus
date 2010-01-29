@@ -65,6 +65,7 @@ CPUS += TMS57002
 CPUS += CCPU
 CPUS += ADSP21XX
 CPUS += ASAP
+CPUS += AM29000
 CPUS += UPD7810
 CPUS += ARM
 CPUS += ARM7
@@ -342,7 +343,6 @@ $(MAMEOBJ)/shared.a: \
 	$(MACHINE)/segacrpt.o \
 	$(MACHINE)/ticket.o \
 	$(VIDEO)/avgdvg.o \
-	$(VIDEO)/hd63484.o \
 
 
 
@@ -807,6 +807,7 @@ $(MAMEOBJ)/konami.a: \
 	$(DRIVERS)/konamigv.o \
 	$(DRIVERS)/konamigx.o $(MACHINE)/konamigx.o $(VIDEO)/konamigx.o \
 	$(DRIVERS)/konamim2.o \
+	$(DRIVERS)/kongambl.o \
 	$(DRIVERS)/ksys573.o $(MACHINE)/zs01.o \
 	$(DRIVERS)/twinkle.o \
 	$(DRIVERS)/labyrunr.o $(VIDEO)/labyrunr.o \
@@ -912,6 +913,7 @@ $(MAMEOBJ)/midway.a: \
 
 $(MAMEOBJ)/msx.a: \
 	$(DRIVERS)/forte2.o \
+	$(DRIVERS)/pengadvb.o \
 	$(DRIVERS)/sangho.o \
 	$(DRIVERS)/sfkick.o \
 
@@ -1573,7 +1575,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/magictg.o \
 	$(DRIVERS)/malzak.o $(VIDEO)/malzak.o \
 	$(DRIVERS)/mcatadv.o $(VIDEO)/mcatadv.o \
-	$(DRIVERS)/micro3d.o \
+	$(DRIVERS)/micro3d.o $(MACHINE)/micro3d.o $(VIDEO)/micro3d.o $(AUDIO)/micro3d.o \
 	$(DRIVERS)/midas.o \
 	$(DRIVERS)/mil4000.o \
 	$(DRIVERS)/miniboy7.o \
@@ -1602,8 +1604,9 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/peplus.o \
 	$(DRIVERS)/photon.o $(VIDEO)/pk8000.o \
 	$(DRIVERS)/photon2.o \
-	$(DRIVERS)/pipeline.o \
 	$(DRIVERS)/photoply.o \
+	$(DRIVERS)/pinkiri8.o \
+	$(DRIVERS)/pipeline.o \
 	$(DRIVERS)/pkscram.o \
 	$(DRIVERS)/pntnpuzl.o \
 	$(DRIVERS)/policetr.o $(VIDEO)/policetr.o \
@@ -1814,6 +1817,12 @@ $(DRIVERS)/sspeedr.o:	$(LAYOUT)/sspeedr.lh
 $(DRIVERS)/stactics.o:	$(LAYOUT)/stactics.lh
 
 $(DRIVERS)/stepstag.o:	$(LAYOUT)/stepstag.lh
+
+$(DRIVERS)/subsino.o:	$(LAYOUT)/victor5.lh \
+						$(LAYOUT)/victor21.lh \
+						$(LAYOUT)/crsbingo.lh \
+						$(LAYOUT)/sharkpy.lh \
+						$(LAYOUT)/smoto.lh
 
 $(DRIVERS)/superchs.o:	$(LAYOUT)/superchs.lh
 

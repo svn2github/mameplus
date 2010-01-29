@@ -790,8 +790,8 @@ static void render_load(running_machine *machine, int config_type, xml_data_node
 
 		//mamep: load refresh
 		{
-			const device_config *screen = (const device_config *)container->screen;
-			const screen_config *scrconfig = (const screen_config *)screen->inline_config;
+			running_device *screen = (running_device *)container->screen;
+			const screen_config *scrconfig = (const screen_config *)screen->baseconfig().inline_config;
 			double defrefresh = ATTOSECONDS_TO_HZ(scrconfig->refresh);
 			double refresh = (double)xml_get_attribute_float(screennode, "refresh", defrefresh);
 
@@ -956,12 +956,12 @@ static void render_save(running_machine *machine, int config_type, xml_data_node
 				xml_set_attribute_float(screennode, "vstretch", container->yscale);
 				changed = TRUE;
 			}
-			
+#if 0 //FIXME: crash on exit
 			//mamep: save refresh
 			{
 				const screen_config *scrconfig = (const screen_config *)container->screen->inline_config;
 				double defrefresh = ATTOSECONDS_TO_HZ(scrconfig->refresh);
-				double refresh = ATTOSECONDS_TO_HZ(video_screen_get_frame_period(container->screen).attoseconds);
+				double refresh = ATTOSECONDS_TO_HZ(video_screen_get_frame_period((running_device *)container->screen).attoseconds);
 
 				if (floor((refresh - defrefresh) * 1000.0f + 0.5f) != 0)
 				{
@@ -969,7 +969,7 @@ static void render_save(running_machine *machine, int config_type, xml_data_node
 					changed = TRUE;
 				}
 			}
-			
+#endif
 			/* if nothing changed, kill the node */
 			if (!changed)
 				xml_delete_node(screennode);
@@ -983,7 +983,7 @@ static void render_save(running_machine *machine, int config_type, xml_data_node
     is 'live'
 -------------------------------------------------*/
 
-int render_is_live_screen(const device_config *screen)
+int render_is_live_screen(running_device *screen)
 {
 	render_target *target;
 	int screen_index;
@@ -994,7 +994,7 @@ int render_is_live_screen(const device_config *screen)
 	assert(screen->machine->config != NULL);
 	assert(screen->tag != NULL);
 
-	screen_index = device_list_index(&screen->machine->config->devicelist, VIDEO_SCREEN, screen->tag);
+	screen_index = screen->machine->devicelist.index(VIDEO_SCREEN, screen->tag);
 
 	assert(screen_index != -1);
 
@@ -1553,8 +1553,9 @@ void render_target_get_minimum_size(render_target *target, INT32 *minwidth, INT3
 		for (item = target->curview->itemlist[layer]; item != NULL; item = item->next)
 			if (item->element == NULL)
 			{
-				const device_config *screen = device_list_find_by_index(&target->machine->config->devicelist, VIDEO_SCREEN, item->index);
+				const device_config *screen = target->machine->config->devicelist.find(VIDEO_SCREEN, item->index);
 				const screen_config *scrconfig = (const screen_config *)screen->inline_config;
+				running_device *screendev = target->machine->device(screen->tag);
 				const rectangle vectorvis = { 0, 639, 0, 479 };
 				const rectangle *visarea = NULL;
 				render_container *container = get_screen_container_by_index(item->index);
@@ -1564,8 +1565,8 @@ void render_target_get_minimum_size(render_target *target, INT32 *minwidth, INT3
 				/* we may be called very early, before machine->visible_area is initialized; handle that case */
 				if (scrconfig->type == SCREEN_TYPE_VECTOR)
 					visarea = &vectorvis;
-				else if (screen->token != NULL)
-					visarea = video_screen_get_visible_area(screen);
+				else if (screendev != NULL && screendev->started)
+					visarea = video_screen_get_visible_area(screendev);
 				else
 					visarea = &scrconfig->visarea;
 
@@ -1685,7 +1686,7 @@ const render_primitive_list *render_target_get_primitives(render_target *target)
 							state = output_get_value(item->output_name);
 						else if (item->input_tag[0] != 0)
 						{
-							const input_field_config *field = input_field_by_tag_and_mask(&target->machine->portlist, item->input_tag, item->input_mask);
+							const input_field_config *field = input_field_by_tag_and_mask(target->machine->portlist, item->input_tag, item->input_mask);
 							if (field != NULL)
 								state = ((input_port_read_safe(target->machine, item->input_tag, 0) ^ field->defvalue) & item->input_mask) ? 1 : 0;
 						}
@@ -3030,6 +3031,12 @@ render_container *render_container_get_screen(const device_config *screen)
 	assert(container != NULL);
 
 	return container;
+}
+
+
+render_container *render_container_get_screen(running_device *screen)
+{
+	return render_container_get_screen(&screen->baseconfig());
 }
 
 

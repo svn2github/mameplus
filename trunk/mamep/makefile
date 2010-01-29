@@ -69,6 +69,11 @@ TARGETOS = win32
 else
 
 ifneq ($(CROSSBUILD),1)
+
+ifneq ($(OS2_SHELL),)
+TARGETOS = win32
+else
+
 UNAME = $(shell uname -a)
 
 ifeq ($(firstword $(filter Linux,$(UNAME))),Linux)
@@ -79,6 +84,9 @@ TARGETOS = solaris
 endif
 ifeq ($(firstword $(filter FreeBSD,$(UNAME))),FreeBSD)
 TARGETOS = freebsd
+endif
+ifeq ($(firstword $(filter OpenBSD,$(UNAME))),OpenBSD)
+TARGETOS = openbsd
 endif
 ifeq ($(firstword $(filter Darwin,$(UNAME))),Darwin)
 TARGETOS = macosx
@@ -93,9 +101,25 @@ ifndef PTR64
 ifeq ($(firstword $(filter x86_64,$(UNAME))),x86_64)
 PTR64 = 1
 endif
+ifeq ($(firstword $(filter amd64,$(UNAME))),amd64)
+PTR64 = 1
+endif
 endif
 
-endif # CROSS_BUILD
+# Autodetect BIGENDIAN 
+# MacOSX
+ifndef BIGENDIAN
+ifneq (,$(findstring Power,$(UNAME)))
+BIGENDIAN=1
+endif
+# Linux
+ifneq (,$(findstring ppc,$(UNAME)))
+BIGENDIAN=1
+endif
+endif # BIGENDIAN
+
+endif # OS/2
+endif # CROSS_BUILD	
 endif # Windows_NT
 
 endif # TARGET_OS
@@ -268,7 +292,7 @@ endif
 endif
 
 # 64-bit builds get a '64' suffix
-ifdef PTR64
+ifeq ($(PTR64),1)
 SUFFIX64 = 64
 endif
 
@@ -344,7 +368,7 @@ endif
 DEFS += -DXML_STATIC -Drestrict=__restrict
 
 # define PTR64 if we are a 64-bit target
-ifdef PTR64
+ifeq ($(PTR64),1)
 DEFS += -DPTR64
 endif
 
@@ -587,7 +611,7 @@ VERSIONOBJ = $(OBJ)/version.o
 LIBS = 
 
 # add expat XML library
-ifdef BUILD_EXPAT
+ifeq ($(BUILD_EXPAT),1)
 CCOMFLAGS += -I$(SRC)/lib/expat
 EXPAT = $(OBJ)/libexpat.a
 else
@@ -596,7 +620,7 @@ EXPAT =
 endif
 
 # add ZLIB compression library
-ifdef BUILD_ZLIB
+ifeq ($(BUILD_ZLIB),1)
 CCOMFLAGS += -I$(SRC)/lib/zlib
 ZLIB = $(OBJ)/libz.a
 else
@@ -684,6 +708,11 @@ ifdef MAP
 	$(RM) $(FULLNAME).map
 endif
 
+checkautodetect:
+	@echo TARGETOS=$(TARGETOS) 
+	@echo PTR64=$(PTR64) 
+	@echo BIGENDIAN=$(BIGENDIAN) 
+	@echo UNAME="$(UNAME)"
 
 
 #-------------------------------------------------
@@ -768,3 +797,4 @@ $(OBJ)/%.o: $(SRC)/%.m | $(OSPREBUILD)
 	@echo Objective-C compiling $<...
 	$(CC) $(CDEFS) $(COBJFLAGS) $(CCOMFLAGS) -c $< -o $@
 endif
+

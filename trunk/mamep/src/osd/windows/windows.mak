@@ -136,7 +136,7 @@ AR += /LTCG
 endif
 
 # disable warnings and link against bufferoverflowu for 64-bit targets
-ifdef PTR64
+ifeq ($(PTR64),1)
 CCOMFLAGS += /wd4267
 LIBS += -lbufferoverflowu
 endif
@@ -208,7 +208,7 @@ DEFS += -Dmain=utf8_main
 
 # debug build: enable guard pages on all memory allocations
 ifdef DEBUG
-DEFS += -DMALLOC_DEBUG
+#DEFS += -DMALLOC_DEBUG
 endif
 
 
@@ -221,7 +221,7 @@ endif
 CCOMFLAGS += -include $(WINSRC)/winprefix.h
 
 # for 32-bit apps, add unicows for Unicode support on Win9x
-ifndef PTR64
+ifneq ($(PTR64),1)
 LIBS += -lunicows
 endif
 
@@ -297,6 +297,17 @@ VERSIONRES = $(WINOBJ)/version.res
 
 
 #-------------------------------------------------
+# extra scale effects, include the scale.mak
+#-------------------------------------------------
+
+ifneq ($(USE_SCALE_EFFECTS),)
+OSDOBJS += $(WINOBJ)/scale.o
+include $(SRC)/osd/windows/scale/scale.mak
+endif
+
+
+
+#-------------------------------------------------
 # rules for building the libaries
 #-------------------------------------------------
 
@@ -344,17 +355,6 @@ $(VERSIONRES): $(WINOBJ)/mamevers.rc
 $(WINOBJ)/mamevers.rc: $(BUILDOUT)/verinfo$(BUILD_EXE) $(SRC)/version.c
 	@echo Emitting $@...
 	@"$(BUILDOUT)/verinfo$(BUILD_EXE)" -b windows $(SRC)/version.c > $@
-
-
-
-#-------------------------------------------------
-# extra scale effects, include the scale.mak
-#-------------------------------------------------
-
-ifneq ($(USE_SCALE_EFFECTS),)
-OSDOBJS += $(WINOBJ)/scale.o
-include $(SRC)/osd/windows/scale/scale.mak
-endif
 
 
 

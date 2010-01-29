@@ -42,8 +42,8 @@
 #define COMMAND_UNICODE	(0xe000)
 #define MAX_GLYPH_FONT	(150)
 
-//mamep: for color glyph
 #ifdef UI_COLOR_DISPLAY
+//mamep: for color glyph
 #define COLOR_BUTTONS	(90)
 #endif /* UI_COLOR_DISPLAY */
 
@@ -64,8 +64,8 @@ struct _render_font_char
 	bitmap_t *			bitmap;				/* pointer to the bitmap containing the raw data */
 	render_texture *	texture;			/* pointer to a texture for rendering and sizing */
 
-//mamep: for color glyph
 #ifdef UI_COLOR_DISPLAY
+	//mamep: for color glyph
 	int			color;
 #endif /* UI_COLOR_DISPLAY */
 };
@@ -83,7 +83,7 @@ struct _render_font
 	const char *		rawdata;			/* pointer to the raw data for the font */
 	UINT64				rawsize;			/* size of the raw font data */
 
-//mamep: for command glyph
+	//mamep: for command glyph
 	render_font *		cmd;
 };
 
@@ -137,7 +137,6 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 	render_font_char *chtable;
 	render_font_char *ch;
 
-
 	/* grab the table; if none, return the dummy character */
 	chtable = font->chars[chnum / 256];
 	if (chtable == NULL)
@@ -156,8 +155,8 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 	ch = &chtable[chnum % 256];
 	if (ch->bitmap == NULL)
 	{
-//mamep: color glyph
 #ifdef UI_COLOR_DISPLAY
+		//mamep: color glyph
 		#include "cmdtable.c"
 
 		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + COLOR_BUTTONS)
@@ -266,7 +265,6 @@ render_font *render_font_alloc(const char *filename)
 	font = global_alloc_clear(render_font);
 
 	/* load the raw data instead */
-
 	//mamep: embedded CJK font
 	switch (lang_get_langcode())
 	{
@@ -348,8 +346,8 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 	int x, y;
 	rgb_t color = MAKE_ARGB(0xff,0xff,0xff,0xff);
 
-//mamep: for color glyph
 #ifdef UI_COLOR_DISPLAY
+	//mamep: for color glyph
 	if (ch->color)
 		color = ui_get_rgb_color(ch->color);
 #endif /* UI_COLOR_DISPLAY */

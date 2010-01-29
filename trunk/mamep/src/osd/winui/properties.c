@@ -780,27 +780,27 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 
 	ZeroMemory(buf, sizeof(buf));
 
-	cpu = device_list_class_first(&config->devicelist, DEVICE_CLASS_CPU_CHIP);
+	cpu = config->devicelist.first(DEVICE_CLASS_CPU_CHIP);
 	while (cpu != NULL)
 	{
 		if (cpu->clock >= 1000000)
 		{
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
-				 _Unicode(cpu_get_name(cpu)),
+				 _Unicode(cpu->name()),
 				cpu->clock / 1000000,
 				cpu->clock % 1000000);
 		}
 		else
 		{
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
-				_Unicode(cpu_get_name(cpu)),
+				_Unicode(cpu->name()),
 				cpu->clock / 1000,
 				cpu->clock % 1000);
 		}
 
 		wcscat(buf, TEXT("\n"));
 
-		cpu = device_list_class_next(cpu, DEVICE_CLASS_CPU_CHIP);
+		cpu = cpu->typenext();
 	}
 
 	/* Free the structure */
@@ -819,25 +819,27 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 	buf[0] = 0;
 
 	/* iterate over sound chips */
-	sound = device_list_class_first(&config->devicelist, DEVICE_CLASS_SOUND_CHIP);
+	sound = config->devicelist.first(DEVICE_CLASS_SOUND_CHIP);
 	while(sound != NULL)
 	{
 		int clock,count;
 		device_type sound_type_;
+		char tmpname[1024];
+
+		sprintf(tmpname,"%s",sound->name());
 
 		sound_type_ = sound_get_type(sound);
 		clock = sound->clock;
 
 		count = 1;
-		sound = device_list_class_next(sound, DEVICE_CLASS_SOUND_CHIP);
-
+		sound = sound->typenext();
 		/* Matching chips at the same clock are aggregated */
 		while (sound != NULL
 			&& sound_get_type(sound) == sound_type_
 			&& sound->clock == clock)
 		{
 			count++;
-			sound = device_list_class_next(sound, DEVICE_CLASS_SOUND_CHIP);
+			sound = sound->typenext();
 		}
 
 		if (count > 1)
@@ -845,7 +847,7 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 			swprintf(&buf[wcslen(buf)], TEXT("%dx"), count);
 		}
 
-		swprintf(&buf[wcslen(buf)],TEXT("%s"),_Unicode(devtype_get_name(sound_type_)));
+		swprintf(&buf[wcslen(buf)],TEXT("%s"),_Unicode(tmpname));
 
 		if (clock)
 		{
@@ -2724,8 +2726,11 @@ static BOOL ScreenReadControl(datamap *map, HWND dialog, HWND control, core_opti
 {
 	char screen_option_name[32];
 	const char *screen_option_value;
+	//int selected_screen;
 	int screen_option_index;
-
+	//const char *op_val;
+	//
+	//selected_screen = GetSelectedScreen(dialog);
 	screen_option_index = ComboBox_GetCurSel(control);
 	screen_option_value = (const char *) ComboBox_GetItemData(control, screen_option_index);
 
@@ -2733,6 +2738,7 @@ static BOOL ScreenReadControl(datamap *map, HWND dialog, HWND control, core_opti
 		screen_option_value = "auto";
 
 	ScreenSetOptionName(map, dialog, control, screen_option_name, ARRAY_LENGTH(screen_option_name));
+	//op_val = utf8_from_tstring(screen_option_value);
 	options_set_string(opts, screen_option_name, screen_option_value, OPTION_PRIORITY_CMDLINE);
 	return FALSE;
 }
@@ -3437,8 +3443,7 @@ static void SetYM3812Enabled(HWND hWnd, int nIndex)
 	{
 		enabled = FALSE;
 
-		for (sound = device_list_class_first(&config->devicelist, DEVICE_CLASS_SOUND_CHIP); sound != NULL;
-			sound = device_list_class_next(sound, DEVICE_CLASS_SOUND_CHIP))
+		for (sound = config->devicelist.first(DEVICE_CLASS_SOUND_CHIP); sound != NULL; sound = sound->next)
 		{
 			if (nIndex <= -1
 				||  sound->type == SOUND_YM3812

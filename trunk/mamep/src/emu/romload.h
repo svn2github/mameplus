@@ -169,8 +169,7 @@ struct _romload_private
 	open_chd *		chd_list;			/* disks */
 	open_chd **		chd_list_tailptr;
 
-	UINT8 *			regionbase;			/* base of current region */
-	UINT32			regionlength;		/* length of current region */
+	region_info *	region;				/* info about current region */
 
 	astring			errorstring;		/* error string */
 };

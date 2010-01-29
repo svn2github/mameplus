@@ -916,11 +916,11 @@ static void CreateDeviceFolders(int parent_index, device_class dev_class, int ic
 		}
 
 		// enumerate through all devices
-		for (device = device_list_class_first(&config->devicelist, dev_class); device != NULL;
-			device = device_list_class_next(device, dev_class))
+		for (device = config->devicelist.first(); device != NULL;
+			device = device->next)
 		{
 			// get the name
-			const TCHAR *dev_name = _Unicode(device_get_name(device));
+			const TCHAR *dev_name = _Unicode(device->name());
 
 			// do we have a folder for this device?
 			folder = NULL;
@@ -938,7 +938,7 @@ static void CreateDeviceFolders(int parent_index, device_class dev_class, int ic
 			{
 				LPTREEFOLDER lpTemp;
 
-				lpTemp = NewFolder(_Unicode(device_get_name(device)), 0, FALSE, next_folder_id++, parent_index, icon_id);
+				lpTemp = NewFolder(_Unicode(device->name()), 0, FALSE, next_folder_id++, parent_index, icon_id);
 				AddFolder(lpTemp);
 				folder = treeFolders[nFolder++];
 

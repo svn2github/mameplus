@@ -469,7 +469,7 @@ static WRITE16_HANDLER ( z80_reset_w )
 
 	if (data == 0x5050)
 	{
-		device_reset(state->ics);
+		state->ics->reset();
 		cpu_set_input_line(state->soundcpu, INPUT_LINE_HALT, CLEAR_LINE);
 		cpu_set_input_line(state->soundcpu, INPUT_LINE_RESET, PULSE_LINE);
 		if(0)
@@ -514,7 +514,7 @@ static WRITE8_HANDLER( z80_l3_w )
 	soundlatch3_w(space, 0, data);
 }
 
-static void sound_irq( const device_config *device, int level )
+static void sound_irq( running_device *device, int level )
 {
 	pgm_state *state = (pgm_state *)device->machine->driver_data;
 	cpu_set_input_line(state->soundcpu, 0, level);

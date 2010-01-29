@@ -5515,12 +5515,11 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_OPTIONS_BG:
 		{
 			OPENFILENAME OpenFileName;
-			TCHAR szFile[MAX_PATH];
+			static TCHAR szFile[MAX_PATH] = TEXT("\0");
 			//TCHAR*       t_bgdir = tstring_from_utf8(GetBgDir());
 			//if( !t_bgdir )
 			//	return FALSE;
 
-			szFile[0] = 0;
 			OpenFileName.lStructSize       = sizeof(OPENFILENAME);
 			OpenFileName.hwndOwner         = hMain;
 			OpenFileName.hInstance         = 0;
