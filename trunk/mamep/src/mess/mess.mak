@@ -119,6 +119,9 @@ $(MESSOBJ)/snk.a:				\
 	$(MESS_DRIVERS)/ngp.o		\
 	$(MESS_VIDEO)/k1ge.o		\
 
+$(MESSOBJ)/skeleton.a:			\
+	$(MESS_DRIVERS)/supracan.o	\
+
 
 
 #-------------------------------------------------
@@ -154,4 +157,5 @@ $(MESSOBJ)/software.a:					\
 	$(MESS_SOFTWARE)/ngp_cart.o	\
 	$(MESS_SOFTWARE)/pico_cart.o	\
 	$(MESS_SOFTWARE)/sms_cart.o	\
+	$(MESS_SOFTWARE)/supracan_cart.o	\
 	$(MESS_SOFTWARE)/wswan_cart.o	\

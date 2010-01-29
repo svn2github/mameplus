@@ -113,6 +113,10 @@ const game_driver * const consoledrivers[] =
     DRIVER( msx2 )      /* 1985 MSX2                                        */
     DRIVER( msx2p )     /* 1988 MSX2+ Japan                                 */
 
+/*********** To sort (mostly skeleton drivers) ******************************/
+
+DRIVER( supracan )
+
 #endif /* MAMEMESS */
 
 

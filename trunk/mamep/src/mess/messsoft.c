@@ -44,6 +44,7 @@ const software_list * const software_lists[] =
 	ADD_SOFTWARE_LIST( ngpc_cart )      /* SNK Neo Geo Pocket Color cartridges */
 	ADD_SOFTWARE_LIST( pico_cart )      /* Sega Pico cartridges */
 	ADD_SOFTWARE_LIST( sms_cart )       /* Sega Master System cartridges */
+	ADD_SOFTWARE_LIST( supracan_cart )  /* Super A'Can cartridges */
 	ADD_SOFTWARE_LIST( wswan_cart )     /* Bandai WonderSwan */
 	ADD_SOFTWARE_LIST( wscolor_cart )   /* Bandai WonderSwan Color */
 
