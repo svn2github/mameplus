@@ -149,13 +149,13 @@ $(UIOBJ)/mkhelp$(EXE): $(UIOBJ)/mkhelp.o $(LIBOCORE)
 # rule for making the verinfo tool
 #-------------------------------------------------
 
-VERINFO = $(UIOBJ)/verinfo$(EXE)
-
-$(VERINFO): $(UIOBJ)/verinfo.o $(LIBOCORE)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-
-BUILD += $(VERINFO)
+#VERINFO = $(UIOBJ)/verinfo$(EXE)
+#
+#$(VERINFO): $(UIOBJ)/verinfo.o $(LIBOCORE)
+#	@echo Linking $@...
+#	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+#
+#BUILD += $(VERINFO)
 
 
 
@@ -163,9 +163,9 @@ BUILD += $(VERINFO)
 # Specific rele to compile verinfo util.
 #-------------------------------------------------
 
-$(UIOBJ)/verinfo.o: $(SRC)/build/verinfo.c | $(OSPREBUILD)
-	@echo Compiling $<...
-	$(CC) $(CDEFS) -DWINUI=1 $(CFLAGS) -c $< -o $@
+#$(UIOBJ)/verinfo.o: $(SRC)/build/verinfo.c | $(OSPREBUILD)
+#	@echo Compiling $<...
+#	$(CC) $(CDEFS) -DWINUI=1 $(CFLAGS) -c $< -o $@
 
 
 
@@ -183,9 +183,9 @@ $(GUIRESFILE): $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
 # rules for resource file
 #-------------------------------------------------
 
-$(UIOBJ)/mamevers.rc: $(VERINFO) $(SRC)/version.c
+$(UIOBJ)/mamevers.rc: $(OBJ)/build/verinfo$(EXE) $(SRC)/version.c
 	@echo Emitting $@...
-	@"$(VERINFO)" $(SRC)/version.c > $@
+	@"$(OBJ)/build/verinfo$(EXE)" $(SRC)/version.c > $@
 
 
 
