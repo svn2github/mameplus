@@ -25,46 +25,43 @@ table {border:0; background-color: #EEEEEE}
 <h1>I. Preparing compile utilities</h1> 
 <ul>
   <li>create a root directory for compile utilities; generally, this is called <em>mingw</em></li>
-  <li>extract official MAME Development Tools <a href="http://www.mamedev.org/tools/">mingw-mame-20070810.exe</a> into your <em>mingw</em> directory</li>
-  <li>extract <a href="http://alleg.sourceforge.net/wip.html">dx80_mgw.zip</a> into your <em>mingw</em> directory</li>
-  <li>extract G++ module <a href="http://downloads.sourceforge.net/mingw/gcc-g++-4.2.1-sjlj-2.tar.gz">gcc-g++-4.2.1-sjlj-2.tar.gz</a> into your <em>mingw</em> directory, and rename g++-sjlj.exe to g++.exe</li>
-  <li>extract MAME Plus! extra compile utils <a href="http://mame.emu-zone.org/download/extra_utils-20070912.7z.zip">extra_utils-20070912</a> into your <em>mingw</em> directory</li>
+  <li>extract official MAME Development Tools <a href="http://www.mamedev.org/tools/">mingw-mame-20100102.exe</a> into your <em>mingw</em> directory</li>
 </ul>
 <h1>II. Preparing official MAME source</h1> 
 <ul>
   <li>create a root directory for mame source code; generally, this is called <em>mamesrc</em></li>
   <li> extract official <a href="http://mamedev.org/release.html">MAME</a> source to <em>mamesrc</em></li>
-  <li>  extract official MAME source diff to <em>mamesrc</em>, when <a href="http://mamedev.org/release.html">intermediate updates</a> are available</li>
+  <li>  extract official MAME source diff to <em>mamesrc</em>, when <a href="http://mamedev.org/updates.html">intermediate updates</a> are available</li>
 </ul>
 <table> 
   <tr> 
     <th>- File List - </th> 
   </tr> 
   <tr> 
-    <td>[MinGW]<br> 
-&nbsp;&nbsp;&nbsp;&nbsp;[bin]<br> 
-&nbsp;&nbsp;&nbsp;&nbsp;[include]<br> 
-&nbsp;&nbsp;&nbsp;&nbsp;[lib]<br> 
+    <td>[MinGW]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[mingw64-w32]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[bin]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;[mingw64-w64]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[bin]<br> 
       ... <br> 
       [mamesrc]<br> 
       <span class="bluestyle">
-&nbsp;&nbsp;[src]<br> 
-&nbsp;&nbsp;&nbsp;&nbsp;[emu]<br> 
-&nbsp;&nbsp;&nbsp;&nbsp;[mame]<br> 
-&nbsp;&nbsp;&nbsp;&nbsp;[osd]<br> 
-&nbsp;&nbsp;&nbsp;&nbsp;...<br> 
-&nbsp;&nbsp;makefile
+&nbsp;&nbsp;&nbsp;&nbsp;[src]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[build]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[emu]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;makefile
 <br> 
-&nbsp;&nbsp;0118u1.diff<br />
-&nbsp;&nbsp;0118u2.diff<br />
-&nbsp;&nbsp;...</span></td> 
+&nbsp;&nbsp;&nbsp;&nbsp;0136u1.diff<br />
+&nbsp;&nbsp;&nbsp;&nbsp;0136u2.diff<br />
+</span></td> 
   </tr> 
 </table> 
 <ul>
   <li> apply official patch:<br>
-    <div class="doscmd" style="background-color:#000000;">D:\mamesrc&gt;patch -p0 -E&lt;0118u1.diff<br>
-      D:\mamesrc&gt;patch -p0 -E&lt;0118u2.diff<br />
-    ......</div></li>
+    <div class="doscmd" style="background-color:#000000;">
+    	D:\mamesrc&gt;patch -p0 -E &lt;0136u1.diff<br>
+      D:\mamesrc&gt;patch -p0 -E &lt;0136u2.diff<br />
+    ...</div></li>
   <li>extract  MAME Plus! source diff (<strong>EXACTLY THE SAME VERSION INCLUDING INTERMEDIATE UPDATES AS OFFICIAL MAME</strong>) on top of <em>mamesrc</em></li>
 </ul>
 <table> 
@@ -75,22 +72,42 @@ table {border:0; background-color: #EEEEEE}
     <td>[MinGW]<br> 
       ... <br> 
       [mamesrc]<br> 
-      <span class="bluestyle">&nbsp;&nbsp;[src]<br> 
-&nbsp;&nbsp;&nbsp;&nbsp;...<br> 
-&nbsp;&nbsp;makefile<br>
-&nbsp;&nbsp;config.def<br>
-&nbsp;&nbsp;env.bat</span></td> 
+      <span class="bluestyle">
+&nbsp;&nbsp;&nbsp;&nbsp;[src]<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;makefile<br>
+&nbsp;&nbsp;&nbsp;&nbsp;config.def<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mkgcc-w32.cmd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mkgcc-w64.cmd
+</span></td> 
   </tr> 
 </table> 
 <h1>III. Compile </h1>
 <ul>
-  <li> Open env.bat,  modify PATH to your <em>mingw</em> directory:
-<div class="doscmd" style="background-color:#000080;">set PATH=D:\MinGW\bin;%PATH%</div>
-  </li>
-  <li>Run env.bat, then type &quot;mingw32-make&quot; to compile. warnings are expected
-<div class="doscmd" style="background-color:#000000;">D:\mamesrc&gt;env<br>
-D:\mamesrc&gt;mingw32-make</div>
-  </li>
+
+<li>32-bit<br><br>
+  Open "mkgcc-w32.cmd" file,  modify PATH to your <em>mingw</em> directory:
+<div class="doscmd" style="background-color:#000080;">
+set PATH=D:\MinGW\mingw64-w32\bin;%PATH%</div>
+  Run "mkgcc-w32.cmd" file to compile. warnings are expected:
+<div class="doscmd" style="background-color:#000000;">
+D:\mamesrc&gt;mkgcc-w32.cmd<br> 
+D:\mamesrc&gt;make
+</div>
+</li>
+
+<li>64-bit<br><br>
+  Open "mkgcc-w64.cmd" file,  modify PATH to your <em>mingw</em> directory:
+<div class="doscmd" style="background-color:#000080;">
+set PATH=D:\MinGW\mingw64-w64\bin;%PATH%</div>
+
+  Run "mkgcc-w64.cmd" file to compile. warnings are expected:
+<div class="doscmd" style="background-color:#000000;">
+D:\mamesrc&gt;mkgcc-w64.cmd<br> 
+D:\mamesrc&gt;make
+</div> 
+</li>
+
 </ul>
 </body>
 </html>
+<br><br><br>
