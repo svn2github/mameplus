@@ -36,12 +36,12 @@ CFLAGS += -I $(UISRC)
 # configure the resource compiler
 #-------------------------------------------------
 
-UI_RC = @windres --use-temp-file
+RC = @windres --use-temp-file
 
-UI_RCDEFS = -DNDEBUG -D_WIN32_IE=0x0501
+RCDEFS = -DNDEBUG -D_WIN32_IE=0x0501
 
 # include UISRC direcotry
-UI_RCFLAGS = -O coff --include-dir $(UISRC) --include-dir $(UIOBJ)
+RCFLAGS = -O coff --include-dir $(UISRC) --include-dir $(UIOBJ)
 
 
 
@@ -86,7 +86,7 @@ endif
 #-------------------------------------------------
 
 # add UI objs
-UIOBJS += \
+OSDOBJS += \
 	$(UIOBJ)/mui_util.o \
 	$(UIOBJ)/directinput.o \
 	$(UIOBJ)/dijoystick.o \
@@ -116,17 +116,17 @@ UIOBJS += \
 
 
 ifneq ($(USE_CUSTOM_UI_COLOR),)
-UIOBJS += $(UIOBJ)/paletteedit.o
+OSDOBJS += $(UIOBJ)/paletteedit.o
 endif
 
 ifneq ($(USE_IMAGE_MENU),)
-UIOBJS += $(UIOBJ)/imagemenu.o
+OSDOBJS += $(UIOBJ)/imagemenu.o
 endif
 
 # add our UI resources
-GUIRESFILE = $(UIOBJ)/mameui.res
+GUIRESFILE += $(UIOBJ)/mameui.res
 
-$(LIBOSD): $(UIOBJS)
+$(LIBOSD): $(OSDOBJS)
 
 
 
@@ -150,11 +150,11 @@ $(UIOBJ)/mkhelp$(EXE): $(UIOBJ)/mkhelp.o $(LIBOCORE)
 #-------------------------------------------------
 
 #VERINFO = $(UIOBJ)/verinfo$(EXE)
-#
+
 #$(VERINFO): $(UIOBJ)/verinfo.o $(LIBOCORE)
 #	@echo Linking $@...
 #	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-#
+
 #BUILD += $(VERINFO)
 
 
@@ -163,9 +163,10 @@ $(UIOBJ)/mkhelp$(EXE): $(UIOBJ)/mkhelp.o $(LIBOCORE)
 # Specific rele to compile verinfo util.
 #-------------------------------------------------
 
-#$(UIOBJ)/verinfo.o: $(SRC)/build/verinfo.c | $(OSPREBUILD)
+#$(BUILDOBJ)/verinfo.o : $(BUILDSRC)/verinfo.c
 #	@echo Compiling $<...
-#	$(CC) $(CDEFS) -DWINUI=1 $(CFLAGS) -c $< -o $@
+#	@echo $(CC) -DWINUI $(CDEFS) $(CFLAGS) -c $< -o $@
+#	$(CC) -DWINUI $(CDEFS) $(CFLAGS) -c $< -o $@
 
 
 
@@ -175,7 +176,7 @@ $(UIOBJ)/mkhelp$(EXE): $(UIOBJ)/mkhelp.o $(LIBOCORE)
 
 $(GUIRESFILE): $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
 	@echo Compiling mameui resources $<...
-	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
+	$(RC) $(RCDEFS) $(RCFLAGS) -o $@ -i $<
 
 
 
@@ -185,7 +186,8 @@ $(GUIRESFILE): $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
 
 $(UIOBJ)/mamevers.rc: $(OBJ)/build/verinfo$(EXE) $(SRC)/version.c
 	@echo Emitting $@...
-	@"$(OBJ)/build/verinfo$(EXE)" $(SRC)/version.c > $@
+	@"$(OBJ)/build/verinfo$(EXE)" -b winui $(SRC)/version.c > $@
+
 
 
 
@@ -207,35 +209,35 @@ endif
 
 #-------------------------------------------------
 # CORE functions
-# only definitions UI_RCDEFS for mameui.rc
+# only definitions RCDEFS for mameui.rc
 #-------------------------------------------------
 
 ifneq ($(USE_CUSTOM_UI_COLOR),)
-UI_RCDEFS += -DUI_COLOR_PALETTE
+RCDEFS += -DUI_COLOR_PALETTE
 endif
 
 ifneq ($(USE_AUTO_PAUSE_PLAYBACK),)
-UI_RCDEFS += -DAUTO_PAUSE_PLAYBACK
+RCDEFS += -DAUTO_PAUSE_PLAYBACK
 endif
 
 ifneq ($(USE_SCALE_EFFECTS),)
-UI_RCDEFS += -DUSE_SCALE_EFFECTS
+RCDEFS += -DUSE_SCALE_EFFECTS
 endif
 
 ifneq ($(USE_TRANS_UI),)
-UI_RCDEFS += -DTRANS_UI
+RCDEFS += -DTRANS_UI
 endif
 
 ifneq ($(USE_JOYSTICK_ID),)
-UI_RCDEFS += -DJOYSTICK_ID
+RCDEFS += -DJOYSTICK_ID
 endif
 
 ifneq ($(USE_VOLUME_AUTO_ADJUST),)
-UI_RCDEFS += -DUSE_VOLUME_AUTO_ADJUST
+RCDEFS += -DUSE_VOLUME_AUTO_ADJUST
 endif
 
 ifneq ($(USE_DRIVER_SWITCH),)
-UI_RCDEFS += -DDRIVER_SWITCH
+RCDEFS += -DDRIVER_SWITCH
 endif
 
 
@@ -246,32 +248,32 @@ endif
 
 ifneq ($(USE_MISC_FOLDER),)
 DEFS += -DMISC_FOLDER
-UI_RCDEFS += -DMISC_FOLDER
+RCDEFS += -DMISC_FOLDER
 endif
 
 ifneq ($(USE_SHOW_SPLASH_SCREEN),)
 DEFS += -DUSE_SHOW_SPLASH_SCREEN
-UI_RCDEFS += -DUSE_SHOW_SPLASH_SCREEN
+RCDEFS += -DUSE_SHOW_SPLASH_SCREEN
 endif
 
 ifneq ($(USE_STORY_DATAFILE),)
 DEFS += -DSTORY_DATAFILE
-UI_RCDEFS += -DSTORY_DATAFILE
+RCDEFS += -DSTORY_DATAFILE
 endif
 
 ifneq ($(USE_VIEW_PCBINFO),)
 DEFS += -DUSE_VIEW_PCBINFO
-UI_RCDEFS += -DUSE_VIEW_PCBINFO
+RCDEFS += -DUSE_VIEW_PCBINFO
 endif
 
 ifneq ($(USE_IMAGE_MENU),)
 DEFS += -DIMAGE_MENU
-UI_RCDEFS += -DIMAGE_MENU
+RCDEFS += -DIMAGE_MENU
 endif
 
 ifneq ($(USE_TREE_SHEET),)
 DEFS += -DTREE_SHEET
-UI_RCDEFS += -DTREE_SHEET
+RCDEFS += -DTREE_SHEET
 endif
 
 ifneq ($(SHOW_UNAVAILABLE_FOLDER),)

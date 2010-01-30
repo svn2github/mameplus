@@ -20,7 +20,7 @@ MESS_WINSRC = $(SRC)/mess/osd/windows
 MESS_WINOBJ = $(OBJ)/mess/osd/windows
 
 
-LIBOSD += \
+OSDOBJS += \
 	$(MESS_WINOBJ)/configms.o	\
 	$(MESS_WINOBJ)/dialog.o	\
 	$(MESS_WINOBJ)/menu.o		\
@@ -36,18 +36,6 @@ OSDCOREOBJS += \
 $(LIBOCORE): $(OSDCOREOBJS)
 
 $(LIBOCORE_NOMAIN): $(OSDCOREOBJS:$(WINOBJ)/main.o=)
-
-
-
-#-------------------------------------------------
-# rules for resource file
-#-------------------------------------------------
-
-ifeq ($(WINUI),)
-	$(MESS_WINOBJ)/messcli.res: $(MESS_WINSRC)/mess.rc $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
-	CLIRESFILE = $(MESS_WINOBJ)/messcli.res
-endif
-
 
 #-------------------------------------------------
 # generic rules for the resource compiler

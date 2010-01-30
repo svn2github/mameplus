@@ -1,7 +1,7 @@
 @echo off
 
 set MINGW_ROOT=..\mingw\mingw64-w64
-set PATH=%MINGW_ROOT%\bin;extra\bin;%PATH%
+set PATH=%MINGW_ROOT%\bin;%PATH%
 
 gcc -v
 
