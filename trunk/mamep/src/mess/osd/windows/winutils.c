@@ -15,12 +15,12 @@
 #include <windows.h>
 #include <commdlg.h>
 #include <tchar.h>
+#include <stdlib.h>
 
 // MESS headers
 #include "winutils.h"
 #include "strconv.h"
 #include "glob.h"
-#include "emu.h"
 
 // stupid hack; not sure why this is needed
 #ifdef const
@@ -81,7 +81,7 @@ BOOL win_get_file_name_dialog(win_open_file_name *ofn)
 			t_filter[i] = (buffer[i] != '|') ? buffer[i] : '\0';
 		t_filter[i++] = '\0';
 		t_filter[i++] = '\0';
-		global_free(buffer);
+		free(buffer);
 	}
 
 	// do we need to translate the file parameter?
@@ -94,7 +94,7 @@ BOOL win_get_file_name_dialog(win_open_file_name *ofn)
 		t_file_size = MAX(_tcslen(buffer) + 1, MAX_PATH);
 		t_file = (LPTSTR) alloca(t_file_size * sizeof(*t_file));
 		_tcscpy(t_file, buffer);
-		global_free(buffer);
+		free(buffer);
 	}
 
 	// do we need to translate the initial directory?
@@ -149,7 +149,7 @@ BOOL win_get_file_name_dialog(win_open_file_name *ofn)
 			goto done;
 
 		snprintf(ofn->filename, ARRAY_LENGTH(ofn->filename), "%s", utf8_file);
-		global_free(utf8_file);
+		free(utf8_file);
 	}
 
 	// we've completed the process
@@ -157,7 +157,7 @@ BOOL win_get_file_name_dialog(win_open_file_name *ofn)
 
 done:
 	if (t_initial_directory != NULL)
-		global_free(t_initial_directory);
+		free(t_initial_directory);
 	return result;
 }
 
@@ -236,7 +236,7 @@ DWORD win_get_file_attributes_utf8(const char *filename)
 	if (t_filename != NULL)
 	{
 		result = GetFileAttributes(t_filename);
-		global_free(t_filename);
+		free(t_filename);
 	}
 	return result;
 }

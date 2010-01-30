@@ -44,7 +44,7 @@
 #include "commctrl.h"
 #include "mamevers.rc"
 
-//1                       24      MOVEABLE PURE   "mame.man"
+1                       24      MOVEABLE PURE   "mame.man"
 
 //Microsoft Developer Studio generated resource script.
 //
@@ -55,8 +55,6 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "windows.h"
-#include "commctrl.h"
 #ifdef __GNUC__
 #define MAMECLASSNAME MAME32
 #else
