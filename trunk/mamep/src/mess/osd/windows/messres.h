@@ -2,6 +2,8 @@
 // Microsoft Visual C++ generated include file.
 // Used by mess.rc
 //
+#define IDI_MAME_ICON                   107 // MAMEMESS console icon
+
 #define ID_FILE_LOADSTATE_NEWUI         3101
 #define ID_FILE_SAVESTATE               3102
 #define ID_FILE_SAVESTATE_AS            3103
@@ -63,8 +65,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        3129
-#define _APS_NEXT_COMMAND_VALUE         40108
+#define _APS_NEXT_COMMAND_VALUE         40008
 #define _APS_NEXT_CONTROL_VALUE         3306
-#define _APS_NEXT_SYMED_VALUE           100
+#define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

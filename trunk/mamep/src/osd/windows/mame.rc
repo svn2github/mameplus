@@ -46,7 +46,7 @@
 
 1                       24      MOVEABLE PURE   "mame.man"
 
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "mameres.h"
 
@@ -55,12 +55,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#ifdef __GNUC__
-#define MAMECLASSNAME MAME32
-#else
-#define MAMECLASSNAME "MAME32"
-#endif
-
+#include <windows.h>
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -79,25 +74,20 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
-    "resource.h\0"
+    "mameres.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#define NOWINRES\r\n"
     "#include ""windows.h""\r\n"
     "#include ""commctrl.h""\r\n"
-    "#ifdef __GNUC__\r\n"
-    "#define MAMECLASSNAME MAME32\r\n"
-    "#else\r\n"
-    "#define MAMECLASSNAME ""MAME32""\r\n"
-    "#endif\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "\r\n"
     "\0"
@@ -111,9 +101,8 @@ END
 // Icon
 //
 
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_MAME_ICON         ICON    DISCARDABLE     "mame.ico"
+IDI_MAME_ICON           ICON    DISCARDABLE     "mame.ico"
+
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -128,4 +117,3 @@ IDI_MAME_ICON         ICON    DISCARDABLE     "mame.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
-

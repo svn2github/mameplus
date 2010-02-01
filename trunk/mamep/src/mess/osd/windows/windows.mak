@@ -19,11 +19,13 @@ OBJDIRS += \
 MESS_WINSRC = $(SRC)/mess/osd/windows
 MESS_WINOBJ = $(OBJ)/mess/osd/windows
 
+CLIRESFILE = $(MESS_WINOBJ)/mess.res
 
 OSDOBJS += \
 	$(MESS_WINOBJ)/configms.o	\
 	$(MESS_WINOBJ)/dialog.o	\
 	$(MESS_WINOBJ)/menu.o		\
+	$(MESS_WINOBJ)/mess.res	\
 	$(MESS_WINOBJ)/opcntrl.o
 
 $(LIBOSD): $(OSDOBJS)
