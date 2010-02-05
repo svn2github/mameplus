@@ -163,7 +163,7 @@
     <message>
         <location filename="../gamelist.cpp" line="1667"/>
         <source>by %1</source>
-        <translation>依%1</translation>
+        <translation>%1</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2632"/>
@@ -567,7 +567,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepgui_main.ui" line="132"/>
         <source>Arrange &amp;Icons</source>
-        <translation>排列圖示(&amp;I)</translation>
+        <translation>排序方式(&amp;I)</translation>
     </message>
     <message>
         <location filename="../mamepgui_main.ui" line="119"/>
@@ -582,7 +582,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepgui_main.ui" line="124"/>
         <source>&amp;Custom Filters</source>
-        <translation>自訂篩選程式(&amp;C)</translation>
+        <translation>自訂篩選方式(&amp;C)</translation>
     </message>
     <message>
         <location filename="../mamepgui_main.ui" line="156"/>
@@ -637,7 +637,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepgui_main.ui" line="369"/>
         <source>&amp;Grouped</source>
-        <translation>群組(&amp;G)</translation>
+        <translation>分組(&amp;G)</translation>
     </message>
     <message>
         <location filename="../mamepgui_main.ui" line="381"/>
@@ -652,7 +652,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepgui_main.ui" line="602"/>
         <source>Highlight Selected Icon</source>
-        <translation>高亮度顯示所選圖示</translation>
+        <translation>放大顯示選定的圖示</translation>
     </message>
     <message>
         <location filename="../mamepgui_main.ui" line="635"/>
@@ -682,7 +682,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepgui_main.ui" line="676"/>
         <source>&amp;Audit All Roms</source>
-        <translation>驗證全部ROM(&amp;A)</translation>
+        <translation>驗證全部 ROM(&amp;A)</translation>
     </message>
     <message>
         <location filename="../mamepgui_main.ui" line="726"/>
@@ -890,7 +890,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mamepgui_main.ui" line="610"/>
         <source>Strech Screenshot Larger</source>
-        <translation>允許延展預覽圖</translation>
+        <translation>延展預覽圖</translation>
     </message>
 </context>
 <context>
@@ -2501,7 +2501,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../utils.cpp" line="156"/>
         <source>LCD</source>
-        <translation>液晶</translation>
+        <translation>LCD 液晶</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="158"/>
@@ -2551,7 +2551,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../utils.cpp" line="171"/>
         <source>VHS</source>
-        <translation>錄影帶</translation>
+        <translation>VHS 錄影帶</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="233"/>
