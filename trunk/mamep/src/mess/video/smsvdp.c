@@ -488,7 +488,9 @@ READ8_DEVICE_HANDLER( sms_ms_vdp_ctrl_r )
 		if (smsvdp->int_callback)
 			smsvdp->int_callback(device->machine, CLEAR_LINE);
 	}
-	return temp;
+
+	/* low 5 bits return non-zero data (it fixes PGA Tour Golf course map introduction) */
+	return temp | 0x1f;
 }
 
 
@@ -1572,8 +1574,8 @@ static DEVICE_RESET( smsvdp )
 	set_display_settings(device);
 
 	/* Clear RAM */
-	memset(smsvdp->VRAM, 0, VRAM_SIZE);
-	memset(smsvdp->CRAM, 0, MAX_CRAM_SIZE);
+	memset(smsvdp->VRAM->base.u8, 0, VRAM_SIZE);
+	memset(smsvdp->CRAM->base.u8, 0, MAX_CRAM_SIZE);
 	memset(smsvdp->line_buffer, 0, 256 * 5 * sizeof(int));
 }
 

@@ -135,25 +135,27 @@ static void draw_tilemap(running_machine *machine, bitmap_t *bitmap, const recta
 	int scrollx,scrolly;
 	int region;
 	int gfx_mode;
-	int size;
+	int xsize,ysize;
 	UINT16 tile_bank,pal_bank;
 
 	count = (state->tilemap_base_addr[layer]);
-	/* FIXME: I guess that this truly controls tilemap paging. */
-	if((state->tilemap_flags[layer] & 0x0f00) == 0xa00)
-		size = 128;
-	else
-		size = (state->video_flags & 0x100) ? 64 : 32;
 
-	/* FIXME: swap scrollx / scrolly */
-	scrolly = (state->tilemap_scrolly[layer] & 0x800) ? ((state->tilemap_scrolly[layer] & (size*8-1)) - size*8) : (state->tilemap_scrolly[layer] & (size*8-1));
-	scrollx = (state->tilemap_scrollx[layer] & 0x800) ? ((state->tilemap_scrollx[layer] & (size*8-1)) - size*8) : (state->tilemap_scrollx[layer] & (size*8-1));
+	switch(state->tilemap_flags[layer] & 0x0f00)
+	{
+		case 0x600: xsize = 64; ysize = 32; break;
+		case 0xa00:	xsize = 128; ysize = 32; break;
+		case 0xc00: xsize = 64; ysize = 64; break;
+		default: xsize = 32; ysize = 32; break;
+	}
+
+	scrollx = (state->tilemap_scrollx[layer] & 0x800) ? ((state->tilemap_scrollx[layer] & (xsize*8-1)) - xsize*8) : (state->tilemap_scrollx[layer] & (xsize*8-1));
+	scrolly = (state->tilemap_scrolly[layer] & 0x800) ? ((state->tilemap_scrolly[layer] & (ysize*8-1)) - ysize*8) : (state->tilemap_scrolly[layer] & (ysize*8-1));
 
 	gfx_mode = (state->tilemap_mode[layer] & 0x7000) >> 12;
 
 	switch(gfx_mode)
 	{
-		case 7:  region = 2; tile_bank = 0x1c00; pal_bank = 0x38; break;
+		case 7:  region = 2; tile_bank = 0x1c00; pal_bank = 0x00; break;
 		case 4:  region = 0; tile_bank = 0x400;  pal_bank = 0x00; break;
 		case 2:  region = 1; tile_bank = 0x400;  pal_bank = 0x00; break;
 		case 0:  region = 1; tile_bank = 0;      pal_bank = 0x00; break;
@@ -161,9 +163,9 @@ static void draw_tilemap(running_machine *machine, bitmap_t *bitmap, const recta
 	}
 
 
-	for (y=0;y<size;y++)
+	for (y=0;y<ysize;y++)
 	{
-		for (x=0;x<size;x++)
+		for (x=0;x<xsize;x++)
 		{
 			int tile, flipx, flipy, pal;
 			tile = (supracan_vram[count] & 0x03ff) + tile_bank;
@@ -174,12 +176,14 @@ static void draw_tilemap(running_machine *machine, bitmap_t *bitmap, const recta
 			drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx,(y*8)-scrolly,0);
 			if(state->tilemap_flags[layer] & 0x20) //wrap-around enable
 			{
-				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx+size*8,(y*8)-scrolly,0);
-				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx,(y*8)-scrolly+size*8,0);
-				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx+size*8,(y*8)-scrolly+size*8,0);
-				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx-size*8,(y*8)-scrolly,0);
-				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx,(y*8)-scrolly-size*8,0);
-				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx-size*8,(y*8)-scrolly-size*8,0);
+				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx+xsize*8,(y*8)-scrolly,0);
+				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx,(y*8)-scrolly+ysize*8,0);
+				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx+xsize*8,(y*8)-scrolly+ysize*8,0);
+				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx-xsize*8,(y*8)-scrolly,0);
+				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx,(y*8)-scrolly-ysize*8,0);
+				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx-xsize*8,(y*8)-scrolly-ysize*8,0);
+				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx+xsize*8,(y*8)-scrolly-ysize*8,0);
+				drawgfx_transpen(bitmap,cliprect,machine->gfx[region],tile,pal,flipx,flipy,(x*8)-scrollx-xsize*8,(y*8)-scrolly+ysize*8,0);
 			}
 			count++;
 		}
@@ -444,7 +448,6 @@ static VIDEO_UPDATE( supracan )
 
 	if(state->video_flags & 4)
 		draw_roz(screen->machine,bitmap,cliprect);
-
 
 	return 0;
 }

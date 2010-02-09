@@ -36,7 +36,7 @@ typedef void (*device_image_unload_func)(running_device *image);
 typedef void (*device_display_func)(running_device *image);
 typedef void (*device_image_partialhash_func)(char *, const unsigned char *, unsigned long, unsigned int);
 typedef const char *(*device_get_name_func)(running_device *device, char *buffer, size_t buffer_length);
-typedef void (*device_get_image_devices_func)(running_device *device, device_list *devlist);
+typedef void (*device_get_image_devices_func)(running_device *device);
 
 typedef enum
 {
@@ -260,7 +260,7 @@ char *image_fgets(running_device *image, char *s, UINT32 length);
 int image_feof(running_device *image);
 
 void *image_ptr(running_device *image);
-
+void set_init_phase(running_device *device);
 
 UINT8 *image_get_software_region(running_device *image, const char *tag);
 UINT32 image_get_software_region_length(running_device *image, const char *tag);
@@ -338,6 +338,6 @@ running_device *image_from_absolute_index(running_machine *machine, int absolute
 #define DEVICE_IMAGE_UNLOAD(name)           void DEVICE_IMAGE_UNLOAD_NAME(name)(running_device *image)
 
 #define DEVICE_GET_IMAGE_DEVICES_NAME(name) device_get_image_devices_##name
-#define DEVICE_GET_IMAGE_DEVICES(name)      void DEVICE_GET_IMAGE_DEVICES_NAME(name)(running_device *device, device_list *devlist)
+#define DEVICE_GET_IMAGE_DEVICES(name)      void DEVICE_GET_IMAGE_DEVICES_NAME(name)(running_device *device)
 
 #endif /* __IMAGE_H__ */
