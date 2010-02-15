@@ -571,6 +571,27 @@ enum
 };
 
 
+/* input classes */
+enum
+{
+	INPUT_CLASS_INTERNAL,
+	INPUT_CLASS_KEYBOARD,
+	INPUT_CLASS_CONTROLLER,
+	INPUT_CLASS_CONFIG,
+	INPUT_CLASS_DIPSWITCH,
+	INPUT_CLASS_CATEGORIZED,
+	INPUT_CLASS_MISC
+};
+
+#define UCHAR_PRIVATE		(0x100000)
+#define UCHAR_SHIFT_1		(UCHAR_PRIVATE + 0)
+#define UCHAR_SHIFT_2		(UCHAR_PRIVATE + 1)
+#define UCHAR_MAMEKEY_BEGIN	(UCHAR_PRIVATE + 2)
+#define UCHAR_MAMEKEY_END	(UCHAR_MAMEKEY_BEGIN + __code_key_last)
+#define UCHAR_MAMEKEY(code)	(UCHAR_MAMEKEY_BEGIN + KEYCODE_##code)
+
+#define UCHAR_SHIFT_BEGIN	(UCHAR_SHIFT_1)
+#define UCHAR_SHIFT_END		(UCHAR_SHIFT_2)
 
 /***************************************************************************
     TYPE DEFINITIONS
@@ -1164,6 +1185,36 @@ int input_port_get_crosshair_position(running_machine *machine, int player, floa
 /* force an update to the input port values based on current conditions */
 void input_port_update_defaults(running_machine *machine);
 
+/* return TRUE if machine use full keyboard emulation */
+int input_machine_has_keyboard(running_machine *machine);
+
+/* these are called by the core; they should not be called from FEs */
+void inputx_init(running_machine *machine);
+
+/* called by drivers to setup natural keyboard support */
+void inputx_setup_natural_keyboard(
+	int (*queue_chars)(const unicode_char *text, size_t text_len),
+	int (*accept_char)(unicode_char ch),
+	int (*charqueue_empty)(void));
+
+/* validity checks */
+int validate_natural_keyboard_statics(void);
+
+/* these can be called from FEs */
+int inputx_can_post(running_machine *machine);
+
+/* various posting functions; can be called from FEs */
+void inputx_postc(running_machine *machine, unicode_char ch);
+void inputx_post_utf8(running_machine *machine, const char *text);
+void inputx_post_utf8_rate(running_machine *machine, const char *text, attotime rate);
+int inputx_is_posting(running_machine *machine);
+
+/* miscellaneous functions */
+int input_classify_port(const input_field_config *field);
+int input_has_input_class(running_machine *machine, int inputclass);
+int input_player_number(const input_field_config *field);
+int input_count_players(running_machine *machine);
+int input_category_active(running_machine *machine, int category);
 
 
 /* ----- port writing ----- */

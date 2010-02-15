@@ -94,7 +94,7 @@ LD = g++-4.2
 else
 ifeq ($(DISTRO),gcc44-generic)
 CC = @gcc -V 4.4
-LD = @g++ -V 4.4
+LD = @g++-4.4
 else
 $(error DISTRO $(DISTRO) unknown)
 endif
@@ -475,6 +475,11 @@ ifeq ($(BASE_TARGETOS),os2)
 # to avoid name clash of '_brk'
 $(OBJ)/emu/cpu/h6280/6280dasm.o : CDEFS += -D__STRICT_ANSI__
 endif # OS2
+
+ifeq ($(TARGETOS),solaris)
+# solaris only has gcc-4.3 by default and is reporting a false positive
+$(OBJ)/emu/video/tms9927.o : CCOMFLAGS += -Wno-error
+endif # solaris
 
 # drawSDL depends on the core software renderer, so make sure it exists
 $(SDLOBJ)/drawsdl.o : $(SRC)/emu/rendersw.c $(SDLSRC)/drawogl.c $(SDLSRC)/texcopy.c

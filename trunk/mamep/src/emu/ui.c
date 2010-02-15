@@ -30,10 +30,7 @@
 #endif /* MAMEMESS */
 
 #ifdef MESS
-#include "mess.h"
 #include "uimess.h"
-#include "inputx.h"
-#include "messopts.h"
 #endif /* MESS */
 
 #include <ctype.h>
@@ -60,6 +57,53 @@ enum
 };
 
 
+/***************************************************************************
+    LOCAL VARIABLES
+***************************************************************************/
+
+/* list of natural keyboard keys that are not associated with UI_EVENT_CHARs */
+static const input_item_id non_char_keys[] =
+{
+	ITEM_ID_ESC,
+	ITEM_ID_F1,
+	ITEM_ID_F2,
+	ITEM_ID_F3,
+	ITEM_ID_F4,
+	ITEM_ID_F5,
+	ITEM_ID_F6,
+	ITEM_ID_F7,
+	ITEM_ID_F8,
+	ITEM_ID_F9,
+	ITEM_ID_F10,
+	ITEM_ID_F11,
+	ITEM_ID_F12,
+	ITEM_ID_NUMLOCK,
+	ITEM_ID_0_PAD,
+	ITEM_ID_1_PAD,
+	ITEM_ID_2_PAD,
+	ITEM_ID_3_PAD,
+	ITEM_ID_4_PAD,
+	ITEM_ID_5_PAD,
+	ITEM_ID_6_PAD,
+	ITEM_ID_7_PAD,
+	ITEM_ID_8_PAD,
+	ITEM_ID_9_PAD,
+	ITEM_ID_DEL_PAD,
+	ITEM_ID_PLUS_PAD,
+	ITEM_ID_MINUS_PAD,
+	ITEM_ID_INSERT,
+	ITEM_ID_DEL,
+	ITEM_ID_HOME,
+	ITEM_ID_END,
+	ITEM_ID_PGUP,
+	ITEM_ID_PGDN,
+	ITEM_ID_UP,
+	ITEM_ID_DOWN,
+	ITEM_ID_LEFT,
+	ITEM_ID_RIGHT,
+	ITEM_ID_PAUSE,
+	ITEM_ID_CANCEL
+};
 
 /***************************************************************************
     GLOBAL VARIABLES
@@ -121,6 +165,10 @@ static int ui_transparency;
 static void display_input_log(running_machine *machine, render_container *container);
 #endif /* USE_SHOW_INPUT_LOG */
 
+static int ui_active;
+/* natural keyboard info */
+static int ui_use_natural_keyboard;
+static UINT8 non_char_keys_down[(ARRAY_LENGTH(non_char_keys) + 7) / 8];
 
 
 /***************************************************************************
@@ -407,6 +455,10 @@ int ui_init(running_machine *machine)
 	/* reset globals */
 	single_step = FALSE;
 	ui_set_handler(handler_messagebox, 0);
+	ui_active = 0;
+	/* retrieve options */
+	ui_use_natural_keyboard = options_get_bool(mame_options(), OPTION_NATURAL_KEYBOARD);
+
 	return 0;
 }
 
@@ -435,21 +487,11 @@ static void ui_exit(running_machine *machine)
 
 int ui_display_startup_screens(running_machine *machine, int first_time, int show_disclaimer)
 {
-#ifdef MESS
-	const int maxstate = 4;
-#else
 	const int maxstate = 3;
-#endif
 	int str = options_get_int(mame_options(), OPTION_SECONDS_TO_RUN);
 	int show_gameinfo = !options_get_bool(mame_options(), OPTION_SKIP_GAMEINFO);
 	int show_warnings = TRUE;
 	int state;
-
-#ifdef MESS
-	show_warnings = !options_get_bool(mame_options(), OPTION_SKIP_WARNINGS);
-	if (!show_warnings)
-		show_disclaimer = FALSE;
-#endif /* MESS */
 
 	/* disable everything if we are using -str for 300 or fewer seconds, or if we're the empty driver,
        or if we are debugging */
@@ -492,10 +534,6 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 				if (show_gameinfo && game_info_astring(machine, messagebox_text).len() > 0)
 					ui_set_handler(handler_messagebox_anykey, 0);
 				break;
-#ifdef MESS
-			case 3:
-				break;
-#endif
 		}
 
 		/* clear the input memory */
@@ -1744,6 +1782,94 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, render_contain
 	return state;
 }
 
+
+/*-------------------------------------------------
+    ui_use_new_ui - determines if the "new ui"
+    is in use
+-------------------------------------------------*/
+
+int ui_use_new_ui(void)
+{
+#ifdef MESS
+#if (defined(WIN32) || defined(_MSC_VER)) && !defined(SDLMAME_WIN32)
+	if (options_get_bool(mame_options(), "newui"))
+		return TRUE;
+#endif
+#endif
+	return FALSE;
+}
+
+/*-------------------------------------------------
+    process_natural_keyboard - processes any
+    natural keyboard input
+-------------------------------------------------*/
+
+static void process_natural_keyboard(running_machine *machine)
+{
+	ui_event event;
+	int i, pressed;
+	input_item_id itemid;
+	input_code code;
+	UINT8 *key_down_ptr;
+	UINT8 key_down_mask;
+
+	/* loop while we have interesting events */
+	while (ui_input_pop_event(machine, &event))
+	{
+		/* if this was a UI_EVENT_CHAR event, post it */
+		if (event.event_type == UI_EVENT_CHAR)
+			inputx_postc(machine, event.ch);
+	}
+
+	/* process natural keyboard keys that don't get UI_EVENT_CHARs */
+	for (i = 0; i < ARRAY_LENGTH(non_char_keys); i++)
+	{
+		/* identify this keycode */
+		itemid = non_char_keys[i];
+		code = input_code_from_input_item_id(machine, itemid);
+
+		/* ...and determine if it is pressed */
+		pressed = input_code_pressed(machine, code);
+
+		/* figure out whey we are in the key_down map */
+		key_down_ptr = &non_char_keys_down[i / 8];
+		key_down_mask = 1 << (i % 8);
+
+		if (pressed && !(*key_down_ptr & key_down_mask))
+		{
+			/* this key is now down */
+			*key_down_ptr |= key_down_mask;
+
+			/* post the key */
+			inputx_postc(machine, UCHAR_MAMEKEY_BEGIN + code);
+		}
+		else if (!pressed && (*key_down_ptr & key_down_mask))
+		{
+			/* this key is now up */
+			*key_down_ptr &= ~key_down_mask;
+		}
+	}
+}
+
+/*-------------------------------------------------
+    ui_paste - does a paste from the keyboard
+-------------------------------------------------*/
+
+void ui_paste(running_machine *machine)
+{
+	/* retrieve the clipboard text */
+	char *text = osd_get_clipboard_text();
+
+	/* was a result returned? */
+	if (text != NULL)
+	{
+		/* post the text */
+		inputx_post_utf8(machine, text);
+
+		/* free the string */
+		free(text);
+	}
+}
 
 /*-------------------------------------------------
     handler_ingame - in-game handler takes care

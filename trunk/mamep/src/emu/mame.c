@@ -1320,7 +1320,6 @@ running_machine::running_machine(const game_driver *driver)
 	  generic_audio_data(NULL),
 #ifdef MESS
 	  images_data(NULL),
-	  ui_mess_data(NULL),
 #endif /* MESS */
 	  driver_data(NULL)
 {
@@ -1349,7 +1348,10 @@ running_machine::running_machine(const game_driver *driver)
 
 		/* fetch core options */
 		sample_rate = options_get_int(mame_options(), OPTION_SAMPLERATE);
-		debug_flags = options_get_bool(mame_options(), OPTION_DEBUG) ? (DEBUG_FLAG_ENABLED | DEBUG_FLAG_CALL_HOOK) : 0;
+		if (options_get_bool(mame_options(), OPTION_DEBUG))
+			debug_flags = (DEBUG_FLAG_ENABLED | DEBUG_FLAG_CALL_HOOK) | (options_get_bool(mame_options(), OPTION_DEBUG_INTERNAL) ? 0 : DEBUG_FLAG_OSD_ENABLED);
+		else
+			debug_flags = 0;
 	}
 	catch (std::bad_alloc &)
 	{
@@ -1397,9 +1399,6 @@ static void init_machine(running_machine *machine)
 	palette_init(machine);
 	render_init(machine);
 	ui_init(machine);
-#ifdef MESS
-	ui_mess_init(machine);
-#endif /* MESS */
 	generic_machine_init(machine);
 	generic_video_init(machine);
 	generic_sound_init(machine);
@@ -1438,6 +1437,9 @@ static void init_machine(running_machine *machine)
 
 	/* allocate the gfx elements prior to device initialization */
 	gfx_init(machine);
+
+	/* initialize natural keyboard support */
+	inputx_init(machine);
 
 #ifdef MESS
 	/* first MESS initialization */

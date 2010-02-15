@@ -23,6 +23,7 @@ OBJDIRS += \
 	$(EMUOBJ)/cpu \
 	$(EMUOBJ)/sound \
 	$(EMUOBJ)/debug \
+	$(EMUOBJ)/debugint \
 	$(EMUOBJ)/audio \
 	$(EMUOBJ)/drivers \
 	$(EMUOBJ)/machine \

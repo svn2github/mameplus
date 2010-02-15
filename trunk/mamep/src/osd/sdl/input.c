@@ -914,7 +914,6 @@ static int lookup_mame_index(const char *scode)
 	return index;
 }
 
-#ifdef MESS
 static int lookup_mame_code(const char *scode)
 {
 	int index;
@@ -924,7 +923,6 @@ static int lookup_mame_code(const char *scode)
 	else
 		return -1;
 }
-#endif
 
 
 //============================================================
@@ -1118,7 +1116,7 @@ void sdlinput_init(running_machine *machine)
 	// register the mice
 	sdlinput_register_mice(machine);
 
-	if (machine->debug_flags & DEBUG_FLAG_ENABLED)
+	if (machine->debug_flags & DEBUG_FLAG_OSD_ENABLED)
 	{
 		mame_printf_warning("Debug Build: Disabling input grab for -debug\n");
 		mouse_enabled = 0;
@@ -1584,24 +1582,30 @@ int sdlinput_should_hide_mouse(running_machine *machine)
 
 void osd_customize_input_type_list(input_type_desc *typelist)
 {
-	#ifdef MESS
 	int mameid_code ,ui_code;
-	#endif
 	input_type_desc *typedesc;
+	const char*  uimode;
 
 	// loop over the defaults
 	for (typedesc = typelist; typedesc != NULL; typedesc = typedesc->next)
 	{
 		switch (typedesc->type)
 		{
-			#ifdef MESS
 			// configurable UI mode switch
 			case IPT_UI_TOGGLE_UI:
-				mameid_code = lookup_mame_code((const char *)options_get_string(mame_options(), SDLOPTION_UIMODEKEY));
+				uimode = (const char *)options_get_string(mame_options(), SDLOPTION_UIMODEKEY);
+				if(!strcmp(uimode,"auto")) {
+					#if defined(__APPLE__) && defined(__MACH__)
+					mameid_code = lookup_mame_code("ITEM_ID_INSERT");
+					#else
+					mameid_code = lookup_mame_code("ITEM_ID_SCRLOCK");
+					#endif
+				} else {
+					mameid_code = lookup_mame_code(uimode);
+				}
 				ui_code = INPUT_CODE(DEVICE_CLASS_KEYBOARD, 0, ITEM_CLASS_SWITCH, ITEM_MODIFIER_NONE, mameid_code);
 				input_seq_set_1(&typedesc->seq[SEQ_TYPE_STANDARD], ui_code);
 				break;
-			#endif
 			// alt-enter for fullscreen
 			case IPT_OSD_1:
 				typedesc->token = "TOGGLE_FULLSCREEN";

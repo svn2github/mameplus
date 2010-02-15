@@ -58,10 +58,6 @@
 #include "osdsdl.h"
 #include "sdlos.h"
 
-#ifdef MESS
-#include "menu.h"
-#endif
-
 //============================================================
 //  CONSTANTS
 //============================================================
@@ -192,7 +188,7 @@ void sdlvideo_monitor_refresh(sdl_monitor_info *monitor)
 	monitor->center_height = monitor->monitor_height = info.rcMonitor.bottom - info.rcMonitor.top;
 	char *temp = utf8_from_wstring(info.szDevice);
 	strcpy(monitor->monitor_device, temp);
-	free(temp);
+	global_free(temp);
 	#elif defined(SDLMAME_MACOSX)	// Mac OS X Core Imaging version
 	CGDirectDisplayID primary;
 	CGRect dbounds;
@@ -354,7 +350,7 @@ void osd_update(running_machine *machine, int skip_redraw)
 	sdlinput_poll(machine);
 	check_osd_inputs(machine);
 
-	if (machine->debug_flags & DEBUG_FLAG_ENABLED)
+	if ((machine->debug_flags & DEBUG_FLAG_OSD_ENABLED) != 0)
 		debugwin_update_during_game(machine);
 }
 
@@ -421,7 +417,7 @@ static BOOL CALLBACK monitor_enum_callback(HMONITOR handle, HDC dc, LPRECT rect,
 	monitor->monitor_height = info.rcMonitor.bottom - info.rcMonitor.top;
 	char *temp = utf8_from_wstring(info.szDevice);
 	strcpy(monitor->monitor_device, temp);
-	free(temp);
+	global_free(temp);
 
 	// guess the aspect ratio assuming square pixels
 	monitor->aspect = (float)(info.rcMonitor.right - info.rcMonitor.left) / (float)(info.rcMonitor.bottom - info.rcMonitor.top);
@@ -635,7 +631,7 @@ static void extract_video_config(running_machine *machine)
 	#endif
 
 
-	if (options_get_bool(mame_options(), OPTION_DEBUG))
+	if (machine->debug_flags & DEBUG_FLAG_OSD_ENABLED)
 		video_config.windowed = TRUE;
 
 	stemp = options_get_string(mame_options(), SDLOPTION_EFFECT);

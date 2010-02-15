@@ -323,6 +323,8 @@ static int validate_driver(int drivnum, const machine_config *config, game_drive
 {
 	const game_driver *driver = drivers[drivnum];
 	const game_driver *clone_of;
+	const char *compatible_with;
+	const game_driver *other_drv;
 	int error = FALSE, is_clone;
 	const char *s;
 
@@ -389,14 +391,42 @@ static int validate_driver(int drivnum, const machine_config *config, game_drive
 			break;
 		}
 
-#ifndef MESS
+	/* normalize driver->compatible_with */
+	compatible_with = driver->compatible_with;
+	if ((compatible_with != NULL) && !strcmp(compatible_with, "0"))
+		compatible_with = NULL;
+
+	/* check for this driver being compatible with a non-existant driver */
+	if ((compatible_with != NULL) && (driver_get_name(driver->compatible_with) == NULL))
+	{
+		mame_printf_error("%s: is compatible with %s, which is not in drivers[]\n", driver->name, driver->compatible_with);
+		error = TRUE;
+	}
+
+	/* check for clone_of and compatible_with being specified at the same time */
+	if ((driver_get_clone(driver) != NULL) && (compatible_with != NULL))
+	{
+		mame_printf_error("%s: both compatible_with and clone_of are specified\n", driver->name);
+		error = TRUE;
+	}
+
+	/* find any recursive dependencies on the current driver */
+	for (other_drv = driver_get_compatible(driver); other_drv != NULL; other_drv = driver_get_compatible(other_drv))
+	{
+		if (driver == other_drv)
+		{
+			mame_printf_error("%s: recursive compatibility\n", driver->name);
+			error = TRUE;
+			break;
+		}
+	}
+
 	/* make sure sound-less drivers are flagged */
-	if ((driver->flags & GAME_IS_BIOS_ROOT) == 0 && sound_first(config) == NULL && (driver->flags & GAME_NO_SOUND) == 0 && strcmp(driver->name, "minivadr"))
+	if ((driver->flags & GAME_IS_BIOS_ROOT) == 0 && sound_first(config) == NULL && (driver->flags & GAME_NO_SOUND) == 0 && (driver->flags & GAME_NO_SOUND_HW) == 0)
 	{
 		mame_printf_error("%s: %s missing GAME_NO_SOUND flag\n", driver->source_file, driver->name);
 		error = TRUE;
 	}
-#endif
 
 	return error;
 }
@@ -416,21 +446,20 @@ static int validate_roms(int drivnum, const machine_config *config, region_array
 	int items_since_region = 1;
 	int error = FALSE;
 
-#ifndef MESS
 	/* check for duplicate ROM entries */
-	if (driver->rom != NULL && (driver->flags & GAME_NO_STANDALONE) == 0)
-	{
-		char romaddr[20];
-		sprintf(romaddr, "%p", driver->rom);
-		if (roms.add(romaddr, driver, FALSE) == TMERR_DUPLICATE)
-		{
-			const game_driver *match = roms.find(romaddr);
-			mame_printf_error("%s: %s uses the same ROM set as (%s, %s)\n", driver->source_file, driver->description, match->source_file, match->name);
-			error = TRUE;
-		}
-	}
-#endif
-
+/*
+    if (driver->rom != NULL && (driver->flags & GAME_NO_STANDALONE) == 0)
+    {
+        char romaddr[20];
+        sprintf(romaddr, "%p", driver->rom);
+        if (roms.add(romaddr, driver, FALSE) == TMERR_DUPLICATE)
+        {
+            const game_driver *match = roms.find(romaddr);
+            mame_printf_error("%s: %s uses the same ROM set as (%s, %s)\n", driver->source_file, driver->description, match->source_file, match->name);
+            error = TRUE;
+        }
+    }
+*/
 	/* iterate, starting with the driver's ROMs and continuing with device ROMs */
 	for (const rom_source *source = rom_first_source(driver, config); source != NULL; source = rom_next_source(driver, config, source))
 	{
@@ -1168,10 +1197,7 @@ static int validate_inputs(int drivnum, const machine_config *config, int_map &d
 				}
 		}
 
-#ifdef MESS
-	if (mess_validate_input_ports(drivnum, config, portlist))
-		error = TRUE;
-#endif /* MESS */
+	error = error || validate_natural_keyboard_statics();
 
 	/* free the config */
 	return error;
@@ -1442,9 +1468,6 @@ int mame_validitychecks(const game_driver *curdriver)
 	osd_ticks_t input_checks = 0;
 	osd_ticks_t sound_checks = 0;
 	osd_ticks_t device_checks = 0;
-#ifdef MESS
-	osd_ticks_t mess_checks = 0;
-#endif
 
 	int drivnum, strnum;
 	int error = FALSE;
@@ -1557,13 +1580,6 @@ int mame_validitychecks(const game_driver *curdriver)
 		machine_config_free(config);
 	}
 
-#ifdef MESS
-	mess_checks -= get_profile_ticks();
-	if (mess_validitychecks())
-		error = TRUE;
-	mess_checks += get_profile_ticks();
-#endif /* MESS */
-
 #if (REPORT_TIMES)
 	mame_printf_info("Prep:      %8dm\n", (int)(prep / 1000000));
 	mame_printf_info("Expansion: %8dm\n", (int)(expansion / 1000000));
@@ -1574,9 +1590,6 @@ int mame_validitychecks(const game_driver *curdriver)
 	mame_printf_info("Graphics:  %8dm\n", (int)(gfx_checks / 1000000));
 	mame_printf_info("Input:     %8dm\n", (int)(input_checks / 1000000));
 	mame_printf_info("Sound:     %8dm\n", (int)(sound_checks / 1000000));
-#ifdef MESS
-	mame_printf_info("MESS:      %8dm\n", (int)(mess_checks / 1000000));
-#endif
 #endif
 
 	return error;

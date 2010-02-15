@@ -283,10 +283,8 @@ static void menu_settings_common(running_machine *machine, ui_menu *menu, void *
 static void menu_settings_populate(running_machine *machine, ui_menu *menu, settings_menu_state *menustate, UINT32 type);
 static void menu_analog(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_analog_populate(running_machine *machine, ui_menu *menu);
-#ifndef MESS
 static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_bookkeeping_populate(running_machine *machine, ui_menu *menu, attotime *curtime);
-#endif
 static void menu_game_info(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 #ifdef CMD_LIST
 static void menu_command(running_machine *machine, ui_menu *menu, void *parameter, void *state);
@@ -1495,6 +1493,33 @@ static void menu_main(running_machine *machine, ui_menu *menu, void *parameter, 
 
 
 /*-------------------------------------------------
+    ui_menu_keyboard_mode - menu that
+-------------------------------------------------*/
+
+static void ui_menu_keyboard_mode(running_machine *machine, ui_menu *menu, void *parameter, void *state)
+{
+	const ui_menu_event *event;
+	int natural = ui_get_use_natural_keyboard(machine);
+
+	/* if the menu isn't built, populate now */
+	if (!ui_menu_populated(menu))
+	{
+		ui_menu_item_append(menu, "Keyboard Mode:", natural ? "Natural" : "Emulated", natural ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, NULL);
+	}
+
+	/* process the menu */
+	event = ui_menu_process(machine, menu, 0);
+
+	if (event != NULL)
+	{
+		if (event->iptkey == IPT_UI_LEFT || event->iptkey == IPT_UI_RIGHT) {
+			ui_set_use_natural_keyboard(machine, natural ^ TRUE);
+			ui_menu_reset(menu, UI_MENU_RESET_REMEMBER_REF);
+		}
+	}
+}
+
+/*-------------------------------------------------
     menu_main_populate - populate the main menu
 -------------------------------------------------*/
 
@@ -1551,6 +1576,10 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	/* add MESS-specific menus */
 	ui_mess_main_menu_populate(machine, menu);
 #endif /* MESS */
+
+	/* add keyboard mode menu */
+	if (input_machine_has_keyboard(machine) && inputx_can_post(machine))
+		ui_menu_item_append(menu, "Keyboard Mode", NULL, 0, (void *)ui_menu_keyboard_mode);
 
 	/* add sliders menu */
 	ui_menu_item_append(menu, _("Slider Controls"), NULL, 0, (void *)menu_sliders);
@@ -2431,7 +2460,6 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
     information menu
 -------------------------------------------------*/
 
-#ifndef MESS
 static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *parameter, void *state)
 {
 	attotime *prevtime;
@@ -2454,7 +2482,6 @@ static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *para
 	/* process the menu */
 	ui_menu_process(machine, menu, 0);
 }
-#endif
 
 
 /*-------------------------------------------------
@@ -2462,7 +2489,6 @@ static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *para
     information menu
 -------------------------------------------------*/
 
-#ifndef MESS
 static void menu_bookkeeping_populate(running_machine *machine, ui_menu *menu, attotime *curtime)
 {
 	int tickets = get_dispensed_tickets(machine);
@@ -2502,7 +2528,6 @@ static void menu_bookkeeping_populate(running_machine *machine, ui_menu *menu, a
 	/* append the single item */
 	ui_menu_item_append(menu, tempstring, NULL, MENU_FLAG_MULTILINE, NULL);
 }
-#endif
 
 
 /*-------------------------------------------------

@@ -14,6 +14,13 @@
 #include <SDL/SDL_version.h>
 
 // standard includes
+#ifdef MESS
+#include <unistd.h>
+#endif
+#ifdef SDLMAME_OS2
+#define INCL_DOS
+#include <os2.h>
+#endif
 
 // MAME headers
 #include "osdepend.h"
@@ -36,30 +43,6 @@
 #include <X11/Xutil.h>
 #endif
 
-#ifdef SDLMAME_OS2
-#define INCL_DOS
-#include <os2.h>
-
-void MorphToPM()
-{
-  PPIB pib;
-  PTIB tib;
-
-  DosGetInfoBlocks(&tib, &pib);
-
-  // Change flag from VIO to PM:
-  if (pib->pib_ultype==2) pib->pib_ultype = 3;
-}
-#endif
-
-//============================================================
-//  LOCAL VARIABLES
-//============================================================
-
-#ifdef MESS
-static char cwd[512];
-#endif
-
 //============================================================
 //  OPTIONS
 //============================================================
@@ -75,6 +58,15 @@ static char cwd[512];
 #endif // MESS
 #endif // MACOSX
 #endif // INI_PATH
+
+
+//============================================================
+//  Global variables
+//============================================================
+
+//============================================================
+//  Local variables
+//============================================================
 
 static const options_entry mame_sdl_options[] =
 {
@@ -185,13 +177,6 @@ static const options_entry mame_sdl_options[] =
 	{ NULL, 		                          NULL,  OPTION_HEADER,     "SDL KEYBOARD MAPPING" },
 	{ SDLOPTION_KEYMAP,                      "0",    OPTION_BOOLEAN,    "enable keymap" },
 	{ SDLOPTION_KEYMAP_FILE,                 "keymap.dat", 0,           "keymap filename" },
-#ifdef MESS
-#ifdef SDLMAME_MACOSX	// work around for SDL 1.2.11 on Mac - 1.2.12 should not require this
-	{ SDLOPTION_UIMODEKEY,			"DELETE", 0,                  "Key to toggle MESS keyboard mode" },
-#else
-	{ SDLOPTION_UIMODEKEY,			"SCROLLOCK", 0,                  "Key to toggle MESS keyboard mode" },
-#endif	// SDLMAME_MACOSX
-#endif	// MESS
 
 	// joystick mapping
 	{ NULL, 		                         NULL,   OPTION_HEADER,     "SDL JOYSTICK MAPPING" },
@@ -242,6 +227,23 @@ static const options_entry mame_sdl_options[] =
 };
 
 //============================================================
+//  OS2 specific
+//============================================================
+
+#ifdef SDLMAME_OS2
+void MorphToPM()
+{
+  PPIB pib;
+  PTIB tib;
+
+  DosGetInfoBlocks(&tib, &pib);
+
+  // Change flag from VIO to PM:
+  if (pib->pib_ultype==2) pib->pib_ultype = 3;
+}
+#endif
+
+//============================================================
 //  main
 //============================================================
 
@@ -277,10 +279,6 @@ int main(int argc, char *argv[])
 
 	#ifdef SDLMAME_OS2
 	MorphToPM();
-	#endif
-
-	#ifdef MESS
-	getcwd(cwd, 511);
 	#endif
 
 #if defined(SDLMAME_X11) && (SDL_MAJOR_VERSION == 1) && (SDL_MINOR_VERSION == 2)
@@ -540,7 +538,7 @@ void osd_init(running_machine *machine)
 	defines_verbose();
 
 	if (!SDLMAME_HAS_DEBUGGER)
-		if (options_get_bool(mame_options(), OPTION_DEBUG))
+		if (machine->debug_flags & DEBUG_FLAG_OSD_ENABLED)
 		{
 			mame_printf_error("sdlmame: -debug not supported on X11-less builds\n\n");
 			osd_exit(machine);
@@ -571,10 +569,3 @@ void osd_init(running_machine *machine)
 	SDL_EnableUNICODE(SDL_TRUE);
 #endif
 }
-
-#ifdef MESS
-char *osd_get_startup_cwd(void)
-{
-	return cwd;
-}
-#endif
