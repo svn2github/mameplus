@@ -1,524 +1,524 @@
-# osd/winui/properties.c: 1019
+# osd/winui/properties.c: 1020
 %d colors 
 %d 色 
 
-# osd/winui/layout.c: 203 osd/winui/winui.c: 3703
+# osd/winui/layout.c: 202 osd/winui/winui.c: 3756
 %d games
 %d ゲーム
 
-# osd/winui/properties.c: 916
+# osd/winui/properties.c: 917
 %d x %d (H) %f Hz (%d colors)\n
 %d x %d (横) %f Hz (%d 色)\n
 
-# osd/winui/properties.c: 911
+# osd/winui/properties.c: 912
 %d x %d (V) %f Hz (%d colors)\n
 %d x %d (縦) %f Hz (%d 色)\n
 
-# osd/winui/treeview.c: 1234
+# osd/winui/treeview.c: 1232
 %dx%d (H)
 %dx%d (H)
 
-# osd/winui/treeview.c: 1228
+# osd/winui/treeview.c: 1226
 %dx%d (V)
 %dx%d (V)
 
-# osd/winui/properties.c: 988
+# osd/winui/properties.c: 989
 %s (%d player)
 %s (%d プレイヤー)
 
-# osd/winui/properties.c: 999
+# osd/winui/properties.c: 1000
 %s (%d player, %d button)
 %s (%d プレイヤー、%d ボタン)
 
-# osd/winui/properties.c: 997
+# osd/winui/properties.c: 998
 %s (%d player, %d buttons)
 %s (%d プレイヤー、%d ボタン)
 
-# osd/winui/properties.c: 985
+# osd/winui/properties.c: 986
 %s (%d players)
 %s (%d プレイヤー)
 
-# osd/winui/properties.c: 994
+# osd/winui/properties.c: 995
 %s (%d players, %d button)
 %s (%d プレイヤー、%d ボタン)
 
-# osd/winui/properties.c: 991
+# osd/winui/properties.c: 992
 %s (%d players, %d buttons)
 %s (%d プレイヤー、%d ボタン)
 
-# osd/winui/mameui.rc: 192
+# osd/winui/mameui.rc: 191
 &About
 このソ\フトについて(&A)
 
-# osd/winui/mameui.rc: 44
+# osd/winui/mameui.rc: 43
 &About MAMEUI
 MAMEUIについて(&A)
 
-# osd/winui/mameui.rc: 65, 204
+# osd/winui/mameui.rc: 64, 203
 &Add to Custom Folder...
 カスタムフォルダに追加(&A)...
 
-# osd/winui/mameui.rc: 1063
+# osd/winui/mameui.rc: 1061
 &All games to use default options
 全ゲームにデフォルトオプション適用(&A)
 
-# osd/winui/mameui.rc: 249
+# osd/winui/mameui.rc: 248
 &Audit
 監査(&A)
 
-# osd/winui/mameui.rc: 72
+# osd/winui/mameui.rc: 71
 &Audit all games
 全ゲームを監査(&A)
 
-# osd/winui/mameui.rc: 156
+# osd/winui/mameui.rc: 155
 &Background Image...
 背景画像(&B)...
 
-# osd/winui/mameui.rc: 1094
+# osd/winui/mameui.rc: 1091
 &Broadcast selected game to all windows
 選択したゲームをブロードキャストする(&B)
 
-# osd/winui/mameui.rc: 90, 265, 279
+# osd/winui/mameui.rc: 89, 264, 278
 &Cabinet
 筐体(&C)
 
-# osd/winui/mameui.rc: 417, 1046, 1072, 1138, 1201
+# osd/winui/mameui.rc: 416, 1045, 1070, 1135, 1197
 &Cancel
 キャンセル(&C)
 
-# osd/winui/mameui.rc: 1211 osd/winui/mui_audit.c: 484
+# osd/winui/mameui.rc: 1207 osd/winui/mui_audit.c: 481
 &Close
 閉じる(&C)
 
-# osd/winui/mameui.rc: 180
+# osd/winui/mameui.rc: 179
 &Contents\tF1
 ヘルプコンテンツ(&H)\tF1
 
-# osd/winui/mui_audit.c: 355
+# osd/winui/mui_audit.c: 352
 &Continue
 継続(&P)
 
-# osd/winui/mameui.rc: 206, 241
+# osd/winui/mameui.rc: 205, 240
 &Custom Filters...
 ゲームフィルタ(&C)...\tCtrl+F
 
-# osd/winui/mameui.rc: 140
+# osd/winui/mameui.rc: 139
 &Custom Filters...\tCtrl+F
 ゲームフィルタ(&C)...\tCtrl+F
 
-# osd/winui/mameui.rc: 1060
+# osd/winui/mameui.rc: 1058
 &Default game options
 デフォルトゲームオプション(&D)
 
-# osd/winui/mameui.rc: 1042
+# osd/winui/mameui.rc: 1041
 &Description filter
 記述のフィルタ(&D)
 
-# osd/winui/mameui.rc: 105
+# osd/winui/mameui.rc: 104
 &Details
 詳細(&D)
 
-# osd/winui/mameui.rc: 148
+# osd/winui/mameui.rc: 147
 &Directories...
 ディレクトリ設定(&D)...
 
-# osd/winui/mameui.rc: 40
+# osd/winui/mameui.rc: 39
 &Exit
 終了(&E)
 
-# osd/winui/mameui.rc: 157
+# osd/winui/mameui.rc: 156
 &Export Game List...
 ゲームリストを出力(&E)...
 
-# osd/winui/mameui.rc: 38, 50
+# osd/winui/mameui.rc: 37, 49
 &File
 ファイル(&F)
 
-# osd/winui/mameui.rc: 89, 264, 278
+# osd/winui/mameui.rc: 88, 263, 277
 &Flyer
 広告(&F)
 
-# osd/winui/mameui.rc: 1066
+# osd/winui/mameui.rc: 1064
 &Folder 'filters'
 ゲームフィルタ(&F)
 
-# osd/winui/mameui.rc: 84
+# osd/winui/mameui.rc: 83
 &Fullscreen\tF11
 フルスクリーン(&P)\tF11
 
-# osd/winui/mameui.rc: 106
+# osd/winui/mameui.rc: 105
 &Grouped
 グループ化(&G)
 
-# osd/winui/mameui.rc: 42, 178
+# osd/winui/mameui.rc: 41, 177
 &Help
 ヘルプ(&H)
 
-# osd/winui/mameui.rc: 96, 271, 284
+# osd/winui/mameui.rc: 95, 270, 283
 &History
 歴史(&H)
 
-# osd/winui/mameui.rc: 1022
+# osd/winui/mameui.rc: 1021
 &Horizontal
 横型(&H)
 
-# osd/winui/mameui.rc: 155
+# osd/winui/mameui.rc: 154
 &Interface Options...
 インターフェイスオプション(&I)...
 
-# osd/winui/mameui.rc: 159
+# osd/winui/mameui.rc: 158
 &Language
 言語(&L)
 
-# osd/winui/mameui.rc: 104
+# osd/winui/mameui.rc: 103
 &List
 一覧(&L)
 
-# osd/winui/mameui.rc: 184
+# osd/winui/mameui.rc: 183
 &Mame Release Notes
 &Mameリリースノート
 
-# osd/winui/mameui.rc: 91, 266, 280
+# osd/winui/mameui.rc: 90, 265, 279
 &Marquee
 マーキー(&M)
 
-# osd/winui/mameui.rc: 127
+# osd/winui/mameui.rc: 126
 &Menu Style
 メニュースタイル (&M)
 
-# osd/winui/mameui.rc: 183
+# osd/winui/mameui.rc: 182
 &New Game Changes
 新しいゲームの変更点(&N)
 
-# osd/winui/mameui.rc: 380, 1045, 1071, 1137, 1200
+# osd/winui/mameui.rc: 379, 1044, 1069, 1134, 1196
 &OK
 &OK
 
-# osd/winui/mameui.rc: 143
+# osd/winui/mameui.rc: 142
 &Options
 オプション(&O)
 
-# osd/winui/mameui.rc: 151
+# osd/winui/mameui.rc: 150
 &Palette Setting...
 パレット設定(&P)...
 
-# osd/winui/mameui.rc: 416 osd/winui/mui_audit.c: 350
+# osd/winui/mameui.rc: 415 osd/winui/mui_audit.c: 347
 &Pause
 一時停止(&P)
 
-# osd/winui/mameui.rc: 81
+# osd/winui/mameui.rc: 80
 &Picture Area\tAlt+P
 画像エリア(&P)\tAlt+P
 
-# osd/winui/mameui.rc: 52, 200 osd/winui/winui.c: 3866, 7458
+# osd/winui/mameui.rc: 51, 199 osd/winui/winui.c: 3919, 7559
 &Play
 プレイ(&P)
 
-# osd/winui/layout.c: 202 osd/winui/winui.c: 3917, 7409
+# osd/winui/layout.c: 201 osd/winui/winui.c: 3973, 7510
 &Play %s
 プレイ(&P) %s
 
-# osd/winui/mameui.rc: 251
+# osd/winui/mameui.rc: 250
 &Properties
 プロパティ(&P)
 
-# osd/winui/mameui.rc: 1028
+# osd/winui/mameui.rc: 1027
 &Raster Graphics
 ラスタグラフィック(&R)
 
-# osd/winui/mameui.rc: 139
+# osd/winui/mameui.rc: 138
 &Refresh\tF5
 最新の情報に更新(&R)\tF5
 
-# osd/winui/mameui.rc: 240
+# osd/winui/mameui.rc: 239
 &Rename
 名前の変更(&R)
 
-# osd/winui/mameui.rc: 154
+# osd/winui/mameui.rc: 153
 &Reset to Default...
 設定の初期化(&R)...
 
-# osd/winui/mameui.rc: 1084
+# osd/winui/mameui.rc: 1081
 &Search for new games on start
 起動時に新しいゲームを検索(&S)
 
-# osd/winui/mameui.rc: 63, 208
+# osd/winui/mameui.rc: 62, 207
 &Select Random Game
 ゲームをランダムに選択(&S)
 
-# osd/winui/mameui.rc: 243
+# osd/winui/mameui.rc: 242
 &Show Folders
 表\示するフォルダ(&S)
 
-# osd/winui/mameui.rc: 88, 263, 277
+# osd/winui/mameui.rc: 87, 262, 276
 &Snapshot
 スナップショット(&S)
 
-# osd/winui/mameui.rc: 79
+# osd/winui/mameui.rc: 78
 &Status bar\tAlt+S
 ステータスバー(&S)\tAlt+S
 
-# osd/winui/mameui.rc: 92, 267, 281
+# osd/winui/mameui.rc: 91, 266, 280
 &Title
 タイトル(&T)
 
-# osd/winui/mameui.rc: 78
+# osd/winui/mameui.rc: 77
 &Toolbar\tAlt+T
 ツールバー(&T)\tAlt+T
 
-# osd/winui/mameui.rc: 181
+# osd/winui/mameui.rc: 180
 &Troubleshooting
 トラブルシューティング(&T)
 
-# osd/winui/mameui.rc: 1025
+# osd/winui/mameui.rc: 1024
 &Unavailable
 未所有(&U)
 
-# osd/winui/mameui.rc: 1057
+# osd/winui/mameui.rc: 1055
 &User Interface (Fonts, Colors, Sizes)
 ユーザインタフェース(フォント、色、サイズ)(&U)
 
-# osd/winui/mameui.rc: 1014
+# osd/winui/mameui.rc: 1013
 &Vector Graphics
 ベクタグラフィック(&V)
 
-# osd/winui/mameui.rc: 1036
+# osd/winui/mameui.rc: 1035
 &Vertical
 縦型(&V)
 
-# osd/winui/mameui.rc: 76
+# osd/winui/mameui.rc: 75
 &View
 表\示(&V)
 
-# osd/winui/mameui.rc: 1034
+# osd/winui/mameui.rc: 1033
 &Working
 動作可(&W)
 
-# osd/winui/winui.c: 6809
+# osd/winui/winui.c: 6902
 '%s' is not a valid savestate file for game '%s'.
 '%s'はゲーム'%s'に適切なステートではありません。
 
-# osd/winui/mameui.rc: 1038
+# osd/winui/mameui.rc: 1037
 (*) = inherited from parent folder
 (*) = 親のフォルダから継承
 
-# osd/winui/mameui.rc: 473
+# osd/winui/mameui.rc: 472
 <- Remove
 <- 削除
 
-# osd/winui/treeview.c: 563, 583, 1132
+# osd/winui/treeview.c: 561, 581, 1130
 <unknown>
 <不明>
 
-# osd/winui/mui_util.c: 261
+# osd/winui/mui_util.c: 258
 A sharing violation occurred.
 共有違反が発生しました。
 
-# osd/winui/mameui.rc: 217
+# osd/winui/mameui.rc: 216
 A&udit
 監査(&U)
 
-# osd/winui/properties.c: 963 osd/winui/treeview.c: 1366
+# osd/winui/properties.c: 964 osd/winui/treeview.c: 1364
 AD Stick
 アナログスティック
 
-# osd/winui/mameui.rc: 497
+# osd/winui/mameui.rc: 496
 ADStick device
 ADスティックデバイス
 
-# osd/winui/winui.c: 820
+# osd/winui/winui.c: 818
 About
 このソ\フトウェアについて
 
-# osd/winui/mameui.rc: 377
+# osd/winui/mameui.rc: 376
 About MAMEUI
 MAMEUIについて
 
-# osd/winui/mameui.rc: 818
+# osd/winui/mameui.rc: 817
 Activate Integrated Debugger
 デバッガの有効・無効
 
-# osd/winui/mameui.rc: 472
+# osd/winui/mameui.rc: 471
 Add ->
 追加 ->
 
-# osd/winui/mameui.rc: 1163
+# osd/winui/mameui.rc: 1159
 Add Game To Custom Folder
 ゲームをカスタムフォルダに追加
 
-# osd/winui/mameui.rc: 1595
+# osd/winui/mameui.rc: 1591
 Add selected item to custom folder
 選択した項目をカスタムフォルダに追加
 
-# osd/winui/mameui.rc: 749
+# osd/winui/mameui.rc: 748
 Advanced
 高度な設定
 
-# osd/winui/dialogs.c: 254
+# osd/winui/dialogs.c: 251
 All
 全て
 
-# osd/winui/layout.c: 53
+# osd/winui/layout.c: 52
 All Games
 全アーケード
 
-# osd/winui/winui.c: 6365, 6368, 6371, 6374, 6377, 6381, 6386, 6389, 6392, 6395, 6398, 6401, 6405
+# osd/winui/winui.c: 6457, 6460, 6463, 6466, 6469, 6473, 6478, 6481, 6484, 6487, 6490, 6493, 6497
 All files (*.*)
 全てのファイル (*.*)
 
-# osd/winui/properties.c: 383
+# osd/winui/properties.c: 382
 All screens
 全画面
 
-# osd/winui/mameui.rc: 1087
+# osd/winui/mameui.rc: 1084
 Allow game selection by a &joystick (requires restart)
 ジョイスティックでゲーム選択を有効(要再起動)(&J)
 
-# osd/winui/mameui.rc: 1090
+# osd/winui/mameui.rc: 1087
 Allow game selection by custom &key sequences
 カスタマイズしたキー配置でゲーム選択を有効(&K)
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 Allow restoring options to 'sane' values.
 各オプション値をデフォルトに戻します
 
-# osd/winui/mameui.rc: 1485, 1595
+# osd/winui/mameui.rc: 1481, 1591
 Allows filtering out games from a folder
 フォルダに対してフィルタリングを設定します
 
-# osd/winui/properties.c: 3629
+# osd/winui/properties.c: 3638
 Anti-clockwise
 反時計回り
 
-# osd/winui/mameui.rc: 108
+# osd/winui/mameui.rc: 107
 Arrange &Icons
 整列(&I)
 
-# osd/winui/mameui.rc: 1485, 1615
+# osd/winui/mameui.rc: 1481, 1611
 Arranges icons in a grid
 アイコンを等間隔に整列します
 
-# osd/winui/layout.c: 122
+# osd/winui/layout.c: 121
 Artwork
 アートワーク
 
-# osd/winui/mameui.rc: 923
+# osd/winui/mameui.rc: 922
 Artwork options
 アートワークオプション
 
-# osd/winui/mameui.rc: 561
+# osd/winui/mameui.rc: 560
 Aspect ratio:
 アスペクト比:
 
-# osd/winui/mameui.rc: 737
+# osd/winui/mameui.rc: 736
 Audio latency
 オーディオのレイテンシ
 
-# osd/winui/mameui.rc: 637
+# osd/winui/mameui.rc: 636
 Audit
 監査
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 Audit ROM and samples sets
 ロムファイルとサンプルファイルを監査します
 
-# osd/winui/mui_audit.c: 483
+# osd/winui/mui_audit.c: 480
 Audit complete.\n
 チェック終了\n
 
-# osd/winui/mameui.rc: 1543
+# osd/winui/mameui.rc: 1539
 Audit items in this folder
 このフォルダ内の項目を監査
 
-# osd/winui/mameui.rc: 1595
+# osd/winui/mameui.rc: 1591
 Audit the selected item
 選択した項目を監査
 
-# osd/winui/properties.c: 397, 428, 470, 2993, 2999
+# osd/winui/properties.c: 396, 427, 469, 3010, 3016
 Auto
 自動
 
-# osd/winui/properties.c: 3632
+# osd/winui/properties.c: 3641
 Auto anti-clockwise
 自動的に反時計回り
 
-# osd/winui/properties.c: 3631
+# osd/winui/properties.c: 3640
 Auto clockwise
 自動的に時計回り
 
-# osd/winui/mameui.rc: 911
+# osd/winui/mameui.rc: 910
 Auto pause when playback is finished
 再生終了時に自動停止
 
-# osd/winui/mameui.rc: 671
+# osd/winui/mameui.rc: 670
 Auto refresh speed
 リフレッシュレートの自動調整
 
-# osd/winui/mameui.rc: 902
+# osd/winui/mameui.rc: 901
 Auto restore and save (only if available)
 自動ロード・セーブ（対応している物）
 
-# osd/winui/mameui.rc: 562, 583, 685
+# osd/winui/mameui.rc: 561, 582, 684
 Automatic
 自動
 
-# osd/winui/layout.c: 54
+# osd/winui/layout.c: 53
 Available
 所有しているアーケード
 
-# osd/winui/mameui.rc: 467
+# osd/winui/mameui.rc: 466
 Available fields:
 利用可能\フィールド:
 
-# osd/winui/layout.c: 64, 91 osd/winui/mameui.rc: 920
+# osd/winui/layout.c: 63, 90 osd/winui/mameui.rc: 919
 BIOS
 BIOS
 
-# osd/winui/properties.c: 1151
+# osd/winui/properties.c: 1152
 BIOS missing
 BIOSがありません
 
-# osd/winui/mameui.rc: 924
+# osd/winui/mameui.rc: 923
 Backdrops
 バックドロップ
 
-# osd/winui/layout.c: 134
+# osd/winui/layout.c: 133
 Background Images
 背景画像
 
-# osd/winui/treeview.c: 1044
+# osd/winui/treeview.c: 1042
 Bad Dump
 吸出し不良
 
-# osd/winui/mameui.rc: 131
+# osd/winui/mameui.rc: 130
 Basic
 基本
 
-# osd/winui/mameui.rc: 965
+# osd/winui/mameui.rc: 964
 Beam width
 ビーム
 
-# osd/winui/mui_audit.c: 539
+# osd/winui/mui_audit.c: 536
 Best available
 最良の状態です
 
-# osd/winui/mameui.rc: 926
+# osd/winui/mameui.rc: 925
 Bezels
 ベゼル
 
-# osd/winui/mameui.rc: 761
+# osd/winui/mameui.rc: 760
 Bilinear filtering
 バイリニアフィルタ有効
 
-# osd/winui/mameui.rc: 1117
+# osd/winui/mameui.rc: 1114
 Bookkeeping
 プレイ記録
 
-# osd/winui/mameui.rc: 697
+# osd/winui/mameui.rc: 696
 Brightness Correction
 明るさ補正
 
-# osd/winui/mameui.rc: 457
+# osd/winui/mameui.rc: 456
 Browse...
 参照...
 
@@ -562,63 +562,63 @@ Button (P or 6)
 Button (S or 7)
 ボタン (S or 7)
 
-# osd/winui/treeview.c: 1380
+# osd/winui/treeview.c: 1378
 Button 1
 ボタン 1
 
-# osd/winui/treeview.c: 1389
+# osd/winui/treeview.c: 1387
 Buttons 10
 ボタン 10
 
-# osd/winui/treeview.c: 1381
+# osd/winui/treeview.c: 1379
 Buttons 2
 ボタン 2
 
-# osd/winui/treeview.c: 1382
+# osd/winui/treeview.c: 1380
 Buttons 3
 ボタン 3
 
-# osd/winui/treeview.c: 1383
+# osd/winui/treeview.c: 1381
 Buttons 4
 ボタン 4
 
-# osd/winui/treeview.c: 1384
+# osd/winui/treeview.c: 1382
 Buttons 5
 ボタン 5
 
-# osd/winui/treeview.c: 1385
+# osd/winui/treeview.c: 1383
 Buttons 6
 ボタン 6
 
-# osd/winui/treeview.c: 1386
+# osd/winui/treeview.c: 1384
 Buttons 7
 ボタン 7
 
-# osd/winui/treeview.c: 1387
+# osd/winui/treeview.c: 1385
 Buttons 8
 ボタン 8
 
-# osd/winui/treeview.c: 1388
+# osd/winui/treeview.c: 1386
 Buttons 9
 ボタン 9
 
-# osd/winui/mameui.rc: 1017
+# osd/winui/mameui.rc: 1016
 C&lones
 クローン(C)
 
-# osd/winui/layout.c: 66
+# osd/winui/layout.c: 65
 CPU
 CPU
 
-# osd/winui/dialogs.c: 244 osd/winui/mui_opts.c: 465
+# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 464
 Cabinet
 筐体
 
-# osd/winui/layout.c: 125
+# osd/winui/layout.c: 124
 Cabinets
 筐体
 
-# osd/winui/mameui.rc: 456, 482, 1173
+# osd/winui/mameui.rc: 455, 481, 1169
 Cancel
 キャンセル
 
@@ -626,855 +626,855 @@ Cancel
 Cannot Move Selected Item
 選択された項目は移動できません
 
-# osd/winui/mameui.rc: 1056
+# osd/winui/mameui.rc: 1054
 Categories
 カテゴリ
 
-# osd/winui/columnedit.c: 258
+# osd/winui/columnedit.c: 260
 Changing this item is not permitted
 このアイテムの変更は許可されていません
 
-# osd/winui/layout.c: 120
+# osd/winui/layout.c: 119
 Cheats
 チート
 
-# osd/winui/mui_audit.c: 273, 282
+# osd/winui/mui_audit.c: 271, 280
 Checking Game %s - %s
 チェック中 ゲーム %s - %s
 
-# osd/winui/mameui.rc: 645, 647
+# osd/winui/mameui.rc: 644, 646
 Checking...
 チェック中...
 
-# osd/winui/properties.c: 3628
+# osd/winui/properties.c: 3637
 Clockwise
 時計回り
 
-# osd/winui/winui.c: 932
+# osd/winui/winui.c: 938
 Clone Of
 原作
 
-# osd/winui/mameui.rc: 631
+# osd/winui/mameui.rc: 630
 Clone of:
 原作:
 
-# osd/winui/layout.c: 74
+# osd/winui/layout.c: 73
 Clones
 クローン
 
-# osd/winui/properties.c: 400, 431
+# osd/winui/properties.c: 399, 430
 Cocktail
 カクテル
 
-# osd/winui/mameui.rc: 906
+# osd/winui/mameui.rc: 905
 Coin lockout
 コイン投入数を制限する
 
-# osd/winui/properties.c: 1054, 1107, 1178
+# osd/winui/properties.c: 1055, 1108, 1179
 Colors are completely wrong
 色が再現されない
 
-# osd/winui/properties.c: 1060, 1113, 1184
+# osd/winui/properties.c: 1061, 1114, 1185
 Colors aren't 100% accurate
 色の再現が不完全
 
-# osd/winui/mameui.rc: 626
+# osd/winui/mameui.rc: 625
 Colors:
 色数:
 
-# osd/winui/layout.c: 135
+# osd/winui/layout.c: 134
 Comment Files
 コメントファイル
 
-# osd/winui/layout.c: 117
+# osd/winui/layout.c: 116
 Config
 設定ファイル
 
-# osd/winui/mameui.rc: 556, 1182
+# osd/winui/mameui.rc: 555, 1178
 Configure for:
 設定対象:
 
-# osd/winui/mameui.rc: 946 osd/winui/mui_opts.c: 434
+# osd/winui/mameui.rc: 945 osd/winui/mui_opts.c: 433
 Console
 家庭用ゲーム機
 
-# osd/winui/mameui.rc: 1470
+# osd/winui/mameui.rc: 1466
 Contains commands for displaying help
 ヘルプを表\示するコマンドが含まれています
 
-# osd/winui/mameui.rc: 1485
+# osd/winui/mameui.rc: 1481
 Contains commands for sorting by various columns
 指定項目を元に整列します
 
-# osd/winui/mameui.rc: 1463
+# osd/winui/mameui.rc: 1459
 Contains commands for user interface options
 ユーザインターフェースの設定を行うコマンドが含まれています
 
-# osd/winui/mameui.rc: 1463
+# osd/winui/mameui.rc: 1459
 Contains commands for working with the selected items
 選択されたアイテムによって動作するコマンドが含まれています
 
-# osd/winui/mameui.rc: 701
+# osd/winui/mameui.rc: 700
 Contrast Correction
 コントラスト補正
 
-# osd/winui/mameui.rc: 93, 268, 282
+# osd/winui/mameui.rc: 92, 267, 281
 Control &Panel
 コンパネ(&P)
 
-# osd/winui/dialogs.c: 250 osd/winui/mui_opts.c: 468
+# osd/winui/dialogs.c: 247 osd/winui/mui_opts.c: 467
 Control Panel
 コンパネ
 
-# osd/winui/layout.c: 128
+# osd/winui/layout.c: 127
 Control Panels
 コントロールパネル
 
-# osd/winui/layout.c: 84
+# osd/winui/layout.c: 83
 Control Type
 コントロールの種類
 
-# osd/winui/mameui.rc: 621
+# osd/winui/mameui.rc: 620
 Control Type:
 コントロール:
 
-# osd/winui/layout.c: 131
+# osd/winui/layout.c: 130
 Controller Files
 コントローラ定義ファイル
 
-# osd/winui/mameui.rc: 519
+# osd/winui/mameui.rc: 518
 Controller ID layout
 コントローラのID配置
 
-# osd/winui/mameui.rc: 487
+# osd/winui/mameui.rc: 486
 Controller Mapping
 コントローラ割り当て
 
-# osd/winui/mameui.rc: 839
+# osd/winui/mameui.rc: 838
 Controllers
 コントローラ
 
-# osd/winui/mameui.rc: 420, 430
+# osd/winui/mameui.rc: 419, 429
 Correct:
 正常:
 
-# osd/winui/winui.c: 6710
+# osd/winui/winui.c: 6802
 Could not open '%s' as a valid input file.
 「%s」を有効な再生ファイルとしてオープンできません
 
-# osd/winui/winui.c: 6821
+# osd/winui/winui.c: 6914
 Could not open '%s' as a valid savestate file.
 '%s'は正常なステートとして開けません。
 
-# osd/winui/mameui.rc: 930
+# osd/winui/mameui.rc: 929
 Crop artwork
 ゲーム画面外をカット
 
-# osd/winui/winui.c: 4706, 4734
+# osd/winui/winui.c: 4763, 4791
 Custom
 カスタム
 
-# osd/winui/mameui.rc: 1083
+# osd/winui/mameui.rc: 1080
 Custom Options
 カスタムオプション
 
-# osd/winui/dialogs.c: 144
+# osd/winui/dialogs.c: 141
 Custom folder filters\n
 カスタムフォルダフィルタ\n
 
-# osd/winui/mameui.rc: 141, 232
+# osd/winui/mameui.rc: 140, 231
 Customi&ze Fields...
 フィールド項目(&Z)...
 
-# osd/winui/mameui.rc: 464
+# osd/winui/mameui.rc: 463
 Customize Fields
 フィールド項目
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 Customize interface options.
 インターフェイスオプションを変更します
 
-# osd/winui/mameui.rc: 1498, 1595
+# osd/winui/mameui.rc: 1494, 1591
 Customize which columns are used in the game list
 ゲームリストに用いる表\示項目を設定します
 
-# osd/winui/mameui.rc: 807
+# osd/winui/mameui.rc: 806
 Debug
 デバッグ
 
-# osd/winui/mameui.rc: 944
+# osd/winui/mameui.rc: 943
 Decrypted
 暗号解除
 
-# osd/winui/properties.c: 3627, 3853, 3882
+# osd/winui/properties.c: 3636, 3862, 3891
 Default
 デフォルト
 
-# osd/winui/properties.c: 609
+# osd/winui/properties.c: 608
 Default Game
 標準のゲーム
 
-# osd/winui/mameui.rc: 149
+# osd/winui/mameui.rc: 148
 Default Game &Options...
 デフォルトゲームオプション(&O)...
 
-# osd/winui/mameui.rc: 872
+# osd/winui/mameui.rc: 871
 Default input layout
 標準のキー入力配置
 
-# osd/winui/mameui.rc: 459
+# osd/winui/mameui.rc: 458
 Delete
 削除
 
-# osd/winui/winui.c: 922
+# osd/winui/winui.c: 927
 Description
 記述
 
-# osd/winui/mameui.rc: 436, 648 osd/winui/winui.c: 818
+# osd/winui/mameui.rc: 435, 647 osd/winui/winui.c: 816
 Details
 詳細
 
-# osd/winui/properties.c: 965 osd/winui/treeview.c: 1368
+# osd/winui/properties.c: 966 osd/winui/treeview.c: 1366
 Dial
 ダイヤル
 
-# osd/winui/mameui.rc: 503
+# osd/winui/mameui.rc: 502
 Dial device
 ダイアルデバイス
 
-# osd/winui/properties.c: 361
+# osd/winui/properties.c: 360
 Direct3D
 Direct3D
 
-# osd/winui/mameui.rc: 444 
+# osd/winui/mameui.rc: 443 
 Directories
 ディレクトリ設定
 
-# osd/winui/mameui.rc: 450
+# osd/winui/mameui.rc: 449
 Directories:
 ディレクトリ:
 
-# osd/winui/directories.c: 617
+# osd/winui/directories.c: 619
 Directory does not exist, continue anyway?
 フォルダが見つかりません。続けますか？
 
-# osd/winui/directories.c: 754
+# osd/winui/directories.c: 756
 Directory name:
 フォルダ名:
 
-# osd/winui/mameui.rc: 129
+# osd/winui/mameui.rc: 128
 Disabled
 無効
 
-# osd/winui/mameui.rc: 656
+# osd/winui/mameui.rc: 655
 Display
 表\示
 
-# osd/winui/mameui.rc: 1543
+# osd/winui/mameui.rc: 1539
 Display folder properties
 フォルダのプロパティを表\示
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 Display help contents
 ヘルプコンテンツを表\示します
 
-# osd/winui/mameui.rc: 1485, 1504
+# osd/winui/mameui.rc: 1481, 1500
 Display items by using large icons.
 大きいアイコン形式で表\示します
 
-# osd/winui/mameui.rc: 1485, 1504
+# osd/winui/mameui.rc: 1481, 1500
 Display items by using small icons.
 小さいアイコン形式で表\示します
 
-# osd/winui/mameui.rc: 1582
+# osd/winui/mameui.rc: 1578
 Display properties for all games in this bios
 このbiosを使用する全てのゲームのプロパティを表\示
 
-# osd/winui/mameui.rc: 1582
+# osd/winui/mameui.rc: 1578
 Display properties for all games in this driver
 このドライバを使用する全てのゲームのプロパティを表\示
 
-# osd/winui/mameui.rc: 1103
+# osd/winui/mameui.rc: 1100
 Display splash screen on start
 起動時にスプラッシュ画面を表\示
 
-# osd/winui/mameui.rc: 1595
+# osd/winui/mameui.rc: 1591
 Display the properties of the selected item
 選択した項目のプロパティを表\示
 
-# osd/winui/mameui.rc: 1485, 1504
+# osd/winui/mameui.rc: 1481, 1500
 Displays detailed information about each item in the window.
 詳細な情報形式で表\示します
 
-# osd/winui/mameui.rc: 1485
+# osd/winui/mameui.rc: 1481
 Displays items grouped by parent game
 原作のゲームでグループ化した形式で表\示します
 
-# osd/winui/mameui.rc: 1485, 1504
+# osd/winui/mameui.rc: 1481, 1500
 Displays items in a list.
 一覧形式で表\示します
 
-# osd/winui/mameui.rc: 1504
+# osd/winui/mameui.rc: 1500
 Displays program and copyright information
 プログラム情報および著作権情報を表\示します
 
-# osd/winui/treeview.c: 1364
+# osd/winui/treeview.c: 1362
 Double Joy 16-Way
 16方向デュアルスティック
 
-# osd/winui/treeview.c: 1361
+# osd/winui/treeview.c: 1359
 Double Joy 2-Way
 2方向デュアルスティック
 
-# osd/winui/treeview.c: 1365
+# osd/winui/treeview.c: 1363
 Double Joy 2-Way (V)
 2方向デュアルスティック(縦)
 
-# osd/winui/treeview.c: 1362
+# osd/winui/treeview.c: 1360
 Double Joy 4-Way
 4方向デュアルスティック
 
-# osd/winui/treeview.c: 1363
+# osd/winui/treeview.c: 1361
 Double Joy 8-Way
 8方向デュアルスティック
 
-# osd/winui/properties.c: 961
+# osd/winui/properties.c: 962
 Double Joystick 16-Way
 16方向デュアルスティック
 
-# osd/winui/properties.c: 958
+# osd/winui/properties.c: 959
 Double Joystick 2-Way
 2方向デュアルスティック
 
-# osd/winui/properties.c: 962
+# osd/winui/properties.c: 963
 Double Joystick 2-Way Vertical
 2方向デュアルスティック 縦
 
-# osd/winui/properties.c: 959
+# osd/winui/properties.c: 960
 Double Joystick 4-Way
 4方向デュアルスティック
 
-# osd/winui/properties.c: 960
+# osd/winui/properties.c: 961
 Double Joystick 8-Way
 8方向デュアルスティック
 
-# osd/winui/mameui.rc: 963
+# osd/winui/mameui.rc: 962
 Draw antialiased vectors
 アンチエイリアス
 
-# osd/winui/properties.c: 3595
+# osd/winui/properties.c: 3604
 Draw every frame
 フレームスキップなし
 
-# osd/winui/layout.c: 62 osd/winui/winui.c: 933
+# osd/winui/layout.c: 61 osd/winui/winui.c: 939
 Driver
 ドライバ
 
-# osd/winui/mameui.rc: 629
+# osd/winui/mameui.rc: 628
 Driver:
 ドライバ:
 
-# osd/winui/mameui.rc: 862
+# osd/winui/mameui.rc: 861
 Dual lightgun
 デュアル光線銃
 
-# osd/winui/layout.c: 69
+# osd/winui/layout.c: 68
 Dumping Status
 吸出し状況
 
-# osd/winui/mameui.rc: 74
+# osd/winui/mameui.rc: 73
 E&xit
 終了(&X)
 
-# osd/winui/mameui.rc: 896
+# osd/winui/mameui.rc: 895
 Enable game cheats
 ゲームチートを有効化
 
-# osd/winui/mameui.rc: 846
+# osd/winui/mameui.rc: 845
 Enable joystick input
 ジョイスティックを使用する
 
-# osd/winui/mameui.rc: 858
+# osd/winui/mameui.rc: 857
 Enable lightgun input
 光線銃を使用
 
-# osd/winui/mameui.rc: 849
+# osd/winui/mameui.rc: 848
 Enable mouse input
 マウスまたはトラックボールを使用
 
-# osd/winui/mameui.rc: 904
+# osd/winui/mameui.rc: 903
 Enable multi-threading
 マルチスレッド有効
 
-# osd/winui/mameui.rc: 853
+# osd/winui/mameui.rc: 852
 Enable multiple keyboards
 複数キーボード有効
 
-# osd/winui/mameui.rc: 851
+# osd/winui/mameui.rc: 850
 Enable multiple mice
 複数マウス有効
 
-# osd/winui/mameui.rc: 720
+# osd/winui/mameui.rc: 719
 Enable sound and sound CPUs
 サウンドとサウンドCPUを有効
 
-# osd/winui/mameui.rc: 855
+# osd/winui/mameui.rc: 854
 Enable steadykey support
 ボタンの同時押し認識を容易
 
-# osd/winui/mameui.rc: 1564
+# osd/winui/mameui.rc: 1560
 Enable the PCB tab
 PCBタブを有効
 
-# osd/winui/mameui.rc: 1564
+# osd/winui/mameui.rc: 1560
 Enable the cabinet tab
 筐体タブを有効
 
-# osd/winui/mameui.rc: 1564
+# osd/winui/mameui.rc: 1560
 Enable the control panel tab
 コントロールパネルタブを有効
 
-# osd/winui/mameui.rc: 1564
+# osd/winui/mameui.rc: 1560
 Enable the flyer tab
 広告タブを有効
 
-# osd/winui/mameui.rc: 1564
+# osd/winui/mameui.rc: 1560
 Enable the history tab
 ヒストリータブを有効
 
-# osd/winui/mameui.rc: 1564
+# osd/winui/mameui.rc: 1560
 Enable the marquee tab
 マーキータブを有効
 
-# osd/winui/mameui.rc: 1564
+# osd/winui/mameui.rc: 1560
 Enable the snapshot tab
 スナップショットタブを有効
 
-# osd/winui/mameui.rc: 1574
+# osd/winui/mameui.rc: 1570
 Enable the story tab
 ストーリータブを有効
 
-# osd/winui/mameui.rc: 1564
+# osd/winui/mameui.rc: 1560
 Enable the title tab
 タイトルタブを有効
 
-# osd/winui/mameui.rc: 667
+# osd/winui/mameui.rc: 666
 Enforce aspect ratio
 表\示比率を固定
 
-# osd/winui/mui_audit.c: 105 osd/winui/properties.c: 628, 762, 2026
+# osd/winui/mui_audit.c: 103 osd/winui/properties.c: 627, 761, 2027
 Error
 エラー
 
-# osd/winui/treeview.c: 2642
+# osd/winui/treeview.c: 2640
 Error finding custom file name to save
 保存するカスタムファイルが見つかりません
 
-# osd/winui/winui.c: 7906
+# osd/winui/winui.c: 8007
 Error searching for custom folder
 カスタムフォルダが見つかりません
 
-# osd/winui/treeview.c: 2570
+# osd/winui/treeview.c: 2568
 Error while renaming custom file %s to %s
 カスタムファイルの名前を %s から %s への変更でエラーが発生しました
 
-# osd/winui/treeview.c: 2714
+# osd/winui/treeview.c: 2712
 Error while saving custom file %s
 カスタムファイル %s の保存でエラーが発生しました
 
-# osd/winui/mameui.rc: 1504
+# osd/winui/mameui.rc: 1500
 Exit the application
 アプリケーションを終了します
 
-# osd/winui/layout.c: 138
+# osd/winui/layout.c: 137
 External Folder List
 外部フォルダリスト
 
-# osd/winui/layout.c: 82
+# osd/winui/layout.c: 81
 FPS
 FPS
 
-# osd/winui/mui_audit.c: 547
+# osd/winui/mui_audit.c: 544
 Failed
 異常です
 
-# osd/winui/mameui.rc: 413 osd/winui/mui_audit.c: 289
+# osd/winui/mameui.rc: 412 osd/winui/mui_audit.c: 287
 File Audit
 ファイル監査
 
-# osd/winui/dialogs.c: 486
+# osd/winui/dialogs.c: 483
 Filters for %s Folder
 「%s」フォルダのフィルタ
 
-# osd/winui/properties.c: 384
+# osd/winui/properties.c: 383
 First screen
 1画面目
 
-# osd/winui/mameui.rc: 969
+# osd/winui/mameui.rc: 968
 Flicker
 フリッカー
 
-# osd/winui/mameui.rc: 682
+# osd/winui/mameui.rc: 681
 Flip screen left-right
 左右反転
 
-# osd/winui/mameui.rc: 680
+# osd/winui/mameui.rc: 679
 Flip screen upside-down
 上下反転
 
-# osd/winui/dialogs.c: 242 osd/winui/mui_opts.c: 464
+# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 463
 Flyer
 広告
 
-# osd/winui/layout.c: 124
+# osd/winui/layout.c: 123
 Flyers
 広告
 
-# osd/winui/mameui.rc: 80
+# osd/winui/mameui.rc: 79
 Fold&er List\tAlt+D
 フォルダリスト(&E)\tAlt+D
 
-# osd/winui/properties.c: 387
+# osd/winui/properties.c: 386
 Fourth screen
 4画面目
 
-# osd/winui/mameui.rc: 684
+# osd/winui/mameui.rc: 683
 Frame skipping
 フレームスキップ
 
-# osd/winui/mameui.rc: 769
+# osd/winui/mameui.rc: 768
 Full screen brightness
 フルスクリーンの明るさ
 
-# osd/winui/mameui.rc: 773
+# osd/winui/mameui.rc: 772
 Full screen contrast
 フルスクリーンのコントラスト
 
-# osd/winui/mameui.rc: 765
+# osd/winui/mameui.rc: 764
 Full screen gamma
 フルスクリーンのガンマ値
 
-# osd/winui/mameui.rc: 1010
+# osd/winui/mameui.rc: 1009
 Game Filters
 ゲームフィルタ
 
-# osd/winui/mameui.rc: 146
+# osd/winui/mameui.rc: 145
 Game List &Clone Color...
 ゲームリストのクローンの色(&C)...
 
-# osd/winui/mameui.rc: 145
+# osd/winui/mameui.rc: 144
 Game List &Font...
 ゲームリストフォント(&F)...
 
-# osd/winui/mameui.rc: 1013
+# osd/winui/mameui.rc: 1012
 Game filters
 ゲームフィルタ
 
-# osd/winui/mameui.rc: 1040
+# osd/winui/mameui.rc: 1039
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 下記より選択された項目をリスト上非表\示にします
 
-# osd/winui/properties.c: 1072, 1125, 1196
+# osd/winui/properties.c: 1073, 1126, 1197
 Game lacks sound
 サウンドが未対応
 
-# osd/winui/properties.c: 1048, 1101, 1172
+# osd/winui/properties.c: 1049, 1102, 1173
 Game protection isn't fully emulated
 プロテクトのため動作が不完全
 
-# osd/winui/winui.c: 3499
+# osd/winui/winui.c: 3552
 Game search %d%% complete
 ゲームの検索 %d%% 完了
 
-# osd/winui/mameui.rc: 673
+# osd/winui/mameui.rc: 672
 Gameplay speed
 ゲームの実行速度
 
-# osd/winui/mameui.rc: 693
+# osd/winui/mameui.rc: 692
 Gamma Correction
 ガンマ値補正
 
-# osd/winui/mameui.rc: 597
+# osd/winui/mameui.rc: 596
 General
 全般
 
-# osd/winui/properties.c: 1264
+# osd/winui/properties.c: 1265
 Global BIOS options\nCustom options used by all games in the %s
 グローバルBIOSオプションです。\n%sの全ゲームのカスタム設定として使用されます。
 
-# osd/winui/properties.c: 1252
+# osd/winui/properties.c: 1253
 Global driver options\nCustom options used by all games in the %s
 グローバルドライバオプションです。\n%sの全ゲームのカスタム設定として使用されます。
 
-# osd/winui/dialogs.c: 140
+# osd/winui/dialogs.c: 137
 Global game options\n
 グローバルゲームオプションです\n
 
-# osd/winui/properties.c: 1237
+# osd/winui/properties.c: 1238
 Global game options\nDefault options used by all games
 グローバルゲームオプションです。\n全ゲームのデフォルト設定として使用されます。
 
-# osd/winui/properties.c: 1240
+# osd/winui/properties.c: 1241
 Global vector options\nCustom options used by all games in the Vector
 グローバルベクタオプションです。\nベクタの全ゲームのカスタム設定として使用されます。
 
-# osd/winui/mameui.rc: 405
+# osd/winui/mameui.rc: 404
 Go to Microsoft's DirectX Web Page
 Microsoft's DirectX Webページを表\示
 
-# osd/winui/mameui.rc: 132
+# osd/winui/mameui.rc: 131
 Gray
 グレー
 
-# osd/winui/winui.c: 819
+# osd/winui/winui.c: 817
 Grouped
 グループ化
 
-# osd/winui/layout.c: 132
+# osd/winui/layout.c: 131
 Hard Drive Difference
 ハードディスク差分ファイル
 
-# osd/winui/mameui.rc: 763
+# osd/winui/mameui.rc: 762
 Hardware stretching
 ハードウェア拡大表\示
 
-# osd/winui/winui.c: 821
+# osd/winui/winui.c: 819
 Help
 ヘルプ
 
-# osd/winui/mameui.rc: 1096
+# osd/winui/mameui.rc: 1093
 Hide &mouse cursor (requires restart)
 マウスカーソ\ルを隠す(要再起動)(&M)
 
-# osd/winui/layout.c: 143
+# osd/winui/layout.c: 142
 High Scores
 ハイスコア
 
-# osd/winui/mui_opts.c: 470
+# osd/winui/mui_opts.c: 469
 History
 歴史
 
-# osd/winui/mameui.rc: 942
+# osd/winui/mameui.rc: 941
 Homebrew
 自家製
 
-# osd/winui/layout.c: 58 osd/winui/winui.c: 5750
+# osd/winui/layout.c: 57 osd/winui/winui.c: 5831
 Horizontal
 横型
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 How cheats work
 チートの使用方法を説明します
 
-# osd/winui/mui_opts.c: 323
+# osd/winui/mui_opts.c: 322
 INTERFACE OPTIONS
 インターフェイスオプション
 
-# osd/winui/layout.c: 140
+# osd/winui/layout.c: 139
 IPS Files
 IPSファイル
 
-# osd/winui/layout.c: 133
+# osd/winui/layout.c: 132
 Icons
 アイコン
 
-# osd/winui/mameui.rc: 796
+# osd/winui/mameui.rc: 795
 Image Enhancement
 イメージを向上
 
-# osd/winui/winui.c: 5453
+# osd/winui/winui.c: 5530
 Image Files (*.png)
 画像ファイル (*.png)
 
-# osd/winui/layout.c: 68
+# osd/winui/layout.c: 67
 Imperfect
 不完全な動作
 
-# osd/winui/treeview.c: 994
+# osd/winui/treeview.c: 992
 Imperfect Colors
 色の再現が不完全
 
-# osd/winui/treeview.c: 995
+# osd/winui/treeview.c: 993
 Imperfect Graphics
 画像の再現が不完全
 
-# osd/winui/treeview.c: 997
+# osd/winui/treeview.c: 995
 Imperfect Sound
 音の再現が不完全
 
-# osd/winui/mameui.rc: 422, 431
+# osd/winui/mameui.rc: 421, 430
 Incorrect:
 異常:
 
-# osd/winui/mameui.rc: 1098
+# osd/winui/mameui.rc: 1095
 Inheritable Filters
 フィルタを継承可能\にする
 
-# osd/winui/layout.c: 116
+# osd/winui/layout.c: 115
 Ini Files
 INIファイル
 
-# osd/winui/layout.c: 119
+# osd/winui/layout.c: 118
 Input Files (*.inp)
 再生ファイル (*.inp)
 
-# osd/winui/mameui.rc: 458
+# osd/winui/mameui.rc: 457
 Insert
 追加
 
-# osd/winui/mameui.rc: 1080
+# osd/winui/mameui.rc: 1077
 Interface Options
 インターフェイスオプション
 
-# osd/winui/treeview.c: 1359
+# osd/winui/treeview.c: 1357
 Joy 16-Way
 16方向スティック
 
-# osd/winui/treeview.c: 1356
+# osd/winui/treeview.c: 1354
 Joy 2-Way
 2方向スティック
 
-# osd/winui/treeview.c: 1360
+# osd/winui/treeview.c: 1358
 Joy 2-Way (V)
 2方向スティック(縦)
 
-# osd/winui/treeview.c: 1357
+# osd/winui/treeview.c: 1355
 Joy 4-Way
 4方向スティック
 
-# osd/winui/treeview.c: 1358
+# osd/winui/treeview.c: 1356
 Joy 8-Way
 8方向スティック
 
-# osd/winui/properties.c: 415
+# osd/winui/properties.c: 414
 Joystick
 ジョイスティック
 
-# osd/winui/properties.c: 956
+# osd/winui/properties.c: 957
 Joystick 16-Way
 16方向スティック
 
-# osd/winui/properties.c: 953
+# osd/winui/properties.c: 954
 Joystick 2-Way
 2方向スティック
 
-# osd/winui/properties.c: 957
+# osd/winui/properties.c: 958
 Joystick 2-Way Vertical
 2方向スティック 縦
 
-# osd/winui/properties.c: 954
+# osd/winui/properties.c: 955
 Joystick 4-Way
 4方向スティック
 
-# osd/winui/properties.c: 955
+# osd/winui/properties.c: 956
 Joystick 8-Way
 8方向スティック
 
-# osd/winui/mameui.rc: 864
+# osd/winui/mameui.rc: 863
 Joystick deadzone
 ジョイスティック内側しきい値
 
-# osd/winui/mameui.rc: 868
+# osd/winui/mameui.rc: 867
 Joystick saturation
 ジョイスティック外側しきい値
 
-# osd/winui/mameui.rc: 875
+# osd/winui/mameui.rc: 874
 Joystickmap
 ジョイスティックマップ
 
-# osd/winui/properties.c: 413
+# osd/winui/properties.c: 412
 Keyboard
 キーボード
 
-# osd/winui/mameui.rc: 102
+# osd/winui/mameui.rc: 101
 L&arge Icons
 大きなアイコン(&A)
 
-# osd/winui/winui.c: 815
+# osd/winui/winui.c: 813
 Large Icons
 大きなアイコン
 
-# osd/winui/layout.c: 79 osd/winui/properties.c: 416, 967 osd/winui/treeview.c: 1370
+# osd/winui/layout.c: 78 osd/winui/properties.c: 415, 968 osd/winui/treeview.c: 1368
 Lightgun
 光線銃
 
-# osd/winui/mameui.rc: 509
+# osd/winui/mameui.rc: 508
 Lightgun device
 光線銃デバイス
 
-# osd/winui/mameui.rc: 124
+# osd/winui/mameui.rc: 123
 Line &Up Icons
 アイコンの整列(&U)
 
-# osd/winui/winui.c: 817
+# osd/winui/winui.c: 815
 List
 リスト
 
-# osd/winui/mameui.rc: 61
+# osd/winui/mameui.rc: 60
 Loa&d Savestate...
 ステートを読み込む(&D)...
 
-# osd/winui/mameui.rc: 1498
+# osd/winui/mameui.rc: 1494
 Localize GUI and MAME core.
 GUIとMAMEコアの言語を切り替えます
 
-# osd/winui/winui.c: 6365
+# osd/winui/winui.c: 6457
 MAME input files (*.inp,*.zip)
 MAME再生ファイル (*.inp,*.zip)
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 MAME release notes
 MAMEリリースノートを表\示します
 
-# osd/winui/winui.c: 6368
+# osd/winui/winui.c: 6460
 MAME savestate files (*.sta)
 MAMEステートファイル (*.sta)
 
-# osd/winui/dialogs.c: 957
+# osd/winui/dialogs.c: 956
 MAMEUI PCB Info: %s [%s]
 MAMEUI PCB情報: %s [%s]
 
-# osd/winui/mui_opts.c: 318 osd/winui/translate.c: 104
+# osd/winui/mui_opts.c: 317 osd/winui/translate.c: 103
 MS Sans Serif
 ＭＳ Ｐゴシック
 
-# osd/winui/mameui.rc: 604
+# osd/winui/mameui.rc: 603
 Manufactured:
 製造元:
 
-# osd/winui/layout.c: 60 osd/winui/winui.c: 930
+# osd/winui/layout.c: 59 osd/winui/winui.c: 936
 Manufacturer
 製造元
 
-# osd/winui/dialogs.c: 246 osd/winui/mui_opts.c: 466
+# osd/winui/dialogs.c: 243 osd/winui/mui_opts.c: 465
 Marquee
 マーキー
 
-# osd/winui/layout.c: 126
+# osd/winui/layout.c: 125
 Marquees
 マーキー
 
-# osd/winui/layout.c: 123
+# osd/winui/layout.c: 122
 Memory Card
 メモリカード
 
-# osd/winui/mameui.rc: 889
+# osd/winui/mameui.rc: 888
 Miscellaneous
 その他
 
-# osd/winui/treeview.c: 996
+# osd/winui/treeview.c: 994
 Missing Sound
 サウンド無し
 
-# osd/winui/properties.c: 414
+# osd/winui/properties.c: 413
 Mouse
 マウス
 
-# osd/winui/mameui.rc: 515
+# osd/winui/mameui.rc: 514
 Mouse device
 マウスデバイス
 
-# osd/winui/mameui.rc: 480
+# osd/winui/mameui.rc: 479
 Move Down
 下に移動
 
@@ -1482,1175 +1482,1175 @@ Move Down
 Move Item
 項目の移動
 
-# osd/winui/mameui.rc: 479
+# osd/winui/mameui.rc: 478
 Move Up
 上に移動
 
-# osd/winui/layout.c: 130
+# osd/winui/layout.c: 129
 NVRAM
 NVRAMファイル
 
-# osd/winui/winui.c: 926
+# osd/winui/winui.c: 932
 Name
 名前
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 New game changes
 新しいゲームの変更点を表\示します
 
-# osd/winui/mui_audit.c: 125 osd/winui/winui.c: 5797
+# osd/winui/mui_audit.c: 123 osd/winui/winui.c: 5878
 No
 いいえ
 
-# osd/winui/treeview.c: 998
+# osd/winui/treeview.c: 996
 No Cocktail
 カクテルモード未対応
 
-# osd/winui/treeview.c: 1046
+# osd/winui/treeview.c: 1044
 No Dump
 未ダンプ
 
-# osd/winui/dialogs.c: 1001
+# osd/winui/dialogs.c: 1000
 No PCB Info available for this game.
 このゲームにPCB情報がありません。
 
-# osd/winui/winui.c: 3893
+# osd/winui/winui.c: 3946
 No Selection
 選択されていません
 
-# osd/winui/mameui.rc: 1100
+# osd/winui/mameui.rc: 1097
 No offset for clones missing parent in view
 親セットが無いクローンをインデントしない
 
-# osd/winui/mameui.rc: 1019
+# osd/winui/mameui.rc: 1018
 Non-Wor&king
 動作不可(&K)
 
-# osd/winui/dialogs.c: 256 osd/winui/properties.c: 358, 412, 2863, 3630, 3711, 3840, 3849, 3878
+# osd/winui/dialogs.c: 253 osd/winui/properties.c: 357, 411, 2880, 3639, 3720, 3849, 3858, 3887
 None
 なし
 
-# osd/winui/mui_audit.c: 393, 397
+# osd/winui/mui_audit.c: 390, 394
 None required
 必要ありません
 
-# osd/winui/layout.c: 72
+# osd/winui/layout.c: 71
 Not Working
 動作不可
 
-# osd/winui/mui_audit.c: 543
+# osd/winui/mui_audit.c: 540
 Not found
 見つかりません
 
-# osd/winui/properties.c: 1042, 1162
+# osd/winui/properties.c: 1043, 1163
 Not working
 動作不可
 
-# osd/winui/mameui.rc: 552
+# osd/winui/mameui.rc: 551
 Number of screens to create:
 生成する画面表\示の数:
 
-# osd/winui/mameui.rc: 455, 481, 1172
+# osd/winui/mameui.rc: 454, 480, 1168
 OK
 OK
 
-# osd/winui/mameui.rc: 134
+# osd/winui/mameui.rc: 133
 Office 2003
 オフィス2003
 
-# osd/winui/mameui.rc: 135
+# osd/winui/mameui.rc: 134
 Office 2007
 オフィス2007
 
-# osd/winui/mameui.rc: 133
+# osd/winui/mameui.rc: 132
 Office XP
 オフィスXP
 
-# osd/winui/mameui.rc: 860
+# osd/winui/mameui.rc: 859
 Offscreen shots reload
 画面外をショットを再ロード
 
-# osd/winui/mameui.rc: 1031
+# osd/winui/mameui.rc: 1030
 Ori&ginals
 原作(&G)
 
-# osd/winui/layout.c: 73
+# osd/winui/layout.c: 72
 Originals
 原作
 
-# osd/winui/mameui.rc: 816
+# osd/winui/mameui.rc: 815
 Output diagnostic information
 起動時に診断用の情報を表\示
 
-# osd/winui/mameui.rc: 814
+# osd/winui/mameui.rc: 813
 Output log to Logfile
 error.logファイルを生成
 
-# osd/winui/mameui.rc: 820
+# osd/winui/mameui.rc: 819
 Output log to Windows Debugger
 error.logデータをシステムデバッガに出力
 
-# osd/winui/mameui.rc: 928
+# osd/winui/mameui.rc: 927
 Overlays
 オーバーレイ
 
-# osd/winui/mameui.rc: 55
+# osd/winui/mameui.rc: 54
 P&layback Input...
 入力の再現(&L)...
 
-# osd/winui/mameui.rc: 95, 270, 283
+# osd/winui/mameui.rc: 94, 269, 282
 PC&B
 PC&B
 
-# osd/winui/dialogs.c: 252 osd/winui/mui_opts.c: 469
+# osd/winui/dialogs.c: 249 osd/winui/mui_opts.c: 468
 PCB
 PCB
 
-# osd/winui/mameui.rc: 1208
+# osd/winui/mameui.rc: 1204
 PCB Info
 PCB情報
 
-# osd/winui/layout.c: 146
+# osd/winui/layout.c: 145
 PCB Info Files
 PCB情報ファイル
 
-# osd/winui/layout.c: 129
+# osd/winui/layout.c: 128
 PCBs
 PCB
 
-# osd/winui/properties.c: 964 osd/winui/treeview.c: 1367
+# osd/winui/properties.c: 965 osd/winui/treeview.c: 1365
 Paddle
 パドル
 
-# osd/winui/mameui.rc: 494
+# osd/winui/mameui.rc: 493
 Paddle device
 パドルデバイス
 
-# osd/winui/mameui.rc: 1179
+# osd/winui/mameui.rc: 1175
 Palette
 パレット設定
 
-# osd/winui/mui_audit.c: 535
+# osd/winui/mui_audit.c: 532
 Passed
 正常です
 
-# osd/winui/mameui.rc: 689
+# osd/winui/mameui.rc: 688
 Pause Brightness
 ポーズ中の明るさ
 
-# osd/winui/properties.c: 968 osd/winui/treeview.c: 1371
+# osd/winui/properties.c: 969 osd/winui/treeview.c: 1369
 Pedal
 ペダル
 
-# osd/winui/mameui.rc: 500
+# osd/winui/mameui.rc: 499
 Pedal device
 ペダルデバイス
 
-# osd/winui/mameui.rc: 559
+# osd/winui/mameui.rc: 558
 Physical monitor:
 物理的なモニタ:
 
-# osd/winui/properties.c: 399, 430
+# osd/winui/properties.c: 398, 429
 Pixel Aspect
 ピクセルのアスペクト
 
-# osd/winui/winui.c: 934
+# osd/winui/winui.c: 940
 Play Time
 プレイ時間
 
-# osd/winui/mameui.rc: 1543
+# osd/winui/mameui.rc: 1539
 Play a game starting with the given savestate
 起動時にステートを使用してゲームをプレイします。
 
-# osd/winui/mameui.rc: 54, 202
+# osd/winui/mameui.rc: 53, 201
 Play and &Record Input...
 入力を保存しながら実行(&R)...
 
-# osd/winui/mameui.rc: 58
+# osd/winui/mameui.rc: 57
 Play and Record &MNG Video...
 MNGビデオを保存しながら実行(&M)...
 
-# osd/winui/mameui.rc: 57
+# osd/winui/mameui.rc: 56
 Play and Record &WAV Sound...
 WAVサウンドを保存しながら実行(&W)...
 
-# osd/winui/mameui.rc: 59
+# osd/winui/mameui.rc: 58
 Play and Record &uncompressed AVI Output...
 無圧縮AVIを保存しながら実行(&u)...
 
-# osd/winui/mameui.rc: 1504
+# osd/winui/mameui.rc: 1500
 Play currently selected game
 現在選択しているゲームを開始します
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 Playback a recorded game
 保存した入力を再現します
 
-# osd/winui/winui.c: 929
+# osd/winui/winui.c: 935
 Played
 プレイ回数
 
-# osd/winui/treeview.c: 1372
+# osd/winui/treeview.c: 1370
 Player 1
 プレイヤー 1
 
-# osd/winui/treeview.c: 1373
+# osd/winui/treeview.c: 1371
 Players 2
 プレイヤー 2
 
-# osd/winui/treeview.c: 1374
+# osd/winui/treeview.c: 1372
 Players 3
 プレイヤー 3
 
-# osd/winui/treeview.c: 1375
+# osd/winui/treeview.c: 1373
 Players 4
 プレイヤー 4
 
-# osd/winui/treeview.c: 1376
+# osd/winui/treeview.c: 1374
 Players 5
 プレイヤー 5
 
-# osd/winui/treeview.c: 1377
+# osd/winui/treeview.c: 1375
 Players 6
 プレイヤー 6
 
-# osd/winui/treeview.c: 1378
+# osd/winui/treeview.c: 1376
 Players 7
 プレイヤー 7
 
-# osd/winui/treeview.c: 1379
+# osd/winui/treeview.c: 1377
 Players 8
 プレイヤー 8
 
-# osd/winui/mameui.rc: 512
+# osd/winui/mameui.rc: 511
 Positional device
 座標デバイス
 
-# osd/winui/mameui.rc: 70, 221
+# osd/winui/mameui.rc: 69, 220
 Pr&operties
 プロパティ(&O)
 
-# osd/winui/winui.c: 3928, 7423
+# osd/winui/winui.c: 3984, 7524
 Propert&ies for %s
 %sのプロパティ(&I)
 
-# osd/winui/mameui.rc: 68, 219 osd/winui/winui.c: 3873, 7468
+# osd/winui/mameui.rc: 67, 218 osd/winui/winui.c: 3926, 7569
 Propert&ies for Driver
 ドライバのプロパティ(&I)
 
-# osd/winui/winui.c: 3940, 7437
+# osd/winui/winui.c: 3996, 7538
 Properties &for %s BIOS
 %s BIOSのプロパティ(&F)
 
-# osd/winui/mameui.rc: 69, 220 osd/winui/winui.c: 3880, 3946, 7443, 7481
+# osd/winui/mameui.rc: 68, 219 osd/winui/winui.c: 3933, 4002, 7544, 7582
 Properties &for BIOS
 BIOSのプロパティ(&F)
 
-# osd/winui/properties.c: 627, 761
+# osd/winui/properties.c: 626, 760
 Propery Sheet Error %d %X
 プロパティシートのエラーです %d %X
 
-# osd/winui/mameui.rc: 908
+# osd/winui/mameui.rc: 907
 Quit game with confirmation
 ゲーム終了前に確認する
 
-# osd/winui/mameui.rc: 66, 205
+# osd/winui/mameui.rc: 65, 204
 R&emove From This Folder
 このフォルダから削除(&E)
 
-# osd/winui/mameui.rc: 1185
+# osd/winui/mameui.rc: 1181
 RGB setting:
 RGB設定:
 
-# osd/winui/mameui.rc: 644
+# osd/winui/mameui.rc: 643
 ROM check:
 ロムファイル:
 
-# osd/winui/layout.c: 114 osd/winui/mameui.rc: 421 osd/winui/winui.c: 924
+# osd/winui/layout.c: 113 osd/winui/mameui.rc: 420 osd/winui/winui.c: 930
 ROMs
 ROM
 
-# osd/winui/properties.c: 1153
+# osd/winui/properties.c: 1154
 ROMs missing
 ROMが見つかりません
 
-# osd/winui/mameui.rc: 1595
+# osd/winui/mameui.rc: 1591
 Randomly select a game.
 ゲームをランダムに選択します
 
-# osd/winui/layout.c: 75 osd/winui/winui.c: 5787
+# osd/winui/layout.c: 74 osd/winui/winui.c: 5868
 Raster
 ラスタ
 
-# osd/winui/winui.c: 3636
+# osd/winui/winui.c: 3689
 Ready
 起動中
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 Record a game for later playback
 現在のゲームを実行し、その入力を保存します
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 Record the audio output of a game
 ゲームの音声出力を記録します
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 Record the complete output of a game
 ゲームの完全な出力を記録します
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 Record the video output of a game
 ゲームのビデオ出力を記録します
 
-# osd/winui/mameui.rc: 1485, 1615
+# osd/winui/mameui.rc: 1481, 1611
 Refresh game list
 ゲームリストを最新の情報に更新します
 
-# osd/winui/mameui.rc: 1595
+# osd/winui/mameui.rc: 1591
 Remove selected item from this folder
 このフォルダから選択した項目を削除
 
-# osd/winui/mameui.rc: 1595
+# osd/winui/mameui.rc: 1591
 Rename this folder
 このフォルダの名前変更します
 
-# osd/winui/treeview.c: 999
+# osd/winui/treeview.c: 997
 Requires Artwork
 要アートワーク
 
-# osd/winui/mameui.rc: 210
+# osd/winui/mameui.rc: 209
 Rese&t Playcount
 プレイ回数をリセットする(&T)
 
-# osd/winui/mameui.rc: 537, 590, 705, 742, 800, 832, 882, 949, 973
+# osd/winui/mameui.rc: 536, 589, 704, 741, 799, 831, 881, 948, 972
 Reset
 リセット
 
-# osd/winui/mameui.rc: 1053
+# osd/winui/mameui.rc: 1051
 Reset Options
 設定の初期化
 
-# osd/winui/mameui.rc: 211
+# osd/winui/mameui.rc: 210
 Reset Pla&y Time
 プレイ時間をリセットする(&Y)
 
-# osd/winui/mameui.rc: 1120
+# osd/winui/mameui.rc: 1117
 Reset all Play Times
 全てのプレイ時間をリセットする
 
-# osd/winui/mameui.rc: 1118
+# osd/winui/mameui.rc: 1115
 Reset all Playcounts
 全てのプレイ回数をリセットする
 
-# osd/winui/mameui.rc: 1543
+# osd/winui/mameui.rc: 1539
 Reset number of plays for selected item
 選択した項目のプレイ回数をリセットします
 
-# osd/winui/mameui.rc: 1543
+# osd/winui/mameui.rc: 1539
 Reset time played for selected item
 選択した項目のプレイ時間をリセットします
 
-# osd/winui/layout.c: 81
+# osd/winui/layout.c: 80
 Resolution
 画面解像度
 
-# osd/winui/mameui.rc: 569
+# osd/winui/mameui.rc: 568
 Resolution:
 解像度:
 
-# osd/winui/mameui.rc: 538, 591, 706, 743, 801, 833, 883, 950, 974
+# osd/winui/mameui.rc: 537, 590, 705, 742, 800, 832, 882, 949, 973
 Restore Default Settings
 デフォルト設定に戻す
 
-# osd/winui/dialogs.c: 154
+# osd/winui/dialogs.c: 151
 Restore Settings
 設定の初期化
 
-# osd/winui/mameui.rc: 677
+# osd/winui/mameui.rc: 676
 Rotation
 画面回転表\示
 
-# osd/winui/mameui.rc: 663
+# osd/winui/mameui.rc: 662
 Run in a window
 ウインドウ表\示
 
-# osd/winui/mameui.rc: 86, 261
+# osd/winui/mameui.rc: 85, 260
 S&how Pictures
 画像表\示(&S)
 
-# osd/winui/mameui.rc: 103
+# osd/winui/mameui.rc: 102
 S&mall Icons
 小さいアイコン(&M)
 
-# osd/winui/mameui.rc: 1123
+# osd/winui/mameui.rc: 1120
 S&tretch screenshot larger than natural size
 スクリーンショットを拡大する(&T)
 
-# osd/winui/mameui.rc: 646
+# osd/winui/mameui.rc: 645
 Sample check:
 サンプルファイル:
 
-# osd/winui/mameui.rc: 729
+# osd/winui/mameui.rc: 728
 Sample rate
 サンプルレート
 
-# osd/winui/layout.c: 88, 115 osd/winui/mameui.rc: 427 osd/winui/winui.c: 925
+# osd/winui/layout.c: 87, 114 osd/winui/mameui.rc: 426 osd/winui/winui.c: 931
 Samples
 サンプルファイル
 
-# osd/winui/layout.c: 83, 90
+# osd/winui/layout.c: 82, 89
 Save State
 ステートの保存
 
-# osd/winui/mameui.rc: 623
+# osd/winui/mameui.rc: 622
 Save State:
 ステートの保存:
 
-# osd/winui/mameui.rc: 1519
+# osd/winui/mameui.rc: 1515
 Save game list in specified lst file
 指定されたLSTファイルにゲームリストを保存します
 
-# osd/winui/mameui.rc: 789
+# osd/winui/mameui.rc: 788
 Scale screen
 プリスケール
 
-# osd/winui/mameui.rc: 544 osd/winui/winui.c: 923
+# osd/winui/mameui.rc: 543 osd/winui/winui.c: 929
 Screen
 画面
 
-# osd/winui/winui.c: 3458
+# osd/winui/winui.c: 3511
 Screen flip support is missing
 カクテルモードの画面反転に未対応
 
-# osd/winui/properties.c: 1084, 1137, 1208
+# osd/winui/properties.c: 1085, 1138, 1209
 Screen flipping is not supported
 カクテルモードの画面反転に未対応
 
-# osd/winui/mameui.rc: 551
+# osd/winui/mameui.rc: 550
 Screen setting
 画面セッティング
 
-# osd/winui/mameui.rc: 617
+# osd/winui/mameui.rc: 616
 Screen:
 画面サイズ:
 
-# osd/winui/mameui.rc: 1122
+# osd/winui/mameui.rc: 1119
 Screenshot Area
 スクリーンショット領域
 
-# osd/winui/mameui.rc: 1130
+# osd/winui/mameui.rc: 1127
 Screenshot Bordersize
 スクリーンショットの縁の幅
 
-# osd/winui/mameui.rc: 1126
+# osd/winui/mameui.rc: 1123
 Screenshot Cycletime in Seconds
 画像を周期的に切り替える時間(秒)
 
-# osd/winui/mameui.rc: 82
+# osd/winui/mameui.rc: 81
 Screenshot Ta&b\tAlt+B
 スクリーンショットタブ(&B)\tAlt+B
 
-# osd/winui/properties.c: 385
+# osd/winui/properties.c: 384
 Second screen
 2画面目
 
-# osd/winui/mameui.rc: 1092
+# osd/winui/mameui.rc: 1089
 Select &random background image on start
 背景画像をランダムに選択する(&R)
 
-# osd/winui/mameui.rc: 1555
+# osd/winui/mameui.rc: 1551
 Select Cabinet tab
 筐体タブの選択
 
-# osd/winui/mameui.rc: 1555
+# osd/winui/mameui.rc: 1551
 Select Control panel tab
 コントロールパネルタブの選択
 
-# osd/winui/mameui.rc: 1595
+# osd/winui/mameui.rc: 1591
 Select Flyer tab
 広告タブの選択
 
-# osd/winui/mameui.rc: 1555
+# osd/winui/mameui.rc: 1551
 Select History tab
 ヒストリータブの選択
 
-# osd/winui/columnedit.c: 258
+# osd/winui/columnedit.c: 260
 Select Item
 項目の選択
 
-# osd/winui/mameui.rc: 1555
+# osd/winui/mameui.rc: 1551
 Select Marquee tab
 マーキータブの選択
 
-# osd/winui/mameui.rc: 1555
+# osd/winui/mameui.rc: 1551
 Select PCB tab
 PCBタブの選択
 
-# osd/winui/mameui.rc: 1595
+# osd/winui/mameui.rc: 1591
 Select Snapshot tab
 スナップショットタブの選択
 
-# osd/winui/mameui.rc: 1562
+# osd/winui/mameui.rc: 1558
 Select Story tab
 ストーリータブの選択
 
-# osd/winui/mameui.rc: 1555
+# osd/winui/mameui.rc: 1551
 Select Title tab
 タイトルタブの選択
 
-# osd/winui/winui.c: 5462
+# osd/winui/winui.c: 5539
 Select a Background Image
 背景画像を選択
 
-# osd/winui/mameui.rc: 1485
+# osd/winui/mameui.rc: 1481
 Select menu style
 メニュースタイルの選択
 
-# osd/winui/mameui.rc: 1069
+# osd/winui/mameui.rc: 1067
 Select the options to be restored to the default settings.
 選択したオプションを標準の設定に復元します。
 
-# osd/winui/mameui.rc: 1113
+# osd/winui/mameui.rc: 1110
 Set Game List Not Working Color
 ゲームリストの動作不可の色を設定
 
-# osd/winui/mameui.rc: 1134
+# osd/winui/mameui.rc: 1131
 Set Screenshot Border Color
 スクリーンショットの縁の色を変更
 
-# osd/winui/mameui.rc: 1504
+# osd/winui/mameui.rc: 1500
 Set default game options
 デフォルトゲームオプションを設定します
 
-# osd/winui/mameui.rc: 1504
+# osd/winui/mameui.rc: 1500
 Set directory configuration
 参照ディレクトリを設定します
 
-# osd/winui/mameui.rc: 1504
+# osd/winui/mameui.rc: 1500
 Set game list and folder list font
 ゲームリストとフォルダリストに使用するフォントを設定します
 
-# osd/winui/mameui.rc: 1517
+# osd/winui/mameui.rc: 1513
 Set in-game UI color palette
 ゲーム中のUIカラーパレットを設定します
 
-# osd/winui/mameui.rc: 1564
+# osd/winui/mameui.rc: 1560
 Set the background image
 背景画像の設定
 
-# osd/winui/mameui.rc: 1504
+# osd/winui/mameui.rc: 1500
 Set the clone font color
 クローン文字色の設定
 
-# osd/winui/mameui.rc: 1135
+# osd/winui/mameui.rc: 1132
 Show History on Tab
 歴史情報を表\示するタブ
 
-# osd/winui/mameui.rc: 259
+# osd/winui/mameui.rc: 258
 Show Tab &Control
 タブコントロールを表\示(&C)
 
-# osd/winui/mameui.rc: 447
+# osd/winui/mameui.rc: 446
 Show directories for:
 設定対象ディレクトリ:
 
-# osd/winui/mameui.rc: 1549
+# osd/winui/mameui.rc: 1545
 Show game PCB information
 ゲームのPCB情報を表\示
 
-# osd/winui/mameui.rc: 1595
+# osd/winui/mameui.rc: 1591
 Show or hide folder
 フォルダの表\示/非表\示を切り替えます
 
-# osd/winui/mameui.rc: 1470
+# osd/winui/mameui.rc: 1466
 Show or hide tabs in the picture area
 画像エリア内のタブの表\示/非表\示を切り替えます
 
-# osd/winui/mameui.rc: 1470, 1595
+# osd/winui/mameui.rc: 1466, 1591
 Show or hide the folder list
 フォルダリストの表\示/非表\示を切り替えます
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 Show or hide the picture area
 画像の表\示/非表\示を切り替えます
 
-# osd/winui/mameui.rc: 1470
+# osd/winui/mameui.rc: 1466
 Show or hide the screen shot
 スクリーンショットの表\示/非表\示を切り替えます
 
-# osd/winui/mameui.rc: 1470, 1595
+# osd/winui/mameui.rc: 1466, 1591
 Show or hide the status bar
 ステータスバーの表\示/非表\示を切り替えます
 
-# osd/winui/mameui.rc: 1595
+# osd/winui/mameui.rc: 1591
 Show or hide the tabs in the picture area
 画像エリア内のタブの表\示/非表\示を切り替えます
 
-# osd/winui/mameui.rc: 1470, 1595
+# osd/winui/mameui.rc: 1466, 1591
 Show or hide the toolbar
 ツールバーの表\示/非表\示を切り替えます
 
-# osd/winui/mameui.rc: 474
+# osd/winui/mameui.rc: 473
 Show these fields in this order:
 表\示設定済みフィールド:
 
-# osd/winui/properties.c: 3597
+# osd/winui/properties.c: 3606
 Skip 1 of 10 frames
 10フレームに1回スキップ
 
-# osd/winui/properties.c: 3615
+# osd/winui/properties.c: 3624
 Skip 10 of 10 frames
 10フレームに10回スキップ
 
-# osd/winui/properties.c: 3599
+# osd/winui/properties.c: 3608
 Skip 2 of 10 frames
 10フレームに2回スキップ
 
-# osd/winui/properties.c: 3601
+# osd/winui/properties.c: 3610
 Skip 3 of 10 frames
 10フレームに3回スキップ
 
-# osd/winui/properties.c: 3603
+# osd/winui/properties.c: 3612
 Skip 4 of 10 frames
 10フレームに4回スキップ
 
-# osd/winui/properties.c: 3605
+# osd/winui/properties.c: 3614
 Skip 5 of 10 frames
 10フレームに5回スキップ
 
-# osd/winui/properties.c: 3607
+# osd/winui/properties.c: 3616
 Skip 6 of 10 frames
 10フレームに6回スキップ
 
-# osd/winui/properties.c: 3609
+# osd/winui/properties.c: 3618
 Skip 7 of 10 frames
 10フレームに7回スキップ
 
-# osd/winui/properties.c: 3611
+# osd/winui/properties.c: 3620
 Skip 8 of 10 frames
 10フレームに8回スキップ
 
-# osd/winui/properties.c: 3613
+# osd/winui/properties.c: 3622
 Skip 9 of 10 frames
 10フレームに9回スキップ
 
-# osd/winui/mameui.rc: 900
+# osd/winui/mameui.rc: 899
 Skip game info
 ゲーム情報をスキップ
 
-# osd/winui/mameui.rc: 898
+# osd/winui/mameui.rc: 897
 Sleep when possible
 アイドル時にCPUを開放
 
-# osd/winui/winui.c: 816
+# osd/winui/winui.c: 814
 Small Icons
 小さなアイコン
 
-# osd/winui/dialogs.c: 240 osd/winui/mui_opts.c: 463
+# osd/winui/dialogs.c: 237 osd/winui/mui_opts.c: 462
 Snapshot
 スナップショット
 
-# osd/winui/layout.c: 118
+# osd/winui/layout.c: 117
 Snapshots
 スナップショット
 
-# osd/winui/mameui.rc: 229
+# osd/winui/mameui.rc: 228
 Sort &Ascending
 昇順に整列(&A)
 
-# osd/winui/mameui.rc: 230
+# osd/winui/mameui.rc: 229
 Sort &Descending
 降順に整列(&D)
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort by number of plays
 プレイ回数で整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort column in ascending (A-Z) order
 昇順で整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort column in descending (Z-A) order
 降順で整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by clone of
 原作で整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by driver
 ドライバで整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by game description
 記述で整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by manufacturer
 製造元で整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by name
 名前で整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by play time
 プレイ時間で整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by roms
 ROMの所有で整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by samples
 サンプルの有無で整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by screen
 画面の向きで整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by trackball
 トラックボールで整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by type
 種別で整列します
 
-# osd/winui/mameui.rc: 1615
+# osd/winui/mameui.rc: 1611
 Sort items by year
 製造年で整列します
 
-# osd/winui/layout.c: 67 osd/winui/mameui.rc: 712
+# osd/winui/layout.c: 66 osd/winui/mameui.rc: 711
 Sound
 サウンド
 
-# osd/winui/properties.c: 1078, 1131, 1202
+# osd/winui/properties.c: 1079, 1132, 1203
 Sound emulation isn't 100% accurate
 音の再現が不完全
 
-# osd/winui/mameui.rc: 613
+# osd/winui/mameui.rc: 612
 Sound:
 サウンド:
 
-# osd/winui/mameui.rc: 98, 273, 286
+# osd/winui/mameui.rc: 97, 272, 285
 St&ory
 ストーリー(&O)
 
-# osd/winui/properties.c: 398, 429
+# osd/winui/properties.c: 397, 428
 Standard
 標準
 
-# osd/winui/mameui.rc: 665
+# osd/winui/mameui.rc: 664
 Start out maximized
 ウィンドウ最大化
 
-# osd/winui/layout.c: 121
+# osd/winui/layout.c: 120
 State
 ゲームステート
 
-# osd/winui/mameui.rc: 606
+# osd/winui/mameui.rc: 605
 Status:
 状態:
 
-# osd/winui/layout.c: 86
+# osd/winui/layout.c: 85
 Stereo
 ステレオ
 
-# osd/winui/mui_opts.c: 472
+# osd/winui/mui_opts.c: 471
 Story
 ストーリー
 
-# osd/winui/properties.c: 1007 osd/winui/treeview.c: 1319
+# osd/winui/properties.c: 1008 osd/winui/treeview.c: 1317
 Supported
 対応
 
-# osd/winui/mameui.rc: 937
+# osd/winui/mameui.rc: 936
 Switch drivers
 使用するドライバの変更
 
-# osd/winui/mameui.rc: 783
+# osd/winui/mameui.rc: 782
 Switch resolutions to fit
 画面解像度を変更
 
-# osd/winui/mameui.rc: 779
+# osd/winui/mameui.rc: 778
 Sync to monitor refresh
 モニタと同期
 
-# osd/winui/mui_util.c: 241
+# osd/winui/mui_util.c: 238
 The operating system is out of memory or resources.
 メモリもしくはリソ\ースが不足しています。
 
-# osd/winui/mui_util.c: 245
+# osd/winui/mui_util.c: 242
 The specified file was not found.
 指定されたファイルが見つかりません。
 
-# osd/winui/mui_util.c: 257
+# osd/winui/mui_util.c: 254
 The specified path was not found.
 指定されたパスが見つかりません。
 
-# osd/winui/mui_util.c: 249
+# osd/winui/mui_util.c: 246
 There is no application associated with the given filename extension.
 拡張子に関連付けられたアプリケーションがありません。
 
-# osd/winui/mui_util.c: 253
+# osd/winui/mui_util.c: 250
 There was not enough memory to complete the operation.
 処理を続行するためのメモリが不足しました。
 
-# osd/winui/properties.c: 386
+# osd/winui/properties.c: 385
 Third screen
 3画面目
 
-# osd/winui/mameui.rc: 932
+# osd/winui/mameui.rc: 931
 Thread priority
 スレッドの優先度
 
-# osd/winui/mameui.rc: 669
+# osd/winui/mameui.rc: 668
 Throttle
 速度制限を有効
 
-# osd/winui/dialogs.c: 248 osd/winui/mui_opts.c: 467
+# osd/winui/dialogs.c: 245 osd/winui/mui_opts.c: 466
 Title
 タイトル
 
-# osd/winui/layout.c: 127
+# osd/winui/layout.c: 126
 Titles
 タイトル画面
 
-# osd/winui/winui.c: 813
+# osd/winui/winui.c: 811
 Toggle Folder List
 フォルダリスト
 
-# osd/winui/mameui.rc: 1576
+# osd/winui/mameui.rc: 1572
 Toggle Fullscreen mode
 フルスクリーンの切換
 
-# osd/winui/winui.c: 814
+# osd/winui/winui.c: 812
 Toggle Screen Shot
 スクリーンショット
 
-# osd/winui/mameui.rc: 1470
+# osd/winui/mameui.rc: 1466
 Toggle full screen mode
 フルスクリーンの切換
 
-# osd/winui/mameui.rc: 423, 432
+# osd/winui/mameui.rc: 422, 431
 Total:
 合計:
 
-# osd/winui/layout.c: 78 osd/winui/properties.c: 966 osd/winui/treeview.c: 1369 osd/winui/winui.c: 928
+# osd/winui/layout.c: 77 osd/winui/properties.c: 967 osd/winui/treeview.c: 1367 osd/winui/winui.c: 934
 Trackball
 トラックボール
 
-# osd/winui/mameui.rc: 506
+# osd/winui/mameui.rc: 505
 Trackball device
 トラックボールデバイス
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Catalan
 言語をカタルニャ語に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into English (US)
 言語を英語(US)に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into French
 言語をフランス語に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into German
 言語をドイツ語に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Hungarian
 言語をハンガリー語に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Italian
 言語をイタリア語に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Japanese
 言語を日本語に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Korean
 言語を韓国語に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Polish
 言語をポーランド語に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Portuguese (BRA)
 言語をポルトガル語 (ブラジル)に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Portuguese (PT)
 言語をポルトガル語 (ポルトガル)に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Simplified Chinese
 言語を中国語(中国)に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Spanish
 言語をスペイン語に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Traditional Chinese
 言語を中国語(台湾)に切り替えます
 
-# osd/winui/mameui.rc: 1636
+# osd/winui/mameui.rc: 1632
 Translate into Valencian
 言語をバレンシア語に切り替えます
 
-# osd/winui/mameui.rc: 915
+# osd/winui/mameui.rc: 914
 Transparency in-game UI
 ゲーム中のUIを透過する
 
-# osd/winui/mameui.rc: 781
+# osd/winui/mameui.rc: 780
 Triple buffering
 トリプルバッファ使用
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 Troubleshooting Documentation
 トラブルシューティング情報を表\示します
 
-# osd/winui/winui.c: 927
+# osd/winui/winui.c: 933
 Type
 種別
 
-# osd/winui/mui_audit.c: 105
+# osd/winui/mui_audit.c: 103
 Unable to Load Riched32.dll
 Riched32.dllが読み込めません
 
-# osd/winui/treeview.c: 2581
+# osd/winui/treeview.c: 2579
 Unable to add game to non-custom folder
 カスタムフォルダ以外にはゲームを追加出来ません
 
-# osd/winui/treeview.c: 2598
+# osd/winui/treeview.c: 2596
 Unable to remove game from non-custom folder
 カスタムフォルダ以外からゲームを削除出来ません
 
-# osd/winui/layout.c: 56
+# osd/winui/layout.c: 55
 Unavailable
 未所有のゲーム
 
-# osd/winui/treeview.c: 992
+# osd/winui/treeview.c: 990
 Unemulated Protection
 プロテクトの再現が不完全
 
-# osd/winui/mui_audit.c: 530 osd/winui/properties.c: 982, 1036 
+# osd/winui/mui_audit.c: 527 osd/winui/properties.c: 983, 1037 
 Unknown
 不明
 
-# osd/winui/mui_util.c: 265
+# osd/winui/mui_util.c: 262
 Unknown error.
 原因不明のエラーが発生しました。
 
-# osd/winui/properties.c: 1009 osd/winui/treeview.c: 1321
+# osd/winui/properties.c: 1010 osd/winui/treeview.c: 1319
 Unsupported
 未対応
 
-# osd/winui/winui.c: 822
+# osd/winui/winui.c: 820
 Use Local Language Game List
 日本語ゲームリストを使用する
 
-# osd/winui/mameui.rc: 1107
+# osd/winui/mameui.rc: 1104
 Use TreeView in property pages
 プロパティページにツリービューを使用
 
-# osd/winui/mameui.rc: 723
+# osd/winui/mameui.rc: 722
 Use samples
 サンプルを使用
 
-# osd/winui/mameui.rc: 1111
+# osd/winui/mameui.rc: 1108
 Use various icon for Not Working game
 動作不可のゲームにドライバのアイコンを使用
 
-# osd/winui/mameui.rc: 726
+# osd/winui/mameui.rc: 725
 Use volume auto adjust
 自動音量調整機能\を使用
 
-# osd/winui/dialogs.c: 147
+# osd/winui/dialogs.c: 144
 User interface settings\n\n
 ユーザインターフェース\n\n
 
-# osd/winui/layout.c: 76 osd/winui/mameui.rc: 956 osd/winui/winui.c: 5785
+# osd/winui/layout.c: 75 osd/winui/mameui.rc: 955 osd/winui/winui.c: 5866
 Vector
 ベクタ
 
-# osd/winui/treeview.c: 1198
+# osd/winui/treeview.c: 1196
 Vector (H)
 ベクタ (H)
 
-# osd/winui/properties.c: 894
+# osd/winui/properties.c: 895
 Vector (H) %f Hz (%d colors)
 ベクタ (横) %f Hz (%d 色)
 
-# osd/winui/treeview.c: 1196
+# osd/winui/treeview.c: 1194
 Vector (V)
 ベクタ (V)
 
-# osd/winui/properties.c: 889
+# osd/winui/properties.c: 890
 Vector (V) %f Hz (%d colors)
 ベクタ (縦) %f Hz (%d 色)
 
-# osd/winui/properties.c: 372
+# osd/winui/properties.c: 371
 Version 8
 バージョン 8
 
-# osd/winui/properties.c: 371
+# osd/winui/properties.c: 370
 Version 9
 バージョン 9
 
-# osd/winui/layout.c: 59 osd/winui/winui.c: 5750
+# osd/winui/layout.c: 58 osd/winui/winui.c: 5831
 Vertical
 縦型
 
-# osd/winui/properties.c: 1066, 1119, 1190
+# osd/winui/properties.c: 1067, 1120, 1191
 Video emulation isn't 100% accurate
 ビデオの再現が不完全
 
-# osd/winui/mameui.rc: 756
+# osd/winui/mameui.rc: 755
 Video output method
 ビデオ描画方式
 
-# osd/winui/mameui.rc: 214
+# osd/winui/mameui.rc: 213
 View PC&B Info
 PCB情報を表\示する
 
-# osd/winui/mameui.rc: 576
+# osd/winui/mameui.rc: 575
 View:
 ビュー:
 
-# osd/winui/mameui.rc: 793
+# osd/winui/mameui.rc: 792
 Visual Effects
 エフェクト表\示
 
-# osd/winui/mameui.rc: 733
+# osd/winui/mameui.rc: 732
 Volume attenuation
 ボリューム
 
-# osd/winui/mameui.rc: 777
+# osd/winui/mameui.rc: 776
 Wait for vertical sync
 Vsyncを待つ
 
-# osd/winui/mameui.rc: 1524
+# osd/winui/mameui.rc: 1520
 What's new in MAME
 MAMEの新しい機能\を表\示します
 
-# osd/winui/layout.c: 71 osd/winui/properties.c: 1095, 1166
+# osd/winui/layout.c: 70 osd/winui/properties.c: 1096, 1167
 Working
 動作可
 
-# osd/winui/treeview.c: 993
+# osd/winui/treeview.c: 991
 Wrong Colors
 色が再現されない
 
-# osd/winui/layout.c: 61 osd/winui/winui.c: 931
+# osd/winui/layout.c: 60 osd/winui/winui.c: 937
 Year
 製造年
 
-# osd/winui/mui_audit.c: 121 osd/winui/winui.c: 5795
+# osd/winui/mui_audit.c: 119 osd/winui/winui.c: 5876
 Yes
 はい
 
-# osd/winui/dialogs.c: 153
+# osd/winui/dialogs.c: 150
 \nDo you wish to continue?
 \n続けますか？
 
-# osd/winui/mameui.rc: 119
+# osd/winui/mameui.rc: 118
 by &Clone Of
 原作(&C)
 
-# osd/winui/mameui.rc: 110
+# osd/winui/mameui.rc: 109
 by &Description
 記述(&D)
 
-# osd/winui/mameui.rc: 117
+# osd/winui/mameui.rc: 116
 by &Manufacturer
 製造元(&M)
 
-# osd/winui/mameui.rc: 113
+# osd/winui/mameui.rc: 112
 by &Name
 名前(&N)
 
-# osd/winui/mameui.rc: 116
+# osd/winui/mameui.rc: 115
 by &Played
 プレイ回数(P)
 
-# osd/winui/mameui.rc: 111
+# osd/winui/mameui.rc: 110
 by &Screen
 画面(&S)
 
-# osd/winui/mameui.rc: 114
+# osd/winui/mameui.rc: 113
 by &Type
 種別(&T)
 
-# osd/winui/mameui.rc: 118
+# osd/winui/mameui.rc: 117
 by &Year
 製造年(&Y)
 
-# osd/winui/mameui.rc: 120
+# osd/winui/mameui.rc: 119
 by Dr&iver
 ドライバ(&i)
 
-# osd/winui/mameui.rc: 121
+# osd/winui/mameui.rc: 120
 by P&lay Time
 プレイ時間(&l)
 
-# osd/winui/mameui.rc: 122
+# osd/winui/mameui.rc: 121
 by R&OMs
 &ROM
 
-# osd/winui/mameui.rc: 112
+# osd/winui/mameui.rc: 111
 by S&amples
 サンプル(&a)
 
-# osd/winui/mameui.rc: 115
+# osd/winui/mameui.rc: 114
 by T&rackball
 トラックボール(&r)
 
-# osd/winui/dialogs.c: 136
+# osd/winui/dialogs.c: 133
  will now reset the following\n
 
 
-# osd/winui/mameui.rc: 186
+# osd/winui/mameui.rc: 185
 &History File...
 
 
-# osd/winui/mameui.rc: 189
+# osd/winui/mameui.rc: 188
 &Story File...
 
 
-# osd/winui/dialogs.c: 151
+# osd/winui/dialogs.c: 148
 .\n
 
 
-# osd/winui/mameui.rc: 391
+# osd/winui/mameui.rc: 390
 Additional MAMEUI code by
 
 
-# osd/winui/mameui.rc: 389
+# osd/winui/mameui.rc: 388
 Christopher Kirmse and the MAMEUI team
 
 
-# osd/winui/mameui.rc: 1463
+# osd/winui/mameui.rc: 1459
 Contains commands for manipulating the view
 
 
-# osd/winui/mameui.rc: 1470, 1595
+# osd/winui/mameui.rc: 1466, 1591
 Contains commands to select tabs shown in the picture area
 
 
-# osd/winui/mameui.rc: 384
+# osd/winui/mameui.rc: 383
 Copyright (C) 1997-2008 The MAME Team
 
 
-# osd/winui/layout.c: 137
+# osd/winui/layout.c: 136
 Crosshair Files
 
 
@@ -2670,71 +2670,71 @@ Cursor text (floating)
 Cursor text (selected)
 
 
-# osd/winui/mameui.rc: 825
+# osd/winui/mameui.rc: 824
 Debugscript
 
 
-# osd/winui/properties.c: 727
+# osd/winui/properties.c: 726
 Default Settings
 
 
-# osd/winui/layout.c: 136
+# osd/winui/layout.c: 135
 Font Files
 
 
-# osd/winui/properties.c: 1090, 1143, 1214
+# osd/winui/properties.c: 1091, 1144, 1215
 Game requires external artwork files
 
 
-# osd/winui/dialogs.c: 264
+# osd/winui/dialogs.c: 261
 Gamename
 
 
-# osd/winui/dialogs.c: 266
+# osd/winui/dialogs.c: 263
 Gamename + Increment
 
 
-# osd/winui/dialogs.c: 268
+# osd/winui/dialogs.c: 265
 Gamename/Gamename
 
 
-# osd/winui/dialogs.c: 270
+# osd/winui/dialogs.c: 267
 Gamename/Gamename + Increment
 
 
-# osd/winui/dialogs.c: 272
+# osd/winui/dialogs.c: 269
 Gamename/Increment
 
 
-# osd/winui/properties.c: 1246
+# osd/winui/properties.c: 1247
 Global horizontal options\nCustom options used by all games in the Horizontal
 
 
-# osd/winui/properties.c: 1243
+# osd/winui/properties.c: 1244
 Global vertical options\nCustom options used by all games in the Vertical
 
 
-# osd/winui/dialogs.c: 142
+# osd/winui/dialogs.c: 139
 Individual game options\n
 
 
-# osd/winui/properties.c: 427
+# osd/winui/properties.c: 426
 Internal
 
 
-# osd/winui/mameui.rc: 394
+# osd/winui/mameui.rc: 393
 John Hardy IV and Michael Soderstrom
 
 
-# osd/winui/layout.c: 148
+# osd/winui/layout.c: 147
 Language Files
 
 
-# osd/winui/dialogs.c: 839
+# osd/winui/dialogs.c: 837
 MAMEUI requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run MAMEUI again.\r\n
 
 
-# osd/winui/mameui.rc: 386
+# osd/winui/mameui.rc: 385
 MAMEUI version by
 
 
@@ -2742,175 +2742,175 @@ MAMEUI version by
 Main background
 
 
-# osd/winui/mameui.rc: 187
+# osd/winui/mameui.rc: 186
 Mame&info File...
 
 
-# osd/winui/datafile.c: 1049
+# osd/winui/datafile.c: 1050
 Mameinfo:\n
 
 
-# osd/winui/mameui.rc: 830
+# osd/winui/mameui.rc: 829
 Reset Debugscript
 
 
-# osd/winui/mameui.rc: 880
+# osd/winui/mameui.rc: 879
 Reset Joystickmap
 
 
-# osd/winui/dialogs.c: 148
+# osd/winui/dialogs.c: 145
 Resetting the User Interface options\n
 
 
-# osd/winui/datafile.c: 1083
+# osd/winui/datafile.c: 1084
 Screen flipping in cocktail mode is not supported.\n
 
 
-# osd/winui/properties.c: 902
+# osd/winui/properties.c: 903
 Screenless Game
 
 
-# osd/winui/layout.c: 70
+# osd/winui/layout.c: 69
 Screens
 
 
-# osd/winui/mameui.rc: 785
+# osd/winui/mameui.rc: 784
 Seconds to run
 
 
-# osd/winui/mameui.rc: 828
+# osd/winui/mameui.rc: 827
 Select Debugscript
 
 
-# osd/winui/mameui.rc: 878
+# osd/winui/mameui.rc: 877
 Select Joystickmap
 
 
-# osd/winui/mameui.rc: 1582
+# osd/winui/mameui.rc: 1578
 Set the History file to use
 
 
-# osd/winui/mameui.rc: 1582
+# osd/winui/mameui.rc: 1578
 Set the Mameinfo file to use
 
 
-# osd/winui/mameui.rc: 1589
+# osd/winui/mameui.rc: 1585
 Set the Story file to use
 
 
-# osd/winui/mameui.rc: 1504
+# osd/winui/mameui.rc: 1500
 Show items grouped by parent game
 
 
-# osd/winui/mameui.rc: 1114
+# osd/winui/mameui.rc: 1111
 Snapshot/movie naming
 
 
-# osd/winui/mameui.rc: 582
+# osd/winui/mameui.rc: 581
 Snapshot/movie resolution
 
 
-# osd/winui/mameui.rc: 579
+# osd/winui/mameui.rc: 578
 Snapshot/movie view
 
 
-# osd/winui/datafile.c: 1061
+# osd/winui/datafile.c: 1062
 THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
 
 
-# osd/winui/datafile.c: 1071
+# osd/winui/datafile.c: 1072
 The colors are completely wrong.\n
 
 
-# osd/winui/datafile.c: 1074
+# osd/winui/datafile.c: 1075
 The colors aren't 100% accurate.\n
 
 
-# osd/winui/datafile.c: 1065
+# osd/winui/datafile.c: 1066
 The game has protection which isn't fully emulated.\n
 
 
-# osd/winui/datafile.c: 1077
+# osd/winui/datafile.c: 1078
 The game lacks sound.\n
 
 
-# osd/winui/datafile.c: 1086
+# osd/winui/datafile.c: 1087
 The game requires external artwork files\n
 
 
-# osd/winui/datafile.c: 1080
+# osd/winui/datafile.c: 1081
 The sound emulation isn't 100% accurate.\n
 
 
-# osd/winui/datafile.c: 1068
+# osd/winui/datafile.c: 1069
 The video emulation isn't 100% accurate.\n
 
 
-# osd/winui/mameui.rc: 822
+# osd/winui/mameui.rc: 821
 Update Main window during paused emulation
 
 
-# osd/winui/datafile.c: 1141
+# osd/winui/datafile.c: 1142
 \nDRIVER: %s\n
 
 
-# osd/winui/datafile.c: 1103, 1117
+# osd/winui/datafile.c: 1104, 1118
 \nORIGINAL:\n
 
 
-# osd/winui/datafile.c: 1023
+# osd/winui/datafile.c: 1024
 \nStory:\n
 
 
-# osd/winui/datafile.c: 1105, 1119
+# osd/winui/datafile.c: 1106, 1120
 \n\nCLONES:\n
 
 
-# osd/winui/winui.c: 6395
+# osd/winui/winui.c: 6487
 cheats (*.dat)
 
 
-# osd/winui/winui.c: 6386
+# osd/winui/winui.c: 6478
 gamelists (*.lst)
 
 
-# osd/winui/winui.c: 6398
+# osd/winui/winui.c: 6490
 history (*.dat)
 
 
-# osd/winui/winui.c: 6401
+# osd/winui/winui.c: 6493
 mameinfo (*.dat)
 
 
-# osd/winui/winui.c: 6389
+# osd/winui/winui.c: 6481
 maps (*.map,*.txt)
 
 
-# osd/winui/dialogs.c: 149
+# osd/winui/dialogs.c: 146
 requires exiting 
 
 
-# osd/winui/winui.c: 6392
+# osd/winui/winui.c: 6484
 scripts (*.txt,*.dat)
 
 
-# osd/winui/winui.c: 6371
+# osd/winui/winui.c: 6463
 sounds (*.wav)
 
 
-# osd/winui/winui.c: 6405
+# osd/winui/winui.c: 6497
 stoty (*.dat)
 
 
-# osd/winui/dialogs.c: 137
+# osd/winui/dialogs.c: 134
 to the default settings:\n\n
 
 
-# osd/winui/winui.c: 6377
+# osd/winui/winui.c: 6469
 videos (*.avi)
 
 
-# osd/winui/winui.c: 6374
+# osd/winui/winui.c: 6466
 videos (*.mng)
 
 

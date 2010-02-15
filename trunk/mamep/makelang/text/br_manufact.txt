@@ -1246,7 +1246,7 @@ Min Corp.
 Mirco
 Mirco
 
-# Pang! 3 (Euro 950511)
+# Pang! 3 (Euro 950601)
 Mitchell
 Mitchell
 
@@ -1358,7 +1358,7 @@ Noise Factory
 Noma
 Noma
 
-# Port Man (bootleg on Moon Cresta hardware)
+# Port Man
 Nova Games Ltd.
 Nova Games Ltd.
 
@@ -2410,6 +2410,10 @@ Amatic Trading GMBH
 Amcoe
 
 
+# Logic Pro Adventure (Japan)
+Amuse World
+
+
 # Guilty Gear X (JPN)
 Arc System Works
 
@@ -2554,6 +2558,10 @@ Fortex LTD
 Fujiwara
 
 
+# Super A'Can
+Funtech Entertainment
+
+
 # Big Deal (hungarian, set 1)
 Funworld
 
@@ -2564,6 +2572,10 @@ G-Rev
 
 # Galaxian Part 4 (hack)
 G.G.I
+
+
+# Track & Field (NZ Bootleg?)
+Goldberg Enterprizes Inc.
 
 
 # Super Free Kick (set 1)
@@ -2666,7 +2678,7 @@ Maygay Machines Ltd.
 Merit Industries
 
 
-# Turbo Poker 2
+# Magical Tonic / Magical Odds?
 Micro Manufacturing Inc.
 
 
@@ -2718,6 +2730,10 @@ Noraut Ltd.
 Nova Desitec
 
 
+# Vega
+Olympia?
+
+
 # PMA Poker
 PMA
 
@@ -2732,6 +2748,10 @@ PlayMark Srl
 
 # Demolish Fist
 Polygon Magic
+
+
+# Quarter Horse Classic
+Prestige Games
 
 
 # Panzer (bootleg of Spectar)
@@ -2790,7 +2810,7 @@ Samsung
 Sandii'
 
 
-# Pachi Fever
+# Pachifever
 Sanki Denshi Kogyo
 
 
@@ -2810,7 +2830,7 @@ Seojin
 Setakikaku, Ltd.
 
 
-# Cube Quest
+# Cube Quest (01/04/84)
 Simutrek
 
 
@@ -2874,8 +2894,16 @@ Tonic
 Triangle Service
 
 
+# Multi Game (Tung Sheng Electronics)
+Tung Sheng Electronics
+
+
 # P's Attack
 Uniana
+
+
+# Neptune's Pearls 2
+Unidesa?
 
 
 # Puzzlet (Japan)
@@ -2918,12 +2946,20 @@ Xex
 YONA Tech
 
 
+# Computer Quiz Atama no Taisou (Japan)
+Yachiyo Denki
+
+
 # Black Touch (Korea)
 Yang Gi Co Ltd.
 
 
 # Grudge Match (Yankee Game Technology)
 Yankee Game Technology
+
+
+# Vortex
+Zilec Electronics Ltd.
 
 
 # Kkoj Noli (Kill the Bees)

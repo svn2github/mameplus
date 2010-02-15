@@ -310,7 +310,7 @@ Mega
 Metro
 メトロ
 
-# Pang! 3 (Euro 950511)
+# Pang! 3 (Euro 950601)
 Mitchell
 ミッチェル
 
@@ -864,6 +864,10 @@ Amstar
 
 # Zero (set 2)
 Amtec
+
+
+# Logic Pro Adventure (Japan)
+Amuse World
 
 
 # Minesweeper
@@ -1466,6 +1470,10 @@ Free Enterprise Games
 Fujiwara
 
 
+# Super A'Can
+Funtech Entertainment
+
+
 # Big Deal (hungarian, set 1)
 Funworld
 
@@ -1536,6 +1544,10 @@ Genie
 
 # Joinem
 Global Corporation
+
+
+# Track & Field (NZ Bootleg?)
+Goldberg Enterprizes Inc.
 
 
 # Up Scope
@@ -1910,7 +1922,7 @@ Merit Industries
 Meyco Games
 
 
-# Turbo Poker 2
+# Magical Tonic / Magical Odds?
 Micro Manufacturing Inc.
 
 
@@ -2062,7 +2074,7 @@ Noraut Ltd.
 Nova Desitec
 
 
-# Port Man (bootleg on Moon Cresta hardware)
+# Port Man
 Nova Games Ltd.
 
 
@@ -2096,6 +2108,10 @@ Ocean Software Limited
 
 # Pass
 Oksan
+
+
+# Vega
+Olympia?
 
 
 # Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 3.0 / 990128)
@@ -2196,6 +2212,10 @@ Poby
 
 # Demolish Fist
 Polygon Magic
+
+
+# Quarter Horse Classic
+Prestige Games
 
 
 # Thunder Heroes
@@ -2354,7 +2374,7 @@ Sandii'
 Sang Ho Soft
 
 
-# Pachi Fever
+# Pachifever
 Sanki Denshi Kogyo
 
 
@@ -2438,7 +2458,7 @@ Sigma Inc.
 Signatron USA
 
 
-# Cube Quest
+# Cube Quest (01/04/84)
 Simutrek
 
 
@@ -2682,6 +2702,10 @@ Triangle Service
 Triumph Software Inc.
 
 
+# Multi Game (Tung Sheng Electronics)
+Tung Sheng Electronics
+
+
 # El Grande - 5 Card Draw (New)
 Tuni Electro Service
 
@@ -2696,6 +2720,10 @@ U.S. Games
 
 # P's Attack
 Uniana
+
+
+# Neptune's Pearls 2
+Unidesa?
 
 
 # Puzzlet (Japan)
@@ -2862,6 +2890,10 @@ Xex
 YONA Tech
 
 
+# Computer Quiz Atama no Taisou (Japan)
+Yachiyo Denki
+
+
 # Black Touch (Korea)
 Yang Gi Co Ltd.
 
@@ -2912,6 +2944,10 @@ Zilec - Zenitone
 
 # Blue Print (Midway)
 Zilec Electronics
+
+
+# Vortex
+Zilec Electronics Ltd.
 
 
 # Space Phantoms

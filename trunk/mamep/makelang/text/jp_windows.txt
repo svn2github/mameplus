@@ -1,32 +1,32 @@
-# mess/osd/windows/dialog.c: 1331
+# mess/osd/windows/dialog.c: 1324
  Analog
  アナログ
 
-# mess/osd/windows/dialog.c: 1336
+# mess/osd/windows/dialog.c: 1329
  Dec
  減少
 
-# mess/osd/windows/dialog.c: 1341
+# mess/osd/windows/dialog.c: 1334
  Inc
  増加
 
-# mess/osd/windows/mess.rc: 57
+# mess/osd/windows/mess.rc: 69
 &Analog Controls...
 アナログコントローラ...(&A)
 
-# mess/osd/windows/mess.rc: 94
+# mess/osd/windows/mess.rc: 66
 &Configuration...
 設定...(&C)
 
-# mess/osd/windows/menu.c: 1307
+# mess/osd/windows/menu.c: 1480
 &Configure...
 設定...(&C)
 
-# mess/osd/windows/mess.rc: 95
+# mess/osd/windows/mess.rc: 67
 &DIP Switches...
 DIPスイッチ...(&D)
 
-# mess/osd/windows/mess.rc: 97
+# mess/osd/windows/mess.rc: 89
 &Debugger...
 デバッガ...(&D)
 
@@ -34,31 +34,27 @@ DIPスイッチ...(&D)
 &Exit
 終了(&E)
 
-# mess/osd/windows/menu.c: 1518 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/mess.rc: 30 
 &File
 ファイル(&F)
 
-# mess/osd/windows/menu.c: 2130 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2302 mess/osd/windows/mess.rc: 71
 &Frameskip
 フレームスキップ(&F)
 
-# mess/osd/windows/mess.rc: 86
+# mess/osd/windows/mess.rc: 87
 &Full Screen\tAlt+Enter
 フルスクリーン(&F)\tAlt+Enter
 
-# mess/osd/windows/mess.rc: 85
+# mess/osd/windows/mess.rc: 86
 &Hide Menubar\tScrLk
 メニューバーを隠す(&H)\tScrLk
 
-# mess/osd/windows/menu.c: 1280 mess/osd/windows/mess.rc: 46
-&Input
-入力(&I)
-
-# mess/osd/windows/menu.c: 1280 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1453 mess/osd/windows/mess.rc: 57
 &Joysticks
 ジョイスティック(&J)
 
-# mess/osd/windows/mess.rc: 48
+# mess/osd/windows/mess.rc: 50
 &Keyboard
 キーボード(&K)
 
@@ -66,15 +62,15 @@ DIPスイッチ...(&D)
 &Load State...
 ステートを読み込む...(&L)
 
-# mess/osd/windows/mess.rc: 56
+# mess/osd/windows/mess.rc: 68
 &Miscellaneous Inputs...
 その他の入力...(&M)
 
-# mess/osd/windows/mess.rc: 88 
+# mess/osd/windows/menu.c: 1453, 1670, 2302 mess/osd/windows/mess.rc: 44 
 &Options
 オプション(&O)
 
-# mess/osd/windows/mess.rc: 90 
+# mess/osd/windows/mess.rc: 46 
 &Pause
 中断(&P)
 
@@ -82,163 +78,183 @@ DIPスイッチ...(&D)
 &Save State
 ステートを保存(&S)
 
-# mess/osd/windows/menu.c: 1497, 1497, 2130 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1670 mess/osd/windows/mess.rc: 58
 &Video
 ビデオ(&V)
 
-# osd/windows/video.c: 292
+# osd/windows/video.c: 290
 (primary)
 (プライマリ)
 
-# mess/osd/windows/menu.c: 2140
+# mess/osd/windows/menu.c: 2312
 About %s (%s)...
 %s (%s)について...
 
-# mess/osd/windows/menu.c: 929
+# mess/osd/windows/menu.c: 1114
 All files (*.*)|*.*|
 全てのファイル (*.*)|*.*|
 
-# mess/osd/windows/dialog.c: 135
+# mess/osd/windows/menu.c: 671
+Analog Controls
+アナログコントロール
+
+# mess/osd/windows/dialog.c: 131
 Apply
 適用
 
-# osd/windows/input.c: 1227
+# osd/windows/input.c: 1223
 Assign joystick %s to player %d\n
 ジョイスティック%sをプレイヤー%dに割り当てます\n
 
-# mess/osd/windows/mess.rc: 72 
+# mess/osd/windows/mess.rc: 73 
 Auto
 自動
 
-# mess/osd/windows/dialog.c: 136 
+# mess/osd/windows/menu.c: 690
+Autocenter Speed
+自動センタリング速度
+
+# mess/osd/windows/dialog.c: 132 
 Cancel
 キャンセル
 
-# mess/osd/windows/menu.c: 926
+# mess/osd/windows/menu.c: 1111
 Common image types
 共通イメージタイプ
 
-# mess/osd/windows/menu.c: 933
+# mess/osd/windows/menu.c: 1118
 Compressed Images (*.zip)|*.zip|
 圧縮イメージ (*.zip)|*.zip|
 
-# mess/osd/windows/mess.rc: 53
+# mess/osd/windows/menu.c: 1715
+Create...
+作成...
+
+# mess/osd/windows/mess.rc: 55
 Customize Emulated Keyboard...
 キーボードエミュレーションを設定...
 
-# osd/windows/winmain.c: 191
+# osd/windows/winmain.c: 213
 DIRECT3D-SPECIFIC OPTIONS
 Direct3D固有オプション
 
-# osd/windows/winmain.c: 187
+# osd/windows/winmain.c: 209
 DIRECTDRAW-SPECIFIC OPTIONS
 DirectDraw固有オプション
 
-# osd/windows/drawd3d.c: 1203
+# osd/windows/drawd3d.c: 1202
 Device %s currently in an unsupported mode\n
 デバイス「%s」は現在サポートされていないモードです\n
 
-# osd/windows/drawd3d.c: 1173
+# mess/osd/windows/menu.c: 685
+Digital Speed
+デジタル速度
+
+# mess/osd/windows/menu.c: 577
+Dip Switches
+ディップスイッチ
+
+# osd/windows/drawd3d.c: 1172
 Direct3D: Configuring adapter #%d = %s\n
 Direct3D: アダプタ#%dを%sに設定しています\n
 
-# osd/windows/drawd3d.c: 797
+# osd/windows/drawd3d.c: 796
 Direct3D: Device created at %dx%d\n
 Direct3D: デバイスを%dx%dで作成しました\n
 
-# osd/windows/drawd3d.c: 656, 2445
+# osd/windows/drawd3d.c: 655, 2444
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: デバイスのbegin_scene呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1671, 2494
+# osd/windows/drawd3d.c: 1670, 2493
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: デバイスのdraw_primitive呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 685, 2498
+# osd/windows/drawd3d.c: 684, 2497
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: デバイスのend_scene呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2438
+# osd/windows/drawd3d.c: 2437
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: デバイスのget_render_target呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 691
+# osd/windows/drawd3d.c: 690
 Direct3D: Error %08X during device present call\n
 Direct3D: デバイスのpresent呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 394, 401, 408, 415
+# osd/windows/drawd3d.c: 393, 400, 407, 414
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: デバイスのset_render_state呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2440, 2502
+# osd/windows/drawd3d.c: 2439, 2501
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: デバイスのset_render_target呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1643, 2492
+# osd/windows/drawd3d.c: 1642, 2491
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: デバイスのset_stream_source呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 326, 2451
+# osd/windows/drawd3d.c: 325, 2450
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: デバイスのset_texture呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 338, 340, 352, 354, 366
+# osd/windows/drawd3d.c: 337, 339, 351, 353, 365
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: デバイスのset_texture_stage_state呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2426
+# osd/windows/drawd3d.c: 2425
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: デバイスのstretct_rect呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 969, 971, 973, 975, 979, 993, 1007, 1021, 1047, 1071, 1085, 1098, 1105
+# osd/windows/drawd3d.c: 968, 970, 972, 974, 978, 992, 1006, 1020, 1046, 1070, 1084, 1097, 1104
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: get_caps_dword呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2405
+# osd/windows/drawd3d.c: 2404
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: テクスチャのget_surface_level呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2381
+# osd/windows/drawd3d.c: 2380
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: テクスチャのunlock_rect呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2455
+# osd/windows/drawd3d.c: 2454
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: 頂点バッファのlock呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1638, 2487
+# osd/windows/drawd3d.c: 1637, 2486
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: 頂点バッファのunlock呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1034
+# osd/windows/drawd3d.c: 1033
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 Direct3D: エラー: デバイスは反転したソ\ースアルファとのアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1029
+# osd/windows/drawd3d.c: 1028
 Direct3D: Error - Device does not support dest alpha blending with one\n
 Direct3D: エラー: デバイスはアルファブレンド係数1をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1024
+# osd/windows/drawd3d.c: 1023
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 Direct3D: エラー: デバイスはアルファブレンド係数0をサポートしていません\n
 
-# osd/windows/drawd3d.c: 982
+# osd/windows/drawd3d.c: 981
 Direct3D: Error - Device does not support immediate presentations\n
 Direct3D: エラー: デバイスは垂直同期を待たないプレゼンテーション処理をサポートしていません\n
 
-# osd/windows/drawd3d.c: 987
+# osd/windows/drawd3d.c: 986
 Direct3D: Error - Device does not support per-refresh presentations\n
 Direct3D: エラー: デバイスは垂直同期を待つプレゼンテーション処理をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1015
+# osd/windows/drawd3d.c: 1014
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 Direct3D: エラー: デバイスは色指定されたアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1010
+# osd/windows/drawd3d.c: 1009
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 Direct3D: エラー: デバイスはソ\ースアルファで指定されたアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1041
+# osd/windows/drawd3d.c: 1040
 Direct3D: Error - Device does not support texture alpha\n
 Direct3D: エラー: デバイスはテクスチャのアルファをサポートしていません\n
 
@@ -250,11 +266,11 @@ Direct3D: Direct3D8の初期化中にエラーが発生しました\n
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: Direct3D9の初期化中にエラーが発生しました\n
 
-# osd/windows/drawd3d.c: 1361
+# osd/windows/drawd3d.c: 1360
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawd3d.c: 1305
+# osd/windows/drawd3d.c: 1304
 Direct3D: Selecting video mode...\n
 Direct3D: 描画モードを選択中です...\n
 
@@ -282,223 +298,223 @@ Direct3D: Direct3D 8を使用しています\n
 Direct3D: Using Direct3D 9\n
 Direct3D: Direct3D 9を使用しています\n
 
-# osd/windows/drawd3d.c: 1107
+# osd/windows/drawd3d.c: 1106
 Direct3D: Using StretchRect for prescaling\n
 Direct3D: プリスケールにStretchRectを使用しています\n
 
-# osd/windows/drawd3d.c: 1101
+# osd/windows/drawd3d.c: 1100
 Direct3D: Using dynamic textures\n
 Direct3D: ダイナミックテクスチャを使用しています\n
 
-# osd/windows/drawd3d.c: 1055
+# osd/windows/drawd3d.c: 1054
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 Direct3D: 警告: デバイスはテクスチャの拡大にバイリニアフィルタをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1065
+# osd/windows/drawd3d.c: 1064
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 Direct3D: 警告: デバイスはテクスチャの縮小にバイリニアフィルタをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1001
+# osd/windows/drawd3d.c: 1000
 Direct3D: Warning - Device does not support hardware rasterization\n
 Direct3D: 警告: デバイスはハードウェアによるラスタライズをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1050
+# osd/windows/drawd3d.c: 1049
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 Direct3D: 警告: デバイスはテクスチャの拡大にポイントサンプルフィルタリングをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1060
+# osd/windows/drawd3d.c: 1059
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 Direct3D: 警告: デバイスはテクスチャの縮小にポイントサンプルフィルタリングをサポートしていません\n
 
-# osd/windows/drawd3d.c: 996
+# osd/windows/drawd3d.c: 995
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 Direct3D: 警告: デバイスはページフリップ後の描画コマンドキューをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1074
+# osd/windows/drawd3d.c: 1073
 Direct3D: Warning - Device does not support texture clamping\n
 Direct3D: 警告: デバイスはテクスチャのアドレス固定をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1088
+# osd/windows/drawd3d.c: 1087
 Direct3D: Warning - Device does not support texture modulation\n
 Direct3D: 警告: デバイスはテクスチャの乗算をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1079
+# osd/windows/drawd3d.c: 1078
 Direct3D: Warning - Device does not support texture wrapping\n
 Direct3D: 警告: デバイスはテクスチャのテクスチャの貼\り付けをサポートしていません\n
 
-# osd/windows/drawd3d.c: 814
+# osd/windows/drawd3d.c: 813
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: 警告: デバイスはフルスクリーンでのガンマ補正をサポートしていません\n
 
-# osd/windows/drawd3d.c: 739
+# osd/windows/drawd3d.c: 738
 Direct3D: YUV format = %s\n
 Direct3D: YUV 形式 = %s\n
 
-# osd/windows/drawd3d.c: 1742
+# osd/windows/drawd3d.c: 1741
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: %dx%dから%dx%dにプリスケールを調整しました\n
 
-# osd/windows/drawd3d.c: 1143
+# osd/windows/drawd3d.c: 1142
 Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: デバイスのリソ\ース再生成が失敗しました。
 
-# osd/windows/drawd3d.c: 1130
+# osd/windows/drawd3d.c: 1129
 Direct3D: resetting device\n
 Direct3D: デバイスをリセットしています\n
 
-# osd/windows/drawdd.c: 823
+# osd/windows/drawdd.c: 821
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %sバッファを作成しました: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1160
+# osd/windows/drawdd.c: 1158
 DirectDraw: Configuring device %s\n
 DirectDraw: デバイス%sを設定中\n
 
-# osd/windows/drawdd.c: 650
+# osd/windows/drawdd.c: 649
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: ガンマ補正の設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 529
+# osd/windows/drawdd.c: 527
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 描画モードを%dx%d@%dに設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1120
+# osd/windows/drawdd.c: 1118
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: 画面への描画でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1087, 1096, 1105, 1114
+# osd/windows/drawdd.c: 1085, 1094, 1103, 1112
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 画面の消去でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 808
+# osd/windows/drawdd.c: 806
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: %sバッファの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 849
+# osd/windows/drawdd.c: 847
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: クリッパーの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 494, 1149
+# osd/windows/drawdd.c: 492, 1147
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1246
+# osd/windows/drawdd.c: 1244
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: 呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1368
+# osd/windows/drawdd.c: 1366
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 750
+# osd/windows/drawdd.c: 748
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 519
+# osd/windows/drawdd.c: 517
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 513
+# osd/windows/drawdd.c: 511
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 816
+# osd/windows/drawdd.c: 814
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: %sバッファの詳細を取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 578
+# osd/windows/drawdd.c: 576
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: 割り当てられた裏画面バッファの取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1168
+# osd/windows/drawdd.c: 1166
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: 現在の画面モード取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 387
+# osd/windows/drawdd.c: 385
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: blitバッファのロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 857
+# osd/windows/drawdd.c: 855
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: ウィンドウのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 865
+# osd/windows/drawdd.c: 863
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: primaryバッファのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 460
+# osd/windows/drawdd.c: 458
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: blitバッファのアンロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 466, 1126
+# osd/windows/drawdd.c: 464, 1124
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: VBLANK待ちでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 502
+# osd/windows/drawdd.c: 500
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: エラー: デバイスはDirectDraw描画に必要最小限の要件をサポートしていません\n
 
-# osd/windows/drawdd.c: 381
+# osd/windows/drawdd.c: 379
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: バッファの消失。次のフレームに削除してやり直します\n
 
-# osd/windows/drawdd.c: 1369
+# osd/windows/drawdd.c: 1367
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 961
+# osd/windows/drawdd.c: 959
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 新しいバッファサイズは%dx%d\n
 
-# osd/windows/drawdd.c: 1366
+# osd/windows/drawdd.c: 1364
 DirectDraw: Selecting video mode...\n
 DirectDraw: 描画モードを選択中です...\n
 
-# osd/windows/drawdd.c: 228
+# osd/windows/drawdd.c: 226
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: ddraw.dllにアクセス出来ません\n
 
-# osd/windows/drawdd.c: 236
+# osd/windows/drawdd.c: 234
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: DirectDrawCreateExを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 246
+# osd/windows/drawdd.c: 244
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: DirectDrawEnumerateExAを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 416, 452, 1202
+# osd/windows/drawdd.c: 414, 450, 1200
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 不明な画面モード: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 259
+# osd/windows/drawdd.c: 257
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: DirectDraw 7を使用します\n
 
-# osd/windows/drawdd.c: 757
+# osd/windows/drawdd.c: 755
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 警告: デバイスはハードウェア拡大表\示をサポートしていません\n
 
-# osd/windows/drawdd.c: 506
+# osd/windows/drawdd.c: 504
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 警告: デバイスはDirectDraw描画にあまり適していないかも知れません\n
 
-# osd/windows/drawdd.c: 633
+# osd/windows/drawdd.c: 632
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告: デバイスはフルスクリーンのガンマ補正をサポートしていません。\n
 
-# osd/windows/input.c: 1211
+# osd/windows/input.c: 1207
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: ジョイスティックの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1196
+# osd/windows/input.c: 1192
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: キーボードの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1205
+# osd/windows/input.c: 1201
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: マウスの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1185
+# osd/windows/input.c: 1181
 DirectInput: Using DirectInput %d\n
 DirectInput: DirectInput %dを使用します\n
 
@@ -506,11 +522,15 @@ DirectInput: DirectInput %dを使用します\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: サウンドバッファ: %d Hz, %d ビット, %d チャンネル\n
 
-# mess/osd/windows/mess.rc: 50 
+# mess/osd/windows/menu.c: 588
+Driver Configuration
+ドライバ設定
+
+# mess/osd/windows/mess.rc: 52
 Emulated
 エミュレート
 
-# mess/osd/windows/menu.c: 322
+# mess/osd/windows/menu.c: 472
 Emulated Keyboard
 キーボードエミュレート
 
@@ -526,11 +546,11 @@ DirectSoundの作成が出来ません: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 DirectSoundのプライマリバッファを生成出来ません: %08x\n
 
-# osd/windows/window.c: 657
+# osd/windows/window.c: 656
 Error creating render target for window %d
 ウインドウ%dの描画対象の生成でエラーが発生しました
 
-# osd/windows/drawd3d.c: 848
+# osd/windows/drawd3d.c: 847
 Error creating vertex buffer (%08X)
 頂点バッファの作成でエラーが発生しました(%08X)
 
@@ -538,15 +558,15 @@ Error creating vertex buffer (%08X)
 Error getting DirectSound capabilities: %08x\n
 DirectSoundの情報が取得出来ません: %08x\n
 
-# osd/windows/drawd3d.c: 1170
+# osd/windows/drawd3d.c: 1169
 Error getting identifier for adapter #%d\n
 アダプタ#%dの識別情報の取得でエラーが発生しました\n
 
-# osd/windows/drawdd.c: 1157
+# osd/windows/drawdd.c: 1155
 Error getting identifier for device\n
 デバイスの識別情報の取得でエラーが発生しました\n
 
-# osd/windows/drawd3d.c: 1179
+# osd/windows/drawd3d.c: 1178
 Error getting mode for adapter #%d\n
 アダプタ#%dのモードの取得でエラーが発生しました\n
 
@@ -570,135 +590,167 @@ DirectSoundの初期化に失敗しました: %08x\n
 Error setting primary DirectSound buffer format: %08x\n
 DirectSoundのプライマリバッファの形式が設定出来ません: %08x\n
 
-# osd/windows/drawd3d.c: 856
+# osd/windows/drawd3d.c: 855
 Error setting vertex shader (%08X)
 頂点シェーダの設定でエラーが発生しました(%08X)\n
 
-# mess/osd/windows/menu.c: 1008
+# mess/osd/windows/menu.c: 1193
 Error when %s the image: %s
 イメージの%sでエラー: %s
 
-# osd/windows/drawd3d.c: 725
+# osd/windows/drawd3d.c: 724
 Error: A8R8G8B8 format textures not supported\n
 エラー: A8R8G8B8形式のテクスチャがサポートされていません\n
 
-# osd/windows/drawd3d.c: 715
+# osd/windows/drawd3d.c: 714
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 エラー: デバイスはDirect3D描画に必要最小限の要件をサポートしていません\n
 
-# osd/windows/drawd3d.c: 757
+# osd/windows/drawd3d.c: 756
 Error: unable to configure a screen texture format\n
 エラー: 画面テクスチャ形式の設定が出来ません\n
 
-# osd/windows/winmain.c: 223
+# osd/windows/winmain.c: 245
 FULL SCREEN OPTIONS
 フルスクリーンオプション
 
-# osd/windows/window.c: 262
+# osd/windows/window.c: 260
 Failed to create pause event
 ポーズイベントの生成が失敗しました
 
-# osd/windows/window.c: 876
+# osd/windows/window.c: 875
 Failed to create window class
 ウインドウクラスの生成が失敗しました
 
-# osd/windows/window.c: 276
+# osd/windows/window.c: 274
 Failed to create window thread
 ウインドウスレッドの生成が失敗しました
 
-# osd/windows/window.c: 270
+# osd/windows/window.c: 268
 Failed to create window thread ready event
 ウインドウスレッド準備完了イベントの生成が失敗しました
 
-# mess/osd/windows/mess.rc: 92
+# mess/osd/windows/menu.c: 1728 
+Fast Forward
+早送り
+
+# mess/osd/windows/mess.rc: 48
 Ha&rd Reset
 ハードリセット(&R)
 
-# osd/windows/winmain.c: 236
+# osd/windows/winmain.c: 258
 INPUT DEVICE OPTIONS
 入力デバイスオプション
 
-# osd/windows/video.c: 557
+# osd/windows/video.c: 555
 Illegal aspect ratio value for %s = %s\n
 %sの値%sは不正なアスペクト比です\n
 
-# osd/windows/video.c: 580
+# osd/windows/video.c: 578
 Illegal resolution value for %s = %s\n
 %sの値%sは不正な解像度です\n
 
-# mess/osd/windows/menu.c: 345
+# mess/osd/windows/menu.c: 495
 Input
 入力
 
-# osd/windows/video.c: 475
+# osd/windows/video.c: 473
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
-# mess/osd/windows/menu.c: 1324
+# mess/osd/windows/menu.c: 1497
 Joystick %i
 ジョイスティック %i
 
-# mess/osd/windows/menu.c: 311
+# mess/osd/windows/menu.c: 461
 Joysticks/Controllers
 ジョイスティック/コントローラ
 
-# osd/windows/window.c: 672
+# osd/windows/window.c: 671
 MAME: %s [%s] - Screen %d
 MAME: %s「%s」- 画面%d
 
-# mess/osd/windows/mess.rc: 74
+# mess/osd/windows/mess.rc: 75
 Maximum &Speed
 最高速度(&S)
 
-# mess/osd/windows/menu.c: 333
+# mess/osd/windows/menu.c: 483
 Miscellaneous Input
 その他の入力
 
-# mess/osd/windows/mess.rc: 51 
+# mess/osd/windows/menu.c: 1712
+Mount...
+マウント...
+
+# mess/osd/windows/mess.rc: 53
 Natural
 そのまま
 
-# mess/osd/windows/dialog.c: 134 
+# mess/osd/windows/dialog.c: 130 
 OK
 OK
 
-# osd/windows/winmain.c: 848
+# mess/osd/windows/menu.c: 698
+Off
+OFF
+
+# mess/osd/windows/menu.c: 700
+On
+ON
+
+# osd/windows/winmain.c: 922
 Out of memory
 メモリ不足
 
-# osd/windows/winmain.c: 196
+# osd/windows/winmain.c: 218
 PER-WINDOW VIDEO OPTIONS
 ウィンドウ毎の画面オプション
 
-# mess/osd/windows/mess.rc: 150
+# mess/osd/windows/mess.rc: 146
 Pause
 中断
 
-# mess/osd/windows/mess.rc: 148
+# mess/osd/windows/menu.c: 1724 
+Pause/Stop
+中断/中止
+
+# mess/osd/windows/menu.c: 1725 mess/osd/windows/mess.rc: 144 
 Play
 プレイ
 
-# osd/windows/drawd3d.c: 1231
+# osd/windows/drawd3d.c: 1230
 Proposed video mode not supported on device %s\n
 指定された画面モードはデバイス%sではサポートされていません\n
 
-# osd/windows/input.c: 1775
+# osd/windows/input.c: 1771
 RawInput: APIs detected\n
 RawInput: APIが検出されました\n
 
-# mess/osd/windows/mess.rc: 64
+# mess/osd/windows/menu.c: 1726 
+Record
+記録
+
+# mess/osd/windows/menu.c: 695
+Reverse
+反転
+
+# mess/osd/windows/menu.c: 1727 
+Rewind
+巻き戻し
+
+# mess/osd/windows/mess.rc: 61
 Rotate 0 degrees
 0度回転
 
-# mess/osd/windows/mess.rc: 66
+# mess/osd/windows/mess.rc: 63
 Rotate 180 degrees
 180度回転
 
-# mess/osd/windows/mess.rc: 67
+# mess/osd/windows/mess.rc: 64
 Rotate 270 degrees
 270度回転
 
-# mess/osd/windows/mess.rc: 65
+# mess/osd/windows/mess.rc: 62
 Rotate 90 degrees
 90度回転
 
@@ -710,15 +762,19 @@ S&ave State As...
 Save Sc&reenshot
 画面を保存(&R)
 
-# mess/osd/windows/mess.rc: 83
+# mess/osd/windows/menu.c: 704
+Sensitivity
+感度
+
+# mess/osd/windows/mess.rc: 84
 Show &FPS
 FPSを表\示(&F)
 
-# mess/osd/windows/mess.rc: 96
+# mess/osd/windows/mess.rc: 88
 Show P&rofiler
 プロファイラを表\示(&R)
 
-# mess/osd/windows/mess.rc: 91
+# mess/osd/windows/mess.rc: 47
 Soft &Reset
 ソ\フトリセット(&R)
 
@@ -730,27 +786,27 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 サウンド: バッファ オーバフロー=%d アンダーフロー=%d\n
 
-# mess/osd/windows/menu.c: 611
+# mess/osd/windows/menu.c: 796
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 ステートファイル (*.sta)|*.sta|全てのファイル (*.*)|*.*
 
-# mess/osd/windows/mess.rc: 149
+# mess/osd/windows/mess.rc: 145
 Stop
 停止
 
-# osd/windows/winmain.c: 844
+# osd/windows/winmain.c: 918
 Symbol table full
 シンボルテーブルが一杯
 
-# mess/osd/windows/mess.rc: 143 
+# mess/osd/windows/mess.rc: 139 
 Tape Control
 テープ制御
 
-# osd/windows/drawd3d.c: 1898
+# osd/windows/drawd3d.c: 1897
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 テクスチャが大きすぎます!(要求: %dx%d、最大: %dx%d)\n
 
-# osd/windows/input.c: 827
+# osd/windows/input.c: 828
 Toggle Fullscreen
 フルスクリーン切り替え
 
@@ -762,23 +818,23 @@ Toggle Menubar
 Unable to close the keyboard device. (error %d)\n
 キーボードディバイスがクローズ出来ません。(エラー %d)\n
 
-# osd/windows/window.c: 692
+# osd/windows/window.c: 691
 Unable to complete window creation
 ウインドウの生成が完了出来ません
 
-# osd/windows/drawd3d.c: 793
+# osd/windows/drawd3d.c: 792
 Unable to create the Direct3D device (%08X)\n
 Direct3Dデバイスを作成出来ません(%08X)\n
 
-# osd/windows/drawd3d.c: 499, 559
+# osd/windows/drawd3d.c: 498, 558
 Unable to initialize Direct3D.\n
 Direct3Dを初期化出来ません。\n
 
-# osd/windows/drawdd.c: 301
+# osd/windows/drawdd.c: 299
 Unable to initialize DirectDraw.\n
 DirectDrawを初期化出来ません\n
 
-# osd/windows/video.c: 526
+# osd/windows/video.c: 524
 Unable to load PNG file '%s'\n
 PNGファイル「%s」を読み込めません\n
 
@@ -786,283 +842,295 @@ PNGファイル「%s」を読み込めません\n
 Unable to open the keyboard device. (error %d)\n
 キーボードディバイスがオープン出来ません。(エラー %d)\n
 
-# osd/windows/drawd3d.c: 2368
+# osd/windows/drawd3d.c: 2367
 Unknown texture blendmode=%d format=%d\n
 不明なテクスチャブレンドモード=%d 形式=%d\n
 
-# mess/osd/windows/mess.rc: 81
+# mess/osd/windows/mess.rc: 82
 Unlimited
 無制限
 
-# osd/windows/video.c: 436
+# mess/osd/windows/menu.c: 1717
+Unmount
+マウント解除
+
+# osd/windows/video.c: 434
 Using %s scale effect\n
 スケールエフェクト %s を使用します\n
 
-# osd/windows/video.c: 292
+# osd/windows/video.c: 290
 Video: Monitor %p = \"%s\" %s\n
 ビデオ: モニタ %p = 「%s」%s\n
 
-# osd/windows/winmain.c: 162
+# osd/windows/winmain.c: 184
 WINDOWS DEBUGGING OPTIONS
 Windows版デバッグオプション
 
-# osd/windows/winmain.c: 169
+# osd/windows/winmain.c: 191
 WINDOWS PERFORMANCE OPTIONS
 Windows版パフォーマンスオプション
 
-# osd/windows/winmain.c: 231
+# osd/windows/winmain.c: 253
 WINDOWS SOUND OPTIONS
 Windows版サウンドオプション
 
-# osd/windows/winmain.c: 175
+# osd/windows/winmain.c: 197
 WINDOWS VIDEO OPTIONS
 Windows版ビデオオプション
 
-# osd/windows/video.c: 471
+# osd/windows/video.c: 469
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video none は -seconds_to_run オプション無しでは無意味です\n
 
-# osd/windows/drawd3d.c: 719
+# osd/windows/drawd3d.c: 718
 Warning: Device may not perform well for Direct3D rendering\n
 警告: デバイスのDirect3D描画パフォーマンスはあまり良くありません\n
 
-# osd/windows/winmain.c: 198
+# mess/osd/windows/menu.c: 1730
+[empty slot]
+[空きスロット]
+
+# osd/windows/winmain.c: 220
 aspect ratio for all screens; 'auto' here will try to make a best guess
 全ての画面のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 203
+# osd/windows/winmain.c: 225
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 １画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 218
+# osd/windows/winmain.c: 240
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 ４画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 208
+# osd/windows/winmain.c: 230
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 ２画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 213
+# osd/windows/winmain.c: 235
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 ３画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 226
+# osd/windows/winmain.c: 248
 brightness value in full screen mode
 フルスクリーン画面での明るさ
 
-# osd/windows/winmain.c: 180
+# osd/windows/winmain.c: 202
 constrain to the proper aspect ratio
 適切なアスペクト比に制限します
 
-# osd/windows/winmain.c: 227
+# osd/windows/winmain.c: 249
 contrast value in full screen mode
 フルスクリーン画面の値を制限します
 
-# mess/osd/windows/menu.c: 1009
+# mess/osd/windows/menu.c: 1194
 creating
 作成
 
-# osd/windows/winmain.c: 179
+# osd/windows/winmain.c: 201
 default to maximized windows; otherwise, windows will be minimized
 デフォルトでウィンドウを最大化。無効な場合はウィンドウは最小化されます
 
-# osd/windows/winmain.c: 193
+# osd/windows/winmain.c: 215
 enable bilinear filtering on screen output
 画面の出力にバイリニアフィルタを有効
 
-# osd/windows/winmain.c: 237
+# osd/windows/winmain.c: 259
 enable dual lightgun input
 デュアル光線銃を使用
 
-# osd/windows/winmain.c: 188
+# osd/windows/winmain.c: 210
 enable hardware stretching
 ハードウェア拡大表\示を有効
 
-# osd/windows/winmain.c: 171
+# osd/windows/winmain.c: 193
 enable multithreading; this enables rendering and blitting on a separate thread
 マルチスレッドを有効。これは描画処理でのスレッド分割を有効にします
 
-# osd/windows/winmain.c: 225
+# osd/windows/winmain.c: 247
 enable resolution switching
 解像度の切り替えを有効
 
-# osd/windows/winmain.c: 224
+# osd/windows/winmain.c: 246
 enable triple buffering
 トリプルバッファリングを有効
 
-# osd/windows/winmain.c: 184
+# osd/windows/winmain.c: 206
 enable using the start of VBLANK for throttling instead of the game time
 速度制限をゲームの実時間の代わりにVBLANK開始で行う
 
-# osd/windows/winmain.c: 183
+# osd/windows/winmain.c: 205
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 画面反転の前にVBLANK開始を待つ。画面のちらつきが減少します
 
-# osd/windows/winmain.c: 178
+# osd/windows/winmain.c: 200
 enable window mode; otherwise, full screen mode is assumed
 ウィンドウモードを有効。無効な場合は当然フルスクリーンです
 
-# osd/windows/winmain.c: 197
+# osd/windows/winmain.c: 219
 explicit name of all screens; 'auto' here will try to make a best guess
 明示的に全ての画面の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 202
+# osd/windows/winmain.c: 224
 explicit name of the first screen; 'auto' here will try to make a best guess
 明示的に１画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 217
+# osd/windows/winmain.c: 239
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 207
+# osd/windows/winmain.c: 229
 explicit name of the second screen; 'auto' here will try to make a best guess
 明示的に２画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 212
+# osd/windows/winmain.c: 234
 explicit name of the third screen; 'auto' here will try to make a best guess
 明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 164
+# osd/windows/winmain.c: 186
 force the program to terminate if no updates within specified number of seconds
 指定された数秒で更新が無いならばプログラムを強制的に終了
 
-# osd/windows/winmain.c: 228
+# osd/windows/winmain.c: 250
 gamma value in full screen mode
 フルスクリーンのガンマ補正値
 
-# mess/osd/windows/menu.c: 1009
+# mess/osd/windows/menu.c: 1194
 loading
 読み込み
 
-# osd/windows/winmain.c: 182
+# osd/windows/winmain.c: 204
 name of a PNG file to use for visual effects, or 'none'
 視覚効果で使用するPNGファイル名、または「none」
 
-# osd/windows/winmain.c: 177
+# osd/windows/winmain.c: 199
 number of screens to create; usually, you want just one
 生成する画面の数を指定。通常は１です
 
-# osd/windows/winmain.c: 163
+# osd/windows/winmain.c: 185
 output error.log data to the system debugger
 error.logデータをシステムデバッガに出力
 
-# osd/windows/winmain.c: 199
+# osd/windows/winmain.c: 221
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 全ての画面の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 204
+# osd/windows/winmain.c: 226
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 １画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 219
+# osd/windows/winmain.c: 241
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ４画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 209
+# osd/windows/winmain.c: 231
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ２画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 214
+# osd/windows/winmain.c: 236
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ３画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 200
+# osd/windows/winmain.c: 222
 preferred view for all screens
 全ての画面のビューを指定
 
-# osd/windows/winmain.c: 205
+# osd/windows/winmain.c: 227
 preferred view for the first screen
 １画面目のビューを指定
 
-# osd/windows/winmain.c: 220
+# osd/windows/winmain.c: 242
 preferred view for the fourth screen
 ４画面目のビューを指定
 
-# osd/windows/winmain.c: 210
+# osd/windows/winmain.c: 232
 preferred view for the second screen
 ２画面目のビューを指定
 
-# osd/windows/winmain.c: 215
+# osd/windows/winmain.c: 237
 preferred view for the third screen
 ３画面目のビューを指定
 
-# osd/windows/winmain.c: 181
+# osd/windows/winmain.c: 203
 scale screen rendering by this amount in software
 指定した割合でソ\フトウェアによる画面描画スケーリングを実行
 
-# osd/windows/winmain.c: 232
+# osd/windows/winmain.c: 254
 set audio latency (increase to reduce glitches)
 オーディオのレイテンシを指定
 
-# osd/windows/winmain.c: 239
+# osd/windows/winmain.c: 261
 set joystick ID (Player1)
 ジョイスティックIDを指定 (プレイヤー1)
 
-# osd/windows/winmain.c: 240
+# osd/windows/winmain.c: 262
 set joystick ID (Player2)
 ジョイスティックIDを指定 (プレイヤー2)
 
-# osd/windows/winmain.c: 241
+# osd/windows/winmain.c: 263
 set joystick ID (Player3)
 ジョイスティックIDを指定 (プレイヤー3)
 
-# osd/windows/winmain.c: 242
+# osd/windows/winmain.c: 264
 set joystick ID (Player4)
 ジョイスティックIDを指定 (プレイヤー4)
 
-# osd/windows/winmain.c: 243
+# osd/windows/winmain.c: 265
 set joystick ID (Player5)
 ジョイスティックIDを指定 (プレイヤー5)
 
-# osd/windows/winmain.c: 244
+# osd/windows/winmain.c: 266
 set joystick ID (Player6)
 ジョイスティックIDを指定 (プレイヤー6)
 
-# osd/windows/winmain.c: 245
+# osd/windows/winmain.c: 267
 set joystick ID (Player7)
 ジョイスティックIDを指定 (プレイヤー7)
 
-# osd/windows/winmain.c: 246
+# osd/windows/winmain.c: 268
 set joystick ID (Player8)
 ジョイスティックIDを指定 (プレイヤー8)
 
-# osd/windows/winmain.c: 192
+# osd/windows/winmain.c: 214
 specify the preferred Direct3D version (8 or 9)
 優先されるDirect3Dのバージョンを指定
 
-# osd/windows/winmain.c: 170
+# osd/windows/winmain.c: 192
 thread priority for the main game thread; range from -15 to 1
 メインのゲームスレッドのプライオリティを指定。-15から1の範囲で指定
 
-# osd/windows/winmain.c: 176
+# osd/windows/winmain.c: 198
 video output method: none, gdi, ddraw, or d3d
 ビデオ描画方法: none、gdi、ddrawまたはd3d
 
-# osd/windows/drawd3d.c: 801
+# mess/osd/windows/menu.c: 1691 mess/osd/windows/mess.rc: 91
+&Devices
+
+
+# mess/osd/windows/mess.rc: 40
+&Edit
+
+
+# osd/windows/drawd3d.c: 800
 Direct3D: Max texture size = %dx%d\n
 
 
-# mess/osd/windows/configms.c: 28
-WINDOWS MESS SPECIFIC OPTIONS
+# mess/osd/windows/mess.rc: 42
+Paste
 
 
-# osd/windows/winmain.c: 233
+# osd/windows/winmain.c: 255
 enable audio sync
 
 
-# osd/windows/winmain.c: 172
+# osd/windows/winmain.c: 194
 number of processors; this overrides the number the system reports
 
 
-# osd/windows/winmain.c: 166
+# osd/windows/winmain.c: 188
 specifies the font size to use for debugging; defaults to 9 pt
 
 
-# osd/windows/winmain.c: 165
+# osd/windows/winmain.c: 187
 specifies the font to use for debugging; defaults to Lucida Console
-
-
-# mess/osd/windows/configms.c: 29
-use the new MESS UI
 
 
