@@ -28,8 +28,7 @@
 
 #ifdef MAMEMESS
 #include "uimess.h"
-#include "inputx.h"
-#endif /* MAMEMESS */
+#endif /* MESS */
 
 #include <ctype.h>
 
@@ -1564,10 +1563,8 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	if (has_analog)
 		ui_menu_item_append(menu, _("Analog Controls"), NULL, 0, (void *)menu_analog);
 
-#ifndef MESS
 	/* add bookkeeping menu */
 	ui_menu_item_append(menu, _("Bookkeeping Info"), NULL, 0, (void *)menu_bookkeeping);
-#endif
 
 	/* add game info menu */
 	ui_menu_item_append(menu, _(CAPSTARTGAMENOUN " Information"), NULL, 0, (void *)menu_game_info);
@@ -1579,7 +1576,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 
 	/* add keyboard mode menu */
 	if (input_machine_has_keyboard(machine) && inputx_can_post(machine))
-		ui_menu_item_append(menu, "Keyboard Mode", NULL, 0, (void *)ui_menu_keyboard_mode);
+		ui_menu_item_append(menu, _("Keyboard Mode"), NULL, 0, (void *)ui_menu_keyboard_mode);
 
 	/* add sliders menu */
 	ui_menu_item_append(menu, _("Slider Controls"), NULL, 0, (void *)menu_sliders);

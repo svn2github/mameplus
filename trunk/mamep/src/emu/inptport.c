@@ -98,19 +98,11 @@
 #include "profiler.h"
 #include "ui.h"
 #include "uiinput.h"
+#include "debug/debugcon.h"
 #include "rendfont.h"
 
 #include <ctype.h>
 #include <time.h>
-
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
-
-#ifdef MESS
-#include "uimess.h"
-#endif /* MESS */
-
 
 /* temporary: set this to 1 to enable the originally defined behavior that
    a field specified via PORT_MODIFY which intersects a previously-defined
@@ -143,6 +135,7 @@
 #define SPACE_COUNT		3
 #define INVALID_CHAR	'?'
 #define IP_NAME_DEFAULT	NULL
+
 
 /***************************************************************************
     TYPE DEFINITIONS
@@ -321,6 +314,35 @@ struct _char_info
 #define COMPUTE_SCALE(num,den)		(((INT64)(num) << 24) / (den))
 #define RECIP_SCALE(s)				(((INT64)1 << 48) / (s))
 #define APPLY_SCALE(x,s)			(((INT64)(x) * (s)) >> 24)
+
+
+
+/***************************************************************************
+    GLOBAL VARIABLES
+***************************************************************************/
+
+/* XML attributes for the different types */
+static const char *const seqtypestrings[] = { "standard", "decrement", "increment" };
+static int autofiredelay[MAX_PLAYERS];
+static int autofiretoggle[MAX_PLAYERS];
+
+#ifdef USE_CUSTOM_BUTTON
+UINT16 custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
+static const input_field_config *custom_button_info[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
+#endif /* USE_CUSTOM_BUTTON */
+
+#ifdef USE_SHOW_INPUT_LOG
+#define COMMAND_LOG_BUFSIZE	128
+
+input_log command_buffer[COMMAND_LOG_BUFSIZE];
+int show_input_log = 0;
+
+static void make_input_log(running_machine *machine);
+#endif /* USE_SHOW_INPUT_LOG */
+
+#ifdef INP_CAPTION
+static int next_caption_frame, caption_timer;
+#endif /* INP_CAPTION */
 
 
 static const char_info charinfo[] =
@@ -631,35 +653,6 @@ static TIMER_CALLBACK(inputx_timerproc);
 /*  Debugging commands and handlers. */
 static void execute_input(running_machine *machine, int ref, int params, const char *param[]);
 static void execute_dumpkbd(running_machine *machine, int ref, int params, const char *param[]);
-
-/***************************************************************************
-    GLOBAL VARIABLES
-***************************************************************************/
-
-/* XML attributes for the different types */
-static const char *const seqtypestrings[] = { "standard", "decrement", "increment" };
-static int autofiredelay[MAX_PLAYERS];
-static int autofiretoggle[MAX_PLAYERS];
-
-#ifdef USE_CUSTOM_BUTTON
-UINT16 custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
-static const input_field_config *custom_button_info[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
-#endif /* USE_CUSTOM_BUTTON */
-
-#ifdef USE_SHOW_INPUT_LOG
-#define COMMAND_LOG_BUFSIZE	128
-
-input_log command_buffer[COMMAND_LOG_BUFSIZE];
-int show_input_log = 0;
-
-static void make_input_log(running_machine *machine);
-#endif /* USE_SHOW_INPUT_LOG */
-
-#ifdef INP_CAPTION
-static int next_caption_frame, caption_timer;
-#endif /* INP_CAPTION */
-
-
 
 /***************************************************************************
     COMMON SHARED STRINGS
@@ -4885,6 +4878,875 @@ static void record_port(const input_port_config *port)
 		}
 	}
 }
+
+int input_machine_has_keyboard(running_machine *machine)
+{
+	const input_field_config *field;
+	const input_port_config *port;
+	int have_keyboard = FALSE;
+	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	{
+		for (field = port->fieldlist; field != NULL; field = field->next)
+		{
+			if (field->type == IPT_KEYBOARD)
+				have_keyboard = TRUE;
+				break;
+		}
+	}
+	return have_keyboard;
+}
+
+/***************************************************************************
+    CODE ASSEMBLING
+***************************************************************************/
+
+/*-------------------------------------------------
+    code_point_string - obtain a string representation of a
+    given code; used for logging and debugging
+-------------------------------------------------*/
+
+static const char *code_point_string(running_machine *machine, unicode_char ch)
+{
+	static char buf[16];
+	const char *result = buf;
+
+	switch(ch)
+	{
+		/* check some magic values */
+		case '\0':	strcpy(buf, "\\0");		break;
+		case '\r':	strcpy(buf, "\\r");		break;
+		case '\n':	strcpy(buf, "\\n");		break;
+		case '\t':	strcpy(buf, "\\t");		break;
+
+		default:
+			if ((ch >= 32) && (ch < 128))
+			{
+				/* seven bit ASCII is easy */
+				buf[0] = (char) ch;
+				buf[1] = '\0';
+			}
+			else if (ch >= UCHAR_MAMEKEY_BEGIN)
+			{
+				/* try to obtain a codename with input_code_name(); this can result in an empty string */
+				astring astr;
+				input_code_name(machine, astr, (input_code) ch - UCHAR_MAMEKEY_BEGIN);
+				snprintf(buf, ARRAY_LENGTH(buf), "%s", astr.cstr());
+			}
+			else
+			{
+				/* empty string; resolve later */
+				buf[0] = '\0';
+			}
+
+			/* did we fail to resolve? if so, we have a last resort */
+			if (buf[0] == '\0')
+				snprintf(buf, ARRAY_LENGTH(buf), "U+%04X", (unsigned) ch);
+			break;
+	}
+	return result;
+}
+
+
+/*-------------------------------------------------
+    scan_keys - scans through input ports and
+    sets up natural keyboard input mapping
+-------------------------------------------------*/
+
+static int scan_keys(running_machine *machine, const input_port_config *portconfig, inputx_code *codes, const input_port_config * *ports, const input_field_config * *shift_ports, int keys, int shift)
+{
+	int code_count = 0;
+	const input_port_config *port;
+	const input_field_config *field;
+	unicode_char code;
+
+	assert(keys < NUM_SIMUL_KEYS);
+
+	for (port = portconfig; port != NULL; port = port->next)
+	{
+		for (field = port->fieldlist; field != NULL; field = field->next)
+		{
+			if (field->type == IPT_KEYBOARD)
+			{
+				code = get_keyboard_code(field, shift);
+				if (code != 0)
+				{
+					/* is this a shifter key? */
+					if ((code >= UCHAR_SHIFT_BEGIN) && (code <= UCHAR_SHIFT_END))
+					{
+						shift_ports[keys] = field;
+						code_count += scan_keys(machine,
+							portconfig,
+							codes ? &codes[code_count] : NULL,
+							ports,
+							shift_ports,
+							keys+1,
+							code - UCHAR_SHIFT_1 + 1);
+					}
+					else
+					{
+						/* not a shifter key; record normally */
+						if (codes)
+						{
+							/* if we have a destination, record the codes used here */
+							memcpy((void *) codes[code_count].field, shift_ports, sizeof(shift_ports[0]) * keys);
+							codes[code_count].ch = code;
+							codes[code_count].field[keys] = field;
+						}
+
+						/* increment the count */
+						code_count++;
+
+						if (LOG_INPUTX)
+							logerror("inputx: code=%i (%s) port=%p field->name='%s'\n", (int) code, code_point_string(machine, code), port, field->name);
+					}
+				}
+			}
+		}
+	}
+	return code_count;
+}
+
+
+
+/*-------------------------------------------------
+    build_codes - given an input port table, create
+    a input code table useful for mapping unicode
+    chars
+-------------------------------------------------*/
+
+static inputx_code *build_codes(running_machine *machine, const input_port_config *portconfig)
+{
+	inputx_code *codes = NULL;
+	const input_port_config *ports[NUM_SIMUL_KEYS];
+	const input_field_config *fields[NUM_SIMUL_KEYS];
+	int code_count;
+
+	/* first count the number of codes */
+	code_count = scan_keys(machine, portconfig, NULL, ports, fields, 0, 0);
+	if (code_count > 0)
+	{
+		/* allocate the codes */
+		codes = auto_alloc_array_clear(machine, inputx_code, code_count + 1);
+
+		/* and populate them */
+		scan_keys(machine, portconfig, codes, ports, fields, 0, 0);
+	}
+	return codes;
+}
+
+
+
+/***************************************************************************
+    VALIDITY CHECKS
+***************************************************************************/
+
+/*-------------------------------------------------
+    validate_natural_keyboard_statics -
+    validates natural keyboard static data
+-------------------------------------------------*/
+
+int validate_natural_keyboard_statics(void)
+{
+	int i;
+	int error = FALSE;
+	unicode_char last_char = 0;
+	const char_info *ci;
+
+	/* check to make sure that charinfo is in order */
+	for (i = 0; i < ARRAY_LENGTH(charinfo); i++)
+	{
+		if (last_char >= charinfo[i].ch)
+		{
+			mame_printf_error("inputx: charinfo is out of order; 0x%08x should be higher than 0x%08x\n", charinfo[i].ch, last_char);
+			error = TRUE;
+		}
+		last_char = charinfo[i].ch;
+	}
+
+	/* check to make sure that I can look up everything on alternate_charmap */
+	for (i = 0; i < ARRAY_LENGTH(charinfo); i++)
+	{
+		ci = find_charinfo(charinfo[i].ch);
+		if (ci != &charinfo[i])
+		{
+			mame_printf_error("inputx: expected find_charinfo(0x%08x) to work properly\n", charinfo[i].ch);
+			error = TRUE;
+		}
+	}
+	return error;
+}
+
+
+
+/***************************************************************************
+    CORE IMPLEMENTATION
+***************************************************************************/
+
+static void clear_keybuffer(running_machine *machine)
+{
+	keybuffer = NULL;
+	queue_chars = NULL;
+	codes = NULL;
+}
+
+
+
+static void setup_keybuffer(running_machine *machine)
+{
+	inputx_timer = timer_alloc(machine, inputx_timerproc, NULL);
+	keybuffer = auto_alloc_clear(machine, key_buffer);
+	add_exit_callback(machine, clear_keybuffer);
+}
+
+
+
+void inputx_init(running_machine *machine)
+{
+	codes = NULL;
+	inputx_timer = NULL;
+	queue_chars = NULL;
+	accept_char = NULL;
+	charqueue_empty = NULL;
+	keybuffer = NULL;
+
+	if (machine->debug_flags & DEBUG_FLAG_ENABLED)
+	{
+		debug_console_register_command(machine, "input", CMDFLAG_NONE, 0, 1, 1, execute_input);
+		debug_console_register_command(machine, "dumpkbd", CMDFLAG_NONE, 0, 0, 1, execute_dumpkbd);
+	}
+
+	/* posting keys directly only makes sense for a computer */
+	if (input_machine_has_keyboard(machine))
+	{
+		codes = build_codes(machine, machine->portlist.first());
+		setup_keybuffer(machine);
+	}
+}
+
+
+
+void inputx_setup_natural_keyboard(
+	int (*queue_chars_)(const unicode_char *text, size_t text_len),
+	int (*accept_char_)(unicode_char ch),
+	int (*charqueue_empty_)(void))
+{
+	queue_chars = queue_chars_;
+	accept_char = accept_char_;
+	charqueue_empty = charqueue_empty_;
+}
+
+int inputx_can_post(running_machine *machine)
+{
+	return queue_chars || codes;
+}
+
+
+static int can_post_key_directly(unicode_char ch)
+{
+	int rc = FALSE;
+	const inputx_code *code;
+
+	if (queue_chars)
+	{
+		rc = accept_char ? accept_char(ch) : TRUE;
+	}
+	else
+	{
+		code = find_code(ch);
+		if (code)
+			rc = code->field[0] != NULL;
+	}
+	return rc;
+}
+
+
+
+static int can_post_key_alternate(unicode_char ch)
+{
+	const char *s;
+	const char_info *ci;
+	unicode_char uchar;
+	int rc;
+
+	ci = find_charinfo(ch);
+	s = ci ? ci->alternate : NULL;
+	if (!s)
+		return 0;
+
+	while(*s)
+	{
+		rc = uchar_from_utf8(&uchar, s, strlen(s));
+		if (rc <= 0)
+			return 0;
+		if (!can_post_key_directly(uchar))
+			return 0;
+		s += rc;
+	}
+	return 1;
+}
+
+static attotime choose_delay(unicode_char ch)
+{
+	attoseconds_t delay = 0;
+
+	if (attotime_compare(current_rate, attotime_zero) != 0)
+		return current_rate;
+
+	if (queue_chars)
+	{
+		/* systems with queue_chars can afford a much smaller delay */
+		delay = DOUBLE_TO_ATTOSECONDS(0.01);
+	}
+	else
+	{
+		switch(ch) {
+		case '\r':
+			delay = DOUBLE_TO_ATTOSECONDS(0.2);
+			break;
+
+		default:
+			delay = DOUBLE_TO_ATTOSECONDS(0.05);
+			break;
+		}
+	}
+	return attotime_make(0, delay);
+}
+
+
+
+static void internal_post_key(running_machine *machine, unicode_char ch)
+{
+	key_buffer *keybuf;
+
+	keybuf = get_buffer(machine);
+
+	/* need to start up the timer? */
+	if (keybuf->begin_pos == keybuf->end_pos)
+	{
+		timer_adjust_oneshot(inputx_timer, choose_delay(ch), 0);
+		keybuf->status_keydown = 0;
+	}
+
+	keybuf->buffer[keybuf->end_pos++] = ch;
+	keybuf->end_pos %= ARRAY_LENGTH(keybuf->buffer);
+}
+
+
+
+static int buffer_full(running_machine *machine)
+{
+	key_buffer *keybuf;
+	keybuf = get_buffer(machine);
+	return ((keybuf->end_pos + 1) % ARRAY_LENGTH(keybuf->buffer)) == keybuf->begin_pos;
+}
+
+
+
+static void inputx_postn_rate(running_machine *machine, const unicode_char *text, size_t text_len, attotime rate)
+{
+	int last_cr = 0;
+	unicode_char ch;
+	const char *s;
+	const char_info *ci;
+	const inputx_code *code;
+
+	current_rate = rate;
+
+	if (inputx_can_post(machine))
+	{
+		while((text_len > 0) && !buffer_full(machine))
+		{
+			ch = *(text++);
+			text_len--;
+
+			/* change all eolns to '\r' */
+			if ((ch != '\n') || !last_cr)
+			{
+				if (ch == '\n')
+					ch = '\r';
+				else
+					last_cr = (ch == '\r');
+
+				if (LOG_INPUTX)
+				{
+					code = find_code(ch);
+					logerror("inputx_postn(): code=%i (%s) field->name='%s'\n", (int) ch, code_point_string(machine, ch), (code && code->field[0]) ? code->field[0]->name : "<null>");
+				}
+
+				if (can_post_key_directly(ch))
+				{
+					/* we can post this key in the queue directly */
+					internal_post_key(machine, ch);
+				}
+				else if (can_post_key_alternate(ch))
+				{
+					/* we can post this key with an alternate representation */
+					ci = find_charinfo(ch);
+					assert(ci && ci->alternate);
+					s = ci->alternate;
+					while(*s)
+					{
+						s += uchar_from_utf8(&ch, s, strlen(s));
+						internal_post_key(machine, ch);
+					}
+				}
+			}
+			else
+			{
+				last_cr = 0;
+			}
+		}
+	}
+}
+
+
+
+static TIMER_CALLBACK(inputx_timerproc)
+{
+	key_buffer *keybuf;
+	attotime delay;
+
+	keybuf = get_buffer(machine);
+
+	if (queue_chars)
+	{
+		/* the driver has a queue_chars handler */
+		while((keybuf->begin_pos != keybuf->end_pos) && queue_chars(&keybuf->buffer[keybuf->begin_pos], 1))
+		{
+			keybuf->begin_pos++;
+			keybuf->begin_pos %= ARRAY_LENGTH(keybuf->buffer);
+
+			if (attotime_compare(current_rate, attotime_zero) != 0)
+				break;
+		}
+	}
+	else
+	{
+		/* the driver does not have a queue_chars handler */
+		if (keybuf->status_keydown)
+		{
+			keybuf->status_keydown = FALSE;
+			keybuf->begin_pos++;
+			keybuf->begin_pos %= ARRAY_LENGTH(keybuf->buffer);
+		}
+		else
+		{
+			keybuf->status_keydown = TRUE;
+		}
+	}
+
+	/* need to make sure timerproc is called again if buffer not empty */
+	if (keybuf->begin_pos != keybuf->end_pos)
+	{
+		delay = choose_delay(keybuf->buffer[keybuf->begin_pos]);
+		timer_adjust_oneshot(inputx_timer, delay, 0);
+	}
+}
+
+int inputx_is_posting(running_machine *machine)
+{
+	const key_buffer *keybuf;
+	keybuf = get_buffer(machine);
+	return (keybuf->begin_pos != keybuf->end_pos) || (charqueue_empty && !charqueue_empty());
+}
+
+/***************************************************************************
+
+    Coded input
+
+***************************************************************************/
+static void inputx_postc_rate(running_machine *machine, unicode_char ch, attotime rate);
+
+static void inputx_postn_coded_rate(running_machine *machine, const char *text, size_t text_len, attotime rate)
+{
+	size_t i, j, key_len, increment;
+	unicode_char ch;
+
+	static const struct
+	{
+		const char *key;
+		unicode_char code;
+	} codes[] =
+	{
+		{ "BACKSPACE",	8 },
+		{ "BS",			8 },
+		{ "BKSP",		8 },
+		{ "DEL",		UCHAR_MAMEKEY(DEL) },
+		{ "DELETE",		UCHAR_MAMEKEY(DEL) },
+		{ "END",		UCHAR_MAMEKEY(END) },
+		{ "ENTER",		13 },
+		{ "ESC",		'\033' },
+		{ "HOME",		UCHAR_MAMEKEY(HOME) },
+		{ "INS",		UCHAR_MAMEKEY(INSERT) },
+		{ "INSERT",		UCHAR_MAMEKEY(INSERT) },
+		{ "PGDN",		UCHAR_MAMEKEY(PGDN) },
+		{ "PGUP",		UCHAR_MAMEKEY(PGUP) },
+		{ "SPACE",		32 },
+		{ "TAB",		9 },
+		{ "F1",			UCHAR_MAMEKEY(F1) },
+		{ "F2",			UCHAR_MAMEKEY(F2) },
+		{ "F3",			UCHAR_MAMEKEY(F3) },
+		{ "F4",			UCHAR_MAMEKEY(F4) },
+		{ "F5",			UCHAR_MAMEKEY(F5) },
+		{ "F6",			UCHAR_MAMEKEY(F6) },
+		{ "F7",			UCHAR_MAMEKEY(F7) },
+		{ "F8",			UCHAR_MAMEKEY(F8) },
+		{ "F9",			UCHAR_MAMEKEY(F9) },
+		{ "F10",		UCHAR_MAMEKEY(F10) },
+		{ "F11",		UCHAR_MAMEKEY(F11) },
+		{ "F12",		UCHAR_MAMEKEY(F12) },
+		{ "QUOTE",		'\"' }
+	};
+
+	i = 0;
+	while(i < text_len)
+	{
+		ch = text[i];
+		increment = 1;
+
+		if (ch == '{')
+		{
+			for (j = 0; j < ARRAY_LENGTH(codes); j++)
+			{
+				key_len = strlen(codes[j].key);
+				if (i + key_len + 2 <= text_len)
+				{
+					if (!memcmp(codes[j].key, &text[i + 1], key_len) && (text[i + key_len + 1] == '}'))
+					{
+						ch = codes[j].code;
+						increment = key_len + 2;
+					}
+				}
+			}
+		}
+
+		if (ch)
+			inputx_postc_rate(machine, ch, rate);
+		i += increment;
+	}
+}
+
+
+
+/***************************************************************************
+
+    Alternative calls
+
+***************************************************************************/
+
+static void inputx_postc_rate(running_machine *machine, unicode_char ch, attotime rate)
+{
+	inputx_postn_rate(machine, &ch, 1, rate);
+}
+
+void inputx_postc(running_machine *machine, unicode_char ch)
+{
+	inputx_postc_rate(machine, ch, attotime_make(0, 0));
+}
+
+static void inputx_postn_utf8_rate(running_machine *machine, const char *text, size_t text_len, attotime rate)
+{
+	size_t len = 0;
+	unicode_char buf[256];
+	unicode_char c;
+	int rc;
+
+	while(text_len > 0)
+	{
+		if (len == ARRAY_LENGTH(buf))
+		{
+			inputx_postn_rate(machine, buf, len, attotime_make(0, 0));
+			len = 0;
+		}
+
+		rc = uchar_from_utf8(&c, text, text_len);
+		if (rc < 0)
+		{
+			rc = 1;
+			c = INVALID_CHAR;
+		}
+		text += rc;
+		text_len -= rc;
+		buf[len++] = c;
+	}
+	inputx_postn_rate(machine, buf, len, rate);
+}
+
+void inputx_post_utf8(running_machine *machine, const char *text)
+{
+	inputx_postn_utf8_rate(machine, text, strlen(text), attotime_make(0, 0));
+}
+
+void inputx_post_utf8_rate(running_machine *machine, const char *text, attotime rate)
+{
+	inputx_postn_utf8_rate(machine, text, strlen(text), rate);
+}
+
+/***************************************************************************
+
+    Other stuff
+
+    This stuff is here more out of convienience than anything else
+***************************************************************************/
+
+int input_classify_port(const input_field_config *field)
+{
+	int result;
+
+	if (field->category && (field->type != IPT_CATEGORY))
+		return INPUT_CLASS_CATEGORIZED;
+
+	switch(field->type)
+	{
+		case IPT_JOYSTICK_UP:
+		case IPT_JOYSTICK_DOWN:
+		case IPT_JOYSTICK_LEFT:
+		case IPT_JOYSTICK_RIGHT:
+		case IPT_JOYSTICKLEFT_UP:
+		case IPT_JOYSTICKLEFT_DOWN:
+		case IPT_JOYSTICKLEFT_LEFT:
+		case IPT_JOYSTICKLEFT_RIGHT:
+		case IPT_JOYSTICKRIGHT_UP:
+		case IPT_JOYSTICKRIGHT_DOWN:
+		case IPT_JOYSTICKRIGHT_LEFT:
+		case IPT_JOYSTICKRIGHT_RIGHT:
+		case IPT_BUTTON1:
+		case IPT_BUTTON2:
+		case IPT_BUTTON3:
+		case IPT_BUTTON4:
+		case IPT_BUTTON5:
+		case IPT_BUTTON6:
+		case IPT_BUTTON7:
+		case IPT_BUTTON8:
+		case IPT_BUTTON9:
+		case IPT_BUTTON10:
+		case IPT_AD_STICK_X:
+		case IPT_AD_STICK_Y:
+		case IPT_AD_STICK_Z:
+		case IPT_TRACKBALL_X:
+		case IPT_TRACKBALL_Y:
+		case IPT_LIGHTGUN_X:
+		case IPT_LIGHTGUN_Y:
+		case IPT_MOUSE_X:
+		case IPT_MOUSE_Y:
+		case IPT_START:
+		case IPT_SELECT:
+			result = INPUT_CLASS_CONTROLLER;
+			break;
+
+		case IPT_KEYBOARD:
+			result = INPUT_CLASS_KEYBOARD;
+			break;
+
+		case IPT_CONFIG:
+			result = INPUT_CLASS_CONFIG;
+			break;
+
+		case IPT_DIPSWITCH:
+			result = INPUT_CLASS_DIPSWITCH;
+			break;
+
+		case 0:
+			if (field->name && (field->name != (const char *) -1))
+				result = INPUT_CLASS_MISC;
+			else
+				result = INPUT_CLASS_INTERNAL;
+			break;
+
+		default:
+			result = INPUT_CLASS_INTERNAL;
+			break;
+	}
+	return result;
+}
+
+
+
+int input_player_number(const input_field_config *port)
+{
+	return port->player;
+}
+
+
+
+/*-------------------------------------------------
+    input_has_input_class - checks to see if a
+    particular input class is present
+-------------------------------------------------*/
+
+int input_has_input_class(running_machine *machine, int inputclass)
+{
+	const input_port_config *port;
+	const input_field_config *field;
+
+	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	{
+		for (field = port->fieldlist; field != NULL; field = field->next)
+		{
+			if (input_classify_port(field) == inputclass)
+				return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+
+
+/*-------------------------------------------------
+    input_count_players - counts the number of
+    active players
+-------------------------------------------------*/
+
+int input_count_players(running_machine *machine)
+{
+	const input_port_config *port;
+	const input_field_config *field;
+	int joystick_count;
+
+	joystick_count = 0;
+	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	{
+		for (field = port->fieldlist;  field != NULL; field = field->next)
+		{
+			if (input_classify_port(field) == INPUT_CLASS_CONTROLLER)
+			{
+				if (joystick_count <= field->player + 1)
+					joystick_count = field->player + 1;
+			}
+		}
+	}
+	return joystick_count;
+}
+
+
+
+/*-------------------------------------------------
+    input_category_active - checks to see if a
+    specific category is active
+-------------------------------------------------*/
+
+int input_category_active(running_machine *machine, int category)
+{
+	const input_port_config *port;
+	const input_field_config *field = NULL;
+	const input_setting_config *setting;
+	input_field_user_settings settings;
+
+	assert(category >= 1);
+
+	/* loop through the input ports */
+	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	{
+		for (field = port->fieldlist; field != NULL; field = field->next)
+		{
+			/* is this field a category? */
+			if (field->type == IPT_CATEGORY)
+			{
+				/* get the settings value */
+				input_field_get_user_settings(field, &settings);
+
+				for (setting = field->settinglist; setting != NULL; setting = setting->next)
+				{
+					/* is this the category we want?  if so, is this settings value correct? */
+					if ((setting->category == category) && (settings.value == setting->value))
+						return TRUE;
+				}
+			}
+		}
+	}
+	return FALSE;
+}
+
+
+
+/***************************************************************************
+    DEBUGGER SUPPORT
+***************************************************************************/
+
+/*-------------------------------------------------
+    execute_input - debugger command to enter
+    natural keyboard input
+-------------------------------------------------*/
+
+static void execute_input(running_machine *machine, int ref, int params, const char *param[])
+{
+	inputx_postn_coded_rate(machine, param[0], strlen(param[0]), attotime_make(0, 0));
+}
+
+
+
+/*-------------------------------------------------
+    execute_dumpkbd - debugger command to natural
+    keyboard codes
+-------------------------------------------------*/
+
+static void execute_dumpkbd(running_machine *machine, int ref, int params, const char *param[])
+{
+	const char *filename;
+	FILE *file = NULL;
+	const inputx_code *code;
+	char buffer[512];
+	size_t pos;
+	int i, j;
+	size_t left_column_width = 24;
+
+	/* was there a file specified? */
+	filename = (params > 0) ? param[0] : NULL;
+	if (filename != NULL)
+	{
+		/* if so, open it */
+		file = fopen(filename, "w");
+		if (file == NULL)
+		{
+			debug_console_printf(machine, "Cannot open \"%s\"\n", filename);
+			return;
+		}
+	}
+
+	if ((codes != NULL) && (codes[0].ch != 0))
+	{
+		/* loop through all codes */
+		for (i = 0; codes[i].ch; i++)
+		{
+			code = &codes[i];
+			pos = 0;
+
+			/* describe the character code */
+			pos += snprintf(&buffer[pos], ARRAY_LENGTH(buffer) - pos, "%08X (%s) ",
+				code->ch,
+				code_point_string(machine, code->ch));
+
+			/* pad with spaces */
+			while(pos < left_column_width)
+				buffer[pos++] = ' ';
+			buffer[pos] = '\0';
+
+			/* identify the keys used */
+			for (j = 0; j < ARRAY_LENGTH(code->field) && (code->field[j] != NULL); j++)
+			{
+				pos += snprintf(&buffer[pos], ARRAY_LENGTH(buffer) - pos, "%s'%s'",
+					(j > 0) ? ", " : "",
+					code->field[j]->name);
+			}
+
+			/* and output it as appropriate */
+			if (file != NULL)
+				fprintf(file, "%s\n", buffer);
+			else
+				debug_console_printf(machine, "%s\n", buffer);
+		}
+	}
+	else
+	{
+		debug_console_printf(machine, "No natural keyboard support\n");
+	}
+
+	/* cleanup */
+	if (file != NULL)
+		fclose(file);
+
+}
+
 
 void input_port_config_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap)
 {

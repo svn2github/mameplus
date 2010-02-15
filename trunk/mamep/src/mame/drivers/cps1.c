@@ -10809,9 +10809,10 @@ GAME( 1993, mbombrd,  0,        qsound,     slammast, slammast, ROT0,   "Capcom"
 GAME( 1993, mbombrdj, mbombrd,  qsound,     slammast, slammast, ROT0,   "Capcom", "Muscle Bomber Duo - Heat Up Warriors (Japan 931206)", GAME_SUPPORTS_SAVE )
 
 GAME( 1994, pnickj,   0,        cps1_12MHz, pnickj,   cps1,     ROT0,   "Compile (Capcom license)", "Pnickies (Japan 940608)", GAME_SUPPORTS_SAVE )
-/* Japanese version of Pang 3 is encrypted, Euro version is not */
-GAME( 1995, pang3,    0,        pang3,      pang3,    pang3,    ROT0,   "Mitchell", "Pang! 3 (Euro 950511)", GAME_SUPPORTS_SAVE )
-GAME( 1995, pang3j,   pang3,    pang3,      pang3,    pang3j,   ROT0,   "Mitchell", "Pang! 3 (Japan 950511)", GAME_SUPPORTS_SAVE )
+
+GAME( 1995, pang3,    0,        pang3,      pang3,    pang3,     ROT0,   "Mitchell", "Pang! 3 (Euro 950601)", GAME_SUPPORTS_SAVE )
+GAME( 1995, pang3n,   pang3,    pang3,      pang3n,   pang3n,    ROT0,   "Mitchell", "Pang! 3 (Euro 950511, not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1995, pang3j,   pang3,    pang3,      pang3n,   pang3,     ROT0,   "Mitchell", "Pang! 3 (Japan 950511)", GAME_SUPPORTS_SAVE )
 
 /* bootleg */
 GAME( 1991, kodh,     kod,      cps1_10MHz, kodh,     cps1,     ROT0,   "bootleg","The King of Dragons (hack)", GAME_SUPPORTS_SAVE )

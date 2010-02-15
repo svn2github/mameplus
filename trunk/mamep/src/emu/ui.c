@@ -1456,10 +1456,8 @@ static astring &warnings_string(running_machine *machine, astring &string)
 		string.cat(_("There are known problems with this game\n\n"));
 
 		/* add one line per warning flag */
-#ifdef MESS
-		if (machine->gamedrv->flags & GAME_COMPUTER)
-			string.cat(_("The emulated system is a computer:\n\nThe keyboard emulation may not be 100% accurate.\n"));
-#endif
+		if (input_machine_has_keyboard(machine))
+			string.cat(_("The keyboard emulation may not be 100% accurate.\n"));
 		if (machine->gamedrv->flags & GAME_IMPERFECT_COLORS)
 			string.cat(_("The colors aren't 100% accurate.\n"));
 		if (machine->gamedrv->flags & GAME_WRONG_COLORS)
@@ -1904,10 +1902,62 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 		single_step = FALSE;
 	}
 
-// mamep: we want to use both window UI and in-game UI
-#if 0 //def MESS
-	if (ui_mess_handler_ingame(machine))
-		return 0;
+	/* determine if we should disable the rest of the UI */
+#ifdef MAMEMESS // mamep: we want to use both MESS-newui and in-game UI
+	int ui_disabled = input_machine_has_keyboard(machine) && !ui_active;
+#else
+	int ui_disabled = ui_use_new_ui() || (input_machine_has_keyboard(machine) && !ui_active);
+#endif // MAMEMESS
+
+	/* is ScrLk UI toggling applicable here? */
+	if (!ui_use_new_ui() && input_machine_has_keyboard(machine))
+	{
+		/* are we toggling the UI with ScrLk? */
+		if (ui_input_pressed(machine, IPT_UI_TOGGLE_UI))
+		{
+			/* toggle the UI */
+			ui_active = !ui_active;
+
+			/* display a popup indicating the new status */
+			if (ui_active)
+			{
+				ui_popup_time(2, "%s\n%s\n%s\n%s\n%s\n%s\n",
+					"Keyboard Emulation Status",
+					"-------------------------",
+					"Mode: PARTIAL Emulation",
+					"UI:   Enabled",
+					"-------------------------",
+					"**Use ScrLock to toggle**");
+			}
+			else
+			{
+				ui_popup_time(2, "%s\n%s\n%s\n%s\n%s\n%s\n",
+					"Keyboard Emulation Status",
+					"-------------------------",
+					"Mode: FULL Emulation",
+					"UI:   Disabled",
+					"-------------------------",
+					"**Use ScrLock to toggle**");
+			}
+		}
+	}
+
+	/* is the natural keyboard enabled? */
+	if (ui_get_use_natural_keyboard(machine) && (mame_get_phase(machine) == MAME_PHASE_RUNNING))
+		process_natural_keyboard(machine);
+
+	/* MESS-specific UI; provided that the UI is not disabled */
+	if (!ui_disabled)
+	{
+		/* paste command */
+		if (ui_input_pressed(machine, IPT_UI_PASTE))
+			ui_paste(machine);
+	}
+
+	if (ui_disabled) return ui_disabled;
+
+#ifdef MESS
+	ui_mess_handler_ingame(machine);
 #endif /* MESS */
 
 	/* if the user pressed ESC, stop the emulation */
@@ -2801,6 +2851,29 @@ static INT32 slider_crossoffset(running_machine *machine, void *arg, astring *st
 }
 #endif
 
+
+/*-------------------------------------------------
+    ui_get_use_natural_keyboard - returns
+    whether the natural keyboard is active
+-------------------------------------------------*/
+
+int ui_get_use_natural_keyboard(running_machine *machine)
+{
+	return ui_use_natural_keyboard;
+}
+
+
+
+/*-------------------------------------------------
+    ui_set_use_natural_keyboard - specifies
+    whether the natural keyboard is active
+-------------------------------------------------*/
+
+void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keyboard)
+{
+	ui_use_natural_keyboard = use_natural_keyboard;
+}
+
 void ui_auto_pause(void)
 {
 	auto_pause = 1;
@@ -2852,3 +2925,4 @@ static void free_bgtexture(running_machine *machine)
 	render_texture_free(bgtexture);
 	bgtexture = NULL;
 }
+

@@ -476,14 +476,6 @@ void mame_get_base_datetime(running_machine *machine, mame_system_time *systime)
 /* retrieve the current system time */
 void mame_get_current_datetime(running_machine *machine, mame_system_time *systime);
 
-
-
-#ifdef MAMEMESS
-#include "mess.h"
-#endif /* MESS */
-
-
-
 /***************************************************************************
     INLINE FUNCTIONS
 ***************************************************************************/

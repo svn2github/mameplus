@@ -43,14 +43,11 @@
 #define GAME_IS_BIOS_ROOT				0x00001000	/* this driver entry is a BIOS root */
 #define GAME_NO_STANDALONE				0x00002000	/* this driver cannot stand alone */
 #define GAME_REQUIRES_ARTWORK			0x00004000	/* the driver requires external artwork for key elements of the game */
-
-
+#define GAME_UNOFFICIAL     			0x00008000	/* unofficial hardware change */
+#define GAME_NO_SOUND_HW				0x00010000	/* sound hardware not available */
 #ifdef MAMEMESS
-#define GAME_COMPUTER_MODIFIED      	0x00008000	/* Official? Hack */
-#define GAME_COMPUTER               	0x00010000  /* Driver is a computer (needs full keyboard) */
-#define GAME_CONSOLE               	0x00020000  /* Driver is a console */
-#endif
-
+#define GAME_CONSOLE					0x00020000	/* Driver is a console */
+#endif // MAMEMESS
 
 
 /* ----- flags to return from video_update ----- */

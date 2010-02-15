@@ -198,6 +198,17 @@ astring &game_info_astring(running_machine *machine, astring &string);
 /* get the list of sliders */
 const slider_state *ui_get_slider_list(void);
 
+/* paste */
+void ui_paste(running_machine *machine);
+
+int ui_use_new_ui(void);
+
+/* returns whether the natural keyboard is active */
+int ui_get_use_natural_keyboard(running_machine *machine);
+
+/* specifies whether the natural keyboard is active */
+void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keyboard);
+
 void ui_auto_pause(void);
 
 int ui_window_scroll_keys(running_machine *machine);

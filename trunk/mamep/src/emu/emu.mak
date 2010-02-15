@@ -88,6 +88,7 @@ EMUOBJS = \
 	$(EMUOBJ)/debug/debugvw.o \
 	$(EMUOBJ)/debug/express.o \
 	$(EMUOBJ)/debug/textbuf.o \
+	$(EMUOBJ)/debugint/debugint.o \
 	$(EMUOBJ)/uilang.o
 
 ifdef USE_CMD_LIST

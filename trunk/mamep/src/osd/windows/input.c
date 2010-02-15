@@ -74,6 +74,7 @@
 #ifdef MAMEMESS
 #define MESS
 #endif /* MAMEMESS */
+
 #ifdef MESS
 #include "uimess.h"
 #endif
@@ -837,13 +838,9 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 				}
 				break;
 
-			//mamep: we want to keep default KEYCODE_F10 for Throttle
-/*
 			case IPT_UI_THROTTLE:
 				input_seq_set_0(&typedesc->seq[SEQ_TYPE_STANDARD]);
 				break;
-*/
-#endif /* MESS */
 		}
 }
 
