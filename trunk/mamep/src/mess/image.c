@@ -1190,7 +1190,7 @@ static int image_checkhash(image_slot_data *image)
         do
         {
             rc = read_hash_config(drv->name, image);
-            drv = mess_next_compatible_driver(drv);
+            drv = driver_get_compatible(drv);
         }
         while(rc && (drv != NULL));
     }
@@ -1239,6 +1239,26 @@ const char *image_filename(running_device *image)
 }
 
 
+//============================================================
+//  image_filename_basename
+//============================================================
+
+static char *image_filename_basename(char *filename)
+{
+	char *c;
+
+	// NULL begets NULL
+	if (!filename)
+		return NULL;
+
+	// start at the end and return when we hit a slash or colon
+	for (c = filename + strlen(filename) - 1; c >= filename; c--)
+		if (*c == '\\' || *c == '/' || *c == ':')
+			return c + 1;
+
+	// otherwise, return the whole thing
+	return filename;
+}
 
 /*-------------------------------------------------
     image_basename
@@ -1246,7 +1266,7 @@ const char *image_filename(running_device *image)
 
 const char *image_basename(running_device *image)
 {
-    return osd_basename((char *) image_filename(image));
+    return image_filename_basename((char *) image_filename(image));
 }
 
 
@@ -1616,12 +1636,12 @@ static int try_change_working_directory(image_slot_data *image, const char *subd
 
 static void setup_working_directory(image_slot_data *image)
 {
-    char mess_directory[1024];
     const game_driver *gamedrv;
-
-    /* first set up the working directory to be the MESS directory */
-    osd_get_emulator_directory(mess_directory, ARRAY_LENGTH(mess_directory));
-    astring_cpyc(image->working_directory, mess_directory);
+	char *dst = NULL;
+	
+	osd_get_full_path(&dst,".");
+    /* first set up the working directory to be the MESS directory */	
+    astring_cpyc(image->working_directory, dst);
 
     /* now try browsing down to "software" */
     if (try_change_working_directory(image, "software"))
@@ -1630,9 +1650,10 @@ static void setup_working_directory(image_slot_data *image)
         gamedrv = image->dev->machine->gamedrv;
         while(gamedrv && !try_change_working_directory(image, gamedrv->name))
         {
-            gamedrv = mess_next_compatible_driver(gamedrv);
+            gamedrv = driver_get_compatible(gamedrv);
         }
     }
+	global_free(dst);
 }
 
 

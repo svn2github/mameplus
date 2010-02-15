@@ -2834,6 +2834,18 @@ static BOOL SnapViewPopulateControl(datamap *map, HWND dialog, HWND control, cor
 	return FALSE;
 }
 
+static BOOL DefaultInputReadControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
+{
+	const char *input_option_value;	
+	int input_option_index;
+	//const char *op_val;
+
+	input_option_index = ComboBox_GetCurSel(control);
+	input_option_value = (const char *) ComboBox_GetItemData(control, input_option_index);	
+	//op_val = utf8_from_tstring(input_option_value);
+	options_set_string(opts, OPTION_CTRLR, input_option_value, OPTION_PRIORITY_CMDLINE);
+	return FALSE;
+}
 
 static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
@@ -3325,6 +3337,7 @@ static void BuildDataMap(void)
 	datamap_set_callback(properties_datamap, IDC_REFRESH,		DCT_POPULATE_CONTROL,	ResolutionPopulateControl);
 	datamap_set_callback(properties_datamap, IDC_SIZES,			DCT_READ_CONTROL,		ResolutionReadControl);
 	datamap_set_callback(properties_datamap, IDC_SIZES,			DCT_POPULATE_CONTROL,	ResolutionPopulateControl);
+	datamap_set_callback(properties_datamap, IDC_DEFAULT_INPUT,	DCT_READ_CONTROL,		DefaultInputReadControl);	
 	datamap_set_callback(properties_datamap, IDC_DEFAULT_INPUT,	DCT_POPULATE_CONTROL,	DefaultInputPopulateControl);
 	datamap_set_callback(properties_datamap, IDC_SNAPVIEW,		DCT_POPULATE_CONTROL,	SnapViewPopulateControl);
 
@@ -3480,7 +3493,7 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 			for (sound = sound_first(config); sound != NULL; sound = sound_next(sound))
 			{
 				if (sound_get_type(sound) == SOUND_SAMPLES
-					//||  sound_get_type(sound) == SOUND_VLM5030
+					||  sound_get_type(sound) == SOUND_VLM5030
 					)
 				{
 					enabled = TRUE;

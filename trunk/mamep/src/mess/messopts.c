@@ -7,12 +7,10 @@
 #include "emu.h"
 #include "emuopts.h"
 #include "options.h"
-#include "emu.h"
 #include "pool.h"
 #include "config.h"
 #include "xmlfile.h"
 #include "messopts.h"
-#include "osdmess.h"
 
 #if 0 //mamep: moved to messopts.h
 #define OPTION_ADDED_DEVICE_OPTIONS	"added_device_options"
@@ -37,10 +35,9 @@ const options_entry mess_core_options[] =
 	{ NULL,							NULL,   OPTION_HEADER,						"MESS SPECIFIC OPTIONS" },
 	{ "ramsize;ram",				NULL,	0,									"size of RAM (if supported by driver)" },
 	{ "writeconfig;wc",				"0",	OPTION_BOOLEAN,						"writes configuration to (driver).ini on exit" },
-	{ OPTION_SKIP_WARNINGS,			"0",    OPTION_BOOLEAN,						"skip displaying the warnings screen" },
+	{ "newui;nu",                   "0",    OPTION_BOOLEAN,						"use the new MESS UI" },	
 	//mamep: stop adding device options until array drivers[] is ready
 	{ OPTION_ADDED_DEVICE_OPTIONS,	"1",	OPTION_BOOLEAN | OPTION_INTERNAL,	"device-specific options have been added" },
-	{ "natural;nat",				"0",	OPTION_BOOLEAN,						"specifies whether to use a natural keyboard or not" },
 	{ NULL }
 };
 
@@ -193,9 +190,6 @@ void mess_options_init(core_options *opts)
 {
 	/* add MESS-specific options */
 	options_add_entries(opts, mess_core_options);
-
-	/* add OSD-MESS specific options (hack!) */
-	osd_mess_options_init(opts);
 
 	/* we need to dynamically add options when the device name is parsed */
 	options_set_option_callback(opts, OPTION_GAMENAME, mess_driver_name_callback);

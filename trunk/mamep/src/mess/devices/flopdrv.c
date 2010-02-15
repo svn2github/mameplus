@@ -37,6 +37,7 @@ struct _floppy_drive
 	devcb_resolved_write_line out_tk00_func;
 	devcb_resolved_write_line out_wpt_func;
 	devcb_resolved_write_line out_rdy_func;
+	devcb_resolved_write_line out_dskchg_func;
 
 	/* state of input lines */
 	int drtn; /* direction */
@@ -454,6 +455,7 @@ void floppy_drive_seek(running_device *img, signed int signed_tracks)
 
 	/* clear disk changed flag */
 	pDrive->dskchg = ASSERT_LINE;
+	//devcb_call_write_line(&flopimg->out_dskchg_func, flopimg->dskchg);
 
 	/* inform disk image of step operation so it can cache information */
 	if (image_exists(img))
@@ -627,24 +629,28 @@ DEVICE_START( floppy )
 	floppy->drive_id = floppy_get_drive(device);
 	floppy->active = FALSE;
 
-	/* by default we are write-protected */
-	floppy->wpt = CLEAR_LINE;
-
-	/* not at track 0 */
-	floppy->tk00 = ASSERT_LINE;
-
-	/* motor off */
-	floppy->mon = ASSERT_LINE;
-
-	/* disk changed */
-	floppy->dskchg = CLEAR_LINE;
-
 	/* resolve callbacks */
 	devcb_resolve_write_line(&floppy->out_idx_func, &floppy->config->out_idx_func, device);
 	devcb_resolve_read_line(&floppy->in_mon_func, &floppy->config->in_mon_func, device);
 	devcb_resolve_write_line(&floppy->out_tk00_func, &floppy->config->out_tk00_func, device);
 	devcb_resolve_write_line(&floppy->out_wpt_func, &floppy->config->out_wpt_func, device);
 	devcb_resolve_write_line(&floppy->out_rdy_func, &floppy->config->out_rdy_func, device);
+//	devcb_resolve_write_line(&floppy->out_dskchg_func, &floppy->config->out_dskchg_func, device);
+
+	/* by default we are not write-protected */
+	floppy->wpt = ASSERT_LINE;
+	devcb_call_write_line(&floppy->out_wpt_func, floppy->wpt);
+
+	/* not at track 0 */
+	floppy->tk00 = ASSERT_LINE;
+	devcb_call_write_line(&floppy->out_tk00_func, floppy->tk00);
+
+	/* motor off */
+	floppy->mon = ASSERT_LINE;
+
+	/* disk changed */
+	floppy->dskchg = CLEAR_LINE;
+//	devcb_call_write_line(&floppy->out_dskchg_func, floppy->dskchg);
 }
 
 static int internal_floppy_device_load(running_device *image, int create_format, option_resolution *create_args)
@@ -695,7 +701,13 @@ error:
 	return INIT_FAIL;
 }
 
+static TIMER_CALLBACK( set_wpt )
+{
+	floppy_drive *flopimg = (floppy_drive *)ptr;
 
+	flopimg->wpt = param;
+	devcb_call_write_line(&flopimg->out_wpt_func, param);
+}
 
 DEVICE_IMAGE_LOAD( floppy )
 {
@@ -707,6 +719,21 @@ DEVICE_IMAGE_LOAD( floppy )
 		if (flopimg->load_proc)
 			flopimg->load_proc(image);
 	}
+
+	/* push disk halfway into drive */
+	flopimg->wpt = CLEAR_LINE;
+	devcb_call_write_line(&flopimg->out_wpt_func, flopimg->wpt);
+
+	/* set timer for disk load */
+	int next_wpt;
+
+	if (image_is_writable(image))
+		next_wpt = ASSERT_LINE;
+	else
+		next_wpt = CLEAR_LINE;
+
+	timer_set(image->machine, ATTOTIME_IN_MSEC(250), flopimg, next_wpt, set_wpt);
+
 	return retVal;
 }
 
@@ -726,6 +753,14 @@ DEVICE_IMAGE_UNLOAD( floppy )
 
 	/* disk changed */
 	flopimg->dskchg = CLEAR_LINE;
+	//devcb_call_write_line(&flopimg->out_dskchg_func, flopimg->dskchg);
+
+	/* pull disk halfway out of drive */
+	flopimg->wpt = CLEAR_LINE;
+	devcb_call_write_line(&flopimg->out_wpt_func, flopimg->wpt);
+
+	/* set timer for disk eject */
+	timer_set(image->machine, ATTOTIME_IN_MSEC(250), flopimg, ASSERT_LINE, set_wpt);
 }
 
 running_device *floppy_get_device(running_machine *machine,int drive)
@@ -944,15 +979,6 @@ WRITE_LINE_DEVICE_HANDLER( floppy_wtg_w )
 READ_LINE_DEVICE_HANDLER( floppy_wpt_r )
 {
 	floppy_drive *drive = get_safe_token(device);
-
-	if (image_slotexists(device))
-	{
-		if (image_is_writable(device))
-			drive->wpt = ASSERT_LINE;
-		else
-			drive->wpt = CLEAR_LINE;
-	}
-
 	return drive->wpt;
 }
 

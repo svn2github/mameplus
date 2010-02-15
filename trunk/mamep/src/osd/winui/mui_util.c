@@ -771,7 +771,7 @@ BOOL DriverIsVertical(int driver_index) {
 BOOL DriverIsConsole(int driver_index)
 {
 #ifdef MAMEMESS
-	return drivers[driver_index]->flags & GAME_COMPUTER || drivers[driver_index]->flags & GAME_CONSOLE;
+	return drivers[driver_index]->flags & GAME_CONSOLE;
 #else /* MAMEMESS */
 	return FALSE;
 #endif /* MAMEMESS */

@@ -8,6 +8,7 @@
 #define __MESSOPTS_H__
 
 #include "image.h"
+#include "options.h"
 
 /***************************************************************************
     CONSTANTS
@@ -15,8 +16,6 @@
 
 #define OPTION_RAMSIZE			"ramsize"
 #define OPTION_WRITECONFIG		"writeconfig"
-#define OPTION_SKIP_WARNINGS	"skip_warnings"
-#define OPTION_NATURAL_KEYBOARD	"natural"
 //mamep: moved from messopts.c
 #define OPTION_ADDED_DEVICE_OPTIONS	"added_device_options"
 

@@ -916,8 +916,8 @@ static void CreateDeviceFolders(int parent_index, device_class dev_class, int ic
 		}
 
 		// enumerate through all devices
-		for (device = config->devicelist.first(); device != NULL;
-			device = device->next)
+		for (device = config->devicelist.first(dev_class); device != NULL;
+			device = device->typenext())
 		{
 			// get the name
 			const TCHAR *dev_name = _Unicode(device->name());

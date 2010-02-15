@@ -50,9 +50,6 @@
 #include "clifront.h"
 #include "translate.h"
 
-#ifdef MAMEMESS
-#include "../mess/osd/windows/configms.h"
-#endif // MAMEMESS
 
 #ifdef MESS
 #include "optionsms.h"
@@ -566,7 +563,6 @@ static void MessSetupGameOptions(core_options *opts, int driver_index)
 {
 	BOOL is_global = (driver_index == OPTIONS_TYPE_GLOBAL);
 	AddOptions(opts, mess_core_options, is_global);
-	AddOptions(opts, mess_win_options, is_global);
 
 	if (driver_index >= 0)
 	{

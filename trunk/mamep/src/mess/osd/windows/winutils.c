@@ -20,7 +20,6 @@
 // MESS headers
 #include "winutils.h"
 #include "strconv.h"
-#include "glob.h"
 
 // stupid hack; not sure why this is needed
 #ifdef const
@@ -219,38 +218,4 @@ void win_scroll_window(HWND window, WPARAM wparam, int scroll_bar, int scroll_de
 		SetScrollPos(window, scroll_bar, scroll_pos, TRUE);
 		ScrollWindowEx(window, 0, si.nPos - scroll_pos, NULL, NULL, NULL, NULL, SW_SCROLLCHILDREN | SW_INVALIDATE | SW_ERASE);
 	}
-}
-
-
-
-//============================================================
-//  win_get_file_attributes_utf8
-//============================================================
-
-DWORD win_get_file_attributes_utf8(const char *filename)
-{
-	DWORD result = ~0;
-	LPTSTR t_filename;
-
-	t_filename = tstring_from_utf8(filename);
-	if (t_filename != NULL)
-	{
-		result = GetFileAttributes(t_filename);
-		free(t_filename);
-	}
-	return result;
-}
-
-void win_expand_wildcards(int *argc, char **argv[])
-{
-	int i;
-	glob_t g;
-
-	memset(&g, 0, sizeof(g));
-
-	for (i = 0; i < *argc; i++)
-		glob((*argv)[i], (g.gl_pathc > 0) ? GLOB_APPEND|GLOB_NOCHECK : GLOB_NOCHECK, NULL, &g);
-
-	*argc = g.gl_pathc;
-	*argv = g.gl_pathv;
 }

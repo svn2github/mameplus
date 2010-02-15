@@ -11,8 +11,6 @@
 
 #include "dialog.h"
 #include "emu.h"
-#include "mslegacy.h"
-#include "inputx.h"
 #include "utils.h"
 #include "strconv.h"
 #include "pool.h"

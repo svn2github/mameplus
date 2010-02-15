@@ -30,6 +30,23 @@ const char mess_disclaimer[] =
 		"with these files is a violation of copyright law and should be promptly\n"
 		"reported to the authors so that appropriate legal action can be taken.\n\n";
 
+static char *filename_basename(char *filename)
+{
+	char *c;
+
+	// NULL begets NULL
+	if (!filename)
+		return NULL;
+
+	// start at the end and return when we hit a slash or colon
+	for (c = filename + strlen(filename) - 1; c >= filename; c--)
+		if (*c == '\\' || *c == '/' || *c == ':')
+			return c + 1;
+
+	// otherwise, return the whole thing
+	return filename;
+}
+		
 /*-------------------------------------------------
     mess_predevice_init - initialize devices for a specific
     running_machine
@@ -41,9 +58,6 @@ void mess_predevice_init(running_machine *machine)
 	running_device *image;
 	image_device_info info;
 	device_get_image_devices_func get_image_devices;
-
-	/* initialize natural keyboard support */
-	inputx_init(machine);
 
 	/* init all devices */
 	image_init(machine);
@@ -80,7 +94,7 @@ void mess_predevice_init(running_machine *machine)
 					/* FIXME: image_name is always empty in this message because of the image_unload_all() call */
 					fatalerror_exitcode(machine, MAMERR_DEVICE, "Device %s load (%s) failed: %s\n",
 						info.name,
-						osd_basename((char *) image_name),
+						filename_basename((char *) image_name),
 						image_err);
 				}
 			}
@@ -125,26 +139,3 @@ void mess_postdevice_init(running_machine *machine)
 	add_exit_callback(machine, image_unload_all);
 }
 
-const game_driver *mess_next_compatible_driver(const game_driver *drv)
-{
-	if (driver_get_clone(drv))
-		drv = driver_get_clone(drv);
-	else if (drv->compatible_with)
-		drv = driver_get_name(drv->compatible_with);
-	else
-		drv = NULL;
-	return drv;
-}
-
-
-
-int mess_count_compatible_drivers(const game_driver *drv)
-{
-	int count = 0;
-	while(drv)
-	{
-		count++;
-		drv = mess_next_compatible_driver(drv);
-	}
-	return count;
-}

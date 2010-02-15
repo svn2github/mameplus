@@ -37,14 +37,16 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Exit",                       ID_FILE_EXIT_NEWUI
     END
-/*
     POPUP "&Edit"
     BEGIN
         MENUITEM "Paste",                       ID_EDIT_PASTE
     END
-*/
-    POPUP "&Input"
+    POPUP "&Options"
     BEGIN
+        MENUITEM "&Pause",                      ID_OPTIONS_PAUSE, GRAYED
+        MENUITEM "Soft &Reset",                 ID_OPTIONS_SOFTRESET
+        MENUITEM "Ha&rd Reset",                 ID_OPTIONS_HARDRESET
+        MENUITEM SEPARATOR
         POPUP "&Keyboard"
         BEGIN
             MENUITEM "Emulated",                    ID_KEYBOARD_EMULATED
@@ -53,11 +55,6 @@ BEGIN
             MENUITEM "Customize Emulated Keyboard...",     ID_KEYBOARD_CUSTOMIZE
         END
         MENUITEM "&Joysticks",                  ID_OPTIONS_JOYSTICKS, GRAYED
-        MENUITEM "&Miscellaneous Inputs...",    ID_OPTIONS_MISCINPUT
-        MENUITEM "&Analog Controls...",         ID_OPTIONS_ANALOGCONTROLS
-    END
-    POPUP "&Video"
-    BEGIN
         POPUP "&Video"
         BEGIN
 		    MENUITEM SEPARATOR
@@ -66,6 +63,10 @@ BEGIN
 		    MENUITEM "Rotate 180 degrees",      ID_VIDEO_ROTATE_180
 		    MENUITEM "Rotate 270 degrees",      ID_VIDEO_ROTATE_270
         END
+        MENUITEM "&Configuration...",           ID_OPTIONS_CONFIGURATION
+        MENUITEM "&DIP Switches...",            ID_OPTIONS_DIPSWITCHES
+        MENUITEM "&Miscellaneous Inputs...",    ID_OPTIONS_MISCINPUT
+        MENUITEM "&Analog Controls...",         ID_OPTIONS_ANALOGCONTROLS
         MENUITEM SEPARATOR
         POPUP "&Frameskip"
         BEGIN
@@ -84,17 +85,12 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Hide Menubar\tScrLk",        ID_OPTIONS_TOGGLEMENUBAR
         MENUITEM "&Full Screen\tAlt+Enter",     ID_OPTIONS_FULLSCREEN
-    END
-    POPUP "&Options"
-    BEGIN
-        MENUITEM "&Pause",                      ID_OPTIONS_PAUSE, GRAYED
-        MENUITEM "Soft &Reset",                 ID_OPTIONS_SOFTRESET
-        MENUITEM "Ha&rd Reset",                 ID_OPTIONS_HARDRESET
-        MENUITEM SEPARATOR
-        MENUITEM "&Configuration...",           ID_OPTIONS_CONFIGURATION
-        MENUITEM "&DIP Switches...",            ID_OPTIONS_DIPSWITCHES
         MENUITEM "Show P&rofiler",              ID_OPTIONS_PROFILER, GRAYED
         MENUITEM "&Debugger...",                ID_OPTIONS_DEBUGGER
+    END
+    POPUP "&Devices"
+    BEGIN
+        MENUITEM SEPARATOR
     END
 /*
     POPUP "&Help"
@@ -160,7 +156,7 @@ END
 // Icon
 //
 
-#if 1 // MAMEMESS console icon
+#if 1 // mamep: MAMEMESS console icon
 IDI_MAME_ICON           ICON    DISCARDABLE     "../../../osd/windows/mame.ico"
 #else
 IDI_ICON_MESS           ICON    DISCARDABLE     "../../osd/winui/res/mess.ico"
