@@ -58,17 +58,17 @@ static struct
 
 struct mmo_header
 {
-	int dummy;
-	int version;
-	int num_msg;
+	INT32 dummy;
+	INT32 version;
+	INT32 num_msg;
 };
 
 struct mmo_data
 {
-	const unsigned char *uid;
-	const unsigned char *ustr;
-	const void *wid;
-	const void *wstr;
+	const UINT8 *uid;
+	const UINT8 *ustr;
+	const UINT16 *wid;
+	const UINT16 *wstr;
 };
 
 struct mmo {
@@ -141,6 +141,8 @@ static void load_mmo(int msgcat)
 	struct mmo *p = &mmo_table[current_lang][msgcat];
 	file_error filerr;
 	mame_file *file;
+	UINT32 *mmo_index_buf = NULL;
+	const UINT8 mmo_data_ptr_size = sizeof UINT32;
 	int str_size;
 	int size;
 	int i;
@@ -166,35 +168,47 @@ static void load_mmo(int msgcat)
 
 	if (p->header.version != 3)
 		goto mmo_readerr;
-
-	p->mmo_index = global_alloc_array(mmo_data, p->header.num_msg * sizeof p->mmo_index[0]);
-	if (!p->mmo_index)
+	
+	//alloc mmo_index buffer
+	size = p->header.num_msg * mmo_data_ptr_size * sizeof p->mmo_index[0] / sizeof p->mmo_index;
+	mmo_index_buf = global_alloc_array(UINT32, size);
+	if (!mmo_index_buf)
 		goto mmo_readerr;
 
-	size = p->header.num_msg * sizeof p->mmo_index[0];
-	if (mame_fread(file, p->mmo_index, size) != size)
+	//read mmo_index to buffer
+	if (mame_fread(file, mmo_index_buf, size) != size)
 		goto mmo_readerr;
 
+	//get str data size
 	size = sizeof str_size;
 	if (mame_fread(file, &str_size, size) != size)
 		goto mmo_readerr;
 
+	//alloc str data
 	p->mmo_str = global_alloc_array(char, str_size);
 	if (!p->mmo_str)
 		goto mmo_readerr;
 
+	//read str data
 	if (mame_fread(file, p->mmo_str, str_size) != str_size)
 		goto mmo_readerr;
 
 	mame_fclose(file);
 
+	//fill mmo_index
+	p->mmo_index = global_alloc_array(mmo_data, p->header.num_msg * sizeof p->mmo_index[0]);
+	if (!p->mmo_index)
+		goto mmo_readerr;
+
 	for (i = 0; i < p->header.num_msg; i++)
 	{
-		p->mmo_index[i].uid = (const unsigned char *)p->mmo_str + (unsigned long long)p->mmo_index[i].uid;
-		p->mmo_index[i].ustr = (const unsigned char *)p->mmo_str + (unsigned long long)p->mmo_index[i].ustr;
-		p->mmo_index[i].wid = (const unsigned char *)p->mmo_str + (unsigned long long)p->mmo_index[i].wid;
-		p->mmo_index[i].wstr = (const unsigned char *)p->mmo_str + (unsigned long long)p->mmo_index[i].wstr;
+		p->mmo_index[i].uid = (const UINT8 *)p->mmo_str + mmo_index_buf[i * mmo_data_ptr_size];
+		p->mmo_index[i].ustr = (const UINT8 *)p->mmo_str + mmo_index_buf[i * mmo_data_ptr_size + 1];
+		p->mmo_index[i].wid = (const UINT16 *)p->mmo_str + mmo_index_buf[i * mmo_data_ptr_size + 2];
+		p->mmo_index[i].wstr = (const UINT16 *)p->mmo_str + mmo_index_buf[i * mmo_data_ptr_size + 3];
 	}
+
+	global_free(mmo_index_buf);
 
 	p->status = mmo::MMO_READY;
 	return;
@@ -211,6 +225,9 @@ mmo_readerr:
 		global_free(p->mmo_index);
 		p->mmo_index = NULL;
 	}
+	
+	global_free(mmo_index_buf);
+	
 	if (file)
 		mame_fclose(file);
 
@@ -278,7 +295,7 @@ void *lang_messagew(int msgcat, const void *str, int (*cmpw)(const void *, const
 				break;
 
 		case mmo::MMO_READY:
-			q.wid = str;
+			q.wid = (const UINT16 *)str;
 			mmocmp = cmpw;
 			mmo = (mmo_data *)bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmpw);
 			if (mmo)
