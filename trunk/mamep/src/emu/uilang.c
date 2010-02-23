@@ -142,7 +142,7 @@ static void load_mmo(int msgcat)
 	file_error filerr;
 	mame_file *file;
 	UINT32 *mmo_index_buf = NULL;
-	const UINT8 mmo_data_ptr_size = sizeof UINT32;
+	const UINT8 mmo_data_ptr_size = sizeof (UINT32);
 	int str_size;
 	int size;
 	int i;

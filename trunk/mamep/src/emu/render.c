@@ -789,7 +789,7 @@ static void render_load(running_machine *machine, int config_type, xml_data_node
 
 		/* set the new values */
 		render_container_set_user_settings(container, &settings);
-
+#if 0
 		//mamep: load refresh
 		{
 			running_device *screen = (running_device *)container->screen;
@@ -806,6 +806,7 @@ static void render_load(running_machine *machine, int config_type, xml_data_node
 				video_screen_configure(screen, width, height, visarea, HZ_TO_ATTOSECONDS(refresh));
 			}
 		}
+#endif
 	}
 }
 
