@@ -726,25 +726,32 @@ void RenderHQ2X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 	uint32  pattern;
 	int		l, y;
 
-	while (height--)
+	for (int h = 0; h < height; h++)
 	{
-		sp--;
+    	uint16 * sp0 = sp - src1line;
+	    if (h == 0 && sp0 < (uint16 *) srcPtr)
+	          sp0 = sp;
 
-		w1 = *(sp - src1line);
+		sp--;
+		sp0--;
+
+		w1 = *(sp0);
 		w4 = *(sp);
 		w7 = *(sp + src1line);
 
 		sp++;
+		sp0++;
 
-		w2 = *(sp - src1line);
+		w2 = *(sp0);
 		w5 = *(sp);
 		w8 = *(sp + src1line);
 
 		for (l = width; l; l--)
 		{
 			sp++;
+			sp0++;
 
-			w3 = *(sp - src1line);
+			w3 = *(sp0);
 			w6 = *(sp);
 			w9 = *(sp + src1line);
 
@@ -1087,25 +1094,32 @@ void RenderHQ3X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 	uint32  pattern;
 	int		l, y;
 
-	while (height--)
+	for (int h = 0; h < height; h++)
 	{
-		sp--;
+    	uint16 * sp0 = sp - src1line;
+	    if (h == 0 && sp0 < (uint16 *) srcPtr)
+	          sp0 = sp;
 
-		w1 = *(sp - src1line);
+		sp--;
+		sp0--;
+
+		w1 = *(sp0);
 		w4 = *(sp);
 		w7 = *(sp + src1line);
 
 		sp++;
+		sp0++;
 
-		w2 = *(sp - src1line);
+		w2 = *(sp0);
 		w5 = *(sp);
 		w8 = *(sp + src1line);
 
 		for (l = width; l; l--)
 		{
 			sp++;
+			sp0++;
 
-			w3 = *(sp - src1line);
+			w3 = *(sp0);
 			w6 = *(sp);
 			w9 = *(sp + src1line);
 

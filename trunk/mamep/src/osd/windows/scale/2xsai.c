@@ -242,7 +242,7 @@ void Super2xSaI (u8 *srcPtr, u32 srcPitch,
     {
       inc_bP = 1;
       
-      for (; height; height--) {
+      for (int h = 0; h < height; h++) {
       	u32 finish;
         bP = (u16 *) srcPtr;
         dP = (u8 *) dstPtr;
@@ -258,11 +258,14 @@ void Super2xSaI (u8 *srcPtr, u32 srcPitch,
           //                                         4  5  6 S2
           //                                         1  2  3 S1
           //                                           A1 A2
-          
-          colorB0 = *(bP - Nextline - 1);
-          colorB1 = *(bP - Nextline);
-          colorB2 = *(bP - Nextline + 1);
-          colorB3 = *(bP - Nextline + 2);
+          u16 * bP0 = bP - Nextline;
+          if (h == 0 && bP0 < (u16 *)srcPtr)
+            bP0 = bP;
+
+          colorB0 = *(bP0 - 1);
+          colorB1 = *(bP0);
+          colorB2 = *(bP0 + 1);
+          colorB3 = *(bP0 + 2);
           
           color4 = *(bP - 1);
           color5 = *(bP);
@@ -375,7 +378,7 @@ void Super2xSaI32 (u8 *srcPtr, u32 srcPitch,
   u32 Nextline = srcPitch >> 2;
   inc_bP = 1;
   
-  for (; height; height--) {
+  for (int h = 0; h < height; h++) {
     u32 finish;
     bP = (u32 *) srcPtr;
     dP = (u32 *) dstPtr;
@@ -391,12 +394,15 @@ void Super2xSaI32 (u8 *srcPtr, u32 srcPitch,
       //                                         4  5  6 S2
       //                                         1  2  3 S1
       //                                           A1 A2
-      
-      colorB0 = *(bP - Nextline - 1);
-      colorB1 = *(bP - Nextline);
-      colorB2 = *(bP - Nextline + 1);
-      colorB3 = *(bP - Nextline + 2);
-      
+      u32 * bP0 = bP - Nextline;
+      if (h == 0 && bP0 < (u32 *)srcPtr)
+        bP0 = bP;
+
+      colorB0 = *(bP0 - 1);
+      colorB1 = *(bP0);
+      colorB2 = *(bP0 + 1);
+      colorB3 = *(bP0 + 2);
+
       color4 = *(bP - 1);
       color5 = *(bP);
       color6 = *(bP + 1);
@@ -513,7 +519,7 @@ void SuperEagle (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
   {
     inc_bP = 1;
     
-    for (; height; height--) {
+    for (int h = 0; h < height; h++) {
       u32 finish;
       bP = (u16 *) srcPtr;
 //    xP = (u16 *) deltaPtr;
@@ -524,8 +530,12 @@ void SuperEagle (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
         u32 colorA1, colorA2, colorB1, colorB2, colorS1, colorS2;
         u32 product1a, product1b, product2a, product2b;
         
-        colorB1 = *(bP - Nextline);
-        colorB2 = *(bP - Nextline + 1);
+        u16 * bP0 = bP - Nextline;
+        if (h == 0 && bP0 < (u16 *)srcPtr)
+          bP0 = bP;
+
+		colorB1 = *(bP0);
+		colorB2 = *(bP0 + 1);
         
         color4 = *(bP - 1);
         color5 = *(bP);
@@ -648,7 +658,7 @@ void SuperEagle32 (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
 
   inc_bP = 1;
   
-  for (; height; height--) {
+  for (int h = 0; h < height; h++) {
     u32 finish;
     bP = (u32 *) srcPtr;
 //  xP = (u32 *) deltaPtr;
@@ -659,9 +669,13 @@ void SuperEagle32 (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
       u32 colorA1, colorA2, colorB1, colorB2, colorS1, colorS2;
       u32 product1a, product1b, product2a, product2b;
       
-      colorB1 = *(bP - Nextline);
-      colorB2 = *(bP - Nextline + 1);
-      
+      u32 * bP0 = bP - Nextline;
+      if (h == 0 && bP0 < (u32 *)srcPtr)
+        bP0 = bP;
+
+	  colorB1 = *(bP0);
+	  colorB2 = *(bP0 + 1);
+		 
       color4 = *(bP - 1);
       color5 = *(bP);
       color6 = *(bP + 1);
@@ -786,7 +800,7 @@ void _2xSaI (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
   {
     inc_bP = 1;
     
-    for (; height; height--) {
+    for (int h = 0; h < height; h++) {
       u32 finish;
       bP = (u16 *) srcPtr;
       dP = dstPtr;
@@ -806,10 +820,14 @@ void _2xSaI (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
         //                                       G|A B|K
         //                                       H|C D|L
         //                                       M|N O|P
-        colorI = *(bP - Nextline - 1);
-        colorE = *(bP - Nextline);
-        colorF = *(bP - Nextline + 1);
-        colorJ = *(bP - Nextline + 2);
+        u16 * bP0 = bP - Nextline;
+        if (h == 0 && bP0 < (u16 *)srcPtr)
+          bP0 = bP;
+
+        colorI = *(bP0 - 1);
+        colorE = *(bP0);
+        colorF = *(bP0 + 1);
+        colorJ = *(bP0 + 2);
         
         colorG = *(bP - 1);
         colorA = *(bP);
@@ -948,7 +966,7 @@ void _2xSaI32 (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
     
   u32 Nextline = srcPitch >> 2;
     
-  for (; height; height--) {
+  for (int h = 0; h < height; h++) {
     u32 finish;
     bP = (u32 *) srcPtr;
     dP = (u32 *) dstPtr;
@@ -961,16 +979,20 @@ void _2xSaI32 (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
         
         colorM, colorN, colorO, colorP;
       u32 product, product1, product2;
-      
+
       //---------------------------------------
       // Map of the pixels:                    I|E F|J
       //                                       G|A B|K
       //                                       H|C D|L
       //                                       M|N O|P
-      colorI = *(bP - Nextline - 1);
-      colorE = *(bP - Nextline);
-      colorF = *(bP - Nextline + 1);
-      colorJ = *(bP - Nextline + 2);
+      u32 * bP0 = bP - Nextline;
+      if (h == 0 && bP0 < (u32 *)srcPtr)
+        bP0 = bP;
+
+      colorI = *(bP0 - 1);
+      colorE = *(bP0);
+      colorF = *(bP0 + 1);
+      colorJ = *(bP0 + 2);
         
       colorG = *(bP - 1);
       colorA = *(bP);
