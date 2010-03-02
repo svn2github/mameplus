@@ -67,8 +67,8 @@ struct mmo_data
 {
 	const UINT8 *uid;
 	const UINT8 *ustr;
-	const UINT16 *wid;
-	const UINT16 *wstr;
+	const UINT8 *wid;
+	const UINT8 *wstr;
 };
 
 struct mmo {
@@ -168,7 +168,7 @@ static void load_mmo(int msgcat)
 
 	if (p->header.version != 3)
 		goto mmo_readerr;
-	
+
 	//alloc mmo_index buffer
 	size = p->header.num_msg * mmo_data_ptr_size * sizeof p->mmo_index[0] / sizeof p->mmo_index;
 	mmo_index_buf = global_alloc_array(UINT32, size);
@@ -204,8 +204,8 @@ static void load_mmo(int msgcat)
 	{
 		p->mmo_index[i].uid = (const UINT8 *)p->mmo_str + mmo_index_buf[i * mmo_data_ptr_size];
 		p->mmo_index[i].ustr = (const UINT8 *)p->mmo_str + mmo_index_buf[i * mmo_data_ptr_size + 1];
-		p->mmo_index[i].wid = (const UINT16 *)p->mmo_str + mmo_index_buf[i * mmo_data_ptr_size + 2];
-		p->mmo_index[i].wstr = (const UINT16 *)p->mmo_str + mmo_index_buf[i * mmo_data_ptr_size + 3];
+		p->mmo_index[i].wid = (const UINT8 *)p->mmo_str + mmo_index_buf[i * mmo_data_ptr_size + 2];
+		p->mmo_index[i].wstr = (const UINT8 *)p->mmo_str + mmo_index_buf[i * mmo_data_ptr_size + 3];
 	}
 
 	global_free(mmo_index_buf);
@@ -225,7 +225,7 @@ mmo_readerr:
 		global_free(p->mmo_index);
 		p->mmo_index = NULL;
 	}
-	
+
 	global_free(mmo_index_buf);
 	
 	if (file)
@@ -251,6 +251,7 @@ static int mmo_cmpw(const void *a, const void *b)
 	str = lang_message(UI_LANG_JA_JP, UI_MSG_LIST, "pacman");
 */
 
+//CORE
 char *lang_message(int msgcat, const char *str)
 {
 	struct mmo *p = &mmo_table[current_lang][msgcat];
@@ -268,7 +269,7 @@ char *lang_message(int msgcat, const char *str)
 				break;
 
 		case mmo::MMO_READY:
-			q.uid = (const unsigned char*)str;
+			q.uid = (const UINT8 *)str;
 			mmo = (mmo_data *)bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmpu);
 			if (mmo)
 				return (char *)mmo->ustr;
@@ -281,6 +282,7 @@ char *lang_message(int msgcat, const char *str)
 	return (char *)str;
 }
 
+//WINUI
 void *lang_messagew(int msgcat, const void *str, int (*cmpw)(const void *, const void *))
 {
 	struct mmo *p = &mmo_table[current_lang][msgcat];
@@ -295,7 +297,7 @@ void *lang_messagew(int msgcat, const void *str, int (*cmpw)(const void *, const
 				break;
 
 		case mmo::MMO_READY:
-			q.wid = (const UINT16 *)str;
+			q.wid = (const UINT8 *)str;
 			mmocmp = cmpw;
 			mmo = (mmo_data *)bsearch(&q, p->mmo_index, p->header.num_msg, sizeof p->mmo_index[0], mmo_cmpw);
 			if (mmo)
