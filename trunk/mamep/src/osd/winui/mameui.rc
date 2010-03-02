@@ -122,19 +122,6 @@ BEGIN
         END
         MENUITEM "Line &Up Icons",              ID_VIEW_LINEUPICONS
         MENUITEM SEPARATOR
-#ifdef IMAGE_MENU
-        POPUP "&Menu Style"
-        BEGIN
-            MENUITEM "Disabled",                    ID_STYLE_NONE
-            MENUITEM SEPARATOR
-            MENUITEM "Basic",                       ID_STYLE_BASIC
-            MENUITEM "Gray",                        ID_STYLE_GRAY
-            MENUITEM "Office XP",                   ID_STYLE_OFFICE
-            MENUITEM "Office 2003",                 ID_STYLE_OFFICE2003
-            MENUITEM "Office 2007",                 ID_STYLE_OFFICE2007
-        END
-        MENUITEM SEPARATOR
-#endif /* IMAGE_MENU */
         MENUITEM "&Refresh\tF5",                ID_UPDATE_GAMELIST
         MENUITEM "&Custom Filters...\tCtrl+F",  ID_CONTEXT_FILTERS
         MENUITEM "Customi&ze Fields...",        ID_CUSTOMIZE_FIELDS

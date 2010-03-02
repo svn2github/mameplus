@@ -152,9 +152,6 @@ static void remove_all_source_options(void);
 #if 0 //mamep
 #define MUIOPTION_LANGUAGE						"language"
 #endif
-#ifdef IMAGE_MENU
-#define MUIOPTION_IMAGEMENU_STYLE				"imagemenu_style"
-#endif /* IMAGE_MENU */
 #define MUIOPTION_FLYER_DIRECTORY				"flyer_directory"
 #define MUIOPTION_CABINET_DIRECTORY				"cabinet_directory"
 #define MUIOPTION_MARQUEE_DIRECTORY				"marquee_directory"
@@ -296,9 +293,6 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_HISTORY_TAB,				"0",        0,                 NULL },
 #endif
 
-#ifdef IMAGE_MENU
-	{ MUIOPTION_IMAGEMENU_STYLE,			"0",        0,                 NULL },
-#endif /* IMAGE_MENU */
 	{ MUIOPTION_SORT_COLUMN,				"0",        0,                 NULL },
 	{ MUIOPTION_SORT_REVERSED,				"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_WINDOW_X,					"0",        0,                 NULL },
@@ -2498,18 +2492,6 @@ BOOL GetUseBrokenIcon(void)
 {
 	return options_get_bool(settings, MUIOPTION_USE_BROKEN_ICON);
 }
-
-#ifdef IMAGE_MENU
-int GetImageMenuStyle(void)
-{
-	return options_get_int(settings, MUIOPTION_IMAGEMENU_STYLE);
-}
-
-void SetImageMenuStyle(int style)
-{
-	options_set_int(settings, MUIOPTION_IMAGEMENU_STYLE, style, OPTION_PRIORITY_CMDLINE);
-}
-#endif /* IMAGE_MENU */
 
 #ifdef USE_SHOW_SPLASH_SCREEN
 BOOL GetDisplaySplashScreen (void)

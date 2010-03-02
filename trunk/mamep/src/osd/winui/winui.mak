@@ -62,21 +62,16 @@ DEFS += \
 LIBS += \
 	-lkernel32 \
 	-lshell32 \
+	-lcomdlg32 \
 	-lshlwapi \
 	-lcomctl32 \
-	-lcomdlg32 \
 	-ladvapi32 \
 	-lddraw \
 	-ldinput \
 	-ldxguid
-ifeq ($(MSVC_BUILD),)
-	ifneq ($(USE_IMAGE_MENU),)
-	LIBS += \
-		-lmsimg32 \
-		-lstdc++
-	endif
-else
-	LIBS += -lhtmlhelp
+
+ifneq ($(MSVC_BUILD),)
+LIBS += -lhtmlhelp
 endif
 
 
@@ -117,10 +112,6 @@ OSDOBJS += \
 
 ifneq ($(USE_CUSTOM_UI_COLOR),)
 OSDOBJS += $(UIOBJ)/paletteedit.o
-endif
-
-ifneq ($(USE_IMAGE_MENU),)
-OSDOBJS += $(UIOBJ)/imagemenu.o
 endif
 
 # add our UI resources
@@ -192,22 +183,6 @@ $(UIOBJ)/mamevers.rc: $(OBJ)/build/verinfo$(EXE) $(SRC)/version.c
 
 
 #-------------------------------------------------
-# Specific rele to compile USE_IMAGE_MENU.
-#-------------------------------------------------
-
-ifneq ($(USE_IMAGE_MENU),)
-    $(UIOBJ)/%.o: $(UISRC)/%.cpp
-	    @echo Compiling $<...
-    ifneq ($(MSVC_BUILD),)
-	    $(CC) -mwindows -c $< -o $@
-    else
-	    @g++ -mwindows -c $< -o $@
-    endif
-endif
-
-
-
-#-------------------------------------------------
 # CORE functions
 # only definitions RCDEFS for mameui.rc
 #-------------------------------------------------
@@ -266,17 +241,12 @@ DEFS += -DUSE_VIEW_PCBINFO
 RCDEFS += -DUSE_VIEW_PCBINFO
 endif
 
-ifneq ($(USE_IMAGE_MENU),)
-DEFS += -DIMAGE_MENU
-RCDEFS += -DIMAGE_MENU
-endif
-
 ifneq ($(USE_TREE_SHEET),)
 DEFS += -DTREE_SHEET
 RCDEFS += -DTREE_SHEET
 endif
 
-ifneq ($(SHOW_UNAVAILABLE_FOLDER),)
+ifneq ($(USE_SHOW_UNAVAILABLE_FOLDER),)
 DEFS += -DSHOW_UNAVAILABLE_FOLDER
 endif
 

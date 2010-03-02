@@ -90,9 +90,6 @@
 #include "paletteedit.h"
 #endif /* UI_COLOR_PALETTE */
 #include "translate.h"
-#ifdef IMAGE_MENU
-#include "imagemenu.h"
-#endif /* IMAGE_MENU */
 
 #ifdef MESS
 #include "messui.h"
@@ -328,9 +325,6 @@ static INT_PTR CALLBACK LanguageDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, L
 static BOOL             SelectLanguageFile(HWND hWnd, TCHAR* filename);
 #endif
 static void             ChangeLanguage(int id);
-#ifdef IMAGE_MENU
-static void             ChangeMenuStyle(int id);
-#endif /* IMAGE_MENU */
 static void             MamePlayRecordGame(void);
 static void             MamePlayBackGame(void);
 static void             MamePlayRecordWave(void);
@@ -498,34 +492,6 @@ typedef struct
 	LPPROCESS_INFORMATION ProcessInfo;
 	HWND hwndFound;
 } FINDWINDOWHANDLE;
-
-#ifdef IMAGE_MENU
-static struct
-{
-	UINT itemID;
-	UINT iconID;
-} menu_icon_table[] =
-{
-	{ ID_HELP_ABOUT,			IDI_MAMEUI_ICON },
-	{ ID_FILE_AUDIT,			IDI_CHECKMARK },
-	{ ID_GAME_AUDIT,			IDI_CHECKMARK },
-	{ ID_FILE_PLAY,				IDI_WIN_ROMS },
-	{ ID_FILE_EXIT,				IDI_WIN_REDX },
-	{ ID_FILE_PLAY_RECORD_WAVE,	IDI_SOUND },
-	{ ID_FILE_PLAY_RECORD_MNG,	IDI_VIDEO },
-	{ ID_FILE_PLAY_RECORD_AVI,	IDI_VIDEO },
-	{ ID_FILE_PLAY_RECORD,		IDI_JOYSTICK },
-	{ ID_OPTIONS_DIR,			IDI_FOLDER },
-	{ ID_VIEW_GROUPED,			IDI_GROUP },
-	{ ID_VIEW_DETAIL,			IDI_DETAILS },
-	{ ID_VIEW_LIST_MENU,		IDI_LIST },
-	{ ID_VIEW_SMALL_ICON,		IDI_SMALL },
-	{ ID_VIEW_LARGE_ICON,		IDI_LARGE },
-	{ ID_GAME_PROPERTIES,		IDI_PROPERTY },
-	{ ID_VIEW_PCBINFO,			IDI_PCBINFO },
-	{ 0 }
-};
-#endif /* IMAGE_MENU */
 
 /***************************************************************************
     Internal variables
@@ -2025,40 +1991,6 @@ static void ChangeLanguage(int id)
 	SaveDefaultOptions();
 }
 
-#ifdef IMAGE_MENU
-static void ApplyMenuStyle(HINSTANCE hInst, HWND hwnd, HMENU menuHandle)
-{
-	if (GetImageMenuStyle() > 0)
-	{
-		IMITEMIMAGE imi;
-		int i;
-
-		ImageMenu_Create(hwnd, menuHandle, TRUE);
-
-		imi.mask = IMIMF_LOADFROMRES | IMIMF_ICON;
-		imi.hInst = hInst;
-
-	    for (i = 0; menu_icon_table[i].itemID; i++)
-	    {
-		    imi.itemID = menu_icon_table[i].itemID;
-		    imi.imageStr = MAKEINTRESOURCE(menu_icon_table[i].iconID);
-		    ImageMenu_SetItemImage(&imi);
-	    }
-
-		ImageMenu_SetStyle(GetImageMenuStyle() - 1);
-	}
-}
-
-static void ChangeMenuStyle(int id)
-{
-	if (id)
-		SetImageMenuStyle(id - ID_STYLE_NONE);
-
-	CheckMenuRadioItem(GetMenu(hMain), ID_STYLE_NONE, ID_STYLE_NONE + MENU_STYLE_MAX, ID_STYLE_NONE + GetImageMenuStyle(), MF_BYCOMMAND);
-	ApplyMenuStyle(hInst, hMain, GetMenu(hMain));
-}
-#endif /* IMAGE_MENU */
-
 // used for our sorted array of game names
 int CLIB_DECL DriverDataCompareFunc(const void *arg1,const void *arg2)
 {
@@ -2533,9 +2465,6 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 		g_pJoyGUI = NULL;
 
 	ChangeLanguage(0);
-#ifdef IMAGE_MENU
-	ChangeMenuStyle(0);
-#endif /* IMAGE_MENU */
 
 	if (GetHideMouseOnStartup())
 	{
@@ -2799,9 +2728,6 @@ static LRESULT CALLBACK MameWindowProc(HWND hWnd, UINT message, WPARAM wParam, L
 
 	case WM_INITMENUPOPUP:
 		UpdateMenu(GetMenu(hWnd));
-#ifdef IMAGE_MENU
-		ApplyMenuStyle(hInst, hWnd, GetMenu(hWnd));
-#endif /* IMAGE_MENU */
 		break;
 
 	case WM_CONTEXTMENU:
@@ -4223,21 +4149,8 @@ static void GamePicker_OnHeaderContextMenu(POINT pt, int nColumn)
 	hMenu = GetSubMenu(hMenuLoad, 0);
 	TranslateMenu(hMenu, ID_SORT_ASCENDING);
 
-#ifdef IMAGE_MENU
-	if (GetImageMenuStyle() > 0)
-	{
-		ImageMenu_CreatePopup(hMain, hMenuLoad);
-		ImageMenu_SetStyle(GetImageMenuStyle());
-	}
-#endif /* IMAGE_MENU */
-
 	lastColumnClick = nColumn;
 	TrackPopupMenu(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,0,hMain,NULL);
-
-#ifdef IMAGE_MENU
-	if (GetImageMenuStyle() > 0)
-		ImageMenu_Remove(hMenuLoad);
-#endif /* IMAGE_MENU */
 
 	DestroyMenu(hMenuLoad);
 }
@@ -4937,14 +4850,6 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	LPTREEFOLDER folder;
 	//char* t_szFile;
 	HRESULT res;
-
-#ifdef IMAGE_MENU
-	if ((id >= ID_STYLE_NONE) && (id <= ID_STYLE_NONE + MENU_STYLE_MAX))
-	{
-		ChangeMenuStyle(id);
-		return TRUE;
-	}
-#endif /* IMAGE_MENU */
 
 	if ((id >= ID_LANGUAGE_ENGLISH_US) && (id < ID_LANGUAGE_ENGLISH_US + UI_LANG_MAX) 
 		&& ((id - ID_LANGUAGE_ENGLISH_US) != GetLangcode()))
@@ -7421,16 +7326,6 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	}
 #endif /* USE_IPS */
 
-#ifdef IMAGE_MENU
-	if (GetImageMenuStyle() > 0)
-	{
-		ImageMenu_CreatePopup(hMain, hMenu);
-
-		ImageMenu_SetMenuTitleProps(hMenu, driversw[nGame]->modify_the, TRUE, RGB(255,255,255));
-		ImageMenu_SetMenuTitleBkProps(hMenu, RGB(255,237,213), RGB(255,186,94), TRUE, TRUE);
-	}
-#endif /* IMAGE_MENU */
-
 	if (GetShowScreenShot())
 	{
 		dprintf("%d,%d,%d,%d", tpmp.rcExclude.left,tpmp.rcExclude.right,tpmp.rcExclude.top,tpmp.rcExclude.bottom);
@@ -7439,11 +7334,6 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	}
 	else
 		TrackPopupMenuEx(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,hMain,NULL);
-
-#ifdef IMAGE_MENU
-	if (GetImageMenuStyle() > 0)
-		ImageMenu_Remove(hMenu);
-#endif /* IMAGE_MENU */
 
 	DestroyMenu(hMenuLoad);
 }
@@ -7470,20 +7360,7 @@ static BOOL HandleScreenShotContextMenu(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 	UpdateMenu(hMenu);
 
-#ifdef IMAGE_MENU
-	if (GetImageMenuStyle() > 0)
-	{
-		ImageMenu_CreatePopup(hWnd, hMenuLoad);
-		ImageMenu_SetStyle(GetImageMenuStyle());
-	}
-#endif /* IMAGE_MENU */
-
 	TrackPopupMenu(hMenu,TPM_LEFTALIGN | TPM_RIGHTBUTTON,pt.x,pt.y,0,hWnd,NULL);
-
-#ifdef IMAGE_MENU
-	if (GetImageMenuStyle() > 0)
-		ImageMenu_Remove(hMenuLoad);
-#endif /* IMAGE_MENU */
 
 	DestroyMenu(hMenuLoad);
 

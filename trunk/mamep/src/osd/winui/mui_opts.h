@@ -563,11 +563,6 @@ COLORREF GetListBrokenColor(void);
 void SetUseBrokenIcon(BOOL use_broken_icon);
 BOOL GetUseBrokenIcon(void);
 
-#ifdef IMAGE_MENU
-int GetImageMenuStyle(void);
-void SetImageMenuStyle(int style);
-#endif /* IMAGE_MENU */
-
 #ifdef USE_SHOW_SPLASH_SCREEN
 BOOL GetDisplaySplashScreen(void);
 void SetDisplaySplashScreen(BOOL val);

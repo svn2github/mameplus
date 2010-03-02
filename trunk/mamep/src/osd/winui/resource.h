@@ -556,14 +556,6 @@
 #define ID_VIEW_BYSRCDRIVERS            40162 // sort items
 #define ID_VIEW_BYPLAYTIME              40163 // sort items
 
-
-#define ID_STYLE_NONE                   40190 // IMAGE_MENU
-#define ID_STYLE_BASIC                  40191 // IMAGE_MENU
-#define ID_STYLE_GRAY                   40192 // IMAGE_MENU
-#define ID_STYLE_OFFICE                 40193 // IMAGE_MENU
-#define ID_STYLE_OFFICE2003             40194 // IMAGE_MENU
-#define ID_STYLE_OFFICE2007             40195 // IMAGE_MENU
-
 #define ID_LANGUAGE_ENGLISH_US          40201
 #define ID_LANGUAGE_SMPL_CHINESE        40202
 #define ID_LANGUAGE_TRAD_CHINESE        40203
