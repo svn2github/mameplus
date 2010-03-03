@@ -22,6 +22,7 @@
 /****************************************************************************
  *      token parsing constants
  ****************************************************************************/
+
 #ifndef TRUE
 #define TRUE 1
 #endif
@@ -42,7 +43,7 @@ enum
 	TOKEN_INVALID=-1
 };
 
-#define MAX_TOKEN_LENGTH	1024
+#define MAX_TOKEN_LENGTH	2048
 
 
 /****************************************************************************
@@ -98,9 +99,9 @@ typedef struct
 	const char *name;
 	int index;
 } driver_data_type;
-
 static driver_data_type *sorted_drivers = NULL;
 static int num_games;
+static void flush_index(void);
 
 
 /****************************************************************************
@@ -117,6 +118,8 @@ void datafile_init(core_options *options)
 
 void datafile_exit(void)
 {
+	flush_index();
+
 	if (sorted_drivers == NULL)
 	{
 		global_free(sorted_drivers);
@@ -513,7 +516,6 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 					dwFilePos = dwPos;
 					*pbTokenPtr++ = bData;	/* A real linefeed */
 					*pbTokenPtr = '\0';
-
 					return(TOKEN_LINEBREAK);
 				}
 
@@ -732,6 +734,25 @@ static int index_datafile (struct tDatafileIndex **_index)
 	idx->offset = 0L;
 	idx->driver = 0;
 	return count;
+}
+
+static void flush_index(void)
+{
+	int i;
+
+	for (i = 0; i < FILE_TYPEMAX; i++)
+	{
+		if (i & FILE_ROOT)
+			continue;
+
+#ifdef CMD_LIST
+		if (cmnd_idx[i])
+		{
+			global_free(cmnd_idx[i]);
+			cmnd_idx[i] = 0;
+		}
+#endif /* CMD_LIST */
+	}
 }
 
 

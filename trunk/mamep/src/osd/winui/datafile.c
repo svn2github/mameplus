@@ -29,7 +29,7 @@
 // MAME/MAMEUI headers
 #include "osdcomm.h"
 #include "emu.h"
-#include "emuopts.h"
+#include "emuopts.h" // For OPTION_LANGPATH
 #include "datafile.h"
 #include "mui_opts.h" // For MameUIGlobal()
 
@@ -57,13 +57,12 @@ enum
 	TOKEN_INVALID=-1
 };
 
-#define MAX_TOKEN_LENGTH	1024
+#define MAX_TOKEN_LENGTH        2048
 
 
 /****************************************************************************
  *      datafile constants
  ****************************************************************************/
-#define MAX_MENUIDX_ENTRIES 64
 #define DATAFILE_TAG '$'
 
 static const char *DATAFILE_TAG_KEY = "$info";
@@ -599,6 +598,7 @@ static void flush_index(void)
 		}
 	}
 }
+
 
 static int index_datafile_drivinfo (struct tDatafileIndex **_index)
 {
@@ -1167,6 +1167,3 @@ int load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize)
 
 	return (drivinfo == 0);
 }
-
-
-
