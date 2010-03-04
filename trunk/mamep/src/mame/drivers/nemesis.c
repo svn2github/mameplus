@@ -1258,7 +1258,7 @@ static INPUT_PORTS_START( spclone )
 	PORT_DIPNAME( 0x10, 0x10, "Font" )
 	PORT_DIPSETTING(    0x10, "Koi no Hotrock" )
 	PORT_DIPSETTING(    0x00, "Gradius III" )
-	PORT_DIPNAME( 0x20, 0x20, "Konami" )
+	PORT_DIPNAME( 0x20, 0x20, "k007232" )
 	PORT_DIPSETTING(    0x20, "old" )
 	PORT_DIPSETTING(    0x00, "new" )
 	PORT_DIPNAME( 0x40, 0x40, "Pulse" )
@@ -2138,6 +2138,7 @@ static MACHINE_DRIVER_START( nyanpani )
 	MDRV_CPU_ADD("audiocpu", Z80, 3579545)        /* 3.579545 MHz */
 	MDRV_CPU_PROGRAM_MAP(city_sound_map)
 
+	MDRV_MACHINE_START(nemesis)
 	MDRV_MACHINE_RESET(nemesis)
 
 	/* video hardware */
@@ -2159,7 +2160,7 @@ static MACHINE_DRIVER_START( nyanpani )
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MDRV_SOUND_ADD("konami", K007232, 3579545)
+	MDRV_SOUND_ADD("k007232", K007232, 3579545)
 	MDRV_SOUND_CONFIG(k007232_config)
 	MDRV_SOUND_ROUTE(0, "lspeaker", 0.30)
 	MDRV_SOUND_ROUTE(0, "rspeaker", 0.30)
@@ -2171,7 +2172,7 @@ static MACHINE_DRIVER_START( nyanpani )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 
-	MDRV_SOUND_ADD("konami2", K051649, 3579545/2)
+	MDRV_SOUND_ADD("k051649", K051649, 3579545/2)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.38)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.38)
 MACHINE_DRIVER_END
@@ -2266,7 +2267,7 @@ ROM_START( nemesisuk )
 	ROM_REGION( 0x10000, "audiocpu", 0 )    /* 64k for sound */
 	ROM_LOAD(      "456-d09.9c",   0x00000, 0x4000, CRC(26bf9636) SHA1(009dcbf18ea6230fc75a72232bd4fc29ad28dbf0) )
 
-	ROM_REGION( 0x0200,  "konami", 0 )      /* 2x 256 byte for 0005289 wavetable data */
+	ROM_REGION( 0x0200,  "k007232", 0 )      /* 2x 256 byte for 0005289 wavetable data */
 	ROM_LOAD(      "400-a01.fse",  0x00000, 0x0100, CRC(5827b1e8) SHA1(fa8cf5f868cfb08bce203baaebb6c4055ee2a000) )
 	ROM_LOAD(      "400-a02.fse",  0x00100, 0x0100, CRC(2f44f970) SHA1(7ab46f9d5d587665782cefc623b8de0124a6d38a) )
 ROM_END
@@ -2315,7 +2316,7 @@ ROM_START( twinbee )
 	ROM_REGION( 0x10000, "audiocpu", 0 )    /* 64k for sound */
 	ROM_LOAD(      "400-e03.5l",   0x00000, 0x02000, CRC(a5a8e57d) SHA1(f4236770093392dec3f76835a5766e9b3ed64e2e) )
 
-	ROM_REGION( 0x0200,  "konami", 0 )      /* 2x 256 byte for 0005289 wavetable data */
+	ROM_REGION( 0x0200,  "k007232", 0 )      /* 2x 256 byte for 0005289 wavetable data */
 	ROM_LOAD(      "400-a01.fse",  0x00000, 0x0100, CRC(5827b1e8) SHA1(fa8cf5f868cfb08bce203baaebb6c4055ee2a000) )
 	ROM_LOAD(      "400-a02.fse",  0x00100, 0x0100, CRC(2f44f970) SHA1(7ab46f9d5d587665782cefc623b8de0124a6d38a) )
 ROM_END
@@ -2345,7 +2346,7 @@ ROM_START( gwarrior )
 	ROM_REGION( 0x10000, "audiocpu", 0 )    /* 64k for sound */
 	ROM_LOAD(      "400-e03.5l",   0x00000, 0x02000, CRC(a5a8e57d) SHA1(f4236770093392dec3f76835a5766e9b3ed64e2e) )
 
-	ROM_REGION( 0x0200,  "konami", 0 )      /* 2x 256 byte for 0005289 wavetable data */
+	ROM_REGION( 0x0200,  "k007232", 0 )      /* 2x 256 byte for 0005289 wavetable data */
 	ROM_LOAD(      "400-a01.fse",  0x00000, 0x0100, CRC(5827b1e8) SHA1(fa8cf5f868cfb08bce203baaebb6c4055ee2a000) )
 	ROM_LOAD(      "400-a02.fse",  0x00100, 0x0100, CRC(2f44f970) SHA1(7ab46f9d5d587665782cefc623b8de0124a6d38a) )
 ROM_END
@@ -2431,7 +2432,7 @@ ROM_START( spclone )
 	ROM_REGION( 0x04000, "vlm", 0 )    /* VLM5030 data? */
 	ROM_LOAD(      "587-d08.8g",       0x00000, 0x04000, CRC(f9ac6b82) SHA1(3370fc3a7f82e922e19d54afb3bca7b07fa4aa9a) )
 
-	ROM_REGION( 0x20000, "konami", 0 )    /* 007232 data */
+	ROM_REGION( 0x20000, "k007232", 0 )    /* 007232 data */
 	ROM_LOAD(      "587-c01.10a",      0x00000, 0x20000, CRC(09fe0632) SHA1(4c3b29c623d70bbe8a938a0beb4638912c46fb6a) ) /* Mask rom */
 ROM_END
 
@@ -2481,7 +2482,7 @@ ROM_START( citybombj )
 	ROM_REGION( 0x10000, "audiocpu", 0 )    /* 64k for sound */
 	ROM_LOAD(      "787-e02.4h",  0x00000, 0x08000, CRC(f4591e46) SHA1(c17c1a24bf1866fbba388521a4b7ea0975bda587) )
 
-	ROM_REGION( 0x80000, "konami", 0 )    /* 007232 data */
+	ROM_REGION( 0x80000, "k007232", 0 )    /* 007232 data */
 	ROM_LOAD(      "787-e01.1k",  0x00000, 0x80000, CRC(edc34d01) SHA1(b1465d1a7364a7cebc14b96cd01dc78e57975972) )
 ROM_END
 
@@ -2509,7 +2510,7 @@ ROM_START( nyanpani )
 	ROM_REGION( 0x10000, "audiocpu", 0 )    /* 64k for sound */
 	ROM_LOAD(      "712-e02.4h",  0x00000, 0x08000, CRC(ba76f310) SHA1(cc2164a9617493d1b3b8ac67430f9eb26fd987d2) )
 
-	ROM_REGION( 0x80000, "konami", 0 )    /* 007232 data */
+	ROM_REGION( 0x80000, "k007232", 0 )    /* 007232 data */
 	ROM_LOAD(      "712-b01.1k",  0x00000, 0x80000, CRC(f65b5d95) SHA1(12701be68629844720cd16af857ce38ef06af61c) )
 ROM_END
 
@@ -2651,40 +2652,28 @@ ROM_START( hcrashc )
 	ROM_LOAD( "790-c08.j4",   0x04000, 0x04000, CRC(cfb844bc) SHA1(43b7adb6093e707212204118087ef4f79b0dbc1f) )
 	ROM_CONTINUE(             0x00000, 0x04000 ) /* Board is wired for 27C128, top half of EPROM is blank */
 
-	ROM_REGION( 0x80000, "konami", 0 )  /* 007232 data */
+	ROM_REGION( 0x80000, "k007232", 0 )  /* 007232 data */
 	ROM_LOAD( "790-c01.m10",  0x00000, 0x20000, CRC(07976bc3) SHA1(9341ac6084fbbe17c4e7bbefade9a3f1dec3f132) )
 ROM_END
 
 
-static DRIVER_INIT( nemesis )
-{
-	/* Set up save state */
-	state_save_register_global(machine, nemesis_irq_on);
-	state_save_register_global(machine, nemesis_irq1_on);
-	state_save_register_global(machine, nemesis_irq2_on);
-	state_save_register_global(machine, nemesis_irq4_on);
-	state_save_register_global(machine, frame_counter);
-	state_save_register_global(machine, gx400_irq1_cnt);
-	state_save_register_global(machine, hcrash_selected_ip);
-}
 
-
-GAME( 1985, nemesis,   0,         nemesis,    nemesis,   nemesis,  ROT0,   "Konami", "Nemesis",  GAME_SUPPORTS_SAVE )
-GAME( 1985, nemesisuk, nemesis,   nemesis,    nemesuk,   nemesis,  ROT0,   "Konami", "Nemesis (World?)",  GAME_SUPPORTS_SAVE )
-GAME( 1985, konamigt,  0,         konamigt,   konamigt,  nemesis,  ROT0,   "Konami", "Konami GT",  GAME_SUPPORTS_SAVE )
-GAME( 1985, rf2,       konamigt,  rf2_gx400,  rf2,       nemesis,  ROT0,   "Konami", "Konami RF2 - Red Fighter",  GAME_SUPPORTS_SAVE )
-GAME( 1985, twinbee,   0,         gx400,      twinbee,   nemesis,  ROT90,  "Konami", "TwinBee",  GAME_SUPPORTS_SAVE )
-GAME( 1985, gradius,   nemesis,   gx400,      gradius,   nemesis,  ROT0,   "Konami", "Gradius",  GAME_SUPPORTS_SAVE )
-GAME( 1985, gwarrior,  0,         gx400,      gwarrior,  nemesis,  ROT0,   "Konami", "Galactic Warriors",  GAME_SUPPORTS_SAVE )
-GAME( 1986, salamand,  0,         salamand,   salamand,  nemesis,  ROT0,   "Konami", "Salamander (version D)",  GAME_SUPPORTS_SAVE )
-GAME( 1986, salamandj, salamand,  salamand,   salamand,  nemesis,  ROT0,   "Konami", "Salamander (version J)",  GAME_SUPPORTS_SAVE )
-GAME( 1986, lifefrce,  salamand,  salamand,   salamand,  nemesis,  ROT0,   "Konami", "Lifeforce (US)",  GAME_SUPPORTS_SAVE )
-GAME( 1987, lifefrcej, salamand,  salamand,   lifefrcj,  nemesis,  ROT0,   "Konami", "Lifeforce (Japan)",  GAME_SUPPORTS_SAVE )
-GAME( 1989, spclone,   salamand,  salamand,   spclone,   nemesis,  ROT0,   "Konami", "Salamander (version YY clone)", GAME_SUPPORTS_SAVE )
-GAME( 1987, blkpnthr,  0,         blkpnthr,   blkpnthr,  nemesis,  ROT0,   "Konami", "Black Panther",  GAME_SUPPORTS_SAVE )
-GAME( 1987, citybomb,  0,         citybomb,   citybomb,  nemesis,  ROT270, "Konami", "City Bomber (World)",  GAME_SUPPORTS_SAVE )
-GAME( 1987, citybombj, citybomb,  citybomb,   citybomb,  nemesis,  ROT270, "Konami", "City Bomber (Japan)",  GAME_SUPPORTS_SAVE )
-GAME( 1987, hcrash,    0,         hcrash,     hcrash,    nemesis,  ROT0,   "Konami", "Hyper Crash (version D)",  GAME_SUPPORTS_SAVE )
-GAME( 1987, hcrashc,   hcrash,    hcrash,     hcrash,    nemesis,  ROT0,   "Konami", "Hyper Crash (version C)",  GAME_SUPPORTS_SAVE )
-GAME( 1988, kittenk,   0,         nyanpani,   nyanpani,  nemesis,  ROT0,   "Konami", "Kitten Kaboodle",  GAME_SUPPORTS_SAVE )
-GAME( 1988, nyanpani,  kittenk,   nyanpani,   nyanpani,  nemesis,  ROT0,   "Konami", "Nyan Nyan Panic (Japan)",  GAME_SUPPORTS_SAVE )
+GAME( 1985, nemesis,   0,         nemesis,    nemesis,   0,    ROT0,   "Konami", "Nemesis",  GAME_SUPPORTS_SAVE )
+GAME( 1985, nemesisuk, nemesis,   nemesis,    nemesuk,   0,    ROT0,   "Konami", "Nemesis (World?)",  GAME_SUPPORTS_SAVE )
+GAME( 1985, konamigt,  0,         konamigt,   konamigt,  0,    ROT0,   "Konami", "Konami GT",  GAME_SUPPORTS_SAVE )
+GAME( 1985, rf2,       konamigt,  rf2_gx400,  rf2,       0,    ROT0,   "Konami", "Konami RF2 - Red Fighter",  GAME_SUPPORTS_SAVE )
+GAME( 1985, twinbee,   0,         gx400,      twinbee,   0,    ROT90,  "Konami", "TwinBee",  GAME_SUPPORTS_SAVE )
+GAME( 1985, gradius,   nemesis,   gx400,      gradius,   0,    ROT0,   "Konami", "Gradius",  GAME_SUPPORTS_SAVE )
+GAME( 1985, gwarrior,  0,         gx400,      gwarrior,  0,    ROT0,   "Konami", "Galactic Warriors",  GAME_SUPPORTS_SAVE )
+GAME( 1986, salamand,  0,         salamand,   salamand,  0,    ROT0,   "Konami", "Salamander (version D)",  GAME_SUPPORTS_SAVE )
+GAME( 1986, salamandj, salamand,  salamand,   salamand,  0,    ROT0,   "Konami", "Salamander (version J)",  GAME_SUPPORTS_SAVE )
+GAME( 1986, lifefrce,  salamand,  salamand,   salamand,  0,    ROT0,   "Konami", "Lifeforce (US)",  GAME_SUPPORTS_SAVE )
+GAME( 1987, lifefrcej, salamand,  salamand,   lifefrcj,  0,    ROT0,   "Konami", "Lifeforce (Japan)",  GAME_SUPPORTS_SAVE )
+GAME( 1989, spclone,   salamand,  salamand,   spclone,   0,    ROT0,   "Konami", "Salamander (version YY clone)", GAME_SUPPORTS_SAVE )
+GAME( 1987, blkpnthr,  0,         blkpnthr,   blkpnthr,  0,    ROT0,   "Konami", "Black Panther",  GAME_SUPPORTS_SAVE )
+GAME( 1987, citybomb,  0,         citybomb,   citybomb,  0,    ROT270, "Konami", "City Bomber (World)",  GAME_SUPPORTS_SAVE )
+GAME( 1987, citybombj, citybomb,  citybomb,   citybomb,  0,    ROT270, "Konami", "City Bomber (Japan)",  GAME_SUPPORTS_SAVE )
+GAME( 1987, hcrash,    0,         hcrash,     hcrash,    0,    ROT0,   "Konami", "Hyper Crash (version D)",  GAME_SUPPORTS_SAVE )
+GAME( 1987, hcrashc,   hcrash,    hcrash,     hcrash,    0,    ROT0,   "Konami", "Hyper Crash (version C)",  GAME_SUPPORTS_SAVE )
+GAME( 1988, kittenk,   0,         nyanpani,   nyanpani,  0,    ROT0,   "Konami", "Kitten Kaboodle",  GAME_SUPPORTS_SAVE )
+GAME( 1988, nyanpani,  kittenk,   nyanpani,   nyanpani,  0,    ROT0,   "Konami", "Nyan Nyan Panic (Japan)",  GAME_SUPPORTS_SAVE )

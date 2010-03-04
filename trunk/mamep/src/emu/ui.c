@@ -1887,14 +1887,10 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 	}
 
 	/* determine if we should disable the rest of the UI */
-#ifdef MAMEMESS // mamep: we want to use both MESS-newui and in-game UI
-	int ui_disabled = input_machine_has_keyboard(machine) && !ui_active;
-#else
-	int ui_disabled = ui_use_new_ui() || (input_machine_has_keyboard(machine) && !ui_active);
-#endif // MAMEMESS
+	int ui_disabled = (input_machine_has_keyboard(machine) && !ui_active);
 
 	/* is ScrLk UI toggling applicable here? */
-	if (!ui_use_new_ui() && input_machine_has_keyboard(machine))
+	if (input_machine_has_keyboard(machine))
 	{
 		/* are we toggling the UI with ScrLk? */
 		if (ui_input_pressed(machine, IPT_UI_TOGGLE_UI))
