@@ -573,23 +573,19 @@ static MACHINE_START(calchase)
  *
  *************************************************************/
 
-static PIC8259_SET_INT_LINE( calchase_pic8259_1_set_int_line ) {
-	cputag_set_input_line(device->machine, "maincpu", 0, interrupt ? HOLD_LINE : CLEAR_LINE);
+static WRITE_LINE_DEVICE_HANDLER( calchase_pic8259_1_set_int_line )
+{
+	cputag_set_input_line(device->machine, "maincpu", 0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
-
-static PIC8259_SET_INT_LINE( calchase_pic8259_2_set_int_line ) {
-	pic8259_set_irq_line( calchase_devices.pic8259_1, 2, interrupt);
-}
-
-
-static const struct pic8259_interface calchase_pic8259_1_config = {
-	calchase_pic8259_1_set_int_line
+static const struct pic8259_interface calchase_pic8259_1_config =
+{
+	DEVCB_LINE(calchase_pic8259_1_set_int_line)
 };
 
-
-static const struct pic8259_interface calchase_pic8259_2_config = {
-	calchase_pic8259_2_set_int_line
+static const struct pic8259_interface calchase_pic8259_2_config =
+{
+	DEVCB_DEVICE_LINE("pic8259_1", pic8259_ir2_w)
 };
 
 
@@ -599,23 +595,21 @@ static const struct pic8259_interface calchase_pic8259_2_config = {
  *
  *************************************************************/
 
-static PIT8253_OUTPUT_CHANGED( pc_timer0_w )
-{
-	pic8259_set_irq_line(calchase_devices.pic8259_1, 0, state);
-}
-
 static const struct pit8253_config calchase_pit8254_config =
 {
 	{
 		{
 			4772720/4,				/* heartbeat IRQ */
-			pc_timer0_w
+			DEVCB_NULL,
+			DEVCB_DEVICE_LINE("pic8259_1", pic8259_ir0_w)
 		}, {
 			4772720/4,				/* dram refresh */
-			NULL
+			DEVCB_NULL,
+			DEVCB_NULL
 		}, {
 			4772720/4,				/* pio port c pin 4, and speaker polling enough */
-			NULL
+			DEVCB_NULL,
+			DEVCB_NULL
 		}
 	}
 };
@@ -632,12 +626,12 @@ static void set_gate_a20(running_machine *machine, int a20)
 
 static void keyboard_interrupt(running_machine *machine, int state)
 {
-	pic8259_set_irq_line(calchase_devices.pic8259_1, 1, state);
+	pic8259_ir1_w(calchase_devices.pic8259_1, state);
 }
 
 static void ide_interrupt(running_device *device, int state)
 {
-	pic8259_set_irq_line(calchase_devices.pic8259_2, 6, state);
+	pic8259_ir6_w(calchase_devices.pic8259_2, state);
 }
 
 static int calchase_get_out2(running_machine *machine) {
@@ -650,7 +644,7 @@ static const struct kbdc8042_interface at8042 =
 };
 
 static void calchase_set_keyb_int(running_machine *machine, int state) {
-	pic8259_set_irq_line(calchase_devices.pic8259_1, 1, state);
+	pic8259_ir1_w(calchase_devices.pic8259_1, state);
 }
 
 

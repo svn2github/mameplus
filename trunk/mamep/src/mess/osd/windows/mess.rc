@@ -156,7 +156,7 @@ END
 // Icon
 //
 
-#if 1 // mamep: MAMEMESS console icon
+#if 1 // mamep: console icon
 IDI_MAME_ICON           ICON    DISCARDABLE     "../../../osd/windows/mame.ico"
 #else
 IDI_ICON_MESS           ICON    DISCARDABLE     "../../osd/winui/res/mess.ico"

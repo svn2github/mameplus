@@ -12,12 +12,6 @@
 #include "emu.h"
 #include <ctype.h>
 
-#if defined(_MSC_VER)
-#pragma optimize ("", off)
-#endif
-
-
-
 /***************************************************************************
     FUNCTION PROTOTYPES
 ***************************************************************************/
@@ -194,8 +188,7 @@ static void machine_config_detokenize(machine_config *config, const machine_conf
 
 			/* core parameters */
 			case MCONFIG_TOKEN_DRIVER_DATA:
-				TOKEN_UNGET_UINT32(tokens);
-				TOKEN_GET_UINT32_UNPACK2(tokens, entrytype, 8, config->driver_data_size, 24);
+				config->driver_data_alloc = TOKEN_GET_PTR(tokens, driver_data_alloc);
 				break;
 
 			case MCONFIG_TOKEN_QUANTUM_TIME:

@@ -2,7 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by mame.rc
 //
-#define IDI_MAME_ICON                   107 // MAME console icon
+#define IDI_MAME_ICON                   107 // mamep: console icon
 
 // Next default values for new objects
 //

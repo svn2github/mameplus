@@ -495,6 +495,7 @@ ifneq ($(TARGETOS),os2)
 ifndef NOWERROR
 CCOMFLAGS += -Wno-error -fno-strict-aliasing $(ARCHOPTS)
 else
+CCOMFLAGS += -fno-strict-aliasing $(ARCHOPTS)
 endif
 else
 CCOMFLAGS += -fno-strict-aliasing $(ARCHOPTS)
@@ -536,6 +537,19 @@ CCOMFLAGS += \
 	-I$(SRC)/osd \
 	-I$(SRC)/osd/$(OSD) \
 
+
+#-------------------------------------------------
+# archiving flags
+#-------------------------------------------------
+# Default to something reasonable for all platforms
+ARFLAGS = -cr
+# Deal with macosx brain damage if COMMAND_MODE is in
+# the luser's environment:
+ifeq ($(TARGETOS),macosx)
+ifeq ($(COMMAND_MODE),"legacy")
+ARFLAGS = -crs
+endif
+endif
 
 
 #-------------------------------------------------
@@ -628,7 +642,8 @@ LIBS += -lz
 ZLIB =
 endif
 
-
+# add SoftFloat floating point emulation library
+SOFTFLOAT = $(OBJ)/libsoftfloat.a
 
 #-------------------------------------------------
 # 'default' target needs to go here, before the 
@@ -790,7 +805,7 @@ $(OBJ)/%.fh: $(OBJ)/%.bdc $(FILE2STR)
 $(OBJ)/%.a:
 	@echo Archiving $@...
 	$(RM) $@
-	$(AR) -cr $@ $^
+	$(AR) $(ARFLAGS) $@ $^
 
 ifeq ($(TARGETOS),macosx)
 $(OBJ)/%.o: $(SRC)/%.m | $(OSPREBUILD)

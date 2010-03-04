@@ -394,23 +394,21 @@ static WRITE8_HANDLER( disk_iobank_w )
 Pit8253
 *********************************/
 
-static PIT8253_OUTPUT_CHANGED( pc_timer0_w )
-{
-    pic8259_set_irq_line(filetto_devices.pic8259_1, 0, state);
-}
-
 static const struct pit8253_config pc_pit8253_config =
 {
 	{
 		{
 			4772720/4,				/* heartbeat IRQ */
-			pc_timer0_w
+			DEVCB_NULL,
+			DEVCB_DEVICE_LINE("pic8259_1", pic8259_ir0_w)
 		}, {
 			4772720/4,				/* dram refresh */
-			NULL
+			DEVCB_NULL,
+			DEVCB_NULL
 		}, {
 			4772720/4,				/* pio port c pin 4, and speaker polling enough */
-			NULL
+			DEVCB_NULL,
+			DEVCB_NULL
 		}
 	}
 };
@@ -644,20 +642,19 @@ static I8237_INTERFACE( dma8237_1_config )
 8259 IRQ controller
 ******************/
 
-static PIC8259_SET_INT_LINE( pic8259_1_set_int_line ) {
-	cputag_set_input_line(device->machine, "maincpu", 0, interrupt ? HOLD_LINE : CLEAR_LINE);
+static WRITE_LINE_DEVICE_HANDLER( pic8259_1_set_int_line )
+{
+	cputag_set_input_line(device->machine, "maincpu", 0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
-static const struct pic8259_interface pic8259_1_config = {
-	pic8259_1_set_int_line
+static const struct pic8259_interface pic8259_1_config =
+{
+	DEVCB_LINE(pic8259_1_set_int_line)
 };
 
-static PIC8259_SET_INT_LINE( pic8259_2_set_int_line ) {
-	pic8259_set_irq_line( filetto_devices.pic8259_1, 2, interrupt);
-}
-
-static const struct pic8259_interface pic8259_2_config = {
-	pic8259_2_set_int_line
+static const struct pic8259_interface pic8259_2_config =
+{
+	DEVCB_DEVICE_LINE("pic8259_1", pic8259_ir2_w)
 };
 
 static IRQ_CALLBACK(irq_callback)

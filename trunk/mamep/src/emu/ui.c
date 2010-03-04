@@ -1782,22 +1782,6 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, render_contain
 
 
 /*-------------------------------------------------
-    ui_use_new_ui - determines if the "new ui"
-    is in use
--------------------------------------------------*/
-
-int ui_use_new_ui(void)
-{
-#ifdef MESS
-#if (defined(WIN32) || defined(_MSC_VER)) && !defined(SDLMAME_WIN32)
-	if (options_get_bool(mame_options(), "newui"))
-		return TRUE;
-#endif
-#endif
-	return FALSE;
-}
-
-/*-------------------------------------------------
     process_natural_keyboard - processes any
     natural keyboard input
 -------------------------------------------------*/
@@ -1946,7 +1930,6 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 	if (ui_get_use_natural_keyboard(machine) && (mame_get_phase(machine) == MAME_PHASE_RUNNING))
 		process_natural_keyboard(machine);
 
-	/* MESS-specific UI; provided that the UI is not disabled */
 	if (!ui_disabled)
 	{
 		/* paste command */
@@ -1954,11 +1937,11 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 			ui_paste(machine);
 	}
 
-	if (ui_disabled) return ui_disabled;
-
 #ifdef MESS
 	ui_mess_handler_ingame(machine);
 #endif /* MESS */
+
+	if (ui_disabled) return ui_disabled;
 
 	/* if the user pressed ESC, stop the emulation */
 	if (ui_input_pressed(machine, IPT_UI_CANCEL))

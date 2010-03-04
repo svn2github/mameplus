@@ -452,26 +452,24 @@ struct SNES_PPU_STRUCT	/* once all the regs are saved in this structure, it woul
 {
 	struct
 	{
+		/* clipmasks */
+		UINT8 window1_enabled, window1_invert;
+		UINT8 window2_enabled, window2_invert;
+		UINT8 wlog_mask;
+		/* color math enabled */
 		UINT8 color_math;
-		UINT32 data;
-		UINT32 map;
-		UINT8 map_size;
+
+		UINT8 charmap;
+		UINT8 tilemap;
+		UINT8 tilemap_size;
+
 		UINT8 tile_size;
 		UINT8 mosaic_enabled;	// actually used only for layers 0->3!
 		UINT8 main_window_enabled;
 		UINT8 sub_window_enabled;
-		UINT8 window1_enabled, window1_invert;
-		UINT8 window2_enabled, window2_invert;
-		UINT8 wlog_mask;
-		struct
-		{
-			UINT16 horizontal;
-			UINT16 vertical;
-			UINT16 tile_horz;
-			UINT8 shift_horz;
-			UINT16 tile_vert;
-			UINT16 shift_vert;
-		} offset;
+
+		UINT16 hoffs;
+		UINT16 voffs;
 	} layer[6];	// this is for the BG1 - BG2 - BG3 - BG4 - OBJ - color layers
 
 	struct
