@@ -39,7 +39,7 @@
 #include "mui_util.h"
 #include "translate.h"
 
-#define MAX_DIRS 64
+#define MAX_DIRS 128
 
 /***************************************************************************
     Internal structures

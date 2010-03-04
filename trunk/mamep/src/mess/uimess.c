@@ -31,7 +31,7 @@ void ui_mess_handler_ingame(running_machine *machine)
 	/* run display routine for devices */
 	if (mame_get_phase(machine) == MAME_PHASE_RUNNING)
 	{
-	
+
 		for (dev = machine->devicelist.first(); dev != NULL; dev = dev->next)
 		{
 			if (is_image_device(dev))

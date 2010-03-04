@@ -148,7 +148,7 @@ static void dma_exec(running_machine *machine, FPTR ch)
 	dst = gba_state->dma_dst[ch];
 	ctrl = gba_state->dma_regs[(ch*3)+2] >> 16;
 	srcadd = gba_state->dma_srcadd[ch];
- 	dstadd = gba_state->dma_dstadd[ch];
+	dstadd = gba_state->dma_dstadd[ch];
 
 	cnt = gba_state->dma_cnt[ch];
 	if (!cnt)
@@ -230,7 +230,7 @@ static void dma_exec(running_machine *machine, FPTR ch)
 			src &= 0xfffffffe;
 			dst &= 0xfffffffe;
 
-		 	// 16-bit
+			// 16-bit
 			memory_write_word(space, dst, memory_read_word(space, src));
 			switch (dstadd)
 			{
@@ -1446,7 +1446,6 @@ static WRITE32_HANDLER( gba_io_w )
 				running_device *gb_a_r = devtag_get_device(machine, "direct_a_right");
 				running_device *gb_b_l = devtag_get_device(machine, "direct_b_left");
 				running_device *gb_b_r = devtag_get_device(machine, "direct_b_right");
-				running_device *gb_device = devtag_get_device(space->machine, "custom");
 
 				gb_sound_w(gb_device, 0x16, data);
 				if ((data & 0x80) && !(gba_state->SOUNDCNT_X & 0x80))
@@ -1611,7 +1610,7 @@ static WRITE32_HANDLER( gba_io_w )
 							dma_exec(machine, ch);
 							return;
 						}
-				 	}
+					}
 				}
 
 				COMBINE_DATA(&gba_state->dma_regs[offset]);
@@ -2254,7 +2253,6 @@ static READ32_HANDLER( eeprom_r )
 		case EEP_IDLE:
 //          printf("eeprom_r: @ %x, mask %08x (state %d) (PC=%x) = %d\n", offset, ~mem_mask, gba_state->eeprom_state, activecpu_get_pc(), 1);
 			return 0x00010001;	// "ready"
-			break;
 
         case EEP_READFIRST:
             gba_state->eeprom_count--;
@@ -2291,7 +2289,6 @@ static READ32_HANDLER( eeprom_r )
 //          printf("out = %08x\n", out);
 //          printf("eeprom_r: @ %x, mask %08x (state %d) (PC=%x) = %08x\n", offset, ~mem_mask, gba_state->eeprom_state, activecpu_get_pc(), out);
 			return out;
-			break;
 	}
 //  printf("eeprom_r: @ %x, mask %08x (state %d) (PC=%x) = %d\n", offset, ~mem_mask, gba_state->eeprom_state, activecpu_get_pc(), 0);
 	return 0;

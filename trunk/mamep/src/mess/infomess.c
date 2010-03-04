@@ -24,40 +24,6 @@
  *************************************/
 
 /*-------------------------------------------------
-    print_game_categories - print the Categories
-    settings for a system
--------------------------------------------------*/
-
-void print_game_categories(FILE *out, const game_driver *game, const ioport_list &portlist)
-{
-	const input_port_config *port;
-	const input_field_config *field;
-
-	/* iterate looking for Categories */
-	for (port = portlist.first(); port != NULL; port = port->next)
-		for (field = port->fieldlist; field != NULL; field = field->next)
-			if (field->type == IPT_CATEGORY)
-			{
-				const input_setting_config *setting;
-
-				/* output the category name information */
-				fprintf(out, "\t\t<category name=\"%s\">\n", xml_normalize_string(input_field_name(field)));
-
-				/* loop over item settings */
-				for (setting = field->settinglist; setting != NULL; setting = setting->next)
-				{
-					fprintf(out, "\t\t\t<item name=\"%s\"", xml_normalize_string(setting->name));
-					if (setting->value == field->defvalue)
-						fprintf(out, " default=\"yes\"");
-					fprintf(out, "/>\n");
-				}
-
-				/* terminate the category entry */
-				fprintf(out, "\t\t</category>\n");
-			}
-}
-
-/*-------------------------------------------------
     print_game_device - prints out all info on
     MESS-specific devices
 -------------------------------------------------*/
@@ -126,14 +92,14 @@ void print_game_ramoptions(FILE *out, const game_driver *game, const machine_con
 
 	for (device = ram_first(config); device != NULL; device = ram_next(device))
 	{
-		ram_config *config = (ram_config *)device->inline_config;
-		fprintf(out, "\t\t<ramoption default=\"1\">%u</ramoption>\n",  messram_parse_string(config->default_size));
-		if (config->extra_options != NULL)
+		ram_config *ram = (ram_config *)device->inline_config;
+		fprintf(out, "\t\t<ramoption default=\"1\">%u</ramoption>\n",  messram_parse_string(ram->default_size));
+		if (ram->extra_options != NULL)
 		{
 			const char *s;
 
 			astring buffer;
-			astring_cpyc(&buffer, config->extra_options);
+			astring_cpyc(&buffer, ram->extra_options);
 			astring_replacechr(&buffer, ',', 0);
 
 			s = astring_c(&buffer);
