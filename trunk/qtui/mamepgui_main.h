@@ -88,6 +88,7 @@ public slots:
 	void on_actionChinese_PRC_activated();
 	void on_actionChinese_Taiwan_activated();
 	void on_actionJapanese_activated();
+	void on_actionSpanish_activated();
 	void on_actionFrench_activated();
 	void on_actionHungarian_activated();
 	void on_actionKorean_activated();

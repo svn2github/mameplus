@@ -88,7 +88,6 @@ class UpdateSelectionThread : public QThread
 	Q_OBJECT
 
 public:
-	MyQueue myqueue;
 	QString historyText;
 	QString mameinfoText;
 	QString driverinfoText;
@@ -110,9 +109,12 @@ protected:
 
 private:
 	QMutex mutex;
+	QString gameName;
 	bool abort;
 
 	QString getHistory(const QString &, const QString &, int);
+	void convertHistory(QString &, const QString &);
+	void convertMameInfo(QString &, const QString &);
 	void convertCommand(QString &);
 	QByteArray getScreenshot(const QString &, const QString &, int);
 };
@@ -171,6 +173,7 @@ public:
 		GameListTreeView(QWidget * = 0);
 		void paintEvent(QPaintEvent *);
 		QModelIndex moveCursor(QAbstractItemView::CursorAction, Qt::KeyboardModifiers);
+		void keyPressEvent(QKeyEvent *);
 };
 
 class GameListDelegate : public QItemDelegate
@@ -197,9 +200,6 @@ public:
 	QPixmap pmDeco;
 	QRect rectDeco;
 	quint16 filterFlags;
-
-	// interactive threads used by the game list
-	UpdateSelectionThread selectionThread;
 	bool autoAudit;
 
 	Gamelist(QObject *parent = 0);
@@ -224,7 +224,6 @@ public slots:
 	void switchProgress(int max, QString title);
 	void updateSelection();
 	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
-	void setupSnap(int);
 
 	// external process management
 	void runMameFinished(int, QProcess::ExitStatus);
@@ -240,6 +239,8 @@ private:
 	QString currentTempROM;
 	QFutureWatcher<void> loadIconWatcher;
 	QAbstractItemDelegate *defaultGameListDelegate;
+	// interactive threads used by the game list
+	UpdateSelectionThread selectionThread;
 	QList<QTreeWidgetItem *> intFolderItems;
 	QStringList extFolderNames;
 
@@ -261,6 +262,7 @@ private:
 	void closeJoysticks();
 
 private slots:
+	void setupSnap(int);
 	void showContextMenu(const QPoint &);
 	void updateContextMenu();
 	void mountDevice();

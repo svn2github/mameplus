@@ -1,0 +1,28 @@
+﻿[setup environment]
+it is required to rebuild Qt for static linking
+get Qt 4.6 here http://get.qt.nokia.com/qt/source/
+
+Linux (Ubuntu 8.04):
+install: libqt4-dev
+install: libgtk2.0-dev
+
+Mac OS X
+install: xcode 3.1
+
+[qt compile config]
+Windows:
+configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-rtti -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde -nomake examples -nomake demos
+
+Linux:
+configure -opensource -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-javascript-jit -no-script -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-opengl -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -gtkstyle -nomake examples -nomake demos
+
+Mac OS X:
+configure -opensource -release -static -universal -no-exceptions -no-accessibility -no-stl -no-phonon -no-multimedia -no-svg -no-webkit -no-javascript-jit -no-script -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl  -no-dwarf2 -nomake examples -nomake demos
+
+make
+make install
+
+[compile MAMEPGUI]
+lrelease mamepgui.pro
+qmake
+make

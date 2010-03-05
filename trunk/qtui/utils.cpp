@@ -274,6 +274,8 @@ bool Utils::matchMameFile(const QString &fileName, const QStringList &fileNameFi
 		{
 			if (QString::compare(fileName, fileNameFilter, Qt::CaseInsensitive) == 0)
 				return true;
+			else if (QString::compare(QFileInfo(fileName).fileName(), fileNameFilter, Qt::CaseInsensitive) == 0)
+				return true;
 		}
 	}
 
@@ -333,9 +335,9 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 			QString dirPath = utils->getPath(_dirPath + archName);
 			QDir dir(dirPath);
 			QStringList fileNames = dir.entryList(fileNameFilters, QDir::Files | QDir::Readable);
-//			win->log(QString("testing: %1, %2").arg(dirPath).arg(fileNames.count()));
+//			win->log(QString("testing: %1, %2").arg(dirPath).arg(fileNames.size()));
 
-			for (int i = 0; i < fileNames.count(); i++)
+			for (int i = 0; i < fileNames.size(); i++)
 			{
 				if (isSingleFile && mameFileInfoList.size() > 0)
 					break;
@@ -525,7 +527,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 				if (method == MAMEFILE_EXTRACT)
 				{
 					bool re = extractMameFile(f->Name, mameFileInfo);
-					win->log(QString("ext re: %1").arg(re));
+				//	win->log(QString("ext re: %1").arg(re));
 				}
 			}
 			IAlloc_Free(&allocImp, outBuffer);
@@ -551,14 +553,14 @@ void MyQueue::setSize(int c)
 
 QString MyQueue::dequeue()
 {
-//	emit logStatusUpdated(QString("deQueue: %1 %2").arg(queue.count()).arg(capacity));
+//	emit logStatusUpdated(QString("deQueue: %1 %2").arg(queue.size()).arg(capacity));
 
 	return queue.dequeue();
 }
 
 void MyQueue::enqueue(const QString & str)
 {
-//	emit logStatusUpdated(QString("enQueue: %1 %2").arg(queue.count()).arg(capacity));
+//	emit logStatusUpdated(QString("enQueue: %1 %2").arg(queue.size()).arg(capacity));
 
 	QMutexLocker locker(&mutex);
 	// unique values only
@@ -567,7 +569,7 @@ void MyQueue::enqueue(const QString & str)
 		queue.enqueue(str);
 
 		// pop if overflow
-		if (queue.count() > capacity)
+		if (queue.size() > capacity)
 			queue.dequeue();
 	}
 }
@@ -587,9 +589,9 @@ QString MyQueue::value(int i)
 	return queue.value(i);
 }
 
-int MyQueue::count() const
+int MyQueue::size() const
 {
-	return queue.count();
+	return queue.size();
 }
 
 
@@ -609,7 +611,7 @@ int ProcessManager::start(QString &command, QStringList &arguments, bool autoCon
 	{
 		lastCommand = command;
 
-		for (int i = 0; i < arguments.count(); i++)
+		for (int i = 0; i < arguments.size(); i++)
 			lastCommand += " " + arguments[i];
 
 		connect(proc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(error(QProcess::ProcessError)));
@@ -631,7 +633,7 @@ int ProcessManager::start(QString &command, QStringList &arguments, bool autoCon
 QProcess *ProcessManager::process(ushort index)
 {
 	QList<QProcess *> vl = procMap.keys(index);
-	if ( vl.count() > 0 )
+	if ( vl.size() > 0 )
 		return vl.at(0);
 	else
 		return NULL;
@@ -664,7 +666,7 @@ void ProcessManager::readyReadStandardOutput()
 	QStringList sl = s.split("\n");
 	int i;
 
-	for (i = 0; i < sl.count(); i++)
+	for (i = 0; i < sl.size(); i++)
 	{
 		s = sl[i].simplified();
 		if ( !s.isEmpty() )
@@ -682,7 +684,7 @@ void ProcessManager::readyReadStandardError()
 	QStringList sl = s.split("\n");
 	int i;
 
-	for (i = 0; i < sl.count(); i++)
+	for (i = 0; i < sl.size(); i++)
 	{
 		s = sl[i].simplified();
 		if ( !s.isEmpty() )
@@ -697,14 +699,14 @@ void ProcessManager::finished(int exitCode, QProcess::ExitStatus exitStatus)
 {
 	QProcess *proc = (QProcess *)sender();
 
-	win->log(QString("proc #%1 finished, exit: %2, remaining: %3").arg(procMap[proc]).arg(exitCode).arg(procMap.count() - 1));
+	win->log(QString("proc #%1 finished, exit: %2, remaining: %3").arg(procMap[proc]).arg(exitCode).arg(procMap.size() - 1));
 	procMap.remove(proc);
 }
 
 void ProcessManager::started()
 {
 	QProcess *proc = (QProcess *)sender();
-	win->log(QString("proc #%1 started, active: %3").arg(procMap[proc]).arg(procMap.count()));
+	win->log(QString("proc #%1 started, active: %3").arg(procMap[proc]).arg(procMap.size()));
 }
 
 void ProcessManager::error(QProcess::ProcessError processError)

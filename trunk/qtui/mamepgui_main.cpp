@@ -401,8 +401,18 @@ void MainWindow::init()
 	// must call optUtils->init() after win, before show()
 	optUtils->init();
 
-	//rearrange docks
 #ifdef Q_OS_WIN
+	//fixme: win font hack
+	if (language.startsWith("zh_") || language.startsWith("ja_"))
+	{
+		QFont font;
+		font.setFamily("MS Gothic");
+		font.setFixedPitch(true);
+		tbCommand->setFont(font);
+//		tbCommand->setLineWrapMode(QTextEdit::NoWrap);
+	}
+
+	//rearrange docks
 	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::LeftDockWidgetArea), m1UI);
 	tabifyDockWidget(dwFolderList, m1UI);
 #endif /* Q_OS_WIN */
@@ -489,12 +499,6 @@ void MainWindow::init()
 	if (gui_style.isEmpty())
 		gui_style = pGuiSettings->value("gui_style").toString();
 
-#ifdef Q_WS_MAC
-	//fixme: temp hack, aqua theme is buggy
-//	if (gui_style.isEmpty() || gui_style.startsWith("macintosh", Qt::CaseInsensitive))
-//		gui_style = "Plastique";
-#endif
-
 	QStringList styles = QStyleFactory::keys();
 	QActionGroup *styleActions = new QActionGroup(this);
 	foreach (QString style, styles)
@@ -505,12 +509,6 @@ void MainWindow::init()
 			act->setChecked(true);
 		styleActions->addAction(act);
 		connect(act, SIGNAL(triggered()), this, SLOT(setGuiStyle()));
-
-#ifdef Q_WS_MAC
-		//fixme: temp hack, aqua theme is buggy
-//		if (style.startsWith("macintosh", Qt::CaseInsensitive))
-//			act->setEnabled(false);
-#endif
 	}
 
 	if (!gui_style.isEmpty())
@@ -928,6 +926,12 @@ void MainWindow::on_actionJapanese_activated()
 	showRestartDialog();
 }
 
+void MainWindow::on_actionSpanish_activated()
+{
+	language = "es_ES";
+	showRestartDialog();
+}
+
 void MainWindow::on_actionFrench_activated()
 {
 	language = "fr_FR";
@@ -1076,6 +1080,8 @@ void MainWindow::loadLayout()
 		actionChinese_Taiwan->setChecked(true);
 	else if (language == "ja_JP")
 		actionJapanese->setChecked(true);
+	else if (language == "es_ES")
+		actionSpanish->setChecked(true);
 	else if (language == "fr_FR")
 		actionFrench->setChecked(true);
 	else if (language == "hu_HU")
@@ -1422,7 +1428,7 @@ QList<QTabBar *> MainWindow::getSSTabBars()
 		bool isSSDocked = false;
 
 		//iterate known screenshot/history dock names
-		for (int i = 0; i < dockCtrlNames.count(); i++)
+		for (int i = 0; i < dockCtrlNames.size(); i++)
 		{
 			//iterate tabs in a tab bar
 			for (int t = 0; t < tabBar->count(); t ++)
@@ -1549,7 +1555,7 @@ void Screenshot::rotateImage()
 		bool isDock = false;
 
 		// if the dock widget contains any of screenshot/history widgets
-		for (int i = 0; i < win->dockCtrlNames.count(); i++)
+		for (int i = 0; i < win->dockCtrlNames.size(); i++)
 		{
 			if (MainWindow::tr(qPrintable(win->dockCtrlNames[i])) == tab->tabText(0))
 			{

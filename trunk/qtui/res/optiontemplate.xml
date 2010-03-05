@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0"?>
-<!-- mame ver 129 -->
+<!-- mame .136u2 / sdlmame .129 -->
 <optiontemplate version="1">
 	<!-- GUI Only -->
 	<option name="cabinet_directory" default="cabinets" type="dirs" guivisible="1" />
@@ -29,7 +29,7 @@
 	<option name="inipath" guiname="ini files directory" type="dirs" />
 	<option name="fontpath" guiname="font files directory" type="dirs" />
 	<option name="cheatpath" guiname="cheat files directory" type="dirs" />
-	<option name="crsshairpath" guiname="crosshair files directory" type="dir" />
+	<option name="crosshairpath" guiname="crosshair files directory" type="dir" />
 	<option name="langpath" guiname="language files directory" type="dir" />
 	<option name="ipspath" guiname="IPS files directory" type="dir" />
 	
@@ -68,6 +68,7 @@
 		<value guivalue="pixel aspect">pixel</value>
 		<value>cocktail</value>
 	</option>
+	<option name="burnin" guiname="create burn-in snapshots" type="bool" />
 
 	<option name="autoframeskip" guiname="auto frame skipping" type="bool" />
 	<option name="frameskip" guiname="frame skipping" type="int" min="0" max="10" />
@@ -114,8 +115,8 @@
 	</option>
 	
 	<option name="antialias" guiname="draw antialiased vectors" type="bool" />
-	<option name="beam" guiname="beam width" type="float" min="0.01" max="1.0" />
-	<option name="flicker" type="float" min="0" max="1.0" />
+	<option name="beam" guiname="beam width" type="float" min="0.1" max="10.0" />
+	<option name="flicker" type="float" min="0" max="100.0" />
 	
 	<option name="sound" guiname="enable sound output" type="bool" />
 	<option name="samplerate" guiname="sample rate" type="string">
@@ -249,6 +250,13 @@
 	<!--WINDOWS PERFORMANCE OPTIONS-->
 	<option name="priority" guiname="thread priority" type="int" min="-15" max="1" />
 	<option name="multithreading" guiname="enable multi-threading" type="bool" />
+	<option name="numprocessors" guiname="number of processors" type="string">
+		<value>auto</value>
+		<value>1</value>
+		<value>2</value>
+		<value>3</value>
+		<value>4</value>
+	</option>
 
 	<option name="sdlvideofps" guiname="show SDL video performance" type="bool" />
 
@@ -257,8 +265,10 @@
 		<value os="win" guivalue="GDI">gdi</value>
 		<value os="win" guivalue="DirectDraw">ddraw</value>
 		<value os="win" guivalue="Direct3D">d3d</value>
-		<value os="sdl">soft</value>
 		<value os="sdl" guivalue="OpenGL">opengl</value>
+		<value os="sdl">opengl16</value>
+		<value os="sdl">soft</value>
+		<value os="sdl">sdl13</value>
 	</option>
 	<option name="numscreens" guiname="number of screens to create" type="int" min="1" max="4" />
 	<option name="window" guiname="run in a window" type="bool" />
@@ -274,6 +284,8 @@
 
 	<option name="scalemode" guiname="scale mode" type="string">
 		<value>none</value>
+		<value>hwblit</value>
+		<value>hwbest</value>
 		<value>async</value>
 		<value>yv12</value>
 		<value>yuy2</value>
@@ -375,6 +387,7 @@
 	<option name="full_screen_brightness" type="float" min="0.1" max="2.0" />
 	<option name="full_screen_contrast" type="float" min="0.1" max="2.0" />
 	<option name="full_screen_gamma" type="float" min="0.1" max="3.0" />
+	
 	<option name="useallheads" guiname="split image across monitors" type="bool" />
 
 	<!--SOUND OPTIONS-->

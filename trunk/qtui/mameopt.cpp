@@ -1450,6 +1450,7 @@ void OptionUtils::loadDefault(QString text)
 		<< QT_TR_NOOP("ini files directory")
 		<< QT_TR_NOOP("font files directory")
 		<< QT_TR_NOOP("cheat files directory")
+		<< QT_TR_NOOP("crosshair files directory")
 		<< QT_TR_NOOP("language files directory")
 		<< QT_TR_NOOP("localized directory")
 		<< QT_TR_NOOP("ips files directory")
@@ -1471,6 +1472,7 @@ void OptionUtils::loadDefault(QString text)
 		<< QT_TR_NOOP("snapshot/movie pattern")
 		<< QT_TR_NOOP("snapshot/movie resolution")
 		<< QT_TR_NOOP("snapshot/movie view")
+		<< QT_TR_NOOP("create burn-in snapshots")
 	
 		<< QT_TR_NOOP("auto frame skipping")
 		<< QT_TR_NOOP("frame skipping")
@@ -1561,20 +1563,21 @@ void OptionUtils::loadDefault(QString text)
 		<< QT_TR_NOOP("button navy")
 		<< QT_TR_NOOP("button lime")
 		<< QT_TR_NOOP("cursor")
-		
+
 		<< QT_TR_NOOP("language")
 		<< QT_TR_NOOP("use lang list")
-		
+
 		<< QT_TR_NOOP("oslog")
 		<< QT_TR_NOOP("watchdog")
-			
+
 		<< QT_TR_NOOP("thread priority")
 		<< QT_TR_NOOP("enable multi-threading")
+		<< QT_TR_NOOP("number of processors")
 
 		<< QT_TR_NOOP("show sdl video performance")
-			
+
 		<< QT_TR_NOOP("video output method")
-		
+
 		<< QT_TR_NOOP("number of screens to create")
 		<< QT_TR_NOOP("run in a window")
 		<< QT_TR_NOOP("start out maximized")
@@ -2096,14 +2099,14 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 		QStringList bufs = mameIni.split(QRegExp("[\\r\\n]+"));
 
 		// remove language setting, it's set at runtime
-		for (int i = 0; i < bufs.count(); i ++)
+		for (int i = 0; i < bufs.size(); i ++)
 		{
 			if (bufs[i].startsWith("language"))
 				bufs.removeAt(i);
 		}
 
 		// read in reverse order to eat empty headers		
-		for (int i = bufs.count() - 1; i >= 0; i --)
+		for (int i = bufs.size() - 1; i >= 0; i --)
 		{
 			static int c = 0;
 			line = bufs[i];
@@ -2117,7 +2120,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 		}
 
 		// remove trailing blank lines
-		for (int i = bufs.count() - 1; i >= 0; i --)
+		for (int i = bufs.size() - 1; i >= 0; i --)
 		{
 			if (bufs[i].isEmpty())
 				bufs.removeAt(i);
@@ -2125,7 +2128,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 				break;
 		}
 
-		for (int i = 0; i < bufs.count(); i ++)
+		for (int i = 0; i < bufs.size(); i ++)
 		{
 			static bool isEntry = false;
 
@@ -2444,9 +2447,10 @@ void OptionUtils::updateSelectableItems(QString optName)
 		pMameOpt->values.clear();
 		pMameOpt->guivalues.clear();
 
-		if ((gameInfo->isBios || !biosof.isEmpty()))
+		//MESS doesnt use "isbios" attrib, so all MESS entries with "biosset" is a bios
+		if ((isMESS || gameInfo->isBios || !biosof.isEmpty()))
 		{
-			if (!gameInfo->isBios)
+			if (!isMESS && !gameInfo->isBios)
 				gameInfo = pMameDat->games[biosof];
 
 			QStringList biosSets = gameInfo->biosSets.keys();
@@ -2475,7 +2479,7 @@ void OptionUtils::updateSelectableItems(QString optName)
 		
 		QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
 		files.sort();
-		for (int i = 0; i < files.count(); i++)
+		for (int i = 0; i < files.size(); i++)
 		{
 			QFileInfo fi(files[i]);
 			QString ctrlr = fi.fileName();
@@ -2502,7 +2506,7 @@ void OptionUtils::updateSelectableItems(QString optName)
 		
 		QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
 		files.sort();
-		for (int i = 0; i < files.count(); i++)
+		for (int i = 0; i < files.size(); i++)
 		{
 			QFileInfo fi(files[i]);
 			QString ctrlr = fi.fileName();

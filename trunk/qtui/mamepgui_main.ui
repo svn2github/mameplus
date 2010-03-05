@@ -163,6 +163,7 @@
      <addaction name="actionChinese_PRC"/>
      <addaction name="actionChinese_Taiwan"/>
      <addaction name="actionJapanese"/>
+     <addaction name="actionSpanish"/>
      <addaction name="actionFrench"/>
      <addaction name="actionHungarian"/>
      <addaction name="actionKorean"/>
@@ -733,6 +734,14 @@
    </property>
    <property name="text">
     <string notr="true">Français</string>
+   </property>
+  </action>
+  <action name="actionSpanish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Español</string>
    </property>
   </action>
  </widget>

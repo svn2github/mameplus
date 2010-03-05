@@ -115,11 +115,11 @@ enum {
 	UI_MSG_MAX = 31
 };
 
-UpdateSelectionThread::UpdateSelectionThread(QObject *parent)
-: QThread(parent)
+UpdateSelectionThread::UpdateSelectionThread(QObject *parent) : 
+QThread(parent),
+gameName(""),
+abort(false)
 {
-	abort = false;
-
 	QFile icoFile;
 
 	if (defIconDataGreen.isEmpty())
@@ -165,8 +165,16 @@ void UpdateSelectionThread::update()
 {
 	QMutexLocker locker(&mutex);
 
+	if (currentGame.isEmpty()/* || currentGame == gameName */)
+		return;
+
+	gameName = currentGame;
+
 	if (!isRunning())
+	{
+		abort = false;
 		start(LowPriority);
+	}
 }
 
 void UpdateSelectionThread::run()
@@ -188,31 +196,43 @@ void UpdateSelectionThread::run()
 		{ "mameinfo_file",	"mameinfo.dat", DOCK_DRIVERINFO,"DriverInfo",	&driverinfoText },
 		{ "story_file", 	"story.dat",	DOCK_STORY, 	"Story",		&storyText },
 		{ "command_file",	"command.dat",	DOCK_COMMAND,	"Command",		&commandText },
-		{ NULL }
+		{ NULL,				NULL,			0,				NULL,			NULL }
 	};
 
-	while (!myqueue.isEmpty() && !abort)
-	{
-		QString gameName = myqueue.dequeue();
+	//save a local copy
+	QString _gameName = gameName;
 
+	while (!abort)
+	{
+		//update snaps
 		for (int snapType = DOCK_SNAP; snapType <= DOCK_PCB; snapType ++)
 		{
+			if (_gameName != gameName)
+			{
+				abort = true;
+				break;
+			}
+
+			
 			if (!abort && win->dockCtrls[snapType]->isVisible() && win->isDockTabVisible(win->dockCtrlNames[snapType]))
 			{
-				pmSnapData[snapType] = getScreenshot(mameOpts[validGuiSettings[snapType]]->globalvalue, gameName, snapType);
+				pmSnapData[snapType] = getScreenshot(mameOpts[validGuiSettings[snapType]]->globalvalue, _gameName, snapType);
 				emit snapUpdated(snapType);
 			}
 		}
-//		static QMovie movie( "xxx.mng" );
-//		win->lblPCB->setMovie( &movie );
 
 		QString path, localPath;
-
 		const DockInfo *dockInfoList = _dockInfoList;
 
-		/* loop over entries until we hit a NULL name */
+		//update documents
 		for ( ; dockInfoList->optName != NULL; dockInfoList++)
 		{
+			if (_gameName != gameName)
+			{
+				abort = true;
+				break;
+			}
+
 			if (!abort && win->tbHistory->isVisible() && win->isDockTabVisible(dockInfoList->title))
 			{
 				if (hasLanguage)
@@ -226,7 +246,7 @@ void UpdateSelectionThread::run()
 				{
 					localPath = localPath + language + "/" + path;
 
-					*dockInfoList->buffer = getHistory(localPath, gameName, dockInfoList->type + DOCK_LAST /*hack for local*/);
+					*dockInfoList->buffer = getHistory(localPath, _gameName, dockInfoList->type + DOCK_LAST /*hack for local*/);
 					if (!dockInfoList->buffer->isEmpty())
 						dockInfoList->buffer->append("<hr>");
 				}
@@ -234,30 +254,37 @@ void UpdateSelectionThread::run()
 				if (mameOpts.contains(dockInfoList->optName))
 					path = mameOpts[dockInfoList->optName]->globalvalue;
 
-				//we don't want to display the same dat twice
+				//don't display the same dat twice
 				if (localPath != path)
-					dockInfoList->buffer->append(getHistory(path, gameName, dockInfoList->type));
+					dockInfoList->buffer->append(getHistory(path, _gameName, dockInfoList->type));
 
-				//special handling for command
-				if (dockInfoList->type == DOCK_COMMAND)
+				//special handling
+				switch (dockInfoList->type)
 				{
+				case DOCK_MAMEINFO:
+					convertMameInfo(mameinfoText, _gameName);
+					break;
+
+				case DOCK_COMMAND:
 					convertCommand(commandText);
-/*
-					//fixme: font hack, should be removed
-					if (language.startsWith("zh_") || language.startsWith("ja_"))
-					{
-						QFont font;
-						font.setFamily("MS Gothic");
-						font.setFixedPitch(true);
-						win->tbCommand->setFont(font);
-		//				win->tbCommand->setLineWrapMode(QTextEdit::NoWrap);
-					}
-*/
+					break;
+					
+				default:
+					break;
 				}
+
 
 				emit snapUpdated(dockInfoList->type);
 			}
 		}
+
+		if (abort)
+		{
+			_gameName = gameName;
+			abort = false;
+		}
+		else
+			break;
 	}
 }
 
@@ -339,7 +366,7 @@ QString UpdateSelectionThread::getHistory(const QString &fileName, const QString
 				}
 			}
 		}
-		while (!line.isNull());
+		while (!line.isNull() && !abort);
 	}
 
 	utils->clearMameFileInfoList(mameFileInfoList);
@@ -366,33 +393,99 @@ QString UpdateSelectionThread::getHistory(const QString &fileName, const QString
 	return buf;
 }
 
-void UpdateSelectionThread::convertCommand(QString &commandText)
+void UpdateSelectionThread::convertHistory(QString &text, const QString &gameName)
 {
-	// command.dat parsing
-	commandText.replace(QRegExp("<br>\\s+"), "<br>");
-	/* directions */
-	//generate dup dirs
-	commandText.replace("_2_1_4_1_2_3_6", "_2_1_4_4_1_2_3_6");
-	commandText.replace("_2_3_6_3_2_1_4", "_2_3_6_6_3_2_1_4");
-	commandText.replace("_4_1_2_3_6", "<img src=\":/res/16x16/dir-hcf.png\" />");
-	commandText.replace("_6_3_2_1_4", "<img src=\":/res/16x16/dir-hcb.png\" />");
-	commandText.replace("_2_3_6", "<img src=\":/res/16x16/dir-qdf.png\" />");
-	commandText.replace("_2_1_4", "<img src=\":/res/16x16/dir-qdb.png\" />");
-	commandText.replace(QRegExp("_(\\d)"), "<img src=\":/res/16x16/dir-\\1.png\" />");
-	// buttons
-	commandText.replace(QRegExp("_([A-DGKNPS\\+])"), "<img src=\":/res/16x16/btn-\\1.png\" />");
-	commandText.replace(QRegExp("_([a-f])"), "<img src=\":/res/16x16/btn-n\\1.png\" />");
-	//------
-	commandText.replace(QRegExp("<br>[\\x2500-]{8,}<br>"), "<hr>");
-	//special moves, starts with <br> || <hr>
-	commandText.replace(QRegExp(">\\x2605"), "><img src=\":/res/16x16/star_gold.png\" />");
-	commandText.replace(QRegExp(">\\x2606"), "><img src=\":/res/16x16/star_silver.png\" />");
-	commandText.replace(QRegExp(">\\x25B2"), "><img src=\":/res/16x16/tri-r.png\" />");
-	commandText.replace(QRegExp(">\\x25CB"), "><img src=\":/res/16x16/cir-y.png\" />");
-	commandText.replace(QRegExp(">\\x25CE"), "><img src=\":/res/16x16/cir-r.png\" />"); 		
-	commandText.replace(QRegExp(">\\x25CF"), "><img src=\":/res/16x16/cir-g.png\" />");
-	commandText.replace(QChar(0x2192), "<img src=\":/res/16x16/blank.png\" /><img src=\":/res/16x16/arrow-r.png\" />");
-//			commandText.replace(QChar(0x3000), "<img src=\":/res/16x16/blank.png\" />");
+}
+
+void UpdateSelectionThread::convertMameInfo(QString &text, const QString &gameName)
+{
+	GameInfo *gameInfo = pMameDat->games[gameName];
+	RomInfo *romInfo;
+	DiskInfo *diskInfo;
+	QString buf = "";
+
+	if (gameInfo->roms.isEmpty() && gameInfo->disks.isEmpty())
+		return;
+
+	buf.append("Rom Region:");
+	buf.append("<table>");
+
+	QMap<QString, quint32> romInfos;
+	foreach (quint32 crc, gameInfo->roms.keys())
+	{
+		romInfo = gameInfo->roms.value(crc);
+		romInfos.insert(romInfo->region + romInfo->name, crc);
+	}
+
+	foreach (quint32 crc, romInfos)
+	{
+		buf.append("<tr>");
+
+		romInfo = gameInfo->roms.value(crc);
+		buf.append("<td>" + romInfo->region + "</td>");
+		buf.append("<td> </td>");
+		buf.append("<td>" + romInfo->name + "</td>");
+
+		buf.append("</tr>");
+	}
+
+	QMap<QString, QString> diskInfos;
+	foreach (QString sha1, gameInfo->disks.keys())
+	{
+		diskInfo = gameInfo->disks.value(sha1);
+		diskInfos.insert(diskInfo->region + diskInfo->name, sha1);
+	}
+
+	foreach (QString sha1, diskInfos)
+	{
+		diskInfo = gameInfo->disks.value(sha1);
+		buf.append("<tr>");
+
+		buf.append("<td>" + diskInfo->region + "</td>");
+		buf.append("<td> </td>");
+		buf.append("<td>" + diskInfo->name + ".chd</td>");
+		
+		buf.append("</tr>");
+	}
+
+	buf.append("</table><hr>");
+
+	text.prepend(buf);	
+}
+
+void UpdateSelectionThread::convertCommand(QString &text)
+{
+	struct CmdTable
+	{
+		QRegExp regex;
+		QString repl;
+	};
+
+	static const CmdTable _cmdTable[] =
+	{
+		{ QRegExp("<br>\\s+"),	"<br>" },
+		// directions, generate duplicated symbols
+		{ QRegExp("_2_1_4_1_2_3_6"), "_2_1_4_4_1_2_3_6" },
+		{ QRegExp("_2_3_6_3_2_1_4"), "_2_3_6_6_3_2_1_4" },
+		{ QRegExp("_4_1_2_3_6"), "<img src=\":/res/16x16/dir-hcf.png\" />" },
+		{ QRegExp("_6_3_2_1_4"), "<img src=\":/res/16x16/dir-hcb.png\" />" },
+		{ QRegExp("_2_3_6"), "<img src=\":/res/16x16/dir-qdf.png\" />" },
+		{ QRegExp("_2_1_4"), "<img src=\":/res/16x16/dir-qdb.png\" />" },
+		{ QRegExp("_(\\d)"), "<img src=\":/res/16x16/dir-\\1.png\" />" },
+		// buttons
+		{ QRegExp("_([A-DGKNPS\\+])"), "<img src=\":/res/16x16/btn-\\1.png\" />" },
+		{ QRegExp("_([a-f])"), "<img src=\":/res/16x16/btn-n\\1.png\" />" },
+		//------
+		{ QRegExp("<br>[\\x2500-]{8,}<br>"), "<hr>" },
+		//special moves, starts with <br> || <hr>
+		{ QRegExp(">\\x2605"), "><img src=\":/res/16x16/star_gold.png\" />" },
+		{ QRegExp(">\\x2606"), "><img src=\":/res/16x16/star_silver.png\" />" },
+		{ QRegExp(">\\x25B2"), "><img src=\":/res/16x16/tri-r.png\" />" },
+		{ QRegExp(">\\x25CB"), "><img src=\":/res/16x16/cir-y.png\" />" },
+		{ QRegExp(">\\x25CE"), "><img src=\":/res/16x16/cir-r.png\" />" }, 		
+		{ QRegExp(">\\x25CF"), "><img src=\":/res/16x16/cir-g.png\" />" },
+		{ QRegExp("\\x2192"), "<img src=\":/res/16x16/blank.png\" /><img src=\":/res/16x16/arrow-r.png\" />" },
+	//	{ QRegExp("\\0x3000"), "<img src=\":/res/16x16/blank.png\" />" },
 
 	/* colors
 	Y: +45
@@ -401,6 +494,17 @@ void UpdateSelectionThread::convertCommand(QString &commandText)
 	C: -32
 	P: -90
 	*/
+
+		{ QRegExp(), NULL }
+	};
+
+	const CmdTable *cmdTable = _cmdTable;
+	
+	/* loop over entries until we hit a NULL name */
+	for ( ; !abort && cmdTable->repl != NULL; cmdTable++)
+	{
+		text.replace(cmdTable->regex, cmdTable->repl);
+	}
 }
 
 QByteArray UpdateSelectionThread::getScreenshot(const QString &_dirPaths, const QString &gameName, int snapType)
@@ -505,12 +609,12 @@ TreeItem *TreeItem::child(int row)
 
 int TreeItem::childCount() const
 {
-	return childItems.count();
+	return childItems.size();
 }
 
 int TreeItem::columnCount() const
 {
-	return itemData.count();
+	return itemData.size();
 }
 
 QVariant TreeItem::data(int column) const
@@ -836,6 +940,32 @@ QModelIndex GameListTreeView::moveCursor(QAbstractItemView::CursorAction cursorA
 	return index;
 }
 
+//Mac: start game with Return/Enter
+void GameListTreeView::keyPressEvent(QKeyEvent *event)
+{
+
+	switch (event->key())
+	{
+#ifdef Q_WS_MAC
+	case Qt::Key_Enter:
+	case Qt::Key_Return:
+		// ### we can't open the editor on enter, becuse
+		// some widgets will forward the enter event back
+		// to the viewport, starting an endless loop
+		if (state() != EditingState || hasFocus())
+		{
+			if (currentIndex().isValid())
+				emit activated(currentIndex());
+			event->ignore();
+		}
+		break;
+#endif
+	default:
+		QTreeView::keyPressEvent(event);
+		break;
+	}
+}
+
 
 GameListDelegate::GameListDelegate(QObject *parent) : 
 QItemDelegate(parent)
@@ -1073,10 +1203,7 @@ void Gamelist::updateSelection()
 #endif /* Q_OS_WIN */
 
 	if (hasInitd && pMameDat->games.contains(currentGame))
-	{
-		selectionThread.myqueue.enqueue(currentGame);
 		selectionThread.update();
-	}
 }
 
 void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & previous)
@@ -1105,7 +1232,6 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		win->logStatus(gameDesc);
 		win->logStatus(gameInfo);
 
-		selectionThread.myqueue.enqueue(currentGame);
 		selectionThread.update();
 
 #ifdef Q_OS_WIN
@@ -1210,8 +1336,8 @@ void Gamelist::centerGameSelection(QModelIndex index)
 // must update GUI in main thread
 void Gamelist::setupSnap(int snapType)
 {
-	if (!selectionThread.myqueue.isEmpty())
-		return;
+//	if (!selectionThread.done)
+//		return;
 
 	switch (snapType)
 	{
@@ -1485,7 +1611,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 	win->romAuditor.exportDat();
 
 	hasInitd = true;
-//	win->log(QString("init'd %1 games").arg(pMameDat->games.count()));
+//	win->log(QString("init'd %1 games").arg(pMameDat->games.size()));
 
 	//for re-init list from folders
 	restoreGameSelection();
@@ -2127,7 +2253,7 @@ void Gamelist::updateHeaderContextMenu()
 		win->actionColSortDescending->setChecked(true);
 }
 
-void Gamelist::updateDeleteCfgMenu(const QString &gameName)
+void Gamelist::updateDeleteCfgMenu(const QString &/*gameName*/)
 {
 	QAction *actionMenuItem;
 	DiskInfo *diskInfo;
@@ -2266,7 +2392,7 @@ void Gamelist::filterFlagsChanged(bool isChecked)
 
 void Gamelist::filterSearchCleared()
 {
-	if (win->lineEditSearch->text().count() < 1)
+	if (win->lineEditSearch->text().size() < 1)
 		return;
 
 	win->lineEditSearch->setText("");
@@ -2280,7 +2406,7 @@ void Gamelist::filterSearchChanged()
 	// multiple space-separated keywords
 	QString text = win->lineEditSearch->text();
 	// do not search less than 2 Latin chars
-	if (text.count() == 1 && text.at(0).unicode() < 0x3000 /* CJK symbols start */)
+	if (text.size() == 1 && text.at(0).unicode() < 0x3000 /* CJK symbols start */)
 		return;
 
 	visibleGames.clear();
@@ -2296,7 +2422,7 @@ void Gamelist::filterSearchChanged()
 }
 
 //apply folder switching
-void Gamelist::filterFolderChanged(QTreeWidgetItem *_current, QTreeWidgetItem *previous)
+void Gamelist::filterFolderChanged(QTreeWidgetItem *_current, QTreeWidgetItem */*previous*/)
 {
 	QTreeWidgetItem *current = _current;
 
@@ -2998,7 +3124,7 @@ void Gamelist::restoreFolderSelection(bool isForce)
 					if (subsubItem->text(0) == subFolder)
 					{
 						win->treeFolders->setCurrentItem(subsubItem);
-//						win->log(QString("treeb.gamecount %1").arg(pMameDat->games.count()));
+//						win->log(QString("treeb.gamecount %1").arg(pMameDat->games.size()));
 						return;
 					}
 				}
@@ -3051,7 +3177,7 @@ void Gamelist::openJoysticks()
 {
 #ifdef USE_SDL
 	//only enable when MAME is not active
-	if (procMan->procMap.count() == 0)
+	if (procMan->procMap.size() == 0)
 	{
 		for (int i = 0; i < SDL_NumJoysticks(); ++i)
 			joysticks.append(SDL_JoystickOpen(i));
@@ -3097,20 +3223,20 @@ void Gamelist::processJoyEvents()
 			//joy up / down
 			if (event.jaxis.axis == 0)
 			{
-				if (event.jaxis.value < 0)
+				if (event.jaxis.value < -3200)
 					key = Qt::Key_Up;
-				else if(event.jaxis.value > 0)
+				else if(event.jaxis.value > 3200)
 					key = Qt::Key_Down;
 				//centered, so we clear the repeat state
 				else
 					key = 0;
 			}
 			//joy left / right
-			else
+			else if (event.jaxis.axis == 1)
 			{
-				if (event.jaxis.value < 0)
+				if (event.jaxis.value < -3200)
 					key = Qt::Key_PageUp;
-				else if (event.jaxis.value > 0)
+				else if (event.jaxis.value > 3200)
 					key = Qt::Key_PageDown;
 				else
 					key = 0;
@@ -3197,9 +3323,16 @@ void Gamelist::runMame(int method, QStringList playArgs)
 			
 			QHash<QString, MameFileInfo *> mameFileInfoList = 
 				utils->iterateMameFile(fileInfo.path(), fileInfo.completeBaseName(), romFileName, MAMEFILE_EXTRACT);
+			if (mameFileInfoList.size() > 0)
+				runMame(RUNMAME_EXTROM);
+			else
+				win->poplog(
+				tr("Could not load:\n\n") + 
+				fileInfo.path() + "/\n" + fileInfo.completeBaseName() + "/\n" + romFileName + "\n\n" +
+				tr("Please refresh the game list."));
+				
 			utils->clearMameFileInfoList(mameFileInfoList);
 			
-			runMame(RUNMAME_EXTROM);
 			return;
 		}
 

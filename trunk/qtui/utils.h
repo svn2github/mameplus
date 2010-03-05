@@ -70,7 +70,7 @@ public:
 	bool isEmpty() const;
 	bool contains(const QString &) const;
 	QString value(int);
-	int count() const;
+	int size() const;
 
 signals:
 	void logStatusUpdated(QString);

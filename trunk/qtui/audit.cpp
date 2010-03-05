@@ -263,7 +263,7 @@ void RomAuditor::run()
 			QStringList romFiles = dir.entryList(nameFilter, QDir::Files | QDir::Readable | QDir::Hidden);
 			QStringList romDirs = dir.entryList(QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Readable | QDir::Hidden);
 
-			emit progressSwitched(romFiles.count(), QString(tr("Auditing %1 ...")).arg(dir.dirName() + "/"));
+			emit progressSwitched(romFiles.size(), QString(tr("Auditing %1 ...")).arg(dir.dirName() + "/"));
 
 			//iterate gameName/*.chd files
 			foreach (QString romDir, romDirs)
@@ -304,7 +304,7 @@ void RomAuditor::run()
 			}
 
 			//iterate rom files
-			for (int i = 0; i < romFiles.count(); i++)
+			for (int i = 0; i < romFiles.size(); i++)
 			{
 				//update progressbar every 10 files
 				if (i % 10 == 0)
@@ -348,7 +348,7 @@ void RomAuditor::run()
 			}
 		}
 
-//		win->log(QString("audit 1.gamecount %1").arg(pMameDat->games.count()));
+//		win->log(QString("audit 1.gamecount %1").arg(pMameDat->games.size()));
 
 		/* see if any rom of a game is not available */
 		//iterate games
@@ -482,8 +482,8 @@ void RomAuditor::auditConsole(QString consoleName)
 
 	// iterate all files in the path
 	QStringList files = dir.entryList(nameFilters, QDir::Files | QDir::Readable);
-	emit progressSwitched(files.count(), QString(tr("Auditing %1 ...")).arg(consoleName));
-	for (int i = 0; i < files.count(); i++)
+	emit progressSwitched(files.size(), QString(tr("Auditing %1 ...")).arg(consoleName));
+	for (int i = 0; i < files.size(); i++)
 	{
 		QString fileName = files[i];
 		QFileInfo fi(files[i]);

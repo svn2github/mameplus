@@ -51,12 +51,12 @@
 <context>
     <name>GameListSortFilterProxyModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="3369"/>
+        <location filename="../gamelist.cpp" line="3651"/>
         <source>Horizontal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3374"/>
+        <location filename="../gamelist.cpp" line="3656"/>
         <source>Vertical</source>
         <translation type="unfinished"></translation>
     </message>
@@ -64,187 +64,199 @@
 <context>
     <name>Gamelist</name>
     <message>
-        <location filename="../gamelist.cpp" line="1279"/>
+        <location filename="../gamelist.cpp" line="1430"/>
         <source>Year</source>
         <translation type="unfinished">제작년도</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1275"/>
+        <location filename="../gamelist.cpp" line="1426"/>
         <source>Available Arcades</source>
         <translation type="unfinished">보유 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1274"/>
+        <location filename="../gamelist.cpp" line="1425"/>
         <source>All Systems</source>
         <translation type="unfinished">전체 시스템</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1275"/>
+        <location filename="../gamelist.cpp" line="1426"/>
         <source>Available Systems</source>
         <translation type="unfinished">보유 시스템</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1276"/>
+        <location filename="../gamelist.cpp" line="1427"/>
         <source>Unavailable Arcades</source>
         <translation type="unfinished">미보유 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1276"/>
+        <location filename="../gamelist.cpp" line="1427"/>
         <source>Unavailable Systems</source>
         <translation type="unfinished">미보유 시스템</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1277"/>
+        <location filename="../gamelist.cpp" line="1428"/>
         <source>Consoles</source>
         <translation type="unfinished">콘솔 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1277"/>
+        <location filename="../gamelist.cpp" line="1428"/>
         <source>Softwares</source>
         <translation type="unfinished">소프트웨어</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1278"/>
+        <location filename="../gamelist.cpp" line="1429"/>
         <source>Manufacturer</source>
         <translation type="unfinished">제작사</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1280"/>
+        <location filename="../gamelist.cpp" line="1431"/>
         <source>Driver</source>
         <translation type="unfinished">드라이버</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1281"/>
+        <location filename="../gamelist.cpp" line="1432"/>
         <source>BIOS</source>
         <translation type="unfinished">바이오스</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1282"/>
+        <location filename="../gamelist.cpp" line="1433"/>
         <source>CPU</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1283"/>
+        <location filename="../gamelist.cpp" line="1434"/>
         <source>Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1284"/>
+        <location filename="../gamelist.cpp" line="1435"/>
         <source>CHD</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1285"/>
+        <location filename="../gamelist.cpp" line="1436"/>
         <source>Samples</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1286"/>
+        <location filename="../gamelist.cpp" line="1437"/>
         <source>Dumping Status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1287"/>
+        <location filename="../gamelist.cpp" line="1438"/>
         <source>Working</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1288"/>
+        <location filename="../gamelist.cpp" line="1439"/>
         <source>Not working</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1290"/>
+        <location filename="../gamelist.cpp" line="1441"/>
         <source>Clones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1293"/>
+        <location filename="../gamelist.cpp" line="1444"/>
         <source>Refresh Rate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1667"/>
+        <location filename="../gamelist.cpp" line="1824"/>
         <source>by %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2632"/>
+        <location filename="../gamelist.cpp" line="2789"/>
         <source>Horizontal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2633"/>
+        <location filename="../gamelist.cpp" line="2790"/>
         <source>Vertical</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1291"/>
+        <location filename="../gamelist.cpp" line="1442"/>
         <source>Resolution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1289"/>
+        <location filename="../gamelist.cpp" line="1440"/>
         <source>Originals</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1292"/>
+        <location filename="../gamelist.cpp" line="1443"/>
         <source>Colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1294"/>
+        <location filename="../gamelist.cpp" line="1445"/>
         <source>Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1295"/>
+        <location filename="../gamelist.cpp" line="1446"/>
         <source>Control Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1296"/>
+        <location filename="../gamelist.cpp" line="1447"/>
         <source>Channels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1297"/>
+        <location filename="../gamelist.cpp" line="1448"/>
         <source>Save State</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1805"/>
+        <location filename="../gamelist.cpp" line="1962"/>
         <source>Remove From &quot;%1%2&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2157"/>
+        <location filename="../gamelist.cpp" line="2314"/>
         <source>Remove All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2726"/>
+        <location filename="../gamelist.cpp" line="2883"/>
         <source>(H)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2726"/>
+        <location filename="../gamelist.cpp" line="2883"/>
         <source>(V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2814"/>
+        <location filename="../gamelist.cpp" line="2971"/>
         <source>Root Folder [.]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3027"/>
+        <location filename="../gamelist.cpp" line="3293"/>
         <source>Loading M1, please wait...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3097"/>
+        <location filename="../gamelist.cpp" line="3330"/>
+        <source>Could not load:
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gamelist.cpp" line="3332"/>
+        <source>Please refresh the game list.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gamelist.cpp" line="3372"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -254,47 +266,47 @@ must be mounted:
 </translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1274"/>
+        <location filename="../gamelist.cpp" line="1425"/>
         <source>All Arcades</source>
         <translation type="unfinished">전체 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1273"/>
+        <location filename="../gamelist.cpp" line="1424"/>
         <source>All Games</source>
         <translation>전체 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2036"/>
+        <location filename="../gamelist.cpp" line="2193"/>
         <source>Common image types</source>
         <translation type="unfinished">일반 이미지 종류</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2038"/>
+        <location filename="../gamelist.cpp" line="2195"/>
         <source>All Files</source>
         <translation type="unfinished">모든 파일</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2044"/>
+        <location filename="../gamelist.cpp" line="2201"/>
         <source>File name:</source>
         <translation type="unfinished">파일명:</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2294"/>
+        <location filename="../gamelist.cpp" line="2451"/>
         <source>Refresh</source>
         <translation>새로고침</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1779"/>
+        <location filename="../gamelist.cpp" line="1936"/>
         <source>Play %1</source>
         <translation type="unfinished">실행 %1</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1811"/>
+        <location filename="../gamelist.cpp" line="1968"/>
         <source>Properties for %1</source>
         <translation type="unfinished">%1 속성</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1155"/>
+        <location filename="../gamelist.cpp" line="1291"/>
         <source>%1 games</source>
         <translation>%1 게임</translation>
     </message>
@@ -396,139 +408,139 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mamepgui_main.ui" line="208"/>
+        <location filename="../mamepgui_main.ui" line="209"/>
         <source>Toolbar</source>
         <translation type="unfinished">툴바</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="228"/>
-        <location filename="../mamepgui_main.ui" line="238"/>
+        <location filename="../mamepgui_main.cpp" line="236"/>
+        <location filename="../mamepgui_main.ui" line="239"/>
         <source>Search</source>
         <translation type="unfinished">검색</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="252"/>
+        <location filename="../mamepgui_main.ui" line="253"/>
         <source>GUI Log</source>
         <translation type="unfinished">GUI 로그</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="325"/>
+        <location filename="../mamepgui_main.ui" line="326"/>
         <source>F5</source>
         <translation type="unfinished">F5</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="333"/>
+        <location filename="../mamepgui_main.ui" line="334"/>
         <source>Alt+X</source>
         <translation type="unfinished">Alt+X</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="279"/>
+        <location filename="../mamepgui_main.ui" line="280"/>
         <source>Folder List</source>
         <translation type="unfinished">폴더 목록</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="153"/>
+        <location filename="../mamepgui_main.cpp" line="161"/>
         <source>Snapshot</source>
         <translation type="unfinished">스냅샷</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="154"/>
+        <location filename="../mamepgui_main.cpp" line="162"/>
         <source>Flyer</source>
         <translation type="unfinished">포스터</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="155"/>
+        <location filename="../mamepgui_main.cpp" line="163"/>
         <source>Cabinet</source>
         <translation type="unfinished">캐비넷</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="156"/>
+        <location filename="../mamepgui_main.cpp" line="164"/>
         <source>Marquee</source>
         <translation type="unfinished">마퀴</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="157"/>
+        <location filename="../mamepgui_main.cpp" line="165"/>
         <source>Title</source>
         <translation type="unfinished">타이틀</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="158"/>
+        <location filename="../mamepgui_main.cpp" line="166"/>
         <source>Control Panel</source>
         <translation type="unfinished">조종장치</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="159"/>
+        <location filename="../mamepgui_main.cpp" line="167"/>
         <source>PCB</source>
         <translation type="unfinished">기판</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="161"/>
+        <location filename="../mamepgui_main.cpp" line="169"/>
         <source>History</source>
         <translation type="unfinished">역사</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="162"/>
+        <location filename="../mamepgui_main.cpp" line="170"/>
         <source>MAMEInfo</source>
         <translation type="unfinished">MAMEInfo</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="164"/>
+        <location filename="../mamepgui_main.cpp" line="172"/>
         <source>Story</source>
         <translation type="unfinished">스토리</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="299"/>
+        <location filename="../mamepgui_main.ui" line="300"/>
         <source>1</source>
         <translation type="unfinished">1</translation>
     </message>
     <message>
         <location filename="../mamepgui_main.ui" line="71"/>
-        <location filename="../mamepgui_main.ui" line="409"/>
+        <location filename="../mamepgui_main.ui" line="410"/>
         <source>Audit</source>
         <translation type="unfinished">검사</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="417"/>
+        <location filename="../mamepgui_main.ui" line="418"/>
         <source>Description</source>
         <translation type="unfinished">설명</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="425"/>
+        <location filename="../mamepgui_main.ui" line="426"/>
         <source>Name</source>
         <translation type="unfinished">이름</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="433"/>
+        <location filename="../mamepgui_main.ui" line="434"/>
         <source>ROMs</source>
         <translation type="unfinished">롬</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="441"/>
+        <location filename="../mamepgui_main.ui" line="442"/>
         <source>Manufacturer</source>
         <translation type="unfinished">제작사</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="449"/>
+        <location filename="../mamepgui_main.ui" line="450"/>
         <source>Driver</source>
         <translation type="unfinished">드라이버</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="457"/>
+        <location filename="../mamepgui_main.ui" line="458"/>
         <source>Year</source>
         <translation type="unfinished">제작년도</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="465"/>
+        <location filename="../mamepgui_main.ui" line="466"/>
         <source>Clone of</source>
         <translation type="unfinished">부모롬</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="473"/>
+        <location filename="../mamepgui_main.ui" line="474"/>
         <source>Sort Ascending</source>
         <translation type="unfinished">오름차순 정렬</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="481"/>
+        <location filename="../mamepgui_main.ui" line="482"/>
         <source>Sort Descending</source>
         <translation type="unfinished">내림차순 정렬</translation>
     </message>
@@ -598,254 +610,254 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">언어(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="173"/>
+        <location filename="../mamepgui_main.ui" line="174"/>
         <source>&amp;Background Images</source>
         <translation type="unfinished">배경화면 이미지(&amp;B)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="181"/>
+        <location filename="../mamepgui_main.ui" line="182"/>
         <source>GUI &amp;Style</source>
         <translation type="unfinished">인터페이스 스타일(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="193"/>
+        <location filename="../mamepgui_main.ui" line="194"/>
         <source>&amp;Help</source>
         <translation type="unfinished">도움말(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="313"/>
+        <location filename="../mamepgui_main.ui" line="314"/>
         <source>Default Game &amp;Options</source>
         <translation type="unfinished">기본 게임 설정(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="322"/>
+        <location filename="../mamepgui_main.ui" line="323"/>
         <source>&amp;Refresh</source>
         <translation type="unfinished">새로고침(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="330"/>
+        <location filename="../mamepgui_main.ui" line="331"/>
         <source>E&amp;xit</source>
         <translation type="unfinished">종료(&amp;X)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="342"/>
+        <location filename="../mamepgui_main.ui" line="343"/>
         <source>&amp;About</source>
         <translation type="unfinished">MAME 정보(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="354"/>
+        <location filename="../mamepgui_main.ui" line="355"/>
         <source>&amp;Details</source>
         <translation type="unfinished">자세히(&amp;D)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="369"/>
+        <location filename="../mamepgui_main.ui" line="370"/>
         <source>&amp;Grouped</source>
         <translation type="unfinished">그룹화(&amp;G)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="381"/>
+        <location filename="../mamepgui_main.ui" line="382"/>
         <source>L&amp;arge Icons</source>
         <translation type="unfinished">큰 아이콘(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="389"/>
+        <location filename="../mamepgui_main.ui" line="390"/>
         <source>&amp;Vertical Tabs</source>
         <translation type="unfinished">가로 탭 보기(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="602"/>
+        <location filename="../mamepgui_main.ui" line="603"/>
         <source>Highlight Selected Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="635"/>
+        <location filename="../mamepgui_main.ui" line="636"/>
         <source>Load &amp;Savestate...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="713"/>
+        <location filename="../mamepgui_main.ui" line="714"/>
         <source>Export All Sets...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="676"/>
+        <location filename="../mamepgui_main.ui" line="677"/>
         <source>&amp;Audit All Roms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="726"/>
+        <location filename="../mamepgui_main.ui" line="727"/>
         <source>Audit All Samples</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="684"/>
+        <location filename="../mamepgui_main.ui" line="685"/>
         <source>Hide C&amp;lones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="656"/>
+        <location filename="../mamepgui_main.ui" line="657"/>
         <source>Export Completely Missing Sets Only...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="661"/>
+        <location filename="../mamepgui_main.ui" line="662"/>
         <source>Export Incomplete Sets Only...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="666"/>
+        <location filename="../mamepgui_main.ui" line="667"/>
         <source>Export All Set Issues...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="692"/>
+        <location filename="../mamepgui_main.ui" line="693"/>
         <source>Hide Non-Wor&amp;king</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="700"/>
+        <location filename="../mamepgui_main.ui" line="701"/>
         <source>Hide &amp;Unavailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="705"/>
+        <location filename="../mamepgui_main.ui" line="706"/>
         <source>Command Line...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="399"/>
+        <location filename="../mamepgui_main.ui" line="400"/>
         <source>&amp;Record Input...</source>
         <translation type="unfinished">INP 리플레이 기록(&amp;R)...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="404"/>
+        <location filename="../mamepgui_main.ui" line="405"/>
         <source>Configure &amp;IPS...</source>
         <translation type="unfinished">IPS 설정...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="490"/>
+        <location filename="../mamepgui_main.ui" line="491"/>
         <source>&amp;Directories...</source>
         <translation type="unfinished">디렉토리 설정(&amp;D)...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="499"/>
+        <location filename="../mamepgui_main.ui" line="500"/>
         <source>Pr&amp;operties</source>
         <translation type="unfinished">등록정보(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="560"/>
+        <location filename="../mamepgui_main.ui" line="561"/>
         <source>Local &amp;Language Game List</source>
         <translation type="unfinished">현지 게임목록(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="615"/>
+        <location filename="../mamepgui_main.ui" line="616"/>
         <source>&amp;Playback Input...</source>
         <translation type="unfinished">INP 리플레이 재생(&amp;P)...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="620"/>
+        <location filename="../mamepgui_main.ui" line="621"/>
         <source>Record &amp;Wave Output...</source>
         <translation type="unfinished">WAV 사운드 기록(&amp;W)...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="625"/>
+        <location filename="../mamepgui_main.ui" line="626"/>
         <source>Record &amp;MNG Output...</source>
         <translation type="unfinished">MNG 비디오 기록(&amp;M)...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="630"/>
+        <location filename="../mamepgui_main.ui" line="631"/>
         <source>Record &amp;AVI Output...</source>
         <translation type="unfinished">MNG AVI 무압축 비디오 기록(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="961"/>
+        <location filename="../mamepgui_main.cpp" line="983"/>
         <source>Restart</source>
         <translation>재시작</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="962"/>
+        <location filename="../mamepgui_main.cpp" line="984"/>
         <source>Changing this option requires a restart to take effect.
 Do you wish to continue?</source>
         <translation type="unfinished">이 설정을 변경하려면 다시 시작해야합니다. 계속하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="552"/>
+        <location filename="../mamepgui_main.ui" line="553"/>
         <source>Enforce Aspect Ratio</source>
         <translation type="unfinished">강제 화면비율유지</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="86"/>
+        <location filename="../mamepgui_main.cpp" line="94"/>
         <source>status</source>
         <translation type="unfinished">상태</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="91"/>
+        <location filename="../mamepgui_main.cpp" line="99"/>
         <source>emulation</source>
         <translation type="unfinished">에뮬레이션</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="96"/>
+        <location filename="../mamepgui_main.cpp" line="104"/>
         <source>color</source>
         <translation type="unfinished">색상</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="101"/>
+        <location filename="../mamepgui_main.cpp" line="109"/>
         <source>sound</source>
         <translation type="unfinished">사운드</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="106"/>
+        <location filename="../mamepgui_main.cpp" line="114"/>
         <source>graphic</source>
         <translation type="unfinished">그래픽</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="111"/>
+        <location filename="../mamepgui_main.cpp" line="119"/>
         <source>savestate</source>
         <translation type="unfinished">상태저장(세이브)파일</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="123"/>
+        <location filename="../mamepgui_main.cpp" line="131"/>
         <source>cocktail</source>
         <translation type="unfinished">칵테일</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="135"/>
+        <location filename="../mamepgui_main.cpp" line="143"/>
         <source>protection</source>
         <translation type="unfinished">암호화</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="163"/>
+        <location filename="../mamepgui_main.cpp" line="171"/>
         <source>DriverInfo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="170"/>
+        <location filename="../mamepgui_main.cpp" line="178"/>
         <source>Preferences...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="440"/>
+        <location filename="../mamepgui_main.cpp" line="467"/>
         <source>Executable files</source>
         <translation type="unfinished">실행파일</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="443"/>
-        <location filename="../mamepgui_main.cpp" line="768"/>
+        <location filename="../mamepgui_main.cpp" line="470"/>
+        <location filename="../mamepgui_main.cpp" line="784"/>
         <source>All Files (*)</source>
         <translation type="unfinished">모든 파일 (*)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="446"/>
+        <location filename="../mamepgui_main.cpp" line="473"/>
         <source>MAME/MESS executable:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="766"/>
+        <location filename="../mamepgui_main.cpp" line="782"/>
         <source>Dat files</source>
         <translation type="unfinished">데이터 파일</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="773"/>
+        <location filename="../mamepgui_main.cpp" line="789"/>
         <source>File name:</source>
         <translation type="unfinished">파일명:</translation>
     </message>
@@ -855,42 +867,42 @@ Do you wish to continue?</source>
         <translation type="unfinished">실행 설정</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="565"/>
+        <location filename="../mamepgui_main.ui" line="566"/>
         <source>FAQ</source>
         <translation type="unfinished">묻고 답하기</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="570"/>
+        <location filename="../mamepgui_main.ui" line="571"/>
         <source>Discussion Board</source>
         <translation type="unfinished">포럼 게시판</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="575"/>
+        <location filename="../mamepgui_main.ui" line="576"/>
         <source>Readme</source>
         <translation type="unfinished">읽어보기</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="583"/>
+        <location filename="../mamepgui_main.ui" line="584"/>
         <source>Stretch</source>
         <translation type="unfinished">늘리기</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="591"/>
+        <location filename="../mamepgui_main.ui" line="592"/>
         <source>Tile</source>
         <translation type="unfinished">타일</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="165"/>
+        <location filename="../mamepgui_main.cpp" line="173"/>
         <source>Command</source>
         <translation type="unfinished">공략파일</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="234"/>
+        <location filename="../mamepgui_main.cpp" line="242"/>
         <source>Clear</source>
         <translation type="unfinished">지우기</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="610"/>
+        <location filename="../mamepgui_main.ui" line="611"/>
         <source>Strech Screenshot Larger</source>
         <translation type="unfinished">스크린샷 이미지 크게 보기</translation>
     </message>
@@ -898,27 +910,27 @@ Do you wish to continue?</source>
 <context>
     <name>MameDat</name>
     <message>
-        <location filename="../mamepgui_types.cpp" line="394"/>
+        <location filename="../mamepgui_types.cpp" line="396"/>
         <source>Saving listxml</source>
         <translation type="unfinished">listxml 저장하기</translation>
     </message>
     <message>
-        <location filename="../mamepgui_types.cpp" line="596"/>
+        <location filename="../mamepgui_types.cpp" line="598"/>
         <source>Cache signature error.</source>
         <translation type="unfinished">캐쉬 표시 에러</translation>
     </message>
     <message>
-        <location filename="../mamepgui_types.cpp" line="605"/>
+        <location filename="../mamepgui_types.cpp" line="607"/>
         <source>Cache streamVersion has been updated. A full refresh is required.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_types.cpp" line="824"/>
+        <location filename="../mamepgui_types.cpp" line="826"/>
         <source>Parsing listxml</source>
         <translation type="unfinished">listxml 분석</translation>
     </message>
     <message>
-        <location filename="../mamepgui_types.cpp" line="939"/>
+        <location filename="../mamepgui_types.cpp" line="942"/>
         <source>Loading listxml: %1 games</source>
         <translation type="unfinished">읽기 listxml: %1 게임</translation>
     </message>
@@ -926,7 +938,7 @@ Do you wish to continue?</source>
 <context>
     <name>MameExeRomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="539"/>
+        <location filename="../audit.cpp" line="537"/>
         <source>Checking...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -967,87 +979,87 @@ Do you wish to continue?</source>
 <context>
     <name>OptionUtils</name>
     <message>
-        <location filename="../mameopt.cpp" line="1483"/>
+        <location filename="../mameopt.cpp" line="1485"/>
         <source>rotate</source>
         <translation type="unfinished">회전</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1484"/>
+        <location filename="../mameopt.cpp" line="1486"/>
         <source>rotate clockwise</source>
         <translation type="unfinished">회전 시계방향</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1485"/>
+        <location filename="../mameopt.cpp" line="1487"/>
         <source>rotate anti-clockwise</source>
         <translation type="unfinished">회전 반시계방향</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1486"/>
+        <location filename="../mameopt.cpp" line="1488"/>
         <source>auto rotate clockwise</source>
         <translation type="unfinished">자동회전 시계방향</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1487"/>
+        <location filename="../mameopt.cpp" line="1489"/>
         <source>auto rotate anti-clockwise</source>
         <translation type="unfinished">자동회전 반시계방향</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1488"/>
+        <location filename="../mameopt.cpp" line="1490"/>
         <source>flip screen left-right</source>
         <translation type="unfinished">좌우 화면반전</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1489"/>
+        <location filename="../mameopt.cpp" line="1491"/>
         <source>flip screen upside-down</source>
         <translation type="unfinished">상하 화면반전</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1496"/>
+        <location filename="../mameopt.cpp" line="1498"/>
         <source>brightness correction</source>
         <translation type="unfinished">밝기 수정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1497"/>
+        <location filename="../mameopt.cpp" line="1499"/>
         <source>contrast correction</source>
         <translation type="unfinished">대비 수정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1498"/>
+        <location filename="../mameopt.cpp" line="1500"/>
         <source>gamma correction</source>
         <translation type="unfinished">감마 수정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1499"/>
+        <location filename="../mameopt.cpp" line="1501"/>
         <source>pause brightness</source>
         <translation type="unfinished">정지화면 밝기조절</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1500"/>
+        <location filename="../mameopt.cpp" line="1502"/>
         <source>image enhancement</source>
         <translation type="unfinished">이미지 개선</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1629"/>
+        <location filename="../mameopt.cpp" line="1632"/>
         <source>triple buffering</source>
         <translation type="unfinished">삼중 버퍼링</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1630"/>
+        <location filename="../mameopt.cpp" line="1633"/>
         <source>switch resolutions to fit</source>
         <translation type="unfinished">지정 해상도 설정 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1631"/>
+        <location filename="../mameopt.cpp" line="1634"/>
         <source>full screen brightness</source>
         <translation type="unfinished">전체 화면 밝기</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1632"/>
+        <location filename="../mameopt.cpp" line="1635"/>
         <source>full screen contrast</source>
         <translation type="unfinished">전체 화면 대비</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1633"/>
+        <location filename="../mameopt.cpp" line="1636"/>
         <source>full screen gamma</source>
         <translation type="unfinished">전체 화면 감마</translation>
     </message>
@@ -1102,52 +1114,52 @@ Do you wish to continue?</source>
         <translation type="unfinished">드라이버 설정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1454"/>
+        <location filename="../mameopt.cpp" line="1455"/>
         <source>localized directory</source>
         <translation type="unfinished">지역언어 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1457"/>
+        <location filename="../mameopt.cpp" line="1458"/>
         <source>cfg directory</source>
         <translation type="unfinished">설정파일 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1458"/>
+        <location filename="../mameopt.cpp" line="1459"/>
         <source>nvram directory</source>
         <translation type="unfinished">NVRAM 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1459"/>
+        <location filename="../mameopt.cpp" line="1460"/>
         <source>memcard directory</source>
         <translation type="unfinished">메모리카드 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1460"/>
+        <location filename="../mameopt.cpp" line="1461"/>
         <source>input directory</source>
         <translation type="unfinished">입력 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1461"/>
+        <location filename="../mameopt.cpp" line="1462"/>
         <source>state directory</source>
         <translation type="unfinished">저장 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1462"/>
+        <location filename="../mameopt.cpp" line="1463"/>
         <source>snapshot directory</source>
         <translation type="unfinished">스냅샷 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1463"/>
+        <location filename="../mameopt.cpp" line="1464"/>
         <source>diff directory</source>
         <translation type="unfinished">DIFF 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1464"/>
+        <location filename="../mameopt.cpp" line="1465"/>
         <source>comment directory</source>
         <translation type="unfinished">코멘트 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1465"/>
+        <location filename="../mameopt.cpp" line="1466"/>
         <source>hiscore directory</source>
         <translation type="unfinished">하이스코어 폴더</translation>
     </message>
@@ -1158,7 +1170,7 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1233"/>
-        <location filename="../mameopt.cpp" line="2237"/>
+        <location filename="../mameopt.cpp" line="2240"/>
         <source>GUI Paths</source>
         <translation type="unfinished">GUI 경로</translation>
     </message>
@@ -1183,519 +1195,534 @@ Do you wish to continue?</source>
         <translation type="unfinished">MAMEInfo 파일</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1467"/>
+        <location filename="../mameopt.cpp" line="1453"/>
+        <source>crosshair files directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mameopt.cpp" line="1468"/>
         <source>command file</source>
         <translation type="unfinished">공략 파일</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1468"/>
+        <location filename="../mameopt.cpp" line="1469"/>
         <source>hiscore file</source>
         <translation type="unfinished">하이스코어 파일</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1470"/>
+        <location filename="../mameopt.cpp" line="1471"/>
         <source>auto restore and save</source>
         <translation type="unfinished">자동 복구/저장</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1471"/>
+        <location filename="../mameopt.cpp" line="1472"/>
         <source>snapshot/movie pattern</source>
         <translation type="unfinished">스냅샷/동영상 패턴</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1472"/>
+        <location filename="../mameopt.cpp" line="1473"/>
         <source>snapshot/movie resolution</source>
         <translation type="unfinished">스냅샷/동영상 해상도</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1475"/>
+        <source>create burn-in snapshots</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mameopt.cpp" line="1477"/>
         <source>auto frame skipping</source>
         <translation type="unfinished">자동 프레임스킵</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1476"/>
+        <location filename="../mameopt.cpp" line="1478"/>
         <source>frame skipping</source>
         <translation type="unfinished">프레임스킵</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1478"/>
+        <location filename="../mameopt.cpp" line="1480"/>
         <source>throttle</source>
         <translation type="unfinished">감속기능</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1479"/>
+        <location filename="../mameopt.cpp" line="1481"/>
         <source>sleep when possible</source>
         <translation type="unfinished">가능할시 슬립모드 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1480"/>
+        <location filename="../mameopt.cpp" line="1482"/>
         <source>gameplay speed</source>
         <translation type="unfinished">게임실행 속도</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1481"/>
+        <location filename="../mameopt.cpp" line="1483"/>
         <source>auto refresh speed</source>
         <translation type="unfinished">자동 재생 속도</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1491"/>
+        <location filename="../mameopt.cpp" line="1493"/>
         <source>crop artwork</source>
         <translation type="unfinished">아트웍 잘라내기
 </translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1492"/>
+        <location filename="../mameopt.cpp" line="1494"/>
         <source>use backdrops</source>
         <translation type="unfinished">배경 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1493"/>
+        <location filename="../mameopt.cpp" line="1495"/>
         <source>use overlays</source>
         <translation type="unfinished">오버레이 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1494"/>
+        <location filename="../mameopt.cpp" line="1496"/>
         <source>use bezels</source>
         <translation type="unfinished">베젤 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1502"/>
+        <location filename="../mameopt.cpp" line="1504"/>
         <source>draw antialiased vectors</source>
         <translation type="unfinished">안티앨리어싱된 벡터 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1503"/>
+        <location filename="../mameopt.cpp" line="1505"/>
         <source>beam width</source>
         <translation type="unfinished">빔 너비</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1504"/>
+        <location filename="../mameopt.cpp" line="1506"/>
         <source>flicker</source>
         <translation type="unfinished">깜빡임</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1507"/>
+        <location filename="../mameopt.cpp" line="1509"/>
         <source>sample rate</source>
         <translation type="unfinished">샘플 레이트</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1509"/>
+        <location filename="../mameopt.cpp" line="1511"/>
         <source>use samples</source>
         <translation type="unfinished">샘플 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1510"/>
+        <location filename="../mameopt.cpp" line="1512"/>
         <source>volume attenuation</source>
         <translation type="unfinished">볼륨 감소</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1511"/>
+        <location filename="../mameopt.cpp" line="1513"/>
         <source>use volume auto adjust</source>
         <translation type="unfinished">자동 음량 조절 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1514"/>
+        <location filename="../mameopt.cpp" line="1516"/>
         <source>default input layout</source>
         <translation type="unfinished">기본 입력 장치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1515"/>
+        <location filename="../mameopt.cpp" line="1517"/>
         <source>enable mouse input</source>
         <translation type="unfinished">마우스 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1516"/>
+        <location filename="../mameopt.cpp" line="1518"/>
         <source>enable joystick input</source>
         <translation type="unfinished">조이스틱 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1517"/>
+        <location filename="../mameopt.cpp" line="1519"/>
         <source>enable lightgun input</source>
         <translation type="unfinished">라이트건 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1518"/>
+        <location filename="../mameopt.cpp" line="1520"/>
         <source>enable multiple keyboards</source>
         <translation type="unfinished">다중 키보드 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1519"/>
+        <location filename="../mameopt.cpp" line="1521"/>
         <source>enable multiple mice</source>
         <translation type="unfinished">다중 마우스 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1520"/>
+        <location filename="../mameopt.cpp" line="1522"/>
         <source>enable steadykey support</source>
         <translation type="unfinished">고정키 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1521"/>
+        <location filename="../mameopt.cpp" line="1523"/>
         <source>offscreen shots reload</source>
         <translation type="unfinished">화면 밖에서 재장전</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1522"/>
+        <location filename="../mameopt.cpp" line="1524"/>
         <source>joystick map</source>
         <translation type="unfinished">조이스틱 배치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1523"/>
+        <location filename="../mameopt.cpp" line="1525"/>
         <source>joystick deadzone</source>
         <translation type="unfinished">조이스틱 데드존</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1524"/>
+        <location filename="../mameopt.cpp" line="1526"/>
         <source>joystick saturation</source>
         <translation type="unfinished">조이스틱 감도</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1526"/>
+        <location filename="../mameopt.cpp" line="1528"/>
         <source>paddle device</source>
         <translation type="unfinished">패들 장치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1527"/>
+        <location filename="../mameopt.cpp" line="1529"/>
         <source>adstick device</source>
         <translation type="unfinished">AD스틱 장치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1528"/>
+        <location filename="../mameopt.cpp" line="1530"/>
         <source>pedal device</source>
         <translation type="unfinished">페달 장치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1529"/>
+        <location filename="../mameopt.cpp" line="1531"/>
         <source>dial device</source>
         <translation type="unfinished">다이얼 장치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1530"/>
+        <location filename="../mameopt.cpp" line="1532"/>
         <source>trackball device</source>
         <translation type="unfinished">트랙볼 장치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1531"/>
+        <location filename="../mameopt.cpp" line="1533"/>
         <source>lightgun device</source>
         <translation type="unfinished">라이트건 장치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1532"/>
+        <location filename="../mameopt.cpp" line="1534"/>
         <source>positional device</source>
         <translation type="unfinished">위치표시 장치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1533"/>
+        <location filename="../mameopt.cpp" line="1535"/>
         <source>mouse device</source>
         <translation type="unfinished">마우스 장치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1540"/>
+        <location filename="../mameopt.cpp" line="1542"/>
         <source>enable game cheats</source>
         <translation type="unfinished">게임 치트 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1541"/>
+        <location filename="../mameopt.cpp" line="1543"/>
         <source>skip game info</source>
         <translation type="unfinished">게임 정보화면 건너뛰기</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1543"/>
+        <location filename="../mameopt.cpp" line="1545"/>
         <source>quit game with confirmation</source>
         <translation type="unfinished">종료시 확인</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1544"/>
+        <location filename="../mameopt.cpp" line="1546"/>
         <source>auto pause when playback is finished</source>
         <translation type="unfinished">재생이 끝나면 자동으로 일시정지</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1565"/>
+        <location filename="../mameopt.cpp" line="1567"/>
         <source>language</source>
         <translation type="unfinished">언어</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1569"/>
+        <location filename="../mameopt.cpp" line="1571"/>
         <source>watchdog</source>
         <translation type="unfinished">감시</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1571"/>
+        <location filename="../mameopt.cpp" line="1573"/>
         <source>thread priority</source>
         <translation type="unfinished">항목 우선순위</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1572"/>
+        <location filename="../mameopt.cpp" line="1574"/>
         <source>enable multi-threading</source>
         <translation type="unfinished">다중 CPU 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1576"/>
+        <location filename="../mameopt.cpp" line="1575"/>
+        <source>number of processors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mameopt.cpp" line="1579"/>
         <source>video output method</source>
         <translation type="unfinished">비디오 출력 방법</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1578"/>
+        <location filename="../mameopt.cpp" line="1581"/>
         <source>number of screens to create</source>
         <translation type="unfinished">생성할 화면 수</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1579"/>
+        <location filename="../mameopt.cpp" line="1582"/>
         <source>run in a window</source>
         <translation type="unfinished">창 모드로 실행
 </translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1580"/>
+        <location filename="../mameopt.cpp" line="1583"/>
         <source>start out maximized</source>
         <translation type="unfinished">창 크기 최대로 실행</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1581"/>
+        <location filename="../mameopt.cpp" line="1584"/>
         <source>enforce aspect ratio</source>
         <translation type="unfinished">강제 화면비율유지</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1582"/>
+        <location filename="../mameopt.cpp" line="1585"/>
         <source>scale screen</source>
         <translation type="unfinished">화면 크기 조절</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1583"/>
+        <location filename="../mameopt.cpp" line="1586"/>
         <source>non-integer stretching</source>
         <translation type="unfinished">비정수값 늘리기</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1584"/>
+        <location filename="../mameopt.cpp" line="1587"/>
         <source>visual effects</source>
         <translation type="unfinished">화면효과</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1585"/>
+        <location filename="../mameopt.cpp" line="1588"/>
         <source>center horizontally</source>
         <translation type="unfinished">수평중심</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1586"/>
+        <location filename="../mameopt.cpp" line="1589"/>
         <source>center vertically</source>
         <translation type="unfinished">수직중심</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1587"/>
+        <location filename="../mameopt.cpp" line="1590"/>
         <source>wait for vertical sync</source>
         <translation type="unfinished">수직동기화를 기다림</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1588"/>
+        <location filename="../mameopt.cpp" line="1591"/>
         <source>sync to monitor refresh</source>
         <translation type="unfinished">모니터 주사율 동기화</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1589"/>
+        <location filename="../mameopt.cpp" line="1592"/>
         <source>scale mode</source>
         <translation type="unfinished">조절 모드</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1591"/>
+        <location filename="../mameopt.cpp" line="1594"/>
         <source>hardware stretching</source>
         <translation type="unfinished">하드웨어 늘리기</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1593"/>
+        <location filename="../mameopt.cpp" line="1596"/>
         <source>d3d version</source>
         <translation type="unfinished">D3D 버전</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1594"/>
+        <location filename="../mameopt.cpp" line="1597"/>
         <source>bilinear filtering</source>
         <translation type="unfinished">바이리니어 필터링</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1596"/>
+        <location filename="../mameopt.cpp" line="1599"/>
         <source>force power of 2 textures</source>
         <translation type="unfinished">2 텍스처의 포스파워</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1635"/>
+        <location filename="../mameopt.cpp" line="1638"/>
         <source>audio latency</source>
         <translation type="unfinished">오디오 레이턴시</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1638"/>
+        <location filename="../mameopt.cpp" line="1641"/>
         <source>dual lightgun</source>
         <translation type="unfinished">듀얼 라이트건</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1654"/>
+        <location filename="../mameopt.cpp" line="1657"/>
         <source>enable keymap</source>
         <translation type="unfinished">키 배치 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1655"/>
+        <location filename="../mameopt.cpp" line="1658"/>
         <source>keymap filename</source>
         <translation type="unfinished">키 배치 파일명</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1657"/>
+        <location filename="../mameopt.cpp" line="1660"/>
         <source>enable joystick mapping</source>
         <translation type="unfinished">조이스틱 설정 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1658"/>
+        <location filename="../mameopt.cpp" line="1661"/>
         <source>joymap filename</source>
         <translation type="unfinished">조이스틱 배치 파일명</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1665"/>
+        <location filename="../mameopt.cpp" line="1668"/>
         <source>alternative libGL.so</source>
         <translation type="unfinished">선택 libGL.so</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1670"/>
+        <location filename="../mameopt.cpp" line="1673"/>
         <source>core configuration</source>
         <translation type="unfinished">코어 구성</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1671"/>
+        <location filename="../mameopt.cpp" line="1674"/>
         <source>core palette</source>
         <translation type="unfinished">코어 팔레트</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1672"/>
+        <location filename="../mameopt.cpp" line="1675"/>
         <source>core language</source>
         <translation type="unfinished">코어 언어</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1674"/>
+        <location filename="../mameopt.cpp" line="1677"/>
         <source>core search path</source>
         <translation type="unfinished">코어 찾기 경로</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1675"/>
+        <location filename="../mameopt.cpp" line="1678"/>
         <source>core output directory</source>
         <translation type="unfinished">코어 출력 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1676"/>
+        <location filename="../mameopt.cpp" line="1679"/>
         <source>core filename</source>
         <translation type="unfinished">코어 파일명</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1678"/>
+        <location filename="../mameopt.cpp" line="1681"/>
         <source>core rotation</source>
         <translation type="unfinished">코어 회전</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1679"/>
+        <location filename="../mameopt.cpp" line="1682"/>
         <source>core screen</source>
         <translation type="unfinished">코어 화면</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1680"/>
+        <location filename="../mameopt.cpp" line="1683"/>
         <source>full screen</source>
         <translation type="unfinished">전체화면</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1683"/>
+        <location filename="../mameopt.cpp" line="1686"/>
         <source>Windows video</source>
         <translation type="unfinished">윈도 화면</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1684"/>
+        <location filename="../mameopt.cpp" line="1687"/>
         <source>DirectDraw-specific</source>
         <translation type="unfinished">DirectDraw 지정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1685"/>
+        <location filename="../mameopt.cpp" line="1688"/>
         <source>Direct3D-specific</source>
         <translation type="unfinished">Direct3D 지정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1681"/>
+        <location filename="../mameopt.cpp" line="1684"/>
         <source>core performance</source>
         <translation type="unfinished">코어 성능</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1686"/>
+        <location filename="../mameopt.cpp" line="1689"/>
         <source>Windows performance</source>
         <translation type="unfinished">윈도 성능</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1689"/>
+        <location filename="../mameopt.cpp" line="1692"/>
         <source>per-window video</source>
         <translation type="unfinished">윈도 비디오</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1691"/>
+        <location filename="../mameopt.cpp" line="1694"/>
         <source>core sound</source>
         <translation type="unfinished">코어 사운드</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1692"/>
+        <location filename="../mameopt.cpp" line="1695"/>
         <source>Windows sound</source>
         <translation type="unfinished">윈도 사운드</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1694"/>
+        <location filename="../mameopt.cpp" line="1697"/>
         <source>core input</source>
         <translation type="unfinished">코어 입력</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1695"/>
+        <location filename="../mameopt.cpp" line="1698"/>
         <source>core input automatic enable</source>
         <translation type="unfinished">코어 입력 자동 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1696"/>
+        <location filename="../mameopt.cpp" line="1699"/>
         <source>input device</source>
         <translation type="unfinished">입력 장치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1700"/>
+        <location filename="../mameopt.cpp" line="1703"/>
         <source>core vector</source>
         <translation type="unfinished">코어 벡터</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1702"/>
+        <location filename="../mameopt.cpp" line="1705"/>
         <source>core misc</source>
         <translation type="unfinished">코어 기타</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1703"/>
+        <location filename="../mameopt.cpp" line="1706"/>
         <source>core artwork</source>
         <translation type="unfinished">코어 아트웍</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1704"/>
+        <location filename="../mameopt.cpp" line="1707"/>
         <source>core state/playback</source>
         <translation type="unfinished">코어 저장/재생</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1706"/>
+        <location filename="../mameopt.cpp" line="1709"/>
         <source>MESS specific</source>
         <translation type="unfinished">MESS 지정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1707"/>
+        <location filename="../mameopt.cpp" line="1710"/>
         <source>Windows MESS specific</source>
         <translation type="unfinished">윈도 MESS 지정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1708"/>
+        <location filename="../mameopt.cpp" line="1711"/>
         <source>core debugging</source>
         <translation type="unfinished">코어 디버깅</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1709"/>
+        <location filename="../mameopt.cpp" line="1712"/>
         <source>Windows debugging</source>
         <translation type="unfinished">윈도 디버킹</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1546"/>
+        <location filename="../mameopt.cpp" line="1548"/>
         <source>transparent in-game ui</source>
         <translation type="unfinished">게임내 UI 투명도 설정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1547"/>
+        <location filename="../mameopt.cpp" line="1549"/>
         <source>in-game ui transparency</source>
         <translation type="unfinished">게임내 UI 투명도 설정</translation>
     </message>
@@ -1725,262 +1752,262 @@ Do you wish to continue?</source>
         <translation type="unfinished">설정 읽기</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1477"/>
+        <location filename="../mameopt.cpp" line="1479"/>
         <source>seconds to run</source>
         <translation type="unfinished">실행할 시간</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1535"/>
+        <location filename="../mameopt.cpp" line="1537"/>
         <source>log</source>
         <translation type="unfinished">로그</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1536"/>
+        <location filename="../mameopt.cpp" line="1538"/>
         <source>verbose</source>
         <translation type="unfinished">자세하게</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1537"/>
+        <location filename="../mameopt.cpp" line="1539"/>
         <source>update in pause</source>
         <translation type="unfinished">업데이트시 일시중지</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1539"/>
+        <location filename="../mameopt.cpp" line="1541"/>
         <source>bios</source>
         <translation type="unfinished">바이오스</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1542"/>
+        <location filename="../mameopt.cpp" line="1544"/>
         <source>ips</source>
         <translation type="unfinished">IPS</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1549"/>
+        <location filename="../mameopt.cpp" line="1551"/>
         <source>font blank</source>
         <translation type="unfinished">공백 폰트</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1550"/>
+        <location filename="../mameopt.cpp" line="1552"/>
         <source>font normal</source>
         <translation type="unfinished">일반 폰트</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1551"/>
+        <location filename="../mameopt.cpp" line="1553"/>
         <source>font special</source>
         <translation type="unfinished">특별 폰트</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1552"/>
+        <location filename="../mameopt.cpp" line="1554"/>
         <source>system background</source>
         <translation type="unfinished">시스템 배경화면</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1553"/>
+        <location filename="../mameopt.cpp" line="1555"/>
         <source>button red</source>
         <translation type="unfinished">빨간 버튼</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1554"/>
+        <location filename="../mameopt.cpp" line="1556"/>
         <source>button yellow</source>
         <translation type="unfinished">노란 버튼</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1555"/>
+        <location filename="../mameopt.cpp" line="1557"/>
         <source>button green</source>
         <translation type="unfinished">초론 버튼</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1556"/>
+        <location filename="../mameopt.cpp" line="1558"/>
         <source>button blue</source>
         <translation type="unfinished">파란 버튼</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1557"/>
+        <location filename="../mameopt.cpp" line="1559"/>
         <source>button purple</source>
         <translation type="unfinished">보라 버튼</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1558"/>
+        <location filename="../mameopt.cpp" line="1560"/>
         <source>button pink</source>
         <translation type="unfinished">분홍 버튼</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1559"/>
+        <location filename="../mameopt.cpp" line="1561"/>
         <source>button aqua</source>
         <translation type="unfinished">아쿠아 버튼</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1560"/>
+        <location filename="../mameopt.cpp" line="1562"/>
         <source>button silver</source>
         <translation type="unfinished">은색 버튼</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1561"/>
+        <location filename="../mameopt.cpp" line="1563"/>
         <source>button navy</source>
         <translation type="unfinished">남색 버튼</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1562"/>
+        <location filename="../mameopt.cpp" line="1564"/>
         <source>button lime</source>
         <translation type="unfinished">라임 버튼</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1563"/>
+        <location filename="../mameopt.cpp" line="1565"/>
         <source>cursor</source>
         <translation type="unfinished">커서</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1566"/>
+        <location filename="../mameopt.cpp" line="1568"/>
         <source>use lang list</source>
         <translation type="unfinished">언어목록 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1568"/>
+        <location filename="../mameopt.cpp" line="1570"/>
         <source>oslog</source>
         <translation type="unfinished">OS로그</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1574"/>
+        <location filename="../mameopt.cpp" line="1577"/>
         <source>show sdl video performance</source>
         <translation type="unfinished">보기 SDL 비디오 성능</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1597"/>
+        <location filename="../mameopt.cpp" line="1600"/>
         <source>no gl arb texture rectangle</source>
         <translation type="unfinished">사용불가 GL ARB 직사각형</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1598"/>
+        <location filename="../mameopt.cpp" line="1601"/>
         <source>enable opengl vbo</source>
         <translation type="unfinished">사용 OpenGL VBO</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1599"/>
+        <location filename="../mameopt.cpp" line="1602"/>
         <source>enable opengl pbo</source>
         <translation type="unfinished">사용 OpenGL PBO</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1600"/>
+        <location filename="../mameopt.cpp" line="1603"/>
         <source>enable opengl glsl</source>
         <translation type="unfinished">사용 OpenGL GLSL</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1601"/>
+        <location filename="../mameopt.cpp" line="1604"/>
         <source>opengl glsl filtering</source>
         <translation type="unfinished">OpenGL GLSL 필터링</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1602"/>
+        <location filename="../mameopt.cpp" line="1605"/>
         <source>opengl glsl video attributes</source>
         <translation type="unfinished">OpenGL GLSL 비디오 특성</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1636"/>
+        <location filename="../mameopt.cpp" line="1639"/>
         <source>audio sync</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1639"/>
+        <location filename="../mameopt.cpp" line="1642"/>
         <source>joyid1</source>
         <translation type="unfinished">조이패드 ID 1</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1640"/>
+        <location filename="../mameopt.cpp" line="1643"/>
         <source>joyid2</source>
         <translation type="unfinished">조이패드 ID 2</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1641"/>
+        <location filename="../mameopt.cpp" line="1644"/>
         <source>joyid3</source>
         <translation type="unfinished">조이패드 ID 3</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1642"/>
+        <location filename="../mameopt.cpp" line="1645"/>
         <source>joyid4</source>
         <translation type="unfinished">조이패드 ID 4</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1643"/>
+        <location filename="../mameopt.cpp" line="1646"/>
         <source>joyid5</source>
         <translation type="unfinished">조이패드 ID 5</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1644"/>
+        <location filename="../mameopt.cpp" line="1647"/>
         <source>joyid6</source>
         <translation type="unfinished">조이패드 ID 6</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1645"/>
+        <location filename="../mameopt.cpp" line="1648"/>
         <source>joyid7</source>
         <translation type="unfinished">조이패드 ID 7</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1646"/>
+        <location filename="../mameopt.cpp" line="1649"/>
         <source>joyid8</source>
         <translation type="unfinished">조이패드 ID 8</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1648"/>
+        <location filename="../mameopt.cpp" line="1651"/>
         <source>ramsize</source>
         <translation type="unfinished">램사이즈</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1649"/>
+        <location filename="../mameopt.cpp" line="1652"/>
         <source>writeconfig</source>
         <translation type="unfinished">설정 작성</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1650"/>
+        <location filename="../mameopt.cpp" line="1653"/>
         <source>skip warnings</source>
         <translation type="unfinished">경고 화면을 건너뜀</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1659"/>
+        <location filename="../mameopt.cpp" line="1662"/>
         <source>ps3 sixaxis controllers</source>
         <translation type="unfinished">PS3 Sixaxis 조종장치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1661"/>
+        <location filename="../mameopt.cpp" line="1664"/>
         <source>sdl audio driver</source>
         <translation type="unfinished">SDL 오디오 드라이버</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1662"/>
+        <location filename="../mameopt.cpp" line="1665"/>
         <source>sdl video driver</source>
         <translation type="unfinished">SDL 비디오 드라이버</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1663"/>
+        <location filename="../mameopt.cpp" line="1666"/>
         <source>sdl render driver</source>
         <translation type="unfinished">SDL 렌더 드라이버</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1859"/>
+        <location filename="../mameopt.cpp" line="1862"/>
         <source>MESS software directory</source>
         <translation type="unfinished">MESS 소프트웨어 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1862"/>
+        <location filename="../mameopt.cpp" line="1865"/>
         <source>GUI paths</source>
         <translation type="unfinished">GUI 경로</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2255"/>
+        <location filename="../mameopt.cpp" line="2258"/>
         <source>GUI</source>
         <translation type="unfinished">GUI 경로</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2354"/>
+        <location filename="../mameopt.cpp" line="2357"/>
         <source>Option</source>
         <translation type="unfinished">설정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2355"/>
+        <location filename="../mameopt.cpp" line="2358"/>
         <source>Value</source>
         <translation type="unfinished">값</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2246"/>
+        <location filename="../mameopt.cpp" line="2249"/>
         <source>Options</source>
         <translation type="unfinished">설정</translation>
     </message>
@@ -1991,7 +2018,7 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1239"/>
-        <location filename="../mameopt.cpp" line="2239"/>
+        <location filename="../mameopt.cpp" line="2242"/>
         <source>Core Video</source>
         <translation type="unfinished">코어 화면</translation>
     </message>
@@ -2001,32 +2028,32 @@ Do you wish to continue?</source>
         <translation type="unfinished">OSD 비디오</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2266"/>
+        <location filename="../mameopt.cpp" line="2269"/>
         <source>Global</source>
         <translation type="unfinished">일반</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1513"/>
+        <location filename="../mameopt.cpp" line="1515"/>
         <source>coin lockout</source>
         <translation type="unfinished">코인잠금</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1687"/>
+        <location filename="../mameopt.cpp" line="1690"/>
         <source>OpenGL-specific</source>
         <translation type="unfinished">OpenGL 지정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1697"/>
+        <location filename="../mameopt.cpp" line="1700"/>
         <source>SDL keyboard mapping</source>
         <translation type="unfinished">SDL 키보드 배치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1698"/>
+        <location filename="../mameopt.cpp" line="1701"/>
         <source>SDL joystick mapping</source>
         <translation type="unfinished">SDL 조이스틱 배치</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1705"/>
+        <location filename="../mameopt.cpp" line="1708"/>
         <source>SDL lowlevel driver</source>
         <translation type="unfinished">SDL 기본 드라이버</translation>
     </message>
@@ -2071,48 +2098,48 @@ Do you wish to continue?</source>
         <translation type="unfinished">치트파일 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1453"/>
+        <location filename="../mameopt.cpp" line="1454"/>
         <source>language files directory</source>
         <translation type="unfinished">지역언어 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1455"/>
+        <location filename="../mameopt.cpp" line="1456"/>
         <source>ips files directory</source>
         <translation type="unfinished">IPS 파일 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1473"/>
+        <location filename="../mameopt.cpp" line="1474"/>
         <source>snapshot/movie view</source>
         <translation type="unfinished">스냅샷/동영상 보기</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1506"/>
+        <location filename="../mameopt.cpp" line="1508"/>
         <source>enable sound output</source>
         <translation type="unfinished">사운드 출력 사용</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1651"/>
+        <location filename="../mameopt.cpp" line="1654"/>
         <source>use new mess ui</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1652"/>
+        <location filename="../mameopt.cpp" line="1655"/>
         <source>use natural keyboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2522"/>
-        <location filename="../mameopt.cpp" line="2541"/>
+        <location filename="../mameopt.cpp" line="2526"/>
+        <location filename="../mameopt.cpp" line="2545"/>
         <source>Auto</source>
         <translation type="unfinished">자동</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2495"/>
+        <location filename="../mameopt.cpp" line="2499"/>
         <source>None</source>
         <translation type="unfinished">없음</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1604"/>
+        <location filename="../mameopt.cpp" line="1607"/>
         <source>all screens: physical monitor</source>
         <translation type="unfinished">전체화면: 물리적 표시</translation>
     </message>
@@ -2122,97 +2149,97 @@ Do you wish to continue?</source>
         <translation type="unfinished">외부폴더 목록</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1605"/>
+        <location filename="../mameopt.cpp" line="1608"/>
         <source>all screens: aspect ratio</source>
         <translation type="unfinished">전체화면: 화면비율</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1606"/>
+        <location filename="../mameopt.cpp" line="1609"/>
         <source>all screens: resolution</source>
         <translation type="unfinished">전체화면: 해상도</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1607"/>
+        <location filename="../mameopt.cpp" line="1610"/>
         <source>all screens: view</source>
         <translation type="unfinished">전체화면: 보기</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1609"/>
+        <location filename="../mameopt.cpp" line="1612"/>
         <source>screen 1: physical monitor</source>
         <translation type="unfinished">화면 1: 물리적 표시</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1610"/>
+        <location filename="../mameopt.cpp" line="1613"/>
         <source>screen 1: aspect ratio</source>
         <translation type="unfinished">화면 1: 화면비율</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1611"/>
+        <location filename="../mameopt.cpp" line="1614"/>
         <source>screen 1: resolution</source>
         <translation type="unfinished">화면 1: 해상도</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1612"/>
+        <location filename="../mameopt.cpp" line="1615"/>
         <source>screen 1: view</source>
         <translation type="unfinished">화면 1: 보기</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1614"/>
+        <location filename="../mameopt.cpp" line="1617"/>
         <source>screen 2: physical monitor</source>
         <translation type="unfinished">화면 2: 물리적 표시</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1615"/>
+        <location filename="../mameopt.cpp" line="1618"/>
         <source>screen 2: aspect ratio</source>
         <translation type="unfinished">화면 2: 화면비율</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1616"/>
+        <location filename="../mameopt.cpp" line="1619"/>
         <source>screen 2: resolution</source>
         <translation type="unfinished">화면 2: 해상도</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1617"/>
+        <location filename="../mameopt.cpp" line="1620"/>
         <source>screen 2: view</source>
         <translation type="unfinished">화면 2: 보기</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1619"/>
+        <location filename="../mameopt.cpp" line="1622"/>
         <source>screen 3: physical monitor</source>
         <translation type="unfinished">화면 3: 물리적 표시</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1620"/>
+        <location filename="../mameopt.cpp" line="1623"/>
         <source>screen 3: aspect ratio</source>
         <translation type="unfinished">화면 3: 화면비율</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1621"/>
+        <location filename="../mameopt.cpp" line="1624"/>
         <source>screen 3: resolution</source>
         <translation type="unfinished">화면 3: 해상도</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1622"/>
+        <location filename="../mameopt.cpp" line="1625"/>
         <source>screen 3: view</source>
         <translation type="unfinished">화면 3: 보기</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1624"/>
+        <location filename="../mameopt.cpp" line="1627"/>
         <source>screen 4: physical monitor</source>
         <translation type="unfinished">화면 4: 물리적 표시</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1625"/>
+        <location filename="../mameopt.cpp" line="1628"/>
         <source>screen 4: aspect ratio</source>
         <translation type="unfinished">화면 4: 화면비율</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1626"/>
+        <location filename="../mameopt.cpp" line="1629"/>
         <source>screen 4: resolution</source>
         <translation type="unfinished">화면 4: 해상도</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1627"/>
+        <location filename="../mameopt.cpp" line="1630"/>
         <source>screen 4: view</source>
         <translation type="unfinished">화면 4: 보기</translation>
     </message>
@@ -2356,8 +2383,8 @@ Do you wish to continue?</source>
 <context>
     <name>Screenshot</name>
     <message>
-        <location filename="../mamepgui_main.cpp" line="1559"/>
-        <location filename="../mamepgui_main.cpp" line="1561"/>
+        <location filename="../mamepgui_main.cpp" line="1583"/>
+        <location filename="../mamepgui_main.cpp" line="1585"/>
         <source>Loading...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2365,47 +2392,47 @@ Do you wish to continue?</source>
 <context>
     <name>TreeModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="637"/>
+        <location filename="../gamelist.cpp" line="745"/>
         <source>No</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="640"/>
+        <location filename="../gamelist.cpp" line="748"/>
         <source>Yes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="536"/>
+        <location filename="../gamelist.cpp" line="644"/>
         <source>Description</source>
         <translation type="unfinished">설명</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="537"/>
+        <location filename="../gamelist.cpp" line="645"/>
         <source>Name</source>
         <translation type="unfinished">이름</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="538"/>
+        <location filename="../gamelist.cpp" line="646"/>
         <source>ROMs</source>
         <translation type="unfinished">롬</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="539"/>
+        <location filename="../gamelist.cpp" line="647"/>
         <source>Manufacturer</source>
         <translation type="unfinished">제작사</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="540"/>
+        <location filename="../gamelist.cpp" line="648"/>
         <source>Driver</source>
         <translation type="unfinished">드라이버</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="541"/>
+        <location filename="../gamelist.cpp" line="649"/>
         <source>Year</source>
         <translation type="unfinished">제작년도</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="542"/>
+        <location filename="../gamelist.cpp" line="650"/>
         <source>Clone of</source>
         <translation type="unfinished">부모롬 이름</translation>
     </message>

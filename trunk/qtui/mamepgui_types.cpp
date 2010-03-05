@@ -179,7 +179,8 @@ public:
 
 			_pMameDat->games[attributes.value("name")] = gameInfo;
 		}
-		else if (gameInfo->isBios && qName == "biosset")
+		//MESS doesnt use "isbios" attrib, so all MESS entries with "biosset" is a bios
+		else if ((isMESS || gameInfo->isBios) && qName == "biosset")
 		{
 			BiosSet *biosSet = new BiosSet(gameInfo);
 			biosSet->description = attributes.value("description");
@@ -388,9 +389,9 @@ void MameDat::save()
 	out.setVersion(QDataStream::Qt_4_4);
 	out << version;
 	out << defaultIni;	//default.ini
-	out << games.count();
+	out << games.size();
 
-	win->log(QString("s11n %1 games").arg(games.count()));
+	win->log(QString("s11n %1 games").arg(games.size()));
 
 	gameList->switchProgress(numTotalGames, tr("Saving listxml"));
 	int i = 0;
@@ -423,7 +424,7 @@ void MameDat::save()
 		/* biosset */
 		if (!gameInfo->isExtRom)
 		{
-			out << gameInfo->biosSets.count();
+			out << gameInfo->biosSets.size();
 			foreach (QString name, gameInfo->biosSets.keys())
 			{
 				BiosSet *biosSet = gameInfo->biosSets[name];
@@ -434,7 +435,7 @@ void MameDat::save()
 		}
 
 		/* rom */
-		out << gameInfo->roms.count();
+		out << gameInfo->roms.size();
 		foreach (quint32 crc, gameInfo->roms.keys())
 		{
 			RomInfo *romInfo = gameInfo->roms.value(crc);
@@ -453,7 +454,7 @@ void MameDat::save()
 		if (!gameInfo->isExtRom)
 		{
 			/* disk */
-			out << gameInfo->disks.count();
+			out << gameInfo->disks.size();
 			foreach (QString sha1, gameInfo->disks.keys())
 			{
 				DiskInfo *diskInfo = gameInfo->disks[sha1];
@@ -469,7 +470,7 @@ void MameDat::save()
 			out << gameInfo->samples;
 
 			/* chip */
-			out << gameInfo->chips.count();
+			out << gameInfo->chips.size();
 			foreach (ChipInfo* chipInfo, gameInfo->chips)
 			{
 				out << chipInfo->name;
@@ -479,7 +480,7 @@ void MameDat::save()
 			}
 
 			/* display */
-			out << gameInfo->displays.count();
+			out << gameInfo->displays.size();
 			foreach (DisplayInfo* displayInfo, gameInfo->displays)
 			{
 				out << displayInfo->type;
@@ -506,7 +507,7 @@ void MameDat::save()
 			out << gameInfo->buttons;
 			out << gameInfo->coins;
 
-			out << gameInfo->controls.count();
+			out << gameInfo->controls.size();
 			foreach (ControlInfo* controlInfo, gameInfo->controls)
 			{
 				out << controlInfo->type;

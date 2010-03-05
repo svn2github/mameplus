@@ -3,105 +3,63 @@
 经过1年3个月的开发，新GUI已经可以兼容MAMEUI的大部分功能，因此决定发布正式版。同时依照之前承诺的，这个项目现在开源。源代码无任何授权，想怎么用都可以。编译方法同Qt其他标准程序。
 
 //Web
+gquery enhanced
+put latest download on first page
 render xml feed
 multi lang basic UI
 read/write cookie
+documentation
 theme
 
 //Done
-1 ips GUI seq
-Command-Line Access Mode
 
-命令行模式
-支持完整dat导出
-
-mame能否加上 显示游戏当前运算的分辨率？
+preliminary code for full dat export
 
 //////////////////////////
 //auto update
-http://downloads.sourceforge.net/sourceforge/mingw/mingw32-make-3.81-20080326-3.tar.gz
-http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-http://www.p4c.philips.com/files/1/170s8fb_93/170s8fb_93_pss_zhs.pdf
-http://bbs.pdafans.com/attachment.php
-
-game name (Package name)
-game category
-game description
-game manufacturer (Maintainer)
-game architecture* (Platform)
-game year (Version)
-game homepage*
-game url* (could pt to a dat file)
-game depends*
-game conflicts*
-  rom name
-  rom size
-  rom crc
-
-note that all paths are determinable
+all misc stuffs in dir as a single pack, ctrlr, docs, etc
 
 exes: mamep, mamepgui, mess, mameui, exttools(multi)
 exts: jp,ita history, jp mameinfo, sysinfo, jp/en command, lang(multi), snap(multi)
 
-.script to detect latest version, provide url, version > filename.info
-wget to local > filename
-7z to list files name, crc, size > filename.txt
-make dat file
-curl upload to remote server
-
 ///////////////////
 //Priority tasks
-2 constrain the game selection to the visible area of the selection window?
-3 残档目录
-3 audit all samples
-3 column sorting
-1 multi profile
-* not working的红色不显示在游戏全名了，只显示在romset名了
-* 点击没有缩略图的纵版游戏，缩略图mame那几个字就变成拉伸变长的了
+4 crash after refresh nes and run game
+4 crash after refresh when nes is removed and then readded then refresh
+4 新GUI无视CRC，只要有名称相同的文件，就会应用对应的IPS 如果有对的CRC，文件名不对，则出错。
+4 multi profile
+3 ini\horizont.ini     ini\vertical.ini   vector
+3 硬件信息
+3 在gui中设置cheat文件仍然只能设置为文件夹，而不能指定zip文件吧
+
+3 jpg snaps
+3 残档目录,并不一定要有zip，因为clone可以merge进主rom的,我每次更新，就有几十个rom废掉，然后只能开2个实例慢慢比对……
+3 coin/time counter column
+3 better create folder
 3 LIN下的GUI能不能想办法支持汉化列表, command.dat... default command.dat path in lang, customizable *.dat location for official mame
 3 color chooser
 3 font chooser
-2 generic clrmamep dat parser
-2 generic downloader, get file size, part download
 2 test with some illegal paths: /history.dat, ///
-2 mamebin changes should cause gamelist->init()
-2 不過執行缺少不分 ROM 檔案的遊戲，不會跟舊GUI 一樣提示缺少了哪些檔案，就關閉這點比較可惜希望可以加上。
 2 other language mamep core
-3 hide all, console folder for non mameplus
 2 audit output only incorrect, sample
 1 crash when exit and auditing
 2 ips lang may cause crash
-2 command.dat may cause crash
-2 split gamelist.cpp to treeview.cpp datatype.cpp
 2 new large icon effect
 2 sysinfo_file, messinfo_file
-2 new version detection
 2 background trans color on switching
 1 find a way to pick MESS systems from drivers
-2 better console refresh
-2 coin/time counter column
 1 added API to know which dock widgets are tabified together with a dock widget
-1 bios可改成完整名稱(像mame plus)
-1 ver 按照版本順序排列(像mame plus)
 1 global softwarepath, multi software dirs
 2 translator credit
-1 pop warning if console rom not exists
+1 custom filters The game/ROM set count doesn't change though until you've clicked on an alternate folder listing.
 2 multi sw paths
 1 MESS sw ext rom cfg saving
-2 disable play with
-2 mamep core lang, for non cjk languages
-2 SDL joystick GUI
 1 playwith state name prompt, empty file name handling
-* reconsider command.dat it's slow and buggy
-* icon for local switching
 
 //Linux/Mac
-1 On OSX, would it be possible to make the front end start the selected game when you press return?
-check font size
 当使用linux版本的时候，rom和artworks等文件夹放在ntfs分区时，会在其目录下建立.mamepgui文件夹
 
 //Coding
-* separate screenshot.cpp
 
 //General
 * test oldest mame version support, warning
@@ -118,11 +76,12 @@ check font size
 * keycode ctrlr config editor
 * customizable GUI text font / color editor +0.05
 * option helper from -su
-* vector.ini, debug.ini
 * unify method to get inherited default value
 * general info page
 
 //GameList
+* icon for local lang switching
+* not working的红色不显示在游戏全名了，只显示在romset名了
 * separate game list language
 * manuals support planned? (http://www.mamext.net/)
 * export lst gamelist
@@ -131,7 +90,6 @@ check font size
 * ROM capa column
 
 //Audit
-* audit samples
 * clrmame style dialog
 
 //Folder
@@ -140,6 +98,7 @@ check font size
 * dnd support
 
 //Snap
+* 点击没有缩略图的纵版游戏，缩略图mame那几个字就变成拉伸变长的了
 1 icons\warning.ico for the non-working games.
 1 snap\nonworking.png for non-working games snap display
 * external default.png.0
@@ -157,6 +116,7 @@ check font size
 
 //MESS
 1 ramoptions
+1 nv? 若是連副檔名都可以不用變更的話就更棒了
 chinese zip console name error
 * if we are in an empty MESS system folder, assign currentGame to the system
 * console folder icon
@@ -169,6 +129,7 @@ chinese zip console name error
   display region/hack info of console rom
 
 //Extra
+* reconsider command.dat it's slow and buggy
 GUI Support for chdman (and possibly the LD Player)
 * controller setting interface
 * export snapshot dat
@@ -181,18 +142,22 @@ GUI Support for chdman (and possibly the LD Player)
 
 [qt compile config]
 windows:
-configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-rtti -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde
+4.5
+configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-rtti -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde -nomake examples -nomake demos
+4.6
+configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-multimedia -no-webkit -no-script -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-rtti -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde -nomake examples -nomake demos
 linux:
 libqt4-dev
 libgtk2.0-dev
-configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-opengl -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -gtkstyle -nomake examples -nomake demos -nomake tools
+configure -opensource -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-javascript-jit -no-script -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-opengl -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -gtkstyle -nomake examples -nomake demos -nomake tools
 macosx:
-configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-dwarf2 -nomake examples -nomake demos -nomake tools
+configure -opensource -release -static -universal -no-exceptions -no-accessibility -no-stl -no-phonon -no-multimedia -no-svg -no-webkit -no-javascript-jit -no-script -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl  -no-dwarf2 -nomake examples -nomake demos -nomake tools
 
 cd /mnt/hgfs/qtui
 
 linux/mac:
 export PATH=/usr/local/Trolltech/Qt-4.5.2/bin:$PATH
+export PATH=/usr/local/Trolltech/Qt-4.6.1/bin:$PATH
 
 sudo cp -f mamepgui /usr/games
 sudo chmod +x /usr/games/mamepgui
@@ -221,6 +186,7 @@ load nvram from playback dir
 neogeo playback rtc
 
 [mamep core bug]
+mame能否加上 显示游戏当前运算的分辨率？
 1 submit joyid
 4 verify rev 3991
 3x filter height
@@ -290,23 +256,4 @@ restoreGameSelection()
 *** restoreGameSelection() is slow
 
 
-	QHash<QString, MameFileInfo *> mameFileInfoList = 
-//		utils->iterateMameFile("d:/mame/icons2/;d:/mame/icons3", "icons", "*" ICO_EXT, MAMEFILE_READ);
-//		utils->iterateMameFile("d:/mame", "", "history.dat", MAMEFILE_READ);
-//		utils->iterateMameFile("d:/mame/roms", "grdians", "*", MAMEFILE_READ);
-//		utils->iterateMameFile("d:/mame/snap/", "snap;.;denjinmk", "denjinmk.png;0000.png", MAMEFILE_READ);
-		utils->iterateMameFile("d:/mame/software/NES/", "Super C", "*.nes", MAMEFILE_GETINFO);
-
-	QString buf;
-	foreach (QString key, mameFileInfoList.keys())
-	{
-		buf.append(QString("%1,%2,%3,%4\n")
-			.arg(key)
-			.arg(mameFileInfoList[key]->crc, 8, 16, QLatin1Char('0'))
-			.arg(mameFileInfoList[key]->size)
-			.arg(mameFileInfoList[key]->data.size())
-			);
-	}
-	win->poplog(buf);
-	
-	utils->clearMameFileInfoList(mameFileInfoList);
+./configure --disable-atomic --disable-audio --disable-events --disable-haptic --disable-power --disable-threads --disable-timers --disable-file --disable-loadso --disable-cpuinfo --disable-mmx --disable-3dnow --disable-sse

@@ -418,7 +418,7 @@ void IPS::updateList()
 	itemStateTable.clear();
 
 	//build ips tree
-	for (int i = 0; i < datFiles.count(); i++)
+	for (int i = 0; i < datFiles.size(); i++)
 		parse(NULL, NULL, datFiles[i]);
 
 	twList->expandAll();
