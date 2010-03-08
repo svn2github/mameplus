@@ -1615,7 +1615,7 @@ static BOOL CALLBACK dinput_joystick_enum(LPCDIDEVICEINSTANCE instance, LPVOID r
 	devinfo->dinput.caps.dwButtons = MIN(devinfo->dinput.caps.dwButtons, 128);
 
 #ifndef JOYSTICK_ID
-	assign_joystick_to_player(devinfo);
+	assign_joystick_to_player(machine, devinfo);
 #endif /* JOYSTICK_ID */
 
 exit:

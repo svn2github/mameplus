@@ -239,6 +239,9 @@ public:
 	ioport_list				portlist;			/* points to a list of input port configurations */
 
 	/* CPU information */
+#ifdef USE_HISCORE
+	running_device *	cpu[8];				/* CPU array for hiscore support */
+#endif /* USE_HISCORE */
 	running_device *	firstcpu;			/* first CPU (allows for quick iteration via typenext) */
 
 	/* game-related information */

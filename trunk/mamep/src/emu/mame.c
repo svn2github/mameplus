@@ -1343,6 +1343,11 @@ running_machine::running_machine(const game_driver *driver)
 			driver_data = (*config->driver_data_alloc)(*this);
 
 		/* find devices */
+#ifdef USE_HISCORE
+		cpu[0] = cpu_first(this);
+ 	 	for (int cpunum = 1; cpunum < ARRAY_LENGTH(cpu) && cpu[cpunum - 1] != NULL; cpunum++)
+	 		cpu[cpunum] = cpu[cpunum - 1]->typenext();
+#endif /* USE_HISCORE */
 		firstcpu = cpu_first(this);
 		primary_screen = video_screen_first(this);
 
@@ -1480,12 +1485,13 @@ static void init_machine(running_machine *machine)
 	if (machine->config->video_start != NULL)
 		(*machine->config->video_start)(machine);
 
-	/* initialize miscellaneous systems */
-	saveload_init(machine);
 #ifdef USE_HISCORE
 	/* initialize the hiscore system */
 	hiscore_init(machine);
 #endif /* USE_HISCORE */
+
+	/* initialize miscellaneous systems */
+	saveload_init(machine);
 	if (options_get_bool(mame_options(), OPTION_CHEAT))
 		cheat_init(machine);
 

@@ -553,6 +553,12 @@ static DEVICE_START( cpu )
 	header = cpu_get_class_header(device);
 	classdata = get_class_data(device);
 
+#ifdef USE_HISCORE
+	/* add ourself to the global array - hiscore support */
+	if (index < ARRAY_LENGTH(device->machine->cpu))
+		device->machine->cpu[index] = device;
+#endif /* USE_HISCORE */
+
 	/* build the header */
 	header->debug = NULL;
 	header->set_info = (cpu_set_info_func)device->get_config_fct(CPUINFO_FCT_SET_INFO);
