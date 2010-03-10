@@ -62,7 +62,7 @@ QSize Utils::getScaledSize(QSize orig, QSize bounding, bool forceAspect)
 
 	// do not enlarge
 	if (!win->actionStretchSshot->isChecked() && (
-		scaledSize.width() > origSize.width() || 
+		scaledSize.width() > origSize.width() ||
 		scaledSize.height() > origSize.height()))
 		scaledSize = origSize;
 
@@ -147,10 +147,10 @@ void Utils::initDescMap()
 	descMap.insert("trackball", tr("Trackball"));
 	descMap.insert("vjoy2way", tr("Joy 2-Way (V)"));
 	descMap.insert("vdoublejoy2way", tr("Double Joy 2-Way (V)"));
-		
+
 	descMap.insert("baddump", tr("Bad Dump"));
 	descMap.insert("nodump", tr("No Dump"));
-		
+
 	descMap.insert("raster", tr("Raster"));
 	descMap.insert("vector", tr("Vector"));
 	descMap.insert("lcd", tr("LCD"));
@@ -182,7 +182,7 @@ QString Utils::getMameVersion()
 {
 	QStringList args;
 	args << "-help";
-	
+
 	mameVersion = "";
 
 	loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
@@ -285,7 +285,7 @@ bool Utils::matchMameFile(const QString &fileName, const QStringList &fileNameFi
 bool Utils::extractMameFile(const QString &fileName, MameFileInfo *mameFileInfo)
 {
 	bool result = false;
-	
+
 	QFileInfo fileInfo(fileName);
 	QFile outFile(utils->getPath(QDir::tempPath()) + fileInfo.fileName());
 
@@ -297,7 +297,7 @@ bool Utils::extractMameFile(const QString &fileName, MameFileInfo *mameFileInfo)
 	}
 
 	outFile.close();
-	
+
 	return result;
 }
 
@@ -312,7 +312,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 
 	QStringList archNames = _archNames.split(";");
 	QStringList fileNameFilters = _fileNameFilters.split(";");
-	if (fileNameFilters.size() > 1 || 
+	if (fileNameFilters.size() > 1 ||
 		fileNameFilters.first().startsWith("*"))
 		isSingleFile = false;
 
@@ -323,14 +323,14 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 	{
 		if (isSingleFile && mameFileInfoList.size() > 0)
 			break;
-	
+
 		_dirPath = utils->getPath(_dirPath);
 
 		foreach (QString archName, archNames)
 		{
 			if (isSingleFile && mameFileInfoList.size() > 0)
 				break;
-		
+
 			// iterate all files in the path
 			QString dirPath = utils->getPath(_dirPath + archName);
 			QDir dir(dirPath);
@@ -371,7 +371,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 				QString _fileName = fileName;
 				if (!archName.isEmpty() && method == MAMEFILE_GETDATINFO)
 					_fileName.prepend(archName + "/");
-				
+
 				mameFileInfoList.insert(_fileName, mameFileInfo);
 			}
 		}
@@ -407,7 +407,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 			{
 				if (isSingleFile && mameFileInfoList.size() > 0)
 					break;
-			
+
 				QuaZipFileInfo zipFileInfo;
 				if(!zip.getCurrentFileInfo(&zipFileInfo))
 					continue;
@@ -526,8 +526,8 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 
 				if (method == MAMEFILE_EXTRACT)
 				{
-					bool re = extractMameFile(f->Name, mameFileInfo);
-				//	win->log(QString("ext re: %1").arg(re));
+//					bool re = extractMameFile(f->Name, mameFileInfo);
+//					win->log(QString("ext re: %1").arg(re));
 				}
 			}
 			IAlloc_Free(&allocImp, outBuffer);
@@ -536,7 +536,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 		SzArEx_Free(&db, &allocImp);
 		File_Close(&archiveStream.file);
 	}
-	
+
 	return mameFileInfoList;
 }
 
@@ -595,7 +595,7 @@ int MyQueue::size() const
 }
 
 
-ProcessManager::ProcessManager(QWidget *parent) : 
+ProcessManager::ProcessManager(QWidget *parent) :
 QObject(parent),
 procCount(0)
 {
@@ -620,7 +620,7 @@ int ProcessManager::start(QString &command, QStringList &arguments, bool autoCon
 		connect(proc, SIGNAL(readyReadStandardError()), this, SLOT(readyReadStandardError()));
 		connect(proc, SIGNAL(started()), this, SLOT(started()));
 	}
-	
+
 #ifdef Q_WS_WIN
 	//explicitly assign WorkingDirectory during M1 loading
 	proc->setWorkingDirectory(currentAppDir);

@@ -4,7 +4,7 @@
 #include "mamepgui_main.h"
 #include "mameopt.h"
 
-RomAuditor::RomAuditor(QObject *parent) : 
+RomAuditor::RomAuditor(QObject *parent) :
 QThread(parent),
 hasAudited(false),
 method(AUDIT_ONLY)
@@ -67,7 +67,7 @@ void RomAuditor::exportDat()
 		{
 			gameInfo = pMameDat->games[gameName];
 
-			if (method == AUDIT_EXPORT_COMPLETE && !gameInfo->isExtRom || gameInfo->available == GAME_MISSING)
+			if ((method == AUDIT_EXPORT_COMPLETE && !gameInfo->isExtRom) || gameInfo->available == GAME_MISSING)
 			{
 				GameInfo *gameInfo2 = NULL, *gameBiosInfo = NULL;
 				RomInfo *romInfo;
@@ -114,7 +114,7 @@ void RomAuditor::exportDat()
 					if (!romInfo->available)
 					{
 						//to reduce redundant data, continue loop if parent is also missing this rom
-						if (gameInfo2 != NULL && 
+						if (gameInfo2 != NULL &&
 							gameInfo2->roms.contains(crc) && !gameInfo2->roms.value(crc)->available)
 						{
 							//dont count bioses #1
@@ -146,8 +146,8 @@ void RomAuditor::exportDat()
 					completelyMissing = completelyMissing || completelyMissingClone;
 
 				//toggle export methods
-				if (method == AUDIT_EXPORT_INCOMPLETE && completelyMissing || 
-					method == AUDIT_EXPORT_MISSING && !completelyMissing)
+				if ((method == AUDIT_EXPORT_INCOMPLETE && completelyMissing) ||
+					(method == AUDIT_EXPORT_MISSING && !completelyMissing))
 					continue;
 
 				//write xml
@@ -178,7 +178,7 @@ void RomAuditor::exportDat()
 		}
 		out.writeEndDocument();
 	}
-	
+
 	outFile.close();
 
 	win->poplog("Finished.");
@@ -192,12 +192,12 @@ void RomAuditor::audit(bool autoAudit, int _method, QString fileName)
 		fixDatFileName = fileName;
 
 		//skip auditing and go export directly
-		if (method == AUDIT_EXPORT_COMPLETE || method != AUDIT_ONLY && hasAudited)
+		if (method == AUDIT_EXPORT_COMPLETE || (method != AUDIT_ONLY && hasAudited))
 		{
 			exportDat();
 			return;
 		}
-	
+
 		gameList->disableCtrls();
 
 		//must clear pMameDat in the main thread
@@ -476,7 +476,7 @@ void RomAuditor::auditConsole(QString consoleName)
 			nameFilters << "*." + ext;
 
 	const QString allExtensionNames = nameFilters.join(";");
-		
+
 	nameFilters << "*" ZIP_EXT;
 	nameFilters << "*" SZIP_EXT;
 
@@ -489,9 +489,9 @@ void RomAuditor::auditConsole(QString consoleName)
 		QFileInfo fi(files[i]);
 		const QString suffixName = "." + fi.suffix();
 
-		if (suffixName == ZIP_EXT || suffixName == SZIP_EXT)	
+		if (suffixName == ZIP_EXT || suffixName == SZIP_EXT)
 		{
-			QHash<QString, MameFileInfo *> mameFileInfoList = 
+			QHash<QString, MameFileInfo *> mameFileInfoList =
 				utils->iterateMameFile(dirPath, fi.completeBaseName(), allExtensionNames, MAMEFILE_GETINFO);
 
 			foreach (QString zipFileName, mameFileInfoList.keys())
@@ -504,11 +504,11 @@ void RomAuditor::auditConsole(QString consoleName)
 				gameInfo->romof = consoleName;
 				gameInfo->sourcefile = sourcefile;
 				gameInfo->available = GAME_COMPLETE;
-				
+
 				QString key = dirPath + fileName + "/" + zipFileName;
 				pMameDat->games[key] = gameInfo;
 			}
-			
+
 			utils->clearMameFileInfoList(mameFileInfoList);
 		}
 		else
@@ -530,7 +530,7 @@ void RomAuditor::auditConsole(QString consoleName)
 }
 
 
-MameExeRomAuditor::MameExeRomAuditor(QObject *parent) : 
+MameExeRomAuditor::MameExeRomAuditor(QObject *parent) :
 QObject(parent)
 {
 	dlgAudit.setModal(true);
