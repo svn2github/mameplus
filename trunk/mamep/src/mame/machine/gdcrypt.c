@@ -340,7 +340,7 @@ void naomi_game_decrypt(running_machine* machine, UINT64 key, UINT8* region, int
 
 	des_generate_subkeys (rev64(key), des_subkeys);
 
-	#ifdef MAME_DEBUG
+//	#ifdef MAME_DEBUG
 	/* save the original file */
 	{
 		FILE *fp;
@@ -353,7 +353,7 @@ void naomi_game_decrypt(running_machine* machine, UINT64 key, UINT8* region, int
 			fclose(fp);
 		}
 	}
-	#endif
+//	#endif
 
 	for(i=0;i<length;i+=8)
 	{
@@ -365,7 +365,7 @@ void naomi_game_decrypt(running_machine* machine, UINT64 key, UINT8* region, int
 		write_from_qword(region+i, ret);
 	}
 
-	#ifdef MAME_DEBUG
+//	#ifdef MAME_DEBUG
 	/* save the decrypted file */
 	{
 		FILE *fp;
@@ -378,6 +378,6 @@ void naomi_game_decrypt(running_machine* machine, UINT64 key, UINT8* region, int
 			fclose(fp);
 		}
 	}
-	#endif
+//	#endif
 }
 
