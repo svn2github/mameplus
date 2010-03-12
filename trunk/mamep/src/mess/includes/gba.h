@@ -146,12 +146,12 @@ enum
 };
 
 /* driver state */
-class  gba_state_t
+class gba_state
 {
 public:
-	static void *alloc(running_machine &machine) { return auto_alloc_clear(&machine, gba_state_t(machine)); }
+	static void *alloc(running_machine &machine) { return auto_alloc_clear(&machine, gba_state(machine)); }
 
-	gba_state_t(running_machine &machine) { }
+	gba_state(running_machine &machine) { }
 
 	UINT32 DISPSTAT;
 	UINT32 BG2X, BG2Y, BG3X, BG3Y;

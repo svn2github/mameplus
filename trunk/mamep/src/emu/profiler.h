@@ -47,9 +47,6 @@ enum
 	PROFILER_BLIT,
 	PROFILER_SOUND,
 	PROFILER_TIMER_CALLBACK,
-#ifdef USE_HISCORE
-	PROFILER_HISCORE,	/* high score load can slow things down if incorrectly written */
-#endif /* USE_HISCORE */
 	PROFILER_INPUT,		/* input.c and inptport.c */
 	PROFILER_MOVIE_REC,	/* movie recording */
 	PROFILER_LOGERROR,	/* logerror */

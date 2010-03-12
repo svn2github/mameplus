@@ -5,5 +5,5 @@ set PATH=%MINGW_ROOT%\bin;%PATH%
 
 gcc -v
 
-make >compile.log
+make -j3 >compile.log
 pause

@@ -830,7 +830,7 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 				break;
 
 #ifdef MESS
-			// mamep: we want to use key to toggle MESS-newui
+			// mamep: we want to add a key to toggle MESS-newui
 			case IPT_OSD_2:
 				if (options_get_bool(mame_options(), "newui"))
 				{
@@ -840,6 +840,7 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 				}
 				break;
 
+#else			// mamep: we want to keep default key setting
 			case IPT_UI_THROTTLE:
 				input_seq_set_0(&typedesc->seq[SEQ_TYPE_STANDARD]);
 				break;

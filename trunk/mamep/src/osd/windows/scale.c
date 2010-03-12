@@ -281,7 +281,7 @@ int scale_exit(void)
 
 		if (scale_buffer[i])
 		{
-			free(scale_buffer[i]);
+			global_free(scale_buffer[i]);
 			scale_buffer[i] = NULL;
 		}
 	}
