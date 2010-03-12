@@ -23,7 +23,7 @@
 #define DOTCLK_NTSC	(MCLK_NTSC/4)
 #define DOTCLK_PAL	(MCLK_PAL/4)
 
-#define SNES_LAYER_DEBUG  1
+#define SNES_LAYER_DEBUG  0
 
 /* Debug definitions */
 #ifdef MAME_DEBUG
@@ -36,25 +36,25 @@
 #endif /* MAME_DEBUG */
 
 /* Useful definitions */
-#define SNES_SCR_WIDTH		256		/* 32 characters 8 pixels wide */
-#define SNES_SCR_HEIGHT_NTSC	224		/* Can be 224 or 240 height */
-#define SNES_SCR_HEIGHT_PAL	274		/* ??? */
-#define SNES_VTOTAL_NTSC	262		/* Maximum number of lines for NTSC systems */
-#define SNES_VTOTAL_PAL		312		/* Maximum number of lines for PAL systems */
-#define SNES_HTOTAL			341		/* Maximum number pixels per line (incl. hblank) */
-#define SNES_DMA_BASE		0x4300	/* Base DMA register address */
-#define SNES_MODE_20		0x1		/* Lo-ROM cart */
-#define SNES_MODE_21		0x2		/* Hi-ROM cart */
-#define SNES_MODE_22		0x4		/* Extended Lo-ROM cart - SDD-1 */
-#define SNES_MODE_25		0x8		/* Extended Hi-ROM cart */
-#define SNES_NTSC			0x00
-#define SNES_PAL			0x10
-#define SNES_VRAM_SIZE		0x20000	/* 128kb of video ram */
-#define SNES_CGRAM_SIZE		0x202	/* 256 16-bit colours + 1 tacked on 16-bit colour for fixed colour */
-#define SNES_OAM_SIZE		0x440	/* 1088 bytes of Object Attribute Memory */
-#define SNES_SPCRAM_SIZE	0x10000	/* 64kb of spc700 ram */
-#define SNES_EXROM_START	0x1000000
-#define FIXED_COLOUR		256		/* Position in cgram for fixed colour */
+#define SNES_SCR_WIDTH        256		/* 32 characters 8 pixels wide */
+#define SNES_SCR_HEIGHT_NTSC  224		/* Can be 224 or 240 height */
+#define SNES_SCR_HEIGHT_PAL   274		/* ??? */
+#define SNES_VTOTAL_NTSC      262		/* Maximum number of lines for NTSC systems */
+#define SNES_VTOTAL_PAL       312		/* Maximum number of lines for PAL systems */
+#define SNES_HTOTAL           341		/* Maximum number pixels per line (incl. hblank) */
+#define SNES_DMA_BASE         0x4300	/* Base DMA register address */
+#define SNES_MODE_20          0x1		/* Lo-ROM cart */
+#define SNES_MODE_21          0x2		/* Hi-ROM cart */
+#define SNES_MODE_22          0x4		/* Extended Lo-ROM cart - SDD-1 */
+#define SNES_MODE_25          0x8		/* Extended Hi-ROM cart */
+#define SNES_NTSC             0x00
+#define SNES_PAL              0x10
+#define SNES_VRAM_SIZE        0x20000	/* 128kb of video ram */
+#define SNES_CGRAM_SIZE       0x202		/* 256 16-bit colours + 1 tacked on 16-bit colour for fixed colour */
+#define SNES_OAM_SIZE         0x440		/* 1088 bytes of Object Attribute Memory */
+#define SNES_SPCRAM_SIZE      0x10000	/* 64kb of spc700 ram */
+#define SNES_EXROM_START      0x1000000
+#define FIXED_COLOUR          256		/* Position in cgram for fixed colour */
 /* Definitions for PPU Memory-Mapped registers */
 #define INIDISP        0x2100
 #define OBSEL          0x2101
@@ -355,6 +355,50 @@
 #define DSP_FIR_C6		0x6F
 #define DSP_FIR_C7		0x7F
 
+struct snes_joypad
+{
+	UINT16 buttons;
+};
+
+struct snes_mouse
+{
+	INT16 x, y, oldx, oldy;
+	UINT8 buttons;
+	UINT8 deltax, deltay;
+	int speed;
+};
+
+struct snes_superscope
+{
+	INT16 x, y;
+	UINT8 buttons;
+	int turbo_lock, pause_lock, fire_lock;
+	int offscreen;
+};
+
+typedef void (*snes_io_read)(running_machine *machine);
+typedef UINT8 (*snes_oldjoy_read)(running_machine *machine);
+
+class snes_state
+{
+public:
+	static void *alloc(running_machine &machine) { return auto_alloc_clear(&machine, snes_state(machine)); }
+
+	snes_state(running_machine &machine) { }
+
+	/* input-related */
+	UINT8                 joy1l, joy1h, joy2l, joy2h, joy3l, joy3h, joy4l, joy4h;
+	UINT16                data1[2], data2[2];
+	UINT8                 read_idx[2];
+	snes_joypad           joypad[2];
+	snes_mouse            mouse[2];
+	snes_superscope       scope[2];
+
+	/* input callbacks (to allow MESS to have its own input handlers) */
+	snes_io_read          io_read;
+	snes_oldjoy_read      oldjoy1_read, oldjoy2_read;
+};
+
 /* Special chips, checked at init and used in memory handlers */
 enum
 {
@@ -436,9 +480,10 @@ extern UINT8 snes_has_addon_chip;
 extern UINT32 snes_rom_size;
 extern UINT16 snes_htmult;
 
-extern void snes_gdma( const address_space *space, UINT8 channels );
+extern void snes_gdma(const address_space *space, UINT8 channels);
 extern void snes_hdma_init(void);
 extern void snes_hdma(const address_space *space);
+extern void snes_latch_counters(running_machine *machine);
 
 /* (PPU) Video related */
 extern UINT8  *snes_vram;			/* Video RAM (Should be 16-bit, but it's easier this way) */
@@ -465,8 +510,11 @@ struct SNES_PPU_STRUCT	/* once all the regs are saved in this structure, it woul
 
 		UINT8 tile_size;
 		UINT8 mosaic_enabled;	// actually used only for layers 0->3!
+
 		UINT8 main_window_enabled;
 		UINT8 sub_window_enabled;
+		UINT8 main_bg_enabled;
+		UINT8 sub_bg_enabled;
 
 		UINT16 hoffs;
 		UINT16 voffs;
@@ -480,7 +528,11 @@ struct SNES_PPU_STRUCT	/* once all the regs are saved in this structure, it woul
 		UINT8 saved_address_high;
 		UINT16 address;
 		UINT16 priority_rotation;
+		UINT8 next_charmap;
+		UINT8 next_size;
+		UINT8 size_;
 		UINT8 size[2];
+		UINT32 next_name_select;
 		UINT32 name_select;
 		UINT8 first_sprite;
 		UINT8 flip;
@@ -520,8 +572,8 @@ struct SNES_PPU_STRUCT	/* once all the regs are saved in this structure, it woul
 	} mode7;
 
 	UINT8 mosaic_size;
-	UINT8 main_color_mask;
-	UINT8 sub_color_mask;
+	UINT8 clip_to_black;
+	UINT8 prevent_color_math;
 	UINT8 sub_add_mode;
 	UINT8 bg3_priority_bit;
 	UINT8 direct_color;
@@ -529,16 +581,15 @@ struct SNES_PPU_STRUCT	/* once all the regs are saved in this structure, it woul
                                     'previous' scroll value */
 	UINT8 mode7_last_scroll;	/* as per Anomie's doc mode 7 scroll regs use a different value, shared with mode 7 matrix! */
 
-	UINT8 main_bg_enabled[5];	// these would probably better fit the layer struct, but it would make worse the code in snes_update_mode_X()
-	UINT8 sub_bg_enabled[5];
 	UINT8 ppu1_open_bus, ppu2_open_bus;
 	UINT8 ppu1_version, ppu2_version;
 	UINT8 window1_left, window1_right, window2_left, window2_right;
 
 	UINT16 mosaic_table[16][4096];
-	UINT8 clipmasks[6][SNES_SCR_WIDTH + 8];
+	UINT8 clipmasks[6][SNES_SCR_WIDTH];
 	UINT8 update_windows;
 	UINT8 update_offsets;
+	UINT8 update_oam_list;
 	UINT8 mode;
 	UINT8 interlace; //doubles the visible resolution
 	UINT8 obj_interlace;

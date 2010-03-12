@@ -59,8 +59,6 @@ const game_driver * const plusdrivers[] =
 	DRIVER( sf2tlonb )	/* bootleg, Tu Long set 2 */
 	DRIVER( sf2th )		/* bootleg */
 	DRIVER( sf2b )		/* bootleg */
-//	DRIVER( dinohc )	/* bootleg */
-//	DRIVER( punishrh )	/* bootleg, Biaofeng Zhanjing */
 
 	/* Capcom CPS1 hack */
 	DRIVER( knightsh )	/* hack */
