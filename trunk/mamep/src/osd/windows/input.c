@@ -839,13 +839,11 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 					input_seq_set_1 (&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_SCRLOCK);
 				}
 				break;
-
-#else		// mamep: keep default key setting
-/*
+#endif
+#if 0			// mamep: keep default key setting
 			case IPT_UI_THROTTLE:
 				input_seq_set_0(&typedesc->seq[SEQ_TYPE_STANDARD]);
 				break;
-*/
 #endif
 		}
 }
