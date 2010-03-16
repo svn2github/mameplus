@@ -48,7 +48,6 @@ const game_driver * const plusdrivers[] =
 	DRIVER( wofh ) 		/* bootleg, 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan */
 	DRIVER( wofha ) 	/* bootleg, 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan */
 	DRIVER( cawingb )	/* bootleg */
-	DRIVER( daimakb )	/* bootleg */
 	DRIVER( sf2m8 )		/* bootleg */
 	DRIVER( sf2m9 )		/* bootleg */
 	DRIVER( sf2m10 )	/* bootleg */
@@ -57,8 +56,6 @@ const game_driver * const plusdrivers[] =
 	DRIVER( sf2m13 )	/* bootleg */
 	DRIVER( sf2tlona )	/* bootleg, Tu Long set 1 */
 	DRIVER( sf2tlonb )	/* bootleg, Tu Long set 2 */
-	DRIVER( sf2th )		/* bootleg */
-	DRIVER( sf2b )		/* bootleg */
 
 	/* Capcom CPS1 hack */
 	DRIVER( knightsh )	/* hack */

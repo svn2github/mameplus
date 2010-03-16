@@ -1189,7 +1189,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"ghoulsu",  CPS_B_01,     mapper_DM620 },
 	{"daimakai", CPS_B_01,     mapper_DM22A },	// equivalent to DM620
 	{"daimakair",CPS_B_21_DEF, mapper_DAM63B },	// equivalent to DM620, also CPS_B_21_DEF is equivalent to CPS_B_01
-	{"daimakb",  CPS_B_01,     mapper_DM22A },	// equivalent to DM620
 	{"strider",  CPS_B_01,     mapper_ST24M1 },
 	{"striderua",CPS_B_01,     mapper_ST24M1 },
 	{"striderj", CPS_B_01,     mapper_ST22B },	// equivalent to ST24M1
@@ -1243,7 +1242,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2ja",    CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2jc",    CPS_B_12,     mapper_STF29,  0x36 },
 	{"sf2qp1",   CPS_B_17,     mapper_STF29,  0x36 },
-	{"sf2b",     CPS_B_17,     mapper_STF29,  0x36 },
 	/* from here onwards the CPS-B board has suicide battery and multiply protection */
 	{"3wonders", CPS_B_21_BT1, mapper_RT24B },
 	{"3wondersu",CPS_B_21_BT1, mapper_RT24B },
@@ -1293,7 +1291,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2yyc",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2koryu", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdt",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2th",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2tlona", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2tlonb", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"varth",    CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
@@ -1448,13 +1445,6 @@ static MACHINE_RESET( cps )
 		/* Patch out protection check */
 		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
 		rom[0xe5332 / 2] = 0x6014;
-	}
-	if ((strcmp(gamename, "dinoh") == 0) ||
-		(strcmp(gamename, "dinoha") == 0))
-	{
-		/* Patch out Q-Sound test */
-		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
-		rom[0xaacf4 / 2] = 0x4e71;
 	}
 
 #if 0
