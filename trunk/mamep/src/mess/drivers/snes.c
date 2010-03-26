@@ -27,7 +27,7 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "video/generic.h"
+#include "audio/snes_snd.h"
 #include "cpu/spc700/spc700.h"
 #include "cpu/superfx/superfx.h"
 #include "cpu/g65816/g65816.h"
@@ -43,14 +43,14 @@
  *
  *************************************/
 
-static READ8_HANDLER( spc_ram_100_r )
+static READ8_DEVICE_HANDLER( spc_ram_100_r )
 {
-	return spc_ram_r(space, offset + 0x100);
+	return spc_ram_r(device, offset + 0x100);
 }
 
-static WRITE8_HANDLER( spc_ram_100_w )
+static WRITE8_DEVICE_HANDLER( spc_ram_100_w )
 {
-	spc_ram_w(space, offset + 0x100, data);
+	spc_ram_w(device, offset + 0x100, data);
 }
 
 /*************************************
@@ -80,11 +80,11 @@ static ADDRESS_MAP_START( superfx_map, ADDRESS_SPACE_PROGRAM, 8)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( spc_map, ADDRESS_SPACE_PROGRAM, 8)
-	AM_RANGE(0x0000, 0x00ef) AM_READWRITE(spc_ram_r, spc_ram_w) AM_BASE(&spc_ram)   	/* lower 32k ram */
-	AM_RANGE(0x00f0, 0x00ff) AM_READWRITE(spc_io_r, spc_io_w)   	/* spc io */
-	AM_RANGE(0x0100, 0xffff) AM_WRITE(spc_ram_100_w)
-	AM_RANGE(0x0100, 0xffbf) AM_READ(spc_ram_100_r)
-	AM_RANGE(0xffc0, 0xffff) AM_READ(spc_ipl_r)
+	AM_RANGE(0x0000, 0x00ef) AM_DEVREADWRITE("spc700", spc_ram_r, spc_ram_w)   	/* lower 32k ram */
+	AM_RANGE(0x00f0, 0x00ff) AM_DEVREADWRITE("spc700", spc_io_r, spc_io_w)   	/* spc io */
+	AM_RANGE(0x0100, 0xffff) AM_DEVWRITE("spc700", spc_ram_100_w)
+	AM_RANGE(0x0100, 0xffbf) AM_DEVREAD("spc700", spc_ram_100_r)
+	AM_RANGE(0xffc0, 0xffff) AM_DEVREAD("spc700", spc_ipl_r)
 ADDRESS_MAP_END
 
 
@@ -293,18 +293,29 @@ static INPUT_PORTS_START( snes )
 	PORT_INCLUDE(snes_mouse)
 	PORT_INCLUDE(snes_superscope)
 
+	PORT_START("OPTIONS")
+	PORT_CONFNAME( 0x01, 0x00, "Hi-Res pixels blurring (TV effect)")
+	PORT_CONFSETTING(    0x00, DEF_STR( Off ) )
+	PORT_CONFSETTING(    0x01, DEF_STR( On ) )
 
 #ifdef SNES_LAYER_DEBUG
 	PORT_START("DEBUG1")
-	PORT_CONFNAME( 0x70, 0x00, "Select OAM" )
-	PORT_CONFSETTING(   0x00, "All" )
-	PORT_CONFSETTING(   0x10, "OAM1 only" )
-	PORT_CONFSETTING(   0x20, "OAM2 only" )
-	PORT_CONFSETTING(   0x30, "OAM3 only" )
-	PORT_CONFSETTING(   0x40, "OAM4 only" )
-	PORT_CONFNAME( 0x80, 0x00, "Draw sprite in reverse order" )
-	PORT_CONFSETTING(   0x00, DEF_STR( Off ) )
-	PORT_CONFSETTING(   0x80, DEF_STR( On ) )
+	PORT_CONFNAME( 0x03, 0x00, "Select BG1 priority" )
+	PORT_CONFSETTING(    0x00, "All" )
+	PORT_CONFSETTING(    0x01, "BG1B (lower) only" )
+	PORT_CONFSETTING(    0x02, "BG1A (higher) only" )
+	PORT_CONFNAME( 0x0c, 0x00, "Select BG2 priority" )
+	PORT_CONFSETTING(    0x00, "All" )
+	PORT_CONFSETTING(    0x04, "BG2B (lower) only" )
+	PORT_CONFSETTING(    0x08, "BG2A (higher) only" )
+	PORT_CONFNAME( 0x30, 0x00, "Select BG3 priority" )
+	PORT_CONFSETTING(    0x00, "All" )
+	PORT_CONFSETTING(    0x10, "BG3B (lower) only" )
+	PORT_CONFSETTING(    0x20, "BG3A (higher) only" )
+	PORT_CONFNAME( 0xc0, 0x00, "Select BG4 priority" )
+	PORT_CONFSETTING(    0x00, "All" )
+	PORT_CONFSETTING(    0x40, "BG4B (lower) only" )
+	PORT_CONFSETTING(    0x80, "BG4A (higher) only" )
 
 	PORT_START("DEBUG2")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Toggle BG 1") PORT_CODE(KEYCODE_1_PAD)
@@ -313,13 +324,20 @@ static INPUT_PORTS_START( snes )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Toggle BG 4") PORT_CODE(KEYCODE_4_PAD)
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Toggle Objects") PORT_CODE(KEYCODE_5_PAD)
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Toggle Main/Sub") PORT_CODE(KEYCODE_6_PAD)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Toggle Back col") PORT_CODE(KEYCODE_7_PAD)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Toggle Color Math") PORT_CODE(KEYCODE_7_PAD)
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Toggle Windows") PORT_CODE(KEYCODE_8_PAD)
 
 	PORT_START("DEBUG3")
-	PORT_BIT( 0x1, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Pal prev") PORT_CODE(KEYCODE_B)
-	PORT_BIT( 0x2, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Pal next") PORT_CODE(KEYCODE_N)
-	PORT_BIT( 0x4, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Toggle Transparency") PORT_CODE(KEYCODE_9_PAD)
+	PORT_BIT( 0x4, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Toggle Mosaic") PORT_CODE(KEYCODE_9_PAD)
+	PORT_CONFNAME( 0x70, 0x00, "Select OAM priority" )
+	PORT_CONFSETTING(    0x00, "All" )
+	PORT_CONFSETTING(    0x10, "OAM0 only" )
+	PORT_CONFSETTING(    0x20, "OAM1 only" )
+	PORT_CONFSETTING(    0x30, "OAM2 only" )
+	PORT_CONFSETTING(    0x40, "OAM3 only" )
+	PORT_CONFNAME( 0x80, 0x00, "Draw sprite in reverse order" )
+	PORT_CONFSETTING(    0x00, DEF_STR( Off ) )
+	PORT_CONFSETTING(    0x80, DEF_STR( On ) )
 
 	PORT_START("DEBUG4")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Toggle Mode 0 draw")
@@ -697,7 +715,7 @@ static MACHINE_DRIVER_START( snes )
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
-	MDRV_SOUND_ADD("custom", SNES, 0)
+	MDRV_SOUND_ADD("spc700", SNES, 0)
 	MDRV_SOUND_ROUTE(0, "lspeaker", 1.00)
 	MDRV_SOUND_ROUTE(1, "rspeaker", 1.00)
 
