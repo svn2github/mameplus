@@ -85,6 +85,9 @@ endif
 ifeq ($(firstword $(filter FreeBSD,$(UNAME))),FreeBSD)
 TARGETOS = freebsd
 endif
+ifeq ($(firstword $(filter GNU/kFreeBSD,$(UNAME))),GNU/kFreeBSD)
+TARGETOS = freebsd
+endif
 ifeq ($(firstword $(filter OpenBSD,$(UNAME))),OpenBSD)
 TARGETOS = openbsd
 endif
