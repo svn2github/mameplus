@@ -5175,11 +5175,11 @@ GAME( 1997, drgw2,        pgm,       drgw2,   drgw2,    drgw2,      ROT0,   "IGS
 GAME( 1997, drgw2j,       drgw2,     drgw2,   drgw2,    drgw2j,     ROT0,   "IGS", "Chuugokuryuu II (ver. 100J, Japan)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // This set still has protection issues!
 GAME( 1997, drgw2c,       drgw2,     drgw2,   drgw2,    drgw2c,     ROT0,   "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 #else
-GAME( 1997, orlegend,     pgm,       pgm,     pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 126)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1997, orlegende,    orlegend,  pgm,     pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1997, orlegendc,    orlegend,  pgm,     pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1997, orlegend111c, orlegend,  pgm,     pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 111, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1997, orlegend105k, orlegend,  pgm,     orld105k, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 105, Korean Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1997, orlegend,     pgm,       pgm,     pgm,      orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 126)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1997, orlegende,    orlegend,  pgm,     pgm,      orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1997, orlegendc,    orlegend,  pgm,     pgm,      orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1997, orlegend111c, orlegend,  pgm,     pgm,      orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 111, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1997, orlegend105k, orlegend,  pgm,     orld105k, orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 105, Korean Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 
 GAME( 1997, drgw2,        pgm,       drgw2,   pgm,      drgw2,      ROT0,   "IGS", "Dragon World II (ver. 110X, Export)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // This set still has protection issues!
 GAME( 1997, drgw2j,       drgw2,     drgw2,   pgm,      drgw2j,     ROT0,   "IGS", "Chuugokuryuu II (ver. 100J, Japan)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // This set still has protection issues!
@@ -5217,7 +5217,7 @@ GAME( 2008, kovqhsgs,     kovlsqh2,  kov,     sango,	kovqhsgs,   ROT0,   "bootle
    Partially Working, playable, but some imperfections
    -----------------------------------------------------------------------------------------------------------------------*/
 
-GAME( 1998, killbld,      0,         killbld, killbld,  killbld,    ROT0,   "IGS", "The Killing Blade (ver. 109, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // it's playable, but there are some things unclear about the protection
+GAME( 1998, killbld,      pgm,       killbld, killbld,  killbld,    ROT0,   "IGS", "The Killing Blade (ver. 109, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // it's playable, but there are some things unclear about the protection
 GAME( 1998, killbld104,   killbld,   killbld, killbld,  killbld,    ROT0,   "IGS", "The Killing Blade (ver. 104)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // this set doesn't work, needs the DMA device emulating properly rather than using extracted data
 
 GAME( 1998, olds,         pgm,       olds,    olds,     olds,       ROT0,   "IGS", "Oriental Legend Special / Xi You Shi E Zhuan Super (ver. 101, Korean Board)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
