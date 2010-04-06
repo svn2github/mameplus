@@ -8341,7 +8341,7 @@ ROM_START( dinohunt )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
 //	ROM_REGION( 0x40000, "oki", 0 ) /* samples */
-	ROM_REGION( 0x200000, "qsound", 0 ) /* QSound samples */
+	ROM_REGION( 0x200000, "oki", 0 ) /* QSound samples */
 	ROM_LOAD( "u18",            0x00000, 0x20000, CRC(8d2899ba) SHA1(0b3ac6cf2ce0323e3bfc9da3ebfcb0fd14bc405b) )
 	ROM_LOAD( "u19",            0x20000, 0x20000, CRC(b34a4b42) SHA1(3eeb9e33bb911359e03d44949ac58439a3d3d54b) )
 	ROM_LOAD( "cd_q1.rom",      0x000000, 0x80000, CRC(60927775) SHA1(f8599bc84c38573ebbe8685822c58b6a38b50462) )
