@@ -23,7 +23,7 @@
 #define DOTCLK_NTSC	(MCLK_NTSC/4)
 #define DOTCLK_PAL	(MCLK_PAL/4)
 
-#define SNES_LAYER_DEBUG  0
+#define SNES_LAYER_DEBUG  1
 
 /* Debug definitions */
 #ifdef MAME_DEBUG
@@ -392,6 +392,9 @@ public:
 	UINT8                 read_ophct, read_opvct;
 	UINT16                hblank_offset;
 	UINT16                vram_fgr_high, vram_fgr_increment, vram_fgr_count, vram_fgr_mask, vram_fgr_shift, vram_read_buffer;
+	UINT32                wram_address;
+	UINT16                htime, vtime;
+	UINT16                vmadd;
 
 	/* timers */
 	emu_timer             *scanline_timer;
@@ -400,10 +403,27 @@ public:
 	emu_timer             *hirq_timer;
 	emu_timer             *div_timer;
 	emu_timer             *mult_timer;
+	emu_timer             *io_timer;
 
 	/* DMA/HDMA-related */
-	int                   dma_disabled[8];	// used to stop DMA if HDMA is enabled (currently not implemented, see machine/snes.c)
-	UINT8                 hdma_chnl;	/* channels enabled for HDMA */
+	struct
+	{
+		UINT8  dmap;
+		UINT8  dest_addr;
+		UINT16 src_addr;
+		UINT16 trans_size;
+		UINT8  bank;
+		UINT8  ibank;
+		UINT16 hdma_addr;
+		UINT16 hdma_iaddr;
+		UINT8  hdma_line_counter;
+		UINT8  unk;
+
+		int    do_transfer;
+
+		int    dma_disabled;	// used to stop DMA if HDMA is enabled (currently not implemented, see machine/snes.c)
+	}dma_channel[8];
+	UINT8                 hdmaen;	/* channels enabled for HDMA */
 
 	/* input-related */
 	UINT8                 joy1l, joy1h, joy2l, joy2h, joy3l, joy3h, joy4l, joy4h;
@@ -474,6 +494,8 @@ extern DRIVER_INIT( snes_hirom );
 
 extern MACHINE_START( snes );
 extern MACHINE_RESET( snes );
+
+READ8_HANDLER( snes_open_bus_r );
 
 extern READ8_HANDLER( snes_r_io );
 extern WRITE8_HANDLER( snes_w_io );
@@ -633,5 +655,7 @@ extern struct SNES_PPU_STRUCT snes_ppu;
 extern VIDEO_START( snes );
 extern VIDEO_UPDATE( snes );
 
+extern READ8_HANDLER( snes_ppu_read );
+extern WRITE8_HANDLER( snes_ppu_write );
 
 #endif /* _SNES_H_ */

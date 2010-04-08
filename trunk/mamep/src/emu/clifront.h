@@ -40,6 +40,7 @@
 #define CLIOPTION_ROMIDENT				"romident"
 #define CLIOPTION_LISTGAMES				"listgames"
 #define CLIOPTION_LISTMEDIA				"listmedia"		// needed by MESS
+#define CLIOPTION_LISTSOFTWARE			"listsoftware"
 
 
 
