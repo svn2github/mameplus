@@ -10119,5 +10119,8 @@ Other Sun games
 	/* Diatec */
 	DRIVER( unclepoo )
 
+	/* Extrema Systems International Ltd. */
+	DRIVER( poker72 )
 #endif /* !NEOCPSPGM */
+
 #endif	/* DRIVER_RECURSIVE */
