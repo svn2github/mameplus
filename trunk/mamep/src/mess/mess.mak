@@ -20,14 +20,12 @@ DRVLIBS += \
 	$(MESSOBJ)/atari.a \
 	$(MESSOBJ)/bandai.a \
 	$(MESSOBJ)/capcom.a \
-	$(MESSOBJ)/messsoft.o \
 	$(MESSOBJ)/nec.a \
 	$(MESSOBJ)/nintendo.a \
 	$(MESSOBJ)/sega.a \
 	$(MESSOBJ)/skeleton.a \
 	$(MESSOBJ)/snk.a \
 	$(MESSOBJ)/softlist.o \
-	$(MESSOBJ)/software.a \
 	$(MESSOBJ)/shared.a \
 
 #-------------------------------------------------
@@ -146,17 +144,3 @@ $(MESSOBJ)/mess.o:	$(MESS_LAYOUT)/lcd.lh
 $(MESSOBJ)/mess.o:	$(MESS_LAYOUT)/lcd_rot.lh
 
 $(MESS_DRIVERS)/sms.o:		$(MESS_LAYOUT)/sms1.lh
-
-
-#-------------------------------------------------
-# software information
-#-------------------------------------------------
-
-$(MESSOBJ)/software.a:					\
-	$(MESS_SOFTWARE)/gamegear_cart.o	\
-	$(MESS_SOFTWARE)/megadriv_cart.o	\
-	$(MESS_SOFTWARE)/ngp_cart.o	\
-	$(MESS_SOFTWARE)/pico_cart.o	\
-	$(MESS_SOFTWARE)/sms_cart.o	\
-	$(MESS_SOFTWARE)/supracan_cart.o	\
-	$(MESS_SOFTWARE)/wswan_cart.o	\

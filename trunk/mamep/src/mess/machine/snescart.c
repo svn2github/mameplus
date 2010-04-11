@@ -208,7 +208,7 @@ static void snes_save_sram(running_machine *machine)
 static void snes_machine_stop(running_machine *machine)
 {
 	/* Save SRAM */
-	if( snes_cart.sram > 0 )
+	if (snes_cart.sram > 0)
 		snes_save_sram(machine);
 }
 
@@ -350,7 +350,7 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 	/*int length;*/
 
 	snes_ram = memory_region(machine, "maincpu");
-	memset( snes_ram, 0, 0x1000000 );
+	memset(snes_ram, 0, 0x1000000);
 
 	snes_rom_size = image_length(image);
 
@@ -364,14 +364,12 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 	}
 	else if ((header[0] | (header[1] << 8)) == (((snes_rom_size - 512) / 1024) / 8))
 	{
-		/* Some headers have the rom size at the start, if this matches with the
-         * actual rom size, we probably have a header */
+		/* Some headers have the rom size at the start, if this matches with the actual rom size, we probably have a header */
 		logerror("Found header(size) - Skipped\n");
 	}
 	else if ((snes_rom_size % 0x8000) == 512)
 	{
-		/* As a last check we'll see if there's exactly 512 bytes extra to this
-         * image. */
+		/* As a last check we'll see if there's exactly 512 bytes extra to this image. */
 		logerror("Found header(extra) - Skipped\n");
 	}
 	else
@@ -405,7 +403,7 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 		/* a few games require 512k, however we store twice as much to be sure to cover the various mirrors */
 		snes_cart.sram_max = 0x100000;
 	}
-	else if( valid_mode21 >= valid_mode25 )
+	else if (valid_mode21 >= valid_mode25)
 	{
 		snes_cart.mode = SNES_MODE_21;	// HiRom
 		snes_cart.sram_max = 0x20000;
@@ -450,29 +448,45 @@ static DEVICE_IMAGE_LOAD( snes_cart )
          * (actually up to 0x7d, because 0x7e and 0x7f are overwritten by WRAM). The top half (address
          * range 0x8000 - 0xffff) of each bank is also mirrored in banks 0x00 to 0x3f and 0x80 to 0xbf.
          */
-			while (read_blocks < 64 && read_blocks < total_blocks)
+			/* SPC7110 games needs this different loading routine */
+			if ((temp_buffer[0x00ffd6] == 0xf9 || temp_buffer[0x00ffd6] == 0xf5) && (temp_buffer[0x00ffd5] == 0x3a))
 			{
-				/* Loading data */
-				memcpy(&snes_ram[0xc00000 + read_blocks * 0x10000], &ROM[0x000000 + read_blocks * 0x10000], 0x10000);
-				/* Mirroring */
-				memcpy(&snes_ram[0x008000 + read_blocks * 0x10000], &snes_ram[0xc08000 + read_blocks * 0x10000], 0x8000);
-				memcpy(&snes_ram[0x400000 + read_blocks * 0x10000], &snes_ram[0xc00000 + read_blocks * 0x10000], 0x10000);
-				memcpy(&snes_ram[0x808000 + read_blocks * 0x10000], &snes_ram[0xc08000 + read_blocks * 0x10000], 0x8000);
-				read_blocks++;
+				while (read_blocks < 16 && read_blocks < total_blocks)
+				{
+					/* Loading data */
+					memcpy(&snes_ram[0xc00000 + read_blocks * 0x10000], &ROM[0x000000 + read_blocks * 0x10000], 0x10000);
+					/* Mirroring */
+					memcpy(&snes_ram[0x008000 + read_blocks * 0x10000], &snes_ram[0xc08000 + read_blocks * 0x10000], 0x8000);
+					memcpy(&snes_ram[0x808000 + read_blocks * 0x10000], &snes_ram[0xc08000 + read_blocks * 0x10000], 0x8000);
+					read_blocks++;
+				}
 			}
-			/* Filling banks up to 0xff and their mirrors */
-			while (read_blocks % 64)
+			else
 			{
-				int j = 0, repeat_blocks;
-				while ((read_blocks % (64 >> j)) && j < 6)
-					j++;
-				repeat_blocks = read_blocks % (64 >> (j - 1));
+				while (read_blocks < 64 && read_blocks < total_blocks)
+				{
+					/* Loading data */
+					memcpy(&snes_ram[0xc00000 + read_blocks * 0x10000], &ROM[0x000000 + read_blocks * 0x10000], 0x10000);
+					/* Mirroring */
+					memcpy(&snes_ram[0x008000 + read_blocks * 0x10000], &snes_ram[0xc08000 + read_blocks * 0x10000], 0x8000);
+					memcpy(&snes_ram[0x400000 + read_blocks * 0x10000], &snes_ram[0xc00000 + read_blocks * 0x10000], 0x10000);
+					memcpy(&snes_ram[0x808000 + read_blocks * 0x10000], &snes_ram[0xc08000 + read_blocks * 0x10000], 0x8000);
+					read_blocks++;
+				}
+				/* Filling banks up to 0xff and their mirrors */
+				while (read_blocks % 64)
+				{
+					int j = 0, repeat_blocks;
+					while ((read_blocks % (64 >> j)) && j < 6)
+						j++;
+					repeat_blocks = read_blocks % (64 >> (j - 1));
 
-				memcpy(&snes_ram[0xc00000 + read_blocks * 0x10000], &snes_ram[0xc00000 + (read_blocks - repeat_blocks) * 0x10000], repeat_blocks * 0x10000);
-				memcpy(&snes_ram[read_blocks * 0x10000], &snes_ram[(read_blocks - repeat_blocks) * 0x10000], repeat_blocks * 0x10000);
-				memcpy(&snes_ram[0x400000 + read_blocks * 0x10000], &snes_ram[0x400000 + (read_blocks - repeat_blocks) * 0x10000], repeat_blocks * 0x10000);
-				memcpy(&snes_ram[0x800000 + read_blocks * 0x10000], &snes_ram[0x800000 + (read_blocks - repeat_blocks) * 0x10000], repeat_blocks * 0x10000);
-				read_blocks += repeat_blocks;
+					memcpy(&snes_ram[0xc00000 + read_blocks * 0x10000], &snes_ram[0xc00000 + (read_blocks - repeat_blocks) * 0x10000], repeat_blocks * 0x10000);
+					memcpy(&snes_ram[read_blocks * 0x10000], &snes_ram[(read_blocks - repeat_blocks) * 0x10000], repeat_blocks * 0x10000);
+					memcpy(&snes_ram[0x400000 + read_blocks * 0x10000], &snes_ram[0x400000 + (read_blocks - repeat_blocks) * 0x10000], repeat_blocks * 0x10000);
+					memcpy(&snes_ram[0x800000 + read_blocks * 0x10000], &snes_ram[0x800000 + (read_blocks - repeat_blocks) * 0x10000], repeat_blocks * 0x10000);
+					read_blocks += repeat_blocks;
+				}
 			}
 			break;
 
@@ -563,7 +577,7 @@ static DEVICE_IMAGE_LOAD( snes_cart )
          * 0x7f are overwritten by WRAM). Each block is also mirrored in banks 0x80 to 0xff (up to 0xff for real)
          */
 			/* SuperFX games needs this different loading routine */
-			if(((temp_buffer[0x007fd6] >= 0x13 && temp_buffer[0x007fd6] <= 0x15) || temp_buffer[0x007fd6] == 0x1a) && (temp_buffer[0x007fd5] == 0x20))
+			if (((temp_buffer[0x007fd6] >= 0x13 && temp_buffer[0x007fd6] <= 0x15) || temp_buffer[0x007fd6] == 0x1a) && (temp_buffer[0x007fd5] == 0x20))
 			{
 				while (read_blocks < 64 && read_blocks < total_blocks)
 				{
@@ -571,12 +585,19 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 					memcpy(&snes_ram[0x008000 + read_blocks * 0x10000], &ROM[0x000000 + read_blocks * 0x8000], 0x8000);
 					/* Mirroring at banks 80-bf from 8000-ffff */
 					memcpy(&snes_ram[0x808000 + read_blocks * 0x10000], &snes_ram[0x8000 + (read_blocks * 0x10000)], 0x8000);
+					/* Mirroring at banks 40-5f and c0-df */
+					memcpy(&snes_ram[0x400000 + read_blocks * 0x8000], &snes_ram[0x8000 + (read_blocks * 0x10000)], total_blocks * 0x8000);
+					memcpy(&snes_ram[0xc00000 + read_blocks * 0x8000], &snes_ram[0x8000 + (read_blocks * 0x10000)], total_blocks * 0x8000);
+
 					read_blocks++;
 				}
-				/* Loading data secondary, filling full 64k banks from 0x400000 to 600000 */
-				memcpy(&snes_ram[0x400000], &ROM[0x000000], total_blocks * 0x8000);
-				/* mirror at c00000-e00000 */
-				memcpy(&snes_ram[0xc00000], &snes_ram[0x400000], total_blocks * 0x8000);
+				/* SuperFX games are supposed to contain 64 blocks! */
+				if (read_blocks < total_blocks)
+				{
+					logerror("This image has been identified as a SuperFX game, but it's too large!\n");
+					logerror("Please verify if it's corrupted. If it's not please report this as a bug.\n");
+					return INIT_FAIL;
+				}
 			}
 			else
 			{
@@ -602,15 +623,6 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 				}
 			}
 			break;
-	}
-
-	/* Find the amount of sram */
-	snes_cart.sram = snes_r_bank1(space, 0x00ffd8);
-	if( snes_cart.sram > 0 )
-	{
-		snes_cart.sram = ((1 << (snes_cart.sram + 3)) / 8);
-		if( snes_cart.sram > snes_cart.sram_max )
-			snes_cart.sram = snes_cart.sram_max;
 	}
 
 	/* Find the type of cart and detect special chips */
@@ -729,6 +741,19 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 				snes_has_addon_chip = HAS_UNK;
 				supported_type = 0;
 				break;
+	}
+
+	/* Find the amount of cart ram (even if we call it sram...) */
+	if ((snes_has_addon_chip != HAS_SUPERFX))
+		snes_cart.sram = snes_r_bank1(space, 0x00ffd8);
+	else
+		snes_cart.sram = (snes_r_bank1(space, 0x00ffbd) & 0x07);
+
+	if (snes_cart.sram > 0)
+	{
+		snes_cart.sram = (1024 << snes_cart.sram);
+		if (snes_cart.sram > snes_cart.sram_max)
+			snes_cart.sram = snes_cart.sram_max;
 	}
 
 	/* Log snes_cart information */
