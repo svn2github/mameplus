@@ -832,6 +832,10 @@ int get_osdcore_acp(void);
 -----------------------------------------------------------------------------*/
 char *osd_get_clipboard_text(void);
 
+//mamep: MAMEMESS
+#ifdef __cplusplus
+}
+#endif
 
 #ifdef MESS
 /***************************************************************************
@@ -892,8 +896,5 @@ file_error osd_get_full_path(char **dst, const char *path);
 const char *osd_get_volume_name(int idx);
 #endif
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif	/* __OSDEPEND_H__ */
