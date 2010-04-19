@@ -2575,6 +2575,9 @@ void OptionUtils::updateSelectableItems(QString optName)
 						.arg(mode.h)
 						.arg(mode.refresh_rate);
 
+					if (pMameOpt->values.contains(modeName))
+						continue; // skip reduplicate resolution
+
 					pMameOpt->values.append(modeName);
 					pMameOpt->guivalues.append(modeName + "Hz");
 				}
