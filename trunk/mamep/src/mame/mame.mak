@@ -1833,6 +1833,7 @@ $(DRIVERS)/subsino.o:	$(LAYOUT)/victor5.lh \
 						$(LAYOUT)/tisub.lh \
 						$(LAYOUT)/crsbingo.lh \
 						$(LAYOUT)/sharkpy.lh \
+						$(LAYOUT)/sharkpye.lh \
 						$(LAYOUT)/smoto.lh
 
 $(DRIVERS)/superchs.o:	$(LAYOUT)/superchs.lh
