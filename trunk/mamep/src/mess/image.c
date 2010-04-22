@@ -563,19 +563,19 @@ int image_device_uses_file_extension(const device_config *device, const char *fi
     using this device's partial hash if appropriate
 -------------------------------------------------*/
 
-void image_device_compute_hash(char *dest, running_device *device,
+void image_device_compute_hash(char *dest, const device_config *device,
     const void *data, size_t length, unsigned int functions)
 {
-    device_image_partialhash_func partialhash;
+	device_image_partialhash_func partialhash;
 
-    /* retrieve the partial hash func */
-    partialhash = (device_image_partialhash_func) device->get_config_string(DEVINFO_FCT_IMAGE_PARTIAL_HASH);
+	/* retrieve the partial hash func */
+	partialhash = (device_image_partialhash_func) device->get_config_fct(DEVINFO_FCT_IMAGE_PARTIAL_HASH);
 
-    /* compute the hash */
-    if (partialhash != NULL)
-        partialhash(dest, (const unsigned char*)data, length, functions);
-    else
-        hash_compute(dest, (const unsigned char*)data, length, functions);
+	/* compute the hash */
+	if (partialhash)
+		partialhash(dest, (const unsigned char*)data, length, functions);
+	else
+		hash_compute(dest, (const unsigned char*)data, length, functions);
 }
 
 
@@ -806,10 +806,6 @@ static int image_load_internal(running_device *image, const char *path,
     if (slot->err)
         goto done;
 
-    /* do we need to reset the CPU? */
-    if ((attotime_compare(timer_get_time(machine), attotime_zero) > 0) && slot->info.reset_on_load)
-        mame_schedule_hard_reset(machine);
-
 	/* Check if there's a software list defined for this device and use that if we're not creating an image */
 	if ( is_create || !load_software_part( image, path, &slot->software_info_ptr, &slot->software_part_ptr, &slot->full_software_name ) )
 	{
@@ -824,6 +820,15 @@ static int image_load_internal(running_device *image, const char *path,
 			if (slot->err && (slot->err != IMAGE_ERROR_FILENOTFOUND))
 				goto done;
 		}
+	}
+
+	/* Copy some image information when we have been loaded through a software list */
+	if ( slot->software_info_ptr )
+	{
+		slot->longname = (char *)slot->software_info_ptr->longname;
+		slot->manufacturer = (char *)slot->software_info_ptr->publisher;
+		slot->year = (char *)slot->software_info_ptr->year;
+		//slot->playable = (char *)slot->software_info_ptr->supported;
 	}
 
 	/* did we fail to find the file? */
@@ -851,6 +856,12 @@ static int image_load_internal(running_device *image, const char *path,
 done:
     if (slot->err)
         image_clear(slot);
+	else {
+		/* do we need to reset the CPU? only schedule it if load/create is successful */
+		if ((attotime_compare(timer_get_time(machine), attotime_zero) > 0) && slot->info.reset_on_load)
+			mame_schedule_hard_reset(machine);
+	}
+
     return slot->err ? INIT_FAIL : INIT_PASS;
 }
 
@@ -949,6 +960,9 @@ static void image_clear(image_slot_data *image)
     image->extrainfo = NULL;
     image->basename_noext = NULL;
     image->ptr = NULL;
+	image->full_software_name = NULL;
+	image->software_info_ptr = NULL;
+	image->software_part_ptr = NULL;
 }
 
 
@@ -1145,7 +1159,7 @@ static void run_hash(running_device *image,
 
 
 
-static int image_checkhash(image_slot_data *image)
+static void image_checkhash(image_slot_data *image)
 {
     const game_driver *drv;
     char hash_string[HASH_BUF_SIZE];
@@ -1161,7 +1175,11 @@ static int image_checkhash(image_slot_data *image)
         /* do not cause a linear read of 600 megs please */
         /* TODO: use SHA/MD5 in the CHD header as the hash */
         if (image->info.type == IO_CDROM)
-            return FALSE;
+            return;
+
+		/* Skip calculating the hash when we have an image mounted through a software list */
+		if ( image->software_info_ptr )
+			return;
 
         /* retrieve the partial hash func */
         partialhash = (device_image_partialhash_func) image->dev->get_config_fct(DEVINFO_FCT_IMAGE_PARTIAL_HASH);
@@ -1179,7 +1197,7 @@ static int image_checkhash(image_slot_data *image)
         }
         while(rc && (drv != NULL));
     }
-    return TRUE;
+    return;
 }
 
 
@@ -1716,8 +1734,9 @@ char *image_strdup(running_device *image, const char *src)
 
 void image_freeptr(running_device *image, void *ptr)
 {
-    /* should really do something better here */
-    image_realloc(image, ptr, 0);
+	image_slot_data *slot = find_image_slot(image);
+
+	pool_object_remove(slot->mempool, ptr, 0);
 }
 
 
@@ -1830,7 +1849,7 @@ static file_error open_battery_file_by_name(const char *filename, UINT32 openfla
     to the function.
 -------------------------------------------------*/
 
-void image_battery_load_by_name(const char *filename, void *buffer, int length)
+void image_battery_load_by_name(const char *filename, void *buffer, int length, int fill)
 {
     file_error filerr;
     mame_file *file;
@@ -1847,7 +1866,7 @@ void image_battery_load_by_name(const char *filename, void *buffer, int length)
     }
 
     /* fill remaining bytes (if necessary) */
-    memset(((char *) buffer) + bytes_read, '\0', length - bytes_read);
+    memset(((char *) buffer) + bytes_read, fill, length - bytes_read);
 }
 
 
@@ -1858,7 +1877,7 @@ void image_battery_load_by_name(const char *filename, void *buffer, int length)
     image name.
 -------------------------------------------------*/
 
-void image_battery_load(running_device *image, void *buffer, int length)
+void image_battery_load(running_device *image, void *buffer, int length, int fill)
 {
     char *basename_noext;
     astring *fname;
@@ -1869,7 +1888,7 @@ void image_battery_load(running_device *image, void *buffer, int length)
 
     fname = astring_assemble_4(astring_alloc(), image->machine->gamedrv->name, PATH_SEPARATOR, basename_noext, ".nv");
 
-    image_battery_load_by_name(astring_c(fname), buffer, length);
+    image_battery_load_by_name(astring_c(fname), buffer, length, fill);
     astring_free(fname);
     free(basename_noext);
 }

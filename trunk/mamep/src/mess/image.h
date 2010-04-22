@@ -179,7 +179,7 @@ int image_device_uses_file_extension(running_device *device, const char *file_ex
 int image_device_uses_file_extension(const device_config *device, const char *file_extension);
 
 /* compute a hash, using this device's partial hash if appropriate */
-void image_device_compute_hash(char *dest, running_device *device,
+void image_device_compute_hash(char *dest, const device_config *device,
     const void *data, size_t length, unsigned int functions);
 
 /* ----- creation formats ----- */
@@ -306,10 +306,10 @@ const char *image_extrainfo(running_device *device);
   image; typically for cartridges.
 ****************************************************************************/
 
-void image_battery_load_by_name(const char *filename, void *buffer, int length);
+void image_battery_load_by_name(const char *filename, void *buffer, int length, int fill);
 void image_battery_save_by_name(const char *filename, const void *buffer, int length);
 
-void image_battery_load(running_device *img, void *buffer, int length);
+void image_battery_load(running_device *img, void *buffer, int length, int fill);
 void image_battery_save(running_device *img, const void *buffer, int length);
 
 

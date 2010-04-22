@@ -723,7 +723,7 @@ done:
 //  win_dirname
 //============================================================
 
-char *win_dirname(const char *filename)
+static char *win_dirname(const char *filename)
 {
 	char *dirname;
 	char *c;
@@ -764,29 +764,12 @@ static void state_dialog(HWND wnd, win_file_dialog_type dlgtype,
 	running_machine *machine)
 {
 	win_open_file_name ofn;
-	char *dir;
+	char *dir = NULL;
 	int result = 0;
-	char *src;
-	char *dst;
 
 	if (state_filename[0])
 	{
 		dir = win_dirname(state_filename);
-	}
-	else
-	{
-		snprintf(state_filename, ARRAY_LENGTH(state_filename),
-			_WINDOWS("%s State.sta"), _LST(machine->gamedrv->description));
-		dir = NULL;
-
-		src = state_filename;
-		dst = state_filename;
-		do
-		{
-			if ((*src == '\0') || isalnum(*src) || isspace(*src) || strchr("(),.", *src))
-				*(dst++) = *src;
-		}
-		while(*(src++));
 	}
 
 	memset(&ofn, 0, sizeof(ofn));
@@ -796,17 +779,24 @@ static void state_dialog(HWND wnd, win_file_dialog_type dlgtype,
 	ofn.filter = _WINDOWS("State Files (*.sta)|*.sta|All Files (*.*)|*.*");
 	ofn.initial_directory = dir;
 
+	if (!core_filename_ends_with(ofn.filename, "sta"))
+		snprintf(ofn.filename, ARRAY_LENGTH(ofn.filename), "%s.sta", state_filename);
+	else
 	snprintf(ofn.filename, ARRAY_LENGTH(ofn.filename), "%s", state_filename);
 
 	result = win_get_file_name_dialog(&ofn);
 	if (result)
 	{
+		// the core doesn't add the extension if it's an absolute path
+		if (osd_is_absolute_path(ofn.filename) && !core_filename_ends_with(ofn.filename, "sta"))
+			snprintf(state_filename, ARRAY_LENGTH(state_filename), "%s.sta", ofn.filename);
+		else
 		snprintf(state_filename, ARRAY_LENGTH(state_filename), "%s", ofn.filename);
 
 		mameproc(machine, state_filename);
 	}
 	if (dir)
-		global_free(dir);
+		free(dir);
 }
 
 
@@ -849,7 +839,7 @@ static void format_combo_changed(dialog_box *dialog, HWND dlgwnd, NMHDR *notific
 	struct file_dialog_params *params;
 	int has_option;
 	TCHAR t_buf1[128];
-	char *buf1;
+	char *utf8_buf1;
 
 	params = (struct file_dialog_params *) changed_param;
 
@@ -874,12 +864,12 @@ static void format_combo_changed(dialog_box *dialog, HWND dlgwnd, NMHDR *notific
 	{
 		// get label text, removing trailing NULL
 		GetWindowText(wnd, t_buf1, ARRAY_LENGTH(t_buf1));
-		buf1 = utf8_from_tstring(t_buf1);
-		assert(buf1[strlen(buf1)-1] == ':');
-		buf1[strlen(buf1)-1] = '\0';
+		utf8_buf1 = utf8_from_tstring(t_buf1);
+		assert(utf8_buf1[strlen(utf8_buf1)-1] == ':');
+		utf8_buf1[strlen(utf8_buf1)-1] = '\0';
 
 		// find guide entry
-		while(guide->option_type && strcmp(buf1, guide->display_name))
+		while(guide->option_type && strcmp(utf8_buf1, guide->display_name))
 			guide++;
 
 		wnd = GetNextWindow(wnd, GW_HWNDNEXT);
@@ -895,7 +885,7 @@ static void format_combo_changed(dialog_box *dialog, HWND dlgwnd, NMHDR *notific
 				has_option ? guide : NULL,
 				has_option ? optspec : NULL);
 		}
-		global_free(buf1);
+		global_free(utf8_buf1);
 	}
 }
 
@@ -2312,6 +2302,25 @@ int win_setup_menus(running_machine *machine, HMODULE module, HMENU menu_bar)
 	snprintf(buf, ARRAY_LENGTH(buf), _WINDOWS("About %s (%s)..."), _LST(machine->gamedrv->description), machine->gamedrv->name);
 	set_menu_text(menu_bar, ID_HELP_ABOUTSYSTEM, buf);
 	translate_menu(menu_bar);
+
+	// initialize state_filename for each driver, so we don't carry names in-between them
+	{
+		char *src;
+		char *dst;
+
+		snprintf(state_filename, ARRAY_LENGTH(state_filename),
+			_WINDOWS("%s State"), _LST(machine->gamedrv->description));
+
+		src = state_filename;
+		dst = state_filename;
+		do
+		{
+			if ((*src == '\0') || isalnum(*src) || isspace(*src) || strchr("(),.", *src))
+				*(dst++) = *src;
+		}
+		while(*(src++));
+	}
+
 	return 0;
 }
 

@@ -819,11 +819,11 @@ int win_dialog_add_combobox_item(dialog_box *dialog, const char *item_label, int
 	// create our own copy of the string
 	if (item_label)
 	{
-		TCHAR* tmp = tstring_from_utf8(item_label);
-		if( !tmp )
+		TCHAR* t_tmp = tstring_from_utf8(item_label);
+		if( !t_tmp )
 			return 1;
-		t_item_label = win_dialog_tcsdup(dialog, tmp);
-		global_free(tmp);
+		t_item_label = win_dialog_tcsdup(dialog, t_tmp);
+		global_free(t_tmp);
 		if (!t_item_label)
 			return 1;
 	}
@@ -1577,7 +1577,7 @@ void win_dialog_exit(dialog_box *dialog)
 	if (dialog->handle)
 		GlobalFree(dialog->handle);
 	pool_free_lib(dialog->mempool);
-	global_free(dialog);
+	free(dialog);
 }
 
 

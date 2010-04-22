@@ -1312,6 +1312,7 @@ WRITE8_HANDLER( wswan_port_w )
 	ws_portram[offset] = data;
 }
 
+#ifdef MAME_DEBUG
 static const char* wswan_determine_sram( UINT8 data )
 {
 	eeprom.write_enabled = 0;
@@ -1332,7 +1333,6 @@ static const char* wswan_determine_sram( UINT8 data )
 	return wswan_sram_str[ eeprom.mode ];
 }
 
-#ifdef MAME_DEBUG
 enum enum_romsize { ROM_4M=0, ROM_8M, ROM_16M, ROM_32M, ROM_64M, ROM_128M, ROM_UNKNOWN };
 static const char *const wswan_romsize_str[] = {
 	"4Mbit", "8Mbit", "16Mbit", "32Mbit", "64Mbit", "128Mbit", "Unknown"
@@ -1376,7 +1376,9 @@ DEVICE_START(wswan_cart)
 DEVICE_IMAGE_LOAD(wswan_cart)
 {
 	UINT32 ii;
+#ifdef MAME_DEBUG
 	const char *sram_str;
+#endif
 
 	ws_ram = (UINT8*) memory_get_read_ptr( cputag_get_address_space( image->machine, "maincpu", ADDRESS_SPACE_PROGRAM ), 0 );
 	memset( ws_ram, 0, 0xFFFF );
@@ -1399,7 +1401,9 @@ DEVICE_IMAGE_LOAD(wswan_cart)
 		}
 	}
 
+#ifdef MAME_DEBUG
 	sram_str = wswan_determine_sram( ROMMap[ROMBanks-1][0xfffb] );
+#endif
 
 	rtc.present = ROMMap[ROMBanks-1][0xfffd] ? 1 : 0;
 
@@ -1433,7 +1437,7 @@ DEVICE_IMAGE_LOAD(wswan_cart)
 	if ( eeprom.size != 0 )
 	{
 		eeprom.data = auto_alloc_array(image->machine, UINT8, eeprom.size );
-		image_battery_load( image, eeprom.data, eeprom.size );
+		image_battery_load( image, eeprom.data, eeprom.size, 0x00 );
 		eeprom.page = eeprom.data;
 	}
 

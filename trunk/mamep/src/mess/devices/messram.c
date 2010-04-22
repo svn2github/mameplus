@@ -180,7 +180,7 @@ static DEVICE_VALIDITY_CHECK( messram )
 				mame_printf_error("%s: '%s' cannot recognize the RAM option %s\n", driver->source_file, driver->name, ramsize_string);
 				error = TRUE;
 			}
-			if (gamename_option!=NULL && strlen(gamename_option) > 0 && strcmp(gamename_option, driver->name) == 0)
+			if (gamename_option != NULL && *gamename_option != 0 && strcmp(gamename_option, driver->name) == 0)
 			{
 				/* compare command line option to default value */
 				if (messram_parse_string(config->default_size) == specified_ram)
@@ -189,30 +189,36 @@ static DEVICE_VALIDITY_CHECK( messram )
 				/* verify extra ram options */
 				if (config->extra_options != NULL)
 				{
-					const char *s;
-
-					astring buffer;
-					astring_cpyc(&buffer, config->extra_options);
-					astring_replacechr(&buffer, ',', 0);
-
-					s = astring_c(&buffer);
-
+					int j;
+					int size = strlen(config->extra_options);
+					char * const s = mame_strdup(config->extra_options);
+					char * const e = s + size;
+					char *p = s;
+					for (j=0;j<size;j++) {
+						if (p[j]==',') p[j]=0;
+					}
+					
 					/* try to parse each option */
-					while(*s != '\0')
+					while(p <= e)
 					{
-						UINT32 option_ram_size = messram_parse_string(s);
+						UINT32 option_ram_size = messram_parse_string(p);
 
 						if (option_ram_size == 0)
 						{
-							mame_printf_error("%s: '%s' has an invalid RAM option: %s\n", driver->source_file, driver->name, s);
+							mame_printf_error("%s: '%s' has an invalid RAM option: %s\n", driver->source_file, driver->name, p);
 							error = TRUE;
 						}
 
 						if (option_ram_size == specified_ram)
 							is_valid = TRUE;
 
-						s += strlen(s) + 1;
+						p += strlen(p);
+						if (p == e)
+							break;
+						p += 1;
 					}
+
+					osd_free(s);
 				}
 
 			} else {

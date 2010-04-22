@@ -324,9 +324,9 @@ static void floppy_close_internal(floppy_image *floppy, int close_file)
 		if (floppy->loaded_track_data)
 			free(floppy->loaded_track_data);
 		pool_free_lib(floppy->tags);
-	}
 
-	free(floppy);
+		free(floppy);
+	}
 }
 
 
@@ -739,7 +739,13 @@ int floppy_get_heads_per_disk(floppy_image *floppy)
 
 UINT32 floppy_get_track_size(floppy_image *floppy, int head, int track)
 {
-	return floppy_callbacks(floppy)->get_track_size(floppy, head, track);
+	const struct FloppyCallbacks *fmt;
+
+	fmt = floppy_callbacks(floppy);
+	if (!fmt->get_track_size)
+		return 0;
+	
+	return fmt->get_track_size(floppy, head, track);
 }
 
 
