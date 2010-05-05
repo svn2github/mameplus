@@ -4180,7 +4180,7 @@ ROM_END
 
 ROM_START( kovlsqh2 )
 	ROM_REGION( 0x600000, "maincpu", 0 ) /* 68000 Code */
-	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  // (BIOS)
+	PGM_68K_BIOS
 	ROM_LOAD16_WORD_SWAP( "lsqh2_prg.rom",0x100000, 0x400000, CRC(d71e3d50) SHA1(bda78648bc176b0ded74118a8e340ee661bb930d) )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
@@ -4214,7 +4214,7 @@ ROM_END
 
 ROM_START( kovlsjb )
 	ROM_REGION( 0x600000, "maincpu", 0 ) /* 68000 Code */
-	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  // (BIOS)
+	PGM_68K_BIOS
 	ROM_LOAD16_WORD_SWAP( "lsjb_prg.rom", 0x100000, 0x400000, CRC(adf06b37) SHA1(be3c0af64de374046d28492ac49c01da1ec78e40) )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
@@ -4248,7 +4248,7 @@ ROM_END
 
 ROM_START( kovlsjba )
 	ROM_REGION( 0x600000, "maincpu", 0 ) /* 68000 Code */
-	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  // (BIOS)
+	PGM_68K_BIOS
 	ROM_LOAD16_WORD_SWAP( "lsjba_prg.rom",0x100000, 0x400000, CRC(8b42f456) SHA1(48796e48f6f1a5f68442cf15a6b195095d443a35) )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
@@ -4282,7 +4282,7 @@ ROM_END
 
 ROM_START( kovqhsgs )
 	ROM_REGION( 0x600000, "maincpu", 0 ) /* 68000 Code */
-	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  // (BIOS)
+	PGM_68K_BIOS
 	ROM_LOAD16_WORD_SWAP( "qhsg_c51.rom", 0x100000, 0x400000, CRC(e5cbac85) SHA1(4b424206387057863990b04f6d5bd0b6f754814f) )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
