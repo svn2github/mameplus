@@ -52,9 +52,6 @@ const unif *nes_unif_lookup(const char *board);
 
 #define MMC5_VRAM
 
-extern UINT8 nes_mmc5_vram[0x400];
-extern int nes_mmc5_vram_control;
-
 void nes_mapper_init( const mmc_intf *intf );
 int nes_mapper_reset( running_machine *machine, int mapperNum );
 int nes_unif_reset( running_machine *machine, const char *board );
@@ -83,7 +80,7 @@ WRITE8_HANDLER( nes_mapper50_add_w );
 #define PPU_MIRROR_LOW		4
 #define PPU_MIRROR_4SCREEN	5	// Same effect as NONE, but signals that we should never mirror
 
-void set_nt_mirroring(int mirroring);
+void set_nt_mirroring(running_machine *machine, int mirroring);
 
 
 #endif

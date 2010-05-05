@@ -95,7 +95,6 @@ enum
 //  LOCAL VARIABLES
 //============================================================
 
-static HICON device_icons[IO_COUNT];
 static int use_input_categories;
 static int joystick_menu_setup;
 static char state_filename[MAX_PATH];
@@ -885,7 +884,7 @@ static void format_combo_changed(dialog_box *dialog, HWND dlgwnd, NMHDR *notific
 				has_option ? guide : NULL,
 				has_option ? optspec : NULL);
 		}
-		global_free(utf8_buf1);
+		osd_free(utf8_buf1);
 	}
 }
 
@@ -1261,13 +1260,13 @@ static HMENU find_sub_menu(HMENU menu, const char *menutext, int create_sub_menu
 		{
 			if (!get_menu_item_string(menu, ++i, TRUE, &sub_menu, buf, ARRAY_LENGTH(buf)))
 			{
-				global_free(t_menutext);
+				osd_free(t_menutext);
 				return NULL;
 			}
 		}
 		while(_tcscmp(t_menutext, wstring_from_utf8(_WINDOWS(utf8_from_wstring(buf)))));
 
-		global_free(t_menutext);
+		osd_free(t_menutext);
 
 		if (!sub_menu && create_sub_menu)
 		{
@@ -1314,20 +1313,6 @@ static void set_command_state(HMENU menu_bar, UINT command, UINT state)
 	mii.fState = state;
 	result = SetMenuItemInfo(menu_bar, command, FALSE, &mii);
 #endif
-}
-
-
-
-//============================================================
-//  append_menu_utf8
-//============================================================
-
-static void append_menu_utf8(HMENU menu, UINT flags, UINT_PTR id, const char *str)
-{
-	TCHAR *t_str = str ? tstring_from_utf8(str) : NULL;
-	AppendMenu(menu, flags, id, t_str);
-	if (t_str)
-		global_free(t_str);
 }
 
 
@@ -1382,19 +1367,9 @@ static void append_menu_by_pos_utf8(HMENU menu, UINT pos, UINT flags, UINT id, H
 	InsertMenuItem(menu, pos, TRUE, &mii);
 
 	if (t_str)
-		global_free(t_str);
+		osd_free(t_str);
 }
 
-
-
-//============================================================
-//  append_menu_uistring
-//============================================================
-
-static void append_menu_uistring(HMENU menu, UINT flags, UINT_PTR id, const char *uistring)
-{
-	append_menu_utf8(menu, flags, id, uistring);
-}
 
 
 
@@ -1461,14 +1436,14 @@ static void setup_joystick_menu(running_machine *machine, HMENU menu_bar)
 					for (setting = field->settinglist; setting != NULL; setting = setting->next)
 					{
 						command = ID_INPUT_0 + serial_number_from_input_item(machine, port, field, setting);
-						append_menu_utf8(submenu, MF_STRING, command, setting->name);
+						win_append_menu_utf8(submenu, MF_STRING, command, setting->name);
 					}
 
 					// tack on the final items and the menu item
 					command = ID_INPUT_0 + serial_number_from_input_item(machine, port, field, NULL);
 					AppendMenu(submenu, MF_SEPARATOR, 0, NULL);
-					append_menu_utf8(submenu, MF_STRING, command, _WINDOWS("&Configure..."));
-					append_menu_utf8(joystick_menu, MF_STRING | MF_POPUP, (UINT_PTR) submenu, field->name);
+					win_append_menu_utf8(submenu, MF_STRING, command, _WINDOWS("&Configure..."));
+					win_append_menu_utf8(joystick_menu, MF_STRING | MF_POPUP, (UINT_PTR) submenu, field->name);
 					child_count++;
 				}
 			}
@@ -1485,7 +1460,7 @@ static void setup_joystick_menu(running_machine *machine, HMENU menu_bar)
 			for(i = 0; i < joystick_count; i++)
 			{
 				snprintf(buf, ARRAY_LENGTH(buf), _WINDOWS("Joystick %i"), i + 1);
-				append_menu_utf8(joystick_menu, MF_STRING, ID_JOYSTICK_0 + i, buf);
+				win_append_menu_utf8(joystick_menu, MF_STRING, ID_JOYSTICK_0 + i, buf);
 				child_count++;
 			}
 		}
@@ -1544,7 +1519,6 @@ static void prepare_menus(HWND wnd)
 	HMENU device_menu;
 	HMENU sub_menu;
 	UINT_PTR new_item;
-	UINT flags;
 	UINT flags_for_exists;
 	UINT flags_for_writing;
 	running_device *img;
@@ -1672,8 +1646,8 @@ static void prepare_menus(HWND wnd)
 		TCHAR *t_view_name = tstring_from_utf8(view_name);
 		InsertMenu(video_menu, i, MF_BYPOSITION | (i == view_index ? MF_CHECKED : 0),
 			ID_VIDEO_VIEW_0 + i, t_view_name);
-		global_free((char *)view_name);
-		global_free(t_view_name);
+		osd_free((char *)view_name);
+		osd_free(t_view_name);
 		i++;
 	}
 
@@ -1699,29 +1673,28 @@ static void prepare_menus(HWND wnd)
 				flags_for_writing |= MF_GRAYED;
 
 			sub_menu = CreateMenu();
-			append_menu_uistring(sub_menu, MF_STRING,		new_item + DEVOPTION_OPEN,		_("Mount..."));
+			win_append_menu_utf8(sub_menu, MF_STRING,		new_item + DEVOPTION_OPEN,		_("Mount..."));
 
 			if (info.creatable)
-				append_menu_uistring(sub_menu, MF_STRING,	new_item + DEVOPTION_CREATE,	_("Create..."));
+				win_append_menu_utf8(sub_menu, MF_STRING,	new_item + DEVOPTION_CREATE,	_("Create..."));
 
-			append_menu_uistring(sub_menu, flags_for_exists,	new_item + DEVOPTION_CLOSE,	_("Unmount"));
+			win_append_menu_utf8(sub_menu, flags_for_exists,	new_item + DEVOPTION_CLOSE,	_("Unmount"));
 
 			if ((img->type == CASSETTE) && !strcmp(info.file_extensions, "wav"))
 			{
 				cassette_state state;
 				state = (cassette_state)(image_exists(img) ? (cassette_get_state(img) & CASSETTE_MASK_UISTATE) : CASSETTE_STOPPED);
-				append_menu_uistring(sub_menu, MF_SEPARATOR, 0, NULL);
-				append_menu_uistring(sub_menu, flags_for_exists	| ((state == CASSETTE_STOPPED)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_STOPPAUSE,	_("Pause/Stop"));
-				append_menu_uistring(sub_menu, flags_for_exists	| ((state == CASSETTE_PLAY)		? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_PLAY,			_("Play"));
-				append_menu_uistring(sub_menu, flags_for_writing	| ((state == CASSETTE_RECORD)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_RECORD,		_("Record"));
-				append_menu_uistring(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_REWIND,		_("Rewind"));
-				append_menu_uistring(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_FASTFORWARD,	_("Fast Forward"));
+				win_append_menu_utf8(sub_menu, MF_SEPARATOR, 0, NULL);
+				win_append_menu_utf8(sub_menu, flags_for_exists	| ((state == CASSETTE_STOPPED)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_STOPPAUSE,	_("Pause/Stop"));
+				win_append_menu_utf8(sub_menu, flags_for_exists	| ((state == CASSETTE_PLAY)		? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_PLAY,			_("Play"));
+				win_append_menu_utf8(sub_menu, flags_for_writing	| ((state == CASSETTE_RECORD)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_RECORD,		_("Record"));
+				win_append_menu_utf8(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_REWIND,		_("Rewind"));
+				win_append_menu_utf8(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_FASTFORWARD,	_("Fast Forward"));
 			}
 			s = image_exists(img) ? image_filename(img) : "[empty slot]";
-			flags = MF_POPUP;
 
 			snprintf(buf, ARRAY_LENGTH(buf), "%s: %s", _(image_typename_id(img)), _(s));
-			append_menu_by_pos_utf8(device_menu, pos++, flags, 0, sub_menu, buf);
+			append_menu_by_pos_utf8(device_menu, pos++, MF_POPUP, 0, sub_menu, buf);
 		}
 		if (pos)
 			append_menu_by_pos_utf8(device_menu, pos++, MF_SEPARATOR, 0, NULL, NULL);
@@ -1887,7 +1860,7 @@ static void help_display(HWND wnd, const char *chapter)
 	{
 		TCHAR *t_chapter = tstring_from_utf8(chapter);
 		htmlhelp(wnd, t_chapter, 0 /*HH_DISPLAY_TOPIC*/, 0);
-		global_free(t_chapter);
+		osd_free(t_chapter);
 	}
 }
 
@@ -2233,7 +2206,7 @@ static void set_menu_text(HMENU menu_bar, int command, const char *text)
 	SetMenuItemInfo(menu_bar, command, FALSE, &mii);
 
 	// cleanup
-	global_free(t_text);
+	osd_free(t_text);
 }
 
 
@@ -2248,27 +2221,11 @@ int win_setup_menus(running_machine *machine, HMODULE module, HMENU menu_bar)
 	char buf[256];
 	int i;
 
-	static const int bitmap_ids[][2] =
-	{
-		{ IO_CARTSLOT,	IDI_ICON_CART },
-		{ IO_HARDDISK,	IDI_ICON_HARD },
-		{ IO_CASSETTE,	IDI_ICON_CASS },
-		{ IO_FLOPPY,	IDI_ICON_FLOP },
-		{ IO_PRINTER,	IDI_ICON_PRIN },
-		{ IO_SERIAL,	IDI_ICON_SERL },
-		{ IO_SNAPSHOT,	IDI_ICON_SNAP }
-	};
-
 	// verify that our magic numbers work
 	assert((ID_DEVICE_0 + IO_COUNT * DEVOPTION_MAX) < ID_JOYSTICK_0);
 
 	// initialize critical values
 	joystick_menu_setup = 0;
-
-	// get the device icons
-	memset(device_icons, 0, sizeof(device_icons));
-	for (i = 0; i < ARRAY_LENGTH(bitmap_ids); i++)
-		device_icons[bitmap_ids[i][0]] = LoadIcon(module, MAKEINTRESOURCE(bitmap_ids[i][1]));
 
 	// remove the profiler menu item if it doesn't exist
 #if HAS_PROFILER
@@ -2295,7 +2252,7 @@ int win_setup_menus(running_machine *machine, HMODULE module, HMENU menu_bar)
 	for(i = 0; i < frameskip_level_count(); i++)
 	{
 		snprintf(buf, ARRAY_LENGTH(buf), "%i", i);
-		append_menu_utf8(frameskip_menu, MF_STRING, ID_FRAMESKIP_0 + i, buf);
+		win_append_menu_utf8(frameskip_menu, MF_STRING, ID_FRAMESKIP_0 + i, buf);
 	}
 
 	// set the help menu to refer to this machine
@@ -2393,7 +2350,7 @@ static void translate_menu(HMENU hMenu)
 
 				SetMenuItemInfoW(hMenu, i, TRUE, &miiW);
 
-				global_free(miiW.dwTypeData);
+				osd_free(miiW.dwTypeData);
 			}
 		}
 	}
