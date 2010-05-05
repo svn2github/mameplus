@@ -1849,7 +1849,7 @@ void ui_paste(running_machine *machine)
 		inputx_post_utf8(machine, text);
 
 		/* free the string */
-		free(text);
+		osd_free(text);
 	}
 }
 

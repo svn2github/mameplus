@@ -11,12 +11,10 @@
 #include "profiler.h"
 #include "video/rgbutil.h"
 
-static int vblc=0;
 #define DEBUG_FIFO_POLY (0)
-#define DEBUG_PVRCTRL	(0)
 #define DEBUG_PVRTA	(0)
 #define DEBUG_PVRTA_REGS (0)
-#define DEBUG_PVRDLIST	(1)
+#define DEBUG_PVRDLIST	(0)
 #define DEBUG_PALRAM (1)
 
 #define NUM_BUFFERS 4
@@ -55,8 +53,8 @@ VO_BORDER_COL
 
 /*
 SPG_HBLANK
----- ---- --xx xxxx xxxx ---- ---- ---- vbend
----- ---- ---- ---- ---- --xx xxxx xxxx vbstart
+---- ---- --xx xxxx xxxx ---- ---- ---- hbend
+---- ---- ---- ---- ---- --xx xxxx xxxx hbstart
 */
 #define spg_hbend    ((pvrta_regs[SPG_HBLANK] & 0x03ff0000) >> 16)
 #define spg_hbstart  ((pvrta_regs[SPG_HBLANK] & 0x000003ff) >> 0)
@@ -112,7 +110,14 @@ VO_STARTY
 #define vo_vert_start_pos_f2 ((pvrta_regs[VO_STARTY] & 0x03ff0000) >> 16)
 #define vo_vert_start_pos_f1 ((pvrta_regs[VO_STARTY] & 0x000003ff) >> 0)
 
-
+/*
+SPG_STATUS
+---- ---- ---- ---- --x- ---- ---- ---- vsync
+---- ---- ---- ---- ---x ---- ---- ---- hsync
+---- ---- ---- ---- ---- x--- ---- ---- blank
+---- ---- ---- ---- ---- -x-- ---- ---- field number
+---- ---- ---- ---- ---- --xx xxxx xxxx scanline
+*/
 
 UINT32 pvrctrl_regs[0x100/4];
 static UINT32 pvrta_regs[0x2000/4];
@@ -132,6 +137,7 @@ UINT64 *dc_texture_ram; // '64-bit access area'
 static UINT32 tafifo_buff[32];
 
 static emu_timer *vbout_timer;
+static emu_timer *vbin_timer;
 static emu_timer *hbin_timer;
 static emu_timer *endofrender_timer_isp;
 static emu_timer *endofrender_timer_tsp;
@@ -975,103 +981,6 @@ INLINE int decode_reg_64(UINT32 offset, UINT64 mem_mask, UINT64 *shift)
 	return reg;
 }
 
-READ64_HANDLER( pvr_ctrl_r )
-{
-	int reg;
-	UINT64 shift;
-
-	reg = decode_reg_64(offset, mem_mask, &shift);
-
-	#if DEBUG_PVRCTRL
-	mame_printf_verbose("PVRCTRL: [%08x] read %x @ %x (reg %x), mask %" I64FMT "x (PC=%x)\n", 0x5f7c00+reg*4, pvrctrl_regs[reg], offset, reg, mem_mask, cpu_get_pc(space->cpu));
-	#endif
-
-	return (UINT64)pvrctrl_regs[reg] << shift;
-}
-
-WRITE64_HANDLER( pvr_ctrl_w )
-{
-	int reg;
-	UINT64 shift;
-	UINT32 dat;
-	static struct {
-		UINT32 pvr_addr;
-		UINT32 sys_addr;
-		UINT32 size;
-		UINT8 sel;
-		UINT8 dir;
-		UINT8 flag;
-		UINT8 start;
-	}pvr_dma;
-
-	reg = decode_reg_64(offset, mem_mask, &shift);
-	dat = (UINT32)(data >> shift);
-
-	switch (reg)
-	{
-		case SB_PDSTAP: pvr_dma.pvr_addr = dat; break;
-		case SB_PDSTAR: pvr_dma.sys_addr = dat; break;
-		case SB_PDLEN: pvr_dma.size = dat; break;
-		case SB_PDDIR: pvr_dma.dir = dat & 1; break;
-		case SB_PDTSEL:
-			pvr_dma.sel = dat & 1;
-			if(pvr_dma.sel & 1)
-				printf("Warning: Unsupported irq mode trigger PVR-DMA\n");
-			break;
-		case SB_PDEN: pvr_dma.flag = dat & 1; break;
-		case SB_PDST:
-			pvr_dma.start = dat & 1;
-
-			if(pvr_dma.flag && pvr_dma.start)
-			{
-				UINT32 src,dst,size;
-				dst = pvr_dma.pvr_addr;
-				src = pvr_dma.sys_addr;
-				size = 0;
-
-				/* used by usagui and sprtjam*/
-				printf("PVR-DMA start\n");
-				printf("%08x %08x %08x\n",pvr_dma.pvr_addr,pvr_dma.sys_addr,pvr_dma.size);
-				printf("src %s dst %08x\n",pvr_dma.dir ? "->" : "<-",pvr_dma.sel);
-
-				/* 0 rounding size = 16 Mbytes */
-				if(pvr_dma.size == 0) { pvr_dma.size = 0x100000; }
-
-				if(pvr_dma.dir == 0)
-				{
-					for(;size<pvr_dma.size;size+=4)
-					{
-						memory_write_dword_64le(space,dst,memory_read_dword(space,src));
-						src+=4;
-						dst+=4;
-					}
-				}
-				else
-				{
-					for(;size<pvr_dma.size;size+=4)
-					{
-						memory_write_dword_64le(space,src,memory_read_dword(space,dst));
-						src+=4;
-						dst+=4;
-					}
-				}
-				/*Note: do not update the params, since this DMA type doesn't support it. */
-
-				dc_sysctrl_regs[SB_ISTNRM] |= IST_DMA_PVR;
-				dc_update_interrupt_status(space->machine);
-			}
-			break;
-	}
-
-	#if DEBUG_PVRCTRL
-	mame_printf_verbose("PVRCTRL: [%08x=%x] write %" I64FMT "x to %x (reg %x), mask %" I64FMT "x\n", 0x5f7c00+reg*4, dat, data>>shift, offset, reg, mem_mask);
-	#endif
-
-//  pvrctrl_regs[reg] |= dat;
-	pvrctrl_regs[reg] = dat;
-
-}
-
 READ64_HANDLER( pvr_ta_r )
 {
 	int reg;
@@ -1097,12 +1006,14 @@ READ64_HANDLER( pvr_ta_r )
 			blank = (video_screen_get_vblank(space->machine->primary_screen) | video_screen_get_hblank(space->machine->primary_screen)) ? 0 : 1;
 			if(spg_blank_pol) { blank^=1; }
 
-			pvrta_regs[reg] = (vsync << 13) | (hsync << 12) | (blank << 11) | (fieldnum << 10) | (video_screen_get_vpos(space->machine->primary_screen) & 0x1ff);
+			pvrta_regs[reg] = (vsync << 13) | (hsync << 12) | (blank << 11) | (fieldnum << 10) | (video_screen_get_vpos(space->machine->primary_screen) & 0x3ff);
 			break;
 		}
 	case SPG_TRIGGER_POS:
 		printf("Warning: read at h/v counter ext latches\n");
 		break;
+	case TA_LIST_INIT:
+		return 0; //bit 31 always return 0, a probable left-over in Crazy Taxi reads this and discards the read (?)
 	}
 
 	#if DEBUG_PVRTA_REGS
@@ -1261,88 +1172,105 @@ WRITE64_HANDLER( pvr_ta_w )
 		assert_always(0, "TA grabber error A!\n");
 		break;
 	case TA_LIST_INIT:
-		state_ta.tafifo_pos=0;
-		state_ta.tafifo_mask=7;
-		state_ta.tafifo_vertexwords=8;
-		state_ta.tafifo_listtype= -1;
+		if(dat & 0x80000000)
+		{
+			state_ta.tafifo_pos=0;
+			state_ta.tafifo_mask=7;
+			state_ta.tafifo_vertexwords=8;
+			state_ta.tafifo_listtype= -1;
 	#if DEBUG_PVRTA
-		mame_printf_verbose("TA_OL_BASE       %08x TA_OL_LIMIT  %08x\n", pvrta_regs[TA_OL_BASE], pvrta_regs[TA_OL_LIMIT]);
-		mame_printf_verbose("TA_ISP_BASE      %08x TA_ISP_LIMIT %08x\n", pvrta_regs[TA_ISP_BASE], pvrta_regs[TA_ISP_LIMIT]);
-		mame_printf_verbose("TA_ALLOC_CTRL    %08x\n", pvrta_regs[TA_ALLOC_CTRL]);
-		mame_printf_verbose("TA_NEXT_OPB_INIT %08x\n", pvrta_regs[TA_NEXT_OPB_INIT]);
+			mame_printf_verbose("TA_OL_BASE       %08x TA_OL_LIMIT  %08x\n", pvrta_regs[TA_OL_BASE], pvrta_regs[TA_OL_LIMIT]);
+			mame_printf_verbose("TA_ISP_BASE      %08x TA_ISP_LIMIT %08x\n", pvrta_regs[TA_ISP_BASE], pvrta_regs[TA_ISP_LIMIT]);
+			mame_printf_verbose("TA_ALLOC_CTRL    %08x\n", pvrta_regs[TA_ALLOC_CTRL]);
+			mame_printf_verbose("TA_NEXT_OPB_INIT %08x\n", pvrta_regs[TA_NEXT_OPB_INIT]);
 	#endif
-		pvrta_regs[TA_NEXT_OPB] = pvrta_regs[TA_NEXT_OPB_INIT];
-		pvrta_regs[TA_ITP_CURRENT] = pvrta_regs[TA_ISP_BASE];
-		state_ta.alloc_ctrl_OPB_Mode = pvrta_regs[TA_ALLOC_CTRL] & 0x100000; // 0 up 1 down
-		state_ta.alloc_ctrl_PT_OPB = (4 << ((pvrta_regs[TA_ALLOC_CTRL] >> 16) & 3)) & 0x38; // number of 32 bit words (0,8,16,32)
-		state_ta.alloc_ctrl_TM_OPB = (4 << ((pvrta_regs[TA_ALLOC_CTRL] >> 12) & 3)) & 0x38;
-		state_ta.alloc_ctrl_T_OPB = (4 << ((pvrta_regs[TA_ALLOC_CTRL] >> 8) & 3)) & 0x38;
-		state_ta.alloc_ctrl_OM_OPB = (4 << ((pvrta_regs[TA_ALLOC_CTRL] >> 4) & 3)) & 0x38;
-		state_ta.alloc_ctrl_O_OPB = (4 << ((pvrta_regs[TA_ALLOC_CTRL] >> 0) & 3)) & 0x38;
-		state_ta.listtype_used |= (1+4);
-		// use TA_ISP_BASE and select buffer for grab data
-		state_ta.grabsel = -1;
-		// try to find already used buffer but not busy
-		for (a=0;a < NUM_BUFFERS;a++)
-		{
-			if ((state_ta.grab[a].ispbase == pvrta_regs[TA_ISP_BASE]) && (state_ta.grab[a].busy == 0) && (state_ta.grab[a].valid == 1))
-			{
-				state_ta.grabsel=a;
-				break;
-			}
-		}
-		// try a buffer not used yet
-		if (state_ta.grabsel < 0)
-		{
+			pvrta_regs[TA_NEXT_OPB] = pvrta_regs[TA_NEXT_OPB_INIT];
+			pvrta_regs[TA_ITP_CURRENT] = pvrta_regs[TA_ISP_BASE];
+			state_ta.alloc_ctrl_OPB_Mode = pvrta_regs[TA_ALLOC_CTRL] & 0x100000; // 0 up 1 down
+			state_ta.alloc_ctrl_PT_OPB = (4 << ((pvrta_regs[TA_ALLOC_CTRL] >> 16) & 3)) & 0x38; // number of 32 bit words (0,8,16,32)
+			state_ta.alloc_ctrl_TM_OPB = (4 << ((pvrta_regs[TA_ALLOC_CTRL] >> 12) & 3)) & 0x38;
+			state_ta.alloc_ctrl_T_OPB = (4 << ((pvrta_regs[TA_ALLOC_CTRL] >> 8) & 3)) & 0x38;
+			state_ta.alloc_ctrl_OM_OPB = (4 << ((pvrta_regs[TA_ALLOC_CTRL] >> 4) & 3)) & 0x38;
+			state_ta.alloc_ctrl_O_OPB = (4 << ((pvrta_regs[TA_ALLOC_CTRL] >> 0) & 3)) & 0x38;
+			state_ta.listtype_used |= (1+4);
+			// use TA_ISP_BASE and select buffer for grab data
+			state_ta.grabsel = -1;
+			// try to find already used buffer but not busy
 			for (a=0;a < NUM_BUFFERS;a++)
 			{
-				if (state_ta.grab[a].valid == 0)
+				if ((state_ta.grab[a].ispbase == pvrta_regs[TA_ISP_BASE]) && (state_ta.grab[a].busy == 0) && (state_ta.grab[a].valid == 1))
 				{
 					state_ta.grabsel=a;
 					break;
 				}
 			}
-		}
-		// find a non busy buffer starting from the last one used
-		if (state_ta.grabsel < 0)
-		{
-			for (a=0;a < 3;a++)
+			// try a buffer not used yet
+			if (state_ta.grabsel < 0)
 			{
-				if (state_ta.grab[(state_ta.grabsellast+1+a) & 3].busy == 0)
+				for (a=0;a < NUM_BUFFERS;a++)
 				{
-					state_ta.grabsel=a;
-					break;
+					if (state_ta.grab[a].valid == 0)
+					{
+						state_ta.grabsel=a;
+						break;
+					}
 				}
 			}
-		}
-		if (state_ta.grabsel < 0)
-			assert_always(0, "TA grabber error B!\n");
-		state_ta.grabsellast=state_ta.grabsel;
-		state_ta.grab[state_ta.grabsel].ispbase=pvrta_regs[TA_ISP_BASE];
-		state_ta.grab[state_ta.grabsel].busy=0;
-		state_ta.grab[state_ta.grabsel].valid=1;
-		state_ta.grab[state_ta.grabsel].verts_size=0;
-		state_ta.grab[state_ta.grabsel].strips_size=0;
+			// find a non busy buffer starting from the last one used
+			if (state_ta.grabsel < 0)
+			{
+				for (a=0;a < 3;a++)
+				{
+					if (state_ta.grab[(state_ta.grabsellast+1+a) & 3].busy == 0)
+					{
+						state_ta.grabsel=a;
+						break;
+					}
+				}
+			}
+			if (state_ta.grabsel < 0)
+				assert_always(0, "TA grabber error B!\n");
+			state_ta.grabsellast=state_ta.grabsel;
+			state_ta.grab[state_ta.grabsel].ispbase=pvrta_regs[TA_ISP_BASE];
+			state_ta.grab[state_ta.grabsel].busy=0;
+			state_ta.grab[state_ta.grabsel].valid=1;
+			state_ta.grab[state_ta.grabsel].verts_size=0;
+			state_ta.grab[state_ta.grabsel].strips_size=0;
 
-		profiler_mark_end();
+			profiler_mark_end();
+		}
 		break;
 //#define TA_YUV_TEX_BASE       ((0x005f8148-0x005f8000)/4)
 	case TA_YUV_TEX_BASE:
 		printf("TA_YUV_TEX_BASE initialized to %08x\n", dat);
 
 		// hack, this interrupt is generated after transfering a set amount of data
-		dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_YUV;
-		dc_update_interrupt_status(space->machine);
+		//dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_YUV;
+		//dc_update_interrupt_status(space->machine);
 
 		break;
+	case TA_YUV_TEX_CTRL:
+		printf("TA_YUV_TEX_CTRL initialized to %08x\n", dat);
+		break;
 
+	case SPG_VBLANK_INT:
+		/* clear pending irqs and modify them with the updated ones */
+		timer_adjust_oneshot(vbin_timer, attotime_never, 0);
+		timer_adjust_oneshot(vbout_timer, attotime_never, 0);
 
+		timer_adjust_oneshot(vbin_timer, video_screen_get_time_until_pos(space->machine->primary_screen, spg_vblank_in_irq_line_num, 0), 0);
+		timer_adjust_oneshot(vbout_timer, video_screen_get_time_until_pos(space->machine->primary_screen, spg_vblank_out_irq_line_num, 0), 0);
+		break;
+	/* TODO: timer adjust for SPG_HBLANK_INT too */
 	case TA_LIST_CONT:
 	#if DEBUG_PVRTA
 		mame_printf_verbose("List continuation processing\n");
 	#endif
-		state_ta.tafifo_listtype= -1; // no list being received
-		state_ta.listtype_used |= (1+4);
+		if(dat & 0x80000000)
+		{
+			state_ta.tafifo_listtype= -1; // no list being received
+			state_ta.listtype_used |= (1+4);
+		}
 		break;
 	case SPG_VBLANK:
 	case SPG_HBLANK:
@@ -1357,6 +1285,7 @@ WRITE64_HANDLER( pvr_ta_w )
 			visarea.min_y = 0;
 			visarea.max_y = ((spg_vbstart - spg_vbend - vo_vert_start_pos_f1) <= 0x100 ? 240 : 480) - 1;
 
+
 			video_screen_configure(space->machine->primary_screen, spg_hbstart, spg_vbstart, &visarea, video_screen_get_frame_period(space->machine->primary_screen).attoseconds );
 		}
 		break;
@@ -1367,10 +1296,39 @@ WRITE64_HANDLER( pvr_ta_w )
 		mame_printf_verbose("PVRTA: [%08x=%x] write %" I64FMT "x to %x (reg %x %x), mask %" I64FMT "x\n", 0x5f8000+reg*4, dat, data>>shift, offset, reg, (reg*4)+0x8000, mem_mask);
 	#endif
 }
+
+static TIMER_CALLBACK( transfer_opaque_list_irq )
+{
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_OPLST;
+	dc_update_interrupt_status(machine);
+}
+
+static TIMER_CALLBACK( transfer_opaque_modifier_volume_list_irq )
+{
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_OPMV;
+	dc_update_interrupt_status(machine);
+}
+
+static TIMER_CALLBACK( transfer_translucent_list_irq )
+{
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_TRLST;
+	dc_update_interrupt_status(machine);
+}
+
+static TIMER_CALLBACK( transfer_translucent_modifier_volume_list_irq )
+{
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_EOXFER_TRMV;
+	dc_update_interrupt_status(machine);
+}
+
+static TIMER_CALLBACK( transfer_punch_through_list_irq )
+{
+	dc_sysctrl_regs[SB_ISTNRM] |= (1 << 21);
+	dc_update_interrupt_status(machine);
+}
+
 static void process_ta_fifo(running_machine* machine)
 {
-	UINT32 a;
-
 	/* first byte in the buffer is the Parameter Control Word
 
      pppp pppp gggg gggg oooo oooo oooo oooo
@@ -1451,28 +1409,16 @@ static void process_ta_fifo(running_machine* machine)
 		#if DEBUG_PVRDLIST
 		mame_printf_verbose("Para Type 0 End of List\n");
 		#endif
-		a=0; // 6-10 0-3
+		/* Process transfer FIFO done irqs here */
+		/* FIXME: timing of these */
 		switch (state_ta.tafifo_listtype)
 		{
-		case 0:
-			a = 1 << 7;
-			break;
-		case 1:
-			a = 1 << 8;
-			break;
-		case 2:
-			a = 1 << 9;
-			break;
-		case 3:
-			a = 1 << 10;
-			break;
-		case 4:
-			a = 1 << 21;
-			break;
+		case 0: timer_set(machine, ATTOTIME_IN_USEC(100), NULL, 0, transfer_opaque_list_irq); break;
+		case 1: timer_set(machine, ATTOTIME_IN_USEC(100), NULL, 0, transfer_opaque_modifier_volume_list_irq); break;
+		case 2: timer_set(machine, ATTOTIME_IN_USEC(100), NULL, 0, transfer_translucent_list_irq); break;
+		case 3: timer_set(machine, ATTOTIME_IN_USEC(100), NULL, 0, transfer_translucent_modifier_volume_list_irq); break;
+		case 4: timer_set(machine, ATTOTIME_IN_USEC(100), NULL, 0, transfer_punch_through_list_irq); break;
 		}
-
-		dc_sysctrl_regs[SB_ISTNRM] |= a;
-		dc_update_interrupt_status(machine);
 		state_ta.tafifo_listtype= -1; // no list being received
 		state_ta.listtype_used |= (2+8);
 	}
@@ -1707,7 +1653,7 @@ WRITE64_HANDLER( ta_fifo_yuv_w )
 	reg = decode_reg_64(offset, mem_mask, &shift);
 	dat = (UINT32)(data >> shift);
 
-	mame_printf_verbose("YUV FIFO: [%08x=%x] write %" I64FMT "x to %x, mask %" I64FMT "x\n", 0x10800000+reg*4, dat, data, offset, mem_mask);
+//  printf("YUV FIFO: [%08x=%x] write %" I64FMT "x to %x, mask %" I64FMT "x %08x\n", 0x10800000+reg*4, dat, data, offset, mem_mask,test);
 }
 
 /* test video start */
@@ -1876,6 +1822,9 @@ static void render_span(bitmap_t *bitmap, texinfo *ti,
 	yy0 = round(y0);
 	yy1 = round(y1);
 
+	if((yy0 < 0 && y0 > 0) || (yy1 < 0 && y1 > 0)) //temp handling of int32 overflow, needed by hotd2/totd
+		return;
+
 	dy = yy0+0.5-y0;
 
 	if(0)
@@ -1993,6 +1942,7 @@ static void render_tri_sorted(bitmap_t *bitmap, texinfo *ti, const vert *v0, con
 						v1->x, v0->x + dx02dy*dy01, v1->u, v0->u + du02dy*dy01, v1->v, v0->v + dv02dy*dy01, v1->w, v0->w + dw02dy*dy01,
 						dx12dy, dx02dy, du12dy, du02dy, dv12dy, dv02dy, dw12dy, dw02dy);
 		} else {
+
 			render_span(bitmap, ti, v0->y, v1->y,
 						v0->x, v0->x, v0->u, v0->u, v0->v, v0->v, v0->w, v0->w,
 						dx02dy, dx01dy, du02dy, du01dy, dv02dy, dv01dy, dw02dy, dw01dy);
@@ -2506,19 +2456,20 @@ static void pvr_build_parameterconfig(void)
 			pvr_parameterconfig[a] = pvr_parameterconfig[a-1];
 }
 
-static TIMER_CALLBACK(vbout)
+static TIMER_CALLBACK(vbin)
 {
-	UINT32 a;
-	//printf("vbout\n");
-
-	a=dc_sysctrl_regs[SB_ISTNRM] | IST_VBL_OUT;
-	dc_sysctrl_regs[SB_ISTNRM] = a; // V Blank-out interrupt
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_VBL_IN; // V Blank-in interrupt
 	dc_update_interrupt_status(machine);
 
-	scanline = 0;
-	next_y = spg_line_comp_val;
-	timer_adjust_oneshot(vbout_timer, attotime_never, 0);
-	timer_adjust_oneshot(hbin_timer, video_screen_get_time_until_pos(machine->primary_screen, 0, spg_hblank_in_irq-1), 0);
+	timer_adjust_oneshot(vbin_timer, video_screen_get_time_until_pos(machine->primary_screen, spg_vblank_in_irq_line_num, 0), 0);
+}
+
+static TIMER_CALLBACK(vbout)
+{
+	dc_sysctrl_regs[SB_ISTNRM] |= IST_VBL_OUT; // V Blank-out interrupt
+	dc_update_interrupt_status(machine);
+
+	timer_adjust_oneshot(vbout_timer, video_screen_get_time_until_pos(machine->primary_screen, spg_vblank_out_irq_line_num, 0), 0);
 }
 
 static TIMER_CALLBACK(hbin)
@@ -2541,6 +2492,12 @@ static TIMER_CALLBACK(hbin)
 //  printf("hbin on scanline %d\n",scanline);
 
 	scanline++;
+
+	if(scanline >= spg_vblank_in_irq_line_num)
+	{
+		scanline = 0;
+		next_y = spg_line_comp_val;
+	}
 
 	timer_adjust_oneshot(hbin_timer, video_screen_get_time_until_pos(machine->primary_screen, scanline, spg_hblank_in_irq-1), 0);
 }
@@ -2605,10 +2562,14 @@ VIDEO_START(dc)
 	computedilated();
 
 	vbout_timer = timer_alloc(machine, vbout, 0);
-	timer_adjust_oneshot(vbout_timer, attotime_never, 0);
+	timer_adjust_oneshot(vbout_timer, video_screen_get_time_until_pos(machine->primary_screen, spg_vblank_out_irq_line_num, 0), 0);
+
+	vbin_timer = timer_alloc(machine, vbin, 0);
+	timer_adjust_oneshot(vbin_timer, video_screen_get_time_until_pos(machine->primary_screen, spg_vblank_in_irq_line_num, 0), 0);
 
 	hbin_timer = timer_alloc(machine, hbin, 0);
-	timer_adjust_oneshot(hbin_timer, attotime_never, 0);
+	timer_adjust_oneshot(hbin_timer, video_screen_get_time_until_pos(machine->primary_screen, 0, spg_hblank_in_irq-1), 0);
+
 	scanline = 0;
 	next_y = 0;
 
@@ -2670,15 +2631,4 @@ VIDEO_UPDATE(dc)
 	debug_dip_status = input_port_read(screen->machine, "MAMEDEBUG");
 
 	return 0;
-}
-
-void dc_vblank(running_machine *machine)
-{
-	//printf("vblankin\n");
-
-	dc_sysctrl_regs[SB_ISTNRM] |= IST_VBL_IN; // V Blank-in interrupt
-	dc_update_interrupt_status(machine);
-	vblc++;
-
-	timer_adjust_oneshot(vbout_timer, video_screen_get_time_until_pos(machine->primary_screen, 0, 0), 0);
 }

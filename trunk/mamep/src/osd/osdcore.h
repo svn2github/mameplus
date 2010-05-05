@@ -827,7 +827,7 @@ int get_osdcore_acp(void);
 
     Return value:
 
-        the returned string needs to be free()-ed!
+        the returned string needs to be osd_free()-ed!
 
 -----------------------------------------------------------------------------*/
 char *osd_get_clipboard_text(void);
@@ -867,7 +867,7 @@ osd_directory_entry *osd_stat(const char *path);
     Parameters:
 
         path - the path in question
-        dst - pointer to receive new path; the returned string needs to be free()-ed!
+        dst - pointer to receive new path; the returned string needs to be osd_free()-ed!
 
     Return value:
 
