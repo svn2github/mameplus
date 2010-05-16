@@ -10189,11 +10189,10 @@ Other Sun games
 	DRIVER( neptunp2 )
 	DRIVER( rgum )
 
-	/* Diatec */
-	DRIVER( unclepoo )
-
 	/* Extrema Systems International Ltd. */
 	DRIVER( poker72 )
+
+	DRIVER( chkun )
 #endif /* !NEOCPSPGM */
 
 #endif	/* DRIVER_RECURSIVE */
