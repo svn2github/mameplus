@@ -420,6 +420,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( dangarb )	/* bootleg */
 	DRIVER( ninjemak )	/* (c) 1986 (US?) */
 	DRIVER( youma )		/* (c) 1986 (Japan) */
+	DRIVER( youma2 )		/* (c) 1986 (Japan) */
 	DRIVER( youmab )	/* bootleg */
 	DRIVER( youmab2 )	/* bootleg */
 	DRIVER( legion )	/* (c) 1986 */
@@ -430,6 +431,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( terrafu )	/* (c) 1987 Nichibutsu USA */
 	DRIVER( kodure )	/* (c) 1987 (Japan) */
 	DRIVER( armedf )	/* (c) 1988 */
+	DRIVER( armedff )	/* (c) 1988 Fillmore license */
 	DRIVER( cclimbr2 )	/* (c) 1988 (Japan) */
 	DRIVER( cclimbr2a )	/* (c) 1988 (Japan) */
 	DRIVER( skyrobo )	/* (c) 1989 */
@@ -450,6 +452,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( nightgal )	/* (c) 1984 */
 	DRIVER( ngtbunny )	/* (c) 1984 */
 	DRIVER( royalngt )	/* (c) 1984 Royal Denshi */
+	DRIVER( royalqn )
 	DRIVER( sexygal  )	/* (c) 1985 */
 	DRIVER( sweetgal )	/* (c) 1985 */
 	DRIVER( ngalsumr )	/* (c) 1985 */
@@ -720,8 +723,9 @@ const game_driver * const mamedrivers[] =
 	DRIVER( polepos2bi )/* bootleg */
 	/* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
 	DRIVER( pacland )	/* (c) 1984 */
-	DRIVER( pacland2 )	/* (c) 1984 */
-	DRIVER( pacland3 )	/* (c) 1984 */
+	DRIVER( paclandj )	/* (c) 1984 */
+	DRIVER( paclandjo )	/* (c) 1984 */
+	DRIVER( paclandjo2 )/* (c) 1984 */
 	DRIVER( paclandm )	/* (c) 1984 Midway */
 	DRIVER( drgnbstr )	/* (c) 1984 */
 	DRIVER( skykid )	/* (c) 1985 */
@@ -968,12 +972,13 @@ const game_driver * const mamedrivers[] =
 	DRIVER( sukuinuf )
 	DRIVER( zgundmdx )
 	DRIVER( soulclb3 )
-	DRIVER( kinniku )
-	DRIVER( taiko9 )
 
 	/* Namco System 256 */
 	DRIVER( sys256 )
 	DRIVER( tekken51 )
+	DRIVER( kinniku )
+	DRIVER( taiko9 )
+	DRIVER( taiko10 )
 
 	/* Misc Namco games */
 	DRIVER( 20pacgal )	/* (c) 2000 Ver 1.04 */
@@ -1437,6 +1442,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( xenophob )	/* (c) 1987 */
 	DRIVER( spyhunt2 )	/* (c) 1987 */
 	DRIVER( spyhunt2a )	/* (c) 1987 */
+	DRIVER( intlaser )	/* (c) 1987 */
 	DRIVER( blasted )	/* (c) 1988 */
 	DRIVER( archrivl )	/* (c) 1989 */
 	DRIVER( archrivl2 )	/* (c) 1989 */
@@ -2782,6 +2788,7 @@ V-V                           TP-027
 	DRIVER( ecofghtru )	/* 15/02/1994 (c) 1993 (US) */
 	DRIVER( ecofghtru1 )/* 03/12/1993 (c) 1993 (US) */
 	DRIVER( ecofghtra )	/* 03/12/1993 (c) 1993 (Asia) */
+	DRIVER( ecofghtrh )	/* 03/12/1993 (c) 1993 (Hispanic) */
 	DRIVER( uecology )	/* 03/12/1993 (c) 1993 (Japan) */
 	DRIVER( ddtod )		/* 12/04/1994 (c) 1993 (Euro) */
 	DRIVER( ddtodr1 )	/* 13/01/1994 (c) 1993 (Euro) */
@@ -2793,6 +2800,7 @@ V-V                           TP-027
 	DRIVER( ddtoda )	/* 13/01/1994 (c) 1993 (Asia) */
 	DRIVER( ddtodh )	/* 12/04/1994 (c) 1993 (Hispanic) */
 	DRIVER( ddtodhr1 )	/* 25/01/1994 (c) 1993 (Hispanic) */
+	DRIVER( ddtodhr2 )	/* 13/01/1994 (c) 1993 (Hispanic) */
 	DRIVER( ssf2t )		/* 23/02/1994 (c) 1994 (World) */
 	DRIVER( ssf2tu )	/* 23/03/1994 (c) 1994 (US) */
 	DRIVER( ssf2tur1 )	/* 23/02/1994 (c) 1994 (US) */
@@ -2824,7 +2832,8 @@ V-V                           TP-027
 	DRIVER( armwara )	/* 20/09/1994 (c) 1994 (Asia) */
 	DRIVER( xmcota )	/* 05/01/1995 (c) 1994 (Euro) */
 	DRIVER( xmcotau )	/* 05/01/1995 (c) 1994 (US) */
-	DRIVER( xmcotah )	/* 31/03/1995 (c) 1994 (Hispanic) */
+	DRIVER( xmcotah )	/* 05/01/1995 (c) 1994 (Hispanic) */
+	DRIVER( xmcotahr1 )	/* 31/03/1995 (c) 1994 (Hispanic) */
 	DRIVER( xmcotaj )	/* 05/01/1995 (c) 1994 (Japan) */
 	DRIVER( xmcotaj1 )	/* 22/12/1994 (c) 1994 (Japan) */
 	DRIVER( xmcotaj2 )	/* 19/12/1994 (c) 1994 (Japan) */
@@ -2956,6 +2965,7 @@ V-V                           TP-027
 	DRIVER( sfa3 )		/* 04/09/1998 (c) 1998 (US) */
 	DRIVER( sfa3u )		/* 04/09/1998 (c) 1998 (US) */
 	DRIVER( sfa3ur1 )	/* 29/06/1998 (c) 1998 (US) */
+	DRIVER( sfa3h )		/* 29/06/1998 (c) 1998 (Hispanic) */
 	DRIVER( sfa3b )		/* 29/06/1998 (c) 1998 (Brazil) */
 	DRIVER( sfz3j )		/* 04/09/1998 (c) 1998 (Japan) */
 	DRIVER( sfz3jr1 )	/* 27/07/1998 (c) 1998 (Japan) */
@@ -2965,6 +2975,7 @@ V-V                           TP-027
 	DRIVER( gigawing )	/* 22/02/1999 (c) 1999 Takumi (US) */
 	DRIVER( gigawingj )	/* 23/02/1999 (c) 1999 Takumi (Japan) */
 	DRIVER( gigawinga )	/* 22/02/1999 (c) 1999 Takumi (Asia) */
+	DRIVER( gigawingh )	/* 22/02/1999 (c) 1999 Takumi (Hispanic) */
 	DRIVER( gigawingb )	/* 22/02/1999 (c) 1999 Takumi (Brazil) */
 	DRIVER( jyangoku )	/* 27/05/1999 (c) 1999 (Japan) */
 	DRIVER( dimahoo )	/* 21/01/2000 (c) 2000 Eighting/Raizing (US) */
@@ -3067,6 +3078,7 @@ V-V                           TP-027
 	DRIVER( sfex2 )		/* Street Fighter EX 2 (USA 980526) */
 	DRIVER( sfex2j )	/* Street Fighter EX 2 (JAPAN 980312) */
 	DRIVER( sfex2a )	/* Street Fighter EX 2 (ASIA 980312) */
+	DRIVER( sfex2h )	/* Street Fighter EX 2 (HISPANIC 980312) */
 	DRIVER( plsmaswd )	/* Plasma Sword (USA 980316) */
 	DRIVER( stargld2 )	/* Star Gladiator 2 (JAPAN 980316) */
 	DRIVER( plsmaswda )	/* Plasma Sword (ASIA 980316) */
@@ -3977,8 +3989,8 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( ddcrew1 )	/* 1991.?? D.D.Crew (World, FD1094, decrypted) */
 	DRIVER( wwallyj )	/* 1992.06 Wally wo Sagase! (Japan, FD1094, decrypted) */
 	DRIVER( wwallyja )	/* 1992.06 Wally wo Sagase! (Japan, FD1094, decrypted) */
-						/* 1992.10 Desert Breaker (Japan) */
 	DRIVER( desertbr )	/* 1993.?? Desert Breaker (World, FD1094, decrypted) */
+	DRIVER( desertbrj )	/* 1992.10 Desert Breaker (Japan) */
 	DRIVER( pontoon )
 
 	/* System18 Bootlegs */
@@ -4158,7 +4170,8 @@ DokiDoki Penguin Land *not confirmed
 	DRIVER( vformula )	/* 1993.?? Virtua Formula */
 	DRIVER( swa )		/* 1994.04 Star Wars Arcade */
 	DRIVER( wingwar )	/* 1994.06 Wing War */
-	DRIVER( wingwara )	/* 1994.09 Wing War (US) */
+	DRIVER( wingwarj )	/* 1994.06 Wing War (Japan) */
+	DRIVER( wingwaru )	/* 1994.09 Wing War (US) */
 
 	/* Sega H1 games */
 	DRIVER( coolridr )	/* 1995.04 Cool Riders */
@@ -6686,6 +6699,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( champbasja )/* (c) 1983 Alpha Denshi Co. */
 	DRIVER( champbb2 )	/* (c) 1983 Sega */
 	DRIVER( champbb2a )	/* (c) 1983 ? */
+	DRIVER( champbb2j )	/* (c) 1983 ? */
 	DRIVER( exctsccr )	/* (c) 1983 Alpha Denshi Co. */
 	DRIVER( exctsccra )	/* (c) 1983 Alpha Denshi Co. */
 	DRIVER( exctsccrj )	/* (c) 1983 Alpha Denshi Co. */
@@ -7101,6 +7115,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( embargo )
 	DRIVER( tripool )	/* (c) 1981 Noma (Casino Tech license) */
 	DRIVER( tripoola )	/* (c) 1981 Noma (Costal Games license) */
+	DRIVER( unclepoo )	/* (c) 1983 Diatec */
 	DRIVER( joinem )	/* (c) 1986 Global */
 	DRIVER( loverboy )	/* (c) 1983 Global */
 	DRIVER( striv )		/* (c) 1985 Hara Industries */
@@ -8402,6 +8417,9 @@ Other Sun games
 	DRIVER( drgw3 )			/* (c) 1998 */
 	DRIVER( drgw3105 )		/* (c) 1998 */
 	DRIVER( drgw3100 )		/* (c) 1998 */
+	DRIVER( dwex )			/* (c) 1998 */
+	DRIVER( killbld )		/* (c) 1998 */
+	DRIVER( killbld104 )	/* (c) 1998 */
 	DRIVER( kov )			/* (c) 1999 */
 	DRIVER( kovplus )		/* (c) 1999 */
 	DRIVER( kovplusa )		/* (c) 1999 */
@@ -8411,8 +8429,7 @@ Other Sun games
 	DRIVER( kovsh103 )		/* (c) 1999 */
 	DRIVER( photoy2k )		/* (c) 1999 */
 	DRIVER( photoy2k102 )	/* (c) 1999 */
-	DRIVER( killbld )		/* (c) 1998 */
-	DRIVER( killbld104 )	/* (c) 1998 */
+	DRIVER( photoy2k104 )	/* (c) 1999 */
 	DRIVER( puzlstar )		/* (c) 1999 */
 	DRIVER( olds )			/* (c) 1999 */
 	DRIVER( olds100 )		/* (c) 1999 */
@@ -8432,6 +8449,8 @@ Other Sun games
 	DRIVER( martmastc102 )	/* (c) 2001 */
 	DRIVER( theglad )		/* (c) 2001 */
 	DRIVER( theglada )		/* (c) 2001 */
+	DRIVER( dw2001 )		/* (c) 2001 */
+	DRIVER( py2k2 )			/* (c) 2001 */
 	DRIVER( dmnfrnt )		/* (c) 2002 */
 	DRIVER( dmnfrnta )		/* (c) 2002 */
 	DRIVER( kovshp )
@@ -9677,6 +9696,7 @@ Other Sun games
 	DRIVER( unkch4 )	/* bootleg */
 
 	DRIVER( ns8lines )	/* unknown */
+	DRIVER( ns8linew )	/* unknown */
 	DRIVER( ladylinr )	/* (c) 198? TAB Austria */
 	DRIVER( kkojnoli )	/* 198? south korean hack */
 	DRIVER( wcat3 )

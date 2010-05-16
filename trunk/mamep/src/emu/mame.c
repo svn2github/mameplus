@@ -835,7 +835,7 @@ UINT8 *memory_region(running_machine *machine, const char *name)
 UINT32 memory_region_length(running_machine *machine, const char *name)
 {
 	const region_info *region = machine->region(name);
-	return (region != NULL) ? region->length : NULL;
+	return (region != NULL) ? region->length : 0;
 }
 
 
@@ -847,7 +847,7 @@ UINT32 memory_region_length(running_machine *machine, const char *name)
 UINT32 memory_region_flags(running_machine *machine, const char *name)
 {
 	const region_info *region = machine->region(name);
-	return (region != NULL) ? region->flags : NULL;
+	return (region != NULL) ? region->flags : 0;
 }
 
 
