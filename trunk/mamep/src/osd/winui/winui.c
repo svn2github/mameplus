@@ -6113,6 +6113,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 			value = sort_index[index1].readings - sort_index[index2].readings;
 		if (value == 0)
 			value = sort_index[index1].description - sort_index[index2].description;
+		break;
 
 	case COLUMN_ORIENTATION:
 		nTemp1 = DriverIsVertical(index1) ? 1 : 0;
