@@ -55,7 +55,7 @@ typedef struct
 typedef struct
 {
 	tPath	*m_Path;
-	TCHAR	*m_Directory;
+	TCHAR	*m_tDirectory;
 } tDirInfo;
 
 /***************************************************************************
@@ -124,7 +124,6 @@ INT_PTR CALLBACK DirectoriesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARA
 
 	case WM_NOTIFY:
 		return (BOOL)HANDLE_WM_NOTIFY(hDlg, wParam, lParam, Directories_OnNotify);
-		break;
 
 	case WM_CLOSE:
 		HANDLE_WM_CLOSE(hDlg, wParam, lParam, Directories_OnClose);
@@ -151,8 +150,8 @@ static BOOL IsMultiDir(int nType)
 
 static void DirInfo_SetDir(tDirInfo *pInfo, int nType, int nItem, LPCTSTR pText)
 {
-	TCHAR *s;
-	TCHAR *pOldText;
+	TCHAR *t_s;
+	TCHAR *t_pOldText;
 
 	if (IsMultiDir(nType))
 	{
@@ -162,20 +161,20 @@ static void DirInfo_SetDir(tDirInfo *pInfo, int nType, int nItem, LPCTSTR pText)
 	}
 	else
 	{
-		s = win_tstring_strdup(pText);
-		if (!s)
+		t_s = win_tstring_strdup(pText);
+		if (!t_s)
 			return;
-		pOldText = pInfo[nType].m_Directory;
-		if (pOldText)
-			global_free(pOldText);
-		pInfo[nType].m_Directory = s;
+		t_pOldText = pInfo[nType].m_tDirectory;
+		if (t_pOldText)
+			osd_free(t_pOldText);
+		pInfo[nType].m_tDirectory = t_s;
 	}
 }
 
 static TCHAR* DirInfo_Dir(tDirInfo *pInfo, int nType)
 {
 	assert(!IsMultiDir(nType));
-	return pInfo[nType].m_Directory;
+	return pInfo[nType].m_tDirectory;
 }
 
 static TCHAR* DirInfo_Path(tDirInfo *pInfo, int nType, int nItem)
@@ -219,11 +218,11 @@ static void UpdateDirectoryList(HWND hDlg)
 	LV_ITEM Item;
 	HWND	hList  = GetDlgItem(hDlg, IDC_DIR_LIST);
 	HWND	hCombo = GetDlgItem(hDlg, IDC_DIR_COMBO);
-	HRESULT res;
+	BOOL	b_res;
 
 	/* Remove previous */
 
-	res = ListView_DeleteAllItems(hList);
+	b_res = ListView_DeleteAllItems(hList);
 
 	/* Update list */
 
@@ -234,17 +233,17 @@ static void UpdateDirectoryList(HWND hDlg)
 	if (IsMultiDir(nType))
 	{
 		Item.pszText = (TCHAR*) TEXT(DIRLIST_NEWENTRYTEXT);
-		res = ListView_InsertItem(hList, &Item);
+		(void)ListView_InsertItem(hList, &Item);
 		for (i = DirInfo_NumDir(g_pDirInfo, nType) - 1; 0 <= i; i--)
 		{
 			Item.pszText = DirInfo_Path(g_pDirInfo, nType, i);
-			res = ListView_InsertItem(hList, &Item);
+			(void)ListView_InsertItem(hList, &Item);
 		}
 	}
 	else
 	{
 		Item.pszText = DirInfo_Dir(g_pDirInfo, nType);
-		res = ListView_InsertItem(hList, &Item);
+		(void)ListView_InsertItem(hList, &Item);
 	}
 
 	/* select first one */
@@ -301,7 +300,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 		//if( !t_s )
 		//	return FALSE;
 		(void)ComboBox_InsertString(GetDlgItem(hDlg, IDC_DIR_COMBO), 0, _UIW(g_directoryInfo[i].lpName));
-		//global_free(t_s);
+		//osd_free(t_s);
 		//t_s = NULL;
 	}
 
@@ -345,7 +344,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 		{
 			DirInfo_SetDir(g_pDirInfo, i, -1, s);
 		}
-		//global_free(t_s);
+		//osd_free(t_s);
 		//t_s = NULL;
 	}
 
@@ -354,7 +353,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 
 error:
 	//if( t_s )
-	//	global_free(t_s);
+	//	osd_free(t_s);
 	Directories_OnDestroy(hDlg);
 	EndDialog(hDlg, -1);
 	return FALSE;
@@ -374,11 +373,11 @@ static void Directories_OnDestroy(HWND hDlg)
 		for (i = 0; i < nDirInfoCount; i++)
 		{
 			if (g_pDirInfo[i].m_Path)
-				global_free(g_pDirInfo[i].m_Path);
-			if (g_pDirInfo[i].m_Directory)
-				global_free(g_pDirInfo[i].m_Directory);			
+				free(g_pDirInfo[i].m_Path);
+			if (g_pDirInfo[i].m_tDirectory)
+				osd_free(g_pDirInfo[i].m_tDirectory);
 		}
-		global_free(g_pDirInfo);
+		free(g_pDirInfo);
 		g_pDirInfo = NULL;
 	}
 }
@@ -409,7 +408,7 @@ static int RetrieveDirList(int nDir, int nFlagResult, void (*SetTheseDirs)(const
 		}
 		//utf8_buf = utf8_from_tstring(buf);
 		SetTheseDirs(buf);
-		//global_free(utf8_buf);
+		//osd_free(utf8_buf);
 
 		nResult |= nFlagResult;
     }
@@ -434,7 +433,7 @@ static void Directories_OnOk(HWND hDlg)
 			s = FixSlash(DirInfo_Dir(g_pDirInfo, i));
 			//utf8_s = utf8_from_tstring(s);
 			g_directoryInfo[i].pfnSetTheseDirs(s);
-			//global_free(utf8_s);
+			//osd_free(utf8_s);
 		}
 	}
 	EndDialog(hDlg, nResult);

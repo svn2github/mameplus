@@ -60,8 +60,6 @@ extern const DWORD dwHelpIDs[] =
 	IDC_JOYSTICK                  ,HIDC_JOYSTICK,
 	IDC_JSAT                      ,HIDC_JSAT,
 	IDC_KEEPASPECT                ,HIDC_KEEPASPECT,
-	IDC_LANGUAGECHECK             ,HIDC_LANGUAGECHECK,
-	IDC_LANGUAGEEDIT              ,HIDC_LANGUAGEEDIT,
 	IDC_LIGHTGUN                  ,HIDC_LIGHTGUN,
 	IDC_LIGHTGUNDEVICE            ,HIDC_LIGHTGUNDEVICE,
 	IDC_LOG                       ,HIDC_LOG,

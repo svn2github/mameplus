@@ -25,6 +25,7 @@
 #include <tchar.h>
 
 // standard C headers
+#include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
 #include <assert.h>
@@ -144,6 +145,7 @@ void datamap_free(datamap *map)
 
 void datamap_add(datamap *map, int dlgitem, datamap_entry_type type, const char *option_name)
 {
+	// sanity check for too many entries
 	if (map->entry_count == map->entry_size)
 	{
 		map->entry_size += 32;

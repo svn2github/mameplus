@@ -225,7 +225,7 @@ static const zip_file_header *zip_file_seek_file(zip_file *zip, const char *file
 		header = zip_file_next_file(zip);
 	}
 
-	global_free(new_filename);
+	free(new_filename);
 	return header;
 }
 
@@ -373,7 +373,7 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 
 	// free the buffer if we have to
 	if (buffer != NULL) {
-		global_free(buffer);
+		free(buffer);
 	}
 
 	global_free(utf8filename);
@@ -531,7 +531,7 @@ BOOL AllocatePNG(png_info *p, HGLOBAL *phDIB, HPALETTE *pPal)
 		
 		*pPal = CreatePalette(pLP);
 		
-		global_free (pLP);
+		free (pLP);
 	}
 	
 	copy_size = dibSize;
@@ -553,13 +553,13 @@ static int png_read_bitmap_gui(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL)
 	if (p.color_type != 3 && p.color_type != 2)
 	{
 		logerror("Unsupported color type %i (has to be 3)\n", p.color_type);
-		global_free(p.image);
+		png_free(&p);
 		return 0;
 	}
 	if (p.interlace_method != 0)
 	{
 		logerror("Interlace unsupported\n");
-		global_free (p.image);
+		png_free(&p);
 		return 0;
 	}
  
@@ -569,7 +569,7 @@ static int png_read_bitmap_gui(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL)
 	if (!AllocatePNG(&p, phDIB, pPAL))
 	{
 		logerror("Unable to allocate memory for artwork\n");
-		global_free(p.image);
+		png_free(&p);
 		return 0;
 	}
 
@@ -595,7 +595,7 @@ static int png_read_bitmap_gui(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL)
 		store_pixels(p.image + i * (p.width * bytespp), p.width * bytespp);
 	}
 
-	global_free(p.image);
+	png_free(&p);
 
 	return 1;
 }

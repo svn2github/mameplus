@@ -1674,10 +1674,8 @@ DEVICE_IMAGE_LOAD(gb_cart)
 		}
 	}
 	else
-	{
 		memcpy(gb_driver_data.gb_cart, image_get_software_region(image, "rom") + load_start, filesize);
-	}
-	
+
 	gb_header = gb_driver_data.gb_cart;
 	gb_driver_data.ROMBank00 = 0;
 
@@ -1698,6 +1696,7 @@ DEVICE_IMAGE_LOAD(gb_cart)
 				bytes_matched++;
 			}
 		}
+
 		if (bytes_matched == 0x18 && gb_header[0x0147] >= 0x0B && gb_header[0x0147] <= 0x0D)
 		{
 			gb_driver_data.ROMBank00 = (filesize / 0x4000) - 2;
@@ -1831,13 +1830,13 @@ DEVICE_IMAGE_LOAD(gb_cart)
 	{
 		logerror("Warning loading cartridge: Checksum is wrong.");
 	}
-	
+
 	/* Initialize ROMMap pointers */
 	for (I = 0; I < gb_driver_data.ROMBanks; I++)
 	{
 		gb_driver_data.ROMMap[I] = gb_driver_data.gb_cart + (I * 0x4000);
 	}
-	
+
 	/*
       Handle odd-sized cartridges (72,80,96 banks)
       ROMBanks      ROMMask
@@ -1854,19 +1853,19 @@ DEVICE_IMAGE_LOAD(gb_cart)
 		}
 		gb_driver_data.ROMMask = I - 1;
 	}
-	
+
 	/* Fill out the remaining rom bank pointers, if any. */
 	for ( ; I < MAX_ROMBANK; I++)
 	{
 		gb_driver_data.ROMMap[I] = gb_driver_data.ROMMap[I & gb_driver_data.ROMMask];
 	}
-	
+
 	/* Log cart information */
 	{
 		const char *P;
 		char S[50];
 		static const int ramsize[8] = { 0, 2, 8, 32, 128, 64, 0, 0 };
-		
+
 
 		strncpy (S, (char *)&gb_header[0x0134], 16);
 		S[16] = '\0';
@@ -1935,10 +1934,6 @@ DEVICE_IMAGE_LOAD(gb_cart)
 		gb_driver_data.MBC3RTCData = auto_alloc_array(image->machine, UINT8, 0x2000);
 		memset(gb_driver_data.gbTama5Memory, 0xff, sizeof(gb_driver_data.gbTama5Memory));
 	}
-
-// not sure about sram handling with softlists, so we exit here (for the moment)
-	if (image_software_entry(image) == NULL)
-		return INIT_PASS;
 
 	/* Load the saved RAM if this cart has a battery */
 	if (gb_driver_data.CartType & BATTERY && gb_driver_data.RAMBanks)
@@ -2215,7 +2210,7 @@ WRITE8_HANDLER( megaduck_rom_bank_select_type2 )
 
 DEVICE_IMAGE_LOAD(megaduck_cart)
 {
-	int I; 
+	int I;
 	UINT32 filesize;
 
 	for (I = 0; I < MAX_ROMBANK; I++)
@@ -2233,7 +2228,7 @@ DEVICE_IMAGE_LOAD(megaduck_cart)
 		image_seterror(image, IMAGE_ERROR_UNSPECIFIED, "Invalid rom file size");
 		return INIT_FAIL;
 	}
-	
+
 	gb_driver_data.ROMBanks = filesize / 0x4000;
 
 	/* Claim memory */
@@ -2270,7 +2265,7 @@ DEVICE_IMAGE_LOAD(megaduck_cart)
 	else
 	{
 		for (I = 1; I < gb_driver_data.ROMBanks; I <<= 1) ;
-		gb_driver_data.ROMMask = I - 1;
+			gb_driver_data.ROMMask = I - 1;
 	}
 
 	gb_driver_data.MBCType = MBC_MEGADUCK;

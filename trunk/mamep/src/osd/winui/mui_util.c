@@ -228,7 +228,7 @@ void DisplayTextFile(HWND hWnd, const char *cName)
 	hErr = ShellExecute(hWnd, NULL, tName, NULL, NULL, SW_SHOWNORMAL);
 	if ((FPTR)hErr > 32) 
 	{
-		global_free(tName);
+		osd_free(tName);
 		return;
 	}
 
@@ -264,7 +264,7 @@ void DisplayTextFile(HWND hWnd, const char *cName)
  
 	MessageBox(NULL, msg, tName, MB_OK);
 	
-	global_free(tName);
+	osd_free(tName);
 }
 
 LPWSTR MyStrStrI(LPCWSTR pFirst, LPCWSTR pSrch)
@@ -489,7 +489,7 @@ static void UpdateController(void)
 				    }
 				}
 			}
-//			input_port_list_deinit(&portlist);
+			//input_port_list_deinit(&portlist);
 
 			if (lr || ud)
 			{
@@ -682,7 +682,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 							gameinfo->usesMouse = TRUE;
 					}
 				}
-//				input_port_list_deinit(&portlist);
+				//input_port_list_deinit(&portlist);
 			}
 		}
 		UpdateController();
@@ -802,6 +802,11 @@ void FlushFileCaches(void)
 	zip_file_cache_clear();
 }
 
+BOOL StringIsSuffixedBy(const char *s, const char *suffix)
+{
+	return (strlen(s) > strlen(suffix)) && (strcmp(s + strlen(s) - strlen(suffix), suffix) == 0);
+}
+
 void FreeIfAllocated(char **s)
 {
 	if (*s)
@@ -809,9 +814,11 @@ void FreeIfAllocated(char **s)
 	*s = NULL;
 }
 
-BOOL StringIsSuffixedBy(const char *s, const char *suffix)
+void FreeIfAllocatedW(WCHAR **s)
 {
-	return (strlen(s) > strlen(suffix)) && (strcmp(s + strlen(s) - strlen(suffix), suffix) == 0);
+	if (*s)
+		global_free(*s);
+	*s = NULL;
 }
 
 /***************************************************************************
@@ -836,12 +843,6 @@ BOOL SafeIsAppThemed(void)
 
 }
 
-void FreeIfAllocatedW(WCHAR **s)
-{
-	if (*s)
-		global_free(*s);
-	*s = NULL;
-}
 
 #ifdef USE_IPS
 int GetPatchCount(const WCHAR *game_name, const WCHAR *patch_name)
@@ -1014,7 +1015,7 @@ HICON win_extract_icon_utf8(HINSTANCE inst, const char* exefilename, UINT iconin
 	
 	icon = ExtractIcon(inst, t_exefilename, iconindex);
 	
-	global_free(t_exefilename);
+	osd_free(t_exefilename);
 	
 	return icon;
 }
@@ -1030,7 +1031,7 @@ TCHAR* win_tstring_strdup(LPCTSTR str)
 	TCHAR *cpy = NULL;
 	if (str != NULL)
 	{
-		cpy = (TCHAR*)malloc((_tcslen(str) + 1) * sizeof(TCHAR));
+		cpy = (TCHAR*)osd_malloc((_tcslen(str) + 1) * sizeof(TCHAR));
 		if (cpy != NULL)
 			_tcscpy(cpy, str);
 	}
@@ -1053,7 +1054,7 @@ HANDLE win_create_file_utf8(const char* filename, DWORD desiredmode, DWORD share
 	result = CreateFile(t_filename, desiredmode, sharemode, securityattributes, creationdisposition,
 						flagsandattributes, templatehandle);
 
-	global_free(t_filename);
+	osd_free(t_filename);
 						
 	return result;
 }
@@ -1079,7 +1080,7 @@ DWORD win_get_current_directory_utf8(DWORD bufferlength, char* buffer)
 	if( bufferlength > 0 ) {
 		utf8_buffer = utf8_from_tstring(t_buffer);
 		if( !utf8_buffer ) {
-			global_free(t_buffer);
+			osd_free(t_buffer);
 			return result;
 		}
 	}
@@ -1087,10 +1088,10 @@ DWORD win_get_current_directory_utf8(DWORD bufferlength, char* buffer)
 	strncpy(buffer, utf8_buffer, bufferlength);
 
 	if( utf8_buffer )
-		global_free(utf8_buffer);
+		osd_free(utf8_buffer);
 	
 	if( t_buffer )
-		global_free(t_buffer);
+		free(t_buffer);
 	
 	return result;
 }
@@ -1108,7 +1109,7 @@ HANDLE win_find_first_file_utf8(const char* filename, LPWIN32_FIND_DATA findfile
 	
 	result = FindFirstFile(t_filename, findfiledata);
 	
-	global_free(t_filename);
+	osd_free(t_filename);
 
 	return result;
 }

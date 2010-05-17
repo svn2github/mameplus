@@ -52,9 +52,6 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 int PropertiesCurrentGame(HWND hDlg);
 
-// mamep: enumerate all monitors on start up
-void PropertiesInit(void);
-
 #ifdef TREE_SHEET
 void ModifyPropertySheetForTreeSheet(HWND);
 #endif /* TREE_SHEET */

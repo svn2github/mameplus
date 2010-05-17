@@ -21,15 +21,15 @@ OBJDIRS += $(SCALEOBJ)
 #-------------------------------------------------
 
 OSDOBJS += \
+	$(SCALEOBJ)/2xpm.o \
+	$(SCALEOBJ)/2xsai.o \
+	$(SCALEOBJ)/hq2x.o \
+	$(SCALEOBJ)/hq3x.o \
 	$(SCALEOBJ)/scale2x.o \
 	$(SCALEOBJ)/scale3x.o \
-	$(SCALEOBJ)/2xpm.o \
-	$(SCALEOBJ)/hq2x.o \
-	$(SCALEOBJ)/vba_hq2x.o \
-	$(SCALEOBJ)/hq3x.o \
-	$(SCALEOBJ)/2xsai.o \
 	$(SCALEOBJ)/scanline.o \
 	$(SCALEOBJ)/snes9x_render.o \
+	$(SCALEOBJ)/vba_hq2x.o \
 
 ifndef PTR64
 DEFS += -DUSE_MMX_INTERP_SCALE

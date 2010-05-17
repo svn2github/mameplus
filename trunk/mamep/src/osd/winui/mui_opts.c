@@ -50,7 +50,6 @@
 #include "clifront.h"
 #include "translate.h"
 
-
 #ifdef MESS
 #include "optionsms.h"
 #endif // MESS
@@ -337,9 +336,9 @@ static const options_entry regSettings[] =
 #ifdef TREE_SHEET
 	{ MUIOPTION_SHOW_TREE_SHEET,			"1",        OPTION_BOOLEAN,    NULL },
 #endif /* TREE_SHEET */
-	{ MUIOPTION_BROKEN_COLOR,				"202",      0,                 NULL },
+	{ MUIOPTION_BROKEN_COLOR,			"202",      0,                 NULL },
 	{ MUIOPTION_USE_BROKEN_ICON,			"1",        OPTION_BOOLEAN,    NULL },
-	{ MUIOPTION_FOLDER_FLAG,				NULL,       0,                 NULL },
+	{ MUIOPTION_FOLDER_FLAG,			NULL,       0,                 NULL },
 
 	{ NULL,									NULL,       OPTION_HEADER,     "SEARCH PATH OPTIONS" },
 	{ MUIOPTION_FLYER_DIRECTORY,			"flyers",   0,                 NULL },
@@ -711,7 +710,7 @@ core_options * MameUIGlobal(void)
 #if 0
 static void LoadFolderFilter(int folder_index,int filters)
 {
-	//dprintf("loaded folder filter %i %i",folder_index,filters);
+	//dprintf("loaded folder filter %i %i\n",folder_index,filters);
 
 	if (num_folder_filters == size_folder_filters)
 	{
@@ -2167,7 +2166,6 @@ void SetRunFullScreen(BOOL fullScreen)
 	options_set_bool(settings, MUIOPTION_FULL_SCREEN, fullScreen, OPTION_PRIORITY_CMDLINE);
 }
 
-
 int GetLangcode(void)
 {
 	return lang_get_langcode();
@@ -2289,7 +2287,66 @@ BOOL FolderHasVector(const WCHAR *name)
 	return FALSE;
 }
 
+COLORREF GetListBrokenColor(void)
+{
+	COLORREF broken_color = (COLORREF)options_get_int(settings, MUIOPTION_BROKEN_COLOR);
+
+	if (broken_color == (COLORREF)-1)
+		return (GetSysColor(COLOR_WINDOWTEXT));
+
+	return broken_color;
+}
+
+void SetListBrokenColor(COLORREF uColor)
+{
+	COLORREF broken_color = GetListBrokenColor();
+
+	if (broken_color == GetSysColor(COLOR_WINDOWTEXT))
+		broken_color = (COLORREF)-1;
+	else
+		broken_color = uColor;
+
+	options_set_int(settings, MUIOPTION_BROKEN_COLOR, (int)broken_color, OPTION_PRIORITY_CMDLINE);
+}
+
+void SetUseBrokenIcon(BOOL use_broken_icon)
+{
+	options_set_bool(settings, MUIOPTION_USE_BROKEN_ICON, use_broken_icon, OPTION_PRIORITY_CMDLINE);
+}
+
+BOOL GetUseBrokenIcon(void)
+{
+	return options_get_bool(settings, MUIOPTION_USE_BROKEN_ICON);
+}
+
+#ifdef USE_SHOW_SPLASH_SCREEN
+BOOL GetDisplaySplashScreen (void)
+{
+	return options_get_bool(settings, MUIOPTION_DISPLAY_SPLASH_SCREEN);
+}
+
+void SetDisplaySplashScreen (BOOL val)
+{
+	options_set_bool(settings, MUIOPTION_DISPLAY_SPLASH_SCREEN, val, OPTION_PRIORITY_CMDLINE);
+}
+#endif /* USE_SHOW_SPLASH_SCREEN */
+
+#ifdef TREE_SHEET
+BOOL GetShowTreeSheet(void)
+{
+	return options_get_bool(settings, MUIOPTION_SHOW_TREE_SHEET);
+}
+
+void SetShowTreeSheet(BOOL val)
+{
+	options_set_bool(settings, MUIOPTION_SHOW_TREE_SHEET, val, OPTION_PRIORITY_CMDLINE);
+}
+#endif /* TREE_SHEET */
+
+
+
 #include <ctype.h>
+#undef realloc
 
 typedef struct
 {
@@ -2348,7 +2405,7 @@ static void set_folder_flag(f_flag *flag, const char *path, DWORD dwFlags)
 	{
 		f_flag_entry *tmp;
 
-		tmp = global_alloc_array(f_flag_entry, (flag->num + ALLOC_FOLDERFLAG) * sizeof (*tmp));
+		tmp = (f_flag_entry *)realloc(flag->entry, (flag->num + ALLOC_FOLDERFLAG) * sizeof (*tmp));
 		if (!tmp)
 		{
 			dprintf("error: realloc failed in set_folder_flag\n");
@@ -2446,7 +2503,7 @@ static void options_set_folder_flag(core_options *opts, const char *name, const 
 			if (len + strlen(flags->entry[i].name) + 16 > size)
 			{
 				size += 1024;
-				buf = global_alloc_array(char, size * sizeof (*buf));
+				buf = (char *)realloc(buf, size * sizeof (*buf));
 			}
 
 			if (len)
@@ -2460,62 +2517,6 @@ static void options_set_folder_flag(core_options *opts, const char *name, const 
 }
 
 static f_flag settings_folder_flag;
-
-COLORREF GetListBrokenColor(void)
-{
-	COLORREF broken_color = (COLORREF)options_get_int(settings, MUIOPTION_BROKEN_COLOR);
-
-	if (broken_color == (COLORREF)-1)
-		return (GetSysColor(COLOR_WINDOWTEXT));
-
-	return broken_color;
-}
-
-void SetListBrokenColor(COLORREF uColor)
-{
-	COLORREF broken_color = GetListBrokenColor();
-
-	if (broken_color == GetSysColor(COLOR_WINDOWTEXT))
-		broken_color = (COLORREF)-1;
-	else
-		broken_color = uColor;
-
-	options_set_int(settings, MUIOPTION_BROKEN_COLOR, (int)broken_color, OPTION_PRIORITY_CMDLINE);
-}
-
-void SetUseBrokenIcon(BOOL use_broken_icon)
-{
-	options_set_bool(settings, MUIOPTION_USE_BROKEN_ICON, use_broken_icon, OPTION_PRIORITY_CMDLINE);
-}
-
-BOOL GetUseBrokenIcon(void)
-{
-	return options_get_bool(settings, MUIOPTION_USE_BROKEN_ICON);
-}
-
-#ifdef USE_SHOW_SPLASH_SCREEN
-BOOL GetDisplaySplashScreen (void)
-{
-	return options_get_bool(settings, MUIOPTION_DISPLAY_SPLASH_SCREEN);
-}
-
-void SetDisplaySplashScreen (BOOL val)
-{
-	options_set_bool(settings, MUIOPTION_DISPLAY_SPLASH_SCREEN, val, OPTION_PRIORITY_CMDLINE);
-}
-#endif /* USE_SHOW_SPLASH_SCREEN */
-
-#ifdef TREE_SHEET
-BOOL GetShowTreeSheet(void)
-{
-	return options_get_bool(settings, MUIOPTION_SHOW_TREE_SHEET);
-}
-
-void SetShowTreeSheet(BOOL val)
-{
-	options_set_bool(settings, MUIOPTION_SHOW_TREE_SHEET, val, OPTION_PRIORITY_CMDLINE);
-}
-#endif /* TREE_SHEET */
 
 /***************************************************************************
     Internal functions
@@ -2642,8 +2643,8 @@ static void SplitterDecodeString(const char *str, int *value)
 /* Parse the given comma-delimited string into a LOGFONT structure */
 static void FontDecodeString(const char* str, LOGFONTW *f)
 {
-	char*	 ptr;
-	WCHAR* 	 w_ptr;
+	const char*	ptr;
+	WCHAR*		w_ptr;
 
 	sscanf(str, "%li,%li,%li,%li,%li,%i,%i,%i,%i,%i,%i,%i,%i",
 		   &f->lfHeight,
@@ -2665,7 +2666,7 @@ static void FontDecodeString(const char* str, LOGFONTW *f)
 		if( !w_ptr )
 			return;
 		wcscpy(f->lfFaceName, w_ptr);
-		global_free(w_ptr);
+		osd_free(w_ptr);
 	}
 }
 
@@ -2692,7 +2693,7 @@ static void FontEncodeString(const LOGFONTW *f, char *str)
 			f->lfPitchAndFamily);
 	//		utf8_FaceName);
         //
-	//global_free(utf8_FaceName);
+	//osd_free(utf8_FaceName);
 }
 
 static void TabFlagsEncodeString(int data, char *str)
@@ -2900,7 +2901,7 @@ static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 #endif
 
 // Adds our folder flags to a temporarty core_options, for saving.
-static core_options * AddFolderFlags(core_options *settings)
+static core_options * AddFolderFlags(core_options *opts_param)
 {
 #if 1 //mamep: folder flags are already registered into variable settings by function SaveFolderFlags()
 	return NULL;
@@ -2920,7 +2921,7 @@ static core_options * AddFolderFlags(core_options *settings)
 	}
 
 	options_add_entries(opts, regSettings);
-	copy_options_ex(opts, settings);
+	copy_options_ex(opts, opts_param);
 
 	memcpy(entries, filterOptions, sizeof(filterOptions));
 	entries[0].name = NULL;
@@ -3324,7 +3325,7 @@ static void remove_all_source_options(void) {
 		astring_free(match);
 		utf8_filename = utf8_from_tstring(findFileData.cFileName);
 		match = astring_assemble_3(astring_alloc(), astring_c(pathname), PATH_SEPARATOR, utf8_filename );
-		global_free(utf8_filename);
+		osd_free(utf8_filename);
 		osd_rmfile(astring_c(match));
 		astring_free(match);
 
@@ -3332,7 +3333,7 @@ static void remove_all_source_options(void) {
 		{
 			utf8_filename = utf8_from_tstring(findFileData.cFileName);
 			match = astring_assemble_3(astring_alloc(), astring_c(pathname), PATH_SEPARATOR, utf8_filename );
-			global_free(utf8_filename);
+			osd_free(utf8_filename);
 			osd_rmfile(astring_c(match));
 			astring_free(match);
 		}

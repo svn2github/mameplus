@@ -140,8 +140,6 @@ b) Exit the dialog.
 #include "winmain.h"
 #include "strconv.h"
 #include "winutf8.h"
-#include "sound/2413intf.h"
-#include "sound/3812intf.h"
 #include "sound/samples.h"
 #include "sound/vlm5030.h"
 #ifdef USE_SCALE_EFFECTS
@@ -152,8 +150,6 @@ b) Exit the dialog.
 #include "translate.h"
 #include "datafile.h"
 
-typedef HANDLE HTHEME;
-
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
@@ -163,17 +159,6 @@ typedef HANDLE HTHEME;
 #include "messopts.h"
 #include "resourcems.h"
 #include "propertiesms.h"
-#endif
-
-// missing win32 api defines
-#ifndef TBCD_TICS
-#define TBCD_TICS 1
-#endif
-#ifndef TBCD_THUMB
-#define TBCD_THUMB 2
-#endif
-#ifndef TBCD_CHANNEL
-#define TBCD_CHANNEL 3
 #endif
 
 #if defined(__GNUC__)
@@ -231,8 +216,6 @@ static void save_options_ex(OPTIONS_TYPE opt_type, core_options *opts, int game_
 //mamep: translate dialog
 static int CALLBACK PropSheetCallbackProc(HWND hDlg, UINT Msg, LPARAM lParam);
 
-static void SetStereoEnabled(HWND hWnd, int nIndex);
-static void SetYM3812Enabled(HWND hWnd, int nIndex);
 static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled);
 static void InitializeOptions(HWND hDlg);
 static void InitializeMisc(HWND hDlg);
@@ -246,9 +229,10 @@ static void UpdateSelectScreenUI(HWND hwnd);
 static void InitializeSelectScreenUI(HWND hwnd);
 static void InitializeD3DVersionUI(HWND hwnd);
 static void InitializeVideoUI(HWND hwnd);
-static void InitializeEffectUI(HWND hWnd);
 static void InitializeBIOSUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
+//mamep: use standard combobox
+static void InitializeEffectUI(HWND hWnd);
 #ifdef USE_SCALE_EFFECTS
 static void InitializeScaleEffectUI(HWND hwnd);
 #endif /* USE_SCALE_EFFECTS */
@@ -259,8 +243,8 @@ static void InitializeJoyidUI(HWND hWnd);
 static  void MovePropertySheetChildWindows(HWND hWnd, int nDx, int nDy);
 static  HTREEITEM GetSheetPageTreeItem(int nPage);
 #endif /* TREE_SHEET */
-static void UpdateOptions(HWND hDlg, datamap *properties_datamap, core_options *opts);
-static void UpdateProperties(HWND hDlg, datamap *properties_datamap, core_options *opts);
+static void UpdateOptions(HWND hDlg, datamap *map, core_options *opts);
+static void UpdateProperties(HWND hDlg, datamap *map, core_options *opts);
 static void PropToOptions(HWND hWnd, core_options *o);
 static void OptionsToProp(HWND hWnd, core_options *o);
 static void SetPropEnabledControls(HWND hWnd);
@@ -290,17 +274,12 @@ static HBRUSH hBkBrush;
 /* No longer used by the core, but we need it to predefine configurable screens for all games. */
 #ifndef MAX_SCREENS
 /* maximum number of screens for one game */
-#define MAX_SCREENS					8
+#define MAX_SCREENS					4
 #endif
 
 static core_options *pOrigOpts, *pDefaultOpts;
 static BOOL orig_uses_defaults;
 static core_options *pCurrentOpts = NULL;
-
-//mamep: for coloring of changed elements
-static core_options *pOptsGlobal;
-static core_options *pOptsVector;
-static core_options *pOptsSource;
 static datamap *properties_datamap;
 
 static int  g_nGame            = 0;
@@ -309,13 +288,9 @@ static int  g_nFolderGame      = 0;
 static int  g_nPropertyMode    = 0;
 static BOOL g_bUseDefaults     = FALSE;
 static BOOL g_bReset           = FALSE;
-static BOOL g_bAutoAspect[MAX_SCREENS + 1] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
+static BOOL g_bAutoAspect[MAX_SCREENS + 1] = {FALSE, FALSE, FALSE, FALSE, FALSE};
 static BOOL  g_bAutoSnapSize = FALSE;
 static HICON g_hIcon = NULL;
-
-// mamep: enumerate all monitors on start up
-static WCHAR *g_sMonitorDeviceString[MAX_SCREENS + 2];
-static char *g_sMonitorDeviceName[MAX_SCREENS + 2];
 
 #ifdef TREE_SHEET
 #define SHEET_TREE_WIDTH 170
@@ -332,6 +307,13 @@ static  BOOL bPageTreeSelChangedActive = FALSE;
 #define HIGHLIGHT_COLOR RGB(0,196,0)
 static HBRUSH highlight_brush = NULL;
 static HBRUSH background_brush = NULL;
+
+//mamep: for coloring of changed elements
+static core_options *pOptsGlobal;
+static core_options *pOptsHorizontal;
+static core_options *pOptsVertical;
+static core_options *pOptsVector;
+static core_options *pOptsSource;
 
 #define ORIENTATION_COLOR RGB( 190, 128, 0) //LIGHT BROWN
 #define VECTOR_COLOR RGB( 190, 0, 0) //DARK RED
@@ -452,33 +434,6 @@ static const struct
  * Public functions
  ***************************************************************/
 
-// mamep: enumerate all monitors on start up
-void PropertiesInit(void)
-{
-	DISPLAY_DEVICEA dd;
-	int iMonitors;
-	int i;
-
-	iMonitors = DirectDraw_GetNumDisplays(); // this gets the count of monitors attached
-	if (iMonitors > MAX_SCREENS)
-		iMonitors = MAX_SCREENS;
-
-	ZeroMemory(&dd, sizeof(dd));
-	dd.cb = sizeof(dd);
-
-	g_sMonitorDeviceString[0] = _UIW(TEXT("Auto"));
-	g_sMonitorDeviceName[0] = NULL;
-
-	for (i = 0; i < iMonitors; i++)
-	{
-		g_sMonitorDeviceString[i + 1] = wstring_from_utf8((const char *)DirectDraw_GetDisplayName(i));
-		g_sMonitorDeviceName[i + 1] = mame_strdup((const char *)DirectDraw_GetDisplayDriver(i));
-	}
-
-	g_sMonitorDeviceString[i + 1] = NULL;
-	g_sMonitorDeviceName[i + 1] = NULL;
-}
-
 // Called by MESS, to avoid MESS specific hacks in properties.c
 int PropertiesCurrentGame(HWND hDlg)
 {
@@ -502,8 +457,7 @@ static int GetSelectedScreen(HWND hWnd)
 		if (nCurSel != CB_ERR)
 			nSelectedScreen = ComboBox_GetItemData(hCtrl, nCurSel);
 	}
-
-	if ((nSelectedScreen < 0) || (nSelectedScreen >= MAX_SCREENS + 1))
+	if ((nSelectedScreen < 0) || (nSelectedScreen >= NUMSELECTSCREEN + 1))
 		nSelectedScreen = 0;
 	return nSelectedScreen;
 
@@ -601,8 +555,8 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	/* Fill in the property sheet header */
 	pshead.hwndParent   = hWnd;
 	pshead.dwSize       = sizeof(PROPSHEETHEADER);
-	pshead.dwFlags      = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_PROPTITLE | PSH_USECALLBACK;
 	//mamep: translate dialog
+	pshead.dwFlags      = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_PROPTITLE | PSH_USECALLBACK;
 	pshead.pfnCallback  = PropSheetCallbackProc;
 	pshead.hInstance    = hInst;
 	pshead.pszCaption   = _UIW(TEXT("Default Game"));
@@ -627,7 +581,7 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 		MessageBox(0, temp, _UIW(TEXT("Error")), IDOK);
 	}
 
-	global_free(pspage);
+	free(pspage);
 }
 
 /* Initilize the property pages for anything but the Default option set */
@@ -640,7 +594,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 {
 	PROPSHEETHEADER pshead;
 	PROPSHEETPAGE   *pspage;
-	WCHAR*          w_description = NULL;
+	WCHAR*          t_description = NULL;
 	OPTIONS_TYPE    default_type = opt_type;
 
 	if (highlight_brush == NULL)
@@ -669,6 +623,8 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 
 	//mamep: for coloring of changed elements
 	pOptsGlobal = load_options(OPTIONS_GLOBAL, game_num);
+	pOptsHorizontal = load_options(OPTIONS_HORIZONTAL, game_num);
+	pOptsVertical = load_options(OPTIONS_VERTICAL, game_num);
 	pOptsVector = load_options(OPTIONS_VECTOR, game_num);
 	pOptsSource = load_options(OPTIONS_SOURCE, game_num);
 
@@ -714,30 +670,30 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	switch( opt_type )
 	{
 	case OPTIONS_GAME:
-		w_description = UseLangList() ? _LSTW(driversw[g_nGame]->description) : driversw[g_nGame]->modify_the;
+		t_description = UseLangList() ? _LSTW(driversw[g_nGame]->description) : driversw[g_nGame]->modify_the;
 		break;
 	case OPTIONS_VECTOR:
 	case OPTIONS_VERTICAL:
 	case OPTIONS_HORIZONTAL:
 	case OPTIONS_SOURCE:
-		w_description = GetFolderByID(g_nFolder)->m_lpTitle;
+		t_description = GetFolderByID(g_nFolder)->m_lpTitle;
 		break;
 	case OPTIONS_GLOBAL:
-		w_description = _UIW(TEXT("Default Settings"));
+		t_description = _UIW(TEXT("Default Settings"));
 		break;
 	default:
 		return;
 	}
 	// If we have no descrption, return.
-	if( !w_description )
+	if( !t_description )
 		return;
 
 	/* Fill in the property sheet header */
-	pshead.pszCaption = w_description;
+	pshead.pszCaption = t_description;
 	pshead.hwndParent = hWnd;
 	pshead.dwSize     = sizeof(PROPSHEETHEADER);
-	pshead.dwFlags    = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_PROPTITLE | PSH_USECALLBACK;
 	//mamep: translate dialog
+	pshead.dwFlags    = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_PROPTITLE | PSH_USECALLBACK;
 	pshead.pfnCallback= PropSheetCallbackProc;
 	pshead.hInstance  = hInst;
 	pshead.nStartPage = start_page;
@@ -761,9 +717,9 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 		MessageBox(0, temp, _UIW(TEXT("Error")), IDOK);
 	}
 
-	//mamep: it doesn't allocate w_description from heap
-	//global_free(w_description);
-	global_free(pspage);
+	//mamep: it doesn't allocate t_description from heap
+	//osd_free(t_description);
+	free(pspage);
 }
 
 
@@ -1667,9 +1623,11 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 					//mamep: for coloring of changed elements
 					if (pOptsGlobal) options_free(pOptsGlobal);
+					if (pOptsHorizontal) options_free(pOptsHorizontal);
+					if (pOptsVertical) options_free(pOptsVertical);
 					if (pOptsVector) options_free(pOptsVector);
 					if (pOptsSource) options_free(pOptsSource);
-					pOptsGlobal = pOptsVector = pOptsSource = NULL;
+					pOptsGlobal = pOptsHorizontal = pOptsVertical = pOptsVector = pOptsSource = NULL;
 				}
 				return TRUE;
 
@@ -1695,94 +1653,114 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			}
 		}
 		break;
-#if 1 //mamep
-	/* FIXME - Not sure what to do here. */
+
+#if 1 //mamep: for coloring of changed elements
+	/* FIXME 
+	 * We need to figure out in which ini of our hierarchy the current value is set, then apply the corresponding colouring.
+	 * Is there an easy way to figure this out?
+	 * The actual colour coding should still work
+	 */
 	case WM_CTLCOLORSTATIC :
 	case WM_CTLCOLOREDIT :
-	{
-		RECT rc;
+		{
+			RECT rc;
 
-		//Set the Coloring of the elements
-		if (GetWindowLong((HWND)lParam, GWL_ID) < 0)
-			return 0;
+			//Set the Coloring of the elements
+			if (GetWindowLong((HWND)lParam, GWL_ID) < 0)
+				return 0;
 
-		if (g_nPropertyMode == OPTIONS_GLOBAL)
-		{
-			//Normal Black case
-			SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
-		}
-		else if (IsControlOptionValue(hDlg, (HWND)lParam, pCurrentOpts, pOptsGlobal))
-		{
-			//Normal Black case
-			SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
-		}
-		else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOptsVector) && DriverIsVector(g_nGame))
-		{
-			SetTextColor((HDC)wParam,VECTOR_COLOR);
-		}
-		else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOptsSource))
-		{
-			SetTextColor((HDC)wParam,FOLDER_COLOR);
-		}
-		else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pDefaultOpts))
-		{
-			SetTextColor((HDC)wParam,PARENT_COLOR);
-		}
-		else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOrigOpts))
-		{
-			SetTextColor((HDC)wParam,GAME_COLOR);
-		}
-		else
-		{
-			switch (g_nPropertyMode)
+			if (g_nPropertyMode == OPTIONS_GLOBAL)
 			{
-				case OPTIONS_GAME:
-					SetTextColor((HDC)wParam,GAME_COLOR);
-					break;
-				case OPTIONS_SOURCE:
-					SetTextColor((HDC)wParam,FOLDER_COLOR);
-					break;
-				case OPTIONS_VECTOR:
-					SetTextColor((HDC)wParam,VECTOR_COLOR);
-					break;
-				default:
-					case OPTIONS_GLOBAL:
-					SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
-					break;
+				//Normal Black case
+				SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
 			}
-		}
-		if (Msg == WM_CTLCOLORSTATIC)
-		{
-			if (SafeIsAppThemed())
+			else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOptsGlobal))
 			{
-				HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
-				// Set the background mode to transparent
-				SetBkMode((HDC)wParam, TRANSPARENT);
-
-				// Get the controls window dimensions
-				GetWindowRect((HWND)lParam, &rc);
-
-				// Map the coordinates to coordinates with the upper left corner of dialog control as base
-				MapWindowPoints(NULL, hWnd, (LPPOINT)(&rc), 2);
-
-				// Adjust the position of the brush for this control (else we see the top left of the brush as background)
-				SetBrushOrgEx((HDC)wParam, -rc.left, -rc.top, NULL);
-
-				// Return the brush
-				return (INT_PTR)(hBkBrush);
+				//Normal Black case
+				SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
+			}
+			else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOptsHorizontal) && !DriverIsVertical(g_nGame))
+			{
+				SetTextColor((HDC)wParam,ORIENTATION_COLOR);
+			}
+			else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOptsVertical) && DriverIsVertical(g_nGame))
+			{
+				SetTextColor((HDC)wParam,ORIENTATION_COLOR);
+			}
+			else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOptsVector) && DriverIsVector(g_nGame))
+			{
+				SetTextColor((HDC)wParam,VECTOR_COLOR);
+			}
+			else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOptsSource))
+			{
+				SetTextColor((HDC)wParam,FOLDER_COLOR);
+			}
+			else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pDefaultOpts))
+			{
+				SetTextColor((HDC)wParam,PARENT_COLOR);
+			}
+			else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOrigOpts))
+			{
+				SetTextColor((HDC)wParam,GAME_COLOR);
 			}
 			else
 			{
-				SetBkColor((HDC)wParam, GetSysColor(COLOR_3DFACE));
+				switch (g_nPropertyMode)
+				{
+					case OPTIONS_GAME:
+						SetTextColor((HDC)wParam,GAME_COLOR);
+						break;
+					case OPTIONS_SOURCE:
+						SetTextColor((HDC)wParam,FOLDER_COLOR);
+						break;
+					case OPTIONS_VECTOR:
+						SetTextColor((HDC)wParam,VECTOR_COLOR);
+						break;
+					case OPTIONS_HORIZONTAL:
+						SetTextColor((HDC)wParam,ORIENTATION_COLOR);
+						break;
+					case OPTIONS_VERTICAL:
+						SetTextColor((HDC)wParam,ORIENTATION_COLOR);
+						break;
+					default:
+					case OPTIONS_GLOBAL:
+						SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
+						break;
+				}
 			}
-		}
-		else
+			if (Msg == WM_CTLCOLORSTATIC)
+			{
+				if (SafeIsAppThemed())
+				{
+					HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
+					// Set the background mode to transparent
+					SetBkMode((HDC)wParam, TRANSPARENT);
+
+					// Get the controls window dimensions
+					GetWindowRect((HWND)lParam, &rc);
+
+					// Map the coordinates to coordinates with the upper left corner of dialog control as base
+					MapWindowPoints(NULL, hWnd, (LPPOINT)(&rc), 2);
+
+					// Adjust the position of the brush for this control (else we see the top left of the brush as background)
+					SetBrushOrgEx((HDC)wParam, -rc.left, -rc.top, NULL);
+
+					// Return the brush
+					return (INT_PTR)(hBkBrush);
+				}
+				else
+				{
+					SetBkColor((HDC)wParam, GetSysColor(COLOR_3DFACE));
+				}
+			}
+			else {
 				SetBkColor((HDC)wParam,RGB(255,255,255) );
+			}
 			UnrealizeObject(background_brush);
 			return (DWORD_PTR)background_brush;
-			break;
-	}
-#endif // 0 Not sure what to do here
+		}
+		break;
+#endif
 
 	case WM_HELP:
 		/* User clicked the ? from the upper right on a control */
@@ -2137,10 +2115,10 @@ static void PropToOptions(HWND hWnd, core_options *o)
 			TCHAR buffer[200];
 			char buffer2[200];
 
-			Edit_GetText(hCtrl,buffer,sizeof(buffer));
+			Edit_GetText(hCtrl, buffer, ARRAY_LENGTH(buffer));
 			swscanf(buffer,TEXT("%d"),&n);
 
-			Edit_GetText(hCtrl2,buffer,sizeof(buffer));
+			Edit_GetText(hCtrl2, buffer, ARRAY_LENGTH(buffer));
 			swscanf(buffer,TEXT("%d"),&d);
 
 			if (n == 0 || d == 0)
@@ -2170,10 +2148,10 @@ static void PropToOptions(HWND hWnd, core_options *o)
 			TCHAR buffer[200];
 			char buffer2[200];
 
-			Edit_GetText(hCtrl,buffer,sizeof(buffer));
+			Edit_GetText(hCtrl, buffer, ARRAY_LENGTH(buffer));
 			swscanf(buffer,TEXT("%d"),&width);
 
-			Edit_GetText(hCtrl2,buffer,sizeof(buffer));
+			Edit_GetText(hCtrl2, buffer, ARRAY_LENGTH(buffer));
 			swscanf(buffer,TEXT("%d"),&height);
 
 			if (width == 0 || height == 0)
@@ -2189,18 +2167,18 @@ static void PropToOptions(HWND hWnd, core_options *o)
 }
 
 /* Update options from the dialog */
-static void UpdateOptions(HWND hDlg, datamap *properties_datamap, core_options *opts)
+static void UpdateOptions(HWND hDlg, datamap *map, core_options *opts)
 {
 	/* These are always called together, so make one conveniece function. */
-	datamap_read_all_controls(properties_datamap, hDlg, opts);
+	datamap_read_all_controls(map, hDlg, opts);
 	PropToOptions(hDlg, opts);
 }
 
 /* Update the dialog from the options */
-static void UpdateProperties(HWND hDlg, datamap *properties_datamap, core_options *opts)
+static void UpdateProperties(HWND hDlg, datamap *map, core_options *opts)
 {
 	/* These are always called together, so make one conviniece function. */
-	datamap_populate_all_controls(properties_datamap, hDlg, opts);
+	datamap_populate_all_controls(map, hDlg, opts);
 	OptionsToProp(hDlg, opts);
 	SetPropEnabledControls(hDlg);
 }
@@ -2423,8 +2401,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	BOOL d3d = FALSE;
 	BOOL gdi = FALSE;
 	BOOL useart = TRUE;
-	//mamep: gdi is ok
-	//BOOL multimon = (DirectDraw_GetNumDisplays() >= 2);
 	int joystick_attached = 0;
 	int in_window = 0;
 
@@ -2469,22 +2445,27 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           !g_bAutoAspect[GetSelectedScreen(hWnd)]);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           !g_bAutoAspect[GetSelectedScreen(hWnd)]);
 
-//	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZETEXT), !g_bAutoSnapSize);
+	//EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZETEXT), !g_bAutoSnapSize);
 	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEHEIGHT), !g_bAutoSnapSize);
 	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEWIDTH), !g_bAutoSnapSize);
 	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEX), !g_bAutoSnapSize);
 
-
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VERSION),            d3d);
 
-#if 0 //mamep: gdi is ok
 	//Switchres and D3D or ddraw enable the per screen parameters
 
-	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENS),            (ddraw || d3d) && multimon);
-	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENSDISP),        (ddraw || d3d) && multimon);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECT),          (ddraw || d3d) && multimon);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECTTEXT),      (ddraw || d3d) && multimon);
+#if 0	//mamep: gdi is ok
+	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENS),                 (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENSDISP),             (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECT),               (ddraw || d3d));
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECTTEXT),           (ddraw || d3d));
+
+	EnableWindow(GetDlgItem(hWnd, IDC_ARTWORK_CROP),	useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_BACKDROPS),		useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_BEZELS),			useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_OVERLAYS),		useart);
+	EnableWindow(GetDlgItem(hWnd, IDC_ARTMISCTEXT),		useart);
 #endif
 
 	/* Joystick options */
@@ -2618,8 +2599,6 @@ static void SetPropEnabledControls(HWND hWnd)
 		EnableWindow(GetDlgItem(hWnd,IDC_VOLUME_ADJUST),sound);
 #endif /* USE_VOLUME_AUTO_ADJUST */
 		SetSamplesEnabled(hWnd, nIndex, sound);
-		SetStereoEnabled(hWnd, nIndex);
-		SetYM3812Enabled(hWnd, nIndex);
 	}
 
 	if (Button_GetCheck(GetDlgItem(hWnd, IDC_AUTOFRAMESKIP)))
@@ -2725,52 +2704,58 @@ static void ScreenSetOptionName(datamap *map, HWND dialog, HWND control, char *b
 static BOOL ScreenReadControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
 	char screen_option_name[32];
-	const char *screen_option_value;
-	//int selected_screen;
+	TCHAR *screen_option_value;
+	int selected_screen;
 	int screen_option_index;
-	//const char *op_val;
-	//
-	//selected_screen = GetSelectedScreen(dialog);
+	char *op_val;
+
+	selected_screen = GetSelectedScreen(dialog);
 	screen_option_index = ComboBox_GetCurSel(control);
-	screen_option_value = (const char *) ComboBox_GetItemData(control, screen_option_index);
-
-	if (screen_option_value == NULL || *screen_option_value == '\0')
-		screen_option_value = "auto";
-
+	screen_option_value = (TCHAR*) ComboBox_GetItemData(control, screen_option_index);
 	ScreenSetOptionName(map, dialog, control, screen_option_name, ARRAY_LENGTH(screen_option_name));
-	//op_val = utf8_from_tstring(screen_option_value);
-	options_set_string(opts, screen_option_name, screen_option_value, OPTION_PRIORITY_CMDLINE);
+	op_val = utf8_from_tstring(screen_option_value);
+	options_set_string(opts, screen_option_name, op_val, OPTION_PRIORITY_CMDLINE);
+	osd_free(op_val);
 	return FALSE;
 }
 
 
 
-// mamep: enumerate all monitors on start up
 static BOOL ScreenPopulateControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
+	//int iMonitors;
+	DISPLAY_DEVICE dd;
 	int i = 0;
 	int nSelection = 0;
-	char screen_option[32];
-	const char * option = 0;
+	TCHAR* t_option = 0;
 
 	/* Remove all items in the list. */
 	(void)ComboBox_ResetContent(control);
+	(void)ComboBox_InsertString(control, 0, _UIW(TEXT("Auto")));
+	(void)ComboBox_SetItemData(control, 0, (void*)tstring_from_utf8("auto"));
 
-	ScreenSetOptionName(map, dialog, control, screen_option, ARRAY_LENGTH(screen_option));
-	option = options_get_string(opts, screen_option);
-
-	for (i = 0; g_sMonitorDeviceString[i]; i++)
+	//Dynamically populate it, by enumerating the Monitors
+	//iMonitors = GetSystemMetrics(SM_CMONITORS); // this gets the count of monitors attached
+	ZeroMemory(&dd, sizeof(dd));
+	dd.cb = sizeof(dd);
+	for(i=0; EnumDisplayDevices(NULL, i, &dd, 0); i++)
 	{
-		(void)ComboBox_InsertString(control, i, g_sMonitorDeviceString[i]);
-		(void)ComboBox_SetItemData(control, i, g_sMonitorDeviceName[i]);
-
-		if (!option)
+		if( !(dd.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) )
 		{
-			if (!g_sMonitorDeviceName[i])
-				nSelection = i;
+			char screen_option[32];
+
+			//we have to add 1 to account for the "auto" entry
+			(void)ComboBox_InsertString(control, i+1, win_tstring_strdup(dd.DeviceName));
+			(void)ComboBox_SetItemData(control, i+1, (void*)win_tstring_strdup(dd.DeviceName));
+
+			ScreenSetOptionName(map, dialog, control, screen_option, ARRAY_LENGTH(screen_option));
+			t_option = tstring_from_utf8(options_get_string(opts, screen_option));
+			if( !t_option )
+				return FALSE;
+			if (wcscmp(t_option, dd.DeviceName) == 0)
+				nSelection = i+1;
+			osd_free(t_option);
 		}
-		else if (g_sMonitorDeviceName[i] && strcmp(option, g_sMonitorDeviceName[i]) == 0)
-			nSelection = i;
 	}
 	(void)ComboBox_SetCurSel(control, nSelection);
 	return FALSE;
@@ -2838,12 +2823,13 @@ static BOOL DefaultInputReadControl(datamap *map, HWND dialog, HWND control, cor
 {
 	const char *input_option_value;	
 	int input_option_index;
-	//const char *op_val;
+	//char *op_val;
 
 	input_option_index = ComboBox_GetCurSel(control);
 	input_option_value = (const char *) ComboBox_GetItemData(control, input_option_index);	
 	//op_val = utf8_from_tstring(input_option_value);
 	options_set_string(opts, OPTION_CTRLR, input_option_value, OPTION_PRIORITY_CMDLINE);
+	//osd_free(op_val);
 	return FALSE;
 }
 
@@ -2857,7 +2843,7 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 	int selected = 0;
 	int index = 0;
 	LPCWSTR w_ctrlr_option = 0;
-	LPWSTR buf = 0;
+	LPWSTR t_buf = 0;
 	const char *ctrlr_option;
 	//TCHAR* t_ctrldir;
 
@@ -2865,10 +2851,10 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 	ctrlr_option = options_get_string(opts, OPTION_CTRLR);
 	if( ctrlr_option != NULL )
 	{
-		buf = wstring_from_utf8(ctrlr_option);
-		if( !buf )
+		t_buf = wstring_from_utf8(ctrlr_option);
+		if( !t_buf )
 			return FALSE;
-		w_ctrlr_option = buf;
+		w_ctrlr_option = t_buf;
 	}
 	else
 	{
@@ -2884,14 +2870,14 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 	//t_ctrldir = tstring_from_utf8(GetCtrlrDir());
 	//if( !t_ctrldir )
 	//{
-	//	if( buf )
-	//		global_free(buf);
+	//	if( t_buf )
+	//		osd_free(t_buf);
 	//	return FALSE;
 	//}
 
 	swprintf (path, TEXT("%s\\*.*"), GetCtrlrDir());
 
-	//global_free(t_ctrldir);
+	//osd_free(t_ctrldir);
 	
 	hFind = FindFirstFileW(path, &FindFileData);
 
@@ -2930,8 +2916,8 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 
 	(void)ComboBox_SetCurSel(control, selected);
 	
-	if( buf )
-		global_free(buf);
+	if( t_buf )
+		osd_free(t_buf);
 
 	return FALSE;
 }
@@ -3021,6 +3007,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 		ScreenSetOptionName(map, dialog, NULL, screen_option, ARRAY_LENGTH(screen_option));
 		screen = options_get_string(opts, screen_option);
 		//t_screen = tstring_from_utf8(screen);
+
 		if (!screen || !*screen || mame_stricmp(screen, "auto") == 0)
 			screen = NULL;
 
@@ -3062,7 +3049,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 				}
 			}
 		}
-		//global_free(t_screen);
+		//osd_free(t_screen);
 
 		(void)ComboBox_SetCurSel(sizes_control, sizes_selection);
 		(void)ComboBox_SetCurSel(refresh_control, refresh_selection);
@@ -3268,7 +3255,7 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_PRESCALE,				DM_INT,		WINOPTION_PRESCALE);
 	datamap_add(properties_datamap, IDC_PRESCALEDISP,			DM_INT,		WINOPTION_PRESCALE);
 	//mamep: use standard combobox
-	datamap_add(properties_datamap, IDC_EFFECT,					DM_STRING,	WINOPTION_EFFECT);
+	datamap_add(properties_datamap, IDC_EFFECT,				DM_STRING,	WINOPTION_EFFECT);
 	datamap_add(properties_datamap, IDC_WAITVSYNC,				DM_BOOL,	WINOPTION_WAITVSYNC);
 	datamap_add(properties_datamap, IDC_SYNCREFRESH,			DM_BOOL,	WINOPTION_SYNCREFRESH);
 #ifdef USE_SCALE_EFFECTS
@@ -3416,63 +3403,6 @@ static BOOL IsControlOptionValue(HWND hDlg, HWND hwnd_ctrl, core_options *opts, 
 }
 #endif
 
-static void SetStereoEnabled(HWND hWnd, int nIndex)
-{
-	BOOL enabled = FALSE;
-	HWND hCtrl;
-	int num_speakers = 0;
-
-	if ( nIndex > -1)
-	{
-		machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
-		num_speakers = numberOfSpeakers(config);
-		machine_config_free(config);
-	}
-
-	hCtrl = GetDlgItem(hWnd, IDC_STEREO);
-	if (hCtrl)
-	{
-		if (nIndex <= -1 || num_speakers == 2)
-			enabled = TRUE;
-
-		EnableWindow(hCtrl, enabled);
-	}
-}
-
-static void SetYM3812Enabled(HWND hWnd, int nIndex)
-{
-	BOOL enabled;
-	HWND hCtrl;
-	machine_config *config = NULL;
-	const device_config *sound;
-
-	if (nIndex > -1)
-	{
-		config = machine_config_alloc(drivers[nIndex]->machine_config);
-	}
-
-	hCtrl = GetDlgItem(hWnd, IDC_USE_FM_YM3812);
-	if (hCtrl)
-	{
-		enabled = FALSE;
-
-		for (sound = config->devicelist.first(DEVICE_CLASS_SOUND_CHIP); sound != NULL; sound = sound->next)
-		{
-			if (nIndex <= -1
-				||  sound->type == SOUND_YM3812
-				||  sound->type == SOUND_YM2413
-			)
-				enabled = TRUE;
-		}
-    
-		EnableWindow(hCtrl, enabled);
-	}
-	if (nIndex > -1)
-	{
-		machine_config_free(config);
-	}
-}
-
 static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 {
 	machine_config *config = NULL;
@@ -3517,11 +3447,12 @@ static void InitializeOptions(HWND hDlg)
 	InitializeSkippingUI(hDlg);
 	InitializeRotateUI(hDlg);
 	InitializeSelectScreenUI(hDlg);
-	InitializeEffectUI(hDlg);
 	InitializeBIOSUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
 	InitializeD3DVersionUI(hDlg);
 	InitializeVideoUI(hDlg);
+	//mamep: use standard combobox
+	InitializeEffectUI(hDlg);
 #ifdef USE_SCALE_EFFECTS
 	InitializeScaleEffectUI(hDlg);
 #endif /* USE_SCALE_EFFECTS */
@@ -3703,9 +3634,9 @@ static void InitializeSelectScreenUI(HWND hwnd)
 	UpdateSelectScreenUI(hwnd);
 }
 
+//mamep: use standard combobox
 static void InitializeEffectUI(HWND hwnd)
 {
-	//mamep: use standard combobox
 	HWND hCtrl = GetDlgItem(hwnd, IDC_EFFECT);
 	int i = 0;
 
@@ -3875,7 +3806,7 @@ static void InitializeBIOSUI(HWND hwnd)
 							return;
 						(void)ComboBox_InsertString(hCtrl, i, win_tstring_strdup(t_s));
 						(void)ComboBox_SetItemData( hCtrl, i++, biosname);
-						global_free(t_s);
+						osd_free(t_s);
 					}
 				}
 			}
@@ -3904,7 +3835,7 @@ static void InitializeBIOSUI(HWND hwnd)
 						return;
 					(void)ComboBox_InsertString(hCtrl, i, win_tstring_strdup(t_s));
 					(void)ComboBox_SetItemData( hCtrl, i++, biosname);
-					global_free(t_s);
+					osd_free(t_s);
 				}
 			}
 		}

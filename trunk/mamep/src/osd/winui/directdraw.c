@@ -24,9 +24,6 @@
 #include <windows.h>
 
 // standard C headers
-#if !defined(__GNUC__)
-#include <multimon.h>
-#endif
 #include <ddraw.h>
 #include <tchar.h>
 
@@ -251,15 +248,15 @@ void DirectDraw_Close(void)
 	
 	for (i = 0; i < g_nNumDisplays; i++)
 	{
-		global_free(g_Displays[i].name);
+		free(g_Displays[i].name);
 		g_Displays[i].name = NULL;
 		if (g_Displays[i].lpguid != NULL)
 		{
-			global_free(g_Displays[i].lpguid);
+			free(g_Displays[i].lpguid);
 			g_Displays[i].lpguid = NULL;
 		}
 
-		global_free(g_Displays[i].driver);
+		free(g_Displays[i].driver);
 		g_Displays[i].driver = NULL;
 	}
 	g_nNumDisplays = 0;
@@ -316,11 +313,6 @@ BOOL DirectDraw_HasRefresh(void)
 LPCTSTR DirectDraw_GetDisplayName(int num_display)
 {
 	return g_Displays[num_display].name;
-}
-
-LPCTSTR DirectDraw_GetDisplayDriver(int num_display)
-{
-	return g_Displays[num_display].driver;
 }
 
 /****************************************************************************/

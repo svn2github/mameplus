@@ -23,7 +23,6 @@
 #include "opcntrl.h"
 #include "strconv.h"
 #include "utils.h"
-#include "png.h"
 #include "debug/debugcpu.h"
 #include "inptport.h"
 #include "devices/cassette.h"
@@ -102,159 +101,6 @@ static char state_filename[MAX_PATH];
 static int add_filter_entry(char *dest, size_t dest_len, const char *description, const char *extensions);
 static void translate_menu(HMENU hMenu);
 
-/***************************************************************************
-
-    Constants
-
-***************************************************************************/
-
-typedef enum
-{
-	ARTWORK_CUSTTYPE_JOYSTICK = 0,
-	ARTWORK_CUSTTYPE_KEYBOARD,
-	ARTWORK_CUSTTYPE_MISC,
-	ARTWORK_CUSTTYPE_INVALID
-} artwork_cust_type;
-
-
-
-/***************************************************************************
-
-    Type definitions
-
-***************************************************************************/
-
-struct inputform_customization
-{
-	UINT32 ipt;
-	int x, y;
-	int width, height;
-};
-
-
-//============================================================
-//  artwork_get_inputscreen_customizations
-//============================================================
-
-int artwork_get_inputscreen_customizations(png_info *png, artwork_cust_type cust_type,
-	const char *section,
-	struct inputform_customization *customizations,
-	int customizations_length)
-{
-	file_error filerr;
-	mame_file *file;
-	char buffer[1000];
-	char current_section[64];
-	char ipt_name[64];
-	char *p;
-	int x1, y1, x2, y2;
-	const char *png_filename;
-	const char *ini_filename;
-	int enabled = TRUE;
-	int item_count = 0;
-
-	static const char *const cust_files[] =
-	{
-		"ctrlr.png",		"ctrlr.ini",
-		"keyboard.png",		"keyboard.ini"
-		"misc.png",			"misc.ini"
-	};
-
-	if ((cust_type >= 0) && (cust_type < (ARRAY_LENGTH(cust_files) / 2)))
-	{
-		png_filename = cust_files[cust_type * 2 + 0];
-		ini_filename = cust_files[cust_type * 2 + 1];
-	}
-	else
-	{
-		png_filename = NULL;
-		ini_filename = NULL;
-	}
-
-	/* subtract one from the customizations length; so we can place IPT_END */
-	customizations_length--;
-
-	/* open the INI file, if available */
-	if (ini_filename)
-	{
-		filerr = mame_fopen(SEARCHPATH_ARTWORK, ini_filename, OPEN_FLAG_READ, &file);
-		if (filerr == FILERR_NONE)
-		{
-			/* loop until we run out of lines */
-			while (customizations_length && mame_fgets(buffer, sizeof(buffer), file))
-			{
-				/* strip off any comments */
-				p = strstr(buffer, "//");
-				if (p)
-					*p = 0;
-
-				/* section header? */
-				if (buffer[0] == '[')
-				{
-					strncpyz(current_section, &buffer[1],
-						ARRAY_LENGTH(current_section));
-					p = strchr(current_section, ']');
-					if (!p)
-						continue;
-					*p = '\0';
-					if (section)
-						enabled = !mame_stricmp(current_section, section);
-					continue;
-				}
-
-				if (!enabled || sscanf(buffer, "%64s (%d,%d)-(%d,%d)", ipt_name, &x1, &y1, &x2, &y2) != 5)
-					continue;
-
-#if 0
-				/* temporarily disabled */
-				for (pik = input_keywords; pik->name[0]; pik++)
-				{
-					pik_name = pik->name;
-					if ((pik_name[0] == 'P') && (pik_name[1] == '1') && (pik_name[2] == '_'))
-						pik_name += 3;
-
-					if (!strcmp(ipt_name, pik_name))
-					{
-						if ((x1 > 0) && (y1 > 0) && (x2 > x1) && (y2 > y1))
-						{
-							customizations->ipt = pik->val;
-							customizations->x = x1;
-							customizations->y = y1;
-							customizations->width = x2 - x1;
-							customizations->height = y2 - y1;
-							customizations++;
-							customizations_length--;
-							item_count++;
-						}
-						break;
-					}
-				}
-#endif
-			}
-			mame_fclose(file);
-		}
-	}
-
-	/* terminate list */
-	customizations->ipt = IPT_END;
-	customizations->x = -1;
-	customizations->y = -1;
-	customizations->width = -1;
-	customizations->height = -1;
-
-	/* open the PNG, if available */
-	memset(png, 0, sizeof(*png));
-	if (png_filename && item_count > 0)
-	{
-		filerr = mame_fopen(SEARCHPATH_ARTWORK, ini_filename, OPEN_FLAG_READ, &file);
-		if (filerr == FILERR_NONE)
-		{
-			png_read_file(mame_core_file(file), png);
-			mame_fclose(file);
-		}
-	}
-	return item_count;
-}
 
 
 //============================================================
@@ -342,40 +188,22 @@ static int serial_number_from_input_item(running_machine *machine, const input_p
 //  customize_input
 //============================================================
 
-static void customize_input(running_machine *machine, HWND wnd, const char *title, artwork_cust_type cust_type, int player, int inputclass, const char *section)
+static void customize_input(running_machine *machine, HWND wnd, const char *title, int player, int inputclass)
 {
 	dialog_box *dlg;
 	const input_port_config *port;
 	const input_field_config *field;
-	png_info png;
-	struct inputform_customization customizations[128];
-	RECT *pr;
-	int this_inputclass, this_player, portslot_count, i;
+	int this_inputclass, this_player, portslot_count = 0, i;
 
 	struct
 	{
 		const input_field_config *field;
-		const RECT *pr;
 	} portslots[256];
-
-	/* check to see if there is any custom artwork for this configure dialog,
-     * and if so, retrieve the info */
-	portslot_count = artwork_get_inputscreen_customizations(&png, cust_type, section,
-		customizations, ARRAY_LENGTH(customizations));
-
-	/* zero out the portslots that correspond to customizations */
-	memset(portslots, 0, sizeof(portslots[0]) * portslot_count);
 
 	/* create the dialog */
 	dlg = win_dialog_init(title, NULL);
 	if (!dlg)
 		goto done;
-
-	if (png.width > 0)
-	{
-		win_dialog_add_image(dlg, &png);
-		win_dialog_add_separator(dlg);
-	}
 
 	for (port = machine->portlist.first(); port != NULL; port = port->next)
 	{
@@ -394,32 +222,14 @@ static void customize_input(running_machine *machine, HWND wnd, const char *titl
 
 				if (this_player == player)
 				{
-					/* check to see if the custom artwork for this configure dialog
-                     * says anything about this input */
-					pr = NULL;
-					for (i = 0; customizations[i].ipt != IPT_END; i++)
-					{
-						if (field->type == customizations[i].ipt)
-						{
-							pr = (RECT *) alloca(sizeof(*pr));
-							pr->left = customizations[i].x;
-							pr->top = customizations[i].y;
-							pr->right = pr->left + customizations[i].width;
-							pr->bottom = pr->top + customizations[i].height;
-							break;
-						}
-					}
-
 					/* store this InputPort/RECT combo in our list.  we do not
                      * necessarily want to add it yet because we the INI might
                      * want to reorder the tab order */
-					if (customizations[i].ipt == IPT_END)
-						i = portslot_count++;
-					if (i < ARRAY_LENGTH(portslots))
+					if (portslot_count < ARRAY_LENGTH(portslots))
 					{
-						portslots[i].field = field;
-						portslots[i].pr = pr;
+						portslots[portslot_count].field = field;
 					}
+					portslot_count++;
 				}
 			}
 		}
@@ -432,7 +242,7 @@ static void customize_input(running_machine *machine, HWND wnd, const char *titl
 	{
 		if (portslots[i].field)
 		{
-			if (win_dialog_add_portselect(dlg, portslots[i].field, portslots[i].pr))
+			if (win_dialog_add_portselect(dlg, portslots[i].field))
 				goto done;
 		}
 	}
@@ -457,7 +267,7 @@ done:
 
 static void customize_joystick(running_machine *machine, HWND wnd, int joystick_num)
 {
-	customize_input(machine, wnd, _WINDOWS("Joysticks/Controllers"), ARTWORK_CUSTTYPE_JOYSTICK, joystick_num, INPUT_CLASS_CONTROLLER, NULL);
+	customize_input(machine, wnd, _WINDOWS("Joysticks/Controllers"), joystick_num, INPUT_CLASS_CONTROLLER);
 }
 
 
@@ -468,7 +278,7 @@ static void customize_joystick(running_machine *machine, HWND wnd, int joystick_
 
 static void customize_keyboard(running_machine *machine, HWND wnd)
 {
-	customize_input(machine, wnd, _WINDOWS("Emulated Keyboard"), ARTWORK_CUSTTYPE_KEYBOARD, 0, INPUT_CLASS_KEYBOARD, NULL);
+	customize_input(machine, wnd, _WINDOWS("Emulated Keyboard"), 0, INPUT_CLASS_KEYBOARD);
 }
 
 
@@ -479,7 +289,7 @@ static void customize_keyboard(running_machine *machine, HWND wnd)
 
 static void customize_miscinput(running_machine *machine, HWND wnd)
 {
-	customize_input(machine, wnd, _WINDOWS("Miscellaneous Input"), ARTWORK_CUSTTYPE_MISC, 0, INPUT_CLASS_MISC, NULL);
+	customize_input(machine, wnd, _WINDOWS("Miscellaneous Input"), 0, INPUT_CLASS_MISC);
 }
 
 
@@ -488,10 +298,10 @@ static void customize_miscinput(running_machine *machine, HWND wnd)
 //  customize_categorizedinput
 //============================================================
 
-static void customize_categorizedinput(running_machine *machine, HWND wnd, const char *section, int category)
+static void customize_categorizedinput(running_machine *machine, HWND wnd, int category)
 {
 	assert(category > 0);
-	customize_input(machine, wnd, _WINDOWS("Input"), ARTWORK_CUSTTYPE_JOYSTICK, category, INPUT_CLASS_CATEGORIZED, section);
+	customize_input(machine, wnd, _WINDOWS("Input"), category, INPUT_CLASS_CATEGORIZED);
 }
 
 
@@ -1951,7 +1761,6 @@ static int invoke_command(HWND wnd, UINT command)
 	int dev_command;
 	running_device *img;
 	UINT16 category;
-	const char *section;
 	const input_field_config *field;
 	const input_setting_config *setting;
 	LONG_PTR ptr = GetWindowLongPtr(wnd, GWLP_USERDATA);
@@ -2150,18 +1959,16 @@ static int invoke_command(HWND wnd, UINT command)
 					// customize the input type
 					input_field_get_user_settings(field, &settings);
 					category = 0;
-					section = NULL;
 
 					for (setting = field->settinglist; setting != NULL; setting = setting->next)
 					{
 						if (settings.value == setting->value)
 						{
 							category = setting->category;
-							section = setting->name;
 						}
 					}
 					if (category)
-					customize_categorizedinput(window->machine, wnd, section, category);
+					customize_categorizedinput(window->machine, wnd, category);
 				}
 				else
 				{

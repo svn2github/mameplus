@@ -121,13 +121,12 @@ const WCHAR *GetAuditString(int audit_result)
 	case NOTFOUND :
 	case INCORRECT :
 		return _UIW(TEXT("No"));
-		break;
 
 	case UNKNOWN :
 		return TEXT("?");
 
 	default:
-		dprintf("unknown audit value %i",audit_result);
+		dprintf("unknown audit value %i\n",audit_result);
 	}
 
 	return TEXT("?");
@@ -499,7 +498,7 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	
 	if (hEdit == NULL)
 	{
-		dprintf("audit detailsprintf() can't find any audit control");
+		dprintf("audit detailsprintf() can't find any audit control\n");
 		return;
 	}
 
@@ -517,7 +516,7 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	Edit_SetSel(hEdit, textLength, textLength);
 	SendMessage( hEdit, EM_REPLACESEL, FALSE, (LPARAM)buffer);
 
-	//global_free(t_s);
+	//osd_free(t_s);
 }
 
 static const WCHAR *StatusString(int iStatus)

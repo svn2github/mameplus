@@ -13,8 +13,8 @@
 
 #pragma once
 
-#ifndef __DATAFILE_H__
-#define __DATAFILE_H__
+#ifndef DATAFILE_H
+#define DATAFILE_H
 
 extern void winui_datafile_init(core_options *options);
 extern void winui_datafile_exit(void);
@@ -26,4 +26,4 @@ extern int load_driver_story(const game_driver *drv, char *buffer, int bufsize);
 extern int load_driver_mameinfo(const game_driver *drv, char *buffer, int bufsize);
 extern int load_driver_drivinfo(const game_driver *drv, char *buffer, int bufsize);
 
-#endif	/* __DATAFILE_H__ */
+#endif
