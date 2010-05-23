@@ -1,12 +1,12 @@
-# mess/osd/windows/dialog.c: 1324
+# mess/osd/windows/dialog.c: 1322
  Analog
  アナログ
 
-# mess/osd/windows/dialog.c: 1329
+# mess/osd/windows/dialog.c: 1327
  Dec
  減少
 
-# mess/osd/windows/dialog.c: 1334
+# mess/osd/windows/dialog.c: 1332
  Inc
  増加
 
@@ -18,7 +18,7 @@
 &Configuration...
 設定...(&C)
 
-# mess/osd/windows/menu.c: 1480
+# mess/osd/windows/menu.c: 1255
 &Configure...
 設定...(&C)
 
@@ -38,19 +38,19 @@ DIPスイッチ...(&D)
 &File
 ファイル(&F)
 
-# mess/osd/windows/menu.c: 2302 mess/osd/windows/mess.rc: 71
+# mess/osd/windows/menu.c: 2056 mess/osd/windows/mess.rc: 71
 &Frameskip
 フレームスキップ(&F)
 
 # mess/osd/windows/mess.rc: 87
-&Full Screen\tAlt+Enter
-フルスクリーン(&F)\tAlt+Enter
+&Full Screen
+フルスクリーン(&F)
 
 # mess/osd/windows/mess.rc: 86
-&Hide Menubar\tScrLk
-メニューバーを隠す(&H)\tScrLk
+&Hide Menubar
+メニューバーを隠す(&H)
 
-# mess/osd/windows/menu.c: 1453 mess/osd/windows/mess.rc: 57
+# mess/osd/windows/menu.c: 1228 mess/osd/windows/mess.rc: 57
 &Joysticks
 ジョイスティック(&J)
 
@@ -66,7 +66,7 @@ DIPスイッチ...(&D)
 &Miscellaneous Inputs...
 その他の入力...(&M)
 
-# mess/osd/windows/menu.c: 1453, 1670, 2302 mess/osd/windows/mess.rc: 44 
+# mess/osd/windows/menu.c: 1228, 1444, 2056 mess/osd/windows/mess.rc: 44 
 &Options
 オプション(&O)
 
@@ -78,23 +78,23 @@ DIPスイッチ...(&D)
 &Save State
 ステートを保存(&S)
 
-# mess/osd/windows/menu.c: 1670 mess/osd/windows/mess.rc: 58
+# mess/osd/windows/menu.c: 1444 mess/osd/windows/mess.rc: 58
 &Video
 ビデオ(&V)
 
-# osd/windows/video.c: 290
+# osd/windows/video.c: 291
 (primary)
 (プライマリ)
 
-# mess/osd/windows/menu.c: 2312
+# mess/osd/windows/menu.c: 2066
 About %s (%s)...
 %s (%s)について...
 
-# mess/osd/windows/menu.c: 1114
+# mess/osd/windows/menu.c: 913
 All files (*.*)|*.*|
 全てのファイル (*.*)|*.*|
 
-# mess/osd/windows/menu.c: 671
+# mess/osd/windows/menu.c: 480
 Analog Controls
 アナログコントロール
 
@@ -102,7 +102,7 @@ Analog Controls
 Apply
 適用
 
-# osd/windows/input.c: 1223
+# osd/windows/input.c: 1227
 Assign joystick %s to player %d\n
 ジョイスティック%sをプレイヤー%dに割り当てます\n
 
@@ -110,7 +110,7 @@ Assign joystick %s to player %d\n
 Auto
 自動
 
-# mess/osd/windows/menu.c: 690
+# mess/osd/windows/menu.c: 499
 Autocenter Speed
 自動センタリング速度
 
@@ -118,15 +118,15 @@ Autocenter Speed
 Cancel
 キャンセル
 
-# mess/osd/windows/menu.c: 1111
+# mess/osd/windows/menu.c: 910
 Common image types
 共通イメージタイプ
 
-# mess/osd/windows/menu.c: 1118
+# mess/osd/windows/menu.c: 917
 Compressed Images (*.zip)|*.zip|
 圧縮イメージ (*.zip)|*.zip|
 
-# mess/osd/windows/menu.c: 1715
+# mess/osd/windows/menu.c: 1489
 Create...
 作成...
 
@@ -146,11 +146,11 @@ DirectDraw固有オプション
 Device %s currently in an unsupported mode\n
 デバイス「%s」は現在サポートされていないモードです\n
 
-# mess/osd/windows/menu.c: 685
+# mess/osd/windows/menu.c: 494
 Digital Speed
 デジタル速度
 
-# mess/osd/windows/menu.c: 577
+# mess/osd/windows/menu.c: 386
 Dip Switches
 ディップスイッチ
 
@@ -502,19 +502,19 @@ DirectDraw: 警告: デバイスはDirectDraw描画にあまり適していないかも知れません\n
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告: デバイスはフルスクリーンのガンマ補正をサポートしていません。\n
 
-# osd/windows/input.c: 1207
+# osd/windows/input.c: 1211
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: ジョイスティックの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1192
+# osd/windows/input.c: 1196
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: キーボードの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1201
+# osd/windows/input.c: 1205
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: マウスの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1181
+# osd/windows/input.c: 1185
 DirectInput: Using DirectInput %d\n
 DirectInput: DirectInput %dを使用します\n
 
@@ -522,7 +522,7 @@ DirectInput: DirectInput %dを使用します\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: サウンドバッファ: %d Hz, %d ビット, %d チャンネル\n
 
-# mess/osd/windows/menu.c: 588
+# mess/osd/windows/menu.c: 397
 Driver Configuration
 ドライバ設定
 
@@ -530,7 +530,7 @@ Driver Configuration
 Emulated
 エミュレート
 
-# mess/osd/windows/menu.c: 472
+# mess/osd/windows/menu.c: 281
 Emulated Keyboard
 キーボードエミュレート
 
@@ -546,7 +546,7 @@ DirectSoundの作成が出来ません: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 DirectSoundのプライマリバッファを生成出来ません: %08x\n
 
-# osd/windows/window.c: 656
+# osd/windows/window.c: 657
 Error creating render target for window %d
 ウインドウ%dの描画対象の生成でエラーが発生しました
 
@@ -594,7 +594,7 @@ DirectSoundのプライマリバッファの形式が設定出来ません: %08x\n
 Error setting vertex shader (%08X)
 頂点シェーダの設定でエラーが発生しました(%08X)\n
 
-# mess/osd/windows/menu.c: 1193
+# mess/osd/windows/menu.c: 992
 Error when %s the image: %s
 イメージの%sでエラー: %s
 
@@ -614,23 +614,23 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 フルスクリーンオプション
 
-# osd/windows/window.c: 260
+# osd/windows/window.c: 261
 Failed to create pause event
 ポーズイベントの生成が失敗しました
 
-# osd/windows/window.c: 875
+# osd/windows/window.c: 876
 Failed to create window class
 ウインドウクラスの生成が失敗しました
 
-# osd/windows/window.c: 274
+# osd/windows/window.c: 275
 Failed to create window thread
 ウインドウスレッドの生成が失敗しました
 
-# osd/windows/window.c: 268
+# osd/windows/window.c: 269
 Failed to create window thread ready event
 ウインドウスレッド準備完了イベントの生成が失敗しました
 
-# mess/osd/windows/menu.c: 1728 
+# mess/osd/windows/menu.c: 1502 
 Fast Forward
 早送り
 
@@ -642,31 +642,31 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 入力デバイスオプション
 
-# osd/windows/video.c: 555
+# osd/windows/video.c: 556
 Illegal aspect ratio value for %s = %s\n
 %sの値%sは不正なアスペクト比です\n
 
-# osd/windows/video.c: 578
+# osd/windows/video.c: 579
 Illegal resolution value for %s = %s\n
 %sの値%sは不正な解像度です\n
 
-# mess/osd/windows/menu.c: 495
+# mess/osd/windows/menu.c: 304
 Input
 入力
 
-# osd/windows/video.c: 473
+# osd/windows/video.c: 474
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
-# mess/osd/windows/menu.c: 1497
+# mess/osd/windows/menu.c: 1272
 Joystick %i
 ジョイスティック %i
 
-# mess/osd/windows/menu.c: 461
+# mess/osd/windows/menu.c: 270
 Joysticks/Controllers
 ジョイスティック/コントローラ
 
-# osd/windows/window.c: 671
+# osd/windows/window.c: 672
 MAME: %s [%s] - Screen %d
 MAME: %s「%s」- 画面%d
 
@@ -674,11 +674,11 @@ MAME: %s「%s」- 画面%d
 Maximum &Speed
 最高速度(&S)
 
-# mess/osd/windows/menu.c: 483
+# mess/osd/windows/menu.c: 292
 Miscellaneous Input
 その他の入力
 
-# mess/osd/windows/menu.c: 1712
+# mess/osd/windows/menu.c: 1486
 Mount...
 マウント...
 
@@ -690,11 +690,11 @@ Natural
 OK
 OK
 
-# mess/osd/windows/menu.c: 698
+# mess/osd/windows/menu.c: 507
 Off
 OFF
 
-# mess/osd/windows/menu.c: 700
+# mess/osd/windows/menu.c: 509
 On
 ON
 
@@ -710,11 +710,11 @@ PER-WINDOW VIDEO OPTIONS
 Pause
 中断
 
-# mess/osd/windows/menu.c: 1724 
+# mess/osd/windows/menu.c: 1498 
 Pause/Stop
 中断/中止
 
-# mess/osd/windows/menu.c: 1725 mess/osd/windows/mess.rc: 144 
+# mess/osd/windows/menu.c: 1499 mess/osd/windows/mess.rc: 144 
 Play
 プレイ
 
@@ -722,19 +722,19 @@ Play
 Proposed video mode not supported on device %s\n
 指定された画面モードはデバイス%sではサポートされていません\n
 
-# osd/windows/input.c: 1771
+# osd/windows/input.c: 1775
 RawInput: APIs detected\n
 RawInput: APIが検出されました\n
 
-# mess/osd/windows/menu.c: 1726 
+# mess/osd/windows/menu.c: 1500 
 Record
 記録
 
-# mess/osd/windows/menu.c: 695
+# mess/osd/windows/menu.c: 504
 Reverse
 反転
 
-# mess/osd/windows/menu.c: 1727 
+# mess/osd/windows/menu.c: 1501 
 Rewind
 巻き戻し
 
@@ -762,7 +762,7 @@ S&ave State As...
 Save Sc&reenshot
 画面を保存(&R)
 
-# mess/osd/windows/menu.c: 704
+# mess/osd/windows/menu.c: 513
 Sensitivity
 感度
 
@@ -786,7 +786,7 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 サウンド: バッファ オーバフロー=%d アンダーフロー=%d\n
 
-# mess/osd/windows/menu.c: 796
+# mess/osd/windows/menu.c: 588
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 ステートファイル (*.sta)|*.sta|全てのファイル (*.*)|*.*
 
@@ -810,7 +810,7 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 Toggle Fullscreen
 フルスクリーン切り替え
 
-# osd/windows/input.c: 836
+# osd/windows/input.c: 838
 Toggle Menubar
 メニューバーの切り替え
 
@@ -818,7 +818,7 @@ Toggle Menubar
 Unable to close the keyboard device. (error %d)\n
 キーボードディバイスがクローズ出来ません。(エラー %d)\n
 
-# osd/windows/window.c: 691
+# osd/windows/window.c: 692
 Unable to complete window creation
 ウインドウの生成が完了出来ません
 
@@ -834,7 +834,7 @@ Direct3Dを初期化出来ません。\n
 Unable to initialize DirectDraw.\n
 DirectDrawを初期化出来ません\n
 
-# osd/windows/video.c: 524
+# osd/windows/video.c: 525
 Unable to load PNG file '%s'\n
 PNGファイル「%s」を読み込めません\n
 
@@ -850,15 +850,15 @@ Unknown texture blendmode=%d format=%d\n
 Unlimited
 無制限
 
-# mess/osd/windows/menu.c: 1717
+# mess/osd/windows/menu.c: 1491
 Unmount
 マウント解除
 
-# osd/windows/video.c: 434
+# osd/windows/video.c: 435
 Using %s scale effect\n
 スケールエフェクト %s を使用します\n
 
-# osd/windows/video.c: 290
+# osd/windows/video.c: 291
 Video: Monitor %p = \"%s\" %s\n
 ビデオ: モニタ %p = 「%s」%s\n
 
@@ -878,7 +878,7 @@ Windows版サウンドオプション
 WINDOWS VIDEO OPTIONS
 Windows版ビデオオプション
 
-# osd/windows/video.c: 469
+# osd/windows/video.c: 470
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video none は -seconds_to_run オプション無しでは無意味です\n
 
@@ -886,7 +886,7 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 警告: デバイスのDirect3D描画パフォーマンスはあまり良くありません\n
 
-# mess/osd/windows/menu.c: 1730
+# mess/osd/windows/menu.c: 1504
 [empty slot]
 [空きスロット]
 
@@ -922,7 +922,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 フルスクリーン画面の値を制限します
 
-# mess/osd/windows/menu.c: 1194
+# mess/osd/windows/menu.c: 993
 creating
 作成
 
@@ -994,7 +994,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 フルスクリーンのガンマ補正値
 
-# mess/osd/windows/menu.c: 1194
+# mess/osd/windows/menu.c: 993
 loading
 読み込み
 
@@ -1102,7 +1102,7 @@ thread priority for the main game thread; range from -15 to 1
 video output method: none, gdi, ddraw, or d3d
 ビデオ描画方法: none、gdi、ddrawまたはd3d
 
-# mess/osd/windows/menu.c: 1691 mess/osd/windows/mess.rc: 91
+# mess/osd/windows/menu.c: 1465 mess/osd/windows/mess.rc: 91
 &Devices
 
 

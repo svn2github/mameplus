@@ -1,12 +1,12 @@
-# mess/osd/windows/dialog.c: 1324
+# mess/osd/windows/dialog.c: 1322
  Analog
  아날로그
 
-# mess/osd/windows/dialog.c: 1329
+# mess/osd/windows/dialog.c: 1327
  Dec
  감소
 
-# mess/osd/windows/dialog.c: 1334
+# mess/osd/windows/dialog.c: 1332
  Inc
  증가
 
@@ -18,7 +18,7 @@
 &Configuration...
 환경설정(&C)...
 
-# mess/osd/windows/menu.c: 1480
+# mess/osd/windows/menu.c: 1255
 &Configure...
 환경설정(&C)...
 
@@ -38,19 +38,19 @@
 &File
 파일(&F)
 
-# mess/osd/windows/menu.c: 2302 mess/osd/windows/mess.rc: 71
+# mess/osd/windows/menu.c: 2056 mess/osd/windows/mess.rc: 71
 &Frameskip
 프레임생략(&F)
 
 # mess/osd/windows/mess.rc: 87
-&Full Screen\tAlt+Enter
-전체화면(&F)\tAlt+Enter
+&Full Screen
+전체화면(&F)
 
 # mess/osd/windows/mess.rc: 86
-&Hide Menubar\tScrLk
-메뉴바 숨김(&H)\tScrLk
+&Hide Menubar
+메뉴바 숨김(&H)
 
-# mess/osd/windows/menu.c: 1453 mess/osd/windows/mess.rc: 57
+# mess/osd/windows/menu.c: 1228 mess/osd/windows/mess.rc: 57
 &Joysticks
 조이스틱(&J)
 
@@ -66,7 +66,7 @@
 &Miscellaneous Inputs...
 기타 입력(&M)
 
-# mess/osd/windows/menu.c: 1453, 1670, 2302 mess/osd/windows/mess.rc: 44 
+# mess/osd/windows/menu.c: 1228, 1444, 2056 mess/osd/windows/mess.rc: 44 
 &Options
 옵션(&O)
 
@@ -78,19 +78,19 @@
 &Save State
 상태저장(세이브) 하기(&S)
 
-# mess/osd/windows/menu.c: 1670 mess/osd/windows/mess.rc: 58
+# mess/osd/windows/menu.c: 1444 mess/osd/windows/mess.rc: 58
 &Video
 비디오(&V)
 
-# osd/windows/video.c: 290
+# osd/windows/video.c: 291
 (primary)
 (주요)
 
-# mess/osd/windows/menu.c: 2312
+# mess/osd/windows/menu.c: 2066
 About %s (%s)...
 %s (%s)정보...
 
-# mess/osd/windows/menu.c: 1114
+# mess/osd/windows/menu.c: 913
 All files (*.*)|*.*|
 모든 파일 (*.*)|*.*|
 
@@ -98,7 +98,7 @@ All files (*.*)|*.*|
 Apply
 적용
 
-# osd/windows/input.c: 1223
+# osd/windows/input.c: 1227
 Assign joystick %s to player %d\n
 %s 조이스틱을 사용자 %d에 할당\n
 
@@ -110,11 +110,11 @@ Auto
 Cancel
 취소
 
-# mess/osd/windows/menu.c: 1111
+# mess/osd/windows/menu.c: 910
 Common image types
 일반 이미지 타입
 
-# mess/osd/windows/menu.c: 1118
+# mess/osd/windows/menu.c: 917
 Compressed Images (*.zip)|*.zip|
 압축 이미지 (*.zip)|*.zip|
 
@@ -486,19 +486,19 @@ DirectDraw: 경고 - 장치가 DirectDraw 랜더링을 수행하지 못할 수 있습니다\n
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 경고 - 장치가 전체화면 감마 수정을 지원하지 않습니다\n
 
-# osd/windows/input.c: 1207
+# osd/windows/input.c: 1211
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: 조이스틱 확인 불가 (result=%08X)\n
 
-# osd/windows/input.c: 1192
+# osd/windows/input.c: 1196
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: 키보드 확인 불가 (result=%08X)\n
 
-# osd/windows/input.c: 1201
+# osd/windows/input.c: 1205
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: 마우스 확인 불가 (result=%08X)\n
 
-# osd/windows/input.c: 1181
+# osd/windows/input.c: 1185
 DirectInput: Using DirectInput %d\n
 DirectInput: %d DirectInput 사용 \n
 
@@ -510,7 +510,7 @@ DirectSound: 주 버퍼: %d Hz, %d 비트, %d 체널\n
 Emulated
 에뮬됨
 
-# mess/osd/windows/menu.c: 472
+# mess/osd/windows/menu.c: 281
 Emulated Keyboard
 키보드 에뮬레이션
 
@@ -526,7 +526,7 @@ DirectSound 생성 오류: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 주 DirectSound 버퍼 생성 오류: %08x\n
 
-# osd/windows/window.c: 656
+# osd/windows/window.c: 657
 Error creating render target for window %d
 %d 윈도우에 렌더 타겟 생성 오류
 
@@ -574,7 +574,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 vertex shader 설정 오류 (%08X)
 
-# mess/osd/windows/menu.c: 1193
+# mess/osd/windows/menu.c: 992
 Error when %s the image: %s
 이미지 %s 중 오류: %s
 
@@ -594,19 +594,19 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 전체 화면 옵션
 
-# osd/windows/window.c: 260
+# osd/windows/window.c: 261
 Failed to create pause event
 pause event 생성 실패
 
-# osd/windows/window.c: 875
+# osd/windows/window.c: 876
 Failed to create window class
 window class 생성 실패
 
-# osd/windows/window.c: 274
+# osd/windows/window.c: 275
 Failed to create window thread
 window thread 생성 실패
 
-# osd/windows/window.c: 268
+# osd/windows/window.c: 269
 Failed to create window thread ready event
 window thread ready event 생성 실패
 
@@ -618,31 +618,31 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 입력 장치 옵션
 
-# osd/windows/video.c: 555
+# osd/windows/video.c: 556
 Illegal aspect ratio value for %s = %s\n
 잘못된 화면비 값 %s = %s\n
 
-# osd/windows/video.c: 578
+# osd/windows/video.c: 579
 Illegal resolution value for %s = %s\n
 잘못된 해상도 값 %s = %s\n
 
-# mess/osd/windows/menu.c: 495
+# mess/osd/windows/menu.c: 304
 Input
 입력
 
-# osd/windows/video.c: 473
+# osd/windows/video.c: 474
 Invalid video value %s; reverting to gdi\n
 잘못된 비디오 값 %s;GDI로 복구\n
 
-# mess/osd/windows/menu.c: 1497
+# mess/osd/windows/menu.c: 1272
 Joystick %i
 조이스틱 %i
 
-# mess/osd/windows/menu.c: 461
+# mess/osd/windows/menu.c: 270
 Joysticks/Controllers
 조이스틱/조종장치
 
-# osd/windows/window.c: 671
+# osd/windows/window.c: 672
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - Screen %d
 
@@ -650,7 +650,7 @@ MAME: %s [%s] - Screen %d
 Maximum &Speed
 최대 속도(&S)
 
-# mess/osd/windows/menu.c: 483
+# mess/osd/windows/menu.c: 292
 Miscellaneous Input
 기타 입력
 
@@ -674,7 +674,7 @@ PER-WINDOW VIDEO OPTIONS
 Pause
 일시정지
 
-# mess/osd/windows/menu.c: 1725 mess/osd/windows/mess.rc: 144 
+# mess/osd/windows/menu.c: 1499 mess/osd/windows/mess.rc: 144 
 Play
 실행
 
@@ -682,7 +682,7 @@ Play
 Proposed video mode not supported on device %s\n
 설정한 비디오 모드는 %s 장치에서 지원되지 않습니다\n
 
-# osd/windows/input.c: 1771
+# osd/windows/input.c: 1775
 RawInput: APIs detected\n
 로우입력:APIs 탐지됨\n
 
@@ -730,7 +730,7 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 사운드: 버퍼 오버플로우=%d 언더플로우=%d\n
 
-# mess/osd/windows/menu.c: 796
+# mess/osd/windows/menu.c: 588
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 상태 파일 (*.sta)|*.sta|모든 파일  (*.*)|*.*
 
@@ -754,7 +754,7 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 Toggle Fullscreen
 전체화면 전환
 
-# osd/windows/input.c: 836
+# osd/windows/input.c: 838
 Toggle Menubar
 메뉴바 토글
 
@@ -762,7 +762,7 @@ Toggle Menubar
 Unable to close the keyboard device. (error %d)\n
 키보드 장치 닫기 실패 (오류 %d)\n
 
-# osd/windows/window.c: 691
+# osd/windows/window.c: 692
 Unable to complete window creation
 창 생성 완료 불가
 
@@ -778,7 +778,7 @@ Direct3D를 초기화할 수 없습니다\n
 Unable to initialize DirectDraw.\n
 DirectDraw를 초기화할 수 없습니다\n
 
-# osd/windows/video.c: 524
+# osd/windows/video.c: 525
 Unable to load PNG file '%s'\n
 '%s' PNG 파일을 불러올 수 없습니다\n
 
@@ -794,11 +794,11 @@ Unknown texture blendmode=%d format=%d\n
 Unlimited
 무제한
 
-# osd/windows/video.c: 434
+# osd/windows/video.c: 435
 Using %s scale effect\n
 %s 크기조절 효과 사용\n
 
-# osd/windows/video.c: 290
+# osd/windows/video.c: 291
 Video: Monitor %p = \"%s\" %s\n
 비디오: 모니터 %p = \"%s\" %s\n
 
@@ -818,7 +818,7 @@ WINDOWS SOUND OPTIONS
 WINDOWS VIDEO OPTIONS
 윈도우 비디오 옵션
 
-# osd/windows/video.c: 469
+# osd/windows/video.c: 470
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 경고: -video none 는 -seconds_to_run 없이는 사용 불가\n
 
@@ -858,7 +858,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 전체 화면 모드에서 대비값
 
-# mess/osd/windows/menu.c: 1194
+# mess/osd/windows/menu.c: 993
 creating
 치트
 
@@ -930,7 +930,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 전체 화면 감마 값
 
-# mess/osd/windows/menu.c: 1194
+# mess/osd/windows/menu.c: 993
 loading
 불러오는 중
 
@@ -1046,7 +1046,7 @@ thread priority for the main game thread; range from -15 to 1
 video output method: none, gdi, ddraw, or d3d
 비디오 출력 방법: 없음, gdi, ddraw 또는 d3d
 
-# mess/osd/windows/menu.c: 1691 mess/osd/windows/mess.rc: 91
+# mess/osd/windows/menu.c: 1465 mess/osd/windows/mess.rc: 91
 &Devices
 
 
@@ -1054,43 +1054,43 @@ video output method: none, gdi, ddraw, or d3d
 &Edit
 
 
-# mess/osd/windows/menu.c: 671
+# mess/osd/windows/menu.c: 480
 Analog Controls
 
 
-# mess/osd/windows/menu.c: 690
+# mess/osd/windows/menu.c: 499
 Autocenter Speed
 
 
-# mess/osd/windows/menu.c: 1715
+# mess/osd/windows/menu.c: 1489
 Create...
 
 
-# mess/osd/windows/menu.c: 685
+# mess/osd/windows/menu.c: 494
 Digital Speed
 
 
-# mess/osd/windows/menu.c: 577
+# mess/osd/windows/menu.c: 386
 Dip Switches
 
 
-# mess/osd/windows/menu.c: 588
+# mess/osd/windows/menu.c: 397
 Driver Configuration
 
 
-# mess/osd/windows/menu.c: 1728 
+# mess/osd/windows/menu.c: 1502 
 Fast Forward
 
 
-# mess/osd/windows/menu.c: 1712
+# mess/osd/windows/menu.c: 1486
 Mount...
 
 
-# mess/osd/windows/menu.c: 698
+# mess/osd/windows/menu.c: 507
 Off
 
 
-# mess/osd/windows/menu.c: 700
+# mess/osd/windows/menu.c: 509
 On
 
 
@@ -1098,31 +1098,31 @@ On
 Paste
 
 
-# mess/osd/windows/menu.c: 1724 
+# mess/osd/windows/menu.c: 1498 
 Pause/Stop
 
 
-# mess/osd/windows/menu.c: 1726 
+# mess/osd/windows/menu.c: 1500 
 Record
 
 
-# mess/osd/windows/menu.c: 695
+# mess/osd/windows/menu.c: 504
 Reverse
 
 
-# mess/osd/windows/menu.c: 1727 
+# mess/osd/windows/menu.c: 1501 
 Rewind
 
 
-# mess/osd/windows/menu.c: 704
+# mess/osd/windows/menu.c: 513
 Sensitivity
 
 
-# mess/osd/windows/menu.c: 1717
+# mess/osd/windows/menu.c: 1491
 Unmount
 
 
-# mess/osd/windows/menu.c: 1730
+# mess/osd/windows/menu.c: 1504
 [empty slot]
 
 

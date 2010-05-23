@@ -1,12 +1,12 @@
-# mess/osd/windows/dialog.c: 1324
+# mess/osd/windows/dialog.c: 1322
  Analog
  Analógico
 
-# mess/osd/windows/dialog.c: 1329
+# mess/osd/windows/dialog.c: 1327
  Dec
  Dec
 
-# mess/osd/windows/dialog.c: 1334
+# mess/osd/windows/dialog.c: 1332
  Inc
  Inc
 
@@ -18,7 +18,7 @@
 &Configuration...
 &Configuración...
 
-# mess/osd/windows/menu.c: 1480
+# mess/osd/windows/menu.c: 1255
 &Configure...
 &Configurar...
 
@@ -38,15 +38,15 @@
 &File
 &Archivo
 
-# mess/osd/windows/menu.c: 2302 mess/osd/windows/mess.rc: 71
+# mess/osd/windows/menu.c: 2056 mess/osd/windows/mess.rc: 71
 &Frameskip
 &Salto de fotogramas
 
 # mess/osd/windows/mess.rc: 87
-&Full Screen\tAlt+Enter
-&Pantalla Completa\tAlt+Enter
+&Full Screen
+&Pantalla Completa
 
-# mess/osd/windows/menu.c: 1453 mess/osd/windows/mess.rc: 57
+# mess/osd/windows/menu.c: 1228 mess/osd/windows/mess.rc: 57
 &Joysticks
 &Joysticks
 
@@ -62,7 +62,7 @@
 &Miscellaneous Inputs...
 &Entradas Variadas...
 
-# mess/osd/windows/menu.c: 1453, 1670, 2302 mess/osd/windows/mess.rc: 44 
+# mess/osd/windows/menu.c: 1228, 1444, 2056 mess/osd/windows/mess.rc: 44 
 &Options
 &Opciones
 
@@ -74,19 +74,19 @@
 &Save State
 &Guardar Estado
 
-# mess/osd/windows/menu.c: 1670 mess/osd/windows/mess.rc: 58
+# mess/osd/windows/menu.c: 1444 mess/osd/windows/mess.rc: 58
 &Video
 &Video
 
-# osd/windows/video.c: 290
+# osd/windows/video.c: 291
 (primary)
 (primario)
 
-# mess/osd/windows/menu.c: 2312
+# mess/osd/windows/menu.c: 2066
 About %s (%s)...
 Acerca de %s (%s)...
 
-# mess/osd/windows/menu.c: 1114
+# mess/osd/windows/menu.c: 913
 All files (*.*)|*.*|
 Todos los archivos (*.*)|*.*|
 
@@ -94,7 +94,7 @@ Todos los archivos (*.*)|*.*|
 Apply
 Aplicar
 
-# osd/windows/input.c: 1223
+# osd/windows/input.c: 1227
 Assign joystick %s to player %d\n
 Asignar joystick %s para jugador %d\n
 
@@ -106,11 +106,11 @@ Auto
 Cancel
 Cancelar
 
-# mess/osd/windows/menu.c: 1111
+# mess/osd/windows/menu.c: 910
 Common image types
 Tipos comunes de imagen
 
-# mess/osd/windows/menu.c: 1118
+# mess/osd/windows/menu.c: 917
 Compressed Images (*.zip)|*.zip|
 Imagenes Comprimidas (*.zip)|*.zip|
 
@@ -478,19 +478,19 @@ DirectDraw: Advertencia - Dispositivo no deberia funcionar bien para representac
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: Advertencia - Dispositivo no soporta correcion gamma a pantalla completa.\n
 
-# osd/windows/input.c: 1207
+# osd/windows/input.c: 1211
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: No disponible para enumerar joysticks (result=%08X)\n
 
-# osd/windows/input.c: 1192
+# osd/windows/input.c: 1196
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: No disponible para enumerar teclados (result=%08X)\n
 
-# osd/windows/input.c: 1201
+# osd/windows/input.c: 1205
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: No disponible para enumerar ratones (result=%08X)\n
 
-# osd/windows/input.c: 1181
+# osd/windows/input.c: 1185
 DirectInput: Using DirectInput %d\n
 DirectInput: Usando DirectInput %d\n
 
@@ -502,7 +502,7 @@ DirectSound: Bufer primario: %d Hz, %d bits, %d canales\n
 Emulated
 Emulado
 
-# mess/osd/windows/menu.c: 472
+# mess/osd/windows/menu.c: 281
 Emulated Keyboard
 Teclado Emulado
 
@@ -518,7 +518,7 @@ Error creando DirectSound: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 Error creando memoria intermedia primaria de DirectSound: %08x\n
 
-# osd/windows/window.c: 656
+# osd/windows/window.c: 657
 Error creating render target for window %d
 Error creando renderización para ventana %d
 
@@ -566,7 +566,7 @@ Error configurando formato de memoria intermedia primaria de DirectSound: %08x\n
 Error setting vertex shader (%08X)
 Error configurando vertex shader (%08X)
 
-# mess/osd/windows/menu.c: 1193
+# mess/osd/windows/menu.c: 992
 Error when %s the image: %s
 Error cuando %s la imagen: %s
 
@@ -586,19 +586,19 @@ Error: no soportado para configurar formato de textura de pantalla\n
 FULL SCREEN OPTIONS
 OPCIONES DE PANTALLA COMPLETA
 
-# osd/windows/window.c: 260
+# osd/windows/window.c: 261
 Failed to create pause event
 Error al crear evento de pausa
 
-# osd/windows/window.c: 875
+# osd/windows/window.c: 876
 Failed to create window class
 Error al crear clase de windows
 
-# osd/windows/window.c: 274
+# osd/windows/window.c: 275
 Failed to create window thread
 Error al crear hilo de windows
 
-# osd/windows/window.c: 268
+# osd/windows/window.c: 269
 Failed to create window thread ready event
 Fallo al crear evento preparado en hilo de ventana
 
@@ -610,31 +610,31 @@ Reiniciar Ha&rdware
 INPUT DEVICE OPTIONS
 OPCIONES DE ENTRADA DE DISPOSITIVOS
 
-# osd/windows/video.c: 555
+# osd/windows/video.c: 556
 Illegal aspect ratio value for %s = %s\n
 Valor ilegal del cociente de aspecto para %s = %s\n
 
-# osd/windows/video.c: 578
+# osd/windows/video.c: 579
 Illegal resolution value for %s = %s\n
 Valor incorrecto de resolución para %s = %s\n
 
-# mess/osd/windows/menu.c: 495
+# mess/osd/windows/menu.c: 304
 Input
 Entrada
 
-# osd/windows/video.c: 473
+# osd/windows/video.c: 474
 Invalid video value %s; reverting to gdi\n
 Valor invalido de video %s; revertir a gdi\n
 
-# mess/osd/windows/menu.c: 1497
+# mess/osd/windows/menu.c: 1272
 Joystick %i
 Joystick %i
 
-# mess/osd/windows/menu.c: 461
+# mess/osd/windows/menu.c: 270
 Joysticks/Controllers
 Joysticks/Controladores
 
-# osd/windows/window.c: 671
+# osd/windows/window.c: 672
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - Pantalla %d
 
@@ -642,7 +642,7 @@ MAME: %s [%s] - Pantalla %d
 Maximum &Speed
 Máxima &Velocidad
 
-# mess/osd/windows/menu.c: 483
+# mess/osd/windows/menu.c: 292
 Miscellaneous Input
 Entrada Variadas
 
@@ -666,7 +666,7 @@ OPCIONES de VIDEO PER-WINDOW
 Pause
 Pausa
 
-# mess/osd/windows/menu.c: 1725 mess/osd/windows/mess.rc: 144 
+# mess/osd/windows/menu.c: 1499 mess/osd/windows/mess.rc: 144 
 Play
 Jugar
 
@@ -674,7 +674,7 @@ Jugar
 Proposed video mode not supported on device %s\n
 Modo de video propuesto no es soportado por el dispositivo %s\n
 
-# osd/windows/input.c: 1771
+# osd/windows/input.c: 1775
 RawInput: APIs detected\n
 RawInput: APIs detectada\n
 
@@ -722,7 +722,7 @@ Bubber de sonido: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 Sonido: almacenador intermediario overflows=%d underflows=%d\n
 
-# mess/osd/windows/menu.c: 796
+# mess/osd/windows/menu.c: 588
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 Archivos de Estado (*.sta)|*.sta|Todos los archivos (*.*)|*.*
 
@@ -746,7 +746,7 @@ Textura demasiado grande! (Buscado: %dx%d, maximo es %dx%d)\n
 Toggle Fullscreen
 Alternar Pantalla completa
 
-# osd/windows/input.c: 836
+# osd/windows/input.c: 838
 Toggle Menubar
 Cambiar barra de Menu
 
@@ -754,7 +754,7 @@ Cambiar barra de Menu
 Unable to close the keyboard device. (error %d)\n
 Deseleccionado para cerrar dispositivo del teclado. (error %d)\n
 
-# osd/windows/window.c: 691
+# osd/windows/window.c: 692
 Unable to complete window creation
 No disponible para completar creación de ventana
 
@@ -770,7 +770,7 @@ No es posible inicializar Direct3D.\n
 Unable to initialize DirectDraw.\n
 No es posible inicializar DirectDraw.\n
 
-# osd/windows/video.c: 524
+# osd/windows/video.c: 525
 Unable to load PNG file '%s'\n
 No es posible cargar archivo PNG '%s'\n
 
@@ -786,11 +786,11 @@ Texture desconocida blendmode=%d format=%d\n
 Unlimited
 Sin limite
 
-# osd/windows/video.c: 434
+# osd/windows/video.c: 435
 Using %s scale effect\n
 Usando %s efecto escalar\n
 
-# osd/windows/video.c: 290
+# osd/windows/video.c: 291
 Video: Monitor %p = \"%s\" %s\n
 Video: Monitor %p = \"%s\" %s\n
 
@@ -810,7 +810,7 @@ OPCIONES DE SONIDO
 WINDOWS VIDEO OPTIONS
 OPCIONES DE VIDEO
 
-# osd/windows/video.c: 469
+# osd/windows/video.c: 470
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 Advertencia: -video ninguno tiene sentido fuera -seconds_to_run\n
 
@@ -850,7 +850,7 @@ obligar al cociente de aspecto apropiado
 contrast value in full screen mode
 valor de contraste en modo a pantalla completa
 
-# mess/osd/windows/menu.c: 1194
+# mess/osd/windows/menu.c: 993
 creating
 creando
 
@@ -918,7 +918,7 @@ nombre explicito de la tercera pantalla; 'automatico' aquí intentará hacer un me
 gamma value in full screen mode
 valor gamma en modo a pantalla completa
 
-# mess/osd/windows/menu.c: 1194
+# mess/osd/windows/menu.c: 993
 loading
 cargando
 
@@ -1026,7 +1026,7 @@ prioridad de hilo para hilo de juego principal; rago desde -15 hasta 1
 video output method: none, gdi, ddraw, or d3d
 metodo de salida de video: ninguno, gdi, ddraw, o d3d
 
-# mess/osd/windows/menu.c: 1691 mess/osd/windows/mess.rc: 91
+# mess/osd/windows/menu.c: 1465 mess/osd/windows/mess.rc: 91
 &Devices
 
 
@@ -1035,26 +1035,26 @@ metodo de salida de video: ninguno, gdi, ddraw, o d3d
 
 
 # mess/osd/windows/mess.rc: 86
-&Hide Menubar\tScrLk
+&Hide Menubar
 
 
-# mess/osd/windows/menu.c: 671
+# mess/osd/windows/menu.c: 480
 Analog Controls
 
 
-# mess/osd/windows/menu.c: 690
+# mess/osd/windows/menu.c: 499
 Autocenter Speed
 
 
-# mess/osd/windows/menu.c: 1715
+# mess/osd/windows/menu.c: 1489
 Create...
 
 
-# mess/osd/windows/menu.c: 685
+# mess/osd/windows/menu.c: 494
 Digital Speed
 
 
-# mess/osd/windows/menu.c: 577
+# mess/osd/windows/menu.c: 386
 Dip Switches
 
 
@@ -1062,23 +1062,23 @@ Dip Switches
 Direct3D: Max texture size = %dx%d\n
 
 
-# mess/osd/windows/menu.c: 588
+# mess/osd/windows/menu.c: 397
 Driver Configuration
 
 
-# mess/osd/windows/menu.c: 1728 
+# mess/osd/windows/menu.c: 1502 
 Fast Forward
 
 
-# mess/osd/windows/menu.c: 1712
+# mess/osd/windows/menu.c: 1486
 Mount...
 
 
-# mess/osd/windows/menu.c: 698
+# mess/osd/windows/menu.c: 507
 Off
 
 
-# mess/osd/windows/menu.c: 700
+# mess/osd/windows/menu.c: 509
 On
 
 
@@ -1086,31 +1086,31 @@ On
 Paste
 
 
-# mess/osd/windows/menu.c: 1724 
+# mess/osd/windows/menu.c: 1498 
 Pause/Stop
 
 
-# mess/osd/windows/menu.c: 1726 
+# mess/osd/windows/menu.c: 1500 
 Record
 
 
-# mess/osd/windows/menu.c: 695
+# mess/osd/windows/menu.c: 504
 Reverse
 
 
-# mess/osd/windows/menu.c: 1727 
+# mess/osd/windows/menu.c: 1501 
 Rewind
 
 
-# mess/osd/windows/menu.c: 704
+# mess/osd/windows/menu.c: 513
 Sensitivity
 
 
-# mess/osd/windows/menu.c: 1717
+# mess/osd/windows/menu.c: 1491
 Unmount
 
 
-# mess/osd/windows/menu.c: 1730
+# mess/osd/windows/menu.c: 1504
 [empty slot]
 
 

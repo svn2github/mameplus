@@ -270,7 +270,7 @@ Bordun International
 Brezzasoft
 Brezzasoft
 
-# Vegas Poker (Prototype)
+# Blox (v2.0)
 BwB
 BwB
 
@@ -414,10 +414,6 @@ Crux
 Current Technologies
 Current Technologies
 
-# Hexa
-D. R. Korea
-D. R. Korea
-
 # Tetris (D.R. Korea)
 D.R. Korea
 D.R. Korea
@@ -534,7 +530,7 @@ Dyna
 Dyna Electronics
 Dyna Electronics
 
-# Mazinger Z (International/Japan)
+# Mazinger Z (World)
 Dynamic Pl. Toei Animation
 Dynamic Pl. Toei Animation
 
@@ -622,7 +618,7 @@ Electro-Sport
 Electrocoin
 Electrocoin
 
-# Rabbit
+# Rabbit (Japan)
 Electronic Arts
 Electronic Arts
 
@@ -881,14 +877,6 @@ Hollow Corp
 # Mahjong Hourouki Part 1 - Seisyun Hen (Japan)
 Home Data
 Home Data
-
-# Schmeiser Robo (Japan)
-Hot B
-Hot B
-
-# Play Girls
-Hot-B.
-Hot-B.
 
 # Far East of Eden - Kabuki Klash / Tengai Makyou - Shin Den
 Hudson
@@ -1186,10 +1174,6 @@ Meadows Games, Inc.
 Media
 Media
 
-# Rapid Hero
-Media Trading Corp
-Media Trading Corp
-
 # Metal Slug 4 (set 1)
 Mega
 Mega
@@ -1294,10 +1278,6 @@ Nakasawa
 Namco
 Namco
 
-# Vs. TKO Boxing
-Namco LTD.
-Namco LTD.
-
 # Crowns Golf (834-5419-04)
 Nasco Japan
 Nasco Japan
@@ -1314,7 +1294,7 @@ Neodev
 Nichibutsu
 Nichibutsu
 
-# Moon Cresta (Nichibutsu, unencrypted)
+# Moon Cresta (Nichibutsu USA, unencrypted)
 Nichibutsu USA
 Nichibutsu USA
 
@@ -2446,6 +2426,10 @@ Bootleg
 Bung
 
 
+# Touchmaster (v3.00 Euro)
+CES Inc., Midway Games Inc.
+
+
 # Credit Poker (ver.30c, standard)
 CGI
 
@@ -2496,6 +2480,10 @@ DellFern Ltd.
 
 # Triple Draw Poker
 Design Labs
+
+
+# Uncle Poo
+Diatec
 
 
 # Royal Card v2.0 Professional
@@ -2550,6 +2538,10 @@ Entretenimientos GEMINIS
 Evona
 
 
+# Poker Monarch (v2.50)
+Extrema Systems International Ltd.
+
+
 # Forte Card
 Fortex LTD
 
@@ -2572,6 +2564,10 @@ G-Rev
 
 # Galaxian Part 4 (hack)
 G.G.I
+
+
+# Happy Tour
+GAV Company
 
 
 # Track & Field (NZ Bootleg?)
@@ -2598,6 +2594,10 @@ High Video
 Home Data?
 
 
+# Cuby Bop (Location Test)
+Hot-B
+
+
 # Blazing Lazers
 Hudson Soft
 
@@ -2620,6 +2620,10 @@ InterFlip
 
 # Squash (Itisa)
 Itisa
+
+
+# The Pit (bootleg on Moon Quasar hardware)
+KZH
 
 
 # Scramble (Karateko, French bootleg)
@@ -2646,6 +2650,10 @@ M.M. - B.R.L.
 M.P.
 
 
+# Jolly Card Professional 2.0 (MZS Tech)
+MZS Tech
+
+
 # Mahjong Oh (V2.06J)
 Mahjong Kobo/Taito
 
@@ -2654,8 +2662,16 @@ Mahjong Kobo/Taito
 Mainline London
 
 
+# Alien Invasion
+Margamatics
+
+
 # Buster
 Marian Electronics Ltd.
+
+
+# Spider-Man vs The Kingpin (Mega-Tech)
+Marvel, Sega
 
 
 # Dengen Tenshi Taisen Janshi Shangri-la (JPN, USA, EXP, KOR, AUS)
@@ -2678,12 +2694,20 @@ Maygay Machines Ltd.
 Merit Industries
 
 
-# Magical Tonic / Magical Odds?
+# Turbo Poker 2
 Micro Manufacturing Inc.
 
 
 # F-15 Strike Eagle (rev. 2.2 02/25/91)
 Microprose Games Inc.
+
+
+# Touchmaster 2000 (v4.02 Standard)
+Midway Games Inc.
+
+
+# Royal Vegas Joker Card (fast deal, Mile)
+Mile
 
 
 # Radirgy (GDL-0032)
@@ -2718,6 +2742,10 @@ New Image Technologies
 New Impeuropex Corp.
 
 
+# Moon Cresta (Nichibutsu UK)
+Nichibutsu UK
+
+
 # PC Engine
 Nippon Electronic Company
 
@@ -2736,6 +2764,10 @@ Olympia?
 
 # PMA Poker
 PMA
+
+
+# Magical Odds (set 2, alt hardware)
+Pal Company
 
 
 # Johnny Nero Action Hero
@@ -2850,11 +2882,11 @@ SonoKong
 Space Computer
 
 
-# Jolly Card Professional 2.0
+# Jolly Card Professional 2.0 (Spale Soft)
 Spale-Soft
 
 
-# Super Shanghai 2005 (Rev A) (GDL-0031A)
+# Super Shanghai 2005 (GDL-0031)
 Starfish
 
 
@@ -2874,20 +2906,16 @@ Sunsoft/Taito
 Sure Milano
 
 
-# Lady Liner
+# Royal Card (austrian, set 1)
 TAB Austria
 
 
-# King Derby
+# King Derby (1981)
 Tazmi
 
 
 # Ten Spot
 Thomas Automatics
-
-
-# Magical Tonic?
-Tonic
 
 
 # XII Stag (V2.01J)

@@ -1,12 +1,12 @@
-# mess/osd/windows/dialog.c: 1324
+# mess/osd/windows/dialog.c: 1322
  Analog
  类比
 
-# mess/osd/windows/dialog.c: 1329
+# mess/osd/windows/dialog.c: 1327
  Dec
  减
 
-# mess/osd/windows/dialog.c: 1334
+# mess/osd/windows/dialog.c: 1332
  Inc
  加
 
@@ -18,7 +18,7 @@
 &Configuration...
 配置(&C)...
 
-# mess/osd/windows/menu.c: 1480
+# mess/osd/windows/menu.c: 1255
 &Configure...
 配置(&C)...
 
@@ -30,7 +30,7 @@
 &Debugger...
 调试器(&D)...
 
-# mess/osd/windows/menu.c: 1691 mess/osd/windows/mess.rc: 91
+# mess/osd/windows/menu.c: 1465 mess/osd/windows/mess.rc: 91
 &Devices
 设备(&D)
 
@@ -46,19 +46,19 @@
 &File
 文件(&F)
 
-# mess/osd/windows/menu.c: 2302 mess/osd/windows/mess.rc: 71
+# mess/osd/windows/menu.c: 2056 mess/osd/windows/mess.rc: 71
 &Frameskip
 跳帧(&F)
 
 # mess/osd/windows/mess.rc: 87
-&Full Screen\tAlt+Enter
-全屏幕(&F)\tAlt+Enter
+&Full Screen
+全屏幕(&F)
 
 # mess/osd/windows/mess.rc: 86
-&Hide Menubar\tScrLk
-隐藏设置菜单(&H)\tScrLk
+&Hide Menubar
+隐藏设置菜单(&H)
 
-# mess/osd/windows/menu.c: 1453 mess/osd/windows/mess.rc: 57
+# mess/osd/windows/menu.c: 1228 mess/osd/windows/mess.rc: 57
 &Joysticks
 游戏杆(&J)
 
@@ -74,7 +74,7 @@
 &Miscellaneous Inputs...
 其他输入(&M)...
 
-# mess/osd/windows/menu.c: 1453, 1670, 2302 mess/osd/windows/mess.rc: 44 
+# mess/osd/windows/menu.c: 1228, 1444, 2056 mess/osd/windows/mess.rc: 44 
 &Options
 选项(&O)
 
@@ -86,23 +86,23 @@
 &Save State
 保存游戏进度(&S)
 
-# mess/osd/windows/menu.c: 1670 mess/osd/windows/mess.rc: 58
+# mess/osd/windows/menu.c: 1444 mess/osd/windows/mess.rc: 58
 &Video
 视频(&V)
 
-# osd/windows/video.c: 290
+# osd/windows/video.c: 291
 (primary)
 (主显示器)
 
-# mess/osd/windows/menu.c: 2312
+# mess/osd/windows/menu.c: 2066
 About %s (%s)...
 关于 %s (%s)...
 
-# mess/osd/windows/menu.c: 1114
+# mess/osd/windows/menu.c: 913
 All files (*.*)|*.*|
 所有文件 (*.*)|*.*|
 
-# mess/osd/windows/menu.c: 671
+# mess/osd/windows/menu.c: 480
 Analog Controls
 类比控制
 
@@ -110,7 +110,7 @@ Analog Controls
 Apply
 应用
 
-# osd/windows/input.c: 1223
+# osd/windows/input.c: 1227
 Assign joystick %s to player %d\n
 分配游戏杆 %s 到玩家 %d\n
 
@@ -118,7 +118,7 @@ Assign joystick %s to player %d\n
 Auto
 自动
 
-# mess/osd/windows/menu.c: 690
+# mess/osd/windows/menu.c: 499
 Autocenter Speed
 自动居中速度
 
@@ -126,15 +126,15 @@ Autocenter Speed
 Cancel
 取消
 
-# mess/osd/windows/menu.c: 1111
+# mess/osd/windows/menu.c: 910
 Common image types
 通用镜像类型
 
-# mess/osd/windows/menu.c: 1118
+# mess/osd/windows/menu.c: 917
 Compressed Images (*.zip)|*.zip|
 压缩镜像 (*.zip)|*.zip|
 
-# mess/osd/windows/menu.c: 1715
+# mess/osd/windows/menu.c: 1489
 Create...
 创建...
 
@@ -154,11 +154,11 @@ DIRECTDRAW 特定选项
 Device %s currently in an unsupported mode\n
 设备 %s 当前处于未支持的模式\n
 
-# mess/osd/windows/menu.c: 685
+# mess/osd/windows/menu.c: 494
 Digital Speed
 数字式速度
 
-# mess/osd/windows/menu.c: 577
+# mess/osd/windows/menu.c: 386
 Dip Switches
 机台设置
 
@@ -514,19 +514,19 @@ DirectDraw: 警告 - 设备可能无法正常配合 DirectDraw 描绘\n
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告 - 设备不支持全屏幕灰度修正。\n
 
-# osd/windows/input.c: 1207
+# osd/windows/input.c: 1211
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: 无法列举游戏杆 (result=%08X)\n
 
-# osd/windows/input.c: 1192
+# osd/windows/input.c: 1196
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: 无法列举键盘 (result=%08X)\n
 
-# osd/windows/input.c: 1201
+# osd/windows/input.c: 1205
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: 无法列举鼠标 (result=%08X)\n
 
-# osd/windows/input.c: 1181
+# osd/windows/input.c: 1185
 DirectInput: Using DirectInput %d\n
 DirectInput: 正在使用 DirectInput %d\n
 
@@ -534,7 +534,7 @@ DirectInput: 正在使用 DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 主要缓冲: %d Hz, %d 位, %d 声道\n
 
-# mess/osd/windows/menu.c: 588
+# mess/osd/windows/menu.c: 397
 Driver Configuration
 驱动设置
 
@@ -542,7 +542,7 @@ Driver Configuration
 Emulated
 模拟
 
-# mess/osd/windows/menu.c: 472
+# mess/osd/windows/menu.c: 281
 Emulated Keyboard
 模拟键盘
 
@@ -558,7 +558,7 @@ Error creating DirectSound: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 创建主要 DirectSound 缓冲时发生错误: %08x\n
 
-# osd/windows/window.c: 656
+# osd/windows/window.c: 657
 Error creating render target for window %d
 创建描绘目标于窗口 %d 时发生错误
 
@@ -606,7 +606,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 设置顶点 shader 时发生错误 (%08X)
 
-# mess/osd/windows/menu.c: 1193
+# mess/osd/windows/menu.c: 992
 Error when %s the image: %s
 %s 镜像文件时发生错误: %s
 
@@ -626,23 +626,23 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 全屏幕选项
 
-# osd/windows/window.c: 260
+# osd/windows/window.c: 261
 Failed to create pause event
 无法创建暂停事件
 
-# osd/windows/window.c: 875
+# osd/windows/window.c: 876
 Failed to create window class
 无法创建窗口类别
 
-# osd/windows/window.c: 274
+# osd/windows/window.c: 275
 Failed to create window thread
 无法创建窗口线程
 
-# osd/windows/window.c: 268
+# osd/windows/window.c: 269
 Failed to create window thread ready event
 无法创建窗口线程预备事件
 
-# mess/osd/windows/menu.c: 1728 
+# mess/osd/windows/menu.c: 1502 
 Fast Forward
 快进
 
@@ -654,31 +654,31 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 输入设备选项
 
-# osd/windows/video.c: 555
+# osd/windows/video.c: 556
 Illegal aspect ratio value for %s = %s\n
 非法的外观比例值 %s = %s\n
 
-# osd/windows/video.c: 578
+# osd/windows/video.c: 579
 Illegal resolution value for %s = %s\n
 非法的分辨率值 %s = %s\n
 
-# mess/osd/windows/menu.c: 495
+# mess/osd/windows/menu.c: 304
 Input
 输入
 
-# osd/windows/video.c: 473
+# osd/windows/video.c: 474
 Invalid video value %s; reverting to gdi\n
 无效的 %s 视频值; 还原成 gdi\n
 
-# mess/osd/windows/menu.c: 1497
+# mess/osd/windows/menu.c: 1272
 Joystick %i
 游戏杆 %i
 
-# mess/osd/windows/menu.c: 461
+# mess/osd/windows/menu.c: 270
 Joysticks/Controllers
 游戏杆/控制器
 
-# osd/windows/window.c: 671
+# osd/windows/window.c: 672
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - 屏幕 %d
 
@@ -686,11 +686,11 @@ MAME: %s [%s] - 屏幕 %d
 Maximum &Speed
 最大速度(&S)
 
-# mess/osd/windows/menu.c: 483
+# mess/osd/windows/menu.c: 292
 Miscellaneous Input
 其他输入
 
-# mess/osd/windows/menu.c: 1712
+# mess/osd/windows/menu.c: 1486
 Mount...
 挂载...
 
@@ -702,11 +702,11 @@ Natural
 OK
 确定
 
-# mess/osd/windows/menu.c: 698
+# mess/osd/windows/menu.c: 507
 Off
 关闭
 
-# mess/osd/windows/menu.c: 700
+# mess/osd/windows/menu.c: 509
 On
 打开
 
@@ -726,11 +726,11 @@ Paste
 Pause
 暂停
 
-# mess/osd/windows/menu.c: 1724 
+# mess/osd/windows/menu.c: 1498 
 Pause/Stop
 暂停/停止
 
-# mess/osd/windows/menu.c: 1725 mess/osd/windows/mess.rc: 144 
+# mess/osd/windows/menu.c: 1499 mess/osd/windows/mess.rc: 144 
 Play
 运行
 
@@ -738,19 +738,19 @@ Play
 Proposed video mode not supported on device %s\n
 建议的视频模式无法支持设备 %s\n
 
-# osd/windows/input.c: 1771
+# osd/windows/input.c: 1775
 RawInput: APIs detected\n
 RawInput: 检测出 API\n
 
-# mess/osd/windows/menu.c: 1726 
+# mess/osd/windows/menu.c: 1500 
 Record
 记录
 
-# mess/osd/windows/menu.c: 695
+# mess/osd/windows/menu.c: 504
 Reverse
 反转
 
-# mess/osd/windows/menu.c: 1727 
+# mess/osd/windows/menu.c: 1501 
 Rewind
 倒带
 
@@ -778,7 +778,7 @@ S&ave State As...
 Save Sc&reenshot
 保存屏幕快照(&R)
 
-# mess/osd/windows/menu.c: 704
+# mess/osd/windows/menu.c: 513
 Sensitivity
 敏感度
 
@@ -802,7 +802,7 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 声音: 缓冲 overflows=%d underflows=%d\n
 
-# mess/osd/windows/menu.c: 796
+# mess/osd/windows/menu.c: 588
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 进度文件 (*.sta)|*.sta|All Files (*.*)|*.*
 
@@ -826,7 +826,7 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 Toggle Fullscreen
 切换全屏幕
 
-# osd/windows/input.c: 836
+# osd/windows/input.c: 838
 Toggle Menubar
 切换设置菜单
 
@@ -834,7 +834,7 @@ Toggle Menubar
 Unable to close the keyboard device. (error %d)\n
 无法关闭键盘设备。(错误 %d)\n
 
-# osd/windows/window.c: 691
+# osd/windows/window.c: 692
 Unable to complete window creation
 无法完成窗口创建
 
@@ -850,7 +850,7 @@ Unable to initialize Direct3D.\n
 Unable to initialize DirectDraw.\n
 无法初始化 DirectDraw\n
 
-# osd/windows/video.c: 524
+# osd/windows/video.c: 525
 Unable to load PNG file '%s'\n
 无法载入 PNG 文件 '%s'\n
 
@@ -866,15 +866,15 @@ Unknown texture blendmode=%d format=%d\n
 Unlimited
 无限
 
-# mess/osd/windows/menu.c: 1717
+# mess/osd/windows/menu.c: 1491
 Unmount
 解除挂载
 
-# osd/windows/video.c: 434
+# osd/windows/video.c: 435
 Using %s scale effect\n
 正在使用 %s 图像增强\n
 
-# osd/windows/video.c: 290
+# osd/windows/video.c: 291
 Video: Monitor %p = \"%s\" %s\n
 视频: 显示器 %p = \"%s\" %s\n
 
@@ -894,7 +894,7 @@ WINDOWS 声音选项
 WINDOWS VIDEO OPTIONS
 WINDOWS 视频选项
 
-# osd/windows/video.c: 469
+# osd/windows/video.c: 470
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video 参数为 none 时无法判断 -seconds_to_run 选项\n
 
@@ -902,7 +902,7 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 警告: 设备可能无法正常配合 Direct3D 描绘\n
 
-# mess/osd/windows/menu.c: 1730
+# mess/osd/windows/menu.c: 1504
 [empty slot]
 [空插槽]
 
@@ -938,7 +938,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 全屏幕模式对比度
 
-# mess/osd/windows/menu.c: 1194
+# mess/osd/windows/menu.c: 993
 creating
 正在创建
 
@@ -1014,7 +1014,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 全屏幕模式灰度
 
-# mess/osd/windows/menu.c: 1194
+# mess/osd/windows/menu.c: 993
 loading
 正在载入
 
