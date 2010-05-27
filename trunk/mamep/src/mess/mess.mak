@@ -25,7 +25,6 @@ DRVLIBS += \
 	$(MESSOBJ)/sega.a \
 	$(MESSOBJ)/skeleton.a \
 	$(MESSOBJ)/snk.a \
-	$(MESSOBJ)/softlist.o \
 	$(MESSOBJ)/shared.a \
 
 #-------------------------------------------------

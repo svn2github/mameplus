@@ -30,23 +30,6 @@ const char mess_disclaimer[] =
 		"with these files is a violation of copyright law and should be promptly\n"
 		"reported to the authors so that appropriate legal action can be taken.\n\n";
 
-static char *filename_basename(char *filename)
-{
-	char *c;
-
-	// NULL begets NULL
-	if (!filename)
-		return NULL;
-
-	// start at the end and return when we hit a slash or colon
-	for (c = filename + strlen(filename) - 1; c >= filename; c--)
-		if (*c == '\\' || *c == '/' || *c == ':')
-			return c + 1;
-
-	// otherwise, return the whole thing
-	return filename;
-}
-
 /*-------------------------------------------------
     mess_predevice_init - initialize devices for a specific
     running_machine
@@ -88,12 +71,12 @@ void mess_predevice_init(running_machine *machine)
 				{
 					/* retrieve image error message */
 					const char *image_err = image_error(image);
-					char *image_basename = auto_strdup(machine, filename_basename((char *)image_name));
+					char *image_basename = auto_strdup(machine, filename_basename(image_name));
 
 					/* unload all images */
 					image_unload_all(machine);
 
-					fatalerror_exitcode(machine, MAMERR_DEVICE, "Device %s load (%s) failed: %s\n",
+					fatalerror_exitcode(machine, MAMERR_DEVICE, "Device %s load (%s) failed: %s",
 						info.name,
 						image_basename,
 						image_err);
@@ -104,7 +87,7 @@ void mess_predevice_init(running_machine *machine)
 				/* no image... must this device be loaded? */
 				if (info.must_be_loaded)
 				{
-					fatalerror_exitcode(machine, MAMERR_DEVICE, "Driver requires that device \"%s\" must have an image to load\n", info.instance_name);
+					fatalerror_exitcode(machine, MAMERR_DEVICE, "Driver requires that device \"%s\" must have an image to load", info.instance_name);
 				}
 			}
 
@@ -132,7 +115,23 @@ void mess_postdevice_init(running_machine *machine)
     {
         if (is_image_device(device))
 		{
-			image_finish_load(device);
+			int result = image_finish_load(device);
+			/* did the image load fail? */
+			if (result)
+			{
+				/* retrieve image error message */
+				const char *image_err = image_error(device);
+				char *image_basename_str = auto_strdup(machine, image_basename(device));
+				image_device_info info = image_device_getinfo(machine->config, device);
+
+				/* unload all images */
+				image_unload_all(machine);
+
+				fatalerror_exitcode(machine, MAMERR_DEVICE, "Device %s load (%s) failed: %s",
+					info.name,
+					image_basename_str,
+					image_err);
+			}
 		}
 	}
 

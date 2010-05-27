@@ -854,12 +854,30 @@ static int image_load_internal(running_device *image, const char *path,
     /* success! */
 
 done:
-    if (slot->err)
-        image_clear(slot);
+    if (slot->err) {
+		if (slot->not_init_phase)
+		{
+			if (mame_get_phase(machine) == MAME_PHASE_RUNNING)
+				popmessage("Error: Unable to %s image '%s': %s\n", is_create ? "create" : "load", path, image_error(image));
+			else
+				mame_printf_error("Error: Unable to %s image '%s': %s", is_create ? "create" : "load", path, image_error(image));
+		}
+		image_clear(slot);
+	}
 	else {
 		/* do we need to reset the CPU? only schedule it if load/create is successful */
 		if ((attotime_compare(timer_get_time(machine), attotime_zero) > 0) && slot->info.reset_on_load)
 			mame_schedule_hard_reset(machine);
+		else
+		{
+			if (slot->not_init_phase)
+			{
+				if (mame_get_phase(machine) == MAME_PHASE_RUNNING)
+					popmessage("Image '%s' was successfully %s.", path, is_create ? "created" : "loaded");
+				else
+					mame_printf_info("Image '%s' was successfully %s.\n", path, is_create ? "created" : "loaded");
+			}
+		}
 	}
 
     return slot->err ? INIT_FAIL : INIT_PASS;
@@ -1242,26 +1260,6 @@ const char *image_filename(running_device *image)
 }
 
 
-//============================================================
-//  image_filename_basename
-//============================================================
-
-static char *image_filename_basename(char *filename)
-{
-	char *c;
-
-	// NULL begets NULL
-	if (!filename)
-		return NULL;
-
-	// start at the end and return when we hit a slash or colon
-	for (c = filename + strlen(filename) - 1; c >= filename; c--)
-		if (*c == '\\' || *c == '/' || *c == ':')
-			return c + 1;
-
-	// otherwise, return the whole thing
-	return filename;
-}
 
 /*-------------------------------------------------
     image_basename
@@ -1269,7 +1267,7 @@ static char *image_filename_basename(char *filename)
 
 const char *image_basename(running_device *image)
 {
-    return image_filename_basename((char *) image_filename(image));
+    return filename_basename(image_filename(image));
 }
 
 
@@ -1447,6 +1445,18 @@ UINT32 image_get_software_region_length(running_device *image, const char *tag)
 
     sprintf( full_tag, "%s:%s", image->tag(), tag );
     return memory_region_length( image->machine, full_tag );
+}
+
+
+/*-------------------------------------------------
+ image_get_feature
+ -------------------------------------------------*/
+
+const char *image_get_feature(running_device *image)
+{
+	image_slot_data *slot = find_image_slot(image);
+	
+	return slot->software_part_ptr->feature;
 }
 
 
