@@ -20,10 +20,10 @@ DRVLIBS += \
 	$(MESSOBJ)/atari.a \
 	$(MESSOBJ)/bandai.a \
 	$(MESSOBJ)/capcom.a \
+	$(MESSOBJ)/funtech.a \
 	$(MESSOBJ)/nec.a \
 	$(MESSOBJ)/nintendo.a \
 	$(MESSOBJ)/sega.a \
-	$(MESSOBJ)/skeleton.a \
 	$(MESSOBJ)/snk.a \
 	$(MESSOBJ)/shared.a \
 
@@ -87,6 +87,9 @@ $(MESSOBJ)/capcom.a:			\
 	$(MESS_DRIVERS)/cpschngr.o	\
 	$(MESS_VIDEO)/cpschngr.o	\
 
+$(MESSOBJ)/funtech.a:			\
+	$(MESS_DRIVERS)/supracan.o	\
+
 $(MESSOBJ)/nec.a:				\
 	$(MESS_MACHINE)/pce.o		\
 	$(MESS_DRIVERS)/pce.o		\
@@ -118,8 +121,6 @@ $(MESSOBJ)/snk.a:				\
 	$(MESS_DRIVERS)/ngp.o		\
 	$(MESS_VIDEO)/k1ge.o		\
 
-$(MESSOBJ)/skeleton.a:			\
-	$(MESS_DRIVERS)/supracan.o	\
 
 
 
@@ -133,6 +134,7 @@ $(MESS_VIDEO)/gba.o: 		$(MESSSRC)/video/gbamode0.c \
 				$(MESSSRC)/video/gbam345.c
 
 $(MESS_MACHINE)/nes_mmc.o: 	$(MESSSRC)/machine/nes_ines.c \
+				$(MESSSRC)/machine/nes_pcb.c \
 				$(MESSSRC)/machine/nes_unif.c \
 
 

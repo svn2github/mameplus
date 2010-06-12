@@ -288,13 +288,13 @@ static void audio_tick(running_machine *machine, int ref)
 				state->fifo_a_ptr = 0;
 			}
 
-			if (state->SOUNDCNT_H & 0x100)
+			if (state->SOUNDCNT_H & 0x200)
 			{
 				running_device *dac_device = devtag_get_device(machine, "direct_a_left");
 
 				dac_signed_data_w(dac_device, state->fifo_a[state->fifo_a_ptr]^0x80);
 			}
-			if (state->SOUNDCNT_H & 0x200)
+			if (state->SOUNDCNT_H & 0x100)
 			{
 				running_device *dac_device = devtag_get_device(machine, "direct_a_right");
 
@@ -328,13 +328,13 @@ static void audio_tick(running_machine *machine, int ref)
 				state->fifo_b_ptr = 0;
 			}
 
-			if (state->SOUNDCNT_H & 0x1000)
+			if (state->SOUNDCNT_H & 0x2000)
 			{
 				running_device *dac_device = devtag_get_device(machine, "direct_b_left");
 
 				dac_signed_data_w(dac_device, state->fifo_b[state->fifo_b_ptr]^0x80);
 			}
-			if (state->SOUNDCNT_H & 0x2000)
+			if (state->SOUNDCNT_H & 0x1000)
 			{
 				running_device *dac_device = devtag_get_device(machine, "direct_b_right");
 
@@ -1902,8 +1902,8 @@ ADDRESS_MAP_END
 static INPUT_PORTS_START( gbadv )
 	PORT_START("IN0")
 	PORT_BIT( 0xfc00, IP_ACTIVE_HIGH, IPT_BUTTON5) PORT_UNUSED
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("P1 R") PORT_PLAYER(1)	// R
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("P1 L") PORT_PLAYER(1)	// L
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("P1 L") PORT_PLAYER(1)	// L
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("P1 R") PORT_PLAYER(1)	// R
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(1)
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(1)
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(1)
