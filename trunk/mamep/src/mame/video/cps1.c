@@ -2720,7 +2720,7 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 					sy = 255 - sy;
 				}
 
-				col = ((col & 0xe0) >> 1) + (video_screen_get_frame_number(screen) / 16 & 0x0f);
+				col = ((col & 0xe0) >> 1) + (screen->frame_number() / 16 & 0x0f);
 
 				if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
 					sy >= cliprect->min_y && sy <= cliprect->max_y)

@@ -3366,7 +3366,7 @@ static void menu_autofire_populate(running_machine *machine, ui_menu *menu)
 	int i;
 
 	/* iterate over the input ports and add autofire toggle items */
-	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
 			const char *name = input_field_name(field);
@@ -3436,7 +3436,7 @@ static void menu_custom_button(running_machine *machine, ui_menu *menu, void *pa
 		int i;
 		
 		//count the number of custom buttons
-		for (port = machine->portlist.first(); port != NULL; port = port->next)
+		for (port = machine->portlist.first(); port != NULL; port = port->next())
 			for (field = port->fieldlist; field != NULL; field = field->next)
 			{
 				int type = field->type;
@@ -3490,7 +3490,7 @@ static void menu_custom_button_populate(running_machine *machine, ui_menu *menu)
 //	ui_menu_item_append(menu, MENU_SEPARATOR_ITEM, NULL, 0, NULL);
 
 	/* loop over the input ports and add autofire toggle items */
-	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
 			int player = field->player;

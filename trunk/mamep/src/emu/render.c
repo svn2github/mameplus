@@ -789,18 +789,6 @@ static void render_load(running_machine *machine, int config_type, xml_data_node
 
 		/* set the new values */
 		render_container_set_user_settings(container, &settings);
-#if 0
-		//mamep: load refresh
-		{
-			running_device *screen = (running_device *)container->screen;
-			const screen_config *scrconfig = (const screen_config *)screen->baseconfig().inline_config;
-			double defrefresh = ATTOSECONDS_TO_HZ(scrconfig->refresh);
-			double refresh = (double)xml_get_attribute_float(screennode, "refresh", defrefresh);
-
-			if (floor((refresh - defrefresh) * 1000.0f + 0.5f) != 0)
-				video_screen_configure(screen, 0, 0, &scrconfig->visarea, HZ_TO_ATTOSECONDS(refresh));
-		}
-#endif
 	}
 }
 
@@ -953,20 +941,7 @@ static void render_save(running_machine *machine, int config_type, xml_data_node
 				xml_set_attribute_float(screennode, "vstretch", container->yscale);
 				changed = TRUE;
 			}
-#if 0 //FIXME: crash on exit
-			//mamep: save refresh
-			{
-				const screen_config *scrconfig = (const screen_config *)container->screen->inline_config;
-				double defrefresh = ATTOSECONDS_TO_HZ(scrconfig->refresh);
-				double refresh = ATTOSECONDS_TO_HZ(video_screen_get_frame_period((running_device *)container->screen).attoseconds);
 
-				if (floor((refresh - defrefresh) * 1000.0f + 0.5f) != 0)
-				{
-					xml_set_attribute_float(screennode, "refresh", refresh);
-					changed = TRUE;
-				}
-			}
-#endif
 			/* if nothing changed, kill the node */
 			if (!changed)
 				xml_delete_node(screennode);

@@ -368,32 +368,28 @@ void nvram_load(running_machine *machine)
 
 void nvram_save(running_machine *machine)
 {
-	mame_file *nvram_file = NULL;
-	running_device *device;
+	// only need to do something if we have an NVRAM device or an nvram_handler
+	device_nvram_interface *nvram = NULL;
+	if (!machine->devicelist.first(nvram) && machine->config->nvram_handler == NULL)
+		return;
 
-	/* write data from general NVRAM handler first */
-	// mamep: dont save nvram during playback
-	if (machine->config->nvram_handler != NULL && !has_playback_file(machine))
+	// open the file; if it exists, call everyone to read from it
+	mame_file *nvram_file = nvram_fopen(machine, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+	if (nvram_file != NULL)
 	{
-		nvram_file = nvram_fopen(machine, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
-		(*machine->config->nvram_handler)(machine, nvram_file, 1);
-	}
+		// write data via general NVRAM handler first
+		// mamep: dont save nvram during playback
+		if (machine->config->nvram_handler != NULL && !has_playback_file(machine))
+			(*machine->config->nvram_handler)(machine, nvram_file, TRUE);
 
-	/* find all devices with NVRAM handlers, and write them next */
-	for (device = machine->devicelist.first(); device != NULL; device = device->next)
-	{
-		device_nvram_func nvram = (device_nvram_func)device->get_config_fct(DEVINFO_FCT_NVRAM);
-		if (nvram != NULL)
-		{
-			if (nvram_file == NULL)
-				nvram_file = nvram_fopen(machine, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
-			(*nvram)(device, nvram_file, 1);
-		}
-	}
+		// find all devices with NVRAM handlers, and tell them to write next
+		for (bool gotone = (nvram != NULL); gotone; gotone = nvram->next(nvram))
+			nvram->nvram_save(*nvram_file);
 
-		if (nvram_file != NULL)
-			mame_fclose(nvram_file);
-		}
+		// close the file
+		mame_fclose(nvram_file);
+	}
+}
 
 
 /*-------------------------------------------------

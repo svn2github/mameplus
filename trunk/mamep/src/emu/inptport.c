@@ -5864,7 +5864,7 @@ void input_port_config_custom(ioport_list &portlist, const input_port_token *tok
 	port_config_detokenize(portlist, tokens, errorbuf, errorbuflen);
 
 	// calc total players
-	for (port = portlist.first(); port != NULL; port = port->next)
+	for (port = portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
 			if (nplayer < field->player+1)
@@ -6098,7 +6098,7 @@ static void make_input_log(running_machine *machine)
 
 		now_btn = 0;
 
-		for (port = machine->portlist.first(); port != NULL; port = port->next)
+		for (port = machine->portlist.first(); port != NULL; port = port->next())
 		{
 			const input_field_config *field;
 
@@ -6220,7 +6220,7 @@ skip_comment:
 			next_caption_timer = 0;
 			if (next_caption_frame == 0)
 			{
-				next_caption_frame = (int)video_screen_get_frame_number(machine->primary_screen);
+				next_caption_frame = (int)machine->primary_screen->frame_number();
 				strcpy(next_caption, _("Error: illegal caption file"));
 				mame_fclose(portdata->caption_file);
 				portdata->caption_file = NULL;
@@ -6257,7 +6257,7 @@ skip_comment:
 			}
 			if (next_caption_timer == 0)
 			{
-				next_caption_timer = 5 * ATTOSECONDS_TO_HZ(video_screen_get_frame_period(machine->primary_screen).attoseconds);	// 5sec.
+				next_caption_timer = 5 * ATTOSECONDS_TO_HZ(machine->primary_screen->frame_period().attoseconds);	// 5sec.
 			}
 
 			strcpy(next_caption, &read_buf[i]);
@@ -6272,7 +6272,7 @@ skip_comment:
 			}
 		}
 	}
-	if (next_caption_timer && next_caption_frame <= (int)video_screen_get_frame_number(machine->primary_screen))
+	if (next_caption_timer && next_caption_frame <= (int)machine->primary_screen->frame_number())
 	{
 		caption_timer = next_caption_timer;
 		strcpy(caption_text, next_caption);

@@ -1671,27 +1671,25 @@ astring &game_info_astring(running_machine *machine, astring &string)
 		string.cat(_("None\n"));
 	else
 	{
-		for (running_device *screen = video_screen_first(machine); screen != NULL; screen = video_screen_next(screen))
+		for (screen_device *screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
 		{
-			const screen_config *scrconfig = (const screen_config *)screen->baseconfig().inline_config;
-
 			if (scrcount > 1)
 			{
-				string.cat(slider_get_screen_desc(screen));
+				string.cat(slider_get_screen_desc(*screen));
 				string.cat(": ");
 			}
 
-			if (scrconfig->type == SCREEN_TYPE_VECTOR)
+			if (screen->screen_type() == SCREEN_TYPE_VECTOR)
 				string.cat(_("Vector\n"));
 			else
 			{
-				const rectangle *visarea = video_screen_get_visible_area(screen);
+				const rectangle &visarea = screen->visible_area();
 
 				string.catprintf("%d " UTF8_MULTIPLY " %d (%s) %f" UTF8_NBSP "Hz\n",
-						visarea->max_x - visarea->min_x + 1,
-						visarea->max_y - visarea->min_y + 1,
+						visarea.max_x - visarea.min_x + 1,
+						visarea.max_y - visarea.min_y + 1,
 						(machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "V" : "H",
-						ATTOSECONDS_TO_HZ(video_screen_get_frame_period(screen).attoseconds));
+						ATTOSECONDS_TO_HZ(screen->frame_period().attoseconds));
 			}
 		}
 	}
@@ -1956,12 +1954,12 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 
 	if (ui_disabled) return ui_disabled;
 
-	/* if the user pressed ESC, stop the emulation */
-	if (ui_input_pressed(machine, IPT_UI_CANCEL))
+	/* if the user pressed ESC, stop the emulation (except in MESS with newui, where ESC toggles the menubar) */
+	if (ui_input_pressed(machine, IPT_UI_CANCEL) && !ui_use_newui())
 		return ui_set_handler(handler_confirm_quit, 0);
 
 	/* turn on menus if requested */
-	if (ui_input_pressed(machine, IPT_UI_CONFIGURE))
+	if (ui_input_pressed(machine, IPT_UI_CONFIGURE) && !ui_use_newui())
 		return ui_set_handler(ui_menu_ui_handler, 0);
 
 	/* if the on-screen display isn't up and the user has toggled it, turn it on */
@@ -2281,67 +2279,62 @@ static slider_state *slider_init(running_machine *machine)
 	/* add CPU overclocking (cheat only) */
 	if (options_get_bool(mame_options(), OPTION_CHEAT))
 	{
-		//mamep: certain system has default clockscale other than 1.0f
-		extern float default_clockscales[];
-		int cpunum = 0;
 		for (device = machine->firstcpu; device != NULL; device = cpu_next(device))
 		{
 			void *param = (void *)device;
 			string.printf(_("Overclock CPU %s"), device->tag());
 			//mamep: 4x overclock
-			*tailptr = slider_alloc(machine, string, 10, floor(default_clockscales[cpunum] * 1000.0f), 4000, 50, slider_overclock, param);
+			*tailptr = slider_alloc(machine, string, 10, 1000, 4000, 50, slider_overclock, param);
 			tailptr = &(*tailptr)->next;
-			cpunum ++;
 		}
 	}
 
 	/* add screen parameters */
-	for (device = video_screen_first(machine); device != NULL; device = video_screen_next(device))
+	for (screen_device *screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
 	{
-		const screen_config *scrconfig = (const screen_config *)device->baseconfig().inline_config;
-		int defxscale = floor(scrconfig->xscale * 1000.0f + 0.5f);
-		int defyscale = floor(scrconfig->yscale * 1000.0f + 0.5f);
-		int defxoffset = floor(scrconfig->xoffset * 1000.0f + 0.5f);
-		int defyoffset = floor(scrconfig->yoffset * 1000.0f + 0.5f);
-		void *param = (void *)device;
+		int defxscale = floor(screen->config().xscale() * 1000.0f + 0.5f);
+		int defyscale = floor(screen->config().yscale() * 1000.0f + 0.5f);
+		int defxoffset = floor(screen->config().xoffset() * 1000.0f + 0.5f);
+		int defyoffset = floor(screen->config().yoffset() * 1000.0f + 0.5f);
+		void *param = (void *)screen;
 
 		/* add refresh rate tweaker */
 		if (options_get_bool(mame_options(), OPTION_CHEAT))
 		{
-			string.printf(_("%s Refresh Rate"), slider_get_screen_desc(device));
+			string.printf(_("%s Refresh Rate"), slider_get_screen_desc(*screen));
 			*tailptr = slider_alloc(machine, string, -33000, 0, 33000, 1000, slider_refresh, param);
 			tailptr = &(*tailptr)->next;
 		}
 
 		/* add standard brightness/contrast/gamma controls per-screen */
-		string.printf(_("%s Brightness"), slider_get_screen_desc(device));
+		string.printf(_("%s Brightness"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, 100, 1000, 2000, 10, slider_brightness, param);
 		tailptr = &(*tailptr)->next;
-		string.printf(_("%s Contrast"), slider_get_screen_desc(device));
+		string.printf(_("%s Contrast"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, 100, 1000, 2000, 50, slider_contrast, param);
 		tailptr = &(*tailptr)->next;
-		string.printf(_("%s Gamma"), slider_get_screen_desc(device));
+		string.printf(_("%s Gamma"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, 100, 1000, 3000, 50, slider_gamma, param);
 		tailptr = &(*tailptr)->next;
 
 		/* add scale and offset controls per-screen */
-		string.printf(_("%s Horiz Stretch"), slider_get_screen_desc(device));
-		*tailptr = slider_alloc(machine, string, 500, (defxscale == 0) ? 1000 : defxscale, 1500, 2, slider_xscale, param);
+		string.printf(_("%s Horiz Stretch"), slider_get_screen_desc(*screen));
+		*tailptr = slider_alloc(machine, string, 500, defxscale, 1500, 2, slider_xscale, param);
 		tailptr = &(*tailptr)->next;
-		string.printf(_("%s Horiz Position"), slider_get_screen_desc(device));
+		string.printf(_("%s Horiz Position"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, -500, defxoffset, 500, 2, slider_xoffset, param);
 		tailptr = &(*tailptr)->next;
-		string.printf(_("%s Vert Stretch"), slider_get_screen_desc(device));
-		*tailptr = slider_alloc(machine, string, 500, (defyscale == 0) ? 1000 : defyscale, 1500, 2, slider_yscale, param);
+		string.printf(_("%s Vert Stretch"), slider_get_screen_desc(*screen));
+		*tailptr = slider_alloc(machine, string, 500, defyscale, 1500, 2, slider_yscale, param);
 		tailptr = &(*tailptr)->next;
-		string.printf(_("%s Vert Position"), slider_get_screen_desc(device));
+		string.printf(_("%s Vert Position"), slider_get_screen_desc(*screen));
 		*tailptr = slider_alloc(machine, string, -500, defyoffset, 500, 2, slider_yoffset, param);
 		tailptr = &(*tailptr)->next;
 	}
 
 	for (device = machine->devicelist.first(LASERDISC); device != NULL; device = device->typenext())
 	{
-		const laserdisc_config *config = (const laserdisc_config *)device->baseconfig().inline_config;
+		const laserdisc_config *config = (const laserdisc_config *)downcast<const legacy_device_config_base &>(device->baseconfig()).inline_config();
 		if (config->overupdate != NULL)
 		{
 			int defxscale = floor(config->overscalex * 1000.0f + 0.5f);
@@ -2772,13 +2765,13 @@ static INT32 slider_beam(running_machine *machine, void *arg, astring *string, I
     description for a given screen
 -------------------------------------------------*/
 
-static char *slider_get_screen_desc(running_device *screen)
+static char *slider_get_screen_desc(screen_device &screen)
 {
-	int screen_count = video_screen_count(screen->machine->config);
+	int scrcount = screen_count(*screen.machine->config);
 	static char descbuf[256];
 
-	if (screen_count > 1)
-		sprintf(descbuf, _("Screen '%s'"), screen->tag());
+	if (scrcount > 1)
+		sprintf(descbuf, _("Screen '%s'"), screen.tag());
 	else
 		strcpy(descbuf, _("Screen"));
 

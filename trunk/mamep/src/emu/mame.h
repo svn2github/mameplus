@@ -228,13 +228,17 @@ public:
 	running_machine(const game_driver *driver);
 	~running_machine();
 
-	inline running_device *device(const char *tag);
+	inline device_t *device(const char *tag);
+	template<class T> inline T *device(const char *tag) { return downcast<T *>(device(tag)); }
 	inline const input_port_config *port(const char *tag);
 	inline const region_info *region(const char *tag);
 
-	resource_pool			respool;			/* pool of resources for this machine */
-	region_list				regionlist;			/* list of memory regions */
-	device_list				devicelist;			/* list of running devices */
+	const char *describe_context();
+
+	resource_pool			respool;			// pool of resources for this machine
+	region_list				regionlist;			// list of memory regions
+	device_list				devicelist;			// list of running devices
+	device_scheduler		scheduler;			// scheduler object
 
 	/* configuration data */
 	const machine_config *	config;				/* points to the constructed machine_config */
@@ -244,7 +248,7 @@ public:
 #ifdef USE_HISCORE
 	running_device *	cpu[8];				/* CPU array for hiscore support */
 #endif /* USE_HISCORE */
-	running_device *	firstcpu;			/* first CPU (allows for quick iteration via typenext) */
+	device_t *				firstcpu;			/* first CPU (allows for quick iteration via typenext) */
 
 	/* game-related information */
 	const game_driver *		gamedrv;			/* points to the definition of the game machine */
@@ -252,7 +256,7 @@ public:
 
 	/* video-related information */
 	gfx_element *			gfx[MAX_GFX_ELEMENTS];/* array of pointers to graphic sets (chars, sprites) */
-	running_device *	primary_screen;		/* the primary screen device, or NULL if screenless */
+	screen_device *	primary_screen;		/* the primary screen device, or NULL if screenless */
 	palette_t *				palette;			/* global palette object */
 
 	/* palette-related information */

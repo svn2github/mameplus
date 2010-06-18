@@ -366,7 +366,7 @@ void hiscore_init (running_machine *machine)
 	}
 
 	timer = timer_alloc(machine, hiscore_periodic, NULL);
-	timer_adjust_periodic(timer, video_screen_get_frame_period(machine->primary_screen), 0, video_screen_get_frame_period(machine->primary_screen));
+	timer_adjust_periodic(timer, machine->primary_screen->frame_period(), 0, machine->primary_screen->frame_period());
 
 	add_exit_callback(machine, hiscore_close);
 }

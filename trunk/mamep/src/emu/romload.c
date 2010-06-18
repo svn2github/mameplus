@@ -1259,29 +1259,34 @@ static void process_disk_entries(rom_load_data *romdata, const char *regiontag, 
 
 static UINT32 normalize_flags_for_device(running_machine *machine, UINT32 startflags, const char *rgntag)
 {
-	running_device *device = machine->device(rgntag);
-	if (device != NULL && device->databus_width(0) != 0)
+	device_t *device = machine->device(rgntag);
+	device_memory_interface *memory;
+	if (device->interface(memory))
 	{
-		int buswidth;
+		const address_space_config *spaceconfig = memory->space_config();
+		if (device != NULL && spaceconfig != NULL)
+		{
+			int buswidth;
 
-		/* set the endianness */
-		startflags &= ~ROMREGION_ENDIANMASK;
-		if (device->endianness() == ENDIANNESS_LITTLE)
-			startflags |= ROMREGION_LE;
-		else
-			startflags |= ROMREGION_BE;
+			/* set the endianness */
+			startflags &= ~ROMREGION_ENDIANMASK;
+			if (spaceconfig->m_endianness == ENDIANNESS_LITTLE)
+				startflags |= ROMREGION_LE;
+			else
+				startflags |= ROMREGION_BE;
 
-		/* set the width */
-		startflags &= ~ROMREGION_WIDTHMASK;
-		buswidth = device->databus_width(0);
-		if (buswidth <= 8)
-			startflags |= ROMREGION_8BIT;
-		else if (buswidth <= 16)
-			startflags |= ROMREGION_16BIT;
-		else if (buswidth <= 32)
-			startflags |= ROMREGION_32BIT;
-		else
-			startflags |= ROMREGION_64BIT;
+			/* set the width */
+			startflags &= ~ROMREGION_WIDTHMASK;
+			buswidth = spaceconfig->m_databus_width;
+			if (buswidth <= 8)
+				startflags |= ROMREGION_8BIT;
+			else if (buswidth <= 16)
+				startflags |= ROMREGION_16BIT;
+			else if (buswidth <= 32)
+				startflags |= ROMREGION_32BIT;
+			else
+				startflags |= ROMREGION_64BIT;
+		}
 	}
 	return startflags;
 }
@@ -1326,6 +1331,10 @@ void load_software_part_region(running_device *device, char *swlist, char *swnam
 		/* if this is a device region, override with the device width and endianness */
 		if (devtag_get_device(romdata->machine, astring_c(regiontag)) != NULL)
 			regionflags = normalize_flags_for_device(romdata->machine, regionflags, astring_c(regiontag));
+
+		/* clear old region (todo: should be moved to an image unload function) */
+		if (memory_region(romdata->machine, astring_c(regiontag)) != NULL)
+			memory_region_free(romdata->machine, astring_c(regiontag));
 
 		/* remember the base and length */
 		romdata->region = memory_region_alloc(romdata->machine, astring_c(regiontag), regionlength, regionflags);
