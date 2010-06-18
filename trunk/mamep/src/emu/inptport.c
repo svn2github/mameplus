@@ -210,7 +210,7 @@ struct _device_field_info
 {
 	device_field_info *			next;				/* linked list of info for this port */
 	const input_field_config *	field;				/* pointer to the input field referenced */
-	running_device *		device;				/* device */
+	device_t *		device;				/* device */
 	UINT8						shift;				/* shift to apply to the final result */
 	input_port_value			oldval;				/* last value */
 };
@@ -926,7 +926,7 @@ INLINE const char *get_port_tag(const input_port_config *port, char *tempbuffer)
 
 	if (port->tag != NULL)
 		return port->tag;
-	for (curport = port->machine->portlist.first(); curport != NULL; curport = curport->next)
+	for (curport = port->machine->portlist.first(); curport != NULL; curport = curport->next())
 	{
 		if (curport == port)
 			break;
@@ -1581,7 +1581,7 @@ input_port_value input_port_read_direct(const input_port_config *port)
 	/* update VBLANK bits */
 	if (port->state->vblank != 0)
 	{
-		if (video_screen_get_vblank(port->machine->primary_screen))
+		if (port->machine->primary_screen->vblank())
 			result |= port->state->vblank;
 		else
 			result &= ~port->state->vblank;
@@ -1663,7 +1663,7 @@ int input_port_get_crosshair_position(running_machine *machine, int player, floa
 	int gotx = FALSE, goty = FALSE;
 
 	/* read all the lightgun values */
-	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (field->player == player && field->crossaxis != CROSSHAIR_AXIS_NONE)
 				if (input_condition_true(machine, &field->condition))
@@ -1732,7 +1732,7 @@ void input_port_update_defaults(running_machine *machine)
 		const input_port_config *port;
 
 		/* loop over all input ports */
-		for (port = machine->portlist.first(); port != NULL; port = port->next)
+		for (port = machine->portlist.first(); port != NULL; port = port->next())
 		{
 			const input_field_config *field;
 
@@ -2082,7 +2082,7 @@ static void init_port_state(running_machine *machine)
 	const input_port_config *port;
 
 	/* allocate live structures to mirror the configuration */
-	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next())
 	{
 		analog_field_state **analogstatetail;
 		device_field_info **readdevicetail;
@@ -2174,7 +2174,7 @@ static void init_port_state(running_machine *machine)
 
 	/* look for 4-way joysticks and change the default map if we find any */
 	if (joystick_map_default[0] == 0 || strcmp(joystick_map_default, "auto") == 0)
-		for (port = machine->portlist.first(); port != NULL; port = port->next)
+		for (port = machine->portlist.first(); port != NULL; port = port->next())
 			for (field = port->fieldlist; field != NULL; field = field->next)
 				if (field->state->joystick != NULL && field->way == 4)
 				{
@@ -2228,7 +2228,7 @@ static void init_autoselect_devices(const ioport_list &portlist, int type1, int 
 
 	/* only scan the list if we haven't already enabled this class of control */
 	if (portlist.first() != NULL && !input_device_class_enabled(portlist.first()->machine, autoenable))
-		for (port = portlist.first(); port != NULL; port = port->next)
+		for (port = portlist.first(); port != NULL; port = port->next())
 			for (field = port->fieldlist; field != NULL; field = field->next)
 
 				/* if this port type is in use, apply the autoselect criteria */
@@ -2264,7 +2264,7 @@ static device_field_info *init_field_device_info(const input_field_config *field
 	if (device_name != NULL)
 		info->device = field->port->machine->device(device_name);
 	else
-		info->device = (running_device *) info;
+		info->device = (device_t *) info;
 
 	info->oldval = field->defvalue >> info->shift;
 	return info;
@@ -2566,7 +2566,7 @@ profiler_mark_start(PROFILER_INPUT);
 	}
 
 	/* loop over all input ports */
-	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next())
 	{
 		const input_field_config *field;
 		device_field_info *device_field;
@@ -2940,7 +2940,7 @@ static int frame_get_digital_field_state(const input_field_config *field, int mo
 	}
 
 	/* skip locked-out coin inputs */
-	if (curstate && field->type >= IPT_COIN1 && field->type <= IPT_COIN8 && coin_lockout_get_state(field->port->machine, field->type - IPT_COIN1) && options_get_bool(mame_options(), OPTION_COIN_LOCKOUT))
+	if (curstate && field->type >= IPT_COIN1 && field->type <= IPT_COIN12 && coin_lockout_get_state(field->port->machine, field->type - IPT_COIN1) && options_get_bool(mame_options(), OPTION_COIN_LOCKOUT))
 	{
 		ui_popup_time(3, _("Coinlock disabled %s."), _(input_field_name(field)));
 		return FALSE;
@@ -3615,7 +3615,7 @@ static void port_config_detokenize(ioport_list &portlist, const input_port_token
 -------------------------------------------------*/
 
 input_port_config::input_port_config(const char *_tag)
-	: next(NULL),
+	: m_next(NULL),
 	  tag(_tag),
 	  fieldlist(NULL),
 	  state(NULL),
@@ -4179,7 +4179,7 @@ static int load_game_config(running_machine *machine, xml_data_node *portnode, i
 	defvalue = xml_get_attribute_int(portnode, "defvalue", 0);
 
 	/* find the port we want; if no tag, search them all */
-	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next())
 		if (tag == NULL || strcmp(get_port_tag(port, tempbuffer), tag) == 0)
 			for (field = port->fieldlist; field != NULL; field = field->next)
 
@@ -4355,7 +4355,7 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 	int portnum;
 
 	/* iterate over ports */
-	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (save_this_input_field_type(field->type))
 			{
@@ -4889,7 +4889,7 @@ int input_machine_has_keyboard(running_machine *machine)
 #ifdef MESS
 	const input_field_config *field;
 	const input_port_config *port;
-	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next())
 	{
 		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
@@ -4970,7 +4970,7 @@ static int scan_keys(running_machine *machine, const input_port_config *portconf
 
 	assert(keys < NUM_SIMUL_KEYS);
 
-	for (port = portconfig; port != NULL; port = port->next)
+	for (port = portconfig; port != NULL; port = port->next())
 	{
 		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
@@ -5589,7 +5589,7 @@ int input_has_input_class(running_machine *machine, int inputclass)
 	const input_port_config *port;
 	const input_field_config *field;
 
-	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next())
 	{
 		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
@@ -5614,7 +5614,7 @@ int input_count_players(running_machine *machine)
 	int joystick_count;
 
 	joystick_count = 0;
-	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next())
 	{
 		for (field = port->fieldlist;  field != NULL; field = field->next)
 		{
@@ -5645,7 +5645,7 @@ int input_category_active(running_machine *machine, int category)
 	assert(category >= 1);
 
 	/* loop through the input ports */
-	for (port = machine->portlist.first(); port != NULL; port = port->next)
+	for (port = machine->portlist.first(); port != NULL; port = port->next())
 	{
 		for (field = port->fieldlist; field != NULL; field = field->next)
 		{

@@ -176,7 +176,7 @@ const rom_source *rom_first_source(const game_driver *drv, const machine_config 
 
 	/* otherwise, look through devices */
 	if (config != NULL)
-		for (devconfig = config->devicelist.first(); devconfig != NULL; devconfig = devconfig->next)
+		for (devconfig = config->devicelist.first(); devconfig != NULL; devconfig = devconfig->next())
 		{
 			const rom_entry *devromp = devconfig->rom_region();
 			if (devromp != NULL)
@@ -199,10 +199,10 @@ const rom_source *rom_next_source(const game_driver *drv, const machine_config *
 	if (rom_source_is_gamedrv(drv, previous))
 		devconfig = (config != NULL) ? config->devicelist.first() : NULL;
 	else
-		devconfig = ((const device_config *)previous)->next;
+		devconfig = ((const device_config *)previous)->next();
 
 	/* look for further devices with ROM definitions */
-	for ( ; devconfig != NULL; devconfig = devconfig->next)
+	for ( ; devconfig != NULL; devconfig = devconfig->next())
 	{
 		const rom_entry *devromp = devconfig->rom_region();
 		if (devromp != NULL)

@@ -4,8 +4,36 @@
 
     Core MAME video routines.
 
-    Copyright Nicola Salmoria and the MAME Team.
-    Visit http://mamedev.org for licensing and usage restrictions.
+****************************************************************************
+
+    Copyright Aaron Giles
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are
+    met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in
+          the documentation and/or other materials provided with the
+          distribution.
+        * Neither the name 'MAME' nor the names of its contributors may be
+          used to endorse or promote products derived from this software
+          without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY AARON GILES ''AS IS'' AND ANY EXPRESS OR
+    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL AARON GILES BE LIABLE FOR ANY DIRECT,
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+    IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
 
 ***************************************************************************/
 
@@ -43,9 +71,6 @@
 
 #define SUBSECONDS_PER_SPEED_UPDATE	(ATTOSECONDS_PER_SECOND / 4)
 #define PAUSED_REFRESH_RATE			(30)
-#define MAX_VBLANK_CALLBACKS		(10)
-#define DEFAULT_FRAME_RATE			60
-#define DEFAULT_FRAME_PERIOD		ATTOTIME_IN_HZ(DEFAULT_FRAME_RATE)
 
 
 
@@ -193,16 +218,9 @@ static const UINT8 skiptable[FRAMESKIP_LEVELS][FRAMESKIP_LEVELS] =
 static void video_exit(running_machine *machine);
 static void init_buffered_spriteram(running_machine *machine);
 
-static void realloc_screen_bitmaps(running_device *screen);
-static STATE_POSTLOAD( video_screen_postload );
-
 /* global rendering */
-static TIMER_CALLBACK( vblank_begin_callback );
-static TIMER_CALLBACK( vblank_end_callback );
-static TIMER_CALLBACK( screenless_update_callback );
-static TIMER_CALLBACK( scanline0_callback );
-static TIMER_CALLBACK( scanline_update_callback );
 static int finish_screen_updates(running_machine *machine);
+static TIMER_CALLBACK( screenless_update_callback );
 
 /* throttling/frameskipping/performance */
 static void update_throttle(running_machine *machine, attotime emutime);
@@ -212,16 +230,12 @@ static void recompute_speed(running_machine *machine, attotime emutime);
 static void update_refresh_speed(running_machine *machine);
 
 /* screen snapshots */
-static void create_snapshot_bitmap(running_device *screen);
+static void create_snapshot_bitmap(device_t *screen);
 static file_error mame_fopen_next(running_machine *machine, const char *pathoption, const char *extension, mame_file **file);
 
 /* movie recording */
 static void video_mng_record_frame(running_machine *machine);
 static void video_avi_record_frame(running_machine *machine);
-
-/* burn-in generation */
-static void video_update_burnin(running_machine *machine);
-static void video_finalize_burnin(running_device *screen);
 
 /* software rendering */
 static void rgb888_draw_primitives(const render_primitive *primlist, void *dstdata, UINT32 width, UINT32 height, UINT32 pitch);
@@ -236,21 +250,6 @@ static void texture_set_scalebitmap(running_device *screen, const rectangle *vis
 /***************************************************************************
     INLINE FUNCTIONS
 ***************************************************************************/
-
-/*-------------------------------------------------
-    get_safe_token - makes sure that the passed
-    in device is, in fact, a screen
--------------------------------------------------*/
-
-INLINE screen_state *get_safe_token(running_device *device)
-{
-	assert(device != NULL);
-	assert(device->token != NULL);
-	assert(device->type == VIDEO_SCREEN);
-
-	return (screen_state *)device->token;
-}
-
 
 /*-------------------------------------------------
     effective_autoframeskip - return the effective
@@ -397,7 +396,7 @@ void video_init(running_machine *machine)
 	if (machine->primary_screen == NULL)
 	{
 		global.screenless_frame_timer = timer_alloc(machine, screenless_update_callback, NULL);
-		timer_adjust_periodic(global.screenless_frame_timer, DEFAULT_FRAME_PERIOD, 0, DEFAULT_FRAME_PERIOD);
+		timer_adjust_periodic(global.screenless_frame_timer, screen_device::k_default_frame_period, 0, screen_device::k_default_frame_period);
 	}
 }
 
@@ -433,7 +432,7 @@ static void video_exit(running_machine *machine)
 	if (global.snap_target != NULL)
 		render_target_free(global.snap_target);
 	if (global.snap_bitmap != NULL)
-		bitmap_free(global.snap_bitmap);
+		global_free(global.snap_bitmap);
 
 	/* print a final result if we have at least 5 seconds' worth of data */
 	if (global.overall_emutime.seconds >= 5)

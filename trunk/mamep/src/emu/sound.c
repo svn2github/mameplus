@@ -46,46 +46,6 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _sound_output sound_output;
-struct _sound_output
-{
-	sound_stream *	stream;					/* associated stream */
-	int				output;					/* output number */
-};
-
-
-typedef struct _sound_class_data sound_class_data;
-struct _sound_class_data
-{
-	int				outputs;				/* number of outputs from this instance */
-	sound_output	output[MAX_OUTPUTS];	/* array of output information */
-};
-
-
-typedef struct _speaker_input speaker_input;
-struct _speaker_input
-{
-	float			gain;					/* current gain */
-	float			default_gain;			/* default gain */
-	char *			name;					/* name of this input */
-};
-
-
-typedef struct _speaker_info speaker_info;
-struct _speaker_info
-{
-	const speaker_config *speaker;			/* pointer to the speaker info */
-	const char *	tag;					/* speaker tag */
-	sound_stream *	mixer_stream;			/* mixing stream */
-	int				inputs;					/* number of input streams */
-	speaker_input *	input;					/* array of input information */
-#ifdef MAME_DEBUG
-	INT32			max_sample;				/* largest sample value we've seen */
-	INT32			clipped_samples;		/* total number of clipped samples */
-	INT32			total_samples;			/* total number of samples */
-#endif
-};
-
 struct _sound_private
 {
 	emu_timer *update_timer;
@@ -125,8 +85,6 @@ static void sound_load(running_machine *machine, int config_type, xml_data_node 
 static void sound_save(running_machine *machine, int config_type, xml_data_node *parentnode);
 static TIMER_CALLBACK( sound_update );
 static void route_sound(running_machine *machine);
-static STREAM_UPDATE( mixer_update );
-static STATE_POSTLOAD( mixer_postload );
 
 #ifdef USE_VOLUME_AUTO_ADJUST
 INLINE INT16 calc_volume_final(INT32 sample);
@@ -138,59 +96,25 @@ INLINE INT16 calc_volume_mixer(INT32 sample);
     INLINE FUNCTIONS
 ***************************************************************************/
 
-/*-------------------------------------------------
-    get_class_data - return a pointer to the
-    class data
--------------------------------------------------*/
+//-------------------------------------------------
+//  index_to_input - map an absolute index to
+//  a particular input
+//-------------------------------------------------
 
-INLINE sound_class_data *get_class_data(running_device *device)
+INLINE speaker_device *index_to_input(running_machine *machine, int index, int &input)
 {
-	assert(device != NULL);
-	assert(device->type == SOUND);
-	assert(device->devclass == DEVICE_CLASS_SOUND_CHIP);
-	assert(device->token != NULL);
-	return (sound_class_data *)((UINT8 *)device->token + device->tokenbytes) - 1;
-}
-
-
-/*-------------------------------------------------
-    get_safe_token - makes sure that the passed
-    in device is, in fact, a timer
--------------------------------------------------*/
-
-INLINE speaker_info *get_safe_token(running_device *device)
-{
-	assert(device != NULL);
-	assert(device->token != NULL);
-	assert(device->type == SPEAKER_OUTPUT);
-
-	return (speaker_info *)device->token;
-}
-
-
-/*-------------------------------------------------
-    index_to_input - map an absolute index to
-    a particular input
--------------------------------------------------*/
-
-INLINE speaker_info *index_to_input(running_machine *machine, int index, int *input)
-{
-	running_device *curspeak;
-	int count = 0;
-
-	/* scan through the speakers until we find the indexed input */
-	for (curspeak = speaker_output_first(machine); curspeak != NULL; curspeak = speaker_output_next(curspeak))
+	// scan through the speakers until we find the indexed input
+	for (speaker_device *speaker = speaker_first(*machine); speaker != NULL; speaker = speaker_next(speaker))
 	{
-		speaker_info *info = (speaker_info *)curspeak->token;
-		if (index < count + info->inputs)
+		if (index < speaker->inputs())
 		{
-			*input = index - count;
-			return info;
+			input = index;
+			return speaker;
 		}
-		count += info->inputs;
+		index -= speaker->inputs();
 	}
 
-	/* index out of range */
+	// index out of range
 	return NULL;
 }
 
@@ -545,11 +469,11 @@ static void route_sound(running_machine *machine)
 
 static void sound_reset(running_machine *machine)
 {
-	running_device *sound;
+	device_sound_interface *sound = NULL;
 
 	/* reset all the sound chips */
-	for (sound = sound_first(machine); sound != NULL; sound = sound_next(sound))
-		sound->reset();
+	for (bool gotone = machine->devicelist.first(sound); gotone; gotone = sound->next(sound))
+		sound->device().reset();
 }
 
 
@@ -731,7 +655,6 @@ static void sound_save(running_machine *machine, int config_type, xml_data_node 
 static TIMER_CALLBACK( sound_update )
 {
 	UINT32 finalmix_step, finalmix_offset;
-	running_device *curspeak;
 	int samples_this_update = 0;
 	int sample;
 	sound_private *global = machine->sound_data;
@@ -747,67 +670,8 @@ static TIMER_CALLBACK( sound_update )
 	finalmix = global->finalmix;
 
 	/* force all the speaker streams to generate the proper number of samples */
-	for (curspeak = speaker_output_first(machine); curspeak != NULL; curspeak = speaker_output_next(curspeak))
-	{
-		speaker_info *spk = (speaker_info *)curspeak->token;
-		const stream_sample_t *stream_buf;
-
-		/* get the output buffer */
-		if (spk->mixer_stream != NULL)
-		{
-			int numsamples;
-
-			/* update the stream, getting the start/end pointers around the operation */
-			stream_buf = stream_get_output_since_last_update(spk->mixer_stream, 0, &numsamples);
-
-			/* set or assert that all streams have the same count */
-			if (samples_this_update == 0)
-			{
-				samples_this_update = numsamples;
-
-				/* reset the mixing streams */
-				memset(leftmix, 0, samples_this_update * sizeof(*leftmix));
-				memset(rightmix, 0, samples_this_update * sizeof(*rightmix));
-			}
-			assert(samples_this_update == numsamples);
-
-#ifdef MAME_DEBUG
-			/* debug version: keep track of the maximum sample */
-			for (sample = 0; sample < samples_this_update; sample++)
-			{
-				if (stream_buf[sample] > spk->max_sample)
-					spk->max_sample = stream_buf[sample];
-				else if (-stream_buf[sample] > spk->max_sample)
-					spk->max_sample = -stream_buf[sample];
-				if (stream_buf[sample] > 32767 || stream_buf[sample] < -32768)
-					spk->clipped_samples++;
-				spk->total_samples++;
-			}
-#endif
-
-			/* mix if sound is enabled */
-			if (global->enabled && !global->nosound_mode)
-			{
-				/* if the speaker is centered, send to both left and right */
-				if (spk->speaker->x == 0)
-					for (sample = 0; sample < samples_this_update; sample++)
-					{
-						leftmix[sample] += stream_buf[sample];
-						rightmix[sample] += stream_buf[sample];
-					}
-
-				/* if the speaker is to the left, send only to the left */
-				else if (spk->speaker->x < 0)
-					for (sample = 0; sample < samples_this_update; sample++)
-						leftmix[sample] += stream_buf[sample];
-
-				/* if the speaker is to the right, send only to the right */
-				else
-					for (sample = 0; sample < samples_this_update; sample++)
-						rightmix[sample] += stream_buf[sample];
-			}
-		}
-	}
+	for (speaker_device *speaker = speaker_first(*machine); speaker != NULL; speaker = speaker_next(speaker))
+		speaker->mix(leftmix, rightmix, samples_this_update, !global->enabled || global->nosound_mode);
 
 	/* now downmix the final result */
 	finalmix_step = video_get_speed_factor();
@@ -1074,7 +938,7 @@ DEVICE_GET_INFO( speaker_output )
     particular output
 -------------------------------------------------*/
 
-void sound_set_output_gain(running_device *device, int output, float gain)
+void sound_set_output_gain(device_t *device, int output, float gain)
 {
 	sound_stream *stream;
 	int outputnum;
@@ -1096,15 +960,11 @@ void sound_set_output_gain(running_device *device, int output, float gain)
 
 int sound_get_user_gain_count(running_machine *machine)
 {
-	running_device *curspeak;
+	// count up the number of speaker inputs
 	int count = 0;
+	for (speaker_device *speaker = speaker_first(*machine); speaker != NULL; speaker = speaker_next(speaker))
+		count += speaker->inputs();
 
-	/* count up the number of speaker inputs */
-	for (curspeak = speaker_output_first(machine); curspeak != NULL; curspeak = speaker_output_next(curspeak))
-	{
-		speaker_info *info = (speaker_info *)curspeak->token;
-		count += info->inputs;
-	}
 	return count;
 }
 
@@ -1117,13 +977,10 @@ int sound_get_user_gain_count(running_machine *machine)
 void sound_set_user_gain(running_machine *machine, int index, float gain)
 {
 	int inputnum;
-	speaker_info *spk = index_to_input(machine, index, &inputnum);
+	speaker_device *speaker = index_to_input(machine, index, inputnum);
 
-	if (spk != NULL)
-	{
-		spk->input[inputnum].gain = gain;
-		stream_set_input_gain(spk->mixer_stream, inputnum, gain);
-	}
+	if (speaker != NULL)
+		speaker->set_input_gain(inputnum, gain);
 }
 
 
@@ -1135,8 +992,8 @@ void sound_set_user_gain(running_machine *machine, int index, float gain)
 float sound_get_user_gain(running_machine *machine, int index)
 {
 	int inputnum;
-	speaker_info *spk = index_to_input(machine, index, &inputnum);
-	return (spk != NULL) ? spk->input[inputnum].gain : 0;
+	speaker_device *speaker = index_to_input(machine, index, inputnum);
+	return (speaker != NULL) ? speaker->input_gain(inputnum) : 0;
 }
 
 
@@ -1148,8 +1005,8 @@ float sound_get_user_gain(running_machine *machine, int index)
 float sound_get_default_gain(running_machine *machine, int index)
 {
 	int inputnum;
-	speaker_info *spk = index_to_input(machine, index, &inputnum);
-	return (spk != NULL) ? spk->input[inputnum].default_gain : 0;
+	speaker_device *speaker = index_to_input(machine, index, inputnum);
+	return (speaker != NULL) ? speaker->input_default_gain(inputnum) : 0;
 }
 
 
@@ -1161,6 +1018,6 @@ float sound_get_default_gain(running_machine *machine, int index)
 const char *sound_get_user_gain_name(running_machine *machine, int index)
 {
 	int inputnum;
-	speaker_info *spk = index_to_input(machine, index, &inputnum);
-	return (spk != NULL) ? spk->input[inputnum].name : NULL;
+	speaker_device *speaker = index_to_input(machine, index, inputnum);
+	return (speaker != NULL) ? speaker->input_name(inputnum) : 0;
 }

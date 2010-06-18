@@ -134,7 +134,7 @@ static sym_get_line_from_addr_64_ptr sym_get_line_from_addr_64;
 static get_module_information_ptr get_module_information;
 
 static char mapfile_name[MAX_PATH];
-static LPTOP_LEVEL_EXCEPTION_FILTER WINAPI pass_thru_filter;
+static LPTOP_LEVEL_EXCEPTION_FILTER pass_thru_filter;
 
 static HANDLE watchdog_reset_event;
 static HANDLE watchdog_exit_event;
@@ -758,10 +758,11 @@ static const char *line_to_symbol(const char *line, FPTR &address)
 	// find a matching start
 	if (strncmp(line, "                0x", 18) == 0)
 		if (sscanf(line, " 0x%p %s", &temp, symbol) == 2)
-		{
-			address = reinterpret_cast<FPTR>(temp);
-			return strstr(line, symbol);
-		}
+			if (symbol[0] != '0' && symbol[1] != 'x')
+			{
+				address = reinterpret_cast<FPTR>(temp);
+				return strstr(line, symbol);
+			}
 #endif
 
 #ifdef _MSC_VER

@@ -174,6 +174,8 @@ public:
 	region_info(running_machine *machine, const char *_name, UINT32 _length, UINT32 _flags);
 	~region_info();
 
+	region_info *next() const { return m_next; }
+
 	operator void *() const { return (this != NULL) ? base.v : NULL; }
 	operator INT8 *() const { return (this != NULL) ? base.i8 : NULL; }
 	operator UINT8 *() const { return (this != NULL) ? base.u8 : NULL; }
@@ -189,7 +191,7 @@ public:
 	endianness_t endianness() const { return ((flags & ROMREGION_ENDIANMASK) == ROMREGION_LE) ? ENDIANNESS_LITTLE : ENDIANNESS_BIG; }
 	UINT8 width() const { return 1 << ((flags & ROMREGION_WIDTHMASK) >> 8); }
 
-	region_info *			next;
+	region_info *			m_next;
 	astring					name;
 	generic_ptr				base;
 	UINT32					length;
@@ -265,12 +267,14 @@ public:
 	/* debugger-related information */
 	UINT32					debug_flags;		/* the current debug flags */
 
+	/* UI-related */
+	bool					ui_active;			/* ui active or not (useful for games / systems with keyboard inputs) */
+
 	/* generic pointers */
 	generic_pointers		generic;			/* generic pointers */
 
 	/* internal core information */
 	mame_private *			mame_data;			/* internal data from mame.c */
-	cpuexec_private *		cpuexec_data;		/* internal data from cpuexec.c */
 	timer_private *			timer_data;			/* internal data from timer.c */
 	state_private *			state_data;			/* internal data from state.c */
 	memory_private *		memory_data;		/* internal data from memory.c */
@@ -295,6 +299,9 @@ public:
 
 	/* driver-specific information */
 	void *					driver_data;		/* drivers can hang data off of here instead of using globals */
+
+private:
+	astring						m_context;				// context string
 };
 
 
@@ -483,7 +490,7 @@ void mame_get_current_datetime(running_machine *machine, mame_system_time *systi
     INLINE FUNCTIONS
 ***************************************************************************/
 
-inline running_device *running_machine::device(const char *tag)
+inline device_t *running_machine::device(const char *tag)
 {
 	return devicelist.find(tag);
 }
