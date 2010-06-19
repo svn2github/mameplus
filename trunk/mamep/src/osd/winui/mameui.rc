@@ -603,15 +603,15 @@ BEGIN
     LTEXT           "Screen:",IDC_STATIC,12,183,55,9
     LTEXT           "Static\nStatic\nStatic",IDC_PROP_SCREEN,68,182,192,24
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,208,240,1
-#ifdef MISC_FOLDER
+#ifdef USE_MORE_FOLDER_INFO
     LTEXT           "Control Type:",IDC_STATIC,12,211,55,9
     LTEXT           "Static",IDC_PROP_INPUT,68,211,192,9
     LTEXT           "Save State:",IDC_STATIC,12,221,55,9
     LTEXT           "Static",IDC_PROP_SAVESTATE,68,221,180,9
-#else /* MISC_FOLDER */
+#else /* USE_MORE_FOLDER_INFO */
     LTEXT           "Colors:",IDC_STATIC,12,211,55,9
     LTEXT           "Static",IDC_PROP_COLORS,68,211,192,9
-#endif /* !MISC_FOLDER */
+#endif /* !USE_MORE_FOLDER_INFO */
     LTEXT           "Driver:",IDC_STATIC,12,231,55,9
     LTEXT           "Static",IDC_PROP_SOURCE,68,231,180,9
     LTEXT           "Clone of:",IDC_PROP_CLONEOF_TEXT,12,241,55,9

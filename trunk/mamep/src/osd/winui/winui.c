@@ -803,6 +803,7 @@ static const int s_nPickers[] =
 	IDC_LIST
 #ifdef MESS
 	,IDC_SWLIST
+	,IDC_SOFTLIST
 #endif
 };
 
@@ -832,6 +833,7 @@ static ResizeItem main_resize_items[] =
 	{ RA_ID,   { IDC_SSTAB },    FALSE,	RA_RIGHT | RA_TOP,                 NULL },
 #ifdef MESS
 	{ RA_ID,   { IDC_SWLIST },    TRUE,	RA_RIGHT | RA_BOTTOM | RA_TOP,     NULL },
+	{ RA_ID,   { IDC_SOFTLIST },  TRUE,	RA_RIGHT | RA_BOTTOM | RA_TOP,     NULL },
 	{ RA_ID,   { IDC_SPLITTER3 },FALSE,	RA_RIGHT | RA_BOTTOM | RA_TOP,     NULL },
 #endif /* MESS */
 	{ RA_END,  { 0 },            FALSE, 0,                                 NULL }
@@ -1007,6 +1009,14 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 			options_set_wstring(mame_opts, OPTION_AVIWRITE, playopts->aviwrite, OPTION_PRIORITY_CMDLINE);
 	}
 
+#ifdef MESS
+	if (g_szSelectedSoftware[0] && g_szSelectedDevice[0]) {
+			options_set_string(mame_opts, g_szSelectedDevice, g_szSelectedSoftware, OPTION_PRIORITY_CMDLINE);
+			// Add params and clear so next start of driver is without parameters			
+			g_szSelectedSoftware[0] = 0;
+			g_szSelectedDevice[0] = 0;
+	}
+#endif	
 	// Mame will parse all the needed .ini files.
 
 	// prepare MAME32 to run the game
@@ -1517,7 +1527,8 @@ void UpdateScreenShot(void)
 		           rect.bottom - rect.top,
 		           TRUE);
 
-		ShowWindow(GetDlgItem(hMain,IDC_SSPICTURE), NeedScreenShotImage() ? SW_SHOW : SW_HIDE);
+		ShowWindow(GetDlgItem(hMain,IDC_SSPICTURE),
+				   NeedScreenShotImage() ? SW_SHOW : SW_HIDE);
 		ShowWindow(GetDlgItem(hMain,IDC_SSFRAME),SW_SHOW);
 		ShowWindow(GetDlgItem(hMain,IDC_SSTAB),bShowTabCtrl ? SW_SHOW : SW_HIDE);
 
@@ -5982,14 +5993,33 @@ static void ReloadIcons(void)
 
 static DWORD GetShellLargeIconSize(void)
 {
-	DWORD  dwSize, dwLength = 512, dwType = REG_SZ;
+	DWORD  dwSize = 32, dwLength = 512, dwType = REG_SZ;
 	TCHAR  szBuffer[512];
 	HKEY   hKey;
+	LONG   lRes;
+	LPTSTR tErrorMessage = NULL;
 
 	/* Get the Key */
-	RegOpenKey(HKEY_CURRENT_USER, TEXT("Control Panel\\desktop\\WindowMetrics"), &hKey);
+	lRes = RegOpenKey(HKEY_CURRENT_USER, TEXT("Control Panel\\Desktop\\WindowMetrics"), &hKey);
+	if( lRes != ERROR_SUCCESS )
+	{
+		GetSystemErrorMessage(lRes, &tErrorMessage);
+		MessageBox(GetMainWindow(), tErrorMessage, TEXT("Large shell icon size registry access"), MB_OK | MB_ICONERROR);
+		LocalFree(tErrorMessage);
+		return dwSize;
+	}
+
 	/* Save the last size */
-	RegQueryValueEx(hKey, TEXT("Shell Icon Size"), NULL, &dwType, (LPBYTE)szBuffer, &dwLength);
+	lRes = RegQueryValueEx(hKey, TEXT("Shell Icon Size"), NULL, &dwType, (LPBYTE)szBuffer, &dwLength);
+	if( lRes != ERROR_SUCCESS )
+	{
+		GetSystemErrorMessage(lRes, &tErrorMessage);
+		MessageBox(GetMainWindow(), tErrorMessage, TEXT("Large shell icon size registry query"), MB_OK | MB_ICONERROR);
+		LocalFree(tErrorMessage);
+		RegCloseKey(hKey);
+		return dwSize;
+	}
+
 	dwSize = _ttol(szBuffer);
 	if (dwSize < 32)
 		dwSize = 32;
@@ -6023,6 +6053,7 @@ static DWORD GetShellSmallIconSize(void)
 // create iconlist for Listview control
 static void CreateIcons(void)
 {
+	DWORD dwSmallIconSize = GetShellSmallIconSize();
 	DWORD dwLargeIconSize = GetShellLargeIconSize();
 	HICON hIcon;
 	int icon_count;
@@ -6049,13 +6080,19 @@ static void CreateIcons(void)
 	dwStyle = GetWindowLong(hwndList,GWL_STYLE);
 	SetWindowLong(hwndList,GWL_STYLE,(dwStyle & ~LVS_TYPEMASK) | LVS_ICON);
 
-	hSmall = ImageList_Create(GetShellSmallIconSize(),GetShellSmallIconSize(),
+	hSmall = ImageList_Create(dwSmallIconSize, dwSmallIconSize,
 							  ILC_COLORDDB | ILC_MASK, icon_count, icon_count + grow);
+
+	if (NULL == hSmall) {
+		win_message_box_utf8(hwndList, "Cannot allocate small icon image list", "Allocation error - Exiting", IDOK);
+		PostQuitMessage(0);
+	}
+	
 	hLarge = ImageList_Create(dwLargeIconSize, dwLargeIconSize,
 							  ILC_COLORDDB | ILC_MASK, icon_count, icon_count + grow);
 
-	if (NULL == hSmall || NULL == hLarge) {
-		win_message_box_utf8(hwndList, "Cannot allocate Icon lists", "Allocation error - Exiting", IDOK);
+	if (NULL == hLarge) {
+		win_message_box_utf8(hwndList, "Cannot allocate large icon image list", "Allocation error - Exiting", IDOK);
 		PostQuitMessage(0);
 	}
 

@@ -393,8 +393,8 @@
 
 #define IDC_TRANSPARENCY                1361 // TRANS_UI
 #define IDC_TRANSPARENCYDISP            1362 // TRANS_UI
-#define IDC_PROP_INPUT                  1363 // USE_MISC_FOLDER
-#define IDC_PROP_SAVESTATE              1364 // USE_MISC_FOLDER
+#define IDC_PROP_INPUT                  1363 // USE_MORE_FOLDER_INFO
+#define IDC_PROP_SAVESTATE              1364 // USE_MORE_FOLDER_INFO
 #define IDC_BIOSTEXT                    1365
 
 #define IDC_DRV_TEXT                    1400 // DRIVER_SWITCH

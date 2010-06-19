@@ -365,7 +365,7 @@ static void video_exit(running_machine *machine)
 
 #ifdef USE_SCALE_EFFECTS
 	{
-		running_device *screen = video_screen_first(machine);
+		screen_device *screen = screen_first(*machine);
 		video_exit_scale_effect(screen);
 	}
 #endif /* USE_SCALE_EFFECTS */
@@ -426,6 +426,78 @@ static void init_buffered_spriteram(running_machine *machine)
 /***************************************************************************
     SCREEN MANAGEMENT
 ***************************************************************************/
+
+#ifdef USE_SCALE_EFFECTS
+/*-------------------------------------------------
+    realloc_scale_bitmaps - reallocate scale
+    bitmaps as necessary
+-------------------------------------------------*/
+
+static void realloc_scale_bitmaps(running_device *screen)
+{
+	screen_state *state = get_safe_token(screen);
+	screen_config *config = (screen_config *)screen->baseconfig().inline_config;
+
+	mame_printf_verbose("realloc_scale_bitmaps()\n");
+
+	if (config->type != SCREEN_TYPE_VECTOR)
+	{
+		int curwidth = 0, curheight = 0, 
+			cur_scalewidth = 0, cur_scaleheight = 0, 
+			cur_xsize = 0, cur_ysize = 0;
+
+		/* bitmap has been alloc'd */
+		curwidth = state->bitmap[0]->width;
+		curheight = state->bitmap[0]->height;
+
+		/* extract the current width/height from the scale_bitmap */
+		if (state->scale_bitmap[0] != NULL)
+		{
+			cur_scalewidth = state->scale_bitmap[0]->width;
+			cur_scaleheight = state->scale_bitmap[0]->height;
+		}
+
+		/* assign new x/y size */
+		state->scale_xsize = scale_effect.xsize;
+		state->scale_ysize = scale_effect.ysize;
+
+		state->scale_bank_offset = 0;
+
+		/* reallocate our bitmaps and textures */
+		if (cur_scalewidth != curwidth * state->scale_xsize || cur_scaleheight != curheight * state->scale_ysize)
+		{
+			int bank;
+			bitmap_format screen_format = (state->scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32;
+
+			for (bank = 0; bank < 2; bank++)
+			{
+				/* free what we have currently */
+				if (state->scale_bitmap[bank] != NULL)
+					bitmap_free(state->scale_bitmap[bank]);
+
+				state->scale_dirty[bank] = 1;
+
+				/* compute new width/height */
+				cur_xsize = MAX(state->scale_xsize, cur_xsize);
+				cur_ysize = MAX(state->scale_ysize, cur_ysize);
+
+				/* allocate scale_bitmaps */
+				state->scale_bitmap[bank] = bitmap_alloc(curwidth * state->scale_xsize, curheight * state->scale_ysize, screen_format);
+				if (state->use_work_bitmap)
+					state->work_bitmap[bank] = bitmap_alloc(curwidth, curheight, screen_format);
+
+				mame_printf_verbose("realloc_scale_bitmaps: %dx%d@%dbpp, workerbmp: %d \n", 
+									curwidth * state->scale_xsize, 
+									curheight * state->scale_ysize,
+									state->scale_depth,
+									state->use_work_bitmap
+									);
+			}
+		}
+		state->scale_bank_offset = 1;
+	}
+}
+#endif /* USE_SCALE_EFFECTS */
 
 /*-------------------------------------------------
     screenless_update_callback - update generator

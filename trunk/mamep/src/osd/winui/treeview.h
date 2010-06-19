@@ -87,13 +87,13 @@ void CreateSourceFolders(int parent_index);
 void CreateScreenFolders(int parent_index);
 void CreateCPUFolders(int parent_index);
 void CreateSoundFolders(int parent_index);
-#ifdef MISC_FOLDER
+#ifdef USE_MORE_FOLDER_INFO
 void CreateBIOSFolders(int parent_index);
 void CreateFPSFolders(int parent_index);
 void CreateResolutionFolders(int parent_index);
 void CreateControlFolders(int parent_index);
 void CreateSaveStateFolders(int parent_index);
-#endif /* MISC_FOLDER */
+#endif /* USE_MORE_FOLDER_INFO */
 //void CreateOrientationFolders(int parent_index);
 void CreateDeficiencyFolders(int parent_index);
 void CreateDumpingFolders(int parent_index);
@@ -121,15 +121,15 @@ enum
 	FOLDER_CLONES,
 	FOLDER_RASTER,
 	FOLDER_VECTOR,
-#ifdef MISC_FOLDER
+#ifdef USE_MORE_FOLDER_INFO
 	FOLDER_RESOLUTION,
 	FOLDER_FPS,
 	FOLDER_CONTROL,
  	FOLDER_DUALMON,
-#else /* MISC_FOLDER */
+#else /* USE_MORE_FOLDER_INFO */
 	FOLDER_TRACKBALL,
 	FOLDER_LIGHTGUN,
-#endif /* !MISC_FOLDER */
+#endif /* !USE_MORE_FOLDER_INFO */
 	FOLDER_STEREO,
 	FOLDER_HARDDISK,
 	FOLDER_SAMPLES,

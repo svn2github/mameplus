@@ -535,11 +535,11 @@ void AddOptions(core_options *opts, const options_entry *entrylist, BOOL is_glob
 				}
 			}
 		}
-
+#ifndef MESS
 		// if is_global is FALSE, blacklist global options
 		if (entrylist->name && !is_global && IsGlobalOption(entrylist->name))
 			good_option = FALSE;
-
+#endif
 		if (good_option)
 		{
 			memcpy(entries, entrylist, sizeof(options_entry));
@@ -2347,6 +2347,7 @@ void SetShowTreeSheet(BOOL val)
 
 #include <ctype.h>
 #undef realloc
+#undef malloc
 
 typedef struct
 {

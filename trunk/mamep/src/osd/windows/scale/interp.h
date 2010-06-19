@@ -1,8 +1,6 @@
 #ifndef __INTERP_INC
 #define __INTERP_INC
 
-#include "emuopts.h"
-
 //#define USE_INTERP_MASK_1
 //#define USE_INTERP_MASK_2
 #define USE_INTERP_MASK_3
@@ -19,10 +17,11 @@
 #define INTERP_MASK_32_G	0x00ff00
 #define INTERP_MASK_32_B	0x0000ff
 
-
 #ifdef INTERP_MMX
 
-#include <mmintrin.h>	
+#include "emuopts.h"
+
+#include <mmintrin.h>
 
 #ifdef __GNUC__
 	#define __M64_CONST __m64

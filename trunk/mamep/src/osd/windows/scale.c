@@ -7,13 +7,12 @@
 //
 //============================================================
 
-#include <windows.h>
 // MAME headers
 #include "emu.h"
 #include "emuopts.h"
-#ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
-#endif /* USE_SCALE_EFFECTS */
+
+#include <windows.h>
 
 // defines
 enum

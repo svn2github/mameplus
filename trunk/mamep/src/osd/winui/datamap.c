@@ -36,6 +36,7 @@
 #include "strconv.h"
 #include "datamap.h"
 #include "winutf8.h"
+#include "emu.h"
 #include "emuopts.h"
 
 #ifdef _MSC_VER
@@ -142,6 +143,9 @@ void datamap_free(datamap *map)
 //============================================================
 //  datamap_add
 //============================================================
+
+#undef realloc
+#undef malloc
 
 void datamap_add(datamap *map, int dlgitem, datamap_entry_type type, const char *option_name)
 {

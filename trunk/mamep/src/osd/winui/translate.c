@@ -25,7 +25,6 @@
 #include "bitmask.h"
 #include "TreeView.h"
 #include "mui_util.h"
-
 #include "mui_opts.h"
 
 #if 0 //#if defined(__GNUC__)

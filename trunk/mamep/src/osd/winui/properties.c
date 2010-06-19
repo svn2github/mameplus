@@ -114,7 +114,6 @@ b) Exit the dialog.
 #include <windowsx.h>
 #include <commctrl.h>
 #include <commdlg.h>
-#include <ddraw.h>
 
 // standard C headers
 #include <stdio.h>
@@ -149,6 +148,8 @@ b) Exit the dialog.
 #include "treeview.h"
 #include "translate.h"
 #include "datafile.h"
+
+#include <ddraw.h>
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -736,22 +737,22 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 
 	ZeroMemory(buf, sizeof(buf));
 
-	cpu = config->devicelist.first(DEVICE_CLASS_CPU_CHIP);
+	cpu = config->devicelist.first(CPU);
 	while (cpu != NULL)
 	{
-		if (cpu->clock >= 1000000)
+		if (cpu->clock() >= 1000000)
 		{
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
 				 _Unicode(cpu->name()),
-				cpu->clock / 1000000,
-				cpu->clock % 1000000);
+				cpu->clock() / 1000000,
+				cpu->clock() % 1000000);
 		}
 		else
 		{
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
 				_Unicode(cpu->name()),
-				cpu->clock / 1000,
-				cpu->clock % 1000);
+				cpu->clock() / 1000,
+				cpu->clock() % 1000);
 		}
 
 		wcscat(buf, TEXT("\n"));
@@ -769,33 +770,34 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 static LPCWSTR GameInfoSound(UINT nIndex)
 {
 	static WCHAR buf[1024];
-	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
-	const device_config *sound;
 
 	buf[0] = 0;
+	
+	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 
 	/* iterate over sound chips */
-	sound = config->devicelist.first(DEVICE_CLASS_SOUND_CHIP);
-	while(sound != NULL)
+	const device_config_sound_interface *sound = NULL;
+	bool gotone = config->devicelist.first(sound);
+	while(gotone)
 	{
 		int clock,count;
 		device_type sound_type_;
 		char tmpname[1024];
 
-		sprintf(tmpname,"%s",sound->name());
+		sprintf(tmpname,"%s",sound->devconfig().name());
 
-		sound_type_ = sound_get_type(sound);
-		clock = sound->clock;
+		sound_type_ = sound->devconfig().type();
+		clock = sound->devconfig().clock();
 
 		count = 1;
-		sound = sound->typenext();
+		gotone = sound->next(sound);
 		/* Matching chips at the same clock are aggregated */
-		while (sound != NULL
-			&& sound_get_type(sound) == sound_type_
-			&& sound->clock == clock)
+		while (gotone
+			&& sound->devconfig().type() == sound_type_
+			&& sound->devconfig().clock() == clock)
 		{
 			count++;
-			sound = sound->typenext();
+			gotone = sound->next(sound);
 		}
 
 		if (count > 1)
@@ -839,41 +841,40 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 
 	if (isDriverVector(config))
 	{
-		const device_config *screen = video_screen_first(config);
-		const screen_config *scrconfig = (const screen_config *)screen->inline_config;
+		const screen_device_config *screen = screen_first(*config);
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
 			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
-					scrconfig->refresh, config->total_colors);
+					screen->refresh(), config->total_colors);
 		}
 		else
 		{
 			swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
-					scrconfig->refresh, config->total_colors);
+					screen->refresh(), config->total_colors);
 		}
 	}
 	else
 	{
-		const device_config *screen = video_screen_first(config);
+		const screen_device_config *screen = screen_first(*config);
 		if (screen == NULL) {
 			wcscpy(buf, _UIW(TEXT("Screenless Game"))); 
 		}
 		else {
-			for (; screen != NULL; screen = video_screen_next(screen)) {
-				const screen_config *scrconfig = (const screen_config *)screen->inline_config;
+			for (; screen != NULL; screen = screen_next(screen)) {
 				WCHAR tmpbuf[256];
+				const rectangle &visarea = screen->visible_area();
 
 				if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 				{
 					swprintf(tmpbuf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)\n")),
-							scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1,
-							scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1,
-							ATTOSECONDS_TO_HZ(scrconfig->refresh), config->total_colors);
+							visarea.max_y - visarea.min_y + 1,
+							visarea.max_x - visarea.min_x + 1,
+							ATTOSECONDS_TO_HZ(screen->refresh()), config->total_colors);
 				} else {
 					swprintf(tmpbuf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)\n")),
-							scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1,
-							scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1,
-							ATTOSECONDS_TO_HZ(scrconfig->refresh), config->total_colors);
+							visarea.max_x - visarea.min_x + 1,
+							visarea.max_y - visarea.min_y + 1,
+							ATTOSECONDS_TO_HZ(screen->refresh()), config->total_colors);
 				}
 					wcscat(buf, tmpbuf);
 			}
@@ -885,7 +886,7 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 	return buf;
 }
 
-#ifdef MISC_FOLDER
+#ifdef USE_MORE_FOLDER_INFO
 /* Build input information string */
 static LPCWSTR GameInfoInput(int nIndex)
 {
@@ -893,11 +894,6 @@ static LPCWSTR GameInfoInput(int nIndex)
 	static WCHAR control[1024];
 	int nplayer = DriverNumPlayers(nIndex);
 	int nbutton = DriverNumButtons(nIndex);
-#if 0 // no space
-	int ncoin = 0;
-	const WCHAR *service = 0;
-	const WCHAR *tilt = 0;
-#endif // no space
 	int i;
 
 	control[0] = '\0';
@@ -925,13 +921,7 @@ static LPCWSTR GameInfoInput(int nIndex)
 				TEXT("Pedal")
 			};
 
-#if 0	// no space
-			if (control[0] != '\0')
-				wcscat(control, TEXT(" "));
-			wcscat(control, _UIW(name[i]));
-#else
 			wcscpy(control, _UIW(name[i]));
-#endif
 		}
 	}
 
@@ -965,7 +955,7 @@ static LPCWSTR GameInfoSaveState(int driver_index)
 
 	return _UIW(TEXT("Unsupported"));
 }
-#else /* MISC_FOLDER */
+#else /* USE_MORE_FOLDER_INFO */
 /* Build color information string */
 static LPCWSTR GameInfoColors(UINT nIndex)
 {
@@ -978,7 +968,7 @@ static LPCWSTR GameInfoColors(UINT nIndex)
 
 	return buf;
 }
-#endif /* !MISC_FOLDER */
+#endif /* !USE_MORE_FOLDER_INFO */
 
 /* Build game status string */
 LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
@@ -1288,12 +1278,12 @@ INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LP
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_CPU),           GameInfoCPU(g_nGame));
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SOUND),         GameInfoSound(g_nGame));
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SCREEN),        GameInfoScreen(g_nGame));
-#ifdef MISC_FOLDER
+#ifdef USE_MORE_FOLDER_INFO
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SAVESTATE),     GameInfoSaveState(g_nGame));
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_INPUT),         GameInfoInput(g_nGame));
-#else /* MISC_FOLDER */
+#else /* USE_MORE_FOLDER_INFO */
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_COLORS),        GameInfoColors(g_nGame));
-#endif /* !MISC_FOLDER */
+#endif /* !USE_MORE_FOLDER_INFO */
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_CLONEOF),       GameInfoCloneOf(g_nGame));
 		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SOURCE),        GameInfoSource(g_nGame));
 
@@ -3417,15 +3407,13 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 	
 	if (hCtrl)
 	{
-		const device_config *sound;
+		const device_config_sound_interface *sound;
 		if (config != NULL)
 		{
-			for (sound = sound_first(config); sound != NULL; sound = sound_next(sound))
-			{
-				if (sound_get_type(sound) == SOUND_SAMPLES
-					||  sound_get_type(sound) == SOUND_VLM5030
-					)
+			for (bool gotone = config->devicelist.first(sound); gotone; gotone = sound->next(sound))
 				{
+				if (sound->devconfig().type() == SOUND_SAMPLES ||
+					sound->devconfig().type() == SOUND_VLM5030) {
 					enabled = TRUE;
 				}
 			}

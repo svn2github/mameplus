@@ -892,9 +892,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 	return strTemp2;
 }
 
-
-
-static void CreateDeviceFolders(int parent_index, device_class dev_class, int icon_id)
+void CreateCPUFolders(int parent_index)
 {
 	int i, j, device_folder_count = 0;
 	LPTREEFOLDER device_folders[512];
@@ -916,7 +914,7 @@ static void CreateDeviceFolders(int parent_index, device_class dev_class, int ic
 		}
 
 		// enumerate through all devices
-		for (device = config->devicelist.first(dev_class); device != NULL;
+		for (device = config->devicelist.first(CPU); device != NULL;
 			device = device->typenext())
 		{
 			// get the name
@@ -938,7 +936,7 @@ static void CreateDeviceFolders(int parent_index, device_class dev_class, int ic
 			{
 				LPTREEFOLDER lpTemp;
 
-				lpTemp = NewFolder(_Unicode(device->name()), 0, FALSE, next_folder_id++, parent_index, icon_id);
+				lpTemp = NewFolder(_Unicode(device->name()), 0, FALSE, next_folder_id++, parent_index, IDI_CPU);
 				AddFolder(lpTemp);
 				folder = treeFolders[nFolder++];
 
@@ -956,16 +954,66 @@ static void CreateDeviceFolders(int parent_index, device_class dev_class, int ic
 		machine_config_free(config);
 }
 
-
-
-void CreateCPUFolders(int parent_index)
-{
-	CreateDeviceFolders(parent_index, DEVICE_CLASS_CPU_CHIP, IDI_CPU);
-}
-
 void CreateSoundFolders(int parent_index)
 {
-	CreateDeviceFolders(parent_index, DEVICE_CLASS_SOUND_CHIP, IDI_SND);
+	int i, j, device_folder_count = 0;
+	LPTREEFOLDER device_folders[512];
+	LPTREEFOLDER folder;
+	machine_config *config = NULL;
+	const machine_config_token *last_tokens = NULL;
+	const device_config_sound_interface *device;
+	int nFolder = numFolders;
+
+	for (i = 0; drivers[i] != NULL; i++)
+	{
+		// instantiate this device config (if it is different than the previous)
+		if (last_tokens != drivers[i]->machine_config)
+		{
+			if (config != NULL)
+				machine_config_free(config);
+			config = machine_config_alloc(drivers[i]->machine_config);
+			last_tokens = drivers[i]->machine_config;
+		}
+
+		// enumerate through all devices
+		
+		for (bool gotone = config->devicelist.first(device); gotone; gotone = device->next(device))
+		{
+			// get the name
+			const TCHAR *dev_name = _Unicode(device->devconfig().name());
+
+			// do we have a folder for this device?
+			folder = NULL;
+			for (j = 0; j < device_folder_count; j++)
+			{
+				if (!wcscmp(dev_name, device_folders[j]->m_lpTitle))
+				{
+					folder = device_folders[j];
+					break;
+				}
+			}
+
+			// are we forced to create a folder?
+			if (folder == NULL)
+			{
+				LPTREEFOLDER lpTemp;
+
+				lpTemp = NewFolder(_Unicode(device->devconfig().name()), 0, FALSE, next_folder_id++, parent_index, IDI_SND);
+				AddFolder(lpTemp);
+				folder = treeFolders[nFolder++];
+
+				// record that we found this folder
+				device_folders[device_folder_count++] = folder;
+			}
+
+			// cpu type #'s are one-based
+			AddGame(folder, i);
+		}
+	}
+
+	// free the config that we're still holding on to
+	if (config != NULL)
+		machine_config_free(config);
 }
 
 // mamep: updated mameui's horrible version
@@ -1134,7 +1182,7 @@ void CreateYearFolders(int parent_index)
 	}
 }
 
-#ifdef MISC_FOLDER
+#ifdef USE_MORE_FOLDER_INFO
 void CreateBIOSFolders(int parent_index)
 {
 	int i,jj;
@@ -1202,12 +1250,11 @@ void CreateResolutionFolders(int parent_index)
 	for (jj = 0; jj < nGames; jj++)
 	{
 		machine_config *config = machine_config_alloc(drivers[jj]->machine_config);
-		const device_config *screen;
-		const screen_config *scrconfig;
-		screen = video_screen_first(config);
+		const screen_device_config *screen;
+		screen = screen_first(*config);
 		if (screen != NULL)
 		{
-			scrconfig = (screen_config *)screen->inline_config;
+			const rectangle &visarea = screen->visible_area();
 
 			if (isDriverVector(config))
 			{
@@ -1224,14 +1271,14 @@ void CreateResolutionFolders(int parent_index)
 			if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
 			{
 				swprintf(Resolution, TEXT("%dx%d (V)"),
-					scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1,
-					scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1);
+					visarea.max_y - visarea.min_y + 1,
+					visarea.max_x - visarea.min_x + 1);
 			}
 			else
 			{
 				swprintf(Resolution, TEXT("%dx%d (H)"),
-					scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1,
-					scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1);
+					visarea.max_x - visarea.min_x + 1,
+					visarea.max_y - visarea.min_y + 1);
 			}
 
 			for (i=numFolders-1;i>=start_folder;i--)
@@ -1272,14 +1319,13 @@ void CreateFPSFolders(int parent_index)
 		LPTREEFOLDER lpTemp;
 		float f;
 		machine_config *config = machine_config_alloc(drivers[i]->machine_config);
-		const device_config *screen;
-		const screen_config *scrconfig;
-		screen = video_screen_first(config);
+		const screen_device_config *screen;
+		screen = screen_first(*config);
 		if (screen != NULL)
 		{
-			scrconfig = (screen_config *)screen->inline_config;
+//			scrconfig = (screen_config *)screen->inline_config;
 
-			f = ATTOSECONDS_TO_HZ(scrconfig->refresh);
+			f = ATTOSECONDS_TO_HZ(screen->refresh());
 
 			for (jj = 0; jj < nFPS; jj++)
 				if (fps[jj] == f)
@@ -1421,7 +1467,7 @@ void CreateControlFolders(int parent_index)
 			AddGame(map[FOLDER_BUTTON1 + b - 1], i);
 	}
 }
-#endif /* MISC_FOLDER */
+#endif /* USE_MORE_FOLDER_INFO */
 
 static int compare_folder(const void *vp1, const void *vp2)
 {

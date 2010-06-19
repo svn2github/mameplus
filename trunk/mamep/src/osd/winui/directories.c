@@ -23,7 +23,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <windowsx.h>
-#include <shlobj.h>
 #undef CINTERFACE
 
 // standard C headers
@@ -38,6 +37,9 @@
 #include "strconv.h"
 #include "mui_util.h"
 #include "translate.h"
+#define CINTERFACE
+#include <shlobj.h>
+#undef CINTERFACE
 
 #define MAX_DIRS 128
 
