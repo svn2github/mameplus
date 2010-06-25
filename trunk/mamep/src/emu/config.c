@@ -13,9 +13,6 @@
 #include "emuopts.h"
 #include "config.h"
 #include "xmlfile.h"
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
 
 
 #define DEBUG_CONFIG		0
@@ -67,10 +64,6 @@ static int config_save_xml(running_machine *machine, mame_file *file, int type);
 void config_init(running_machine *machine)
 {
 	typelist = NULL;
-
-#ifdef MESS
-	mess_config_init(machine);
-#endif
 }
 
 

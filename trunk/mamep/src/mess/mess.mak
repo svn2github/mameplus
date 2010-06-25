@@ -49,7 +49,6 @@ $(MESSOBJ)/shared.a: \
 	$(MESS_FORMATS)/basicdsk.o	\
 	$(MESS_FORMATS)/cassimg.o	\
 	$(MESS_FORMATS)/flopimg.o	\
-	$(MESS_FORMATS)/ioprocs.o	\
 	$(MESS_FORMATS)/wavfile.o	\
 	$(MESS_MACHINE)/ctronics.o	\
 	$(MESS_MACHINE)/tc8521.o	\

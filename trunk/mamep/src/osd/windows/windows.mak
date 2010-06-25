@@ -302,7 +302,6 @@ VERSIONRES = $(WINOBJ)/version.res
 #-------------------------------------------------
 
 ifneq ($(USE_SCALE_EFFECTS),)
-OSDOBJS += $(WINOBJ)/scale.o
 include $(SRC)/osd/windows/scale/scale.mak
 endif
 

@@ -14,9 +14,6 @@
 
 #include <ctype.h>
 
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
 
 
 /***************************************************************************
@@ -31,6 +28,11 @@ const options_entry mame_core_options[] =
 	/* config options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE CONFIGURATION OPTIONS" },
 	{ "readconfig;rc",               "1",         OPTION_BOOLEAN,    "enable loading of configuration files" },
+#ifdef MESS
+	{ "writeconfig;wc",				 "1",		  OPTION_BOOLEAN,	 "writes configuration to (driver).ini on exit" },
+#else
+	{ "writeconfig;wc",				 "0",		  OPTION_BOOLEAN,	 "writes configuration to (driver).ini on exit" },
+#endif /* MESS */
 #ifdef DRIVER_SWITCH
 	{ "driver_config",               "mame,plus,console", 0,         "switch drivers"},
 #endif /* DRIVER_SWITCH */
@@ -223,7 +225,8 @@ const options_entry mame_core_options[] =
 	{ "use_lang_list",               "1",         OPTION_BOOLEAN,    "enable/disable local language game list" },
 
 	/* image device options */
-	{ OPTION_ADDED_DEVICE_OPTIONS,	 "0",		  OPTION_BOOLEAN | OPTION_INTERNAL,	"image device-specific options have been added" },
+	//mamep: stop adding device options until array drivers[] is ready
+	{ OPTION_ADDED_DEVICE_OPTIONS,	 "1",		  OPTION_BOOLEAN | OPTION_INTERNAL,	"image device-specific options have been added" },
 	{ NULL }
 };
 
@@ -270,14 +273,14 @@ static void mame_puts_error(const char *s)
     option
 -------------------------------------------------*/
 
-const char *image_get_device_option(device_t *image)
+const char *image_get_device_option(device_image_interface *image)
 {
 	const char *result = NULL;
 
 	if (options_get_bool(mame_options(), OPTION_ADDED_DEVICE_OPTIONS))
 	{
 		/* access the option */
-		result = options_get_string(mame_options(),  downcast<const legacy_image_device_config_base *>(&image->baseconfig())->instance_name());
+		result = options_get_string(mame_options(),  image->image_config().instance_name());
 	}
 	return result;
 }
@@ -373,7 +376,7 @@ core_options *mame_options_init(const options_entry *entries)
 	/* we need to dynamically add options when the device name is parsed */
 	options_set_option_callback(opts, OPTION_GAMENAME, image_driver_name_callback);
 
-#ifdef MESS
+#ifdef MAMEMESS
 	mess_options_init(opts);
 #endif /* MESS */
 

@@ -268,6 +268,19 @@ private:
 		void *						m_param;
 	};
 	callback_item *			m_callback_list;		// list of VBLANK callbacks
+
+#ifdef USE_SCALE_EFFECTS
+	/* scaler dimensions */
+	int					use_work_bitmap;
+	int					scale_depth;
+	int					scale_xsize;
+	int					scale_ysize;
+
+	int					scale_bank_offset;
+	bitmap_t *				scale_bitmap[2];
+	bitmap_t *				work_bitmap[2];
+	int					scale_dirty[2];
+#endif /* USE_SCALE_EFFECTS */
 };
 
 

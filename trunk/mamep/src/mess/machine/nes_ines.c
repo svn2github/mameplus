@@ -69,7 +69,7 @@ static void MMC1_set_prg( running_machine *machine )
 	{
 	case 0x00:
 	case 0x04:
-		prg32(machine, prg_offset + state->MMC1_regs[3]);
+		prg32(machine, (prg_offset + state->MMC1_regs[3]) >> 1);
 		break;
 	case 0x08:
 		prg16_89ab(machine, prg_offset + 0);
@@ -272,7 +272,7 @@ static void mapper4_irq( running_device *device, int scanline, int vblank, int b
 		if (state->IRQ_enable && !blanked && (state->IRQ_count == 0) && priorCount)
 		{
 			LOG_MMC(("irq fired, scanline: %d (MAME %d, beam pos: %d)\n", scanline,
-					video_screen_get_vpos(device->machine->primary_screen), video_screen_get_hpos(device->machine->primary_screen)));
+					device->machine->primary_screen->vpos(), device->machine->primary_screen->hpos()));
 			cpu_set_input_line(state->maincpu, M6502_IRQ_LINE, HOLD_LINE);
 		}
 	}
@@ -1898,134 +1898,6 @@ static WRITE8_HANDLER( mapper19_w )
 
 /*************************************************************
 
-    Mapper 20
-
-    Known Boards: Reserved for FDS
-    Games: any FDS disk
-
-    In MESS: Supported
-
-*************************************************************/
-
-static void fds_irq( running_device *device, int scanline, int vblank, int blanked )
-{
-	nes_state *state = (nes_state *)device->machine->driver_data;
-
-	if (state->IRQ_enable_latch)
-		cpu_set_input_line(state->maincpu, M6502_IRQ_LINE, HOLD_LINE);
-
-	if (state->IRQ_enable)
-	{
-		if (state->IRQ_count <= 114)
-		{
-			cpu_set_input_line(state->maincpu, M6502_IRQ_LINE, HOLD_LINE);
-			state->IRQ_enable = 0;
-			state->fds_status0 |= 0x01;
-		}
-		else
-			state->IRQ_count -= 114;
-	}
-}
-
-READ8_HANDLER( nes_fds_r )
-{
-	nes_state *state = (nes_state *)space->machine->driver_data;
-	UINT8 ret = 0x00;
-	LOG_MMC(("fds_r, offset: %04x\n", offset));
-
-	switch (offset)
-	{
-		case 0x00: /* $4030 - disk status 0 */
-			ret = state->fds_status0;
-			/* clear the disk IRQ detect flag */
-			state->fds_status0 &= ~0x01;
-			break;
-		case 0x01: /* $4031 - data latch */
-			/* don't read data if disk is unloaded */
-			if (state->fds_data == NULL)
-				ret = 0;
-			else if (state->fds_current_side)
-				ret = state->fds_data[(state->fds_current_side - 1) * 65500 + state->fds_head_position++];
-			else
-				ret = 0;
-			break;
-		case 0x02: /* $4032 - disk status 1 */
-			/* return "no disk" status if disk is unloaded */
-			if (state->fds_data == NULL)
-				ret = 1;
-			else if (state->fds_last_side != state->fds_current_side)
-			{
-				/* If we've switched disks, report "no disk" for a few reads */
-				ret = 1;
-				state->fds_count++;
-				if (state->fds_count == 50)
-				{
-					state->fds_last_side = state->fds_current_side;
-					state->fds_count = 0;
-				}
-			}
-			else
-				ret = (state->fds_current_side == 0); /* 0 if a disk is inserted */
-			break;
-		case 0x03: /* $4033 */
-			ret = 0x80;
-			break;
-		default:
-			ret = 0x00;
-			break;
-	}
-
-	LOG_FDS(("fds_r, address: %04x, data: %02x\n", offset + 0x4030, ret));
-
-	return ret;
-}
-
-WRITE8_HANDLER( nes_fds_w )
-{
-	nes_state *state = (nes_state *)space->machine->driver_data;
-	LOG_MMC(("fds_w, offset: %04x, data: %02x\n", offset, data));
-
-	switch (offset)
-	{
-		case 0x00:
-			state->IRQ_count_latch = (state->IRQ_count_latch & 0xff00) | data;
-			break;
-		case 0x01:
-			state->IRQ_count_latch = (state->IRQ_count_latch & 0x00ff) | (data << 8);
-			break;
-		case 0x02:
-			state->IRQ_count = state->IRQ_count_latch;
-			state->IRQ_enable = data;
-			break;
-		case 0x03:
-			// d0 = sound io (1 = enable)
-			// d1 = disk io (1 = enable)
-			break;
-		case 0x04:
-			/* write data out to disk */
-			break;
-		case 0x05:
-			state->fds_motor_on = BIT(data, 0);
-
-			if (BIT(data, 1))
-				state->fds_head_position = 0;
-
-			state->fds_read_mode = BIT(data, 2);
-			set_nt_mirroring(space->machine, BIT(data, 3) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT);
-
-			if ((!(data & 0x40)) && (state->fds_write_reg & 0x40))
-				state->fds_head_position -= 2; // ???
-
-			state->IRQ_enable_latch = BIT(data, 7);
-			state->fds_write_reg = data;
-			break;
-	}
-
-	LOG_FDS(("fds_w, address: %04x, data: %02x\n", offset + 0x4020, data));
-}
-
-/*************************************************************
-
     Mapper 21 & 25
 
     Known Boards: Konami VRC4A & VRC4C (21), VRC4B & VRC4D (25)
@@ -2036,7 +1908,7 @@ WRITE8_HANDLER( nes_fds_w )
 
 *************************************************************/
 
-static void vrc4_set_prg( running_machine *machine )
+static void vrc4a_set_prg( running_machine *machine )
 {
 	nes_state *state = (nes_state *)machine->driver_data;
 	if (state->mmc_cmd1 & 0x02)
@@ -2048,18 +1920,6 @@ static void vrc4_set_prg( running_machine *machine )
 	{
 		prg8_89(machine, state->mmc_prg_bank[0]);
 		prg8_cd(machine, 0xfe);
-	}
-}
-
-static void konami_irq( running_device *device, int scanline, int vblank, int blanked )
-{
-	nes_state *state = (nes_state *)device->machine->driver_data;
-	/* Increment & check the IRQ scanline counter */
-	if (state->IRQ_enable && (++state->IRQ_count == 0x100))
-	{
-		state->IRQ_count = state->IRQ_count_latch;
-		state->IRQ_enable = state->IRQ_enable_latch;
-		cpu_set_input_line(state->maincpu, M6502_IRQ_LINE, HOLD_LINE);
 	}
 }
 
@@ -2078,7 +1938,7 @@ static WRITE8_HANDLER( konami_vrc4a_w )
 		case 0x0080:
 		case 0x00c0:
 			state->mmc_prg_bank[0] = data;
-			vrc4_set_prg(space->machine);
+			vrc4a_set_prg(space->machine);
 			break;
 
 		case 0x1000:
@@ -2098,7 +1958,7 @@ static WRITE8_HANDLER( konami_vrc4a_w )
 		case 0x1080:
 		case 0x10c0:
 			state->mmc_cmd1 = data & 0x02;
-			vrc4_set_prg(space->machine);
+			vrc4a_set_prg(space->machine);
 			break;
 
 		case 0x2000:
@@ -2228,7 +2088,7 @@ static WRITE8_HANDLER( konami_vrc4b_w )
 		case 0x0008:
 		case 0x000c:
 			state->mmc_prg_bank[0] = data;
-			vrc4_set_prg(space->machine);
+			vrc4a_set_prg(space->machine);
 			break;
 
 		case 0x1000:
@@ -2248,7 +2108,7 @@ static WRITE8_HANDLER( konami_vrc4b_w )
 		case 0x1004:
 		case 0x100c:
 			state->mmc_cmd1 = data & 0x02;
-			vrc4_set_prg(space->machine);
+			vrc4a_set_prg(space->machine);
 			break;
 
 		case 0x2000:
@@ -2877,7 +2737,7 @@ static void mapper35_irq( running_device *device, int scanline, int vblank, int 
 		if (!blanked && (state->IRQ_count == 0))
 		{
 			LOG_MMC(("irq fired, scanline: %d (MAME %d, beam pos: %d)\n", scanline,
-					video_screen_get_vpos(device->machine->primary_screen), video_screen_get_hpos(device->machine->primary_screen)));
+					device->machine->primary_screen->vpos(), device->machine->primary_screen->hpos()));
 			cpu_set_input_line(state->maincpu, M6502_IRQ_LINE, HOLD_LINE);
 			state->IRQ_enable = 0;
 		}
@@ -3837,7 +3697,7 @@ static void mapper64_irq( running_device *device, int scanline, int vblank, int 
 					if (state->IRQ_enable && !blanked && !state->IRQ_count)
 					{
 						LOG_MMC(("irq fired, scanline: %d (MAME %d, beam pos: %d)\n", scanline,
-								video_screen_get_vpos(device->machine->primary_screen), video_screen_get_hpos(device->machine->primary_screen)));
+								device->machine->primary_screen->vpos(), device->machine->primary_screen->hpos()));
 						cpu_set_input_line(state->maincpu, M6502_IRQ_LINE, HOLD_LINE);
 					}
 				}
@@ -3864,7 +3724,7 @@ static void mapper64_irq( running_device *device, int scanline, int vblank, int 
 				if (state->IRQ_enable && !blanked && (state->IRQ_count <= 114))
 				{
 					LOG_MMC(("irq fired, scanline: %d (MAME %d, beam pos: %d)\n", scanline,
-							video_screen_get_vpos(device->machine->primary_screen), video_screen_get_hpos(device->machine->primary_screen)));
+							device->machine->primary_screen->vpos(), device->machine->primary_screen->hpos()));
 					cpu_set_input_line(state->maincpu, M6502_IRQ_LINE, HOLD_LINE);
 				}
 			}
@@ -4526,27 +4386,6 @@ static WRITE8_HANDLER( mapper73_w )
 
 *************************************************************/
 
-/* MIRROR_LOW and MIRROR_HIGH are swapped! */
-static void waixing_set_mirror( running_machine *machine, UINT8 nt )
-{
-	switch (nt)
-	{
-	case 0:
-	case 1:
-		set_nt_mirroring(machine, nt ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT);
-		break;
-	case 2:
-		set_nt_mirroring(machine, PPU_MIRROR_LOW);
-		break;
-	case 3:
-		set_nt_mirroring(machine, PPU_MIRROR_HIGH);
-		break;
-	default:
-		LOG_MMC(("Mapper set NT to invalid value %02x", nt));
-		break;
-	}
-}
-
 static void mapper74_set_chr( running_machine *machine, int chr_base, int chr_mask )
 {
 	nes_state *state = (nes_state *)machine->driver_data;
@@ -5046,7 +4885,7 @@ static WRITE8_HANDLER( mapper83_w )
 
 *************************************************************/
 
-static WRITE8_HANDLER( konami_vrc7_w )
+static WRITE8_HANDLER( mapper85_w )
 {
 	nes_state *state = (nes_state *)space->machine->driver_data;
 	UINT8 bank;
@@ -5306,8 +5145,7 @@ static WRITE8_HANDLER( mapper92_w )
     Games: Shanghai, Fantasy Zone
 
     Very similar to mapper 89, but no NT mirroring for data&8
-    and only CHRRAM present
-
+ 
     In MESS: Supported.
 
 *************************************************************/
@@ -6621,29 +6459,6 @@ static READ8_HANDLER( mapper136_l_r )
 
 *************************************************************/
 
-static void sachen_set_mirror( running_machine *machine, UINT8 nt ) // used by mappers 137, 138, 139, 141
-{
-	switch (nt)
-	{
-	case 0:
-	case 1:
-		set_nt_mirroring(machine, nt ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT);
-		break;
-	case 2:
-		set_nt_page(machine, 0, CIRAM, 0, 1);
-		set_nt_page(machine, 1, CIRAM, 1, 1);
-		set_nt_page(machine, 2, CIRAM, 1, 1);
-		set_nt_page(machine, 3, CIRAM, 1, 1);
-		break;
-	case 3:
-		set_nt_mirroring(machine, PPU_MIRROR_LOW);
-		break;
-	default:
-		LOG_MMC(("Mapper set NT to invalid value %02x", nt));
-		break;
-	}
-}
-
 static WRITE8_HANDLER( mapper137_l_w )
 {
 	nes_state *state = (nes_state *)space->machine->driver_data;
@@ -6814,7 +6629,7 @@ static WRITE8_HANDLER( mapper139_m_w )
 
 *************************************************************/
 
-static WRITE8_HANDLER( mapper_140_m_w )
+static WRITE8_HANDLER( mapper140_m_w )
 {
        chr8(space->machine, data & 0x0f, CHRROM);
        prg32(space->machine, (data >> 4) & 0x03);
@@ -9808,7 +9623,7 @@ static void mapper222_irq( running_device *device, int scanline, int vblank, int
 
 		state->IRQ_count = 0;
 		LOG_MMC(("irq fired, scanline: %d (MAME %d, beam pos: %d)\n", scanline,
-				video_screen_get_vpos(device->machine->primary_screen), video_screen_get_hpos(device->machine->primary_screen)));
+				device->machine->primary_screen->vpos(), device->machine->primary_screen->hpos()));
 		cpu_set_input_line(state->maincpu, M6502_IRQ_LINE, HOLD_LINE);
 	}
 }
@@ -10853,7 +10668,6 @@ static const mmc mmc_list[] =
 	{ 17, "FFE F8xxx",                 mapper17_l_w, NULL, NULL, NULL, NULL, NULL, ffe_irq },
 	{ 18, "Jaleco SS88006",            NULL, NULL, NULL, mapper18_w, NULL, NULL, jaleco_irq },
 	{ 19, "Namcot 106 + N106",         mapper19_l_w, mapper19_l_r, NULL, mapper19_w, NULL, NULL, namcot_irq },
-	{ 20, "Famicom Disk System",       NULL, NULL, NULL, NULL, NULL, NULL, fds_irq },
 	{ 21, "Konami VRC 4a",             NULL, NULL, NULL, konami_vrc4a_w, NULL, NULL, konami_irq },
 	{ 22, "Konami VRC 2a",             NULL, NULL, NULL, konami_vrc2a_w, NULL, NULL, NULL },
 	{ 23, "Konami VRC 2b",             NULL, NULL, NULL, konami_vrc2b_w, NULL, NULL, konami_irq },
@@ -10916,7 +10730,7 @@ static const mmc mmc_list[] =
 	{ 82, "Taito X1-017",              NULL, NULL, mapper82_m_w, NULL, NULL, NULL, NULL },
 	{ 83, "Cony",                      mapper83_l_w, mapper83_l_r, NULL, mapper83_w, NULL, NULL, NULL },
 	{ 84, "Pasofami hacked images?",   NULL, NULL, NULL, NULL, NULL, NULL, NULL },
-	{ 85, "Konami VRC 7",              NULL, NULL, NULL, konami_vrc7_w, NULL, NULL, konami_irq },
+	{ 85, "Konami VRC 7",              NULL, NULL, NULL, mapper85_w, NULL, NULL, konami_irq },
 	{ 86, "Jaleco JF13",               NULL, NULL, mapper86_m_w, NULL, NULL, NULL, NULL },
 	{ 87, "74139/74",                  NULL, NULL, mapper87_m_w, NULL, NULL, NULL, NULL },
 	{ 88, "Namcot 34x3",               NULL, NULL, NULL, mapper88_w, NULL, NULL, NULL },
@@ -10965,7 +10779,7 @@ static const mmc mmc_list[] =
 	{ 137, "Sachen 8259D",             mapper137_l_w, NULL, mapper137_m_w, NULL, NULL, NULL, NULL },
 	{ 138, "Sachen 8259B",             mapper138_l_w, NULL, mapper138_m_w, NULL, NULL, NULL, NULL },
 	{ 139, "Sachen 8259C",             mapper139_l_w, NULL, mapper139_m_w, NULL, NULL, NULL, NULL },
-	{ 140, "Jaleco JF11",              NULL, NULL, mapper_140_m_w, NULL, NULL, NULL, NULL },
+	{ 140, "Jaleco JF11",              NULL, NULL, mapper140_m_w, NULL, NULL, NULL, NULL },
 	{ 141, "Sachen 8259A",             mapper141_l_w, NULL, mapper141_m_w, NULL, NULL, NULL, NULL },
 // 142 Kaiser KS7032
 	{ 143, "Sachen TCA01",             NULL, mapper143_l_r, NULL, NULL, NULL, NULL, NULL },
@@ -11148,8 +10962,6 @@ static int mapper_initialize( running_machine *machine, int mmc_num )
 			/* that much is documented for Nintendo Gauntlet boards */
 			if (state->four_screen_vram)
 			{
-				state->extended_ntram = auto_alloc_array(machine, UINT8, 0x2000);
-				state_save_register_global_pointer(machine, state->extended_ntram, 0x2000);
 				set_nt_page(machine, 0, CART_NTRAM, 0, 1);
 				set_nt_page(machine, 1, CART_NTRAM, 1, 1);
 				set_nt_page(machine, 2, CART_NTRAM, 2, 1);
@@ -11263,16 +11075,6 @@ static int mapper_initialize( running_machine *machine, int mmc_num )
 			prg16_cdef(machine, state->prg_chunks - 1);
 			state->mmc_chr_source = state->chr_chunks ? CHRROM : CHRRAM;
 			set_nt_mirroring(machine, PPU_MIRROR_VERT);
-			break;
-		case 20:
-			state->fds_last_side = 0;
-			state->fds_count = 0;
-			state->fds_motor_on = 0;
-			state->fds_door_closed = 0;
-			state->fds_current_side = 1;
-			state->fds_head_position = 0;
-			state->fds_status0 = 0;
-			state->fds_read_mode = state->fds_write_reg = 0;
 			break;
 		case 21:
 		case 22:

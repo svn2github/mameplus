@@ -72,10 +72,6 @@
 #include "strconv.h"
 #include "config.h"
 
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
-
 #ifdef MESS
 #include "uimess.h"
 #endif
@@ -834,22 +830,16 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 				if (ui_use_newui())
 				{
 					typedesc->token = "TOGGLE_MENUBAR";
-					typedesc->name = "Toggle Menu Bar";
+					typedesc->name = _WINDOWS("Toggle Menu Bar");
+#ifdef MAMEMESS
+					//mamep: we want to use both MESS-newui and in-game-UI
+					input_seq_set_1(&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_SCRLOCK);
+#else
 					input_seq_set_1(&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_ESC);
+#endif
 				}
 				break;
 
-#ifdef MESS
-			// mamep: add a key to toggle MESS new UI
-			case IPT_OSD_2:
-				if (options_get_bool(mame_options(), "newui"))
-				{
-					typedesc->token = "TOGGLE_MENUBAR";
-					typedesc->name = _WINDOWS("Toggle Menubar");
-					input_seq_set_1 (&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_SCRLOCK);
-				}
-				break;
-#endif
 #if 0			// mamep: keep default key setting
 			case IPT_UI_THROTTLE:
 				input_seq_set_0(&typedesc->seq[SEQ_TYPE_STANDARD]);

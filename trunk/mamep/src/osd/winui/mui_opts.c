@@ -559,7 +559,7 @@ static void MessSetupGameOptions(core_options *opts, int driver_index)
 
 	if (driver_index >= 0)
 	{
-		mess_add_device_options(opts, drivers[driver_index]);
+		image_add_device_options(opts, drivers[driver_index]);
 	}
 }
 #endif // MAMEMESS

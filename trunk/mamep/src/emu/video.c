@@ -2151,6 +2151,12 @@ screen_device::screen_device(running_machine &_machine, const screen_device_conf
 
 screen_device::~screen_device()
 {
+#ifdef USE_SCALE_EFFECTS
+	if (scale_bitmap[0] != NULL)
+		bitmap_free(scale_bitmap[0]);
+	if (scale_bitmap[1] != NULL)
+		bitmap_free(scale_bitmap[1]);
+#endif /* USE_SCALE_EFFECTS */
 	if (m_texture[0] != NULL)
 		render_texture_free(m_texture[0]);
 	if (m_texture[1] != NULL)
@@ -2241,6 +2247,9 @@ void screen_device::device_post_load()
 {
 	realloc_screen_bitmaps();
 	global.movie_next_frame_time = timer_get_time(machine);
+#ifdef USE_SCALE_EFFECTS
+	video_init_scale_effect(screen);
+#endif /* USE_SCALE_EFFECTS */
 }
 
 
@@ -2266,6 +2275,11 @@ void screen_device::configure(int width, int height, const rectangle &visarea, a
 
 	// reallocate bitmap if necessary
 	realloc_screen_bitmaps();
+
+#ifdef USE_SCALE_EFFECTS
+	/* init scale */
+	video_init_scale_effect(screen);
+#endif /* USE_SCALE_EFFECTS */
 
 	// compute timing parameters
 	m_frame_period = frame_period;
@@ -2697,6 +2711,11 @@ bool screen_device::update_quads()
 				palette_t *palette = (m_texture_format == TEXFORMAT_PALETTE16) ? machine->palette : NULL;
 				render_texture_set_bitmap(m_texture[m_curbitmap], m_bitmap[m_curbitmap], &fixedvis, m_texture_format, palette);
 
+#ifdef USE_SCALE_EFFECTS
+				if (scale_effect.effect > 0)
+					texture_set_scalebitmap(screen, &fixedvis, 0);
+				else
+#endif /* USE_SCALE_EFFECTS */
 				m_curtexture = m_curbitmap;
 				m_curbitmap = 1 - m_curbitmap;
 			}

@@ -595,7 +595,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 {
 	PROPSHEETHEADER pshead;
 	PROPSHEETPAGE   *pspage;
-	WCHAR*          t_description = NULL;
+	WCHAR*          t_description = 0;
 	OPTIONS_TYPE    default_type = opt_type;
 
 	if (highlight_brush == NULL)

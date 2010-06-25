@@ -137,6 +137,8 @@
 #define LOG_MMC(x) do { if (VERBOSE) logerror x; } while (0)
 #define LOG_FDS(x) do { if (VERBOSE) logerror x; } while (0)
 
+static int unif_initialize( running_machine *machine, int idx );
+
 /*************************************************************
 
     Base emulation (see drivers/nes.c):
@@ -144,15 +146,16 @@
            0x2000-0x3fff PPU
            0x4000-0x4017 APU
            0x4018-0x5fff Expansion Area
-           0x6000-0x7fff SRAM
+           0x6000-0x7fff PRG RAM
            0x8000-0xffff PRG ROM
 
     nes_chr_r/w take care of RAM, nes_nt_r/w take care of PPU.
     for mapper specific emulation, we generically setup the
     following handlers:
     - nes_low_mapper_r/w take care of accesses to 0x4100-0x5fff
-    - nes_mid_mapper_r/w take care of accesses to 0x6000-0x7fff
-    - nes_mapper_r/w takes care of accesses to 0x8000-0xffff
+      (calling state->mmc_write_low/state->mmc_read_low)
+    - state->mmc_write/read_mid take care of 0x6000-0x7fff
+    - state->mmc_write/read take care of access to 0x8000-0xffff
       (most mappers only writes in this area)
     some mappers may access 0x4018-0x4100: this must be taken
     care separately in init_nes_core
@@ -232,50 +235,6 @@ READ8_HANDLER( nes_low_mapper_r )
 
 	return 0;
 }
-
-WRITE8_HANDLER( nes_mid_mapper_w )
-{
-	nes_state *state = (nes_state *)space->machine->driver_data;
-
-	if (state->mmc_write_mid)
-		(*state->mmc_write_mid)(space, offset, data);
-}
-
-// currently, this is not used (but it might become handy for some pirate mapper)
-READ8_HANDLER( nes_mid_mapper_r )
-{
-	nes_state *state = (nes_state *)space->machine->driver_data;
-
-	if ((state->mid_ram_enable) || (state->mapper == 5))
-	{
-		if (state->battery && !state->trainer)
-			return state->battery_ram[offset];
-		else
-			return state->wram[(state->prg_bank[4] - state->prgram_bank5_start) * 0x2000 + offset];
-	}
-	else
-		logerror("Unimplemented LOW mapper read, offset: %04x\n", offset + 0x6000);
-
-	return 0;
-}
-
-WRITE8_HANDLER( nes_mapper_w )
-{
-	nes_state *state = (nes_state *)space->machine->driver_data;
-
-	if (state->mmc_write)
-		(*state->mmc_write)(space, offset, data);
-	else
-		logerror("Unimplemented mapper write, offset: %04x, data: %02x\n", offset + 0x8000, data);
-}
-
-// apparently, a few pirate mappers also reads from here!
-READ8_HANDLER( nes_mapper_r )
-{
-	logerror("Unimplemented mapper read, offset: %04x\n", offset + 0x8000);
-	return 0;
-}
-
 
 /*************************************************************
 
@@ -437,21 +396,44 @@ static void prg8_67( running_machine *machine, int bank )
 
 /* CHR ROM in 1K, 2K, 4K or 8K blocks */
 
+// this can be probably removed later, but it is useful while testing xml and unf handling with VRAM & VROM
+INLINE void chr_sanity_check( running_machine *machine, int source )
+{
+	nes_state *state = (nes_state *)machine->driver_data;
+
+	if (source == CHRRAM && state->vram == NULL)
+		fatalerror("CHRRAM bankswitch with no VRAM");
+	
+	if (source == CHRROM && state->vrom == NULL)
+		fatalerror("CHRROM bankswitch with no VROM");
+}
+
 static void chr8( running_machine *machine, int bank, int source )
 {
 	nes_state *state = (nes_state *)machine->driver_data;
 	int i;
 
-	bank &= (state->chr_chunks - 1);
-	for (i = 0; i < 8; i++)
-	{
-		state->chr_map[i].source = source;
-		state->chr_map[i].origin = (bank * 0x2000) + (i * 0x400); // for save state uses!
+	chr_sanity_check(machine, source);
 
-		if (source == CHRRAM)
+	if (source == CHRRAM)
+	{
+		bank &= (state->vram_chunks - 1);
+		for (i = 0; i < 8; i++)
+		{
+			state->chr_map[i].source = source;
+			state->chr_map[i].origin = (bank * 0x2000) + (i * 0x400); // for save state uses!
 			state->chr_map[i].access = &state->vram[state->chr_map[i].origin];
-		else
+		}
+	}
+	else
+	{
+		bank &= (state->chr_chunks - 1);
+		for (i = 0; i < 8; i++)
+		{
+			state->chr_map[i].source = source;
+			state->chr_map[i].origin = (bank * 0x2000) + (i * 0x400); // for save state uses!
 			state->chr_map[i].access = &state->vrom[state->chr_map[i].origin];
+		}
 	}
 }
 
@@ -460,16 +442,27 @@ static void chr4_x( running_machine *machine, int start, int bank, int source )
 	nes_state *state = (nes_state *)machine->driver_data;
 	int i;
 
-	bank &= ((state->chr_chunks << 1) - 1);
-	for (i = 0; i < 4; i++)
+	chr_sanity_check(machine, source);
+	
+	if (source == CHRRAM)
 	{
-		state->chr_map[i + start].source = source;
-		state->chr_map[i + start].origin = (bank * 0x1000) + (i * 0x400); // for save state uses!
-
-		if (source == CHRRAM)
+		bank &= ((state->vram_chunks << 1) - 1);
+		for (i = 0; i < 4; i++)
+		{
+			state->chr_map[i + start].source = source;
+			state->chr_map[i + start].origin = (bank * 0x1000) + (i * 0x400); // for save state uses!
 			state->chr_map[i + start].access = &state->vram[state->chr_map[i + start].origin];
-		else
+		}
+	}
+	else
+	{
+		bank &= ((state->chr_chunks << 1) - 1);
+		for (i = 0; i < 4; i++)
+		{
+			state->chr_map[i + start].source = source;
+			state->chr_map[i + start].origin = (bank * 0x1000) + (i * 0x400); // for save state uses!
 			state->chr_map[i + start].access = &state->vrom[state->chr_map[i + start].origin];
+		}
 	}
 }
 
@@ -488,16 +481,27 @@ static void chr2_x( running_machine *machine, int start, int bank, int source )
 	nes_state *state = (nes_state *)machine->driver_data;
 	int i;
 
-	bank &= ((state->chr_chunks << 2) - 1);
-	for (i = 0; i < 2; i++)
+	chr_sanity_check(machine, source);
+	
+	if (source == CHRRAM)
 	{
-		state->chr_map[i + start].source = source;
-		state->chr_map[i + start].origin = (bank * 0x800) + (i * 0x400);
-
-		if (source == CHRRAM)
+		bank &= ((state->vram_chunks << 2) - 1);
+		for (i = 0; i < 2; i++)
+		{
+			state->chr_map[i + start].source = source;
+			state->chr_map[i + start].origin = (bank * 0x800) + (i * 0x400); // for save state uses!
 			state->chr_map[i + start].access = &state->vram[state->chr_map[i + start].origin];
-		else
+		}
+	}
+	else
+	{
+		bank &= ((state->chr_chunks << 2) - 1);
+		for (i = 0; i < 2; i++)
+		{
+			state->chr_map[i + start].source = source;
+			state->chr_map[i + start].origin = (bank * 0x800) + (i * 0x400); // for save state uses!
 			state->chr_map[i + start].access = &state->vrom[state->chr_map[i + start].origin];
+		}
 	}
 }
 
@@ -525,14 +529,22 @@ static void chr1_x( running_machine *machine, int start, int bank, int source )
 {
 	nes_state *state = (nes_state *)machine->driver_data;
 
-	state->chr_map[start].source = source;
-	bank &= ((state->chr_chunks << 3) - 1);
-	state->chr_map[start].origin = bank * 0x400;
-
+	chr_sanity_check(machine, source);
+	
 	if (source == CHRRAM)
+	{
+		bank &= ((state->vram_chunks << 3) - 1);
+		state->chr_map[start].source = source;
+		state->chr_map[start].origin = (bank * 0x400); // for save state uses!
 		state->chr_map[start].access = &state->vram[state->chr_map[start].origin];
+	}
 	else
+	{
+		bank &= ((state->chr_chunks << 3) - 1);
+		state->chr_map[start].source = source;
+		state->chr_map[start].origin = (bank * 0x400); // for save state uses!
 		state->chr_map[start].access = &state->vrom[state->chr_map[start].origin];
+	}
 }
 
 static void chr1_0 (running_machine *machine, int bank, int source)
@@ -669,14 +681,15 @@ void set_nt_mirroring( running_machine *machine, int mirroring )
     MIRROR_HIGH and MIRROR_LOW compared to the above) and Sachen games use sachen_set_mirror (which has
     a slightly different MIRROR_HIGH, with page 0 set to 0) */
 
+
 /*************************************************************
+ 
+ Support for xml list
+ 
+ *************************************************************/
 
-    Support for .nes Files
-
-*************************************************************/
-
-/* Include emulation of iNES Mappers for .nes files */
-#include "machine/nes_ines.c"
+/* Include emulation of NES PCBs for softlist */
+#include "machine/nes_pcb.c"
 
 
 /*************************************************************
@@ -691,10 +704,10 @@ void set_nt_mirroring( running_machine *machine, int mirroring )
 
 /*************************************************************
  
- Support for xml list
+ Support for .nes Files
  
  *************************************************************/
 
-/* Include emulation of NES PCBs for softlist */
-#include "machine/nes_pcb.c"
+/* Include emulation of iNES Mappers for .nes files */
+#include "machine/nes_ines.c"
 

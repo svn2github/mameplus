@@ -15,6 +15,7 @@
 #include "rendutil.h"
 #include "rendfont.h"
 #include "cheat.h"
+#include "uiimage.h"
 #include "uiinput.h"
 #include "uimenu.h"
 #include "audit.h"
@@ -27,6 +28,10 @@
 #endif /* USE_SCALE_EFFECTS */
 
 #ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+
+#ifdef MESS
 #include "uimess.h"
 #endif /* MESS */
 
@@ -1569,11 +1574,23 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	/* add game info menu */
 	ui_menu_item_append(menu, _(CAPSTARTGAMENOUN " Information"), NULL, 0, (void *)menu_game_info);
 
-#ifdef MESS
+	device_image_interface *image = NULL;
+	if (machine->devicelist.first(image)) 
+	{
+		/* add image info menu */
+		ui_menu_item_append(menu, _("Image Information"), NULL, 0, (void*)ui_image_menu_image_info);
+
+		/* add file manager menu */
+		ui_menu_item_append(menu, _("File Manager"), NULL, 0, (void*)ui_image_menu_file_manager);
+
+		/* add software menu */
+		ui_menu_item_append(menu, _("Software"), NULL, 0, (void*)ui_image_menu_software);
+		
+	#ifdef MESS
 	/* add MESS-specific menus */
 	ui_mess_main_menu_populate(machine, menu);
-#endif /* MESS */
-
+	#endif /* MESS */
+	}
 	/* add keyboard mode menu */
 	if (input_machine_has_keyboard(machine) && inputx_can_post(machine))
 		ui_menu_item_append(menu, _("Keyboard Mode"), NULL, 0, (void *)ui_menu_keyboard_mode);
@@ -1754,9 +1771,9 @@ static void menu_input_specific_populate(running_machine *machine, ui_menu *menu
 
 			/* add if we match the group and we have a valid name */
 			if (name != NULL && input_condition_true(machine, &field->condition) &&
-#ifdef MAMEMESS
+#ifdef MESS
 				(field->category == 0 || input_category_active(machine, field->category)) &&
-#endif /* MAMEMESS */
+#endif /* MESS */
 				((field->type == IPT_OTHER && field->name != NULL) || input_type_group(machine, field->type, field->player) != IPG_INVALID))
 			{
 				input_seq_type seqtype;

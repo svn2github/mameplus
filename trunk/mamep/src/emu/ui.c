@@ -29,10 +29,6 @@
 #define MESS
 #endif /* MAMEMESS */
 
-#ifdef MESS
-#include "uimess.h"
-#endif /* MESS */
-
 #include <ctype.h>
 
 
@@ -1869,6 +1865,26 @@ void ui_paste(running_machine *machine)
 }
 
 /*-------------------------------------------------
+    ui_image_handler_ingame - execute display 
+	callback function for each image device
+-------------------------------------------------*/
+
+void ui_image_handler_ingame(running_machine *machine)
+{
+	device_image_interface *image = NULL;
+
+	/* run display routine for devices */
+	if (mame_get_phase(machine) == MAME_PHASE_RUNNING)
+	{
+		for (bool gotone = machine->devicelist.first(image); gotone; gotone = image->next(image))
+		{
+			image->call_display();
+		}
+	}
+
+}
+
+/*-------------------------------------------------
     handler_ingame - in-game handler takes care
     of the standard keypresses
 -------------------------------------------------*/
@@ -1948,18 +1964,26 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 			ui_paste(machine);
 	}
 
-#ifdef MESS
-	ui_mess_handler_ingame(machine);
-#endif /* MESS */
+	ui_image_handler_ingame(machine);
 
 	if (ui_disabled) return ui_disabled;
 
 	/* if the user pressed ESC, stop the emulation (except in MESS with newui, where ESC toggles the menubar) */
+#ifdef MAMEMESS
+	//mamep: we want to use both MESS-newui and in-game-UI
+	if (ui_input_pressed(machine, IPT_UI_CANCEL))
+#else
 	if (ui_input_pressed(machine, IPT_UI_CANCEL) && !ui_use_newui())
+#endif
 		return ui_set_handler(handler_confirm_quit, 0);
 
 	/* turn on menus if requested */
+#ifdef MAMEMESS
+	//mamep: we want to use both MESS-newui and in-game-UI
+	if (ui_input_pressed(machine, IPT_UI_CONFIGURE))
+#else
 	if (ui_input_pressed(machine, IPT_UI_CONFIGURE) && !ui_use_newui())
+#endif
 		return ui_set_handler(ui_menu_ui_handler, 0);
 
 	/* if the on-screen display isn't up and the user has toggled it, turn it on */
@@ -2856,6 +2880,7 @@ int ui_get_use_natural_keyboard(running_machine *machine)
 void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keyboard)
 {
 	ui_use_natural_keyboard = use_natural_keyboard;
+	options_set_bool(mame_options(), OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE);
 }
 
 void ui_auto_pause(void)

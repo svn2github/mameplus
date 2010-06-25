@@ -71,15 +71,17 @@ public:
 
 	/* input_related - this part has to be cleaned up (e.g. in_2 and in_3 are not really necessary here...) */
 	nes_input in_0, in_1, in_2, in_3;
+	UINT8 fck_scan, fck_mode;
 
 	int           prg_bank[5];
 	chr_bank      chr_map[8];  //quick banking structure, because some of this changes multiple times per scanline!
 	name_table    nt_page[4];  //quick banking structure for a maximum of 4K of RAM/ROM/ExRAM
 
 	int chr_open_bus;
-	int prgram_bank5_start, battery_bank5_start;
+	int prgram_bank5_start, battery_bank5_start, empty_bank5_start;
 
 	UINT8 ce_mask, ce_state;
+	UINT8 vrc_ls_prg_a, vrc_ls_prg_b, vrc_ls_chr;
 
 	int MMC5_floodtile;
 	int MMC5_floodattr;
@@ -115,11 +117,11 @@ public:
 	UINT8      *vram;
 	UINT8      *wram;
 	UINT8      *ciram; //PPU nametable RAM - external to PPU!
+	UINT8      *battery_ram;
+	UINT8      *mapper_ram;
 	// Variables which can change
 	UINT8      mid_ram_enable;
 
-	/* SRAM-related (we have two elements due to the init order, but it would be better to verify they both are still needed) */
-	UINT8      *battery_ram;
 
 	/***** Mapper-related variables *****/
 
@@ -130,6 +132,7 @@ public:
 	UINT8      IRQ_reset;
 	UINT8      IRQ_status;
 	UINT8      IRQ_mode;
+	UINT8      IRQ_clear;
 	int        mult1, mult2;
 
 	UINT8 mmc_chr_source;			// This is set at init to CHRROM or CHRRAM. a few mappers can swap between
@@ -150,11 +153,16 @@ public:
 
 	UINT8 mmc_latch1, mmc_latch2;
 	UINT8 mmc_reg[16];
+	
+	UINT8 mmc_dipsetting;
 
 	// misc mapper related variables which should be merged with the above one, where possible
 	UINT8 MMC1_regs[4];
+	int mmc1_reg_write_enable;
 	UINT8 MMC2_regs[4];	// these replace bank0/bank0_hi/bank1/bank1_hi
-	
+
+	UINT8 mmc3_alt_irq;
+
 	int MMC5_rom_bank_mode;
 	int MMC5_vrom_bank_mode;
 	int MMC5_vram_protect;
@@ -162,7 +170,9 @@ public:
 	int vrom_page_a;
 	int vrom_page_b;
 	// int vrom_next[4];
-	
+
+	UINT8 mmc6_reg;
+
 	// these might be unified in single mmc_reg[] array, together with state->mmc_cmd1 & state->mmc_cmd2
 	// but be careful that MMC3 clones often use state->mmc_cmd1/state->mmc_cmd2 (from base MMC3) AND additional regs below!
 	UINT8 mapper45_reg[4];
@@ -181,7 +191,7 @@ public:
 	UINT8 map217_reg[4];
 	UINT8 map249_reg;
 	UINT8 map14_reg[2];
-	UINT8 mapper121_reg[3];
+	UINT8 mapper121_reg[8];
 	UINT8 mapper187_reg[4];
 	UINT8 map208_reg[5];
 	UINT8 bmc_64in1nr_reg[4];
@@ -203,11 +213,13 @@ public:
 	/* load-time cart variables which remain constant */
 	UINT16 prg_chunks;		// iNES 2.0 allows for more chunks (a recently dumped multigame cart has 256 chunks of both PRG & CHR!)
 	UINT16 chr_chunks;
+	UINT16 vram_chunks;
 	UINT8 trainer;
 	UINT8 battery;			// if there is PRG RAM with battery backup
 	UINT32 battery_size;
 	UINT8 prg_ram;			// if there is PRG RAM with no backup
 	UINT32 wram_size;
+	UINT32 mapper_ram_size;
 
 	int format;	// 1 = iNES, 2 = UNIF
 
@@ -221,6 +233,8 @@ public:
 	UINT8 ines20;
 
 	/***** FDS-floppy related *****/
+
+	int     disk_expansion;
 
 	UINT8   fds_sides;
 	UINT8   *fds_data;	// here, we store a copy of the disk

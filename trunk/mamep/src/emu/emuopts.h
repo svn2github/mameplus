@@ -39,6 +39,7 @@
 
 /* core configuration options */
 #define OPTION_READCONFIG			"readconfig"
+#define OPTION_WRITECONFIG			"writeconfig"
 #ifdef DRIVER_SWITCH
 #define OPTION_DRIVER_CONFIG			"driver_config"
 #endif /* DRIVER_SWITCH */
@@ -239,6 +240,6 @@ core_options *mame_options_init(const options_entry *entries);
 /* add the device options for a specified device */
 void image_add_device_options(core_options *opts, const game_driver *driver);
 /* accesses a device option, by device and index */
-const char *image_get_device_option(device_t *image);
+const char *image_get_device_option(device_image_interface *image);
 
 #endif	/* __EMUOPTS_H__ */

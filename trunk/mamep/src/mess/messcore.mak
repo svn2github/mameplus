@@ -73,20 +73,12 @@ OBJDIRS += \
 EMUOBJS += \
 	$(MESSOBJ)/mess.o		\
 	$(MESSOBJ)/messopts.o	\
-	$(MESSOBJ)/configms.o	\
-	$(MESSOBJ)/image.o		\
-	$(MESSOBJ)/device.o		\
-	$(MESSOBJ)/hashfile.o	\
 	$(MESSOBJ)/uimess.o		\
-	$(MESSOBJ)/filemngr.o	\
 	$(MESSOBJ)/tapectrl.o	\
 	$(MESSOBJ)/utils.o		\
 	$(MESSOBJ)/eventlst.o	\
 	$(MESSOBJ)/cheatms.o	\
-	$(MESSOBJ)/opresolv.o	\
 	$(MESSOBJ)/infomess.o	\
 	$(MESSOBJ)/climess.o	\
-	$(MESSOBJ)/zippath.o	\
-	$(MESSOBJ)/softlist.o	\
 
 $(LIBEMU): $(EMUOBJS)

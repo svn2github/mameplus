@@ -20,10 +20,6 @@
 #include "ips.h"
 #endif /* USE_IPS */
 
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
-
 
 #define LOG_LOAD 0
 #define LOG(x) do { if (LOG_LOAD) debugload x; } while(0)
@@ -1292,7 +1288,6 @@ static UINT32 normalize_flags_for_device(running_machine *machine, UINT32 startf
 }
 
 
-#ifdef MESS
 /*-------------------------------------------------
     load_software_part_region - load a software part
 
@@ -1371,7 +1366,6 @@ void load_software_part_region(running_device *device, char *swlist, char *swnam
 	/* display the results and exit */
 	display_rom_load_results(romdata);
 }
-#endif
 
 
 /*-------------------------------------------------
