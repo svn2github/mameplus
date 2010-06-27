@@ -49,7 +49,7 @@ static void gba_machine_stop(running_machine *machine)
 	// only do this if the cart loader detected some form of backup
 	if (state->nvsize > 0)
 	{
-		device_image_interface *image = (device_image_interface*)state->nvimage;
+		device_image_interface *image = dynamic_cast<device_image_interface *>(state->nvimage);
 		image->battery_save(state->nvptr, state->nvsize);
 	}
 }
@@ -2208,7 +2208,7 @@ static WRITE32_HANDLER( eeprom_w )
 		data >>= 16;
 	}
 
-//	printf("eeprom_w: %x @ %x (state %d) (PC=%x)\n", data, offset, state->eeprom_state, cpu_get_pc(space->cpu));
+//  printf("eeprom_w: %x @ %x (state %d) (PC=%x)\n", data, offset, state->eeprom_state, cpu_get_pc(space->cpu));
 
 	switch (state->eeprom_state)
 	{
@@ -2413,7 +2413,7 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 			break;
 	}
 
-	return INIT_PASS;
+	return IMAGE_INIT_PASS;
 }
 
 static MACHINE_DRIVER_START( gbadv )

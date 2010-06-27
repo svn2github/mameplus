@@ -580,7 +580,7 @@ static WRITE16_HANDLER( genesis_TMSS_bank_w )
 static void alloc_sram(running_machine *machine)
 {
 	genesis_sram = auto_alloc_array(machine, UINT16, (genesis_sram_end - genesis_sram_start + 1) / sizeof(UINT16));
-	device_image_interface *image = (device_image_interface*)devtag_get_device(machine, "cart");
+	device_image_interface *image = dynamic_cast<device_image_interface *>(devtag_get_device(machine, "cart"));
 	image->battery_load(genesis_sram, genesis_sram_end - genesis_sram_start + 1, 0x00);
 	memcpy(megadriv_backupram, genesis_sram, genesis_sram_end - genesis_sram_start + 1);
 }
@@ -1054,7 +1054,7 @@ static DEVICE_IMAGE_LOAD( genesis_cart )
 		if (!tmpROMnew)
 		{
 			logerror("Memory allocation failed reading roms!\n");
-			return INIT_FAIL;
+			return IMAGE_INIT_FAIL;
 		}
 
 		memcpy(tmpROMnew, ROM + 0x2000, length);
@@ -1283,7 +1283,7 @@ static DEVICE_IMAGE_LOAD( genesis_cart )
 	if (sram_detected)
 		logerror("SRAM detected from header: starting location %X - SRAM Length %X\n", genesis_sram_start, genesis_sram_end - genesis_sram_start + 1);
 
-	return INIT_PASS;
+	return IMAGE_INIT_PASS;
 }
 
 /******* Image unloading (with SRAM saving) *******/
@@ -1340,7 +1340,7 @@ static DEVICE_IMAGE_LOAD( _32x_cart )
 
 	auto_free(image.device().machine, temp_copy);
 
-	return INIT_PASS;
+	return IMAGE_INIT_PASS;
 }
 
 /******* Cart getinfo *******/

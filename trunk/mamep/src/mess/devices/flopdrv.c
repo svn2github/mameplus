@@ -118,13 +118,13 @@ static const floppy_error_map errmap[] =
 /***************************************************************************
     IMPLEMENTATION
 ***************************************************************************/
-extern DEVICE_GET_INFO(apple525);
-extern DEVICE_GET_INFO(sonydriv);
+DECLARE_LEGACY_IMAGE_DEVICE(FLOPPY_APPLE, apple525);
+DECLARE_LEGACY_IMAGE_DEVICE(FLOPPY_SONY, sonydriv);
 
 INLINE floppy_drive *get_safe_token(running_device *device)
 {
 	assert( device != NULL );
-//	assert( device->type() == FLOPPY || device->type() == FLOPPY_APPLE || device->type() == FLOPPY_SONY);
+	assert( device->type() == FLOPPY || device->type() == FLOPPY_APPLE || device->type() == FLOPPY_SONY);
 	return (floppy_drive *) downcast<legacy_device_base *>(device)->token();
 }
 
@@ -346,7 +346,7 @@ a fixed set of circumstances */
 void floppy_drive_set_ready_state(running_device *img, int state, int flag)
 {
 	floppy_drive *drive = get_safe_token(img);
-	device_image_interface *image = (device_image_interface *) img;
+	device_image_interface *image = dynamic_cast<device_image_interface *>(img);
 	if (flag)
 	{
 		/* set ready only if drive is present, disk is in the drive,
@@ -394,7 +394,7 @@ int	floppy_drive_get_flag_state(running_device *img, int flag)
 
 void floppy_drive_seek(running_device *img, signed int signed_tracks)
 {
-	device_image_interface *image = (device_image_interface *) img;
+	device_image_interface *image = dynamic_cast<device_image_interface *>(img);
 	floppy_drive *pDrive;
 
 	pDrive = get_safe_token( img );
@@ -469,7 +469,7 @@ int	floppy_drive_get_next_id(running_device *img, int side, chrn_id *id)
 void floppy_drive_read_track_data_info_buffer(running_device *img, int side, void *ptr, int *length )
 {
 	floppy_drive *flopimg;
-	device_image_interface *image = (device_image_interface *) img;
+	device_image_interface *image = dynamic_cast<device_image_interface *>(img);
 
 	if (image->exists())
 	{
@@ -484,7 +484,7 @@ void floppy_drive_read_track_data_info_buffer(running_device *img, int side, voi
 void floppy_drive_write_track_data_info_buffer(running_device *img, int side, const void *ptr, int *length )
 {
 	floppy_drive *flopimg;
-	device_image_interface *image = (device_image_interface *) img;
+	device_image_interface *image = dynamic_cast<device_image_interface *>(img);
 
 	if (image->exists())
 	{
@@ -498,7 +498,7 @@ void floppy_drive_write_track_data_info_buffer(running_device *img, int side, co
 
 void floppy_drive_format_sector(running_device *img, int side, int sector_index,int c,int h, int r, int n, int filler)
 {
-	device_image_interface *image = (device_image_interface *) img;
+	device_image_interface *image = dynamic_cast<device_image_interface *>(img);
 
 	if (image->exists())
 	{
@@ -510,8 +510,8 @@ void floppy_drive_format_sector(running_device *img, int side, int sector_index,
 void floppy_drive_read_sector_data(running_device *img, int side, int index1, void *ptr, int length)
 {
 	floppy_drive *flopimg;
-	device_image_interface *image = (device_image_interface *) img;
-	
+	device_image_interface *image = dynamic_cast<device_image_interface *>(img);
+
 	if (image->exists())
 	{
 		flopimg = get_safe_token( img );
@@ -529,7 +529,7 @@ void floppy_drive_read_sector_data(running_device *img, int side, int index1, vo
 void floppy_drive_write_sector_data(running_device *img, int side, int index1, const void *ptr,int length, int ddam)
 {
 	floppy_drive *flopimg;
-	device_image_interface *image = (device_image_interface *) img;
+	device_image_interface *image = dynamic_cast<device_image_interface *>(img);
 
 	if (image->exists())
 	{
@@ -586,7 +586,7 @@ UINT64 floppy_drive_get_current_track_size(running_device *img, int head)
 {
 	floppy_drive *drv = get_safe_token( img );
 	int size = 0;
-	device_image_interface *image = (device_image_interface*)img;
+	device_image_interface *image = dynamic_cast<device_image_interface *>(img);
 
 	if (image->exists())
 	{
@@ -679,7 +679,7 @@ static int internal_floppy_device_load(device_image_interface *image, int create
 			floppy_get_tracks_per_disk(flopimg->floppy),
 			floppy_get_heads_per_disk(flopimg->floppy));
 	}
-	return INIT_PASS;
+	return IMAGE_INIT_PASS;
 
 error:
 	for (i = 0; i < ARRAY_LENGTH(errmap); i++)
@@ -687,7 +687,7 @@ error:
 		if (err == errmap[i].ferr)
 			image->seterror(errmap[i].ierr, errmap[i].message);
 	}
-	return INIT_FAIL;
+	return IMAGE_INIT_FAIL;
 }
 
 static TIMER_CALLBACK( set_wpt )
@@ -703,7 +703,7 @@ DEVICE_IMAGE_LOAD( floppy )
 	floppy_drive *flopimg;
 	int retVal = internal_floppy_device_load(&image, -1, NULL);
 	flopimg = get_safe_token( &image.device() );
-	if (retVal==INIT_PASS) {
+	if (retVal==IMAGE_INIT_PASS) {
 		/* if we have one of our hacky unload procs, call it */
 		if (flopimg->load_proc)
 			flopimg->load_proc(image);
@@ -887,7 +887,7 @@ WRITE8_DEVICE_HANDLER( floppy_ds_w )
 WRITE_LINE_DEVICE_HANDLER( floppy_mon_w )
 {
 	floppy_drive *drive = get_safe_token(device);
-	device_image_interface *image = (device_image_interface *) device;
+	device_image_interface *image = dynamic_cast<device_image_interface *>(device);
 	/* force off if there is no attached image */
 	if (!image->exists())
 		state = ASSERT_LINE;

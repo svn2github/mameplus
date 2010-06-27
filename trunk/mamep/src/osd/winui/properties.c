@@ -157,7 +157,6 @@ b) Exit the dialog.
 
 #ifdef MESS
 // done like this until I figure out a better idea
-#include "messopts.h"
 #include "resourcems.h"
 #include "propertiesms.h"
 #endif

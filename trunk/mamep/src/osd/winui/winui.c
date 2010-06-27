@@ -93,7 +93,6 @@
 
 #ifdef MESS
 #include "messui.h"
-#include "messopts.h"
 #endif // MESS
 
 #ifdef _MSC_VER

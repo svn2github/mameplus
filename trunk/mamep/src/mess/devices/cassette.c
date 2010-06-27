@@ -211,7 +211,7 @@ void cassette_seek(running_device *device, double time, int origin)
 
 	cassette_update(device);
 
-	length = cassette_get_length(device);	
+	length = cassette_get_length(device);
 
 	switch(origin) {
 	case SEEK_SET:
@@ -303,10 +303,10 @@ static DEVICE_IMAGE_LOAD( cassette )
 	cassette->position = 0.0;
 	cassette->position_time = attotime_to_double(timer_get_time(device->machine));
 
-	return INIT_PASS;
+	return IMAGE_INIT_PASS;
 
 error:
-	return INIT_FAIL;
+	return IMAGE_INIT_FAIL;
 }
 
 

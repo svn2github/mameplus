@@ -22,10 +22,6 @@
 #define MESS
 #endif /* MAMEMESS */
 
-#ifdef MESS
-#include "infomess.h"
-#endif /* MESS */
-
 /* MESS/MAME configuration */
 #if 0 //def MESS
 #define XML_ROOT "mess"
