@@ -199,7 +199,7 @@ public:																			\
 	virtual device_t *alloc_device(running_machine &machine) const; 			\
 };																				\
 																				\
-const device_type name = configclass::static_alloc_device_config
+extern const device_type name
 
 // macro for defining the implementation needed for configuration and device classes
 #define _DEFINE_LEGACY_DEVICE(name, basename, configclass, deviceclass, baseconfigclass, basedeviceclass)		\
@@ -222,7 +222,8 @@ device_config *configclass::static_alloc_device_config(const machine_config &mco
 device_t *configclass::alloc_device(running_machine &machine) const 			\
 {																				\
 	return pool_alloc(machine_get_pool(machine), deviceclass(machine, *this));	\
-}
+}																				\
+const device_type name = configclass::static_alloc_device_config
 
 // reduced macros that are easier to use, and map to the above two macros
 #define DECLARE_LEGACY_DEVICE(name, basename) _DECLARE_LEGACY_DEVICE(name, basename, basename##_device_config, basename##_device, legacy_device_config_base, legacy_device_base)
@@ -467,10 +468,6 @@ protected:
 public:
 	// access to legacy token
 	void *token() const { return m_token; }
-	
-	INT64 get_config_int(UINT32 state) const { return m_config.get_legacy_config_int(state); }
-	genf *get_config_fct(UINT32 state) const { return m_config.get_legacy_config_fct(state); }
-	void *get_config_ptr(UINT32 state) const { return m_config.get_legacy_config_ptr(state); }
 protected:
 	// device-level overrides
 	virtual void device_start();

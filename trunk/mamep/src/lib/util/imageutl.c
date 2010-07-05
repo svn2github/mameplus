@@ -1,73 +1,44 @@
-#include <stdio.h>
+/***************************************************************************
+
+    imageutl.h
+
+    Image related utilities
+
+****************************************************************************
+
+    Copyright Aaron Giles
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are
+    met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in
+          the documentation and/or other materials provided with the
+          distribution.
+        * Neither the name 'MAME' nor the names of its contributors may be
+          used to endorse or promote products derived from this software
+          without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY AARON GILES ''AS IS'' AND ANY EXPRESS OR
+    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL AARON GILES BE LIABLE FOR ANY DIRECT,
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+    IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+
+***************************************************************************/
+
 #include <ctype.h>
-#include <stdlib.h>
-#include "emu.h"
-#include "utils.h"
-
-char *strncpyz(char *dest, const char *source, size_t len)
-{
-	char *s;
-	if (len) {
-		s = strncpy(dest, source, len - 1);
-		dest[len-1] = '\0';
-	}
-	else {
-		s = dest;
-	}
-	return s;
-}
-
-char *strncatz(char *dest, const char *source, size_t len)
-{
-	size_t l;
-	l = strlen(dest);
-	dest += l;
-	if (len > l)
-		len -= l;
-	else
-		len = 0;
-	return strncpyz(dest, source, len);
-}
-
-void rtrim(char *buf)
-{
-	size_t buflen;
-	char *s;
-
-	buflen = strlen(buf);
-	if (buflen)
-	{
-		for (s = &buf[buflen-1]; s >= buf && (*s >= '\0') && isspace(*s); s--)
-			*s = '\0';
-	}
-}
-
-#ifndef strncmpi
-int strncmpi(const char *dst, const char *src, size_t n)
-{
-	int result = 0;
-
-	while( !result && *src && *dst && n)
-	{
-		result = tolower(*dst) - tolower(*src);
-		src++;
-		dst++;
-		n--;
-	}
-	return result;
-}
-#endif /* strncmpi */
-
-#ifndef memset16
-void *memset16 (void *dest, int value, size_t size)
-{
-	register int i;
-
-	for (i = 0; i < size; i++)
-		((short *) dest)[i] = value;
-	return dest;
-}
-#endif
+#include "imageutl.h"
 
 int compute_log2(int val)
 {
@@ -82,8 +53,6 @@ int compute_log2(int val)
 	}
 	return (val == 0) ? -1 : count;
 }
-
-
 
 /*
    Compute CCITT CRC-16 using the correct bit order for floppy disks.
@@ -141,19 +110,6 @@ unsigned short ccitt_crc16_one( unsigned short crc, const unsigned char data )
 }
 
 
-
-int hexdigit(char c)
-{
-	int result = 0;
-	if (isdigit(c))
-		result = c - '0';
-	else if (isxdigit(c))
-		result = toupper(c) - 'A' + 10;
-	return result;
-}
-
-
-
 /*-------------------------------------------------
     is_delim - returns whether c is a comma or \0
 -------------------------------------------------*/
@@ -166,11 +122,11 @@ static int is_delim(char c)
 
 
 /*-------------------------------------------------
-    internal_find_extension - find an extension in
+    image_internal_find_extension - find an extension in
     an extension list
 -------------------------------------------------*/
 
-static int internal_find_extension(const char *extension_list, const char *target_extension)
+static int image_internal_find_extension(const char *extension_list, const char *target_extension)
 {
 	/* this version allows target_extension to be delimited with a comma */
 	int pos = 0;
@@ -206,11 +162,11 @@ static int internal_find_extension(const char *extension_list, const char *targe
 
 
 /*-------------------------------------------------
-    find_extension - find an extension in an extension
+    image_find_extension - find an extension in an extension
     list
 -------------------------------------------------*/
 
-int find_extension(const char *extension_list, const char *target_extension)
+int image_find_extension(const char *extension_list, const char *target_extension)
 {
 	/* the internal function allows something that we do not */
 	if (strchr(target_extension, ','))
@@ -221,17 +177,17 @@ int find_extension(const char *extension_list, const char *target_extension)
 		target_extension++;
 
 	/* do the actual work */
-	return internal_find_extension(extension_list, target_extension);
+	return image_internal_find_extension(extension_list, target_extension);
 }
 
 
 
 /*-------------------------------------------------
-    specify_extension - merge a comma-delimited
+    image_specify_extension - merge a comma-delimited
     list of file extensions onto an existing list
 -------------------------------------------------*/
 
-void specify_extension(char *buffer, size_t buffer_len, const char *extension)
+void image_specify_extension(char *buffer, size_t buffer_len, const char *extension)
 {
 	int extension_pos = 0;
 	int len;
@@ -246,7 +202,7 @@ void specify_extension(char *buffer, size_t buffer_len, const char *extension)
 		while(extension[extension_pos] != '\0')
 		{
 			/* try to find the file extension */
-			found = internal_find_extension(buffer, &extension[extension_pos]);
+			found = image_internal_find_extension(buffer, &extension[extension_pos]);
 
 			/* append a delimiter if we have to */
 			if (!found && (len > 0))
@@ -264,3 +220,4 @@ void specify_extension(char *buffer, size_t buffer_len, const char *extension)
 		}
 	}
 }
+

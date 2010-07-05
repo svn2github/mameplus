@@ -270,7 +270,17 @@ private:
 	callback_item *			m_callback_list;		// list of VBLANK callbacks
 
 #ifdef USE_SCALE_EFFECTS
-	/* scaler dimensions */
+	void realloc_scale_bitmaps();
+	void free_scalebitmap();
+	void convert_palette_to_32(const bitmap_t *src, bitmap_t *dst, const rectangle *visarea, UINT32 palettebase);
+	void convert_palette_to_15(const bitmap_t *src, bitmap_t *dst, const rectangle *visarea, UINT32 palettebase);
+	void texture_set_scalebitmap(const rectangle *visarea, UINT32 palettebase);
+
+	// scale effect rendering
+	void video_init_scale_effect();
+	void video_exit_scale_effect();
+
+	// scaler dimensions
 	int					use_work_bitmap;
 	int					scale_depth;
 	int					scale_xsize;
@@ -285,7 +295,7 @@ private:
 
 
 // device type definition
-const device_type SCREEN = screen_device_config::static_alloc_device_config;
+extern const device_type SCREEN;
 
 
 
@@ -409,14 +419,6 @@ void video_avi_add_sound(running_machine *machine, const INT16 *sound, int numsa
 
 /* select a view for a given target */
 int video_get_view_for_target(running_machine *machine, render_target *target, const char *viewname, int targetindex, int numtargets);
-
-
-#ifdef USE_SCALE_EFFECTS
-/* ----- scale effect rendering ----- */
-
-void video_init_scale_effect(running_device *screen);
-void video_exit_scale_effect(running_device *screen);
-#endif /* USE_SCALE_EFFECTS */
 
 
 /* ----- debugging helpers ----- */

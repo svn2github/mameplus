@@ -16,7 +16,7 @@
 #include "osdepend.h"
 #include "formats/flopimg.h"
 #include "pool.h"
-#include "utils.h"
+#include "imageutl.h"
 
 #define TRACK_LOADED		0x01
 #define TRACK_DIRTY			0x02
@@ -114,7 +114,7 @@ static floperr_t floppy_open_internal(void *fp, const struct io_procs *procs, co
 	/* vote on the best format */
 	for (i = 0; (i < max_options) && floppy_options[i].construct; i++)
 	{
-		if (!extension || !floppy_options[i].extensions || find_extension(floppy_options[i].extensions, extension))
+		if (!extension || !floppy_options[i].extensions || image_find_extension(floppy_options[i].extensions, extension))
 		{
 			if (floppy_options[i].identify)
 			{

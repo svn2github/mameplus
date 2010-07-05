@@ -7,7 +7,7 @@
 *********************************************************************/
 
 #include "emu.h"
-#include "utils.h"
+#include "imageutl.h"
 #include "cassette.h"
 #include "formats/cassimg.h"
 #include "ui.h"
@@ -428,7 +428,7 @@ DEVICE_GET_INFO(cassette)
 				info->s[0] = '\0';
 
 				for ( i = 0; formats[i]; i++ )
-					specify_extension( info->s, 256, formats[i]->extensions );
+					image_specify_extension( info->s, 256, formats[i]->extensions );
 			}
 			break;
 	}

@@ -61,6 +61,8 @@ typedef struct
 	UINT8* access;	/* direct access when possible */
 } name_table;
 
+typedef void (*nes_prg_callback)(running_machine *machine, int start, int bank);
+typedef void (*nes_chr_callback)(running_machine *machine, int start, int bank, int source);
 
 class nes_state
 {
@@ -85,7 +87,6 @@ public:
 
 	int MMC5_floodtile;
 	int MMC5_floodattr;
-	UINT8 mmc5_vram[0x400];
 	int mmc5_vram_control;
 	UINT8 mmc5_high_chr;
 	UINT8 mmc5_split_scr;
@@ -116,6 +117,9 @@ public:
 	read8_space_func    mmc_read;
 	emu_timer	        *irq_timer;
 
+	nes_prg_callback    mmc3_prg_cb;	// these are used to simplify a lot emulation of some MMC3 pirate clones
+	nes_chr_callback    mmc3_chr_cb;
+
 	/* devices */
 	running_device      *maincpu;
 	running_device      *ppu;
@@ -131,9 +135,7 @@ public:
 	UINT8      *ciram; //PPU nametable RAM - external to PPU!
 	UINT8      *battery_ram;
 	UINT8      *mapper_ram;
-	// Variables which can change
-	UINT8      mid_ram_enable;
-
+	UINT8      *mapper_bram;
 
 	/***** Mapper-related variables *****/
 
@@ -156,7 +158,7 @@ public:
 	int mmc_prg_base, mmc_prg_mask;	// MMC3 based multigame carts select a block of banks by using these (and then act like normal MMC3),
 	int mmc_chr_base, mmc_chr_mask;	// while MMC3 and clones (mapper 118 & 119) simply set them as 0 and 0xff resp.
 
-	UINT8 mmc_prg_bank[4];				// Many mappers writes only some bits of the selected bank (for both PRG and CHR),
+	UINT8 mmc_prg_bank[6];				// Many mappers writes only some bits of the selected bank (for both PRG and CHR),
 	UINT8 mmc_vrom_bank[16];			// hence these are handy to latch bank values.
 
 	UINT16 MMC5_vrom_bank[12];			// MMC5 has 10bit wide VROM regs!
@@ -169,11 +171,13 @@ public:
 	UINT8 mmc_dipsetting;
 
 	// misc mapper related variables which should be merged with the above one, where possible
-	UINT8 MMC1_regs[4];
 	int mmc1_reg_write_enable;
-	UINT8 MMC2_regs[4];	// these replace bank0/bank0_hi/bank1/bank1_hi
+	int mmc1_latch;
+	int mmc1_count;
 
-	UINT8 mmc3_alt_irq;
+	int mmc3_latch;
+	int mmc3_wram_protect;
+	int mmc3_alt_irq;
 
 	int MMC5_rom_bank_mode;
 	int MMC5_vrom_bank_mode;
@@ -187,38 +191,13 @@ public:
 
 	// these might be unified in single mmc_reg[] array, together with state->mmc_cmd1 & state->mmc_cmd2
 	// but be careful that MMC3 clones often use state->mmc_cmd1/state->mmc_cmd2 (from base MMC3) AND additional regs below!
-	UINT8 mapper45_reg[4];
-	UINT8 mapper51_reg[3];
 	UINT8 mapper83_reg[10];
 	UINT8 mapper83_low_reg[4];
-	UINT8 mapper95_reg[4];
-	UINT8 mapper115_reg[4];
 	UINT8 txc_reg[4];	// used by mappers 132, 172 & 173
 	UINT8 subor_reg[4];	// used by mappers 166 & 167
 	UINT8 sachen_reg[8];	// used by mappers 137, 138, 139 & 141
-	UINT8 mapper12_reg;
 	UINT8 map52_reg_written;
 	UINT8 map114_reg, map114_reg_enabled;
-	UINT8 map215_reg[4];
-	UINT8 map217_reg[4];
-	UINT8 map249_reg;
-	UINT8 map14_reg[2];
-	UINT8 mapper121_reg[8];
-	UINT8 mapper187_reg[4];
-	UINT8 map208_reg[5];
-	UINT8 bmc_64in1nr_reg[4];
-	UINT8 unl_8237_reg[3];
-	UINT8 bmc_s24in1sc03_reg[3];
-
-	// mapper 68 needs these for NT mirroring!
-	int m68_mirror;
-	int m0, m1;
-
-	// Famicom Jump II is identified as Mapper 153, but it works in a completely different way.
-	// in particular, it requires these (not needed by other Mapper 153 games)
-	UINT8 map153_reg[8];
-	UINT8 map153_bank_latch;
-
 
 	/***** NES-cart related *****/
 
@@ -232,15 +211,13 @@ public:
 	UINT8 prg_ram;			// if there is PRG RAM with no backup
 	UINT32 wram_size;
 	UINT32 mapper_ram_size;
-
-	int format;	// 1 = iNES, 2 = UNIF
+	UINT32 mapper_bram_size;
 
 	/* system variables which don't change at run-time */
 	UINT16 mapper;		// for iNES
 	UINT16 pcb_id;		// for UNIF & xml
 	UINT8 four_screen_vram;
 	UINT8 hard_mirroring;
-	UINT8 slow_banking;
 	UINT8 crc_hack;	// this is needed to detect different boards sharing the same Mappers (shame on .nes format)
 	UINT8 ines20;
 

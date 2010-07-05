@@ -499,3 +499,4 @@ device_image_interface *image_from_absolute_index(running_machine *machine, int 
 	}
 	return NULL;
 } 
+

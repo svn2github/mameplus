@@ -23,28 +23,26 @@
     Known issues on specific mappers:
 
     * 000 F1 Race requires more precise PPU timing. It currently has plenty of 1-line glitches.
-    * 001 AD&D Hillsfar and Bill & Ted are broken. We need to ignore the case of writes happening on 2
-          consecutive CPU cycles because these games use dirty tricks to reset counters (see note in mapper1_w)
-    * 001 Yoshi flashes in-game. Zombie Hunter regressed. Rocket Ranger and Back to the Future have heavily
-          corrupted graphics (since forever) and Snow Bros. (J) has never worked.
-    * 001, 155 We don't handle (yet) WRAM enable/disable bit
+    * 001 Yoshi flashes in-game. Back to the Future have heavily corrupted graphics (since forever).
+    * 001 SOROM boards do not properly handle the two WRAM/Battery banks
     * 002, 003, 094, 097, 152 Bus conflict?
+    * 003 Firehouse Rescue has flashing graphics
     * 004 Mendel Palace has never worked properly
+    * 004 Ninja Gaiden 2 has flashing bg graphics in the second level
     * 005 has issues (see e.g. Just Breed or Metal Slader Glory), RAM banking needs hardware flags to determine size
     * 007 Marble Madness has small graphics corruptions
     * 014 in-game graphics is glitched
     * 015 Shanghai Tycoon has corrupted graphics
-    * 025 TMNT & TMNT2 Jpn do not work
     * 033 has still some graphics problem (e.g. missing text in Akira)
     * 034 Impossible Mission II does not show graphics
     * 038 seems to miss inputs. separate reads?
-    * 039 Study n Game 32 in 1 misses keyboard and starts differently than in NEStopia
     * 042 Ai Senshi Nicol has broken graphics (our Mapper 42 implementation does not handle CHR banks)
+    * 048 Don Doko Don 2 freezes when you reach the first boss
     * 051 only half of the games work
     * 064 has many IRQ problems (due to the way we implement CPU based IRQ) - see Skull & Crossbones.
           Klax has problems as well (even if it uses scanline based IRQ, according to Disch's docs).
     * 067 some 1-line glitches that cannot be solved without a better implementation for cycle-based IRQs
-    * 071 Micro Machines has various small graphics problems. Fire Hawk is flashing all the times.
+    * 071 Fire Hawk is flashing all the times.
     * 072, 086, 092 lack samples support (maybe others as well)
     * 073 16 bit IRQ mode is not implemented
     * 077 Requires 4-screen mirroring. Currently, it is very glitchy
@@ -58,19 +56,16 @@
     * 119 Pin Bot has glitches when the ball is in the upper half of the screen
     * 133 Qi Wang starts with corrupted graphics (ingame seems better)
     * 143 are Dancing Block borders (in the intro) correct?
-    * 153 Famicom Jump II variant is not working, for some reason
     * 158 In addition to IRQ problems (same as 64), mirroring was just a guess (wrong?). info needed!
     * 164 preliminary - no sprites?
     * 176 has some graphics problem
     * 178 Fan Kong Jin Ying is not working (but not even in NEStopia)
     * 180 Crazy Climber controller?
-    * 185 we emulate it like plain Mapper 3, but it's not: Mighty BombJack and Seicross don't work
     * 187, 198, 208, 215 have some PRG banking issues - preliminary!
     * 188 needs mic input (reads from 0x6000-0x7fff)
     * 197 Super Fighter 3 has some glitch in-game (maybe mirroring?)
     * 222 is only preliminar (wrong IRQ, mirroring or CHR banking?)
     * 225 115-in-1 has glitches in the menu (games seem fine)
-    * 228 seems wrong. e.g. Action52 starts with a game rather than in the menu
     * 229 is preliminary
     * 230 not working yet (needs a value to flip at reset)
     * 232 has graphics glitches
@@ -91,10 +86,15 @@
     * 113 - HES 6-in-1 requires mirroring (check Bookyman playfield), while other games break with this (check AV Soccer)
     * 153 - Famicom Jump II uses a different board (or the same in a very different way)
     * 242 - DQ8 has no mirroring (missing graphics is due to other reasons though)
+ 
+    crc_hacks have been added also to handle a few wiring settings which would require submappers:
+    * CHR protection pins for mapper 185
+    * VRC-2, VRC-4 and VRC-6 line wiring
 
     Known issues on specific UNIF boards:
     * BMC-GS2004 is not working
     * BMC-GS2013 is not working
+    * BMC-WS some games have corrupted graphics (e.g. Galaxian)
     * UNL-8237 is not working
     * UNL-KOF97 is not working
 
@@ -116,7 +116,6 @@
 
     TODO:
     - add more info
-    - complete the removal of global variable
     - add missing mappers
 
 ****************************************************************************************/
@@ -137,7 +136,11 @@
 #define LOG_MMC(x) do { if (VERBOSE) logerror x; } while (0)
 #define LOG_FDS(x) do { if (VERBOSE) logerror x; } while (0)
 
-static int unif_initialize( running_machine *machine, int idx );
+static void ffe_irq( running_device *device, int scanline, int vblank, int blanked );
+static WRITE8_HANDLER( mapper6_l_w );
+static WRITE8_HANDLER( mapper6_w );
+static WRITE8_HANDLER( mapper8_w );
+static WRITE8_HANDLER( mapper17_l_w );
 
 /*************************************************************
 
@@ -277,16 +280,12 @@ static void prg32( running_machine *machine, int bank )
 
 	/* assumes that bank references a 32k chunk */
 	bank &= ((state->prg_chunks >> 1) - 1);
-	if (state->slow_banking)
-		memcpy(&state->rom[0x8000], &state->rom[bank * 0x8000 + 0x10000], 0x8000);
-	else
-	{
-		state->prg_bank[0] = bank * 4 + 0;
-		state->prg_bank[1] = bank * 4 + 1;
-		state->prg_bank[2] = bank * 4 + 2;
-		state->prg_bank[3] = bank * 4 + 3;
-		prg_bank_refresh(machine);
-	}
+
+	state->prg_bank[0] = bank * 4 + 0;
+	state->prg_bank[1] = bank * 4 + 1;
+	state->prg_bank[2] = bank * 4 + 2;
+	state->prg_bank[3] = bank * 4 + 3;
+	prg_bank_refresh(machine);
 }
 
 static void prg16_89ab( running_machine *machine, int bank )
@@ -295,14 +294,10 @@ static void prg16_89ab( running_machine *machine, int bank )
 
 	/* assumes that bank references a 16k chunk */
 	bank &= (state->prg_chunks - 1);
-	if (state->slow_banking)
-		memcpy(&state->rom[0x8000], &state->rom[bank * 0x4000 + 0x10000], 0x4000);
-	else
-	{
-		state->prg_bank[0] = bank * 2 + 0;
-		state->prg_bank[1] = bank * 2 + 1;
-		prg_bank_refresh(machine);
-	}
+
+	state->prg_bank[0] = bank * 2 + 0;
+	state->prg_bank[1] = bank * 2 + 1;
+	prg_bank_refresh(machine);
 }
 
 static void prg16_cdef( running_machine *machine, int bank )
@@ -311,14 +306,10 @@ static void prg16_cdef( running_machine *machine, int bank )
 
 	/* assumes that bank references a 16k chunk */
 	bank &= (state->prg_chunks - 1);
-	if (state->slow_banking)
-		memcpy(&state->rom[0xc000], &state->rom[bank * 0x4000 + 0x10000], 0x4000);
-	else
-	{
-		state->prg_bank[2] = bank * 2 + 0;
-		state->prg_bank[3] = bank * 2 + 1;
-		prg_bank_refresh(machine);
-	}
+
+	state->prg_bank[2] = bank * 2 + 0;
+	state->prg_bank[3] = bank * 2 + 1;
+	prg_bank_refresh(machine);
 }
 
 static void prg8_89( running_machine *machine, int bank )
@@ -327,13 +318,9 @@ static void prg8_89( running_machine *machine, int bank )
 
 	/* assumes that bank references an 8k chunk */
 	bank &= ((state->prg_chunks << 1) - 1);
-	if (state->slow_banking)
-		memcpy(&state->rom[0x8000], &state->rom[bank * 0x2000 + 0x10000], 0x2000);
-	else
-	{
-		state->prg_bank[0] = bank;
-		prg_bank_refresh(machine);
-	}
+
+	state->prg_bank[0] = bank;
+	prg_bank_refresh(machine);
 }
 
 static void prg8_ab( running_machine *machine, int bank )
@@ -342,13 +329,9 @@ static void prg8_ab( running_machine *machine, int bank )
 
 	/* assumes that bank references an 8k chunk */
 	bank &= ((state->prg_chunks << 1) - 1);
-	if (state->slow_banking)
-		memcpy(&state->rom[0xa000], &state->rom[bank * 0x2000 + 0x10000], 0x2000);
-	else
-	{
-		state->prg_bank[1] = bank;
-		prg_bank_refresh(machine);
-	}
+
+	state->prg_bank[1] = bank;
+	prg_bank_refresh(machine);
 }
 
 static void prg8_cd( running_machine *machine, int bank )
@@ -357,13 +340,9 @@ static void prg8_cd( running_machine *machine, int bank )
 
 	/* assumes that bank references an 8k chunk */
 	bank &= ((state->prg_chunks << 1) - 1);
-	if (state->slow_banking)
-		memcpy(&state->rom[0xc000], &state->rom[bank * 0x2000 + 0x10000], 0x2000);
-	else
-	{
-		state->prg_bank[2] = bank;
-		prg_bank_refresh(machine);
-	}
+
+	state->prg_bank[2] = bank;
+	prg_bank_refresh(machine);
 }
 
 static void prg8_ef( running_machine *machine, int bank )
@@ -372,13 +351,9 @@ static void prg8_ef( running_machine *machine, int bank )
 
 	/* assumes that bank references an 8k chunk */
 	bank &= ((state->prg_chunks << 1) - 1);
-	if (state->slow_banking)
-		memcpy(&state->rom[0xe000], &state->rom[bank * 0x2000 + 0x10000], 0x2000);
-	else
-	{
-		state->prg_bank[3] = bank;
-		prg_bank_refresh(machine);
-	}
+
+	state->prg_bank[3] = bank;
+	prg_bank_refresh(machine);
 }
 
 /* We define an additional helper to map PRG-ROM to 0x6000-0x7000 */
@@ -390,8 +365,23 @@ static void prg8_67( running_machine *machine, int bank )
 
 	/* assumes that bank references an 8k chunk */
 	bank &= ((state->prg_chunks << 1) - 1);
+
 	state->prg_bank[4] = bank;
 	memory_set_bank(machine, "bank5", state->prg_bank[4]);
+}
+
+/* We also define an additional helper to map 8k PRG-ROM to one of the banks (passed as parameter) */
+static void prg8_x( running_machine *machine, int start, int bank )
+{
+	nes_state *state = (nes_state *)machine->driver_data;
+	
+	assert(start < 4);
+
+	/* assumes that bank references an 8k chunk */
+	bank &= ((state->prg_chunks << 1) - 1);
+	
+	state->prg_bank[start] = bank;
+	prg_bank_refresh(machine);
 }
 
 /* CHR ROM in 1K, 2K, 4K or 8K blocks */
@@ -607,7 +597,7 @@ static void set_nt_page( running_machine *machine, int page, int source, int ban
 			base_ptr = state->vrom;
 			break;
 		case EXRAM:
-			base_ptr = state->mmc5_vram;
+			base_ptr = state->mapper_ram;
 			break;
 		case CIRAM:
 		default:

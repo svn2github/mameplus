@@ -58,7 +58,6 @@ static void init_nes_core( running_machine *machine )
 	/* If there is Disk Expansion and no cart has been loaded, setup memory accordingly */
 	if (state->disk_expansion && state->pcb_id == NO_BOARD)
 	{
-		state->slow_banking = 0;
 		/* If we are loading a disk we have already filled state->fds_data and we don't want to overwrite it,
          if we are loading a cart image identified as mapper 20 (probably wrong mapper...) we need to alloc
          memory for use in nes_fds_r/nes_fds_w. Same goes for allocation of fds_ram (used for bank2)  */
@@ -84,13 +83,9 @@ static void init_nes_core( running_machine *machine )
 	}
 
 	/* Set up the mapper callbacks */
-	if (state->format == 1)
-		mapper_handlers_setup(machine);
-	else if (state->format == 3 || state->format == 2)
-		pcb_handlers_setup(machine);
+	pcb_handlers_setup(machine);
 
 	/* Set up the memory handlers for the mapper */
-	state->slow_banking = 0;
 	memory_install_read_bank(space, 0x8000, 0x9fff, 0, 0, "bank1");
 	memory_install_read_bank(space, 0xa000, 0xbfff, 0, 0, "bank2");
 	memory_install_read_bank(space, 0xc000, 0xdfff, 0, 0, "bank3");
@@ -163,16 +158,26 @@ static void init_nes_core( running_machine *machine )
 		memory_install_read8_handler(space, 0x8000, 0xffff, 0, 0, state->mmc_read);
 
 	// install additional handlers
-	if (state->pcb_id == BTL_SMB2B)
+	if (state->pcb_id == BTL_SMB2B || state->mapper == 50)
 	{
 		memory_install_write8_handler(space, 0x4020, 0x403f, 0, 0, smb2jb_extra_w);
 		memory_install_write8_handler(space, 0x40a0, 0x40bf, 0, 0, smb2jb_extra_w);
 	}
-	if (state->mapper == 50)
+
+	if (state->pcb_id == KAISER_KS7017)
 	{
-		memory_install_write8_handler(space, 0x4020, 0x403f, 0, 0, nes_mapper50_add_w);
-		memory_install_write8_handler(space, 0x40a0, 0x40bf, 0, 0, nes_mapper50_add_w);
+		memory_install_read8_handler(space, 0x4030, 0x4030, 0, 0, ks7017_extra_r);
+		memory_install_write8_handler(space, 0x4020, 0x40ff, 0, 0, ks7017_extra_w);
 	}
+
+	if (state->pcb_id == UNL_603_5052)
+	{
+		memory_install_read8_handler(space, 0x4020, 0x40ff, 0, 0, unl_6035052_extra_r);
+		memory_install_write8_handler(space, 0x4020, 0x40ff, 0, 0, unl_6035052_extra_w);
+	}
+
+	if (state->pcb_id == WAIXING_SH2)
+		memory_install_read8_handler(cpu_get_address_space(devtag_get_device(machine, "ppu"), ADDRESS_SPACE_PROGRAM), 0, 0x1fff, 0, 0, waixing_sh2_chr_r);
 }
 
 // to be probably removed (it does nothing since a long time)
@@ -185,17 +190,10 @@ MACHINE_RESET( nes )
 {
 	nes_state *state = (nes_state *)machine->driver_data;
 
-	/* Some carts have extra RAM and require it on at startup, e.g. Metroid */
-	state->mid_ram_enable = 1;
-
 	/* Reset the mapper variables. Will also mark the char-gen ram as dirty */
 	if (state->disk_expansion && state->pcb_id == NO_BOARD)
 		ppu2c0x_set_hblank_callback(state->ppu, fds_irq);
-
-	if (state->format == 1)
-		nes_mapper_reset(machine);
-
-	if (state->format == 2 || state->format == 3)
+	else
 		nes_pcb_reset(machine);
 
 	/* Reset the serial input ports */
@@ -231,12 +229,10 @@ static void nes_state_register( running_machine *machine )
 
 	state_save_register_global(machine, state->MMC5_floodtile);
 	state_save_register_global(machine, state->MMC5_floodattr);
-	state_save_register_global_array(machine, state->mmc5_vram);
 	state_save_register_global(machine, state->mmc5_vram_control);
 
 	state_save_register_global_array(machine, state->nes_vram_sprite);
 	state_save_register_global(machine, state->last_frame_flip);
-	state_save_register_global(machine, state->mid_ram_enable);
 
 	// shared mapper variables
 	state_save_register_global(machine, state->IRQ_enable);
@@ -302,8 +298,8 @@ static void nes_machine_stop( running_machine *machine )
 	if (state->battery)
 		image->battery_save(state->battery_ram, state->battery_size);
 
-	if (state->mapper_ram_size)
-		image->battery_save(state->mapper_ram, state->mapper_ram_size);
+	if (state->mapper_bram_size)
+		image->battery_save(state->mapper_bram, state->mapper_bram_size);
 }
 
 
@@ -314,7 +310,7 @@ READ8_HANDLER( nes_IN0_r )
 	int cfg = input_port_read(space->machine, "CTRLSEL");
 	int ret;
 
-	if ((cfg & 0x000f) >= 0x04)	// for now we treat the FC keyboard separately from other inputs!
+	if ((cfg & 0x000f) >= 0x07)	// for now we treat the FC keyboard separately from other inputs!
 	{
 		// here we should have the tape input
 		ret = 0;
@@ -382,7 +378,7 @@ READ8_HANDLER( nes_IN1_r )
 	int cfg = input_port_read(space->machine, "CTRLSEL");
 	int ret;
 
-	if ((cfg & 0x000f) == 0x04)	// for now we treat the FC keyboard separately from other inputs!
+	if ((cfg & 0x000f) == 0x07)	// for now we treat the FC keyboard separately from other inputs!
 	{
 		if (state->fck_scan < 9)
 			ret = ~nes_read_fc_keyboard_line(space->machine, state->fck_scan, state->fck_mode) & 0x1e;
@@ -453,22 +449,24 @@ READ8_HANDLER( nes_IN1_r )
 }
 
 
-
-static void nes_read_input_device( running_machine *machine, int cfg, nes_input *vals, int pad_port, int supports_zapper, int paddle_port )
+// FIXME: this is getting messier and messier (no pun intended). inputs reading should be simplified and port_categories cleaned up 
+// to also emulate the fact that nothing should be in Port 2 if there is a Crazy Climber pad, etc.
+static void nes_read_input_device( running_machine *machine, int cfg, nes_input *vals, int pad_port, int supports_zapper )
 {
-	static const char *const padnames[] = { "PAD1", "PAD2", "PAD3", "PAD4" };
-
+	nes_state *state = (nes_state *)machine->driver_data;
+	static const char *const padnames[] = { "PAD1", "PAD2", "PAD3", "PAD4", "CC_LEFT", "CC_RIGHT" };
+	
 	vals->i0 = 0;
 	vals->i1 = 0;
 	vals->i2 = 0;
-
-	switch(cfg & 0x0f)
+	
+	switch (cfg & 0x0f)
 	{
 		case 0x01:	/* gamepad */
 			if (pad_port >= 0)
 				vals->i0 = input_port_read(machine, padnames[pad_port]);
 			break;
-
+			
 		case 0x02:	/* zapper 1 */
 			if (supports_zapper)
 			{
@@ -477,7 +475,7 @@ static void nes_read_input_device( running_machine *machine, int cfg, nes_input 
 				vals->i2 = input_port_read(machine, "ZAPPER1_Y");
 			}
 			break;
-
+			
 		case 0x03:	/* zapper 2 */
 			if (supports_zapper)
 			{
@@ -486,10 +484,18 @@ static void nes_read_input_device( running_machine *machine, int cfg, nes_input 
 				vals->i2 = input_port_read(machine, "ZAPPER2_Y");
 			}
 			break;
-
+			
 		case 0x04:	/* arkanoid paddle */
-			if (paddle_port >= 0)
+			if (pad_port == 1)
 				vals->i0 = (UINT8) ((UINT8) input_port_read(machine, "PADDLE") + (UINT8)0x52) ^ 0xff;
+			break;
+			
+		case 0x05:	/* crazy climber controller */
+			if (pad_port == 0)
+			{
+				state->in_0.i0 = input_port_read(machine, padnames[4]);
+				state->in_1.i0 = input_port_read(machine, padnames[5]);
+			}
 			break;
 	}
 }
@@ -528,7 +534,7 @@ WRITE8_HANDLER( nes_IN0_w )
 	/* Check if lightgun has been chosen as input: if so, enable crosshair */
 	timer_set(space->machine, attotime_zero, NULL, 0, lightgun_tick);
 
-	if ((cfg & 0x000f) >= 0x04)	// for now we treat the FC keyboard separately from other inputs!
+	if ((cfg & 0x000f) >= 0x07)	// for now we treat the FC keyboard separately from other inputs!
 	{
 		// here we should also have the tape output
 
@@ -550,23 +556,33 @@ WRITE8_HANDLER( nes_IN0_w )
 	{
 		if (data & 0x01)
 			return;
-
+		
 		if (LOG_JOY)
 			logerror("joy 0 bits read: %d\n", state->in_0.shift);
-
+		
 		/* Toggling bit 0 high then low resets both controllers */
 		state->in_0.shift = 0;
 		state->in_1.shift = 0;
-
+		
 		/* Read the input devices */
-		nes_read_input_device(space->machine, cfg >>  0, &state->in_0, 0,  TRUE, -1);
-		nes_read_input_device(space->machine, cfg >>  4, &state->in_1, 1,  TRUE,  1);
-		nes_read_input_device(space->machine, cfg >>  8, &state->in_2, 2, FALSE, -1);
-		nes_read_input_device(space->machine, cfg >> 12, &state->in_3, 3, FALSE, -1);
-
+		if ((cfg & 0x000f) != 0x06)
+		{
+			nes_read_input_device(space->machine, cfg >>  0, &state->in_0, 0,  TRUE);
+			nes_read_input_device(space->machine, cfg >>  4, &state->in_1, 1,  TRUE);
+			nes_read_input_device(space->machine, cfg >>  8, &state->in_2, 2, FALSE);
+			nes_read_input_device(space->machine, cfg >> 12, &state->in_3, 3, FALSE);
+		}
+		else // crazy climber pad
+		{
+			nes_read_input_device(space->machine, 0, &state->in_1, 1,  TRUE);
+			nes_read_input_device(space->machine, 0, &state->in_2, 2, FALSE);
+			nes_read_input_device(space->machine, 0, &state->in_3, 3, FALSE);
+			nes_read_input_device(space->machine, cfg >>  0, &state->in_0, 0,  TRUE);
+		}
+		
 		if (cfg & 0x0f00)
 			state->in_0.i0 |= (state->in_2.i0 << 8) | (0x08 << 16);
-
+		
 		if (cfg & 0xf000)
 			state->in_1.i0 |= (state->in_3.i0 << 8) | (0x04 << 16);
 	}
@@ -639,12 +655,11 @@ DEVICE_IMAGE_LOAD( nes_cart )
 		/* Check first 4 bytes of the image to decide if it is UNIF or iNES */
 		/* Unfortunately, many .unf files have been released as .nes, so we cannot rely on extensions only */
 		memset(magic, '\0', sizeof(magic));
-		image.fread( magic, 4);
+		image.fread(magic, 4);
 
 		if ((magic[0] == 'N') && (magic[1] == 'E') && (magic[2] == 'S'))	/* If header starts with 'NES' it is iNES */
 		{
 			UINT32 prg_size;
-			state->format = 1;	// we use this to select between mapper_reset / unif_reset
 			state->ines20 = 0;
 			state->battery_size = NES_BATTERY_SIZE; // with iNES we can only support 8K WRAM battery (iNES 2.0 might fix this)
 			state->prg_ram = 1;	// always map state->wram in bank5 (eventually, this should be enabled only for some mappers)
@@ -656,17 +671,17 @@ DEVICE_IMAGE_LOAD( nes_cart )
 			// Let's skip past the magic header once again.
 			image.fseek(4, SEEK_SET);
 
-			image.fread( &state->prg_chunks, 1);
-			image.fread( &state->chr_chunks, 1);
+			image.fread(&state->prg_chunks, 1);
+			image.fread(&state->chr_chunks, 1);
 			/* Read the first ROM option byte (offset 6) */
-			image.fread( &m, 1);
+			image.fread(&m, 1);
 
 			/* Interpret the iNES header flags */
 			state->mapper = (m & 0xf0) >> 4;
 			local_options = m & 0x0f;
 
 			/* Read the second ROM option byte (offset 7) */
-			image.fread( &m, 1);
+			image.fread(&m, 1);
 
 			switch (m & 0xc)
 			{
@@ -690,7 +705,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					/* image is present in nes.hsi: overwrite the header settings with these */
 					state->mapper = mapint1;
 					local_options = mapint2 & 0x0f;
-					state->crc_hack = mapint2 & 0xf0;	// this is used to differentiate among variants of the same Mapper (see nes_mmc.c)
+					state->crc_hack = (mapint2 & 0xf0) >> 4;	// this is used to differentiate among variants of the same Mapper (see below)
 					state->prg_chunks = mapint3;
 					state->chr_chunks = mapint4;
 					logerror("NES.HSI info: %d %d %d %d\n", mapint1, mapint2, mapint3, mapint4);
@@ -726,7 +741,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 			if (state->ines20)
 			{
 				logerror("Extended iNES format:\n");
-				image.fread( &extend, 5);
+				image.fread(&extend, 5);
 				state->mapper |= (extend[0] & 0x0f) << 8;
 				logerror("-- mapper: %d\n", state->mapper);
 				logerror("-- submapper: %d\n", (extend[0] & 0xf0) >> 4);
@@ -761,15 +776,143 @@ DEVICE_IMAGE_LOAD( nes_cart )
 			state->wram_size = 0x10000;
 			state->wram = auto_alloc_array(image.device().machine, UINT8, state->wram_size);
 
+			/* Setup PCB type (needed to add proper handlers later) */
+			state->pcb_id = nes_get_mmc_id(image.device().machine, state->mapper);
+
+			// a few mappers correspond to multiple PCBs, so we need a few additional checks
+			switch (state->pcb_id)
+			{
+				case STD_CNROM:
+					if (state->mapper == 185)
+					{
+						switch (state->crc_hack)
+						{
+							case 0x0: // pin26: CE, pin27: CE (B-Wings, Bird Week)
+								state->ce_mask = 0x03;
+								state->ce_state = 0x03;
+								break;
+							case 0x4: // pin26: CE, pin27: /CE (Mighty Bomb Jack, Spy Vs. Spy)
+								state->ce_mask = 0x03;
+								state->ce_state = 0x01;
+								break;
+							case 0x8: // pin26: /CE, pin27: CE (Sansu 1, 2, 3 Nen)
+								state->ce_mask = 0x03;
+								state->ce_state = 0x02;
+								break;
+							case 0xc: // pin26: /CE, pin27: /CE (Seicross v2.0)
+								state->ce_mask = 0x03;
+								state->ce_state = 0x00;
+								break;
+						}
+					}
+					break;
+				case KONAMI_VRC2:
+					if (state->mapper == 22)
+					{
+						state->vrc_ls_prg_a = 0;
+						state->vrc_ls_prg_b = 1;
+						state->vrc_ls_chr = 1;
+					}
+					if (state->mapper == 23 && !state->crc_hack)
+					{
+						state->vrc_ls_prg_a = 1;
+						state->vrc_ls_prg_b = 0;
+						state->vrc_ls_chr = 0;
+					}
+					if (state->mapper == 23 && state->crc_hack)
+					{
+						// here there are also Akumajou Special, Crisis Force, Parodius da!, Tiny Toons which are VRC-4
+						state->vrc_ls_prg_a = 3;
+						state->vrc_ls_prg_b = 2;
+						state->pcb_id = KONAMI_VRC4; // this allows for konami_irq to be installed at reset
+					}
+					break;
+				case KONAMI_VRC4:
+					if (state->mapper == 21)
+					{
+						// Wai Wai World 2 & Ganbare Goemon Gaiden 2 (the latter with crc_hack)
+						state->vrc_ls_prg_a = state->crc_hack ? 7 : 2;
+						state->vrc_ls_prg_b = state->crc_hack ? 6 : 1;
+					}
+					if (state->mapper == 25)	// here there is also Ganbare Goemon Gaiden which is VRC-2
+					{
+						state->vrc_ls_prg_a = state->crc_hack ? 2 : 0;
+						state->vrc_ls_prg_b = state->crc_hack ? 3 : 1;
+					}
+					break;
+				case KONAMI_VRC6:
+					if (state->mapper == 24)
+					{
+						state->vrc_ls_prg_a = 1;
+						state->vrc_ls_prg_b = 0;
+					}
+					if (state->mapper == 26)
+					{
+						state->vrc_ls_prg_a = 0;
+						state->vrc_ls_prg_b = 1;
+					}
+					break;
+				case IREM_G101:
+					if (state->crc_hack)
+						state->hard_mirroring = PPU_MIRROR_HIGH;	// Major League has hardwired mirroring
+					break;
+				case DIS_74X161X161X32:
+					if (state->mapper == 70)
+						state->hard_mirroring = PPU_MIRROR_VERT;	// only hardwired mirroring makes different mappers 70 & 152
+					break;
+				case SUNSOFT_2:
+					if (state->mapper == 93)
+						state->hard_mirroring = PPU_MIRROR_VERT;	// only hardwired mirroring makes different mappers 89 & 93
+					break;
+				case STD_BXROM:
+					if (state->crc_hack)
+						state->pcb_id = AVE_NINA01;	// Mapper 34 is used for 2 diff boards
+					break;
+				case BANDAI_LZ93:
+					if (state->crc_hack)
+						state->pcb_id = BANDAI_JUMP2;	// Mapper 153 is used for 2 diff boards
+					break;
+				case IREM_HOLYDIV:
+					if (state->crc_hack)
+						state->pcb_id = JALECO_JF16;	// Mapper 78 is used for 2 diff boards
+					break;
+				case CAMERICA_BF9093:
+					if (state->crc_hack)
+						state->pcb_id = CAMERICA_BF9097;	// Mapper 71 is used for 2 diff boards
+					break;
+				case HES_BOARD:
+					if (state->crc_hack)
+						state->pcb_id = HES6IN1_BOARD;	// Mapper 113 is used for 2 diff boards
+					break;
+				case WAIXING_ZS:
+					if (state->crc_hack)
+						state->pcb_id = WAIXING_DQ8;	// Mapper 242 is used for 2 diff boards
+					break;
+				//FIXME: we also have to fix Action 52 PRG loading somewhere...
+			}
+
+			/* Allocate internal Mapper RAM for boards which require it */
+			if (state->pcb_id == STD_EXROM)
+				state->mapper_ram = auto_alloc_array(image.device().machine, UINT8, 0x400);
+			
+			if (state->pcb_id == TAITO_X1_005 || state->pcb_id == TAITO_X1_005_A)
+				state->mapper_bram = auto_alloc_array(image.device().machine, UINT8, 0x80);
+			
+			if (state->pcb_id == TAITO_X1_017)
+				state->mapper_bram = auto_alloc_array(image.device().machine, UINT8, 0x1400);
+			
+			if (state->pcb_id == NAMCOT_163)
+				state->mapper_ram = auto_alloc_array(image.device().machine, UINT8, 0x2000);
+			
 			/* Position past the header */
 			image.fseek(16, SEEK_SET);
 
 			/* Load the 0x200 byte trainer at 0x7000 if it exists */
 			if (state->trainer)
-				image.fread( &state->wram[0x1000], 0x200);
+				image.fread(&state->wram[0x1000], 0x200);
 
 			/* Read in the program chunks */
-			image.fread( &state->rom[0x10000], 0x4000 * state->prg_chunks);
+			image.fread(&state->rom[0x10000], 0x4000 * state->prg_chunks);
 			if (state->prg_chunks == 1)
 				memcpy(&state->rom[0x14000], &state->rom[0x10000], 0x4000);
 
@@ -799,7 +942,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 			/* Read in any chr chunks */
 			if (state->chr_chunks > 0)
 			{
-				image.fread( state->vrom, state->chr_chunks * 0x2000);
+				image.fread(state->vrom, state->chr_chunks * 0x2000);
 				if (state->mapper == 2)
 					logerror("Warning: VROM has been found in VRAM-based mapper. Either the mapper is set wrong or the ROM image is incorrect.\n");
 			}
@@ -839,14 +982,13 @@ DEVICE_IMAGE_LOAD( nes_cart )
 			// allocate space to temporarily store PRG & CHR banks
 			UINT8 *temp_prg = auto_alloc_array(image.device().machine, UINT8, 256 * 0x4000);
 			UINT8 *temp_chr = auto_alloc_array(image.device().machine, UINT8, 256 * 0x2000);
+			UINT8 temp_byte = 0;
 
 			/* init prg/chr chunks to 0: the exact number of chunks will be determined while reading the file */
 			state->prg_chunks = 0;
 			state->chr_chunks = 0;
 
-			state->format = 2;	// we use this to select between mapper_reset / unif_reset
-
-			image.fread( &buffer, 4);
+			image.fread(&buffer, 4);
 			unif_ver = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 			logerror("UNIF file found, version %d\n", unif_ver);
 
@@ -861,7 +1003,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 				image.fseek(read_length, SEEK_SET);
 
 				memset(magic2, '\0', sizeof(magic2));
-				image.fread( &magic2, 4);
+				image.fread(&magic2, 4);
 
 				/* We first run through the whole image to find a [MAPR] chunk. This is needed
                  because, unfortunately, the MAPR chunk is not always the first chunk (see
@@ -873,11 +1015,11 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					{
 						mapr_chunk_found = 1;
 						logerror("[MAPR] chunk found: ");
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						if (chunk_length <= 0x20)
-							image.fread( &unif_mapr, chunk_length);
+							image.fread(&unif_mapr, chunk_length);
 
 						// find out prg/chr size, battery, wram, etc.
 						unif_mapr_setup(image.device().machine, unif_mapr);
@@ -889,7 +1031,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					else
 					{
 						logerror("Skip this chunk. We need a [MAPR] chunk before anything else.\n");
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						read_length += (chunk_length + 8);
@@ -903,7 +1045,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 						/* The [MAPR] chunk has already been read, so we skip it */
 						/* TO DO: it would be nice to check if more than one MAPR chunk is present */
 						logerror("[MAPR] chunk found (in the 2nd run). Already loaded.\n");
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						read_length += (chunk_length + 8);
@@ -911,7 +1053,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					else if ((magic2[0] == 'R') && (magic2[1] == 'E') && (magic2[2] == 'A') && (magic2[3] == 'D'))
 					{
 						logerror("[READ] chunk found. No support yet.\n");
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						read_length += (chunk_length + 8);
@@ -919,7 +1061,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					else if ((magic2[0] == 'N') && (magic2[1] == 'A') && (magic2[2] == 'M') && (magic2[3] == 'E'))
 					{
 						logerror("[NAME] chunk found. No support yet.\n");
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						read_length += (chunk_length + 8);
@@ -927,23 +1069,26 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					else if ((magic2[0] == 'W') && (magic2[1] == 'R') && (magic2[2] == 'T') && (magic2[3] == 'R'))
 					{
 						logerror("[WRTR] chunk found. No support yet.\n");
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						read_length += (chunk_length + 8);
 					}
 					else if ((magic2[0] == 'T') && (magic2[1] == 'V') && (magic2[2] == 'C') && (magic2[3] == 'I'))
 					{
-						logerror("[TVCI] chunk found. No support yet.\n");
-						image.fread( &buffer, 4);
+						logerror("[TVCI] chunk found.\n");
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
+
+						image.fread(&temp_byte, 1);
+						logerror("Television Standard : %s\n", (temp_byte == 0) ? "NTSC" : (temp_byte == 1) ? "PAL" : "Does not matter");
 
 						read_length += (chunk_length + 8);
 					}
 					else if ((magic2[0] == 'D') && (magic2[1] == 'I') && (magic2[2] == 'N') && (magic2[3] == 'F'))
 					{
 						logerror("[DINF] chunk found. No support yet.\n");
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						read_length += (chunk_length + 8);
@@ -951,7 +1096,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					else if ((magic2[0] == 'C') && (magic2[1] == 'T') && (magic2[2] == 'R') && (magic2[3] == 'L'))
 					{
 						logerror("[CTRL] chunk found. No support yet.\n");
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						read_length += (chunk_length + 8);
@@ -959,7 +1104,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					else if ((magic2[0] == 'B') && (magic2[1] == 'A') && (magic2[2] == 'T') && (magic2[3] == 'R'))
 					{
 						logerror("[BATR] chunk found. No support yet.\n");
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						read_length += (chunk_length + 8);
@@ -967,23 +1112,53 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					else if ((magic2[0] == 'V') && (magic2[1] == 'R') && (magic2[2] == 'O') && (magic2[3] == 'R'))
 					{
 						logerror("[VROR] chunk found. No support yet.\n");
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						read_length += (chunk_length + 8);
 					}
 					else if ((magic2[0] == 'M') && (magic2[1] == 'I') && (magic2[2] == 'R') && (magic2[3] == 'R'))
 					{
-						logerror("[MIRR] chunk found. No support yet.\n");
-						image.fread( &buffer, 4);
+						logerror("[MIRR] chunk found.\n");
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
-
+						
+						image.fread(&temp_byte, 1);
+						switch (temp_byte)
+						{
+							case 0:	// Horizontal Mirroring (Hard Wired)
+								state->hard_mirroring = PPU_MIRROR_HORZ;
+								break;
+							case 1:	// Vertical Mirroring (Hard Wired)
+								state->hard_mirroring = PPU_MIRROR_VERT;
+								break;
+							case 2:	// Mirror All Pages From $2000 (Hard Wired)
+								state->hard_mirroring = PPU_MIRROR_LOW;
+								break;
+							case 3:	// Mirror All Pages From $2400 (Hard Wired)
+								state->hard_mirroring = PPU_MIRROR_HIGH;
+								break;
+							case 4:	// Four Screens of VRAM (Hard Wired)
+								state->four_screen_vram = 1;
+								break;
+							case 5:	// Mirroring Controlled By Mapper Hardware
+								logerror("Mirroring handled by the board hardware.\n");
+								// default to horizontal at start
+								state->hard_mirroring = PPU_MIRROR_HORZ;
+								break;
+							default:
+								logerror("Undocumented mirroring value.\n");
+								// default to horizontal
+								state->hard_mirroring = PPU_MIRROR_HORZ;
+								break;
+						}
+						
 						read_length += (chunk_length + 8);
 					}
 					else if ((magic2[0] == 'P') && (magic2[1] == 'C') && (magic2[2] == 'K'))
 					{
 						logerror("[PCK%c] chunk found. No support yet.\n", magic2[3]);
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						read_length += (chunk_length + 8);
@@ -991,7 +1166,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					else if ((magic2[0] == 'C') && (magic2[1] == 'C') && (magic2[2] == 'K'))
 					{
 						logerror("[CCK%c] chunk found. No support yet.\n", magic2[3]);
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						read_length += (chunk_length + 8);
@@ -999,7 +1174,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					else if ((magic2[0] == 'P') && (magic2[1] == 'R') && (magic2[2] == 'G'))
 					{
 						logerror("[PRG%c] chunk found. ", magic2[3]);
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						// FIXME: we currently don't support PRG chunks smaller than 16K!
@@ -1011,7 +1186,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 							logerror("This chunk is smaller than 16K: the emulation might have issues. Please report this file to the MESS forums.\n");
 
 						/* Read in the program chunks */
-						image.fread( &temp_prg[prg_start], chunk_length);
+						image.fread(&temp_prg[prg_start], chunk_length);
 
 						prg_start += chunk_length;
 						read_length += (chunk_length + 8);
@@ -1019,7 +1194,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					else if ((magic2[0] == 'C') && (magic2[1] == 'H') && (magic2[2] == 'R'))
 					{
 						logerror("[CHR%c] chunk found. ", magic2[3]);
-						image.fread( &buffer, 4);
+						image.fread(&buffer, 4);
 						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 
 						state->chr_chunks += (chunk_length / 0x2000);
@@ -1027,7 +1202,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 						logerror("It consists of %d 8K-blocks.\n", chunk_length / 0x2000);
 
 						/* Read in the vrom chunks */
-						image.fread( &temp_chr[chr_start], chunk_length);
+						image.fread(&temp_chr[chr_start], chunk_length);
 
 						chr_start += chunk_length;
 						read_length += (chunk_length + 8);
@@ -1165,8 +1340,6 @@ DEVICE_IMAGE_LOAD( nes_cart )
 		state->chr_chunks = chr_size / 0x2000;
 		state->vram_chunks = vram_size / 0x2000;
 
-		state->format = 3;
-		state->mapper = 0;		// this allows us to set up memory handlers without duplicating code (for the moment)
 		state->pcb_id = nes_get_pcb_id(image.device().machine, image.get_feature("pcb"));
 
 		if (state->pcb_id == STD_TVROM || state->pcb_id == STD_DRROM || state->pcb_id == IREM_LROG017)
@@ -1194,10 +1367,14 @@ DEVICE_IMAGE_LOAD( nes_cart )
 		state->prg_ram = (image.get_software_region("wram") != NULL) ? 1 : 0;
 		state->wram_size = image.get_software_region_length("wram");
 		state->mapper_ram_size = image.get_software_region_length("mapper_ram");
+		state->mapper_bram_size = image.get_software_region_length("mapper_bram");
+
 		if (state->prg_ram)
 			state->wram = auto_alloc_array(image.device().machine, UINT8, state->wram_size);
 		if (state->mapper_ram_size)
 			state->mapper_ram = auto_alloc_array(image.device().machine, UINT8, state->mapper_ram_size);
+		if (state->mapper_bram_size)
+			state->mapper_bram = auto_alloc_array(image.device().machine, UINT8, state->mapper_bram_size);
 
 		/* Check for mirroring */
 		if (image.get_feature("mirroring") != NULL)
@@ -1244,7 +1421,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 		if (state->pcb_id == KONAMI_VRC2)
 		{
 			state->vrc_ls_prg_a = nes_cart_get_line(image.get_feature("vrc2-pin3"));
-			state->vrc_ls_prg_b = nes_cart_get_line(image.get_feature("vrc2-pin3"));
+			state->vrc_ls_prg_b = nes_cart_get_line(image.get_feature("vrc2-pin4"));
 			state->vrc_ls_chr = (nes_cart_get_line(image.get_feature("vrc2-pin21")) != 10) ? 1 : 0;
 //          printf("VRC-2, pin3: A%d, pin4: A%d, pin21: %s\n", state->vrc_ls_prg_a, state->vrc_ls_prg_b, state->vrc_ls_chr ? "NC" : "A10");
 		}
@@ -1299,17 +1476,17 @@ DEVICE_IMAGE_LOAD( nes_cart )
 
 	// Attempt to load a battery file for this ROM
 	// A few boards have internal RAM with a battery (MMC6, Taito X1-005 & X1-017, etc.)
-	if (state->battery || state->mapper_ram_size)
+	if (state->battery || state->mapper_bram_size)
 	{
-		UINT8 *temp_nvram = auto_alloc_array(image.device().machine, UINT8, state->battery_size + state->mapper_ram_size);
-		image.battery_load(temp_nvram, state->battery_size + state->mapper_ram_size, 0x00);
+		UINT8 *temp_nvram = auto_alloc_array(image.device().machine, UINT8, state->battery_size + state->mapper_bram_size);
+		image.battery_load(temp_nvram, state->battery_size + state->mapper_bram_size, 0x00);
 		if (state->battery)
 		{
 			state->battery_ram = auto_alloc_array(image.device().machine, UINT8, state->battery_size);
 			memcpy(state->battery_ram, temp_nvram, state->battery_size);
 		}
-		if (state->mapper_ram_size)
-			memcpy(state->mapper_ram, temp_nvram + state->battery_size, state->mapper_ram_size);
+		if (state->mapper_bram_size)
+			memcpy(state->mapper_bram, temp_nvram + state->battery_size, state->mapper_bram_size);
 
 		auto_free(image.device().machine, temp_nvram);
 	}
@@ -1460,7 +1637,7 @@ static void nes_load_proc( device_image_interface &image )
 	/* if there is an header, skip it */
 	image.fseek(header, SEEK_SET);
 
-	image.fread( state->fds_data, 65500 * state->fds_sides);
+	image.fread(state->fds_data, 65500 * state->fds_sides);
 	return;
 }
 

@@ -50,8 +50,8 @@ enum
 	/* Rex Soft */
 	REXSOFT_SL1632, REXSOFT_DBZ5,
 	/* Sachen */
-	SACHEN_8259A, SACHEN_8259B, SACHEN_8259C,
-	SACHEN_8259D, SACHEN_SA0036, SACHEN_SA0037,
+	SACHEN_8259A, SACHEN_8259B, SACHEN_8259C, SACHEN_8259D, 
+	SACHEN_SA009, SACHEN_SA0036, SACHEN_SA0037,
 	SACHEN_SA72007, SACHEN_SA72008, SACHEN_TCA01,
 	SACHEN_TCU01, SACHEN_TCU02,
 	SACHEN_74LS374, SACHEN_74LS374_A,
@@ -76,40 +76,45 @@ enum
 	BMC_GOLDENCARD_6IN1, BMC_72IN1, BMC_SUPER_42IN1, BMC_76IN1,
 	BMC_1200IN1, BMC_31IN1, BMC_22GAMES, BMC_20IN1, BMC_110IN1,
 	BMC_GKA, BMC_GKB, BMC_VT5201, BMC_BENSHENG_BS5, BMC_810544,
-	BMC_NTD_03, BMC_G63IN1, 
+	BMC_NTD_03, BMC_G63IN1, BMC_FK23C, BMC_FK23CA, BMC_PJOY84,
 	/* Unlicensed */
 	UNL_8237, UNL_CC21, UNL_AX5705, UNL_KOF97,
 	UNL_N625092, UNL_SC127, UNL_SMB2J, UNL_T230,
 	UNL_UXROM, UNL_MK2, UNL_XZY, UNL_KOF96,
 	UNL_SUPERFIGHTER3, UNL_RACERMATE, UNL_EDU2K,
+	UNL_SHJY3, UNL_STUDYNGAME, UNL_603_5052, UNL_H2288,
 	/* Bootleg boards */
-	BTL_SMB2A, BTL_MARIOBABY, BTL_AISENSHINICOL,
+	BTL_SMB2A, BTL_MARIOBABY, BTL_AISENSHINICOL, BTL_TOBIDASE,
 	BTL_SMB2B, BTL_SMB3, BTL_SUPERBROS11, BTL_DRAGONNINJA,
+	BTL_PIKACHUY2K,
 	/* Misc: these are needed to convert mappers to boards, I will sort them later */
 	OPENCORP_DAOU306, HES_BOARD, HES6IN1_BOARD, RUMBLESTATION_BOARD,
-	MAGICSERIES_MD, KASING_BOARD, FUTUREMEDIA_BOARD, SOMERITEAM_SL12,
-	HENGEDIANZI_BOARD, HENGEDIANZI_XJZB, SUBOR_TYPE0, SUBOR_TYPE1, KAISER_KS7058, CONY_BOARD,
+	MAGICSERIES_MD, KASING_BOARD, FUTUREMEDIA_BOARD, FUKUTAKE_BOARD, SOMERI_SL12,
+	HENGEDIANZI_BOARD, HENGEDIANZI_XJZB, SUBOR_TYPE0, SUBOR_TYPE1, 
+	KAISER_KS7058, KAISER_KS7032, KAISER_KS7022, KAISER_KS7017, KAISER_KS202, CONY_BOARD,
 	CNE_DECATHLON, CNE_FSB, CNE_SHLZ, RCM_GS2015, RCM_TETRISFAMILY,
-	WAIXING_TYPE_A, WAIXING_TYPE_B, WAIXING_TYPE_C, WAIXING_TYPE_D,
+	WAIXING_TYPE_A, WAIXING_TYPE_A_1, WAIXING_TYPE_B, WAIXING_TYPE_C, WAIXING_TYPE_D,
 	WAIXING_TYPE_E, WAIXING_TYPE_F, WAIXING_TYPE_G, WAIXING_TYPE_H,
-	WAIXING_SGZLZ, WAIXING_SGZ, WAIXING_ZS, WAIXING_SECURITY,
+	WAIXING_TYPE_I, WAIXING_TYPE_J,
+	WAIXING_SGZLZ, WAIXING_SGZ, WAIXING_ZS, WAIXING_SECURITY, WAIXING_SH2,
 	WAIXING_DQ8, WAIXING_FFV, WAIXING_PS2, SUPERGAME_LIONKING, SUPERGAME_BOOGERMAN,
 	KAY_PANDAPRINCE, HOSENKAN_BOARD, NITRA_TDA, GOUDER_37017, NANJING_BOARD,
+	WHIRLWIND_2706,
+	/* FFE boards, for mappers 6, 8, 17 */
+	FFE_MAPPER6, FFE_MAPPER8, FFE_MAPPER17,
 	/* Unsupported (for place-holder boards, with no working emulation) & no-board (at init) */
-	UNSUPPORTED_BOARD, NO_BOARD
+	UNSUPPORTED_BOARD, UNKNOWN_BOARD, NO_BOARD
 };
 
-//extern int MMC1_extended; /* 0 = normal MMC1 cart, 1 = 512k MMC1, 2 = 1024k MMC1 */
+// these are used to setup the proper PCB ID, for each supported type of files
+int nes_get_pcb_id(running_machine *machine, const char *feature);	// for softlist
+void unif_mapr_setup(running_machine *machine, const char *board);	// for UNIF files
+int nes_get_mmc_id(running_machine *machine, int mapper);	// for iNES files
 
-#define MMC5_VRAM
-
-int nes_mapper_reset(running_machine *machine);
+// these are used to setup handlers and callbacks necessary to the emulation (resp. at start and reset)
+void pcb_handlers_setup(running_machine *machine);
 int nes_pcb_reset(running_machine *machine);
 
-void mapper_handlers_setup(running_machine *machine);
-void pcb_handlers_setup(running_machine *machine);
-void unif_mapr_setup(running_machine *machine, const char *board);
-int nes_get_pcb_id(running_machine *machine, const char *feature);
 
 WRITE8_HANDLER( nes_low_mapper_w );
 READ8_HANDLER( nes_low_mapper_r );
@@ -118,8 +123,12 @@ READ8_HANDLER( nes_chr_r );
 WRITE8_HANDLER( nes_nt_w );
 READ8_HANDLER( nes_nt_r );
 
-WRITE8_HANDLER( nes_mapper50_add_w );
 WRITE8_HANDLER( smb2jb_extra_w );
+WRITE8_HANDLER( ks7017_extra_w );
+READ8_HANDLER( ks7017_extra_r );
+WRITE8_HANDLER( unl_6035052_extra_w );
+READ8_HANDLER( unl_6035052_extra_r );
+READ8_HANDLER( waixing_sh2_chr_r );
 
 //TEMPORARY PPU STUFF
 
