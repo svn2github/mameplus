@@ -89,10 +89,10 @@ static void a800_setbank(running_machine *machine, int n)
 }
 
 
-static void cart_reset(running_machine *machine)
+static void cart_reset(running_machine &machine)
 {
 	if (a800_cart_loaded)
-		a800_setbank(machine, 1);
+		a800_setbank(&machine, 1);
 }
 
 /* MESS specific parts that have to be started */
@@ -125,7 +125,7 @@ static void ms_atari_machine_start(running_machine *machine, int type, int has_c
 
 	/* cartridge */
 	if (has_cart)
-		add_reset_callback(machine, cart_reset);
+		machine->add_notifier(MACHINE_NOTIFY_RESET, cart_reset);
 }
 
 static void ms_atari800xl_machine_start(running_machine *machine, int type, int has_cart)
@@ -135,7 +135,7 @@ static void ms_atari800xl_machine_start(running_machine *machine, int type, int 
 
 	/* cartridge */
 	if (has_cart)
-		add_reset_callback(machine, cart_reset);
+		machine->add_notifier(MACHINE_NOTIFY_RESET, cart_reset);
 }
 
 /*************************************
@@ -272,9 +272,14 @@ DEVICE_IMAGE_LOAD( a5200_cart )
 {
 	UINT8 *mem = memory_region(image.device().machine, "maincpu");
 	int size;
-
-	/* load an optional (dual) cartidge */
-	size = image.fread(&mem[0x4000], 0x8000);
+	if (image.software_entry() == NULL)
+	{
+		/* load an optional (dual) cartidge */
+		size = image.fread(&mem[0x4000], 0x8000);
+	} else {
+		size = image.get_software_region_length("rom");
+		memcpy(mem + 0x4000, image.get_software_region("rom"), size);
+	}
 	if (size<0x8000) memmove(mem+0x4000+0x8000-size, mem+0x4000, size);
 	// mirroring of smaller cartridges
 	if (size <= 0x1000) memcpy(mem+0xa000, mem+0xb000, 0x1000);
@@ -291,7 +296,7 @@ DEVICE_IMAGE_LOAD( a5200_cart )
 		}
 	}
 	logerror("%s loaded cartridge '%s' size %dK\n",
-		image.device().machine->gamedrv->name, image.filename() , size/1024);
+		image.device().machine->gamedrv->name, image.filename() , size/1024);	
 	return IMAGE_INIT_PASS;
 }
 
