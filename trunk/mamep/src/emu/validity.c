@@ -15,10 +15,6 @@
 
 #include <ctype.h>
 
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
-
 
 /***************************************************************************
     DEBUGGING

@@ -511,7 +511,7 @@ static TIMER_CALLBACK( sound_update )
 	{
 		osd_update_audio_stream(machine, finalmix, finalmix_offset / 2);
 		video_avi_add_sound(machine, finalmix, finalmix_offset / 2);
-		if (global->wavfile != NULL && !mame_is_paused(machine))
+		if (global->wavfile != NULL && !machine->paused())
 			wav_add_data_16(global->wavfile, finalmix, finalmix_offset);
 	}
 

@@ -986,10 +986,8 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 	//mamep: we want parse MAME.ini in root directory with all INIs in inipath. not only parse inipath
 	//options_set_string(mame_opts, OPTION_INIPATH, GetIniDir(), OPTION_PRIORITY_CMDLINE);
 
-#ifdef MESS
-	// add MESS specific device options
-	mess_add_device_options(mame_opts, drivers[nGameIndex]);
-#endif // MESS
+	// add image specific device options
+	image_add_device_options(mame_opts, drivers[nGameIndex]);
 
 	// set any specified play options
 	if (playopts != NULL)
@@ -5737,13 +5735,14 @@ static const TCHAR *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nCo
 
 		case COLUMN_TYPE:
 			{
-				machine_config *config = machine_config_alloc(drivers[nItem]->machine_config);
+				machine_config *config = global_alloc(machine_config(drivers[nItem]->machine_config));
 				/* Vector/Raster */
 				if (isDriverVector(config))
 					s = _UIW(TEXT("Vector"));
 				else
 					s = _UIW(TEXT("Raster"));
-				machine_config_free(config);
+
+				global_free(config);
 			}
 			break;
 
@@ -6238,13 +6237,13 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 
 	case COLUMN_TYPE:
 		{
-			machine_config *config1 = machine_config_alloc(drivers[index1]->machine_config);
-			machine_config *config2 = machine_config_alloc(drivers[index2]->machine_config);
+			machine_config *config1 = global_alloc(machine_config(drivers[index1]->machine_config));
+			machine_config *config2 = global_alloc(machine_config(drivers[index2]->machine_config));
 
 			value = isDriverVector(config1) - isDriverVector(config2);
 
-			machine_config_free(config1);
-			machine_config_free(config2);
+			global_free(config1);
+			global_free(config2);
 		}
 		break;
 

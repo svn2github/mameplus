@@ -2602,7 +2602,7 @@ static void menu_command_content(running_machine *machine, ui_menu *menu, void *
 	{
 	char commandbuf[64 * 1024]; // 64KB of command.dat buffer, enough for everything
 
-	int game_paused = mame_is_paused(machine);
+	int game_paused = machine->paused();
 
 	/* Disable sound to prevent strange sound*/
 	if (!game_paused)

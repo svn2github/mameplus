@@ -292,8 +292,8 @@ Notes:
 #define PGMARM7LOGERROR 1
 
 //mamep: hack defs
-#define PGMSPEEDHACK 1
-#define PGMREGIONHACK 1
+#define PGMSPEEDHACK 0
+#define PGMREGIONHACK 0
 
 #include "emu.h"
 #include "cpu/z80/z80.h"

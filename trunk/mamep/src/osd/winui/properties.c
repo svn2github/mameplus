@@ -497,7 +497,7 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 			/* Allocate machine config */
 			if (gamedrv != NULL)
 			{
-				config = machine_config_alloc(gamedrv->machine_config);
+				config = global_alloc(machine_config(gamedrv->machine_config));
 			}
 			if (!gamedrv || !g_propSheets[i].pfnFilterProc || g_propSheets[i].pfnFilterProc(config, gamedrv))
 			{
@@ -513,7 +513,7 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 			if (config != NULL)
 			{
 				/* Free the structure */
-				machine_config_free(config);
+				global_free(config);
 			}
 		}
 	}
@@ -731,36 +731,36 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 static LPCWSTR GameInfoCPU(UINT nIndex)
 {
 	static WCHAR buf[1024];
-	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
-	const device_config *cpu;
+	machine_config *config = global_alloc(machine_config(drivers[nIndex]->machine_config));
+	const device_config_execute_interface *cpu;
 
 	ZeroMemory(buf, sizeof(buf));
 
-	cpu = config->devicelist.first(CPU);
-	while (cpu != NULL)
+	bool gotone = config->m_devicelist.first(cpu);
+	while (gotone)
 	{
-		if (cpu->clock() >= 1000000)
+		if (cpu->devconfig().clock() >= 1000000)
 		{
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
-				 _Unicode(cpu->name()),
-				cpu->clock() / 1000000,
-				cpu->clock() % 1000000);
+				 _Unicode(cpu->devconfig().name()),
+				cpu->devconfig().clock() / 1000000,
+				cpu->devconfig().clock() % 1000000);
 		}
 		else
 		{
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
-				_Unicode(cpu->name()),
-				cpu->clock() / 1000,
-				cpu->clock() % 1000);
+				_Unicode(cpu->devconfig().name()),
+				cpu->devconfig().clock() / 1000,
+				cpu->devconfig().clock() % 1000);
 		}
 
 		wcscat(buf, TEXT("\n"));
 
-		cpu = cpu->typenext();
+		gotone = cpu->next(cpu);
 	}
 
 	/* Free the structure */
-	machine_config_free(config);
+	global_free(config);
 
 	return buf;
 }
@@ -772,11 +772,11 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 
 	buf[0] = 0;
 	
-	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
+	machine_config *config = global_alloc(machine_config(drivers[nIndex]->machine_config));
 
 	/* iterate over sound chips */
 	const device_config_sound_interface *sound = NULL;
-	bool gotone = config->devicelist.first(sound);
+	bool gotone = config->m_devicelist.first(sound);
 	while(gotone)
 	{
 		int clock,count;
@@ -825,7 +825,7 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 		wcscat(buf, TEXT("\n"));
 	}
 	/* Free the structure */
-	machine_config_free(config);
+	global_free(config);
 
 	return buf;
 }
@@ -835,7 +835,7 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 static LPCWSTR GameInfoScreen(UINT nIndex)
 {
 	static WCHAR buf[1024];
-	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
+	machine_config *config = global_alloc(machine_config(drivers[nIndex]->machine_config));
 	memset(buf, '\0', 1024);
 
 	if (isDriverVector(config))
@@ -844,12 +844,12 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
 			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
-					screen->refresh(), config->total_colors);
+					screen->refresh(), config->m_total_colors);
 		}
 		else
 		{
 			swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
-					screen->refresh(), config->total_colors);
+					screen->refresh(), config->m_total_colors);
 		}
 	}
 	else
@@ -868,19 +868,19 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 					swprintf(tmpbuf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)\n")),
 							visarea.max_y - visarea.min_y + 1,
 							visarea.max_x - visarea.min_x + 1,
-							ATTOSECONDS_TO_HZ(screen->refresh()), config->total_colors);
+							ATTOSECONDS_TO_HZ(screen->refresh()), config->m_total_colors);
 				} else {
 					swprintf(tmpbuf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)\n")),
 							visarea.max_x - visarea.min_x + 1,
 							visarea.max_y - visarea.min_y + 1,
-							ATTOSECONDS_TO_HZ(screen->refresh()), config->total_colors);
+							ATTOSECONDS_TO_HZ(screen->refresh()), config->m_total_colors);
 				}
 					wcscat(buf, tmpbuf);
 			}
 		}
 	}
 	/* Free the structure */
-	machine_config_free(config);
+	global_free(config);
 
 	return buf;
 }
@@ -959,11 +959,11 @@ static LPCWSTR GameInfoSaveState(int driver_index)
 static LPCWSTR GameInfoColors(UINT nIndex)
 {
 	static WCHAR buf[1024];
-	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
+	machine_config *config = global_alloc(machine_config(drivers[nIndex]->machine_config));
 
 	ZeroMemory(buf, sizeof(buf));
-	swprintf(buf, _UIW(TEXT("%d colors ")), config->total_colors);
-	machine_config_free(config);
+	swprintf(buf, _UIW(TEXT("%d colors ")), config->m_total_colors);
+	global_free(config);
 
 	return buf;
 }
@@ -3401,7 +3401,7 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 	hCtrl = GetDlgItem(hWnd, IDC_SAMPLES);
 
 	if ( nIndex > -1 ) {
-		config = machine_config_alloc(drivers[nIndex]->machine_config);
+		config = global_alloc(machine_config(drivers[nIndex]->machine_config));
 	}
 	
 	if (hCtrl)
@@ -3409,7 +3409,7 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 		const device_config_sound_interface *sound;
 		if (config != NULL)
 		{
-			for (bool gotone = config->devicelist.first(sound); gotone; gotone = sound->next(sound))
+			for (bool gotone = config->m_devicelist.first(sound); gotone; gotone = sound->next(sound))
 				{
 				if (sound->devconfig().type() == SOUND_SAMPLES ||
 					sound->devconfig().type() == SOUND_VLM5030) {
@@ -3423,7 +3423,7 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 	}
 	if (config != NULL)
 	{
-		machine_config_free(config);
+		global_free(config);
 	}
 }
 

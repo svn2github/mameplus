@@ -584,95 +584,6 @@ static const char *translate_description(const options_data *data)
 }
 
 
-/*-------------------------------------------------
-    options_output_diff_command_line - output the
-    diff of the current state from a base state to
-    command line string
--------------------------------------------------*/
-
-#if 0
-int options_output_diff_command_line(core_options *opts, core_options *baseopts, char *buf)
-{
-	options_data *data;
-	const char *name;
-	const char *value;
-	options_data *basedata;
-	int total = 1;
-
-	/* loop over all items */
-	for (data = opts->datalist; data != NULL; data = data->next)
-	{
-		/* skip header */
-		if ((data->flags & OPTION_HEADER) != 0)
-			continue;
-
-		/* otherwise, output entries for all non-deprecated and non-command items (if not in baseopts) */
-		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0)
-		{
-			int len = 2 + astring_len(data->links[0].name);
-
-			/* get name and data of this value */
-			name = astring_c(data->links[0].name);
-			value = astring_c(data->data);
-
-			/* look up counterpart in baseopts, if baseopts is specified */
-			basedata = (baseopts != NULL) ? find_entry_data(baseopts, name, FALSE) : NULL;
-
-			/* is our data different, or not in baseopts? */
-			if ((basedata == NULL) || (strcmp(value, astring_c(basedata->data)) != 0))
-			{
-				if (data->flags & OPTION_BOOLEAN)
-				{
-					int val = FALSE;
-
-					sscanf(value, "%d", &val);
-
-					if (val)
-					{
-						if (buf)
-							sprintf(buf, "-%s ", name);
-					}
-					else
-					{
-						if (buf)
-							sprintf(buf, "-no%s ", name);
-						len += 2;
-					}
-				}
-				else
-				{
-					if (!*value || astring_chr(data->data, 0, ' ') != -1 || astring_chr(data->data, 0, '#') != -1)
-					{
-						if (buf)
-							sprintf(buf, "-%s \"%s\" ", name, value);
-						len += 3 + astring_len(data->data);
-					}
-					else
-					{
-						if (buf)
-							sprintf(buf, "-%s %s ", name, value);
-						len += 1 + astring_len(data->data);
-					}
-				}
-
-				if (buf)
-					buf += len;
-				total += len;
-			}
-		}
-	}
-
-	if (buf)
-	{
-		if (total > 1)
-			buf--;
-		*buf = '\0';
-	}
-
-	return total;
-}
-#endif
-
 
 /*-------------------------------------------------
     options_output_diff_ini_file - output the diff
@@ -900,30 +811,6 @@ float options_get_float(core_options *opts, const char *name)
 	}
 	return value;
 }
-
-
-/*-------------------------------------------------
-    options_get_string - return data formatted
-    as a string
--------------------------------------------------*/
-
-#if 0
-const char *options_get_option_default_value(core_options *opts, const char *name)
-{
-	options_data *data = find_entry_data(opts, name, FALSE);
-	const char *value = NULL;
-
-	/* error if not found */
-	if (data == NULL)
-		message(opts, OPTMSG_ERROR, "Unexpected option %s queried\n", name);
-
-	/* copy if non-NULL */
-	else
-		value = astring_c(data->defdata);
-
-	return value;
-}
-#endif
 
 
 /*-------------------------------------------------

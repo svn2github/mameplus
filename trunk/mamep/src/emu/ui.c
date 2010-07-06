@@ -213,7 +213,7 @@ static INT32 slider_crossoffset(running_machine *machine, void *arg, astring *st
 #endif
 
 static void build_bgtexture(running_machine *machine);
-static void free_bgtexture(running_machine *machine);
+static void free_bgtexture(running_machine &machine);
 
 /***************************************************************************
     INLINE FUNCTIONS
@@ -367,17 +367,17 @@ static void setup_palette(void)
 	ui_transparency = 255;
 
 #ifdef TRANS_UI
-	ui_transparency = options_get_int(machine->options(), OPTION_UI_TRANSPARENCY);
+	ui_transparency = options_get_int(mame_options(), OPTION_UI_TRANSPARENCY);
 	if (ui_transparency < 0 || ui_transparency > 255)
 	{
-		mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, options_get_string(machine->options(), OPTION_UI_TRANSPARENCY));
+		mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, options_get_string(mame_options(), OPTION_UI_TRANSPARENCY));
 		ui_transparency = 224;
 	}
 #endif /* TRANS_UI */
 
 	for (i = 0; palette_decode_table[i].name; i++)
 	{
-		const char *value = options_get_string(machine->options(), palette_decode_table[i].name);
+		const char *value = options_get_string(mame_options(), palette_decode_table[i].name);
 		int col = palette_decode_table[i].color;
 		int r = palette_decode_table[i].defval[0];
 		int g = palette_decode_table[i].defval[1];
@@ -1597,7 +1597,7 @@ astring &game_info_astring(running_machine *machine, astring &string)
 	string.printf("%s\n%s %s\n\nCPU:\n", _LST(machine->gamedrv->description), machine->gamedrv->year, _MANUFACT(machine->gamedrv->manufacturer));
 
 	/* loop over all CPUs */
-	device_execute_interface *exec;
+	device_execute_interface *exec = NULL;
 	for (bool gotone = machine->m_devicelist.first(exec); gotone; gotone = exec->next(exec))
 	{
 		/* get cpu specific clock that takes internal multiplier/dividers into account */
@@ -1605,7 +1605,7 @@ astring &game_info_astring(running_machine *machine, astring &string)
 
 		/* count how many identical CPUs we have */
 		int count = 1;
-		device_execute_interface *scan;
+		device_execute_interface *scan = NULL;
 		for (bool gotone = exec->next(scan); gotone; gotone = scan->next(scan))
 		{
 			if (exec->device().type() != scan->device().type() || exec->device().clock() != scan->device().clock())
@@ -1785,7 +1785,7 @@ int ui_use_newui( void )
 {
 	#ifdef MESS
 	#if (defined(WIN32) || defined(_MSC_VER)) && !defined(SDLMAME_WIN32)
-		if (options_get_bool(machine->options(), "newui"))
+		if (options_get_bool(mame_options(), "newui"))
 			return TRUE;
 	#endif
 	#endif
@@ -2305,7 +2305,7 @@ static slider_state *slider_init(running_machine *machine)
 	/* add CPU overclocking (cheat only) */
 	if (options_get_bool(machine->options(), OPTION_CHEAT))
 	{
-		device_execute_interface *exec;
+		device_execute_interface *exec = NULL;
 		for (bool gotone = machine->m_devicelist.first(exec); exec != NULL; gotone = exec->next(exec))
 		{
 			void *param = (void *)&exec->device();
@@ -2884,5 +2884,57 @@ void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keybo
 {
 	ui_use_natural_keyboard = use_natural_keyboard;
 	options_set_bool(machine->options(), OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE);
+}
+
+void ui_auto_pause(void)
+{
+	auto_pause = 1;
+}
+
+static void build_bgtexture(running_machine *machine)
+{
+#ifdef UI_COLOR_DISPLAY
+	float r = (float)RGB_RED(uifont_colortable[UI_BACKGROUND_COLOR]);
+	float g = (float)RGB_GREEN(uifont_colortable[UI_BACKGROUND_COLOR]);
+	float b = (float)RGB_BLUE(uifont_colortable[UI_BACKGROUND_COLOR]);
+#else /* UI_COLOR_DISPLAY */
+	UINT8 r = 0x10;
+	UINT8 g = 0x10;
+	UINT8 b = 0x30;
+#endif /* UI_COLOR_DISPLAY */
+	UINT8 a = 0xff;
+	int i;
+
+#ifdef TRANS_UI
+	a = ui_transparency;
+#endif /* TRANS_UI */
+
+	bgbitmap = bitmap_alloc(1, 1024, BITMAP_FORMAT_RGB32);
+	if (!bgbitmap)
+		fatalerror("build_bgtexture failed");
+
+	for (i = 0; i < bgbitmap->height; i++)
+	{
+		double gradual = (float)(1024 - i) / 1024.0f + 0.1f;
+
+		if (gradual > 1.0f)
+			gradual = 1.0f;
+		else if (gradual < 0.1f)
+			gradual = 0.1f;
+
+		*BITMAP_ADDR32(bgbitmap, i, 0) = MAKE_ARGB(a, (UINT8)(r * gradual), (UINT8)(g * gradual), (UINT8)(b * gradual));
+	}
+
+	bgtexture = render_texture_alloc(render_texture_hq_scale, NULL);
+	render_texture_set_bitmap(bgtexture, bgbitmap, NULL, TEXFORMAT_ARGB32, NULL);
+	machine->add_notifier(MACHINE_NOTIFY_EXIT, free_bgtexture);
+}
+
+static void free_bgtexture(running_machine &machine)
+{
+	bitmap_free(bgbitmap);
+	bgbitmap = NULL;
+	render_texture_free(bgtexture);
+	bgtexture = NULL;
 }
 

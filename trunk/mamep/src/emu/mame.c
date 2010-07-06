@@ -42,8 +42,6 @@
                 - calls rom_init() [romload.c] to load the game's ROMs
                 - calls memory_init() [memory.c] to process the game's memory maps
                 - calls watchdog_init() [watchdog.c] to initialize the watchdog system
-// USE_HISCORE
-                - calls hiscore_init() [hiscore.c] to initialize the hiscores
                 - calls the driver's DRIVER_INIT callback
                 - calls device_list_start() [devintrf.c] to start any devices
                 - calls video_init() [video.c] to start the video system
@@ -78,9 +76,6 @@
 #include "emuopts.h"
 #include "osdepend.h"
 #include "config.h"
-#ifdef USE_HISCORE
-#include "hiscore.h"
-#endif /* USE_HISCORE */
 #include "debugger.h"
 #include "image.h"
 #include "profiler.h"
@@ -241,18 +236,6 @@ core_options *mame_options(void)
 {
 	assert(mame_opts != NULL);
 	return mame_opts;
-}
-
-
-
-/*-------------------------------------------------
-    mame_is_exit_pending - is a exit pending?
--------------------------------------------------*/
-
-int mame_is_exit_pending(running_machine *machine)
-{
-	mame_private *mame = machine->mame_data;
-	return mame->exit_pending;
 }
 
 

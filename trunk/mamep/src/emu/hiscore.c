@@ -193,7 +193,7 @@ static void hiscore_load (running_machine *machine)
 	mame_file *f;
 	if (is_highscore_enabled(machine))
 	{
-		astring fname(machine->basename, ".hi");
+		astring fname(machine->basename(), ".hi");
 		filerr = mame_fopen(SEARCHPATH_HISCORE, fname, OPEN_FLAG_READ, &f);
 		state.hiscores_have_been_loaded = 1;
 		LOG(("hiscore_load\n"));
@@ -226,7 +226,7 @@ static void hiscore_save (running_machine *machine)
 	mame_file *f;
 	if (is_highscore_enabled(machine))
 	{
-		astring fname(machine->basename, ".hi");
+		astring fname(machine->basename(), ".hi");
 		filerr = mame_fopen(SEARCHPATH_HISCORE, fname, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &f);
 		LOG(("hiscore_save\n"));
 		if (filerr == FILERR_NONE)
@@ -291,7 +291,7 @@ void hiscore_init (running_machine *machine)
 	file_error filerr;
 	mame_file *f;
 	const char *db_filename = options_get_string(mame_options(), OPTION_HISCORE_FILE); /* high score definition file */
-	const char *name = machine->basename;
+	const char *name = machine->basename();
 	state.hiscores_have_been_loaded = 0;
 
 	//while (mem_range)
@@ -368,5 +368,5 @@ void hiscore_init (running_machine *machine)
 	timer = timer_alloc(machine, hiscore_periodic, NULL);
 	timer_adjust_periodic(timer, machine->primary_screen->frame_period(), 0, machine->primary_screen->frame_period());
 
-	add_exit_callback(machine, hiscore_close);
+	machine->add_notifier(MACHINE_NOTIFY_EXIT, hiscore_close);
 }

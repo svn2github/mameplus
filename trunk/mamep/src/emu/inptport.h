@@ -1198,6 +1198,33 @@ int input_port_get_crosshair_position(running_machine *machine, int player, floa
 /* force an update to the input port values based on current conditions */
 void input_port_update_defaults(running_machine *machine);
 
+
+
+/* ----- port writing ----- */
+
+/* write a value to a port */
+void input_port_write_direct(const input_port_config *port, input_port_value value, input_port_value mask);
+
+/* write a value to a port specified by tag */
+void input_port_write(running_machine *machine, const char *tag, input_port_value value, input_port_value mask);
+
+/* write a value to a port, ignore if the port does not exist */
+void input_port_write_safe(running_machine *machine, const char *tag, input_port_value value, input_port_value mask);
+
+
+
+/* ----- misc helper functions ----- */
+
+/* return the TRUE if the given condition attached is true */
+int input_condition_true(running_machine *machine, const input_condition *condition);
+
+/* convert an input_port_token to a default string */
+const char *input_port_string_from_token(const input_port_token token);
+
+/* autofire functions */
+int get_autofiredelay(int player);
+void set_autofiredelay(int player, int delay);
+
 /* return TRUE if machine use full keyboard emulation */
 int input_machine_has_keyboard(running_machine *machine);
 
@@ -1228,31 +1255,5 @@ int input_has_input_class(running_machine *machine, int inputclass);
 int input_player_number(const input_field_config *field);
 int input_count_players(running_machine *machine);
 int input_category_active(running_machine *machine, int category);
-
-
-/* ----- port writing ----- */
-
-/* write a value to a port */
-void input_port_write_direct(const input_port_config *port, input_port_value value, input_port_value mask);
-
-/* write a value to a port specified by tag */
-void input_port_write(running_machine *machine, const char *tag, input_port_value value, input_port_value mask);
-
-/* write a value to a port, ignore if the port does not exist */
-void input_port_write_safe(running_machine *machine, const char *tag, input_port_value value, input_port_value mask);
-
-
-
-/* ----- misc helper functions ----- */
-
-/* return the TRUE if the given condition attached is true */
-int input_condition_true(running_machine *machine, const input_condition *condition);
-
-/* convert an input_port_token to a default string */
-const char *input_port_string_from_token(const input_port_token token);
-
-/* autofire functions */
-int get_autofiredelay(int player);
-void set_autofiredelay(int player, int delay);
 
 #endif	/* __INPTPORT_H__ */
