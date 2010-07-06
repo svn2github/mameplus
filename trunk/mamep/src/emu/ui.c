@@ -170,7 +170,7 @@ static UINT8 non_char_keys_down[(ARRAY_LENGTH(non_char_keys) + 7) / 8];
     FUNCTION PROTOTYPES
 ***************************************************************************/
 
-static void ui_exit(running_machine *machine);
+static void ui_exit(running_machine &machine);
 
 /* text generators */
 static astring &disclaimer_string(running_machine *machine, astring &buffer);
@@ -367,17 +367,17 @@ static void setup_palette(void)
 	ui_transparency = 255;
 
 #ifdef TRANS_UI
-	ui_transparency = options_get_int(mame_options(), OPTION_UI_TRANSPARENCY);
+	ui_transparency = options_get_int(machine->options(), OPTION_UI_TRANSPARENCY);
 	if (ui_transparency < 0 || ui_transparency > 255)
 	{
-		mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, options_get_string(mame_options(), OPTION_UI_TRANSPARENCY));
+		mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, options_get_string(machine->options(), OPTION_UI_TRANSPARENCY));
 		ui_transparency = 224;
 	}
 #endif /* TRANS_UI */
 
 	for (i = 0; palette_decode_table[i].name; i++)
 	{
-		const char *value = options_get_string(mame_options(), palette_decode_table[i].name);
+		const char *value = options_get_string(machine->options(), palette_decode_table[i].name);
 		int col = palette_decode_table[i].color;
 		int r = palette_decode_table[i].defval[0];
 		int g = palette_decode_table[i].defval[1];
@@ -428,7 +428,7 @@ static void setup_palette(void)
 int ui_init(running_machine *machine)
 {
 	/* make sure we clean up after ourselves */
-	add_exit_callback(machine, ui_exit);
+	machine->add_notifier(MACHINE_NOTIFY_EXIT, ui_exit);
 
 #ifdef UI_COLOR_DISPLAY
 	setup_palette();
@@ -444,14 +444,14 @@ int ui_init(running_machine *machine)
 	ui_gfx_init(machine);
 
 #ifdef CMD_LIST
-	datafile_init(mame_options());
+	datafile_init(machine->options());
 #endif /* CMD_LIST */
 
 	/* reset globals */
 	single_step = FALSE;
 	ui_set_handler(handler_messagebox, 0);
 	/* retrieve options */
-	ui_use_natural_keyboard = options_get_bool(mame_options(), OPTION_NATURAL_KEYBOARD);
+	ui_use_natural_keyboard = options_get_bool(machine->options(), OPTION_NATURAL_KEYBOARD);
 
 	return 0;
 }
@@ -461,7 +461,7 @@ int ui_init(running_machine *machine)
     ui_exit - clean up ourselves on exit
 -------------------------------------------------*/
 
-static void ui_exit(running_machine *machine)
+static void ui_exit(running_machine &machine)
 {
 #ifdef CMD_LIST
 	datafile_exit();
@@ -482,8 +482,8 @@ static void ui_exit(running_machine *machine)
 int ui_display_startup_screens(running_machine *machine, int first_time, int show_disclaimer)
 {
 	const int maxstate = 3;
-	int str = options_get_int(mame_options(), OPTION_SECONDS_TO_RUN);
-	int show_gameinfo = !options_get_bool(mame_options(), OPTION_SKIP_GAMEINFO);
+	int str = options_get_int(machine->options(), OPTION_SECONDS_TO_RUN);
+	int show_gameinfo = !options_get_bool(machine->options(), OPTION_SKIP_GAMEINFO);
 	int show_warnings = TRUE;
 	int state;
 
@@ -500,7 +500,7 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 
 	/* loop over states */
 	ui_set_handler(handler_ingame, 0);
-	for (state = 0; state < maxstate && !mame_is_scheduled_event_pending(machine) && !ui_menu_is_force_game_select(); state++)
+	for (state = 0; state < maxstate && !machine->scheduled_event_pending() && !ui_menu_is_force_game_select(); state++)
 	{
 		/* default to standard colors */
 		messagebox_backcolor = UI_BACKGROUND_COLOR;
@@ -535,7 +535,7 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 		while (input_code_poll_switches(machine, FALSE) != INPUT_CODE_INVALID) ;
 
 		/* loop while we have a handler */
-		while (ui_handler_callback != handler_ingame && !mame_is_scheduled_event_pending(machine) && !ui_menu_is_force_game_select())
+		while (ui_handler_callback != handler_ingame && !machine->scheduled_event_pending() && !ui_menu_is_force_game_select())
 			video_frame_update(machine, FALSE);
 
 		/* clear the handler and force an update */
@@ -593,13 +593,13 @@ void ui_update_and_render(running_machine *machine, render_container *container)
 	if (auto_pause)
 	{
 		auto_pause = 0;
-		mame_pause(machine, TRUE);
+		machine->pause();
 	}
 
 	/* if we're paused, dim the whole screen */
-	if (mame_get_phase(machine) >= MAME_PHASE_RESET && (single_step || mame_is_paused(machine)))
+	if (machine->phase() >= MACHINE_PHASE_RESET && (single_step || machine->paused()))
 	{
-		int alpha = (1.0f - options_get_float(mame_options(), OPTION_PAUSE_BRIGHTNESS)) * 255.0f;
+		int alpha = (1.0f - options_get_float(machine->options(), OPTION_PAUSE_BRIGHTNESS)) * 255.0f;
 		if (ui_menu_is_force_game_select())
 			alpha = 255;
 		if (alpha > 255)
@@ -1591,33 +1591,33 @@ static void display_input_log(running_machine *machine, render_container *contai
 astring &game_info_astring(running_machine *machine, astring &string)
 {
 	int scrcount = screen_count(*machine->config);
-	device_t *scandevice;
-	device_t *device;
 	int found_sound = FALSE;
-	int count;
 
 	/* print description, manufacturer, and CPU: */
 	string.printf("%s\n%s %s\n\nCPU:\n", _LST(machine->gamedrv->description), machine->gamedrv->year, _MANUFACT(machine->gamedrv->manufacturer));
 
 	/* loop over all CPUs */
-	for (device = machine->firstcpu; device != NULL; device = scandevice)
+	device_execute_interface *exec;
+	for (bool gotone = machine->m_devicelist.first(exec); gotone; gotone = exec->next(exec))
 	{
 		/* get cpu specific clock that takes internal multiplier/dividers into account */
-		int clock = device->clock();
+		int clock = exec->device().clock();
 
 		/* count how many identical CPUs we have */
-		count = 1;
-		for (scandevice = device->typenext(); scandevice != NULL; scandevice = scandevice->typenext())
+		int count = 1;
+		device_execute_interface *scan;
+		for (bool gotone = exec->next(scan); gotone; gotone = scan->next(scan))
 		{
-			if (cpu_get_type(device) != cpu_get_type(scandevice) || device->clock() != scandevice->clock())
+			if (exec->device().type() != scan->device().type() || exec->device().clock() != scan->device().clock())
 				break;
 			count++;
+			exec = scan;
 		}
 
 		/* if more than one, prepend a #x in front of the CPU name */
 		if (count > 1)
 			string.catprintf("%d" UTF8_MULTIPLY, count);
-		string.cat(device->name());
+		string.cat(exec->device().name());
 
 		/* display clock in kHz or MHz */
 		if (clock >= 1000000)
@@ -1628,7 +1628,7 @@ astring &game_info_astring(running_machine *machine, astring &string)
 
 	/* loop over all sound chips */
 	device_sound_interface *sound = NULL;
-	for (bool gotone = machine->devicelist.first(sound); gotone; gotone = sound->next(sound))
+	for (bool gotone = machine->m_devicelist.first(sound); gotone; gotone = sound->next(sound))
 	{
 		/* append the Sound: string */
 		if (!found_sound)
@@ -1636,9 +1636,9 @@ astring &game_info_astring(running_machine *machine, astring &string)
 		found_sound = TRUE;
 
 		/* count how many identical sound chips we have */
-		count = 1;
-		device_sound_interface *scan = sound;
-		for (bool gotanother = scan->next(scan); gotanother; gotanother = scan->next(scan))
+		int count = 1;
+		device_sound_interface *scan;
+		for (bool gotanother = sound->next(scan); gotanother; gotanother = scan->next(scan))
 		{
 			if (sound->device().type() != scan->device().type() || sound->device().clock() != scan->device().clock())
 				break;
@@ -1738,7 +1738,7 @@ static UINT32 handler_messagebox_ok(running_machine *machine, render_container *
 	/* if the user cancels, exit out completely */
 	if (res == 2)
 	{
-		mame_schedule_exit(machine);
+		machine->schedule_exit();
 		state = UI_HANDLER_CANCEL;
 	}
 
@@ -1762,7 +1762,7 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, render_contain
 	/* if the user cancels, exit out completely */
 	if (res == 2)
 	{
-		mame_schedule_exit(machine);
+		machine->schedule_exit();
 		state = UI_HANDLER_CANCEL;
 	}
 
@@ -1785,7 +1785,7 @@ int ui_use_newui( void )
 {
 	#ifdef MESS
 	#if (defined(WIN32) || defined(_MSC_VER)) && !defined(SDLMAME_WIN32)
-		if (options_get_bool(mame_options(), "newui"))
+		if (options_get_bool(machine->options(), "newui"))
 			return TRUE;
 	#endif
 	#endif
@@ -1874,9 +1874,9 @@ void ui_image_handler_ingame(running_machine *machine)
 	device_image_interface *image = NULL;
 
 	/* run display routine for devices */
-	if (mame_get_phase(machine) == MAME_PHASE_RUNNING)
+	if (machine->phase() == MACHINE_PHASE_RUNNING)
 	{
-		for (bool gotone = machine->devicelist.first(image); gotone; gotone = image->next(image))
+		for (bool gotone = machine->m_devicelist.first(image); gotone; gotone = image->next(image))
 		{
 			image->call_display();
 		}
@@ -1891,7 +1891,7 @@ void ui_image_handler_ingame(running_machine *machine)
 
 static UINT32 handler_ingame(running_machine *machine, render_container *container, UINT32 state)
 {
-	int is_paused = mame_is_paused(machine);
+	bool is_paused = machine->paused();
 
 	/* first draw the FPS counter */
 	if (showfps || osd_ticks() < showfps_end)
@@ -1913,7 +1913,7 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 	/* if we're single-stepping, pause now */
 	if (single_step)
 	{
-		mame_pause(machine, TRUE);
+		machine->pause();
 		single_step = FALSE;
 	}
 
@@ -1954,7 +1954,7 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 	}
 
 	/* is the natural keyboard enabled? */
-	if (ui_get_use_natural_keyboard(machine) && (mame_get_phase(machine) == MAME_PHASE_RUNNING))
+	if (ui_get_use_natural_keyboard(machine) && (machine->phase() == MACHINE_PHASE_RUNNING))
 		process_natural_keyboard(machine);
 
 	if (!ui_disabled)
@@ -1992,29 +1992,29 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 
 	/* handle a reset request */
 	if (ui_input_pressed(machine, IPT_UI_RESET_MACHINE))
-		mame_schedule_hard_reset(machine);
+		machine->schedule_hard_reset();
 	if (ui_input_pressed(machine, IPT_UI_SOFT_RESET))
-		mame_schedule_soft_reset(machine);
+		machine->schedule_soft_reset();
 
 	/* handle a request to display graphics/palette */
 	if (ui_input_pressed(machine, IPT_UI_SHOW_GFX))
 	{
 		if (!is_paused)
-			mame_pause(machine, TRUE);
+			machine->pause();
 		return ui_set_handler(ui_gfx_ui_handler, is_paused);
 	}
 
 	/* handle a save state request */
 	if (ui_input_pressed(machine, IPT_UI_SAVE_STATE))
 	{
-		mame_pause(machine, TRUE);
+		machine->pause();
 		return ui_set_handler(handler_load_save, LOADSAVE_SAVE);
 	}
 
 	/* handle a load state request */
 	if (ui_input_pressed(machine, IPT_UI_LOAD_STATE))
 	{
-		mame_pause(machine, TRUE);
+		machine->pause();
 		return ui_set_handler(handler_load_save, LOADSAVE_LOAD);
 	}
 
@@ -2033,10 +2033,12 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 		if (is_paused && (input_code_pressed(machine, KEYCODE_LSHIFT) || input_code_pressed(machine, KEYCODE_RSHIFT)))
 		{
 			single_step = TRUE;
-			mame_pause(machine, FALSE);
+			machine->resume();
 		}
+		else if (machine->paused())
+			machine->resume();
 		else
-			mame_pause(machine, !mame_is_paused(machine));
+			machine->pause();
 	}
 
 #ifdef USE_SHOW_INPUT_LOG
@@ -2152,7 +2154,7 @@ static UINT32 handler_load_save(running_machine *machine, render_container *cont
 			popmessage(_("Load cancelled"));
 
 		/* reset the state */
-		mame_pause(machine, FALSE);
+		machine->resume();
 		return UI_HANDLER_CANCEL;
 	}
 
@@ -2176,16 +2178,16 @@ static UINT32 handler_load_save(running_machine *machine, render_container *cont
 	if (state == LOADSAVE_SAVE)
 	{
 		popmessage(_("Save to position %c"), file);
-		mame_schedule_save(machine, filename);
+		machine->schedule_save(filename);
 	}
 	else
 	{
 		popmessage(_("Load from position %c"), file);
-		mame_schedule_load(machine, filename);
+		machine->schedule_load(filename);
 	}
 
 	/* remove the pause and reset the state */
-	mame_pause(machine, FALSE);
+	machine->resume();
 	return UI_HANDLER_CANCEL;
 }
 
@@ -2198,9 +2200,9 @@ static UINT32 handler_confirm_quit(running_machine *machine, render_container *c
 		"Press Select key/button to quit,\n"
 		"Cancel key/button to continue.";
 
-	if (!options_get_bool(mame_options(), OPTION_CONFIRM_QUIT))
+	if (!options_get_bool(machine->options(), OPTION_CONFIRM_QUIT))
 	{
-		mame_schedule_exit(machine);
+		machine->schedule_exit();
 		return ui_set_handler(ui_menu_ui_handler, 0);
 	}
 
@@ -2208,7 +2210,7 @@ static UINT32 handler_confirm_quit(running_machine *machine, render_container *c
 
 	if (ui_input_pressed(machine, IPT_UI_SELECT))
 	{
-		mame_schedule_exit(machine);
+		machine->schedule_exit();
 		return ui_set_handler(ui_menu_ui_handler, 0);
 	}
 
@@ -2291,7 +2293,7 @@ static slider_state *slider_init(running_machine *machine)
 	}
 
 	/* add analog adjusters */
-	for (port = machine->portlist.first(); port != NULL; port = port->next())
+	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (field->type == IPT_ADJUSTER)
 			{
@@ -2301,12 +2303,13 @@ static slider_state *slider_init(running_machine *machine)
 			}
 
 	/* add CPU overclocking (cheat only) */
-	if (options_get_bool(mame_options(), OPTION_CHEAT))
+	if (options_get_bool(machine->options(), OPTION_CHEAT))
 	{
-		for (device = machine->firstcpu; device != NULL; device = cpu_next(device))
+		device_execute_interface *exec;
+		for (bool gotone = machine->m_devicelist.first(exec); exec != NULL; gotone = exec->next(exec))
 		{
-			void *param = (void *)device;
-			string.printf(_("Overclock CPU %s"), device->tag());
+			void *param = (void *)&exec->device();
+			string.printf(_("Overclock CPU %s"), exec->device().tag());
 			//mamep: 4x overclock
 			*tailptr = slider_alloc(machine, string, 10, 1000, 4000, 50, slider_overclock, param);
 			tailptr = &(*tailptr)->next;
@@ -2323,7 +2326,7 @@ static slider_state *slider_init(running_machine *machine)
 		void *param = (void *)screen;
 
 		/* add refresh rate tweaker */
-		if (options_get_bool(mame_options(), OPTION_CHEAT))
+		if (options_get_bool(machine->options(), OPTION_CHEAT))
 		{
 			string.printf(_("%s Refresh Rate"), slider_get_screen_desc(*screen));
 			*tailptr = slider_alloc(machine, string, -33000, 0, 33000, 1000, slider_refresh, param);
@@ -2356,7 +2359,7 @@ static slider_state *slider_init(running_machine *machine)
 		tailptr = &(*tailptr)->next;
 	}
 
-	for (device = machine->devicelist.first(LASERDISC); device != NULL; device = device->typenext())
+	for (device = machine->m_devicelist.first(LASERDISC); device != NULL; device = device->typenext())
 	{
 		const laserdisc_config *config = (const laserdisc_config *)downcast<const legacy_device_config_base &>(device->baseconfig()).inline_config();
 		if (config->overupdate != NULL)
@@ -2396,7 +2399,7 @@ static slider_state *slider_init(running_machine *machine)
 
 #ifdef MAME_DEBUG
 	/* add crosshair adjusters */
-	for (port = machine->portlist.first(); port != NULL; port = port->next())
+	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (field->crossaxis != CROSSHAIR_AXIS_NONE && field->player == 0)
 			{
@@ -2810,7 +2813,7 @@ static char *slider_get_screen_desc(screen_device &screen)
 
 static char *slider_get_laserdisc_desc(device_t *laserdisc)
 {
-	int ldcount = laserdisc->machine->devicelist.count(LASERDISC);
+	int ldcount = laserdisc->machine->m_devicelist.count(LASERDISC);
 	static char descbuf[256];
 
 	if (ldcount > 1)
@@ -2880,58 +2883,6 @@ int ui_get_use_natural_keyboard(running_machine *machine)
 void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keyboard)
 {
 	ui_use_natural_keyboard = use_natural_keyboard;
-	options_set_bool(mame_options(), OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE);
-}
-
-void ui_auto_pause(void)
-{
-	auto_pause = 1;
-}
-
-static void build_bgtexture(running_machine *machine)
-{
-#ifdef UI_COLOR_DISPLAY
-	float r = (float)RGB_RED(uifont_colortable[UI_BACKGROUND_COLOR]);
-	float g = (float)RGB_GREEN(uifont_colortable[UI_BACKGROUND_COLOR]);
-	float b = (float)RGB_BLUE(uifont_colortable[UI_BACKGROUND_COLOR]);
-#else /* UI_COLOR_DISPLAY */
-	UINT8 r = 0x10;
-	UINT8 g = 0x10;
-	UINT8 b = 0x30;
-#endif /* UI_COLOR_DISPLAY */
-	UINT8 a = 0xff;
-	int i;
-
-#ifdef TRANS_UI
-	a = ui_transparency;
-#endif /* TRANS_UI */
-
-	bgbitmap = bitmap_alloc(1, 1024, BITMAP_FORMAT_RGB32);
-	if (!bgbitmap)
-		fatalerror("build_bgtexture failed");
-
-	for (i = 0; i < bgbitmap->height; i++)
-	{
-		double gradual = (float)(1024 - i) / 1024.0f + 0.1f;
-
-		if (gradual > 1.0f)
-			gradual = 1.0f;
-		else if (gradual < 0.1f)
-			gradual = 0.1f;
-
-		*BITMAP_ADDR32(bgbitmap, i, 0) = MAKE_ARGB(a, (UINT8)(r * gradual), (UINT8)(g * gradual), (UINT8)(b * gradual));
-	}
-
-	bgtexture = render_texture_alloc(render_texture_hq_scale, NULL);
-	render_texture_set_bitmap(bgtexture, bgbitmap, NULL, TEXFORMAT_ARGB32, NULL);
-	add_exit_callback(machine, free_bgtexture);
-}
-
-static void free_bgtexture(running_machine *machine)
-{
-	bitmap_free(bgbitmap);
-	bgbitmap = NULL;
-	render_texture_free(bgtexture);
-	bgtexture = NULL;
+	options_set_bool(machine->options(), OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE);
 }
 

@@ -78,9 +78,10 @@ static int have_sample = 0;
     FUNCTION PROTOTYPES
 ***************************************************************************/
 
-static void sound_reset(running_machine *machine);
-static void sound_exit(running_machine *machine);
-static void sound_pause(running_machine *machine, int pause);
+static void sound_reset(running_machine &machine);
+static void sound_exit(running_machine &machine);
+static void sound_pause(running_machine &machine);
+static void sound_resume(running_machine &machine);
 static void sound_load(running_machine *machine, int config_type, xml_data_node *parentnode);
 static void sound_save(running_machine *machine, int config_type, xml_data_node *parentnode);
 static TIMER_CALLBACK( sound_update );
@@ -136,7 +137,7 @@ void sound_init(running_machine *machine)
 	machine->sound_data = global = auto_alloc_clear(machine, sound_private);
 
 	/* handle -nosound */
-	global->nosound_mode = !options_get_bool(mame_options(), OPTION_SOUND);
+	global->nosound_mode = !options_get_bool(machine->options(), OPTION_SOUND);
 	if (global->nosound_mode)
 		machine->sample_rate = 11025;
 
@@ -157,20 +158,21 @@ void sound_init(running_machine *machine)
 	route_sound(machine);
 
 	/* open the output WAV file if specified */
-	filename = options_get_string(mame_options(), OPTION_WAVWRITE);
+	filename = options_get_string(machine->options(), OPTION_WAVWRITE);
 	if (filename[0] != 0)
 		global->wavfile = wav_open(filename, machine->sample_rate, 2);
 
 	/* enable sound by default */
 	global->enabled = TRUE;
 	global->muted = FALSE;
-	sound_set_attenuation(machine, options_get_int(mame_options(), OPTION_VOLUME));
+	sound_set_attenuation(machine, options_get_int(machine->options(), OPTION_VOLUME));
 
 	/* register callbacks */
 	config_register(machine, "mixer", sound_load, sound_save);
-	add_pause_callback(machine, sound_pause);
-	add_reset_callback(machine, sound_reset);
-	add_exit_callback(machine, sound_exit);
+	machine->add_notifier(MACHINE_NOTIFY_PAUSE, sound_pause);
+	machine->add_notifier(MACHINE_NOTIFY_RESUME, sound_resume);
+	machine->add_notifier(MACHINE_NOTIFY_RESET, sound_reset);
+	machine->add_notifier(MACHINE_NOTIFY_EXIT, sound_exit);
 }
 
 
@@ -178,9 +180,9 @@ void sound_init(running_machine *machine)
     sound_exit - clean up after ourselves
 -------------------------------------------------*/
 
-static void sound_exit(running_machine *machine)
+static void sound_exit(running_machine &machine)
 {
-	sound_private *global = machine->sound_data;
+	sound_private *global = machine.sound_data;
 
 	/* close any open WAV file */
 	if (global->wavfile != NULL)
@@ -206,7 +208,7 @@ static void route_sound(running_machine *machine)
 {
 	/* iterate again over all the sound chips */
 	device_sound_interface *sound = NULL;
-	for (bool gotone = machine->devicelist.first(sound); gotone; gotone = sound->next(sound))
+	for (bool gotone = machine->m_devicelist.first(sound); gotone; gotone = sound->next(sound))
 	{
 		int numoutputs = stream_get_device_outputs(*sound);
 
@@ -244,12 +246,12 @@ static void route_sound(running_machine *machine)
     sound_reset - reset all sound chips
 -------------------------------------------------*/
 
-static void sound_reset(running_machine *machine)
+static void sound_reset(running_machine &machine)
 {
 	device_sound_interface *sound = NULL;
 
 	/* reset all the sound chips */
-	for (bool gotone = machine->devicelist.first(sound); gotone; gotone = sound->next(sound))
+	for (bool gotone = machine.m_devicelist.first(sound); gotone; gotone = sound->next(sound))
 		sound->device().reset();
 }
 
@@ -258,14 +260,17 @@ static void sound_reset(running_machine *machine)
     sound_pause - pause sound output
 -------------------------------------------------*/
 
-static void sound_pause(running_machine *machine, int pause)
+static void sound_pause(running_machine &machine)
 {
-	sound_private *global = machine->sound_data;
+	sound_private *global = machine.sound_data;
+	global->muted |= 0x02;
+	osd_set_mastervolume(global->muted ? -32 : global->attenuation);
+}
 
-	if (pause)
-		global->muted |= 0x02;
-	else
-		global->muted &= ~0x02;
+static void sound_resume(running_machine &machine)
+{
+	sound_private *global = machine.sound_data;
+	global->muted &= ~0x02;
 	osd_set_mastervolume(global->muted ? -32 : global->attenuation);
 }
 
@@ -587,7 +592,7 @@ INLINE INT16 calc_volume_mixer(INT32 sample)
 //-------------------------------------------------
 
 speaker_device_config::speaker_device_config(const machine_config &mconfig, const char *tag, const device_config *owner, UINT32 clock)
-	: device_config(mconfig, static_alloc_device_config, tag, owner, clock),
+	: device_config(mconfig, static_alloc_device_config, "Speaker", tag, owner, clock),
 	  m_x(0.0),
 	  m_y(0.0),
 	  m_z(0.0)
@@ -680,7 +685,7 @@ void speaker_device::device_start()
 	// scan all the sound devices and count our inputs
 	int inputs = 0;
 	device_sound_interface *sound = NULL;
-	for (bool gotone = machine->devicelist.first(sound); gotone; gotone = sound->next(sound))
+	for (bool gotone = machine->m_devicelist.first(sound); gotone; gotone = sound->next(sound))
 	{
 		// scan each route on the device
 		for (const device_config_sound_interface::sound_route *route = sound->sound_config().m_route_list; route != NULL; route = route->m_next)
@@ -712,7 +717,7 @@ void speaker_device::device_start()
 	m_inputs = 0;
 
 	// iterate again over all the sound devices
-	for (bool gotone = machine->devicelist.first(sound); gotone; gotone = sound->next(sound))
+	for (bool gotone = machine->m_devicelist.first(sound); gotone; gotone = sound->next(sound))
 	{
 		// scan each route on the device
 		for (const device_config_sound_interface::sound_route *route = sound->sound_config().m_route_list; route != NULL; route = route->m_next)

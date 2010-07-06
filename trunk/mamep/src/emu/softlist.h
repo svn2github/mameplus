@@ -74,8 +74,6 @@ void ui_image_menu_software(running_machine *machine, ui_menu *menu, void *param
 
 *********************************************************************/
 DECLARE_LEGACY_DEVICE(SOFTWARE_LIST, software_list);
-#define __SOFTWARE_LIST_TAG	"software_list"
-
 
 #define SOFTWARE_SUPPORTED_YES		0
 #define SOFTWARE_SUPPORTED_PARTIAL	1
@@ -89,24 +87,36 @@ typedef struct _software_list_config software_list_config;
 struct _software_list_config
 {
 	char *list_name[SOFTWARE_LIST_CONFIG_SIZE];
+	UINT32 list_type;
 };
 
 
 #define DEVINFO_STR_SWLIST_0	(DEVINFO_STR_DEVICE_SPECIFIC+0)
 #define DEVINFO_STR_SWLIST_MAX	(DEVINFO_STR_SWLIST_0 + SOFTWARE_LIST_CONFIG_SIZE - 1)
 
+#define SOFTWARE_LIST_ORIGINAL_SYSTEM		0
+#define SOFTWARE_LIST_COMPATIBLE_SYSTEM		1
 
-#define MDRV_SOFTWARE_LIST_CONFIG(_idx,_list)								\
-	MDRV_DEVICE_CONFIG_DATAPTR_ARRAY(software_list_config, list_name, _idx, _list)
+#define MDRV_SOFTWARE_LIST_CONFIG(_idx,_list,_list_type)								\
+	MDRV_DEVICE_CONFIG_DATAPTR_ARRAY(software_list_config, list_name, _idx, _list)	\
+	MDRV_DEVICE_CONFIG_DATA32(software_list_config, list_type, _list_type)
 
-#define MDRV_SOFTWARE_LIST_ADD( _list )										\
-	MDRV_DEVICE_ADD( __SOFTWARE_LIST_TAG, SOFTWARE_LIST, 0 )				\
-	MDRV_SOFTWARE_LIST_CONFIG(0,_list)
+#define MDRV_SOFTWARE_LIST_ADD( _tag, _list )										\
+	MDRV_DEVICE_ADD( _tag, SOFTWARE_LIST, 0 )				\
+	MDRV_SOFTWARE_LIST_CONFIG(0,_list, SOFTWARE_LIST_ORIGINAL_SYSTEM)
 
 
-#define MDRV_SOFTWARE_LIST_MODIFY( _list )									\
-	MDRV_DEVICE_MODIFY( __SOFTWARE_LIST_TAG )								\
-	MDRV_SOFTWARE_LIST_CONFIG(0,_list)
+#define MDRV_SOFTWARE_LIST_COMPATIBLE_ADD( _tag, _list )										\
+	MDRV_DEVICE_ADD( _tag, SOFTWARE_LIST, 0 )				\
+	MDRV_SOFTWARE_LIST_CONFIG(0,_list, SOFTWARE_LIST_COMPATIBLE_SYSTEM)
 
+
+#define MDRV_SOFTWARE_LIST_MODIFY( _tag, _list )									\
+	MDRV_DEVICE_MODIFY( _tag )								\
+	MDRV_SOFTWARE_LIST_CONFIG(0,_list, SOFTWARE_LIST_ORIGINAL_SYSTEM)
+
+#define MDRV_SOFTWARE_LIST_COMPATIBLE_MODIFY( _tag, _list )									\
+	MDRV_DEVICE_MODIFY( _tag )								\
+	MDRV_SOFTWARE_LIST_CONFIG(0,_list, SOFTWARE_LIST_COMPATIBLE_SYSTEM)
 
 #endif

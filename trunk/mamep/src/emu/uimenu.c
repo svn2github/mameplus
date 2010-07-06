@@ -258,7 +258,7 @@ static const char exittext[] = "Exit";
     FUNCTION PROTOTYPES
 ***************************************************************************/
 
-static void ui_menu_exit(running_machine *machine);
+static void ui_menu_exit(running_machine &machine);
 
 /* internal menu processing */
 static void ui_menu_draw(running_machine *machine, ui_menu *menu, int customonly);
@@ -426,7 +426,7 @@ void ui_menu_init(running_machine *machine)
 	arrow_texture = render_texture_alloc(menu_render_triangle, NULL);
 
 	/* add an exit callback to free memory */
-	add_exit_callback(machine, ui_menu_exit);
+	machine->add_notifier(MACHINE_NOTIFY_EXIT, ui_menu_exit);
 }
 
 
@@ -434,11 +434,11 @@ void ui_menu_init(running_machine *machine)
     ui_menu_exit - clean up after ourselves
 -------------------------------------------------*/
 
-static void ui_menu_exit(running_machine *machine)
+static void ui_menu_exit(running_machine &machine)
 {
 	/* free menus */
-	ui_menu_stack_reset(machine);
-	ui_menu_clear_free_list(machine);
+	ui_menu_stack_reset(&machine);
+	ui_menu_clear_free_list(&machine);
 
 	/* free textures */
 	render_texture_free(hilight_texture);
@@ -1269,7 +1269,12 @@ static void ui_menu_handle_keys(ui_menu *menu, UINT32 flags)
 
 	/* pause enables/disables pause */
 	if (!ignorepause && exclusive_input_pressed(menu, IPT_UI_PAUSE, 0))
-		mame_pause(menu->machine, !mame_is_paused(menu->machine));
+	{
+		if (menu->machine->paused())
+			menu->machine->resume();
+		else
+			menu->machine->pause();
+	}
 
 	/* handle a toggle cheats request */
 	if (ui_input_pressed_repeat(menu->machine, IPT_UI_TOGGLE_CHEAT, 0))
@@ -1437,7 +1442,7 @@ UINT32 ui_slider_ui_handler(running_machine *machine, render_container *containe
 
 void ui_menu_force_game_select(running_machine *machine, render_container *container)
 {
-	char *gamename = (char *)options_get_string(mame_options(), OPTION_GAMENAME);
+	char *gamename = (char *)options_get_string(machine->options(), OPTION_GAMENAME);
 
 	/* reset the menu stack */
 	ui_menu_stack_reset(machine);
@@ -1450,7 +1455,7 @@ void ui_menu_force_game_select(running_machine *machine, render_container *conta
 	ui_show_menu();
 
 	/* make sure MAME is paused */
-	mame_pause(machine, TRUE);
+	machine->pause();
 }
 
 
@@ -1537,7 +1542,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	int has_dips = FALSE;
 
 	/* scan the input port array to see what options we need to enable */
-	for (port = machine->portlist.first(); port != NULL; port = port->next())
+	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
 			if (field->type == IPT_DIPSWITCH)
@@ -1575,17 +1580,13 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	ui_menu_item_append(menu, _(CAPSTARTGAMENOUN " Information"), NULL, 0, (void *)menu_game_info);
 
 	device_image_interface *image = NULL;
-	if (machine->devicelist.first(image)) 
+	if (machine->m_devicelist.first(image))
 	{
 		/* add image info menu */
 		ui_menu_item_append(menu, _("Image Information"), NULL, 0, (void*)ui_image_menu_image_info);
 
 		/* add file manager menu */
 		ui_menu_item_append(menu, _("File Manager"), NULL, 0, (void*)ui_image_menu_file_manager);
-
-		/* add software menu */
-		ui_menu_item_append(menu, _("Software"), NULL, 0, (void*)ui_image_menu_software);
-		
 	#ifdef MESS
 	/* add MESS-specific menus */
 	ui_mess_main_menu_populate(machine, menu);
@@ -1611,11 +1612,11 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 		ui_menu_item_append(menu, _("Crosshair Options"), NULL, 0, (void *)menu_crosshair);
 
 	/* add cheat menu */
-	if (options_get_bool(mame_options(), OPTION_CHEAT) && cheat_get_next_menu_entry(machine, NULL, NULL, NULL, NULL) != NULL)
+	if (options_get_bool(machine->options(), OPTION_CHEAT) && cheat_get_next_menu_entry(machine, NULL, NULL, NULL, NULL) != NULL)
 		ui_menu_item_append(menu, _("Cheat"), NULL, 0, (void *)menu_cheat);
 
 	/* add memory card menu */
-	if (machine->config->memcard_handler != NULL)
+	if (machine->config->m_memcard_handler != NULL)
 		ui_menu_item_append(menu, _("Memory Card"), NULL, 0, (void *)menu_memory_card);
 
 #ifdef CMD_LIST
@@ -1764,7 +1765,7 @@ static void menu_input_specific_populate(running_machine *machine, ui_menu *menu
 	suborder[SEQ_TYPE_INCREMENT] = 2;
 
 	/* iterate over the input ports and add menu items */
-	for (port = machine->portlist.first(); port != NULL; port = port->next())
+	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
 			const char *name = input_field_name(field);
@@ -2118,7 +2119,7 @@ static void menu_settings_populate(running_machine *machine, ui_menu *menu, sett
 	diplist_tailptr = &menustate->diplist;
 
 	/* loop over input ports and set up the current values */
-	for (port = machine->portlist.first(); port != NULL; port = port->next())
+	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (field->type == type && input_condition_true(machine, &field->condition))
 			{
@@ -2372,7 +2373,7 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
 	astring text;
 
 	/* loop over input ports and add the items */
-	for (port = machine->portlist.first(); port != NULL; port = port->next())
+	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (input_type_is_analog(field->type))
 			{
@@ -2605,7 +2606,7 @@ static void menu_command_content(running_machine *machine, ui_menu *menu, void *
 
 	/* Disable sound to prevent strange sound*/
 	if (!game_paused)
-		mame_pause(machine, TRUE);
+		machine->pause();
 
 	if (load_driver_command_ex(machine->gamedrv, commandbuf, ARRAY_LENGTH(commandbuf), (FPTR)parameter) == 0)
 	{
@@ -2618,7 +2619,7 @@ static void menu_command_content(running_machine *machine, ui_menu *menu, void *
 	}
 
 	if (!game_paused)
-		mame_pause(machine, FALSE);
+		machine->resume();
 
 	if (ui_window_scroll_keys(machine) > 0)
 		ui_menu_stack_pop(machine);
@@ -2790,7 +2791,7 @@ static void menu_memory_card(running_machine *machine, ui_menu *menu, void *para
 
 				/* handle card ejecting */
 				case MEMCARD_ITEM_EJECT:
-					memcard_eject(menu->machine);
+					memcard_eject(*menu->machine);
 					popmessage(_("Memory card ejected"));
 					break;
 
@@ -3383,7 +3384,7 @@ static void menu_autofire_populate(running_machine *machine, ui_menu *menu)
 	int i;
 
 	/* iterate over the input ports and add autofire toggle items */
-	for (port = machine->portlist.first(); port != NULL; port = port->next())
+	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
 			const char *name = input_field_name(field);
@@ -3453,7 +3454,7 @@ static void menu_custom_button(running_machine *machine, ui_menu *menu, void *pa
 		int i;
 		
 		//count the number of custom buttons
-		for (port = machine->portlist.first(); port != NULL; port = port->next())
+		for (port = machine->m_portlist.first(); port != NULL; port = port->next())
 			for (field = port->fieldlist; field != NULL; field = field->next)
 			{
 				int type = field->type;
@@ -3507,7 +3508,7 @@ static void menu_custom_button_populate(running_machine *machine, ui_menu *menu)
 //	ui_menu_item_append(menu, MENU_SEPARATOR_ITEM, NULL, 0, NULL);
 
 	/* loop over the input ports and add autofire toggle items */
-	for (port = machine->portlist.first(); port != NULL; port = port->next())
+	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
 			int player = field->player;
@@ -3707,7 +3708,7 @@ static void menu_crosshair_populate(running_machine *machine, ui_menu *menu)
 			/* search for crosshair graphics */
 
 			/* open a path to the crosshairs */
-			path = mame_openpath(mame_options(), OPTION_CROSSHAIRPATH);
+			path = mame_openpath(machine->options(), OPTION_CROSSHAIRPATH);
 			if (path != NULL)
 			{
 				const osd_directory_entry *dir;
@@ -3816,7 +3817,7 @@ static void menu_crosshair_populate(running_machine *machine, ui_menu *menu)
 static void menu_quit_game(running_machine *machine, ui_menu *menu, void *parameter, void *state)
 {
 	/* request a reset */
-	mame_schedule_exit(machine);
+	machine->schedule_exit();
 
 	/* reset the menu stack */
 	ui_menu_stack_reset(machine);
@@ -3874,7 +3875,7 @@ static void menu_select_game(running_machine *machine, ui_menu *menu, void *para
 				int audit_result;
 
 				/* audit the game first to see if we're going to work */
-				audit_records = audit_images(mame_options(), driver, AUDIT_VALIDATE_FAST, &audit);
+				audit_records = audit_images(menu->machine->options(), driver, AUDIT_VALIDATE_FAST, &audit);
 				audit_result = audit_summary(driver, audit_records, audit, FALSE);
 				if (audit_records > 0)
 					global_free(audit);
@@ -3882,7 +3883,7 @@ static void menu_select_game(running_machine *machine, ui_menu *menu, void *para
 				/* if everything looks good, schedule the new driver */
 				if (audit_result == CORRECT || audit_result == BEST_AVAILABLE)
 				{
-					mame_schedule_new_driver(machine, driver);
+					machine->schedule_new_driver(*driver);
 					ui_menu_stack_reset(machine);
 				}
 
@@ -4027,7 +4028,7 @@ static void menu_select_game_build_driver_list(ui_menu *menu, select_game_state 
 	memset(found, 0, (driver_count + 7) / 8);
 
 	/* open a path to the ROMs and find them in the array */
-	path = mame_openpath(mame_options(), OPTION_ROMPATH);
+	path = mame_openpath(menu->machine->options(), OPTION_ROMPATH);
 	if (path != NULL)
 	{
 		const osd_directory_entry *dir;
