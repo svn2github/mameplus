@@ -158,17 +158,22 @@ public:
 		if (!metMameTag && qName != mameTag)
 			return false;
 
+		bool ok;
+
 		if (qName == mameTag)
 		{
 			metMameTag = true;
-			_pMameDat->version = attributes.value("build");
+			_pMameDat->mameVersion = attributes.value("build");
 		}
 		else if (qName == "game" || qName == "machine")
 		{
 			//update progress
 			static int i;
-			gameList->updateProgress(i++);
-			qApp->processEvents();
+			if (method == 0)
+			{
+				gameList->updateProgress(i++);
+				qApp->processEvents();
+			}
 			
 			gameInfo = new GameInfo(_pMameDat);
 			gameInfo->sourcefile = attributes.value("sourcefile");
@@ -176,6 +181,11 @@ public:
 			gameInfo->cloneof = attributes.value("cloneof");
 			gameInfo->romof = attributes.value("romof");
 			gameInfo->sampleof = attributes.value("sampleof");
+
+			gameInfo->size = attributes.value("size").toULongLong();
+			gameInfo->crc = attributes.value("crc").toUInt(&ok, 16);
+			gameInfo->directory = attributes.value("directory");
+			gameInfo->filter = attributes.value("filter");
 
 			_pMameDat->games[attributes.value("name")] = gameInfo;
 		}
@@ -199,7 +209,6 @@ public:
 			romInfo->status = attributes.value("status");
 
 			//it's a multihash, use insert instead of []
-			bool ok;
 			gameInfo->roms.insert(attributes.value("crc").toUInt(&ok, 16), romInfo);
 		}
 		else if (qName == "disk")
@@ -325,6 +334,9 @@ public:
 			gameInfo->ramOptions << currentText.toUInt();
 		}
 
+		else if (qName == "url")
+			gameInfo->url = currentText;
+
 		return true;
 	}
 
@@ -353,24 +365,9 @@ numTotalGames(-1)
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadListXmlFinished(int, QProcess::ExitStatus)));
 }
 
-MameDat::MameDat(const QString &fileName)
+MameDat::MameDat(const QByteArray &dat)
 {
-	QString line;
-
-	QFile datFile(fileName);
-	if (datFile.open(QFile::ReadOnly | QFile::Text))
-	{
-		QTextStream in(&datFile);
-		in.setCodec("UTF-8");
-
-		do
-		{
-			line = in.readLine();
-			mameOutputBuf += line;
-			mameOutputBuf += "\n";
-		}
-		while (!line.isNull());
-	}
+	mameOutputBuf = QString(dat);
 
 	parseListXml(1);
 }
@@ -387,7 +384,7 @@ void MameDat::save()
 	out << (quint32)MAMEPLUS_SIG; //mameplus signature
 	out << (qint16)S11N_VER; //s11n version
 	out.setVersion(QDataStream::Qt_4_4);
-	out << version;
+	out << mameVersion;
 	out << defaultIni;	//default.ini
 	out << games.size();
 
@@ -614,7 +611,7 @@ int MameDat::load()
 		in.setVersion(QDataStream::Qt_4_4);
 
 	// MAME Version
-	version = utils->getMameVersion();
+	mameVersion = utils->getMameVersion();
 	QString mameVersion0;
 	in >> mameVersion0;
 
@@ -802,9 +799,9 @@ int MameDat::load()
 	win->log(QString("loaded %1 games from cache.").arg(gamecount));
 
 	// verify MAME Version
-	if (version != mameVersion0)
+	if (mameVersion != mameVersion0)
 	{
-		win-> log(QString("new MAME version: %1 vs %2").arg(mameVersion0).arg(version));
+		win-> log(QString("new MAME version: %1 vs %2").arg(mameVersion0).arg(mameVersion));
 		return QDataStream::ReadCorruptData;
 	}
 
@@ -823,9 +820,13 @@ void MameDat::parseListXml(int method)
 
 //	win->log("DEBUG: Gamelist::start parseListXml()");
 
-	gameList->switchProgress(numTotalGames, tr("Parsing listxml"));
+	if (method == 0)
+		gameList->switchProgress(numTotalGames, tr("Parsing listxml"));
+	
 	reader.parse(*pXmlInputSource);
-	gameList->switchProgress(-1, "");
+
+	if (method == 0)
+		gameList->switchProgress(-1, "");
 
 	if (method == 0)
 	{

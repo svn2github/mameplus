@@ -101,6 +101,7 @@
 	<file>res/16x16/drive-harddisk.png</file>
 	<file>res/16x16/printer.png</file>
 	<file>res/16x16/media-optical.png</file>
+	<file>res/16x16/list-remove.png</file>
 
 	<file>res/mame32-show-snap.png</file>
 	<file>res/mame32-show-tree.png</file>

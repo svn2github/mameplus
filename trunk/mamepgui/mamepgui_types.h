@@ -177,6 +177,13 @@ public:
 	/* extension */
 	QByteArray extraInfo;
 
+	/* updater only */
+	QString url;
+	qint64 size;
+	quint32 crc;
+	QString directory;
+	QString filter;	//only for filenames, no paths
+
 	/* internal */
 	QString lcDesc;
 	QString lcMftr;
@@ -204,11 +211,11 @@ Q_OBJECT
 
 public:
 	QString defaultIni;
-	QString version;
+	QString mameVersion;
 	QHash<QString, GameInfo *> games;
 
 	MameDat(QObject * = 0, int = 0);
-	MameDat(const QString &);
+	MameDat(const QByteArray&);
 	int load();
 	void save();
 	int completeData();

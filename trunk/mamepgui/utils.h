@@ -14,11 +14,15 @@ enum
 class MameFileInfo : public QObject
 {
 public:
+	QString path;
 	quint32 crc;
 	quint64 size;
 	QByteArray data;
+	bool removable;
 };
 
+class MameDat;
+class GameInfo;
 class Utils : public QObject
 {
 Q_OBJECT
@@ -39,8 +43,9 @@ public:
 	quint8 getStatus(QString);
 	QString getStatusString(quint8, bool = false);
 	QString getLongName(const QString &);
+	QString getSize(quint64 size);
 
-	QHash<QString, MameFileInfo *> iterateMameFile(const QString &, const QString &, const QString &, int);
+	QHash<QString, MameFileInfo *> iterateMameFile(const QString &_dirPaths, const QString &_archNames, const QString &_fileNameFilters, int method, const QString &_extractPath = "", const MameDat *_pFixDat = NULL);
 	void clearMameFileInfoList(QHash<QString, MameFileInfo *>);
 
 signals:
@@ -54,8 +59,8 @@ private:
 	QString mameVersion;
 	QMap<QString, QString> descMap;
 	void initDescMap();
-	bool matchMameFile(const QString &, const QStringList &);
-	bool extractMameFile(const QString &, MameFileInfo *);
+	bool matchMameFile(const QString &, const QStringList &, quint32);
+	bool extractMameFile(const QString &, MameFileInfo *, const QString &outPath, const GameInfo *itemInfo = NULL);
 };
 
 class MyQueue : public QObject

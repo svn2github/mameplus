@@ -62,7 +62,7 @@ QSize Utils::getScaledSize(QSize orig, QSize bounding, bool forceAspect)
 
 	// do not enlarge
 	if (!win->actionStretchSshot->isChecked() && (
-		scaledSize.width() > origSize.width() ||
+		scaledSize.width() > origSize.width() || 
 		scaledSize.height() > origSize.height()))
 		scaledSize = origSize;
 
@@ -147,10 +147,10 @@ void Utils::initDescMap()
 	descMap.insert("trackball", tr("Trackball"));
 	descMap.insert("vjoy2way", tr("Joy 2-Way (V)"));
 	descMap.insert("vdoublejoy2way", tr("Double Joy 2-Way (V)"));
-
+		
 	descMap.insert("baddump", tr("Bad Dump"));
 	descMap.insert("nodump", tr("No Dump"));
-
+		
 	descMap.insert("raster", tr("Raster"));
 	descMap.insert("vector", tr("Vector"));
 	descMap.insert("lcd", tr("LCD"));
@@ -178,11 +178,27 @@ QString Utils::getLongName(const QString &str)
 
 	return str;
 }
+
+QString Utils::getSize(quint64 size)
+{
+	double dsize = size * 1.0;
+	QString ssize;
+
+	if (size < 1024)
+		ssize = QString("%1").arg(size);
+	else if (size < 1024*1024)
+		ssize = QString().sprintf("%.0fk", dsize / 1024);
+	else
+		ssize = QString().sprintf("%.1fM", dsize / 1048576);
+
+	return ssize;
+}
+
 QString Utils::getMameVersion()
 {
 	QStringList args;
 	args << "-help";
-
+	
 	mameVersion = "";
 
 	loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
@@ -253,7 +269,7 @@ void Utils::clearMameFileInfoList(QHash<QString, MameFileInfo *> mameFileInfoLis
 		delete mameFileInfoList[key];
 }
 
-bool Utils::matchMameFile(const QString &fileName, const QStringList &fileNameFilters)
+bool Utils::matchMameFile(const QString &fileName, const QStringList &fileNameFilters, quint32 crc)
 {
 	foreach (QString fileNameFilter, fileNameFilters)
 	{
@@ -269,6 +285,13 @@ bool Utils::matchMameFile(const QString &fileName, const QStringList &fileNameFi
 			if (fileName.endsWith(fileNameFilter, Qt::CaseInsensitive))
 				return true;
 		}
+		//crc filter
+		else if (crc != 0x0 && fileNameFilter.startsWith("?"))
+		{
+			fileNameFilter.remove(0, 1);
+			if (crc == fileNameFilter.toULong())
+				return true;
+		}
 		//filename filter
 		else
 		{
@@ -282,12 +305,48 @@ bool Utils::matchMameFile(const QString &fileName, const QStringList &fileNameFi
 	return false;
 }
 
-bool Utils::extractMameFile(const QString &fileName, MameFileInfo *mameFileInfo)
+bool Utils::extractMameFile(const QString &zipFileName, MameFileInfo *mameFileInfo, const QString &outPath, const GameInfo *itemInfo)
 {
 	bool result = false;
+	QFileInfo zipFileInfo(zipFileName);
+	QString romFilePath = zipFileInfo.fileName();
 
-	QFileInfo fileInfo(fileName);
-	QFile outFile(utils->getPath(QDir::tempPath()) + fileInfo.fileName());
+	//try to figure out a proper extraction file path
+	if (itemInfo != NULL)
+	foreach(RomInfo *romInfo, itemInfo->roms)
+	{
+		//zip: xx/lang/ja_JP/mame.mmo
+		//rom: ja_JP/mame.mmo
+		
+		//zip: en/captcomm.lst
+		//rom: lists/en/captcomm.lst
+
+		if (romInfo->name.contains("/"))
+		{
+			QStringList bufs = romInfo->name.split("/");
+			QFileInfo romFileInfo(romInfo->name);
+
+			//for now, only match the nearest dir name
+			while (bufs.size() > 2)
+				bufs.removeFirst();
+
+			QString trimmedRomFilePath = bufs.join("/");
+
+			if (zipFileName.endsWith(trimmedRomFilePath))
+			{
+				romFilePath = romInfo->name;
+				break;
+			}
+		}
+	}
+
+	QFile outFile(outPath + romFilePath);
+	QFileInfo outFileInfo(outFile);
+	QDir outDir = outFileInfo.absoluteDir();
+
+	//create output path if needed
+	if (!outDir.exists())
+		QDir().mkpath(outFileInfo.path());
 
 	if (outFile.open(QIODevice::WriteOnly))
 	{
@@ -297,26 +356,32 @@ bool Utils::extractMameFile(const QString &fileName, MameFileInfo *mameFileInfo)
 	}
 
 	outFile.close();
-
 	return result;
 }
 
 //fixme: filter dir from zip and path, handle paths in the zip/7z, cases
-QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, const QString &_archNames, const QString &_fileNameFilters, int method)
+QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, const QString &_archNames, const QString &_fileNameFilters, int method, const QString &_extractPath, const MameDat *_pFixDat)
 {
-//fixme: clear mameFileInfoList
+	//NOTE: mameFileInfoList must get released later by clearMameFileInfoList()
 	QHash<QString, MameFileInfo *> mameFileInfoList;
-
+	MameFileInfo *mameFileInfo;
 	bool isSingleFile = true;
 	QStringList dirPaths = _dirPaths.split(";");
-
 	QStringList archNames = _archNames.split(";");
 	QStringList fileNameFilters = _fileNameFilters.split(";");
-	if (fileNameFilters.size() > 1 ||
-		fileNameFilters.first().startsWith("*"))
+	QStringList extractPaths = _extractPath.split(";");
+
+	if (fileNameFilters.size() > 1 || 
+		fileNameFilters.first().startsWith("*") || 
+		fileNameFilters.first().startsWith("?"))
 		isSingleFile = false;
 
-	MameFileInfo *mameFileInfo;
+	//fixme: only process first path for now
+	QString extractPath = extractPaths.first();
+	if (extractPath.isEmpty())
+		extractPath = utils->getPath(QDir::tempPath());
+	else
+		extractPath = utils->getPath(extractPath);
 
 	// iterate split dirpath
 	foreach (QString _dirPath, dirPaths)
@@ -330,12 +395,12 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 		{
 			if (isSingleFile && mameFileInfoList.size() > 0)
 				break;
-
+		
 			// iterate all files in the path
 			QString dirPath = utils->getPath(_dirPath + archName);
 			QDir dir(dirPath);
 			QStringList fileNames = dir.entryList(fileNameFilters, QDir::Files | QDir::Readable);
-//			win->log(QString("testing: %1, %2").arg(dirPath).arg(fileNames.size()));
+	//		win->log(QString("#: %1, %2").arg(dirPath).arg(fileNames.join(",")));
 
 			for (int i = 0; i < fileNames.size(); i++)
 			{
@@ -348,16 +413,21 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 
 				//already loaded
 				QString fileName = fileInfo.fileName();
+
 				if (mameFileInfoList.contains(fileName))
 					continue;
 
 				if (!file.open(QIODevice::ReadOnly))
 					continue;
 
+				//dont process chds in a game archive
 				bool isCHD = fileName.endsWith(".chd");
 
 				mameFileInfo = new MameFileInfo();
+				mameFileInfo->removable = true;
 				mameFileInfo->size = file.size();
+				mameFileInfo->path = fileInfo.absoluteFilePath();
+				
 				if (method != MAMEFILE_EXTRACT && !isCHD)
 					mameFileInfo->data = file.readAll();
 				if (method <= MAMEFILE_GETDATINFO && !isCHD)
@@ -400,6 +470,12 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 
 		// iterate all fileNames in the .zip
 		QuaZip zip(_dirPath + archName + ZIP_EXT);
+
+		// prepare itemInfo for updater
+		GameInfo *itemInfo = NULL;
+		if (_pFixDat != NULL && _pFixDat->games.contains(archName))
+			itemInfo = pFixDat->games[archName];
+		
 //		win->log("testing: " + _dirPath + archName + ZIP_EXT);
 		if(zip.open(QuaZip::mdUnzip))
 		{
@@ -407,7 +483,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 			{
 				if (isSingleFile && mameFileInfoList.size() > 0)
 					break;
-
+			
 				QuaZipFileInfo zipFileInfo;
 				if(!zip.getCurrentFileInfo(&zipFileInfo))
 					continue;
@@ -420,7 +496,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 				if (mameFileInfoList.contains(zipFileInfo.name))
 					continue;
 
-				if (!matchMameFile(zipFileInfo.name, fileNameFilters))
+				if (!matchMameFile(zipFileInfo.name, fileNameFilters, zipFileInfo.crc))
 					continue;
 
 				QuaZipFile inFile(&zip);
@@ -436,8 +512,8 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 
 				if (method == MAMEFILE_EXTRACT)
 				{
-					extractMameFile(zipFileInfo.name, mameFileInfo);
-//					win->log(QString("ext re: %1").arg(re));
+					bool re = extractMameFile(zipFileInfo.name, mameFileInfo, extractPath, itemInfo);
+				//	win->log(QString("zipext: %1: %2: %3").arg(zipFileInfo.name).arg(extractPath).arg(re));
 				}
 
 				inFile.close();
@@ -506,7 +582,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 				if (mameFileInfoList.contains(f->Name))
 					continue;
 
-				if (!matchMameFile(f->Name, fileNameFilters))
+				if (!matchMameFile(f->Name, fileNameFilters, f->FileCRC))
 					continue;
 
 				res = SzAr_Extract(&db, &lookStream.s, i,
@@ -515,7 +591,10 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 					&allocImp, &allocTempImp);
 
 				if (res != SZ_OK)
+				{
+					win->log(QString("SZ_RES: %1.").arg(res));
 					break;
+				}
 
 				mameFileInfo = new MameFileInfo();
 				mameFileInfo->size = outSizeProcessed;
@@ -526,8 +605,9 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 
 				if (method == MAMEFILE_EXTRACT)
 				{
-//					bool re = extractMameFile(f->Name, mameFileInfo);
-//					win->log(QString("ext re: %1").arg(re));
+				//	bool re = 
+					extractMameFile(f->Name, mameFileInfo, extractPath, itemInfo);
+				//	win->log(QString("7zext: %1: %2: %3").arg(f->Name).arg(extractPath).arg(re));
 				}
 			}
 			IAlloc_Free(&allocImp, outBuffer);
@@ -536,7 +616,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 		SzArEx_Free(&db, &allocImp);
 		File_Close(&archiveStream.file);
 	}
-
+	
 	return mameFileInfoList;
 }
 
@@ -595,7 +675,7 @@ int MyQueue::size() const
 }
 
 
-ProcessManager::ProcessManager(QWidget *parent) :
+ProcessManager::ProcessManager(QWidget *parent) : 
 QObject(parent),
 procCount(0)
 {
@@ -620,7 +700,7 @@ int ProcessManager::start(QString &command, QStringList &arguments, bool autoCon
 		connect(proc, SIGNAL(readyReadStandardError()), this, SLOT(readyReadStandardError()));
 		connect(proc, SIGNAL(started()), this, SLOT(started()));
 	}
-
+	
 #ifdef Q_WS_WIN
 	//explicitly assign WorkingDirectory during M1 loading
 	proc->setWorkingDirectory(currentAppDir);

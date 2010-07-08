@@ -12,6 +12,10 @@ documentation
 theme
 
 //Done
+sanity check for valid mame binary
+removed duplicated resolution [regret]
+added some new fields to cache file for updater module
+added support to iterate and extract updater files
 
 preliminary code for full dat export
 

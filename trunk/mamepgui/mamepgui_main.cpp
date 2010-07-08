@@ -44,10 +44,7 @@ bool isMESS = false;
 
 QStringList validGuiSettings;
 
-/* internal */
-QDockWidget *dwHistory = NULL;
-
-#define MPGUI_VER "1.5.0"
+#define MPGUI_VER "1.5.1"
 
 void MainWindow::log(QString message)
 {
@@ -153,7 +150,8 @@ void MainWindow::logStatus(GameInfo *gameInfo)
 }
 
 MainWindow::MainWindow(QWidget *parent) : 
-QMainWindow(parent)
+QMainWindow(parent),
+dwHistory(NULL)
 {
 	currentAppDir = QDir::currentPath();
 
@@ -303,6 +301,11 @@ QMainWindow(parent)
 	m1UI = new M1UI(this);
 #endif /* Q_OS_WIN */
 
+#ifdef USE_SDL
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_NOPARACHUTE) >= 0)
+		sdlInited = true;
+#endif /* USE_SDL */
+
 	QTimer::singleShot(0, this, SLOT(init()));
 }
 
@@ -446,7 +449,7 @@ void MainWindow::init()
 
 	if (warnings.size() > 0)
 	{
-		win->poplog("Current user has no sufficient privilege to read/write:\n" + warnings + "\n\ncouldn't save GUI settings.");
+		poplog("Current user has no sufficient privilege to read/write:\n" + warnings + "\n\ncouldn't save GUI settings.");
 		//quit the program
 		close();
 		return;
@@ -455,40 +458,12 @@ void MainWindow::init()
 	initSettings();
 	loadSettings();
 	
-	// validate mame_binary
-	mame_binary = pGuiSettings->value("mame_binary", "mamep.exe").toString();
-	QFileInfo mamebin(mame_binary);
-
-	// if no valid exec was found, popup a dialog
-	if (!mamebin.exists() || mamebin.absoluteFilePath() == QCoreApplication::applicationFilePath())
+	if (!validateMameBinary())
 	{
-		QString filter = "";
-#ifdef Q_WS_WIN
-		filter.append(tr("Executable files") + " (*" EXEC_EXT ")");
-		filter.append(";;");
-#endif
-		filter.append(tr("All Files (*)"));
-	
-		mame_binary = QFileDialog::getOpenFileName(this,
-									tr("MAME/MESS executable:"),
-									QCoreApplication::applicationDirPath(),
-									filter);
-
-		mamebin.setFile(mame_binary);
-		if (mame_binary.isEmpty() || mamebin.absoluteFilePath() == QCoreApplication::applicationFilePath())
-		{
-			win->poplog(QString("Could not find MAME/MESS."));
-			mame_binary = "";
 			//quit the program
 			close();
 			return;
 		}
-	}
-
-	//save the new mame_binary value now, it will be accessed later in option module
-	pGuiSettings->setValue("mame_binary", mame_binary);
-	if (QFileInfo(mame_binary).baseName().contains("mess", Qt::CaseInsensitive))
-		isMESS = true;
 
 	QIcon mamepIcon(":/res/mamep_256.png");
 	qApp->setWindowIcon(mamepIcon);
@@ -503,7 +478,7 @@ void MainWindow::init()
 	QActionGroup *styleActions = new QActionGroup(this);
 	foreach (QString style, styles)
 	{
-		QAction* act = win->menuGUIStyle->addAction(style);
+		QAction* act = menuGUIStyle->addAction(style);
 		act->setCheckable(true);
 		if (gui_style == style)
 			act->setChecked(true);
@@ -534,7 +509,7 @@ void MainWindow::init()
 		QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
 		foreach (QString fileName, files)
 		{
-			QAction* act = win->menuBackground->addAction(fileName);
+			QAction* act = menuBackground->addAction(fileName);
 			act->setCheckable(true);
 			if (background_file == fileName)
 				act->setChecked(true);
@@ -555,7 +530,7 @@ void MainWindow::init()
 	if (des11n_status == QDataStream::Ok)
 	{
 		gameList->init(true, GAMELIST_INIT_FULL);
-		win->setVersion();
+		setVersion();
 	}
 	else
 	//des11n() failed, construct a new pMameDat
@@ -565,7 +540,7 @@ void MainWindow::init()
 		pMameDat = new MameDat(0, 1);
 	}
 
-	// connect misc signal and slots
+	// connect misc signals and slots
 
 	// Docked snapshots
 	QList<QTabBar *> tabBars = getSSTabBars();
@@ -609,6 +584,55 @@ void MainWindow::init()
 //	gameList->updateSelection();
 }
 
+bool MainWindow::validateMameBinary()
+{
+	// validate mame_binary
+	mame_binary = pGuiSettings->value("mame_binary", "mamep.exe").toString();
+	pMameDat->mameVersion = utils->getMameVersion();
+	QFileInfo mamebin(mame_binary);
+
+	// if no valid exec was found
+	if (mame_binary.isEmpty() ||
+		mamebin.absoluteFilePath() == QCoreApplication::applicationFilePath() ||
+		pMameDat->mameVersion.isEmpty())
+	{
+		mame_binary = selectMameBinary();
+		mamebin.setFile(mame_binary);
+		pMameDat->mameVersion = utils->getMameVersion();
+
+		if (mame_binary.isEmpty() ||
+			mamebin.absoluteFilePath() == QCoreApplication::applicationFilePath() ||
+			pMameDat->mameVersion.isEmpty())
+		{
+			poplog(QString("Could not find valid MAME/MESS."));
+			mame_binary = "";
+			return false;
+		}
+	}
+
+	//save the new mame_binary value now, it will be accessed later in option module
+	pGuiSettings->setValue("mame_binary", mame_binary);
+	if (QFileInfo(mame_binary).baseName().contains("mess", Qt::CaseInsensitive))
+		isMESS = true;
+
+	return true;
+}
+
+QString MainWindow::selectMameBinary()
+{
+	QString filter = "";
+#ifdef Q_WS_WIN
+	filter.append(tr("Executable files") + " (*" EXEC_EXT ")");
+	filter.append(";;");
+#endif
+	filter.append(tr("All Files (*)"));
+
+	return QFileDialog::getOpenFileName(this,
+								tr("MAME/MESS executable:"),
+								QCoreApplication::applicationDirPath(),
+								filter);
+}
+
 void MainWindow::setVersion()
 {
 	//set version info
@@ -619,9 +643,9 @@ void MainWindow::setVersion()
 	QString sdlVerString = "";
 
 	if (!isMESS)
-		mameString.append(QString("<a href=\"http://mamedev.org\">M.A.M.E.</a> %1 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>").arg(pMameDat->version));
+		mameString.append(QString("<a href=\"http://mamedev.org\">M.A.M.E.</a> %1 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>").arg(pMameDat->mameVersion));
 	if (hasDevices)
-		mameString.append(QString("<a href=\"http://www.mess.org\">M.E.S.S.</a> %1 - Multi Emulator Super System &copy; the MESS Team<br>").arg(pMameDat->version));
+		mameString.append(QString("<a href=\"http://www.mess.org\">M.E.S.S.</a> %1 - Multi Emulator Super System &copy; the MESS Team<br>").arg(pMameDat->mameVersion));
 
 #ifdef Q_OS_WIN
 	if (m1 != NULL && m1->available)
@@ -675,7 +699,7 @@ void MainWindow::setVersion()
 	setWindowTitle(QString("%1 - %2 %3")
 		.arg("M+GUI " MPGUI_VER)
 		.arg(fi.baseName().toUpper())
-		.arg(pMameDat->version));
+		.arg(pMameDat->mameVersion));
 }
 
 void MainWindow::enableCtrls(bool isEnabled)
@@ -1599,11 +1623,6 @@ void Screenshot::updateScreenshotLabel(bool isLoading)
 
 int main(int argc, char *argv[])
 {
-#ifdef USE_SDL
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_NOPARACHUTE) >= 0)
-		sdlInited = true;
-#endif /* USE_SDL */
-
 	for (int i = 1; i < argc; i++)
 	{
 		if (QString(argv[i]) == "-configpath" && i + 1 < argc)
@@ -1638,9 +1657,5 @@ int main(int argc, char *argv[])
 	win = new MainWindow(0);
 
 	return myApp.exec();
-
-#ifdef USE_SDL
-	SDL_Quit();
-#endif /* USE_SDL */
 }
 

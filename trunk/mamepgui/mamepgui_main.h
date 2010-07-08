@@ -144,7 +144,10 @@ protected:
 private:
 	QString background_file;
 	QString gui_style;
-	
+	QDockWidget *dwHistory;
+
+	bool validateMameBinary();
+	QString selectMameBinary();
 	void initHistory(int);
 	void initSnap(int);
 	void showRestartDialog();
