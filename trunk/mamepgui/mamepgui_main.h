@@ -1,18 +1,10 @@
 #ifndef _MAMEPGUIMAIN_H_
 #define _MAMEPGUIMAIN_H_
 
-//common
-#include "quazip.h"
-#include "quazipfile.h"
-
 #include <QtGui>
-#include <QApplication>
-#include <QtXml>
 
 #include "ui_mamepgui_main.h"
-#include "mamepgui_types.h"
 #include "gamelist.h"
-#include "audit.h"
 
 class Screenshot : public QDockWidget
 {
@@ -40,6 +32,19 @@ private:
 
 };
 
+class RomAuditor;
+class MameExeRomAuditor;
+
+class DirsUI;
+class PlayOptionsUI;
+class AboutUI;
+class CmdUI;
+class IpsUI;
+class M1Core;
+class M1UI;
+class OptionsUI;
+class CsvCfgUI;
+
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
 Q_OBJECT
@@ -53,7 +58,7 @@ public:
 	void enableCtrls(bool);
 	void log(QString);
 
-	RomAuditor romAuditor;
+	RomAuditor *romAuditor;
 	MameExeRomAuditor *mameAuditor;
 
 	GameListTreeView *tvGameList;
@@ -61,13 +66,21 @@ public:
 	
 	QLineEdit *lineEditSearch;
 	QToolButton *btnSearch, *btnClearSearch;
-	QLabel *labelProgress, *labelGameCount, 
-		*labelStatus, *labelEmulation, *labelColor, *labelSound, 
-		*labelGraphic, *labelCocktail, *labelProtection, *labelSavestate;
+	QLabel  *labelProgress, *labelGameCount, *labelStatus, *labelEmulation, *labelColor, *labelSound, *labelGraphic, *labelCocktail, *labelProtection, *labelSavestate;
 	QWidget *wStatus;
 	QProgressBar *progressBarGamelist;
 	QSystemTrayIcon *trayIcon;
 	
+	DirsUI *dirsUI;
+	PlayOptionsUI *playOptionsUI;
+	AboutUI *aboutUI;
+	CmdUI *cmdUI;
+	IpsUI *ipsUI;
+	M1UI *m1UI;
+	M1Core *m1Core;
+	OptionsUI *optionsUI;
+	CsvCfgUI *csvCfgUI;
+
 	QStringList dockCtrlNames;
 	QDockWidget* dockCtrls[DOCK_LAST];
 	QTextBrowser *tbHistory, *tbMameinfo, *tbDriverinfo, *tbStory, *tbCommand;

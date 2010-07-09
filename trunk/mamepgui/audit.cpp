@@ -1,5 +1,7 @@
-#include "audit.h"
+#include "quazip.h"
+#include "quazipfile.h"
 
+#include "audit.h"
 #include "mamepgui_types.h"
 #include "mamepgui_main.h"
 #include "mameopt.h"

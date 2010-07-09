@@ -1,7 +1,8 @@
-<ui version="4.0" >
- <class>IPS</class>
- <widget class="QDialog" name="IPS" >
-  <property name="geometry" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>IpsUI</class>
+ <widget class="QDialog" name="IpsUI">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,33 +10,33 @@
     <height>460</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <item rowspan="2" row="0" column="0" colspan="3" >
-    <widget class="QTreeWidget" name="twList" >
-     <property name="rootIsDecorated" >
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" rowspan="2" colspan="3">
+    <widget class="QTreeWidget" name="twList">
+     <property name="rootIsDecorated">
       <bool>false</bool>
      </property>
-     <property name="itemsExpandable" >
+     <property name="itemsExpandable">
       <bool>false</bool>
      </property>
-     <property name="columnCount" >
+     <property name="columnCount">
       <number>2</number>
      </property>
      <column>
-      <property name="text" >
+      <property name="text">
        <string>1</string>
       </property>
      </column>
      <column>
-      <property name="text" >
+      <property name="text">
        <string>2</string>
       </property>
      </column>
     </widget>
    </item>
-   <item row="0" column="3" colspan="3" >
-    <widget class="QLabel" name="lblSnap" >
-     <property name="minimumSize" >
+   <item row="0" column="3" colspan="3">
+    <widget class="QLabel" name="lblSnap">
+     <property name="minimumSize">
       <size>
        <width>260</width>
        <height>240</height>
@@ -43,38 +44,38 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="3" colspan="3" >
-    <widget class="QTextBrowser" name="tbDesc" />
+   <item row="1" column="3" colspan="3">
+    <widget class="QTextBrowser" name="tbDesc"/>
    </item>
-   <item row="2" column="2" >
-    <widget class="QPushButton" name="btnClear" >
-     <property name="text" >
+   <item row="2" column="2">
+    <widget class="QPushButton" name="btnClear">
+     <property name="text">
       <string>Clear</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="4" colspan="2" >
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="orientation" >
+   <item row="2" column="4" colspan="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
+     <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
-   <item row="2" column="0" >
-    <widget class="QComboBox" name="cmbLang" />
+   <item row="2" column="0">
+    <widget class="QComboBox" name="cmbLang"/>
    </item>
-   <item row="2" column="1" >
-    <widget class="QCheckBox" name="chkRelation" >
-     <property name="text" >
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="chkRelation">
+     <property name="text">
       <string>Enforce relationship</string>
      </property>
-     <property name="checked" >
+     <property name="checked">
       <bool>true</bool>
      </property>
-     <property name="tristate" >
+     <property name="tristate">
       <bool>false</bool>
      </property>
     </widget>
@@ -86,14 +87,14 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>IPS</receiver>
+   <receiver>IpsUI</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>248</x>
      <y>254</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>157</x>
      <y>274</y>
     </hint>
@@ -102,14 +103,14 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>IPS</receiver>
+   <receiver>IpsUI</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>316</x>
      <y>260</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
     </hint>

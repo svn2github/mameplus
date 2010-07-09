@@ -23,13 +23,16 @@ public:
 
 class MameDat;
 class GameInfo;
+
 class Utils : public QObject
 {
 Q_OBJECT
-public:
-	QProcess *loadProc;
 
+public:
 	Utils(QObject *parent = 0);
+
+	QProcess *loadProc;
+	QRegExp rxSpace;
 
 	QString getDesc(const QString &, bool = true);
 	QSize getScaledSize(QSize, QSize, bool);
@@ -120,6 +123,5 @@ public slots:
 
 extern Utils *utils;
 extern ProcessManager *procMan;
-extern QRegExp rxSpace;
 
 #endif

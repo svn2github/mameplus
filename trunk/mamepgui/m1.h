@@ -41,7 +41,7 @@ private:
 	QMutex mutex;
 };
 
-class M1 : public QObject
+class M1Core : public QObject
 {
 Q_OBJECT
 
@@ -50,8 +50,8 @@ private:
 	QFutureWatcher<void> m1Watcher;
 
 public:
-	M1(QObject *parent = 0);
-	~M1();
+	M1Core(QObject *parent = 0);
+	~M1Core();
 
 	int max_games;
 	bool isHex;
@@ -85,6 +85,4 @@ public slots:
 	void updateList(const QString & = NULL);
 };
 
-extern M1UI *m1UI;
-extern M1 *m1;
 #endif

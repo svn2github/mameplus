@@ -1,5 +1,6 @@
-#include "mamepgui_types.h"
+#include <QtXml>
 
+#include "mamepgui_types.h"
 #include "mamepgui_main.h"
 
 /* global */
@@ -7,8 +8,8 @@ MameDat *pMameDat = NULL;
 MameDat *pFixDat = NULL;
 MameDat *pTempDat = NULL;
 
-BiosSet::BiosSet(QObject *parent)
-: QObject(parent)
+BiosSet::BiosSet(QObject *parent) :
+QObject(parent)
 {
 	//	win->log("# BiosSet()");
 }
@@ -25,18 +26,18 @@ available(false)
 {
 }
 
-ChipInfo::ChipInfo(QObject *parent)
-: QObject(parent)
+ChipInfo::ChipInfo(QObject *parent) :
+QObject(parent)
 {
 }
 
-DisplayInfo::DisplayInfo(QObject *parent)
-: QObject(parent)
+DisplayInfo::DisplayInfo(QObject *parent) :
+QObject(parent)
 {
 }
 
-ControlInfo::ControlInfo(QObject *parent)
-: QObject(parent)
+ControlInfo::ControlInfo(QObject *parent) :
+QObject(parent)
 {
 }
 

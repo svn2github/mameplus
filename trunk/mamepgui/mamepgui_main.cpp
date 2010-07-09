@@ -3,7 +3,7 @@
 #include "7zVersion.h"
 
 #include "mamepgui_main.h"
-
+#include "audit.h"
 #include "mamepgui_types.h"
 #include "gamelist.h"
 #include "mameopt.h"
@@ -143,7 +143,7 @@ void MainWindow::logStatus(GameInfo *gameInfo)
 	}
 
 	statusBuffer.chop(1);
-	win->wStatus->setToolTip(statusBuffer);
+	wStatus->setToolTip(statusBuffer);
 
 	
 //	setText(QString("E: %1").arg(status));
@@ -284,20 +284,21 @@ dwHistory(NULL)
 	menuShowFolders->addSeparator();
 	toolBar->insertAction(actionLargeIcons, actionFolderList);
 
+	romAuditor = new RomAuditor(this);
 	mameAuditor = new MameExeRomAuditor(this);
 
 	pMameDat = new MameDat(0, 0);
 	gameList = new Gamelist(0);
 	optUtils = new OptionUtils(0);
-	dirsUI = new Dirs(this);
-	playOptionsUI = new PlayOptions(this);
-	optionsUI = new Options(this);
-	csvCfgUI = new CsvCfg(this);
-	aboutUI = new About(this);
-	ipsUI = new IPS(this);
-	cmdUI = new Cmd(this);
+	dirsUI = new DirsUI(this);
+	playOptionsUI = new PlayOptionsUI(this);
+	optionsUI = new OptionsUI(this);
+	csvCfgUI = new CsvCfgUI(this);
+	aboutUI = new AboutUI(this);
+	ipsUI = new IpsUI(this);
+	cmdUI = new CmdUI(this);
 #ifdef Q_OS_WIN
-	m1 = new M1(0);
+	m1Core = new M1Core(0);
 	m1UI = new M1UI(this);
 #endif /* Q_OS_WIN */
 
@@ -463,7 +464,7 @@ void MainWindow::init()
 			//quit the program
 			close();
 			return;
-		}
+	}
 
 	QIcon mamepIcon(":/res/mamep_256.png");
 	qApp->setWindowIcon(mamepIcon);
@@ -567,9 +568,9 @@ void MainWindow::init()
 	connect(actionFilterUnavailable, SIGNAL(toggled(bool)), gameList, SLOT(filterFlagsChanged(bool)));
 
 	// Auditor
-	connect(&romAuditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));
-	connect(&romAuditor, SIGNAL(progressUpdated(int)), gameList, SLOT(updateProgress(int)));
-	connect(&romAuditor, SIGNAL(finished()), gameList, SLOT(init()));
+	connect(romAuditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));
+	connect(romAuditor, SIGNAL(progressUpdated(int)), gameList, SLOT(updateProgress(int)));
+	connect(romAuditor, SIGNAL(finished()), gameList, SLOT(init()));
 
 	// Game List
 	connect(lineEditSearch, SIGNAL(returnPressed()), gameList, SLOT(filterSearchChanged()));
@@ -648,9 +649,9 @@ void MainWindow::setVersion()
 		mameString.append(QString("<a href=\"http://www.mess.org\">M.E.S.S.</a> %1 - Multi Emulator Super System &copy; the MESS Team<br>").arg(pMameDat->mameVersion));
 
 #ifdef Q_OS_WIN
-	if (m1 != NULL && m1->available)
+	if (m1Core != NULL && m1Core->available)
 	{
-		m1Ver = m1->version;
+		m1Ver = m1Core->version;
 		m1VerString = QString("<a href=\"http://rbelmont.mameworld.info/?page_id=223\">M1</a> %1 multi-platform arcade music emulator &copy; R. Belmont<br>")
 						.arg(m1Ver);
 	}
@@ -704,24 +705,24 @@ void MainWindow::setVersion()
 
 void MainWindow::enableCtrls(bool isEnabled)
 {
-	win->treeFolders->setEnabled(isEnabled);
-	win->actionLargeIcons->setEnabled(false);
-	win->actionDetails->setEnabled(isEnabled);
-	win->actionGrouped->setEnabled(isEnabled);
-	win->actionRefresh->setEnabled(isEnabled);
-	win->actionDirectories->setEnabled(isEnabled);
-	win->actionProperties->setEnabled(isEnabled);
-	win->actionSrcProperties->setEnabled(isEnabled);
-	win->actionDefaultOptions->setEnabled(isEnabled);
-	win->actionPlay->setEnabled(isEnabled);
-	win->menuPlayWith->setEnabled(isEnabled);
-	win->menuAudit->setEnabled(isEnabled);
-	win->menuArrangeIcons->setEnabled(isEnabled);
-	win->menuCustomizeFields->setEnabled(isEnabled);
-	win->menuCustomFilters->setEnabled(isEnabled);
-	win->lineEditSearch->setEnabled(isEnabled);
-	win->btnSearch->setEnabled(isEnabled);
-	win->btnClearSearch->setEnabled(isEnabled);
+	treeFolders->setEnabled(isEnabled);
+	actionLargeIcons->setEnabled(false);
+	actionDetails->setEnabled(isEnabled);
+	actionGrouped->setEnabled(isEnabled);
+	actionRefresh->setEnabled(isEnabled);
+	actionDirectories->setEnabled(isEnabled);
+	actionProperties->setEnabled(isEnabled);
+	actionSrcProperties->setEnabled(isEnabled);
+	actionDefaultOptions->setEnabled(isEnabled);
+	actionPlay->setEnabled(isEnabled);
+	menuPlayWith->setEnabled(isEnabled);
+	menuAudit->setEnabled(isEnabled);
+	menuArrangeIcons->setEnabled(isEnabled);
+	menuCustomizeFields->setEnabled(isEnabled);
+	menuCustomFilters->setEnabled(isEnabled);
+	lineEditSearch->setEnabled(isEnabled);
+	btnSearch->setEnabled(isEnabled);
+	btnClearSearch->setEnabled(isEnabled);
 }
 
 void MainWindow::on_actionPlay_activated()
@@ -777,7 +778,7 @@ void MainWindow::on_actionConfigIPS_activated()
 
 void MainWindow::on_actionRefresh_activated()
 {
-	romAuditor.audit();
+	romAuditor->audit();
 }
 
 void MainWindow::on_actionFixDatComplete_activated()
@@ -813,7 +814,7 @@ void MainWindow::exportFixDat(int method)
 		(0, tr("File name:"), mamebin.absolutePath(), filter);	
 
 	if (!fileName.isEmpty())
-		romAuditor.audit(false, method, fileName);
+		romAuditor->audit(false, method, fileName);
 }
 
 void MainWindow::on_actionAudit_activated()
@@ -905,10 +906,10 @@ void MainWindow::toggleGameListColumn()
 	if (col == -1)
 		return;
 
-	if (win->tvGameList->header()->isSectionHidden(col))
-		win->tvGameList->header()->setSectionHidden (col, false);
+	if (tvGameList->header()->isSectionHidden(col))
+		tvGameList->header()->setSectionHidden (col, false);
 	else
-		win->tvGameList->header()->setSectionHidden (col, true);
+		tvGameList->header()->setSectionHidden (col, true);
 }
 
 void MainWindow::on_actionColSortAscending_activated()
@@ -916,14 +917,14 @@ void MainWindow::on_actionColSortAscending_activated()
 	int col = colSortActionGroup->actions().indexOf((QAction *)sender());
 
 	if (col == -1)
-		col = win->tvGameList->header()->sortIndicatorSection();
+		col = tvGameList->header()->sortIndicatorSection();
 
-	win->tvGameList->sortByColumn(col, Qt::AscendingOrder);
+	tvGameList->sortByColumn(col, Qt::AscendingOrder);
 }
 
 void MainWindow::on_actionColSortDescending_activated()
 {
-	win->tvGameList->sortByColumn(win->tvGameList->header()->sortIndicatorSection(), Qt::DescendingOrder);
+	tvGameList->sortByColumn(tvGameList->header()->sortIndicatorSection(), Qt::DescendingOrder);
 }
 
 void MainWindow::on_actionEnglish_activated()
@@ -997,7 +998,7 @@ void MainWindow::on_trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 	{
 	case QSystemTrayIcon::Trigger:
 	case QSystemTrayIcon::DoubleClick:
-		if (win->isVisible())
+		if (isVisible())
 			hide();
 		else
 			show();
@@ -1090,9 +1091,9 @@ void MainWindow::loadLayout()
 	actionRowDelegate->setChecked(pGuiSettings->value("zoom_icon", "1").toInt() == 1);
 
 	gameList->listMode = pGuiSettings->value("list_mode").toString();
-	if (gameList->listMode == win->actionDetails->objectName().remove("action"))
+	if (gameList->listMode == actionDetails->objectName().remove("action"))
 		actionDetails->setChecked(true);
-	else if (gameList->listMode == win->actionLargeIcons->objectName().remove("action"))
+	else if (gameList->listMode == actionLargeIcons->objectName().remove("action"))
 		actionLargeIcons->setChecked(true);
 	else
 		actionGrouped->setChecked(true);
@@ -1173,7 +1174,7 @@ void MainWindow::saveSettings()
 	else
 		pGuiSettings->setValue("mame_binary", mame_binary);
 
-	QList<QTreeWidgetItem *> softwaresItems = win->treeFolders->findItems(gameList->intFolderNames[FOLDER_CONSOLE], Qt::MatchFixedString);
+	QList<QTreeWidgetItem *> softwaresItems = treeFolders->findItems(gameList->intFolderNames[FOLDER_CONSOLE], Qt::MatchFixedString);
 	QTreeWidgetItem *softwaresItem = NULL;
 	if (!softwaresItems.isEmpty())
 		softwaresItem = softwaresItems.first();
@@ -1384,9 +1385,9 @@ void MainWindow::setBgPixmap(QString fileName)
 			bkgroundImg = bkgroundImg.scaled(size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 
 		//fixme: must init before stylesheet applied
-		QPalette palette = win->palette();
+		QPalette palette = this->palette();
 		palette.setBrush(backgroundRole(), QBrush(bkgroundImg));
-//		win->setPalette(palette);
+//		setPalette(palette);
 
 		//get the color tone of bg image
 		bkgroundImg = bkgroundImg.scaled(1, 1, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
@@ -1433,11 +1434,11 @@ void MainWindow::setBgPixmap(QString fileName)
 
 void MainWindow::toggleTrayIcon(int, QProcess::ExitStatus, bool isTrayIconVisible)
 {
-	win->trayIcon->setVisible(isTrayIconVisible);
+	trayIcon->setVisible(isTrayIconVisible);
 	if (isTrayIconVisible)
-		win->trayIcon->setToolTip(win->windowTitle());
+		trayIcon->setToolTip(windowTitle());
 
-	win->setVisible(!isTrayIconVisible);
+	setVisible(!isTrayIconVisible);
 }
 
 QList<QTabBar *> MainWindow::getSSTabBars()
@@ -1480,7 +1481,7 @@ QList<QTabBar *> MainWindow::getSSTabBars()
 	return tabBars2;
 }
 
-//fixme: win->dockCtrls[snapType]->isVisible() && win->isDockTabVisible(win->dockCtrlNames[snapType])
+//fixme: dockCtrls[snapType]->isVisible() && isDockTabVisible(dockCtrlNames[snapType])
 bool MainWindow::isDockTabVisible(QString objName)
 {
 	bool isSSTabbed = false;

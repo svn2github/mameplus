@@ -1,16 +1,11 @@
 #include "m1ui.h"
 #include "m1.h"
-
 #include "mamepgui_types.h"
 #include "mamepgui_main.h"
 #include "mameopt.h"
 
-/* global */
-M1 *m1 = NULL;
-M1UI *m1UI = NULL;
-
-M1UI::M1UI(QWidget *parent)
-:QDockWidget(parent)
+M1UI::M1UI(QWidget *parent) :
+QDockWidget(parent)
 {
 	setupUi(this);
 	setObjectName("M1");
@@ -46,16 +41,16 @@ M1UI::M1UI(QWidget *parent)
 
 void M1UI::init()
 {
-	connect(btnPlay, SIGNAL(pressed()), &m1->m1Thread, SLOT(play()));
-	connect(twSongList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), &m1->m1Thread, SLOT(play(QTreeWidgetItem*, int)));
-	connect(btnStop, SIGNAL(pressed()), &m1->m1Thread, SLOT(stop()));
-	connect(cmbLang, SIGNAL(currentIndexChanged(const QString &)), m1, SLOT(updateList(const QString &)));
+	connect(btnPlay, SIGNAL(pressed()), &win->m1Core->m1Thread, SLOT(play()));
+	connect(twSongList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), &win->m1Core->m1Thread, SLOT(play(QTreeWidgetItem*, int)));
+	connect(btnStop, SIGNAL(pressed()), &win->m1Core->m1Thread, SLOT(stop()));
+	connect(cmbLang, SIGNAL(currentIndexChanged(const QString &)), win->m1Core, SLOT(updateList(const QString &)));
 
 	setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Expanding));
 //	win->addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), this);
 }
 
-M1::M1(QObject *parent) : 
+M1Core::M1Core(QObject *parent) :
 QObject(parent),
 max_games(0),
 isHex(false),
@@ -63,19 +58,19 @@ available(false)
 {
 }
 
-M1::~M1()
+M1Core::~M1Core()
 {
 	m1snd_shutdown();
 }
 
-void M1::init()
+void M1Core::init()
 {
 	connect(&m1Watcher, SIGNAL(finished()), this, SLOT(postInit()));
-	QFuture<void> future = QtConcurrent::run(this, &M1::loadLib);
+	QFuture<void> future = QtConcurrent::run(this, &M1Core::loadLib);
 	m1Watcher.setFuture(future);
 }
 
-void M1::loadLib()
+void M1Core::loadLib()
 {
 	//set current dir to m1, so that m1.xml and list could be loaded
 	m1_dir = utils->getPath(pGuiSettings->value("m1_directory", "bin/m1").toString());
@@ -133,37 +128,37 @@ void M1::loadLib()
 	win->logStatus("");
 }
 
-void M1::postInit()
+void M1Core::postInit()
 {
 	if (max_games > 0)
 	{
 		available = true;
 
-		m1UI->init();
+		win->m1UI->init();
 		updateList();
 		win->setVersion();
 
-		QAction *actionM1UI = m1UI->toggleViewAction();
+		QAction *actionM1UI = win->m1UI->toggleViewAction();
 		win->menuView->insertAction(win->actionVerticalTabs, actionM1UI);
 		
 		win->log("m1 loaded");
 	}
 }
 
-void M1::updateList(const QString &)
+void M1Core::updateList(const QString &)
 {
 	QString gameName = currentGame;
 
 	QString fileName = QString("%1lists/%2/%3%4")
 		.arg(m1_dir)
-		.arg(m1UI->cmbLang->currentText())
+		.arg(win->m1UI->cmbLang->currentText())
 		.arg(gameName)
 		.arg(".lst");
 	QFile datFile(fileName);
 
 	QString buf = "";
 
-	m1UI->twSongList->clear();
+	win->m1UI->twSongList->clear();
 
 	if (datFile.open(QFile::ReadOnly | QFile::Text))
 	{
@@ -199,7 +194,7 @@ void M1::updateList(const QString &)
 						list.append(rxTime.cap(1).trimmed());
 					}
 
-					items.append(new QTreeWidgetItem(m1UI->twSongList, list));
+					items.append(new QTreeWidgetItem(win->m1UI->twSongList, list));
 				}
 			}
 			else
@@ -208,7 +203,7 @@ void M1::updateList(const QString &)
 				list.append("");
 				list.append(line.trimmed());
 
-				QTreeWidgetItem *item = new QTreeWidgetItem(m1UI->twSongList, list);
+				QTreeWidgetItem *item = new QTreeWidgetItem(win->m1UI->twSongList, list);
 				item->setDisabled(true);
 
 				items.append(item);
@@ -216,13 +211,13 @@ void M1::updateList(const QString &)
 		}
 		while (!line.isNull());
 
-		m1UI->twSongList->header()->setResizeMode(2,QHeaderView::ResizeToContents);
-		m1UI->twSongList->header()->setResizeMode(0,QHeaderView::ResizeToContents);
-		m1UI->twSongList->header()->setResizeMode(1,QHeaderView::Stretch);
+		win->m1UI->twSongList->header()->setResizeMode(2,QHeaderView::ResizeToContents);
+		win->m1UI->twSongList->header()->setResizeMode(0,QHeaderView::ResizeToContents);
+		win->m1UI->twSongList->header()->setResizeMode(1,QHeaderView::Stretch);
 	}
 }
 
-int M1::m1ui_message(void *pthis, int message, char *txt, int iparm)
+int M1Core::m1ui_message(void *pthis, int message, char *txt, int iparm)
 {
 //	win->log(QString("M1 callback %1, %2").arg(message).arg(txt));
 	switch (message)
@@ -231,20 +226,17 @@ int M1::m1ui_message(void *pthis, int message, char *txt, int iparm)
 		{
 			GameInfo *gameInfo = pMameDat->games[currentGame];
 			
-			m1UI->lblTrackInfo->setText(
-				QString(
-				"<b>Manufacturer: </b>%1 %2<br>"
-				"<b>Hardware: </b>%3"
-				)
-				.arg(gameInfo->year)
-				.arg(gameInfo->manufacturer)
-				.arg(txt)
-				);
+			win->m1UI->lblTrackInfo->setText(
+				QString("<b>Manufacturer: </b>%1 %2<br>"
+						"<b>Hardware: </b>%3")
+						.arg(gameInfo->year)
+						.arg(gameInfo->manufacturer)
+						.arg(txt));
 			break;
 		}
 		case M1_MSG_ROMLOADERR:
 			win->log("M1 ERR: ROMLOADERR");
-			m1->m1Thread.stop();
+			win->m1Core->m1Thread.stop();
 			break;
 
 		case M1_MSG_STARTINGSONG:
@@ -253,12 +245,12 @@ int M1::m1ui_message(void *pthis, int message, char *txt, int iparm)
 
 		case M1_MSG_ERROR:
 			win->log(QString("M1 ERR: %1").arg(txt));
-			m1->m1Thread.stop();
+			win->m1Core->m1Thread.stop();
 			break;
 
 		case M1_MSG_HARDWAREERROR:
 			win->log("M1 ERR: HARDWAREERROR");
-			m1->m1Thread.stop();
+			win->m1Core->m1Thread.stop();
 			break;
 
 		case M1_MSG_MATCHPATH:
@@ -277,7 +269,7 @@ int M1::m1ui_message(void *pthis, int message, char *txt, int iparm)
 				if (file.exists())
 				{
 					strcpy(txt, qPrintable(path));
-					m1->m1snd_set_info_str(M1_SINF_SET_ROMPATH, txt, 0, 0, 0);
+					win->m1Core->m1snd_set_info_str(M1_SINF_SET_ROMPATH, txt, 0, 0, 0);
 	//				win->log(QString("M1 INF: MATCHPATH2: %1").arg(txt));
 					return 1;
 				}
@@ -289,10 +281,10 @@ int M1::m1ui_message(void *pthis, int message, char *txt, int iparm)
 
 		case M1_MSG_GETWAVPATH:
 		{
-			int song = m1->m1snd_get_info_int(M1_IINF_CURCMD, 0);
-			int game = m1->m1snd_get_info_int(M1_IINF_CURGAME, 0); 
+			int song = win->m1Core->m1snd_get_info_int(M1_IINF_CURCMD, 0);
+			int game = win->m1Core->m1snd_get_info_int(M1_IINF_CURGAME, 0);
 	
-			sprintf(txt, "%s%s%04d.wav", "", m1->m1snd_get_info_str(M1_SINF_ROMNAME, game), song);
+			sprintf(txt, "%s%s%04d.wav", "", win->m1Core->m1snd_get_info_str(M1_SINF_ROMNAME, game), song);
 //			win->log(txt);
 			break;
 		}
@@ -300,8 +292,8 @@ int M1::m1ui_message(void *pthis, int message, char *txt, int iparm)
 	return 0;
 }
 
-M1Thread::M1Thread(QObject *parent)
-: QThread(parent),
+M1Thread::M1Thread(QObject *parent) :
+QThread(parent),
 gameNum(-1),
 cmdNum(0)
 {
@@ -330,7 +322,7 @@ void M1Thread::stop()
 
 void M1Thread::play(QTreeWidgetItem*, int)
 {
-	QList<QTreeWidgetItem *> selectedItems = m1UI->twSongList->selectedItems();
+	QList<QTreeWidgetItem *> selectedItems = win->m1UI->twSongList->selectedItems();
 	if (selectedItems.isEmpty())
 		return;
 
@@ -341,26 +333,26 @@ void M1Thread::play(QTreeWidgetItem*, int)
 	{
 		cmdStr = cmdStr.remove(0, 1);
 		cmdNum = cmdStr.toInt(&ok, 16);
-		m1UI->lcdNumber->setHexMode();
+		win->m1UI->lcdNumber->setHexMode();
 	}
 	else
 	{
 		cmdStr = cmdStr.remove(0, 1);
 		cmdNum = cmdStr.toInt(&ok);
-		m1UI->lcdNumber->setDecMode();
+		win->m1UI->lcdNumber->setDecMode();
 	}
 
 	if (!ok)
 		return;
 
-	m1UI->lcdNumber->display(cmdStr);
-	m1UI->lblTrackName->setText(selectedItems[0]->text(1));
+	win->m1UI->lcdNumber->display(cmdStr);
+	win->m1UI->lblTrackName->setText(selectedItems[0]->text(1));
 
 	QMutexLocker locker(&mutex);
 
-	for (int curgame = 0; curgame < m1->max_games; curgame++)
+	for (int curgame = 0; curgame < win->m1Core->max_games; curgame++)
 	{
-		if (currentGame == m1->m1snd_get_info_str(M1_SINF_ROMNAME, curgame))
+		if (currentGame == win->m1Core->m1snd_get_info_str(M1_SINF_ROMNAME, curgame))
 		{
 			gameNum = curgame;
 			break;
@@ -386,15 +378,15 @@ void M1Thread::run()
 	}
 	*/
 	
-	m1->m1snd_setoption(M1_OPT_DEFCMD, cmdNum);
-	m1->m1snd_run(M1_CMD_GAMEJMP, gameNum);
+	win->m1Core->m1snd_setoption(M1_OPT_DEFCMD, cmdNum);
+	win->m1Core->m1snd_run(M1_CMD_GAMEJMP, gameNum);
 //	win->log(QString("play1: %1").arg(m1->m1snd_get_info_int(M1_IINF_CURSONG, 0)));
 
 	while(!cancel)
-		m1->m1snd_run(M1_CMD_IDLE, 0);
+		win->m1Core->m1snd_run(M1_CMD_IDLE, 0);
 
 	//have to call this to stop sound
-	m1->m1snd_run(M1_CMD_GAMEJMP, gameNum);
-	m1->m1snd_run(M1_CMD_STOP, 0);
+	win->m1Core->m1snd_run(M1_CMD_GAMEJMP, gameNum);
+	win->m1Core->m1snd_run(M1_CMD_STOP, 0);
 }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CsvCfg</class>
- <widget class="QDialog" name="CsvCfg">
+ <class>CsvCfgUI</class>
+ <widget class="QDialog" name="CsvCfgUI">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -46,7 +46,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CsvCfg</receiver>
+   <receiver>CsvCfgUI</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -62,7 +62,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CsvCfg</receiver>
+   <receiver>CsvCfgUI</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

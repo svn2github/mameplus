@@ -1,15 +1,8 @@
 #include "dialogs.h"
-
 #include "mamepgui_main.h"
 #include "mameopt.h"
 
-/* global */
-PlayOptions *playOptionsUI = NULL;
-Dirs *dirsUI = NULL;
-About *aboutUI = NULL;
-Cmd *cmdUI = NULL;
-
-PlayOptions::PlayOptions(QWidget *parent) : 
+PlayOptionsUI::PlayOptionsUI(QWidget *parent) :
 QDialog(parent)
 {
 	setupUi(this);
@@ -23,7 +16,7 @@ QDialog(parent)
 	connect(this, SIGNAL(accepted()), this, SLOT(runMame()));
 }
 
-void PlayOptions::init(QLineEdit *lineEdit, QString optName, QString extension)
+void PlayOptionsUI::init(QLineEdit *lineEdit, QString optName, QString extension)
 {
 	QString dirPath, fileName, filePath;
 	QFileInfo fileInfo;
@@ -81,41 +74,41 @@ void PlayOptions::init(QLineEdit *lineEdit, QString optName, QString extension)
 	lineEdit->setFocus();
 }
 
-void PlayOptions::initSavestate()
+void PlayOptionsUI::initSavestate()
 {
 	init(lineEditSavestate, "state_directory", STA_EXT);
 	setSavestateFile();
 }
 
-void PlayOptions::initPlayback()
+void PlayOptionsUI::initPlayback()
 {
 	lineEditRecord->clear();
 	init(lineEditPlayback, "input_directory", INP_EXT);
 	setPlaybackFile();
 }
 
-void PlayOptions::initRecord()
+void PlayOptionsUI::initRecord()
 {
 	lineEditPlayback->clear();
 	init(lineEditRecord, "input_directory", INP_EXT);
 }
 
-void PlayOptions::initMNG()
+void PlayOptionsUI::initMNG()
 {
 	init(lineEditMNG, "snapshot_directory", MNG_EXT);
 }
 
-void PlayOptions::initAVI()
+void PlayOptionsUI::initAVI()
 {
 	init(lineEditAVI, "snapshot_directory", AVI_EXT);
 }
 
-void PlayOptions::initWave()
+void PlayOptionsUI::initWave()
 {
 	init(lineEditWave, "input_directory", WAV_EXT);
 }
 
-void PlayOptions::runMame()
+void PlayOptionsUI::runMame()
 {
 	QString arg1, arg2;
 	QStringList args;
@@ -191,7 +184,7 @@ void PlayOptions::runMame()
 	gameList->runMame(RUNMAME_NORMAL, args);
 }
 
-void PlayOptions::clear()
+void PlayOptionsUI::clear()
 {
 	lineEditSavestate->clear();
 	lineEditPlayback->clear();
@@ -201,7 +194,7 @@ void PlayOptions::clear()
 	lineEditWave->clear();
 }
 
-void PlayOptions::setFile(QLineEdit *lineEdit, QString filter)
+void PlayOptionsUI::setFile(QLineEdit *lineEdit, QString filter)
 {
 	QFileInfo fi;
 	QDir dir;
@@ -228,13 +221,13 @@ void PlayOptions::setFile(QLineEdit *lineEdit, QString filter)
 		lineEdit->setText(fileName);
 }
 
-void PlayOptions::setSavestateFile()
+void PlayOptionsUI::setSavestateFile()
 {
 	//fixme: filefield could be empty
 	setFile(lineEditSavestate, tr("Savestate files") + " (*" STA_EXT ")");
 }
 
-void PlayOptions::setPlaybackFile()
+void PlayOptionsUI::setPlaybackFile()
 {
 	//fixme: filefield could be empty
 	setFile(lineEditPlayback, tr("Input files") + " (*" INP_EXT " *" ZIP_EXT ")");
@@ -251,7 +244,7 @@ void PlayOptions::setPlaybackFile()
 	}
 }
 
-void PlayOptions::setRecordFile()
+void PlayOptionsUI::setRecordFile()
 {
 	if (lineEditRecord->text().isEmpty())
 		initRecord();
@@ -259,7 +252,7 @@ void PlayOptions::setRecordFile()
 	setFile(lineEditRecord, tr("Input files") + " (*" INP_EXT ")");
 }
 
-void PlayOptions::setMNGFile()
+void PlayOptionsUI::setMNGFile()
 {
 	if (lineEditMNG->text().isEmpty())
 		initMNG();
@@ -267,7 +260,7 @@ void PlayOptions::setMNGFile()
 	setFile(lineEditMNG, tr("Videos") + " (*" MNG_EXT ")");
 }
 
-void PlayOptions::setAVIFile()
+void PlayOptionsUI::setAVIFile()
 {
 	if (lineEditAVI->text().isEmpty())
 		initAVI();
@@ -275,7 +268,7 @@ void PlayOptions::setAVIFile()
 	setFile(lineEditAVI, tr("Videos") + " (*" AVI_EXT ")");
 }
 
-void PlayOptions::setWaveFile()
+void PlayOptionsUI::setWaveFile()
 {
 	if (lineEditWave->text().isEmpty())
 		initWave();
@@ -283,7 +276,7 @@ void PlayOptions::setWaveFile()
 	setFile(lineEditWave, tr("Sounds") + " (*" WAV_EXT ")");
 }
 
-Dirs::Dirs(QWidget *parent)
+DirsUI::DirsUI(QWidget *parent)
 :QDialog(parent)
 {
 	setupUi(this);
@@ -293,14 +286,14 @@ Dirs::Dirs(QWidget *parent)
 	connect(btnInsert, SIGNAL(clicked()), this, SLOT(appendDirectory()));
 }
 
-void Dirs::init(QString initPath)
+void DirsUI::init(QString initPath)
 {
 	lstwDirs->clear();
 	lstwDirs->addItems(initPath.split(";"));
 	lstwDirs->setCurrentItem(lstwDirs->item(0));
 }
 
-QString Dirs::getDirs()
+QString DirsUI::getDirs()
 {
 	QString paths = "";
 	
@@ -320,7 +313,7 @@ QString Dirs::getDirs()
 	return paths;
 }
 
-void Dirs::setDirectory(bool isAppend)
+void DirsUI::setDirectory(bool isAppend)
 {
 	//take current dir
 	QString initPath;
@@ -351,24 +344,24 @@ void Dirs::setDirectory(bool isAppend)
 	}
 }
 
-void Dirs::appendDirectory()
+void DirsUI::appendDirectory()
 {
 	setDirectory(true);
 }
 
-void Dirs::removeDirectory()
+void DirsUI::removeDirectory()
 {
 	delete lstwDirs->takeItem(lstwDirs->currentRow());
 }
 
-About::About(QWidget *parent)
-:QDialog(parent)
+AboutUI::AboutUI(QWidget *parent):
+QDialog(parent)
 {
 	setupUi(this);
 }
 
-Cmd::Cmd(QWidget *parent)
-:QDialog(parent)
+CmdUI::CmdUI(QWidget *parent) :
+QDialog(parent)
 {
 	setupUi(this);
 }

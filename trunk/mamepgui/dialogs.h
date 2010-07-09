@@ -8,12 +8,12 @@
 #include "ui_about.h"
 #include "ui_cmd.h"
 
-class PlayOptions: public QDialog, public Ui::PlayOptions
+class PlayOptionsUI: public QDialog, public Ui::PlayOptionsUI
 {
 Q_OBJECT
 
 public:
-	PlayOptions(QWidget *parent = 0);
+	PlayOptionsUI(QWidget *parent = 0);
 	void initSavestate();
 	void initPlayback();
 	void initRecord();
@@ -41,12 +41,12 @@ private slots:
 	void runMame();
 };
 
-class Dirs: public QDialog, public Ui::Dirs
+class DirsUI: public QDialog, public Ui::DirsUI
 {
 Q_OBJECT
 
 public:
-	Dirs(QWidget *parent = 0);
+	DirsUI(QWidget *parent = 0);
 	void init(QString);
 	QString getDirs();
 
@@ -58,25 +58,20 @@ public slots:
 };
 
 
-class About: public QDialog, public Ui::About
+class AboutUI: public QDialog, public Ui::AboutUI
 {
 Q_OBJECT
 
 public:
-	About(QWidget *parent = 0);
+	AboutUI(QWidget *parent = 0);
 };
 
-class Cmd: public QDialog, public Ui::Cmd
+class CmdUI: public QDialog, public Ui::CmdUI
 {
 Q_OBJECT
 
 public:
-	Cmd(QWidget *parent = 0);
+	CmdUI(QWidget *parent = 0);
 };
 
-
-extern PlayOptions *playOptionsUI;
-extern Dirs *dirsUI;
-extern About *aboutUI;
-extern Cmd *cmdUI;
 #endif

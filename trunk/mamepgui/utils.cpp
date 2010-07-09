@@ -1,23 +1,23 @@
+#include "quazip.h"
+#include "quazipfile.h"
 #include "7zCrc.h"
 #include "7zFile.h"
 #include "7zVersion.h"
-
 #include "7zAlloc.h"
 #include "7zExtract.h"
 #include "7zIn.h"
 
 #include "utils.h"
-
 #include "mamepgui_types.h"
 #include "mamepgui_main.h"
 
 /* global */
 Utils *utils;
 ProcessManager *procMan = NULL;
-QRegExp rxSpace = QRegExp("\\s+");
 
-Utils::Utils(QObject *parent)
-: QObject(parent)
+Utils::Utils(QObject *parent) :
+QObject(parent),
+rxSpace("\\s+")
 {
 	initDescMap();
 }

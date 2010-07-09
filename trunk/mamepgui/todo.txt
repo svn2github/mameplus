@@ -28,7 +28,9 @@ exts: jp,ita history, jp mameinfo, sysinfo, jp/en command, lang(multi), snap(mul
 
 ///////////////////
 //Priority tasks
-4 crash after refresh nes and run game
+4 ubuntu下还是需要手动设置mame.ini的权限
+4 检测到不同版的mame.exe，跳一个框，问是否F5
+4 add an option to disable joygui
 4 crash after refresh when nes is removed and then readded then refresh
 4 新GUI无视CRC，只要有名称相同的文件，就会应用对应的IPS 如果有对的CRC，文件名不对，则出错。
 4 multi profile
@@ -147,13 +149,17 @@ GUI Support for chdman (and possibly the LD Player)
 [qt compile config]
 windows:
 4.5
-configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-rtti -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde -nomake examples -nomake demos
+configure -opensource -release -static -no-exceptions -no-accessibility -no-phonon -no-webkit -no-scripttools -no-sse2 -no-openssl -no-rtti -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde -nomake examples -nomake demos -prefix D:\Qt-4.5.3
 4.6
-configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-multimedia -no-webkit -no-script -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-rtti -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde -nomake examples -nomake demos
+configure -release -static -no-exceptions -no-accessibility -no-phonon -no-multimedia -no-webkit -no-script -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-rtti -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde -nomake examples -nomake demos
 linux:
 libqt4-dev
 libgtk2.0-dev
-configure -opensource -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-javascript-jit -no-script -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-opengl -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -gtkstyle -nomake examples -nomake demos -nomake tools
+configure -opensource -release -static -no-exceptions -no-accessibility -no-phonon -no-svg -no-webkit -no-javascript-jit -no-script -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-opengl -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -gtkstyle -nomake examples -nomake demos -nomake tools
+opengl:
+libgl1-mesa-dev
+libglu1-mesa-dev
+configure -opensource -release -static -no-exceptions -no-accessibility -no-phonon -no-svg -no-webkit -no-javascript-jit -no-script -no-scripttools -no-3dnow -no-sse -no-sse2 -openssl -opengl -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -gtkstyle -nomake examples -nomake demos -nomake tools
 macosx:
 configure -opensource -release -static -universal -no-exceptions -no-accessibility -no-stl -no-phonon -no-multimedia -no-svg -no-webkit -no-javascript-jit -no-script -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl  -no-dwarf2 -nomake examples -nomake demos -nomake tools
 
@@ -161,7 +167,7 @@ cd /mnt/hgfs/qtui
 
 linux/mac:
 export PATH=/usr/local/Trolltech/Qt-4.5.2/bin:$PATH
-export PATH=/usr/local/Trolltech/Qt-4.6.1/bin:$PATH
+export PATH=/usr/local/Trolltech/Qt-4.6.2/bin:$PATH
 
 sudo cp -f mamepgui /usr/games
 sudo chmod +x /usr/games/mamepgui

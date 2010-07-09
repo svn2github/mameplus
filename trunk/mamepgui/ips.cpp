@@ -4,21 +4,16 @@
 #include "mamepgui_main.h"
 #include "mameopt.h"
 
-/* global */
-IPS *ipsUI = NULL;
-
-/* internal */
-const QStringList ipsLangs = (QStringList()
-	<< "zh_CN" << "zh_TW" << "en_US" );
-
-IPS::IPS(QWidget *parent) : 
+IpsUI::IpsUI(QWidget *parent) :
 QDialog(parent),
 ipspath(NULL)
 {
 	setupUi(this);
+
+	ipsLangs = (QStringList() << "zh_CN" << "zh_TW" << "en_US" );
 }
 
-void IPS::init()
+void IpsUI::init()
 {
 	const QStringList headers = (QStringList()
 		<< tr("Description") << tr("Name"));
@@ -47,7 +42,7 @@ void IPS::init()
 	connect(cmbLang, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(updateList()));
 }
 
-void IPS::applyRelations(QTreeWidgetItem *item, int col)
+void IpsUI::applyRelations(QTreeWidgetItem *item, int col)
 {
 	if (col == 1 || stopListenRelations)
 		return;
@@ -66,7 +61,7 @@ void IPS::applyRelations(QTreeWidgetItem *item, int col)
 	stopListenRelations = false;
 }
 
-void IPS::validateConf(const QString &datName)
+void IpsUI::validateConf(const QString &datName)
 {
 //	win->log("validateConf: " + datName);
 
@@ -96,7 +91,7 @@ void IPS::validateConf(const QString &datName)
 	}
 }
 
-void IPS::validateDep(const QString &datName)
+void IpsUI::validateDep(const QString &datName)
 {
 	//depend case A: if parent ($datName) is unchecked, uncheck all its dependant children
 	if (itemStateTable[datName] == 0)
@@ -202,7 +197,7 @@ void IPS::validateDep(const QString &datName)
 	}
 }
 
-void IPS::parseRelations()
+void IpsUI::parseRelations()
 {
 	depTable.clear();
 	confTable.clear();
@@ -243,7 +238,7 @@ void IPS::parseRelations()
 }
 
 //check if is ips dat is avaiable for a game
-bool IPS::checkAvailable(const QString &gameName)
+bool IpsUI::checkAvailable(const QString &gameName)
 {
 	//set current ips dirpath
 	if (ipspath == NULL && mameOpts.contains("ipspath"))
@@ -266,7 +261,7 @@ bool IPS::checkAvailable(const QString &gameName)
 	return true;
 }
 
-void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QString &_datName, const QString & fallbackLang)
+void IpsUI::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QString &_datName, const QString & fallbackLang)
 {
 	QString datName = _datName;
 	
@@ -412,7 +407,7 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 }
 
 //update tree ctlr content and checkstate
-void IPS::updateList()
+void IpsUI::updateList()
 {
 	twList->clear();
 	itemStateTable.clear();
@@ -475,7 +470,7 @@ void IPS::updateList()
 }
 
 //save tree ctrl values to ips options
-void IPS::save()
+void IpsUI::save()
 {
 	QStringList ipsValues;
 
@@ -493,13 +488,13 @@ void IPS::save()
 	optUtils->saveIniFile(OPTLEVEL_CURR, mameIniPath + "ini/" + currentGame + INI_EXT);
 }
 
-void IPS::clear()
+void IpsUI::clear()
 {
 //	win->log("clear");
 	iterateItems(twList->invisibleRootItem(), ITR_CLEAR);
 }
 
-void IPS::iterateItems(QTreeWidgetItem *item, int method)
+void IpsUI::iterateItems(QTreeWidgetItem *item, int method)
 {
 	int count = item->childCount();
 

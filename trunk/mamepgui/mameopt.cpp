@@ -1,5 +1,5 @@
+#include <QtXml>
 #include "mameopt.h"
-
 #include "mamepgui_types.h"
 #include "mamepgui_main.h"
 #include "dialogs.h"
@@ -10,11 +10,7 @@
 #endif /* USE_SDL */
 
 /* global */
-Options *optionsUI = NULL;
-CsvCfg *csvCfgUI = NULL;
-
 OptionUtils *optUtils;
-QList<QListWidget *> optCtrls;
 
 //collection of all MameOptions
 QHash<QString, MameOption*> mameOpts;
@@ -42,8 +38,8 @@ enum
 	USERROLE_GUIVALLIST
 };
 
-Options::Options(QWidget *parent)
-:QDialog(parent)
+OptionsUI::OptionsUI(QWidget *parent) :
+QDialog(parent)
 {
 	setupUi(this);
 
@@ -59,7 +55,7 @@ Options::Options(QWidget *parent)
 	connect(buttonBoxDlg, SIGNAL(accepted()), this, SLOT(accept()));
 }
 
-void Options::init(int optLevel, int lstRow)
+void OptionsUI::init(int optLevel, int lstRow)
 {
 	//init ctlrs
 	for (int i = OPTLEVEL_GUI; i < OPTLEVEL_LAST; i++)
@@ -73,26 +69,25 @@ void Options::init(int optLevel, int lstRow)
 		optCtrls[optLevel]->setCurrentRow(lstRow);
 }
 
-void Options::showEvent(QShowEvent *e)
+void OptionsUI::showEvent(QShowEvent *e)
 {
 	restoreGeometry(option_geometry);
 	e->accept();
 }
 
-void Options::closeEvent(QCloseEvent *event)
+void OptionsUI::closeEvent(QCloseEvent *event)
 {
 	option_geometry = saveGeometry();
 	event->accept();
 }
 
-
-CsvCfg::CsvCfg(QWidget *parent)
-:QDialog(parent)
+CsvCfgUI::CsvCfgUI(QWidget *parent) :
+QDialog(parent)
 {
 	setupUi(this);
 }
 
-void CsvCfg::init(QString title, QMap<QString, bool> items)
+void CsvCfgUI::init(QString title, QMap<QString, bool> items)
 {
 	groupBoxTitle->setTitle(title);
 
@@ -125,7 +120,7 @@ void CsvCfg::init(QString title, QMap<QString, bool> items)
 	}
 }
 
-QString CsvCfg::getCSV()
+QString CsvCfgUI::getCSV()
 {
 	QString csv = "";
 
@@ -147,8 +142,8 @@ QString CsvCfg::getCSV()
 }
 
 
-OptInfo::OptInfo(QListWidget *catv, QTreeView *optv, QObject *parent)
-: QObject(parent)
+OptInfo::OptInfo(QListWidget *catv, QTreeView *optv, QObject *parent) :
+QObject(parent)
 {
 	lstCatView = catv;
 	optView = optv;
@@ -774,9 +769,9 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 			mameOpts[optName]->globalvalue = pMameOpt->globalvalue;
 
 		if (optLevel == OPTLEVEL_GUI)
-			itemModel = optionsUI->treeGuiOpt->model();
+			itemModel = win->optionsUI->treeGuiOpt->model();
 		else
-			itemModel = optionsUI->treeGlobalOpt->model();
+			itemModel = win->optionsUI->treeGlobalOpt->model();
 
 		itemModel->setData(itemModel->index(index.row(), 1), dispValue);
 		//fall to next case
@@ -797,7 +792,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->srcvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			itemModel = optionsUI->treeSourceOpt->model();
+			itemModel = win->optionsUI->treeSourceOpt->model();
 			itemModel->setData(itemModel->index(index.row(), 1), dispValue);
 			// fall to next case
 		}
@@ -815,7 +810,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->biosvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			itemModel = optionsUI->treeBiosOpt->model();
+			itemModel = win->optionsUI->treeBiosOpt->model();
 			itemModel->setData(itemModel->index(index.row(), 1), dispValue);
 			// fall to next case
 		}
@@ -833,7 +828,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->cloneofvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			itemModel = optionsUI->treeCloneofOpt->model();
+			itemModel = win->optionsUI->treeCloneofOpt->model();
 			itemModel->setData(itemModel->index(index.row(), 1), dispValue);
 			// fall to next case
 		}
@@ -857,7 +852,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->currvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			itemModel = optionsUI->treeCurrOpt->model();
+			itemModel = win->optionsUI->treeCurrOpt->model();
 			itemModel->setData(itemModel->index(index.row(), 1), dispValue);
 		}
 		break;
@@ -897,7 +892,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		if (needReload)
 		{
 			//avoid accepted() SIGNAL
-			optionsUI->hide();
+			win->optionsUI->hide();
 			gameList->disableCtrls();
 
 			pTempDat = pMameDat;
@@ -935,8 +930,8 @@ void OptionDelegate::setCSV()
 	if (rWidget == NULL)
 		return;
 
-	disconnect(csvCfgUI, SIGNAL(accepted()), this, SLOT(setCSVAccepted()));
-	connect(csvCfgUI, SIGNAL(accepted()), this, SLOT(setCSVAccepted()));
+	disconnect(win->csvCfgUI, SIGNAL(accepted()), this, SLOT(setCSVAccepted()));
+	connect(win->csvCfgUI, SIGNAL(accepted()), this, SLOT(setCSVAccepted()));
 
 	QMap<QString, bool> items;
 
@@ -952,13 +947,13 @@ void OptionDelegate::setCSV()
 	items.insert("c3_decrypted", driverStrings.contains("decrypted"));
 	items.insert("c4_console", driverStrings.contains("console"));
 
-	csvCfgUI->init("Driver Config", items);
-	csvCfgUI->exec();
+	win->csvCfgUI->init("Driver Config", items);
+	win->csvCfgUI->exec();
 }
 
 void OptionDelegate::setCSVAccepted()
 {
-	csvBuf = csvCfgUI->getCSV();
+	csvBuf = win->csvCfgUI->getCSV();
 	emit commitData(rWidget);
 	csvBuf.clear();
 }
@@ -971,17 +966,17 @@ void OptionDelegate::setDirectories()
 
 	QLineEdit *ctrl = static_cast<QLineEdit*>(rWidget->subWidget);
 
-	disconnect(dirsUI, SIGNAL(accepted()), this, SLOT(setDirectoriesAccepted()));
-	connect(dirsUI, SIGNAL(accepted()), this, SLOT(setDirectoriesAccepted()));
+	disconnect(win->dirsUI, SIGNAL(accepted()), this, SLOT(setDirectoriesAccepted()));
+	connect(win->dirsUI, SIGNAL(accepted()), this, SLOT(setDirectoriesAccepted()));
 
 	//take existing dir
-	dirsUI->init(ctrl->text());
-	dirsUI->exec();
+	win->dirsUI->init(ctrl->text());
+	win->dirsUI->exec();
 }
 
 void OptionDelegate::setDirectoriesAccepted()
 {
-	csvBuf = dirsUI->getDirs();
+	csvBuf = win->dirsUI->getDirs();
 	emit commitData(rWidget);
 	csvBuf.clear();
 }
@@ -1216,12 +1211,12 @@ void OptionUtils::init()
 {
 	//assign unique ctlrs for each level of options
 	optInfos = (QList <OptInfo *>()
-			<< new OptInfo(optionsUI->lvGuiOpt, optionsUI->treeGuiOpt, optionsUI)
-			<< new OptInfo(optionsUI->lvGlobalOpt, optionsUI->treeGlobalOpt, optionsUI)
-			<< new OptInfo(optionsUI->lvSourceOpt, optionsUI->treeSourceOpt, optionsUI)
-			<< new OptInfo(optionsUI->lvBiosOpt, optionsUI->treeBiosOpt, optionsUI)
-			<< new OptInfo(optionsUI->lvCloneofOpt, optionsUI->treeCloneofOpt, optionsUI)
-			<< new OptInfo(optionsUI->lvCurrOpt, optionsUI->treeCurrOpt, optionsUI));
+			<< new OptInfo(win->optionsUI->lvGuiOpt, win->optionsUI->treeGuiOpt, win->optionsUI)
+			<< new OptInfo(win->optionsUI->lvGlobalOpt, win->optionsUI->treeGlobalOpt, win->optionsUI)
+			<< new OptInfo(win->optionsUI->lvSourceOpt, win->optionsUI->treeSourceOpt, win->optionsUI)
+			<< new OptInfo(win->optionsUI->lvBiosOpt, win->optionsUI->treeBiosOpt, win->optionsUI)
+			<< new OptInfo(win->optionsUI->lvCloneofOpt, win->optionsUI->treeCloneofOpt, win->optionsUI)
+			<< new OptInfo(win->optionsUI->lvCurrOpt, win->optionsUI->treeCurrOpt, win->optionsUI));
 
 	//init category list ctlrs for each level of options
 	for (int optLevel = OPTLEVEL_GUI; optLevel < OPTLEVEL_LAST; optLevel++)
@@ -1255,10 +1250,10 @@ void OptionUtils::init()
 	}
 
 	for (int i = OPTLEVEL_GUI; i < OPTLEVEL_LAST; i++)
-		connect(optCtrls[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(preUpdateModel(QListWidgetItem *)));
+		connect(win->optionsUI->optCtrls[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(preUpdateModel(QListWidgetItem *)));
 
-	connect(optionsUI, SIGNAL(accepted()), &optDelegate, SLOT(setChangesAccepted()));
-	connect(optionsUI->tabOptions, SIGNAL(currentChanged(int)), this, SLOT(preUpdateModel()));
+	connect(win->optionsUI, SIGNAL(accepted()), &optDelegate, SLOT(setChangesAccepted()));
+	connect(win->optionsUI->tabOptions, SIGNAL(currentChanged(int)), this, SLOT(preUpdateModel()));
 }
 
 QVariant OptionUtils::getField(const QModelIndex &index, int field)
@@ -1375,30 +1370,24 @@ bool OptionUtils::isChanged(const QModelIndex &index)
 	{
 	case OPTLEVEL_GUI:
 	case OPTLEVEL_GLOBAL:
-		{
-			compVal = pMameOpt->defvalue;
-			break;
-		}
+		compVal = pMameOpt->defvalue;
+		break;
+
 	case OPTLEVEL_SRC:
-		{
-			compVal = pMameOpt->globalvalue;
-			break;
-		}
+		compVal = pMameOpt->globalvalue;
+		break;
+
 	case OPTLEVEL_BIOS:
-		{
-			compVal = pMameOpt->srcvalue;
-			break;
-		}
+		compVal = pMameOpt->srcvalue;
+		break;
+
 	case OPTLEVEL_CLONEOF:
-		{
-			compVal = pMameOpt->biosvalue;
-			break;
-		}
+		compVal = pMameOpt->biosvalue;
+		break;
+
 	case OPTLEVEL_CURR:
-		{
-			compVal = pMameOpt->cloneofvalue;
-			break;
-		}
+		compVal = pMameOpt->cloneofvalue;
+		break;
 	}
 
 	compVal = getLongValue(optName, compVal);
@@ -2015,7 +2004,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 			// process option entry
 			else
 			{
-				int sep = line.indexOf(rxSpace);
+				int sep = line.indexOf(utils->rxSpace);
 				optName = line.left(sep);
 
 				MameOption *pMameOpt = mameOpts[optName];
@@ -2086,7 +2075,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 					outBuf << optName;
 					outBuf.setFieldWidth(0);
 					//quote value if needed
-					if (currVal.indexOf(rxSpace) > 0 && !(currVal.startsWith('"') && currVal.endsWith('"')))
+					if (currVal.indexOf(utils->rxSpace) > 0 && !(currVal.startsWith('"') && currVal.endsWith('"')))
 						outBuf << "\"" << currVal << "\"" << endl;
 					else
 						outBuf << currVal << endl;
@@ -2176,7 +2165,7 @@ QHash<QString, QString> OptionUtils::parseIniFile(const QString &iniFileName)
 			if (!line.startsWith("#") && line.size() > 0)
 			{
 				//locate the first space
-				int sep = line.indexOf(rxSpace);
+				int sep = line.indexOf(utils->rxSpace);
 
 				//valid entry
 				if (sep != -1)
@@ -2220,7 +2209,7 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel, const 
 
 	//get optLevel by selected tab
 	if (optLevel == -1)
-		optLevel = optionsUI->tabOptions->currentIndex();
+		optLevel = win->optionsUI->tabOptions->currentIndex();
 
 	// figure out which option category are we in list ctlr
 	QString optCat;
@@ -2228,7 +2217,7 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel, const 
 	{
 		//assign current option category if not assigned
 		if (!currItem)
-			currItem = optCtrls[optLevel]->currentItem();
+			currItem = win->optionsUI->optCtrls[optLevel]->currentItem();
 
 		if (currItem)
 			optCat = currItem->text();
@@ -2255,7 +2244,7 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel, const 
 		if (method == 0)
 		{
 			updateModel(optCat, optLevel);
-			optionsUI->setWindowTitle(STR_OPTS_ + tr("GUI"));
+			win->optionsUI->setWindowTitle(STR_OPTS_ + tr("GUI"));
 		}
 		return;
 	}
@@ -2266,7 +2255,7 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel, const 
 		if (method == 0)
 		{
 			updateModel(optCat, optLevel);
-			optionsUI->setWindowTitle(STR_OPTS_ + tr("Global"));
+			win->optionsUI->setWindowTitle(STR_OPTS_ + tr("Global"));
 		}
 		return;
 	}
@@ -2281,7 +2270,7 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel, const 
 		if (method == 0)
 		{
 			updateModel(optCat, optLevel);
-			optionsUI->setWindowTitle(STR_OPTS_ + gameInfo->sourcefile);
+			win->optionsUI->setWindowTitle(STR_OPTS_ + gameInfo->sourcefile);
 		}
 		return;
 	}
@@ -2290,15 +2279,15 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel, const 
 	iniFileName = gameInfo->biosof();
 	loadIni(OPTLEVEL_BIOS, mameIniPath + "ini/" + iniFileName + INI_EXT);
 
-	optionsUI->tabOptions->widget(OPTLEVEL_BIOS)->setEnabled(iniFileName.isEmpty() ? false : true);
-//	optionsUI->tabOptions->removeTab(OPTLEVEL_BIOS);
+	win->optionsUI->tabOptions->widget(OPTLEVEL_BIOS)->setEnabled(iniFileName.isEmpty() ? false : true);
+//	win->optionsUI->tabOptions->removeTab(OPTLEVEL_BIOS);
 
 	if (optLevel == OPTLEVEL_BIOS)
 	{
 		if (method == 0)
 		{
 			updateModel(optCat, optLevel);
-			optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
+			win->optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
 		}
 		return;
 	}
@@ -2307,15 +2296,15 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel, const 
 	iniFileName = gameInfo->cloneof;
 	loadIni(OPTLEVEL_CLONEOF, mameIniPath + "ini/" + iniFileName + INI_EXT);
 
-	optionsUI->tabOptions->widget(OPTLEVEL_CLONEOF)->setEnabled(iniFileName.isEmpty() ? false : true);
-//	optionsUI->tabOptions->removeTab(OPTLEVEL_CLONEOF);
+	win->optionsUI->tabOptions->widget(OPTLEVEL_CLONEOF)->setEnabled(iniFileName.isEmpty() ? false : true);
+//	win->optionsUI->tabOptions->removeTab(OPTLEVEL_CLONEOF);
 
 	if (optLevel == OPTLEVEL_CLONEOF)
 	{
 		if (method == 0)
 		{
 			updateModel(optCat, optLevel);
-			optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
+			win->optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
 		}
 		return;
 	}
@@ -2333,7 +2322,7 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel, const 
 		if (method == 0)
 		{
 			updateModel(optCat, optLevel);
-			optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
+			win->optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
 		}
 		return;
 	}
@@ -2346,7 +2335,7 @@ void OptionUtils::updateModel(QString optCat, int optLevel)
 	QTreeView *optView = optInfos[optLevel]->optView;
 
 	//init option listview
-	//hack: preserve model and delete it later, so that scroll pos is kept
+	//hack: save model and delete it later, so that scroll bar pos is kept
 	optModel0 = optInfos[optLevel]->optModel;
 
 	//fixme: setup columns, not needed every time?
@@ -2599,7 +2588,7 @@ void OptionUtils::updateHeaderSize(int logicalIndex, int oldSize, int newSize)
 	if (logicalIndex > 0)
 		return;
 
-	int optLevel = optionsUI->tabOptions->currentIndex();
+	int optLevel = win->optionsUI->tabOptions->currentIndex();
 	option_column_state = optInfos[optLevel]->optView->header()->saveState();
 
 //	win->log(QString("header%3: %1 to %2").arg(optInfos[optLevel]->optView->header()->sectionSize(0)).arg(newSize).arg(logicalIndex));

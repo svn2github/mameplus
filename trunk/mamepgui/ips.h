@@ -5,12 +5,12 @@
 
 #include "ui_ips.h"
 
-class IPS: public QDialog, public Ui::IPS
+class IpsUI: public QDialog, public Ui::IpsUI
 {
 Q_OBJECT
 
 public:
-	IPS(QWidget *parent = 0);
+	IpsUI(QWidget *parent = 0);
 	void init();
 	bool checkAvailable(const QString & = NULL);
 	void parseRelations();
@@ -23,6 +23,7 @@ public slots:
 	void applyRelations(QTreeWidgetItem * = NULL, int = 0);
 
 private:
+	QStringList ipsLangs;
 	QString ipspath;
 	QStringList datFiles;
 	bool stopListenRelations;
@@ -43,5 +44,4 @@ private:
 	void iterateItems(QTreeWidgetItem *, int);
 };
 
-extern IPS *ipsUI;
 #endif

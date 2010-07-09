@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>About</class>
- <widget class="QDialog" name="About">
+ <class>AboutUI</class>
+ <widget class="QDialog" name="AboutUI">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -71,7 +71,7 @@ border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>About</receiver>
+   <receiver>AboutUI</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -87,7 +87,7 @@ border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>About</receiver>
+   <receiver>AboutUI</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

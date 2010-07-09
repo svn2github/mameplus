@@ -35,12 +35,13 @@ enum
 	OPTLEVEL_LAST
 };
 
-class Options : public QDialog, public Ui::Options
+class OptionsUI : public QDialog, public Ui::OptionsUI
 {
 Q_OBJECT
 
 public:
-	Options(QWidget *parent = 0);
+	OptionsUI(QWidget *parent = 0);
+	QList<QListWidget *> optCtrls;
 	void init(int, int = -1);
 
 protected:
@@ -48,7 +49,7 @@ protected:
 	void closeEvent(QCloseEvent *);
 };
 
-
+//a custom widget shown in the right side of each option item to restore default value
 class ResetWidget : public QWidget
 {
 	Q_OBJECT
@@ -67,12 +68,9 @@ public:
 
 signals:
 //	void resetProperty(QtProperty *property);
-private slots:
-	void slotClicked();
 
 public slots:
 	void updateSliderLabel(int);
-
 
 private:
 //	QtProperty *m_property;
@@ -85,15 +83,18 @@ private:
 	int ctrlSpacing;
 	int optType;
 	int sliderOffset;
+
+private slots:
+	void slotClicked();
 };
 
-
-class CsvCfg : public QDialog, public Ui::CsvCfg
+//for csv options
+class CsvCfgUI : public QDialog, public Ui::CsvCfgUI
 {
 Q_OBJECT
 
 public:
-	CsvCfg(QWidget *parent = 0);
+	CsvCfgUI(QWidget *parent = 0);
 	void init(QString, QMap<QString, bool>);
 	QString getCSV();
 };
@@ -101,7 +102,7 @@ public:
 
 class OptionDelegate : public QItemDelegate
 {
-	Q_OBJECT
+Q_OBJECT
 
 public:
 	OptionDelegate(QObject *parent = 0);
@@ -162,7 +163,7 @@ public:
 
 class OptionUtils : public QObject
 {
-	Q_OBJECT
+Q_OBJECT
 
 public:
 	OptionUtils(QObject *parent = 0);
@@ -195,11 +196,7 @@ private:
 	void updateModel(QString, int);
 };
 
-extern Options *optionsUI;
-extern CsvCfg *csvCfgUI;
-
 extern OptionUtils *optUtils;
-extern QList<QListWidget *> optCtrls;
 
 extern QHash<QString, MameOption*> mameOpts;
 extern QByteArray option_column_state;

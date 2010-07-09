@@ -20,10 +20,9 @@ enum
 	VERIFY_ALL_SAMPLES
 };
 
-
 class RomAuditor : public QThread
 {
-	Q_OBJECT
+Q_OBJECT
 
 public:
 	RomAuditor(QObject *parent = 0);
@@ -53,7 +52,7 @@ private:
 
 class MameExeRomAuditor : public QObject
 {
-	Q_OBJECT
+Q_OBJECT
 public:
 	QProcess *loadProc;
 
@@ -68,6 +67,5 @@ private:
 	QDialog dlgAudit;
 	QTextBrowser *tbAudit;
 };
-
 
 #endif

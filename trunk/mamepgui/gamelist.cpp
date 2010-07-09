@@ -1,7 +1,7 @@
 #include "gamelist.h"
-
-#include "mamepgui_types.h"
 #include "mamepgui_main.h"
+#include "audit.h"
+#include "mamepgui_types.h"
 #include "mameopt.h"
 #include "ips.h"
 #include "m1.h"
@@ -1197,10 +1197,10 @@ void Gamelist::updateSelection()
 {
 #ifdef Q_OS_WIN
 	static bool m1Loaded = false;
-	if (!m1Loaded && m1UI->isVisible() && win->isDockTabVisible("M1"))
+	if (!m1Loaded && win->m1UI->isVisible() && win->isDockTabVisible("M1"))
 	{
 		m1Loaded = true;
-		m1->init();
+		win->m1Core->init();
 	}
 #endif /* Q_OS_WIN */
 
@@ -1238,8 +1238,8 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 
 #ifdef Q_OS_WIN
 		//fixme: move to thread!
-		if (m1 != NULL && m1->available)
-			m1->updateList();
+		if (win->m1Core != NULL && win->m1Core->available)
+			win->m1Core->updateList();
 #endif /* Q_OS_WIN */
 
 		//update selected rows, fixme: performance bottleneck!
@@ -1546,7 +1546,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 	// auto audit will shortcircuit gameList->init() and must be the last thing in gameList->init()
 	if (autoAudit)
 	{
-		win->romAuditor.audit(true);
+		win->romAuditor->audit(true);
 		return;
 	}
 
@@ -1610,7 +1610,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 	win->enableCtrls(true);
 
 	//save fixdat
-	win->romAuditor.exportDat();
+	win->romAuditor->exportDat();
 
 	hasInitd = true;
 //	win->log(QString("init'd %1 games").arg(pMameDat->games.size()));
@@ -1993,7 +1993,7 @@ void Gamelist::updateDynamicMenu(QMenu *rootMenu)
 
 	//update IPS menu
 	rootMenu->removeAction(win->actionConfigIPS);
-	if (hasIPS && ipsUI->checkAvailable(gameName))
+	if (hasIPS && win->ipsUI->checkAvailable(gameName))
 		rootMenu->insertAction(win->actionSrcProperties, win->actionConfigIPS);
 
 	//construct devices for ext roms
@@ -2412,7 +2412,7 @@ void Gamelist::filterSearchChanged()
 		return;
 
 	visibleGames.clear();
-	text.replace(rxSpace, "*");
+	text.replace(utils->rxSpace, "*");
 
 	//fixme: doesnt use filterregexp
 	gameListPModel->searchText = text;
@@ -3418,10 +3418,10 @@ void Gamelist::runMame(int method, QStringList playArgs)
 			}
 		}
 
-		cmdUI->textCommand->setText((args + strOptions).join(" "));
-		if (cmdUI->exec() == QDialog::Accepted)
+		win->cmdUI->textCommand->setText((args + strOptions).join(" "));
+		if (win->cmdUI->exec() == QDialog::Accepted)
 		{
-			QString cmdArgs = cmdUI->textCommand->toPlainText();
+			QString cmdArgs = win->cmdUI->textCommand->toPlainText();
 			args.clear();
 			args << "-noreadconfig";
 			args << cmdArgs.split(" ", QString::SkipEmptyParts);
