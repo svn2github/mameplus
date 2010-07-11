@@ -208,15 +208,15 @@ running_machine::running_machine(const game_driver &driver, const machine_config
 		driver_data = (*m_config.m_driver_data_alloc)(*this);
 
 	// find devices
-#ifdef USE_HISCORE
-		cpu[0] = cpu_first(this);
- 	 	for (int cpunum = 1; cpunum < ARRAY_LENGTH(cpu) && cpu[cpunum - 1] != NULL; cpunum++)
-	 		cpu[cpunum] = cpu[cpunum - 1]->typenext();
-#endif /* USE_HISCORE */
 	primary_screen = screen_first(*this);
 	for (device_t *device = m_devicelist.first(); device != NULL; device = device->next())
 		if (dynamic_cast<cpu_device *>(device) != NULL)
 		{
+#ifdef USE_HISCORE
+			cpu[0] = downcast<cpu_device *>(device);
+ 	 		for (int cpunum = 1; cpunum < ARRAY_LENGTH(cpu) && cpu[cpunum - 1] != NULL; cpunum++)
+	 			cpu[cpunum] = cpu[cpunum - 1]->typenext();
+#endif /* USE_HISCORE */
 			firstcpu = downcast<cpu_device *>(device);
 			break;
 		}

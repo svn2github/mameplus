@@ -271,10 +271,10 @@ static TIMER_CALLBACK (hiscore_periodic)
 
 
 /* call hiscore_close when done playing game */
-void hiscore_close (running_machine *machine)
+void hiscore_close (running_machine &machine)
 {
 	if (state.hiscores_have_been_loaded)
-		hiscore_save(machine);
+		hiscore_save(&machine);
 	hiscore_free();
 }
 

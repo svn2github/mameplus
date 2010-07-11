@@ -334,7 +334,7 @@ public:
 
 	// CPU information
 #ifdef USE_HISCORE
-	running_device *		cpu[8];				// CPU array for hiscore support
+	device_t *			cpu[8];				// CPU array for hiscore support
 #endif /* USE_HISCORE */
 	cpu_device *			firstcpu;			// first CPU (allows for quick iteration via typenext)
 
