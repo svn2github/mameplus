@@ -43,7 +43,7 @@ enum
 	TOKEN_INVALID=-1
 };
 
-#define MAX_TOKEN_LENGTH	2048
+#define MAX_TOKEN_LENGTH	4096
 
 
 /****************************************************************************

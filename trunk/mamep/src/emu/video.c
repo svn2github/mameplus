@@ -356,8 +356,8 @@ static void video_exit(running_machine &machine)
 
 #ifdef USE_SCALE_EFFECTS
 	{
-		screen_device *screen = screen_first(*machine);
-		video_exit_scale_effect(screen);
+		screen_device *screen = screen_first(machine);
+		screen->video_exit_scale_effect();
 	}
 #endif /* USE_SCALE_EFFECTS */
 
@@ -417,75 +417,6 @@ static void init_buffered_spriteram(running_machine *machine)
 /***************************************************************************
     SCREEN MANAGEMENT
 ***************************************************************************/
-
-#ifdef USE_SCALE_EFFECTS
-/*-------------------------------------------------
-    realloc_scale_bitmaps - reallocate scale
-    bitmaps as necessary
--------------------------------------------------*/
-
-void screen_device::realloc_scale_bitmaps()
-{
-	mame_printf_verbose("realloc_scale_bitmaps()\n");
-
-	if (m_config.m_type == SCREEN_TYPE_VECTOR)
-	{
-		int curwidth = 0, curheight = 0, 
-			cur_scalewidth = 0, cur_scaleheight = 0, 
-			cur_xsize = 0, cur_ysize = 0;
-
-		/* bitmap has been alloc'd */
-		curwidth = m_bitmap[0]->width;
-		curheight = m_bitmap[0]->height;
-
-		/* extract the current width/height from the scale_bitmap */
-		if (scale_bitmap[0] != NULL)
-		{
-			cur_scalewidth = scale_bitmap[0]->width;
-			cur_scaleheight = scale_bitmap[0]->height;
-		}
-
-		/* assign new x/y size */
-		scale_xsize = scale_effect.xsize;
-		scale_ysize = scale_effect.ysize;
-
-		scale_bank_offset = 0;
-
-		/* reallocate our bitmaps and textures */
-		if (cur_scalewidth != curwidth * scale_xsize || cur_scaleheight != curheight * scale_ysize)
-		{
-			int bank;
-			bitmap_format screen_format = (scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32;
-
-			for (bank = 0; bank < 2; bank++)
-			{
-				/* free what we have currently */
-				if (scale_bitmap[bank] != NULL)
-					auto_free(machine, scale_bitmap[bank]);
-
-				scale_dirty[bank] = 1;
-
-				/* compute new width/height */
-				cur_xsize = MAX(scale_xsize, cur_xsize);
-				cur_ysize = MAX(scale_ysize, cur_ysize);
-
-				/* allocate scale_bitmaps */
-				scale_bitmap[bank] = auto_alloc(machine, bitmap_t(curwidth * scale_xsize, curheight * scale_ysize, screen_format));
-				if (use_work_bitmap)
-					work_bitmap[bank] = auto_alloc(machine, bitmap_t(curwidth, curheight, screen_format));
-
-				mame_printf_verbose("realloc_scale_bitmaps: %dx%d@%dbpp, workerbmp: %d \n", 
-									curwidth * scale_xsize, 
-									curheight * scale_ysize,
-									scale_depth,
-									use_work_bitmap
-									);
-			}
-		}
-		scale_bank_offset = 1;
-	}
-}
-#endif /* USE_SCALE_EFFECTS */
 
 /*-------------------------------------------------
     screenless_update_callback - update generator
@@ -1762,12 +1693,12 @@ void screen_device::video_init_scale_effect()
 
 void screen_device::video_exit_scale_effect()
 {
-	free_scalebitmap();
+	free_scale_bitmap();
 	scale_exit();
 }
 
 
-void screen_device::free_scalebitmap()
+void screen_device::free_scale_bitmap()
 {
 	palette_t *palette = (m_texture_format == TEXFORMAT_PALETTE16) ? machine->palette : NULL;
 	int bank;
@@ -1781,13 +1712,13 @@ void screen_device::free_scalebitmap()
 
 		if (scale_bitmap[bank] != NULL)
 		{
-			auto_free(machine, scale_bitmap[bank]);
+			global_free(scale_bitmap[bank]);
 			scale_bitmap[bank] = NULL;
 		}
 
 		if (work_bitmap[bank] != NULL)
 		{
-			auto_free(machine, work_bitmap[bank]);
+			global_free(work_bitmap[bank]);
 			work_bitmap[bank] = NULL;
 		}
 	}
@@ -1863,10 +1794,10 @@ static void convert_32_to_15(bitmap_t *src, bitmap_t *dst, const rectangle *visa
 }
 
 
-void screen_device::texture_set_scalebitmap(const rectangle *visarea, UINT32 palettebase)
+void screen_device::texture_set_scale_bitmap(const rectangle *visarea, UINT32 palettebase)
 {
 	int curbank = m_curbitmap;
-	int scalebank = /*scale_bank_offset + */curbank;
+	int scalebank = /* scale_bank_offset + */curbank;
 	bitmap_t *target = m_bitmap[curbank];
 	bitmap_t *dst;
 	rectangle fixedvis;
@@ -2137,9 +2068,9 @@ screen_device::~screen_device()
 {
 #ifdef USE_SCALE_EFFECTS
 	if (scale_bitmap[0] != NULL)
-		auto_free(machine, scale_bitmap[0]);
+		global_free(scale_bitmap[0]);
 	if (scale_bitmap[1] != NULL)
-		auto_free(machine, scale_bitmap[1]);
+		global_free(scale_bitmap[1]);
 #endif /* USE_SCALE_EFFECTS */
 	if (m_texture[0] != NULL)
 		render_texture_free(m_texture[0]);
@@ -2351,6 +2282,75 @@ void screen_device::realloc_screen_bitmaps()
 		render_texture_set_bitmap(m_texture[1], m_bitmap[1], &m_visarea, m_texture_format, palette);
 	}
 }
+
+
+#ifdef USE_SCALE_EFFECTS
+/*-------------------------------------------------
+    realloc_scale_bitmaps - reallocate scale
+    bitmaps as necessary
+-------------------------------------------------*/
+
+void screen_device::realloc_scale_bitmaps()
+{
+	mame_printf_verbose("realloc_scale_bitmaps()\n");
+
+	if (m_config.m_type == SCREEN_TYPE_VECTOR)
+		return;
+
+	int curwidth = 0, curheight = 0;
+	int cur_scalewidth = 0, cur_scaleheight = 0, cur_xsize = 0, cur_ysize = 0;
+
+	// bitmap has been alloc'd
+	curwidth = m_bitmap[0]->width;
+	curheight = m_bitmap[0]->height;
+
+	// extract the current width/height from the scale_bitmap
+	if (scale_bitmap[0] != NULL)
+	{
+		cur_scalewidth = scale_bitmap[0]->width;
+		cur_scaleheight = scale_bitmap[0]->height;
+	}
+
+	// assign new x/y size
+	scale_xsize = scale_effect.xsize;
+	scale_ysize = scale_effect.ysize;
+
+	scale_bank_offset = 0;
+
+	// reallocate our bitmaps and textures
+	if (cur_scalewidth != curwidth * scale_xsize || cur_scaleheight != curheight * scale_ysize)
+	{
+		int bank;
+		bitmap_format screen_format = (scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32;
+
+		for (bank = 0; bank < 2; bank++)
+		{
+			// free what we have currently
+			if (scale_bitmap[bank] != NULL)
+				global_free(scale_bitmap[bank]);
+
+			scale_dirty[bank] = 1;
+
+			// compute new width/height
+			cur_xsize = MAX(scale_xsize, cur_xsize);
+			cur_ysize = MAX(scale_ysize, cur_ysize);
+
+			// allocate scale_bitmaps
+			scale_bitmap[bank] = bitmap_alloc(curwidth * scale_xsize, curheight * scale_ysize, screen_format);
+			if (use_work_bitmap)
+				work_bitmap[bank] = bitmap_alloc(curwidth, curheight, screen_format);
+
+			mame_printf_verbose("realloc_scale_bitmaps: %dx%d@%dbpp, workerbmp: %d \n", 
+								curwidth * scale_xsize, 
+								curheight * scale_ysize,
+								scale_depth,
+								use_work_bitmap
+								);
+		}
+	}
+	scale_bank_offset = 1;
+}
+#endif /* USE_SCALE_EFFECTS */
 
 
 //-------------------------------------------------
@@ -2693,13 +2693,13 @@ bool screen_device::update_quads()
 				fixedvis.max_y++;
 
 				palette_t *palette = (m_texture_format == TEXFORMAT_PALETTE16) ? machine->palette : NULL;
-				render_texture_set_bitmap(m_texture[m_curbitmap], m_bitmap[m_curbitmap], &fixedvis, m_texture_format, palette);
-
 #ifdef USE_SCALE_EFFECTS
 				if (scale_effect.effect > 0)
-					texture_set_scalebitmap(&fixedvis, 0);
+					texture_set_scale_bitmap(&fixedvis, 0);
 				else
 #endif /* USE_SCALE_EFFECTS */
+				render_texture_set_bitmap(m_texture[m_curbitmap], m_bitmap[m_curbitmap], &fixedvis, m_texture_format, palette);
+
 				m_curtexture = m_curbitmap;
 				m_curbitmap = 1 - m_curbitmap;
 			}

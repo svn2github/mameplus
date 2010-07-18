@@ -3253,9 +3253,9 @@ static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *par
 		(FPTR)event->itemref >= SCALE_ITEM_NONE)
 	{
 		screen_device *screen = screen_first(*machine);
-		video_exit_scale_effect(screen);
+		screen->video_exit_scale_effect();
 		scale_decode(scale_name((FPTR)event->itemref - SCALE_ITEM_NONE));
-		video_init_scale_effect(screen);
+		screen->video_init_scale_effect();
 		changed = TRUE;
 		mame_printf_verbose(_("scale effect: %s\n"), scale_name((FPTR)event->itemref - SCALE_ITEM_NONE));
 	}

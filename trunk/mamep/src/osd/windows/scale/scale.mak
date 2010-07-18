@@ -17,11 +17,18 @@ OBJDIRS += $(SCALEOBJ)
 
 
 #-------------------------------------------------
+# scale effects framework code
+#-------------------------------------------------
+
+OSDOBJS += $(SCALEOBJ)/scale.o
+
+
+
+#-------------------------------------------------
 # scale effects objects
 #-------------------------------------------------
 
 OSDOBJS += \
-	$(SCALEOBJ)/scale.o \
 	$(SCALEOBJ)/2xpm.o \
 	$(SCALEOBJ)/2xsai.o \
 	$(SCALEOBJ)/hq2x.o \
