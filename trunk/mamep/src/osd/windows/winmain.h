@@ -39,8 +39,8 @@
 //
 //============================================================
 
-#ifndef __WIN_MAIN__
-#define __WIN_MAIN__
+#ifndef __WINMAIN_H__
+#define __WINMAIN_H__
 
 #include "options.h"
 

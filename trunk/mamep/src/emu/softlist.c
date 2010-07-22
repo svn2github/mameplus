@@ -1003,7 +1003,7 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 				{
 					swlist_name = swlist->list_name[i-DEVINFO_STR_SWLIST_0];
 
-					if ( swlist_name && *swlist_name )
+					if ( swlist_name && *swlist_name && (swlist->list_type == SOFTWARE_LIST_ORIGINAL_SYSTEM))
 					{
 						if ( software_list_ptr )
 						{
@@ -1087,7 +1087,7 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 	{
 		/* Load the software part */
 		try {
-			load_software_part_region( &image->device(), (char *)swlist_name, (char *)software_info_ptr->shortname, software_part_ptr->romdata );
+			result = image->call_softlist_load((char *)swlist_name, (char *)software_info_ptr->shortname, software_part_ptr->romdata );
 		}
 		catch (emu_fatalerror &fatal)
 		{
@@ -1137,8 +1137,6 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 		/* Tell the world which part we actually loaded */
 		*full_sw_name = auto_alloc_array( image->device().machine, char, strlen(swlist_name) + strlen(software_info_ptr->shortname) + strlen(software_part_ptr->name) + 3 );
 		sprintf( *full_sw_name, "%s:%s:%s", swlist_name, software_info_ptr->shortname, software_part_ptr->name );
-
-		result = true;
 	}
 
 	/* Close the software list if it's still open */

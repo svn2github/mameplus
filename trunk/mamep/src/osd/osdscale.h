@@ -1,11 +1,16 @@
-//============================================================
-//
-//	scale.c - scaling effects framework code
-//
-//============================================================
+/***************************************************************************
 
-#ifndef __SCALE_EFFECTS__
-#define __SCALE_EFFECTS__
+    osdscale.h
+
+    OS-scale code interface.
+
+    Scale Effects is an unofficial version based on MAME.
+    Please do not send any reports from this build to the MAME team.
+
+***************************************************************************/
+
+#ifndef __OSDSCALE_H__
+#define __OSDSCALE_H__
 
 
 //============================================================

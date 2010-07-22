@@ -68,15 +68,10 @@
 #include "strconv.h"
 #include "config.h"
 #include "winutf8.h"
+#include "mameres.h"
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */
-
-#ifdef WINUI
-#include "resource.h"
-#else
-#include "mameres.h"
-#endif /* WINUI */
 
 #ifdef MAMEMESS
 #define MESS
@@ -865,11 +860,7 @@ static void create_window_class(void)
 		wc.lpfnWndProc		= winwindow_video_window_proc;
 #endif
 		wc.hCursor			= LoadCursor(NULL, IDC_ARROW);
-#ifdef WINUI
-		wc.hIcon			= LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_MAME32_ICON));
-#else /* WINUI */
 		wc.hIcon			= LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_MAME_ICON));
-#endif /* WINUI */
 
 		// register the class; fail if we can't
 		if (!RegisterClass(&wc))

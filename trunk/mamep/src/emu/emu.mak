@@ -176,7 +176,6 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/i8243.o \
 	$(EMUMACHINE)/i8255a.o \
 	$(EMUMACHINE)/i2cmem.o \
-	$(EMUMACHINE)/i2cmemdev.o \
 	$(EMUMACHINE)/idectrl.o \
 	$(EMUMACHINE)/ins8154.o	\
 	$(EMUMACHINE)/ins8250.o \
@@ -276,8 +275,8 @@ $(LIBSOUND): $(SOUNDOBJS)
 
 $(EMUOBJ)/rendfont.o:		$(EMUOBJ)/uismall11.fh $(EMUOBJ)/uismall14.fh $(EMUOBJ)/uicmd11.fh $(EMUOBJ)/uicmd14.fh
 
-$(EMUOBJ)/video.o:		$(EMUSRC)/rendersw.c
-
+$(EMUOBJ)/video.o:	$(EMUSRC)/rendersw.c
+$(EMUVIDEO)/v9938.o:	$(EMUSRC)/video/v9938mod.c
 
 
 #-------------------------------------------------

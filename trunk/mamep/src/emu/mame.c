@@ -575,6 +575,11 @@ int parse_ini_file(core_options *options, const char *name, int priority)
 	if (filerr != FILERR_NONE)
 		return FALSE;
 
+	/* update game name so depending callback options could be added */
+	if (priority==OPTION_PRIORITY_DRIVER_INI) {
+		options_force_option_callback(options, OPTION_GAMENAME, name, priority);
+	}
+
 	/* parse the file and close it */
 	mame_printf_verbose(_("Parsing %s.ini\n"), name);
 	options_parse_ini_file(options, mame_core_file(file), priority);

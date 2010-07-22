@@ -301,7 +301,7 @@ VERSIONRES = $(WINOBJ)/version.res
 
 
 #-------------------------------------------------
-# extra scale effects, include the scale.mak
+# For building Scale Effects include scale.mak
 #-------------------------------------------------
 
 ifneq ($(USE_SCALE_EFFECTS),)

@@ -39,6 +39,7 @@
 
 
 #include "emu.h"
+#include "emuopts.h"
 #include "devlegcy.h"
 #include "hashfile.h"
 #include "zippath.h"
@@ -214,7 +215,7 @@ legacy_image_device_base::legacy_image_device_base(running_machine &machine, con
 
 bool legacy_image_device_base::is_loaded()
 {
-    return (m_file != NULL) || (m_software_info_ptr != NULL);
+    return (m_file != NULL);
 }
 
 /*-------------------------------------------------
@@ -295,6 +296,50 @@ void legacy_image_device_base::determine_open_plan(int is_create, UINT32 *open_p
 }
 
 /*-------------------------------------------------
+    load_software - software image loading
+-------------------------------------------------*/
+bool legacy_image_device_base::load_software(char *swlist, char *swname, rom_entry *start)
+{
+	const rom_entry *region;
+	astring regiontag;
+	bool retVal = FALSE;
+	for (region = start; region != NULL; region = rom_next_region(region))
+	{
+		/* loop until we hit the end of this region */
+		const rom_entry *romp = region + 1;
+		while (!ROMENTRY_ISREGIONEND(romp))
+		{
+			/* handle files */
+			if (ROMENTRY_ISFILE(romp))
+			{
+				UINT32 crc = 0;
+				UINT8 crcbytes[4];
+				file_error filerr;
+
+				bool has_crc = hash_data_extract_binary_checksum(ROM_GETHASHDATA(romp), HASH_CRC, crcbytes);
+				if (has_crc)
+					crc = (crcbytes[0] << 24) | (crcbytes[1] << 16) | (crcbytes[2] << 8) | crcbytes[3];
+
+				astring fname(swlist, PATH_SEPARATOR, swname, PATH_SEPARATOR, ROM_GETNAME(romp));
+				if (has_crc)
+					filerr = mame_fopen_crc(SEARCHPATH_ROM, fname, crc, OPEN_FLAG_READ, &m_mame_file);
+				else
+					filerr = mame_fopen(SEARCHPATH_ROM, fname, OPEN_FLAG_READ, &m_mame_file);
+
+				if (filerr == FILERR_NONE)
+				{
+					m_file = mame_core_file(m_mame_file);
+					retVal = TRUE;
+				}
+				break; // load first item for start
+			}
+			romp++;	/* something else; skip */
+		}
+	}
+	return retVal;
+}
+
+/*-------------------------------------------------
     load_internal - core image loading
 -------------------------------------------------*/
 
@@ -303,6 +348,7 @@ bool legacy_image_device_base::load_internal(const char *path, bool is_create, i
     image_error_t err;
     UINT32 open_plan[4];
     int i;
+	bool softload = FALSE;
 
     /* first unload the image */
     unload();
@@ -319,7 +365,8 @@ bool legacy_image_device_base::load_internal(const char *path, bool is_create, i
         goto done;
 
 	/* Check if there's a software list defined for this device and use that if we're not creating an image */
-	if (is_create || !load_software_part( this, path, &m_software_info_ptr, &m_software_part_ptr, &m_full_software_name ) )
+	softload = load_software_part( this, path, &m_software_info_ptr, &m_software_part_ptr, &m_full_software_name );
+	if (is_create || (!softload  && m_software_info_ptr==NULL))
 	{
 		/* determine open plan */
 		determine_open_plan(is_create, open_plan);
@@ -344,7 +391,7 @@ bool legacy_image_device_base::load_internal(const char *path, bool is_create, i
 	}
 
 	/* did we fail to find the file? */
-	if (!is_loaded())
+	if (!is_loaded() && !softload)
 	{
 		err = IMAGE_ERROR_FILENOTFOUND;
 		goto done;
@@ -415,7 +462,7 @@ bool legacy_image_device_base::finish_load()
     {
 		image_checkhash();
 
-        if (has_been_created())
+        if (has_been_created() && m_config.get_legacy_config_fct(DEVINFO_FCT_IMAGE_CREATE)!=NULL)
         {
             err = call_create(m_create_format, m_create_args);
             if (err)
@@ -460,11 +507,18 @@ bool legacy_image_device_base::create(const char *path, const image_device_forma
 
 void legacy_image_device_base::clear()
 {
-	if (m_file)
+	if (m_mame_file)
     {
-        core_fclose(m_file);
-        m_file = NULL;
-    }
+		mame_fclose(m_mame_file);
+		m_mame_file = NULL;
+		m_file = NULL;
+	} else {
+		if (m_file)
+		{
+			core_fclose(m_file);
+			m_file = NULL;
+		}
+	}
 
     m_name.reset();
     m_writeable = FALSE;
@@ -489,7 +543,11 @@ void legacy_image_device_base::clear()
 
 void legacy_image_device_base::unload()
 {
+	if (is_loaded()) {
+		call_unload();
+	}
     clear();
+	clear_error();
 }
 
 int legacy_image_device_base::call_load()
@@ -497,6 +555,16 @@ int legacy_image_device_base::call_load()
 	device_image_load_func func = reinterpret_cast<device_image_load_func>(m_config.get_legacy_config_fct(DEVINFO_FCT_IMAGE_LOAD));
 	if (func) {
 		return (*func)(*this);
+	} else {
+		return FALSE;
+	}
+}
+
+bool legacy_image_device_base::call_softlist_load(char *swlist, char *swname, rom_entry *start_entry)
+{
+	device_image_softlist_load_func func = reinterpret_cast<device_image_softlist_load_func>(m_config.get_legacy_config_fct(DEVINFO_FCT_IMAGE_SOFTLIST_LOAD));
+	if (func) {
+		return (*func)(*this,swlist,swname,start_entry);
 	} else {
 		return FALSE;
 	}
