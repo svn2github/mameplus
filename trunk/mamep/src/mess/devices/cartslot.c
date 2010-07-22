@@ -107,8 +107,9 @@ static int load_cartridge(device_image_interface *image, const rom_entry *romrgn
 		datawidth = ROMREGION_GETWIDTH(romrgn) / 8;
 
 		/* if the region is inverted, do that now */
-		cpu = devtag_get_device(image->device().machine, type);
-		if (cpu != NULL)
+		device_memory_interface *memory;
+		cpu = image->device().machine->device(type);
+		if (cpu!=NULL && cpu->interface(memory))
 		{
 			datawidth = device_memory(cpu)->space_config(AS_PROGRAM)->m_databus_width / 8;
 			littleendian = (device_memory(cpu)->space_config()->m_endianness == ENDIANNESS_LITTLE);
@@ -398,6 +399,14 @@ static DEVICE_IMAGE_GET_DEVICES(cartslot)
 	}
 }
 
+/*-------------------------------------------------
+    DEVICE_IMAGE_SOFTLIST_LOAD(cartslot)
+-------------------------------------------------*/
+static DEVICE_IMAGE_SOFTLIST_LOAD(cartslot)
+{
+	load_software_part_region( &image.device(), swlist, swname, start_entry );
+	return TRUE;
+}
 
 /*-------------------------------------------------
     DEVICE_GET_INFO( cartslot )
@@ -428,6 +437,7 @@ DEVICE_GET_INFO( cartslot )
 		case DEVINFO_FCT_IMAGE_LOAD:				info->f = (genf *) DEVICE_IMAGE_LOAD_NAME(cartslot);		break;
 		case DEVINFO_FCT_IMAGE_UNLOAD:				info->f = (genf *) DEVICE_IMAGE_UNLOAD_NAME(cartslot);		break;
 		case DEVINFO_FCT_IMAGE_GET_DEVICES:			info->f = (genf *) DEVICE_IMAGE_GET_DEVICES_NAME(cartslot);	break;
+		case DEVINFO_FCT_IMAGE_SOFTLIST_LOAD:		info->f = (genf *) DEVICE_IMAGE_SOFTLIST_LOAD_NAME(cartslot);	break;
 		case DEVINFO_FCT_IMAGE_PARTIAL_HASH:
 			if ( device && downcast<const legacy_image_device_config_base *>(device)->inline_config() && get_config_dev(device)->device_partialhash) {
 				info->f = (genf *) get_config_dev(device)->device_partialhash;

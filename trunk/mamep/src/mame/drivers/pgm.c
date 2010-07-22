@@ -292,8 +292,8 @@ Notes:
 #define PGMARM7LOGERROR 1
 
 //mamep: hack defs
-#define PGMSPEEDHACK 0
-#define PGMREGIONHACK 0
+#define PGMSPEEDHACK 1
+#define PGMREGIONHACK 1
 
 #include "emu.h"
 #include "cpu/z80/z80.h"
@@ -869,11 +869,11 @@ ADDRESS_MAP_END
 /* Kov Superheroes */
 
 #if PGMSPEEDHACK
-#define KOVSH_68K_SUSPEND	if(cpu_is_executing(devtag_get_device(space->machine, "maincpu"))==TRUE) cpu_suspend(devtag_get_device(space->machine, "maincpu"),SUSPEND_REASON_SPIN,1)
-#define KOVSH_ARM_SUSPEND	if(cpu_is_executing(devtag_get_device(space->machine, "prot"))==TRUE) cpu_suspend(devtag_get_device(space->machine, "prot"),SUSPEND_REASON_SPIN,1)
+#define KOVSH_68K_SUSPEND	cpu_suspend(space->machine->device("maincpu"),SUSPEND_REASON_SPIN,1)
+#define KOVSH_ARM_SUSPEND	cpu_suspend(space->machine->device("prot"),SUSPEND_REASON_SPIN,1)
 
-#define KOVSH_68K_RESUME	if(cpu_is_executing(devtag_get_device(space->machine, "maincpu"))==FALSE) cpu_resume(devtag_get_device(space->machine, "maincpu"),SUSPEND_REASON_SPIN)
-#define KOVSH_ARM_RESUME	if(cpu_is_executing(devtag_get_device(space->machine, "prot"))==FALSE) cpu_resume(devtag_get_device(space->machine, "prot"),SUSPEND_REASON_SPIN)
+#define KOVSH_68K_RESUME	cpu_resume(space->machine->device("maincpu"),SUSPEND_REASON_SPIN)
+#define KOVSH_ARM_RESUME	cpu_resume(space->machine->device("prot"),SUSPEND_REASON_SPIN)
 
 #define KOVSH_68K_2_ARM		do { KOVSH_68K_SUSPEND; KOVSH_ARM_RESUME; } while (0)
 #define KOVSH_ARM_2_68K		do { KOVSH_ARM_SUSPEND; KOVSH_68K_RESUME; } while (0)
@@ -1590,7 +1590,7 @@ static MACHINE_START( pgm )
 
 	state->soundcpu = machine->device<cpu_device>("soundcpu");
 	state->prot = machine->device<cpu_device>("prot");
-	state->ics = devtag_get_device(machine, "ics");
+	state->ics = machine->device("ics");
 
 	state_save_register_global(machine, state->cal_val);
 	state_save_register_global(machine, state->cal_mask);
@@ -4538,16 +4538,13 @@ static DRIVER_INIT( kov )
  	pgm_kov_decrypt(machine);
 #if PGMREGIONHACK
 	kov_latch_init(machine);
-#else
- 	kovsh_latch_init(machine);
-#endif
 
-#if PGMREGIONHACK
 	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x500000, 0x500003, 0, 0, asic28_r, asic28_w);
 
-	/* 0x4f0000 - ? is actually ram shared with the protection device,
-       the protection device provides the region code */
+	/* 0x4f0000 - ? is actually ram shared with the protection device, the protection device provides the region code */
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x4f0000, 0x4fffff, 0, 0, sango_protram_r);
+#else
+ 	kovsh_latch_init(machine);
 #endif
 }
 
