@@ -135,6 +135,8 @@ struct rom_entry
 	UINT32			_flags;				/* flags */
 };
 
+
+
 //mamep: moved from romload.c
 typedef struct _open_chd open_chd;
 struct _open_chd

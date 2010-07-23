@@ -149,7 +149,10 @@ char *core_strdup(const char *str)
 }
 
 
-
+#ifdef DRIVER_SWITCH
+/*-------------------------------------------------
+    core_strtrim - for get individual driver name
+-------------------------------------------------*/
 
 char *core_strtrim(const char *str)
 {
@@ -157,7 +160,7 @@ char *core_strtrim(const char *str)
 	int len;
 	char *s;
 
-	/* strip spaces, move to mamecore.c */
+	/* strip spaces, move to corestr.c */
 	while (isspace(*start))
 		start++;
 
@@ -165,12 +168,13 @@ char *core_strtrim(const char *str)
 		if (!isspace(start[len - 1]))
 			break;
 
-	s = (char *)malloc(len + 1);
+	s = (char *)osd_malloc(len + 1);
 	strncpy(s, start, len);
 	s[len] = '\0';
 
 	return s;
 }
+#endif /* DRIVER_SWITCH */
 
 
 /*-------------------------------------------------

@@ -1473,6 +1473,7 @@ void rom_init(running_machine *machine)
 		}
 	}
 #endif /* USE_IPS */
+
 	/* display the results and exit */
 	display_rom_load_results(romdata);
 }

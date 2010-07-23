@@ -31,13 +31,13 @@
 
 #define MAX_PLAYERS			8
 
-#define AUTOFIRE_ON		1	/* Autofire enable bit */
-#define AUTOFIRE_TOGGLE		2	/* Autofire toggle enable bit */
+#define AUTOFIRE_ON			1	/* Autofire enable bit */
+#define AUTOFIRE_TOGGLE			2	/* Autofire toggle enable bit */
 
-#define MAX_NORMAL_BUTTONS	10
+#define MAX_NORMAL_BUTTONS		10
 
 #ifdef USE_CUSTOM_BUTTON
-#define MAX_CUSTOM_BUTTONS	4
+#define MAX_CUSTOM_BUTTONS		4
 #endif /* USE_CUSTOM_BUTTON */
 
 #define IP_ACTIVE_HIGH		0x00000000
@@ -1099,6 +1099,7 @@ void draw_caption(running_machine *machine, render_container *container);
 #endif /* INP_CAPTION */
 
 
+
 /***************************************************************************
     FUNCTION PROTOTYPES
 ***************************************************************************/
@@ -1175,9 +1176,15 @@ int input_field_has_next_setting(const input_field_config *field);
 /* select the next item for a DIP switch or configuration field */
 void input_field_select_next_setting(const input_field_config *field);
 
-//mamep
+/* has_record_file */
 int has_record_file(running_machine *machine);
+
+/* has_playback_file */
 int has_playback_file(running_machine *machine);
+
+/* autofire */
+int get_autofiredelay(int player);
+void set_autofiredelay(int player, int delay);
 
 
 
@@ -1220,10 +1227,6 @@ int input_condition_true(running_machine *machine, const input_condition *condit
 
 /* convert an input_port_token to a default string */
 const char *input_port_string_from_token(const input_port_token token);
-
-/* autofire functions */
-int get_autofiredelay(int player);
-void set_autofiredelay(int player, int delay);
 
 /* return TRUE if machine use full keyboard emulation */
 int input_machine_has_keyboard(running_machine *machine);

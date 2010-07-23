@@ -3017,9 +3017,9 @@ BOOL IsGlobalOption(const char *option_name)
 	static const char *global_options[] =
 	{
 		OPTION_ROMPATH,
-#ifdef MAMEMESS
+#ifdef MESS
 		OPTION_HASHPATH,
-#endif // MAMEMESS
+#endif // MESS
 		OPTION_SAMPLEPATH,
 		OPTION_ARTPATH,
 		OPTION_CTRLRPATH,

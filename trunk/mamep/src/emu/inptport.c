@@ -131,8 +131,8 @@
 #define JOYDIR_LEFT_BIT		(1 << JOYDIR_LEFT)
 #define JOYDIR_RIGHT_BIT	(1 << JOYDIR_RIGHT)
 
-#define AUTOFIRE_ON			1	/* Autofire enable bit */
-#define AUTOFIRE_TOGGLE			2	/* Autofire toggle enable bit */
+#define AUTOFIRE_ON		1	/* Autofire enable bit */
+#define AUTOFIRE_TOGGLE		2	/* Autofire toggle enable bit */
 
 #define NUM_SIMUL_KEYS	(UCHAR_SHIFT_END - UCHAR_SHIFT_BEGIN + 1)
 #define LOG_INPUTX		0
@@ -861,7 +861,7 @@ static void record_port(const input_port_config *port);
 
 /* autofire */
 static int auto_pressed(running_machine *machine, const input_field_config *field);
-void input_port_config_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap);
+void input_port_list_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap);
 
 
 
@@ -1041,7 +1041,7 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 	/* if we have a token list, proceed */
 	if (tokens != NULL)
 	{
-		input_port_config_custom(machine->m_portlist, tokens, errorbuf, sizeof(errorbuf), TRUE);
+		input_port_list_custom(machine->m_portlist, tokens, errorbuf, sizeof(errorbuf), TRUE);
 		if (errorbuf[0] != 0)
 			mame_printf_error(_("Input port errors:\n%s"), errorbuf);
 		init_port_state(machine);
@@ -1534,11 +1534,11 @@ const input_type_desc *input_type_list(running_machine *machine)
 }
 
 
-
 int has_record_file(running_machine *machine)
 {
 	return machine->input_port_data->record_file != NULL;
 }
+
 
 int has_playback_file(running_machine *machine)
 {
@@ -5758,7 +5758,14 @@ static void execute_dumpkbd(running_machine *machine, int ref, int params, const
 }
 
 
-void input_port_config_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap)
+
+/*-------------------------------------------------
+    input_port_list_custom - initialize an input
+    port list structure and allocate ports
+    according to the given tokens
+-------------------------------------------------*/
+
+void input_port_list_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap)
 {
 	const input_port_config *port;
 	const input_field_config *field;
@@ -5890,6 +5897,8 @@ void input_port_config_custom(ioport_list &portlist, const input_port_token *tok
 		port_config_detokenize(portlist, ipt_custom8p, errorbuf, errorbuflen);
 }
 
+
+
 static int auto_pressed(running_machine *machine, const input_field_config *field)
 {
 /*
@@ -5966,6 +5975,8 @@ static int auto_pressed(running_machine *machine, const input_field_config *fiel
 #undef IS_AUTOKEY
 }
 
+
+
 int get_autofiredelay(int player)
 {
 	return autofiredelay[player];
@@ -5975,6 +5986,8 @@ void set_autofiredelay(int player, int delay)
 {
 	autofiredelay[player] = delay;
 }
+
+
 
 #ifdef USE_SHOW_INPUT_LOG
 INLINE void copy_command_buffer(running_machine *machine, char log)
@@ -6008,6 +6021,8 @@ INLINE void copy_command_buffer(running_machine *machine, char log)
 	command_buffer[len].time = attotime_to_double(timer_get_time(machine));
 	command_buffer[++len].code = '\0';
 }
+
+
 
 static void make_input_log(running_machine *machine)
 {
@@ -6177,11 +6192,8 @@ static void make_input_log(running_machine *machine)
 #endif /* USE_SHOW_INPUT_LOG */
 
 
-#ifdef INP_CAPTION
-//============================================================
-//	draw_caption
-//============================================================
 
+#ifdef INP_CAPTION
 void draw_caption(running_machine *machine, render_container *container)
 {
 	input_port_private *portdata = machine->input_port_data;

@@ -509,7 +509,7 @@ void mame_parse_ini_files(core_options *options, const game_driver *driver)
 	/* if we have a valid game driver, parse game-specific INI files */
 	if (driver != NULL)
 	{
-#if 1 //ndef MESS
+#ifndef MESS
 		const game_driver *parent = driver_get_clone(driver);
 		const game_driver *gparent = (parent != NULL) ? driver_get_clone(parent) : NULL;
 		machine_config *config;

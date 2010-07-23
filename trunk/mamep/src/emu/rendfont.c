@@ -63,7 +63,6 @@ struct _render_font_char
 	const char *		rawdata;			/* pointer to the raw data for this one */
 	bitmap_t *			bitmap;				/* pointer to the bitmap containing the raw data */
 	render_texture *	texture;			/* pointer to a texture for rendering and sizing */
-
 #ifdef UI_COLOR_DISPLAY
 	//mamep: for color glyph
 	int			color;
@@ -82,7 +81,6 @@ struct _render_font
 	render_font_char *	chars[256];			/* array of character subtables */
 	const char *		rawdata;			/* pointer to the raw data for the font */
 	UINT64				rawsize;			/* size of the raw font data */
-
 	//mamep: for command glyph
 	render_font *		cmd;
 };
@@ -1002,6 +1000,7 @@ error:
 	global_free(chartable);
 	return 1;
 }
+
 
 void convert_command_glyph(char *s, int buflen)
 {

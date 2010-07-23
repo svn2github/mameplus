@@ -32,4 +32,5 @@ float render_font_get_string_width(render_font *font, float height, float aspect
 float render_font_get_utf8string_width(render_font *font, float height, float aspect, const char *utf8string);
 
 void convert_command_glyph(char *s, int buflen);
+
 #endif	/* __RENDFONT_H__ */

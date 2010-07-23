@@ -85,8 +85,11 @@ char *core_strdup(const char *str);
 /* additional string compare helper */
 int core_strwildcmp(const char *sp1, const char *sp2);
 
-char *core_strtrim(const char *str);
 
+#ifdef DRIVER_SWITCH
+/* for get individual driver name */
+char *core_strtrim(const char *str);
+#endif /* DRIVER_SWITCH */
 
 /* I64 printf helper */
 char *core_i64_hex_format(UINT64 value, UINT8 mindigits);

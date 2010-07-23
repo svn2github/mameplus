@@ -46,7 +46,7 @@
 
 /* core search path options */
 #define OPTION_ROMPATH				"rompath"
-#ifdef MAMEMESS
+#ifdef MESS
 #define OPTION_HASHPATH				"hashpath"
 #endif
 #define OPTION_SAMPLEPATH			"samplepath"

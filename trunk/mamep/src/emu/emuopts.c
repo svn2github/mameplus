@@ -34,7 +34,7 @@ const options_entry mame_core_options[] =
 	{ "writeconfig;wc",				 "0",		  OPTION_BOOLEAN,	 "writes configuration to (driver).ini on exit" },
 #endif /* MESS */
 #ifdef DRIVER_SWITCH
-	{ "driver_config",               "mame,plus,console", 0,         "switch drivers"},
+	{ "driver_config",               "all",       0,                 "switch drivers"},
 #endif /* DRIVER_SWITCH */
 
 	/* seach path options */
@@ -47,7 +47,7 @@ const options_entry mame_core_options[] =
 	{ "artpath;artwork_directory",   "artwork",   0,                 "path to artwork files" },
 	{ "ctrlrpath;ctrlr_directory",   "ctrlr",     0,                 "path to controller definitions" },
 	{ "inipath",                     "ini",       0,                 "path to ini files" },
-	{ "fontpath",                    ".;lang",    0,                 "path to font files" },
+	{ "fontpath",                    ".",         0,                 "path to font files" },
 	{ "cheatpath",                   "cheat",     0,                 "path to cheat files" },
 	{ "crosshairpath",               "crosshair", 0,                 "path to crosshair files" },
 	{ "langpath;language_directory", "lang",      0,                 "path to localized languages and datafiles" },

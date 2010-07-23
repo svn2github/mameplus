@@ -212,4 +212,5 @@ void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keybo
 void ui_auto_pause(void);
 
 int ui_window_scroll_keys(running_machine *machine);
+
 #endif	/* __USRINTRF_H__ */

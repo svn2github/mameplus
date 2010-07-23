@@ -313,11 +313,11 @@ INLINE int is_fullwidth_char(unicode_char uchar)
 	if (uchar < 0x1000)
 		return CHAR_WIDTH_HALFWIDTH;
 
-	//	Halfwidth CJK Chars
+	// Halfwidth CJK Chars
 	if (uchar >= 0xff61 && uchar <= 0xffdc)
 		return CHAR_WIDTH_HALFWIDTH;
 
-	//	Halfwidth Symbols Variants
+	// Halfwidth Symbols Variants
 	if (uchar >= 0xffe8 && uchar <= 0xffee)
 		return CHAR_WIDTH_HALFWIDTH;
 
@@ -331,9 +331,9 @@ INLINE int is_fullwidth_char(unicode_char uchar)
 ***************************************************************************/
 
 #ifdef UI_COLOR_DISPLAY
-//============================================================
-//	setup_palette
-//============================================================
+/*-------------------------------------------------
+    setup_palette - set up the ui palette
+-------------------------------------------------*/
 
 static void setup_palette(void)
 {
@@ -550,8 +550,7 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 		ui_set_handler(ui_menu_ui_handler, 0);
 
 	/* clear the input memory */
-	while (input_code_poll_switches(machine, FALSE) != INPUT_CODE_INVALID)
-		;
+	while (input_code_poll_switches(machine, FALSE) != INPUT_CODE_INVALID) ;
 
 	return 0;
 }
@@ -699,11 +698,13 @@ float ui_get_char_width(unicode_char ch)
 	return render_font_get_char_width(ui_font, ui_get_line_height(), render_get_ui_aspect(), ch);
 }
 
+
 //mamep: to render as fixed-width font
 float ui_get_char_width_no_margin(unicode_char ch)
 {
 	return render_font_get_char_width_no_margin(ui_font, ui_get_line_height(), render_get_ui_aspect(), ch);
 }
+
 
 float ui_get_char_fixed_width(unicode_char uchar, double halfwidth, double fullwidth)
 {
@@ -722,7 +723,6 @@ float ui_get_char_fixed_width(unicode_char uchar, double halfwidth, double fullw
 
 	return fullwidth;
 }
-
 
 
 /*-------------------------------------------------
@@ -776,6 +776,7 @@ void ui_draw_text(render_container *container, const char *buf, float x, float y
 {
 	ui_draw_text_full(container, buf, x, y, 1.0f - x, JUSTIFY_LEFT, WRAP_WORD, DRAW_NORMAL, UI_TEXT_COLOR, UI_TEXT_BG_COLOR, NULL, NULL);
 }
+
 
 void ui_draw_text_bk(render_container *container, const char *buf, float x, float y, int col)
 {
@@ -1101,6 +1102,7 @@ int ui_draw_text_set_fixed_width_mode(int mode)
 	return mode_save;
 }
 
+
 void ui_draw_text_full_fixed_width(render_container *container, const char *origs, float x, float y, float wrapwidth, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
 {
 	int mode_save = ui_draw_text_set_fixed_width_mode(TRUE);
@@ -1108,6 +1110,7 @@ void ui_draw_text_full_fixed_width(render_container *container, const char *orig
 	ui_draw_text_full(container, origs, x, y, wrapwidth, justify, wrap, draw, fgcolor, bgcolor, totalwidth, totalheight);
 	ui_draw_text_set_fixed_width_mode(mode_save);
 }
+
 
 void ui_draw_text_full_scroll(render_container *container, const char *origs, float x, float y, float wrapwidth, int offset, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight)
 {
@@ -1161,6 +1164,7 @@ void ui_draw_text_box_scroll(render_container *container, const char *text, int 
 	ui_draw_text_full_scroll(container, text, target_x, target_y, target_width, offset,
 				justify, WRAP_WORD, DRAW_NORMAL, UI_TEXT_COLOR, UI_TEXT_BG_COLOR, NULL, NULL);
 }
+
 
 void ui_draw_text_box(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
 {
@@ -2192,7 +2196,6 @@ static UINT32 handler_load_save(running_machine *machine, render_container *cont
 }
 
 
-
 static UINT32 handler_confirm_quit(running_machine *machine, render_container *container, UINT32 state)
 {
 	const char *quit_message =
@@ -2221,6 +2224,7 @@ static UINT32 handler_confirm_quit(running_machine *machine, render_container *c
 
 	return 0;
 }
+
 
 
 /***************************************************************************
@@ -2886,10 +2890,12 @@ void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keybo
 	options_set_bool(machine->options(), OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE);
 }
 
+
 void ui_auto_pause(void)
 {
 	auto_pause = 1;
 }
+
 
 static void build_bgtexture(running_machine *machine)
 {
@@ -2929,6 +2935,7 @@ static void build_bgtexture(running_machine *machine)
 	render_texture_set_bitmap(bgtexture, bgbitmap, NULL, TEXFORMAT_ARGB32, NULL);
 	machine->add_notifier(MACHINE_NOTIFY_EXIT, free_bgtexture);
 }
+
 
 static void free_bgtexture(running_machine &machine)
 {

@@ -96,9 +96,9 @@ static const options_entry cli_options[] =
 	{ "verifysamples",            "0",        OPTION_COMMAND,    "report samplesets that have problems" },
 	{ "romident",                 "0",        OPTION_COMMAND,    "compare files with known MAME roms" },
 	{ "listdevices;ld",           "0",        OPTION_COMMAND,    "list available devices" },
-	{ "listgames",                "0",        OPTION_COMMAND,    "year, manufacturer and full name" },
 	{ "listmedia;lm",             "0",        OPTION_COMMAND,    "list available media for the system" },
 	{ "listsoftware",             "0",        OPTION_COMMAND,    "list known software for the system" },
+	{ "listgames",                "0",        OPTION_COMMAND,    "year, manufacturer and full name" },
 
 	{ NULL }
 };
@@ -307,13 +307,13 @@ static int execute_commands(core_options *options, const char *exename, const ga
 		{ CLIOPTION_LISTBROTHERS,	cli_info_listbrothers },
 		{ CLIOPTION_LISTCRC,		cli_info_listcrc },
 		{ CLIOPTION_LISTDEVICES,	cli_info_listdevices },
-		{ CLIOPTION_LISTGAMES,		cli_info_listgames },
 		{ CLIOPTION_LISTROMS,		cli_info_listroms },
 		{ CLIOPTION_LISTSAMPLES,	cli_info_listsamples },
 		{ CLIOPTION_VERIFYROMS,		info_verifyroms },
 		{ CLIOPTION_VERIFYSAMPLES,	info_verifysamples },
 		{ CLIOPTION_LISTMEDIA,		info_listmedia },
 		{ CLIOPTION_LISTSOFTWARE,	info_listsoftware },
+		{ CLIOPTION_LISTGAMES,		cli_info_listgames },
 		{ CLIOPTION_ROMIDENT,		info_romident }
 	};
 	int i;
