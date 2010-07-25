@@ -299,33 +299,3 @@ $(EMUOBJ)/rendlay.o:	$(EMULAYOUT)/dualhovu.lh \
 						$(EMULAYOUT)/voffff20.lh \
 
 $(EMUOBJ)/video.o:		$(EMULAYOUT)/snap.lh
-
-
-
-#-------------------------------------------------
-# embedded font
-#-------------------------------------------------
-
-$(EMUOBJ)/uismall11.bdc: $(PNG2BDC) \
-		$(SRC)/emu/font/uismall.png \
-		$(SRC)/emu/font/cp1250.png
-	@echo Generating $@...
-	@$^ $@
-
-$(EMUOBJ)/uismall14.bdc: $(PNG2BDC) \
-		$(SRC)/emu/font/cp1252.png \
-		$(SRC)/emu/font/cp932.png \
-		$(SRC)/emu/font/cp932hw.png \
-		$(SRC)/emu/font/cp936.png \
-		$(SRC)/emu/font/cp949.png \
-		$(SRC)/emu/font/cp950.png
-	@echo Generating $@...
-	@$^ $@
-
-$(EMUOBJ)/uicmd11.bdc: $(PNG2BDC) $(SRC)/emu/font/cmd11.png
-	@echo Generating $@...
-	@$^ $@
-
-$(EMUOBJ)/uicmd14.bdc: $(PNG2BDC) $(SRC)/emu/font/cmd14.png
-	@echo Generating $@...
-	@$^ $@

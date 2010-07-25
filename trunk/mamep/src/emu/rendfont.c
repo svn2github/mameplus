@@ -173,7 +173,7 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 			ch->bmwidth = (int)(glyph_ch->bmwidth * scale + 0.5f);
 			ch->bmheight = (int)(glyph_ch->bmheight * scale + 0.5f);
 
-			ch->bitmap = bitmap_alloc(ch->bmwidth, ch->bmheight, BITMAP_FORMAT_ARGB32);
+			ch->bitmap = global_alloc(bitmap_t(ch->bmwidth, ch->bmheight, BITMAP_FORMAT_ARGB32));
 			render_texture_hq_scale(ch->bitmap, glyph_ch->bitmap, NULL, NULL);
 
 			ch->texture = render_texture_alloc(render_texture_hq_scale, NULL);

@@ -10184,7 +10184,7 @@ static DRIVER_INIT( jckeygpd )
 /****************************************************************************/
 
 /*    YEAR  NAME      PARENT    MACHINE   INPUT     INIT      MONITOR  */
-GAME( 1990, neogeo,   0,        neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Neo-Geo", GAME_IS_BIOS_ROOT )
+GAME( 1990, neogeo,    0,        neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Neo-Geo", GAME_IS_BIOS_ROOT | GAME_SUPPORTS_SAVE )
 
 /* SNK */
 GAME( 1990, nam1975,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "NAM-1975", GAME_SUPPORTS_SAVE )

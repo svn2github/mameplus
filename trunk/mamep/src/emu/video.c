@@ -2336,9 +2336,9 @@ void screen_device::realloc_scale_bitmaps()
 			cur_ysize = MAX(scale_ysize, cur_ysize);
 
 			// allocate scale_bitmaps
-			scale_bitmap[bank] = bitmap_alloc(curwidth * scale_xsize, curheight * scale_ysize, screen_format);
+			scale_bitmap[bank] = auto_alloc(machine, bitmap_t(curwidth * scale_xsize, curheight * scale_ysize, screen_format));
 			if (use_work_bitmap)
-				work_bitmap[bank] = bitmap_alloc(curwidth, curheight, screen_format);
+				work_bitmap[bank] = auto_alloc(machine, bitmap_t(curwidth, curheight, screen_format));
 
 			mame_printf_verbose("realloc_scale_bitmaps: %dx%d@%dbpp, workerbmp: %d \n", 
 								curwidth * scale_xsize, 

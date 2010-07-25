@@ -30,7 +30,7 @@ UIOBJ = $(OBJ)/osd/winui
 
 OBJDIRS += $(UIOBJ)
 
-CFLAGS += -I $(UISRC)
+DEFS += -DWINUI
 
 #-------------------------------------------------
 # configure the resource compiler
@@ -41,17 +41,7 @@ RC = @windres --use-temp-file
 RCDEFS = -DNDEBUG -D_WIN32_IE=0x0501
 
 # include UISRC direcotry
-RCFLAGS = -O coff --include-dir $(UISRC) --include-dir $(UIOBJ)
-
-
-
-#-------------------------------------------------
-# preprocessor definitions
-#-------------------------------------------------
-
-DEFS += \
-	-DWINVER=0x0500 \
-	-D_WIN32_IE=0x0501
+RCFLAGS = -O coff -I $(UISRC) -I $(UIOBJ)
 
 
 
@@ -59,21 +49,12 @@ DEFS += \
 # Windows-specific flags and libraries
 #-------------------------------------------------
 
-LIBS += \
+# add -mwindows for UI
+LDFLAGSEMULATOR += \
+	-mwindows \
 	-lkernel32 \
 	-lshell32 \
 	-lcomdlg32 \
-	-lshlwapi \
-	-lcomctl32 \
-	-ladvapi32 \
-	-lddraw \
-	-ldinput \
-	-ldxguid
-
-ifneq ($(MSVC_BUILD),)
-LIBS += -lhtmlhelp
-endif
-
 
 
 #-------------------------------------------------
@@ -178,7 +159,6 @@ $(GUIRESFILE): $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
 $(UIOBJ)/mamevers.rc: $(OBJ)/build/verinfo$(EXE) $(SRC)/version.c
 	@echo Emitting $@...
 	@"$(OBJ)/build/verinfo$(EXE)" -b winui $(SRC)/version.c > $@
-
 
 
 

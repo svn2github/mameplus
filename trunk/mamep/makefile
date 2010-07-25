@@ -400,9 +400,6 @@ ifndef BIGENDIAN
 DEFS += -DLSB_FIRST
 endif
 
-# MAME Plus! specific options
-DEFS += -DXML_STATIC -Drestrict=__restrict
-
 # define PTR64 if we are a 64-bit target
 ifeq ($(PTR64),1)
 DEFS += -DPTR64
@@ -689,7 +686,7 @@ SOFTFLOAT = $(OBJ)/libsoftfloat.a
 
 default: maketree buildtools emulator
 
-all: default
+all: default tools
 
 
 
@@ -714,13 +711,13 @@ endif
 
 # include OSD-specific rules first
 include $(SRC)/osd/$(OSD)/$(OSD).mak
-
 ifdef MAMEMESS
 include $(SRC)/mess/osd/$(OSD)/$(OSD).mak
 endif
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
+include $(SRC)/emu/emu.mak
 include $(SRC)/lib/lib.mak
 include $(SRC)/build/build.mak
 -include $(SRC)/osd/$(CROSS_BUILD_OSD)/build.mak
@@ -728,8 +725,6 @@ include $(SRC)/tools/tools.mak
 ifdef MAMEMESS
 include $(SRC)/mess/mess.mak
 endif
-# mamep: must stay at the end for png2bdc
-include $(SRC)/emu/emu.mak
 
 # combine the various definitions to one
 CDEFS = $(DEFS)
@@ -809,6 +804,7 @@ endif
 # generic rules
 #-------------------------------------------------
 
+ifdef MAMEMESS
 $(OBJ)/mess/%.o: $(SRC)/mess/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) -DMESS $(CFLAGS) -c $< -o $@
@@ -824,6 +820,7 @@ $(OBJ)/mess/drivers/%.o: $(SRC)/mess/drivers/%.c | $(OSPREBUILD)
 $(OBJ)/mess/osd/windows/%.o: $(SRC)/mess/osd/windows/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) -DMESS $(CFLAGS) -c $< -o $@
+endif
 
 $(OBJ)/%.o: $(SRC)/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
@@ -855,4 +852,34 @@ $(OBJ)/%.o: $(SRC)/%.m | $(OSPREBUILD)
 	@echo Objective-C compiling $<...
 	$(CC) $(CDEFS) $(COBJFLAGS) $(CCOMFLAGS) -c $< -o $@
 endif
+
+
+
+#-------------------------------------------------
+# embedded font
+#-------------------------------------------------
+
+$(EMUOBJ)/uismall11.bdc: $(PNG2BDC) \
+		$(SRC)/emu/font/uismall.png \
+		$(SRC)/emu/font/cp1250.png
+	@echo Generating $@...
+	@$^ $@
+
+$(EMUOBJ)/uismall14.bdc: $(PNG2BDC) \
+		$(SRC)/emu/font/cp1252.png \
+		$(SRC)/emu/font/cp932.png \
+		$(SRC)/emu/font/cp932hw.png \
+		$(SRC)/emu/font/cp936.png \
+		$(SRC)/emu/font/cp949.png \
+		$(SRC)/emu/font/cp950.png
+	@echo Generating $@...
+	@$^ $@
+
+$(EMUOBJ)/uicmd11.bdc: $(PNG2BDC) $(SRC)/emu/font/cmd11.png
+	@echo Generating $@...
+	@$^ $@
+
+$(EMUOBJ)/uicmd14.bdc: $(PNG2BDC) $(SRC)/emu/font/cmd14.png
+	@echo Generating $@...
+	@$^ $@
 

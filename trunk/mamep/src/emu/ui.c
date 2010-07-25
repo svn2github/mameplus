@@ -2915,7 +2915,7 @@ static void build_bgtexture(running_machine *machine)
 	a = ui_transparency;
 #endif /* TRANS_UI */
 
-	bgbitmap = bitmap_alloc(1, 1024, BITMAP_FORMAT_RGB32);
+	bgbitmap = global_alloc(bitmap_t(1, 1024, BITMAP_FORMAT_RGB32));
 	if (!bgbitmap)
 		fatalerror("build_bgtexture failed");
 
@@ -2939,7 +2939,7 @@ static void build_bgtexture(running_machine *machine)
 
 static void free_bgtexture(running_machine &machine)
 {
-	bitmap_free(bgbitmap);
+	global_free(bgbitmap);
 	bgbitmap = NULL;
 	render_texture_free(bgtexture);
 	bgtexture = NULL;
