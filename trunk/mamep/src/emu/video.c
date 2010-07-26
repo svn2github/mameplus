@@ -1687,6 +1687,7 @@ void screen_device::video_init_scale_effect()
 
 	logerror("scale effect: %s (depth:%d)\n", scale_effect.name, scale_depth);
 
+	free_scale_bitmap();
 	realloc_scale_bitmaps();
 }
 

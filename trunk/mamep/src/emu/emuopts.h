@@ -58,7 +58,7 @@
 #define OPTION_CROSSHAIRPATH		"crosshairpath"
 #define OPTION_LANGPATH				"langpath"
 #ifdef USE_IPS
-#define OPTION_IPSPATH  			"ips_directory"
+#define OPTION_IPSPATH  			"ipspath"
 #endif /* USE_IPS */
 
 /* core directory options */
@@ -178,15 +178,15 @@
 #define OPTION_CHEAT				"cheat"
 #define OPTION_SKIP_GAMEINFO		"skip_gameinfo"
 #define OPTION_CONFIRM_QUIT			"confirm_quit"
-#ifdef USE_IPS
-#define OPTION_IPS				"ips"
-#endif /* USE_IPS */
 #ifdef AUTO_PAUSE_PLAYBACK
 #define OPTION_AUTO_PAUSE_PLAYBACK		"auto_pause"
 #endif /* AUTO_PAUSE_PLAYBACK */
 #ifdef TRANS_UI
 #define OPTION_UI_TRANSPARENCY			"ui_transparency"
 #endif /* TRANS_UI */
+#ifdef USE_IPS
+#define OPTION_IPS				"ips"
+#endif /* USE_IPS */
 
 #ifdef UI_COLOR_DISPLAY
 /* core palette options */

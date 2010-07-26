@@ -50,9 +50,9 @@ const options_entry mame_core_options[] =
 	{ "fontpath",                    ".",         0,                 "path to font files" },
 	{ "cheatpath",                   "cheat",     0,                 "path to cheat files" },
 	{ "crosshairpath",               "crosshair", 0,                 "path to crosshair files" },
-	{ "langpath;language_directory", "lang",      0,                 "path to localized languages and datafiles" },
+	{ "langpath",                    "lang",      0,                 "path to localized languages and datafiles" },
 #ifdef USE_IPS
-	{ "ipspath;ips_directory",       "ips",       0,                 "path to ips files" },
+	{ "ipspath",                     "ips",       0,                 "path to ips files" },
 #endif /* USE_IPS */
 
 	/* output directory options */
@@ -189,15 +189,15 @@ const options_entry mame_core_options[] =
 	{ "cheat;c",                     "0",         OPTION_BOOLEAN,    "enable cheat subsystem" },
 	{ "skip_gameinfo",               "0",         OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
 	{ "confirm_quit",                "1",         OPTION_BOOLEAN,    "quit game with confirmation" },
-#ifdef USE_IPS
-	{ "ips",                         NULL,        0,                 "ips datafile name"},
-#endif /* USE_IPS */
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause",                  "0",         OPTION_BOOLEAN,    "automatic pause when playback is finished" },
 #endif /* AUTO_PAUSE_PLAYBACK */
 #ifdef TRANS_UI
-	{ "ui_transparency",             "224",       0,                 "transparency in-game UI [0-255]" },
+	{ "ui_transparency",             "215",       0,                 "transparency in-game UI [0-255]" },
 #endif /* TRANS_UI */
+#ifdef USE_IPS
+	{ "ips",                         NULL,        0,                 "ips datafile name"},
+#endif /* USE_IPS */
 
 #ifdef UI_COLOR_DISPLAY
 	/* palette options */
