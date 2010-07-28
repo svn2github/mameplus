@@ -313,8 +313,8 @@ static int execute_commands(core_options *options, const char *exename, const ga
 		{ CLIOPTION_VERIFYSAMPLES,	info_verifysamples },
 		{ CLIOPTION_LISTMEDIA,		info_listmedia },
 		{ CLIOPTION_LISTSOFTWARE,	info_listsoftware },
-		{ CLIOPTION_LISTGAMES,		cli_info_listgames },
 		{ CLIOPTION_ROMIDENT,		info_romident }
+		,{ CLIOPTION_LISTGAMES,		cli_info_listgames }
 	};
 	int i;
 

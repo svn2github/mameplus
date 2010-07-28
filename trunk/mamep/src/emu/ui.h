@@ -51,7 +51,7 @@
 #define UI_TEXT_BG_COLOR		MAKE_ARGB(0xe0,0x00,0x00,0x00)
 #define UI_SUBITEM_COLOR		MAKE_ARGB(0xff,0xff,0xff,0xff)
 #define UI_CLONE_COLOR			MAKE_ARGB(0xff,0x80,0x80,0x80)
-#if UI_COLOR_DISPLAY
+#ifdef UI_COLOR_DISPLAY
 #define UI_SELECTED_COLOR		ui_get_rgb_color(CURSOR_SELECTED_TEXT)
 #define UI_SELECTED_BG_COLOR		ui_get_rgb_color(CURSOR_SELECTED_BG)
 #define UI_MOUSEOVER_COLOR		ui_get_rgb_color(CURSOR_HOVER_TEXT)
@@ -154,7 +154,9 @@ float ui_get_line_height(void);
 float ui_get_char_width(unicode_char ch);
 float ui_get_string_width(const char *s);
 
+#ifdef UI_COLOR_DISPLAY
 rgb_t ui_get_rgb_color(rgb_t color);
+#endif /* UI_COLOR_DISPLAY */
 
 /* draw a box filled with a given color */
 void ui_draw_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t backcolor);

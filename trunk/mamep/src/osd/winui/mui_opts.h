@@ -550,10 +550,10 @@ const WCHAR *GetIPSDir(void);
 void SetIPSDir(const WCHAR *path);
 #endif /* USE_IPS */
 
-#ifdef UI_COLOR_PALETTE
+#ifdef UI_COLOR_DISPLAY
 const char *GetUIPaletteString(int n);
 void SetUIPaletteString(int n, const char *s);
-#endif /* UI_COLOR_PALETTE */
+#endif /* UI_COLOR_DISPLAY */
 
 BOOL FolderHasVector(const WCHAR *name);
 

@@ -91,7 +91,7 @@ OSDOBJS += \
 	$(UIOBJ)/translate.o \
 
 
-ifneq ($(USE_CUSTOM_UI_COLOR),)
+ifneq ($(USE_UI_COLOR_DISPLAY),)
 OSDOBJS += $(UIOBJ)/paletteedit.o
 endif
 
@@ -100,6 +100,8 @@ GUIRESFILE += $(UIOBJ)/mameui.res
 
 $(LIBOSD): $(OSDOBJS)
 
+# The : is important! It prevents the dependency above from including mui_main.o in its target!
+LIBOSD := $(UIOBJ)/mui_main.o $(LIBOSD)
 
 
 
@@ -164,11 +166,11 @@ $(UIOBJ)/mamevers.rc: $(OBJ)/build/verinfo$(EXE) $(SRC)/version.c
 
 #-------------------------------------------------
 # CORE functions
-# only definitions RCDEFS for mameui.rc
+# only definitions RCDEFS for resource file
 #-------------------------------------------------
 
-ifneq ($(USE_CUSTOM_UI_COLOR),)
-RCDEFS += -DUI_COLOR_PALETTE
+ifneq ($(USE_UI_COLOR_DISPLAY),)
+RCDEFS += -DUI_COLOR_DISPLAY
 endif
 
 ifneq ($(USE_AUTO_PAUSE_PLAYBACK),)
@@ -199,6 +201,7 @@ endif
 
 #-------------------------------------------------
 # MAMEUI-specific functions
+# need definitions DEFS and RCDEFS
 #-------------------------------------------------
 
 ifneq ($(USE_MORE_FOLDER_INFO),)

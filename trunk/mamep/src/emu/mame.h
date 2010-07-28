@@ -18,9 +18,6 @@
 #ifndef __MAME_H__
 #define __MAME_H__
 
-#include "uipal.h"
-#include "uilang.h"
-
 #include <time.h>
 
 

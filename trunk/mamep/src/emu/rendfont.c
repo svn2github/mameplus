@@ -15,8 +15,10 @@
 #include "emuopts.h"
 #include "zlib.h"
 
+#ifdef UI_COLOR_DISPLAY
 //mamep: for ui_get_rgb_color()
 #include "ui.h"
+#endif /* UI_COLOR_DISPLAY */
 
 //mamep: embedded CJK and non-CJK font
 #include "uismall11.fh"

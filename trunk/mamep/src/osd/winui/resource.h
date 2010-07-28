@@ -95,7 +95,7 @@
 #define IDD_PROP_SCREEN                 187
 #define IDD_PROP_DEBUG                  188
 
-#define IDD_PALETTE                     191 // UI_COLOR_PALETTE
+#define IDD_PALETTE                     191 // UI_COLOR_DISPLAY
 #define IDD_PCBINFO                     192 // USE_VIEW_PCBINFO
 #define IDB_TOOLBAR_US                  193
 #define IDB_TOOLBAR_CN                  194
@@ -382,14 +382,14 @@
 #define IDC_USE_LIST                    1341 // local language gamelist
 #define IDC_SCALEEFFECT                 1342 // USE_SCALE_EFFECTS
 
-#define IDC_PALETTE_COMBO               1353 // UI_COLOR_PALETTE
-#define IDC_PALETTE_R                   1344 // UI_COLOR_PALETTE
-#define IDC_PALETTE_G                   1345 // UI_COLOR_PALETTE
-#define IDC_PALETTE_B                   1346 // UI_COLOR_PALETTE
-#define IDC_PALETTE_VIEW                1347 // UI_COLOR_PALETTE
-#define IDC_PALETTE_TEXTR               1348 // UI_COLOR_PALETTE
-#define IDC_PALETTE_TEXTG               1349 // UI_COLOR_PALETTE
-#define IDC_PALETTE_TEXTB               1350 // UI_COLOR_PALETTE
+#define IDC_PALETTE_COMBO               1353 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_R                   1344 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_G                   1345 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_B                   1346 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_VIEW                1347 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTR               1348 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTG               1349 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTB               1350 // UI_COLOR_DISPLAY
 
 #define IDC_TRANSPARENCY                1361 // TRANS_UI
 #define IDC_TRANSPARENCYDISP            1362 // TRANS_UI
@@ -434,7 +434,7 @@
 #define ID_HELP_RELEASE                 40028
 #define ID_HELP_WHATS_NEW               40029
 #define ID_HELP_CHEATS                  40030
-#define ID_OPTIONS_PALETTE              40031 // UI_COLOR_PALETTE
+#define ID_OPTIONS_PALETTE              40031 // UI_COLOR_DISPLAY
 #define ID_OPTIONS_MMO2LST              40032 // export gamelist
 
 #define ID_VIEW_LINEUPICONS             40040

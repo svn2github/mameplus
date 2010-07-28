@@ -2233,7 +2233,7 @@ void SetIPSDir(const WCHAR* path)
 }
 #endif /* USE_IPS */
 
-#ifdef UI_COLOR_PALETTE
+#ifdef UI_COLOR_DISPLAY
 struct ui_palette_assign
 {
 	const char *name;
@@ -2274,7 +2274,7 @@ void SetUIPaletteString(int n, const char *s)
 
 	options_set_string(global, ui_palette_tbl[n].name, s, OPTION_PRIORITY_CMDLINE);
 }
-#endif /* UI_COLOR_PALETTE */
+#endif /* UI_COLOR_DISPLAY */
 
 BOOL FolderHasVector(const WCHAR *name)
 {
@@ -3047,7 +3047,7 @@ BOOL IsGlobalOption(const char *option_name)
 #ifdef USE_HISCORE
 		OPTION_HISCORE_FILE,
 #endif /* USE_HISCORE */
-#ifdef UI_COLOR_PALETTE
+#ifdef UI_COLOR_DISPLAY
 		OPTION_SYSTEM_BACKGROUND,
 		OPTION_CURSOR_SELECTED_TEXT,
 		OPTION_CURSOR_SELECTED_BG,
@@ -3063,7 +3063,7 @@ BOOL IsGlobalOption(const char *option_name)
 		OPTION_BUTTON_SILVER,
 		OPTION_BUTTON_NAVY,
 		OPTION_BUTTON_LIME,
-#endif /* UI_COLOR_PALETTE */
+#endif /* UI_COLOR_DISPLAY */
 		OPTION_LANGUAGE,
 		OPTION_USE_LANG_LIST
 	};

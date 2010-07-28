@@ -9,12 +9,11 @@
 
 *********************************************************************/
 
-#ifndef __PALETTE_DEFINE__
-#define __PALETTE_DEFINE__
+#ifndef __UIPAL_H__
+#define __UIPAL_H__
 
 enum
 {
-#ifdef UI_COLOR_DISPLAY
 	SYSTEM_COLOR_BACKGROUND,
 	CURSOR_SELECTED_TEXT,
 	CURSOR_SELECTED_BG,
@@ -30,7 +29,6 @@ enum
 	BUTTON_COLOR_SILVER,
 	BUTTON_COLOR_NAVY,
 	BUTTON_COLOR_LIME,
-#endif /* UI_COLOR_DISPLAY */
 	MAX_COLORTABLE
 };
 #endif

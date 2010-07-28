@@ -86,9 +86,9 @@
 #include "directdraw.h"
 #include "directinput.h"
 #include "dijoystick.h"     /* For DIJoystick avalibility. */
-#ifdef UI_COLOR_PALETTE
+#ifdef UI_COLOR_DISPLAY
 #include "paletteedit.h"
-#endif /* UI_COLOR_PALETTE */
+#endif /* UI_COLOR_DISPLAY */
 #include "translate.h"
 
 #ifdef MESS
@@ -5445,7 +5445,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		}
 		break;
 
-#ifdef UI_COLOR_PALETTE
+#ifdef UI_COLOR_DISPLAY
 	case ID_OPTIONS_PALETTE:
 		{
 			DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_PALETTE), hMain, PaletteDialogProc);
@@ -5454,7 +5454,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			}
 			return TRUE;
 		}
-#endif /* UI_COLOR_PALETTE */
+#endif /* UI_COLOR_DISPLAY */
 
 	case ID_OPTIONS_HISTORY:
 		{

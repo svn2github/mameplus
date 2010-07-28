@@ -105,7 +105,9 @@ static const input_item_id non_char_keys[] =
     GLOBAL VARIABLES
 ***************************************************************************/
 
+#ifdef UI_COLOR_DISPLAY
 static rgb_t uifont_colortable[MAX_COLORTABLE];
+#endif /* UI_COLOR_DISPLAY */
 static render_texture *bgtexture;
 static bitmap_t *bgbitmap;
 
@@ -153,9 +155,9 @@ static rgb_t messagebox_backcolor;
 static slider_state *slider_list;
 static slider_state *slider_current;
 
-#ifdef UI_COLOR_DISPLAY
+#ifdef TRANS_UI
 static int ui_transparency;
-#endif /* UI_COLOR_DISPLAY */
+#endif /* TRANS_UI */
 
 #ifdef USE_SHOW_INPUT_LOG
 static void display_input_log(running_machine *machine, render_container *container);
@@ -232,6 +234,7 @@ INLINE UINT32 ui_set_handler(UINT32 (*callback)(running_machine *, render_contai
 }
 
 
+#ifdef UI_COLOR_DISPLAY
 rgb_t ui_get_rgb_color(rgb_t color)
 {
 	if (color < MAX_COLORTABLE)
@@ -239,6 +242,7 @@ rgb_t ui_get_rgb_color(rgb_t color)
 
 	return color;
 }
+#endif /* UI_COLOR_DISPLAY */
 
 
 /*-------------------------------------------------
@@ -364,9 +368,9 @@ static void setup_palette(void)
 
 	int i;
 
+#ifdef TRANS_UI
 	ui_transparency = 255;
 
-#ifdef TRANS_UI
 	ui_transparency = options_get_int(mame_options(), OPTION_UI_TRANSPARENCY);
 	if (ui_transparency < 0 || ui_transparency > 255)
 	{
