@@ -11,6 +11,15 @@
 
  ***************************************************************************/
 
+/***************************************************************************
+
+  translate.h
+
+  This is an unofficial version based on MAMEUI.
+  Please do not send any reports from this build to the MAMEUI team.
+
+***************************************************************************/
+
 int      InitTranslator(int langcode);
 HFONT    TranslateCreateFont(const LOGFONTW *);
 void     TranslateMenu(HMENU hMenu, int uiString);

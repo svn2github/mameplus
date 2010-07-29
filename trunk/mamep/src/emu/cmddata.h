@@ -4,8 +4,10 @@
 
     Command List datafile engine
 
-    Copyright Nicola Salmoria and the MAME Team.
-    Visit http://mamedev.org for licensing and usage restrictions.
+    This is an unofficial version based on MAME.
+    Please do not send any reports from this build to the MAME team.
+
+****************************************************************************
 
     Token parsing by Neil Bradley
     Modifications and higher-level functions by John Butler

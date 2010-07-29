@@ -68,7 +68,7 @@
 #include "strconv.h"
 #include "config.h"
 #include "winutf8.h"
-#include "mameres.h"
+#include "mameres.h" // For IDI_MAME_ICON
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */
@@ -860,6 +860,7 @@ static void create_window_class(void)
 		wc.lpfnWndProc		= winwindow_video_window_proc;
 #endif
 		wc.hCursor			= LoadCursor(NULL, IDC_ARROW);
+		// mamep: show mame icon in-game window title
 		wc.hIcon			= LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_MAME_ICON));
 
 		// register the class; fail if we can't

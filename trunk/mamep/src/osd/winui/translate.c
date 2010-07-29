@@ -11,6 +11,15 @@
 
  ***************************************************************************/
 
+/***************************************************************************
+
+  translate.c
+
+  This is an unofficial version based on MAMEUI.
+  Please do not send any reports from this build to the MAMEUI team.
+
+***************************************************************************/
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <windowsx.h>

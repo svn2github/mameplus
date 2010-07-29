@@ -11,6 +11,15 @@
 
  ***************************************************************************/
 
+/***************************************************************************
+
+  paletteedit.h
+
+  This is an unofficial version based on MAMEUI.
+  Please do not send any reports from this build to the MAMEUI team.
+
+***************************************************************************/
+
 #ifndef PALETTEEDIT_H
 #define PALETTEEDIT_H
 

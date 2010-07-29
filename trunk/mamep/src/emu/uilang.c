@@ -4,8 +4,8 @@
 
     Translation language functions for the user interface.
 
-    Copyright Nicola Salmoria and the MAME Team.
-    Visit http://mamedev.org for licensing and usage restrictions.
+    This is an unofficial version based on MAME.
+    Please do not send any reports from this build to the MAME team.
 
 *********************************************************************/
 

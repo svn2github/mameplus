@@ -61,4 +61,80 @@ const game_driver * const mamedrivers[] =
 	DRIVER( starfir2 )	/* (c) 1979 Exidy */
 	DRIVER( wrally )	/* (c) 1993 - Ref 930705 */
 
+	/* Cave games */
+	/* Cave was formed in 1994 from the ruins of Toaplan, like Raizing was. */
+	DRIVER( pwrinst2 )	/* (c) 1994 Atlus */
+	DRIVER( pwrinst2j )	/* (c) 1994 Atlus */
+	DRIVER( plegends )	/* (c) 1994 Atlus */
+	DRIVER( plegendsj )	/* (c) 1994 Atlus */
+	DRIVER( mazinger )	/* (c) 1994 Banpresto (country is in EEPROM) */
+	DRIVER( mazingerj )	/* (c) 1994 Banpresto (country is in EEPROM) */
+	DRIVER( donpachi )	/* (c) 1995 Atlus/Cave */
+	DRIVER( donpachij )	/* (c) 1995 Atlus/Cave */
+	DRIVER( donpachikr )	/* (c) 1995 Atlus/Cave */
+	DRIVER( donpachihk )	/* (c) 1995 Atlus/Cave */
+	DRIVER( metmqstr )	/* (c) 1995 Banpresto / Pandorabox */
+	DRIVER( nmaster )	/* (c) 1995 Banpresto / Pandorabox */
+	DRIVER( sailormn )	/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( sailormnu )	/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( sailormnj )	/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( sailormnk )	/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( sailormnt )	/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( sailormnh )	/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( sailormno )	/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( sailormnou )/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( sailormnoj )/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( sailormnok )/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( sailormnot )/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( sailormnoh )/* (c) 1995 Banpresto (country is in EEPROM) */
+	DRIVER( agallet )	/* (c) 1996 Banpresto / Gazelle (country is in EEPROM) */
+	DRIVER( agalletu )	/* (c) 1996 Banpresto / Gazelle (country is in EEPROM) */
+	DRIVER( agalletj )	/* (c) 1996 Banpresto / Gazelle (country is in EEPROM) */
+	DRIVER( agalletk )	/* (c) 1996 Banpresto / Gazelle (country is in EEPROM) */
+	DRIVER( agallett )	/* (c) 1996 Banpresto / Gazelle (country is in EEPROM) */
+	DRIVER( agalleth )	/* (c) 1996 Banpresto / Gazelle (country is in EEPROM) */
+	DRIVER( hotdogst )	/* (c) 1996 Marble */
+	DRIVER( ddonpach )	/* (c) 1997 Atlus/Cave */
+	DRIVER( ddonpachj )	/* (c) 1997 Atlus/Cave */
+	DRIVER( dfeveron )	/* (c) 1998 Cave + Nihon System license */
+	DRIVER( feversos )	/* (c) 1998 Cave + Nihon System license */
+	DRIVER( esprade )	/* (c) 1998 Atlus/Cave */
+	DRIVER( espradej )	/* (c) 1998 Atlus/Cave (Japan) */
+	DRIVER( espradejo )	/* (c) 1998 Atlus/Cave (Japan) */
+	DRIVER( uopoko )	/* (c) 1998 Cave + Jaleco license */
+	DRIVER( uopokoj )	/* (c) 1998 Cave + Jaleco license */
+	DRIVER( guwange )	/* (c) 1999 Atlus/Cave */
+	DRIVER( gaia )		/* (c) 1999 Noise Factory */
+	DRIVER( theroes )	/* (c) 2001 Primetek Investments */
+	DRIVER( korokoro )	/* (c) 1999 Takumi */
+	DRIVER( crusherm )	/* (c) 1999 Takumi */
+	DRIVER( tjumpman )	/* (c) 1999 Namco */
+
+	/* Psikyo games */
+	DRIVER( samuraia )	/* (c) 1993 (World) */
+	DRIVER( sngkace )	/* (c) 1993 (Japan) */
+	DRIVER( gunbird )	/* (c) 1994 */
+	DRIVER( gunbirdk )	/* (c) 1994 */
+	DRIVER( gunbirdj )	/* (c) 1994 */
+	DRIVER( btlkroad )	/* (c) 1994 */
+	DRIVER( s1945 )		/* (c) 1995 */
+	DRIVER( s1945a )	/* (c) 1995 */
+	DRIVER( s1945j )	/* (c) 1995 */
+	DRIVER( s1945jn )	/* (c) 1995 */
+	DRIVER( s1945bl )	/* (c) 1995 (Hong Kong bootleg) */
+	DRIVER( s1945k )	/* (c) 1995 */
+	DRIVER( tengai )	/* (c) 1996 */
+	DRIVER( tengaij )	/* (c) 1996 */
+	DRIVER( s1945ii )	/* (c) 1997 */
+	DRIVER( soldivid )	/* (c) 1997 */
+	DRIVER( sbomberb )	/* (c) 1998 */
+	DRIVER( daraku )	/* (c) 1998 */
+	DRIVER( gunbird2 )	/* (c) 1998 */
+	DRIVER( s1945iii )	/* (c) 1999 */
+	DRIVER( dragnblz )	/* (c) 2000 */
+	DRIVER( tgm2 )		/* (c) 2000 */
+	DRIVER( tgm2p )		/* (c) 2000 */
+	DRIVER( gnbarich )	/* (c) 2001 */
+	DRIVER( mjgtaste )	/* (c) 2002 */
+
 #endif	/* DRIVER_RECURSIVE */

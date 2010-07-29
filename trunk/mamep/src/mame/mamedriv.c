@@ -2429,7 +2429,6 @@ V-V                           TP-027
  2/94 Batsugun                                        Kit 2P 8W+2B     VC            TP-
  4/94 Snow Bros. 2                                    Kit 2P 8W+2B     HC    Action  TP-
 */
-#endif /* !NEOCPSPGM */
 
 	/* Cave games */
 	/* Cave was formed in 1994 from the ruins of Toaplan, like Raizing was. */
@@ -2480,7 +2479,6 @@ V-V                           TP-027
 	DRIVER( crusherm )	/* (c) 1999 Takumi */
 	DRIVER( tjumpman )	/* (c) 1999 Namco */
 
-#ifndef NEOCPSPGM
 	/* Kyugo games */
 	/* Kyugo only made four games: Repulse, Flash Gal, SRD Mission and Air Wolf. */
 	/* Gyrodine was made by Crux. Crux was antecedent of Toa Plan, and spin-off from Orca. */
@@ -2659,6 +2657,7 @@ V-V                           TP-027
 	/* Capcom CPS1 games */
 	DRIVER( forgottn )	/*  7/1988 (c) 1988 (World) */
 	DRIVER( forgottnu )	/*  7/1988 (c) 1988 (US) */
+	DRIVER( forgottnua )	/*  7/1988 (c) 1988 (US) */
 	DRIVER( lostwrld )	/*  7/1988 (c) 1988 (Japan) */
 	DRIVER( lostwrldo )	/*  7/1988 (c) 1988 (Japan) */
 	DRIVER( ghouls )	/* 12/1988 (c) 1988 (World) */
@@ -2730,6 +2729,7 @@ V-V                           TP-027
 	DRIVER( captcommr1 )	/* 14/10/1991 (c) 1991 (World) */
 	DRIVER( captcommu )	/* 28/ 9/1991 (c) 1991 (US)    */
 	DRIVER( captcommj )	/* 02/12/1991 (c) 1991 (Japan) */
+	DRIVER( captcommjr1 )	/* 28/ 9/1991 (c) 1991 (Japan) */
 	DRIVER( captcommb )	/* bootleg */
 	DRIVER( knights )	/* 27/11/1991 (c) 1991 (World) */
 	DRIVER( knightsu )	/* 27/11/1991 (c) 1991 (US)    */
@@ -2767,10 +2767,10 @@ V-V                           TP-027
 	DRIVER( wofa )		/* 05/10/1992 (c) 1992 (Asia)  (CPS1 + QSound) */
 	DRIVER( wofu )		/* 31/10/1992 (c) 1992 (US) (CPS1 + QSound) */
 	DRIVER( wofj )		/* 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound) */
-	DRIVER( wofhfh )	/* bootleg */
+	DRIVER( wofhfb )	/* bootleg */
 	DRIVER( sf2hf )		/* 09/12/1992 (c) 1992 (World) */
 	DRIVER( sf2hfu )	/* 09/12/1992 (c) 1992 (US)    */
-	DRIVER( sf2tj )		/* 09/12/1992 (c) 1992 (Japan) */
+	DRIVER( sf2hfj )	/* 09/12/1992 (c) 1992 (Japan) */
 	DRIVER( dino )		/* 01/02/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( dinou )		/* 01/02/1993 (c) 1993 (US)    (CPS1 + QSound) */
 	DRIVER( dinoj )		/* 01/02/1993 (c) 1993 (Japan) (CPS1 + QSound) */
@@ -2783,7 +2783,7 @@ V-V                           TP-027
 	DRIVER( punipic )	/* bootleg */
 	DRIVER( punipic2 )	/* bootleg */
 	DRIVER( punipic3 )	/* bootleg */
-	DRIVER( punisherbz )/* bootleg */
+	DRIVER( punisherbz )	/* bootleg */
 	DRIVER( slammast )	/* 13/07/1993 (c) 1993 (World) (CPS1 + QSound) */
 	DRIVER( slammastu )	/* 13/07/1993 (c) 1993 (US)    (CPS1 + QSound) */
 	DRIVER( mbomberj )	/* 13/07/1993 (c) 1993 (Japan) (CPS1 + QSound) */
@@ -2792,7 +2792,7 @@ V-V                           TP-027
 	DRIVER( pnickj )	/* 08/06/1994 (c) 1994 Compile + Capcom license (Japan) not listed on Capcom's site */
 	DRIVER( qad )		/* 01/07/1992 (c) 1992 (US)    */
 	DRIVER( qadj )		/* 21/09/1994 (c) 1994 (Japan) */
-	DRIVER( qtono2 )	/* 23/01/1995 (c) 1995 (Japan) */
+	DRIVER( qtono2j )	/* 23/01/1995 (c) 1995 (Japan) */
 	DRIVER( pang3 )		/* 01/06/1995 (c) 1995 Mitchell (Euro) not listed on Capcom's site */
 	DRIVER( pang3n )	/* 11/05/1995 (c) 1995 Mitchell (Euro) not listed on Capcom's site */
 	DRIVER( pang3j )	/* 11/05/1995 (c) 1995 Mitchell (Japan) not listed on Capcom's site */
@@ -4097,6 +4097,7 @@ DokiDoki Penguin Land *not confirmed
 						/* 1988.05 Galaxy Force (Japan) */
 						/* 1988.08 Galaxy Force (US) */
 	DRIVER( gforce2j )	/* 1988.07 Galaxy Force II (Japan) */
+	DRIVER( gforce2ja )	/* 1988.07 Galaxy Force II (Japan) */
 	DRIVER( gforce2 )	/* 1988.?? Galaxy Force II (World) */
 						/* 1988.12 Galaxy Force II (US) */
 						/* 1988.08 Power Drift (US) */
@@ -5662,6 +5663,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( mystwarr )	/* GX128 (c) 1993 (World) */
 	DRIVER( mystwarru )	/* GX128 (c) 1993 (US) */
 	DRIVER( mystwarrj )	/* GX128 (c) 1993 (Japan) */
+	DRIVER( mystwarra )	/* GX128 (c) 1993 (Asia) */
 	DRIVER( viostorm )	/* GX168 (c) 1993 (Europe) */
 	DRIVER( viostormu )	/* GX168 (c) 1993 (US) */
 	DRIVER( viostormub )	/* GX168 (c) 1993 (US) */
@@ -6485,6 +6487,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( joyjoy )	/* 0021 (c) 1990 SNK */
 	DRIVER( bjourney )	/* 0022 (c) 1990 Alpha Denshi Co. */
 	DRIVER( quizdais )	/* 0023 (c) 1991 SNK */
+	DRIVER( quizdaisk )	/* 0123 (c) 1991 SNK */
 	DRIVER( lresort )	/* 0024 (c) 1992 SNK */
 	DRIVER( eightman )	/* 0025 (c) 1991 SNK / Pallas */
 						/* 0026 Fun Fun Brothers (prototype) 1991 Alpha */
@@ -6555,6 +6558,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( galaxyfg )	/* 0078 (c) 1995 Sunsoft */
 	DRIVER( strhoop )	/* 0079 (c) 1994 Data East Corporation */
 	DRIVER( quizkof )	/* 0080 (c) 1995 Saurus */
+	DRIVER( quizkofk )	/* 0080 (c) 1995 Saurus */
 	DRIVER( ssideki3 )	/* 0081 (c) 1995 SNK */
 	DRIVER( doubledr )	/* 0082 (c) 1995 Technos */
 	DRIVER( pbobblen )	/* 0083 (c) 1994 Taito */
@@ -6608,6 +6612,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( samsho4 )	/* 0222 (c) 1996 SNK */
 	DRIVER( samsho4k )	/* Censored Korean release of samsho4 */
 	DRIVER( rbffspec )	/* 0223 (c) 1996 SNK */
+	DRIVER( rbffspeck )	/* 0124 (c) 1996 SNK */
 	DRIVER( twinspri )	/* 0224 (c) 1996 ADK */
 	DRIVER( wakuwak7 )	/* 0225 (c) 1996 Sunsoft */
 						/* 0226 Pair Pair Wars (prototype) 1996 Sunsoft? */
@@ -6712,9 +6717,9 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( kf2k3bla )	/* bootleg */
 	DRIVER( kf2k3pl )	/* bootleg */
 	DRIVER( kf2k3upl )	/* bootleg */
-	DRIVER( samsh5sp )	/* 0272 (c) 2003 Playmore */
-	DRIVER( samsh5sph )	/* 0272 (c) 2003 Playmore */
-	DRIVER( samsh5spn )	/* 0272 (c) 2003 Playmore */
+	DRIVER( samsh5sp )	/* 0272 (c) 2004 Playmore */
+	DRIVER( samsh5sph )	/* 0272 (c) 2004 Playmore */
+	DRIVER( samsh5spn )	/* 0272 (c) 2004 Playmore */
 
 	/* The BrezzaSoft games don't have proper ID codes */
 	DRIVER( jockeygp )
@@ -7587,7 +7592,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( fromancr )	/* (c) 1995 Video System Co. (Japan) */
 	DRIVER( fromanc4 )	/* (c) 1998 Video System Co. (Japan) */
 	DRIVER( inufuku )	/* (c) 1998 Video System Co. (Japan) */
-#endif /* !NEOCPSPGM */
 
 	/* Psikyo games */
 	DRIVER( samuraia )	/* (c) 1993 (World) */
@@ -7615,8 +7619,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( tgm2p )		/* (c) 2000 */
 	DRIVER( gnbarich )	/* (c) 2001 */
 	DRIVER( mjgtaste )	/* (c) 2002 */
-
-#ifndef NEOCPSPGM
 	DRIVER( hotgmck )	/* (c) 1997 */
 	DRIVER( hgkairak )	/* (c) 1998 */
 	DRIVER( hotgmck3 )	/* (c) 1999 */
@@ -9003,6 +9005,7 @@ Other Sun games
 	DRIVER( ppchamp )	/* (c) 1997 Dongsung + "presented by Para" */
 	DRIVER( amerdart )	/* (c) 1989 Ameri Corporation */
 	DRIVER( amerdart2 )	/* (c) 1989 Ameri Corporation */
+	DRIVER( amerdart3 )	/* (c) 1989 Ameri Corporation */
 	DRIVER( coolpool )	/* (c) 1992 Catalina Games */
 	DRIVER( 9ballsht )	/* (c) 1993 E-Scape EnterMedia + "marketed by Bundra Games" */
 	DRIVER( 9ballsht2 )	/* (c) 1993 E-Scape EnterMedia + "marketed by Bundra Games" */
@@ -9667,6 +9670,7 @@ Other Sun games
 	DRIVER( showhand )	/* (c) 2000  Astro Corp. */
 	DRIVER( showhanc )	/* (c) 2000  Astro Corp. */
 	DRIVER( skilldrp )	/* (c) 2002  Astro Corp. */
+	DRIVER( speeddrp )	/* (c) 2003  Astro Corp. */
 	DRIVER( winbingo )	/* (c) 2005? Astro Corp. */
 	DRIVER( winbingoa )	/* (c) 2005? Astro Corp. */
 	DRIVER( zoo )		/* (c) 2005? Astro Corp. */
@@ -10055,6 +10059,7 @@ Other Sun games
 	DRIVER( smshilo )	/* (c) 1983 SMS Manufacturing Corp. */
 	DRIVER( drhl )		/* (c) Drew, Inc. */
 	DRIVER( tpoker2 )	/* (c) 1993 Micro Manufacturing, Inc. */
+	DRIVER( ssjkrpkr )	/* (c) 1982 Southern Systems & Assembly, Ltd. */
 	DRIVER( fastdrwp )	/* Stern? */
 	DRIVER( dphlunka )	/* SMS Manufacturing Corp? */
 	DRIVER( dphlunkb )	/* SMS Manufacturing Corp? */

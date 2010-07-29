@@ -4,7 +4,7 @@
 
     OS-scale code interface.
 
-    Scale Effects is an unofficial version based on MAME.
+    This is an unofficial version based on MAME.
     Please do not send any reports from this build to the MAME team.
 
 ***************************************************************************/

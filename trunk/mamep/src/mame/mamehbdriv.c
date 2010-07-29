@@ -1,9 +1,9 @@
 /******************************************************************************
 
-    mamedriv.c
+    mamehbdriv.c
 
-    Copyright Nicola Salmoria and the MAME Team.
-    Visit http://mamedev.org for licensing and usage restrictions.
+    This is an unofficial version based on MAME.
+    Please do not send any reports from this build to the MAME team.
 
     The list of all available drivers. Drivers have to be included here to be
     recognized by the executable.

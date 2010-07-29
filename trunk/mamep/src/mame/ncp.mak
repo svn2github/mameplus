@@ -1,12 +1,12 @@
 ###########################################################################
 #
-#   lite.mak
+#   ncp.mak
 #
-#   Small driver-specific example makefile
-#   Use make SUBTARGET=lite to build
+#   NeoGeo, CPS1/2/3, PGM driver-specific example makefile
+#   Use make SUBTARGET=ncp to build
 #
-#   Copyright Nicola Salmoria and the MAME Team.
-#   Visit http://mamedev.org for licensing and usage restrictions.
+#   This is an unofficial version based on MAME.
+#   Please do not send any reports from this build to the MAME team.
 #
 ###########################################################################
 
@@ -45,7 +45,6 @@ CPUS += ARM7
 CPUS += SH2
 CPUS += PIC16C5X
 
-
 #-------------------------------------------------
 # specify available sound cores; some of these are
 # only for MESS and so aren't included
@@ -54,19 +53,14 @@ CPUS += PIC16C5X
 SOUNDS += CUSTOM
 SOUNDS += YM2151
 SOUNDS += YM2203
-SOUNDS += YM2413
 SOUNDS += YM2608
 SOUNDS += YM2610
 SOUNDS += YM2610B
-SOUNDS += YM3812
-SOUNDS += YMF278B
-SOUNDS += YMZ280B
 SOUNDS += MSM5205
 SOUNDS += OKIM6295
 SOUNDS += QSOUND
 SOUNDS += CDDA
 SOUNDS += ICS2115
-
 
 #-------------------------------------------------
 # this is the list of driver libraries that
@@ -87,19 +81,6 @@ DRVLIBS += \
 	$(MAMEOBJ)/capcom.a \
 	$(MAMEOBJ)/igs.a \
 	$(MAMEOBJ)/neogeo.a \
-	$(MAMEOBJ)/psikyo.a \
-	$(MAMEOBJ)/misc.a \
-	$(MAMEOBJ)/shared.a \
-
-
-
-#-------------------------------------------------
-# the following files are general components and
-# shared across a number of drivers
-#-------------------------------------------------
-
-$(MAMEOBJ)/shared.a: \
-	$(MACHINE)/nmk112.o \
 
 
 
@@ -125,18 +106,6 @@ $(MAMEOBJ)/neogeo.a: \
 	$(MACHINE)/neoboot.o \
 	$(MACHINE)/neocrypt.o \
 	$(MACHINE)/neoprot.o \
-
-$(MAMEOBJ)/psikyo.a: \
-	$(DRIVERS)/psikyo.o $(VIDEO)/psikyo.o \
-	$(DRIVERS)/psikyosh.o $(VIDEO)/psikyosh.o \
-
-
-#-------------------------------------------------
-# remaining drivers
-#-------------------------------------------------
-
-$(MAMEOBJ)/misc.a: \
-	$(DRIVERS)/cave.o $(VIDEO)/cave.o \
 
 #-------------------------------------------------
 # layout dependencies
