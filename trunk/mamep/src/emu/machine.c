@@ -799,8 +799,8 @@ void running_machine::call_notifiers(machine_notification which)
 void running_machine::handle_saveload()
 {
 	UINT32 openflags = (m_saveload_schedule == SLS_LOAD) ? OPEN_FLAG_READ : (OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
-	const char *opnamed = (m_saveload_schedule == SLS_LOAD) ? "loaded" : "saved";
-	const char *opname = (m_saveload_schedule == SLS_LOAD) ? "load" : "save";
+	const char *opnamed = (m_saveload_schedule == SLS_LOAD) ? _("loaded") : _("saved");
+	const char *opname = (m_saveload_schedule == SLS_LOAD) ? _("load") : _("save");
 	file_error filerr = FILERR_NONE;
 
 	// if no name, bail

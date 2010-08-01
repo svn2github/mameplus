@@ -39,7 +39,6 @@ DEFS += -DNEOCPSPGM
 
 CPUS += Z80
 CPUS += I386
-CPUS += MCS48
 CPUS += M680X0
 CPUS += ARM7
 CPUS += SH2
@@ -50,12 +49,13 @@ CPUS += PIC16C5X
 # only for MESS and so aren't included
 #-------------------------------------------------
 
-SOUNDS += CUSTOM
 SOUNDS += YM2151
 SOUNDS += YM2203
 SOUNDS += YM2608
 SOUNDS += YM2610
-SOUNDS += YM2610B
+ifdef WINUI
+SOUNDS += VLM5030
+endif
 SOUNDS += MSM5205
 SOUNDS += OKIM6295
 SOUNDS += QSOUND

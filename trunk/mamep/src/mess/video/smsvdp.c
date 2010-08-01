@@ -446,7 +446,7 @@ static TIMER_CALLBACK( smsvdp_display_callback )
 }
 
 
-READ8_DEVICE_HANDLER( sms_ms_vdp_data_r )
+READ8_DEVICE_HANDLER( sms_vdp_data_r )
 {
 	smsvdp_t *smsvdp = get_safe_token(device);
 	UINT8 temp;
@@ -469,7 +469,7 @@ READ8_DEVICE_HANDLER( sms_ms_vdp_data_r )
 }
 
 
-READ8_DEVICE_HANDLER( sms_ms_vdp_ctrl_r )
+READ8_DEVICE_HANDLER( sms_vdp_ctrl_r )
 {
 	smsvdp_t *smsvdp = get_safe_token(device);
 
@@ -493,7 +493,7 @@ READ8_DEVICE_HANDLER( sms_ms_vdp_ctrl_r )
 }
 
 
-WRITE8_DEVICE_HANDLER( sms_ms_vdp_data_w )
+WRITE8_DEVICE_HANDLER( sms_vdp_data_w )
 {
 	smsvdp_t *smsvdp = get_safe_token(device);
 	int address;
@@ -528,7 +528,7 @@ WRITE8_DEVICE_HANDLER( sms_ms_vdp_data_w )
 }
 
 
-WRITE8_DEVICE_HANDLER( sms_ms_vdp_ctrl_w )
+WRITE8_DEVICE_HANDLER( sms_vdp_ctrl_w )
 {
 	smsvdp_t *smsvdp = get_safe_token(device);
 

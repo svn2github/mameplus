@@ -1252,7 +1252,7 @@ static MACHINE_DRIVER_START( a5200 )
 
 	/* Software lists */
 	MDRV_SOFTWARE_LIST_ADD("cart_list","a5200")
-
+	
 	/* internal ram */
 	MDRV_RAM_MODIFY("messram")
 	MDRV_RAM_DEFAULT_SIZE("16K")
