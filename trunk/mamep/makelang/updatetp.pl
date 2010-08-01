@@ -538,6 +538,12 @@ sub MakeSrc
 		my $text = $_;
 		my $ref = $SRC{$text};
 
+		while ($ref =~ /(mess\/|)osd\/sdl\/[^\s]+[\s,\d]+/)
+		{
+			$sdl .= $&;
+			$ref = $` . $';
+		}
+
 		while ($ref =~ /(mess\/|)osd\/windows\/[^\s]+[\s,\d]+/)
 		{
 			$windows .= $&;
@@ -547,6 +553,12 @@ sub MakeSrc
 		while ($ref =~ /(mess\/|)osd\/winui\/[^\s]+[\s,\d]+/)
 		{
 			$ui .= $&;
+			$ref = $` . $';
+		}
+
+		while ($ref =~ /(mess\/|)tools\/[^\s]+[\s,\d]+/)
+		{
+			$tools .= $&;
 			$ref = $` . $';
 		}
 

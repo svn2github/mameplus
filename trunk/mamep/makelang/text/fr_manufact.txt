@@ -1,10 +1,6 @@
-# Chewing Gum
+# Galaxian Test ROM
 <unknown>
 <inconnu>
-
-# Kkoj Noli (Kill the Bees)
-south korean hack
-Hack Sud Coréen
 
 # Grand Prix
 4fun
@@ -70,10 +66,6 @@ AMT
 AMT Co. Ltd.
 
 
-# Omotesandou (Japan 890215)
-ANIME TEC
-
-
 # MSX
 ASCII & Microsoft
 
@@ -86,8 +78,8 @@ ATW
 ATW USA, Inc.
 
 
-# AV2Mahjong No.1 Bay Bridge no Seijo (Japan)
-AV JAPAN
+# Mahjong La Man (Japan)
+AV Japan
 
 
 # Chaos Field (GDL-0025)
@@ -98,16 +90,12 @@ Able
 Able Corp, Ltd.
 
 
-# Mayjinsen 3
-Able Corporation
-
-
 # David Crane's Amazing Tennis (Nintendo Super System)
 Absolute Entertainment Inc.
 
 
 # Vs. Tetris
-Academysoft-Elory
+Academysoft-Elorg
 
 
 # Hit Poker (Bulgaria)
@@ -146,7 +134,7 @@ Alberici
 Alfa System
 
 
-# Delta Race
+# Ace
 Allied Leisure
 
 
@@ -154,20 +142,16 @@ Allied Leisure
 Allumer
 
 
-# Flower (Sega/Alpha)
-Alpha
-
-
-# Miss Bubble 2
-Alpha Co
+# Miss Bubble II
+Alpha Co.
 
 
 # Magician Lord (set 1)
 Alpha Denshi Co.
 
 
-# Shikigami No Shiro II / The Castle of Shikigami II (GDL-0021)
-Alpha System
+# Pinkiri 8
+Alta
 
 
 # Danchi de Quiz Okusan Yontaku Desuyo! (J 001128 V1.200)
@@ -175,7 +159,7 @@ Altron
 
 
 # Amatic Unknown Slots Game
-Amatic Trading GMBH
+Amatic Trading GmbH
 
 
 # Skill '98 (ver. s98-1.33)
@@ -194,6 +178,10 @@ Amenip Nova Games Ltd.
 Ameri
 
 
+# Treasure Bonus (Subsino)
+American Alpha
+
+
 # King Pin
 American Communication Laboratories Inc.
 
@@ -210,10 +198,6 @@ American Sammy
 Amstar
 
 
-# Zero (set 2)
-Amtec
-
-
 # Logic Pro Adventure (Japan)
 Amuse World
 
@@ -224,6 +208,10 @@ Amutech
 
 # Live Quiz Show
 Andamiro
+
+
+# Omotesandou (Japan 890215)
+Anime Tec
 
 
 # Otona no Mahjong (Japan 880628)
@@ -238,7 +226,7 @@ Arc System Works
 Arcadia Systems
 
 
-# Street Fighter EX (EURO 961219)
+# Tetris The Grand Master (Japan 980710)
 Arika
 
 
@@ -254,7 +242,7 @@ Armenia
 Art & Magic
 
 
-# Mars
+# Defend the Terra Attack on the Red UFO
 Artic
 
 
@@ -262,19 +250,15 @@ Artic
 Aruze
 
 
-# Dingo (encrypted)
-Ashby Computers and Graphics LTD.
-
-
-# Son of Phoenix
-Associated Overseas MFR, Inc
+# Dingo
+Ashby Computers and Graphics Ltd.
 
 
 # Show Hand (Italy)
 Astro Corp.
 
 
-# Fast Freddie
+# Atari PSX
 Atari
 
 
@@ -286,7 +270,7 @@ Atari Games
 Athena
 
 
-# Atlus PSX
+# Power Instinct 2 (US, Ver. 94/04/08)
 Atlus
 
 
@@ -306,10 +290,6 @@ BFM
 BMC
 
 
-# Mahjong Nanpa Story (Japan 890713)
-BROOKS
-
-
 # Carrera (Version 6.7)
 BS Electronics
 
@@ -318,11 +298,11 @@ BS Electronics
 Bally Midway
 
 
-# Ultraman (Japan)
+# WonderSwan
 Bandai
 
 
-# Mobile Suit Z-Gundam: A.E.U.G. vs Titans (ZGA1 Ver. A)
+# Mazinger Z (World)
 Banpresto
 
 
@@ -358,16 +338,16 @@ Blastar
 Bonanza Enterprises, Ltd
 
 
-# Shao-lin's Road (bootleg)
-Bootleg
-
-
 # Sky Lancer (Bordun, ver.U450C)
 Bordun International
 
 
 # Crystal System BIOS
-Brezzasoft
+BrezzaSoft
+
+
+# Mahjong Nanpa Story (Japan 890713)
+Brooks
 
 
 # Doctor PC Jr
@@ -378,7 +358,7 @@ Bung
 BwB
 
 
-# Cuore 1 (italian)
+# Cuore 1 (Italian)
 C.M.C.
 
 
@@ -394,10 +374,6 @@ CES Inc., Midway Games Inc.
 CGI
 
 
-# Herbie at the Olympics (DK conversion)
-CVS
-
-
 # Cal Omega - Game 17.51 (Gaming Draw Poker)
 Cal Omega
 
@@ -406,23 +382,23 @@ Cal Omega
 Cal Omega Inc.
 
 
-# 1942 (PlayChoice-10)
+# Mobile Suit Z-Gundam: A.E.U.G. vs Titans (ZGA1 Ver. A)
 Capcom
 
 
-# Progear (USA 010117)
-Capcom, supported by Cave
+# Varth: Operation Thunderstorm (USA 920612)
+Capcom, distributed by Romstar
 
 
-# Giga Wing (USA 990222)
-Capcom, supported by Takumi
+# Pnickies (Japan 940608)
+Capcom, licensed by Compile)
 
 
 # Cool Pool
 Catalina
 
 
-# Power Instinct 2 (US, Ver. 94/04/08)
+# Dangun Feveron (Japan, Ver. 98/09/17)
 Cave
 
 
@@ -430,7 +406,7 @@ Cave
 Central Denshi
 
 
-# Eagle (set 1)
+# Aztarac
 Centuri
 
 
@@ -450,7 +426,7 @@ Century?
 Chaos
 
 
-# Funny Mouse
+# Time Limit
 Chuo Co. Ltd
 
 
@@ -466,6 +442,10 @@ Cin
 Cinematronics
 
 
+# Flower (US)
+Clarue
+
+
 # Sports Authority
 Classic Games
 
@@ -478,7 +458,7 @@ Coastal Amusements
 Coinmaster
 
 
-# Colorama (english)
+# Colorama (English)
 Coinmaster-Gaming, Ltd.
 
 
@@ -530,10 +510,6 @@ Cosmo Electronics Corporation
 Craul Denshi
 
 
-# Run Deep
-Cream
-
-
 # Galaxy Games (BIOS v1.90)
 Creative Electronics & Software
 
@@ -558,16 +534,8 @@ D.G.R.M.
 D.R. Korea
 
 
-# The Block Kuzushi (JAPAN)
-D3 Publisher
-
-
 # Poke Champ
 DGRM
-
-
-# Shadow Fighters
-DUTECH Inc.
 
 
 # Pipeline
@@ -586,10 +554,6 @@ Daiki
 Danbi
 
 
-# Vamf x1/2 (Europe)
-Danbi & F2 System
-
-
 # Super Casino
 Data Amusement
 
@@ -602,7 +566,7 @@ Data East
 Data East Corporation
 
 
-# Tattoo Assassins (US Prototype)
+# Tattoo Assassins (US prototype)
 Data East Pinball
 
 
@@ -650,12 +614,12 @@ Digital Soft
 Digitrex Techstar
 
 
+# Quizard 1.7
+Disney
+
+
 # Connect 4
 Dolbeck Systems
-
-
-# Double Point (Dong Bang Electron, bootleg?)
-Dong Bang Electron
 
 
 # Pang Pang
@@ -672,10 +636,6 @@ Dongsung
 
 # Gun Dealer
 Dooyong
-
-
-# Scorpion (Moon Cresta hardware)
-Dorneer
 
 
 # X Se Dae Quiz
@@ -698,16 +658,16 @@ Duintronic
 Duncan Brown
 
 
+# Shadow Fighters
+Dutech Inc.
+
+
 # V-Liner (set 1)
 Dyna
 
 
 # Watashiha Suzumechan (Japan)
 Dyna Electronics
-
-
-# Mazinger Z (World)
-Dynamic Pl. Toei Animation
 
 
 # Skeet Shot
@@ -742,20 +702,12 @@ EIM
 ELAM
 
 
-# Behind Enemy Lines
-EPL Productions
-
-
 # Jumping Pop
 ESD
 
 
 # Tugboat
 ETM
-
-
-# Shooting Master (EVG, 8751 315-5159a)
-EVG
 
 
 # King of Dynast Gear (version 1.8)
@@ -790,20 +742,8 @@ Ecole
 Ecole Software
 
 
-# The Alphax Z (Japan)
-Ed
-
-
 # Battle Bakraid - Unlimited Version (U.S.A.) (Tue Jun 8 1999)
 Eighting
-
-
-# PS Arcade 95
-Eighting/Raizing
-
-
-# Space Force (set 2)
-Elcon
 
 
 # Jan Jan Paradise
@@ -866,10 +806,6 @@ Enerdyne Technologies, Inc.
 Enix
 
 
-# Bust a Move 2 (JAPANESE ROM ver. 1999/07/17 10:00:00)
-Enix/Namco
-
-
 # Swinging Singles
 Ent. Ent. Ltd
 
@@ -910,11 +846,7 @@ Etona
 Evoga
 
 
-# Jolly Card (Evona Electronic)
-Evona
-
-
-# Royal Card (slovak, encrypted)
+# Royal Card (Slovak, encrypted)
 Evona Electronic
 
 
@@ -926,7 +858,7 @@ ExPotato
 Excellent System
 
 
-# Bandido
+# Car Polo
 Exidy
 
 
@@ -938,16 +870,16 @@ Extrema Systems International Ltd.
 F2 System
 
 
-# Mahjong Gal 10-renpatsu (Japan)
-FUJIC
-
-
 # Mahjong Gakuen 2 Gakuen-chou no Fukushuu
 Face
 
 
-# Frog (Falcon bootleg)
+# Crazy Kong Part II (set 1)
 Falcon
+
+
+# Crazy Kong
+Falcon?
 
 
 # Metal Saver
@@ -955,26 +887,18 @@ First Amusement
 
 
 # Forte Card
-Fortex LTD
+Fortex Ltd
 
 
-# Space Thunderbird
-Fortrek
-
-
-# The Anteater (UK)
-Free Enterprise Games
-
-
-# Super Othello
-Fujiwara
+# Mahjong Gal 10-renpatsu (Japan)
+Fujic
 
 
 # Super A'Can
 Funtech Entertainment
 
 
-# Big Deal (hungarian, set 1)
+# Big Deal (Hungarian, set 1)
 Funworld
 
 
@@ -986,16 +910,8 @@ Fuuki
 G-Rev
 
 
-# Galaxian Part 4 (hack)
-G.G.I
-
-
 # Lover Boy
 G.T Enterprise Inc
-
-
-# Flame Gunner
-GAPS Inc.
 
 
 # Happy Tour
@@ -1012,10 +928,6 @@ GM Shoji
 
 # Real Battle Mahjong King
 GMS
-
-
-# Abunai Houkago - Mou Matenai (Japan 890325)
-GREEN SOFT
 
 
 # GTI Poker
@@ -1042,7 +954,7 @@ Game Room
 Game-A-Tron
 
 
-# Intruder
+# Tora Tora (prototype?)
 GamePlan
 
 
@@ -1054,16 +966,16 @@ GameTek
 Gameace
 
 
+# Flame Gunner
+Gaps Inc.
+
+
 # Puckman Pockimon
 Genie
 
 
 # Joinem
 Global Corporation
-
-
-# Track & Field (NZ Bootleg?)
-Goldberg Enterprizes Inc.
 
 
 # Reactor
@@ -1078,19 +990,15 @@ Grand Products
 Graphic Techno
 
 
-# Trivia (UK Version 5.07)
-Grayhound Electronics
+# Abunai Houkago - Mou Matenai (Japan 890325)
+Green Soft
 
 
-# Super Crash (bootleg of Head On)
-Gremlim
-
-
-# Moon Cresta (Gremlin)
+# Blockade
 Gremlin
 
 
-# Trivia (Questions Series 8)
+# Trivia (UK Version 5.07)
 Greyhound Electronics
 
 
@@ -1106,12 +1014,12 @@ HAR
 HJ Corp
 
 
-# Laser Base (set 1)
-HOEI
-
-
 # Super Free Kick (set 2)
 Haesung
+
+
+# Snow Bros. 2 - With New Elves / Otenki Paradise
+Hanafram
 
 
 # Ghost Hunter
@@ -1134,7 +1042,7 @@ Hi-max Technology Inc.
 High Video
 
 
-# Meteor
+# Jump Bug
 Hoei
 
 
@@ -1174,12 +1082,16 @@ Human Amusement
 Human Inc.
 
 
-# Multi Amenity Cassette System BIOS
+# Nandemo Seal Iinkai
 I'Max
 
 
 # Harem
 I.G.R.
+
+
+# Mouse Attack
+ICE
 
 
 # 4 En Raya
@@ -1196,6 +1108,10 @@ IGS?
 
 # Player's Edge Plus (Set038) Set Chip
 IGT - International Gaming Technology
+
+
+# Andromeda (Japan?)
+IPM
 
 
 # See See Find Out
@@ -1230,16 +1146,12 @@ InfoCube
 Infogrames
 
 
-# Jolly Card (austrian, Funworld, bootleg)
+# Jolly Card (Austrian, Funworld, bootleg)
 Inter Games
 
 
 # Video Poker
 InterFlip
-
-
-# Pandora's Palace
-Interlogic
 
 
 # Wheels Runner
@@ -1262,16 +1174,8 @@ Irem America
 Island Design
 
 
-# Quiz (Revision 2)
-Italian bootleg
-
-
 # Squash (Itisa)
 Itisa
-
-
-# Major Havoc (Return to Vax)
-JMA
 
 
 # Poker Night (Homebrew, No sound edition)
@@ -1282,12 +1186,8 @@ JMK
 JPM
 
 
-# Check Man (Japan)
+# Top Roller
 Jaleco
-
-
-# Jatre Specter (set 1)
-Jatre
 
 
 # Final Tetris
@@ -1298,15 +1198,11 @@ Jeil Computer System
 Jetsoft
 
 
-# Star Fighter
-Jeutel
-
-
 # Trivia Challenge
 Joyland
 
 
-# Kaitei Takara Sagashi (K'K-Tokki)
+# Kaitei Takara Sagashi
 K.K. Tokki
 
 
@@ -1330,20 +1226,8 @@ KKI
 KKK
 
 
-# The Pit (bootleg on Moon Quasar hardware)
-KZH
-
-
 # Fly-Boy
 Kaneko
-
-
-# Van-Van Car (Karateco)
-Karateco
-
-
-# Scramble (Karateko, French bootleg)
-Karateko
 
 
 # Mahjong Circuit no Mehyou (Japan)
@@ -1364,10 +1248,6 @@ Kitronix
 
 # Mr. Jong (Japan)
 Kiwako
-
-
-# Flower (Komax)
-Komax
 
 
 # Scramble
@@ -1398,16 +1278,12 @@ Kural TWT
 Kyle Hodgetts
 
 
-# '99: The Last War (Kyugo)
+# Airwolf
 Kyugo
 
 
 # Ripper Ribbit (Version 2.8.4)
 LAI Games
-
-
-# Zig Zag (Galaxian hardware, set 1)
-LAX
 
 
 # Quake Arcade Tournament (Release Beta 2)
@@ -1418,10 +1294,6 @@ Lazer-Tron
 Leijac Corporation
 
 
-# Astro Laser
-Leisure Time Electronics Inc.
-
-
 # Super Baseball Double Play Home Run Derby
 Leland Corp.
 
@@ -1430,7 +1302,7 @@ Leland Corp.
 Leprechaun
 
 
-# Battle Bubble (v2.00)
+# Dynamite Bomber (Korea, Rev 1.5)
 Limenko
 
 
@@ -1440,10 +1312,6 @@ Loewen Spielautomaten
 
 # Monoshiri Quiz Osyaberi Macha (Japan)
 Logitec
-
-
-# Star Wars Trilogy (Revision A)
-LucasArts
 
 
 # Poker / Black Jack (Model 7521)
@@ -1458,14 +1326,6 @@ M.M. - B.R.L.
 M.P.
 
 
-# Mahjong Kaguyahime [BET] (Japan 880521)
-MIKI SYOUJI
-
-
-# Medal Mahjong Pachi-Slot Tengoku [BET] (Japan)
-MIKI SYOUJI/AV JAPAN
-
-
 # Catacomb
 MTM Games
 
@@ -1476,10 +1336,6 @@ MZS Tech
 
 # Wakakusamonogatari Mahjong Yonshimai (Japan)
 Maboroshi Ware
-
-
-# Mahjong Oh (V2.06J)
-Mahjong Kobo/Taito
 
 
 # Mainline Double Joker Poker
@@ -1498,20 +1354,12 @@ MakeSoft
 Marble
 
 
-# Alien Invasion
-Margamatics
-
-
 # Buster
 Marian Electronics Ltd.
 
 
-# Desert Tank
-Martin Marietta
-
-
 # Spider-Man vs The Kingpin (Mega-Tech)
-Marvel, Sega
+Marvel
 
 
 # Dengen Tenshi Taisen Janshi Shangri-la (JPN, USA, EXP, KOR, AUS)
@@ -1554,7 +1402,7 @@ Merit
 Merit Industries
 
 
-# Gekitoride-Jong Space (10011 Ver.A)
+# Bust a Move 2 (Japanese ROM ver. 1999/07/17 10:00:00)
 Metro
 
 
@@ -1602,6 +1450,14 @@ Midway Games Inc.
 Mijin
 
 
+# Mahjong Kaguyahime [BET] (Japan 880521)
+Miki Syouji
+
+
+# Medal Mahjong Pachi-Slot Tengoku [BET] (Japan)
+Miki Syouji/AV Japan
+
+
 # Truco Clemente
 Miky SRL
 
@@ -1630,11 +1486,7 @@ Mirco
 Mitchell
 
 
-# Mighty! Pang (Euro 001010)
-Mitchell, distributed by Capcom
-
-
-# Space Invaders (Model Racing)
+# unknown Model Racing gun game
 Model Racing
 
 
@@ -1646,16 +1498,16 @@ Mondial Games
 Monolith Corp.
 
 
-# Flip Maze (V2.04J)
-Moss
-
-
 # Tylz (prototype)
 Mylstar
 
 
 # Pirates
 NIX
+
+
+# Hot Blocks - Tetrix II
+NIX?
 
 
 # Zed Blade / Operation Ragnarok
@@ -1710,7 +1562,7 @@ New Image Technologies
 New Impeuropex Corp.
 
 
-# Moon Cresta (Nichibutsu)
+# Moon Alien
 Nichibutsu
 
 
@@ -1726,19 +1578,15 @@ Nichibutsu USA
 Nichibutsu?
 
 
-# Jumping Pop (Nics, Korean bootleg of Plump Pop)
+# Dragon Bowl
 Nics
 
 
-# Hot Blocks - Tetrix II
-Nics?
-
-
 # Monster Zero
-Nihon
+Nihon Game
 
 
-# Pocket Gal Deluxe (Japan v3.00)
+# Sky Smasher
 Nihon System
 
 
@@ -1748,10 +1596,6 @@ Nintendo
 
 # Donkey Kong (US set 1)
 Nintendo of America
-
-
-# Ambush
-Nippon Amuse Co-Ltd
 
 
 # PC Engine
@@ -1774,7 +1618,7 @@ Noraut Ltd.
 Nova Desitec
 
 
-# Port Man
+# Intrepid (set 1)
 Nova Games Ltd.
 
 
@@ -1784,10 +1628,6 @@ Nova Games of Canada
 
 # Platoon V.?.? US
 Nova?
-
-
-# Rallys (bootleg of Spectar)
-Novar
 
 
 # Filetto (v1.05 901009)
@@ -1810,7 +1650,7 @@ Ocean Software Limited
 Oksan
 
 
-# Nibbler (Olympia)
+# Monza GP
 Olympia
 
 
@@ -1820,10 +1660,6 @@ Olympia?
 
 # Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 3.0 / 990128)
 Omega System
-
-
-# Strafe Bomb
-Omni
 
 
 # Shuttle Invader
@@ -1850,14 +1686,6 @@ Oriental
 Oriental Soft Japan
 
 
-# Defence Command
-Outer Limits
-
-
-# Police Trainer (Rev 1.3)
-P & P Marketing
-
-
 # Magic Fly
 P&A Games
 
@@ -1874,7 +1702,7 @@ PMA
 Pacific Novelty
 
 
-# Magical Odds (set 2, alt hardware)
+# Magical Odds (set 3, alt hardware)
 Pal Company
 
 
@@ -1890,16 +1718,12 @@ Panac
 Pandora
 
 
-# Metamoqester (International)
-Pandorabox
-
-
 # Fighting Basketball
 Paradise Co. Ltd.
 
 
-# Zero Time
-Petaco S.A.
+# CD-i (Mono-I) BIOS
+Philips
 
 
 # Turtle Ship (North America)
@@ -1910,12 +1734,12 @@ Philko
 Play Mechanix
 
 
-# PlayMan Poker (german)
+# PlayMan Poker (German)
 PlayMan
 
 
 # Number Dieci (Poker)
-PlayMark Srl
+PlayMark SRL
 
 
 # Super Slam (set 1)
@@ -1946,8 +1770,8 @@ Primetek Investments
 Prince Co.
 
 
-# Panzer (bootleg of Spectar)
-Proel
+# Paca Paca Passion (Japan, PPP1/VER.A2)
+Produce
 
 
 # Noraut Joker Poker (Prologic HW)
@@ -1962,10 +1786,6 @@ Proma
 Promat
 
 
-# New Double Bet Mahjong (Japan)
-Ps Ltd.
-
-
 # Zero Gunner (Model 2A)
 Psikyo
 
@@ -1978,16 +1798,12 @@ Psygnosis
 Public Software
 
 
-# Heaven's Gate
-RACDYM
+# New Double Bet Mahjong (Japan)
+Public Software Ltd.
 
 
 # Thayer's Quest
 RDI Video Systems
-
-
-# Kyukyoku no Hito [BET] (Japan 880824)
-ROLLER TRON
 
 
 # Azurian Attack
@@ -1998,24 +1814,12 @@ Rait Electronics Ltd
 Raizing
 
 
-# Dimahoo (Euro 000121)
-Raizing, distributed by Capcom
-
-
-# Hit Me
-RamTek
-
-
 # M-79 Ambush
-Ramtek
+RamTek
 
 
 # R.C. Pro-Am (PlayChoice-10)
 Rare
-
-
-# Vs. Slalom
-Rare LTD.
 
 
 # Tickee Tickats
@@ -2030,16 +1834,12 @@ Rastersoft
 Recreativos Franco
 
 
-# Astro Fire
-Rene Pierre
-
-
-# Nibbler (set 1)
+# Levers
 Rock-Ola
 
 
-# Levers
-Rock-ola
+# Kyukyoku no Hito [BET] (Japan 880824)
+Roller Tron
 
 
 # Romar Triv
@@ -2047,7 +1847,7 @@ Romar
 
 
 # Grand Prix '98
-Romtec Co. LTD
+Romtec Co. Ltd
 
 
 # Country Girl (Japan set 1)
@@ -2062,19 +1862,7 @@ Ryoto Electric Co.
 SA
 
 
-# Astron Belt
-SEGA
-
-
-# Champion Italian PK (bootleg, blue board)
-SGS
-
-
 # Trivia Hangup (Question Set 1)
-SMS MFG CORP
-
-
-# HI-LO Double Up Joker Poker
 SMS Manufacturing Corp.
 
 
@@ -2082,20 +1870,8 @@ SMS Manufacturing Corp.
 SNK
 
 
-# Meijinsen
-SNK Electronics corp.
-
-
 # Metal Slug 5 (JAMMA PCB)
 SNK Playmore
-
-
-# Prehistoric Isle in 1930 (US)
-SNK of America
-
-
-# Bishoujo Janshi Pretty Sailor 18-kin (Japan)
-SPHINX
 
 
 # SSI Poker (v2.4)
@@ -2170,16 +1946,8 @@ Sculptured Software Inc.
 Seatongrove Ltd
 
 
-# Fast Draw (poker conversion kit)?
-Seeburg?
-
-
 # Ali Baba and 40 Thieves
 Sega
-
-
-# Tottemo E Jong
-Seibu
 
 
 # Stinger
@@ -2190,19 +1958,11 @@ Seibu Denshi
 Seibu Kaihatsu
 
 
-# Kung-Fu Taikun
-Seibu Kaihatsu Inc.
-
-
 # Hyper Pacman
 SemiCom
 
 
-# Hex Pool (Senko)
-Senko
-
-
-# Special Forces
+# Rack + Roll
 Senko Industries
 
 
@@ -2235,15 +1995,11 @@ Seta Kikaku Corp.
 
 
 # Hana Awase
-Setakikaku, Ltd.
+Seta Kikaku, Ltd.
 
 
 # Famicom Twin
 Sharp
-
-
-# Hex Pool (Shinkai)
-Shinkai
 
 
 # Driving Force (Pac-Man conversion)
@@ -2258,12 +2014,8 @@ Shoei
 Shonan
 
 
-# Condor (bootleg of Phoenix)
+# Invasion (Sidam)
 Sidam
-
-
-# Dig Dug (manufactured by Sidam)
-Sidam license
 
 
 # Astropal
@@ -2290,23 +2042,15 @@ Signatron USA
 Simutrek
 
 
-# Sky Kid (Sipem)
-Sipem license
-
-
 # Erotictac/Tactic
 Sisteme
-
-
-# Cannon Ball (bootleg on Crazy Kong hardware) (set 1, buggy)
-Soft
 
 
 # Disco Boy
 Soft Art Co.
 
 
-# Jolly Card (croatian, set 2)
+# Jolly Card (Croatian, set 2)
 Soft Design
 
 
@@ -2318,8 +2062,16 @@ Solar Games
 SonoKong
 
 
+# ZN1
+Sony
+
+
 # Dambusters (US, set 1)
 South West Research
+
+
+# Southern Systems Joker Poker
+Southern Systems & Assembly
 
 
 # Mosaic
@@ -2335,7 +2087,11 @@ Spacy Industrial, Ltd.
 
 
 # Jolly Card Professional 2.0 (Spale Soft)
-Spale-Soft
+Spale Soft
+
+
+# Bishoujo Janshi Pretty Sailor 18-kin (Japan)
+Sphinx
 
 
 # Mahjong Dunhuang
@@ -2348,10 +2104,6 @@ Square
 
 # Super Shanghai 2005 (GDL-0031)
 Starfish
-
-
-# Rack + Roll
-Status
 
 
 # Status Black Jack (V1.0c)
@@ -2367,14 +2119,14 @@ Stella
 
 
 # Armored Car (set 1)
-Stern
-
-
-# Cliff Hanger
 Stern Electronics
 
 
-# Swarm (bootleg?)
+# Fast Draw (poker conversion kit)?
+Stern Electronics?
+
+
+# Pisces
 Subelectro
 
 
@@ -2403,10 +2155,6 @@ Sun Mixing
 
 
 # Goindol (World)
-Sun a Electronics
-
-
-# Rough Ranger (v2.0, unprotected, bootleg?)
 SunA
 
 
@@ -2416,10 +2164,6 @@ Sunn
 
 # Vs. Freedom Force
 Sunsoft
-
-
-# Shanghai Sangokuhai Tougi (Ver 2.01J)
-Sunsoft/Taito
 
 
 # Othello Derby (Japan)
@@ -2450,7 +2194,7 @@ System Ten
 SystemBit
 
 
-# Pebble Beach - The Great Shot (JUE 950913 V0.990)
+# New Super 3D Golf Simulation - Waialae No Kiseki / Super Mahjong 2 (Super Famicom Box)
 T&E Soft
 
 
@@ -2459,15 +2203,15 @@ T.I.C.
 
 
 # Mahjong Gal no Kokuhaku (Japan)
-T.R.TEC
+T.R.Tec
 
 
-# Royal Card (austrian, set 1)
+# Jolly Card (Austrian)
 TAB Austria
 
 
-# Jolly Card (austrian)
-TAB-Austria
+# Cabal (World, Joystick version)
+TAD Corporation
 
 
 # Speed Spin
@@ -2482,32 +2226,12 @@ TDS
 TDS & Mints
 
 
-# Cannon Ball (bootleg on Crazy Kong hardware) (set 2, buggy)
-TV Game Gruenberg
-
-
-# Ameisenbaer (German)
-TV-Tuning
-
-
-# Cabal (US set 1, Trackball version)
-Tad
-
-
-# Cabal (World, Joystick version)
-Tad Corporation
-
-
 # Rock Climber
 Taito
 
 
 # Kick and Run (US)
 Taito America Corp
-
-
-# Tiger Heli (US)
-Taito America Corp.
 
 
 # Qix (set 1)
@@ -2530,20 +2254,20 @@ Taito Europe Corporation
 Taito do Brasil
 
 
-# Galaxy Wars (Taito?)
-Taito?
-
-
 # Dynamic Ski
 Taiyo
 
 
-# Battle Arena Toshinden 2 (USA 951124)
+# Chibi Marukochan Deluxe Quiz
 Takara
 
 
 # Koro Koro Quest (Japan)
 Takumi
+
+
+# The Block Kuzushi (Japan)
+Tamsoft
 
 
 # Shisensho - Joshiryo-Hen (Japan)
@@ -2558,7 +2282,7 @@ Tatsumi
 Tazmi
 
 
-# Hole Land
+# Ambush
 Tecfri
 
 
@@ -2590,16 +2314,12 @@ Tehkan
 Tekunon Kougyou
 
 
-# Mr. TNT
+# Eggor
 Telko
 
 
 # Snezhnaja Koroleva
 Terminal
-
-
-# Galaxian Test ROM
-Test ROM
 
 
 # Lethal Justice
@@ -2614,10 +2334,6 @@ Thomas Automatics
 Thunderhead Inc.
 
 
-# Area 51 (Time Warner License)
-Time Warner
-
-
 # Fishin' Frenzy (prototype)
 Time Warner Interactive
 
@@ -2626,8 +2342,8 @@ Time Warner Interactive
 Toaplan
 
 
-# Masked Riders Club Battle Race
-Toei
+# Shin Nihon Pro Wrestling Toukon Retsuden 3 Arcade Edition (Japan, TR1/VER.A)
+Tomy
 
 
 # Leprechaun
@@ -2650,10 +2366,6 @@ Triangle Service
 Triumph Software Inc.
 
 
-# Ultraman Club - Tatakae! Ultraman Kyoudai!!
-Tsuburaya Prod.
-
-
 # Multi Game (Tung Sheng Electronics)
 Tung Sheng Electronics
 
@@ -2670,7 +2382,7 @@ Tuning
 U.S. Games
 
 
-# Mouser
+# Dorodon (set 1)
 UPL
 
 
@@ -2698,10 +2410,6 @@ Universal
 Universal Video Games
 
 
-# Capitol
-Universal Video Spiel
-
-
 # Taiwan Chess Legend
 Uniwang
 
@@ -2714,15 +2422,11 @@ V-System Co.
 VEB Polytechnik Karl-Marx-Stadt
 
 
-# Meteorites
-VGG
-
-
 # Virtual Combat
 VR8 Inc.
 
 
-# Millpac
+# Bagman
 Valadon Automation
 
 
@@ -2732,10 +2436,6 @@ Vectorbeam
 
 # Card Line
 Veltmeijer
-
-
-# Pinball Champ '95 (bootleg?)
-Veltmeijer Automaten
 
 
 # Space Force (set 1)
@@ -2754,11 +2454,7 @@ Viccom
 Videa
 
 
-# Space Attack
-Video Games GMBH
-
-
-# Super Tank
+# Looping
 Video Games GmbH
 
 
@@ -2767,19 +2463,11 @@ Video Klein
 
 
 # Video System PSX
-Video System
-
-
-# Power Spikes II
 Video System Co.
 
 
 # MegaDuck/Cougar Boy
 Videojet/Timlex/Cougar
-
-
-# Griffon (bootleg of Phoenix)
-Videotron
 
 
 # Videotronics Poker
@@ -2802,32 +2490,24 @@ Vision Electronics
 Vivid
 
 
-# Ambush (Volt Elec co-ltd)
-Volt Elec co-ltd
-
-
-# Success Joe (World)
-WAVE
-
-
 # Sea Hunter Penguin
 WSAC Systems?
 
 
-# Otenami Haiken Final (V2.07JC)
+# Mahjong Oh (V2.06J)
 Warashi
+
+
+# Success Joe (World)
+Wave
 
 
 # Zorton Brothers (Los Justicieros)
 Web Picmatic
 
 
-# Sukeban Jansi Ryuko (set 1, System 16A, FD1089B 317-5021)
-White Board
-
-
 # DakkoChan House (MC-8123, 317-0014)
-Whiteboard
+White Board
 
 
 # Hit the Ice (US)
@@ -2838,16 +2518,16 @@ Williams
 Windom
 
 
-# Lucky Girl? (Wing)
+# Yosaku To Donbei (set 1)
 Wing
 
 
-# Lucky 74 (bootleg, set 1)
-Wing Co.,Ltd.
+# Ron Jan (Super)
+Wing Co., Ltd
 
 
-# Slot Carnival
-Wing Co.Ltd
+# Lucky Girl? (Wing)
+Wing Co., Ltd.
 
 
 # Magical Cat Adventure
@@ -2858,28 +2538,16 @@ Wintechno
 Wonwoo Systems
 
 
-# King of Boxer (English)
-Woodplace
-
-
 # Clash-Road
-Woodplace Inc.
+Wood Place Inc.
 
 
 # Vegas Roulette
 World Game
 
 
-# Kyros
-World Games Inc
-
-
 # Mahjong Club [BET] (Japan)
 Xex
-
-
-# Spectrum 2000 (Euro)
-YONA Tech
 
 
 # Computer Quiz Atama no Taisou (Japan)
@@ -2906,6 +2574,10 @@ Yankee Game Technology
 Yanyaka
 
 
+# Spectrum 2000 (Euro)
+Yona Tech
+
+
 # Mahjong Yoshimoto Gekijou (Japan)
 Yoshimoto Kougyou
 
@@ -2915,7 +2587,7 @@ Yubis
 
 
 # Mahjong Janjan Baribari (Japan)
-Yubis/AV JAPAN
+Yubis/AV Japan
 
 
 # Mahjong Gakuen
@@ -2934,7 +2606,7 @@ Yumekobo
 Yun Sung
 
 
-# Eyes (Zaccaria)
+# Scorpion (set 1)
 Zaccaria
 
 
@@ -2946,7 +2618,7 @@ Zelco
 Zenitone
 
 
-# Space Attack II
+# Super Invaders (Zenitone-Microsec)
 Zenitone-Microsec Ltd
 
 
@@ -2958,20 +2630,12 @@ Zenitone-Microsec Ltd.
 Zilec
 
 
-# Wizz Quiz (version 4)
-Zilec - Zenitone
-
-
 # Blue Print (Midway)
 Zilec Electronics
 
 
 # Vortex
 Zilec Electronics Ltd.
-
-
-# Space Phantoms
-Zilec Games
 
 
 # Check Man
@@ -2982,7 +2646,7 @@ Zilec-Zenitone
 bootleg
 
 
-# Omega
+# Swarm (bootleg?)
 bootleg?
 
 
