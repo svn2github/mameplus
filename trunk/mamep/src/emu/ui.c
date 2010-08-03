@@ -116,8 +116,6 @@ static rgb_t ui_bgcolor;
 /* font for rendering */
 static render_font *ui_font;
 
-float ui_font_height;
-
 static int multiline_text_box_visible_lines;
 static int multiline_text_box_target_lines;
 
@@ -782,12 +780,6 @@ void ui_draw_text(render_container *container, const char *buf, float x, float y
 }
 
 
-void ui_draw_text_bk(render_container *container, const char *buf, float x, float y, int col)
-{
-	ui_draw_text_full(container, buf, x, y, 1.0f - x, JUSTIFY_LEFT, WRAP_WORD, DRAW_NORMAL, UI_TEXT_COLOR, col, NULL, NULL);
-}
-
-
 /*-------------------------------------------------
     ui_draw_text_full - full featured text
     renderer with word wrapping, justification,
@@ -1176,6 +1168,7 @@ void ui_draw_text_box(render_container *container, const char *text, int justify
 }
 
 
+#ifdef CMD_LIST
 void ui_draw_text_box_fixed_width(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor)
 {
 	int mode_save = draw_text_fixed_mode;
@@ -1185,12 +1178,7 @@ void ui_draw_text_box_fixed_width(render_container *container, const char *text,
 
 	draw_text_fixed_mode = mode_save;
 }
-
-
-void ui_draw_text_box_reset_scroll(void)
-{
-	scroll_reset = TRUE;
-}
+#endif /* CMD_LIST */
 
 
 int ui_window_scroll_keys(running_machine *machine)

@@ -124,7 +124,9 @@ struct _slider_state
 ***************************************************************************/
 
 #define ui_draw_message_window(c, text) ui_draw_text_box(c, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR)
+#ifdef CMD_LIST
 #define ui_draw_message_window_fixed_width(c, text) ui_draw_text_box_fixed_width(c, text, JUSTIFY_LEFT, 0.5f, 0.5f, UI_BACKGROUND_COLOR)
+#endif /* CMD_LIST */
 
 
 
@@ -173,8 +175,9 @@ int ui_draw_text_set_fixed_width_mode(int mode);
 
 /* draw a multi-line message with a box around it */
 void ui_draw_text_box(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
+#ifdef CMD_LIST
 void ui_draw_text_box_fixed_width(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
-void ui_draw_text_box_reset_scroll(void);
+#endif /* CMD_LIST */
 
 /* display a temporary message at the bottom of the screen */
 void CLIB_DECL ui_popup_time(int seconds, const char *text, ...) ATTR_PRINTF(2,3);

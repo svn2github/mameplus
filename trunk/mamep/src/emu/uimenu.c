@@ -13,13 +13,13 @@
 #include "emuopts.h"
 #include "ui.h"
 #include "rendutil.h"
-#include "rendfont.h"
 #include "cheat.h"
 #include "uiimage.h"
 #include "uiinput.h"
 #include "uimenu.h"
 #include "audit.h"
 #include "crsshair.h"
+#include "rendfont.h" // For convert_command_glyph
 #ifdef CMD_LIST
 #include "cmddata.h"
 #endif /* CMD_LIST */
@@ -3973,7 +3973,7 @@ static void menu_select_game_populate(running_machine *machine, ui_menu *menu, s
 		if (driver != NULL)
 		{
 			const game_driver *cloneof = driver_get_clone(driver);
-			ui_menu_item_append(menu, driver->name, driver->description, (cloneof == NULL || (cloneof->flags & GAME_IS_BIOS_ROOT)) ? 0 : MENU_FLAG_INVERT, (void *)driver);
+			ui_menu_item_append(menu, driver->name, _LST(driver->description), (cloneof == NULL || (cloneof->flags & GAME_IS_BIOS_ROOT)) ? 0 : MENU_FLAG_INVERT, (void *)driver);
 		}
 	}
 
@@ -4126,10 +4126,10 @@ static void menu_select_game_custom_render(running_machine *machine, ui_menu *me
 		const char *gfxstat, *soundstat;
 
 		/* first line is game name */
-		sprintf(&tempbuf[0][0], "%-.100s", driver->description);
+		sprintf(&tempbuf[0][0], "%-.100s", _LST(driver->description));
 
 		/* next line is year, manufacturer */
-		sprintf(&tempbuf[1][0], "%s, %-.100s", driver->year, driver->manufacturer);
+		sprintf(&tempbuf[1][0], "%s, %-.100s", driver->year, _MANUFACT(driver->manufacturer));
 
 		/* next line is overall driver status */
 		if (driver->flags & GAME_NOT_WORKING)
@@ -4156,7 +4156,7 @@ static void menu_select_game_custom_render(running_machine *machine, ui_menu *me
 	}
 	else
 	{
-		const char *s = COPYRIGHT;
+		const char *s = _(COPYRIGHT);
 		int line = 0;
 		int col = 0;
 

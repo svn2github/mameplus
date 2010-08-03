@@ -99,7 +99,9 @@
 #include "ui.h"
 #include "uiinput.h"
 #include "debug/debugcon.h"
+#ifdef USE_SHOW_INPUT_LOG
 #include "rendfont.h"
+#endif /* USE_SHOW_INPUT_LOG */
 
 #include <ctype.h>
 #include <time.h>
