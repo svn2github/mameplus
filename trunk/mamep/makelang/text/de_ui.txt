@@ -347,7 +347,7 @@ Auto clockwise
 Automatisch im Uhrzeigersinn
 
 # osd/winui/mameui.rc: 896
-Auto pause when playback is finished
+Auto pause when playback ended
 Automatisch Pause when Wiedergabe beendet ist
 
 # osd/winui/mameui.rc: 887

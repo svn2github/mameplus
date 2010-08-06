@@ -395,7 +395,7 @@ Auto clockwise
 Sentit horari automàtic 
 
 # osd/winui/mameui.rc: 896
-Auto pause when playback is finished
+Auto pause when playback ended
 Acte pausar quan la reproducció és finalitzada
 
 # osd/winui/mameui.rc: 887

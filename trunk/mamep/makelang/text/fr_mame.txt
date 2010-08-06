@@ -3411,7 +3411,7 @@ assert: %s:%d: %s
 assert : %s:%d: %s
 
 # emu/emuopts.c: 193
-automatic pause when playback is finished
+automatic pause when playback ended
 pause auto quand le playback est termin?
 
 # emu/emuopts.c: 103

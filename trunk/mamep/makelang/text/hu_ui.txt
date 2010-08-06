@@ -403,7 +403,7 @@ Auto clockwise
 Automatán jobbra
 
 # osd/winui/mameui.rc: 896
-Auto pause when playback is finished
+Auto pause when playback ended
 Automatikus leállás a lejátszás végén
 
 # osd/winui/mameui.rc: 887

@@ -4479,7 +4479,7 @@ auto%2d/%d
 자동%2d/%d
 
 # emu/emuopts.c: 193
-automatic pause when playback is finished
+automatic pause when playback ended
 리플레이 재생이 끝나면 자동으로 일시정지
 
 # emu/emuopts.c: 103

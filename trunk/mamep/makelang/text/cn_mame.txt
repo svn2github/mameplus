@@ -4755,8 +4755,8 @@ auto%2d/%d
 自动%2d/%d
 
 # emu/emuopts.c: 193
-automatic pause when playback is finished
-播放完成时自动暂停
+automatic pause when playback ended
+播放结束时自动暂停
 
 # emu/emuopts.c: 103
 automatically adjusts the speed of gameplay to keep the refresh rate lower than the screen

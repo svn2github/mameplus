@@ -443,7 +443,7 @@ Auto clockwise
 ©“®“I‚ÉŒv‰ñ‚è
 
 # osd/winui/mameui.rc: 896
-Auto pause when playback is finished
+Auto pause when playback ended
 Ä¶I—¹‚É©“®’â~
 
 # osd/winui/mameui.rc: 656

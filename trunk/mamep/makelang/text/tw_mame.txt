@@ -4743,7 +4743,7 @@ auto%2d/%d
 自動%2d/%d
 
 # emu/emuopts.c: 193
-automatic pause when playback is finished
+automatic pause when playback ended
 輸入檔播放結束時自動暫停
 
 # emu/emuopts.c: 103

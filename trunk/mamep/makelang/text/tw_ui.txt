@@ -463,7 +463,7 @@ Auto clockwise
 自動順時針
 
 # osd/winui/mameui.rc: 896
-Auto pause when playback is finished
+Auto pause when playback ended
 輸入檔播放結束時自動暫停
 
 # osd/winui/mameui.rc: 656

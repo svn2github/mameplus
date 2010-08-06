@@ -5059,7 +5059,7 @@ auto%2d/%d
 
 
 # emu/emuopts.c: 193
-automatic pause when playback is finished
+automatic pause when playback ended
 
 
 # emu/emuopts.c: 103
