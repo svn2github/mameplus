@@ -39,9 +39,6 @@
 //
 //============================================================
 
-#ifndef __WINMAIN_H__
-#define __WINMAIN_H__
-
 #include "options.h"
 
 
@@ -130,8 +127,6 @@
 #define WINOPTION_JOYID8			"joyid8"
 #endif /* JOYSTICK_ID */
 
-#include "options.h"
-
 
 
 //============================================================
@@ -165,5 +160,3 @@ void CLIB_DECL mame_printf_verbose(const char *text, ...) ATTR_PRINTF(1,2);
 
 // use this to ping the watchdog
 void winmain_watchdog_ping(void);
-
-#endif

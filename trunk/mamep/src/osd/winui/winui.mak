@@ -169,24 +169,28 @@ $(UIOBJ)/mamevers.rc: $(OBJ)/build/verinfo$(EXE) $(SRC)/version.c
 # only definitions RCDEFS for resource file
 #-------------------------------------------------
 
-ifneq ($(USE_UI_COLOR_DISPLAY),)
-RCDEFS += -DUI_COLOR_DISPLAY
-endif
-
-ifneq ($(USE_AUTO_PAUSE_PLAYBACK),)
-RCDEFS += -DAUTO_PAUSE_PLAYBACK
-endif
-
 ifneq ($(USE_SCALE_EFFECTS),)
 RCDEFS += -DUSE_SCALE_EFFECTS
+endif
+
+ifneq ($(USE_UI_COLOR_DISPLAY),)
+RCDEFS += -DUI_COLOR_DISPLAY
 endif
 
 ifneq ($(USE_TRANS_UI),)
 RCDEFS += -DTRANS_UI
 endif
 
+ifneq ($(USE_CONFIRM_QUIT),)
+RCDEFS += -DCONFIRM_QUIT
+endif
+
 ifneq ($(USE_JOYSTICK_ID),)
 RCDEFS += -DJOYSTICK_ID
+endif
+
+ifneq ($(USE_PLAYBACK_END_PAUSE),)
+RCDEFS += -DPLAYBACK_END_PAUSE
 endif
 
 ifneq ($(USE_VOLUME_AUTO_ADJUST),)

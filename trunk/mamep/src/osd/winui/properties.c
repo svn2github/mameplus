@@ -3220,10 +3220,12 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_BIOS,					DM_STRING,	OPTION_BIOS);
 	datamap_add(properties_datamap, IDC_CHEAT,					DM_BOOL,	OPTION_CHEAT);
 	datamap_add(properties_datamap, IDC_SKIP_GAME_INFO,			DM_BOOL,	OPTION_SKIP_GAMEINFO);
+#ifdef CONFIRM_QUIT
 	datamap_add(properties_datamap, IDC_CONFIRM_QUIT,			DM_BOOL,	OPTION_CONFIRM_QUIT);
-#ifdef AUTO_PAUSE_PLAYBACK
-	datamap_add(properties_datamap, IDC_AUTO_PAUSE_PLAYBACK,		DM_BOOL,	OPTION_AUTO_PAUSE_PLAYBACK);
-#endif /* AUTO_PAUSE_PLAYBACK */
+#endif /* CONFIRM_QUIT */
+#ifdef PLAYBACK_END_PAUSE
+	datamap_add(properties_datamap, IDC_PLAYBACK_END_PAUSE,			DM_BOOL,	OPTION_PLAYBACK_END_PAUSE);
+#endif /* PLAYBACK_END_PAUSE */
 #ifdef TRANS_UI
 	datamap_add(properties_datamap, IDC_TRANSPARENCY,			DM_INT,  	OPTION_UI_TRANSPARENCY);
 	datamap_add(properties_datamap, IDC_TRANSPARENCYDISP,			DM_INT,  	OPTION_UI_TRANSPARENCY);

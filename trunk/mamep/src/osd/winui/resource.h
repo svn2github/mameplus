@@ -355,8 +355,8 @@
 #define IDC_DISPLAY_SPLASH_SCREEN       1262 // USE_SHOW_SPLASH_SCREEN
 #define IDC_SHOW_TREE_SHEET             1263 // USE_TREE_SHEET
 
-#define IDC_AUTO_PAUSE_PLAYBACK         1301 // USE_AUTO_PAUSE_PLAYBACK
-#define IDC_CONFIRM_QUIT                1302 // confirm_quit
+#define IDC_CONFIRM_QUIT                1301 // USE_CONFIRM_QUIT
+#define IDC_PLAYBACK_END_PAUSE          1302 // USE_PLAYBACK_END_PAUSE
 #define IDC_VOLUME_ADJUST               1303 // USE_VOLUME_AUTO_ADJUST
 #define IDC_BROKEN_ICON                 1304 // use not working icon
 #define IDC_EDIT_BROKEN_COLOR           1305 // set not working color

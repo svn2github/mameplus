@@ -57,7 +57,6 @@
 #include "rendutil.h"
 #include "ui.h"
 #include "uiinput.h"
-
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */
@@ -102,6 +101,7 @@ static bitmap_t *effect_bitmap;
 static int cur_scale_xsize;
 static int cur_scale_ysize;
 #endif /* USE_SCALE_EFFECTS */
+
 
 
 //============================================================
@@ -244,8 +244,8 @@ void osd_update(running_machine *machine, int skip_redraw)
 	{
 #ifdef USE_SCALE_EFFECTS
 		extern int win_scale_res_changed;
-
 		win_scale_res_changed = 0;
+
 		if (scale_effect.xsize != cur_scale_xsize || scale_effect.ysize != cur_scale_ysize)
 		{
 			win_scale_res_changed = 1;
@@ -426,6 +426,7 @@ static void extract_video_config(running_machine *machine)
 
 #ifdef USE_SCALE_EFFECTS
 	stemp = options_get_string(mame_options(), OPTION_SCALE_EFFECT);
+
 	if (stemp)
 	{
 		scale_decode(stemp);

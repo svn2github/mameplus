@@ -160,9 +160,6 @@ float ui_get_string_width(const char *s);
 rgb_t ui_get_rgb_color(rgb_t color);
 #endif /* UI_COLOR_DISPLAY */
 
-/* draw a box filled with a given color */
-void ui_draw_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t backcolor);
-
 /* draw an outlined box filled with a given color */
 void ui_draw_outlined_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t backcolor);
 
@@ -171,7 +168,6 @@ void ui_draw_text(render_container *container, const char *buf, float x, float y
 
 /* full-on text draw with all the options */
 void ui_draw_text_full(render_container *container, const char *origs, float x, float y, float wrapwidth, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight);
-int ui_draw_text_set_fixed_width_mode(int mode);
 
 /* draw a multi-line message with a box around it */
 void ui_draw_text_box(render_container *container, const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
@@ -213,8 +209,6 @@ int ui_get_use_natural_keyboard(running_machine *machine);
 
 /* specifies whether the natural keyboard is active */
 void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keyboard);
-
-void ui_auto_pause(void);
 
 int ui_window_scroll_keys(running_machine *machine);
 

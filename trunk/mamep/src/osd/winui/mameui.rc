@@ -890,12 +890,14 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,97,135,10,0,HIDC_MULTITHREAD_RENDERING
     CONTROL         "Coin lockout",IDC_COINLOCKOUT,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,10,110,135,10,0,HIDC_COINLOCKOUT
+#ifdef CONFIRM_QUIT
     CONTROL         "Quit game with confirmation",IDC_CONFIRM_QUIT,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,123,135,10
-#ifdef AUTO_PAUSE_PLAYBACK
-    CONTROL         "Auto pause when playback is finished",IDC_AUTO_PAUSE_PLAYBACK,"Button",
+#endif /* CONFIRM_QUIT */
+#ifdef PLAYBACK_END_PAUSE
+    CONTROL         "Auto pause when playback ended",IDC_PLAYBACK_END_PAUSE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,136,135,10
-#endif /* AUTO_PAUSE_PLAYBACK */
+#endif /* PLAYBACK_END_PAUSE */
 #ifdef TRANS_UI
     GROUPBOX        "Transparency in-game UI",IDC_STATIC,4,149,140,30
     CONTROL         "IntensitySlider",IDC_TRANSPARENCY,"msctls_trackbar32",

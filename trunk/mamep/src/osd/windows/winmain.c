@@ -503,7 +503,7 @@ void osd_init(running_machine *machine)
 		osd_num_processors = atoi(stemp);
 		if (osd_num_processors < 1)
 		{
-			mame_printf_warning("Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n");
+			mame_printf_warning(_WINDOWS("Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n"));
 			osd_num_processors = 0;
 		}
 	}

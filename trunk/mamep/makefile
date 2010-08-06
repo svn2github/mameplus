@@ -429,6 +429,10 @@ ifneq ($(USE_TRANS_UI),)
 DEFS += -DTRANS_UI
 endif
 
+ifneq ($(USE_CONFIRM_QUIT),)
+DEFS += -DCONFIRM_QUIT
+endif
+
 ifneq ($(USE_JOYSTICK_ID),)
 DEFS += -DJOYSTICK_ID
 endif
@@ -441,8 +445,8 @@ ifneq ($(USE_INP_CAPTION),)
 DEFS += -DINP_CAPTION
 endif
 
-ifneq ($(USE_AUTO_PAUSE_PLAYBACK),)
-DEFS += -DAUTO_PAUSE_PLAYBACK
+ifneq ($(USE_PLAYBACK_END_PAUSE),)
+DEFS += -DPLAYBACK_END_PAUSE
 endif
 
 ifneq ($(USE_SHOW_INPUT_LOG),)

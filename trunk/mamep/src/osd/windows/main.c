@@ -57,7 +57,7 @@ extern int utf8_main(int argc, char *argv[]);
 //============================================================
 
 // undo the command-line #define that maps main to utf8_main in all other cases
-#if !defined(WINUI) || defined(MESS)
+#ifndef WINUI
 #undef main
 #undef wmain
 #endif

@@ -430,8 +430,8 @@ static const int win_key_trans_table[][4] =
 	{ ITEM_ID_PAUSE,		DIK_PAUSE,			VK_PAUSE,		0 },
 	{ ITEM_ID_CANCEL,		0,					VK_CANCEL,		0 },
 	{ ITEM_ID_KANA,			DIK_KANA,			0x15,	 		0 },
-	{ ITEM_ID_CONVERT,		DIK_CONVERT,		0x1c,			0 },
-	{ ITEM_ID_NONCONVERT,	DIK_NOCONVERT,		0x1d,			0 },
+	{ ITEM_ID_CONVERT,		DIK_CONVERT,			0x1c,			0 },
+	{ ITEM_ID_NONCONVERT,		DIK_NOCONVERT,			0x1d,			0 },
 
 	// New keys introduced in Windows 2000. These have no MAME codes to
 	// preserve compatibility with old config files that may refer to them

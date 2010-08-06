@@ -177,10 +177,12 @@
 #define OPTION_BIOS					"bios"
 #define OPTION_CHEAT				"cheat"
 #define OPTION_SKIP_GAMEINFO		"skip_gameinfo"
+#ifdef CONFIRM_QUIT
 #define OPTION_CONFIRM_QUIT			"confirm_quit"
-#ifdef AUTO_PAUSE_PLAYBACK
-#define OPTION_AUTO_PAUSE_PLAYBACK		"auto_pause"
-#endif /* AUTO_PAUSE_PLAYBACK */
+#endif /* CONFIRM_QUIT */
+#ifdef PLAYBACK_END_PAUSE
+#define OPTION_PLAYBACK_END_PAUSE		"playback_end_pause"
+#endif /* PLAYBACK_END_PAUSE */
 #ifdef TRANS_UI
 #define OPTION_UI_TRANSPARENCY			"ui_transparency"
 #endif /* TRANS_UI */

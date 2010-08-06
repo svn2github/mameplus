@@ -4624,12 +4624,18 @@ static void playback_end(running_machine *machine, const char *message)
 #ifdef INP_CAPTION
 		if (portdata->caption_file != NULL)
 			mame_fclose(portdata->caption_file);
+
 		portdata->caption_file = NULL;
 #endif /* INP_CAPTION */
 
 		/* pop a message */
 		if (message != NULL)
 			popmessage(_("Playback Ended\nReason: %s"), message);
+
+#ifdef PLAYBACK_END_PAUSE
+		if (options_get_bool(machine->options(), OPTION_PLAYBACK_END_PAUSE))
+			machine->pause();
+#endif /* PLAYBACK_END_PAUSE */
 
 		/* display speed stats */
 		portdata->playback_accumulated_speed /= portdata->playback_accumulated_frames;

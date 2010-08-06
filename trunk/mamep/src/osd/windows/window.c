@@ -135,6 +135,7 @@ int win_scale_res_changed;
 #endif /* USE_SCALE_EFFECTS */
 
 
+
 //============================================================
 //  LOCAL VARIABLES
 //============================================================
@@ -757,6 +758,7 @@ void winwindow_video_window_update(win_window_info *window)
 				SendMessage(window->hwnd, WM_USER_SET_MAXSIZE, 0, 0);
 		}
 	}
+
 #ifdef USE_SCALE_EFFECTS
 	if (win_scale_res_changed)
 	{

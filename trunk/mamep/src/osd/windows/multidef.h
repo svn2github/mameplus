@@ -33,6 +33,6 @@
 
 
 #define COMPILE_MULTIMON_STUBS
-//#include <multimon.h>
+#include <multimon.h>
 
 #endif /* __MULTIDEF__ */

@@ -125,7 +125,6 @@ static int draw_text_scroll_offset;
 
 static int message_window_scroll;
 
-static int auto_pause;
 static int scroll_reset;
 
 /* current UI handler */
@@ -182,7 +181,9 @@ static UINT32 handler_messagebox_ok(running_machine *machine, render_container *
 static UINT32 handler_messagebox_anykey(running_machine *machine, render_container *container, UINT32 state);
 static UINT32 handler_ingame(running_machine *machine, render_container *container, UINT32 state);
 static UINT32 handler_load_save(running_machine *machine, render_container *container, UINT32 state);
+#ifdef CONFIRM_QUIT
 static UINT32 handler_confirm_quit(running_machine *machine, render_container *container, UINT32 state);
+#endif /* CONFIRM_QUIT */
 
 /* slider controls */
 static slider_state *slider_alloc(running_machine *machine, const char *title, INT32 minval, INT32 defval, INT32 maxval, INT32 incval, slider_update update, void *arg);
@@ -497,7 +498,6 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 	/* initialize the on-screen display system */
 	slider_list = slider_current = slider_init(machine);
 
-	auto_pause = FALSE;
 	scroll_reset = TRUE;
 
 	/* loop over states */
@@ -590,12 +590,6 @@ void ui_update_and_render(running_machine *machine, render_container *container)
 {
 	/* always start clean */
 	render_container_empty(container);
-
-	if (auto_pause)
-	{
-		auto_pause = 0;
-		machine->pause();
-	}
 
 	/* if we're paused, dim the whole screen */
 	if (machine->phase() >= MACHINE_PHASE_RESET && (single_step || machine->paused()))
@@ -743,7 +737,7 @@ float ui_get_string_width(const char *s)
     a box with the given background color
 -------------------------------------------------*/
 
-void ui_draw_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t backcolor)
+static void ui_draw_box(render_container *container, float x0, float y0, float x1, float y1, rgb_t backcolor)
 {
 #ifdef UI_COLOR_DISPLAY
 	if (backcolor == UI_BACKGROUND_COLOR)
@@ -1089,7 +1083,7 @@ void ui_draw_text_full(render_container *container, const char *origs, float x, 
 }
 
 
-int ui_draw_text_set_fixed_width_mode(int mode)
+static int ui_draw_text_set_fixed_width_mode(int mode)
 {
 	int mode_save = draw_text_fixed_mode;
 
@@ -1971,7 +1965,11 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 #else
 	if (ui_input_pressed(machine, IPT_UI_CANCEL) && !ui_use_newui())
 #endif
+#ifdef CONFIRM_QUIT
 		return ui_set_handler(handler_confirm_quit, 0);
+#else /* CONFIRM_QUIT */
+		machine->schedule_exit();
+#endif /* CONFIRM_QUIT */
 
 	/* turn on menus if requested */
 #ifdef MAMEMESS
@@ -2188,6 +2186,7 @@ static UINT32 handler_load_save(running_machine *machine, render_container *cont
 }
 
 
+#ifdef CONFIRM_QUIT
 static UINT32 handler_confirm_quit(running_machine *machine, render_container *container, UINT32 state)
 {
 	const char *quit_message =
@@ -2216,6 +2215,7 @@ static UINT32 handler_confirm_quit(running_machine *machine, render_container *c
 
 	return 0;
 }
+#endif /* CONFIRM_QUIT */
 
 
 
@@ -2882,11 +2882,6 @@ void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keybo
 	options_set_bool(machine->options(), OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE);
 }
 
-
-void ui_auto_pause(void)
-{
-	auto_pause = 1;
-}
 
 
 static void build_bgtexture(running_machine *machine)

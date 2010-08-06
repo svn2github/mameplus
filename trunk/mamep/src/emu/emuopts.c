@@ -188,10 +188,12 @@ const options_entry mame_core_options[] =
 	{ "bios",                        NULL,        0,                 "select the system BIOS to use" },
 	{ "cheat;c",                     "0",         OPTION_BOOLEAN,    "enable cheat subsystem" },
 	{ "skip_gameinfo",               "0",         OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
+#ifdef CONFIRM_QUIT
 	{ "confirm_quit",                "1",         OPTION_BOOLEAN,    "quit game with confirmation" },
-#ifdef AUTO_PAUSE_PLAYBACK
-	{ "auto_pause",                  "0",         OPTION_BOOLEAN,    "automatic pause when playback is finished" },
-#endif /* AUTO_PAUSE_PLAYBACK */
+#endif /* CONFIRM_QUIT */
+#ifdef PLAYBACK_END_PAUSE
+	{ "playback_end_pause",          "0",         OPTION_BOOLEAN,    "automatic pause when playback ended" },
+#endif /* PLAYBACK_END_PAUSE */
 #ifdef TRANS_UI
 	{ "ui_transparency",             "215",       0,                 "transparency in-game UI [0-255]" },
 #endif /* TRANS_UI */

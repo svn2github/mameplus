@@ -15,6 +15,7 @@
 #include "emu.h"
 #include "emuopts.h"
 
+/*
 extern const UINT8 uifontdata_cp932[];
 extern const UINT16 uifontmap_cp932[];
 extern const UINT8 uifontdata_cp936[];
@@ -23,6 +24,7 @@ extern const UINT8 uifontdata_cp949[];
 extern const UINT16 uifontmap_cp949[];
 extern const UINT8 uifontdata_cp950[];
 extern const UINT16 uifontmap_cp950[];
+*/
 
 struct ui_lang_info_t ui_lang_info[UI_LANG_MAX] =
 {

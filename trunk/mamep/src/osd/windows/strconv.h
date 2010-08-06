@@ -50,9 +50,6 @@
 //  FUNCTION PROTOTYPES
 //============================================================
 
-void set_osdcore_acp(int cp);
-int get_osdcore_acp(void);
-
 // the result of these functions has to be released with osd_free()
 
 CHAR *astring_from_utf8(const char *s);
