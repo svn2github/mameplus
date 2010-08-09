@@ -346,143 +346,143 @@ Direct3D: 장치에서 리소스 재 생성에 실패했습니다; failing permanently\n
 Direct3D: resetting device\n
 Direct3D: 장치 초기화\n
 
-# osd/windows/drawdd.c: 823
+# osd/windows/drawdd.c: 824
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %s 표면 생성: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1160
+# osd/windows/drawdd.c: 1161
 DirectDraw: Configuring device %s\n
 DirectDraw: 장치 설정 %s\n
 
-# osd/windows/drawdd.c: 651
+# osd/windows/drawdd.c: 652
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: gamma correction 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 529
+# osd/windows/drawdd.c: 530
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 비디오 모드 %dx%d@%d 변경중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 1120
+# osd/windows/drawdd.c: 1121
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: blitting to the screen %08X 오류\n\n
 
-# osd/windows/drawdd.c: 1087, 1096, 1105, 1114
+# osd/windows/drawdd.c: 1088, 1097, 1106, 1115
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 화면 지우기 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 808
+# osd/windows/drawdd.c: 809
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: %s 표면 생성중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 849
+# osd/windows/drawdd.c: 850
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: clipper 생성중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 494, 1149
+# osd/windows/drawdd.c: 495, 1150
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 1246
+# osd/windows/drawdd.c: 1247
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: DirectDrawCreateEx 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 1365
+# osd/windows/drawdd.c: 1366
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 750
+# osd/windows/drawdd.c: 751
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 519
+# osd/windows/drawdd.c: 520
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 513
+# osd/windows/drawdd.c: 514
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 816
+# osd/windows/drawdd.c: 817
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: getting %s surface desciption 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 578
+# osd/windows/drawdd.c: 579
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: getting attached back surface 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 1168
+# osd/windows/drawdd.c: 1169
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: getting current display mode 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 387
+# osd/windows/drawdd.c: 388
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: locking blit surface 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 857
+# osd/windows/drawdd.c: 858
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: 오류 %08X 설정 clipper hwnd\n
 
-# osd/windows/drawdd.c: 865
+# osd/windows/drawdd.c: 866
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: 오류 %08X 설정 clipper on primary surface\n
 
-# osd/windows/drawdd.c: 460
+# osd/windows/drawdd.c: 461
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: 오류 %08X unlocking blit surface\n
 
-# osd/windows/drawdd.c: 466, 1126
+# osd/windows/drawdd.c: 467, 1127
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: 오류 %08X waiting for VBLANK\n
 
-# osd/windows/drawdd.c: 502
+# osd/windows/drawdd.c: 503
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: 오류 - 장치가 DirectDraw 렌더링을 위한 최소사양에 맞지 않습니다\n
 
-# osd/windows/drawdd.c: 381
+# osd/windows/drawdd.c: 382
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: 포면 오류; 삭제하고 다음 프레임 재시도\n
 
-# osd/windows/drawdd.c: 1366
+# osd/windows/drawdd.c: 1367
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 모드 선택됨 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 961
+# osd/windows/drawdd.c: 962
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 새 blit 크기 = %dx%d\n
 
-# osd/windows/drawdd.c: 1363
+# osd/windows/drawdd.c: 1364
 DirectDraw: Selecting video mode...\n
 DirectDraw: 비디오 모드 선택...\n
 
-# osd/windows/drawdd.c: 228
+# osd/windows/drawdd.c: 229
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: ddraw.dll 접근 불가\n
 
-# osd/windows/drawdd.c: 236
+# osd/windows/drawdd.c: 237
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: DirectDrawCreateEx 찾을 수 없음\n
 
-# osd/windows/drawdd.c: 246
+# osd/windows/drawdd.c: 247
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: DirectDrawEnumerateExA 찾을 수 없음\n
 
-# osd/windows/drawdd.c: 416, 452, 1202
+# osd/windows/drawdd.c: 417, 453, 1203
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 알 수 없는 target mode: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 259
+# osd/windows/drawdd.c: 260
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: DirectDraw 7 사용\n
 
-# osd/windows/drawdd.c: 757
+# osd/windows/drawdd.c: 758
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 경고 - 장치가 하드웨어 늘리기를 지원하지 않습니다\n
 
-# osd/windows/drawdd.c: 506
+# osd/windows/drawdd.c: 507
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 경고 - 장치가 DirectDraw 랜더링을 수행하지 못할 수 있습니다\n
 
-# osd/windows/drawdd.c: 634
+# osd/windows/drawdd.c: 635
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 경고 - 장치가 전체화면 감마 수정을 지원하지 않습니다\n
 
@@ -526,7 +526,7 @@ DirectSound 생성 오류: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 주 DirectSound 버퍼 생성 오류: %08x\n
 
-# osd/windows/window.c: 652
+# osd/windows/window.c: 653
 Error creating render target for window %d
 %d 윈도우에 렌더 타겟 생성 오류
 
@@ -542,7 +542,7 @@ DirectSound 가능기능 가져오기 실패: %08x\n
 Error getting identifier for adapter #%d\n
 아답터 #%d identifier 획득 오류\n
 
-# osd/windows/drawdd.c: 1157
+# osd/windows/drawdd.c: 1158
 Error getting identifier for device\n
 장치 identifier 획득 오류\n
 
@@ -590,19 +590,19 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 전체 화면 옵션
 
-# osd/windows/window.c: 256
+# osd/windows/window.c: 257
 Failed to create pause event
 pause event 생성 실패
 
-# osd/windows/window.c: 868
+# osd/windows/window.c: 870
 Failed to create window class
 window class 생성 실패
 
-# osd/windows/window.c: 270
+# osd/windows/window.c: 271
 Failed to create window thread
 window thread 생성 실패
 
-# osd/windows/window.c: 264
+# osd/windows/window.c: 265
 Failed to create window thread ready event
 window thread ready event 생성 실패
 
@@ -614,11 +614,11 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 입력 장치 옵션
 
-# osd/windows/video.c: 554
+# osd/windows/video.c: 555
 Illegal aspect ratio value for %s = %s\n
 잘못된 화면비 값 %s = %s\n
 
-# osd/windows/video.c: 577
+# osd/windows/video.c: 578
 Illegal resolution value for %s = %s\n
 잘못된 해상도 값 %s = %s\n
 
@@ -626,7 +626,7 @@ Illegal resolution value for %s = %s\n
 Input
 입력
 
-# osd/windows/video.c: 473
+# osd/windows/video.c: 474
 Invalid video value %s; reverting to gdi\n
 잘못된 비디오 값 %s;GDI로 복구\n
 
@@ -638,7 +638,7 @@ Joystick %i
 Joysticks/Controllers
 조이스틱/조종장치
 
-# osd/windows/window.c: 667
+# osd/windows/window.c: 668
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - Screen %d
 
@@ -734,7 +734,7 @@ Toggle Fullscreen
 Unable to close the keyboard device. (error %d)\n
 키보드 장치 닫기 실패 (오류 %d)\n
 
-# osd/windows/window.c: 687
+# osd/windows/window.c: 688
 Unable to complete window creation
 창 생성 완료 불가
 
@@ -746,11 +746,11 @@ Direct3D 장치 (%08X) 생성할 수 없습니다\n
 Unable to initialize Direct3D.\n
 Direct3D를 초기화할 수 없습니다\n
 
-# osd/windows/drawdd.c: 301
+# osd/windows/drawdd.c: 302
 Unable to initialize DirectDraw.\n
 DirectDraw를 초기화할 수 없습니다\n
 
-# osd/windows/video.c: 523
+# osd/windows/video.c: 524
 Unable to load PNG file '%s'\n
 '%s' PNG 파일을 불러올 수 없습니다\n
 
@@ -766,7 +766,7 @@ Unknown texture blendmode=%d format=%d\n
 Unlimited
 무제한
 
-# osd/windows/video.c: 434
+# osd/windows/video.c: 435
 Using %s scale effect\n
 %s 크기조절 효과 사용\n
 
@@ -790,7 +790,7 @@ WINDOWS SOUND OPTIONS
 WINDOWS VIDEO OPTIONS
 윈도우 비디오 옵션
 
-# osd/windows/video.c: 469
+# osd/windows/video.c: 470
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 경고: -video none 는 -seconds_to_run 없이는 사용 불가\n
 
@@ -1088,6 +1088,10 @@ Toggle Menu Bar
 
 # mess/osd/windows/menu.c: 1481
 Unmount
+
+
+# osd/windows/winmain.c: 506
+Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 
 
 # mess/osd/windows/menu.c: 1494

@@ -102,7 +102,7 @@
 (BAD) 
 (RUIM)
 
-# emu/ui.c: 808, 853
+# emu/ui.c: 787, 832
 (more)
 (mais)
 
@@ -114,43 +114,43 @@
 (recording)
 (gravando)
 
-# emu/ui.c: 1949, 1959
+# emu/ui.c: 1918, 1928
 **Use ScrLock to toggle**
 **Use Scroll Lock para ativar**
 
-# emu/inptport.c: 698
+# emu/inptport.c: 700
 1 Coin/1 Credit
 1 Ficha/1 Crédito
 
-# emu/inptport.c: 704
+# emu/inptport.c: 706
 1 Coin/2 Credits
 1 Ficha/2 Créditos
 
-# emu/inptport.c: 707
+# emu/inptport.c: 709
 1 Coin/3 Credits
 1 Ficha/3 Créditos
 
-# emu/inptport.c: 710
+# emu/inptport.c: 712
 1 Coin/4 Credits
 1 Ficha/4 Créditos
 
-# emu/inptport.c: 711
+# emu/inptport.c: 713
 1 Coin/5 Credits
 1 Ficha/5 Créditos
 
-# emu/inptport.c: 712
+# emu/inptport.c: 714
 1 Coin/6 Credits
 1 Ficha/6 Créditos
 
-# emu/inptport.c: 713
+# emu/inptport.c: 715
 1 Coin/7 Credits
 1 Ficha/7 Créditos
 
-# emu/inptport.c: 714
+# emu/inptport.c: 716
 1 Coin/8 Credits
 1 Ficha/8 Crédito
 
-# emu/inptport.c: 715
+# emu/inptport.c: 717
 1 Coin/9 Credits
 1 Ficha/9 Créditos
 
@@ -162,35 +162,35 @@ Iniciar Jogador 1
 1st Bonus Life
 Primeiro Bônus de Vida
 
-# emu/inptport.c: 691
+# emu/inptport.c: 693
 2 Coins/1 Credit
 2 Fichas/1 Crédito
 
-# emu/inptport.c: 697
+# emu/inptport.c: 699
 2 Coins/2 Credits
 2 Fichas/2 Créditos
 
-# emu/inptport.c: 701
+# emu/inptport.c: 703
 2 Coins/3 Credits
 2 Fichas/3 Créditos
 
-# emu/inptport.c: 703
+# emu/inptport.c: 705
 2 Coins/4 Credits
 2 Fichas/4 Créditos
 
-# emu/inptport.c: 705
+# emu/inptport.c: 707
 2 Coins/5 Credits
 2 Fichas/5 Créditos
 
-# emu/inptport.c: 706
+# emu/inptport.c: 708
 2 Coins/6 Credits
 2 Fichas/6 Créditos
 
-# emu/inptport.c: 708
+# emu/inptport.c: 710
 2 Coins/7 Credits
 2 Fichas/7 Créditos
 
-# emu/inptport.c: 709
+# emu/inptport.c: 711
 2 Coins/8 Credits
 2 Fichas/8 Créditos
 
@@ -202,19 +202,19 @@ Iniciar Jogador 2
 2nd Bonus Life
 Segundo Bônus de Vida
 
-# emu/inptport.c: 688
+# emu/inptport.c: 690
 3 Coins/1 Credit
 3 Fichas/1 Crédito
 
-# emu/inptport.c: 693
+# emu/inptport.c: 695
 3 Coins/2 Credits
 3 Fichas/2 Créditos
 
-# emu/inptport.c: 696
+# emu/inptport.c: 698
 3 Coins/3 Credits
 3 Fichas/3 Créditos
 
-# emu/inptport.c: 700
+# emu/inptport.c: 702
 3 Coins/4 Credits
 3 Fichas/4 Créditos
 
@@ -222,27 +222,27 @@ Segundo Bônus de Vida
 3 Players Start
 Iniciar Jogador 3
 
-# emu/inptport.c: 687
+# emu/inptport.c: 689
 4 Coins/1 Credit
 4 Fichas/1 Crédito
 
-# emu/inptport.c: 690
+# emu/inptport.c: 692
 4 Coins/2 Credits
 4 Fichas/2 Créditos
 
-# emu/inptport.c: 694
+# emu/inptport.c: 696
 4 Coins/3 Credits
 4 Fichas/3 Créditos
 
-# emu/inptport.c: 695
+# emu/inptport.c: 697
 4 Coins/4 Credits
 4 Fichas/4 Créditos
 
-# emu/inptport.c: 699
+# emu/inptport.c: 701
 4 Coins/5 Credits
 4 Fichas/5 Créditos
 
-# emu/inptport.c: 702
+# emu/inptport.c: 704
 4 Coins/7 Credits
 4 Fichas/7 Créditos
 
@@ -250,11 +250,11 @@ Iniciar Jogador 3
 4 Players Start
 Iniciar Jogador 4
 
-# emu/inptport.c: 686
+# emu/inptport.c: 688
 5 Coins/1 Credit
 5 Fichas/1 Crédito
 
-# emu/inptport.c: 692
+# emu/inptport.c: 694
 5 Coins/3 Credits
 5 Fichas/3 Créditos
 
@@ -262,7 +262,7 @@ Iniciar Jogador 4
 5 Players Start
 Iniciar Jogador 5
 
-# emu/inptport.c: 685
+# emu/inptport.c: 687
 6 Coins/1 Credit
 6 Fichas/1 Crédito
 
@@ -270,7 +270,7 @@ Iniciar Jogador 5
 6 Players Start
 Iniciar Jogador 6
 
-# emu/inptport.c: 684
+# emu/inptport.c: 686
 7 Coins/1 Credit
 7 Fichas/1 Crédito
 
@@ -278,11 +278,11 @@ Iniciar Jogador 6
 7 Players Start
 Iniciar Jogador 7
 
-# emu/inptport.c: 683
+# emu/inptport.c: 685
 8 Coins/1 Credit
 8 Fichas/1 Crédito
 
-# emu/inptport.c: 689
+# emu/inptport.c: 691
 8 Coins/3 Credits
 8 Fichas/3 Créditos
 
@@ -290,7 +290,7 @@ Iniciar Jogador 7
 8 Players Start
 Iniciar Jogador 8
 
-# emu/inptport.c: 682
+# emu/inptport.c: 684
 9 Coins/1 Credit
 9 Fichas/1 Crédito
 
@@ -414,11 +414,11 @@ Adicionador,VFD e Lâmpadas
 Advanced
 Avançado
 
-# emu/inptport.c: 775
+# emu/inptport.c: 777
 Allow Continue
 Permitir Continuar
 
-# emu/inptport.c: 784
+# emu/inptport.c: 786
 Alternate
 Alternativo
 
@@ -430,7 +430,7 @@ Controles Analógicos
 Arcade
 Arcade
 
-# emu/inptport.c: 731
+# emu/inptport.c: 733
 Asia
 Ásia
 
@@ -454,7 +454,7 @@ Configuração do Tiro Automático
 Automatic
 Automático
 
-# emu/video.c: 384
+# emu/video.c: 397
 Average speed: %.2f%% (%d seconds)\n
 Velocidade média: %.2f%% (%d segundos)\n
 
@@ -462,7 +462,7 @@ Velocidade média: %.2f%% (%d segundos)\n
 BIOS
 BIOS
 
-# emu/ui.c: 2403
+# emu/ui.c: 2378
 Beam Width
 Largura do Feixe deLuz
 
@@ -482,7 +482,7 @@ Lâmpadas de Bezel
 Bill 1
 Conta 1
 
-# emu/inptport.c: 676 mame/drivers/cclimber.c: 468
+# emu/inptport.c: 678 mame/drivers/cclimber.c: 468
 Bonus Life
 Vida Bônus
 
@@ -542,7 +542,7 @@ OPÇÕES DE HABILITAÇÃO AUTOMÁTICA DE ENTRADA DO NÚCLEO
 CORE INPUT OPTIONS
 OPÇÕES DE ENTRADA DO NÚCLEO
 
-# emu/emuopts.c: 223
+# emu/emuopts.c: 225
 CORE LANGUAGE OPTIONS
 OPÇÕES DE LINGUAGEM DO NÚCLEO
 
@@ -554,7 +554,7 @@ OUTRAS OPÇÕES DO NÚCLEO
 CORE OUTPUT DIRECTORY OPTIONS
 OPÇÕES DE DIRETÓRIO DE SAÍDA DO NÚCLEO
 
-# emu/emuopts.c: 204
+# emu/emuopts.c: 206
 CORE PALETTE OPTIONS
 OPÇÕES DE PALETA DO NÚCLEO
 
@@ -590,7 +590,7 @@ OPÇÕES VETORIAIS DO NÚCLEO
 CRC-32s
 CRC-32s
 
-# emu/inptport.c: 717 
+# emu/inptport.c: 719 
 Cabinet
 Gabinete
 
@@ -630,7 +630,7 @@ Clássico
 Classic graphics and VFD
 Gráficos clássicos e VFD
 
-# emu/inptport.c: 719 emu/layout/dualhovu.lay: 63 emu/layout/dualhsxs.lay: 63 emu/layout/dualhuov.lay: 63 emu/layout/horizont.lay: 15 emu/layout/vertical.lay: 15 
+# emu/inptport.c: 721 emu/layout/dualhovu.lay: 63 emu/layout/dualhsxs.lay: 63 emu/layout/dualhuov.lay: 63 emu/layout/horizont.lay: 15 emu/layout/vertical.lay: 15 
 Cocktail
 Cocktail
 
@@ -674,11 +674,11 @@ Ficha 7
 Coin 8
 Ficha 8
 
-# emu/inptport.c: 680
+# emu/inptport.c: 682
 Coin A
 Ficha A
 
-# emu/inptport.c: 681
+# emu/inptport.c: 683
 Coin B
 Ficha B
 
@@ -702,7 +702,7 @@ Encaixe de Ficha
 Coin Slots
 Encaixes de Ficha
 
-# emu/inptport.c: 679 mame/drivers/angelkds.c: 219
+# emu/inptport.c: 681 mame/drivers/angelkds.c: 219
 Coinage
 Fichas
 
@@ -730,11 +730,11 @@ Continuar
 Continue Mode
 Modo de Continuação
 
-# emu/inptport.c: 769
+# emu/inptport.c: 771
 Continue Price
 Preço de Continuação
 
-# emu/inptport.c: 774
+# emu/inptport.c: 776
 Continues
 Continues
 
@@ -746,11 +746,11 @@ Painel de Controle
 Control Type
 Tipo de Controle
 
-# emu/inptport.c: 770
+# emu/inptport.c: 772
 Controller
 Controlador
 
-# emu/inptport.c: 765 mame/drivers/fantland.c: 186, 245, 675 mess/drivers/ngp.c: 193, 562
+# emu/inptport.c: 767 mame/drivers/fantland.c: 186, 245, 675 mess/drivers/ngp.c: 193, 562
 Controls
 Controles
 
@@ -794,11 +794,11 @@ Decriptando %d%%
 Default
 Padrão
 
-# emu/inptport.c: 604 
+# emu/inptport.c: 606 
 Delete
 Delete
 
-# emu/inptport.c: 678 mame/drivers/dreamwld.c: 369
+# emu/inptport.c: 680 mame/drivers/dreamwld.c: 369
 Demo Sounds
 Sons Demonstrativos
 
@@ -866,7 +866,7 @@ Dial V 7
 Dial V 8
 Dial V 8
 
-# emu/inptport.c: 677 mame/drivers/dreamwld.c: 379, 380, 381 mame/drivers/pktgaldx.c: 219
+# emu/inptport.c: 679 mame/drivers/dreamwld.c: 379, 380, 381 mame/drivers/pktgaldx.c: 219
 Difficulty
 Dificuldade
 
@@ -906,7 +906,7 @@ Double Up
 Driver Configuration
 Configuração de Driver
 
-# emu/inptport.c: 766
+# emu/inptport.c: 768
 Dual
 Dual
 
@@ -950,15 +950,15 @@ ERRO: arquivos necessários estão faltando, o jogo não pode ser executado.
 EXPECTED: %s\n
 ESPERADO: %s\n
 
-# emu/inptport.c: 743
+# emu/inptport.c: 745
 Easier
 Muito Fácil
 
-# emu/inptport.c: 742
+# emu/inptport.c: 744
 Easiest
 Facílimo
 
-# emu/inptport.c: 744 mame/drivers/yunsun16.c: 399
+# emu/inptport.c: 746 mame/drivers/yunsun16.c: 399
 Easy
 Fácil
 
@@ -970,7 +970,7 @@ Ejetar Cartão Atual
 England
 Inglaterra
 
-# emu/inptport.c: 735 mame/drivers/snowbros.c: 845
+# emu/inptport.c: 737 mame/drivers/snowbros.c: 845
 English
 Inglês
 
@@ -990,7 +990,7 @@ Error carregando cartão de memória
 Error: 
 Erro:
 
-# emu/inptport.c: 6236
+# emu/inptport.c: 6245
 Error: illegal caption file
 Erro: arquivo de legenda ilegal
 
@@ -1002,7 +1002,7 @@ Erro: opção %s esperado um parâmetro\n
 Error: unknown option: %s\n
 Erro: opção desconhecida: %s\n
 
-# emu/inptport.c: 730
+# emu/inptport.c: 732
 Europe
 Europa
 
@@ -1018,11 +1018,11 @@ Expert
 FRONTEND COMMANDS
 COMANDOS DO FRONTEND
 
-# emu/inptport.c: 4564
+# emu/inptport.c: 4566
 Failed to open file for playback
 Falha ao abrir arquivo para reprodução
 
-# emu/inptport.c: 4782
+# emu/inptport.c: 4791
 Failed to open file for recording
 Falha ao abrir arquivo para gravação
 
@@ -1050,7 +1050,7 @@ Gerenciador de Arquivo
 First Bonus
 Primeiro Bônus
 
-# emu/inptport.c: 720
+# emu/inptport.c: 722
 Flip Screen
 Girar Tela
 
@@ -1074,7 +1074,7 @@ Aumenta Pulo de Quadros
 Free
 Livre
 
-# emu/inptport.c: 716 mame/drivers/alpha68k.c: 1108
+# emu/inptport.c: 718 mame/drivers/alpha68k.c: 1108
 Free Play
 Jogo Livre
 
@@ -1082,7 +1082,7 @@ Jogo Livre
 Freeze
 Congelar
 
-# emu/inptport.c: 738 emu/uilang.c: 32 
+# emu/inptport.c: 740 emu/uilang.c: 34 
 French
 Françês
 
@@ -1094,7 +1094,7 @@ Jogos
 Game Information
 Informação do Jogo
 
-# emu/inptport.c: 768
+# emu/inptport.c: 770
 Game Time
 Tempo de Jogo
 
@@ -1106,7 +1106,7 @@ Geral
 Generating cached BDF font...\n
 Gerando fonte BDF de reserva...\n
 
-# emu/inptport.c: 737 emu/uilang.c: 33 
+# emu/inptport.c: 739 emu/uilang.c: 35 
 German
 Alemão
 
@@ -1122,15 +1122,15 @@ Gráficos: %s, Som: %s
 Gray
 Cinza
 
-# emu/inptport.c: 749
+# emu/inptport.c: 751
 Hard
 Difícil
 
-# emu/inptport.c: 750
+# emu/inptport.c: 752
 Harder
 Muito Difícil
 
-# emu/inptport.c: 751
+# emu/inptport.c: 753
 Hardest
 Dificílimo
 
@@ -1138,7 +1138,7 @@ Dificílimo
 Help
 Ajuda
 
-# emu/inptport.c: 760 emu/inpttype.h: 103
+# emu/inptport.c: 762 emu/inpttype.h: 103
 High
 Alto
 
@@ -1146,15 +1146,15 @@ Alto
 High Scores
 Recordes
 
-# emu/inptport.c: 761
+# emu/inptport.c: 763
 Higher
 Mais Alto
 
-# emu/inptport.c: 762
+# emu/inptport.c: 764
 Highest
 Altíssimo
 
-# emu/inptport.c: 733
+# emu/inptport.c: 735
 Hispanic
 Hispânico
 
@@ -1170,7 +1170,7 @@ Horizontal
 Horizontally
 Horizontalmente
 
-# emu/ui.c: 1417
+# emu/ui.c: 1392
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
 SE VOC?NÃO EST?LICENCIADO PARA JOGAR \"%s\" NESTE EMULADOR, TECLE ESC.\n\n
 
@@ -1182,7 +1182,7 @@ CHECKSUM INCORRETO:\n
 INCORRECT LENGTH: %d bytes\n
 TAMANHO INCORRETO: %d bytes\n
 
-# emu/inptport.c: 1257
+# emu/inptport.c: 1259
 INVALID
 INVÁLIDO
 
@@ -1206,7 +1206,7 @@ Valor inteiro ilegal para %s; mantendo valor of %\n
 Illegal integer value for %s; reverting to %d\n
 Valor inteiro ilegal para %s; revertendo para %d\n
 
-# emu/clifront.c: 444 emu/ui.c: 377 
+# emu/clifront.c: 444 emu/ui.c: 376 
 Illegal value for %s = %s\n
 Valor ilegal para %s = %s\n
 
@@ -1222,7 +1222,7 @@ Informação da Imagem
 Imperfect
 Imperfeito
 
-# emu/inptport.c: 777
+# emu/inptport.c: 779
 Infinite
 Infinito
 
@@ -1242,7 +1242,7 @@ Entradas (Geral)
 Input (this Game)
 Entradas (este jogo)
 
-# emu/inptport.c: 4584
+# emu/inptport.c: 4586
 Input file is for game '%s', not for current game '%s'\n
 Arquivo de input ?para o jogo '%s', não para o jogo atual '%s'\n
 
@@ -1250,7 +1250,7 @@ Arquivo de input ?para o jogo '%s', não para o jogo atual '%s'\n
 Input: Adding %s #%d: %s\n
 Entrada: Adicionando %s #%d: %s\n
 
-# emu/inptport.c: 2239
+# emu/inptport.c: 2241
 Input: Autoenabling %s due to presence of a %s\n
 Entrada: Habilitando automaticamente %s devido a presença de um %s\n
 
@@ -1262,15 +1262,15 @@ Entrada: Mudando mapa padrão de joystick
 Input: Default joystick map
 Entrada: Mapa padrão de joystick
 
-# emu/inptport.c: 603 mame/drivers/funworld.c: 963, 1387 
+# emu/inptport.c: 605 mame/drivers/funworld.c: 963, 1387 
 Insert
 Insert
 
-# emu/inptport.c: 727
+# emu/inptport.c: 729
 International
 Internacional
 
-# emu/inptport.c: 2227
+# emu/inptport.c: 2229
 Invalid %s value %s; reverting to keyboard\n
 %s Valor %s inválido; revertendo para teclado\n
 
@@ -1282,7 +1282,7 @@ Valor %s inválido (deve estar entre %f e %f); mantendo valor de %s\n
 Invalid %s value (must be between %i and %i); keeping value of %s\n
 Valor %s inválido (deve estar entre %i e %i); mantendo valor de %s\n
 
-# emu/uigfx.c: 1050 emu/video.c: 2270
+# emu/uigfx.c: 1050 emu/video.c: 2282
 Invalid bitmap format!
 Formato de bitmap inválido!
 
@@ -1302,7 +1302,7 @@ Invencibilidade
 Invulnerability
 Invulnerabilidade
 
-# emu/inptport.c: 739 emu/uilang.c: 34 
+# emu/inptport.c: 741 emu/uilang.c: 36 
 Italian
 Italiano
 
@@ -1310,15 +1310,15 @@ Italiano
 Italy
 Itália
 
-# emu/inptport.c: 728 
+# emu/inptport.c: 730 
 Japan
 Japão
 
-# emu/inptport.c: 736 emu/uilang.c: 35 
+# emu/inptport.c: 738 emu/uilang.c: 37 
 Japanese
 Japonês
 
-# emu/inptport.c: 772 mess/drivers/a2600.c: 1604 
+# emu/inptport.c: 774 mess/drivers/a2600.c: 1604 
 Joystick
 Joystick
 
@@ -1326,7 +1326,7 @@ Joystick
 Keyboard
 Teclado
 
-# emu/ui.c: 1944, 1954
+# emu/ui.c: 1913, 1923
 Keyboard Emulation Status
 Status de Emulação do Teclado
 
@@ -1354,7 +1354,7 @@ Lâmpadas
 Lamps and Timer
 Lâmpadas e Temporizador
 
-# emu/inptport.c: 734 mame/drivers/snowbros.c: 845, 906
+# emu/inptport.c: 736 mame/drivers/snowbros.c: 845, 906
 Language
 Idioma
 
@@ -1366,11 +1366,11 @@ Metade Esquerda
 Less
 Menor
 
-# emu/inptport.c: 776
+# emu/inptport.c: 778
 Level Select
 Selecione Nível
 
-# emu/inptport.c: 771
+# emu/inptport.c: 773
 Light Gun
 Pistola Laser
 
@@ -1442,7 +1442,7 @@ Pistola Laser Y 7
 Lightgun Y 8
 Pistola Laser Y 8
 
-# emu/inptport.c: 675
+# emu/inptport.c: 677
 Lives
 Vidas
 
@@ -1454,11 +1454,11 @@ Carregar Cartão Selecionado
 Load State
 Carregar State
 
-# emu/ui.c: 2162
+# emu/ui.c: 2135
 Load cancelled
 Carregamento cancelado
 
-# emu/ui.c: 2193
+# emu/ui.c: 2166
 Load from position %c
 Carregar da posição %c
 
@@ -1474,7 +1474,7 @@ Carregando fonte BDF... (%d caracteres carregados)\n
 Loading Complete
 Carregamento Completo
 
-# emu/inptport.c: 759 emu/inpttype.h: 104
+# emu/inptport.c: 761 emu/inpttype.h: 104
 Low
 Baixo
 
@@ -1506,7 +1506,7 @@ Máximo
 Max Players
 Número Máximo de Jogadores
 
-# emu/inptport.c: 747
+# emu/inptport.c: 749
 Medium
 Médio
 
@@ -1530,11 +1530,11 @@ Cartão de Memória carregado
 Minimum
 Mínimo
 
-# emu/ui.c: 1956
+# emu/ui.c: 1925
 Mode: FULL Emulation
 Modo: Emulação TOTAL
 
-# emu/ui.c: 1946
+# emu/ui.c: 1915
 Mode: PARTIAL Emulation
 Modo: Emulação PARCIAL
 
@@ -1542,7 +1542,7 @@ Modo: Emulação PARCIAL
 Monitor
 Monitor
 
-# emu/inptport.c: 779
+# emu/inptport.c: 781
 Mono
 Mono
 
@@ -1666,7 +1666,7 @@ Próximo Jogo
 Nihongo
 Nihongo
 
-# emu/inptport.c: 673 emu/uiimage.c: 224 mess/machine/nes.c: 1471, 1472, 1473 
+# emu/inptport.c: 675 emu/uiimage.c: 224 mess/machine/nes.c: 1471, 1472, 1473 
 No
 Não
 
@@ -1682,11 +1682,11 @@ Imagem de Fita não carregada
 No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
 Jogos não encontrados. Favor checar o caminho da ROM especificado no arquivo mame.ini.\n\nSe esta ?sua primeira vez usando o MAME, favor consulte o arquivo config.txt no diretório "docs" para informações de configuração do MAME.
 
-# emu/inptport.c: 785 emu/inputseq.c: 433 emu/uimenu.c: 3209, 3277 
+# emu/inptport.c: 787 emu/inputseq.c: 433 emu/uimenu.c: 3209, 3277 
 None
 Nenhum
 
-# emu/inptport.c: 746 mame/drivers/metro.c: 2677 mame/drivers/nmk16.c: 1331 mame/drivers/yunsun16.c: 399 mame/video/midzeus.c: 635
+# emu/inptport.c: 748 mame/drivers/metro.c: 2677 mame/drivers/nmk16.c: 1331 mame/drivers/yunsun16.c: 399 mame/video/midzeus.c: 635
 Normal
 Normal
 
@@ -1698,11 +1698,11 @@ OK
 OPTIONAL %s NOT FOUND\n
 OPCIONAL %s NÃO ENCONTRADO\n
 
-# emu/cheat.c: 587, 598, 624 emu/inptport.c: 671 emu/uimenu.c: 2443, 3409, 3677 mame/drivers/alpha68k.c: 1074 
+# emu/cheat.c: 587, 598, 624 emu/inptport.c: 673 emu/uimenu.c: 2443, 3409, 3677 mame/drivers/alpha68k.c: 1074 
 Off
 Desligado
 
-# emu/cheat.c: 587 emu/inptport.c: 672 emu/uimenu.c: 2443, 3410, 3677 
+# emu/cheat.c: 587 emu/inptport.c: 674 emu/uimenu.c: 2443, 3410, 3677 
 On
 Ligado
 
@@ -1710,7 +1710,7 @@ Ligado
 On Screen Display
 Mensagem de Tela
 
-# emu/ui.c: 1450
+# emu/ui.c: 1425
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
 Um ou mais ROMs/CHDs para esse jogo estão incorretos. O jogo pode não rodar corretamente.\n
 
@@ -1726,7 +1726,7 @@ Orientação
 Other Controls
 Outros Controles
 
-# emu/ui.c: 1418
+# emu/ui.c: 1393
 Otherwise, type OK or move the joystick left then right to continue
 Senão, digite OK ou mova o joystick para esquerda e direita para continuar
 
@@ -3234,7 +3234,7 @@ Jogador %d
 Player %d Controls
 Controles Jogador %d 
 
-# emu/inptport.c: 764
+# emu/inptport.c: 766
 Players
 Jogadores
 
@@ -3310,15 +3310,15 @@ Jogo Anterior
 Printer
 Impressora
 
-# emu/ui.c: 2206
+# emu/ui.c: 2180
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 Sair do jogo ?\n\nPressione tecla/botão Selecionar para sair,\ntecla/botão Cancelar para continuar.
 
-# emu/ui.c: 2074
+# emu/ui.c: 2047
 REC START
 INICIAR GRAVAÇÃO
 
-# emu/ui.c: 2079
+# emu/ui.c: 2052
 REC STOP
 PARAR GRAVAÇÃO
 
@@ -3334,7 +3334,7 @@ Gravar
 Record Movie
 Gravar Filme
 
-# emu/inptport.c: 726 mame/drivers/pgm.c: 396, 968, 1227, 1249, 1262, 1273, 1283, 1302, 1315, 1332, 1348, 1367, 1381, 1394, 1408, 1524, 4389, 4398, 4407, 4416, 5037, 5218, 5422 mame/machine/pgmprot.c: 114, 285, 329, 338, 453
+# emu/inptport.c: 728 mame/drivers/pgm.c: 396, 968, 1227, 1249, 1262, 1273, 1283, 1302, 1315, 1332, 1348, 1367, 1381, 1394, 1408, 1524, 4389, 4398, 4407, 4416, 5037, 5218, 5422 mame/machine/pgmprot.c: 114, 285, 329, 338, 453
 Region
 Região
 
@@ -3386,15 +3386,15 @@ Salvar Captura de Tela
 Save State
 Salvar Posição
 
-# emu/ui.c: 2160
+# emu/ui.c: 2133
 Save cancelled
 Salvamento cancelado
 
-# emu/ui.c: 2188
+# emu/ui.c: 2161
 Save to position %c
 Salvar na posição %c
 
-# emu/ui.c: 2811 mame/drivers/gei.c: 711, 739, 799 mame/drivers/turbo.c: 976 
+# emu/ui.c: 2786 mame/drivers/gei.c: 711, 739, 799 mame/drivers/turbo.c: 976 
 Screen
 Tela
 
@@ -3410,7 +3410,7 @@ Tela %d Aspecto de Pixel (%d:%d)
 Screen %d Standard (%d:%d)
 Tela %d Padrão (%d:%d)
 
-# emu/ui.c: 1474 
+# emu/ui.c: 1449 
 Screen flipping in cocktail mode is not supported.\n
 Giro de tela no modo cocktail não suportado.\n
 
@@ -3426,11 +3426,11 @@ Selecionar
 Select New Game
 Selecionar Novo Jogo
 
-# emu/ui.c: 2153
+# emu/ui.c: 2126
 Select position to load from
 Selecione a posição de onde carregar
 
-# emu/ui.c: 2151
+# emu/ui.c: 2124
 Select position to save to
 Selecione a posição para salvar
 
@@ -3454,7 +3454,7 @@ Serviço 3
 Service 4
 Serviço 4
 
-# emu/inptport.c: 721
+# emu/inptport.c: 723
 Service Mode
 Modo de Serviço
 
@@ -3490,7 +3490,7 @@ Mostrar Perfil
 Simple LEDs
 LEDs Simples
 
-# emu/inptport.c: 767
+# emu/inptport.c: 769
 Single
 Único
 
@@ -3506,11 +3506,11 @@ Reset Parcial
 Sound
 Som
 
-# emu/inptport.c: 740 emu/uilang.c: 37 
+# emu/inptport.c: 742 emu/uilang.c: 39 
 Spanish
 Espanhol
 
-# emu/inptport.c: 782 
+# emu/inptport.c: 784 
 Standard
 Padrão
 
@@ -3522,7 +3522,7 @@ Padrão (%d:%d)
 State
 State
 
-# emu/inptport.c: 778 
+# emu/inptport.c: 780 
 Stereo
 Estéreo
 
@@ -3546,7 +3546,7 @@ Controle de Fita
 Territory
 Território
 
-# emu/inptport.c: 723 mame/drivers/lasso.c: 267
+# emu/inptport.c: 725 mame/drivers/lasso.c: 267
 Test
 Teste
 
@@ -3562,19 +3562,19 @@ Chave de Teste
 Text
 Texto
 
-# emu/ui.c: 1466 
+# emu/ui.c: 1441 
 The colors are completely wrong.\n
 As cores estão completamente erradas.\n
 
-# emu/ui.c: 1464 
+# emu/ui.c: 1439 
 The colors aren't 100% accurate.\n
 As cores não estão 100% corretas.\n
 
-# emu/ui.c: 1489 
+# emu/ui.c: 1464 
 The game has protection which isn't fully emulated.\n
 O jogo tem proteções que não estão completemente emuladas.\n
 
-# emu/ui.c: 1472 
+# emu/ui.c: 1447 
 The game lacks sound.\n
 O jogo não tem som.\n
 
@@ -3582,15 +3582,15 @@ O jogo não tem som.\n
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
 O jogo selecionado não possui todas as ROMs ou Imagens de CHD necessárias. Favor selecionar um outro jogo.\n\nPressione qualquer tecla para continuar.
 
-# emu/ui.c: 1470 
+# emu/ui.c: 1445 
 The sound emulation isn't 100% accurate.\n
 A emulação do som não est?100% correta.\n
 
-# emu/ui.c: 1468 
+# emu/ui.c: 1443 
 The video emulation isn't 100% accurate.\n
 A emulação do vídeo não est?100% correta.\n
 
-# emu/ui.c: 1458
+# emu/ui.c: 1433
 There are known problems with this game\n\n
 H?problemas conhecidos com este jogo\n\n
 
@@ -3606,7 +3606,7 @@ Desaceleração
 Tickets dispensed: %d\n\n
 Tickets dispensados: %d\n\n
 
-# emu/inptport.c: 724 emu/inpttype.h: 469
+# emu/inptport.c: 726 emu/inpttype.h: 469
 Tilt
 Tilt
 
@@ -3698,7 +3698,7 @@ Track Y 7
 Track Y 8
 Track Y 8
 
-# emu/inptport.c: 773 
+# emu/inptport.c: 775 
 Trackball
 Trackball
 
@@ -3786,11 +3786,11 @@ Interface de Usuário Aumentar Zoom
 UI Zoom Out
 Interface de Usuário Diminuir Zoom
 
-# emu/ui.c: 1957
+# emu/ui.c: 1926
 UI:   Disabled
 Interface de Usuário:   Desabiltada
 
-# emu/ui.c: 1947
+# emu/ui.c: 1916
 UI:   Enabled
 Interface de Usuário:   Habiltada
 
@@ -3798,11 +3798,11 @@ Interface de Usuário:   Habiltada
 UNKNOWN
 DESCONHECIDO
 
-# emu/uilang.c: 29 mame/drivers/taotaido.c: 270 mame/drivers/toaplan1.c: 871, 1252, 1276, 1294
+# emu/uilang.c: 31 mame/drivers/taotaido.c: 270 mame/drivers/toaplan1.c: 871, 1252, 1276, 1294
 US
 EUA                                                                                                                                                                                                                                                                                                                  
 
-# emu/inptport.c: 729 
+# emu/inptport.c: 731 
 USA
 EUA
 
@@ -3826,7 +3826,7 @@ Valor inteiro inesperado %s na espera\n
 Unimplemented
 Não implementado
 
-# emu/inptport.c: 781 lib/util/chd.c: 1639 mame/drivers/psattack.c: 127 mess/machine/snescart.c: 18 mess/machine/wswan.c: 27, 1338 
+# emu/inptport.c: 783 lib/util/chd.c: 1639 mame/drivers/psattack.c: 127 mess/machine/snescart.c: 18 mess/machine/wswan.c: 27, 1338 
 Unknown
 Desconhecido
 
@@ -3834,11 +3834,11 @@ Desconhecido
 Unlimited
 Sem Limites
 
-# emu/inptport.c: 780 mame/drivers/actfancr.c: 157, 179, 183, 184, 210 mame/drivers/aeroboto.c: 142, 169, 170, 171 mame/drivers/aerofgt.c: 462, 463, 876, 877 mame/drivers/aliens.c: 166, 167, 168, 182, 184 mame/drivers/alpha68k.c: 1066, 1067, 1068, 1107, 1154, 1157, 1334, 1345, 1431, 1541, 1545 mame/drivers/amspdwy.c: 150, 151, 152, 170, 171, 203 mame/drivers/angelkds.c: 438 mame/drivers/appoooh.c: 306 mame/drivers/argus.c: 346, 347, 419, 420 mame/drivers/armedf.c: 554, 555, 561, 579, 606, 636, 688, 697, 700 mame/drivers/artmagic.c: 536, 699 mame/drivers/asteroid.c: 474, 582 mame/drivers/astrocde.c: 1060, 1066 mame/drivers/asuka.c: 690 mame/drivers/atarifb.c: 253, 254, 327, 328, 337, 338, 414 mame/drivers/atarisy2.c: 869, 870 mame/drivers/avalnche.c: 161, 162 mame/drivers/baraduke.c: 268, 334, 335, 336, 337 mame/drivers/battlera.c: 172, 176, 177, 193, 194, 195 mame/drivers/bbusters.c: 495, 496, 497, 536, 552, 567, 568, 569 mame/drivers/bionicc.c: 232 mame/drivers/bking.c: 313, 344 mame/drivers/bladestl.c: 228, 229, 232 mame/drivers/blockhl.c: 145, 146, 147, 148, 166, 168 mame/drivers/blockout.c: 177, 178, 189, 190, 191, 192, 193 mame/drivers/blueprnt.c: 145, 160, 163, 171, 180, 181 mame/drivers/changela.c: 362 mame/drivers/clshroad.c: 123, 124, 140, 141, 142, 143, 144, 145, 146, 147 mame/drivers/flkatck.c: 158 mame/drivers/gaelco.c: 382 mame/drivers/galaga.c: 1059, 1154, 1164 mame/drivers/gaplus.c: 348 mame/drivers/gberet.c: 266, 267 mame/drivers/gbusters.c: 226, 228 mame/drivers/gijoe.c: 248 mame/drivers/gladiatr.c: 511, 531, 532, 533 mame/drivers/glass.c: 145 mame/drivers/gng.c: 158 mame/drivers/hcastle.c: 104, 105 mame/drivers/kaneko16.c: 905, 906, 907, 908, 909, 910, 1006, 1086, 1087, 1480, 1481, 1482, 1483, 1484, 1485 mame/drivers/lasso.c: 255, 266 mame/drivers/m58.c: 116, 120, 123, 145 mame/drivers/m63.c: 567, 572 mame/drivers/m92.c: 628 mame/drivers/mainevt.c: 283, 284, 285, 286, 289, 290, 291, 310, 312, 371 mame/drivers/mcatadv.c: 393 mame/drivers/megasys1.c: 792, 1072, 1122, 1146 mame/drivers/nmk16.c: 1155, 1158, 1161, 1164, 1165, 1890, 1898, 1901, 1932, 1972, 1975, 1983, 2012, 2402, 2486, 2494, 2508, 2568, 2571, 2653, 2656, 2666, 2826, 2829, 2832, 2835, 2838, 3043, 3044, 3176 mame/drivers/punchout.c: 439 mame/drivers/segag80r.c: 430, 431, 432, 433, 434, 435, 436, 437, 515 mame/drivers/segas16a.c: 1844, 1845, 1846 mame/drivers/segas16b.c: 2954, 2955, 2956 mame/drivers/seta.c: 3254, 3385, 3386, 3390, 3724, 3727, 4027, 4051, 4565, 4566, 4567, 4588, 4589, 4896, 4902, 4903, 5684, 5687, 5690, 5691, 5692, 5835, 5836, 5837, 5838, 5894, 5895, 5896, 5897, 5898, 5901, 5902 mame/drivers/seta2.c: 1120, 1124, 1127, 1481, 1482, 1517, 1518, 1519, 1567, 1568, 1603, 1604, 1605, 1606 mame/drivers/ssv.c: 1180, 1238, 1239, 1292, 1303, 1817, 1818, 1956, 1975, 1988, 1992 mame/drivers/system16.c: 1557, 1575, 1624, 1625, 1689, 1752, 1756, 1757, 1812, 1818, 1819, 1825, 1826 mame/drivers/ultraman.c: 140, 141
+# emu/inptport.c: 782 mame/drivers/actfancr.c: 157, 179, 183, 184, 210 mame/drivers/aeroboto.c: 142, 169, 170, 171 mame/drivers/aerofgt.c: 462, 463, 876, 877 mame/drivers/aliens.c: 166, 167, 168, 182, 184 mame/drivers/alpha68k.c: 1066, 1067, 1068, 1107, 1154, 1157, 1334, 1345, 1431, 1541, 1545 mame/drivers/amspdwy.c: 150, 151, 152, 170, 171, 203 mame/drivers/angelkds.c: 438 mame/drivers/appoooh.c: 306 mame/drivers/argus.c: 346, 347, 419, 420 mame/drivers/armedf.c: 554, 555, 561, 579, 606, 636, 688, 697, 700 mame/drivers/artmagic.c: 536, 699 mame/drivers/asteroid.c: 474, 582 mame/drivers/astrocde.c: 1060, 1066 mame/drivers/asuka.c: 690 mame/drivers/atarifb.c: 253, 254, 327, 328, 337, 338, 414 mame/drivers/atarisy2.c: 869, 870 mame/drivers/avalnche.c: 161, 162 mame/drivers/baraduke.c: 268, 334, 335, 336, 337 mame/drivers/battlera.c: 172, 176, 177, 193, 194, 195 mame/drivers/bbusters.c: 495, 496, 497, 536, 552, 567, 568, 569 mame/drivers/bionicc.c: 232 mame/drivers/bking.c: 313, 344 mame/drivers/bladestl.c: 228, 229, 232 mame/drivers/blockhl.c: 145, 146, 147, 148, 166, 168 mame/drivers/blockout.c: 177, 178, 189, 190, 191, 192, 193 mame/drivers/blueprnt.c: 145, 160, 163, 171, 180, 181 mame/drivers/changela.c: 362 mame/drivers/clshroad.c: 123, 124, 140, 141, 142, 143, 144, 145, 146, 147 mame/drivers/flkatck.c: 158 mame/drivers/gaelco.c: 382 mame/drivers/galaga.c: 1059, 1154, 1164 mame/drivers/gaplus.c: 348 mame/drivers/gberet.c: 266, 267 mame/drivers/gbusters.c: 226, 228 mame/drivers/gijoe.c: 248 mame/drivers/gladiatr.c: 511, 531, 532, 533 mame/drivers/glass.c: 145 mame/drivers/gng.c: 158 mame/drivers/hcastle.c: 104, 105 mame/drivers/kaneko16.c: 905, 906, 907, 908, 909, 910, 1006, 1086, 1087, 1480, 1481, 1482, 1483, 1484, 1485 mame/drivers/lasso.c: 255, 266 mame/drivers/m58.c: 116, 120, 123, 145 mame/drivers/m63.c: 567, 572 mame/drivers/m92.c: 628 mame/drivers/mainevt.c: 283, 284, 285, 286, 289, 290, 291, 310, 312, 371 mame/drivers/mcatadv.c: 393 mame/drivers/megasys1.c: 792, 1072, 1122, 1146 mame/drivers/nmk16.c: 1155, 1158, 1161, 1164, 1165, 1890, 1898, 1901, 1932, 1972, 1975, 1983, 2012, 2402, 2486, 2494, 2508, 2568, 2571, 2653, 2656, 2666, 2826, 2829, 2832, 2835, 2838, 3043, 3044, 3176 mame/drivers/punchout.c: 439 mame/drivers/segag80r.c: 430, 431, 432, 433, 434, 435, 436, 437, 515 mame/drivers/segas16a.c: 1844, 1845, 1846 mame/drivers/segas16b.c: 2954, 2955, 2956 mame/drivers/seta.c: 3254, 3385, 3386, 3390, 3724, 3727, 4027, 4051, 4565, 4566, 4567, 4588, 4589, 4896, 4902, 4903, 5684, 5687, 5690, 5691, 5692, 5835, 5836, 5837, 5838, 5894, 5895, 5896, 5897, 5898, 5901, 5902 mame/drivers/seta2.c: 1120, 1124, 1127, 1481, 1482, 1517, 1518, 1519, 1567, 1568, 1603, 1604, 1605, 1606 mame/drivers/ssv.c: 1180, 1238, 1239, 1292, 1303, 1817, 1818, 1956, 1975, 1988, 1992 mame/drivers/system16.c: 1557, 1575, 1624, 1625, 1689, 1752, 1756, 1757, 1812, 1818, 1819, 1825, 1826 mame/drivers/ultraman.c: 140, 141
 Unused
 Sem Uso
 
-# emu/inptport.c: 718
+# emu/inptport.c: 720
 Upright
 Upright
 
@@ -3854,7 +3854,7 @@ Tempo ligado: %d:%02d:%02d\n\n
 Uptime: %d:%02d\n\n
 Tempo ligado: %d:%02d\n\n
 
-# emu/ui.c: 1416
+# emu/ui.c: 1391
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
 O uso de emuladores em conjunto de ROMs que voc?não possui ?proibido por leis de copyright.\n\n
 
@@ -3878,11 +3878,11 @@ Somente Saída de Display VFD
 VFD Only (%d:%d)
 Somente VFD (%d:%d)
 
-# emu/ui.c: 2401
+# emu/ui.c: 2376
 Vector Flicker
 Cintilação Vetorial
 
-# emu/inptport.c: 725
+# emu/inptport.c: 727
 Version
 Versão
 
@@ -3894,19 +3894,19 @@ Vertical
 Vertically
 Verticalmente
 
-# emu/inptport.c: 741
+# emu/inptport.c: 743
 Very Easy
 Muito Fácil
 
-# emu/inptport.c: 752
+# emu/inptport.c: 754
 Very Hard
 Muito Difícil
 
-# emu/inptport.c: 763
+# emu/inptport.c: 765
 Very High
 Muito Alto
 
-# emu/inptport.c: 758
+# emu/inptport.c: 760
 Very Low
 Muito Baixo
 
@@ -3942,7 +3942,7 @@ Aviso: Linha inválida no INI: %s
 Warning: unknown option in INI: %s\n
 Aviso: opção de INI desconhecida: %s\n
 
-# emu/inptport.c: 732 mame/drivers/tetrisp2.c: 661, 664, 667, 668
+# emu/inptport.c: 734 mame/drivers/tetrisp2.c: 661, 664, 667, 668
 World
 Mundial
 
@@ -3954,7 +3954,7 @@ Gravar
 XOR
 XOR
 
-# emu/inptport.c: 674 emu/uiimage.c: 225 mess/machine/nes.c: 1471, 1472, 1473 
+# emu/inptport.c: 676 emu/uiimage.c: 225 mess/machine/nes.c: 1471, 1472, 1473 
 Yes
 Sim
 
@@ -3970,7 +3970,7 @@ Zoom Automático
 [empty slot]
 [encaixe vazio]
 
-# emu/video.c: 622
+# emu/video.c: 635
 \n%d partial updates
 \n%d atualizações parciais
 
@@ -3978,11 +3978,11 @@ Zoom Automático
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n\"%s\" aproximadamente equivale aos seguintes\njogos suportados (melhor equivalência primeiro):\n\n
 
-# emu/ui.c: 1509
+# emu/ui.c: 1484
 \n\nThere are working clones of this game: 
 \n\nH?clones funcionando deste jogo: 
 
-# emu/ui.c: 1522
+# emu/ui.c: 1497
 \n\nType OK or move the joystick left then right to continue
 \n\nDigite OK ou mova o joystick para esquerda e direita para continuar
 
@@ -3998,7 +3998,7 @@ toda a informação disponível no driver em formato XML
 amount to scale the screen brightness when paused
 igualar ?escala o brilho de tela quando pausado
 
-# emu/inptport.c: 2167
+# emu/inptport.c: 2169
 analog joystick
 joystick analógico
 
@@ -4006,11 +4006,11 @@ joystick analógico
 assert: %s:%d: %s
 afirmar: %s:%d: %s
 
-# emu/video.c: 610
+# emu/video.c: 623
 auto%2d/%d
 automático%2d/%d
 
-# emu/emuopts.c: 193
+# emu/emuopts.c: 195
 automatic pause when playback ended
 pausar automaticamente quando finalizar reprodução
 
@@ -4026,43 +4026,43 @@ rotacionar tela automaticamente no sentido horário 90 graus, se vertical
 automatically rotate screen counterclockwise 90 degrees if vertical
 rotacionar tela automaticamente no sentido anti-horário 90 graus, se vertical
 
-# emu/emuopts.c: 216
+# emu/emuopts.c: 218
 button color (aqua)
 cor do botão (azul marinho)
 
-# emu/emuopts.c: 213
+# emu/emuopts.c: 215
 button color (blue)
 cor do botão (azul)
 
-# emu/emuopts.c: 212
+# emu/emuopts.c: 214
 button color (green)
 cor do botão (verde)
 
-# emu/emuopts.c: 219
+# emu/emuopts.c: 221
 button color (lime)
 cor do botão (verde limão)
 
-# emu/emuopts.c: 218
+# emu/emuopts.c: 220
 button color (navy)
 cor do botão (azul naval)
 
-# emu/emuopts.c: 215
+# emu/emuopts.c: 217
 button color (pink)
 cor do botão (rosa)
 
-# emu/emuopts.c: 214
+# emu/emuopts.c: 216
 button color (purple)
 cor do botão (roxo)
 
-# emu/emuopts.c: 210
+# emu/emuopts.c: 212
 button color (red)
 cor do botão (vermelho)
 
-# emu/emuopts.c: 217
+# emu/emuopts.c: 219
 button color (silver)
 cor do botão (prata)
 
-# emu/emuopts.c: 211
+# emu/emuopts.c: 213
 button color (yellow)
 color do botão (amarelo)
 
@@ -4106,7 +4106,7 @@ correção padrão de contraste da tela do jogo
 default game screen gamma correction
 correção padrão de gama da tela
 
-# emu/info.c: 172 emu/inptport.c: 2170
+# emu/info.c: 172 emu/inptport.c: 2172
 dial
 dial
 
@@ -4226,7 +4226,7 @@ habilitar descaleração para fazer o jogo rodar sincronizado com o tempo real
 enable/disable debugger
 habilitar/desabilitar depurador
 
-# emu/emuopts.c: 225
+# emu/emuopts.c: 227
 enable/disable local language game list
 habilitar/desabilitar idioma local na lista de jogos
 
@@ -4242,7 +4242,7 @@ final de alcance de saturação de eixo para o joystick onde a mudança ?ignorada (
 error: invalid value for language: %s\nUse %s\n
 erro: valor inválido para idioma: %s\nUse %s\n
 
-# emu/ui.c: 400
+# emu/ui.c: 399
 error: invalid value for palette: %s\n
 erro: valor da paleta inválido: %s\n
 
@@ -4250,7 +4250,7 @@ erro: valor da paleta inválido: %s\n
 explicit joystick map, or auto to auto-select
 Indique mapa do joystick, or auto para seleção automática
 
-# emu/video.c: 606
+# emu/video.c: 619
 fast 
 rápido
 
@@ -4282,7 +4282,7 @@ efeito de melhoramento da imagem
 invalid
 inválido
 
-# emu/emuopts.c: 199
+# emu/emuopts.c: 201
 ips datafile name
 nome do datafile ips
 
@@ -4298,7 +4298,7 @@ is best available\n
 is good\n
 ?bom\n
 
-# emu/emuopts.h: 146 emu/info.c: 172 emu/inptport.c: 2168, 2216, 2219 
+# emu/emuopts.h: 146 emu/info.c: 172 emu/inptport.c: 2170, 2218, 2221 
 lightgun
 pistola laser
 
@@ -4338,7 +4338,7 @@ nome de arquivo opcional para gravar um arquivo WAV da sessão atual
 or
 ou
 
-# emu/info.c: 172 emu/inptport.c: 2166
+# emu/info.c: 172 emu/inptport.c: 2168
 paddle
 paddle
 
@@ -4374,11 +4374,11 @@ diretório para arquivos ips
 path to samplesets
 caminho para conjuntos de amostras de som
 
-# emu/video.c: 602
+# emu/video.c: 615
 paused
 pausado
 
-# emu/info.c: 172 emu/inptport.c: 2169
+# emu/info.c: 172 emu/inptport.c: 2171
 pedal
 pedal
 
@@ -4394,7 +4394,7 @@ reproduzir um arquivo de input
 playing
 jogando
 
-# emu/inptport.c: 2172
+# emu/inptport.c: 2174
 positional
 posicional
 
@@ -4402,7 +4402,7 @@ posicional
 preconfigure for specified controller
 pre-configurar para controlador específico
 
-# emu/emuopts.c: 191
+# emu/emuopts.c: 192
 quit game with confirmation
 sair do jogo com confirmação
 
@@ -4462,7 +4462,7 @@ conjunto de amostras de som \"%s\" não encontrado!\n
 saved state to load
 posição salva para carregar
 
-# emu/video.c: 1676
+# emu/video.c: 1689
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 scale_effect \"%s\" não suporta ambos bpp de 15 e 32. efeito de escala est?desabilitado.
 
@@ -4474,7 +4474,7 @@ script para depurador
 select the system BIOS to use
 selecione o BIOS de sistema a ser usado
 
-# emu/emuopts.c: 224
+# emu/emuopts.c: 226
 select translation language
 selecione idioma de tradução
 
@@ -4514,7 +4514,7 @@ mostrar esta ajuda
 size of RAM (if supported by driver)
 tamanho de RAM (se suportado pelo driver)
 
-# emu/video.c: 614
+# emu/video.c: 627
 skip %d/%d
 pular %d/%d
 
@@ -4538,11 +4538,11 @@ parado
 switch drivers
 trocar drivers
 
-# emu/info.c: 172 emu/inptport.c: 2171 
+# emu/info.c: 172 emu/inptport.c: 2173 
 trackball
 trackball
 
-# emu/emuopts.c: 196
+# emu/emuopts.c: 198
 transparency in-game UI [0-255]
 transparência de fundo da Interface de Usuário [0-255]
 
@@ -4586,7 +4586,7 @@ escreve configuração no (driver).ini ao sair
 %s Analog Inc
 
 
-# emu/ui.c: 2345
+# emu/ui.c: 2320
 %s Brightness
 
 
@@ -4594,7 +4594,7 @@ escreve configuração no (driver).ini ao sair
 %s CHD ERROR: %s\n
 
 
-# emu/ui.c: 2348
+# emu/ui.c: 2323
 %s Contrast
 
 
@@ -4602,31 +4602,31 @@ escreve configuração no (driver).ini ao sair
 %s DIFF CHD ERROR: %s\n
 
 
-# emu/ui.c: 2351
+# emu/ui.c: 2326
 %s Gamma
 
 
-# emu/ui.c: 2359, 2385
+# emu/ui.c: 2334, 2360
 %s Horiz Position
 
 
-# emu/ui.c: 2356, 2382
+# emu/ui.c: 2331, 2357
 %s Horiz Stretch
 
 
-# emu/ui.c: 2339
+# emu/ui.c: 2314
 %s Refresh Rate
 
 
-# emu/ui.c: 2365, 2391
+# emu/ui.c: 2340, 2366
 %s Vert Position
 
 
-# emu/ui.c: 2362, 2388
+# emu/ui.c: 2337, 2363
 %s Vert Stretch
 
 
-# emu/ui.c: 2298
+# emu/ui.c: 2273
 %s Volume
 
 
@@ -4638,7 +4638,7 @@ escreve configuração no (driver).ini ao sair
 %sWrong version in save file (version %d, expected %d)
 
 
-# emu/inptport.c: 1909
+# emu/inptport.c: 1911
 (Unknown Default)
 
 
@@ -4670,7 +4670,7 @@ Activated\n %s = %s
 Adder %d Output Only (%d:%d, No Artwork)
 
 
-# emu/video.c: 1028
+# emu/video.c: 1041
 Adjusting target speed to %d%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n
 
 
@@ -4686,7 +4686,7 @@ All cheats reloaded
 Available
 
 
-# emu/inptport.c: 4635
+# emu/inptport.c: 4644
 Average recorded speed: %d%%\n
 
 
@@ -4770,7 +4770,7 @@ Coin 12
 Coin 9
 
 
-# emu/inptport.c: 2945
+# emu/inptport.c: 2947
 Coinlock disabled %s.
 
 
@@ -4798,7 +4798,7 @@ Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org
 Copyright the MESS team\nhttp://mess.org
 
 
-# emu/inptport.c: 4579
+# emu/inptport.c: 4581
 Created %s
 
 
@@ -4810,7 +4810,7 @@ Cropped
 Cropped Corners
 
 
-# emu/ui.c: 2418
+# emu/ui.c: 2393
 Crosshair Offset %s
 
 
@@ -4818,23 +4818,23 @@ Crosshair Offset %s
 Crosshair Options
 
 
-# emu/ui.c: 2415
+# emu/ui.c: 2390
 Crosshair Scale %s
 
 
-# emu/inptport.c: 612
+# emu/inptport.c: 614
 Cursor Down
 
 
-# emu/inptport.c: 609
+# emu/inptport.c: 611
 Cursor Left
 
 
-# emu/inptport.c: 610
+# emu/inptport.c: 612
 Cursor Right
 
 
-# emu/inptport.c: 611
+# emu/inptport.c: 613
 Cursor Up
 
 
@@ -4914,7 +4914,7 @@ Emulated
 Enabled
 
 
-# emu/inptport.c: 4480, 4506, 4532
+# emu/inptport.c: 4482, 4508, 4534
 End of file
 
 
@@ -4994,7 +4994,7 @@ Hold 4
 Hold 5
 
 
-# emu/inptport.c: 4576
+# emu/inptport.c: 4578
 INP version %d.%d\n
 
 
@@ -5010,23 +5010,23 @@ IPS: parsing ips \"%s/%s%s\"\n
 Ignoring duplicate cheat '%s' from file %s\n
 
 
-# emu/inptport.c: 4572 
+# emu/inptport.c: 4574 
 Input file format version mismatch
 
 
-# emu/inptport.c: 4570 
+# emu/inptport.c: 4572 
 Input file invalid or in an older, unsupported format
 
 
-# emu/inptport.c: 4568 
+# emu/inptport.c: 4570 
 Input file is corrupt or invalid (missing header)
 
 
-# emu/inptport.c: 4575 
+# emu/inptport.c: 4577 
 Input file: %s\n
 
 
-# emu/inptport.c: 1046
+# emu/inptport.c: 1048
 Input port errors:\n%s
 
 
@@ -5034,7 +5034,7 @@ Input port errors:\n%s
 Invalid data type supplied for state saving.
 
 
-# emu/inptport.c: 3601
+# emu/inptport.c: 3603
 Invalid token %d in input ports\n
 
 
@@ -5074,11 +5074,11 @@ LCD Standard (%d:%d)
 LCD with square pixels
 
 
-# emu/ui.c: 2830
+# emu/ui.c: 2805
 Laserdisc
 
 
-# emu/ui.c: 2828
+# emu/ui.c: 2803
 Laserdisc '%s'
 
 
@@ -5086,19 +5086,19 @@ Laserdisc '%s'
 Left
 
 
-# emu/inptport.c: 635
+# emu/inptport.c: 637
 Left Alt
 
 
-# emu/inptport.c: 633
+# emu/inptport.c: 635
 Left Ctrl
 
 
-# emu/inptport.c: 631
+# emu/inptport.c: 633
 Left Shift
 
 
-# emu/inptport.c: 640
+# emu/inptport.c: 642
 Left Win
 
 
@@ -5126,7 +5126,7 @@ Main Screen
 Main Screen + LCD
 
 
-# emu/ui.c: 2285
+# emu/ui.c: 2260
 Master Volume
 
 
@@ -5150,19 +5150,19 @@ Natural
 Nicola Salmoria and the MAME Team
 
 
-# emu/ui.c: 1675
+# emu/ui.c: 1650
 None\n
 
 
-# emu/inptport.c: 4720, 4740, 4760
+# emu/inptport.c: 4729, 4749, 4769
 Out of space
 
 
-# emu/inptport.c: 4658
+# emu/inptport.c: 4667
 Out of sync
 
 
-# emu/ui.c: 2320
+# emu/ui.c: 2295
 Overclock CPU %s
 
 
@@ -5318,7 +5318,7 @@ P8 Button 15
 Parsing %s.ini\n
 
 
-# emu/inptport.c: 630, 722 emu/inpttype.h: 642
+# emu/inptport.c: 632, 724 emu/inpttype.h: 642
 Pause
 
 
@@ -5326,15 +5326,15 @@ Pause
 Payout
 
 
-# emu/inptport.c: 4630
+# emu/inptport.c: 4634
 Playback Ended\nReason: %s
 
 
-# emu/inptport.c: 4580
+# emu/inptport.c: 4582
 Recorded using %s\n
 
 
-# emu/inptport.c: 4828
+# emu/inptport.c: 4837
 Recording Ended\nReason: %s
 
 
@@ -5346,7 +5346,7 @@ Reload All
 Reset All
 
 
-# emu/inptport.c: 783 
+# emu/inptport.c: 785 
 Reverse
 
 
@@ -5354,19 +5354,19 @@ Reverse
 Right
 
 
-# emu/inptport.c: 636
+# emu/inptport.c: 638
 Right Alt
 
 
-# emu/inptport.c: 634
+# emu/inptport.c: 636
 Right Ctrl
 
 
-# emu/inptport.c: 632
+# emu/inptport.c: 634
 Right Shift
 
 
-# emu/inptport.c: 641
+# emu/inptport.c: 643
 Right Win
 
 
@@ -5386,7 +5386,7 @@ Screen %d Stretched (%dx%d)
 Screen %d Widescreen (%d:%d)
 
 
-# emu/ui.c: 2809
+# emu/ui.c: 2784
 Screen '%s'
 
 
@@ -5446,7 +5446,7 @@ Shifter-R
 Slider Controls
 
 
-# emu/video.c: 1137, 1402, 2860 
+# emu/video.c: 1150, 1415, 2872 
 Software
 
 
@@ -5502,15 +5502,15 @@ Stop Reel 3
 Stop Reel 4
 
 
-# emu/ui.c: 1491 
+# emu/ui.c: 1466 
 THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
 
 
-# emu/ui.c: 1478 
+# emu/ui.c: 1453 
 The game requires external artwork files\n
 
 
-# emu/ui.c: 1462
+# emu/ui.c: 1437
 The keyboard emulation may not be 100% accurate.\n
 
 
@@ -5534,7 +5534,7 @@ Tilt 3
 Tilt 4
 
 
-# emu/inptport.c: 4634
+# emu/inptport.c: 4643
 Total playback frames: %d\n
 
 
@@ -5554,7 +5554,7 @@ UI Toggle
 Unable to %s due to pending anonymous timers. See error.log for details.
 
 
-# emu/inptport.c: 1635, 1824
+# emu/inptport.c: 1637, 1826
 Unable to locate input port '%s'
 
 
@@ -5562,7 +5562,7 @@ Unable to locate input port '%s'
 Up
 
 
-# emu/ui.c: 1687
+# emu/ui.c: 1662
 Vector\n
 
 
@@ -5598,11 +5598,11 @@ With LEDs
 [software list]
 
 
-# emu/ui.c: 1643
+# emu/ui.c: 1618
 \nSound:\n
 
 
-# emu/ui.c: 1673
+# emu/ui.c: 1648
 \nVideo:\n
 
 
@@ -5610,19 +5610,19 @@ With LEDs
 create burn-in snapshots for each screen
 
 
-# emu/emuopts.c: 209
+# emu/emuopts.c: 211
 cursor background color (floating)
 
 
-# emu/emuopts.c: 207
+# emu/emuopts.c: 209
 cursor background color (selected)
 
 
-# emu/emuopts.c: 208
+# emu/emuopts.c: 210
 cursor text color (floating)
 
 
-# emu/emuopts.c: 206
+# emu/emuopts.c: 208
 cursor text color (selected)
 
 
@@ -5666,11 +5666,11 @@ enable coin lockouts to actually lock out coins
 enable joystick input
 
 
-# emu/video.c: 598
+# emu/video.c: 611
 frame:%ld 
 
 
-# emu/emuopts.c: 229
+# emu/emuopts.c: 231
 image device-specific options have been added
 
 
@@ -5694,7 +5694,7 @@ load
 loaded
 
 
-# emu/emuopts.c: 205
+# emu/emuopts.c: 207
 main background color
 
 

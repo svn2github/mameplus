@@ -362,143 +362,143 @@ Direct3D: デバイスのリソ\ース再生成が失敗しました。
 Direct3D: resetting device\n
 Direct3D: デバイスをリセットしています\n
 
-# osd/windows/drawdd.c: 823
+# osd/windows/drawdd.c: 824
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %sバッファを作成しました: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1160
+# osd/windows/drawdd.c: 1161
 DirectDraw: Configuring device %s\n
 DirectDraw: デバイス%sを設定中\n
 
-# osd/windows/drawdd.c: 651
+# osd/windows/drawdd.c: 652
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: ガンマ補正の設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 529
+# osd/windows/drawdd.c: 530
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 描画モードを%dx%d@%dに設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1120
+# osd/windows/drawdd.c: 1121
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: 画面への描画でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1087, 1096, 1105, 1114
+# osd/windows/drawdd.c: 1088, 1097, 1106, 1115
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 画面の消去でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 808
+# osd/windows/drawdd.c: 809
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: %sバッファの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 849
+# osd/windows/drawdd.c: 850
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: クリッパーの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 494, 1149
+# osd/windows/drawdd.c: 495, 1150
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1246
+# osd/windows/drawdd.c: 1247
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: 呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1365
+# osd/windows/drawdd.c: 1366
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 750
+# osd/windows/drawdd.c: 751
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 519
+# osd/windows/drawdd.c: 520
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 513
+# osd/windows/drawdd.c: 514
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 816
+# osd/windows/drawdd.c: 817
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: %sバッファの詳細を取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 578
+# osd/windows/drawdd.c: 579
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: 割り当てられた裏画面バッファの取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1168
+# osd/windows/drawdd.c: 1169
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: 現在の画面モード取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 387
+# osd/windows/drawdd.c: 388
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: blitバッファのロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 857
+# osd/windows/drawdd.c: 858
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: ウィンドウのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 865
+# osd/windows/drawdd.c: 866
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: primaryバッファのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 460
+# osd/windows/drawdd.c: 461
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: blitバッファのアンロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 466, 1126
+# osd/windows/drawdd.c: 467, 1127
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: VBLANK待ちでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 502
+# osd/windows/drawdd.c: 503
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: エラー: デバイスはDirectDraw描画に必要最小限の要件をサポートしていません\n
 
-# osd/windows/drawdd.c: 381
+# osd/windows/drawdd.c: 382
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: バッファの消失。次のフレームに削除してやり直します\n
 
-# osd/windows/drawdd.c: 1366
+# osd/windows/drawdd.c: 1367
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 961
+# osd/windows/drawdd.c: 962
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 新しいバッファサイズは%dx%d\n
 
-# osd/windows/drawdd.c: 1363
+# osd/windows/drawdd.c: 1364
 DirectDraw: Selecting video mode...\n
 DirectDraw: 描画モードを選択中です...\n
 
-# osd/windows/drawdd.c: 228
+# osd/windows/drawdd.c: 229
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: ddraw.dllにアクセス出来ません\n
 
-# osd/windows/drawdd.c: 236
+# osd/windows/drawdd.c: 237
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: DirectDrawCreateExを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 246
+# osd/windows/drawdd.c: 247
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: DirectDrawEnumerateExAを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 416, 452, 1202
+# osd/windows/drawdd.c: 417, 453, 1203
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 不明な画面モード: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 259
+# osd/windows/drawdd.c: 260
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: DirectDraw 7を使用します\n
 
-# osd/windows/drawdd.c: 757
+# osd/windows/drawdd.c: 758
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 警告: デバイスはハードウェア拡大表\示をサポートしていません\n
 
-# osd/windows/drawdd.c: 506
+# osd/windows/drawdd.c: 507
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 警告: デバイスはDirectDraw描画にあまり適していないかも知れません\n
 
-# osd/windows/drawdd.c: 634
+# osd/windows/drawdd.c: 635
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告: デバイスはフルスクリーンのガンマ補正をサポートしていません。\n
 
@@ -546,7 +546,7 @@ DirectSoundの作成が出来ません: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 DirectSoundのプライマリバッファを生成出来ません: %08x\n
 
-# osd/windows/window.c: 652
+# osd/windows/window.c: 653
 Error creating render target for window %d
 ウインドウ%dの描画対象の生成でエラーが発生しました
 
@@ -562,7 +562,7 @@ DirectSoundの情報が取得出来ません: %08x\n
 Error getting identifier for adapter #%d\n
 アダプタ#%dの識別情報の取得でエラーが発生しました\n
 
-# osd/windows/drawdd.c: 1157
+# osd/windows/drawdd.c: 1158
 Error getting identifier for device\n
 デバイスの識別情報の取得でエラーが発生しました\n
 
@@ -610,19 +610,19 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 フルスクリーンオプション
 
-# osd/windows/window.c: 256
+# osd/windows/window.c: 257
 Failed to create pause event
 ポーズイベントの生成が失敗しました
 
-# osd/windows/window.c: 868
+# osd/windows/window.c: 870
 Failed to create window class
 ウインドウクラスの生成が失敗しました
 
-# osd/windows/window.c: 270
+# osd/windows/window.c: 271
 Failed to create window thread
 ウインドウスレッドの生成が失敗しました
 
-# osd/windows/window.c: 264
+# osd/windows/window.c: 265
 Failed to create window thread ready event
 ウインドウスレッド準備完了イベントの生成が失敗しました
 
@@ -638,11 +638,11 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 入力デバイスオプション
 
-# osd/windows/video.c: 554
+# osd/windows/video.c: 555
 Illegal aspect ratio value for %s = %s\n
 %sの値%sは不正なアスペクト比です\n
 
-# osd/windows/video.c: 577
+# osd/windows/video.c: 578
 Illegal resolution value for %s = %s\n
 %sの値%sは不正な解像度です\n
 
@@ -650,7 +650,7 @@ Illegal resolution value for %s = %s\n
 Input
 入力
 
-# osd/windows/video.c: 473
+# osd/windows/video.c: 474
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
@@ -662,7 +662,7 @@ Joystick %i
 Joysticks/Controllers
 ジョイスティック/コントローラ
 
-# osd/windows/window.c: 667
+# osd/windows/window.c: 668
 MAME: %s [%s] - Screen %d
 MAME: %s「%s」- 画面%d
 
@@ -790,7 +790,7 @@ Toggle Fullscreen
 Unable to close the keyboard device. (error %d)\n
 キーボードディバイスがクローズ出来ません。(エラー %d)\n
 
-# osd/windows/window.c: 687
+# osd/windows/window.c: 688
 Unable to complete window creation
 ウインドウの生成が完了出来ません
 
@@ -802,11 +802,11 @@ Direct3Dデバイスを作成出来ません(%08X)\n
 Unable to initialize Direct3D.\n
 Direct3Dを初期化出来ません。\n
 
-# osd/windows/drawdd.c: 301
+# osd/windows/drawdd.c: 302
 Unable to initialize DirectDraw.\n
 DirectDrawを初期化出来ません\n
 
-# osd/windows/video.c: 523
+# osd/windows/video.c: 524
 Unable to load PNG file '%s'\n
 PNGファイル「%s」を読み込めません\n
 
@@ -826,7 +826,7 @@ Unlimited
 Unmount
 マウント解除
 
-# osd/windows/video.c: 434
+# osd/windows/video.c: 435
 Using %s scale effect\n
 スケールエフェクト %s を使用します\n
 
@@ -850,7 +850,7 @@ Windows版サウンドオプション
 WINDOWS VIDEO OPTIONS
 Windows版ビデオオプション
 
-# osd/windows/video.c: 469
+# osd/windows/video.c: 470
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video none は -seconds_to_run オプション無しでは無意味です\n
 
@@ -1084,6 +1084,10 @@ Paste
 
 # osd/windows/input.c: 841
 Toggle Menu Bar
+
+
+# osd/windows/winmain.c: 506
+Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 
 
 # osd/windows/winmain.c: 368

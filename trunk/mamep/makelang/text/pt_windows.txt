@@ -222,143 +222,143 @@ Direct3D: falha ao recriar recursos para dispositibo; falhando permanentemente\n
 Direct3D: resetting device\n
 Direct3D: resettando dispositivo\n
 
-# osd/windows/drawdd.c: 823
+# osd/windows/drawdd.c: 824
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %s superfície criada: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1160
+# osd/windows/drawdd.c: 1161
 DirectDraw: Configuring device %s\n
 DirectDraw: Configurando dispositivo %s\n
 
-# osd/windows/drawdd.c: 651
+# osd/windows/drawdd.c: 652
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: Erro %08X tentando configurar a correção gama.\n
 
-# osd/windows/drawdd.c: 529
+# osd/windows/drawdd.c: 530
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: Erro %08X tentando configurar a chamada do modo de vídeo %dx%d@%d\n
 
-# osd/windows/drawdd.c: 1120
+# osd/windows/drawdd.c: 1121
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: Erro %08X blitting na tela\n
 
-# osd/windows/drawdd.c: 1087, 1096, 1105, 1114
+# osd/windows/drawdd.c: 1088, 1097, 1106, 1115
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: Erro %08X limpando a tela\n
 
-# osd/windows/drawdd.c: 808
+# osd/windows/drawdd.c: 809
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: Erro %08X criando superfície %s\n
 
-# osd/windows/drawdd.c: 849
+# osd/windows/drawdd.c: 850
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: Erro %08X criando clipper\n
 
-# osd/windows/drawdd.c: 494, 1149
+# osd/windows/drawdd.c: 495, 1150
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: Erro %08X durante chamada de DirectDrawCreateEx\n
 
-# osd/windows/drawdd.c: 1246
+# osd/windows/drawdd.c: 1247
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: Erro %08X durante chamada de DirectDrawEnumerateEx\n
 
-# osd/windows/drawdd.c: 1365
+# osd/windows/drawdd.c: 1366
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: Erro %08X durante chamada de EnumDisplayModes\n
 
-# osd/windows/drawdd.c: 750
+# osd/windows/drawdd.c: 751
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: Erro %08X durante chamada de IDirectDraw7_GetCaps\n
 
-# osd/windows/drawdd.c: 519
+# osd/windows/drawdd.c: 520
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: Erro %08X durante chamada de IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)\n
 
-# osd/windows/drawdd.c: 513
+# osd/windows/drawdd.c: 514
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: Erro %08X durante chamada de IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)\n
 
-# osd/windows/drawdd.c: 816
+# osd/windows/drawdd.c: 817
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: Erro %08X detectando %s descrição de superfície\n
 
-# osd/windows/drawdd.c: 578
+# osd/windows/drawdd.c: 579
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: Error %08X getting attached back surface\n
 
-# osd/windows/drawdd.c: 1168
+# osd/windows/drawdd.c: 1169
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: Erro %08X detectando modo de tela atual\n
 
-# osd/windows/drawdd.c: 387
+# osd/windows/drawdd.c: 388
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: Erro %08X travando superfície de blit\n
 
-# osd/windows/drawdd.c: 857
+# osd/windows/drawdd.c: 858
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: Erro %08X configurando clipper hwnd\n
 
-# osd/windows/drawdd.c: 865
+# osd/windows/drawdd.c: 866
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: Erro %08X configurando clipper na superfície primária\n
 
-# osd/windows/drawdd.c: 460
+# osd/windows/drawdd.c: 461
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: Erro %08X destravando superfície de blit\n
 
-# osd/windows/drawdd.c: 466, 1126
+# osd/windows/drawdd.c: 467, 1127
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: Erro %08X esperando por VBLANK\n
 
-# osd/windows/drawdd.c: 502
+# osd/windows/drawdd.c: 503
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: Erro - Dispositivo não suporta requisitos mínimos para renderização DirectDraw\n
 
-# osd/windows/drawdd.c: 381
+# osd/windows/drawdd.c: 382
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: Superfícies perdidas; deletando e tentando próximo frame\n
 
-# osd/windows/drawdd.c: 1366
+# osd/windows/drawdd.c: 1367
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: Modo selecionado = %4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 961
+# osd/windows/drawdd.c: 962
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: Novo tamanho de blit = %dx%d\n
 
-# osd/windows/drawdd.c: 1363
+# osd/windows/drawdd.c: 1364
 DirectDraw: Selecting video mode...\n
 DirectDraw: Selecionando modo de vídeo...\n
 
-# osd/windows/drawdd.c: 228
+# osd/windows/drawdd.c: 229
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: Não foi possível accessar ddraw.dll\n
 
-# osd/windows/drawdd.c: 236
+# osd/windows/drawdd.c: 237
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: Não foi possível encontrar DirectDrawCreateEx\n
 
-# osd/windows/drawdd.c: 246
+# osd/windows/drawdd.c: 247
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: Não foi possível encontrar DirectDrawEnumerateExA\n
 
-# osd/windows/drawdd.c: 416, 452, 1202
+# osd/windows/drawdd.c: 417, 453, 1203
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: Modo de alvo desconhecido: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 259
+# osd/windows/drawdd.c: 260
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: Usando DirectDraw 7\n
 
-# osd/windows/drawdd.c: 757
+# osd/windows/drawdd.c: 758
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: Aviso - Dispositivo não suporta esticamento por hardware\n
 
-# osd/windows/drawdd.c: 506
+# osd/windows/drawdd.c: 507
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: Aviso - Dispositivo pode não funcionar corretamente em renderização DirectDraw\n
 
-# osd/windows/drawdd.c: 634
+# osd/windows/drawdd.c: 635
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: Aviso - dispositivo não suporta correção gama em tela cheia.\n
 
@@ -394,7 +394,7 @@ Erro detectando capacidades do DirectSound: %08x\n
 Error getting identifier for adapter #%d\n
 Erro detectando identificador para adaptador #%d\n
 
-# osd/windows/drawdd.c: 1157
+# osd/windows/drawdd.c: 1158
 Error getting identifier for device\n
 Erro detectando identificador para dispositivo\n
 
@@ -446,19 +446,19 @@ FULL SCREEN OPTIONS
 INPUT DEVICE OPTIONS
 INPUT DEVICE OPTIONS
 
-# osd/windows/video.c: 554
+# osd/windows/video.c: 555
 Illegal aspect ratio value for %s = %s\n
 Valor de aspecto de tela ilegal para %s = %s\n
 
-# osd/windows/video.c: 577
+# osd/windows/video.c: 578
 Illegal resolution value for %s = %s\n
 Valor de resolução ilegal para %s = %s\n
 
-# osd/windows/video.c: 473
+# osd/windows/video.c: 474
 Invalid video value %s; reverting to gdi\n
 Valor de vídeo inválido %s; revertendo para gdi\n
 
-# osd/windows/window.c: 667
+# osd/windows/window.c: 668
 MAME: %s [%s] - Screen %d
 NOME: %s [%s] - Tela %d
 
@@ -498,11 +498,11 @@ Não foi possível criar dispositivo de Direct3D (%08X)\n
 Unable to initialize Direct3D.\n
 Não foi possível inicializar Direct3D.\n
 
-# osd/windows/drawdd.c: 301
+# osd/windows/drawdd.c: 302
 Unable to initialize DirectDraw.\n
 Não foi possível inicializar DirectDraw.\n
 
-# osd/windows/video.c: 523
+# osd/windows/video.c: 524
 Unable to load PNG file '%s'\n
 Não foi possível carregar arquivo PNG '%s'\n
 
@@ -514,7 +514,7 @@ Impossível inicializar dispositivo de teclado. (erro %d)\n
 Unknown texture blendmode=%d format=%d\n
 Blendmode de textura desconhecido=%d formato=%d\n
 
-# osd/windows/video.c: 434
+# osd/windows/video.c: 435
 Using %s scale effect\n
 Usando efeito %s de escala\n
 
@@ -534,7 +534,7 @@ WINDOWS SOUND OPTIONS
 WINDOWS VIDEO OPTIONS
 WINDOWS VIDEO OPTIONS
 
-# osd/windows/video.c: 469
+# osd/windows/video.c: 470
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 Aviso: -video none não faz sentido sem -seconds_to_run\n
 
@@ -914,23 +914,23 @@ Emulated
 Emulated Keyboard
 
 
-# osd/windows/window.c: 652
+# osd/windows/window.c: 653
 Error creating render target for window %d
 
 
-# osd/windows/window.c: 256
+# osd/windows/window.c: 257
 Failed to create pause event
 
 
-# osd/windows/window.c: 868
+# osd/windows/window.c: 870
 Failed to create window class
 
 
-# osd/windows/window.c: 270
+# osd/windows/window.c: 271
 Failed to create window thread
 
 
-# osd/windows/window.c: 264
+# osd/windows/window.c: 265
 Failed to create window thread ready event
 
 
@@ -1058,7 +1058,7 @@ State Files (*.sta)|*.sta|All Files (*.*)|*.*
 Toggle Menu Bar
 
 
-# osd/windows/window.c: 687
+# osd/windows/window.c: 688
 Unable to complete window creation
 
 
@@ -1072,6 +1072,10 @@ Unmount
 
 # osd/windows/winmain.c: 296
 WINDOWS DEBUGGING OPTIONS
+
+
+# osd/windows/winmain.c: 506
+Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 
 
 # mess/osd/windows/menu.c: 1494
