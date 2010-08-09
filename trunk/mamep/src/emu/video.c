@@ -190,6 +190,19 @@ static void video_avi_record_frame(running_machine *machine);
 /* software rendering */
 static void rgb888_draw_primitives(const render_primitive *primlist, void *dstdata, UINT32 width, UINT32 height, UINT32 pitch);
 
+#ifdef USE_SCALE_EFFECTS
+/* scaler dimensions */
+int					use_work_bitmap;
+int					scale_depth;
+int					scale_xsize;
+int					scale_ysize;
+
+int					scale_bank_offset;
+bitmap_t *				scale_bitmap[2];
+bitmap_t *				work_bitmap[2];
+int					scale_dirty[2];
+#endif /* USE_SCALE_EFFECTS */
+
 
 
 /***************************************************************************

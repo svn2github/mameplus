@@ -4623,9 +4623,10 @@ static void playback_end(running_machine *machine, const char *message)
 
 #ifdef INP_CAPTION
 		if (portdata->caption_file != NULL)
+		{
 			mame_fclose(portdata->caption_file);
-
-		portdata->caption_file = NULL;
+			portdata->caption_file = NULL;
+		}
 #endif /* INP_CAPTION */
 
 		/* pop a message */

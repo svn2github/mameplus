@@ -327,7 +327,7 @@ void running_machine::start()
 	// call the game driver's init function
 	// this is where decryption is done and memory maps are altered
 	// so this location in the init order is important
-	ui_set_startup_text(this, "Initializing...", true);
+	ui_set_startup_text(this, _("Initializing..."), true);
 	if (m_game.driver_init != NULL)
 		(*m_game.driver_init)(this);
 

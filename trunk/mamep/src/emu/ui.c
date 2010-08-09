@@ -498,8 +498,6 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 	/* initialize the on-screen display system */
 	slider_list = slider_current = slider_init(machine);
 
-	scroll_reset = TRUE;
-
 	/* loop over states */
 	ui_set_handler(handler_ingame, 0);
 	for (state = 0; state < maxstate && !machine->scheduled_event_pending() && !ui_menu_is_force_game_select(); state++)
@@ -543,16 +541,11 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 		/* clear the handler and force an update */
 		ui_set_handler(handler_ingame, 0);
 		video_frame_update(machine, FALSE);
-
-		scroll_reset = TRUE;
 	}
 
 	/* if we're the empty driver, force the menus on */
 	if (ui_menu_is_force_game_select())
 		ui_set_handler(ui_menu_ui_handler, 0);
-
-	/* clear the input memory */
-	while (input_code_poll_switches(machine, FALSE) != INPUT_CODE_INVALID) ;
 
 	return 0;
 }
@@ -1708,25 +1701,19 @@ static UINT32 handler_messagebox(running_machine *machine, render_container *con
 
 static UINT32 handler_messagebox_ok(running_machine *machine, render_container *container, UINT32 state)
 {
-	int res;
-
 	/* draw a standard message window */
 	ui_draw_text_box(container, messagebox_text, JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
 
-	res = ui_window_scroll_keys(machine);
-	if (res == 0)
-	{
-		/* an 'O' or left joystick kicks us to the next state */
-		if (state == 0 && (input_code_pressed_once(machine, KEYCODE_O) || ui_input_pressed(machine, IPT_UI_LEFT)))
-			state++;
+	/* an 'O' or left joystick kicks us to the next state */
+	if (state == 0 && (input_code_pressed_once(machine, KEYCODE_O) || ui_input_pressed(machine, IPT_UI_LEFT)))
+		state++;
 
-		/* a 'K' or right joystick exits the state */
-		else if (state == 1 && (input_code_pressed_once(machine, KEYCODE_K) || ui_input_pressed(machine, IPT_UI_RIGHT)))
-			state = UI_HANDLER_CANCEL;
-	}
+	/* a 'K' or right joystick exits the state */
+	else if (state == 1 && (input_code_pressed_once(machine, KEYCODE_K) || ui_input_pressed(machine, IPT_UI_RIGHT)))
+		state = UI_HANDLER_CANCEL;
 
 	/* if the user cancels, exit out completely */
-	if (res == 2)
+	else if (ui_input_pressed(machine, IPT_UI_CANCEL))
 	{
 		machine->schedule_exit();
 		state = UI_HANDLER_CANCEL;
@@ -1760,7 +1747,7 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, render_contain
 	if (res == 1)
 	{
 		if (input_code_poll_switches(machine, FALSE) != INPUT_CODE_INVALID)
-			state = UI_HANDLER_CANCEL;
+		state = UI_HANDLER_CANCEL;
 	}
 
 	return state;

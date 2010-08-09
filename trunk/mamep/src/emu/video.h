@@ -278,17 +278,6 @@ private:
 	void convert_palette_to_15(const bitmap_t *src, bitmap_t *dst, const rectangle *visarea, UINT32 palettebase);
 	void texture_set_scale_bitmap(const rectangle *visarea, UINT32 palettebase);
 	void realloc_scale_bitmaps();
-
-	// scaler dimensions
-	int					use_work_bitmap;
-	int					scale_depth;
-	int					scale_xsize;
-	int					scale_ysize;
-
-	int					scale_bank_offset;
-	bitmap_t *				scale_bitmap[2];
-	bitmap_t *				work_bitmap[2];
-	int					scale_dirty[2];
 #endif /* USE_SCALE_EFFECTS */
 };
 
