@@ -441,14 +441,14 @@ static void astrocade_trigger_lightpen(running_machine *machine, UINT8 vfeedback
 		if ((interrupt_enable & 0x01) == 0)
 		{
 			cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, interrupt_vector & 0xf0);
-			timer_set(machine, machine->primary_screen->time_until_vblank_end(), NULL, 0, interrupt_off);
+			timer_set(machine, machine->primary_screen->time_until_pos(vfeedback), NULL, 0, interrupt_off);
 		}
 
 		/* mode 1 means assert for 1 instruction */
 		else
 		{
 			cputag_set_input_line_and_vector(machine, "maincpu", 0, ASSERT_LINE, interrupt_vector & 0xf0);
-			timer_set(machine, cputag_clocks_to_attotime(machine, "maincpu", 1), NULL, 0, interrupt_off);
+			timer_set(machine, machine->device<cpu_device>("maincpu")->cycles_to_attotime(1), NULL, 0, interrupt_off);
 		}
 
 		/* latch the feedback registers */
@@ -488,7 +488,7 @@ static TIMER_CALLBACK( scanline_callback )
 		else
 		{
 			cputag_set_input_line_and_vector(machine, "maincpu", 0, ASSERT_LINE, interrupt_vector);
-			timer_set(machine, cputag_clocks_to_attotime(machine, "maincpu", 1), NULL, 0, interrupt_off);
+			timer_set(machine, machine->device<cpu_device>("maincpu")->cycles_to_attotime(1), NULL, 0, interrupt_off);
 		}
 	}
 

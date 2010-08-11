@@ -11,11 +11,6 @@
 
 
 ###########################################################################
-#################   BEGIN USER-CONFIGURABLE OPTIONS   #####################
-###########################################################################
-
-
-###########################################################################
 ##################   END USER-CONFIGURABLE OPTIONS   ######################
 ###########################################################################
 
@@ -161,6 +156,17 @@ $(GUIRESFILE): $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
 $(UIOBJ)/mamevers.rc: $(OBJ)/build/verinfo$(EXE) $(SRC)/version.c
 	@echo Emitting $@...
 	@"$(OBJ)/build/verinfo$(EXE)" -b winui $(SRC)/version.c > $@
+
+
+
+#-------------------------------------------------
+# LIBOCORE_NOMAIN for UI
+# if build without MAMEMESS
+#-------------------------------------------------
+
+LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
+
+$(LIBOCORE_NOMAIN): $(OSDCOREOBJS:$(WINOBJ)/main.o=)
 
 
 

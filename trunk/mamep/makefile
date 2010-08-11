@@ -417,10 +417,6 @@ ifdef PROFILER
 DEFS += -DMAME_PROFILER
 endif
 
-ifneq ($(USE_SCALE_EFFECTS),)
-DEFS += -DUSE_SCALE_EFFECTS
-endif
-
 ifneq ($(USE_UI_COLOR_DISPLAY),)
 DEFS += -DUI_COLOR_DISPLAY
 endif
@@ -471,10 +467,6 @@ endif
 
 ifneq ($(USE_HISCORE),)
 DEFS += -DUSE_HISCORE
-endif
-
-ifneq ($(MAMEMESS),)
-DEFS += -DMAMEMESS
 endif
 
 
@@ -644,7 +636,6 @@ LIBDASM = $(OBJ)/libdasm.a
 LIBSOUND = $(OBJ)/libsound.a
 LIBUTIL = $(OBJ)/libutil.a
 LIBOCORE = $(OBJ)/libocore.a
-LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
 LIBOSD = $(OBJ)/libosd.a
 
 VERSIONOBJ = $(OBJ)/version.o
@@ -707,16 +698,8 @@ BUILDOUT = $(BUILDOBJ)
 # include the various .mak files
 #-------------------------------------------------
 
-ifdef MAMEMESS
-# mamep: must stay before MAME OSD for include MESS core defines
-include $(SRC)/mess/messcore.mak
-endif
-
 # include OSD-specific rules first
 include $(SRC)/osd/$(OSD)/$(OSD).mak
-ifdef MAMEMESS
-include $(SRC)/mess/osd/$(OSD)/$(OSD).mak
-endif
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak

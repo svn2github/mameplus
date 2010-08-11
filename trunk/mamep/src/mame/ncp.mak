@@ -27,7 +27,7 @@ OBJDIRS += \
 	$(MACHINE) \
 	$(VIDEO) \
 
-DEFS += -DNEOCPSPGM
+DEFS += -DNCP
 
 
 

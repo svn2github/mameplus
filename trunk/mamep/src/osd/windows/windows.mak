@@ -316,8 +316,6 @@ endif
 
 $(LIBOCORE): $(OSDCOREOBJS)
 
-$(LIBOCORE_NOMAIN): $(OSDCOREOBJS:$(WINOBJ)/main.o=)
-
 $(LIBOSD): $(OSDOBJS)
 
 

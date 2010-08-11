@@ -11,11 +11,22 @@
 # MESS core defines
 #-------------------------------------------------
 
+ifdef MAMEMESS
+DEFS += -DMAMEMESS
+else
+DEFS += -DMESS
+endif
+
+# add some additional include libraries for the mame files
+CFLAGS += \
+	-I$(SRC)/mame \
+	-I$(SRC)/mess/osd \
+	-I$(SRC)/mess/osd/$(OSD)
+
+# add some additional include libraries for the MAMEMESS
 CFLAGS += \
 	-I$(SRC)/mess \
 	-I$(OBJ)/mess/layout \
-	-I$(SRC)/mess/osd \
-	-I$(SRC)/mess/osd/$(OSD)
 
 
 # Root object directories
@@ -67,6 +78,7 @@ OBJDIRS += \
 # MESS core objects
 #-------------------------------------------------
 
+LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
 
 EMUOBJS += \
 	$(MESSOBJ)/mess.o		\

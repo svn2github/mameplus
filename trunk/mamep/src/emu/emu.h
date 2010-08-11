@@ -69,6 +69,7 @@
 
 // memory and address spaces
 #include "memory.h"
+#include "addrmap.h"
 
 // devices and callbacks
 #include "devintrf.h"

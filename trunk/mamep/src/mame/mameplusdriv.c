@@ -91,9 +91,9 @@ const game_driver * const plusdrivers[] =
 	DRIVER( kovlsjba )	/* (c) 2009 */
 	DRIVER( kovlsqh2 )	/* (c) 2009 */
 
-#ifndef NEOCPSPGM
+#ifndef NCP
 	/* Konami "Nemesis hardware" games */
 	DRIVER( spclone )	/* GX587 (c) 1986 based */
-#endif /* !NEOCPSPGM */
+#endif /* !NCP */
 
 #endif	/* DRIVER_RECURSIVE */

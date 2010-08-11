@@ -20,10 +20,13 @@ OBJDIRS += $(SCALEOBJ)
 # compile-time definitions
 #-------------------------------------------------
 
-# scale-specific defines
+# enable USE_SCALE_EFFECTS flags
+DEFS += -DUSE_SCALE_EFFECTS
+
+# add hq2x/hq3x specific define
 DEFS += -Drestrict=__restrict
 
-# define the x64 MMX
+# define the x64 without MMX
 ifndef PTR64
 DEFS += -DUSE_MMX_INTERP_SCALE
 endif

@@ -16,7 +16,7 @@ OBJDIRS += \
 	$(MESSOBJ)/osd \
 	$(MESSOBJ)/osd/windows
 
-MESS_WINSRC = $(SRC)/mess/osd/windows
+MESS_WINSRC = src/mess/osd/windows
 MESS_WINOBJ = $(OBJ)/mess/osd/windows
 
 CLIRESFILE = $(MESS_WINOBJ)/mess.res

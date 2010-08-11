@@ -55,7 +55,7 @@ So this is the correct behavior of real hardware, not an emulation bug.
 
 static INTERRUPT_GEN( nemesis_interrupt )
 {
-	nemesis_state *state = (nemesis_state *)device->machine->driver_data;
+	nemesis_state *state = device->machine->driver_data<nemesis_state>();
 
 	if (state->irq_on)
 		cpu_set_input_line(device, 1, HOLD_LINE);
@@ -63,7 +63,7 @@ static INTERRUPT_GEN( nemesis_interrupt )
 
 static INTERRUPT_GEN( konamigt_interrupt )
 {
-	nemesis_state *state = (nemesis_state *)device->machine->driver_data;
+	nemesis_state *state = device->machine->driver_data<nemesis_state>();
 
 	if (cpu_getiloops(device) == 0)
 	{
@@ -79,7 +79,7 @@ static INTERRUPT_GEN( konamigt_interrupt )
 
 static INTERRUPT_GEN( gx400_interrupt )
 {
-	nemesis_state *state = (nemesis_state *)device->machine->driver_data;
+	nemesis_state *state = device->machine->driver_data<nemesis_state>();
 
 	switch (cpu_getiloops(device))
 	{
@@ -102,7 +102,7 @@ static INTERRUPT_GEN( gx400_interrupt )
 
 static INTERRUPT_GEN( salamand_interrupt )
 {
-	nemesis_state *state = (nemesis_state *)device->machine->driver_data;
+	nemesis_state *state = device->machine->driver_data<nemesis_state>();
 
 	if (state->irq_on)
 		cpu_set_input_line(device, 1, HOLD_LINE);
@@ -110,7 +110,7 @@ static INTERRUPT_GEN( salamand_interrupt )
 
 static INTERRUPT_GEN( blkpnthr_interrupt )
 {
-	nemesis_state *state = (nemesis_state *)device->machine->driver_data;
+	nemesis_state *state = device->machine->driver_data<nemesis_state>();
 
 	if (state->irq_on)
 		cpu_set_input_line(device, 2, HOLD_LINE);
@@ -119,7 +119,7 @@ static INTERRUPT_GEN( blkpnthr_interrupt )
 
 static WRITE16_HANDLER( gx400_irq1_enable_word_w )
 {
-	nemesis_state *state = (nemesis_state *)space->machine->driver_data;
+	nemesis_state *state = space->machine->driver_data<nemesis_state>();
 
 	if (ACCESSING_BITS_0_7)
 		state->irq1_on = data & 0x0001;
@@ -130,7 +130,7 @@ static WRITE16_HANDLER( gx400_irq1_enable_word_w )
 
 static WRITE16_HANDLER( gx400_irq2_enable_word_w )
 {
-	nemesis_state *state = (nemesis_state *)space->machine->driver_data;
+	nemesis_state *state = space->machine->driver_data<nemesis_state>();
 
 	if (ACCESSING_BITS_0_7)
 		state->irq2_on = data & 0x0001;
@@ -141,7 +141,7 @@ static WRITE16_HANDLER( gx400_irq2_enable_word_w )
 
 static WRITE16_HANDLER( gx400_irq4_enable_word_w )
 {
-	nemesis_state *state = (nemesis_state *)space->machine->driver_data;
+	nemesis_state *state = space->machine->driver_data<nemesis_state>();
 
 	if (ACCESSING_BITS_8_15)
 		state->irq4_on = data & 0x0100;
@@ -149,7 +149,7 @@ static WRITE16_HANDLER( gx400_irq4_enable_word_w )
 
 static WRITE16_HANDLER( nemesis_irq_enable_word_w )
 {
-	nemesis_state *state = (nemesis_state *)space->machine->driver_data;
+	nemesis_state *state = space->machine->driver_data<nemesis_state>();
 
 	if (ACCESSING_BITS_0_7)
 		state->irq_on = data & 0xff;
@@ -160,7 +160,7 @@ static WRITE16_HANDLER( nemesis_irq_enable_word_w )
 
 static WRITE16_HANDLER( konamigt_irq_enable_word_w )
 {
-	nemesis_state *state = (nemesis_state *)space->machine->driver_data;
+	nemesis_state *state = space->machine->driver_data<nemesis_state>();
 
 	if (ACCESSING_BITS_0_7)
 		state->irq_on = data & 0xff;
@@ -171,7 +171,7 @@ static WRITE16_HANDLER( konamigt_irq_enable_word_w )
 
 static WRITE16_HANDLER( konamigt_irq2_enable_word_w )
 {
-	nemesis_state *state = (nemesis_state *)space->machine->driver_data;
+	nemesis_state *state = space->machine->driver_data<nemesis_state>();
 
 	if (ACCESSING_BITS_0_7)
 		state->irq2_on = data & 0xff;
@@ -183,13 +183,13 @@ static WRITE16_HANDLER( konamigt_irq2_enable_word_w )
 
 static READ16_HANDLER( gx400_sharedram_word_r )
 {
-	nemesis_state *state = (nemesis_state *)space->machine->driver_data;
+	nemesis_state *state = space->machine->driver_data<nemesis_state>();
 	return state->gx400_shared_ram[offset];
 }
 
 static WRITE16_HANDLER( gx400_sharedram_word_w )
 {
-	nemesis_state *state = (nemesis_state *)space->machine->driver_data;
+	nemesis_state *state = space->machine->driver_data<nemesis_state>();
 
 	if (ACCESSING_BITS_0_7)
 		state->gx400_shared_ram[offset] = data;
@@ -225,7 +225,7 @@ static READ16_HANDLER( konamigt_input_word_r )
 
 static WRITE16_HANDLER( selected_ip_word_w )
 {
-	nemesis_state *state = (nemesis_state *)space->machine->driver_data;
+	nemesis_state *state = space->machine->driver_data<nemesis_state>();
 
 	if (ACCESSING_BITS_0_7)
 		state->selected_ip = data & 0xff;	// latch the value
@@ -233,7 +233,7 @@ static WRITE16_HANDLER( selected_ip_word_w )
 
 static READ16_HANDLER( selected_ip_word_r )
 {
-	nemesis_state *state = (nemesis_state *)space->machine->driver_data;
+	nemesis_state *state = space->machine->driver_data<nemesis_state>();
 
 	switch (state->selected_ip & 0xf)
 	{												// From WEC Le Mans Schems:
@@ -255,7 +255,7 @@ static WRITE16_HANDLER( nemesis_soundlatch_word_w )
 
 static WRITE8_DEVICE_HANDLER( gx400_speech_start_w )
 {
-	nemesis_state *state = (nemesis_state *)device->machine->driver_data;
+	nemesis_state *state = device->machine->driver_data<nemesis_state>();
 
 	/* the voice data is not in a rom but in sound RAM at $8000 */
 	vlm5030_set_rom(device, state->gx400_shared_ram + 0x4000);
@@ -277,7 +277,7 @@ static READ8_DEVICE_HANDLER( nemesis_portA_r )
    bit 5:     vlm5030 busy
    bit 7:     unused by this software version. Bubble Memory version uses this bit.
 */
-	nemesis_state *state = (nemesis_state *)device->machine->driver_data;
+	nemesis_state *state = device->machine->driver_data<nemesis_state>();
 	int res = (state->audiocpu->total_cycles() / 1024) & 0x2f; // this should be 0x0f, but it doesn't work
 
 	res |= 0xd0;
@@ -571,7 +571,7 @@ ADDRESS_MAP_END
 
 static READ8_HANDLER( wd_r )
 {
-	nemesis_state *state = (nemesis_state *)space->machine->driver_data;
+	nemesis_state *state = space->machine->driver_data<nemesis_state>();
 	state->frame_counter ^= 1;
 	return state->frame_counter;
 }
@@ -1201,7 +1201,7 @@ static INPUT_PORTS_START( lifefrcj )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( spclone )
-	PORT_START("IN0")	/* IN0 */
+	PORT_START("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SERVICE1 )
@@ -1215,7 +1215,7 @@ static INPUT_PORTS_START( spclone )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE_DIPLOC( 0x80, IP_ACTIVE_LOW, "SWT:3" )
 
-	PORT_START("IN1")	/* IN1 */
+	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1)
@@ -1227,7 +1227,7 @@ static INPUT_PORTS_START( spclone )
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( Cocktail ) )
 
-	PORT_START("IN2")	/* IN2 */
+	PORT_START("IN2")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2)
@@ -1237,7 +1237,7 @@ static INPUT_PORTS_START( spclone )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_PLAYER(2)
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
-	PORT_START("DSW0")	/* DSW0 */
+	PORT_START("DSW0")
 	PORT_DIPNAME( 0x0f, 0x0f, DEF_STR( Coin_A ) ) PORT_DIPLOCATION("SW0:1,2,3,4")
 	PORT_DIPSETTING(    0x02, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x05, DEF_STR( 3C_1C ) )
@@ -1268,7 +1268,7 @@ static INPUT_PORTS_START( spclone )
 	PORT_DIPSETTING(    0x80, "1P" )
 	PORT_DIPSETTING(    0x00, "2P" )
 
-	PORT_START("DSW1")	/* DSW1 */
+	PORT_START("DSW1")
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x03, "3" )
 	PORT_DIPSETTING(    0x02, "4" )
@@ -1709,7 +1709,7 @@ static const ay8910_interface ay8910_interface_2 =
 static void sound_irq(running_device *device, int state)
 {
 /* Interrupts _are_ generated, I wonder where they go.. */
-// nemesis_state *driver_state = (nemesis_state *)device->machine->driver_data;
+// nemesis_state *driver_state = device->machine->driver_data<nemesis_state>();
 // cpu_set_input_line(driver_state->audiocpu, 0, HOLD_LINE);
 }
 
@@ -1738,7 +1738,7 @@ static const k007232_interface k007232_config =
 
 static MACHINE_START( nemesis )
 {
-	nemesis_state *state = (nemesis_state *)machine->driver_data;
+	nemesis_state *state = machine->driver_data<nemesis_state>();
 
 	state->maincpu = machine->device<cpu_device>("maincpu");
 	state->audiocpu = machine->device<cpu_device>("audiocpu");
@@ -1759,7 +1759,7 @@ static MACHINE_START( nemesis )
 
 static MACHINE_RESET( nemesis )
 {
-	nemesis_state *state = (nemesis_state *)machine->driver_data;
+	nemesis_state *state = machine->driver_data<nemesis_state>();
 
 	state->irq_on = 0;
 	state->irq1_on = 0;
@@ -2421,19 +2421,19 @@ ROM_END
 
 ROM_START( spclone )
 	ROM_REGION( 0x80000, "maincpu", 0 )
-	ROM_LOAD16_BYTE( "587yq02.18b",   0x00000, 0x10000, CRC(14c19a46) SHA1(1a65a98c390693949247f4e568fe71cff82d59b4) )
-	ROM_LOAD16_BYTE( "587yq05.18c",   0x00001, 0x10000, CRC(fdafc246) SHA1(1641411023f85afe82af749b15d067efc5859f4e) )
+	ROM_LOAD16_BYTE( "587yq02.18b",  0x00000, 0x10000, CRC(14c19a46) SHA1(1a65a98c390693949247f4e568fe71cff82d59b4) )
+	ROM_LOAD16_BYTE( "587yq05.18c",  0x00001, 0x10000, CRC(fdafc246) SHA1(1641411023f85afe82af749b15d067efc5859f4e) )
 	ROM_LOAD16_BYTE( "587-c03.17b",  0x40000, 0x20000, CRC(e5caf6e6) SHA1(f5df4fbc43cfa6e2866558c99dd95ba8dc89dc7a) ) /* Mask rom */
 	ROM_LOAD16_BYTE( "587-c06.17c",  0x40001, 0x20000, CRC(c2f567ea) SHA1(0c38fea53f3d4a9ae0deada5669deca4be8c9fd3) ) /* Mask rom */
 
 	ROM_REGION( 0x10000, "audiocpu", 0 )    /* 64k for sound */
-	ROM_LOAD(      "587nd09.11j",      0x00000, 0x08000, CRC(bf83b182) SHA1(e702eddffea3bad8944bfab03d53c6e277bca866) )
+	ROM_LOAD(      "587nd09.11j",  0x00000, 0x08000, CRC(bf83b182) SHA1(e702eddffea3bad8944bfab03d53c6e277bca866) )
 
 	ROM_REGION( 0x04000, "vlm", 0 )    /* VLM5030 data? */
-	ROM_LOAD(      "587-d08.8g",       0x00000, 0x04000, CRC(f9ac6b82) SHA1(3370fc3a7f82e922e19d54afb3bca7b07fa4aa9a) )
+	ROM_LOAD(      "587-d08.8g",  0x00000, 0x04000, CRC(f9ac6b82) SHA1(3370fc3a7f82e922e19d54afb3bca7b07fa4aa9a) )
 
 	ROM_REGION( 0x20000, "k007232", 0 )    /* 007232 data */
-	ROM_LOAD(      "587-c01.10a",      0x00000, 0x20000, CRC(09fe0632) SHA1(4c3b29c623d70bbe8a938a0beb4638912c46fb6a) ) /* Mask rom */
+	ROM_LOAD(      "587-c01.10a", 0x00000, 0x20000, CRC(09fe0632) SHA1(4c3b29c623d70bbe8a938a0beb4638912c46fb6a) ) /* Mask rom */
 ROM_END
 
 ROM_START( blkpnthr )

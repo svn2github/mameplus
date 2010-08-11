@@ -596,7 +596,7 @@ void decrypt_ct2k3sp( running_machine *machine )
 #define MATRIMBLFIX(i) (i^(BITSWAP8(i&0x3,4,3,1,2,0,7,6,5)<<8))
 void decrypt_matrimbl(running_machine *machine)
 {
-	neogeo_state *state = (neogeo_state *)machine->driver_data;
+	neogeo_state *state = machine->driver_data<neogeo_state>();
 	UINT8 *src2 = memory_region(machine, "audiocpu")+0x10000;
 	UINT8 *dst2 = global_alloc_array(UINT8, 0x20000);
 	int i, j=0;

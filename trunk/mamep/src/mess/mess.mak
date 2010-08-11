@@ -8,6 +8,16 @@
 
 
 
+###########################################################################
+##################   END USER-CONFIGURABLE OPTIONS   ######################
+###########################################################################
+
+
+
+# include MESS core defines
+include $(SRC)/mess/messcore.mak
+
+
 #-------------------------------------------------
 # this is the list of driver libraries that
 # comprise MESS plus messdriv.o which contains
@@ -145,3 +155,10 @@ $(MESSOBJ)/mess.o:	$(MESS_LAYOUT)/lcd.lh
 $(MESSOBJ)/mess.o:	$(MESS_LAYOUT)/lcd_rot.lh
 
 $(MESS_DRIVERS)/sms.o:		$(MESS_LAYOUT)/sms1.lh
+
+
+#-------------------------------------------------
+# MESS special OSD rules
+#-------------------------------------------------
+
+include $(MESSSRC)/osd/$(OSD)/$(OSD).mak
