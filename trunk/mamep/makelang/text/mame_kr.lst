@@ -340,8 +340,8 @@ seicross	세이크로스	세이크로스	Nichibutsu / Alice
 sectrzon	섹터 존	섹터 존	Nichibutsu / Alice
 firebatl	파이어 배틀	파이어 배틀	Taito
 clshroad	클래쉬 로드	클래쉬 로드	Wood Place Inc.
-clshroads	클래쉬 로드 (Status 판)	클래쉬 로드 (Status 판)	Wood Place Inc. (Status Game Corp. license)
-clshroadd	Clash-Road (Data East license)	Clash-Road (Data East license)	Wood Place Inc. (Data East license)
+clshroads	클래쉬 로드 (Status社 판)	클래쉬 로드 (Status社 판)	Wood Place Inc. (Status Game Corp. license)
+clshroadd	클래쉬 로드 (Data East社 라이센스판)	클래쉬 로드 (Data East社 라이센스판)	Wood Place Inc. (Data East license)
 tubep	튜브 패닉	튜브 패닉	Nichibutsu / Fujitek
 tubepb	튜브 패닉 (해적판)	튜브 패닉 (해적판)	bootleg
 rjammer	롤러 잼머	롤러 잼머	Nichibutsu / Alice
@@ -861,20 +861,20 @@ zgundm	기동전사 Z-건담: A.E.U.G. vs 타이탄 (ZGA1 버전 A)	기동전사 Z-건담: A.E.U.
 fghtjam	캡콤 파이팅 잼 (JAM1 버전 A)	캡콤 파이팅 잼 (JAM1 버전 A)	Capcom / Namco
 sukuinuf	퀴즈 & 버라이어티 무럭무럭 개복 2 (IN2 Ver. A)	퀴즈 & 버라이어티 무럭무럭 개복 2 (IN2 Ver. A)	Namco
 zgundmdx	기동전사 Z-건담: A.E.U.G. vs 타이탄 DX (ZDX1 버전 A)	기동전사 Z-건담: A.E.U.G. vs 타이탄 DX (ZDX1 버전 A)	Capcom / Banpresto
-gundzaft	Gundam Seed: Federation vs. Z.A.F.T. (SED1 Ver. A)	Gundam Seed: Federation vs. Z.A.F.T. (SED1 Ver. A)	Capcom / Banpresto
+gundzaft	건담 시드: 연합군 대 자프트군 (SED1 버전 A)	건담 시드: 연합군 대 자프트군 (SED1 버전 A)	Capcom / Banpresto
 soulclb3	소울 칼리버 III (SC31001-NA-A)	소울 칼리버 III (SC31001-NA-A)	Namco
 sys256	시스템 256 바이오스	시스템 256 바이오스	Namco
 tekken51	철권 5.1 (TE51 버전 B)	철권 5.1 (TE51 버전 B)	Namco
 kinniku	근육맥 머슬 그랑프리 (KN1 버전 A)	근육맥 머슬 그랑프리 (KN1 버전 A)	Namco
 taiko9	태고의 달인 9 (TK91001-NA-A)	태고의 달인 9 (TK91001-NA-A)	Namco
 taiko10	태고의 달인 10 (T101001-NA-A)	태고의 달인 10 (T101001-NA-A)	Namco
-25pacman	Pacman - 25th Anniversary Edition (Rev 2.00)	Pacman - 25th Anniversary Edition (Rev 2.00)	Namco
+25pacman	팩맨 - 25주년 기념판 (개정판 2.00)	팩맨 - 25주년 기념판 (개정판 2.00)	Namco
 20pacgal	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.08)	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.08)	Namco
 20pacgalr4	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.04)	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.04)	Namco
-20pacgalr3	Ms. Pac-Man/Galaga - 20th Anniversary Class of 1981 Reunion (V1.03)	Ms. Pac-Man/Galaga - 20th Anniversary Class of 1981 Reunion (V1.03)	Namco
+20pacgalr3	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.03)	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.03)	Namco
 20pacgalr2	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.02)	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.02)	Namco
 20pacgalr1	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.01)	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.01)	Namco
-20pacgalr0	Ms. Pac-Man/Galaga - 20th Anniversary Class of 1981 Reunion (V1.00)	Ms. Pac-Man/Galaga - 20th Anniversary Class of 1981 Reunion (V1.00)	Namco
+20pacgalr0	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.00)	미스 팩맨 / 갤러그 - 20주년 기념판 (버전 1.00)	Namco
 turrett	터릿 타워	터릿 타워	Dell Electronics (Namco license)
 cosmicg	코즈믹 게릴라	코즈믹 게릴라	Universal
 cosmica	코즈믹 에일리언 (버전 II)	코즈믹 에일리언 (버전 II)	Universal
@@ -2045,7 +2045,7 @@ tigerhj	타이거 헬리 (일본판)	타이거 헬리 (일본판)	Toaplan / Taito
 tigerhb1	타이거 헬리 (해적판, 세트 1)	타이거 헬리 (해적판, 세트 1)	bootleg
 tigerhb2	타이거 헬리 (해적판, 세트 2)	타이거 헬리 (해적판, 세트 2)	bootleg
 tigerhb3	타이거 헬리 (해적판, 세트 3)	타이거 헬리 (해적판, 세트 3)	bootleg
-alcon	알콘 (미국판)	알콘 (미국판)	Toaplan / Taito America Corp.
+alcon	슬랩 파이트 / 알콘 (미국판)	슬랩 파이트 / 알콘 (미국판)	Toaplan / Taito America Corp.
 slapfigh	슬랩 파이트 (일본판 세트 1)	슬랩 파이트 (일본판 세트 1)	Toaplan / Taito
 slapfigha	슬랩 파이트 (일본판 세트 2)	슬랩 파이트 (일본판 세트 2)	Toaplan / Taito
 slapfighb1	슬랩 파이트 (해적판 세트 1)	슬랩 파이트 (해적판 세트 1)	bootleg
@@ -2367,15 +2367,15 @@ strider	스트라이더 비룡 / 스트라이더 (미국판, 세트 1)	스트라이더 비룡 / 스트라이
 striderua	스트라이더 (미국판, 세트 2)	스트라이더 (미국판, 세트 2)	Capcom
 striderj	스트라이더 비룡 (일본판)	스트라이더 비룡 (일본판)	Capcom
 striderjr	스트라이버 비룡 (일본판, 재판매 버전)	스트라이버 비룡 (일본판, 재판매 버전)	Capcom
-dynwar	삼국지 / 다이너스티 워즈 (미국판 세트 1)	삼국지 / 다이너스티 워즈 (미국판 세트 1)	Capcom
-dynwara	Dynasty Wars (USA, B-Board 88622B-3)	Dynasty Wars (USA, B-Board 88622B-3)	Capcom
+dynwar	삼국지 / 다이너스티 워즈 (미국판, B 보드 89624B-?)	삼국지 / 다이너스티 워즈 (미국판, B 보드 89624B-?)	Capcom
+dynwara	다이너스티 워즈 (미국판, B 보드 88622B-3)	다이너스티 워즈 (미국판, B 보드 88622B-3)	Capcom
 dynwarj	천지를 먹다 (일본판)	천지를 먹다 (일본판)	Capcom
 willow	윌로우 (미국판)	윌로우 (미국판)	Capcom
 willowj	윌로우 (일본판, 일본어)	윌로우 (일본판, 일본어)	Capcom
 willowje	윌로우 (일본판, 영어)	윌로우 (일본판, 영어)	Capcom
 unsquad	에어리어 88 / U.N. 특수부대 (미국판)	에어리어 88 / U.N. 특수부대 (미국판)	Capcom / Daipro
 area88	에어리어 88 (일본판)	에어리어 88 (일본판)	Capcom / Daipro
-area88r	Area 88 (Japan Resale Ver.)	Area 88 (Japan Resale Ver.)	Capcom / Daipro
+area88r	에어리어 88 (일본 재판매 버전)	에어리어 88 (일본 재판매 버전)	Capcom / Daipro
 ffight	파이널 파이트 (세계판)	파이널 파이트 (세계판)	Capcom
 ffightu	파이널 파이트 (미국판)	파이널 파이트 (미국판)	Capcom
 ffightua	파이널 파이트 (미국판 900112)	파이널 파이트 (미국판 900112)	Capcom
@@ -2467,7 +2467,7 @@ wof	삼국지 II / 워리어즈 오브 페이트 (세계판 921002)	삼국지 II / 워리어즈 오브 �
 wofa	삼국지 II (아시아판 921005)	삼국지 II (아시아판 921005)	Capcom
 wofu	워리어즈 오브 페이트 (미국판 921031)	워리어즈 오브 페이트 (미국판 921031)	Capcom
 wofj	천지를 먹다 II - 적벽의 전투 (일본판 921031)	천지를 먹다 II - 적벽의 전투 (일본판 921031)	Capcom
-wofhfh	Huo Feng Huang (Chinese bootleg of Sangokushi II)	Huo Feng Huang (Chinese bootleg of Sangokushi II)	bootleg
+wofhfh	Huo Feng Huang (삼국지 II 중국 해적판)	Huo Feng Huang (삼국지 II 중국 해적판)	bootleg
 sf2hf	스트리트 파이터 II' - 하이퍼 파이팅 (세계판 921209)	스트리트 파이터 II' - 하이퍼 파이팅 (세계판 921209)	Capcom
 sf2hfu	스트리트 파이터 II' - 하이퍼 파이팅 (미국판 921209)	스트리트 파이터 II' - 하이퍼 파이팅 (미국판 921209)	Capcom
 sf2hfj	스트리트 파이터 II' 터보 - 하이퍼 파이팅 (일본판 921209)	스트리트 파이터 II' 터보 - 하이퍼 파이팅 (일본판 921209)	Capcom
@@ -5209,8 +5209,8 @@ apb1	APB - 지명수배령 (올 포인트 블러틴) (개정판 1)	APB - 지명수배령 (올 포인트 
 apbg	APB - 지명수배령 (올 포인트 블러틴) (독일판)	APB - 지명수배령 (올 포인트 블러틴) (독일판)	Atari Games
 apbf	APB - 지명수배령 (올 포인트 블러틴) (프랑스판)	APB - 지명수배령 (올 포인트 블러틴) (프랑스판)	Atari Games
 irobot	아이 로봇	아이 로봇	Atari
-laststar	The Last Starfighter (prototype)	The Last Starfighter (prototype)	Atari Games
-airrace	Air Race (prototype)	Air Race (prototype)	Atari Games
+laststar	라스트 스타파이터 (시험판)	라스트 스타파이터 (시험판)	Atari Games
+airrace	에어 레이스 (시험판)	에어 레이스 (시험판)	Atari Games
 harddriv	하드 드리븐 (조종석 캐비넷, 개정판 7)	하드 드리븐 (조종석 캐비넷, 개정판 7)	Atari Games
 harddrivb	하드 드리븐 (조종석 캐비넷, 영국판, 개정판 7)	하드 드리븐 (조종석 캐비넷, 영국판, 개정판 7)	Atari Games
 harddrivg	하드 드리븐 (조종석 캐비넷, 독일판, 개정판 7)	하드 드리븐 (조종석 캐비넷, 독일판, 개정판 7)	Atari Games
@@ -7917,11 +7917,11 @@ megat4sn	슈퍼 메가터치 IV (9255-41-07 ROG, New Jersey 버전)	슈퍼 메가터치 IV (92
 megat4te	메가터치 IV 토너먼트 에디션 (9255-50-01 ROD, Standard 버전)	메가터치 IV 토너먼트 에디션 (9255-50-01 ROD, Standard 버전)	Merit
 megat4tea	메가터치 IV 토너먼트 에디션 (9255-50-01 ROA, Standard 버전)	메가터치 IV 토너먼트 에디션 (9255-50-01 ROA, Standard 버전)	Merit
 megat4st	슈퍼 메가터치 IV 토너먼트 에디션 (9255-51-01 ROB, Standard 버전)	슈퍼 메가터치 IV 토너먼트 에디션 (9255-51-01 ROB, Standard 버전)	Merit
-megat4stg	Super Megatouch IV Turnier Version (9255-51-50 ROA, Bi-Lingual GER/ENG version)	Super Megatouch IV Turnier Version (9255-51-50 ROA, Bi-Lingual GER/ENG version)	Merit
+megat4stg	슈퍼 메가터치 IV 튜니어 버전 (9255-51-50 ROA, Bi-Lingual GER/ENG 버전)	슈퍼 메가터치 IV 튜니어 버전 (9255-51-50 ROA, Bi-Lingual GER/ENG 버전)	Merit
 megat5	메가터치 5 (9255-60-01 ROC, Standard 버전)	메가터치 5 (9255-60-01 ROC, Standard 버전)	Merit
 megat5a	메가터치 5 (9255-60-01 ROC, Standard 버전)	메가터치 5 (9255-60-01 ROC, Standard 버전)	Merit
 megat5nj	메가터치 5 (9255-60-07 RON, New Jersey 버전)	메가터치 5 (9255-60-07 RON, New Jersey 버전)	Merit
-megat5tg	Megatouch 5 Turnier Version (9255-70-50 ROD, Bi-Lingual GER/ENG version)	Megatouch 5 Turnier Version (9255-70-50 ROD, Bi-Lingual GER/ENG version)	Merit
+megat5tg	메가터치 5 튜니어 버전 (9255-70-50 ROD, Bi-Lingual GER/ENG 버전)	메가터치 5 튜니어 버전 (9255-70-50 ROD, Bi-Lingual GER/ENG 버전)	Merit
 megat6	메가터치 6 (9255-80-01 ROA, Standard 버전))	메가터치 6 (9255-80-01 ROA, Standard 버전))	Merit
 suprgolf	슈퍼 크라운 골프 (일본판)	슈퍼 크라운 골프 (일본판)	Nasco
 hotblock	핫 블럭스 - 테트릭스 II	핫 블럭스 - 테트릭스 II	NIX?
@@ -7938,7 +7938,7 @@ dambustruk	댐버스터즈 (영국판)	댐버스터즈 (영국판)	South West Research
 gunpey	건피	건피	Banpresto
 spaceg	스페이스 게릴라	스페이스 게릴라	Omori
 wldarrow	와일드 애로우 (버전 4.8)	와일드 애로우 (버전 4.8)	Meyco Games
-unkmeyco	unknown Meyco game	unknown Meyco game	Meyco Games
+unkmeyco	미확인 메이코社 제작 게임	미확인 메이코社 제작 게임	Meyco Games
 mdrawpkr	드로우 포커 조커스 와일드 (표준판)	드로우 포커 조커스 와일드 (표준판)	Meyco Games
 mdrawpkra	드로우 포커 조커스 와일드 (02-11)	드로우 포커 조커스 와일드 (02-11)	Meyco Games
 laserbas	레이저 베이스 (세트 1)	레이저 베이스 (세트 1)	Hoei (Amstar license)
@@ -8088,7 +8088,7 @@ sharkpya	샤크 파티 (이탈리아판, 버전 1.6)	샤크 파티 (이탈리아판, 버전 1.6)	Subsi
 sharkpye	샤크 파티 (영어판, Alpha社 라이센스판)	샤크 파티 (영어판, Alpha社 라이센스판)	American Alpha
 smoto20	슈퍼 라이더 (이탈리아판, 버전 2.0)	슈퍼 라이더 (이탈리아판, 버전 2.0)	Subsino
 smoto16	슈퍼 모토 (이탈리아판, 버전 1.6)	슈퍼 모토 (이탈리아판, 버전 1.6)	Subsino
-mtrain	Magic Train	Magic Train	Subsino
+mtrain	매직 트레인	매직 트레인	Subsino
 saklove	앵화연 2.0 (중국판 1.02)	앵화연 2.0 (중국판 1.02)	Subsino
 bishjan	미소작 (美笑雀) (일본판 203)	미소작 (美笑雀) (일본판 203)	Subsino
 lastfght	라스트 파이팅	라스트 파이팅	Subsino
@@ -8224,8 +8224,8 @@ filetto	필레토 (버전 1.05 901009)	필레토 (버전 1.05 901009)	Novarmatic
 quizo	퀴즈 올림픽 (한국판, 세트 1)	퀴즈 올림픽 (한국판, 세트 1)	Seoul Coin Corp.
 quizoa	퀴즈 올림픽 (한국판, 세트 2)	퀴즈 올림픽 (한국판, 세트 2)	Seoul Coin Corp.
 gstream	G-스트림 G2020	G-스트림 G2020	Oriental Soft Japan
-miniboy7	미니 보이 7	미니 보이 7	Bonanza Enterprises, Ltd
-miniboy7a	Mini Boy 7 (set 2)	Mini Boy 7 (set 2)	Bonanza Enterprises, Ltd
+miniboy7	미니보이 7 (세트 1)	미니보이 7 (세트 1)	Bonanza Enterprises, Ltd
+miniboy7a	미니보이 7 (세트 2)	미니보이 7 (세트 2)	Bonanza Enterprises, Ltd
 39in1	39 게임 합본 MAME (해적판)	39 게임 합본 MAME (해적판)	bootleg
 48in1	48 게임 합본 MAME (버전 3.09, 해적판)	48 게임 합본 MAME (버전 3.09, 해적판)	bootleg
 48in1a	48 게임 합본 MAME (버전 3.02, 해적판)	48 게임 합본 MAME (버전 3.02, 해적판)	bootleg
@@ -8785,9 +8785,9 @@ keks_2b	켁스 (060403, 텍스트 변경 버전)	켁스 (060403, 텍스트 변경 버전)	Igrosoft
 cdi	CD-i (Mono-I) 바이오스	CD-i (Mono-I) 바이오스	Philips
 quizard	퀴자드 1.7	퀴자드 1.7	Disney
 quizrd22	퀴자드 2.2	퀴자드 2.2	Disney
-quizrd17	Quizard 1.7	Quizard 1.7	Disney
-quizrd12	Quizard 1.2	Quizard 1.2	Disney
-quizrr42	Quizard Rainbow 4.2	Quizard Rainbow 4.2	Disney
+quizrd17	퀴자드 1.7	퀴자드 1.7	Disney
+quizrd12	퀴자드 1.2	퀴자드 1.2	Disney
+quizrr42	퀴자드 레인보우 4.2	퀴자드 레인보우 4.2	Disney
 quizrr41	퀴자드 레인보우 4.1	퀴자드 레인보우 4.1	Disney
 m_brkfst	더 빅 브레이크패스트 (세트 1, 영국판, 게임카드 95-750-524 )	더 빅 브레이크패스트 (세트 1, 영국판, 게임카드 95-750-524 )	BFM
 m_brkfs1	더 빅 브레이크패스트 (세트 2)	더 빅 브레이크패스트 (세트 2)	BFM
@@ -8842,7 +8842,7 @@ neptunp2	해신의 진주 2	해신의 진주 2	Unidesa?
 rgum	로얄 검 (이탈리아판)	로얄 검 (이탈리아판)	<unknown>
 poker72	포커 군주 (v2.50)	포커 군주 (v2.50)	Extrema Systems International Ltd.
 chkun	찬스 군	찬스 군	<unknown>
-megadpkr	Mega Double Poker (conversion kit)	Mega Double Poker (conversion kit)	Blitz System Inc.
+megadpkr	마게 더블 포커 (개조 키트)	마게 더블 포커 (개조 키트)	Blitz System Inc.
 knightsb2	원탁의 기사 (해적판, 세트 2)	원탁의 기사 (해적판, 세트 2)	bootleg
 wofb	삼국지 II (해적판)	삼국지 II (해적판)	bootleg
 wofsj	삼국지 II: 성검삼국 (세트 1, 중국 해적판)	삼국지 II: 성검삼국 (세트 1, 중국 해적판)	bootleg
