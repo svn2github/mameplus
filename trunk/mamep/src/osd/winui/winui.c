@@ -4779,7 +4779,7 @@ static void PickCloneColor(void)
 }
 
 
-//mamep: export gamelist
+#ifdef USE_EXPORT_GAMELIST
 static int MMO2LST(void)
 {
 	WCHAR filename[MAX_PATH];
@@ -4821,6 +4821,7 @@ static int MMO2LST(void)
 
 	return 1;
 }
+#endif /* USE_EXPORT_GAMELIST */
 
 
 static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
@@ -5300,10 +5301,11 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		UpdateGameList(TRUE, TRUE);
 		break;
 
-	//mamep: export gamelist
+#ifdef USE_EXPORT_GAMELIST
 	case ID_OPTIONS_MMO2LST:
 		MMO2LST();
 		break;
+#endif /* USE_EXPORT_GAMELIST */
 
 	case ID_OPTIONS_FONT:
 		PickFont();
@@ -6375,10 +6377,11 @@ BOOL CommonFileDialog(common_file_dialog_proc cfd, WCHAR *filename, int filetype
 		of.lpstrFilter   = TEXT("effects (*.png)\0*.png;\0All files (*.*)\0*.*\0");
 		break;
 #endif
-	//mamep: export gamelist
+#ifdef USE_EXPORT_GAMELIST
 	case FILETYPE_GAMELIST_FILES :
 		of.lpstrFilter   = TEXT("gamelists (*.lst)\0*.lst;\0All files (*.*)\0*.*\0");
 		break;
+#endif /* USE_EXPORT_GAMELIST */
 	case FILETYPE_JOYMAP_FILES :
 		of.lpstrFilter   = TEXT("maps (*.map,*.txt)\0*.map;*.txt;\0All files (*.*)\0*.*\0");
 		break;
@@ -6425,11 +6428,12 @@ BOOL CommonFileDialog(common_file_dialog_proc cfd, WCHAR *filename, int filetype
 		of.lpstrInitialDir = t_artdir;
 	}
 #endif
-	//mamep: export gamelist
+#ifdef USE_EXPORT_GAMELIST
 	else if (filetype == FILETYPE_GAMELIST_FILES)
 	{
 		of.lpstrInitialDir = GetLanguageDir();
 	}
+#endif /* USE_EXPORT_GAMELIST */
 	else if (filetype == FILETYPE_MNG_FILES || filetype == FILETYPE_AVI_FILES)
 	{
 		//t_snapdir = tstring_from_utf8(GetImgDir());
@@ -6467,10 +6471,11 @@ BOOL CommonFileDialog(common_file_dialog_proc cfd, WCHAR *filename, int filetype
 		of.lpstrDefExt       = TEXT("png");
 		break;
 #endif
-	//mamep: export gamelist
+#ifdef USE_EXPORT_GAMELIST
 	case FILETYPE_GAMELIST_FILES :
 		of.lpstrDefExt       = TEXT("lst");
 		break;
+#endif /* USE_EXPORT_GAMELIST */
 	case FILETYPE_JOYMAP_FILES :
 		of.lpstrDefExt       = TEXT("map");
 		break;

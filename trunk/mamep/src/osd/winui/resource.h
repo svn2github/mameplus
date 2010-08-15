@@ -435,7 +435,7 @@
 #define ID_HELP_WHATS_NEW               40029
 #define ID_HELP_CHEATS                  40030
 #define ID_OPTIONS_PALETTE              40031 // UI_COLOR_DISPLAY
-#define ID_OPTIONS_MMO2LST              40032 // export gamelist
+#define ID_OPTIONS_MMO2LST              40032 // USE_EXPORT_GAMELIST
 
 #define ID_VIEW_LINEUPICONS             40040
 #define ID_UPDATE_GAMELIST              40042

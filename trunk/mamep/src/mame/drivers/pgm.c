@@ -1402,7 +1402,7 @@ static INPUT_PORTS_START( martmast )
 	PORT_DIPSETTING(      0x0006, DEF_STR( USA ) )
 INPUT_PORTS_END
 
-static INPUT_PORTS_START( martmasc )
+static INPUT_PORTS_START( martmastc )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */

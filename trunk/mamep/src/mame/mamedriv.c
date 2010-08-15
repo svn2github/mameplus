@@ -10310,9 +10310,9 @@ Other Sun games
 	DRIVER( poker72 )
 
 	DRIVER( chkun )
-#endif /* !NCP */
 
 	/* Blitz System Inc. */
 	DRIVER( megadpkr )	/* (c) 1990 Blitz System Inc */
+#endif /* !NCP */
 
 #endif	/* DRIVER_RECURSIVE */

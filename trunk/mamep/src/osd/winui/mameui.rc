@@ -140,7 +140,9 @@ BEGIN
         MENUITEM "&Reset to Default...",        ID_OPTIONS_RESET_DEFAULTS
         MENUITEM "&Interface Options...",       ID_OPTIONS_INTERFACE
         MENUITEM "&Background Image...",        ID_OPTIONS_BG
+#ifdef USE_EXPORT_GAMELIST
         MENUITEM "&Export Game List...",        ID_OPTIONS_MMO2LST
+#endif /* USE_EXPORT_GAMELIST */
         MENUITEM SEPARATOR
         POPUP "&Language"
         BEGIN
@@ -1474,7 +1476,9 @@ BEGIN
 #ifdef UI_COLOR_DISPLAY
     ID_OPTIONS_PALETTE      "Set in-game UI color palette"
 #endif /* UI_COLOR_DISPLAY */
+#ifdef USE_EXPORT_GAMELIST
     ID_OPTIONS_MMO2LST      "Save game list in specified lst file"
+#endif /* USE_EXPORT_GAMELIST */
 END
 
 STRINGTABLE DISCARDABLE 
