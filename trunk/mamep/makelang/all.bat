@@ -12,3 +12,4 @@ call pl.bat
 call pt.bat
 call tw.bat
 call va.bat
+call catver.bat
