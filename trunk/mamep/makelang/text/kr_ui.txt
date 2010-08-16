@@ -778,6 +778,10 @@ Controller Mapping
 Controllers
 조종장치
 
+# osd/winui/mameui.rc: 370
+Copyright (C) 1997-2010 The MAME Team
+저작권 (C) 1997-2010 The MAME Team
+
 # osd/winui/mameui.rc: 405, 415
 Correct:
 정상:
@@ -793,6 +797,10 @@ Could not open '%s' as a valid savestate file.
 # osd/winui/mameui.rc: 917
 Crop artwork
 아트웍 잘라내기
+
+# osd/winui/layout.c: 136
+Crosshair Files
+십자표적 파일
 
 # osd/winui/paletteedit.c: 113
 Cursor background (floating)
@@ -2861,14 +2869,6 @@ videos (*.avi)
 # osd/winui/winui.c: 6368
 videos (*.mng)
 비디오 (*.mng)
-
-# osd/winui/mameui.rc: 370
-Copyright (C) 1997-2010 The MAME Team
-
-
-# osd/winui/layout.c: 136
-Crosshair Files
-
 
 # osd/winui/properties.c: 1192
 Global horizontal options\nCustom options used by all games in the Horizontal

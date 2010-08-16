@@ -30,6 +30,14 @@
 &Debugger...
 디버거(&D)
 
+# mess/osd/windows/menu.c: 1458 mess/osd/windows/mess.rc: 91
+&Devices
+디바이스(&D)
+
+# mess/osd/windows/mess.rc: 40
+&Edit
+편집(&E)
+
 # mess/osd/windows/mess.rc: 38 
 &Exit
 종료(&E)
@@ -93,6 +101,10 @@ About %s (%s)...
 # mess/osd/windows/menu.c: 916
 All files (*.*)|*.*|
 모든 파일 (*.*)|*.*|
+
+# mess/osd/windows/menu.c: 479
+Analog Controls
+아날로그 조종장치
 
 # mess/osd/windows/dialog.c: 132
 Apply
@@ -1009,18 +1021,6 @@ thread priority for the main game thread; range from -15 to 1
 # osd/windows/winmain.c: 311
 video output method: none, gdi, ddraw, or d3d
 비디오 출력 방법: 없음, gdi, ddraw 또는 d3d
-
-# mess/osd/windows/menu.c: 1458 mess/osd/windows/mess.rc: 91
-&Devices
-
-
-# mess/osd/windows/mess.rc: 40
-&Edit
-
-
-# mess/osd/windows/menu.c: 479
-Analog Controls
-
 
 # mess/osd/windows/menu.c: 498
 Autocenter Speed

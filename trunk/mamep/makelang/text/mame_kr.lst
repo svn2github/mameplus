@@ -857,11 +857,11 @@ tekken4	철권 4 (TEF3 버전 C)	철권 4 (TEF3 버전 C)	Namco
 tekken4a	철권 4 (TEF2 버전 A)	철권 4 (TEF2 버전 A)	Namco
 tekken4b	철권 4 (TEF1 버전 A)	철권 4 (TEF1 버전 A)	Namco
 timecrs3	타임 크라이시스 3 (TST1)	타임 크라이시스 3 (TST1)	Namco
-zgundm	기동전사 Z-건담: A.E.U.G. vs 타이탄 (ZGA1 버전 A)	기동전사 Z-건담: A.E.U.G. vs 타이탄 (ZGA1 버전 A)	Capcom / Banpresto
+zgundm	기동전사 Z-건담: 에우고 대 티탄즈 (ZGA1 버전 A)	기동전사 Z-건담: 에우고 대 티탄즈 (ZGA1 버전 A)	Capcom / Banpresto
 fghtjam	캡콤 파이팅 잼 (JAM1 버전 A)	캡콤 파이팅 잼 (JAM1 버전 A)	Capcom / Namco
 sukuinuf	퀴즈 & 버라이어티 무럭무럭 개복 2 (IN2 Ver. A)	퀴즈 & 버라이어티 무럭무럭 개복 2 (IN2 Ver. A)	Namco
-zgundmdx	기동전사 Z-건담: A.E.U.G. vs 타이탄 DX (ZDX1 버전 A)	기동전사 Z-건담: A.E.U.G. vs 타이탄 DX (ZDX1 버전 A)	Capcom / Banpresto
-gundzaft	건담 시드: 연합군 대 자프트군 (SED1 버전 A)	건담 시드: 연합군 대 자프트군 (SED1 버전 A)	Capcom / Banpresto
+zgundmdx	기동전사 Z-건담: 에우고 대 티탄즈 DX (ZDX1 버전 A)	기동전사 Z-건담: 에우고 대 티탄즈 DX (ZDX1 버전 A)	Capcom / Banpresto
+gundzaft	건담 시드: 연방 대 자프트군 (SED1 버전 A)	건담 시드: 연방 대 자프트군 (SED1 버전 A)	Capcom / Banpresto
 soulclb3	소울 칼리버 III (SC31001-NA-A)	소울 칼리버 III (SC31001-NA-A)	Namco
 sys256	시스템 256 바이오스	시스템 256 바이오스	Namco
 tekken51	철권 5.1 (TE51 버전 B)	철권 5.1 (TE51 버전 B)	Namco
@@ -1161,8 +1161,8 @@ superinv	슈퍼 인베이더	슈퍼 인베이더	bootleg
 invasion	인베이젼	인베이젼	Sidam
 invasiona	인베이전 (해적판, 세트 1, 일반 그래픽)	인베이전 (해적판, 세트 1, 일반 그래픽)	bootleg
 invasionb	인베이전 (해적판, 세트 2, 저작권 없음)	인베이전 (해적판, 세트 2, 저작권 없음)	bootleg
-invasionrz	인베이전 (해적판, 세트 4, R Z SRL BOLOGNA)	인베이전 (해적판, 세트 4, R Z SRL BOLOGNA)	bootleg (R Z SRL Bologna)
-invasionrza	Invasion (bootleg, set 4, R Z SRL Bologna)	Invasion (bootleg, set 4, R Z SRL Bologna)	bootleg (R Z SRL Bologna)
+invasionrz	인베이전 (해적판, 세트 3, R Z SRL BOLOGNA)	인베이전 (해적판, 세트 3, R Z SRL BOLOGNA)	bootleg (R Z SRL Bologna)
+invasionrza	인베이전 (해적판, 세트 4, R Z SRL BOLOGNA)	인베이전 (해적판, 세트 4, R Z SRL BOLOGNA)	bootleg (R Z SRL Bologna)
 sstrangr	스페이스 스트레인져	스페이스 스트레인져	Yachiyo Electronics, Ltd.
 sstrangr2	스페이스 스트레인져 2	스페이스 스트레인져 2	Yachiyo Electronics, Ltd.
 sinvemag	슈퍼 인베이더 (Emag社 판)	슈퍼 인베이더 (Emag社 판)	bootleg (Emag)
@@ -2429,7 +2429,7 @@ captcomm	캡틴 코만도 (세계판 911202)	캡틴 코만도 (세계판 911202)	Capcom
 captcommr1	캡틴 코만도 (세계판 911014)	캡틴 코만도 (세계판 911014)	Capcom
 captcommu	캡틴 코만도 (미국판 910928)	캡틴 코만도 (미국판 910928)	Capcom
 captcommj	캡틴 코만도 (일본판 911202)	캡틴 코만도 (일본판 911202)	Capcom
-captcommjr1	Captain Commando (Japan 910928)	Captain Commando (Japan 910928)	Capcom
+captcommjr1	캡틴 코만도 (일본판 910928)	캡틴 코만도 (일본판 910928)	Capcom
 captcommb	캡틴 코만도 (해적판)	캡틴 코만도 (해적판)	bootleg
 knights	원탁의 기사 (세계판 911127)	원탁의 기사 (세계판 911127)	Capcom
 knightsu	원탁의 기사 (미국판 911127)	원탁의 기사 (미국판 911127)	Capcom
@@ -2467,7 +2467,7 @@ wof	삼국지 II / 워리어즈 오브 페이트 (세계판 921002)	삼국지 II / 워리어즈 오브 �
 wofa	삼국지 II (아시아판 921005)	삼국지 II (아시아판 921005)	Capcom
 wofu	워리어즈 오브 페이트 (미국판 921031)	워리어즈 오브 페이트 (미국판 921031)	Capcom
 wofj	천지를 먹다 II - 적벽의 전투 (일본판 921031)	천지를 먹다 II - 적벽의 전투 (일본판 921031)	Capcom
-wofhfh	Huo Feng Huang (삼국지 II 중국 해적판)	Huo Feng Huang (삼국지 II 중국 해적판)	bootleg
+wofhfh	화봉황 (삼국지 II 중국 해적판)	화봉황 (삼국지 II 중국 해적판)	bootleg
 sf2hf	스트리트 파이터 II' - 하이퍼 파이팅 (세계판 921209)	스트리트 파이터 II' - 하이퍼 파이팅 (세계판 921209)	Capcom
 sf2hfu	스트리트 파이터 II' - 하이퍼 파이팅 (미국판 921209)	스트리트 파이터 II' - 하이퍼 파이팅 (미국판 921209)	Capcom
 sf2hfj	스트리트 파이터 II' 터보 - 하이퍼 파이팅 (일본판 921209)	스트리트 파이터 II' 터보 - 하이퍼 파이팅 (일본판 921209)	Capcom
@@ -2483,7 +2483,7 @@ punisherj	퍼니셔 (일본판 930422)	퍼니셔 (일본판 930422)	Capcom
 punipic	퍼니셔 (해적판, PIC16c57, 세트 1)	퍼니셔 (해적판, PIC16c57, 세트 1)	bootleg
 punipic2	퍼니셔 (해적판, PIC16c57, 세트 2)	퍼니셔 (해적판, PIC16c57, 세트 2)	bootleg
 punipic3	퍼니셔 (해적판, PIC16c57, 세트 3)	퍼니셔 (해적판, PIC16c57, 세트 3)	bootleg
-punisherbz	Biaofeng Zhanjing (퍼니셔 중국 해적판)	Biaofeng Zhanjing (퍼니셔 중국 해적판)	bootleg
+punisherbz	표풍전경 (퍼니셔 중국 해적판)	표풍전경 (퍼니셔 중국 해적판)	bootleg
 slammast	머슬 봄버 / 슬램 마스터즈 (세계판 930713)	머슬 봄버 / 슬램 마스터즈 (세계판 930713)	Capcom
 slammastu	슬램 마스터즈 (미국판 930713)	슬램 마스터즈 (미국판 930713)	Capcom
 mbomberj	머슬 봄버 - 바디 익스플로전 (일본판 930713)	머슬 봄버 - 바디 익스플로전 (일본판 930713)	Capcom
@@ -3974,7 +3974,7 @@ smlg99	슈퍼 메이저 리그 '99 (나오미 기판)	슈퍼 메이저 리그 '99 (나오미 기판)	Seg
 pstone	파워 스톤 (나오미 기판, 일본, 미국, 유럽, 아시아, 호주판)	파워 스톤 (나오미 기판, 일본, 미국, 유럽, 아시아, 호주판)	Capcom
 crzytaxi	크레이지 택시 (나오미 기판, 일본판, 미국판, 수출판, 한국판, 호주판)	크레이지 택시 (나오미 기판, 일본판, 미국판, 수출판, 한국판, 호주판)	Sega
 zombrvn	좀비 리벤지 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	좀비 리벤지 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
-airlbios	나오미 항공 조종사 디럭스 바이오스	나오미 항공 조종사 디럭스 바이오스	Sega
+airlbios	나오미 에어라린 파일럿 디럭스 바이오스	나오미 에어라린 파일럿 디럭스 바이오스	Sega
 alpiltdx	에어라인 파일럿 디럭스 (개정판 B, 나오미 기판)	에어라인 파일럿 디럭스 (개정판 B, 나오미 기판)	Sega
 alpilota	에어라인 파일럿 (개정판 A, 나오미 기판)	에어라인 파일럿 (개정판 A, 나오미 기판)	Sega
 ggram2	자이언트 그램 ~ 전일본 프로레스링 2 - 일본무도관 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	자이언트 그램 ~ 전일본 프로레스링 2 - 일본무도관 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
@@ -4024,7 +4024,7 @@ gwing2	기가 윙 2 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	기가 윙 2 (나오미
 csmash	코즈믹 스매쉬 (개정판 A, 나오미 기판, 일본, 미국, 수출, 한국, 호주판)	코즈믹 스매쉬 (개정판 A, 나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
 csmasho	코즈믹 스매쉬 (원본) (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	코즈믹 스매쉬 (원본) (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
 sfz3ugd	스트리트 파이터 제로 3 어퍼 (나오미 GD롬 기판, GDL-0002)	스트리트 파이터 제로 3 어퍼 (나오미 GD롬 기판, GDL-0002)	Capcom
-gundmgd	기동전사 건담: 연방 vs 지온 (나오미 GD롬 기판, GDL-0001)	기동전사 건담: 연방 vs 지온 (나오미 GD롬 기판, GDL-0001)	Capcom
+gundmgd	기동전사 건담: 연방 대 지온 (나오미 GD롬 기판, GDL-0001)	기동전사 건담: 연방 대 지온 (나오미 GD롬 기판, GDL-0001)	Capcom
 dygolf	버추어 골프 / 다이나믹 골프 (나오미 GD롬 기판, GDS-0009)	버추어 골프 / 다이나믹 골프 (나오미 GD롬 기판, GDS-0009)	Sega
 monkeyba	몽키 볼 (나오미 GD롬 기판, GDS-0008)	몽키 볼 (나오미 GD롬 기판, GDS-0008)	Sega
 cvsgd	캡콤 대 SNK 밀레니엄 파이트 2000 Pro (나오미 GD롬 기판, GDL-0004)	캡콤 대 SNK 밀레니엄 파이트 2000 Pro (나오미 GD롬 기판, GDL-0004)	Capcom / SNK
@@ -4032,7 +4032,7 @@ wsbbgd	월드 시리즈 야구 / 슈퍼 메이저리그 (나오미 GD롬 기판, GDS-0010)	월드 시리
 spkrbtl	스파이커즈 배틀 (나오미 GD롬 기판, GDS-0005)	스파이커즈 배틀 (나오미 GD롬 기판, GDS-0005)	Sega
 gunsur2	건 서바이버 2: 바이오 하자드 코드 베로니카 (나오미 기판)	건 서바이버 2: 바이오 하자드 코드 베로니카 (나오미 기판)	Capcom / Namco
 cvs2gd	캡콤 대 SNK 2 밀리어내어 파이팅 2001 (개정판 A, 나오미 GD롬 기판, GDL-0007A)	캡콤 대 SNK 2 밀리어내어 파이팅 2001 (개정판 A, 나오미 GD롬 기판, GDL-0007A)	Capcom / SNK
-gundmxgd	기동전사 건담: 연방 vs 지온 DX (나오미 GD롬 기판, GDL-0006)	기동전사 건담: 연방 vs 지온 DX (나오미 GD롬 기판, GDL-0006)	Capcom
+gundmxgd	기동전사 건담: 연방 대 지온 DX (나오미 GD롬 기판, GDL-0006)	기동전사 건담: 연방 대 지온 DX (나오미 GD롬 기판, GDL-0006)	Capcom
 hmgeo	헤비메탈 지오메트릭스 (나오미 기판, 일본, 미국, 유럽, 한국, 호주판)	헤비메탈 지오메트릭스 (나오미 기판, 일본, 미국, 유럽, 한국, 호주판)	Capcom
 derbyoc2	더비 오너스 클럽 II (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	더비 오너스 클럽 II (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
 vtennis2	버추어 테니스 2 (개정판 A, 나오미 GD롬 기판, GDS-0015A)	버추어 테니스 2 (개정판 A, 나오미 GD롬 기판, GDS-0015A)	Sega
@@ -5256,7 +5256,7 @@ racedrivcb4	레이스 드리븐 컴팩트 (영국판, 개정판 4)	레이스 드리븐 컴팩트 (영국판
 racedrivcg4	레이스 드리븐 컴팩트 (독일판, 개정판 4)	레이스 드리븐 컴팩트 (독일판, 개정판 4)	Atari Games
 racedrivc2	레이스 드리븐 컴팩트 (개정판 2)	레이스 드리븐 컴팩트 (개정판 2)	Atari Games
 racedrivc1	레이스 드리븐 컴팩트 (개정판 1)	레이스 드리븐 컴팩트 (개정판 1)	Atari Games
-racedrivpan	Race Drivin' Panorama (prototype, rev 2.1)	Race Drivin' Panorama (prototype, rev 2.1)	Atari Games
+racedrivpan	레이스 드리븐 파노라마 (시험판, 개정판 2.1)	레이스 드리븐 파노라마 (시험판, 개정판 2.1)	Atari Games
 steeltal	스틸 탤론스 (개정판 2)	스틸 탤론스 (개정판 2)	Atari Games
 steeltalg	스틸 탤론스 (독일판, 개정판 2)	스틸 탤론스 (독일판, 개정판 2)	Atari Games
 steeltal1	스틸 탤론스 (개정판 1)	스틸 탤론스 (개정판 1)	Atari Games
@@ -7305,7 +7305,7 @@ ddp2a	노수령봉 II / 도돈파치 II (버전 102)	노수령봉 II / 도돈파치 II (버전 102)	
 puzzli2	퍼즐리 2 슈퍼 (버전 200)	퍼즐리 2 슈퍼 (버전 200)	IGS
 martmast	형의권 / 마샬 마스터즈 (버전 104, 102, 102US)	형의권 / 마샬 마스터즈 (버전 104, 102, 102US)	IGS
 martmastc	형의권 / 마샬 마스터즈 (버전 104, 102, 101CN)	형의권 / 마샬 마스터즈 (버전 104, 102, 101CN)	IGS
-martmastc102	Martial Masters (ver. 102, 101, 101CN)	Martial Masters (ver. 102, 101, 101CN)	IGS
+martmastc102	형의권 / 마샬 마스터즈 (버전 102, 101, 101CN)	형의권 / 마샬 마스터즈 (버전 102, 101, 101CN)	IGS
 theglad	신검의 풍운 / 글라디에이터 (버전 100)	신검의 풍운 / 글라디에이터 (버전 100)	IGS
 theglada	신검의 풍운 / 글라디에이터 (버전 101)	신검의 풍운 / 글라디에이터 (버전 101)	IGS
 dw2001	중국룡 2001 / 드래곤 월드 2001	중국룡 2001 / 드래곤 월드 2001	IGS

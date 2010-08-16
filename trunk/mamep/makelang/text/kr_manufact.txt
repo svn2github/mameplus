@@ -2,17 +2,41 @@
 <unknown>
 <알수없음>
 
+# Sea Bass Fishing (JUET 971110 V0.001)
+A wave inc.
+A 웨이브
+
 # Magic's 10 (ver. 16.55)
 A.W.P. Games
-AWP 게임즈
+A.W.P. 게임즈
+
+# Hot Slot (ver. 05.01)
+ABM Electronics
+ABM 일렉트로닉스
+
+# Magic's 10 2 (ver 1.1)
+ABM Games
+ABM 게임즈
 
 # Gals Hustler
 ACE International
 ACE 인터네셔널
 
+# MSX
+ASCII & Microsoft
+아스키 & 마이크로스프트
+
+# Mahjong La Man (Japan)
+AV Japan
+AV 저팬
+
 # David Crane's Amazing Tennis (Nintendo Super System)
 Absolute Entertainment Inc.
-앱솔루트 엔터테인먼트
+앱솔룻 엔터테인먼트
+
+# Vs. Tetris
+Academysoft-Elorg
+아카데미소프트-엘로그
 
 # Acclaim PSX
 Acclaim
@@ -20,10 +44,6 @@ Acclaim
 
 # Imago (cocktail set)
 Acom
-에이콤
-
-# Jyanshin Densetsu - Quest of Jongmaster
-Aicom
 에이콤
 
 # Real Mahjong Haihai (Japan)
@@ -34,13 +54,33 @@ Alba
 Alberici
 알베리시
 
+# Shikigami no Shiro (V2.03J)
+Alfa System
+알파 시스템
+
 # Ace
 Allied Leisure
-얼라이드 레져
+얼라이드 레저
+
+# Miss Bubble II
+Alpha Co.
+알파
 
 # Magician Lord (set 1)
 Alpha Denshi Co.
 알파전자
+
+# Pinkiri 8
+Alta
+알타
+
+# Danchi de Quiz Okusan Yontaku Desuyo! (J 001128 V1.200)
+Altron
+알톤
+
+# Amatic Unknown Slots Game
+Amatic Trading GmbH
+어매틱 트레이딘 GmbH
 
 # Naughty Mouse (set 1)
 Amenip
@@ -54,13 +94,17 @@ Amenip Nova Games Ltd.
 Ameri
 아메리
 
+# Treasure Bonus (Subsino)
+American Alpha
+아메리칸 알파
+
 # King Pin
 American Communication Laboratories Inc.
 아메리칸 커뮤니케이션 래버러터리
 
 # American Laser Games BIOS
 American Laser Games
-아메리칸 레이져 게임즈
+아메리칸 레이저 게임즈
 
 # Krazy Bowl
 American Sammy
@@ -70,6 +114,10 @@ American Sammy
 Amstar
 암스타
 
+# Logic Pro Adventure (Japan)
+Amuse World
+어뮤즈월드
+
 # Minesweeper
 Amutech
 아뮤텍
@@ -78,9 +126,17 @@ Amutech
 Andamiro
 안다미로
 
+# Omotesandou (Japan 890215)
+Anime Tec
+아니메 텍
+
 # Otona no Mahjong (Japan 880628)
 Apple
 애플
+
+# Guilty Gear X (JPN)
+Arc System Works
+아크 시스템 웍스
 
 # Arcadia System BIOS
 Arcadia Systems
@@ -90,9 +146,13 @@ Arcadia Systems
 Arika
 아리카
 
+# 86 Lions
+Aristocrat
+아리스토크랫
+
 # War of the Bugs or Monsterous Manouvers in a Mushroom Maze
 Armenia
-아메니아
+아르메니아
 
 # Ultimate Tennis
 Art & Magic
@@ -106,17 +166,33 @@ Artic
 Aruze
 아루즈
 
+# Show Hand (Italy)
+Astro Corp.
+아스트로 코퍼레이션
+
 # Atari PSX
 Atari
 아타리
 
 # The Empire Strikes Back
 Atari Games
-아타리
+아타리 게임즈
+
+# Pro Mahjong Kiwame S (J 951020 V1.208)
+Athena
+아테나
 
 # Power Instinct 2 (US, Ver. 94/04/08)
 Atlus
 아틀러스
+
+# Carrera (Version 6.7)
+BS Electronics
+BS 일렉트로닉스
+
+# Jump Shot
+Bally Midway
+발리 미드웨이
 
 # WonderSwan
 Bandai
@@ -126,17 +202,53 @@ Bandai
 Banpresto
 반프레스토
 
+# Daisyarin [BET] (Japan)
+Best System
+베스트 시스템
+
+# Neo 2500 Demo (Homebrew)
+Blastar
+블라스터
+
 # Golden Poker Double Up (Big Boy)
 Bonanza Enterprises, Ltd
 보난자 엔터프라이즈
+
+# Crystal System BIOS
+BrezzaSoft
+브레자소프트
+
+# Mahjong Nanpa Story (Japan 890713)
+Brooks
+브룩스
 
 # Candy Puzzle (v1.0)
 CD Express
 CD 익스프레스
 
+# Cal Omega - Game 17.51 (Gaming Draw Poker)
+Cal Omega
+칼 오메가
+
+# Cal Omega - Game 7.4 (Gaming Poker, W.Export)
+Cal Omega Inc.
+칼 오메가
+
 # Mobile Suit Z-Gundam: A.E.U.G. vs Titans (ZGA1 Ver. A)
 Capcom
 캡콤
+
+# Varth: Operation Thunderstorm (USA 920612)
+Capcom, distributed by Romstar
+캡콤 (롬스타 배포)
+
+# Pnickies (Japan 940608)
+Capcom, licensed by Compile)
+캡콤 (컴파일 라이센스)
+
+# Cool Pool
+Catalina
+카타리나
 
 # Dangun Feveron (Japan, Ver. 98/09/17)
 Cave
@@ -154,6 +266,50 @@ Centuri
 Century Electronics
 센츄리 일렉트로닉스
 
+# Slither (set 1)
+Century II
+센츄리 II
+
+# Paint & Puzzle
+Century?
+센츄리?
+
+# Neo-Demo (Homebrew)
+Chaos
+카오스
+
+# Cerberus
+Cinematronics
+시네메트로닉스
+
+# Sports Authority
+Classic Games
+클래식 게임즈
+
+# Fred Flintstones' Memory Match (World?, Ticket version, 3/17/95)
+Coastal Amusements
+코스트랄 어뮤즈먼트
+
+# International Toote (Germany)
+Coinmaster
+코인마스터
+
+# Colorama (English)
+Coinmaster-Gaming, Ltd.
+코인마스터-게이밍
+
+# Gulf War II
+Comad
+코매드
+
+# Hot Pinball
+Comad & New Japan System
+코매드 & 뉴 저팬 시스템
+
+# Funny Bubble (Comad version)
+Comad Industry Co Ltd
+코메드 인더스트리
+
 # Amiga CD32 Bios
 Commodore
 코모도어
@@ -161,6 +317,18 @@ Commodore
 # Puyo Puyo Sun (J 961115 V0.001)
 Compile
 컴파일
+
+# Battle of Atlantis (set 1)
+Comsoft
+컴소프트
+
+# SWAT (315-5048)
+Coreland
+코어랜드
+
+# Cherry Master (Corsica, ver.8.01)
+Corsica
+코르시카
 
 # Janyou Part II (ver 7.03, July 1 1983)
 Cosmo Denshi
@@ -174,9 +342,25 @@ Cosmo Electronics Corporation
 Craul Denshi
 크라울 전자
 
+# Galaxy Games (BIOS v1.90)
+Creative Electronics & Software
+크리에이티브 일렉트로닉스 & 소프트웨어
+
+# GameCristal
+Cristaltec
+크리스탈텍
+
+# Gyrodine
+Crux
+크럭스
+
+# Mirax
+Current Technologies
+커렌트 테크놀로지
+
 # Tetris (D.R. Korea)
 D.R. Korea
-DR 코리아
+D.R. 코리아
 
 # Pipeline
 Daehyun Electronics
@@ -189,6 +373,14 @@ Daiichi Denshi
 # Find Love (J 971212 V1.000)
 Daiki
 다이키
+
+# Office Yeo In Cheon Ha (version 1.2)
+Danbi
+단비
+
+# Super Casino
+Data Amusement
+데이터 어뮤즈먼트
 
 # Cobra Command (M.A.C.H. 3 hardware)
 Data East
@@ -218,6 +410,34 @@ Deniam
 Denki Onkyo
 덴키 온쿄
 
+# Triple Draw Poker
+Design Labs
+디자인 랩스
+
+# Little Casino (older)
+Digital Controls Inc.
+디지털 콘트롤
+
+# Royal Card v2.0 Professional
+Digital Dreams
+지지털 드림
+
+# Idol no Himitsu [BET] (Japan 890304)
+Digital Soft
+디지털 소프트
+
+# Eyes (Digitrex Techstar)
+Digitrex Techstar
+디지트렉스 테크스타
+
+# Quizard 1.7
+Disney
+디즈니
+
+# Connect 4
+Dolbeck Systems
+돌벡 시스템즈
+
 # Pang Pang
 Dong Gue La Mi Ltd.
 동그라미
@@ -234,17 +454,253 @@ Dongsung
 Dooyong
 두영
 
+# X Se Dae Quiz
+Dream Island
+드림 아일랜드
+
+# DRHL Poker (v.2.89)
+Drews Inc.
+드류
+
 # The Masters of Kin
 Du Tech
 두 테크
+
+# Alien Arena
+Duncan Brown
+던컨 브라운
+
+# V-Liner (set 1)
+Dyna
+다이나
+
+# Watashiha Suzumechan (Japan)
+Dyna Electronics
+다이나 일렉트로닉스
+
+# Skeet Shot
+Dynamo
+다이나모
+
+# Big Bucks
+Dynasoft Inc.
+다이나소프트
+
+# Hana Fubuki [BET] (Japan)
+Dynax
+다이낙스
+
+# 9-Ball Shootout (set 1)
+E-Scape EnterMedia
+이스케이프 엔터미디어
+
+# Hot Shocker
+E.G. Felaco
+E.G. 펠라코
+
+# King of Dynast Gear (version 1.8)
+EZ Graphics
+EZ 그래픽스
+
+# Janshi
+Eagle
+이글
+
+# Dangerous Dungeons (East Coast Coin Company)
+East Coast Coin Company
+이스트 코스트 코인 컴퍼니
+
+# Gigandes
+East Technology
+이스트 테크놀로지
+
+# Gekisou (Japan)
+Eastern Corp.
+이스턴
+
+# Hoccer (set 1)
+Eastern Micro Electronics, Inc.
+이스턴 마이크로 일렉트로닉스
+
+# Death Crimson OX (JPN, USA, EXP, KOR, AUS)
+Ecole
+에콜
+
+# Musapey's Choco Marker (Rev A) (GDL-0014A)
+Ecole Software
+에콜 소프트웨어
+
+# Battle Bakraid - Unlimited Version (U.S.A.) (Tue Jun 8 1999)
+Eighting
+에이팅
+
+# Jan Jan Paradise
+Electro Design
+일렉트로 디자인
+
+# Dwarfs Den
+Electro-Sport
+일렉트로-스포트
+
+# Diamond Derby (Newer)
+Electrocoin
+일렉트로코인
 
 # Rabbit (Japan)
 Electronic Arts
 일렉트로닉 아츠
 
+# Twins (set 1)
+Electronic Devices
+일렉트로닉 디바이스
+
+# Mug Smashers
+Electronic Devices Italy
+일렉트로닉 디바이스 이탈리아
+
+# Ping Pong Masters '93
+Electronic Devices S.R.L.
+일렉트로닉 디바이스 S.R.L.
+
+# Jackpot Cards / Jackpot Pool (Italy)
+Electronic Projects
+일렉트로닉 프로젝트
+
+# Galaxy Gunners
+Electronics Devices Italy
+일렉트로닉스 디바이스 이탈리아
+
+# Twin Brats (set 1)
+Elettronica Video-Games S.R.L.
+일레트로니카 비디오-게임즈 S.R.L.
+
+# Red Robin
+Elettronolo
+일레트로놀로
+
+# Nightmare in the Dark
+Eleven
+일레븐
+
+# Trivia Master (set 1)
+Enerdyne Technologies Inc.
+에너다인 테크놀러지
+
+# American Speedway (set 1)
+Enerdyne Technologies, Inc.
+에너다인 테크놀러지
+
+# Act Raiser (Nintendo Super System)
+Enix
+에닉스
+
+# Noah's Ark
+Enter-Tech
+엔터-테크
+
+# Mini Vegas 4in1
+Entertainment Enterprises
+엔터테인먼트 엔터프라이즈
+
+# Turbo Sub (prototype rev. TSCA)
+Entertainment Sciences
+엔터테인먼트 사이언스
+
+# Ruleta RE-900
+Entretenimientos GEMINIS
+엔터테니민토스 제미니
+
+# The King of Fighters 2001 (set 1)
+Eolith
+이오리스
+
+# Boardwalk Casino
+Epos Corporation
+이포스 코퍼레이션
+
+# Poizone
+Eterna
+이터나
+
+# Mouja (Japan)
+Etona
+에토나
+
+# Rage of the Dragons
+Evoga
+에보가
+
+# Royal Card (Slovak, encrypted)
+Evona Electronic
+에보나 일렉트로닉
+
+# Come On Baby
+ExPotato
+엑스포테이토
+
+# Dream 9 Final (v2.24)
+Excellent System
+엑설런트 시스템
+
+# Poker Monarch (v2.50)
+Extrema Systems International Ltd.
+익스트림 시스템 인터네셔널
+
 # Jumping Break
 F2 System
 F2 시스템
+
+# Mahjong Gakuen 2 Gakuen-chou no Fukushuu
+Face
+페이스
+
+# Crazy Kong Part II (set 1)
+Falcon
+팔콘
+
+# Crazy Kong
+Falcon?
+팔콘?
+
+# Metal Saver
+First Amusement
+퍼스트 어뮤즈먼트
+
+# Forte Card
+Fortex Ltd
+포텍스
+
+# Mahjong Gal 10-renpatsu (Japan)
+Fujic
+푸직
+
+# Super A'Can
+Funtech Entertainment
+펀테크 엔터테인먼트
+
+# Big Deal (Hungarian, set 1)
+Funworld
+펀월드
+
+# Go Go! Mile Smile
+Fuuki
+푸키
+
+# Lover Boy
+G.T Enterprise Inc
+G.T 엔터프라이즈
+
+# Happy Tour
+GAV Company
+GAV 컴퍼니
+
+# Super Cross II (Japan, set 1)
+GM Shoji
+GM 쇼지
+
+# Master Boy (Spanish, PCB Rev A)
+Gaelco
+잘레코
 
 # Puckman Pockimon
 Genie
@@ -252,7 +708,7 @@ Genie
 
 # Joinem
 Global Corporation
-글로벌 코퍼래이션
+글로벌 코퍼레이션
 
 # Top Roller
 Jaleco
@@ -336,7 +792,7 @@ Rare
 
 # Levers
 Rock-Ola
-록-오라
+락-올라
 
 # Romar Triv
 Romar
@@ -404,7 +860,7 @@ Sigma
 
 # Ponpoko
 Sigma Enterprises Inc.
-시그마 엔터프라이즈 (주)
+시그마 엔터프라이즈
 
 # Jolly Card (Croatian, set 2)
 Soft Design
@@ -428,7 +884,7 @@ Space Computer
 
 # Mahjong Dunhuang
 Spirit
-스피닛
+스피릿
 
 # Rad Racer (PlayChoice-10)
 Square
@@ -498,6 +954,14 @@ SystemBit
 T&E Soft
 T&E 소프트
 
+# Jolly Card (Austrian)
+TAB Austria
+TAB 오스트리아
+
+# Cabal (World, Joystick version)
+TAD Corporation
+TAD 코퍼레이션
+
 # Rock Climber
 Taito
 타이토
@@ -512,7 +976,7 @@ Taito America Corporation
 
 # Space Seeker
 Taito Corporation
-타이토
+타이토 코퍼레이션
 
 # Darius (World)
 Taito Corporation Japan
@@ -556,7 +1020,7 @@ Tecmo
 
 # Thunder Force II MD (Mega-Tech)
 Tecno Soft
-테크노소프트
+테크노 소프트
 
 # Eggor
 Telko
@@ -576,7 +1040,7 @@ Thunderhead Inc.
 
 # Fishin' Frenzy (prototype)
 Time Warner Interactive
-타임 워너 인터엑티브
+타임워너 인터렉티브
 
 # Performan (Japan)
 Toaplan
@@ -588,7 +1052,7 @@ Topis Corp
 
 # Radiant Silvergun (JUET 980523 V1.000)
 Treasure
-트레져
+트레저
 
 # MTV Rock-N-Roll Trivia (Part 2)
 Triumph Software Inc.
@@ -650,6 +1114,10 @@ Videa
 Video Games GmbH
 비디오 게임즈 GmbH
 
+# Witch Card (Video Klein)
+Video Klein
+비디오 클레인
+
 # Video System PSX
 Video System Co.
 비디오 시스템
@@ -658,17 +1126,25 @@ Video System Co.
 Videojet/Timlex/Cougar
 비디오젯/팀렉스/쿠거
 
+# Videotronics Poker
+Videotronics
+비디오트로닉스
+
 # Galmedes (Japan)
 Visco
 비스코
 
 # Devil Fish (Galaxian hardware, bootleg?)
 Vision
-Vision
+비전
 
 # Alpha One (Vision Electronics / Kyle Hodgetts)
 Vision Electronics
-Vision 일렉트로닉스
+비전 일렉트로닉스
+
+# Honey Money
+Vivid
+비비드
 
 # Sea Hunter Penguin
 WSAC Systems?
@@ -708,7 +1184,7 @@ Wonwoo Systems
 
 # Vegas Roulette
 World Game
-World Game
+월드게임
 
 # Space Stranger
 Yachiyo Electronics, Ltd.
@@ -736,11 +1212,11 @@ Yoshimoto Kougyou
 
 # Mahjong Uranai Densetsu (Japan)
 Yubis
-Yubis
+유비스
 
 # Mahjong Gakuen
 Yuga
-Yuga
+유가
 
 # Samurai Shodown V / Samurai Spirits Zero (set 1)
 Yuki Enterprise
@@ -756,7 +1232,7 @@ Yun Sung
 
 # Scorpion (set 1)
 Zaccaria
-Zaccaria
+자카리아
 
 # Quasar
 Zelco
@@ -764,15 +1240,15 @@ Zelco
 
 # Deal 'Em (MPU4 Conversion Kit, v7.0)
 Zenitone
-Zenitone
+제니톤
 
 # Super Invaders (Zenitone-Microsec)
 Zenitone-Microsec Ltd
-Zenitone-Microsec
+제니톤-마이크로섹
 
 # Invader's Revenge
 Zenitone-Microsec Ltd.
-Zenitone-Microsec 
+제니톤-마이크로섹 
 
 # Reaktor (Track & Field conversion)
 Zilec
@@ -792,7 +1268,7 @@ bootleg
 
 # Swarm (bootleg?)
 bootleg?
-해적판
+해적판?
 
 # X-Files
 dgPIX Entertainment Inc.
@@ -800,14 +1276,10 @@ dgPIX 엔터테인먼트
 
 # Puckman (Falcom?)
 hack
-핵킹
+해킹판
 
 # Grand Prix
 4fun
-
-
-# Sea Bass Fishing (JUET 971110 V0.001)
-A wave inc.
 
 
 # Wizard (Ver 1.0)
@@ -824,14 +1296,6 @@ ABM
 
 # Blomby Car
 ABM & Gecas
-
-
-# Hot Slot (ver. 05.01)
-ABM Electronics
-
-
-# Magic's 10 2 (ver 1.1)
-ABM Games
 
 
 # Nozokimeguri Mahjong Peep Show (Japan 890404)
@@ -858,20 +1322,12 @@ AMT
 AMT Co. Ltd.
 
 
-# MSX
-ASCII & Microsoft
-
-
 # Mr. Kougar
 ATW
 
 
 # New Sinbad 7
 ATW USA, Inc.
-
-
-# Mahjong La Man (Japan)
-AV Japan
 
 
 # Chaos Field (GDL-0025)
@@ -882,10 +1338,6 @@ Able
 Able Corp, Ltd.
 
 
-# Vs. Tetris
-Academysoft-Elorg
-
-
 # Hit Poker (Bulgaria)
 Accept Ltd.
 
@@ -894,68 +1346,24 @@ Accept Ltd.
 Afega
 
 
+# Jyanshin Densetsu - Quest of Jongmaster
+Aicom
+
+
 # Pochi and Nyaa
 Aiky
-
-
-# Shikigami no Shiro (V2.03J)
-Alfa System
 
 
 # Rezon
 Allumer
 
 
-# Miss Bubble II
-Alpha Co.
-
-
-# Pinkiri 8
-Alta
-
-
-# Danchi de Quiz Okusan Yontaku Desuyo! (J 001128 V1.200)
-Altron
-
-
-# Amatic Unknown Slots Game
-Amatic Trading GmbH
-
-
 # Skill '98 (ver. s98-1.33)
 Amcoe
 
 
-# Treasure Bonus (Subsino)
-American Alpha
-
-
-# Logic Pro Adventure (Japan)
-Amuse World
-
-
-# Omotesandou (Japan 890215)
-Anime Tec
-
-
-# Guilty Gear X (JPN)
-Arc System Works
-
-
-# 86 Lions
-Aristocrat
-
-
 # Dingo
 Ashby Computers and Graphics Ltd.
-
-
-# Show Hand (Italy)
-Astro Corp.
-
-
-# Pro Mahjong Kiwame S (J 951020 V1.208)
-Athena
 
 
 # Jingi Storm - The Arcade (GDL-0037)
@@ -972,14 +1380,6 @@ BFM
 
 # BMC Bowling
 BMC
-
-
-# Carrera (Version 6.7)
-BS Electronics
-
-
-# Jump Shot
-Bally Midway
 
 
 # MPU4 Unit Test (Program 4)
@@ -1002,24 +1402,8 @@ Barko Corp.
 Bee-Oh
 
 
-# Daisyarin [BET] (Japan)
-Best System
-
-
-# Neo 2500 Demo (Homebrew)
-Blastar
-
-
 # Sky Lancer (Bordun, ver.U450C)
 Bordun International
-
-
-# Crystal System BIOS
-BrezzaSoft
-
-
-# Mahjong Nanpa Story (Japan 890713)
-Brooks
 
 
 # Doctor PC Jr
@@ -1042,38 +1426,6 @@ CES Inc., Midway Games Inc.
 CGI
 
 
-# Cal Omega - Game 17.51 (Gaming Draw Poker)
-Cal Omega
-
-
-# Cal Omega - Game 7.4 (Gaming Poker, W.Export)
-Cal Omega Inc.
-
-
-# Varth: Operation Thunderstorm (USA 920612)
-Capcom, distributed by Romstar
-
-
-# Pnickies (Japan 940608)
-Capcom, licensed by Compile)
-
-
-# Cool Pool
-Catalina
-
-
-# Slither (set 1)
-Century II
-
-
-# Paint & Puzzle
-Century?
-
-
-# Neo-Demo (Homebrew)
-Chaos
-
-
 # Time Limit
 Chuo Co. Ltd
 
@@ -1086,72 +1438,12 @@ Cidelsa
 Cin
 
 
-# Cerberus
-Cinematronics
-
-
 # Flower (US)
 Clarue
 
 
-# Sports Authority
-Classic Games
-
-
-# Fred Flintstones' Memory Match (World?, Ticket version, 3/17/95)
-Coastal Amusements
-
-
-# International Toote (Germany)
-Coinmaster
-
-
-# Colorama (English)
-Coinmaster-Gaming, Ltd.
-
-
-# Gulf War II
-Comad
-
-
-# Hot Pinball
-Comad & New Japan System
-
-
-# Funny Bubble (Comad version)
-Comad Industry Co Ltd
-
-
 # Video Stars
 Competitive Video?
-
-
-# Battle of Atlantis (set 1)
-Comsoft
-
-
-# SWAT (315-5048)
-Coreland
-
-
-# Cherry Master (Corsica, ver.8.01)
-Corsica
-
-
-# Galaxy Games (BIOS v1.90)
-Creative Electronics & Software
-
-
-# GameCristal
-Cristaltec
-
-
-# Gyrodine
-Crux
-
-
-# Mirax
-Current Technologies
 
 
 # Black Touch '96
@@ -1162,100 +1454,24 @@ D.G.R.M.
 DGRM
 
 
-# Office Yeo In Cheon Ha (version 1.2)
-Danbi
-
-
-# Super Casino
-Data Amusement
-
-
 # Double Joker Poker (45%-75% payout)
 DellFern Ltd.
-
-
-# Triple Draw Poker
-Design Labs
 
 
 # Uncle Poo
 Diatec
 
 
-# Little Casino (older)
-Digital Controls Inc.
-
-
-# Royal Card v2.0 Professional
-Digital Dreams
-
-
-# Idol no Himitsu [BET] (Japan 890304)
-Digital Soft
-
-
-# Eyes (Digitrex Techstar)
-Digitrex Techstar
-
-
-# Quizard 1.7
-Disney
-
-
-# Connect 4
-Dolbeck Systems
-
-
-# X Se Dae Quiz
-Dream Island
-
-
-# DRHL Poker (v.2.89)
-Drews Inc.
-
-
 # Buccaneers (set 1)
 Duintronic
-
-
-# Alien Arena
-Duncan Brown
 
 
 # Shadow Fighters
 Dutech Inc.
 
 
-# V-Liner (set 1)
-Dyna
-
-
-# Watashiha Suzumechan (Japan)
-Dyna Electronics
-
-
-# Skeet Shot
-Dynamo
-
-
-# Big Bucks
-Dynasoft Inc.
-
-
-# Hana Fubuki [BET] (Japan)
-Dynax
-
-
-# 9-Ball Shootout (set 1)
-E-Scape EnterMedia
-
-
 # Wild Cat 3
 E.A.I.
-
-
-# Hot Shocker
-E.G. Felaco
 
 
 # Miyasu Nonki no Quiz 18-Kin
@@ -1274,212 +1490,20 @@ ESD
 ETM
 
 
-# King of Dynast Gear (version 1.8)
-EZ Graphics
-
-
-# Janshi
-Eagle
-
-
-# Dangerous Dungeons (East Coast Coin Company)
-East Coast Coin Company
-
-
-# Gigandes
-East Technology
-
-
-# Gekisou (Japan)
-Eastern Corp.
-
-
-# Hoccer (set 1)
-Eastern Micro Electronics, Inc.
-
-
-# Death Crimson OX (JPN, USA, EXP, KOR, AUS)
-Ecole
-
-
-# Musapey's Choco Marker (Rev A) (GDL-0014A)
-Ecole Software
-
-
-# Battle Bakraid - Unlimited Version (U.S.A.) (Tue Jun 8 1999)
-Eighting
-
-
-# Jan Jan Paradise
-Electro Design
-
-
-# Dwarfs Den
-Electro-Sport
-
-
-# Diamond Derby (Newer)
-Electrocoin
-
-
-# Twins (set 1)
-Electronic Devices
-
-
-# Mug Smashers
-Electronic Devices Italy
-
-
-# Ping Pong Masters '93
-Electronic Devices S.R.L.
-
-
-# Jackpot Cards / Jackpot Pool (Italy)
-Electronic Projects
-
-
-# Galaxy Gunners
-Electronics Devices Italy
-
-
-# Twin Brats (set 1)
-Elettronica Video-Games S.R.L.
-
-
-# Red Robin
-Elettronolo
-
-
-# Nightmare in the Dark
-Eleven
-
-
-# Trivia Master (set 1)
-Enerdyne Technologies Inc.
-
-
-# American Speedway (set 1)
-Enerdyne Technologies, Inc.
-
-
-# Act Raiser (Nintendo Super System)
-Enix
-
-
 # Swinging Singles
 Ent. Ent. Ltd
-
-
-# Noah's Ark
-Enter-Tech
-
-
-# Mini Vegas 4in1
-Entertainment Enterprises
-
-
-# Turbo Sub (prototype rev. TSCA)
-Entertainment Sciences
-
-
-# Ruleta RE-900
-Entretenimientos GEMINIS
-
-
-# The King of Fighters 2001 (set 1)
-Eolith
-
-
-# Boardwalk Casino
-Epos Corporation
-
-
-# Poizone
-Eterna
-
-
-# Mouja (Japan)
-Etona
-
-
-# Rage of the Dragons
-Evoga
-
-
-# Royal Card (Slovak, encrypted)
-Evona Electronic
-
-
-# Come On Baby
-ExPotato
-
-
-# Dream 9 Final (v2.24)
-Excellent System
 
 
 # Car Polo
 Exidy
 
 
-# Poker Monarch (v2.50)
-Extrema Systems International Ltd.
-
-
-# Mahjong Gakuen 2 Gakuen-chou no Fukushuu
-Face
-
-
-# Crazy Kong Part II (set 1)
-Falcon
-
-
-# Crazy Kong
-Falcon?
-
-
-# Metal Saver
-First Amusement
-
-
-# Forte Card
-Fortex Ltd
-
-
-# Mahjong Gal 10-renpatsu (Japan)
-Fujic
-
-
-# Super A'Can
-Funtech Entertainment
-
-
-# Big Deal (Hungarian, set 1)
-Funworld
-
-
-# Go Go! Mile Smile
-Fuuki
-
-
 # Border Down (Rev A) (GDL-0023A)
 G-Rev
 
 
-# Lover Boy
-G.T Enterprise Inc
-
-
-# Happy Tour
-GAV Company
-
-
 # Abscam
 GL
-
-
-# Super Cross II (Japan, set 1)
-GM Shoji
 
 
 # Real Battle Mahjong King
@@ -1488,10 +1512,6 @@ GMS
 
 # GTI Poker
 GTI Inc
-
-
-# Master Boy (Spanish, PCB Rev A)
-Gaelco
 
 
 # Interstellar Laser Fantasy
@@ -2510,14 +2530,6 @@ T.I.C.
 T.R.Tec
 
 
-# Jolly Card (Austrian)
-TAB Austria
-
-
-# Cabal (World, Joystick version)
-TAD Corporation
-
-
 # Speed Spin
 TCH
 
@@ -2608,18 +2620,6 @@ Veltmeijer
 
 # Joker Card (Ver.A267BC, encrypted)
 Vesely Svet
-
-
-# Witch Card (Video Klein)
-Video Klein
-
-
-# Videotronics Poker
-Videotronics
-
-
-# Honey Money
-Vivid
 
 
 # Success Joe (World)
