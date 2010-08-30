@@ -356,7 +356,7 @@ static void gb_update_scanline( running_machine *machine )
 {
 	bitmap_t *bitmap = machine->generic.tmpbitmap;
 
-	profiler_mark_start(PROFILER_VIDEO);
+	g_profiler.start(PROFILER_VIDEO);
 
 	/* Make sure we're in mode 3 */
 	if ( ( LCDSTAT & 0x03 ) == 0x03 )
@@ -502,7 +502,7 @@ static void gb_update_scanline( running_machine *machine )
 		}
 	}
 
-	profiler_mark_end();
+	g_profiler.stop();
 }
 
 /* --- Super Game Boy Specific --- */
@@ -679,7 +679,7 @@ static void sgb_update_scanline( running_machine *machine )
 {
 	bitmap_t *bitmap = machine->generic.tmpbitmap;
 
-	profiler_mark_start(PROFILER_VIDEO);
+	g_profiler.start(PROFILER_VIDEO);
 
 	if ( ( LCDSTAT & 0x03 ) == 0x03 )
 	{
@@ -742,18 +742,18 @@ static void sgb_update_scanline( running_machine *machine )
 				{
 					rectangle r;
 					r.min_x = SGB_XOFFSET;
-					r.max_x -= SGB_XOFFSET;
+					r.max_x = SGB_XOFFSET + 160-1;
 					r.min_y = SGB_YOFFSET;
-					r.max_y -= SGB_YOFFSET;
+					r.max_y = SGB_YOFFSET + 144 - 1;
 					bitmap_fill( bitmap, &r , 0);
 				} return;
 			case 3: /* Blank screen (white - or should it be color 0?) */
 				{
 					rectangle r;
 					r.min_x = SGB_XOFFSET;
-					r.max_x -= SGB_XOFFSET;
+					r.max_x = SGB_XOFFSET + 160 - 1;
 					r.min_y = SGB_YOFFSET;
-					r.max_y -= SGB_YOFFSET;
+					r.max_y = SGB_YOFFSET + 144 - 1;
 					bitmap_fill( bitmap, &r , 32767);
 				} return;
 			}
@@ -773,7 +773,7 @@ static void sgb_update_scanline( running_machine *machine )
 			{
 				rectangle r;
 				r.min_x = SGB_XOFFSET;
-				r.max_x -= SGB_XOFFSET;
+				r.max_x = SGB_XOFFSET + 160 - 1;
 				r.min_y = r.max_y = gb_lcd.current_line + SGB_YOFFSET;
 				bitmap_fill( bitmap, &r , 0);
 			}
@@ -855,7 +855,7 @@ static void sgb_update_scanline( running_machine *machine )
 				{
 					rectangle r;
 					r.min_x = SGB_XOFFSET;
-					r.max_x -= SGB_XOFFSET;
+					r.max_x = SGB_XOFFSET + 160 - 1;
 					r.min_y = r.max_y = gb_lcd.current_line + SGB_YOFFSET;
 					bitmap_fill(bitmap, &r, 0);
 				}
@@ -864,7 +864,7 @@ static void sgb_update_scanline( running_machine *machine )
 		}
 	}
 
-	profiler_mark_end();
+	g_profiler.stop();
 }
 
 /* --- Game Boy Color Specific --- */
@@ -985,7 +985,7 @@ static void cgb_update_scanline ( running_machine *machine )
 {
 	bitmap_t *bitmap = machine->generic.tmpbitmap;
 
-	profiler_mark_start(PROFILER_VIDEO);
+	g_profiler.start(PROFILER_VIDEO);
 
 	if ( ( LCDSTAT & 0x03 ) == 0x03 )
 	{
@@ -1171,7 +1171,7 @@ static void cgb_update_scanline ( running_machine *machine )
 		}
 	}
 
-	profiler_mark_end();
+	g_profiler.stop();
 }
 
 /* OAM contents on power up.
@@ -1301,7 +1301,7 @@ void gb_video_reset( running_machine *machine, int mode )
 {
 	int	i;
 	int vram_size = 0x2000;
-	const address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
 	emu_timer *old_timer = gb_lcd.lcd_timer;
 
 	memset( &gb_lcd, 0, sizeof(gb_lcd) );
@@ -1410,14 +1410,14 @@ void gb_video_reset( running_machine *machine, int mode )
 static void gbc_hdma(running_machine *machine, UINT16 length)
 {
 	UINT16 src, dst;
-	const address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
 
 	src = ((UINT16)HDMA1 << 8) | (HDMA2 & 0xF0);
 	dst = ((UINT16)(HDMA3 & 0x1F) << 8) | (HDMA4 & 0xF0);
 	dst |= 0x8000;
 	while( length > 0 )
 	{
-		memory_write_byte( space, dst++, memory_read_byte( space, src++ ) );
+		space->write_byte( dst++, space->read_byte( src++ ) );
 		length--;
 	}
 	HDMA1 = src >> 8;
@@ -2173,7 +2173,7 @@ WRITE8_HANDLER ( gb_video_w )
 			UINT8 *P = gb_lcd.gb_oam->base();
 			offset = (UINT16) data << 8;
 			for (data = 0; data < 0xA0; data++)
-				*P++ = memory_read_byte (space, offset++);
+				*P++ = space->read_byte(offset++);
 		}
 		return;
 	case 0x07:						/* BGP - Background Palette */

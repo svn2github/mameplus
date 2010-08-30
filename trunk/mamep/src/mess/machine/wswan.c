@@ -259,7 +259,7 @@ MACHINE_START( wscolor )
 
 MACHINE_RESET( wswan )
 {
-	const address_space *space = cputag_get_address_space( machine, "maincpu", ADDRESS_SPACE_PROGRAM );
+	address_space *space = cputag_get_address_space( machine, "maincpu", ADDRESS_SPACE_PROGRAM );
 
 	/* Intialize ports */
 	memcpy( ws_portram, ws_portram_init, 256 );
@@ -267,8 +267,8 @@ MACHINE_RESET( wswan )
 	/* Initialize VDP */
 	memset( &wswan_vdp, 0, sizeof( wswan_vdp ) );
 
-	wswan_vdp.vram = (UINT8*)memory_get_read_ptr( space, 0 );
-	wswan_vdp.palette_vram = (UINT8*)memory_get_read_ptr( space, ( system_type == WSC ) ? 0xFE00 : 0 );
+	wswan_vdp.vram = (UINT8*)space->get_read_ptr(0);
+	wswan_vdp.palette_vram = (UINT8*)space->get_read_ptr(( system_type == WSC ) ? 0xFE00 : 0 );
 	wswan_vdp.current_line = 145;  /* Randomly chosen, beginning of VBlank period to give cart some time to boot up */
 	wswan_vdp.new_display_vertical = ROMMap[ROMBanks-1][0xfffc] & 0x01;
 	wswan_vdp.display_vertical = ~wswan_vdp.new_display_vertical;
@@ -728,7 +728,7 @@ WRITE8_HANDLER( wswan_port_w )
 				length = ws_portram[0x46] + (ws_portram[0x47] << 8);
 				for( ; length > 0; length-- )
 				{
-					memory_write_byte(space,  dst, memory_read_byte(space,  src ) );
+					space->write_byte(dst, space->read_byte(src ) );
 					src++;
 					dst++;
 				}
@@ -1382,7 +1382,7 @@ DEVICE_IMAGE_LOAD(wswan_cart)
 	else
 		size = image.get_software_region_length("rom");
 
-	ws_ram = (UINT8*) memory_get_read_ptr(cputag_get_address_space(image.device().machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0);
+	ws_ram = (UINT8*) cputag_get_address_space(image.device().machine, "maincpu", ADDRESS_SPACE_PROGRAM)->get_read_ptr(0);
 	memset(ws_ram, 0, 0xffff);
 	ROMBanks = size / 65536;
 
@@ -1485,9 +1485,9 @@ static TIMER_CALLBACK(wswan_scanline_interrupt)
 	/* Handle Sound DMA */
 	if ( ( sound_dma.enable & 0x88 ) == 0x80 )
 	{
-		const address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM );
+		address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM );
 		/* TODO: Output sound DMA byte */
-		wswan_port_w( space, 0x89, memory_read_byte(space,  sound_dma.source ) );
+		wswan_port_w( space, 0x89, space->read_byte(sound_dma.source ) );
 		sound_dma.size--;
 		sound_dma.source = ( sound_dma.source + 1 ) & 0x0FFFFF;
 		if ( sound_dma.size == 0 )
