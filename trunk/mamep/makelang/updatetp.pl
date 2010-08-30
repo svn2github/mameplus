@@ -538,24 +538,42 @@ sub MakeSrc
 		my $text = $_;
 		my $ref = $SRC{$text};
 
-		while ($ref =~ /(mess\/|)osd\/sdl\/[^\s]+[\s,\d]+/)
-		{
-			$sdl .= $&;
-			$ref = $` . $';
-		}
-
+		# tp_windows.txt
 		while ($ref =~ /(mess\/|)osd\/windows\/[^\s]+[\s,\d]+/)
 		{
 			$windows .= $&;
 			$ref = $` . $';
 		}
 
+		# tp_ui.txt
 		while ($ref =~ /(mess\/|)osd\/winui\/[^\s]+[\s,\d]+/)
 		{
 			$ui .= $&;
 			$ref = $` . $';
 		}
 
+		# Exclude
+		while ($ref =~ /(mess\/|)emu\/debug\/[^\s]+[\s,\d]+/)
+		{
+			$debug .= $&;
+			$ref = $` . $';
+		}
+
+		# Exclude
+		while ($ref =~ /(mess\/|)emu\/debugint\/[^\s]+[\s,\d]+/)
+		{
+			$debugint .= $&;
+			$ref = $` . $';
+		}
+
+		# Exclude
+		while ($ref =~ /(mess\/|)osd\/sdl\/[^\s]+[\s,\d]+/)
+		{
+			$sdl .= $&;
+			$ref = $` . $';
+		}
+
+		# Exclude
 		while ($ref =~ /(mess\/|)tools\/[^\s]+[\s,\d]+/)
 		{
 			$tools .= $&;

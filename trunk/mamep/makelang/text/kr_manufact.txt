@@ -242,10 +242,6 @@ Capcom
 Capcom, distributed by Romstar
 캡콤 (롬스타 배포)
 
-# Pnickies (Japan 940608)
-Capcom, licensed by Compile)
-캡콤 (컴파일 라이센스)
-
 # Cool Pool
 Catalina
 카타리나
@@ -429,10 +425,6 @@ Digital Soft
 # Eyes (Digitrex Techstar)
 Digitrex Techstar
 디지트렉스 테크스타
-
-# Quizard 1.7
-Disney
-디즈니
 
 # Connect 4
 Dolbeck Systems
@@ -1402,6 +1394,10 @@ Barko Corp.
 Bee-Oh
 
 
+# Mega Double Poker (conversion kit)
+Blitz System Inc.
+
+
 # Sky Lancer (Bordun, ver.U450C)
 Bordun International
 
@@ -1424,6 +1420,10 @@ CES Inc., Midway Games Inc.
 
 # Credit Poker (ver.30c, standard)
 CGI
+
+
+# Pnickies (Japan 940608)
+Capcom, licensed by Compile
 
 
 # Time Limit
@@ -1498,7 +1498,7 @@ Ent. Ent. Ltd
 Exidy
 
 
-# Border Down (Rev A) (GDL-0023A)
+# Doki Doki Idol Star Seeker (GDL-0005)
 G-Rev
 
 
@@ -1556,6 +1556,10 @@ Grand Products
 
 # Taxi Driver
 Graphic Techno
+
+
+# Super Poker (Version 10.19S)
+Grayhound Electronics
 
 
 # Abunai Houkago - Mou Matenai (Japan 890325)
@@ -1720,6 +1724,10 @@ Inter Games
 
 # Video Poker
 InterFlip
+
+
+# Savage Quest
+Interactive Light
 
 
 # Wheels Runner
@@ -2154,6 +2162,10 @@ Olympia
 Olympia?
 
 
+# Olympic Hot Stuff (TAS 5 Reel System)
+Olympic Video Gaming
+
+
 # Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 3.0 / 990128)
 Omega System
 
@@ -2268,10 +2280,6 @@ Prince Co.
 
 # Paca Paca Passion (Japan, PPP1/VER.A2)
 Produce
-
-
-# Noraut Joker Poker (Prologic HW)
-Prologic
 
 
 # Ozon I
@@ -2620,6 +2628,10 @@ Veltmeijer
 
 # Joker Card (Ver.A267BC, encrypted)
 Vesely Svet
+
+
+# Noraut Joker Poker (Prologic HW)
+Video Fun Games Ltd.
 
 
 # Success Joe (World)

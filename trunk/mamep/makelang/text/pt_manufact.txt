@@ -2034,6 +2034,10 @@ B.R.L.
 Best System
 
 
+# Mega Double Poker (conversion kit)
+Blitz System Inc.
+
+
 # Crystal System BIOS
 BrezzaSoft
 
@@ -2063,7 +2067,7 @@ Capcom, distributed by Romstar
 
 
 # Pnickies (Japan 940608)
-Capcom, licensed by Compile)
+Capcom, licensed by Compile
 
 
 # Pirati
@@ -2112,10 +2116,6 @@ Diatec
 
 # Royal Card v2.0 Professional
 Digital Dreams
-
-
-# Quizard 1.7
-Disney
 
 
 # X Se Dae Quiz
@@ -2186,7 +2186,7 @@ Funtech Entertainment
 Funworld
 
 
-# Border Down (Rev A) (GDL-0023A)
+# Doki Doki Idol Star Seeker (GDL-0005)
 G-Rev
 
 
@@ -2196,6 +2196,10 @@ GAV Company
 
 # Flame Gunner
 Gaps Inc.
+
+
+# Super Poker (Version 10.19S)
+Grayhound Electronics
 
 
 # Abunai Houkago - Mou Matenai (Japan 890325)
@@ -2256,6 +2260,10 @@ Infogrames
 
 # Video Poker
 InterFlip
+
+
+# Savage Quest
+Interactive Light
 
 
 # Squash (Itisa)
@@ -2398,6 +2406,10 @@ Nova Desitec
 Olympia?
 
 
+# Olympic Hot Stuff (TAS 5 Reel System)
+Olympic Video Gaming
+
+
 # PMA Poker
 PMA
 
@@ -2428,10 +2440,6 @@ Prestige Games
 
 # Paca Paca Passion (Japan, PPP1/VER.A2)
 Produce
-
-
-# Noraut Joker Poker (Prologic HW)
-Prologic
 
 
 # New Double Bet Mahjong (Japan)
@@ -2596,6 +2604,10 @@ Unies Corporation
 
 # Virtual Combat
 VR8 Inc.
+
+
+# Noraut Joker Poker (Prologic HW)
+Video Fun Games Ltd.
 
 
 # Witch Card (Video Klein)

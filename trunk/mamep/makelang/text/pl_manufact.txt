@@ -334,6 +334,10 @@ Best System
 Blastar
 
 
+# Mega Double Poker (conversion kit)
+Blitz System Inc.
+
+
 # Golden Poker Double Up (Big Boy)
 Bonanza Enterprises, Ltd
 
@@ -391,7 +395,7 @@ Capcom, distributed by Romstar
 
 
 # Pnickies (Japan 940608)
-Capcom, licensed by Compile)
+Capcom, licensed by Compile
 
 
 # Cool Pool
@@ -612,10 +616,6 @@ Digital Soft
 
 # Eyes (Digitrex Techstar)
 Digitrex Techstar
-
-
-# Quizard 1.7
-Disney
 
 
 # Connect 4
@@ -906,7 +906,7 @@ Funworld
 Fuuki
 
 
-# Border Down (Rev A) (GDL-0023A)
+# Doki Doki Idol Star Seeker (GDL-0005)
 G-Rev
 
 
@@ -988,6 +988,10 @@ Grand Products
 
 # Taxi Driver
 Graphic Techno
+
+
+# Super Poker (Version 10.19S)
+Grayhound Electronics
 
 
 # Abunai Houkago - Mou Matenai (Japan 890325)
@@ -1152,6 +1156,10 @@ Inter Games
 
 # Video Poker
 InterFlip
+
+
+# Savage Quest
+Interactive Light
 
 
 # Wheels Runner
@@ -1658,6 +1666,10 @@ Olympia
 Olympia?
 
 
+# Olympic Hot Stuff (TAS 5 Reel System)
+Olympic Video Gaming
+
+
 # Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 3.0 / 990128)
 Omega System
 
@@ -1772,10 +1784,6 @@ Prince Co.
 
 # Paca Paca Passion (Japan, PPP1/VER.A2)
 Produce
-
-
-# Noraut Joker Poker (Prologic HW)
-Prologic
 
 
 # Ozon I
@@ -2452,6 +2460,10 @@ Viccom
 
 # Gridlee
 Videa
+
+
+# Noraut Joker Poker (Prologic HW)
+Video Fun Games Ltd.
 
 
 # Looping

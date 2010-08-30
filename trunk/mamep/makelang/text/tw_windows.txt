@@ -680,7 +680,7 @@ MAME: %s [%s] - 畫面 %d
 
 # mess/osd/windows/mess.rc: 75
 Maximum &Speed
-最快速度
+最快速度(&S)
 
 # mess/osd/windows/menu.c: 291
 Miscellaneous Input

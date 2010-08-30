@@ -12,23 +12,27 @@
 
 # mess/osd/windows/mess.rc: 69
 &Analog Controls...
-アナログコントローラ...(&A)
+アナログコントローラ(&A)...
 
 # mess/osd/windows/mess.rc: 66
 &Configuration...
-設定...(&C)
+設定(&C)...
 
 # mess/osd/windows/menu.c: 1248
 &Configure...
-設定...(&C)
+設定(&C)...
 
 # mess/osd/windows/mess.rc: 67
 &DIP Switches...
-DIPスイッチ...(&D)
+DIPスイッチ(&D)...
 
 # mess/osd/windows/mess.rc: 89
 &Debugger...
-デバッガ...(&D)
+デバッガ(&D)...
+
+# mess/osd/windows/menu.c: 1458 mess/osd/windows/mess.rc: 91
+&Devices
+デバイス(&D)
 
 # mess/osd/windows/mess.rc: 38 
 &Exit
@@ -60,11 +64,11 @@ DIPスイッチ...(&D)
 
 # mess/osd/windows/mess.rc: 32
 &Load State...
-ステートを読み込む...(&L)
+ステートを読み込む(&L)...
 
 # mess/osd/windows/mess.rc: 68
 &Miscellaneous Inputs...
-その他の入力...(&M)
+その他の入力(&M)...
 
 # mess/osd/windows/menu.c: 1221, 1437, 2048 mess/osd/windows/mess.rc: 44 
 &Options
@@ -744,7 +748,7 @@ Rotate 90 degrees
 
 # mess/osd/windows/mess.rc: 34
 S&ave State As...
-ステートを保存...(&S)
+ステートを保存(&A)...
 
 # mess/osd/windows/mess.rc: 36
 Save Sc&reenshot
@@ -785,6 +789,10 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 # osd/windows/input.c: 833
 Toggle Fullscreen
 フルスクリーン切り替え
+
+# osd/windows/input.c: 841
+Toggle Menu Bar
+メニューバーの切り替え
 
 # osd/windows/ledutil.c: 603, 609
 Unable to close the keyboard device. (error %d)\n
@@ -1066,10 +1074,6 @@ thread priority for the main game thread; range from -15 to 1
 video output method: none, gdi, ddraw, or d3d
 ビデオ描画方法: none、gdi、ddrawまたはd3d
 
-# mess/osd/windows/menu.c: 1458 mess/osd/windows/mess.rc: 91
-&Devices
-
-
 # mess/osd/windows/mess.rc: 40
 &Edit
 
@@ -1080,10 +1084,6 @@ Direct3D: Max texture size = %dx%d\n
 
 # mess/osd/windows/mess.rc: 42
 Paste
-
-
-# osd/windows/input.c: 841
-Toggle Menu Bar
 
 
 # osd/windows/winmain.c: 506

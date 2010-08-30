@@ -912,7 +912,7 @@ brightness value in full screen mode
 
 # osd/windows/winmain.c: 315
 constrain to the proper aspect ratio
-全屏幕模式外观比例
+强制使用合适的长宽比例
 
 # osd/windows/winmain.c: 362
 contrast value in full screen mode
