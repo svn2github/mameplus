@@ -55,21 +55,21 @@ static int is_highscore_enabled(running_machine *machine)
 
 static void copy_to_memory (running_machine *machine, int cpunum, int addr, const UINT8 *source, int num_bytes)
 {
-	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
+	address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	int i;
 	for (i=0; i<num_bytes; i++)
 	{
-		memory_write_byte (space, addr+i, source[i]);
+		space->write_byte(addr+i, source[i]);
 	}
 }
 
 static void copy_from_memory (running_machine *machine, int cpunum, int addr, UINT8 *dest, int num_bytes)
 {
-	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
+	address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	int i;
 	for (i=0; i<num_bytes; i++)
 	{
-		dest[i] = memory_read_byte (space, addr+i);
+		dest[i] = space->read_byte(addr+i);
 	}
 }
 
@@ -158,14 +158,14 @@ static int safe_to_load (running_machine *machine)
 {
 	memory_range *mem_range = state.mem_range;
 	int cpunum = mem_range->cpunum;
-	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
+	address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	while (mem_range)
 	{
-		if (memory_read_byte (space, mem_range->addr) != mem_range->start_value)
+		if (space->read_byte(mem_range->addr) != mem_range->start_value)
 		{
 			return 0;
 		}
-		if (memory_read_byte (space, mem_range->addr + mem_range->num_bytes - 1) != mem_range->end_value)
+		if (space->read_byte(mem_range->addr + mem_range->num_bytes - 1) != mem_range->end_value)
 		{
 			return 0;
 		}
@@ -287,7 +287,7 @@ void hiscore_init (running_machine *machine)
 {
 	memory_range *mem_range = state.mem_range;
 	//int cpunum = mem_range->cpunum;
-	//const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
+	//address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	file_error filerr;
 	mame_file *f;
 	const char *db_filename = options_get_string(mame_options(), OPTION_HISCORE_FILE); /* high score definition file */
@@ -296,8 +296,8 @@ void hiscore_init (running_machine *machine)
 
 	//while (mem_range)
 	//{
-	//	memory_write_byte(space, mem_range->addr, ~mem_range->start_value);
-	//	memory_write_byte(space, mem_range->addr + mem_range->num_bytes-1, ~mem_range->end_value);
+	//	space->write_byte(mem_range->addr, ~mem_range->start_value);
+	//	space->write_byte(mem_range->addr + mem_range->num_bytes-1, ~mem_range->end_value);
 	//	mem_range = mem_range->next;
 	//}
 

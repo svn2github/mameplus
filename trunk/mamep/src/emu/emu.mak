@@ -45,6 +45,7 @@ EMUOBJS = \
 	$(EMUOBJ)/config.o \
 	$(EMUOBJ)/crsshair.o \
 	$(EMUOBJ)/debugger.o \
+	$(EMUOBJ)/delegate.o \
 	$(EMUOBJ)/devcb.o \
 	$(EMUOBJ)/devcpu.o \
 	$(EMUOBJ)/devimage.o \
@@ -110,6 +111,7 @@ EMUOBJS = \
 	$(EMUOBJ)/debug/express.o \
 	$(EMUOBJ)/debug/textbuf.o \
 	$(EMUOBJ)/debugint/debugint.o \
+	$(EMUOBJ)/profiler.o \
 	$(EMUOBJ)/uilang.o
 
 ifdef USE_CMD_LIST
@@ -125,11 +127,6 @@ endif
 ifdef USE_HISCORE
 EMUOBJS += \
 	$(EMUOBJ)/hiscore.o
-endif
-
-ifdef PROFILER
-EMUOBJS += \
-	$(EMUOBJ)/profiler.o
 endif
 
 EMUSOUNDOBJS = \
