@@ -449,10 +449,6 @@ ifneq ($(USE_SHOW_INPUT_LOG),)
 DEFS += -DUSE_SHOW_INPUT_LOG
 endif
 
-ifneq ($(USE_VOLUME_AUTO_ADJUST),)
-DEFS += -DUSE_VOLUME_AUTO_ADJUST
-endif
-
 ifneq ($(USE_IPS),)
 DEFS += -DUSE_IPS
 endif

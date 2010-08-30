@@ -2572,9 +2572,7 @@ static void SetPropEnabledControls(HWND hWnd)
 		EnableWindow(GetDlgItem(hWnd,IDC_AUDIO_LATENCY),sound);
 		EnableWindow(GetDlgItem(hWnd,IDC_AUDIO_LATENCY_DISP),sound);
 		EnableWindow(GetDlgItem(hWnd,IDC_AUDIO_LATENCY_TEXT),sound);
-#ifdef USE_VOLUME_AUTO_ADJUST
-		EnableWindow(GetDlgItem(hWnd,IDC_VOLUME_ADJUST),sound);
-#endif /* USE_VOLUME_AUTO_ADJUST */
+		EnableWindow(GetDlgItem(hWnd,IDC_AUDIO_SYNC),sound);
 		//mamep: allow in GLOBAL_OPTIONS set IDC_SAMPLES
 		if (g_nGame != GLOBAL_OPTIONS)
 			SetSamplesEnabled(hWnd, nIndex, sound);
@@ -3161,9 +3159,7 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_USE_SOUND,				DM_BOOL,	OPTION_SOUND);
 	datamap_add(properties_datamap, IDC_VOLUME,				DM_INT,		OPTION_VOLUME);
 	datamap_add(properties_datamap, IDC_VOLUMEDISP,				DM_INT,		OPTION_VOLUME);
-#ifdef USE_VOLUME_AUTO_ADJUST
-	datamap_add(properties_datamap, IDC_VOLUME_ADJUST,			DM_BOOL,	OPTION_VOLUME_ADJUST);
-#endif /* USE_VOLUME_AUTO_ADJUST */
+	datamap_add(properties_datamap, IDC_AUDIO_SYNC,				DM_BOOL,	WINOPTION_AUDIO_SYNC);
 
 	// core input options 
 	datamap_add(properties_datamap, IDC_COINLOCKOUT,			DM_BOOL,	OPTION_COIN_LOCKOUT);

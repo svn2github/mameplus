@@ -709,10 +709,8 @@ BEGIN
                     HIDC_USE_SOUND
     CONTROL         "Use samples",IDC_SAMPLES,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,10,59,220,10,0,HIDC_SAMPLES
-#ifdef USE_VOLUME_AUTO_ADJUST
-    CONTROL         "Use volume auto adjust",IDC_VOLUME_ADJUST,
+    CONTROL         "Enable audio sync",IDC_AUDIO_SYNC,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,73,220,10
-#endif /* USE_VOLUME_AUTO_ADJUST */
     GROUPBOX        "Sample rate",IDC_RATETEXT,68,87,124,30,NOT WS_GROUP
     COMBOBOX        IDC_SAMPLERATE,74,99,112,60,CBS_DROPDOWNLIST | 
                     CBS_UPPERCASE | WS_VSCROLL | WS_TABSTOP,0,

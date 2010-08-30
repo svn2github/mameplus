@@ -141,9 +141,6 @@ const options_entry mame_core_options[] =
 	{ "samplerate;sr(1000-1000000)", "48000",     0,                 "set sound output sample rate" },
 	{ "samples",                     "1",         OPTION_BOOLEAN,    "enable the use of external samples if available" },
 	{ "volume;vol",                  "0",         0,                 "sound volume in decibels (-32 min, 0 max)" },
-#ifdef USE_VOLUME_AUTO_ADJUST
-	{ "volume_adjust",               "0",         OPTION_BOOLEAN,    "enable/disable volume auto adjust" },
-#endif /* USE_VOLUME_AUTO_ADJUST */
 
 	/* input options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE INPUT OPTIONS" },

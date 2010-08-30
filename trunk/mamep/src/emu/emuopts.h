@@ -138,9 +138,6 @@
 #define OPTION_SAMPLERATE			"samplerate"
 #define OPTION_SAMPLES				"samples"
 #define OPTION_VOLUME				"volume"
-#ifdef USE_VOLUME_AUTO_ADJUST
-#define OPTION_VOLUME_ADJUST			"volume_adjust"
-#endif /* USE_VOLUME_AUTO_ADJUST */
 
 /* core input options */
 #define OPTION_COIN_LOCKOUT			"coin_lockout"
