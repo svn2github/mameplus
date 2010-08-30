@@ -21,19 +21,14 @@
 #include "pool.h"
 #include "screenshot.h"
 
-#if !defined(MAMEUINAME)
-#define MAMEUINAME "MAMEUI"
-#endif
 
 #ifndef MESS
 #ifdef PTR64
-#define TEXT_MAMEUINAME	TEXT("MAMEUI")
+#define MAMEUINAME	"MAMEUI"
 #else
-#define TEXT_MAMEUINAME	TEXT("MAMEUI")
+#define MAMEUINAME	"MAMEUI"
 #endif
-#if !defined(MAMENAME)
 #define MAMENAME	"MAME"
-#endif
 #else
 #define MAMEUINAME	"MESSUI"
 #define MAMENAME	"MESS"
@@ -89,7 +84,6 @@ struct _driverw
 	WCHAR *source_file;
 };
 
-/* in winui.c */
 extern struct _driverw **driversw;
 
 extern TCHAR last_directory[MAX_PATH];
@@ -174,22 +168,3 @@ LPWSTR GetSearchText(void);
 #define _UIW(str)	w_lang_message(UI_MSG_UI, str)
 
 #endif
-
-
-#ifdef _MSC_VER
-	#define wcscmpi _wcsicmp
-	#define snprintf _snprintf
-	#define snwprintf _snwprintf
-
-	// for VC2005
-	#if _MSC_VER >= 1400
-		#undef strdup
-		#undef stricmp
-		#define wcsdup _wcsdup
-		#define wcsicmp _wcsicmp
-		#define strdup _strdup
-		#define stricmp _stricmp
-		#define strlwr _strlwr
-		#define itoa _itoa
-	#endif // for VC2005
-#endif // _MSC_VER

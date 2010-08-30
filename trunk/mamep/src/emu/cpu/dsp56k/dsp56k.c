@@ -67,12 +67,12 @@ static CPU_RESET( dsp56k );
 /***************************************************************************
     Direct Update Handler
 ***************************************************************************/
-static DIRECT_UPDATE_HANDLER( dsp56k_direct_handler )
+DIRECT_UPDATE_HANDLER( dsp56k_direct_handler )
 {
 	if (address >= (0x0000<<1) && address <= (0x07ff<<1))
 	{
-		dsp56k_core* cpustate = get_safe_token(space->cpu);
-		direct->raw = direct->decrypted = (UINT8 *)(cpustate->program_ram - (0x0000<<1));
+		dsp56k_core* cpustate = get_safe_token(direct.space().cpu);
+		direct.explicit_configure(0x0000<<1, 0x07ff<<1, 0x07ff<<1, cpustate->program_ram);
 		return ~0;
 	}
 
@@ -83,7 +83,7 @@ static DIRECT_UPDATE_HANDLER( dsp56k_direct_handler )
 /***************************************************************************
     MEMORY ACCESSORS
 ***************************************************************************/
-#define ROPCODE(pc)   memory_decrypted_read_word(cpustate->program, pc)
+#define ROPCODE(pc)   cpustate->direct->read_decrypted_word(pc)
 
 
 /***************************************************************************
@@ -233,11 +233,12 @@ static CPU_INIT( dsp56k )
 	//cpustate->irq_callback = irqcallback;
 	cpustate->device = device;
 	cpustate->program = device->space(AS_PROGRAM);
+	cpustate->direct = &cpustate->program->direct();
 	cpustate->data = device->space(AS_DATA);
 
 	/* Setup the direct memory handler for this CPU */
 	/* NOTE: Be sure to grab this guy and call him if you ever install another direct_update_hander in a driver! */
-	memory_set_direct_update_handler(cpustate->program, dsp56k_direct_handler);
+	const_cast<address_space *>(cpustate->program)->set_direct_update_handler(direct_update_delegate_create_static(dsp56k_direct_handler, *device->machine));
 }
 
 
@@ -290,7 +291,7 @@ static CPU_RESET( dsp56k )
 	alu_reset(cpustate);
 
 	/* HACK - Put a jump to 0x0000 at 0x0000 - this keeps the CPU locked to the instruction at address 0x0000 */
-	memory_write_word_16le(cpustate->program, 0x0000, 0x0124);
+	cpustate->program->write_word(0x0000, 0x0124);
 }
 
 
@@ -381,6 +382,46 @@ ADDRESS_MAP_END
 /**************************************************************************
  * Generic set_info/get_info
  **************************************************************************/
+enum
+{
+	// PCU
+	DSP56K_PC=1,
+	DSP56K_SR,
+	DSP56K_LC,
+	DSP56K_LA,
+	DSP56K_SP,
+	DSP56K_OMR,
+
+	// ALU
+	DSP56K_X, DSP56K_Y,
+	DSP56K_A, DSP56K_B,
+
+	// AGU
+	DSP56K_R0,DSP56K_R1,DSP56K_R2,DSP56K_R3,
+	DSP56K_N0,DSP56K_N1,DSP56K_N2,DSP56K_N3,
+	DSP56K_M0,DSP56K_M1,DSP56K_M2,DSP56K_M3,
+	DSP56K_TEMP,
+	DSP56K_STATUS,
+
+	// CPU STACK
+	DSP56K_ST0,
+	DSP56K_ST1,
+	DSP56K_ST2,
+	DSP56K_ST3,
+	DSP56K_ST4,
+	DSP56K_ST5,
+	DSP56K_ST6,
+	DSP56K_ST7,
+	DSP56K_ST8,
+	DSP56K_ST9,
+	DSP56K_ST10,
+	DSP56K_ST11,
+	DSP56K_ST12,
+	DSP56K_ST13,
+	DSP56K_ST14,
+	DSP56K_ST15
+};
+
 static CPU_SET_INFO( dsp56k )
 {
 	dsp56k_core* cpustate = get_safe_token(device);

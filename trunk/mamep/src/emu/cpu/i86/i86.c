@@ -11,8 +11,6 @@
 #include "i86priv.h"
 #include "i86.h"
 
-#include "i86mem.h"
-
 extern int i386_dasm_one(char *buffer, UINT32 eip, const UINT8 *oprom, int mode);
 
 #define VERBOSE 0
@@ -35,6 +33,7 @@ typedef struct _i8086_state i8086_state;
 struct _i8086_state
 {
 	i8086basicregs regs;
+	offs_t fetch_xor;
 	UINT32 pc;
 	UINT32 prevpc;
 	UINT32 base[4];
@@ -57,11 +56,10 @@ struct _i8086_state
 	UINT16 ip;
 	UINT32 sp;
 
-	memory_interface	mem;
-
 	legacy_cpu_device *device;
-	const address_space *program;
-	const address_space *io;
+	address_space *program;
+	direct_read_data *direct;
+	address_space *io;
 	int icount;
 
 	unsigned prefix_base;		   /* base address of the latest prefix segment */
@@ -105,7 +103,6 @@ static UINT8 parity_table[256];
 #include "table86.h"
 
 #include "instr86.c"
-#include "i86mem.c"
 #undef I8086
 
 
@@ -167,6 +164,7 @@ static CPU_INIT( i8086 )
 	cpustate->irq_callback = irqcallback;
 	cpustate->device = device;
 	cpustate->program = device->space(AS_PROGRAM);
+	cpustate->direct = &cpustate->program->direct();
 	cpustate->io = device->space(AS_IO);
 
 	/* set up the state table */
@@ -201,29 +199,27 @@ static CPU_INIT( i8086 )
 	}
 
 	i8086_state_register(device);
-	configure_memory_16bit(cpustate);
+	cpustate->fetch_xor = BYTE_XOR_LE(0);
 }
 
 static CPU_INIT( i8088 )
 {
 	i8086_state *cpustate = get_safe_token(device);
 	CPU_INIT_CALL(i8086);
-	configure_memory_8bit(cpustate);
+	cpustate->fetch_xor = 0;
 }
 
 static CPU_RESET( i8086 )
 {
 	i8086_state *cpustate = get_safe_token(device);
 	device_irq_callback save_irqcallback;
-	memory_interface save_mem;
 
 	save_irqcallback = cpustate->irq_callback;
-	save_mem = cpustate->mem;
 	memset(cpustate, 0, sizeof(*cpustate));
 	cpustate->irq_callback = save_irqcallback;
-	cpustate->mem = save_mem;
 	cpustate->device = device;
 	cpustate->program = device->space(AS_PROGRAM);
+	cpustate->direct = &cpustate->program->direct();
 	cpustate->io = device->space(AS_IO);
 
 	cpustate->sregs[CS] = 0xf000;

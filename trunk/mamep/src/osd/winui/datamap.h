@@ -80,5 +80,7 @@ void datamap_populate_all_controls(datamap *map, HWND dialog, core_options *opts
 void datamap_update_control(datamap *map, HWND dialog, core_options *opts, int dlgitem);
 void datamap_update_all_controls(datamap *map, HWND dialog, core_options *opts);
 
+//mamep: for coloring of changed elements
 const char *datamap_get_contorl_option_name(datamap *map, HWND dialog, HWND control);
+
 #endif // _DATAMAP_H_

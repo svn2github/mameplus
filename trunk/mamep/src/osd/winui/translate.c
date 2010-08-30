@@ -687,7 +687,9 @@ WCHAR *w_lang_message(int msgcat, const WCHAR *str)
 }
 
 
-#if 0 // temporary to keep compatibility
+#if 0 //temporary to keep compatibility
+#undef realloc
+#undef malloc
 
 struct mb_msg
 {
@@ -712,7 +714,7 @@ char *mb_lang_message(int msgcat, const char *str)
 	WCHAR *wstr;
 
 	wid = _Unicode(str);
-	wstr = lang_messagew(msgcat, wid, wcmp);
+	wstr = (WCHAR *)lang_messagew(msgcat, wid, wcmp);
 
 	if (wid == wstr)
 		return (char *)str;
@@ -721,9 +723,9 @@ dprintf("mb_lang_message: %s", str);
 	if (mb_msg_index == NULL)
 	{
 		mb_msg_size = 1024;
-		mb_msg_index = malloc(mb_msg_size * sizeof (*mb_msg_index));
+		mb_msg_index = (mb_msg *)malloc(mb_msg_size * sizeof (*mb_msg_index));
 		mb_msg_index[0].wstr = wstr;
-		mb_msg_index[0].mbstr = strdup(_String(wstr));
+		mb_msg_index[0].mbstr = mame_strdup(_String(wstr));
 		mb_msg_num = 1;
 
 		return mb_msg_index[0].mbstr;
@@ -737,10 +739,10 @@ dprintf("mb_lang_message: %s", str);
 	if (mb_msg_num == mb_msg_size)
 	{
 		mb_msg_size += 1024;
-		mb_msg_index = realloc(mb_msg_index, mb_msg_size * sizeof (*mb_msg_index));
+		mb_msg_index = (mb_msg *)realloc(mb_msg_index, mb_msg_size * sizeof (*mb_msg_index));
 	}
 
-	temp.mbstr = strdup(_String(wstr));
+	temp.mbstr = mame_strdup(_String(wstr));
 	mb_msg_index[mb_msg_num++] = temp;
 
 	qsort(mb_msg_index, mb_msg_num, sizeof (*mb_msg_index), mb_msg_cmp);

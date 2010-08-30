@@ -136,7 +136,7 @@ static void remove_all_source_options(void);
 #define MUIOPTION_FOLDER_FLAG					"folder_flag"
 #define MUIOPTION_USE_BROKEN_ICON				"use_broken_icon"
 #define MUIOPTION_LIST_FONT						"list_font"
-#define MUIOPTION_LIST_FONTFACE						"list_fontface"
+#define MUIOPTION_LIST_FONTFACE					"list_fontface"
 #define MUIOPTION_TEXT_COLOR					"text_color"
 #define MUIOPTION_CLONE_COLOR					"clone_color"
 #define MUIOPTION_BROKEN_COLOR					"broken_color"
@@ -158,7 +158,7 @@ static void remove_all_source_options(void);
 #define MUIOPTION_CPANEL_DIRECTORY				"cpanel_directory"
 #define MUIOPTION_PCB_DIRECTORY				    "pcb_directory"
 #ifdef USE_VIEW_PCBINFO
-#define MUIOPTION_PCBINFO_DIRECTORY				    "pcbinfo_directory"
+#define MUIOPTION_PCBINFO_DIRECTORY				"pcbinfo_directory"
 #endif /* USE_VIEW_PCBINFO */
 #define MUIOPTION_ICONS_DIRECTORY				"icons_directory"
 #define MUIOPTION_BACKGROUND_DIRECTORY			"background_directory"
@@ -385,37 +385,37 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_UI_KEY_VIEW_FOLDERS,		"KEYCODE_LALT KEYCODE_D",     0, NULL },
 	{ MUIOPTION_UI_KEY_VIEW_FULLSCREEN,		"KEYCODE_F11",                0, NULL },
 	{ MUIOPTION_UI_KEY_VIEW_PAGETAB,		"KEYCODE_LALT KEYCODE_B",     0, NULL },
-	{ MUIOPTION_UI_KEY_VIEW_PICTURE_AREA,	"KEYCODE_LALT KEYCODE_P",     0, NULL },
+	{ MUIOPTION_UI_KEY_VIEW_PICTURE_AREA,		"KEYCODE_LALT KEYCODE_P",     0, NULL },
 	{ MUIOPTION_UI_KEY_VIEW_STATUS,			"KEYCODE_LALT KEYCODE_S",     0, NULL },
         { MUIOPTION_UI_KEY_VIEW_TOOLBARS,		"KEYCODE_LALT KEYCODE_T",     0, NULL },
 
 	{ MUIOPTION_UI_KEY_VIEW_TAB_CABINET,	"KEYCODE_LALT KEYCODE_3",     0, NULL },
-	{ MUIOPTION_UI_KEY_VIEW_TAB_CPANEL,		"KEYCODE_LALT KEYCODE_6",     0, NULL },
-	{ MUIOPTION_UI_KEY_VIEW_TAB_FLYER,		"KEYCODE_LALT KEYCODE_2",     0, NULL },
-	{ MUIOPTION_UI_KEY_VIEW_TAB_HISTORY,	"KEYCODE_LALT KEYCODE_8",     0, NULL },
+        { MUIOPTION_UI_KEY_VIEW_TAB_CPANEL,	"KEYCODE_LALT KEYCODE_6",     0, NULL },
+        { MUIOPTION_UI_KEY_VIEW_TAB_FLYER,	"KEYCODE_LALT KEYCODE_2",     0, NULL },
+        { MUIOPTION_UI_KEY_VIEW_TAB_HISTORY,	"KEYCODE_LALT KEYCODE_8",     0, NULL },
 #ifdef STORY_DATAFILE
-	{ MUIOPTION_UI_KEY_VIEW_TAB_STORY,	"KEYCODE_LALT KEYCODE_9",     0, NULL },
+        { MUIOPTION_UI_KEY_VIEW_TAB_STORY,	"KEYCODE_LALT KEYCODE_9",     0, NULL },
 #endif /* STORY_DATAFILE */
-	{ MUIOPTION_UI_KEY_VIEW_TAB_MARQUEE,	"KEYCODE_LALT KEYCODE_4",     0, NULL },
-	{ MUIOPTION_UI_KEY_VIEW_TAB_SCREENSHOT,	"KEYCODE_LALT KEYCODE_1",     0, NULL },
-	{ MUIOPTION_UI_KEY_VIEW_TAB_TITLE,		"KEYCODE_LALT KEYCODE_5",     0, NULL },
-	{ MUIOPTION_UI_KEY_VIEW_TAB_PCB,		"KEYCODE_LALT KEYCODE_7",     0, NULL },
-	{ MUIOPTION_UI_KEY_QUIT,				"KEYCODE_LALT KEYCODE_Q",     0, NULL },
+        { MUIOPTION_UI_KEY_VIEW_TAB_MARQUEE,	"KEYCODE_LALT KEYCODE_4",     0, NULL },
+        { MUIOPTION_UI_KEY_VIEW_TAB_SCREENSHOT,	"KEYCODE_LALT KEYCODE_1",     0, NULL },
+        { MUIOPTION_UI_KEY_VIEW_TAB_TITLE,	"KEYCODE_LALT KEYCODE_5",     0, NULL },
+        { MUIOPTION_UI_KEY_VIEW_TAB_PCB,	"KEYCODE_LALT KEYCODE_7",     0, NULL },
+        { MUIOPTION_UI_KEY_QUIT,		"KEYCODE_LALT KEYCODE_Q",     0, NULL },
 
 	{ NULL,									NULL,       OPTION_HEADER,     "NAVIGATION JOYSTICK CODES" },
-	{ MUIOPTION_UI_JOY_UP,					"1,1,1,1",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_DOWN,				"1,1,1,2",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_UP,					"1,1,1,1",  0,                 NULL },
+	{ MUIOPTION_UI_JOY_DOWN,				"1,1,1,2",  0,                 NULL },
 	{ MUIOPTION_UI_JOY_LEFT,				"1,1,2,1",  0,                 NULL },
 	{ MUIOPTION_UI_JOY_RIGHT,				"1,1,2,2",  0,                 NULL },
-	{ MUIOPTION_UI_JOY_START,				"1,0,1,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_START,				"1,0,1,0",  0,                 NULL },
 	{ MUIOPTION_UI_JOY_PGUP,				"2,1,2,1",  0,                 NULL },
 	{ MUIOPTION_UI_JOY_PGDWN,				"2,1,2,2",  0,                 NULL },
-	{ MUIOPTION_UI_JOY_HOME,				"0,0,0,0",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_END,					"0,0,0,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_HOME,				"0,0,0,0",  0,                 NULL },
+	{ MUIOPTION_UI_JOY_END,					"0,0,0,0",  0,                 NULL },
 	{ MUIOPTION_UI_JOY_SS_CHANGE,			"2,0,3,0",  0,                 NULL },
 	{ MUIOPTION_UI_JOY_HISTORY_UP,			"2,0,4,0",  0,                 NULL },
 	{ MUIOPTION_UI_JOY_HISTORY_DOWN,		"2,0,1,0",  0,                 NULL },
-	{ MUIOPTION_UI_JOY_EXEC,				"0,0,0,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_EXEC,				"0,0,0,0",  0,                 NULL },
 
 #ifndef MESS
 	{ NULL,									NULL,       OPTION_HEADER,     "GAME STATISTICS" },
@@ -450,7 +450,7 @@ static const options_entry filterOptions[] =
 // Screen shot Page tab control text
 // these must match the order of the options flags in options.h
 // (TAB_...)
-static const WCHAR* image_tabs_long_name[MAX_TAB_TYPES] =
+static const WCHAR *const image_tabs_long_name[MAX_TAB_TYPES] =
 {
 	L"Snapshot",
 	L"Flyer",
@@ -465,7 +465,7 @@ static const WCHAR* image_tabs_long_name[MAX_TAB_TYPES] =
 #endif /* STORY_DATAFILE */
 };
 
-static const char * image_tabs_short_name[MAX_TAB_TYPES] =
+static const char *const image_tabs_short_name[MAX_TAB_TYPES] =
 {
 	"snapshot",
 	"flyer",

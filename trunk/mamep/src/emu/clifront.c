@@ -60,8 +60,11 @@ static int info_listsoftware(core_options *options, const char *gamename);
 static void romident(core_options *options, const char *filename, romident_status *status);
 static void identify_file(core_options *options, const char *name, romident_status *status);
 static void identify_data(core_options *options, const char *name, const UINT8 *data, int length, romident_status *status);
-static void namecopy(char *name_ref, const char *desc);
 static void match_roms(core_options *options, const char *hash, int length, int *found);
+static void namecopy(char *name_ref, const char *desc);
+
+//mamep: required for using -listxml to parse -driver_config
+extern int parse_ini_file(core_options *options, const char *name, int priority);
 
 
 
@@ -148,7 +151,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 		if (result != -1)
 			goto error;
 
-		//mamep: required for using -listxml with -driver_config
+		//mamep: required for using -listxml to parse -driver_config
 		options_set_string(options, OPTION_INIPATH, ".", OPTION_PRIORITY_INI);
 		parse_ini_file(options, CONFIGNAME, OPTION_PRIORITY_MAME_INI);
 
@@ -167,7 +170,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 			goto error;
 		}
 
-		//mamep: required for using -listxml with -driver_config
+		//mamep: required for using -listxml to parse -driver_config
 		options_set_string(options, OPTION_INIPATH, ".", OPTION_PRIORITY_INI);
 		parse_ini_file(options, CONFIGNAME, OPTION_PRIORITY_MAME_INI);
 
@@ -1695,31 +1698,6 @@ static void identify_data(core_options *options, const char *name, const UINT8 *
 }
 
 
-static void namecopy(char *name_ref, const char *desc)
-{
-	char name[200];
-
-	if (lang_message_is_enabled(UI_MSG_LIST))
-	{
-		strcpy(name, _LST(desc));
-		if (strstr(name," (")) *strstr(name," (") = 0;
-		sprintf(name_ref,"%s",name);
-		return;
-	}
-
-	strcpy(name,desc);
-
-	/* remove details in parenthesis */
-	if (strstr(name," (")) *strstr(name," (") = 0;
-
-	/* Move leading "The" to the end */
-	if (strncmp(name,"The ",4) == 0)
-		sprintf(name_ref,"%s, The",name+4);
-	else
-		sprintf(name_ref,"%s",name);
-}
-
-
 /*-------------------------------------------------
     match_roms - scan for a matching ROM by hash
 -------------------------------------------------*/
@@ -1754,4 +1732,29 @@ static void match_roms(core_options *options, const char *hash, int length, int 
 	}
 
 	softlist_match_roms( options, hash, length, found );
+}
+
+
+static void namecopy(char *name_ref, const char *desc)
+{
+	char name[200];
+
+	if (lang_message_is_enabled(UI_MSG_LIST))
+	{
+		strcpy(name, _LST(desc));
+		if (strstr(name," (")) *strstr(name," (") = 0;
+		sprintf(name_ref,"%s",name);
+		return;
+	}
+
+	strcpy(name,desc);
+
+	/* remove details in parenthesis */
+	if (strstr(name," (")) *strstr(name," (") = 0;
+
+	/* Move leading "The" to the end */
+	if (strncmp(name,"The ",4) == 0)
+		sprintf(name_ref,"%s, The",name+4);
+	else
+		sprintf(name_ref,"%s",name);
 }

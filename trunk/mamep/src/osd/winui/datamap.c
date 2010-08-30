@@ -107,7 +107,7 @@ static int control_operation(datamap *map, HWND dialog, core_options *opts,
 	datamap_entry *entry, datamap_callback_type callback_type);
 static void read_control(datamap *map, HWND control, core_options *opts, datamap_entry *entry, const char *option_name);
 static void populate_control(datamap *map, HWND control, core_options *opts, datamap_entry *entry, const char *option_name);
-//mamep: helper for coloring of changed elements in property page
+//mamep: for coloring of changed elements
 //static	char *tztrim(float float_value);
 
 
@@ -817,7 +817,7 @@ static	char *tztrim(float float_value) {
 }
 #endif
 
-//mamep: helper for coloring of changed elements in property page
+//mamep: for coloring of changed elements
 const char *datamap_get_contorl_option_name(datamap *map, HWND dialog, HWND control)
 {
 	int i;

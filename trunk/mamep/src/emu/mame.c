@@ -127,9 +127,8 @@ const char mame_disclaimer[] =
     FUNCTION PROTOTYPES
 ***************************************************************************/
 
-#if 0 //mamep: moved to mame.h
-static int parse_ini_file(core_options *options, const char *name, int priority);
-#endif
+//mamep: required for using -listxml to parse -driver_config
+int parse_ini_file(core_options *options, const char *name, int priority);
 
 
 
@@ -547,7 +546,7 @@ void mame_parse_ini_files(core_options *options, const game_driver *driver)
 #endif	/* MESS */
 
 #ifdef USE_IPS
-		// mamep: hack, DO NOT INHERIT IPS CONFIGURATION
+		//mamep: hack, DO NOT INHERIT IPS CONFIGURATION
 		options_set_string(options, OPTION_IPS, NULL, OPTION_PRIORITY_INI);
 #endif /* USE_IPS */		
 
@@ -560,6 +559,7 @@ void mame_parse_ini_files(core_options *options, const game_driver *driver)
     parse_ini_file - parse a single INI file
 -------------------------------------------------*/
 
+//mamep: required for using -listxml to parse -driver_config
 int parse_ini_file(core_options *options, const char *name, int priority)
 {
 	file_error filerr;

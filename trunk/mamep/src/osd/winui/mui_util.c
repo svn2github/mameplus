@@ -99,7 +99,7 @@ void __cdecl ErrorMsg(const char* fmt, ...)
 
 	vsprintf(buf, fmt, va);
 
-	MessageBox(GetActiveWindow(), _Unicode(buf), TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
+	MessageBox(GetActiveWindow(), _Unicode(buf), TEXT(MAMEUINAME), MB_OK | MB_ICONERROR);
 
 	strcpy(buf2, MAMEUINAME ": ");
 	strcat(buf2,buf);

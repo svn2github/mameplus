@@ -494,7 +494,7 @@ int GetUIJoyExec(int joycodeIndex);
 void SetUIJoyExec(int joycodeIndex, int val);
 
 WCHAR *GetExecCommand(void);
-void SetExecCommand(WCHAR *cmd);
+void SetExecCommand(WCHAR* cmd);
 
 int GetExecWait(void);
 void SetExecWait(int wait);

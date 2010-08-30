@@ -151,9 +151,9 @@ INLINE UINT16 RW(sh2_state *sh2, offs_t A)
 		return sh2_internal_r(sh2->internal, (A & 0x1fc)>>2, 0xffff << (((~A) & 2)*8)) >> (((~A) & 2)*8);
 
 	if (A >= 0xc0000000)
-		return memory_read_word_32be(sh2->program, A);
+		return sh2->program->read_word(A);
 
-	return memory_read_word_32be(sh2->program, A & AM);
+	return sh2->program->read_word(A & AM);
 }
 
 INLINE UINT32 RL(sh2_state *sh2, offs_t A)
@@ -162,9 +162,9 @@ INLINE UINT32 RL(sh2_state *sh2, offs_t A)
 		return sh2_internal_r(sh2->internal, (A & 0x1fc)>>2, 0xffffffff);
 
 	if (A >= 0xc0000000)
-		return memory_read_dword_32be(sh2->program, A);
+		return sh2->program->read_dword(A);
 
-	return memory_read_dword_32be(sh2->program, A & AM);
+	return sh2->program->read_dword(A & AM);
 }
 
 /*-------------------------------------------------
@@ -827,8 +827,8 @@ static CPU_RESET( sh2 )
 	sh2->m = m;
 	memset(sh2->m, 0, 0x200);
 
-	sh2->pc = memory_read_dword_32be(sh2->program, 0);
-	sh2->r[15] = memory_read_dword_32be(sh2->program, 4);
+	sh2->pc = sh2->program->read_dword(0);
+	sh2->r[15] = sh2->program->read_dword(4);
 	sh2->sr = I;
 
 	sh2->internal_irq_level = -1;
@@ -925,7 +925,7 @@ static void code_compile_block(sh2_state *sh2, UINT8 mode, offs_t pc)
 	drcuml_block *block;
 	jmp_buf errorbuf;
 
-	profiler_mark_start(PROFILER_DRC_COMPILE);
+	g_profiler.start(PROFILER_DRC_COMPILE);
 
 	/* get a description of this sequence */
 	desclist = drcfe_describe_code(sh2->drcfe, pc);
@@ -977,7 +977,7 @@ static void code_compile_block(sh2_state *sh2, UINT8 mode, offs_t pc)
 		}
 
 		/* validate this code block if we're not pointing into ROM */
-		if (memory_get_write_ptr(sh2->program, seqhead->physpc) != NULL)
+		if (sh2->program->get_write_ptr(seqhead->physpc) != NULL)
 			generate_checksum_block(sh2, block, &compiler, seqhead, seqlast);
 
 		/* label this instruction, if it may be jumped to locally */
@@ -1016,7 +1016,7 @@ static void code_compile_block(sh2_state *sh2, UINT8 mode, offs_t pc)
 
 	/* end the sequence */
 	drcuml_block_end(block);
-	profiler_mark_end();
+	g_profiler.stop();
 }
 
 /*-------------------------------------------------
@@ -1515,7 +1515,7 @@ static void generate_checksum_block(sh2_state *sh2, drcuml_block *block, compile
 	{
 		if (!(seqhead->flags & OPFLAG_VIRTUAL_NOOP))
 		{
-			void *base = memory_decrypted_read_ptr(sh2->program, SH2_CODE_XOR(seqhead->physpc));
+			void *base = sh2->direct->read_decrypted_ptr(SH2_CODE_XOR(seqhead->physpc));
 			UML_LOAD(block, IREG(0), base, IMM(0), WORD);							// load    i0,base,word
 			UML_CMP(block, IREG(0), IMM(seqhead->opptr.w[0]));						// cmp     i0,*opptr
 			UML_EXHc(block, IF_NE, sh2->nocode, IMM(epc(seqhead)));		// exne    nocode,seqhead->pc
@@ -1529,20 +1529,20 @@ static void generate_checksum_block(sh2_state *sh2, drcuml_block *block, compile
 		for (curdesc = seqhead->next; curdesc != seqlast->next; curdesc = curdesc->next)
 			if (!(curdesc->flags & OPFLAG_VIRTUAL_NOOP))
 			{
-				base = memory_decrypted_read_ptr(sh2->program, SH2_CODE_XOR(curdesc->physpc));
+				base = sh2->direct->read_decrypted_ptr(SH2_CODE_XOR(curdesc->physpc));
 				UML_LOAD(block, IREG(0), curdesc->opptr.w, IMM(0), WORD);			// load    i0,*opptr,0,word
 				UML_CMP(block, IREG(0), IMM(curdesc->opptr.w[0]));					// cmp     i0,*opptr
 				UML_EXHc(block, IF_NE, sh2->nocode, IMM(epc(seqhead)));	// exne    nocode,seqhead->pc
 			}
 #else
 		UINT32 sum = 0;
-		void *base = memory_decrypted_read_ptr(sh2->program, SH2_CODE_XOR(seqhead->physpc));
+		void *base = sh2->direct->read_decrypted_ptr(SH2_CODE_XOR(seqhead->physpc));
 		UML_LOAD(block, IREG(0), base, IMM(0), WORD);								// load    i0,base,word
 		sum += seqhead->opptr.w[0];
 		for (curdesc = seqhead->next; curdesc != seqlast->next; curdesc = curdesc->next)
 			if (!(curdesc->flags & OPFLAG_VIRTUAL_NOOP))
 			{
-				base = memory_decrypted_read_ptr(sh2->program, SH2_CODE_XOR(curdesc->physpc));
+				base = sh2->direct->read_decrypted_ptr(SH2_CODE_XOR(curdesc->physpc));
 				UML_LOAD(block, IREG(1), base, IMM(0), WORD);						// load    i1,*opptr,word
 				UML_ADD(block, IREG(0), IREG(0), IREG(1));							// add     i0,i0,i1
 				sum += curdesc->opptr.w[0];

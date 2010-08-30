@@ -617,7 +617,7 @@ static BOOL Directories_OnEndLabelEdit(HWND hDlg, NMHDR* pNMHDR)
 		}
 		else
 		{
-			if (MessageBox(NULL, _UIW(TEXT("Directory does not exist, continue anyway?")), TEXT_MAMEUINAME, MB_OKCANCEL) == IDOK)
+			if (MessageBox(NULL, _UIW(TEXT("Directory does not exist, continue anyway?")), TEXT(MAMEUINAME), MB_OKCANCEL) == IDOK)
 				bResult = TRUE;
 		}
 	}

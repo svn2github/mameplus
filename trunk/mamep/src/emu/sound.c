@@ -445,7 +445,7 @@ static TIMER_CALLBACK( sound_update )
 
 	VPRINTF(("sound_update\n"));
 
-	profiler_mark_start(PROFILER_SOUND);
+	g_profiler.start(PROFILER_SOUND);
 
 	leftmix = global->leftmix;
 	rightmix = global->rightmix;
@@ -518,7 +518,7 @@ static TIMER_CALLBACK( sound_update )
 	/* update the streamer */
 	streams_update(machine);
 
-	profiler_mark_end();
+	g_profiler.stop();
 }
 
 
@@ -622,17 +622,16 @@ device_t *speaker_device_config::alloc_device(running_machine &machine) const
 
 
 //-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
+//  static_set_position - configuration helper to
+//  set the speaker position
 //-------------------------------------------------
 
-void speaker_device_config::device_config_complete()
+void speaker_device_config::static_set_position(device_config *device, double x, double y, double z)
 {
-	// move inline data into its final home
-	m_x = static_cast<double>(static_cast<INT32>(m_inline_data[INLINE_X])) / (double)(1 << 24);
-	m_y = static_cast<double>(static_cast<INT32>(m_inline_data[INLINE_Y])) / (double)(1 << 24);
-	m_z = static_cast<double>(static_cast<INT32>(m_inline_data[INLINE_Z])) / (double)(1 << 24);
+	speaker_device_config *speaker = downcast<speaker_device_config *>(device);
+	speaker->m_x = x;
+	speaker->m_y = y;
+	speaker->m_z = z;
 }
 
 

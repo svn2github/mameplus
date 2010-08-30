@@ -107,28 +107,55 @@ device_t *eeprom_device_config::alloc_device(running_machine &machine) const
 
 
 //-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
+//  static_set_interface - configuration helper
+//  to set the interface
 //-------------------------------------------------
 
-void eeprom_device_config::device_config_complete()
+void eeprom_device_config::static_set_interface(device_config *device, const eeprom_interface &interface)
 {
-	// extract inline configuration from raw data
-	const eeprom_interface *intf = reinterpret_cast<const eeprom_interface *>(m_inline_data[INLINE_INTERFACE]);
-	m_default_data = reinterpret_cast<const UINT8 *>(m_inline_data[INLINE_DATAPTR]);
-	m_default_data_size = m_inline_data[INLINE_DATASIZE];
-	m_default_value = m_inline_data[INLINE_DEFVALUE];
+	eeprom_device_config *eeprom = downcast<eeprom_device_config *>(device);
+	*static_cast<eeprom_interface *>(eeprom) = interface;
 
-	// inherit a copy of the static data
-	if (intf != NULL)
-		*static_cast<eeprom_interface *>(this) = *intf;
-
-	// now describe our address space
-	if (m_data_bits == 8)
-		m_space_config = address_space_config("eeprom", ENDIANNESS_BIG, 8,  m_address_bits, 0, *ADDRESS_MAP_NAME(eeprom_map8));
+	// describe our address space
+	if (eeprom->m_data_bits == 8)
+		eeprom->m_space_config = address_space_config("eeprom", ENDIANNESS_BIG, 8,  eeprom->m_address_bits, 0, *ADDRESS_MAP_NAME(eeprom_map8));
 	else
-		m_space_config = address_space_config("eeprom", ENDIANNESS_BIG, 16, m_address_bits * 2, 0, *ADDRESS_MAP_NAME(eeprom_map16));
+		eeprom->m_space_config = address_space_config("eeprom", ENDIANNESS_BIG, 16, eeprom->m_address_bits * 2, 0, *ADDRESS_MAP_NAME(eeprom_map16));
+}
+
+
+//-------------------------------------------------
+//  static_set_default_data - configuration helpers
+//  to set the default data
+//-------------------------------------------------
+
+void eeprom_device_config::static_set_default_data(device_config *device, const UINT8 *data, UINT32 size)
+{
+	eeprom_device_config *eeprom = downcast<eeprom_device_config *>(device);
+if (eeprom->m_data_bits != 8) mame_printf_warning("16-bit EEPROM set with 8-bit data\n");
+//  assert(eeprom->m_data_bits == 8);
+	eeprom->m_default_data = data;
+	eeprom->m_default_data_size = size;
+}
+
+void eeprom_device_config::static_set_default_data(device_config *device, const UINT16 *data, UINT32 size)
+{
+	eeprom_device_config *eeprom = downcast<eeprom_device_config *>(device);
+if (eeprom->m_data_bits != 16) mame_printf_warning("8-bit EEPROM set with 16-bit data\n");
+//  assert(eeprom->m_data_bits == 16);
+	eeprom->m_default_data = reinterpret_cast<const UINT8 *>(data);
+	eeprom->m_default_data_size = size;
+}
+
+
+//-------------------------------------------------
+//  static_set_default_value - configuration helper
+//  to set the default value
+//-------------------------------------------------
+
+void eeprom_device_config::static_set_default_value(device_config *device, UINT16 value)
+{
+	downcast<eeprom_device_config *>(device)->m_default_value = 0x10000 | value;
 }
 
 
@@ -141,12 +168,7 @@ bool eeprom_device_config::device_validity_check(const game_driver &driver) cons
 {
 	bool error = false;
 
-	if (m_inline_data[INLINE_INTERFACE] == 0)
-	{
-		mame_printf_error("%s: %s eeprom device '%s' did not specify an interface\n", driver.source_file, driver.name, tag());
-		error = true;
-	}
-	else if (m_data_bits != 8 && m_data_bits != 16)
+	if (m_data_bits != 8 && m_data_bits != 16)
 	{
 		mame_printf_error("%s: %s eeprom device '%s' specified invalid data width %d\n", driver.source_file, driver.name, tag(), m_data_bits);
 		error = true;
@@ -239,14 +261,14 @@ void eeprom_device::nvram_default()
 		default_value = m_config.m_default_value;
 	for (offs_t offs = 0; offs < eeprom_length; offs++)
 		if (m_config.m_data_bits == 8)
-			memory_write_byte(m_addrspace[0], offs, default_value);
+			m_addrspace[0]->write_byte(offs, default_value);
 		else
-			memory_write_word(m_addrspace[0], offs * 2, default_value);
+			m_addrspace[0]->write_word(offs * 2, default_value);
 
 	/* handle hard-coded data from the driver */
 	if (m_config.m_default_data != NULL)
 		for (offs_t offs = 0; offs < m_config.m_default_data_size; offs++)
-			memory_write_byte(m_addrspace[0], offs, m_config.m_default_data[offs]);
+			m_addrspace[0]->write_byte(offs, m_config.m_default_data[offs]);
 
 	/* populate from a memory region if present */
 	if (m_region != NULL)
@@ -260,9 +282,9 @@ void eeprom_device::nvram_default()
 
 		for (offs_t offs = 0; offs < eeprom_length; offs++)
 			if (m_config.m_data_bits == 8)
-				memory_write_byte(m_addrspace[0], offs, m_region->u8(offs));
+				m_addrspace[0]->write_byte(offs, m_region->u8(offs));
 			else
-				memory_write_word(m_addrspace[0], offs * 2, m_region->u16(offs));
+				m_addrspace[0]->write_word(offs * 2, m_region->u16(offs));
 	}
 }
 
@@ -280,7 +302,7 @@ void eeprom_device::nvram_read(mame_file &file)
 	UINT8 *buffer = auto_alloc_array(&m_machine, UINT8, eeprom_bytes);
 	mame_fread(&file, buffer, eeprom_bytes);
 	for (offs_t offs = 0; offs < eeprom_bytes; offs++)
-		memory_write_byte(m_addrspace[0], offs, buffer[offs]);
+		m_addrspace[0]->write_byte(offs, buffer[offs]);
 	auto_free(&m_machine, buffer);
 }
 
@@ -297,7 +319,7 @@ void eeprom_device::nvram_write(mame_file &file)
 
 	UINT8 *buffer = auto_alloc_array(&m_machine, UINT8, eeprom_bytes);
 	for (offs_t offs = 0; offs < eeprom_bytes; offs++)
-		buffer[offs] = memory_read_byte(m_addrspace[0], offs);
+		buffer[offs] = m_addrspace[0]->read_byte(offs);
 	mame_fwrite(&file, buffer, eeprom_bytes);
 	auto_free(&m_machine, buffer);
 }
@@ -391,9 +413,9 @@ void eeprom_device::set_clock_line(int state)
 				{
 					m_read_address = (m_read_address + 1) & ((1 << m_config.m_address_bits) - 1);
 					if (m_config.m_data_bits == 16)
-						m_data_bits = memory_read_word(m_addrspace[0], m_read_address * 2);
+						m_data_bits = m_addrspace[0]->read_word(m_read_address * 2);
 					else
-						m_data_bits = memory_read_byte(m_addrspace[0], m_read_address);
+						m_data_bits = m_addrspace[0]->read_byte(m_read_address);
 					m_clock_count = 0;
 logerror("EEPROM read %04x from address %02x\n",m_data_bits,m_read_address);
 				}
@@ -439,9 +461,9 @@ void eeprom_device::write(int bit)
 			if (m_serial_buffer[i] == '1') address |= 1;
 		}
 		if (m_config.m_data_bits == 16)
-			m_data_bits = memory_read_word(m_addrspace[0], address * 2);
+			m_data_bits = m_addrspace[0]->read_word(address * 2);
 		else
-			m_data_bits = memory_read_byte(m_addrspace[0], address);
+			m_data_bits = m_addrspace[0]->read_byte(address);
 		m_read_address = address;
 		m_clock_count = 0;
 		m_sending = 1;
@@ -463,9 +485,9 @@ logerror("EEPROM erase address %02x\n",address);
 		if (m_locked == 0)
 		{
 			if (m_config.m_data_bits == 16)
-				memory_write_word(m_addrspace[0], address * 2, 0x0000);
+				m_addrspace[0]->write_word(address * 2, 0x0000);
 			else
-				memory_write_byte(m_addrspace[0], address, 0x00);
+				m_addrspace[0]->write_byte(address, 0x00);
 		}
 		else
 logerror("Error: EEPROM is m_locked\n");
@@ -492,9 +514,9 @@ logerror("EEPROM write %04x to address %02x\n",data,address);
 		if (m_locked == 0)
 		{
 			if (m_config.m_data_bits == 16)
-				memory_write_word(m_addrspace[0], address * 2, data);
+				m_addrspace[0]->write_word(address * 2, data);
 			else
-				memory_write_byte(m_addrspace[0], address, data);
+				m_addrspace[0]->write_byte(address, data);
 		}
 		else
 logerror("Error: EEPROM is m_locked\n");

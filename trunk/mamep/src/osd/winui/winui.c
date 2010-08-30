@@ -24,10 +24,6 @@
   Nov/Dec 1998 - Mike Haaland
 
 ***************************************************************************/
-#ifdef _MSC_VER
-#undef NONAMELESSUNION
-#define NONAMELESSUNION
-#endif
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
@@ -2053,7 +2049,7 @@ static void SetMainTitle(void)
 	WCHAR buffer[100];
 
 	sscanf(build_version,"%s",version);
-	swprintf(buffer, TEXT("%s Plus! %s"), TEXT(MAMENAME), _Unicode(version));
+	swprintf(buffer, TEXT("%s Plus! %s"), TEXT(MAMENAME), _Unicode(GetVersionString()));
 	SetWindowText(hMain, buffer);
 }
 
@@ -2211,7 +2207,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	/* USE LANGUAGE LIST */
 	build_sort_readings();
 
-	g_mame32_message = RegisterWindowMessage(TEXT_MAMEUINAME);
+	g_mame32_message = RegisterWindowMessage(TEXT(MAMEUINAME));
 	g_bDoBroadcast = GetBroadcast();
 
 	HelpInit();
@@ -6550,7 +6546,7 @@ static void CLIB_DECL MameMessageBoxUTF8(const char *fmt, ...)
 
 	va_start(va, fmt);
 	vsprintf(buf, fmt, va);
-	MessageBox(GetMainWindow(), _UTF8Unicode(buf), TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
+	MessageBox(GetMainWindow(), _UTF8Unicode(buf), TEXT(MAMEUINAME), MB_OK | MB_ICONERROR);
 	va_end(va);
 }
 
@@ -6561,7 +6557,7 @@ static void CLIB_DECL MameMessageBox(LPCTSTR fmt, ...)
 
 	va_start(va, fmt);
 	_vstprintf(buf, fmt, va);
-	MessageBox(GetMainWindow(), buf, TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
+	MessageBox(GetMainWindow(), buf, TEXT(MAMEUINAME), MB_OK | MB_ICONERROR);
 	va_end(va);
 }
 
@@ -7781,7 +7777,7 @@ static void RemoveGameCustomFolder(int driver_index)
 			return;
 		}
 	}
-	MessageBox(GetMainWindow(), _UIW(TEXT("Error searching for custom folder")), TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
+	MessageBox(GetMainWindow(), _UIW(TEXT("Error searching for custom folder")), TEXT(MAMEUINAME), MB_OK | MB_ICONERROR);
 
 }
 

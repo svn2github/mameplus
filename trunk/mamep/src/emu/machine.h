@@ -158,11 +158,28 @@ typedef tagged_list<region_info> region_list;
 
 
 // base class for all driver data structures
-class driver_data_t
+class driver_data_t : public bindable_object
 {
+	friend class running_machine;
+
 public:
 	driver_data_t(running_machine &machine);
 	virtual ~driver_data_t();
+
+	virtual void machine_start();
+	virtual void machine_reset();
+
+	virtual void sound_start();
+	virtual void sound_reset();
+
+	virtual void palette_init(const UINT8 *color_prom);
+	virtual void video_start();
+	virtual void video_reset();
+	virtual bool video_update(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect);
+	virtual void video_eof();
+
+	virtual void pre_save();
+	virtual void post_load();
 
 	running_machine &	m_machine;
 };
@@ -271,7 +288,7 @@ public:
 
 
 // description of the currently-running machine
-class running_machine
+class running_machine : public bindable_object
 {
 	DISABLE_COPYING(running_machine);
 
@@ -298,7 +315,7 @@ public:
 	machine_phase phase() const { return m_current_phase; }
 	bool paused() const { return m_paused || (m_current_phase != MACHINE_PHASE_RUNNING); }
 	bool scheduled_event_pending() const { return m_exit_pending || m_hard_reset_pending; }
-	bool save_or_load_pending() const { return (m_saveload_pending_file.len() != 0); }
+	bool save_or_load_pending() const { return (m_saveload_pending_file); }
 	bool exit_pending() const { return m_exit_pending; }
 	bool new_driver_pending() const { return (m_new_driver_pending != NULL); }
 	const char *new_driver_name() const { return m_new_driver_pending->name; }
@@ -349,6 +366,7 @@ public:
 	device_t *			cpu[8];				// CPU array for hiscore support
 #endif /* USE_HISCORE */
 	cpu_device *			firstcpu;			// first CPU (allows for quick iteration via typenext)
+	address_space *			m_nonspecific_space;// a dummy address_space used for legacy compatibility
 
 	// game-related information
 	const game_driver *		gamedrv;			// points to the definition of the game machine
@@ -408,6 +426,8 @@ private:
 	void set_saveload_filename(const char *filename);
 	void fill_systime(system_time &systime, time_t t);
 	void handle_saveload();
+	static STATE_PRESAVE( pre_save_static );
+	static STATE_POSTLOAD( post_load_static );
 
 	static TIMER_CALLBACK( static_soft_reset );
 	void soft_reset();

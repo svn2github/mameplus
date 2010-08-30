@@ -1508,7 +1508,7 @@ static void snes_refresh_scanline( running_machine *machine, bitmap_t *bitmap, U
 	UINT16 prev_colour = 0;
 	int blurring = input_port_read_safe(machine, "OPTIONS", 0) & 0x01;
 
-	profiler_mark_start(PROFILER_VIDEO);
+	g_profiler.start(PROFILER_VIDEO);
 
 	if (snes_ppu.screen_disabled) /* screen is forced blank */
 		for (x = 0; x < SNES_SCR_WIDTH * 2; x++)
@@ -1556,7 +1556,7 @@ static void snes_refresh_scanline( running_machine *machine, bitmap_t *bitmap, U
 #ifdef SNES_LAYER_DEBUG
 		if (snes_dbg_video(machine, curline))
 		{
-			profiler_mark_end();
+			g_profiler.stop();
 			return;
 		}
 
@@ -1654,7 +1654,7 @@ static void snes_refresh_scanline( running_machine *machine, bitmap_t *bitmap, U
 		}
 	}
 
-	profiler_mark_end();
+	g_profiler.stop();
 }
 
 VIDEO_START( snes )
@@ -2246,8 +2246,8 @@ WRITE8_HANDLER( snes_ppu_write )
 		case INIDISP:	/* Initial settings for screen */
 			if ((snes_ppu.screen_disabled & 0x80) && (!(data & 0x80))) //a 1->0 force blank transition causes a reset OAM address
 			{
-				memory_write_byte(space, OAMADDL, snes_ppu.oam.saved_address_low);
-				memory_write_byte(space, OAMADDH, snes_ppu.oam.saved_address_high);
+				space->write_byte(OAMADDL, snes_ppu.oam.saved_address_low);
+				space->write_byte(OAMADDH, snes_ppu.oam.saved_address_high);
 				snes_ppu.oam.first_sprite = snes_ppu.oam.priority_rotation ? (snes_ppu.oam.address >> 1) & 127 : 0;
 			}
 			snes_ppu.screen_disabled = data & 0x80;

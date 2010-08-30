@@ -135,9 +135,6 @@ void mame_printf_debug(const char *format, ...) ATTR_PRINTF(1,2);
 /* parse the configured INI files */
 void mame_parse_ini_files(core_options *options, const game_driver *driver);
 
-//mamep: moved from mame.c
-/* required for using -listxml with -driver_config */
-int parse_ini_file(core_options *options, const char *name, int priority);
 
 // pop-up a user visible message
 void CLIB_DECL popmessage(const char *format,...) ATTR_PRINTF(1,2);

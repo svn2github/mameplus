@@ -55,9 +55,7 @@
 #include "translate.h"
 
 #ifdef _MSC_VER
-#if _MSC_VER > 1200
-#define HAS_DUMMYUNIONNAME
-#endif
+#define snprintf _snprintf
 #endif
 
 #define MAX_EXTRA_FOLDERS 256
@@ -898,7 +896,7 @@ void CreateCPUFolders(int parent_index)
 	LPTREEFOLDER device_folders[512];
 	LPTREEFOLDER folder;
 	machine_config *config = NULL;
-	const machine_config_token *last_tokens = NULL;
+	machine_config_constructor last_tokens = NULL;
 	const device_config_execute_interface *device;
 	int nFolder = numFolders;
 
@@ -960,7 +958,7 @@ void CreateSoundFolders(int parent_index)
 	LPTREEFOLDER device_folders[512];
 	LPTREEFOLDER folder;
 	machine_config *config = NULL;
-	const machine_config_token *last_tokens = NULL;
+	machine_config_constructor last_tokens = NULL;
 	const device_config_sound_interface *device;
 	int nFolder = numFolders;
 
@@ -2611,7 +2609,7 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const TCHAR *new_name)
 
 		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Error while renaming custom file %s to %s")),
 				 filename, new_filename);
-		MessageBox(GetMainWindow(), buf, TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
+		MessageBox(GetMainWindow(), buf, TEXT(MAMEUINAME), MB_OK | MB_ICONERROR);
 	}
 	return retval;
 }
@@ -2621,7 +2619,7 @@ void AddToCustomFolder(LPTREEFOLDER lpFolder,int driver_index)
 	if ((lpFolder->m_dwFlags & F_CUSTOM) == 0)
 	{
 	    MessageBox(GetMainWindow(),_UIW(TEXT("Unable to add game to non-custom folder")),
-				   TEXT_MAMEUINAME,MB_OK | MB_ICONERROR);
+				   TEXT(MAMEUINAME),MB_OK | MB_ICONERROR);
 		return;
 	}
 
@@ -2638,7 +2636,7 @@ void RemoveFromCustomFolder(LPTREEFOLDER lpFolder,int driver_index)
     if ((lpFolder->m_dwFlags & F_CUSTOM) == 0)
 	{
 	    MessageBox(GetMainWindow(),_UIW(TEXT("Unable to remove game from non-custom folder")),
-				   TEXT_MAMEUINAME,MB_OK | MB_ICONERROR);
+				   TEXT(MAMEUINAME),MB_OK | MB_ICONERROR);
 		return;
 	}
 
@@ -2681,7 +2679,7 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 
 	if (extra_folder == NULL || root_folder == NULL)
 	{
-	   MessageBox(GetMainWindow(), _UIW(TEXT("Error finding custom file name to save")),	TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
+	   MessageBox(GetMainWindow(), _UIW(TEXT("Error finding custom file name to save")),	TEXT(MAMEUINAME), MB_OK | MB_ICONERROR);
 	   return FALSE;
 	}
 	/* "folder\title.ini" */
@@ -2754,7 +2752,7 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 	{
 		TCHAR buf[500];
 		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Error while saving custom file %s")), fname);
-		MessageBox(GetMainWindow(), buf, TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
+		MessageBox(GetMainWindow(), buf, TEXT(MAMEUINAME), MB_OK | MB_ICONERROR);
 	}
 	return !error;
 }

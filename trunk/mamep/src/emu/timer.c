@@ -371,9 +371,9 @@ void timer_execute_timers(running_machine *machine)
 		if (was_enabled && timer->callback != NULL)
 		{
 			LOG(("Timer %s:%d[%s] fired (expire=%s)\n", timer->file, timer->line, timer->func, attotime_string(timer->expire, 9)));
-			profiler_mark_start(PROFILER_TIMER_CALLBACK);
+			g_profiler.start(PROFILER_TIMER_CALLBACK);
 			(*timer->callback)(machine, timer->ptr, timer->param);
-			profiler_mark_end();
+			g_profiler.stop();
 		}
 
 		/* clear the callback timer global */
@@ -612,7 +612,7 @@ INLINE emu_timer *_timer_alloc_common(running_machine *machine, timer_fired_func
 	/* if we're not temporary, register ourselves with the save state system */
 	if (!temp)
 	{
-//mamep: disabled check for cps3 redeartn
+//mamep: disabled check for cps3 game redeartn
 //		if (!state_save_registration_allowed(machine))
 //			fatalerror("timer_alloc() called after save state registration closed! (file %s, line %d)\n", file, line);
 		timer_register_save(timer);
@@ -944,8 +944,8 @@ timer_device_config::timer_device_config(const machine_config &mconfig, const ch
 	  m_type(TIMER_TYPE_GENERIC),
 	  m_callback(NULL),
 	  m_ptr(NULL),
-	  m_start_delay(0),
-	  m_period(0),
+	  m_start_delay(attotime_zero),
+	  m_period(attotime_zero),
 	  m_param(0),
 	  m_screen(NULL),
 	  m_first_vpos(0),
@@ -976,23 +976,93 @@ device_t *timer_device_config::alloc_device(running_machine &machine) const
 
 
 //-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
+//  static_configure_generic - configuration
+//  helper to set up a generic timer
 //-------------------------------------------------
 
-void timer_device_config::device_config_complete()
+void timer_device_config::static_configure_generic(device_config *device, timer_device_fired_func callback)
 {
-	// move inline data into its final home
-	m_type = static_cast<timer_type>(m_inline_data[INLINE_TYPE]);
-	m_callback = reinterpret_cast<timer_device_fired_func>(m_inline_data[INLINE_CALLBACK]);
-	m_ptr = reinterpret_cast<void *>(m_inline_data[INLINE_PTR]);
-	m_start_delay = static_cast<UINT64>(m_inline_data[INLINE_DELAY]);
-	m_period = static_cast<UINT64>(m_inline_data[INLINE_PERIOD]);
-	m_param = static_cast<UINT32>(m_inline_data[INLINE_PARAM]);
-	m_screen = reinterpret_cast<const char *>(m_inline_data[INLINE_SCREEN]);
-	m_first_vpos = static_cast<INT16>(m_inline_data[INLINE_FIRST_VPOS]);
-	m_increment = static_cast<INT16>(m_inline_data[INLINE_INCREMENT]);
+	timer_device_config *timer = downcast<timer_device_config *>(device);
+	timer->m_type = TIMER_TYPE_GENERIC;
+	timer->m_callback = callback;
+}
+
+
+//-------------------------------------------------
+//  static_configure_periodic - configuration
+//  helper to set up a periodic timer
+//-------------------------------------------------
+
+void timer_device_config::static_configure_periodic(device_config *device, timer_device_fired_func callback, attotime period)
+{
+	timer_device_config *timer = downcast<timer_device_config *>(device);
+	timer->m_type = TIMER_TYPE_PERIODIC;
+	timer->m_callback = callback;
+	timer->m_period = period;
+}
+
+
+//-------------------------------------------------
+//  static_configure_scanline - configuration
+//  helper to set up a scanline timer
+//-------------------------------------------------
+
+void timer_device_config::static_configure_scanline(device_config *device, timer_device_fired_func callback, const char *screen, int first_vpos, int increment)
+{
+	timer_device_config *timer = downcast<timer_device_config *>(device);
+	timer->m_type = TIMER_TYPE_SCANLINE;
+	timer->m_callback = callback;
+	timer->m_screen = screen;
+	timer->m_first_vpos = first_vpos;
+	timer->m_increment = increment;
+}
+
+
+//-------------------------------------------------
+//  static_set_callback - configuration helper
+//  to set the callback
+//-------------------------------------------------
+
+void timer_device_config::static_set_callback(device_config *device, timer_device_fired_func callback)
+{
+	timer_device_config *timer = downcast<timer_device_config *>(device);
+	timer->m_callback = callback;
+}
+
+
+//-------------------------------------------------
+//  static_set_start_delay - configuration helper
+//  to set the starting delay
+//-------------------------------------------------
+
+void timer_device_config::static_set_start_delay(device_config *device, attotime delay)
+{
+	timer_device_config *timer = downcast<timer_device_config *>(device);
+	timer->m_start_delay = delay;
+}
+
+
+//-------------------------------------------------
+//  static_set_param - configuration helper to set
+//  the integer parameter
+//-------------------------------------------------
+
+void timer_device_config::static_set_param(device_config *device, int param)
+{
+	timer_device_config *timer = downcast<timer_device_config *>(device);
+	timer->m_param = param;
+}
+
+
+//-------------------------------------------------
+//  static_set_ptr - configuration helper to set
+//  the pointer parameter
+//-------------------------------------------------
+
+void timer_device_config::static_set_ptr(device_config *device, void *ptr)
+{
+	timer_device_config *timer = downcast<timer_device_config *>(device);
+	timer->m_ptr = ptr;
 }
 
 
@@ -1009,16 +1079,16 @@ bool timer_device_config::device_validity_check(const game_driver &driver) const
 	switch (m_type)
 	{
 		case TIMER_TYPE_GENERIC:
-			if (m_screen != NULL || m_first_vpos != 0 || m_start_delay != 0)
+			if (m_screen != NULL || m_first_vpos != 0 || attotime_compare(m_start_delay, attotime_zero) != 0)
 				mame_printf_warning("%s: %s generic timer '%s' specified parameters for a scanline timer\n", driver.source_file, driver.name, tag());
-			if (m_period != 0 || m_start_delay != 0)
+			if (attotime_compare(m_period, attotime_zero) != 0 || attotime_compare(m_start_delay, attotime_zero) != 0)
 				mame_printf_warning("%s: %s generic timer '%s' specified parameters for a periodic timer\n", driver.source_file, driver.name, tag());
 			break;
 
 		case TIMER_TYPE_PERIODIC:
 			if (m_screen != NULL || m_first_vpos != 0)
 				mame_printf_warning("%s: %s periodic timer '%s' specified parameters for a scanline timer\n", driver.source_file, driver.name, tag());
-			if (m_period <= 0)
+			if (attotime_compare(m_period, attotime_zero) <= 0)
 			{
 				mame_printf_error("%s: %s periodic timer '%s' specified invalid period\n", driver.source_file, driver.name, tag());
 				error = true;
@@ -1026,7 +1096,7 @@ bool timer_device_config::device_validity_check(const game_driver &driver) const
 			break;
 
 		case TIMER_TYPE_SCANLINE:
-			if (m_period != 0 || m_start_delay != 0)
+			if (attotime_compare(m_period, attotime_zero) != 0 || attotime_compare(m_start_delay, attotime_zero) != 0)
 				mame_printf_warning("%s: %s scanline timer '%s' specified parameters for a periodic timer\n", driver.source_file, driver.name, tag());
 			if (m_param != 0)
 				mame_printf_warning("%s: %s scanline timer '%s' specified parameter which is ignored\n", driver.source_file, driver.name, tag());
@@ -1105,14 +1175,14 @@ void timer_device::device_reset()
 		{
 			// convert the period into attotime
 			attotime period = attotime_never;
-			if (m_config.m_period > 0)
+			if (attotime_compare(m_config.m_period, attotime_zero) > 0)
 			{
-				period = UINT64_ATTOTIME_TO_ATTOTIME(m_config.m_period);
+				period = m_config.m_period;
 
 				// convert the start_delay into attotime
 				attotime start_delay = attotime_zero;
-				if (m_config.m_start_delay > 0)
-					start_delay = UINT64_ATTOTIME_TO_ATTOTIME(m_config.m_start_delay);
+				if (attotime_compare(m_config.m_start_delay, attotime_zero) > 0)
+					start_delay = m_config.m_start_delay;
 
 				// allocate and start the backing timer
 				timer_adjust_periodic(m_timer, start_delay, m_config.m_param, period);
