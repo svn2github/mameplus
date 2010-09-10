@@ -14,6 +14,9 @@
 
 #include <ctype.h>
 
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
 
 
 /***************************************************************************
@@ -375,7 +378,7 @@ core_options *mame_options_init(const options_entry *entries)
 	/* we need to dynamically add options when the device name is parsed */
 	options_set_option_callback(opts, OPTION_GAMENAME, image_driver_name_callback);
 
-#ifdef MAMEMESS
+#ifdef MESS
 	mess_options_init(opts);
 #endif /* MESS */
 

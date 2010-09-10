@@ -271,7 +271,7 @@ $(LIBSOUND): $(SOUNDOBJS)
 # additional dependencies
 #-------------------------------------------------
 
-$(EMUOBJ)/rendfont.o:		$(EMUOBJ)/uismall11.fh $(EMUOBJ)/uismall14.fh $(EMUOBJ)/uicmd11.fh $(EMUOBJ)/uicmd14.fh
+$(EMUOBJ)/rendfont.o:	$(EMUOBJ)/uismall11.fh $(EMUOBJ)/uismall14.fh $(EMUOBJ)/uicmd11.fh $(EMUOBJ)/uicmd14.fh
 
 $(EMUOBJ)/video.o:	$(EMUSRC)/rendersw.c
 $(EMUVIDEO)/v9938.o:	$(EMUSRC)/video/v9938mod.c

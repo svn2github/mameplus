@@ -1119,8 +1119,8 @@ static int info_listsoftware(core_options *options, const char *gamename)
 										fprintf( out, "\t\t\t<part name=\"%s\"", part->name );
 										if ( part->interface_ )
 											fprintf( out, " interface=\"%s\"", part->interface_ );
-//											if ( part->feature )
-//												fprintf( out, " features=\"%s\"", part->feature );
+//                                          if ( part->feature )
+//                                              fprintf( out, " features=\"%s\"", part->feature );
 										fprintf( out, ">\n");
 
 										/* TODO: display rom region information */
@@ -1192,8 +1192,8 @@ static int info_listsoftware(core_options *options, const char *gamename)
 
 
 /*-------------------------------------------------
-    softlist_match_roms - scan for a matching 
-	software ROM by hash
+    softlist_match_roms - scan for a matching
+    software ROM by hash
 -------------------------------------------------*/
 static void softlist_match_roms(core_options *options, const char *hash, int length, int *found)
 {

@@ -41,12 +41,12 @@
 #define OPTION_READCONFIG			"readconfig"
 #define OPTION_WRITECONFIG			"writeconfig"
 #ifdef DRIVER_SWITCH
-#define OPTION_DRIVER_CONFIG			"driver_config"
+#define OPTION_DRIVER_CONFIG		"driver_config"
 #endif /* DRIVER_SWITCH */
 
 /* core search path options */
 #define OPTION_ROMPATH				"rompath"
-#ifdef MESS
+#ifdef MAMEMESS
 #define OPTION_HASHPATH				"hashpath"
 #endif
 #define OPTION_SAMPLEPATH			"samplepath"
@@ -125,7 +125,7 @@
 #define OPTION_GAMMA				"gamma"
 #define OPTION_PAUSE_BRIGHTNESS		"pause_brightness"
 #ifdef USE_SCALE_EFFECTS
-#define OPTION_SCALE_EFFECT		"scale_effect"
+#define OPTION_SCALE_EFFECT			"scale_effect"
 #endif /* USE_SCALE_EFFECTS */
 
 /* core vector options */
@@ -178,13 +178,13 @@
 #define OPTION_CONFIRM_QUIT			"confirm_quit"
 #endif /* CONFIRM_QUIT */
 #ifdef PLAYBACK_END_PAUSE
-#define OPTION_PLAYBACK_END_PAUSE		"playback_end_pause"
+#define OPTION_PLAYBACK_END_PAUSE	"playback_end_pause"
 #endif /* PLAYBACK_END_PAUSE */
 #ifdef TRANS_UI
-#define OPTION_UI_TRANSPARENCY			"ui_transparency"
+#define OPTION_UI_TRANSPARENCY		"ui_transparency"
 #endif /* TRANS_UI */
 #ifdef USE_IPS
-#define OPTION_IPS				"ips"
+#define OPTION_IPS					"ips"
 #endif /* USE_IPS */
 
 #ifdef UI_COLOR_DISPLAY
@@ -195,20 +195,20 @@
 #define OPTION_CURSOR_HOVER_TEXT		"cursor_hov_text"
 #define OPTION_CURSOR_HOVER_BG			"cursor_hov_background"
 #define OPTION_BUTTON_RED			"button_red"
-#define OPTION_BUTTON_YELLOW			"button_yellow"
+#define OPTION_BUTTON_YELLOW		"button_yellow"
 #define OPTION_BUTTON_GREEN			"button_green"
 #define OPTION_BUTTON_BLUE			"button_blue"
-#define OPTION_BUTTON_PURPLE			"button_purple"
+#define OPTION_BUTTON_PURPLE		"button_purple"
 #define OPTION_BUTTON_PINK			"button_pink"
 #define OPTION_BUTTON_AQUA			"button_aqua"
-#define OPTION_BUTTON_SILVER			"button_silver"
+#define OPTION_BUTTON_SILVER		"button_silver"
 #define OPTION_BUTTON_NAVY			"button_navy"
 #define OPTION_BUTTON_LIME			"button_lime"
 #endif /* UI_COLOR_DISPLAY */
 
 /* core language options */
 #define OPTION_LANGUAGE				"language"
-#define OPTION_USE_LANG_LIST			"use_lang_list"
+#define OPTION_USE_LANG_LIST		"use_lang_list"
 
 /* image device options */
 #define OPTION_ADDED_DEVICE_OPTIONS	"added_device_options"
