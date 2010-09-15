@@ -140,7 +140,7 @@ Labirintus / Vonalhúzó
 
 # 2053
 Maze / Outline *Mature*
-Labirintus / Vonalhúzó 	*felnõtt*
+Labirintus / Vonalhúzó *felnõtt*
 
 # 2056
 Maze / Shooter Large

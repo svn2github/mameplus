@@ -22,7 +22,7 @@
  BAD
  错误
 
-# emu/sound.c: 738
+# emu/sound.c: 612
  Ch.%d
  声道 %d
 
@@ -622,7 +622,7 @@ CORE COMMANDS
 CORE CONFIGURATION OPTIONS
 核心设置选项
 
-# emu/emuopts.c: 178
+# emu/emuopts.c: 175
 CORE DEBUGGING OPTIONS
 核心调试选项
 
@@ -630,19 +630,19 @@ CORE DEBUGGING OPTIONS
 CORE FILENAME OPTIONS
 核心文件名选项
 
-# emu/emuopts.c: 167
+# emu/emuopts.c: 164
 CORE INPUT AUTOMATIC ENABLE OPTIONS
 核心输入自动启用选项
 
-# emu/emuopts.c: 149
+# emu/emuopts.c: 146
 CORE INPUT OPTIONS
 核心输入选项
 
-# emu/emuopts.c: 225
+# emu/emuopts.c: 222
 CORE LANGUAGE OPTIONS
 核心语言选项
 
-# emu/emuopts.c: 187
+# emu/emuopts.c: 184
 CORE MISC OPTIONS
 核心杂项选项
 
@@ -650,7 +650,7 @@ CORE MISC OPTIONS
 CORE OUTPUT DIRECTORY OPTIONS
 核心输出目录选项
 
-# emu/emuopts.c: 206
+# emu/emuopts.c: 203
 CORE PALETTE OPTIONS
 核心色盘选项
 
@@ -4162,15 +4162,15 @@ Sound
 Spanish
 西班牙文
 
-# emu/sound/speaker.c: 440, 441 emu/sound.c: 595
+# emu/sound/speaker.c: 440, 441 emu/sound.c: 469
 Speaker
 喇叭
 
-# emu/sound.c: 736
+# emu/sound.c: 610
 Speaker '%s': %s '%s'
 喇叭 '%s': %s '%s'
 
-# emu/sound.c: 672
+# emu/sound.c: 546
 Speaker \"%s\" - max = %d (gain *= %f) - %d%% samples clipped\n
 喇叭 \"%s\" - max = %d (gain *= %f) - %d%% samples clipped\n
 
@@ -4754,10 +4754,6 @@ all available info on driver in XML format
 amount to scale the screen brightness when paused
 暂停时的画面亮度
 
-# emu/inptport.c: 2169
-analog joystick
-类比游戏杆
-
 # emu/emucore.h: 206
 assert: %s:%d: %s
 判定原因: %s:%d: %s
@@ -4766,7 +4762,7 @@ assert: %s:%d: %s
 auto%2d/%d
 自动%2d/%d
 
-# emu/emuopts.c: 195
+# emu/emuopts.c: 192
 automatic pause when playback ended
 播放结束时自动暂停
 
@@ -4782,47 +4778,47 @@ automatically rotate screen clockwise 90 degrees if vertical
 automatically rotate screen counterclockwise 90 degrees if vertical
 如果是垂直画面，自动逆时针旋转画面 90 度
 
-# emu/emuopts.c: 218
+# emu/emuopts.c: 215
 button color (aqua)
 按钮色 (青)
 
-# emu/emuopts.c: 215
+# emu/emuopts.c: 212
 button color (blue)
 按钮色 (蓝)
 
-# emu/emuopts.c: 214
+# emu/emuopts.c: 211
 button color (green)
 按钮色 (绿)
 
-# emu/emuopts.c: 221
+# emu/emuopts.c: 218
 button color (lime)
 按钮色 (橙)
 
-# emu/emuopts.c: 220
+# emu/emuopts.c: 217
 button color (navy)
 按钮色 (深蓝)
 
-# emu/emuopts.c: 217
+# emu/emuopts.c: 214
 button color (pink)
 按钮色 (粉红)
 
-# emu/emuopts.c: 216
+# emu/emuopts.c: 213
 button color (purple)
 按钮色 (紫)
 
-# emu/emuopts.c: 212
+# emu/emuopts.c: 209
 button color (red)
 按钮色 (红)
 
-# emu/emuopts.c: 219
+# emu/emuopts.c: 216
 button color (silver)
 按钮色 (银)
 
-# emu/emuopts.c: 213
+# emu/emuopts.c: 210
 button color (yellow)
 按钮色 (黄)
 
-# emu/emuopts.c: 160
+# emu/emuopts.c: 157
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 游戏杆的中心反应死区，在此范围的变化将被忽略 (0.0 - 1.0)
 
@@ -4838,7 +4834,7 @@ compare files with known MAME roms
 controls the speed of gameplay, relative to realtime; smaller numbers are slower
 控制游戏运行速度，即时相应; 数字越小将越慢
 
-# emu/emuopts.c: 158
+# emu/emuopts.c: 155
 convert lightgun button 2 into offscreen reload
 转换光枪按钮 2 为射击画面外区域重新填补
 
@@ -4854,19 +4850,19 @@ create the default configuration file
 crop artwork to game screen size
 裁切装饰图至游戏原始画面大小
 
-# emu/emuopts.c: 211
+# emu/emuopts.c: 208
 cursor background color (floating)
 光标背景颜色 (浮动)
 
-# emu/emuopts.c: 209
+# emu/emuopts.c: 206
 cursor background color (selected)
 光标背景颜色 (选定)
 
-# emu/emuopts.c: 210
+# emu/emuopts.c: 207
 cursor text color (floating)
 光标文字颜色 (浮动)
 
-# emu/emuopts.c: 208
+# emu/emuopts.c: 205
 cursor text color (selected)
 光标文字颜色 (选定)
 
@@ -4881,10 +4877,6 @@ default game screen contrast correction
 # emu/emuopts.c: 126
 default game screen gamma correction
 默认游戏画面灰度值修正
-
-# emu/info.c: 172 emu/inptport.c: 2172
-dial
-方向盘
 
 # emu/emuopts.c: 60
 directory to save configurations
@@ -4922,7 +4914,7 @@ directory to save screenshots
 directory to save states
 保存进度文件的目录
 
-# emu/emuopts.c: 180
+# emu/emuopts.c: 177
 display additional diagnostic information
 显示附加的诊断信息
 
@@ -4934,35 +4926,35 @@ display running parameters
 driver sourcefile
 驱动来源文件
 
-# emu/emuopts.c: 171
+# emu/emuopts.c: 168
 enable (none|keyboard|mouse|lightgun|joystick) if a dial control is present
 启用 (none|keyboard|mouse|lightgun|joystick) 于方向盘控制
 
-# emu/emuopts.c: 173
+# emu/emuopts.c: 170
 enable (none|keyboard|mouse|lightgun|joystick) if a lightgun control is present
 启用 (none|keyboard|mouse|lightgun|joystick) 于光枪控制
 
-# emu/emuopts.c: 175
+# emu/emuopts.c: 172
 enable (none|keyboard|mouse|lightgun|joystick) if a mouse control is present
 启用 (none|keyboard|mouse|lightgun|joystick) 于鼠标控制
 
-# emu/emuopts.c: 168
+# emu/emuopts.c: 165
 enable (none|keyboard|mouse|lightgun|joystick) if a paddle control is present
 启用 (none|keyboard|mouse|lightgun|joystick) 于操纵杆控制
 
-# emu/emuopts.c: 170
+# emu/emuopts.c: 167
 enable (none|keyboard|mouse|lightgun|joystick) if a pedal control is present
 启用 (none|keyboard|mouse|lightgun|joystick) 于踏板控制
 
-# emu/emuopts.c: 174
+# emu/emuopts.c: 171
 enable (none|keyboard|mouse|lightgun|joystick) if a positional control is present
 启用 (none|keyboard|mouse|lightgun|joystick) 于定位器控制
 
-# emu/emuopts.c: 172
+# emu/emuopts.c: 169
 enable (none|keyboard|mouse|lightgun|joystick) if a trackball control is present
 启用 (none|keyboard|mouse|lightgun|joystick) 于轨迹球控制
 
-# emu/emuopts.c: 169
+# emu/emuopts.c: 166
 enable (none|keyboard|mouse|lightgun|joystick) if an analog joystick control is present
 启用 (none|keyboard|mouse|lightgun|joystick) 于类比游戏杆
 
@@ -4982,19 +4974,19 @@ enable backdrops if artwork is enabled and available
 enable bezels if artwork is enabled and available
 启用外框图 (如果装饰图已启用且可用)
 
-# emu/emuopts.c: 189
+# emu/emuopts.c: 186
 enable cheat subsystem
 启用游戏作弊码引擎子系统
 
-# emu/emuopts.c: 150
+# emu/emuopts.c: 147
 enable coin lockouts to actually lock out coins
 启用投币锁定来实际关闭投币装置
 
-# emu/emuopts.c: 153
+# emu/emuopts.c: 150
 enable joystick input
 启用游戏杆输入
 
-# emu/emuopts.c: 154
+# emu/emuopts.c: 151
 enable lightgun input
 启用光枪输入
 
@@ -5002,7 +4994,7 @@ enable lightgun input
 enable loading of configuration files
 启用载入设置文件
 
-# emu/emuopts.c: 152
+# emu/emuopts.c: 149
 enable mouse input
 启用鼠标输入
 
@@ -5010,11 +5002,11 @@ enable mouse input
 enable overlays if artwork is enabled and available
 启用前景图 (如果装饰图已启用且可用)
 
-# emu/emuopts.c: 155
+# emu/emuopts.c: 152
 enable separate input from each keyboard device (if present)
 启用各个键盘设备分开输入 (如果存在)
 
-# emu/emuopts.c: 156
+# emu/emuopts.c: 153
 enable separate input from each mouse device (if present)
 启用各个鼠标设备分开输入 (如果存在)
 
@@ -5026,7 +5018,7 @@ enable sleeping, which gives time back to other applications when idle
 enable sound output
 启用声音输输出
 
-# emu/emuopts.c: 157
+# emu/emuopts.c: 154
 enable steadykey support
 启用多键同时输入支持
 
@@ -5038,11 +5030,11 @@ enable the use of external samples if available
 enable throttling to keep game running in sync with real time
 启用限制速度以维持游戏即时同步运行
 
-# emu/emuopts.c: 182
+# emu/emuopts.c: 179
 enable/disable debugger
 启用/禁用 调试器
 
-# emu/emuopts.c: 227
+# emu/emuopts.c: 224
 enable/disable local language game list
 启用/禁用 当地语言游戏列表
 
@@ -5050,7 +5042,7 @@ enable/disable local language game list
 enable/disable volume auto adjust
 启用/禁用 音量自动调整
 
-# emu/emuopts.c: 161
+# emu/emuopts.c: 158
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 游戏杆的末端轴饱和度范围，在此范围的变化将被忽略 (0.0 - 1.0)
 
@@ -5062,7 +5054,7 @@ error: invalid value for language: %s\nUse %s\n
 error: invalid value for palette: %s\n
 错误: 无效的 palette 值: %s\n
 
-# emu/emuopts.c: 159
+# emu/emuopts.c: 156
 explicit joystick map, or auto to auto-select
 详细设置游戏杆映射，或设为 auto 自动选择
 
@@ -5086,7 +5078,7 @@ frame:%ld
 game
 游戏
 
-# emu/emuopts.c: 179
+# emu/emuopts.c: 176
 generate an error.log file
 生成 error.log 文件
 
@@ -5094,7 +5086,7 @@ generate an error.log file
 high score database name
 游戏高分数据名
 
-# emu/emuopts.c: 231
+# emu/emuopts.c: 228
 image device-specific options have been added
 镜像特定装置选项已经添加
 
@@ -5106,7 +5098,7 @@ image enhancement effect
 invalid
 无效
 
-# emu/emuopts.c: 201
+# emu/emuopts.c: 198
 ips datafile name
 IPS 数据文件名
 
@@ -5122,13 +5114,9 @@ is best available\n
 is good\n
 正确\n
 
-# emu/emuopts.c: 181
+# emu/emuopts.c: 178
 keep calling video updates while in pause
 暂停期间持续更新主画面视频
-
-# emu/emuopts.h: 146 emu/info.c: 172 emu/inptport.c: 2170, 2218, 2221 
-lightgun
-光枪
 
 # emu/clifront.c: 101
 list available devices
@@ -5158,7 +5146,7 @@ load
 loaded
 加载
 
-# emu/emuopts.c: 207
+# emu/emuopts.c: 204
 main background color
 主背景颜色
 
@@ -5193,10 +5181,6 @@ or
 # emu/emuopts.c: 90
 override of the default snapshot/movie naming; %g == gamename, %i == index
 指定屏幕快照/录像命名方式; %g == 游戏名称, %i == 索引编号
-
-# emu/info.c: 172 emu/inptport.c: 2168
-paddle
-操纵杆
 
 # emu/emuopts.c: 42
 path to ROMsets and hard disk images
@@ -5246,10 +5230,6 @@ path to samplesets
 paused
 已暂停
 
-# emu/info.c: 172 emu/inptport.c: 2171
-pedal
-踏板
-
 # emu/clifront.c: 80
 perform driver validation on all game drivers
 运行全部游戏驱动的驱动检查
@@ -5262,15 +5242,11 @@ playback an input file
 playing
 正在运行
 
-# emu/inptport.c: 2174
-positional
-定位
-
-# emu/emuopts.c: 151
+# emu/emuopts.c: 148
 preconfigure for specified controller
 特定控制器的预先配置
 
-# emu/emuopts.c: 192
+# emu/emuopts.c: 189
 quit game with confirmation
 离开游戏时先确认
 
@@ -5350,15 +5326,15 @@ scale effect: %s\n
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 scale_effect \"%s\" 无法支持 15 位和 32 位的色深。已禁用图像增强。
 
-# emu/emuopts.c: 183
+# emu/emuopts.c: 180
 script for debugger
 调试器脚本
 
-# emu/emuopts.c: 188
+# emu/emuopts.c: 185
 select the system BIOS to use
 选择要使用的系统 BIOS
 
-# emu/emuopts.c: 226
+# emu/emuopts.c: 223
 select translation language
 选择翻译语言
 
@@ -5406,7 +5382,7 @@ RAM 大小 (如果驱动支援)
 skip %d/%d
 帧数 %d/%d
 
-# emu/emuopts.c: 190
+# emu/emuopts.c: 187
 skip displaying the information screen at startup
 启动时跳过显示信息画面
 
@@ -5418,11 +5394,11 @@ sound
 sound volume in decibels (-32 min, 0 max)
 音量分贝 (最小 -32，最大 0)
 
-# emu/emuopts.c: 163
+# emu/emuopts.c: 160
 specifies the key used to toggle between full and partial UI mode
 指定用在介于全部到部分菜单的按键
 
-# emu/emuopts.c: 162
+# emu/emuopts.c: 159
 specifies whether to use a natural keyboard or not
 指定是否使用自然键盘
 
@@ -5442,11 +5418,7 @@ stopped
 switch drivers
 切换驱动
 
-# emu/info.c: 172 emu/inptport.c: 2173 
-trackball
-轨迹球
-
-# emu/emuopts.c: 198
+# emu/emuopts.c: 195
 transparency in-game UI [0-255]
 菜单背景透明度 [0-255]
 
@@ -5458,7 +5430,7 @@ unable to open log file
 use antialiasing when drawing vectors
 使用抗锯齿描绘矢量
 
-# emu/emuopts.c: 184
+# emu/emuopts.c: 181
 use the internal debugger for debugging
 调试时使用内部调试程序
 

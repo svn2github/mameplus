@@ -578,7 +578,7 @@ COMANDOS DO NÚCLEO
 CORE CONFIGURATION OPTIONS
 OPÇÕES DE CONFIGURAÇÃO DO NÚCLEO
 
-# emu/emuopts.c: 178
+# emu/emuopts.c: 175
 CORE DEBUGGING OPTIONS
 OPÇÕES DE DEPURAÇÃO DO NÚCLEO
 
@@ -586,19 +586,19 @@ OPÇÕES DE DEPURAÇÃO DO NÚCLEO
 CORE FILENAME OPTIONS
 OPÇÕES DE NOME DE ARQUIVO DO NÚCLEO
 
-# emu/emuopts.c: 167
+# emu/emuopts.c: 164
 CORE INPUT AUTOMATIC ENABLE OPTIONS
 OPÇÕES DE HABILITAÇÃO AUTOMÁTICA DE ENTRADA DO NÚCLEO
 
-# emu/emuopts.c: 149
+# emu/emuopts.c: 146
 CORE INPUT OPTIONS
 OPÇÕES DE ENTRADA DO NÚCLEO
 
-# emu/emuopts.c: 225
+# emu/emuopts.c: 222
 CORE LANGUAGE OPTIONS
 OPÇÕES DE LINGUAGEM DO NÚCLEO
 
-# emu/emuopts.c: 187
+# emu/emuopts.c: 184
 CORE MISC OPTIONS
 OUTRAS OPÇÕES DO NÚCLEO
 
@@ -606,7 +606,7 @@ OUTRAS OPÇÕES DO NÚCLEO
 CORE OUTPUT DIRECTORY OPTIONS
 OPÇÕES DE DIRETÓRIO DE SAÍDA DO NÚCLEO
 
-# emu/emuopts.c: 206
+# emu/emuopts.c: 203
 CORE PALETTE OPTIONS
 OPÇÕES DE PALETA DO NÚCLEO
 
@@ -3816,7 +3816,7 @@ Interface de Usuário Próximo Grupo
 
 # emu/inpttype.h: 664
 UI Page Down
-Interface de Usuário Avançar Página	
+Interface de Usuário Avançar Página
 
 # emu/inpttype.h: 663
 UI Page Up
@@ -4062,10 +4062,6 @@ toda a informação disponível no driver em formato XML
 amount to scale the screen brightness when paused
 igualar à escala o brilho de tela quando pausado
 
-# emu/inptport.c: 2169
-analog joystick
-joystick analógico
-
 # emu/emucore.h: 206
 assert: %s:%d: %s
 afirmar: %s:%d: %s
@@ -4074,7 +4070,7 @@ afirmar: %s:%d: %s
 auto%2d/%d
 automático%2d/%d
 
-# emu/emuopts.c: 195
+# emu/emuopts.c: 192
 automatic pause when playback ended
 pausar automaticamente quando finalizar reprodução
 
@@ -4090,47 +4086,47 @@ rotacionar tela automaticamente no sentido horário 90 graus, se vertical
 automatically rotate screen counterclockwise 90 degrees if vertical
 rotacionar tela automaticamente no sentido anti-horário 90 graus, se vertical
 
-# emu/emuopts.c: 218
+# emu/emuopts.c: 215
 button color (aqua)
 cor do botão (azul marinho)
 
-# emu/emuopts.c: 215
+# emu/emuopts.c: 212
 button color (blue)
 cor do botão (azul)
 
-# emu/emuopts.c: 214
+# emu/emuopts.c: 211
 button color (green)
 cor do botão (verde)
 
-# emu/emuopts.c: 221
+# emu/emuopts.c: 218
 button color (lime)
 cor do botão (verde limão)
 
-# emu/emuopts.c: 220
+# emu/emuopts.c: 217
 button color (navy)
 cor do botão (azul naval)
 
-# emu/emuopts.c: 217
+# emu/emuopts.c: 214
 button color (pink)
 cor do botão (rosa)
 
-# emu/emuopts.c: 216
+# emu/emuopts.c: 213
 button color (purple)
 cor do botão (roxo)
 
-# emu/emuopts.c: 212
+# emu/emuopts.c: 209
 button color (red)
 cor do botão (vermelho)
 
-# emu/emuopts.c: 219
+# emu/emuopts.c: 216
 button color (silver)
 cor do botão (prata)
 
-# emu/emuopts.c: 213
+# emu/emuopts.c: 210
 button color (yellow)
 color do botão (amarelo)
 
-# emu/emuopts.c: 160
+# emu/emuopts.c: 157
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 centralizar o alcance da zona morta para o joystick onde a mudança é ignorada (0.0 centro, 1.0 fim)
 
@@ -4146,7 +4142,7 @@ comparar arquivos com ROMs conhecidas do MAME
 controls the speed of gameplay, relative to realtime; smaller numbers are slower
 controla a velocidade da jogabilidade, relativo ao tempo real; número menores indicam lentidão
 
-# emu/emuopts.c: 158
+# emu/emuopts.c: 155
 convert lightgun button 2 into offscreen reload
 converter o botão 2 da pistola laser em recarregamento fora da tela
 
@@ -4169,10 +4165,6 @@ correção padrão de contraste da tela do jogo
 # emu/emuopts.c: 126
 default game screen gamma correction
 correção padrão de gama da tela
-
-# emu/info.c: 172 emu/inptport.c: 2172
-dial
-dial
 
 # emu/emuopts.c: 60
 directory to save configurations
@@ -4210,7 +4202,7 @@ diretório para salvar capturas de tela
 directory to save states
 diretório para salvar posições
 
-# emu/emuopts.c: 180
+# emu/emuopts.c: 177
 display additional diagnostic information
 mostrar informações de diagnóstico adicionais
 
@@ -4238,11 +4230,11 @@ habilitar backdrops se artwork estiver habilitado e disponível
 enable bezels if artwork is enabled and available
 habilitar bezels se artwork estiver habilitado e disponível
 
-# emu/emuopts.c: 189
+# emu/emuopts.c: 186
 enable cheat subsystem
 habilitar sub-sistema de trapaça
 
-# emu/emuopts.c: 154
+# emu/emuopts.c: 151
 enable lightgun input
 habilitar entrada de pistola laser
 
@@ -4250,7 +4242,7 @@ habilitar entrada de pistola laser
 enable loading of configuration files
 habilitar carregamento de arquivos de configuração
 
-# emu/emuopts.c: 152
+# emu/emuopts.c: 149
 enable mouse input
 habilitar entrada de mouse
 
@@ -4258,11 +4250,11 @@ habilitar entrada de mouse
 enable overlays if artwork is enabled and available
 habilitar overlays se artwork estiver habilitado e disponível
 
-# emu/emuopts.c: 155
+# emu/emuopts.c: 152
 enable separate input from each keyboard device (if present)
 habilitar entrada separada de cada dispositivo de teclado (se presente)
 
-# emu/emuopts.c: 156
+# emu/emuopts.c: 153
 enable separate input from each mouse device (if present)
 habilitar entrada separadas de cada dispositivo de mouse (se presente)
 
@@ -4274,7 +4266,7 @@ habilitar auto-desligamento, dando tempo para voltar a outros aplicativos quando
 enable sound output
 habilitar saída de som
 
-# emu/emuopts.c: 157
+# emu/emuopts.c: 154
 enable steadykey support
 habilitar suporte para teclas de aderência
 
@@ -4286,11 +4278,11 @@ habilitar o uso de amostras de som externas, se disponível
 enable throttling to keep game running in sync with real time
 habilitar descaleração para fazer o jogo rodar sincronizado com o tempo real
 
-# emu/emuopts.c: 182
+# emu/emuopts.c: 179
 enable/disable debugger
 habilitar/desabilitar depurador
 
-# emu/emuopts.c: 227
+# emu/emuopts.c: 224
 enable/disable local language game list
 habilitar/desabilitar idioma local na lista de jogos
 
@@ -4298,7 +4290,7 @@ habilitar/desabilitar idioma local na lista de jogos
 enable/disable volume auto adjust
 habilitar/desabilitar auto ajuste de volume
 
-# emu/emuopts.c: 161
+# emu/emuopts.c: 158
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 final de alcance de saturação de eixo para o joystick onde a mudança é ignorada (0.0 centro, 1.0 fim)
 
@@ -4310,7 +4302,7 @@ erro: valor inválido para idioma: %s\nUse %s\n
 error: invalid value for palette: %s\n
 erro: valor da paleta inválido: %s\n
 
-# emu/emuopts.c: 159
+# emu/emuopts.c: 156
 explicit joystick map, or auto to auto-select
 Indique mapa do joystick, or auto para seleção automática
 
@@ -4330,7 +4322,7 @@ gira a tela de ponta-cabeça
 game
 jogo
 
-# emu/emuopts.c: 179
+# emu/emuopts.c: 176
 generate an error.log file
 gerar um arquivo error.log
 
@@ -4346,7 +4338,7 @@ efeito de melhoramento da imagem
 invalid
 inválido
 
-# emu/emuopts.c: 201
+# emu/emuopts.c: 198
 ips datafile name
 nome do datafile ips
 
@@ -4361,10 +4353,6 @@ is best available\n
 # emu/clifront.c: 956, 1365
 is good\n
 é bom\n
-
-# emu/emuopts.h: 146 emu/info.c: 172 emu/inptport.c: 2170, 2218, 2221 
-lightgun
-pistola laser
 
 # emu/clifront.c: 101
 list available devices
@@ -4402,10 +4390,6 @@ nome de arquivo opcional para gravar um arquivo WAV da sessão atual
 or
 ou
 
-# emu/info.c: 172 emu/inptport.c: 2168
-paddle
-paddle
-
 # emu/emuopts.c: 42
 path to ROMsets and hard disk images
 caminho para conjuntos de ROMs e imagens de disco rígido
@@ -4442,10 +4426,6 @@ caminho para conjuntos de amostras de som
 paused
 pausado
 
-# emu/info.c: 172 emu/inptport.c: 2171
-pedal
-pedal
-
 # emu/clifront.c: 80
 perform driver validation on all game drivers
 fazer validação de driver em todos os drivers de jogo
@@ -4458,15 +4438,11 @@ reproduzir um arquivo de input
 playing
 jogando
 
-# emu/inptport.c: 2174
-positional
-posicional
-
-# emu/emuopts.c: 151
+# emu/emuopts.c: 148
 preconfigure for specified controller
 pre-configurar para controlador específico
 
-# emu/emuopts.c: 192
+# emu/emuopts.c: 189
 quit game with confirmation
 sair do jogo com confirmação
 
@@ -4530,15 +4506,15 @@ posição salva para carregar
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 scale_effect \"%s\" não suporta ambos bpp de 15 e 32. efeito de escala está desabilitado.
 
-# emu/emuopts.c: 183
+# emu/emuopts.c: 180
 script for debugger
 script para depurador
 
-# emu/emuopts.c: 188
+# emu/emuopts.c: 185
 select the system BIOS to use
 selecione o BIOS de sistema a ser usado
 
-# emu/emuopts.c: 226
+# emu/emuopts.c: 223
 select translation language
 selecione idioma de tradução
 
@@ -4582,7 +4558,7 @@ tamanho de RAM (se suportado pelo driver)
 skip %d/%d
 pular %d/%d
 
-# emu/emuopts.c: 190
+# emu/emuopts.c: 187
 skip displaying the information screen at startup
 não mostrar a tela de informação ao iniciar
 
@@ -4602,11 +4578,7 @@ parado
 switch drivers
 trocar drivers
 
-# emu/info.c: 172 emu/inptport.c: 2173 
-trackball
-trackball
-
-# emu/emuopts.c: 198
+# emu/emuopts.c: 195
 transparency in-game UI [0-255]
 transparência de fundo da Interface de Usuário [0-255]
 
@@ -4626,7 +4598,7 @@ escreve configuração no (driver).ini ao sair
 year, manufacturer and full name
 ano, fabricante e nome completo
 
-# emu/sound.c: 738
+# emu/sound.c: 612
  Ch.%d
 
 
@@ -5454,15 +5426,15 @@ Software
 Software lists
 
 
-# emu/sound/speaker.c: 440, 441 emu/sound.c: 595
+# emu/sound/speaker.c: 440, 441 emu/sound.c: 469
 Speaker
 
 
-# emu/sound.c: 736
+# emu/sound.c: 610
 Speaker '%s': %s '%s'
 
 
-# emu/sound.c: 672
+# emu/sound.c: 546
 Speaker \"%s\" - max = %d (gain *= %f) - %d%% samples clipped\n
 
 
@@ -5606,59 +5578,59 @@ With LEDs
 create burn-in snapshots for each screen
 
 
-# emu/emuopts.c: 211
+# emu/emuopts.c: 208
 cursor background color (floating)
 
 
-# emu/emuopts.c: 209
+# emu/emuopts.c: 206
 cursor background color (selected)
 
 
-# emu/emuopts.c: 210
+# emu/emuopts.c: 207
 cursor text color (floating)
 
 
-# emu/emuopts.c: 208
+# emu/emuopts.c: 205
 cursor text color (selected)
 
 
-# emu/emuopts.c: 171
+# emu/emuopts.c: 168
 enable (none|keyboard|mouse|lightgun|joystick) if a dial control is present
 
 
-# emu/emuopts.c: 173
+# emu/emuopts.c: 170
 enable (none|keyboard|mouse|lightgun|joystick) if a lightgun control is present
 
 
-# emu/emuopts.c: 175
+# emu/emuopts.c: 172
 enable (none|keyboard|mouse|lightgun|joystick) if a mouse control is present
 
 
-# emu/emuopts.c: 168
+# emu/emuopts.c: 165
 enable (none|keyboard|mouse|lightgun|joystick) if a paddle control is present
 
 
-# emu/emuopts.c: 170
+# emu/emuopts.c: 167
 enable (none|keyboard|mouse|lightgun|joystick) if a pedal control is present
 
 
-# emu/emuopts.c: 174
+# emu/emuopts.c: 171
 enable (none|keyboard|mouse|lightgun|joystick) if a positional control is present
 
 
-# emu/emuopts.c: 172
+# emu/emuopts.c: 169
 enable (none|keyboard|mouse|lightgun|joystick) if a trackball control is present
 
 
-# emu/emuopts.c: 169
+# emu/emuopts.c: 166
 enable (none|keyboard|mouse|lightgun|joystick) if an analog joystick control is present
 
 
-# emu/emuopts.c: 150
+# emu/emuopts.c: 147
 enable coin lockouts to actually lock out coins
 
 
-# emu/emuopts.c: 153
+# emu/emuopts.c: 150
 enable joystick input
 
 
@@ -5666,11 +5638,11 @@ enable joystick input
 frame:%ld 
 
 
-# emu/emuopts.c: 231
+# emu/emuopts.c: 228
 image device-specific options have been added
 
 
-# emu/emuopts.c: 181
+# emu/emuopts.c: 178
 keep calling video updates while in pause
 
 
@@ -5690,7 +5662,7 @@ load
 loaded
 
 
-# emu/emuopts.c: 207
+# emu/emuopts.c: 204
 main background color
 
 
@@ -5734,11 +5706,11 @@ scale effect: %s\n
 show \"brothers\", or other drivers from same sourcefile
 
 
-# emu/emuopts.c: 163
+# emu/emuopts.c: 160
 specifies the key used to toggle between full and partial UI mode
 
 
-# emu/emuopts.c: 162
+# emu/emuopts.c: 159
 specifies whether to use a natural keyboard or not
 
 
@@ -5750,7 +5722,7 @@ specify snapshot/movie resolution (<width>x<height>) or 'auto' to use minimal si
 specify snapshot/movie view or 'internal' to use internal pixel-aspect views
 
 
-# emu/emuopts.c: 184
+# emu/emuopts.c: 181
 use the internal debugger for debugging
 
 
