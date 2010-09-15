@@ -198,9 +198,6 @@ int					scale_xsize;
 int					scale_ysize;
 
 int					scale_bank_offset;
-bitmap_t *				scale_bitmap[2];
-bitmap_t *				work_bitmap[2];
-int					scale_dirty[2];
 #endif /* USE_SCALE_EFFECTS */
 
 
@@ -2154,6 +2151,11 @@ screen_device::screen_device(running_machine &_machine, const screen_device_conf
 {
 	memset(m_texture, 0, sizeof(m_texture));
 	memset(m_bitmap, 0, sizeof(m_bitmap));
+#ifdef USE_SCALE_EFFECTS
+	memset(scale_bitmap, 0, sizeof(scale_bitmap));
+	memset(work_bitmap, 0, sizeof(work_bitmap));
+	memset(scale_dirty, 0, sizeof(scale_dirty));
+#endif /* USE_SCALE_EFFECTS */
 }
 
 
