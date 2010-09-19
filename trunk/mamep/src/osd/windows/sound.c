@@ -95,7 +95,9 @@ static WAVEFORMATEX			stream_format;
 static int					buffer_underflows;
 static int					buffer_overflows;
 
+#ifdef USE_AUDIO_SYNC
 static int					audio_sync;
+#endif /* USE_AUDIO_SYNC */
 
 
 //============================================================
@@ -120,7 +122,9 @@ void winsound_init(running_machine *machine)
 	if (!options_get_bool(machine->options(), OPTION_SOUND))
 		return;
 
+#ifdef USE_AUDIO_SYNC
 	audio_sync = options_get_bool(mame_options(), WINOPTION_AUDIO_SYNC);
+#endif /* USE_AUDIO_SYNC */
 
 	// ensure we get called on the way out
 	machine->add_notifier(MACHINE_NOTIFY_EXIT, sound_exit);
@@ -207,11 +211,13 @@ void osd_update_audio_stream(running_machine *machine, INT16 *buffer, int sample
 	if (stream_buffer == NULL)
 		return;
 
-	/* if we are active, update the sampling frequency */
+#ifdef USE_AUDIO_SYNC
+	// if we are active, update the sampling frequency
 	if (audio_sync && video_get_speed_percent(machine) > 0.0f)
 	{
 		IDirectSoundBuffer_SetFrequency(stream_buffer, machine->sample_rate * video_get_speed_percent(machine));
 	}
+#endif /* USE_AUDIO_SYNC */
 
 	// determine the current play position
 	result = IDirectSoundBuffer_GetCurrentPosition(stream_buffer, &play_position, &write_position);

@@ -10446,7 +10446,6 @@ Other Sun games
 
 	/* Interactive Light */
 	DRIVER( savquest )
-#endif /* !NCP */
 
 	/* Jubilee */
 	DRIVER( jubileep )
@@ -10454,5 +10453,6 @@ Other Sun games
 	/* Golden Games / C+M Technics AG */
 	DRIVER( swisspkr )	/* (c) Golden Games 1990 */
 	DRIVER( moviecrd )	/* (c) Golden Games 1998 */
+#endif /* !NCP */
 
 #endif	/* DRIVER_RECURSIVE */

@@ -233,7 +233,7 @@
 #define IDC_VOLUMEDISP                  1122
 #define IDC_HISTORY                     1124
 #define IDC_SAMPLES                     1125
-#define IDC_AUDIO_SYNC                  1126 // audio_sync
+#define IDC_AUDIO_SYNC                  1126 // USE_AUDIO_SYNC
 #define IDC_TRIPLE_BUFFER               1127
 #define IDC_LOAD_ROMNAME                0    // N/A
 #define IDC_DEFAULT_INPUT               1129

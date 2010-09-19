@@ -449,6 +449,10 @@ ifneq ($(USE_SHOW_INPUT_LOG),)
 DEFS += -DUSE_SHOW_INPUT_LOG
 endif
 
+ifneq ($(USE_AUDIO_SYNC),)
+DEFS += -DUSE_AUDIO_SYNC
+endif
+
 ifneq ($(USE_IPS),)
 DEFS += -DUSE_IPS
 endif

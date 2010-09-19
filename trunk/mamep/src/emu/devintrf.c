@@ -145,7 +145,7 @@ void device_list::start_all()
 		nextdevice = device->next();
 		try
 		{
-			mame_printf_verbose("Starting %s '%s'\n", device->name(), device->tag());
+			mame_printf_verbose(_("Starting %s '%s'\n"), device->name(), device->tag());
 			device->start();
 		}
 
@@ -153,7 +153,7 @@ void device_list::start_all()
 		catch (device_missing_dependencies &)
 		{
 			// if we're the end, fail
-			mame_printf_verbose("  (missing dependencies; rescheduling)\n");
+			mame_printf_verbose(_("  (missing dependencies; rescheduling)\n"));
 			if (nextdevice == NULL)
 				throw emu_fatalerror("Circular dependency in device startup; unable to start %s '%s'\n", device->name(), device->tag());
 			detach(device);

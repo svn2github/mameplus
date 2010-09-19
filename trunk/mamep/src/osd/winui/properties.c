@@ -490,6 +490,21 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 
 	for (; g_propSheets[i].pfnDlgProc; i++)
 	{
+		if (!gamedrv)
+		{
+			if (g_propSheets[i].bOnDefaultPage)
+			{
+				pspages[maxPropSheets].dwSize      = sizeof(PROPSHEETPAGE);
+				pspages[maxPropSheets].dwFlags     = 0;
+				pspages[maxPropSheets].hInstance   = hInst;
+				pspages[maxPropSheets].pszTemplate = MAKEINTRESOURCE(g_propSheets[i].dwDlgID);
+				pspages[maxPropSheets].pfnCallback = NULL;
+				pspages[maxPropSheets].lParam      = 0;
+				pspages[maxPropSheets].pfnDlgProc  = g_propSheets[i].pfnDlgProc;
+				maxPropSheets++;
+			}
+		}
+		else
 		if ((gamedrv != NULL) || g_propSheets[i].bOnDefaultPage)
 		{
 			machine_config config(*gamedrv);
@@ -2552,7 +2567,9 @@ static void SetPropEnabledControls(HWND hWnd)
 		EnableWindow(GetDlgItem(hWnd,IDC_AUDIO_LATENCY),sound);
 		EnableWindow(GetDlgItem(hWnd,IDC_AUDIO_LATENCY_DISP),sound);
 		EnableWindow(GetDlgItem(hWnd,IDC_AUDIO_LATENCY_TEXT),sound);
+#ifdef USE_AUDIO_SYNC
 		EnableWindow(GetDlgItem(hWnd,IDC_AUDIO_SYNC),sound);
+#endif /* USE_AUDIO_SYNC */
 		//mamep: allow in GLOBAL_OPTIONS set IDC_SAMPLES
 		if (g_nGame != GLOBAL_OPTIONS)
 			SetSamplesEnabled(hWnd, nIndex, sound);
@@ -3139,7 +3156,9 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_USE_SOUND,				DM_BOOL,	OPTION_SOUND);
 	datamap_add(properties_datamap, IDC_VOLUME,				DM_INT,		OPTION_VOLUME);
 	datamap_add(properties_datamap, IDC_VOLUMEDISP,				DM_INT,		OPTION_VOLUME);
+#ifdef USE_AUDIO_SYNC
 	datamap_add(properties_datamap, IDC_AUDIO_SYNC,				DM_BOOL,	WINOPTION_AUDIO_SYNC);
+#endif /* USE_AUDIO_SYNC */
 
 	// core input options 
 	datamap_add(properties_datamap, IDC_COINLOCKOUT,			DM_BOOL,	OPTION_COIN_LOCKOUT);

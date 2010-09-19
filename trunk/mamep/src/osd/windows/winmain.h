@@ -112,7 +112,9 @@
 
 // sound options
 #define WINOPTION_AUDIO_LATENCY			"audio_latency"
+#ifdef USE_AUDIO_SYNC
 #define WINOPTION_AUDIO_SYNC			"audio_sync"
+#endif /* USE_AUDIO_SYNC */
 
 // input options
 #define WINOPTION_DUAL_LIGHTGUN			"dual_lightgun"

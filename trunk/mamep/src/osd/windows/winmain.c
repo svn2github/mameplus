@@ -368,7 +368,9 @@ const options_entry mame_win_options[] =
 	// sound options
 	{ NULL,                       NULL,       OPTION_HEADER,     "WINDOWS SOUND OPTIONS" },
 	{ "audio_latency(1-5)",       "2",        0,                 "set audio latency (increase to reduce glitches)" },
+#ifdef USE_AUDIO_SYNC
 	{ "audio_sync",               "0",        OPTION_BOOLEAN,    "enable audio sync" },
+#endif /* USE_AUDIO_SYNC */
 
 	// input options
 	{ NULL,                       NULL,       OPTION_HEADER,     "INPUT DEVICE OPTIONS" },
