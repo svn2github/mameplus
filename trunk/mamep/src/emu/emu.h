@@ -77,11 +77,10 @@
 // between devices and the machine config
 class machine_config;
 class device_config;
-typedef void (*machine_config_constructor)(machine_config &config, device_config *owner);
+typedef device_config * (*machine_config_constructor)(machine_config &config, device_config *owner);
 
 // devices and callbacks
 #include "devintrf.h"
-#include "devcb.h"
 #include "distate.h"
 #include "dimemory.h"
 #include "diexec.h"
@@ -133,6 +132,7 @@ typedef void (*machine_config_constructor)(machine_config &config, device_config
 #include "sound.h"
 
 // generic helpers
+#include "devcb.h"
 #include "drivers/xtal.h"
 #include "audio/generic.h"
 #include "machine/generic.h"

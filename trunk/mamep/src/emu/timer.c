@@ -56,6 +56,8 @@ public:
 	attotime				period;			/* the repeat frequency of the timer */
 	attotime				start;			/* time when the timer was started */
 	attotime				expire;			/* time when the timer will expire */
+	device_t *				device;			/* for device timers, a pointer to the device */
+	device_timer_id				id;				/* for device timers, the ID of the timer */
 };
 
 
@@ -368,12 +370,17 @@ void timer_execute_timers(running_machine *machine)
 		global->callback_timer_expire_time = timer->expire;
 
 		/* call the callback */
-		if (was_enabled && timer->callback != NULL)
+		if (was_enabled)
 		{
-			LOG(("Timer %s:%d[%s] fired (expire=%s)\n", timer->file, timer->line, timer->func, attotime_string(timer->expire, 9)));
-			g_profiler.start(PROFILER_TIMER_CALLBACK);
-			(*timer->callback)(machine, timer->ptr, timer->param);
-			g_profiler.stop();
+			if (timer->device != NULL)
+				timer->device->timer_fired(*timer, timer->id, timer->param, timer->ptr);
+			else if (timer->callback != NULL)
+			{
+				LOG(("Timer %s:%d[%s] fired (expire=%s)\n", timer->file, timer->line, timer->func, attotime_string(timer->expire, 9)));
+				g_profiler.start(PROFILER_TIMER_CALLBACK);
+				(*timer->callback)(machine, timer->ptr, timer->param);
+				g_profiler.stop();
+			}
 		}
 
 		/* clear the callback timer global */
@@ -513,6 +520,8 @@ static void timer_register_save(emu_timer *timer)
 	state_save_register_item(timer->machine, "timer", timer->func, count, timer->start.attoseconds);
 	state_save_register_item(timer->machine, "timer", timer->func, count, timer->expire.seconds);
 	state_save_register_item(timer->machine, "timer", timer->func, count, timer->expire.attoseconds);
+	if (timer->device != NULL)
+		state_save_register_item(timer->machine, "timer", timer->func, count, timer->id);
 }
 
 
@@ -588,7 +597,7 @@ int timer_count_anonymous(running_machine *machine)
     isn't primed yet
 -------------------------------------------------*/
 
-INLINE emu_timer *_timer_alloc_common(running_machine *machine, timer_fired_func callback, void *ptr, const char *file, int line, const char *func, int temp)
+INLINE emu_timer *_timer_alloc_common(running_machine *machine, device_t *device, device_timer_id id, timer_fired_func callback, void *ptr, const char *file, int line, const char *func, int temp)
 {
 	attotime time = get_current_time(machine);
 	emu_timer *timer = timer_new(machine);
@@ -603,6 +612,8 @@ INLINE emu_timer *_timer_alloc_common(running_machine *machine, timer_fired_func
 	timer->file = file;
 	timer->line = line;
 	timer->func = func;
+	timer->device = device;
+	timer->id = id;
 
 	/* compute the time of the next firing and insert into the list */
 	timer->start = time;
@@ -624,7 +635,12 @@ INLINE emu_timer *_timer_alloc_common(running_machine *machine, timer_fired_func
 
 emu_timer *_timer_alloc_internal(running_machine *machine, timer_fired_func callback, void *ptr, const char *file, int line, const char *func)
 {
-	return _timer_alloc_common(machine, callback, ptr, file, line, func, FALSE);
+	return _timer_alloc_common(machine, NULL, 0, callback, ptr, file, line, func, FALSE);
+}
+
+emu_timer *device_timer_alloc(device_t &device, UINT32 id, void *ptr)
+{
+	return _timer_alloc_common(device.machine, &device, id, NULL, ptr, __FILE__, __LINE__, device.tag(), FALSE);
 }
 
 
@@ -714,6 +730,13 @@ void timer_adjust_periodic(emu_timer *which, attotime start_delay, INT32 param, 
     SIMPLIFIED ANONYMOUS TIMER MANAGEMENT
 ***************************************************************************/
 
+void device_timer_call_after_resynch(device_t &device, device_timer_id id, INT32 param, void *ptr)
+{
+	emu_timer *timer = _timer_alloc_common(device.machine, &device, id, NULL, ptr, __FILE__, __LINE__, device.tag(), TRUE);
+	timer_adjust_oneshot(timer, attotime_zero, param);
+}
+
+
 /*-------------------------------------------------
     timer_pulse - allocate a pulse timer, which
     repeatedly calls the callback using the given
@@ -722,7 +745,7 @@ void timer_adjust_periodic(emu_timer *which, attotime start_delay, INT32 param, 
 
 void _timer_pulse_internal(running_machine *machine, attotime period, void *ptr, INT32 param, timer_fired_func callback, const char *file, int line, const char *func)
 {
-	emu_timer *timer = _timer_alloc_common(machine, callback, ptr, file, line, func, FALSE);
+	emu_timer *timer = _timer_alloc_common(machine, NULL, 0, callback, ptr, file, line, func, FALSE);
 	timer_adjust_periodic(timer, period, param, period);
 }
 
@@ -734,7 +757,7 @@ void _timer_pulse_internal(running_machine *machine, attotime period, void *ptr,
 
 void _timer_set_internal(running_machine *machine, attotime duration, void *ptr, INT32 param, timer_fired_func callback, const char *file, int line, const char *func)
 {
-	emu_timer *timer = _timer_alloc_common(machine, callback, ptr, file, line, func, TRUE);
+	emu_timer *timer = _timer_alloc_common(machine, NULL, 0, callback, ptr, file, line, func, TRUE);
 	timer_adjust_oneshot(timer, duration, param);
 }
 
@@ -760,15 +783,18 @@ void timer_reset(emu_timer *which, attotime duration)
 
 int timer_enable(emu_timer *which, int enable)
 {
-	int old;
+	int old = which->enabled;
 
-	/* set the enable flag */
-	old = which->enabled;
-	which->enabled = enable;
+	/* reschedule only if the state has changed */
+	if (old != enable)
+	{
+		/* set the enable flag */
+		which->enabled = enable;
 
-	/* remove the timer and insert back into the list */
-	timer_list_remove(which);
-	timer_list_insert(which);
+		/* remove the timer and insert back into the list */
+		timer_list_remove(which);
+		timer_list_insert(which);
+	}
 
 	return old;
 }

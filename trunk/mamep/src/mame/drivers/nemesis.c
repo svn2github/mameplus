@@ -1774,10 +1774,7 @@ static MACHINE_RESET( nemesis )
 	state->irq_port_last = 0;
 }
 
-static MACHINE_DRIVER_START( nemesis )
-
-	/* driver data */
-	MDRV_DRIVER_DATA(nemesis_state)
+static MACHINE_CONFIG_START( nemesis, nemesis_state )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
@@ -1821,13 +1818,10 @@ static MACHINE_DRIVER_START( nemesis )
 
 	MDRV_SOUND_ADD("vlm", VLM5030, 3579545)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.70)	/* unused */
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( gx400 )
-
-	/* driver data */
-	MDRV_DRIVER_DATA(nemesis_state)
+static MACHINE_CONFIG_START( gx400, nemesis_state )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000,18432000/2)     /* 9.216MHz */
@@ -1871,13 +1865,10 @@ static MACHINE_DRIVER_START( gx400 )
 
 	MDRV_SOUND_ADD("vlm", VLM5030, 3579545)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.70)	/* unused */
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( konamigt )
-
-	/* driver data */
-	MDRV_DRIVER_DATA(nemesis_state)
+static MACHINE_CONFIG_START( konamigt, nemesis_state )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
@@ -1917,13 +1908,10 @@ static MACHINE_DRIVER_START( konamigt )
 
 	MDRV_SOUND_ADD("k007232", K005289, 3579545/2)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( rf2_gx400 )
-
-	/* driver data */
-	MDRV_DRIVER_DATA(nemesis_state)
+static MACHINE_CONFIG_START( rf2_gx400, nemesis_state )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000,18432000/2)     /* 9.216MHz */
@@ -1967,13 +1955,10 @@ static MACHINE_DRIVER_START( rf2_gx400 )
 
 	MDRV_SOUND_ADD("vlm", VLM5030, 3579545)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.70)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( salamand )
-
-	/* driver data */
-	MDRV_DRIVER_DATA(nemesis_state)
+static MACHINE_CONFIG_START( salamand, nemesis_state )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000,18432000/2)       /* 9.216MHz */
@@ -2020,13 +2005,10 @@ static MACHINE_DRIVER_START( salamand )
 	MDRV_SOUND_CONFIG(ym2151_config)
 	MDRV_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MDRV_SOUND_ROUTE(1, "rspeaker", 1.0)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( blkpnthr )
-
-	/* driver data */
-	MDRV_DRIVER_DATA(nemesis_state)
+static MACHINE_CONFIG_START( blkpnthr, nemesis_state )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
@@ -2069,13 +2051,10 @@ static MACHINE_DRIVER_START( blkpnthr )
 	MDRV_SOUND_CONFIG(ym2151_config)
 	MDRV_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MDRV_SOUND_ROUTE(1, "rspeaker", 1.0)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( citybomb )
-
-	/* driver data */
-	MDRV_DRIVER_DATA(nemesis_state)
+static MACHINE_CONFIG_START( citybomb, nemesis_state )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
@@ -2122,13 +2101,10 @@ static MACHINE_DRIVER_START( citybomb )
 	MDRV_SOUND_ADD("k051649", K051649, 3579545/2)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.38)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.38)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( nyanpani )
-
-	/* driver data */
-	MDRV_DRIVER_DATA(nemesis_state)
+static MACHINE_CONFIG_START( nyanpani, nemesis_state )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
@@ -2175,13 +2151,10 @@ static MACHINE_DRIVER_START( nyanpani )
 	MDRV_SOUND_ADD("k051649", K051649, 3579545/2)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.38)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.38)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( hcrash )
-
-	/* driver data */
-	MDRV_DRIVER_DATA(nemesis_state)
+static MACHINE_CONFIG_START( hcrash, nemesis_state )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000,18432000/3)         /* 6.144MHz */
@@ -2226,7 +2199,7 @@ static MACHINE_DRIVER_START( hcrash )
 	MDRV_SOUND_CONFIG(ym2151_config)
 	MDRV_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MDRV_SOUND_ROUTE(1, "rspeaker", 1.0)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 /***************************************************************************
 

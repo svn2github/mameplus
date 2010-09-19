@@ -49,31 +49,28 @@
 //  machine_config - constructor
 //-------------------------------------------------
 
-machine_config::machine_config(machine_config_constructor constructor)
-	: m_driver_data_alloc(NULL),
-	  m_minimum_quantum(attotime_zero),
+machine_config::machine_config(const game_driver &gamedrv)
+	: m_minimum_quantum(attotime_zero),
 	  m_perfect_cpu_quantum(NULL),
 	  m_watchdog_vblank_count(0),
 	  m_watchdog_time(attotime_zero),
-	  m_machine_start(NULL),
-	  m_machine_reset(NULL),
 	  m_nvram_handler(NULL),
 	  m_memcard_handler(NULL),
 	  m_video_attributes(0),
 	  m_gfxdecodeinfo(NULL),
 	  m_total_colors(0),
 	  m_default_layout(NULL),
-	  m_init_palette(NULL),
-	  m_video_start(NULL),
-	  m_video_reset(NULL),
-	  m_video_eof(NULL),
-	  m_video_update(NULL),
-	  m_sound_start(NULL),
-	  m_sound_reset(NULL),
+	  m_gamedrv(gamedrv),
 	  m_parse_level(0)
 {
 	// construct the config
-	(*constructor)(*this, NULL);
+	(*gamedrv.machine_config)(*this, NULL);
+
+	// when finished, set the game driver
+	device_config *config = m_devicelist.find("root");
+	if (config == NULL)
+		throw emu_fatalerror("Machine configuration missing driver_device");
+	driver_device_config_base::static_set_game(config, &gamedrv);
 
 	// process any device-specific machine configurations
 	for (device_config *devconfig = m_devicelist.first(); devconfig != NULL; devconfig = devconfig->next())

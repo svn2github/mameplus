@@ -1537,227 +1537,6 @@ INPUT_PORTS_START( megadri6 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON8 ) PORT_PLAYER(2) PORT_NAME("P2 MODE") // mode
 INPUT_PORTS_END
 
-/* verified from M68000 code */
-INPUT_PORTS_START( ssf2ghw )
-	PORT_INCLUDE( md_common )
-
-	PORT_MODIFY("PAD1")
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
-
-	PORT_MODIFY("PAD2")
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START2 )
-
-	PORT_START("EXTRA1")	/* Extra buttons for Joypad 1 (6 button + start + mode) NOT READ DIRECTLY */
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED )
-
-	PORT_START("EXTRA2")	/* Extra buttons for Joypad 2 (6 button + start + mode) NOT READ DIRECTLY */
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED )
-
-	PORT_START("IN0")		/* 3rd I/O port */
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
-
-	PORT_START("DSWA")
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
-	PORT_DIPSETTING(    0x03, DEF_STR( 2C_1C ) )
-	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
-	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
-//  PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-
-	PORT_START("DSWB")
-	PORT_DIPNAME( 0x07, 0x03, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x07, "0 (Easiest)" )
-	PORT_DIPSETTING(    0x06, "1" )
-	PORT_DIPSETTING(    0x05, "2" )
-	PORT_DIPSETTING(    0x04, "3" )
-	PORT_DIPSETTING(    0x03, "4" )
-	PORT_DIPSETTING(    0x02, "5" )
-	PORT_DIPSETTING(    0x01, "6" )
-	PORT_DIPSETTING(    0x00, "7 (Hardest)" )
-
-	PORT_START("DSWC")
-	PORT_DIPNAME( 0x0f, 0x0b, "Speed" )
-	PORT_DIPSETTING(    0x0f, "0 (Slowest)" )
-	PORT_DIPSETTING(    0x0e, "1" )
-	PORT_DIPSETTING(    0x0d, "2" )
-	PORT_DIPSETTING(    0x0c, "3" )
-	PORT_DIPSETTING(    0x0b, "4" )
-	PORT_DIPSETTING(    0x0a, "5" )
-	PORT_DIPSETTING(    0x09, "6" )
-	PORT_DIPSETTING(    0x08, "7" )
-	PORT_DIPSETTING(    0x07, "8" )
-	PORT_DIPSETTING(    0x06, "9" )
-	PORT_DIPSETTING(    0x05, "10 (Fastest)" )
-//  PORT_DIPSETTING(    0x04, "10 (Fastest)" )
-//  PORT_DIPSETTING(    0x03, "10 (Fastest)" )
-//  PORT_DIPSETTING(    0x02, "10 (Fastest)" )
-//  PORT_DIPSETTING(    0x01, "10 (Fastest)" )
-//  PORT_DIPSETTING(    0x00, "10 (Fastest)" )
-INPUT_PORTS_END
-
-/* verified from M68000 code */
-INPUT_PORTS_START( mk3ghw )
-	PORT_INCLUDE( md_common )
-
-	PORT_MODIFY("PAD1")
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
-
-	PORT_MODIFY("PAD2")
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START2 )
-
-	PORT_START("EXTRA1")	/* Extra buttons for Joypad 1 (6 button + start + mode) NOT READ DIRECTLY */
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1)
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED )
-
-	PORT_START("EXTRA2")	/* Extra buttons for Joypad 2 (6 button + start + mode) NOT READ DIRECTLY */
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNUSED )
-
-	PORT_START("IN0")
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
-
-	PORT_START("DSWA")
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coinage ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
-	PORT_DIPSETTING(    0x03, DEF_STR( 2C_1C ) )
-	PORT_DIPSETTING(    0x07, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(    0x06, DEF_STR( 1C_2C ) )
-	PORT_DIPSETTING(    0x05, DEF_STR( 1C_3C ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
-//  PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-
-	PORT_START("DSWB")
-	PORT_DIPNAME( 0x07, 0x07, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x07, DEF_STR( Easiest ) )
-	PORT_DIPSETTING(    0x06, DEF_STR( Easy ) )
-	PORT_DIPSETTING(    0x05, DEF_STR( Medium ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Hard ) )
-	PORT_DIPSETTING(    0x03, DEF_STR( Hardest ) )
-//  PORT_DIPSETTING(    0x02, DEF_STR( Hardest ) )
-//  PORT_DIPSETTING(    0x01, DEF_STR( Hardest ) )
-//  PORT_DIPSETTING(    0x00, DEF_STR( Hardest ) )
-	PORT_DIPUNUSED( 0x08, IP_ACTIVE_HIGH )
-	PORT_DIPUNUSED( 0x10, IP_ACTIVE_HIGH )
-	PORT_DIPUNUSED( 0x20, IP_ACTIVE_HIGH )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Demo_Sounds ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, "Blood" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
-
-	PORT_START("DSWC")        /* not even read in this set */
-INPUT_PORTS_END
-
-/* verified from M68000 code */
-INPUT_PORTS_START( aladbl )
-	PORT_INCLUDE( md_common )
-
-	PORT_MODIFY("PAD1")		/* Joypad 1 (3 button + start) NOT READ DIRECTLY */
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1) PORT_NAME("P1 Throw") // a
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_NAME("P1 Sword") // b
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_NAME("P1 Jump") // c
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 ) // start
-
-	PORT_MODIFY("PAD2")		/* Joypad 2 (3 button + start) NOT READ DIRECTLY - not used */
-	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_UNUSED )
-
-    /* As I don't know how it is on real hardware, this is more a guess than anything */
-	PORT_START("MCU")
-	PORT_DIPNAME( 0x07, 0x01, DEF_STR( Coinage ) )          /* code at 0x1b2a50 - unsure if there are so many settings */
-//  PORT_DIPSETTING(    0x00, "INVALID" )                   /* adds 0 credit */
-	PORT_DIPSETTING(    0x01, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
-	PORT_DIPSETTING(    0x03, DEF_STR( 1C_3C ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_4C ) )
-	PORT_DIPSETTING(    0x05, DEF_STR( 1C_5C ) )
-	PORT_DIPSETTING(    0x06, DEF_STR( 1C_6C ) )
-    PORT_DIPSETTING(    0x07, DEF_STR( 1C_7C ) )
-//  PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_SPECIAL )         /* to avoid it being changed and corrupting Coinage settings */
-	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Difficulty ) )       /* code at 0x1b2680 */
-	PORT_DIPSETTING(    0x10, DEF_STR( Easy ) )             /* "PRACTICE" */
-	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )           /* "NORMAL" */
-	PORT_DIPSETTING(    0x20, DEF_STR( Hard ) )             /* "DIFFICULT" */
-//  PORT_DIPSETTING(    0x30, DEF_STR( Normal ) )
-	PORT_DIPUNUSED( 0x40, IP_ACTIVE_HIGH )
-	PORT_DIPUNUSED( 0x80, IP_ACTIVE_HIGH )
-	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_IMPULSE(1)     /* needed to avoid credits getting mad */
-INPUT_PORTS_END
-
-/* verified from M68000 code */
-INPUT_PORTS_START( ssgbl )
-	PORT_INCLUDE( md_common )
-
-	PORT_MODIFY("PAD1")
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1) PORT_NAME("P1 Shoot") // a
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_NAME("P1 Jump") // b
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED ) // c (duplicate shoot button)
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 ) // start
-
-	PORT_MODIFY("PAD2")
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2) PORT_NAME("P1 Shoot") // a
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2) PORT_NAME("P1 Jump") // b
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED ) // c (duplicate shoot button)
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START2 )
-
-	PORT_START("IN0")		/* 3rd I/O port */
-	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
-
-	PORT_START("DSWA")
-	PORT_DIPNAME( 0x07, 0x00, DEF_STR( Coinage ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( 4C_1C ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( 3C_1C ) )
-	PORT_DIPSETTING(    0x03, DEF_STR( 2C_1C ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(    0x07, DEF_STR( 1C_2C ) )
-	PORT_DIPSETTING(    0x06, DEF_STR( 1C_3C ) )
-	PORT_DIPSETTING(    0x05, DEF_STR( 1C_4C ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( 1C_5C ) )
-
-	PORT_START("DSWB")
-	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Difficulty ) )
-	PORT_DIPSETTING(    0x03, DEF_STR( Easy ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Medium ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( Hard ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Hardest ) )
-
-	PORT_START("DSWC")
-	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )
-	PORT_DIPSETTING(    0x03, "3" )
-	PORT_DIPSETTING(    0x02, "4" )
-	PORT_DIPSETTING(    0x01, "5" )
-	PORT_DIPSETTING(    0x00, "6" )
-INPUT_PORTS_END
-
 UINT8 megadrive_io_data_regs[3];
 UINT8 megadrive_io_ctrl_regs[3];
 static UINT8 megadrive_io_tx_regs[3];
@@ -1769,10 +1548,10 @@ static void megadrive_init_io(running_machine *machine)
 	if (ipt == INPUT_PORTS_NAME(megadri6))
 		init_megadri6_io(machine);
 
-	if (ipt == INPUT_PORTS_NAME(ssf2ghw))
+	if (ipt == INPUT_PORTS_NAME(ssf2mdb))
 		init_megadri6_io(machine);
 
-	if (ipt == INPUT_PORTS_NAME(mk3ghw))
+	if (ipt == INPUT_PORTS_NAME(mk3mdb))
 		init_megadri6_io(machine);
 }
 
@@ -2472,12 +2251,11 @@ static ADDRESS_MAP_START( md_bootleg_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xe00000, 0xe0ffff) AM_RAM AM_MIRROR(0x1f0000) AM_BASE(&megadrive_ram)
 ADDRESS_MAP_END
 
-MACHINE_DRIVER_START( md_bootleg )
-	MDRV_IMPORT_FROM(megadriv)
+MACHINE_CONFIG_DERIVED( md_bootleg, megadriv )
 
 	MDRV_CPU_MODIFY("maincpu")
 	MDRV_CPU_PROGRAM_MAP(md_bootleg_map)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
 /****************************************** 32X related ******************************************/
@@ -3883,23 +3661,21 @@ INPUT_PORTS_START( megdsvp )
 	PORT_DIPSETTING( 0x01, DEF_STR( On ) )
 INPUT_PORTS_END
 
-MACHINE_DRIVER_START( megdsvp )
-	MDRV_IMPORT_FROM(megadriv)
+MACHINE_CONFIG_DERIVED( megdsvp, megadriv )
 
 	MDRV_CPU_ADD("svp", SSP1601, MASTER_CLOCK_NTSC / 7 * 3) /* ~23 MHz (guessed) */
 	MDRV_CPU_PROGRAM_MAP(svp_ssp_map)
 	MDRV_CPU_IO_MAP(svp_ext_map)
 	/* IRQs are not used by this CPU */
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
-MACHINE_DRIVER_START( megdsvppal )
-	MDRV_IMPORT_FROM(megadpal)
+MACHINE_CONFIG_DERIVED( megdsvppal, megadpal )
 
 	MDRV_CPU_ADD("svp", SSP1601, MASTER_CLOCK_PAL / 7 * 3) /* ~23 MHz (guessed) */
 	MDRV_CPU_PROGRAM_MAP(svp_ssp_map)
 	MDRV_CPU_IO_MAP(svp_ext_map)
 	/* IRQs are not used by this CPU */
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 /****************************************** END SVP related *************************************/
 
@@ -6188,16 +5964,16 @@ static NVRAM_HANDLER( megadriv )
 #endif
 
 
-MACHINE_DRIVER_START( megadriv_timers )
+MACHINE_CONFIG_FRAGMENT( megadriv_timers )
 	MDRV_TIMER_ADD("frame_timer", frame_timer_callback)
 	MDRV_TIMER_ADD("scanline_timer", scanline_timer_callback)
 	MDRV_TIMER_ADD("render_timer", render_timer_callback)
 	MDRV_TIMER_ADD("irq6_timer", irq6_on_callback)
 	MDRV_TIMER_ADD("irq4_timer", irq4_on_callback)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-MACHINE_DRIVER_START( megadriv )
+MACHINE_CONFIG_START( megadriv, driver_device )
 	MDRV_CPU_ADD("maincpu", M68000, MASTER_CLOCK_NTSC / 7) /* 7.67 MHz */
 	MDRV_CPU_PROGRAM_MAP(megadriv_map)
 	/* IRQs are handled via the timers */
@@ -6210,7 +5986,7 @@ MACHINE_DRIVER_START( megadriv )
 	MDRV_MACHINE_START(megadriv)
 	MDRV_MACHINE_RESET(megadriv)
 
-	MDRV_IMPORT_FROM(megadriv_timers)
+	MDRV_FRAGMENT_ADD(megadriv_timers)
 
 	MDRV_SCREEN_ADD("megadriv", RASTER)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_RGB15)
@@ -6240,11 +6016,11 @@ MACHINE_DRIVER_START( megadriv )
 	MDRV_SOUND_ADD("snsnd", SMSIII, MASTER_CLOCK_NTSC/15)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.25) /* 3.58 MHz */
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker",0.25) /* 3.58 MHz */
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 /************ PAL hardware has a different master clock *************/
 
-MACHINE_DRIVER_START( megadpal )
+MACHINE_CONFIG_START( megadpal, driver_device )
 	MDRV_CPU_ADD("maincpu", M68000, MASTER_CLOCK_PAL / 7) /* 7.67 MHz */
 	MDRV_CPU_PROGRAM_MAP(megadriv_map)
 	/* IRQs are handled via the timers */
@@ -6257,7 +6033,7 @@ MACHINE_DRIVER_START( megadpal )
 	MDRV_MACHINE_START(megadriv)
 	MDRV_MACHINE_RESET(megadriv)
 
-	MDRV_IMPORT_FROM(megadriv_timers)
+	MDRV_FRAGMENT_ADD(megadriv_timers)
 
 	MDRV_SCREEN_ADD("megadriv", RASTER)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_RGB15)
@@ -6287,15 +6063,14 @@ MACHINE_DRIVER_START( megadpal )
 	MDRV_SOUND_ADD("snsnd", SMSIII, MASTER_CLOCK_PAL/15)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.25) /* 3.58 MHz */
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker",0.25) /* 3.58 MHz */
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
 
 static const sh2_cpu_core sh2_conf_master = { 0, NULL };
 static const sh2_cpu_core sh2_conf_slave  = { 1, NULL };
 
-MACHINE_DRIVER_START( genesis_32x )
-	MDRV_IMPORT_FROM(megadriv)
+MACHINE_CONFIG_DERIVED( genesis_32x, megadriv )
 
 	MDRV_CPU_ADD("32x_master_sh2", SH2, (MASTER_CLOCK_NTSC*3)/7 )
 	MDRV_CPU_PROGRAM_MAP(sh2_main_map)
@@ -6311,11 +6086,10 @@ MACHINE_DRIVER_START( genesis_32x )
 	// boosting the interleave here actually makes Kolibri run incorrectly however, that
 	// one works best just boosting the interleave on communications?!
 	MDRV_QUANTUM_TIME(HZ(1800000))
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-MACHINE_DRIVER_START( genesis_32x_pal )
-	MDRV_IMPORT_FROM(megadpal)
+MACHINE_CONFIG_DERIVED( genesis_32x_pal, megadpal )
 
 	MDRV_CPU_ADD("32x_master_sh2", SH2, (MASTER_CLOCK_PAL*3)/7 )
 	MDRV_CPU_PROGRAM_MAP(sh2_main_map)
@@ -6325,21 +6099,19 @@ MACHINE_DRIVER_START( genesis_32x_pal )
 	MDRV_CPU_PROGRAM_MAP(sh2_slave_map)
 	MDRV_CPU_CONFIG(sh2_conf_slave)
 
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
-MACHINE_DRIVER_START( genesis_scd )
-	MDRV_IMPORT_FROM(megadriv)
-
-	MDRV_CPU_ADD("segacd_68k", M68000, SEGACD_CLOCK ) /* 12.5 MHz */
-	MDRV_CPU_PROGRAM_MAP(segacd_map)
-MACHINE_DRIVER_END
-
-MACHINE_DRIVER_START( genesis_32x_scd )
-	MDRV_IMPORT_FROM(genesis_32x)
+MACHINE_CONFIG_DERIVED( genesis_scd, megadriv )
 
 	MDRV_CPU_ADD("segacd_68k", M68000, SEGACD_CLOCK ) /* 12.5 MHz */
 	MDRV_CPU_PROGRAM_MAP(segacd_map)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
+
+MACHINE_CONFIG_DERIVED( genesis_32x_scd, genesis_32x )
+
+	MDRV_CPU_ADD("segacd_68k", M68000, SEGACD_CLOCK ) /* 12.5 MHz */
+	MDRV_CPU_PROGRAM_MAP(segacd_map)
+MACHINE_CONFIG_END
 
 
 /* Callback when the genesis enters interrupt code */
@@ -6422,7 +6194,7 @@ static void megadriv_init_common(running_machine *machine)
 
 	m68k_set_tas_callback(machine->device("maincpu"), megadriv_tas_callback);
 
-	if ((ipt == INPUT_PORTS_NAME(megadri6)) || (ipt == INPUT_PORTS_NAME(ssf2ghw)) || (ipt == INPUT_PORTS_NAME(mk3ghw)))
+	if ((ipt == INPUT_PORTS_NAME(megadri6)) || (ipt == INPUT_PORTS_NAME(ssf2mdb)) || (ipt == INPUT_PORTS_NAME(mk3mdb)))
 	{
 		megadrive_io_read_data_port_ptr	= megadrive_io_read_data_port_6button;
 		megadrive_io_write_data_port_ptr = megadrive_io_write_data_port_6button;

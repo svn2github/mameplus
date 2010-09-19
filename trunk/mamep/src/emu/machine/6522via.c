@@ -218,9 +218,9 @@ void via6522_device::device_start()
     m_t2ll = 0xff; /* taken from vice */
     m_t2lh = 0xff;
     m_time2 = m_time1 = timer_get_time(&m_machine);
-    m_t1 = timer_alloc(&m_machine, t1_timeout_callback, (void *)this);
-    m_t2 = timer_alloc(&m_machine, t2_timeout_callback, (void *)this);
-    m_shift_timer = timer_alloc(&m_machine, shift_callback, (void *)this);
+    m_t1 = device_timer_alloc(*this, TIMER_T1);
+    m_t2 = device_timer_alloc(*this, TIMER_T2);
+    m_shift_timer = device_timer_alloc(*this, TIMER_SHIFT);
 
 	/* Default clock is from CPU1 */
 	if (clock() == 0)
@@ -415,86 +415,64 @@ void via6522_device::shift()
 }
 
 
-/*-------------------------------------------------
-    TIMER_CALLBACK( via_shift_callback )
--------------------------------------------------*/
-
-TIMER_CALLBACK( via6522_device::shift_callback )
+void via6522_device::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
 {
-    via6522_device *via = reinterpret_cast<via6522_device *>(ptr);
-    via->shift();
-}
-
-
-/*-------------------------------------------------
-    TIMER_CALLBACK( via_t1_timeout )
--------------------------------------------------*/
-
-TIMER_CALLBACK( via6522_device::t1_timeout_callback )
-{
-    via6522_device *via = reinterpret_cast<via6522_device *>(ptr);
-    via->t1_timeout();
-}
-
-void via6522_device::t1_timeout()
-{
-    if (T1_CONTINUOUS (m_acr))
-    {
-        if (T1_SET_PB7(m_acr))
-        {
-            m_out_b ^= 0x80;
-        }
-        timer_adjust_oneshot(m_t1, cycles_to_time(TIMER1_VALUE + IFR_DELAY), 0);
-    }
-	else
-    {
-        if (T1_SET_PB7(m_acr))
-        {
-            m_out_b |= 0x80;
-        }
-        m_t1_active = 0;
-        m_time1 = timer_get_time(&m_machine);
-    }
-    if (m_ddr_b)
+	switch (id)
 	{
-        UINT8 write_data = (m_out_b & m_ddr_b) | (m_ddr_b ^ 0xff);
-        devcb_call_write8(&m_out_b_func, 0, write_data);
+		// shift timer
+		case TIMER_SHIFT:
+			shift();
+			break;
+
+		// t1 timeout
+		case TIMER_T1:
+		    if (T1_CONTINUOUS (m_acr))
+		    {
+		        if (T1_SET_PB7(m_acr))
+		        {
+		            m_out_b ^= 0x80;
+		        }
+		        timer_adjust_oneshot(m_t1, cycles_to_time(TIMER1_VALUE + IFR_DELAY), 0);
+		    }
+			else
+		    {
+		        if (T1_SET_PB7(m_acr))
+		        {
+		            m_out_b |= 0x80;
+		        }
+		        m_t1_active = 0;
+		        m_time1 = timer_get_time(&m_machine);
+		    }
+		    if (m_ddr_b)
+			{
+		        UINT8 write_data = (m_out_b & m_ddr_b) | (m_ddr_b ^ 0xff);
+		        devcb_call_write8(&m_out_b_func, 0, write_data);
+			}
+
+		    if (!(m_ifr & INT_T1))
+		    {
+				set_int(INT_T1);
+		    }
+		    break;
+
+		// t2 timeout
+		case TIMER_T2:
+		    m_t2_active = 0;
+		    m_time2 = timer_get_time(&m_machine);
+
+		    if (!(m_ifr & INT_T2))
+		    {
+				set_int(INT_T2);
+		    }
+		    break;
 	}
-
-    if (!(m_ifr & INT_T1))
-    {
-		set_int(INT_T1);
-    }
 }
-
-
-/*-------------------------------------------------
-    TIMER_CALLBACK( via_t2_timeout )
--------------------------------------------------*/
-
-TIMER_CALLBACK( via6522_device::t2_timeout_callback )
-{
-    via6522_device *via = reinterpret_cast<via6522_device *>(ptr);
-    via->t2_timeout();
-}
-
-void via6522_device::t2_timeout()
-{
-    m_t2_active = 0;
-    m_time2 = timer_get_time(&m_machine);
-
-    if (!(m_ifr & INT_T2))
-    {
-		set_int(INT_T2);
-    }
-}
-
 
 /*-------------------------------------------------
     via_r - CPU interface for VIA read
 -------------------------------------------------*/
 
-READ8_DEVICE_HANDLER_TRAMPOLINE(via6522, via_r)
+READ8_MEMBER( via6522_device::read )
 {
 	int val = 0;
 
@@ -652,15 +630,14 @@ READ8_DEVICE_HANDLER_TRAMPOLINE(via6522, via_r)
 
     case VIA_SR:
 		val = m_sr;
+		m_shift_counter=0;
 		clear_int(INT_SR);
 		if (SO_O2_CONTROL(m_acr))
 		{
-			m_shift_counter=0;
 			timer_adjust_oneshot(m_shift_timer, cycles_to_time(2), 0);
 		}
 		if (SO_T2_CONTROL(m_acr))
 		{
-			m_shift_counter=0;
 			timer_adjust_oneshot(m_shift_timer, cycles_to_time((m_t2ll + 2)*2), 0);
 		}
 		break;
@@ -689,7 +666,7 @@ READ8_DEVICE_HANDLER_TRAMPOLINE(via6522, via_r)
     via_w - CPU interface for VIA write
 -------------------------------------------------*/
 
-WRITE8_DEVICE_HANDLER_TRAMPOLINE(via6522, via_w)
+WRITE8_MEMBER( via6522_device::write )
 {
 	offset &=0x0f;
 
@@ -858,11 +835,11 @@ WRITE8_DEVICE_HANDLER_TRAMPOLINE(via6522, via_w)
 		clear_int(INT_SR);
 		if (SO_O2_CONTROL(m_acr))
 		{
-			timer_set(&m_machine, cycles_to_time(2), (void *)this, 0, shift_callback);
+			timer_adjust_oneshot(m_shift_timer, cycles_to_time(2), 0);
 		}
 		if (SO_T2_CONTROL(m_acr))
 		{
-			timer_set(&m_machine, cycles_to_time((m_t2ll + 2)*2), (void *)this, 0, shift_callback);
+			timer_adjust_oneshot(m_shift_timer, cycles_to_time((m_t2ll + 2)*2), 0);
 		}
 		break;
 
@@ -959,8 +936,7 @@ WRITE8_DEVICE_HANDLER_TRAMPOLINE(via6522, via_w)
     ca1_w - interface setting VIA port CA1 input
 -------------------------------------------------*/
 
-//void via6522_device::via_ca1_w(UINT8 state)
-WRITE_LINE_DEVICE_HANDLER_TRAMPOLINE(via6522, via_ca1_w)
+WRITE_LINE_MEMBER( via6522_device::write_ca1 )
 {
 	/* handle the active transition */
 	if (state != m_in_ca1)
@@ -1008,8 +984,7 @@ WRITE_LINE_DEVICE_HANDLER_TRAMPOLINE(via6522, via_ca1_w)
     ca2_w - interface setting VIA port CA2 input
 -------------------------------------------------*/
 
-//void via6522_device::via_ca2_w(UINT8 state)
-WRITE_LINE_DEVICE_HANDLER_TRAMPOLINE(via6522, via_ca2_w)
+WRITE_LINE_MEMBER( via6522_device::write_ca2 )
 {
 	/* CA2 is in input mode */
 	if (CA2_INPUT(m_pcr))
@@ -1034,8 +1009,7 @@ WRITE_LINE_DEVICE_HANDLER_TRAMPOLINE(via6522, via_ca2_w)
     cb1_w - interface setting VIA port CB1 input
 -------------------------------------------------*/
 
-//void via6522_device::via_cb1_w(UINT8 state)
-WRITE_LINE_DEVICE_HANDLER_TRAMPOLINE(via6522, via_cb1_w)
+WRITE_LINE_MEMBER( via6522_device::write_cb1 )
 {
 	/* handle the active transition */
 	if (state != m_in_cb1)
@@ -1083,8 +1057,7 @@ WRITE_LINE_DEVICE_HANDLER_TRAMPOLINE(via6522, via_cb1_w)
     cb2_w - interface setting VIA port CB2 input
 -------------------------------------------------*/
 
-//void via6522_device::via_cb2_w(UINT8 state)
-WRITE_LINE_DEVICE_HANDLER_TRAMPOLINE(via6522, via_cb2_w)
+WRITE_LINE_MEMBER( via6522_device::write_cb2 )
 {
 	/* CB2 is in input mode */
 	if (CB2_INPUT(m_pcr))
@@ -1103,17 +1076,3 @@ WRITE_LINE_DEVICE_HANDLER_TRAMPOLINE(via6522, via_cb2_w)
 		}
     }
 }
-
-
-
-/***************************************************************************
-    TRAMPOLINES
-***************************************************************************/
-
-READ_LINE_DEVICE_HANDLER(via_ca1_r) { return downcast<via6522_device *>(device)->via_ca1_r(); }
-READ_LINE_DEVICE_HANDLER(via_ca2_r) { return downcast<via6522_device *>(device)->via_ca2_r(); }
-READ_LINE_DEVICE_HANDLER(via_cb1_r) { return downcast<via6522_device *>(device)->via_cb1_r(); }
-READ_LINE_DEVICE_HANDLER(via_cb2_r) { return downcast<via6522_device *>(device)->via_cb2_r(); }
-WRITE8_DEVICE_HANDLER(via_porta_w) { downcast<via6522_device *>(device)->via_porta_w(data); }
-READ8_DEVICE_HANDLER(via_portb_r) { return downcast<via6522_device *>(device)->via_portb_r(); }
-WRITE8_DEVICE_HANDLER(via_portb_w) { downcast<via6522_device *>(device)->via_portb_w(data); }

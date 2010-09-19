@@ -12,7 +12,6 @@
 #include "emu.h"
 #include "emuopts.h"
 #include "debugcmd.h"
-#include "debugcmt.h"
 #include "debugcon.h"
 #include "debugcpu.h"
 #include "express.h"
@@ -364,9 +363,6 @@ void debug_command_init(running_machine *machine)
 
 	debug_console_register_command(machine, "softreset",	CMDFLAG_NONE, 0, 0, 1, execute_softreset);
 	debug_console_register_command(machine, "hardreset",	CMDFLAG_NONE, 0, 0, 1, execute_hardreset);
-
-	/* ask all the devices if they would like to register functions or symbols */
-	machine->m_devicelist.debug_setup_all();
 
 	machine->add_notifier(MACHINE_NOTIFY_EXIT, debug_command_exit);
 
@@ -1117,7 +1113,7 @@ static void execute_comment(running_machine *machine, int ref, int params, const
 	}
 
 	/* Now try adding the comment */
-	debug_comment_add(cpu, address, param[1], 0x00ff0000, debug_comment_get_opcode_crc32(cpu, address));
+	cpu->debug()->comment_add(address, param[1], 0x00ff0000);
 	cpu->machine->m_debug_view->update_all(DVT_DISASSEMBLY);
 }
 
@@ -1141,7 +1137,7 @@ static void execute_comment_del(running_machine *machine, int ref, int params, c
 
 	/* If it's a number, it must be an address */
 	/* The bankoff and cbn will be pulled from what's currently active */
-	debug_comment_remove(cpu, address, debug_comment_get_opcode_crc32(cpu, address));
+	cpu->debug()->comment_remove(address);
 	cpu->machine->m_debug_view->update_all(DVT_DISASSEMBLY);
 }
 
@@ -2216,7 +2212,7 @@ static void execute_dasm(running_machine *machine, int ref, int params, const ch
 	for (i = 0; i < length; )
 	{
 		int pcbyte = space->address_to_byte(offset + i) & space->bytemask();
-		char output[200+DEBUG_COMMENT_MAX_LINE_LENGTH], disasm[200];
+		char output[512], disasm[200];
 		const char *comment;
 		offs_t tempaddr;
 		int outdex = 0;
@@ -2258,7 +2254,7 @@ static void execute_dasm(running_machine *machine, int ref, int params, const ch
 		sprintf(&output[outdex], "%s", disasm);
 
 		/* attempt to add the comment */
-		comment = debug_comment_get_text(space->cpu, tempaddr, debug_comment_get_opcode_crc32(space->cpu, tempaddr));
+		comment = space->cpu->debug()->comment_text(tempaddr);
 		if (comment != NULL)
 		{
 			/* somewhat arbitrary guess as to how long most disassembly lines will be [column 60] */

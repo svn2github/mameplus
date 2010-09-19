@@ -38,6 +38,7 @@
 ***************************************************************************/
 
 #include "emu.h"
+#include "debug/debugcpu.h"
 
 
 
@@ -136,44 +137,29 @@ void device_list::start_all()
 	state_save_register_presave(m_machine, static_pre_save, this);
 	state_save_register_postload(m_machine, static_post_load, this);
 
-	// iterate until we've started everything
-	int devcount = count();
-	int numstarted = 0;
-	while (numstarted < devcount)
+	// iterate over devices to start them
+	device_t *nextdevice;
+	for (device_t *device = first(); device != NULL; device = nextdevice)
 	{
-		// iterate over devices and start them
-		int prevstarted = numstarted;
-		for (device_t *device = first(); device != NULL; device = device->next())
-			if (!device->started())
-			{
-				// attempt to start the device, catching any expected exceptions
-				try
-				{
-					device->start();
-					numstarted++;
-				}
-				catch (device_missing_dependencies &)
-				{
-				}
-			}
+		// attempt to start the device, catching any expected exceptions
+		nextdevice = device->next();
+		try
+		{
+			mame_printf_verbose("Starting %s '%s'\n", device->name(), device->tag());
+			device->start();
+		}
 
-		// if we didn't start anything new, we're in trouble
-		if (numstarted == prevstarted)
-			fatalerror("Circular dependency in device startup; unable to start %d/%d devices\n", devcount - numstarted, devcount);
+		// handle missing dependencies by moving the device to the end
+		catch (device_missing_dependencies &)
+		{
+			// if we're the end, fail
+			mame_printf_verbose("  (missing dependencies; rescheduling)\n");
+			if (nextdevice == NULL)
+				throw emu_fatalerror("Circular dependency in device startup; unable to start %s '%s'\n", device->name(), device->tag());
+			detach(device);
+			append(device->tag(), device);
+		}
 	}
-}
-
-
-//-------------------------------------------------
-//  debug_setup_all - tell all the devices to set
-//  up any debugging they need
-//-------------------------------------------------
-
-void device_list::debug_setup_all()
-{
-	// iterate over devices and stop them
-	for (device_t *device = first(); device != NULL; device = device->next())
-		device->debug_setup();
 }
 
 
@@ -201,6 +187,11 @@ void device_list::static_reset(running_machine &machine)
 
 void device_list::static_exit(running_machine &machine)
 {
+	// first let the debugger save comments
+	if ((machine.debug_flags & DEBUG_FLAG_ENABLED) != 0)
+		debug_comment_save(&machine);
+
+	// then nuke the devices
 	machine.m_devicelist.reset();
 }
 
@@ -294,7 +285,7 @@ bool device_config_interface::interface_validity_check(const game_driver &driver
 //  device configuration
 //-------------------------------------------------
 
-device_config::device_config(const machine_config &mconfig, device_type type, const char *name, const char *tag, const device_config *owner, UINT32 clock)
+device_config::device_config(const machine_config &mconfig, device_type type, const char *name, const char *tag, const device_config *owner, UINT32 clock, UINT32 param)
 	: m_next(NULL),
 	  m_owner(const_cast<device_config *>(owner)),
 	  m_interface_list(NULL),
@@ -557,7 +548,8 @@ device_t::device_t(running_machine &_machine, const device_config &config)
 	  m_baseconfig(config),
 	  m_unscaled_clock(config.m_clock),
 	  m_clock_scale(1.0),
-	  m_attoseconds_per_clock((config.m_clock == 0) ? 0 : HZ_TO_ATTOSECONDS(config.m_clock))
+	  m_attoseconds_per_clock((config.m_clock == 0) ? 0 : HZ_TO_ATTOSECONDS(config.m_clock)),
+	  m_auto_finder_list(NULL)
 {
 }
 
@@ -701,6 +693,10 @@ void device_t::start()
 	// populate the region field
 	m_region = m_machine.region(tag());
 
+	// find all the registered devices
+	for (auto_finder_base *autodev = m_auto_finder_list; autodev != NULL; autodev = autodev->m_next)
+		autodev->findit(*this);
+
 	// let the interfaces do their pre-work
 	for (device_interface *intf = m_interface_list; intf != NULL; intf = intf->interface_next())
 		intf->interface_pre_start();
@@ -728,6 +724,13 @@ void device_t::start()
 
 	// force an update of the clock
 	notify_clock_changed();
+
+	// if we're debugging, create a device_debug object
+	if ((m_machine.debug_flags & DEBUG_FLAG_ENABLED) != 0)
+	{
+		m_debug = auto_alloc(&m_machine, device_debug(*this));
+		debug_setup();
+	}
 
 	// register our save states
 	state_save_register_device_item(this, 0, m_clock);
@@ -866,6 +869,17 @@ void device_t::device_debug_setup()
 
 
 //-------------------------------------------------
+//  device_timer - called whenever a device timer
+//  fires
+//-------------------------------------------------
+
+void device_t::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
+{
+	// do nothing by default
+}
+
+
+//-------------------------------------------------
 //  notify_clock_changed - notify all interfaces
 //  that the clock has changed
 //-------------------------------------------------
@@ -878,4 +892,73 @@ void device_t::notify_clock_changed()
 
 	// then notify the device
 	device_clock_changed();
+}
+
+
+//-------------------------------------------------
+//  register_auto_finder - add a new item to the
+//  list of stuff to find after we go live
+//-------------------------------------------------
+
+void device_t::register_auto_finder(auto_finder_base &autodev)
+{
+	// add to this list
+	autodev.m_next = m_auto_finder_list;
+	m_auto_finder_list = &autodev;
+}
+
+
+//-------------------------------------------------
+//  auto_finder_base - constructor
+//-------------------------------------------------
+
+device_t::auto_finder_base::auto_finder_base(device_t &base, const char *tag)
+	: m_next(NULL),
+	  m_tag(tag)
+{
+	// register ourselves with our device class
+	base.register_auto_finder(*this);
+}
+
+
+//-------------------------------------------------
+//  ~auto_finder_base - destructor
+//-------------------------------------------------
+
+device_t::auto_finder_base::~auto_finder_base()
+{
+}
+
+
+//-------------------------------------------------
+//  find_device - find a device; done here instead
+//  of inline in the template due to include
+//  dependency ordering
+//-------------------------------------------------
+
+device_t *device_t::auto_finder_base::find_device(device_t &base, const char *tag)
+{
+	return base.subdevice(tag);
+}
+
+
+//-------------------------------------------------
+//  find_shared_ptr - find a shared pointer
+//-------------------------------------------------
+
+void *device_t::auto_finder_base::find_shared_ptr(device_t &base, const char *tag)
+{
+	return memory_get_shared(*base.machine, tag);
+}
+
+
+//-------------------------------------------------
+//  find_shared_size - find a shared pointer size
+//-------------------------------------------------
+
+size_t device_t::auto_finder_base::find_shared_size(device_t &base, const char *tag)
+{
+	size_t result = 0;
+	memory_get_shared(*base.machine, tag, result);
+	return result;
 }

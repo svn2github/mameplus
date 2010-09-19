@@ -279,6 +279,7 @@ static int execute_simple_commands(core_options *options, const char *exename)
 	/* validate? */
 	if (options_get_bool(options, CLIOPTION_VALIDATE))
 	{
+		set_mame_options(options);
 #ifdef DRIVER_SWITCH
 		options_set_string(options, OPTION_DRIVER_CONFIG, "all", OPTION_PRIORITY_INI);
 		assign_drivers(options);
@@ -722,13 +723,13 @@ int cli_info_listcrc(core_options *options, const char *gamename)
 	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
-			machine_config *config = global_alloc(machine_config(drivers[drvindex]->machine_config));
+			machine_config config(*drivers[drvindex]);
 			const rom_entry *region, *rom;
 			const rom_source *source;
 
 			/* iterate over sources, regions, and then ROMs within the region */
-			for (source = rom_first_source(drivers[drvindex], config); source != NULL; source = rom_next_source(drivers[drvindex], config, source))
-				for (region = rom_first_region(drivers[drvindex], source); region; region = rom_next_region(region))
+			for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
+				for (region = rom_first_region(*source); region; region = rom_next_region(region))
 					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 					{
 						char hashbuf[HASH_BUF_SIZE];
@@ -739,7 +740,6 @@ int cli_info_listcrc(core_options *options, const char *gamename)
 					}
 
 			count++;
-			global_free(config);
 		}
 
 	/* return an error if none found */
@@ -760,7 +760,7 @@ int cli_info_listroms(core_options *options, const char *gamename)
 	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
-			machine_config *config = global_alloc(machine_config(drivers[drvindex]->machine_config));
+			machine_config config(*drivers[drvindex]);
 			const rom_entry *region, *rom;
 			const rom_source *source;
 
@@ -771,8 +771,8 @@ int cli_info_listroms(core_options *options, const char *gamename)
 					"Name            Size Checksum\n"), drivers[drvindex]->name);
 
 			/* iterate over sources, regions and then ROMs within the region */
-			for (source = rom_first_source(drivers[drvindex], config); source != NULL; source = rom_next_source(drivers[drvindex], config, source))
-				for (region = rom_first_region(drivers[drvindex], source); region != NULL; region = rom_next_region(region))
+			for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
+				for (region = rom_first_region(*source); region != NULL; region = rom_next_region(region))
 					for (rom = rom_first_file(region); rom != NULL; rom = rom_next_file(rom))
 					{
 						const char *name = ROM_GETNAME(rom);
@@ -810,7 +810,6 @@ int cli_info_listroms(core_options *options, const char *gamename)
 					}
 
 			count++;
-			global_free(config);
 		}
 
 	return (count > 0) ? MAMERR_NONE : MAMERR_NO_SUCH_GAME;
@@ -831,12 +830,12 @@ int cli_info_listsamples(core_options *options, const char *gamename)
 	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
-			machine_config *config = global_alloc(machine_config(drivers[drvindex]->machine_config));
+			machine_config config(*drivers[drvindex]);
 			const device_config_sound_interface *sound = NULL;
 
 			/* find samples interfaces */
-			for (bool gotone = config->m_devicelist.first(sound); gotone; gotone = sound->next(sound))
-				if (sound->devconfig().type() == SOUND_SAMPLES)
+			for (bool gotone = config.m_devicelist.first(sound); gotone; gotone = sound->next(sound))
+				if (sound->devconfig().type() == SAMPLES)
 				{
 					const char *const *samplenames = ((const samples_interface *)sound->devconfig().static_config())->samplenames;
 					int sampnum;
@@ -848,7 +847,6 @@ int cli_info_listsamples(core_options *options, const char *gamename)
 				}
 
 			count++;
-			global_free(config);
 		}
 
 	return (count > 0) ? MAMERR_NONE : MAMERR_NO_SUCH_GAME;
@@ -870,7 +868,7 @@ int cli_info_listdevices(core_options *options, const char *gamename)
 	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
-			machine_config *config = global_alloc(machine_config(drivers[drvindex]->machine_config));
+			machine_config config(*drivers[drvindex]);
 			const device_config *devconfig;
 
 			if (count != 0)
@@ -878,7 +876,7 @@ int cli_info_listdevices(core_options *options, const char *gamename)
 			printf(_("Driver %s (%s):\n"), drivers[drvindex]->name, _LST(drivers[drvindex]->description));
 
 			/* iterate through devices */
-			for (devconfig = config->m_devicelist.first(); devconfig != NULL; devconfig = devconfig->next())
+			for (devconfig = config.m_devicelist.first(); devconfig != NULL; devconfig = devconfig->next())
 			{
 				printf("   %s ('%s')", devconfig->name(), devconfig->tag());
 
@@ -896,7 +894,6 @@ int cli_info_listdevices(core_options *options, const char *gamename)
 			}
 
 			count++;
-			global_free(config);
 		}
 
 	return (count > 0) ? MAMERR_NONE : MAMERR_NO_SUCH_GAME;
@@ -1008,9 +1005,9 @@ static int info_listsoftware(core_options *options, const char *gamename)
 		if ( mame_strwildcmp( gamename, drivers[drvindex]->name ) == 0 )
 		{
 			/* allocate the machine config */
-			machine_config *config = global_alloc(machine_config(drivers[drvindex]->machine_config));
+			machine_config config(*drivers[drvindex]);
 
-			for (const device_config *dev = config->m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
+			for (const device_config *dev = config.m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
 			{
 				software_list_config *swlist = (software_list_config *)downcast<const legacy_device_config_base *>(dev)->inline_config();
 
@@ -1020,9 +1017,6 @@ static int info_listsoftware(core_options *options, const char *gamename)
 						nr_lists++;
 				}
 			}
-
-			/* free the machine config */
-			global_free(config);
 		}
 	}
 
@@ -1069,9 +1063,9 @@ static int info_listsoftware(core_options *options, const char *gamename)
 		if ( mame_strwildcmp( gamename, drivers[drvindex]->name ) == 0 )
 		{
 			/* allocate the machine config */
-			machine_config *config = global_alloc(machine_config(drivers[drvindex]->machine_config));
+			machine_config config(*drivers[drvindex]);
 
-			for (const device_config *dev = config->m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
+			for (const device_config *dev = config.m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
 			{
 				software_list_config *swlist = (software_list_config *)downcast<const legacy_device_config_base *>(dev)->inline_config();
 
@@ -1178,8 +1172,6 @@ static int info_listsoftware(core_options *options, const char *gamename)
 					}
 				}
 			}
-
-			global_free(config);
 		}
 	}
 
@@ -1202,9 +1194,9 @@ static void softlist_match_roms(core_options *options, const char *hash, int len
 	/* iterate over drivers */
 	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 	{
-		machine_config *config = global_alloc(machine_config(drivers[drvindex]->machine_config));
+		machine_config config(*drivers[drvindex]);
 
-		for (const device_config *dev = config->m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
+		for (const device_config *dev = config.m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
 		{
 			software_list_config *swlist = (software_list_config *)downcast<const legacy_device_config_base *>(dev)->inline_config();
 
@@ -1241,8 +1233,6 @@ static void softlist_match_roms(core_options *options, const char *hash, int len
 				}
 			}
 		}
-
-		global_free(config);
 	}
 }
 
@@ -1256,7 +1246,6 @@ static int info_listmedia(core_options *options, const char *gamename)
 {
 	int count = 0, devcount;
 	int drvindex;
-	machine_config *config;
 	const device_config_image_interface *dev = NULL;
 	const char *src;
 	const char *driver_name;
@@ -1272,13 +1261,13 @@ static int info_listmedia(core_options *options, const char *gamename)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			/* allocate the machine config */
-			config = global_alloc(machine_config(drivers[drvindex]->machine_config));
+			machine_config config(*drivers[drvindex]);
 
 			driver_name = drivers[drvindex]->name;
 
 			devcount = 0;
 
-			for (bool gotone = config->m_devicelist.first(dev); gotone; gotone = dev->next(dev))
+			for (bool gotone = config.m_devicelist.first(dev); gotone; gotone = dev->next(dev))
 			{
 				src = downcast<const legacy_image_device_config_base *>(dev)->file_extensions();
 				name = downcast<const legacy_image_device_config_base *>(dev)->instance_name();
@@ -1303,7 +1292,6 @@ static int info_listmedia(core_options *options, const char *gamename)
 				printf("%-13s(none)\n",driver_name);
 
 			count++;
-			global_free(config);
 		}
 
 	if (!count)
@@ -1709,13 +1697,13 @@ static void match_roms(core_options *options, const char *hash, int length, int 
 	/* iterate over drivers */
 	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 	{
-		machine_config *config = global_alloc(machine_config(drivers[drvindex]->machine_config));
+		machine_config config(*drivers[drvindex]);
 		const rom_entry *region, *rom;
 		const rom_source *source;
 
 		/* iterate over sources, regions and files within the region */
-		for (source = rom_first_source(drivers[drvindex], config); source != NULL; source = rom_next_source(drivers[drvindex], config, source))
-			for (region = rom_first_region(drivers[drvindex], source); region; region = rom_next_region(region))
+		for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
+			for (region = rom_first_region(*source); region; region = rom_next_region(region))
 				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 					if (hash_data_is_equal(hash, ROM_GETHASHDATA(rom), 0))
 					{
@@ -1727,8 +1715,6 @@ static void match_roms(core_options *options, const char *hash, int length, int 
 						mame_printf_info("= %s%-20s  %-10s %s\n", baddump ? _("(BAD) ") : "", ROM_GETNAME(rom), drivers[drvindex]->name, _LST(drivers[drvindex]->description));
 						(*found)++;
 					}
-
-		global_free(config);
 	}
 
 	softlist_match_roms( options, hash, length, found );

@@ -32,11 +32,11 @@ enum
 //**************************************************************************
 
 #define MDRV_OKIM6295_ADD(_tag, _clock, _pin7) \
-	MDRV_DEVICE_ADD(_tag, SOUND_OKIM6295, _clock) \
+	MDRV_DEVICE_ADD(_tag, OKIM6295, _clock) \
 	MDRV_OKIM6295_PIN7(_pin7)
 
 #define MDRV_OKIM6295_REPLACE(_tag, _clock, _pin7) \
-	MDRV_DEVICE_REPLACE(_tag, SOUND_OKIM6295, _clock) \
+	MDRV_DEVICE_REPLACE(_tag, OKIM6295, _clock) \
 	MDRV_OKIM6295_PIN7(_pin7)
 
 #define MDRV_OKIM6295_PIN7(_pin7) \
@@ -120,6 +120,9 @@ public:
 	void set_bank_base(offs_t base);
 	void set_pin7(int pin7);
 
+	UINT8 read_status();
+	void write_command(UINT8 command);
+
 	DECLARE_READ8_MEMBER( read );
 	DECLARE_WRITE8_MEMBER( write );
 
@@ -167,16 +170,7 @@ protected:
 
 
 // device type definition
-extern const device_type SOUND_OKIM6295;
-
-
-
-//**************************************************************************
-//  READ/WRITE HANDLERS
-//**************************************************************************
-
-READ8_DEVICE_HANDLER( okim6295_r );
-WRITE8_DEVICE_HANDLER( okim6295_w );
+extern const device_type OKIM6295;
 
 
 #endif /* __OKIM6295_H__ */

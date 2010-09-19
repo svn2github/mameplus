@@ -552,7 +552,7 @@ COBJFLAGS += \
 #-------------------------------------------------
 
 # add core include paths
-CCOMFLAGS += \
+INCPATH += \
 	-I$(SRC)/$(TARGET) \
 	-I$(OBJ)/$(TARGET)/layout \
 	-I$(SRC)/emu \
@@ -561,6 +561,7 @@ CCOMFLAGS += \
 	-I$(SRC)/lib/util \
 	-I$(SRC)/osd \
 	-I$(SRC)/osd/$(OSD) \
+
 
 
 #-------------------------------------------------
@@ -648,7 +649,7 @@ LIBS =
 
 # add expat XML library
 ifeq ($(BUILD_EXPAT),1)
-CCOMFLAGS += -I$(SRC)/lib/expat
+INCPATH += -I$(SRC)/lib/expat
 EXPAT = $(OBJ)/libexpat.a
 else
 LIBS += -lexpat
@@ -657,7 +658,7 @@ endif
 
 # add ZLIB compression library
 ifeq ($(BUILD_ZLIB),1)
-CCOMFLAGS += -I$(SRC)/lib/zlib
+INCPATH += -I$(SRC)/lib/zlib
 ZLIB = $(OBJ)/libz.a
 else
 LIBS += -lz
@@ -709,6 +710,7 @@ include $(SRC)/mess/mess.mak
 endif
 
 # combine the various definitions to one
+CCOMFLAGS += $(INCPATH)
 CDEFS = $(DEFS)
 
 
@@ -720,6 +722,22 @@ CDEFS = $(DEFS)
 emulator: maketree $(BUILD) $(EMULATOR)
 
 buildtools: maketree $(BUILD)
+
+# In order to keep dependencies reasonable, we exclude objects in the base of
+# $(SRC)/emu, as well as all the OSD objects and anything in the $(OBJ) tree
+depend: maketree $(MAKEDEP_TARGET)
+	@echo Rebuilding depend.mak...
+	$(MAKEDEP) -I. $(INCPATH) -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... src/mame > depend.mak
+
+INCPATH += \
+	-I$(SRC)/$(TARGET) \
+	-I$(OBJ)/$(TARGET)/layout \
+	-I$(SRC)/emu \
+	-I$(OBJ)/emu \
+	-I$(OBJ)/emu/layout \
+	-I$(SRC)/lib/util \
+	-I$(SRC)/osd \
+	-I$(SRC)/osd/$(OSD) \
 
 tools: maketree $(TOOLS)
 
@@ -816,11 +834,11 @@ $(OBJ)/%.s: $(SRC)/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -S $< -o $@
 
-$(OBJ)/%.lh: $(SRC)/%.lay $(FILE2STR)
+$(OBJ)/%.lh: $(SRC)/%.lay $(FILE2STR_TARGET)
 	@echo Converting $<...
 	@$(FILE2STR) $< $@ layout_$(basename $(notdir $<))
 
-$(OBJ)/%.fh: $(OBJ)/%.bdc $(FILE2STR)
+$(OBJ)/%.fh: $(OBJ)/%.bdc $(FILE2STR_TARGET)
 	@echo Converting $<...
 	@$(FILE2STR) $< $@ font_$(basename $(notdir $<)) UINT8
 
@@ -841,13 +859,13 @@ endif
 # embedded font
 #-------------------------------------------------
 
-$(EMUOBJ)/uismall11.bdc: $(PNG2BDC) \
+$(EMUOBJ)/uismall11.bdc: $(PNG2BDC_TARGET) \
 		$(SRC)/emu/font/uismall.png \
 		$(SRC)/emu/font/cp1250.png
 	@echo Generating $@...
 	@$^ $@
 
-$(EMUOBJ)/uismall14.bdc: $(PNG2BDC) \
+$(EMUOBJ)/uismall14.bdc: $(PNG2BDC_TARGET) \
 		$(SRC)/emu/font/cp1252.png \
 		$(SRC)/emu/font/cp932.png \
 		$(SRC)/emu/font/cp932hw.png \
@@ -857,11 +875,18 @@ $(EMUOBJ)/uismall14.bdc: $(PNG2BDC) \
 	@echo Generating $@...
 	@$^ $@
 
-$(EMUOBJ)/uicmd11.bdc: $(PNG2BDC) $(SRC)/emu/font/cmd11.png
+$(EMUOBJ)/uicmd11.bdc: $(PNG2BDC_TARGET) $(SRC)/emu/font/cmd11.png
 	@echo Generating $@...
 	@$^ $@
 
-$(EMUOBJ)/uicmd14.bdc: $(PNG2BDC) $(SRC)/emu/font/cmd14.png
+$(EMUOBJ)/uicmd14.bdc: $(PNG2BDC_TARGET) $(SRC)/emu/font/cmd14.png
 	@echo Generating $@...
 	@$^ $@
 
+
+
+#-------------------------------------------------
+# optional dependencies file
+#-------------------------------------------------
+
+-include depend.mak
