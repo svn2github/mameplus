@@ -117,13 +117,11 @@ enum flash_state
 };
 
 
-class ngp_state : public driver_data_t
+class ngp_state : public driver_device
 {
 public:
-	static driver_data_t *alloc(running_machine &machine) { return auto_alloc_clear(&machine, ngp_state(machine)); }
-
-	ngp_state(running_machine &machine)
-		: driver_data_t(machine) { }
+	ngp_state(running_machine &machine, const driver_device_config_base &config)
+		: driver_device(machine, config) { }
 
 	UINT8 io_reg[0x40];
 	UINT8 old_to3;
@@ -769,8 +767,7 @@ static const tlcs900_interface ngp_tlcs900_interface =
 };
 
 
-static MACHINE_DRIVER_START( ngp_common )
-	MDRV_DRIVER_DATA( ngp_state )
+static MACHINE_CONFIG_START( ngp_common, ngp_state )
 
 	MDRV_CPU_ADD( "maincpu", TLCS900H, XTAL_6_144MHz )
 	MDRV_CPU_PROGRAM_MAP( ngp_mem)
@@ -801,11 +798,10 @@ static MACHINE_DRIVER_START( ngp_common )
 	MDRV_SOUND_ROUTE( ALL_OUTPUTS, "lspeaker", 0.50 )
 	MDRV_SOUND_ADD( "dac_r", DAC, 0 )
 	MDRV_SOUND_ROUTE( ALL_OUTPUTS, "rspeaker", 0.50 )
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( ngp )
-	MDRV_IMPORT_FROM( ngp_common )
+static MACHINE_CONFIG_DERIVED( ngp, ngp_common )
 
 	MDRV_PALETTE_LENGTH( 8 )
 	MDRV_PALETTE_INIT( k1ge )
@@ -820,11 +816,10 @@ static MACHINE_DRIVER_START( ngp )
 	MDRV_CARTSLOT_INTERFACE("ngp_cart")
 	MDRV_CARTSLOT_UNLOAD(ngp_cart)
 	MDRV_SOFTWARE_LIST_ADD("cart_list","ngp")
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( ngpc )
-	MDRV_IMPORT_FROM( ngp_common )
+static MACHINE_CONFIG_DERIVED( ngpc, ngp_common )
 
 	MDRV_PALETTE_LENGTH( 4096 )
 	MDRV_PALETTE_INIT( k2ge )
@@ -839,7 +834,7 @@ static MACHINE_DRIVER_START( ngpc )
 	MDRV_CARTSLOT_INTERFACE("ngp_cart")
 	MDRV_CARTSLOT_UNLOAD(ngp_cart)
 	MDRV_SOFTWARE_LIST_ADD("cart_list","ngp")
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
 ROM_START( ngp )

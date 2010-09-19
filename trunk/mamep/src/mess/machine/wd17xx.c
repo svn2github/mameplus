@@ -523,7 +523,7 @@ static TIMER_CALLBACK( wd17xx_data_callback )
 			else
 			{
 				/* Delay the INTRQ 3 byte times because we need to read two CRC bytes and
-				   compare them with a calculated CRC */
+                   compare them with a calculated CRC */
 				wd17xx_complete_command(device, DELAY_DATADONE);
 
 				if (VERBOSE)
@@ -2043,7 +2043,7 @@ static DEVICE_RESET( wd1770 )
 
 	w->hd = 0;
 	w->hld_count = 0;
-
+	w->sector = 1;
 	wd17xx_command_restore(device);
 }
 

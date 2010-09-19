@@ -851,7 +851,7 @@ static void a1200xl_mmu(running_machine *machine, UINT8 new_mmu)
 static void xegs_mmu(running_machine *machine, UINT8 new_mmu)
 {
 	UINT8 *base2, *base3, *base4;
-	
+
 	/* check if memory C000-FFFF changed */
 	if( new_mmu & 0x01 )
 	{
@@ -873,8 +873,8 @@ static void xegs_mmu(running_machine *machine, UINT8 new_mmu)
 	}
 	memory_set_bankptr(machine, "bank3", base3);
 	memory_set_bankptr(machine, "bank4", base4);
-	
-	
+
+
 	/* check if self-test ROM changed */
 	if( new_mmu & 0x80 )
 	{
@@ -1017,15 +1017,15 @@ static const pia6821_interface xegs_pia_interface =
  *
  **************************************************************/
 
-static MACHINE_DRIVER_START( a400_cartslot )
+static MACHINE_CONFIG_FRAGMENT( a400_cartslot )
 	MDRV_CARTSLOT_ADD("cart1")
 	MDRV_CARTSLOT_EXTENSION_LIST("rom,bin")
 	MDRV_CARTSLOT_NOT_MANDATORY
 	MDRV_CARTSLOT_LOAD(a800_cart)
 	MDRV_CARTSLOT_UNLOAD(a800_cart)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
-static MACHINE_DRIVER_START( a800_cartslot )
+static MACHINE_CONFIG_FRAGMENT( a800_cartslot )
 	MDRV_CARTSLOT_ADD("cart1")
 	MDRV_CARTSLOT_EXTENSION_LIST("rom,bin")
 	MDRV_CARTSLOT_NOT_MANDATORY
@@ -1037,9 +1037,9 @@ static MACHINE_DRIVER_START( a800_cartslot )
 	MDRV_CARTSLOT_NOT_MANDATORY
 	MDRV_CARTSLOT_LOAD(a800_cart)
 	MDRV_CARTSLOT_UNLOAD(a800_cart)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
-static MACHINE_DRIVER_START( atari_common_nodac )
+static MACHINE_CONFIG_START( atari_common_nodac, driver_device )
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M6502, FREQ_17_EXACT)
 
@@ -1067,18 +1067,16 @@ static MACHINE_DRIVER_START( atari_common_nodac )
 	MDRV_RAM_DEFAULT_SIZE("40K")
 
 	MDRV_ATARI_FDC_ADD("fdc")
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( atari_common )
-	MDRV_IMPORT_FROM( atari_common_nodac )
+static MACHINE_CONFIG_DERIVED( atari_common, atari_common_nodac )
 	MDRV_SOUND_ADD("dac", DAC, 0)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( a400 )
-	MDRV_IMPORT_FROM( atari_common )
+static MACHINE_CONFIG_DERIVED( a400, atari_common )
 
 	MDRV_CPU_MODIFY( "maincpu" )
 	MDRV_CPU_PROGRAM_MAP(a400_mem)
@@ -1090,12 +1088,11 @@ static MACHINE_DRIVER_START( a400 )
 	MDRV_SCREEN_REFRESH_RATE(FRAME_RATE_60HZ)
 	MDRV_SCREEN_SIZE(HWIDTH*8, TOTAL_LINES_60HZ)
 
-	MDRV_IMPORT_FROM(a400_cartslot)
-MACHINE_DRIVER_END
+	MDRV_FRAGMENT_ADD(a400_cartslot)
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( a400pal )
-	MDRV_IMPORT_FROM( atari_common )
+static MACHINE_CONFIG_DERIVED( a400pal, atari_common )
 
 	MDRV_CPU_MODIFY( "maincpu" )
 	MDRV_CPU_PROGRAM_MAP(a400_mem)
@@ -1107,12 +1104,11 @@ static MACHINE_DRIVER_START( a400pal )
 	MDRV_SCREEN_REFRESH_RATE(FRAME_RATE_50HZ)
 	MDRV_SCREEN_SIZE(HWIDTH*8, TOTAL_LINES_50HZ)
 
-	MDRV_IMPORT_FROM(a400_cartslot)
-MACHINE_DRIVER_END
+	MDRV_FRAGMENT_ADD(a400_cartslot)
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( a800 )
-	MDRV_IMPORT_FROM( atari_common )
+static MACHINE_CONFIG_DERIVED( a800, atari_common )
 
 	MDRV_CPU_MODIFY( "maincpu" )
 	MDRV_CPU_PROGRAM_MAP(a800_mem)
@@ -1124,12 +1120,11 @@ static MACHINE_DRIVER_START( a800 )
 	MDRV_SCREEN_REFRESH_RATE(FRAME_RATE_60HZ)
 	MDRV_SCREEN_SIZE(HWIDTH*8, TOTAL_LINES_60HZ)
 
-	MDRV_IMPORT_FROM(a800_cartslot)
-MACHINE_DRIVER_END
+	MDRV_FRAGMENT_ADD(a800_cartslot)
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( a800pal )
-	MDRV_IMPORT_FROM( atari_common )
+static MACHINE_CONFIG_DERIVED( a800pal, atari_common )
 
 	MDRV_CPU_MODIFY( "maincpu" )
 	MDRV_CPU_PROGRAM_MAP(a800_mem)
@@ -1141,12 +1136,11 @@ static MACHINE_DRIVER_START( a800pal )
 	MDRV_SCREEN_REFRESH_RATE(FRAME_RATE_50HZ)
 	MDRV_SCREEN_SIZE(HWIDTH*8, TOTAL_LINES_50HZ)
 
-	MDRV_IMPORT_FROM(a800_cartslot)
-MACHINE_DRIVER_END
+	MDRV_FRAGMENT_ADD(a800_cartslot)
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( a600xl )
-	MDRV_IMPORT_FROM( atari_common )
+static MACHINE_CONFIG_DERIVED( a600xl, atari_common )
 
 	MDRV_CPU_MODIFY( "maincpu" )
 	MDRV_CPU_PROGRAM_MAP(a600xl_mem)	// FIXME?
@@ -1160,16 +1154,15 @@ static MACHINE_DRIVER_START( a600xl )
 	MDRV_SCREEN_REFRESH_RATE(FRAME_RATE_60HZ)
 	MDRV_SCREEN_SIZE(HWIDTH*8, TOTAL_LINES_60HZ)
 
-	MDRV_IMPORT_FROM(a400_cartslot)
+	MDRV_FRAGMENT_ADD(a400_cartslot)
 
 	/* internal ram */
 	MDRV_RAM_MODIFY("messram")
 	MDRV_RAM_DEFAULT_SIZE("16K")
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( a800xl )
-	MDRV_IMPORT_FROM( atari_common )
+static MACHINE_CONFIG_DERIVED( a800xl, atari_common )
 
 	MDRV_CPU_MODIFY( "maincpu" )
 	MDRV_CPU_PROGRAM_MAP(a800xl_mem)
@@ -1183,11 +1176,10 @@ static MACHINE_DRIVER_START( a800xl )
 	MDRV_SCREEN_REFRESH_RATE(FRAME_RATE_60HZ)
 	MDRV_SCREEN_SIZE(HWIDTH*8, TOTAL_LINES_60HZ)
 
-	MDRV_IMPORT_FROM(a400_cartslot)
-MACHINE_DRIVER_END
+	MDRV_FRAGMENT_ADD(a400_cartslot)
+MACHINE_CONFIG_END
 
-static MACHINE_DRIVER_START( a800xlpal )
-	MDRV_IMPORT_FROM( a800xl )
+static MACHINE_CONFIG_DERIVED( a800xlpal, a800xl )
 
 	MDRV_CPU_MODIFY( "maincpu" )
 	MDRV_CPU_CLOCK( 1773000 )
@@ -1198,16 +1190,14 @@ static MACHINE_DRIVER_START( a800xlpal )
 
 	MDRV_SOUND_MODIFY("pokey")
 	MDRV_SOUND_CLOCK(1773000)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
-static MACHINE_DRIVER_START( a1200xl )
-	MDRV_IMPORT_FROM( a800xl )
+static MACHINE_CONFIG_DERIVED( a1200xl, a800xl )
 
 	MDRV_PIA6821_MODIFY( "pia", a1200xl_pia_interface )
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
-static MACHINE_DRIVER_START( xegs )
-	MDRV_IMPORT_FROM( a800xl )
+static MACHINE_CONFIG_DERIVED( xegs, a800xl )
 
 	MDRV_CPU_MODIFY( "maincpu" )
 	MDRV_CPU_PROGRAM_MAP(xegs_mem)
@@ -1227,11 +1217,10 @@ static MACHINE_DRIVER_START( xegs )
 	/* software lists */
 	MDRV_SOFTWARE_LIST_ADD("cart_list","xegs")
 
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
-static MACHINE_DRIVER_START( a5200 )
-	MDRV_IMPORT_FROM( atari_common_nodac )
+static MACHINE_CONFIG_DERIVED( a5200, atari_common_nodac )
 
 	MDRV_CPU_MODIFY( "maincpu" )
 	MDRV_CPU_PROGRAM_MAP(a5200_mem)
@@ -1252,11 +1241,11 @@ static MACHINE_DRIVER_START( a5200 )
 
 	/* Software lists */
 	MDRV_SOFTWARE_LIST_ADD("cart_list","a5200")
-	
+
 	/* internal ram */
 	MDRV_RAM_MODIFY("messram")
 	MDRV_RAM_DEFAULT_SIZE("16K")
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
 /**************************************************************

@@ -67,7 +67,7 @@ static INPUT_PORTS_START( nes_controllers )
 	PORT_CATEGORY_ITEM(  0x0010, "Gamepad",			2 )
 	PORT_CATEGORY_ITEM(  0x0030, "Zapper",			6 )
 	PORT_CATEGORY_ITEM(  0x0040, "Arkanoid paddle",	7 )
-//	PORT_CATEGORY_ITEM(  0x0050, "Family Trainer",  11 )
+//  PORT_CATEGORY_ITEM(  0x0050, "Family Trainer",  11 )
 	PORT_CATEGORY_CLASS( 0x0f00, 0x0000, "P3 Controller")
 	PORT_CATEGORY_ITEM(  0x0000, "Unconnected",		0 )
 	PORT_CATEGORY_ITEM(  0x0100, "Gamepad",			3 )
@@ -410,7 +410,7 @@ static INPUT_PORTS_START( famikey )
 	PORT_CATEGORY_ITEM(  0x0010, "Gamepad",			2 )
 	PORT_CATEGORY_ITEM(  0x0030, "Zapper",			6 )
 	PORT_CATEGORY_ITEM(  0x0040, "Arkanoid paddle",	7 )
-//	PORT_CATEGORY_ITEM(  0x0050, "Family Trainer",  11 )
+//  PORT_CATEGORY_ITEM(  0x0050, "Family Trainer",  11 )
 	PORT_CATEGORY_CLASS( 0x0f00, 0x0000, "P3 Controller")
 	PORT_CATEGORY_ITEM(  0x0000, "Unconnected",		0 )
 	PORT_CATEGORY_ITEM(  0x0100, "Gamepad",			3 )
@@ -466,12 +466,10 @@ static const floppy_config nes_floppy_config =
 };
 
 
-static MACHINE_DRIVER_START( nes )
+static MACHINE_CONFIG_START( nes, nes_state )
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", N2A03, NTSC_CLOCK)
 	MDRV_CPU_PROGRAM_MAP(nes_map)
-
-	MDRV_DRIVER_DATA( nes_state )
 
 	MDRV_MACHINE_START( nes )
 	MDRV_MACHINE_RESET( nes )
@@ -507,10 +505,9 @@ static MACHINE_DRIVER_START( nes )
 	MDRV_CARTSLOT_LOAD(nes_cart)
 	MDRV_CARTSLOT_PARTIALHASH(nes_partialhash)
 	MDRV_SOFTWARE_LIST_ADD("cart_list","nes")
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
-static MACHINE_DRIVER_START( nespal )
-	MDRV_IMPORT_FROM( nes )
+static MACHINE_CONFIG_DERIVED( nespal, nes )
 
 	/* basic machine hardware */
 	MDRV_CPU_MODIFY( "maincpu" )
@@ -529,10 +526,9 @@ static MACHINE_DRIVER_START( nespal )
 	MDRV_SOUND_REPLACE("nessound", NES, PAL_CLOCK)
 	MDRV_SOUND_CONFIG(nes_apu_interface)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
-static MACHINE_DRIVER_START( dendy )
-	MDRV_IMPORT_FROM( nes )
+static MACHINE_CONFIG_DERIVED( dendy, nes )
 
 	/* basic machine hardware */
 	MDRV_CPU_MODIFY( "maincpu" )
@@ -551,10 +547,9 @@ static MACHINE_DRIVER_START( dendy )
 	MDRV_SOUND_REPLACE("nessound", NES, 26601712/15) /* 26.601712MHz / 15 == 1.77344746666... MHz */
 	MDRV_SOUND_CONFIG(nes_apu_interface)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
-static MACHINE_DRIVER_START( famicom )
-	MDRV_IMPORT_FROM( nes )
+static MACHINE_CONFIG_DERIVED( famicom, nes )
 
 	MDRV_CARTSLOT_MODIFY("cart")
 	MDRV_CARTSLOT_EXTENSION_LIST("nes,unf")
@@ -563,7 +558,7 @@ static MACHINE_DRIVER_START( famicom )
 	MDRV_CARTSLOT_PARTIALHASH(nes_partialhash)
 
 	MDRV_FLOPPY_DRIVE_ADD(FLOPPY_0, nes_floppy_config)
-MACHINE_DRIVER_END
+MACHINE_CONFIG_END
 
 
 /* rom regions are just place-holders: they get removed and re-allocated when a cart is loaded */

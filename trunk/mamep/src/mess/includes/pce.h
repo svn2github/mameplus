@@ -13,6 +13,9 @@
 
 #define C6280_TAG			"c6280"
 
+#define	MAIN_CLOCK		21477270
+#define PCE_CD_CLOCK	9216000
+
 #define PCE_HEADER_SIZE		512
 
 #define TG_16_JOY_SIG		0x00
@@ -44,12 +47,17 @@ extern const msm5205_interface pce_cd_msm5205_interface;
 WRITE8_HANDLER( pce_cd_bram_w );
 WRITE8_HANDLER( pce_cd_intf_w );
 READ8_HANDLER( pce_cd_intf_r );
+WRITE8_HANDLER( pce_cd_acard_w );
+READ8_HANDLER( pce_cd_acard_r );
+WRITE8_HANDLER( pce_cd_acard_wram_w );
+READ8_HANDLER( pce_cd_acard_wram_r );
 
 extern struct pce_struct pce;
 DRIVER_INIT( pce );
 DRIVER_INIT( tg16 );
 DRIVER_INIT( sgx );
-MACHINE_START( pce_ms );
+MACHINE_START( pce_mess );
+MACHINE_RESET( pce );
 
 
 #endif /* PCE_H_ */
