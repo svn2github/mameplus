@@ -354,7 +354,7 @@ MACHINE_START( pce_mess )
 
 static UINT8 joy_6b_packet[5];
 
-MACHINE_RESET( pce )
+MACHINE_RESET( pce_mess )
 {
 	int joy_i;
 

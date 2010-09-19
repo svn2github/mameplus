@@ -57,7 +57,7 @@ DRIVER_INIT( pce );
 DRIVER_INIT( tg16 );
 DRIVER_INIT( sgx );
 MACHINE_START( pce_mess );
-MACHINE_RESET( pce );
+MACHINE_RESET( pce_mess );
 
 
 #endif /* PCE_H_ */

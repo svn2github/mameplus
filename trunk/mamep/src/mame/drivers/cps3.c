@@ -2557,66 +2557,6 @@ static void copy_from_nvram(running_machine *machine)
 
 }
 
-static NVRAM_HANDLER( cps3 )
-{
-	int i;
-	UINT8 chd_flag = 0x00;
-	const rom_entry *region;
-
-	for (region = machine->gamedrv->rom; region; region = rom_next_region(region))
-	{
-		if (ROMREGION_ISDISKDATA(region)) chd_flag = 0x01;
-	}
-
-	if (chd_flag)
-	{
-		if (read_or_write)
-		{
-			//printf("read_write\n");
-			mame_fwrite(file, cps3_eeprom, 0x400);
-			for (i=0;i<48;i++)
-				nvram_handler_intelflash( machine, i, file, read_or_write );
-		}
-		else if (file)
-		{
-			//printf("file\n");
-			mame_fread(file, cps3_eeprom, 0x400);
-			for (i=0;i<48;i++)
-				nvram_handler_intelflash( machine, i, file, read_or_write );
-
-			copy_from_nvram(machine); // copy data from flashroms back into user regions + decrypt into regions we execute/draw from.
-		}
-		else
-		{
-			//printf("nothing?\n");
-			precopy_to_flash(machine); // attempt to copy data from user regions into flash roms (incase this is a NOCD set)
-			copy_from_nvram(machine); // copy data from flashroms back into user regions + decrypt into regions we execute/draw from.
-		}
-	}
-	else
-	{
-		if (read_or_write)
-		{
-			mame_fwrite(file, cps3_eeprom, 0x400);
-		}
-		else if (file)
-		{
-			mame_fread(file, cps3_eeprom, 0x400);
-			precopy_to_flash(machine);
-			copy_from_nvram(machine);
-		}
-		else
-		{
-			precopy_to_flash(machine);
-			copy_from_nvram(machine);
-		}
-	}
-
-
-}
-
-
-
 
 static int cps3_dma_callback(UINT32 src, UINT32 dst, UINT32 data, int size)
 {

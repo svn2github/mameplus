@@ -342,7 +342,7 @@ static MACHINE_CONFIG_START( pce_common, driver_device )
 	MDRV_QUANTUM_TIME(HZ(60))
 
 	MDRV_MACHINE_START( pce_mess )
-	MDRV_MACHINE_RESET( pce )
+	MDRV_MACHINE_RESET( pce_mess )
 
     /* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
@@ -393,7 +393,7 @@ static MACHINE_CONFIG_START( sgx, driver_device )
 	MDRV_QUANTUM_TIME(HZ(60))
 
 	MDRV_MACHINE_START( pce_mess )
-	MDRV_MACHINE_RESET( pce )
+	MDRV_MACHINE_RESET( pce_mess )
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)

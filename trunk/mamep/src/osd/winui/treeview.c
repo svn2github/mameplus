@@ -895,24 +895,15 @@ void CreateCPUFolders(int parent_index)
 	int i, j, device_folder_count = 0;
 	LPTREEFOLDER device_folders[512];
 	LPTREEFOLDER folder;
-	machine_config *config = NULL;
-	machine_config_constructor last_tokens = NULL;
 	const device_config_execute_interface *device;
 	int nFolder = numFolders;
 
 	for (i = 0; drivers[i] != NULL; i++)
 	{
-		// instantiate this device config (if it is different than the previous)
-		if (last_tokens != drivers[i]->machine_config)
-		{
-			if (config != NULL)
-				global_free(config);
-			config = global_alloc(machine_config(drivers[i]->machine_config));
-			last_tokens = drivers[i]->machine_config;
-		}
+		machine_config config(*drivers[i]);
 
 		// enumerate through all devices
-		for (bool gotone = config->m_devicelist.first(device); gotone; gotone = device->next(device))
+		for (bool gotone = config.m_devicelist.first(device); gotone; gotone = device->next(device))
 		{
 		
 			// get the name
@@ -947,9 +938,6 @@ void CreateCPUFolders(int parent_index)
 		}
 	}
 
-	// free the config that we're still holding on to
-	if (config != NULL)
-		global_free(config);	
 }
 
 void CreateSoundFolders(int parent_index)
@@ -957,25 +945,16 @@ void CreateSoundFolders(int parent_index)
 	int i, j, device_folder_count = 0;
 	LPTREEFOLDER device_folders[512];
 	LPTREEFOLDER folder;
-	machine_config *config = NULL;
-	machine_config_constructor last_tokens = NULL;
 	const device_config_sound_interface *device;
 	int nFolder = numFolders;
 
 	for (i = 0; drivers[i] != NULL; i++)
 	{
-		// instantiate this device config (if it is different than the previous)
-		if (last_tokens != drivers[i]->machine_config)
-		{
-			if (config != NULL)
-				global_free(config);
-			config = global_alloc(machine_config(drivers[i]->machine_config));
-			last_tokens = drivers[i]->machine_config;
-		}
+		machine_config config(*drivers[i]);
 
 		// enumerate through all devices
 		
-		for (bool gotone = config->m_devicelist.first(device); gotone; gotone = device->next(device))
+		for (bool gotone = config.m_devicelist.first(device); gotone; gotone = device->next(device))
 		{
 			// get the name
 			const TCHAR *dev_name = _Unicode(device->devconfig().name());
@@ -1008,10 +987,6 @@ void CreateSoundFolders(int parent_index)
 			AddGame(folder, i);
 		}
 	}
-
-	// free the config that we're still holding on to
-	if (config != NULL)
-		global_free(config);	
 }
 
 // mamep: updated mameui's horrible version
@@ -1081,7 +1056,6 @@ void CreateDumpingFolders(int parent_index)
 	const rom_entry *region, *rom;
 	//const char *name;
 	const game_driver *gamedrv;
-	machine_config *config;
 
 	// create our two subfolders
 	LPTREEFOLDER lpBad, lpNo;
@@ -1103,10 +1077,11 @@ void CreateDumpingFolders(int parent_index)
 		bBadDump = FALSE;
 		bNoDump = FALSE;
 		/* Allocate machine config */
-		config = global_alloc(machine_config(gamedrv->machine_config));
-		for (source = rom_first_source(gamedrv, config); source != NULL; source = rom_next_source(gamedrv, config, source))
+		machine_config config(*gamedrv);
+		
+		for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
 		{
-			for (region = rom_first_region(gamedrv, source); region; region = rom_next_region(region))
+			for (region = rom_first_region(*source); region; region = rom_next_region(region))
 			{
 				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 				{
@@ -1121,9 +1096,6 @@ void CreateDumpingFolders(int parent_index)
 				}
 		}
 		}
-		/* Free the structure */
-		global_free(config);
-		config = NULL;
 		if (bBadDump)
 		{
 			AddGame(lpBad,jj);
@@ -1247,14 +1219,14 @@ void CreateResolutionFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		machine_config *config = global_alloc(machine_config(drivers[jj]->machine_config));
+		machine_config config(*drivers[jj]);
 		const screen_device_config *screen;
-		screen = screen_first(*config);
+		screen = screen_first(config);
 		if (screen != NULL)
 		{
 			const rectangle &visarea = screen->visible_area();
 
-			if (isDriverVector(config))
+			if (isDriverVector(&config))
 			{
 				if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
 				{
@@ -1295,7 +1267,6 @@ void CreateResolutionFolders(int parent_index)
 				AddGame(lpTemp,jj);
 			}
 		}
-		global_free(config);
 	}
 }
 
@@ -1316,13 +1287,11 @@ void CreateFPSFolders(int parent_index)
 	{
 		LPTREEFOLDER lpTemp;
 		float f;
-		machine_config *config = global_alloc(machine_config(drivers[i]->machine_config));
+		machine_config config(*drivers[i]);
 		const screen_device_config *screen;
-		screen = screen_first(*config);
+		screen = screen_first(config);
 		if (screen != NULL)
 		{
-//			scrconfig = (screen_config *)screen->inline_config;
-
 			f = ATTOSECONDS_TO_HZ(screen->refresh());
 
 			for (jj = 0; jj < nFPS; jj++)
@@ -1346,7 +1315,6 @@ void CreateFPSFolders(int parent_index)
 
 			AddGame(map[jj],i);
 		}
-		global_free(config);
 	}
 }
 
