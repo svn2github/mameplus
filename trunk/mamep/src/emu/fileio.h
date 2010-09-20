@@ -23,15 +23,18 @@
 ***************************************************************************/
 
 /* search paths */
-#define SEARCHPATH_RAW			NULL
-#define SEARCHPATH_LANGUAGE		NULL
-#define SEARCHPATH_DEBUGLOG		NULL
+#define SEARCHPATH_RAW             NULL
+#define SEARCHPATH_LANGUAGE        NULL
+#define SEARCHPATH_DEBUGLOG        NULL
 
 #define SEARCHPATH_ROM             OPTION_ROMPATH
 #ifdef MAMEMESS
-#define SEARCHPATH_HASH            OPTION_HASHPATH
-#endif /* MAMEMESS */
 #define SEARCHPATH_IMAGE           OPTION_ROMPATH
+#define SEARCHPATH_HASH            OPTION_HASHPATH
+#else
+#define SEARCHPATH_IMAGE           OPTION_ROMPATH
+#define SEARCHPATH_HASH            NULL
+#endif
 #define SEARCHPATH_SAMPLE          OPTION_SAMPLEPATH
 #define SEARCHPATH_ARTWORK         OPTION_ARTPATH
 #define SEARCHPATH_CTRLR           OPTION_CTRLRPATH

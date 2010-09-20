@@ -616,11 +616,10 @@ static void pce_cd_nec_set_audio_start_position( running_machine *machine )
 		return;
 	}
 
-	printf("%02x MODE START\n",pce_cd.command_buffer[9] & 0xC0);
-
 	switch( pce_cd.command_buffer[9] & 0xC0 )
 	{
 	case 0x00:
+		popmessage("CD-DA set start mode 0x00, contact MESSdev");
 		frame = ( pce_cd.command_buffer[3] << 16 ) | ( pce_cd.command_buffer[4] << 8 ) | pce_cd.command_buffer[5];
 		break;
 	case 0x40:
@@ -631,25 +630,21 @@ static void pce_cd_nec_set_audio_start_position( running_machine *machine )
 		s = bcd_2_dec( pce_cd.command_buffer[3]);
 		f = bcd_2_dec( pce_cd.command_buffer[4]);
 
-		printf("%d %d %d START\n",m,s,f);
-
 		frame = f + 75 * (s + m * 60);
 		if(frame >= 525) // TODO: seven seconds gap? O_o
 			frame -= 525;
 		break;
 	}
 	case 0x80:
-		printf("%d TRACK START\n", bcd_2_dec ( pce_cd.command_buffer[2] ) - 1);
 		frame = pce_cd.toc->tracks[ bcd_2_dec( pce_cd.command_buffer[2] ) - 1 ].physframeofs;
 		break;
 	default:
+		popmessage("CD-DA set start mode 0xc0, contact MESSdev");
 		//assert( NULL == pce_cd_nec_set_audio_start_position );
 		break;
 	}
 
 	pce_cd.current_frame = frame;
-
-	printf("Set Start %02x\n",pce_cd.command_buffer[1] & 0x03);
 
 	if ( pce_cd.cdda_status == PCE_CD_CDDA_PAUSED )
 	{
@@ -694,11 +689,10 @@ static void pce_cd_nec_set_audio_stop_position( running_machine *machine )
 		return;
 	}
 
-	printf("%02x MODE END\n",pce_cd.command_buffer[9] & 0xC0);
-
 	switch( pce_cd.command_buffer[9] & 0xC0 )
 	{
 	case 0x00:
+		popmessage("CD-DA set end mode 0x00, contact MESSdev");
 		frame = ( pce_cd.command_buffer[3] << 16 ) | ( pce_cd.command_buffer[4] << 8 ) | pce_cd.command_buffer[5];
 		break;
 	case 0x40:
@@ -709,8 +703,6 @@ static void pce_cd_nec_set_audio_stop_position( running_machine *machine )
 		s = bcd_2_dec( pce_cd.command_buffer[3]);
 		f = bcd_2_dec( pce_cd.command_buffer[4]);
 
-		printf("%d %d %d END\n",m,s,f);
-
 		frame = f + 75 * (s + m * 60);
 		if(frame >= 525) // TODO: seven seconds gap? O_o
 			frame -= 525;
@@ -720,6 +712,7 @@ static void pce_cd_nec_set_audio_stop_position( running_machine *machine )
 		frame = pce_cd.toc->tracks[ bcd_2_dec( pce_cd.command_buffer[2] ) - 1 ].physframeofs;
 		break;
 	default:
+		popmessage("CD-DA set end mode 0xc0, contact MESSdev");
 		//assert( NULL == pce_cd_nec_set_audio_start_position );
 		break;
 	}
@@ -727,7 +720,6 @@ static void pce_cd_nec_set_audio_stop_position( running_machine *machine )
 	pce_cd.end_frame = frame;
 	pce_cd.cdda_play_mode = pce_cd.command_buffer[1] & 0x03;
 
-	//printf("Set End %02x\n",pce_cd.cdda_play_mode);
 	if ( pce_cd.cdda_play_mode )
 	{
 		if ( pce_cd.cdda_status == PCE_CD_CDDA_PAUSED )
@@ -1487,8 +1479,6 @@ WRITE8_HANDLER( pce_cd_intf_w )
 		msm5205_change_clock_w(space->machine->device("msm5205"), (PCE_CD_CLOCK / 6) / pce_cd.adpcm_clock_divider);
 		break;
 	case 0x0F:	/* ADPCM and CD audio fade timer */
-		printf("%02x FADE\n",data);
-
 		/* TODO: timers needs HW tests */
 		if(pce_cd.regs[0xf] != data)
 		{
@@ -1542,6 +1532,9 @@ WRITE8_HANDLER( pce_cd_intf_w )
 					pce_cd.adpcm_volume = 100.0;
 					timer_adjust_oneshot(pce_cd.adpcm_fadeout_timer, ATTOTIME_IN_USEC(1500), 1500);
 					timer_adjust_oneshot(pce_cd.adpcm_fadein_timer, attotime_never, NULL);
+					break;
+				default:
+					popmessage("CD-DA / ADPCM Fade effect mode %02x, contact MESSdev",data & 0x0f);
 					break;
 			}
 		}

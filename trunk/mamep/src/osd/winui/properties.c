@@ -874,7 +874,7 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 							visarea.max_y - visarea.min_y + 1,
 							ATTOSECONDS_TO_HZ(screen->refresh()), config.m_total_colors);
 				}
-					wcscat(buf, tmpbuf);
+				wcscat(buf, tmpbuf);
 			}
 		}
 	}
@@ -919,7 +919,6 @@ static LPCWSTR GameInfoInput(int nIndex)
 			wcscpy(control, _UIW(name[i]));
 		}
 	}
-
 	if (nplayer<1)
 		wcscpy(buf, _UIW(TEXT("Unknown")));
 	else

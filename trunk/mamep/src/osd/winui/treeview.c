@@ -1094,7 +1094,7 @@ void CreateDumpingFolders(int parent_index)
 							bNoDump = TRUE;
 					}
 				}
-		}
+			}
 		}
 		if (bBadDump)
 		{

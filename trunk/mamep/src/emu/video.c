@@ -360,7 +360,8 @@ static void video_exit(running_machine &machine)
 {
 	int i;
 
-#ifdef USE_SCALE_EFFECTS
+//mamep: 0.139u3 disabled this code to avert scale_effect crash
+#if 0
 	{
 		screen_device *screen = screen_first(machine);
 		screen->video_exit_scale_effect();
