@@ -1146,6 +1146,10 @@ WSAC 시스템
 Warashi
 와라시
 
+# Success Joe (World)
+Wave
+웨이브
+
 # Zorton Brothers (Los Justicieros)
 Web Picmatic
 웹 피크매틱
@@ -1166,6 +1170,14 @@ Windom
 Wing
 윙
 
+# Ron Jan (Super)
+Wing Co., Ltd
+윙
+
+# Lucky Girl? (Wing)
+Wing Co., Ltd.
+윙
+
 # Magical Cat Adventure
 Wintechno
 윈테크노
@@ -1173,6 +1185,10 @@ Wintechno
 # Domino Block
 Wonwoo Systems
 원우 시스템
+
+# Clash-Road
+Wood Place Inc.
+우드 플레이스
 
 # Vegas Roulette
 World Game
@@ -1198,6 +1214,10 @@ Yankee Game Technology
 Yanyaka
 얀야카
 
+# Spectrum 2000 (Euro)
+Yona Tech
+요나테크
+
 # Mahjong Yoshimoto Gekijou (Japan)
 Yoshimoto Kougyou
 요시모토 코우규
@@ -1205,6 +1225,10 @@ Yoshimoto Kougyou
 # Mahjong Uranai Densetsu (Japan)
 Yubis
 유비스
+
+# Mahjong Janjan Baribari (Japan)
+Yubis/AV Japan
+유비스/AV 재팬
 
 # Mahjong Gakuen
 Yuga
@@ -1249,6 +1273,10 @@ Zilec
 # Blue Print (Midway)
 Zilec Electronics
 Zilec 일렉트로닉스
+
+# Vortex
+Zilec Electronics Ltd.
+자일렉 일렉트로닉스
 
 # Check Man
 Zilec-Zenitone
@@ -2634,39 +2662,11 @@ Vesely Svet
 Video Fun Games Ltd.
 
 
-# Success Joe (World)
-Wave
-
-
-# Ron Jan (Super)
-Wing Co., Ltd
-
-
-# Lucky Girl? (Wing)
-Wing Co., Ltd.
-
-
-# Clash-Road
-Wood Place Inc.
-
-
 # Mahjong Club [BET] (Japan)
 Xex
 
 
 # Computer Quiz Atama no Taisou (Japan)
 Yachiyo Denki
-
-
-# Spectrum 2000 (Euro)
-Yona Tech
-
-
-# Mahjong Janjan Baribari (Japan)
-Yubis/AV Japan
-
-
-# Vortex
-Zilec Electronics Ltd.
 
 

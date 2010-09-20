@@ -737,10 +737,10 @@ finalap2j	파이널 랩 2 (일본판)	파이널 랩 2 (일본판)	Namco
 gollygho	골리! 고스트!	골리! 고스트!	Namco
 rthun2	롤링 썬더 2	롤링 썬더 2	Namco
 rthun2j	롤링 썬더 2 (일본판)	롤링 썬더 2 (일본판)	Namco
-sgunner	스틸 건너	스틸 건너	Namco
-sgunnerj	스틸 건너 (일본판)	스틸 건너 (일본판)	Namco
-sgunner2	스틸 건너 2 (미국판)	스틸 건너 2 (미국판)	Namco
-sgunner2j	스틸 건너 2 (일본판)	스틸 건너 2 (일본판)	Namco
+sgunner	스틸 거너	스틸 거너	Namco
+sgunnerj	스틸 거너 (일본판)	스틸 거너 (일본판)	Namco
+sgunner2	스틸 거너 2 (미국판)	스틸 거너 2 (미국판)	Namco
+sgunner2j	스틸 거너 2 (일본판)	스틸 거너 2 (일본판)	Namco
 cosmogng	코스모 갱 더 비디오 (미국판)	코스모 갱 더 비디오 (미국판)	Namco
 cosmogngj	코스모 갱 더 비디오 (일본판)	코스모 갱 더 비디오 (일본판)	Namco
 bubbletr	버블 트러블	버블 트러블	Namco
@@ -849,11 +849,13 @@ gunwars	건맨 워즈 (GM1 Ver. A)	건맨 워즈 (GM1 Ver. A)	Namco
 finfurl2	파이널 푸어롱 2 (세계판)	파이널 푸어롱 2 (세계판)	Namco
 finfurl2j	파이널 푸어롱 2 (일본판)	파이널 푸어롱 2 (일본판)	Namco
 crszone	크라이시스 존 (CSZO3 버전 B)	크라이시스 존 (CSZO3 버전 B)	Namco
+crszonea	크라이시스 존 (CSZO2 버전 A)	크라이시스 존 (CSZO2 버전 A)	Namco
 sys246	시스템 246 바이오스	시스템 246 바이오스	Namco
 dragchrn	드래곤 연대기 (DC001 버전 A)	드래곤 연대기 (DC001 버전 A)	Namco
 netchu02	네츄 프로 야구 2002 (NPY1 버전 A)	네츄 프로 야구 2002 (NPY1 버전 A)	Namco
 soulclb2	소울 칼리버 II (SC23 버전 A)	소울 칼리버 II (SC23 버전 A)	Namco
-soulcl2a	소울 칼리버 II (SC21 버전 A)	소울 칼리버 II (SC21 버전 A)	Namco
+soulcl2a	소울 칼리버 II (SC22 버전 A)	소울 칼리버 II (SC22 버전 A)	Namco
+soulcl2b	소울 칼리버 II (SC21 버전 A)	소울 칼리버 II (SC21 버전 A)	Namco
 tekken4	철권 4 (TEF3 버전 C)	철권 4 (TEF3 버전 C)	Namco
 tekken4a	철권 4 (TEF2 버전 A)	철권 4 (TEF2 버전 A)	Namco
 tekken4b	철권 4 (TEF1 버전 A)	철권 4 (TEF1 버전 A)	Namco
@@ -960,10 +962,10 @@ dkongjre	동키콩 쥬니어 (쉬운 난이도)	동키콩 쥬니어 (쉬운 난이도)	Nintendo of Ame
 dkong3	동키콩 3 (미국판)	동키콩 3 (미국판)	Nintendo of America
 dkong3j	동키콩 3 (일본판)	동키콩 3 (일본판)	Nintendo
 dkong3b	동키콩 3 (동키콩 쥬니어 하드웨어 해적판)	동키콩 3 (동키콩 쥬니어 하드웨어 해적판)	bootleg
-mario	마리오 브라더스 (미국판, 개정판 F)	마리오 브라더스 (미국판, 개정판 F)	Nintendo of America
-marioe	마리오 브라더스 (미국판, 개정판 E)	마리오 브라더스 (미국판, 개정판 E)	Nintendo of America
-marioo	마리오 브라더스 (미국판, 개정판?)	마리오 브라더스 (미국판, 개정판?)	Nintendo of America
-marioj	마리오 브라더스 (일본판)	마리오 브라더스 (일본판)	Nintendo
+mario	마리오 브러더스 (미국판, 개정판 F)	마리오 브러더스 (미국판, 개정판 F)	Nintendo of America
+marioe	마리오 브러더스 (미국판, 개정판 E)	마리오 브러더스 (미국판, 개정판 E)	Nintendo of America
+marioo	마리오 브러더스 (미국판, 개정판?)	마리오 브러더스 (미국판, 개정판?)	Nintendo of America
+marioj	마리오 브러더스 (일본판)	마리오 브러더스 (일본판)	Nintendo
 masao	마사오	마사오	bootleg
 pestplce	페스트 플레이스	페스트 플레이스	bootleg
 spclforc	스페셜 포스	스페셜 포스	Senko Industries (Magic Eletronics Inc. license)
@@ -991,14 +993,14 @@ spnchoutj	슈퍼 펀치아웃!! (일본판)	슈퍼 펀치아웃!! (일본판)	Nintendo
 armwrest	팔씨름	팔씨름	Nintendo
 playch10	PlayChoice-10 바이오스	PlayChoice-10 바이오스	Nintendo of America
 pc_tenis	테니스 (PlayChoice-10 기판)	테니스 (PlayChoice-10 기판)	Nintendo
-pc_mario	마리오 브라더스 (PlayChoice-10 기판)	마리오 브라더스 (PlayChoice-10 기판)	Nintendo
+pc_mario	마리오 브러더스 (PlayChoice-10 기판)	마리오 브러더스 (PlayChoice-10 기판)	Nintendo
 pc_bball	야구 (PlayChoice-10 기판)	야구 (PlayChoice-10 기판)	Nintendo of America
 pc_bfght	벌룬 파이트 (PlayChoice-10 기판)	벌룬 파이트 (PlayChoice-10 기판)	Nintendo
 pc_ebike	익사이트 바이크 (PlayChoice-10 기판)	익사이트 바이크 (PlayChoice-10 기판)	Nintendo
 pc_golf	골프 (PlayChoice-10 기판)	골프 (PlayChoice-10 기판)	Nintendo
 pc_kngfu	쿵후 (PlayChoice-10 기판)	쿵후 (PlayChoice-10 기판)	Irem (Nintendo license)
 pc_1942	1942 (PlayChoice-10 기판)	1942 (PlayChoice-10 기판)	Capcom
-pc_smb	슈퍼 마리오 브라더스 (PlayChoice-10 기판)	슈퍼 마리오 브라더스 (PlayChoice-10 기판)	Nintendo
+pc_smb	슈퍼 마리오 브러더스 (PlayChoice-10 기판)	슈퍼 마리오 브러더스 (PlayChoice-10 기판)	Nintendo
 pc_vball	배구 (PlayChoice-10 기판)	배구 (PlayChoice-10 기판)	Nintendo
 pc_duckh	덕 헌트 / 오리사냥 (PlayChoice-10 기판)	덕 헌트 / 오리사냥 (PlayChoice-10 기판)	Nintendo
 pc_hgaly	호건즈 앨리 (PlayChoice-10 기판)	호건즈 앨리 (PlayChoice-10 기판)	Nintendo
@@ -1028,8 +1030,8 @@ pc_ynoid	가면의 닌자 하나마루 / 요! 노이드 (PlayChoice-10 기판)	가면의 닌자 하나
 pc_rrngr	다람쥐 구조대 : 칩과 데일 (PlayChoice-10 기판)	다람쥐 구조대 : 칩과 데일 (PlayChoice-10 기판)	Capcom USA (Nintendo of America license)
 pc_ddrgn	쌍용권 (PlayChoice-10 기판)	쌍용권 (PlayChoice-10 기판)	Technos Japan
 pc_gntlt	건틀렛 (PlayChoice-10 기판)	건틀렛 (PlayChoice-10 기판)	Atari / Tengen (Nintendo of America license)
-pc_smb2	슈퍼 마리오 브라더스 2 (PlayChoice-10 기판)	슈퍼 마리오 브라더스 2 (PlayChoice-10 기판)	Nintendo
-pc_smb3	슈퍼 마리오 브라더스 3 (PlayChoice-10 기판)	슈퍼 마리오 브라더스 3 (PlayChoice-10 기판)	Nintendo
+pc_smb2	슈퍼 마리오 브러더스 2 (PlayChoice-10 기판)	슈퍼 마리오 브러더스 2 (PlayChoice-10 기판)	Nintendo
+pc_smb3	슈퍼 마리오 브러더스 3 (PlayChoice-10 기판)	슈퍼 마리오 브러더스 3 (PlayChoice-10 기판)	Nintendo
 pc_mman3	록맨 III (PlayChoice-10 기판)	록맨 III (PlayChoice-10 기판)	Capcom USA (Nintendo of America license)
 pc_radr2	래드 레이서 II (PlayChoice-10 기판)	래드 레이서 II (PlayChoice-10 기판)	Square (Nintendo of America license)
 pc_suprc	슈퍼 C (PlayChoice-10 기판)	슈퍼 C (PlayChoice-10 기판)	Konami (Nintendo of America license)
@@ -1060,11 +1062,11 @@ machridr	VS 매치 라이더 (엔듀런스 코스 버전)	VS 매치 라이더 (엔듀런스 코스 버전)
 machridrj	VS 매치 라이더 (일본판, 파이팅 코스 버전)	VS 매치 라이더 (일본판, 파이팅 코스 버전)	Nintendo
 rbibb	VS 아타리 R.B.I. 야구 (세트 1)	VS 아타리 R.B.I. 야구 (세트 1)	Namco
 rbibba	VS 아타리 R.B.I. 야구 (세트 2)	VS 아타리 R.B.I. 야구 (세트 2)	Namco
-suprmrio	VS 슈퍼 마리오 브라더스	VS 슈퍼 마리오 브라더스	Nintendo
-suprmrioa	VS 슈퍼 마리오 브라더스 (교체판)	VS 슈퍼 마리오 브라더스 (교체판)	Nintendo
-suprmriobl	VS 슈퍼 마리오 브라더스 (Z80 해적판, 세트 2)	VS 슈퍼 마리오 브라더스 (Z80 해적판, 세트 2)	bootleg
-suprmriobl2	VS 슈퍼 마리오 브라더스 (Z80 해적판, 세트 2)	VS 슈퍼 마리오 브라더스 (Z80 해적판, 세트 2)	bootleg
-skatekds	VS 스케이트 키즈 (슈퍼 마리오 브라더스 그래픽 해킹판)	VS 스케이트 키즈 (슈퍼 마리오 브라더스 그래픽 해킹판)	hack
+suprmrio	VS 슈퍼 마리오 브러더스	VS 슈퍼 마리오 브러더스	Nintendo
+suprmrioa	VS 슈퍼 마리오 브러더스 (교체판)	VS 슈퍼 마리오 브러더스 (교체판)	Nintendo
+suprmriobl	VS 슈퍼 마리오 브러더스 (Z80 해적판, 세트 2)	VS 슈퍼 마리오 브러더스 (Z80 해적판, 세트 2)	bootleg
+suprmriobl2	VS 슈퍼 마리오 브러더스 (Z80 해적판, 세트 2)	VS 슈퍼 마리오 브러더스 (Z80 해적판, 세트 2)	bootleg
+skatekds	VS 스케이트 키즈 (슈퍼 마리오 브러더스 그래픽 해킹판)	VS 스케이트 키즈 (슈퍼 마리오 브러더스 그래픽 해킹판)	hack
 vsskykid	VS 슈퍼 스카이키드	VS 슈퍼 스카이키드	Namco
 tkoboxng	VS T.K.O. 권투	VS T.K.O. 권투	Namco / Data East USA
 smgolf	VS 스트로크 & 매치 골프 (남성 버전, 세트 1)	VS 스트로크 & 매치 골프 (남성 버전, 세트 1)	Nintendo
@@ -1397,7 +1399,8 @@ spelunkrj	스페랑카 (일본판)	스페랑카 (일본판)	Irem (licensed from Broderbund)
 spelunk2	스페랑카 II	스페랑카 II	Irem (licensed from Broderbund)
 horizon	호라이즌	호라이즌	Irem
 youjyudn	요수전 (일본판)	요수전 (일본판)	Irem
-vigilant	비질란테 (세계판)	비질란테 (세계판)	Irem
+vigilant	비질란테 (세계판, 세트 1)	비질란테 (세계판, 세트 1)	Irem
+vigilant1	비질란테 (세계판, 세트 2)	비질란테 (세계판, 세트 2)	Irem
 vigilantu	비질란테 (미국판)	비질란테 (미국판)	Irem (Data East USA license)
 vigilantj	비질란테 (일본판)	비질란테 (일본판)	Irem
 kikcubic	미궁도 (일본판)	미궁도 (일본판)	Irem
@@ -1431,7 +1434,7 @@ majtitlej	메이저 타이틀 (일본판)	메이저 타이틀 (일본판)	Irem
 hharry	망치소년 / 해머링 해리 (세계판)	망치소년 / 해머링 해리 (세계판)	Irem
 hharryu	해머링 해리 (미국판)	해머링 해리 (미국판)	Irem America
 dkgensan	목수 겐씨 (일본판 , M82)	목수 겐씨 (일본판 , M82)	Irem
-dkgensanm72	Daiku no Gensan (Japan, M72)	Daiku no Gensan (Japan, M72)	Irem
+dkgensanm72	목수 겐씨 (일본판 , M72)	목수 겐씨 (일본판 , M72)	Irem
 poundfor	파운드 포 파운드 (세계판)	파운드 포 파운드 (세계판)	Irem
 poundforj	파운드 포 파운드 (일본판)	파운드 포 파운드 (일본판)	Irem
 poundforu	파운드 포 파운드 (미국판)	파운드 포 파운드 (미국판)	Irem America
@@ -1481,9 +1484,9 @@ hookj	후크 (일본판)	후크 (일본판)	Irem
 ppan	피터팬 (후크 해적판)	피터팬 (후크 해적판)	bootleg
 rtypeleo	R 타입 레오 (세계판)	R 타입 레오 (세계판)	Irem
 rtypeleoj	R 타입 레오 (일본판)	R 타입 레오 (일본판)	Irem
-inthunt	해저 대전쟁 / 인 더 헌트 (세계판)	해저 대전쟁 / 인 더 헌트 (세계판)	Irem
+inthunt	해저대전쟁 / 인 더 헌트 (세계판)	해저대전쟁 / 인 더 헌트 (세계판)	Irem
 inthuntu	인 더 헌트 (미국판)	인 더 헌트 (미국판)	Irem America
-kaiteids	해저 대전쟁 (일본판)	해저 대전쟁 (일본판)	Irem
+kaiteids	해저대전쟁 (일본판)	해저대전쟁 (일본판)	Irem
 nbbatman	야구 격투 리그맨 / 닌자 베이스볼 뱃맨 (미국판)	야구 격투 리그맨 / 닌자 베이스볼 뱃맨 (미국판)	Irem America
 leaguemn	야구 격투 리그맨 / 야구왕 (일본판)	야구 격투 리그맨 / 야구왕 (일본판)	Irem
 ssoldier	슈페리어 솔져스 (미국판)	슈페리어 솔져스 (미국판)	Irem America
@@ -1748,7 +1751,7 @@ ninjawj	닌자 워리어즈 (일본판)	닌자 워리어즈 (일본판)	Taito Corporation
 darius2	다라이어스 II (일본판)	다라이어스 II (일본판)	Taito Corporation
 darius2d	다라이어스 II (듀얼 스크린) (일본판)	다라이어스 II (듀얼 스크린) (일본판)	Taito Corporation
 darius2do	다라이어스 II (듀얼 스크린) (일본판 구버전)	다라이어스 II (듀얼 스크린) (일본판 구버전)	Taito Corporation
-warriorb	라스탄 사가 에피소드 III / 워리어 블레이드 (일본판)	라스탄 사가 에피소드 III / 워리어 블레이드 (일본판)	Taito Corporation
+warriorb	라스탄 사가 III / 워리어 블레이드 (일본판)	라스탄 사가 III / 워리어 블레이드 (일본판)	Taito Corporation
 superman	슈퍼맨	슈퍼맨	Taito Corporation
 supermanj	슈퍼맨 (일본판)	슈퍼맨 (일본판)	Taito Corporation
 twinhawk	대선풍 (大旋風) / 트윈 호크 (세계판)	대선풍 (大旋風) / 트윈 호크 (세계판)	Taito Corporation Japan
@@ -1757,7 +1760,7 @@ daisenpu	대선풍 (일본판)	대선풍 (일본판)	Taito Corporation
 gigandes	기간데스	기간데스	East Technology
 gigandesj	기간데스 (일본판)	기간데스 (일본판)	East Technology
 kyustrkr	구극의 스트라이커 / 라스트 스트라이커	구극의 스트라이커 / 라스트 스트라이커	East Technology
-ballbros	벌룬 브라더스	벌룬 브라더스	East Technology
+ballbros	벌룬 브러더스	벌룬 브러더스	East Technology
 plumppop	플럼프 팝 (일본판)	플럼프 팝 (일본판)	Taito Corporation
 jpopnics	점핑 팝 (Nics 판 , 플럼 팝 한국 해적판)	점핑 팝 (Nics 판 , 플럼 팝 한국 해적판)	bootleg (Nics)
 extrmatn	익스터미네이션 (세계판)	익스터미네이션 (세계판)	Taito Corporation Japan
@@ -1822,9 +1825,9 @@ dleague	다이너마이트 리그 (일본판)	다이너마이트 리그 (일본판)	Taito Corporation
 masterw	마스터 오브 웨폰 (세계판)	마스터 오브 웨폰 (세계판)	Taito Corporation Japan
 masterwu	마스터 오브 웨폰 (미국판)	마스터 오브 웨폰 (미국판)	Taito America Corporation
 masterwj	마스터 오브 웨폰 (일본판)	마스터 오브 웨폰 (일본판)	Taito Corporation
-nastar	라스탄 사가 2 / 나스타 (세계판)	라스탄 사가 2 / 나스타 (세계판)	Taito Corporation Japan
+nastar	라스탄 사가 II / 나스타 (세계판)	라스탄 사가 II / 나스타 (세계판)	Taito Corporation Japan
 nastarw	나스타 워리어 (미국판)	나스타 워리어 (미국판)	Taito America Corporation
-rastsag2	라스탄 사가 2 (일본판)	라스탄 사가 2 (일본판)	Taito Corporation
+rastsag2	라스탄 사가 II (일본판)	라스탄 사가 II (일본판)	Taito Corporation
 rambo3	람보 III (유럽판 세트 1)	람보 III (유럽판 세트 1)	Taito Europe Corporation
 rambo3ae	람보 III (유럽판 세트 2)	람보 III (유럽판 세트 2)	Taito Europe Corporation
 rambo3a	람보 III (미국판)	람보 III (미국판)	Taito America Corporation
@@ -2006,9 +2009,9 @@ gekirido	역린탄 (일본판, 버전 2.3J 1995/09/21)	역린탄 (일본판, 버전 2.3J 1995/09
 tcobra2	구극 타이거 II / 트윈 코브라 II (세계판, 버전 2.1O 1995/11/30)	구극 타이거 II / 트윈 코브라 II (세계판, 버전 2.1O 1995/11/30)	Taito Corporation Japan
 tcobra2u	트윈 코브라 II (미국판, 버전 2.1A 1995/11/30)	트윈 코브라 II (미국판, 버전 2.1A 1995/11/30)	Taito America Corporation
 ktiger2	구극 타이거 II (일본판, 버전 2.1J 1995/11/30)	구극 타이거 II (일본판, 버전 2.1J 1995/11/30)	Taito Corporation
-bubblem	보글 메모리즈: 보글보글 III 이야기 (세계판, 버전 2.4O 1996/02/15)	보글 메모리즈: 보글보글 III 이야기 (세계판, 버전 2.4O 1996/02/15)	Taito Corporation Japan
-bubblemj	보글 메모리즈: 보글보글 III 이야기 (일본판, 버전 2.3J 1996/02/07)	보글 메모리즈: 보글보글 III 이야기 (일본판, 버전 2.3J 1996/02/07)	Taito Corporation
-cleopatr	클레오파트라 포춘 (일본판, 버전 2.1J 1996/09/05)	클레오파트라 포춘 (일본판, 버전 2.1J 1996/09/05)	Taito Corporation
+bubblem	보글 메모리즈: 보글보글 이야기 III (세계판, 버전 2.4O 1996/02/15)	보글 메모리즈: 보글보글 이야기 III (세계판, 버전 2.4O 1996/02/15)	Taito Corporation Japan
+bubblemj	보글 메모리즈: 보글보글 이야기 III (일본판, 버전 2.3J 1996/02/07)	보글 메모리즈: 보글보글 이야기 III (일본판, 버전 2.3J 1996/02/07)	Taito Corporation
+cleopatr	클레오파트라의 보물 (일본판, 버전 2.1J 1996/09/05)	클레오파트라의 보물 (일본판, 버전 2.1J 1996/09/05)	Taito Corporation
 pbobble3	퍼즐 보블 3 (세계판, 버전 2.1O 1996/09/27)	퍼즐 보블 3 (세계판, 버전 2.1O 1996/09/27)	Taito Corporation
 pbobble3u	퍼즐 보블 3 (미국판, 버전 2.1A 1996/09/27)	퍼즐 보블 3 (미국판, 버전 2.1A 1996/09/27)	Taito Corporation
 pbobble3j	퍼즐 보블 3 (일본판, 버전 2.1J 1996/09/27)	퍼즐 보블 3 (일본판, 버전 2.1J 1996/09/27)	Taito Corporation
@@ -2071,7 +2074,7 @@ twincobru	트윈 코브라 (미국판)	트윈 코브라 (미국판)	Toaplan / Taito America Corp
 ktiger	구극 타이거 (일본판)	구극 타이거 (일본판)	Toaplan / Taito Corporation
 gulfwar2	걸프 워 II	걸프 워 II	Comad
 rallybik	랠리 바이크	랠리 바이크	Toaplan / Taito Corporation
-truxton	달인 / 트럭스턴 / 타츠진	달인 / 트럭스턴 / 타츠진	Toaplan / Taito Corporation
+truxton	달인 / 트럭스턴	달인 / 트럭스턴	Toaplan / Taito Corporation
 hellfire	헬파이어 (2인용)	헬파이어 (2인용)	Toaplan (Taito license)
 hellfire1	헬파이어 (1인용)	헬파이어 (1인용)	Toaplan (Taito license)
 hellfire2	헬파이어 (2인용, 초기버전)	헬파이어 (2인용, 초기버전)	Toaplan (Taito license)
@@ -2096,13 +2099,13 @@ outzoned	아웃 존 (세트 5)	아웃 존 (세트 5)	Toaplan
 vimana	비마나	비마나	Toaplan
 vimana1	비마나 (일본판)	비마나 (일본판)	Toaplan
 vimanan	비마나 (Nova Apparate GmbH社 판)	비마나 (Nova Apparate GmbH社 판)	Toaplan (Nova Apparate GmbH license)
-snowbros	스노우 브라더스 - 닉 & 톰 (세트 1)	스노우 브라더스 - 닉 & 톰 (세트 1)	Toaplan
-snowbrosa	스노우 브라더스 - 닉 & 톰 (세트 2)	스노우 브라더스 - 닉 & 톰 (세트 2)	Toaplan
-snowbrosb	스노우 브라더스 - 닉 & 톰 (세트 3)	스노우 브라더스 - 닉 & 톰 (세트 3)	Toaplan
-snowbrosc	스노우 브라더스 - 닉 & 톰 (세트 4)	스노우 브라더스 - 닉 & 톰 (세트 4)	Toaplan
-snowbrosj	스노우 브라더스 - 닉 & 톰 (일본판)	스노우 브라더스 - 닉 & 톰 (일본판)	Toaplan
-snowbrosd	스노우 브라더스 - 닉 & 톰 (Dooyong社 라이센스판)	스노우 브라더스 - 닉 & 톰 (Dooyong社 라이센스판)	Toaplan (Dooyong license)
-wintbob	윈터 보블 (스노우 브라더스 해적판)	윈터 보블 (스노우 브라더스 해적판)	bootleg (Sakowa Project Korea)
+snowbros	스노우 브러더스 - 닉 & 톰 (세트 1)	스노우 브러더스 - 닉 & 톰 (세트 1)	Toaplan
+snowbrosa	스노우 브러더스 - 닉 & 톰 (세트 2)	스노우 브러더스 - 닉 & 톰 (세트 2)	Toaplan
+snowbrosb	스노우 브러더스 - 닉 & 톰 (세트 3)	스노우 브러더스 - 닉 & 톰 (세트 3)	Toaplan
+snowbrosc	스노우 브러더스 - 닉 & 톰 (세트 4)	스노우 브러더스 - 닉 & 톰 (세트 4)	Toaplan
+snowbrosj	스노우 브러더스 - 닉 & 톰 (일본판)	스노우 브러더스 - 닉 & 톰 (일본판)	Toaplan
+snowbrosd	스노우 브러더스 - 닉 & 톰 (Dooyong社 라이센스판)	스노우 브러더스 - 닉 & 톰 (Dooyong社 라이센스판)	Toaplan (Dooyong license)
+wintbob	윈터 보블 (스노우 브러더스 해적판)	윈터 보블 (스노우 브러더스 해적판)	bootleg (Sakowa Project Korea)
 honeydol	허니 돌	허니 돌	Barko Corp.
 twinadv	트윈 어드벤쳐 (세계판)	트윈 어드벤쳐 (세계판)	Barko Corp.
 twinadvk	트윈 어드벤쳐 (한국판)	트윈 어드벤쳐 (한국판)	Barko Corp.
@@ -2117,7 +2120,7 @@ pzlbreak	퍼즐 브레이크	퍼즐 브레이크	SemiCom
 moremore	퍼즐특급 모아 모아	퍼즐특급 모아 모아	SemiCom / Exit
 moremorp	퍼즐특급 모아 모아 Plus	퍼즐특급 모아 모아 Plus	SemiCom / Exit
 4in1boot	퍼즐왕 (스노우 브러더스 게임 해적판)	퍼즐왕 (스노우 브러더스 게임 해적판)	K1 Soft
-snowbros3	스노우 브라더스 3 - 매지컬 어드벤처	스노우 브라더스 3 - 매지컬 어드벤처	Syrmex
+snowbros3	스노우 브러더스 3 - 매지컬 어드벤처	스노우 브러더스 3 - 매지컬 어드벤처	Syrmex
 finalttr	파이널 테트리스 (한국판)	파이널 테트리스 (한국판)	Jeil Computer System
 tekipaki	테키 파키	테키 파키	Toaplan
 ghox	곡스	곡스	Toaplan
@@ -2126,7 +2129,7 @@ dogyuun	도균	도균	Toaplan
 dogyuunk	도균 (Unite Trading 한국 라이센스)	도균 (Unite Trading 한국 라이센스)	Toaplan
 kbash	너클 배쉬	너클 배쉬	Toaplan
 kbash2	너클 배쉬 2 (해적판)	너클 배쉬 2 (해적판)	bootleg
-truxton2	달인왕 / 트럭스턴 II / 타츠진 II	달인왕 / 트럭스턴 II / 타츠진 II	Toaplan
+truxton2	달인왕 / 트럭스턴 II	달인왕 / 트럭스턴 II	Toaplan
 pipibibs	피피 & 비비스 / 후피!! (Z80 사운드 CPU, 세트 1)	피피 & 비비스 / 후피!! (Z80 사운드 CPU, 세트 1)	Toaplan
 pipibibsa	피피 & 비비스 / 후피!! (Z80 사운드 CPU, 세트 2)	피피 & 비비스 / 후피!! (Z80 사운드 CPU, 세트 2)	Toaplan
 whoopee	후피!! / 피피 & 비비스	후피!! / 피피 & 비비스	Toaplan
@@ -2139,7 +2142,7 @@ grindstma	그라인드 스토머 (구버전 세트)	그라인드 스토머 (구버전 세트)	Toaplan
 batsugun	발군 (拔群) / 바츠군 (세트 1)	발군 (拔群) / 바츠군 (세트 1)	Toaplan
 batsuguna	발군 (拔群) (세트 2)	발군 (拔群) (세트 2)	Toaplan
 batsugunsp	발군 (拔群) (특별판)	발군 (拔群) (특별판)	Toaplan
-snowbro2	스노우 브라더스 2 - 위드 뉴 엘브스 / 날씨 파라다이스	스노우 브라더스 2 - 위드 뉴 엘브스 / 날씨 파라다이스	Hanafram
+snowbro2	스노우 브러더스 2 - 새로운 요정들과 함께 / 날씨 파라다이스	스노우 브러더스 2 - 새로운 요정들과 함께 / 날씨 파라다이스	Hanafram
 sstriker	소서 스트라이커 (세계판)	소서 스트라이커 (세계판)	Raizing
 sstrikera	소서 스트라이커 (세계판, 교체판)	소서 스트라이커 (세계판, 교체판)	Raizing
 mahoudai	마법대작전 (일본판)	마법대작전 (일본판)	Raizing (Able license)
@@ -2173,18 +2176,18 @@ donpachikr	수령봉 (首領蜂) / 돈파치 (한국판)	수령봉 (首領蜂) / 돈파치 (한국판)	C
 donpachihk	수령봉 (首領蜂) / 돈파치 (홍콩판)	수령봉 (首領蜂) / 돈파치 (홍콩판)	Cave (Atlus license)
 metmqstr	은인 - 닌자 마스터 / 메타모퀘스터 (국제판)	은인 - 닌자 마스터 / 메타모퀘스터 (국제판)	Banpresto / Pandorabox
 nmaster	은인 - 닌자 마스터 (일본판)	은인 - 닌자 마스터 (일본판)	Banpresto / Pandorabox
-sailormn	미소녀 전사 세일러문 (버전 95/03/22B, 유럽판)	미소녀 전사 세일러문 (버전 95/03/22B, 유럽판)	Banpresto
-sailormnu	미소녀 전사 세일러문 (버전 95/03/22B, 미국판)	미소녀 전사 세일러문 (버전 95/03/22B, 미국판)	Banpresto
-sailormnj	미소녀 전사 세일러문 (버전 95/03/22B, 일본판)	미소녀 전사 세일러문 (버전 95/03/22B, 일본판)	Banpresto
-sailormnk	미소녀 전사 세일러문 (버전 95/03/22B, 한국판)	미소녀 전사 세일러문 (버전 95/03/22B, 한국판)	Banpresto
-sailormnt	미소녀 전사 세일러문 (버전 95/03/22B, 대만판)	미소녀 전사 세일러문 (버전 95/03/22B, 대만판)	Banpresto
-sailormnh	미소녀 전사 세일러문 (버전 95/03/22B, 홍콩판)	미소녀 전사 세일러문 (버전 95/03/22B, 홍콩판)	Banpresto
-sailormno	미소녀 전사 세일러문 (버전 95/03/22, 유럽판)	미소녀 전사 세일러문 (버전 95/03/22, 유럽판)	Banpresto
-sailormnou	미소녀 전사 세일러문 (버전 95/03/22, 미국판)	미소녀 전사 세일러문 (버전 95/03/22, 미국판)	Banpresto
-sailormnoj	미소녀 전사 세일러문 (버전 95/03/22, 일본판)	미소녀 전사 세일러문 (버전 95/03/22, 일본판)	Banpresto
-sailormnok	미소녀 전사 세일러문 (버전 95/03/22, 한국판)	미소녀 전사 세일러문 (버전 95/03/22, 한국판)	Banpresto
-sailormnot	미소녀 전사 세일러문 (버전 95/03/22, 대만판)	미소녀 전사 세일러문 (버전 95/03/22, 대만판)	Banpresto
-sailormnoh	미소녀 전사 세일러문 (버전 95/03/22, 홍콩판)	미소녀 전사 세일러문 (버전 95/03/22, 홍콩판)	Banpresto
+sailormn	미소녀전사 세일러문 (버전 95/03/22B, 유럽판)	미소녀전사 세일러문 (버전 95/03/22B, 유럽판)	Banpresto
+sailormnu	미소녀전사 세일러문 (버전 95/03/22B, 미국판)	미소녀전사 세일러문 (버전 95/03/22B, 미국판)	Banpresto
+sailormnj	미소녀전사 세일러문 (버전 95/03/22B, 일본판)	미소녀전사 세일러문 (버전 95/03/22B, 일본판)	Banpresto
+sailormnk	미소녀전사 세일러문 (버전 95/03/22B, 한국판)	미소녀전사 세일러문 (버전 95/03/22B, 한국판)	Banpresto
+sailormnt	미소녀전사 세일러문 (버전 95/03/22B, 대만판)	미소녀전사 세일러문 (버전 95/03/22B, 대만판)	Banpresto
+sailormnh	미소녀전사 세일러문 (버전 95/03/22B, 홍콩판)	미소녀전사 세일러문 (버전 95/03/22B, 홍콩판)	Banpresto
+sailormno	미소녀전사 세일러문 (버전 95/03/22, 유럽판)	미소녀전사 세일러문 (버전 95/03/22, 유럽판)	Banpresto
+sailormnou	미소녀전사 세일러문 (버전 95/03/22, 미국판)	미소녀전사 세일러문 (버전 95/03/22, 미국판)	Banpresto
+sailormnoj	미소녀전사 세일러문 (버전 95/03/22, 일본판)	미소녀전사 세일러문 (버전 95/03/22, 일본판)	Banpresto
+sailormnok	미소녀전사 세일러문 (버전 95/03/22, 한국판)	미소녀전사 세일러문 (버전 95/03/22, 한국판)	Banpresto
+sailormnot	미소녀전사 세일러문 (버전 95/03/22, 대만판)	미소녀전사 세일러문 (버전 95/03/22, 대만판)	Banpresto
+sailormnoh	미소녀전사 세일러문 (버전 95/03/22, 홍콩판)	미소녀전사 세일러문 (버전 95/03/22, 홍콩판)	Banpresto
 agallet	에어 갈렛 (유럽판)	에어 갈렛 (유럽판)	Banpresto / Gazelle
 agalletu	에어 갈렛 (미국판)	에어 갈렛 (미국판)	Banpresto / Gazelle
 agalletj	에어 갈렛 (일본판)	에어 갈렛 (일본판)	Banpresto / Gazelle
@@ -2387,7 +2390,7 @@ ffightub	파이널 파이트 (미국판 900613)	파이널 파이트 (미국판 900613)	Capcom
 ffightj	파이널 파이트 (일본판)	파이널 파이트 (일본판)	Capcom
 ffightj1	파이널 파이트 (일본판 900305)	파이널 파이트 (일본판 900305)	Capcom
 ffightj2	파이널 파이트 (일본판 900112)	파이널 파이트 (일본판 900112)	Capcom
-ffightjh	스트리트 스마트 / 파이날 파이트 (일본판, 해킹판)	스트리트 스마트 / 파이날 파이트 (일본판, 해킹판)	bootleg
+ffightjh	스트리트 스마트 / 파이널 파이트 (일본판, 해킹판)	스트리트 스마트 / 파이널 파이트 (일본판, 해킹판)	bootleg
 1941	1941: 역습 (세계판)	1941: 역습 (세계판)	Capcom
 1941j	1941: 역습 (일본판)	1941: 역습 (일본판)	Capcom
 mercs	전장의 이리 II / 머크스 (세계판 900302)	전장의 이리 II / 머크스 (세계판 900302)	Capcom
@@ -2478,11 +2481,11 @@ wofhfh	화봉황 (삼국지 II 중국 해적판)	화봉황 (삼국지 II 중국 해적판)	bootleg
 sf2hf	스트리트 파이터 II' - 하이퍼 파이팅 (세계판 921209)	스트리트 파이터 II' - 하이퍼 파이팅 (세계판 921209)	Capcom
 sf2hfu	스트리트 파이터 II' - 하이퍼 파이팅 (미국판 921209)	스트리트 파이터 II' - 하이퍼 파이팅 (미국판 921209)	Capcom
 sf2hfj	스트리트 파이터 II' 터보 - 하이퍼 파이팅 (일본판 921209)	스트리트 파이터 II' 터보 - 하이퍼 파이팅 (일본판 921209)	Capcom
-dino	캐딜락 공룡신세기  / 캐딜락 & 다이노사우르스 (세계판 930201)	캐딜락 공룡신세기  / 캐딜락 & 다이노사우르스 (세계판 930201)	Capcom
-dinou	캐딜락 & 다이노사우르스 (미국판 930201)	캐딜락 & 다이노사우르스 (미국판 930201)	Capcom
+dino	캐딜락 공룡신세기 / 캐딜락 & 다이노소어 (세계판 930201)	캐딜락 공룡신세기 / 캐딜락 & 다이노소어 (세계판 930201)	Capcom
+dinou	캐딜락 & 다이노소어 (미국판 930201)	캐딜락 & 다이노소어 (미국판 930201)	Capcom
 dinoj	캐딜락 공룡신세기 (일본판 930201)	캐딜락 공룡신세기 (일본판 930201)	Capcom
-dinopic	캐딜락 & 다이노사우르스 (해적판 PIC16c57, 세트 1)	캐딜락 & 다이노사우르스 (해적판 PIC16c57, 세트 1)	bootleg
-dinopic2	캐딜락 & 다이노사우르스 (해적판 PIC16c57, 세트 2)	캐딜락 & 다이노사우르스 (해적판 PIC16c57, 세트 2)	bootleg
+dinopic	캐딜락 & 다이노소어 (해적판 PIC16c57, 세트 1)	캐딜락 & 다이노소어 (해적판 PIC16c57, 세트 1)	bootleg
+dinopic2	캐딜락 & 다이노소어 (해적판 PIC16c57, 세트 2)	캐딜락 & 다이노소어 (해적판 PIC16c57, 세트 2)	bootleg
 dinohunt	다이노소어 헌터 (캐딜락 공룡신세기 중국 해적판)	다이노소어 헌터 (캐딜락 공룡신세기 중국 해적판)	bootleg
 punisher	퍼니셔 (세계판 930422)	퍼니셔 (세계판 930422)	Capcom
 punisheru	퍼니셔 (미국판 930422)	퍼니셔 (미국판 930422)	Capcom
@@ -2496,7 +2499,7 @@ slammastu	슬램 마스터즈 (미국판 930713)	슬램 마스터즈 (미국판 930713)	Capcom
 mbomberj	머슬 봄버 - 바디 익스플로전 (일본판 930713)	머슬 봄버 - 바디 익스플로전 (일본판 930713)	Capcom
 mbombrd	머슬 봄버 듀오 - 얼티메이트 팀 배틀 (세계판 931206)	머슬 봄버 듀오 - 얼티메이트 팀 배틀 (세계판 931206)	Capcom
 mbombrdj	머슬 봄버 듀오 - 히트 업 워리어즈 (일본판 931206)	머슬 봄버 듀오 - 히트 업 워리어즈 (일본판 931206)	Capcom
-pnickj	닉키스 (일본판 940608)	닉키스 (일본판 940608)	Capcom, licensed by Compile
+pnickj	프닉키즈 (일본판 940608)	프닉키즈 (일본판 940608)	Capcom, licensed by Compile
 qad	퀴즈 & 드래곤즈: 캡콤 퀴즈 게임 (미국판 920701)	퀴즈 & 드래곤즈: 캡콤 퀴즈 게임 (미국판 920701)	Capcom
 qadj	퀴즈 & 드래곤즈: 캡콤 퀴즈 게임 (일본판 940921)	퀴즈 & 드래곤즈: 캡콤 퀴즈 게임 (일본판 940921)	Capcom
 qtono2j	퀴즈 영주의 야망 2: 전국판 (일본판 950123) 	퀴즈 영주의 야망 2: 전국판 (일본판 950123) 	Capcom
@@ -2559,8 +2562,8 @@ armwar	파워드 기어 / 아머드 워리어즈 (유럽판 941024)	파워드 기어 / 아머드 워리어
 armwarr1	아머드 워리어즈 (유럽판 941011)	아머드 워리어즈 (유럽판 941011)	Capcom
 armwaru	아머드 워리어즈 (미국판 941024)	아머드 워리어즈 (미국판 941024)	Capcom
 armwaru1	아머드 워리어즈 (미국판 940920)	아머드 워리어즈 (미국판 940920)	Capcom
-pgear	파워드 기어: 스트레이트직 배리언트 아머 이큅먼트 (일본판 941024)	파워드 기어: 스트레이트직 배리언트 아머 이큅먼트 (일본판 941024)	Capcom
-pgearr1	파워드 기어: 스트레이트직 배리언트 아머 이큅먼트 (일본판 940916)	파워드 기어: 스트레이트직 배리언트 아머 이큅먼트 (일본판 940916)	Capcom
+pgear	파워드 기어: 전략적 변형 갑옷 장비 (일본판 941024)	파워드 기어: 전략적 변형 갑옷 장비 (일본판 941024)	Capcom
+pgearr1	파워드 기어: 전략적 변형 갑옷 장비 (일본판 940916)	파워드 기어: 전략적 변형 갑옷 장비 (일본판 940916)	Capcom
 armwara	아머드 워리어즈 (아시아판 940920)	아머드 워리어즈 (아시아판 940920)	Capcom
 xmcota	엑스맨: 칠드런 오브 더 아톰 (유럽판 950105)	엑스맨: 칠드런 오브 더 아톰 (유럽판 950105)	Capcom
 xmcotau	엑스맨: 칠드런 오브 더 아톰 (미국판 950105)	엑스맨: 칠드런 오브 더 아톰 (미국판 950105)	Capcom
@@ -2572,22 +2575,22 @@ xmcotaj2	엑스맨: 칠드런 오브 더 아톰 (일본판 941217)	엑스맨: 칠드런 오브 더 아톰
 xmcotaj3	엑스맨: 칠드런 오브 더 아톰 (일본판 941217)	엑스맨: 칠드런 오브 더 아톰 (일본판 941217)	Capcom
 xmcotaa	엑스맨: 칠드런 오브 더 아톰 (아시아판 941217)	엑스맨: 칠드런 오브 더 아톰 (아시아판 941217)	Capcom
 xmcotajr	엑스맨: 칠드런 오브 더 아톰 (일본판 941208, 차용판)	엑스맨: 칠드런 오브 더 아톰 (일본판 941208, 차용판)	Capcom
-nwarr	나이트 워리어즈: 다크스토커즈 리벤지 (유럽판 950316)	나이트 워리어즈: 다크스토커즈 리벤지 (유럽판 950316)	Capcom
-nwarru	나이트 워리어즈: 다크스토커즈 리벤지 (미국판 950406)	나이트 워리어즈: 다크스토커즈 리벤지 (미국판 950406)	Capcom
-nwarrh	나이트 워리어즈: 다크스토커즈 리벤지 (라틴판 950403)	나이트 워리어즈: 다크스토커즈 리벤지 (라틴판 950403)	Capcom
-nwarrb	나이트 워리어즈: 다크스토커즈 리벤지 (브라질판 950403)	나이트 워리어즈: 다크스토커즈 리벤지 (브라질판 950403)	Capcom
-nwarra	나이트 워리어즈: 다크스토커즈 리벤지 (아시아판 950302)	나이트 워리어즈: 다크스토커즈 리벤지 (아시아판 950302)	Capcom
+nwarr	나이트 워리어즈: 다크스토커즈의 복수 (유럽판 950316)	나이트 워리어즈: 다크스토커즈의 복수 (유럽판 950316)	Capcom
+nwarru	나이트 워리어즈: 다크스토커즈의 복수 (미국판 950406)	나이트 워리어즈: 다크스토커즈의 복수 (미국판 950406)	Capcom
+nwarrh	나이트 워리어즈: 다크스토커즈의 복수 (라틴판 950403)	나이트 워리어즈: 다크스토커즈의 복수 (라틴판 950403)	Capcom
+nwarrb	나이트 워리어즈: 다크스토커즈의 복수 (브라질판 950403)	나이트 워리어즈: 다크스토커즈의 복수 (브라질판 950403)	Capcom
+nwarra	나이트 워리어즈: 다크스토커즈의 복수 (아시아판 950302)	나이트 워리어즈: 다크스토커즈의 복수 (아시아판 950302)	Capcom
 vhuntj	뱀파이어 헌터: 다크스토커즈의 복수 (일본판 950316)	뱀파이어 헌터: 다크스토커즈의 복수 (일본판 950316)	Capcom
 vhuntjr1	뱀파이어 헌터: 다크스토커즈의 복수 (일본판 950307)	뱀파이어 헌터: 다크스토커즈의 복수 (일본판 950307)	Capcom
 vhuntjr2	뱀파이어 헌터: 다크스토커즈의 복수 (일본판 950302)	뱀파이어 헌터: 다크스토커즈의 복수 (일본판 950302)	Capcom
 cybots	사이버보츠: 풀메탈 매드니스 (유럽판 950424)	사이버보츠: 풀메탈 매드니스 (유럽판 950424)	Capcom
 cybotsu	사이버보츠: 풀메탈 매드니스 (미국판 950424)	사이버보츠: 풀메탈 매드니스 (미국판 950424)	Capcom
 cybotsj	사이버보츠: 풀메탈 매드니스 (일본판 950420)	사이버보츠: 풀메탈 매드니스 (일본판 950420)	Capcom
-sfa	스트리트 파이터 제로 / 스트리트 파이터 알파: 워리어즈 드림 (유럽판 950727)	스트리트 파이터 제로 / 스트리트 파이터 알파: 워리어즈 드림 (유럽판 950727)	Capcom
-sfar1	스트리트 파이터 알파: 워리어즈 드림 (유럽판 950718)	스트리트 파이터 알파: 워리어즈 드림 (유럽판 950718)	Capcom
-sfar2	스트리트 파이터 알파: 워리어즈 드림 (유럽판 950627)	스트리트 파이터 알파: 워리어즈 드림 (유럽판 950627)	Capcom
-sfar3	스트리트 파이터 알파: 워리어즈 드림 (유럽판 950605)	스트리트 파이터 알파: 워리어즈 드림 (유럽판 950605)	Capcom
-sfau	스트리트 파이터 알파: 워리어즈 드림 (미국판 950627)	스트리트 파이터 알파: 워리어즈 드림 (미국판 950627)	Capcom
+sfa	스트리트 파이터 제로 / 스트리트 파이터 알파: 전사들의 희망 (유럽판 950727)	스트리트 파이터 제로 / 스트리트 파이터 알파: 전사들의 희망 (유럽판 950727)	Capcom
+sfar1	스트리트 파이터 알파: 전사들의 희망 (유럽판 950718)	스트리트 파이터 알파: 전사들의 희망 (유럽판 950718)	Capcom
+sfar2	스트리트 파이터 알파: 전사들의 희망 (유럽판 950627)	스트리트 파이터 알파: 전사들의 희망 (유럽판 950627)	Capcom
+sfar3	스트리트 파이터 알파: 전사들의 희망 (유럽판 950605)	스트리트 파이터 알파: 전사들의 희망 (유럽판 950605)	Capcom
+sfau	스트리트 파이터 알파: 전사들의 희망 (미국판 950627)	스트리트 파이터 알파: 전사들의 희망 (미국판 950627)	Capcom
 sfza	스트리트 파이터 제로 (아시아판 950627)	스트리트 파이터 제로 (아시아판 950627)	Capcom
 sfzj	스트리트 파이터 제로 (일본판 950727)	스트리트 파이터 제로 (일본판 950727)	Capcom
 sfzjr1	스트리트 파이터 제로 (일본판 950627)	스트리트 파이터 제로 (일본판 950627)	Capcom
@@ -2598,13 +2601,13 @@ sfzb	스트리트 파이터 제로 (브라질판 951109)	스트리트 파이터 제로 (브라질판 95110
 sfzbr1	스트리트 파이터 제로 (브라질판 950727)	스트리트 파이터 제로 (브라질판 950727)	Capcom
 mmancp2u	록맨 - 파워 배틀 / 메가맨 (CPS 2 기판, 미국판 951006, 샘플버전)	록맨 - 파워 배틀 / 메가맨 (CPS 2 기판, 미국판 951006, 샘플버전)	Capcom
 rmancp2j	록맨 - 파워 배틀 (CPS 2 기판, 일본판 950922)	록맨 - 파워 배틀 (CPS 2 기판, 일본판 950922)	Capcom
-msh	마블 슈퍼 히어로즈 (유럽판 951024)	마블 슈퍼 히어로즈 (유럽판 951024)	Capcom
-mshu	마블 슈퍼 히어로즈 (미국판 951024)	마블 슈퍼 히어로즈 (미국판 951024)	Capcom
-mshj	마블 슈퍼 히어로즈 (일본판 951117)	마블 슈퍼 히어로즈 (일본판 951117)	Capcom
-mshjr1	마블 슈퍼 히어로즈 (일본판 951024)	마블 슈퍼 히어로즈 (일본판 951024)	Capcom
-msha	마블 슈퍼 히어로즈 (아시아판 951024)	마블 슈퍼 히어로즈 (아시아판 951024)	Capcom
-mshh	마블 슈퍼 히어로즈 (라틴판 951117)	마블 슈퍼 히어로즈 (라틴판 951117)	Capcom
-mshb	마블 슈퍼 히어로즈 (브라질판 951117)	마블 슈퍼 히어로즈 (브라질판 951117)	Capcom
+msh	마블 슈퍼히어로즈 (유럽판 951024)	마블 슈퍼히어로즈 (유럽판 951024)	Capcom
+mshu	마블 슈퍼히어로즈 (미국판 951024)	마블 슈퍼히어로즈 (미국판 951024)	Capcom
+mshj	마블 슈퍼히어로즈 (일본판 951117)	마블 슈퍼히어로즈 (일본판 951117)	Capcom
+mshjr1	마블 슈퍼히어로즈 (일본판 951024)	마블 슈퍼히어로즈 (일본판 951024)	Capcom
+msha	마블 슈퍼히어로즈 (아시아판 951024)	마블 슈퍼히어로즈 (아시아판 951024)	Capcom
+mshh	마블 슈퍼히어로즈 (라틴판 951117)	마블 슈퍼히어로즈 (라틴판 951117)	Capcom
+mshb	마블 슈퍼히어로즈 (브라질판 951117)	마블 슈퍼히어로즈 (브라질판 951117)	Capcom
 19xx	19XX: 운명과의 전쟁 (미국판 951207)	19XX: 운명과의 전쟁 (미국판 951207)	Capcom
 19xxj	19XX: 운명과의 전쟁 (일본판 951225)	19XX: 운명과의 전쟁 (일본판 951225)	Capcom
 19xxjr1	19XX: 운명과의 전쟁 (일본판 951207)	19XX: 운명과의 전쟁 (일본판 951207)	Capcom
@@ -2675,11 +2678,11 @@ mshvsfa	마블 슈퍼히어로즈 대 스트리트 파이터 (아시아판 970625)	마블 슈퍼히어로즈
 mshvsfa1	마블 슈퍼히어로즈 대 스트리트 파이터 (아시아판 970620)	마블 슈퍼히어로즈 대 스트리트 파이터 (아시아판 970620)	Capcom
 mshvsfb	마블 슈퍼히어로즈 대 스트리트 파이터 (브라질판 970827)	마블 슈퍼히어로즈 대 스트리트 파이터 (브라질판 970827)	Capcom
 mshvsfb1	마블 슈퍼히어로즈 대 스트리트 파이터 (브라질판 970625)	마블 슈퍼히어로즈 대 스트리트 파이터 (브라질판 970625)	Capcom
-csclub	캡콤 스포츠 클럽 (유럽판 970717)	캡콤 스포츠 클럽 (유럽판 970717)	Capcom
-csclub1	캡콤 스포츠 클럽 (유럽판 970722)	캡콤 스포츠 클럽 (유럽판 970722)	Capcom
-csclubj	캡콤 스포츠 클럽 (일본판 970722)	캡콤 스포츠 클럽 (일본판 970722)	Capcom
-cscluba	캡콤 스포츠 클럽 (아시아판 970722)	캡콤 스포츠 클럽 (아시아판 970722)	Capcom
-csclubh	캡콤 스포츠 클럽 (라틴판 970722)	캡콤 스포츠 클럽 (라틴판 970722)	Capcom
+csclub	캡콤 스포츠클럽 (유럽판 970717)	캡콤 스포츠클럽 (유럽판 970717)	Capcom
+csclub1	캡콤 스포츠클럽 (유럽판 970722)	캡콤 스포츠클럽 (유럽판 970722)	Capcom
+csclubj	캡콤 스포츠클럽 (일본판 970722)	캡콤 스포츠클럽 (일본판 970722)	Capcom
+cscluba	캡콤 스포츠클럽 (아시아판 970722)	캡콤 스포츠클럽 (아시아판 970722)	Capcom
+csclubh	캡콤 스포츠클럽 (라틴판 970722)	캡콤 스포츠클럽 (라틴판 970722)	Capcom
 sgemf	포켓 파이터 / 슈퍼 젬 파이터 미니믹스 (미국판 970904)	포켓 파이터 / 슈퍼 젬 파이터 미니믹스 (미국판 970904)	Capcom
 pfghtj	포켓 파이터 (일본판 970904)	포켓 파이터 (일본판 970904)	Capcom
 sgemfa	슈퍼 젬 파이터: 미니믹스 (아시아판 970904)	슈퍼 젬 파이터: 미니믹스 (아시아판 970904)	Capcom
@@ -2713,9 +2716,9 @@ gigawinga	기가 윙 (아시아판 990222)	기가 윙 (아시아판 990222)	Takumi (Capcom lic
 gigawingh	기가 윙 (라틴판 990222)	기가 윙 (라틴판 990222)	Takumi (Capcom license)
 gigawingb	기가 윙 (브라질판 990222)	기가 윙 (브라질판 990222)	Takumi (Capcom license)
 jyangoku	작국지: 패왕의 채패 (雀國志 - 覇王采牌) (일본판)	작국지: 패왕의 채패 (雀國志 - 覇王采牌) (일본판)	Capcom
-dimahoo	그레이트 마법 대작전/ 디마후 (유럽판 000121)	그레이트 마법 대작전/ 디마후 (유럽판 000121)	Eighting / Raizing (Capcom license)
+dimahoo	그레이트 마법대작전/ 디마후 (유럽판 000121)	그레이트 마법대작전/ 디마후 (유럽판 000121)	Eighting / Raizing (Capcom license)
 dimahoou	디마후 (미국판 000121)	디마후 (미국판 000121)	Eighting / Raizing (Capcom license)
-gmahou	그레이트 마법 대작전 (일본판 000121)	그레이트 마법 대작전 (일본판 000121)	Eighting / Raizing (Capcom license)
+gmahou	그레이트 마법대작전 (일본판 000121)	그레이트 마법대작전 (일본판 000121)	Eighting / Raizing (Capcom license)
 mmatrix	마스 매트릭스: 하이퍼 솔리드 슈팅 (미국판 000412)	마스 매트릭스: 하이퍼 솔리드 슈팅 (미국판 000412)	Takumi (Capcom license)
 mmatrixj	마스 매트릭스: 하이퍼 솔리드 슈팅 (일본판 000412)	마스 매트릭스: 하이퍼 솔리드 슈팅 (일본판 000412)	Takumi (Capcom license)
 1944	1944: 루프 마스터 (미국판 000620)	1944: 루프 마스터 (미국판 000620)	Eighting / Raizing (Capcom license)
@@ -2740,9 +2743,9 @@ avspd	에일리언 대 프레데터 (유럽판 940520, 피닉스 버전)	에일리언 대 프레데터 (유
 dstlku1d	다크 스토커즈: 나이트 워리어즈 (미국판 940705, 피닉스 버전)	다크 스토커즈: 나이트 워리어즈 (미국판 940705, 피닉스 버전)	bootleg
 ringdstd	슬램 마스터즈 II - 링 오브 디스트럭션 (유럽판 940902, 피닉스 버전)	슬램 마스터즈 II - 링 오브 디스트럭션 (유럽판 940902, 피닉스 버전)	bootleg
 xmcotad	엑스맨: 칠드런 오브 더 아톰 (유럽판 950105, 피닉스 버전)	엑스맨: 칠드런 오브 더 아톰 (유럽판 950105, 피닉스 버전)	bootleg
-nwarrud	나이트 워리어즈: 다크스토커즈 리벤지 (미국판 950406, 피닉스 버전)	나이트 워리어즈: 다크스토커즈 리벤지 (미국판 950406, 피닉스 버전)	bootleg
-sfad	스트리트 파이터 알파: 워리어즈 드림 (유럽판 950727, 피닉스 버전)	스트리트 파이터 알파: 워리어즈 드림 (유럽판 950727, 피닉스 버전)	bootleg
-mshud	마블 슈퍼 히어로즈 (미국판 951024, 피닉스 버전)	마블 슈퍼 히어로즈 (미국판 951024, 피닉스 버전)	bootleg
+nwarrud	나이트 워리어즈: 다크스토커즈의 복수 (미국판 950406, 피닉스 버전)	나이트 워리어즈: 다크스토커즈의 복수 (미국판 950406, 피닉스 버전)	bootleg
+sfad	스트리트 파이터 알파: 전사들의 희망 (유럽판 950727, 피닉스 버전)	스트리트 파이터 알파: 전사들의 희망 (유럽판 950727, 피닉스 버전)	bootleg
+mshud	마블 슈퍼히어로즈 (미국판 951024, 피닉스 버전)	마블 슈퍼히어로즈 (미국판 951024, 피닉스 버전)	bootleg
 19xxd	19XX: 운명과의 전쟁 (미국판 951207, 피닉스 버전)	19XX: 운명과의 전쟁 (미국판 951207, 피닉스 버전)	bootleg
 sfz2ad	스트리트 파이터 제로 2 (아시아판 960227, 피닉스 버전)	스트리트 파이터 제로 2 (아시아판 960227, 피닉스 버전)	bootleg
 sfz2jd	스트리트 파이터 제로 2 (일본판 960227, 피닉스 버전)	스트리트 파이터 제로 2 (일본판 960227, 피닉스 버전)	bootleg
@@ -2767,34 +2770,34 @@ ssf2tbd	슈퍼 스트리트 파이터 II: 토너먼트 배틀 (세계판 93111,9 피닉스 버전)	슈퍼
 ssf2xjd	슈퍼 스트리트 파이터 II X: 그랜드 마스터 챌린지 (일본판 940223, 피닉스 버전)	슈퍼 스트리트 파이터 II X: 그랜드 마스터 챌린지 (일본판 940223, 피닉스 버전)	bootleg
 sgemfd	슈퍼 젬 파이터 미니믹스 (미국판 970904, 피닉스 버전)	슈퍼 젬 파이터 미니믹스 (미국판 970904, 피닉스 버전)	bootleg
 armwar1d	아머드 워리어즈 (유럽판 941011 피닉스 버전)	아머드 워리어즈 (유럽판 941011 피닉스 버전)	bootleg
-dimahoud	그레이트 마법 대작전/ 디마후 (미국판 000121, 피닉스 버전)	그레이트 마법 대작전/ 디마후 (미국판 000121, 피닉스 버전)	bootleg
+dimahoud	그레이트 마법대작전/ 디마후 (미국판 000121, 피닉스 버전)	그레이트 마법대작전/ 디마후 (미국판 000121, 피닉스 버전)	bootleg
 mmatrixd	마스 매트릭스: 하이퍼 솔리드 슈팅 (일본판 000412, 피닉스 버전)	마스 매트릭스: 하이퍼 솔리드 슈팅 (일본판 000412, 피닉스 버전)	bootleg
 vhunt2d	뱀파이어 헌터 2: 다크스토커즈의 복수 (일본판 970929, 피닉스 버전)	뱀파이어 헌터 2: 다크스토커즈의 복수 (일본판 970929, 피닉스 버전)	bootleg
 vsav2d	뱀파이어 세이비어 2: 뱀파이어의 제왕 (일본판 970913, 피닉스 버전)	뱀파이어 세이비어 2: 뱀파이어의 제왕 (일본판 970913, 피닉스 버전)	bootleg
-csclub1d	캡콤 스포츠 클럽 (유럽판 970722, 피닉스 버전)	캡콤 스포츠 클럽 (유럽판 970722, 피닉스 버전)	bootleg
+csclub1d	캡콤 스포츠클럽 (유럽판 970722, 피닉스 버전)	캡콤 스포츠클럽 (유럽판 970722, 피닉스 버전)	bootleg
 cybotsud	사이버보츠: 풀메탈 매드니스 (미국판 950424, 피닉스 버전)	사이버보츠: 풀메탈 매드니스 (미국판 950424, 피닉스 버전)	bootleg
 mshvsfu1d	마블 슈퍼히어로즈 대 스트리트 파이터 (미국판 970625, 피닉스 버전)	마블 슈퍼히어로즈 대 스트리트 파이터 (미국판 970625, 피닉스 버전)	bootleg
 sfz3jr2d	스트리트 파이터 제로 3 (일본판 980629, 피닉스 버전)	스트리트 파이터 제로 3 (일본판 980629, 피닉스 버전)	bootleg
-sfiii	스트리트 파이터 III: 뉴 제네레이션 (미국판, 970204)	스트리트 파이터 III: 뉴 제네레이션 (미국판, 970204)	Capcom
-sfiiij	스트리트 파이터 III: 뉴 제네레이션 (일본판, 970204)	스트리트 파이터 III: 뉴 제네레이션 (일본판, 970204)	Capcom
-sfiii2	스트리트 파이터 III 2nd 임팩트: 자이언트 어택 (미국판, 970930)	스트리트 파이터 III 2nd 임팩트: 자이언트 어택 (미국판, 970930)	Capcom
-sfiii2j	스트리트 파이터 III 2nd 임팩트: 자이언트 어택 (일본판, 970930)	스트리트 파이터 III 2nd 임팩트: 자이언트 어택 (일본판, 970930)	Capcom
-sfiii3	스트리트 파이터 III 3rd 스트라이크: 파이트 포 더 퓨쳐 (미국판, 990608)	스트리트 파이터 III 3rd 스트라이크: 파이트 포 더 퓨쳐 (미국판, 990608)	Capcom
-sfiii3a	스트리트 파이터 III 3rd 스트라이크: 파이트 포 더 퓨쳐 (미국판, 990512)	스트리트 파이터 III 3rd 스트라이크: 파이트 포 더 퓨쳐 (미국판, 990512)	Capcom
+sfiii	스트리트 파이터 III: 새로운 세대 (미국판, 970204)	스트리트 파이터 III: 새로운 세대 (미국판, 970204)	Capcom
+sfiiij	스트리트 파이터 III: 새로운 세대 (일본판, 970204)	스트리트 파이터 III: 새로운 세대 (일본판, 970204)	Capcom
+sfiii2	스트리트 파이터 III 2nd 임팩트: 거대한 공격 (미국판, 970930)	스트리트 파이터 III 2nd 임팩트: 거대한 공격 (미국판, 970930)	Capcom
+sfiii2j	스트리트 파이터 III 2nd 임팩트: 거대한 공격 (일본판, 970930)	스트리트 파이터 III 2nd 임팩트: 거대한 공격 (일본판, 970930)	Capcom
+sfiii3	스트리트 파이터 III 3rd 스트라이크: 미래를위한 싸움 (미국판, 990608)	스트리트 파이터 III 3rd 스트라이크: 미래를위한 싸움 (미국판, 990608)	Capcom
+sfiii3a	스트리트 파이터 III 3rd 스트라이크: 미래를위한 싸움 (미국판, 990512)	스트리트 파이터 III 3rd 스트라이크: 미래를위한 싸움 (미국판, 990512)	Capcom
 jojo	죠죠의 기묘한 모험 (일본판, 990108)	죠죠의 기묘한 모험 (일본판, 990108)	Capcom
 jojoa	죠죠의 기묘한 모험 (일본판, 981202)	죠죠의 기묘한 모험 (일본판, 981202)	Capcom
 jojoba	죠죠의 기묘한 모험: 미래로의 유산 (일본판, 990913)	죠죠의 기묘한 모험: 미래로의 유산 (일본판, 990913)	Capcom
-redearth	레드 어쓰 (유럽판, 961121)	레드 어쓰 (유럽판, 961121)	Capcom
+redearth	레드어쓰 (유럽판, 961121)	레드어쓰 (유럽판, 961121)	Capcom
 warzard	워저드 (일본판, 961121)	워저드 (일본판, 961121)	Capcom
-sfiiin	스트리트 파이터 III: 뉴 제네레이션 (아시아판, 970204, NO CD)	스트리트 파이터 III: 뉴 제네레이션 (아시아판, 970204, NO CD)	Capcom
-sfiii2n	스트리트 파이터 III 2nd 임팩트: 자이언트 어택 (아시아판, 970930, NO CD)	스트리트 파이터 III 2nd 임팩트: 자이언트 어택 (아시아판, 970930, NO CD)	Capcom
-sfiii3n	스트리트 파이터 III 3rd 스트라이크: 파이트 포 더 퓨쳐 (일본판, 990608, NO CD)	스트리트 파이터 III 3rd 스트라이크: 파이트 포 더 퓨쳐 (일본판, 990608, NO CD)	Capcom
-sfiii3an	스트리트 파이터 III 3rd 스트라이크: 파이트 포 더 퓨쳐 (일본판, 990512, NO CD)	스트리트 파이터 III 3rd 스트라이크: 파이트 포 더 퓨쳐 (일본판, 990512, NO CD)	Capcom
+sfiiin	스트리트 파이터 III: 새로운 세대 (아시아판, 970204, NO CD)	스트리트 파이터 III: 새로운 세대 (아시아판, 970204, NO CD)	Capcom
+sfiii2n	스트리트 파이터 III 2nd 임팩트: 거대한 공격 (아시아판, 970930, NO CD)	스트리트 파이터 III 2nd 임팩트: 거대한 공격 (아시아판, 970930, NO CD)	Capcom
+sfiii3n	스트리트 파이터 III 3rd 스트라이크: 미래를위한 싸움 (일본판, 990608, NO CD)	스트리트 파이터 III 3rd 스트라이크: 미래를위한 싸움 (일본판, 990608, NO CD)	Capcom
+sfiii3an	스트리트 파이터 III 3rd 스트라이크: 미래를위한 싸움 (일본판, 990512, NO CD)	스트리트 파이터 III 3rd 스트라이크: 미래를위한 싸움 (일본판, 990512, NO CD)	Capcom
 jojon	죠죠의 기묘한 모험 (아시아판, 990108, NO CD)	죠죠의 기묘한 모험 (아시아판, 990108, NO CD)	Capcom
 jojoan	죠죠의 기묘한 모험 (아시아판, 981202, NO CD)	죠죠의 기묘한 모험 (아시아판, 981202, NO CD)	Capcom
 jojoban	죠죠의 기묘한 모험: 미래로의 유산 (일본판, 990913, NO CD)	죠죠의 기묘한 모험: 미래로의 유산 (일본판, 990913, NO CD)	Capcom
 jojobane	죠죠의 기묘한 모험: 미래로의 유산 (유럽판, 990913, NO CD)	죠죠의 기묘한 모험: 미래로의 유산 (유럽판, 990913, NO CD)	Capcom
-redeartn	레드 어쓰 (961121, NO CD)	레드 어쓰 (961121, NO CD)	Capcom
+redeartn	레드어쓰 (961121, NO CD)	레드어쓰 (961121, NO CD)	Capcom
 cpzn1	Capcom ZN1 바이오스	Capcom ZN1 바이오스	Sony / Capcom
 ts2	배틀 아레나 투신전 2 (미국판, 951124)	배틀 아레나 투신전 2 (미국판, 951124)	Capcom / Takara
 ts2j	배틀 아레나 투신전 2 (일본판, 951124)	배틀 아레나 투신전 2 (일본판, 951124)	Capcom / Takara
@@ -3130,7 +3133,7 @@ hatena	어드벤처 퀴즈 2 하테나 - 하테나의 대모험 (일본판 900228)	어드벤처 퀴즈 2 
 spang	슈퍼 팡 (세계판 900914)	슈퍼 팡 (세계판 900914)	Mitchell
 spangj	슈퍼 팡 (일본판 901023)	슈퍼 팡 (일본판 901023)	Mitchell
 spangbl	슈퍼 팡 (세계판 900914, 해적판)	슈퍼 팡 (세계판 900914, 해적판)	bootleg
-sbbros	슈퍼 버스터 브라더스 (미국판 901001)	슈퍼 버스터 브라더스 (미국판 901001)	Mitchell (Capcom license)
+sbbros	슈퍼 버스터 브러더스 (미국판 901001)	슈퍼 버스터 브러더스 (미국판 901001)	Mitchell (Capcom license)
 marukin	슈퍼 금단편 (일본판 901017)	슈퍼 금단편 (일본판 901017)	Yuga
 qtono1	퀴즈 성주님의 야망 (일본판)	퀴즈 성주님의 야망 (일본판)	Capcom
 qsangoku	퀴즈 삼국지 - 지략의 패자 (일본판)	퀴즈 삼국지 - 지략의 패자 (일본판)	Capcom
@@ -3464,7 +3467,7 @@ aliensyn2	에일리언 신드롬 (세트 2, System 16A 기판, FD1089A 317-0033)	에일리언 �
 aliensyn5	에일리언 신드롬 (세트 5, System 16A 기판, FD1089B 317-0037)	에일리언 신드롬 (세트 5, System 16A 기판, FD1089B 317-0037)	Sega
 bodyslam	바디 슬램 / 여자 레슬링 (8751 317-0015)	바디 슬램 / 여자 레슬링 (8751 317-0015)	Sega
 dumpmtmt	덤프 마츠모토 (일본판, 8751 317-0011a)	덤프 마츠모토 (일본판, 8751 317-0011a)	Sega
-mjleague	메이저 리그	메이저 리그	Sega
+mjleague	메이저리그	메이저리그	Sega
 quartet	쿼텟트 (개정판 A, 8751 315-5194)	쿼텟트 (개정판 A, 8751 315-5194)	Sega
 quarteta	쿼텟트 (8751 315-5194)	쿼텟트 (8751 315-5194)	Sega
 quartet2	쿼텟트 2 (8751 317-0010)	쿼텟트 2 (8751 317-0010)	Sega
@@ -3576,6 +3579,8 @@ beautyb	뷰티 블럭	뷰티 블럭	AMT
 iqpipe	IQ 파이프	IQ 파이프	AMT
 tturfbl	터프 터프 (해적판)	터프 터프 (해적판)	bootleg (Datsu)
 wb3bbl	원더보이 III - 몬스터 레어 (해적판)	원더보이 III - 몬스터 레어 (해적판)	bootleg
+isgsm	ISG 셀렉션 마스터 타입 2006 바이오스	ISG 셀렉션 마스터 타입 2006 바이오스	ISG
+shinfz	시노비 / FZ-2006 (한국 System 16 기판 해적판)	시노비 / FZ-2006 (한국 System 16 기판 해적판)	ISG
 shdancer	쉐도우 댄서 - 영의무 (影の舞) (세계판)	쉐도우 댄서 - 영의무 (影の舞) (세계판)	Sega
 shdancerj	쉐도우 댄서 - 영의무 (影の舞) (일본판)	쉐도우 댄서 - 영의무 (影の舞) (일본판)	Sega
 shdancer1	쉐도우 댄서 - 영의무 (影の舞) (미국판)	쉐도우 댄서 - 영의무 (影の舞) (미국판)	Sega
@@ -3681,8 +3686,8 @@ radm	래드 모빌 (세계판)	래드 모빌 (세계판)	Sega
 radmu	래드 모빌 (미국판)	래드 모빌 (미국판)	Sega
 radr	래드 랠리 (세계판)	래드 랠리 (세계판)	Sega
 radru	래드 랠리 (미국판)	래드 랠리 (미국판)	Sega
-spidman	스파이더 맨: 비디오게임 (세계판)	스파이더 맨: 비디오게임 (세계판)	Sega
-spidmanu	스파이더 맨: 비디오게임 (미국판)	스파이더 맨: 비디오게임 (미국판)	Sega
+spidman	스파이더맨: 비디오게임 (세계판)	스파이더맨: 비디오게임 (세계판)	Sega
+spidmanu	스파이더맨: 비디오게임 (미국판)	스파이더맨: 비디오게임 (미국판)	Sega
 f1en	F1 이그저스트 노트	F1 이그저스트 노트	Sega
 arabfgt	아라비안 파이트 (세계판)	아라비안 파이트 (세계판)	Sega
 arabfgtu	아라비안 파이트 (미국판)	아라비안 파이트 (미국판)	Sega
@@ -3743,7 +3748,7 @@ fhboxers	펑키 헤드 복서 (JUETBKAL 951218 버전 1.000)	펑키 헤드 복서 (JUETBKAL 95
 vfkids	버추어 파이터 키즈 (JUET 960319, 버전 V0.000)	버추어 파이터 키즈 (JUET 960319, 버전 V0.000)	Sega
 pblbeach	페블 비치 - 그레이트 샷 (JUE 950913 버전 0.990)	페블 비치 - 그레이트 샷 (JUE 950913 버전 0.990)	T&E Soft
 introdon	가라오케 퀴즈 인트로 돈 돈! (일본판, 960213 버전 1.000)	가라오케 퀴즈 인트로 돈 돈! (일본판, 960213 버전 1.000)	Sunsoft / Success
-smleague	슈퍼 메이저 리그 (미국판, 960108 버전 1.000)	슈퍼 메이저 리그 (미국판, 960108 버전 1.000)	Sega
+smleague	슈퍼 메이저리그 (미국판, 960108 버전 1.000)	슈퍼 메이저리그 (미국판, 960108 버전 1.000)	Sega
 decathlt	10종경기선수 / 디캐슬릿 (JUET 960709, 버전 1.001)	10종경기선수 / 디캐슬릿 (JUET 960709, 버전 1.001)	Sega
 decathlto	10종경기선수 / 디캐슬릿 (JUET 960424, 버전 1.000)	10종경기선수 / 디캐슬릿 (JUET 960424, 버전 1.000)	Sega
 dnmtdeka	다이너마이트 형사 (일본판, 960515 버전 1.000)	다이너마이트 형사 (일본판, 960515 버전 1.000)	Sega
@@ -3754,9 +3759,9 @@ prikura	클라라 공주 대작전 (일본판 960910 버전 1.000)	클라라 공주 대작전 (일본판
 magzun	매지컬 두뇌 파워 (일본판, 961031 버전 1.000)	매지컬 두뇌 파워 (일본판, 961031 버전 1.000)	Sega
 puyosun	뿌요뿌요 썬 (일본판 961115 버전 0.001)	뿌요뿌요 썬 (일본판 961115 버전 0.001)	Compile
 colmns97	컬럼스 '97 (JET 961209 버전 1.000)	컬럼스 '97 (JET 961209 버전 1.000)	Sega
-shienryu	자염룡 (紫炎龍)  (JUET 961226 버전 1.000)	자염룡 (紫炎龍)  (JUET 961226 버전 1.000)	Warashi
+shienryu	자염룡 (紫炎龍) (JUET 961226 버전 1.000)	자염룡 (紫炎龍) (JUET 961226 버전 1.000)	Warashi
 vmahjong	버추얼 마작 (일본판 961214, 버전 1.000)	버추얼 마작 (일본판 961214, 버전 1.000)	Micronet
-groovef	호혈사일족 3 / 파워 인스팅트 3 - 그루브 온 파이트 (일본판 970416 버전 1.001)	호혈사일족 3 / 파워 인스팅트 3 - 그루브 온 파이트 (일본판 970416 버전 1.001)	Atlus
+groovef	호혈사일족 3 / 그루브 온 파이트 (일본판 970416 버전 1.001)	호혈사일족 3 / 그루브 온 파이트 (일본판 970416 버전 1.001)	Atlus
 nclubv3	남코 클럽 버전3 (일본판 970723 버전 1.000)	남코 클럽 버전3 (일본판 970723 버전 1.000)	Sega
 pclub2	프린트 클럽 2 (미국판 970921 버전 1.000)	프린트 클럽 2 (미국판 970921 버전 1.000)	Atlus
 thunt	퍼즐 & 액션: 트레저 헌트 (970901 버전 2.00E)	퍼즐 & 액션: 트레저 헌트 (970901 버전 2.00E)	Sega
@@ -3797,13 +3802,14 @@ vcop	버추어 캅 (개정판 B)	버추어 캅 (개정판 B)	Sega
 vf2o	버추어 파이터 2	버추어 파이터 2	Sega
 vf2a	버추어 파이터 2 (개정판 A)	버추어 파이터 2 (개정판 A)	Sega
 vf2b	버추어 파이터 2 (개정판 B)	버추어 파이터 2 (개정판 B)	Sega
-srallyc	세가 랠리 선수권대회	세가 랠리 선수권대회	Sega
+srallyc	세가 랠리 선수권대회 (개정판 C)	세가 랠리 선수권대회 (개정판 C)	Sega
+srallycb	세가 랠리 선수권대회 (개정판 B)	세가 랠리 선수권대회 (개정판 B)	Sega
 vcop2	버추어 캅 2	버추어 캅 2	Sega
 vf2	버추어 파이터 2 (버전 2.1)	버추어 파이터 2 (버전 2.1)	Sega
 manxtt	망스 TT 슈퍼바이크 (개정판 C)	망스 TT 슈퍼바이크 (개정판 C)	Sega
 doaa	데드 오어 얼라이브 (모델 2A 기판, 개정판 A)	데드 오어 얼라이브 (모델 2A 기판, 개정판 A)	Sega
 motoraid	모터레이드	모터레이드	Sega
-zeroguna	제로 건너 (모델 2A 기판)	제로 건너 (모델 2A 기판)	Psikyo
+zeroguna	제로거너 (모델 2A 기판)	제로거너 (모델 2A 기판)	Psikyo
 dyndeka2	다이너마이트 형사 2 (모델 2A 기판, 일본판)	다이너마이트 형사 2 (모델 2A 기판, 일본판)	Sega
 dynamcop	다이너마이트 형사 2 / 다이너마이트 캅 (모델 2A 기판, 수출판)	다이너마이트 형사 2 / 다이너마이트 캅 (모델 2A 기판, 수출판)	Sega
 pltkidsa	파일럿 키즈 (모델 2A 기판)	파일럿 키즈 (모델 2A 기판)	Psikyo
@@ -3820,13 +3826,13 @@ vonj	전뇌전기 버추얼 온 사이버 트루퍼스 (개정판 B, 일본판)	전뇌전기 버추얼 온 사
 gunblade	건블레이드 NY (개정판 A)	건블레이드 NY (개정판 A)	Sega
 schamp	소닉 챔피언쉽	소닉 챔피언쉽	Sega
 sfight	소닉 더 파이터즈	소닉 더 파이터즈	Sega
-lastbrnx	라스트 브롱스 (개정판 A, 수출판)	라스트 브롱스 (개정판 A, 수출판)	Sega
-lastbrnxj	라스트 브롱스 (개정판 A, 일본판)	라스트 브롱스 (개정판 A, 일본판)	Sega
+lastbrnx	라스트 브롱스 - 동경번외지 (개정판 A, 수출판)	라스트 브롱스 - 동경번외지 (개정판 A, 수출판)	Sega
+lastbrnxj	라스트 브롱스 - 동경번외지 (개정판 A, 일본판)	라스트 브롱스 - 동경번외지 (개정판 A, 일본판)	Sega
 sgt24h	슈퍼 GT 24h	슈퍼 GT 24h	Jaleco
 dynabb	다이너마이트 야구 '97 (개정판 A)	다이너마이트 야구 '97 (개정판 A)	Sega
 doa	데드 오어 얼라이브 (모델 2B 기판, 개정판 B)	데드 오어 얼라이브 (모델 2B 기판, 개정판 B)	Sega
-zerogun	제로 건너 (모델 2B 기판)	제로 건너 (모델 2B 기판)	Psikyo
-zerogunj	제로 건너 (모델 2B 기판, 일본판)	제로 건너 (모델 2B 기판, 일본판)	Psikyo
+zerogun	제로거너 (모델 2B 기판)	제로거너 (모델 2B 기판)	Psikyo
+zerogunj	제로거너 (모델 2B 기판, 일본판)	제로거너 (모델 2B 기판, 일본판)	Psikyo
 dyndeka2b	다이너마이트 형사 2 (모델 2B 기판, 일본판)	다이너마이트 형사 2 (모델 2B 기판, 일본판)	Sega
 dynamcopb	다이너마이트 캅 (모델 2B 기판, 수출판)	다이너마이트 캅 (모델 2B 기판, 수출판)	Sega
 pltkids	파일럿 키즈 (모델 2B 기판, 개정판 A)	파일럿 키즈 (모델 2B 기판, 개정판 A)	Psikyo
@@ -3978,10 +3984,10 @@ mp_soni2	소닉 더 헤지혹 2 (Mega Play 기판)	소닉 더 헤지혹 2 (Mega Play 기판)	Seg
 mp_shnb3	시노비 III (Mega Play 기판)	시노비 III (Mega Play 기판)	Sega
 mp_mazin	마징사가 / 마징워즈 (Mega Play 기판)	마징사가 / 마징워즈 (Mega Play 기판)	Sega
 mp_col3	컬럼스 III (Mega Play 기판)	컬럼스 III (Mega Play 기판)	Sega
-ssf2ghw	슈퍼 스트리트 파이터 II - 새로운 도전자 (일본 메가 드라이브 게임기 해적판)	슈퍼 스트리트 파이터 II - 새로운 도전자 (일본 메가 드라이브 게임기 해적판)	bootleg / Capcom
-aladbl	알라딘 (일본판 메가드라이브 버전 해적판)	알라딘 (일본판 메가드라이브 버전 해적판)	bootleg / Sega
-mk3ghw	모탈 컴뱃 3 (메가드라이브 버전 해적판)	모탈 컴뱃 3 (메가드라이브 버전 해적판)	bootleg / Midway
-ssgbl	선셋 라이더스 (메가드라이브 버전 해적판)	선셋 라이더스 (메가드라이브 버전 해적판)	bootleg / Konami
+ssf2mdb	슈퍼 스트리트 파이터 II - 새로운 도전자 (일본 메가 드라이브 게임기 해적판)	슈퍼 스트리트 파이터 II - 새로운 도전자 (일본 메가 드라이브 게임기 해적판)	bootleg / Capcom
+aladmdb	알라딘 (일본 메가 드라이브 게임기 해적판)	알라딘 (일본 메가 드라이브 게임기 해적판)	bootleg / Sega
+mk3mdb	모탈 컴뱃 3 (메가 드라이브 게임기 해적판)	모탈 컴뱃 3 (메가 드라이브 게임기 해적판)	bootleg / Midway
+srmdb	선셋 라이더스 (일본 메가 드리아브 게임기 해적판)	선셋 라이더스 (일본 메가 드리아브 게임기 해적판)	bootleg / Konami
 naomi	나오미 바이오스	나오미 바이오스	Sega
 naomigd	나오미 GD-ROM 바이오스	나오미 GD-ROM 바이오스	Sega
 naomi2	나오미 2 바이오스	나오미 2 바이오스	Sega
@@ -3989,7 +3995,7 @@ hod2bios	나오미 하우스 오브 더 데드 2 바이오스	나오미 하우스 오브 더 데드 2 바이
 hotd2	하우스 오브 더 데드 2 (나오미 기판)	하우스 오브 더 데드 2 (나오미 기판)	Sega
 hotd2o	하우스 오브 더 데드 2 (원본) (나오미 기판)	하우스 오브 더 데드 2 (원본) (나오미 기판)	Sega
 dybbnao	다이너마이트 야구 (나오미 기판, 일본판)	다이너마이트 야구 (나오미 기판, 일본판)	Sega
-smlg99	슈퍼 메이저 리그 '99 (나오미 기판)	슈퍼 메이저 리그 '99 (나오미 기판)	Sega
+smlg99	슈퍼 메이저리그 '99 (나오미 기판)	슈퍼 메이저리그 '99 (나오미 기판)	Sega
 pstone	파워 스톤 (나오미 기판, 일본, 미국, 유럽, 아시아, 호주판)	파워 스톤 (나오미 기판, 일본, 미국, 유럽, 아시아, 호주판)	Capcom
 crzytaxi	크레이지 택시 (나오미 기판, 일본판, 미국판, 수출판, 한국판, 호주판)	크레이지 택시 (나오미 기판, 일본판, 미국판, 수출판, 한국판, 호주판)	Sega
 zombrvn	좀비 리벤지 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	좀비 리벤지 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
@@ -3999,8 +4005,8 @@ alpilota	에어라인 파일럿 (개정판 A, 나오미 기판)	에어라인 파일럿 (개정판 A, 나오
 ggram2	자이언트 그램 ~ 전일본 프로레스링 2 - 일본무도관 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	자이언트 그램 ~ 전일본 프로레스링 2 - 일본무도관 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
 f355bios	나오미 페라리 F355 첼린지 바이오스	나오미 페라리 F355 첼린지 바이오스	Sega
 f355	페라리 F355 첼린지 (나오미 기판)	페라리 F355 첼린지 (나오미 기판)	Sega
-f355twin	페라리 F355 첼린지 (나오미 기판, 멀티화면)	페라리 F355 첼린지 (나오미 기판, 멀티화면)	Sega
-shangril	전환 천사대전 작사 샹그릴라 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	전환 천사대전 작사 샹그릴라 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Marvelous Ent.
+f355twin	페라리 F355 첼린지 트윈 (나오미 기판)	페라리 F355 첼린지 트윈 (나오미 기판)	Sega
+shangril	전환 천사대전 마작 샹그릴라 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	전환 천사대전 마작 샹그릴라 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Marvelous Ent.
 vs2_2k	버추어 스트라이커 2 2000 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	버추어 스트라이커 2 2000 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
 suchie3	아이돌 작사 스치파이 3 (나오미 기판, 일본판)	아이돌 작사 스치파이 3 (나오미 기판, 일본판)	Jaleco
 toyfight	토이 파이터 (나오미 기판)	토이 파이터 (나오미 기판)	Sega
@@ -4023,22 +4029,22 @@ mvsc2	마블 대 캡콤 2 (나오미 기판, 일본, 미국, 유럽, 스페인, 호주판)	마블 대 캡�
 smarinef	세가 마린 피싱 (나오미 기판)	세가 마린 피싱 (나오미 기판)	Sega
 pstone2	파워 스톤 2 (나오미 기판, 일본, 미국, 유럽, 아시아, 호주판)	파워 스톤 2 (나오미 기판, 일본, 미국, 유럽, 아시아, 호주판)	Capcom
 qmegamis	퀴즈 오! 나의 여신님 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	퀴즈 오! 나의 여신님 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
-ggx	길티기어 X (나오미 기판, 일본판)	길티기어 X (나오미 기판, 일본판)	Arc System Works
+ggx	길티기어 젝스 (나오미 기판, 일본판)	길티기어 젝스 (나오미 기판, 일본판)	Arc System Works
 slasho	슬래시아웃 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	슬래시아웃 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
 slashout	슬래시아웃 (나오미 GD롬 기판, GDS-0004)	슬래시아웃 (나오미 GD롬 기판, GDS-0004)	Sega
 capsnka	캡콤 대 SNK 밀레니엄 파이트 2000 (개정판 A, 나오미 기판, 일본, 미국, 수출, 한국, 호주판)	캡콤 대 SNK 밀레니엄 파이트 2000 (개정판 A, 나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Capcom / SNK
 capsnk	캡콤 대 SNK 밀레니엄 파이트 2000 (개정판 C, 나오미 기판, 일본, 미국, 수출, 한국, 호주판)	캡콤 대 SNK 밀레니엄 파이트 2000 (개정판 C, 나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Capcom / SNK
 gram2000	자이언트 그램 2000 ~ 전일본 프로레스링 3 - 영광의 용자들 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	자이언트 그램 2000 ~ 전일본 프로레스링 3 - 영광의 용자들 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
-crackndj	크래킹 DJ (나오미 기판)	크래킹 DJ (나오미 기판)	Sega
+crackndj	크래킨 DJ (나오미 기판)	크래킨 DJ (나오미 기판)	Sega
 cspike	건 스파이크 (나오미 기판, 일본판) / 캐논 스파이크 (나오미 기판, 미국, 수출, 한국, 호주판)	건 스파이크 (나오미 기판, 일본판) / 캐논 스파이크 (나오미 기판, 미국, 수출, 한국, 호주판)	Psikyo / Capcom
 sstrkfgt	세가 스트라이크 파이터 (개정판 A, 나오미 기판)	세가 스트라이크 파이터 (개정판 A, 나오미 기판)	Sega
 deathcox	데스 크림슨 OX (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	데스 크림슨 OX (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Ecole
 confmiss	컨피덴샬 미션 (나오미 GD롬 기판, GDS-0001)	컨피덴샬 미션 (나오미 GD롬 기판, GDS-0001)	Sega
 wwfroyal	WWF 로얄럼블 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	WWF 로얄럼블 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
-pjustic	불타라 사립정의학원 (나오미 기판, 일본판) / 프로젝트 저스티스 (나오미 기판, 미국, 수출, 한국, 호주판)	불타라 사립정의학원 (나오미 기판, 일본판) / 프로젝트 저스티스 (나오미 기판, 미국, 수출, 한국, 호주판)	Capcom
+pjustic	불타라! 정의학원 (나오미 기판, 일본판) / 프로젝트 저스티스 (나오미 기판, 미국, 수출, 한국, 호주판)	불타라! 정의학원 (나오미 기판, 일본판) / 프로젝트 저스티스 (나오미 기판, 미국, 수출, 한국, 호주판)	Capcom
 sprtjam	스포츠 잼 (나오미 GD롬 기판, GDS-0003)	스포츠 잼 (나오미 GD롬 기판, GDS-0003)	Sega
 derbyocw	더비 오너스 클럽 월드 에디션 (개정판 C, 나오미 기판, 일본, 미국, 수출, 한국, 호주판)	더비 오너스 클럽 월드 에디션 (개정판 C, 나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
-f355twn2	페라리 F355 첼린지 2 (나오미 기판, 멀티화면)	페라리 F355 첼린지 2 (나오미 기판, 멀티화면)	Sega
+f355twn2	페라리 F355 첼린지 2 트윈 (나오미 기판)	페라리 F355 첼린지 2 트윈 (나오미 기판)	Sega
 gwing2	기가 윙 2 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	기가 윙 2 (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Takumi / Capcom
 csmash	코즈믹 스매쉬 (개정판 A, 나오미 기판, 일본, 미국, 수출, 한국, 호주판)	코즈믹 스매쉬 (개정판 A, 나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
 csmasho	코즈믹 스매쉬 (원본) (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	코즈믹 스매쉬 (원본) (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
@@ -4050,34 +4056,34 @@ cvsgd	캡콤 대 SNK 밀레니엄 파이트 2000 Pro (나오미 GD롬 기판, GDL-0004)	캡콤 대 
 wsbbgd	월드 시리즈 야구 / 슈퍼 메이저리그 (나오미 GD롬 기판, GDS-0010)	월드 시리즈 야구 / 슈퍼 메이저리그 (나오미 GD롬 기판, GDS-0010)	Sega
 spkrbtl	스파이커즈 배틀 (나오미 GD롬 기판, GDS-0005)	스파이커즈 배틀 (나오미 GD롬 기판, GDS-0005)	Sega
 gunsur2	건 서바이버 2: 바이오 하자드 코드 베로니카 (나오미 기판)	건 서바이버 2: 바이오 하자드 코드 베로니카 (나오미 기판)	Capcom / Namco
-starseek	두근두근 아이돌스타 시커 (GDL-0005)	두근두근 아이돌스타 시커 (GDL-0005)	G-Rev
+starseek	두근두근 아이돌스타 시커 (나오미 GD롬 기판, GDL-0005)	두근두근 아이돌스타 시커 (나오미 GD롬 기판, GDL-0005)	G-Rev
 cvs2gd	캡콤 대 SNK 2 밀리어내어 파이팅 2001 (개정판 A, 나오미 GD롬 기판, GDL-0007A)	캡콤 대 SNK 2 밀리어내어 파이팅 2001 (개정판 A, 나오미 GD롬 기판, GDL-0007A)	Capcom / SNK
 gundmxgd	기동전사 건담: 연방 대 지온 DX (나오미 GD롬 기판, GDL-0006)	기동전사 건담: 연방 대 지온 DX (나오미 GD롬 기판, GDL-0006)	Capcom
 hmgeo	헤비메탈 지오메트릭스 (나오미 기판, 일본, 미국, 유럽, 한국, 호주판)	헤비메탈 지오메트릭스 (나오미 기판, 일본, 미국, 유럽, 한국, 호주판)	Capcom
 derbyoc2	더비 오너스 클럽 II (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	더비 오너스 클럽 II (나오미 기판, 일본, 미국, 수출, 한국, 호주판)	Sega
 vtennis2	버추어 테니스 2 (개정판 A, 나오미 GD롬 기판, GDS-0015A)	버추어 테니스 2 (개정판 A, 나오미 GD롬 기판, GDS-0015A)	Sega
 vtenis2c	버추어 테니스 2 / 파워 스매시 2 (나오미 기판)	버추어 테니스 2 / 파워 스매시 2 (나오미 기판)	Sega
-keyboard	La 키보도(나오미 GD롬 기판, GDS-0017)	La 키보도(나오미 GD롬 기판, GDS-0017)	Sega
+keyboard	La 키보드 (나오미 GD롬 기판, GDS-0017)	La 키보드 (나오미 GD롬 기판, GDS-0017)	Sega
 ikaruga	반구 (斑鳩) / 이카루가 (나오미 GD롬 기판, GDL-0010)	반구 (斑鳩) / 이카루가 (나오미 GD롬 기판, GDL-0010)	Treasure
 lupinsho	루팡 3세 - 더 슈팅 (나오미 GD롬 기판, GDS-0018)	루팡 3세 - 더 슈팅 (나오미 GD롬 기판, GDS-0018)	Sega
 vathlete	버추어 육상경기 / 버추어 운동선수 (나오미 GD롬 기판, GDS-0019)	버추어 육상경기 / 버추어 운동선수 (나오미 GD롬 기판, GDS-0019)	Sega
 luptype	루팡 3세 - 더 타이핑 (개정판 A, 나오미 GD롬 기판, GDS-0021A)	루팡 3세 - 더 타이핑 (개정판 A, 나오미 GD롬 기판, GDS-0021A)	Sega
-ggxx	길티기어 XX (나오미 GD롬 기판, GDL-0011)	길티기어 XX (나오미 GD롬 기판, GDL-0011)	Arc System Works
-mok	메이즈 오브 더 킹 (나오미 GD롬 기판, GDS-0022)	메이즈 오브 더 킹 (나오미 GD롬 기판, GDS-0022)	Sega
+ggxx	길티기어 이그젝스 (나오미 GD롬 기판, GDL-0011)	길티기어 이그젝스 (나오미 GD롬 기판, GDL-0011)	Arc System Works
+mok	메이즈 오브 더 킹스 (나오미 GD롬 기판, GDS-0022)	메이즈 오브 더 킹스 (나오미 GD롬 기판, GDS-0022)	Sega
 cleoftp	클레오파트라의 보물 Plus (나오미 GD롬 기판, GDL-0012)	클레오파트라의 보물 Plus (나오미 GD롬 기판, GDL-0012)	Altron
 chocomk	무사피의 초코 마커 (개정판 A, 나오미 GD롬 기판, GDL-0014A)	무사피의 초코 마커 (개정판 A, 나오미 GD롬 기판, GDL-0014A)	Ecole Software
 azumanga	아즈망가 대왕 퍼즐 버블 (나오미 GD롬 기판, GDL-0018)	아즈망가 대왕 퍼즐 버블 (나오미 GD롬 기판, GDL-0018)	Moss (Taito license)
-moeru	버닝 카지노 (나오미 GD롬 기판, GDL-0013)	버닝 카지노 (나오미 GD롬 기판, GDL-0013)	Altron
+moeru	불타는 카지노 (나오미 GD롬 기판, GDL-0013)	불타는 카지노 (나오미 GD롬 기판, GDL-0013)	Altron
 quizqgd	퀴즈 휴대폰 Q 모드 (나오미 GD롬 기판, GDL-0017)	퀴즈 휴대폰 Q 모드 (나오미 GD롬 기판, GDL-0017)	Amedio (Taito license)
-ggxxrl	길티키어 XX # 리로드 (개정판 A, 나오미 GD롬 기판, GDL-0019A)	길티키어 XX # 리로드 (개정판 A, 나오미 GD롬 기판, GDL-0019A)	Arc System Works
+ggxxrl	길티기어 이그젝스 샤프 리로드 (개정판 A, 나오미 GD롬 기판, GDL-0019A)	길티기어 이그젝스 샤프 리로드 (개정판 A, 나오미 GD롬 기판, GDL-0019A)	Arc System Works
 shikgam2	식신의 성 II (나오미 GD롬 기판, GDL-0021)	식신의 성 II (나오미 GD롬 기판, GDL-0021)	Alfa System
-bdrdown	보더 다운 (개정판 A, 나오미 GD롬 기판, GDL-0023A)	보더 다운 (개정판 A, 나오미 GD롬 기판, GDL-0023A)	G-Rev
-usagui	토 (兎) - 야성의 투패 - 산성마작편 (나오미 GD롬 기판, GDL-0022)	토 (兎) - 야성의 투패 - 산성마작편 (나오미 GD롬 기판, GDL-0022)	Warashi / Mahjong Kobo / Taito
+bdrdown	보더다운 (개정판 A, 나오미 GD롬 기판, GDL-0023A)	보더다운 (개정판 A, 나오미 GD롬 기판, GDL-0023A)	G-Rev
+usagui	토끼 - 야성의 투패 - 야마시로 마작편 (나오미 GD롬 기판, GDL-0022)	토끼 - 야성의 투패 - 야마시로 마작편 (나오미 GD롬 기판, GDL-0022)	Warashi / Mahjong Kobo / Taito
 psyvar2	사이버리아 2 -  더 윌 투 패브리케이트 (나오미 GD롬 기판, GDL-0024)	사이버리아 2 -  더 윌 투 패브리케이트 (나오미 GD롬 기판, GDL-0024)	G-Rev
 puyofev	뿌요뿌요 피버 (나오미 GD롬 기판, GDS-0031)	뿌요뿌요 피버 (나오미 GD롬 기판, GDS-0031)	Sega
 shootopl	슛아웃 풀 (나오미 기판)	슛아웃 풀 (나오미 기판)	Sega
 shootpl	슛아웃 풀 (나오미 기판, 일본, 미국, 한국, 호주판) / 슛아웃 풀 프라이즈 (수출판)	슛아웃 풀 (나오미 기판, 일본, 미국, 한국, 호주판) / 슛아웃 풀 프라이즈 (수출판)	Sega
-kick4csh	킥 4 캐쉬 (나오미 기판)	킥 4 캐쉬 (나오미 기판)	Sega
+kick4csh	킥 4 캐시 (나오미 기판)	킥 4 캐시 (나오미 기판)	Sega
 tetkiwam	테트리스 극도 (나오미 GD롬 기판, GDL-0020)	테트리스 극도 (나오미 GD롬 기판, GDL-0020)	Success
 cfield	카오스 필드 (나오미 GD롬 기판, GDL-0025)	카오스 필드 (나오미 GD롬 기판, GDL-0025)	Able
 trizeal	트라이질 (나오미 GD롬 기판, GDL-0026)	트라이질 (나오미 GD롬 기판, GDL-0026)	Taito
@@ -4085,8 +4091,8 @@ ss2005	슈퍼 상해 2005 (나오미 GD롬 기판, GDL-0031)	슈퍼 상해 2005 (나오미 GD롬 �
 ss2005a	슈퍼 상해 2005 (개정판 A, 나오미 GD롬 기판, GDL-0031A)	슈퍼 상해 2005 (개정판 A, 나오미 GD롬 기판, GDL-0031A)	Starfish
 senkoo	선광의 윤무 (나오미 GD롬 기판, GDL-0030)	선광의 윤무 (나오미 GD롬 기판, GDL-0030)	G-Rev
 senko	선광의 윤무 (개정판 A, 나오미 GD롬 기판, GDL-0030A)	선광의 윤무 (개정판 A, 나오미 GD롬 기판, GDL-0030A)	G-Rev
-meltybld	멜티 블러드 액트 카덴자 (개정판 C, 나오미 GD롬 기판, GDL-0028C)	멜티 블러드 액트 카덴자 (개정판 C, 나오미 GD롬 기판, GDL-0028C)	Ecole Software
-ggxxsla	길티기어 XX 슬래시 (개정판 A, 나오미 GD롬 기판, GDL-0033A)	길티기어 XX 슬래시 (개정판 A, 나오미 GD롬 기판, GDL-0033A)	Arc System Works
+meltybld	멜티블러드 액트 카덴자 (개정판 C, 나오미 GD롬 기판, GDL-0028C)	멜티블러드 액트 카덴자 (개정판 C, 나오미 GD롬 기판, GDL-0028C)	Ecole Software
+ggxxsla	길티기어 이그젝스 슬래시 (개정판 A, 나오미 GD롬 기판, GDL-0033A)	길티기어 이그젝스 슬래시 (개정판 A, 나오미 GD롬 기판, GDL-0033A)	Arc System Works
 radirgy	라디르기 (나오미 GD롬 기판, GDL-0032)	라디르기 (나오미 GD롬 기판, GDL-0032)	Milestone
 undefeat	언더 디핏 (나오미 GD롬 기판, GDL-0035)	언더 디핏 (나오미 GD롬 기판, GDL-0035)	G-Rev
 kurucham	빙글빙글 카멜레온 (나오미 GD롬 기판, GDL-0034)	빙글빙글 카멜레온 (나오미 GD롬 기판, GDL-0034)	Able
@@ -4094,9 +4100,9 @@ trgheart	트리거 허트 엑셀리카 (개정판 A, 나오미 GD롬 기판) (GDL-0036A)	트리거 허
 senkosp	선광의 윤무 스페셜 (나오미 GD롬 기판, GDL-0038)	선광의 윤무 스페셜 (나오미 GD롬 기판, GDL-0038)	G-Rev
 jingystm	인의 스톰 - 더 아케이드 (나오미 GD롬 기판, GDL-0037)	인의 스톰 - 더 아케이드 (나오미 GD롬 기판, GDL-0037)	Atrativa Japan
 karous	카라스 (나오미 GD롬 기판, GDL-0040)	카라스 (나오미 GD롬 기판, GDL-0040)	Milestone
-ggxxac	길티기어 XX 엑센트 코어 (나오미 GD롬 기판, GDL-0041)	길티기어 XX 엑센트 코어 (나오미 GD롬 기판, GDL-0041)	Arc System Works
-meltyb	멜티 블러드 액트 카덴자 Ver B (나오미 GD롬 기판, GDL-0039)	멜티 블러드 액트 카덴자 Ver B (나오미 GD롬 기판, GDL-0039)	Ecole Software
-meltyba	멜티 블러드 액트 카덴자 Ver B (개정판 A, 나오미 GD롬 기판, GDL-0039A)	멜티 블러드 액트 카덴자 Ver B (개정판 A, 나오미 GD롬 기판, GDL-0039A)	Ecole Software
+ggxxac	길티기어 이그젝스 엑센트 코어 (나오미 GD롬 기판, GDL-0041)	길티기어 이그젝스 엑센트 코어 (나오미 GD롬 기판, GDL-0041)	Arc System Works
+meltyb	멜티블러드 액트 카덴자 Ver B (나오미 GD롬 기판, GDL-0039)	멜티블러드 액트 카덴자 Ver B (나오미 GD롬 기판, GDL-0039)	Ecole Software
+meltyba	멜티블러드 액트 카덴자 Ver B (개정판 A, 나오미 GD롬 기판, GDL-0039A)	멜티블러드 액트 카덴자 Ver B (개정판 A, 나오미 GD롬 기판, GDL-0039A)	Ecole Software
 takoron	노코네 퍼즐 타코롱 (나오미 GD롬 기판, GDL-0042)	노코네 퍼즐 타코롱 (나오미 GD롬 기판, GDL-0042)	Compile
 ngdup23a	나오미 DIMM 펌웨어 업데이터 (GDL-0023A)	나오미 DIMM 펌웨어 업데이터 (GDL-0023A)	Sega
 ngdup23c	나오미 DIMM 펌웨어 업데이터 (GDL-0023C)	나오미 DIMM 펌웨어 업데이터 (GDL-0023C)	Sega
@@ -4120,20 +4126,21 @@ vf4tuneda	버추어 파이터 4 파이널 튠드 (개정판 A, 나오미 2 GD롬 기판, GDS-0036A)	
 vf4tunedd	버추어 파이터 4 파이널 튠드 (개정판 D, 나오미 2 GD롬 기판, GDS-0036D)	버추어 파이터 4 파이널 튠드 (개정판 D, 나오미 2 GD롬 기판, GDS-0036D)	Sega
 vf4tuned	버추어 파이터 4 파이널 튠드 (개정판 F, 나오미 2 GD롬 기판, GDS-0036F)	버추어 파이터 4 파이널 튠드 (개정판 F, 나오미 2 GD롬 기판, GDS-0036F)	Sega
 awbios	아토미스 웨이브 바이오스	아토미스 웨이브 바이오스	Sammy
+maxspeed	맥시멈 스피트 (아토미스 웨이브 기판)	맥시멈 스피트 (아토미스 웨이브 기판)	Sammy
 sprtshot	스포츠 슈팅 USA (아토미스 웨이브 기판)	스포츠 슈팅 USA (아토미스 웨이브 기판)	Sammy USA
 demofist	데몰리시 피스트 (아토미스 웨이브 기판)	데몰리시 피스트 (아토미스 웨이브 기판)	Polygon Magic / Dimps
-dolphin	돌핀 블루 (아토미스 웨이브 기판)	돌핀 블루 (아토미스 웨이브 기판)	Sammy
+dolphin	돌핀블루 (아토미스 웨이브 기판)	돌핀블루 (아토미스 웨이브 기판)	Sammy
 ggisuka	길티기어 이수카 (아토미스 웨이브 기판)	길티기어 이수카 (아토미스 웨이브 기판)	Sammy / Arc System Works
-rumblef	럼블 피시 (아토미스 웨이브 기판)	럼블 피시 (아토미스 웨이브 기판)	Sammy / Dimps
+rumblef	럼블피쉬 (아토미스 웨이브 기판)	럼블피쉬 (아토미스 웨이브 기판)	Sammy / Dimps
 rangrmsn	레인저 미션 (아토미스 웨이브 기판)	레인저 미션 (아토미스 웨이브 기판)	Sammy
 salmankt	샐러리맨 킨타로 (아토미스 웨이브 기판)	샐러리맨 킨타로 (아토미스 웨이브 기판)	Sammy
 kofnw	킹 오브 파이터즈 네오웨이브 (아토미스 웨이브 기판)	킹 오브 파이터즈 네오웨이브 (아토미스 웨이브 기판)	Sammy / SNK Playmore
 kofnwj	킹 오브 파이터즈 네오웨이브 (일본판, 아토미스 웨이브 기판)	킹 오브 파이터즈 네오웨이브 (일본판, 아토미스 웨이브 기판)	Sammy / SNK Playmore
 xtrmhunt	익스트림 헌팅 (아토미스 웨이브 기판)	익스트림 헌팅 (아토미스 웨이브 기판)	Sammy
-kov7sprt	삼국전기 3 칠성환생 / 신 삼국전기 (아토미스 웨이브 기판)	삼국전기 3 칠성환생 / 신 삼국전기 (아토미스 웨이브 기판)	Sammy / IGS
+kov7sprt	신 삼국전기 칠성전생 / 삼국전기 3 (아토미스 웨이브 기판)	신 삼국전기 칠성전생 / 삼국전기 3 (아토미스 웨이브 기판)	Sammy / IGS
 vfurlong	넷 셀렉트 경마 빅토리 푸어롱 (아토미스 웨이브 기판)	넷 셀렉트 경마 빅토리 푸어롱 (아토미스 웨이브 기판)	Sammy
 ngbc	네오지오 배틀 콜로세움 (아토미스 웨이브 기판)	네오지오 배틀 콜로세움 (아토미스 웨이브 기판)	Sammy / SNK Playmore
-fotns	북두신권 (아토미스 웨이브 기판)	북두신권 (아토미스 웨이브 기판)	Sega / Arc System Works
+fotns	북두의권 - 심판의 쌍창성 권호열전 (아토미스 웨이브 기판)	북두의권 - 심판의 쌍창성 권호열전 (아토미스 웨이브 기판)	Sega / Arc System Works
 xtrmhnt2	익스트림 헌팅 2 (아토미스 웨이브 기판)	익스트림 헌팅 2 (아토미스 웨이브 기판)	Sega
 hikaru	히카루 바이오스	히카루 바이오스	Sega
 podrace	스타워즈 포드 레이서	스타워즈 포드 레이서	Sega
@@ -4151,7 +4158,7 @@ avalon20	아발론의 열쇠 2.0 - 질서와 계율 (클라이언트 버전) (트라이포스 기판, 버�
 vs42006	버추어 스트라이커 4 2006 (개정판 D, 트라이포스 기판, 일본판, GDT-0020D)	버추어 스트라이커 4 2006 (개정판 D, 트라이포스 기판, 일본판, GDT-0020D)	Sega
 tfupdate	트라이포스 DIMM 펌웨어 업데이터 (GDT-0011)	트라이포스 DIMM 펌웨어 업데이터 (GDT-0011)	Sega
 chihiro	치히로 바이오스	치히로 바이오스	Sega
-hotd3	하우스 오브 더 데드  III (치히로 기판, GDX-0001)	하우스 오브 더 데드  III (치히로 기판, GDX-0001)	Sega
+hotd3	하우스 오브 더 데드 III (치히로 기판, GDX-0001)	하우스 오브 더 데드 III (치히로 기판, GDX-0001)	Sega
 vcop3	버추어 캅 3 (치히로 기판, GDX-0003A)	버추어 캅 3 (치히로 기판, GDX-0003A)	Sega
 outr2	아웃 런 2 (개정판 A, 치히로 기판, GDX-0004A)	아웃 런 2 (개정판 A, 치히로 기판, GDX-0004A)	Sega
 ollie	올리 킹 (치히로 기판, GDX-0007)	올리 킹 (치히로 기판, GDX-0007)	Sega
@@ -4299,8 +4306,8 @@ bldwolfj	건달 전투부대 블러디 울프 (일본판)	건달 전투부대 블러디 울프 (일본판)	D
 actfancr	액트팬서 사이버네틱 하이퍼 웨폰 (세계 개정판 2)	액트팬서 사이버네틱 하이퍼 웨폰 (세계 개정판 2)	Data East Corporation
 actfancr1	액트팬서 사이버네틱 하이퍼 웨폰 (세계 개정판 1)	액트팬서 사이버네틱 하이퍼 웨폰 (세계 개정판 1)	Data East Corporation
 actfancrj	액트팬서 사이버네틱 하이퍼 웨폰 (일본 개정판 1)	액트팬서 사이버네틱 하이퍼 웨폰 (일본 개정판 1)	Data East Corporation
-triothep	트리오 더 펀치 - 잊지 마세요... (세계판)	트리오 더 펀치 - 잊지 마세요... (세계판)	Data East Corporation
-triothepj	트리오 더 펀치 - 잊지 마세요... (일본판)	트리오 더 펀치 - 잊지 마세요... (일본판)	Data East Corporation
+triothep	트리오 더 펀치 - 나를 잊지 마세요... (세계판)	트리오 더 펀치 - 나를 잊지 마세요... (세계판)	Data East Corporation
+triothepj	트리오 더 펀치 - 나를 마세요... (일본판)	트리오 더 펀치 - 나를 마세요... (일본판)	Data East Corporation
 lastmisn	라스트 미션 (미국 개정판 6)	라스트 미션 (미국 개정판 6)	Data East USA
 lastmisno	라스트 미션 (미국 개정판 5)	라스트 미션 (미국 개정판 5)	Data East USA
 lastmisnj	라스트 미션 (일본판)	라스트 미션 (일본판)	Data East Corporation
@@ -4484,7 +4491,7 @@ ddream95	덩크 드림 '95 (일본판 1.4 EAM)	덩크 드림 '95 (일본판 1.4 EAM)	Data East
 hoops95	훕스 (유럽/아시아판 1.7)	훕스 (유럽/아시아판 1.7)	Data East Corporation
 avengrgs	어벤저스 인 갤럭틱 스톰 (미국판)	어벤저스 인 갤럭틱 스톰 (미국판)	Data East Corporation
 avengrgsj	어벤저스 인 갤럭틱 스톰 (일본판)	어벤저스 인 갤럭틱 스톰 (일본판)	Data East Corporation
-skullfng	공아 3 / 스컬  팽 (세계판)	공아 3 / 스컬  팽 (세계판)	Data East Corporation
+skullfng	공아 3 / 스컬 팽 (세계판)	공아 3 / 스컬 팽 (세계판)	Data East Corporation
 skullfngj	스컬  팽 (일본판)	스컬  팽 (일본판)	Data East Corporation
 stadhr96	스타디움 히어로 96 (세계판, EAJ)	스타디움 히어로 96 (세계판, EAJ)	Data East Corporation
 stadhr96j	스타디움 히어로 96 (일본판, EAD)	스타디움 히어로 96 (일본판, EAD)	Data East Corporation
@@ -4528,7 +4535,7 @@ gaiden	닌자 외전 (미국판)	닌자 외전 (미국판)	Tecmo
 ryukendn	닌자 용검전 (일본판, 세트 1)	닌자 용검전 (일본판, 세트 1)	Tecmo
 ryukendna	닌자 용검전 (일본판, 세트 2)	닌자 용검전 (일본판, 세트 2)	Tecmo
 mastninj	마스터 닌자 (닌자 용검전 게임 해적판)	마스터 닌자 (닌자 용검전 게임 해적판)	bootleg
-wildfang	테크모 나이트 / 와일드 팽	테크모 나이트 / 와일드 팽	Tecmo
+wildfang	와일드 팽 / 테크모 나이트	와일드 팽 / 테크모 나이트	Tecmo
 wildfangs	와일드 팽	와일드 팽	Tecmo
 tknight	테크모 나이트	테크모 나이트	Tecmo
 stratof	뇌아 (雷牙) - 스트레토 파이터 (미국판)	뇌아 (雷牙) - 스트레토 파이터 (미국판)	Tecmo
@@ -4624,9 +4631,9 @@ ironhors	대열차 강도 / 아이언 호스	대열차 강도 / 아이언 호스	Konami
 dairesya	대열차 강도 (일본판)	대열차 강도 (일본판)	Konami (Kawakusu license)
 farwest	머나먼 서부	머나먼 서부	bootleg?
 jackal	특수부대 자칼 / 자칼 (세계판)	특수부대 자칼 / 자칼 (세계판)	Konami
-topgunr	탑 건너 (미국판)	탑 건너 (미국판)	Konami
+topgunr	탑 거너 (미국판)	탑 거너 (미국판)	Konami
 jackalj	특수부대 자칼 (일본판)	특수부대 자칼 (일본판)	Konami
-topgunbl	탑 건너 (해적판)	탑 건너 (해적판)	bootleg
+topgunbl	탑 거너 (해적판)	탑 거너 (해적판)	bootleg
 ddribble	더블 드리블	더블 드리블	Konami
 contra	혼두라 (魂斗羅) (미국판, 세트 1)	혼두라 (魂斗羅) (미국판, 세트 1)	Konami
 contra1	혼두라 (미국판, 세트 2)	혼두라 (미국판, 세트 2)	Konami
@@ -4638,7 +4645,7 @@ gryzora	그리저 (세트 2)	그리저 (세트 2)	Konami
 combatsc	컴뱃스쿨 (조이스틱 버전)	컴뱃스쿨 (조이스틱 버전)	Konami
 combatsct	컴뱃스쿨 (트랙볼 버전)	컴뱃스쿨 (트랙볼 버전)	Konami
 combatscj	컴뱃스쿨 (일본판, 트랙볼 버전)	컴뱃스쿨 (일본판, 트랙볼 버전)	Konami
-bootcamp	부 캠프	부 캠프	Konami
+bootcamp	부트 캠프	부트 캠프	Konami
 combatscb	컴뱃스쿨 (해적판)	컴뱃스쿨 (해적판)	bootleg
 rockrage	사랑의 핫 락 / 락 앤 레이지 (세계판)	사랑의 핫 락 / 락 앤 레이지 (세계판)	Konami
 rockragea	락 앤 레이지 (시험판?)	락 앤 레이지 (시험판?)	Konami
@@ -4836,12 +4843,12 @@ moo	와일드 웨스트 카우보이 오브 무 메사 (유럽판 버전 A, EA)	와일드 웨스트 카우보
 mooua	와일드 웨스트 카우보이 오브 무 메사 (미국판 버전 A, UA)	와일드 웨스트 카우보이 오브 무 메사 (미국판 버전 A, UA)	Konami
 mooaa	와일드 웨스트 카우보이 오브 무 메사 (아시아판 버전 A, AA)	와일드 웨스트 카우보이 오브 무 메사 (아시아판 버전 A, AA)	Konami
 moobl	와일드 웨스트 카우보이 오브 무 메사 (아시아판 버전 A, 해적판)	와일드 웨스트 카우보이 오브 무 메사 (아시아판 버전 A, 해적판)	bootleg
-bucky	벅키 오 헤어 (유럽판 버전 A, EA)	벅키 오 헤어 (유럽판 버전 A, EA)	Konami
-buckyua	벅키 오 헤어 (미국판 버전 A, UA)	벅키 오 헤어 (미국판 버전 A, UA)	Konami
-buckyaa	벅키 오 헤어 (아시아판 버전 A, AA)	벅키 오 헤어 (아시아판 버전 A, AA)	Konami
-gaiapols	가이아 폴리스 (유럽판 버전 F, EAF)	가이아 폴리스 (유럽판 버전 F, EAF)	Konami
-gaiapolsu	가이아 폴리스 (미국판 버전 F, UAF)	가이아 폴리스 (미국판 버전 F, UAF)	Konami
-gaiapolsj	가이아 폴리스 (일본판 버전 F, JAF)	가이아 폴리스 (일본판 버전 F, JAF)	Konami
+bucky	버키 오 헤어 (유럽판 버전 A, EA)	버키 오 헤어 (유럽판 버전 A, EA)	Konami
+buckyua	버키 오 헤어 (미국판 버전 A, UA)	버키 오 헤어 (미국판 버전 A, UA)	Konami
+buckyaa	버키 오 헤어 (아시아판 버전 A, AA)	버키 오 헤어 (아시아판 버전 A, AA)	Konami
+gaiapols	가이아 폴리스 - 황금매의 검 (유럽판 버전 F, EAF)	가이아 폴리스 - 황금매의 검 (유럽판 버전 F, EAF)	Konami
+gaiapolsu	가이아 폴리스 - 황금매의 검 (미국판 버전 F, UAF)	가이아 폴리스 - 황금매의 검 (미국판 버전 F, UAF)	Konami
+gaiapolsj	가이아 폴리스 - 황금매의 검 (일본판 버전 F, JAF)	가이아 폴리스 - 황금매의 검 (일본판 버전 F, JAF)	Konami
 mystwarr	미스틱 워리어즈 (유럽판 버전 A, EAA)	미스틱 워리어즈 (유럽판 버전 A, EAA)	Konami
 mystwarru	미스틱 워리어즈 (미국판 버전 A, UAA)	미스틱 워리어즈 (미국판 버전 A, UAA)	Konami
 mystwarrj	미스틱 워리어즈 - 분노의 닌자 (일본판 버전 A, JAA)	미스틱 워리어즈 - 분노의 닌자 (일본판 버전 A, JAA)	Konami
@@ -4861,18 +4868,18 @@ mtlchamp1	마샬 챔피언 (유럽판 버전 A, EAA)	마샬 챔피언 (유럽판 버전 A, EAA)	Kona
 mtlchampu	마샬 챔피언 (미국판 버전 D, UAD)	마샬 챔피언 (미국판 버전 D, UAD)	Konami
 mtlchampj	마샬 챔피언 (일본판 버전 A, JAA)	마샬 챔피언 (일본판 버전 A, JAA)	Konami
 mtlchampa	마샬 챔피언 (아시아판 버전 A, AAA)	마샬 챔피언 (아시아판 버전 A, AAA)	Konami
-rungun	런 앤 건 (유럽판 버전 A, EAA 1993 10.8)	런 앤 건 (유럽판 버전 A, EAA 1993 10.8)	Konami
-runguna	런 앤 건 (유럽판 버전 A, EAA 1993 10.4)	런 앤 건 (유럽판 버전 A, EAA 1993 10.4)	Konami
-rungunu	런 앤 건 (미국판 버전 B, UAB 1993 10.12)	런 앤 건 (미국판 버전 B, UAB 1993 10.12)	Konami
-rungunua	런 앤 건 (미국판 버전 A, UBA 1993 10.8)	런 앤 건 (미국판 버전 A, UBA 1993 10.8)	Konami
-slmdunkj	슬램 덩크 (일본판 버전 A, JAA 1993 10.8)	슬램 덩크 (일본판 버전 A, JAA 1993 10.8)	Konami
+rungun	런앤건 (유럽판 버전 A, EAA 1993 10.8)	런앤건 (유럽판 버전 A, EAA 1993 10.8)	Konami
+runguna	런앤건 (유럽판 버전 A, EAA 1993 10.4)	런앤건 (유럽판 버전 A, EAA 1993 10.4)	Konami
+rungunu	런앤건 (미국판 버전 B, UAB 1993 10.12)	런앤건 (미국판 버전 B, UAB 1993 10.12)	Konami
+rungunua	런앤건 (미국판 버전 A, UBA 1993 10.8)	런앤건 (미국판 버전 A, UBA 1993 10.8)	Konami
+slmdunkj	슬램덩크 (일본판 버전 A, JAA 1993 10.8)	슬램덩크 (일본판 버전 A, JAA 1993 10.8)	Konami
 dbz	드래곤볼 Z	드래곤볼 Z	Banpresto
 dbz2	드래곤볼 Z 2 - 수퍼 배틀	드래곤볼 Z 2 - 수퍼 배틀	Banpresto
 bishi	비시바시 챔피언쉽 미니게임 선수권 (일본판 버전 A, JAA)	비시바시 챔피언쉽 미니게임 선수권 (일본판 버전 A, JAA)	Konami
 sbishi	슈퍼 비시바시 챔프 (일본판 버전 A, JAA, 2인용)	슈퍼 비시바시 챔프 (일본판 버전 A, JAA, 2인용)	Konami
 sbishik	슈퍼 비시바시 챔프 (한국판 버전 A, KAA, 3인용)	슈퍼 비시바시 챔프 (한국판 버전 A, KAA, 3인용)	Konami
 overdriv	오버 드라이브	오버 드라이브	Konami
-gradius3	그라디우스 III (일본판)	그라디우스 III (일본판)	Konami
+gradius3	그라디우스 III - 전설에서 신화로 (일본판)	그라디우스 III - 전설에서 신화로 (일본판)	Konami
 gradius3a	그라디우스 III (아시아판)	그라디우스 III (아시아판)	Konami
 gradius3e	그라디우스 III (세계판?)	그라디우스 III (세계판?)	Konami
 plygonet	폴리고넷 커맨더스 (미국판 버전 A, UAA)	폴리고넷 커맨더스 (미국판 버전 A, UAA)	Konami
@@ -4887,8 +4894,8 @@ le2	리썰 엔포서스 II: 건 파이터즈 (유럽판 버전 A, EAA)	리썰 엔포서스 II: 건 파이
 le2u	리썰 엔포서스 II: 건 파이터즈 (미국판 버전 A, UAA)	리썰 엔포서스 II: 건 파이터즈 (미국판 버전 A, UAA)	Konami
 le2j	리썰 엔포서스 II: 건 파이터즈 (일본판 버전 A, JAA)	리썰 엔포서스 II: 건 파이터즈 (일본판 버전 A, JAA)	Konami
 puzldama	대전 퍼즐구슬 (일본판 버전 A, JAA)	대전 퍼즐구슬 (일본판 버전 A, JAA)	Konami
-gokuparo	극상 파로디우스 (일본판 버전 D, JAD)	극상 파로디우스 (일본판 버전 D, JAD)	Konami
-fantjour	판타스틱 저니 (유럽판 버전 A, EAA)	판타스틱 저니 (유럽판 버전 A, EAA)	Konami
+gokuparo	극상 파로디우스 - 과거의 영광을 찾아서 (일본판 버전 D, JAD)	극상 파로디우스 - 과거의 영광을 찾아서 (일본판 버전 D, JAD)	Konami
+fantjour	극상 파로디우스 / 판타스틱 저니 (유럽판 버전 A, EAA)	극상 파로디우스 / 판타스틱 저니 (유럽판 버전 A, EAA)	Konami
 fantjoura	판타스틱 저니 (아시아판 버전 A, AAA)	판타스틱 저니 (아시아판 버전 A, AAA)	Konami
 dragoona	드래군 마이트 (아시아판 버전 B, AAB)	드래군 마이트 (아시아판 버전 B, AAB)	Konami
 dragoonj	드래군 마이트 (일본판 버전 A, JAA)	드래군 마이트 (일본판 버전 A, JAA)	Konami
@@ -4910,8 +4917,8 @@ vsnetscreb	버서스 넷 축구 (유럽판 버전 B, EAB)	버서스 넷 축구 (유럽판 버전 B, EA
 vsnetscru	버서스 넷 축구 (미국판 버전 B, UAB)	버서스 넷 축구 (미국판 버전 B, UAB)	Konami
 vsnetscra	버서스 넷 축구 (아시아판 버전 A, AAA)	버서스 넷 축구 (아시아판 버전 A, AAA)	Konami
 vsnetscrj	버서스 넷 축구 (일본판 버전 B, JAB)	버서스 넷 축구 (일본판 버전 B, JAB)	Konami
-rungun2	런 앤 건 2 (미국판 버전 A, UAA)	런 앤 건 2 (미국판 버전 A, UAA)	Konami
-slamdnk2	슬램 덩크 2 (일본판 버전 A, JAA)	슬램 덩크 2 (일본판 버전 A, JAA)	Konami
+rungun2	런앤건 2 (미국판 버전 A, UAA)	런앤건 2 (미국판 버전 A, UAA)	Konami
+slamdnk2	슬램덩크 2 (일본판 버전 A, JAA)	슬램덩크 2 (일본판 버전 A, JAA)	Konami
 rushhero	러싱 히어로즈 (미국판 버전 B, UAB)	러싱 히어로즈 (미국판 버전 B, UAB)	Konami
 qdrmfgp	퀴즈 도레미파 그랑프리 (일본판)	퀴즈 도레미파 그랑프리 (일본판)	Konami
 qdrmfgp2	퀴즈 도레미파 그랑프리 2 - 신곡 넣었다구 (일본판)	퀴즈 도레미파 그랑프리 2 - 신곡 넣었다구 (일본판)	Konami
@@ -4949,7 +4956,7 @@ slrasslt	솔라 어설트 (미국판 버전 A, UAA)	솔라 어설트 (미국판 버전 A, UAA)	Konam
 gticlub	GTI 클럽 (유럽판 버전 A, EAA)	GTI 클럽 (유럽판 버전 A, EAA)	Konami
 gticluba	GTI 클럽 (아시아판 버전 A, AAA)	GTI 클럽 (아시아판 버전 A, AAA)	Konami
 gticlubj	GTI 클럽 (일본판 버전 A, JAA)	GTI 클럽 (일본판 버전 A, JAA)	Konami
-hangplt	행 파일롯	행 파일롯	Konami
+hangplt	행 파일럿	행 파일럿	Konami
 nbapbp	NBA 플레이 바이 플레이	NBA 플레이 바이 플레이	Konami
 terabrst	테라버스트	테라버스트	Konami
 terabrsta	테라버스트 (아시아판 버전 A, AAA)	테라버스트 (아시아판 버전 A, AAA)	Konami
@@ -5007,7 +5014,7 @@ fireone	파이어 원	파이어 원	Exidy
 starfir2	스타 파이어 2	스타 파이어 2	Exidy
 victory	빅토리	빅토리	Exidy
 victorba	빅터 바나나	빅터 바나나	Exidy
-topgunnr	탑 건너	탑 건너	Exidy
+topgunnr	탑 거너	탑 거너	Exidy
 crossbow	크로스보우 (버전 2.0)	크로스보우 (버전 2.0)	Exidy
 cheyenne	샤이엔 (버전 1.0)	샤이엔 (버전 1.0)	Exidy
 combat	컴뱃 (버전 3.0)	컴뱃 (버전 3.0)	Exidy
@@ -5505,7 +5512,7 @@ fsoccerb	파이팅 사커 (조이스틱 해킹판)	파이팅 사커 (조이스틱 해킹판)	bootleg
 tdfever	터치다운 피버 (미국판?)	터치다운 피버 (미국판?)	SNK
 tdfeverj	터치다운 피버 (일본판)	터치다운 피버 (일본판)	SNK
 tdfever2	터치다운 피버 2	터치다운 피버 2	SNK
-ikari3	이카리 III - 구출 (로터리 조이스틱)	이카리 III - 구출 (로터리 조이스틱)	SNK
+ikari3	이카리 III - 구출 (회전 조이스틱)	이카리 III - 구출 (회전 조이스틱)	SNK
 ikari3nr	이카리 III - 구출 (8방향 조이스틱)	이카리 III - 구출 (8방향 조이스틱)	SNK
 pow	탈옥 - 프리즈너 오브 워 (미국판 버전 1)	탈옥 - 프리즈너 오브 워 (미국판 버전 1)	SNK
 powj	탈옥 - 전쟁 포로 (일본판)	탈옥 - 전쟁 포로 (일본판)	SNK
@@ -5651,7 +5658,7 @@ neodrift	네오 드리프트 아웃 - 뉴 테크놀러지	네오 드리프트 아웃 - 뉴 테크놀러지	V
 kof96	킹 오브 파이터즈 '96 (세트 1)	킹 오브 파이터즈 '96 (세트 1)	SNK
 kof96h	킹 오브 파이터즈 '96 (세트 2)	킹 오브 파이터즈 '96 (세트 2)	SNK
 ssideki4	득점왕 4 - 불꽃의 리베로 / 울티메이트 11 - SNK 축구 선수권대회	득점왕 4 - 불꽃의 리베로 / 울티메이트 11 - SNK 축구 선수권대회	SNK
-kizuna	풍운 슈퍼 태그 배틀 / 키즈나 인카운터 - 슈퍼 태그 배틀 / 세비지 레인 2	풍운 슈퍼 태그 배틀 / 키즈나 인카운터 - 슈퍼 태그 배틀 / 세비지 레인 2	SNK
+kizuna	풍운 슈퍼 태그배틀 / 키즈나 인카운터 - 슈퍼 태그배틀 / 세비지 레인 2	풍운 슈퍼 태그배틀 / 키즈나 인카운터 - 슈퍼 태그배틀 / 세비지 레인 2	SNK
 ninjamas	닌자 마스터즈 - 패왕인법첩	닌자 마스터즈 - 패왕인법첩	ADK / SNK
 ragnagrd	신황권 / 라그나가드	신황권 / 라그나가드	Saurus
 pgoal	플레져 골 / 풋살 - 5 on 5 미니 축구	플레져 골 / 풋살 - 5 on 5 미니 축구	Saurus
@@ -5736,9 +5743,9 @@ kf2k2mp2	킹 오브 파이터즈 2002 매직 Plus II (해적판)	킹 오브 파이터즈 2002 매직 
 kof10th	킹 오브 파이터즈 10주년 기념판 (KOF 2002 해적판)	킹 오브 파이터즈 10주년 기념판 (KOF 2002 해적판)	bootleg
 kf2k5uni	킹 오브 파이터즈 10주년 기념판 2005 유니크 (KOF 2002 해적판)	킹 오브 파이터즈 10주년 기념판 2005 유니크 (KOF 2002 해적판)	bootleg
 kf10thep	킹 오브 파이터즈 10주년 기념판 엑스트라 Plus (KOF 2002 해적판)	킹 오브 파이터즈 10주년 기념판 엑스트라 Plus (KOF 2002 해적판)	bootleg
-kof2k4se	킹 오브 파이터즈 특별판 2004 (KOF 2002 해적판)	킹 오브 파이터즈 특별판 2004 (KOF 2002 해적판)	bootleg
-matrim	신 호혈사 일족 투혼 / 매트리밀리	신 호혈사 일족 투혼 / 매트리밀리	Noise Factory / Atlus
-matrimbl	신 호혈사 일족 투혼 (해적판)	신 호혈사 일족 투혼 (해적판)	bootleg
+kof2k4se	킹 오브 파이터즈 스페셜 2004 (KOF 2002 해적판)	킹 오브 파이터즈 스페셜 2004 (KOF 2002 해적판)	bootleg
+matrim	신 호혈사일족 투혼 / 매트리밀리	신 호혈사일족 투혼 / 매트리밀리	Noise Factory / Atlus
+matrimbl	신 호혈사일족 투혼 (해적판)	신 호혈사일족 투혼 (해적판)	bootleg
 pnyaa	포치와 나야	포치와 나야	Aiky / Taito
 ms5pcb	메탈 슬러그 5 (JAMMA 기판)	메탈 슬러그 5 (JAMMA 기판)	SNK Playmore
 mslug5	메탈 슬러그 5	메탈 슬러그 5	SNK Playmore
@@ -5840,8 +5847,8 @@ maniach2	매니아 챌린지 (세트 2)	매니아 챌린지 (세트 2)	Technos Japan (Taito Amer
 renegade	열혈경파 쿠니오군/ 레니게이드 (미국판)	열혈경파 쿠니오군/ 레니게이드 (미국판)	Technos Japan (Taito America license)
 kuniokun	열혈경파 쿠니오군 (일본판)	열혈경파 쿠니오군 (일본판)	Technos Japan
 kuniokunb	열혈경파 쿠니오군 (일본 해적판)	열혈경파 쿠니오군 (일본 해적판)	bootleg
-xsleena	제인드 슬리나	제인드 슬리나	Technos Japan
-xsleenab	제인드 슬리나 (해적판)	제인드 슬리나 (해적판)	bootleg
+xsleena	자인드 슬리나	자인드 슬리나	Technos Japan
+xsleenab	자인드 슬리나 (해적판)	자인드 슬리나 (해적판)	bootleg
 solarwar	솔라 워리어	솔라 워리어	Technos Japan / Taito (Memetron license)
 battlane	배틀 레인! Vol. 5 (세트 1)	배틀 레인! Vol. 5 (세트 1)	Technos Japan (Taito license)
 battlane2	배틀 레인! Vol. 5 (세트 2)	배틀 레인! Vol. 5 (세트 2)	Technos Japan (Taito license)
@@ -6000,7 +6007,7 @@ ddealer	더블 딜러	더블 딜러	NMK
 quizpani	퀴즈 파니쿠루 판타지	퀴즈 파니쿠루 판타지	NMK
 acommand	에일리언 커맨드	에일리언 커맨드	Jaleco
 macrossp	초시공요새 마크로스 Plus	초시공요새 마크로스 Plus	Banpresto
-quizmoon	퀴즈 미소녀 전사 세일러문 - 지력 체력 시간의 운	퀴즈 미소녀 전사 세일러문 - 지력 체력 시간의 운	Banpresto
+quizmoon	퀴즈 미소녀전사 세일러문 - 지력 체력 시간의 운	퀴즈 미소녀전사 세일러문 - 지력 체력 시간의 운	Banpresto
 gakupara	퀴즈 학원 파라다이스 (일본판)	퀴즈 학원 파라다이스 (일본판)	NMK
 quizdna	퀴즈 DNA의 반란 (일본판)	퀴즈 DNA의 반란 (일본판)	Face
 gekiretu	퀴즈 격렬 스크램블 (일본판)	퀴즈 격렬 스크램블 (일본판)	Face
@@ -6133,12 +6140,14 @@ gauntdl24	건틀렛 다크 레가시 (버전 DL 2.4)	건틀렛 다크 레가시 (버전 DL 2.4)	Midw
 cartfury	카트 퓨리	카트 퓨리	Midway Games
 tm	터치마스터 (버전 3.00 유럽판)	터치마스터 (버전 3.00 유럽판)	CES Inc., Midway Games Inc.
 tmdo	터치마스터 (버전 2.2-01)	터치마스터 (버전 2.2-01)	CES Inc., Midway Games Inc.
-tm2k	터치마스터 2000 (버전 4.02 Standard)	터치마스터 2000 (버전 4.02 Standard)	Midway Games Inc.
-tm2ka	터치마스터 2000 (v4.00 Standard)	터치마스터 2000 (v4.00 Standard)	Midway Games Inc.
+tm2k	터치마스터 2000 Plus (버전 4.63 Standard)	터치마스터 2000 Plus (버전 4.63 Standard)	Midway Games Inc.
+tm2ka	터치마스터 2000 (버전 4.02 Standard)	터치마스터 2000 (버전 4.02 Standard)	Midway Games Inc.
+tm2kb	터치마스터 2000 (버전 4.00 Standard)	터치마스터 2000 (버전 4.00 Standard)	Midway Games Inc.
 tm3k	터치마스터 3000 (v5.02 Standard)	터치마스터 3000 (v5.02 Standard)	Midway Games Inc.
 tm3ka	터치마스터 3000 (v5.01 Standard)	터치마스터 3000 (v5.01 Standard)	Midway Games Inc.
-tm4k	터치마스터 4000 (버전 6.03)	터치마스터 4000 (버전 6.03)	Midway Games Inc.
-tm4ka	터치마스터 4000 (버전 6.02)	터치마스터 4000 (버전 6.02)	Midway Games Inc.
+tm4k	터치마스터 4000 (버전 6.03 Standard)	터치마스터 4000 (버전 6.03 Standard)	Midway Games Inc.
+tm4ka	터치마스터 4000 (버전 6.02 Standard))	터치마스터 4000 (버전 6.02 Standard))	Midway Games Inc.
+tm4kb	터치마스터 4000 (버전 6.01 Standard)	터치마스터 4000 (버전 6.01 Standard)	Midway Games Inc.
 tm5k	터치마스터 5000 (버전 7.10 Standard)	터치마스터 5000 (버전 7.10 Standard)	Midway Games Inc.
 tm5kca	터치마스터 5000 (버전 7.10 California)	터치마스터 5000 (버전 7.10 California)	Midway Games Inc.
 tm5ka	터치마스터 5000 (버전 7.01 Standard)	터치마스터 5000 (버전 7.01 Standard)	Midway Games Inc.
@@ -6174,7 +6183,7 @@ starcasp	스타 캐슬 (시험판)	스타 캐슬 (시험판)	Cinematronics
 starcase	스타 캐슬 (Mottoeis 판)	스타 캐슬 (Mottoeis 판)	Cinematronics (Mottoeis license)
 stellcas	스텔라 캐슬 (Elettronolo 판)	스텔라 캐슬 (Elettronolo 판)	bootleg (Elettronolo)
 spaceftr	스페이스 포트리스 (Zaccaria 판)	스페이스 포트리스 (Zaccaria 판)	Cinematronics (Zaccaria license)
-tailg	테일건너	테일건너	Cinematronics
+tailg	테일거너	테일거너	Cinematronics
 ripoff	립 오프	립 오프	Cinematronics
 armora	아머 어택	아머 어택	Cinematronics
 armorap	아머 어택 (시험판)	아머 어택 (시험판)	Cinematronics
@@ -6346,9 +6355,9 @@ tokiua	토키 (미국판, 세트 2)	토키 (미국판, 세트 2)	TAD Corporation (Fabtek licen
 tokib	토키 (해적판)	토키 (해적판)	bootleg (Datsu)
 juju	주주전설 (일본판)	주주전설 (일본판)	TAD Corporation
 jujub	주주전설 (일본판, 해적판)	주주전설 (일본판, 해적판)	bootleg
-bloodbro	카발 2 / 블러드 브라더스 (세트 1)	카발 2 / 블러드 브라더스 (세트 1)	TAD Corporation
-bloodbroa	카발 2 / 블러드 브라더스 (세트 2)	카발 2 / 블러드 브라더스 (세트 2)	TAD Corporation
-bloodbrob	카발 2 / 블러드 브라더스 (세트 3)	카발 2 / 블러드 브라더스 (세트 3)	TAD Corporation
+bloodbro	카발 2 / 블러드 브러더스 (세트 1)	카발 2 / 블러드 브러더스 (세트 1)	TAD Corporation
+bloodbroa	카발 2 / 블러드 브러더스 (세트 2)	카발 2 / 블러드 브러더스 (세트 2)	TAD Corporation
+bloodbrob	카발 2 / 블러드 브러더스 (세트 3)	카발 2 / 블러드 브러더스 (세트 3)	TAD Corporation
 weststry	서부 이야기 (해적판)	서부 이야기 (해적판)	bootleg (Datsu)
 skysmash	스카이 스매셔	스카이 스매셔	Nihon System
 legionna	리젠에어 (세계판)	리젠에어 (세계판)	TAD Corporation
@@ -6545,12 +6554,12 @@ s1945j	스트라이커즈 1945 (일본판)	스트라이커즈 1945 (일본판)	Psikyo
 s1945jn	스트라이커즈 1945 (일본판, 비보호판)	스트라이커즈 1945 (일본판, 비보호판)	Psikyo
 s1945bl	스트라이커즈 1945 (홍콩판, 해적판)	스트라이커즈 1945 (홍콩판, 해적판)	bootleg
 s1945k	스트라이커즈 1945 (한국판)	스트라이커즈 1945 (한국판)	Psikyo
-tengai	전국 에이스 2 / 텐가이 / 전국 블레이드 (세계판)	전국 에이스 2 / 텐가이 / 전국 블레이드 (세계판)	Psikyo
-tengaij	전국 블레이드: 전국 에이스 2 / 텐가이	전국 블레이드: 전국 에이스 2 / 텐가이	Psikyo
+tengai	전국 블레이드: 전국 에이스 II / 텐가이 (세계판)	전국 블레이드: 전국 에이스 II / 텐가이 (세계판)	Psikyo
+tengaij	전국 블레이드: 전국 에이스 II	전국 블레이드: 전국 에이스 II	Psikyo
 s1945ii	스트라이커즈 1945 II	스트라이커즈 1945 II	Psikyo
 soldivid	솔 디바이드 - 어둠의 검	솔 디바이드 - 어둠의 검	Psikyo
 sbomberb	스페이스 봄버 (버전 B)	스페이스 봄버 (버전 B)	Psikyo
-daraku	타락천사 - 타락한 천사	타락천사 - 타락한 천사	Psikyo
+daraku	타락천사	타락천사	Psikyo
 gunbird2	건버드 2	건버드 2	Psikyo
 s1945iii	스트라이커즈 1945 III (세계판) / 스트라이커즈 1999 (일본판)	스트라이커즈 1945 III (세계판) / 스트라이커즈 1999 (일본판)	Psikyo
 dragnblz	드래곤 블레이즈	드래곤 블레이즈	Psikyo
@@ -6652,7 +6661,7 @@ galpani2g	갈스패닉 2 (독일판)	갈스패닉 2 (독일판)	Kaneko
 galpani2t	갈스패닉 2 (대만판)	갈스패닉 2 (대만판)	Kaneko
 galpani2j	갈스패닉 2 (일본판)	갈스패닉 2 (일본판)	Kaneko
 gp2quiz	갈스패닉 2 - 퀴즈 버전 (일본판)	갈스패닉 2 - 퀴즈 버전 (일본판)	Kaneko
-gp2se	갈스패닉 2 - 특별판 (일본판)	갈스패닉 2 - 특별판 (일본판)	Kaneko
+gp2se	갈스패닉 2 스페셜 (일본판)	갈스패닉 2 스페셜 (일본판)	Kaneko
 jchan	이소룡 - 쿵후 마스터	이소룡 - 쿵후 마스터	Kaneko
 jchan2	불주먹의 재키 찬 - 성룡전설	불주먹의 재키 찬 - 성룡전설	Kaneko
 galpani3	갈스패닉 3	갈스패닉 3	Kaneko
@@ -6737,7 +6746,7 @@ superbar	슈퍼 바	슈퍼 바	Promat
 jockeyc	조키 클럽	조키 클럽	Seta (Visco license)
 rezon	레존	레존	Allumer
 rezont	레존 (Taito 판)	레존 (Taito 판)	Allumer (Taito license)
-stg	스트라이크 건너 S.T.G	스트라이크 건너 S.T.G	Athena / Tecmo
+stg	스트라이크 거너 S.T.G	스트라이크 거너 S.T.G	Athena / Tecmo
 pairlove	페어스 러브	페어스 러브	Athena
 blandia	황금성 2 / 블랜디아	황금성 2 / 블랜디아	Allumer
 blandiap	블랜디아 (시험판)	블랜디아 (시험판)	Allumer
@@ -6777,7 +6786,7 @@ mj4simai	와카쿠사 이야기 마작 4자매 (일본판)	와카쿠사 이야기 마작 4자매 (일본판)
 myangel	육아 퀴즈 마이 엔젤 (일본판)	육아 퀴즈 마이 엔젤 (일본판)	Namco
 myangel2	육아 퀴즈 마이 엔젤 2 (일본판)	육아 퀴즈 마이 엔젤 2 (일본판)	Namco
 pzlbowl	퍼즐로 볼링 (일본판)	퍼즐로 볼링 (일본판)	Nihon System / Moss
-penbros	펭귄 브라더스 (일본판)	펭귄 브라더스 (일본판)	Subsino
+penbros	펭귄 브러더스 (일본판)	펭귄 브러더스 (일본판)	Subsino
 deerhunt	디어 헌팅 USA V4.3	디어 헌팅 USA V4.3	Sammy USA Corporation
 deerhunta	디어 헌팅 USA V4.2	디어 헌팅 USA V4.2	Sammy USA Corporation
 deerhuntb	디어 헌팅 USA V4.0	디어 헌팅 USA V4.0	Sammy USA Corporation
@@ -6883,7 +6892,7 @@ rranger	러프 레인져 (버전 2.0, 해적판?)	러프 레인져 (버전 2.0, 해적판?)	SunA (Sh
 sranger	슈퍼 레인져 (버전 2.0)	슈퍼 레인져 (버전 2.0)	SunA
 srangerb	슈퍼 레인져 (해적판)	슈퍼 레인져 (해적판)	bootleg
 srangerw	슈퍼 레인져 (WDK 판)	슈퍼 레인져 (WDK 판)	SunA (WDK license)
-hardhead	짱구박사 / 하드 헤드	짱구박사 / 하드 헤드	SunA
+hardhead	짱구박사 / 하드헤드	짱구박사 / 하드헤드	SunA
 hardheadb	짱구박사 / 하드헤드 (해적판)	짱구박사 / 하드헤드 (해적판)	bootleg
 pop_hh	팝퍼 (짱구박사 해적판)	팝퍼 (짱구박사 해적판)	bootleg
 sparkman	스파크맨 (버전 2.0, 세트 1)	스파크맨 (버전 2.0, 세트 1)	SunA
@@ -7056,7 +7065,7 @@ gogomile	Go Go! 마일 스마일	Go Go! 마일 스마일	Fuuki
 gogomilej	나아가라! 마일 스마일 (일본판)	나아가라! 마일 스마일 (일본판)	Fuuki
 pbancho	역전! 퍼즐대장 (일본판)	역전! 퍼즐대장 (일본판)	Fuuki
 asurabld	아수라 블레이드 - 왕조의 검 (일본판)	아수라 블레이드 - 왕조의 검 (일본판)	Fuuki
-asurabus	아수라 버스터 - 영원한 전사 (일본판)	아수라 버스터 - 영원한 전사 (일본판)	Fuuki
+asurabus	아수라 버스터 - 영원한 전사들 (일본판)	아수라 버스터 - 영원한 전사들 (일본판)	Fuuki
 drgnmst	드래곤 마스터	드래곤 마스터	Unico
 burglarx	버글라 X	버글라 X	Unico
 zeropnt	제로 포인트 (세트 1)	제로 포인트 (세트 1)	Unico
@@ -7306,8 +7315,8 @@ kovplus	삼국전기 Plus (버전 119)	삼국전기 Plus (버전 119)	IGS
 kovplusa	삼국전기 Plus (버전 119, 교체판)	삼국전기 Plus (버전 119, 교체판)	IGS
 kov115	삼국전기 (버전 115)	삼국전기 (버전 115)	IGS
 kov100	삼국전기 (버전 100, 일본기판)	삼국전기 (버전 100, 일본기판)	IGS
-kovsh	삼국전기 풍운재기 / 삼국전기 슈퍼 히어로즈 (버전 104, 중국판)	삼국전기 풍운재기 / 삼국전기 슈퍼 히어로즈 (버전 104, 중국판)	IGS
-kovsh103	삼국전기 풍운재기 / 삼국전기 슈퍼 히어로즈 (버전 103, 중국판)	삼국전기 풍운재기 / 삼국전기 슈퍼 히어로즈 (버전 103, 중국판)	IGS
+kovsh	삼국전기 풍운재기 / 삼국전기 슈퍼히어로즈 (버전 104, 중국판)	삼국전기 풍운재기 / 삼국전기 슈퍼히어로즈 (버전 104, 중국판)	IGS
+kovsh103	삼국전기 풍운재기 / 삼국전기 슈퍼히어로즈 (버전 103, 중국판)	삼국전기 풍운재기 / 삼국전기 슈퍼히어로즈 (버전 103, 중국판)	IGS
 photoy2k	포토 Y2K (버전 105)	포토 Y2K (버전 105)	IGS
 photoy2k102	포토 Y2K (버전 102, 일본기판)	포토 Y2K (버전 102, 일본기판)	IGS
 photoy2k104	포토 Y2K (버전 104)	포토 Y2K (버전 104)	IGS
@@ -7334,7 +7343,7 @@ dw2001	중국룡 2001 / 드래곤 월드 2001	중국룡 2001 / 드래곤 월드 2001	IGS
 py2k2	포토 Y2K 2	포토 Y2K 2	IGS
 dmnfrnt	데몬 프론트 (버전 102)	데몬 프론트 (버전 102)	IGS
 dmnfrnta	데몬 프론트 (버전 105)	데몬 프론트 (버전 105)	IGS
-kovshp	삼국전기 난세효웅 / 삼국전기 슈퍼 히어로즈 Plus (버전 100)	삼국전기 난세효웅 / 삼국전기 슈퍼 히어로즈 Plus (버전 100)	IGS
+kovshp	삼국전기 난세효웅 / 삼국전기 슈퍼히어로즈 Plus (버전 100)	삼국전기 난세효웅 / 삼국전기 슈퍼히어로즈 Plus (버전 100)	IGS
 oldsplus	서유석액전 슈퍼 Plus	서유석액전 슈퍼 Plus	IGS
 killbldp	오검광도 Plus / 킬링 블레이드 EX (버전 300)	오검광도 Plus / 킬링 블레이드 EX (버전 300)	IGS
 happy6	해피 6-in-1 (버전 101CN)	해피 6-in-1 (버전 101CN)	IGS
@@ -7452,7 +7461,7 @@ stlforce	스틸 포스	스틸 포스	Electronic Devices Italy / Ecogames S.L. Spain
 fantland	판타지 랜드 (세트 1)	판타지 랜드 (세트 1)	Electronic Devices Italy
 fantlanda	판타지 랜드 (세트 2)	판타지 랜드 (세트 2)	Electronic Devices Italy
 wheelrun	휠즈 런너	휠즈 런너	International Games
-galaxygn	갤럭시 건너즈	갤럭시 건너즈	Electronics Devices Italy
+galaxygn	갤럭시 거너즈	갤럭시 거너즈	Electronics Devices Italy
 borntofi	본 투 파이트	본 투 파이트	International Games
 diverboy	다이버 보이	다이버 보이	Electronic Devices Italy
 twinbrat	트윈 브래츠 (세트 1)	트윈 브래츠 (세트 1)	Elettronica Video-Games S.R.L.
@@ -7739,8 +7748,8 @@ maddonnb	매드 도너 (세트 2)	매드 도너 (세트 2)	Tuning
 tugboat	터그보트	터그보트	ETM
 noahsark	노아의 방주	노아의 방주	Enter-Tech
 berenstn	베렌스테인 곰가족 이야기 - 큰 개의 동굴	베렌스테인 곰가족 이야기 - 큰 개의 동굴	Enter-Tech
-gotcha	빠샤빠샤 챔프 미니게임 페스티벌 / 갓챠 미니게임 페스티발	빠샤빠샤 챔프 미니게임 페스티벌 / 갓챠 미니게임 페스티발	Dongsung
-ppchamp	빠샤빠샤 챔프 미니게임 페스티벌 (한국판)	빠샤빠샤 챔프 미니게임 페스티벌 (한국판)	Dongsung
+gotcha	빠샤빠샤 미니게임 페스티벌 / 갓챠 미니게임 페스티벌	빠샤빠샤 미니게임 페스티벌 / 갓챠 미니게임 페스티벌	Dongsung
+ppchamp	빠샤빠샤 미니게임 페스티벌 (한국판)	빠샤빠샤 미니게임 페스티벌 (한국판)	Dongsung
 amerdart	아메리다트 (세트 1)	아메리다트 (세트 1)	Ameri
 amerdart2	아메리다트 (세트 2)	아메리다트 (세트 2)	Ameri
 amerdart3	아메리다트 (세트 3)	아메리다트 (세트 3)	Ameri
@@ -7836,7 +7845,7 @@ crazywar	크래이지 워	크래이지 워	Eolith
 bballoon	벌룬 & 벌룬	벌룬 & 벌룬	Eolith
 hapytour	해피 투어	해피 투어	GAV Company
 xfiles	엑스파일	엑스파일	dgPIX Entertainment Inc.
-kdynastg	다이나 기어 해킹판 / 킹 오브 다이나 기어 (버전 1.8)	다이나 기어 해킹판 / 킹 오브 다이나 기어 (버전 1.8)	EZ Graphics
+kdynastg	다이나 기어 해킹판 / 킹 오브 다이나스트 기어 (버전 1.8)	다이나 기어 해킹판 / 킹 오브 다이나스트 기어 (버전 1.8)	EZ Graphics
 fmaniac3	낚시광 3 (한국판)	낚시광 3 (한국판)	Saero Entertainment
 promutrv	프로그레시브 뮤직 트리비아 (문제, 세트 1)	프로그레시브 뮤직 트리비아 (문제, 세트 1)	Enerdyne Technologies Inc.
 promutrva	프로그레시브 뮤직 트리비아 (문제, 세트 2)	프로그레시브 뮤직 트리비아 (문제, 세트 2)	Enerdyne Technologies Inc.
@@ -8046,6 +8055,7 @@ pulltabs	풀 탭스	풀 탭스	Game-A-Tron
 vroulet	베가스 룰렛	베가스 룰렛	World Game
 rcasino	로얄 카지노	로얄 카지노	Dyna Electronics
 ampoker2	아메리칸 포커 II	아메리칸 포커 II	Novomatic
+piccolop	피콜로 포커	피콜로 포커	Admiral - Novomatic
 ampkr2b1	아메리칸 포커 II (해적판, 세트 1)	아메리칸 포커 II (해적판, 세트 1)	bootleg
 ampkr2b2	아메리칸 포커 II (해적판, 세트 2)	아메리칸 포커 II (해적판, 세트 2)	bootleg
 ampkr2b3	아메리칸 포커 II (해적판, 세트 3)	아메리칸 포커 II (해적판, 세트 3)	bootleg
@@ -8127,7 +8137,7 @@ sfkicka	슈퍼 프리 킥 (세트 2)	슈퍼 프리 킥 (세트 2)	Haesung
 spinkick	스핀킥	스핀킥	Haesung/Seojin
 7mezzo	7 e 메조	7 e 메조	<unknown>
 magicfly	매직 플라이	매직 플라이	P&A Games
-dynabomb	다이나마이트 범버 (한국판, 개정판 1.5)	다이나마이트 범버 (한국판, 개정판 1.5)	Limenko
+dynabomb	다이나마이트 봄버 (한국판, 개정판 1.5)	다이나마이트 봄버 (한국판, 개정판 1.5)	Limenko
 legendoh	영웅전설 / 레전드 오브 히어로즈	영웅전설 / 레전드 오브 히어로즈	Limenko
 sb2003	슈퍼 버블 2003 (세계판, 버전 1.0)	슈퍼 버블 2003 (세계판, 버전 1.0)	Limenko
 sb2003a	슈퍼 버블 2003 (아시아판, 버전 1.0)	슈퍼 버블 2003 (아시아판, 버전 1.0)	Limenko
@@ -8401,6 +8411,7 @@ cmastere	체리 마스터 I (버전 1.01, 세트 6)	체리 마스터 I (버전 1.01, 세트 6)	Dyn
 cmasterf	체리 마스터 I (버전 1.01, 세트 7)	체리 마스터 I (버전 1.01, 세트 7)	Dyna
 cmast91	체리 마스터 '91 (버전 1.30)	체리 마스터 '91 (버전 1.30)	Dyna
 cmast92	체리 마스터 '92	체리 마스터 '92	Dyna
+tonypok	포커 마스터 (토니-포커, 버전 3.A, 해킹판?)	포커 마스터 (토니-포커, 버전 3.A, 해킹판?)	Corsica
 jkrmast	조커 마스터	조커 마스터	<unknown>
 pkrmast	포커 마스터 (세트 1)	포커 마스터 (세트 1)	<unknown>
 pkrmasta	포커 마스터 (세트 2)	포커 마스터 (세트 2)	<unknown>
@@ -8439,6 +8450,7 @@ indiandr	인디안 드리밍 (B - 15/12/98)	인디안 드리밍 (B - 15/12/98)	Aristocrat
 magicmsk	매직 마스크 (A - 09/05/2000, 수출판)	매직 마스크 (A - 09/05/2000, 수출판)	Aristocrat
 margmgc	마르가리타 마술 (A - 07/07/2000)	마르가리타 마술 (A - 07/07/2000)	Aristocrat
 geishanz	게이샤 (A - 05/03/01, 뉴질랜드판)	게이샤 (A - 05/03/01, 뉴질랜드판)	Aristocrat
+wtiger	화이트 타이거	화이트 타이거	Aristocrat
 janshi	작사	작사	Eagle
 ronjan	론 잔 (슈퍼)	론 잔 (슈퍼)	Wing Co., Ltd
 pinkiri8	핀 오동나무 8	핀 오동나무 8	Alta
@@ -8753,62 +8765,145 @@ colorama	콜로라마 (영어)	콜로라마 (영어)	Coinmaster-Gaming, Ltd.
 cmrltv75	코인마스터 룰렛 V75 (Y2K, 스페인어)	코인마스터 룰렛 V75 (Y2K, 스페인어)	Coinmaster-Gaming, Ltd.
 cmkenosp	코인마스터 케노 (Y2K, 스페인어, 2000-12-14)	코인마스터 케노 (Y2K, 스페인어, 2000-12-14)	Coinmaster-Gaming, Ltd.
 cmkenospa	코인마스터 케노 (Y2K, 스페인어, 2000-12-02)	코인마스터 케노 (Y2K, 스페인어, 2000-12-02)	Coinmaster-Gaming, Ltd.
-mfish_3	멀티 피쉬 (021124)	멀티 피쉬 (021124)	Igro
-mfish_3a	멀티 피쉬 (021124, 해킹판)	멀티 피쉬 (021124, 해킹판)	Igro
-mfish_6	멀티 피쉬 (030124)	멀티 피쉬 (030124)	Igro
-mfish_11	멀티 피쉬 (031124)	멀티 피쉬 (031124)	Igro
-mfish_12	멀티 피쉬 (040308)	멀티 피쉬 (040308)	Igro
-mfish_12a	멀티 피쉬 (040308, 해킹판)	멀티 피쉬 (040308, 해킹판)	Igro
+mfish_3	멀티 피쉬 (021124)	멀티 피쉬 (021124)	Igrosoft
+mfish_6	멀티 피쉬 (030124)	멀티 피쉬 (030124)	Igrosoft
+mfish_11	멀티 피쉬 (031124)	멀티 피쉬 (031124)	Igrosoft
+mfish_12	멀티 피쉬 (040308)	멀티 피쉬 (040308)	Igrosoft
+mfish_13	멀티 피쉬 (040316)	멀티 피쉬 (040316)	Igrosoft
+crzmon_5	크레이지 몽키 (030421 세계판)	크레이지 몽키 (030421 세계판)	Igrosoft
 crzmon_7	크레이지 몽키 (031110, 세트 1)	크레이지 몽키 (031110, 세트 1)	Igrosoft
-crzmon_7a	크레이지 몽키 (031110, 세트 2)	크레이지 몽키 (031110, 세트 2)	Igrosoft
-crzmon_7b	크레이지 몽키 (031110, 세트 3)	크레이지 몽키 (031110, 세트 3)	Igrosoft
 crzmon_8	크레이지 몽키 (050120, 세트 1)	크레이지 몽키 (050120, 세트 1)	Igrosoft
-crzmon_8a	크레이지 몽키 (050120, 세트 2)	크레이지 몽키 (050120, 세트 2)	Igrosoft
-fcockt_6	과일 칵테일 (040216)	과일 칵테일 (040216)	Igrosoft
-fcockt_6a	과일 칵테일 (040216, 해킹판)	과일 칵테일 (040216, 해킹판)	Igrosoft
-fcockt_6b	과일 칵테일 (040216, 백도어)	과일 칵테일 (040216, 백도어)	Igrosoft
-fcockt_7	과일 칵테일 (050118)	과일 칵테일 (050118)	Igrosoft
-fcockt_7a	과일 칵테일 (050118, 백도어)	과일 칵테일 (050118, 백도어)	Igrosoft
-fcockt_8	과일 칵테일 (060111)	과일 칵테일 (060111)	Igrosoft
-lhaunt_4	럭키 헌터 (031111)	럭키 헌터 (031111)	Igrosoft
-lhaunt_4a	럭키 헌터 (031111, 백도어)	럭키 헌터 (031111, 백도어)	Igrosoft
-lhaunt_5	럭키 헌터 (040216)	럭키 헌터 (040216)	Igrosoft
-lhaunt_5a	럭키 헌터 (040216, 백도어)	럭키 헌터 (040216, 백도어)	Igrosoft
-lhaunt_6	럭키 헌터 (040825)	럭키 헌터 (040825)	Igrosoft
-lhaunt_6a	럭키 헌터 (040825, 백도어)	럭키 헌터 (040825, 백도어)	Igrosoft
+crzmon_9	크레이지 몽키 (070315 러시아판)	크레이지 몽키 (070315 러시아판)	Igrosoft
+fcockt_5	과일 칵테일 (030111 세계판)	과일 칵테일 (030111 세계판)	Igrosoft
+fcockt_6	과일 칵테일 (040216 세계판)	과일 칵테일 (040216 세계판)	Igrosoft
+fcockt_7	과일 칵테일 (050118 세계판)	과일 칵테일 (050118 세계판)	Igrosoft
+fcockt_8	과일 칵테일 (060111 세계판)	과일 칵테일 (060111 세계판)	Igrosoft
+fcockt_9	과일 칵테일 (070305 러시아판)	과일 칵테일 (070305 러시아판)	Igrosoft
+fcockt_10	과일 칵테일 (070517 러시아판)	과일 칵테일 (070517 러시아판)	Igrosoft
+fcockt_11	과일 칵테일 (070822 러시아판)	과일 칵테일 (070822 러시아판)	Igrosoft
+fcockt_12	과일 칵테일 (070911 러시아판)	과일 칵테일 (070911 러시아판)	Igrosoft
+lhaunt_4	럭키 헌터 (031111 세계판)	럭키 헌터 (031111 세계판)	Igrosoft
+lhaunt_5	럭키 헌터 (040216 세계판)	럭키 헌터 (040216 세계판)	Igrosoft
+lhaunt_6	럭키 헌터 (040825 세계판)	럭키 헌터 (040825 세계판)	Igrosoft
+lhaunt_7	럭키 헌터 (070402 러시아판)	럭키 헌터 (070402 러시아판)	Igrosoft
+lhaunt_8	럭키 헌터 (070604 러시아판)	럭키 헌터 (070604 러시아판)	Igrosoft
 rollfr_2	롤 과일 (040318)	롤 과일 (040318)	Igrosoft
 garage_4	거라지 (040219)	거라지 (040219)	Igrosoft
-garage_4a	거라지 (040219, 백도어)	거라지 (040219, 백도어)	Igrosoft
-garage_4b	거라지 (040219, 텍스트 변경 버전)	거라지 (040219, 텍스트 변경 버전)	Igrosoft
 garage_5	거라지 (050311)	거라지 (050311)	Igrosoft
-garage_5a	거라지 (050311, 백도어)	거라지 (050311, 백도어)	Igrosoft
-rclimb_3	락 클라임버 (040827)	락 클라임버 (040827)	Igrosoft
-rclimb_3a	락 클라임버 (040827, 백도어)	락 클라임버 (040827, 백도어)	Igrosoft
-rclimb_3b	락 클라임버 (040827, 신서비스 메뉴)	락 클라임버 (040827, 신서비스 메뉴)	Igrosoft
+garage_6	거라지 (070213 러시아판)	거라지 (070213 러시아판)	Igrosoft
+garage_7	거라지 (070329 러시아판)	거라지 (070329 러시아판)	Igrosoft
+rclimb	락 클라임버 (040812 세계판)	락 클라임버 (040812 세계판)	Igrosoft
+rclimb_3	락 클라임버 (040827 세계판)	락 클라임버 (040827 세계판)	Igrosoft
+rclimb_4	락 클라임버 (070322 러시아판)	락 클라임버 (070322 러시아판)	Igrosoft
+rclimb_5	락 클라임버 (070621 러시아판)	락 클라임버 (070621 러시아판)	Igrosoft
 sweetl	스윗 라이프 (041220)	스윗 라이프 (041220)	Igrosoft
-sweetla	스윗 라이프 (041220, 백도어)	스윗 라이프 (041220, 백도어)	Igrosoft
-sweetlb	스윗 라이프 (041220, 텍스트 변경 버전)	스윗 라이프 (041220, 텍스트 변경 버전)	Igrosoft
-resdnt_2	레지던트 (040513)	레지던트 (040513)	Igrosoft
-resdnt_2a	레지던트 (040513, 백도어)	레지던트 (040513, 백도어)	Igrosoft
-island	아일랜드 (050713, 세트 1)	아일랜드 (050713, 세트 1)	Igrosoft
-islanda	아일랜드 (050713, 세트 2)	아일랜드 (050713, 세트 2)	Igrosoft
-pirate_2	해적 (060210)	해적 (060210)	Igrosoft
-pirate_3	해적 (060803)	해적 (060803)	Igrosoft
-pirate2	해적 2 (061005)	해적 2 (061005)	Igrosoft
-pirate2a	해적 2 (061005, 뱅킹 주소 해킹판, 세트 1)	해적 2 (061005, 뱅킹 주소 해킹판, 세트 1)	Igrosoft
-pirate2b	해적 2 (061005, 뱅킹 주소 해킹판, 세트 2)	해적 2 (061005, 뱅킹 주소 해킹판, 세트 2)	Igrosoft
-pirate2c	해적 2 (061005, 텍스트 변경 버전, 세트 1)	해적 2 (061005, 텍스트 변경 버전, 세트 1)	Igrosoft
-pirate2d	해적 2 (061005, 텍스트 변경 버전, 세트 2)	해적 2 (061005, 텍스트 변경 버전, 세트 2)	Igrosoft
-pirate2e	해적 2 (061005, 텍스트 변경 버전, 세트 3)	해적 2 (061005, 텍스트 변경 버전, 세트 3)	Igrosoft
-island2	아일랜드 2 (060529, 세트 1)	아일랜드 2 (060529, 세트 1)	Igrosoft
-island2a	아일랜드 2 (060529, 세트 2)	아일랜드 2 (060529, 세트 2)	Igrosoft
-keks	켁스 (060328)	켁스 (060328)	Igrosoft
-keksa	켁스 (060328, 뱅킹 주소 해킹판)	켁스 (060328, 뱅킹 주소 해킹판)	Igrosoft
-keksb	켁스 (060328, 백도어)	켁스 (060328, 백도어)	Igrosoft
-keksc	켁스 (060328, 텍스트 변경 버전)	켁스 (060328, 텍스트 변경 버전)	Igrosoft
-keks_2	켁스 (060403)	켁스 (060403)	Igrosoft
-keks_2a	켁스 (060403, 뱅킹 주소 해킹판)	켁스 (060403, 뱅킹 주소 해킹판)	Igrosoft
-keks_2b	켁스 (060403, 텍스트 변경 버전)	켁스 (060403, 텍스트 변경 버전)	Igrosoft
+sweetl_2	스윗 라이프 (070412 러시아판)	스윗 라이프 (070412 러시아판)	Igrosoft
+resdnt_2	레지던트 (040513 세계판)	레지던트 (040513 세계판)	Igrosoft
+resdnt_3	레지던트 (070222 러시아판)	레지던트 (070222 러시아판)	Igrosoft
+island	아일랜드 (050713 세계판)	아일랜드 (050713 세계판)	Igrosoft
+pirate_2	해적 (060210 세계판)	해적 (060210 세계판)	Igrosoft
+pirate_3	해적 (060803 세계판)	해적 (060803 세계판)	Igrosoft
+pirate_4	해적 (070412 러시아판)	해적 (070412 러시아판)	Igrosoft
+island2	아일랜드 2 (060529 세계판)	아일랜드 2 (060529 세계판)	Igrosoft
+island2_3	아일랜드 2 (061218 세계판)	아일랜드 2 (061218 세계판)	Igrosoft
+island2_4	아일랜드 2 (070205 러시아판)	아일랜드 2 (070205 러시아판)	Igrosoft
+pirate2	해적 2 (061005 세계판)	해적 2 (061005 세계판)	Igrosoft
+pirate2_2	해적 2 (070126 러시아판)	해적 2 (070126 러시아판)	Igrosoft
+keks	켁스 (060328 세계판)	켁스 (060328 세계판)	Igrosoft
+keks_2	켁스 (060403 세계판)	켁스 (060403 세계판)	Igrosoft
+keks_3	켁스 (070119 러시아판)	켁스 (070119 러시아판)	Igrosoft
+gnome	지놈 (070906 러시아판)	지놈 (070906 러시아판)	Igrosoft
+mfish_3a	멀티 피쉬 (해적판, 021124, 뱅킹주소 해킹판)	멀티 피쉬 (해적판, 021124, 뱅킹주소 해킹판)	bootleg
+mfish_12a	멀티 피쉬 (해적판, 040308, 뱅킹주소 해킹판)	멀티 피쉬 (해적판, 040308, 뱅킹주소 해킹판)	bootleg
+crzmon_7a	크레이지 몽키 (031110, 세트 2)	크레이지 몽키 (031110, 세트 2)	bootleg
+crzmon_7b	크레이지 몽키 (031110, 세트 3)	크레이지 몽키 (031110, 세트 3)	bootleg
+crzmon_8a	크레이지 몽키 (050120, 세트 2)	크레이지 몽키 (050120, 세트 2)	bootleg
+crzmon_8b	크레이지 몽키 (해적판, 050120, 텍스트 변경버전)	크레이지 몽키 (해적판, 050120, 텍스트 변경버전)	bootleg
+crzmon_8c	크레이지 몽키 (해적판, 050120, 비디오 게임-1)	크레이지 몽키 (해적판, 050120, 비디오 게임-1)	bootleg
+crzmon_8d	크레이지 몽키 (해적판, 050120, LOTTO 게임)	크레이지 몽키 (해적판, 050120, LOTTO 게임)	bootleg
+crzmon_8e	크레이지 몽키 (해적판, 050120, LOTO 프로그램)	크레이지 몽키 (해적판, 050120, LOTO 프로그램)	bootleg
+crzmon_8f	크레이지 몽키 (해적판, 050120, LOTO CM01)	크레이지 몽키 (해적판, 050120, LOTO CM01)	bootleg
+crzmon_9a	크레이지 몽키 (해적판, 070315, 비디오 게임-1, 세트 1)	크레이지 몽키 (해적판, 070315, 비디오 게임-1, 세트 1)	bootleg
+crzmon_9b	크레이지 몽키 (해적판, 070315, 비디오 게임-1, 세트 2)	크레이지 몽키 (해적판, 070315, 비디오 게임-1, 세트 2)	bootleg
+crzmon_9c	크레이지 몽키 (해적판, 070315, 지불금 비율 70)	크레이지 몽키 (해적판, 070315, 지불금 비율 70)	bootleg
+fcockt_6a	과일 칵테일 (040216, 해킹판)	과일 칵테일 (040216, 해킹판)	bootleg
+fcockt_6b	과일 칵테일 (040216, 백도어)	과일 칵테일 (040216, 백도어)	bootleg
+fcockt_6c	과일 칵테일 (해적판, 040216, 로또로씨+)	과일 칵테일 (해적판, 040216, 로또로씨+)	bootleg
+fcockt_6d	과일 칵테일 (해적판, 040216, 비디오 게임-1)	과일 칵테일 (해적판, 040216, 비디오 게임-1)	bootleg
+fcockt_7a	과일 칵테일 (050118, 백도어)	과일 칵테일 (050118, 백도어)	bootleg
+fcockt_7b	과일 칵테일 (해적판, 050118, 비디오 게임-1)	과일 칵테일 (해적판, 050118, 비디오 게임-1)	bootleg
+fcockt_7c	과일 칵테일 (해적판, 050118, 지불금 비율 40)	과일 칵테일 (해적판, 050118, 지불금 비율 40)	bootleg
+fcockt_7d	과일 칵테일 (해적판, 050118, 지불금 비율 60)	과일 칵테일 (해적판, 050118, 지불금 비율 60)	bootleg
+fcockt_7e	과일 칵테일 (해적판, 050118, 지불금 비율 70)	과일 칵테일 (해적판, 050118, 지불금 비율 70)	bootleg
+fcockt_7f	과일 칵테일 (해적판, 050118, 텍스트 변경버전)	과일 칵테일 (해적판, 050118, 텍스트 변경버전)	bootleg
+fcockt_7g	과일 칵테일 (해적판, 050118, LOTO 프로그램)	과일 칵테일 (해적판, 050118, LOTO 프로그램)	bootleg
+fcockt_7h	과일 칵테일 (해적판, 050118, LOTOS)	과일 칵테일 (해적판, 050118, LOTOS)	bootleg
+fcockt_8a	과일 칵테일 (해적판, 060111, LOTO 칵테일)	과일 칵테일 (해적판, 060111, LOTO 칵테일)	bootleg
+fcockt_8b	과일 칵테일 (해적판, 060111, LOTTO 게임)	과일 칵테일 (해적판, 060111, LOTTO 게임)	bootleg
+lhaunt_4a	럭키 헌터 (해적판, 031111, 백도어)	럭키 헌터 (해적판, 031111, 백도어)	bootleg
+lhaunt_5a	럭키 헌터 (해적판, 040216, 백도어)	럭키 헌터 (해적판, 040216, 백도어)	bootleg
+lhaunt_6a	럭키 헌터 (해적판, 040825, 백도어)	럭키 헌터 (해적판, 040825, 백도어)	bootleg
+lhaunt_6b	럭키 헌터 (해적판, 040825, 비디오 게임-1)	럭키 헌터 (해적판, 040825, 비디오 게임-1)	bootleg
+lhaunt_6c	럭키 헌터 (해적판, 040825, 텍스트 변경버전)	럭키 헌터 (해적판, 040825, 텍스트 변경버전)	bootleg
+lhaunt_6d	럭키 헌터 (해적판, 040825, LOTTO 게임)	럭키 헌터 (해적판, 040825, LOTTO 게임)	bootleg
+lhaunt_6e	럭키 헌터 (해적판, 040825, LOTO 프로그램)	럭키 헌터 (해적판, 040825, LOTO 프로그램)	bootleg
+lhaunt_6f	럭키 헌터 (해적판, 040825, LOTOS)	럭키 헌터 (해적판, 040825, LOTOS)	bootleg
+garage_4a	거라지 (040219, 백도어)	거라지 (040219, 백도어)	bootleg
+garage_4b	거라지 (040219, 텍스트 변경 버전)	거라지 (040219, 텍스트 변경 버전)	bootleg
+garage_4c	거라지 (해적판, 040219, LOTO 프로그램)	거라지 (해적판, 040219, LOTO 프로그램)	bootleg
+garage_5a	거라지 (050311, 백도어)	거라지 (050311, 백도어)	bootleg
+garage_5b	거라지 (해적판, 050311, 비디오 게임-1)	거라지 (해적판, 050311, 비디오 게임-1)	bootleg
+garage_5c	거라지 (해적판, 050311, 지불금 비율 70)	거라지 (해적판, 050311, 지불금 비율 70)	bootleg
+garage_5d	거라지 (해적판, 050311, LOTTO 게임)	거라지 (해적판, 050311, LOTTO 게임)	bootleg
+garage_5e	거라지 (해적판, 050311, LOTOS)	거라지 (해적판, 050311, LOTOS)	bootleg
+rclimb_3a	락 클라임버 (해적판, 040827, 백도어)	락 클라임버 (해적판, 040827, 백도어)	bootleg
+rclimb_3b	락 클라임버 (해적판, 040827, 신서비스 메뉴)	락 클라임버 (해적판, 040827, 신서비스 메뉴)	bootleg
+rclimb_3c	락 클라임버 (해적판, 040827, 비디오 게임-1)	락 클라임버 (해적판, 040827, 비디오 게임-1)	bootleg
+rclimb_3d	락 클라임버 (해적판, 040827, LOTTO 게임)	락 클라임버 (해적판, 040827, LOTTO 게임)	bootleg
+rclimb_3e	락 클라임버 (해적판, 040827, LOTOS)	락 클라임버 (해적판, 040827, LOTOS)	bootleg
+sweetla	스윗 라이프 (041220, 백도어)	스윗 라이프 (041220, 백도어)	bootleg
+sweetlb	스윗 라이프 (041220, 텍스트 변경 버전)	스윗 라이프 (041220, 텍스트 변경 버전)	bootleg
+resdnt_2a	레지던트 (해적판, 040513, 백도어)	레지던트 (해적판, 040513, 백도어)	bootleg
+resdnt_2b	레지던트 (해적판, 040513, 비디오 게임-1, 세트 1)	레지던트 (해적판, 040513, 비디오 게임-1, 세트 1)	bootleg
+resdnt_2c	레지던트 (해적판, 040513, 비디오 게임-1, 세트 2)	레지던트 (해적판, 040513, 비디오 게임-1, 세트 2)	bootleg
+resdnt_2d	레지던트 (해적판, 040513, 비디오 게임-1, 세트 3)	레지던트 (해적판, 040513, 비디오 게임-1, 세트 3)	bootleg
+resdnt_2e	레지던트 (해적판, 040513, LOTTO 게임)	레지던트 (해적판, 040513, LOTTO 게임)	bootleg
+resdnt_2f	레지던트 (해적판, 040513, LOTO 프로그램)	레지던트 (해적판, 040513, LOTO 프로그램)	bootleg
+resdnt_2g	레지던트 (해적판, 040513, LOTOS)	레지던트 (해적판, 040513, LOTOS)	bootleg
+islanda	아일랜드 (050713, 백도어)	아일랜드 (050713, 백도어)	bootleg
+islandb	아일랜드 (해적판, 050713, 비디오 게임-1)	아일랜드 (해적판, 050713, 비디오 게임-1)	bootleg
+islandc	아일랜드 (해적판, 050713, LOTOS)	아일랜드 (해적판, 050713, LOTOS)	bootleg
+island2a	아일랜드 2 (해적판, 060529, 해킹판)	아일랜드 2 (해적판, 060529, 해킹판)	bootleg
+island2b	아일랜드 2 (해적판, 060529, 뱅킹주소 해킹판, 텍스트 변경버전)	아일랜드 2 (해적판, 060529, 뱅킹주소 해킹판, 텍스트 변경버전)	bootleg
+island2c	아일랜드 2 (해적판, 060529, LOTTO 게임)	아일랜드 2 (해적판, 060529, LOTTO 게임)	bootleg
+island2_3a	아일랜드 2 (해적판, 061218, 비디오 게임-1)	아일랜드 2 (해적판, 061218, 비디오 게임-1)	bootleg
+island2_4a	아일랜드 2 (해적판, 070205, 뱅킹주소 해킹판)	아일랜드 2 (해적판, 070205, 뱅킹주소 해킹판)	bootleg
+pirate2a	해적 2 (해적판, 061005, 뱅킹주소 해킹판, 세트 1)	해적 2 (해적판, 061005, 뱅킹주소 해킹판, 세트 1)	bootleg
+pirate2b	해적 2 (해적판, 061005, 뱅킹주소 해킹판, 세트 2)	해적 2 (해적판, 061005, 뱅킹주소 해킹판, 세트 2)	bootleg
+pirate2c	해적 2 (해적판, 061005, 뱅킹주소 해킹판, 텍스트 변경버전, 세트 1)	해적 2 (해적판, 061005, 뱅킹주소 해킹판, 텍스트 변경버전, 세트 1)	bootleg
+pirate2d	해적 2 (해적판, 061005, 뱅킹주소 해킹판, 텍스트 변경버전, 세트 2)	해적 2 (해적판, 061005, 뱅킹주소 해킹판, 텍스트 변경버전, 세트 2)	bootleg
+pirate2e	해적 2 (해적판, 061005, 뱅킹주소 해킹판, 텍스트 변경버전, 세트 3)	해적 2 (해적판, 061005, 뱅킹주소 해킹판, 텍스트 변경버전, 세트 3)	bootleg
+pirate2f	해적 2 (해적판, 061005, 비디오 게임-1)	해적 2 (해적판, 061005, 비디오 게임-1)	bootleg
+pirate2g	해적 2 (해적판, 061005, LOTTO 게임)	해적 2 (해적판, 061005, LOTTO 게임)	bootleg
+pirate2h	해적 2 (해적판, 061005, LOTOS)	해적 2 (해적판, 061005, LOTOS)	bootleg
+pirate2_2a	해적 2 (해적판, 070126, 뱅킹주소 해킹판)	해적 2 (해적판, 070126, 뱅킹주소 해킹판)	bootleg
+keksa	켁스 (해적판, 060328, 뱅킹주소 해킹판)	켁스 (해적판, 060328, 뱅킹주소 해킹판)	bootleg
+keksb	켁스 (해적판, 060328, 백도어)	켁스 (해적판, 060328, 백도어)	bootleg
+keksc	켁스 (해적판, 060328, 뱅킹주소 해킹판, 텍스트 변경버전)	켁스 (해적판, 060328, 뱅킹주소 해킹판, 텍스트 변경버전)	bootleg
+keks_2a	켁스 (해적판, 060403, 뱅킹주소 해킹판)	켁스 (해적판, 060403, 뱅킹주소 해킹판)	bootleg
+keks_2b	켁스 (해적판, 060403, 뱅킹주소 해킹판, 텍스트 변경버전)	켁스 (해적판, 060403, 뱅킹주소 해킹판, 텍스트 변경버전)	bootleg
+keks_2c	켁스 (해적판, 060403, 비디오 게임-1, 세트 1)	켁스 (해적판, 060403, 비디오 게임-1, 세트 1)	bootleg
+keks_2d	켁스 (해적판, 060403, 비디오 게임-1, 세트 2)	켁스 (해적판, 060403, 비디오 게임-1, 세트 2)	bootleg
+keks_2e	켁스 (해적판, 060403, 뱅킹주소 해킹판, 지불금 비율 60)	켁스 (해적판, 060403, 뱅킹주소 해킹판, 지불금 비율 60)	bootleg
+keks_2f	켁스 (해적판, 060403, LOTTO 게임)	켁스 (해적판, 060403, LOTTO 게임)	bootleg
+keks_2g	켁스 (해적판, 060403, LOTOS)	켁스 (해적판, 060403, LOTOS)	bootleg
+keks_3a	켁스 (해적판, 070119, 뱅킹주소 해킹판, 세트 1)	켁스 (해적판, 070119, 뱅킹주소 해킹판, 세트 1)	bootleg
+keks_3b	켁스 (해적판, 070119, 뱅킹주소 해킹판, 세트 2)	켁스 (해적판, 070119, 뱅킹주소 해킹판, 세트 2)	bootleg
+gnomea	지놈 (해적판, 070906, 뱅킹주소 해킹판, 세트 1)	지놈 (해적판, 070906, 뱅킹주소 해킹판, 세트 1)	bootleg
+gnomeb	지놈 (해적판, 070906, 뱅킹주소 해킹판, 세트 2)	지놈 (해적판, 070906, 뱅킹주소 해킹판, 세트 2)	bootleg
+gnomec	지놈 (해적판, 070906, 뱅킹주소 해킹판, 세트 3)	지놈 (해적판, 070906, 뱅킹주소 해킹판, 세트 3)	bootleg
+gnomed	지놈 (해적판, 070906, 비디오 게임-1)	지놈 (해적판, 070906, 비디오 게임-1)	bootleg
+gnomee	지놈 (해적판, 070906, LOTOS)	지놈 (해적판, 070906, LOTOS)	bootleg
 cdi	CD-i (Mono-I) 바이오스	CD-i (Mono-I) 바이오스	Philips
 quizard	퀴자드 1.7	퀴자드 1.7	TAB Austria
 quizrd22	퀴자드 2.2	퀴자드 2.2	TAB Austria
@@ -8873,6 +8968,9 @@ megadpkr	메가 더블 포커 (개조 키트)	메가 더블 포커 (개조 키트)	Blitz System Inc.
 genie	지니	지니	Video Fun Games Ltd.
 hotstuff	올림픽 핫 스터프 (TAS 5 Reel 시스템)	올림픽 핫 스터프 (TAS 5 Reel 시스템)	Olympic Video Gaming
 savquest	세비지 퀘스트	세비지 퀘스트	Interactive Light
+jubileep	즈블리 더블-업 포커	즈블리 더블-업 포커	Jubilee
+swisspkr	스위스 포커 ('50 SG-.10', 버전 2.5)	스위스 포커 ('50 SG-.10', 버전 2.5)	Golden Games / C+M Technics AG
+moviecrd	무비 카드	무비 카드	Golden Games / C+M Technics AG
 knightsb2	원탁의 기사 (해적판, 세트 2)	원탁의 기사 (해적판, 세트 2)	bootleg
 wofb	삼국지 II (해적판)	삼국지 II (해적판)	bootleg
 wofsj	삼국지 II: 성검삼국 (세트 1, 중국 해적판)	삼국지 II: 성검삼국 (세트 1, 중국 해적판)	bootleg
@@ -8894,9 +8992,9 @@ sf2tlona	스트리트 파이터 II' - 챔피언 에디션 (도룡 세트 1, 중국 해적판)	스트리트
 sf2tlonb	스트리트 파이터 II' - 챔피언 에디션 (도룡 세트 2, 중국 해적판)	스트리트 파이터 II' - 챔피언 에디션 (도룡 세트 2, 중국 해적판)	bootleg
 knightsh	원탁의 기사 (해킹판)	원탁의 기사 (해킹판)	bootleg
 kodh	킹 오브 드래곤즈 (해킹판)	킹 오브 드래곤즈 (해킹판)	bootleg
-dinoh	캐딜락 & 다이노사우르스 (해킹판, 세트 1)	캐딜락 & 다이노사우르스 (해킹판, 세트 1)	bootleg
-dinoha	캐딜락 & 다이노사우르스 (해킹판, 세트 2)	캐딜락 & 다이노사우르스 (해킹판, 세트 2)	bootleg
-dinohb	캐딜락 & 다이노사우르스 (해킹판, 세트 3)	캐딜락 & 다이노사우르스 (해킹판, 세트 3)	bootleg
+dinoh	캐딜락 & 다이노소어 (해킹판, 세트 1)	캐딜락 & 다이노소어 (해킹판, 세트 1)	bootleg
+dinoha	캐딜락 & 다이노소어 (해킹판, 세트 2)	캐딜락 & 다이노소어 (해킹판, 세트 2)	bootleg
+dinohb	캐딜락 & 다이노소어 (해킹판, 세트 3)	캐딜락 & 다이노소어 (해킹판, 세트 3)	bootleg
 kof96ep	킹 오브 파이터즈 '96 (해적판 / 해킹판)	킹 오브 파이터즈 '96 (해적판 / 해킹판)	bootleg
 kof97pla	킹 오브 파이터즈 '97  Plus 2003 (해적판 / 해킹판)	킹 오브 파이터즈 '97  Plus 2003 (해적판 / 해킹판)	bootleg
 kf2k1pls	킹 오브 파이터즈 2001 Plus (세트 1, 해적판 / 해킹판)	킹 오브 파이터즈 2001 Plus (세트 1, 해적판 / 해킹판)	bootleg
@@ -8904,7 +9002,7 @@ kf2k1pa	킹 오브 파이터즈 2001 Plus (세트 2, 해적판 / 해킹판)	킹 오브 파이터즈 20
 cthd2k3a	와호장룡 2003 (KOF 2001 해적판, 세트 2)	와호장룡 2003 (KOF 2001 해적판, 세트 2)	bootleg
 kf2k2plb	킹 오브 파이터즈 2002 Plus (세트 3, 해적판 / 해킹판)	킹 오브 파이터즈 2002 Plus (세트 3, 해적판 / 해킹판)	bootleg
 kf2k2plc	킹 오브 파이터즈 2002 슈퍼 (세트 4, 해적판 / 해킹판)	킹 오브 파이터즈 2002 슈퍼 (세트 4, 해적판 / 해킹판)	bootleg
-kf2k4pls	킹 오브 파이터즈 특별판 2004 Plus (KOF 2002 해적판)	킹 오브 파이터즈 특별판 2004 Plus (KOF 2002 해적판)	bootleg
+kf2k4pls	킹 오브 파이터즈 스페셜 2004 Plus (KOF 2002 해적판)	킹 오브 파이터즈 스페셜 2004 Plus (KOF 2002 해적판)	bootleg
 mslug5b	메탈 슬러그 5 (해적판)	메탈 슬러그 5 (해적판)	bootleg
 bangbedp	뱅 비드 (시험판)	뱅 비드 (시험판)	Visco
 zintrkcd	밀어내기 진트릭 (CD버전 MVS로 변환, 해킹판)	밀어내기 진트릭 (CD버전 MVS로 변환, 해킹판)	hack
@@ -8937,7 +9035,7 @@ kf2k2ps2	킹 오브 파이터즈 2002 (PS2 버전 0.4, EGHT 해킹판)	킹 오브 파이터즈 2002
 columnsh	컬럼즈 (세가 하드웨어 해킹판, NO 사운드)	컬럼즈 (세가 하드웨어 해킹판, NO 사운드)	hack
 zupapad	주파파! (해독된 C)	주파파! (해독된 C)	SNK
 kof99d	킹 오브 파이터즈 '99 - 밀레니엄 배틀 (비암호화 P, 해독된 C)	킹 오브 파이터즈 '99 - 밀레니엄 배틀 (비암호화 P, 해독된 C)	SNK
-ganryud	무장암류기 / 간류 / 무사시 간류키 (해독된 C)	무장암류기 / 간류 / 무사시 간류키 (해독된 C)	Visco
+ganryud	무장암류기 / 간류 (해독된 C)	무장암류기 / 간류 (해독된 C)	Visco
 garoud	아랑 - 늑대의 표시 (해독된 C)	아랑 - 늑대의 표시 (해독된 C)	SNK
 s1945pd	스트라이커즈 1945 Plus (해독된 C)	스트라이커즈 1945 Plus (해독된 C)	Psikyo
 preisl2d	프리히스토릭 아일 2 (해독된 C)	프리히스토릭 아일 2 (해독된 C)	Yumekobo
@@ -8949,14 +9047,14 @@ kof2001d	킹 오브 파이터즈 2001 (세트 2, 해독된 C)	킹 오브 파이터즈 2001 (세트 2,
 mslug4d	메탈 슬러그 4 (해독된 C)	메탈 슬러그 4 (해독된 C)	Mega
 rotdd	레이지 오브 더 드래곤 (해독된 C)	레이지 오브 더 드래곤 (해독된 C)	Evoga / Playmore
 kof2002d	킹 오브 파이터즈 2002 (해독된 C)	킹 오브 파이터즈 2002 (해독된 C)	Eolith / Playmore
-matrimd	신 호혈사 일족 투혼 / 매트리밀리 (해독된 C)	신 호혈사 일족 투혼 / 매트리밀리 (해독된 C)	Noise Factory / Atlus
+matrimd	신 호혈사일족 투혼 / 매트리밀리 (해독된 C)	신 호혈사일족 투혼 / 매트리밀리 (해독된 C)	Noise Factory / Atlus
 ct2k3ad	와호장룡 2003 (KOF 2001 해적판 / 세트 2 전체 해독)	와호장룡 2003 (KOF 2001 해적판 / 세트 2 전체 해독)	bootleg
 cthd2k3d	와호장룡 2003 (KOF 2001 해적판 / 세트 1 전체 해독)	와호장룡 2003 (KOF 2001 해적판 / 세트 1 전체 해독)	bootleg
 kof10thd	킹 오브 파이터즈 10주년 기념 - 올 팀 배틀 (KOF 2002 해적판 / 전체 해독)	킹 오브 파이터즈 10주년 기념 - 올 팀 배틀 (KOF 2002 해적판 / 전체 해독)	bootleg
 kof2003d	킹 오브 파이터즈 2003 (해독된 P&C)	킹 오브 파이터즈 2003 (해독된 P&C)	SNK Playmore
 mslug5d	메탈 슬러그 5 (전체 해독)	메탈 슬러그 5 (전체 해독)	SNK / Playmore
 samsho5d	사무라이 쇼다운 V / 사무라이 스피리츠 령(零) (해독된 C)	사무라이 쇼다운 V / 사무라이 스피리츠 령(零) (해독된 C)	Yuki Enterprise / SNK Playmore
-samsh5sd	사무라이 쇼다운 V 특별판 / 사무라이 스피리츠 령(零) 특별판 (해독된 C)	사무라이 쇼다운 V 특별판 / 사무라이 스피리츠 령(零) 특별판 (해독된 C)	Yuki Enterprise / SNK Playmore
+samsh5sd	사무라이 쇼다운 V 스페셜 / 사무라이 스피리츠 령(零) 스페셜 (해독된 C)	사무라이 쇼다운 V 스페셜 / 사무라이 스피리츠 령(零) 스페셜 (해독된 C)	Yuki Enterprise / SNK Playmore
 lans2k4d	랜스퀴넷 2004 (쇼크 트루퍼스 - 2nd 스쿼드 해적판 / 전체 해독)	랜스퀴넷 2004 (쇼크 트루퍼스 - 2nd 스쿼드 해적판 / 전체 해독)	bootleg
 svcd	SNK 대 CAPCOM SVC 카오스 (해독된 C)	SNK 대 CAPCOM SVC 카오스 (해독된 C)	SNK Playmore
 jckeygpd	조키 그랜드 프릭스 (해독된 C)	조키 그랜드 프릭스 (해독된 C)	Sun Amusement / BrezzaSoft
@@ -9009,7 +9107,7 @@ picoj	피코 (일본판, NTSC 방식)	피코 (일본판, NTSC 방식)	Sega
 pce	PC엔진	PC엔진	Nippon Electronic Company
 tg16	터보그래픽스 16	터보그래픽스 16	Nippon Electronic Company
 sgx	PC엔진 슈퍼그래픽스	PC엔진 슈퍼그래픽스	Nippon Electronic Company
-sfach	CPS 체인저 - 스트리트 파이터 알파: 워리어즈 드림 (미국판 950727)	CPS 체인저 - 스트리트 파이터 알파: 워리어즈 드림 (미국판 950727)	Capcom
+sfach	CPS 체인저 - 스트리트 파이터 알파: 전사들의 희망 (미국판 950727)	CPS 체인저 - 스트리트 파이터 알파: 전사들의 희망 (미국판 950727)	Capcom
 sfzbch	CPS 체인저 - 스트리트 파이터 알파 (브라질판 950727)	CPS 체인저 - 스트리트 파이터 알파 (브라질판 950727)	Capcom
 sfzch	CPS 체인저 - 스트리트 파이터 제로 (일본판 951020)	CPS 체인저 - 스트리트 파이터 제로 (일본판 951020)	Capcom
 wofch	CPS 체인저 - 천지를 먹다 II (일본판 921031)	CPS 체인저 - 천지를 먹다 II (일본판 921031)	Capcom

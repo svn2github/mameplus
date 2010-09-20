@@ -76,7 +76,7 @@
 
 # mess/osd/windows/menu.c: 1221, 1437, 2048 mess/osd/windows/mess.rc: 44 
 &Options
-옵션(&O)
+설정(&O)
 
 # mess/osd/windows/mess.rc: 46 
 &Pause
@@ -118,6 +118,10 @@ Assign joystick %s to player %d\n
 Auto
 자동
 
+# mess/osd/windows/menu.c: 498
+Autocenter Speed
+자동센터링 속도
+
 # mess/osd/windows/dialog.c: 133 
 Cancel
 취소
@@ -129,6 +133,10 @@ Common image types
 # mess/osd/windows/menu.c: 920
 Compressed Images (*.zip)|*.zip|
 압축 이미지 (*.zip)|*.zip|
+
+# mess/osd/windows/menu.c: 1479
+Create...
+작성...
 
 # mess/osd/windows/mess.rc: 55
 Customize Emulated Keyboard...
@@ -145,6 +153,14 @@ DIRECTDRAW-전용 옵션
 # osd/windows/drawd3d.c: 1202
 Device %s currently in an unsupported mode\n
 장치 %s는 현재 지원되지 않습니다\n
+
+# mess/osd/windows/menu.c: 493
+Digital Speed
+디지털 속도
+
+# mess/osd/windows/menu.c: 385
+Dip Switches
+딥스위치
 
 # osd/windows/drawd3d.c: 1172
 Direct3D: Configuring adapter #%d = %s\n
@@ -518,6 +534,10 @@ DirectInput: %d DirectInput 사용 \n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 주 버퍼: %d Hz, %d 비트, %d 체널\n
 
+# mess/osd/windows/menu.c: 396
+Driver Configuration
+드라이버 설정
+
 # mess/osd/windows/mess.rc: 52
 Emulated
 에뮬됨
@@ -618,6 +638,10 @@ window thread 생성 실패
 Failed to create window thread ready event
 window thread ready event 생성 실패
 
+# mess/osd/windows/menu.c: 1492 
+Fast Forward
+빨라감기
+
 # mess/osd/windows/mess.rc: 48
 Ha&rd Reset
 하드 재설정(&R)
@@ -662,6 +686,10 @@ Maximum &Speed
 Miscellaneous Input
 기타 입력
 
+# mess/osd/windows/menu.c: 1476
+Mount...
+마운트...
+
 # mess/osd/windows/mess.rc: 53
 Natural
 인체공학
@@ -674,6 +702,10 @@ OK
 PER-WINDOW VIDEO OPTIONS
 윈도우별 비디오 옵션
 
+# mess/osd/windows/menu.c: 1488 
+Pause/Stop
+중단/정지
+
 # mess/osd/windows/menu.c: 1489 
 Play
 실행
@@ -685,6 +717,18 @@ Proposed video mode not supported on device %s\n
 # osd/windows/input.c: 1783
 RawInput: APIs detected\n
 로우입력:APIs 탐지됨\n
+
+# mess/osd/windows/menu.c: 1490 
+Record
+기록
+
+# mess/osd/windows/menu.c: 503
+Reverse
+반전
+
+# mess/osd/windows/menu.c: 1491 
+Rewind
+되감기
 
 # mess/osd/windows/mess.rc: 61
 Rotate 0 degrees
@@ -709,6 +753,10 @@ S&ave State As...
 # mess/osd/windows/mess.rc: 36
 Save Sc&reenshot
 스크린샷 저장(&R)
+
+# mess/osd/windows/menu.c: 512
+Sensitivity
+감도
 
 # mess/osd/windows/mess.rc: 84
 Show &FPS
@@ -741,6 +789,10 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 # osd/windows/input.c: 833
 Toggle Fullscreen
 전체화면 전환
+
+# osd/windows/input.c: 841
+Toggle Menu Bar
+메뉴바 변경
 
 # osd/windows/ledutil.c: 603, 609
 Unable to close the keyboard device. (error %d)\n
@@ -778,6 +830,10 @@ Unknown texture blendmode=%d format=%d\n
 Unlimited
 무제한
 
+# mess/osd/windows/menu.c: 1481
+Unmount
+마운트 해제
+
 # osd/windows/video.c: 435
 Using %s scale effect\n
 %s 크기조절 효과 사용\n
@@ -809,6 +865,10 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 # osd/windows/drawd3d.c: 718
 Warning: Device may not perform well for Direct3D rendering\n
 경고: 장치가 Direct3D 렌더링을 잘 지원하지 못합니다\n
+
+# mess/osd/windows/menu.c: 1494
+[empty slot]
+[슬롯 비어있음]
 
 # osd/windows/winmain.c: 333
 aspect ratio for all screens; 'auto' here will try to make a best guess
@@ -846,6 +906,10 @@ contrast value in full screen mode
 default to maximized windows; otherwise, windows will be minimized
 창크기 최대화를 기본으로; 반대는 창크기 최소화
 
+# osd/windows/winmain.c: 368
+enable audio sync
+오디오동기화를 활성화
+
 # osd/windows/winmain.c: 328
 enable bilinear filtering on screen output
 화면 출력에 바이라이너 필터링 사용
@@ -860,7 +924,7 @@ enable hardware stretching
 
 # osd/windows/winmain.c: 305
 enable multithreading; this enables rendering and blitting on a separate thread
-렌더링과 블리팅을 분리된 스레드에서 실행하도록 멀티 스레딩 사용
+렌더링과 블리팅을 각각 분리된 스레드에서 실행하도록 멀티 스레딩 사용
 
 # osd/windows/winmain.c: 360
 enable resolution switching
@@ -904,7 +968,7 @@ explicit name of the third screen; 'auto' here will try to make a best guess
 
 # osd/windows/winmain.c: 298
 force the program to terminate if no updates within specified number of seconds
-지정된 시간(초) 안에 업데이트가 되지 않으면 프로그램 강재 종료
+지정된 시간(초) 안에 업데이트가 되지 않으면 프로그램 강제종료
 
 # osd/windows/winmain.c: 363
 gamma value in full screen mode
@@ -912,11 +976,11 @@ gamma value in full screen mode
 
 # osd/windows/winmain.c: 317
 name of a PNG file to use for visual effects, or 'none'
-화면 효과를 위한 PNG 파일 이름
+시각효과로 사용하는 PNG파일명, 또는「none」 
 
 # osd/windows/winmain.c: 312
 number of screens to create; usually, you want just one
-생성할 화면 수;보통 1로 설정
+생성하는 화면의 수를 지정. 보통 1로 설정
 
 # osd/windows/winmain.c: 297
 output error.log data to the system debugger
@@ -924,51 +988,51 @@ error.log 데이터를 시스템 디버거에 출력
 
 # osd/windows/winmain.c: 334
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
-모든 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<재생률>] 또는 'auto'
+모든 화면 해상도를 지정; 형식: <폭>x<높이>[@<주사율>] 또는 'auto'
 
 # osd/windows/winmain.c: 339
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-첫 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<재생률>] 또는 'auto'
+첫 번째 화면 해상도를 지정; 형식은: <폭>x<높이>[@<주사율>] 또는 'auto'
 
 # osd/windows/winmain.c: 354
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-네 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<재생률>] 또는 'auto'
+네 번째 화면 해상도를 지정; 형식은: <폭>x<높이>[@<주사율>] 또는 'auto'
 
 # osd/windows/winmain.c: 344
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-두 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<재생률>] 또는 'auto'
+두 번째 화면 해상도를 지정; 형식은: <폭>x<높이>[@<주사율>] 또는 'auto'
 
 # osd/windows/winmain.c: 349
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-세 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<재생률>] 또는 'auto'
+세 번째 화면 해상도를 지정; 형식은: <폭>x<높이>[@<주사율>] 또는 'auto'
 
 # osd/windows/winmain.c: 335
 preferred view for all screens
-모든 화면에서 선호하는 보기
+모든 화면 뷰 지정
 
 # osd/windows/winmain.c: 340
 preferred view for the first screen
-첫 번째 화면에서 선호하는 보기
+첫 번째 화면 뷰 지정
 
 # osd/windows/winmain.c: 355
 preferred view for the fourth screen
-네 번째 화면에서 선호하는 보기
+네 번째 화면 뷰 지정
 
 # osd/windows/winmain.c: 345
 preferred view for the second screen
-두 번째 화면에서 선호하는 보기
+두 번째 화면 뷰 지정
 
 # osd/windows/winmain.c: 350
 preferred view for the third screen
-세 번째 화면에서 선호하는 보기
+세 번째 화면 뷰 지정
 
 # osd/windows/winmain.c: 316
 scale screen rendering by this amount in software
-프로그램 상 화면 렌더링 크기
+지정된 비율로 소프트웨어의 화면 렌더링 확장을 실행합니다.
 
 # osd/windows/winmain.c: 367
 set audio latency (increase to reduce glitches)
-오디오 레이턴시 설정 (증가시 잡음감소)
+오디오 지연시간을 지정
 
 # osd/windows/winmain.c: 374
 set joystick ID (Player1)
@@ -1022,34 +1086,6 @@ thread priority for the main game thread; range from -15 to 1
 video output method: none, gdi, ddraw, or d3d
 비디오 출력 방법: 없음, gdi, ddraw 또는 d3d
 
-# mess/osd/windows/menu.c: 498
-Autocenter Speed
-
-
-# mess/osd/windows/menu.c: 1479
-Create...
-
-
-# mess/osd/windows/menu.c: 493
-Digital Speed
-
-
-# mess/osd/windows/menu.c: 385
-Dip Switches
-
-
-# mess/osd/windows/menu.c: 396
-Driver Configuration
-
-
-# mess/osd/windows/menu.c: 1492 
-Fast Forward
-
-
-# mess/osd/windows/menu.c: 1476
-Mount...
-
-
 # mess/osd/windows/menu.c: 506
 Off
 
@@ -1062,44 +1098,8 @@ On
 Paste
 
 
-# mess/osd/windows/menu.c: 1488 
-Pause/Stop
-
-
-# mess/osd/windows/menu.c: 1490 
-Record
-
-
-# mess/osd/windows/menu.c: 503
-Reverse
-
-
-# mess/osd/windows/menu.c: 1491 
-Rewind
-
-
-# mess/osd/windows/menu.c: 512
-Sensitivity
-
-
-# osd/windows/input.c: 841
-Toggle Menu Bar
-
-
-# mess/osd/windows/menu.c: 1481
-Unmount
-
-
 # osd/windows/winmain.c: 506
 Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
-
-
-# mess/osd/windows/menu.c: 1494
-[empty slot]
-
-
-# osd/windows/winmain.c: 368
-enable audio sync
 
 
 # osd/windows/winmain.c: 307

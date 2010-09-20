@@ -30,6 +30,10 @@ Ch.%d
  NO GOOD DUMP KNOWN
  정확하게 덤프된 롬 없음
 
+# emu/clifront.c: 1267
+ SYSTEM      DEVICE NAME (brief)   IMAGE FILE EXTENSIONS SUPPORTED    \n
+ 시스템      디바이스명 (brief)   이미지파일 확장명 지원    \n
+
 # emu/clifront.c: 984
 %d romsets found, %d were OK.\n
 %d 롬셋 발견, %d 정상\n
@@ -74,6 +78,10 @@ Ch.%d
 %s Brightness
 %s 밝기
 
+# emu/romload.c: 1193
+%s CHD ERROR: %s\n
+%s CHD 오류: %s\n
+
 # emu/romload.c: 1217
 %s CHD NEEDS REDUMP\n
 %s CHD 재덤프 필요\n
@@ -81,6 +89,10 @@ Ch.%d
 # emu/ui.c: 2315
 %s Contrast
 %s 명암
+
+# emu/romload.c: 1228
+%s DIFF CHD ERROR: %s\n
+%s DIFF CHD 오류: %s\n
 
 # emu/uimenu.c: 2424
 %s Digital Speed
@@ -470,6 +482,14 @@ AWP 시뮬레이트 비디오 (아트웍 없음)
 Activated %s
 활성화된%s
 
+# emu/cheat.c: 678
+Activated\n %s = %d (0x%X)
+활성화\n %s = %d (0x%X)
+
+# emu/cheat.c: 676
+Activated\n %s = %s
+활성화\n %s = %s
+
 # mame/layout/bfm_sc2.lay: 856
 Adder %d Output Only (%d:%d)
 %d 출력 한정 (%d:%d)
@@ -493,6 +513,10 @@ Adjusting target speed to %d%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n
 # mame/drivers/mcr68.c: 865 
 Advanced
 고급
+
+# emu/uimenu.c: 2710
+All cheats reloaded
+모든 치트 재읽기
 
 # emu/inptport.c: 777
 Allow Continue
@@ -610,6 +634,14 @@ Button Lamps
 CCW 90
 반시계 방향으로 90도 회전
 
+# mame/drivers/neodrvr.c: 9047 mame/drivers/neogeo.c: 1235
+COMM Setting (Cabinet No.)
+COMM 설정 (캐비닛 No.)
+
+# mame/drivers/neodrvr.c: 9052 mame/drivers/neogeo.c: 1235
+COMM Setting (Link Enable)
+COMM 설정 (링크 활성화)
+
 # emu/clifront.c: 83
 CONFIGURATION COMMANDS
 설정 명령
@@ -710,6 +742,10 @@ Cancel
 Card Number:
 카드 번호:
 
+# mess/devices/cartslot.c: 450, 451
+Cartslot
+카트슬롯
+
 # emu/sound/wave.c: 105, 106 mess/devices/cassette.c: 427, 428
 Cassette
 카세트
@@ -718,6 +754,10 @@ Cassette
 Categories
 카테고리
 
+# mess/devices/chd_cd.c: 173, 174
+Cdrom
+CD-롬
+
 # mame/drivers/cischeat.c: 1412
 Center
 원점 복귀
@@ -725,6 +765,14 @@ Center
 # emu/uimenu.c: 1616
 Cheat
 치트
+
+# emu/cheat.c: 484
+Cheats Disabled
+치트 비활성화
+
+# emu/cheat.c: 496
+Cheats Enabled
+치트 활성화
 
 # mame/drivers/aerofgt.c: 570, 573 mame/drivers/nmk16.c: 2733, 3290 mame/drivers/pgm.c: 1231, 1241, 1252, 1266, 1287, 1304, 1338, 1351, 1370, 1383, 1396, 1410, 1526 mame/drivers/ssv.c: 2415 mame/drivers/toaplan2.c: 3166, 3219, 3385
 China
@@ -758,6 +806,18 @@ Coin %c:
 Coin 1
 동전 1
 
+# emu/inpttype.h: 453
+Coin 10
+동전 10
+
+# emu/inpttype.h: 454
+Coin 11
+동전 11
+
+# emu/inpttype.h: 455
+Coin 12
+동전 12
+
 # emu/inpttype.h: 445 mame/drivers/magic10.c: 571 mame/drivers/mexico86.c: 318 mame/drivers/midyunit.c: 539 mame/drivers/murogmbl.c: 113, 135
 Coin 2
 동전 2
@@ -785,6 +845,10 @@ Coin 7
 # emu/inpttype.h: 451
 Coin 8
 동전 8
+
+# emu/inpttype.h: 452
+Coin 9
+동전 9
 
 # emu/inptport.c: 682
 Coin A
@@ -922,9 +986,29 @@ Cropped Corners
 Crosshair Offset %s
 십자조준점 오프셋 %s
 
+# emu/uimenu.c: 1612
+Crosshair Options
+십자표적 설정
+
 # emu/ui.c: 2382
 Crosshair Scale %s
 십자조준점 크기 %s
+
+# emu/inptport.c: 614
+Cursor Down
+커서 아래로
+
+# emu/inptport.c: 611
+Cursor Left
+커서 왼쪽
+
+# emu/inptport.c: 612
+Cursor Right
+커서 오른쪽
+
+# emu/inptport.c: 613
+Cursor Up
+커서 위로
 
 # mame/drivers/tickee.c: 500 
 Custom
@@ -934,9 +1018,17 @@ Custom
 Custom Buttons
 사용자 정의 버튼
 
+# emu/inputseq.c: 490, 545 emu/uimenu.c: 3779
+DEFAULT
+디폴트
+
 # mame/drivers/aztarac.c: 83, 124 mame/drivers/cinemat.c: 258, 836 mame/drivers/exidy.c: 148, 621 mame/drivers/goindol.c: 97, 146 mame/drivers/mcr.c: 392, 1037 mame/drivers/mgolf.c: 146, 150, 248 mame/drivers/mhavoc.c: 270, 295, 358, 449 mame/drivers/scobra.c: 464, 481 mame/drivers/sfkick.c: 80, 365 mame/drivers/turbo.c: 644, 651, 905 mame/drivers/victory.c: 144, 179 mame/drivers/wallc.c: 152, 174 mame/drivers/wolfpack.c: 58, 206
 DIAL
 다이얼
+
+# mame/layout/awpdmd.lay: 1196
+DMD Output Only
+DMD 출력 전용
 
 # emu/layout/vertical.lay: 28 mame/drivers/aerofgt.c: 490, 560 mame/drivers/cinemat.c: 933 mame/drivers/cps3.c: 2311 mame/drivers/psikyo4.c: 428, 526, 614 mame/drivers/psikyosh.c: 581, 698, 741 
 Debug
@@ -1988,7 +2080,7 @@ OSD 화면 표시
 
 # emu/ui.c: 1417
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
-하나 이상의 롬/CHD가 맞지 않습니다. 게임실행이 정확하지 않을 수 있습니다.\n
+하나 이상의 롬/CHD가 맞지 않습니다. 게임이 제대로 실행되지 않을 수 있습니다.\n
 
 # mame/drivers/fgoal.c: 252 
 Options
@@ -2004,11 +2096,7 @@ Other Controls
 
 # emu/ui.c: 1385
 Otherwise, type OK or move the joystick left then right to continue
-아니라면, 키보드자판에서 OK 를 입력하거나 조이스틱을 좌우로 움직여 진행하십시오.
-
-# emu/diimage.c: 291 lib/util/opresolv.c: 551 mess/formats/flopimg.c: 914
-Out of memory
-메모리 부족
+아니라면, 키보드자판에서 OK 를 입력하거나 조이스틱을 좌우로 움직여 진행하십시오. 
 
 # emu/inptport.c: 4729, 4749, 4769
 Out of space
@@ -4016,7 +4104,7 @@ The game requires external artwork files\n
 
 # emu/ui.c: 1429
 The keyboard emulation may not be 100% accurate.\n
-키보드 에뮬레이션이 100 % 정확하지 않을 수도있습니다.\n
+키보드 에뮬레이션이 100 % 정확하지 않을 수도 있습니다.\n
 
 # emu/uimenu.c: 3932
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
@@ -4218,6 +4306,10 @@ UI 회전
 UI Select
 UI 선택
 
+# emu/inpttype.h: 675
+UI Toggle
+UI 토글
+
 # emu/inpttype.h: 657
 UI Up
 UI 위
@@ -4374,6 +4466,10 @@ Video Options
 View
 보기
 
+# emu/uimenu.c: 3804
+Visible Delay
+표시 지연
+
 # mame/drivers/cps1.c: 2842 mame/drivers/ms32.c: 728, 774, 822 mame/drivers/pgm.c: 1208 mame/drivers/pinkiri8.c: 755, 890 mame/drivers/ssv.c: 1701, 1877 mame/drivers/tetrisp2.c: 636
 Voice
 음성
@@ -4422,9 +4518,29 @@ Zoom = %d
 Zoom Auto
 자동 확대
 
+# emu/uiimage.c: 659
+[DIR]
+[디렉토리]
+
+# emu/uiimage.c: 654
+[DRIVE]
+[드라이브]
+
+# emu/uiimage.c: 664
+[FILE]
+[파일]
+
+# emu/uiimage.c: 645
+[create]
+[생성]
+
 # emu/uiimage.c: 641 
 [empty slot]
 [빈 슬롯]
+
+# emu/uiimage.c: 649
+[software list]
+[소프트웨어 목록]
 
 # emu/video.c: 634
 \n%d partial updates
@@ -4449,18 +4565,6 @@ Zoom Auto
 # emu/ui.c: 1489
 \n\nType OK or move the joystick left then right to continue
 \n\nOK를 입력하거나 조이스틱을 좌우로 움직여 진행하십시오.
-
-# emu/romload.c: 504
-\tInvalid %s checksum treated as 0 (check leading zeros)\n
-\t0으로 처리되는 잘못된 %s 체크섬 \n
-
-# emu/clifront.c: 90
-all available info on driver in XML format
-이용가능한 모든 드라이버 정보(XML 포맷)
-
-# emu/emuopts.c: 127
-amount to scale the screen brightness when paused
-일시 정지 시의 화면 밝기
 
 # emu/emucore.h: 206
 assert: %s:%d: %s
@@ -4732,7 +4836,7 @@ enable the use of external samples if available
 
 # emu/emuopts.c: 100
 enable throttling to keep game running in sync with real time
-게임이 실시간으로 실행되도록 감속 기능 사용
+실제의 시간과 게임실행 속도를 같게하기 위해서 제한속도를 설정 
 
 # emu/emuopts.c: 179
 enable/disable debugger
@@ -4744,11 +4848,11 @@ enable/disable local language game list
 
 # emu/emuopts.c: 145
 enable/disable volume auto adjust
-음량 자동조절 사용/사용안함
+자동음량조절 사용/사용안함
 
 # emu/emuopts.c: 158
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
-움직임을 무시할 조이스틱 축 초과 범위 (0.0 가운데, 1.0 끝)
+조이스틱의 입력을 무시하는 영역의 축 초과 범위 (0.0 중앙, 1.0 밖)
 
 # emu/clifront.c: 529
 error: invalid value for language: %s\nUse %s\n
@@ -4760,7 +4864,7 @@ error: invalid value for palette: %s\n
 
 # emu/emuopts.c: 156
 explicit joystick map, or auto to auto-select
-정확한 조이스틱 맵, 또는 자동을 자동 선택으로
+명시적으로 조이스틱 맵을 지정, 또는 auto를 지정해서 자동선택 
 
 # emu/video.c: 618
 fast 
@@ -4788,7 +4892,7 @@ error.log 파일 생성
 
 # emu/emuopts.c: 78
 high score database name
-점수 데이터베이스 이름
+하이스코어 데이터베이스 파일명
 
 # emu/emuopts.c: 129
 image enhancement effect
@@ -4808,7 +4912,7 @@ is bad\n
 
 # emu/clifront.c: 961, 1370
 is best available\n
- 이용 가능한 최적\n
+ 는 현재 최적의 상태\n
 
 # emu/clifront.c: 956, 1365
 is good\n
@@ -4828,7 +4932,15 @@ list optional samples for a driver
 
 # emu/clifront.c: 96
 list required roms for a driver
-드라이버의 필요 롬 목록
+드라이버에 필요한 롬목록 표시
+
+# emu/devimage.c: 415, 417 emu/machine.c: 804
+load
+읽기
+
+# emu/devimage.c: 430, 432 emu/machine.c: 803
+loaded
+읽음
 
 # emu/emuopts.c: 204
 main background color
@@ -4836,7 +4948,7 @@ main background color
 
 # emu/inputseq.c: 433
 n/a
-이용불가
+없음
 
 # emu/inputseq.c: 451
 not
@@ -4844,19 +4956,19 @@ not
 
 # emu/emuopts.c: 99
 number of emulated seconds to run before automatically exiting
-자동 종료 전에 실행할 시간(초)
+지정한 시간(초)이 경과후에 자동적으로 종료
 
 # emu/emuopts.c: 87
 optional filename to write a MNG movie of the current session
-현재 세션에 사용할 MNG 파일명
+지정한 파일명으로 현재의 세션을 MNG동영상에 기록 
 
 # emu/emuopts.c: 89
 optional filename to write a WAV file of the current session
-현재 세션에 사용할 WAV 파일명
+지정한 파일명으로 현재의 세션을 WAV사운드에 기록  
 
 # emu/emuopts.c: 88
 optional filename to write an AVI movie of the current session
-현재 세션의 AVI 동영상 저장을 위한 부가 파일명
+ 지정한 파일명으로 현재의 세션을 AVI동영상에 기록 
 
 # emu/inputseq.c: 449
 or
@@ -4882,6 +4994,10 @@ path to cheat files
 path to controller definitions
 콘트롤러 설정 파일 경로
 
+# emu/emuopts.c: 52
+path to crosshair files
+십자표적 파일 경로
+
 # emu/emuopts.c: 50
 path to font files
 폰트 파일 경로
@@ -4904,7 +5020,7 @@ path to localized languages and datafiles
 
 # emu/emuopts.c: 46
 path to samplesets
-샘플셋 경로
+샘플파일 경로
 
 # emu/video.c: 614
 paused
@@ -4924,7 +5040,7 @@ playing
 
 # emu/emuopts.c: 148
 preconfigure for specified controller
-특정 입력기를 위한 기본 설정
+콘트롤러 지정
 
 # emu/emuopts.c: 189
 quit game with confirmation
@@ -4968,7 +5084,7 @@ rotate screen counterclockwise 90 degrees
 
 # emu/emuopts.c: 107
 rotate the game screen according to the game's orientation needs it
-게임상 필요에 따라 게임 화면 회전
+게임상 필요에 따라 게임화면 회전
 
 # emu/layout/snap.lay: 3, 9, 15, 21, 27, 33, 39, 45
 s%d
@@ -4986,9 +5102,17 @@ sampleset \"%s\" not found!\n
 sampleset \"%s\" not supported!\n
 샘플셋 \"%s\\ 지원 안됨!\n
 
+# emu/machine.c: 804
+save
+저장
+
+# emu/machine.c: 803 emu/video/v9938.c: 1413 mame/video/konamiic.c: 1322, 2431, 2891, 3465, 3702 mame/video/konicdev.c: 2556, 3192, 3776, 4026
+saved
+저장됨
+
 # emu/emuopts.c: 83
 saved state to load
-불러올 상태 저장
+저장된 파일을 읽음
 
 # emu/uimenu.c: 3260
 scale effect: %s\n
@@ -4996,7 +5120,7 @@ scale effect: %s\n
 
 # emu/video.c: 1688
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
-\"%s\" 화면효과는 15 및 32 에서 지원되지 않습니다. 화면효과를 사용하지 않습니다.
+\"%s\" 화면효과는 15비트색상, 32비트색상 모두에서 지원되지 않습니다. 화면효과를 사용하지 않습니다.
 
 # emu/emuopts.c: 180
 script for debugger
@@ -5008,11 +5132,11 @@ select the system BIOS to use
 
 # emu/emuopts.c: 223
 select translation language
-번역 언어 선택
+사용할 언어 선택
 
 # emu/emuopts.c: 98
 set frameskip to fixed value, 0-10 (autoframeskip must be disabled)
-프레임스킵을 고정값으로 설정, 0-10 (자동 프레임스킵이 꺼져 있어야 함)
+프레임스킵을 고정값으로 설정, 0-10 (자동 프레임스킵은 무효)
 
 # emu/emuopts.c: 141
 set sound output sample rate
@@ -5028,7 +5152,7 @@ set vector flicker effect
 
 # emu/clifront.c: 91
 short name, full name
-짧은 이름, 전체 이름
+게임 디렉토리명+게임의 풀 네임을 표시
 
 # emu/clifront.c: 94
 show \"brothers\", or other drivers from same sourcefile
@@ -5056,7 +5180,7 @@ skip %d/%d
 
 # emu/emuopts.c: 187
 skip displaying the information screen at startup
-시작시 정보 화면 표시 건너뛰기
+시작시 정보화면 표시 건너뛰기
 
 # emu/emuopts.c: 140 emu/emuopts.h: 137 emu/validity.c: 99 mame/drivers/segas16b.c: 987 
 sound
@@ -5064,11 +5188,11 @@ sound
 
 # emu/emuopts.c: 143
 sound volume in decibels (-32 min, 0 max)
-사운드 음량 (최소 -32, 최대 0)
+사운드 음량을 데시벨로 지정 (최소 -32, 최대 0)
 
 # emu/emuopts.c: 159
 specifies whether to use a natural keyboard or not
-키보드 사용할지 여부를 지정
+키보드를 드래도 사용할지 여부를 지정
 
 # emu/emuopts.c: 91
 specify snapshot/movie resolution (<width>x<height>) or 'auto' to use minimal size 
@@ -5080,11 +5204,11 @@ specify snapshot/movie view or 'internal' to use internal pixel-aspect views
 
 # mess/uimess.c: 146
 stopped
-중지됨
+정지
 
 # emu/emuopts.c: 37
 switch drivers
-드라이버 변경
+사용하는 드라이버 변경
 
 # emu/emuopts.c: 195
 transparency in-game UI [0-255]
@@ -5092,34 +5216,30 @@ transparency in-game UI [0-255]
 
 # emu/machine.c: 398
 unable to open log file
-로그 파일을 불러올 수 없습니다
+로그 파일이 열리지 않습니다.
 
 # emu/emuopts.c: 134
 use antialiasing when drawing vectors
-벡터 표시에 안티얼라이징 사용
+벡터 드로잉에 안티얼라이징 사용
+
+# emu/emuopts.c: 181
+use the internal debugger for debugging
+디버깅을 위해 내부 디버거를 사용
+
+# mess/mess.c: 120
+use the new MESS UI
+새로운 MESS 인터페이스 사용
 
 # emu/emuopts.c: 32, 34
 writes configuration to (driver).ini on exit
-종료시 설정을 (드라이버).ini 에 기록
+종료시 설정 (드라이버).ini 에 출력
 
 # emu/clifront.c: 104
 year, manufacturer and full name
 제작년도, 제작사와 전체 이름
 
-# emu/clifront.c: 1267
- SYSTEM      DEVICE NAME (brief)   IMAGE FILE EXTENSIONS SUPPORTED    \n
-
-
 # emu/clifront.c: 1303
 %-13s(none)\n
-
-
-# emu/romload.c: 1193
-%s CHD ERROR: %s\n
-
-
-# emu/romload.c: 1228
-%s DIFF CHD ERROR: %s\n
 
 
 # mame/layout/drwho.lay: 1575
@@ -5130,14 +5250,6 @@ AWP Simulated Video (Lamp Matrix and Reels)
 AWP Simulated Video (Reels and Lamp Matrix)
 
 
-# emu/cheat.c: 678
-Activated\n %s = %d (0x%X)
-
-
-# emu/cheat.c: 676
-Activated\n %s = %s
-
-
 # mame/layout/bfm_sc1.lay: 2086, 4178
 Adder %d Output Only (%d:%d, No Artwork)
 
@@ -5146,32 +5258,12 @@ Adder %d Output Only (%d:%d, No Artwork)
 All
 
 
-# emu/uimenu.c: 2710
-All cheats reloaded
-
-
 # emu/inpttype.h: 116
 Book-Keeping
 
 
-# mame/drivers/neodrvr.c: 9047 mame/drivers/neogeo.c: 1235
-COMM Setting (Cabinet No.)
-
-
-# mame/drivers/neodrvr.c: 9052 mame/drivers/neogeo.c: 1235
-COMM Setting (Link Enable)
-
-
 # emu/devcpu.c: 68 
 CPU
-
-
-# mess/devices/cartslot.c: 450, 451
-Cartslot
-
-
-# mess/devices/chd_cd.c: 173, 174
-Cdrom
 
 
 # mess/machine/ctronics.c: 136, 137
@@ -5180,58 +5272,6 @@ Centronics
 
 # emu/uimenu.c: 2697
 Cheat Comment:\n%s
-
-
-# emu/cheat.c: 484
-Cheats Disabled
-
-
-# emu/cheat.c: 496
-Cheats Enabled
-
-
-# emu/inpttype.h: 453
-Coin 10
-
-
-# emu/inpttype.h: 454
-Coin 11
-
-
-# emu/inpttype.h: 455
-Coin 12
-
-
-# emu/inpttype.h: 452
-Coin 9
-
-
-# emu/uimenu.c: 1612
-Crosshair Options
-
-
-# emu/inptport.c: 614
-Cursor Down
-
-
-# emu/inptport.c: 611
-Cursor Left
-
-
-# emu/inptport.c: 612
-Cursor Right
-
-
-# emu/inptport.c: 613
-Cursor Up
-
-
-# emu/inputseq.c: 490, 545 emu/uimenu.c: 3779
-DEFAULT
-
-
-# mame/layout/awpdmd.lay: 1196
-DMD Output Only
 
 
 # emu/inpttype.h: 106 mame/drivers/gei.c: 618 mame/drivers/mpu4drvr.c: 1441 mame/drivers/murogem.c: 119 mame/drivers/sms.c: 316 mame/drivers/statriv2.c: 307
@@ -5420,6 +5460,10 @@ Name:             Description:\n
 
 # emu/clifront.c: 654
 Name:            Clone of:\n
+
+
+# emu/diimage.c: 291 lib/util/opresolv.c: 551 mess/formats/flopimg.c: 914
+Out of memory
 
 
 # emu/uimenu.c: 3778
@@ -5646,10 +5690,6 @@ UI Display Comment
 UI Paste Text
 
 
-# emu/inpttype.h: 675
-UI Toggle
-
-
 # emu/machine.c: 818
 Unable to %s due to pending anonymous timers. See error.log for details.
 
@@ -5658,28 +5698,16 @@ Unable to %s due to pending anonymous timers. See error.log for details.
 Up
 
 
-# emu/uimenu.c: 3804
-Visible Delay
+# emu/romload.c: 504
+\tInvalid %s checksum treated as 0 (check leading zeros)\n
 
 
-# emu/uiimage.c: 659
-[DIR]
+# emu/clifront.c: 90
+all available info on driver in XML format
 
 
-# emu/uiimage.c: 654
-[DRIVE]
-
-
-# emu/uiimage.c: 664
-[FILE]
-
-
-# emu/uiimage.c: 645
-[create]
-
-
-# emu/uiimage.c: 649
-[software list]
+# emu/emuopts.c: 127
+amount to scale the screen brightness when paused
 
 
 # emu/emuopts.c: 93
@@ -5698,35 +5726,7 @@ list available media for the system
 list known software for the system
 
 
-# emu/devimage.c: 415, 417 emu/machine.c: 804
-load
-
-
-# emu/devimage.c: 430, 432 emu/machine.c: 803
-loaded
-
-
-# emu/emuopts.c: 52
-path to crosshair files
-
-
-# emu/machine.c: 804
-save
-
-
-# emu/machine.c: 803 emu/video/v9938.c: 1413 mame/video/konamiic.c: 1322, 2431, 2891, 3465, 3702 mame/video/konicdev.c: 2556, 3192, 3776, 4026
-saved
-
-
 # emu/emuopts.c: 160
 specifies the key used to toggle between full and partial UI mode
-
-
-# emu/emuopts.c: 181
-use the internal debugger for debugging
-
-
-# mess/mess.c: 120
-use the new MESS UI
 
 
