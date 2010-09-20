@@ -40,8 +40,8 @@ extern unsigned char *pce_user_ram; /* scratch RAM at F8 */
 extern UINT8 *pce_cd_ram;
 DEVICE_IMAGE_LOAD(pce_cart);
 NVRAM_HANDLER( pce );
-extern WRITE8_HANDLER ( pce_joystick_w );
-extern READ8_HANDLER ( pce_joystick_r );
+WRITE8_HANDLER ( pce_mess_joystick_w );
+ READ8_HANDLER ( pce_mess_joystick_r );
 
 extern const msm5205_interface pce_cd_msm5205_interface;
 WRITE8_HANDLER( pce_cd_bram_w );
@@ -53,10 +53,10 @@ WRITE8_HANDLER( pce_cd_acard_wram_w );
 READ8_HANDLER( pce_cd_acard_wram_r );
 
 extern struct pce_struct pce;
-DRIVER_INIT( pce );
+DRIVER_INIT( pce_mess );
 DRIVER_INIT( tg16 );
 DRIVER_INIT( sgx );
-MACHINE_START( pce_mess );
+MACHINE_START( pce );
 MACHINE_RESET( pce_mess );
 
 

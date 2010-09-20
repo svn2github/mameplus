@@ -176,8 +176,8 @@ static UINT8 *cartridge_ram;
 #define JOY_CLOCK   0x01
 #define JOY_RESET   0x02
 
-//static int joystick_port_select;        /* internal index of joystick ports */
-//static int joystick_data_select;        /* which nibble of joystick data we want */
+static int joystick_port_select;        /* internal index of joystick ports */
+static int joystick_data_select;        /* which nibble of joystick data we want */
 
 /* prototypes */
 static void pce_cd_init( running_machine *machine );
@@ -330,12 +330,10 @@ DEVICE_IMAGE_LOAD(pce_cart)
 	return 0;
 }
 
-#if 0
-DRIVER_INIT( pce )
+DRIVER_INIT( pce_mess )
 {
 	pce.io_port_options = PCE_JOY_SIG | CONST_SIG;
 }
-#endif
 
 DRIVER_INIT( tg16 )
 {
@@ -347,7 +345,7 @@ DRIVER_INIT( sgx )
 	pce.io_port_options = PCE_JOY_SIG | CONST_SIG;
 }
 
-MACHINE_START( pce_mess ) 
+MACHINE_START( pce ) 
 {
 	pce_cd_init( machine );
 }
@@ -375,9 +373,8 @@ MACHINE_RESET( pce_mess )
 	pce_acard = input_port_read(machine, "A_CARD") & 1;
 }
 
-#if 0
 /* todo: how many input ports does the PCE have? */
-WRITE8_HANDLER ( pce_joystick_w )
+WRITE8_HANDLER ( pce_mess_joystick_w )
 {
 	int joy_i;
 	UINT8 joy_type = input_port_read(space->machine,"JOY_TYPE");
@@ -406,7 +403,7 @@ WRITE8_HANDLER ( pce_joystick_w )
     }
 }
 
-READ8_HANDLER ( pce_joystick_r )
+READ8_HANDLER ( pce_mess_joystick_r )
 {
 	static const char *const joyname[4][5] = {
 		{ "JOY_P1", "JOY_P2", "JOY_P3", "JOY_P4", "JOY_P5" },
@@ -453,7 +450,6 @@ READ8_HANDLER ( pce_joystick_r )
 
 	return (ret);
 }
-#endif
 
 NVRAM_HANDLER( pce )
 {
@@ -1032,6 +1028,9 @@ static void pce_cd_update( running_machine *machine )
 			pce_cd.scsi_MSG = pce_cd.scsi_REQ = pce_cd.scsi_ATN = 0;
 			pce_cd.cd_motor_on = 0;
 			pce_cd.selected = 0;
+			pce_cd.cdda_status = PCE_CD_CDDA_OFF;
+			cdda_stop_audio( machine->device( "cdda" ) );
+			timer_adjust_oneshot(pce_cd.adpcm_dma_timer, attotime_never, 0); // stop ADPCM DMA here
 		}
 		pce_cd.scsi_last_RST = pce_cd.scsi_RST;
 	}
@@ -1375,6 +1374,7 @@ WRITE8_HANDLER( pce_cd_intf_w )
 		pce_cd.scsi_SEL = 1;
 		pce_cd_update(space->machine);
 		pce_cd.scsi_SEL = 0;
+		timer_adjust_oneshot(pce_cd.adpcm_dma_timer, attotime_never, 0); // stop ADPCM DMA here
 		break;
 	case 0x01:	/* CDC command / status / data */
 		break;
@@ -1411,16 +1411,11 @@ WRITE8_HANDLER( pce_cd_intf_w )
 		pce_cd_set_adpcm_ram_byte(space->machine, data);
 		break;
 	case 0x0B:	/* ADPCM DMA control */
-		if ( ! ( pce_cd.regs[0x0B] & 0x03 ) && ( data & 0x03 ) )
+		if ( data & 0x03 )
 		{
 			/* Start CD to ADPCM transfer */
 			timer_adjust_periodic(pce_cd.adpcm_dma_timer, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND * 2048 ), 0, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND * 2048 ) );
 			pce_cd.regs[0x0c] |= 4;
-		}
-		if ( ( pce_cd.regs[0x0B] & 0x03 ) && ! ( data & 0x03 ) )
-		{
-			/* Stop CD to ADPCM transfer (?) */
-			timer_adjust_oneshot(pce_cd.adpcm_dma_timer, attotime_never, 0);
 		}
 		break;
 	case 0x0C:	/* ADPCM status */
