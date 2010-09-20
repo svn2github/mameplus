@@ -1362,6 +1362,10 @@ Able Corp, Ltd.
 Accept Ltd.
 
 
+# Piccolo Poker
+Admiral - Novomatic
+
+
 # Twin Action
 Afega
 
@@ -1574,6 +1578,10 @@ Gameace
 Gaps Inc.
 
 
+# Swiss Poker ('50 SG-.10', V2.5)
+Golden Games
+
+
 # Reactor
 Gottlieb
 
@@ -1714,15 +1722,15 @@ IGT - International Gaming Technology
 IPM
 
 
+# ISG Selection Master Type 2006 BIOS
+ISG
+
+
 # See See Find Out
 Icarus
 
 
 # Multi Fish (021124)
-Igro
-
-
-# Crazy Monkey (031110)
 Igrosoft
 
 
@@ -1792,6 +1800,10 @@ JPM
 
 # Final Tetris
 Jeil Computer System
+
+
+# Jubilee Double-Up Poker
+Jubilee
 
 
 # Blocken (Japan)
@@ -1998,7 +2010,7 @@ Midas
 Midcoin
 
 
-# Touchmaster 2000 (v4.02 Standard)
+# Touchmaster 2000 Plus (v4.63 Standard)
 Midway Games Inc.
 
 

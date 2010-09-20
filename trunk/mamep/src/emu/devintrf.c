@@ -145,7 +145,7 @@ void device_list::start_all()
 		nextdevice = device->next();
 		try
 		{
-			mame_printf_verbose(_("Starting %s '%s'\n"), device->name(), device->tag());
+			mame_printf_verbose(_("Starting %s '%s'\n"), _(device->name()), device->tag());
 			device->start();
 		}
 

@@ -6,11 +6,11 @@
 Assign joystick %s to player %d\n
 Assegnato joystick %s al giocatore %d\n
 
-# osd/windows/winmain.c: 326
+# osd/windows/winmain.c: 329
 DIRECT3D-SPECIFIC OPTIONS
 OPZIONI SPECIFICHE DEL DIRECT3D
 
-# osd/windows/winmain.c: 322
+# osd/windows/winmain.c: 325
 DIRECTDRAW-SPECIFIC OPTIONS
 OPZIONI SPECIFICHE DEL DIRECTDRAW
 
@@ -382,19 +382,19 @@ DirectInput: Impossibile elencare i mouse (result=%08X)\n
 DirectInput: Using DirectInput %d\n
 DirectInput: Uso delle DirectInput %d\n
 
-# osd/windows/sound.c: 399
+# osd/windows/sound.c: 405
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: Buffer primario: %d Hz, %d bits, %d canali\n
 
-# osd/windows/sound.c: 413
+# osd/windows/sound.c: 419
 Error creating DirectSound stream buffer: %08x\n
 Errore nella creazione del buffer del flusso DirectSound: %08x\n
 
-# osd/windows/sound.c: 288
+# osd/windows/sound.c: 294
 Error creating DirectSound: %08x\n
 Errore creazione DirectSound: %08x\n
 
-# osd/windows/sound.c: 380
+# osd/windows/sound.c: 386
 Error creating primary DirectSound buffer: %08x\n
 Errore nella creazione del buffer primario DirectSound: %08x\n
 
@@ -406,7 +406,7 @@ Errore nella creazione del render per finestra %d
 Error creating vertex buffer (%08X)
 Errore nella creazione del buffer vertice (%08X)
 
-# osd/windows/sound.c: 297
+# osd/windows/sound.c: 303
 Error getting DirectSound capabilities: %08x\n
 Errore acquisendo le capacità DirectSound: %08x\n
 
@@ -422,23 +422,23 @@ Errore nella rilevazione dell'identificatore per la periferica\n
 Error getting mode for adapter #%d\n
 Errore nella rilevazione della modalità dell'adattatore #%d\n
 
-# osd/windows/sound.c: 396
+# osd/windows/sound.c: 402
 Error getting primary DirectSound buffer format: %08x\n
 Errore nella rilevazione del formato del buffer primario DirectSound: %08x\n
 
-# osd/windows/sound.c: 421
+# osd/windows/sound.c: 427
 Error locking DirectSound stream buffer: %08x\n
 Errore nel bloccaggio del buffer del flusso DirectSound: %08x\n
 
-# osd/windows/sound.c: 334
+# osd/windows/sound.c: 340
 Error playing: %08x\n
 Errore eseguendo: %08x\n
 
-# osd/windows/sound.c: 305
+# osd/windows/sound.c: 311
 Error setting DirectSound cooperative level: %08x\n
 Errore impostando livello cooperativo DirectSound: %08x\n
 
-# osd/windows/sound.c: 388
+# osd/windows/sound.c: 394
 Error setting primary DirectSound buffer format: %08x\n
 Errore nell'impostare il formato del buffer primario DirectSound: %08x\n
 
@@ -458,7 +458,7 @@ Errore: La periferica non ha i requisiti minimi per il rendering Direct3D\n
 Error: unable to configure a screen texture format\n
 Errore: impossibile configurare il formato delle textures dello schermo\n
 
-# osd/windows/winmain.c: 358
+# osd/windows/winmain.c: 361
 FULL SCREEN OPTIONS
 OPZIONI TUTTO SCHERMO
 
@@ -478,7 +478,7 @@ Impossibile creare window thread
 Failed to create window thread ready event
 Impossibile creare window thread evento pronto
 
-# osd/windows/winmain.c: 371
+# osd/windows/winmain.c: 376
 INPUT DEVICE OPTIONS
 OPZIONI PERIFERICA INPUT\t
 
@@ -498,7 +498,7 @@ Valore video errato %s; ritorno al gdi\n
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - Schermo %d
 
-# osd/windows/winmain.c: 331
+# osd/windows/winmain.c: 334
 PER-WINDOW VIDEO OPTIONS
 OPZIONI VIDEO PER-FINESTRA
 
@@ -510,11 +510,11 @@ Modalità video indicata non supportata dalla periferica %s\n
 RawInput: APIs detected\n
 RawInput: APIs rilevato\n
 
-# osd/windows/sound.c: 148
+# osd/windows/sound.c: 152
 Sound buffer: overflows=%d underflows=%d\n
 Buffer sonoro: overflows=%d underflows=%d\n 
 
-# osd/windows/sound.c: 146
+# osd/windows/sound.c: 150
 Sound: buffer overflows=%d underflows=%d\n
 Audio: buffer overflows=%d underflows=%d\n
 
@@ -566,19 +566,19 @@ Usando %s effetto scal.\n
 Video: Monitor %p = \"%s\" %s\n
 Video: Monitor %p = \"%s\" %s\n
 
-# osd/windows/winmain.c: 296
+# osd/windows/winmain.c: 298
 WINDOWS DEBUGGING OPTIONS
 OPZIONI DEBUGGING WINDOWS
 
-# osd/windows/winmain.c: 303
+# osd/windows/winmain.c: 305
 WINDOWS PERFORMANCE OPTIONS
 WINDOWS OPZIONI PRESTAZIONI
 
-# osd/windows/winmain.c: 366
+# osd/windows/winmain.c: 369
 WINDOWS SOUND OPTIONS
 WINDOWS OPZIONI AUDIO
 
-# osd/windows/winmain.c: 310
+# osd/windows/winmain.c: 313
 WINDOWS VIDEO OPTIONS
 WINDOWS OPZIONI VIDEO
 
@@ -590,203 +590,203 @@ Attenzione: -nessun video può essere ben impostato senza -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 Attenzione: La periferica potrebbe non gestire bene il rendering Direct3D\n
 
-# osd/windows/winmain.c: 333
+# osd/windows/winmain.c: 336
 aspect ratio for all screens; 'auto' here will try to make a best guess
 rapporti aspetto per tutti gli schermi; 'auto' cercherà la soluzione ottimale
 
-# osd/windows/winmain.c: 338
+# osd/windows/winmain.c: 341
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 rapporti aspetto per il primo schermo; 'auto' cercherà la soluzione ottimale
 
-# osd/windows/winmain.c: 353
+# osd/windows/winmain.c: 356
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 rapporti aspetto per il quarto schermo; 'auto' cercherà la soluzione ottimale
 
-# osd/windows/winmain.c: 343
+# osd/windows/winmain.c: 346
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 rapporti aspetto per il secondo schermo; 'auto' cercherà la soluzione ottimale
 
-# osd/windows/winmain.c: 348
+# osd/windows/winmain.c: 351
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 rapporti aspetto per il terzo schermo; 'auto' cercherà la soluzione ottimale
 
-# osd/windows/winmain.c: 361
+# osd/windows/winmain.c: 364
 brightness value in full screen mode
 valore delle luminosità in modalità Tutto Schermo
 
-# osd/windows/winmain.c: 315
+# osd/windows/winmain.c: 318
 constrain to the proper aspect ratio
 obbliga l'utilizzo dei rapporti aspetto corretti
 
-# osd/windows/winmain.c: 362
+# osd/windows/winmain.c: 365
 contrast value in full screen mode
 valore del contrasto in modalità Tutto Schermo
 
-# osd/windows/winmain.c: 314
+# osd/windows/winmain.c: 317
 default to maximized windows; otherwise, windows will be minimized
 predefinito per le finestre ingrandite; oppure le finestre saranno ridotte a icona
 
-# osd/windows/winmain.c: 328
+# osd/windows/winmain.c: 331
 enable bilinear filtering on screen output
 attiva il filtro bilineare sull'uscita schermo
 
-# osd/windows/winmain.c: 372
+# osd/windows/winmain.c: 377
 enable dual lightgun input
 attiva input doppia pistola
 
-# osd/windows/winmain.c: 323
+# osd/windows/winmain.c: 326
 enable hardware stretching
 attiva l'allargamento hardware
 
-# osd/windows/winmain.c: 305
+# osd/windows/winmain.c: 307
 enable multithreading; this enables rendering and blitting on a separate thread
 attiva il multithreading; questo attiverà il rendering e il blitting su due processi separati
 
-# osd/windows/winmain.c: 360
+# osd/windows/winmain.c: 363
 enable resolution switching
 attiva scambio di risoluzione
 
-# osd/windows/winmain.c: 359
+# osd/windows/winmain.c: 362
 enable triple buffering
 attiva triplo buffering
 
-# osd/windows/winmain.c: 319
+# osd/windows/winmain.c: 322
 enable using the start of VBLANK for throttling instead of the game time
 attiva usando l'inizio di VBLANK per accelerare al posto del tempo di gioco
 
-# osd/windows/winmain.c: 318
+# osd/windows/winmain.c: 321
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 attiva l'attesa per l'inizio di VBLANK prima del flipping degli schermi; riduce gli effetti 'strappo'
 
-# osd/windows/winmain.c: 313
+# osd/windows/winmain.c: 316
 enable window mode; otherwise, full screen mode is assumed
 attiva la modalità finestra; oppure, sarà attivata le modalità a Tutto Schermo
 
-# osd/windows/winmain.c: 332
+# osd/windows/winmain.c: 335
 explicit name of all screens; 'auto' here will try to make a best guess
 esplicita nome di tutti gli schermi; 'auto' cercherà il più adatto
 
-# osd/windows/winmain.c: 337
+# osd/windows/winmain.c: 340
 explicit name of the first screen; 'auto' here will try to make a best guess
 inserisce il nome del primo schermo; 'auto' cercherà la soluzione ottimale
 
-# osd/windows/winmain.c: 352
+# osd/windows/winmain.c: 355
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 inserisce il nome del quarto schermo; 'auto' cercherà la soluzione ottimale
 
-# osd/windows/winmain.c: 342
+# osd/windows/winmain.c: 345
 explicit name of the second screen; 'auto' here will try to make a best guess
 inserisce il nome del secondo schermo; 'auto' cercherà la soluzione ottimale
 
-# osd/windows/winmain.c: 347
+# osd/windows/winmain.c: 350
 explicit name of the third screen; 'auto' here will try to make a best guess
 inserisce il nome del terzo schermo; 'auto' cercherà la soluzione ottimale
 
-# osd/windows/winmain.c: 363
+# osd/windows/winmain.c: 366
 gamma value in full screen mode
 valore della gamma in modalità a Tutto Schermo
 
-# osd/windows/winmain.c: 317
+# osd/windows/winmain.c: 320
 name of a PNG file to use for visual effects, or 'none'
 nome del file PNG usato per gli effetti visivi, o 'nessuno'
 
-# osd/windows/winmain.c: 312
+# osd/windows/winmain.c: 315
 number of screens to create; usually, you want just one
 numero degli schermi da creare; normalmente è solo uno
 
-# osd/windows/winmain.c: 297
+# osd/windows/winmain.c: 299
 output error.log data to the system debugger
 uscita dati error.log come debugger di sistema
 
-# osd/windows/winmain.c: 334
+# osd/windows/winmain.c: 337
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 risoluzione preferita per tutti gli schermi; il formato è <width>x<height>[@<refreshrate>] o 'auto'
 
-# osd/windows/winmain.c: 339
+# osd/windows/winmain.c: 342
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 risoluzione preferita del primo schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
 
-# osd/windows/winmain.c: 354
+# osd/windows/winmain.c: 357
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 risoluzione preferita del quarto schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
 
-# osd/windows/winmain.c: 344
+# osd/windows/winmain.c: 347
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 risoluzione preferita del secondo schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
 
-# osd/windows/winmain.c: 349
+# osd/windows/winmain.c: 352
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 risoluzione preferita del terzo schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
 
-# osd/windows/winmain.c: 335
+# osd/windows/winmain.c: 338
 preferred view for all screens
 visuale preferita per tutti gli schermi
 
-# osd/windows/winmain.c: 340
+# osd/windows/winmain.c: 343
 preferred view for the first screen
 visuale preferita per il primo schermo
 
-# osd/windows/winmain.c: 355
+# osd/windows/winmain.c: 358
 preferred view for the fourth screen
 visuale preferita per il quarto schermo
 
-# osd/windows/winmain.c: 345
+# osd/windows/winmain.c: 348
 preferred view for the second screen
 visuale preferita per il secondo schermo
 
-# osd/windows/winmain.c: 350
+# osd/windows/winmain.c: 353
 preferred view for the third screen
 visuale preferita per il terzo schermo
 
-# osd/windows/winmain.c: 316
+# osd/windows/winmain.c: 319
 scale screen rendering by this amount in software
 scalare rendering dello schermo di questo numero in software
 
-# osd/windows/winmain.c: 367
+# osd/windows/winmain.c: 370
 set audio latency (increase to reduce glitches)
 imposta latenza audio (aumenta per ridurre salti)
 
-# osd/windows/winmain.c: 374
+# osd/windows/winmain.c: 379
 set joystick ID (Player1)
 imposta ID joystick (Giocatore1)
 
-# osd/windows/winmain.c: 375
+# osd/windows/winmain.c: 380
 set joystick ID (Player2)
 imposta ID joystick (Giocatore 2)
 
-# osd/windows/winmain.c: 376
+# osd/windows/winmain.c: 381
 set joystick ID (Player3)
 imposta ID joystick (Giocatore3)
 
-# osd/windows/winmain.c: 377
+# osd/windows/winmain.c: 382
 set joystick ID (Player4)
 imposta ID joystick (Giocatore 4)
 
-# osd/windows/winmain.c: 378
+# osd/windows/winmain.c: 383
 set joystick ID (Player5)
 imposta ID joystick (Giocatore5) 
 
-# osd/windows/winmain.c: 379
+# osd/windows/winmain.c: 384
 set joystick ID (Player6)
 imposta ID joystick (Giocatore6)
 
-# osd/windows/winmain.c: 380
+# osd/windows/winmain.c: 385
 set joystick ID (Player7)
 imposta ID joystick (Giocatore7)
 
-# osd/windows/winmain.c: 381
+# osd/windows/winmain.c: 386
 set joystick ID (Player8)
 imposta ID joystick (Giocatore8)
 
-# osd/windows/winmain.c: 327
+# osd/windows/winmain.c: 330
 specify the preferred Direct3D version (8 or 9)
 specificare la versione Direct3D preferita (8 o 9)
 
-# osd/windows/winmain.c: 304
+# osd/windows/winmain.c: 306
 thread priority for the main game thread; range from -15 to 1
 priorità del processo per il gioco principale; varia da -15 a 1
 
-# osd/windows/winmain.c: 311
+# osd/windows/winmain.c: 314
 video output method: none, gdi, ddraw, or d3d
 metodo di uscita video: nessuno, gdi, ddraw, o d3d
 
@@ -838,7 +838,7 @@ metodo di uscita video: nessuno, gdi, ddraw, o d3d
 &File
 
 
-# mess/osd/windows/menu.c: 2048 mess/osd/windows/mess.rc: 71
+# mess/osd/windows/menu.c: 2056 mess/osd/windows/mess.rc: 71
 &Frameskip
 
 
@@ -866,7 +866,7 @@ metodo di uscita video: nessuno, gdi, ddraw, o d3d
 &Miscellaneous Inputs...
 
 
-# mess/osd/windows/menu.c: 1221, 1437, 2048 mess/osd/windows/mess.rc: 44 
+# mess/osd/windows/menu.c: 1221, 1437, 2056 mess/osd/windows/mess.rc: 44 
 &Options
 
 
@@ -882,7 +882,7 @@ metodo di uscita video: nessuno, gdi, ddraw, o d3d
 &Video
 
 
-# mess/osd/windows/menu.c: 2058
+# mess/osd/windows/menu.c: 2066
 About %s (%s)...
 
 
@@ -1078,7 +1078,7 @@ Unlimited
 Unmount
 
 
-# osd/windows/winmain.c: 506
+# osd/windows/winmain.c: 525
 Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 
 
@@ -1086,27 +1086,27 @@ Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 [empty slot]
 
 
-# osd/windows/winmain.c: 368
+# osd/windows/winmain.c: 372
 enable audio sync
 
 
-# osd/windows/winmain.c: 307
+# osd/windows/winmain.c: 309
 enable profiling, specifying the stack depth to track
 
 
-# osd/windows/winmain.c: 298
+# osd/windows/winmain.c: 300
 force the program to terminate if no updates within specified number of seconds
 
 
-# osd/windows/winmain.c: 306
+# osd/windows/winmain.c: 308
 number of processors; this overrides the number the system reports
 
 
-# osd/windows/winmain.c: 300
+# osd/windows/winmain.c: 302
 specifies the font size to use for debugging; defaults to 9 pt
 
 
-# osd/windows/winmain.c: 299
+# osd/windows/winmain.c: 301
 specifies the font to use for debugging; defaults to Lucida Console
 
 

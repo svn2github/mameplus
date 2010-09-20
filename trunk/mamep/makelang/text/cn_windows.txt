@@ -46,7 +46,7 @@
 &File
 文件(&F)
 
-# mess/osd/windows/menu.c: 2048 mess/osd/windows/mess.rc: 71
+# mess/osd/windows/menu.c: 2056 mess/osd/windows/mess.rc: 71
 &Frameskip
 跳帧(&F)
 
@@ -74,7 +74,7 @@
 &Miscellaneous Inputs...
 其他输入(&M)...
 
-# mess/osd/windows/menu.c: 1221, 1437, 2048 mess/osd/windows/mess.rc: 44 
+# mess/osd/windows/menu.c: 1221, 1437, 2056 mess/osd/windows/mess.rc: 44 
 &Options
 选项(&O)
 
@@ -94,7 +94,7 @@
 (primary)
 (主显示器)
 
-# mess/osd/windows/menu.c: 2058
+# mess/osd/windows/menu.c: 2066
 About %s (%s)...
 关于 %s (%s)...
 
@@ -142,11 +142,11 @@ Create...
 Customize Emulated Keyboard...
 自定义模拟键盘...
 
-# osd/windows/winmain.c: 326
+# osd/windows/winmain.c: 329
 DIRECT3D-SPECIFIC OPTIONS
 DIRECT3D 特定选项
 
-# osd/windows/winmain.c: 322
+# osd/windows/winmain.c: 325
 DIRECTDRAW-SPECIFIC OPTIONS
 DIRECTDRAW 特定选项
 
@@ -530,7 +530,7 @@ DirectInput: 无法列举鼠标 (result=%08X)\n
 DirectInput: Using DirectInput %d\n
 DirectInput: 正在使用 DirectInput %d\n
 
-# osd/windows/sound.c: 399
+# osd/windows/sound.c: 405
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 主要缓冲: %d Hz, %d 位, %d 声道\n
 
@@ -546,15 +546,15 @@ Emulated
 Emulated Keyboard
 模拟键盘
 
-# osd/windows/sound.c: 413
+# osd/windows/sound.c: 419
 Error creating DirectSound stream buffer: %08x\n
 创建 DirectSound 流式缓冲时发生错误: %08x\n
 
-# osd/windows/sound.c: 288
+# osd/windows/sound.c: 294
 Error creating DirectSound: %08x\n
 创建 DirectSound 时发生错误: %08x\n
 
-# osd/windows/sound.c: 380
+# osd/windows/sound.c: 386
 Error creating primary DirectSound buffer: %08x\n
 创建主要 DirectSound 缓冲时发生错误: %08x\n
 
@@ -566,7 +566,7 @@ Error creating render target for window %d
 Error creating vertex buffer (%08X)
 创建顶点缓冲时发生错误 (%08X)
 
-# osd/windows/sound.c: 297
+# osd/windows/sound.c: 303
 Error getting DirectSound capabilities: %08x\n
 获取 DirectSound 能力时发生错误: %08x\n
 
@@ -582,23 +582,23 @@ Error getting identifier for device\n
 Error getting mode for adapter #%d\n
 为界面卡取得模式时发生错误 #%d\n
 
-# osd/windows/sound.c: 396
+# osd/windows/sound.c: 402
 Error getting primary DirectSound buffer format: %08x\n
 取得主要 DirectSound 缓冲格式时发生错误: %08x\n
 
-# osd/windows/sound.c: 421
+# osd/windows/sound.c: 427
 Error locking DirectSound stream buffer: %08x\n
 锁定 DirectSound 流式缓冲时发生错误: %08x\n
 
-# osd/windows/sound.c: 334
+# osd/windows/sound.c: 340
 Error playing: %08x\n
 播放时发生错误: %08x\n
 
-# osd/windows/sound.c: 305
+# osd/windows/sound.c: 311
 Error setting DirectSound cooperative level: %08x\n
 设置 DirectSound cooperative level 时发生错误: %08x\n
 
-# osd/windows/sound.c: 388
+# osd/windows/sound.c: 394
 Error setting primary DirectSound buffer format: %08x\n
 设置主要 DirectSound 缓冲格式时发生错误: %08x\n
 
@@ -618,7 +618,7 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 错误: 未能配置画面材质格式\n
 
-# osd/windows/winmain.c: 358
+# osd/windows/winmain.c: 361
 FULL SCREEN OPTIONS
 全屏幕选项
 
@@ -646,7 +646,7 @@ Fast Forward
 Ha&rd Reset
 硬重启(&R)
 
-# osd/windows/winmain.c: 371
+# osd/windows/winmain.c: 376
 INPUT DEVICE OPTIONS
 输入设备选项
 
@@ -676,7 +676,7 @@ Joysticks/Controllers
 
 # osd/windows/window.c: 668
 MAME: %s [%s] - Screen %d
-MAME: %s [%s] - 屏幕 %d
+MAME: %s [%s] - 画面 %d
 
 # mess/osd/windows/mess.rc: 75
 Maximum &Speed
@@ -706,7 +706,7 @@ Off
 On
 打开
 
-# osd/windows/winmain.c: 331
+# osd/windows/winmain.c: 334
 PER-WINDOW VIDEO OPTIONS
 各个画面的视频选项
 
@@ -782,11 +782,11 @@ Show P&rofiler
 Soft &Reset
 软重启(&R)
 
-# osd/windows/sound.c: 148
+# osd/windows/sound.c: 152
 Sound buffer: overflows=%d underflows=%d\n
 声音缓冲: 上限溢位=%d 下限溢位=%d\n
 
-# osd/windows/sound.c: 146
+# osd/windows/sound.c: 150
 Sound: buffer overflows=%d underflows=%d\n
 声音: 缓冲 overflows=%d underflows=%d\n
 
@@ -854,19 +854,19 @@ Using %s scale effect\n
 Video: Monitor %p = \"%s\" %s\n
 视频: 显示器 %p = \"%s\" %s\n
 
-# osd/windows/winmain.c: 296
+# osd/windows/winmain.c: 298
 WINDOWS DEBUGGING OPTIONS
 WINDOWS 调试器选项
 
-# osd/windows/winmain.c: 303
+# osd/windows/winmain.c: 305
 WINDOWS PERFORMANCE OPTIONS
 WUNDOWS 效能选项
 
-# osd/windows/winmain.c: 366
+# osd/windows/winmain.c: 369
 WINDOWS SOUND OPTIONS
 WINDOWS 声音选项
 
-# osd/windows/winmain.c: 310
+# osd/windows/winmain.c: 313
 WINDOWS VIDEO OPTIONS
 WINDOWS 视频选项
 
@@ -878,7 +878,7 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 警告: 设备可能无法正常配合 Direct3D 描绘\n
 
-# osd/windows/winmain.c: 506
+# osd/windows/winmain.c: 525
 Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 警告: numprocessors < 1 并没有意义。将假设为 auto ...\n
 
@@ -886,227 +886,227 @@ Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 [empty slot]
 [空插槽]
 
-# osd/windows/winmain.c: 333
+# osd/windows/winmain.c: 336
 aspect ratio for all screens; 'auto' here will try to make a best guess
-所有屏幕的外观比例; 设为 auto 将试着找出最佳设置
+所有画面的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 338
+# osd/windows/winmain.c: 341
 aspect ratio of the first screen; 'auto' here will try to make a best guess
-第一个屏幕的外观比例; 设为 auto 将试着找出最佳设置
+第一个画面的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 353
+# osd/windows/winmain.c: 356
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
-第四个屏幕的外观比例; 设为 auto 将试着找出最佳设置
+第四个画面的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 343
+# osd/windows/winmain.c: 346
 aspect ratio of the second screen; 'auto' here will try to make a best guess
-第二个个屏幕的外观比例; 设为 auto 将试着找出最佳设置
+第二个个画面的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 348
+# osd/windows/winmain.c: 351
 aspect ratio of the third screen; 'auto' here will try to make a best guess
-第三个屏幕的外观比例; 设为 auto 将试着找出最佳设置
+第三个画面的外观比例; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 361
+# osd/windows/winmain.c: 364
 brightness value in full screen mode
 全屏幕模式亮度
 
-# osd/windows/winmain.c: 315
+# osd/windows/winmain.c: 318
 constrain to the proper aspect ratio
 强制使用合适的长宽比例
 
-# osd/windows/winmain.c: 362
+# osd/windows/winmain.c: 365
 contrast value in full screen mode
 全屏幕模式对比度
 
-# osd/windows/winmain.c: 314
+# osd/windows/winmain.c: 317
 default to maximized windows; otherwise, windows will be minimized
 默认成窗口最大化; 否则将采用窗口最小化模式
 
-# osd/windows/winmain.c: 368
+# osd/windows/winmain.c: 372
 enable audio sync
 启用音频同步
 
-# osd/windows/winmain.c: 328
+# osd/windows/winmain.c: 331
 enable bilinear filtering on screen output
 启用双线性过滤的画面输出
 
-# osd/windows/winmain.c: 372
+# osd/windows/winmain.c: 377
 enable dual lightgun input
 启用双光枪输入
 
-# osd/windows/winmain.c: 323
+# osd/windows/winmain.c: 326
 enable hardware stretching
 启用硬件拉伸
 
-# osd/windows/winmain.c: 305
+# osd/windows/winmain.c: 307
 enable multithreading; this enables rendering and blitting on a separate thread
 启用多线程; 可以将描绘和 blit 分开处理
 
-# osd/windows/winmain.c: 307
+# osd/windows/winmain.c: 309
 enable profiling, specifying the stack depth to track
 启用性能分析，指定要跟踪的堆叠深度
 
-# osd/windows/winmain.c: 360
+# osd/windows/winmain.c: 363
 enable resolution switching
 启用分辨率切换
 
-# osd/windows/winmain.c: 359
+# osd/windows/winmain.c: 362
 enable triple buffering
 启用三重缓冲
 
-# osd/windows/winmain.c: 319
+# osd/windows/winmain.c: 322
 enable using the start of VBLANK for throttling instead of the game time
 启用 VBLANK 开始限制速度替换游戏时间
 
-# osd/windows/winmain.c: 318
+# osd/windows/winmain.c: 321
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 启用画面翻转之前等待 VBLANK 开始; 降低破损效果
 
-# osd/windows/winmain.c: 313
+# osd/windows/winmain.c: 316
 enable window mode; otherwise, full screen mode is assumed
 启用窗口模式; 否则将假设为全屏幕模式
 
-# osd/windows/winmain.c: 332
+# osd/windows/winmain.c: 335
 explicit name of all screens; 'auto' here will try to make a best guess
-所有屏幕的详细名称; 设为 auto 将试着找出最佳设置
+所有画面的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 337
+# osd/windows/winmain.c: 340
 explicit name of the first screen; 'auto' here will try to make a best guess
-第一个屏幕的详细名称; 设为 auto 将试着找出最佳设置
+第一个画面的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 352
+# osd/windows/winmain.c: 355
 explicit name of the fourth screen; 'auto' here will try to make a best guess
-第四个屏幕的详细名称; 设为 auto 将试着找出最佳设置
+第四个画面的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 342
+# osd/windows/winmain.c: 345
 explicit name of the second screen; 'auto' here will try to make a best guess
-第二个屏幕的详细名称; 设为 auto 将试着找出最佳设置
+第二个画面的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 347
+# osd/windows/winmain.c: 350
 explicit name of the third screen; 'auto' here will try to make a best guess
-第三个屏幕的详细名称; 设为 auto 将试着找出最佳设置
+第三个画面的详细名称; 设为 auto 将试着找出最佳设置
 
-# osd/windows/winmain.c: 298
+# osd/windows/winmain.c: 300
 force the program to terminate if no updates within specified number of seconds
 如果在指定的秒数内没有更新就强制终止程序
 
-# osd/windows/winmain.c: 363
+# osd/windows/winmain.c: 366
 gamma value in full screen mode
 全屏幕模式灰度
 
-# osd/windows/winmain.c: 317
+# osd/windows/winmain.c: 320
 name of a PNG file to use for visual effects, or 'none'
 设置要使用的视觉效果 PNG 文件名，或设为 none
 
-# osd/windows/winmain.c: 306
+# osd/windows/winmain.c: 308
 number of processors; this overrides the number the system reports
 设置处理器数量; 将覆盖系统回报的数量
 
-# osd/windows/winmain.c: 312
+# osd/windows/winmain.c: 315
 number of screens to create; usually, you want just one
-创建的屏幕数量; 通常设为一个
+创建的画面数量; 通常设为一个
 
-# osd/windows/winmain.c: 297
+# osd/windows/winmain.c: 299
 output error.log data to the system debugger
 输出 error.log 数据到系统调试器
 
-# osd/windows/winmain.c: 334
+# osd/windows/winmain.c: 337
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
-所有屏幕的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
+所有画面的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
 
-# osd/windows/winmain.c: 339
+# osd/windows/winmain.c: 342
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-第一个屏幕的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
+第一个画面的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
 
-# osd/windows/winmain.c: 354
+# osd/windows/winmain.c: 357
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-第四个屏幕的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
+第四个画面的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
 
-# osd/windows/winmain.c: 344
+# osd/windows/winmain.c: 347
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-第二个屏幕的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
+第二个画面的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
 
-# osd/windows/winmain.c: 349
+# osd/windows/winmain.c: 352
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-第三个屏幕的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
+第三个画面的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
 
-# osd/windows/winmain.c: 335
+# osd/windows/winmain.c: 338
 preferred view for all screens
-所有屏幕的查看方式
+所有画面的查看方式
 
-# osd/windows/winmain.c: 340
+# osd/windows/winmain.c: 343
 preferred view for the first screen
-第一个屏幕的查看方式
+第一个画面的查看方式
 
-# osd/windows/winmain.c: 355
+# osd/windows/winmain.c: 358
 preferred view for the fourth screen
-第四个屏幕的查看方式
+第四个画面的查看方式
 
-# osd/windows/winmain.c: 345
+# osd/windows/winmain.c: 348
 preferred view for the second screen
-第二个屏幕的查看方式
+第二个画面的查看方式
 
-# osd/windows/winmain.c: 350
+# osd/windows/winmain.c: 353
 preferred view for the third screen
-第三个屏幕的查看方式
+第三个画面的查看方式
 
-# osd/windows/winmain.c: 316
+# osd/windows/winmain.c: 319
 scale screen rendering by this amount in software
 以此倍数运行软件缩放画面描绘
 
-# osd/windows/winmain.c: 367
+# osd/windows/winmain.c: 370
 set audio latency (increase to reduce glitches)
 设置音频等待时间 (增加值可减少破损)
 
-# osd/windows/winmain.c: 374
+# osd/windows/winmain.c: 379
 set joystick ID (Player1)
 设置游戏杆标识码 (P1)
 
-# osd/windows/winmain.c: 375
+# osd/windows/winmain.c: 380
 set joystick ID (Player2)
 设置游戏杆标识码 (P2)
 
-# osd/windows/winmain.c: 376
+# osd/windows/winmain.c: 381
 set joystick ID (Player3)
 设置游戏杆标识码 (P3)
 
-# osd/windows/winmain.c: 377
+# osd/windows/winmain.c: 382
 set joystick ID (Player4)
 设置游戏杆标识码 (P4)
 
-# osd/windows/winmain.c: 378
+# osd/windows/winmain.c: 383
 set joystick ID (Player5)
 设置游戏杆标识码 (P5)
 
-# osd/windows/winmain.c: 379
+# osd/windows/winmain.c: 384
 set joystick ID (Player6)
 设置游戏杆标识码 (P6)
 
-# osd/windows/winmain.c: 380
+# osd/windows/winmain.c: 385
 set joystick ID (Player7)
 设置游戏杆标识码 (P7)
 
-# osd/windows/winmain.c: 381
+# osd/windows/winmain.c: 386
 set joystick ID (Player8)
 设置游戏杆标识码 (P8)
 
-# osd/windows/winmain.c: 300
+# osd/windows/winmain.c: 302
 specifies the font size to use for debugging; defaults to 9 pt
 指定调试器的字体大小; 默认是 9 pt
 
-# osd/windows/winmain.c: 299
+# osd/windows/winmain.c: 301
 specifies the font to use for debugging; defaults to Lucida Console
 指定调试器的字体; 默认是 Lucida Console
 
-# osd/windows/winmain.c: 327
+# osd/windows/winmain.c: 330
 specify the preferred Direct3D version (8 or 9)
 指定 Direct3D 版本 (8 或 9)
 
-# osd/windows/winmain.c: 304
+# osd/windows/winmain.c: 306
 thread priority for the main game thread; range from -15 to 1
 主要游戏的线程优先级; 范围是 -15 至 1
 
-# osd/windows/winmain.c: 311
+# osd/windows/winmain.c: 314
 video output method: none, gdi, ddraw, or d3d
 视频输出方式: none, gdi, ddraw 或 d3d
 

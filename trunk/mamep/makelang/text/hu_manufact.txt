@@ -114,6 +114,10 @@ Acclaim
 Acom
 
 
+# Piccolo Poker
+Admiral - Novomatic
+
+
 # Twin Action
 Afega
 
@@ -982,6 +986,10 @@ Genie
 Global Corporation
 
 
+# Swiss Poker ('50 SG-.10', V2.5)
+Golden Games
+
+
 # Reactor
 Gottlieb
 
@@ -1122,15 +1130,15 @@ IGT - International Gaming Technology
 IPM
 
 
+# ISG Selection Master Type 2006 BIOS
+ISG
+
+
 # See See Find Out
 Icarus
 
 
 # Multi Fish (021124)
-Igro
-
-
-# Crazy Monkey (031110)
 Igrosoft
 
 
@@ -1212,6 +1220,10 @@ Jetsoft
 
 # Trivia Challenge
 Joyland
+
+
+# Jubilee Double-Up Poker
+Jubilee
 
 
 # Kaitei Takara Sagashi
@@ -1454,7 +1466,7 @@ Midway
 Midway Games
 
 
-# Touchmaster 2000 (v4.02 Standard)
+# Touchmaster 2000 Plus (v4.63 Standard)
 Midway Games Inc.
 
 

@@ -1970,6 +1970,10 @@ Academysoft-Elorg
 Accept Ltd.
 
 
+# Piccolo Poker
+Admiral - Novomatic
+
+
 # Shikigami no Shiro (V2.03J)
 Alfa System
 
@@ -2198,6 +2202,10 @@ GAV Company
 Gaps Inc.
 
 
+# Swiss Poker ('50 SG-.10', V2.5)
+Golden Games
+
+
 # Super Poker (Version 10.19S)
 Grayhound Electronics
 
@@ -2246,11 +2254,11 @@ ICE
 IPM
 
 
+# ISG Selection Master Type 2006 BIOS
+ISG
+
+
 # Multi Fish (021124)
-Igro
-
-
-# Crazy Monkey (031110)
 Igrosoft
 
 
@@ -2268,6 +2276,10 @@ Interactive Light
 
 # Squash (Itisa)
 Itisa
+
+
+# Jubilee Double-Up Poker
+Jubilee
 
 
 # Kimble Double HI-LO (z80 version)
@@ -2334,7 +2346,7 @@ Micro Manufacturing Inc.
 Microprose Games Inc.
 
 
-# Touchmaster 2000 (v4.02 Standard)
+# Touchmaster 2000 Plus (v4.63 Standard)
 Midway Games Inc.
 
 
