@@ -39,6 +39,7 @@ DEFS += -DNCP
 
 CPUS += Z80
 CPUS += I386
+CPUS += MCS48
 CPUS += M680X0
 CPUS += ARM7
 CPUS += SH2
@@ -81,6 +82,16 @@ DRVLIBS += \
 	$(MAMEOBJ)/capcom.a \
 	$(MAMEOBJ)/igs.a \
 	$(MAMEOBJ)/neogeo.a \
+
+
+
+#-------------------------------------------------
+# emulator core objects
+#-------------------------------------------------
+
+DRVLIBS += \
+	$(EMUOBJ)/machine/ldpr8210.o \
+	$(EMUOBJ)/machine/ldvp931.o \
 
 
 
