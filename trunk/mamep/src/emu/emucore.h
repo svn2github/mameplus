@@ -38,6 +38,7 @@
 #include "astring.h"
 #include "bitmap.h"
 #include "tagmap.h"
+#include "uilang.h"
 
 
 

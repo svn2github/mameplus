@@ -153,6 +153,7 @@ b) Exit the dialog.
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
+#define snwprintf _snwprintf
 #endif
 
 #ifdef MESS

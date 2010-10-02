@@ -56,6 +56,7 @@
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
+#define snwprintf _snwprintf
 #endif
 
 #define FILTERTEXT_LEN 256
@@ -130,9 +131,9 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			{
 
 				TCHAR temp[1024];
-				_tcscpy(temp, _UIW(TEXT(MAMEUINAME
-							" will now reset the following\n"
-							"to the default settings:\n\n")));
+				_tcscpy(temp, _UIW(TEXT(MAMEUINAME)
+							TEXT(" will now reset the following\n")
+							TEXT("to the default settings:\n\n")));
 
 				if (resetDefaults)
 					_tcscat(temp, _UIW(TEXT("Global game options\n")));
@@ -143,10 +144,10 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				if (resetUI)
 				{
 					_tcscat(temp, _UIW(TEXT("User interface settings\n\n")));
-					_tcscat(temp, _UIW(TEXT("Resetting the User Interface options\n"
-								"requires exiting "
-								MAMEUINAME
-								".\n")));
+					_tcscat(temp, _UIW(TEXT("Resetting the User Interface options\n")
+								TEXT("requires exiting ")
+								TEXT(MAMEUINAME)
+								TEXT(".\n")));
 				}
 				_tcscat(temp, _UIW(TEXT("\nDo you wish to continue?")));
 				if (MessageBox(hDlg, temp, _UIW(TEXT("Restore Settings")), IDOK) == IDOK)
@@ -831,10 +832,10 @@ INT_PTR CALLBACK DirectXDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 	HWND hEdit;
 
 	const WCHAR *directx_help =
-		TEXT(MAMEUINAME " requires DirectX version 3 or later, which is a set of operating\r\n"
-		"system extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\n"
-		"Visit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\n"
-		"download DirectX, install it, and then run " MAMEUINAME " again.\r\n");
+		TEXT(MAMEUINAME) TEXT(" requires DirectX version 3 or later, which is a set of operating\r\n")
+		TEXT("system extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\n")
+		TEXT("Visit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\n")
+		TEXT("download DirectX, install it, and then run ") TEXT(MAMEUINAME) TEXT(" again.\r\n");
 
 	switch (Msg)
 	{
@@ -950,7 +951,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 					PcbData[filelen] = '\0';
 
 					swprintf(buf, 
-						_UIW(TEXT(MAMEUINAME " PCB Info: %s [%s]")), 
+						_UIW(TEXT(MAMEUINAME) TEXT(" PCB Info: %s [%s]")), 
 						ConvertAmpersandString(UseLangList() ?
 							_LSTW(driversw[nGame]->description) :
 							driversw[nGame]->modify_the), 
