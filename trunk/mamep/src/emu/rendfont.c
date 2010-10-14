@@ -202,7 +202,7 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 ***************************************************************************/
 
 //mamep: allocate command glyph font
-static render_font *render_font_alloc_command_glyph(int height)
+static render_font *render_font_alloc_command_glyph(running_machine &machine, int height)
 {
 	file_error filerr;
 	mame_file *ramfile;
@@ -210,6 +210,7 @@ static render_font *render_font_alloc_command_glyph(int height)
 
 	/* allocate and clear memory */
 	font = global_alloc_clear(render_font);
+	font->machine = &machine;
 
 	if (height >= 14)
 		filerr = mame_fopen_ram(font_uicmd14, sizeof(font_uicmd14), OPEN_FLAG_READ, &ramfile);
@@ -224,6 +225,7 @@ static render_font *render_font_alloc_command_glyph(int height)
 
 	return font;
 }
+
 
 /*-------------------------------------------------
     render_font_alloc - allocate a new font
@@ -254,6 +256,7 @@ render_font *render_font_alloc(running_machine &machine, const char *filename)
 			/* if we failed, clean up and realloc */
 			render_font_free(font);
 			font = global_alloc_clear(render_font);
+			font->machine = &machine;
 
 			if (render_font_load_cached_bdf(font, filename) == 0)
 				loaded++;
@@ -262,7 +265,7 @@ render_font *render_font_alloc(running_machine &machine, const char *filename)
 		if (loaded)
 		{
 			//mamep: allocate command glyph font
-			font->cmd = render_font_alloc_command_glyph(font->height);
+			font->cmd = render_font_alloc_command_glyph(machine, font->height);
 			return font;
 		}
 	}
@@ -294,7 +297,7 @@ render_font *render_font_alloc(running_machine &machine, const char *filename)
 	}
 
 	//mamep: allocate command glyph font
-	font->cmd = render_font_alloc_command_glyph(font->height);
+	font->cmd = render_font_alloc_command_glyph(machine, font->height);
 	return font;
 }
 
