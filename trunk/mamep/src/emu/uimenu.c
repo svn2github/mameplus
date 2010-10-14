@@ -1605,7 +1605,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	ui_menu_item_append(menu, _("Slider Controls"), NULL, 0, (void *)menu_sliders);
 
 	/* add video options menu */
-	ui_menu_item_append(menu, _("Video Options"), NULL, 0, (render_target_get_indexed(1) != NULL) ? (void *)menu_video_targets : (void *)menu_video_options);
+	ui_menu_item_append(menu, _("Video Options"), NULL, 0, (machine->render().target_by_index(1) != NULL) ? (void *)menu_video_targets : (void *)menu_video_options);
 
 #ifdef USE_SCALE_EFFECTS
 	/* add image enhancement menu */
@@ -3216,7 +3216,7 @@ static void menu_video_options_populate(running_machine *machine, ui_menu *menu,
 	/* add items for each view */
 	for (viewnum = 0; ; viewnum++)
 	{
-		const char *name = render_target_get_translated_view_name(target, viewnum);
+		const char *name = target->translated_view_name(viewnum);
 		if (name == NULL)
 			break;
 
@@ -3239,20 +3239,20 @@ static void menu_video_options_populate(running_machine *machine, ui_menu *menu,
 	ui_menu_item_append(menu, _("Rotate"), subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_ROTATE);
 
 	/* backdrop item */
-	enabled = layermask & LAYER_CONFIG_ENABLE_BACKDROP;
-	ui_menu_item_append(menu, _("Backdrops"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)LAYER_CONFIG_ENABLE_BACKDROP);
+	enabled = target->backdrops_enabled();
+	ui_menu_item_append(menu, _("Backdrops"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_BACKDROPS);
 
 	/* overlay item */
-	enabled = layermask & LAYER_CONFIG_ENABLE_OVERLAY;
-	ui_menu_item_append(menu, _("Overlays"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)LAYER_CONFIG_ENABLE_OVERLAY);
+	enabled = target->overlays_enabled();
+	ui_menu_item_append(menu, _("Overlays"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_OVERLAYS);
 
 	/* bezel item */
-	enabled = layermask & LAYER_CONFIG_ENABLE_BEZEL;
-	ui_menu_item_append(menu, _("Bezels"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)LAYER_CONFIG_ENABLE_BEZEL);
+	enabled = target->bezels_enabled();
+	ui_menu_item_append(menu, _("Bezels"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_BEZELS);
 
 	/* cropping */
-	enabled = layermask & LAYER_CONFIG_ZOOM_TO_SCREEN;
-	ui_menu_item_append(menu, _("View"), enabled ? _("Cropped") : _("Full"), enabled ? MENU_FLAG_RIGHT_ARROW : MENU_FLAG_LEFT_ARROW, (void *)LAYER_CONFIG_ZOOM_TO_SCREEN);
+	enabled = target->zoom_to_screen();
+	ui_menu_item_append(menu, _("View"), enabled ? _("Cropped") : _("Full"), enabled ? MENU_FLAG_RIGHT_ARROW : MENU_FLAG_LEFT_ARROW, (void *)VIDEO_ITEM_ZOOM);
 }
 
 

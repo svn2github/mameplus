@@ -258,6 +258,10 @@ a tilemap-like structure, from which data is copied)
 */
 
 
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+
 #include "emu.h"
 #include "coreutil.h"
 #include "cpu/z80/z80.h"
@@ -274,10 +278,6 @@ a tilemap-like structure, from which data is copied)
 #ifdef MESS
 #include "devices/chd_cd.h"
 #endif
-
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
 
 #define MEGADRIV_VDP_VRAM(address) megadrive_vdp_vram[(address)&0x7fff]
 

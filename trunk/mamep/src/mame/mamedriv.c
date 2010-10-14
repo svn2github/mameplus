@@ -10478,8 +10478,20 @@ Other Sun games
 	DRIVER( jubileep )
 
 	/* Golden Games / C+M Technics AG */
-	DRIVER( swisspkr )	/* (c) Golden Games 1990 */
-	DRIVER( moviecrd )	/* (c) Golden Games 1998 */
+	DRIVER( swisspkr )	/* (c) 1990 Golden Games */
+	DRIVER( moviecrd )	/* (c) 1998 Golden Games */
+
+	/* NSM */
+	DRIVER( nsmpoker )
+
+	/* Labtronix Technologies */
+	DRIVER( dualgame )	/* (c) 1995 Labtronix Technologies */
+
+	/* Advanced Video Technologies */
+	DRIVER( avtsym14 )	/* (c) 1985 AVT */
+	DRIVER( avtsym25 )	/* (c) 1985 AVT */
+	DRIVER( avtbingo )	/* (c) 1985 AVT */
+	DRIVER( avtnfl )	/* (c) 1989 AVT */
 #endif /* !NCP */
 
 #endif	/* DRIVER_RECURSIVE */

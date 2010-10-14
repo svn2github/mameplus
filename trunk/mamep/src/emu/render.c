@@ -101,1149 +101,1098 @@ enum
 
 
 
-/***************************************************************************
-    MACROS
-***************************************************************************/
+//**************************************************************************
+//  MACROS
+//**************************************************************************
 
 #define ISWAP(var1, var2) do { int temp = var1; var1 = var2; var2 = temp; } while (0)
 #define FSWAP(var1, var2) do { float temp = var1; var1 = var2; var2 = temp; } while (0)
 
 
 
-/***************************************************************************
-    TYPE DEFINITIONS
-***************************************************************************/
+//**************************************************************************
+//  TYPE DEFINITIONS
+//**************************************************************************
 
-/* typedef struct _render_container render_container; -- defined in render.h */
-typedef struct _object_transform object_transform;
-typedef struct _scaled_texture scaled_texture;
-typedef struct _container_item container_item;
-
-
-/* a render_ref is an abstract reference to an internal object of some sort */
-struct _render_ref
+// an object_transform is used to track transformations when building an object list
+struct object_transform
 {
-	render_ref *		next;				/* link to the next reference */
-	void *				refptr;				/* reference pointer */
-};
-
-
-/* an object_transform is used to track transformations when building an object list */
-struct _object_transform
-{
-	float				xoffs, yoffs;		/* offset transforms */
-	float				xscale, yscale;		/* scale transforms */
-	render_color		color;				/* color transform */
-	int					orientation;		/* orientation transform */
-	int					no_center;			/* center the container? */
-};
-
-
-/* a scaled_texture contains a single scaled entry for a texture */
-struct _scaled_texture
-{
-	bitmap_t *			bitmap;				/* final bitmap */
-	UINT32				seqid;				/* sequence number */
-};
-
-
-/* a render_texture is used to track transformations when building an object list */
-struct render_texture
-{
-	render_texture *	next;				/* next texture (for free list) */
-	render_texture *	base;				/* pointer to base of texture group */
-	bitmap_t *			bitmap;				/* pointer to the original bitmap */
-	rectangle			sbounds;			/* source bounds within the bitmap */
-	palette_t *			palette;			/* palette associated with the texture */
-	int					format;				/* format of the texture data */
-	texture_scaler_func	scaler;				/* scaling callback */
-	void *				param;				/* scaling callback parameter */
-	UINT32				curseq;				/* current sequence number */
-	scaled_texture		scaled[MAX_TEXTURE_SCALES];	/* array of scaled variants of this texture */
-	rgb_t *				bcglookup;			/* dynamically allocated B/C/G lookup table */
-	UINT32				bcglookup_entries;	/* number of B/C/G lookup entries allocated */
-};
-
-
-/* a render_target describes a surface that is being rendered to */
-class render_target
-{
-public:
-	render_target *		next;				/* keep a linked list of targets */
-	running_machine *	machine;			/* pointer to the machine we are connected with */
-	layout_view *		curview;			/* current view */
-	layout_file *		filelist;			/* list of layout files */
-	UINT32				flags;				/* creation flags */
-	render_primitive_list primlist[NUM_PRIMLISTS];/* list of primitives */
-	int					listindex;			/* index of next primlist to use */
-	INT32				width;				/* width in pixels */
-	INT32				height;				/* height in pixels */
-	render_bounds		bounds;				/* bounds of the target */
-	float				pixel_aspect;		/* aspect ratio of individual pixels */
-	float				max_refresh;		/* maximum refresh rate, 0 or if none */
-	int					orientation;		/* orientation */
-	int					layerconfig;		/* layer configuration */
-	layout_view *		base_view;			/* the view at the time of first frame */
-	int					base_orientation;	/* the orientation at the time of first frame */
-	int					base_layerconfig;	/* the layer configuration at the time of first frame */
-	int					maxtexwidth;		/* maximum width of a texture */
-	int					maxtexheight;		/* maximum height of a texture */
-	render_container *	debug_containers;
-};
-
-
-/* a container_item describes a high level primitive that is added to a container */
-struct _container_item
-{
-	container_item *	next;				/* pointer to the next element in the list */
-	UINT8				type;				/* type of element */
-	render_bounds		bounds;				/* bounds of the element */
-	render_color		color;				/* RGBA factors */
-	UINT32				flags;				/* option flags */
-	UINT32				internal;			/* internal flags */
-	float				width;				/* width of the line (lines only) */
-	render_texture *	texture;			/* pointer to the source texture (quads only) */
-};
-
-
-/* a render_container holds a list of items and an orientation for the entire collection */
-struct _render_container
-{
-	render_container *	next;				/* the next container in the list */
-	container_item *	itemlist;			/* head of the item list */
-	container_item **	nextitem;			/* pointer to the next item to add */
-	screen_device *screen;			/* the screen device */
-	int					orientation;		/* orientation of the container */
-	float				brightness;			/* brightness of the container */
-	float				contrast;			/* contrast of the container */
-	float				gamma;				/* gamma of the container */
-	float				xscale;				/* X scale factor of the container */
-	float				yscale;				/* Y scale factor of the container */
-	float				xoffset;			/* X offset of the container */
-	float				yoffset;			/* Y offset of the container */
-	bitmap_t *			overlaybitmap;		/* overlay bitmap */
-	render_texture *	overlaytexture;		/* overlay texture */
-	palette_client *	palclient;			/* client to the system palette */
-	rgb_t				bcglookup256[0x400];/* lookup table for brightness/contrast/gamma */
-	rgb_t				bcglookup32[0x80];	/* lookup table for brightness/contrast/gamma */
-	rgb_t				bcglookup[0x10000];	/* full palette lookup with bcg adjustements */
+	float				xoffs, yoffs;		// offset transforms
+	float				xscale, yscale;		// scale transforms
+	render_color		color;				// color transform
+	int					orientation;		// orientation transform
+	bool				no_center;			// center the container?
 };
 
 
 
-/***************************************************************************
-    GLOBAL VARIABLES
-***************************************************************************/
+//**************************************************************************
+//  GLOBAL VARIABLES
+//**************************************************************************
 
-/* array of live targets */
-static render_target *targetlist;
-static render_target *ui_target;
-
-/* free lists */
-static render_primitive *render_primitive_free_list;
-static container_item *container_item_free_list;
-static render_ref *render_ref_free_list;
-static render_texture *render_texture_free_list;
-
-/* containers for the UI and for screens */
-static render_container *ui_container;
-static render_container *screen_container_list;
-static bitmap_t *screen_overlay;
-
-/* variables for tracking extents to clear */
-static INT32 clear_extents[MAX_CLEAR_EXTENTS];
-static INT32 clear_extent_count;
-
-/* precomputed UV coordinates for various orientations */
+// precomputed UV coordinates for various orientations
 static const render_quad_texuv oriented_texcoords[8] =
 {
-	{ { 0,0 }, { 1,0 }, { 0,1 }, { 1,1 } },		/* 0 */
-	{ { 1,0 }, { 0,0 }, { 1,1 }, { 0,1 } },		/* ORIENTATION_FLIP_X */
-	{ { 0,1 }, { 1,1 }, { 0,0 }, { 1,0 } },		/* ORIENTATION_FLIP_Y */
-	{ { 1,1 }, { 0,1 }, { 1,0 }, { 0,0 } },		/* ORIENTATION_FLIP_X | ORIENTATION_FLIP_Y */
-	{ { 0,0 }, { 0,1 }, { 1,0 }, { 1,1 } },		/* ORIENTATION_SWAP_XY */
-	{ { 0,1 }, { 0,0 }, { 1,1 }, { 1,0 } },		/* ORIENTATION_SWAP_XY | ORIENTATION_FLIP_X */
-	{ { 1,0 }, { 1,1 }, { 0,0 }, { 0,1 } },		/* ORIENTATION_SWAP_XY | ORIENTATION_FLIP_Y */
-	{ { 1,1 }, { 1,0 }, { 0,1 }, { 0,0 } }		/* ORIENTATION_SWAP_XY | ORIENTATION_FLIP_X | ORIENTATION_FLIP_Y */
+	{ { 0,0 }, { 1,0 }, { 0,1 }, { 1,1 } },		// 0
+	{ { 1,0 }, { 0,0 }, { 1,1 }, { 0,1 } },		// ORIENTATION_FLIP_X
+	{ { 0,1 }, { 1,1 }, { 0,0 }, { 1,0 } },		// ORIENTATION_FLIP_Y
+	{ { 1,1 }, { 0,1 }, { 1,0 }, { 0,0 } },		// ORIENTATION_FLIP_X | ORIENTATION_FLIP_Y
+	{ { 0,0 }, { 0,1 }, { 1,0 }, { 1,1 } },		// ORIENTATION_SWAP_XY
+	{ { 0,1 }, { 0,0 }, { 1,1 }, { 1,0 } },		// ORIENTATION_SWAP_XY | ORIENTATION_FLIP_X
+	{ { 1,0 }, { 1,1 }, { 0,0 }, { 0,1 } },		// ORIENTATION_SWAP_XY | ORIENTATION_FLIP_Y
+	{ { 1,1 }, { 1,0 }, { 0,1 }, { 0,0 } }		// ORIENTATION_SWAP_XY | ORIENTATION_FLIP_X | ORIENTATION_FLIP_Y
 };
 
-/* layer orders */
+// layer orders
 static const int layer_order_standard[] = { ITEM_LAYER_SCREEN, ITEM_LAYER_OVERLAY, ITEM_LAYER_BACKDROP, ITEM_LAYER_BEZEL };
 static const int layer_order_alternate[] = { ITEM_LAYER_BACKDROP, ITEM_LAYER_SCREEN, ITEM_LAYER_OVERLAY, ITEM_LAYER_BEZEL };
 
 
 
-/***************************************************************************
-    FUNCTION PROTOTYPES
-***************************************************************************/
+//**************************************************************************
+//  INLINE FUNCTIONS
+//**************************************************************************
 
-/* core system */
-static void render_exit(running_machine &machine);
-static void render_load(running_machine *machine, int config_type, xml_data_node *parentnode);
-static void render_save(running_machine *machine, int config_type, xml_data_node *parentnode);
+//-------------------------------------------------
+//  apply_orientation - apply orientation to a
+//  set of bounds
+//-------------------------------------------------
 
-/* render targets */
-static void release_render_list(render_primitive_list *list);
-static int load_layout_files(render_target *target, const char *layoutfile, int singlefile);
-static void add_container_primitives(render_target *target, render_primitive_list *list, const object_transform *xform, render_container *container, int blendmode);
-static void add_element_primitives(render_target *target, render_primitive_list *list, const object_transform *xform, const layout_element *element, int state, int blendmode);
-static void add_clear_and_optimize_primitive_list(render_target *target, render_primitive_list *list);
-
-/* render references */
-static void invalidate_all_render_ref(void *refptr);
-
-/* render textures */
-static int texture_get_scaled(render_texture *texture, UINT32 dwidth, UINT32 dheight, render_texinfo *texinfo, render_ref **reflist);
-static const rgb_t *texture_get_adjusted_palette(render_texture *texture, render_container *container);
-
-/* render containers */
-static render_container *render_container_alloc(running_machine *machine);
-static void render_container_free(render_container *container);
-static container_item *render_container_item_add_generic(render_container *container, UINT8 type, float x0, float y0, float x1, float y1, rgb_t argb);
-static void render_container_overlay_scale(bitmap_t *dest, const bitmap_t *source, const rectangle *sbounds, void *param);
-static void render_container_recompute_lookups(render_container *container);
-static void render_container_update_palette(render_container *container);
-
-
-
-/***************************************************************************
-    INLINE FUNCTIONS
-***************************************************************************/
-
-/*-------------------------------------------------
-    apply_orientation - apply orientation to a
-    set of bounds
--------------------------------------------------*/
-
-INLINE void apply_orientation(render_bounds *bounds, int orientation)
+inline void apply_orientation(render_bounds &bounds, int orientation)
 {
-	/* swap first */
+	// swap first
 	if (orientation & ORIENTATION_SWAP_XY)
 	{
-		FSWAP(bounds->x0, bounds->y0);
-		FSWAP(bounds->x1, bounds->y1);
+		FSWAP(bounds.x0, bounds.y0);
+		FSWAP(bounds.x1, bounds.y1);
 	}
 
-	/* apply X flip */
+	// apply X flip
 	if (orientation & ORIENTATION_FLIP_X)
 	{
-		bounds->x0 = 1.0f - bounds->x0;
-		bounds->x1 = 1.0f - bounds->x1;
+		bounds.x0 = 1.0f - bounds.x0;
+		bounds.x1 = 1.0f - bounds.x1;
 	}
 
-	/* apply Y flip */
+	// apply Y flip
 	if (orientation & ORIENTATION_FLIP_Y)
 	{
-		bounds->y0 = 1.0f - bounds->y0;
-		bounds->y1 = 1.0f - bounds->y1;
+		bounds.y0 = 1.0f - bounds.y0;
+		bounds.y1 = 1.0f - bounds.y1;
 	}
 }
 
 
-/*-------------------------------------------------
-    normalize_bounds - normalize bounds so that
-    x0/y0 are less than x1/y1
--------------------------------------------------*/
+//-------------------------------------------------
+//  normalize_bounds - normalize bounds so that
+//  x0/y0 are less than x1/y1
+//-------------------------------------------------
 
-INLINE void normalize_bounds(render_bounds *bounds)
+inline void normalize_bounds(render_bounds &bounds)
 {
-	if (bounds->x0 > bounds->x1)
-		FSWAP(bounds->x0, bounds->x1);
-	if (bounds->y0 > bounds->y1)
-		FSWAP(bounds->y0, bounds->y1);
+	if (bounds.x0 > bounds.x1)
+		FSWAP(bounds.x0, bounds.x1);
+	if (bounds.y0 > bounds.y1)
+		FSWAP(bounds.y0, bounds.y1);
 }
 
 
-/*-------------------------------------------------
-    alloc_container_item - allocate a new
-    container item object
---------------------------------------------------*/
+//-------------------------------------------------
+//  get_layer_and_blendmode - return the
+//  appropriate layer index and blendmode
+//-------------------------------------------------
 
-INLINE container_item *alloc_container_item(void)
+inline int get_layer_and_blendmode(const layout_view &view, int index, int &blendmode)
 {
-	container_item *result = container_item_free_list;
+    const int *layer_order = layer_order_standard;
+    int layer;
 
-	/* allocate from the free list if we can; otherwise, malloc a new item */
-	if (result != NULL)
-		container_item_free_list = result->next;
+	//  if we have multiple backdrop pieces and no overlays, render:
+    //      backdrop (add) + screens (add) + bezels (alpha)
+    //  else render:
+    //      screens (add) + overlays (RGB multiply) + backdrop (add) + bezels (alpha)
+
+	if (view.itemlist[ITEM_LAYER_BACKDROP] != NULL && view.itemlist[ITEM_LAYER_BACKDROP]->next != NULL && view.itemlist[ITEM_LAYER_OVERLAY] == NULL)
+		layer_order = layer_order_alternate;
+
+	// select the layer
+	layer = layer_order[index];
+
+	// pick a blendmode
+	if (layer == ITEM_LAYER_SCREEN && layer_order == layer_order_standard)
+		blendmode = -1;
+	else if (layer == ITEM_LAYER_SCREEN || (layer == ITEM_LAYER_BACKDROP && layer_order == layer_order_standard))
+		blendmode = BLENDMODE_ADD;
+	else if (layer == ITEM_LAYER_OVERLAY)
+		blendmode = BLENDMODE_RGB_MULTIPLY;
 	else
-		result = global_alloc(container_item);
+		blendmode = BLENDMODE_ALPHA;
 
-	memset(result, 0, sizeof(*result));
-	return result;
+	return layer;
 }
 
 
-/*-------------------------------------------------
-    container_item_free - free a previously
-    allocated render element object
--------------------------------------------------*/
 
-INLINE void free_container_item(container_item *item)
+//**************************************************************************
+//  RENDER PRIMITIVE
+//**************************************************************************
+
+//-------------------------------------------------
+//  reset - reset the state of a primitive after
+//  it is re-allocated
+//-------------------------------------------------
+
+void render_primitive::reset()
 {
-	item->next = container_item_free_list;
-	container_item_free_list = item;
+	memset(&type, 0, FPTR(&texcoords + 1) - FPTR(&type));
 }
 
 
-/*-------------------------------------------------
-    alloc_render_primitive - allocate a new empty
-    element object
--------------------------------------------------*/
 
-INLINE render_primitive *alloc_render_primitive(int type)
+//**************************************************************************
+//  RENDER PRIMITIVE LIST
+//**************************************************************************
+
+//-------------------------------------------------
+//  render_primitive_list - constructor
+//-------------------------------------------------
+
+render_primitive_list::render_primitive_list()
+	: m_lock(osd_lock_alloc())
 {
-	render_primitive *result = render_primitive_free_list;
+}
 
-	/* allocate from the free list if we can; otherwise, malloc a new item */
-	if (result != NULL)
-		render_primitive_free_list = result->next;
-	else
-		result = global_alloc(render_primitive);
 
-	/* clear to 0 */
-	memset(result, 0, sizeof(*result));
+//-------------------------------------------------
+//  ~render_primitive_list - destructor
+//-------------------------------------------------
+
+render_primitive_list::~render_primitive_list()
+{
+	release_all();
+	osd_lock_free(m_lock);
+}
+
+
+//-------------------------------------------------
+//  add_reference - add a new reference
+//-------------------------------------------------
+
+inline void render_primitive_list::add_reference(void *refptr)
+{
+	// skip if we already have one
+	if (has_reference(refptr))
+		return;
+
+	// set the refptr and link us into the list
+	reference *ref = m_reference_allocator.alloc();
+	ref->m_refptr = refptr;
+	m_reflist.append(*ref);
+}
+
+
+//-------------------------------------------------
+//  has_reference - find a refptr in a reference
+//  list
+//-------------------------------------------------
+
+inline bool render_primitive_list::has_reference(void *refptr) const
+{
+	// skip if we already have one
+	for (reference *ref = m_reflist.first(); ref != NULL; ref = ref->next())
+		if (ref->m_refptr == refptr)
+			return true;
+	return false;
+}
+
+
+//-------------------------------------------------
+//  alloc - allocate a new empty primitive
+//-------------------------------------------------
+
+inline render_primitive *render_primitive_list::alloc(render_primitive::primitive_type type)
+{
+	render_primitive *result = m_primitive_allocator.alloc();
+	result->reset();
 	result->type = type;
 	return result;
 }
 
 
-/*-------------------------------------------------
-    append_render_primitive - append a primitive
-    to the end of the list
--------------------------------------------------*/
+//-------------------------------------------------
+//  release_all - release the contents of
+//  a render list
+//-------------------------------------------------
 
-INLINE void append_render_primitive(render_primitive_list *list, render_primitive *prim)
+void render_primitive_list::release_all()
 {
-	*list->nextptr = prim;
-	list->nextptr = &prim->next;
+	// release all the live items while under the lock
+	acquire_lock();
+	m_primitive_allocator.reclaim_all(m_primlist);
+	m_reference_allocator.reclaim_all(m_reflist);
+	release_lock();
 }
 
 
-/*-------------------------------------------------
-    free_render_primitive - free a previously
-    allocated render element object
--------------------------------------------------*/
+//-------------------------------------------------
+//  append_or_return - append a primitive to the
+//  end of the list, or return it to the free
+//  list, based on a flag
+//-------------------------------------------------
 
-INLINE void free_render_primitive(render_primitive *element)
+void render_primitive_list::append_or_return(render_primitive &prim, bool clipped)
 {
-	element->next = render_primitive_free_list;
-	render_primitive_free_list = element;
-}
-
-
-/*-------------------------------------------------
-    add_render_ref - add a new reference
--------------------------------------------------*/
-
-INLINE void add_render_ref(render_ref **list, void *refptr)
-{
-	render_ref *ref;
-
-	/* skip if we already have one */
-	for (ref = *list; ref != NULL; ref = ref->next)
-		if (ref->refptr == refptr)
-			return;
-
-	/* allocate from the free list if we can; otherwise, malloc a new item */
-	ref = render_ref_free_list;
-	if (ref != NULL)
-		render_ref_free_list = ref->next;
+	if (!clipped)
+		m_primlist.append(prim);
 	else
-		ref = global_alloc(render_ref);
-
-	/* set the refptr and link us into the list */
-	ref->refptr = refptr;
-	ref->next = *list;
-	*list = ref;
-}
-
-
-/*-------------------------------------------------
-    has_render_ref - find a refptr in a reference
-    list
--------------------------------------------------*/
-
-INLINE int has_render_ref(render_ref *list, void *refptr)
-{
-	render_ref *ref;
-
-	/* skip if we already have one */
-	for (ref = list; ref != NULL; ref = ref->next)
-		if (ref->refptr == refptr)
-			return TRUE;
-	return FALSE;
-}
-
-
-/*-------------------------------------------------
-    free_render_ref - free a previously
-    allocated render reference
--------------------------------------------------*/
-
-INLINE void free_render_ref(render_ref *ref)
-{
-	ref->next = render_ref_free_list;
-	render_ref_free_list = ref;
-}
-
-
-/*-------------------------------------------------
-    get_layer_and_blendmode - return the
-    appropriate layer index and blendmode
--------------------------------------------------*/
-
-INLINE int get_layer_and_blendmode(const layout_view *view, int index, int *blendmode)
-{
-    const int *layer_order = layer_order_standard;
-    int layer;
-
-	/*
-        if we have multiple backdrop pieces and no overlays, render:
-            backdrop (add) + screens (add) + bezels (alpha)
-        else render:
-            screens (add) + overlays (RGB multiply) + backdrop (add) + bezels (alpha)
-    */
-	if (view->itemlist[ITEM_LAYER_BACKDROP] != NULL && view->itemlist[ITEM_LAYER_BACKDROP]->next != NULL && view->itemlist[ITEM_LAYER_OVERLAY] == NULL)
-		layer_order = layer_order_alternate;
-
-	/* select the layer */
-	layer = layer_order[index];
-
-	/* if we want the blendmode as well, compute it */
-	if (blendmode != NULL)
-	{
-		/* pick a blendmode */
-		if (layer == ITEM_LAYER_SCREEN && layer_order == layer_order_standard)
-			*blendmode = -1;
-		else if (layer == ITEM_LAYER_SCREEN || (layer == ITEM_LAYER_BACKDROP && layer_order == layer_order_standard))
-			*blendmode = BLENDMODE_ADD;
-		else if (layer == ITEM_LAYER_OVERLAY)
-			*blendmode = BLENDMODE_RGB_MULTIPLY;
-		else
-			*blendmode = BLENDMODE_ALPHA;
-	}
-	return layer;
-}
-
-
-/*-------------------------------------------------
-    get_screen_container_by_index - get the
-    screen container for this screen index
--------------------------------------------------*/
-
-INLINE render_container *get_screen_container_by_index(int index)
-{
-	render_container *container;
-
-	assert(index >= 0);
-
-	/* get the container for the screen index */
-	for (container = screen_container_list; container != NULL; container = container->next)
-	{
-		if (index == 0)
-			break;
-		index--;
-	}
-
-	assert(index == 0);
-
-	return container;
+		m_primitive_allocator.reclaim(prim);
 }
 
 
 
-/***************************************************************************
-    CORE IMPLEMENTATION
-***************************************************************************/
+//**************************************************************************
+//  RENDER TEXTURE
+//**************************************************************************
 
-/*-------------------------------------------------
-    render_init - allocate base structures for
-    the rendering system
--------------------------------------------------*/
+//-------------------------------------------------
+//  render_texture - constructor
+//-------------------------------------------------
 
-void render_init(running_machine *machine)
+render_texture::render_texture()
 {
-	render_container **current_container_ptr = &screen_container_list;
-
-	/* make sure we clean up after ourselves */
-	machine->add_notifier(MACHINE_NOTIFY_EXIT, render_exit);
-
-	/* set up the list of render targets */
-	targetlist = NULL;
-
-	/* zap the free lists */
-	render_primitive_free_list = NULL;
-	container_item_free_list = NULL;
-
-	/* zap more variables */
-	ui_target = NULL;
-
-	/* create a UI container */
-	ui_container = render_container_alloc(machine);
-
-	/* create a container for each screen and determine its orientation */
-	for (screen_device *screendev = screen_first(*machine); screendev != NULL; screendev = screen_next(screendev))
-	{
-		render_container *screen_container = render_container_alloc(machine);
-		render_container **temp = &screen_container->next;
-		render_container_user_settings settings;
-
-		/* set the initial orientation and brightness/contrast/gamma */
-		render_container_get_user_settings(screen_container, &settings);
-		settings.orientation = machine->gamedrv->flags & ORIENTATION_MASK;
-		settings.brightness = options_get_float(machine->options(), OPTION_BRIGHTNESS);
-		settings.contrast = options_get_float(machine->options(), OPTION_CONTRAST);
-		settings.gamma = options_get_float(machine->options(), OPTION_GAMMA);
-		render_container_set_user_settings(screen_container, &settings);
-
-		screen_container->screen = screendev;
-
-		/* link it up */
-		*current_container_ptr = screen_container;
-		current_container_ptr = temp;
-	}
-
-	/* terminate list */
-	*current_container_ptr = NULL;
-
-	/* register callbacks */
-	config_register(machine, "video", render_load, render_save);
+	// no initialization because we rely on reset() to do it
 }
 
 
-/*-------------------------------------------------
-    render_exit - free all rendering data
--------------------------------------------------*/
+//-------------------------------------------------
+//  ~render_texture - destructor
+//-------------------------------------------------
 
-static void render_exit(running_machine &machine)
+render_texture::~render_texture()
 {
-	render_texture **texture_ptr;
-	render_container *container;
-
-	/* free the UI container */
-	if (ui_container != NULL)
-		render_container_free(ui_container);
-
-	/* free the screen container */
-	for (container = screen_container_list; container != NULL; )
+	// free all scaled versions
+	for (int scalenum = 0; scalenum < ARRAY_LENGTH(m_scaled); scalenum++)
 	{
-		render_container *temp = container;
-		container = temp->next;
-		render_container_free(temp);
+		m_manager->invalidate_all(m_scaled[scalenum].bitmap);
+		auto_free(&m_manager->machine(), m_scaled[scalenum].bitmap);
 	}
 
-	/* remove all non-head entries from the texture free list */
-	for (texture_ptr = &render_texture_free_list; *texture_ptr != NULL; texture_ptr = &(*texture_ptr)->next)
-		while (*texture_ptr != NULL && (*texture_ptr)->base != *texture_ptr)
-			*texture_ptr = (*texture_ptr)->next;
+	// invalidate references to the original bitmap as well
+	m_manager->invalidate_all(m_bitmap);
 
-	/* free the targets; this must be done before freeing the texture groups
-       as that will forcefully free everything, and if it goes first, we may
-       end up double-freeing textures of the render targets */
-	while (targetlist != NULL)
-		render_target_free(targetlist);
+	// release palette references
+	if (m_palette != NULL)
+		palette_deref(m_palette);
 
-	/* free the screen overlay; similarly, do this before any of the following
-       calls to avoid double-frees */
-	global_free(screen_overlay);
-	screen_overlay = NULL;
-
-	/* free the texture groups */
-	while (render_texture_free_list != NULL)
-	{
-		render_texture *temp = render_texture_free_list;
-		render_texture_free_list = temp->next;
-		global_free(temp);
-	}
-
-	/* free the render primitives */
-	while (render_primitive_free_list != NULL)
-	{
-		render_primitive *temp = render_primitive_free_list;
-		render_primitive_free_list = temp->next;
-		global_free(temp);
-	}
-
-	/* free the render refs */
-	while (render_ref_free_list != NULL)
-	{
-		render_ref *temp = render_ref_free_list;
-		render_ref_free_list = temp->next;
-		global_free(temp);
-	}
-
-	/* free the container items */
-	while (container_item_free_list != NULL)
-	{
-		container_item *temp = container_item_free_list;
-		container_item_free_list = temp->next;
-		global_free(temp);
-	}
+	// free any B/C/G lookup tables
+	auto_free(&m_manager->machine(), m_bcglookup);
 }
 
 
-/*-------------------------------------------------
-    render_load - read and apply data from the
-    configuration file
--------------------------------------------------*/
+//-------------------------------------------------
+//  reset - reset the state of a texture after
+//  it has been re-allocated
+//-------------------------------------------------
 
-static void render_load(running_machine *machine, int config_type, xml_data_node *parentnode)
+void render_texture::reset(render_manager &manager, texture_scaler_func scaler, void *param)
 {
-	xml_data_node *targetnode;
-	xml_data_node *screennode;
-	xml_data_node *uinode;
-	int tmpint;
+	m_manager = &manager;
+	memset(&m_next, 0, FPTR(&m_bcglookup_entries + 1) - FPTR(&m_next));
+	m_format = TEXFORMAT_ARGB32;
+	m_scaler = scaler;
+	m_param = param;
+}
 
-	/* we only care about game files */
-	if (config_type != CONFIG_TYPE_GAME)
-		return;
 
-	/* might not have any data */
-	if (parentnode == NULL)
-		return;
+//-------------------------------------------------
+//  set_bitmap - set a new source bitmap
+//-------------------------------------------------
 
-	/* check the UI target */
-	uinode = xml_get_sibling(parentnode->child, "interface");
-	if (uinode != NULL)
+void render_texture::set_bitmap(bitmap_t *bitmap, const rectangle *sbounds, int format, palette_t *palette)
+{
+	// ensure we have a valid palette for palettized modes
+	if (format == TEXFORMAT_PALETTE16 || format == TEXFORMAT_PALETTEA16)
+		assert(palette != NULL);
+
+	// invalidate references to the old bitmap
+	if (bitmap != m_bitmap && m_bitmap != NULL)
+		m_manager->invalidate_all(m_bitmap);
+
+	// if the palette is different, adjust references
+	if (palette != m_palette)
 	{
-		render_target *target = render_target_get_indexed(xml_get_attribute_int(uinode, "target", 0));
-		if (target != NULL)
-			render_set_ui_target(target);
+		if (m_palette != NULL)
+			palette_deref(m_palette);
+		if (palette != NULL)
+			palette_ref(palette);
 	}
 
-	/* iterate over target nodes */
-	for (targetnode = xml_get_sibling(parentnode->child, "target"); targetnode; targetnode = xml_get_sibling(targetnode->next, "target"))
+	// set the new bitmap/palette
+	m_bitmap = bitmap;
+	m_sbounds.min_x = (sbounds != NULL) ? sbounds->min_x : 0;
+	m_sbounds.min_y = (sbounds != NULL) ? sbounds->min_y : 0;
+	m_sbounds.max_x = (sbounds != NULL) ? sbounds->max_x : (bitmap != NULL) ? bitmap->width : 1000;
+	m_sbounds.max_y = (sbounds != NULL) ? sbounds->max_y : (bitmap != NULL) ? bitmap->height : 1000;
+	m_palette = palette;
+	m_format = format;
+
+	// invalidate all scaled versions
+	for (int scalenum = 0; scalenum < ARRAY_LENGTH(m_scaled); scalenum++)
 	{
-		render_target *target = render_target_get_indexed(xml_get_attribute_int(targetnode, "index", -1));
-		if (target != NULL)
+		if (m_scaled[scalenum].bitmap != NULL)
 		{
-			const char *viewname = xml_get_attribute_string(targetnode, "view", NULL);
-			int viewnum;
+			m_manager->invalidate_all(m_scaled[scalenum].bitmap);
+			auto_free(&m_manager->machine(), m_scaled[scalenum].bitmap);
+		}
+		m_scaled[scalenum].bitmap = NULL;
+		m_scaled[scalenum].seqid = 0;
+	}
+}
 
-			/* find the view */
-			if (viewname != NULL)
-				for (viewnum = 0; viewnum < 1000; viewnum++)
-				{
-					const char *testname = render_target_get_view_name(target, viewnum);
-					if (testname == NULL)
-						break;
-					if (!strcmp(viewname, testname))
+
+//-------------------------------------------------
+//  hq_scale - generic high quality resampling
+//  scaler
+//-------------------------------------------------
+
+void render_texture::hq_scale(bitmap_t &dest, const bitmap_t &source, const rectangle &sbounds, void *param)
+{
+	render_color color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	render_resample_argb_bitmap_hq(dest.base, dest.rowpixels, dest.width, dest.height, &source, &sbounds, &color);
+}
+
+
+//-------------------------------------------------
+//  get_scaled - get a scaled bitmap (if we can)
+//-------------------------------------------------
+
+bool render_texture::get_scaled(UINT32 dwidth, UINT32 dheight, render_texinfo &texinfo, render_primitive_list &primlist)
+{
+	// source width/height come from the source bounds
+	int swidth = m_sbounds.max_x - m_sbounds.min_x;
+	int sheight = m_sbounds.max_y - m_sbounds.min_y;
+
+	// ensure height/width are non-zero
+	if (dwidth < 1) dwidth = 1;
+	if (dheight < 1) dheight = 1;
+
+	// are we scaler-free? if so, just return the source bitmap
+	const rgb_t *palbase = (m_format == TEXFORMAT_PALETTE16 || m_format == TEXFORMAT_PALETTEA16) ? palette_entry_list_adjusted(m_palette) : NULL;
+	if (m_scaler == NULL || (m_bitmap != NULL && swidth == dwidth && sheight == dheight))
+	{
+		// add a reference and set up the source bitmap
+		primlist.add_reference(m_bitmap);
+		UINT8 bpp = (m_format == TEXFORMAT_PALETTE16 || m_format == TEXFORMAT_PALETTEA16 || m_format == TEXFORMAT_RGB15 || m_format == TEXFORMAT_YUY16) ? 16 : 32;
+		texinfo.base = (UINT8 *)m_bitmap->base + (m_sbounds.min_y * m_bitmap->rowpixels + m_sbounds.min_x) * (bpp / 8);
+		texinfo.rowpixels = m_bitmap->rowpixels;
+		texinfo.width = swidth;
+		texinfo.height = sheight;
+		texinfo.palette = palbase;
+		texinfo.seqid = ++m_curseq;
+		return true;
+	}
+
+	// is it a size we already have?
+	scaled_texture *scaled = NULL;
+	int scalenum;
+	for (scalenum = 0; scalenum < ARRAY_LENGTH(m_scaled); scalenum++)
+	{
+		scaled = &m_scaled[scalenum];
+
+		// we need a non-NULL bitmap with matching dest size
+		if (scaled->bitmap != NULL && dwidth == scaled->bitmap->width && dheight == scaled->bitmap->height)
+			break;
+	}
+
+	// did we get one?
+	if (scalenum == ARRAY_LENGTH(m_scaled))
+	{
+		int lowest = -1;
+
+		// didn't find one -- take the entry with the lowest seqnum
+		for (scalenum = 0; scalenum < ARRAY_LENGTH(m_scaled); scalenum++)
+			if ((lowest == -1 || m_scaled[scalenum].seqid < m_scaled[lowest].seqid) && !primlist.has_reference(m_scaled[scalenum].bitmap))
+				lowest = scalenum;
+		assert_always(lowest != -1, "Too many live texture instances!");
+
+		// throw out any existing entries
+		scaled = &m_scaled[lowest];
+		if (scaled->bitmap != NULL)
+		{
+			m_manager->invalidate_all(scaled->bitmap);
+			auto_free(&m_manager->machine(), scaled->bitmap);
+		}
+
+		// allocate a new bitmap
+		scaled->bitmap = auto_alloc(&m_manager->machine(), bitmap_t(dwidth, dheight, BITMAP_FORMAT_ARGB32));
+		scaled->seqid = ++m_curseq;
+
+		// let the scaler do the work
+		(*m_scaler)(*scaled->bitmap, *m_bitmap, m_sbounds, m_param);
+	}
+
+	// finally fill out the new info
+	primlist.add_reference(scaled->bitmap);
+	texinfo.base = scaled->bitmap->base;
+	texinfo.rowpixels = scaled->bitmap->rowpixels;
+	texinfo.width = dwidth;
+	texinfo.height = dheight;
+	texinfo.palette = palbase;
+	texinfo.seqid = scaled->seqid;
+	return true;
+}
+
+
+//-------------------------------------------------
+//  get_adjusted_palette - return the adjusted
+//  palette for a texture
+//-------------------------------------------------
+
+const rgb_t *render_texture::get_adjusted_palette(render_container &container)
+{
+	const rgb_t *adjusted;
+	int numentries;
+
+	// override the palette with our adjusted palette
+	switch (m_format)
+	{
+		case TEXFORMAT_PALETTE16:
+		case TEXFORMAT_PALETTEA16:
+
+			// if no adjustment necessary, return the raw palette
+			assert(m_palette != NULL);
+			adjusted = palette_entry_list_adjusted(m_palette);
+			if (!container.has_brightness_contrast_gamma_changes())
+				return adjusted;
+
+			// if this is the machine palette, return our precomputed adjusted palette
+			adjusted = container.bcg_lookup_table(m_format, m_palette);
+			if (adjusted != NULL)
+				return adjusted;
+
+			// otherwise, ensure we have memory allocated and compute the adjusted result ourself
+			numentries = palette_get_num_colors(m_palette) * palette_get_num_groups(m_palette);
+			if (m_bcglookup == NULL || m_bcglookup_entries < numentries)
+			{
+				rgb_t *newlookup = auto_alloc_array(&m_manager->machine(), rgb_t, numentries);
+				memcpy(newlookup, m_bcglookup, m_bcglookup_entries * sizeof(rgb_t));
+				auto_free(&m_manager->machine(), m_bcglookup);
+				m_bcglookup = newlookup;
+				m_bcglookup_entries = numentries;
+			}
+			for (int index = 0; index < numentries; index++)
+			{
+				UINT8 r = container.apply_brightness_contrast_gamma(RGB_RED(adjusted[index]));
+				UINT8 g = container.apply_brightness_contrast_gamma(RGB_GREEN(adjusted[index]));
+				UINT8 b = container.apply_brightness_contrast_gamma(RGB_BLUE(adjusted[index]));
+				m_bcglookup[index] = MAKE_ARGB(RGB_ALPHA(adjusted[index]), r, g, b);
+			}
+			return m_bcglookup;
+
+		case TEXFORMAT_RGB15:
+
+			// if no adjustment necessary, return NULL
+			if (!container.has_brightness_contrast_gamma_changes() && m_palette == NULL)
+				return NULL;
+
+			// if no palette, return the standard lookups
+			if (m_palette == NULL)
+				return container.bcg_lookup_table(m_format);
+
+			// otherwise, ensure we have memory allocated and compute the adjusted result ourself
+			assert(palette_get_num_colors(m_palette) == 32);
+			adjusted = palette_entry_list_adjusted(m_palette);
+			if (m_bcglookup == NULL || m_bcglookup_entries < 4 * 32)
+			{
+				rgb_t *newlookup = auto_alloc_array(&m_manager->machine(), rgb_t, 4 * 32);
+				memcpy(newlookup, m_bcglookup, m_bcglookup_entries * sizeof(rgb_t));
+				auto_free(&m_manager->machine(), m_bcglookup);
+				m_bcglookup = newlookup;
+				m_bcglookup_entries = 4 * 32;
+			}
+
+			// otherwise, return the 32-entry BCG lookups
+			for (int index = 0; index < 32; index++)
+			{
+				UINT8 val = container.apply_brightness_contrast_gamma(RGB_GREEN(adjusted[index]));
+				m_bcglookup[0x00 + index] = val << 0;
+				m_bcglookup[0x20 + index] = val << 8;
+				m_bcglookup[0x40 + index] = val << 16;
+				m_bcglookup[0x60 + index] = val << 24;
+			}
+			return m_bcglookup;
+
+		case TEXFORMAT_RGB32:
+		case TEXFORMAT_ARGB32:
+		case TEXFORMAT_YUY16:
+
+			// if no adjustment necessary, return NULL
+			if (!container.has_brightness_contrast_gamma_changes() && m_palette == NULL)
+				return NULL;
+
+			// if no palette, return the standard lookups
+			if (m_palette == NULL)
+				return container.bcg_lookup_table(m_format);
+
+			// otherwise, ensure we have memory allocated and compute the adjusted result ourself
+			assert(palette_get_num_colors(m_palette) == 256);
+			adjusted = palette_entry_list_adjusted(m_palette);
+			if (m_bcglookup == NULL || m_bcglookup_entries < 4 * 256)
+			{
+				rgb_t *newlookup = auto_alloc_array(&m_manager->machine(), rgb_t, 4 * 256);
+				memcpy(newlookup, m_bcglookup, m_bcglookup_entries * sizeof(rgb_t));
+				auto_free(&m_manager->machine(), m_bcglookup);
+				m_bcglookup = newlookup;
+				m_bcglookup_entries = 4 * 256;
+			}
+
+			// otherwise, return the 32-entry BCG lookups
+			for (int index = 0; index < 256; index++)
+			{
+				UINT8 val = container.apply_brightness_contrast_gamma(RGB_GREEN(adjusted[index]));
+				m_bcglookup[0x000 + index] = val << 0;
+				m_bcglookup[0x100 + index] = val << 8;
+				m_bcglookup[0x200 + index] = val << 16;
+				m_bcglookup[0x300 + index] = val << 24;
+			}
+			return m_bcglookup;
+
+		default:
+			assert(FALSE);
+	}
+
+	return NULL;
+}
+
+
+
+//**************************************************************************
+//  RENDER CONTAINER
+//**************************************************************************
+
+//-------------------------------------------------
+//  render_container - constructor
+//-------------------------------------------------
+
+render_container::render_container(render_manager &manager, screen_device *screen)
+	: m_next(NULL),
+	  m_manager(manager),
+	  m_itemlist(manager.machine().m_respool),
+	  m_item_allocator(manager.machine().m_respool),
+	  m_screen(screen),
+	  m_overlaybitmap(NULL),
+	  m_overlaytexture(NULL),
+	  m_palclient(NULL)
+{
+	// all palette entries are opaque by default
+	for (int color = 0; color < ARRAY_LENGTH(m_bcglookup); color++)
+		m_bcglookup[color] = MAKE_ARGB(0xff,0x00,0x00,0x00);
+
+	// make sure it is empty
+	empty();
+
+	// if we have a screen, read and apply the options
+	if (screen != NULL)
+	{
+		// set the initial orientation and brightness/contrast/gamma
+		m_user.m_orientation = manager.machine().gamedrv->flags & ORIENTATION_MASK;
+		m_user.m_brightness = options_get_float(manager.machine().options(), OPTION_BRIGHTNESS);
+		m_user.m_contrast = options_get_float(manager.machine().options(), OPTION_CONTRAST);
+		m_user.m_gamma = options_get_float(manager.machine().options(), OPTION_GAMMA);
+	}
+
+	// allocate a client to the main palette
+	if (manager.machine().palette != NULL)
+		m_palclient = palette_client_alloc(manager.machine().palette);
+	recompute_lookups();
+}
+
+
+//-------------------------------------------------
+//  ~render_container - destructor
+//-------------------------------------------------
+
+render_container::~render_container()
+{
+	// free all the container items
+	empty();
+
+	// free the overlay texture
+	m_manager.texture_free(m_overlaytexture);
+
+	// release our palette client
+	if (m_palclient != NULL)
+		palette_client_free(m_palclient);
+}
+
+
+//-------------------------------------------------
+//  set_overlay - set the overlay bitmap for the
+//  container
+//-------------------------------------------------
+
+void render_container::set_overlay(bitmap_t *bitmap)
+{
+	// free any existing texture
+	m_manager.texture_free(m_overlaytexture);
+
+	// set the new data and allocate the texture
+	m_overlaybitmap = bitmap;
+	if (m_overlaybitmap != NULL)
+	{
+		m_overlaytexture = m_manager.texture_alloc(render_container::overlay_scale);
+		m_overlaytexture->set_bitmap(bitmap, NULL, TEXFORMAT_ARGB32);
+	}
+}
+
+
+//-------------------------------------------------
+//  set_user_settings - set the current user
+//  settings for a container
+//-------------------------------------------------
+
+void render_container::set_user_settings(const user_settings &settings)
+{
+	m_user = settings;
+	recompute_lookups();
+}
+
+
+//-------------------------------------------------
+//  add_line - add a line item to this container
+//-------------------------------------------------
+
+void render_container::add_line(float x0, float y0, float x1, float y1, float width, rgb_t argb, UINT32 flags)
+{
+	item &newitem = add_generic(CONTAINER_ITEM_LINE, x0, y0, x1, y1, argb);
+	newitem.m_width = width;
+	newitem.m_flags = flags;
+}
+
+
+//-------------------------------------------------
+//  add_quad - add a quad item to this container
+//-------------------------------------------------
+
+void render_container::add_quad(float x0, float y0, float x1, float y1, rgb_t argb, render_texture *texture, UINT32 flags)
+{
+	item &newitem = add_generic(CONTAINER_ITEM_QUAD, x0, y0, x1, y1, argb);
+	newitem.m_texture = texture;
+	newitem.m_flags = flags;
+}
+
+
+//-------------------------------------------------
+//  add_char - add a char item to this container
+//-------------------------------------------------
+
+void render_container::add_char(float x0, float y0, float height, float aspect, rgb_t argb, render_font &font, UINT16 ch)
+{
+	// compute the bounds of the character cell and get the texture
+	render_bounds bounds;
+	bounds.x0 = x0;
+	bounds.y0 = y0;
+	render_texture *texture = render_font_get_char_texture_and_bounds(&font, height, aspect, ch, &bounds);
+
+	// add it like a quad
+	item &newitem = add_generic(CONTAINER_ITEM_QUAD, bounds.x0, bounds.y0, bounds.x1, bounds.y1, argb);
+	newitem.m_texture = texture;
+	newitem.m_flags = PRIMFLAG_TEXORIENT(ROT0) | PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA);
+	newitem.m_internal = INTERNAL_FLAG_CHAR;
+}
+
+
+//-------------------------------------------------
+//  apply_brightness_contrast_gamma - apply the
+//  container's brightess, contrast, and gamma to
+//  an 8-bit value
+//-------------------------------------------------
+
+UINT8 render_container::apply_brightness_contrast_gamma(UINT8 value)
+{
+	return ::apply_brightness_contrast_gamma(value, m_user.m_brightness, m_user.m_contrast, m_user.m_gamma);
+}
+
+
+//-------------------------------------------------
+//  apply_brightness_contrast_gamma_fp - apply the
+//  container's brightess, contrast, and gamma to
+//  a floating-point value
+//-------------------------------------------------
+
+float render_container::apply_brightness_contrast_gamma_fp(float value)
+{
+	return ::apply_brightness_contrast_gamma_fp(value, m_user.m_brightness, m_user.m_contrast, m_user.m_gamma);
+}
+
+
+//-------------------------------------------------
+//  bcg_lookup_table - return the appropriate
+//  brightness/contrast/gamma lookup table for a
+//  given texture mode
+//-------------------------------------------------
+
+const rgb_t *render_container::bcg_lookup_table(int texformat, palette_t *palette)
+{
+	switch (texformat)
+	{
+		case TEXFORMAT_PALETTE16:
+		case TEXFORMAT_PALETTEA16:
+			return (palette != NULL && palette == palette_client_get_palette(m_palclient)) ? m_bcglookup : NULL;
+
+		case TEXFORMAT_RGB15:
+			return m_bcglookup32;
+
+		case TEXFORMAT_RGB32:
+		case TEXFORMAT_ARGB32:
+		case TEXFORMAT_YUY16:
+			return m_bcglookup256;
+
+		default:
+			return NULL;
+	}
+}
+
+
+//-------------------------------------------------
+//  overlay_scale - scaler for an overlay
+//-------------------------------------------------
+
+void render_container::overlay_scale(bitmap_t &dest, const bitmap_t &source, const rectangle &sbounds, void *param)
+{
+	// simply replicate the source bitmap over the target
+	for (int y = 0; y < dest.height; y++)
+	{
+		UINT32 *src = (UINT32 *)source.base + (y % source.height) * source.rowpixels;
+		UINT32 *dst = (UINT32 *)dest.base + y * dest.rowpixels;
+		int sx = 0;
+
+		// loop over columns
+		for (int x = 0; x < dest.width; x++)
+		{
+			*dst++ = src[sx++];
+			if (sx >= source.width)
+				sx = 0;
+		}
+	}
+}
+
+
+//-------------------------------------------------
+//  add_generic - add a generic item to a
+//  container
+//-------------------------------------------------
+
+render_container::item &render_container::add_generic(UINT8 type, float x0, float y0, float x1, float y1, rgb_t argb)
+{
+	item *newitem = m_item_allocator.alloc();
+
+	// copy the data into the new item
+	newitem->m_type = type;
+	newitem->m_bounds.x0 = x0;
+	newitem->m_bounds.y0 = y0;
+	newitem->m_bounds.x1 = x1;
+	newitem->m_bounds.y1 = y1;
+	newitem->m_color.r = (float)RGB_RED(argb) * (1.0f / 255.0f);
+	newitem->m_color.g = (float)RGB_GREEN(argb) * (1.0f / 255.0f);
+	newitem->m_color.b = (float)RGB_BLUE(argb) * (1.0f / 255.0f);
+	newitem->m_color.a = (float)RGB_ALPHA(argb) * (1.0f / 255.0f);
+	newitem->m_flags = 0;
+	newitem->m_internal = 0;
+	newitem->m_width = 0;
+	newitem->m_texture = NULL;
+
+	// add the item to the container
+	return m_itemlist.append(*newitem);
+}
+
+
+//-------------------------------------------------
+//  recompute_lookups - recompute the lookup table
+//  for the render container
+//-------------------------------------------------
+
+void render_container::recompute_lookups()
+{
+	// recompute the 256 entry lookup table
+	for (int i = 0; i < 0x100; i++)
+	{
+		UINT8 adjustedval = apply_brightness_contrast_gamma(i);
+		m_bcglookup256[i + 0x000] = adjustedval << 0;
+		m_bcglookup256[i + 0x100] = adjustedval << 8;
+		m_bcglookup256[i + 0x200] = adjustedval << 16;
+		m_bcglookup256[i + 0x300] = adjustedval << 24;
+	}
+
+	// recompute the 32 entry lookup table
+	for (int i = 0; i < 0x20; i++)
+	{
+		UINT8 adjustedval = apply_brightness_contrast_gamma(pal5bit(i));
+		m_bcglookup32[i + 0x000] = adjustedval << 0;
+		m_bcglookup32[i + 0x020] = adjustedval << 8;
+		m_bcglookup32[i + 0x040] = adjustedval << 16;
+		m_bcglookup32[i + 0x060] = adjustedval << 24;
+	}
+
+	// recompute the palette entries
+	if (m_palclient != NULL)
+	{
+		palette_t *palette = palette_client_get_palette(m_palclient);
+		const pen_t *adjusted_palette = palette_entry_list_adjusted(palette);
+		int colors = palette_get_num_colors(palette) * palette_get_num_groups(palette);
+
+		for (int i = 0; i < colors; i++)
+		{
+			pen_t newval = adjusted_palette[i];
+			m_bcglookup[i] = (newval & 0xff000000) |
+									  m_bcglookup256[0x200 + RGB_RED(newval)] |
+									  m_bcglookup256[0x100 + RGB_GREEN(newval)] |
+									  m_bcglookup256[0x000 + RGB_BLUE(newval)];
+		}
+	}
+}
+
+
+//-------------------------------------------------
+//  update_palette - update any dirty palette
+//  entries
+//-------------------------------------------------
+
+void render_container::update_palette()
+{
+	// skip if no client
+	if (m_palclient == NULL)
+		return;
+
+	// get the dirty list
+	UINT32 mindirty, maxdirty;
+	const UINT32 *dirty = palette_client_get_dirty_list(m_palclient, &mindirty, &maxdirty);
+
+	// iterate over dirty items and update them
+	if (dirty != NULL)
+	{
+		palette_t *palette = palette_client_get_palette(m_palclient);
+		const pen_t *adjusted_palette = palette_entry_list_adjusted(palette);
+
+		// loop over chunks of 32 entries, since we can quickly examine 32 at a time
+		for (UINT32 entry32 = mindirty / 32; entry32 <= maxdirty / 32; entry32++)
+		{
+			UINT32 dirtybits = dirty[entry32];
+			if (dirtybits != 0)
+
+				// this chunk of 32 has dirty entries; fix them up
+				for (UINT32 entry = 0; entry < 32; entry++)
+					if (dirtybits & (1 << entry))
 					{
-						render_target_set_view(target, viewnum);
-						break;
+						UINT32 finalentry = entry32 * 32 + entry;
+						rgb_t newval = adjusted_palette[finalentry];
+						m_bcglookup[finalentry] = (newval & 0xff000000) |
+													  m_bcglookup256[0x200 + RGB_RED(newval)] |
+													  m_bcglookup256[0x100 + RGB_GREEN(newval)] |
+													  m_bcglookup256[0x000 + RGB_BLUE(newval)];
 					}
-				}
-
-			/* modify the artwork config */
-			tmpint = xml_get_attribute_int(targetnode, "backdrops", -1);
-			if (tmpint == 0)
-				render_target_set_layer_config(target, target->layerconfig & ~LAYER_CONFIG_ENABLE_BACKDROP);
-			else if (tmpint == 1)
-				render_target_set_layer_config(target, target->layerconfig | LAYER_CONFIG_ENABLE_BACKDROP);
-
-			tmpint = xml_get_attribute_int(targetnode, "overlays", -1);
-			if (tmpint == 0)
-				render_target_set_layer_config(target, target->layerconfig & ~LAYER_CONFIG_ENABLE_OVERLAY);
-			else if (tmpint == 1)
-				render_target_set_layer_config(target, target->layerconfig | LAYER_CONFIG_ENABLE_OVERLAY);
-
-			tmpint = xml_get_attribute_int(targetnode, "bezels", -1);
-			if (tmpint == 0)
-				render_target_set_layer_config(target, target->layerconfig & ~LAYER_CONFIG_ENABLE_BEZEL);
-			else if (tmpint == 1)
-				render_target_set_layer_config(target, target->layerconfig | LAYER_CONFIG_ENABLE_BEZEL);
-
-			tmpint = xml_get_attribute_int(targetnode, "zoom", -1);
-			if (tmpint == 0)
-				render_target_set_layer_config(target, target->layerconfig & ~LAYER_CONFIG_ZOOM_TO_SCREEN);
-			else if (tmpint == 1)
-				render_target_set_layer_config(target, target->layerconfig | LAYER_CONFIG_ZOOM_TO_SCREEN);
-
-			/* apply orientation */
-			tmpint = xml_get_attribute_int(targetnode, "rotate", -1);
-			if (tmpint != -1)
-			{
-				if (tmpint == 90)
-					tmpint = ROT90;
-				else if (tmpint == 180)
-					tmpint = ROT180;
-				else if (tmpint == 270)
-					tmpint = ROT270;
-				else
-					tmpint = ROT0;
-				render_target_set_orientation(target, orientation_add(tmpint, target->orientation));
-
-				/* apply the opposite orientation to the UI */
-				if (target == render_get_ui_target())
-				{
-					render_container_user_settings settings;
-
-					render_container_get_user_settings(ui_container, &settings);
-					settings.orientation = orientation_add(orientation_reverse(tmpint), settings.orientation);
-					render_container_set_user_settings(ui_container, &settings);
-				}
-			}
-		}
-	}
-
-	/* iterate over screen nodes */
-	for (screennode = xml_get_sibling(parentnode->child, "screen"); screennode; screennode = xml_get_sibling(screennode->next, "screen"))
-	{
-		int index = xml_get_attribute_int(screennode, "index", -1);
-		render_container *container = get_screen_container_by_index(index);
-		render_container_user_settings settings;
-
-		/* fetch current settings */
-		render_container_get_user_settings(container, &settings);
-
-		/* fetch color controls */
-		settings.brightness = xml_get_attribute_float(screennode, "brightness", settings.brightness);
-		settings.contrast = xml_get_attribute_float(screennode, "contrast", settings.contrast);
-		settings.gamma = xml_get_attribute_float(screennode, "gamma", settings.gamma);
-
-		/* fetch positioning controls */
-		settings.xoffset = xml_get_attribute_float(screennode, "hoffset", settings.xoffset);
-		settings.xscale = xml_get_attribute_float(screennode, "hstretch", settings.xscale);
-		settings.yoffset = xml_get_attribute_float(screennode, "voffset", settings.yoffset);
-		settings.yscale = xml_get_attribute_float(screennode, "vstretch", settings.yscale);
-
-		/* set the new values */
-		render_container_set_user_settings(container, &settings);
-	}
-}
-
-
-/*-------------------------------------------------
-    render_save - save data to the configuration
-    file
--------------------------------------------------*/
-
-static void render_save(running_machine *machine, int config_type, xml_data_node *parentnode)
-{
-	render_target *target;
-	render_container *container;
-	int scrnum;
-	int targetnum = 0;
-
-	/* we only care about game files */
-	if (config_type != CONFIG_TYPE_GAME)
-		return;
-
-	/* write out the interface target */
-	target = render_get_ui_target();
-	if (target != render_target_get_indexed(0))
-	{
-		xml_data_node *uinode;
-
-		/* find the target index */
-		for (targetnum = 0; ; targetnum++)
-			if (render_target_get_indexed(targetnum) == target)
-				break;
-
-		/* create a node for it */
-		uinode = xml_add_child(parentnode, "interface", NULL);
-		if (uinode != NULL)
-			xml_set_attribute_int(uinode, "target", targetnum);
-	}
-
-	/* iterate over targets */
-	for (targetnum = 0; targetnum < 1000; targetnum++)
-	{
-		xml_data_node *targetnode;
-
-		/* get this target and break when we fail */
-		target = render_target_get_indexed(targetnum);
-		if (target == NULL)
-			break;
-
-		/* create a node */
-		targetnode = xml_add_child(parentnode, "target", NULL);
-		if (targetnode != NULL)
-		{
-			int changed = FALSE;
-
-			/* output the basics */
-			xml_set_attribute_int(targetnode, "index", targetnum);
-
-			/* output the view */
-			if (target->curview != target->base_view)
-			{
-				xml_set_attribute(targetnode, "view", target->curview->name);
-				changed = TRUE;
-			}
-
-			/* output the layer config */
-			if (target->layerconfig != target->base_layerconfig)
-			{
-				xml_set_attribute_int(targetnode, "backdrops", (target->layerconfig & LAYER_CONFIG_ENABLE_BACKDROP) != 0);
-				xml_set_attribute_int(targetnode, "overlays", (target->layerconfig & LAYER_CONFIG_ENABLE_OVERLAY) != 0);
-				xml_set_attribute_int(targetnode, "bezels", (target->layerconfig & LAYER_CONFIG_ENABLE_BEZEL) != 0);
-				xml_set_attribute_int(targetnode, "zoom", (target->layerconfig & LAYER_CONFIG_ZOOM_TO_SCREEN) != 0);
-				changed = TRUE;
-			}
-
-			/* output rotation */
-			if (target->orientation != target->base_orientation)
-			{
-				int rotate = 0;
-				if (orientation_add(ROT90, target->base_orientation) == target->orientation)
-					rotate = 90;
-				else if (orientation_add(ROT180, target->base_orientation) == target->orientation)
-					rotate = 180;
-				else if (orientation_add(ROT270, target->base_orientation) == target->orientation)
-					rotate = 270;
-				assert(rotate != 0);
-				xml_set_attribute_int(targetnode, "rotate", rotate);
-				changed = TRUE;
-			}
-
-			/* if nothing changed, kill the node */
-			if (!changed)
-				xml_delete_node(targetnode);
-		}
-	}
-
-	/* iterate over screen containers */
-	for (container = screen_container_list, scrnum = 0; container != NULL; container = container->next, scrnum++)
-	{
-		xml_data_node *screennode;
-
-		/* create a node */
-		screennode = xml_add_child(parentnode, "screen", NULL);
-
-		if (screennode != NULL)
-		{
-			int changed = FALSE;
-
-			/* output the basics */
-			xml_set_attribute_int(screennode, "index", scrnum);
-
-			/* output the color controls */
-			if (container->brightness != options_get_float(machine->options(), OPTION_BRIGHTNESS))
-			{
-				xml_set_attribute_float(screennode, "brightness", container->brightness);
-				changed = TRUE;
-			}
-
-			if (container->contrast != options_get_float(machine->options(), OPTION_CONTRAST))
-			{
-				xml_set_attribute_float(screennode, "contrast", container->contrast);
-				changed = TRUE;
-			}
-
-			if (container->gamma != options_get_float(machine->options(), OPTION_GAMMA))
-			{
-				xml_set_attribute_float(screennode, "gamma", container->gamma);
-				changed = TRUE;
-			}
-
-			/* output the positioning controls */
-			if (container->xoffset != 0.0f)
-			{
-				xml_set_attribute_float(screennode, "hoffset", container->xoffset);
-				changed = TRUE;
-			}
-
-			if (container->xscale != 1.0f)
-			{
-				xml_set_attribute_float(screennode, "hstretch", container->xscale);
-				changed = TRUE;
-			}
-
-			if (container->yoffset != 0.0f)
-			{
-				xml_set_attribute_float(screennode, "voffset", container->yoffset);
-				changed = TRUE;
-			}
-
-			if (container->yscale != 1.0f)
-			{
-				xml_set_attribute_float(screennode, "vstretch", container->yscale);
-				changed = TRUE;
-			}
-
-			/* if nothing changed, kill the node */
-			if (!changed)
-				xml_delete_node(screennode);
 		}
 	}
 }
 
 
-/*-------------------------------------------------
-    render_is_live_screen - return if the screen
-    is 'live'
--------------------------------------------------*/
+//-------------------------------------------------
+//  user_settings - constructor
+//-------------------------------------------------
 
-int render_is_live_screen(device_t *screen)
+render_container::user_settings::user_settings()
+	: m_orientation(0),
+	  m_brightness(1.0f),
+	  m_contrast(1.0f),
+	  m_gamma(1.0f),
+	  m_xscale(1.0f),
+	  m_yscale(1.0f),
+	  m_xoffset(0.0f),
+	  m_yoffset(0.0f)
 {
-	render_target *target;
-	int screen_index;
-	UINT32 bitmask = 0;
-
-	assert(screen != NULL);
-	assert(screen->machine != NULL);
-	assert(screen->machine->config != NULL);
-
-	screen_index = screen->machine->m_devicelist.index(SCREEN, screen->tag());
-
-	assert(screen_index != -1);
-
-	/* iterate over all live targets and or together their screen masks */
-	for (target = targetlist; target != NULL; target = target->next)
-		bitmask |= target->curview->screens;
-
-	return (bitmask & (1 << screen_index)) ? TRUE : FALSE;
 }
 
 
-/*-------------------------------------------------
-    render_get_max_update_rate - return the
-    smallest maximum update rate across all targets
--------------------------------------------------*/
 
-float render_get_max_update_rate(void)
+//**************************************************************************
+//  RENDER TARGET
+//**************************************************************************
+
+//-------------------------------------------------
+//  render_target - constructor
+//-------------------------------------------------
+
+render_target::render_target(render_manager &manager, const char *layoutfile, UINT32 flags)
+	: m_next(NULL),
+	  m_manager(manager),
+	  m_curview(NULL),
+	  m_filelist(NULL),
+	  m_flags(flags),
+	  m_listindex(0),
+	  m_width(640),
+	  m_height(480),
+	  m_pixel_aspect(0.0f),
+	  m_max_refresh(0),
+	  m_orientation(0),
+	  m_layerconfig(LAYER_CONFIG_DEFAULT),
+	  m_base_view(NULL),
+	  m_base_orientation(ROT0),
+	  m_base_layerconfig(LAYER_CONFIG_DEFAULT),
+	  m_maxtexwidth(65536),
+	  m_maxtexheight(65536),
+	  m_debug_containers(manager.machine().m_respool)
 {
-	render_target *target;
-	float minimum = 0;
+	// determine the base layer configuration based on options
+	if (!options_get_bool(manager.machine().options(), OPTION_USE_BACKDROPS)) m_base_layerconfig &= ~LAYER_CONFIG_ENABLE_BACKDROP;
+	if (!options_get_bool(manager.machine().options(), OPTION_USE_OVERLAYS)) m_base_layerconfig &= ~LAYER_CONFIG_ENABLE_OVERLAY;
+	if (!options_get_bool(manager.machine().options(), OPTION_USE_BEZELS)) m_base_layerconfig &= ~LAYER_CONFIG_ENABLE_BEZEL;
+	if (options_get_bool(manager.machine().options(), OPTION_ARTWORK_CROP)) m_base_layerconfig |= LAYER_CONFIG_ZOOM_TO_SCREEN;
 
-	/* iterate over all live targets and or together their screen masks */
-	for (target = targetlist; target != NULL; target = target->next)
-		if (target->max_refresh != 0)
-		{
-			if (minimum == 0)
-				minimum = target->max_refresh;
-			else
-				minimum = MIN(target->max_refresh, minimum);
-		}
+	// determine the base orientation based on options
+	m_orientation = ROT0;
+	if (!options_get_bool(manager.machine().options(), OPTION_ROTATE))
+		m_base_orientation = orientation_reverse(manager.machine().gamedrv->flags & ORIENTATION_MASK);
 
-	return minimum;
+	// rotate left/right
+	if (options_get_bool(manager.machine().options(), OPTION_ROR) || (options_get_bool(manager.machine().options(), OPTION_AUTOROR) && (manager.machine().gamedrv->flags & ORIENTATION_SWAP_XY)))
+		m_base_orientation = orientation_add(ROT90, m_base_orientation);
+	if (options_get_bool(manager.machine().options(), OPTION_ROL) || (options_get_bool(manager.machine().options(), OPTION_AUTOROL) && (manager.machine().gamedrv->flags & ORIENTATION_SWAP_XY)))
+		m_base_orientation = orientation_add(ROT270, m_base_orientation);
+
+	// flip X/Y
+	if (options_get_bool(manager.machine().options(), OPTION_FLIPX))
+		m_base_orientation ^= ORIENTATION_FLIP_X;
+	if (options_get_bool(manager.machine().options(), OPTION_FLIPY))
+		m_base_orientation ^= ORIENTATION_FLIP_Y;
+
+	// set the orientation and layerconfig equal to the base
+	m_orientation = m_base_orientation;
+	m_layerconfig = m_base_layerconfig;
+
+	// load the layout files
+	load_layout_files(layoutfile, flags & RENDER_CREATE_SINGLE_FILE);
+
+	// set the current view to the first one
+	set_view(0);
+
+	// make us the UI target if there is none
+	if (!hidden() && manager.m_ui_target == NULL)
+		manager.set_ui_target(*this);
 }
 
 
-/*-------------------------------------------------
-    render_set_ui_target - select the UI target
--------------------------------------------------*/
+//-------------------------------------------------
+//  ~render_target - destructor
+//-------------------------------------------------
 
-void render_set_ui_target(render_target *target)
+render_target::~render_target()
 {
-	assert(target != NULL);
-	ui_target = target;
-}
-
-
-/*-------------------------------------------------
-    render_get_ui_target - return the UI target
--------------------------------------------------*/
-
-render_target *render_get_ui_target(void)
-{
-	assert(ui_target != NULL);
-	return ui_target;
-}
-
-
-/*-------------------------------------------------
-    render_get_ui_aspect - return the aspect
-    ratio for UI fonts
--------------------------------------------------*/
-
-float render_get_ui_aspect(void)
-{
-	render_target *target = render_get_ui_target();
-	if (target != NULL)
+	// free the layout files
+	while (m_filelist != NULL)
 	{
-		int orient = orientation_add(target->orientation, ui_container->orientation);
-		float aspect;
-
-		/* based on the orientation of the target, compute height/width or width/height */
-		if (!(orient & ORIENTATION_SWAP_XY))
-			aspect = (float)target->height / (float)target->width;
-		else
-			aspect = (float)target->width / (float)target->height;
-
-		/* if we have a valid pixel aspect, apply that and return */
-		if (target->pixel_aspect != 0.0f)
-			return aspect / target->pixel_aspect;
-
-		/* if not, clamp for extreme proportions */
-		if (aspect < 0.66f)
-			aspect = 0.66f;
-		if (aspect > 1.5f)
-			aspect = 1.5f;
-		return aspect;
-	}
-
-	return 1.0f;
-}
-
-
-
-/***************************************************************************
-    RENDER TARGETS
-***************************************************************************/
-
-/*-------------------------------------------------
-    render_target_alloc - allocate a new render
-    target
--------------------------------------------------*/
-
-render_target *render_target_alloc(running_machine *machine, const char *layoutfile, UINT32 flags)
-{
-	render_target *target;
-	render_target **nextptr;
-	int listnum;
-
-	/* allocate memory for the target */
-	target = global_alloc_clear(render_target);
-
-	/* add it to the end of the list */
-	for (nextptr = &targetlist; *nextptr != NULL; nextptr = &(*nextptr)->next) ;
-	*nextptr = target;
-
-	/* fill in the basics with reasonable defaults */
-	target->machine = machine;
-	target->flags = flags;
-	target->width = 640;
-	target->height = 480;
-	target->pixel_aspect = 0.0f;
-	target->orientation = ROT0;
-	target->layerconfig = LAYER_CONFIG_DEFAULT;
-	target->maxtexwidth = 65536;
-	target->maxtexheight = 65536;
-
-	/* determine the base layer configuration based on options */
-	target->base_layerconfig = LAYER_CONFIG_DEFAULT;
-	if (!options_get_bool(machine->options(), OPTION_USE_BACKDROPS)) target->base_layerconfig &= ~LAYER_CONFIG_ENABLE_BACKDROP;
-	if (!options_get_bool(machine->options(), OPTION_USE_OVERLAYS)) target->base_layerconfig &= ~LAYER_CONFIG_ENABLE_OVERLAY;
-	if (!options_get_bool(machine->options(), OPTION_USE_BEZELS)) target->base_layerconfig &= ~LAYER_CONFIG_ENABLE_BEZEL;
-	if (options_get_bool(machine->options(), OPTION_ARTWORK_CROP)) target->base_layerconfig |= LAYER_CONFIG_ZOOM_TO_SCREEN;
-
-	/* determine the base orientation based on options */
-	target->orientation = ROT0;
-	if (!options_get_bool(machine->options(), OPTION_ROTATE))
-		target->base_orientation = orientation_reverse(machine->gamedrv->flags & ORIENTATION_MASK);
-
-	/* rotate left/right */
-	if (options_get_bool(machine->options(), OPTION_ROR) || (options_get_bool(machine->options(), OPTION_AUTOROR) && (machine->gamedrv->flags & ORIENTATION_SWAP_XY)))
-		target->base_orientation = orientation_add(ROT90, target->base_orientation);
-	if (options_get_bool(machine->options(), OPTION_ROL) || (options_get_bool(machine->options(), OPTION_AUTOROL) && (machine->gamedrv->flags & ORIENTATION_SWAP_XY)))
-		target->base_orientation = orientation_add(ROT270, target->base_orientation);
-
-	/* flip X/Y */
-	if (options_get_bool(machine->options(), OPTION_FLIPX))
-		target->base_orientation ^= ORIENTATION_FLIP_X;
-	if (options_get_bool(machine->options(), OPTION_FLIPY))
-		target->base_orientation ^= ORIENTATION_FLIP_Y;
-
-	/* set the orientation and layerconfig equal to the base */
-	target->orientation = target->base_orientation;
-	target->layerconfig = target->base_layerconfig;
-
-	/* allocate a lock for the primitive list */
-	for (listnum = 0; listnum < ARRAY_LENGTH(target->primlist); listnum++)
-		target->primlist[listnum].lock = osd_lock_alloc();
-
-	/* load the layout files */
-	if (load_layout_files(target, layoutfile, flags & RENDER_CREATE_SINGLE_FILE))
-	{
-		render_target_free(target);
-		return NULL;
-	}
-
-	/* set the current view to the first one */
-	render_target_set_view(target, 0);
-
-	/* make us the UI target if there is none */
-	if (ui_target == NULL && !(flags & RENDER_CREATE_HIDDEN))
-		render_set_ui_target(target);
-	return target;
-}
-
-
-/*-------------------------------------------------
-    render_target_free - free memory for a render
-    target
--------------------------------------------------*/
-
-void render_target_free(render_target *target)
-{
-	render_target **curr;
-	int listnum;
-
-	/* remove us from the list */
-	for (curr = &targetlist; *curr != target; curr = &(*curr)->next) ;
-	*curr = target->next;
-
-	/* free any primitives */
-	for (listnum = 0; listnum < ARRAY_LENGTH(target->primlist); listnum++)
-	{
-		release_render_list(&target->primlist[listnum]);
-		osd_lock_free(target->primlist[listnum].lock);
-	}
-
-	/* free the layout files */
-	while (target->filelist != NULL)
-	{
-		layout_file *temp = target->filelist;
-		target->filelist = temp->next;
+		layout_file *temp = m_filelist;
+		m_filelist = temp->next;
 		layout_file_free(temp);
 	}
-
-	/* free the target itself */
-	global_free(target);
 }
 
 
-/*-------------------------------------------------
-    render_target_get_indexed - get a render_target
-    by index
--------------------------------------------------*/
+//-------------------------------------------------
+//  is_ui_target - return true if this is the
+//  UI target
+//-------------------------------------------------
 
-render_target *render_target_get_indexed(int index)
+bool render_target::is_ui_target() const
 {
-	render_target *target;
-
-	/* count up the targets until we hit the requested index */
-	for (target = targetlist; target != NULL; target = target->next)
-		if (!(target->flags & RENDER_CREATE_HIDDEN))
-			if (index-- == 0)
-				return target;
-	return NULL;
+	return (this == &m_manager.ui_target());
 }
 
 
-/*-------------------------------------------------
-    render_target_get_view_name - return the
-    name of the indexed view, or NULL if it
-    doesn't exist
--------------------------------------------------*/
+//-------------------------------------------------
+//  index - return the index of this target
+//-------------------------------------------------
 
-const char *render_target_get_view_name(render_target *target, int viewindex)
+int render_target::index() const
 {
-	layout_file *file;
-	layout_view *view;
-
-	/* return the name from the indexed view */
-	for (file = target->filelist; file != NULL; file = file->next)
-		for (view = file->viewlist; view != NULL; view = view->next)
-			if (!(target->flags & RENDER_CREATE_NO_ART) || !layout_view_has_art(view))
-				if (viewindex-- == 0)
-					return view->name;
-
-	return NULL;
+	return m_manager.m_targetlist.indexof(*this);
 }
 
 
-/*-------------------------------------------------
-    render_target_get_translated_view_name - return the
-    localized name of the indexed view
--------------------------------------------------*/
+//-------------------------------------------------
+//  set_bounds - set the bounds and pixel aspect
+//  of a target
+//-------------------------------------------------
 
-const char *render_target_get_translated_view_name(render_target *target, int viewindex)
+void render_target::set_bounds(INT32 width, INT32 height, float pixel_aspect)
 {
-	const char *s = render_target_get_view_name(target, viewindex);
+	m_width = width;
+	m_height = height;
+	m_bounds.x0 = m_bounds.y0 = 0;
+	m_bounds.x1 = (float)width;
+	m_bounds.y1 = (float)height;
+	m_pixel_aspect = pixel_aspect;
+}
+
+
+//-------------------------------------------------
+//  set_layer_config - set the layer config of a
+//  target
+//-------------------------------------------------
+
+void render_target::set_layer_config(int layerconfig)
+{
+	m_layerconfig = layerconfig;
+	layout_view_recompute(m_curview, layerconfig);
+}
+
+
+//-------------------------------------------------
+//  set_view - dynamically change the view for
+//  a target
+//-------------------------------------------------
+
+void render_target::set_view(int viewindex)
+{
+	layout_view *view = view_by_index(viewindex);
+	if (view != NULL)
+	{
+		m_curview = view;
+		layout_view_recompute(view, m_layerconfig);
+	}
+}
+
+
+//-------------------------------------------------
+//  set_max_texture_size - set the upper bound on
+//  the texture size
+//-------------------------------------------------
+
+void render_target::set_max_texture_size(int maxwidth, int maxheight)
+{
+	m_maxtexwidth = maxwidth;
+	m_maxtexheight = maxheight;
+}
+
+
+//-------------------------------------------------
+//  view_name - return the name of the given view
+//-------------------------------------------------
+
+const char *render_target::view_name(int viewindex)
+{
+	layout_view *view = view_by_index(viewindex);
+	return (view != NULL) ? view->name : NULL;
+}
+
+
+//-------------------------------------------------
+//  render_target_get_translated_view_name - return
+//  the localized name of the indexed view
+//-------------------------------------------------
+
+const char *render_target::translated_view_name(int viewindex)
+{
+	const char *s = view_name(viewindex);
 	const char *idx[8];
 	const char **pp;
 	astring temp, res;
@@ -1292,221 +1241,52 @@ const char *render_target_get_translated_view_name(render_target *target, int vi
 }
 
 
-/*-------------------------------------------------
-    render_target_get_view_screens - return a
-    bitmask of which screens are visible on a
-    given view
--------------------------------------------------*/
+//-------------------------------------------------
+//  render_target_get_view_screens - return a
+//  bitmask of which screens are visible on a
+//  given view
+//-------------------------------------------------
 
-UINT32 render_target_get_view_screens(render_target *target, int viewindex)
+UINT32 render_target::view_screens(int viewindex)
 {
-	layout_file *file;
-	layout_view *view;
-
-	/* return the name from the indexed view */
-	for (file = target->filelist; file != NULL; file = file->next)
-		for (view = file->viewlist; view != NULL; view = view->next)
-			if (!(target->flags & RENDER_CREATE_NO_ART) || !layout_view_has_art(view))
-				if (viewindex-- == 0)
-					return view->screens;
-
-	return 0;
+	layout_view *view = view_by_index(viewindex);
+	return (view != NULL) ? view->screens : NULL;
 }
 
 
-/*-------------------------------------------------
-    render_target_get_bounds - get the bounds and
-    pixel aspect of a target
--------------------------------------------------*/
+//-------------------------------------------------
+//  compute_visible_area - compute the visible
+//  area for the given target with the current
+//  layout and proposed new parameters
+//-------------------------------------------------
 
-void render_target_get_bounds(render_target *target, INT32 *width, INT32 *height, float *pixel_aspect)
-{
-	if (width != NULL)
-		*width = target->width;
-	if (height != NULL)
-		*height = target->height;
-	if (pixel_aspect != NULL)
-		*pixel_aspect = target->pixel_aspect;
-}
-
-
-/*-------------------------------------------------
-    render_target_set_bounds - set the bounds and
-    pixel aspect of a target
--------------------------------------------------*/
-
-void render_target_set_bounds(render_target *target, INT32 width, INT32 height, float pixel_aspect)
-{
-	target->width = width;
-	target->height = height;
-	target->bounds.x0 = target->bounds.y0 = 0;
-	target->bounds.x1 = (float)width;
-	target->bounds.y1 = (float)height;
-	target->pixel_aspect = pixel_aspect;
-}
-
-
-/*-------------------------------------------------
-    render_target_get_max_update_rate - get the
-    maximum update rate (refresh rate) of a target,
-    or 0 if no maximum
--------------------------------------------------*/
-
-float render_target_get_max_update_rate(render_target *target)
-{
-	return target->max_refresh;
-}
-
-
-/*-------------------------------------------------
-    render_target_set_max_update_rate - set the
-    maximum update rate (refresh rate) of a target,
-    or 0 if no maximum
--------------------------------------------------*/
-
-void render_target_set_max_update_rate(render_target *target, float updates_per_second)
-{
-	target->max_refresh = updates_per_second;
-}
-
-
-/*-------------------------------------------------
-    render_target_get_orientation - get the
-    orientation of a target
--------------------------------------------------*/
-
-int render_target_get_orientation(render_target *target)
-{
-	return target->orientation;
-}
-
-
-/*-------------------------------------------------
-    render_target_set_orientation - set the
-    orientation of a target
--------------------------------------------------*/
-
-void render_target_set_orientation(render_target *target, int orientation)
-{
-	target->orientation = orientation;
-}
-
-
-/*-------------------------------------------------
-    render_target_get_layer_config - get the
-    layer config of a target
--------------------------------------------------*/
-
-int render_target_get_layer_config(render_target *target)
-{
-	return target->layerconfig;
-}
-
-
-/*-------------------------------------------------
-    render_target_set_layer_config - set the
-    layer config of a target
--------------------------------------------------*/
-
-void render_target_set_layer_config(render_target *target, int layerconfig)
-{
-	target->layerconfig = layerconfig;
-	layout_view_recompute(target->curview, layerconfig);
-}
-
-
-/*-------------------------------------------------
-    render_target_get_view - return the currently
-    selected view index
--------------------------------------------------*/
-
-int render_target_get_view(render_target *target)
-{
-	layout_file *file;
-	layout_view *view;
-	int index = 0;
-
-	/* find the first named match */
-	for (file = target->filelist; file != NULL; file = file->next)
-		for (view = file->viewlist; view != NULL; view = view->next)
-			if (!(target->flags & RENDER_CREATE_NO_ART) || !layout_view_has_art(view))
-			{
-				if (target->curview == view)
-					return index;
-				index++;
-			}
-	return 0;
-}
-
-
-/*-------------------------------------------------
-    render_target_set_view - dynamically change
-    the view for a target
--------------------------------------------------*/
-
-void render_target_set_view(render_target *target, int viewindex)
-{
-	layout_file *file;
-	layout_view *view;
-
-	/* find the first named match */
-	for (file = target->filelist; file != NULL; file = file->next)
-		for (view = file->viewlist; view != NULL; view = view->next)
-			if (!(target->flags & RENDER_CREATE_NO_ART) || !layout_view_has_art(view))
-				if (viewindex-- == 0)
-				{
-					target->curview = view;
-					layout_view_recompute(view, target->layerconfig);
-					break;
-				}
-}
-
-
-/*-------------------------------------------------
-    render_target_set_max_texture_size - set the
-    upper bound on the texture size
--------------------------------------------------*/
-
-void render_target_set_max_texture_size(render_target *target, int maxwidth, int maxheight)
-{
-	target->maxtexwidth = maxwidth;
-	target->maxtexheight = maxheight;
-}
-
-
-/*-------------------------------------------------
-    render_target_compute_visible_area - compute
-    the visible area for the given target with
-    the current layout and proposed new parameters
--------------------------------------------------*/
-
-void render_target_compute_visible_area(render_target *target, INT32 target_width, INT32 target_height, float target_pixel_aspect, int target_orientation, INT32 *visible_width, INT32 *visible_height)
+void render_target::compute_visible_area(INT32 target_width, INT32 target_height, float target_pixel_aspect, int target_orientation, INT32 &visible_width, INT32 &visible_height)
 {
 	float width, height;
 	float scale;
 
-	/* constrained case */
+	// constrained case
 	if (target_pixel_aspect != 0.0f)
 	{
-		/* start with the aspect ratio of the square pixel layout */
-		width = ((target->layerconfig & LAYER_CONFIG_ZOOM_TO_SCREEN) && target->curview->screens > 0) ? target->curview->scraspect : target->curview->aspect;
+		// start with the aspect ratio of the square pixel layout
+		width = (zoom_to_screen() && m_curview->screens > 0) ? m_curview->scraspect : m_curview->aspect;
 		height = 1.0f;
 
-		/* first apply target orientation */
+		// first apply target orientation
 		if (target_orientation & ORIENTATION_SWAP_XY)
 			FSWAP(width, height);
 
-		/* apply the target pixel aspect ratio */
+		// apply the target pixel aspect ratio
 		height *= target_pixel_aspect;
 
-		/* based on the height/width ratio of the source and target, compute the scale factor */
+		// based on the height/width ratio of the source and target, compute the scale factor
 		if (width / height > (float)target_width / (float)target_height)
 			scale = (float)target_width / width;
 		else
 			scale = (float)target_height / height;
 	}
 
-	/* stretch-to-fit case */
+	// stretch-to-fit case
 	else
 	{
 		width = (float)target_width;

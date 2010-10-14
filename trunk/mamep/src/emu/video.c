@@ -1719,7 +1719,7 @@ void screen_device::free_scale_bitmap()
 	{
 		// restore mame screen
 		if ((m_texture[bank]) && (m_bitmap[bank]))
-			render_texture_set_bitmap(m_texture[bank], m_bitmap[bank], &m_visarea, m_texture_format, palette);
+			m_texture[bank]->set_bitmap(m_bitmap[bank], &m_visarea, m_texture_format, palette);
 
 		if (scale_bitmap[bank] != NULL)
 		{
@@ -1871,7 +1871,7 @@ void screen_device::texture_set_scale_bitmap(const rectangle *visarea, UINT32 pa
 	}
 	scale_dirty[curbank] = 0;
 
-	render_texture_set_bitmap(m_texture[curbank], dst, &fixedvis, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15, NULL);
+	m_texture[curbank]->set_bitmap(dst, &fixedvis, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15, NULL);
 }
 #endif /* USE_SCALE_EFFECTS */
 
@@ -2174,10 +2174,8 @@ screen_device::~screen_device()
 	if (scale_bitmap[1] != NULL)
 		global_free(scale_bitmap[1]);
 #endif /* USE_SCALE_EFFECTS */
-	if (m_texture[0] != NULL)
-		render_texture_free(m_texture[0]);
-	if (m_texture[1] != NULL)
-		render_texture_free(m_texture[1]);
+	m_machine.render().texture_free(m_texture[0]);
+	m_machine.render().texture_free(m_texture[1]);
 	if (m_burnin != NULL)
 		finalize_burnin();
 }
@@ -2796,15 +2794,15 @@ bool screen_device::update_quads()
 					texture_set_scale_bitmap(&fixedvis, 0);
 				else
 #endif /* USE_SCALE_EFFECTS */
-				render_texture_set_bitmap(m_texture[m_curbitmap], m_bitmap[m_curbitmap], &fixedvis, m_texture_format, palette);
+				m_texture[m_curbitmap]->set_bitmap(m_bitmap[m_curbitmap], &fixedvis, m_texture_format, palette);
 
 				m_curtexture = m_curbitmap;
 				m_curbitmap = 1 - m_curbitmap;
 			}
 
 			// create an empty container with a single quad
-			render_container_empty(render_container_get_screen(this));
-			render_screen_add_quad(this, 0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(0xff,0xff,0xff,0xff), m_texture[m_curtexture], PRIMFLAG_BLENDMODE(BLENDMODE_NONE) | PRIMFLAG_SCREENTEX(1));
+			m_container->empty();
+			m_container->add_quad(0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(0xff,0xff,0xff,0xff), m_texture[m_curtexture], PRIMFLAG_BLENDMODE(BLENDMODE_NONE) | PRIMFLAG_SCREENTEX(1));
 		}
 	}
 

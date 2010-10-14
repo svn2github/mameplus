@@ -177,10 +177,15 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 			ch->bmheight = (int)(glyph_ch->bmheight * scale + 0.5f);
 
 			ch->bitmap = global_alloc(bitmap_t(ch->bmwidth, ch->bmheight, BITMAP_FORMAT_ARGB32));
-			render_texture_hq_scale(ch->bitmap, glyph_ch->bitmap, NULL, NULL);
+			rectangle clip;
+			clip.min_x = clip.min_y = 0;
+			clip.max_x = ch->bitmap->width - 1;
+			clip.max_y = ch->bitmap->height - 1;
+			render_texture::hq_scale(*ch->bitmap, *glyph_ch->bitmap, clip, NULL);
 
-			ch->texture = render_texture_alloc(render_texture_hq_scale, NULL);
-			render_texture_set_bitmap(ch->texture, ch->bitmap, NULL, TEXFORMAT_ARGB32, NULL);
+			/* wrap a texture around the bitmap */
+			ch->texture = font->machine->render().texture_alloc(render_texture::hq_scale);
+			ch->texture->set_bitmap(ch->bitmap, NULL, TEXFORMAT_ARGB32);
 		}
 		else
 			render_font_char_expand(font, ch);

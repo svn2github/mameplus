@@ -648,18 +648,16 @@ void winwindow_video_window_create(running_machine *machine, int index, win_moni
 	window->render_lock = osd_lock_alloc();
 
 	// load the layout
-	window->target = render_target_alloc(machine, NULL, 0);
-	if (window->target == NULL)
-		fatalerror(_WINDOWS("Error creating render target for window %d"), index);
+	window->target = machine->render().target_alloc();
 
 	// set the specific view
 	sprintf(option, "view%d", index);
 	set_starting_view(index, window, options_get_string(machine->options(), option));
 
 	// remember the current values in case they change
-	window->targetview = render_target_get_view(window->target);
-	window->targetorient = render_target_get_orientation(window->target);
-	window->targetlayerconfig = render_target_get_layer_config(window->target);
+	window->targetview = window->target->view();
+	window->targetorient = window->target->orientation();
+	window->targetlayerconfig = window->target->layer_config();
 
 	// make the window title
 	if (video_config.numscreens == 1)
