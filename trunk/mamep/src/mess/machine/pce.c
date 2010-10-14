@@ -592,6 +592,8 @@ static void pce_cd_read_6( running_machine *machine )
 
 	if ( frame_count == 0 )
 	{
+		/* Star Breaker uses this */
+		popmessage("Read Sector frame count == 0, contact MESSdev");
 		pce_cd_reply_status_byte( SCSI_STATUS_OK );
 	}
 	else
@@ -879,6 +881,11 @@ static void pce_cd_nec_get_dir_info( running_machine *machine )
 	pce_cd.scsi_CD = 0;
 }
 
+static void pce_cd_end_of_list( running_machine *machine )
+{
+	pce_cd_reply_status_byte( SCSI_CHECK_CONDITION );
+}
+
 static void pce_cd_handle_data_output( running_machine *machine )
 {
 	static const struct {
@@ -893,7 +900,7 @@ static void pce_cd_handle_data_output( running_machine *machine )
 		{ 0xDA,10, pce_cd_nec_pause },						/* NEC PAUSE */
 		{ 0xDD,10, pce_cd_nec_get_subq },					/* NEC GET SUBCHANNEL Q */
 		{ 0xDE,10, pce_cd_nec_get_dir_info },				/* NEC GET DIR INFO */
-		{ 0xFF, 0, NULL }									/* end of list marker */
+		{ 0xFF, 1, pce_cd_end_of_list }						/* end of list marker */
 	};
 
 	if ( pce_cd.scsi_REQ && pce_cd.scsi_ACK )
@@ -921,6 +928,8 @@ static void pce_cd_handle_data_output( running_machine *machine )
 		if ( pce_cd.command_buffer[0] != pce_cd_commands[i].command_byte )
 		{
 			logerror("Unrecognized command: %02X\n", pce_cd.command_buffer[0] );
+			if(pce_cd.command_buffer[0] == 0x03)
+				popmessage("CD command 0x03 issued (Request Sense), contact MESSdev");
 		}
 		assert( pce_cd.command_buffer[0] == pce_cd_commands[i].command_byte );
 
@@ -1375,6 +1384,9 @@ WRITE8_HANDLER( pce_cd_intf_w )
 		pce_cd_update(space->machine);
 		pce_cd.scsi_SEL = 0;
 		timer_adjust_oneshot(pce_cd.adpcm_dma_timer, attotime_never, 0); // stop ADPCM DMA here
+		/* any write here clears CD transfer irqs */
+		pce_cd.regs[0x03] &= ~0x70;
+		cputag_set_input_line(space->machine, "maincpu", 1, CLEAR_LINE );
 		break;
 	case 0x01:	/* CDC command / status / data */
 		break;
