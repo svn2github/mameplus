@@ -93,7 +93,6 @@
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
-#define snwprintf _snwprintf
 #endif
 
 #ifndef LVS_EX_LABELTIP
@@ -3732,7 +3731,7 @@ static void UpdateHistory(void)
 				wcstok(text, TEXT("\r\n"));	// check only first line
 				if (wcschr(text, '/'))		// no category
 				{
-					WCHAR *p = (WCHAR *)wcschr(histText, '/');
+					WCHAR *p = wcschr(histText, '/');
 					histText = p + 1;
 				}
 				global_free(text);

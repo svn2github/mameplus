@@ -99,8 +99,7 @@ static const translation_info gcc_translate[] =
 //============================================================
 	{ 0,		"-Opgoc",					"/O2 /GL" },
 	// mamep: disable /Og implied by -O2
-	{ VS2008,	"-Ong",						"/Oi /Ot /Oy /Ob2 /Gs /GF /Gy /Qfast_transcendentals" },
-	{ 0,		"-Ong",						"/Oi /Ot /Oy /Ob2 /Gs /GF /Gy" },
+	{ 0,		"-Ong",						"/Oi /Ot /Oy /Ob2 /Gs /GF /Gy /Qfast_transcendentals" },
 	{ 0,		"-Ongc",					"/Oi /Ot /Oy /Ob2 /Gs /GF /Gy /GL" },
 	{ 0,		"-pgoc",					"/GL" },
 //============================================================

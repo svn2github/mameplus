@@ -347,7 +347,7 @@ endif
 
 # fullname is prefix+name+suffix+suffix64+suffixdebug
 FULLNAME = $(PREFIX)$(PREFIXSDL)$(NAME)$(SUFFIX)$(SUFFIX64)$(SUFFIXDEBUG)$(SUFFIXPROFILE)
-ifdef WINUI
+ifneq ($(WINUI),)
 ifeq ($(TARGET),$(SUBTARGET))
 MAMEUINAME = $(TARGET)$(EXTRA_SUFFIX)ui
 else
@@ -713,7 +713,7 @@ include $(SRC)/lib/lib.mak
 include $(SRC)/build/build.mak
 -include $(SRC)/osd/$(CROSS_BUILD_OSD)/build.mak
 include $(SRC)/tools/tools.mak
-ifdef MAMEMESS
+ifneq ($(MAMEMESS),)
 include $(SRC)/mess/mess.mak
 endif
 
@@ -735,7 +735,7 @@ buildtools: maketree $(BUILD)
 # $(SRC)/emu, as well as all the OSD objects and anything in the $(OBJ) tree
 depend: maketree $(MAKEDEP_TARGET)
 	@echo Rebuilding depend.mak...
-	$(MAKEDEP) -I. $(INCPATH) -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... src/mame > depend.mak
+	$(MAKEDEP) -I. $(INCPATH) -X$(SRC)/emu -X$(SRC)/osd/... -X$(OBJ)/... src/$(TARGET) > depend.mak
 
 INCPATH += \
 	-I$(SRC)/$(TARGET) \
@@ -792,16 +792,10 @@ $(EMULATOR): $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@
 
-ifdef WINUI
-ifdef MSVC_BUILD
-LDFLAGS_WINUI = $(LDFLAGS:/ENTRY:wmainCRTStartup=)
-LDFLAGS_WINUI += /ENTRY:wWinMainCRTStartup
-else
-LDFLAGS_WINUI = $(LDFLAGS)
-endif
+ifneq ($(WINUI),)
 $(MAMEUIEXE): $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(ZLIB) $(LIBOCORE_NOMAIN) $(RESFILE) $(GUIRESFILE)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS_WINUI) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@
 endif
 
 ifeq ($(TARGETOS),win32)
@@ -818,7 +812,7 @@ endif
 # generic rules
 #-------------------------------------------------
 
-ifdef MAMEMESS
+ifneq ($(MAMEMESS),)
 $(OBJ)/mess/%.o: $(SRC)/mess/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) -DMESS $(CFLAGS) -c $< -o $@

@@ -236,9 +236,10 @@ DRVLIBS = \
 	$(MAMEOBJ)/mamedriv.o \
 
 ifneq ($(USE_DRIVER_SWITCH),)
-DRVLIBS += $(MAMEOBJ)/mameplusdriv.o \
-            $(MAMEOBJ)/mamehbdriv.o \
-            $(MAMEOBJ)/mamedecrypteddriv.o
+DRVLIBS += \
+	$(MAMEOBJ)/mameplusdriv.o \
+	$(MAMEOBJ)/mamehbdriv.o \
+	$(MAMEOBJ)/mamedecrypteddriv.o
 endif
 
 DRVLIBS += \
@@ -989,6 +990,7 @@ $(MAMEOBJ)/nichibut.a: \
 	$(DRIVERS)/bigfghtr.o \
 	$(DRIVERS)/cclimber.o $(MACHINE)/cclimber.o $(AUDIO)/cclimber.o $(VIDEO)/cclimber.o \
 	$(DRIVERS)/clshroad.o $(VIDEO)/clshroad.o \
+	$(DRIVERS)/csplayh5.o \
 	$(DRIVERS)/cop01.o $(VIDEO)/cop01.o \
 	$(DRIVERS)/dacholer.o \
 	$(DRIVERS)/galivan.o $(VIDEO)/galivan.o \
@@ -1502,6 +1504,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/artmagic.o $(VIDEO)/artmagic.o \
 	$(DRIVERS)/astrocorp.o \
 	$(DRIVERS)/attckufo.o \
+	$(DRIVERS)/avt.o \
 	$(DRIVERS)/aztarac.o $(AUDIO)/aztarac.o $(VIDEO)/aztarac.o \
 	$(DRIVERS)/beaminv.o \
 	$(DRIVERS)/bingor.o \
@@ -1513,7 +1516,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/carrera.o \
 	$(DRIVERS)/cave.o $(VIDEO)/cave.o \
 	$(DRIVERS)/cb2001.o \
-	$(DRIVERS)/cdi.o \
+	$(DRIVERS)/cdi.o $(VIDEO)/mcd212.o $(MACHINE)/cdi070.o $(MACHINE)/cdislave.o $(MACHINE)/cdicdic.o \
 	$(DRIVERS)/chsuper.o \
 	$(DRIVERS)/cidelsa.o $(VIDEO)/cidelsa.o \
 	$(DRIVERS)/coinmstr.o \
@@ -1531,6 +1534,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/dreamwld.o \
 	$(DRIVERS)/dribling.o $(VIDEO)/dribling.o \
 	$(DRIVERS)/drw80pkr.o \
+	$(DRIVERS)/dualgame.o \
 	$(DRIVERS)/dwarfd.o \
 	$(DRIVERS)/dynadice.o \
 	$(DRIVERS)/epos.o $(VIDEO)/epos.o \
@@ -1601,6 +1605,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/neptunp2.o \
 	$(DRIVERS)/news.o $(VIDEO)/news.o \
 	$(DRIVERS)/norautp.o  $(AUDIO)/norautp.o \
+	$(DRIVERS)/nsmpoker.o \
 	$(DRIVERS)/oneshot.o $(VIDEO)/oneshot.o \
 	$(DRIVERS)/onetwo.o \
 	$(DRIVERS)/othello.o \

@@ -113,17 +113,17 @@ EMUOBJS = \
 	$(EMUOBJ)/profiler.o \
 	$(EMUOBJ)/uilang.o
 
-ifdef USE_CMD_LIST
+ifneq ($(USE_CMD_LIST),)
 EMUOBJS += \
 	$(EMUOBJ)/cmddata.o
 endif
 
-ifdef USE_IPS
+ifneq ($(USE_IPS),)
 EMUOBJS += \
 	$(EMUOBJ)/ips.o
 endif
 
-ifdef USE_HISCORE
+ifneq ($(USE_HISCORE),)
 EMUOBJS += \
 	$(EMUOBJ)/hiscore.o
 endif
@@ -168,6 +168,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/ds2401.o \
 	$(EMUMACHINE)/ds2404.o \
 	$(EMUMACHINE)/eeprom.o \
+	$(EMUMACHINE)/er2055.o \
 	$(EMUMACHINE)/f3853.o \
 	$(EMUMACHINE)/generic.o \
 	$(EMUMACHINE)/i8243.o \

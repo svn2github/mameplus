@@ -11,7 +11,7 @@
 # MESS core defines
 #-------------------------------------------------
 
-ifdef MAMEMESS
+ifneq ($(MAMEMESS),)
 DEFS += -DMAMEMESS
 else
 DEFS += -DMESS

@@ -26,8 +26,8 @@ DEFS += -DUSE_SCALE_EFFECTS
 # add hq2x/hq3x specific define
 DEFS += -Drestrict=__restrict
 
-# define the x64 without MMX
-ifndef PTR64
+# define the 64-bit without MMX
+ifneq ($(PTR64),1)
 DEFS += -DUSE_MMX_INTERP_SCALE
 endif
 

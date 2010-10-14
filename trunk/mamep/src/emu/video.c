@@ -75,6 +75,14 @@
 
 
 /***************************************************************************
+    DEVICE DEFINITIONS
+***************************************************************************/
+
+const device_type SCREEN = screen_device_config::static_alloc_device_config;
+
+
+
+/***************************************************************************
     TYPE DEFINITIONS
 ***************************************************************************/
 
@@ -188,7 +196,7 @@ static void video_mng_record_frame(running_machine *machine);
 static void video_avi_record_frame(running_machine *machine);
 
 /* software rendering */
-static void rgb888_draw_primitives(const render_primitive *primlist, void *dstdata, UINT32 width, UINT32 height, UINT32 pitch);
+static void rgb888_draw_primitives(const render_primitive_list &primlist, void *dstdata, UINT32 width, UINT32 height, UINT32 pitch);
 
 #ifdef USE_SCALE_EFFECTS
 /* scaler dimensions */
@@ -316,18 +324,16 @@ void video_init(running_machine *machine)
 	/* the native target is hard-coded to our internal layout and has all options disabled */
 	if (global.snap_native)
 	{
-		global.snap_target = render_target_alloc(machine, layout_snap, RENDER_CREATE_SINGLE_FILE | RENDER_CREATE_HIDDEN);
-		assert(global.snap_target != NULL);
-		render_target_set_layer_config(global.snap_target, 0);
+		global.snap_target = machine->render().target_alloc(layout_snap, RENDER_CREATE_SINGLE_FILE | RENDER_CREATE_HIDDEN);
+		global.snap_target->set_layer_config(0);
 	}
 
 	/* other targets select the specified view and turn off effects */
 	else
 	{
-		global.snap_target = render_target_alloc(machine, NULL, RENDER_CREATE_HIDDEN);
-		assert(global.snap_target != NULL);
-		render_target_set_view(global.snap_target, video_get_view_for_target(machine, global.snap_target, viewname, 0, 1));
-		render_target_set_layer_config(global.snap_target, render_target_get_layer_config(global.snap_target) & ~LAYER_CONFIG_ENABLE_SCREEN_OVERLAY);
+		global.snap_target = machine->render().target_alloc(NULL, RENDER_CREATE_HIDDEN);
+		global.snap_target->set_view(video_get_view_for_target(machine, global.snap_target, viewname, 0, 1));
+		global.snap_target->set_screen_overlay_enabled(false);
 	}
 
 	/* extract snap resolution if present */
@@ -377,8 +383,7 @@ static void video_exit(running_machine &machine)
 		gfx_element_free(machine.gfx[i]);
 
 	/* free the snapshot target */
-	if (global.snap_target != NULL)
-		render_target_free(global.snap_target);
+	machine.render().target_free(global.snap_target);
 	if (global.snap_bitmap != NULL)
 		global_free(global.snap_bitmap);
 
@@ -468,7 +473,7 @@ void video_frame_update(running_machine *machine, int debug)
 	}
 
 	/* draw the user interface */
-	ui_update_and_render(machine, render_container_get_ui());
+	ui_update_and_render(machine, &machine->render().ui_container());
 
 	/* update the internal render debugger */
 	debugint_update_during_game(machine);
@@ -1007,7 +1012,7 @@ static void update_refresh_speed(running_machine *machine)
 	/* only do this if the refreshspeed option is used */
 	if (options_get_bool(machine->options(), OPTION_REFRESHSPEED))
 	{
-		float minrefresh = render_get_max_update_rate();
+		float minrefresh = machine->render().max_update_rate();
 		if (minrefresh != 0)
 		{
 			attoseconds_t min_frame_period = ATTOSECONDS_PER_SECOND;
@@ -1172,7 +1177,7 @@ void video_save_active_screen_snapshots(running_machine *machine)
 	{
 		/* write one snapshot per visible screen */
 		for (screen_device *screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
-			if (render_is_live_screen(screen))
+			if (machine->render().is_live(*screen))
 			{
 				file_error filerr = mame_fopen_next(machine, SEARCHPATH_SCREENSHOT, "png", &fp);
 				if (filerr == FILERR_NONE)
@@ -1204,7 +1209,6 @@ void video_save_active_screen_snapshots(running_machine *machine)
 
 static void create_snapshot_bitmap(device_t *screen)
 {
-	const render_primitive_list *primlist;
 	INT32 width, height;
 	int view_index;
 
@@ -1213,15 +1217,15 @@ static void create_snapshot_bitmap(device_t *screen)
 	{
 		view_index = screen->machine->m_devicelist.index(SCREEN, screen->tag());
 		assert(view_index != -1);
-		render_target_set_view(global.snap_target, view_index);
+		global.snap_target->set_view(view_index);
 	}
 
 	/* get the minimum width/height and set it on the target */
 	width = global.snap_width;
 	height = global.snap_height;
 	if (width == 0 || height == 0)
-		render_target_get_minimum_size(global.snap_target, &width, &height);
-	render_target_set_bounds(global.snap_target, width, height, 0);
+		global.snap_target->compute_minimum_size(width, height);
+	global.snap_target->set_bounds(width, height);
 
 	/* if we don't have a bitmap, or if it's not the right size, allocate a new one */
 	if (global.snap_bitmap == NULL || width != global.snap_bitmap->width || height != global.snap_bitmap->height)
@@ -1233,10 +1237,10 @@ static void create_snapshot_bitmap(device_t *screen)
 	}
 
 	/* render the screen there */
-	primlist = render_target_get_primitives(global.snap_target);
-	osd_lock_acquire(primlist->lock);
-	rgb888_draw_primitives(primlist->head, global.snap_bitmap->base, width, height, global.snap_bitmap->rowpixels);
-	osd_lock_release(primlist->lock);
+	render_primitive_list &primlist = global.snap_target->get_primitives();
+	primlist.acquire_lock();
+	rgb888_draw_primitives(primlist, global.snap_bitmap->base, width, height, global.snap_bitmap->rowpixels);
+	primlist.release_lock();
 }
 
 
@@ -1602,7 +1606,7 @@ int video_get_view_for_target(running_machine *machine, render_target *target, c
 		/* scan for a matching view name */
 		for (viewindex = 0; ; viewindex++)
 		{
-			const char *name = render_target_get_view_name(target, viewindex);
+			const char *name = target->view_name(viewindex);
 
 			/* stop scanning when we hit NULL */
 			if (name == NULL)
@@ -1626,7 +1630,7 @@ int video_get_view_for_target(running_machine *machine, render_target *target, c
 			/* find the first view with this screen and this screen only */
 			for (viewindex = 0; ; viewindex++)
 			{
-				UINT32 viewscreens = render_target_get_view_screens(target, viewindex);
+				UINT32 viewscreens = target->view_screens(viewindex);
 				if (viewscreens == (1 << targetindex))
 					break;
 				if (viewscreens == 0)
@@ -1642,7 +1646,7 @@ int video_get_view_for_target(running_machine *machine, render_target *target, c
 		{
 			for (viewindex = 0; ; viewindex++)
 			{
-				UINT32 viewscreens = render_target_get_view_screens(target, viewindex);
+				UINT32 viewscreens = target->view_screens(viewindex);
 				if (viewscreens == (1 << scrcount) - 1)
 					break;
 				if (viewscreens == 0)
@@ -1652,7 +1656,7 @@ int video_get_view_for_target(running_machine *machine, render_target *target, c
 	}
 
 	/* make sure it's a valid view */
-	if (render_target_get_view_name(target, viewindex) == NULL)
+	if (target->view_name(viewindex) == NULL)
 		viewindex = 0;
 
 	return viewindex;
@@ -2125,6 +2129,7 @@ bool screen_device_config::device_validity_check(const game_driver &driver) cons
 screen_device::screen_device(running_machine &_machine, const screen_device_config &config)
 	: device_t(_machine, config),
 	  m_config(config),
+	  m_container(NULL),
 	  m_width(m_config.m_width),
 	  m_height(m_config.m_height),
 	  m_visarea(m_config.m_visarea),
@@ -2185,17 +2190,16 @@ screen_device::~screen_device()
 void screen_device::device_start()
 {
 	// get and validate that the container for this screen exists
-	render_container *container = render_container_get_screen(this);
-	assert(container != NULL);
+	m_container = m_machine.render().container_for_screen(this);
 
 	// configure the default cliparea
-	render_container_user_settings settings;
-	render_container_get_user_settings(container, &settings);
-	settings.xoffset = m_config.m_xoffset;
-	settings.yoffset = m_config.m_yoffset;
-	settings.xscale = m_config.m_xscale;
-	settings.yscale = m_config.m_yscale;
-	render_container_set_user_settings(container, &settings);
+	render_container::user_settings settings;
+	m_container->get_user_settings(settings);
+	settings.m_xoffset = m_config.m_xoffset;
+	settings.m_yoffset = m_config.m_yoffset;
+	settings.m_xscale = m_config.m_xscale;
+	settings.m_yscale = m_config.m_yscale;
+	m_container->set_user_settings(settings);
 
 	// allocate the VBLANK timers
 	m_vblank_begin_timer = timer_alloc(machine, static_vblank_begin_callback, (void *)this);
@@ -2343,10 +2347,8 @@ void screen_device::realloc_screen_bitmaps()
 	if (m_width > curwidth || m_height > curheight)
 	{
 		// free what we have currently
-		if (m_texture[0] != NULL)
-			render_texture_free(m_texture[0]);
-		if (m_texture[1] != NULL)
-			render_texture_free(m_texture[1]);
+		global_free(m_texture[0]);
+		global_free(m_texture[1]);
 		if (m_bitmap[0] != NULL)
 			auto_free(machine, m_bitmap[0]);
 		if (m_bitmap[1] != NULL)
@@ -2373,10 +2375,10 @@ void screen_device::realloc_screen_bitmaps()
 		bitmap_set_palette(m_bitmap[1], machine->palette);
 
 		// allocate textures
-		m_texture[0] = render_texture_alloc(NULL, NULL);
-		render_texture_set_bitmap(m_texture[0], m_bitmap[0], &m_visarea, m_texture_format, palette);
-		m_texture[1] = render_texture_alloc(NULL, NULL);
-		render_texture_set_bitmap(m_texture[1], m_bitmap[1], &m_visarea, m_texture_format, palette);
+		m_texture[0] = m_machine.render().texture_alloc();
+		m_texture[0]->set_bitmap(m_bitmap[0], &m_visarea, m_texture_format, palette);
+		m_texture[1] = m_machine.render().texture_alloc();
+		m_texture[1]->set_bitmap(m_bitmap[1], &m_visarea, m_texture_format, palette);
 	}
 }
 
@@ -2496,7 +2498,7 @@ bool screen_device::update_partial(int scanline)
 		}
 
 		// skip if this screen is not visible anywhere
-		if (!render_is_live_screen(this))
+		if (!m_machine.render().is_live(*this))
 		{
 			LOG_PARTIAL_UPDATES(("skipped because screen not live\n"));
 			return FALSE;
@@ -2776,7 +2778,7 @@ void screen_device::scanline_update_callback(int scanline)
 bool screen_device::update_quads()
 {
 	// only update if live
-	if (render_is_live_screen(this))
+	if (m_machine.render().is_live(*this))
 	{
 		// only update if empty and not a vector game; otherwise assume the driver did it directly
 		if (m_config.m_type != SCREEN_TYPE_VECTOR && (machine->config->m_video_attributes & VIDEO_SELF_RENDER) == 0)
@@ -2982,5 +2984,3 @@ void screen_device::finalize_burnin()
 #define BILINEAR_FILTER		1
 
 #include "rendersw.c"
-
-const device_type SCREEN = screen_device_config::static_alloc_device_config;

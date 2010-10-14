@@ -56,7 +56,6 @@
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
-#define snwprintf _snwprintf
 #endif
 
 /***************************************************************************

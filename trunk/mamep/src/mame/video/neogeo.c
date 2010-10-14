@@ -910,6 +910,7 @@ VIDEO_RESET( neogeo )
 {
 	start_sprite_line_timer(machine);
 	start_auto_animation_timer(machine);
+	optimize_sprite_data(machine);
 }
 
 

@@ -21,7 +21,7 @@ USE_CMD_LIST=1
 #
 # MAMEMESS BUILD
 #
-ifndef SUBTARGET
+ifeq ($(TARGET),$(SUBTARGET))
 MAMEMESS=1
 endif
 

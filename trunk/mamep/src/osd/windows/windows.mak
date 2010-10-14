@@ -363,6 +363,6 @@ $(WINOBJ)/mamevers.rc: $(BUILDOUT)/verinfo$(BUILD_EXE) $(SRC)/version.c
 # For building UI include ui.mak
 #-------------------------------------------------
 
-ifdef WINUI
+ifneq ($(WINUI),)
 include $(SRC)/osd/winui/winui.mak
 endif

@@ -56,7 +56,6 @@
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
-#define snwprintf _snwprintf
 #endif
 
 #define MAX_EXTRA_FOLDERS 256
@@ -2186,7 +2185,7 @@ LPTREEFOLDER GetFolderByName(int nParentId, const TCHAR *pszFolderName)
 
 static BOOL RegistExtraFolder(const TCHAR *name, LPEXFOLDERDATA *fExData, int msgcat, int icon, int subicon)
 {
-	TCHAR *ext = (TCHAR *)wcsrchr(name, '.');
+	TCHAR *ext = wcsrchr(name, '.');
 
 	if (ext && !wcsicmp(ext, TEXT(".ini")))
 	{

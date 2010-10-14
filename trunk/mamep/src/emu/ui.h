@@ -150,11 +150,11 @@ void ui_update_and_render(running_machine *machine, render_container *container)
 render_font *ui_get_font(void);
 
 /* returns the line height of the font used by the UI system */
-float ui_get_line_height(void);
+float ui_get_line_height(running_machine &machine);
 
 /* returns the width of a character or string in the UI font */
-float ui_get_char_width(unicode_char ch);
-float ui_get_string_width(const char *s);
+float ui_get_char_width(running_machine &machine, unicode_char ch);
+float ui_get_string_width(running_machine &machine, const char *s);
 
 #ifdef UI_COLOR_DISPLAY
 rgb_t ui_get_rgb_color(rgb_t color);

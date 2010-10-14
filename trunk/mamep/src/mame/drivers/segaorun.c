@@ -274,6 +274,7 @@ Notes:
 #include "machine/fd1089.h"
 #include "machine/segaic16.h"
 #include "machine/8255ppi.h"
+#include "machine/nvram.h"
 #include "cpu/m68000/m68000.h"
 #include "sound/2151intf.h"
 #include "sound/segapcm.h"
@@ -414,6 +415,10 @@ static void outrun_generic_init(running_machine *machine)
 	state->soundcpu = machine->device("soundcpu");
 	state->subcpu = machine->device("sub");
 	state->ppi8255 = machine->device("ppi8255");
+
+	nvram_device *nvram = machine->device<nvram_device>("nvram");
+	if (nvram != NULL)
+		nvram->set_base(workram, 0x8000);
 
 	state_save_register_global(machine, state->adc_select);
 	state_save_register_global(machine, state->vblank_irq_state);
@@ -779,22 +784,6 @@ static WRITE16_HANDLER( shangon_custom_io_w )
 
 /*************************************
  *
- *  Capacitor-backed RAM
- *
- *************************************/
-
-static NVRAM_HANDLER( outrun )
-{
-	if (read_or_write)
-		mame_fwrite(file, workram, 0x8000);
-	else if (file)
-		mame_fread(file, workram, 0x8000);
-}
-
-
-
-/*************************************
- *
  *  Main CPU memory handlers
  *
  *************************************/
@@ -1142,7 +1131,6 @@ static MACHINE_CONFIG_START( outrun_base, segas1x_state )
 	MDRV_VIDEO_START(outrun)
 	MDRV_VIDEO_UPDATE(outrun)
 
-
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -1161,14 +1149,14 @@ static MACHINE_CONFIG_DERIVED( outrundx, outrun_base )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( outrun, outrun_base )
-	MDRV_NVRAM_HANDLER(outrun)
+	MDRV_NVRAM_ADD_0FILL("nvram")
 
 	MDRV_SEGA16SP_ADD_OUTRUN("segaspr1")
 MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_DERIVED( shangon, outrun_base )
-	MDRV_NVRAM_HANDLER(outrun)
+	MDRV_NVRAM_ADD_0FILL("nvram")
 
 	MDRV_SCREEN_MODIFY("screen")
 	MDRV_SCREEN_RAW_PARAMS(MASTER_CLOCK_25MHz/4, 400, 0, 321, 262, 0, 224)
