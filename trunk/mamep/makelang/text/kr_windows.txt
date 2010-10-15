@@ -784,7 +784,7 @@ State Files (*.sta)|*.sta|All Files (*.*)|*.*
 
 # osd/windows/drawd3d.c: 1894
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
-덱스처가 너무 큽니다! (기대값: %dx%d, 최대는 %dx%d)\n
+텍스처가 너무 큽니다! (기대값: %dx%d, 최대는 %dx%d)\n
 
 # osd/windows/input.c: 833
 Toggle Fullscreen
