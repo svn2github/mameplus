@@ -1593,8 +1593,8 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 		/* add file manager menu */
 		ui_menu_item_append(menu, _("File Manager"), NULL, 0, (void*)ui_image_menu_file_manager);
 	#ifdef MESS
-	/* add MESS-specific menus */
-	ui_mess_main_menu_populate(machine, menu);
+		/* add MESS-specific menus */
+		ui_mess_main_menu_populate(machine, menu);
 	#endif /* MESS */
 	}
 	/* add keyboard mode menu */
@@ -1625,6 +1625,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 		ui_menu_item_append(menu, _("Memory Card"), NULL, 0, (void *)menu_memory_card);
 
 #ifdef CMD_LIST
+	/* add command list menu */
 	ui_menu_item_append(menu, _("Show Command List"), NULL, 0, (void *)menu_command);
 #endif /* CMD_LIST */
 
@@ -3216,6 +3217,7 @@ static void menu_video_options_populate(running_machine *machine, ui_menu *menu,
 	/* add items for each view */
 	for (viewnum = 0; ; viewnum++)
 	{
+		// mamep: return the localized name of the indexed view
 		const char *name = target->translated_view_name(viewnum);
 		if (name == NULL)
 			break;

@@ -252,25 +252,25 @@ static file_error fopen_internal(core_options *opts, path_iterator *iterator, co
 			if (filerr == FILERR_NONE)
 				break;
 
-#if 1	// mamep: load zipped inp file
+			// mamep: load zipped inp file
 			{
-			    astring zipped_fullname;
-			    int offset = 0;
-			    int n = (*file)->filename.rchr(offset, '.');
+				astring zipped_fullname;
+				int offset = 0;
+				int n = (*file)->filename.rchr(offset, '.');
     
-			    if (n > 0)
-				    offset = n;
+				if (n > 0)
+					offset = n;
     
-			    zipped_fullname.cpy((*file)->filename, offset);
-			    zipped_fullname.cat(PATH_SEPARATOR);
-			    zipped_fullname.cat(filename);
+				zipped_fullname.cpy((*file)->filename, offset);
+				zipped_fullname.cat(PATH_SEPARATOR);
+				zipped_fullname.cat(filename);
     
-			    filerr = fopen_attempt_zipped((*file)->filename, crc, openflags, *file);
+				filerr = fopen_attempt_zipped((*file)->filename, crc, openflags, *file);
 
-			if (filerr == FILERR_NONE)
-				break;
+				if (filerr == FILERR_NONE)
+					break;
 			}
-#endif
+
 		}
 	}
 

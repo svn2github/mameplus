@@ -2583,6 +2583,7 @@ g_profiler.start(PROFILER_INPUT);
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (input_condition_true(port->machine, &field->condition))
 			{
+
 #ifdef USE_CUSTOM_BUTTON
 				/* update autofire status */
 				if (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
@@ -4425,6 +4426,7 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 							    custom_button[field->player][field->type - IPT_CUSTOM1])
 								xml_set_attribute_int(portnode, "custom", custom_button[field->player][field->type - IPT_CUSTOM1]);
 #endif /* USE_CUSTOM_BUTTON */
+
 						}
 
 						/* write out analog changes */
@@ -4564,7 +4566,7 @@ static time_t playback_init(running_machine *machine)
 
 	/* open the playback file */
 	filerr = mame_fopen(SEARCHPATH_INPUTLOG, filename, OPEN_FLAG_READ, &portdata->playback_file);
-	assert_always(filerr == FILERR_NONE, "Failed to open file for playback");
+	assert_always(filerr == FILERR_NONE, _("Failed to open file for playback"));
 
 	/* read the header and verify that it is a modern version; if not, print an error */
 	if (mame_fread(portdata->playback_file, header, sizeof(header)) != sizeof(header))

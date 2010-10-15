@@ -216,6 +216,7 @@ static INT32 slider_crossoffset(running_machine *machine, void *arg, astring *st
 static void build_bgtexture(running_machine *machine);
 static void free_bgtexture(running_machine &machine);
 
+
 /***************************************************************************
     INLINE FUNCTIONS
 ***************************************************************************/
@@ -1412,7 +1413,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 	/* add a warning if any ROMs were loaded with warnings */
 	if (rom_load_warnings(machine) > 0)
 	{
-		string.cat(_("One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n"));
+		string.cat(_("One or more ROMs/CHDs for this game are incorrect. The " GAMENOUN " may not run correctly.\n"));
 		if (machine->gamedrv->flags & WARNING_FLAGS)
 			string.cat("\n");
 	}
@@ -1420,7 +1421,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 	/* if we have at least one warning flag, print the general header */
 	if (machine->gamedrv->flags & WARNING_FLAGS)
 	{
-		string.cat(_("There are known problems with this game\n\n"));
+		string.cat(_("There are known problems with this " GAMENOUN "\n\n"));
 
 		/* add one line per warning flag */
 		if (input_machine_has_keyboard(machine))
@@ -1453,7 +1454,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 			if (machine->gamedrv->flags & GAME_UNEMULATED_PROTECTION)
 				string.cat(_("The game has protection which isn't fully emulated.\n"));
 			if (machine->gamedrv->flags & GAME_NOT_WORKING)
-				string.cat(_("THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. "
+				string.cat(_("THIS " CAPGAMENOUN " DOESN'T WORK. The emulation for this game is not yet complete. "
 									 "There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n"));
 
 			/* find the parent of this driver */

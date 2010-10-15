@@ -1186,8 +1186,8 @@ const char *render_target::view_name(int viewindex)
 
 
 //-------------------------------------------------
-//  render_target_get_translated_view_name - return
-//  the localized name of the indexed view
+//  translated_view_name -
+//  return the localized name of the indexed view
 //-------------------------------------------------
 
 const char *render_target::translated_view_name(int viewindex)

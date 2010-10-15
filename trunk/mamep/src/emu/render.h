@@ -556,7 +556,7 @@ public:
 
 	// view information
 	const char *view_name(int viewindex);
-	const char *translated_view_name(int viewindex);
+	const char *translated_view_name(int viewindex);	// mamep: return the localized name of the indexed view
 	UINT32 view_screens(int viewindex);
 
 	// bounds computations

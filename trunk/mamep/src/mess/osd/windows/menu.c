@@ -1444,6 +1444,7 @@ static void prepare_menus(HWND wnd)
 	while(_tcscmp(t_buf, TEXT("-")));
 	i = 0;
 	view_index = window->target->view();
+	// mamep: return the localized name of the indexed view
 	while((view_name = window->target->translated_view_name(i)) != NULL)
 	{
 		TCHAR *t_view_name = tstring_from_utf8(view_name);
