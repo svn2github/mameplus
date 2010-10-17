@@ -366,12 +366,9 @@ static void video_exit(running_machine &machine)
 {
 	int i;
 
-//mamep: 0.139u3 disabled this code to avert scale_effect crash
-#if 0
-	{
-		screen_device *screen = screen_first(machine);
+#if USE_SCALE_EFFECTS
+	for (screen_device *screen = screen_first(machine); screen != NULL; screen = screen_next(screen))
 		screen->video_exit_scale_effect();
-	}
 #endif /* USE_SCALE_EFFECTS */
 
 	/* stop recording any movie */
@@ -606,8 +603,10 @@ const char *video_get_speed_text(running_machine *machine)
 	/* validate */
 	assert(machine != NULL);
 
+#ifdef INP_CAPTION
 	*dest = '\0';
 	dest += sprintf(dest, _("frame:%ld "), (long)machine->primary_screen->frame_number());
+#endif /* INP_CAPTION */
 
 	/* if we're paused, just display Paused */
 	if (paused)
@@ -1022,11 +1021,11 @@ static void update_refresh_speed(running_machine *machine)
 			/* find the screen with the shortest frame period (max refresh rate) */
 			/* note that we first check the token since this can get called before all screens are created */
 			for (screen_device *screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
-				{
+			{
 				attoseconds_t period = screen->frame_period().attoseconds;
 				if (period != 0)
 					min_frame_period = MIN(min_frame_period, period);
-				}
+			}
 
 			/* compute a target speed as an integral percentage */
 			/* note that we lop 0.25Hz off of the minrefresh when doing the computation to allow for
@@ -1874,6 +1873,7 @@ void screen_device::texture_set_scale_bitmap(const rectangle *visarea, UINT32 pa
 	m_texture[curbank]->set_bitmap(dst, &fixedvis, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15, NULL);
 }
 #endif /* USE_SCALE_EFFECTS */
+
 
 
 /***************************************************************************
