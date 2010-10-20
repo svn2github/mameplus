@@ -82,7 +82,7 @@ public:
 
 public slots:
 	void postInit();
-	void updateList(const QString & = NULL);
+	void updateList(const QString & = "");
 };
 
 #endif

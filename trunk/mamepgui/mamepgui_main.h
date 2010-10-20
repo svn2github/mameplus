@@ -63,14 +63,14 @@ public:
 
 	GameListTreeView *tvGameList;
 	QListView *lvGameList;
-	
+
 	QLineEdit *lineEditSearch;
 	QToolButton *btnSearch, *btnClearSearch;
-	QLabel  *labelProgress, *labelGameCount, *labelStatus, *labelEmulation, *labelColor, *labelSound, *labelGraphic, *labelCocktail, *labelProtection, *labelSavestate;
+	QLabel *labelProgress, *labelGameCount, *labelStatus, *labelEmulation, *labelColor, *labelSound, *labelGraphic, *labelCocktail, *labelProtection, *labelSavestate;
 	QWidget *wStatus;
 	QProgressBar *progressBarGamelist;
 	QSystemTrayIcon *trayIcon;
-	
+
 	DirsUI *dirsUI;
 	PlayOptionsUI *playOptionsUI;
 	AboutUI *aboutUI;
@@ -145,9 +145,9 @@ public slots:
 	void loadSettings();
 	void saveSettings();
 	void setDockOptions();
-	void setGuiStyle(QString = NULL);
+	void setGuiStyle(QString = "");
 	void setBgTile();
-	void setBgPixmap(QString = NULL);
+	void setBgPixmap(QString = "");
 	void toggleTrayIcon(int, QProcess::ExitStatus, bool = false);
 
 protected:

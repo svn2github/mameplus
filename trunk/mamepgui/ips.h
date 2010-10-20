@@ -12,11 +12,11 @@ Q_OBJECT
 public:
 	IpsUI(QWidget *parent = 0);
 	void init();
-	bool checkAvailable(const QString & = NULL);
+	bool checkAvailable(const QString & = "");
 	void parseRelations();
 
 public slots:
-	void parse(QTreeWidgetItem *, QTreeWidgetItem *, const QString & = NULL, const QString & = NULL);
+	void parse(QTreeWidgetItem *, QTreeWidgetItem *, const QString & = "", const QString & = "");
 	void updateList();
 	void save();
 	void clear();

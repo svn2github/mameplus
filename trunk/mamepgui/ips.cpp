@@ -4,9 +4,8 @@
 #include "mamepgui_main.h"
 #include "mameopt.h"
 
-IpsUI::IpsUI(QWidget *parent) :
-QDialog(parent),
-ipspath(NULL)
+IpsUI::IpsUI(QWidget *parent)
+	: QDialog(parent), ipspath("")
 {
 	setupUi(this);
 
@@ -175,7 +174,7 @@ void IpsUI::validateDep(const QString &datName)
 
 					QStringList _children = _it.value();
 					//of child ($datName) is checked
-					if (_children.contains(datName) 
+					if (_children.contains(datName)
 						&& itemStateTable[_parent] == 1)
 					{
 						//ignore the checking
@@ -241,7 +240,7 @@ void IpsUI::parseRelations()
 bool IpsUI::checkAvailable(const QString &gameName)
 {
 	//set current ips dirpath
-	if (ipspath == NULL && mameOpts.contains("ipspath"))
+	if (ipspath.isEmpty() && mameOpts.contains("ipspath"))
 	{
 		QString _dirpath = utils->getPath(mameOpts["ipspath"]->globalvalue);
 		QDir dir(_dirpath);
@@ -249,7 +248,7 @@ bool IpsUI::checkAvailable(const QString &gameName)
 			ipspath = utils->getPath(_dirpath);
 	}
 
-	if (ipspath == NULL)
+	if (ipspath.isEmpty())
 		return false;
 
 	//iterate all files in ips path
@@ -264,8 +263,8 @@ bool IpsUI::checkAvailable(const QString &gameName)
 void IpsUI::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QString &_datName, const QString & fallbackLang)
 {
 	QString datName = _datName;
-	
-	if (ipspath == NULL)
+
+	if (ipspath.isEmpty())
 		return;
 
 	if (current != NULL)
@@ -274,6 +273,7 @@ void IpsUI::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QSt
 	//set category font
 	static QFont boldFont(twList->font());
 	boldFont.setBold(true);
+
 	static const QBrush brushCat = QBrush(QColor(0, 21, 110, 255));
 
 	QString lang;
@@ -291,10 +291,10 @@ void IpsUI::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QSt
 	{
 		QTextStream in(&datFile);
 		in.setCodec("UTF-8");
-	
+
 		QString line;
 		QString desc = "";
-	
+
 		//met category/short desc
 		bool startCat = false;
 		//met long desc
@@ -318,10 +318,10 @@ void IpsUI::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QSt
 				//fixme: move to utils
 				int sep;
 				sep = line.indexOf("/");
-	
+
 				QTreeWidgetItem *parentItem = twList->invisibleRootItem();
 				QTreeWidgetItem *item;
-	
+
 				QString shortDesc;
 				if (sep > -1)
 				{
@@ -334,7 +334,7 @@ void IpsUI::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QSt
 						parentItem = new QTreeWidgetItem(parentItem, (QStringList() << cat));
 						parentItem->setForeground (0, brushCat);
 						parentItem->setFont(0, boldFont);
-						parentItem->setFlags(parentItem->flags() 
+						parentItem->setFlags(parentItem->flags()
 							& ~Qt::ItemIsUserCheckable
 							& ~Qt::ItemIsSelectable);
 					}
@@ -346,25 +346,24 @@ void IpsUI::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QSt
 					shortDesc = line;
 					parentItem = twList->invisibleRootItem();
 				}
-	
-				item = new QTreeWidgetItem(parentItem, (QStringList() 
-						<< shortDesc << datName));
+
+				item = new QTreeWidgetItem(parentItem, (QStringList() << shortDesc << datName));
 				item->setCheckState(0, Qt::Unchecked);
 
 				if (!datName.isEmpty())
 					itemStateTable.insert(datName.toLower(), 0);
 
 				success = true;
-			
+
 				startCat = false;
 			}
-	
+
 			if (current != NULL && startDesc)
 			{
 				desc.append(line);
 				desc.append("<br>");
 			}
-	
+
 			if (line == lang)
 			{
 				startCat = true;
@@ -421,7 +420,7 @@ void IpsUI::updateList()
 	//update mameOpts
 	optUtils->preUpdateModel(NULL, OPTLEVEL_CURR, currentGame, 1);
 
-	//check the selected ips	
+	//check the selected ips
 	if (mameOpts.contains("ips"))
 	{
 		QString ipsString = mameOpts["ips"]->currvalue;
@@ -521,4 +520,3 @@ void IpsUI::iterateItems(QTreeWidgetItem *item, int method)
 			item->setCheckState(0, (itemStateTable[datName] == 1) ? Qt::Checked : Qt::Unchecked);
 	}
 }
-
