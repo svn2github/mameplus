@@ -278,6 +278,7 @@ a tilemap-like structure, from which data is copied)
 #ifdef MESS
 #include "devices/chd_cd.h"
 #endif
+#include "sound/rf5c68.h"
 
 #define MEGADRIV_VDP_VRAM(address) megadrive_vdp_vram[(address)&0x7fff]
 
@@ -346,7 +347,10 @@ static UINT16* _32x_palette_lookup;
 /* SegaCD! */
 static cpu_device *_segacd_68k_cpu;
 static emu_timer *segacd_gfx_conversion_timer;
+static emu_timer *segacd_dmna_ret_timer;
+static emu_timer *segacd_irq3_timer;
 static int segacd_wordram_mapped = 0;
+static TIMER_CALLBACK( segacd_irq3_timer_callback );
 
 /* SVP (virtua racing) */
 static cpu_device *_svp_cpu;
@@ -395,11 +399,7 @@ static UINT8 segacd_cdd_rx[10];
 static UINT8 segacd_cdd_tx[10];
 static struct
 {
-	UINT8 status;
-	UINT8 minute;
-	UINT8 seconds;
-	UINT8 frame;
-	UINT8 ext;
+	UINT8 buffer[5];
 	UINT8 ctrl;
 }segacd_cdd;
 #ifdef MESS
@@ -3865,7 +3865,7 @@ static UINT16 segacd_stampmap_base_address;
 static UINT16 segacd_imagebuffer_start_address;
 static UINT16 segacd_imagebuffer_offset;
 static tilemap_t    *segacd_stampmap[4];
-static void segacd_mark_stampmaps_dirty(void);
+//static void segacd_mark_stampmaps_dirty(void);
 
 
 static WRITE16_HANDLER( scd_a12000_halt_reset_w )
@@ -3920,10 +3920,46 @@ static READ16_HANDLER( scd_a12000_halt_reset_r )
 // so probably don't change instantly...
 //
 
+int segacd_dmna = 0;
+int segacd_ret = 0;
+
+static TIMER_CALLBACK( segacd_dmna_ret_timer_callback )
+{
+
+	// this is the initial state, and the state after changing modes?
+	if ((segacd_dmna==0) && (segacd_ret ==0))
+	{
+		//printf("aaa %d %d\n", segacd_dmna, segacd_ret);
+		segacd_dmna = 0;
+		segacd_ret = 1;
+		//printf("bbb %d %d\n", segacd_dmna, segacd_ret);
+	}
+	else if ((segacd_dmna==1) && (segacd_ret == 1))
+	{
+		//printf("aaa %d %d\n", segacd_dmna, segacd_ret);
+		segacd_dmna = 1;
+		segacd_ret = 0;
+		//printf("bbb %d %d\n", segacd_dmna, segacd_ret);
+	}
+	else if ((segacd_dmna==1) && (segacd_ret == 0))
+	{
+		//printf("aaa %d %d\n", segacd_dmna, segacd_ret);
+		segacd_dmna = 0;
+		segacd_ret = 1;
+		//printf("bbb %d %d\n", segacd_dmna, segacd_ret);
+	}
+	else
+	{
+		printf("huh? %d %d\n", segacd_dmna, segacd_ret);
+	}
+}
+
+
 static UINT8 segacd_ram_writeprotect_bits;
 static int segacd_ram_mode;
+static int segacd_ram_mode_old;
 
-static int segacd_maincpu_has_ram_access = 0;
+//static int segacd_maincpu_has_ram_access = 0;
 static int segacd_4meg_prgbank = 0; // which bank the MainCPU can see of the SubCPU PrgRAM
 static int segacd_memory_priority_mode = 0;
 static int segacd_stampsize;
@@ -3934,9 +3970,45 @@ static READ16_HANDLER( scd_a12002_memory_mode_r )
 	return (segacd_ram_writeprotect_bits << 8) |
 		   (segacd_4meg_prgbank << 6) |
 		   (segacd_ram_mode << 2) |
-		   ((segacd_maincpu_has_ram_access^1) << 1) |
-		   ((segacd_maincpu_has_ram_access) << 0);
+		   ((segacd_dmna) << 1) |
+		   ((segacd_ret) << 0);
 }
+
+
+/* I'm still not 100% clear how this works, the sources I have are a bit vague,
+   it might still be incorrect in both modes
+
+  for a simple way to swap blocks of ram between cpus this is stupidly convoluted
+
+ */
+
+// DMNA = Decleration Mainram No Access (bit 0)
+// RET = Return access (bit 1)
+
+/* In Mode 0
+
+*/
+
+/* In Mode 1
+
+
+RET
+
+0 = Main CPU Accesses WordRam0 (1st Half of WordRAM)
+    Sub CPU  Accesses WordRam1 (2nd Half of WordRAM)
+
+1 = Main CPU Accesses WordRam1 (2nd Half of WordRAM)
+    Sub  CPU Accesses WordRam0 (1st Half of WordRAM)
+
+DMNA
+
+Setting this bis sends a Swap request to the SUB-CPU (Main CPU access only?)
+  1 = Swap Reqested / In Progress
+  0 = Swap Complete
+
+ (personal note, is this just a software flag? in this mode? sub p11/p12)
+
+*/
 
 static WRITE16_HANDLER( scd_a12002_memory_mode_w )
 {
@@ -3948,10 +4020,29 @@ static WRITE16_HANDLER( scd_a12002_memory_mode_w )
 		//if (data&0x0001) printf("ret bit set (invalid? can't set from main68k?)\n");
 		if (data&0x0002)
 		{
-			//printf("dmn set (swap requested)\n"); // give ram to sub?
+			//printf("dmna set (swap requested)\n"); // give ram to sub?
 
 			// this should take some time?
-			segacd_maincpu_has_ram_access = 0;
+
+			//segacd_ret = 1;
+
+			//printf("main cpu dmna set dmna: %d ret: %d\n", segacd_dmna, segacd_ret);
+			if (segacd_ram_mode==0)
+			{
+				if (!timer_enabled(segacd_dmna_ret_timer))
+				{
+					if (!segacd_dmna)
+					{
+						//printf("main dmna\n");
+						segacd_dmna = 1;
+						timer_adjust_oneshot(segacd_dmna_ret_timer, ATTOTIME_IN_USEC(100), 0);
+					}
+				}
+			}
+			else
+			{
+				printf("dmna bit in mode 1\n");
+			}
 		}
 
 
@@ -3986,8 +4077,8 @@ static READ16_HANDLER( segacd_sub_memory_mode_r )
 		 /*(segacd_4meg_prgbank << 6) | */
 		   (segacd_memory_priority_mode << 3) |
 		   (segacd_ram_mode << 2) |
-		   ((segacd_maincpu_has_ram_access^1) << 1) |
-		   ((segacd_maincpu_has_ram_access) << 0);
+		   ((segacd_dmna) << 1) |
+		   ((segacd_ret) << 0);
 }
 
 static WRITE16_HANDLER( segacd_sub_memory_mode_w )
@@ -3999,16 +4090,70 @@ static WRITE16_HANDLER( segacd_sub_memory_mode_w )
 		if (data&0x0001)
 		{
 			//printf("ret bit set\n");
-			segacd_maincpu_has_ram_access = 1;
+			//segacd_dmna = 0;
+
+
+			//printf("sub cpu ret set dmna: %d ret: %d\n", segacd_dmna, segacd_ret);
+
+			if (segacd_ram_mode==0)
+			{
+				if (!timer_enabled(segacd_dmna_ret_timer))
+				{
+					if (segacd_dmna)
+					{
+					//  printf("sub ret\n");
+					//  segacd_ret = 1;
+					//  segacd_dmna = 0;
+						timer_adjust_oneshot(segacd_dmna_ret_timer, ATTOTIME_IN_USEC(100), 0);
+					}
+				}
+			}
+			else
+			{
+				// in mode 1 this changes the word ram 1 to main cpu and word ram 0 to sub cpu?
+				// but should be proceeded by a dmna request? is this only valid if dmna has been
+				// set to 1 by the main CPU first?
+				printf("ret bit in mode 1\n");
+				segacd_ret = 1;
+			}
+		}
+		else
+		{
+			// in mode 1 this changes the word ram 0 to main cpu and word ram 1 to sub cpu?
+			// but should be proceeded by a dmna request? is this only valid if dmna has been
+			// set to 1 by the main CPU first?
+			if (segacd_ram_mode==1)
+			{
+				segacd_ret = 0;
+			}
 		}
 
 
-		//if (data&0x0002) printf("dmn set (swap requested) (invalid, can't be set from sub68k?\n");
+		//if (data&0x0002) printf("dmna set (swap requested) (invalid, can't be set from sub68k?\n");
 
 		//if (data&0x0004)
 		{
 			segacd_ram_mode = (data&0x0004)>>2;
-			//printf("mode set %d\n", segacd_ram_mode);
+			if (segacd_ram_mode!=segacd_ram_mode_old)
+			{
+				printf("mode set %d\n", segacd_ram_mode);
+				segacd_ram_mode_old = segacd_ram_mode;
+
+				if (segacd_ram_mode==0)
+				{
+					// reset it flags etc.?
+					segacd_ret = 0;
+					segacd_dmna = 0;
+					timer_adjust_oneshot(segacd_dmna_ret_timer, ATTOTIME_IN_USEC(100), 0);
+				}
+				else
+				{
+					segacd_ret = 0;
+					segacd_dmna = 0;
+
+
+				}
+			}
 		}
 
 		//if (data&0x0018)
@@ -4268,7 +4413,7 @@ static READ16_HANDLER( segacd_main_dataram_part1_r )
 	if (segacd_ram_mode==0)
 	{
 		// is this correct?
-		if (segacd_maincpu_has_ram_access)
+		if (!segacd_dmna)
 		{
 			//printf("segacd_main_dataram_part1_r in mode 0 %08x %04x\n", offset*2, segacd_dataram[offset]);
 
@@ -4280,11 +4425,32 @@ static READ16_HANDLER( segacd_main_dataram_part1_r )
 			printf("Illegal: segacd_main_dataram_part1_r in mode 0 without permission\n");
 			return 0xffff;
 		}
+
 	}
 	else if (segacd_ram_mode==1)
 	{
-		printf("Unspported: segacd_main_dataram_part1_r in mode 1\n");
-		return 0x0000;
+
+		if (offset<0x20000/2)
+		{
+			// wordram accees
+			//printf("Unspported: segacd_main_dataram_part1_r (word RAM) in mode 1\n");
+
+			// ret bit set by sub cpu determines which half of WorkRAM we have access to?
+			if (segacd_ret)
+			{
+				return segacd_dataram[offset+0x20000/2];
+			}
+			else
+			{
+				return segacd_dataram[offset+0x00000/2];
+			}
+
+		}
+		else
+		{
+			printf("Unspported: segacd_main_dataram_part1_r (Cell rearranged RAM) in mode 1\n");
+			return 0x0000;
+		}
 	}
 
 	return 0x0000;
@@ -4295,7 +4461,7 @@ static WRITE16_HANDLER( segacd_main_dataram_part1_w )
 	if (segacd_ram_mode==0)
 	{
 		// is this correct?
-		if (segacd_maincpu_has_ram_access)
+		if (!segacd_dmna)
 		{
 			COMBINE_DATA(&segacd_dataram[offset]);
 			segacd_mark_tiles_dirty(space->machine, offset);
@@ -4304,10 +4470,29 @@ static WRITE16_HANDLER( segacd_main_dataram_part1_w )
 		{
 			printf("Illegal: segacd_main_dataram_part1_w in mode 0 without permission\n");
 		}
+
 	}
 	else if (segacd_ram_mode==1)
 	{
-		printf("Unspported: segacd_main_dataram_part1_w in mode 1\n");
+		if (offset<0x20000/2)
+		{
+			//printf("Unspported: segacd_main_dataram_part1_w (word RAM) in mode 1\n");
+			// wordram accees
+
+			// ret bit set by sub cpu determines which half of WorkRAM we have access to?
+			if (segacd_ret)
+			{
+				COMBINE_DATA(&segacd_dataram[offset+0x20000/2]);
+			}
+			else
+			{
+				COMBINE_DATA(&segacd_dataram[offset+0x00000/2]);
+			}
+		}
+		else
+		{
+			printf("Unspported: segacd_main_dataram_part1_w (Cell rearranged RAM) in mode 1 (illega?)\n"); // is this legal??
+		}
 	}
 }
 
@@ -4343,7 +4528,7 @@ static TIMER_CALLBACK( segacd_gfx_conversion_timer_callback )
 {
 	// todo irqmask
 
-	printf("segacd_gfx_conversion_timer_callback\n");
+	//printf("segacd_gfx_conversion_timer_callback\n");
 
 	if (segacd_irq_mask & 0x02)
 		cputag_set_input_line(machine, "segacd_68k", 1, HOLD_LINE);
@@ -4381,7 +4566,7 @@ static const gfx_layout sega_8x8_layout =
 #define _16x16_SEQUENCE_1_FLIP  { 512+20,512+16,512+28,512+24,512+4,512+0, 512+12,512+8, 20,16,28,24,4,0,12,8 },
 
 #define _16x16_SEQUENCE_2  { 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32, 8*32, 9*32,10*32,11*32,12*32,13*32,14*32,15*32 },
-#define _16x16_SEQUENCE_2_FLIP  { 16*32, 14*32, 13*32, 12*32, 11*32, 10*32, 9*32, 8*32, 7*32, 6*32, 5*32, 4*32, 3*32, 2*32, 1*32, 0*32 },
+#define _16x16_SEQUENCE_2_FLIP  { 15*32, 14*32, 13*32, 12*32, 11*32, 10*32, 9*32, 8*32, 7*32, 6*32, 5*32, 4*32, 3*32, 2*32, 1*32, 0*32 },
 
 
 #define _16x16_START \
@@ -4556,12 +4741,14 @@ static void segacd_mark_tiles_dirty(running_machine* machine, int offset)
 	gfx_element_mark_dirty(machine->gfx[15],(offset*2)/(SEGACD_BYTES_PER_TILE32));
 }
 
+
 // mame specific.. map registers to which tilemap cache we use
 static int segacd_get_active_stampmap_tilemap(void)
 {
 	return (segacd_stampsize & 0x6)>>1;
 }
 
+#if 0
 static void segacd_mark_stampmaps_dirty(void)
 {
 	tilemap_mark_all_tiles_dirty(segacd_stampmap[segacd_get_active_stampmap_tilemap()]);
@@ -4571,70 +4758,245 @@ static void segacd_mark_stampmaps_dirty(void)
 	//tilemap_mark_all_tiles_dirty(segacd_stampmap[2]);
 	//tilemap_mark_all_tiles_dirty(segacd_stampmap[3]);
 }
+#endif
 
-static TILE_GET_INFO( get_stampmap_16x16_1x1_tile_info )
+void SCD_GET_TILE_INFO_16x16_1x1( int& tile_region, int& tileno, int tile_index )
 {
-	int tile_region = 0; // 16x16 tiles
+	tile_region = 0; // 16x16 tiles
 	int tile_base = (segacd_stampmap_base_address & 0xff80) * 4;
 
 	int tiledat = segacd_dataram[((tile_base>>1)+tile_index) & 0x1ffff];
-	int tileno = tiledat & 0x07ff;
+	tileno = tiledat & 0x07ff;
 	int xflip =  tiledat & 0x8000;
 	int roll  =  (tiledat & 0x6000)>>13;
 
 	if (xflip) tile_region += 4;
 	tile_region+=roll;
-
-	SET_TILE_INFO(tile_region, tileno, 0, 0);
 }
 
-static TILE_GET_INFO( get_stampmap_16x16_16x16_tile_info )
+void SCD_GET_TILE_INFO_32x32_1x1( int& tile_region, int& tileno, int tile_index )
 {
-	int tile_region = 0; // 16x16 tiles
+	tile_region = 8; // 32x32 tiles
+	int tile_base = (segacd_stampmap_base_address & 0xffe0) * 4;
+
+	int tiledat = segacd_dataram[((tile_base>>1)+tile_index) & 0x1ffff];
+	tileno = (tiledat & 0x07fc)>>2;
+	int xflip =  tiledat & 0x8000;
+	int roll  =  (tiledat & 0x6000)>>13;
+
+	if (xflip) tile_region += 4;
+	tile_region+=roll;
+}
+
+
+void SCD_GET_TILE_INFO_16x16_16x16( int& tile_region, int& tileno, int tile_index )
+{
+	tile_region = 0; // 16x16 tiles
 	int tile_base = (0x8000) * 4; // fixed address in this mode
 
 	int tiledat = segacd_dataram[((tile_base>>1)+tile_index) & 0x1ffff];
-	int tileno = tiledat & 0x07ff;
+	tileno = tiledat & 0x07ff;
 	int xflip =  tiledat & 0x8000;
 	int roll  =  (tiledat & 0x6000)>>13;
 
 	if (xflip) tile_region += 4;
 	tile_region+=roll;
+}
 
+
+void SCD_GET_TILE_INFO_32x32_16x16( int& tile_region, int& tileno, int tile_index )
+{
+	tile_region = 8; // 32x32 tiles
+	int tile_base = (segacd_stampmap_base_address & 0xe000) * 4;
+
+	int tiledat = segacd_dataram[((tile_base>>1)+tile_index) & 0x1ffff];
+	tileno = (tiledat & 0x07fc)>>2;
+	int xflip =  tiledat & 0x8000;
+	int roll  =  (tiledat & 0x6000)>>13;
+
+	if (xflip) tile_region += 4;
+	tile_region+=roll;
+}
+
+/* Tilemap callbacks (we don't actually use the tilemaps due to the excessive overhead */
+
+
+
+static TILE_GET_INFO( get_stampmap_16x16_1x1_tile_info )
+{
+	int tile_region, tileno;
+	SCD_GET_TILE_INFO_16x16_1x1(tile_region,tileno,(int)tile_index);
 	SET_TILE_INFO(tile_region, tileno, 0, 0);
 }
 
 static TILE_GET_INFO( get_stampmap_32x32_1x1_tile_info )
 {
-	int tile_region = 8; // 32x32 tiles
-	int tile_base = (segacd_stampmap_base_address & 0xffe0) * 4;
+	int tile_region, tileno;
+	SCD_GET_TILE_INFO_32x32_1x1(tile_region,tileno,(int)tile_index);
+	SET_TILE_INFO(tile_region, tileno, 0, 0);
+}
 
-	int tiledat = segacd_dataram[((tile_base>>1)+tile_index) & 0x1ffff];
-	int tileno = (tiledat & 0x07fc)>>2;
-	int xflip =  tiledat & 0x8000;
-	int roll  =  (tiledat & 0x6000)>>13;
 
-	if (xflip) tile_region += 4;
-	tile_region+=roll;
-
+static TILE_GET_INFO( get_stampmap_16x16_16x16_tile_info )
+{
+	int tile_region, tileno;
+	SCD_GET_TILE_INFO_16x16_16x16(tile_region,tileno,(int)tile_index);
 	SET_TILE_INFO(tile_region, tileno, 0, 0);
 }
 
 static TILE_GET_INFO( get_stampmap_32x32_16x16_tile_info )
 {
-	int tile_region = 8; // 32x32 tiles
-	int tile_base = (segacd_stampmap_base_address & 0xe000) * 4;
-
-	int tiledat = segacd_dataram[((tile_base>>1)+tile_index) & 0x1ffff];
-	int tileno = (tiledat & 0x07fc)>>2;
-	int xflip =  tiledat & 0x8000;
-	int roll  =  (tiledat & 0x6000)>>13;
-
-	if (xflip) tile_region += 4;
-	tile_region+=roll;
-
+	int tile_region, tileno;
+	SCD_GET_TILE_INFO_32x32_16x16(tile_region,tileno,(int)tile_index);
 	SET_TILE_INFO(tile_region, tileno, 0, 0);
 }
+
+// non-tilemap functions to get a pixel from a 'tilemap' based on the above, but looking up each pixel, as to avoid the heavy cache bitmap
+
+INLINE UINT8 get_stampmap_16x16_1x1_tile_info_pixel(running_machine* machine, int xpos, int ypos)
+{
+	const int tilesize = 4; // 0xf pixels
+	const int tilemapsize = 0x0f;
+
+	int wraparound = segacd_stampsize&1;
+
+	int xtile = xpos / (1<<tilesize);
+	int ytile = ypos / (1<<tilesize);
+
+	if (wraparound)
+	{
+		// wrap...
+		xtile &= tilemapsize;
+		ytile &= tilemapsize;
+	}
+	else
+	{
+		if (xtile>tilemapsize) return 0;
+		if (xtile<0) return 0;
+
+		if (ytile>tilemapsize) return 0;
+		if (ytile<0) return 0;
+	}
+
+	int tile_index = (ytile * (tilemapsize+1)) + xtile;
+
+	int tile_region, tileno;
+	SCD_GET_TILE_INFO_16x16_1x1(tile_region,tileno,(int)tile_index);
+
+	const gfx_element *gfx = machine->gfx[tile_region];
+	tileno %= gfx->total_elements;
+	const UINT8* srcdata = gfx_element_get_data(gfx, tileno);
+	return srcdata[((ypos&((1<<tilesize)-1))*(1<<tilesize))+(xpos&((1<<tilesize)-1))];
+}
+
+INLINE UINT8 get_stampmap_32x32_1x1_tile_info_pixel(running_machine* machine, int xpos, int ypos)
+{
+	const int tilesize = 5; // 0x1f pixels
+	const int tilemapsize = 0x07;
+
+	int wraparound = segacd_stampsize&1;
+
+	int xtile = xpos / (1<<tilesize);
+	int ytile = ypos / (1<<tilesize);
+
+	if (wraparound)
+	{
+		// wrap...
+		xtile &= tilemapsize;
+		ytile &= tilemapsize;
+	}
+	else
+	{
+		if (xtile>tilemapsize) return 0;
+		if (xtile<0) return 0;
+
+		if (ytile>tilemapsize) return 0;
+		if (ytile<0) return 0;
+	}
+
+	int tile_index = (ytile * (tilemapsize+1)) + xtile;
+
+	int tile_region, tileno;
+	SCD_GET_TILE_INFO_32x32_1x1(tile_region,tileno,(int)tile_index);
+
+	const gfx_element *gfx = machine->gfx[tile_region];
+	tileno %= gfx->total_elements;
+	const UINT8* srcdata = gfx_element_get_data(gfx, tileno);
+	return srcdata[((ypos&((1<<tilesize)-1))*(1<<tilesize))+(xpos&((1<<tilesize)-1))];
+}
+
+INLINE UINT8 get_stampmap_16x16_16x16_tile_info_pixel(running_machine* machine, int xpos, int ypos)
+{
+	const int tilesize = 4; // 0xf pixels
+	const int tilemapsize = 0xff;
+
+	int wraparound = segacd_stampsize&1;
+
+	int xtile = xpos / (1<<tilesize);
+	int ytile = ypos / (1<<tilesize);
+
+	if (wraparound)
+	{
+		// wrap...
+		xtile &= tilemapsize;
+		ytile &= tilemapsize;
+	}
+	else
+	{
+		if (xtile>tilemapsize) return 0;
+		if (xtile<0) return 0;
+
+		if (ytile>tilemapsize) return 0;
+		if (ytile<0) return 0;
+	}
+
+	int tile_index = (ytile * (tilemapsize+1)) + xtile;
+
+	int tile_region, tileno;
+	SCD_GET_TILE_INFO_16x16_16x16(tile_region,tileno,(int)tile_index);
+
+	const gfx_element *gfx = machine->gfx[tile_region];
+	tileno %= gfx->total_elements;
+	const UINT8* srcdata = gfx_element_get_data(gfx, tileno);
+	return srcdata[((ypos&((1<<tilesize)-1))*(1<<tilesize))+(xpos&((1<<tilesize)-1))];
+}
+
+INLINE UINT8 get_stampmap_32x32_16x16_tile_info_pixel(running_machine* machine, int xpos, int ypos)
+{
+	const int tilesize = 5; // 0x1f pixels
+	const int tilemapsize = 0x7f;
+
+	int wraparound = segacd_stampsize&1;
+
+	int xtile = xpos / (1<<tilesize);
+	int ytile = ypos / (1<<tilesize);
+
+	if (wraparound)
+	{
+		// wrap...
+		xtile &= tilemapsize;
+		ytile &= tilemapsize;
+	}
+	else
+	{
+		if (xtile>tilemapsize) return 0;
+		if (xtile<0) return 0;
+
+		if (ytile>tilemapsize) return 0;
+		if (ytile<0) return 0;
+	}
+
+	int tile_index = (ytile * (tilemapsize+1)) + xtile;
+
+	int tile_region, tileno;
+	SCD_GET_TILE_INFO_32x32_16x16(tile_region,tileno,(int)tile_index);
+
+	const gfx_element *gfx = machine->gfx[tile_region];
+	tileno %= gfx->total_elements;
+	const UINT8* srcdata = gfx_element_get_data(gfx, tileno);
+	return srcdata[((ypos&((1<<tilesize)-1))*(1<<tilesize))+(xpos&((1<<tilesize)-1))];
+}
+
 
 
 
@@ -4674,6 +5036,14 @@ void segacd_init_main_cpu( running_machine* machine )
 
 	segacd_gfx_conversion_timer = timer_alloc(machine, segacd_gfx_conversion_timer_callback, 0);
 	timer_adjust_oneshot(segacd_gfx_conversion_timer, attotime_never, 0);
+
+	segacd_dmna_ret_timer = timer_alloc(machine, segacd_dmna_ret_timer_callback, 0);
+	timer_adjust_oneshot(segacd_gfx_conversion_timer, attotime_never, 0);
+
+
+	segacd_irq3_timer = timer_alloc(machine, segacd_irq3_timer_callback, 0);
+	timer_adjust_oneshot(segacd_irq3_timer, attotime_never, 0);
+
 
 
 	/* create the char set (gfx will then be updated dynamically from RAM) */
@@ -4744,6 +5114,14 @@ static MACHINE_RESET( segacd )
 		}
 	}
 	#endif
+
+	segacd_dmna = 0;
+	segacd_ret = 0;
+
+	segacd_ram_mode = 0;
+	segacd_ram_mode_old = 0;
+
+	timer_adjust_oneshot(segacd_dmna_ret_timer, attotime_zero, 0);
 }
 
 
@@ -4784,7 +5162,7 @@ static WRITE16_HANDLER( segacd_sub_led_ready_w )
 		segacd_redled = (data >> 8)&1;
 		segacd_greenled = (data >> 9)&1;
 
-		popmessage("%02x %02x",segacd_greenled,segacd_redled);
+		//popmessage("%02x %02x",segacd_greenled,segacd_redled);
 	}
 
 }
@@ -4796,7 +5174,7 @@ static READ16_HANDLER( segacd_sub_dataram_part1_r )
 	if (segacd_ram_mode==0)
 	{
 		// is this correct?
-		if (!segacd_maincpu_has_ram_access)
+		if (segacd_dmna)
 			return segacd_dataram[offset];
 		else
 		{
@@ -4806,7 +5184,7 @@ static READ16_HANDLER( segacd_sub_dataram_part1_r )
 	}
 	else if (segacd_ram_mode==1)
 	{
-		printf("Unspported: segacd_sub_dataram_part1_r in mode 1\n");
+		printf("Unspported: segacd_sub_dataram_part1_r in mode 1 (Word RAM Expander - 1 Byte Per Pixel)\n");
 		return 0x0000;
 	}
 
@@ -4818,7 +5196,7 @@ static WRITE16_HANDLER( segacd_sub_dataram_part1_w )
 	if (segacd_ram_mode==0)
 	{
 		// is this correct?
-		if (!segacd_maincpu_has_ram_access)
+		if (segacd_dmna)
 		{
 			COMBINE_DATA(&segacd_dataram[offset]);
 			segacd_mark_tiles_dirty(space->machine, offset);
@@ -4830,7 +5208,7 @@ static WRITE16_HANDLER( segacd_sub_dataram_part1_w )
 	}
 	else if (segacd_ram_mode==1)
 	{
-		printf("Unspported: segacd_sub_dataram_part1_w in mode 1\n");
+		printf("Unspported: segacd_sub_dataram_part1_w in mode 1 (Word RAM Expander - 1 Byte Per Pixel)\n");
 	}
 }
 
@@ -4838,13 +5216,22 @@ static READ16_HANDLER( segacd_sub_dataram_part2_r )
 {
 	if (segacd_ram_mode==0)
 	{
-		printf("ILLEGAL segacd_sub_dataram_part2_r in mode 1\n");
+		printf("ILLEGAL segacd_sub_dataram_part2_r in mode 0\n"); // not mapepd to anything in mode 0
 		return 0x0000;
 	}
 	else if (segacd_ram_mode==1)
 	{
-		printf("Unspported: segacd_sub_dataram_part2_r in mode 1\n");
-		return 0x0000;
+		//printf("Unsupported: segacd_sub_dataram_part2_r in mode 1 (Word RAM)\n");
+		// ret bit set by sub cpu determines which half of WorkRAM we have access to?
+		if (!segacd_ret)
+		{
+			return segacd_dataram[offset+0x20000/2];
+		}
+		else
+		{
+			return segacd_dataram[offset+0x00000/2];
+		}
+
 	}
 
 	return 0x0000;
@@ -4854,41 +5241,56 @@ static WRITE16_HANDLER( segacd_sub_dataram_part2_w )
 {
 	if (segacd_ram_mode==0)
 	{
-		printf("ILLEGAL segacd_sub_dataram_part2_w in mode 1\n");
+		printf("ILLEGAL segacd_sub_dataram_part2_w in mode 0\n"); // not mapepd to anything in mode 0
 	}
 	else if (segacd_ram_mode==1)
 	{
-		printf("Unsupported: segacd_sub_dataram_part2_w in mode 1\n");
+		//printf("Unsupported: segacd_sub_dataram_part2_w in mode 1 (Word RAM)\n");
+		// ret bit set by sub cpu determines which half of WorkRAM we have access to?
+		if (!segacd_ret)
+		{
+			COMBINE_DATA(&segacd_dataram[offset+0x20000/2]);
+		}
+		else
+		{
+			COMBINE_DATA(&segacd_dataram[offset+0x00000/2]);
+		}
+
 	}
+}
+
+static TIMER_CALLBACK( execute_hock_irq )
+{
+	int i,cdd_crc;
+
+	segacd_cdd.ctrl &= ~4; // clear HOCK flag
+
+	segacd_cdd_rx[0] = (segacd_cdd.buffer[0] & 0xf0) >> 4;
+	segacd_cdd_rx[1] = (segacd_cdd.buffer[0] & 0x0f) >> 0;
+	segacd_cdd_rx[2] = (segacd_cdd.buffer[1] & 0xf0) >> 4;
+	segacd_cdd_rx[3] = (segacd_cdd.buffer[1] & 0x0f) >> 0;
+	segacd_cdd_rx[4] = (segacd_cdd.buffer[2] & 0xf0) >> 4;
+	segacd_cdd_rx[5] = (segacd_cdd.buffer[2] & 0x0f) >> 0;
+	segacd_cdd_rx[6] = (segacd_cdd.buffer[3] & 0xf0) >> 4;
+	segacd_cdd_rx[7] = (segacd_cdd.buffer[3] & 0x0f) >> 0;
+	segacd_cdd_rx[8] = (segacd_cdd.buffer[4] & 0x0f) >> 0;
+
+	/* Do checksum calculation of the above registers */
+	cdd_crc = 0;
+	for(i=0;i<9;i++)
+		cdd_crc += segacd_cdd_rx[i];
+
+	segacd_cdd_rx[9] = ((cdd_crc & 0xf) ^ 0xf);
+
+	cputag_set_input_line(machine, "segacd_68k", 4, HOLD_LINE);
 }
 
 static void cdd_hock_irq(running_machine *machine,UINT8 dir)
 {
-	int i,cdd_crc;
-
 	if((segacd_cdd.ctrl & 4 || dir) && segacd_irq_mask & 0x10) // export status, check if bit 2 (HOst ClocK) and irq is enabled
 	{
-		// TODO: this shouldn't be instant, CDD should first fill receive data.
-		segacd_cdd.ctrl &= 0x103; // clear HOCK flag
-
-		segacd_cdd_rx[0] = (segacd_cdd.status & 0xf0) >> 4;
-		segacd_cdd_rx[1] = (segacd_cdd.status & 0x0f) >> 0;
-		segacd_cdd_rx[2] = (segacd_cdd.minute & 0xf0) >> 4;
-		segacd_cdd_rx[3] = (segacd_cdd.minute & 0x0f) >> 0;
-		segacd_cdd_rx[4] = (segacd_cdd.seconds & 0xf0) >> 4;
-		segacd_cdd_rx[5] = (segacd_cdd.seconds & 0x0f) >> 0;
-		segacd_cdd_rx[6] = (segacd_cdd.frame & 0xf0) >> 4;
-		segacd_cdd_rx[7] = (segacd_cdd.frame & 0x0f) >> 0;
-		segacd_cdd_rx[8] = (segacd_cdd.ext & 0x0f) >> 0;
-
-		/* Do checksum calculation of the above registers */
-		cdd_crc = 0;
-		for(i=0;i<9;i++)
-			cdd_crc += segacd_cdd_rx[i];
-
-		segacd_cdd_rx[9] = ((cdd_crc & 0xf) ^ 0xf);
-
-		cputag_set_input_line(machine, "segacd_68k", 4, HOLD_LINE);
+		segacd_cdd.ctrl |= 4; // enable Hock bit if it isn't already active
+		timer_set(machine, ATTOTIME_IN_HZ(75), NULL,0, execute_hock_irq); // 1 / 75th of a second
 	}
 }
 
@@ -4920,7 +5322,7 @@ static WRITE16_HANDLER( segacd_cdd_ctrl_w )
 /* 68k <- CDD communication comms are 4-bit wide */
 static READ8_HANDLER( segacd_cdd_rx_r )
 {
-	return segacd_cdd_rx[offset] & 0xf;
+	return (segacd_cdd_rx[offset] & 0xf);
 }
 
 static const char *const segacd_cdd_cmd[] =
@@ -4962,15 +5364,16 @@ static const char *const segacd_cdd_get_toc_cmd[] =
 };
 
 #ifdef MESS
+
+#define LOG_CDD 1
+
 static void segacd_cdd_get_status(running_machine *machine)
 {
-	// ...
-
-	/*segacd_cdd.status = 0;
-    segacd_cdd.minute = 0;
-    segacd_cdd.seconds = 0;
-    segacd_cdd.frame = 0;
-    segacd_cdd.ext = 0;*/
+	segacd_cdd.buffer[0] = 0;
+	segacd_cdd.buffer[1] = 0;
+	segacd_cdd.buffer[2] = 0;
+	segacd_cdd.buffer[3] = 0;
+	segacd_cdd.buffer[4] = 0;
 
 	cdd_hock_irq(machine,1);
 }
@@ -4979,33 +5382,52 @@ static void segacd_cdd_stop_all(running_machine *machine)
 {
 	segacd_cdd.ctrl |= 0x100;
 
-	segacd_cdd.status = 0;
-	segacd_cdd.minute = 0;
-	segacd_cdd.seconds = 0;
-	segacd_cdd.frame = 0;
-	segacd_cdd.ext = 0;
+	segacd_cdd.buffer[0] = 0;
+	segacd_cdd.buffer[1] = 0;
+	segacd_cdd.buffer[2] = 0;
+	segacd_cdd.buffer[3] = 0;
+	segacd_cdd.buffer[4] = 0;
 
-	//cdd_hock_irq(machine,1); // doesn't work?
+	cdd_hock_irq(machine,1);
 }
 
 
 static void segacd_cdd_get_toc_info(running_machine *machine)
 {
-	segacd_cdd.status = (segacd_cdd_tx[3] & 0xf) | (segacd_cdd.status & 0xf0);
+	segacd_cdd.buffer[0] = (segacd_cdd_tx[3] & 0xf) | (segacd_cdd.buffer[0] & 0xf0);
 
-	logerror("CDD: TOC command %s issued\n",segacd_cdd_get_toc_cmd[segacd_cdd_tx[3] & 0xf]);
+	#if LOG_CDD
+	printf("CDD: TOC command %s issued\n",segacd_cdd_get_toc_cmd[segacd_cdd_tx[3] & 0xf]);
+	#endif
 
-	switch(segacd_cdd_tx[3] & 0xf)
+	if ( ! segacd.cd ) // no cd is present
 	{
-		case 0x3: //Get Total Length (in MSF)
-			if ( ! segacd.cd ) // no cd is present
+		segacd_cdd.buffer[0] = (0) | (segacd_cdd.buffer[0] & 0xf0);
+		segacd_cdd.buffer[1] = 0;
+		segacd_cdd.buffer[2] = 0;
+		segacd_cdd.buffer[3] = 0;
+		segacd_cdd.buffer[4] = 0;
+
+		cdd_hock_irq(machine,1);
+		return;
+	}
+	else
+	{
+		switch(segacd_cdd_tx[3] & 0xf)
+		{
+			case 0x2: //Get Current Track
 			{
-				segacd_cdd.status = (0) | (segacd_cdd.status & 0xf0);
-				segacd_cdd.minute = 0;
-				segacd_cdd.seconds = 0;
-				segacd_cdd.frame = 0;
+				segacd_cdd.buffer[0] = (0x2 & 0xf) | (segacd_cdd.buffer[0] & 0xf0);
+
+				segacd_cdd.buffer[0] = 1; // current track number, TODO
+				segacd_cdd.buffer[1] = 0;
+				segacd_cdd.buffer[2] = 0;
+				segacd_cdd.buffer[3] = 0;
+				segacd_cdd.buffer[4] = 0;
+				cdd_hock_irq(machine,1);
+				return;
 			}
-			else
+			case 0x3: //Get Total Length (in MSF)
 			{
 				UINT32 frame,msf;
 
@@ -5013,32 +5435,29 @@ static void segacd_cdd_get_toc_info(running_machine *machine)
 				frame += segacd.toc->tracks[segacd.toc->numtrks-1].frames;
 				msf = lba_to_msf( frame );
 
-				segacd_cdd.status = (0x3 & 0xf) | (segacd_cdd.status & 0xf0);
-				segacd_cdd.minute = ((msf >> 16) & 0xff);
-				segacd_cdd.seconds = ((msf >> 8) & 0xff);
-				segacd_cdd.frame = ((msf >> 0) & 0xff);
+				segacd_cdd.buffer[0] = (0x3 & 0xf) | (segacd_cdd.buffer[0] & 0xf0);
+				segacd_cdd.buffer[1] = ((msf >> 16) & 0xff);
+				segacd_cdd.buffer[2] = ((msf >> 8) & 0xff);
+				segacd_cdd.buffer[3] = ((msf >> 0) & 0xff);
+				segacd_cdd.buffer[4] = 0;
+
+				cdd_hock_irq(machine,1);
+				return;
+
 			}
-			segacd_cdd.ext = 0;
-			cdd_hock_irq(machine,1);
-			return;
 		case 0x4: //Get First and Last Track Number
-			if ( ! segacd.cd ) // no cd is present
 			{
-				segacd_cdd.status = (0) | (segacd_cdd.status & 0xf0);
-				segacd_cdd.minute = 0;
-				segacd_cdd.seconds = 0;
+				segacd_cdd.buffer[0] = (0x4 & 0xf) | (segacd_cdd.buffer[0] & 0xf0);
+				segacd_cdd.buffer[1] = dec_2_bcd(1);
+				segacd_cdd.buffer[2] = dec_2_bcd(segacd.toc->numtrks);
+				segacd_cdd.buffer[3] = 0;
+				segacd_cdd.buffer[4] = 0;
+
+				cdd_hock_irq(machine,1);
 			}
-			else
-			{
-				segacd_cdd.status = (0x4 & 0xf) | (segacd_cdd.status & 0xf0);
-				segacd_cdd.minute = dec_2_bcd(1);
-				segacd_cdd.seconds = dec_2_bcd(segacd.toc->numtrks);
-			}
-			segacd_cdd.frame = 0;
-			segacd_cdd.ext = 0;
-			cdd_hock_irq(machine,1);
 			return;
-		//default: logerror("CDD: unhandled TOC command %s issued\n",segacd_cdd_get_toc_cmd[segacd_cdd_tx[3] & 0xf]);
+			//default: logerror("CDD: unhandled TOC command %s issued\n",segacd_cdd_get_toc_cmd[segacd_cdd_tx[3] & 0xf]);
+		}
 	}
 
 	cdd_hock_irq(machine,1);
@@ -5054,7 +5473,10 @@ static WRITE8_HANDLER( segacd_cdd_tx_w )
 	#ifdef MESS
 	if(offset == 9) //execute the command when crc is sent (TODO: I wonder if we need to check if crc is valid. Plus obviously this shouldn't be instant)
 	{
-		logerror("CDD: command %s issued\n",segacd_cdd_cmd[segacd_cdd_tx[0] & 0xf]);
+		#if LOG_CDD
+		if(segacd_cdd_tx[0] != 0)
+			printf("CDD: command %s issued\n",segacd_cdd_cmd[segacd_cdd_tx[0] & 0xf]);
+		#endif
 
 		switch(segacd_cdd_tx[0] & 0xf)
 		{
@@ -5108,6 +5530,96 @@ static WRITE16_HANDLER( segacd_stampsize_w )
 	}
 }
 
+// these functions won't cope if
+//
+// the lower 3 bits of segacd_imagebuffer_hdot_size are set
+
+// this really needs to be doing it's own lookups rather than depending on the inefficient MAME cache..
+INLINE UINT8 read_pixel_from_stampmap( running_machine* machine, bitmap_t* srcbitmap, int x, int y)
+{
+/*
+    if (!srcbitmap)
+    {
+        return mame_rand(machine);
+    }
+
+    if (x >= srcbitmap->width) return 0;
+    if (y >= srcbitmap->height) return 0;
+
+    UINT16* cacheptr = BITMAP_ADDR16( srcbitmap, y, x);
+
+    return cacheptr[0] & 0xf;
+*/
+
+	switch (segacd_get_active_stampmap_tilemap()&3)
+	{
+		case 0x00: return get_stampmap_16x16_1x1_tile_info_pixel( machine, x, y );
+		case 0x01: return get_stampmap_32x32_1x1_tile_info_pixel( machine, x, y );
+		case 0x02: return get_stampmap_16x16_16x16_tile_info_pixel( machine, x, y );
+		case 0x03: return get_stampmap_32x32_16x16_tile_info_pixel( machine, x, y );
+	}
+
+	return 0;
+}
+
+INLINE void write_pixel_to_imagebuffer( running_machine* machine, UINT32 pix, int line, int xpos )
+{
+
+	UINT32 bufferstart = (segacd_imagebuffer_start_address&0xfff8)*2;
+	UINT32 bufferend = bufferstart + (((segacd_imagebuffer_vcell_size+1) * (segacd_imagebuffer_hdot_size>>3)*0x20)/2);
+	UINT32 offset;
+
+	offset = bufferstart+(((segacd_imagebuffer_vcell_size+1)*0x10)*xpos);
+
+	// lines of each output cell
+	offset+= (line*2);
+
+	while (offset>=bufferend)
+		offset-= bufferend;
+
+
+	switch (segacd_memory_priority_mode)
+	{
+		case 0x00: // normal write, just write the data
+			segacd_dataram[offset] = pix >> 16;
+			segacd_dataram[offset+1] = pix & 0xffff;
+			break;
+
+		case 0x01: // underwrite, only write if the existing data is 0
+			if ((segacd_dataram[offset]&0xf000) == 0x0000) segacd_dataram[offset] |= (pix>>16)&0xf000;
+			if ((segacd_dataram[offset]&0x0f00) == 0x0000) segacd_dataram[offset] |= (pix>>16)&0x0f00;
+			if ((segacd_dataram[offset]&0x00f0) == 0x0000) segacd_dataram[offset] |= (pix>>16)&0x00f0;
+			if ((segacd_dataram[offset]&0x000f) == 0x0000) segacd_dataram[offset] |= (pix>>16)&0x000f;
+			if ((segacd_dataram[offset+1]&0xf000) == 0x0000) segacd_dataram[offset+1] |= (pix)&0xf000;
+			if ((segacd_dataram[offset+1]&0x0f00) == 0x0000) segacd_dataram[offset+1] |= (pix)&0x0f00;
+			if ((segacd_dataram[offset+1]&0x00f0) == 0x0000) segacd_dataram[offset+1] |= (pix)&0x00f0;
+			if ((segacd_dataram[offset+1]&0x000f) == 0x0000) segacd_dataram[offset+1] |= (pix)&0x000f;
+			break;
+
+		case 0x02: // overwrite, only write non-zero data
+			if ((pix>>16)&0xf000) segacd_dataram[offset] = (segacd_dataram[offset] & 0x0fff) | ((pix>>16)&0xf000);
+			if ((pix>>16)&0x0f00) segacd_dataram[offset] = (segacd_dataram[offset] & 0xf0ff) | ((pix>>16)&0x0f00);
+			if ((pix>>16)&0x00f0) segacd_dataram[offset] = (segacd_dataram[offset] & 0xff0f) | ((pix>>16)&0x00f0);
+			if ((pix>>16)&0x000f) segacd_dataram[offset] = (segacd_dataram[offset] & 0xfff0) | ((pix>>16)&0x000f);
+			if ((pix)&0xf000) segacd_dataram[offset+1] = (segacd_dataram[offset+1] & 0x0fff) | ((pix)&0xf000);
+			if ((pix)&0x0f00) segacd_dataram[offset+1] = (segacd_dataram[offset+1] & 0xf0ff) | ((pix)&0x0f00);
+			if ((pix)&0x00f0) segacd_dataram[offset+1] = (segacd_dataram[offset+1] & 0xff0f) | ((pix)&0x00f0);
+			if ((pix)&0x000f) segacd_dataram[offset+1] = (segacd_dataram[offset+1] & 0xfff0) | ((pix)&0x000f);
+			break;
+
+		default:
+		case 0x03: // invalid?
+			segacd_dataram[offset] = mame_rand(machine);
+			segacd_dataram[offset+1] = mame_rand(machine);
+			break;
+
+	}
+
+	segacd_mark_tiles_dirty(machine, offset);
+	segacd_mark_tiles_dirty(machine, offset+1);
+
+}
+
 // this triggers the conversion operation, which will cause an IRQ1 when finished
 WRITE16_HANDLER( segacd_trace_vector_base_address_w )
 {
@@ -5116,68 +5628,71 @@ WRITE16_HANDLER( segacd_trace_vector_base_address_w )
 		printf("ILLEGAL: segacd_trace_vector_base_address_w %04x %04x in mode 1!\n",data,mem_mask);
 	}
 
-	logerror("segacd_trace_vector_base_address_w %04x %04x\n",data,mem_mask);
+	//printf("segacd_trace_vector_base_address_w %04x %04x\n",data,mem_mask);
 
 	{
 		int base = (data & 0xfffe) * 4;
 
-		logerror("actual base = %06x\n", base + 0x80000);
+		//printf("actual base = %06x\n", base + 0x80000);
 
 		// nasty nasty nasty
-		segacd_mark_stampmaps_dirty();
+		//segacd_mark_stampmaps_dirty();
 
 		segacd_conversion_active = 1;
 
 		// todo: proper time calculation
-		timer_adjust_oneshot(segacd_gfx_conversion_timer, ATTOTIME_IN_HZ(1000), 0);
+		timer_adjust_oneshot(segacd_gfx_conversion_timer, ATTOTIME_IN_HZ(500), 0);
 
 
-		int i;
+		int line;
+		//bitmap_t *srcbitmap = tilemap_get_pixmap(segacd_stampmap[segacd_get_active_stampmap_tilemap()]);
+		bitmap_t *srcbitmap = 0;
 
-		for (i=0;i<segacd_imagebuffer_vdot_size;i++)
+		for (line=0;line<segacd_imagebuffer_vdot_size;line++)
 		{
-			int currbase = base + i * 0x8;
-			UINT16 param1 = segacd_dataram[(currbase+0x0)>>1];
-			UINT16 param2 = segacd_dataram[(currbase+0x2)>>1];
-			UINT16 param3 = segacd_dataram[(currbase+0x4)>>1];
-			UINT16 param4 = segacd_dataram[(currbase+0x6)>>1];
+			int currbase = base + line * 0x8;
 
+			// are the 256x256 tile modes using the same sign bits?
+			INT16 tilemapxoffs,tilemapyoffs;
+			INT16 deltax,deltay;
 
-			logerror("%06x:  %04x %04x %04x %04x\n", currbase, param1, param2, param3, param4);
+			tilemapxoffs = segacd_dataram[(currbase+0x0)>>1];
+			tilemapyoffs = segacd_dataram[(currbase+0x2)>>1];
+			deltax = segacd_dataram[(currbase+0x4)>>1]; // x-zoom
+			deltay = segacd_dataram[(currbase+0x6)>>1]; // rotation
 
-		}
+			//printf("%06x:  %04x (%d) %04x (%d) %04x %04x\n", currbase, tilemapxoffs, tilemapxoffs>>3, tilemapyoffs, tilemapyoffs>>3, deltax, deltay);
 
-		{
-			// not real code.. yet
-			// should copy part of the stamp into the imagebuffer area using the rotation / zooming parameters given
-			// (while we're using the MAME tilemaps that means, part of the tilemap cache into the ram buffer for the image)
+			int xbase = tilemapxoffs * 256;
+			int ybase = tilemapyoffs * 256;
+			int count;
 
-			bitmap_t *srcbitmap = tilemap_get_pixmap(segacd_stampmap[segacd_get_active_stampmap_tilemap()]);
-			UINT16* x;
-			x = BITMAP_ADDR16(srcbitmap,10,10);
-			UINT16 datax;
-			datax = x[0];
-
-			// I don't quite understand what happens if the lower bits of hdotsize are set.. do we end up rounding up?
-			// this 'buffersize' clearly fills the frame for the SegaCD logo screen at least
-			int buffersize = ((segacd_imagebuffer_vcell_size+1) * (segacd_imagebuffer_hdot_size>>3)*0x20)/2;  // 0x20 = 8x8x4 tile, /2 due to word offset
-			//buffersize -= 8;
-
-			for (int i=0;i< buffersize ;i++)
+			for (count=0;count<(segacd_imagebuffer_hdot_size>>3);count++)
 			{
-				int offsetx = ((segacd_imagebuffer_start_address&0xfff8)*2)+i;
+				int i;
+				UINT32 pixblock = 0x00000000;
+				for (i=7*4;i>=0;i-=4)
+				{
+					pixblock |= read_pixel_from_stampmap(space->machine, srcbitmap, xbase>>(3+8), ybase>>(3+8)) << (i);
 
-				//printf("data write %08x\n", offsetx*2);
+
+					xbase += deltax;
+					ybase += deltay;
+
+					// clamp to 24-bits, seems to be required for all the intro effects to work
+					xbase &= 0xffffff;
+					ybase &= 0xffffff;
 
 
-				segacd_dataram[offsetx]=mame_rand(space->machine);
+				}
 
-				segacd_mark_tiles_dirty(space->machine, offsetx);
+
+
+
+				write_pixel_to_imagebuffer(space->machine, pixblock, line, count);
 			}
 
-
 		}
-
 	}
 
 }
@@ -5190,7 +5705,7 @@ READ16_HANDLER( segacd_imagebuffer_vdot_size_r )
 
 WRITE16_HANDLER( segacd_imagebuffer_vdot_size_w )
 {
-	printf("segacd_imagebuffer_vdot_size_w %04x %04x\n",data,mem_mask);
+	//printf("segacd_imagebuffer_vdot_size_w %04x %04x\n",data,mem_mask);
 	COMBINE_DATA(&segacd_imagebuffer_vdot_size);
 }
 
@@ -5221,9 +5736,8 @@ static WRITE16_HANDLER( segacd_imagebuffer_start_address_w )
 {
 	COMBINE_DATA(&segacd_imagebuffer_start_address);
 
-	int base = (segacd_imagebuffer_start_address & 0xfffe) * 4;
-
-	printf("segacd_imagebuffer_start_address_w %04x %04x (actual base = %06x)\n", data, segacd_imagebuffer_start_address, base);
+	//int base = (segacd_imagebuffer_start_address & 0xfffe) * 4;
+	//printf("segacd_imagebuffer_start_address_w %04x %04x (actual base = %06x)\n", data, segacd_imagebuffer_start_address, base);
 }
 
 static READ16_HANDLER( segacd_imagebuffer_offset_r )
@@ -5258,6 +5772,39 @@ static WRITE16_HANDLER( segacd_imagebuffer_hdot_size_w )
 	COMBINE_DATA(&segacd_imagebuffer_hdot_size);
 }
 
+static UINT16 segacd_irq3_timer_reg;
+
+static READ16_HANDLER( segacd_irq3timer_r )
+{
+	return segacd_irq3_timer_reg; // always returns value written, not current counter!
+}
+
+#define SEGACD_IRQ3_TIMER_SPEED (ATTOTIME_IN_NSEC(segacd_irq3_timer_reg*30720))
+
+static WRITE16_HANDLER( segacd_irq3timer_w )
+{
+	if (ACCESSING_BITS_0_7)
+	{
+		segacd_irq3_timer_reg = data & 0xff;
+
+		// time = reg * 30.72 us
+
+		if (segacd_irq3_timer_reg)
+			timer_adjust_oneshot(segacd_irq3_timer, SEGACD_IRQ3_TIMER_SPEED, 0);
+		else
+			timer_adjust_oneshot(segacd_irq3_timer, attotime_never, 0);
+
+		printf("segacd_irq3timer_w %02x\n", segacd_irq3_timer_reg);
+	}
+}
+
+static TIMER_CALLBACK( segacd_irq3_timer_callback )
+{
+	if (segacd_irq_mask & 0x08)
+		cputag_set_input_line(machine, "segacd_68k", 3, HOLD_LINE);
+
+	timer_adjust_oneshot(segacd_irq3_timer, SEGACD_IRQ3_TIMER_SPEED, 0);
+}
 
 
 static ADDRESS_MAP_START( segacd_map, ADDRESS_SPACE_PROGRAM, 16 )
@@ -5268,7 +5815,10 @@ static ADDRESS_MAP_START( segacd_map, ADDRESS_SPACE_PROGRAM, 16 )
 
 	AM_RANGE(0xfe0000, 0xfe3fff) AM_RAM // backup RAM, odd bytes only!
 
-	AM_RANGE(0xff0000, 0xff7fff) AM_RAM // PCM, RF5C164
+	AM_RANGE(0xff0000, 0xff001f) AM_DEVWRITE8("rfsnd", rf5c68_w, 0x00ff)  // PCM, RF5C164
+	AM_RANGE(0xff2000, 0xff3fff) AM_DEVREADWRITE8("rfsnd", rf5c68_mem_r, rf5c68_mem_w,0x00ff)  // PCM, RF5C164
+
+
 	AM_RANGE(0xff8000 ,0xff8001) AM_READWRITE(segacd_sub_led_ready_r, segacd_sub_led_ready_w)
 	AM_RANGE(0xff8002 ,0xff8003) AM_READWRITE(segacd_sub_memory_mode_r, segacd_sub_memory_mode_w)
 
@@ -5280,7 +5830,7 @@ static ADDRESS_MAP_START( segacd_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xff800e ,0xff800f) AM_READWRITE(segacd_comms_flags_r, segacd_comms_flags_subcpu_w)
 	AM_RANGE(0xff8010 ,0xff801f) AM_READWRITE(segacd_comms_sub_part1_r, segacd_comms_sub_part1_w)
 	AM_RANGE(0xff8020 ,0xff802f) AM_READWRITE(segacd_comms_sub_part2_r, segacd_comms_sub_part2_w)
-//  AM_RANGE(0xff8030, 0xff8031) // Timer W/INT3
+	AM_RANGE(0xff8030, 0xff8031) AM_READWRITE(segacd_irq3timer_r, segacd_irq3timer_w) // Timer W/INT3
 	AM_RANGE(0xff8032, 0xff8033) AM_READWRITE(segacd_irq_mask_r,segacd_irq_mask_w)
 	AM_RANGE(0xff8034, 0xff8035) AM_NOP // CD Fader
 	AM_RANGE(0xff8036, 0xff8037) AM_READWRITE(segacd_cdd_ctrl_r,segacd_cdd_ctrl_w)
@@ -8238,6 +8788,10 @@ MACHINE_CONFIG_DERIVED( genesis_scd, megadriv )
 	MDRV_SOUND_ROUTE( 0, "lspeaker", 1.00 )
 	MDRV_SOUND_ROUTE( 1, "rspeaker", 1.00 )
 
+	MDRV_SOUND_ADD("rfsnd", RF5C68, SEGACD_CLOCK) // RF5C164!
+	MDRV_SOUND_ROUTE( 0, "lspeaker", 0.25 )
+	MDRV_SOUND_ROUTE( 1, "rspeaker", 0.25 )
+
 	#ifdef MESS
 	MDRV_CDROM_ADD( "cdrom" )
 	#endif
@@ -8251,6 +8805,10 @@ MACHINE_CONFIG_DERIVED( genesis_32x_scd, genesis_32x )
 	MDRV_SOUND_ADD( "cdda", CDDA, 0 )
 	MDRV_SOUND_ROUTE( 0, "lspeaker", 1.00 )
 	MDRV_SOUND_ROUTE( 1, "rspeaker", 1.00 )
+
+	MDRV_SOUND_ADD("rfsnd", RF5C68, SEGACD_CLOCK) // RF5C164
+	MDRV_SOUND_ROUTE( 0, "lspeaker", 0.25 )
+	MDRV_SOUND_ROUTE( 1, "rspeaker", 0.25 )
 
 	#ifdef MESS
 	MDRV_CDROM_ADD( "cdrom" )

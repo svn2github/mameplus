@@ -22,7 +22,7 @@
 #include "emu.h"
 #include "debugger.h"
 
-#include "cdp1802.h"
+#include "cosmac.h"
 
 typedef enum
 {
@@ -96,7 +96,7 @@ static const struct { const char *mnemonic; Adr adr; } table[]={
 
 };
 
-CPU_DISASSEMBLE( cdp1802 )
+CPU_DISASSEMBLE( cosmac )
 {
 	UINT32 flags = 0;
 	int oldpc = pc;
@@ -171,4 +171,3 @@ CPU_DISASSEMBLE( cdp1802 )
 
 	return (pc-oldpc) | flags | DASMFLAG_SUPPORTED;
 }
-

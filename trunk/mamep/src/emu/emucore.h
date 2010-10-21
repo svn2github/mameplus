@@ -375,6 +375,8 @@ public:
 
 	virtual ~simple_list() { reset(); }
 
+	resource_pool &pool() const { return m_pool; }
+
 	T *first() const { return m_head; }
 	T *last() const { return m_tail; }
 	int count() const { return m_count; }

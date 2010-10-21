@@ -39,7 +39,7 @@
 //
 //============================================================
 
-// mamep: for VC2005
+// mamep: Visual C++
 #if defined(_MSC_VER) && _MSC_VER >= 1400
 #define _CRT_NON_CONFORMING_SWPRINTFS 
 #endif
@@ -52,6 +52,7 @@
 #define _WIN32_WINNT 0x0501
 
 #ifdef _MSC_VER
+#include <assert.h>
 #include <malloc.h>
 #define alloca _alloca
 #define round(x) floor((x) + 0.5)

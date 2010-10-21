@@ -124,6 +124,7 @@
 #define OPTION_CONTRAST				"contrast"
 #define OPTION_GAMMA				"gamma"
 #define OPTION_PAUSE_BRIGHTNESS		"pause_brightness"
+#define OPTION_EFFECT				"effect"
 #ifdef USE_SCALE_EFFECTS
 #define OPTION_SCALE_EFFECT			"scale_effect"
 #endif /* USE_SCALE_EFFECTS */

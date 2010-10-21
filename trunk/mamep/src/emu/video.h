@@ -141,6 +141,7 @@ private:
 class screen_device : public device_t
 {
 	friend class screen_device_config;
+	friend class render_manager;
 	friend resource_pool_object<screen_device>::~resource_pool_object();
 
 	// construction/destruction
@@ -159,6 +160,7 @@ public:
 
 	// dynamic configuration
 	void configure(int width, int height, const rectangle &visarea, attoseconds_t frame_period);
+	void reset_origin(int beamy = 0, int beamx = 0);
 	void set_visible_area(int min_x, int max_x, int min_y, int max_y);
 
 	// beam positioning and state
@@ -199,6 +201,7 @@ private:
 	virtual void device_post_load();
 
 	// internal helpers
+	void set_container(render_container &container) { m_container = &container; }
 	void realloc_screen_bitmaps();
 
 	static TIMER_CALLBACK( static_vblank_begin_callback ) { reinterpret_cast<screen_device *>(ptr)->vblank_begin_callback(); }
@@ -216,6 +219,7 @@ private:
 	void scanline_update_callback(int scanline);
 
 	void finalize_burnin();
+	void load_effect_overlay(const char *filename);
 
 	// internal state
 	const screen_device_config &m_config;
@@ -235,6 +239,7 @@ private:
 	INT32					m_texture_format;		// texture format of bitmap for this screen
 	bool					m_changed;				// has this bitmap changed?
 	INT32					m_last_partial_scan;	// scanline of last partial update
+	bitmap_t *				m_screen_overlay_bitmap;// screen overlay bitmap
 
 	// screen timing
 	attoseconds_t			m_frame_period;			// attoseconds per frame

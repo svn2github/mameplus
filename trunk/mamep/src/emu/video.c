@@ -325,7 +325,11 @@ void video_init(running_machine *machine)
 	if (global.snap_native)
 	{
 		global.snap_target = machine->render().target_alloc(layout_snap, RENDER_CREATE_SINGLE_FILE | RENDER_CREATE_HIDDEN);
-		global.snap_target->set_layer_config(0);
+		global.snap_target->set_backdrops_enabled(false);
+		global.snap_target->set_overlays_enabled(false);
+		global.snap_target->set_bezels_enabled(false);
+		global.snap_target->set_screen_overlay_enabled(false);
+		global.snap_target->set_zoom_to_screen(false);
 	}
 
 	/* other targets select the specified view and turn off effects */
@@ -366,7 +370,7 @@ static void video_exit(running_machine &machine)
 {
 	int i;
 
-#if USE_SCALE_EFFECTS
+#ifdef USE_SCALE_EFFECTS
 	for (screen_device *screen = screen_first(machine); screen != NULL; screen = screen_next(screen))
 		screen->video_exit_scale_effect();
 #endif /* USE_SCALE_EFFECTS */
@@ -1274,7 +1278,7 @@ static file_error mame_fopen_next(running_machine *machine, const char *pathopti
 
 	/* determine if the template has an index; if not, we always use the same name */
 	if (snapstr.find(0, "%i") == -1)
-		snapstr.cpy(snapstr);
+		fname.cpy(snapstr);
 
 	/* otherwise, we scan for the next available filename */
 	else
@@ -1619,20 +1623,25 @@ int video_get_view_for_target(running_machine *machine, render_target *target, c
 	}
 
 	/* if we don't have a match, default to the nth view */
-	if (viewindex == -1)
+	int scrcount = screen_count(*machine->config);
+	if (viewindex == -1 && scrcount > 0)
 	{
-		int scrcount = screen_count(*machine->config);
-
 		/* if we have enough targets to be one per screen, assign in order */
 		if (numtargets >= scrcount)
 		{
+			int index = target->index() % scrcount;
+			screen_device *screen;
+			for (screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
+				if (index-- == 0)
+					break;
+
 			/* find the first view with this screen and this screen only */
 			for (viewindex = 0; ; viewindex++)
 			{
-				UINT32 viewscreens = target->view_screens(viewindex);
-				if (viewscreens == (1 << targetindex))
+				const render_screen_list &viewscreens = target->view_screens(viewindex);
+				if (viewscreens.count() == 1 && viewscreens.contains(*screen))
 					break;
-				if (viewscreens == 0)
+				if (viewscreens.count() == 0)
 				{
 					viewindex = -1;
 					break;
@@ -1645,11 +1654,18 @@ int video_get_view_for_target(running_machine *machine, render_target *target, c
 		{
 			for (viewindex = 0; ; viewindex++)
 			{
-				UINT32 viewscreens = target->view_screens(viewindex);
-				if (viewscreens == (1 << scrcount) - 1)
+				const render_screen_list &viewscreens = target->view_screens(viewindex);
+				if (viewscreens.count() == 0)
 					break;
-				if (viewscreens == 0)
-					break;
+				if (viewscreens.count() >= scrcount)
+				{
+					screen_device *screen;
+					for (screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
+						if (!viewscreens.contains(*screen))
+							break;
+					if (screen == NULL)
+						break;
+				}
 			}
 		}
 	}
@@ -2139,6 +2155,7 @@ screen_device::screen_device(running_machine &_machine, const screen_device_conf
 	  m_texture_format(0),
 	  m_changed(true),
 	  m_last_partial_scan(0),
+	  m_screen_overlay_bitmap(NULL),
 	  m_frame_period(m_config.m_refresh),
 	  m_scantime(1),
 	  m_pixeltime(1),
@@ -2178,6 +2195,7 @@ screen_device::~screen_device()
 	m_machine.render().texture_free(m_texture[1]);
 	if (m_burnin != NULL)
 		finalize_burnin();
+	global_free(m_screen_overlay_bitmap);
 }
 
 
@@ -2187,9 +2205,6 @@ screen_device::~screen_device()
 
 void screen_device::device_start()
 {
-	// get and validate that the container for this screen exists
-	m_container = m_machine.render().container_for_screen(this);
-
 	// configure the default cliparea
 	render_container::user_settings settings;
 	m_container->get_user_settings(settings);
@@ -2232,6 +2247,11 @@ void screen_device::device_start()
 			fatalerror("Error allocating burn-in bitmap for screen at (%dx%d)\n", width, height);
 		bitmap_fill(m_burnin, NULL, 0);
 	}
+
+	// load the effect overlay
+	const char *overname = options_get_string(machine->options(), OPTION_EFFECT);
+	if (overname != NULL && strcmp(overname, "none") != 0)
+		load_effect_overlay(overname);
 
 	state_save_register_device_item(this, 0, m_width);
 	state_save_register_device_item(this, 0, m_height);
@@ -2323,6 +2343,34 @@ void screen_device::configure(int width, int height, const rectangle &visarea, a
 
 
 //-------------------------------------------------
+//  reset_origin - reset the timing such that the
+//  given (x,y) occurs at the current time
+//-------------------------------------------------
+
+void screen_device::reset_origin(int beamy, int beamx)
+{
+	// compute the effective VBLANK start/end times
+	attotime curtime = timer_get_time(machine);
+	m_vblank_end_time = attotime_sub_attoseconds(curtime, beamy * m_scantime + beamx * m_pixeltime);
+	m_vblank_start_time = attotime_sub_attoseconds(m_vblank_end_time, m_vblank_period);
+
+	// if we are resetting relative to (0,0) == VBLANK end, call the
+	// scanline 0 timer by hand now; otherwise, adjust it for the future
+	if (beamy == 0 && beamx == 0)
+		scanline0_callback();
+	else
+		timer_adjust_oneshot(m_scanline0_timer, time_until_pos(0), 0);
+
+	// if we are resetting relative to (visarea.max_y + 1, 0) == VBLANK start,
+	// call the VBLANK start timer now; otherwise, adjust it for the future
+	if (beamy == m_visarea.max_y + 1 && beamx == 0)
+		vblank_begin_callback();
+	else
+		timer_adjust_oneshot(m_vblank_begin_timer, time_until_vblank_start(), 0);
+}
+
+
+//-------------------------------------------------
 //  realloc_screen_bitmaps - reallocate bitmaps
 //  and textures as necessary
 //-------------------------------------------------
@@ -2345,12 +2393,10 @@ void screen_device::realloc_screen_bitmaps()
 	if (m_width > curwidth || m_height > curheight)
 	{
 		// free what we have currently
-		global_free(m_texture[0]);
-		global_free(m_texture[1]);
-		if (m_bitmap[0] != NULL)
-			auto_free(machine, m_bitmap[0]);
-		if (m_bitmap[1] != NULL)
-			auto_free(machine, m_bitmap[1]);
+		m_machine.render().texture_free(m_texture[0]);
+		m_machine.render().texture_free(m_texture[1]);
+		auto_free(machine, m_bitmap[0]);
+		auto_free(machine, m_bitmap[1]);
 
 		// compute new width/height
 		curwidth = MAX(m_width, curwidth);
@@ -2881,8 +2927,7 @@ void screen_device::update_burnin()
 
 
 //-------------------------------------------------
-//  video_finalize_burnin - finalize the burnin
-//  bitmap
+//  finalize_burnin - finalize the burnin bitmap
 //-------------------------------------------------
 
 void screen_device::finalize_burnin()
@@ -2963,6 +3008,28 @@ void screen_device::finalize_burnin()
 		png_free(&pnginfo);
 		mame_fclose(file);
 	}
+}
+
+
+//-------------------------------------------------
+//  finalize_burnin - finalize the burnin bitmap
+//-------------------------------------------------
+
+void screen_device::load_effect_overlay(const char *filename)
+{
+	// ensure that there is a .png extension
+	astring fullname(filename);
+	int extension = fullname.rchr(0, '.');
+	if (extension != -1)
+		fullname.del(extension, -1);
+	fullname.cat(".png");
+
+	// load the file
+	m_screen_overlay_bitmap = render_load_png(OPTION_ARTPATH, NULL, fullname, NULL, NULL);
+	if (m_screen_overlay_bitmap != NULL)
+		m_container->set_overlay(m_screen_overlay_bitmap);
+	else
+		mame_printf_warning(_("Unable to load effect PNG file '%s'\n"), fullname.cstr());
 }
 
 

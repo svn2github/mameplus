@@ -2313,10 +2313,10 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 #if 0 //mamep: use standard combobox
 	hCtrl = GetDlgItem(hWnd, IDC_EFFECT);
 	if (hCtrl) {
-		const char* effect = options_get_string(o, WINOPTION_EFFECT);
+		const char* effect = options_get_string(o, OPTION_EFFECT);
 		if (effect == NULL) {
 			effect = "none";
-			options_set_string(o, WINOPTION_EFFECT, effect, OPTION_PRIORITY_CMDLINE);
+			options_set_string(o, OPTION_EFFECT, effect, OPTION_PRIORITY_CMDLINE);
 		}
 		win_set_window_text_utf8(hCtrl, effect);
 	}
@@ -3228,7 +3228,7 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_PRESCALE,				DM_INT,		WINOPTION_PRESCALE);
 	datamap_add(properties_datamap, IDC_PRESCALEDISP,			DM_INT,		WINOPTION_PRESCALE);
 	//mamep: use standard combobox
-	datamap_add(properties_datamap, IDC_EFFECT,				DM_STRING,	WINOPTION_EFFECT);
+	datamap_add(properties_datamap, IDC_EFFECT,				DM_STRING,	OPTION_EFFECT);
 	datamap_add(properties_datamap, IDC_WAITVSYNC,				DM_BOOL,	WINOPTION_WAITVSYNC);
 	datamap_add(properties_datamap, IDC_SYNCREFRESH,			DM_BOOL,	WINOPTION_SYNCREFRESH);
 #ifdef USE_SCALE_EFFECTS
@@ -3830,10 +3830,10 @@ static BOOL SelectEffect(HWND hWnd)
 		}
 		buff[l] = '\0';
 
-		if (strcmp(buff, options_get_string(pCurrentOpts, WINOPTION_EFFECT)))
+		if (strcmp(buff, options_get_string(pCurrentOpts, OPTION_EFFECT)))
 		{
 			HWND control = GetDlgItem(hWnd, IDC_EFFECT);
-			options_set_string(pCurrentOpts, WINOPTION_EFFECT, buff, OPTION_PRIORITY_CMDLINE);
+			options_set_string(pCurrentOpts, OPTION_EFFECT, buff, OPTION_PRIORITY_CMDLINE);
 			win_set_window_text_utf8(control, buff);
 			// datamap_populate_control(properties_datamap, hWnd, pCurrentOpts, IDC_EFFECT);
 			changed = TRUE;
@@ -3847,10 +3847,10 @@ static BOOL ResetEffect(HWND hWnd)
 	BOOL changed = FALSE;
 	const char *new_value = "none";
 
-	if (strcmp(new_value, options_get_string(pCurrentOpts, WINOPTION_EFFECT)))
+	if (strcmp(new_value, options_get_string(pCurrentOpts, OPTION_EFFECT)))
 	{
 		HWND control = GetDlgItem(hWnd, IDC_EFFECT);
-		options_set_string(pCurrentOpts, WINOPTION_EFFECT, new_value, OPTION_PRIORITY_CMDLINE);
+		options_set_string(pCurrentOpts, OPTION_EFFECT, new_value, OPTION_PRIORITY_CMDLINE);
 		win_set_window_text_utf8(control, new_value);
 		// datamap_populate_control(properties_datamap, hWnd, pCurrentOpts, IDC_EFFECT);
 		changed = TRUE;
