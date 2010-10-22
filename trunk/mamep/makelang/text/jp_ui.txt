@@ -2510,10 +2510,6 @@ Use samples
 Use various icon for Not Working game
 動作不可のゲームにドライバのアイコンを使用
 
-# osd/winui/mameui.rc: 713
-Use volume auto adjust
-自動音量調整機能\を使用
-
 # osd/winui/dialogs.c: 145
 User interface settings\n\n
 ユーザインターフェース\n\n

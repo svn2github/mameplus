@@ -2126,10 +2126,6 @@ Utiliser les samples
 Use various icon for Not Working game
 Utiliser un icône différent pour les jeux non jouable
 
-# osd/winui/mameui.rc: 713
-Use volume auto adjust
-Ajuster le volume auto
-
 # osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5739
 Vector
 Vecteur

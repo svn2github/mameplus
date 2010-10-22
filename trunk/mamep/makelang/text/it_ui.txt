@@ -2110,10 +2110,6 @@ Usa campioni
 Use various icon for Not Working game
 Usa varie icone per i giochi Non Funzionanti
 
-# osd/winui/mameui.rc: 713
-Use volume auto adjust
-Usa autoregolazione volume
-
 # osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5739
 Vector
 Vettoriali

@@ -2670,10 +2670,6 @@ Use samples
 Use various icon for Not Working game
 使用不同的图表显示不可运行的游戏
 
-# osd/winui/mameui.rc: 713
-Use volume auto adjust
-使用音量自动调整
-
 # osd/winui/dialogs.c: 145
 User interface settings\n\n
 用户界面设置\n\n

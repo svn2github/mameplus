@@ -2662,10 +2662,6 @@ Use samples
 Use various icon for Not Working game
 실행 불가 게임에 다양한 아이콘 사용
 
-# osd/winui/mameui.rc: 713
-Use volume auto adjust
-자동 음량조절 기능 사용
-
 # osd/winui/dialogs.c: 145
 User interface settings\n\n
 사용자 인터페이스 설정\n\n

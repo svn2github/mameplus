@@ -1682,10 +1682,6 @@ Benutze Samples
 Use various icon for Not Working game
 Benutze unterschiedliche Icons für nicht-funktionierende Spiele
 
-# osd/winui/mameui.rc: 713
-Use volume auto adjust
-Benutze automatische Lautstärke-Einstellung
-
 # osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5739
 Vector
 Vektor

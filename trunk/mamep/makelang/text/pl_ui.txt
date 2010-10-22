@@ -2722,10 +2722,6 @@ Use TreeView in property pages
 Use various icon for Not Working game
 
 
-# osd/winui/mameui.rc: 713
-Use volume auto adjust
-
-
 # osd/winui/dialogs.c: 145
 User interface settings\n\n
 

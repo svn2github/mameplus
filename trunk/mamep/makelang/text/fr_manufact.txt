@@ -110,8 +110,8 @@ Acclaim
 Acom
 
 
-# Piccolo Poker
-Admiral - Novomatic
+# Symbols (ver 1.4)
+Advanced Video Technology
 
 
 # Twin Action
@@ -974,7 +974,7 @@ Gameace
 Gaps Inc.
 
 
-# Puckman Pockimon
+# Puckman Pockimon (set 1)
 Genie
 
 
@@ -1100,6 +1100,10 @@ I'Max
 
 # Harem
 I.G.R.
+
+
+# Puckman Pockimon (set 2)
+IBS
 
 
 # Mouse Attack
@@ -1306,6 +1310,10 @@ Kyugo
 LAI Games
 
 
+# Dual Games (prototype)
+Labtronix Technologies
+
+
 # Quake Arcade Tournament (Release Beta 2)
 Lazer-Tron
 
@@ -1430,6 +1438,10 @@ Metro
 Meyco Games
 
 
+# Magical Touch
+Micro Manufacturing
+
+
 # Turbo Poker 2
 Micro Manufacturing Inc.
 
@@ -1532,6 +1544,10 @@ NIX?
 
 # Zed Blade / Operation Ragnarok
 NMK
+
+
+# NSM Poker (TMS9995)
+NSM
 
 
 # Super-X (NTC)
@@ -1758,7 +1774,7 @@ Philko
 Play Mechanix
 
 
-# PlayMan Poker (German)
+# Witch Card (English, witch game, lamps)
 PlayMan
 
 
@@ -2026,7 +2042,7 @@ Sharp
 Shinkai Inc.
 
 
-# Streaking
+# Streaking (set 1)
 Shoei
 
 
@@ -2246,6 +2262,14 @@ TDS
 TDS & Mints
 
 
+# Witch Card (German, set 3, alt gfx)
+TV Game Elektronik
+
+
+# Falcons Wild - Wild Card 1991 (TVG)
+TVG
+
+
 # Rock Climber
 Taito
 
@@ -2434,6 +2458,10 @@ Universal Video Games
 Uniwang
 
 
+# 5-Aces Poker
+Unknown
+
+
 # Rabio Lepus (Japan)
 V-System Co.
 
@@ -2474,7 +2502,7 @@ Viccom
 Videa
 
 
-# Noraut Joker Poker (Prologic HW)
+# Genie
 Video Fun Games Ltd.
 
 

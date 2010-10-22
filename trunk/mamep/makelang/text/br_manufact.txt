@@ -698,7 +698,7 @@ GameTek
 Gameace
 Gameace
 
-# Puckman Pockimon
+# Puckman Pockimon (set 1)
 Genie
 Genie
 
@@ -1246,7 +1246,7 @@ Paradise Co. Ltd.
 Philko
 Philko
 
-# PlayMan Poker (German)
+# Witch Card (English, witch game, lamps)
 PlayMan
 PlayMan
 
@@ -1438,7 +1438,7 @@ Sharp
 Shinkai Inc.
 Shinkai Inc.
 
-# Streaking
+# Streaking (set 1)
 Shoei
 Shoei
 
@@ -1970,8 +1970,8 @@ Academysoft-Elorg
 Accept Ltd.
 
 
-# Piccolo Poker
-Admiral - Novomatic
+# Symbols (ver 1.4)
+Advanced Video Technology
 
 
 # Shikigami no Shiro (V2.03J)
@@ -2246,6 +2246,10 @@ Hot-B
 Hudson Soft
 
 
+# Puckman Pockimon (set 2)
+IBS
+
+
 # Mouse Attack
 ICE
 
@@ -2284,6 +2288,10 @@ Jubilee
 
 # Kimble Double HI-LO (z80 version)
 Kimble Ireland
+
+
+# Dual Games (prototype)
+Labtronix Technologies
 
 
 # Quake Arcade Tournament (Release Beta 2)
@@ -2338,6 +2346,10 @@ Maygay Machines Ltd.
 Merit Industries
 
 
+# Magical Touch
+Micro Manufacturing
+
+
 # Turbo Poker 2
 Micro Manufacturing Inc.
 
@@ -2372,6 +2384,10 @@ Ming-Yang Electronic
 
 # Hot Blocks - Tetrix II
 NIX?
+
+
+# NSM Poker (TMS9995)
+NSM
 
 
 # Super Crowns Golf (Japan)
@@ -2578,6 +2594,14 @@ TAB Austria
 TAD Corporation
 
 
+# Witch Card (German, set 3, alt gfx)
+TV Game Elektronik
+
+
+# Falcons Wild - Wild Card 1991 (TVG)
+TVG
+
+
 # The Block Kuzushi (Japan)
 Tamsoft
 
@@ -2614,11 +2638,15 @@ Unidesa?
 Unies Corporation
 
 
+# 5-Aces Poker
+Unknown
+
+
 # Virtual Combat
 VR8 Inc.
 
 
-# Noraut Joker Poker (Prologic HW)
+# Genie
 Video Fun Games Ltd.
 
 

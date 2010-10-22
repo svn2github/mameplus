@@ -2106,10 +2106,6 @@ Usar mostres de so
 Use various icon for Not Working game
 Usar diverses icones per a jocs que no funcionen
 
-# osd/winui/mameui.rc: 713
-Use volume auto adjust
-Usar ajustament automàtic de volum
-
 # osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5739
 Vector
 Vector

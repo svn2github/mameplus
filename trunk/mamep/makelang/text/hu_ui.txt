@@ -2062,10 +2062,6 @@ Hangminta használata
 Use various icon for Not Working game
 Eltérõ ikonok használata a nem mûködõ játékokhoz
 
-# osd/winui/mameui.rc: 713
-Use volume auto adjust
-Automatikus hangszabályozás használata
-
 # osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5739
 Vector
 Vektor

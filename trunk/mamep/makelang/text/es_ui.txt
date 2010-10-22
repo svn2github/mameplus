@@ -2126,10 +2126,6 @@ Usar muestras de sonido
 Use various icon for Not Working game
 Usar varios iconos para juegos que no funcionan
 
-# osd/winui/mameui.rc: 713
-Use volume auto adjust
-Usar ajuste automático de volumen
-
 # osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5739
 Vector
 Vector

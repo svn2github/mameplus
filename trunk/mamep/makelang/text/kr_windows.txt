@@ -30,7 +30,7 @@
 &Debugger...
 디버거(&D)
 
-# mess/osd/windows/menu.c: 1458 mess/osd/windows/mess.rc: 91
+# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 91
 &Devices
 디바이스(&D)
 
@@ -46,7 +46,7 @@
 &File
 파일(&F)
 
-# mess/osd/windows/menu.c: 2056 mess/osd/windows/mess.rc: 71
+# mess/osd/windows/menu.c: 2057 mess/osd/windows/mess.rc: 71
 &Frameskip
 프레임생략(&F)
 
@@ -74,7 +74,7 @@
 &Miscellaneous Inputs...
 기타 입력(&M)
 
-# mess/osd/windows/menu.c: 1221, 1437, 2056 mess/osd/windows/mess.rc: 44 
+# mess/osd/windows/menu.c: 1221, 1437, 2057 mess/osd/windows/mess.rc: 44 
 &Options
 설정(&O)
 
@@ -90,11 +90,11 @@
 &Video
 비디오(&V)
 
-# osd/windows/video.c: 290
+# osd/windows/video.c: 283
 (primary)
 (주요)
 
-# mess/osd/windows/menu.c: 2066
+# mess/osd/windows/menu.c: 2067
 About %s (%s)...
 %s (%s)정보...
 
@@ -134,7 +134,7 @@ Common image types
 Compressed Images (*.zip)|*.zip|
 압축 이미지 (*.zip)|*.zip|
 
-# mess/osd/windows/menu.c: 1479
+# mess/osd/windows/menu.c: 1480
 Create...
 작성...
 
@@ -142,15 +142,15 @@ Create...
 Customize Emulated Keyboard...
 에뮬레이션 키보드 사용자 정의...
 
-# osd/windows/winmain.c: 329
+# osd/windows/winmain.c: 330
 DIRECT3D-SPECIFIC OPTIONS
 DIRECT3D-전용 옵션
 
-# osd/windows/winmain.c: 325
+# osd/windows/winmain.c: 326
 DIRECTDRAW-SPECIFIC OPTIONS
 DIRECTDRAW-전용 옵션
 
-# osd/windows/drawd3d.c: 1202
+# osd/windows/drawd3d.c: 1205
 Device %s currently in an unsupported mode\n
 장치 %s는 현재 지원되지 않습니다\n
 
@@ -162,31 +162,31 @@ Digital Speed
 Dip Switches
 딥스위치
 
-# osd/windows/drawd3d.c: 1172
+# osd/windows/drawd3d.c: 1175
 Direct3D: Configuring adapter #%d = %s\n
 Direct3D: 아답터 #%d 설정 = %s\n
 
-# osd/windows/drawd3d.c: 796
+# osd/windows/drawd3d.c: 799
 Direct3D: Device created at %dx%d\n
 Direct3D: 장치 생성됨 %dx%d\n
 
-# osd/windows/drawd3d.c: 655, 2441
+# osd/windows/drawd3d.c: 655, 2444
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: device begin_scene call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 1667, 2490
+# osd/windows/drawd3d.c: 1670, 2493
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: device draw_primitive call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 684, 2494
+# osd/windows/drawd3d.c: 687, 2497
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: device end_scene call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2434
+# osd/windows/drawd3d.c: 2437
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: device get_render_target call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 690
+# osd/windows/drawd3d.c: 693
 Direct3D: Error %08X during device present call\n
 Direct3D: device present call 진행중 %08X 오류\n
 
@@ -194,15 +194,15 @@ Direct3D: device present call 진행중 %08X 오류\n
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: device set_render_state call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2436, 2498
+# osd/windows/drawd3d.c: 2439, 2501
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: device set_render_target call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 1639, 2488
+# osd/windows/drawd3d.c: 1642, 2491
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: device set_stream_source call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 326, 2447
+# osd/windows/drawd3d.c: 326, 2450
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: device set_texture call 진행중 %08X 오류\n
 
@@ -210,59 +210,59 @@ Direct3D: device set_texture call 진행중 %08X 오류\n
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: device set_texture_stage_state call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2422
+# osd/windows/drawd3d.c: 2425
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: device stretct_rect call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 968, 970, 972, 974, 978, 992, 1006, 1020, 1046, 1070, 1084, 1097, 1104
+# osd/windows/drawd3d.c: 971, 973, 975, 977, 981, 995, 1009, 1023, 1049, 1073, 1087, 1100, 1107
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: device get_caps_dword call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2401
+# osd/windows/drawd3d.c: 2404
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: texture get_surface_level call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2377
+# osd/windows/drawd3d.c: 2380
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: texture unlock_rect call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2451
+# osd/windows/drawd3d.c: 2454
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: vertex buffer lock call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 1634, 2483
+# osd/windows/drawd3d.c: 1637, 2486
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: vertex buffer unlock call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 1033
+# osd/windows/drawd3d.c: 1036
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 Direct3D: 오류 - 장치가 inverted source alpha에 dest alpha blending을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1028
+# osd/windows/drawd3d.c: 1031
 Direct3D: Error - Device does not support dest alpha blending with one\n
 Direct3D: 오류 - 장치가 1에서 dest alpha blending을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1023
+# osd/windows/drawd3d.c: 1026
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 Direct3D: 오류 - 장치가 0에서 dest alpha blending을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 981
+# osd/windows/drawd3d.c: 984
 Direct3D: Error - Device does not support immediate presentations\n
 Direct3D: 오류 - 장치가 immediate presentations을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 986
+# osd/windows/drawd3d.c: 989
 Direct3D: Error - Device does not support per-refresh presentations\n
 Direct3D: 오류 - 장치가 per-refresh presentations을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1014
+# osd/windows/drawd3d.c: 1017
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 Direct3D: 오류 - 장치가 destination color에 source alpha blending을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1009
+# osd/windows/drawd3d.c: 1012
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 Direct3D: 오류 - 장치가 source alpha에 source alpha blending을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1040
+# osd/windows/drawd3d.c: 1043
 Direct3D: Error - Device does not support texture alpha\n
 Direct3D: 오류 - 장치가 texture alpha를 지원하지 않습니다\n
 
@@ -274,15 +274,15 @@ Direct3D: Direct3D8 초기화에 오류가 발생했습니다\n
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: Direct3D9 초기화에 오류가 발생했습니다\n
 
-# osd/windows/drawd3d.c: 800
+# osd/windows/drawd3d.c: 803
 Direct3D: Max texture size = %dx%d\n
 Direct3D: 최대 텍스쳐 사이즈 = %dx%d\n
 
-# osd/windows/drawd3d.c: 1357
+# osd/windows/drawd3d.c: 1360
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 모드 선택 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawd3d.c: 1301
+# osd/windows/drawd3d.c: 1304
 Direct3D: Selecting video mode...\n
 Direct3D: 비디오 모드 선택...\n
 
@@ -310,67 +310,67 @@ Direct3D: Direct3D 8 사용\n
 Direct3D: Using Direct3D 9\n
 Direct3D: Direct3D 9 사용\n
 
-# osd/windows/drawd3d.c: 1106
+# osd/windows/drawd3d.c: 1109
 Direct3D: Using StretchRect for prescaling\n
 Direct3D: prescaling에 StretchRect 사용\n
 
-# osd/windows/drawd3d.c: 1100
+# osd/windows/drawd3d.c: 1103
 Direct3D: Using dynamic textures\n
 Direct3D: dynamic textures 사용\n
 
-# osd/windows/drawd3d.c: 1054
+# osd/windows/drawd3d.c: 1057
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 Direct3D: 경고 - 장치가 확대에 바이라이너 텍스처 필터링을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1064
+# osd/windows/drawd3d.c: 1067
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 Direct3D: 경고 - 장치가 축소에 바이라이너 텍스처 필터링을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1000
+# osd/windows/drawd3d.c: 1003
 Direct3D: Warning - Device does not support hardware rasterization\n
 Direct3D: 경고 - 장치가 hardware rasterization을  지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1049
+# osd/windows/drawd3d.c: 1052
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 Direct3D: 경고 - 장치가 확대에 point-sample texture filtering을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1059
+# osd/windows/drawd3d.c: 1062
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 Direct3D: 경고 - 장치가 축소에 point-sample texture filtering을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 995
+# osd/windows/drawd3d.c: 998
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 Direct3D: 경고 - 장치가 page flip 이후 queued rendering을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1073
+# osd/windows/drawd3d.c: 1076
 Direct3D: Warning - Device does not support texture clamping\n
 Direct3D: 경고 - 장치가 texture clamping을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1087
+# osd/windows/drawd3d.c: 1090
 Direct3D: Warning - Device does not support texture modulation\n
 Direct3D: 경고 - 장치가 texture modulation을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1078
+# osd/windows/drawd3d.c: 1081
 Direct3D: Warning - Device does not support texture wrapping\n
 Direct3D: 경고 - 장치가 texture wrapping을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 813
+# osd/windows/drawd3d.c: 816
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: 경고 - 장치가 full screen gamma correction을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 738
+# osd/windows/drawd3d.c: 741
 Direct3D: YUV format = %s\n
 Direct3D: YUV 형식 = %s\n
 
-# osd/windows/drawd3d.c: 1738
+# osd/windows/drawd3d.c: 1741
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: 크기 조절 %dx%d -> %dx%d\n
 
-# osd/windows/drawd3d.c: 1142
+# osd/windows/drawd3d.c: 1145
 Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: 장치에서 리소스 재 생성에 실패했습니다; failing permanently\n
 
-# osd/windows/drawd3d.c: 1129
+# osd/windows/drawd3d.c: 1132
 Direct3D: resetting device\n
 Direct3D: 장치 초기화\n
 
@@ -558,11 +558,7 @@ DirectSound 생성 오류: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 주 DirectSound 버퍼 생성 오류: %08x\n
 
-# osd/windows/window.c: 653
-Error creating render target for window %d
-%d 윈도우에 렌더 타겟 생성 오류
-
-# osd/windows/drawd3d.c: 847
+# osd/windows/drawd3d.c: 850
 Error creating vertex buffer (%08X)
 vertex 버퍼 생성 중 오류 (%08X)
 
@@ -570,7 +566,7 @@ vertex 버퍼 생성 중 오류 (%08X)
 Error getting DirectSound capabilities: %08x\n
 DirectSound 가능기능 가져오기 실패: %08x\n
 
-# osd/windows/drawd3d.c: 1169
+# osd/windows/drawd3d.c: 1172
 Error getting identifier for adapter #%d\n
 아답터 #%d identifier 획득 오류\n
 
@@ -578,7 +574,7 @@ Error getting identifier for adapter #%d\n
 Error getting identifier for device\n
 장치 identifier 획득 오류\n
 
-# osd/windows/drawd3d.c: 1178
+# osd/windows/drawd3d.c: 1181
 Error getting mode for adapter #%d\n
 아답터 #%d 모드 획득 오류\n
 
@@ -602,23 +598,23 @@ DirectSound 보조레벨 설정 실패: %08x\n
 Error setting primary DirectSound buffer format: %08x\n
 주 DirectSound 버퍼 포맷 설정 오류: %08x\n
 
-# osd/windows/drawd3d.c: 855
+# osd/windows/drawd3d.c: 858
 Error setting vertex shader (%08X)
 vertex shader 설정 오류 (%08X)
 
-# osd/windows/drawd3d.c: 724
+# osd/windows/drawd3d.c: 727
 Error: A8R8G8B8 format textures not supported\n
 오류: A8R8G8B8 포맷 텍스쳐가 지원되지 않습니다\n
 
-# osd/windows/drawd3d.c: 714
+# osd/windows/drawd3d.c: 717
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 오류: 장치가 Direct3D 렌더링을 위한 최소 요구사항을 만족하지 못합니다\n
 
-# osd/windows/drawd3d.c: 756
+# osd/windows/drawd3d.c: 759
 Error: unable to configure a screen texture format\n
 오류: 화면 텍스터 포맷을 설정 할 수 없습니다\n
 
-# osd/windows/winmain.c: 361
+# osd/windows/winmain.c: 362
 FULL SCREEN OPTIONS
 전체 화면 옵션
 
@@ -626,7 +622,7 @@ FULL SCREEN OPTIONS
 Failed to create pause event
 pause event 생성 실패
 
-# osd/windows/window.c: 870
+# osd/windows/window.c: 868
 Failed to create window class
 window class 생성 실패
 
@@ -638,7 +634,7 @@ window thread 생성 실패
 Failed to create window thread ready event
 window thread ready event 생성 실패
 
-# mess/osd/windows/menu.c: 1492 
+# mess/osd/windows/menu.c: 1493 
 Fast Forward
 빨라감기
 
@@ -646,15 +642,15 @@ Fast Forward
 Ha&rd Reset
 하드 재설정(&R)
 
-# osd/windows/winmain.c: 376
+# osd/windows/winmain.c: 377
 INPUT DEVICE OPTIONS
 입력 장치 옵션
 
-# osd/windows/video.c: 555
+# osd/windows/video.c: 511
 Illegal aspect ratio value for %s = %s\n
 잘못된 화면비 값 %s = %s\n
 
-# osd/windows/video.c: 578
+# osd/windows/video.c: 534
 Illegal resolution value for %s = %s\n
 잘못된 해상도 값 %s = %s\n
 
@@ -662,7 +658,7 @@ Illegal resolution value for %s = %s\n
 Input
 입력
 
-# osd/windows/video.c: 474
+# osd/windows/video.c: 464
 Invalid video value %s; reverting to gdi\n
 잘못된 비디오 값 %s;GDI로 복구\n
 
@@ -674,7 +670,7 @@ Joystick %i
 Joysticks/Controllers
 조이스틱/조종장치
 
-# osd/windows/window.c: 668
+# osd/windows/window.c: 666
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - Screen %d
 
@@ -686,7 +682,7 @@ Maximum &Speed
 Miscellaneous Input
 기타 입력
 
-# mess/osd/windows/menu.c: 1476
+# mess/osd/windows/menu.c: 1477
 Mount...
 마운트...
 
@@ -698,19 +694,19 @@ Natural
 OK
 확인
 
-# osd/windows/winmain.c: 334
+# osd/windows/winmain.c: 335
 PER-WINDOW VIDEO OPTIONS
 윈도우별 비디오 옵션
 
-# mess/osd/windows/menu.c: 1488 
+# mess/osd/windows/menu.c: 1489 
 Pause/Stop
 중단/정지
 
-# mess/osd/windows/menu.c: 1489 
+# mess/osd/windows/menu.c: 1490 
 Play
 실행
 
-# osd/windows/drawd3d.c: 1230
+# osd/windows/drawd3d.c: 1233
 Proposed video mode not supported on device %s\n
 설정한 비디오 모드는 %s 장치에서 지원되지 않습니다\n
 
@@ -718,7 +714,7 @@ Proposed video mode not supported on device %s\n
 RawInput: APIs detected\n
 로우입력:APIs 탐지됨\n
 
-# mess/osd/windows/menu.c: 1490 
+# mess/osd/windows/menu.c: 1491 
 Record
 기록
 
@@ -726,7 +722,7 @@ Record
 Reverse
 반전
 
-# mess/osd/windows/menu.c: 1491 
+# mess/osd/windows/menu.c: 1492 
 Rewind
 되감기
 
@@ -782,7 +778,7 @@ Sound: buffer overflows=%d underflows=%d\n
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 상태 파일 (*.sta)|*.sta|모든 파일  (*.*)|*.*
 
-# osd/windows/drawd3d.c: 1894
+# osd/windows/drawd3d.c: 1897
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 텍스처가 너무 큽니다! (기대값: %dx%d, 최대는 %dx%d)\n
 
@@ -798,11 +794,11 @@ Toggle Menu Bar
 Unable to close the keyboard device. (error %d)\n
 키보드 장치 닫기 실패 (오류 %d)\n
 
-# osd/windows/window.c: 688
+# osd/windows/window.c: 686
 Unable to complete window creation
 창 생성 완료 불가
 
-# osd/windows/drawd3d.c: 792
+# osd/windows/drawd3d.c: 795
 Unable to create the Direct3D device (%08X)\n
 Direct3D 장치 (%08X) 생성할 수 없습니다\n
 
@@ -814,15 +810,11 @@ Direct3D를 초기화할 수 없습니다\n
 Unable to initialize DirectDraw.\n
 DirectDraw를 초기화할 수 없습니다\n
 
-# osd/windows/video.c: 524
-Unable to load PNG file '%s'\n
-'%s' PNG 파일을 불러올 수 없습니다\n
-
 # osd/windows/ledutil.c: 567, 575
 Unable to open the keyboard device. (error %d)\n
 키보드 장치 열기 실패 (오류 %d)\n
 
-# osd/windows/drawd3d.c: 2364
+# osd/windows/drawd3d.c: 2367
 Unknown texture blendmode=%d format=%d\n
 알 수 없는 texture blendmode=%d format=%d\n
 
@@ -830,259 +822,255 @@ Unknown texture blendmode=%d format=%d\n
 Unlimited
 무제한
 
-# mess/osd/windows/menu.c: 1481
+# mess/osd/windows/menu.c: 1482
 Unmount
 마운트 해제
 
-# osd/windows/video.c: 435
+# osd/windows/video.c: 428
 Using %s scale effect\n
 %s 크기조절 효과 사용\n
 
-# osd/windows/video.c: 290
+# osd/windows/video.c: 283
 Video: Monitor %p = \"%s\" %s\n
 비디오: 모니터 %p = \"%s\" %s\n
 
-# osd/windows/winmain.c: 298
+# osd/windows/winmain.c: 300
 WINDOWS DEBUGGING OPTIONS
 윈도우즈 디버깅 옵션
 
-# osd/windows/winmain.c: 305
+# osd/windows/winmain.c: 307
 WINDOWS PERFORMANCE OPTIONS
 윈도우 성능 옵션
 
-# osd/windows/winmain.c: 369
+# osd/windows/winmain.c: 370
 WINDOWS SOUND OPTIONS
 윈도우 사운드 옵션
 
-# osd/windows/winmain.c: 313
+# osd/windows/winmain.c: 315
 WINDOWS VIDEO OPTIONS
 윈도우 비디오 옵션
 
-# osd/windows/video.c: 470
+# osd/windows/video.c: 460
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 경고: -video none 는 -seconds_to_run 없이는 사용 불가\n
 
-# osd/windows/drawd3d.c: 718
+# osd/windows/drawd3d.c: 721
 Warning: Device may not perform well for Direct3D rendering\n
 경고: 장치가 Direct3D 렌더링을 잘 지원하지 못합니다\n
 
-# mess/osd/windows/menu.c: 1494
+# mess/osd/windows/menu.c: 1495
 [empty slot]
 [슬롯 비어있음]
 
-# osd/windows/winmain.c: 336
+# osd/windows/winmain.c: 337
 aspect ratio for all screens; 'auto' here will try to make a best guess
 전체 화면 비율; '자동'설정하면 최적값을 찾습니다
 
-# osd/windows/winmain.c: 341
+# osd/windows/winmain.c: 342
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 첫 번째 화면 비율; '자동'설정하면 최적값을 찾습니다
 
-# osd/windows/winmain.c: 356
+# osd/windows/winmain.c: 357
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 두 번째 화면 비율; '자동'설정하면 최적값을 찾습니다
 
-# osd/windows/winmain.c: 346
+# osd/windows/winmain.c: 347
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 세 번째 화면 비율; '자동'설정하면 최적값을 찾습니다
 
-# osd/windows/winmain.c: 351
+# osd/windows/winmain.c: 352
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 네 번째 화면 비율; '자동'설정하면 최적값을 찾습니다
 
-# osd/windows/winmain.c: 364
+# osd/windows/winmain.c: 365
 brightness value in full screen mode
 전체화면 밝기
 
-# osd/windows/winmain.c: 318
+# osd/windows/winmain.c: 320
 constrain to the proper aspect ratio
 화면 비 유지
 
-# osd/windows/winmain.c: 365
+# osd/windows/winmain.c: 366
 contrast value in full screen mode
 전체 화면 모드에서 대비값
 
-# osd/windows/winmain.c: 317
+# osd/windows/winmain.c: 319
 default to maximized windows; otherwise, windows will be minimized
 창크기 최대화를 기본으로; 반대는 창크기 최소화
 
-# osd/windows/winmain.c: 372
+# osd/windows/winmain.c: 373
 enable audio sync
 오디오동기화를 활성화
 
-# osd/windows/winmain.c: 331
+# osd/windows/winmain.c: 332
 enable bilinear filtering on screen output
 화면 출력에 바이라이너 필터링 사용
 
-# osd/windows/winmain.c: 377
+# osd/windows/winmain.c: 378
 enable dual lightgun input
 듀얼 라이트건 입력 활성화
 
-# osd/windows/winmain.c: 326
+# osd/windows/winmain.c: 327
 enable hardware stretching
 하드웨어 늘리기 사용
 
-# osd/windows/winmain.c: 307
+# osd/windows/winmain.c: 309
 enable multithreading; this enables rendering and blitting on a separate thread
 렌더링과 블리팅을 각각 분리된 스레드에서 실행하도록 멀티 스레딩 사용
 
-# osd/windows/winmain.c: 363
+# osd/windows/winmain.c: 364
 enable resolution switching
 해상도 변경 사용
 
-# osd/windows/winmain.c: 362
+# osd/windows/winmain.c: 363
 enable triple buffering
 트리플 버퍼링 사용
 
-# osd/windows/winmain.c: 322
+# osd/windows/winmain.c: 323
 enable using the start of VBLANK for throttling instead of the game time
 감속기능에 게임 시간 대신에 VBLANK 시작 점을 사용
 
-# osd/windows/winmain.c: 321
+# osd/windows/winmain.c: 322
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 화면 전환전 VBLANK 시작을 기다림; 화면이 갈라지는 현상을 감소시킴
 
-# osd/windows/winmain.c: 316
+# osd/windows/winmain.c: 318
 enable window mode; otherwise, full screen mode is assumed
 윈도우 모드 사용; 설정하지 않으면 전체화면으로 설정됨
 
-# osd/windows/winmain.c: 335
+# osd/windows/winmain.c: 336
 explicit name of all screens; 'auto' here will try to make a best guess
 모든 화면의 정확한 명칭; '자동' 설정 시 최적값을 찾게됩니다
 
-# osd/windows/winmain.c: 340
+# osd/windows/winmain.c: 341
 explicit name of the first screen; 'auto' here will try to make a best guess
 1번 화면의 정확한 명칭; '자동' 설정 시 최적값을 찾게됩니다
 
-# osd/windows/winmain.c: 355
+# osd/windows/winmain.c: 356
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 4번 화면의 정확한 명칭; '자동' 설정 시 최적값을 찾게됩니다
 
-# osd/windows/winmain.c: 345
+# osd/windows/winmain.c: 346
 explicit name of the second screen; 'auto' here will try to make a best guess
 2번 화면의 정확한 명칭; '자동' 설정 시 최적값을 찾게됩니다
 
-# osd/windows/winmain.c: 350
+# osd/windows/winmain.c: 351
 explicit name of the third screen; 'auto' here will try to make a best guess
 3번 화면의 정확한 명칭; '자동' 설정 시 최적값을 찾게됩니다
 
-# osd/windows/winmain.c: 300
+# osd/windows/winmain.c: 302
 force the program to terminate if no updates within specified number of seconds
 지정된 시간(초) 안에 업데이트가 되지 않으면 프로그램 강제종료
 
-# osd/windows/winmain.c: 366
+# osd/windows/winmain.c: 367
 gamma value in full screen mode
 전체 화면 감마 값
 
-# osd/windows/winmain.c: 320
-name of a PNG file to use for visual effects, or 'none'
-시각효과로 사용하는 PNG파일명, 또는「none」 
-
-# osd/windows/winmain.c: 315
+# osd/windows/winmain.c: 317
 number of screens to create; usually, you want just one
 생성하는 화면의 수를 지정. 보통 1로 설정
 
-# osd/windows/winmain.c: 299
+# osd/windows/winmain.c: 301
 output error.log data to the system debugger
 error.log 데이터를 시스템 디버거에 출력
 
-# osd/windows/winmain.c: 337
+# osd/windows/winmain.c: 338
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 모든 화면 해상도를 지정; 형식: <폭>x<높이>[@<주사율>] 또는 'auto'
 
-# osd/windows/winmain.c: 342
+# osd/windows/winmain.c: 343
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 첫 번째 화면 해상도를 지정; 형식은: <폭>x<높이>[@<주사율>] 또는 'auto'
 
-# osd/windows/winmain.c: 357
+# osd/windows/winmain.c: 358
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 네 번째 화면 해상도를 지정; 형식은: <폭>x<높이>[@<주사율>] 또는 'auto'
 
-# osd/windows/winmain.c: 347
+# osd/windows/winmain.c: 348
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 두 번째 화면 해상도를 지정; 형식은: <폭>x<높이>[@<주사율>] 또는 'auto'
 
-# osd/windows/winmain.c: 352
+# osd/windows/winmain.c: 353
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 세 번째 화면 해상도를 지정; 형식은: <폭>x<높이>[@<주사율>] 또는 'auto'
 
-# osd/windows/winmain.c: 338
+# osd/windows/winmain.c: 339
 preferred view for all screens
 모든 화면 뷰 지정
 
-# osd/windows/winmain.c: 343
+# osd/windows/winmain.c: 344
 preferred view for the first screen
 첫 번째 화면 뷰 지정
 
-# osd/windows/winmain.c: 358
+# osd/windows/winmain.c: 359
 preferred view for the fourth screen
 네 번째 화면 뷰 지정
 
-# osd/windows/winmain.c: 348
+# osd/windows/winmain.c: 349
 preferred view for the second screen
 두 번째 화면 뷰 지정
 
-# osd/windows/winmain.c: 353
+# osd/windows/winmain.c: 354
 preferred view for the third screen
 세 번째 화면 뷰 지정
 
-# osd/windows/winmain.c: 319
+# osd/windows/winmain.c: 321
 scale screen rendering by this amount in software
 지정된 비율로 소프트웨어의 화면 렌더링 확장을 실행합니다.
 
-# osd/windows/winmain.c: 370
+# osd/windows/winmain.c: 371
 set audio latency (increase to reduce glitches)
 오디오 지연시간을 지정
 
-# osd/windows/winmain.c: 379
+# osd/windows/winmain.c: 380
 set joystick ID (Player1)
 조이스틱 ID 설정 (사용자1)
 
-# osd/windows/winmain.c: 380
+# osd/windows/winmain.c: 381
 set joystick ID (Player2)
 조이스틱 ID 설정 (사용자2)
 
-# osd/windows/winmain.c: 381
+# osd/windows/winmain.c: 382
 set joystick ID (Player3)
 조이스틱 ID 설정 (사용자3)
 
-# osd/windows/winmain.c: 382
+# osd/windows/winmain.c: 383
 set joystick ID (Player4)
 조이스틱 ID 설정 (사용자4)
 
-# osd/windows/winmain.c: 383
+# osd/windows/winmain.c: 384
 set joystick ID (Player5)
 조이스틱 ID 설정 (사용자5)
 
-# osd/windows/winmain.c: 384
+# osd/windows/winmain.c: 385
 set joystick ID (Player6)
 조이스틱 ID 설정 (사용자6)
 
-# osd/windows/winmain.c: 385
+# osd/windows/winmain.c: 386
 set joystick ID (Player7)
 조이스틱 ID 설정 (사용자7)
 
-# osd/windows/winmain.c: 386
+# osd/windows/winmain.c: 387
 set joystick ID (Player8)
 조이스틱 ID 설정 (사용자8)
 
-# osd/windows/winmain.c: 302
+# osd/windows/winmain.c: 304
 specifies the font size to use for debugging; defaults to 9 pt
 디버깅에 사용할 글꼴 크기를 지정합니다; 기본값 9 포인트
 
-# osd/windows/winmain.c: 301
+# osd/windows/winmain.c: 303
 specifies the font to use for debugging; defaults to Lucida Console
 디버깅에 사용할 글꼴을 지정합니다; 기본값 Lucida Console
 
-# osd/windows/winmain.c: 330
+# osd/windows/winmain.c: 331
 specify the preferred Direct3D version (8 or 9)
 사용할 Direct3D 버전 지정 (8 또는 9)
 
-# osd/windows/winmain.c: 306
+# osd/windows/winmain.c: 308
 thread priority for the main game thread; range from -15 to 1
 기본 게임 스레드의 우선 순위; -15 에서 1 범위
 
-# osd/windows/winmain.c: 314
+# osd/windows/winmain.c: 316
 video output method: none, gdi, ddraw, or d3d
 비디오 출력 방법: 없음, gdi, ddraw 또는 d3d
 
@@ -1098,15 +1086,15 @@ On
 Paste
 
 
-# osd/windows/winmain.c: 525
+# osd/windows/winmain.c: 566
 Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 
 
-# osd/windows/winmain.c: 309
+# osd/windows/winmain.c: 311
 enable profiling, specifying the stack depth to track
 
 
-# osd/windows/winmain.c: 308
+# osd/windows/winmain.c: 310
 number of processors; this overrides the number the system reports
 
 
