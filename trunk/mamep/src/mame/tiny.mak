@@ -112,16 +112,6 @@ DRVLIBS += \
 
 
 #-------------------------------------------------
-# emulator core objects
-#-------------------------------------------------
-
-DRVLIBS += \
-	$(EMUOBJ)/machine/ldpr8210.o \
-	$(EMUOBJ)/machine/ldvp931.o \
-
-
-
-#-------------------------------------------------
 # the following files are general components and
 # shared across a number of drivers
 #-------------------------------------------------

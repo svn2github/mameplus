@@ -71,6 +71,7 @@ SOUNDS += ICS2115
 
 DRVLIBS = \
 	$(MAMEOBJ)/mamedriv.o \
+	$(EMUDRIVERS)/emudummy.o \
 
 ifneq ($(USE_DRIVER_SWITCH),)
 DRVLIBS += \
@@ -83,16 +84,6 @@ DRVLIBS += \
 	$(MAMEOBJ)/capcom.a \
 	$(MAMEOBJ)/igs.a \
 	$(MAMEOBJ)/neogeo.a \
-
-
-
-#-------------------------------------------------
-# emulator core objects
-#-------------------------------------------------
-
-DRVLIBS += \
-	$(EMUOBJ)/machine/ldpr8210.o \
-	$(EMUOBJ)/machine/ldvp931.o \
 
 
 
