@@ -435,9 +435,7 @@ int main(int argc, char *argv[])
 
 	mame_set_output_channel(OUTPUT_CHANNEL_WARNING, win_mame_file_output_callback, stderr, NULL, NULL);
 	mame_set_output_channel(OUTPUT_CHANNEL_INFO, win_mame_file_output_callback, stdout, NULL, NULL);
-#ifdef MAME_DEBUG
 	mame_set_output_channel(OUTPUT_CHANNEL_DEBUG, win_mame_file_output_callback, stdout, NULL, NULL);
-#endif
 	mame_set_output_channel(OUTPUT_CHANNEL_VERBOSE, win_mame_file_output_callback, stdout, NULL, NULL);
 	mame_set_output_channel(OUTPUT_CHANNEL_LOG, win_mame_file_output_callback, stderr, NULL, NULL);
 

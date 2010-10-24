@@ -49,7 +49,7 @@ extern const game_driver GAME_NAME(NAME) =	\
 	DRIVER_INIT_NAME(INIT),					\
 	ROM_NAME(NAME),							\
 	#COMPAT,								\
-	ROT0|(FLAGS),				\
+	ROT0|GAME_CONSOLE|(FLAGS),				\
 	NULL									\
 };
 

@@ -40,7 +40,7 @@
 #define CLIOPTION_ROMIDENT				"romident"
 #define CLIOPTION_LISTMEDIA				"listmedia"		// needed by MESS
 #define CLIOPTION_LISTSOFTWARE			"listsoftware"
-#define CLIOPTION_LISTGAMES				"listgames"
+#define CLIOPTION_LISTGAMES				"listgames"		// for make tp_manufact.txt
 
 
 
@@ -60,7 +60,7 @@ int cli_info_listcrc(core_options *options, const char *gamename);
 int cli_info_listroms(core_options *options, const char *gamename);
 int cli_info_listsamples(core_options *options, const char *gamename);
 int cli_info_listdevices(core_options *options, const char *gamename);
-int cli_info_listgames(core_options *options, const char *gamename);
+int cli_info_listgames(core_options *options, const char *gamename);		// for make tp_manufact.txt
 
 #ifdef DRIVER_SWITCH
 void assign_drivers(core_options *options);

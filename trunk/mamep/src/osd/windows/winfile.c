@@ -71,7 +71,7 @@ struct _osd_file
 //  FUNCTION PROTOTYPES
 //============================================================
 
-DWORD create_path_recursive(const TCHAR *path);
+static DWORD create_path_recursive(const TCHAR *path);
 
 
 
