@@ -437,6 +437,10 @@ ifneq ($(USE_JOYSTICK_ID),)
 DEFS += -DJOYSTICK_ID
 endif
 
+ifneq ($(USE_AUTOFIRE),)
+DEFS += -DUSE_AUTOFIRE
+endif
+
 ifneq ($(USE_CUSTOM_BUTTON),)
 DEFS += -DUSE_CUSTOM_BUTTON
 endif
@@ -445,12 +449,12 @@ ifneq ($(USE_INP_CAPTION),)
 DEFS += -DINP_CAPTION
 endif
 
-ifneq ($(USE_PLAYBACK_END_PAUSE),)
-DEFS += -DPLAYBACK_END_PAUSE
-endif
-
 ifneq ($(USE_SHOW_INPUT_LOG),)
 DEFS += -DUSE_SHOW_INPUT_LOG
+endif
+
+ifneq ($(USE_PLAYBACK_END_PAUSE),)
+DEFS += -DPLAYBACK_END_PAUSE
 endif
 
 ifneq ($(USE_AUDIO_SYNC),)

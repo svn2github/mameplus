@@ -133,8 +133,10 @@
 #define JOYDIR_LEFT_BIT		(1 << JOYDIR_LEFT)
 #define JOYDIR_RIGHT_BIT	(1 << JOYDIR_RIGHT)
 
+#ifdef USE_AUTOFIRE
 #define AUTOFIRE_ON		1	/* Autofire enable bit */
 #define AUTOFIRE_TOGGLE		2	/* Autofire toggle enable bit */
+#endif /* USE_AUTOFIRE */
 
 #define NUM_SIMUL_KEYS	(UCHAR_SHIFT_END - UCHAR_SHIFT_BEGIN + 1)
 #define LOG_INPUTX		0
@@ -227,10 +229,12 @@ struct _input_field_state
 	input_port_value			value;				/* current value of this port */
 	UINT8						impulse;			/* counter for impulse controls */
 	UINT8						last;				/* were we pressed last time? */
-	UINT8						toggle;				/* current toggle state */
 	UINT8						joydir;				/* digital joystick direction index */
+#ifdef USE_AUTOFIRE
+	UINT8						toggle;				/* current toggle state */
 	int						autofire;			/* autofire */
 	int						autopressed;			/* autofire status */
+#endif /* USE_AUTOFIRE */
 	char *						name;				/* overridden name */
 };
 
@@ -329,8 +333,10 @@ struct _char_info
 
 /* XML attributes for the different types */
 static const char *const seqtypestrings[] = { "standard", "decrement", "increment" };
+#ifdef USE_AUTOFIRE
 static int autofiredelay[MAX_PLAYERS];
 static int autofiretoggle[MAX_PLAYERS];
+#endif /* USE_AUTOFIRE */
 
 #ifdef USE_CUSTOM_BUTTON
 UINT16 custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
@@ -861,9 +867,13 @@ static void record_end(running_machine *machine, const char *message);
 static void record_frame(running_machine *machine, attotime curtime);
 static void record_port(const input_port_config *port);
 
-/* autofire */
+#ifdef USE_AUTOFIRE
 static int auto_pressed(running_machine *machine, const input_field_config *field);
-void input_port_list_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap);
+#endif /* USE_AUTOFIRE */
+
+#ifdef USE_CUSTOM_BUTTON
+static void input_port_list_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap);
+#endif /* USE_CUSTOM_BUTTON */
 
 
 
@@ -1016,7 +1026,9 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 	//input_port_private *portdata;
 	char errorbuf[1024];
 	time_t basetime;
+#ifdef USE_AUTOFIRE
 	int player;
+#endif /* USE_AUTOFIRE */
 
 	/* allocate memory for our data structure */
 	machine->input_port_data = auto_alloc_clear(machine, input_port_private);
@@ -1026,11 +1038,13 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 	machine->add_notifier(MACHINE_NOTIFY_EXIT, input_port_exit);
 	machine->add_notifier(MACHINE_NOTIFY_FRAME, frame_update_callback);
 
+#ifdef USE_AUTOFIRE
 	for (player = 0; player < MAX_PLAYERS; player++)
 	{
 		autofiredelay[player] = 3;	//mamep: 1 is too short for some games
 		autofiretoggle[player] = 1;
 	}
+#endif /* USE_AUTOFIRE */
 
 #ifdef USE_CUSTOM_BUTTON
 	memset(custom_button, 0, sizeof(custom_button));
@@ -1043,7 +1057,11 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 	/* if we have a token list, proceed */
 	if (tokens != NULL)
 	{
+#ifdef USE_CUSTOM_BUTTON
 		input_port_list_custom(machine->m_portlist, tokens, errorbuf, sizeof(errorbuf), TRUE);
+#else /* USE_CUSTOM_BUTTON */
+		input_port_list_init(machine->m_portlist, tokens, errorbuf, sizeof(errorbuf), TRUE);
+#endif /* USE_CUSTOM_BUTTON */
 		if (errorbuf[0] != 0)
 			mame_printf_error(_("Input port errors:\n%s"), errorbuf);
 		init_port_state(machine);
@@ -1097,6 +1115,147 @@ void input_port_list_init(ioport_list &portlist, const input_port_token *tokens,
 	/* detokenize into the list */
 	port_config_detokenize(portlist, tokens, errorbuf, errorbuflen);
 }
+
+
+#ifdef USE_CUSTOM_BUTTON
+/*-------------------------------------------------
+    input_port_list_custom - initialize an input
+    port list structure and allocate ports
+    according to the given tokens
+-------------------------------------------------*/
+
+static void input_port_list_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap)
+{
+	const input_port_config *port;
+	const input_field_config *field;
+	int nplayer = 0;
+
+	static INPUT_PORTS_START( custom1p )
+		PORT_START("CUSTOM1P")
+#ifdef USE_AUTOFIRE
+		PORT_BIT( 1 << 0, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(1) PORT_TOGGLE
+#endif /* USE_AUTOFIRE */
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(1)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(1)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(1)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(1)
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom2p )
+		PORT_START("CUSTOM2P")
+#ifdef USE_AUTOFIRE
+		PORT_BIT( 1 << 1, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(2) PORT_TOGGLE
+#endif /* USE_AUTOFIRE */
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(2)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(2)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(2)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(2)
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom3p )
+		PORT_START("CUSTOM3P")
+#ifdef USE_AUTOFIRE
+		PORT_BIT( 1 << 2, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(3) PORT_TOGGLE
+#endif /* USE_AUTOFIRE */
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(3)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(3)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(3)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(3)
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom4p )
+		PORT_START("CUSTOM4P")
+#ifdef USE_AUTOFIRE
+		PORT_BIT( 1 << 3, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(4) PORT_TOGGLE
+#endif /* USE_AUTOFIRE */
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(4)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(4)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(4)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(4)
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom5p )
+		PORT_START("CUSTOM5P")
+#ifdef USE_AUTOFIRE
+		PORT_BIT( 1 << 4, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(5) PORT_TOGGLE
+#endif /* USE_AUTOFIRE */
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(5)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(5)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(5)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(5)
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom6p )
+		PORT_START("CUSTOM6P")
+#ifdef USE_AUTOFIRE
+		PORT_BIT( 1 << 5, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(6) PORT_TOGGLE
+#endif /* USE_AUTOFIRE */
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(6)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(6)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(6)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(6)
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom7p )
+		PORT_START("CUSTOM7P")
+#ifdef USE_AUTOFIRE
+		PORT_BIT( 1 << 6, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(7) PORT_TOGGLE
+#endif /* USE_AUTOFIRE */
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(7)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(7)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(7)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(7)
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom8p )
+		PORT_START("CUSTOM8P")
+#ifdef USE_AUTOFIRE
+		PORT_BIT( 1 << 7, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(8) PORT_TOGGLE
+#endif /* USE_AUTOFIRE */
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(8)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(8)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(8)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(8)
+	INPUT_PORTS_END
+
+	/* no tokens, no list */
+	if (tokens == NULL)
+		return;
+
+	/* reset error buffer */
+	if (errorbuf != NULL)
+		*errorbuf = 0;
+
+	/* detokenize into the list */
+	port_config_detokenize(portlist, tokens, errorbuf, errorbuflen);
+
+	// calc total players
+	for (port = portlist.first(); port != NULL; port = port->next())
+		for (field = port->fieldlist; field != NULL; field = field->next)
+		{
+			if (nplayer < field->player+1)
+				nplayer = field->player+1;
+		}
+
+	// mamep: append custom ports if needed
+	if (nplayer > 0)
+		port_config_detokenize(portlist, ipt_custom1p, errorbuf, errorbuflen);
+	if (nplayer > 1)
+		port_config_detokenize(portlist, ipt_custom2p, errorbuf, errorbuflen);
+	if (nplayer > 2)
+		port_config_detokenize(portlist, ipt_custom3p, errorbuf, errorbuflen);
+	if (nplayer > 3)
+		port_config_detokenize(portlist, ipt_custom4p, errorbuf, errorbuflen);
+	if (nplayer > 4)
+		port_config_detokenize(portlist, ipt_custom5p, errorbuf, errorbuflen);
+	if (nplayer > 5)
+		port_config_detokenize(portlist, ipt_custom6p, errorbuf, errorbuflen);
+	if (nplayer > 6)
+		port_config_detokenize(portlist, ipt_custom7p, errorbuf, errorbuflen);
+	if (nplayer > 7)
+		port_config_detokenize(portlist, ipt_custom8p, errorbuf, errorbuflen);
+}
+#endif /* USE_CUSTOM_BUTTON */
 
 
 /*-------------------------------------------------
@@ -1196,8 +1355,10 @@ void input_field_get_user_settings(const input_field_config *field, input_field_
 		settings->centerdelta = field->state->analog->centerdelta;
 		settings->reverse = field->state->analog->reverse;
 	}
+#ifdef USE_AUTOFIRE
 	else
 		settings->autofire = field->state->autofire;
+#endif /* USE_AUTOFIRE */
 }
 
 
@@ -1233,8 +1394,10 @@ void input_field_set_user_settings(const input_field_config *field, const input_
 		field->state->analog->centerdelta = settings->centerdelta;
 		field->state->analog->reverse = settings->reverse;
 	}
+#ifdef USE_AUTOFIRE
 	else
 		field->state->autofire = settings->autofire;
+#endif /* USE_AUTOFIRE */
 }
 
 
@@ -2583,7 +2746,7 @@ g_profiler.start(PROFILER_INPUT);
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (input_condition_true(port->machine, &field->condition))
 			{
-
+#ifdef USE_AUTOFIRE
 #ifdef USE_CUSTOM_BUTTON
 				/* update autofire status */
 				if (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
@@ -2601,6 +2764,7 @@ g_profiler.start(PROFILER_INPUT);
 					continue;
 				}
 #endif /* USE_CUSTOM_BUTTON */
+#endif /* USE_AUTOFIRE */
 
 				/* accumulate VBLANK bits */
 				if (field->type == IPT_VBLANK)
@@ -2884,8 +3048,11 @@ static void frame_update_analog_field(running_machine *machine, analog_field_sta
 
 static int frame_get_digital_field_state(const input_field_config *field, int mouse_down)
 {
-//	int curstate = mouse_down || input_seq_pressed(field->port->machine, input_field_seq(field, SEQ_TYPE_STANDARD));
+#ifdef USE_AUTOFIRE
 	int curstate = auto_pressed(field->port->machine, field);
+#else /* USE_AUTOFIRE */
+	int curstate = mouse_down || input_seq_pressed(field->port->machine, input_field_seq(field, SEQ_TYPE_STANDARD));
+#endif /* USE_AUTOFIRE */
 	int changed = FALSE;
 
 	/* if the state changed, look for switch down/switch up */
@@ -2911,7 +3078,9 @@ static int frame_get_digital_field_state(const input_field_config *field, int mo
 			if (field->settinglist == NULL)
 			{
 				field->state->value ^= field->mask;
+#ifdef USE_AUTOFIRE
 				field->state->toggle = !field->state->toggle;
+#endif /* USE_AUTOFIRE */
 			}
 			else
 				input_field_select_next_setting(field);
@@ -3520,9 +3689,8 @@ static void port_config_detokenize(ioport_list &portlist, const input_port_token
 					TOKEN_SKIP_STRING(ipt);
 					break;
 				}
-				TOKEN_GET_UINT64_UNPACK3(ipt, entrytype, 8, defval, 32, category, 16);
+				TOKEN_GET_UINT64_UNPACK2(ipt, entrytype, 8, defval, 32);
 				cursetting = setting_config_alloc(curfield, defval & curfield->mask, input_port_string_from_token(*ipt++));
-				cursetting->category = category;
 				break;
 
 			/* configuration definition */
@@ -4047,6 +4215,7 @@ static void load_config_callback(running_machine *machine, int config_type, xml_
 			load_game_config(machine, portnode, type, player, newseq);
 	}
 
+#ifdef USE_AUTOFIRE
 	if (config_type == CONFIG_TYPE_GAME)
 	{
 		for (portnode = xml_get_sibling(parentnode->child, "autofire"); portnode; portnode = xml_get_sibling(portnode->next, "autofire"))
@@ -4057,6 +4226,7 @@ static void load_config_callback(running_machine *machine, int config_type, xml_
 				autofiredelay[player - 1] = xml_get_attribute_int(portnode, "delay", 3);
 		}
 	}
+#endif /* USE_AUTOFIRE */
 
 	/* after applying the controller config, push that back into the backup, since that is */
 	/* what we will diff against */
@@ -4203,12 +4373,14 @@ static int load_game_config(running_machine *machine, xml_data_node *portnode, i
 					if (field->state->analog == NULL)
 					{
 						field->state->value = xml_get_attribute_int(portnode, "value", field->defvalue);
+#ifdef USE_AUTOFIRE
 						if (strcmp(xml_get_attribute_string(portnode, "autofire", "off"), "on") == 0)
 							field->state->autofire = AUTOFIRE_ON;
 						else if (strcmp(xml_get_attribute_string(portnode, "autofire", "off"), "toggle") == 0)
 							field->state->autofire = AUTOFIRE_TOGGLE;
 						else
 							field->state->autofire = 0;
+#endif /* USE_AUTOFIRE */
 
 #ifdef USE_CUSTOM_BUTTON
 						if (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
@@ -4356,7 +4528,9 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 {
 	const input_field_config *field;
 	const input_port_config *port;
+#ifdef USE_AUTOFIRE
 	int portnum;
+#endif /* USE_AUTOFIRE */
 
 	/* iterate over ports */
 	for (port = machine->m_portlist.first(); port != NULL; port = port->next())
@@ -4374,7 +4548,9 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 				if (field->state->analog == NULL)
 				{
 					changed |= ((field->state->value & field->mask) != (field->defvalue & field->mask));
+#ifdef USE_AUTOFIRE
 					changed |= field->state->autofire;
+#endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 					changed |= field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS &&
 						custom_button[field->player][field->type - IPT_CUSTOM1];
@@ -4416,17 +4592,18 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 							if ((field->state->value & field->mask) != (field->defvalue & field->mask))
 								xml_set_attribute_int(portnode, "value", field->state->value & field->mask);
 
+#ifdef USE_AUTOFIRE
 							if (field->state->autofire & AUTOFIRE_ON)
 								xml_set_attribute(portnode, "autofire", "on");
 							else if (field->state->autofire & AUTOFIRE_TOGGLE)
 								xml_set_attribute(portnode, "autofire", "toggle");
+#endif /* USE_AUTOFIRE */
 
 #ifdef USE_CUSTOM_BUTTON
 							if (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS &&
 							    custom_button[field->player][field->type - IPT_CUSTOM1])
 								xml_set_attribute_int(portnode, "custom", custom_button[field->player][field->type - IPT_CUSTOM1]);
 #endif /* USE_CUSTOM_BUTTON */
-
 						}
 
 						/* write out analog changes */
@@ -4445,6 +4622,7 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 				}
 			}
 
+#ifdef USE_AUTOFIRE
 	for (portnum = 0; portnum < MAX_PLAYERS; portnum++)
 	{
 		if (autofiredelay[portnum] != 3)
@@ -4457,6 +4635,7 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 			}
 		}
 	}
+#endif /* USE_AUTOFIRE */
 }
 
 
@@ -5771,146 +5950,7 @@ static void execute_dumpkbd(running_machine *machine, int ref, int params, const
 
 
 
-/*-------------------------------------------------
-    input_port_list_custom - initialize an input
-    port list structure and allocate ports
-    according to the given tokens
--------------------------------------------------*/
-
-void input_port_list_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap)
-{
-	const input_port_config *port;
-	const input_field_config *field;
-	int nplayer = 0;
-
-	static INPUT_PORTS_START( custom1p )
-		PORT_START("CUSTOM1P")
-		PORT_BIT( 1 << 0, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(1) PORT_TOGGLE
-#ifdef USE_CUSTOM_BUTTON
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(1)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(1)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(1)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(1)
-#endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORTS_END
-
-	static INPUT_PORTS_START( custom2p )
-		PORT_START("CUSTOM2P")
-		PORT_BIT( 1 << 1, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(2) PORT_TOGGLE
-#ifdef USE_CUSTOM_BUTTON
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(2)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(2)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(2)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(2)
-#endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORTS_END
-
-	static INPUT_PORTS_START( custom3p )
-		PORT_START("CUSTOM3P")
-		PORT_BIT( 1 << 2, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(3) PORT_TOGGLE
-#ifdef USE_CUSTOM_BUTTON
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(3)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(3)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(3)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(3)
-#endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORTS_END
-
-	static INPUT_PORTS_START( custom4p )
-		PORT_START("CUSTOM4P")
-		PORT_BIT( 1 << 3, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(4) PORT_TOGGLE
-#ifdef USE_CUSTOM_BUTTON
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(4)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(4)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(4)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(4)
-#endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORTS_END
-
-	static INPUT_PORTS_START( custom5p )
-		PORT_START("CUSTOM5P")
-		PORT_BIT( 1 << 4, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(5) PORT_TOGGLE
-#ifdef USE_CUSTOM_BUTTON
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(5)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(5)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(5)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(5)
-#endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORTS_END
-
-	static INPUT_PORTS_START( custom6p )
-		PORT_START("CUSTOM6P")
-		PORT_BIT( 1 << 5, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(6) PORT_TOGGLE
-#ifdef USE_CUSTOM_BUTTON
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(6)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(6)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(6)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(6)
-#endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORTS_END
-
-	static INPUT_PORTS_START( custom7p )
-		PORT_START("CUSTOM7P")
-		PORT_BIT( 1 << 6, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(7) PORT_TOGGLE
-#ifdef USE_CUSTOM_BUTTON
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(7)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(7)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(7)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(7)
-#endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORTS_END
-
-	static INPUT_PORTS_START( custom8p )
-		PORT_START("CUSTOM8P")
-		PORT_BIT( 1 << 7, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(8) PORT_TOGGLE
-#ifdef USE_CUSTOM_BUTTON
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(8)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(8)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(8)
-		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(8)
-#endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORTS_END
-
-	/* no tokens, no list */
-	if (tokens == NULL)
-		return;
-
-	/* reset error buffer */
-	if (errorbuf != NULL)
-		*errorbuf = 0;
-
-	/* detokenize into the list */
-	port_config_detokenize(portlist, tokens, errorbuf, errorbuflen);
-
-	// calc total players
-	for (port = portlist.first(); port != NULL; port = port->next())
-		for (field = port->fieldlist; field != NULL; field = field->next)
-		{
-			if (nplayer < field->player+1)
-				nplayer = field->player+1;
-		}
-
-	// mamep: append custom ports if needed
-	if (nplayer > 0)
-		port_config_detokenize(portlist, ipt_custom1p, errorbuf, errorbuflen);
-	if (nplayer > 1)
-		port_config_detokenize(portlist, ipt_custom2p, errorbuf, errorbuflen);
-	if (nplayer > 2)
-		port_config_detokenize(portlist, ipt_custom3p, errorbuf, errorbuflen);
-	if (nplayer > 3)
-		port_config_detokenize(portlist, ipt_custom4p, errorbuf, errorbuflen);
-	if (nplayer > 4)
-		port_config_detokenize(portlist, ipt_custom5p, errorbuf, errorbuflen);
-	if (nplayer > 5)
-		port_config_detokenize(portlist, ipt_custom6p, errorbuf, errorbuflen);
-	if (nplayer > 6)
-		port_config_detokenize(portlist, ipt_custom7p, errorbuf, errorbuflen);
-	if (nplayer > 7)
-		port_config_detokenize(portlist, ipt_custom8p, errorbuf, errorbuflen);
-}
-
-
-
+#ifdef USE_AUTOFIRE
 static int auto_pressed(running_machine *machine, const input_field_config *field)
 {
 /*
@@ -5998,6 +6038,7 @@ void set_autofiredelay(int player, int delay)
 {
 	autofiredelay[player] = delay;
 }
+#endif /* USE_AUTOFIRE */
 
 
 
@@ -6040,7 +6081,9 @@ static void make_input_log(running_machine *machine)
 {
 	input_port_private *portdata = machine->input_port_data;
 	const input_port_config *port;
+#ifdef USE_CUSTOM_BUTTON
 	int i;
+#endif /* USE_CUSTOM_BUTTON */
 	int player = 0; /* player 1 */
 	int normal_buttons = 6;
 

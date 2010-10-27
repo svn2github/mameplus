@@ -52,13 +52,15 @@ static const input_type_desc core_types[] =
 	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, BUTTON14,            "P1 Button 14",           SEQ_DEF_3(KEYCODE_SLASH, SEQCODE_OR, INDEXED(JOYCODE_BUTTON14, 0)) )
 	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, BUTTON15,            "P1 Button 15",           SEQ_DEF_3(KEYCODE_RSHIFT, SEQCODE_OR, INDEXED(JOYCODE_BUTTON15, 0)) )
 	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, BUTTON16,            "P1 Button 16",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON16, 0)) )
+#ifdef USE_AUTOFIRE
+	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, TOGGLE_AUTOFIRE,     "P1 Toggle Autofire",     SEQ_DEF_0 )
+#endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, CUSTOM1,             "P1 Custom 1",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, CUSTOM2,             "P1 Custom 2",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, CUSTOM3,             "P1 Custom 3",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, CUSTOM4,             "P1 Custom 4",            SEQ_DEF_0 )
 #endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, TOGGLE_AUTOFIRE,     "P1 Toggle Autofire",     SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, START,               "P1 Start",               SEQ_DEF_3(KEYCODE_1, SEQCODE_OR, INDEXED(JOYCODE_START, 0)) )
 	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, SELECT,              "P1 Select",              SEQ_DEF_3(KEYCODE_5, SEQCODE_OR, INDEXED(JOYCODE_SELECT, 0)) )
 	INPUT_PORT_DIGITAL_TYPE( 1, PLAYER1, MAHJONG_A,           "P1 Mahjong A",           SEQ_DEF_1(KEYCODE_A) )
@@ -155,13 +157,15 @@ static const input_type_desc core_types[] =
 	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, BUTTON14,            "P2 Button 14",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON14, 1)) )
 	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, BUTTON15,            "P2 Button 15",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON15, 1)) )
 	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, BUTTON16,            "P2 Button 16",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON16, 1)) )
+#ifdef USE_AUTOFIRE
+	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, TOGGLE_AUTOFIRE,     "P2 Toggle Autofire",     SEQ_DEF_0 )
+#endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, CUSTOM1,             "P2 Custom 1",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, CUSTOM2,             "P2 Custom 2",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, CUSTOM3,             "P2 Custom 3",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, CUSTOM4,             "P2 Custom 4",            SEQ_DEF_0 )
 #endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, TOGGLE_AUTOFIRE,     "P2 Toggle Autofire",     SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, START,               "P2 Start",               SEQ_DEF_3(KEYCODE_2, SEQCODE_OR, INDEXED(JOYCODE_START, 1)) )
 	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, SELECT,              "P2 Select",              SEQ_DEF_3(KEYCODE_6, SEQCODE_OR, INDEXED(JOYCODE_SELECT, 1)) )
 	INPUT_PORT_DIGITAL_TYPE( 2, PLAYER2, MAHJONG_A,           "P2 Mahjong A",           SEQ_DEF_0 )
@@ -232,13 +236,15 @@ static const input_type_desc core_types[] =
 	INPUT_PORT_DIGITAL_TYPE( 3, PLAYER3, BUTTON14,            "P3 Button 14",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON14, 2)) )
 	INPUT_PORT_DIGITAL_TYPE( 3, PLAYER3, BUTTON15,            "P3 Button 15",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON15, 2)) )
 	INPUT_PORT_DIGITAL_TYPE( 3, PLAYER3, BUTTON16,            "P3 Button 16",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON16, 2)) )
+#ifdef USE_AUTOFIRE
+	INPUT_PORT_DIGITAL_TYPE( 3, PLAYER3, TOGGLE_AUTOFIRE,     "P3 Toggle Autofire",     SEQ_DEF_0 )
+#endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 	INPUT_PORT_DIGITAL_TYPE( 3, PLAYER3, CUSTOM1,             "P3 Custom 1",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 3, PLAYER3, CUSTOM2,             "P3 Custom 2",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 3, PLAYER3, CUSTOM3,             "P3 Custom 3",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 3, PLAYER3, CUSTOM4,             "P3 Custom 4",            SEQ_DEF_0 )
 #endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORT_DIGITAL_TYPE( 3, PLAYER3, TOGGLE_AUTOFIRE,     "P3 Toggle Autofire",     SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 3, PLAYER3, START,               "P3 Start",               SEQ_DEF_3(KEYCODE_3, SEQCODE_OR, INDEXED(JOYCODE_START, 2)) )
 	INPUT_PORT_DIGITAL_TYPE( 3, PLAYER3, SELECT,              "P3 Select",              SEQ_DEF_3(KEYCODE_7, SEQCODE_OR, INDEXED(JOYCODE_SELECT, 2)) )
 
@@ -270,13 +276,15 @@ static const input_type_desc core_types[] =
 	INPUT_PORT_DIGITAL_TYPE( 4, PLAYER4, BUTTON14,            "P4 Button 14",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON14, 3)) )
 	INPUT_PORT_DIGITAL_TYPE( 4, PLAYER4, BUTTON15,            "P4 Button 15",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON15, 3)) )
 	INPUT_PORT_DIGITAL_TYPE( 4, PLAYER4, BUTTON16,            "P4 Button 16",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON16, 3)) )
+#ifdef USE_AUTOFIRE
+	INPUT_PORT_DIGITAL_TYPE( 4, PLAYER4, TOGGLE_AUTOFIRE,     "P4 Toggle Autofire",     SEQ_DEF_0 )
+#endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 	INPUT_PORT_DIGITAL_TYPE( 4, PLAYER4, CUSTOM1,             "P4 Custom 1",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 4, PLAYER4, CUSTOM2,             "P4 Custom 2",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 4, PLAYER4, CUSTOM3,             "P4 Custom 3",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 4, PLAYER4, CUSTOM4,             "P4 Custom 4",            SEQ_DEF_0 )
 #endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORT_DIGITAL_TYPE( 4, PLAYER4, TOGGLE_AUTOFIRE,     "P4 Toggle Autofire",     SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 4, PLAYER4, START,               "P4 Start",               SEQ_DEF_3(KEYCODE_4, SEQCODE_OR, INDEXED(JOYCODE_START, 3)) )
 	INPUT_PORT_DIGITAL_TYPE( 4, PLAYER4, SELECT,              "P4 Select",              SEQ_DEF_3(KEYCODE_8, SEQCODE_OR, INDEXED(JOYCODE_SELECT, 3)) )
 
@@ -308,13 +316,15 @@ static const input_type_desc core_types[] =
 	INPUT_PORT_DIGITAL_TYPE( 5, PLAYER5, BUTTON14,            "P5 Button 14",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON14, 4)) )
 	INPUT_PORT_DIGITAL_TYPE( 5, PLAYER5, BUTTON15,            "P5 Button 15",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON15, 4)) )
 	INPUT_PORT_DIGITAL_TYPE( 5, PLAYER5, BUTTON16,            "P5 Button 16",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON16, 4)) )
+#ifdef USE_AUTOFIRE
+	INPUT_PORT_DIGITAL_TYPE( 5, PLAYER5, TOGGLE_AUTOFIRE,     "P5 Toggle Autofire",     SEQ_DEF_0 )
+#endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 	INPUT_PORT_DIGITAL_TYPE( 5, PLAYER5, CUSTOM1,             "P5 Custom 1",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 5, PLAYER5, CUSTOM2,             "P5 Custom 2",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 5, PLAYER5, CUSTOM3,             "P5 Custom 3",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 5, PLAYER5, CUSTOM4,             "P5 Custom 4",            SEQ_DEF_0 )
 #endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORT_DIGITAL_TYPE( 5, PLAYER5, TOGGLE_AUTOFIRE,     "P5 Toggle Autofire",     SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 5, PLAYER5, START,               "P5 Start",               SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 5, PLAYER5, SELECT,              "P5 Select",              SEQ_DEF_0 )
 
@@ -346,13 +356,15 @@ static const input_type_desc core_types[] =
 	INPUT_PORT_DIGITAL_TYPE( 6, PLAYER6, BUTTON14,            "P6 Button 14",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON14, 5)) )
 	INPUT_PORT_DIGITAL_TYPE( 6, PLAYER6, BUTTON15,            "P6 Button 15",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON15, 5)) )
 	INPUT_PORT_DIGITAL_TYPE( 6, PLAYER6, BUTTON16,            "P6 Button 16",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON16, 5)) )
+#ifdef USE_AUTOFIRE
+	INPUT_PORT_DIGITAL_TYPE( 6, PLAYER6, TOGGLE_AUTOFIRE,     "P6 Toggle Autofire",     SEQ_DEF_0 )
+#endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 	INPUT_PORT_DIGITAL_TYPE( 6, PLAYER6, CUSTOM1,             "P6 Custom 1",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 6, PLAYER6, CUSTOM2,             "P6 Custom 2",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 6, PLAYER6, CUSTOM3,             "P6 Custom 3",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 6, PLAYER6, CUSTOM4,             "P6 Custom 4",            SEQ_DEF_0 )
 #endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORT_DIGITAL_TYPE( 6, PLAYER6, TOGGLE_AUTOFIRE,     "P6 Toggle Autofire",     SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 6, PLAYER6, START,               "P6 Start",               SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 6, PLAYER6, SELECT,              "P6 Select",              SEQ_DEF_0 )
 
@@ -384,13 +396,15 @@ static const input_type_desc core_types[] =
 	INPUT_PORT_DIGITAL_TYPE( 7, PLAYER7, BUTTON14,            "P7 Button 14",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON14, 6)) )
 	INPUT_PORT_DIGITAL_TYPE( 7, PLAYER7, BUTTON15,            "P7 Button 15",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON15, 6)) )
 	INPUT_PORT_DIGITAL_TYPE( 7, PLAYER7, BUTTON16,            "P7 Button 16",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON16, 6)) )
+#ifdef USE_AUTOFIRE
+	INPUT_PORT_DIGITAL_TYPE( 7, PLAYER7, TOGGLE_AUTOFIRE,     "P7 Toggle Autofire",     SEQ_DEF_0 )
+#endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 	INPUT_PORT_DIGITAL_TYPE( 7, PLAYER7, CUSTOM1,             "P7 Custom 1",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 7, PLAYER7, CUSTOM2,             "P7 Custom 2",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 7, PLAYER7, CUSTOM3,             "P7 Custom 3",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 7, PLAYER7, CUSTOM4,             "P7 Custom 4",            SEQ_DEF_0 )
 #endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORT_DIGITAL_TYPE( 7, PLAYER7, TOGGLE_AUTOFIRE,     "P7 Toggle Autofire",     SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 7, PLAYER7, START,               "P7 Start",               SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 7, PLAYER7, SELECT,              "P7 Select",              SEQ_DEF_0 )
 
@@ -422,13 +436,15 @@ static const input_type_desc core_types[] =
 	INPUT_PORT_DIGITAL_TYPE( 8, PLAYER8, BUTTON14,            "P8 Button 14",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON14, 7)) )
 	INPUT_PORT_DIGITAL_TYPE( 8, PLAYER8, BUTTON15,            "P8 Button 15",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON15, 7)) )
 	INPUT_PORT_DIGITAL_TYPE( 8, PLAYER8, BUTTON16,            "P8 Button 16",           SEQ_DEF_1(INDEXED(JOYCODE_BUTTON16, 7)) )
+#ifdef USE_AUTOFIRE
+	INPUT_PORT_DIGITAL_TYPE( 8, PLAYER8, TOGGLE_AUTOFIRE,     "P8 Toggle Autofire",     SEQ_DEF_0 )
+#endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 	INPUT_PORT_DIGITAL_TYPE( 8, PLAYER8, CUSTOM1,             "P8 Custom 1",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 8, PLAYER8, CUSTOM2,             "P8 Custom 2",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 8, PLAYER8, CUSTOM3,             "P8 Custom 3",            SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 8, PLAYER8, CUSTOM4,             "P8 Custom 4",            SEQ_DEF_0 )
 #endif /* USE_CUSTOM_BUTTON */
-	INPUT_PORT_DIGITAL_TYPE( 8, PLAYER8, TOGGLE_AUTOFIRE,     "P8 Toggle Autofire",     SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 8, PLAYER8, START,               "P8 Start",               SEQ_DEF_0 )
 	INPUT_PORT_DIGITAL_TYPE( 8, PLAYER8, SELECT,              "P8 Select",              SEQ_DEF_0 )
 
