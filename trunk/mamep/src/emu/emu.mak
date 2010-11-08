@@ -30,6 +30,11 @@ OBJDIRS += \
 	$(EMUOBJ)/layout \
 	$(EMUOBJ)/video \
 
+OSDSRC = $(SRC)/osd
+OSDOBJ = $(OBJ)/osd
+
+OBJDIRS += \
+	$(OSDOBJ)
 
 
 #-------------------------------------------------
@@ -111,6 +116,7 @@ EMUOBJS = \
 	$(EMUOBJ)/debug/textbuf.o \
 	$(EMUOBJ)/debugint/debugint.o \
 	$(EMUOBJ)/profiler.o \
+	$(OSDOBJ)/osdepend.o \
 	$(EMUOBJ)/uilang.o
 
 ifneq ($(USE_CMD_LIST),)

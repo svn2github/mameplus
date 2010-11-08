@@ -190,6 +190,7 @@ const options_entry mame_core_options[] =
 	{ "bios",                        NULL,        0,                 "select the system BIOS to use" },
 	{ "cheat;c",                     "0",         OPTION_BOOLEAN,    "enable cheat subsystem" },
 	{ "skip_gameinfo",               "0",         OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
+	{ "uifont",                      "default",   0,                 "specify a font to use" },
 #ifdef CONFIRM_QUIT
 	{ "confirm_quit",                "1",         OPTION_BOOLEAN,    "quit game with confirmation" },
 #endif /* CONFIRM_QUIT */

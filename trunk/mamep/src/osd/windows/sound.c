@@ -157,7 +157,7 @@ static void sound_exit(running_machine &machine)
 //  copy_sample_data
 //============================================================
 
-static void copy_sample_data(INT16 *data, int bytes_to_copy)
+static void copy_sample_data(const INT16 *data, int bytes_to_copy)
 {
 	void *buffer1, *buffer2;
 	DWORD length1, length2;
@@ -198,10 +198,10 @@ static void copy_sample_data(INT16 *data, int bytes_to_copy)
 
 
 //============================================================
-//  osd_update_audio_stream
+//  update_audio_stream
 //============================================================
 
-void osd_update_audio_stream(running_machine *machine, INT16 *buffer, int samples_this_frame)
+void windows_osd_interface::update_audio_stream(const INT16 *buffer, int samples_this_frame)
 {
 	int bytes_this_frame = samples_this_frame * stream_format.nBlockAlign;
 	DWORD play_position, write_position;
@@ -213,9 +213,9 @@ void osd_update_audio_stream(running_machine *machine, INT16 *buffer, int sample
 
 #ifdef USE_AUDIO_SYNC
 	// if we are active, update the sampling frequency
-	if (audio_sync && video_get_speed_percent(machine) > 0.0f)
+	if (audio_sync && video_get_speed_percent(&machine()) > 0.0f)
 	{
-		IDirectSoundBuffer_SetFrequency(stream_buffer, machine->sample_rate * video_get_speed_percent(machine));
+		IDirectSoundBuffer_SetFrequency(stream_buffer, machine().sample_rate * video_get_speed_percent(&machine()));
 	}
 #endif /* USE_AUDIO_SYNC */
 
@@ -262,10 +262,10 @@ void osd_update_audio_stream(running_machine *machine, INT16 *buffer, int sample
 
 
 //============================================================
-//  osd_set_mastervolume
+//  set_mastervolume
 //============================================================
 
-void osd_set_mastervolume(int attenuation)
+void windows_osd_interface::set_mastervolume(int attenuation)
 {
 	// clamp the attenuation to 0-32 range
 	if (attenuation > 0)

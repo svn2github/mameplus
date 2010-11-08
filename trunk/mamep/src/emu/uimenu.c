@@ -1285,7 +1285,7 @@ static void ui_menu_handle_keys(ui_menu *menu, UINT32 flags)
 
 	/* handle a toggle cheats request */
 	if (ui_input_pressed_repeat(menu->machine, IPT_UI_TOGGLE_CHEAT, 0))
-		cheat_set_global_enable(menu->machine, !cheat_get_global_enable(menu->machine));
+		menu->machine->cheat().set_enable(!menu->machine->cheat().enabled());
 
 	/* see if any other UI keys are pressed */
 	if (menu->event.iptkey == IPT_INVALID)
@@ -1596,10 +1596,10 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 
 		/* add file manager menu */
 		ui_menu_item_append(menu, _("File Manager"), NULL, 0, (void*)ui_image_menu_file_manager);
-	#ifdef MESS
+#ifdef MESS
 		/* add MESS-specific menus */
 		ui_mess_main_menu_populate(machine, menu);
-	#endif /* MESS */
+#endif /* MESS */
 	}
 	/* add keyboard mode menu */
 	if (input_machine_has_keyboard(machine) && inputx_can_post(machine))
@@ -1621,7 +1621,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 		ui_menu_item_append(menu, _("Crosshair Options"), NULL, 0, (void *)menu_crosshair);
 
 	/* add cheat menu */
-	if (options_get_bool(machine->options(), OPTION_CHEAT) && cheat_get_next_menu_entry(machine, NULL, NULL, NULL, NULL) != NULL)
+	if (options_get_bool(machine->options(), OPTION_CHEAT) && machine->cheat().first() != NULL)
 		ui_menu_item_append(menu, _("Cheat"), NULL, 0, (void *)menu_cheat);
 
 	/* add memory card menu */
@@ -2656,7 +2656,7 @@ static void menu_cheat(running_machine *machine, ui_menu *menu, void *parameter,
 	/* handle events */
 	if (event != NULL && event->itemref != NULL)
 	{
-		int changed = FALSE;
+		bool changed = false;
 
 		/* clear cheat comment on any movement or keypress */
 		popmessage(NULL);
@@ -2664,47 +2664,46 @@ static void menu_cheat(running_machine *machine, ui_menu *menu, void *parameter,
 		/* handle reset all + reset all cheats for reload all option */
 		if ((FPTR)event->itemref < 3 && event->iptkey == IPT_UI_SELECT)
 		{
-			void *curcheat;
-			for (curcheat = cheat_get_next_menu_entry(machine, NULL, NULL, NULL, NULL);
-				 curcheat != NULL;
-				 curcheat = cheat_get_next_menu_entry(machine, curcheat, NULL, NULL, NULL))
-			{
-				changed |= cheat_select_default_state(machine, curcheat);
-			}
+			for (cheat_entry *curcheat = machine->cheat().first(); curcheat != NULL; curcheat = curcheat->next())
+				if (curcheat->select_default_state())
+					changed = true;
 		}
 
 
 		/* handle individual cheats */
 		else if ((FPTR)event->itemref > 2)
 		{
+			cheat_entry *curcheat = reinterpret_cast<cheat_entry *>(event->itemref);
+			const char *string;
 			switch (event->iptkey)
 			{
 				/* if selected, activate a oneshot */
 				case IPT_UI_SELECT:
-					changed = cheat_activate(machine, event->itemref);
+					changed = curcheat->activate();
 					break;
 
 				/* if cleared, reset to default value */
 				case IPT_UI_CLEAR:
-					changed = cheat_select_default_state(machine, event->itemref);
+					changed = curcheat->select_default_state();
 					break;
 
 				/* left decrements */
 				case IPT_UI_LEFT:
-					changed = cheat_select_previous_state(machine, event->itemref);
+					changed = curcheat->select_previous_state();
 					break;
 
 				/* right increments */
 				case IPT_UI_RIGHT:
-					changed = cheat_select_next_state(machine, event->itemref);
+					changed = curcheat->select_next_state();
 					break;
 
 				/* bring up display comment if one exists */
 				case IPT_UI_DISPLAY_COMMENT:
 				case IPT_UI_UP:
 				case IPT_UI_DOWN:
-					if (cheat_get_comment(event->itemref))
-						popmessage(_("Cheat Comment:\n%s"), cheat_get_comment(event->itemref).cstr());
+					string = curcheat->comment();
+					if (string != NULL && string[0] != 0)
+						popmessage(_("Cheat Comment:\n%s"), string);
 					break;
 			}
 		}
@@ -2713,7 +2712,7 @@ static void menu_cheat(running_machine *machine, ui_menu *menu, void *parameter,
 		if ((FPTR)event->itemref == 2 && event->iptkey == IPT_UI_SELECT)
 		{
 			/* re-init cheat engine and thus reload cheats/cheats have already been turned off by here */
-			cheat_reload(machine);
+			machine->cheat().reload();
 
 			/* display the reloaded cheats */
 			ui_menu_reset(menu, UI_MENU_RESET_REMEMBER_REF);
@@ -2733,15 +2732,13 @@ static void menu_cheat(running_machine *machine, ui_menu *menu, void *parameter,
 
 static void menu_cheat_populate(running_machine *machine, ui_menu *menu)
 {
-	const char *text, *subtext;
-	void *curcheat;
-	UINT32 flags;
-
 	/* iterate over cheats */
-	for (curcheat = cheat_get_next_menu_entry(machine, NULL, &text, &subtext, &flags);
-		 curcheat != NULL;
-		 curcheat = cheat_get_next_menu_entry(machine, curcheat, &text, &subtext, &flags))
+	astring text;
+	astring subtext;
+	for (cheat_entry *curcheat = machine->cheat().first(); curcheat != NULL; curcheat = curcheat->next())
 	{
+		UINT32 flags;
+		curcheat->menu_text(text, subtext, flags);
 		ui_menu_item_append(menu, text, subtext, flags, curcheat);
 	}
 

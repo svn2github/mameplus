@@ -117,7 +117,7 @@ static const options_entry cli_options[] =
     command line interface
 -------------------------------------------------*/
 
-int cli_execute(int argc, char **argv, const options_entry *osd_options)
+int cli_execute(int argc, char **argv, osd_interface &osd, const options_entry *osd_options)
 {
 	core_options *options = NULL;
 	const char *gamename_option;
@@ -206,7 +206,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 		}
 
 		/* run the game */
-		result = mame_execute(options);
+		result = mame_execute(osd, options);
 	}
 	catch (emu_fatalerror &fatal)
 	{
