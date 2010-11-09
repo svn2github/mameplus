@@ -215,21 +215,18 @@ render_font::render_font(render_manager &manager, const char *filename)
 	}
 
 	// if the filename is 'default' default to 'ui.bdf' for backwards compatibility
-	if (filename != NULL && mame_stricmp(filename, "default") == 0)
-		filename = "ui.bdf";
-
-	// attempt to load the cached version of the font first
 	if (filename != NULL)
 	{
 		int loaded = 0;
 		astring filename_local(ui_lang_info[lang_get_langcode()].name, PATH_SEPARATOR, filename);
 //		mame_printf_warning("%s\n", filename_local);
 
-	 	if (filename_local.len() > 0 && load_cached_bdf(filename_local))
+	 	if (filename_local.len() > 0 && load_cached_bdf(filename_local) == 0)
 			loaded++;
 		else
 		{
-			if (load_cached_bdf(filename))
+			if (mame_stricmp(filename, "default") == 0)
+				filename = "ui.bdf";
 				loaded++;
 		}
 
@@ -241,6 +238,11 @@ render_font::render_font(render_manager &manager, const char *filename)
 #endif
 		}
 	}
+
+
+	// attempt to load the cached version of the font first
+	if (filename != NULL && load_cached_bdf(filename))
+		return;
 
 	// load the raw data instead
 	mame_file *ramfile;
@@ -278,14 +280,13 @@ render_font::render_font(render_manager &manager, const char *filename)
 
 render_font::~render_font()
 {
-#if 0 //FIXME
 	//mamep: free command glyph font
 	if (cmd)
 	{
+		running_machine &machine = manager().machine();
 		machine.render().font_free(cmd);
 		cmd = NULL;
 	}
-#endif
 
 	// free all the subtables
 	for (int tablenum = 0; tablenum < 256; tablenum++)

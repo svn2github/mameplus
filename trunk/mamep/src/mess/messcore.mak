@@ -17,16 +17,16 @@ else
 DEFS += -DMESS
 endif
 
+# add some additional include libraries for the MAMEMESS
+CFLAGS += \
+	-I$(SRC)/mess \
+	-I$(OBJ)/mess/layout \
+
 # add some additional include libraries for the mame files
 CFLAGS += \
 	-I$(SRC)/mame \
 	-I$(SRC)/mess/osd \
 	-I$(SRC)/mess/osd/$(OSD)
-
-# add some additional include libraries for the MAMEMESS
-CFLAGS += \
-	-I$(SRC)/mess \
-	-I$(OBJ)/mess/layout \
 
 
 # Root object directories
@@ -55,7 +55,6 @@ MESS_LAYOUT = $(MESSOBJ)/layout
 MESS_MACHINE = $(MESSOBJ)/machine
 MESS_VIDEO = $(MESSOBJ)/video
 
-
 OBJDIRS += \
 	$(EMU_AUDIO) \
 	$(EMU_MACHINE) \
@@ -73,6 +72,9 @@ OBJDIRS += \
 	$(MESS_MACHINE) \
 	$(MESS_VIDEO) \
 
+# System-specific directories
+
+OBJDIRS += $(MESS_MACHINE)/ti99 \
 
 #-------------------------------------------------
 # MESS core objects

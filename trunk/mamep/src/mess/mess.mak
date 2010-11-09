@@ -43,6 +43,7 @@ DRVLIBS += \
 #-------------------------------------------------
 
 $(MESSOBJ)/shared.a: \
+	$(MESS_DEVICES)/bitbngr.o	\
 	$(MESS_DEVICES)/cartslot.o	\
 	$(MESS_DEVICES)/cassette.o	\
 	$(MESS_DEVICES)/chd_cd.o	\

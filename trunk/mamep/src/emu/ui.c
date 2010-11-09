@@ -108,13 +108,9 @@ static const input_item_id non_char_keys[] =
 #ifdef UI_COLOR_DISPLAY
 static rgb_t uifont_colortable[MAX_COLORTABLE];
 #endif /* UI_COLOR_DISPLAY */
+static rgb_t ui_bgcolor;
 static render_texture *bgtexture;
 static bitmap_t *bgbitmap;
-
-static rgb_t ui_bgcolor;
-
-/* font for rendering */
-static render_font *ui_font;
 
 static int multiline_text_box_visible_lines;
 static int multiline_text_box_target_lines;
@@ -124,8 +120,17 @@ static int draw_text_fixed_mode;
 static int draw_text_scroll_offset;
 
 static int message_window_scroll;
-
 static int scroll_reset;
+
+static void build_bgtexture(running_machine *machine);
+static void free_bgtexture(running_machine &machine);
+
+#ifdef TRANS_UI
+static int ui_transparency;
+#endif /* TRANS_UI */
+
+/* font for rendering */
+static render_font *ui_font;
 
 /* current UI handler */
 static UINT32 (*ui_handler_callback)(running_machine *, render_container *, UINT32);
@@ -151,14 +156,6 @@ static rgb_t messagebox_backcolor;
 /* slider info */
 static slider_state *slider_list;
 static slider_state *slider_current;
-
-#ifdef TRANS_UI
-static int ui_transparency;
-#endif /* TRANS_UI */
-
-#ifdef USE_SHOW_INPUT_LOG
-static void display_input_log(running_machine *machine, render_container *container);
-#endif /* USE_SHOW_INPUT_LOG */
 
 /* natural keyboard info */
 static int ui_use_natural_keyboard;
@@ -212,9 +209,6 @@ static char *slider_get_laserdisc_desc(device_t *screen);
 static INT32 slider_crossscale(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_crossoffset(running_machine *machine, void *arg, astring *string, INT32 newval);
 #endif
-
-static void build_bgtexture(running_machine *machine);
-static void free_bgtexture(running_machine &machine);
 
 
 /***************************************************************************
@@ -1503,73 +1497,6 @@ static astring &warnings_string(running_machine *machine, astring &string)
 }
 
 
-#ifdef USE_SHOW_INPUT_LOG
-static void display_input_log(running_machine *machine, render_container *container)
-{
-	double time_now = attotime_to_double(timer_get_time(machine));
-	double time_display = attotime_to_double(ATTOTIME_IN_MSEC(1000));
-	double time_fadeout = attotime_to_double(ATTOTIME_IN_MSEC(1000));
-	float curx;
-	int i;
-
-	if (!command_buffer[0].code)
-		return;
-
-	// adjust time for load state
-	{
-		double max = 0.0f;
-		int i;
-
-		for (i = 0; command_buffer[i].code; i++)
-			if (max < command_buffer[i].time)
-				max = command_buffer[i].time;
-
-		if (max > time_now)
-		{
-			double adjust = max - time_now;
-
-			for (i = 0; command_buffer[i].code; i++)
-				command_buffer[i].time -= adjust;
-		}
-	}
-
-	// find position to start display
-	curx = 1.0f - UI_LINE_WIDTH;
-	for (i = 0; command_buffer[i].code; i++)
-		curx -= ui_get_char_width(*machine, command_buffer[i].code);
-
-	for (i = 0; command_buffer[i].code; i++)
-	{
-		if (curx >= UI_LINE_WIDTH)
-			break;
-
-		curx += ui_get_char_width(*machine, command_buffer[i].code);
-	}
-
-	ui_draw_box(container, 0.0f, 1.0f - ui_get_line_height(*machine), 1.0f, 1.0f, UI_BACKGROUND_COLOR);
-
-	for (; command_buffer[i].code; i++)
-	{
-		double rate = time_now - command_buffer[i].time;
-
-		if (rate < time_display + time_fadeout)
-		{
-			int level = 255 - ((rate - time_display) / time_fadeout) * 255;
-			rgb_t fgcolor;
-
-			if (level > 255)
-				level = 255;
-
-			fgcolor = MAKE_ARGB(255, level, level, level);
-
-			container->add_char(curx, 1.0f - ui_get_line_height(*machine), ui_get_line_height(*machine), machine->render().ui_aspect(), fgcolor, *ui_get_font(*machine), command_buffer[i].code);
-		}
-		curx += ui_get_char_width(*machine, command_buffer[i].code);
-	}
-}
-#endif /* USE_SHOW_INPUT_LOG */
-
-
 /*-------------------------------------------------
     game_info_astring - populate an allocated
     string with the game info text
@@ -1865,6 +1792,77 @@ void ui_image_handler_ingame(running_machine *machine)
 
 }
 
+#ifdef USE_SHOW_INPUT_LOG
+/*-------------------------------------------------
+    ui_display_input_log -
+    show popup message if input exist any log
+-------------------------------------------------*/
+
+static void ui_display_input_log(running_machine *machine, render_container *container)
+{
+	double time_now = attotime_to_double(timer_get_time(machine));
+	double time_display = attotime_to_double(ATTOTIME_IN_MSEC(1000));
+	double time_fadeout = attotime_to_double(ATTOTIME_IN_MSEC(1000));
+	float curx;
+	int i;
+
+	if (!command_buffer[0].code)
+		return;
+
+	// adjust time for load state
+	{
+		double max = 0.0f;
+		int i;
+
+		for (i = 0; command_buffer[i].code; i++)
+			if (max < command_buffer[i].time)
+				max = command_buffer[i].time;
+
+		if (max > time_now)
+		{
+			double adjust = max - time_now;
+
+			for (i = 0; command_buffer[i].code; i++)
+				command_buffer[i].time -= adjust;
+		}
+	}
+
+	// find position to start display
+	curx = 1.0f - UI_LINE_WIDTH;
+	for (i = 0; command_buffer[i].code; i++)
+		curx -= ui_get_char_width(*machine, command_buffer[i].code);
+
+	for (i = 0; command_buffer[i].code; i++)
+	{
+		if (curx >= UI_LINE_WIDTH)
+			break;
+
+		curx += ui_get_char_width(*machine, command_buffer[i].code);
+	}
+
+	ui_draw_box(container, 0.0f, 1.0f - ui_get_line_height(*machine), 1.0f, 1.0f, UI_BACKGROUND_COLOR);
+
+	for (; command_buffer[i].code; i++)
+	{
+		double rate = time_now - command_buffer[i].time;
+
+		if (rate < time_display + time_fadeout)
+		{
+			int level = 255 - ((rate - time_display) / time_fadeout) * 255;
+			rgb_t fgcolor;
+
+			if (level > 255)
+				level = 255;
+
+			fgcolor = MAKE_ARGB(255, level, level, level);
+
+			container->add_char(curx, 1.0f - ui_get_line_height(*machine), ui_get_line_height(*machine), machine->render().ui_aspect(), fgcolor, *ui_get_font(*machine), command_buffer[i].code);
+		}
+		curx += ui_get_char_width(*machine, command_buffer[i].code);
+	}
+}
+#endif /* USE_SHOW_INPUT_LOG */
+
 /*-------------------------------------------------
     handler_ingame - in-game handler takes care
     of the standard keypresses
@@ -2035,7 +2033,7 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 
 	/* show popup message if input exist any log */
 	if (show_input_log)
-		display_input_log(machine, container);
+		ui_display_input_log(machine, container);
 #endif /* USE_SHOW_INPUT_LOG */
 
 	/* handle a toggle cheats request */
