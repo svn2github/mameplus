@@ -2,7 +2,7 @@
 %d colors 
 %d colors 
 
-# osd/winui/layout.c: 202 osd/winui/winui.c: 3655
+# osd/winui/layout.c: 202 osd/winui/winui.c: 3656
 %d games
 %d jocs
 
@@ -48,7 +48,11 @@
 
 # osd/winui/mameui.rc: 180
 &About
-&Sobre ...
+&Sobre
+
+# osd/winui/mameui.rc: 43
+&About MAMEUI
+&Sobre MAMEUI
 
 # osd/winui/mameui.rc: 64, 192
 &Add to Custom Folder...
@@ -198,11 +202,11 @@ Canvis de Jocs &Nous
 &Picture Area\tAlt+P
 &Àrea de Captures\tAlt+P
 
-# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3818, 7327
+# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3819, 7328
 &Play
 &Jugar
 
-# osd/winui/layout.c: 201 osd/winui/winui.c: 3872, 7278
+# osd/winui/layout.c: 201 osd/winui/winui.c: 3873, 7279
 &Play %s
 &Jugar a %s
 
@@ -212,7 +216,7 @@ Canvis de Jocs &Nous
 
 # osd/winui/mameui.rc: 1018
 &Raster Graphics
-Escomb&rat
+&Gràfics amb Escombrat
 
 # osd/winui/mameui.rc: 125
 &Refresh\tF5
@@ -268,7 +272,7 @@ Embarra d'E&stat\tAlt+S
 
 # osd/winui/mameui.rc: 1004
 &Vector Graphics
-&Vector
+&Gràfics Vectorials
 
 # osd/winui/mameui.rc: 75
 &View
@@ -278,7 +282,7 @@ Embarra d'E&stat\tAlt+S
 &Working
 &Funcionen
 
-# osd/winui/winui.c: 6697
+# osd/winui/winui.c: 6698
 '%s' is not a valid savestate file for game '%s'.
 '%s' no és un arxiu d'estat guardat vàlid per al joc '%s'.
 
@@ -314,6 +318,10 @@ Dispositiu - Palanca de vol
 About
 Sobre…
 
+# osd/winui/mameui.rc: 365
+About MAMEUI
+Sobre MAMEUI
+
 # osd/winui/mameui.rc: 459
 Add ->
 Afegir ->
@@ -330,7 +338,7 @@ Avançat
 All
 Tots
 
-# osd/winui/winui.c: 6353, 6356, 6359, 6362, 6365, 6369, 6374, 6378, 6381, 6384, 6387, 6390, 6394
+# osd/winui/winui.c: 6354, 6357, 6360, 6363, 6366, 6370, 6375, 6379, 6382, 6385, 6388, 6391, 6395
 All files (*.*)
 Tots els arxius (*.*)
 
@@ -404,7 +412,7 @@ Sentit horari automàtic
 
 # osd/winui/mameui.rc: 900
 Auto pause when playback ended
-Acte pausar (reproducció és finalitzada)
+Pausar quan la reproducció és acabar
 
 # osd/winui/mameui.rc: 889
 Auto restore and save (only if available)
@@ -686,11 +694,11 @@ Controls
 Correct:
 Correcte:
 
-# osd/winui/winui.c: 6597
+# osd/winui/winui.c: 6598
 Could not open '%s' as a valid input file.
 No es pot obrir '%s' com un arxiu d'entrada vàlid.
 
-# osd/winui/winui.c: 6709
+# osd/winui/winui.c: 6710
 Could not open '%s' as a valid savestate file.
 No es pot obrir '%s' per a arxiu d'estat vàlid.
 
@@ -698,7 +706,7 @@ No es pot obrir '%s' per a arxiu d'estat vàlid.
 Crop artwork
 Retallar decorat
 
-# osd/winui/winui.c: 4650, 4678
+# osd/winui/winui.c: 4651, 4679
 Custom
 Personalitzar
 
@@ -852,7 +860,7 @@ Doble Maneta de jocs 8-Eixos
 
 # osd/winui/mameui.rc: 952
 Draw antialiased vectors
-Dibuixar vectors suavitzats
+Dibuixar vectorials suavitzats
 
 # osd/winui/properties.c: 3498
 Draw every frame
@@ -926,19 +934,19 @@ Respectar aspecte
 Error
 Error
 
-# osd/winui/treeview.c: 2650
+# osd/winui/treeview.c: 2648
 Error finding custom file name to save
 Error trobant nom d'arxiu per a guardar
 
-# osd/winui/winui.c: 7776
+# osd/winui/winui.c: 7777
 Error searching for custom folder
 Error en la recerca de carpeta personalitzada
 
-# osd/winui/treeview.c: 2578
+# osd/winui/treeview.c: 2576
 Error while renaming custom file %s to %s
 Error mentre renombra arxiu %s en %s
 
-# osd/winui/treeview.c: 2722
+# osd/winui/treeview.c: 2720
 Error while saving custom file %s
 Error mentre guarda l'arxiu %s
 
@@ -1036,13 +1044,13 @@ Els filtres dels jocs permeten visualitzar els jocs en diferents carpetes oculta
 
 # osd/winui/properties.c: 1013, 1066, 1137
 Game lacks sound
-El joc manca de so
+El joc manca de sonido
 
 # osd/winui/properties.c: 989, 1042, 1113
 Game protection isn't fully emulated
 La protecció del joc no està totalment emulada
 
-# osd/winui/winui.c: 3451
+# osd/winui/winui.c: 3452
 Game search %d%% complete
 Recerca de joc %d%% completad
 
@@ -1090,7 +1098,7 @@ Història
 Homebrew
 Homebrew
 
-# osd/winui/layout.c: 57 osd/winui/winui.c: 5704
+# osd/winui/layout.c: 57 osd/winui/winui.c: 5705
 Horizontal
 Horitzontal
 
@@ -1128,7 +1136,7 @@ Gràfics Imperfectes
 
 # osd/winui/treeview.c: 1016
 Imperfect Sound
-So Imperfecte
+Sonido Imperfecte
 
 # osd/winui/mameui.rc: 409, 418
 Incorrect:
@@ -1236,7 +1244,7 @@ Llista
 
 # osd/winui/mameui.rc: 60
 Loa&d Savestate...
-C&arregar Estat Guardat
+C&arregar Estat Guardat...
 
 # osd/winui/mameui.rc: 1457
 Localize GUI and MAME core.
@@ -1246,7 +1254,7 @@ Localitzar GUI i nucli MAME.
 MAME release notes
 Notes de la versió de MAME
 
-# osd/winui/winui.c: 6356
+# osd/winui/winui.c: 6357
 MAME savestate files (*.sta)
 Arxius d'estat guardat MAME (*.sta)
 
@@ -1280,7 +1288,7 @@ Varis
 
 # osd/winui/treeview.c: 1015
 Missing Sound
-So Perdut
+Sonido Perdut
 
 # osd/winui/properties.c: 395
 Mouse
@@ -1314,7 +1322,7 @@ Nom
 New game changes
 Canvis en joc nou
 
-# osd/winui/mui_audit.c: 123 osd/winui/winui.c: 5751
+# osd/winui/mui_audit.c: 123 osd/winui/winui.c: 5752
 No
 No
 
@@ -1330,7 +1338,7 @@ Sense Dumpear
 No PCB Info available for this game.
 No disponible Informació de PCB per a aquest joc.
 
-# osd/winui/winui.c: 3845
+# osd/winui/winui.c: 3846
 No Selection
 No Seleccionar
 
@@ -1448,7 +1456,7 @@ Reproduir i Gravar Video &MNG...
 
 # osd/winui/mameui.rc: 56
 Play and Record &WAV Sound...
-Reproduir i Gravar So &Wav...
+Reproduir i Gravar Sonido &Wav...
 
 # osd/winui/mameui.rc: 1463
 Play currently selected game
@@ -1502,19 +1510,19 @@ Dispositiu - Posicional
 Pr&operties
 Pr&opietats
 
-# osd/winui/winui.c: 3883, 7292
+# osd/winui/winui.c: 3884, 7293
 Propert&ies for %s
 Propiet&ats per a %s
 
-# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3825, 7337
+# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3826, 7338
 Propert&ies for Driver
 Propiet&ats per a Driver
 
-# osd/winui/winui.c: 3895, 7306
+# osd/winui/winui.c: 3896, 7307
 Properties &for %s BIOS
 Propietats &per a %s BIOS
 
-# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3832, 3901, 7312, 7350
+# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3833, 3902, 7313, 7351
 Properties &for BIOS
 Propietats &per a BIOS
 
@@ -1550,11 +1558,11 @@ ROMs perdudes
 Randomly select a game.
 Seleccionar un joc a l'atzar.
 
-# osd/winui/layout.c: 74 osd/winui/winui.c: 5741
+# osd/winui/layout.c: 74 osd/winui/winui.c: 5742
 Raster
 Escombrat
 
-# osd/winui/winui.c: 3588
+# osd/winui/winui.c: 3589
 Ready
 Llest
 
@@ -1658,7 +1666,7 @@ Escalat de pantalla
 Screen
 Pantalla
 
-# osd/winui/winui.c: 3410
+# osd/winui/winui.c: 3411
 Screen flip support is missing
 Suport de pantalla perdut
 
@@ -1702,7 +1710,7 @@ Seleccionar aleatò&riament imagén de fons a l'iniciar
 Select Item
 Seleccionar objete
 
-# osd/winui/winui.c: 5421
+# osd/winui/winui.c: 5422
 Select a Background Image
 Seleccionar una Imatge de Fons
 
@@ -1872,15 +1880,15 @@ Ordenar els objectes per any
 
 # osd/winui/layout.c: 66 osd/winui/mameui.rc: 699
 Sound
-So
+Sonido
 
 # osd/winui/properties.c: 1019, 1072, 1143
 Sound emulation isn't 100% accurate
-L'emulació de so no és 100% exacta
+L'emulació de sonido no és 100% exacta
 
 # osd/winui/mameui.rc: 600
 Sound:
-So:
+Sonido:
 
 # osd/winui/mameui.rc: 97, 261, 274
 St&ory
@@ -2062,11 +2070,11 @@ Tipus
 Unable to Load Riched32.dll
 Incapaç de Carregar Riched32.dll
 
-# osd/winui/treeview.c: 2589
+# osd/winui/treeview.c: 2587
 Unable to add game to non-custom folder
 No es pot afegir joc a la carpeta no personalitzada
 
-# osd/winui/treeview.c: 2606
+# osd/winui/treeview.c: 2604
 Unable to remove game from non-custom folder
 No es pot moure joc de la carpeta no personalitzada
 
@@ -2106,9 +2114,9 @@ Usar mostres de so
 Use various icon for Not Working game
 Usar diverses icones per a jocs que no funcionen
 
-# osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5739
+# osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5740
 Vector
-Vector
+Vectorial
 
 # osd/winui/treeview.c: 1214
 Vector (H)
@@ -2116,7 +2124,7 @@ Vectorial (Horitzontal)
 
 # osd/winui/properties.c: 850
 Vector (H) %f Hz (%d colors)
-Vector (H) %f Hz (%d colors)
+Vectorial (H) %f Hz (%d colors)
 
 # osd/winui/treeview.c: 1212
 Vector (V)
@@ -2124,13 +2132,13 @@ Vectorial (Vertical)
 
 # osd/winui/properties.c: 845
 Vector (V) %f Hz (%d colors)
-Vector (V) %f Hz (%d colors)
+Vectorial (V) %f Hz (%d colors)
 
 # osd/winui/properties.c: 1181
 Vector options\nCustom options used by all games in the Vector
-Opcions globals de vector\nOpciones personalitzades usats per tots els jocs vectorials
+Opcions globals de vectorial\nOpciones personalitzades usats per tots els jocs vectorials
 
-# osd/winui/layout.c: 58 osd/winui/winui.c: 5704
+# osd/winui/layout.c: 58 osd/winui/winui.c: 5705
 Vertical
 Vertical
 
@@ -2178,7 +2186,7 @@ Colors Falsos
 Year
 Any
 
-# osd/winui/mui_audit.c: 119 osd/winui/winui.c: 5749
+# osd/winui/mui_audit.c: 119 osd/winui/winui.c: 5750
 Yes
 Si
 
@@ -2202,10 +2210,6 @@ per &Tipus
 by &Year
 per &Any
 
-# osd/winui/mameui.rc: 43
-&About MAMEUI
-
-
 # osd/winui/mameui.rc: 174
 &History File...
 
@@ -2220,10 +2224,6 @@ per &Any
 
 # osd/winui/mameui.rc: 1026
 &Vertical
-
-
-# osd/winui/mameui.rc: 365
-About MAMEUI
 
 
 # osd/winui/mameui.rc: 805
@@ -2442,7 +2442,7 @@ Hardware stretching
 Horizontal options\nCustom options used by all games in the Horizontal
 
 
-# osd/winui/winui.c: 5412
+# osd/winui/winui.c: 5413
 Image Files (*.png)
 
 
@@ -2466,7 +2466,7 @@ Joystickmap
 Language Files
 
 
-# osd/winui/winui.c: 6353
+# osd/winui/winui.c: 6354
 MAME input files (*.inp,*.zip)
 
 
@@ -2834,43 +2834,43 @@ by S&amples
 by T&rackball
 
 
-# osd/winui/winui.c: 6384
+# osd/winui/winui.c: 6385
 cheats (*.dat)
 
 
-# osd/winui/winui.c: 6374
+# osd/winui/winui.c: 6375
 gamelists (*.lst)
 
 
-# osd/winui/winui.c: 6387
+# osd/winui/winui.c: 6388
 history (*.dat)
 
 
-# osd/winui/winui.c: 6390
+# osd/winui/winui.c: 6391
 mameinfo (*.dat)
 
 
-# osd/winui/winui.c: 6378
+# osd/winui/winui.c: 6379
 maps (*.map,*.txt)
 
 
-# osd/winui/winui.c: 6381
+# osd/winui/winui.c: 6382
 scripts (*.txt,*.dat)
 
 
-# osd/winui/winui.c: 6359
+# osd/winui/winui.c: 6360
 sounds (*.wav)
 
 
-# osd/winui/winui.c: 6394
+# osd/winui/winui.c: 6395
 stoty (*.dat)
 
 
-# osd/winui/winui.c: 6365
+# osd/winui/winui.c: 6366
 videos (*.avi)
 
 
-# osd/winui/winui.c: 6362
+# osd/winui/winui.c: 6363
 videos (*.mng)
 
 

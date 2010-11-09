@@ -2,7 +2,7 @@
 %d colors 
 %d 색상
 
-# osd/winui/layout.c: 202 osd/winui/winui.c: 3655
+# osd/winui/layout.c: 202 osd/winui/winui.c: 3656
 %d games
 %d 게임
 
@@ -210,11 +210,11 @@ Mame 배포일지(&M)
 &Picture Area\tAlt+P
 화면영역(&P)\tAlt+P
 
-# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3818, 7327
+# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3819, 7328
 &Play
 실행(&P)
 
-# osd/winui/layout.c: 201 osd/winui/winui.c: 3872, 7278
+# osd/winui/layout.c: 201 osd/winui/winui.c: 3873, 7279
 &Play %s
 실행(&P) %s
 
@@ -298,7 +298,7 @@ Mame 배포일지(&M)
 &Working
 실행 가능(&W)
 
-# osd/winui/winui.c: 6697
+# osd/winui/winui.c: 6698
 '%s' is not a valid savestate file for game '%s'.
 '%s' 는 게임 '%s'의 올바른 상태저장(세이브) 파일이 아닙니다
 
@@ -370,7 +370,7 @@ All
 All Games
 전체게임
 
-# osd/winui/winui.c: 6353, 6356, 6359, 6362, 6365, 6369, 6374, 6378, 6381, 6384, 6387, 6390, 6394
+# osd/winui/winui.c: 6354, 6357, 6360, 6363, 6366, 6370, 6375, 6379, 6382, 6385, 6388, 6391, 6395
 All files (*.*)
 모든 파일 (*.*)
 
@@ -782,11 +782,11 @@ Copyright (C) 1997-2010 The MAME Team
 Correct:
 정상:
 
-# osd/winui/winui.c: 6597
+# osd/winui/winui.c: 6598
 Could not open '%s' as a valid input file.
 리플레이 파일 '%s' 를 열 수 없음
 
-# osd/winui/winui.c: 6709
+# osd/winui/winui.c: 6710
 Could not open '%s' as a valid savestate file.
 상태저장(세이브)파일 '%s'를 열 수 없음
 
@@ -814,7 +814,7 @@ Cursor text (floating)
 Cursor text (selected)
 커서 텍스트 (선택)
 
-# osd/winui/winui.c: 4650, 4678
+# osd/winui/winui.c: 4651, 4679
 Custom
 사용자 설정
 
@@ -1122,19 +1122,19 @@ Enforce aspect ratio
 Error
 오류
 
-# osd/winui/treeview.c: 2650
+# osd/winui/treeview.c: 2648
 Error finding custom file name to save
 저장할 사용자 지정 파일을 찾지 못함
 
-# osd/winui/winui.c: 7776
+# osd/winui/winui.c: 7777
 Error searching for custom folder
 사용자 지정 폴더의 검색오류
 
-# osd/winui/treeview.c: 2578
+# osd/winui/treeview.c: 2576
 Error while renaming custom file %s to %s
 사용자 파일 이름을 %s 에서 %s로 변경 실패
 
-# osd/winui/treeview.c: 2722
+# osd/winui/treeview.c: 2720
 Error while saving custom file %s
 사용자 파일 %s 저장 실패
 
@@ -1246,7 +1246,7 @@ Game protection isn't fully emulated
 Game requires external artwork files
 게임 외부 아트웍파일이 필요합니다.
 
-# osd/winui/winui.c: 3451
+# osd/winui/winui.c: 3452
 Game search %d%% complete
 게임 찾기 %d%% 완료
 
@@ -1326,7 +1326,7 @@ History
 Homebrew
 홈브류
 
-# osd/winui/layout.c: 57 osd/winui/winui.c: 5704
+# osd/winui/layout.c: 57 osd/winui/winui.c: 5705
 Horizontal
 가로화면
 
@@ -1350,7 +1350,7 @@ Icons
 Image Enhancement
 이미지 개선
 
-# osd/winui/winui.c: 5412
+# osd/winui/winui.c: 5413
 Image Files (*.png)
 이미지 파일 (*.png)
 
@@ -1502,7 +1502,7 @@ Loa&d Savestate...
 Localize GUI and MAME core.
 GUI 와 MAME 언어를 전환함.
 
-# osd/winui/winui.c: 6353
+# osd/winui/winui.c: 6354
 MAME input files (*.inp,*.zip)
 INP파일 (*.inp,*.zip)
 
@@ -1510,7 +1510,7 @@ INP파일 (*.inp,*.zip)
 MAME release notes
 MAME 발표 일지
 
-# osd/winui/winui.c: 6356
+# osd/winui/winui.c: 6357
 MAME savestate files (*.sta)
 MAME 상태저장(세이브) 파일 (*.sta)
 
@@ -1606,7 +1606,7 @@ Name
 New game changes
 새로 추가된 게임과 변경된 게임들의 정보
 
-# osd/winui/mui_audit.c: 123 osd/winui/winui.c: 5751
+# osd/winui/mui_audit.c: 123 osd/winui/winui.c: 5752
 No
 아니오
 
@@ -1622,7 +1622,7 @@ No Dump
 No PCB Info available for this game.
 현재 게임에 대한 기판정보가 없습니다.
 
-# osd/winui/winui.c: 3845
+# osd/winui/winui.c: 3846
 No Selection
 선택되지 않음
 
@@ -1826,19 +1826,19 @@ Positional device
 Pr&operties
 등록정보(&O)
 
-# osd/winui/winui.c: 3883, 7292
+# osd/winui/winui.c: 3884, 7293
 Propert&ies for %s
 %s 등록정보(&I)
 
-# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3825, 7337
+# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3826, 7338
 Propert&ies for Driver
 드라이버 등록정보
 
-# osd/winui/winui.c: 3895, 7306
+# osd/winui/winui.c: 3896, 7307
 Properties &for %s BIOS
 %s 바이오스 속성(&F)
 
-# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3832, 3901, 7312, 7350
+# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3833, 3902, 7313, 7351
 Properties &for BIOS
 바이오스 속성(&F)
 
@@ -1874,11 +1874,11 @@ ROMs missing
 Randomly select a game.
 무작위로 게임을 선택함.
 
-# osd/winui/layout.c: 74 osd/winui/winui.c: 5741
+# osd/winui/layout.c: 74 osd/winui/winui.c: 5742
 Raster
 래스터
 
-# osd/winui/winui.c: 3588
+# osd/winui/winui.c: 3589
 Ready
 준비됨
 
@@ -2026,7 +2026,7 @@ Scale screen
 Screen
 화면
 
-# osd/winui/winui.c: 3410
+# osd/winui/winui.c: 3411
 Screen flip support is missing
 화면 뒤집기 지원기능이 없음
 
@@ -2126,7 +2126,7 @@ Select Story tab
 Select Title tab
 타이틀 탭 선택
 
-# osd/winui/winui.c: 5421
+# osd/winui/winui.c: 5422
 Select a Background Image
 배경 이미지 선택
 
@@ -2614,11 +2614,11 @@ Type
 Unable to Load Riched32.dll
 Riched32.dll 을 불러올 수 없습니다
 
-# osd/winui/treeview.c: 2589
+# osd/winui/treeview.c: 2587
 Unable to add game to non-custom folder
 사용자 정의 폴더 이외의 게임을 추가 할 수 없습니다.
 
-# osd/winui/treeview.c: 2606
+# osd/winui/treeview.c: 2604
 Unable to remove game from non-custom folder
 사용자 정의 폴더 이외에서 게임을 삭제할 수 없습니다.
 
@@ -2666,7 +2666,7 @@ Use various icon for Not Working game
 User interface settings\n\n
 사용자 인터페이스 설정\n\n
 
-# osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5739
+# osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5740
 Vector
 벡터
 
@@ -2698,7 +2698,7 @@ Version 8
 Version 9
 버전 9
 
-# osd/winui/layout.c: 58 osd/winui/winui.c: 5704
+# osd/winui/layout.c: 58 osd/winui/winui.c: 5705
 Vertical
 세로화면
 
@@ -2746,7 +2746,7 @@ Wrong Colors
 Year
 제작년도
 
-# osd/winui/mui_audit.c: 119 osd/winui/winui.c: 5749
+# osd/winui/mui_audit.c: 119 osd/winui/winui.c: 5750
 Yes
 예
 
@@ -2822,43 +2822,43 @@ by S&amples
 by T&rackball
 트랙볼(&R)
 
-# osd/winui/winui.c: 6384
+# osd/winui/winui.c: 6385
 cheats (*.dat)
 치트파일 (*.dat)
 
-# osd/winui/winui.c: 6374
+# osd/winui/winui.c: 6375
 gamelists (*.lst)
 게임목록 (*.lst)
 
-# osd/winui/winui.c: 6387
+# osd/winui/winui.c: 6388
 history (*.dat)
 역사 파일 (*.dat)
 
-# osd/winui/winui.c: 6390
+# osd/winui/winui.c: 6391
 mameinfo (*.dat)
 정보 파일 (*.dat)
 
-# osd/winui/winui.c: 6378
+# osd/winui/winui.c: 6379
 maps (*.map,*.txt)
 맵 (*.map,*.txt)
 
-# osd/winui/winui.c: 6381
+# osd/winui/winui.c: 6382
 scripts (*.txt,*.dat)
 스크립트 (*.txt,*.dat)
 
-# osd/winui/winui.c: 6359
+# osd/winui/winui.c: 6360
 sounds (*.wav)
 사운드 (*.wav)
 
-# osd/winui/winui.c: 6394
+# osd/winui/winui.c: 6395
 stoty (*.dat)
 줄거리파일 (*.dat)
 
-# osd/winui/winui.c: 6365
+# osd/winui/winui.c: 6366
 videos (*.avi)
 비디오 (*.avi)
 
-# osd/winui/winui.c: 6362
+# osd/winui/winui.c: 6363
 videos (*.mng)
 비디오 (*.mng)
 

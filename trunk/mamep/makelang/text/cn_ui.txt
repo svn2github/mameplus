@@ -2,7 +2,7 @@
 %d colors 
 %d 色 
 
-# osd/winui/layout.c: 202 osd/winui/winui.c: 3655
+# osd/winui/layout.c: 202 osd/winui/winui.c: 3656
 %d games
 %d 个游戏
 
@@ -210,11 +210,11 @@ MAME 版本说明(&M)
 &Picture Area\tAlt+P
 图片区域(&P)\tAlt+P
 
-# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3818, 7327
+# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3819, 7328
 &Play
 运行(&P)
 
-# osd/winui/layout.c: 201 osd/winui/winui.c: 3872, 7278
+# osd/winui/layout.c: 201 osd/winui/winui.c: 3873, 7279
 &Play %s
 运行 %s(&P)
 
@@ -298,7 +298,7 @@ MAME 版本说明(&M)
 &Working
 可以运行(&W)
 
-# osd/winui/winui.c: 6697
+# osd/winui/winui.c: 6698
 '%s' is not a valid savestate file for game '%s'.
 '%s' 不是游戏 '%s' 的有效保存进度文件。
 
@@ -370,7 +370,7 @@ All
 All Games
 所有街机
 
-# osd/winui/winui.c: 6353, 6356, 6359, 6362, 6365, 6369, 6374, 6378, 6381, 6384, 6387, 6390, 6394
+# osd/winui/winui.c: 6354, 6357, 6360, 6363, 6366, 6370, 6375, 6379, 6382, 6385, 6388, 6391, 6395
 All files (*.*)
 所有文件 (*.*)
 
@@ -782,11 +782,11 @@ Copyright (C) 1997-2010 The MAME Team
 Correct:
 正确:
 
-# osd/winui/winui.c: 6597
+# osd/winui/winui.c: 6598
 Could not open '%s' as a valid input file.
 '%s'不是有效的输入指令文件。
 
-# osd/winui/winui.c: 6709
+# osd/winui/winui.c: 6710
 Could not open '%s' as a valid savestate file.
 '%s'不是有效的保存进度文件。
 
@@ -814,7 +814,7 @@ Cursor text (floating)
 Cursor text (selected)
 光标文字 (选定)
 
-# osd/winui/winui.c: 4650, 4678
+# osd/winui/winui.c: 4651, 4679
 Custom
 自定义
 
@@ -1122,19 +1122,19 @@ Enforce aspect ratio
 Error
 错误
 
-# osd/winui/treeview.c: 2650
+# osd/winui/treeview.c: 2648
 Error finding custom file name to save
 搜索要保存的自定义文件名时发生错误
 
-# osd/winui/winui.c: 7776
+# osd/winui/winui.c: 7777
 Error searching for custom folder
 搜索自定义文件夹时发生错误
 
-# osd/winui/treeview.c: 2578
+# osd/winui/treeview.c: 2576
 Error while renaming custom file %s to %s
 重命名自定义文件 %s 到 %s 时发生错误
 
-# osd/winui/treeview.c: 2722
+# osd/winui/treeview.c: 2720
 Error while saving custom file %s
 保存自定义文件 %s 时发生错误
 
@@ -1246,7 +1246,7 @@ Game protection isn't fully emulated
 Game requires external artwork files
 游戏需要外部装饰图文件
 
-# osd/winui/winui.c: 3451
+# osd/winui/winui.c: 3452
 Game search %d%% complete
 游戏搜索 %d%% 完成
 
@@ -1326,7 +1326,7 @@ History
 Homebrew
 自制
 
-# osd/winui/layout.c: 57 osd/winui/winui.c: 5704
+# osd/winui/layout.c: 57 osd/winui/winui.c: 5705
 Horizontal
 水平
 
@@ -1354,7 +1354,7 @@ Icons
 Image Enhancement
 图像增强
 
-# osd/winui/winui.c: 5412
+# osd/winui/winui.c: 5413
 Image Files (*.png)
 图片文件 (*.png)
 
@@ -1506,7 +1506,7 @@ Loa&d Savestate...
 Localize GUI and MAME core.
 当地化图形用户界面和 MAME 核心。
 
-# osd/winui/winui.c: 6353
+# osd/winui/winui.c: 6354
 MAME input files (*.inp,*.zip)
 MAME 输入指令文件 (*.inp,*.zip)
 
@@ -1514,7 +1514,7 @@ MAME 输入指令文件 (*.inp,*.zip)
 MAME release notes
 MAME 版本说明
 
-# osd/winui/winui.c: 6356
+# osd/winui/winui.c: 6357
 MAME savestate files (*.sta)
 MAME 保存进度文件 (*.sta)
 
@@ -1610,7 +1610,7 @@ Name
 New game changes
 新游戏更改
 
-# osd/winui/mui_audit.c: 123 osd/winui/winui.c: 5751
+# osd/winui/mui_audit.c: 123 osd/winui/winui.c: 5752
 No
 否
 
@@ -1626,7 +1626,7 @@ No Dump
 No PCB Info available for this game.
 这个游戏没有可用的电路板信息
 
-# osd/winui/winui.c: 3845
+# osd/winui/winui.c: 3846
 No Selection
 没有选定
 
@@ -1830,19 +1830,19 @@ Positional device
 Pr&operties
 属性(&O)
 
-# osd/winui/winui.c: 3883, 7292
+# osd/winui/winui.c: 3884, 7293
 Propert&ies for %s
 %s 的属性(&I)
 
-# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3825, 7337
+# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3826, 7338
 Propert&ies for Driver
 驱动属性(&I)
 
-# osd/winui/winui.c: 3895, 7306
+# osd/winui/winui.c: 3896, 7307
 Properties &for %s BIOS
 %s BIOS 属性(&F)
 
-# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3832, 3901, 7312, 7350
+# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3833, 3902, 7313, 7351
 Properties &for BIOS
 BIOS 属性(&F)
 
@@ -1878,11 +1878,11 @@ ROMs missing
 Randomly select a game.
 随机选定游戏。
 
-# osd/winui/layout.c: 74 osd/winui/winui.c: 5741
+# osd/winui/layout.c: 74 osd/winui/winui.c: 5742
 Raster
 位图画面
 
-# osd/winui/winui.c: 3588
+# osd/winui/winui.c: 3589
 Ready
 就绪
 
@@ -2030,7 +2030,7 @@ Scale screen
 Screen
 画面
 
-# osd/winui/winui.c: 3410
+# osd/winui/winui.c: 3411
 Screen flip support is missing
 不支持画面翻转
 
@@ -2134,7 +2134,7 @@ Select Story tab
 Select Title tab
 选定标题图选项卡
 
-# osd/winui/winui.c: 5421
+# osd/winui/winui.c: 5422
 Select a Background Image
 选定一个背景图片
 
@@ -2622,11 +2622,11 @@ Type
 Unable to Load Riched32.dll
 无法载入 Riched32.dll
 
-# osd/winui/treeview.c: 2589
+# osd/winui/treeview.c: 2587
 Unable to add game to non-custom folder
 无法添加游戏到非自定义文件夹
 
-# osd/winui/treeview.c: 2606
+# osd/winui/treeview.c: 2604
 Unable to remove game from non-custom folder
 无法从非自定义文件夹移除游戏
 
@@ -2674,7 +2674,7 @@ Use various icon for Not Working game
 User interface settings\n\n
 用户界面设置\n\n
 
-# osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5739
+# osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5740
 Vector
 矢量画面
 
@@ -2706,7 +2706,7 @@ Version 8
 Version 9
 版本 9
 
-# osd/winui/layout.c: 58 osd/winui/winui.c: 5704
+# osd/winui/layout.c: 58 osd/winui/winui.c: 5705
 Vertical
 垂直
 
@@ -2758,7 +2758,7 @@ Wrong Colors
 Year
 年代
 
-# osd/winui/mui_audit.c: 119 osd/winui/winui.c: 5749
+# osd/winui/mui_audit.c: 119 osd/winui/winui.c: 5750
 Yes
 是
 
@@ -2834,43 +2834,43 @@ by S&amples
 by T&rackball
 按轨迹球(&R)
 
-# osd/winui/winui.c: 6384
+# osd/winui/winui.c: 6385
 cheats (*.dat)
 作弊码文件 (*.dat)
 
-# osd/winui/winui.c: 6374
+# osd/winui/winui.c: 6375
 gamelists (*.lst)
 游戏列表文件 (*.lst)
 
-# osd/winui/winui.c: 6387
+# osd/winui/winui.c: 6388
 history (*.dat)
 history (*.dat)
 
-# osd/winui/winui.c: 6390
+# osd/winui/winui.c: 6391
 mameinfo (*.dat)
 mameinfo (*.dat)
 
-# osd/winui/winui.c: 6378
+# osd/winui/winui.c: 6379
 maps (*.map,*.txt)
 映射文件 (*.map,*.txt)
 
-# osd/winui/winui.c: 6381
+# osd/winui/winui.c: 6382
 scripts (*.txt,*.dat)
 脚本文件 (*.txt,*.dat)
 
-# osd/winui/winui.c: 6359
+# osd/winui/winui.c: 6360
 sounds (*.wav)
 音频文件 (*.wav)
 
-# osd/winui/winui.c: 6394
+# osd/winui/winui.c: 6395
 stoty (*.dat)
 stoty (*.dat)
 
-# osd/winui/winui.c: 6365
+# osd/winui/winui.c: 6366
 videos (*.avi)
 视频文件 (*.avi)
 
-# osd/winui/winui.c: 6362
+# osd/winui/winui.c: 6363
 videos (*.mng)
 视频文件 (*.mng)
 

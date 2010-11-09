@@ -90,7 +90,7 @@
 &Video
 視訊(&V)
 
-# osd/windows/video.c: 283
+# osd/windows/video.c: 280
 (primary)
 (主顯示器)
 
@@ -142,11 +142,11 @@ Create...
 Customize Emulated Keyboard...
 自訂模擬鍵盤...
 
-# osd/windows/winmain.c: 330
+# osd/windows/winmain.c: 329
 DIRECT3D-SPECIFIC OPTIONS
 DIRECT3D 特定選項
 
-# osd/windows/winmain.c: 326
+# osd/windows/winmain.c: 325
 DIRECTDRAW-SPECIFIC OPTIONS
 DIRECTDRAW 特定選項
 
@@ -614,7 +614,7 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 錯誤: 無法設定畫面材質格式\n
 
-# osd/windows/winmain.c: 362
+# osd/windows/winmain.c: 361
 FULL SCREEN OPTIONS
 全螢幕選項
 
@@ -642,25 +642,25 @@ Fast Forward
 Ha&rd Reset
 重新啟動硬體(&R)
 
-# osd/windows/winmain.c: 377
+# osd/windows/winmain.c: 376
 INPUT DEVICE OPTIONS
 輸入裝置選項
 
-# osd/windows/video.c: 511
+# osd/windows/video.c: 508
 Illegal aspect ratio value for %s = %s\n
-非法的長寬比例值 %s = %s\n
+非法的 %s 長寬比例值 = %s\n
 
-# osd/windows/video.c: 534
+# osd/windows/video.c: 531
 Illegal resolution value for %s = %s\n
-非法的解析度值 %s = %s\n
+非法的 %s 解析度值 = %s\n
 
 # mess/osd/windows/menu.c: 303
 Input
 輸入
 
-# osd/windows/video.c: 464
+# osd/windows/video.c: 461
 Invalid video value %s; reverting to gdi\n
-無效的 %s 視訊值; 還原成 gdi\n
+無效的 video 值 %s; 還原成 gdi\n
 
 # mess/osd/windows/menu.c: 1265
 Joystick %i
@@ -702,7 +702,7 @@ Off
 On
 開
 
-# osd/windows/winmain.c: 335
+# osd/windows/winmain.c: 334
 PER-WINDOW VIDEO OPTIONS
 各個畫面的視訊選項
 
@@ -838,31 +838,31 @@ Unlimited
 Unmount
 卸載
 
-# osd/windows/video.c: 428
+# osd/windows/video.c: 425
 Using %s scale effect\n
 正在使用 %s 影像增強\n
 
-# osd/windows/video.c: 283
+# osd/windows/video.c: 280
 Video: Monitor %p = \"%s\" %s\n
 視訊: 顯示器 %p = \"%s\" %s\n
 
-# osd/windows/winmain.c: 300
+# osd/windows/winmain.c: 299
 WINDOWS DEBUGGING OPTIONS
 WINDOWS 除錯程式選項
 
-# osd/windows/winmain.c: 307
+# osd/windows/winmain.c: 306
 WINDOWS PERFORMANCE OPTIONS
 WUNDOWS 效能選項
 
-# osd/windows/winmain.c: 370
+# osd/windows/winmain.c: 369
 WINDOWS SOUND OPTIONS
 WINDOWS 聲音選項
 
-# osd/windows/winmain.c: 315
+# osd/windows/winmain.c: 314
 WINDOWS VIDEO OPTIONS
 WINDOWS 視訊選項
 
-# osd/windows/video.c: 460
+# osd/windows/video.c: 457
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video 參數為 none 時無法判斷 -seconds_to_run 選項\n
 
@@ -870,7 +870,7 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 警告: 裝置可能無法正常配合 Direct3D 描繪\n
 
-# osd/windows/winmain.c: 566
+# osd/windows/winmain.c: 588
 Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 警告: numprocessors < 1 並沒有意義。將假設為 auto ...\n
 
@@ -878,223 +878,223 @@ Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 [empty slot]
 [空的插槽]
 
-# osd/windows/winmain.c: 337
+# osd/windows/winmain.c: 336
 aspect ratio for all screens; 'auto' here will try to make a best guess
 全部畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 342
+# osd/windows/winmain.c: 341
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 第一個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 357
+# osd/windows/winmain.c: 356
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 第四個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 347
+# osd/windows/winmain.c: 346
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 第二個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 352
+# osd/windows/winmain.c: 351
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 第三個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 365
+# osd/windows/winmain.c: 364
 brightness value in full screen mode
 全螢幕模式亮度值
 
-# osd/windows/winmain.c: 320
+# osd/windows/winmain.c: 319
 constrain to the proper aspect ratio
 強制使用合適的長寬比例
 
-# osd/windows/winmain.c: 366
+# osd/windows/winmain.c: 365
 contrast value in full screen mode
 全螢幕模式對比值
 
-# osd/windows/winmain.c: 319
+# osd/windows/winmain.c: 318
 default to maximized windows; otherwise, windows will be minimized
 預設成視窗最大化; 否則將採用視窗最小化模式
 
-# osd/windows/winmain.c: 373
+# osd/windows/winmain.c: 372
 enable audio sync
 啟用音訊同步
 
-# osd/windows/winmain.c: 332
+# osd/windows/winmain.c: 331
 enable bilinear filtering on screen output
 啟用雙線過濾的畫面輸出
 
-# osd/windows/winmain.c: 378
+# osd/windows/winmain.c: 377
 enable dual lightgun input
 啟用雙光線槍輸入
 
-# osd/windows/winmain.c: 327
+# osd/windows/winmain.c: 326
 enable hardware stretching
 啟用硬體延展
 
-# osd/windows/winmain.c: 309
+# osd/windows/winmain.c: 308
 enable multithreading; this enables rendering and blitting on a separate thread
 啟用多執行緒; 可以將描繪和 blit 分開處理
 
-# osd/windows/winmain.c: 311
+# osd/windows/winmain.c: 310
 enable profiling, specifying the stack depth to track
 啟用性能分析，指定要追蹤的堆疊深度
 
-# osd/windows/winmain.c: 364
+# osd/windows/winmain.c: 363
 enable resolution switching
 啟用解析度切換
 
-# osd/windows/winmain.c: 363
+# osd/windows/winmain.c: 362
 enable triple buffering
 啟用三重緩衝
 
-# osd/windows/winmain.c: 323
+# osd/windows/winmain.c: 322
 enable using the start of VBLANK for throttling instead of the game time
 啟用 VBLANK 開始限制速度取代遊戲時間
 
-# osd/windows/winmain.c: 322
+# osd/windows/winmain.c: 321
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 啟用畫面翻轉之前等待 VBLANK 開始; 降低破損效果
 
-# osd/windows/winmain.c: 318
+# osd/windows/winmain.c: 317
 enable window mode; otherwise, full screen mode is assumed
 啟用視窗模式; 否則將假設為全螢幕模式
 
-# osd/windows/winmain.c: 336
+# osd/windows/winmain.c: 335
 explicit name of all screens; 'auto' here will try to make a best guess
 全部畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 341
+# osd/windows/winmain.c: 340
 explicit name of the first screen; 'auto' here will try to make a best guess
 第一個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 356
+# osd/windows/winmain.c: 355
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 第四個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 346
+# osd/windows/winmain.c: 345
 explicit name of the second screen; 'auto' here will try to make a best guess
 第二個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 351
+# osd/windows/winmain.c: 350
 explicit name of the third screen; 'auto' here will try to make a best guess
 第三個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 302
+# osd/windows/winmain.c: 301
 force the program to terminate if no updates within specified number of seconds
 如果在指定的秒數內沒有更新就強制終止程式
 
-# osd/windows/winmain.c: 367
+# osd/windows/winmain.c: 366
 gamma value in full screen mode
 全螢幕模式 Gamma 值
 
-# osd/windows/winmain.c: 310
+# osd/windows/winmain.c: 309
 number of processors; this overrides the number the system reports
 設定處理器數量; 將覆寫系統回報的數量
 
-# osd/windows/winmain.c: 317
+# osd/windows/winmain.c: 316
 number of screens to create; usually, you want just one
 建立的畫面數量; 通常設為一個
 
-# osd/windows/winmain.c: 301
+# osd/windows/winmain.c: 300
 output error.log data to the system debugger
 輸出 error.log 資料到系統除錯程式
 
-# osd/windows/winmain.c: 338
+# osd/windows/winmain.c: 337
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 全部畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 343
+# osd/windows/winmain.c: 342
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第一個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 358
+# osd/windows/winmain.c: 357
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第四個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 348
+# osd/windows/winmain.c: 347
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第二個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 353
+# osd/windows/winmain.c: 352
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第三個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 339
+# osd/windows/winmain.c: 338
 preferred view for all screens
 全部畫面的檢視方式
 
-# osd/windows/winmain.c: 344
+# osd/windows/winmain.c: 343
 preferred view for the first screen
 第一個畫面的檢視方式
 
-# osd/windows/winmain.c: 359
+# osd/windows/winmain.c: 358
 preferred view for the fourth screen
 第四個畫面的檢視方式
 
-# osd/windows/winmain.c: 349
+# osd/windows/winmain.c: 348
 preferred view for the second screen
 第二個畫面的檢視方式
 
-# osd/windows/winmain.c: 354
+# osd/windows/winmain.c: 353
 preferred view for the third screen
 第三個畫面的檢視方式
 
-# osd/windows/winmain.c: 321
+# osd/windows/winmain.c: 320
 scale screen rendering by this amount in software
 以此倍數執行軟體縮放畫面描繪
 
-# osd/windows/winmain.c: 371
+# osd/windows/winmain.c: 370
 set audio latency (increase to reduce glitches)
 設定音訊等待時間 (增加值可減少破損)
 
-# osd/windows/winmain.c: 380
+# osd/windows/winmain.c: 379
 set joystick ID (Player1)
 設定搖桿 ID (玩家 1)
 
-# osd/windows/winmain.c: 381
+# osd/windows/winmain.c: 380
 set joystick ID (Player2)
 設定搖桿 ID (玩家 2)
 
-# osd/windows/winmain.c: 382
+# osd/windows/winmain.c: 381
 set joystick ID (Player3)
 設定搖桿 ID (玩家 3)
 
-# osd/windows/winmain.c: 383
+# osd/windows/winmain.c: 382
 set joystick ID (Player4)
 設定搖桿 ID (玩家 4)
 
-# osd/windows/winmain.c: 384
+# osd/windows/winmain.c: 383
 set joystick ID (Player5)
 設定搖桿 ID (玩家 5)
 
-# osd/windows/winmain.c: 385
+# osd/windows/winmain.c: 384
 set joystick ID (Player6)
 設定搖桿 ID (玩家 6)
 
-# osd/windows/winmain.c: 386
+# osd/windows/winmain.c: 385
 set joystick ID (Player7)
 設定搖桿 ID (玩家 7)
 
-# osd/windows/winmain.c: 387
+# osd/windows/winmain.c: 386
 set joystick ID (Player8)
 設定搖桿 ID (玩家 8)
 
-# osd/windows/winmain.c: 304
+# osd/windows/winmain.c: 303
 specifies the font size to use for debugging; defaults to 9 pt
 指定除錯程式的字型大小; 預設是 9 pt
 
-# osd/windows/winmain.c: 303
+# osd/windows/winmain.c: 302
 specifies the font to use for debugging; defaults to Lucida Console
 指定除錯程式的字型; 預設是 Lucida Console
 
-# osd/windows/winmain.c: 331
+# osd/windows/winmain.c: 330
 specify the preferred Direct3D version (8 or 9)
 指定 Direct3D 版本 (8 或 9)
 
-# osd/windows/winmain.c: 308
+# osd/windows/winmain.c: 307
 thread priority for the main game thread; range from -15 to 1
 主要遊戲的執行緒優先權; 範圍是 -15 至 1
 
-# osd/windows/winmain.c: 316
+# osd/windows/winmain.c: 315
 video output method: none, gdi, ddraw, or d3d
 視訊輸出方式: none, gdi, ddraw 或 d3d
 

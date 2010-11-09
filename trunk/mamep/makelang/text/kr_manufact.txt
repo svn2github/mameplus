@@ -1426,7 +1426,7 @@ Barko Corp.
 Bee-Oh
 
 
-# Mega Double Poker (conversion kit)
+# Mega Double Poker (conversion kit, set 1)
 Blitz System Inc.
 
 
@@ -2176,6 +2176,10 @@ Noma
 
 # Noraut Poker
 Noraut Ltd.
+
+
+# Shooting Star
+Nova
 
 
 # Gran Tesoro? / Play 2000 (v5.01) (Italy)

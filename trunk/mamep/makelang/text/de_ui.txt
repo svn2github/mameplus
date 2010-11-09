@@ -2,7 +2,7 @@
 %d colors 
 %d Farben 
 
-# osd/winui/layout.c: 202 osd/winui/winui.c: 3655
+# osd/winui/layout.c: 202 osd/winui/winui.c: 3656
 %d games
 %d Spiele
 
@@ -158,11 +158,11 @@ Benutzer-Oberfläche Opt&ionen...
 &Picture Area\tAlt+P
 Bi&ld-Bereich\tAlt+&P
 
-# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3818, 7327
+# osd/winui/mameui.rc: 51, 188 osd/winui/winui.c: 3819, 7328
 &Play
 &Spiele
 
-# osd/winui/layout.c: 201 osd/winui/winui.c: 3872, 7278
+# osd/winui/layout.c: 201 osd/winui/winui.c: 3873, 7279
 &Play %s
 &Spiele %s
 
@@ -238,7 +238,7 @@ Zeige die&se Ordner
 &Working
 &Funktionierende
 
-# osd/winui/winui.c: 6697
+# osd/winui/winui.c: 6698
 '%s' is not a valid savestate file for game '%s'.
 '%s' ist keine korrekte Speicherstatus-Datei für Spiel '%s'.
 
@@ -282,7 +282,7 @@ Fortgeschritten
 All
 Alle
 
-# osd/winui/winui.c: 6353, 6356, 6359, 6362, 6365, 6369, 6374, 6378, 6381, 6384, 6387, 6390, 6394
+# osd/winui/winui.c: 6354, 6357, 6360, 6363, 6366, 6370, 6375, 6379, 6382, 6385, 6388, 6391, 6395
 All files (*.*)
 Alle Dateien (*.*)
 
@@ -562,11 +562,11 @@ Steuerungen
 Correct:
 Richtig:
 
-# osd/winui/winui.c: 6597
+# osd/winui/winui.c: 6598
 Could not open '%s' as a valid input file.
 Kann '%s' nicht als korrekte Eingabe-Datei öffnen.
 
-# osd/winui/winui.c: 6709
+# osd/winui/winui.c: 6710
 Could not open '%s' as a valid savestate file.
 Kann '%s' nicht als korrekte Speicherstatus-Datei öffnen.
 
@@ -574,7 +574,7 @@ Kann '%s' nicht als korrekte Speicherstatus-Datei öffnen.
 Crop artwork
 Beschneide Kunstwerk
 
-# osd/winui/winui.c: 4650, 4678
+# osd/winui/winui.c: 4651, 4679
 Custom
 Benutzerdefiniert
 
@@ -726,19 +726,19 @@ Aspekt Verh. erzwingen
 Error
 Fehler
 
-# osd/winui/treeview.c: 2650
+# osd/winui/treeview.c: 2648
 Error finding custom file name to save
 Fehler beim finden eines benutzerdefinierten Dateinamens zum speichern
 
-# osd/winui/winui.c: 7776
+# osd/winui/winui.c: 7777
 Error searching for custom folder
 Fehler bei der Suche nach benutzerdefiniertem Verzeichnis
 
-# osd/winui/treeview.c: 2578
+# osd/winui/treeview.c: 2576
 Error while renaming custom file %s to %s
 Fehler beim Umbenennen der benutzerdefinierten Datei %s in %s
 
-# osd/winui/treeview.c: 2722
+# osd/winui/treeview.c: 2720
 Error while saving custom file %s
 Fehler beim Speichern der benutzerdefinierten Daten %s
 
@@ -830,7 +830,7 @@ Dem Spiel fehlt der Sound
 Game protection isn't fully emulated
 Spiel-Schutz ist nicht voll emuliert
 
-# osd/winui/winui.c: 3451
+# osd/winui/winui.c: 3452
 Game search %d%% complete
 Spiele Suche %d%% fertig
 
@@ -882,7 +882,7 @@ Historie
 Homebrew
 Heimgemacht
 
-# osd/winui/layout.c: 57 osd/winui/winui.c: 5704
+# osd/winui/layout.c: 57 osd/winui/winui.c: 5705
 Horizontal
 Horizontal
 
@@ -1018,7 +1018,7 @@ NVRAM
 New game changes
 Änderungen neuer Spiele
 
-# osd/winui/mui_audit.c: 123 osd/winui/winui.c: 5751
+# osd/winui/mui_audit.c: 123 osd/winui/winui.c: 5752
 No
 Nein
 
@@ -1030,7 +1030,7 @@ Kein Cocktail-Mode
 No Dump
 Kein Dump
 
-# osd/winui/winui.c: 3845
+# osd/winui/winui.c: 3846
 No Selection
 Keine Auswahl
 
@@ -1126,11 +1126,11 @@ Wiedergabe eines aufgenommenen Spieles
 Pr&operties
 Ei&genschaften
 
-# osd/winui/winui.c: 3883, 7292
+# osd/winui/winui.c: 3884, 7293
 Propert&ies for %s
 E&igenschaften für %s
 
-# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3825, 7337
+# osd/winui/mameui.rc: 67, 207 osd/winui/winui.c: 3826, 7338
 Propert&ies for Driver
 E&igenschaften für Treiber
 
@@ -1166,11 +1166,11 @@ Fehlende ROMs
 Randomly select a game.
 Wähle zufällig ein Spiel. 
 
-# osd/winui/layout.c: 74 osd/winui/winui.c: 5741
+# osd/winui/layout.c: 74 osd/winui/winui.c: 5742
 Raster
 Raster
 
-# osd/winui/winui.c: 3588
+# osd/winui/winui.c: 3589
 Ready
 Fertig
 
@@ -1266,7 +1266,7 @@ Skaliere Bild
 Screen
 Bildschirm
 
-# osd/winui/winui.c: 3410
+# osd/winui/winui.c: 3411
 Screen flip support is missing
 Bild spiegeln-Unterstützung fehlt
 
@@ -1302,7 +1302,7 @@ Wähle zufälliges Hinte&rundbild beim Start
 Select Item
 Eintrag auswählen
 
-# osd/winui/winui.c: 5421
+# osd/winui/winui.c: 5422
 Select a Background Image
 Auswahl eines Bildhintergrundes
 
@@ -1638,11 +1638,11 @@ Typ
 Unable to Load Riched32.dll
 Konnte Riched32.dll nicht laden
 
-# osd/winui/treeview.c: 2589
+# osd/winui/treeview.c: 2587
 Unable to add game to non-custom folder
 Unmöglich das Spiel einen nicht-benutzerdefierten Ordner hinzuzufügen
 
-# osd/winui/treeview.c: 2606
+# osd/winui/treeview.c: 2604
 Unable to remove game from non-custom folder
 Unmöglich ein Spiel aus eine nicht-benutzerdefierten Ordner zu löschen
 
@@ -1682,7 +1682,7 @@ Benutze Samples
 Use various icon for Not Working game
 Benutze unterschiedliche Icons für nicht-funktionierende Spiele
 
-# osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5739
+# osd/winui/layout.c: 75 osd/winui/mameui.rc: 945 osd/winui/winui.c: 5740
 Vector
 Vektor
 
@@ -1702,7 +1702,7 @@ Vektor (V)
 Vector (V) %f Hz (%d colors)
 Vektor (V) %f Hz (%d Farben)
 
-# osd/winui/layout.c: 58 osd/winui/winui.c: 5704
+# osd/winui/layout.c: 58 osd/winui/winui.c: 5705
 Vertical
 Vertikal
 
@@ -1742,7 +1742,7 @@ Falsche Farben
 Year
 Jahr
 
-# osd/winui/mui_audit.c: 119 osd/winui/winui.c: 5749
+# osd/winui/mui_audit.c: 119 osd/winui/winui.c: 5750
 Yes
 Ja
 
@@ -2214,7 +2214,7 @@ INTERFACE OPTIONS
 Image Enhancement
 
 
-# osd/winui/winui.c: 5412
+# osd/winui/winui.c: 5413
 Image Files (*.png)
 
 
@@ -2302,11 +2302,11 @@ Lightgun
 Lightgun device
 
 
-# osd/winui/winui.c: 6353
+# osd/winui/winui.c: 6354
 MAME input files (*.inp,*.zip)
 
 
-# osd/winui/winui.c: 6356
+# osd/winui/winui.c: 6357
 MAME savestate files (*.sta)
 
 
@@ -2462,11 +2462,11 @@ Players 8
 Positional device
 
 
-# osd/winui/winui.c: 3895, 7306
+# osd/winui/winui.c: 3896, 7307
 Properties &for %s BIOS
 
 
-# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3832, 3901, 7312, 7350
+# osd/winui/mameui.rc: 68, 208 osd/winui/winui.c: 3833, 3902, 7313, 7351
 Properties &for BIOS
 
 
@@ -2834,43 +2834,43 @@ by S&amples
 by T&rackball
 
 
-# osd/winui/winui.c: 6384
+# osd/winui/winui.c: 6385
 cheats (*.dat)
 
 
-# osd/winui/winui.c: 6374
+# osd/winui/winui.c: 6375
 gamelists (*.lst)
 
 
-# osd/winui/winui.c: 6387
+# osd/winui/winui.c: 6388
 history (*.dat)
 
 
-# osd/winui/winui.c: 6390
+# osd/winui/winui.c: 6391
 mameinfo (*.dat)
 
 
-# osd/winui/winui.c: 6378
+# osd/winui/winui.c: 6379
 maps (*.map,*.txt)
 
 
-# osd/winui/winui.c: 6381
+# osd/winui/winui.c: 6382
 scripts (*.txt,*.dat)
 
 
-# osd/winui/winui.c: 6359
+# osd/winui/winui.c: 6360
 sounds (*.wav)
 
 
-# osd/winui/winui.c: 6394
+# osd/winui/winui.c: 6395
 stoty (*.dat)
 
 
-# osd/winui/winui.c: 6365
+# osd/winui/winui.c: 6366
 videos (*.avi)
 
 
-# osd/winui/winui.c: 6362
+# osd/winui/winui.c: 6363
 videos (*.mng)
 
 
