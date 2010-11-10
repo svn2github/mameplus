@@ -121,7 +121,10 @@ private:
 	UINT64				m_rawsize;			// size of the raw font data
 	osd_font			m_osdfont;			// handle to the OSD font
 	//mamep: for command glyph
-	render_font *		cmd;
+	render_font *			cmd;
+
+	//mamep: allocate command glyph font
+	void render_font_command_glyph();
 
 	// constants
 	static const int CACHED_CHAR_SIZE		= 12;
@@ -130,6 +133,7 @@ private:
 };
 
 
+//mamep: convert command glyph
 void convert_command_glyph(char *s, int buflen);
 
 

@@ -165,9 +165,12 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 //  RENDER FONT
 //**************************************************************************
 
-#if 0 //FIXME
+//FIXME
+//TODO: support display command glyph for OSD font (operating system font)
+//TODO: fix command glyph size error for BDF font
+
 //mamep: allocate command glyph font
-static render_font *render_font_command_glyph(running_machine &machine, int height)
+void render_font::render_font_command_glyph()
 {
 	mame_file *ramfile;
 	file_error filerr;
@@ -183,7 +186,6 @@ static render_font *render_font_command_glyph(running_machine &machine, int heig
 		mame_fclose(ramfile);
 	}
 }
-#endif
 
 
 //-------------------------------------------------
@@ -232,10 +234,8 @@ render_font::render_font(render_manager &manager, const char *filename)
 
 		if (loaded)
 		{
-#if 0 //FIXME
 			//mamep: allocate command glyph font
-			cmd = render_font_command_glyph(m_height);
-#endif
+			render_font_command_glyph();
 		}
 	}
 
@@ -267,10 +267,8 @@ render_font::render_font(render_manager &manager, const char *filename)
 		mame_fclose(ramfile);
 	}
 
-#if 0 //FIXME
 	//mamep: allocate command glyph font
-	cmd = render_font_command_glyph(m_height);
-#endif
+	render_font_command_glyph();
 }
 
 
@@ -973,6 +971,7 @@ bool render_font::save_cached(const char *filename, UINT32 hash)
 }
 
 
+//mamep: convert command glyph
 void convert_command_glyph(char *s, int buflen)
 {
 	unicode_char uchar;

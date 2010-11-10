@@ -65,9 +65,11 @@ void ui_mess_main_menu_populate(running_machine *machine, ui_menu *menu)
 	if (machine->m_devicelist.first(CASSETTE))
 		ui_menu_item_append(menu, _("Tape Control"), NULL, 0, (void*)ui_mess_menu_tape_control);
 
+#if 0
 	/* add bitbanger control menu */
 	if (machine->m_devicelist.first(BITBANGER))
 		ui_menu_item_append(menu, _("Bitbanger Control"), NULL, 0, (void*)ui_mess_menu_bitbanger_control);
+#endif
 }
 
 
@@ -79,7 +81,7 @@ void ui_mess_main_menu_populate(running_machine *machine, ui_menu *menu)
 INLINE int cassette_count( running_machine *machine )
 {
 	int count = 0;
-	running_device *device = machine->m_devicelist.first(CASSETTE);
+	running_device *device = machine->m_devicelist.first(CASSETTE );
 
 	while ( device )
 	{
@@ -216,6 +218,7 @@ static void menu_tape_control_populate(running_machine *machine, ui_menu *menu, 
     main bitbanger control menu
 -------------------------------------------------*/
 
+#if 0
 static void menu_bitbanger_control_populate(running_machine *machine, ui_menu *menu, bitbanger_control_menu_state *menustate)
 {
 	int count = bitbanger_count(machine);
@@ -263,6 +266,7 @@ static void menu_bitbanger_control_populate(running_machine *machine, ui_menu *m
 		ui_menu_item_append(menu, "No Bitbanger Image loaded", NULL, flags, NULL);
 	}
 }
+#endif
 
 
 /*-------------------------------------------------
@@ -366,6 +370,7 @@ void ui_mess_menu_tape_control(running_machine *machine, ui_menu *menu, void *pa
     control menu
 -------------------------------------------------*/
 
+#if 0
 void ui_mess_menu_bitbanger_control(running_machine *machine, ui_menu *menu, void *parameter, void *state)
 {
 	bitbanger_control_menu_state *menustate;
@@ -452,4 +457,5 @@ void ui_mess_menu_bitbanger_control(running_machine *machine, ui_menu *menu, voi
 		}
 	}
 }
+#endif
 
