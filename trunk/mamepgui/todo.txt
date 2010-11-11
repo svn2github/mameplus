@@ -2,6 +2,33 @@
 
 经过1年3个月的开发，新GUI已经可以兼容MAMEUI的大部分功能，因此决定发布正式版。同时依照之前承诺的，这个项目现在开源。源代码无任何授权，想怎么用都可以。编译方法同Qt其他标准程序。
 
+///options rewrite
+
+OptionUtils::loadDefault()
+
+  //parse default mame.ini
+  parseIni()
+    //add option name to optCatMap
+    //init mameOpts with default values (new MameOption)
+
+  loadTemplate()
+    //add GUI options to mameOpts (new MameOption)
+    //add more info to exisiting core mameOpts
+
+  //append GUI MESS extra
+
+optUtils::preUpdateModel()
+  //core:update mameOpts by loading .ini files of different levels
+  loadIni()
+
+  //gui:determine what to update in the option dialog
+  updateModel()
+
+  
+
+gamelist::init() called twice
+
+
 //Web
 gquery enhanced
 put latest download on first page
@@ -12,11 +39,6 @@ documentation
 theme
 
 //Done
-sanity check for valid mame binary
-removed duplicated resolution [regret]
-added some new fields to cache file for updater module
-added support to iterate and extract updater files
-
 preliminary code for full dat export
 
 //////////////////////////
@@ -28,11 +50,11 @@ exts: jp,ita history, jp mameinfo, sysinfo, jp/en command, lang(multi), snap(mul
 
 ///////////////////
 //Priority tasks
-4 ubuntu下还是需要手动设置mame.ini的权限
 4 检测到不同版的mame.exe，跳一个框，问是否F5
+4 font chooser
 4 add an option to disable joygui
 4 crash after refresh when nes is removed and then readded then refresh
-4 新GUI无视CRC，只要有名称相同的文件，就会应用对应的IPS 如果有对的CRC，文件名不对，则出错。
+3 新GUI无视CRC，只要有名称相同的文件，就会应用对应的IPS 如果有对的CRC，文件名不对，则出错。
 4 multi profile
 3 ini\horizont.ini     ini\vertical.ini   vector
 3 硬件信息
@@ -44,7 +66,6 @@ exts: jp,ita history, jp mameinfo, sysinfo, jp/en command, lang(multi), snap(mul
 3 better create folder
 3 LIN下的GUI能不能想办法支持汉化列表, command.dat... default command.dat path in lang, customizable *.dat location for official mame
 3 color chooser
-3 font chooser
 2 test with some illegal paths: /history.dat, ///
 2 other language mamep core
 2 audit output only incorrect, sample

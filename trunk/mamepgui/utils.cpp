@@ -94,7 +94,7 @@ QStringList Utils::split2Str(const QString &str, const QString &separator, bool 
 
 	if (pos > -1)
 		return (QStringList() << str.left(pos).trimmed()
-							  << str.right(str.size() - pos - 1).trimmed());
+							  << str.right(str.size() - pos - separator.size()).trimmed());
 
 	return QStringList() << str;
 }

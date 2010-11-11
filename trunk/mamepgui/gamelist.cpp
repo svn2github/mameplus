@@ -1526,10 +1526,6 @@ void Gamelist::init(bool toggleState, int initMethod)
 			if (pGuiSettings->contains(optName))
 				pMameOpt->globalvalue = pGuiSettings->value(optName).toString();
 		}
-
-		// we're ready to set version info
-//		if (!hasInitd)
-//			win->setVersion();
 	}
 
 	//localization must be loaded after init of options so that proper lang directory can be located
@@ -1585,7 +1581,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 		if (pGuiSettings->value("column_state").isValid())
 			column_state = pGuiSettings->value("column_state").toByteArray();
 		else
-			column_state = defSettings.value("column_state").toByteArray();
+			column_state = defaultGuiSettings.value("column_state").toByteArray();
 
 		win->tvGameList->header()->restoreState(column_state);
 		restoreFolderSelection();

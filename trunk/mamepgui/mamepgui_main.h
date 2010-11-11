@@ -53,6 +53,7 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+	void saveSettings();
 	bool isDockTabVisible(QString);
 	void setVersion();
 	void enableCtrls(bool);
@@ -140,10 +141,6 @@ public slots:
 	void logStatus(QString);
 	void logStatus(GameInfo *);
 	void init();
-	void initSettings();
-	void loadLayout();
-	void loadSettings();
-	void saveSettings();
 	void setDockOptions();
 	void setGuiStyle(QString = "");
 	void setBgTile();
@@ -159,6 +156,8 @@ private:
 	QString gui_style;
 	QDockWidget *dwHistory;
 
+	void loadGuiSettings();
+	void loadLayout();
 	bool validateMameBinary();
 	QString selectMameBinary();
 	void initHistory(int);
@@ -193,7 +192,7 @@ private:
 extern QString CFG_PREFIX;
 
 extern MainWindow *win;
-extern QSettings *pGuiSettings, defSettings;
+extern QSettings *pGuiSettings, defaultGuiSettings;
 extern QString currentAppDir;
 extern QString mame_binary;
 extern QString language;

@@ -33,7 +33,7 @@ QString CFG_PREFIX =
 
 MainWindow *win;
 QSettings *pGuiSettings;
-QSettings defSettings(":/res/mamepgui" INI_EXT, QSettings::IniFormat);
+QSettings defaultGuiSettings(":/res/mamepgui" INI_EXT, QSettings::IniFormat);
 QString currentAppDir;
 QString mame_binary;
 QString language;
@@ -456,8 +456,7 @@ void MainWindow::init()
 		return;
 	}
 
-	initSettings();
-	loadSettings();
+	loadGuiSettings();
 	
 	if (!validateMameBinary())
 	{
@@ -1017,11 +1016,10 @@ void MainWindow::showRestartDialog()
 		close();
 }
 
-void MainWindow::initSettings()
+void MainWindow::loadGuiSettings()
 {
     pGuiSettings->setFallbacksEnabled(false);
 
-	//remove invalid settings
 	validGuiSettings = (QStringList() 
 		<< "snapshot_directory"	//fixme: core
 		<< "flyer_directory"
@@ -1039,42 +1037,67 @@ void MainWindow::initSettings()
 		<< "icons_directory"
 		<< "background_directory"
 		<< "folder_directory"
-		<< "background_file"
+
+		//m1
 		<< "m1_directory"
 		<< "m1_language"
+		//ips
 		<< "ips_language"
 		<< "ips_relationship"
-		<< "gui_style"
-		<< "background_stretch"
+
+		//ui path
 		<< "mame_binary"
-		<< "option_geometry"
+
+		//ui mainwindow
+		<< "background_file"
+		<< "background_stretch"
+		<< "gui_style"
+
+		//ui gamelist
+		<< "zoom_icon"
+		<< "list_mode"
+		<< "local_game_list"
 		<< "sort_column"
 		<< "sort_reverse"
 		<< "default_game"
+
+		//ui folder
 		<< "default_folder"
 		<< "hide_folders"
 		<< "folder_flag"
-		<< "vertical_tabs"
+
+		//ui snapshot
 		<< "stretch_screenshot_larger"
 		<< "enforce_aspect"
-		<< "zoom_icon"
-		<< "local_game_list"
-		<< "list_mode"
-		<< "option_column_state"
+		<< "vertical_tabs"
+
 		<< "window_geometry"
 		<< "window_state"
 		<< "column_state"
+		<< "option_geometry"
+		<< "option_column_state"
 		<< "language");
 
+	//remove invalid settings
 	QStringList keys = pGuiSettings->allKeys();
 	foreach(QString key, keys)
 	{
+		//fixme: ignore mess for now
 		if (key.endsWith("_extra_software") || validGuiSettings.contains(key))
 			continue;
 
 		pGuiSettings->remove(key);
 	}
 
+	//assign settings to local variables
+	//fixme: move loadLayout and other similar methods
+	currentGame = pGuiSettings->value("default_game").toString();
+
+	//fixme: remove default by setting it programatically
+	if (pGuiSettings->value("option_column_state").isValid())
+		option_column_state = pGuiSettings->value("option_column_state").toByteArray();
+	else
+		option_column_state = defaultGuiSettings.value("option_column_state").toByteArray();
 }
 
 void MainWindow::loadLayout()
@@ -1131,16 +1154,6 @@ void MainWindow::loadLayout()
 	else
 		actionBgStretch->setChecked(true);
 	
-}
-
-void MainWindow::loadSettings()
-{
-	currentGame = pGuiSettings->value("default_game").toString();
-
-	if (defSettings.value("option_column_state").isValid())
-		option_column_state = defSettings.value("option_column_state").toByteArray();
-	else
-		option_column_state = pGuiSettings->value("option_column_state").toByteArray();
 }
 
 void MainWindow::saveSettings()

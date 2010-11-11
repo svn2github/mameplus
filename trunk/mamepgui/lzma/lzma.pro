@@ -4,6 +4,10 @@ DESTDIR = ../lib/$${OSDIR}
 TARGET = lzma
 TEMPLATE = lib
 
+macx {
+	DEFINES += _LZMA_UINT32_IS_ULONG
+}
+
 HEADERS += \
 	7zBuf.h \
 	7zCrc.h \

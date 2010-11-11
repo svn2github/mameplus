@@ -154,7 +154,7 @@ public:
 class OptInfo : public QObject
 {
 public:
-	QListWidget *lstCatView;
+	QListWidget *optCatView;
 	QTreeView *optView;
 	QStandardItemModel *optModel;
 
@@ -167,6 +167,7 @@ Q_OBJECT
 
 public:
 	OptionUtils(QObject *parent = 0);
+	//init option-related GUI
 	void init();
 	QVariant getField(const QModelIndex &, int);
 	const QString getLongName(QString);
@@ -180,7 +181,7 @@ public:
 	void saveIniFile(int , const QString &);
 
 public slots:
-	void preUpdateModel(QListWidgetItem *currItem = 0, int optType = -1, const QString &gameName = "", int method = 0);
+	void preUpdateModel(QListWidgetItem *currItem = 0, int optLevel = -1, QString gameName = "", int method = 0);
 	void updateHeaderSize(int, int, int);
 
 private:
@@ -190,10 +191,10 @@ private:
 
 	void loadIni(int, const QString &);
 	void loadTemplate();
-	QHash<QString, QString> parseIniFile(const QString &);
+	QHash<QString, QString> parseIni(QTextStream &in, bool isInitOptCatMap);
 	void addModelItemTitle(QStandardItemModel*, QString);
 	void addModelItem(QStandardItemModel*, QString);
-	void updateModel(QString, int);
+	void updateModel(const QString&, int);
 };
 
 extern OptionUtils *optUtils;

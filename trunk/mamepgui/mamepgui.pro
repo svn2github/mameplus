@@ -8,25 +8,17 @@ QT += xml
 INCLUDEPATH += quazip lzma include include/zlib include/SDL include/SDL/$${OSDIR}
 
 #LIBS
+TARGETDEPS += \
+	./lib/$${OSDIR}/libquazip.a \
+	./lib/$${OSDIR}/liblzma.a
+
 LIBS += -L./lib/$${OSDIR}
 LIBS += -lquazip -llzma
 
-build_static {
-  QTPLUGIN += qico qjpeg
-  DEFINES += USE_STATIC
-}
-
 build_sdl {
-  macx: LIBS += -framework Cocoa -framework IOKit -framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework OpenGL -framework ForceFeedback
-  LIBS += -lSDL
-  DEFINES += USE_SDL
-}
-
-win32: RC_FILE = mamepgui.rc
-
-macx {
-DEFINES += _LZMA_UINT32_IS_ULONG
-ICON = mamepgui.icns
+	macx: LIBS += -framework Cocoa -framework IOKit -framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework OpenGL -framework ForceFeedback
+	LIBS += -lSDL
+	DEFINES += USE_SDL
 }
 
 HEADERS += \
@@ -74,3 +66,9 @@ TRANSLATIONS = \
 	lang/mamepgui_ru_RU.ts
 
 RESOURCES = mamepgui_main.qrc
+
+win32: RC_FILE = mamepgui.rc
+
+macx {
+	ICON = mamepgui.icns
+}

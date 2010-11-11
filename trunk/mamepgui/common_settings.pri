@@ -3,18 +3,23 @@ macx:OSDIR       = macx
 unix:!macx:OSDIR = linux
 
 CONFIG(debug, debug|release){
-	OBJECTS_DIR       = obj/debug
+	OBJECTS_DIR = tmp/debug
 }else{
-	OBJECTS_DIR       = obj/release
-	DEFINES          *= QT_NO_DEBUG_OUTPUT
+	OBJECTS_DIR = tmp/release
+	CONFIG += build_static
+	CONFIG += build_sdl
+	DEFINES *= QT_NO_DEBUG_OUTPUT
 }
 
-MOC_DIR = moc
-RCC_DIR = rcc
-UI_DIR = ui
+build_static {
+	QTPLUGIN += qico qjpeg
+	DEFINES += USE_STATIC
+}
 
-CONFIG += build_static
-CONFIG += build_sdl
+MOC_DIR = tmp
+RCC_DIR = tmp
+UI_DIR = tmp
+
 macx {
 CONFIG += x86 ppc
 }
