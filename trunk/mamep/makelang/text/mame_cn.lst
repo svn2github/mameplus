@@ -1592,6 +1592,7 @@ lkageoo	影子传说 (旧版 第2套)	影子传说 (旧版 第2套)	Taito Corporation
 lkageb	影子传说 (盗版 第1套)	影子传说 (盗版 第1套)	bootleg
 lkageb2	影子传说 (盗版 第2套)	影子传说 (盗版 第2套)	bootleg
 lkageb3	影子传说 (盗版 第3套)	影子传说 (盗版 第3套)	bootleg
+bygone	往事	往事	Taito Corporation
 msisaac	钢铁神兵 2	钢铁神兵 2	Taito Corporation
 retofinv	侵略者回归	侵略者回归	Taito Corporation
 retofinv1	侵略者回归 (盗版 第1套)	侵略者回归 (盗版 第1套)	bootleg
@@ -4062,6 +4063,7 @@ sfz3ugd	少年街霸 3 Upper (GDL-0002)	少年街霸 3 Upper (GDL-0002)	Capcom
 gundmgd	机动战士高达: 联邦 对 吉翁 (GDL-0001)	机动战士高达: 联邦 对 吉翁 (GDL-0001)	Capcom
 gundmct	机动战士高达: 联邦 对 吉翁 (2001-02-08)	机动战士高达: 联邦 对 吉翁 (2001-02-08)	Banpresto
 dygolf	立体高尔夫 (版本 A) (GDS-0009A)	立体高尔夫 (版本 A) (GDS-0009A)	Sega
+zerogu2	零式枪手 2	零式枪手 2	Psikyo
 monkeyba	猴子球 (GDS-0008)	猴子球 (GDS-0008)	Sega
 cvsgd	卡普空 对 SNK 千禧格斗 2000 Pro (GDL-0004)	卡普空 对 SNK 千禧格斗 2000 Pro (GDL-0004)	Capcom / SNK
 wsbbgd	超级职棒大联盟 (GDS-0010)	超级职棒大联盟 (GDS-0010)	Sega
@@ -4154,6 +4156,7 @@ ftspeed	极速赛车	极速赛车	Sammy
 kov7sprt	新·三国战纪 - 七星转生	新·三国战纪 - 七星转生	Sammy / IGS
 vfurlong	赛马之胜利距离	赛马之胜利距离	Sammy
 ngbc	Neo-Geo 格斗竞技场	Neo-Geo 格斗竞技场	Sammy / SNK Playmore
+kofxi	拳皇 XI	拳皇 XI	Sammy / SNK Playmore
 fotns	新北斗神拳	新北斗神拳	Sega / Arc System Works
 xtrmhnt2	狂热打猎 2	狂热打猎 2	Sega
 hikaru	Hikaru Bios	Hikaru Bios	Sega
@@ -7153,6 +7156,7 @@ mjvegasa	麻雀维加斯 (日版, 未保护)	麻雀维加斯 (日版, 未保护)	Dynax
 cafetime	麻雀咖啡时间	麻雀咖啡时间	Dynax
 cafedoll	麻雀咖啡娃娃 (日版)	麻雀咖啡娃娃 (日版)	Dynax
 janptr96	纯真日语 '96 (日版)	纯真日语 '96 (日版)	Dynax
+janptrsp	纯真日语特别版 (日版)	纯真日语特别版 (日版)	Dynax
 sprtmtch	脑力激荡	脑力激荡	Dynax (Fabtek license)
 maya	消除牌 - 玛雅 (第1套)	消除牌 - 玛雅 (第1套)	Promat
 mayaa	消除牌 - 玛雅 (第2套)	消除牌 - 玛雅 (第2套)	Promat
@@ -7160,7 +7164,8 @@ inca	消除牌 - 印卡	消除牌 - 印卡	<unknown>
 blktouch	黑色接触 (韩国版)	黑色接触 (韩国版)	Yang Gi Co Ltd.
 mcnpshnt	麻雀校园狩猎 (日版)	麻雀校园狩猎 (日版)	Dynax
 7jigen	7 次元之妖精达 (日版)	7 次元之妖精达 (日版)	Dynax
-neruton	麻雀男女牌鲸团 (日版)	麻雀男女牌鲸团 (日版)	Dynax / Yukiyoshi Tokoro
+neruton	麻雀牌鲸团 (日版, Rev. B?)	麻雀牌鲸团 (日版, Rev. B?)	Dynax / Yukiyoshi Tokoro
+nerutona	麻雀牌鲸团 (日版, Rev. A?)	麻雀牌鲸团 (日版, Rev. A?)	Dynax / Yukiyoshi Tokoro
 mjcomv1	麻雀爆笑剧场 Vol.1 (日版)	麻雀爆笑剧场 Vol.1 (日版)	Dynax
 shpeng	海洋猎人	海洋猎人	WSAC Systems?
 tenkai	麻雀天开眼	麻雀天开眼	Dynax
@@ -7454,6 +7459,7 @@ ultennisj	终极网球 (v 1.4, 日版)	终极网球 (v 1.4, 日版)	Art & Magic (Banpresto l
 cheesech	干酪追逐	干酪追逐	Art & Magic
 stonebal	石头球 (4 Players)	石头球 (4 Players)	Art & Magic
 stonebal2	石头球 (2 Players)	石头球 (2 Players)	Art & Magic
+shtstar	流星	流星	Nova
 skeetsht	街头射击	街头射击	Dynamo
 toursol	纸牌锦标赛 (V1.06, 08/03/95)	纸牌锦标赛 (V1.06, 08/03/95)	Dynamo
 toursol1	纸牌锦标赛 (V1.04, 06/22/95)	纸牌锦标赛 (V1.04, 06/22/95)	Dynamo
@@ -7518,6 +7524,7 @@ lsrquiz2	激速问答 2 意大利 (v1.0)	激速问答 2 意大利 (v1.0)	CD Express
 mgprem11	魔法保险 (v1.1)	魔法保险 (v1.1)	CD Express
 lasstixx	激速 Strixx 2	激速 Strixx 2	CD Express
 mgnumber	数字魔法	数字魔法	CD Express
+odeontw2	Odeon Twister 2 (v202.19)	Odeon Twister 2 (v202.19)	CD Express
 alg_bios	American Laser Games BIOS	American Laser Games BIOS	American Laser Games
 maddoga	疯狗 v1C board 版本A	疯狗 v1C board 版本A	American Laser Games
 wsjr	谁杀了强尼洛克 v1.6	谁杀了强尼洛克 v1.6	American Laser Games
@@ -7959,6 +7966,7 @@ pitbossm	赌场大亨 Megastar (9244-00-01)	赌场大亨 Megastar (9244-00-01)	Merit
 pitbossma	赌场大亨 Megastar (9243-00-01)	赌场大亨 Megastar (9243-00-01)	Merit
 pbst30	赌场大亨 - 超级接触 30 (9234-10-01)	赌场大亨 - 超级接触 30 (9234-10-01)	Merit
 pbst30b	赌场大亨 - 超级接触 30 (9234-00-01)	赌场大亨 - 超级接触 30 (9234-00-01)	Merit
+megat2	赌场大亨 - 非常接触 II (9255-10-06 ROG, 加利福尼亚 版本)	赌场大亨 - 非常接触 II (9255-10-06 ROG, 加利福尼亚 版本)	Merit
 megat3	非常接触 III (9255-20-01 RON, 标准版)	非常接触 III (9255-20-01 RON, 标准版)	Merit
 megat3a	非常接触 III (9255-20-01 ROF, 标准版)	非常接触 III (9255-20-01 ROF, 标准版)	Merit
 megat3ca	非常接触 III (9255-20-06 RON, 加利福尼亚版)	非常接触 III (9255-20-06 RON, 加利福尼亚版)	Merit
@@ -8045,6 +8053,7 @@ royalcrdc	皇家纸牌 (奥地利版, 第4套)	皇家纸牌 (奥地利版, 第4套)	TAB Austria
 royalcrdd	皇家纸牌 (奥地利版, 第5套)	皇家纸牌 (奥地利版, 第5套)	TAB Austria
 royalcrde	皇家纸牌 (奥地利版, 第6套)	皇家纸牌 (奥地利版, 第6套)	TAB Austria
 royalcrdf	皇家纸牌 (斯洛伐克版, 加密)	皇家纸牌 (斯洛伐克版, 加密)	Evona Electronic
+royalcrdt	皇家纸牌 (TAB 初版)	皇家纸牌 (TAB 初版)	TAB Austria
 royalcrdp	皇家纸牌 v2.0 专业版	皇家纸牌 v2.0 专业版	Digital Dreams
 lluck3x3	幸运女士 (3x3 deal)	幸运女士 (3x3 deal)	TAB Austria
 lluck4x1	幸运女士 (4x1 aces)	幸运女士 (4x1 aces)	TAB Austria
@@ -8063,7 +8072,7 @@ jokercrd	鬼牌 (Ver.A267BC, 加密)	鬼牌 (Ver.A267BC, 加密)	Vesely Svet
 mongolnw	新热气球 (意大利版)	新热气球 (意大利版)	bootleg
 soccernw	新足球 (意大利版)	新足球 (意大利版)	bootleg
 saloon	酒吧 (法国版, 加密)	酒吧 (法国版, 加密)	<unknown>
-funquiz	世界趣味问答 (奥地利版)	世界趣味问答 (奥地利版)	Funworld
+funquiz	世界趣味问答 (奥地利版)	世界趣味问答 (奥地利版)	Funworld / 脰hlinger
 photoply	相片播放	相片播放	Funworld
 snookr10	司诺克 10 (Ver 1.11)	司诺克 10 (Ver 1.11)	Sandii'
 apple10	苹果 10 (Ver 1.21)	苹果 10 (Ver 1.21)	Sandii'
@@ -8998,7 +9007,8 @@ neptunp2	海王星的珍珠 2	海王星的珍珠 2	Unidesa?
 rgum	皇家胶水 (意大利)	皇家胶水 (意大利)	<unknown>
 poker72	扑克王 (v2.50)	扑克王 (v2.50)	Extrema Systems International Ltd.
 chkun	棒球王	棒球王	<unknown>
-megadpkr	魔法梭哈 (转换 kit)	魔法梭哈 (转换 kit)	Blitz System Inc.
+megadpkr	魔法梭哈 (转换, 第1套)	魔法梭哈 (转换, 第1套)	Blitz System Inc.
+megadpkrb	魔法梭哈 (转换, 第2套)	魔法梭哈 (转换, 第2套)	Blitz System Inc.
 hotstuff	奥运热 (TAS 5 Reel 系统)	奥运热 (TAS 5 Reel 系统)	Olympic Video Gaming
 savquest	寻求暴力	寻求暴力	Interactive Light
 jubileep	五使周年双分扑克	五使周年双分扑克	Jubilee
