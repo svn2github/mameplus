@@ -58,7 +58,7 @@ void OptionsUI::init(int optLevel, int lstRow)
 {
 	//init ctlrs
 	for (int i = OPTLEVEL_GUI; i < OPTLEVEL_LAST; i++)
-		optUtils->preUpdateModel(NULL, i);
+		optUtils->chainLoadOptions(NULL, i);
 
 	//select option tab
 	tabOptions->setCurrentIndex(optLevel);
@@ -1247,10 +1247,10 @@ void OptionUtils::init()
 	}
 
 	for (int i = OPTLEVEL_GUI; i < OPTLEVEL_LAST; i++)
-		connect(win->optionsUI->optCtrls[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(preUpdateModel(QListWidgetItem *)));
+		connect(win->optionsUI->optCtrls[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(chainLoadOptions(QListWidgetItem *)));
 
 	connect(win->optionsUI, SIGNAL(accepted()), &optDelegate, SLOT(setChangesAccepted()));
-	connect(win->optionsUI->tabOptions, SIGNAL(currentChanged(int)), this, SLOT(preUpdateModel()));
+	connect(win->optionsUI->tabOptions, SIGNAL(currentChanged(int)), this, SLOT(chainLoadOptions()));
 }
 
 QVariant OptionUtils::getField(const QModelIndex &index, int field)
@@ -1659,11 +1659,11 @@ void OptionUtils::loadDefault(QString text)
 
 	//init mameOpts with default values
 	foreach (QString key, iniSettings.keys())
-	{
-		MameOption *pMameOpt = new MameOption(0);	//fixme parent
+		{
+				MameOption *pMameOpt = new MameOption(0);	//fixme parent
 		pMameOpt->defvalue = iniSettings.value(key);
 		mameOpts[key] = pMameOpt;
-	}
+					}
 
 	//take the first value of mame's default inipath csv as our inipath
 	QStringList inipaths = mameOpts["inipath"]->defvalue.split(";");
@@ -1678,7 +1678,7 @@ void OptionUtils::loadDefault(QString text)
 	if (iniFile.size() == 0)
 		iniFile.remove();
 
-	//mkdir for individual game settings
+	// mkdir for individual game settings
 	QDir().mkpath(mameIniPath + "ini/source");
 
 	iniFile.setFileName(mameIniPath + "ini/puckman" INI_EXT);
@@ -1714,7 +1714,7 @@ void OptionUtils::loadDefault(QString text)
 
 	loadTemplate();
 
-	//append GUI MESS extra software paths to mameOpts
+	// append GUI MESS extra software paths to mameOpts
 	foreach (QString gameName, pMameDat->games.keys())
 	{
 		GameInfo *gameInfo = pMameDat->games[gameName];
@@ -1727,6 +1727,7 @@ void OptionUtils::loadDefault(QString text)
 			hasDevices = true;
 		}
 	}
+
 	//append GUI and MESS settings to optCatMap
 	QStringList optNames = mameOpts.keys();
 	qSort(optNames);
@@ -1745,8 +1746,8 @@ void OptionUtils::loadDefault(QString text)
 		}
 		else
 			optCatMap["01_GUI Paths_00_" + QString(QT_TR_NOOP("GUI paths"))] << optName;
-		}
 	}
+}
 
 // assign option type, defvalue, min, max, etc. from template
 void OptionUtils::loadTemplate()
@@ -1854,7 +1855,7 @@ void OptionUtils::loadIni(int optLevel, const QString &iniFileName)
 				break;
 
 			case OPTLEVEL_CLONEOF:
-				pMameOpt->currvalue = pMameOpt->cloneofvalue = pMameOpt->biosvalue;
+				pMameOpt->currvalue = pMameOpt->cloneofvalue= pMameOpt->biosvalue;
 				break;
 
 			case OPTLEVEL_CURR:
@@ -2114,7 +2115,7 @@ QHash<QString, QString> OptionUtils::parseIni(QTextStream &in, bool isInitOptCat
 		{
 			//line contains only # is ignored
 			if (line.size() > 2 && isInitOptCatMap)
-			{
+		{
 				QString category(line);
 				category.remove("#");
 				category.remove("OPTIONS");
@@ -2132,7 +2133,7 @@ QHash<QString, QString> OptionUtils::parseIni(QTextStream &in, bool isInitOptCat
 		}
 		// ignore <UNADORNED>
 		else if (!line.startsWith("<") && line.size() > 0)
-		{
+			{
 			QStringList strs = utils->split2Str(line, " ");
 
 			//add option name to optCatMap
@@ -2141,37 +2142,34 @@ QHash<QString, QString> OptionUtils::parseIni(QTextStream &in, bool isInitOptCat
 
 			//option has a value from ini
 			if (strs.size() > 1)
-			{
+				{
 				key = strs.first();
 				value = strs.last();
 
-				//remove quoted value if needed
-				if (value.startsWith('"') && value.endsWith('"'))
+					//remove quoted value if needed
+					if (value.startsWith('"') && value.endsWith('"'))
+					{
+						value.remove(0, 1);
+						value.chop(1);
+					}
+				}
+			//option has empty value
+				else
 				{
-					value.remove(0, 1);
-					value.chop(1);
+				key = strs.first();
+					value = "";
 				}
 			}
-			//option has empty value
-			else
-			{
-				key = strs.first();
-				value = "";
-			}
-		}
 
 		if (!key.isEmpty())
 			settings[key] = value;
-	}
+		}
 
 	return settings;
 }
 
-//core:update mameOpts by loading .ini files of different levels
-//gui:determine what to update in the option dialog
-//method 0 updates model, method 1 loads ini only
 //fixme: use signal to separate GUI and core logic
-void OptionUtils::preUpdateModel(QListWidgetItem *currrentOptCatItem, int optLevel, QString gameName, int method)
+void OptionUtils::chainLoadOptions(QListWidgetItem *currrentOptCatItem, int optLevel, QString gameName, int method)
 {
 	if (gameName.isEmpty())
 		gameName = currentGame;
@@ -2196,9 +2194,6 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currrentOptCatItem, int optLev
 		if (currrentOptCatItem != NULL)
 			optSubCat = currrentOptCatItem->text();
 	}
-
-	if (optSubCat.isEmpty())
-		return;
 
 	/* update mameOpts by loading .ini files of different levels */
 	GameInfo *gameInfo = pMameDat->games[gameName];
@@ -2551,4 +2546,3 @@ void OptionUtils::updateHeaderSize(int logicalIndex, int oldSize, int newSize)
 
 //	win->log(QString("header%3: %1 to %2").arg(optInfos[optLevel]->optView->header()->sectionSize(0)).arg(newSize).arg(logicalIndex));
 }
-

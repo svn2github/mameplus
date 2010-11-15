@@ -1513,7 +1513,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 		optUtils->loadDefault(pMameDat->defaultIni);
 
 		// load mame.ini overrides
-		optUtils->preUpdateModel(NULL, OPTLEVEL_GLOBAL, currentGame, 1);
+		optUtils->chainLoadOptions(NULL, OPTLEVEL_GLOBAL, currentGame, 1);
 
 		// load GUI path overrides
 		foreach (QString optName, mameOpts.keys())
@@ -1591,7 +1591,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 	win->tvGameList->setSortingEnabled(true);
 
 	//fixme: hack to update snapshot_directory for non-Windows build
-	optUtils->preUpdateModel(NULL, OPTLEVEL_GLOBAL, currentGame, 1);
+	optUtils->chainLoadOptions(NULL, OPTLEVEL_GLOBAL, currentGame, 1);
 
 	if (!hasInitd)
 	{
@@ -3385,7 +3385,7 @@ void Gamelist::runMame(int method, QStringList playArgs)
 		QStringList strOptions;
 
 		//update mameOpts
-		optUtils->preUpdateModel(NULL, OPTLEVEL_CURR, currentGame, 1);
+		optUtils->chainLoadOptions(NULL, OPTLEVEL_CURR, currentGame, 1);
 
 		QStringList optNames = mameOpts.keys();
 		optNames.sort();

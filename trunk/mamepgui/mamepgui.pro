@@ -67,7 +67,10 @@ TRANSLATIONS = \
 
 RESOURCES = mamepgui_main.qrc
 
-win32: RC_FILE = mamepgui.rc
+win32 {
+	RC_FILE = mamepgui.rc
+	QMAKE_LFLAGS_RELEASE += -static-libgcc
+}
 
 macx {
 	ICON = mamepgui.icns

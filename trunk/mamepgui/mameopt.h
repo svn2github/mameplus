@@ -181,7 +181,10 @@ public:
 	void saveIniFile(int , const QString &);
 
 public slots:
-	void preUpdateModel(QListWidgetItem *currItem = 0, int optLevel = -1, QString gameName = "", int method = 0);
+	//core:update mameOpts by loading .ini files of different levels
+	//gui:determine what to update in the option dialog
+	//method 0 updates model, method 1 loads ini only
+	void chainLoadOptions(QListWidgetItem *currItem = 0, int optLevel = -1, QString gameName = "", int method = 0);
 	void updateHeaderSize(int, int, int);
 
 private:
