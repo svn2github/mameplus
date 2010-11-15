@@ -167,7 +167,7 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 
 //FIXME
 //TODO: support display command glyph for OSD font (operating system font)
-//TODO: fix command glyph size error for BDF font
+//TODO: fix display command glyph for BDF font
 
 //mamep: allocate command glyph font
 void render_font::render_font_command_glyph()
@@ -219,6 +219,8 @@ render_font::render_font(render_manager &manager, const char *filename)
 	// if the filename is 'default' default to 'ui.bdf' for backwards compatibility
 	if (filename != NULL)
 	{
+//FIXME
+#if 0
 		int loaded = 0;
 		astring filename_local(ui_lang_info[lang_get_langcode()].name, PATH_SEPARATOR, filename);
 //		mame_printf_warning("%s\n", filename_local);
@@ -227,8 +229,11 @@ render_font::render_font(render_manager &manager, const char *filename)
 			loaded++;
 		else
 		{
+#endif
 			if (mame_stricmp(filename, "default") == 0)
 				filename = "ui.bdf";
+//FIXME
+#if 0
 				loaded++;
 		}
 
@@ -237,6 +242,7 @@ render_font::render_font(render_manager &manager, const char *filename)
 			//mamep: allocate command glyph font
 			render_font_command_glyph();
 		}
+#endif
 	}
 
 
