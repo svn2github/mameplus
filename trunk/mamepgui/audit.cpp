@@ -2,14 +2,16 @@
 #include "quazipfile.h"
 
 #include "audit.h"
-#include "mamepgui_types.h"
-#include "mamepgui_main.h"
+#include "prototype.h"
+#include "utils.h"
+#include "processmanager.h"
+#include "mainwindow.h"
 #include "mameopt.h"
 
 RomAuditor::RomAuditor(QObject *parent) :
-QThread(parent),
-hasAudited(false),
-method(AUDIT_ONLY)
+	QThread(parent),
+	hasAudited(false),
+	method(AUDIT_ONLY)
 {
 }
 
@@ -188,42 +190,42 @@ void RomAuditor::exportDat()
 
 void RomAuditor::audit(bool autoAudit, int _method, QString fileName)
 {
-	if (!isRunning())
+	if (isRunning())
+		return;
+
+	method = _method;
+	fixDatFileName = fileName;
+
+	//skip auditing and go export directly
+	if ((method == AUDIT_EXPORT_COMPLETE) || (method != AUDIT_ONLY && hasAudited))
 	{
-		method = _method;
-		fixDatFileName = fileName;
-
-		//skip auditing and go export directly
-		if (method == AUDIT_EXPORT_COMPLETE || (method != AUDIT_ONLY && hasAudited))
-		{
-			exportDat();
-			return;
-		}
-
-		gameList->disableCtrls();
-
-		//must clear pMameDat in the main thread
-		// fixme: currently only console games are cleared
-		foreach (QString gameName, pMameDat->games.keys())
-		{
-			GameInfo *gameInfo = pMameDat->games[gameName];
-			if (gameInfo->isExtRom && gameList->isAuditConsoleFolder(gameInfo->romof))
-			{
-				pMameDat->games.remove(gameName);
-				delete gameInfo;
-			}
-		}
-
-		isConsoleFolder = gameList->isConsoleFolder();
-		if (autoAudit)
-		{
-			gameList->autoAudit = false;
-			isConsoleFolder = false;
-		}
-
-		hasAudited = true;
-		start(LowPriority);
+		exportDat();
+		return;
 	}
+
+	gameList->disableCtrls();
+
+	//must clear pMameDat in the main thread
+	// fixme: currently only console games are cleared
+	foreach (QString gameName, pMameDat->games.keys())
+	{
+		GameInfo *gameInfo = pMameDat->games[gameName];
+		if (gameInfo->isExtRom && gameList->isAuditConsoleFolder(gameInfo->romof))
+		{
+			pMameDat->games.remove(gameName);
+			delete gameInfo;
+		}
+	}
+
+	isConsoleFolder = gameList->isConsoleFolder();
+	if (autoAudit)
+	{
+		gameList->autoAudit = false;
+		isConsoleFolder = false;
+	}
+
+	hasAudited = true;
+	start(LowPriority);
 }
 
 void RomAuditor::run()
@@ -467,6 +469,7 @@ void RomAuditor::auditConsole(QString consoleName)
 	QDir dir(_dirpath);
 	if (_dirpath.isEmpty() || !dir.exists())
 		return;
+
 	QString dirPath = utils->getPath(_dirpath);
 
 	GameInfo *gameInfo = pMameDat->games[consoleName];
@@ -533,7 +536,7 @@ void RomAuditor::auditConsole(QString consoleName)
 
 
 MameExeRomAuditor::MameExeRomAuditor(QObject *parent) :
-QObject(parent)
+	QObject(parent)
 {
 	dlgAudit.setModal(true);
 	dlgAudit.setWindowTitle(tr("Checking..."));

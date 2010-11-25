@@ -3,6 +3,7 @@ include(../common_settings.pri)
 DESTDIR = ../lib/$${OSDIR}
 TARGET = lzma
 TEMPLATE = lib
+CONFIG += staticlib
 
 macx {
 	DEFINES += _LZMA_UINT32_IS_ULONG

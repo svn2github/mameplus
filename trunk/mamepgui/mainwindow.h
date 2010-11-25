@@ -3,34 +3,8 @@
 
 #include <QtGui>
 
-#include "ui_mamepgui_main.h"
+#include "ui_mainwindow.h"
 #include "gamelist.h"
-
-class Screenshot : public QDockWidget
-{
-    Q_OBJECT
-
-public:
-    Screenshot(QString, QWidget *parent = 0);
-	void setPixmap(QPixmap pm);
-	void setPixmap(const QByteArray &, bool);
-    void updateScreenshotLabel(bool = false);
-
-protected:
-    void resizeEvent(QResizeEvent *);
-
-
-private slots:
-	void rotateImage();
-
-private:
-	QPushButton *screenshotLabel;
-	QPixmap originalPixmap;
-	QGridLayout *mainLayout;
-	QWidget *dockWidgetContents;
-	bool forceAspect;
-
-};
 
 class RomAuditor;
 class MameExeRomAuditor;
@@ -92,49 +66,49 @@ signals:
 	void logUpdated(QString);
 
 public slots:
-	void on_actionExitStop_activated();
-	void on_actionRefresh_activated();
-	void on_actionFixDatComplete_activated();
-	void on_actionFixDatAll_activated();
-	void on_actionFixDatIncomplete_activated();
-	void on_actionFixDatMissing_activated();
-	void on_actionEnglish_activated();
-	void on_actionChinese_PRC_activated();
-	void on_actionChinese_Taiwan_activated();
-	void on_actionJapanese_activated();
-	void on_actionSpanish_activated();
-	void on_actionFrench_activated();
-	void on_actionHungarian_activated();
-	void on_actionKorean_activated();
-	void on_actionBrazilian_activated();
-	void on_actionRussian_activated();
-	void on_actionLocalGameList_activated();
-	void on_actionReadme_activated();
-	void on_actionFAQ_activated();
-	void on_actionBoard_activated();
-	void on_actionAbout_activated();
+	void on_actionExitStop_triggered();
+	void on_actionRefresh_triggered();
+	void on_actionFixDatComplete_triggered();
+	void on_actionFixDatAll_triggered();
+	void on_actionFixDatIncomplete_triggered();
+	void on_actionFixDatMissing_triggered();
+	void on_actionEnglish_triggered();
+	void on_actionChinese_PRC_triggered();
+	void on_actionChinese_Taiwan_triggered();
+	void on_actionJapanese_triggered();
+	void on_actionSpanish_triggered();
+	void on_actionFrench_triggered();
+	void on_actionHungarian_triggered();
+	void on_actionKorean_triggered();
+	void on_actionBrazilian_triggered();
+	void on_actionRussian_triggered();
+	void on_actionLocalGameList_triggered();
+	void on_actionReadme_triggered();
+	void on_actionFAQ_triggered();
+	void on_actionBoard_triggered();
+	void on_actionAbout_triggered();
 
-	void on_actionPlay_activated();
-	void on_actionCommandLine_activated();
-	void on_actionSavestate_activated();
-	void on_actionPlayback_activated();
-	void on_actionRecord_activated();
-	void on_actionMNG_activated();
-	void on_actionAVI_activated();
-	void on_actionWave_activated();
-	void on_actionConfigIPS_activated();
-	void on_actionAudit_activated();
-	void on_actionAuditAll_activated();
-	void on_actionAuditAllSamples_activated();
-	void on_actionProperties_activated();
-	void on_actionSrcProperties_activated();
-	void on_actionDefaultOptions_activated();
-	void on_actionDirectories_activated();
+	void on_actionPlay_triggered();
+	void on_actionCommandLine_triggered();
+	void on_actionSavestate_triggered();
+	void on_actionPlayback_triggered();
+	void on_actionRecord_triggered();
+	void on_actionMNG_triggered();
+	void on_actionAVI_triggered();
+	void on_actionWave_triggered();
+	void on_actionConfigIPS_triggered();
+	void on_actionAudit_triggered();
+	void on_actionAuditAll_triggered();
+	void on_actionAuditAllSamples_triggered();
+	void on_actionProperties_triggered();
+	void on_actionSrcProperties_triggered();
+	void on_actionDefaultOptions_triggered();
+	void on_actionDirectories_triggered();
+	void on_actionColSortAscending_triggered();
+	void on_actionColSortDescending_triggered();
 
-	void on_actionColSortAscending_activated();
-	void on_actionColSortDescending_activated();
 	void toggleGameListColumn();
-	void on_trayIconActivated(QSystemTrayIcon::ActivationReason);
+	void trayIconActivated(QSystemTrayIcon::ActivationReason);
 
     void updateLog(QString);
 	void poplog(QString);

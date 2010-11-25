@@ -1,7 +1,9 @@
 #include <QtXml>
 
-#include "mamepgui_types.h"
-#include "mamepgui_main.h"
+#include "prototype.h"
+#include "mainwindow.h"
+#include "utils.h"
+#include "processmanager.h"
 
 /* global */
 MameDat *pMameDat = NULL;
@@ -9,54 +11,54 @@ MameDat *pFixDat = NULL;
 MameDat *pTempDat = NULL;
 
 BiosSet::BiosSet(QObject *parent) :
-QObject(parent)
+	QObject(parent)
 {
 	//	win->log("# BiosSet()");
 }
 
 RomInfo::RomInfo(QObject *parent) : 
-QObject(parent),
-available(false)
+	QObject(parent),
+	available(false)
 {
 }
 
 DiskInfo::DiskInfo(QObject *parent) : 
-QObject(parent),
-available(false)
+	QObject(parent),
+	available(false)
 {
 }
 
 ChipInfo::ChipInfo(QObject *parent) :
-QObject(parent)
+	QObject(parent)
 {
 }
 
 DisplayInfo::DisplayInfo(QObject *parent) :
-QObject(parent)
+	QObject(parent)
 {
 }
 
 ControlInfo::ControlInfo(QObject *parent) :
-QObject(parent)
+	QObject(parent)
 {
 }
 
 DeviceInfo::DeviceInfo(QObject *parent) : 
-QObject(parent),
-isConst(false)
+	QObject(parent),
+	isConst(false)
 {
 	//	win->log("# DeviceInfo()");
 }
 
 GameInfo::GameInfo(QObject *parent) :
-QObject(parent),
-isBios(false),
-//hack for displaying status
-cocktail(64),
-protection(64),
-isExtRom(false),
-isHorz(true),
-available(GAME_MISSING)
+	QObject(parent),
+	isBios(false),
+	//hack for displaying status
+	cocktail(64),
+	protection(64),
+	isExtRom(false),
+	isHorz(true),
+	available(GAME_MISSING)
 {
 	//	win->log("# GameInfo()");
 }
@@ -350,9 +352,9 @@ public:
 
 
 MameDat::MameDat(QObject *parent, int method) : 
-QObject(parent),
-loadProc(NULL),
-numTotalGames(-1)
+	QObject(parent),
+	loadProc(NULL),
+	numTotalGames(-1)
 {
 	if (method == 0)
 		return;

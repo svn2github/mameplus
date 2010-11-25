@@ -1,9 +1,11 @@
 #include "dialogs.h"
-#include "mamepgui_main.h"
+#include "utils.h"
+#include "processmanager.h"
+#include "mainwindow.h"
 #include "mameopt.h"
 
 PlayOptionsUI::PlayOptionsUI(QWidget *parent) :
-QDialog(parent)
+	QDialog(parent)
 {
 	setupUi(this);
 
@@ -276,8 +278,8 @@ void PlayOptionsUI::setWaveFile()
 	setFile(lineEditWave, tr("Sounds") + " (*" WAV_EXT ")");
 }
 
-DirsUI::DirsUI(QWidget *parent)
-:QDialog(parent)
+DirsUI::DirsUI(QWidget *parent) : 
+	QDialog(parent)
 {
 	setupUi(this);
 
@@ -355,13 +357,13 @@ void DirsUI::removeDirectory()
 }
 
 AboutUI::AboutUI(QWidget *parent):
-QDialog(parent)
+	QDialog(parent)
 {
 	setupUi(this);
 }
 
 CmdUI::CmdUI(QWidget *parent) :
-QDialog(parent)
+	QDialog(parent)
 {
 	setupUi(this);
 }

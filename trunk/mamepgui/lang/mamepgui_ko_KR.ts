@@ -161,7 +161,7 @@
     <message>
         <location filename="../gamelist.cpp" line="1444"/>
         <source>Refresh Rate</source>
-        <translation type="unfinished">화면 주사율/translation>
+        <translation type="unfinished">화면 주사율</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="1824"/>
@@ -590,7 +590,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepgui_main.ui" line="124"/>
         <source>&amp;Custom Filters</source>
-        <translation type="unfinished">&사용자 정의 필터(&amp;C)</translation>
+        <translation type="unfinished">사용자 정의 필터(&amp;C)</translation>
     </message>
     <message>
         <location filename="../mamepgui_main.ui" line="156"/>

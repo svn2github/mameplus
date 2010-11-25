@@ -3,8 +3,6 @@
 
 #include <QtGui>
 
-#include "utils.h"
-
 enum
 {
 	GAME_MISSING = 0,
@@ -36,7 +34,7 @@ enum
 	DOCK_TITLE,
 	DOCK_CPANEL,
 	DOCK_PCB,
-	
+
 	DOCK_HISTORY,
 	DOCK_MAMEINFO,
 	DOCK_DRIVERINFO,
@@ -179,6 +177,7 @@ public:
 class GameListDelegate : public QItemDelegate
 {
 Q_OBJECT
+
 public:
 	GameListDelegate(QObject * = 0);
 
@@ -188,7 +187,7 @@ public:
 
 class Gamelist : public QObject
 {
-	Q_OBJECT
+Q_OBJECT
 
 public:
 	QProcess *loadProc;

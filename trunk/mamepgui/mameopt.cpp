@@ -1,7 +1,9 @@
 #include <QtXml>
+
 #include "mameopt.h"
-#include "mamepgui_types.h"
-#include "mamepgui_main.h"
+#include "prototype.h"
+#include "utils.h"
+#include "mainwindow.h"
 #include "dialogs.h"
 
 #ifdef USE_SDL
@@ -39,7 +41,7 @@ enum
 };
 
 OptionsUI::OptionsUI(QWidget *parent) :
-QDialog(parent)
+	QDialog(parent)
 {
 	setupUi(this);
 
@@ -81,7 +83,7 @@ void OptionsUI::closeEvent(QCloseEvent *event)
 }
 
 CsvCfgUI::CsvCfgUI(QWidget *parent) :
-QDialog(parent)
+	QDialog(parent)
 {
 	setupUi(this);
 }
@@ -104,9 +106,7 @@ void CsvCfgUI::init(QString title, QMap<QString, bool> items)
 		const QString key = keys[i];
 //		const QString name = names[i];
 		const QString desc = QString(key).remove(0, 3);
-		QCheckBox *checkBox;
-
-		checkBox = groupBoxTitle->findChild<QCheckBox *>(desc);
+		QCheckBox *checkBox = groupBoxTitle->findChild<QCheckBox *>(desc);
 		if (checkBox == NULL)
 		{
 			checkBox = new QCheckBox(groupBoxTitle);
@@ -142,7 +142,7 @@ QString CsvCfgUI::getCSV()
 
 
 OptInfo::OptInfo(QListWidget *cat, QTreeView *opt, QObject *parent) :
-QObject(parent)
+	QObject(parent)
 {
 	optCatView = cat;
 	optView = opt;
@@ -150,14 +150,14 @@ QObject(parent)
 }
 
 ResetWidget::ResetWidget(/*QtProperty *property, */ QWidget *parent) :
-QWidget(parent),
-//m_property(property),
-_textLabel(new QLabel(this)),
-_iconLabel(new QLabel(this)),
-_btnReset(new QToolButton(this)),
-ctrlSpacing(-1),
-optType(0),
-sliderOffset(0)
+	QWidget(parent),
+	//m_property(property),
+	_textLabel(new QLabel(this)),
+	_iconLabel(new QLabel(this)),
+	_btnReset(new QToolButton(this)),
+	ctrlSpacing(-1),
+	optType(0),
+	sliderOffset(0)
 {
 	_textLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
 	_iconLabel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
@@ -946,7 +946,7 @@ void OptionDelegate::setCSV()
 	items.insert("c3_decrypted", driverStrings.contains("decrypted"));
 	items.insert("c4_console", driverStrings.contains("console"));
 
-	win->csvCfgUI->init("Driver Config", items);
+	win->csvCfgUI->init(tr("Driver Config"), items);
 	win->csvCfgUI->exec();
 }
 

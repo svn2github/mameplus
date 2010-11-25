@@ -1,7 +1,10 @@
 #include "gamelist.h"
-#include "mamepgui_main.h"
+#include "prototype.h"
+#include "utils.h"
+#include "processmanager.h"
+#include "mainwindow.h"
+#include "screenshot.h"
 #include "audit.h"
-#include "mamepgui_types.h"
 #include "mameopt.h"
 #include "ips.h"
 #include "m1.h"
@@ -118,9 +121,9 @@ enum {
 };
 
 UpdateSelectionThread::UpdateSelectionThread(QObject *parent) :
-QThread(parent),
-gameName(""),
-abort(false)
+	QThread(parent),
+	gameName(""),
+	abort(false)
 {
 	QFile icoFile;
 
@@ -899,7 +902,7 @@ TreeItem * TreeModel::setupModelData(TreeItem *parent, QString gameName)
 
 
 GameListTreeView::GameListTreeView(QWidget *parent) :
-QTreeView(parent)
+	QTreeView(parent)
 {
 }
 
@@ -945,7 +948,6 @@ QModelIndex GameListTreeView::moveCursor(QAbstractItemView::CursorAction cursorA
 //Mac: start game with Return/Enter
 void GameListTreeView::keyPressEvent(QKeyEvent *event)
 {
-
 	switch (event->key())
 	{
 #ifdef Q_WS_MAC
@@ -957,7 +959,7 @@ void GameListTreeView::keyPressEvent(QKeyEvent *event)
 		if (state() != EditingState || hasFocus())
 		{
 			if (currentIndex().isValid())
-				emit activated(currentIndex());
+				emit triggered(currentIndex());
 			event->ignore();
 		}
 		break;
@@ -1108,13 +1110,13 @@ void GameListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 }
 
 Gamelist::Gamelist(QObject *parent) :
-QObject(parent),
-loadProc(NULL),
-menuContext(NULL),
-headerMenu(NULL),
-autoAudit(false),
-hasInitd(false),
-defaultGameListDelegate(NULL)
+	QObject(parent),
+	loadProc(NULL),
+	menuContext(NULL),
+	headerMenu(NULL),
+	autoAudit(false),
+	hasInitd(false),
+	defaultGameListDelegate(NULL)
 {
 	//init joystick
 	connect(&timerJoy, SIGNAL(timeout()), this, SLOT(processJoyEvents()));
@@ -1834,7 +1836,7 @@ void Gamelist::initMenus()
 		colToggleActions.append(actionMenuItem2);
 		win->menuCustomizeFields->addAction(actionMenuItem2);
 
-		connect(actionMenuItem, SIGNAL(triggered()), win, SLOT(on_actionColSortAscending_activated()));
+		connect(actionMenuItem, SIGNAL(triggered()), win, SLOT(on_actionColSortAscending_triggered()));
 		connect(actionMenuItem2, SIGNAL(triggered()), win, SLOT(toggleGameListColumn()));
 	}
 
@@ -3450,7 +3452,7 @@ void Gamelist::runMameFinished(int exitCode, QProcess::ExitStatus exitStatus)
 
 
 GameListSortFilterProxyModel::GameListSortFilterProxyModel(QObject *parent) :
-QSortFilterProxyModel(parent)
+	QSortFilterProxyModel(parent)
 {
 }
 

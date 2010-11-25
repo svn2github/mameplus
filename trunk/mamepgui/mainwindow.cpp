@@ -2,10 +2,13 @@
 
 #include "7zVersion.h"
 
-#include "mamepgui_main.h"
-#include "audit.h"
-#include "mamepgui_types.h"
+#include "mainwindow.h"
+#include "prototype.h"
+#include "utils.h"
+#include "processmanager.h"
 #include "gamelist.h"
+#include "screenshot.h"
+#include "audit.h"
 #include "mameopt.h"
 #include "dialogs.h"
 #include "ips.h"
@@ -145,14 +148,15 @@ void MainWindow::logStatus(GameInfo *gameInfo)
 	statusBuffer.chop(1);
 	wStatus->setToolTip(statusBuffer);
 
-	
 //	setText(QString("E: %1").arg(status));
 }
 
 MainWindow::MainWindow(QWidget *parent) : 
-QMainWindow(parent),
-dwHistory(NULL)
+	QMainWindow(parent),
+	dwHistory(NULL)
 {
+	setupUi(this);
+
 	currentAppDir = QDir::currentPath();
 
 	dockCtrlNames = (QStringList() 
@@ -169,8 +173,6 @@ dwHistory(NULL)
 	   << QT_TR_NOOP("DriverInfo")
 	   << QT_TR_NOOP("Story")
 	   << QT_TR_NOOP("Command"));
-
-	setupUi(this);
 
 #ifdef Q_OS_MAC
 	actionDefaultOptions->setText(tr("Preferences..."));
@@ -578,7 +580,7 @@ void MainWindow::init()
 
 	// Tray Icon
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-			this, SLOT(on_trayIconActivated(QSystemTrayIcon::ActivationReason)));
+			this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
 //	gameList->restoreGameSelection();
 //	gameList->updateSelection();
@@ -673,7 +675,7 @@ void MainWindow::setVersion()
 		"</style>"
 		"</head>"
 		"<body>"
-		"<strong>M+GUI</strong> %1 &copy; 2008-2009 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
+		"<strong>M+GUI</strong> %1 &copy; 2008-2010 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
 		"A Qt implementation of <a href=\"http://mameui.classicgaming.gamespy.com\">MameUI</a><br>"
 		"Source code released under <a href=\"http://sam.zoy.org/wtfpl/COPYING\">WTFPL</a>"
 		"<hr>"
@@ -724,78 +726,78 @@ void MainWindow::enableCtrls(bool isEnabled)
 	btnClearSearch->setEnabled(isEnabled);
 }
 
-void MainWindow::on_actionPlay_activated()
+void MainWindow::on_actionPlay_triggered()
 {
 	gameList->runMame();
 }
 
-void MainWindow::on_actionCommandLine_activated()
+void MainWindow::on_actionCommandLine_triggered()
 {
 	gameList->runMame(RUNMAME_CMD);
 }
 
-void MainWindow::on_actionSavestate_activated()
+void MainWindow::on_actionSavestate_triggered()
 {
 	playOptionsUI->initSavestate();
 	playOptionsUI->exec();
 }
-void MainWindow::on_actionPlayback_activated()
+void MainWindow::on_actionPlayback_triggered()
 {
 	playOptionsUI->initPlayback();
 	playOptionsUI->exec();
 }
 
-void MainWindow::on_actionRecord_activated()
+void MainWindow::on_actionRecord_triggered()
 {
 	playOptionsUI->initRecord();
 	playOptionsUI->exec();
 }
 
-void MainWindow::on_actionMNG_activated()
+void MainWindow::on_actionMNG_triggered()
 {
 	playOptionsUI->initMNG();
 	playOptionsUI->exec();
 }
 
-void MainWindow::on_actionAVI_activated()
+void MainWindow::on_actionAVI_triggered()
 {
 	playOptionsUI->initAVI();
 	playOptionsUI->exec();
 }
 
-void MainWindow::on_actionWave_activated()
+void MainWindow::on_actionWave_triggered()
 {
 	playOptionsUI->initWave();
 	playOptionsUI->exec();
 }
 
-void MainWindow::on_actionConfigIPS_activated()
+void MainWindow::on_actionConfigIPS_triggered()
 {
 	ipsUI->updateList();
 	ipsUI->exec();
 }
 
-void MainWindow::on_actionRefresh_activated()
+void MainWindow::on_actionRefresh_triggered()
 {
 	romAuditor->audit();
 }
 
-void MainWindow::on_actionFixDatComplete_activated()
+void MainWindow::on_actionFixDatComplete_triggered()
 {
 	exportFixDat(AUDIT_EXPORT_COMPLETE);
 }
 
-void MainWindow::on_actionFixDatAll_activated()
+void MainWindow::on_actionFixDatAll_triggered()
 {
 	exportFixDat(AUDIT_EXPORT_ALL);
 }
 
-void MainWindow::on_actionFixDatIncomplete_activated()
+void MainWindow::on_actionFixDatIncomplete_triggered()
 {
 	exportFixDat(AUDIT_EXPORT_INCOMPLETE);
 }
 
-void MainWindow::on_actionFixDatMissing_activated()
+void MainWindow::on_actionFixDatMissing_triggered()
 {
 	exportFixDat(AUDIT_EXPORT_MISSING);
 }
@@ -816,22 +818,22 @@ void MainWindow::exportFixDat(int method)
 		romAuditor->audit(false, method, fileName);
 }
 
-void MainWindow::on_actionAudit_activated()
+void MainWindow::on_actionAudit_triggered()
 {
 	mameAuditor->audit(VERIFY_CURRENT_ROMS);
 }
 
-void MainWindow::on_actionAuditAll_activated()
+void MainWindow::on_actionAuditAll_triggered()
 {
 	mameAuditor->audit(VERIFY_ALL_ROMS);
 }
 
-void MainWindow::on_actionAuditAllSamples_activated()
+void MainWindow::on_actionAuditAllSamples_triggered()
 {
 	mameAuditor->audit(VERIFY_ALL_SAMPLES);
 }
 
-void MainWindow::on_actionSrcProperties_activated()
+void MainWindow::on_actionSrcProperties_triggered()
 {
 	if (!pMameDat->games.contains(currentGame))
 		return;
@@ -840,7 +842,7 @@ void MainWindow::on_actionSrcProperties_activated()
 	optionsUI->exec();
 }
 
-void MainWindow::on_actionProperties_activated()
+void MainWindow::on_actionProperties_triggered()
 {
 	if (!pMameDat->games.contains(currentGame))
 		return;
@@ -849,7 +851,7 @@ void MainWindow::on_actionProperties_activated()
 	optionsUI->exec();	
 }
 
-void MainWindow::on_actionDefaultOptions_activated()
+void MainWindow::on_actionDefaultOptions_triggered()
 {
 	if (!pMameDat->games.contains(currentGame))
 		return;
@@ -858,7 +860,7 @@ void MainWindow::on_actionDefaultOptions_activated()
 	optionsUI->exec();
 }
 
-void MainWindow::on_actionDirectories_activated()
+void MainWindow::on_actionDirectories_triggered()
 {
 	if (!pMameDat->games.contains(currentGame))
 		return;
@@ -867,17 +869,17 @@ void MainWindow::on_actionDirectories_activated()
 	optionsUI->exec();
 }
 
-void MainWindow::on_actionExitStop_activated()
+void MainWindow::on_actionExitStop_triggered()
 {
 	close();
 }
 
-void MainWindow::on_actionReadme_activated()
+void MainWindow::on_actionReadme_triggered()
 {
 	QDesktopServices::openUrl(QUrl("http://www.mameworld.info/ubbthreads/showflat.php?Cat=&Number=158710&view=collapsed"));
 }
 
-void MainWindow::on_actionFAQ_activated()
+void MainWindow::on_actionFAQ_triggered()
 {
 	if (language.startsWith("zh_"))
 		QDesktopServices::openUrl(QUrl("http://bbs.wisestudio.org/viewthread.php?tid=504"));
@@ -885,7 +887,7 @@ void MainWindow::on_actionFAQ_activated()
 		QDesktopServices::openUrl(QUrl("http://www.mameworld.info/ubbthreads/showflat.php?Cat=&Number=164054&view=collapsed"));
 }
 
-void MainWindow::on_actionBoard_activated()
+void MainWindow::on_actionBoard_triggered()
 {
 	if (language.startsWith("zh_"))
 		QDesktopServices::openUrl(QUrl("http://bbs.wisestudio.org/forum-16-1.html"));
@@ -893,7 +895,7 @@ void MainWindow::on_actionBoard_activated()
 		QDesktopServices::openUrl(QUrl("http://www.mameworld.info/ubbthreads/postlist.php?Cat=&Board=mameplus&view=collapsed"));
 }
 
-void MainWindow::on_actionAbout_activated()
+void MainWindow::on_actionAbout_triggered()
 {
 	aboutUI->exec();
 }
@@ -911,7 +913,7 @@ void MainWindow::toggleGameListColumn()
 		tvGameList->header()->setSectionHidden (col, true);
 }
 
-void MainWindow::on_actionColSortAscending_activated()
+void MainWindow::on_actionColSortAscending_triggered()
 {
 	int col = colSortActionGroup->actions().indexOf((QAction *)sender());
 
@@ -921,77 +923,77 @@ void MainWindow::on_actionColSortAscending_activated()
 	tvGameList->sortByColumn(col, Qt::AscendingOrder);
 }
 
-void MainWindow::on_actionColSortDescending_activated()
+void MainWindow::on_actionColSortDescending_triggered()
 {
 	tvGameList->sortByColumn(tvGameList->header()->sortIndicatorSection(), Qt::DescendingOrder);
 }
 
-void MainWindow::on_actionEnglish_activated()
+void MainWindow::on_actionEnglish_triggered()
 {
 	language = "en_US";
 	showRestartDialog();
 }
 
-void MainWindow::on_actionChinese_PRC_activated()
+void MainWindow::on_actionChinese_PRC_triggered()
 {
 	language = "zh_CN";
 	showRestartDialog();
 }
 
-void MainWindow::on_actionChinese_Taiwan_activated()
+void MainWindow::on_actionChinese_Taiwan_triggered()
 {
 	language = "zh_TW";
 	showRestartDialog();
 }
 
-void MainWindow::on_actionJapanese_activated()
+void MainWindow::on_actionJapanese_triggered()
 {
 	language = "ja_JP";
 	showRestartDialog();
 }
 
-void MainWindow::on_actionSpanish_activated()
+void MainWindow::on_actionSpanish_triggered()
 {
 	language = "es_ES";
 	showRestartDialog();
 }
 
-void MainWindow::on_actionFrench_activated()
+void MainWindow::on_actionFrench_triggered()
 {
 	language = "fr_FR";
 	showRestartDialog();
 }
 
-void MainWindow::on_actionHungarian_activated()
+void MainWindow::on_actionHungarian_triggered()
 {
 	language = "hu_HU";
 	showRestartDialog();
 }
 
-void MainWindow::on_actionKorean_activated()
+void MainWindow::on_actionKorean_triggered()
 {
 	language = "ko_KR";
 	showRestartDialog();
 }
 
-void MainWindow::on_actionBrazilian_activated()
+void MainWindow::on_actionBrazilian_triggered()
 {
 	language = "pt_BR";
 	showRestartDialog();
 }
 
-void MainWindow::on_actionRussian_activated()
+void MainWindow::on_actionRussian_triggered()
 {
 	language = "ru_RU";
 	showRestartDialog();
 }
 
-void MainWindow::on_actionLocalGameList_activated()
+void MainWindow::on_actionLocalGameList_triggered()
 {
 	local_game_list = actionLocalGameList->isChecked();
 }
 
-void MainWindow::on_trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
 	switch (reason)
 	{
@@ -1153,7 +1155,6 @@ void MainWindow::loadLayout()
 		actionBgTile->setChecked(true);
 	else
 		actionBgStretch->setChecked(true);
-	
 }
 
 void MainWindow::saveSettings()
@@ -1386,9 +1387,6 @@ void MainWindow::setBgPixmap(QString fileName)
 	background_file = fileName;
 
 	QString _dirpath = utils->getPath(pGuiSettings->value("background_directory", "bkground").toString());
-	QDir dir(_dirpath);
-	QString dirpath = utils->getPath(_dirpath);
-
 	QImage bkgroundImg(_dirpath + fileName);
 
 	// setup mainwindow background
@@ -1527,114 +1525,6 @@ bool MainWindow::isDockTabVisible(QString objName)
 	return false;
 }
 
-Screenshot::Screenshot(QString title, QWidget *parent)
-: QDockWidget(parent),
-forceAspect(false)
-{
-	setObjectName("dockWidget_" + title);
-	setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures);
-	dockWidgetContents = new QWidget(this);
-	dockWidgetContents->setObjectName("dockWidgetContents_" + title);
-	mainLayout = new QGridLayout(dockWidgetContents);
-	mainLayout->setObjectName("mainLayout_" + title);
-	mainLayout->setContentsMargins(0, 0, 0, 0);
-
-	screenshotLabel = new QPushButton(dockWidgetContents);
-	screenshotLabel->setObjectName("label_" + title);
-	screenshotLabel->setCursor(QCursor(Qt::PointingHandCursor));
-	screenshotLabel->setFlat(true);
-
-	//so that we can shrink image
-	screenshotLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-	
-	mainLayout->addWidget(screenshotLabel);
-
-	setWidget(dockWidgetContents);
-	setWindowTitle(MainWindow::tr(qPrintable(title)));
-
-	connect(screenshotLabel, SIGNAL(clicked()), this, SLOT(rotateImage()));
-}
-
-void Screenshot::resizeEvent(QResizeEvent * /* event */)
-{
-    QSize scaledSize = originalPixmap.size();
-	scaledSize.scale(screenshotLabel->size(), Qt::KeepAspectRatio);
-
-	updateScreenshotLabel();
-}
-
-void Screenshot::setPixmap(QPixmap pm)
-{
-	originalPixmap = pm;
-	forceAspect = false;
-	updateScreenshotLabel();
-}
-
-void Screenshot::setPixmap(const QByteArray &pmdata, bool _forceAspect)
-{
-	QPixmap pm;
-	pm.loadFromData(pmdata);
-	originalPixmap = pm;
-
-	forceAspect = _forceAspect;
-	updateScreenshotLabel();
-}
-
-//click screenshot area to rotate dockwidgets
-void Screenshot::rotateImage()
-{
-	QString objName = ((QWidget* )sender())->objectName();
-	objName.remove(0, 6);	//remove "label_"
-
-	//there's no API in Qt to access docked widget tabbar
-	QList<QTabBar *> tabs = win->findChildren<QTabBar *>();
-	foreach (QTabBar *tab, tabs)
-	{
-		bool isDock = false;
-
-		// if the dock widget contains any of screenshot/history widgets
-		for (int i = 0; i < win->dockCtrlNames.size(); i++)
-		{
-			if (MainWindow::tr(qPrintable(win->dockCtrlNames[i])) == tab->tabText(0))
-			{
-				isDock = true;
-				break;
-			}
-		}
-
-		// select the next tab
-		if (isDock && MainWindow::tr(qPrintable(objName)) == tab->tabText(tab->currentIndex()))
-		{
-			int i = tab->currentIndex();
-			if (++i > tab->count() - 1)
-				i = 0;
-			tab->setCurrentIndex(i);
-			break;
-		}
-	}
-}
-
-void Screenshot::updateScreenshotLabel(bool isLoading)
-{
-    QSize scaledSize = utils->getScaledSize(originalPixmap.size(), screenshotLabel->size(), forceAspect);
-
-	screenshotLabel->setIconSize(scaledSize);
-	QPixmap pm = originalPixmap.scaled(scaledSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-
-	if (isLoading)
-	{
-		QPainter p;
-		p.begin(&pm);
-		p.setPen(Qt::black);
-		p.drawText(5, -3, pm.width(), pm.height(), Qt::AlignBottom, tr("Loading..."));
-		p.setPen(Qt::white);
-		p.drawText(4, -4, pm.width(), pm.height(), Qt::AlignBottom, tr("Loading..."));
-		p.end();
-	}
-	
-	screenshotLabel->setIcon(pm);
-}
-
 int main(int argc, char *argv[])
 {
 	for (int i = 1; i < argc; i++)
@@ -1672,4 +1562,3 @@ int main(int argc, char *argv[])
 
 	return myApp.exec();
 }
-

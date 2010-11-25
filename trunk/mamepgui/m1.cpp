@@ -1,11 +1,12 @@
 #include "m1ui.h"
 #include "m1.h"
-#include "mamepgui_types.h"
-#include "mamepgui_main.h"
+#include "prototype.h"
+#include "utils.h"
+#include "mainwindow.h"
 #include "mameopt.h"
 
 M1UI::M1UI(QWidget *parent) :
-QDockWidget(parent)
+	QDockWidget(parent)
 {
 	setupUi(this);
 	setObjectName("M1");
@@ -51,10 +52,10 @@ void M1UI::init()
 }
 
 M1Core::M1Core(QObject *parent) :
-QObject(parent),
-max_games(0),
-isHex(false),
-available(false)
+	QObject(parent),
+	max_games(0),
+	isHex(false),
+	available(false)
 {
 }
 
@@ -293,9 +294,9 @@ int M1Core::m1ui_message(void *pthis, int message, char *txt, int iparm)
 }
 
 M1Thread::M1Thread(QObject *parent) :
-QThread(parent),
-gameNum(-1),
-cmdNum(0)
+	QThread(parent),
+	gameNum(-1),
+	cmdNum(0)
 {
 }
 

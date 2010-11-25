@@ -22,29 +22,33 @@ build_sdl {
 }
 
 HEADERS += \
-	mamepgui_types.h \
-	mamepgui_main.h \
+	prototype.h \
+	mainwindow.h \
+	screenshot.h\
 	dialogs.h \
 	audit.h \
 	gamelist.h \
 	mameopt.h \
 	utils.h \
+	processmanager.h\
 	ips.h \
 	m1.h \
 
 SOURCES += \
-	mamepgui_types.cpp \
-	mamepgui_main.cpp \
+	prototype.cpp \
+	mainwindow.cpp \
+	screenshot.cpp\
 	dialogs.cpp \
 	audit.cpp \
 	gamelist.cpp \
 	mameopt.cpp \
 	utils.cpp \
+	processmanager.cpp\
 	ips.cpp \
 	m1.cpp \
 
 FORMS += \
-	mamepgui_main.ui \
+	mainwindow.ui \
 	playoptions.ui \
 	options.ui \
 	csvcfg.ui \
@@ -65,7 +69,7 @@ TRANSLATIONS = \
 	lang/mamepgui_pt_BR.ts \
 	lang/mamepgui_ru_RU.ts
 
-RESOURCES = mamepgui_main.qrc
+RESOURCES = mamepgui.qrc
 
 win32 {
 	RC_FILE = mamepgui.rc

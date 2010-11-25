@@ -3,6 +3,7 @@ include(../common_settings.pri)
 DESTDIR = ../lib/$${OSDIR}
 TARGET = quazip
 TEMPLATE = lib
+CONFIG += staticlib
 
 INCLUDEPATH += ../include/zlib
 

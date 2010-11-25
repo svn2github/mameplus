@@ -53,6 +53,7 @@ private:
 class MameExeRomAuditor : public QObject
 {
 Q_OBJECT
+
 public:
 	QProcess *loadProc;
 

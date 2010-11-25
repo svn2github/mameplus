@@ -1,7 +1,8 @@
 #include "ips.h"
 
-#include "mamepgui_types.h"
-#include "mamepgui_main.h"
+#include "prototype.h"
+#include "utils.h"
+#include "mainwindow.h"
 #include "mameopt.h"
 
 IpsUI::IpsUI(QWidget *parent)

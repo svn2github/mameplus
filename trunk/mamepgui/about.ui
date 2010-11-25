@@ -61,8 +61,6 @@ border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 
     </widget>
    </item>
   </layout>
-  <zorder>buttonBox</zorder>
-  <zorder></zorder>
  </widget>
  <resources>
   <include location="mamepgui_main.qrc"/>
