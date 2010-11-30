@@ -140,7 +140,7 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 			gl.bmwidth = (int)(glyph_ch.bmwidth * scale + 0.5f);
 			gl.bmheight = (int)(glyph_ch.bmheight * scale + 0.5f);
 
-			gl.bitmap = global_alloc(bitmap_t(gl.bmwidth, gl.bmheight, BITMAP_FORMAT_ARGB32));
+			gl.bitmap = auto_alloc(&m_manager.machine(), bitmap_t(gl.bmwidth, gl.bmheight, BITMAP_FORMAT_ARGB32));
 			rectangle clip;
 			clip.min_x = clip.min_y = 0;
 			clip.max_x = glyph_ch.bitmap->width - 1;
@@ -217,23 +217,21 @@ render_font::render_font(render_manager &manager, const char *filename)
 	}
 
 	// if the filename is 'default' default to 'ui.bdf' for backwards compatibility
+	if (filename != NULL && mame_stricmp(filename, "default") == 0)
+			filename = "ui.bdf";
+
+	// attempt to load the cached version of the font first
 	if (filename != NULL)
 	{
-//FIXME
-#if 0
 		int loaded = 0;
 		astring filename_local(ui_lang_info[lang_get_langcode()].name, PATH_SEPARATOR, filename);
 //		mame_printf_warning("%s\n", filename_local);
 
-	 	if (filename_local.len() > 0 && load_cached_bdf(filename_local) == 0)
+	 	if (filename_local.len() > 0 && load_cached_bdf(filename_local))
 			loaded++;
 		else
 		{
-#endif
-			if (mame_stricmp(filename, "default") == 0)
-				filename = "ui.bdf";
-//FIXME
-#if 0
+			if (load_cached_bdf(filename))
 				loaded++;
 		}
 
@@ -241,14 +239,9 @@ render_font::render_font(render_manager &manager, const char *filename)
 		{
 			//mamep: allocate command glyph font
 			render_font_command_glyph();
+			return;
 		}
-#endif
 	}
-
-
-	// attempt to load the cached version of the font first
-	if (filename != NULL && load_cached_bdf(filename))
-		return;
 
 	// load the raw data instead
 	mame_file *ramfile;

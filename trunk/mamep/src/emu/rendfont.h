@@ -120,6 +120,7 @@ private:
 	const char *		m_rawdata;			// pointer to the raw data for the font
 	UINT64				m_rawsize;			// size of the raw font data
 	osd_font			m_osdfont;			// handle to the OSD font
+	//FIXME
 	//mamep: for command glyph
 	render_font *			cmd;
 

@@ -64,7 +64,6 @@ void ui_mess_main_menu_populate(running_machine *machine, ui_menu *menu)
 	/* add tape control menu */
 	if (machine->m_devicelist.first(CASSETTE))
 		ui_menu_item_append(menu, _("Tape Control"), NULL, 0, (void*)ui_mess_menu_tape_control);
-
 #if 0
 	/* add bitbanger control menu */
 	if (machine->m_devicelist.first(BITBANGER))

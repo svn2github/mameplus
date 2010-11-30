@@ -83,7 +83,7 @@ INLINE const bitbanger_config *get_config(running_device *device)
     native_output - outputs data to a file
 -------------------------------------------------*/
 
-void native_output(running_device *bitbanger, UINT8 data)
+static void native_output(running_device *bitbanger, UINT8 data)
 {
 	device_image_interface *image = dynamic_cast<device_image_interface *>(bitbanger);
 	if (image->exists())
@@ -97,7 +97,7 @@ void native_output(running_device *bitbanger, UINT8 data)
     native_input - inputs data from a file
 -------------------------------------------------*/
 
-UINT32 native_input(running_device *bitbanger, void *buffer, UINT32 length)
+static UINT32 native_input(running_device *bitbanger, void *buffer, UINT32 length)
 {
 	device_image_interface *image = dynamic_cast<device_image_interface *>(bitbanger);
 	if (image->exists())
@@ -173,11 +173,11 @@ const char *bitbanger_tune_string(running_device *device)
 /*-------------------------------------------------
     bitbanger_tune_value
 -------------------------------------------------*/
-float bitbanger_tune_value(running_device *device)
+static float bitbanger_tune_value(running_device *device)
 {
 	bitbanger_token *bi = get_token(device);
-   float tunes[] = {0.97, 0.9825, 0.985, 0.9875, 0.99, 0.9925, 0.995, 0.9975, 1.0,
-                  1.0025, 1.005, 1.0075, 1.01, 1.0125, 1.015, 1.0175, 1.02};
+   float tunes[] = {0.97f, 0.9825f, 0.985f, 0.9875f, 0.99f, 0.9925f, 0.995f, 0.9975f, 1.0f,
+                  1.0025f, 1.005f, 1.0075f, 1.01f, 1.0125f, 1.015f, 1.0175f, 1.02f};
 
    return(tunes[bi->tune]);
 }
@@ -187,11 +187,11 @@ float bitbanger_tune_value(running_device *device)
     bitbanger_baud_value
 -------------------------------------------------*/
 
-UINT32 bitbanger_baud_value(running_device *device)
+static UINT32 bitbanger_baud_value(running_device *device)
 {
 	bitbanger_token *bi = get_token(device);
-   float bauds[] = { 150.0, 300.0, 600.0, 1200.0, 2400.0, 4800.0, 9600.0,
-            14400.0, 28800.0, 38400.0, 57600.0, 115200.0};
+   float bauds[] = { 150.0f, 300.0f, 600.0f, 1200.0f, 2400.0f, 4800.0f, 9600.0f,
+            14400.0f, 28800.0f, 38400.0f, 57600.0f, 115200.0f};
    float result = bitbanger_tune_value(device) * bauds[bi->baud];
    return (UINT32)result;
 }
@@ -454,7 +454,7 @@ void bitbanger_output(running_device *device, int value)
 
       one_point_five_baud = attotime_add(bi->current_baud, attotime_div(bi->current_baud,2));
       timer_adjust_periodic(bi->bitbanger_output_timer, one_point_five_baud, 0, bi->current_baud);
-    }
+   }
 
    //fprintf(stderr,"%s, %d\n", attotime_string(timer_get_time(device->machine),9), value);
    bi->output_value = value;

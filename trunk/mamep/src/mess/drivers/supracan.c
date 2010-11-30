@@ -326,7 +326,7 @@ static void supracan_tilemap_get_info_roz(running_machine* machine, int layer, t
         case 0:
 			// hack: case for startup logo
 			// this isn't understood properly, it's rendering a single 64x64 tile, which for convenience we've rearranged and decoded as 8x8 for the tilemaps
-           {
+			{
 				int tile = 0x880 + ((count & 7)*2);
 			//	tile += (count & 0x070) >> 2;
 
@@ -642,7 +642,7 @@ static void supracan_suprnova_draw_roz(running_machine* machine, bitmap_t* bitma
 	int ex;
 	int ey;
 	UINT16 *dest;
-	UINT8* destflags;
+//	UINT8* destflags;
 //  UINT8 *pri;
 	//const UINT16 *src;
 	//const UINT8 *maskptr;
@@ -713,7 +713,7 @@ static void supracan_suprnova_draw_roz(running_machine* machine, bitmap_t* bitma
 				cy += incxy;
 				x++;
 				dest++;
-				destflags++;
+//				destflags++;
 //              pri++;
 			}
 
