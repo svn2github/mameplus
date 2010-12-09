@@ -41,14 +41,12 @@
 #define OPTION_READCONFIG			"readconfig"
 #define OPTION_WRITECONFIG			"writeconfig"
 #ifdef DRIVER_SWITCH
-#define OPTION_DRIVER_CONFIG		"driver_config"
+#define OPTION_DRIVER_CONFIG			"driver_config"
 #endif /* DRIVER_SWITCH */
 
 /* core search path options */
 #define OPTION_ROMPATH				"rompath"
-#ifdef MAMEMESS
 #define OPTION_HASHPATH				"hashpath"
-#endif
 #define OPTION_SAMPLEPATH			"samplepath"
 #define OPTION_ARTPATH				"artpath"
 #define OPTION_CTRLRPATH			"ctrlrpath"

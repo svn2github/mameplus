@@ -140,6 +140,7 @@ ifeq ($(TARGETOS),freebsd)
 BASE_TARGETOS = unix
 SYNC_IMPLEMENTATION = tc
 DEFS += -DNO_AFFINITY_NP
+LIBS += -lutil
 # /usr/local/include is not considered a system include directory
 # on FreeBSD. GL.h resides there and throws warnings
 CCOMFLAGS += -isystem /usr/local/include
@@ -151,6 +152,13 @@ endif
 ifeq ($(TARGETOS),openbsd)
 BASE_TARGETOS = unix
 SYNC_IMPLEMENTATION = ntc
+LIBS += -lutil
+endif
+
+ifeq ($(TARGETOS),netbsd)
+BASE_TARGETOS = unix
+SYNC_IMPLEMENTATION = ntc
+LIBS += -lutil
 endif
 
 ifeq ($(TARGETOS),solaris)
@@ -257,6 +265,8 @@ OSDCOREOBJS = \
 	$(SDLOBJ)/strconv.o	\
 	$(SDLOBJ)/sdldir.o	\
 	$(SDLOBJ)/sdlfile.o 	\
+	$(SDLOBJ)/sdlptty_$(BASE_TARGETOS).o	\
+	$(SDLOBJ)/sdlsocket.o	\
 	$(SDLOBJ)/sdlmisc_$(BASE_TARGETOS).o	\
 	$(SDLOBJ)/sdlos_$(BASE_TARGETOS).o	\
 	$(SDLOBJ)/sdlsync_$(SYNC_IMPLEMENTATION).o     \
@@ -344,6 +354,10 @@ INCPATH += -I$(SDL_INSTALL_ROOT)/include
 CCOMFLAGS += -D_GNU_SOURCE=1
 LIBS += -lm -L$(SDL_INSTALL_ROOT)/lib -Wl,-rpath,$(SDL_INSTALL_ROOT)/lib -lSDL
 endif
+
+INCPATH += `pkg-config --cflags fontconfig`
+LIBS += `pkg-config --libs fontconfig`
+LIBS += -lSDL_ttf -lutil
 
 endif # Unix
 

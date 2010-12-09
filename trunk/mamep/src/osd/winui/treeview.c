@@ -1221,7 +1221,7 @@ void CreateResolutionFolders(int parent_index)
 	{
 		machine_config config(*drivers[jj]);
 		const screen_device_config *screen;
-		screen = screen_first(config);
+		screen = config.first_screen();
 		if (screen != NULL)
 		{
 			const rectangle &visarea = screen->visible_area();
@@ -1289,7 +1289,7 @@ void CreateFPSFolders(int parent_index)
 		float f;
 		machine_config config(*drivers[i]);
 		const screen_device_config *screen;
-		screen = screen_first(config);
+		screen = config.first_screen();
 		if (screen != NULL)
 		{
 			f = ATTOSECONDS_TO_HZ(screen->refresh());

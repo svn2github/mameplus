@@ -527,11 +527,11 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 
 		/* loop while we have a handler */
 		while (ui_handler_callback != handler_ingame && !machine->scheduled_event_pending() && !ui_menu_is_force_game_select())
-			video_frame_update(machine, FALSE);
+			machine->video().frame_update();
 
 		/* clear the handler and force an update */
 		ui_set_handler(handler_ingame, 0);
-		video_frame_update(machine, FALSE);
+		machine->video().frame_update();
 	}
 
 	/* if we're the empty driver, force the menus on */
@@ -560,7 +560,7 @@ void ui_set_startup_text(running_machine *machine, const char *text, int force)
 	if (force || (curtime - lastupdatetime) > osd_ticks_per_second() / 4)
 	{
 		lastupdatetime = curtime;
-		video_frame_update(machine, FALSE);
+		machine->video().frame_update();
 	}
 }
 
@@ -1504,7 +1504,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 
 astring &game_info_astring(running_machine *machine, astring &string)
 {
-	int scrcount = screen_count(*machine->config);
+	int scrcount = machine->m_devicelist.count(SCREEN);
 	int found_sound = FALSE;
 
 	/* print description, manufacturer, and CPU: */
@@ -1581,7 +1581,7 @@ astring &game_info_astring(running_machine *machine, astring &string)
 		string.cat(_("None\n"));
 	else
 	{
-		for (screen_device *screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
+		for (screen_device *screen = machine->first_screen(); screen != NULL; screen = screen->next_screen())
 		{
 			if (scrcount > 1)
 			{
@@ -1875,7 +1875,8 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 	/* first draw the FPS counter */
 	if (showfps || osd_ticks() < showfps_end)
 	{
-		ui_draw_text_full_fixed_width(container, video_get_speed_text(machine), 0.0f, 0.0f, 1.0f,
+		astring tempstring;
+		ui_draw_text_full_fixed_width(container, machine->video().speed_text(tempstring), 0.0f, 0.0f, 1.0f,
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
 	}
 	else
@@ -2003,7 +2004,7 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 
 	/* handle a save snapshot request */
 	if (ui_input_pressed(machine, IPT_UI_SNAPSHOT))
-		video_save_active_screen_snapshots(machine);
+		machine->video().save_active_screen_snapshots();
 
 #ifdef INP_CAPTION
 	draw_caption(machine, container);
@@ -2043,14 +2044,14 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 	/* toggle movie recording */
 	if (ui_input_pressed(machine, IPT_UI_RECORD_MOVIE))
 	{
-		if (!video_mng_is_movie_active(machine))
+		if (!machine->video().is_recording())
 		{
-			video_mng_begin_recording(machine, NULL);
+			machine->video().begin_recording(NULL, video_manager::MF_MNG);
 			popmessage(_("REC START"));
 		}
 		else
 		{
-			video_mng_end_recording(machine);
+			machine->video().end_recording();
 			popmessage(_("REC STOP"));
 		}
 	}
@@ -2067,10 +2068,10 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 	if (ui_input_pressed(machine, IPT_UI_FRAMESKIP_INC))
 	{
 		/* get the current value and increment it */
-		int newframeskip = video_get_frameskip() + 1;
+		int newframeskip = machine->video().frameskip() + 1;
 		if (newframeskip > MAX_FRAMESKIP)
 			newframeskip = -1;
-		video_set_frameskip(newframeskip);
+		machine->video().set_frameskip(newframeskip);
 
 		/* display the FPS counter for 2 seconds */
 		ui_show_fps_temp(2.0);
@@ -2080,10 +2081,10 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 	if (ui_input_pressed(machine, IPT_UI_FRAMESKIP_DEC))
 	{
 		/* get the current value and decrement it */
-		int newframeskip = video_get_frameskip() - 1;
+		int newframeskip = machine->video().frameskip() - 1;
 		if (newframeskip < -1)
 			newframeskip = MAX_FRAMESKIP;
-		video_set_frameskip(newframeskip);
+		machine->video().set_frameskip(newframeskip);
 
 		/* display the FPS counter for 2 seconds */
 		ui_show_fps_temp(2.0);
@@ -2091,16 +2092,16 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 
 	/* toggle throttle? */
 	if (ui_input_pressed(machine, IPT_UI_THROTTLE))
-		video_set_throttle(!video_get_throttle());
+		machine->video().set_throttled(!machine->video().throttled());
 
 	/* check for fast forward */
 	if (input_type_pressed(machine, IPT_UI_FAST_FORWARD, 0))
 	{
-		video_set_fastforward(TRUE);
+		machine->video().set_fastforward(true);
 		ui_show_fps_temp(0.5);
 	}
 	else
-		video_set_fastforward(FALSE);
+		machine->video().set_fastforward(false);
 
 	return 0;
 }
@@ -2302,7 +2303,7 @@ static slider_state *slider_init(running_machine *machine)
 	}
 
 	/* add screen parameters */
-	for (screen_device *screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
+	for (screen_device *screen = machine->first_screen(); screen != NULL; screen = screen->next_screen())
 	{
 		int defxscale = floor(screen->config().xscale() * 1000.0f + 0.5f);
 		int defyscale = floor(screen->config().yscale() * 1000.0f + 0.5f);
@@ -2371,7 +2372,7 @@ static slider_state *slider_init(running_machine *machine)
 		}
 	}
 
-	for (screen_device *screen = screen_first(*machine); screen != NULL; screen = screen_next(screen))
+	for (screen_device *screen = machine->first_screen(); screen != NULL; screen = screen->next_screen())
 		if (screen->screen_type() == SCREEN_TYPE_VECTOR)
 		{
 			/* add flicker control */
@@ -2772,7 +2773,7 @@ static INT32 slider_beam(running_machine *machine, void *arg, astring *string, I
 
 static char *slider_get_screen_desc(screen_device &screen)
 {
-	int scrcount = screen_count(*screen.machine->config);
+	int scrcount = screen.machine->m_devicelist.count(SCREEN);
 	static char descbuf[256];
 
 	if (scrcount > 1)

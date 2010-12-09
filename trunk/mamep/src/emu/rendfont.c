@@ -56,6 +56,7 @@
 #include "uicmd11.fh"
 #include "uicmd14.fh"
 
+
 //mamep: command.dat symbols assigned to Unicode PUA U+E000
 #define COMMAND_UNICODE	(0xe000)
 #define MAX_GLYPH_FONT	(150)
@@ -167,7 +168,7 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 
 //FIXME
 //TODO: support display command glyph for OSD font (operating system font)
-//TODO: fix display command glyph for BDF font
+//TODO: fix display command glyph for BDF font (external pdf font)
 
 //mamep: allocate command glyph font
 void render_font::render_font_command_glyph()

@@ -839,7 +839,7 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 
 	if (isDriverVector(&config))
 	{
-		const screen_device_config *screen = screen_first(config);
+		const screen_device_config *screen = config.first_screen();
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
 			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
@@ -853,12 +853,12 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 	}
 	else
 	{
-		const screen_device_config *screen = screen_first(config);
+		const screen_device_config *screen = config.first_screen();
 		if (screen == NULL) {
 			wcscpy(buf, _UIW(TEXT("Screenless Game"))); 
 		}
 		else {
-			for (; screen != NULL; screen = screen_next(screen)) {
+			for (; screen != NULL; screen = screen->next_screen()) {
 				WCHAR tmpbuf[256];
 				const rectangle &visarea = screen->visible_area();
 

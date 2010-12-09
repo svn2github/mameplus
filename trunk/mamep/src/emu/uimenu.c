@@ -3546,7 +3546,7 @@ static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *par
 	if (event != NULL && event->iptkey == IPT_UI_SELECT && 
 		(FPTR)event->itemref >= SCALE_ITEM_NONE)
 	{
-		screen_device *screen = screen_first(*machine);
+		screen_device *screen = machine->first_screen();
 		screen->video_exit_scale_effect();
 		scale_decode(scale_name((FPTR)event->itemref - SCALE_ITEM_NONE));
 		screen->video_init_scale_effect();

@@ -213,9 +213,9 @@ void windows_osd_interface::update_audio_stream(const INT16 *buffer, int samples
 
 #ifdef USE_AUDIO_SYNC
 	// if we are active, update the sampling frequency
-	if (audio_sync && video_get_speed_percent(&machine()) > 0.0f)
+	if (audio_sync && machine().video().speed_percent() > 0.0f)
 	{
-		IDirectSoundBuffer_SetFrequency(stream_buffer, machine().sample_rate * video_get_speed_percent(&machine()));
+		IDirectSoundBuffer_SetFrequency(stream_buffer, machine().sample_rate * machine().video().speed_percent());
 	}
 #endif /* USE_AUDIO_SYNC */
 

@@ -64,6 +64,7 @@ $(MESSOBJ)/shared.a: \
 	$(MESS_MACHINE)/ctronics.o	\
 	$(MESS_MACHINE)/tc8521.o	\
 	$(MESS_MACHINE)/wd17xx.o	\
+	$(MESS_FORMATS)/msx_dsk.o	\
 
 
 
