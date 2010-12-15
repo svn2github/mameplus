@@ -469,6 +469,63 @@ static WRITE16_HANDLER( arm7_ram_w )
 	COMBINE_DATA(&share16[BYTE_XOR_LE(offset)]);
 }
 
+static READ32_HANDLER( cavepgm_arm7_latch_arm_r )
+{
+	pgm_state *state = space->machine->driver_data<pgm_state>();
+	return state->cavepgm_latchdata_68k_w;
+}
+
+static WRITE32_HANDLER( cavepgm_arm7_latch_arm_w )
+{
+	pgm_state *state = space->machine->driver_data<pgm_state>();
+
+	COMBINE_DATA(&state->cavepgm_latchdata_arm_w);
+}
+
+static READ32_HANDLER( cavepgm_arm7_shareram_r )
+{
+	pgm_state *state = space->machine->driver_data<pgm_state>();
+
+	return state->arm7_shareram[offset];
+}
+
+static WRITE32_HANDLER( cavepgm_arm7_shareram_w )
+{
+	pgm_state *state = space->machine->driver_data<pgm_state>();
+
+	COMBINE_DATA(&state->arm7_shareram[offset]);
+}
+
+static READ16_HANDLER( cavepgm_arm7_latch_68k_r )
+{
+	pgm_state *state = space->machine->driver_data<pgm_state>();
+
+	if(offset == 0)
+		return state->cavepgm_latchdata_arm_w & 0x0000FFFF;
+	else if(offset == 1)
+		return (state->cavepgm_latchdata_arm_w >> 16) & 0x0000FFFF;
+	else
+		return 0xFFFF;
+}
+
+static WRITE16_HANDLER( cavepgm_arm7_latch_68k_w )
+{
+	pgm_state *state = space->machine->driver_data<pgm_state>();
+
+	if(offset == 0) {
+		state->cavepgm_latchdata_68k_w &= ~0xFFFF0000;
+		state->cavepgm_latchdata_68k_w |= (data << 16) & 0xFFFF0000;
+	}else if(offset == 1) {
+		state->cavepgm_latchdata_68k_w &= ~0x0000FFFF;
+		state->cavepgm_latchdata_68k_w |= data & 0x0000FFFF;
+		generic_pulse_irq_line(state->prot, ARM7_FIRQ_LINE);
+		cpuexec_boost_interleave(space->machine, attotime_zero, ATTOTIME_IN_USEC(200));
+		cpu_spinuntil_time(space->cpu, state->prot->cycles_to_attotime(200)); // give the arm time to respond (just boosting the interleave doesn't help)
+	}else if(offset == 2) {
+		/* 0x0000 gets written here to acknowledge a response. Possibly does an IRQ? */
+	}
+}
+
 static WRITE16_HANDLER ( z80_ram_w )
 {
 	pgm_state *state = space->machine->driver_data<pgm_state>();
@@ -787,6 +844,36 @@ static ADDRESS_MAP_START( kov2speed_mem, ADDRESS_SPACE_PROGRAM, 16)
 ADDRESS_MAP_END
 #endif
 
+static ADDRESS_MAP_START( cavepgm_ddp3_mem, ADDRESS_SPACE_PROGRAM, 16)
+	AM_RANGE(0x000000, 0x3fffff) AM_ROM
+
+	AM_RANGE(0x700006, 0x700007) AM_WRITENOP // Watchdog?
+
+//  AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_MIRROR(0x0e0000) AM_BASE(&pgm_mainram) AM_SHARE("sram") /* Main Ram */
+	AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_BASE(&pgm_mainram) AM_SHARE("sram") /* Main Ram */
+	/* 0x880000 - 0x89ffff seems to be protection related, maybe they just happen to access protection results
+       via a mirror tho. */
+
+	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_READWRITE(pgm_videoram_r, pgm_videoram_w) AM_BASE_MEMBER(pgm_state, videoram) /* IGS023 VIDEO CHIP */
+	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)
+	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE_MEMBER(pgm_state, videoregs) /* Video Regs inc. Zoom Table */
+
+	AM_RANGE(0xc00002, 0xc00003) AM_READWRITE(soundlatch_word_r, m68k_l1_w)
+	AM_RANGE(0xc00004, 0xc00005) AM_READWRITE(soundlatch2_word_r, soundlatch2_word_w)
+	AM_RANGE(0xc00006, 0xc00007) AM_READWRITE(pgm_calendar_r, pgm_calendar_w)
+	AM_RANGE(0xc00008, 0xc00009) AM_WRITE(z80_reset_w)
+	AM_RANGE(0xc0000a, 0xc0000b) AM_WRITE(z80_ctrl_w)
+	AM_RANGE(0xc0000c, 0xc0000d) AM_READWRITE(soundlatch3_word_r, soundlatch3_word_w)
+
+	AM_RANGE(0xc08000, 0xc08001) AM_READ_PORT("P1P2")
+	AM_RANGE(0xc08002, 0xc08003) AM_READ_PORT("P3P4")
+	AM_RANGE(0xc08004, 0xc08005) AM_READ_PORT("Service")
+	AM_RANGE(0xc08006, 0xc08007) AM_READ_PORT("DSW")
+
+	AM_RANGE(0xc10000, 0xc1ffff) AM_READWRITE(z80_ram_r, z80_ram_w) /* Z80 Program */
+	/* Protection stuff */
+	AM_RANGE(0x500000, 0x500005) AM_READWRITE(cavepgm_arm7_latch_68k_r, cavepgm_arm7_latch_68k_w) /* ARM7 Latch */
+ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cavepgm_mem, ADDRESS_SPACE_PROGRAM, 16)
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
@@ -815,6 +902,18 @@ static ADDRESS_MAP_START( cavepgm_mem, ADDRESS_SPACE_PROGRAM, 16)
 	AM_RANGE(0xc08006, 0xc08007) AM_READ_PORT("DSW")
 
 	AM_RANGE(0xc10000, 0xc1ffff) AM_READWRITE(z80_ram_r, z80_ram_w) /* Z80 Program */
+	/* Protection stuff */
+	AM_RANGE(0x400000, 0x400005) AM_READWRITE(cavepgm_arm7_latch_68k_r, cavepgm_arm7_latch_68k_w) /* ARM7 Latch */
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( cavepgm_arm7_map, ADDRESS_SPACE_PROGRAM, 32 )
+	AM_RANGE(0x00000000, 0x00003fff) AM_ROM
+	AM_RANGE(0x08000000, 0x083fffff) AM_ROM AM_REGION("user1", 0)
+	AM_RANGE(0x10000000, 0x100003ff) AM_RAM
+	AM_RANGE(0x18000000, 0x1800ffff) AM_RAM
+	AM_RANGE(0x38000000, 0x38000003) AM_READWRITE(cavepgm_arm7_latch_arm_r, cavepgm_arm7_latch_arm_w) /* 68k Latch */
+	AM_RANGE(0x48000000, 0x4800ffff) AM_READWRITE(cavepgm_arm7_shareram_r, cavepgm_arm7_shareram_w) AM_BASE_MEMBER(pgm_state, arm7_shareram)
+	AM_RANGE(0x50000000, 0x500003ff) AM_RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( z80_mem, ADDRESS_SPACE_PROGRAM, 8 )
@@ -1626,7 +1725,7 @@ static MACHINE_CONFIG_START( pgm, pgm_state )
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
-	MDRV_SCREEN_REFRESH_RATE(60)
+	MDRV_SCREEN_REFRESH_RATE(59.17)
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(64*8, 64*8)
@@ -1783,6 +1882,15 @@ static MACHINE_CONFIG_DERIVED( cavepgm, pgm )
 	MDRV_CPU_PROGRAM_MAP(cavepgm_mem)
 	MDRV_CPU_VBLANK_INT_HACK(drgw_interrupt,2)
 
+	/* protection CPU */
+	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857E/F/G
+	MDRV_CPU_PROGRAM_MAP(cavepgm_arm7_map)
+MACHINE_CONFIG_END
+
+static MACHINE_CONFIG_DERIVED( cavepgm_ddp3, cavepgm )
+
+	MDRV_CPU_MODIFY("maincpu")
+	MDRV_CPU_PROGRAM_MAP(cavepgm_ddp3_mem)
 MACHINE_CONFIG_END
 
 
@@ -6179,15 +6287,16 @@ GAME( 2004, happy6,       pgm,       svg,     sango,    svg,        ROT0,   "IGS
 GAME( 2005, svg,          pgm,       svg,     sango,    svg,        ROT0,   "IGS", "S.V.G. - Spectral vs Generation (ver. 200)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) /* need internal rom of IGS027A */
 
 /* these don't use an External ARM rom, and don't have any weak internal functions which would allow the internal ROM to be read out */
-GAME( 2002, ddp3,         0,         cavepgm,    ddp2,     ddp3,       ROT270, "Cave", "DoDonPachi Dai-Ou-Jou", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 2002, ddp3blk,      ddp3,      cavepgm,    ddp2,     ddp3,       ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (Black Label)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 2002, ddp3,         pgm,       cavepgm_ddp3,ddp2, ddp3,       ROT270, "Cave", "DoDonPachi Dai-Ou-Jou", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 2002, ddp3blk,      ddp3,      cavepgm_ddp3,ddp2, ddp3,       ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (Black Label)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 
 // the exact text of the 'version' shows which revision of the game it is; the newest has 2 '.' symbols in the string, the oldest, none.
-GAME( 2002, ket,          0,         cavepgm,    ddp2,     ket,       ROT270, "Cave", "Ketsui",                  GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // Displays 2003/01/01. Master Ver.
+GAME( 2002, ket,          pgm,       cavepgm, ddp2,     ket,        ROT270, "Cave", "Ketsui",                  GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // Displays 2003/01/01. Master Ver.
 GAME( 2002, keta,         ket,       cavepgm,    ddp2,     ket,       ROT270, "Cave", "Ketsui (older)",          GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // Displays 2003/01/01 Master Ver.
 GAME( 2002, ketb,         ket,       cavepgm,    ddp2,     ket,       ROT270, "Cave", "Ketsui (first revision)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // Displays 2003/01/01 Master Ver
 
-GAME( 2002, espgal,       0,         cavepgm,    ddp2,     espgal,       ROT270, "Cave", "EspGaluda", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 2002, espgal,       pgm,       cavepgm, ddp2,     espgal,     ROT270, "Cave", "EspGaluda", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 
 /* PGM2 */
 GAME( 2007, orleg2,       0,         pgm,    pgm,     0,       ROT0, "IGS", "Oriental Legend 2", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+

@@ -59,6 +59,9 @@ public:
 	UINT16        asic_params[256];
 	UINT16        asic28_rcnt;
 	UINT32        eoregs[16];
+	// cavepgm
+	UINT32        cavepgm_latchdata_68k_w;
+	UINT32        cavepgm_latchdata_arm_w;
 
 	/* calendar */
 	UINT8        cal_val, cal_mask, cal_com, cal_cnt;
