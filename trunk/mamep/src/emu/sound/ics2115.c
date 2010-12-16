@@ -158,7 +158,6 @@ static STREAM_UPDATE( update )
 	if (rec_irq)
 		recalc_irq(chip);
 }
-
 static void keyon(ics2115_state *chip, int osc)
 {
 	if (ICS2115LOGERROR) logerror("ICS2115: KEYON %2d conf:%02x vctl:%02x p:%02X a:%07x.%03x l:%05x.%x e:%05x.%x v:%03x f:%d\n",

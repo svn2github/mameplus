@@ -5982,158 +5982,22 @@ static DRIVER_INIT( kovqhsgs )
 	kovsh_latch_init(machine);
 }
 
-/* this is based on the puzzle star simulation,
- at least for how it communicates with the device..
-
- please don't driver_data this, it's temporary code, and just
- becomes and absolute pain to work with if bits of it end
- up all over the place, and near impossible to read with state->
- before everything.
-
-*/
-static UINT16 value0, value1, valuekey, ddp3lastcommand;
-static UINT32 valueresponse;
-
-static WRITE16_HANDLER( ddp3_asic_w )
-{
-
-	if (offset == 0)
-	{
-		value0 = data;
-		return;
-	}
-	else if (offset == 1)
-	{
-		UINT16 realkey;
-		if ((data >> 8) == 0xff)
-			valuekey = 0xff00;
-		realkey = valuekey >> 8;
-		realkey |= valuekey;
-		{
-			valuekey += 0x0100;
-			valuekey &= 0xff00;
-			if (valuekey == 0xff00)
-				valuekey =  0x0100;
-		}
-		data ^= realkey;
-		value1 = data;
-		value0 ^= realkey;
-
-		ddp3lastcommand = value1 & 0xff;
-
-		/* typical frame (ddp3) (all 3 games use only these commands? for the most part of levels espgal just issues 8e)
-            vbl
-            145f28 command 67
-            145f70 command e5
-            145f28 command 67
-            145f70 command e5
-            1460c6 command 40
-            145ec0 command 8e
-            */
-
-		switch (ddp3lastcommand)
-		{
-			default:
-				printf("%06x command %02x | %04x\n", cpu_get_pc(space->cpu), ddp3lastcommand, value0);
-				valueresponse = 0x880000;
-				break;
-
-			case 0x40:
-			case 0x67:
-			case 0x8e:
-			case 0xe5:
-				printf("%06x command %02x | %04x\n", cpu_get_pc(space->cpu), ddp3lastcommand, value0);
-				valueresponse = 0x880000;
-				break;
-
-			case 0x99: // reset?
-				valuekey = 0x100;
-				valueresponse = 0x00880000;
-				break;
-
-		}
-	}
-	else if (offset==2)
-	{
-
-	}
-
-}
-
-static READ16_HANDLER( ddp3_asic_r )
-{
-
-	if (offset == 0)
-	{
-		UINT16 d = valueresponse & 0xffff;
-		UINT16 realkey = valuekey >> 8;
-		realkey |= valuekey;
-		d ^= realkey;
-
-		return d;
-
-	}
-	else if (offset == 1)
-	{
-		UINT16 d = valueresponse >> 16;
-		UINT16 realkey = valuekey >> 8;
-		realkey |= valuekey;
-		d ^= realkey;
-		return d;
-
-	}
-	return 0xffff;
-}
-
-static READ16_HANDLER( ddp3_ram_mirror_r )
-{
-	// HACK!
-	// this should be a mirror of main ram, at least according to the standard PGM map.
-	// returning 0x0000 for all values read from here allows the games to run for a bit longer tho
-	printf("%06x ddp3_ram_mirror_r would return %04x returning 0x0000 instead\n", cpu_get_pc(space->cpu), pgm_mainram[offset]);
-	return 0x0000;
-	//return pgm_mainram[offset];
-}
-
-void install_asic27a_ddp3(running_machine* machine)
-{
-	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x500000, 0x500005, 0, 0, ddp3_asic_r, ddp3_asic_w);
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x880000, 0x89ffff, 0, 0, ddp3_ram_mirror_r);
-}
-
-void install_asic27a_ket(running_machine* machine)
-{
-	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400005, 0, 0, ddp3_asic_r, ddp3_asic_w);
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x880000, 0x89ffff, 0, 0, ddp3_ram_mirror_r);
-}
-
-void install_asic27a_espgal(running_machine* machine)
-{
-	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400005, 0, 0, ddp3_asic_r, ddp3_asic_w);
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x880000, 0x89ffff, 0, 0, ddp3_ram_mirror_r);
-}
-
-
-
 static DRIVER_INIT( ddp3 )
 {
 	pgm_basic_init_nobank(machine);
 	pgm_py2k2_decrypt(machine); // yes, it's the same as photo y2k2
-	install_asic27a_ddp3(machine);
 }
 
 static DRIVER_INIT( ket )
 {
 	pgm_basic_init_nobank(machine);
 	pgm_ket_decrypt(machine);
-	install_asic27a_ket(machine);
 }
 
 static DRIVER_INIT( espgal )
 {
 	pgm_basic_init_nobank(machine);
 	pgm_espgal_decrypt(machine);
-	install_asic27a_espgal(machine);
 }
 
 
