@@ -1986,7 +1986,7 @@ void input_port_write(running_machine *machine, const char *tag, input_port_valu
 {
 	const input_port_config *port = machine->port(tag);
 	if (port == NULL)
-		fatalerror("Unable to locate input port '%s'", tag);
+		fatalerror(_("Unable to locate input port '%s'"), tag);
 	input_port_write_direct(port, value, mask);
 }
 

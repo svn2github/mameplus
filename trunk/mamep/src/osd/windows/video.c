@@ -399,7 +399,12 @@ static void check_osd_inputs(running_machine *machine)
 
 #ifdef MESS
 	// check for toggling menu bar (only if ui is active)
+#ifdef MAMEMESS
+	//mamep: we want to use both MESS-newui and in-game-UI
+	if (ui_input_pressed(machine, IPT_OSD_2))
+#else
 	if (ui_input_pressed(machine, IPT_OSD_2) && machine->ui_active)
+#endif
 		win_toggle_menubar();
 #endif
 }

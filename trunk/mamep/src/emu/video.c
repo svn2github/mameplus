@@ -288,22 +288,26 @@ astring &video_manager::speed_text(astring &string)
 {
 	string.reset();
 
+#ifdef INP_CAPTION
+	string.catprintf(_("frame:%ld "), (long)m_machine.primary_screen->frame_number());
+#endif /* INP_CAPTION */
+
 	// if we're paused, just display Paused
 	bool paused = m_machine.paused();
 	if (paused)
-		string.cat("paused");
+		string.cat(_("paused"));
 
 	// if we're fast forwarding, just display Fast-forward
 	else if (m_fastforward)
-		string.cat("fast ");
+		string.cat(_("fast "));
 
 	// if we're auto frameskipping, display that plus the level
 	else if (effective_autoframeskip())
-		string.catprintf("auto%2d/%d", effective_frameskip(), MAX_FRAMESKIP);
+		string.catprintf(_("auto%2d/%d"), effective_frameskip(), MAX_FRAMESKIP);
 
 	// otherwise, just display the frameskip plus the level
 	else
-		string.catprintf("skip %d/%d", effective_frameskip(), MAX_FRAMESKIP);
+		string.catprintf(_("skip %d/%d"), effective_frameskip(), MAX_FRAMESKIP);
 
 	// append the speed for all cases except paused
 	if (!paused)
@@ -314,7 +318,7 @@ astring &video_manager::speed_text(astring &string)
 	for (screen_device *screen = m_machine.first_screen(); screen != NULL; screen = screen->next_screen())
 		partials += screen->partial_updates();
 	if (partials > 1)
-		string.catprintf("\n%d partial updates", partials);
+		string.catprintf(_("\n%d partial updates"), partials);
 
 	return string;
 }
@@ -344,7 +348,7 @@ void video_manager::save_snapshot(screen_device *screen, mame_file &fp)
 	const rgb_t *palette = (m_machine.palette != NULL) ? palette_entry_list_adjusted(m_machine.palette) : NULL;
 	png_error error = png_write_bitmap(mame_core_file(&fp), &pnginfo, m_snap_bitmap, m_machine.total_colors(), palette);
 	if (error != PNGERR_NONE)
-		mame_printf_error("Error generating PNG for snapshot: png_error = %d\n", error);
+		mame_printf_error(_("Error generating PNG for snapshot: png_error = %d\n"), error);
 
 	// free any data allocated
 	png_free(&pnginfo);
@@ -446,7 +450,7 @@ void video_manager::begin_recording(const char *name, movie_format format)
 			// create the file and free the string
 			avi_error avierr = avi_create(fullname, &info, &m_avifile);
 			if (avierr != AVIERR_NONE)
-				mame_printf_error("Error creating AVI: %s\n", avi_error_string(avierr));
+				mame_printf_error(_("Error creating AVI: %s\n"), avi_error_string(avierr));
 		}
 	}
 
@@ -534,7 +538,7 @@ void video_manager::exit_static(running_machine &machine)
 
 void video_manager::exit()
 {
-#ifdef USE_SCALE_EFFECTS
+#if 0 //mamep: remove this code to avert crash at exit
 	for (screen_device *screen = m_machine.first_screen(); screen != NULL; screen = screen->next_screen())
 		screen->video_exit_scale_effect();
 #endif /* USE_SCALE_EFFECTS */
@@ -557,7 +561,7 @@ void video_manager::exit()
 		osd_ticks_t tps = osd_ticks_per_second();
 		double final_real_time = (double)m_overall_real_seconds + (double)m_overall_real_ticks / (double)tps;
 		double final_emu_time = attotime_to_double(m_overall_emutime);
-		mame_printf_info("Average speed: %.2f%% (%d seconds)\n", 100 * final_emu_time / final_real_time, attotime_add_attoseconds(m_overall_emutime, ATTOSECONDS_PER_SECOND / 2).seconds);
+		mame_printf_info(_("Average speed: %.2f%% (%d seconds)\n"), 100 * final_emu_time / final_real_time, attotime_add_attoseconds(m_overall_emutime, ATTOSECONDS_PER_SECOND / 2).seconds);
 	}
 }
 
@@ -978,7 +982,7 @@ void video_manager::update_refresh_speed()
 			// if we changed, log that verbosely
 			if (target_speed != m_speed)
 			{
-				mame_printf_verbose("Adjusting target speed to %d%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n", target_speed, minrefresh, ATTOSECONDS_TO_HZ(min_frame_period), ATTOSECONDS_TO_HZ(min_frame_period * 100 / target_speed));
+				mame_printf_verbose(_("Adjusting target speed to %d%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n"), target_speed, minrefresh, ATTOSECONDS_TO_HZ(min_frame_period), ATTOSECONDS_TO_HZ(min_frame_period * 100 / target_speed));
 				m_speed = target_speed;
 			}
 		}
