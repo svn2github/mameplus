@@ -460,7 +460,7 @@ Auto pause when playback ended
 
 # osd/winui/mameui.rc: 658
 Auto refresh speed
-自动调整刷新频率
+自动调整刷新率
 
 # osd/winui/mameui.rc: 889
 Auto restore and save (only if available)
@@ -1104,7 +1104,7 @@ Enable the marquee tab
 
 # osd/winui/mameui.rc: 1525
 Enable the snapshot tab
-启用屏幕快照选项卡
+启用快照选项卡
 
 # osd/winui/mameui.rc: 1535
 Enable the story tab
@@ -2124,7 +2124,7 @@ Select PCB tab
 
 # osd/winui/mameui.rc: 1542
 Select Snapshot tab
-选定屏幕快照选项卡
+选定快照选项卡
 
 # osd/winui/mameui.rc: 1523
 Select Story tab
@@ -2304,15 +2304,15 @@ Snapshot
 
 # osd/winui/mameui.rc: 1102
 Snapshot/movie naming
-屏幕快照/录像命名方式
+快照/录像命名方式
 
 # osd/winui/mameui.rc: 569
 Snapshot/movie resolution
-屏幕快照/录像分辨率
+快照/录像分辨率
 
 # osd/winui/mameui.rc: 566
 Snapshot/movie view
-屏幕快照/录像查看方式
+快照/录像查看方式
 
 # osd/winui/layout.c: 117
 Snapshots

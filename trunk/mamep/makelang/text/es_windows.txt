@@ -602,11 +602,11 @@ Reiniciar Ha&rdware
 INPUT DEVICE OPTIONS
 OPCIONES DE ENTRADA DE DISPOSITIVOS
 
-# osd/windows/video.c: 508
+# osd/windows/video.c: 513
 Illegal aspect ratio value for %s = %s\n
 Valor ilegal del cociente de aspecto para %s = %s\n
 
-# osd/windows/video.c: 531
+# osd/windows/video.c: 536
 Illegal resolution value for %s = %s\n
 Valor incorrecto de resolución para %s = %s\n
 
@@ -614,7 +614,7 @@ Valor incorrecto de resolución para %s = %s\n
 Input
 Entrada
 
-# osd/windows/video.c: 461
+# osd/windows/video.c: 466
 Invalid video value %s; reverting to gdi\n
 Valor invalido de video %s; revertir a gdi\n
 
@@ -750,7 +750,7 @@ Texture desconocida blendmode=%d format=%d\n
 Unlimited
 Sin limite
 
-# osd/windows/video.c: 425
+# osd/windows/video.c: 430
 Using %s scale effect\n
 Usando %s efecto escalar\n
 
@@ -774,7 +774,7 @@ OPCIONES DE SONIDO
 WINDOWS VIDEO OPTIONS
 OPCIONES DE VIDEO
 
-# osd/windows/video.c: 457
+# osd/windows/video.c: 462
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 Advertencia: -video ninguno tiene sentido fuera -seconds_to_run\n
 

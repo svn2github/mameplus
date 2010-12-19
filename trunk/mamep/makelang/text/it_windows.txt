@@ -478,15 +478,15 @@ Impossibile creare window thread evento pronto
 INPUT DEVICE OPTIONS
 OPZIONI PERIFERICA INPUT\t
 
-# osd/windows/video.c: 508
+# osd/windows/video.c: 513
 Illegal aspect ratio value for %s = %s\n
 Valore dei rapporti aspetto errato per %s = %s\n
 
-# osd/windows/video.c: 531
+# osd/windows/video.c: 536
 Illegal resolution value for %s = %s\n
 Valore della risoluzione errato per %s = %s\n
 
-# osd/windows/video.c: 461
+# osd/windows/video.c: 466
 Invalid video value %s; reverting to gdi\n
 Valore video errato %s; ritorno al gdi\n
 
@@ -550,7 +550,7 @@ Impossibile aprire la periferica tastiera. (errore %d)\n
 Unknown texture blendmode=%d format=%d\n
 Modalità texture blend sconosciuta=%d formato=%d\n
 
-# osd/windows/video.c: 425
+# osd/windows/video.c: 430
 Using %s scale effect\n
 Usando %s effetto scal.\n
 
@@ -574,7 +574,7 @@ WINDOWS OPZIONI AUDIO
 WINDOWS VIDEO OPTIONS
 WINDOWS OPZIONI VIDEO
 
-# osd/windows/video.c: 457
+# osd/windows/video.c: 462
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 Attenzione: -nessun video può essere ben impostato senza -seconds_to_run\n
 

@@ -1454,6 +1454,10 @@ CES Inc., Midway Games Inc.
 CGI
 
 
+# Funny Fruit (Version 1.13)
+Cadillac Jack
+
+
 # Pnickies (Japan 940608)
 Capcom, licensed by Compile
 
@@ -1802,6 +1806,10 @@ JMK
 JPM
 
 
+# X Tom 3D
+Jamie System Development
+
+
 # Final Tetris
 Jeil Computer System
 
@@ -1820,6 +1828,10 @@ KKI
 
 # Knock Out!!
 KKK
+
+
+# Super Double (French)
+Karateco
 
 
 # Kimble Double HI-LO (z80 version)
@@ -2712,5 +2724,9 @@ Xex
 
 # Computer Quiz Atama no Taisou (Japan)
 Yachiyo Denki
+
+
+# Dream Crown
+unknown
 
 

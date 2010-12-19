@@ -646,11 +646,11 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 輸入裝置選項
 
-# osd/windows/video.c: 508
+# osd/windows/video.c: 513
 Illegal aspect ratio value for %s = %s\n
 非法的 %s 長寬比例值 = %s\n
 
-# osd/windows/video.c: 531
+# osd/windows/video.c: 536
 Illegal resolution value for %s = %s\n
 非法的 %s 解析度值 = %s\n
 
@@ -658,7 +658,7 @@ Illegal resolution value for %s = %s\n
 Input
 輸入
 
-# osd/windows/video.c: 461
+# osd/windows/video.c: 466
 Invalid video value %s; reverting to gdi\n
 無效的 video 值 %s; 還原成 gdi\n
 
@@ -760,7 +760,7 @@ S&ave State As...
 
 # mess/osd/windows/mess.rc: 36
 Save Sc&reenshot
-儲存畫面擷圖(&R)
+儲存擷圖(&R)
 
 # mess/osd/windows/menu.c: 512
 Sensitivity
@@ -838,7 +838,7 @@ Unlimited
 Unmount
 卸載
 
-# osd/windows/video.c: 425
+# osd/windows/video.c: 430
 Using %s scale effect\n
 正在使用 %s 影像增強\n
 
@@ -862,7 +862,7 @@ WINDOWS 聲音選項
 WINDOWS VIDEO OPTIONS
 WINDOWS 視訊選項
 
-# osd/windows/video.c: 457
+# osd/windows/video.c: 462
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video 參數為 none 時無法判斷 -seconds_to_run 選項\n
 

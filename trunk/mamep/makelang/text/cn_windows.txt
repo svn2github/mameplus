@@ -252,7 +252,7 @@ Direct3D: 错误 - 设备不支持立即演示\n
 
 # osd/windows/drawd3d.c: 989
 Direct3D: Error - Device does not support per-refresh presentations\n
-Direct3D: 错误 - 设备不支持每个更新频率演示\n
+Direct3D: 错误 - 设备不支持每个刷新率演示\n
 
 # osd/windows/drawd3d.c: 1017
 Direct3D: Error - Device does not support source alpha blending with destination color\n
@@ -646,11 +646,11 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 输入设备选项
 
-# osd/windows/video.c: 508
+# osd/windows/video.c: 513
 Illegal aspect ratio value for %s = %s\n
 非法的 %s 外观比例值 = %s\n
 
-# osd/windows/video.c: 531
+# osd/windows/video.c: 536
 Illegal resolution value for %s = %s\n
 非法的 %s 分辨率值 = %s\n
 
@@ -658,7 +658,7 @@ Illegal resolution value for %s = %s\n
 Input
 输入
 
-# osd/windows/video.c: 461
+# osd/windows/video.c: 466
 Invalid video value %s; reverting to gdi\n
 无效的 video 值 %s; 还原成 gdi\n
 
@@ -760,7 +760,7 @@ S&ave State As...
 
 # mess/osd/windows/mess.rc: 36
 Save Sc&reenshot
-保存屏幕快照(&R)
+保存快照(&R)
 
 # mess/osd/windows/menu.c: 512
 Sensitivity
@@ -838,7 +838,7 @@ Unlimited
 Unmount
 解除挂载
 
-# osd/windows/video.c: 425
+# osd/windows/video.c: 430
 Using %s scale effect\n
 正在使用 %s 图像增强\n
 
@@ -862,7 +862,7 @@ WINDOWS 声音选项
 WINDOWS VIDEO OPTIONS
 WINDOWS 视频选项
 
-# osd/windows/video.c: 457
+# osd/windows/video.c: 462
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video 参数为 none 时无法判断 -seconds_to_run 选项\n
 
@@ -1000,23 +1000,23 @@ output error.log data to the system debugger
 
 # osd/windows/winmain.c: 337
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
-所有画面的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
+所有画面的分辨率; 格式是 <宽>x<高>[@<刷新率>] 或 auto
 
 # osd/windows/winmain.c: 342
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-第一个画面的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
+第一个画面的分辨率; 格式是 <宽>x<高>[@<刷新率>] 或 auto
 
 # osd/windows/winmain.c: 357
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-第四个画面的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
+第四个画面的分辨率; 格式是 <宽>x<高>[@<刷新率>] 或 auto
 
 # osd/windows/winmain.c: 347
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-第二个画面的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
+第二个画面的分辨率; 格式是 <宽>x<高>[@<刷新率>] 或 auto
 
 # osd/windows/winmain.c: 352
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-第三个画面的分辨率; 格式是 <宽>x<高>[@<刷新频率>] 或 auto
+第三个画面的分辨率; 格式是 <宽>x<高>[@<刷新率>] 或 auto
 
 # osd/windows/winmain.c: 338
 preferred view for all screens

@@ -30,7 +30,7 @@ Billentyûzet kikapcsolása sikertelen. (hiba %d)\n
 Unable to open the keyboard device. (error %d)\n
 Billentyûzet alkalmazása sikertelen. (hiba %d)\n
 
-# osd/windows/video.c: 425
+# osd/windows/video.c: 430
 Using %s scale effect\n
 Felosztási  %s effekt használata\n
 
@@ -706,11 +706,11 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 
 
-# osd/windows/video.c: 508
+# osd/windows/video.c: 513
 Illegal aspect ratio value for %s = %s\n
 
 
-# osd/windows/video.c: 531
+# osd/windows/video.c: 536
 Illegal resolution value for %s = %s\n
 
 
@@ -718,7 +718,7 @@ Illegal resolution value for %s = %s\n
 Input
 
 
-# osd/windows/video.c: 461
+# osd/windows/video.c: 466
 Invalid video value %s; reverting to gdi\n
 
 
@@ -902,7 +902,7 @@ WINDOWS SOUND OPTIONS
 WINDOWS VIDEO OPTIONS
 
 
-# osd/windows/video.c: 457
+# osd/windows/video.c: 462
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 
 

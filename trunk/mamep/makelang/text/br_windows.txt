@@ -598,11 +598,11 @@ R&eset Total
 INPUT DEVICE OPTIONS
 OPÇÕES DE DISPOSITIVO DE ENTRADA
 
-# osd/windows/video.c: 508
+# osd/windows/video.c: 513
 Illegal aspect ratio value for %s = %s\n
 Valor de relação de aspecto ilegal para %s = %s\n
 
-# osd/windows/video.c: 531
+# osd/windows/video.c: 536
 Illegal resolution value for %s = %s\n
 Valor de resolução ilegal para %s = %s\n
 
@@ -610,7 +610,7 @@ Valor de resolução ilegal para %s = %s\n
 Input
 Entrada
 
-# osd/windows/video.c: 461
+# osd/windows/video.c: 466
 Invalid video value %s; reverting to gdi\n
 Valor de vídeo inválido %s; revertendo para gdi\n
 
@@ -742,7 +742,7 @@ Blendmode de textura desconhecido=%d formato=%d\n
 Unlimited
 Ilimitado
 
-# osd/windows/video.c: 425
+# osd/windows/video.c: 430
 Using %s scale effect\n
 Usando efeito %s de escala\n
 
@@ -766,7 +766,7 @@ OPÇÕES DE SOM DO WINDOWS
 WINDOWS VIDEO OPTIONS
 OPÇÕES DE VÍDEO DO WINDOWS
 
-# osd/windows/video.c: 457
+# osd/windows/video.c: 462
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 Aviso: -nenhum vídeo faz sentido sem -segundos_para_funcionar\n
 

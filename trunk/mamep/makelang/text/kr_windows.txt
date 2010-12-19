@@ -646,11 +646,11 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 입력 장치 옵션
 
-# osd/windows/video.c: 508
+# osd/windows/video.c: 513
 Illegal aspect ratio value for %s = %s\n
 잘못된 화면비 값 %s = %s\n
 
-# osd/windows/video.c: 531
+# osd/windows/video.c: 536
 Illegal resolution value for %s = %s\n
 잘못된 해상도 값 %s = %s\n
 
@@ -658,7 +658,7 @@ Illegal resolution value for %s = %s\n
 Input
 입력
 
-# osd/windows/video.c: 461
+# osd/windows/video.c: 466
 Invalid video value %s; reverting to gdi\n
 잘못된 비디오 값 %s;GDI로 복구\n
 
@@ -826,7 +826,7 @@ Unlimited
 Unmount
 마운트 해제
 
-# osd/windows/video.c: 425
+# osd/windows/video.c: 430
 Using %s scale effect\n
 %s 크기조절 효과 사용\n
 
@@ -850,7 +850,7 @@ WINDOWS SOUND OPTIONS
 WINDOWS VIDEO OPTIONS
 윈도우 비디오 옵션
 
-# osd/windows/video.c: 457
+# osd/windows/video.c: 462
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 경고: -video none 는 -seconds_to_run 없이는 사용 불가\n
 

@@ -2062,6 +2062,10 @@ CES Inc., Midway Games Inc.
 CGI
 
 
+# Funny Fruit (Version 1.13)
+Cadillac Jack
+
+
 # Cal Omega - Game 7.4 (Gaming Poker, W.Export)
 Cal Omega Inc.
 
@@ -2282,8 +2286,16 @@ Interactive Light
 Itisa
 
 
+# X Tom 3D
+Jamie System Development
+
+
 # Jubilee Double-Up Poker
 Jubilee
+
+
+# Super Double (French)
+Karateco
 
 
 # Kimble Double HI-LO (z80 version)
@@ -2712,5 +2724,9 @@ Yubis/AV Japan
 
 # Vortex
 Zilec Electronics Ltd.
+
+
+# Dream Crown
+unknown
 
 

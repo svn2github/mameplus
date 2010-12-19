@@ -394,6 +394,10 @@ CES Inc., Midway Games Inc.
 CGI
 
 
+# Funny Fruit (Version 1.13)
+Cadillac Jack
+
+
 # Cal Omega - Game 17.51 (Gaming Draw Poker)
 Cal Omega
 
@@ -1222,6 +1226,10 @@ JPM
 Jaleco
 
 
+# X Tom 3D
+Jamie System Development
+
+
 # Final Tetris
 Jeil Computer System
 
@@ -1264,6 +1272,10 @@ KKK
 
 # Fly-Boy
 Kaneko
+
+
+# Super Double (French)
+Karateco
 
 
 # Mahjong Circuit no Mehyou (Japan)
@@ -2712,5 +2724,9 @@ Zilec-Zenitone
 
 # X-Files
 dgPIX Entertainment Inc.
+
+
+# Dream Crown
+unknown
 
 

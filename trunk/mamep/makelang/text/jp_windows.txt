@@ -638,11 +638,11 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 入力デバイスオプション
 
-# osd/windows/video.c: 508
+# osd/windows/video.c: 513
 Illegal aspect ratio value for %s = %s\n
 %sの値%sは不正なアスペクト比です\n
 
-# osd/windows/video.c: 531
+# osd/windows/video.c: 536
 Illegal resolution value for %s = %s\n
 %sの値%sは不正な解像度です\n
 
@@ -650,7 +650,7 @@ Illegal resolution value for %s = %s\n
 Input
 入力
 
-# osd/windows/video.c: 461
+# osd/windows/video.c: 466
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
@@ -826,7 +826,7 @@ Unlimited
 Unmount
 マウント解除
 
-# osd/windows/video.c: 425
+# osd/windows/video.c: 430
 Using %s scale effect\n
 スケールエフェクト %s を使用します\n
 
@@ -850,7 +850,7 @@ Windows版サウンドオプション
 WINDOWS VIDEO OPTIONS
 Windows版ビデオオプション
 
-# osd/windows/video.c: 457
+# osd/windows/video.c: 462
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video none は -seconds_to_run オプション無しでは無意味です\n
 
