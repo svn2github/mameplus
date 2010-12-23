@@ -207,6 +207,9 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/roc10937.o \
 	$(EMUMACHINE)/rp5h01.o \
 	$(EMUMACHINE)/rtc65271.o \
+	$(EMUMACHINE)/s3c2400.o \
+	$(EMUMACHINE)/s3c2410.o \
+	$(EMUMACHINE)/s3c2440.o \
 	$(EMUMACHINE)/scsi.o \
 	$(EMUMACHINE)/scsicd.o \
 	$(EMUMACHINE)/scsidev.o \
@@ -283,6 +286,10 @@ $(EMUOBJ)/rendfont.o:	$(EMUOBJ)/uismall11.fh $(EMUOBJ)/uismall14.fh $(EMUOBJ)/ui
 
 $(EMUOBJ)/video.o:	$(EMUSRC)/rendersw.c
 $(EMUVIDEO)/v9938.o:	$(EMUSRC)/video/v9938mod.c
+
+$(EMUMACHINE)/s3c2400.o:	$(EMUSRC)/machine/s3c24xx.c
+$(EMUMACHINE)/s3c2410.o:	$(EMUSRC)/machine/s3c24xx.c
+$(EMUMACHINE)/s3c2440.o:	$(EMUSRC)/machine/s3c24xx.c
 
 
 #-------------------------------------------------

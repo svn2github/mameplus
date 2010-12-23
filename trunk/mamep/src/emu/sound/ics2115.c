@@ -3,7 +3,6 @@
 
    By O. Galibert, with a lot of help from the nebula
    ics emulation by Elsemi.
-   Also by trap15, nimitz, and austere.
 */
 
 #include "emu.h"
@@ -48,10 +47,9 @@ struct _ics2115_state
 	INT16 *ulaw;
 
 	struct {
-		UINT32 curvol;
 		UINT16 fc, addrh, addrl, strth, endh, volacc;
 		UINT8 strtl, endl, saddr, pan, conf, ctl;
-		UINT8 vincr, vstart, vend, vctl;
+		UINT8 vstart, vend, vctl;
 		UINT8 state;
 	} voice[32];
 
@@ -91,10 +89,6 @@ static void recalc_irq(ics2115_state *chip)
 	}
 }
 
-#define SOUND_FLAG_ULAW		(1 << 0)
-#define SOUND_FLAG_REPEAT	(1 << 3)
-/* What? */
-#define SOUND_FLAG_SFX		(1 << 5)
 
 static STREAM_UPDATE( update )
 {
@@ -114,57 +108,47 @@ static STREAM_UPDATE( update )
 			UINT32 badr = (chip->voice[osc].saddr << 20) & 0xffffff;
 			UINT32 delta = chip->voice[osc].fc << 2;
 			UINT8 conf = chip->voice[osc].conf;
-			UINT8 pan = chip->voice[osc].pan;
 			INT32 vol = chip->voice[osc].volacc;
-			INT32 curvol = chip->voice[osc].curvol;
 			vol = (((vol & 0xff0)|0x1000)<<(vol>>12))>>12;
 
-			if (ICS2115LOGERROR) logerror("ICS2115: KEYRUN %02d adr=%08x end=%08x loop=%08x delta=%08x\n",
-					 osc, adr, end, loop, delta);
+			if (ICS2115LOGERROR) logerror("ICS2115: KEYRUN %02d adr=%08x end=%08x delta=%08x\n",
+					 osc, adr, end, delta);
 
 			for (i = 0; i < samples; i++)
 			{
 				INT32 v = chip->rom[badr|(adr >> 12)];
-				if (conf & SOUND_FLAG_ULAW)
+				if (conf & 1)
 					v = chip->ulaw[v];
 				else
 					v = ((INT8)v) << 6;
 
-				v = (v*(curvol + vol))>>(16+4);
-				outputs[0][i] += v * (255 - pan) / 0x80;
-				outputs[1][i] += v * (pan + 1) / 0x80;
+				v = (v*vol)>>(16+5);
+				outputs[0][i] += v;
+				outputs[1][i] += v;
 				adr += delta;
-				if((end - loop) == 0)
-					end = loop + 1;
-				curvol += (chip->voice[osc].vincr + ((chip->voice[osc].vend - chip->voice[osc].vstart) / (end - loop))) * 1;
 				if (adr >= end)
 				{
 					if (ICS2115LOGERROR) logerror("ICS2115: KEYDONE %2d\n", osc);
-					if (ICS2115LOGERROR) logerror("ICS2115: KEYRUN %02d conf=%02x adr=%08x end=%08x loop=%08x delta=%08x\n",
-						 osc, conf, adr, end, loop, delta);
-					adr = loop;
-					if(!(conf & SOUND_FLAG_REPEAT) || (loop == 0)) {
-						chip->voice[osc].state &= ~V_ON;
-						chip->voice[osc].state |= V_DONE;
-					}
+					adr -= (end-loop);
+					chip->voice[osc].state &= ~V_ON;
+					chip->voice[osc].state |= V_DONE;
 					rec_irq = 1;
 					break;
 				}
 			}
-			chip->voice[osc].curvol = curvol;
 			chip->voice[osc].addrh = adr >> 16;
 			chip->voice[osc].addrl = adr;
 		}
 	if (rec_irq)
 		recalc_irq(chip);
 }
+
 static void keyon(ics2115_state *chip, int osc)
 {
-	if (ICS2115LOGERROR) logerror("ICS2115: KEYON %2d conf:%02x vctl:%02x p:%02X a:%07x.%03x l:%05x.%x e:%05x.%x v:%03x f:%d\n",
+	if (ICS2115LOGERROR) logerror("ICS2115: KEYON %2d conf:%02x vctl:%02x a:%07x.%03x l:%05x.%x e:%05x.%x v:%03x f:%d\n",
 			osc,
 			chip->voice[chip->osc].conf,
 			chip->voice[chip->osc].vctl,
-			chip->voice[chip->osc].pan,
 			(chip->voice[osc].saddr << 20)|(chip->voice[osc].addrh << 4)|(chip->voice[osc].addrl >> 12),
 			(chip->voice[osc].addrl >> 3) & 0x1ff,
 			(chip->voice[osc].strth << 4)|(chip->voice[osc].strtl >> 4),
@@ -174,7 +158,6 @@ static void keyon(ics2115_state *chip, int osc)
 			chip->voice[osc].volacc>>4,
 			(chip->voice[chip->osc].fc*33075+512)/1024);
 	chip->voice[osc].state |= V_ON;
-	chip->voice[osc].curvol = chip->voice[osc].vstart;
 }
 
 
@@ -194,7 +177,23 @@ static TIMER_CALLBACK( timer_cb_1 )
 
 static void recalc_timer(ics2115_state *chip, int timer)
 {
-	UINT64 period = chip->timer[timer].preset * (chip->timer[timer].scale << 16) / 60;
+	UINT64 period;
+
+	if(chip->timer[timer].scale) {
+		int sc = chip->timer[timer].scale;
+		UINT64 counter = UINT64(((sc & 31)+1) * (chip->timer[timer].preset+1)) << (4+(sc >> 5));
+		period = 1000000000 * counter / 33868800;
+	} else
+		period = 0;
+
+	if (period)
+	{
+		if (ICS2115LOGERROR) logerror("ICS2115: timer %d freq=%fHz\n", timer, 1.0/(period / 1000000000.0));
+	}
+	else
+	{
+		if (ICS2115LOGERROR) logerror("ICS2115: timer %d off\n", timer);
+	}
 
 	if (chip->timer[timer].period != period)
 	{
@@ -205,6 +204,7 @@ static void recalc_timer(ics2115_state *chip, int timer)
 			timer_adjust_oneshot(chip->timer[timer].timer, attotime_never, 0);
 	}
 }
+
 
 static void ics2115_reg_w(ics2115_state *chip, UINT8 reg, UINT8 data, int msb)
 {
@@ -265,12 +265,6 @@ static void ics2115_reg_w(ics2115_state *chip, UINT8 reg, UINT8 data, int msb)
 			if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: endl = %02x\n", cpuexec_describe_context(machine), chip->osc,
 					 chip->voice[chip->osc].endl);
 		}
-		break;
-
-	case 0x06: // [osc] Volume Increment
-		chip->voice[chip->osc].vincr = data;
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: vincr = %02x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].vincr);
 		break;
 
 	case 0x07: // [osc] Volume Start
@@ -337,20 +331,6 @@ static void ics2115_reg_w(ics2115_state *chip, UINT8 reg, UINT8 data, int msb)
 		}
 		break;
 
-	case 0x0e: // Active Voices
-		if (msb)
-		{
-			int i;
-			if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: actv = %02x\n", cpuexec_describe_context(machine), chip->osc, data);
-			for(i = 0; i < 0x20; i++) {
-				if(data & (1 << i))
-					chip->voice[i].vctl = chip->voice[i].vctl & ~V_DONE;
-				else
-					chip->voice[i].vctl = (chip->voice[i].vctl | V_DONE) & ~V_ON;
-			}
-		}
-		break;
-
 	case 0x10: // [osc] Oscillator Control
 		if (msb)
 		{
@@ -359,8 +339,6 @@ static void ics2115_reg_w(ics2115_state *chip, UINT8 reg, UINT8 data, int msb)
 					 chip->voice[chip->osc].ctl);
 			if (data == 0)
 				keyon(chip, chip->osc);
-			else if (data == 0xF)
-				chip->voice[chip->osc].volacc = 0;
 		}
 		break;
 
@@ -437,94 +415,12 @@ static UINT16 ics2115_reg_r(ics2115_state *chip, UINT8 reg)
 
 	switch (reg)
 	{
-	case 0x00: // [osc] Oscillator Configuration
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read conf = %02x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].conf);
-		return chip->voice[chip->osc].conf << 8;
-
-	case 0x01: // [osc] Wavesample frequency
-		// freq = fc*33075/1024 in 32 voices mode, fc*44100/1024 in 24 voices mode
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read fc = %04x (%dHz)\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].fc, chip->voice[chip->osc].fc*33075/1024);
-		return chip->voice[chip->osc].fc;
-
-	case 0x02: // [osc] Wavesample loop start address 19-4
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read strth = %04x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].strth);
-		return chip->voice[chip->osc].strth;
-
-	case 0x03: // [osc] Wavesample loop start address 3-0.3-0
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read strtl = %02x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].strtl);
-		return chip->voice[chip->osc].strtl << 8;
-
-	case 0x04: // [osc] Wavesample loop end address 19-4
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read endh = %04x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].endh);
-		return chip->voice[chip->osc].endh;
-
-	case 0x05: // [osc] Wavesample loop end address 3-0.3-0
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read endl = %02x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].endl);
-		return chip->voice[chip->osc].endl << 8;
-
-	case 0x06: // [osc] Volume Increment
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read vincr = %02x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].vincr);
-		return chip->voice[chip->osc].vincr << 8;
-
-	case 0x07: // [osc] Volume Start
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read vstart = %02x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].vstart);
-		return chip->voice[chip->osc].vstart << 8;
-
-	case 0x08: // [osc] Volume End
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read vend = %02x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].vend);
-		return chip->voice[chip->osc].vend << 8;
-
-	case 0x09: // [osc] Volume accumulator
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read volacc = %04x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].volacc);
-		return chip->voice[chip->osc].volacc;
-
-	case 0x0a: // [osc] Wavesample address 19-4
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read addrh = %04x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].addrh);
-		return chip->voice[chip->osc].addrh;
-
-	case 0x0b: // [osc] Wavesample address 3-0.8-0
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read addrl = %04x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].addrl);
-		return chip->voice[chip->osc].addrl;
-
-
-	case 0x0c: // [osc] Pan
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read pan = %02x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].pan);
-		return chip->voice[chip->osc].pan << 8;
-
-#if 1
 	case 0x0d: // [osc] Volume Enveloppe Control
 		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read vctl\n", cpuexec_describe_context(machine), chip->osc);
 		//      res = chip->voice[chip->osc].vctl << 8;
 		// may expect |8 on voice irq with &40 == 0
 		// may expect |8 on reg 0 on voice irq with &80 == 0
 		return 0x100;
-#else
-	case 0x0d: // [osc] Volume Enveloppe Control
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read vctl = %02x\n", cpuexec_describe_context(machine), chip->osc,
-					 chip->voice[chip->osc].vctl);
-		return chip->voice[chip->osc].vctl << 8;
-#endif
-
-	case 0x0e:{ // Active Voices
-		int i, v;
-		for(v = 0, i = 0; i < 0x20; i++) {
-			v |= !(chip->voice[i].vctl & V_DONE) << i;
-		}
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read actv = %02x\n", cpuexec_describe_context(machine), chip->osc, v);
-		return v << 8;}
 
 	case 0x0f:{// [osc] Interrupt source/oscillator
 		int osc;
@@ -539,21 +435,11 @@ static UINT16 ics2115_reg_r(ics2115_state *chip, UINT8 reg)
 				break;
 			}
 		if (ICS2115LOGERROR) logerror("%s:ICS2115: read irqv %02x\n", cpuexec_describe_context(machine), res);
-		return res << 8;}
-
-	case 0x10: // [osc] Oscillator Control
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read ctl = %02x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].ctl);
-		return chip->voice[chip->osc].ctl << 8;
-
-	case 0x11: // [osc] Wavesample static address 27-20
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: %2d: read saddr = %02x\n", cpuexec_describe_context(machine), chip->osc,
-				 chip->voice[chip->osc].saddr);
-		return chip->voice[chip->osc].saddr << 8;
-
+		return res << 8;
+	}
 
 	case 0x40: // Timer 0 clear irq
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: clear timer 0\n", cpuexec_describe_context(machine));
+		//      if (ICS2115LOGERROR) logerror("%s:ICS2115: clear timer 0\n", cpuexec_describe_context(machine));
 		chip->irq_pend &= ~(1<<0);
 		recalc_irq(chip);
 		return chip->timer[0].preset;
@@ -565,7 +451,7 @@ static UINT16 ics2115_reg_r(ics2115_state *chip, UINT8 reg)
 		return chip->timer[1].preset;
 
 	case 0x43: // Timer status
-		if (ICS2115LOGERROR) logerror("%s:ICS2115: read timer status %02x\n", cpuexec_describe_context(machine), chip->irq_pend & 3);
+		//      if (ICS2115LOGERROR) logerror("%s:ICS2115: read timer status %02x\n", cpuexec_describe_context(machine), chip->irq_pend & 3);
 		return chip->irq_pend & 3;
 
 	case 0x4a: // IRQ Pending
@@ -638,7 +524,6 @@ static DEVICE_START( ics2115 )
 		state_save_register_device_item(device, vv, chip->voice[vv].pan);
 		state_save_register_device_item(device, vv, chip->voice[vv].conf);
 		state_save_register_device_item(device, vv, chip->voice[vv].ctl);
-		state_save_register_device_item(device, vv, chip->voice[vv].vincr);
 		state_save_register_device_item(device, vv, chip->voice[vv].vstart);
 		state_save_register_device_item(device, vv, chip->voice[vv].vend);
 		state_save_register_device_item(device, vv, chip->voice[vv].vctl);
