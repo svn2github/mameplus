@@ -4,11 +4,19 @@ Artwork
 
 # 1688
 Backdrop
-
+バックドロップ
 
 # 1733
 Bezel
+ベゼル
 
+# 3570
+Marquee
+マーキー
+
+# 3786
+Overlay
+オーバーレイ
 
 # 2762
 CP Graphics
@@ -20,13 +28,5 @@ Inst. Card
 
 # 3511
 Lamps or LEDs
-
-
-# 3570
-Marquee
-
-
-# 3786
-Overlay
 
 

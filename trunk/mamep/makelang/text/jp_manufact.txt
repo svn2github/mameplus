@@ -6,6 +6,10 @@
 ADK
 ADK
 
+# MSX
+ASCII & Microsoft
+アスキー & マイクロソ\フト
+
 # Baluba-louk no Densetsu
 Able Corp, Ltd.
 エイブルコーポレーション
@@ -22,6 +26,10 @@ Aicom
 Alba
 アルバ
 
+# Shikigami no Shiro (V2.03J)
+Alfa System
+アルファシステム
+
 # Rezon
 Allumer
 アリュメ
@@ -29,6 +37,10 @@ Allumer
 # Magician Lord (set 1)
 Alpha Denshi Co.
 アルファ電子工業
+
+# Guilty Gear X (JPN)
+Arc System Works
+アークシステムワークス
 
 # Atari PSX
 Atari
@@ -56,6 +68,14 @@ Banpresto
 
 # Mobile Suit Z-Gundam: A.E.U.G. vs Titans (ZGA1 Ver. A)
 Capcom
+カプコン
+
+# Varth: Operation Thunderstorm (USA 920612)
+Capcom, distributed by Romstar
+カプコン
+
+# Pnickies (Japan 940608)
+Capcom, licensed by Compile
 カプコン
 
 # Dangun Feveron (Japan, Ver. 98/09/17)
@@ -198,6 +218,10 @@ Home Data
 Hudson
 ハドソ\ン
 
+# Blazing Lazers
+Hudson Soft
+ハドソ\ン
+
 # Grand Striker
 Human
 ヒューマン
@@ -205,6 +229,10 @@ Human
 # Blazing Tornado
 Human Amusement
 ヒューマン アミューズメント
+
+# Golden Star
+IGS
+IGS
 
 # Capcom Bowling (set 1)
 Incredible Technologies
@@ -370,6 +398,14 @@ Sammy Industries
 Sammy Industries Japan
 サミー
 
+# Sports Shooting USA
+Sammy USA
+サミーアメリカ
+
+# Deer Hunting USA V4.3
+Sammy USA Corporation
+サミーアメリカ
+
 # Dream Shopper
 Sanritsu
 サンリツ
@@ -402,6 +438,10 @@ Seta
 Seta Kikaku Corp.
 セタ企画
 
+# Hana Awase
+Seta Kikaku, Ltd.
+セタ企画
+
 # Famicom Twin
 Sharp
 シャープ
@@ -414,9 +454,17 @@ Shoei
 Sigma Enterprises Inc.
 シグマ
 
+# ZN1
+Sony
+ソ\ニー
+
 # Mosaic
 Space
 スペース
+
+# Bishoujo Janshi Pretty Sailor 18-kin (Japan)
+Sphinx
+スフィンクス
 
 # Rad Racer (PlayChoice-10)
 Square
@@ -450,6 +498,10 @@ Sunwise
 System Service
 システムサービス
 
+# New Super 3D Golf Simulation - Waialae No Kiseki / Super Mahjong 2 (Super Famicom Box)
+T&E Soft
+T&Eソ\フト
+
 # Black Hole
 TDS
 東京電子設計
@@ -457,6 +509,10 @@ TDS
 # Rock Climber
 Taito
 タイトー
+
+# Kick and Run (US)
+Taito America Corp
+タイトーアメリカ
 
 # Qix (set 1)
 Taito America Corporation
@@ -522,6 +578,14 @@ Tekunon Kougyou
 Toaplan
 東亜プラン
 
+# Shin Nihon Pro Wrestling Toukon Retsuden 3 Arcade Edition (Japan, TR1/VER.A)
+Tomy
+トミー
+
+# Radiant Silvergun (JUET 980523 V1.000)
+Treasure
+トレジャー
+
 # Dorodon (set 1)
 UPL
 UPL
@@ -533,6 +597,10 @@ Unico
 # Cosmic Guerilla
 Universal
 ユニバーサル
+
+# 5-Aces Poker
+Unknown
+不明
 
 # Rabio Lepus (Japan)
 V-System Co.
@@ -553,6 +621,10 @@ Windom
 # Magical Cat Adventure
 Wintechno
 ウインテクノ
+
+# Computer Quiz Atama no Taisou (Japan)
+Yachiyo Denki
+八千代電気
 
 # Space Stranger
 Yachiyo Electronics, Ltd.
@@ -589,6 +661,10 @@ bootleg?
 # Puckman (Falcom?)
 hack
 ハック
+
+# Dream Crown
+unknown
+不明
 
 # Grand Prix
 4fun
@@ -650,10 +726,6 @@ AMT
 AMT Co. Ltd.
 
 
-# MSX
-ASCII & Microsoft
-
-
 # Mr. Kougar
 ATW
 
@@ -700,10 +772,6 @@ Aiky
 
 # Imola Grand Prix
 Alberici
-
-
-# Shikigami no Shiro (V2.03J)
-Alfa System
 
 
 # Ace
@@ -780,10 +848,6 @@ Anime Tec
 
 # Otona no Mahjong (Japan 880628)
 Apple
-
-
-# Guilty Gear X (JPN)
-Arc System Works
 
 
 # Arcadia System BIOS
@@ -928,14 +992,6 @@ Cal Omega
 
 # Cal Omega - Game 7.4 (Gaming Poker, W.Export)
 Cal Omega Inc.
-
-
-# Varth: Operation Thunderstorm (USA 920612)
-Capcom, distributed by Romstar
-
-
-# Pnickies (Japan 940608)
-Capcom, licensed by Compile
 
 
 # Cool Pool
@@ -1474,10 +1530,6 @@ Home Data?
 Hot-B
 
 
-# Blazing Lazers
-Hudson Soft
-
-
 # Super Soccer (Nintendo Super System)
 Human Inc.
 
@@ -1500,10 +1552,6 @@ ICE
 
 # 4 En Raya
 IDSA
-
-
-# Golden Star
-IGS
 
 
 # Dou Di Zhu
@@ -2174,14 +2222,6 @@ Saero Entertainment
 Sai-Mate
 
 
-# Sports Shooting USA
-Sammy USA
-
-
-# Deer Hunting USA V4.3
-Sammy USA Corporation
-
-
 # Gam*Boy II (Korea)
 Samsung
 
@@ -2232,10 +2272,6 @@ Seojin
 
 # Quiz Olympic (set 1)
 Seoul Coin Corp.
-
-
-# Hana Awase
-Seta Kikaku, Ltd.
 
 
 # Driving Force (Pac-Man conversion)
@@ -2290,10 +2326,6 @@ Solar Games
 SonoKong
 
 
-# ZN1
-Sony
-
-
 # Dambusters (US, set 1)
 South West Research
 
@@ -2312,10 +2344,6 @@ Spacy Industrial, Ltd.
 
 # Jolly Card Professional 2.0 (Spale Soft)
 Spale Soft
-
-
-# Bishoujo Janshi Pretty Sailor 18-kin (Japan)
-Sphinx
 
 
 # Mahjong Dunhuang
@@ -2386,10 +2414,6 @@ System Ten
 SystemBit
 
 
-# New Super 3D Golf Simulation - Waialae No Kiseki / Super Mahjong 2 (Super Famicom Box)
-T&E Soft
-
-
 # The Hand
 T.I.C.
 
@@ -2420,10 +2444,6 @@ TV Game Elektronik
 
 # Falcons Wild - Wild Card 1991 (TVG)
 TVG
-
-
-# Kick and Run (US)
-Taito America Corp
 
 
 # The Block Kuzushi (Japan)
@@ -2470,20 +2490,12 @@ Thunderhead Inc.
 Time Warner Interactive
 
 
-# Shin Nihon Pro Wrestling Toukon Retsuden 3 Arcade Edition (Japan, TR1/VER.A)
-Tomy
-
-
 # Leprechaun
 Tong Electronic
 
 
 # Golden Fire II
 Topis Corp
-
-
-# Radiant Silvergun (JUET 980523 V1.000)
-Treasure
 
 
 # XII Stag (V2.01J)
@@ -2528,10 +2540,6 @@ Universal Video Games
 
 # Taiwan Chess Legend
 Uniwang
-
-
-# 5-Aces Poker
-Unknown
 
 
 # Poly-Play
@@ -2654,10 +2662,6 @@ World Game
 Xex
 
 
-# Computer Quiz Atama no Taisou (Japan)
-Yachiyo Denki
-
-
 # Black Touch (Korea)
 Yang Gi Co Ltd.
 
@@ -2724,9 +2728,5 @@ Zilec-Zenitone
 
 # X-Files
 dgPIX Entertainment Inc.
-
-
-# Dream Crown
-unknown
 
 

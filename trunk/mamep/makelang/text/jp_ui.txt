@@ -706,6 +706,10 @@ Console
 Contains commands for displaying help
 ヘルプを表\示するコマンドが含まれています
 
+# osd/winui/mameui.rc: 1422
+Contains commands for manipulating the view
+ビューを処理するコマンドが含まれています
+
 # osd/winui/mameui.rc: 1444
 Contains commands for sorting by various columns
 指定項目を元に整列します
@@ -717,6 +721,10 @@ Contains commands for user interface options
 # osd/winui/mameui.rc: 1422
 Contains commands for working with the selected items
 選択されたアイテムによって動作するコマンドが含まれています
+
+# osd/winui/mameui.rc: 1429, 1542
+Contains commands to select tabs shown in the picture area
+画像エリア内のタブを選択するコマンドが含まれています
 
 # osd/winui/mameui.rc: 688
 Contrast Correction
@@ -778,6 +786,22 @@ Crop artwork
 Crosshair Files
 十\字線ファイル
 
+# osd/winui/paletteedit.c: 113
+Cursor background (floating)
+カーソ\ル背景 (移動時)
+
+# osd/winui/paletteedit.c: 111
+Cursor background (selected)
+カーソ\ル背景 (選択時)
+
+# osd/winui/paletteedit.c: 112
+Cursor text (floating)
+カーソ\ル文字 (移動時)
+
+# osd/winui/paletteedit.c: 110
+Cursor text (selected)
+カーソ\ル文字 (選択時)
+
 # osd/winui/winui.c: 4651, 4679
 Custom
 カスタム
@@ -800,7 +824,7 @@ Customize Fields
 
 # osd/winui/mameui.rc: 1485
 Customize interface options.
-インターフェイスオプションを変更します
+インターフェースオプションを変更します
 
 # osd/winui/mameui.rc: 1457, 1542
 Customize which columns are used in the game list
@@ -1002,6 +1026,10 @@ Dumping Status
 E&xit
 終了(&X)
 
+# osd/winui/mameui.rc: 713
+Enable audio sync
+音声同期を有効
+
 # osd/winui/mameui.rc: 883
 Enable game cheats
 ゲームチートを有効化
@@ -1202,9 +1230,33 @@ Game lacks sound
 Game protection isn't fully emulated
 プロテクトのため動作が不完全
 
+# osd/winui/properties.c: 1031, 1084, 1155
+Game requires external artwork files
+ゲームは外部のアートワークファイルが必要です
+
 # osd/winui/winui.c: 3452
 Game search %d%% complete
 ゲームの検索 %d%% 完了
+
+# osd/winui/dialogs.c: 262
+Gamename
+ゲーム名
+
+# osd/winui/dialogs.c: 264
+Gamename + Increment
+ゲーム名 + 連番
+
+# osd/winui/dialogs.c: 266
+Gamename/Gamename
+ゲーム名/ゲーム名
+
+# osd/winui/dialogs.c: 268
+Gamename/Gamename + Increment
+ゲーム名/ゲーム名 + 連番
+
+# osd/winui/dialogs.c: 270
+Gamename/Increment
+ゲーム名/連番
 
 # osd/winui/mameui.rc: 660
 Gameplay speed
@@ -1266,13 +1318,17 @@ Homebrew
 Horizontal
 横型
 
+# osd/winui/properties.c: 1187
+Horizontal options\nCustom options used by all games in the Horizontal
+グローバル縦型オプションです。\n縦型の全ゲームのカスタム設定として使用されます。
+
 # osd/winui/mameui.rc: 1485
 How cheats work
 チートの使用方法を説明します
 
 # osd/winui/mui_opts.c: 315
 INTERFACE OPTIONS
-インターフェイスオプション
+インターフェースオプション
 
 # osd/winui/layout.c: 139
 IPS Files
@@ -1310,6 +1366,10 @@ Imperfect Sound
 Incorrect:
 異常:
 
+# osd/winui/dialogs.c: 140
+Individual game options\n
+個別のゲームオプション\n
+
 # osd/winui/mameui.rc: 1086
 Inheritable Filters
 フィルタを継承可能\にする
@@ -1328,7 +1388,11 @@ Insert
 
 # osd/winui/mameui.rc: 1068
 Interface Options
-インターフェイスオプション
+インターフェースオプション
+
+# osd/winui/properties.c: 408
+Internal
+内部
 
 # osd/winui/treeview.c: 1369
 Joy 16-Way
@@ -1441,6 +1505,14 @@ MAMEステートファイル (*.sta)
 # osd/winui/dialogs.c: 953
 MAMEUI PCB Info: %s [%s]
 MAMEUI PCB情報: %s [%s]
+
+# osd/winui/dialogs.c: 834
+MAMEUI requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run MAMEUI again.\r\n
+MAMEUI は、Microsoft Windows 9x/Me/NT/2000のOS拡張セットであるDirectX\r\nバージョン3.0以降が必要です。\r\n\r\nMicrosoftのDirectXホームページ(http://www.microsoft.com/japan/directx)\r\nからDirectXをダウンロードし、インストール後に MAMEUI を起動してください。\r\n
+
+# osd/winui/dialogs.c: 133
+MAMEUI will now reset the following\nto the default settings:\n\n
+MAMEUIは現在以下を標準の設定に\nリセットしようとしています:\n\n
 
 # osd/winui/mui_opts.c: 310 osd/winui/translate.c: 111
 MS Sans Serif
@@ -1834,6 +1906,14 @@ Rese&t Playcount
 Reset
 リセット
 
+# osd/winui/mameui.rc: 817
+Reset Debugscript
+スクリプトのリセット
+
+# osd/winui/mameui.rc: 867
+Reset Joystickmap
+マップのリセット
+
 # osd/winui/mameui.rc: 1042
 Reset Options
 設定の初期化
@@ -1857,6 +1937,10 @@ Reset number of plays for selected item
 # osd/winui/mameui.rc: 1504
 Reset time played for selected item
 選択した項目のプレイ時間をリセットします
+
+# osd/winui/dialogs.c: 146
+Resetting the User Interface options\nrequires exiting MAMEUI.\n
+ユーザインターフェースオプションをリセットするには\nMAMEUIの終了が必要です。\n
 
 # osd/winui/layout.c: 80
 Resolution
@@ -1946,6 +2030,10 @@ Screen setting
 Screen:
 画面サイズ:
 
+# osd/winui/properties.c: 858
+Screenless Game
+画面なしゲーム
+
 # osd/winui/layout.c: 69
 Screens
 画面数
@@ -1970,6 +2058,10 @@ Screenshot Ta&b\tAlt+B
 Second screen
 2画面目
 
+# osd/winui/mameui.rc: 772
+Seconds to run
+実行時間
+
 # osd/winui/mameui.rc: 1080
 Select &random background image on start
 背景画像をランダムに選択する(&R)
@@ -1982,6 +2074,10 @@ Select Cabinet tab
 Select Control panel tab
 コントロールパネルタブの選択
 
+# osd/winui/mameui.rc: 815
+Select Debugscript
+スクリプトの選択
+
 # osd/winui/mameui.rc: 1542
 Select Flyer tab
 広告タブの選択
@@ -1993,6 +2089,10 @@ Select History tab
 # osd/winui/columnedit.c: 260
 Select Item
 項目の選択
+
+# osd/winui/mameui.rc: 865
+Select Joystickmap
+マップの選択
 
 # osd/winui/mameui.rc: 1516
 Select Marquee tab
@@ -2050,6 +2150,18 @@ Set game list and folder list font
 Set in-game UI color palette
 ゲーム中のUIカラーパレットを設定します
 
+# osd/winui/mameui.rc: 1610
+Set the History file to use
+歴史ファイルの設定
+
+# osd/winui/mameui.rc: 1610
+Set the Mameinfo file to use
+MAME情報ファイルの設定
+
+# osd/winui/mameui.rc: 1613
+Set the Story file to use
+ストーリーファイルの設定
+
 # osd/winui/mameui.rc: 1525
 Set the background image
 背景画像の設定
@@ -2073,6 +2185,10 @@ Show directories for:
 # osd/winui/mameui.rc: 1510
 Show game PCB information
 ゲームのPCB情報を表\示
+
+# osd/winui/mameui.rc: 1463
+Show items grouped by parent game
+原作のゲームでグループ化した形式で表\示
 
 # osd/winui/mameui.rc: 1542
 Show or hide folder
@@ -2165,6 +2281,18 @@ Small Icons
 # osd/winui/dialogs.c: 238 osd/winui/mui_opts.c: 455
 Snapshot
 スナップショット
+
+# osd/winui/mameui.rc: 1102
+Snapshot/movie naming
+スナップショット/動画の命名
+
+# osd/winui/mameui.rc: 569
+Snapshot/movie resolution
+スナップショット/動画の解像度
+
+# osd/winui/mameui.rc: 566
+Snapshot/movie view
+スナップショット/動画 ビュー
 
 # osd/winui/layout.c: 117
 Snapshots
@@ -2294,6 +2422,10 @@ Switch resolutions to fit
 Sync to monitor refresh
 モニタと同期
 
+# osd/winui/datafile.c: 1062
+THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
+このゲームは動作しません。 このゲームのエミュレーションはまだ不完全です。 開発者がエミュレーションを改善するのを待つ以外できることはありません。\n
+
 # osd/winui/datafile.c: 1072
 The colors are completely wrong.\n
 色が再現されません。\n
@@ -2309,6 +2441,10 @@ The game has protection which isn't fully emulated.\n
 # osd/winui/datafile.c: 1078
 The game lacks sound.\n
 サウンドが再生されません。\n
+
+# osd/winui/datafile.c: 1087
+The game requires external artwork files\n
+ゲームは外部のアートワークファイルが必要です\n
 
 # osd/winui/mui_util.c: 239
 The operating system is out of memory or resources.
@@ -2494,6 +2630,10 @@ Unknown error.
 Unsupported
 未対応
 
+# osd/winui/mameui.rc: 809
+Update Main window during paused emulation
+ポーズ中にもメインウインドウの更新を行う
+
 # osd/winui/winui.c: 778
 Use Local Language Game List
 日本語ゲームリストを使用する
@@ -2549,6 +2689,10 @@ Version 9
 # osd/winui/layout.c: 58 osd/winui/winui.c: 5705
 Vertical
 縦型
+
+# osd/winui/properties.c: 1184
+Vertical options\nCustom options used by all games in the Vertical
+グローバル横型オプションです。\n横型の全ゲームのカスタム設定として使用されます。
 
 # osd/winui/properties.c: 1007, 1060, 1131
 Video emulation isn't 100% accurate
@@ -2670,6 +2814,46 @@ by S&amples
 by T&rackball
 トラックボール(&R)
 
+# osd/winui/winui.c: 6385
+cheats (*.dat)
+チートファイル (*.dat)
+
+# osd/winui/winui.c: 6375
+gamelists (*.lst)
+ゲームリスト (*.lst)
+
+# osd/winui/winui.c: 6388
+history (*.dat)
+歴史ファイル (*.dat)
+
+# osd/winui/winui.c: 6391
+mameinfo (*.dat)
+MAME情報ファイル (*.dat)
+
+# osd/winui/winui.c: 6379
+maps (*.map,*.txt)
+マップファイル (*.map,*.txt)
+
+# osd/winui/winui.c: 6382
+scripts (*.txt,*.dat)
+スクリプト (*.txt,*.dat)
+
+# osd/winui/winui.c: 6360
+sounds (*.wav)
+サウンドファイル (*.wav)
+
+# osd/winui/winui.c: 6395
+stoty (*.dat)
+ストーリーファイル (*.dat)
+
+# osd/winui/winui.c: 6366
+videos (*.avi)
+動画ファイル (*.avi)
+
+# osd/winui/winui.c: 6363
+videos (*.mng)
+動画ファイル (*.mng)
+
 # osd/winui/mameui.rc: 379
 Additional MAMEUI code by
 
@@ -2678,199 +2862,15 @@ Additional MAMEUI code by
 Christopher Kirmse and the MAMEUI team
 
 
-# osd/winui/mameui.rc: 1422
-Contains commands for manipulating the view
-
-
-# osd/winui/mameui.rc: 1429, 1542
-Contains commands to select tabs shown in the picture area
-
-
 # osd/winui/mameui.rc: 372
 Copyright (C) 1997-2010 The MAME Team
-
-
-# osd/winui/paletteedit.c: 113
-Cursor background (floating)
-
-
-# osd/winui/paletteedit.c: 111
-Cursor background (selected)
-
-
-# osd/winui/paletteedit.c: 112
-Cursor text (floating)
-
-
-# osd/winui/paletteedit.c: 110
-Cursor text (selected)
-
-
-# osd/winui/mameui.rc: 713
-Enable audio sync
-
-
-# osd/winui/properties.c: 1031, 1084, 1155
-Game requires external artwork files
-
-
-# osd/winui/dialogs.c: 262
-Gamename
-
-
-# osd/winui/dialogs.c: 264
-Gamename + Increment
-
-
-# osd/winui/dialogs.c: 266
-Gamename/Gamename
-
-
-# osd/winui/dialogs.c: 268
-Gamename/Gamename + Increment
-
-
-# osd/winui/dialogs.c: 270
-Gamename/Increment
-
-
-# osd/winui/properties.c: 1187
-Horizontal options\nCustom options used by all games in the Horizontal
-
-
-# osd/winui/dialogs.c: 140
-Individual game options\n
-
-
-# osd/winui/properties.c: 408
-Internal
 
 
 # osd/winui/mameui.rc: 382
 John Hardy IV and Michael Soderstrom
 
 
-# osd/winui/dialogs.c: 834
-MAMEUI requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run MAMEUI again.\r\n
-
-
 # osd/winui/mameui.rc: 374
 MAMEUI version by
-
-
-# osd/winui/dialogs.c: 133
-MAMEUI will now reset the following\nto the default settings:\n\n
-
-
-# osd/winui/mameui.rc: 817
-Reset Debugscript
-
-
-# osd/winui/mameui.rc: 867
-Reset Joystickmap
-
-
-# osd/winui/dialogs.c: 146
-Resetting the User Interface options\nrequires exiting MAMEUI.\n
-
-
-# osd/winui/properties.c: 858
-Screenless Game
-
-
-# osd/winui/mameui.rc: 772
-Seconds to run
-
-
-# osd/winui/mameui.rc: 815
-Select Debugscript
-
-
-# osd/winui/mameui.rc: 865
-Select Joystickmap
-
-
-# osd/winui/mameui.rc: 1610
-Set the History file to use
-
-
-# osd/winui/mameui.rc: 1610
-Set the Mameinfo file to use
-
-
-# osd/winui/mameui.rc: 1613
-Set the Story file to use
-
-
-# osd/winui/mameui.rc: 1463
-Show items grouped by parent game
-
-
-# osd/winui/mameui.rc: 1102
-Snapshot/movie naming
-
-
-# osd/winui/mameui.rc: 569
-Snapshot/movie resolution
-
-
-# osd/winui/mameui.rc: 566
-Snapshot/movie view
-
-
-# osd/winui/datafile.c: 1062
-THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
-
-
-# osd/winui/datafile.c: 1087
-The game requires external artwork files\n
-
-
-# osd/winui/mameui.rc: 809
-Update Main window during paused emulation
-
-
-# osd/winui/properties.c: 1184
-Vertical options\nCustom options used by all games in the Vertical
-
-
-# osd/winui/winui.c: 6385
-cheats (*.dat)
-
-
-# osd/winui/winui.c: 6375
-gamelists (*.lst)
-
-
-# osd/winui/winui.c: 6388
-history (*.dat)
-
-
-# osd/winui/winui.c: 6391
-mameinfo (*.dat)
-
-
-# osd/winui/winui.c: 6379
-maps (*.map,*.txt)
-
-
-# osd/winui/winui.c: 6382
-scripts (*.txt,*.dat)
-
-
-# osd/winui/winui.c: 6360
-sounds (*.wav)
-
-
-# osd/winui/winui.c: 6395
-stoty (*.dat)
-
-
-# osd/winui/winui.c: 6366
-videos (*.avi)
-
-
-# osd/winui/winui.c: 6363
-videos (*.mng)
 
 

@@ -2,6 +2,10 @@
 Bootleg And Clone
 ŠC‘¯”Å‚ÆƒNƒ[ƒ“
 
+# 105
+CPS 1/2/3
+CPS 1/2/3
+
 # Title
 IPS
 IPS
@@ -17,8 +21,4 @@ Neo-Geo
 # 7
 Translation
 –|–ó”Å
-
-# 105
-CPS 1/2/3
-
 

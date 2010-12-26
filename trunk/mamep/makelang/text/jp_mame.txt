@@ -10,6 +10,10 @@
    FOUND: %s\n
 見つかった物: %s\n
 
+# emu/devintrf.c: 156
+  (missing dependencies; rescheduling)\n
+  (依存状態を見失いました; 再スケジュールします)\n
+
 # emu/audit.c: 257
  (%d bytes)
  (%d バイト)
@@ -21,6 +25,10 @@
 # emu/clifront.c: 800
  BAD
  不良
+
+# emu/sound.c: 577
+ Ch.%d
+ チャンネル.%d
 
 # emu/clifront.c: 806
  NO GOOD DUMP KNOWN
@@ -70,6 +78,10 @@
 %s Brightness
 %s 明るさ
 
+# emu/romload.c: 1155
+%s CHD ERROR: %s\n
+%s CHD エラー: %s\n
+
 # emu/romload.c: 1179
 %s CHD NEEDS REDUMP\n
 %s CHDは再ダンプが必要です\n
@@ -77,6 +89,10 @@
 # emu/ui.c: 2326
 %s Contrast
 %s コントラスト
+
+# emu/romload.c: 1190
+%s DIFF CHD ERROR: %s\n
+%s DIFF CHD エラー: %s\n
 
 # emu/uimenu.c: 2434
 %s Digital Speed
@@ -146,6 +162,22 @@
 %s'File is not a valid savestate file for game '%s'.
 %s'はゲーム'%s'の保存ファイルではありません '%s'。
 
+# emu/screen.c: 282
+%s: %s screen '%s' has a zero refresh rate\n
+%s: %s 画面 '%s' はリフレッシュレート0が存在します\n
+
+# emu/screen.c: 265
+%s: %s screen '%s' has an invalid display area\n
+%s: %s 画面 '%s' 無効な表\示エリアが存在します\n
+
+# emu/screen.c: 253
+%s: %s screen '%s' has invalid display dimensions\n
+%s: %s 画面 '%s' は無効な表\示次元です\n
+
+# emu/screen.c: 274
+%s: %s screen '%s' has unsupported format\n
+%s: %s 画面 '%s' はサポートされない形式です\n
+
 # emu/state.c: 467
 %sIncompatible save file (signature %08x, expected %08x)
 %s保存したファイルと互換がありません (シグネチャ %08x、正常値 %08x)
@@ -161,6 +193,10 @@
 # emu/clifront.c: 1224, 1715
 (BAD) 
 (異常) 
+
+# emu/inptport.c: 2074
+(Unknown Default)
+(未知のデフォルト)
 
 # emu/ui.c: 780, 825
 (more)
@@ -454,6 +490,14 @@ AD スティック Z 8
 AWP Simulated Video (No Artwork)
 AWPビデオシミュレーション (アートワークではありません）
 
+# emu/cheat.c: 874
+Activated %s
+作動 %s
+
+# emu/cheat.c: 882
+Activated\n %s = %s
+作動\n %s = %s
+
 # mame/layout/bfm_sc2.lay: 856
 Adder %d Output Only (%d:%d)
 加算器%dの出力のみ表\示 (%d:%d)
@@ -470,9 +514,21 @@ VFDとランプマトリックス追加
 Adder,VFD and Lamps
 VFDとランプ追加
 
+# emu/video.c: 985
+Adjusting target speed to %d%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n
+対象の速度を %d%% に調整しています (hw=%.2fHz, ゲーム=%.2fHz, 調整=%.2fHz)\n
+
 # mame/drivers/mcr68.c: 866 
 Advanced
 拡張形式
+
+# mame/drivers/igspoker.c: 821 mame/drivers/nss.c: 564, 568, 572, 576, 593 mame/drivers/sfcbox.c: 159, 163, 167, 171, 188 mame/drivers/snesb.c: 337, 341, 345, 349, 366 mess/drivers/snes.c: 304, 308, 312, 316, 333 
+All
+全て
+
+# emu/uimenu.c: 2719
+All cheats reloaded
+全てのチートを再読み込みしました
 
 # emu/inptport.c: 783
 Allow Continue
@@ -586,6 +642,18 @@ Button 1
 Button Lamps
 ボタンランプ
 
+# emu/uimenu.c: 3240
+CCW 90
+CCW 90
+
+# mame/drivers/neodrvr.c: 8969 mame/drivers/neogeo.c: 1239
+COMM Setting (Cabinet No.)
+COMM 設定 (筐体番号)
+
+# mame/drivers/neodrvr.c: 8974 mame/drivers/neogeo.c: 1239
+COMM Setting (Link Enable)
+COMM 設定 (リンク有効)
+
 # emu/clifront.c: 83
 CONFIGURATION COMMANDS
 設定コマンド
@@ -662,9 +730,17 @@ CORE STATE/PLAYBACK OPTIONS
 CORE VECTOR OPTIONS
 コアのベクタオプション
 
+# emu/devcpu.c: 68 
+CPU
+CPU
+
 # emu/clifront.c: 95
 CRC-32s
 CRC-32の値を表\示
+
+# emu/uimenu.c: 3238
+CW 90
+CW 90
 
 # emu/inptport.c: 725 
 Cabinet
@@ -690,6 +766,10 @@ Cassette
 Categories
 カテゴリ
 
+# mess/devices/chd_cd.c: 173, 174
+Cdrom
+CDロム
+
 # mame/drivers/cischeat.c: 1412
 Center
 センタリング
@@ -697,6 +777,18 @@ Center
 # emu/uimenu.c: 1625
 Cheat
 チート (ゲームの改造)
+
+# emu/uimenu.c: 2706
+Cheat Comment:\n%s
+チートコメント:\n%s
+
+# emu/cheat.c: 1138
+Cheats Disabled
+チート無効
+
+# emu/cheat.c: 1150
+Cheats Enabled
+チート有効
 
 # mame/drivers/aerofgt.c: 570, 573 mame/drivers/nmk16.c: 2733, 3290 mame/drivers/pgm.c: 1326, 1336, 1347, 1361, 1382, 1399, 1433, 1446, 1465, 1478, 1491, 1505, 1621 mame/drivers/ssv.c: 2397 mame/drivers/toaplan2.c: 3185, 3238, 3404
 China
@@ -870,9 +962,17 @@ Create New Card
 Created %s
 作成日時 %s
 
+# emu/ui.c: 2396
+Crosshair Offset %s
+十\字線 オフセット %s
+
 # emu/uimenu.c: 1621
 Crosshair Options
 十\字線オプション
+
+# emu/ui.c: 2393
+Crosshair Scale %s
+十\字線 スケール %s
 
 # emu/inptport.c: 620
 Cursor Down
@@ -1074,9 +1174,45 @@ EEPROM
 ERROR: %s/%s: IPS data is empty\n
 エラー: %s/%s: IPSデータが空です\n
 
+# emu/ips.c: 104
+ERROR: %s/%s: incorrect IPS header\n
+エラー: %s/%s: IPSヘッダが不正です\n
+
+# emu/ips.c: 94
+ERROR: %s/%s: open fail\n
+エラー: %s/%s: オープン失敗\n
+
+# emu/ips.c: 169
+ERROR: %s/%s: unexpected EOF\n
+エラー: %s/%s: 想定外のEOF\n
+
+# emu/ips.c: 226, 363
+ERROR: %s: IPS file is not found\n
+エラー: %s: IPSファイルが見つかりません\n
+
+# emu/ips.c: 384
+ERROR: %s: IPS is not applied correctly to ROM entry \"%s\"\n
+エラー: %s: IPSはROMエントリに正しく適用されません \"%s\"\n
+
+# emu/ips.c: 267
+ERROR: IPS file is not defined for ROM entry \"%s\"\n
+エラー: IPSファイルはROMエントリ用に定義されていません \"%s\"\n
+
+# emu/ips.c: 141, 302
+ERROR: IPS is not enough memory\n
+エラー: IPS はメモリ不足です\n
+
+# emu/ips.c: 259
+ERROR: ROM entry \"%s\" is not found for IPS file \"%s\"\n
+ERROR: ROMエントリ \"%s\" はIPSファイル中に見つかりません \"%s\"\n
+
 # emu/romload.c: 557
 ERROR: required files are missing, the game cannot be run.
 エラー: 必要なファイルがありません。ゲームは実行できません。
+
+# emu/ips.c: 277
+ERROR: wrong CRC for ROM entry \"%s\"\n
+ERROR: ROMエントリに対して不正なCRCです \"%s\"\n
 
 # emu/audit.c: 281
 EXPECTED: %s\n
@@ -1126,9 +1262,17 @@ BIOSに入る
 Error
 エラー
 
+# emu/video.c: 453
+Error creating AVI: %s\n
+AVI作成エラー: %s\n
+
 # emu/uimenu.c: 2810
 Error creating memory card\n(Card may already exist)
 メモリーカード作成エラー\n(カードを既に作成済みかも知れません)
+
+# emu/video.c: 351
+Error generating PNG for snapshot: png_error = %d\n
+スナップショット用PNG生成エラー: png_error = %d\n
 
 # emu/uimenu.c: 2796
 Error loading memory card
@@ -1138,9 +1282,29 @@ Error loading memory card
 Error: 
 エラー: 
 
+# emu/machine.c: 863
+Error: Failed to open file for %s operation.
+エラー: %s 操作を行うためのファイルオープンに失敗。
+
+# emu/machine.c: 838
+Error: Unable to %s state due to a read error (file is likely corrupt).
+エラー: 読み込みエラーのため %s 状態にすることができません (おそらくファイルが破損しています)。
+
+# emu/machine.c: 842
+Error: Unable to %s state due to a write error. Verify there is enough disk space.
+エラー: 書き込みエラーのため %s 状態にすることができません。 十\分な空きディスク容量があるか確認して下さい。
+
+# emu/machine.c: 834
+Error: Unable to %s state due to an invalid header. Make sure the save state is correct for this game.
+エラー: 無効なヘッダのため %s 状態にすることができません。 このゲーム用の状態保存が正しいか確かめて下さい。
+
 # emu/machine.c: 830
 Error: Unable to %s state due to illegal registrations. See error.log for details.
 エラー: 不正な登録のためステートを%sが出来ません。詳細はerror.logをご覧下さい。
+
+# emu/machine.c: 853
+Error: Unknown error during state %s.
+エラー: %s 状態にする時に不明なエラーが発生しました。
 
 # emu/inptport.c: 6291
 Error: illegal caption file
@@ -1238,6 +1402,10 @@ Freeze
 French
 フランス語
 
+# emu/uimenu.c: 3258 mame/drivers/cultures.c: 242 mame/drivers/funybubl.c: 167 mame/drivers/metro.c: 2395, 2742 mame/drivers/skykid.c: 335 mame/drivers/warriorb.c: 364
+Full
+全部
+
 # mame/drivers/bublbobl.c: 562, 580 mame/drivers/cps1.c: 906, 1100, 1140, 1211, 1352, 1416, 1467, 1575, 1643, 1698, 1749, 1793, 1912, 1972, 2050, 2118, 2168, 2228, 2363, 2577, 2642, 2734, 2862 mame/drivers/fcrash.c: 562, 646 mame/drivers/ksys573.c: 3050 mame/drivers/macs.c: 273 mame/drivers/missile.c: 934 mame/drivers/multigam.c: 987 mame/drivers/pacman.c: 1547 mame/drivers/turbo.c: 979 mame/drivers/vegas.c: 2045
 Game
 ゲーム名
@@ -1278,6 +1446,10 @@ Gfx: %s, Sound: %s
 Gray
 グレー
 
+# emu/input.c: 152
+Gun
+ガン
+
 # emu/inptport.c: 757
 Hard
 困難
@@ -1314,6 +1486,26 @@ Highest
 Hispanic
 ラテン
 
+# emu/inpttype.h: 119 mame/drivers/acefruit.c: 437 mame/drivers/bfm_sc1.c: 1029 mame/drivers/bfm_sc2.c: 3056, 3207, 3364, 3677, 3833 mame/drivers/calomega.c: 1381 mame/drivers/funworld.c: 1214, 1276, 1579, 1640, 1701, 1762 mame/drivers/limenko.c: 575 mame/drivers/maygay1b.c: 615 mame/drivers/mpu4.c: 1203 mame/drivers/subsino.c: 1463
+Hold 1
+ホールド 1
+
+# emu/inpttype.h: 120 mame/drivers/acefruit.c: 446 mame/drivers/bfm_sc1.c: 1030 mame/drivers/bfm_sc2.c: 3678 mame/drivers/calomega.c: 1382 mame/drivers/limenko.c: 576 mame/drivers/maygay1b.c: 616 mame/drivers/mpu4.c: 1204
+Hold 2
+ホールド 2
+
+# emu/inpttype.h: 121 mame/drivers/acefruit.c: 455 mame/drivers/bfm_sc1.c: 1031 mame/drivers/bfm_sc2.c: 3679 mame/drivers/calomega.c: 1383 mame/drivers/funworld.c: 1286, 1589, 1650, 1711, 1772 mame/drivers/limenko.c: 577 mame/drivers/maygay1b.c: 617 mame/drivers/mpu4.c: 1205
+Hold 3
+ホールド 3
+
+# emu/inpttype.h: 122 mame/drivers/acefruit.c: 466 mame/drivers/bfm_sc1.c: 1032 mame/drivers/calomega.c: 1384 mame/drivers/limenko.c: 578 mame/drivers/maygay1b.c: 618 mame/drivers/mpu4.c: 1206
+Hold 4
+ホールド 4
+
+# emu/inpttype.h: 123 mame/drivers/calomega.c: 1385
+Hold 5
+ホールド 5
+
 # mame/drivers/aerofgt.c: 1054 mame/drivers/ddenlovr.c: 5871 mame/drivers/f1gp.c: 323 mame/drivers/nmk16.c: 2732 mame/drivers/pgm.c: 1329, 1350, 1359, 1385, 1403, 1436, 1447, 1469, 1482, 1495, 1509, 1625 mame/drivers/psikyo.c: 605, 632, 768, 838, 954 mame/drivers/toaplan1.c: 1254, 1278, 1296, 1350, 1389 mame/drivers/toaplan2.c: 2521, 2673, 2730, 2744, 2792, 2944, 3006, 3072, 3143, 3187, 3240
 Hong Kong
 香港
@@ -1345,6 +1537,14 @@ INP バージョン %d.%d\n
 # emu/inptport.c: 1422
 INVALID
 無効
+
+# emu/ips.c: 86
+IPS: loading ips \"%s/%s%s\"\n
+IPS: ips 読み込み中 \"%s/%s%s\"\n
+
+# emu/ips.c: 218
+IPS: parsing ips \"%s/%s%s\"\n
+IPS: ips 解析中 \"%s/%s%s\"\n
 
 # lib/util/options.c: 774
 Illegal boolean value for %s; reverting to %d\n
@@ -1466,6 +1666,10 @@ Invalid %s value (must be between %i and %i); keeping value of %s\n
 Invalid bitmap format!
 ビットマップの形式が不正!
 
+# emu/state.h: 85
+Invalid data type supplied for state saving.
+供給されたデータ型はステートセーブには無効です
+
 # emu/input.c: 618
 Invalid joystick map: %s\n
 不正なジョイスティックマップ: %s\n
@@ -1506,9 +1710,17 @@ Japan
 Japanese
 日本語
 
+# emu/input.c: 153
+Joy
+ジョイスティック
+
 # emu/inptport.c: 780 mess/drivers/a2600.c: 1728 
 Joystick
 ジョイスティック
+
+# emu/input.c: 150 
+Kbd
+キーボード
 
 # emu/inpttype.h: 653 mame/drivers/bishjan.c: 581 mame/drivers/ddenlovr.c: 4653, 4876, 6089 mame/drivers/igs017.c: 1609, 1726, 1840 mame/drivers/ltcasino.c: 544 mame/drivers/rbmk.c: 187 mame/drivers/ssv.c: 1520, 1622, 1864 osd/osdmini/minimain.c: 138 
 Keyboard
@@ -1518,9 +1730,29 @@ Keyboard
 Keyboard Emulation Status
 キーボードエミュレーション状況
 
+# emu/uimenu.c: 1606
+Keyboard Mode
+キーボードモード
+
+# emu/uimenu.c: 1523
+Keyboard Mode:
+キーボードモード:
+
 # mame/drivers/aerofgt.c: 1053 mame/drivers/cps3.c: 2307 mame/drivers/crshrace.c: 353 mame/drivers/dblewing.c: 549 mame/drivers/f1gp.c: 322 mame/drivers/nmk16.c: 2730 mame/drivers/pgm.c: 1328, 1335, 1349, 1384, 1402, 1435, 1455, 1468, 1481, 1494, 1508, 1624 mame/drivers/psikyo.c: 604, 631, 767, 837, 953 mame/drivers/stv.c: 2135 mame/drivers/taotaido.c: 274 mame/drivers/toaplan1.c: 1255, 1279, 1297, 1349, 1388 mame/drivers/toaplan2.c: 2520, 2568, 2674, 2729, 2742, 2791, 2942, 3004, 3070, 3142
 Korea
 韓国
+
+# mame/layout/cdi.lay: 21
+LCD Pixel Aspect (%d:%d)
+LCD アスペクト比 (%d:%d)
+
+# mame/layout/cdi.lay: 9
+LCD Standard (%d:%d)
+LCD 標準 (%d:%d)
+
+# mess/layout/lcd.lay: 3 mess/layout/lcd_rot.lay: 3
+LCD with square pixels
+LCD 正方形ピクセル
 
 # mame/layout/nbmj8688.lay: 27, 33
 LCD%d Pixel Aspect (%d:%d)
@@ -1546,13 +1778,37 @@ Lamps and Timer
 Language
 言語
 
+# emu/ui.c: 2801
+Laserdisc
+レーザーディスク
+
+# emu/ui.c: 2799
+Laserdisc '%s'
+レーザーディスク '%s'
+
 # emu/input.c: 174 mame/drivers/balsente.c: 1019 mame/drivers/bfm_sc2.c: 1589 mame/drivers/re900.c: 248 mame/drivers/statriv2.c: 403 mame/drivers/stv.c: 2147 mess/drivers/gb.c: 544 mess/drivers/ngp.c: 564
 Left
 左
 
+# emu/inptport.c: 643
+Left Alt
+左 Alt
+
+# emu/inptport.c: 641
+Left Ctrl
+左 Ctrl
+
 # mame/layout/darius.lay: 51
 Left Half
 左半分
+
+# emu/inptport.c: 639
+Left Shift
+左 Shift
+
+# emu/inptport.c: 648
+Left Win
+左 Windowsキー
 
 # mame/drivers/cninja.c: 560, 569, 616 mame/drivers/compgolf.c: 124 mame/drivers/dec0.c: 747 mame/drivers/drtomy.c: 235, 238 mame/drivers/flower.c: 156 mame/drivers/jalmah.c: 1069 mame/drivers/nmg5.c: 498, 562, 565 mame/drivers/snk.c: 1903 mame/drivers/taito_x.c: 819 mame/drivers/vsnes.c: 1101 mame/drivers/warriorb.c: 346
 Less
@@ -1666,6 +1922,10 @@ BDFフォントを読み込み中... (%d文字を読み込み)\n
 Loading Complete
 読み込み完了
 
+# emu/cheat.c: 1418
+Loading cheats file from %s\n
+チートファイル %s から読み込んでいます\n
+
 # mame/drivers/taito_z.c: 2070
 Locked
 固定
@@ -1681,6 +1941,10 @@ MAMEはエミュレータです: いくつかのアーケードマシンをほぼ忠実に再現します。しか\n
 # mess/mess.c: 118
 MESS SPECIFIC OPTIONS
 MESS固有設定
+
+# mame/drivers/neodrvr.c: 8966
+Mahjong Control Panel
+麻雀コントロールパネル
 
 # mess/layout/sms1.lay: 39
 Main Screen
@@ -1838,6 +2102,10 @@ NO GOOD DUMP KNOWN\n
 NO MATCH\n
 マッチしません\n
 
+# emu/clifront.c: 1559
+NOT A CHD\n
+CHDでない\n
+
 # emu/clifront.c: 1670
 NOT A ROM\n
 ROMではありません\n
@@ -1994,6 +2262,10 @@ Overseas
 P%d Crosshair
 P%d 十\字線
 
+# emu/uimenu.c: 3413
+P%d Visibility
+P%d 視界
+
 # emu/inpttype.h: 39
 P1 Button 1
 P1 ボタン 1
@@ -2077,6 +2349,46 @@ P1 カスタム 4
 # emu/inpttype.h: 28 mame/drivers/4enraya.c: 118 mame/drivers/galaxold.c: 1762
 P1 Down
 P1 下
+
+# emu/inpttype.h: 95
+P1 Hanafuda A / 1
+P1 花札 A / 1
+
+# emu/inpttype.h: 96
+P1 Hanafuda B / 2
+P1 花札 B / 2
+
+# emu/inpttype.h: 97
+P1 Hanafuda C / 3
+P1 花札 C / 3
+
+# emu/inpttype.h: 98
+P1 Hanafuda D / 4
+P1 花札 D / 4
+
+# emu/inpttype.h: 99
+P1 Hanafuda E / 5
+P1 花札 E / 5
+
+# emu/inpttype.h: 100
+P1 Hanafuda F / 6
+P1 花札 F / 6
+
+# emu/inpttype.h: 101
+P1 Hanafuda G / 7
+P1 花札 G / 7
+
+# emu/inpttype.h: 102
+P1 Hanafuda H / 8
+P1 花札 H / 8
+
+# emu/inpttype.h: 104
+P1 Hanafuda No
+P1 花札 No
+
+# emu/inpttype.h: 103
+P1 Hanafuda Yes
+P1 花札 Yes
 
 # emu/inpttype.h: 29 mame/drivers/speedatk.c: 233
 P1 Left
@@ -2345,6 +2657,46 @@ P2 カスタム 4
 # emu/inpttype.h: 133 mame/drivers/4enraya.c: 120 mame/drivers/galaxold.c: 1761
 P2 Down
 P2 下
+
+# emu/inpttype.h: 200
+P2 Hanafuda A / 1
+P2 花札 A / 1
+
+# emu/inpttype.h: 201
+P2 Hanafuda B / 2
+P2 花札 B / 2
+
+# emu/inpttype.h: 202
+P2 Hanafuda C / 3
+P2 花札 C / 3
+
+# emu/inpttype.h: 203
+P2 Hanafuda D / 4
+P2 花札 D / 4
+
+# emu/inpttype.h: 204
+P2 Hanafuda E / 5
+P2 花札 E / 5
+
+# emu/inpttype.h: 205
+P2 Hanafuda F / 6
+P2 花札 F / 6
+
+# emu/inpttype.h: 206
+P2 Hanafuda G / 7
+P2 花札 G / 7
+
+# emu/inpttype.h: 207
+P2 Hanafuda H / 8
+P2 花札 H / 8
+
+# emu/inpttype.h: 209
+P2 Hanafuda No
+P2 花札 No
+
+# emu/inpttype.h: 208
+P2 Hanafuda Yes
+P2 花札 Yes
 
 # emu/inpttype.h: 134 mame/drivers/speedatk.c: 246
 P2 Left
@@ -3506,6 +3858,10 @@ Paddle V 7
 Paddle V 8
 パドル V 8
 
+# emu/mame.c: 595
+Parsing %s.ini\n
+%s.ini を解析中\n
+
 # emu/inptport.c: 638, 730 emu/inpttype.h: 658
 Pause
 中断
@@ -3513,6 +3869,10 @@ Pause
 # mame/drivers/megadriv.c: 5360 mess/uimess.c: 193
 Pause/Stop
 中断/中止
+
+# emu/inpttype.h: 115 mame/drivers/ampoker2.c: 785, 870 mame/drivers/astrocorp.c: 352, 381 mame/drivers/big10.c: 158 mame/drivers/cardline.c: 141 mame/drivers/d9final.c: 158 mame/drivers/ddenlovr.c: 5051, 5284, 5832, 6446, 6627, 7231, 7472 mame/drivers/dunhuang.c: 561 mame/drivers/funworld.c: 966, 1027, 1087, 1148, 1206, 1268, 1329, 1390, 1571, 1632, 1693, 1754, 1815 mame/drivers/gei.c: 608, 880 mame/drivers/ggconnie.c: 64 mame/drivers/goldnpkr.c: 1159, 1228, 1299, 1373, 1424, 1642, 1716, 1813, 2110 mame/drivers/igspoker.c: 370, 502, 661, 801, 999, 1133, 1273, 1449 mame/drivers/magic10.c: 552 mame/drivers/magicfly.c: 590, 652 mame/drivers/roul.c: 205 mame/drivers/royalmah.c: 1323, 2256, 2477 mame/drivers/seibuspi.c: 1407 mame/drivers/seta.c: 6254 mame/drivers/slotcarn.c: 238 mame/drivers/supdrapo.c: 324 mame/drivers/taito_o.c: 83 mame/drivers/videopkr.c: 1035 mame/drivers/vroulet.c: 137
+Payout
+支払
 
 # mame/drivers/turbo.c: 1036 
 Pedal
@@ -3654,9 +4014,17 @@ Recording Ended\nReason: %s
 Region
 領域
 
+# emu/uimenu.c: 2752
+Reload All
+全て再読み込み
+
 # mame/drivers/albazc.c: 176 mame/drivers/arcadia.c: 225 mame/drivers/astrocde.c: 1056, 1177 mame/drivers/bartop52.c: 57 mame/drivers/big10.c: 157 mame/drivers/bishjan.c: 577, 801 mame/drivers/cubocd32.c: 581, 584, 587, 590, 593, 596, 599, 602, 607, 610, 613, 616, 619, 622, 625, 628 mame/drivers/d9final.c: 115 mame/drivers/deco32.c: 1251, 1345 mame/drivers/djmain.c: 531, 1100 mame/drivers/feversoc.c: 228 mame/drivers/highvdeo.c: 512, 573, 602 mame/drivers/jpmsys5.c: 431 mame/drivers/laserbat.c: 246, 325, 399 mame/drivers/lastfght.c: 452 mame/drivers/luckgrln.c: 618 mame/drivers/murogem.c: 128 mame/drivers/playch10.c: 415 mame/drivers/sengokmj.c: 225 mame/drivers/skylncr.c: 500 mame/drivers/subsino.c: 1240, 1348, 1484, 1618, 1753, 1845, 2047, 2141 mame/drivers/taito_o.c: 91 mame/drivers/trvquest.c: 80 mess/drivers/a7800.c: 80 mess/drivers/atari.c: 592 
 Reset
 リセット
+
+# emu/uimenu.c: 2749 mame/drivers/lvcards.c: 360
+Reset All
+全てリセット
 
 # emu/inpttype.h: 659 mess/drivers/a2600.c: 2120
 Reset Game
@@ -3686,9 +4054,25 @@ Rewind
 Right
 右
 
+# emu/inptport.c: 644
+Right Alt
+右 Alt
+
+# emu/inptport.c: 642
+Right Ctrl
+右 Ctrl
+
 # mame/layout/darius.lay: 61
 Right Half
 右半分
+
+# emu/inptport.c: 640
+Right Shift
+右 Shift
+
+# emu/inptport.c: 649
+Right Win
+右 Windowsキー
 
 # mame/layout/rocknms.lay: 29
 Rockn Megasession Custom
@@ -3838,6 +4222,10 @@ Slow
 Soft Reset
 ソ\フトリセット
 
+# emu/screen.c: 1366 emu/video.c: 344, 1197 
+Software
+ソ\フトウェア
+
 # mame/drivers/balsente.c: 630 mame/drivers/contra.c: 147 mame/drivers/cps1.c: 2448 mame/drivers/gijoe.c: 234 mame/drivers/jchan.c: 622 mame/drivers/merit.c: 1034 mame/drivers/mosaic.c: 171 mame/drivers/tmnt.c: 1691, 1738, 2032 mame/drivers/zaxxon.c: 557 
 Sound
 音源
@@ -3845,6 +4233,14 @@ Sound
 # emu/inptport.c: 748 emu/uilang.c: 39 
 Spanish
 スペイン語
+
+# emu/sound/speaker.c: 440, 441 emu/sound.c: 434
+Speaker
+スピーカー
+
+# emu/sound.c: 575
+Speaker '%s': %s '%s'
+スピーカー '%s': %s '%s'
 
 # emu/inptport.c: 790 
 Standard
@@ -3873,6 +4269,30 @@ Stereo
 # mame/drivers/bfm_sc2.c: 3523, 3680 mame/drivers/bmcbowl.c: 356 mame/drivers/holeland.c: 117, 185 mame/drivers/igs009.c: 537 mame/drivers/jackie.c: 453 mame/drivers/limenko.c: 580 mame/drivers/pgm.c: 1309 mame/drivers/popper.c: 264 mame/drivers/toaplan2.c: 2507 mame/drivers/turbo.c: 974 mess/drivers/nes.c: 185
 Stop
 停止
+
+# emu/inpttype.h: 130
+Stop All Reels
+全てのリール停止
+
+# emu/inpttype.h: 126 mame/drivers/wldarrow.c: 243
+Stop Reel 1
+リール停止 1
+
+# emu/inpttype.h: 127 mame/drivers/wldarrow.c: 242
+Stop Reel 2
+リール停止 2
+
+# emu/inpttype.h: 128 mame/drivers/wldarrow.c: 241
+Stop Reel 3
+リール停止 3
+
+# emu/inpttype.h: 129
+Stop Reel 4
+リール停止 4
+
+# emu/ui.c: 1464 
+THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
+このゲームは動作しません。 このゲームのエミュレーションはまだ不完全です。 開発者がエミュレーションを改善するのを待つ以外できることはありません。\n
 
 # mame/drivers/aerofgt.c: 571, 963, 1055 mame/drivers/f1gp.c: 324 mame/drivers/midzeus.c: 863 mame/drivers/pgm.c: 1325, 1346, 1381, 1400, 1432, 1445, 1464, 1479, 1492, 1506, 1622 mame/drivers/psikyo.c: 606, 633, 769, 839, 955 mame/drivers/toaplan1.c: 1256, 1280, 1298, 1352, 1391 mame/drivers/toaplan2.c: 2523, 2570, 2636, 2660, 2675, 2745, 2793, 2836, 2946, 3008, 3074, 3144, 3188, 3241
 Taiwan
@@ -3921,6 +4341,10 @@ The game has protection which isn't fully emulated.\n
 # emu/ui.c: 1445 
 The game lacks sound.\n
 サウンドが再生されません。\n
+
+# emu/ui.c: 1451 
+The game requires external artwork files\n
+このゲームは外部のアートワークファイルを必要とします\n
 
 # emu/ui.c: 1435
 The keyboard emulation may not be 100% accurate.\n
@@ -4098,6 +4522,10 @@ UI キャンセル
 UI Clear
 UI クリア
 
+# emu/inpttype.h: 683
+UI Display Comment
+UI コメント表\示
+
 # emu/inpttype.h: 674
 UI Down
 UI 下
@@ -4125,6 +4553,10 @@ UI ページダウン
 # emu/inpttype.h: 679
 UI Page Up
 UI ページアップ
+
+# emu/inpttype.h: 692
+UI Paste Text
+UI テキストの貼\り付け
 
 # emu/inpttype.h: 687
 UI Previous Group
@@ -4392,7 +4824,7 @@ all available info on driver in XML format
 
 # emu/emuopts.c: 125
 amount to scale the screen brightness when paused
-ポーズ時の画面の明るさ
+中断時の画面の明るさ
 
 # emu/emucore.h: 207
 assert: %s:%d: %s
@@ -4485,6 +4917,22 @@ create the default configuration file
 # emu/emuopts.c: 115
 crop artwork to game screen size
 アートワークをゲーム画面サイズでカットします
+
+# emu/emuopts.c: 208
+cursor background color (floating)
+カーソ\ル背景色 (移動時)
+
+# emu/emuopts.c: 206
+cursor background color (selected)
+カーソ\ル背景色 (選択時)
+
+# emu/emuopts.c: 207
+cursor text color (floating)
+カーソ\ル文字色 (移動時)
+
+# emu/emuopts.c: 205
+cursor text color (selected)
+カーソ\ル文字色 (選択時)
 
 # emu/emuopts.c: 122
 default game screen brightness correction
@@ -4682,6 +5130,10 @@ flip screen left-right
 flip screen upside-down
 上下反転
 
+# emu/video.c: 292
+frame:%ld 
+フレーム:%ld
+
 # emu/clifront.c: 274 emu/info.c: 30 mame/drivers/bwidow.c: 659 mame/drivers/pengadvb.c: 71, 72, 91, 92, 315, 324 
 game
 ゲーム名
@@ -4706,6 +5158,10 @@ invalid
 ips datafile name
 IPSデータファイル名
 
+# emu/clifront.c: 1569
+is a writable CHD\n
+は書込み可能\なCHDです\n
+
 # emu/clifront.c: 948, 1348
 is bad\n
 は異常です\n
@@ -4717,6 +5173,10 @@ is best available\n
 # emu/clifront.c: 953, 1353
 is good\n
 は正常です\n
+
+# emu/emuopts.c: 177
+keep calling video updates while in pause
+中断時の間も画面更新を実行
 
 # emu/clifront.c: 101
 list available devices
@@ -4790,6 +5250,10 @@ path to cheat files
 path to controller definitions
 コントローラ定義のパスを指定
 
+# emu/emuopts.c: 50
+path to crosshair files
+十\字線ファイルへのパスを指定
+
 # emu/emuopts.c: 48
 path to font files
 フォントファイルへのパスを指定
@@ -4805,6 +5269,10 @@ iniファイルへのパスを指定
 # emu/emuopts.c: 53
 path to ips files
 IPSファイルのディレクトリ
+
+# emu/emuopts.c: 51
+path to localized languages and datafiles
+言語とデータファイルへのパスを指定
 
 # emu/emuopts.c: 44
 path to samplesets
@@ -4974,9 +5442,25 @@ sound
 sound volume in decibels (-32 min, 0 max)
 サウンドの音量をデシベルで指定(最小は-32、最大は0)
 
+# emu/emuopts.c: 159
+specifies the key used to toggle between full and partial UI mode
+完全と不完全なUIモードを切り替えるキーを指定
+
 # emu/emuopts.c: 158
 specifies whether to use a natural keyboard or not
 キーボードをそのまま使用するかどうかを指定する
+
+# emu/emuopts.c: 187
+specify a font to use
+使用するフォントを指定
+
+# emu/emuopts.c: 89
+specify snapshot/movie resolution (<width>x<height>) or 'auto' to use minimal size 
+スナップショット/動画の解像度 (<横幅>x<高さ>) 又は最小サイズにするために '自動' を指定 
+
+# emu/emuopts.c: 90
+specify snapshot/movie view or 'internal' to use internal pixel-aspect views
+スナップショット/動画のビュー又は内部のアスペクト比を使用するために '内部' を指定
 
 # mess/uimess.c: 183
 stopped
@@ -4998,6 +5482,14 @@ unable to open log file
 use antialiasing when drawing vectors
 ベクタの描画にアンチエイリアスを使用
 
+# emu/emuopts.c: 180
+use the internal debugger for debugging
+デバッグに内部デバッガを使用
+
+# mess/mess.c: 120
+use the new MESS UI
+新しいMESS UIを使用
+
 # emu/emuopts.c: 35
 writes configuration to (driver).ini on exit
 終了時に設定を(ドライバ).iniに出力する
@@ -5006,48 +5498,12 @@ writes configuration to (driver).ini on exit
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
 
-# emu/devintrf.c: 156
-  (missing dependencies; rescheduling)\n
-
-
-# emu/sound.c: 577
- Ch.%d
-
-
 # emu/clifront.c: 1256
  SYSTEM      DEVICE NAME (brief)   IMAGE FILE EXTENSIONS SUPPORTED    \n
 
 
 # emu/clifront.c: 688
 %s ... other drivers in %s:\n
-
-
-# emu/romload.c: 1155
-%s CHD ERROR: %s\n
-
-
-# emu/romload.c: 1190
-%s DIFF CHD ERROR: %s\n
-
-
-# emu/screen.c: 282
-%s: %s screen '%s' has a zero refresh rate\n
-
-
-# emu/screen.c: 265
-%s: %s screen '%s' has an invalid display area\n
-
-
-# emu/screen.c: 253
-%s: %s screen '%s' has invalid display dimensions\n
-
-
-# emu/screen.c: 274
-%s: %s screen '%s' has unsupported format\n
-
-
-# emu/inptport.c: 2074
-(Unknown Default)
 
 
 # mame/layout/drwho.lay: 1575
@@ -5058,76 +5514,20 @@ AWP Simulated Video (Lamp Matrix and Reels)
 AWP Simulated Video (Reels and Lamp Matrix)
 
 
-# emu/cheat.c: 874
-Activated %s
-
-
-# emu/cheat.c: 882
-Activated\n %s = %s
-
-
 # mame/layout/bfm_sc1.lay: 2086, 4178
 Adder %d Output Only (%d:%d, No Artwork)
-
-
-# emu/video.c: 985
-Adjusting target speed to %d%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n
-
-
-# mame/drivers/igspoker.c: 821 mame/drivers/nss.c: 564, 568, 572, 576, 593 mame/drivers/sfcbox.c: 159, 163, 167, 171, 188 mame/drivers/snesb.c: 337, 341, 345, 349, 366 mess/drivers/snes.c: 304, 308, 312, 316, 333 
-All
-
-
-# emu/uimenu.c: 2719
-All cheats reloaded
 
 
 # mame/drivers/ssv.c: 1808 
 Available
 
 
-# emu/uimenu.c: 3240
-CCW 90
-
-
-# mame/drivers/neodrvr.c: 8969 mame/drivers/neogeo.c: 1239
-COMM Setting (Cabinet No.)
-
-
-# mame/drivers/neodrvr.c: 8974 mame/drivers/neogeo.c: 1239
-COMM Setting (Link Enable)
-
-
-# emu/devcpu.c: 68 
-CPU
-
-
-# emu/uimenu.c: 3238
-CW 90
-
-
 # mess/devices/cartslot.c: 470, 471
 Cartslot
 
 
-# mess/devices/chd_cd.c: 173, 174
-Cdrom
-
-
 # mess/machine/ctronics.c: 136, 137
 Centronics
-
-
-# emu/uimenu.c: 2706
-Cheat Comment:\n%s
-
-
-# emu/cheat.c: 1138
-Cheats Disabled
-
-
-# emu/cheat.c: 1150
-Cheats Enabled
 
 
 # build/verinfo.c: 273 
@@ -5174,14 +5574,6 @@ Cropped
 Cropped Corners
 
 
-# emu/ui.c: 2396
-Crosshair Offset %s
-
-
-# emu/ui.c: 2393
-Crosshair Scale %s
-
-
 # mame/layout/awpdmd.lay: 1706
 DMD Only
 
@@ -5206,74 +5598,6 @@ Door
 Driver Device
 
 
-# emu/ips.c: 104
-ERROR: %s/%s: incorrect IPS header\n
-
-
-# emu/ips.c: 94
-ERROR: %s/%s: open fail\n
-
-
-# emu/ips.c: 169
-ERROR: %s/%s: unexpected EOF\n
-
-
-# emu/ips.c: 226, 363
-ERROR: %s: IPS file is not found\n
-
-
-# emu/ips.c: 384
-ERROR: %s: IPS is not applied correctly to ROM entry \"%s\"\n
-
-
-# emu/ips.c: 267
-ERROR: IPS file is not defined for ROM entry \"%s\"\n
-
-
-# emu/ips.c: 141, 302
-ERROR: IPS is not enough memory\n
-
-
-# emu/ips.c: 259
-ERROR: ROM entry \"%s\" is not found for IPS file \"%s\"\n
-
-
-# emu/ips.c: 277
-ERROR: wrong CRC for ROM entry \"%s\"\n
-
-
-# emu/video.c: 453
-Error creating AVI: %s\n
-
-
-# emu/video.c: 351
-Error generating PNG for snapshot: png_error = %d\n
-
-
-# emu/machine.c: 863
-Error: Failed to open file for %s operation.
-
-
-# emu/machine.c: 838
-Error: Unable to %s state due to a read error (file is likely corrupt).
-
-
-# emu/machine.c: 842
-Error: Unable to %s state due to a write error. Verify there is enough disk space.
-
-
-# emu/machine.c: 834
-Error: Unable to %s state due to an invalid header. Make sure the save state is correct for this game.
-
-
-# emu/machine.c: 853
-Error: Unknown error during state %s.
-
-
-# emu/uimenu.c: 3258 mame/drivers/cultures.c: 242 mame/drivers/funybubl.c: 167 mame/drivers/metro.c: 2395, 2742 mame/drivers/skykid.c: 335 mame/drivers/warriorb.c: 364
-Full
-
-
 # mame/layout/bfm_sc1.lay: 409, 2501
 Full Output
 
@@ -5286,56 +5610,12 @@ Gamball AWP Simulated Video (No Artwork)
 Generic
 
 
-# emu/input.c: 152
-Gun
-
-
 # emu/inpttype.h: 107 mame/drivers/ampoker2.c: 967
 Half Gamble
 
 
-# emu/inpttype.h: 119 mame/drivers/acefruit.c: 437 mame/drivers/bfm_sc1.c: 1029 mame/drivers/bfm_sc2.c: 3056, 3207, 3364, 3677, 3833 mame/drivers/calomega.c: 1381 mame/drivers/funworld.c: 1214, 1276, 1579, 1640, 1701, 1762 mame/drivers/limenko.c: 575 mame/drivers/maygay1b.c: 615 mame/drivers/mpu4.c: 1203 mame/drivers/subsino.c: 1463
-Hold 1
-
-
-# emu/inpttype.h: 120 mame/drivers/acefruit.c: 446 mame/drivers/bfm_sc1.c: 1030 mame/drivers/bfm_sc2.c: 3678 mame/drivers/calomega.c: 1382 mame/drivers/limenko.c: 576 mame/drivers/maygay1b.c: 616 mame/drivers/mpu4.c: 1204
-Hold 2
-
-
-# emu/inpttype.h: 121 mame/drivers/acefruit.c: 455 mame/drivers/bfm_sc1.c: 1031 mame/drivers/bfm_sc2.c: 3679 mame/drivers/calomega.c: 1383 mame/drivers/funworld.c: 1286, 1589, 1650, 1711, 1772 mame/drivers/limenko.c: 577 mame/drivers/maygay1b.c: 617 mame/drivers/mpu4.c: 1205
-Hold 3
-
-
-# emu/inpttype.h: 122 mame/drivers/acefruit.c: 466 mame/drivers/bfm_sc1.c: 1032 mame/drivers/calomega.c: 1384 mame/drivers/limenko.c: 578 mame/drivers/maygay1b.c: 618 mame/drivers/mpu4.c: 1206
-Hold 4
-
-
-# emu/inpttype.h: 123 mame/drivers/calomega.c: 1385
-Hold 5
-
-
-# emu/ips.c: 86
-IPS: loading ips \"%s/%s%s\"\n
-
-
-# emu/ips.c: 218
-IPS: parsing ips \"%s/%s%s\"\n
-
-
 # emu/cheat.c: 1452
 Ignoring duplicate cheat '%s' from file %s\n
-
-
-# emu/state.h: 85
-Invalid data type supplied for state saving.
-
-
-# emu/input.c: 153
-Joy
-
-
-# emu/input.c: 150 
-Kbd
 
 
 # emu/inpttype.h: 113 mame/drivers/bishjan.c: 691, 702, 705 mame/drivers/goldstar.c: 3020 mame/drivers/igs017.c: 1478 mame/drivers/jackie.c: 444 mame/drivers/luckgrln.c: 688 mame/drivers/slotcarn.c: 213 mame/drivers/subsino.c: 1151, 1261, 1369, 1639 mame/drivers/witch.c: 493
@@ -5346,184 +5626,12 @@ Key In
 Key Out
 
 
-# emu/uimenu.c: 1606
-Keyboard Mode
-
-
-# emu/uimenu.c: 1523
-Keyboard Mode:
-
-
-# mame/layout/cdi.lay: 21
-LCD Pixel Aspect (%d:%d)
-
-
-# mame/layout/cdi.lay: 9
-LCD Standard (%d:%d)
-
-
-# mess/layout/lcd.lay: 3 mess/layout/lcd_rot.lay: 3
-LCD with square pixels
-
-
-# emu/ui.c: 2801
-Laserdisc
-
-
-# emu/ui.c: 2799
-Laserdisc '%s'
-
-
-# emu/inptport.c: 643
-Left Alt
-
-
-# emu/inptport.c: 641
-Left Ctrl
-
-
-# emu/inptport.c: 639
-Left Shift
-
-
-# emu/inptport.c: 648
-Left Win
-
-
-# emu/cheat.c: 1418
-Loading cheats file from %s\n
-
-
 # emu/clifront.c: 382
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright Nicola Salmoria and the MAME Team\n\n
 
 
-# mame/drivers/neodrvr.c: 8966
-Mahjong Control Panel
-
-
-# emu/clifront.c: 1559
-NOT A CHD\n
-
-
 # build/verinfo.c: 284
 Nicola Salmoria and the MAME Team
-
-
-# emu/uimenu.c: 3413
-P%d Visibility
-
-
-# emu/inpttype.h: 95
-P1 Hanafuda A / 1
-
-
-# emu/inpttype.h: 96
-P1 Hanafuda B / 2
-
-
-# emu/inpttype.h: 97
-P1 Hanafuda C / 3
-
-
-# emu/inpttype.h: 98
-P1 Hanafuda D / 4
-
-
-# emu/inpttype.h: 99
-P1 Hanafuda E / 5
-
-
-# emu/inpttype.h: 100
-P1 Hanafuda F / 6
-
-
-# emu/inpttype.h: 101
-P1 Hanafuda G / 7
-
-
-# emu/inpttype.h: 102
-P1 Hanafuda H / 8
-
-
-# emu/inpttype.h: 104
-P1 Hanafuda No
-
-
-# emu/inpttype.h: 103
-P1 Hanafuda Yes
-
-
-# emu/inpttype.h: 200
-P2 Hanafuda A / 1
-
-
-# emu/inpttype.h: 201
-P2 Hanafuda B / 2
-
-
-# emu/inpttype.h: 202
-P2 Hanafuda C / 3
-
-
-# emu/inpttype.h: 203
-P2 Hanafuda D / 4
-
-
-# emu/inpttype.h: 204
-P2 Hanafuda E / 5
-
-
-# emu/inpttype.h: 205
-P2 Hanafuda F / 6
-
-
-# emu/inpttype.h: 206
-P2 Hanafuda G / 7
-
-
-# emu/inpttype.h: 207
-P2 Hanafuda H / 8
-
-
-# emu/inpttype.h: 209
-P2 Hanafuda No
-
-
-# emu/inpttype.h: 208
-P2 Hanafuda Yes
-
-
-# emu/mame.c: 595
-Parsing %s.ini\n
-
-
-# emu/inpttype.h: 115 mame/drivers/ampoker2.c: 785, 870 mame/drivers/astrocorp.c: 352, 381 mame/drivers/big10.c: 158 mame/drivers/cardline.c: 141 mame/drivers/d9final.c: 158 mame/drivers/ddenlovr.c: 5051, 5284, 5832, 6446, 6627, 7231, 7472 mame/drivers/dunhuang.c: 561 mame/drivers/funworld.c: 966, 1027, 1087, 1148, 1206, 1268, 1329, 1390, 1571, 1632, 1693, 1754, 1815 mame/drivers/gei.c: 608, 880 mame/drivers/ggconnie.c: 64 mame/drivers/goldnpkr.c: 1159, 1228, 1299, 1373, 1424, 1642, 1716, 1813, 2110 mame/drivers/igspoker.c: 370, 502, 661, 801, 999, 1133, 1273, 1449 mame/drivers/magic10.c: 552 mame/drivers/magicfly.c: 590, 652 mame/drivers/roul.c: 205 mame/drivers/royalmah.c: 1323, 2256, 2477 mame/drivers/seibuspi.c: 1407 mame/drivers/seta.c: 6254 mame/drivers/slotcarn.c: 238 mame/drivers/supdrapo.c: 324 mame/drivers/taito_o.c: 83 mame/drivers/videopkr.c: 1035 mame/drivers/vroulet.c: 137
-Payout
-
-
-# emu/uimenu.c: 2752
-Reload All
-
-
-# emu/uimenu.c: 2749 mame/drivers/lvcards.c: 360
-Reset All
-
-
-# emu/inptport.c: 644
-Right Alt
-
-
-# emu/inptport.c: 642
-Right Ctrl
-
-
-# emu/inptport.c: 640
-Right Shift
-
-
-# emu/inptport.c: 649
-Right Win
 
 
 # mame/layout/neogeo.lay: 15
@@ -5590,20 +5698,8 @@ Shifter-L
 Shifter-R
 
 
-# emu/screen.c: 1366 emu/video.c: 344, 1197 
-Software
-
-
 # emu/softlist.c: 1288, 1289
 Software lists
-
-
-# emu/sound/speaker.c: 440, 441 emu/sound.c: 434
-Speaker
-
-
-# emu/sound.c: 575
-Speaker '%s': %s '%s'
 
 
 # emu/sound.c: 511
@@ -5622,44 +5718,8 @@ Starting %s '%s'\n
 Stepping Stage Custom
 
 
-# emu/inpttype.h: 130
-Stop All Reels
-
-
-# emu/inpttype.h: 126 mame/drivers/wldarrow.c: 243
-Stop Reel 1
-
-
-# emu/inpttype.h: 127 mame/drivers/wldarrow.c: 242
-Stop Reel 2
-
-
-# emu/inpttype.h: 128 mame/drivers/wldarrow.c: 241
-Stop Reel 3
-
-
-# emu/inpttype.h: 129
-Stop Reel 4
-
-
-# emu/ui.c: 1464 
-THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
-
-
-# emu/ui.c: 1451 
-The game requires external artwork files\n
-
-
 # emu/clifront.c: 1298
 There are no Computers or Consoles named %s\n
-
-
-# emu/inpttype.h: 683
-UI Display Comment
-
-
-# emu/inpttype.h: 692
-UI Paste Text
 
 
 # emu/inptport.c: 1800, 1989
@@ -5702,36 +5762,8 @@ With LEDs
 create burn-in snapshots for each screen
 
 
-# emu/emuopts.c: 208
-cursor background color (floating)
-
-
-# emu/emuopts.c: 206
-cursor background color (selected)
-
-
-# emu/emuopts.c: 207
-cursor text color (floating)
-
-
-# emu/emuopts.c: 205
-cursor text color (selected)
-
-
-# emu/video.c: 292
-frame:%ld 
-
-
 # emu/emuopts.c: 228
 image device-specific options have been added
-
-
-# emu/clifront.c: 1569
-is a writable CHD\n
-
-
-# emu/emuopts.c: 177
-keep calling video updates while in pause
 
 
 # emu/clifront.c: 102
@@ -5746,39 +5778,7 @@ list known software for the system
 override of the default snapshot/movie naming; %g == gamename, %i == index
 
 
-# emu/emuopts.c: 50
-path to crosshair files
-
-
-# emu/emuopts.c: 51
-path to localized languages and datafiles
-
-
 # emu/clifront.c: 94
 show \"brothers\", or other drivers from same sourcefile
-
-
-# emu/emuopts.c: 159
-specifies the key used to toggle between full and partial UI mode
-
-
-# emu/emuopts.c: 187
-specify a font to use
-
-
-# emu/emuopts.c: 89
-specify snapshot/movie resolution (<width>x<height>) or 'auto' to use minimal size 
-
-
-# emu/emuopts.c: 90
-specify snapshot/movie view or 'internal' to use internal pixel-aspect views
-
-
-# emu/emuopts.c: 180
-use the internal debugger for debugging
-
-
-# mess/mess.c: 120
-use the new MESS UI
 
 
