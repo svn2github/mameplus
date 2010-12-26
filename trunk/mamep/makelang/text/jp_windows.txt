@@ -270,6 +270,10 @@ Direct3D: Direct3D8の初期化中にエラーが発生しました\n
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: Direct3D9の初期化中にエラーが発生しました\n
 
+# osd/windows/drawd3d.c: 803
+Direct3D: Max texture size = %dx%d\n
+Direct3D: 最大テクスチャサイズ = %dx%d\n
+
 # osd/windows/drawd3d.c: 1360
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 選択されたモードは%4dx%4d@%3dHz\n
@@ -858,6 +862,10 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 警告: デバイスのDirect3D描画パフォーマンスはあまり良くありません\n
 
+# osd/windows/winmain.c: 588
+Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
+警告: プロセッサ数 < 1 は理解できません。 自動と仮定します ...\n
+
 # mess/osd/windows/menu.c: 1495
 [empty slot]
 [空きスロット]
@@ -898,6 +906,10 @@ contrast value in full screen mode
 default to maximized windows; otherwise, windows will be minimized
 デフォルトでウィンドウを最大化。無効な場合はウィンドウは最小化されます
 
+# osd/windows/winmain.c: 372
+enable audio sync
+音声同期を有効
+
 # osd/windows/winmain.c: 331
 enable bilinear filtering on screen output
 画面の出力にバイリニアフィルタを有効
@@ -913,6 +925,10 @@ enable hardware stretching
 # osd/windows/winmain.c: 308
 enable multithreading; this enables rendering and blitting on a separate thread
 マルチスレッドを有効。これは描画処理でのスレッド分割を有効にします
+
+# osd/windows/winmain.c: 310
+enable profiling, specifying the stack depth to track
+プロファイラ有効, 追跡のためのスタックの深さを指定
 
 # osd/windows/winmain.c: 363
 enable resolution switching
@@ -961,6 +977,10 @@ force the program to terminate if no updates within specified number of seconds
 # osd/windows/winmain.c: 366
 gamma value in full screen mode
 フルスクリーンのガンマ補正値
+
+# osd/windows/winmain.c: 309
+number of processors; this overrides the number the system reports
+プロセッサ数; これはシステムレポートの数値を上書きします。
 
 # osd/windows/winmain.c: 316
 number of screens to create; usually, you want just one
@@ -1050,6 +1070,14 @@ set joystick ID (Player7)
 set joystick ID (Player8)
 ジョイスティックIDを指定 (プレイヤー8)
 
+# osd/windows/winmain.c: 303
+specifies the font size to use for debugging; defaults to 9 pt
+デバッグ時のフォントサイズを指定; デフォルトは 9 pt
+
+# osd/windows/winmain.c: 302
+specifies the font to use for debugging; defaults to Lucida Console
+デバッグ時のフォントを指定; デフォルトは Lucida Console
+
 # osd/windows/winmain.c: 330
 specify the preferred Direct3D version (8 or 9)
 優先されるDirect3Dのバージョンを指定
@@ -1066,35 +1094,7 @@ video output method: none, gdi, ddraw, or d3d
 &Edit
 
 
-# osd/windows/drawd3d.c: 803
-Direct3D: Max texture size = %dx%d\n
-
-
 # mess/osd/windows/mess.rc: 42
 Paste
-
-
-# osd/windows/winmain.c: 588
-Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
-
-
-# osd/windows/winmain.c: 372
-enable audio sync
-
-
-# osd/windows/winmain.c: 310
-enable profiling, specifying the stack depth to track
-
-
-# osd/windows/winmain.c: 309
-number of processors; this overrides the number the system reports
-
-
-# osd/windows/winmain.c: 303
-specifies the font size to use for debugging; defaults to 9 pt
-
-
-# osd/windows/winmain.c: 302
-specifies the font to use for debugging; defaults to Lucida Console
 
 

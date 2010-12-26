@@ -58,6 +58,10 @@
 %dD Glasses Side-by-Side
 %dD眼鏡 左右
 
+# emu/clifront.c: 688
+%s ... other drivers in %s:\n
+%s ... %s 中の他のドライバ:\n
+
 # emu/uimenu.c: 1977
 %s Analog
 %s アナログ
@@ -570,6 +574,10 @@ Autofire Setting
 Automatic
 自動
 
+# mame/drivers/ssv.c: 1808 
+Available
+入手可能\
+
 # emu/inptport.c: 4826
 Average recorded speed: %d%%\n
 Average recorded speed: %d%%\n
@@ -961,6 +969,14 @@ Create New Card
 # emu/inptport.c: 4763
 Created %s
 作成日時 %s
+
+# emu/uimenu.c: 3258
+Cropped
+カット
+
+# mame/layout/elecyoyo.lay: 7
+Cropped Corners
+角をカット
 
 # emu/ui.c: 2396
 Crosshair Offset %s
@@ -4114,6 +4130,10 @@ Screen
 Screen #%d
 画面 #%d
 
+# mame/layout/neogeo.lay: 15
+Screen %d Cropped (%dx%d)
+画面 %d カット (%dx%d)
+
 # emu/layout/dualhovu.lay: 15, 21 emu/layout/dualhsxs.lay: 15, 21 emu/layout/dualhuov.lay: 15, 21 emu/layout/triphsxs.lay: 21, 27, 33 mame/layout/darius.lay: 21, 27, 33 mame/layout/rocknms.lay: 16, 22 mame/layout/stepstag.lay: 23, 30, 36
 Screen %d Pixel Aspect (%d:%d)
 画面%dのアスペクト比 (%d:%d)
@@ -4122,6 +4142,14 @@ Screen %d Pixel Aspect (%d:%d)
 Screen %d Standard (%d:%d)
 画面%d 標準 (%d:%d)
 
+# mame/layout/neogeo.lay: 27
+Screen %d Stretched (%dx%d)
+画面 %d 拡大 (%dx%d)
+
+# mame/layout/cps3.lay: 9
+Screen %d Widescreen (%d:%d)
+画面 %d ワイド画面 (%d:%d)
+
 # emu/ui.c: 2780
 Screen '%s'
 画面 '%s'
@@ -4129,6 +4157,10 @@ Screen '%s'
 # emu/ui.c: 1447 
 Screen flipping in cocktail mode is not supported.\n
 カクテルモードの画面反転に対応していません。\n
+
+# mame/drivers/konamigx.c: 1680 
+Screens
+画面数
 
 # mame/drivers/nova2001.c: 400 mame/drivers/royalmah.c: 2764
 Second Bonus
@@ -4226,6 +4258,10 @@ Soft Reset
 Software
 ソ\フトウェア
 
+# emu/softlist.c: 1288, 1289
+Software lists
+ソ\フトウェアリスト
+
 # mame/drivers/balsente.c: 630 mame/drivers/contra.c: 147 mame/drivers/cps1.c: 2448 mame/drivers/gijoe.c: 234 mame/drivers/jchan.c: 622 mame/drivers/merit.c: 1034 mame/drivers/mosaic.c: 171 mame/drivers/tmnt.c: 1691, 1738, 2032 mame/drivers/zaxxon.c: 557 
 Sound
 音源
@@ -4250,6 +4286,10 @@ Standard
 Standard (%d:%d)
 標準 (%d:%d)
 
+# emu/devintrf.c: 148
+Starting %s '%s'\n
+開始中 %s '%s'\n
+
 # mame/drivers/funworld.c: 942, 1003, 1064, 1185, 1305, 1366, 1546 
 State
 ステート
@@ -4272,7 +4312,7 @@ Stop
 
 # emu/inpttype.h: 130
 Stop All Reels
-全てのリール停止
+全リール停止
 
 # emu/inpttype.h: 126 mame/drivers/wldarrow.c: 243
 Stop Reel 1
@@ -4365,6 +4405,10 @@ The video emulation isn't 100% accurate.\n
 # emu/ui.c: 1431
 There are known problems with this game\n\n
 このゲームには以下の問題があります\n\n
+
+# emu/clifront.c: 1298
+There are no Computers or Consoles named %s\n
+%s という名前のコンピュータやコンソ\ールはありません\n
 
 # emu/clifront.c: 770
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
@@ -4622,6 +4666,10 @@ mame.iniが作成出来ません\n
 Unable to load effect PNG file '%s'\n
 視覚効果のPNGファイル「%s」を読み込めません\n
 
+# emu/inptport.c: 1800, 1989
+Unable to locate input port '%s'
+入力ポート '%s' を割り当てられません
+
 # lib/util/options.c: 765
 Unexpected boolean option %s queried\n
 論理値オプション%sが不正です\n
@@ -4741,6 +4789,10 @@ Video Options
 # emu/uimenu.c: 3258
 View
 ビュー
+
+# emu/uimenu.c: 3519
+Visible Delay
+遅延の可視
 
 # mame/drivers/cps1.c: 2842 mame/drivers/ms32.c: 728, 774, 822 mame/drivers/pgm.c: 1303 mame/drivers/pinkiri8.c: 755, 890 mame/drivers/ssv.c: 1683, 1859 mame/drivers/tetrisp2.c: 620
 Voice
@@ -5234,6 +5286,10 @@ optional filename to write an AVI movie of the current session
 or
 or
 
+# emu/emuopts.c: 88
+override of the default snapshot/movie naming; %g == gamename, %i == index
+デフォルトのスナップショット/動画命名を上書き; %g == ゲーム名, %i == インデックス 
+
 # emu/emuopts.c: 42
 path to ROMsets and hard disk images
 ROMセットとハードディスクイメージのパスを指定
@@ -5502,10 +5558,6 @@ year, manufacturer and full name
  SYSTEM      DEVICE NAME (brief)   IMAGE FILE EXTENSIONS SUPPORTED    \n
 
 
-# emu/clifront.c: 688
-%s ... other drivers in %s:\n
-
-
 # mame/layout/drwho.lay: 1575
 AWP Simulated Video (Lamp Matrix and Reels)
 
@@ -5516,10 +5568,6 @@ AWP Simulated Video (Reels and Lamp Matrix)
 
 # mame/layout/bfm_sc1.lay: 2086, 4178
 Adder %d Output Only (%d:%d, No Artwork)
-
-
-# mame/drivers/ssv.c: 1808 
-Available
 
 
 # mess/devices/cartslot.c: 470, 471
@@ -5564,14 +5612,6 @@ Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org
 
 # emu/mame.h: 58
 Copyright the MESS team\nhttp://mess.org
-
-
-# emu/uimenu.c: 3258
-Cropped
-
-
-# mame/layout/elecyoyo.lay: 7
-Cropped Corners
 
 
 # mame/layout/awpdmd.lay: 1706
@@ -5634,22 +5674,6 @@ M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright Nicola Salmoria and t
 Nicola Salmoria and the MAME Team
 
 
-# mame/layout/neogeo.lay: 15
-Screen %d Cropped (%dx%d)
-
-
-# mame/layout/neogeo.lay: 27
-Screen %d Stretched (%dx%d)
-
-
-# mame/layout/cps3.lay: 9
-Screen %d Widescreen (%d:%d)
-
-
-# mame/drivers/konamigx.c: 1680 
-Screens
-
-
 # mess/layout/sms1.lay: 45
 SegaScope %d-D Glasses
 
@@ -5698,10 +5722,6 @@ Shifter-L
 Shifter-R
 
 
-# emu/softlist.c: 1288, 1289
-Software lists
-
-
 # emu/sound.c: 511
 Speaker \"%s\" - max = %d (gain *= %f) - %d%% samples clipped\n
 
@@ -5710,28 +5730,12 @@ Speaker \"%s\" - max = %d (gain *= %f) - %d%% samples clipped\n
 Stand
 
 
-# emu/devintrf.c: 148
-Starting %s '%s'\n
-
-
 # mame/layout/stepstag.lay: 43
 Stepping Stage Custom
 
 
-# emu/clifront.c: 1298
-There are no Computers or Consoles named %s\n
-
-
-# emu/inptport.c: 1800, 1989
-Unable to locate input port '%s'
-
-
 # emu/screen.c: 92
 Video Screen
-
-
-# emu/uimenu.c: 3519
-Visible Delay
 
 
 # mame/layout/gridiron.lay: 10
@@ -5772,10 +5776,6 @@ list available media for the system
 
 # emu/clifront.c: 103
 list known software for the system
-
-
-# emu/emuopts.c: 88
-override of the default snapshot/movie naming; %g == gamename, %i == index
 
 
 # emu/clifront.c: 94
