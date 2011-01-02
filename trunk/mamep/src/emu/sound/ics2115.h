@@ -43,50 +43,49 @@ struct ics2115_voice {
 	} vol;
 
 	union {
-	 struct {
-	     UINT8 ulaw       : 1;
-	     UINT8 stop 	 : 1;	//stops wave + vol envelope
-	     UINT8 eightbit   : 1;
-	     UINT8 loop       : 1;
-	     UINT8 loop_bidir : 1;
-	     UINT8 irq	      : 1;
-	     UINT8 invert     : 1;
-	     UINT8 irq_pending: 1;
-	     //IRQ on variable?
-	 };
-	 UINT8 value;
+        struct {
+            UINT8 ulaw       : 1;
+            UINT8 stop		 : 1;	//stops wave + vol envelope
+            UINT8 eightbit   : 1;
+            UINT8 loop       : 1;
+            UINT8 loop_bidir : 1;
+            UINT8 irq        : 1;
+            UINT8 invert     : 1;
+            UINT8 irq_pending: 1;
+            //IRQ on variable?
+        };
+        UINT8 value;
     } osc_conf;
 
     union {
-	 struct {
-	     UINT8 done       : 1;	//indicates ramp has stopped
-	     UINT8 stop 	 : 1;	//stops the ramp
-	     UINT8 rollover   : 1;	//rollover (TODO)
-	     UINT8 loop       : 1;
-	     UINT8 loop_bidir : 1;
-	     UINT8 irq	      : 1;	//enable IRQ generation
-	     UINT8 invert     : 1;	//invert direction
-	     UINT8 irq_pending: 1;	//(read only) IRQ pending
-	     //noenvelope == (done | disable)
-	 };
-	 UINT8 value;
+        struct {
+            UINT8 done       : 1;	//indicates ramp has stopped
+            UINT8 stop		 : 1;	//stops the ramp
+            UINT8 rollover   : 1;	//rollover (TODO)
+            UINT8 loop       : 1;
+            UINT8 loop_bidir : 1;
+            UINT8 irq        : 1;	//enable IRQ generation
+            UINT8 invert     : 1;	//invert direction
+            UINT8 irq_pending: 1;	//(read only) IRQ pending
+            //noenvelope == (done | disable)
+        };
+        UINT8 value;
     } vol_ctrl;
 
     //Possibly redundant state. => improvements of wavetable logic
     //may lead to its elimination.
     union {
-	 struct {
-	     UINT8 on	      : 1;
-	     //UINT8 waveirq	: 1;
-	     //UINT8 volirq	: 1;
-	     //irq == (volirq | waveirq)
-	 };
-	 UINT8 value;
+        struct {
+            UINT8 on         : 1;
+            UINT8 ramp       : 7;       // 100 0000 = 0x40 maximum
+        };
+        UINT8 value;
     } state;
 
     bool playing();
     int update_volume_envelope();
     int update_oscillator();
+    void update_ramp();
 };
 
 // ======================> ics2115_device_config
@@ -167,7 +166,7 @@ protected:
 
     //Unknown variable, seems to be effected by 0x12. Further investigation
     //Required.
-    UINT8 m_outhalt;
+    UINT8 m_vmode;
 
 	//internal register helper functions
 	UINT16 reg_read();
@@ -178,7 +177,7 @@ protected:
 
 	//stream helper functions
 	int fill_output(ics2115_voice& voice, stream_sample_t *outputs[2], int samples);
-	stream_sample_t get_sample(ics2115_voice& voice, UINT32 curaddr);
+	stream_sample_t get_sample(ics2115_voice& voice);
 };
 
 
