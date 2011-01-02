@@ -171,7 +171,7 @@ struct _romload_private
 	open_chd *		chd_list;			/* disks */
 	open_chd **		chd_list_tailptr;
 
-	region_info *	region;				/* info about current region */
+	memory_region *	region;				/* info about current region */
 
 	astring			errorstring;		/* error string */
 };
@@ -365,6 +365,6 @@ chd_file *get_disk_handle(running_machine *machine, const char *region);
 /* set a pointer to the CHD file associated with the given region */
 void set_disk_handle(running_machine *machine, const char *region, mame_file *file, chd_file *chd);
 
-void load_software_part_region(running_device *device, char *swlist, char *swname, rom_entry *start_region);
+void load_software_part_region(device_t *device, char *swlist, char *swname, rom_entry *start_region);
 
 #endif	/* __ROMLOAD_H__ */

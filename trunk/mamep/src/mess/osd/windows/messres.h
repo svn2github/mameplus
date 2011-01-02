@@ -2,8 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by mess.rc
 //
-#define IDI_MAME_ICON                   107 // mamep: console icon
-
 #define ID_FILE_LOADSTATE_NEWUI         3101
 #define ID_FILE_SAVESTATE               3102
 #define ID_FILE_SAVESTATE_AS            3103

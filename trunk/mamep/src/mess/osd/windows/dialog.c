@@ -1645,7 +1645,7 @@ void win_dialog_runmodal(running_machine *machine, HWND wnd, dialog_box *dialog)
 
 	// show the dialog
 	before_display_dialog(machine);
-		DialogBoxIndirectParamW(NULL, (const DLGTEMPLATE*)dialog->handle, wnd, dialog_proc, (LPARAM) dialog);
+	DialogBoxIndirectParamW(NULL, (const DLGTEMPLATE*)dialog->handle, wnd, dialog_proc, (LPARAM) dialog);
 	after_display_dialog(machine);
 }
 

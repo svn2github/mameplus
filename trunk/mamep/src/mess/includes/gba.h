@@ -188,13 +188,13 @@ public:
 	UINT32 flash_size;
 	UINT32 flash_mask;
 	intelfsh8_device *mFlashDev;
-	int eeprom_state, eeprom_command, eeprom_count, eeprom_addr, eeprom_bits;
+	int eeprom_state, eeprom_command, eeprom_count, eeprom_addr, eeprom_bits, eeprom_addr_bits;
 	UINT8 eep_data;
 
 	/* nvram-specific for MESS */
 	UINT8 *nvptr;
 	UINT32 nvsize;
-	running_device *nvimage;
+	device_t *nvimage;
 
 	emu_timer *dma_timer[4], *tmr_timer[4], *irq_timer;
 	emu_timer *scan_timer, *hbl_timer;
@@ -204,6 +204,9 @@ public:
 	int fifo_a_ptr, fifo_b_ptr, fifo_a_in, fifo_b_in;
 	UINT8 fifo_a[20], fifo_b[20];
 	UINT32 xferscan[7][240+2048];
+	
+	UINT32 bios_last_address;
+	int bios_protected;
 };
 
 /*----------- defined in video/gba.c -----------*/

@@ -98,7 +98,6 @@ static int joystick_menu_setup;
 static char state_filename[MAX_PATH];
 
 static int add_filter_entry(char *dest, size_t dest_len, const char *description, const char *extensions);
-static void translate_menu(HMENU hMenu);
 
 
 
@@ -266,7 +265,7 @@ done:
 
 static void customize_joystick(running_machine *machine, HWND wnd, int joystick_num)
 {
-	customize_input(machine, wnd, _WINDOWS("Joysticks/Controllers"), joystick_num, INPUT_CLASS_CONTROLLER);
+	customize_input(machine, wnd, "Joysticks/Controllers", joystick_num, INPUT_CLASS_CONTROLLER);
 }
 
 
@@ -277,7 +276,7 @@ static void customize_joystick(running_machine *machine, HWND wnd, int joystick_
 
 static void customize_keyboard(running_machine *machine, HWND wnd)
 {
-	customize_input(machine, wnd, _WINDOWS("Emulated Keyboard"), 0, INPUT_CLASS_KEYBOARD);
+	customize_input(machine, wnd, "Emulated Keyboard", 0, INPUT_CLASS_KEYBOARD);
 }
 
 
@@ -288,7 +287,7 @@ static void customize_keyboard(running_machine *machine, HWND wnd)
 
 static void customize_miscinput(running_machine *machine, HWND wnd)
 {
-	customize_input(machine, wnd, _WINDOWS("Miscellaneous Input"), 0, INPUT_CLASS_MISC);
+	customize_input(machine, wnd, "Miscellaneous Input", 0, INPUT_CLASS_MISC);
 }
 
 
@@ -300,7 +299,7 @@ static void customize_miscinput(running_machine *machine, HWND wnd)
 static void customize_categorizedinput(running_machine *machine, HWND wnd, int category)
 {
 	assert(category > 0);
-	customize_input(machine, wnd, _WINDOWS("Input"), category, INPUT_CLASS_CATEGORIZED);
+	customize_input(machine, wnd, "Input", category, INPUT_CLASS_CATEGORIZED);
 }
 
 
@@ -325,7 +324,7 @@ static void storeval_inputport(void *param, int val)
 //  customize_switches
 //============================================================
 
-static void customize_switches(running_machine *machine, HWND wnd, const char * title_string, UINT32 ipt_name)
+static void customize_switches(running_machine *machine, HWND wnd, const char* title_string, UINT32 ipt_name)
 {
 	dialog_box *dlg;
 	const input_port_config *port;
@@ -348,7 +347,7 @@ static void customize_switches(running_machine *machine, HWND wnd, const char * 
 
 			if (type == ipt_name)
 			{
-				switch_name = _(input_field_name(field));
+				switch_name = input_field_name(field);
 
 				input_field_get_user_settings(field, &settings);
 
@@ -357,7 +356,7 @@ static void customize_switches(running_machine *machine, HWND wnd, const char * 
 
 				for (setting = field->settinglist; setting != NULL; setting = setting->next)
 				{
-					if (win_dialog_add_combobox_item(dlg, _(setting->name), setting->value))
+					if (win_dialog_add_combobox_item(dlg, setting->name, setting->value))
 						goto done;
 				}
 			}
@@ -382,7 +381,7 @@ done:
 
 static void customize_dipswitches(running_machine *machine, HWND wnd)
 {
-	customize_switches(machine, wnd, _("Dip Switches"), IPT_DIPSWITCH);
+	customize_switches(machine, wnd, "Dip Switches", IPT_DIPSWITCH);
 }
 
 
@@ -393,7 +392,7 @@ static void customize_dipswitches(running_machine *machine, HWND wnd)
 
 static void customize_configuration(running_machine *machine, HWND wnd)
 {
-	customize_switches(machine, wnd, _("Driver Configuration"), IPT_CONFIG);
+	customize_switches(machine, wnd, "Driver Configuration", IPT_CONFIG);
 }
 
 
@@ -476,7 +475,7 @@ static void customize_analogcontrols(running_machine *machine, HWND wnd)
 	char buf[255];
 	static const struct dialog_layout layout = { 120, 52 };
 
-	dlg = win_dialog_init(_("Analog Controls"), &layout);
+	dlg = win_dialog_init("Analog Controls", &layout);
 	if (!dlg)
 		goto done;
 
@@ -487,29 +486,29 @@ static void customize_analogcontrols(running_machine *machine, HWND wnd)
 			if (port_type_is_analog(field->type))
 			{
 				input_field_get_user_settings(field, &settings);
-				name = _(input_field_name(field));
+				name = input_field_name(field);
 
 				_snprintf(buf, ARRAY_LENGTH(buf),
-					"%s %s", name, _("Digital Speed"));
+					"%s %s", name, "Digital Speed");
 				if (win_dialog_add_adjuster(dlg, buf, settings.delta, 1, 255, FALSE, store_delta, (void *) field))
 					goto done;
 
 				_snprintf(buf, ARRAY_LENGTH(buf),
-					"%s %s", name, _("Autocenter Speed"));
+					"%s %s", name, "Autocenter Speed");
 				if (win_dialog_add_adjuster(dlg, buf, settings.centerdelta, 1, 255, FALSE, store_centerdelta, (void *) field))
 					goto done;
 
 				_snprintf(buf, ARRAY_LENGTH(buf),
-					"%s %s", name, _("Reverse"));
+					"%s %s", name, "Reverse");
 				if (win_dialog_add_combobox(dlg, buf, settings.reverse ? 1 : 0, store_reverse, (void *) field))
 					goto done;
-				if (win_dialog_add_combobox_item(dlg, _("Off"), 0))
+				if (win_dialog_add_combobox_item(dlg, "Off", 0))
 					goto done;
-				if (win_dialog_add_combobox_item(dlg, _("On"), 1))
+				if (win_dialog_add_combobox_item(dlg, "On", 1))
 					goto done;
 
 				_snprintf(buf, ARRAY_LENGTH(buf),
-					"%s %s", name, _("Sensitivity"));
+					"%s %s", name, "Sensitivity");
 				if (win_dialog_add_adjuster(dlg, buf, settings.sensitivity, 1, 255, TRUE, store_sensitivity, (void *) field))
 					goto done;
 			}
@@ -584,13 +583,13 @@ static void state_dialog(HWND wnd, win_file_dialog_type dlgtype,
 	ofn.type = dlgtype;
 	ofn.owner = wnd;
 	ofn.flags = OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | fileproc_flags;
-	ofn.filter = _WINDOWS("State Files (*.sta)|*.sta|All Files (*.*)|*.*");
+	ofn.filter = "State Files (*.sta)|*.sta|All Files (*.*)|*.*";
 	ofn.initial_directory = dir;
 
 	if (!core_filename_ends_with(ofn.filename, "sta"))
 		snprintf(ofn.filename, ARRAY_LENGTH(ofn.filename), "%s.sta", state_filename);
 	else
-	snprintf(ofn.filename, ARRAY_LENGTH(ofn.filename), "%s", state_filename);
+		snprintf(ofn.filename, ARRAY_LENGTH(ofn.filename), "%s", state_filename);
 
 	result = win_get_file_name_dialog(&ofn);
 	if (result)
@@ -599,7 +598,7 @@ static void state_dialog(HWND wnd, win_file_dialog_type dlgtype,
 		if (osd_is_absolute_path(ofn.filename) && !core_filename_ends_with(ofn.filename, "sta"))
 			snprintf(state_filename, ARRAY_LENGTH(state_filename), "%s.sta", ofn.filename);
 		else
-		snprintf(state_filename, ARRAY_LENGTH(state_filename), "%s", ofn.filename);
+			snprintf(state_filename, ARRAY_LENGTH(state_filename), "%s", ofn.filename);
 
 		if (is_load) {
 			machine->schedule_load(state_filename);
@@ -897,7 +896,7 @@ static int add_filter_entry(char *dest, size_t dest_len, const char *description
 //  build_generic_filter
 //============================================================
 
-static void build_generic_filter(running_device *device, int is_save, char *filter, size_t filter_len)
+static void build_generic_filter(device_t *device, int is_save, char *filter, size_t filter_len)
 {
 	char *s;
 
@@ -910,14 +909,14 @@ static void build_generic_filter(running_device *device, int is_save, char *filt
 	s = filter;
 
 	// common image types
-	s += add_filter_entry(filter, filter_len, _WINDOWS("Common image types"), file_extension);
+	s += add_filter_entry(filter, filter_len, "Common image types", file_extension);
 
 	// all files
-	s += sprintf(s, _WINDOWS("All files (*.*)|*.*|"));
+	s += sprintf(s, "All files (*.*)|*.*|");
 
 	// compressed
 	if (!is_save)
-		s += sprintf(s, _WINDOWS("Compressed Images (*.zip)|*.zip|"));
+		s += sprintf(s, "Compressed Images (*.zip)|*.zip|");
 
 	*(s++) = '\0';
 }
@@ -1056,7 +1055,7 @@ static HMENU find_sub_menu(HMENU menu, const char *menutext, int create_sub_menu
 
 	while(*menutext)
 	{
-		TCHAR *t_menutext = tstring_from_utf8(_WINDOWS(menutext));
+		TCHAR *t_menutext = tstring_from_utf8(menutext);
 
 		i = -1;
 		do
@@ -1067,7 +1066,7 @@ static HMENU find_sub_menu(HMENU menu, const char *menutext, int create_sub_menu
 				return NULL;
 			}
 		}
-		while(_tcscmp(t_menutext, wstring_from_utf8(_WINDOWS(utf8_from_wstring(buf)))));
+		while(_tcscmp(t_menutext, buf));
 
 		osd_free(t_menutext);
 
@@ -1116,61 +1115,6 @@ static void set_command_state(HMENU menu_bar, UINT command, UINT state)
 	mii.fState = state;
 	result = SetMenuItemInfo(menu_bar, command, FALSE, &mii);
 #endif
-}
-
-
-
-//============================================================
-//  append_menu_by_pos_utf8
-//============================================================
-
-static void append_menu_by_pos_utf8(HMENU menu, UINT pos, UINT flags, UINT id, HMENU submenu, const char *str)
-{
-	TCHAR *t_str = str ? tstring_from_utf8(str) : NULL;
-	MENUITEMINFO mii;
-
-	mii.cbSize = sizeof(MENUITEMINFO);
-	mii.fMask = MIIM_STATE;
-	mii.fState = MFS_ENABLED;
-
-	if (str)
-	{
-		mii.fMask |= MIIM_TYPE;
-		mii.fType = MFT_STRING;
-		mii.dwTypeData = t_str;
-	}
-
-	if (flags & MF_SEPARATOR)
-	{
-		mii.fMask |= MIIM_TYPE;
-		mii.fType = MFT_SEPARATOR;
-	}
-
-	if (flags & (MF_GRAYED | MF_DISABLED))
-		mii.fState |= MFS_DISABLED;
-	if (flags & MF_CHECKED)
-		mii.fState |= MFS_CHECKED;
-	if (flags & MF_HILITE)
-		mii.fState |= MFS_HILITE;
-	if (flags & MF_DEFAULT)
-		mii.fState |= MFS_DEFAULT;
-
-	if (id)
-	{
-		mii.fMask |= MIIM_ID;
-		mii.wID = id;
-	}
-
-	if (submenu)
-	{
-		mii.fMask |= MIIM_SUBMENU;
-		mii.hSubMenu = submenu;
-	}
-
-	InsertMenuItem(menu, pos, TRUE, &mii);
-
-	if (t_str)
-		osd_free(t_str);
 }
 
 
@@ -1245,7 +1189,7 @@ static void setup_joystick_menu(running_machine *machine, HMENU menu_bar)
 					// tack on the final items and the menu item
 					command = ID_INPUT_0 + serial_number_from_input_item(machine, port, field, NULL);
 					AppendMenu(submenu, MF_SEPARATOR, 0, NULL);
-					win_append_menu_utf8(submenu, MF_STRING, command, _WINDOWS("&Configure..."));
+					AppendMenu(submenu, MF_STRING, command, TEXT("&Configure..."));
 					win_append_menu_utf8(joystick_menu, MF_STRING | MF_POPUP, (UINT_PTR) submenu, field->name);
 					child_count++;
 				}
@@ -1260,9 +1204,9 @@ static void setup_joystick_menu(running_machine *machine, HMENU menu_bar)
 #endif
 		if (joystick_count > 0)
 		{
-			for(i = 0; i < joystick_count; i++)
+			for (i = 0; i < joystick_count; i++)
 			{
-				snprintf(buf, ARRAY_LENGTH(buf), _WINDOWS("Joystick %i"), i + 1);
+				snprintf(buf, ARRAY_LENGTH(buf), "Joystick %i", i + 1);
 				win_append_menu_utf8(joystick_menu, MF_STRING, ID_JOYSTICK_0 + i, buf);
 				child_count++;
 			}
@@ -1313,7 +1257,6 @@ static int frameskip_level_count(void)
 static void prepare_menus(HWND wnd)
 {
 	int i;
-	int pos = 0;
 	char buf[MAX_PATH];
 	TCHAR t_buf[MAX_PATH];
 	const char *s;
@@ -1444,13 +1387,11 @@ static void prepare_menus(HWND wnd)
 	while(_tcscmp(t_buf, TEXT("-")));
 	i = 0;
 	view_index = window->target->view();
-	// mamep: return the localized name of the indexed view
-	while((view_name = window->target->translated_view_name(i)) != NULL)
+	while((view_name = window->target->view_name(i)) != NULL)
 	{
 		TCHAR *t_view_name = tstring_from_utf8(view_name);
 		InsertMenu(video_menu, i, MF_BYPOSITION | (i == view_index ? MF_CHECKED : 0),
 			ID_VIDEO_VIEW_0 + i, t_view_name);
-		osd_free((char *)view_name);
 		osd_free(t_view_name);
 		i++;
 	}
@@ -1474,33 +1415,30 @@ static void prepare_menus(HWND wnd)
 			flags_for_writing |= MF_GRAYED;
 
 		sub_menu = CreateMenu();
-		win_append_menu_utf8(sub_menu, MF_STRING,		new_item + DEVOPTION_OPEN,		_("Mount..."));
+		win_append_menu_utf8(sub_menu, MF_STRING,		new_item + DEVOPTION_OPEN,		"Mount...");
 
 		if (img->image_config().is_creatable())
-			win_append_menu_utf8(sub_menu, MF_STRING,	new_item + DEVOPTION_CREATE,	_("Create..."));
+			win_append_menu_utf8(sub_menu, MF_STRING,	new_item + DEVOPTION_CREATE,	"Create...");
 
-		win_append_menu_utf8(sub_menu, flags_for_exists,	new_item + DEVOPTION_CLOSE,	_("Unmount"));
+		win_append_menu_utf8(sub_menu, flags_for_exists,	new_item + DEVOPTION_CLOSE,	"Unmount");
 
 		if (img->device().type() == CASSETTE)
 		{
 			cassette_state state;
 			state = (cassette_state)(img->exists() ? (cassette_get_state(&img->device()) & CASSETTE_MASK_UISTATE) : CASSETTE_STOPPED);
 			win_append_menu_utf8(sub_menu, MF_SEPARATOR, 0, NULL);
-			win_append_menu_utf8(sub_menu, flags_for_exists	| ((state == CASSETTE_STOPPED)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_STOPPAUSE,	_("Pause/Stop"));
-			win_append_menu_utf8(sub_menu, flags_for_exists	| ((state == CASSETTE_PLAY)		? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_PLAY,			_("Play"));
-			win_append_menu_utf8(sub_menu, flags_for_writing	| ((state == CASSETTE_RECORD)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_RECORD,		_("Record"));
-			win_append_menu_utf8(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_REWIND,		_("Rewind"));
-			win_append_menu_utf8(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_FASTFORWARD,	_("Fast Forward"));
+			win_append_menu_utf8(sub_menu, flags_for_exists	| ((state == CASSETTE_STOPPED)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_STOPPAUSE,	"Pause/Stop");
+			win_append_menu_utf8(sub_menu, flags_for_exists	| ((state == CASSETTE_PLAY)		? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_PLAY,			"Play");
+			win_append_menu_utf8(sub_menu, flags_for_writing	| ((state == CASSETTE_RECORD)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_RECORD,		"Record");
+			win_append_menu_utf8(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_REWIND,		"Rewind");
+			win_append_menu_utf8(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_FASTFORWARD,	"Fast Forward");
 		}
 		s = img->exists() ? img->filename() : "[empty slot]";
 
-		snprintf(buf, ARRAY_LENGTH(buf), "%s: %s", _(img->image_config().devconfig().name()), _(s));
-		append_menu_by_pos_utf8(device_menu, pos++, MF_POPUP, 0, sub_menu, buf);
+		snprintf(buf, ARRAY_LENGTH(buf), "%s: %s", img->image_config().devconfig().name(), s);
+		win_append_menu_utf8(device_menu, MF_POPUP, (UINT_PTR)sub_menu, buf);
 
 		cnt++;
-
-		if (pos)
-			append_menu_by_pos_utf8(device_menu, pos++, MF_SEPARATOR, 0, NULL, NULL);
 	}
 }
 
@@ -1969,7 +1907,7 @@ static int invoke_command(HWND wnd, UINT command)
 						}
 					}
 					if (category)
-					customize_categorizedinput(window->machine, wnd, category);
+						customize_categorizedinput(window->machine, wnd, category);
 				}
 				else
 				{
@@ -2064,9 +2002,8 @@ int win_setup_menus(running_machine *machine, HMODULE module, HMENU menu_bar)
 	}
 
 	// set the help menu to refer to this machine
-	snprintf(buf, ARRAY_LENGTH(buf), _WINDOWS("About %s (%s)..."), _LST(machine->gamedrv->description), machine->gamedrv->name);
+	snprintf(buf, ARRAY_LENGTH(buf), "About %s (%s)...", machine->gamedrv->description, machine->gamedrv->name);
 	set_menu_text(menu_bar, ID_HELP_ABOUTSYSTEM, buf);
-	translate_menu(menu_bar);
 
 	// initialize state_filename for each driver, so we don't carry names in-between them
 	{
@@ -2074,7 +2011,7 @@ int win_setup_menus(running_machine *machine, HMODULE module, HMENU menu_bar)
 		char *dst;
 
 		snprintf(state_filename, ARRAY_LENGTH(state_filename),
-			_WINDOWS("%s State"), _LST(machine->gamedrv->description));
+			"%s State", machine->gamedrv->description);
 
 		src = state_filename;
 		dst = state_filename;
@@ -2110,64 +2047,6 @@ static HMODULE win_resource_module(void)
 
 
 //============================================================
-//  translate_menu
-//============================================================
-
-#ifndef UNDER_CE
-static void translate_menu(HMENU hMenu)
-{
-	int i;
-
-	for (i = GetMenuItemCount(hMenu) - 1; i >= 0; i--)
-	{
-		HMENU hSubMenu;
-		MENUITEMINFOA miiA;
-		char buffer[1024];
-		int id;
-		char *p;
-
-		hSubMenu = GetSubMenu(hMenu, i);
-		if (hSubMenu != NULL )
-			translate_menu(hSubMenu);
-
-		miiA.cbSize     = sizeof(MENUITEMINFOA);
-		miiA.fMask      = MIIM_ID | MIIM_STRING | MIIM_FTYPE;
-		miiA.dwTypeData = buffer;
-		miiA.cch        = ARRAY_LENGTH(buffer);
-		*buffer        = '\0';
-
-		if (!GetMenuItemInfoA(hMenu, i, TRUE, &miiA) || !miiA.wID)
-			continue;
-
-		if (miiA.fType & MFT_SEPARATOR)
-			continue;
-
-		id = miiA.wID;
-		p = _WINDOWS(buffer);
-		if (p != buffer)
-		{
-			MENUITEMINFOW miiW;
-
-			miiW.dwTypeData = wstring_from_utf8(p);
-			if (miiW.dwTypeData)
-			{
-				miiW.cbSize     = sizeof(miiW);
-				miiW.fMask      = MIIM_STRING | MIIM_FTYPE;
-				miiW.fType      = MFT_STRING;
-				miiW.cch        = wcslen(miiW.dwTypeData);
-
-				SetMenuItemInfoW(hMenu, i, TRUE, &miiW);
-
-				osd_free(miiW.dwTypeData);
-			}
-		}
-	}
-}
-#endif /* UNDER_CE */
-
-
-
-//============================================================
 //  win_create_menu
 //============================================================
 
@@ -2184,11 +2063,9 @@ int win_create_menu(running_machine *machine, HMENU *menus)
 		if (!menu_bar)
 			goto error;
 
-		translate_menu(menu_bar);
 		if (win_setup_menus(machine, module, menu_bar))
 			goto error;
 	}
-	translate_menu(menu_bar);
 
 	*menus = menu_bar;
 	return 0;
@@ -2208,15 +2085,10 @@ error:
 
 LRESULT CALLBACK win_mess_window_proc(HWND wnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
-	HMENU menu_bar;
-
 	switch(message)
 	{
 		case WM_INITMENU:
 			prepare_menus(wnd);
-			menu_bar = GetMenu(wnd);
-			if (menu_bar)
-				translate_menu(menu_bar);
 			break;
 
 		case WM_PASTE:

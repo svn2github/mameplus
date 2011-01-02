@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    Samsung S3C2410 private data
+    Samsung S3C2410
 
 *******************************************************************************/
 
@@ -15,9 +15,9 @@
 
 #define S3C2410_TAG "s3c2410"
 
-#define MDRV_S3C2410_ADD(_tag, _clock, _config) \
-    MDRV_DEVICE_ADD(_tag, S3C2410, _clock) \
-    MDRV_DEVICE_CONFIG(_config)
+#define MCFG_S3C2410_ADD(_tag, _clock, _config) \
+    MCFG_DEVICE_ADD(_tag, S3C2410, _clock) \
+    MCFG_DEVICE_CONFIG(_config)
 
 #define S3C2410_INTERFACE(name) \
 	const s3c2410_interface(name) =
@@ -36,14 +36,14 @@ enum
 
 DECLARE_LEGACY_DEVICE(S3C2410, s3c2410);
 
-READ32_DEVICE_HANDLER( s3c24xx_lcd_r );
+READ32_DEVICE_HANDLER( s3c2410_lcd_r );
 
 /*******************************************************************************
     TYPE DEFINITIONS
 *******************************************************************************/
 
-typedef UINT32 (*s3c24xx_gpio_port_r_func)( running_device *device, int port);
-typedef void (*s3c24xx_gpio_port_w_func)( running_device *device, int port, UINT32 data);
+typedef UINT32 (*s3c24xx_gpio_port_r_func)( device_t *device, int port);
+typedef void (*s3c24xx_gpio_port_w_func)( device_t *device, int port, UINT32 data);
 
 typedef struct _s3c2410_interface_gpio s3c2410_interface_gpio;
 struct _s3c2410_interface_gpio
@@ -81,6 +81,12 @@ struct _s3c2410_interface_nand
 	write8_device_func data_w;
 };
 
+typedef struct _s3c2410_interface_lcd s3c2410_interface_lcd;
+struct _s3c2410_interface_lcd
+{
+	int flags;
+};
+
 typedef struct _s3c2410_interface s3c2410_interface;
 struct _s3c2410_interface
 {
@@ -89,6 +95,7 @@ struct _s3c2410_interface
 	s3c2410_interface_adc adc;
 	s3c2410_interface_i2s i2s;
 	s3c2410_interface_nand nand;
+	s3c2410_interface_lcd lcd;
 };
 
 /*******************************************************************************
@@ -100,8 +107,9 @@ DEVICE_GET_INFO( s3c2410 );
 VIDEO_START( s3c2410 );
 VIDEO_UPDATE( s3c2410 );
 
-void s3c2410_uart_fifo_w( running_device *device, int uart, UINT8 data);
-void s3c2410_touch_screen( running_device *device, int state);
+void s3c2410_uart_fifo_w( device_t *device, int uart, UINT8 data);
+void s3c2410_touch_screen( device_t *device, int state);
+void s3c2410_request_eint( device_t *device, UINT32 number);
 
 WRITE_LINE_DEVICE_HANDLER( s3c2410_pin_frnb_w );
 
@@ -110,6 +118,10 @@ void s3c2410_nand_calculate_mecc( UINT8 *data, UINT32 size, UINT8 *mecc);
 /*******************************************************************************
     MACROS & CONSTANTS
 *******************************************************************************/
+
+/* Interface */
+
+#define S3C24XX_INTERFACE_LCD_REVERSE 1
 
 /* Memory Controller */
 
@@ -711,6 +723,7 @@ typedef struct
 typedef struct
 {
 	s3c24xx_irq_regs_t regs;
+	int line_irq, line_fiq;
 } s3c24xx_irq_t;
 
 typedef struct
@@ -778,6 +791,7 @@ typedef struct
 {
 	s3c24xx_wdt_regs_t regs;
 	emu_timer *timer;
+	UINT32 freq, cnt;
 } s3c24xx_wdt_t;
 
 typedef struct

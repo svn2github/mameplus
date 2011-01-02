@@ -25,12 +25,12 @@ struct _bitbanger_token
 	int build_byte;
 	attotime idle_delay;
 	attotime current_baud;
-	UINT8 *input_buffer;
 	UINT32 input_buffer_size;
 	UINT32 input_buffer_cursor;
 	int mode;
 	int baud;
 	int tune;
+	UINT8 input_buffer[1000];
 };
 
 
@@ -53,7 +53,7 @@ static TIMER_CALLBACK(bitbanger_input_timer);
     get_token - safely gets the bitbanger data
 -------------------------------------------------*/
 
-INLINE bitbanger_token *get_token(running_device *device)
+INLINE bitbanger_token *get_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == BITBANGER);
@@ -65,7 +65,7 @@ INLINE bitbanger_token *get_token(running_device *device)
     get_config - safely gets the bitbanger config
 -------------------------------------------------*/
 
-INLINE const bitbanger_config *get_config(running_device *device)
+INLINE const bitbanger_config *get_config(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == BITBANGER);
@@ -83,7 +83,7 @@ INLINE const bitbanger_config *get_config(running_device *device)
     native_output - outputs data to a file
 -------------------------------------------------*/
 
-static void native_output(running_device *bitbanger, UINT8 data)
+static void native_output(device_t *bitbanger, UINT8 data)
 {
 	device_image_interface *image = dynamic_cast<device_image_interface *>(bitbanger);
 	if (image->exists())
@@ -97,7 +97,7 @@ static void native_output(running_device *bitbanger, UINT8 data)
     native_input - inputs data from a file
 -------------------------------------------------*/
 
-static UINT32 native_input(running_device *bitbanger, void *buffer, UINT32 length)
+static UINT32 native_input(device_t *bitbanger, void *buffer, UINT32 length)
 {
 	device_image_interface *image = dynamic_cast<device_image_interface *>(bitbanger);
 	if (image->exists())
@@ -112,7 +112,7 @@ static UINT32 native_input(running_device *bitbanger, void *buffer, UINT32 lengt
 /*-------------------------------------------------
     bitbanger_mode_string
 -------------------------------------------------*/
-const char *bitbanger_mode_string(running_device *device)
+const char *bitbanger_mode_string(device_t *device)
 {
 	bitbanger_token *bi = get_token(device);
 	static const char *const modes[] = {"Printer", "Modem"};
@@ -124,7 +124,7 @@ const char *bitbanger_mode_string(running_device *device)
 /*-------------------------------------------------
     bitbanger_inc_mode
 -------------------------------------------------*/
-bool bitbanger_inc_mode(running_device *device, bool test)
+bool bitbanger_inc_mode(device_t *device, bool test)
 {
 	bitbanger_token *bi = get_token(device);
    int adjust_mode = (int)bi->mode + 1;
@@ -142,7 +142,7 @@ bool bitbanger_inc_mode(running_device *device, bool test)
 /*-------------------------------------------------
     bitbanger_dec_mode
 -------------------------------------------------*/
-bool bitbanger_dec_mode(running_device *device, bool test)
+bool bitbanger_dec_mode(device_t *device, bool test)
 {
 	bitbanger_token *bi = get_token(device);
    int adjust_mode = bi->mode - 1;
@@ -160,7 +160,7 @@ bool bitbanger_dec_mode(running_device *device, bool test)
 /*-------------------------------------------------
     bitbanger_tune_string
 -------------------------------------------------*/
-const char *bitbanger_tune_string(running_device *device)
+const char *bitbanger_tune_string(device_t *device)
 {
 	bitbanger_token *bi = get_token(device);
 	static const char *const tunes[] = {"-2.0%", "-1.75%", "-1.5%", "-1.25%", "-1.0%", "-0.75%", "-0.5", "-0.25%", "\xc2\xb1""0%",
@@ -173,7 +173,7 @@ const char *bitbanger_tune_string(running_device *device)
 /*-------------------------------------------------
     bitbanger_tune_value
 -------------------------------------------------*/
-static float bitbanger_tune_value(running_device *device)
+static float bitbanger_tune_value(device_t *device)
 {
 	bitbanger_token *bi = get_token(device);
 	static const float tunes[] = {0.97f, 0.9825f, 0.985f, 0.9875f, 0.99f, 0.9925f, 0.995f, 0.9975f, 1.0f,
@@ -187,7 +187,7 @@ static float bitbanger_tune_value(running_device *device)
     bitbanger_baud_value
 -------------------------------------------------*/
 
-static UINT32 bitbanger_baud_value(running_device *device)
+static UINT32 bitbanger_baud_value(device_t *device)
 {
 	bitbanger_token *bi = get_token(device);
 	static const float bauds[] = { 150.0f, 300.0f, 600.0f, 1200.0f, 2400.0f, 4800.0f, 9600.0f,
@@ -201,7 +201,7 @@ static UINT32 bitbanger_baud_value(running_device *device)
     bitbanger_baud_string
 -------------------------------------------------*/
 
-const char *bitbanger_baud_string(running_device *device)
+const char *bitbanger_baud_string(device_t *device)
 {
 	bitbanger_token *bi = get_token(device);
 	static const char *const bauds[] = { "150", "300", "600", "1200", "2400", "4800",
@@ -214,7 +214,7 @@ const char *bitbanger_baud_string(running_device *device)
 /*-------------------------------------------------
     bitbanger_inc_baud
 -------------------------------------------------*/
-bool bitbanger_inc_baud(running_device *device, bool test)
+bool bitbanger_inc_baud(device_t *device, bool test)
 {
 	bitbanger_token *bi = get_token(device);
    int adjust_baud = (int)bi->baud + 1;
@@ -235,7 +235,7 @@ bool bitbanger_inc_baud(running_device *device, bool test)
 /*-------------------------------------------------
     bitbanger_dec_baud
 -------------------------------------------------*/
-bool bitbanger_dec_baud(running_device *device, bool test)
+bool bitbanger_dec_baud(device_t *device, bool test)
 {
 	bitbanger_token *bi = get_token(device);
    int adjust_baud = bi->baud - 1;
@@ -256,7 +256,7 @@ bool bitbanger_dec_baud(running_device *device, bool test)
 /*-------------------------------------------------
     bitbanger_inc_tune
 -------------------------------------------------*/
-bool bitbanger_inc_tune(running_device *device, bool test)
+bool bitbanger_inc_tune(device_t *device, bool test)
 {
 	bitbanger_token *bi = get_token(device);
    int adjust_tune = (int)bi->tune + 1;
@@ -277,7 +277,7 @@ bool bitbanger_inc_tune(running_device *device, bool test)
 /*-------------------------------------------------
     bitbanger_dec_tune
 -------------------------------------------------*/
-bool bitbanger_dec_tune(running_device *device, bool test)
+bool bitbanger_dec_tune(device_t *device, bool test)
 {
 	bitbanger_token *bi = get_token(device);
    int adjust_tune = bi->tune - 1;
@@ -298,37 +298,36 @@ bool bitbanger_dec_tune(running_device *device, bool test)
 /*-------------------------------------------------
     bitbanger_bytes_to_bits_81N
 -------------------------------------------------*/
-static void bitbanger_bytes_to_bits_81N(running_device *img, UINT8 **buffer, UINT32 *size)
+static void bitbanger_bytes_to_bits_81N(device_t *img)
 {
+   bitbanger_token *bi = get_token(img);
    UINT8 byte_buffer[100];
-   static UINT8 bit_buffer[1000];
    UINT32 byte_buffer_size, bit_buffer_size;
    int i, j;
    static const UINT8 bitmask[8] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 
    bit_buffer_size = 0;
-   byte_buffer_size = 100;
-   byte_buffer_size = native_input(img, &byte_buffer, byte_buffer_size);
+   byte_buffer_size = native_input(img, byte_buffer, sizeof(byte_buffer));
 
    /* Translate byte buffer into bit buffer using: 1 start bit, 8 data bits, 1 stop bit, no parity */
 
    for( i=0; i<byte_buffer_size; i++ )
    {
-      bit_buffer[bit_buffer_size++] = 0;
+      bi->input_buffer[bit_buffer_size++] = 0;
 
       for( j=0; j<8; j++ )
       {
          if( byte_buffer[i] & bitmask[j] )
-            bit_buffer[bit_buffer_size++] = 1;
+            bi->input_buffer[bit_buffer_size++] = 1;
          else
-            bit_buffer[bit_buffer_size++] = 0;
+            bi->input_buffer[bit_buffer_size++] = 0;
       }
 
-      bit_buffer[bit_buffer_size++] = 1;
+      bi->input_buffer[bit_buffer_size++] = 1;
    }
 
-   *buffer = bit_buffer;
-   *size = bit_buffer_size;
+   bi->input_buffer_size = bit_buffer_size;
+   bi->input_buffer_cursor = 0;
 }
 
 
@@ -347,21 +346,20 @@ static DEVICE_START(bitbanger)
 	bi->build_count = 0;
 	bi->bitbanger_output_timer = timer_alloc(device->machine, bitbanger_output_timer, (void *) device);
 
-   /* input config */
+	/* input config */
 	bi->bitbanger_input_timer = timer_alloc(device->machine, bitbanger_input_timer, (void *) device );
-   bi->idle_delay = ATTOTIME_IN_SEC(1);
-	bi->input_buffer = 0;
+	bi->idle_delay = ATTOTIME_IN_SEC(1);
 	bi->input_buffer_size = 0;
 	bi->input_buffer_cursor = 0;
 
 	bi->mode = config->default_mode;
 	bi->baud = config->default_baud;
 	bi->tune = config->default_tune;
-   bi->current_baud = ATTOTIME_IN_HZ(bitbanger_baud_value(device));
+	bi->current_baud = ATTOTIME_IN_HZ(bitbanger_baud_value(device));
 
 	/* test callback */
 	if(!config->input_callback)
-	   fatalerror("Misconfigured bitbanger device: input_callback cannot be NULL\n");
+		fatalerror("Misconfigured bitbanger device: input_callback cannot be NULL\n");
 }
 
 
@@ -371,7 +369,7 @@ static DEVICE_START(bitbanger)
 
 static TIMER_CALLBACK(bitbanger_output_timer)
 {
-	running_device *device = (running_device *) ptr;
+	device_t *device = (device_t *) ptr;
 	bitbanger_token *bi = get_token(device);
 
    /* this ia harded coded for 8-1-N */
@@ -399,15 +397,14 @@ static TIMER_CALLBACK(bitbanger_output_timer)
 
 static TIMER_CALLBACK(bitbanger_input_timer)
 {
-	running_device *device = (running_device *) ptr;
+	device_t *device = (device_t *) ptr;
 	bitbanger_token *bi = get_token(device);
 	const bitbanger_config *config = get_config(device);
 
    if(bi->input_buffer_cursor == bi->input_buffer_size)
    {
       /* get more data */
-      bitbanger_bytes_to_bits_81N(device, &(bi->input_buffer), &(bi->input_buffer_size));
-      bi->input_buffer_cursor = 0;
+      bitbanger_bytes_to_bits_81N(device);
 
       if(bi->input_buffer_size == 0)
       {
@@ -440,7 +437,7 @@ static TIMER_CALLBACK(bitbanger_input_timer)
     port
 -------------------------------------------------*/
 
-void bitbanger_output(running_device *device, int value)
+void bitbanger_output(device_t *device, int value)
 {
 	bitbanger_token *bi = get_token(device);
    attotime one_point_five_baud;
@@ -467,12 +464,12 @@ void bitbanger_output(running_device *device, int value)
 
 static DEVICE_IMAGE_LOAD( bitbanger )
 {
-   device_t *device = &image.device();
+	device_t *device = &image.device();
 	bitbanger_token *bi;
 	bi = get_token(device);
 
 	timer_enable(bi->bitbanger_input_timer, TRUE);
-   timer_adjust_periodic(bi->bitbanger_input_timer, attotime_zero, 0, ATTOTIME_IN_SEC(1));
+	timer_adjust_periodic(bi->bitbanger_input_timer, attotime_zero, 0, ATTOTIME_IN_SEC(1));
 
 	/* we don't need to do anything special */
 	return IMAGE_INIT_PASS;
@@ -485,7 +482,7 @@ static DEVICE_IMAGE_LOAD( bitbanger )
 
 static DEVICE_IMAGE_UNLOAD( bitbanger )
 {
-   device_t *device = &image.device();
+	device_t *device = &image.device();
 	bitbanger_token *bi;
 	bi = get_token(device);
 

@@ -1215,7 +1215,7 @@ $(MAMEOBJ)/seibu.a: \
 	$(DRIVERS)/feversoc.o \
 
 $(MAMEOBJ)/seta.a: \
-	$(DRIVERS)/aleck64.o $(MACHINE)/n64.o $(VIDEO)/n64.o $(VIDEO)/rdpblend.o $(VIDEO)/rdpfb.o $(VIDEO)/rdpspn16.o $(VIDEO)/rdptrect.o $(VIDEO)/rdpfrect.o $(VIDEO)/rdpfetch.o $(VIDEO)/rdptpipe.o \
+	$(DRIVERS)/aleck64.o $(MACHINE)/n64.o $(VIDEO)/n64.o $(VIDEO)/rdpblend.o $(VIDEO)/rdpfb.o $(VIDEO)/rdpspn16.o $(VIDEO)/rdptpipe.o \
 	$(DRIVERS)/darkhors.o \
 	$(DRIVERS)/hanaawas.o $(VIDEO)/hanaawas.o \
 	$(DRIVERS)/macs.o \
@@ -1517,6 +1517,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/bingor.o \
 	$(DRIVERS)/blackt96.o \
 	$(DRIVERS)/blitz.o \
+	$(DRIVERS)/blitz68k.o \
 	$(DRIVERS)/buster.o \
 	$(DRIVERS)/calchase.o \
 	$(DRIVERS)/calomega.o $(VIDEO)/calomega.o \
@@ -1541,7 +1542,6 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/dreamwld.o \
 	$(DRIVERS)/dribling.o $(VIDEO)/dribling.o \
 	$(DRIVERS)/drw80pkr.o \
-	$(DRIVERS)/dualgame.o \
 	$(DRIVERS)/dwarfd.o \
 	$(DRIVERS)/dynadice.o \
 	$(DRIVERS)/epos.o $(VIDEO)/epos.o \
@@ -1570,7 +1570,6 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/homedata.o $(VIDEO)/homedata.o \
 	$(DRIVERS)/hotblock.o \
 	$(DRIVERS)/hotstuff.o \
-	$(DRIVERS)/ilpag.o \
 	$(DRIVERS)/imolagp.o \
 	$(DRIVERS)/intrscti.o \
 	$(DRIVERS)/istellar.o \

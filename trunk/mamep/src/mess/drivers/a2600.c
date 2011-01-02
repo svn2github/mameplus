@@ -43,7 +43,7 @@ public:
 		: driver_device(machine, config) { }
 
 	dpc_t dpc;
-	region_info* extra_RAM;
+	memory_region* extra_RAM;
 	UINT8* bank_base[5];
 	UINT8* ram_base;
 	UINT8* riot_ram;
@@ -68,7 +68,7 @@ public:
 
 
 
-#define CART memory_region(machine, "user1")
+#define CART machine->region("user1")->base()
 
 #define MASTER_CLOCK_NTSC	3579545
 #define MASTER_CLOCK_PAL	3546894
@@ -704,7 +704,7 @@ static void modeE7_switch(running_machine *machine, UINT16 offset, UINT8 data)
 static void modeE7_RAM_switch(running_machine *machine, UINT16 offset, UINT8 data)
 {
 	a2600_state *state = machine->driver_data<a2600_state>();
-	memory_set_bankptr(machine,"bank9", state->extra_RAM + (4 + offset) * 256 );
+	memory_set_bankptr(machine,"bank9", state->extra_RAM->base() + (4 + offset) * 256 );
 }
 static void modeDC_switch(running_machine *machine, UINT16 offset, UINT8 data)
 {
@@ -904,12 +904,12 @@ static READ8_HANDLER(modeSS_r)
 		{
 		case 0x00:
 			state->bank_base[1] = state->extra_RAM->base() + 2 * 0x800;
-			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? memory_region(space->machine, "maincpu") + 0x1800 : memory_region(space->machine, "user1");
+			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? space->machine->region("maincpu")->base() + 0x1800 : space->machine->region("user1")->base();
 			state->modeSS_high_ram_enabled = 0;
 			break;
 		case 0x04:
 			state->bank_base[1] = state->extra_RAM->base();
-			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? memory_region(space->machine, "maincpu") + 0x1800 : memory_region(space->machine, "user1");
+			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? space->machine->region("maincpu")->base() + 0x1800 : space->machine->region("user1")->base();
 			state->modeSS_high_ram_enabled = 0;
 			break;
 		case 0x08:
@@ -924,12 +924,12 @@ static READ8_HANDLER(modeSS_r)
 			break;
 		case 0x10:
 			state->bank_base[1] = state->extra_RAM->base() + 2 * 0x800;
-			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? memory_region(space->machine, "maincpu") + 0x1800 : memory_region(space->machine, "user1");
+			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? space->machine->region("maincpu")->base() + 0x1800 : space->machine->region("user1")->base();
 			state->modeSS_high_ram_enabled = 0;
 			break;
 		case 0x14:
 			state->bank_base[1] = state->extra_RAM->base() + 0x800;
-			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? memory_region(space->machine, "maincpu") + 0x1800 : memory_region(space->machine, "user1");
+			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? space->machine->region("maincpu")->base() + 0x1800 : space->machine->region("user1")->base();
 			state->modeSS_high_ram_enabled = 0;
 			break;
 		case 0x18:
@@ -1105,7 +1105,7 @@ static READ8_HANDLER(modeDPC_r)
 	}
 	else
 	{
-		UINT8	display_data = memory_region(space->machine, "user1")[0x2000 + ( ~ ( ( state->dpc.df[data_fetcher].low | ( state->dpc.df[data_fetcher].high << 8 ) ) ) & 0x7FF ) ];
+		UINT8	display_data = space->machine->region("user1")->base()[0x2000 + ( ~ ( ( state->dpc.df[data_fetcher].low | ( state->dpc.df[data_fetcher].high << 8 ) ) ) & 0x7FF ) ];
 
 		switch( offset & 0x38 )
 		{
@@ -1215,7 +1215,7 @@ DIRECT_UPDATE_HANDLER(modeFE_opbase_handler)
 		/* Still cheating a bit here by looking bit 13 of the address..., but the high byte of the
            cpu should be the last byte that was on the data bus and so should determine the bank
            we should switch in. */
-		state->bank_base[1] = memory_region(machine, "user1") + 0x1000 * ( ( address & 0x2000 ) ? 0 : 1 );
+		state->bank_base[1] = machine->region("user1")->base() + 0x1000 * ( ( address & 0x2000 ) ? 0 : 1 );
 		memory_set_bankptr(machine, "bank1", state->bank_base[1] );
 		/* and restore old opbase handler */
 		cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM)->set_direct_update_handler(FE_old_opbase_handler);
@@ -1673,26 +1673,28 @@ static const struct tia_interface tia_interface_pal =
 	a2600_tia_vsync_callback_pal
 };
 
-static MACHINE_START( a2600 )
-{
-	a2600_state *state = machine->driver_data<a2600_state>();
-	screen_device *screen = machine->first_screen();
-	state->current_screen_height = screen->height();
-	state->extra_RAM =	machine->region_alloc("user2", 0x8600, ROM_REQUIRED );
-	tia_init( machine, &tia_interface );
-	memset( state->riot_ram, 0x00, 0x80 );
-	state->current_reset_bank_counter = 0xFF;
-}
 
-static MACHINE_START( a2600p )
+static void common_init(running_machine *machine)
 {
 	a2600_state *state = machine->driver_data<a2600_state>();
 	screen_device *screen = machine->first_screen();
 	state->current_screen_height = screen->height();
 	state->extra_RAM = machine->region_alloc("user2", 0x8600, ROM_REQUIRED );
-	tia_init( machine, &tia_interface_pal );
 	memset( state->riot_ram, 0x00, 0x80 );
 	state->current_reset_bank_counter = 0xFF;
+	state->dpc.oscillator = timer_alloc(machine, modeDPC_timer_callback, NULL);
+}
+
+static MACHINE_START( a2600 )
+{
+	common_init(machine);
+	tia_init( machine, &tia_interface );
+}
+
+static MACHINE_START( a2600p )
+{
+	common_init(machine);
+	tia_init( machine, &tia_interface_pal );
 }
 
 static void set_category_value( running_machine *machine, const char* cat, const char *cat_selection )
@@ -1969,7 +1971,7 @@ static MACHINE_RESET( a2600 )
 		memory_install_write8_handler(space, 0x1fe8, 0x1feb, 0, 0, modeE7_RAM_switch_w);
 		memory_install_read8_handler(space, 0x1fe8, 0x1feb, 0, 0, modeE7_RAM_switch_r);
 		memory_install_readwrite_bank(space, 0x1800, 0x18ff, 0, 0, "bank9");
-		memory_set_bankptr(machine, "bank9", state->extra_RAM + 4 * 256 );
+		memory_set_bankptr(machine, "bank9", state->extra_RAM->base() + 4 * 256 );
 		break;
 
 	case modeDC:
@@ -2021,7 +2023,6 @@ static MACHINE_RESET( a2600 )
 				state->dpc.df[data_fetcher].music_mode = 0;
 			}
 		}
-		state->dpc.oscillator = timer_alloc(machine,  modeDPC_timer_callback , NULL);
 		timer_adjust_periodic(state->dpc.oscillator, ATTOTIME_IN_HZ(42000), 0, ATTOTIME_IN_HZ(42000));
 		break;
 
@@ -2043,7 +2044,7 @@ static MACHINE_RESET( a2600 )
 		memory_install_write_bank(space, 0x1000, 0x10ff, 0, 0, "bank9");
 		memory_install_read_bank(space, 0x1100, 0x11ff, 0, 0, "bank9");
 
-		memory_set_bankptr(machine,"bank9", state->extra_RAM);
+		memory_set_bankptr(machine,"bank9", state->extra_RAM->base());
 	}
 
 	if (state->banking_mode == modeCV)
@@ -2051,7 +2052,7 @@ static MACHINE_RESET( a2600 )
 		memory_install_write_bank(space, 0x1400, 0x17ff, 0, 0, "bank9");
 		memory_install_read_bank(space, 0x1000, 0x13ff, 0, 0, "bank9");
 
-		memory_set_bankptr(machine,"bank9", state->extra_RAM);
+		memory_set_bankptr(machine,"bank9", state->extra_RAM->base());
 	}
 
 	if (chip)
@@ -2059,7 +2060,7 @@ static MACHINE_RESET( a2600 )
 		memory_install_write_bank(space, 0x1000, 0x107f, 0, 0, "bank9");
 		memory_install_read_bank(space, 0x1080, 0x10ff, 0, 0, "bank9");
 
-		memory_set_bankptr(machine,"bank9", state->extra_RAM);
+		memory_set_bankptr(machine,"bank9", state->extra_RAM->base());
 	}
 
 	/* Banks may have changed, reset the cpu so it uses the correct reset vector */
@@ -2228,74 +2229,74 @@ static const cassette_config a2600_cassette_config =
 };
 
 static MACHINE_CONFIG_FRAGMENT(a2600_cartslot)
-	MDRV_CARTSLOT_ADD("cart")
-	MDRV_CARTSLOT_EXTENSION_LIST("bin,a26")
-	MDRV_CARTSLOT_MANDATORY
-	MDRV_CARTSLOT_START(a2600_cart)
-	MDRV_CARTSLOT_LOAD(a2600_cart)
+	MCFG_CARTSLOT_ADD("cart")
+	MCFG_CARTSLOT_EXTENSION_LIST("bin,a26")
+	MCFG_CARTSLOT_MANDATORY
+	MCFG_CARTSLOT_START(a2600_cart)
+	MCFG_CARTSLOT_LOAD(a2600_cart)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( a2600, a2600_state )
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu", M6502, MASTER_CLOCK_NTSC / 3)	/* actually M6507 */
-	MDRV_CPU_PROGRAM_MAP(a2600_mem)
+	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK_NTSC / 3)	/* actually M6507 */
+	MCFG_CPU_PROGRAM_MAP(a2600_mem)
 
-	MDRV_MACHINE_START(a2600)
-	MDRV_MACHINE_RESET(a2600)
+	MCFG_MACHINE_START(a2600)
+	MCFG_MACHINE_RESET(a2600)
 
 	/* video hardware */
-	MDRV_SCREEN_ADD("screen", RASTER)
-	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_RAW_PARAMS( MASTER_CLOCK_NTSC, 228, 26, 26 + 160 + 16, 262, 24 , 24 + 192 + 31 )
-	MDRV_PALETTE_LENGTH( TIA_PALETTE_LENGTH )
-	MDRV_PALETTE_INIT(tia_NTSC)
+	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MCFG_SCREEN_RAW_PARAMS( MASTER_CLOCK_NTSC, 228, 26, 26 + 160 + 16, 262, 24 , 24 + 192 + 31 )
+	MCFG_PALETTE_LENGTH( TIA_PALETTE_LENGTH )
+	MCFG_PALETTE_INIT(tia_NTSC)
 
-	MDRV_VIDEO_START(tia)
-	MDRV_VIDEO_UPDATE(tia)
+	MCFG_VIDEO_START(tia)
+	MCFG_VIDEO_UPDATE(tia)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_MONO("mono")
-	MDRV_SOUND_ADD("tia", TIA, MASTER_CLOCK_NTSC/114)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
-	MDRV_SOUND_WAVE_ADD("wave", "cassette")
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
+	MCFG_SPEAKER_STANDARD_MONO("mono")
+	MCFG_SOUND_ADD("tia", TIA, MASTER_CLOCK_NTSC/114)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
+	MCFG_SOUND_WAVE_ADD("wave", "cassette")
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 
 	/* devices */
-	MDRV_RIOT6532_ADD("riot", MASTER_CLOCK_NTSC / 3, r6532_interface)
-	MDRV_FRAGMENT_ADD(a2600_cartslot)
-	MDRV_CASSETTE_ADD( "cassette", a2600_cassette_config )
+	MCFG_RIOT6532_ADD("riot", MASTER_CLOCK_NTSC / 3, r6532_interface)
+	MCFG_FRAGMENT_ADD(a2600_cartslot)
+	MCFG_CASSETTE_ADD( "cassette", a2600_cassette_config )
 MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_START( a2600p, a2600_state )
 	/* basic machine hardware */
-	MDRV_CPU_ADD("maincpu", M6502, MASTER_CLOCK_PAL / 3)    /* actually M6507 */
-	MDRV_CPU_PROGRAM_MAP(a2600_mem)
+	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK_PAL / 3)    /* actually M6507 */
+	MCFG_CPU_PROGRAM_MAP(a2600_mem)
 
-	MDRV_MACHINE_START(a2600p)
-	MDRV_MACHINE_RESET(a2600)
+	MCFG_MACHINE_START(a2600p)
+	MCFG_MACHINE_RESET(a2600)
 
 	/* video hardware */
-	MDRV_SCREEN_ADD("screen", RASTER)
-	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_RAW_PARAMS( MASTER_CLOCK_PAL, 228, 26, 26 + 160 + 16, 312, 32, 32 + 228 + 31 )
-	MDRV_PALETTE_LENGTH( TIA_PALETTE_LENGTH )
-	MDRV_PALETTE_INIT(tia_PAL)
+	MCFG_SCREEN_ADD("screen", RASTER)
+	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MCFG_SCREEN_RAW_PARAMS( MASTER_CLOCK_PAL, 228, 26, 26 + 160 + 16, 312, 32, 32 + 228 + 31 )
+	MCFG_PALETTE_LENGTH( TIA_PALETTE_LENGTH )
+	MCFG_PALETTE_INIT(tia_PAL)
 
-	MDRV_VIDEO_START(tia)
-	MDRV_VIDEO_UPDATE(tia)
+	MCFG_VIDEO_START(tia)
+	MCFG_VIDEO_UPDATE(tia)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_MONO("mono")
-	MDRV_SOUND_ADD("tia", TIA, MASTER_CLOCK_PAL/114)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
-	MDRV_SOUND_WAVE_ADD("wave", "cassette")
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
+	MCFG_SPEAKER_STANDARD_MONO("mono")
+	MCFG_SOUND_ADD("tia", TIA, MASTER_CLOCK_PAL/114)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
+	MCFG_SOUND_WAVE_ADD("wave", "cassette")
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 
 	/* devices */
-	MDRV_RIOT6532_ADD("riot", MASTER_CLOCK_PAL / 3, r6532_interface)
-	MDRV_FRAGMENT_ADD(a2600_cartslot)
-	MDRV_CASSETTE_ADD( "cassette", a2600_cassette_config )
+	MCFG_RIOT6532_ADD("riot", MASTER_CLOCK_PAL / 3, r6532_interface)
+	MCFG_FRAGMENT_ADD(a2600_cartslot)
+	MCFG_CASSETTE_ADD( "cassette", a2600_cassette_config )
 MACHINE_CONFIG_END
 
 

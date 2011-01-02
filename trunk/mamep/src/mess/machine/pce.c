@@ -89,7 +89,7 @@ static UINT8 pce_io_port_options;
 //unsigned char *pce_user_ram;    /* scratch RAM at F8 */
 
 /* CD Unit RAM */
-UINT8	*pce_cd_ram;			/* 64KB RAM from a CD unit */
+UINT8 *pce_cd_ram;			/* 64KB RAM from a CD unit */
 static UINT8	pce_sys3_card;	/* Is a Super CD System 3 card present */
 static UINT8	pce_acard;		/* Is this an Arcade Card? */
 
@@ -165,7 +165,7 @@ typedef struct {
 static pce_cd_t pce_cd;
 
 /* MSM5205 ADPCM decoder definition */
-static void pce_cd_msm5205_int(running_device *device);
+static void pce_cd_msm5205_int(device_t *device);
 const msm5205_interface pce_cd_msm5205_interface = {
 	pce_cd_msm5205_int,	/* interrupt function */
 	MSM5205_S48_4B		/* 1/48 prescaler, 4bit data */
@@ -192,9 +192,9 @@ static TIMER_CALLBACK( pce_cd_adpcm_fadein_callback );
 
 static WRITE8_HANDLER( pce_sf2_banking_w )
 {
-	memory_set_bankptr( space->machine, "bank2", memory_region(space->machine, "user1") + offset * 0x080000 + 0x080000 );
-	memory_set_bankptr( space->machine, "bank3", memory_region(space->machine, "user1") + offset * 0x080000 + 0x088000 );
-	memory_set_bankptr( space->machine, "bank4", memory_region(space->machine, "user1") + offset * 0x080000 + 0x0D0000 );
+	memory_set_bankptr( space->machine, "bank2", space->machine->region("user1")->base() + offset * 0x080000 + 0x080000 );
+	memory_set_bankptr( space->machine, "bank3", space->machine->region("user1")->base() + offset * 0x080000 + 0x088000 );
+	memory_set_bankptr( space->machine, "bank4", space->machine->region("user1")->base() + offset * 0x080000 + 0x0D0000 );
 }
 
 static WRITE8_HANDLER( pce_cartridge_ram_w )
@@ -211,7 +211,7 @@ DEVICE_IMAGE_LOAD(pce_cart)
 	logerror("*** DEVICE_IMAGE_LOAD(pce_cart) : %s\n", image.filename());
 
 	/* open file to get size */
-	ROM = memory_region(image.device().machine, "user1");
+	ROM = image.device().machine->region("user1")->base();
 
 	if (image.software_entry() == NULL)
 		size = image.length();
@@ -347,7 +347,7 @@ DRIVER_INIT( sgx )
 	pce_io_port_options = PCE_JOY_SIG | CONST_SIG;
 }
 
-MACHINE_START( pce ) 
+MACHINE_START( pce )
 {
 	pce_cd_init( machine );
 }
@@ -384,7 +384,7 @@ WRITE8_HANDLER ( pce_mess_joystick_w )
 	h6280io_set_buffer(space->cpu, data);
 
     /* bump counter on a low-to-high transition of bit 1 */
-    if((!joystick_data_select) && (data & JOY_CLOCK))
+    if ((!joystick_data_select) && (data & JOY_CLOCK))
     {
         joystick_port_select = (joystick_port_select + 1) & 0x07;
     }
@@ -497,7 +497,7 @@ static void adpcm_play(running_machine *machine)
   the MSM5205. Currently we can only use static clocks for the
   MSM5205.
  */
-static void pce_cd_msm5205_int(running_device *device)
+static void pce_cd_msm5205_int(device_t *device)
 {
 	UINT8 msm_data;
 
@@ -1061,7 +1061,7 @@ static void pce_cd_update( running_machine *machine )
 		if ( ! pce_cd.selected )
 		{
 			pce_cd.selected = 1;
-logerror("Setting CD in device selection\n");
+			logerror("Setting CD in device selection\n");
 			pce_cd.scsi_BSY = pce_cd.scsi_REQ = pce_cd.scsi_CD = 1;
 			pce_cd.scsi_MSG = pce_cd.scsi_IO = 0;
 		}
@@ -1214,7 +1214,7 @@ static TIMER_CALLBACK( pce_cd_data_timer_callback )
 
 static void pce_cd_init( running_machine *machine )
 {
-	running_device *device;
+	device_t *device;
 
 	/* Initialize pce_cd struct */
 	memset( &pce_cd, 0, sizeof(pce_cd) );
@@ -1583,7 +1583,7 @@ static UINT8 pce_cd_get_cd_data_byte(running_machine *machine)
 
 static TIMER_CALLBACK( pce_cd_adpcm_dma_timer_callback )
 {
-	if ( pce_cd.scsi_REQ && ! pce_cd.scsi_ACK && ! pce_cd.scsi_CD && pce_cd.scsi_IO )
+	if ( pce_cd.scsi_REQ && ! pce_cd.scsi_ACK && ! pce_cd.scsi_CD && pce_cd.scsi_IO  )
 	{
 		pce_cd.adpcm_ram[pce_cd.adpcm_write_ptr] = pce_cd_get_cd_data_byte(machine);
 		pce_cd.adpcm_write_ptr = ( pce_cd.adpcm_write_ptr + 1 ) & 0xFFFF;

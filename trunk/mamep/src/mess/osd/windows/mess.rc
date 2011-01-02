@@ -25,7 +25,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Menu
 //
 
-IDR_RUNTIME_MENU MENU 
+IDR_RUNTIME_MENU MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -83,8 +83,8 @@ BEGIN
         END
         MENUITEM "Show &FPS",                   ID_OPTIONS_TOGGLEFPS
         MENUITEM SEPARATOR
-        MENUITEM "&Hide Menubar",        		ID_OPTIONS_TOGGLEMENUBAR
-        MENUITEM "&Full Screen",     			ID_OPTIONS_FULLSCREEN
+        MENUITEM "&Hide Menubar",       		ID_OPTIONS_TOGGLEMENUBAR
+        MENUITEM "&Full Screen",    			ID_OPTIONS_FULLSCREEN
         MENUITEM "Show P&rofiler",              ID_OPTIONS_PROFILER, GRAYED
         MENUITEM "&Debugger...",                ID_OPTIONS_DEBUGGER
     END
@@ -92,13 +92,11 @@ BEGIN
     BEGIN
         MENUITEM SEPARATOR
     END
-/*
     POPUP "&Help"
     BEGIN
         MENUITEM "About This System...",        ID_HELP_ABOUTSYSTEM
         MENUITEM "&About MESS...",              ID_HELP_ABOUT_NEWUI
     END
-*/
 END
 
 
@@ -108,17 +106,17 @@ END
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "messres.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#include <windows.h>\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\r\n"
     "\0"
@@ -147,7 +145,7 @@ IDI_ICON_MESS           ICON    DISCARDABLE     "../../osd/winui/res/mess.ico"
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_TAPEDIALOG, DIALOG
     BEGIN

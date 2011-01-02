@@ -418,7 +418,6 @@
     . NEO-MVS CHA42G-3B
     . NEO-MVS CHA256
     . NEO-MVS CHA256B
-    . NEO-MVS PSTM CHA136
     . NEO-MVS CHA512Y
     . NEO-MVS CHAFIO (1999.6.14) - used with NEO-CMC 90G06C7042 or NEO-CMC 90G06C7050
     . MVS CHAFIO REV1.0 (KOF-2001)
@@ -1296,7 +1295,7 @@ ROM_END
 
 ROM_START( burningfh )
 	ROM_REGION( 0x100000, "maincpu", 0 )
-	ROM_LOAD16_WORD_SWAP( "018-p1h.bin", 0x000000, 0x080000, CRC(ddffcbf4) SHA1(c646c4bbdb4e9b32df76c90f582ccd69fcc9f8e7) ) /* HN62434 */
+	ROM_LOAD16_WORD_SWAP( "018-hp1.bin", 0x000000, 0x080000, CRC(ddffcbf4) SHA1(c646c4bbdb4e9b32df76c90f582ccd69fcc9f8e7) ) /* HN62434 */
 
 	NEO_SFIX_128K( "018-s1.bin", CRC(6799ea0d) SHA1(ec75ef9dfdcb0b123574fc6d81ebaaadfba32fb5) ) /* HN62321 */
 
@@ -1479,7 +1478,7 @@ ROM_START( lresort )
 	ROM_LOAD16_BYTE( "024-c4.bin", 0x200001, 0x080000, CRC(7382fefb) SHA1(e916dec5bb5462eb9ae9711f08c7388937abb980) ) /* Plane 2,3 */ /* TC534200 */
 ROM_END
 
-ROM_START( eightman )
+ROM_START( eightman ) /* MVS AND AES VERSION */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "025-p1.bin", 0x000000, 0x080000, CRC(43344cb0) SHA1(29dfd699f35b0a74e20fedd6c9174c289f0ef6e0) ) /* TC574200 */
 
@@ -1632,7 +1631,6 @@ ROM_START( socbrawlh ) /* AES VERSION */
 
 	NEO_SFIX_128K( "031-s1.bin", CRC(4c117174) SHA1(26e52c4f628338a9aa1c159517cdf873f738fb98) ) /* TC531000 */
 
-	/* TC531001 */
 	NEO_BIOS_AUDIO_128K( "031-m1.bin", CRC(cb37427c) SHA1(99efe9600ebeda48331f396e3203c7588bdb7d24) ) /* TC531001 */
 
 	ROM_REGION( 0x200000, "ymsnd", 0 )
@@ -3287,29 +3285,29 @@ ROM_END
 
 ROM_START( gowcaizr )
 	ROM_REGION( 0x200000, "maincpu", 0 )
-	ROM_LOAD16_WORD_SWAP( "094-p1.bin", 0x100000, 0x100000, CRC(33019545) SHA1(213db6c0b7d24b74b809854f9c606dbea1d9ba00) )
+	ROM_LOAD16_WORD_SWAP( "094-p1.bin", 0x100000, 0x100000, CRC(33019545) SHA1(213db6c0b7d24b74b809854f9c606dbea1d9ba00) ) /* TC5316200 */
 	ROM_CONTINUE( 0x000000, 0x100000 )
 
-	NEO_SFIX_128K( "094-s1.bin", CRC(2f8748a2) SHA1(5cc723c4284120473d63d8b0c1a3b3be74bdc324) )
+	NEO_SFIX_128K( "094-s1.bin", CRC(2f8748a2) SHA1(5cc723c4284120473d63d8b0c1a3b3be74bdc324) ) /* TC531000 */
 
-	NEO_BIOS_AUDIO_128K( "094-m1.bin", CRC(78c851cb) SHA1(a9923c002e4e2171a564af45cff0958c5d57b275) )
+	NEO_BIOS_AUDIO_128K( "094-m1.bin", CRC(78c851cb) SHA1(a9923c002e4e2171a564af45cff0958c5d57b275) ) /* TC531001 */
 
 	ROM_REGION( 0x500000, "ymsnd", 0 )
-	ROM_LOAD( "094-v1.bin", 0x000000, 0x200000, CRC(6c31223c) SHA1(ede3a2806d7d872a0f737626a23ecce200b534e6) )
-	ROM_LOAD( "094-v2.bin", 0x200000, 0x200000, CRC(8edb776c) SHA1(a9eac5e24f83ccdcf303d63261747b1bad876a24) )
-	ROM_LOAD( "094-v3.bin", 0x400000, 0x100000, CRC(c63b9285) SHA1(6bbbacfe899e204e74657d6c3f3d05ce75e432f1) )
+	ROM_LOAD( "094-v1.bin", 0x000000, 0x200000, CRC(6c31223c) SHA1(ede3a2806d7d872a0f737626a23ecce200b534e6) ) /* TC5316200 */
+	ROM_LOAD( "094-v2.bin", 0x200000, 0x200000, CRC(8edb776c) SHA1(a9eac5e24f83ccdcf303d63261747b1bad876a24) ) /* TC5316200 */
+	ROM_LOAD( "094-v3.bin", 0x400000, 0x100000, CRC(c63b9285) SHA1(6bbbacfe899e204e74657d6c3f3d05ce75e432f1) ) /* TC538200 */
 
 	NO_DELTAT_REGION
 
 	ROM_REGION( 0x1000000, "sprites", 0 )
-	ROM_LOAD16_BYTE( "094-c1.bin", 0x000000, 0x200000, CRC(042f6af5) SHA1(1c50df6a1a53ffb3079ea0a19c746f5c9536a3ed) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "094-c2.bin", 0x000001, 0x200000, CRC(0fbcd046) SHA1(9a6dc920a877f27424477c3478907b23afbaa5ea) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "094-c3.bin", 0x400000, 0x200000, CRC(58bfbaa1) SHA1(4c6f9cf138c5e6dfe89a45e2a690a986c75f5bfc) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "094-c4.bin", 0x400001, 0x200000, CRC(9451ee73) SHA1(7befee4a886b1d7493c06cefb7abf4ec01c14a8b) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "094-c5.bin", 0x800000, 0x200000, CRC(ff9cf48c) SHA1(5f46fb5d0812275b0006919d8540f22be7c16492) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "094-c6.bin", 0x800001, 0x200000, CRC(31bbd918) SHA1(7ff8c5e3f17d40e7a8a189ad8f8026de55368810) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "094-c7.bin", 0xc00000, 0x200000, CRC(2091ec04) SHA1(a81d4bdbef1ac6ea49845dc30e31bf9745694100) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "094-c8.bin", 0xc00001, 0x200000, CRC(0d31dee6) SHA1(4979aa3daa7e490fbe39e7b3c70cbb2ef7551c5f) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "094-c1.bin", 0x000000, 0x200000, CRC(042f6af5) SHA1(1c50df6a1a53ffb3079ea0a19c746f5c9536a3ed) ) /* Plane 0,1 */ /* TC5316200 */
+	ROM_LOAD16_BYTE( "094-c2.bin", 0x000001, 0x200000, CRC(0fbcd046) SHA1(9a6dc920a877f27424477c3478907b23afbaa5ea) ) /* Plane 2,3 */ /* TC5316200 */
+	ROM_LOAD16_BYTE( "094-c3.bin", 0x400000, 0x200000, CRC(58bfbaa1) SHA1(4c6f9cf138c5e6dfe89a45e2a690a986c75f5bfc) ) /* Plane 0,1 */ /* TC5316200 */
+	ROM_LOAD16_BYTE( "094-c4.bin", 0x400001, 0x200000, CRC(9451ee73) SHA1(7befee4a886b1d7493c06cefb7abf4ec01c14a8b) ) /* Plane 2,3 */ /* TC5316200 */
+	ROM_LOAD16_BYTE( "094-c5.bin", 0x800000, 0x200000, CRC(ff9cf48c) SHA1(5f46fb5d0812275b0006919d8540f22be7c16492) ) /* Plane 0,1 */ /* TC5316200 */
+	ROM_LOAD16_BYTE( "094-c6.bin", 0x800001, 0x200000, CRC(31bbd918) SHA1(7ff8c5e3f17d40e7a8a189ad8f8026de55368810) ) /* Plane 2,3 */ /* TC5316200 */
+	ROM_LOAD16_BYTE( "094-c7.bin", 0xc00000, 0x200000, CRC(2091ec04) SHA1(a81d4bdbef1ac6ea49845dc30e31bf9745694100) ) /* Plane 0,1 */ /* TC5316200 */
+	ROM_LOAD16_BYTE( "094-c8.bin", 0xc00001, 0x200000, CRC(d80dd241) SHA1(1356a64e4d4e271f62cd0d83f79ee9c906440810) ) /* Plane 2,3 */ /* TC5316200 */
 ROM_END
 
 ROM_START( rbff1 ) /* MVS AND AES VERSION */
@@ -5891,8 +5889,8 @@ ROM_END
 
 ROM_START( mslug5h ) /* Encrypted Set */ /* AES release of the game but is also found in later MVS carts */
 	ROM_REGION( 0x800000, "maincpu", 0 )
-	ROM_LOAD32_WORD_SWAP( "268-p1cr2.bin", 0x000000, 0x400000, CRC(3636690a) SHA1(e0da714b4bdc6efffe1250ded02ebddb3ab6d7b3) )
-	ROM_LOAD32_WORD_SWAP( "268-p2cr2.bin", 0x000002, 0x400000, CRC(8dfc47a2) SHA1(27d618cfbd0107a4d2a836797e967b39d2eb4851) )
+	ROM_LOAD32_WORD_SWAP( "268-p1c.bin", 0x000000, 0x400000, CRC(3636690a) SHA1(e0da714b4bdc6efffe1250ded02ebddb3ab6d7b3) )
+	ROM_LOAD32_WORD_SWAP( "268-p2c.bin", 0x000002, 0x400000, CRC(8dfc47a2) SHA1(27d618cfbd0107a4d2a836797e967b39d2eb4851) )
 
 	ROM_Y_ZOOM
 
@@ -5903,7 +5901,9 @@ ROM_START( mslug5h ) /* Encrypted Set */ /* AES release of the game but is also 
 	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) )
 
 	/* Encrypted */
-	NEO_BIOS_AUDIO_ENCRYPTED_512K( "268-m1h.bin", CRC(4a5a6e0e) SHA1(df0f660f2465e1db7be5adfcaf5e88ad61a74a42) ) /* Same as MVS above, but different label */
+	NEO_BIOS_AUDIO_ENCRYPTED_512K( "268-m1.bin", CRC(4a5a6e0e) SHA1(df0f660f2465e1db7be5adfcaf5e88ad61a74a42) )
+	/* Comment from set released on MVS (268-m1h.bin): Same as MVS above, but different label */
+
 
 	ROM_REGION( 0x1000000, "ymsnd", 0 )
 	/* Encrypted */
@@ -6204,11 +6204,11 @@ ROM_START( samsh5spn ) /* Encrypted Set */ /* AES VERSION */
 	ROM_LOAD16_BYTE( "272-c8.bin", 0x3000001, 0x800000, CRC(d49773cd) SHA1(cd8cf3b762d381c1f8f12919579c84a7ef7efb3f) ) /* Plane 2,3 */
 ROM_END
 
-ROM_START( jockeygp ) /* Officially licensed? Cart has a holographic 'SNK' sticker applied */
-	/* PROG board used: MVS PROGV (2000.11.17)
-    CHA board used: NEO-MVS CHAFIO (1999.6.14) */
+ROM_START( jockeygp ) /* MVS ONLY RELEASE */
+	/* Officially licensed? Cart has a holographic 'SNK' sticker applied */
+	/* PROG board used: MVS PROGV (2000.11.17) CHA board used: NEO-MVS CHAFIO (1999.6.14) */
 	ROM_REGION( 0x200000, "maincpu", 0 )
-	ROM_LOAD16_WORD_SWAP( "008-epr.p1", 0x000000, 0x100000, CRC(2fb7f388) SHA1(e3c9b03944b4c10cf5081caaf9c8be1f08c06493) )
+	ROM_LOAD16_WORD_SWAP( "008-epr.p1", 0x000000, 0x100000, CRC(2fb7f388) SHA1(e3c9b03944b4c10cf5081caaf9c8be1f08c06493) ) /* M27C160 */
 	/* P on eprom, correct chip label unknown */
 	ROM_FILL( 0x100000, 0x100000, 0xff )
 
@@ -6221,22 +6221,51 @@ ROM_START( jockeygp ) /* Officially licensed? Cart has a holographic 'SNK' stick
 	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) )
 
 	/* Encrypted */
-	NEO_BIOS_AUDIO_ENCRYPTED_512K( "008-mg1.bin", CRC(d163c690) SHA1(1dfd04d20c5985037f07cd01000d0b04f3a8f4f4) )
+	NEO_BIOS_AUDIO_ENCRYPTED_512K( "008-mg1.m1", CRC(d163c690) SHA1(1dfd04d20c5985037f07cd01000d0b04f3a8f4f4) )
 
 	ROM_REGION( 0x0200000, "ymsnd", 0 )
-	ROM_LOAD( "008-v1.bin", 0x000000, 0x200000, CRC(443eadba) SHA1(3def3c22f0e276bc4c2fc7ff70ce473c08b0d2df) )
+	ROM_LOAD( "008-v1.v1", 0x000000, 0x200000, CRC(443eadba) SHA1(3def3c22f0e276bc4c2fc7ff70ce473c08b0d2df) )
 
 	NO_DELTAT_REGION
 
 	ROM_REGION( 0x1000000, "sprites", 0 )
 	/* Encrypted */
-	ROM_LOAD16_BYTE( "008-c1.bin", 0x0000000, 0x800000, CRC(a9acbf18) SHA1(d55122c70cbe78c2679598dc07863e1d1d1a31df) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "008-c2.bin", 0x0000001, 0x800000, CRC(6289eef9) SHA1(a2ede77bb2468a2e1486d74745a22a5451026039) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "008-c1.c1", 0x0000000, 0x800000, CRC(a9acbf18) SHA1(d55122c70cbe78c2679598dc07863e1d1d1a31df) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "008-c2.c2", 0x0000001, 0x800000, CRC(6289eef9) SHA1(a2ede77bb2468a2e1486d74745a22a5451026039) ) /* Plane 2,3 */
 ROM_END
 
-ROM_START( vliner ) /* Officially licensed? Cart has a holographic 'SNK' sticker applied */
-	/* PROG board used: MVS PROGV (2000.11.17)
-    CHA board used: MVS CHAV (2000.10.26 */
+ROM_START( jockeygpa ) /* MVS ONLY RELEASE */
+	/* Officially licensed? Cart has a holographic 'SNK' sticker applied */
+	/* PROG board used: MVS PROGV (2000.11.17) CHA board used: NEO-MVS CHAFIO (1999.6.14) */
+	ROM_REGION( 0x100000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "008-epr_a.p1", 0x000000, 0x100000, CRC(b8f35532) SHA1(b46c96677f1bfe324b678112e9c614a20c550d51) ) /* M27C800 */
+	/* P on eprom, correct chip label unknown */
+
+	ROM_Y_ZOOM
+
+	/* The Encrypted Boards do not have an s1 rom, data for it comes from the Cx ROMs */
+	ROM_REGION( 0x20000, "fixed", 0 )
+	ROM_FILL( 0x000000, 0x20000, 0 )
+	ROM_REGION( 0x20000, "fixedbios", 0 )
+	ROM_LOAD( "sfix.sfix", 0x000000, 0x20000, CRC(c2ea0cfd) SHA1(fd4a618cdcdbf849374f0a50dd8efe9dbab706c3) )
+
+	/* Encrypted */
+	NEO_BIOS_AUDIO_ENCRYPTED_512K( "008-mg1.m1", CRC(d163c690) SHA1(1dfd04d20c5985037f07cd01000d0b04f3a8f4f4) )
+
+	ROM_REGION( 0x0200000, "ymsnd", 0 )
+	ROM_LOAD( "008-v1.v1", 0x000000, 0x200000, CRC(443eadba) SHA1(3def3c22f0e276bc4c2fc7ff70ce473c08b0d2df) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x1000000, "sprites", 0 )
+	/* Encrypted */
+	ROM_LOAD16_BYTE( "008-c1.c1", 0x0000000, 0x800000, CRC(a9acbf18) SHA1(d55122c70cbe78c2679598dc07863e1d1d1a31df) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "008-c2.c2", 0x0000001, 0x800000, CRC(6289eef9) SHA1(a2ede77bb2468a2e1486d74745a22a5451026039) ) /* Plane 2,3 */
+ROM_END
+
+ROM_START( vliner ) /* MVS ONLY RELEASE */
+	/* Officially licensed? Cart has a holographic 'SNK' sticker applied */
+	/* PROG board used: MVS PROGV (2000.11.17) CHA board used: MVS CHAV (2000.10.26) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "epr.p1", 0x000000, 0x080000, CRC(72a2c043) SHA1(b34bcc10ff33e4465126a6865fe8bf6b6a3d6cee) )
 	/* P on eprom, correct chip label unknown */
@@ -6254,9 +6283,9 @@ ROM_START( vliner ) /* Officially licensed? Cart has a holographic 'SNK' sticker
 	ROM_LOAD16_BYTE( "c-2.c2", 0x000001, 0x80000, CRC(efe9b33e) SHA1(910c651aadce9bf59e51c338ceef62287756d2e8) ) /* Plane 2,3 */
 ROM_END
 
-ROM_START( vlinero ) /* Officially licensed? Cart has a holographic 'SNK' sticker applied */
-	/* PROG board used: MVS PROGV (2000.11.17)
-    CHA board used: MVS CHAV (2000.10.26 */
+ROM_START( vlinero ) /* MVS ONLY RELEASE */
+	/* Officially licensed? Cart has a holographic 'SNK' sticker applied */
+	/* PROG board used: MVS PROGV (2000.11.17) CHA board used: MVS CHAV (2000.10.26) */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "epr_54.p1", 0x000000, 0x080000, CRC(172efc18) SHA1(8ca739f8780a9e6fa19ac2c3e931d75871603f58) )
 	/* P on eprom, correct chip label unknown */
@@ -9532,8 +9561,8 @@ static DRIVER_INIT( kof2002b )
 	kof2002_decrypt_68k(machine);
 	neo_pcm2_swap(machine, 0);
 	neogeo_cmc50_m1_decrypt(machine);
-	kof2002b_gfx_decrypt(machine, memory_region(machine, "sprites"),0x4000000);
-	kof2002b_gfx_decrypt(machine, memory_region(machine, "fixed"),0x20000);
+	kof2002b_gfx_decrypt(machine, machine->region("sprites")->base(),0x4000000);
+	kof2002b_gfx_decrypt(machine, machine->region("fixed")->base(),0x20000);
 }
 
 static DRIVER_INIT( kf2k2pls )
@@ -9624,7 +9653,7 @@ static DRIVER_INIT( kof10thd ) // decrypted P
 
 static DRIVER_INIT( kf2k4pls )
 {
-	unsigned char *src = memory_region(machine, "maincpu");
+	unsigned char *src = machine->region("maincpu")->base();
 	unsigned char *dst = (unsigned char*)malloc(0x200000);
 
 	if (dst)
@@ -9724,7 +9753,7 @@ static DRIVER_INIT( mslug5d ) // decrypted C & decrypted P
 static TIMER_CALLBACK( ms5pcb_bios_timer_callback )
 {
 	int harddip3 = input_port_read(machine, "HARDDIP") & 1;
-	memory_set_bankptr(machine, NEOGEO_BANK_BIOS, memory_region(machine, "mainbios")+0x20000+harddip3*0x20000);
+	memory_set_bankptr(machine, NEOGEO_BANK_BIOS, machine->region("mainbios")->base() + 0x20000 + harddip3 * 0x20000);
 }
 
 static DRIVER_INIT( ms5pcb )
@@ -9761,7 +9790,7 @@ static DRIVER_INIT( ms5plus )
 static TIMER_CALLBACK( svcpcb_bios_timer_callback )
 {
 	int harddip3 = input_port_read(machine, "HARDDIP") & 1;
-	memory_set_bankptr(machine, NEOGEO_BANK_BIOS, memory_region(machine, "mainbios") + 0x20000 + harddip3 * 0x20000);
+	memory_set_bankptr(machine, NEOGEO_BANK_BIOS, machine->region("mainbios")->base() + 0x20000 + harddip3 * 0x20000);
 }
 
 static DRIVER_INIT( svcpcb )
@@ -9881,7 +9910,7 @@ static DRIVER_INIT( kf2k3pcb )
        incorrect */
 	{
 		int i;
-		UINT8* rom = memory_region(machine, "audiocpu");
+		UINT8* rom = machine->region("audiocpu")->base();
 		for (i = 0; i < 0x90000; i++)
 		{
 			rom[i] = BITSWAP8(rom[i], 5, 6, 1, 4, 3, 0, 7, 2);
@@ -9970,7 +9999,7 @@ static DRIVER_INIT( kf2k3pcd ) // decrypted C & decrypted Bios
        incorrect */
 	{
 		int i;
-		UINT8* rom = memory_region(machine, "audiocpu");
+		UINT8* rom = (UINT8 *)machine->region("audiocpu")->base();
 		for (i=0;i<0x90000;i++)
 		{
 			rom[i] = BITSWAP8(rom[i], 5, 6, 1, 4, 3, 0, 7, 2);
@@ -10041,7 +10070,7 @@ static DRIVER_INIT( kog )
 
 static DRIVER_INIT( kof97pla )
 {
-	UINT8 *mem8 = memory_region(machine, "maincpu");
+	UINT8 *mem8 = (UINT8 *)machine->region("maincpu")->base();
 	mem8[0x1394A] = 0x6C;
 	mem8[0x1394B] = 0xD1;
 	mem8[0x1394C] = 0x3A;
@@ -10067,7 +10096,7 @@ static DRIVER_INIT( lans2004 )
 static WRITE16_HANDLER( fr2ch_cx_hack_w )
 {
 	int i, n;
-	UINT8 *src = memory_region( space->machine, "sprites" );
+	UINT8 *src = (UINT8 *)space->machine->region("sprites")->base();
 	if (offset == 1) {
 		for (i = 0; i < 0x200000; i++) {
 			n = src[0x200000 + i];
@@ -10079,9 +10108,9 @@ static WRITE16_HANDLER( fr2ch_cx_hack_w )
 
 static void fr2ch_patches( running_machine *machine )
 {
-	UINT16 *src = (UINT16*)memory_region( machine, "maincpu" );
-	UINT8 *rom = memory_region( machine, "maincpu" );
-	UINT8 *dst = memory_region( machine, "fixed" );
+	UINT16 *src = (UINT16*)machine->region("maincpu")->base();
+	UINT8 *rom = (UINT8 *)machine->region("maincpu")->base();
+	UINT8 *dst = (UINT8 *)machine->region("fixed")->base();
 
 	int i;
 	UINT8 data[16] = {
@@ -10441,7 +10470,8 @@ GAME( 2002, matrim,    neogeo,   neogeo,   neogeo,   matrim,   ROT0, "Noise Fact
 GAME( 2002, matrimbl,  matrim,   neogeo,   neogeo,   matrimbl, ROT0, "bootleg", "Matrimelee / Shin Gouketsuji Ichizoku Toukon (bootleg)", GAME_SUPPORTS_SAVE )
 
 /* BrezzaSoft */
-GAME( 2001, jockeygp,  neogeo,   neogeo,   jockeygp, jockeygp, ROT0, "Sun Amusement / BrezzaSoft", "Jockey Grand Prix", GAME_SUPPORTS_SAVE )
+GAME( 2001, jockeygp,  neogeo,   neogeo,   jockeygp, jockeygp, ROT0, "Sun Amusement / BrezzaSoft", "Jockey Grand Prix (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 2001, jockeygpa, jockeygp, neogeo,   jockeygp, jockeygp, ROT0, "Sun Amusement / BrezzaSoft", "Jockey Grand Prix (set 2)", GAME_SUPPORTS_SAVE )
 GAME( 2001, vliner,    neogeo,   neogeo,   vliner,   vliner,   ROT0, "Dyna / BrezzaSoft", "V-Liner (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 2001, vlinero,   vliner,   neogeo,   vliner,   vliner,   ROT0, "Dyna / BrezzaSoft", "V-Liner (set 2)", GAME_SUPPORTS_SAVE )
 
