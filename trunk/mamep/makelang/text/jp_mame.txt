@@ -164,7 +164,7 @@
 
 # emu/state.c: 456
 %s'File is not a valid savestate file for game '%s'.
-%s'はゲーム'%s'の保存ファイルではありません '%s'。
+%s'はゲーム'%s'の保存ファイルではありません。
 
 # emu/screen.c: 282
 %s: %s screen '%s' has a zero refresh rate\n

@@ -6,6 +6,7 @@
 #include "streams.h"
 #include "cpu/spc700/spc700.h"
 #include "cpu/g65816/g65816.h"
+#include "cpu/upd7725/upd7725.h"
 #include "audio/snes_snd.h"
 
 /*
@@ -28,6 +29,12 @@
 #define DOTCLK_PAL	(MCLK_PAL/4)
 
 #define SNES_LAYER_DEBUG  0
+
+#define SNES_DSP1B_OFFSET (0x0000)
+#define SNES_DSP1_OFFSET  (0x3000)
+#define SNES_DSP2_OFFSET  (0x6000)
+#define SNES_DSP3_OFFSET  (0x9000)
+#define SNES_DSP4_OFFSET  (0xc000)
 
 /* Debug definitions */
 #ifdef MAME_DEBUG
@@ -463,6 +470,7 @@ public:
 	spc700_device *soundcpu;
 	snes_sound_device *spc700;
 	cpu_device *superfx;
+	upd7725_device *upd7725;
 };
 
 /* Special chips, checked at init and used in memory handlers */
