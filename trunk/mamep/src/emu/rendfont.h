@@ -124,6 +124,7 @@ private:
 	//FIXME
 	//mamep: for command glyph
 	int					m_height_cmd;		// height of the font, from ascent to descent
+	glyph *				m_glyphs_cmd[256];	// array of glyph subtables
 	const char *		m_rawdata_cmd;		// pointer to the raw data for the font
 
 	//mamep: allocate command glyph font

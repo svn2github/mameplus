@@ -107,13 +107,10 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 		glyphtable = m_glyphs[chnum / 256] = auto_alloc_array_clear(&m_manager.machine(), glyph, 256);
 	if (glyphtable == NULL)
 	{
-#if 0
+#if 1
 		//mamep: make table for command glyph
 		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
-		{
-			glyphtable = auto_alloc_array_clear(&m_manager.machine(), glyph, 256);
-			m_glyphs[chnum / 256] = glyphtable;
-		}
+			glyphtable = m_glyphs[chnum / 256] = auto_alloc_array_clear(&m_manager.machine(), glyph, 256);
 		else
 #endif
 			return dummy_glyph;
@@ -123,7 +120,7 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 	glyph &gl = glyphtable[chnum % 256];
 	if (gl.bitmap == NULL)
 	{
-#if 0
+#if 1
 #ifdef UI_COLOR_DISPLAY
 		//mamep: color glyph
 		#include "cmdtable.c"
@@ -133,10 +130,13 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 #endif /* UI_COLOR_DISPLAY */
 
 		//mamep: command glyph support
-		if (glyphtable && chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
+		if (m_height_cmd && chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
 		{
-			glyph &glyph_ch = get_char(chnum);
-			float scale = m_height / m_height_cmd;
+			glyph &glyph_ch = m_glyphs_cmd[chnum / 256][chnum % 256];
+			float scale = (float)m_height / (float)m_height_cmd;
+
+			if (glyph_ch.bitmap  == NULL)
+				char_expand(chnum, glyph_ch);
 
 			gl.width = (int)(glyph_ch.width * scale + 0.5f);
 			gl.xoffs = (int)(glyph_ch.xoffs * scale + 0.5f);
@@ -210,6 +210,7 @@ render_font::render_font(render_manager &manager, const char *filename)
 	  m_rawdata_cmd(NULL)
 {
 	memset(m_glyphs, 0, sizeof(m_glyphs));
+	memset(m_glyphs_cmd, 0, sizeof(m_glyphs_cmd));
 
 	// if this is an OSD font, we're done
 	if (filename != NULL)
@@ -303,6 +304,20 @@ render_font::~render_font()
 		}
 
 	//mamep: free command glyph font
+	for (int tablenum = 0; tablenum < 256; tablenum++)
+		if (m_glyphs_cmd[tablenum] != NULL)
+		{
+			// loop over characters
+			for (int charnum = 0; charnum < 256; charnum++)
+			{
+				glyph &gl = m_glyphs_cmd[tablenum][charnum];
+				m_manager.texture_free(gl.texture);
+				auto_free(&m_manager.machine(), gl.bitmap);
+			}
+
+			// free the subtable itself
+			auto_free(&m_manager.machine(), m_glyphs_cmd[tablenum]);
+		}
 	if (m_rawdata_cmd != NULL)
 		auto_free(&m_manager.machine(), m_rawdata_cmd);
 
@@ -865,11 +880,11 @@ bool render_font::load_cached_cmd(mame_file *file, UINT32 hash)
 		int chnum = (info[0] << 8) | info[1];
 
 		// if we don't have a subtable yet, make one
-		if (m_glyphs[chnum / 256] == NULL)
-			m_glyphs[chnum / 256] = auto_alloc_array_clear(&m_manager.machine(), glyph, 256);
+		if (m_glyphs_cmd[chnum / 256] == NULL)
+			m_glyphs_cmd[chnum / 256] = auto_alloc_array_clear(&m_manager.machine(), glyph, 256);
 
 		// fill in the entry
-		glyph &gl = m_glyphs[chnum / 256][chnum % 256];
+		glyph &gl = m_glyphs_cmd[chnum / 256][chnum % 256];
 #ifdef UI_COLOR_DISPLAY
 		//mamep: color glyph
 		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + COLOR_BUTTONS)
