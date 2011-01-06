@@ -107,6 +107,7 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 		glyphtable = m_glyphs[chnum / 256] = auto_alloc_array_clear(&m_manager.machine(), glyph, 256);
 	if (glyphtable == NULL)
 	{
+#if 0
 		//mamep: make table for command glyph
 		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
 		{
@@ -114,6 +115,7 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 			m_glyphs[chnum / 256] = glyphtable;
 		}
 		else
+#endif
 			return dummy_glyph;
 	}
 
@@ -121,6 +123,7 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 	glyph &gl = glyphtable[chnum % 256];
 	if (gl.bitmap == NULL)
 	{
+#if 0
 #ifdef UI_COLOR_DISPLAY
 		//mamep: color glyph
 		#include "cmdtable.c"
@@ -130,10 +133,10 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 #endif /* UI_COLOR_DISPLAY */
 
 		//mamep: command glyph support
-		if (cmd && chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
+		if (glyphtable && chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
 		{
 			glyph &glyph_ch = get_char(chnum);
-			float scale = m_height / cmd->m_height;
+			float scale = m_height / m_height_cmd;
 
 			gl.width = (int)(glyph_ch.width * scale + 0.5f);
 			gl.xoffs = (int)(glyph_ch.xoffs * scale + 0.5f);
@@ -153,6 +156,7 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 			gl.texture->set_bitmap(gl.bitmap, NULL, TEXFORMAT_ARGB32);
 		}
 		else
+#endif
 			char_expand(chnum, gl);
 	}
 
@@ -183,7 +187,7 @@ void render_font::render_font_command_glyph()
 
 	if (filerr == FILERR_NONE)
 	{
-		load_cached(ramfile, 0);
+		load_cached_cmd(ramfile, 0);
 		mame_fclose(ramfile);
 	}
 }
@@ -201,7 +205,9 @@ render_font::render_font(render_manager &manager, const char *filename)
 	  m_scale(1.0f),
 	  m_rawdata(NULL),
 	  m_rawsize(0),
-	  m_osdfont(NULL)
+	  m_osdfont(NULL),
+	  m_height_cmd(0),
+	  m_rawdata_cmd(NULL)
 {
 	memset(m_glyphs, 0, sizeof(m_glyphs));
 
@@ -213,6 +219,8 @@ render_font::render_font(render_manager &manager, const char *filename)
 		{
 			m_scale = 1.0f / (float)m_height;
 			m_format = FF_OSD;
+			//mamep: allocate command glyph font
+			render_font_command_glyph();
 			return;
 		}
 	}
@@ -278,14 +286,6 @@ render_font::render_font(render_manager &manager, const char *filename)
 
 render_font::~render_font()
 {
-	//mamep: free command glyph font
-	if (cmd)
-	{
-		running_machine &machine = manager().machine();
-		machine.render().font_free(cmd);
-		cmd = NULL;
-	}
-
 	// free all the subtables
 	for (int tablenum = 0; tablenum < 256; tablenum++)
 		if (m_glyphs[tablenum] != NULL)
@@ -301,6 +301,10 @@ render_font::~render_font()
 			// free the subtable itself
 			auto_free(&m_manager.machine(), m_glyphs[tablenum]);
 		}
+
+	//mamep: free command glyph font
+	if (m_rawdata_cmd != NULL)
+		auto_free(&m_manager.machine(), m_rawdata_cmd);
 
 	// free the raw data and the size itself
 	auto_free(&m_manager.machine(), m_rawdata);
@@ -319,6 +323,7 @@ render_font::~render_font()
 void render_font::char_expand(unicode_char chnum, glyph &gl)
 {
 	rgb_t color = MAKE_ARGB(0xff,0xff,0xff,0xff);
+	bool is_cmd = (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT);
 
 #ifdef UI_COLOR_DISPLAY
 	//mamep: for color glyph
@@ -327,7 +332,7 @@ void render_font::char_expand(unicode_char chnum, glyph &gl)
 #endif /* UI_COLOR_DISPLAY */
 
 	// if we're an OSD font, query the info
-	if (m_format == FF_OSD)
+	if (m_format == FF_OSD && !is_cmd)
 	{
 		// we set bmwidth to -1 if we've previously queried and failed
 		if (gl.bmwidth == -1)
@@ -400,7 +405,7 @@ void render_font::char_expand(unicode_char chnum, glyph &gl)
 			}
 
 			// cached format
-			else if (m_format == FF_CACHED)
+			else if (m_format == FF_CACHED || is_cmd)
 			{
 				for (int x = 0; x < gl.bmwidth; x++)
 				{
@@ -813,6 +818,82 @@ bool render_font::load_cached(mame_file *file, UINT32 hash)
 	// reuse the chartable as a temporary buffer
 	m_format = FF_CACHED;
 	m_rawdata = (char *)data;
+	return true;
+}
+
+bool render_font::load_cached_cmd(mame_file *file, UINT32 hash)
+{
+#ifdef UI_COLOR_DISPLAY
+		//mamep: color glyph
+		#include "cmdtable.c"
+#endif /* UI_COLOR_DISPLAY */
+	// get the file size
+	UINT64 filesize = mame_fsize(file);
+
+	// first read the header
+	UINT8 header[CACHED_HEADER_SIZE];
+	UINT32 bytes_read = mame_fread(file, header, CACHED_HEADER_SIZE);
+	if (bytes_read != CACHED_HEADER_SIZE)
+		return false;
+
+	// validate the header
+	if (header[0] != 'f' || header[1] != 'o' || header[2] != 'n' || header[3] != 't')
+		return false;
+	if (header[4] != (UINT8)(hash >> 24) || header[5] != (UINT8)(hash >> 16) || header[6] != (UINT8)(hash >> 8) || header[7] != (UINT8)hash)
+		return false;
+	m_height_cmd = (header[8] << 8) | header[9];
+//	m_scale = 1.0f / (float)m_height;
+//	m_yoffs = (INT16)((header[10] << 8) | header[11]);
+	int numchars = (header[12] << 24) | (header[13] << 16) | (header[14] << 8) | header[15];
+	if (filesize - CACHED_HEADER_SIZE < numchars * CACHED_CHAR_SIZE)
+		return false;
+
+	// now read the rest of the data
+	UINT8 *data = auto_alloc_array(&m_manager.machine(), UINT8, filesize - CACHED_HEADER_SIZE);
+	bytes_read = mame_fread(file, data, filesize - CACHED_HEADER_SIZE);
+	if (bytes_read != filesize - CACHED_HEADER_SIZE)
+	{
+		auto_free(&m_manager.machine(), data);
+		return false;
+	}
+
+	// extract the data from the data
+	UINT64 offset = numchars * CACHED_CHAR_SIZE;
+	for (int chindex = 0; chindex < numchars; chindex++)
+	{
+		const UINT8 *info = &data[chindex * CACHED_CHAR_SIZE];
+		int chnum = (info[0] << 8) | info[1];
+
+		// if we don't have a subtable yet, make one
+		if (m_glyphs[chnum / 256] == NULL)
+			m_glyphs[chnum / 256] = auto_alloc_array_clear(&m_manager.machine(), glyph, 256);
+
+		// fill in the entry
+		glyph &gl = m_glyphs[chnum / 256][chnum % 256];
+#ifdef UI_COLOR_DISPLAY
+		//mamep: color glyph
+		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + COLOR_BUTTONS)
+			gl.color = color_table[chnum - COMMAND_UNICODE];
+#endif /* UI_COLOR_DISPLAY */
+		gl.width = (info[2] << 8) | info[3];
+		gl.xoffs = (INT16)((info[4] << 8) | info[5]);
+		gl.yoffs = (INT16)((info[6] << 8) | info[7]);
+		gl.bmwidth = (info[8] << 8) | info[9];
+		gl.bmheight = (info[10] << 8) | info[11];
+		gl.rawdata = (char *)data + offset;
+
+		// advance the offset past the character
+		offset += (gl.bmwidth * gl.bmheight + 7) / 8;
+		if (offset > filesize - CACHED_HEADER_SIZE)
+		{
+			auto_free(&m_manager.machine(), data);
+			return false;
+		}
+	}
+
+	// reuse the chartable as a temporary buffer
+//	m_format = FF_CACHED;
+	m_rawdata_cmd = (char *)data;
 	return true;
 }
 
