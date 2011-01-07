@@ -107,12 +107,10 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 		glyphtable = m_glyphs[chnum / 256] = auto_alloc_array_clear(&m_manager.machine(), glyph, 256);
 	if (glyphtable == NULL)
 	{
-#if 1
 		//mamep: make table for command glyph
 		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
 			glyphtable = m_glyphs[chnum / 256] = auto_alloc_array_clear(&m_manager.machine(), glyph, 256);
 		else
-#endif
 			return dummy_glyph;
 	}
 
@@ -120,15 +118,6 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 	glyph &gl = glyphtable[chnum % 256];
 	if (gl.bitmap == NULL)
 	{
-#if 1
-#ifdef UI_COLOR_DISPLAY
-		//mamep: color glyph
-		#include "cmdtable.c"
-
-		if (chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + COLOR_BUTTONS)
-			gl.color = color_table[chnum - COMMAND_UNICODE];
-#endif /* UI_COLOR_DISPLAY */
-
 		//mamep: command glyph support
 		if (m_height_cmd && chnum >= COMMAND_UNICODE && chnum < COMMAND_UNICODE + MAX_GLYPH_FONT)
 		{
@@ -138,6 +127,10 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 			if (glyph_ch.bitmap  == NULL)
 				char_expand(chnum, glyph_ch);
 
+#ifdef UI_COLOR_DISPLAY
+			//mamep: for color glyph
+			gl.color = glyph_ch.color;
+#endif /* UI_COLOR_DISPLAY */
 			gl.width = (int)(glyph_ch.width * scale + 0.5f);
 			gl.xoffs = (int)(glyph_ch.xoffs * scale + 0.5f);
 			gl.yoffs = (int)(glyph_ch.yoffs * scale + 0.5f);
@@ -156,7 +149,6 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 			gl.texture->set_bitmap(gl.bitmap, NULL, TEXFORMAT_ARGB32);
 		}
 		else
-#endif
 			char_expand(chnum, gl);
 	}
 
@@ -169,10 +161,6 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 //**************************************************************************
 //  RENDER FONT
 //**************************************************************************
-
-//FIXME
-//TODO: support display command glyph for OSD font (operating system font)
-//TODO: fix display command glyph for BDF font (external pdf font)
 
 //mamep: allocate command glyph font
 void render_font::render_font_command_glyph()
@@ -207,6 +195,7 @@ render_font::render_font(render_manager &manager, const char *filename)
 	  m_rawsize(0),
 	  m_osdfont(NULL),
 	  m_height_cmd(0),
+	  m_yoffs_cmd(0),
 	  m_rawdata_cmd(NULL)
 {
 	memset(m_glyphs, 0, sizeof(m_glyphs));
@@ -346,8 +335,41 @@ void render_font::char_expand(unicode_char chnum, glyph &gl)
 		color = ui_get_rgb_color(gl.color);
 #endif /* UI_COLOR_DISPLAY */
 
+	//mamep: command glyph support
+	if (is_cmd)
+	{
+		// punt if nothing there
+		if (gl.bmwidth == 0 || gl.bmheight == 0 || gl.rawdata == NULL)
+			return;
+
+		// allocate a new bitmap of the size we need
+		gl.bitmap = auto_alloc(&m_manager.machine(), bitmap_t(gl.bmwidth, m_height_cmd, BITMAP_FORMAT_ARGB32));
+		bitmap_fill(gl.bitmap, NULL, 0);
+
+		// extract the data
+		const char *ptr = gl.rawdata;
+		UINT8 accum = 0, accumbit = 7;
+		for (int y = 0; y < gl.bmheight; y++)
+		{
+			int desty = y + m_height_cmd + m_yoffs_cmd - gl.yoffs - gl.bmheight;
+			UINT32 *dest = (desty >= 0 && desty < m_height_cmd) ? BITMAP_ADDR32(gl.bitmap, desty, 0) : NULL;
+
+			{
+				for (int x = 0; x < gl.bmwidth; x++)
+				{
+					if (accumbit == 7)
+						accum = *ptr++;
+					if (dest != NULL)
+						*dest++ = (accum & (1 << accumbit)) ? color : MAKE_ARGB(0x00,0xff,0xff,0xff);
+					accumbit = (accumbit - 1) & 7;
+				}
+			}
+		}
+	}
+	else
+
 	// if we're an OSD font, query the info
-	if (m_format == FF_OSD && !is_cmd)
+	if (m_format == FF_OSD)
 	{
 		// we set bmwidth to -1 if we've previously queried and failed
 		if (gl.bmwidth == -1)
@@ -420,7 +442,7 @@ void render_font::char_expand(unicode_char chnum, glyph &gl)
 			}
 
 			// cached format
-			else if (m_format == FF_CACHED || is_cmd)
+			else if (m_format == FF_CACHED)
 			{
 				for (int x = 0; x < gl.bmwidth; x++)
 				{
@@ -839,8 +861,8 @@ bool render_font::load_cached(mame_file *file, UINT32 hash)
 bool render_font::load_cached_cmd(mame_file *file, UINT32 hash)
 {
 #ifdef UI_COLOR_DISPLAY
-		//mamep: color glyph
-		#include "cmdtable.c"
+	//mamep: color glyph
+	#include "cmdtable.c"
 #endif /* UI_COLOR_DISPLAY */
 	// get the file size
 	UINT64 filesize = mame_fsize(file);
@@ -858,7 +880,7 @@ bool render_font::load_cached_cmd(mame_file *file, UINT32 hash)
 		return false;
 	m_height_cmd = (header[8] << 8) | header[9];
 //	m_scale = 1.0f / (float)m_height;
-//	m_yoffs = (INT16)((header[10] << 8) | header[11]);
+	m_yoffs_cmd = (INT16)((header[10] << 8) | header[11]);
 	int numchars = (header[12] << 24) | (header[13] << 16) | (header[14] << 8) | header[15];
 	if (filesize - CACHED_HEADER_SIZE < numchars * CACHED_CHAR_SIZE)
 		return false;

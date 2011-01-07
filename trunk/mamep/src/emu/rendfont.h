@@ -121,9 +121,9 @@ private:
 	const char *		m_rawdata;			// pointer to the raw data for the font
 	UINT64				m_rawsize;			// size of the raw font data
 	osd_font			m_osdfont;			// handle to the OSD font
-	//FIXME
 	//mamep: for command glyph
 	int					m_height_cmd;		// height of the font, from ascent to descent
+	int					m_yoffs_cmd;		// y offset from baseline to descent
 	glyph *				m_glyphs_cmd[256];	// array of glyph subtables
 	const char *		m_rawdata_cmd;		// pointer to the raw data for the font
 
