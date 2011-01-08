@@ -136,15 +136,15 @@ void winui_datafile_exit(void)
 {
 	flush_index();
 
-	if (sorted_drivers == NULL)
+	if (sorted_drivers)
 	{
-		global_free(sorted_drivers);
+		free(sorted_drivers);
 		sorted_drivers = NULL;
 	}
 
 	if (sorted_srcdrivers)
 	{
-		global_free(sorted_srcdrivers);
+		free(sorted_srcdrivers);
 		sorted_srcdrivers = NULL;
 	}
 }
@@ -243,7 +243,7 @@ static int GetSrcDriverIndex(const char *srcdriver)
 	key.srcdriver = (const char *)s;
 	srcdriver_index_info = (srcdriver_data_type *)bsearch(&key, sorted_srcdrivers, num_games, sizeof(srcdriver_data_type),
 	                               SrcDriverDataCompareFunc);
-	global_free(s);
+	osd_free(s);
 
 	if (srcdriver_index_info == NULL)
 		return -1;
@@ -579,21 +579,21 @@ static void flush_index(void)
 
 		if (hist_idx[i])
 		{
-			global_free(hist_idx[i]);
+			free(hist_idx[i]);
 			hist_idx[i] = 0;
 		}
 
 #ifdef STORY_DATAFILE
 		if (story_idx[i])
 		{
-			global_free(story_idx[i]);
+			free(story_idx[i]);
 			story_idx[i] = 0;
 		}
 #endif /* STORY_DATAFILE */
 
 		if (mame_idx[i])
 		{
-			global_free(mame_idx[i]);
+			free(mame_idx[i]);
 			mame_idx[i] = 0;
 		}
 	}
@@ -934,7 +934,7 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 				/* create index */
 				if (idx[i])
 				{
-					global_free(idx[i]);
+					free(idx[i]);
 					idx[i] = 0;
 				}
 

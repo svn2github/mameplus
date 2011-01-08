@@ -1733,14 +1733,14 @@ static LPTREEFOLDER NewFolder(const TCHAR *lpTitle, UINT nCategoryID, BOOL bTran
 	{
 		int len = 1 + strlen(title) + 1;
 
-		lpFolder->m_lpPath = (char *)malloc(len * sizeof (*lpFolder->m_lpPath));
+		lpFolder->m_lpPath = (char *)osd_malloc(len * sizeof (*lpFolder->m_lpPath));
 		snprintf(lpFolder->m_lpPath, len, "/%s", title);
 	}
 	else
 	{
 		int len = strlen(treeFolders[nParent]->m_lpPath) + 1 + strlen(title) + 1;
 
-		lpFolder->m_lpPath = (char *)malloc(len * sizeof (*lpFolder->m_lpPath));
+		lpFolder->m_lpPath = (char *)osd_malloc(len * sizeof (*lpFolder->m_lpPath));
 		snprintf(lpFolder->m_lpPath, len, "%s/%s", treeFolders[nParent]->m_lpPath, title);
 	}
 
@@ -1750,10 +1750,10 @@ static LPTREEFOLDER NewFolder(const TCHAR *lpTitle, UINT nCategoryID, BOOL bTran
 			nCategoryID = UI_MSG_UI;
 		lpFolder->m_nCategoryID = nCategoryID;
 
-		lpFolder->m_lpOriginalTitle = wcsdup(lpTitle);
+		lpFolder->m_lpOriginalTitle = win_tstring_strdup(lpTitle);
 		lpTitle = w_lang_message(nCategoryID, lpTitle);
 	}
-	lpFolder->m_lpTitle = wcsdup(lpTitle);
+	lpFolder->m_lpTitle = win_tstring_strdup(lpTitle);
 	lpFolder->m_lpGameBits = NewBits(GetNumGames());
 	lpFolder->m_nFolderId = nFolderId;
 	lpFolder->m_nParent = nParent;
@@ -1771,13 +1771,15 @@ static void DeleteFolder(LPTREEFOLDER lpFolder)
 		if (lpFolder->m_lpGameBits)
 		{
 			DeleteBits(lpFolder->m_lpGameBits);
+			lpFolder->m_lpGameBits = 0;
 		}
 
 		FreeIfAllocatedW(&lpFolder->m_lpTitle);
 		FreeIfAllocatedW(&lpFolder->m_lpOriginalTitle);
 		FreeIfAllocated(&lpFolder->m_lpPath);
 
-		global_free(lpFolder);
+		free(lpFolder);
+		lpFolder = 0;
 	}
 }
 
@@ -1852,9 +1854,9 @@ BOOL InitFolders(void)
 		else
 			doCreateFavorite = FALSE;
 
-		global_free(filename);
-		global_free(rootname);
-		global_free(subname);
+		osd_free(filename);
+		osd_free(rootname);
+		osd_free(subname);
 	}
 
 	for (i = 0; i < numExtraFolders; i++)
@@ -2203,14 +2205,14 @@ static BOOL RegistExtraFolder(const TCHAR *name, LPEXFOLDERDATA *fExData, int ms
 			for (i = 0; utf8title[i]; i++)
 				if (utf8title[i] & 0x80)
 				{
-					global_free(*fExData);
-					global_free(utf8title);
+					free(*fExData);
+					osd_free(utf8title);
 					*fExData = NULL;
 					return FALSE;
 				}
 
 			assign_msg_catategory(msgcat, utf8title);
-			global_free(utf8title);
+			osd_free(utf8title);
 
 			memset(*fExData, 0, sizeof(EXFOLDERDATA));
 
@@ -2538,7 +2540,7 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const TCHAR *new_name)
 		TCHAR *old_title = lpFolder->m_lpTitle;
 
 		// set new title
-		lpFolder->m_lpTitle = wcsdup(new_name);
+		lpFolder->m_lpTitle = win_tstring_strdup(new_name);
 
 		// try to save
 		if (TrySaveExtraFolder(lpFolder) == FALSE)
@@ -2567,7 +2569,7 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const TCHAR *new_name)
 	{
 		TryRenameCustomFolderIni(lpFolder, lpFolder->m_lpTitle, new_name);
 		free(lpFolder->m_lpTitle);
-		lpFolder->m_lpTitle = wcsdup(new_name);
+		lpFolder->m_lpTitle = win_tstring_strdup(new_name);
 	}
 	else
 	{

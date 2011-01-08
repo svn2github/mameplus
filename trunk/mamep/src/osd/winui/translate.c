@@ -189,7 +189,7 @@ static void TranslateMenuRecurse(HMENU hMenu)
 
 		if (!MenuStrings[id])
 		{
-			MenuStrings[id] = wcsdup(buffer);
+			MenuStrings[id] = win_tstring_strdup(buffer);
 			if (!MenuStrings[id])
 				continue;
 		}
@@ -197,7 +197,7 @@ static void TranslateMenuRecurse(HMENU hMenu)
 		if (!MenuHelpStrings[id])
 		{
 			LoadString(GetModuleHandle(NULL), mii.wID, buffer, ARRAY_LENGTH(buffer));
-			MenuHelpStrings[id] = wcsdup(buffer);
+			MenuHelpStrings[id] = win_tstring_strdup(buffer);
 		}
 
 		p = _UIW(MenuStrings[id]);
@@ -387,10 +387,10 @@ static void translate_tree_folder_items(HWND hWnd, HTREEITEM hti)
 
 			translated = w_lang_message(lpFolder->m_nCategoryID, lpFolder->m_lpOriginalTitle);
 
-			p = wcsdup(translated);
+			p = win_tstring_strdup(translated);
 			if (p)
 			{
-				global_free(lpFolder->m_lpTitle);
+				osd_free(lpFolder->m_lpTitle);
 				lpFolder->m_lpTitle = p;
 			}
 
@@ -420,12 +420,52 @@ void TranslateTreeFolders(HWND hWnd)
 
 #define TMP_STRING_POOL_ENTRIES 32
 
+static bool translate_firsttime = true;
+static LPWSTR tmp_unicode_string_pool[TMP_STRING_POOL_ENTRIES];
+static int tmp_unicode_string_pool_alloc_len[TMP_STRING_POOL_ENTRIES];
+static LPWSTR tmp_utf8_string_pool[TMP_STRING_POOL_ENTRIES];
+static int tmp_utf8_string_pool_alloc_len[TMP_STRING_POOL_ENTRIES];
+static char *tmp_str_string_pool[TMP_STRING_POOL_ENTRIES];
+static int tmp_str_string_pool_alloc_len[TMP_STRING_POOL_ENTRIES];
+
+static void InitializeTranslateBuffer(void)
+{
+	translate_firsttime = false;
+
+	for (int i = 0; i < TMP_STRING_POOL_ENTRIES; i++)
+	{
+		tmp_unicode_string_pool[i] = NULL;
+		tmp_unicode_string_pool_alloc_len[i] = 0;
+		tmp_utf8_string_pool[i] = NULL;
+		tmp_utf8_string_pool_alloc_len[i] = 0;
+		tmp_str_string_pool[i] = NULL;
+		tmp_str_string_pool_alloc_len[i] = 0;
+	}
+}
+
+void FreeTranslateBuffer(void)
+{
+	//Not initialized
+	if (translate_firsttime) return;
+
+	for (int i = 0; i < TMP_STRING_POOL_ENTRIES; i++)
+	{
+		if (tmp_unicode_string_pool[i])
+			free(tmp_unicode_string_pool[i]);
+		if (tmp_utf8_string_pool[i])
+			free(tmp_utf8_string_pool[i]);
+		if (tmp_str_string_pool[i])
+			free(tmp_str_string_pool[i]);
+	}
+
+}
+
 LPWSTR _Unicode(const char *s)
 {
-	static LPWSTR tmp_string_pool[TMP_STRING_POOL_ENTRIES];
-	static int tmp_string_pool_alloc_len[TMP_STRING_POOL_ENTRIES];
-	static int tmp_string_pool_index;
+	static int tmp_string_pool_index = 0;
 	size_t len;
+
+	if (translate_firsttime) InitializeTranslateBuffer();
 
 	tmp_string_pool_index %= TMP_STRING_POOL_ENTRIES;
 
@@ -433,31 +473,31 @@ LPWSTR _Unicode(const char *s)
 	if (!len)
 		return NULL;
 
-	if (len >= tmp_string_pool_alloc_len[tmp_string_pool_index])
+	if (len >= tmp_unicode_string_pool_alloc_len[tmp_string_pool_index])
 	{
-		if (tmp_string_pool[tmp_string_pool_index])
-			global_free(tmp_string_pool[tmp_string_pool_index]);
+		if (tmp_unicode_string_pool[tmp_string_pool_index])
+			free(tmp_unicode_string_pool[tmp_string_pool_index]);
 
-		tmp_string_pool[tmp_string_pool_index] = (WCHAR *)malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
-		if (!tmp_string_pool[tmp_string_pool_index])
+		tmp_unicode_string_pool[tmp_string_pool_index] = (WCHAR *)malloc((len + 1) * sizeof(*tmp_unicode_string_pool[tmp_string_pool_index]));
+		if (!tmp_unicode_string_pool[tmp_string_pool_index])
 		{
-			tmp_string_pool_alloc_len[tmp_string_pool_index] = 0;
+			tmp_unicode_string_pool_alloc_len[tmp_string_pool_index] = 0;
 			return NULL;
 		}
-		tmp_string_pool_alloc_len[tmp_string_pool_index] = len + 1;
+		tmp_unicode_string_pool_alloc_len[tmp_string_pool_index] = len + 1;
 	}
-	if (!MultiByteToWideChar(ansi_codepage, 0, s, -1, tmp_string_pool[tmp_string_pool_index], tmp_string_pool_alloc_len[tmp_string_pool_index]))
+	if (!MultiByteToWideChar(ansi_codepage, 0, s, -1, tmp_unicode_string_pool[tmp_string_pool_index], tmp_unicode_string_pool_alloc_len[tmp_string_pool_index]))
 		return NULL;
 
-	return tmp_string_pool[tmp_string_pool_index++];
+	return tmp_unicode_string_pool[tmp_string_pool_index++];
 }
 
 LPWSTR _UTF8Unicode(const char *s)
 {
-	static LPWSTR tmp_string_pool[TMP_STRING_POOL_ENTRIES];
-	static int tmp_string_pool_alloc_len[TMP_STRING_POOL_ENTRIES];
-	static int tmp_string_pool_index;
+	static int tmp_string_pool_index = 0;
 	size_t len;
+
+	if (translate_firsttime) InitializeTranslateBuffer();
 
 	tmp_string_pool_index %= TMP_STRING_POOL_ENTRIES;
 
@@ -465,31 +505,31 @@ LPWSTR _UTF8Unicode(const char *s)
 	if (!len)
 		return NULL;
 
-	if (len >= tmp_string_pool_alloc_len[tmp_string_pool_index])
+	if (len >= tmp_utf8_string_pool_alloc_len[tmp_string_pool_index])
 	{
-		if (tmp_string_pool[tmp_string_pool_index])
-			global_free(tmp_string_pool[tmp_string_pool_index]);
+		if (tmp_utf8_string_pool[tmp_string_pool_index])
+			free(tmp_utf8_string_pool[tmp_string_pool_index]);
 
-		tmp_string_pool[tmp_string_pool_index] = (WCHAR *)malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
-		if (!tmp_string_pool[tmp_string_pool_index])
+		tmp_utf8_string_pool[tmp_string_pool_index] = (WCHAR *)malloc((len + 1) * sizeof(*tmp_utf8_string_pool[tmp_string_pool_index]));
+		if (!tmp_utf8_string_pool[tmp_string_pool_index])
 		{
-			tmp_string_pool_alloc_len[tmp_string_pool_index] = 0;
+			tmp_utf8_string_pool_alloc_len[tmp_string_pool_index] = 0;
 			return NULL;
 		}
-		tmp_string_pool_alloc_len[tmp_string_pool_index] = len + 1;
+		tmp_utf8_string_pool_alloc_len[tmp_string_pool_index] = len + 1;
 	}
-	if (!MultiByteToWideChar(CP_UTF8, 0, s, -1, tmp_string_pool[tmp_string_pool_index], tmp_string_pool_alloc_len[tmp_string_pool_index]))
+	if (!MultiByteToWideChar(CP_UTF8, 0, s, -1, tmp_utf8_string_pool[tmp_string_pool_index], tmp_utf8_string_pool_alloc_len[tmp_string_pool_index]))
 		return NULL;
 
-	return tmp_string_pool[tmp_string_pool_index++];
+	return tmp_utf8_string_pool[tmp_string_pool_index++];
 }
 
 char *_String(const WCHAR *ws)
 {
-	static char *tmp_string_pool[TMP_STRING_POOL_ENTRIES];
-	static int tmp_string_pool_alloc_len[TMP_STRING_POOL_ENTRIES];
-	static int tmp_string_pool_index;
+	static int tmp_string_pool_index = 0;
 	size_t len;
+
+	if (translate_firsttime) InitializeTranslateBuffer();
 
 	tmp_string_pool_index %= TMP_STRING_POOL_ENTRIES;
 
@@ -498,23 +538,23 @@ char *_String(const WCHAR *ws)
 	if (!len)
 		return NULL;
 
-	if (len >= tmp_string_pool_alloc_len[tmp_string_pool_index])
+	if (len >= tmp_str_string_pool_alloc_len[tmp_string_pool_index])
 	{
-		if (tmp_string_pool[tmp_string_pool_index])
-			global_free(tmp_string_pool[tmp_string_pool_index]);
+		if (tmp_str_string_pool[tmp_string_pool_index])
+			free(tmp_str_string_pool[tmp_string_pool_index]);
 
-		tmp_string_pool[tmp_string_pool_index] = (char *)malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
-		if (!tmp_string_pool[tmp_string_pool_index])
+		tmp_str_string_pool[tmp_string_pool_index] = (char *)malloc((len + 1) * sizeof(*tmp_str_string_pool[tmp_string_pool_index]));
+		if (!tmp_str_string_pool[tmp_string_pool_index])
 		{
-			tmp_string_pool_alloc_len[tmp_string_pool_index] = 0;
+			tmp_str_string_pool_alloc_len[tmp_string_pool_index] = 0;
 			return NULL;
 		}
-		tmp_string_pool_alloc_len[tmp_string_pool_index] = len + 1;
+		tmp_str_string_pool_alloc_len[tmp_string_pool_index] = len + 1;
 	}
-	if (!WideCharToMultiByte(ansi_codepage, 0, ws, -1, tmp_string_pool[tmp_string_pool_index], len, NULL, NULL))
+	if (!WideCharToMultiByte(ansi_codepage, 0, ws, -1, tmp_str_string_pool[tmp_string_pool_index], len, NULL, NULL))
 		return NULL;
 
-	return tmp_string_pool[tmp_string_pool_index++];
+	return tmp_str_string_pool[tmp_string_pool_index++];
 }
 
 HFONT TranslateCreateFont(const LOGFONTW *lpLf)
@@ -543,7 +583,7 @@ void ListView_GetItemTextA(HWND hwndCtl, int nIndex, int isitem, LPSTR lpch, int
 	char *p;
 
 	if (buf)
-		global_free(buf);
+		free(buf);
 	buf = (WCHAR *)malloc((cchMax + 1) * sizeof (*buf));
 	buf[0] = '\0';
 
@@ -574,7 +614,7 @@ int ComboBox_GetLBTextA(HWND hwndCtl, int nIndex, LPSTR lpszBuffer)
 	static LPWSTR buf;
 
 	if (buf)
-		global_free(buf);
+		free(buf);
 	buf = (WCHAR *)malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (*buf));
 
 	ret = ComboBox_GetLBTextW(hwndCtl, nIndex, buf);
@@ -590,7 +630,7 @@ int ComboBox_GetLBTextLenA(HWND hwndCtl, int nIndex)
 	static WCHAR *buf;
 
 	if (buf)
-		global_free(buf);
+		free(buf);
 	buf = (WCHAR *)malloc((ComboBox_GetLBTextLenW(hwndCtl, nIndex) + 1) * sizeof (*buf));
 
 	ComboBox_GetLBTextW(hwndCtl, nIndex, buf);
@@ -604,7 +644,7 @@ int ComboBox_GetTextA(HWND hwndCtl, LPSTR lpch, int cchMax)
 	static LPWSTR buf;
 
 	if (buf)
-		global_free(buf);
+		free(buf);
 	buf = (WCHAR *)malloc((cchMax + 1) * sizeof (*buf));
 
 	ret = GetWindowTextW(hwndCtl, buf, cchMax);

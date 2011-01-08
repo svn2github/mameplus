@@ -1951,7 +1951,7 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 						hWnd, (HMENU)0x1234, hSheetInstance, NULL);
 
 	{
-		LPWSTR wstr = wcsdup(TEXT(""));
+		LPWSTR wstr = win_tstring_strdup(TEXT(""));
 		TCITEM item;
 
 		item.mask    = TCIF_TEXT;
@@ -1961,7 +1961,7 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 
 		SendMessage(hTempTab, TCM_INSERTITEM, 0, (LPARAM)&item);
 
-		global_free(wstr);
+		osd_free(wstr);
 	}
 
 	DestroyWindow(hTempTab);
@@ -2246,12 +2246,12 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 					if (!drivers_table[i].name)
 						dwprintf(_WINDOWSW(TEXT("Illegal value for %s = %s\n")), TEXT(OPTION_DRIVER_CONFIG), _Unicode(s));
 				}
-				global_free(s);
+				osd_free(s);
 
 				p = strtok(NULL, ",");
 			}
 
-			global_free(temp);
+			osd_free(temp);
 		}
 
 		if (enabled == 0)

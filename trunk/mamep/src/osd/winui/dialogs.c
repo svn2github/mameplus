@@ -926,13 +926,13 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 
 			stemp = utf8_from_wstring(buf);
 			filerr = mame_fopen_options(MameUISettings(), NULL, stemp, OPEN_FLAG_READ, &mfile);
-			global_free(stemp);
+			osd_free(stemp);
 			if (filerr != FILERR_NONE)
 			{
 				swprintf(buf, TEXT("%s\\pcbinfo\\%s.txt"), szDir, szGame);
 				stemp = utf8_from_wstring(buf);
 				filerr = mame_fopen_options(MameUISettings(), NULL, stemp, OPEN_FLAG_READ, &mfile);
-				global_free(stemp);
+				osd_free(stemp);
 			}
 
 			if (filerr == FILERR_NONE)
@@ -987,7 +987,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 
 //					ShowWindow(GetDlgItem(hDlg, IDC_PCBINFO), SW_SHOW);
 
-					global_free(PcbData);
+					free(PcbData);
 				}
 
 				mame_fclose(mfile);

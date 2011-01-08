@@ -2386,7 +2386,7 @@ static void set_folder_flag(f_flag *flag, const char *path, DWORD dwFlags)
 		{
 			if (dwFlags == 0)
 			{
-				global_free(flag->entry[i].name);
+				osd_free(flag->entry[i].name);
 				flag->entry[i].name = NULL;
 			}
 			else
@@ -2430,7 +2430,7 @@ static void free_folder_flag(f_flag *flag)
 		FreeIfAllocated(&flag->entry[i].name);
 
 	if (flag->entry)
-		global_free(flag->entry);
+		free(flag->entry);
 	flag->entry = NULL;
 	flag->num = 0;
 }
@@ -2514,7 +2514,7 @@ static void options_set_folder_flag(core_options *opts, const char *name, const 
 		}
 
 	options_set_string(opts, name, buf, priority);
-	global_free(buf);
+	free(buf);
 }
 
 static f_flag settings_folder_flag;
@@ -2806,11 +2806,11 @@ static void GetSettingsFileName(char *filename, size_t filename_size)
 {
 	// copy INI directory
 	char *inidir = utf8_from_wstring(GetIniDir());
-	char *s = _strdup(UI_INI_FILENAME);
+	char *s = mame_strdup(UI_INI_FILENAME);
 	_strlwr(s);
 	snprintf(filename, filename_size, "%s\\%s", inidir, s);
-	global_free(inidir);
-	global_free(s);
+	osd_free(inidir);
+	osd_free(s);
 }
 
 /* Register access functions below */
@@ -3088,7 +3088,7 @@ static void ui_parse_ini_file(core_options *opts, const char *name)
 	/* open the file; if we fail, that's ok */
 	char *inidir = utf8_from_wstring(GetIniDir());
 	fname = astring_assemble_4(astring_alloc(), inidir, PATH_SEPARATOR, name, ".ini");
-	global_free(inidir);
+	osd_free(inidir);
 	LoadSettingsFile(opts, astring_c(fname));
 	astring_free(fname);
 }
@@ -3286,7 +3286,7 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 		{
 			char *inidir = utf8_from_wstring(GetIniDir());
 			filepath = astring_assemble_4(astring_alloc(), inidir, PATH_SEPARATOR, astring_c(filename), ".ini");
-			global_free(inidir);
+			osd_free(inidir);
 		}
 		astring_free(filename);
 
@@ -3312,7 +3312,7 @@ static void remove_all_source_options(void) {
 	 */
 	char *inidir = utf8_from_wstring(GetIniDir());
 	pathname = astring_assemble_3(astring_alloc(), inidir, PATH_SEPARATOR, "source");
-	global_free(inidir);
+	osd_free(inidir);
 	match = astring_assemble_3(astring_alloc(), astring_c(pathname), PATH_SEPARATOR, "*.ini");
 	if ((hFindFile = win_find_first_file_utf8(astring_c(match), &findFileData)) != INVALID_HANDLE_VALUE)
 	{
@@ -3372,7 +3372,7 @@ void options_set_wstring(core_options *opts, const char *name, const WCHAR *valu
 
 	options_set_string(opts, name, utf8_value, priority);
 
-	global_free(utf8_value);
+	osd_free(utf8_value);
 }
 
 

@@ -376,9 +376,9 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 		free(buffer);
 	}
 
-	global_free(utf8filename);
-	global_free(utf8zip_name);
-	global_free(utf8dir_name);
+	osd_free(utf8filename);
+	osd_free(utf8zip_name);
+	osd_free(utf8dir_name);
 
 	return success;
 }

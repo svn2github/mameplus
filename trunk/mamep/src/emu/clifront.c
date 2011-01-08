@@ -447,10 +447,10 @@ void assign_drivers(core_options *options)
 					if (!drivers_table[i].name)
 						mame_printf_warning(_("Illegal value for %s = %s\n"), OPTION_DRIVER_CONFIG, s);
 				}
-				global_free(s);
+				osd_free(s);
  				p = strtok(NULL, ",");
 			}
- 			global_free(temp);
+ 			osd_free(temp);
 		}
 	}
 #endif /* !TINY_BUILD */

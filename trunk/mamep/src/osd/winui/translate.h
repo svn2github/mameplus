@@ -34,6 +34,7 @@ LRESULT  StatusBarSetTextW(HWND,WPARAM,LPCWSTR);
 char   *_String(const WCHAR *ws);
 LPWSTR  _Unicode(const char *s);
 LPWSTR  _UTF8Unicode(const char *s);
+void FreeTranslateBuffer(void);
 
 void ListView_GetItemTextA(HWND hwndCtl, int nIndex, int isitem, LPSTR lpch, int cchMax);
 
