@@ -192,6 +192,10 @@ const char *real_profiler_state::text(running_machine &machine, astring &string)
 		{ PROFILER_BLIT,             "OSD Blitting" },
 		{ PROFILER_SOUND,            "Sound Generation" },
 		{ PROFILER_TIMER_CALLBACK,   "Timer Callbacks" },
+#ifdef USE_HISCORE
+		//MKCHAMP - INCLUDING THE HISCORE ENGINE TO THE PROFILER
+		{ PROFILER_HISCORE,          "Hiscore" },
+#endif /* USE_HISCORE */
 		{ PROFILER_INPUT,            "Input Processing" },
 		{ PROFILER_MOVIE_REC,        "Movie Recording" },
 		{ PROFILER_LOGERROR,         "Error Logging" },

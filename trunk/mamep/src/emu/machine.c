@@ -347,11 +347,6 @@ void running_machine::start()
 	// start up the devices
 	m_devicelist.start_all();
 
-#ifdef USE_HISCORE
-	// initialize the hiscore system
-	hiscore_init(this);
-#endif /* USE_HISCORE */
-
 	// if we're coming in with a savegame request, process it now
 	const char *savegame = options_get_string(&m_options, OPTION_STATE);
 	if (savegame[0] != 0)
@@ -363,6 +358,11 @@ void running_machine::start()
 
 	// set up the cheat engine
 	m_cheat = auto_alloc(this, cheat_manager(*this));
+
+#ifdef USE_HISCORE
+  //MKCHAMP - INITIALIZING THE HISCORE ENGINE
+ 	hiscore_init(this);
+#endif /* USE_HISCORE */
 
 	// disallow save state registrations starting here
 	state_save_allow_registration(this, false);

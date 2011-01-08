@@ -28,7 +28,7 @@ static emu_timer *timer;
 
 struct _memory_range
 {
-	UINT32 cpunum, addr, num_bytes, start_value, end_value;
+	UINT32 cpu, addr, num_bytes, start_value, end_value;
 	struct _memory_range *next;
 };
 typedef struct _memory_range memory_range;
@@ -53,23 +53,40 @@ static int is_highscore_enabled(running_machine *machine)
 
 /*****************************************************************************/
 
-static void copy_to_memory (running_machine *machine, int cpunum, int addr, const UINT8 *source, int num_bytes)
+static void copy_to_memory (running_machine *machine, int cpu, int addr, const UINT8 *source, int num_bytes)
 {
-	address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	int i;
+	address_space *targetspace;
+	if (strstr(machine->gamedrv->source_file,"cinemat.c") > 0)
+	{
+		 targetspace = cpu_get_address_space(machine->cpu[cpu], ADDRESS_SPACE_DATA);
+	}
+	else
+	{
+		 targetspace = cpu_get_address_space(machine->cpu[cpu], ADDRESS_SPACE_PROGRAM);
+	}
+
 	for (i=0; i<num_bytes; i++)
 	{
-		space->write_byte(addr+i, source[i]);
+    targetspace->write_byte(addr+i, source[i]);
 	}
 }
 
-static void copy_from_memory (running_machine *machine, int cpunum, int addr, UINT8 *dest, int num_bytes)
+static void copy_from_memory (running_machine *machine, int cpu, int addr, UINT8 *dest, int num_bytes)
 {
-	address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	int i;
+	address_space *targetspace;
+	if (strstr(machine->gamedrv->source_file,"cinemat.c") > 0)
+	{
+		 targetspace = cpu_get_address_space(machine->cpu[cpu], ADDRESS_SPACE_DATA);
+	}
+	else
+	{
+		 targetspace = cpu_get_address_space(machine->cpu[cpu], ADDRESS_SPACE_PROGRAM);
+	}
 	for (i=0; i<num_bytes; i++)
 	{
-		dest[i] = space->read_byte(addr+i);
+	  dest[i] = targetspace->read_byte(addr+i);
 	}
 }
 
@@ -157,15 +174,24 @@ static int matching_game_name (const char *pBuf, const char *name)
 static int safe_to_load (running_machine *machine)
 {
 	memory_range *mem_range = state.mem_range;
-	int cpunum = mem_range->cpunum;
-	address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
+	address_space *srcspace;
+	if (strstr(machine->gamedrv->source_file,"cinemat.c") > 0)
+	{
+		srcspace = cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_DATA);
+	}
+	else
+	{
+		srcspace = cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_PROGRAM);
+	}
 	while (mem_range)
 	{
-		if (space->read_byte(mem_range->addr) != mem_range->start_value)
+		if (srcspace->read_byte(mem_range->addr) !=
+			mem_range->start_value)
 		{
 			return 0;
 		}
-		if (space->read_byte(mem_range->addr + mem_range->num_bytes - 1) != mem_range->end_value)
+		if (srcspace->read_byte(mem_range->addr + mem_range->num_bytes - 1) !=
+			mem_range->end_value)
 		{
 			return 0;
 		}
@@ -206,12 +232,13 @@ static void hiscore_load (running_machine *machine)
 				UINT8 *data = global_alloc_array(UINT8, mem_range->num_bytes);
 				if (data)
 				{
-					/* this buffer will almost certainly be small
-					enough to be dynamically allocated, but let's
-					avoid memory trashing just in case */
+					/*  this buffer will almost certainly be small
+                        enough to be dynamically allocated, but let's
+                        avoid memory trashing just in case
+                    */
 					mame_fread (f, data, mem_range->num_bytes);
-					copy_to_memory (machine, mem_range->cpunum, mem_range->addr, data, mem_range->num_bytes);
-					global_free(data);
+					copy_to_memory (machine,mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
+					global_free (data);
 				}
 				mem_range = mem_range->next;
 			}
@@ -222,8 +249,8 @@ static void hiscore_load (running_machine *machine)
 
 static void hiscore_save (running_machine *machine)
 {
-	file_error filerr;
-	mame_file *f;
+    file_error filerr;
+ 	mame_file *f;
 	if (is_highscore_enabled(machine))
 	{
 		astring fname(machine->basename(), ".hi");
@@ -238,12 +265,13 @@ static void hiscore_save (running_machine *machine)
 				UINT8 *data = global_alloc_array(UINT8, mem_range->num_bytes);
 				if (data)
 				{
-					/* this buffer will almost certainly be small
-					enough to be dynamically allocated, but let's
-					avoid memory trashing just in case */
-					copy_from_memory (machine, mem_range->cpunum, mem_range->addr, data, mem_range->num_bytes);
+					/*  this buffer will almost certainly be small
+                        enough to be dynamically allocated, but let's
+                        avoid memory trashing just in case
+                    */
+					copy_from_memory (machine, mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
 					mame_fwrite(f, data, mem_range->num_bytes);
-					global_free(data);
+					global_free (data);
 				}
 				mem_range = mem_range->next;
 			}
@@ -254,7 +282,7 @@ static void hiscore_save (running_machine *machine)
 
 
 /* call hiscore_update periodically (i.e. once per frame) */
-static TIMER_CALLBACK (hiscore_periodic)
+static TIMER_CALLBACK( hiscore_periodic )
 {
 	if (state.mem_range)
 	{
@@ -273,8 +301,7 @@ static TIMER_CALLBACK (hiscore_periodic)
 /* call hiscore_close when done playing game */
 void hiscore_close (running_machine &machine)
 {
-	if (state.hiscores_have_been_loaded)
-		hiscore_save(&machine);
+	if (state.hiscores_have_been_loaded) hiscore_save(&machine);
 	hiscore_free();
 }
 
@@ -286,25 +313,38 @@ void hiscore_close (running_machine &machine)
 void hiscore_init (running_machine *machine)
 {
 	memory_range *mem_range = state.mem_range;
-	//int cpunum = mem_range->cpunum;
-	//address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	file_error filerr;
 	mame_file *f;
 	const char *db_filename = options_get_string(mame_options(), OPTION_HISCORE_FILE); /* high score definition file */
-	const char *name = machine->basename();
+    const char *name = machine->gamedrv->name;
 	state.hiscores_have_been_loaded = 0;
 
-	//while (mem_range)
-	//{
-	//	space->write_byte(mem_range->addr, ~mem_range->start_value);
-	//	space->write_byte(mem_range->addr + mem_range->num_bytes-1, ~mem_range->end_value);
-	//	mem_range = mem_range->next;
-	//}
+	while (mem_range)
+	{
+
+		if (strstr(machine->gamedrv->source_file,"cinemat.c") > 0)
+		{
+			cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_DATA)->write_byte(mem_range->addr,
+				~mem_range->start_value
+			);
+			cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_DATA)->write_byte(mem_range->addr + mem_range->num_bytes-1,
+				~mem_range->end_value
+			);
+			mem_range = mem_range->next;
+		}
+		else
+		{
+			cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_PROGRAM)->write_byte(mem_range->addr,
+				~mem_range->start_value
+			);
+		  cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_PROGRAM)->write_byte(mem_range->addr + mem_range->num_bytes-1,
+				~mem_range->end_value
+			);
+			mem_range = mem_range->next;
+		}
+	}
 
 	state.mem_range = NULL;
-
-	LOG(("hiscore_open: '%s'\n", name));
-
 	filerr = mame_fopen(NULL, db_filename, OPEN_FLAG_READ, &f);
 	if (filerr == FILERR_NONE)
 	{
@@ -328,7 +368,7 @@ void hiscore_init (running_machine *machine)
 				mem_range = global_alloc_array(memory_range, sizeof(memory_range));
 				if (mem_range)
 				{
-					mem_range->cpunum = hexstr2num (&pBuf);
+					mem_range->cpu = hexstr2num (&pBuf);
 					mem_range->addr = hexstr2num (&pBuf);
 					mem_range->num_bytes = hexstr2num (&pBuf);
 					mem_range->start_value = hexstr2num (&pBuf);
