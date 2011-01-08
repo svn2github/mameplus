@@ -697,7 +697,7 @@ static void win_mame_file_output_callback(void *param, const char *format, va_li
 	vsnprintf(buf, ARRAY_LENGTH(buf), format, argptr);
 	s = astring_from_utf8(buf);
 	fputs(s, (FILE *)param);
-	global_free(s);
+	osd_free(s);
 }
 
 
