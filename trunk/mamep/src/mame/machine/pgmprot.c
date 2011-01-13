@@ -281,7 +281,7 @@ static void asic3_compute_hold(running_machine *machine)
 	// The mode is dependent on the region
 	static const int modes[4] = { 1, 1, 3, 2 };
 	int mode;
-	if (!strcmp(machine->gamedrv->name,"orlegend111c"))
+	if (!strcmp(machine->gamedrv->name,"orlegend111c") || !strcmp(machine->gamedrv->name,"orlegendca"))
 		mode = modes[input_port_read(machine, "Region") & 3];
 	else
 		mode = modes[2 & 3];
@@ -325,7 +325,7 @@ READ16_HANDLER( pgm_asic3_r )
 	{
 	case 0x00:
 		{
-			if (!strcmp(space->machine->gamedrv->name,"orlegend111c"))
+			if (!strcmp(space->machine->gamedrv->name,"orlegend111c") || !strcmp(space->machine->gamedrv->name,"orlegendca"))
 				res = (state->asic3_latch[0] & 0xf7) | ((input_port_read(space->machine, "Region") << 3) & 0x08);
 			else
 				res = (state->asic3_latch[0] & 0xf7) | ((2 << 3) & 0x08);
@@ -334,7 +334,7 @@ READ16_HANDLER( pgm_asic3_r )
 	case 0x01: res = state->asic3_latch[1]; break;
 	case 0x02:
 		{
-			if (!strcmp(space->machine->gamedrv->name,"orlegend111c"))
+			if (!strcmp(space->machine->gamedrv->name,"orlegend111c") || !strcmp(space->machine->gamedrv->name,"orlegendca"))
 				res = (state->asic3_latch[2] & 0x7f) | ((input_port_read(space->machine, "Region") << 6) & 0x80);
 			else
 				res = (state->asic3_latch[2] & 0x7f) | ((2 << 6) & 0x80);

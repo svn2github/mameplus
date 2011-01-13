@@ -1747,17 +1747,6 @@ static MACHINE_CONFIG_DERIVED( kov_disabled_arm, pgm )
 	MCFG_DEVICE_DISABLE()
 MACHINE_CONFIG_END
 
-
-static MACHINE_CONFIG_DERIVED( kov2, pgm )
-
-	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_PROGRAM_MAP(kov2_mem)
-
-	/* protection CPU */
-	MCFG_CPU_ADD("prot", ARM7, 20000000)	// 55857F
-	MCFG_CPU_PROGRAM_MAP(arm7_map)
-MACHINE_CONFIG_END
-
 #if PGMSPEEDHACK
 static MACHINE_CONFIG_DERIVED( kov2speed, pgm )
 
@@ -1767,6 +1756,16 @@ static MACHINE_CONFIG_DERIVED( kov2speed, pgm )
 	/* protection CPU */
 	MCFG_CPU_ADD("prot", ARM7, 20000000)	// 55857F
 	MCFG_CPU_PROGRAM_MAP(kov2speed_arm7_map)
+MACHINE_CONFIG_END
+#else
+static MACHINE_CONFIG_DERIVED( kov2, pgm )
+
+	MCFG_CPU_MODIFY("maincpu")
+	MCFG_CPU_PROGRAM_MAP(kov2_mem)
+
+	/* protection CPU */
+	MCFG_CPU_ADD("prot", ARM7, 20000000)	// 55857F
+	MCFG_CPU_PROGRAM_MAP(arm7_map)
 MACHINE_CONFIG_END
 #endif
 
@@ -4710,7 +4709,11 @@ static DRIVER_INIT( pgm )
 
 /* Oriental Legend INIT */
 
+#if PGMREGIONHACK
 static DRIVER_INIT( orld111c )
+#else
+static DRIVER_INIT( orlegend )
+#endif
 {
 	pgm_state *state = machine->driver_data<pgm_state>();
 	pgm_basic_init(machine);
@@ -5947,7 +5950,7 @@ static DRIVER_INIT( olds )
 static void pgm_decode_kovlsqh2_tiles( running_machine *machine )
 {
 	int i, j;
-	UINT16 *src = (UINT16 *)(machine->region("tiles")->base() + 0x400000);
+	UINT16 *src = (UINT16 *)(machine->region("tiles")->base() + 0x180000);
 	UINT16 *dst = auto_alloc_array(machine, UINT16, 0x800000);
 
 	for (i = 0; i < 0x800000 / 2; i++)
@@ -6238,10 +6241,10 @@ GAME( 1997, pgm,          0,         pgm,     pgm,      pgm,        ROT0,   "IGS
 
 // the version numbering on these is a mess... date srings from ROM (and in some cases even those are missing..)
 #if PGMREGIONHACK
-GAME( 1997, orlegend,     pgm,       orlegend,pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 126)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )                // V0001 01/14/98 18:16:38 - runs as World
-GAME( 1997, orlegende,    orlegend,  orlegnde,pgm,      orlegnde,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )                // V0001 07/14/97 11:19:45 - runs as World
+GAME( 1997, orlegend,     pgm,       orlegend,orlegend, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 126)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )                // V0001 01/14/98 18:16:38 - runs as World
+GAME( 1997, orlegende,    orlegend,  orlegnde,orlegend, orlegnde,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )                // V0001 07/14/97 11:19:45 - runs as World
 GAME( 1997, orlegendc,    orlegend,  orlegndc,orlegndc, orlegnde,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  ) // V0001 05/05/97 10:08:21 - runs as World, Korea, China
-GAME( 1997, orlegendca,   orlegend,  orlegndc,orlegndc, orlegnde,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. ???, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // V0001 04/02/97 13:35:43 - runs as HongKong, China, China
+GAME( 1997, orlegendca,   orlegend,  pgm,     orld111c, orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (alt ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // V0001 04/02/97 13:35:43 - runs as HongKong, China, China
 GAME( 1997, orlegend111c, orlegend,  pgm,     orld111c, orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 111, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  ) // V0001 no date!          - runs as HongKong, China, China
 GAME( 1997, orlegend105k, orlegend,  orld105k,orld105k, orld105k,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 105, Korean Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )  // V0000 no date!          - runs as Korea
 
@@ -6250,12 +6253,12 @@ GAME( 1997, dw2v100x,     drgw2,     drgw2,   drgw2,    dw2v100x,   ROT0,   "IGS
 GAME( 1997, drgw2j,       drgw2,     drgw2,   drgw2,    drgw2j,     ROT0,   "IGS", "Chuugokuryuu II (ver. 100J, Japan)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // This set still has protection issues!
 GAME( 1997, drgw2c,       drgw2,     drgw2,   drgw2,    drgw2c,     ROT0,   "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 #else
-GAME( 1997, orlegend,     pgm,       pgm,     orlegend, orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 126)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )                // V0001 01/14/98 18:16:38 - runs as World
-GAME( 1997, orlegende,    orlegend,  pgm,     orlegend, orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )                // V0001 07/14/97 11:19:45 - runs as World
-GAME( 1997, orlegendc,    orlegend,  pgm,     orlegend, orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // V0001 05/05/97 10:08:21 - runs as World, Korea, China
-GAME( 1997, orlegendca,   orlegend,  pgm,     orlegend, orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. ???, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // V0001 04/02/97 13:35:43 - runs as HongKong, China, China
-GAME( 1997, orlegend111c, orlegend,  pgm,     orlegend, orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 111, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // V0001 no date!          - runs as HongKong, China, China
-GAME( 1997, orlegend105k, orlegend,  pgm,     orld105k, orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 105, Korean Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )  // V0000 no date!          - runs as Korea
+GAME( 1997, orlegend,     pgm,       pgm,     orlegend, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 126)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )                // V0001 01/14/98 18:16:38 - runs as World
+GAME( 1997, orlegende,    orlegend,  pgm,     orlegend, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )                // V0001 07/14/97 11:19:45 - runs as World
+GAME( 1997, orlegendc,    orlegend,  pgm,     orlegend, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // V0001 05/05/97 10:08:21 - runs as World, Korea, China
+GAME( 1997, orlegendca,   orlegend,  pgm,     orlegend, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. ???, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // V0001 04/02/97 13:35:43 - runs as HongKong, China, China
+GAME( 1997, orlegend111c, orlegend,  pgm,     orlegend, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 111, Chinese Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // V0001 no date!          - runs as HongKong, China, China
+GAME( 1997, orlegend105k, orlegend,  pgm,     orld105k, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 105, Korean Board)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )  // V0000 no date!          - runs as Korea
 
 GAME( 1997, drgw2,        pgm,       drgw2,   pgm,      drgw2,      ROT0,   "IGS", "Dragon World II (ver. 110X, Export)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // This set still has protection issues!
 GAME( 1997, dw2v100x,     drgw2,     drgw2,   pgm,      dw2v100x,   ROT0,   "IGS", "Dragon World II (ver. 100X, Export)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // This set still has protection issues!
@@ -6379,18 +6382,18 @@ GAME( 2005, svg,          pgm,       svg,     sango,    svg,        ROT0,   "IGS
 
 /* these don't use an External ARM rom, and don't have any weak internal functions which would allow the internal ROM to be read out */
 
-GAME( 2002, ddp3,         0,         cavepgm,    pgm,     ddp3,       ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (V101)",                   GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // Displays "2002.04.05.Master Ver"
+GAME( 2002, ddp3,         0,         cavepgm,    pgm,     ddp3,       ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (ver. 101)",                   GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // Displays "2002.04.05.Master Ver"
 // is there a v101 without the . after 05?
-GAME( 2002, ddp3a,        ddp3,      cavepgm,    pgm,     ddp3,       ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (V100, second revision)",  GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // Displays "2002.04.05.Master Ver"
-GAME( 2002, ddp3b,        ddp3,      cavepgm,    pgm,     ddp3,       ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (V100, first revision)",   GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // Displays "2002.04.05 Master Ver"
+GAME( 2002, ddp3a,        ddp3,      cavepgm,    pgm,     ddp3,       ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (ver. 100, second revision)",  GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // Displays "2002.04.05.Master Ver"
+GAME( 2002, ddp3b,        ddp3,      cavepgm,    pgm,     ddp3,       ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (ver. 100, first revision)",   GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // Displays "2002.04.05 Master Ver"
 GAME( 2002, ddp3blk,      ddp3,      cavepgm,    pgm,     ddp3,       ROT270, "Cave", "DoDonPachi Dai-Ou-Jou (Black Label)",            GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // Displays "2002.04.05.Master Ver" (old) or "2002.10.07 Black Ver" (new)
 
 // the exact text of the 'version' shows which revision of the game it is; the newest has 2 '.' symbols in the string, the oldest, none.
-GAME( 2002, ket,          0,         cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui: Kizuna Jigoku Tachi (V100, third revision)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // Displays "2003/01/01. Master Ver."
-GAME( 2002, keta,         ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui: Kizuna Jigoku Tachi (V100, second revision)",GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE) // Displays "2003/01/01 Master Ver."
-GAME( 2002, ketb,         ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui: Kizuna Jigoku Tachi (V100, first revision)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE) // Displays "2003/01/01 Master Ver"
+GAME( 2002, ket,          0,         cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui: Kizuna Jigoku Tachi (ver. 100, third revision)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // Displays "2003/01/01. Master Ver."
+GAME( 2002, keta,         ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui: Kizuna Jigoku Tachi (ver. 100, second revision)",GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE) // Displays "2003/01/01 Master Ver."
+GAME( 2002, ketb,         ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui: Kizuna Jigoku Tachi (ver. 100, first revision)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE) // Displays "2003/01/01 Master Ver"
 
-GAME( 2003, espgal,       0,         cavepgm,    pgm,     espgal,       ROT270, "Cave", "EspGaluda (V100, first revision)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // Displays "2003/10/15 Master Ver"
+GAME( 2003, espgal,       0,         cavepgm,    pgm,     espgal,       ROT270, "Cave", "EspGaluda (ver. 100, first revision)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // Displays "2003/10/15 Master Ver"
 
 /* PGM2 */
 GAME( 2007, orleg2,       0,         pgm,    pgm,     0,       ROT0, "IGS", "Oriental Legend 2", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
