@@ -2,6 +2,7 @@
 #define MASTER_CLOCK_PAL  53203424
 #define SEGACD_CLOCK      12500000
 
+/*----------- defined in machine/megadriv.c -----------*/
 
 extern DRIVER_INIT( megadriv_c2 );
 extern DRIVER_INIT( megadrie );
@@ -74,6 +75,9 @@ extern int genvdp_use_cram;
 extern int genesis_always_irq6;
 extern int genesis_other_hacks;
 
+extern int megadrive_6buttons_pad;
+extern int megadrive_region_export;
+extern int megadrive_region_pal;
 
 /* Megaplay - Megatech specific */
 /* It might be possible to move the following structs in the drivers */
@@ -112,3 +116,16 @@ struct _mtech_bios	/* once all the regs are saved in this structure, it would be
 	int mt_bank_partial;
 	int mt_bank_addr;
 };
+
+/*----------- defined in machine/md_cart.c -----------*/
+
+MACHINE_CONFIG_EXTERN( genesis_cartslot );
+MACHINE_CONFIG_EXTERN( _32x_cartslot );
+MACHINE_CONFIG_EXTERN( pico_cartslot );
+MACHINE_START( md_sram );
+
+/*----------- defined in drivers/megadriv.c -----------*/
+
+/* These are needed to handle J-Cart inputs */
+extern WRITE16_HANDLER( jcart_ctrl_w );
+extern READ16_HANDLER( jcart_ctrl_r );

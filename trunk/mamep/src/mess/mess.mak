@@ -43,24 +43,13 @@ DRVLIBS += \
 #-------------------------------------------------
 
 $(MESSOBJ)/shared.a: \
-	$(MESS_DEVICES)/bitbngr.o	\
-	$(MESS_DEVICES)/cartslot.o	\
-	$(MESS_DEVICES)/cassette.o	\
-	$(MESS_DEVICES)/chd_cd.o	\
 	$(MESS_FORMATS)/imd_dsk.o	\
 	$(MESS_FORMATS)/td0_dsk.o	\
 	$(MESS_FORMATS)/cqm_dsk.o	\
 	$(MESS_FORMATS)/dsk_dsk.o	\
 	$(MESS_FORMATS)/d88_dsk.o	\
 	$(MESS_FORMATS)/fdi_dsk.o	\
-	$(MESS_DEVICES)/flopdrv.o	\
-	$(MESS_DEVICES)/messram.o	\
-	$(MESS_DEVICES)/multcart.o	\
-	$(MESS_DEVICES)/printer.o	\
 	$(MESS_FORMATS)/basicdsk.o	\
-	$(MESS_FORMATS)/cassimg.o	\
-	$(MESS_FORMATS)/flopimg.o	\
-	$(MESS_FORMATS)/wavfile.o	\
 	$(MESS_MACHINE)/ctronics.o	\
 	$(MESS_MACHINE)/tc8521.o	\
 	$(MESS_MACHINE)/wd17xx.o	\
@@ -132,13 +121,12 @@ $(MESSOBJ)/nintendo.a:			\
 	$(MESS_VIDEO)/gba.o		\
 
 $(MESSOBJ)/sega.a:				\
-	$(MESS_DRIVERS)/genesis.o	\
-	$(MESS_MACHINE)/genesis.o	\
-	$(MESS_MACHINE)/gen_pcb.o	\
 	$(MESS_VIDEO)/smsvdp.o		\
 	$(MESS_MACHINE)/sms.o		\
 	$(MESS_DRIVERS)/sms.o		\
 	$(MAME_DRIVERS)/megadriv.o  \
+	$(MAME_MACHINE)/megadriv.o  \
+	$(MAME_MACHINE)/md_cart.o	\
 
 $(MESSOBJ)/snk.a:				\
 	$(MESS_DRIVERS)/ngp.o		\
@@ -164,9 +152,6 @@ $(MESS_MACHINE)/nes_mmc.o:	$(MESSSRC)/machine/nes_ines.c \
 #-------------------------------------------------
 # layout dependencies
 #-------------------------------------------------
-
-$(MESSOBJ)/mess.o:	$(MESS_LAYOUT)/lcd.lh
-$(MESSOBJ)/mess.o:	$(MESS_LAYOUT)/lcd_rot.lh
 
 $(MESS_DRIVERS)/sms.o:		$(MESS_LAYOUT)/sms1.lh
 

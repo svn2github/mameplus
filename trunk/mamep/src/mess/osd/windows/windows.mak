@@ -6,35 +6,22 @@
 #
 ###########################################################################
 
-
-# build the executable names
-RCFLAGS += -DMESS
-
-LIBS += -lcomdlg32
+MESS_WINSRC = src/mess/osd/windows
+MESS_WINOBJ = $(OBJ)/mess/osd/windows
 
 OBJDIRS += \
 	$(MESSOBJ)/osd \
 	$(MESSOBJ)/osd/windows
 
-MESS_WINSRC = src/mess/osd/windows
-MESS_WINOBJ = $(OBJ)/mess/osd/windows
-
 CLIRESFILE = $(MESS_WINOBJ)/mess.res
 
-OSDOBJS += \
-	$(MESS_WINOBJ)/dialog.o	\
-	$(MESS_WINOBJ)/menu.o		\
-	$(MESS_WINOBJ)/mess.res	\
-	$(MESS_WINOBJ)/opcntrl.o
-
 $(LIBOSD): $(OSDOBJS)
-
-OSDCOREOBJS += \
-	$(OBJ)/mess/osd/windows/winutils.o
 
 $(LIBOCORE): $(OSDCOREOBJS)
 
 $(LIBOCORE_NOMAIN): $(OSDCOREOBJS:$(WINOBJ)/main.o=)
+
+$CLIRESFILE): $(MESS_WINSRC)/mess.rc $(WINOBJ)/mamevers.rc
 
 #-------------------------------------------------
 # generic rules for the resource compiler
@@ -43,4 +30,3 @@ $(LIBOCORE_NOMAIN): $(OSDCOREOBJS:$(WINOBJ)/main.o=)
 $(MESS_WINOBJ)/%.res: $(MESS_WINSRC)/%.rc
 	@echo Compiling resources $<...
 	$(RC) $(RCDEFS) $(RCFLAGS) --include-dir mess/$(OSD) -o $@ -i $<
-

@@ -410,8 +410,9 @@ static const nes_pcb pcb_list[] =
 	{ "JYCOMPANY-A",      UNSUPPORTED_BOARD },	// mapper 90
 	{ "JYCOMPANY-B",      UNSUPPORTED_BOARD },	// mapper 209
 	{ "JYCOMPANY-C",      UNSUPPORTED_BOARD },	// mapper 211
-	{ "NTDEC-112",        NTDEC_ASDER },
-	{ "NTDEC-193",        NTDEC_FIGHTINGHERO },
+	{ "NTDEC-112",        NTDEC_ASDER },	// mapper 112 (better rename this board tag, to avoid confusion with TC-112!!
+	{ "NTDEC-TC-112",     NTDEC_FIGHTINGHERO },
+	{ "NTDEC-193",        NTDEC_FIGHTINGHERO },	// mapper 193
 	{ "UNL-TEK90",        UNSUPPORTED_BOARD },	// related to JY Company? (i.e. mappers 90, 209, 211?)
 	{ "UNL-SA-002",       SACHEN_TCU02 },
 	{ "UNL-SA-009",       SACHEN_SA009 },
@@ -521,6 +522,7 @@ static const nes_pcb pcb_list[] =
 	{ "UNL-KOF97",        UNL_KOF97 },
 	{ "UNL-T-230",        UNL_T230 },
 	{ "UNL-STUDYNGAME",   UNL_STUDYNGAME },	// mapper 39
+	{ "UNL-OneBus",       UNSUPPORTED_BOARD },
 //
 	{ "BTL-SMB2A",         BTL_SMB2A },
 	{ "BTL-MARIOBABY",     BTL_MARIOBABY },

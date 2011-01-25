@@ -5,8 +5,8 @@
 #include "video/ppu2c0x.h"
 #include "includes/nes.h"
 #include "machine/nes_mmc.h"
-#include "devices/cartslot.h"
-#include "devices/flopdrv.h"
+#include "imagedev/cartslot.h"
+#include "imagedev/flopdrv.h"
 
 /***************************************************************************
     CONSTANTS
@@ -50,8 +50,8 @@ static void init_nes_core( running_machine *machine )
 	/* Brutal hack put in as a consequence of the new memory system; we really need to fix the NES code */
 	memory_install_readwrite_bank(space, 0x0000, 0x07ff, 0, 0x1800, "bank10");
 
-	memory_install_readwrite8_handler(cpu_get_address_space(machine->device("ppu"), ADDRESS_SPACE_PROGRAM), 0, 0x1fff, 0, 0, nes_chr_r, nes_chr_w);
-	memory_install_readwrite8_handler(cpu_get_address_space(machine->device("ppu"), ADDRESS_SPACE_PROGRAM), 0x2000, 0x3eff, 0, 0, nes_nt_r, nes_nt_w);
+	memory_install_readwrite8_handler(device_get_space(machine->device("ppu"), ADDRESS_SPACE_PROGRAM), 0, 0x1fff, 0, 0, nes_chr_r, nes_chr_w);
+	memory_install_readwrite8_handler(device_get_space(machine->device("ppu"), ADDRESS_SPACE_PROGRAM), 0x2000, 0x3eff, 0, 0, nes_nt_r, nes_nt_w);
 
 	memory_set_bankptr(machine, "bank10", state->rom);
 
@@ -710,7 +710,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					state->prg_chunks = mapint3;
 					state->chr_chunks = mapint4;
 					logerror("NES.HSI info: %d %d %d %d\n", mapint1, mapint2, mapint3, mapint4);
-//                  printf("NES.HSI info: %d %d %d %d\n", mapint1, mapint2, mapint3, mapint4);
+//                  mame_printf_error("NES.HSI info: %d %d %d %d\n", mapint1, mapint2, mapint3, mapint4);
 					goodcrcinfo = 1;
 					state->ines20 = 0;
 				}
@@ -725,7 +725,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 			}
 
 			state->hard_mirroring = (local_options & 0x01) ? PPU_MIRROR_VERT : PPU_MIRROR_HORZ;
-//          printf("%s\n", state->hard_mirroring & 0x01 ? "Vertical" : "Horizontal");
+//          mame_printf_error("%s\n", state->hard_mirroring & 0x01 ? "Vertical" : "Horizontal");
 			state->battery = local_options & 0x02;
 			state->trainer = local_options & 0x04;
 			state->four_screen_vram = local_options & 0x08;
@@ -905,6 +905,9 @@ DEVICE_IMAGE_LOAD( nes_cart )
 			if (state->pcb_id == NAMCOT_163)
 				state->mapper_ram = auto_alloc_array(image.device().machine, UINT8, 0x2000);
 
+			if (state->pcb_id == FUKUTAKE_BOARD)
+				state->mapper_ram = auto_alloc_array(image.device().machine, UINT8, 2816);
+			
 			/* Position past the header */
 			image.fseek(16, SEEK_SET);
 
@@ -927,7 +930,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 				if (prgout)
 				{
 					fwrite(&state->rom[0x10000], 1, 0x4000 * state->prg_chunks, prgout);
-					printf("Created PRG chunk\n");
+					mame_printf_error("Created PRG chunk\n");
 				}
 
 				fclose(prgout);
@@ -937,8 +940,8 @@ DEVICE_IMAGE_LOAD( nes_cart )
 			logerror("**\n");
 			logerror("Mapper: %d\n", state->mapper);
 			logerror("PRG chunks: %02x, size: %06x\n", state->prg_chunks, 0x4000 * state->prg_chunks);
-			// printf("Mapper: %d\n", state->mapper);
-			// printf("PRG chunks: %02x, size: %06x\n", state->prg_chunks, 0x4000 * state->prg_chunks);
+			// mame_printf_error("Mapper: %d\n", state->mapper);
+			// mame_printf_error("PRG chunks: %02x, size: %06x\n", state->prg_chunks, 0x4000 * state->prg_chunks);
 
 			/* Read in any chr chunks */
 			if (state->chr_chunks > 0)
@@ -959,7 +962,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 				if (chrout)
 				{
 					fwrite(state->vrom, 1, 0x2000 * state->chr_chunks, chrout);
-					printf("Created CHR chunk\n");
+					mame_printf_error("Created CHR chunk\n");
 				}
 				fclose(chrout);
 			}
@@ -967,8 +970,8 @@ DEVICE_IMAGE_LOAD( nes_cart )
 
 			logerror("CHR chunks: %02x, size: %06x\n", state->chr_chunks, 0x2000 * state->chr_chunks);
 			logerror("**\n");
-			// printf("CHR chunks: %02x, size: %06x\n", state->chr_chunks, 0x2000 * state->chr_chunks);
-			// printf("**\n");
+			// mame_printf_error("CHR chunks: %02x, size: %06x\n", state->chr_chunks, 0x2000 * state->chr_chunks);
+			// mame_printf_error("**\n");
 		}
 		else if ((magic[0] == 'U') && (magic[1] == 'N') && (magic[2] == 'I') && (magic[3] == 'F')) /* If header starts with 'UNIF' it is UNIF */
 		{
@@ -1084,6 +1087,14 @@ DEVICE_IMAGE_LOAD( nes_cart )
 						image.fread(&temp_byte, 1);
 						logerror("Television Standard : %s\n", (temp_byte == 0) ? "NTSC" : (temp_byte == 1) ? "PAL" : "Does not matter");
 
+						read_length += (chunk_length + 8);
+					}
+					else if ((magic2[0] == 'T') && (magic2[1] == 'V') && (magic2[2] == 'S') && (magic2[3] == 'C')) // is this the same as TVCI??
+					{
+						logerror("[TVSC] chunk found. No support yet.\n");
+						image.fread(&buffer, 4);
+						chunk_length = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
+						
 						read_length += (chunk_length + 8);
 					}
 					else if ((magic2[0] == 'D') && (magic2[1] == 'I') && (magic2[2] == 'N') && (magic2[3] == 'F'))
@@ -1210,7 +1221,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 					}
 					else
 					{
-						printf("Unsupported UNIF chunk. Please report the problem at MESS Board.\n");
+						logerror("Unsupported UNIF chunk or corrupted header. Please report the problem at MESS Board.\n");
 						read_length = size;
 					}
 				}
@@ -1223,6 +1234,13 @@ DEVICE_IMAGE_LOAD( nes_cart )
 				fatalerror("UNIF should have a [MAPR] chunk to work. Check if your image has been corrupted");
 			}
 
+			if (!prg_start)
+			{
+				auto_free(image.device().machine, temp_prg);
+				auto_free(image.device().machine, temp_chr);
+				fatalerror("Unsupported UNIF chunk or corrupted header. Please report the problem at MESS Board.\n");
+			}
+			
 			/* Free the regions that were allocated by the ROM loader */
 			image.device().machine->region_free("maincpu");
 			image.device().machine->region_free("gfx1");
@@ -1267,7 +1285,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 				if (prgout)
 				{
 					fwrite(&state->rom[0x10000], 1, 0x4000 * state->prg_chunks, prgout);
-					printf("Created PRG chunk\n");
+					mame_printf_error("Created PRG chunk\n");
 				}
 
 				fclose(prgout);
@@ -1285,7 +1303,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 				if (chrout)
 				{
 					fwrite(state->vrom, 1, 0x2000 * state->chr_chunks, chrout);
-					printf("Created CHR chunk\n");
+					mame_printf_error("Created CHR chunk\n");
 				}
 				fclose(chrout);
 			}
@@ -1424,21 +1442,21 @@ DEVICE_IMAGE_LOAD( nes_cart )
 			state->vrc_ls_prg_a = nes_cart_get_line(image.get_feature("vrc2-pin3"));
 			state->vrc_ls_prg_b = nes_cart_get_line(image.get_feature("vrc2-pin4"));
 			state->vrc_ls_chr = (nes_cart_get_line(image.get_feature("vrc2-pin21")) != 10) ? 1 : 0;
-//          printf("VRC-2, pin3: A%d, pin4: A%d, pin21: %s\n", state->vrc_ls_prg_a, state->vrc_ls_prg_b, state->vrc_ls_chr ? "NC" : "A10");
+//          mame_printf_error("VRC-2, pin3: A%d, pin4: A%d, pin21: %s\n", state->vrc_ls_prg_a, state->vrc_ls_prg_b, state->vrc_ls_chr ? "NC" : "A10");
 		}
 
 		if (state->pcb_id == KONAMI_VRC4)
 		{
 			state->vrc_ls_prg_a = nes_cart_get_line(image.get_feature("vrc4-pin3"));
 			state->vrc_ls_prg_b = nes_cart_get_line(image.get_feature("vrc4-pin4"));
-//          printf("VRC-4, pin3: A%d, pin4: A%d\n", state->vrc_ls_prg_a, state->vrc_ls_prg_b);
+//          mame_printf_error("VRC-4, pin3: A%d, pin4: A%d\n", state->vrc_ls_prg_a, state->vrc_ls_prg_b);
 		}
 
 		if (state->pcb_id == KONAMI_VRC6)
 		{
 			state->vrc_ls_prg_a = nes_cart_get_line(image.get_feature("vrc6-pin9"));
 			state->vrc_ls_prg_b = nes_cart_get_line(image.get_feature("vrc6-pin10"));
-//          printf("VRC-6, pin9: A%d, pin10: A%d\n", state->vrc_ls_prg_a, state->vrc_ls_prg_b);
+//          mame_printf_error("VRC-6, pin9: A%d, pin10: A%d\n", state->vrc_ls_prg_a, state->vrc_ls_prg_b);
 		}
 
 		/* Check for other misc board variants */
@@ -1465,13 +1483,13 @@ DEVICE_IMAGE_LOAD( nes_cart )
 
 #if 0
 		if (state->pcb_id == UNSUPPORTED_BOARD)
-			printf("This board (%s) is currently not supported by MESS\n", image.get_feature("pcb"));
-		printf("PCB Feature: %s\n", image.get_feature("pcb"));
-		printf("PRG chunks: %d\n", state->prg_chunks);
-		printf("CHR chunks: %d\n", state->chr_chunks);
-		printf("VRAM: Present %s, size: %d\n", state->vram_chunks ? "Yes" : "No", vram_size);
-		printf("NVWRAM: Present %s, size: %d\n", state->battery ? "Yes" : "No", state->battery_size);
-		printf("WRAM:   Present %s, size: %d\n", state->prg_ram ? "Yes" : "No", state->wram_size);
+			mame_printf_error("This board (%s) is currently not supported by MESS\n", image.get_feature("pcb"));
+		mame_printf_error("PCB Feature: %s\n", image.get_feature("pcb"));
+		mame_printf_error("PRG chunks: %d\n", state->prg_chunks);
+		mame_printf_error("CHR chunks: %d\n", state->chr_chunks);
+		mame_printf_error("VRAM: Present %s, size: %d\n", state->vram_chunks ? "Yes" : "No", vram_size);
+		mame_printf_error("NVWRAM: Present %s, size: %d\n", state->battery ? "Yes" : "No", state->battery_size);
+		mame_printf_error("WRAM:   Present %s, size: %d\n", state->prg_ram ? "Yes" : "No", state->wram_size);
 #endif
 	}
 

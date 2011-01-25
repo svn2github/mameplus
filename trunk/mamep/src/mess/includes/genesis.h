@@ -1,23 +1,13 @@
-/*****************************************************************************
- *
- *  includes/genesis.h
- *
- ****************************************************************************/
+/* Todo, reorganise, cleanup etc.*/
 
-#ifndef GENESIS_H_
-#define GENESIS_H_
+/*----------- defined in video/genesis.c -----------*/
 
-#include "devices/cartslot.h"
+extern UINT16 genesis_bg_pal_lookup[4];
+extern UINT16 genesis_sp_pal_lookup[4];
+extern UINT8 genesis_vdp_regs[32];
 
-/*----------- defined in machine/genesis.c -----------*/
+void system18_vdp_start(running_machine *machine);
+void system18_vdp_update(bitmap_t *bitmap, const rectangle *cliprect);
 
-MACHINE_RESET( md_mappers );
-
-MACHINE_CONFIG_EXTERN( genesis_cartslot );
-MACHINE_CONFIG_EXTERN( _32x_cartslot );
-MACHINE_CONFIG_EXTERN( pico_cartslot );
-
-WRITE16_HANDLER( jcart_ctrl_w );
-READ16_HANDLER( jcart_ctrl_r );
-
-#endif /* GENESIS_H_ */
+READ16_HANDLER ( genesis_vdp_r );
+WRITE16_HANDLER( genesis_vdp_w );

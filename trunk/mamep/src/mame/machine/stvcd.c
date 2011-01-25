@@ -22,9 +22,7 @@
 ***************************************************************************/
 
 #include "emu.h"
-#ifdef MESS
-#include "devices/chd_cd.h"
-#endif
+#include "imagedev/chd_cd.h"
 #include "cdrom.h"
 #include "stvcd.h"
 
@@ -258,7 +256,7 @@ void stvcd_reset(running_machine *machine)
 	}
 
 	#ifdef MESS
-	cdrom = mess_cd_get_cdrom_file(machine->device( "cdrom" ));
+	cdrom = cd_get_cdrom_file(machine->device( "cdrom" ));
 	#else
 	cdrom = cdrom_open(get_disk_handle(machine, "cdrom"));
 	#endif

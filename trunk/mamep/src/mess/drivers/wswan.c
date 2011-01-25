@@ -34,7 +34,7 @@
 #include "emu.h"
 #include "cpu/v30mz/nec.h"
 #include "includes/wswan.h"
-#include "devices/cartslot.h"
+#include "imagedev/cartslot.h"
 
 static ADDRESS_MAP_START (wswan_mem, ADDRESS_SPACE_PROGRAM, 8)
 	AM_RANGE(0x00000, 0x03fff) AM_RAM		/* 16kb RAM / 4 colour tiles */
@@ -166,6 +166,7 @@ static MACHINE_CONFIG_START( wswan, wswan_state )
 
 	/* software lists */
 	MCFG_SOFTWARE_LIST_ADD("cart_list","wswan")
+	MCFG_SOFTWARE_LIST_COMPATIBLE_ADD("wsc_list","wscolor")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( wscolor, wswan )
@@ -174,6 +175,13 @@ static MACHINE_CONFIG_DERIVED( wscolor, wswan )
 	MCFG_MACHINE_START( wscolor )
 	MCFG_PALETTE_LENGTH(4096)
 	MCFG_PALETTE_INIT( wscolor )
+
+
+	/* software lists */
+	MCFG_DEVICE_REMOVE("cart_list")
+	MCFG_DEVICE_REMOVE("wsc_list")
+	MCFG_SOFTWARE_LIST_ADD("cart_list","wscolor")
+	MCFG_SOFTWARE_LIST_COMPATIBLE_ADD("ws_list","wswan")
 MACHINE_CONFIG_END
 
 /***************************************************************************

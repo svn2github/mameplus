@@ -72,12 +72,6 @@
 #include "strconv.h"
 #include "config.h"
 
-#ifdef MESS
-#include "uimess.h"
-#endif
-
-
-
 //============================================================
 //  PARAMETERS
 //============================================================
@@ -833,26 +827,6 @@ void windows_osd_interface::customize_input_type_list(input_type_desc *typelist)
 				typedesc->name = _WINDOWS("Toggle Fullscreen");
 				input_seq_set_2(&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_LALT, KEYCODE_ENTER);
 				break;
-
-			case IPT_OSD_2:
-				if (ui_use_newui())
-				{
-					typedesc->token = "TOGGLE_MENUBAR";
-					typedesc->name = _WINDOWS("Toggle Menu Bar");
-#ifdef MAMEMESS
-					//mamep: we want to use both MESS-newui and in-game-UI
-					input_seq_set_1(&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_SCRLOCK);
-#else
-					input_seq_set_1(&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_ESC);
-#endif
-				}
-				break;
-
-#if 0			// mamep: keep default key setting
-			case IPT_UI_THROTTLE:
-				input_seq_set_1(&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_F10);
-				break;
-#endif
 		}
 }
 

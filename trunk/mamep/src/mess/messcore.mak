@@ -84,6 +84,5 @@ LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
 
 EMUOBJS += \
 	$(MESSOBJ)/mess.o		\
-	$(MESSOBJ)/uimess.o		\
 
 $(LIBEMU): $(EMUOBJS)

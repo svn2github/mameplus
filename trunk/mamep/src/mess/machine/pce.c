@@ -57,7 +57,7 @@ CD Interface Register 0x0f - ADPCM fade in/out register
 #include "coreutil.h"
 #include "cpu/h6280/h6280.h"
 #include "includes/pce.h"
-#include "devices/chd_cd.h"
+#include "imagedev/chd_cd.h"
 #include "sound/msm5205.h"
 #include "sound/cdda.h"
 
@@ -86,7 +86,11 @@ enum {
 static UINT8 pce_io_port_options;
 
 /* system RAM */
-//unsigned char *pce_user_ram;    /* scratch RAM at F8 */
+#if 0 //def MESS
+unsigned char *pce_user_ram;    /* scratch RAM at F8 */
+#else 
+extern unsigned char *pce_user_ram;    /* scratch RAM at F8 */
+#endif
 
 /* CD Unit RAM */
 UINT8 *pce_cd_ram;			/* 64KB RAM from a CD unit */
@@ -178,8 +182,10 @@ static UINT8 *cartridge_ram;
 #define JOY_CLOCK   0x01
 #define JOY_RESET   0x02
 
+#ifdef MESS
 static int joystick_port_select;        /* internal index of joystick ports */
 static int joystick_data_select;        /* which nibble of joystick data we want */
+#endif
 
 /* prototypes */
 static void pce_cd_init( running_machine *machine );
@@ -331,12 +337,12 @@ DEVICE_IMAGE_LOAD(pce_cart)
 	}
 	return 0;
 }
-
+#ifdef MESS
 DRIVER_INIT( pce_mess )
 {
 	pce_io_port_options = PCE_JOY_SIG | CONST_SIG;
 }
-
+#endif
 DRIVER_INIT( tg16 )
 {
 	pce_io_port_options = TG_16_JOY_SIG | CONST_SIG;
@@ -352,6 +358,7 @@ MACHINE_START( pce )
 	pce_cd_init( machine );
 }
 
+#ifdef MESS
 static UINT8 joy_6b_packet[5];
 
 MACHINE_RESET( pce_mess )
@@ -452,7 +459,7 @@ READ8_HANDLER ( pce_mess_joystick_r )
 
 	return (ret);
 }
-
+#endif
 NVRAM_HANDLER( pce )
 {
 	if (read_or_write)
@@ -1251,7 +1258,7 @@ static void pce_cd_init( running_machine *machine )
 	device = machine->device("cdrom");
 	if ( device )
 	{
-		pce_cd.cd = mess_cd_get_cdrom_file(device);
+		pce_cd.cd = cd_get_cdrom_file(device);
 		if ( pce_cd.cd )
 		{
 			pce_cd.toc = cdrom_get_toc( pce_cd.cd );

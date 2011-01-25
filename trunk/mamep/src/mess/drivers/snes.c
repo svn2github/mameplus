@@ -93,8 +93,16 @@ static ADDRESS_MAP_START( dsp_prg_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x0000, 0x07ff) AM_ROM AM_REGION("dspprg", 0)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( dsp_data_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( dsp_data_map, ADDRESS_SPACE_DATA, 16 )
 	AM_RANGE(0x0000, 0x03ff) AM_ROM AM_REGION("dspdata", 0)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( setadsp_prg_map, ADDRESS_SPACE_PROGRAM, 32 )
+	AM_RANGE(0x0000, 0x3fff) AM_ROM AM_REGION("dspprg", 0)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( setadsp_data_map, ADDRESS_SPACE_DATA, 16 )
+	AM_RANGE(0x0000, 0x07ff) AM_ROM AM_REGION("dspdata", 0)
 ADDRESS_MAP_END
 
 /*************************************
@@ -749,6 +757,20 @@ static MACHINE_CONFIG_DERIVED( snesdsp, snes )
 	MCFG_CPU_DATA_MAP(dsp_data_map)
 MACHINE_CONFIG_END
 
+static MACHINE_CONFIG_DERIVED( snesst10, snes )
+
+	MCFG_CPU_ADD("setadsp", UPD96050, 10000000)
+	MCFG_CPU_PROGRAM_MAP(setadsp_prg_map)
+	MCFG_CPU_DATA_MAP(setadsp_data_map)
+MACHINE_CONFIG_END
+
+static MACHINE_CONFIG_DERIVED( snesst11, snes )
+
+	MCFG_CPU_ADD("setadsp", UPD96050, 15000000)
+	MCFG_CPU_PROGRAM_MAP(setadsp_prg_map)
+	MCFG_CPU_DATA_MAP(setadsp_data_map)
+MACHINE_CONFIG_END
+
 static MACHINE_CONFIG_DERIVED( snespal, snes )
 	MCFG_CPU_MODIFY( "maincpu" )
 	MCFG_CPU_CLOCK( MCLK_PAL )
@@ -819,6 +841,34 @@ ROM_START( snesdsp )
 	ROM_REGION( MAX_SNES_CART_SIZE, "cart", ROMREGION_ERASE00 )
 	ROM_REGION( 0x2000, "dspprg", ROMREGION_ERASEFF)
 	ROM_REGION( 0x800, "dspdata", ROMREGION_ERASEFF)
+ROM_END
+
+ROM_START( snesst10 )
+	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
+
+	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
+
+	ROM_REGION( 0x11000, "addons", 0 )		/* add-on chip ROMs (DSP, SFX, etc) */
+	ROM_LOAD( "st010.bin",    0x000000, 0x011000, CRC(aa11ee2d) SHA1(cc1984e989cb94e3dcbb5f99e085b5414e18a017) ) 
+
+	ROM_REGION( MAX_SNES_CART_SIZE, "cart", ROMREGION_ERASE00 )
+	ROM_REGION( 0x10000, "dspprg", ROMREGION_ERASEFF)
+	ROM_REGION( 0x1000, "dspdata", ROMREGION_ERASEFF)
+ROM_END
+
+ROM_START( snesst11 )
+	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
+
+	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
+
+	ROM_REGION( 0x11000, "addons", 0 )		/* add-on chip ROMs (DSP, SFX, etc) */
+	ROM_LOAD( "st011.bin",    0x000000, 0x011000, CRC(34d2952c) SHA1(1375b8c1efc8cae4962b57dfe22f6b78e1ddacc8) ) 
+
+	ROM_REGION( MAX_SNES_CART_SIZE, "cart", ROMREGION_ERASE00 )
+	ROM_REGION( 0x10000, "dspprg", ROMREGION_ERASEFF)
+	ROM_REGION( 0x1000, "dspdata", ROMREGION_ERASEFF)
 ROM_END
 
 ROM_START( snessfx )
@@ -933,6 +983,8 @@ CONS( 1989, snesdsp,  snes,   0,      snesdsp,  snes,  snes_mess,    "Nintendo",
 CONS( 1991, snespdsp, snes,   0,      snespdsp, snes,  snes_mess,    "Nintendo", "Super Nintendo Entertainment System (PAL, w/DSP-x)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 CONS( 1989, snessfx,  snes,   0,      snessfx,  snes,  snes_mess,    "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC, w/SuperFX)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 CONS( 1991, snespsfx, snes,   0,      snespsfx, snes,  snes_mess,    "Nintendo", "Super Nintendo Entertainment System (PAL, w/SuperFX)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+CONS( 1989, snesst10,  snes,   0,      snesst10,  snes,  snes_mess,    "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC, w/ST-010)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+CONS( 1989, snesst11,  snes,   0,      snesst11,  snes,  snes_mess,    "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC, w/ST-011)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 //CONS( 1989, snessa1,  snes,   0,      snessa1,  snes,  snes_mess,    "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC, w/SA-1)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 //CONS( 1991, snespsa1, snes,   0,      snespsa1, snes,  snes_mess,    "Nintendo", "Super Nintendo Entertainment System (PAL, w/SA-1)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 

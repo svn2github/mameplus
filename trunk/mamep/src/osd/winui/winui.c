@@ -2136,7 +2136,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 		filerr = mame_fopen_options(options, SEARCHPATH_RAW, CONFIGNAME ".ini", OPEN_FLAG_READ, &file);
 		if (filerr == FILERR_NONE)
 		{
-			options_parse_ini_file(options, mame_core_file(file), OPTION_PRIORITY_CMDLINE);
+			options_parse_ini_file(options, mame_core_file(file), OPTION_PRIORITY_CMDLINE, FALSE);
 			mame_fclose(file);
 		}
 

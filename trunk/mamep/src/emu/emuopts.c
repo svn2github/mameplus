@@ -181,7 +181,7 @@ const options_entry mame_core_options[] =
 
 	/* misc options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE MISC OPTIONS" },
-	{ "bios",                        NULL,        0,                 "select the system BIOS to use" },
+	{ "bios",                        NULL,        OPTION_DRIVER_ONLY,"select the system BIOS to use" },
 	{ "cheat;c",                     "0",         OPTION_BOOLEAN,    "enable cheat subsystem" },
 	{ "skip_gameinfo",               "0",         OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
 	{ "uifont",                      "default",   0,                 "specify a font to use" },
@@ -197,6 +197,7 @@ const options_entry mame_core_options[] =
 #ifdef USE_IPS
 	{ "ips",                         NULL,        0,                 "ips datafile name"},
 #endif /* USE_IPS */
+	{ "ramsize;ram",				 NULL,		  OPTION_DRIVER_ONLY,"size of RAM (if supported by driver)" },
 
 #ifdef UI_COLOR_DISPLAY
 	/* palette options */
@@ -279,7 +280,7 @@ const char *image_get_device_option(device_image_interface *image)
 	if (options_get_bool(image->device().machine->options(), OPTION_ADDED_DEVICE_OPTIONS))
 	{
 		/* access the option */
-		result = options_get_string(image->device().machine->options(),  image->image_config().instance_name());
+		result = options_get_string_priority(image->device().machine->options(),  image->image_config().instance_name(), OPTION_PRIORITY_DRIVER_INI);
 	}
 	return result;
 }
@@ -319,7 +320,7 @@ void image_add_device_options(core_options *opts, const game_driver *driver)
 		/* add the option */
 		memset(entry, 0, sizeof(entry));
 		entry[0].name = dev_full_name;
-		options_add_entries(opts, entry);
+		options_add_entries(opts, entry, TRUE);
 
 		index++;
 	}
@@ -370,10 +371,5 @@ core_options *mame_options_init(const options_entry *entries)
 
 	/* we need to dynamically add options when the device name is parsed */
 	options_set_option_callback(opts, OPTION_GAMENAME, image_driver_name_callback);
-
-#ifdef MESS
-	mess_options_init(opts);
-#endif /* MESS */
-
 	return opts;
 }

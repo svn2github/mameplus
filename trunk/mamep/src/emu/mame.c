@@ -216,6 +216,10 @@ int mame_execute(osd_interface &osd, core_options *options)
 		global_free(machine);
 		global_free(config);
 		global_machine = NULL;
+		if (firstrun) {
+			// clear flag for added devices
+			options_set_bool(options, OPTION_ADDED_DEVICE_OPTIONS, FALSE, OPTION_PRIORITY_CMDLINE);
+		}
 
 		// reset the options
 		mame_opts = NULL;
@@ -519,7 +523,6 @@ void mame_parse_ini_files(core_options *options, const game_driver *driver)
 	/* if we have a valid game driver, parse game-specific INI files */
 	if (driver != NULL && driver != &GAME_NAME(empty))
 	{
-#ifndef MESS
 		const game_driver *parent = driver_get_clone(driver);
 		const game_driver *gparent = (parent != NULL) ? driver_get_clone(parent) : NULL;
 
@@ -554,7 +557,9 @@ void mame_parse_ini_files(core_options *options, const game_driver *driver)
 			parse_ini_file(options, gparent->name, OPTION_PRIORITY_GPARENT_INI);
 		if (parent != NULL)
 			parse_ini_file(options, parent->name, OPTION_PRIORITY_PARENT_INI);
-#endif	/* MESS */
+
+		options_revert_driver_only(options, OPTION_PRIORITY_CMDLINE);
+
 
 #ifdef USE_IPS
 		//mamep: hack, DO NOT INHERIT IPS CONFIGURATION
@@ -577,7 +582,7 @@ int parse_ini_file(core_options *options, const char *name, int priority)
 	mame_file *file;
 
 	/* update game name so depending callback options could be added */
-	if (priority==OPTION_PRIORITY_DRIVER_INI) {
+	if (priority==OPTION_PRIORITY_DRIVER_INI || priority==OPTION_PRIORITY_SOURCE_INI) {
 		options_force_option_callback(options, OPTION_GAMENAME, name, priority);
 	}
 
@@ -593,7 +598,7 @@ int parse_ini_file(core_options *options, const char *name, int priority)
 
 	/* parse the file and close it */
 	mame_printf_verbose(_("Parsing %s.ini\n"), name);
-	options_parse_ini_file(options, mame_core_file(file), priority);
+	options_parse_ini_file(options, mame_core_file(file), priority, OPTION_PRIORITY_DRIVER_INI);
 	mame_fclose(file);
 	setup_language(options);
 	return TRUE;

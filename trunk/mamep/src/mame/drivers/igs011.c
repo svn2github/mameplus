@@ -39,7 +39,10 @@ To do:
 
 - Implement the I/O part of IGS003 as an 8255
 - IGS003 parametric bitswap protection in lhb2, vbowl (instead of patching the roms)
-  vbowl, vbowlj: trackball support.
+- Interrupt controller at 838000 or a38000 (there's a preliminary implementation for lhb)
+- A few graphical bugs
+
+- vbowl, vbowlj: trackball support.
   Wrong colors in "Game Over" screen.
 
 - lhb: in the copyright screen the '5' in '1995' is drawn by the cpu on layer 5,

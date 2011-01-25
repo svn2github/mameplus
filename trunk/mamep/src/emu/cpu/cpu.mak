@@ -33,39 +33,31 @@ DRCOBJ = \
 	$(CPUOBJ)/drccache.o \
 	$(CPUOBJ)/drcfe.o \
 	$(CPUOBJ)/drcuml.o \
+	$(CPUOBJ)/uml.o \
+	$(CPUOBJ)/i386/i386dasm.o \
+	$(CPUOBJ)/x86log.o \
+	$(CPUOBJ)/drcbex86.o \
+	$(CPUOBJ)/drcbex64.o \
 
 DRCDEPS = \
+	$(CPUSRC)/drcbec.h \
 	$(CPUSRC)/drcbeut.h \
 	$(CPUSRC)/drccache.h \
 	$(CPUSRC)/drcfe.h \
 	$(CPUSRC)/drcuml.h \
 	$(CPUSRC)/drcumlsh.h \
+	$(CPUSRC)/uml.h \
+	$(CPUSRC)/drcbex86.h \
+	$(CPUSRC)/drcbex64.h \
+	$(CPUSRC)/x86emit.h \
 
 # fixme - need to make this work for other target architectures (PPC)
 
 ifndef FORCE_DRC_C_BACKEND
 ifeq ($(PTR64),1)
-
-DRCOBJ += \
-	$(CPUOBJ)/drcbex64.o \
-	$(CPUOBJ)/x86log.o $(CPUOBJ)/i386/i386dasm.o
-
-DRCDEPS += \
-	$(CPUSRC)/x86emit.h
-
-DEFS += -DNATIVE_DRC=drcbe_x64_be_interface
-
+DEFS += -DNATIVE_DRC=drcbe_x64
 else
-
-DRCOBJ += \
-	$(CPUOBJ)/drcbex86.o \
-	$(CPUOBJ)/x86log.o $(CPUOBJ)/i386/i386dasm.o
-
-DRCDEPS += \
-	$(CPUSRC)/x86emit.h
-
-DEFS += -DNATIVE_DRC=drcbe_x86_be_interface
-
+DEFS += -DNATIVE_DRC=drcbe_x86
 endif
 endif
 
@@ -488,7 +480,8 @@ $(CPUOBJ)/sh2/sh2comn.o:  $(CPUSRC)/sh2/sh2comn.c \
 
 $(CPUOBJ)/sh2/sh2drc.o:	$(CPUSRC)/sh2/sh2drc.c \
 			$(CPUSRC)/sh2/sh2.h \
-			$(CPUSRC)/sh2/sh2comn.h
+			$(CPUSRC)/sh2/sh2comn.h \
+			$(DRCDEPS)
 
 $(CPUOBJ)/sh2/sh2fe.o:	$(CPUSRC)/sh2/sh2fe.c \
 			$(CPUSRC)/sh2/sh2.h \
@@ -832,7 +825,7 @@ $(CPUOBJ)/pic16c62x/pic16c62x.o:	$(CPUSRC)/pic16c62x/pic16c62x.c \
 ifneq ($(filter MIPS,$(CPUS)),)
 OBJDIRS += $(CPUOBJ)/mips
 CPUOBJS += $(CPUOBJ)/mips/r3000.o
-CPUOBJS += $(CPUOBJ)/mips/mips3com.o $(CPUOBJ)/mips/mips3fe.o $(CPUOBJ)/mips/mips3drc.o $(DRCOBJ)
+CPUOBJS += $(CPUOBJ)/mips/mips3com.o $(CPUOBJ)/mips/mips3.o $(CPUOBJ)/mips/mips3fe.o $(CPUOBJ)/mips/mips3drc.o $(DRCOBJ)
 CPUOBJS += $(CPUOBJ)/mips/psx.o
 DASMOBJS += $(CPUOBJ)/mips/r3kdasm.o
 DASMOBJS += $(CPUOBJ)/mips/mips3dsm.o
@@ -841,6 +834,9 @@ endif
 
 $(CPUOBJ)/mips/r3000.o:	$(CPUSRC)/mips/r3000.c \
 			$(CPUSRC)/mips/r3000.h
+
+$(CPUOBJ)/mips/mips3.o:	$(CPUSRC)/mips/mips3.h $(CPUSRC)/mips/mips3com.h \
+				$(CPUSRC)/mips/mips3.c
 
 $(CPUOBJ)/mips/mips3com.o:	$(CPUSRC)/mips/mips3.h \
 				$(CPUSRC)/mips/mips3com.h
@@ -1163,6 +1159,7 @@ $(CPUOBJ)/nec/nec.o:	$(CPUSRC)/nec/nec.c \
 						$(CPUSRC)/nec/necea.h \
 						$(CPUSRC)/nec/necinstr.c \
 						$(CPUSRC)/nec/necinstr.h \
+						$(CPUSRC)/nec/necmacro.h \
 						$(CPUSRC)/nec/necmodrm.h \
 						$(CPUSRC)/nec/necpriv.h
 
@@ -1172,6 +1169,7 @@ $(CPUOBJ)/nec/v25.o:	$(CPUSRC)/nec/v25.c \
 						$(CPUSRC)/nec/necinstr.c \
 						$(CPUSRC)/nec/v25instr.c \
 						$(CPUSRC)/nec/v25instr.h \
+						$(CPUSRC)/nec/necmacro.h \
 						$(CPUSRC)/nec/necmodrm.h \
 						$(CPUSRC)/nec/v25priv.h
 
@@ -1768,3 +1766,29 @@ endif
 
 $(CPUOBJ)/superfx/superfx.o:$(CPUSRC)/superfx/superfx.c \
 							$(CPUSRC)/superfx/superfx.h
+
+#-------------------------------------------------
+# Rockwell PPS-4
+#-------------------------------------------------
+
+ifneq ($(filter PPS4,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/pps4
+CPUOBJS += $(CPUOBJ)/pps4/pps4.o
+DASMOBJS += $(CPUOBJ)/pps4/pps4dasm.o
+endif
+
+$(CPUOBJ)/pps4/pps4.o:	$(CPUSRC)/pps4/pps4.c \
+							$(CPUSRC)/pps4/pps4.h
+
+#-------------------------------------------------
+# Hitachi HD61700
+#-------------------------------------------------
+
+ifneq ($(filter HD61700,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/hd61700
+CPUOBJS += $(CPUOBJ)/hd61700/hd61700.o
+DASMOBJS += $(CPUOBJ)/hd61700/hd61700d.o
+endif
+
+$(CPUOBJ)/hd61700/hd61700.o:	$(CPUSRC)/hd61700/hd61700.c \
+								$(CPUSRC)/hd61700/hd61700.h

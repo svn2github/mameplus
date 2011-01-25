@@ -19,11 +19,12 @@
 #include "video/generic.h"
 #include "cpu/arm7/arm7.h"
 #include "cpu/arm7/arm7core.h"
-#include "devices/cartslot.h"
+#include "imagedev/cartslot.h"
 #include "sound/dac.h"
 #include "machine/intelfsh.h"
 #include "audio/gb.h"
 #include "includes/gba.h"
+#include "rendlay.h"
 
 #define VERBOSE_LEVEL	(0)
 
@@ -404,7 +405,7 @@ static TIMER_CALLBACK(timer_expire)
 	case 0:
 	        if (state->timer_regs[1] & 0x40000)
 	        {
-		        state->timer_regs[1] = ( ( state->timer_regs[1] & 0x0000ffff ) + 1 ) & 0x0000ffff;
+		        state->timer_regs[1] = (( ( state->timer_regs[1] & 0x0000ffff ) + 1 ) & 0x0000ffff) | (state->timer_regs[1] & 0xffff0000);
 		        if( ( state->timer_regs[1] & 0x0000ffff ) == 0 )
 		        {
 		                state->timer_regs[1] |= state->timer_reload[1];
@@ -414,7 +415,7 @@ static TIMER_CALLBACK(timer_expire)
 		                }
 		                if( ( state->timer_regs[2] & 0x40000 ) )
 		                {
-			                state->timer_regs[2] = ( ( state->timer_regs[2] & 0x0000ffff ) + 1 ) & 0x0000ffff;
+			                state->timer_regs[2] = (( ( state->timer_regs[2] & 0x0000ffff ) + 1 ) & 0x0000ffff) | (state->timer_regs[2] & 0xffff0000);
 			                if( ( state->timer_regs[2] & 0x0000ffff ) == 0 )
 			                {
 			                        state->timer_regs[2] |= state->timer_reload[2];
@@ -424,7 +425,7 @@ static TIMER_CALLBACK(timer_expire)
 			                        }
 			                        if( ( state->timer_regs[3] & 0x40000 ) )
 			                        {
-				                        state->timer_regs[3] = ( ( state->timer_regs[3] & 0x0000ffff ) + 1 ) & 0x0000ffff;
+				                        state->timer_regs[3] = (( ( state->timer_regs[3] & 0x0000ffff ) + 1 ) & 0x0000ffff) | (state->timer_regs[3] & 0xffff0000);
 				                        if( ( state->timer_regs[3] & 0x0000ffff ) == 0 )
 				                        {
 				                                state->timer_regs[3] |= state->timer_reload[3];
@@ -442,7 +443,7 @@ static TIMER_CALLBACK(timer_expire)
 	case 1:
 	        if (state->timer_regs[2] & 0x40000)
 	        {
-		        state->timer_regs[2] = ( ( state->timer_regs[2] & 0x0000ffff ) + 1 ) & 0x0000ffff;
+		        state->timer_regs[2] = (( ( state->timer_regs[2] & 0x0000ffff ) + 1 ) & 0x0000ffff) | (state->timer_regs[2] & 0xffff0000);
 		        if( ( state->timer_regs[2] & 0x0000ffff ) == 0 )
 		        {
 		                state->timer_regs[2] |= state->timer_reload[2];
@@ -452,10 +453,10 @@ static TIMER_CALLBACK(timer_expire)
 		                }
 		                if( ( state->timer_regs[3] & 0x40000 ) )
 		                {
-		        	        state->timer_regs[3] = ( ( state->timer_regs[3] & 0x0000ffff ) + 1 ) & 0x0000ffff;
+		        	        state->timer_regs[3] = (( ( state->timer_regs[3] & 0x0000ffff ) + 1 ) & 0x0000ffff) | (state->timer_regs[3] & 0xffff0000);
 			                if( ( state->timer_regs[3] & 0x0000ffff ) == 0 )
 			                {
-			                        state->timer_regs[2] |= state->timer_reload[2];
+			                        state->timer_regs[3] |= state->timer_reload[3];
 			                        if( ( state->timer_regs[3] & 0x400000 ) && ( state->IME != 0 ) )
 			                        {
 				                        gba_request_irq( machine, tmr_ints[3] );
@@ -468,7 +469,7 @@ static TIMER_CALLBACK(timer_expire)
 	case 2:
 	        if (state->timer_regs[3] & 0x40000)
 	        {
-		        state->timer_regs[3] = ( ( state->timer_regs[3] & 0x0000ffff ) + 1 ) & 0x0000ffff;
+		        state->timer_regs[3] = (( ( state->timer_regs[3] & 0x0000ffff ) + 1 ) & 0x0000ffff) | (state->timer_regs[3] & 0xffff0000);
 		        if( ( state->timer_regs[3] & 0x0000ffff ) == 0 )
 		        {
 		                state->timer_regs[3] |= state->timer_reload[3];
@@ -715,7 +716,8 @@ static READ32_HANDLER( gba_io_r )
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog(machine, 2, "GBA IO Register Read: BLDALPHA (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BLDALPHA (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, state->BLDALPHA );
+				retval |= state->BLDALPHA << 16;
 			}
 			break;
 		case 0x0054/4:
@@ -849,6 +851,13 @@ static READ32_HANDLER( gba_io_r )
 				// update times for
 				if (state->timer_regs[timer] & 0x800000)
 				{
+					if (state->timer_regs[timer] & 0x00040000)
+					{
+						elapsed = state->timer_regs[timer] & 0xffff;
+					}
+					else
+					{
+
 					time = attotime_to_double(timer_timeelapsed(state->tmr_timer[timer]));
 
 					ticks = (double)(0x10000 - (state->timer_regs[timer] & 0xffff));
@@ -859,6 +868,8 @@ static READ32_HANDLER( gba_io_r )
 					time /= (1.0 / state->timer_hz[timer]);
 
 					elapsed = (UINT32)time;
+					
+					}
 
 //                  printf("elapsed = %x\n", elapsed);
 				}
@@ -1692,6 +1703,20 @@ static WRITE32_HANDLER( gba_io_w )
 			if( (mem_mask) & 0x0000ffff )
 			{
 				verboselog(machine, 2, "GBA IO Register Write: SIOCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				// normal mode ?
+				if (((state->RCNT & 0x8000) == 0) && ((data & 0x2000) == 0))
+				{
+					// start ?
+					if (((state->SIOCNT & 0x0080) == 0) && ((data & 0x0080) != 0))
+					{
+						data &= ~0x0080;
+						// request interrupt ?
+						if (data & 0x4000)
+						{
+							gba_request_irq( machine, INT_SIO);
+						}
+					}
+				}
 				state->SIOCNT = ( state->SIOCNT & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
@@ -2321,12 +2346,165 @@ static WRITE32_HANDLER( eeprom_w )
 	}
 }
 
+#define	GBA_CHIP_EEPROM    (1 << 0)
+#define	GBA_CHIP_SRAM      (1 << 1)
+#define	GBA_CHIP_FLASH     (1 << 2)
+#define	GBA_CHIP_FLASH_1M  (1 << 3)
+#define	GBA_CHIP_RTC       (1 << 4)
+#define	GBA_CHIP_FLASH_512 (1 << 5)
+#define	GBA_CHIP_EEPROM_8K (1 << 6)
+
+static UINT32 gba_detect_chip( UINT8 *data, int size)
+{
+	int i;
+	UINT32 chip = 0;
+	for (i = 0; i < size; i++)
+	{
+		if (!memcmp(&data[i], "EEPROM_", 7))
+		{
+			chip |= GBA_CHIP_EEPROM;
+		}
+		else if ((!memcmp(&data[i], "SRAM_", 5))) // || (!memcmp(&data[i], "ADVANCEWARS", 11))) //advance wars 1 & 2 has SRAM, but no "SRAM_" string can be found inside the ROM space
+		{
+			chip |= GBA_CHIP_SRAM;
+		}
+		else if (!memcmp(&data[i], "FLASH1M_", 8))
+		{
+			chip |= GBA_CHIP_FLASH_1M;
+		}
+		else if (!memcmp(&data[i], "FLASH512_", 9))
+		{
+			chip |= GBA_CHIP_FLASH_512;
+		}
+		else if (!memcmp(&data[i], "FLASH_", 6))
+		{
+			chip |= GBA_CHIP_FLASH;
+		}
+		else if (!memcmp(&data[i], "SIIRTC_V", 8))
+		{
+			chip |= GBA_CHIP_RTC;
+		}
+	}
+	return chip;
+}
+
+static UINT32 gba_fix_wrong_chip(running_machine *machine, UINT32 cart_size, UINT32 chip)
+{
+	UINT8 game_code[4] = { 0 };
+	UINT8 *ROM = machine->region("cartridge")->base();
+
+	if (cart_size >= 0xAC + 4)
+	{
+		memcpy(game_code, ROM + 0xAC, 4);
+	}
+	
+	{
+		char s[256], *p = s;
+		if (chip == 0) p += sprintf( p, " NONE");
+		if (chip & GBA_CHIP_EEPROM) p += sprintf( p, " EEPROM");
+		if (chip & GBA_CHIP_EEPROM_8K) p += sprintf( p, " EEPROM_8K");
+		if (chip & GBA_CHIP_FLASH) p += sprintf( p, " FLASH");
+		if (chip & GBA_CHIP_FLASH_1M) p += sprintf( p, " FLASH_1M");
+		if (chip & GBA_CHIP_FLASH_512) p += sprintf( p, " FLASH_512");
+		if (chip & GBA_CHIP_SRAM) p += sprintf( p, " SRAM");
+		if (chip & GBA_CHIP_RTC) p += sprintf( p, " RTC");
+		mame_printf_info( "GBA: Detected%s\n", s);
+	}
+	
+	{
+		int count = 0;
+		if (chip & GBA_CHIP_EEPROM) count++;
+		if (chip & GBA_CHIP_EEPROM_8K) count++;
+		if (chip & GBA_CHIP_FLASH) count++;
+		if (chip & GBA_CHIP_FLASH_1M) count++;
+		if (chip & GBA_CHIP_FLASH_512) count++;
+		if (chip & GBA_CHIP_SRAM) count++;
+
+		// fix for games which return more than one kind of chip: either it is one of the known titles, or we default to no battery
+		if (count > 1)
+		{
+			chip &= ~(GBA_CHIP_EEPROM | GBA_CHIP_EEPROM_8K | GBA_CHIP_FLASH | GBA_CHIP_FLASH_1M | GBA_CHIP_FLASH_512 | GBA_CHIP_SRAM);
+			if      (!memcmp(game_code, "ABFJ", 4)) chip |= GBA_CHIP_SRAM;      // 0059 - Breath of Fire - Ryuu no Senshi (JPN)
+			else if (!memcmp(game_code, "AHMJ", 4)) chip |= GBA_CHIP_EEPROM;    // 0364 - Dai-Mahjong (JPN)
+			else if (!memcmp(game_code, "A2GJ", 4)) chip |= GBA_CHIP_EEPROM_8K; // 0399 - Advance GT2 (JPN)
+			else if (!memcmp(game_code, "AK9E", 4)) chip |= GBA_CHIP_EEPROM;    // 0479 - Medabots AX - Rokusho Version (USA)
+			else if (!memcmp(game_code, "AK8E", 4)) chip |= GBA_CHIP_EEPROM;    // 0480 - Medabots AX - Metabee Version (USA)
+			else if (!memcmp(game_code, "AK9P", 4)) chip |= GBA_CHIP_EEPROM;    // 0515 - Medabots AX - Rokusho Version (EUR)
+			else if (!memcmp(game_code, "AGIJ", 4)) chip |= GBA_CHIP_EEPROM;    // 0548 - Medarot G - Kuwagata Version (JPN)
+			else if (!memcmp(game_code, "A3DJ", 4)) chip |= GBA_CHIP_EEPROM;    // 0567 - Disney Sports - American Football (JPN)
+			else if (!memcmp(game_code, "AF7J", 4)) chip |= GBA_CHIP_EEPROM;    // 0605 - Tokimeki Yume Series 1 - Ohanaya-san ni Narou! (JPN)
+			else if (!memcmp(game_code, "AH7J", 4)) chip |= GBA_CHIP_EEPROM_8K; // 0617 - Nakayoshi Pet Advance Series 1 - Kawaii Hamster (JPN)
+			else if (!memcmp(game_code, "AGHJ", 4)) chip |= GBA_CHIP_EEPROM;    // 0620 - Medarot G - Kabuto Version (JPN)
+			else if (!memcmp(game_code, "AR8E", 4)) chip |= GBA_CHIP_SRAM;      // 0727 - Rocky (USA)
+			else if (!memcmp(game_code, "ALUE", 4)) chip |= GBA_CHIP_EEPROM;    // 0751 - Super Monkey Ball Jr. (USA)
+			else if (!memcmp(game_code, "A3DE", 4)) chip |= GBA_CHIP_EEPROM;    // 0800 - Disney Sports - Football (USA)
+			else if (!memcmp(game_code, "A87J", 4)) chip |= GBA_CHIP_EEPROM;    // 0817 - Ohanaya-San Monogatari GBA (JPN)
+			else if (!memcmp(game_code, "A56J", 4)) chip |= GBA_CHIP_EEPROM;    // 0827 - DokiDoki Cooking Series 1 - Komugi-chan no Happy Cake (JPN)
+			else if (!memcmp(game_code, "AUSJ", 4)) chip |= GBA_CHIP_FLASH;     // 0906 - One Piece - Mezase! King of Berries (JPN)
+			else if (!memcmp(game_code, "ANTJ", 4)) chip |= GBA_CHIP_SRAM;      // 0950 - Nippon Pro Mahjong Renmei Kounin - Tetsuman Advance (JPN)
+			else if (!memcmp(game_code, "A8OJ", 4)) chip |= GBA_CHIP_EEPROM;    // 0988 - DokiDoki Cooking Series 2 - Gourmet Kitchen - Suteki na Obentou (JPN)
+			else if (!memcmp(game_code, "AZWE", 4)) chip |= GBA_CHIP_SRAM;      // 0990 - WarioWare, Inc. - Mega Microgame$! (USA)
+			else
+			{
+				mame_printf_warning( "GBA: NVRAM is disabled because multiple NVRAM chips were detected!\n");
+			}
+		}
+	}
+	
+	// fix for a few games detected with the wrong nvram
+
+	// "Bomberman Max 2", "Broken Sword", "Custom Robo GX" and "Classic NES Series - Excitebike" require 14 bit EEPROM addressing
+	if (chip & GBA_CHIP_EEPROM)
+	{
+		if ((!memcmp(game_code, "AMHE", 4)) || (!memcmp(game_code, "AMYJ", 4)) || (!memcmp(game_code, "AMYE", 4))
+			|| (!memcmp(game_code, "AMHP", 4)) || (!memcmp(game_code, "AMHJ", 4)) || (!memcmp(game_code, "AMYP", 4))
+			|| (!memcmp(game_code, "ABJE", 4)) || (!memcmp(game_code, "ABJP", 4)) || (!memcmp(game_code, "ARJJ", 4))
+			|| (!memcmp(game_code, "FEBE", 4)))
+		{
+			chip = (chip & ~GBA_CHIP_EEPROM) | GBA_CHIP_EEPROM_8K;
+		}
+	}
+	
+	return chip;
+}
+
+typedef struct _gba_pcb  gba_pcb;
+struct _gba_pcb
+{
+	const char              *pcb_name;
+	int                     pcb_id;
+};
+
+// Here, we take the feature attribute from .xml (i.e. the PCB name) and we assign a unique ID to it
+static const gba_pcb pcb_list[] =
+{
+	{"GBA-EEPROM",    GBA_CHIP_EEPROM},
+	{"GBA-SRAM",      GBA_CHIP_SRAM},
+	{"GBA-FLASH",     GBA_CHIP_FLASH},
+	{"GBA-FLASH-1M",  GBA_CHIP_FLASH_1M},
+	{"GBA-RTC",       GBA_CHIP_RTC},
+	{"GBA-FLASH-512", GBA_CHIP_FLASH_512},
+	{"GBA-EEPROM-8K", GBA_CHIP_EEPROM_8K}
+};
+
+static int gba_get_pcb_id(const char *pcb)
+{
+	int	i;
+	
+	for (i = 0; i < ARRAY_LENGTH(pcb_list); i++)
+	{
+		if (!mame_stricmp(pcb_list[i].pcb_name, pcb))
+			return pcb_list[i].pcb_id;
+	}
+	
+	return 0;
+}
+
 static DEVICE_IMAGE_LOAD( gba_cart )
 {
 	UINT8 *ROM = image.device().machine->region("cartridge")->base();
-	int i;
 	UINT32 cart_size;
-	UINT8 game_code[4] = { 0 };
+	UINT32 chip = 0;
 	gba_state *state = image.device().machine->driver_data<gba_state>();
 
 	state->nvsize = 0;
@@ -2336,86 +2514,84 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 	if (image.software_entry() == NULL)
 	{
 		cart_size = image.length();
-		image.fread( ROM, cart_size);
+		image.fread(ROM, cart_size);
 	}
 	else
 	{
+		const char *pcb_name = "";
 		cart_size = image.get_software_region_length("rom");
 		memcpy(ROM, image.get_software_region("rom"), cart_size);
+		
+		if ((pcb_name = image.get_feature("pcb_type")) == NULL)
+			chip = 0;
+		else
+			chip = gba_get_pcb_id(pcb_name);
+		
+		mame_printf_info("Type from xml: %s\n", pcb_name);
 	}
 
-	if (cart_size >= 0xAC + 4)
+	if (!chip)
 	{
-		memcpy(game_code, ROM + 0xAC, 4);
+		// detect nvram based on strings inside the file
+		chip = gba_detect_chip(ROM, cart_size);
+	
+		// fix the previous value when possible
+		chip = gba_fix_wrong_chip(image.device().machine, cart_size, chip);
+	}
+	
+	if ((chip & GBA_CHIP_EEPROM) || (chip & GBA_CHIP_EEPROM_8K))
+	{
+		state->nvptr = (UINT8 *)&state->gba_eeprom;
+		state->nvsize = 0x2000;
+
+		state->eeprom_addr_bits = (chip & GBA_CHIP_EEPROM_8K) ? 14 : 6;
+
+		if (cart_size <= (16 * 1024 * 1024))
+		{
+			memory_install_read32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xd000000, 0xdffffff, 0, 0, eeprom_r);
+			memory_install_write32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xd000000, 0xdffffff, 0, 0, eeprom_w);
+		}
+		else
+		{
+			memory_install_read32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xdffff00, 0xdffffff, 0, 0, eeprom_r);
+			memory_install_write32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xdffff00, 0xdffffff, 0, 0, eeprom_w);
+		}
 	}
 
-	for (i = 0; i < cart_size; i++)
+	if (chip & GBA_CHIP_SRAM)
 	{
-		if (!memcmp(&ROM[i], "EEPROM_", 7))
-		{
-			state->nvptr = (UINT8 *)&state->gba_eeprom;
-			state->nvsize = 0x2000;
+		state->nvptr = (UINT8 *)&state->gba_sram;
+		state->nvsize = 0x10000;
 
-			// "Bomberman Max 2" and "Broken Sword" use 14 bit addressing
-			if ((!memcmp(game_code, "AMHE", 4)) || (!memcmp(game_code, "AMYJ", 4)) || (!memcmp(game_code, "AMYE", 4)) ||
-				(!memcmp(game_code, "AMHP", 4)) || (!memcmp(game_code, "AMHJ", 4)) || (!memcmp(game_code, "AMYP", 4)) ||
-				(!memcmp(game_code, "ABJE", 4)) || (!memcmp(game_code, "ABJP", 4)))
-			{
-				state->eeprom_addr_bits = 14;
-			}
-			else
-			{
-				state->eeprom_addr_bits = 6;
-			}
+		memory_install_read32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe00ffff, 0, 0, sram_r);
+		memory_install_write32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe00ffff, 0, 0, sram_w);
+	}
 
-			if (cart_size <= (16 * 1024 * 1024))
-			{
-				memory_install_read32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xd000000, 0xdffffff, 0, 0, eeprom_r);
-				memory_install_write32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xd000000, 0xdffffff, 0, 0, eeprom_w);
-			}
-			else
-			{
-				memory_install_read32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xdffff00, 0xdffffff, 0, 0, eeprom_r);
-				memory_install_write32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xdffff00, 0xdffffff, 0, 0, eeprom_w);
-			}
-			break;
-		}
-		else if ((!memcmp(&ROM[i], "SRAM_", 5)) || (!memcmp(&ROM[i], "ADVANCEWARS", 11))) //advance wars 1 & 2 has SRAM, but no "SRAM_" string can be found inside the ROM space
-		{
-			state->nvptr = (UINT8 *)&state->gba_sram;
-			state->nvsize = 0x10000;
+	if (chip & GBA_CHIP_FLASH_1M)
+	{
+		state->nvptr = NULL;
+		state->nvsize = 0;
+		state->flash_size = 0x20000;
+		state->flash_mask = 0x1ffff/4;
 
-			memory_install_read32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe00ffff, 0, 0, sram_r);
-			memory_install_write32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe00ffff, 0, 0, sram_w);
-			break;
-		}
-		else if (!memcmp(&ROM[i], "FLASH1M_", 8))
-		{
-			state->nvptr = NULL;
-			state->nvsize = 0;
-			state->flash_size = 0x20000;
-			state->flash_mask = 0x1ffff/4;
+		memory_install_read32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe01ffff, 0, 0, flash_r);
+		memory_install_write32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe01ffff, 0, 0, flash_w);
+	}
 
-			memory_install_read32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe01ffff, 0, 0, flash_r);
-			memory_install_write32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe01ffff, 0, 0, flash_w);
-			break;
-		}
-		else if ((!memcmp(&ROM[i], "FLASH", 5)) && (memcmp(game_code, "BYHE", 4))) // "Backyard Hockey" false positive
-		{
-			state->nvptr = NULL;
-			state->nvsize = 0;
-			state->flash_size = 0x10000;
-			state->flash_mask = 0xffff/4;
+	if ((chip & GBA_CHIP_FLASH) || (chip & GBA_CHIP_FLASH_512))
+	{
+		state->nvptr = NULL;
+		state->nvsize = 0;
+		state->flash_size = 0x10000;
+		state->flash_mask = 0xffff/4;
 
-			memory_install_read32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe00ffff, 0, 0, flash_r);
-			memory_install_write32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe00ffff, 0, 0, flash_w);
-			break;
-		}
-		else if (!memcmp(&ROM[i], "SIIRTC_V", 8))
-		{
-			mame_printf_verbose("game has RTC\n");
-			break;
-		}
+		memory_install_read32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe00ffff, 0, 0, flash_r);
+		memory_install_write32_handler(cpu_get_address_space(image.device().machine->device("maincpu"), ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe00ffff, 0, 0, flash_w);
+	}
+
+	if (chip & GBA_CHIP_RTC)
+	{
+		mame_printf_verbose("game has RTC\n");
 	}
 
 	// if save media was found, reload it
@@ -2434,13 +2610,9 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 	if (state->flash_size > 0)
 	{
 		if (state->flash_size == 0x10000)
-		{
 			state->mFlashDev = image.device().machine->device<intelfsh8_device>("pflash");
-		}
 		else
-		{
 			state->mFlashDev = image.device().machine->device<intelfsh8_device>("sflash");
-		}
 	}
 
 	// mirror the ROM

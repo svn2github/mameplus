@@ -510,7 +510,7 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 					ui_set_handler(handler_messagebox_ok, 0);
 					if (machine->gamedrv->flags & (GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS | GAME_REQUIRES_ARTWORK | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NO_SOUND))
 						messagebox_backcolor = UI_YELLOW_COLOR;
-					if (machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
+					if (machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_MECHANICAL))
 						messagebox_backcolor = UI_RED_COLOR;
 				}
 				break;
@@ -1402,6 +1402,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 {
 #define WARNING_FLAGS (	GAME_NOT_WORKING | \
 						GAME_UNEMULATED_PROTECTION | \
+						GAME_MECHANICAL | \
 						GAME_WRONG_COLORS | \
 						GAME_IMPERFECT_COLORS | \
 						GAME_REQUIRES_ARTWORK | \
@@ -1409,6 +1410,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 						GAME_IMPERFECT_SOUND |  \
 						GAME_IMPERFECT_GRAPHICS | \
 						GAME_NO_COCKTAIL)
+
 	int i;
 
 	string.reset();
@@ -1450,8 +1452,8 @@ static astring &warnings_string(running_machine *machine, astring &string)
 		if (machine->gamedrv->flags & GAME_REQUIRES_ARTWORK)
 			string.cat(_("The game requires external artwork files\n"));
 
-		/* if there's a NOT WORKING or UNEMULATED PROTECTION warning, make it stronger */
-		if (machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
+		/* if there's a NOT WORKING, UNEMULATED PROTECTION or GAME MECHANICAL warning, make it stronger */
+		if (machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_MECHANICAL))
 		{
 			const game_driver *maindrv;
 			const game_driver *clone_of;
@@ -1461,8 +1463,11 @@ static astring &warnings_string(running_machine *machine, astring &string)
 			if (machine->gamedrv->flags & GAME_UNEMULATED_PROTECTION)
 				string.cat(_("The game has protection which isn't fully emulated.\n"));
 			if (machine->gamedrv->flags & GAME_NOT_WORKING)
-				string.cat(_("THIS " CAPGAMENOUN " DOESN'T WORK. The emulation for this game is not yet complete. "
-									 "There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n"));
+				string.cat(_("\nTHIS " CAPGAMENOUN " DOESN'T WORK. The emulation for this game is not yet complete. "
+					 "There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n"));
+			if (machine->gamedrv->flags & GAME_MECHANICAL)
+				string.cat(_("\nCertain elements of this " GAMENOUN " cannot be emulated as it requires actual physical interaction or consists of mechanical devices. "
+					 "It is not possible to fully play this " GAMENOUN ".\n"));
 
 			/* find the parent of this driver */
 			clone_of = driver_get_clone(machine->gamedrv);
@@ -1475,7 +1480,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 			foundworking = FALSE;
 			for (i = 0; drivers[i] != NULL; i++)
 				if (drivers[i] == maindrv || driver_get_clone(drivers[i]) == maindrv)
-					if ((drivers[i]->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION)) == 0)
+					if ((drivers[i]->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_MECHANICAL)) == 0)
 					{
 						/* this one works, add a header and display the name of the clone */
 						if (!foundworking)
@@ -1682,22 +1687,6 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, render_contain
 	}
 
 	return state;
-}
-
-
-/*-------------------------------------------------
-    ui_use_newui - determines if "newui" is in use
--------------------------------------------------*/
-
-int ui_use_newui( void )
-{
-	#ifdef MESS
-	#if (defined(WIN32) || defined(_MSC_VER)) && !defined(SDLMAME_WIN32)
-		if (options_get_bool(mame_options(), "newui"))
-			return TRUE;
-	#endif
-	#endif
-	return FALSE;
 }
 
 /*-------------------------------------------------
@@ -1948,13 +1937,7 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 
 	if (ui_disabled) return ui_disabled;
 
-	/* if the user pressed ESC, stop the emulation (except in MESS with newui, where ESC toggles the menubar) */
-#ifdef MAMEMESS
-	//mamep: we want to use both MESS-newui and in-game-UI
 	if (ui_input_pressed(machine, IPT_UI_CANCEL))
-#else
-	if (ui_input_pressed(machine, IPT_UI_CANCEL) && !ui_use_newui())
-#endif
 #ifdef CONFIRM_QUIT
 		return ui_set_handler(handler_confirm_quit, 0);
 #else /* CONFIRM_QUIT */
@@ -1962,12 +1945,7 @@ static UINT32 handler_ingame(running_machine *machine, render_container *contain
 #endif /* CONFIRM_QUIT */
 
 	/* turn on menus if requested */
-#ifdef MAMEMESS
-	//mamep: we want to use both MESS-newui and in-game-UI
 	if (ui_input_pressed(machine, IPT_UI_CONFIGURE))
-#else
-	if (ui_input_pressed(machine, IPT_UI_CONFIGURE) && !ui_use_newui())
-#endif
 		return ui_set_handler(ui_menu_ui_handler, 0);
 
 	/* if the on-screen display isn't up and the user has toggled it, turn it on */

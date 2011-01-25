@@ -118,6 +118,8 @@ $(DRIVERS)/neogeo.o:	$(LAYOUT)/neogeo.lh
 
 $(DRIVERS)/cps3.o:	$(LAYOUT)/cps3.lh
 
+$(MAMEOBJ)/mamedriv.o:	$(LAYOUT)/pinball.lh
+
 
 
 #-------------------------------------------------

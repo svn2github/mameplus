@@ -60,6 +60,7 @@
 #define OPTION_HEADER				0x0008			/* text-only header */
 #define OPTION_INTERNAL				0x0010			/* option is internal-only */
 #define OPTION_REPEATS				0x0020			/* unadorned option repeats */
+#define OPTION_DRIVER_ONLY			0x0040			/* remove value if found in lower levels */
 
 /* option priorities */
 #define OPTION_PRIORITY_DEFAULT		0				/* defaults are at 0 priority */
@@ -138,6 +139,9 @@ void options_set_output_callback(core_options *opts, options_message msgtype, vo
 /* revert options at or below a certain priority back to their defaults */
 void options_revert(core_options *opts, int priority);
 
+/* revert options that are marked as driver only */
+void options_revert_driver_only(core_options *opts, int priority);
+
 /* copy one collection of options into another */
 int options_copy(core_options *dest_opts, core_options *src_opts);
 
@@ -151,6 +155,9 @@ int options_equal(core_options *opts1, core_options *opts2);
 /* add a set of entries to an options collection */
 int options_add_entries(core_options *opts, const options_entry *entrylist);
 
+/* add a set of entries to an options collection, and force recreation if true */
+int options_add_entries(core_options *opts, const options_entry *entrylist, int force);
+
 /* set the default value for a particular option entry */
 int options_set_option_default_value(core_options *opts, const char *name, const char *defvalue);
 
@@ -162,13 +169,13 @@ int options_set_option_callback(core_options *opts, const char *name, void (*cal
 /* ----- option data extraction ----- */
 
 /* parse option data from a command line */
-int options_parse_command_line(core_options *opts, int argc, char **argv, int priority);
+int options_parse_command_line(core_options *opts, int argc, char **argv, int priority, int show_error);
 
 /*  set option value and execute callback call */
 int options_force_option_callback(core_options *opts, const char *optionname, const char *newval, int priority);
 
 /* parse option data from an INI file */
-int options_parse_ini_file(core_options *opts, core_file *inifile, int priority);
+int options_parse_ini_file(core_options *opts, core_file *inifile, int priority, int ignoreprio);
 
 
 
@@ -192,6 +199,9 @@ void options_output_help(core_options *opts, void (*output)(const char *s));
 
 /* read an option as a string */
 const char *options_get_string(core_options *opts, const char *name);
+
+/* read an option as a string with priority */
+const char *options_get_string_priority(core_options *opts, const char *name, int priority);
 
 /* read an option as a boolean */
 int options_get_bool(core_options *opts, const char *name);

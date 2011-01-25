@@ -554,9 +554,6 @@ void AddOptions(core_options *opts, const options_entry *entrylist, BOOL is_glob
 #ifdef MAMEMESS //mamep: moved from ../mess/osd/winui/optionsms.c
 static void MessSetupGameOptions(core_options *opts, int driver_index)
 {
-	BOOL is_global = (driver_index == OPTIONS_TYPE_GLOBAL);
-	AddOptions(opts, mess_core_options, is_global);
-
 	if (driver_index >= 0)
 	{
 		image_add_device_options(opts, drivers[driver_index]);
@@ -2761,7 +2758,7 @@ static file_error LoadSettingsFile(core_options *opts, const char *filename)
 	filerr = core_fopen(filename, OPEN_FLAG_READ, &file);
 	if (filerr == FILERR_NONE)
 	{
-		options_parse_ini_file(opts, file, OPTION_PRIORITY_CMDLINE);
+		options_parse_ini_file(opts, file, OPTION_PRIORITY_CMDLINE, FALSE);
 		core_fclose(file);
 	}
 	return filerr;

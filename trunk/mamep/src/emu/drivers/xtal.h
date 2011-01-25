@@ -67,6 +67,7 @@ enum
 	XTAL_5_7143MHz		= 5714300,		/* Cidelsa Destroyer */
 	XTAL_5_9904MHz		= 5990400,		/* Luxor ABC 800 keyboard */
 	XTAL_6MHz   		= 6000000,		/* American Poker II */
+	XTAL_6_5MHz 		= 6500000,		/* Jupiter Ace */
 	XTAL_6_144MHz		= 6144000,		/* Used on Alpha Denshi early 80's games sound board */
 	XTAL_7MHz   		= 7000000,		/* Jaleco Mega System PCBs */
 	XTAL_7_15909MHz 	= 7159090,		/* Blood Bros */
@@ -135,6 +136,7 @@ enum
 	XTAL_21_4772MHz 	= 21477270,		/* BMC bowling, some Data East 90's games, Vtech Socrates; NTSC color subcarrier * 6 */
 	XTAL_22MHz  		= 22000000,
 	XTAL_22_1184MHz		= 22118400,
+	XTAL_23_9616MHz		= 23961600,		/* Osborne 4 (Vixen) */
 	XTAL_24MHz  		= 24000000,		/* Mario, 80's Data East games, 80's Konami games */
 	XTAL_24_576MHz  	= 24576000,		/* Pole Position h/w, Model 3 CPU board */
 	XTAL_24_8832MHz 	= 24883200,		/* DEC VT100 */

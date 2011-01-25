@@ -17,6 +17,7 @@ EMUAUDIO = $(EMUOBJ)/audio
 EMUDRIVERS = $(EMUOBJ)/drivers
 EMULAYOUT = $(EMUOBJ)/layout
 EMUMACHINE = $(EMUOBJ)/machine
+EMUIMAGEDEV = $(EMUOBJ)/imagedev
 EMUVIDEO = $(EMUOBJ)/video
 
 OBJDIRS += \
@@ -28,6 +29,7 @@ OBJDIRS += \
 	$(EMUOBJ)/drivers \
 	$(EMUOBJ)/machine \
 	$(EMUOBJ)/layout \
+	$(EMUOBJ)/imagedev \
 	$(EMUOBJ)/video \
 
 OSDSRC = $(SRC)/osd
@@ -204,6 +206,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/pic8259.o \
 	$(EMUMACHINE)/pit8253.o \
 	$(EMUMACHINE)/pd4990a.o \
+	$(EMUMACHINE)/ram.o \
 	$(EMUMACHINE)/roc10937.o \
 	$(EMUMACHINE)/rp5h01.o \
 	$(EMUMACHINE)/rtc65271.o \
@@ -250,7 +253,22 @@ EMUVIDEOOBJS = \
 	$(EMUVIDEO)/vector.o \
 	$(EMUVIDEO)/voodoo.o \
 
-LIBEMUOBJS = $(EMUOBJS) $(EMUSOUNDOBJS) $(EMUAUDIOOBJS) $(EMUDRIVEROBJS) $(EMUMACHINEOBJS) $(EMUVIDEOOBJS)
+EMUIMAGEDEVOBJS = \
+	$(EMUIMAGEDEV)/bitbngr.o	\
+	$(EMUIMAGEDEV)/cartslot.o	\
+	$(EMUIMAGEDEV)/cassette.o	\
+	$(EMUIMAGEDEV)/cassimg.o	\
+	$(EMUIMAGEDEV)/chd_cd.o		\
+	$(EMUIMAGEDEV)/flopdrv.o	\
+	$(EMUIMAGEDEV)/flopimg.o	\
+	$(EMUIMAGEDEV)/harddriv.o	\
+	$(EMUIMAGEDEV)/multcart.o	\
+	$(EMUIMAGEDEV)/printer.o	\
+	$(EMUIMAGEDEV)/snapquik.o	\
+	$(EMUIMAGEDEV)/wavfile.o	\
+
+
+LIBEMUOBJS = $(EMUOBJS) $(EMUSOUNDOBJS) $(EMUAUDIOOBJS) $(EMUDRIVEROBJS) $(EMUMACHINEOBJS) $(EMUIMAGEDEVOBJS) $(EMUVIDEOOBJS)
 
 $(LIBEMU): $(LIBEMUOBJS)
 
@@ -310,5 +328,7 @@ $(EMUOBJ)/rendlay.o:	$(EMULAYOUT)/dualhovu.lh \
 						$(EMULAYOUT)/hoffe457.lh \
 						$(EMULAYOUT)/hoffff20.lh \
 						$(EMULAYOUT)/voffff20.lh \
+						$(EMULAYOUT)/lcd.lh \
+						$(EMULAYOUT)/lcd_rot.lh \
 
 $(EMUOBJ)/video.o:		$(EMULAYOUT)/snap.lh

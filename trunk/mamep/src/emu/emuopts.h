@@ -174,6 +174,7 @@
 #define OPTION_CHEAT				"cheat"
 #define OPTION_SKIP_GAMEINFO		"skip_gameinfo"
 #define OPTION_UI_FONT				"uifont"
+#define OPTION_RAMSIZE				"ramsize"
 #ifdef CONFIRM_QUIT
 #define OPTION_CONFIRM_QUIT			"confirm_quit"
 #endif /* CONFIRM_QUIT */
