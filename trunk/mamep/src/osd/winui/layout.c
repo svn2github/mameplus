@@ -89,6 +89,8 @@ extern const FOLDERDATA g_folderData[] =
 	{TEXT("Save State"),      "savestate",         FOLDER_SAVESTATE,    IDI_FOLDER,               0,             0,            NULL,                       DriverSupportsSaveState,  TRUE },
 	{TEXT("BIOS"),            "bios",              FOLDER_BIOS,         IDI_FOLDER,               0,             0,            NULL,                       DriverIsBios,  TRUE },
 #endif /* !USE_MORE_FOLDER_INFO */
+	{TEXT("Mechanical"),      "mechanical",        FOLDER_MECHANICAL,   IDI_FOLDER,               0,             0,            NULL,                       DriverIsMechanical,      TRUE },
+	{TEXT("Non Mechanical"),  "nonmechanical",     FOLDER_NONMECHANICAL,IDI_FOLDER,               0,             0,            NULL,                       DriverIsMechanical,      FALSE },
 	{ NULL }
 };
 
@@ -105,6 +107,7 @@ extern const FILTER_ITEM g_filterList[] =
 	{ F_AVAILABLE,    IDC_FILTER_AVAILABLE,   FilterAvailable, TRUE },
 	{ F_HORIZONTAL,   IDC_FILTER_HORIZONTAL,  DriverIsVertical, FALSE },
 	{ F_VERTICAL,     IDC_FILTER_VERTICAL,    DriverIsVertical, TRUE },
+	{ F_MECHANICAL,   IDC_FILTER_MECHANICAL,  DriverIsMechanical, TRUE },
 	{ 0 }
 };
 

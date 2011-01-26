@@ -351,6 +351,7 @@
 #define IDC_SNAPSIZEHEIGHT              1251
 #define IDC_SNAPSIZETEXT                0    // N/A
 #define IDC_SNAPSIZEX                   1253
+#define IDC_FILTER_MECHANICAL           1254
 
 #define IDC_PRESCALETEXT                1261
 #define IDC_DISPLAY_SPLASH_SCREEN       1262 // USE_SHOW_SPLASH_SCREEN
