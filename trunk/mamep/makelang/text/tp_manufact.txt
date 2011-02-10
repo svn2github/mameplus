@@ -162,6 +162,10 @@ Alta
 Altron
 
 
+# A.G. Soccer Ball
+Alvin G
+
+
 # Amatic Unknown Slots Game
 Amatic Trading GmbH
 
@@ -258,6 +262,10 @@ Aruze
 Ashby Computers and Graphics Ltd.
 
 
+# Black Sheep Squadron
+Astro
+
+
 # Show Hand (Italy)
 Astro Corp.
 
@@ -298,6 +306,10 @@ BMC
 BS Electronics
 
 
+# Continental (Bingo)
+Bally
+
+
 # Jump Shot
 Bally Midway
 
@@ -330,6 +342,10 @@ Barko Corp.
 Bee-Oh
 
 
+# Cosmic Flash
+Bell Games
+
+
 # Daisyarin [BET] (Japan)
 Best System
 
@@ -340,6 +356,10 @@ Blastar
 
 # Mega Double Poker (conversion kit, set 1)
 Blitz System Inc.
+
+
+# Mega Double Poker Jackpot (Ver. 1.26)
+Blitz Systems Inc.
 
 
 # Golden Poker Double Up (Big Boy)
@@ -436,6 +456,10 @@ Century?
 
 # Neo-Demo (Homebrew)
 Chaos
+
+
+# L'Hexagone
+Christian Tabart
 
 
 # Time Limit
@@ -650,12 +674,16 @@ Dooyong
 Dream Island
 
 
-# DRHL Poker (v.2.89)
+# Drews Revenge (v.2.89, set 1)
 Drews Inc.
 
 
 # The Masters of Kin
 Du Tech
+
+
+# The Hermit (Ver. 1.14)
+Dugamex
 
 
 # Buccaneers (set 1)
@@ -830,6 +858,10 @@ Entertainment Enterprises
 Entertainment Sciences
 
 
+# Bank Robbery (Ver. 3.32)
+Entertainment Technology Corp.
+
+
 # Ruleta RE-900
 Entretenimientos GEMINIS
 
@@ -866,6 +898,10 @@ ExPotato
 Excellent System
 
 
+# Last Bank
+Excellent Systems
+
+
 # Car Polo
 Exidy
 
@@ -888,6 +924,10 @@ Falcon
 
 # Crazy Kong
 Falcon?
+
+
+# Roy Clark - The Entertainer
+Fascination Int.
 
 
 # Metal Saver
@@ -954,6 +994,10 @@ Gakken
 Gamart?
 
 
+# Model 110
+Game Plan
+
+
 # Dangerous Dungeons
 Game Room
 
@@ -998,6 +1042,10 @@ Gottlieb
 Grand Products
 
 
+# 301/Bullseye
+Grand Products Inc.
+
+
 # Taxi Driver
 Graphic Techno
 
@@ -1040,6 +1088,10 @@ Hanafram
 
 # Ghost Hunter
 Hanaho Games
+
+
+# FJ Holden
+Hankin
 
 
 # Super Triv
@@ -1158,11 +1210,15 @@ In Chang Electronic Co
 Incredible Technologies
 
 
+# 250 CC
+Inder
+
+
 # Pango Fun (Italy)
 InfoCube
 
 
-# Multipede (V1.00)
+# Multipede (rev 1.62)
 Infogrames
 
 
@@ -1176,6 +1232,10 @@ InterFlip
 
 # Savage Quest
 Interactive Light
+
+
+# Caribbean Cruise
+International Concepts
 
 
 # Wheels Runner
@@ -1210,6 +1270,10 @@ JMK
 JPM
 
 
+# Escape
+Jac Van Ham
+
+
 # Top Roller
 Jaleco
 
@@ -1232,6 +1296,10 @@ Joyland
 
 # Jubilee Double-Up Poker
 Jubilee
+
+
+# America 1492
+Juegos Populares
 
 
 # Kaitei Takara Sagashi
@@ -1320,6 +1388,10 @@ Kyugo
 
 # Ripper Ribbit (Version 2.8.4)
 LAI Games
+
+
+# Al Capone
+LTD
 
 
 # Dual Games (prototype)
@@ -1466,6 +1538,10 @@ Microhard
 Micronet
 
 
+# Pentacup (rev. 1)
+Micropin
+
+
 # F-15 Strike Eagle (rev. 2.2 02/25/91)
 Microprose Games Inc.
 
@@ -1540,6 +1616,14 @@ Mondial Games
 
 # Minnasanno Okagesamadesu
 Monolith Corp.
+
+
+# Stars & Strikes (Bowler)
+Monroe Bowling Co.
+
+
+# Dakar
+Mr Game
 
 
 # Tylz (prototype)
@@ -1638,6 +1722,10 @@ Nihon Game
 Nihon System
 
 
+# Gals Ds - Three Dealers Casino House (bootleg?)
+Nihon System Corp.
+
+
 # Space Fever (New Ver.)
 Nintendo
 
@@ -1688,6 +1776,14 @@ Novarmatic
 
 # Cannon Ball (Pacman Hardware)
 Novomatic
+
+
+# Space Hawks
+Nuova Bell Games
+
+
+# Flicker (Prototype)
+Nutting Associates
 
 
 # The Addams Family (Nintendo Super System)
@@ -1758,7 +1854,7 @@ PMA
 Pacific Novelty
 
 
-# Magical Odds (set 3, alt hardware)
+# Magical Odds (set 1)
 Pal Company
 
 
@@ -1778,12 +1874,20 @@ Pandora
 Paradise Co. Ltd.
 
 
-# CD-i (Mono-I) BIOS
+# Odisea Paris-Dakar
+Peyper
+
+
+# CD-i (Mono-I) (PAL)
 Philips
 
 
 # Turtle Ship (North America)
 Philko
+
+
+# Gamatron
+Pinstar
 
 
 # Johnny Nero Action Hero
@@ -1800,6 +1904,10 @@ PlayMark SRL
 
 # Super Slam (set 1)
 Playmark
+
+
+# Big Town
+Playmatic
 
 
 # Truco-Tron
@@ -1898,8 +2006,16 @@ Roller Tron
 Romar
 
 
+# Goofy Hoops
+Romstar
+
+
 # Grand Prix '98
 Romtec Co. Ltd
+
+
+# Heavy Metal
+Rowamet
 
 
 # Country Girl (Japan set 1)
@@ -2098,6 +2214,10 @@ Simutrek
 Sisteme
 
 
+# Sleic Pin Ball
+Sleic
+
+
 # Disco Boy
 Soft Art Co.
 
@@ -2108,6 +2228,10 @@ Soft Design
 
 # Euro Jolly X5
 Solar Games
+
+
+# Odin De Luxe
+Sonic
 
 
 # Top Blade V
@@ -2146,8 +2270,16 @@ Spale Soft
 Sphinx
 
 
+# Bushido
+Spinball
+
+
 # Mahjong Dunhuang
 Spirit
+
+
+# Golden Game (Bingo)
+Splin
 
 
 # Rad Racer (PlayChoice-10)
@@ -2156,6 +2288,10 @@ Square
 
 # Super Shanghai 2005 (GDL-0031)
 Starfish
+
+
+# Mephisto (rev. 1.2)
+Stargame
 
 
 # Status Black Jack (V1.0c)
@@ -2168,6 +2304,10 @@ Steepler
 
 # Funny Land de Luxe
 Stella
+
+
+# Black Beauty (Shuffle)
+Stern
 
 
 # Armored Car (set 1)
@@ -2194,11 +2334,11 @@ Success
 Sun
 
 
-# Jockey Grand Prix
+# Jockey Grand Prix (set 1)
 Sun Amusement
 
 
-# Speak & Rescue
+# Dai San Wakusei Meteor (Japan)
 Sun Electronics
 
 
@@ -2276,10 +2416,6 @@ TDS
 
 # Cosmo
 TDS & Mints
-
-
-# Witch Card (German, set 3, alt gfx)
-TV Game Elektronik
 
 
 # Falcons Wild - Wild Card 1991 (TVG)
@@ -2366,6 +2502,10 @@ Tecmo
 Tecno Soft
 
 
+# X Force
+Tecnoplay
+
+
 # Swimmer (set 1)
 Tehkan
 
@@ -2412,6 +2552,10 @@ Tong Electronic
 
 # Golden Fire II
 Topis Corp
+
+
+# Unnamed game
+Toptronic
 
 
 # Radiant Silvergun (JUET 980523 V1.000)
@@ -2462,6 +2606,10 @@ Unidesa?
 Unies Corporation
 
 
+# Big Ball Bowling (Bowler)
+United
+
+
 # Cosmic Guerilla
 Universal
 
@@ -2474,8 +2622,8 @@ Universal Video Games
 Uniwang
 
 
-# 5-Aces Poker
-Unknown
+# Unknown Game
+Unknown Manufacturer
 
 
 # Rabio Lepus (Japan)
@@ -2526,12 +2674,20 @@ Video Fun Games Ltd.
 Video Games GmbH
 
 
-# Witch Card (Video Klein)
+# Witch Game (Video Klein)
 Video Klein
+
+
+# Witch Card (Video Klein CPU box)
+Video Klein?
 
 
 # Video System PSX
 Video System Co.
+
+
+# Break
+Videodens
 
 
 # MegaDuck/Cougar Boy
@@ -2576,6 +2732,10 @@ Web Picmatic
 
 # DakkoChan House (MC-8123, 317-0014)
 White Board
+
+
+# Af-Tor
+Wico
 
 
 # Hit the Ice (US)
@@ -2722,11 +2882,11 @@ bootleg?
 dgPIX Entertainment Inc.
 
 
+# Funky Ball
+dgPix
+
+
 # Puckman (Falcom?)
 hack
-
-
-# Dream Crown
-unknown
 
 
