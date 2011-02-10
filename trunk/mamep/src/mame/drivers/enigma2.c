@@ -127,16 +127,16 @@ static TIMER_CALLBACK( interrupt_assert_callback )
 		next_counter = INT_TRIGGER_COUNT_1;
 
 	next_vpos = vysnc_chain_counter_to_vpos(next_counter);
-	timer_adjust_oneshot(state->interrupt_assert_timer, machine->primary_screen->time_until_pos(next_vpos), 0);
-	timer_adjust_oneshot(state->interrupt_clear_timer, machine->primary_screen->time_until_pos(vpos + 1), 0);
+	state->interrupt_assert_timer->adjust(machine->primary_screen->time_until_pos(next_vpos));
+	state->interrupt_clear_timer->adjust(machine->primary_screen->time_until_pos(vpos + 1));
 }
 
 
 static void create_interrupt_timers( running_machine *machine )
 {
 	enigma2_state *state = machine->driver_data<enigma2_state>();
-	state->interrupt_clear_timer = timer_alloc(machine, interrupt_clear_callback, NULL);
-	state->interrupt_assert_timer = timer_alloc(machine, interrupt_assert_callback, NULL);
+	state->interrupt_clear_timer = machine->scheduler().timer_alloc(FUNC(interrupt_clear_callback));
+	state->interrupt_assert_timer = machine->scheduler().timer_alloc(FUNC(interrupt_assert_callback));
 }
 
 
@@ -144,7 +144,7 @@ static void start_interrupt_timers( running_machine *machine )
 {
 	enigma2_state *state = machine->driver_data<enigma2_state>();
 	int vpos = vysnc_chain_counter_to_vpos(INT_TRIGGER_COUNT_1);
-	timer_adjust_oneshot(state->interrupt_assert_timer, machine->primary_screen->time_until_pos(vpos), 0);
+	state->interrupt_assert_timer->adjust(machine->primary_screen->time_until_pos(vpos));
 }
 
 
@@ -157,11 +157,11 @@ static MACHINE_START( enigma2 )
 	state->maincpu = machine->device("maincpu");
 	state->audiocpu = machine->device("audiocpu");
 
-	state_save_register_global(machine, state->blink_count);
-	state_save_register_global(machine, state->sound_latch);
-	state_save_register_global(machine, state->last_sound_data);
-	state_save_register_global(machine, state->protection_data);
-	state_save_register_global(machine, state->flip_screen);
+	state->save_item(NAME(state->blink_count));
+	state->save_item(NAME(state->sound_latch));
+	state->save_item(NAME(state->last_sound_data));
+	state->save_item(NAME(state->protection_data));
+	state->save_item(NAME(state->flip_screen));
 }
 
 
@@ -403,7 +403,7 @@ static READ8_DEVICE_HANDLER( sound_latch_r )
 static WRITE8_DEVICE_HANDLER( protection_data_w )
 {
 	enigma2_state *state = device->machine->driver_data<enigma2_state>();
-	if (LOG_PROT) logerror("%s: Protection Data Write: %x\n", cpuexec_describe_context(device->machine), data);
+	if (LOG_PROT) logerror("%s: Protection Data Write: %x\n", device->machine->describe_context(), data);
 	state->protection_data = data;
 }
 

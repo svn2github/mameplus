@@ -88,11 +88,11 @@ static READ16_HANDLER( special_port1_r )
 
 static READ16_HANDLER( adc_r )
 {
-	static int last_offset;
+	eprom_state *state = space->machine->driver_data<eprom_state>();
 	static const char *const adcnames[] = { "ADC0", "ADC1", "ADC2", "ADC3" };
-	int result = input_port_read(space->machine, adcnames[last_offset & 3]);
+	int result = input_port_read(space->machine, adcnames[state->last_offset & 3]);
 
-	last_offset = offset;
+	state->last_offset = offset;
 	return result;
 }
 
@@ -416,7 +416,7 @@ static MACHINE_CONFIG_START( eprom, eprom_state )
 	MCFG_CPU_ADD("extra", M68000, ATARI_CLOCK_14MHz/2)
 	MCFG_CPU_PROGRAM_MAP(extra_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(eprom)
 	MCFG_MACHINE_RESET(eprom)
@@ -448,7 +448,7 @@ static MACHINE_CONFIG_START( klaxp, eprom_state )
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_VBLANK_INT("screen", atarigen_video_int_gen)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(eprom)
 	MCFG_MACHINE_RESET(eprom)
@@ -480,7 +480,7 @@ static MACHINE_CONFIG_START( guts, eprom_state )
 	MCFG_CPU_PROGRAM_MAP(guts_map)
 	MCFG_CPU_VBLANK_INT("screen", atarigen_video_int_gen)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(eprom)
 	MCFG_MACHINE_RESET(eprom)

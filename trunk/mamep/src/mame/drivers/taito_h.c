@@ -533,8 +533,8 @@ static MACHINE_START( taitoh )
 	state->tc0220ioc = machine->device("tc0220ioc");
 	state->tc0080vco = machine->device("tc0080vco");
 
-	state_save_register_global(machine, state->banknum);
-	state_save_register_postload(machine, taitoh_postload, NULL);
+	state->save_item(NAME(state->banknum));
+	machine->state().register_postload(taitoh_postload, NULL);
 }
 
 
@@ -576,7 +576,7 @@ static MACHINE_CONFIG_START( syvalion, taitoh_state )
 	MCFG_MACHINE_START(taitoh)
 	MCFG_MACHINE_RESET(taitoh)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitoh_io_intf)
 
@@ -621,7 +621,7 @@ static MACHINE_CONFIG_START( recordbr, taitoh_state )
 	MCFG_MACHINE_START(taitoh)
 	MCFG_MACHINE_RESET(taitoh)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitoh_io_intf)
 
@@ -666,7 +666,7 @@ static MACHINE_CONFIG_START( dleague, taitoh_state )
 	MCFG_MACHINE_START(taitoh)
 	MCFG_MACHINE_RESET(taitoh)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitoh_io_intf)
 

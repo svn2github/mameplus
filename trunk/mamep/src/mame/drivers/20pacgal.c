@@ -336,9 +336,9 @@ static MACHINE_START( 20pacgal )
 	state->maincpu = machine->device("maincpu");
 	state->eeprom = machine->device("eeprom");
 
-	state_save_register_global(machine, state->game_selected);
-	state_save_register_global_pointer(machine, state->ram_48000, 0x2000);
-	state_save_register_postload(machine, postload_20pacgal, NULL);
+	state->save_item(NAME(state->game_selected));
+	state->save_item(NAME(state->ram_48000));
+	machine->state().register_postload(postload_20pacgal, NULL);
 }
 
 static MACHINE_RESET( 20pacgal )
@@ -452,7 +452,6 @@ ROM_END
 static DRIVER_INIT(20pacgal)
 {
 	_20pacgal_state *state = machine->driver_data<_20pacgal_state>();
-	state->ram_48000 = auto_alloc_array(machine, UINT8, 0x2000);
 	state->sprite_pal_base = 0x00<<2;
 }
 
@@ -460,7 +459,6 @@ static DRIVER_INIT(25pacman)
 
 {
 	_20pacgal_state *state = machine->driver_data<_20pacgal_state>();
-	state->ram_48000 = auto_alloc_array(machine, UINT8, 0x2000);
 	state->sprite_pal_base = 0x20<<2;
 }
 

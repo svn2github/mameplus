@@ -156,7 +156,7 @@ static int twin16_set_sprite_timer( running_machine *machine )
 
 	// sprite system busy, maybe a dma? time is guessed, assume 4 scanlines
 	twin16_sprite_busy = 1;
-	timer_adjust_oneshot(twin16_sprite_timer, attotime_make(0,machine->primary_screen->frame_period().attoseconds / machine->primary_screen->height() * 4), 0);
+	twin16_sprite_timer->adjust(machine->primary_screen->frame_period() / machine->primary_screen->height() * 4);
 
 	return 0;
 }
@@ -504,8 +504,8 @@ VIDEO_START( twin16 )
 
 	memset(twin16_sprite_buffer,0xff,0x800*sizeof(UINT16));
 	twin16_sprite_busy = 0;
-	twin16_sprite_timer = timer_alloc(machine, twin16_sprite_tick, NULL);
-	timer_adjust_oneshot(twin16_sprite_timer, attotime_never, 0);
+	twin16_sprite_timer = machine->scheduler().timer_alloc(FUNC(twin16_sprite_tick));
+	twin16_sprite_timer->adjust(attotime::never);
 
 	/* register for savestates */
 	state_save_register_global_array(machine, twin16_sprite_buffer);

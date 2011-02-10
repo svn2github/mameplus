@@ -298,10 +298,10 @@ static MACHINE_START( ohmygod )
 {
 	ohmygod_state *state = machine->driver_data<ohmygod_state>();
 
-	state_save_register_global(machine, state->spritebank);
-	state_save_register_global(machine, state->scrollx);
-	state_save_register_global(machine, state->scrolly);
-	state_save_register_global(machine, state->sndbank);
+	state->save_item(NAME(state->spritebank));
+	state->save_item(NAME(state->scrollx));
+	state->save_item(NAME(state->scrolly));
+	state->save_item(NAME(state->sndbank));
 }
 
 static MACHINE_RESET( ohmygod )
@@ -324,7 +324,7 @@ static MACHINE_CONFIG_START( ohmygod, ohmygod_state )
 	MCFG_CPU_PROGRAM_MAP(ohmygod_map)
 	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
 
-	MCFG_WATCHDOG_TIME_INIT(SEC(3))	/* a guess, and certainly wrong */
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(3))	/* a guess, and certainly wrong */
 
 	MCFG_MACHINE_START(ohmygod)
 	MCFG_MACHINE_RESET(ohmygod)

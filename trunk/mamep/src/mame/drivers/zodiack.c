@@ -135,7 +135,7 @@ static MACHINE_START( zodiack )
 	state->maincpu = machine->device("maincpu");
 	state->audiocpu = machine->device("audiocpu");
 
-	state_save_register_global(machine, state->sound_nmi_enabled);
+	state->save_item(NAME(state->sound_nmi_enabled));
 }
 
 static MACHINE_RESET( zodiack )
@@ -143,7 +143,7 @@ static MACHINE_RESET( zodiack )
 	zodiack_state *state = machine->driver_data<zodiack_state>();
 
 	/* we must start with NMI interrupts disabled */
-	timer_call_after_resynch(machine, NULL, 0, interrupt_disable);
+	machine->scheduler().synchronize(FUNC(interrupt_disable));
 	state->sound_nmi_enabled = FALSE;
 }
 

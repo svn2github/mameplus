@@ -58,7 +58,7 @@ static WRITE8_HANDLER( paradise_rombank_w )
 static WRITE8_DEVICE_HANDLER( paradise_okibank_w )
 {
 	if (data & ~0x02)
-		logerror("%s: unknown oki bank bits %02X\n", cpuexec_describe_context(device->machine), data);
+		logerror("%s: unknown oki bank bits %02X\n", device->machine->describe_context(), data);
 
 	downcast<okim6295_device *>(device)->set_bank_base((data & 0x02) ? 0x40000 : 0);
 }
@@ -550,8 +550,8 @@ static MACHINE_START( paradise )
 	memory_configure_bank(machine, "bank1", 0, 3, &ROM[0x00000], 0x4000);
 	memory_configure_bank(machine, "bank1", 3, bank_n - 3, &ROM[0x10000], 0x4000);
 
-	state_save_register_global(machine, state->palbank);
-	state_save_register_global(machine, state->priority);
+	state->save_item(NAME(state->palbank));
+	state->save_item(NAME(state->priority));
 }
 
 static MACHINE_RESET( paradise )

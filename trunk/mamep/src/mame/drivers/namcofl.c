@@ -216,7 +216,7 @@ static WRITE32_HANDLER( namcofl_paletteram_w )
 		UINT16 v = space->machine->generic.paletteram.u32[offset] >> 16;
 		UINT16 triggerscanline=(((v>>8)&0xff)|((v&0xff)<<8))-(32+1);
 
-		timer_adjust_oneshot(raster_interrupt_timer, space->machine->primary_screen->time_until_pos(triggerscanline), 0);
+		raster_interrupt_timer->adjust(space->machine->primary_screen->time_until_pos(triggerscanline));
 	}
 }
 
@@ -535,14 +535,14 @@ GFXDECODE_END
 static TIMER_CALLBACK( network_interrupt_callback )
 {
 	cputag_set_input_line(machine, "maincpu", I960_IRQ0, ASSERT_LINE);
-	timer_set(machine, machine->primary_screen->frame_period(), NULL, 0, network_interrupt_callback);
+	machine->scheduler().timer_set(machine->primary_screen->frame_period(), FUNC(network_interrupt_callback));
 }
 
 
 static TIMER_CALLBACK( vblank_interrupt_callback )
 {
 	cputag_set_input_line(machine, "maincpu", I960_IRQ2, ASSERT_LINE);
-	timer_set(machine, machine->primary_screen->frame_period(), NULL, 0, vblank_interrupt_callback);
+	machine->scheduler().timer_set(machine->primary_screen->frame_period(), FUNC(vblank_interrupt_callback));
 }
 
 
@@ -550,7 +550,7 @@ static TIMER_CALLBACK( raster_interrupt_callback )
 {
 	machine->primary_screen->update_partial(machine->primary_screen->vpos());
 	cputag_set_input_line(machine, "maincpu", I960_IRQ1, ASSERT_LINE);
-	timer_adjust_oneshot(raster_interrupt_timer, machine->primary_screen->frame_period(), 0);
+	raster_interrupt_timer->adjust(machine->primary_screen->frame_period());
 }
 
 static INTERRUPT_GEN( mcu_interrupt )
@@ -571,14 +571,14 @@ static INTERRUPT_GEN( mcu_interrupt )
 
 static MACHINE_START( namcofl )
 {
-	raster_interrupt_timer = timer_alloc(machine, raster_interrupt_callback, NULL);
+	raster_interrupt_timer = machine->scheduler().timer_alloc(FUNC(raster_interrupt_callback));
 }
 
 
 static MACHINE_RESET( namcofl )
 {
-	timer_set(machine, machine->primary_screen->time_until_pos(machine->primary_screen->visible_area().max_y + 3, 0), NULL, 0, network_interrupt_callback);
-	timer_set(machine, machine->primary_screen->time_until_pos(machine->primary_screen->visible_area().max_y + 1, 0), NULL, 0, vblank_interrupt_callback);
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(machine->primary_screen->visible_area().max_y + 3), FUNC(network_interrupt_callback));
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(machine->primary_screen->visible_area().max_y + 1), FUNC(vblank_interrupt_callback));
 
 	memory_set_bankptr(machine,  "bank1", machine->region("maincpu")->base() );
 	memory_set_bankptr(machine,  "bank2", namcofl_workram );

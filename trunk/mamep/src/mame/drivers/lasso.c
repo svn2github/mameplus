@@ -471,7 +471,7 @@ static MACHINE_START( lasso )
 	state->sn_1 = machine->device("sn76489.1");
 	state->sn_2 = machine->device("sn76489.2");
 
-	state_save_register_global(machine, state->gfxbank);
+	state->save_item(NAME(state->gfxbank));
 }
 
 static MACHINE_START( wwjgtin )
@@ -480,7 +480,7 @@ static MACHINE_START( wwjgtin )
 
 	MACHINE_START_CALL(lasso);
 
-	state_save_register_global(machine, state->track_enable);
+	state->save_item(NAME(state->track_enable));
 }
 
 static MACHINE_RESET( lasso )
@@ -509,7 +509,7 @@ static MACHINE_CONFIG_START( base, lasso_state )
 	MCFG_CPU_ADD("audiocpu", M6502, 600000)
 	MCFG_CPU_PROGRAM_MAP(lasso_audio_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(lasso)
 	MCFG_MACHINE_RESET(lasso)

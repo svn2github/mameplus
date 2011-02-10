@@ -69,7 +69,7 @@ static TIMER_CALLBACK( cursor_callback )
 	if (state->main_inten)
 		cpu_set_input_line_and_vector(state->maincpu, 0, HOLD_LINE, 0xff);
 
-	timer_adjust_oneshot(state->cursor_timer, machine->primary_screen->time_until_pos(CURSOR_YPOS, CURSOR_XPOS), 0);
+	state->cursor_timer->adjust(machine->primary_screen->time_until_pos(CURSOR_YPOS, CURSOR_XPOS));
 }
 
 /*************************************
@@ -388,7 +388,7 @@ static void ground_draw( running_machine *machine )
 		/* End of list marker */
 		if (state->ground_ram[offs + 2] & 0x8000)
 		{
-			timer_adjust_oneshot(state->bufend_timer, attotime_mul(ATTOTIME_IN_HZ(FRAMEBUFFER_CLOCK), FRAMEBUFFER_MAX_X * y), 0);
+			state->bufend_timer->adjust(attotime::from_hz(FRAMEBUFFER_CLOCK) * (FRAMEBUFFER_MAX_X * y));
 		}
 	}
 }
@@ -918,15 +918,15 @@ VIDEO_START( lockon )
 	state->obj_pal_ram = auto_alloc_array(machine, UINT8, 2048);
 
 	/* Timer for ground display list callback */
-	state->bufend_timer = timer_alloc(machine, bufend_callback, NULL);
+	state->bufend_timer = machine->scheduler().timer_alloc(FUNC(bufend_callback));
 
 	/* Timer for the CRTC cursor pulse */
-	state->cursor_timer = timer_alloc(machine, cursor_callback, NULL);
-	timer_adjust_oneshot(state->cursor_timer, machine->primary_screen->time_until_pos(CURSOR_YPOS, CURSOR_XPOS), 0);
+	state->cursor_timer = machine->scheduler().timer_alloc(FUNC(cursor_callback));
+	state->cursor_timer->adjust(machine->primary_screen->time_until_pos(CURSOR_YPOS, CURSOR_XPOS));
 
-	state_save_register_global_bitmap(machine, state->back_buffer);
-	state_save_register_global_bitmap(machine, state->front_buffer);
-	state_save_register_global_pointer(machine, state->obj_pal_ram, 2048);
+	state->save_item(NAME(*state->back_buffer));
+	state->save_item(NAME(*state->front_buffer));
+	state->save_pointer(NAME(state->obj_pal_ram), 2048);
 }
 
 VIDEO_UPDATE( lockon )

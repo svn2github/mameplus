@@ -790,7 +790,7 @@ private:
 	{
 		if (m_space.log_unmap() && !m_space.debugger_access())
 			logerror("%s: unmapped %s memory read from %s & %s\n",
-						cpuexec_describe_context(&m_space.m_machine), m_space.name(),
+						m_space.m_machine.describe_context(), m_space.name(),
 						core_i64_hex_format(m_space.byte_to_address(offset * sizeof(_UintType)), m_space.addrchars()),
 						core_i64_hex_format(mask, 2 * sizeof(_UintType)));
 		return m_space.unmap();
@@ -846,7 +846,7 @@ private:
 	{
 		if (m_space.log_unmap() && !m_space.debugger_access())
 			logerror("%s: unmapped %s memory write to %s = %s & %s\n",
-					cpuexec_describe_context(&m_space.m_machine), m_space.name(),
+					m_space.m_machine.describe_context(), m_space.name(),
 					core_i64_hex_format(m_space.byte_to_address(offset * sizeof(_UintType)), m_space.addrchars()),
 					core_i64_hex_format(data, 2 * sizeof(_UintType)),
 					core_i64_hex_format(mask, 2 * sizeof(_UintType)));
@@ -1590,7 +1590,7 @@ void memory_init(running_machine *machine)
 		space->locate_memory();
 
 	// register a callback to reset banks when reloading state
-	state_save_register_postload(machine, bank_reattach, NULL);
+	machine->state().register_postload(bank_reattach, NULL);
 
 	// dump the final memory configuration
 	generate_memdump(machine);
@@ -4092,7 +4092,7 @@ memory_block::memory_block(address_space &space, offs_t bytestart, offs_t byteen
 		int bytes_per_element = space.data_width() / 8;
 		astring name;
 		name.printf("%08x-%08x", bytestart, byteend);
-		state_save_register_memory(&space.m_machine, "memory", space.device().tag(), space.spacenum(), name, m_data, bytes_per_element, (UINT32)(byteend + 1 - bytestart) / bytes_per_element, __FILE__, __LINE__);
+		space.m_machine.state().save_memory("memory", space.device().tag(), space.spacenum(), name, m_data, bytes_per_element, (UINT32)(byteend + 1 - bytestart) / bytes_per_element);
 	}
 }
 
@@ -4142,8 +4142,8 @@ memory_bank::memory_bank(address_space &space, int index, offs_t bytestart, offs
 		m_name.printf("Bank '%s'", tag);
 	}
 
-	if (!m_anonymous && state_save_registration_allowed(&space.m_machine))
-		state_save_register_item(&space.m_machine, "memory", m_tag, 0, m_curentry);
+	if (!m_anonymous && space.m_machine.state().registration_allowed())
+		space.m_machine.state().save_item("memory", m_tag, 0, NAME(m_curentry));
 }
 
 
@@ -4832,7 +4832,7 @@ void handler_entry_write::set_delegate(write32_delegate delegate, UINT64 mask)
 	// if mismatched bus width, configure a stub
 	if (m_datawidth != 32)
 	{
-		configure_subunits(mask, 16);
+		configure_subunits(mask, 32);
 		if (m_datawidth == 64)
 			set_delegate(write64_delegate(write64_proto_delegate::_create_member<handler_entry_write, &handler_entry_write::write_stub_64_from_32>(delegate.name()), *this));
 	}

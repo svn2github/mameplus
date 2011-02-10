@@ -98,7 +98,7 @@ WRITE8_DEVICE_HANDLER( namco_51xx_write )
 
 	data &= 0x07;
 
-	LOG(("%s: custom 51XX write %02x\n",cpuexec_describe_context(device->machine),data));
+	LOG(("%s: custom 51XX write %02x\n",device->machine->describe_context(),data));
 
 	if (state->coincred_mode)
 	{
@@ -196,7 +196,7 @@ READ8_DEVICE_HANDLER( namco_51xx_read )
 {
 	namco_51xx_state *state = get_safe_token(device);
 
-	LOG(("%s: custom 51XX read\n",cpuexec_describe_context(device->machine)));
+	LOG(("%s: custom 51XX read\n",device->machine->describe_context()));
 
 	if (state->mode == 0)	/* switch mode */
 	{
@@ -404,16 +404,16 @@ static DEVICE_START( namco_51xx )
 	INT32 in_count;
 	INT32 mode,coincred_mode,remap_joy;
 #endif
-	state_save_register_device_item(device, 0, state->lastcoins);
-	state_save_register_device_item(device, 0, state->lastbuttons);
-	state_save_register_device_item(device, 0, state->credits);
-	state_save_register_device_item_array(device, 0, state->coins);
-	state_save_register_device_item_array(device, 0, state->coins_per_cred);
-	state_save_register_device_item_array(device, 0, state->creds_per_coin);
-	state_save_register_device_item(device, 0, state->in_count);
-	state_save_register_device_item(device, 0, state->mode);
-	state_save_register_device_item(device, 0, state->coincred_mode);
-	state_save_register_device_item(device, 0, state->remap_joy);
+	device->save_item(NAME(state->lastcoins));
+	device->save_item(NAME(state->lastbuttons));
+	device->save_item(NAME(state->credits));
+	device->save_item(NAME(state->coins));
+	device->save_item(NAME(state->coins_per_cred));
+	device->save_item(NAME(state->creds_per_coin));
+	device->save_item(NAME(state->in_count));
+	device->save_item(NAME(state->mode));
+	device->save_item(NAME(state->coincred_mode));
+	device->save_item(NAME(state->remap_joy));
 }
 
 

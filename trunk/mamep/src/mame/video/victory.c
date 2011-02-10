@@ -44,7 +44,7 @@ static struct
 /* but the interrupt test does some precise timing, and fails */
 /* if it's not 8 */
 #define VICTORY_MICRO_STATE_CLOCK	(XTAL_11_289MHz)
-#define MICRO_STATE_CLOCK_PERIOD	ATTOTIME_IN_HZ(VICTORY_MICRO_STATE_CLOCK / 8)
+#define MICRO_STATE_CLOCK_PERIOD	attotime::from_hz(VICTORY_MICRO_STATE_CLOCK / 8)
 
 
 /* debugging constants */
@@ -86,7 +86,7 @@ VIDEO_START( victory )
 	scrollx = scrolly = 0;
 	video_control = 0;
 	memset(&micro, 0, sizeof(micro));
-	micro.timer = timer_alloc(machine, NULL, NULL);
+	micro.timer = machine->scheduler().timer_alloc(FUNC(NULL));
 
 	/* register for state saving */
 	state_save_register_global_array(machine, victory_paletteram);
@@ -192,7 +192,7 @@ READ8_HANDLER( victory_video_control_r )
 			// D5 = 5VIRQ
 			// D4 = 5BCIRQ (3B1)
 			// D3 = SL256
-			if (micro.timer_active && attotime_compare(timer_timeelapsed(micro.timer), micro.endtime) < 0)
+			if (micro.timer_active && micro.timer->elapsed() < micro.endtime)
 				result |= 0x80;
 			result |= (~fgcoll & 1) << 6;
 			result |= (~vblank_irq & 1) << 5;
@@ -526,22 +526,22 @@ Registers:
 
 INLINE void count_states(int states)
 {
-	attotime state_time = attotime_make(0, attotime_to_attoseconds(MICRO_STATE_CLOCK_PERIOD) * states);
+	attotime state_time = MICRO_STATE_CLOCK_PERIOD * states;
 
 	if (!micro.timer)
 	{
-		timer_adjust_oneshot(micro.timer, attotime_never, 0);
+		micro.timer->adjust(attotime::never);
 		micro.timer_active = 1;
 		micro.endtime = state_time;
 	}
-	else if (attotime_compare(timer_timeelapsed(micro.timer), micro.endtime) > 0)
+	else if (micro.timer->elapsed() > micro.endtime)
 	{
-		timer_adjust_oneshot(micro.timer, attotime_never, 0);
+		micro.timer->adjust(attotime::never);
 		micro.timer_active = 1;
 		micro.endtime = state_time;
 	}
 	else
-		micro.endtime = attotime_add(micro.endtime, state_time);
+		micro.endtime += state_time;
 }
 
 
@@ -1125,7 +1125,7 @@ VIDEO_UPDATE( victory )
 			int bpix = bg[(x + scrollx) & 255];
 			scanline[x] = bpix | (fpix << 3);
 			if (fpix && (bpix & bgcollmask) && count++ < 128)
-				timer_set(screen->machine, screen->time_until_pos(y, x), NULL, x | (y << 8), bgcoll_irq_callback);
+				screen->machine->scheduler().timer_set(screen->time_until_pos(y, x), FUNC(bgcoll_irq_callback), x | (y << 8));
 		}
 	}
 

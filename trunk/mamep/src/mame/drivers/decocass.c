@@ -639,7 +639,7 @@ static MACHINE_CONFIG_START( decocass, decocass_state )
 	MCFG_CPU_ADD("mcu", I8041, HCLK)
 	MCFG_CPU_IO_MAP(decocass_mcu_portmap)
 
-	MCFG_QUANTUM_TIME(HZ(4200))				/* interleave CPUs */
+	MCFG_QUANTUM_TIME(attotime::from_hz(4200))				/* interleave CPUs */
 
 	MCFG_MACHINE_START(decocass)
 	MCFG_MACHINE_RESET(decocass)
@@ -1338,7 +1338,7 @@ static DRIVER_INIT( decocass )
 	for (A = 0xf000; A < 0x10000; A++)
 		state->decrypted[A] = swap_bits_5_6(rom[A]);
 
-	state_save_register_global_pointer(machine, state->decrypted, 0x10000);
+	state->save_pointer(NAME(state->decrypted), 0x10000);
 
 	/* Call the state save setup code in machine/decocass.c */
 	decocass_machine_state_save_init(machine);
@@ -1374,7 +1374,7 @@ static DRIVER_INIT( decocrom )
 	/* install the bank selector */
 	memory_install_write8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xe900, 0xe900, 0, 0, decocass_e900_w);
 
-	state_save_register_global_pointer(machine, state->decrypted2, romlength);
+	state->save_pointer(NAME(state->decrypted2), romlength);
 }
 
 

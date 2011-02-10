@@ -159,13 +159,13 @@ static MACHINE_START( ddragon )
 	state->adpcm_2 = machine->device("adpcm2");
 
 	/* register for save states */
-	state_save_register_global(machine, state->dd_sub_cpu_busy);
-	state_save_register_global(machine, state->scrollx_hi);
-	state_save_register_global(machine, state->scrolly_hi);
-	state_save_register_global_array(machine, state->adpcm_pos);
-	state_save_register_global_array(machine, state->adpcm_end);
-	state_save_register_global_array(machine, state->adpcm_idle);
-	state_save_register_global_array(machine, state->adpcm_data);
+	state->save_item(NAME(state->dd_sub_cpu_busy));
+	state->save_item(NAME(state->scrollx_hi));
+	state->save_item(NAME(state->scrolly_hi));
+	state->save_item(NAME(state->adpcm_pos));
+	state->save_item(NAME(state->adpcm_end));
+	state->save_item(NAME(state->adpcm_idle));
+	state->save_item(NAME(state->adpcm_data));
 }
 
 
@@ -987,7 +987,7 @@ static MACHINE_CONFIG_START( ddragon, ddragon_state )
 	MCFG_CPU_ADD("soundcpu", M6809, MAIN_CLOCK / 8)	/* 1.5 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(60000))	/* heavy interleaving to sync up sprite<->main cpu's */
+	MCFG_QUANTUM_TIME(attotime::from_hz(60000))	/* heavy interleaving to sync up sprite<->main cpu's */
 
 	MCFG_MACHINE_START(ddragon)
 	MCFG_MACHINE_RESET(ddragon)
@@ -1051,7 +1051,7 @@ static MACHINE_CONFIG_START( ddragon6809, ddragon_state )
 	MCFG_CPU_ADD("soundcpu", M6809, MAIN_CLOCK / 8)	/* 1.5 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(60000)) /* heavy interleaving to sync up sprite<->main cpu's */
+	MCFG_QUANTUM_TIME(attotime::from_hz(60000)) /* heavy interleaving to sync up sprite<->main cpu's */
 
 	MCFG_MACHINE_START(ddragon)
 	MCFG_MACHINE_RESET(ddragon)
@@ -1098,7 +1098,7 @@ static MACHINE_CONFIG_START( ddragon2, ddragon_state )
 	MCFG_CPU_ADD("soundcpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(dd2_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(60000)) /* heavy interleaving to sync up sprite<->main cpu's */
+	MCFG_QUANTUM_TIME(attotime::from_hz(60000)) /* heavy interleaving to sync up sprite<->main cpu's */
 
 	MCFG_MACHINE_START(ddragon)
 	MCFG_MACHINE_RESET(ddragon)

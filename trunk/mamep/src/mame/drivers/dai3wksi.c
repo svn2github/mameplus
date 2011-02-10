@@ -286,7 +286,7 @@ static WRITE8_HANDLER( dai3wksi_audio_1_w )
 {
 	device_t *ic79 = space->machine->device("ic79");
 
-	sound_global_enable(space->machine, data & 0x80);
+	space->machine->sound().system_enable(data & 0x80);
 
 	sn76477_enable_w(ic79, (~data >> 5) & 0x01);		/* invader movement enable */
 	sn76477_envelope_1_w(ic79, (~data >> 2) & 0x01);	/* invader movement envelope control*/
@@ -567,13 +567,13 @@ static MACHINE_START( dai3wksi )
 	dai3wksi_state *state = machine->driver_data<dai3wksi_state>();
 
 	/* Set up save state */
-	state_save_register_global(machine, state->dai3wksi_flipscreen);
-	state_save_register_global(machine, state->dai3wksi_redscreen);
-	state_save_register_global(machine, state->dai3wksi_redterop);
-	state_save_register_global(machine, state->port_last1);
-	state_save_register_global(machine, state->port_last2);
-	state_save_register_global(machine, state->enabled_sound);
-	state_save_register_global(machine, state->sound3_counter);
+	state->save_item(NAME(state->dai3wksi_flipscreen));
+	state->save_item(NAME(state->dai3wksi_redscreen));
+	state->save_item(NAME(state->dai3wksi_redterop));
+	state->save_item(NAME(state->port_last1));
+	state->save_item(NAME(state->port_last2));
+	state->save_item(NAME(state->enabled_sound));
+	state->save_item(NAME(state->sound3_counter));
 }
 
 static MACHINE_RESET( dai3wksi )

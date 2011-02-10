@@ -92,13 +92,13 @@ static void update_plunger( running_machine *machine )
 	{
 		if (val == 0)
 		{
-			state->time_released = timer_get_time(machine);
+			state->time_released = machine->time();
 
 			if (!state->mask)
 				cpu_set_input_line(state->maincpu, INPUT_LINE_NMI, PULSE_LINE);
 		}
 		else
-			state->time_pushed = timer_get_time(machine);
+			state->time_pushed = machine->time();
 
 		state->prev = val;
 	}
@@ -119,14 +119,14 @@ static TIMER_CALLBACK( interrupt_callback )
 	if (scanline >= 262)
 		scanline = 16;
 
-	timer_set(machine, machine->primary_screen->time_until_pos(scanline), NULL, scanline, interrupt_callback);
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(scanline), FUNC(interrupt_callback), scanline);
 }
 
 
 static double calc_plunger_pos(running_machine *machine)
 {
 	mgolf_state *state = machine->driver_data<mgolf_state>();
-	return (attotime_to_double(timer_get_time(machine)) - attotime_to_double(state->time_released)) * (attotime_to_double(state->time_released) - attotime_to_double(state->time_pushed) + 0.2);
+	return (machine->time().as_double() - state->time_released.as_double()) * (state->time_released.as_double() - state->time_pushed.as_double() + 0.2);
 }
 
 
@@ -305,14 +305,14 @@ static MACHINE_START( mgolf )
 
 	state->maincpu = machine->device("maincpu");
 
-	state_save_register_global(machine, state->prev);
-	state_save_register_global(machine, state->mask);
+	state->save_item(NAME(state->prev));
+	state->save_item(NAME(state->mask));
 }
 
 static MACHINE_RESET( mgolf )
 {
 	mgolf_state *state = machine->driver_data<mgolf_state>();
-	timer_set(machine, machine->primary_screen->time_until_pos(16), NULL, 16, interrupt_callback);
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(16), FUNC(interrupt_callback), 16);
 
 	state->mask = 0;
 	state->prev = 0;

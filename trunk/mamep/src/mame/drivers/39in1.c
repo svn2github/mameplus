@@ -95,8 +95,8 @@ INLINE void ATTR_PRINTF(3,4) verboselog( running_machine* machine, int n_level, 
 		va_start( v, s_fmt );
 		vsprintf( buf, s_fmt, v );
 		va_end( v );
-		logerror( "%s: %s", cpuexec_describe_context(machine), buf );
-		//printf( "%s: %s", cpuexec_describe_context(machine), buf );
+		logerror( "%s: %s", machine->describe_context(), buf );
+		//printf( "%s: %s", machine->describe_context(), buf );
 	}
 }
 
@@ -253,9 +253,9 @@ static void pxa255_dma_load_descriptor_and_start(running_machine* machine, int c
 
 	// Shut down any transfers that are currently going on, software should be smart enough to check if a
 	// transfer is running before starting another one on the same channel.
-	if (timer_enabled(dma_regs->timer[channel]))
+	if (dma_regs->timer[channel]->enabled())
 	{
-		timer_adjust_oneshot(dma_regs->timer[channel], attotime_never, 0);
+		dma_regs->timer[channel]->adjust(attotime::never);
 	}
 
 	// Load the next descriptor
@@ -270,14 +270,14 @@ static void pxa255_dma_load_descriptor_and_start(running_machine* machine, int c
 	switch(channel)
 	{
 		case 3:
-			period = attotime_mul(ATTOTIME_IN_HZ((147600000 / state->i2s_regs.sadiv) / (4 * 64)), dma_regs->dcmd[channel] & 0x00001fff);
+			period = attotime::from_hz((147600000 / state->i2s_regs.sadiv) / (4 * 64)) * (dma_regs->dcmd[channel] & 0x00001fff);
 			break;
 		default:
-			period = attotime_mul(ATTOTIME_IN_HZ(100000000), dma_regs->dcmd[channel] & 0x00001fff);
+			period = attotime::from_hz(100000000) * (dma_regs->dcmd[channel] & 0x00001fff);
 			break;
 	}
 
-	timer_adjust_oneshot(dma_regs->timer[channel], period, channel);
+	dma_regs->timer[channel]->adjust(period, channel);
 
 	// Interrupt as necessary
 	if(dma_regs->dcmd[channel] & PXA255_DCMD_STARTIRQEN)
@@ -624,10 +624,10 @@ static WRITE32_HANDLER( pxa255_ostimer_w )
 			ostimer_regs->osmr[0] = data;
 			if(ostimer_regs->oier & PXA255_OIER_E0)
 			{
-				attotime period = attotime_mul(ATTOTIME_IN_HZ(3846400), ostimer_regs->osmr[0] - ostimer_regs->oscr);
+				attotime period = attotime::from_hz(3846400) * (ostimer_regs->osmr[0] - ostimer_regs->oscr);
 
 				//printf( "Adjusting one-shot timer to 200MHz * %08x\n", ostimer_regs->osmr[0]);
-				timer_adjust_oneshot(ostimer_regs->timer[0], period, 0);
+				ostimer_regs->timer[0]->adjust(period);
 			}
 			break;
 		case PXA255_OSMR1:
@@ -635,9 +635,9 @@ static WRITE32_HANDLER( pxa255_ostimer_w )
 			ostimer_regs->osmr[1] = data;
 			if(ostimer_regs->oier & PXA255_OIER_E1)
 			{
-				attotime period = attotime_mul(ATTOTIME_IN_HZ(3846400), ostimer_regs->osmr[1] - ostimer_regs->oscr);
+				attotime period = attotime::from_hz(3846400) * (ostimer_regs->osmr[1] - ostimer_regs->oscr);
 
-				timer_adjust_oneshot(ostimer_regs->timer[1], period, 1);
+				ostimer_regs->timer[1]->adjust(period, 1);
 			}
 			break;
 		case PXA255_OSMR2:
@@ -645,9 +645,9 @@ static WRITE32_HANDLER( pxa255_ostimer_w )
 			ostimer_regs->osmr[2] = data;
 			if(ostimer_regs->oier & PXA255_OIER_E2)
 			{
-				attotime period = attotime_mul(ATTOTIME_IN_HZ(3846400), ostimer_regs->osmr[2] - ostimer_regs->oscr);
+				attotime period = attotime::from_hz(3846400) * (ostimer_regs->osmr[2] - ostimer_regs->oscr);
 
-				timer_adjust_oneshot(ostimer_regs->timer[2], period, 2);
+				ostimer_regs->timer[2]->adjust(period, 2);
 			}
 			break;
 		case PXA255_OSMR3:
@@ -655,9 +655,9 @@ static WRITE32_HANDLER( pxa255_ostimer_w )
 			ostimer_regs->osmr[3] = data;
 			if(ostimer_regs->oier & PXA255_OIER_E3)
 			{
-				//attotime period = attotime_mul(ATTOTIME_IN_HZ(3846400), ostimer_regs->osmr[3] - ostimer_regs->oscr);
+				//attotime period = attotime::from_hz(3846400) * (ostimer_regs->osmr[3] - ostimer_regs->oscr);
 
-				//timer_adjust_oneshot(ostimer_regs->timer[3], period, 3);
+				//ostimer_regs->timer[3]->adjust(period, 3);
 			}
 			break;
 		case PXA255_OSCR:
@@ -682,9 +682,9 @@ static WRITE32_HANDLER( pxa255_ostimer_w )
 			{
 				if(ostimer_regs->oier & (1 << index))
 				{
-					//attotime period = attotime_mul(ATTOTIME_IN_HZ(200000000), ostimer_regs->osmr[index]);
+					//attotime period = attotime::from_hz(200000000) * ostimer_regs->osmr[index];
 
-					//timer_adjust_oneshot(ostimer_regs->timer[index], period, index);
+					//ostimer_regs->timer[index]->adjust(period, index);
 				}
 			}
 
@@ -1088,9 +1088,9 @@ static void pxa255_lcd_dma_kickoff(running_machine* machine, int channel)
 
 	if(lcd_regs->dma[channel].fdadr != 0)
 	{
-		attotime period = attotime_mul(ATTOTIME_IN_HZ(20000000), lcd_regs->dma[channel].ldcmd & 0x000fffff);
+		attotime period = attotime::from_hz(20000000) * (lcd_regs->dma[channel].ldcmd & 0x000fffff);
 
-		timer_adjust_oneshot(lcd_regs->dma[channel].eof, period, channel);
+		lcd_regs->dma[channel].eof->adjust(period, channel);
 
 		if(lcd_regs->dma[channel].ldcmd & PXA255_LDCMD_SOFINT)
 		{
@@ -1263,7 +1263,7 @@ static WRITE32_HANDLER( pxa255_lcd_w )
 		case PXA255_FBR0:		// 0x44000020
 			verboselog( space->machine, 4l, "pxa255_lcd_w: LCD Frame Branch Register 0: %08x & %08x\n", data, mem_mask );
 			lcd_regs->fbr[0] = data & 0xfffffff3;
-			if(!timer_enabled(lcd_regs->dma[0].eof))
+			if(!lcd_regs->dma[0].eof->enabled())
 			{
 				if (0) verboselog( space->machine, 3, "ch0 EOF timer is not enabled, taking branch now\n" );
 				pxa255_lcd_check_load_next_branch(space->machine, 0);
@@ -1273,7 +1273,7 @@ static WRITE32_HANDLER( pxa255_lcd_w )
 		case PXA255_FBR1:		// 0x44000024
 			verboselog( space->machine, 3, "pxa255_lcd_w: LCD Frame Branch Register 1: %08x & %08x\n", data, mem_mask );
 			lcd_regs->fbr[1] = data & 0xfffffff3;
-			if(!timer_enabled(lcd_regs->dma[1].eof))
+			if(!lcd_regs->dma[1].eof->enabled())
 			{
 				verboselog( space->machine, 3, "ch1 EOF timer is not enabled, taking branch now\n" );
 				pxa255_lcd_check_load_next_branch(space->machine, 1);
@@ -1298,7 +1298,7 @@ static WRITE32_HANDLER( pxa255_lcd_w )
 			break;
 		case PXA255_FDADR0:		// 0x44000200
 			verboselog( space->machine, 4, "pxa255_lcd_w: LCD DMA Frame Descriptor Address Register 0: %08x & %08x\n", data, mem_mask );
-			if(!timer_enabled(lcd_regs->dma[0].eof))
+			if(!lcd_regs->dma[0].eof->enabled())
 			{
 				pxa255_lcd_load_dma_descriptor(space, data & 0xfffffff0, 0);
 			}
@@ -1319,7 +1319,7 @@ static WRITE32_HANDLER( pxa255_lcd_w )
 			break;
 		case PXA255_FDADR1:		// 0x44000210
 			verboselog( space->machine, 4, "pxa255_lcd_w: LCD DMA Frame Descriptor Address Register 1: %08x & %08x\n", data, mem_mask );
-			if(!timer_enabled(lcd_regs->dma[1].eof))
+			if(!lcd_regs->dma[1].eof->enabled())
 			{
 				pxa255_lcd_load_dma_descriptor(space, data & 0xfffffff0, 1);
 			}
@@ -1542,21 +1542,21 @@ static void pxa255_start(running_machine* machine)
 	for(index = 0; index < 16; index++)
 	{
 		state->dma_regs.dcsr[index] = 0x00000008;
-		state->dma_regs.timer[index] = timer_alloc(machine, pxa255_dma_dma_end, 0);
+		state->dma_regs.timer[index] = machine->scheduler().timer_alloc(FUNC(pxa255_dma_dma_end));
 	}
 
 	memset(&state->ostimer_regs, 0, sizeof(state->ostimer_regs));
 	for(index = 0; index < 4; index++)
 	{
 		state->ostimer_regs.osmr[index] = 0;
-		state->ostimer_regs.timer[index] = timer_alloc(machine, pxa255_ostimer_match, 0);
+		state->ostimer_regs.timer[index] = machine->scheduler().timer_alloc(FUNC(pxa255_ostimer_match));
 	}
 
 	memset(&state->intc_regs, 0, sizeof(state->intc_regs));
 
 	memset(&state->lcd_regs, 0, sizeof(state->lcd_regs));
-	state->lcd_regs.dma[0].eof = timer_alloc(machine, pxa255_lcd_dma_eof, 0);
-	state->lcd_regs.dma[1].eof = timer_alloc(machine, pxa255_lcd_dma_eof, 0);
+	state->lcd_regs.dma[0].eof = machine->scheduler().timer_alloc(FUNC(pxa255_lcd_dma_eof));
+	state->lcd_regs.dma[1].eof = machine->scheduler().timer_alloc(FUNC(pxa255_lcd_dma_eof));
 	state->lcd_regs.trgbr = 0x00aa5500;
 	state->lcd_regs.tcr = 0x0000754f;
 

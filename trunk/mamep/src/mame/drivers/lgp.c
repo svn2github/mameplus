@@ -329,14 +329,14 @@ static INTERRUPT_GEN( vblank_callback_lgp )
 
 	// IRQ
 	cpu_set_input_line(device, 0, ASSERT_LINE);
-	timer_adjust_oneshot(irq_timer, ATTOTIME_IN_USEC(50), 0);
+	irq_timer->adjust(attotime::from_usec(50));
 }
 
 
 static MACHINE_START( lgp )
 {
 	laserdisc = machine->device("laserdisc");
-    irq_timer = timer_alloc(machine, irq_stop, 0);
+    irq_timer = machine->scheduler().timer_alloc(FUNC(irq_stop));
 }
 
 

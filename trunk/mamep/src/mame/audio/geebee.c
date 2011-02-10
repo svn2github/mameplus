@@ -8,7 +8,6 @@
  ****************************************************************************/
 
 #include "emu.h"
-#include "streams.h"
 #include "includes/warpwarp.h"
 
 
@@ -44,7 +43,7 @@ WRITE8_DEVICE_HANDLER( geebee_sound_w )
 {
 	geebee_sound_state *state = get_safe_token(device);
 
-	stream_update(state->channel);
+	state->channel->update();
 	state->sound_latch = data;
 	state->volume = 0x7fff; /* set volume */
 	state->noise = 0x0000;  /* reset noise shifter */
@@ -59,8 +58,8 @@ WRITE8_DEVICE_HANDLER( geebee_sound_w )
          * Decay:
          * discharge C33 (1uF) through R50 (22k) -> 0.14058s
          */
-		attotime period = attotime_div(attotime_mul(ATTOTIME_IN_HZ(32768), 14058), 100000);
-		timer_adjust_periodic(state->volume_timer, period, 0, period);
+		attotime period = attotime::from_hz(32768) * 14058 / 100000;
+		state->volume_timer->adjust(period, 0, period);
 	}
 	else
 	{
@@ -71,8 +70,8 @@ WRITE8_DEVICE_HANDLER( geebee_sound_w )
          * I can only guess here that the decay should be slower,
          * maybe half as fast?
          */
-		attotime period = attotime_div(attotime_mul(ATTOTIME_IN_HZ(32768), 29060), 100000);
-		timer_adjust_periodic(state->volume_timer, period, 0, period);
+		attotime period = attotime::from_hz(32768) * 29060 / 100000;
+		state->volume_timer->adjust(period, 0, period);
     }
 }
 
@@ -139,10 +138,10 @@ static DEVICE_START( geebee_sound )
 		state->decay[0x7fff-i] = (INT16) (0x7fff/exp(1.0*i/4096));
 
 	/* 1V = HSYNC = 18.432MHz / 3 / 2 / 384 = 8000Hz */
-	state->channel = stream_create(device, 0, 1, 18432000 / 3 / 2 / 384, NULL, geebee_sound_update);
+	state->channel = device->machine->sound().stream_alloc(*device, 0, 1, 18432000 / 3 / 2 / 384, NULL, geebee_sound_update);
 	state->vcount = 0;
 
-	state->volume_timer = timer_alloc(machine, volume_decay, state);
+	state->volume_timer = machine->scheduler().timer_alloc(FUNC(volume_decay), state);
 }
 
 DEVICE_GET_INFO( geebee_sound )

@@ -592,10 +592,10 @@ static MACHINE_START( ddealer )
 {
 	ddealer_state *state = machine->driver_data<ddealer_state>();
 
-	state_save_register_global(machine, state->respcount);
-	state_save_register_global(machine, state->flipscreen);
-	state_save_register_global(machine, state->input_pressed);
-	state_save_register_global(machine, state->coin_input);
+	state->save_item(NAME(state->respcount));
+	state->save_item(NAME(state->flipscreen));
+	state->save_item(NAME(state->input_pressed));
+	state->save_item(NAME(state->coin_input));
 }
 
 static MACHINE_RESET (ddealer)
@@ -639,7 +639,7 @@ static MACHINE_CONFIG_START( ddealer, ddealer_state )
 	MCFG_VIDEO_START(ddealer)
 	MCFG_VIDEO_UPDATE(ddealer)
 
-	MCFG_TIMER_ADD_PERIODIC("coinsim", ddealer_mcu_sim, HZ(10000)) // not real, but for simulating the MCU
+	MCFG_TIMER_ADD_PERIODIC("coinsim", ddealer_mcu_sim, attotime::from_hz(10000)) // not real, but for simulating the MCU
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("ymsnd", YM2203, 6000000 / 4)//guess

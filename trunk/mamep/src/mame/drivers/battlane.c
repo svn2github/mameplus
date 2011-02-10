@@ -281,8 +281,8 @@ static MACHINE_START( battlane )
 	state->maincpu = machine->device("maincpu");
 	state->subcpu = machine->device("sub");
 
-	state_save_register_global(machine, state->video_ctrl);
-	state_save_register_global(machine, state->cpu_control);
+	state->save_item(NAME(state->video_ctrl));
+	state->save_item(NAME(state->cpu_control));
 }
 
 static MACHINE_RESET( battlane )
@@ -303,7 +303,7 @@ static MACHINE_CONFIG_START( battlane, battlane_state )
 	MCFG_CPU_ADD("sub", M6809, 1500000)        /* 1.5 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(battlane_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(battlane)
 	MCFG_MACHINE_RESET(battlane)

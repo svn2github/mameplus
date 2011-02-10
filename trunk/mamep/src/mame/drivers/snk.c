@@ -372,18 +372,18 @@ static TIMER_CALLBACK( sgladiat_sndirq_update_callback )
 static WRITE8_HANDLER( sgladiat_soundlatch_w )
 {
 	soundlatch_w(space, offset, data);
-	timer_call_after_resynch(space->machine, NULL, CMDIRQ_BUSY_ASSERT, sgladiat_sndirq_update_callback);
+	space->machine->scheduler().synchronize(FUNC(sgladiat_sndirq_update_callback), CMDIRQ_BUSY_ASSERT);
 }
 
 static READ8_HANDLER( sgladiat_soundlatch_r )
 {
-	timer_call_after_resynch(space->machine, NULL, BUSY_CLEAR, sgladiat_sndirq_update_callback);
+	space->machine->scheduler().synchronize(FUNC(sgladiat_sndirq_update_callback), BUSY_CLEAR);
 	return soundlatch_r(space,0);
 }
 
 static READ8_HANDLER( sgladiat_sound_nmi_ack_r )
 {
-	timer_call_after_resynch(space->machine, NULL, CMDIRQ_CLEAR, sgladiat_sndirq_update_callback);
+	space->machine->scheduler().synchronize(FUNC(sgladiat_sndirq_update_callback), CMDIRQ_CLEAR);
 	return 0xff;
 }
 
@@ -460,13 +460,13 @@ static TIMER_CALLBACK( sndirq_update_callback )
 static void ymirq_callback_1(device_t *device, int irq)
 {
 	if (irq)
-		timer_call_after_resynch(device->machine, NULL, YM1IRQ_ASSERT, sndirq_update_callback);
+		device->machine->scheduler().synchronize(FUNC(sndirq_update_callback), YM1IRQ_ASSERT);
 }
 
 static void ymirq_callback_2(device_t *device, int irq)
 {
 	if (irq)
-		timer_call_after_resynch(device->machine, NULL, YM2IRQ_ASSERT, sndirq_update_callback);
+		device->machine->scheduler().synchronize(FUNC(sndirq_update_callback), YM2IRQ_ASSERT);
 }
 
 
@@ -495,7 +495,7 @@ static const y8950_interface y8950_config_2 =
 static WRITE8_HANDLER( snk_soundlatch_w )
 {
 	soundlatch_w(space, offset, data);
-	timer_call_after_resynch(space->machine, NULL, CMDIRQ_BUSY_ASSERT, sndirq_update_callback);
+	space->machine->scheduler().synchronize(FUNC(sndirq_update_callback), CMDIRQ_BUSY_ASSERT);
 }
 
 static CUSTOM_INPUT( snk_sound_busy )
@@ -517,29 +517,29 @@ static READ8_HANDLER( snk_sound_status_r )
 static WRITE8_HANDLER( snk_sound_status_w )
 {
 	if (~data & 0x10)	// ack YM1 irq
-		timer_call_after_resynch(space->machine, NULL, YM1IRQ_CLEAR, sndirq_update_callback);
+		space->machine->scheduler().synchronize(FUNC(sndirq_update_callback), YM1IRQ_CLEAR);
 
 	if (~data & 0x20)	// ack YM2 irq
-		timer_call_after_resynch(space->machine, NULL, YM2IRQ_CLEAR, sndirq_update_callback);
+		space->machine->scheduler().synchronize(FUNC(sndirq_update_callback), YM2IRQ_CLEAR);
 
 	if (~data & 0x40)	// clear busy flag
-		timer_call_after_resynch(space->machine, NULL, BUSY_CLEAR, sndirq_update_callback);
+		space->machine->scheduler().synchronize(FUNC(sndirq_update_callback), BUSY_CLEAR);
 
 	if (~data & 0x80)	// ack command from main cpu
-		timer_call_after_resynch(space->machine, NULL, CMDIRQ_CLEAR, sndirq_update_callback);
+		space->machine->scheduler().synchronize(FUNC(sndirq_update_callback), CMDIRQ_CLEAR);
 }
 
 
 
 static READ8_HANDLER( tnk3_cmdirq_ack_r )
 {
-	timer_call_after_resynch(space->machine, NULL, CMDIRQ_CLEAR, sndirq_update_callback);
+	space->machine->scheduler().synchronize(FUNC(sndirq_update_callback), CMDIRQ_CLEAR);
 	return 0xff;
 }
 
 static READ8_HANDLER( tnk3_ymirq_ack_r )
 {
-	timer_call_after_resynch(space->machine, NULL, YM1IRQ_CLEAR, sndirq_update_callback);
+	space->machine->scheduler().synchronize(FUNC(sndirq_update_callback), YM1IRQ_CLEAR);
 	return 0xff;
 }
 
@@ -547,7 +547,7 @@ static READ8_HANDLER( tnk3_busy_clear_r )
 {
 	// it's uncertain whether the latch should be cleared here or when it's read
 	soundlatch_clear_w(space, 0, 0);
-	timer_call_after_resynch(space->machine, NULL, BUSY_CLEAR, sndirq_update_callback);
+	space->machine->scheduler().synchronize(FUNC(sndirq_update_callback), BUSY_CLEAR);
 	return 0xff;
 }
 
@@ -3647,7 +3647,7 @@ static MACHINE_CONFIG_START( marvins, snk_state )
 	MCFG_CPU_IO_MAP(marvins_sound_portmap)
 	MCFG_CPU_PERIODIC_INT(nmi_line_assert, 244)	// schematics show a separate 244Hz timer
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -3717,7 +3717,7 @@ static MACHINE_CONFIG_START( jcross, snk_state )
 	MCFG_CPU_IO_MAP(jcross_sound_portmap)
 	MCFG_CPU_PERIODIC_INT(irq0_line_assert, 244)	// Marvin's frequency, sounds ok
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -3796,7 +3796,7 @@ static MACHINE_CONFIG_START( tnk3, snk_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(tnk3_YM3526_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -3881,7 +3881,7 @@ static MACHINE_CONFIG_START( ikari, snk_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(YM3526_YM3526_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -3939,7 +3939,7 @@ static MACHINE_CONFIG_START( bermudat, snk_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_8MHz/2) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(YM3526_Y8950_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(24000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(24000))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -4043,7 +4043,7 @@ static MACHINE_CONFIG_START( tdfever, snk_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(YM3526_Y8950_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)

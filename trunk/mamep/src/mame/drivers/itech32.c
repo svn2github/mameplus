@@ -390,7 +390,7 @@ static UINT32 *tms1_boot;
 static UINT8 tms_spinning[2];
 
 #define START_TMS_SPINNING(n)			do { cpu_spinuntil_trigger(space->cpu, 7351 + n); tms_spinning[n] = 1; } while (0)
-#define STOP_TMS_SPINNING(machine, n)	do { cpuexec_trigger(machine, 7351 + n); tms_spinning[n] = 0; } while (0)
+#define STOP_TMS_SPINNING(machine, n)	do { machine->scheduler().trigger(7351 + n); tms_spinning[n] = 0; } while (0)
 
 
 
@@ -520,9 +520,9 @@ static READ32_HANDLER( trackball32_4bit_r )
 	static int effx, effy;
 	static int lastresult;
 	static attotime lasttime;
-	attotime curtime = timer_get_time(space->machine);
+	attotime curtime = space->machine->time();
 
-	if (attotime_compare(attotime_sub(curtime, lasttime), space->machine->primary_screen->scan_period()) > 0)
+	if ((curtime - lasttime) > space->machine->primary_screen->scan_period())
 	{
 		int upper, lower;
 		int dx, dy;
@@ -559,9 +559,9 @@ static READ32_HANDLER( trackball32_4bit_p2_r )
 	static int effx, effy;
 	static int lastresult;
 	static attotime lasttime;
-	attotime curtime = timer_get_time(space->machine);
+	attotime curtime = space->machine->time();
 
-	if (attotime_compare(attotime_sub(curtime, lasttime), space->machine->primary_screen->scan_period()) > 0)
+	if ((curtime - lasttime) > space->machine->primary_screen->scan_period())
 	{
 		int upper, lower;
 		int dx, dy;
@@ -678,7 +678,7 @@ static TIMER_CALLBACK( delayed_sound_data_w )
 static WRITE16_HANDLER( sound_data_w )
 {
 	if (ACCESSING_BITS_0_7)
-		timer_call_after_resynch(space->machine, NULL, data & 0xff, delayed_sound_data_w);
+		space->machine->scheduler().synchronize(FUNC(delayed_sound_data_w), data & 0xff);
 }
 
 
@@ -691,7 +691,7 @@ static READ32_HANDLER( sound_data32_r )
 static WRITE32_HANDLER( sound_data32_w )
 {
 	if (ACCESSING_BITS_16_23)
-		timer_call_after_resynch(space->machine, NULL, (data >> 16) & 0xff, delayed_sound_data_w);
+		space->machine->scheduler().synchronize(FUNC(delayed_sound_data_w), (data >> 16) & 0xff);
 }
 
 
@@ -836,7 +836,7 @@ static WRITE32_HANDLER( tms1_68k_ram_w )
 	if (offset == 0) COMBINE_DATA(tms1_boot);
 	if (offset == 0x382 && tms_spinning[0]) STOP_TMS_SPINNING(space->machine, 0);
 	if (!tms_spinning[0])
-		cpuexec_boost_interleave(space->machine, ATTOTIME_IN_HZ(CPU020_CLOCK/256), ATTOTIME_IN_USEC(20));
+		space->machine->scheduler().boost_interleave(attotime::from_hz(CPU020_CLOCK/256), attotime::from_usec(20));
 }
 
 
@@ -845,21 +845,21 @@ static WRITE32_HANDLER( tms2_68k_ram_w )
 	COMBINE_DATA(&tms2_ram[offset]);
 	if (offset == 0x382 && tms_spinning[1]) STOP_TMS_SPINNING(space->machine, 1);
 	if (!tms_spinning[1])
-		cpuexec_boost_interleave(space->machine, ATTOTIME_IN_HZ(CPU020_CLOCK/256), ATTOTIME_IN_USEC(20));
+		space->machine->scheduler().boost_interleave(attotime::from_hz(CPU020_CLOCK/256), attotime::from_usec(20));
 }
 
 
 static WRITE32_HANDLER( tms1_trigger_w )
 {
 	COMBINE_DATA(&tms1_ram[offset]);
-	cpuexec_boost_interleave(space->machine, ATTOTIME_IN_HZ(CPU020_CLOCK/256), ATTOTIME_IN_USEC(20));
+	space->machine->scheduler().boost_interleave(attotime::from_hz(CPU020_CLOCK/256), attotime::from_usec(20));
 }
 
 
 static WRITE32_HANDLER( tms2_trigger_w )
 {
 	COMBINE_DATA(&tms2_ram[offset]);
-	cpuexec_boost_interleave(space->machine, ATTOTIME_IN_HZ(CPU020_CLOCK/256), ATTOTIME_IN_USEC(20));
+	space->machine->scheduler().boost_interleave(attotime::from_hz(CPU020_CLOCK/256), attotime::from_usec(20));
 }
 
 
@@ -1769,7 +1769,7 @@ static MACHINE_CONFIG_DERIVED( drivedge, bloodstm )
 //  MCFG_CPU_ADD("comm", M6803, 8000000/4) -- network CPU
 
 	MCFG_MACHINE_RESET(drivedge)
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 MACHINE_CONFIG_END
 
 

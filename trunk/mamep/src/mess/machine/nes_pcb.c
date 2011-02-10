@@ -1029,7 +1029,7 @@ static void common_sxrom_write_handler( address_space *space, offs_t offset, UIN
 	else
 	{
 		state->mmc1_reg_write_enable = 0;
-		timer_call_after_resynch(space->machine, NULL, 0, mmc1_resync_callback);
+		space->machine->scheduler().synchronize(FUNC(mmc1_resync_callback));
 	}
 
 	if (data & 0x80)
@@ -9127,12 +9127,12 @@ static WRITE8_HANDLER( btl_mariobaby_w )
 				if (!state->IRQ_enable && (data & 0x02))
 				{
 					state->IRQ_enable = 1;
-					timer_adjust_oneshot(state->irq_timer, downcast<cpu_device *>(state->maincpu)->cycles_to_attotime(24576), 0);
+					state->irq_timer->adjust(downcast<cpu_device *>(state->maincpu)->cycles_to_attotime(24576));
 				}
 				if (!(data & 0x02))
 				{
 					state->IRQ_enable = 0;
-					timer_adjust_oneshot(state->irq_timer, attotime_never, 0);
+					state->irq_timer->adjust(attotime::never);
 				}
 				break;
 		}

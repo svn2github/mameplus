@@ -339,11 +339,11 @@ static MACHINE_START( mrflea )
 	state->maincpu = machine->device("maincpu");
 	state->subcpu = machine->device("sub");
 
-	state_save_register_global(machine, state->gfx_bank);
-	state_save_register_global(machine, state->io);
-	state_save_register_global(machine, state->main);
-	state_save_register_global(machine, state->status);
-	state_save_register_global(machine, state->select1);
+	state->save_item(NAME(state->gfx_bank));
+	state->save_item(NAME(state->io));
+	state->save_item(NAME(state->main));
+	state->save_item(NAME(state->status));
+	state->save_item(NAME(state->select1));
 }
 
 static MACHINE_RESET( mrflea )
@@ -370,7 +370,7 @@ static MACHINE_CONFIG_START( mrflea, mrflea_state )
 	MCFG_CPU_IO_MAP(mrflea_slave_io_map)
 	MCFG_CPU_VBLANK_INT_HACK(mrflea_slave_interrupt,2)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(mrflea)
 	MCFG_MACHINE_RESET(mrflea)

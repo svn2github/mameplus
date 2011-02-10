@@ -105,7 +105,7 @@ static WRITE8_DEVICE_HANDLER( misc_w )
 	/* bit 1 = (10) = PC1 */
 	/* bit 0 = (32) = PC0 */
 	state->input_mux = data & 7;
-	logerror("%s:misc_w(%02X)\n", cpuexec_describe_context(device->machine), data);
+	logerror("%s:misc_w(%02X)\n", device->machine->describe_context(), data);
 }
 
 
@@ -119,14 +119,14 @@ static WRITE8_DEVICE_HANDLER( sound_w )
 	/* bit 2 = folla a */
 	/* bit 1 = folla m */
 	/* bit 0 = folla b */
-	logerror("%s:sound_w(%02X)\n", cpuexec_describe_context(device->machine), data);
+	logerror("%s:sound_w(%02X)\n", device->machine->describe_context(), data);
 }
 
 
 static WRITE8_DEVICE_HANDLER( pb_w )
 {
 	/* write PB0-7 */
-	logerror("%s:pb_w(%02X)\n", cpuexec_describe_context(device->machine), data);
+	logerror("%s:pb_w(%02X)\n", device->machine->describe_context(), data);
 }
 
 
@@ -291,12 +291,12 @@ static MACHINE_START( dribling )
 	state->ppi_0 = machine->device("ppi8255_0");
 	state->ppi_1 = machine->device("ppi8255_1");
 
-	state_save_register_global(machine, state->abca);
-	state_save_register_global(machine, state->di);
-	state_save_register_global(machine, state->dr);
-	state_save_register_global(machine, state->ds);
-	state_save_register_global(machine, state->sh);
-	state_save_register_global(machine, state->input_mux);
+	state->save_item(NAME(state->abca));
+	state->save_item(NAME(state->di));
+	state->save_item(NAME(state->dr));
+	state->save_item(NAME(state->ds));
+	state->save_item(NAME(state->sh));
+	state->save_item(NAME(state->input_mux));
 }
 
 static MACHINE_RESET( dribling )

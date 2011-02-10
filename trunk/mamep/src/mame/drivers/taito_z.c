@@ -965,7 +965,7 @@ static INTERRUPT_GEN( sci_interrupt )
 	state->sci_int6 = !state->sci_int6;
 
 	if (state->sci_int6)
-		timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), NULL, 0, taitoz_interrupt6);
+		device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(taitoz_interrupt6));
 
 	cpu_set_input_line(device, 4, HOLD_LINE);
 }
@@ -983,7 +983,7 @@ static INTERRUPT_GEN( dblaxle_interrupt )
 	state->dblaxle_int6 = !state->dblaxle_int6;
 
 	if (state->dblaxle_int6)
-		timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), NULL, 0, taitoz_interrupt6);
+		device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(taitoz_interrupt6));
 
 	cpu_set_input_line(device, 4, HOLD_LINE);
 }
@@ -991,7 +991,7 @@ static INTERRUPT_GEN( dblaxle_interrupt )
 static INTERRUPT_GEN( dblaxle_cpub_interrupt )
 {
 	// Unsure how many int6's per frame
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), NULL,  0, taitoz_interrupt6);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(taitoz_interrupt6));
 	cpu_set_input_line(device, 4, HOLD_LINE);
 }
 
@@ -1208,7 +1208,7 @@ static WRITE16_HANDLER( bshark_stick_w )
        but we don't want CPUA to have an int6 before int4 is over (?)
     */
 
-	timer_set(space->machine, downcast<cpu_device *>(space->cpu)->cycles_to_attotime(10000), NULL, 0, taitoz_interrupt6);
+	space->machine->scheduler().timer_set(downcast<cpu_device *>(space->cpu)->cycles_to_attotime(10000), FUNC(taitoz_interrupt6));
 }
 
 
@@ -1293,7 +1293,7 @@ static WRITE16_HANDLER( spacegun_lightgun_w )
        Four lightgun interrupts happen before the collected coords
        are moved to shared ram where CPUA can use them. */
 
-	timer_set(space->machine, downcast<cpu_device *>(space->cpu)->cycles_to_attotime(10000), NULL, 0, taitoz_cpub_interrupt5);
+	space->machine->scheduler().timer_set(downcast<cpu_device *>(space->cpu)->cycles_to_attotime(10000), FUNC(taitoz_cpub_interrupt5));
 }
 
 static WRITE16_HANDLER( spacegun_gun_output_w )
@@ -2978,14 +2978,14 @@ static MACHINE_START( bshark )
 	state->tc0220ioc = machine->device("tc0220ioc");
 	state->tc0140syt = machine->device("tc0140syt");
 
-	state_save_register_global(machine, state->cpua_ctrl);
+	state->save_item(NAME(state->cpua_ctrl));
 
 	/* these are specific to various games: we ought to split the inits */
-	state_save_register_global(machine, state->sci_int6);
-	state_save_register_global(machine, state->dblaxle_int6);
-	state_save_register_global(machine, state->ioc220_port);
+	state->save_item(NAME(state->sci_int6));
+	state->save_item(NAME(state->dblaxle_int6));
+	state->save_item(NAME(state->ioc220_port));
 
-	state_save_register_global(machine, state->banknum);
+	state->save_item(NAME(state->banknum));
 }
 
 static MACHINE_START( taitoz )
@@ -2994,7 +2994,7 @@ static MACHINE_START( taitoz )
 
 	memory_configure_bank(machine, "bank10", 0, banks, machine->region("audiocpu")->base() + 0xc000, 0x4000);
 
-	state_save_register_postload(machine, taitoz_postload, NULL);
+	machine->state().register_postload(taitoz_postload, NULL);
 
 	MACHINE_START_CALL(bshark);
 }
@@ -3157,7 +3157,7 @@ static MACHINE_CONFIG_START( enforce, taitoz_state )
 	MCFG_MACHINE_START(taitoz)
 	MCFG_MACHINE_RESET(taitoz)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitoz_io220_intf)
 
@@ -3220,7 +3220,7 @@ static MACHINE_CONFIG_START( bshark, taitoz_state )
 	MCFG_MACHINE_START(bshark)
 	MCFG_MACHINE_RESET(taitoz)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitoz_io220_intf)
 
@@ -3283,7 +3283,7 @@ static MACHINE_CONFIG_START( sci, taitoz_state )
 	MCFG_MACHINE_START(taitoz)
 	MCFG_MACHINE_RESET(taitoz)
 
-	MCFG_QUANTUM_TIME(HZ(3000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(3000))
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitoz_io220_intf)
 
@@ -3346,7 +3346,7 @@ static MACHINE_CONFIG_START( nightstr, taitoz_state )
 	MCFG_MACHINE_START(taitoz)
 	MCFG_MACHINE_RESET(taitoz)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitoz_io220_intf)
 
@@ -3411,7 +3411,7 @@ static MACHINE_CONFIG_START( aquajack, taitoz_state )
 	MCFG_MACHINE_START(taitoz)
 	MCFG_MACHINE_RESET(taitoz)
 
-	MCFG_QUANTUM_TIME(HZ(30000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(30000))
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitoz_io220_intf)
 
@@ -3535,7 +3535,7 @@ static MACHINE_CONFIG_START( dblaxle, taitoz_state )
 	MCFG_MACHINE_START(taitoz)
 	MCFG_MACHINE_RESET(taitoz)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_TC0510NIO_ADD("tc0510nio", taitoz_io510_intf)
 
@@ -3598,7 +3598,7 @@ static MACHINE_CONFIG_START( racingb, taitoz_state )
 	MCFG_MACHINE_START(taitoz)
 	MCFG_MACHINE_RESET(taitoz)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_TC0510NIO_ADD("tc0510nio", taitoz_io510_intf)
 
@@ -4888,8 +4888,8 @@ static DRIVER_INIT( bshark )
 	state->dblaxle_vibration = 0;
 	state->eep_latch = 0;
 
-	state_save_register_postload(machine, bshark_postload, NULL);
-	state_save_register_global(machine, state->eep_latch);
+	machine->state().register_postload(bshark_postload, NULL);
+	state->save_item(NAME(state->eep_latch));
 }
 
 static DRIVER_INIT( chasehq )

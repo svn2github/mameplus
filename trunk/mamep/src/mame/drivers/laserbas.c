@@ -26,13 +26,13 @@ public:
 	laserbas_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	/* video-related */
-	UINT8    *vram1;
-	UINT8    *vram2;
-	int      vrambank;
-
 	/* misc */
 	int      count;
+
+	/* video-related */
+	int      vrambank;
+	UINT8    vram1[0x8000];
+	UINT8    vram2[0x8000];
 };
 
 
@@ -40,11 +40,8 @@ static VIDEO_START(laserbas)
 {
 	laserbas_state *state = machine->driver_data<laserbas_state>();
 
-	state->vram1 = auto_alloc_array(machine, UINT8, 0x8000);
-	state->vram2 = auto_alloc_array(machine, UINT8, 0x8000);
-
-	state_save_register_global_pointer(machine, state->vram1, 0x8000);
-	state_save_register_global_pointer(machine, state->vram2, 0x8000);
+	state->save_item(NAME(state->vram1));
+	state->save_item(NAME(state->vram2));
 }
 
 static VIDEO_UPDATE(laserbas)
@@ -159,8 +156,8 @@ static MACHINE_START( laserbas )
 {
 	laserbas_state *state = machine->driver_data<laserbas_state>();
 
-	state_save_register_global(machine, state->vrambank);
-	state_save_register_global(machine, state->count);
+	state->save_item(NAME(state->vrambank));
+	state->save_item(NAME(state->count));
 }
 
 static MACHINE_RESET( laserbas )

@@ -142,7 +142,7 @@ static void start_mono_flop( device_t *sn, int n, attotime expire )
 
 	update_SN76477_status(sn);
 
-	timer_adjust_oneshot(state->sound_timer[n], expire, n);
+	state->sound_timer[n]->adjust(expire, n);
 }
 
 
@@ -153,7 +153,7 @@ static void stop_mono_flop( device_t *sn, int n )
 
 	update_SN76477_status(sn);
 
-	timer_adjust_oneshot(state->sound_timer[n], attotime_never, n);
+	state->sound_timer[n]->adjust(attotime::never, n);
 }
 
 
@@ -179,15 +179,15 @@ static void spacefev_sound_pins_changed( running_machine *machine )
 	}
 	if (changes & (1 << 0x3))
 	{
-		start_mono_flop(sn, 0, ATTOTIME_IN_USEC(550 * 36 * 100));
+		start_mono_flop(sn, 0, attotime::from_usec(550 * 36 * 100));
 	}
 	if (changes & (1 << 0x6))
 	{
-		start_mono_flop(sn, 1, ATTOTIME_IN_USEC(550 * 22 * 33));
+		start_mono_flop(sn, 1, attotime::from_usec(550 * 22 * 33));
 	}
 	if (changes & (1 << 0x4))
 	{
-		start_mono_flop(sn, 2, ATTOTIME_IN_USEC(550 * 22 * 33));
+		start_mono_flop(sn, 2, attotime::from_usec(550 * 22 * 33));
 	}
 	if (changes & ((1 << 0x2) | (1 << 0x3) | (1 << 0x5)))
 	{
@@ -208,11 +208,11 @@ static void sheriff_sound_pins_changed( running_machine *machine )
 	}
 	if (changes & (1 << 0x6))
 	{
-		start_mono_flop(sn, 0, ATTOTIME_IN_USEC(550 * 33 * 33));
+		start_mono_flop(sn, 0, attotime::from_usec(550 * 33 * 33));
 	}
 	if (changes & (1 << 0x4))
 	{
-		start_mono_flop(sn, 1, ATTOTIME_IN_USEC(550 * 33 * 33));
+		start_mono_flop(sn, 1, attotime::from_usec(550 * 33 * 33));
 	}
 	if (changes & ((1 << 0x2) | (1 << 0x3) | (1 << 0x5)))
 	{
@@ -329,12 +329,12 @@ static TIMER_CALLBACK( delayed_sound_2_callback )
 
 WRITE8_HANDLER( n8080_sound_1_w )
 {
-	timer_call_after_resynch(space->machine, NULL, data, delayed_sound_1_callback); /* force CPUs to sync */
+	space->machine->scheduler().synchronize(FUNC(delayed_sound_1_callback), data); /* force CPUs to sync */
 }
 
 WRITE8_HANDLER( n8080_sound_2_w )
 {
-	timer_call_after_resynch(space->machine, NULL, data, delayed_sound_2_callback); /* force CPUs to sync */
+	space->machine->scheduler().synchronize(FUNC(delayed_sound_2_callback), data); /* force CPUs to sync */
 }
 
 
@@ -431,7 +431,7 @@ static WRITE8_HANDLER( helifire_sound_ctrl_w )
 		state->helifire_dac_timing = DECAY_RATE * log(state->helifire_dac_volume);
 	}
 
-	state->helifire_dac_timing += attotime_to_double(timer_get_time(space->machine));
+	state->helifire_dac_timing += space->machine->time().as_double();
 }
 
 
@@ -443,7 +443,7 @@ static TIMER_DEVICE_CALLBACK( spacefev_vco_voltage_timer )
 
 	if (state->mono_flop[2])
 	{
-		voltage = 5 * (1 - exp(- attotime_to_double(timer_timeelapsed(state->sound_timer[2])) / 0.22));
+		voltage = 5 * (1 - exp(- state->sound_timer[2]->elapsed().as_double() / 0.22));
 	}
 
 	sn76477_vco_voltage_w(sn, voltage);
@@ -453,7 +453,7 @@ static TIMER_DEVICE_CALLBACK( spacefev_vco_voltage_timer )
 static TIMER_DEVICE_CALLBACK( helifire_dac_volume_timer )
 {
 	n8080_state *state = timer.machine->driver_data<n8080_state>();
-	double t = state->helifire_dac_timing - attotime_to_double(timer_get_time(timer.machine));
+	double t = state->helifire_dac_timing - timer.machine->time().as_double();
 
 	if (state->helifire_dac_phase)
 	{
@@ -470,15 +470,15 @@ MACHINE_START( spacefev_sound )
 {
 	n8080_state *state = machine->driver_data<n8080_state>();
 
-	state->sound_timer[0] = timer_alloc(machine, stop_mono_flop_callback, NULL);
-	state->sound_timer[1] = timer_alloc(machine, stop_mono_flop_callback, NULL);
-	state->sound_timer[2] = timer_alloc(machine, stop_mono_flop_callback, NULL);
+	state->sound_timer[0] = machine->scheduler().timer_alloc(FUNC(stop_mono_flop_callback));
+	state->sound_timer[1] = machine->scheduler().timer_alloc(FUNC(stop_mono_flop_callback));
+	state->sound_timer[2] = machine->scheduler().timer_alloc(FUNC(stop_mono_flop_callback));
 
-	state_save_register_global(machine, state->prev_snd_data);
-	state_save_register_global(machine, state->prev_sound_pins);
-	state_save_register_global(machine, state->curr_sound_pins);
-	state_save_register_global(machine, state->n8080_hardware);
-	state_save_register_global_array(machine, state->mono_flop);
+	state->save_item(NAME(state->prev_snd_data));
+	state->save_item(NAME(state->prev_sound_pins));
+	state->save_item(NAME(state->curr_sound_pins));
+	state->save_item(NAME(state->n8080_hardware));
+	state->save_item(NAME(state->mono_flop));
 }
 
 MACHINE_RESET( spacefev_sound )
@@ -502,14 +502,14 @@ MACHINE_START( sheriff_sound )
 {
 	n8080_state *state = machine->driver_data<n8080_state>();
 
-	state->sound_timer[0] = timer_alloc(machine, stop_mono_flop_callback, NULL);
-	state->sound_timer[1] = timer_alloc(machine, stop_mono_flop_callback, NULL);
+	state->sound_timer[0] = machine->scheduler().timer_alloc(FUNC(stop_mono_flop_callback));
+	state->sound_timer[1] = machine->scheduler().timer_alloc(FUNC(stop_mono_flop_callback));
 
-	state_save_register_global(machine, state->prev_snd_data);
-	state_save_register_global(machine, state->prev_sound_pins);
-	state_save_register_global(machine, state->curr_sound_pins);
-	state_save_register_global(machine, state->n8080_hardware);
-	state_save_register_global_array(machine, state->mono_flop);
+	state->save_item(NAME(state->prev_snd_data));
+	state->save_item(NAME(state->prev_sound_pins));
+	state->save_item(NAME(state->curr_sound_pins));
+	state->save_item(NAME(state->n8080_hardware));
+	state->save_item(NAME(state->mono_flop));
 }
 
 MACHINE_RESET( sheriff_sound )
@@ -532,13 +532,13 @@ MACHINE_START( helifire_sound )
 {
 	n8080_state *state = machine->driver_data<n8080_state>();
 
-	state_save_register_global(machine, state->prev_snd_data);
-	state_save_register_global(machine, state->prev_sound_pins);
-	state_save_register_global(machine, state->curr_sound_pins);
-	state_save_register_global(machine, state->n8080_hardware);
-	state_save_register_global(machine, state->helifire_dac_volume);
-	state_save_register_global(machine, state->helifire_dac_timing);
-	state_save_register_global(machine, state->helifire_dac_phase);
+	state->save_item(NAME(state->prev_snd_data));
+	state->save_item(NAME(state->prev_sound_pins));
+	state->save_item(NAME(state->curr_sound_pins));
+	state->save_item(NAME(state->n8080_hardware));
+	state->save_item(NAME(state->helifire_dac_volume));
+	state->save_item(NAME(state->helifire_dac_timing));
+	state->save_item(NAME(state->helifire_dac_phase));
 }
 
 MACHINE_RESET( helifire_sound )
@@ -592,7 +592,7 @@ MACHINE_CONFIG_FRAGMENT( spacefev_sound )
 	MCFG_CPU_PROGRAM_MAP(n8080_sound_cpu_map)
 	MCFG_CPU_IO_MAP(n8080_sound_io_map)
 
-	MCFG_TIMER_ADD_PERIODIC("vco_timer", spacefev_vco_voltage_timer, HZ(1000))
+	MCFG_TIMER_ADD_PERIODIC("vco_timer", spacefev_vco_voltage_timer, attotime::from_hz(1000))
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -632,7 +632,7 @@ MACHINE_CONFIG_FRAGMENT( helifire_sound )
 	MCFG_CPU_PROGRAM_MAP(n8080_sound_cpu_map)
 	MCFG_CPU_IO_MAP(helifire_sound_io_map)
 
-	MCFG_TIMER_ADD_PERIODIC("helifire_dac", helifire_dac_volume_timer, HZ(1000) )
+	MCFG_TIMER_ADD_PERIODIC("helifire_dac", helifire_dac_volume_timer, attotime::from_hz(1000) )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

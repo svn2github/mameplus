@@ -455,7 +455,7 @@ static WRITE32_DEVICE_HANDLER( dragngun_eeprom_w )
 		eeprom_set_cs_line(device, (data & 0x4) ? CLEAR_LINE : ASSERT_LINE);
 		return;
 	}
-	logerror("%s:Write control 1 %08x %08x\n",cpuexec_describe_context(device->machine),offset,data);
+	logerror("%s:Write control 1 %08x %08x\n",device->machine->describe_context(),offset,data);
 }
 
 /**********************************************************************************/
@@ -1950,7 +1950,7 @@ static MACHINE_CONFIG_START( nslasher, driver_device )
 	MCFG_CPU_PROGRAM_MAP(nslasher_sound)
 	MCFG_CPU_IO_MAP(nslasher_io_sound)
 
-	MCFG_QUANTUM_TIME(HZ(6000))	/* to improve main<->audio comms */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* to improve main<->audio comms */
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 

@@ -317,7 +317,7 @@ static void borntofi_adpcm_start( device_t *device, int voice )
 	msm5205_reset_w(device, 0);
 	state->adpcm_playing[voice] = 1;
 	state->adpcm_nibble[voice] = 0;
-//  logerror("%s: adpcm start = %06x, stop = %06x\n", cpuexec_describe_context(device->machine), state->adpcm_addr[0][voice], state->adpcm_addr[1][voice]);
+//  logerror("%s: adpcm start = %06x, stop = %06x\n", device->machine->describe_context(), state->adpcm_addr[0][voice], state->adpcm_addr[1][voice]);
 }
 
 static void borntofi_adpcm_stop( device_t *device, int voice )
@@ -831,7 +831,7 @@ static MACHINE_START( fantland )
 
 	state->audio_cpu = machine->device("audiocpu");
 
-	state_save_register_global(machine, state->nmi_enable);
+	state->save_item(NAME(state->nmi_enable));
 }
 
 static MACHINE_RESET( fantland )
@@ -868,7 +868,7 @@ static MACHINE_CONFIG_START( fantland, fantland_state )
 	MCFG_MACHINE_START(fantland)
 	MCFG_MACHINE_RESET(fantland)
 
-	MCFG_QUANTUM_TIME(HZ(8000))	// sound irq must feed the DAC at 8kHz
+	MCFG_QUANTUM_TIME(attotime::from_hz(8000))	// sound irq must feed the DAC at 8kHz
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -977,14 +977,14 @@ static MACHINE_START( borntofi )
 	state->msm3 = machine->device("msm3");
 	state->msm4 = machine->device("msm4");
 
-	state_save_register_global_array(machine, state->old_x);
-	state_save_register_global_array(machine, state->old_y);
-	state_save_register_global_array(machine, state->old_f);
-	state_save_register_global_array(machine, state->input_ret);
-	state_save_register_global_array(machine, state->adpcm_playing);
-	state_save_register_global_array(machine, state->adpcm_addr[0]);
-	state_save_register_global_array(machine, state->adpcm_addr[1]);
-	state_save_register_global_array(machine, state->adpcm_nibble);
+	state->save_item(NAME(state->old_x));
+	state->save_item(NAME(state->old_y));
+	state->save_item(NAME(state->old_f));
+	state->save_item(NAME(state->input_ret));
+	state->save_item(NAME(state->adpcm_playing));
+	state->save_item(NAME(state->adpcm_addr[0]));
+	state->save_item(NAME(state->adpcm_addr[1]));
+	state->save_item(NAME(state->adpcm_nibble));
 }
 
 static MACHINE_RESET( borntofi )

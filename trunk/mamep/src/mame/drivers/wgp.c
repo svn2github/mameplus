@@ -477,7 +477,7 @@ static TIMER_CALLBACK( wgp_cpub_interrupt6 )
 
 static INTERRUPT_GEN( wgp_cpub_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(200000-500), NULL, 0, wgp_cpub_interrupt6);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000-500), FUNC(wgp_cpub_interrupt6));
 	cpu_set_input_line(device, 4, HOLD_LINE);
 }
 
@@ -601,7 +601,7 @@ static WRITE16_HANDLER( wgp_adinput_w )
        hardware has got the next a/d conversion ready. We set a token
        delay of 10000 cycles although our inputs are always ready. */
 
-	timer_set(space->machine, downcast<cpu_device *>(space->cpu)->cycles_to_attotime(10000), NULL, 0, wgp_interrupt6);
+	space->machine->scheduler().timer_set(downcast<cpu_device *>(space->cpu)->cycles_to_attotime(10000), FUNC(wgp_interrupt6));
 }
 
 
@@ -961,10 +961,10 @@ static MACHINE_START( wgp )
 	state->tc0140syt = machine->device("tc0140syt");
 	state->tc0100scn = machine->device("tc0100scn");
 
-	state_save_register_global(machine, state->cpua_ctrl);
-	state_save_register_global(machine, state->banknum);
-	state_save_register_global(machine, state->port_sel);
-	state_save_register_postload(machine, wgp_postload, NULL);
+	state->save_item(NAME(state->cpua_ctrl));
+	state->save_item(NAME(state->banknum));
+	state->save_item(NAME(state->port_sel));
+	machine->state().register_postload(wgp_postload, NULL);
 }
 
 static const tc0100scn_interface wgp_tc0100scn_intf =
@@ -1015,7 +1015,7 @@ static MACHINE_CONFIG_START( wgp, wgp_state )
 	MCFG_MACHINE_START(wgp)
 	MCFG_MACHINE_RESET(wgp)
 
-	MCFG_QUANTUM_TIME(HZ(30000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(30000))
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", wgp_io_intf)
 
@@ -1051,7 +1051,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( wgp2, wgp )
 
-	MCFG_QUANTUM_TIME(HZ(12000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 	/* video hardware */
 	MCFG_VIDEO_START(wgp2)
 

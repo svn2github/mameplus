@@ -48,7 +48,7 @@ static UINT8 m6840_irq_vector;
 static UINT8 v493_irq_state;
 static UINT8 v493_irq_vector;
 
-static timer_fired_func v493_callback;
+static timer_expired_func v493_callback;
 
 static UINT8 zwackery_sound_data;
 
@@ -169,7 +169,7 @@ MACHINE_START( mcr68 )
 	{
 		struct counter_state *m6840 = &m6840_state[i];
 
-		m6840->timer = timer_alloc(machine, counter_fired_callback, NULL);
+		m6840->timer = machine->scheduler().timer_alloc(FUNC(counter_fired_callback));
 
 		state_save_register_item(machine, "m6840", NULL, i, m6840->control);
 		state_save_register_item(machine, "m6840", NULL, i, m6840->latch);
@@ -192,9 +192,9 @@ static void mcr68_common_init(running_machine *machine)
 	int i;
 
 	/* reset the 6840's */
-	m6840_counter_periods[0] = ATTOTIME_IN_HZ(30);			/* clocked by /VBLANK */
-	m6840_counter_periods[1] = attotime_never;					/* grounded */
-	m6840_counter_periods[2] = ATTOTIME_IN_HZ(512 * 30);	/* clocked by /HSYNC */
+	m6840_counter_periods[0] = attotime::from_hz(30);			/* clocked by /VBLANK */
+	m6840_counter_periods[1] = attotime::never;					/* grounded */
+	m6840_counter_periods[2] = attotime::from_hz(512 * 30);	/* clocked by /HSYNC */
 
 	m6840_status = 0x00;
 	m6840_status_read_since_int = 0x00;
@@ -206,13 +206,13 @@ static void mcr68_common_init(running_machine *machine)
 		m6840->control = 0x00;
 		m6840->latch = 0xffff;
 		m6840->count = 0xffff;
-		timer_enable(m6840->timer, FALSE);
+		m6840->timer->enable(false);
 		m6840->timer_active = 0;
 		m6840->period = m6840_counter_periods[i];
 	}
 
 	/* initialize the clock */
-	m6840_internal_counter_period = ATTOTIME_IN_HZ(cputag_get_clock(machine, "maincpu") / 10);
+	m6840_internal_counter_period = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10);
 
 	/* initialize the sound */
 	mcr_sound_reset(machine);
@@ -267,7 +267,7 @@ INTERRUPT_GEN( mcr68_interrupt )
 	/* also set a timer to generate the 493 signal at a specific time before the next VBLANK */
 	/* the timing of this is crucial for Blasted and Tri-Sports, which check the timing of */
 	/* VBLANK and 493 using counter 2 */
-	timer_set(device->machine, attotime_sub(ATTOTIME_IN_HZ(30), mcr68_timing_factor), NULL, 0, v493_callback);
+	device->machine->scheduler().timer_set(attotime::from_hz(30) - mcr68_timing_factor, FUNC(v493_callback));
 }
 
 
@@ -296,7 +296,7 @@ static TIMER_CALLBACK( mcr68_493_callback )
 {
 	v493_irq_state = 1;
 	update_mcr68_interrupts(machine);
-	timer_set(machine, machine->primary_screen->scan_period(), NULL, 0, mcr68_493_off_callback);
+	machine->scheduler().timer_set(machine->primary_screen->scan_period(), FUNC(mcr68_493_off_callback));
 	logerror("--- (INT1) ---\n");
 }
 
@@ -351,7 +351,7 @@ static TIMER_CALLBACK( zwackery_493_callback )
 	device_t *pia = machine->device("pia0");
 
 	pia6821_ca1_w(pia, 1);
-	timer_set(machine, machine->primary_screen->scan_period(), NULL, 0, zwackery_493_off_callback);
+	machine->scheduler().timer_set(machine->primary_screen->scan_period(), FUNC(zwackery_493_off_callback));
 }
 
 
@@ -460,7 +460,7 @@ static void reload_count(int counter)
 	/* counter 0 is self-updating if clocked externally */
 	if (counter == 0 && !(m6840_state[counter].control & 0x02))
 	{
-		timer_adjust_oneshot(m6840_state[counter].timer, attotime_never, 0);
+		m6840_state[counter].timer->adjust(attotime::never);
 		m6840_state[counter].timer_active = 0;
 		return;
 	}
@@ -479,9 +479,9 @@ static void reload_count(int counter)
 		count = count + 1;
 
 	/* set the timer */
-	total_period = attotime_make(0, attotime_to_attoseconds(period) * count);
-LOG(("reload_count(%d): period = %f  count = %d\n", counter, attotime_to_double(period), count));
-	timer_adjust_oneshot(m6840_state[counter].timer, total_period, (count << 2) + counter);
+	total_period = period * count;
+LOG(("reload_count(%d): period = %f  count = %d\n", counter, period.as_double(), count));
+	m6840_state[counter].timer->adjust(total_period, (count << 2) + counter);
 	m6840_state[counter].timer_active = 1;
 }
 
@@ -502,7 +502,7 @@ static UINT16 compute_counter(int counter)
 		period = m6840_counter_periods[counter];
 
 	/* see how many are left */
-	remaining = attotime_to_attoseconds(timer_timeleft(m6840_state[counter].timer)) / attotime_to_attoseconds(period);
+	remaining = m6840_state[counter].timer->remaining().as_attoseconds() / period.as_attoseconds();
 
 	/* adjust the count for dual byte mode */
 	if (m6840_state[counter].control & 0x04)
@@ -544,7 +544,7 @@ static WRITE8_HANDLER( mcr68_6840_w_common )
 			{
 				for (i = 0; i < 3; i++)
 				{
-					timer_adjust_oneshot(m6840_state[i].timer, attotime_never, 0);
+					m6840_state[i].timer->adjust(attotime::never);
 					m6840_state[i].timer_active = 0;
 				}
 			}

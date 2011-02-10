@@ -18,9 +18,9 @@ MACHINE_START( extra_8080bw_sh )
 {
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 
-	state_save_register_global(machine, state->port_1_last_extra);
-	state_save_register_global(machine, state->port_2_last_extra);
-	state_save_register_global(machine, state->port_3_last_extra);
+	state->save_item(NAME(state->port_1_last_extra));
+	state->save_item(NAME(state->port_2_last_extra));
+	state->save_item(NAME(state->port_3_last_extra));
 }
 
 /*******************************************************/
@@ -43,7 +43,7 @@ WRITE8_HANDLER( invadpt2_sh_port_1_w )
 
 	state->screen_red = data & 0x04;
 
-	sound_global_enable(space->machine, data & 0x20);
+	space->machine->sound().system_enable(data & 0x20);
 
 	state->port_1_last_extra = data;
 
@@ -134,7 +134,7 @@ WRITE8_HANDLER( lrescue_sh_port_1_w )
 	if (rising_bits & 0x08) sample_start(state->samples, 1, 0, 0);		/* Alien Hit */
 	if (rising_bits & 0x10) sample_start(state->samples, 2, 5, 0);		/* Bonus Ship (not confirmed) */
 
-	sound_global_enable(space->machine, data & 0x20);
+	space->machine->sound().system_enable(data & 0x20);
 
 	state->screen_red = data & 0x04;
 
@@ -192,7 +192,7 @@ WRITE8_HANDLER( ballbomb_sh_port_1_w )
 	if (rising_bits & 0x08) sample_start(state->samples, 1, 7, 0);		/* Hit a Bomb */
 	if (rising_bits & 0x10) sample_start(state->samples, 3, 8, 0);		/* Bonus Base at 1500 points */
 
-	sound_global_enable(space->machine, data & 0x20);
+	space->machine->sound().system_enable(data & 0x20);
 
 	state->screen_red = data & 0x04;
 
@@ -268,7 +268,7 @@ WRITE8_HANDLER( indianbt_sh_port_1_w )
 	if (rising_bits & 0x04) sample_start(state->samples, 2, 3, 0);		/* Move */
 	if (rising_bits & 0x08) sample_start(state->samples, 3, 2, 0);		/* Hit */
 
-	sound_global_enable(space->machine, data & 0x20);
+	space->machine->sound().system_enable(data & 0x20);
 
 	state->screen_red = data & 0x01;
 
@@ -812,16 +812,16 @@ WRITE8_HANDLER( schaser_sh_port_1_w )
 	{
 		if (effect)
 		{
-			if (attotime_compare(state->schaser_effect_555_time_remain, attotime_zero) != 0)
+			if (state->schaser_effect_555_time_remain != attotime::zero)
 			{
 				/* timer re-enabled, use up remaining 555 high time */
-				timer_adjust_oneshot(state->schaser_effect_555_timer, state->schaser_effect_555_time_remain, effect);
+				state->schaser_effect_555_timer->adjust(state->schaser_effect_555_time_remain, effect);
 			}
 			else if (!state->schaser_effect_555_is_low)
 			{
 				/* set 555 high time */
-				attotime new_time = attotime_make(0, ATTOSECONDS_PER_SECOND * .8873 * schaser_effect_rc[effect]);
-				timer_adjust_oneshot(state->schaser_effect_555_timer, new_time, effect);
+				attotime new_time = attotime(0, ATTOSECONDS_PER_SECOND * .8873 * schaser_effect_rc[effect]);
+				state->schaser_effect_555_timer->adjust(new_time, effect);
 			}
 		}
 		else
@@ -829,9 +829,9 @@ WRITE8_HANDLER( schaser_sh_port_1_w )
 			/* disable effect - stops at end of low cycle */
 			if (!state->schaser_effect_555_is_low)
 			{
-				state->schaser_effect_555_time_remain = timer_timeleft(state->schaser_effect_555_timer);
-            		state->schaser_effect_555_time_remain_savable = attotime_to_double(state->schaser_effect_555_time_remain);
-				timer_adjust_oneshot(state->schaser_effect_555_timer, attotime_never, 0);
+				state->schaser_effect_555_time_remain = state->schaser_effect_555_timer->remaining();
+            		state->schaser_effect_555_time_remain_savable = state->schaser_effect_555_time_remain.as_double();
+				state->schaser_effect_555_timer->adjust(attotime::never);
 			}
 		}
 		state->schaser_last_effect = effect;
@@ -867,7 +867,7 @@ WRITE8_HANDLER( schaser_sh_port_2_w )
 	discrete_sound_w(state->discrete, SCHASER_MUSIC_BIT, data & 0x01);
 
 	discrete_sound_w(state->discrete, SCHASER_SND_EN, data & 0x02);
-	sound_global_enable(space->machine, data & 0x02);
+	space->machine->sound().system_enable(data & 0x02);
 
 	coin_lockout_global_w(space->machine, data & 0x04);
 
@@ -887,19 +887,19 @@ static TIMER_CALLBACK( schaser_effect_555_cb )
 	attotime new_time;
 	/* Toggle 555 output */
 	state->schaser_effect_555_is_low = !state->schaser_effect_555_is_low;
-	state->schaser_effect_555_time_remain = attotime_zero;
-	state->schaser_effect_555_time_remain_savable = attotime_to_double(state->schaser_effect_555_time_remain);
+	state->schaser_effect_555_time_remain = attotime::zero;
+	state->schaser_effect_555_time_remain_savable = state->schaser_effect_555_time_remain.as_double();
 
 	if (state->schaser_effect_555_is_low)
-		new_time = attotime_div(PERIOD_OF_555_ASTABLE(0, RES_K(20), CAP_U(1)), 2);
+		new_time = PERIOD_OF_555_ASTABLE(0, RES_K(20), CAP_U(1)) / 2;
 	else
 	{
 		if (effect)
-			new_time = attotime_make(0, ATTOSECONDS_PER_SECOND * .8873 * schaser_effect_rc[effect]);
+			new_time = attotime(0, ATTOSECONDS_PER_SECOND * .8873 * schaser_effect_rc[effect]);
 		else
-			new_time = attotime_never;
+			new_time = attotime::never;
 	}
-	timer_adjust_oneshot(state->schaser_effect_555_timer, new_time, effect);
+	state->schaser_effect_555_timer->adjust(new_time, effect);
 	sn76477_enable_w(state->sn, !(state->schaser_effect_555_is_low || state->schaser_explosion));
 	sn76477_one_shot_cap_voltage_w(state->sn, !(state->schaser_effect_555_is_low || state->schaser_explosion) ? 0 : SN76477_EXTERNAL_VOLTAGE_DISCONNECT);
 }
@@ -909,7 +909,7 @@ static STATE_POSTLOAD( schaser_reinit_555_time_remain )
 {
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 	address_space *space = cpu_get_address_space(state->maincpu, ADDRESS_SPACE_PROGRAM);
-	state->schaser_effect_555_time_remain = double_to_attotime(state->schaser_effect_555_time_remain_savable);
+	state->schaser_effect_555_time_remain = attotime::from_double(state->schaser_effect_555_time_remain_savable);
 	schaser_sh_port_2_w(space, 0, state->port_2_last_extra);
 }
 
@@ -918,13 +918,13 @@ MACHINE_START( schaser_sh )
 {
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 
-	state->schaser_effect_555_timer = timer_alloc(machine, schaser_effect_555_cb, NULL);
+	state->schaser_effect_555_timer = machine->scheduler().timer_alloc(FUNC(schaser_effect_555_cb));
 
-	state_save_register_global(machine, state->schaser_explosion);
-	state_save_register_global(machine, state->schaser_effect_555_is_low);
-	state_save_register_global(machine, state->schaser_effect_555_time_remain_savable);
-	state_save_register_global(machine, state->port_2_last_extra);
-	state_save_register_postload(machine, schaser_reinit_555_time_remain, NULL);
+	state->save_item(NAME(state->schaser_explosion));
+	state->save_item(NAME(state->schaser_effect_555_is_low));
+	state->save_item(NAME(state->schaser_effect_555_time_remain_savable));
+	state->save_item(NAME(state->port_2_last_extra));
+	machine->state().register_postload(schaser_reinit_555_time_remain, NULL);
 }
 
 
@@ -934,11 +934,11 @@ MACHINE_RESET( schaser_sh )
 	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
 
 	state->schaser_effect_555_is_low = 0;
-	timer_adjust_oneshot(state->schaser_effect_555_timer, attotime_never, 0);
+	state->schaser_effect_555_timer->adjust(attotime::never);
 	schaser_sh_port_1_w(space, 0, 0);
 	schaser_sh_port_2_w(space, 0, 0);
-	state->schaser_effect_555_time_remain = attotime_zero;
-	state->schaser_effect_555_time_remain_savable = attotime_to_double(state->schaser_effect_555_time_remain);
+	state->schaser_effect_555_time_remain = attotime::zero;
+	state->schaser_effect_555_time_remain_savable = state->schaser_effect_555_time_remain.as_double();
 }
 
 
@@ -1079,7 +1079,7 @@ WRITE8_HANDLER( schasercv_sh_port_2_w )
 
 	speaker_level_w(state->speaker, (data & 0x01) ? 1 : 0);		/* End-of-Level */
 
-	sound_global_enable(space->machine, data & 0x10);
+	space->machine->sound().system_enable(data & 0x10);
 
 	state->c8080bw_flip_screen = data & 0x20;
 }
@@ -1101,7 +1101,7 @@ WRITE8_HANDLER( yosakdon_sh_port_1_w )
 	if (rising_bits & 0x08) sample_start(state->samples, 1, 2, 0);			/* Man dead */
 	if (rising_bits & 0x10) sample_start(state->samples, 5, 8, 0);			/* Bonus Man? */
 
-	sound_global_enable(space->machine, data & 0x20);
+	space->machine->sound().system_enable(data & 0x20);
 
 	state->port_1_last_extra = data;
 }

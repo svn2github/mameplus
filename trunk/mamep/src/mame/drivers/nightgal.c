@@ -33,9 +33,6 @@ public:
 	nightgal_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	/* memory pointers */
-	UINT8 *    blit_buffer;
-
 	/* video-related */
 	UINT8 blit_raw_data[3];
 	UINT8 true_blit[7];
@@ -51,6 +48,9 @@ public:
 	/* devices */
 	device_t *maincpu;
 	device_t *subcpu;
+
+	/* memory */
+	UINT8      blit_buffer[256*256];
 };
 
 
@@ -63,9 +63,8 @@ static READ8_HANDLER( blitter_status_r )
 static VIDEO_START( nightgal )
 {
 	nightgal_state *state = machine->driver_data<nightgal_state>();
-	state->blit_buffer = auto_alloc_array(machine, UINT8, 256*256);
 
-	state_save_register_global_pointer(machine, state->blit_buffer, 256*256);
+	state->save_item(NAME(state->blit_buffer));
 }
 
 static VIDEO_UPDATE( nightgal )
@@ -832,14 +831,14 @@ static MACHINE_START( nightgal )
 	state->maincpu = machine->device("maincpu");
 	state->subcpu = machine->device("sub");
 
-	state_save_register_global(machine, state->nsc_latch);
-	state_save_register_global(machine, state->z80_latch);
-	state_save_register_global(machine, state->mux_data);
+	state->save_item(NAME(state->nsc_latch));
+	state->save_item(NAME(state->z80_latch));
+	state->save_item(NAME(state->mux_data));
 
-	state_save_register_global_array(machine, state->blit_raw_data);
-	state_save_register_global_array(machine, state->true_blit);
-	state_save_register_global_array(machine, state->pen_data);
-	state_save_register_global_array(machine, state->pen_raw_data);
+	state->save_item(NAME(state->blit_raw_data));
+	state->save_item(NAME(state->true_blit));
+	state->save_item(NAME(state->pen_data));
+	state->save_item(NAME(state->pen_raw_data));
 }
 
 static MACHINE_RESET( nightgal )

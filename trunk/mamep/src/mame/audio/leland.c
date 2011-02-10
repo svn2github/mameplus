@@ -78,7 +78,6 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "streams.h"
 #include "cpu/i86/i86.h"
 #include "cpu/z80/z80.h"
 #include "includes/leland.h"
@@ -272,7 +271,7 @@ static DEVICE_START( leland_sound )
 	state->dac_bufout[0] = state->dac_bufout[1] = 0;
 
 	/* allocate the stream */
-	state->dac_stream = stream_create(device, 0, 1, 256*60, NULL, leland_update);
+	state->dac_stream = device->machine->sound().stream_alloc(*device, 0, 1, 256*60, NULL, leland_update);
 
 	/* allocate memory */
 	state->dac_buffer[0] = auto_alloc_array(device->machine, UINT8, DAC_BUFFER_SIZE);
@@ -546,29 +545,29 @@ static DEVICE_START( common_sh_start )
 	state->has_ym2151 = (device->machine->device("ymsnd") != NULL);
 
 	/* allocate separate streams for the DMA and non-DMA DACs */
-	state->dma_stream = stream_create(device, 0, 1, OUTPUT_RATE, (void *)dmaspace, leland_80186_dma_update);
-	state->nondma_stream = stream_create(device, 0, 1, OUTPUT_RATE, NULL, leland_80186_dac_update);
+	state->dma_stream = device->machine->sound().stream_alloc(*device, 0, 1, OUTPUT_RATE, (void *)dmaspace, leland_80186_dma_update);
+	state->nondma_stream = device->machine->sound().stream_alloc(*device, 0, 1, OUTPUT_RATE, NULL, leland_80186_dac_update);
 
 	/* if we have a 2151, install an externally driven DAC stream */
 	if (state->has_ym2151)
 	{
 		state->ext_base = machine->region("dac")->base();
-		state->extern_stream = stream_create(device, 0, 1, OUTPUT_RATE, NULL, leland_80186_extern_update);
+		state->extern_stream = device->machine->sound().stream_alloc(*device, 0, 1, OUTPUT_RATE, NULL, leland_80186_extern_update);
 	}
 
 	/* create timers here so they stick around */
 	state->i80186.cpu = dmaspace->cpu;
-	state->i80186.timer[0].int_timer = timer_alloc(machine, internal_timer_int, device);
-	state->i80186.timer[1].int_timer = timer_alloc(machine, internal_timer_int, device);
-	state->i80186.timer[2].int_timer = timer_alloc(machine, internal_timer_int, device);
-	state->i80186.timer[0].time_timer = timer_alloc(machine, NULL, NULL);
-	state->i80186.timer[1].time_timer = timer_alloc(machine, NULL, NULL);
-	state->i80186.timer[2].time_timer = timer_alloc(machine, NULL, NULL);
-	state->i80186.dma[0].finish_timer = timer_alloc(machine, dma_timer_callback, device);
-	state->i80186.dma[1].finish_timer = timer_alloc(machine, dma_timer_callback, device);
+	state->i80186.timer[0].int_timer = machine->scheduler().timer_alloc(FUNC(internal_timer_int), device);
+	state->i80186.timer[1].int_timer = machine->scheduler().timer_alloc(FUNC(internal_timer_int), device);
+	state->i80186.timer[2].int_timer = machine->scheduler().timer_alloc(FUNC(internal_timer_int), device);
+	state->i80186.timer[0].time_timer = machine->scheduler().timer_alloc(FUNC(NULL));
+	state->i80186.timer[1].time_timer = machine->scheduler().timer_alloc(FUNC(NULL));
+	state->i80186.timer[2].time_timer = machine->scheduler().timer_alloc(FUNC(NULL));
+	state->i80186.dma[0].finish_timer = machine->scheduler().timer_alloc(FUNC(dma_timer_callback), device);
+	state->i80186.dma[1].finish_timer = machine->scheduler().timer_alloc(FUNC(dma_timer_callback), device);
 
 	for (i = 0; i < 9; i++)
-		state->counter[i].timer = timer_alloc(machine, NULL, NULL);
+		state->counter[i].timer = machine->scheduler().timer_alloc(FUNC(NULL));
 }
 
 static DEVICE_START( leland_80186_sound )
@@ -695,7 +694,7 @@ static DEVICE_RESET( leland_80186_sound )
 static IRQ_CALLBACK( int_callback )
 {
 	leland_sound_state *state = get_safe_token(device->machine->device("custom"));
-	if (LOG_INTERRUPTS) logerror("(%f) **** Acknowledged interrupt vector %02X\n", attotime_to_double(timer_get_time(device->machine)), state->i80186.intr.poll_status & 0x1f);
+	if (LOG_INTERRUPTS) logerror("(%f) **** Acknowledged interrupt vector %02X\n", device->machine->time().as_double(), state->i80186.intr.poll_status & 0x1f);
 
 	/* clear the interrupt */
 	cpu_set_input_line(state->i80186.cpu, 0, CLEAR_LINE);
@@ -810,7 +809,7 @@ generate_int:
 	if (!state->i80186.intr.pending)
 		cputag_set_input_line(machine, "audiocpu", 0, ASSERT_LINE);
 	state->i80186.intr.pending = 1;
-	if (LOG_INTERRUPTS) logerror("(%f) **** Requesting interrupt vector %02X\n", attotime_to_double(timer_get_time(machine)), new_vector);
+	if (LOG_INTERRUPTS) logerror("(%f) **** Requesting interrupt vector %02X\n", machine->time().as_double(), new_vector);
 }
 
 
@@ -835,9 +834,9 @@ static void handle_eoi(device_t *device, int data)
 			case 0x0d:	state->i80186.intr.in_service &= ~0x20;	break;
 			case 0x0e:	state->i80186.intr.in_service &= ~0x40;	break;
 			case 0x0f:	state->i80186.intr.in_service &= ~0x80;	break;
-			default:	logerror("%s:ERROR - 80186 EOI with unknown vector %02X\n", cpuexec_describe_context(machine), data & 0x1f);
+			default:	logerror("%s:ERROR - 80186 EOI with unknown vector %02X\n", machine->describe_context(), data & 0x1f);
 		}
-		if (LOG_INTERRUPTS) logerror("(%f) **** Got EOI for vector %02X\n", attotime_to_double(timer_get_time(machine)), data & 0x1f);
+		if (LOG_INTERRUPTS) logerror("(%f) **** Got EOI for vector %02X\n", machine->time().as_double(), data & 0x1f);
 	}
 
 	/* non-specific case */
@@ -850,7 +849,7 @@ static void handle_eoi(device_t *device, int data)
 			if ((state->i80186.intr.timer & 7) == i && (state->i80186.intr.in_service & 0x01))
 			{
 				state->i80186.intr.in_service &= ~0x01;
-				if (LOG_INTERRUPTS) logerror("(%f) **** Got EOI for timer\n", attotime_to_double(timer_get_time(machine)));
+				if (LOG_INTERRUPTS) logerror("(%f) **** Got EOI for timer\n", machine->time().as_double());
 				return;
 			}
 
@@ -859,7 +858,7 @@ static void handle_eoi(device_t *device, int data)
 				if ((state->i80186.intr.dma[j] & 7) == i && (state->i80186.intr.in_service & (0x04 << j)))
 				{
 					state->i80186.intr.in_service &= ~(0x04 << j);
-					if (LOG_INTERRUPTS) logerror("(%f) **** Got EOI for DMA%d\n", attotime_to_double(timer_get_time(machine)), j);
+					if (LOG_INTERRUPTS) logerror("(%f) **** Got EOI for DMA%d\n", machine->time().as_double(), j);
 					return;
 				}
 
@@ -868,7 +867,7 @@ static void handle_eoi(device_t *device, int data)
 				if ((state->i80186.intr.ext[j] & 7) == i && (state->i80186.intr.in_service & (0x10 << j)))
 				{
 					state->i80186.intr.in_service &= ~(0x10 << j);
-					if (LOG_INTERRUPTS) logerror("(%f) **** Got EOI for INT%d\n", attotime_to_double(timer_get_time(machine)), j);
+					if (LOG_INTERRUPTS) logerror("(%f) **** Got EOI for INT%d\n", machine->time().as_double(), j);
 					return;
 				}
 		}
@@ -907,11 +906,11 @@ static TIMER_CALLBACK( internal_timer_int )
 	if (t->control & 0x0001)
 	{
 		int count = t->maxA ? t->maxA : 0x10000;
-		timer_adjust_oneshot(t->int_timer, attotime_mul(ATTOTIME_IN_HZ(2000000), count), which);
+		t->int_timer->adjust(attotime::from_hz(2000000) * count, which);
 		if (LOG_TIMER) logerror("  Repriming interrupt\n");
 	}
 	else
-		timer_adjust_oneshot(t->int_timer, attotime_never, which);
+		t->int_timer->adjust(attotime::never, which);
 }
 
 
@@ -922,8 +921,8 @@ static void internal_timer_sync(leland_sound_state *state, int which)
 	/* if we have a timing timer running, adjust the count */
 	if (t->time_timer_active)
 	{
-		attotime current_time = timer_timeelapsed(t->time_timer);
-		int net_clocks = attotime_to_double(attotime_mul(attotime_sub(current_time, t->last_time), 2000000));
+		attotime current_time = t->time_timer->elapsed();
+		int net_clocks = ((current_time - t->last_time) * 2000000).as_double();
 		t->last_time = current_time;
 
 		/* set the max count bit if we passed the max */
@@ -1025,7 +1024,7 @@ static void internal_timer_update(leland_sound_state *state, int which, int new_
 				internal_timer_sync(state, which);
 
 				/* nuke the timer and force the interrupt timer to be recomputed */
-				timer_adjust_oneshot(t->time_timer, attotime_never, which);
+				t->time_timer->adjust(attotime::never, which);
 				t->time_timer_active = 0;
 				update_int_timer = 1;
 			}
@@ -1034,7 +1033,7 @@ static void internal_timer_update(leland_sound_state *state, int which, int new_
 			else if ((diff & 0x8000) && (new_control & 0x8000))
 			{
 				/* start the timing */
-				timer_adjust_oneshot(t->time_timer, attotime_never, which);
+				t->time_timer->adjust(attotime::never, which);
 				t->time_timer_active = 1;
 				update_int_timer = 1;
 			}
@@ -1063,11 +1062,11 @@ static void internal_timer_update(leland_sound_state *state, int which, int new_
 			{
 				int diff = t->maxA - t->count;
 				if (diff <= 0) diff += 0x10000;
-				timer_adjust_oneshot(t->int_timer, attotime_mul(ATTOTIME_IN_HZ(2000000), diff), which);
+				t->int_timer->adjust(attotime::from_hz(2000000) * diff, which);
 				if (LOG_TIMER) logerror("Set interrupt timer for %d\n", which);
 			}
 			else
-				timer_adjust_oneshot(t->int_timer, attotime_never, which);
+				t->int_timer->adjust(attotime::never, which);
 		}
 }
 
@@ -1087,7 +1086,7 @@ static TIMER_CALLBACK( dma_timer_callback )
 	struct dma_state *d = &state->i80186.dma[which];
 
 	/* force an update and see if we're really done */
-	stream_update(state->dma_stream);
+	state->dma_stream->update();
 
 	/* complete the status update */
 	d->control &= ~0x0002;
@@ -1154,7 +1153,7 @@ static void update_dma_control(leland_sound_state *state, int which, int new_con
 			if (LOG_DMA) logerror("Initiated DMA %d - count = %04X, source = %04X, dest = %04X\n", which, d->count, d->source, d->dest);
 
 			d->finished = 0;
-			timer_adjust_oneshot(d->finish_timer, attotime_mul(ATTOTIME_IN_HZ(state->dac[dacnum].frequency), count), which);
+			d->finish_timer->adjust(attotime::from_hz(state->dac[dacnum].frequency) * count, which);
 		}
 	}
 
@@ -1302,42 +1301,42 @@ static READ16_DEVICE_HANDLER( i80186_internal_port_r )
 		case 0xd0/2:
 			if (LOG_PORTS) logerror("%05X:read 80186 DMA%d lower source address\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			return state->i80186.dma[which].source;
 
 		case 0xc2/2:
 		case 0xd2/2:
 			if (LOG_PORTS) logerror("%05X:read 80186 DMA%d upper source address\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			return state->i80186.dma[which].source >> 16;
 
 		case 0xc4/2:
 		case 0xd4/2:
 			if (LOG_PORTS) logerror("%05X:read 80186 DMA%d lower dest address\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			return state->i80186.dma[which].dest;
 
 		case 0xc6/2:
 		case 0xd6/2:
 			if (LOG_PORTS) logerror("%05X:read 80186 DMA%d upper dest address\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			return state->i80186.dma[which].dest >> 16;
 
 		case 0xc8/2:
 		case 0xd8/2:
 			if (LOG_PORTS) logerror("%05X:read 80186 DMA%d transfer count\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			return state->i80186.dma[which].count;
 
 		case 0xca/2:
 		case 0xda/2:
 			if (LOG_PORTS) logerror("%05X:read 80186 DMA%d control\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			return state->i80186.dma[which].control;
 
 		default:
@@ -1530,7 +1529,7 @@ static WRITE16_DEVICE_HANDLER( i80186_internal_port_w )
 		case 0xd0/2:
 			if (LOG_PORTS) logerror("%05X:80186 DMA%d lower source address = %04X & %04X\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8, data, mem_mask);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			state->i80186.dma[which].source = (state->i80186.dma[which].source & ~0x0ffff) | (data & 0x0ffff);
 			break;
 
@@ -1538,7 +1537,7 @@ static WRITE16_DEVICE_HANDLER( i80186_internal_port_w )
 		case 0xd2/2:
 			if (LOG_PORTS) logerror("%05X:80186 DMA%d upper source address = %04X & %04X\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8, data, mem_mask);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			state->i80186.dma[which].source = (state->i80186.dma[which].source & ~0xf0000) | ((data << 16) & 0xf0000);
 			break;
 
@@ -1546,7 +1545,7 @@ static WRITE16_DEVICE_HANDLER( i80186_internal_port_w )
 		case 0xd4/2:
 			if (LOG_PORTS) logerror("%05X:80186 DMA%d lower dest address = %04X & %04X\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8, data, mem_mask);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			state->i80186.dma[which].dest = (state->i80186.dma[which].dest & ~0x0ffff) | (data & 0x0ffff);
 			break;
 
@@ -1554,7 +1553,7 @@ static WRITE16_DEVICE_HANDLER( i80186_internal_port_w )
 		case 0xd6/2:
 			if (LOG_PORTS) logerror("%05X:80186 DMA%d upper dest address = %04X & %04X\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8, data, mem_mask);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			state->i80186.dma[which].dest = (state->i80186.dma[which].dest & ~0xf0000) | ((data << 16) & 0xf0000);
 			break;
 
@@ -1562,7 +1561,7 @@ static WRITE16_DEVICE_HANDLER( i80186_internal_port_w )
 		case 0xd8/2:
 			if (LOG_PORTS) logerror("%05X:80186 DMA%d transfer count = %04X & %04X\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8, data, mem_mask);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			state->i80186.dma[which].count = data;
 			break;
 
@@ -1570,7 +1569,7 @@ static WRITE16_DEVICE_HANDLER( i80186_internal_port_w )
 		case 0xda/2:
 			if (LOG_PORTS) logerror("%05X:80186 DMA%d control = %04X & %04X\n", cpu_get_pc(state->i80186.cpu), (offset - 0xc0/2) / 8, data, mem_mask);
 			which = (offset - 0xc0/2) / 8;
-			stream_update(state->dma_stream);
+			state->dma_stream->update();
 			update_dma_control(state, which, data);
 			break;
 
@@ -1613,7 +1612,7 @@ INLINE void counter_update_count(struct counter_state *ctr)
 	if (ctr->timer)
 	{
 		/* determine how many 2MHz cycles are remaining */
-		int count = attotime_to_double(attotime_mul(timer_timeleft(ctr->timer), 2000000));
+		int count = (ctr->timer->remaining() * 2000000).as_double();
 		ctr->count = (count < 0) ? 0 : count;
 	}
 }
@@ -1697,7 +1696,7 @@ static WRITE16_DEVICE_HANDLER( pit8254_w )
 				if (ctr->count == 0) ctr->count = 0x10000;
 
 				/* reset/start the timer */
-				timer_adjust_oneshot(ctr->timer, attotime_never, 0);
+				ctr->timer->adjust(attotime::never);
 
 				if (LOG_PIT) logerror("PIT counter %d set to %d (%d Hz)\n", which, ctr->count, 4000000 / ctr->count);
 
@@ -1808,14 +1807,14 @@ static TIMER_CALLBACK( command_lo_sync )
 {
 	device_t *device = (device_t *)ptr;
 	leland_sound_state *state = get_safe_token(device);
-	if (LOG_COMM) logerror("%s:Write sound command latch lo = %02X\n", cpuexec_describe_context(machine), param);
+	if (LOG_COMM) logerror("%s:Write sound command latch lo = %02X\n", machine->describe_context(), param);
 	state->sound_command = (state->sound_command & 0xff00) | param;
 }
 
 
 WRITE8_DEVICE_HANDLER( leland_80186_command_lo_w )
 {
-	timer_call_after_resynch(device->machine, device, data, command_lo_sync);
+	device->machine->scheduler().synchronize(FUNC(command_lo_sync), data, device);
 }
 
 
@@ -1878,7 +1877,7 @@ READ8_DEVICE_HANDLER( leland_80186_response_r )
 	if (LOG_COMM) logerror("%04X:Read sound response latch = %02X\n", pc, state->sound_response);
 
 	/* synchronize the response */
-	timer_call_after_resynch(device->machine, device, pc + 2, delayed_response_r);
+	device->machine->scheduler().synchronize(FUNC(delayed_response_r), pc + 2, device);
 	return state->sound_response;
 }
 
@@ -1942,7 +1941,7 @@ static WRITE16_DEVICE_HANDLER( dac_w )
 		{
 			/* if this is the first byte, sync the stream */
 			if (count == 0)
-				stream_update(state->nondma_stream);
+				state->nondma_stream->update();
 
 			/* prescale by the volume */
 			d->buffer[d->bufin] = d->value * d->volume;
@@ -1978,7 +1977,7 @@ static WRITE16_DEVICE_HANDLER( redline_dac_w )
 	{
 		/* if this is the first byte, sync the stream */
 		if (count == 0)
-			stream_update(state->nondma_stream);
+			state->nondma_stream->update();
 
 		/* prescale by the volume */
 		d->buffer[d->bufin] = d->value * d->volume;
@@ -2015,7 +2014,7 @@ static WRITE16_DEVICE_HANDLER( dac_10bit_w )
 	{
 		/* if this is the first byte, sync the stream */
 		if (count == 0)
-			stream_update(state->nondma_stream);
+			state->nondma_stream->update();
 
 		/* prescale by the volume */
 		d->buffer[d->bufin] = d->value * (0xff / DAC_VOLUME_SCALE / 2);
@@ -2052,7 +2051,7 @@ static WRITE16_DEVICE_HANDLER( ataxx_dac_control )
 	/* if we have a YM2151 (and an external DAC), handle those offsets */
 	if (state->has_ym2151)
 	{
-		stream_update(state->extern_stream);
+		state->extern_stream->update();
 		switch (offset)
 		{
 			case 0x04:

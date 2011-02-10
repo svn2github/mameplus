@@ -32,7 +32,7 @@ static TIMER_CALLBACK( soundlatch_callback )
 
 static WRITE8_HANDLER( tankbust_soundlatch_w )
 {
-	timer_call_after_resynch(space->machine, NULL, data,soundlatch_callback);
+	space->machine->scheduler().synchronize(FUNC(soundlatch_callback), data);
 }
 
 static READ8_DEVICE_HANDLER( tankbust_soundlatch_r )
@@ -81,7 +81,7 @@ static WRITE8_HANDLER( tankbust_e0xx_w )
 	break;
 
 	case 1:	/* 0xe001 (value 0 then 1) written right after the soundlatch_w */
-		timer_call_after_resynch(space->machine, NULL, data,soundirqline_callback);
+		space->machine->scheduler().synchronize(FUNC(soundirqline_callback), data);
 	break;
 
 	case 2:	/* 0xe002 coin counter */
@@ -335,7 +335,7 @@ static MACHINE_CONFIG_START( tankbust, driver_device )
 	MCFG_CPU_PROGRAM_MAP(map_cpu2)
 	MCFG_CPU_IO_MAP(port_map_cpu2)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_RESET( tankbust )
 

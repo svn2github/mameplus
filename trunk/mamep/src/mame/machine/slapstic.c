@@ -1143,13 +1143,13 @@ static void slapstic_log(running_machine *machine, offs_t offset)
 		slapsticlog = fopen("slapstic.log", "w");
 	if (slapsticlog)
 	{
-		attotime time = timer_get_time(machine);
+		attotime time = machine->time();
 
-		if (attotime_compare(attotime_sub(time, last_time), ATTOTIME_IN_SEC(1)) > 0)
+		if ((time - last_time) > attotime::from_seconds(1))
 			fprintf(slapsticlog, "------------------------------------\n");
 		last_time = time;
 
-		fprintf(slapsticlog, "%s: %04X B=%d ", cpuexec_describe_context(machine), offset, current_bank);
+		fprintf(slapsticlog, "%s: %04X B=%d ", machine->describe_context(), offset, current_bank);
 		switch (state)
 		{
 			case DISABLED:

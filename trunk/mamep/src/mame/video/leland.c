@@ -67,7 +67,7 @@ static TIMER_CALLBACK( scanline_callback )
 	scanline = (scanline+1) % 256;
 
 	/* come back at the next appropriate scanline */
-	timer_adjust_oneshot(scanline_timer, machine->primary_screen->time_until_pos(scanline), scanline);
+	scanline_timer->adjust(machine->primary_screen->time_until_pos(scanline), scanline);
 }
 
 
@@ -83,8 +83,8 @@ static VIDEO_START( leland )
 	leland_video_ram = auto_alloc_array_clear(machine, UINT8, VRAM_SIZE);
 
 	/* scanline timer */
-	scanline_timer = timer_alloc(machine, scanline_callback, NULL);
-	timer_adjust_oneshot(scanline_timer, machine->primary_screen->time_until_pos(0), 0);
+	scanline_timer = machine->scheduler().timer_alloc(FUNC(scanline_callback));
+	scanline_timer->adjust(machine->primary_screen->time_until_pos(0));
 
 }
 
@@ -197,14 +197,14 @@ static int leland_vram_port_r(address_space *space, int offset, int num)
 
 		default:
 			logerror("%s: Warning: Unknown video port %02x read (address=%04x)\n",
-						cpuexec_describe_context(space->machine), offset, addr);
+						space->machine->describe_context(), offset, addr);
 			ret = 0;
 			break;
 	}
 	state->addr = addr;
 
 	if (LOG_COMM && addr >= 0xf000)
-		logerror("%s:%s comm read %04X = %02X\n", cpuexec_describe_context(space->machine), num ? "slave" : "master", addr, ret);
+		logerror("%s:%s comm read %04X = %02X\n", space->machine->describe_context(), num ? "slave" : "master", addr, ret);
 
 	return ret;
 }
@@ -231,7 +231,7 @@ static void leland_vram_port_w(address_space *space, int offset, int data, int n
 		space->machine->primary_screen->update_partial(scanline - 1);
 
 	if (LOG_COMM && addr >= 0xf000)
-		logerror("%s:%s comm write %04X = %02X\n", cpuexec_describe_context(space->machine), num ? "slave" : "master", addr, data);
+		logerror("%s:%s comm write %04X = %02X\n", space->machine->describe_context(), num ? "slave" : "master", addr, data);
 
 	/* based on the low 3 bits of the offset, update the destination */
 	switch (offset & 7)
@@ -283,7 +283,7 @@ static void leland_vram_port_w(address_space *space, int offset, int data, int n
 
 		default:
 			logerror("%s:Warning: Unknown video port write (address=%04x value=%02x)\n",
-						cpuexec_describe_context(space->machine), offset, addr);
+						space->machine->describe_context(), offset, addr);
 			break;
 	}
 
@@ -318,7 +318,7 @@ static TIMER_CALLBACK( leland_delayed_mvram_w )
 
 WRITE8_HANDLER( leland_mvram_port_w )
 {
-	timer_call_after_resynch(space->machine, NULL, 0x00000 | (offset << 8) | data, leland_delayed_mvram_w);
+	space->machine->scheduler().synchronize(FUNC(leland_delayed_mvram_w), 0x00000 | (offset << 8) | data);
 }
 
 
@@ -363,7 +363,7 @@ READ8_HANDLER( leland_svram_port_r )
 WRITE8_HANDLER( ataxx_mvram_port_w )
 {
 	offset = ((offset >> 1) & 0x07) | ((offset << 3) & 0x08) | (offset & 0x10);
-	timer_call_after_resynch(space->machine, NULL, 0x00000 | (offset << 8) | data, leland_delayed_mvram_w);
+	space->machine->scheduler().synchronize(FUNC(leland_delayed_mvram_w), 0x00000 | (offset << 8) | data);
 }
 
 

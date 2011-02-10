@@ -193,46 +193,46 @@ VIDEO_START( ddenlovr )
 	}
 
 	/* register save states */
-	state_save_register_global(machine, state->ddenlovr_dest_layer);
-	state_save_register_global(machine, state->ddenlovr_blit_flip);
-	state_save_register_global(machine, state->ddenlovr_blit_x);
-	state_save_register_global(machine, state->ddenlovr_blit_y);
-	state_save_register_global(machine, state->ddenlovr_blit_address);
-	state_save_register_global(machine, state->ddenlovr_blit_pen);
-	state_save_register_global(machine, state->ddenlovr_blit_pen_mode);
-	state_save_register_global(machine, state->ddenlovr_blitter_irq_flag);
-	state_save_register_global(machine, state->ddenlovr_blitter_irq_enable);
-	state_save_register_global(machine, state->ddenlovr_rect_width);
-	state_save_register_global(machine, state->ddenlovr_rect_height);
-	state_save_register_global(machine, state->ddenlovr_clip_width);
-	state_save_register_global(machine, state->ddenlovr_clip_height);
-	state_save_register_global(machine, state->ddenlovr_line_length);
-	state_save_register_global(machine, state->ddenlovr_clip_ctrl);
-	state_save_register_global(machine, state->ddenlovr_clip_x);
-	state_save_register_global(machine, state->ddenlovr_clip_y);
-	state_save_register_global_array(machine, state->ddenlovr_scroll);
-	state_save_register_global(machine, state->ddenlovr_priority);
-	state_save_register_global(machine, state->ddenlovr_priority2);
-	state_save_register_global(machine, state->ddenlovr_bgcolor);
-	state_save_register_global(machine, state->ddenlovr_bgcolor2);
-	state_save_register_global(machine, state->ddenlovr_layer_enable);
-	state_save_register_global(machine, state->ddenlovr_layer_enable2);
-	state_save_register_global_array(machine, state->ddenlovr_palette_base);
-	state_save_register_global_array(machine, state->ddenlovr_palette_mask);
-	state_save_register_global_array(machine, state->ddenlovr_transparency_pen);
-	state_save_register_global_array(machine, state->ddenlovr_transparency_mask);
-	state_save_register_global(machine, state->ddenlovr_blit_latch);
-	state_save_register_global(machine, state->ddenlovr_blit_pen_mask);
-	state_save_register_global_array(machine, state->ddenlovr_blit_regs);
+	state->save_item(NAME(state->ddenlovr_dest_layer));
+	state->save_item(NAME(state->ddenlovr_blit_flip));
+	state->save_item(NAME(state->ddenlovr_blit_x));
+	state->save_item(NAME(state->ddenlovr_blit_y));
+	state->save_item(NAME(state->ddenlovr_blit_address));
+	state->save_item(NAME(state->ddenlovr_blit_pen));
+	state->save_item(NAME(state->ddenlovr_blit_pen_mode));
+	state->save_item(NAME(state->ddenlovr_blitter_irq_flag));
+	state->save_item(NAME(state->ddenlovr_blitter_irq_enable));
+	state->save_item(NAME(state->ddenlovr_rect_width));
+	state->save_item(NAME(state->ddenlovr_rect_height));
+	state->save_item(NAME(state->ddenlovr_clip_width));
+	state->save_item(NAME(state->ddenlovr_clip_height));
+	state->save_item(NAME(state->ddenlovr_line_length));
+	state->save_item(NAME(state->ddenlovr_clip_ctrl));
+	state->save_item(NAME(state->ddenlovr_clip_x));
+	state->save_item(NAME(state->ddenlovr_clip_y));
+	state->save_item(NAME(state->ddenlovr_scroll));
+	state->save_item(NAME(state->ddenlovr_priority));
+	state->save_item(NAME(state->ddenlovr_priority2));
+	state->save_item(NAME(state->ddenlovr_bgcolor));
+	state->save_item(NAME(state->ddenlovr_bgcolor2));
+	state->save_item(NAME(state->ddenlovr_layer_enable));
+	state->save_item(NAME(state->ddenlovr_layer_enable2));
+	state->save_item(NAME(state->ddenlovr_palette_base));
+	state->save_item(NAME(state->ddenlovr_palette_mask));
+	state->save_item(NAME(state->ddenlovr_transparency_pen));
+	state->save_item(NAME(state->ddenlovr_transparency_mask));
+	state->save_item(NAME(state->ddenlovr_blit_latch));
+	state->save_item(NAME(state->ddenlovr_blit_pen_mask));
+	state->save_item(NAME(state->ddenlovr_blit_regs));
 
-	state_save_register_global_pointer(machine, state->ddenlovr_pixmap[0], 512 * 512);
-	state_save_register_global_pointer(machine, state->ddenlovr_pixmap[1], 512 * 512);
-	state_save_register_global_pointer(machine, state->ddenlovr_pixmap[2], 512 * 512);
-	state_save_register_global_pointer(machine, state->ddenlovr_pixmap[3], 512 * 512);
-	state_save_register_global_pointer(machine, state->ddenlovr_pixmap[4], 512 * 512);
-	state_save_register_global_pointer(machine, state->ddenlovr_pixmap[5], 512 * 512);
-	state_save_register_global_pointer(machine, state->ddenlovr_pixmap[6], 512 * 512);
-	state_save_register_global_pointer(machine, state->ddenlovr_pixmap[7], 512 * 512);
+	state->save_pointer(NAME(state->ddenlovr_pixmap[0]), 512 * 512);
+	state->save_pointer(NAME(state->ddenlovr_pixmap[1]), 512 * 512);
+	state->save_pointer(NAME(state->ddenlovr_pixmap[2]), 512 * 512);
+	state->save_pointer(NAME(state->ddenlovr_pixmap[3]), 512 * 512);
+	state->save_pointer(NAME(state->ddenlovr_pixmap[4]), 512 * 512);
+	state->save_pointer(NAME(state->ddenlovr_pixmap[5]), 512 * 512);
+	state->save_pointer(NAME(state->ddenlovr_pixmap[6]), 512 * 512);
+	state->save_pointer(NAME(state->ddenlovr_pixmap[7]), 512 * 512);
 }
 
 static VIDEO_START( mmpanic )
@@ -686,7 +686,7 @@ INLINE void log_blit( running_machine *machine, int data )
 
 #if 1
 	logerror("%s: blit src %06x x %03x y %03x flags %02x layer %02x pen %02x penmode %02x w %03x h %03x linelen %03x flip %02x clip: ctrl %x xy %03x %03x wh %03x %03x\n",
-			cpuexec_describe_context(machine),
+			machine->describe_context(),
 			state->ddenlovr_blit_address, state->ddenlovr_blit_x, state->ddenlovr_blit_y, data,
 			state->ddenlovr_dest_layer, state->ddenlovr_blit_pen, state->ddenlovr_blit_pen_mode, state->ddenlovr_rect_width, state->ddenlovr_rect_height, state->ddenlovr_line_length, state->ddenlovr_blit_flip,
 			state->ddenlovr_clip_ctrl, state->ddenlovr_clip_x, state->ddenlovr_clip_y, state->ddenlovr_clip_width, state->ddenlovr_clip_height);
@@ -994,7 +994,7 @@ g_profiler.start(PROFILER_VIDEO);
 							;
 				#ifdef MAME_DEBUG
 					popmessage("unknown blitter command %02x", data);
-					logerror("%s: unknown blitter command %02x\n", cpuexec_describe_context(machine), data);
+					logerror("%s: unknown blitter command %02x\n", machine->describe_context(), data);
 				#endif
 			}
 
@@ -1002,7 +1002,7 @@ g_profiler.start(PROFILER_VIDEO);
 			break;
 
 		default:
-			logerror("%s: Blitter %d reg %02x = %02x\n", cpuexec_describe_context(machine), blitter, state->ddenlovr_blit_regs[blitter], data);
+			logerror("%s: Blitter %d reg %02x = %02x\n", machine->describe_context(), blitter, state->ddenlovr_blit_regs[blitter], data);
 			break;
 		}
 	}
@@ -2653,7 +2653,7 @@ static void mjchuuka_get_romdata(running_machine *machine)
 
 	if (address >= size)
 	{
-		logerror("%s: Error, Blitter address %06X out of range\n", cpuexec_describe_context(machine), address);
+		logerror("%s: Error, Blitter address %06X out of range\n", machine->describe_context(), address);
 		address %= size;
 	}
 
@@ -2919,7 +2919,7 @@ static READ8_DEVICE_HANDLER( hginga_dsw_r )
 	if (!BIT(state->dsw_sel, 3))   return input_port_read(device->machine, "DSW1");
 	if (!BIT(state->dsw_sel, 4))   return input_port_read(device->machine, "DSW5");
 
-	logerror("%s: warning, unknown bits read, ddenlovr_select = %02x\n", cpuexec_describe_context(device->machine), state->dsw_sel);
+	logerror("%s: warning, unknown bits read, ddenlovr_select = %02x\n", device->machine->describe_context(), state->dsw_sel);
 	return 0xff;
 }
 
@@ -7580,29 +7580,29 @@ static MACHINE_START( ddenlovr )
 	state->soundcpu = machine->device("soundcpu");
 	state->oki = machine->device<okim6295_device>("oki");
 
-	state_save_register_global(machine, state->input_sel);
-	state_save_register_global(machine, state->dsw_sel);
-	state_save_register_global(machine, state->keyb);
-	state_save_register_global(machine, state->coins);
-	state_save_register_global(machine, state->hopper);
+	state->save_item(NAME(state->input_sel));
+	state->save_item(NAME(state->dsw_sel));
+	state->save_item(NAME(state->keyb));
+	state->save_item(NAME(state->coins));
+	state->save_item(NAME(state->hopper));
 
-	state_save_register_global(machine, state->okibank);
-	state_save_register_global(machine, state->rongrong_blitter_busy_select);
+	state->save_item(NAME(state->okibank));
+	state->save_item(NAME(state->rongrong_blitter_busy_select));
 
-	state_save_register_global(machine, state->prot_val);
-	state_save_register_global(machine, state->prot_16);
-	state_save_register_global_array(machine, state->quiz365_protection);
+	state->save_item(NAME(state->prot_val));
+	state->save_item(NAME(state->prot_16));
+	state->save_item(NAME(state->quiz365_protection));
 
-	state_save_register_global(machine, state->mmpanic_leds);
-	state_save_register_global(machine, state->funkyfig_lockout);
-	state_save_register_global_array(machine, state->romdata);
-	state_save_register_global(machine, state->palette_index);
-	state_save_register_global(machine, state->hginga_rombank);
-	state_save_register_global(machine, state->mjflove_irq_cause);
-	state_save_register_global(machine, state->daimyojn_palette_sel);
-	state_save_register_global_array(machine, state->palram);
+	state->save_item(NAME(state->mmpanic_leds));
+	state->save_item(NAME(state->funkyfig_lockout));
+	state->save_item(NAME(state->romdata));
+	state->save_item(NAME(state->palette_index));
+	state->save_item(NAME(state->hginga_rombank));
+	state->save_item(NAME(state->mjflove_irq_cause));
+	state->save_item(NAME(state->daimyojn_palette_sel));
+	state->save_item(NAME(state->palram));
 
-	state_save_register_global(machine, state->irq_count);
+	state->save_item(NAME(state->irq_count));
 }
 
 static MACHINE_RESET( ddenlovr )

@@ -1333,10 +1333,10 @@ static void uPD71054_update_timer( running_machine *machine, device_t *cpu, int 
 	UINT16 max = uPD71054->max[no]&0xffff;
 
 	if( max != 0 ) {
-		attotime period = attotime_mul(ATTOTIME_IN_HZ(cputag_get_clock(machine, "maincpu")), 16 * max);
-		timer_adjust_oneshot( uPD71054->timer[no], period, no );
+		attotime period = attotime::from_hz(cputag_get_clock(machine, "maincpu")) * (16 * max);
+		uPD71054->timer[no]->adjust( period, no );
 	} else {
-		timer_adjust_oneshot( uPD71054->timer[no], attotime_never, no);
+		uPD71054->timer[no]->adjust( attotime::never, no);
 		logerror( "CPU #0 PC %06X: uPD71054 error, timer %d duration is 0\n",
 				(cpu != NULL) ? cpu_get_pc(cpu) : -1, no );
 	}
@@ -1370,7 +1370,7 @@ static void uPD71054_timer_init( running_machine *machine )
 		uPD71054->max[no] = 0xffff;
 	}
 	for( no = 0; no < USED_TIMER_NUM; no++ ) {
-		uPD71054->timer[no] = timer_alloc( machine, uPD71054_timer_callback , NULL);
+		uPD71054->timer[no] = machine->scheduler().timer_alloc( FUNC(uPD71054_timer_callback ));
 	}
 }
 
@@ -1663,7 +1663,7 @@ static WRITE16_HANDLER( calibr50_soundlatch_w )
 	{
 		soundlatch_word_w(space, 0, data, mem_mask);
 		cputag_set_input_line(space->machine, "sub", INPUT_LINE_NMI, PULSE_LINE);
-		cpu_spinuntil_time(space->cpu, ATTOTIME_IN_USEC(50));	// Allow the other cpu to reply
+		cpu_spinuntil_time(space->cpu, attotime::from_usec(50));	// Allow the other cpu to reply
 	}
 }
 
@@ -2064,7 +2064,7 @@ static WRITE16_HANDLER( keroppi_prize_w )
 	if ((data & 0x0010) && !state->keroppi_prize_hop)
 	{
 		state->keroppi_prize_hop = 1;
-		timer_set(space->machine, ATTOTIME_IN_SEC(3), NULL, 0x20, keroppi_prize_hop_callback);		/* 3 seconds */
+		space->machine->scheduler().timer_set(attotime::from_seconds(3), FUNC(keroppi_prize_hop_callback), 0x20);		/* 3 seconds */
 	}
 }
 
@@ -3030,7 +3030,7 @@ static MACHINE_RESET(calibr50)
 static WRITE8_HANDLER( calibr50_soundlatch2_w )
 {
 	soundlatch2_w(space,0,data);
-	cpu_spinuntil_time(space->cpu, ATTOTIME_IN_USEC(50));	// Allow the other cpu to reply
+	cpu_spinuntil_time(space->cpu, attotime::from_usec(50));	// Allow the other cpu to reply
 }
 
 static ADDRESS_MAP_START( calibr50_sub_map, ADDRESS_SPACE_PROGRAM, 8 )

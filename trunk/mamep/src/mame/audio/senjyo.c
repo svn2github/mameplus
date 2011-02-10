@@ -64,7 +64,7 @@ static TIMER_CALLBACK( senjyo_sh_update )
 	/* ctc2 timer single tone generator frequency */
 	z80ctc_device *ctc = machine->device<z80ctc_device>("z80ctc");
 	attotime period = ctc->period(2);
-	if (attotime_compare(period, attotime_zero) != 0 )
+	if (period != attotime::zero)
 		state->single_rate = ATTOSECONDS_TO_HZ(period.attoseconds);
 	else
 		state->single_rate = 0;
@@ -90,5 +90,5 @@ SAMPLES_START( senjyo_sh_start )
 	sample_set_volume(device, 0, state->single_volume / 15.0);
 	sample_start_raw(device, 0, state->single_data, SINGLE_LENGTH, state->single_rate, 1);
 
-	timer_pulse(machine, machine->primary_screen->frame_period(), NULL, 0, senjyo_sh_update);
+	machine->scheduler().timer_pulse(machine->primary_screen->frame_period(), FUNC(senjyo_sh_update));
 }

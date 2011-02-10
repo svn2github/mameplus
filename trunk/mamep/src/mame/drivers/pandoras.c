@@ -307,11 +307,11 @@ static MACHINE_START( pandoras )
 	state->audiocpu = machine->device<cpu_device>("audiocpu");
 	state->mcu = machine->device<cpu_device>("mcu");
 
-	state_save_register_global(machine, state->firq_old_data_a);
-	state_save_register_global(machine, state->firq_old_data_b);
-	state_save_register_global(machine, state->irq_enable_a);
-	state_save_register_global(machine, state->irq_enable_b);
-	state_save_register_global(machine, state->i8039_status);
+	state->save_item(NAME(state->firq_old_data_a));
+	state->save_item(NAME(state->firq_old_data_b));
+	state->save_item(NAME(state->irq_enable_a));
+	state->save_item(NAME(state->irq_enable_b));
+	state->save_item(NAME(state->i8039_status));
 }
 
 static MACHINE_RESET( pandoras )
@@ -367,7 +367,7 @@ static MACHINE_CONFIG_START( pandoras, pandoras_state )
 	MCFG_CPU_PROGRAM_MAP(pandoras_i8039_map)
 	MCFG_CPU_IO_MAP(pandoras_i8039_io_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))	/* 100 CPU slices per frame - needed for correct synchronization of the sound CPUs */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* 100 CPU slices per frame - needed for correct synchronization of the sound CPUs */
 
 	MCFG_MACHINE_START(pandoras)
 	MCFG_MACHINE_RESET(pandoras)

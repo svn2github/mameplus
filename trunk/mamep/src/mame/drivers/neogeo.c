@@ -245,10 +245,10 @@ static void adjust_display_position_interrupt_timer( running_machine *machine )
 
 	if ((state->display_counter + 1) != 0)
 	{
-		attotime period = attotime_mul(ATTOTIME_IN_HZ(NEOGEO_PIXEL_CLOCK), state->display_counter + 1);
+		attotime period = attotime::from_hz(NEOGEO_PIXEL_CLOCK) * (state->display_counter + 1);
 		if (LOG_VIDEO_SYSTEM) logerror("adjust_display_position_interrupt_timer  current y: %02x  current x: %02x   target y: %x  target x: %x\n", machine->primary_screen->vpos(), machine->primary_screen->hpos(), (state->display_counter + 1) / NEOGEO_HTOTAL, (state->display_counter + 1) % NEOGEO_HTOTAL);
 
-		timer_adjust_oneshot(state->display_position_interrupt_timer, period, 0);
+		state->display_position_interrupt_timer->adjust(period);
 	}
 }
 
@@ -344,7 +344,7 @@ static TIMER_CALLBACK( display_position_vblank_callback )
 	}
 
 	/* set timer for next screen */
-	timer_adjust_oneshot(state->display_position_vblank_timer, machine->primary_screen->time_until_pos(NEOGEO_VBSTART, NEOGEO_VBLANK_RELOAD_HPOS), 0);
+	state->display_position_vblank_timer->adjust(machine->primary_screen->time_until_pos(NEOGEO_VBSTART, NEOGEO_VBLANK_RELOAD_HPOS));
 }
 
 
@@ -362,24 +362,24 @@ static TIMER_CALLBACK( vblank_interrupt_callback )
 	update_interrupts(machine);
 
 	/* set timer for next screen */
-	timer_adjust_oneshot(state->vblank_interrupt_timer, machine->primary_screen->time_until_pos(NEOGEO_VBSTART), 0);
+	state->vblank_interrupt_timer->adjust(machine->primary_screen->time_until_pos(NEOGEO_VBSTART));
 }
 
 
 static void create_interrupt_timers( running_machine *machine )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
-	state->display_position_interrupt_timer = timer_alloc(machine, display_position_interrupt_callback, NULL);
-	state->display_position_vblank_timer = timer_alloc(machine, display_position_vblank_callback, NULL);
-	state->vblank_interrupt_timer = timer_alloc(machine, vblank_interrupt_callback, NULL);
+	state->display_position_interrupt_timer = machine->scheduler().timer_alloc(FUNC(display_position_interrupt_callback));
+	state->display_position_vblank_timer = machine->scheduler().timer_alloc(FUNC(display_position_vblank_callback));
+	state->vblank_interrupt_timer = machine->scheduler().timer_alloc(FUNC(vblank_interrupt_callback));
 }
 
 
 static void start_interrupt_timers( running_machine *machine )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
-	timer_adjust_oneshot(state->vblank_interrupt_timer, machine->primary_screen->time_until_pos(NEOGEO_VBSTART), 0);
-	timer_adjust_oneshot(state->display_position_vblank_timer, machine->primary_screen->time_until_pos(NEOGEO_VBSTART, NEOGEO_VBLANK_RELOAD_HPOS), 0);
+	state->vblank_interrupt_timer->adjust(machine->primary_screen->time_until_pos(NEOGEO_VBSTART));
+	state->display_position_vblank_timer->adjust(machine->primary_screen->time_until_pos(NEOGEO_VBSTART, NEOGEO_VBLANK_RELOAD_HPOS));
 }
 
 
@@ -646,7 +646,7 @@ static WRITE16_HANDLER( audio_command_w )
 		audio_cpu_assert_nmi(space->machine);
 
 		/* boost the interleave to let the audio CPU read the command */
-		cpuexec_boost_interleave(space->machine, attotime_zero, ATTOTIME_IN_USEC(50));
+		space->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
 
 		if (LOG_CPU_COMM) logerror("MAIN CPU PC %06x: audio_command_w %04x - %04x\n", cpu_get_pc(space->cpu), data, mem_mask);
 	}
@@ -1023,7 +1023,7 @@ static void set_output_latch( running_machine *machine, UINT8 data )
 		state->led2_value = ~state->output_data;
 
 	if (falling_bits & 0xc7)
-		logerror("%s  Unmaped LED write.  Data: %x\n", cpuexec_describe_context(machine), falling_bits);
+		logerror("%s  Unmaped LED write.  Data: %x\n", machine->describe_context(), falling_bits);
 
 	state->output_latch = data;
 
@@ -1081,28 +1081,28 @@ static MACHINE_START( neogeo )
 	state->upd4990a = machine->device("upd4990a");
 
 	/* register state save */
-	state_save_register_global(machine, state->display_position_interrupt_control);
-	state_save_register_global(machine, state->display_counter);
-	state_save_register_global(machine, state->vblank_interrupt_pending);
-	state_save_register_global(machine, state->display_position_interrupt_pending);
-	state_save_register_global(machine, state->irq3_pending);
-	state_save_register_global(machine, state->audio_result);
-	state_save_register_global(machine, state->controller_select);
-	state_save_register_global(machine, state->main_cpu_bank_address);
-	state_save_register_global(machine, state->main_cpu_vector_table_source);
-	state_save_register_global_array(machine, state->audio_cpu_banks);
-	state_save_register_global(machine, state->audio_cpu_rom_source);
-	state_save_register_global(machine, state->audio_cpu_rom_source_last);
-	state_save_register_global(machine, state->save_ram_unlocked);
+	state->save_item(NAME(state->display_position_interrupt_control));
+	state->save_item(NAME(state->display_counter));
+	state->save_item(NAME(state->vblank_interrupt_pending));
+	state->save_item(NAME(state->display_position_interrupt_pending));
+	state->save_item(NAME(state->irq3_pending));
+	state->save_item(NAME(state->audio_result));
+	state->save_item(NAME(state->controller_select));
+	state->save_item(NAME(state->main_cpu_bank_address));
+	state->save_item(NAME(state->main_cpu_vector_table_source));
+	state->save_item(NAME(state->audio_cpu_banks));
+	state->save_item(NAME(state->audio_cpu_rom_source));
+	state->save_item(NAME(state->audio_cpu_rom_source_last));
+	state->save_item(NAME(state->save_ram_unlocked));
 	state_save_register_global_pointer(machine, memcard_data, 0x800);
-	state_save_register_global(machine, state->output_data);
-	state_save_register_global(machine, state->output_latch);
-	state_save_register_global(machine, state->el_value);
-	state_save_register_global(machine, state->led1_value);
-	state_save_register_global(machine, state->led2_value);
-	state_save_register_global(machine, state->recurse);
+	state->save_item(NAME(state->output_data));
+	state->save_item(NAME(state->output_latch));
+	state->save_item(NAME(state->el_value));
+	state->save_item(NAME(state->led1_value));
+	state->save_item(NAME(state->led2_value));
+	state->save_item(NAME(state->recurse));
 
-	state_save_register_postload(machine, neogeo_postload, NULL);
+	machine->state().register_postload(neogeo_postload, NULL);
 }
 
 
@@ -1354,7 +1354,7 @@ static MACHINE_CONFIG_START( neogeo, neogeo_state )
 	MCFG_CPU_PROGRAM_MAP(audio_map)
 	MCFG_CPU_IO_MAP(audio_io_map)
 
-	MCFG_WATCHDOG_TIME_INIT(USEC(128762))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(128762))
 
 	MCFG_MACHINE_START(neogeo)
 	MCFG_MACHINE_RESET(neogeo)

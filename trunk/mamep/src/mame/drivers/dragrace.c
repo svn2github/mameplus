@@ -320,8 +320,8 @@ static MACHINE_START( dragrace )
 
 	state->discrete = machine->device("discrete");
 
-	state_save_register_global(machine, state->misc_flags);
-	state_save_register_global_array(machine, state->gear);
+	state->save_item(NAME(state->misc_flags));
+	state->save_item(NAME(state->gear));
 }
 
 static MACHINE_RESET( dragrace )
@@ -344,7 +344,7 @@ static MACHINE_CONFIG_START( dragrace, dragrace_state )
 	MCFG_MACHINE_START(dragrace)
 	MCFG_MACHINE_RESET(dragrace)
 
-	MCFG_TIMER_ADD_PERIODIC("frame_timer", dragrace_frame_callback, HZ(60))
+	MCFG_TIMER_ADD_PERIODIC("frame_timer", dragrace_frame_callback, attotime::from_hz(60))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

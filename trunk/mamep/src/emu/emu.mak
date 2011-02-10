@@ -94,8 +94,8 @@ EMUOBJS = \
 	$(EMUOBJ)/screen.o \
 	$(EMUOBJ)/softlist.o \
 	$(EMUOBJ)/sound.o \
+	$(EMUOBJ)/speaker.o \
 	$(EMUOBJ)/state.o \
-	$(EMUOBJ)/streams.o \
 	$(EMUOBJ)/tilemap.o \
 	$(EMUOBJ)/timer.o \
 	$(EMUOBJ)/ui.o \
@@ -198,6 +198,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/mb3773.o \
 	$(EMUMACHINE)/mb87078.o \
 	$(EMUMACHINE)/mc146818.o \
+	$(EMUMACHINE)/mc68901.o \
 	$(EMUMACHINE)/microtch.o \
 	$(EMUMACHINE)/msm6242.o \
 	$(EMUMACHINE)/nvram.o \

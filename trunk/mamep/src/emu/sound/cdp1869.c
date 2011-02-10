@@ -267,7 +267,7 @@ inline void cdp1869_device::update_prd_changed_timer()
 	}
 
 	attotime duration = m_screen->time_until_pos(next_scanline);
-	timer_adjust_oneshot(m_prd_timer, duration, next_state);
+	m_prd_timer->adjust(duration, next_state);
 }
 
 
@@ -427,38 +427,38 @@ void cdp1869_device::device_start()
 	m_out_char_ram_func = m_config.out_char_ram_func;
 
 	// allocate timers
-	m_prd_timer = device_timer_alloc(*this);
+	m_prd_timer = timer_alloc();
 	update_prd_changed_timer();
 
 	// initialize palette
 	initialize_palette();
 
 	// create sound stream
-	m_stream = stream_create(this, 0, 1, m_machine.sample_rate, this, static_stream_generate);
+	m_stream = m_machine.sound().stream_alloc(*this, 0, 1, m_machine.sample_rate);
 
 	// register for state saving
-	state_save_register_device_item(this, 0, m_prd);
-	state_save_register_device_item(this, 0, m_dispoff);
-	state_save_register_device_item(this, 0, m_fresvert);
-	state_save_register_device_item(this, 0, m_freshorz);
-	state_save_register_device_item(this, 0, m_cmem);
-	state_save_register_device_item(this, 0, m_dblpage);
-	state_save_register_device_item(this, 0, m_line16);
-	state_save_register_device_item(this, 0, m_line9);
-	state_save_register_device_item(this, 0, m_cfc);
-	state_save_register_device_item(this, 0, m_col);
-	state_save_register_device_item(this, 0, m_bkg);
-	state_save_register_device_item(this, 0, m_pma);
-	state_save_register_device_item(this, 0, m_hma);
-	state_save_register_device_item(this, 0, m_signal);
-	state_save_register_device_item(this, 0, m_incr);
-	state_save_register_device_item(this, 0, m_toneoff);
-	state_save_register_device_item(this, 0, m_wnoff);
-	state_save_register_device_item(this, 0, m_tonediv);
-	state_save_register_device_item(this, 0, m_tonefreq);
-	state_save_register_device_item(this, 0, m_toneamp);
-	state_save_register_device_item(this, 0, m_wnfreq);
-	state_save_register_device_item(this, 0, m_wnamp);
+	save_item(NAME(m_prd));
+	save_item(NAME(m_dispoff));
+	save_item(NAME(m_fresvert));
+	save_item(NAME(m_freshorz));
+	save_item(NAME(m_cmem));
+	save_item(NAME(m_dblpage));
+	save_item(NAME(m_line16));
+	save_item(NAME(m_line9));
+	save_item(NAME(m_cfc));
+	save_item(NAME(m_col));
+	save_item(NAME(m_bkg));
+	save_item(NAME(m_pma));
+	save_item(NAME(m_hma));
+	save_item(NAME(m_signal));
+	save_item(NAME(m_incr));
+	save_item(NAME(m_toneoff));
+	save_item(NAME(m_wnoff));
+	save_item(NAME(m_tonediv));
+	save_item(NAME(m_tonefreq));
+	save_item(NAME(m_toneamp));
+	save_item(NAME(m_wnfreq));
+	save_item(NAME(m_wnamp));
 }
 
 
@@ -512,16 +512,11 @@ void cdp1869_device::initialize_palette()
 
 
 //-------------------------------------------------
-//  stream_generate - handle update requests for
+//  sound_stream_update - handle update requests for
 //  our sound stream
 //-------------------------------------------------
 
-STREAM_UPDATE( cdp1869_device::static_stream_generate )
-{
-	reinterpret_cast<cdp1869_device *>(param)->stream_generate(inputs, outputs, samples);
-}
-
-void cdp1869_device::stream_generate(stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+void cdp1869_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
 {
 	// reset the output stream
 	memset(outputs[0], 0, samples * sizeof(*outputs[0]));
@@ -713,7 +708,7 @@ WRITE8_MEMBER( cdp1869_device::out4_w )
 	m_toneoff = BIT(offset, 7);
 	m_tonediv = (offset & 0x7f00) >> 8;
 
-	stream_update(m_stream);
+	m_stream->update();
 }
 
 
@@ -753,7 +748,7 @@ WRITE8_MEMBER( cdp1869_device::out5_w )
 	m_wnfreq = (offset & 0x7000) >> 12;
 	m_wnoff = BIT(offset, 15);
 
-	stream_update(m_stream);
+	m_stream->update();
 
 	if (m_cmem)
 	{

@@ -315,9 +315,9 @@ static MACHINE_START( bladestl )
 	state->k007342 = machine->device("k007342");
 	state->k007420 = machine->device("k007420");
 
-	state_save_register_global(machine, state->spritebank);
-	state_save_register_global_array(machine, state->layer_colorbase);
-	state_save_register_global_array(machine, state->last_track);
+	state->save_item(NAME(state->spritebank));
+	state->save_item(NAME(state->layer_colorbase));
+	state->save_item(NAME(state->last_track));
 }
 
 static MACHINE_RESET( bladestl )
@@ -343,7 +343,7 @@ static MACHINE_CONFIG_START( bladestl, bladestl_state )
 	MCFG_CPU_ADD("audiocpu", M6809, 2000000)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(bladestl)
 	MCFG_MACHINE_RESET(bladestl)

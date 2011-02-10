@@ -237,7 +237,7 @@ static TIMER_CALLBACK( nmi_callback )
 static WRITE8_HANDLER( sound_command_w )
 {
 	soundlatch_w(space, 0, data);
-	timer_call_after_resynch(space->machine, NULL, data, nmi_callback);
+	space->machine->scheduler().synchronize(FUNC(nmi_callback), data);
 }
 
 static WRITE8_HANDLER( nmi_disable_w )
@@ -713,10 +713,12 @@ static WRITE8_DEVICE_HANDLER( sound_control_0_w )
 //  popmessage("SND0 0=%02x 1=%02x 2=%02x 3=%02x", state->snd_ctrl0, state->snd_ctrl1, state->snd_ctrl2, state->snd_ctrl3);
 
 	/* this definitely controls main melody voice on 2'-1 and 4'-1 outputs */
-	sound_set_output_gain(device, 0, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group1 from msm5232 */
-	sound_set_output_gain(device, 1, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group1 from msm5232 */
-	sound_set_output_gain(device, 2, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group1 from msm5232 */
-	sound_set_output_gain(device, 3, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group1 from msm5232 */
+	device_sound_interface *sound;
+	device->interface(sound);
+	sound->set_output_gain(0, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group1 from msm5232 */
+	sound->set_output_gain(1, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group1 from msm5232 */
+	sound->set_output_gain(2, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group1 from msm5232 */
+	sound->set_output_gain(3, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group1 from msm5232 */
 
 }
 static WRITE8_DEVICE_HANDLER( sound_control_1_w )
@@ -724,10 +726,12 @@ static WRITE8_DEVICE_HANDLER( sound_control_1_w )
 	fortyl_state *state = device->machine->driver_data<fortyl_state>();
 	state->snd_ctrl1 = data & 0xff;
 //  popmessage("SND1 0=%02x 1=%02x 2=%02x 3=%02x", state->snd_ctrl0, state->snd_ctrl1, state->snd_ctrl2, state->snd_ctrl3);
-	sound_set_output_gain(device, 4, state->vol_ctrl[(state->snd_ctrl1 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
-	sound_set_output_gain(device, 5, state->vol_ctrl[(state->snd_ctrl1 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
-	sound_set_output_gain(device, 6, state->vol_ctrl[(state->snd_ctrl1 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
-	sound_set_output_gain(device, 7, state->vol_ctrl[(state->snd_ctrl1 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
+	device_sound_interface *sound;
+	device->interface(sound);
+	sound->set_output_gain(4, state->vol_ctrl[(state->snd_ctrl1 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
+	sound->set_output_gain(5, state->vol_ctrl[(state->snd_ctrl1 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
+	sound->set_output_gain(6, state->vol_ctrl[(state->snd_ctrl1 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
+	sound->set_output_gain(7, state->vol_ctrl[(state->snd_ctrl1 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
 }
 
 static WRITE8_DEVICE_HANDLER( sound_control_2_w )
@@ -737,8 +741,10 @@ static WRITE8_DEVICE_HANDLER( sound_control_2_w )
 	state->snd_ctrl2 = data & 0xff;
 //  popmessage("SND2 0=%02x 1=%02x 2=%02x 3=%02x", state->snd_ctrl0, state->snd_ctrl1, state->snd_ctrl2, state->snd_ctrl3);
 
+	device_sound_interface *sound;
+	device->interface(sound);
 	for (i = 0; i < 3; i++)
-		sound_set_output_gain(device, i, state->vol_ctrl[(state->snd_ctrl2 >> 4) & 15] / 100.0);	/* ym2149f all */
+		sound->set_output_gain(i, state->vol_ctrl[(state->snd_ctrl2 >> 4) & 15] / 100.0);	/* ym2149f all */
 }
 
 static WRITE8_DEVICE_HANDLER( sound_control_3_w ) /* unknown */
@@ -985,18 +991,18 @@ static MACHINE_START( 40love )
 	state->audiocpu = machine->device("audiocpu");
 
 	/* video */
-	state_save_register_global(machine, state->pix1);
-	state_save_register_global_array(machine, state->pix2);
+	state->save_item(NAME(state->pix1));
+	state->save_item(NAME(state->pix2));
 	/* sound */
-	state_save_register_global(machine, state->sound_nmi_enable);
-	state_save_register_global(machine, state->pending_nmi);
-	state_save_register_global(machine, state->snd_data);
-	state_save_register_global(machine, state->snd_flag);
-	state_save_register_global_array(machine, state->vol_ctrl);
-	state_save_register_global(machine, state->snd_ctrl0);
-	state_save_register_global(machine, state->snd_ctrl1);
-	state_save_register_global(machine, state->snd_ctrl2);
-	state_save_register_global(machine, state->snd_ctrl3);
+	state->save_item(NAME(state->sound_nmi_enable));
+	state->save_item(NAME(state->pending_nmi));
+	state->save_item(NAME(state->snd_data));
+	state->save_item(NAME(state->snd_flag));
+	state->save_item(NAME(state->vol_ctrl));
+	state->save_item(NAME(state->snd_ctrl0));
+	state->save_item(NAME(state->snd_ctrl1));
+	state->save_item(NAME(state->snd_ctrl2));
+	state->save_item(NAME(state->snd_ctrl3));
 }
 
 static MACHINE_START( undoukai )
@@ -1006,12 +1012,12 @@ static MACHINE_START( undoukai )
 	MACHINE_START_CALL(40love);
 
 	/* fake mcu */
-	state_save_register_global(machine, state->from_mcu);
-	state_save_register_global(machine, state->mcu_cmd);
-	state_save_register_global_array(machine, state->mcu_in[0]);
-	state_save_register_global_array(machine, state->mcu_in[1]);
-	state_save_register_global_array(machine, state->mcu_out[0]);
-	state_save_register_global_array(machine, state->mcu_out[1]);
+	state->save_item(NAME(state->from_mcu));
+	state->save_item(NAME(state->mcu_cmd));
+	state->save_item(NAME(state->mcu_in[0]));
+	state->save_item(NAME(state->mcu_in[1]));
+	state->save_item(NAME(state->mcu_out[0]));
+	state->save_item(NAME(state->mcu_out[1]));
 }
 
 static MACHINE_RESET( common )
@@ -1077,7 +1083,7 @@ static MACHINE_CONFIG_START( 40love, fortyl_state )
 	MCFG_CPU_PROGRAM_MAP(buggychl_mcu_map)
 	MCFG_DEVICE_ADD("bmcu", BUGGYCHL_MCU, 0)
 
-	MCFG_QUANTUM_TIME(HZ(6000))	/* high interleave to ensure proper synchronization of CPUs */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* high interleave to ensure proper synchronization of CPUs */
 	MCFG_MACHINE_START(40love)
 	MCFG_MACHINE_RESET(40love)
 

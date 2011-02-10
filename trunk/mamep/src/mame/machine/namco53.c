@@ -126,7 +126,7 @@ void namco_53xx_read_request(device_t *device)
 	// The input clock to the 06XX interface chip is 64H, that is
 	// 18432000/6/64 = 48kHz, so it makes sense for the irq line to be
 	// asserted for one clock cycle ~= 21us.
-	timer_set(device->machine, ATTOTIME_IN_USEC(21), (void *)device, 0, namco_53xx_irq_clear);
+	device->machine->scheduler().timer_set(attotime::from_usec(21), FUNC(namco_53xx_irq_clear), 0, (void *)device);
 }
 
 READ8_DEVICE_HANDLER( namco_53xx_read )
@@ -188,7 +188,7 @@ static DEVICE_START( namco_53xx )
 	devcb_resolve_read8(&state->in[3], &config->in[3], device);
 	devcb_resolve_write8(&state->p, &config->p, device);
 
-	state_save_register_device_item(device, 0, state->portO);
+	device->save_item(NAME(state->portO));
 }
 
 

@@ -207,7 +207,7 @@ UINT8 midway_serial_pic_status_r(void)
 
 UINT8 midway_serial_pic_r(address_space *space)
 {
-	logerror("%s:security R = %04X\n", cpuexec_describe_context(space->machine), serial.buffer);
+	logerror("%s:security R = %04X\n", space->machine->describe_context(), serial.buffer);
 	serial.status = 1;
 	return serial.buffer;
 }
@@ -215,7 +215,7 @@ UINT8 midway_serial_pic_r(address_space *space)
 
 void midway_serial_pic_w(address_space *space, UINT8 data)
 {
-	logerror("%s:security W = %04X\n", cpuexec_describe_context(space->machine), data);
+	logerror("%s:security W = %04X\n", space->machine->describe_context(), data);
 
 	/* status seems to reflect the clock bit */
 	serial.status = (data >> 4) & 1;
@@ -258,8 +258,7 @@ static TIMER_CALLBACK( reset_timer )
 static void pic_register_state(running_machine *machine)
 {
 	state_save_register_global(machine, pic.latch);
-	state_save_register_global(machine, pic.latch_expire_time.seconds);
-	state_save_register_global(machine, pic.latch_expire_time.attoseconds);
+	state_save_register_global(machine, pic.latch_expire_time);
 	state_save_register_global(machine, pic.state);
 	state_save_register_global(machine, pic.index);
 	state_save_register_global(machine, pic.total);
@@ -281,7 +280,7 @@ void midway_serial_pic2_init(running_machine *machine, int upper, int yearoffs)
 
 	pic.yearoffs = yearoffs;
 	pic.time_just_written = 0;
-	pic.time_write_timer = timer_alloc(machine, reset_timer, NULL);
+	pic.time_write_timer = machine->scheduler().timer_alloc(FUNC(reset_timer));
 	memset(pic.default_nvram, 0xff, sizeof(pic.default_nvram));
 	generate_serial_data(machine, upper);
 }
@@ -300,14 +299,14 @@ UINT8 midway_serial_pic2_status_r(address_space *space)
 	/* if we're still holding the data ready bit high, do it */
 	if (pic.latch & 0xf00)
 	{
-		if (attotime_compare(timer_get_time(space->machine), pic.latch_expire_time) > 0)
+		if (space->machine->time() > pic.latch_expire_time)
 			pic.latch &= 0xff;
 		else
 			pic.latch -= 0x100;
 		result = 1;
 	}
 
-	logerror("%s:PIC status %d\n", cpuexec_describe_context(space->machine), result);
+	logerror("%s:PIC status %d\n", space->machine->describe_context(), result);
 	return result;
 }
 
@@ -317,7 +316,7 @@ UINT8 midway_serial_pic2_r(address_space *space)
 	UINT8 result = 0;
 
 	/* PIC data register */
-	logerror("%s:PIC data read (index=%d total=%d latch=%03X) =", cpuexec_describe_context(space->machine), pic.index, pic.total, pic.latch);
+	logerror("%s:PIC data read (index=%d total=%d latch=%03X) =", space->machine->describe_context(), pic.index, pic.total, pic.latch);
 
 	/* return the current result */
 	if (pic.latch & 0xf00)
@@ -341,13 +340,13 @@ void midway_serial_pic2_w(address_space *space, UINT8 data)
 
 	/* PIC command register */
 	if (pic.state == 0)
-		logerror("%s:PIC command %02X\n", cpuexec_describe_context(machine), data);
+		logerror("%s:PIC command %02X\n", machine->describe_context(), data);
 	else
-		logerror("%s:PIC data %02X\n", cpuexec_describe_context(machine), data);
+		logerror("%s:PIC data %02X\n", machine->describe_context(), data);
 
 	/* store in the latch, along with a bit to indicate we have data */
 	pic.latch = (data & 0x00f) | 0x480;
-	pic.latch_expire_time = attotime_add(timer_get_time(machine), ATTOTIME_IN_MSEC(1));
+	pic.latch_expire_time = machine->time() + attotime::from_msec(1);
 	if (data & 0x10)
 	{
 		int cmd = pic.state ? (pic.state & 0x0f) : (pic.latch & 0x0f);
@@ -436,7 +435,7 @@ void midway_serial_pic2_w(address_space *space, UINT8 data)
 					/* otherwise, flag the time as having just been written for 1/2 second */
 					else
 					{
-						timer_adjust_oneshot(pic.time_write_timer, ATTOTIME_IN_MSEC(500), 0);
+						pic.time_write_timer->adjust(attotime::from_msec(500));
 						pic.time_just_written = 1;
 						pic.state = 0;
 					}
@@ -801,7 +800,7 @@ void midway_ioasic_fifo_reset_w(running_machine *machine, int state)
 		update_ioasic_irq(machine);
 	}
 	if (LOG_FIFO)
-		logerror("%s:fifo_reset(%d)\n", cpuexec_describe_context(machine), state);
+		logerror("%s:fifo_reset(%d)\n", machine->describe_context(), state);
 }
 
 

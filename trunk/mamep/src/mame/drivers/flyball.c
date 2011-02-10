@@ -136,12 +136,12 @@ static TIMER_CALLBACK( flyball_quarter_callback	)
 
 	for (i = 0; i < 64; i++)
 		if (potsense[i] != 0)
-			timer_set(machine, machine->primary_screen->time_until_pos(scanline + i), NULL, potsense[i], flyball_joystick_callback);
+			machine->scheduler().timer_set(machine->primary_screen->time_until_pos(scanline + i), FUNC(flyball_joystick_callback), potsense[i]);
 
 	scanline += 0x40;
 	scanline &= 0xff;
 
-	timer_set(machine, machine->primary_screen->time_until_pos(scanline), NULL, scanline, flyball_quarter_callback);
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(scanline), FUNC(flyball_quarter_callback), scanline);
 
 	state->potsense = 0;
 	state->potmask = 0;
@@ -365,13 +365,13 @@ static MACHINE_START( flyball )
 
 	state->maincpu = machine->device("maincpu");
 
-	state_save_register_global(machine, state->pitcher_vert);
-	state_save_register_global(machine, state->pitcher_horz);
-	state_save_register_global(machine, state->pitcher_pic);
-	state_save_register_global(machine, state->ball_vert);
-	state_save_register_global(machine, state->ball_horz);
-	state_save_register_global(machine, state->potmask);
-	state_save_register_global(machine, state->potsense);
+	state->save_item(NAME(state->pitcher_vert));
+	state->save_item(NAME(state->pitcher_horz));
+	state->save_item(NAME(state->pitcher_pic));
+	state->save_item(NAME(state->ball_vert));
+	state->save_item(NAME(state->ball_horz));
+	state->save_item(NAME(state->potmask));
+	state->save_item(NAME(state->potsense));
 }
 
 static MACHINE_RESET( flyball )
@@ -387,7 +387,7 @@ static MACHINE_RESET( flyball )
 
 	machine->device("maincpu")->reset();
 
-	timer_set(machine, machine->primary_screen->time_until_pos(0), NULL, 0, flyball_quarter_callback);
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(0), FUNC(flyball_quarter_callback));
 
 	state->pitcher_vert = 0;
 	state->pitcher_horz = 0;

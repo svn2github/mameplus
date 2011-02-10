@@ -1150,7 +1150,7 @@ static READ8_DEVICE_HANDLER( htengoku_dsw_r )
 	if (!BIT(state->dsw_sel, 2))	return input_port_read(device->machine, "DSW2");
 	if (!BIT(state->dsw_sel, 3))	return input_port_read(device->machine, "DSW3");
 	if (!BIT(state->dsw_sel, 4))	return input_port_read(device->machine, "DSW4");
-	logerror("%s: warning, unknown bits read, dsw_sel = %02x\n", cpuexec_describe_context(device->machine), state->dsw_sel);
+	logerror("%s: warning, unknown bits read, dsw_sel = %02x\n", device->machine->describe_context(), state->dsw_sel);
 
 	return 0xff;
 }
@@ -1375,7 +1375,7 @@ static READ8_DEVICE_HANDLER( tenkai_dsw_r )
 	if (!BIT(state->dsw_sel, 2)) return input_port_read(device->machine, "DSW2");
 	if (!BIT(state->dsw_sel, 3)) return input_port_read(device->machine, "DSW3");
 	if (!BIT(state->dsw_sel, 4)) return input_port_read(device->machine, "DSW4");
-	logerror("%s: unmapped dsw %02x read\n", cpuexec_describe_context(device->machine), state->dsw_sel);
+	logerror("%s: unmapped dsw %02x read\n", device->machine->describe_context(), state->dsw_sel);
 
 	return 0xff;
 }
@@ -4210,35 +4210,35 @@ static MACHINE_START( dynax )
 	state->rtc = machine->device("rtc");
 	state->ymsnd = machine->device("ymsnd");
 
-	state_save_register_global(machine, state->sound_irq);
-	state_save_register_global(machine, state->vblank_irq);
-	state_save_register_global(machine, state->blitter_irq);
-	state_save_register_global(machine, state->blitter2_irq);
-	state_save_register_global(machine, state->soundlatch_irq);
-	state_save_register_global(machine, state->sound_vblank_irq);
+	state->save_item(NAME(state->sound_irq));
+	state->save_item(NAME(state->vblank_irq));
+	state->save_item(NAME(state->blitter_irq));
+	state->save_item(NAME(state->blitter2_irq));
+	state->save_item(NAME(state->soundlatch_irq));
+	state->save_item(NAME(state->sound_vblank_irq));
 
-	state_save_register_global(machine, state->input_sel);
-	state_save_register_global(machine, state->dsw_sel);
-	state_save_register_global(machine, state->keyb);
-	state_save_register_global(machine, state->coins);
-	state_save_register_global(machine, state->hopper);
-	state_save_register_global(machine, state->hnoridur_bank);
-	state_save_register_global(machine, state->palbank);
-	state_save_register_global(machine, state->msm5205next);
-	state_save_register_global(machine, state->resetkludge);
-	state_save_register_global(machine, state->toggle);
-	state_save_register_global(machine, state->toggle_cpu1);
-	state_save_register_global(machine, state->yarunara_clk_toggle);
-	state_save_register_global(machine, state->soundlatch_ack);
-	state_save_register_global(machine, state->soundlatch_full);
-	state_save_register_global(machine, state->latch);
-	state_save_register_global(machine, state->rombank);
-	state_save_register_global(machine, state->tenkai_p5_val);
-	state_save_register_global(machine, state->tenkai_6c);
-	state_save_register_global(machine, state->tenkai_70);
-	state_save_register_global_array(machine, state->gekisha_val);
-	state_save_register_global_array(machine, state->palette_ram);
-	state_save_register_global(machine, state->gekisha_rom_enable);
+	state->save_item(NAME(state->input_sel));
+	state->save_item(NAME(state->dsw_sel));
+	state->save_item(NAME(state->keyb));
+	state->save_item(NAME(state->coins));
+	state->save_item(NAME(state->hopper));
+	state->save_item(NAME(state->hnoridur_bank));
+	state->save_item(NAME(state->palbank));
+	state->save_item(NAME(state->msm5205next));
+	state->save_item(NAME(state->resetkludge));
+	state->save_item(NAME(state->toggle));
+	state->save_item(NAME(state->toggle_cpu1));
+	state->save_item(NAME(state->yarunara_clk_toggle));
+	state->save_item(NAME(state->soundlatch_ack));
+	state->save_item(NAME(state->soundlatch_full));
+	state->save_item(NAME(state->latch));
+	state->save_item(NAME(state->rombank));
+	state->save_item(NAME(state->tenkai_p5_val));
+	state->save_item(NAME(state->tenkai_6c));
+	state->save_item(NAME(state->tenkai_70));
+	state->save_item(NAME(state->gekisha_val));
+	state->save_item(NAME(state->palette_ram));
+	state->save_item(NAME(state->gekisha_rom_enable));
 }
 
 static MACHINE_RESET( dynax )
@@ -4933,7 +4933,7 @@ static MACHINE_START( tenkai )
 {
 	MACHINE_START_CALL(dynax);
 
-	state_save_register_postload(machine, tenkai_bank_postload, NULL);
+	machine->state().register_postload(tenkai_bank_postload, NULL);
 }
 
 static MACHINE_CONFIG_START( tenkai, dynax_state )
@@ -4996,7 +4996,7 @@ static MACHINE_START( gekisha )
 {
 	MACHINE_START_CALL(dynax);
 
-	state_save_register_postload(machine, gekisha_bank_postload, NULL);
+	machine->state().register_postload(gekisha_bank_postload, NULL);
 }
 
 static MACHINE_RESET( gekisha )

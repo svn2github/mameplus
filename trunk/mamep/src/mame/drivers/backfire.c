@@ -27,10 +27,6 @@ public:
 		: driver_device(machine, config) { }
 
 	/* memory pointers */
-	UINT16 *  pf1_rowscroll;
-	UINT16 *  pf2_rowscroll;
-	UINT16 *  pf3_rowscroll;
-	UINT16 *  pf4_rowscroll;
 	UINT32 *  spriteram_1;
 	UINT32 *  spriteram_2;
 	UINT32 *  mainram;
@@ -47,6 +43,12 @@ public:
 	device_t *lscreen;
 	device_t *rscreen;
 	device_t *eeprom;
+
+	/* memory */
+	UINT16    pf1_rowscroll[0x0800/2];
+	UINT16    pf2_rowscroll[0x0800/2];
+	UINT16    pf3_rowscroll[0x0800/2];
+	UINT16    pf4_rowscroll[0x0800/2];
 };
 
 //UINT32 *backfire_180010, *backfire_188010;
@@ -56,23 +58,17 @@ static VIDEO_START( backfire )
 {
 	backfire_state *state = machine->driver_data<backfire_state>();
 
-	/* allocate the ram as 16-bit (we do it here because the CPU is 32-bit) */
-	state->pf1_rowscroll = auto_alloc_array(machine, UINT16, 0x0800/2);
-	state->pf2_rowscroll = auto_alloc_array(machine, UINT16, 0x0800/2);
-	state->pf3_rowscroll = auto_alloc_array(machine, UINT16, 0x0800/2);
-	state->pf4_rowscroll = auto_alloc_array(machine, UINT16, 0x0800/2);
-
 	/* and register the allocated ram so that save states still work */
-	state_save_register_global_pointer(machine, state->pf1_rowscroll, 0x800/2);
-	state_save_register_global_pointer(machine, state->pf2_rowscroll, 0x800/2);
-	state_save_register_global_pointer(machine, state->pf3_rowscroll, 0x800/2);
-	state_save_register_global_pointer(machine, state->pf4_rowscroll, 0x800/2);
+	state->save_item(NAME(state->pf1_rowscroll));
+	state->save_item(NAME(state->pf2_rowscroll));
+	state->save_item(NAME(state->pf3_rowscroll));
+	state->save_item(NAME(state->pf4_rowscroll));
 
 	state->left =  auto_bitmap_alloc(machine, 80*8, 32*8, BITMAP_FORMAT_INDEXED16);
 	state->right = auto_bitmap_alloc(machine, 80*8, 32*8, BITMAP_FORMAT_INDEXED16);
 
-	state_save_register_global_bitmap(machine, state->left);
-	state_save_register_global_bitmap(machine, state->right);
+	state->save_item(NAME(*state->left));
+	state->save_item(NAME(*state->right));
 }
 
 static void draw_sprites( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, UINT32 *spriteram, int region )
@@ -242,7 +238,7 @@ static READ32_HANDLER(backfire_control3_r)
 
 static WRITE32_DEVICE_HANDLER(backfire_eeprom_w)
 {
-	logerror("%s:write eprom %08x (%08x) %08x\n",cpuexec_describe_context(device->machine),offset<<1,mem_mask,data);
+	logerror("%s:write eprom %08x (%08x) %08x\n",device->machine->describe_context(),offset<<1,mem_mask,data);
 	if (ACCESSING_BITS_0_7)
 	{
 		eeprom_set_clock_line(device, BIT(data, 1) ? ASSERT_LINE : CLEAR_LINE);
@@ -675,8 +671,8 @@ static READ32_HANDLER( backfire_speedup_r )
 
 	//mame_printf_debug( "%08x\n",cpu_get_pc(space->cpu));
 
-	if (cpu_get_pc(space->cpu )== 0xce44)  cpu_spinuntil_time(space->cpu, ATTOTIME_IN_USEC(400)); // backfire
-	if (cpu_get_pc(space->cpu) == 0xcee4)  cpu_spinuntil_time(space->cpu, ATTOTIME_IN_USEC(400)); // backfirea
+	if (cpu_get_pc(space->cpu )== 0xce44)  cpu_spinuntil_time(space->cpu, attotime::from_usec(400)); // backfire
+	if (cpu_get_pc(space->cpu) == 0xcee4)  cpu_spinuntil_time(space->cpu, attotime::from_usec(400)); // backfirea
 
 	return state->mainram[0x18/4];
 }

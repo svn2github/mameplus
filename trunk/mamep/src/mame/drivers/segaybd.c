@@ -96,7 +96,7 @@ static void update_main_irqs(running_machine *machine)
 	cpu_set_input_line(state->suby, 6, state->timer_irq_state && state->vblank_irq_state ? ASSERT_LINE : CLEAR_LINE);
 
 	if (state->timer_irq_state || state->vblank_irq_state)
-		cpuexec_boost_interleave(machine, attotime_zero, ATTOTIME_IN_USEC(50));
+		machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
 }
 
 
@@ -199,11 +199,11 @@ static MACHINE_START( yboard )
 	state->subx = machine->device("subx");
 	state->suby = machine->device("suby");
 
-	state_save_register_global(machine, state->vblank_irq_state);
-	state_save_register_global(machine, state->timer_irq_state);
-	state_save_register_global(machine, state->irq2_scanline);
-	state_save_register_global_array(machine, state->misc_io_data);
-	state_save_register_global_array(machine, state->analog_data);
+	state->save_item(NAME(state->vblank_irq_state));
+	state->save_item(NAME(state->timer_irq_state));
+	state->save_item(NAME(state->irq2_scanline));
+	state->save_item(NAME(state->misc_io_data));
+	state->save_item(NAME(state->analog_data));
 }
 
 
@@ -245,7 +245,7 @@ static TIMER_CALLBACK( delayed_sound_data_w )
 static WRITE16_HANDLER( sound_data_w )
 {
 	if (ACCESSING_BITS_0_7)
-		timer_call_after_resynch(space->machine, NULL, data & 0xff, delayed_sound_data_w);
+		space->machine->scheduler().synchronize(FUNC(delayed_sound_data_w), data & 0xff);
 }
 
 
@@ -368,7 +368,7 @@ static WRITE16_HANDLER( io_chip_w )
 
 			/* D7 = /MUTE */
 			/* D6-D0 = FLT31-25 */
-			sound_global_enable(space->machine, data & 0x80);
+			space->machine->sound().system_enable(data & 0x80);
 			break;
 
 		/* CNT register */
@@ -1005,7 +1005,7 @@ static MACHINE_CONFIG_START( yboard, segas1x_state )
 	MCFG_MACHINE_START(yboard)
 	MCFG_MACHINE_RESET(yboard)
 	MCFG_NVRAM_ADD_0FILL("backupram")
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_TIMER_ADD("int_timer", scanline_callback)
 

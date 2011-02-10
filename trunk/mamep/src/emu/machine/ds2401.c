@@ -20,7 +20,7 @@ INLINE void ATTR_PRINTF(3,4) verboselog( running_machine *machine, int n_level, 
 		va_start( v, s_fmt );
 		vsprintf( buf, s_fmt, v );
 		va_end( v );
-		logerror( "%s: %s", cpuexec_describe_context(machine), buf );
+		logerror( "%s: %s", machine->describe_context(), buf );
 	}
 }
 
@@ -63,7 +63,7 @@ static TIMER_CALLBACK( ds2401_reset )
 	verboselog( machine, 1, "ds2401_reset(%d)\n", which );
 
 	c->state = STATE_RESET;
-	timer_adjust_oneshot( c->timer, attotime_never, which );
+	c->timer->adjust( attotime::never, which );
 }
 
 static TIMER_CALLBACK( ds2401_tick )
@@ -77,7 +77,7 @@ static TIMER_CALLBACK( ds2401_tick )
 		verboselog( machine, 2, "ds2401_tick(%d) state_reset1 %d\n", which, c->rx );
 		c->tx = 0;
 		c->state = STATE_RESET2;
-		timer_adjust_oneshot( c->timer, c->t_pdl, which );
+		c->timer->adjust( c->t_pdl, which );
 		break;
 	case STATE_RESET2:
 		verboselog( machine, 2, "ds2401_tick(%d) state_reset2 %d\n", which, c->rx );
@@ -140,11 +140,11 @@ void ds2401_init( running_machine *machine, int which, const UINT8 *data )
 	c->rx = 1;
 	c->tx = 1;
 	c->data = data;
-	c->t_samp = ATTOTIME_IN_USEC( 15 );
-	c->t_rdv = ATTOTIME_IN_USEC( 15 );
-	c->t_rstl = ATTOTIME_IN_USEC( 480 );
-	c->t_pdh = ATTOTIME_IN_USEC( 15 );
-	c->t_pdl = ATTOTIME_IN_USEC( 60 );
+	c->t_samp = attotime::from_usec( 15 );
+	c->t_rdv = attotime::from_usec( 15 );
+	c->t_rstl = attotime::from_usec( 480 );
+	c->t_pdh = attotime::from_usec( 15 );
+	c->t_pdl = attotime::from_usec( 60 );
 
 	state_save_register_item(machine,  "ds2401", NULL, which, c->state );
 	state_save_register_item(machine,  "ds2401", NULL, which, c->bit );
@@ -153,8 +153,8 @@ void ds2401_init( running_machine *machine, int which, const UINT8 *data )
 	state_save_register_item(machine,  "ds2401", NULL, which, c->rx );
 	state_save_register_item(machine,  "ds2401", NULL, which, c->tx );
 
-	c->timer = timer_alloc(machine, ds2401_tick , NULL);
-	c->reset_timer = timer_alloc(machine, ds2401_reset , NULL);
+	c->timer = machine->scheduler().timer_alloc(FUNC(ds2401_tick ));
+	c->reset_timer = machine->scheduler().timer_alloc(FUNC(ds2401_reset ));
 }
 
 void ds2401_write( running_machine *machine, int which, int data )
@@ -171,7 +171,7 @@ void ds2401_write( running_machine *machine, int which, int data )
 			break;
 		case STATE_COMMAND:
 			verboselog( machine, 2, "ds2401_write(%d) state_command\n", which );
-			timer_adjust_oneshot( c->timer, c->t_samp, which );
+			c->timer->adjust( c->t_samp, which );
 			break;
 		case STATE_READROM:
 			if( c->bit == 0 )
@@ -188,13 +188,13 @@ void ds2401_write( running_machine *machine, int which, int data )
 				c->byte++;
 			}
 			verboselog( machine, 2, "ds2401_write(%d) state_readrom %d\n", which, c->tx );
-			timer_adjust_oneshot( c->timer, c->t_rdv, which );
+			c->timer->adjust( c->t_rdv, which );
 			break;
 		default:
 			verboselog( machine, 0, "ds2401_write(%d) state not handled: %d\n", which, c->state );
 			break;
 		}
-		timer_adjust_oneshot( c->reset_timer, c->t_rstl, which );
+		c->reset_timer->adjust( c->t_rstl, which );
 	}
 	else if( data == 1 && c->rx == 0 )
 	{
@@ -202,10 +202,10 @@ void ds2401_write( running_machine *machine, int which, int data )
 		{
 		case STATE_RESET:
 			c->state = STATE_RESET1;
-			timer_adjust_oneshot( c->timer, c->t_pdh, which );
+			c->timer->adjust( c->t_pdh, which );
 			break;
 		}
-		timer_adjust_oneshot( c->reset_timer, attotime_never, which );
+		c->reset_timer->adjust( attotime::never, which );
 	}
 	c->rx = data;
 }

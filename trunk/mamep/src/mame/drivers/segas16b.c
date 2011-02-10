@@ -1056,11 +1056,11 @@ static void system16b_common_init(running_machine* machine, int _rom_board)
 	state->_315_5250_1 = machine->device("315_5250_1");
 	state->_315_5250_2 = machine->device("315_5250_2");
 
-	state_save_register_global(machine, state->disable_screen_blanking);
-	state_save_register_global(machine, state->mj_input_num);
-	state_save_register_global(machine, state->mj_last_val);
-	state_save_register_global(machine, state->hwc_input_value);
-	state_save_register_global(machine, state->atomicp_sound_divisor);
+	state->save_item(NAME(state->disable_screen_blanking));
+	state->save_item(NAME(state->mj_input_num));
+	state->save_item(NAME(state->mj_last_val));
+	state->save_item(NAME(state->hwc_input_value));
+	state->save_item(NAME(state->atomicp_sound_divisor));
 
 }
 
@@ -1110,7 +1110,7 @@ static TIMER_CALLBACK( suspend_i8751 )
 
 static TIMER_CALLBACK( boost_interleave )
 {
-	cpuexec_boost_interleave(machine, attotime_zero, ATTOTIME_IN_MSEC(10));
+	machine->scheduler().boost_interleave(attotime::zero, attotime::from_msec(10));
 }
 
 
@@ -1130,9 +1130,9 @@ static MACHINE_RESET( system16b )
 
 	/* if we have a fake i8751 handler, disable the actual 8751, otherwise crank the interleave */
 	if (state->i8751_vblank_hook != NULL)
-		timer_call_after_resynch(machine, NULL, 0, suspend_i8751);
+		machine->scheduler().synchronize(FUNC(suspend_i8751));
 	else
-		timer_call_after_resynch(machine, NULL, 0, boost_interleave);
+		machine->scheduler().synchronize(FUNC(boost_interleave));
 
 	/* configure sprite banks */
 	for (i = 0; i < 16; i++)
@@ -1591,7 +1591,7 @@ static void wb3_i8751_sim(running_machine *machine)
 static MACHINE_START( atomicp )
 {
 	segas1x_state *state = machine->driver_data<segas1x_state>();
-	state_save_register_global(machine, state->atomicp_sound_count);
+	state->save_item(NAME(state->atomicp_sound_count));
 }
 
 
@@ -3351,7 +3351,7 @@ static MACHINE_CONFIG_DERIVED( atomicp, system16b ) /* 10MHz CPU Clock verified 
 	MCFG_DEVICE_REMOVE("soundcpu")
 
 	MCFG_MACHINE_START(atomicp)
-	MCFG_TIMER_ADD_PERIODIC("atomicp_timer", atomicp_sound_irq, HZ(10000))
+	MCFG_TIMER_ADD_PERIODIC("atomicp_timer", atomicp_sound_irq, attotime::from_hz(10000))
 
 	/* sound hardware */
 	MCFG_SOUND_REPLACE("ymsnd", YM2413, XTAL_20MHz/4) /* 20MHz OSC divided by 4 (verified) */
@@ -4748,6 +4748,7 @@ ROM_END
     Flash Point, Sega System 16B
     CPU: FD1094 (317-0127A)
     ROM Board: 171-5704
+    Sega ID# for ROM board: 834-7122-03
 
     Pos.   Silk        Type        Part         Pos.   Silk        Type        Part
 

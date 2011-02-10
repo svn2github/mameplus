@@ -343,7 +343,7 @@ static WRITE32_HANDLER( macrossp_soundcmd_w )
 		state->sndpending = 1;
 		cpu_set_input_line(state->audiocpu, 2, HOLD_LINE);
 		/* spin for a while to let the sound CPU read the command */
-		cpu_spinuntil_time(space->cpu, ATTOTIME_IN_USEC(50));
+		cpu_spinuntil_time(space->cpu, attotime::from_usec(50));
 	}
 }
 
@@ -609,10 +609,10 @@ static MACHINE_START( macrossp )
 	state->maincpu = machine->device("maincpu");
 	state->audiocpu = machine->device("audiocpu");
 
-	state_save_register_global(machine, state->sndpending);
-	state_save_register_global(machine, state->snd_toggle);
-	state_save_register_global(machine, state->fade_effect);
-	state_save_register_global(machine, state->old_fade);
+	state->save_item(NAME(state->sndpending));
+	state->save_item(NAME(state->snd_toggle));
+	state->save_item(NAME(state->fade_effect));
+	state->save_item(NAME(state->old_fade));
 }
 
 static MACHINE_RESET( macrossp )

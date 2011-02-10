@@ -145,7 +145,7 @@ static WRITE8_HANDLER( unk_8a_w )
     state->n7751_command = (data & 0x07);
     cpu_set_input_line(state->n7751, 0, ((data & 0x08) == 0) ? ASSERT_LINE : CLEAR_LINE);
     //cpu_set_input_line(state->n7751, 0, (data & 0x02) ? CLEAR_LINE : ASSERT_LINE);
-    cpuexec_boost_interleave(space->machine, attotime_zero, ATTOTIME_IN_USEC(100));
+    space->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
     */
 
 	logerror("8a -> %x\n", data);
@@ -388,12 +388,12 @@ static MACHINE_START( othello )
 	state->ay1 = machine->device("ay1");
 	state->ay2 = machine->device("ay2");
 
-	state_save_register_global(machine, state->tile_bank);
-	state_save_register_global(machine, state->ay_select);
-	state_save_register_global(machine, state->ack_data);
-	state_save_register_global(machine, state->n7751_command);
-	state_save_register_global(machine, state->sound_addr);
-	state_save_register_global(machine, state->n7751_busy);
+	state->save_item(NAME(state->tile_bank));
+	state->save_item(NAME(state->ay_select));
+	state->save_item(NAME(state->ack_data));
+	state->save_item(NAME(state->n7751_command));
+	state->save_item(NAME(state->sound_addr));
+	state->save_item(NAME(state->n7751_busy));
 }
 
 static MACHINE_RESET( othello )

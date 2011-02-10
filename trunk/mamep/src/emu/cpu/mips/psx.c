@@ -1052,6 +1052,7 @@ static void log_bioscall( psxcpu_state *psxcpu )
 			sprintf( buf, "unknown_%02x_%02x", address, operation );
 		}
 		logerror( "%08x: bioscall %s\n", (unsigned int)psxcpu->r[ 31 ] - 8, buf );
+		psxcpu->berr = 0;
 	}
 }
 
@@ -1609,24 +1610,24 @@ static void mips_state_register( const char *type, legacy_cpu_device *device )
 {
 	psxcpu_state *psxcpu = get_safe_token(device);
 
-	state_save_register_device_item( device, 0, psxcpu->op );
-	state_save_register_device_item( device, 0, psxcpu->pc );
-	state_save_register_device_item( device, 0, psxcpu->delayv );
-	state_save_register_device_item( device, 0, psxcpu->delayr );
-	state_save_register_device_item( device, 0, psxcpu->hi );
-	state_save_register_device_item( device, 0, psxcpu->lo );
-	state_save_register_device_item( device, 0, psxcpu->biu );
-	state_save_register_device_item_array( device, 0, psxcpu->r );
-	state_save_register_device_item_array( device, 0, psxcpu->cp0r );
-	state_save_register_device_item_array( device, 0, psxcpu->cp2cr );
-	state_save_register_device_item_array( device, 0, psxcpu->cp2dr );
-	state_save_register_device_item_array( device, 0, psxcpu->icacheTag );
-	state_save_register_device_item_array( device, 0, psxcpu->icache );
-	state_save_register_device_item_array( device, 0, psxcpu->dcache );
-	state_save_register_device_item( device, 0, psxcpu->multiplier_operation );
-	state_save_register_device_item( device, 0, psxcpu->multiplier_operand1 );
-	state_save_register_device_item( device, 0, psxcpu->multiplier_operand2 );
-	state_save_register_postload( device->machine, mips_postload, psxcpu );
+	device->save_item( NAME(psxcpu->op) );
+	device->save_item( NAME(psxcpu->pc) );
+	device->save_item( NAME(psxcpu->delayv) );
+	device->save_item( NAME(psxcpu->delayr) );
+	device->save_item( NAME(psxcpu->hi) );
+	device->save_item( NAME(psxcpu->lo) );
+	device->save_item( NAME(psxcpu->biu) );
+	device->save_item( NAME(psxcpu->r) );
+	device->save_item( NAME(psxcpu->cp0r) );
+	device->save_item( NAME(psxcpu->cp2cr) );
+	device->save_item( NAME(psxcpu->cp2dr) );
+	device->save_item( NAME(psxcpu->icacheTag) );
+	device->save_item( NAME(psxcpu->icache) );
+	device->save_item( NAME(psxcpu->dcache) );
+	device->save_item( NAME(psxcpu->multiplier_operation) );
+	device->save_item( NAME(psxcpu->multiplier_operand1) );
+	device->save_item( NAME(psxcpu->multiplier_operand2) );
+	device->machine->state().register_postload( mips_postload, psxcpu );
 }
 
 static CPU_INIT( psxcpu )

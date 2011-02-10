@@ -1471,7 +1471,7 @@ static void demon_sound_w(running_machine *machine, UINT8 sound_val, UINT8 bits_
 
 	/* watch for a 0->1 edge on bit 4 ("shift in") to clock in the new data */
 	if ((bits_changed & 0x10) && (sound_val & 0x10))
-		timer_call_after_resynch(machine, NULL, sound_val & 0x0f, synced_sound_w);
+		machine->scheduler().synchronize(FUNC(synced_sound_w), sound_val & 0x0f);
 }
 
 
@@ -1500,7 +1500,7 @@ static WRITE8_DEVICE_HANDLER( sound_portb_w )
 
 	/* bit 2 controls the global mute */
 	if ((data & 4) != (last_portb_write & 4))
-		sound_global_enable(device->machine, !(data & 4));
+		device->machine->sound().system_mute(data & 4);
 
 	/* remember the last value written */
 	last_portb_write = data;

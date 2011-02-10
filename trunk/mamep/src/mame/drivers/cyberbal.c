@@ -48,12 +48,12 @@ static MACHINE_START( cyberbal )
 	cyberbal_state *state = machine->driver_data<cyberbal_state>();
 	atarigen_init(machine);
 
-	state_save_register_global(machine, state->fast_68k_int);
-	state_save_register_global(machine, state->io_68k_int);
-	state_save_register_global(machine, state->sound_data_from_68k);
-	state_save_register_global(machine, state->sound_data_from_6502);
-	state_save_register_global(machine, state->sound_data_from_68k_ready);
-	state_save_register_global(machine, state->sound_data_from_6502_ready);
+	state->save_item(NAME(state->fast_68k_int));
+	state->save_item(NAME(state->io_68k_int));
+	state->save_item(NAME(state->sound_data_from_68k));
+	state->save_item(NAME(state->sound_data_from_6502));
+	state->save_item(NAME(state->sound_data_from_68k_ready));
+	state->save_item(NAME(state->sound_data_from_6502_ready));
 }
 
 
@@ -447,7 +447,7 @@ static MACHINE_CONFIG_START( cyberbal, cyberbal_state )
 	MCFG_CPU_PROGRAM_MAP(sound_68k_map)
 	MCFG_CPU_PERIODIC_INT(cyberbal_sound_68k_irq_gen, 10000)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(cyberbal)
 	MCFG_MACHINE_RESET(cyberbal)

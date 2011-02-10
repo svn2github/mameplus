@@ -139,7 +139,7 @@ static WRITE8_HANDLER( sound_arm_nmi_w )
 	parodius_state *state = space->machine->driver_data<parodius_state>();
 
 	cpu_set_input_line(state->audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
-	timer_set(space->machine, ATTOTIME_IN_USEC(50), NULL, 0, nmi_callback);	/* kludge until the K053260 is emulated correctly */
+	space->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(nmi_callback));	/* kludge until the K053260 is emulated correctly */
 }
 
 /********************************************/
@@ -273,10 +273,10 @@ static MACHINE_START( parodius )
 	state->k053251 = machine->device("k053251");
 	state->k052109 = machine->device("k052109");
 
-	state_save_register_global(machine, state->videobank);
-	state_save_register_global(machine, state->sprite_colorbase);
-	state_save_register_global_array(machine, state->layer_colorbase);
-	state_save_register_global_array(machine, state->layerpri);
+	state->save_item(NAME(state->videobank));
+	state->save_item(NAME(state->sprite_colorbase));
+	state->save_item(NAME(state->layer_colorbase));
+	state->save_item(NAME(state->layerpri));
 	state_save_register_global_pointer(machine, machine->generic.paletteram.u8, 0x1000);
 }
 

@@ -88,8 +88,8 @@ static CUSTOM_INPUT( z80_nmi_r )
 
 		/* main CPU might be waiting for sound CPU to finish NMI,
            so set a timer to give sound CPU a chance to run */
-		timer_call_after_resynch(field->port->machine, NULL, 0, NULL);
-//      logerror("%s - Read coin port during Z80 NMI\n", cpuexec_describe_context(machine));
+		field->port->machine->scheduler().synchronize();
+//      logerror("%s - Read coin port during Z80 NMI\n", machine->describe_context());
 	}
 
 	return ret;
@@ -157,7 +157,7 @@ static TIMER_CALLBACK( psikyo_soundlatch_callback )
 static WRITE32_HANDLER( psikyo_soundlatch_w )
 {
 	if (ACCESSING_BITS_0_7)
-		timer_call_after_resynch(space->machine, NULL, data & 0xff, psikyo_soundlatch_callback);
+		space->machine->scheduler().synchronize(FUNC(psikyo_soundlatch_callback), data & 0xff);
 }
 
 /***************************************************************************
@@ -167,7 +167,7 @@ static WRITE32_HANDLER( psikyo_soundlatch_w )
 static WRITE32_HANDLER( s1945_soundlatch_w )
 {
 	if (ACCESSING_BITS_16_23)
-		timer_call_after_resynch(space->machine, NULL, (data >> 16) & 0xff, psikyo_soundlatch_callback);
+		space->machine->scheduler().synchronize(FUNC(psikyo_soundlatch_callback), (data >> 16) & 0xff);
 }
 
 static const UINT8 s1945_table[256] = {
@@ -1033,11 +1033,11 @@ static MACHINE_START( psikyo )
 
 	state->audiocpu = machine->device("audiocpu");
 
-	state_save_register_global(machine, state->soundlatch);
-	state_save_register_global(machine, state->z80_nmi);
-	state_save_register_global(machine, state->mcu_status);
-	state_save_register_global(machine, state->tilemap_0_bank);
-	state_save_register_global(machine, state->tilemap_1_bank);
+	state->save_item(NAME(state->soundlatch));
+	state->save_item(NAME(state->z80_nmi));
+	state->save_item(NAME(state->mcu_status));
+	state->save_item(NAME(state->tilemap_0_bank));
+	state->save_item(NAME(state->tilemap_1_bank));
 }
 
 static MACHINE_RESET( psikyo )
@@ -1879,15 +1879,15 @@ static void s1945_mcu_init( running_machine *machine )
 	state->s1945_mcu_mode = 0;
 	state->s1945_mcu_bctrl = 0x00;
 
-	state_save_register_global(machine, state->s1945_mcu_direction);
-	state_save_register_global(machine, state->s1945_mcu_inlatch);
-	state_save_register_global(machine, state->s1945_mcu_latch1);
-	state_save_register_global(machine, state->s1945_mcu_latch2);
-	state_save_register_global(machine, state->s1945_mcu_latching);
-	state_save_register_global(machine, state->s1945_mcu_control);
-	state_save_register_global(machine, state->s1945_mcu_index);
-	state_save_register_global(machine, state->s1945_mcu_mode);
-	state_save_register_global(machine, state->s1945_mcu_bctrl);
+	state->save_item(NAME(state->s1945_mcu_direction));
+	state->save_item(NAME(state->s1945_mcu_inlatch));
+	state->save_item(NAME(state->s1945_mcu_latch1));
+	state->save_item(NAME(state->s1945_mcu_latch2));
+	state->save_item(NAME(state->s1945_mcu_latching));
+	state->save_item(NAME(state->s1945_mcu_control));
+	state->save_item(NAME(state->s1945_mcu_index));
+	state->save_item(NAME(state->s1945_mcu_mode));
+	state->save_item(NAME(state->s1945_mcu_bctrl));
 }
 
 static DRIVER_INIT( tengai )

@@ -295,7 +295,7 @@ INLINE int adjust_object_timer(running_machine *machine, int vc)
 		return FALSE;
 
 	/* adjust the timer */
-	timer_adjust_oneshot(object_timer, machine->primary_screen->time_until_pos(vc / 2, hdb), vc | (hdb << 16));
+	object_timer->adjust(machine->primary_screen->time_until_pos(vc / 2, hdb), vc | (hdb << 16));
 	return TRUE;
 }
 
@@ -628,7 +628,7 @@ WRITE32_HANDLER( jaguar_blitter_w )
 	if (offset == B_CMD)
 	{
 		blitter_status = 0;
-		timer_set(space->machine, ATTOTIME_IN_USEC(100), NULL, 0, blitter_done);
+		space->machine->scheduler().timer_set(attotime::from_usec(100), FUNC(blitter_done));
 		blitter_run(space->machine);
 	}
 
@@ -687,8 +687,8 @@ static TIMER_CALLBACK( jaguar_pit )
 
 	if (gpu_regs[PIT0])
 	{
-		sample_period = ATTOTIME_IN_NSEC(((machine->device("gpu")->unscaled_clock()*PIT_MULT_DBG_HACK) / (1+gpu_regs[PIT0])) / (1+gpu_regs[PIT1]));
-		timer_set(machine, sample_period, NULL, 0, jaguar_pit);
+		sample_period = attotime::from_nsec(((machine->device("gpu")->unscaled_clock()*PIT_MULT_DBG_HACK) / (1+gpu_regs[PIT0])) / (1+gpu_regs[PIT1]));
+		machine->scheduler().timer_set(sample_period, FUNC(jaguar_pit));
 	}
 }
 
@@ -712,8 +712,8 @@ WRITE16_HANDLER( jaguar_tom_regs_w )
 			case PIT1:
 				if (gpu_regs[PIT0] && gpu_regs[PIT0] != 0xffff) //FIXME: avoid too much small timers for now
 				{
-					sample_period = ATTOTIME_IN_NSEC(((space->machine->device("gpu")->unscaled_clock()*PIT_MULT_DBG_HACK) / (1+gpu_regs[PIT0])) / (1+gpu_regs[PIT1]));
-					timer_set(space->machine, sample_period, NULL, 0, jaguar_pit);
+					sample_period = attotime::from_nsec(((space->machine->device("gpu")->unscaled_clock()*PIT_MULT_DBG_HACK) / (1+gpu_regs[PIT0])) / (1+gpu_regs[PIT1]));
+					space->machine->scheduler().timer_set(sample_period, FUNC(jaguar_pit));
 				}
 				break;
 
@@ -902,7 +902,7 @@ VIDEO_START( cojag )
 	memset(&gpu_regs, 0, sizeof(gpu_regs));
 	cpu_irq_state = 0;
 
-	object_timer = timer_alloc(machine, cojag_scanline_update, NULL);
+	object_timer = machine->scheduler().timer_alloc(FUNC(cojag_scanline_update));
 	adjust_object_timer(machine, 0);
 
 	screen_bitmap = auto_bitmap_alloc(machine, 760, 512, BITMAP_FORMAT_RGB32);
@@ -915,7 +915,7 @@ VIDEO_START( cojag )
 	state_save_register_global_array(machine, blitter_regs);
 	state_save_register_global_array(machine, gpu_regs);
 	state_save_register_global(machine, cpu_irq_state);
-	state_save_register_postload(machine, cojag_postload, NULL);
+	machine->state().register_postload(cojag_postload, NULL);
 }
 
 

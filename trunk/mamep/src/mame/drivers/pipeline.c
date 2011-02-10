@@ -161,8 +161,8 @@ static TIMER_CALLBACK( protection_deferred_w )
 
 static WRITE8_DEVICE_HANDLER(protection_w)
 {
-	timer_call_after_resynch(device->machine, NULL, data, protection_deferred_w);
-	cpuexec_boost_interleave(device->machine, attotime_zero, ATTOTIME_IN_USEC(100));
+	device->machine->scheduler().synchronize(FUNC(protection_deferred_w), data);
+	device->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
 static ADDRESS_MAP_START( cpu0_mem, ADDRESS_SPACE_PROGRAM, 8 )

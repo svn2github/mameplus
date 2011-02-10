@@ -92,7 +92,7 @@ static TIMER_CALLBACK( setup_gun_interrupts )
 	int beamx, beamy;
 
 	/* set a timer to do this again next frame */
-	timer_adjust_oneshot(setup_gun_timer, machine->primary_screen->time_until_pos(0), 0);
+	setup_gun_timer->adjust(machine->primary_screen->time_until_pos(0));
 
 	/* only do work if the palette is flashed */
 	if (tickee_control)
@@ -101,13 +101,13 @@ static TIMER_CALLBACK( setup_gun_interrupts )
 
 	/* generate interrupts for player 1's gun */
 	get_crosshair_xy(machine, 0, &beamx, &beamy);
-	timer_set(machine, machine->primary_screen->time_until_pos(beamy + beamyadd,     beamx + beamxadd), NULL, 0, trigger_gun_interrupt);
-	timer_set(machine, machine->primary_screen->time_until_pos(beamy + beamyadd + 1, beamx + beamxadd), NULL, 0, clear_gun_interrupt);
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(beamy + beamyadd, beamx + beamxadd), FUNC(trigger_gun_interrupt), 0);
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(beamy + beamyadd + 1, beamx + beamxadd), FUNC(clear_gun_interrupt), 0);
 
 	/* generate interrupts for player 2's gun */
 	get_crosshair_xy(machine, 1, &beamx, &beamy);
-	timer_set(machine, machine->primary_screen->time_until_pos(beamy + beamyadd,     beamx + beamxadd), NULL, 1, trigger_gun_interrupt);
-	timer_set(machine, machine->primary_screen->time_until_pos(beamy + beamyadd + 1, beamx + beamxadd), NULL, 1, clear_gun_interrupt);
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(beamy + beamyadd, beamx + beamxadd), FUNC(trigger_gun_interrupt), 1);
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(beamy + beamyadd + 1, beamx + beamxadd), FUNC(clear_gun_interrupt), 1);
 }
 
 
@@ -121,8 +121,8 @@ static TIMER_CALLBACK( setup_gun_interrupts )
 static VIDEO_START( tickee )
 {
 	/* start a timer going on the first scanline of every frame */
-	setup_gun_timer = timer_alloc(machine, setup_gun_interrupts, NULL);
-	timer_adjust_oneshot(setup_gun_timer, machine->primary_screen->time_until_pos(0), 0);
+	setup_gun_timer = machine->scheduler().timer_alloc(FUNC(setup_gun_interrupts));
+	setup_gun_timer->adjust(machine->primary_screen->time_until_pos(0));
 }
 
 

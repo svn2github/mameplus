@@ -8,7 +8,6 @@
  ****************************************************************************/
 
 #include "emu.h"
-#include "streams.h"
 #include "includes/warpwarp.h"
 
 #define CLOCK_16H	(18432000/3/2/16)
@@ -56,7 +55,7 @@ WRITE8_DEVICE_HANDLER( warpwarp_sound_w )
 {
 	warpwarp_sound_state *state = get_safe_token(device);
 
-	stream_update(state->channel);
+	state->channel->update();
 	state->sound_latch = data & 0x0f;
 	state->sound_volume = 0x7fff; /* set sound_volume */
 	state->noise = 0x0000;  /* reset noise shifter */
@@ -73,8 +72,8 @@ WRITE8_DEVICE_HANDLER( warpwarp_sound_w )
          * discharge C90(?) (1uF) through R13||R14 (22k||47k)
          * 0.639 * 15k * 1uF -> 0.9585s
          */
-		attotime period = attotime_div(attotime_mul(ATTOTIME_IN_HZ(32768), 95850), 100000);
-		timer_adjust_periodic(state->sound_volume_timer, period, 0, period);
+		attotime period = attotime::from_hz(32768) * 95850 / 100000;
+		state->sound_volume_timer->adjust(period, 0, period);
 	}
 	else
 	{
@@ -85,9 +84,9 @@ WRITE8_DEVICE_HANDLER( warpwarp_sound_w )
          * ...but this is not very realistic for the game sound :(
          * maybe there _is_ a discharge through the diode D17?
          */
-		//attotime period = attotime_div(attotime_mul(ATTOTIME_IN_HZ(32768), 702900), 100000);
-		attotime period = attotime_div(attotime_mul(ATTOTIME_IN_HZ(32768), 191700), 100000);
-		timer_adjust_periodic(state->sound_volume_timer, period, 0, period);
+		//attotime period = attotime::from_hz(32768) * 702900 / 100000;
+		attotime period = attotime::from_hz(32768) * 191700 / 100000;
+		state->sound_volume_timer->adjust(period, 0, period);
 	}
 }
 
@@ -95,7 +94,7 @@ WRITE8_DEVICE_HANDLER( warpwarp_music1_w )
 {
 	warpwarp_sound_state *state = get_safe_token(device);
 
-	stream_update(state->channel);
+	state->channel->update();
 	state->music1_latch = data & 0x3f;
 }
 
@@ -109,7 +108,7 @@ static TIMER_CALLBACK( music_volume_decay )
 WRITE8_DEVICE_HANDLER( warpwarp_music2_w )
 {
 	warpwarp_sound_state *state = get_safe_token(device);
-	stream_update(state->channel);
+	state->channel->update();
 	state->music2_latch = data & 0x3f;
 	state->music_volume = 0x7fff;
 	/* fast decay enabled? */
@@ -125,8 +124,8 @@ WRITE8_DEVICE_HANDLER( warpwarp_music2_w )
          * 0.639 * 15k * 10uF -> 9.585s
          * ...I'm sure this is off by one number of magnitude :/
          */
-		attotime period = attotime_div(attotime_mul(ATTOTIME_IN_HZ(32768), 95850), 100000);
-		timer_adjust_periodic(state->music_volume_timer, period, 0, period);
+		attotime period = attotime::from_hz(32768) * 95850 / 100000;
+		state->music_volume_timer->adjust(period, 0, period);
 	}
 	else
 	{
@@ -135,9 +134,9 @@ WRITE8_DEVICE_HANDLER( warpwarp_music2_w )
          * discharge C95(?) (10uF) through R14 (47k)
          * 0.639 * 47k * 10uF -> 30.033s
          */
-		//attotime period = attotime_div(attotime_mul(ATTOTIME_IN_HZ(32768), 3003300), 100000);
-		attotime period = attotime_div(attotime_mul(ATTOTIME_IN_HZ(32768),  300330), 100000);
-		timer_adjust_periodic(state->music_volume_timer, period, 0, period);
+		//attotime period = attotime::from_hz(32768) * 3003300 / 100000;
+		attotime period = attotime::from_hz(32768) * 300330 / 100000;
+		state->music_volume_timer->adjust(period, 0, period);
 	}
 
 }
@@ -235,10 +234,10 @@ static DEVICE_START( warpwarp_sound )
 	for( i = 0; i < 0x8000; i++ )
 		state->decay[0x7fff-i] = (INT16) (0x7fff/exp(1.0*i/4096));
 
-	state->channel = stream_create(device, 0, 1, CLOCK_16H, NULL, warpwarp_sound_update);
+	state->channel = device->machine->sound().stream_alloc(*device, 0, 1, CLOCK_16H, NULL, warpwarp_sound_update);
 
-	state->sound_volume_timer = timer_alloc(machine, sound_volume_decay, state);
-	state->music_volume_timer = timer_alloc(machine, music_volume_decay, state);
+	state->sound_volume_timer = machine->scheduler().timer_alloc(FUNC(sound_volume_decay), state);
+	state->music_volume_timer = machine->scheduler().timer_alloc(FUNC(music_volume_decay), state);
 }
 
 

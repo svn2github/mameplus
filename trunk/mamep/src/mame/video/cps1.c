@@ -4,11 +4,10 @@ The CPS1 system is made of 3 boards: A, B and C. The first two games also exist
 a 2-board setups, where the C-board is integrated into the B-board.
 
 There are several revisions of the A-board, but they are functionally equivalent
-and interchangeable except for 89626A-4 DASH used by sf2 which has a 12MHz xtal
-replacing the 10Hz one. Note that it's likely that from one point onwards Capcom
+and interchangeable except for 89626A-4 DASH used by sf2ce which has a 12MHz xtal
+replacing the 10MHz one. Note that it's likely that from one point onwards Capcom
 simply switched to make only 89626A-4 DASH board, that is all games after a
-certain point should use the 12MHz xtal not just sf2.
-Verified: Quiz and Dragons (USA) comes with the DASH version (original pcb with sticker).
+certain point should use the 12MHz xtal not just sf2ce.
 
 Known A-board revisions:
 
@@ -40,10 +39,11 @@ Strider Hiryu (Japan Resale Ver.)                              91634B-2   STH63B
 Dynasty Wars (USA, B-Board 88622B-3)                     1989  88622B-3   TK22B            LWIO  88622-C-2    CPS-B-02  DL-0411-10002  None
 Dynasty Wars (USA, B-Board 89624B-?)                           89624B-?   TK24B1           LWIO? ?            CPS-B-02  DL-0411-10002
 Tenchi wo Kurau (Japan)                                        88622B-3   TK22B            LWIO  88622-C-2    CPS-B-02  DL-0411-10002  None
+Tenchi wo Kurau (Japan Resale Ver.)                            91634B-2   TK163B   BPRG1   IOB1  92631C-6     CPS-B-21  DL-0921-10014  C632    IOC1
 
-Willow (USA)                                             1989  89624B-3   WL24B            LWIO  88622-C-4    CPS-B-03  DL-0411-10003  None
-Willow (Japan, English)                                        89624B-3   WL24B            LWIO  88622-C-2    CPS-B-03  DL-0411-10003  None
-Willow (Japan, Japanese)                                       88622B-3   WL22B            LWIO  88622-C-2    CPS-B-03  DL-0411-10003  None
+Willow (USA Old Ver.)                                    1989  89624B-3   WL24B            LWIO  88622-C-2    CPS-B-03  DL-0411-10003  None
+Willow (USA)                                                   89624B-3   WL24B            LWIO  88622-C-4    CPS-B-03  DL-0411-10003  None
+Willow (Japan)                                                 88622B-3   WL22B            LWIO  88622-C-2    CPS-B-03  DL-0411-10003  None
 
 U.N. Squadron (USA)                                      1989  89624B-3   AR24B            LWIO  88622-C-4    CPS-B-11  DL-0411-10004  None
 Area 88 (Japan)                                                88622B-3   AR22B            LWIO  88622-C-4    CPS-B-11  DL-0411-10004  None
@@ -66,7 +66,7 @@ Mercs (USA 900608)                                             89624B-3   O224B 
 Senjou no Ookami II (Japan 900302)                             89625B-1   O222B            LWIO? 90628-C-1    CPS-B-12  DL-0411-10007  C628
 
 Mega Twins (World 900619)                                1990  89624B-3   CK24B            IOB1  88622-C-5    CPS-B-14  DL-0411-10009  None
-Chiki Chiki Boys (Japan 900619)                                ?          CK22B?           ?     ?            CPS-B-14  DL-0411-10009
+Chiki Chiki Boys (Japan 900619)                                89625B-1   CK22B            ?     ?            CPS-B-14  DL-0411-10009  None
 
 Magic Sword: Heroic Fantasy (World 900623)               1990  89624B-3   MS24B            IOB1  88622-C-5    CPS-B-13  DL-0411-10008  None
 Magic Sword: Heroic Fantasy (World 900725)                     89624B-3   MS24B            IOB1  88622-C-5    CPS-B-13  DL-0411-10008  None
@@ -90,7 +90,7 @@ Street Fighter II: The World Warrior (USA 910228)              90629B-3   STF29 
 Street Fighter II: The World Warrior (USA 910318)              90629B-?   STF29            IOB1  ?            CPS-B-05  DL-0411-10006  C632
 Street Fighter II: The World Warrior (USA 910411)              90629B-?   STF29            IOB1  ?            CPS-B-15  DL-0411-10010  C632
 Street Fighter II: The World Warrior (USA 910522)              90629B-3   STF29            IOB1  90632C-1     CPS-B-14  DL-0411-10009  C632
-Street Fighter II: The World Warrior (USA 911101)              90629B-?   STF29            IOB1  ?            CPS-B-17  DL-0411-10012  C632
+Street Fighter II: The World Warrior (USA 911101)              90629B-3   STF29            IOB1  90632C-1     CPS-B-17  DL-0411-10012  C632
 Street Fighter II: The World Warrior (Japan 910214)            90629B-2   STF29            IOB1  90632C-1     CPS-B-17  DL-0411-10012  C632
 Street Fighter II: The World Warrior (Japan 910306)            90629B-3   STF29            IOB1  90632C-1     CPS-B-12  DL-0411-10007  C632
 Street Fighter II: The World Warrior (Japan 911210)            90629B-?   STF29            IOB1  ?            CPS-B-13  DL-0411-10008  C632
@@ -1280,9 +1280,10 @@ static const struct CPS1config cps1_config_table[]=
 	{"dynwar",      CPS_B_02,     mapper_TK22B },	// wrong, this set uses TK24B1, dumped but equations still not added
 	{"dynwara",     CPS_B_02,     mapper_TK22B },
 	{"dynwarj",     CPS_B_02,     mapper_TK22B },
+	{"dynwarjr",    CPS_B_21_DEF, mapper_TK22B },	// wrong, this set uses TK163B, still non dumped
 	{"willow",      CPS_B_03,     mapper_WL24B },
+	{"willowo",     CPS_B_03,     mapper_WL24B },
 	{"willowj",     CPS_B_03,     mapper_WL24B },	// wrong, this set uses WL22B, still non dumped
-	{"willowje",    CPS_B_03,     mapper_WL24B },
 	{"ffight",      CPS_B_04,     mapper_S224B },
 	{"ffightu",     CPS_B_04,     mapper_S224B },
 	{"ffightua",    CPS_B_01,     mapper_S224B },
@@ -1305,7 +1306,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"mswordu",     CPS_B_13,     mapper_MS24B },
 	{"mswordj",     CPS_B_13,     mapper_MS24B },	// wrong, this set uses MS22B, still non dumped
 	{"mtwins",      CPS_B_14,     mapper_CK24B },
-	{"chikij",      CPS_B_14,     mapper_CK24B },	// PAL used could be CK22B
+	{"chikij",      CPS_B_14,     mapper_CK24B },	// wrong, this set uses CK22B, still non dumped
 	{"nemo",        CPS_B_15,     mapper_NM24B },
 	{"nemoj",       CPS_B_15,     mapper_NM24B },	// wrong, this set uses NM22B, still non dumped
 	{"cawing",      CPS_B_16,     mapper_CA24B },
@@ -1323,7 +1324,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2ue",       CPS_B_18,     mapper_STF29,  0x3c },
 	{"sf2uf",       CPS_B_15,     mapper_STF29,  0x36 },
 	{"sf2ui",       CPS_B_14,     mapper_STF29,  0x36 },
-	{"sf2uk",       CPS_B_17,     mapper_STF29,  0x36 },	// check CPS_B
+	{"sf2uk",       CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2j",        CPS_B_13,     mapper_STF29,  0x36 },
 	{"sf2ja",       CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2jc",       CPS_B_12,     mapper_STF29,  0x36 },
@@ -2211,35 +2212,35 @@ static VIDEO_START( cps )
 	cps1_get_video_base(machine);   /* Calculate old base pointers */
 
 	/* state save register */
-	state_save_register_global(machine, state->scanline1);
-	state_save_register_global(machine, state->scanline2);
-	state_save_register_global(machine, state->scancalls);
+	state->save_item(NAME(state->scanline1));
+	state->save_item(NAME(state->scanline2));
+	state->save_item(NAME(state->scancalls));
 #if 0
 	/* these do not need to be saved, because they are recovered from cps_a_regs in cps1_postload */
-	state_save_register_global(machine, state->scroll1x);
-	state_save_register_global(machine, state->scroll1y);
-	state_save_register_global(machine, state->scroll2x);
-	state_save_register_global(machine, state->scroll2y);
-	state_save_register_global(machine, state->scroll3x);
-	state_save_register_global(machine, state->scroll3y);
-	state_save_register_global(machine, state->stars1x);
-	state_save_register_global(machine, state->stars1y);
-	state_save_register_global(machine, state->stars2x);
-	state_save_register_global(machine, state->stars2y);
-	state_save_register_global_array(machine, state->stars_enabled);
+	state->save_item(NAME(state->scroll1x));
+	state->save_item(NAME(state->scroll1y));
+	state->save_item(NAME(state->scroll2x));
+	state->save_item(NAME(state->scroll2y));
+	state->save_item(NAME(state->scroll3x));
+	state->save_item(NAME(state->scroll3y));
+	state->save_item(NAME(state->stars1x));
+	state->save_item(NAME(state->stars1y));
+	state->save_item(NAME(state->stars2x));
+	state->save_item(NAME(state->stars2y));
+	state->save_item(NAME(state->stars_enabled));
 #endif
-	state_save_register_global(machine, state->last_sprite_offset);
-	state_save_register_global(machine, state->pri_ctrl);
-	state_save_register_global(machine, state->objram_bank);
+	state->save_item(NAME(state->last_sprite_offset));
+	state->save_item(NAME(state->pri_ctrl));
+	state->save_item(NAME(state->objram_bank));
 
-	state_save_register_global_pointer(machine, state->buffered_obj, state->obj_size / 2);
+	state->save_pointer(NAME(state->buffered_obj), state->obj_size / 2);
 	if (state->cps_version == 2)
 	{
-		state_save_register_global(machine, state->cps2_last_sprite_offset);
-		state_save_register_global_pointer(machine, state->cps2_buffered_obj, state->cps2_obj_size / 2);
+		state->save_item(NAME(state->cps2_last_sprite_offset));
+		state->save_pointer(NAME(state->cps2_buffered_obj), state->cps2_obj_size / 2);
 	}
 
-	state_save_register_postload(machine, cps_postload, NULL);
+	machine->state().register_postload(cps_postload, NULL);
 }
 
 VIDEO_START( cps1 )

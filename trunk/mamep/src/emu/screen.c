@@ -62,7 +62,7 @@
 
 const device_type SCREEN = screen_device_config::static_alloc_device_config;
 
-const attotime screen_device::DEFAULT_FRAME_PERIOD = STATIC_ATTOTIME_IN_HZ(DEFAULT_FRAME_RATE);
+const attotime screen_device::DEFAULT_FRAME_PERIOD(attotime::from_hz(DEFAULT_FRAME_RATE));
 
 
 
@@ -526,8 +526,8 @@ screen_device::screen_device(running_machine &_machine, const screen_device_conf
 	  m_scantime(1),
 	  m_pixeltime(1),
 	  m_vblank_period(0),
-	  m_vblank_start_time(attotime_zero),
-	  m_vblank_end_time(attotime_zero),
+	  m_vblank_start_time(attotime::zero),
+	  m_vblank_end_time(attotime::zero),
 	  m_vblank_begin_timer(NULL),
 	  m_vblank_end_timer(NULL),
 	  m_scanline0_timer(NULL),
@@ -582,26 +582,26 @@ void screen_device::device_start()
 	m_container->set_user_settings(settings);
 
 	// allocate the VBLANK timers
-	m_vblank_begin_timer = timer_alloc(machine, static_vblank_begin_callback, (void *)this);
-	m_vblank_end_timer = timer_alloc(machine, static_vblank_end_callback, (void *)this);
+	m_vblank_begin_timer = machine->scheduler().timer_alloc(FUNC(static_vblank_begin_callback), (void *)this);
+	m_vblank_end_timer = machine->scheduler().timer_alloc(FUNC(static_vblank_end_callback), (void *)this);
 
 	// allocate a timer to reset partial updates
-	m_scanline0_timer = timer_alloc(machine, static_scanline0_callback, (void *)this);
+	m_scanline0_timer = machine->scheduler().timer_alloc(FUNC(static_scanline0_callback), (void *)this);
 
 	// allocate a timer to generate per-scanline updates
 	if ((machine->config->m_video_attributes & VIDEO_UPDATE_SCANLINE) != 0)
-		m_scanline_timer = timer_alloc(machine, static_scanline_update_callback, (void *)this);
+		m_scanline_timer = machine->scheduler().timer_alloc(FUNC(static_scanline_update_callback), (void *)this);
 
 	// configure the screen with the default parameters
 	configure(m_config.m_width, m_config.m_height, m_config.m_visarea, m_config.m_refresh);
 
 	// reset VBLANK timing
-	m_vblank_start_time = attotime_zero;
-	m_vblank_end_time = attotime_make(0, m_vblank_period);
+	m_vblank_start_time = attotime::zero;
+	m_vblank_end_time = attotime(0, m_vblank_period);
 
 	// start the timer to generate per-scanline updates
 	if ((machine->config->m_video_attributes & VIDEO_UPDATE_SCANLINE) != 0)
-		timer_adjust_oneshot(m_scanline_timer, time_until_pos(0), 0);
+		m_scanline_timer->adjust(time_until_pos(0));
 
 	// create burn-in bitmap
 	if (options_get_int(machine->options(), OPTION_BURNIN) > 0)
@@ -620,22 +620,21 @@ void screen_device::device_start()
 	if (overname != NULL && strcmp(overname, "none") != 0)
 		load_effect_overlay(overname);
 
-	state_save_register_device_item(this, 0, m_width);
-	state_save_register_device_item(this, 0, m_height);
-	state_save_register_device_item(this, 0, m_visarea.min_x);
-	state_save_register_device_item(this, 0, m_visarea.min_y);
-	state_save_register_device_item(this, 0, m_visarea.max_x);
-	state_save_register_device_item(this, 0, m_visarea.max_y);
-	state_save_register_device_item(this, 0, m_last_partial_scan);
-	state_save_register_device_item(this, 0, m_frame_period);
-	state_save_register_device_item(this, 0, m_scantime);
-	state_save_register_device_item(this, 0, m_pixeltime);
-	state_save_register_device_item(this, 0, m_vblank_period);
-	state_save_register_device_item(this, 0, m_vblank_start_time.seconds);
-	state_save_register_device_item(this, 0, m_vblank_start_time.attoseconds);
-	state_save_register_device_item(this, 0, m_vblank_end_time.seconds);
-	state_save_register_device_item(this, 0, m_vblank_end_time.attoseconds);
-	state_save_register_device_item(this, 0, m_frame_number);
+	// register items for saving
+	save_item(NAME(m_width));
+	save_item(NAME(m_height));
+	save_item(NAME(m_visarea.min_x));
+	save_item(NAME(m_visarea.min_y));
+	save_item(NAME(m_visarea.max_x));
+	save_item(NAME(m_visarea.max_y));
+	save_item(NAME(m_last_partial_scan));
+	save_item(NAME(m_frame_period));
+	save_item(NAME(m_scantime));
+	save_item(NAME(m_pixeltime));
+	save_item(NAME(m_vblank_period));
+	save_item(NAME(m_vblank_start_time));
+	save_item(NAME(m_vblank_end_time));
+	save_item(NAME(m_frame_number));
 }
 
 
@@ -696,12 +695,12 @@ void screen_device::configure(int width, int height, const rectangle &visarea, a
 	// if we are on scanline 0 already, reset the update timer immediately
 	// otherwise, defer until the next scanline 0
 	if (vpos() == 0)
-		timer_adjust_oneshot(m_scanline0_timer, attotime_zero, 0);
+		m_scanline0_timer->adjust(attotime::zero);
 	else
-		timer_adjust_oneshot(m_scanline0_timer, time_until_pos(0), 0);
+		m_scanline0_timer->adjust(time_until_pos(0));
 
 	// start the VBLANK timer
-	timer_adjust_oneshot(m_vblank_begin_timer, time_until_vblank_start(), 0);
+	m_vblank_begin_timer->adjust(time_until_vblank_start());
 
 	// adjust speed if necessary
 	m_machine.video().update_refresh_speed();
@@ -716,23 +715,23 @@ void screen_device::configure(int width, int height, const rectangle &visarea, a
 void screen_device::reset_origin(int beamy, int beamx)
 {
 	// compute the effective VBLANK start/end times
-	attotime curtime = timer_get_time(machine);
-	m_vblank_end_time = attotime_sub_attoseconds(curtime, beamy * m_scantime + beamx * m_pixeltime);
-	m_vblank_start_time = attotime_sub_attoseconds(m_vblank_end_time, m_vblank_period);
+	attotime curtime = machine->time();
+	m_vblank_end_time = curtime - attotime(0, beamy * m_scantime + beamx * m_pixeltime);
+	m_vblank_start_time = m_vblank_end_time - attotime(0, m_vblank_period);
 
 	// if we are resetting relative to (0,0) == VBLANK end, call the
 	// scanline 0 timer by hand now; otherwise, adjust it for the future
 	if (beamy == 0 && beamx == 0)
 		scanline0_callback();
 	else
-		timer_adjust_oneshot(m_scanline0_timer, time_until_pos(0), 0);
+		m_scanline0_timer->adjust(time_until_pos(0));
 
 	// if we are resetting relative to (visarea.max_y + 1, 0) == VBLANK start,
 	// call the VBLANK start timer now; otherwise, adjust it for the future
 	if (beamy == m_visarea.max_y + 1 && beamx == 0)
 		vblank_begin_callback();
 	else
-		timer_adjust_oneshot(m_vblank_begin_timer, time_until_vblank_start(), 0);
+		m_vblank_begin_timer->adjust(time_until_vblank_start());
 }
 
 
@@ -985,7 +984,7 @@ void screen_device::update_now()
 
 int screen_device::vpos() const
 {
-	attoseconds_t delta = attotime_to_attoseconds(attotime_sub(timer_get_time(machine), m_vblank_start_time));
+	attoseconds_t delta = (machine->time() - m_vblank_start_time).as_attoseconds();
 	int vpos;
 
 	// round to the nearest pixel
@@ -1006,7 +1005,7 @@ int screen_device::vpos() const
 
 int screen_device::hpos() const
 {
-	attoseconds_t delta = attotime_to_attoseconds(attotime_sub(timer_get_time(machine), m_vblank_start_time));
+	attoseconds_t delta = (machine->time() - m_vblank_start_time).as_attoseconds();
 
 	// round to the nearest pixel
 	delta += m_pixeltime / 2;
@@ -1042,14 +1041,14 @@ attotime screen_device::time_until_pos(int vpos, int hpos) const
 	attoseconds_t targetdelta = (attoseconds_t)vpos * m_scantime + (attoseconds_t)hpos * m_pixeltime;
 
 	// if we're past that time (within 1/2 of a pixel), head to the next frame
-	attoseconds_t curdelta = attotime_to_attoseconds(attotime_sub(timer_get_time(machine), m_vblank_start_time));
+	attoseconds_t curdelta = (machine->time() - m_vblank_start_time).as_attoseconds();
 	if (targetdelta <= curdelta + m_pixeltime / 2)
 		targetdelta += m_frame_period;
 	while (targetdelta <= curdelta)
 		targetdelta += m_frame_period;
 
 	// return the difference
-	return attotime_make(0, targetdelta - curdelta);
+	return attotime(0, targetdelta - curdelta);
 }
 
 
@@ -1065,8 +1064,8 @@ attotime screen_device::time_until_vblank_end() const
 	// if we are in the VBLANK region, compute the time until the end of the current VBLANK period
 	attotime target_time = m_vblank_end_time;
 	if (!vblank())
-		target_time = attotime_add_attoseconds(target_time, m_frame_period);
-	return attotime_sub(target_time, timer_get_time(machine));
+		target_time += attotime(0, m_frame_period);
+	return target_time - machine->time();
 }
 
 
@@ -1105,8 +1104,8 @@ void screen_device::register_vblank_callback(vblank_state_changed_func vblank_ca
 void screen_device::vblank_begin_callback()
 {
 	// reset the starting VBLANK time
-	m_vblank_start_time = timer_get_time(machine);
-	m_vblank_end_time = attotime_add_attoseconds(m_vblank_start_time, m_vblank_period);
+	m_vblank_start_time = machine->time();
+	m_vblank_end_time = m_vblank_start_time + attotime(0, m_vblank_period);
 
 	// call the screen specific callbacks
 	for (callback_item *item = m_callback_list; item != NULL; item = item->m_next)
@@ -1117,13 +1116,13 @@ void screen_device::vblank_begin_callback()
 		machine->video().frame_update();
 
 	// reset the VBLANK start timer for the next frame
-	timer_adjust_oneshot(m_vblank_begin_timer, time_until_vblank_start(), 0);
+	m_vblank_begin_timer->adjust(time_until_vblank_start());
 
 	// if no VBLANK period, call the VBLANK end callback immedietely, otherwise reset the timer
 	if (m_vblank_period == 0)
 		vblank_end_callback();
 	else
-		timer_adjust_oneshot(m_vblank_end_timer, time_until_vblank_end(), 0);
+		m_vblank_end_timer->adjust(time_until_vblank_end());
 }
 
 
@@ -1158,7 +1157,7 @@ void screen_device::scanline0_callback()
 	m_last_partial_scan = 0;
 	m_partial_updates_this_frame = 0;
 
-	timer_adjust_oneshot(m_scanline0_timer, time_until_pos(0), 0);
+	m_scanline0_timer->adjust(time_until_pos(0));
 }
 
 
@@ -1176,7 +1175,7 @@ void screen_device::scanline_update_callback(int scanline)
 	scanline++;
 	if (scanline > m_visarea.max_y)
 		scanline = m_visarea.min_y;
-	timer_adjust_oneshot(m_scanline_timer, time_until_pos(scanline), scanline);
+	m_scanline_timer->adjust(time_until_pos(scanline), scanline);
 }
 
 

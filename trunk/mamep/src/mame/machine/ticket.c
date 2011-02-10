@@ -49,7 +49,7 @@ static TIMER_CALLBACK( ticket_dispenser_toggle )
 	{
 		state->status ^= state->active_bit;
 		LOG(("Ticket Status Changed to %02X\n", state->status));
-		timer_adjust_oneshot(state->timer, ATTOTIME_IN_MSEC(state->time_msec), 0);
+		state->timer->adjust(attotime::from_msec(state->time_msec));
 	}
 
 	if (state->status == state->ticketdispensed)
@@ -69,7 +69,7 @@ static TIMER_CALLBACK( ticket_dispenser_toggle )
 READ8_DEVICE_HANDLER( ticket_dispenser_r )
 {
 	ticket_state *state = get_safe_token(device);
-	LOG(("%s: Ticket Status Read = %02X\n", cpuexec_describe_context(device->machine), state->status));
+	LOG(("%s: Ticket Status Read = %02X\n", device->machine->describe_context(), state->status));
 	return state->status;
 }
 
@@ -90,8 +90,8 @@ WRITE8_DEVICE_HANDLER( ticket_dispenser_w )
 	{
 		if (!state->power)
 		{
-			LOG(("%s: Ticket Power On\n", cpuexec_describe_context(device->machine)));
-			timer_adjust_oneshot(state->timer, ATTOTIME_IN_MSEC(state->time_msec), 0);
+			LOG(("%s: Ticket Power On\n", device->machine->describe_context()));
+			state->timer->adjust(attotime::from_msec(state->time_msec));
 			state->power = 1;
 
 			state->status = state->ticketnotdispensed;
@@ -101,8 +101,8 @@ WRITE8_DEVICE_HANDLER( ticket_dispenser_w )
 	{
 		if (state->power)
 		{
-			LOG(("%s: Ticket Power Off\n", cpuexec_describe_context(device->machine)));
-			timer_adjust_oneshot(state->timer, attotime_never, 0);
+			LOG(("%s: Ticket Power Off\n", device->machine->describe_context()));
+			state->timer->adjust(attotime::never);
 			set_led_status(device->machine, 2,0);
 			state->power = 0;
 		}
@@ -133,10 +133,10 @@ static DEVICE_START( ticket )
 	state->ticketdispensed		= config->statushigh ? state->active_bit : 0;
 	state->ticketnotdispensed	= state->ticketdispensed ^ state->active_bit;
 
-	state->timer				= timer_alloc(device->machine, ticket_dispenser_toggle, (void *)device);
+	state->timer				= device->machine->scheduler().timer_alloc(FUNC(ticket_dispenser_toggle), (void *)device);
 
-	state_save_register_device_item(device, 0, state->status);
-	state_save_register_device_item(device, 0, state->power);
+	device->save_item(NAME(state->status));
+	device->save_item(NAME(state->power));
 }
 
 

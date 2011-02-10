@@ -21,7 +21,6 @@
 #include "cpu/m68000/m68000.h"
 #include "cpu/cubeqcpu/cubeqcpu.h"
 #include "sound/dac.h"
-#include "streams.h"
 #include "machine/laserdsc.h"
 #include "machine/nvram.h"
 
@@ -251,7 +250,7 @@ static TIMER_CALLBACK( delayed_bank_swap )
 static void swap_linecpu_banks(running_machine *machine)
 {
 	/* Best sync up before we switch banks around */
-	timer_call_after_resynch(machine, NULL, 0, delayed_bank_swap);
+	machine->scheduler().synchronize(FUNC(delayed_bank_swap));
 }
 
 
@@ -511,7 +510,7 @@ static MACHINE_CONFIG_START( cubeqst, driver_device )
 	MCFG_CPU_PROGRAM_MAP(line_sound_map)
 	MCFG_CPU_CONFIG(snd_config)
 
-	MCFG_QUANTUM_TIME(HZ(48000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(48000))
 
 	MCFG_MACHINE_START(cubeqst)
 	MCFG_MACHINE_RESET(cubeqst)

@@ -287,12 +287,12 @@ INLINE void Timer_w( address_space *space, int which, UINT32 data, UINT32 mem_ma
 	{
 		int PD = (data >> 8) & 0xff;
 		int TCV = space->read_dword(0x01801404 + which * 8);
-		attotime period = attotime_mul(ATTOTIME_IN_HZ(43000000), (PD + 1) * (TCV + 1));
+		attotime period = attotime::from_hz(43000000) * ((PD + 1) * (TCV + 1));
 
 		if (state->Timerctrl[which] & 2)
-			timer_adjust_periodic(state->Timer[which], period, 0, period);
+			state->Timer[which]->adjust(period, 0, period);
 		else
-			timer_adjust_oneshot(state->Timer[which], period, 0);
+			state->Timer[which]->adjust(period);
 	}
 	COMBINE_DATA(&state->Timerctrl[which]);
 }
@@ -569,23 +569,23 @@ static MACHINE_START( crystal )
 
 	cpu_set_irq_callback(machine->device("maincpu"), icallback);
 	for (i = 0; i < 4; i++)
-		state->Timer[i] = timer_alloc(machine, Timercb, (void*)(FPTR)i);
+		state->Timer[i] = machine->scheduler().timer_alloc(FUNC(Timercb), (void*)(FPTR)i);
 
 	PatchReset(machine);
 
 #ifdef IDLE_LOOP_SPEEDUP
-	state_save_register_global(machine, state->FlipCntRead);
+	state->save_item(NAME(state->FlipCntRead));
 #endif
 
-	state_save_register_global(machine, state->Bank);
-	state_save_register_global(machine, state->FlipCount);
-	state_save_register_global(machine, state->IntHigh);
-	state_save_register_global_array(machine, state->Timerctrl);
-	state_save_register_global(machine, state->FlashCmd);
-	state_save_register_global(machine, state->PIO);
-	state_save_register_global_array(machine, state->DMActrl);
-	state_save_register_global(machine, state->OldPort4);
-	state_save_register_postload(machine, crystal_banksw_postload, NULL);
+	state->save_item(NAME(state->Bank));
+	state->save_item(NAME(state->FlipCount));
+	state->save_item(NAME(state->IntHigh));
+	state->save_item(NAME(state->Timerctrl));
+	state->save_item(NAME(state->FlashCmd));
+	state->save_item(NAME(state->PIO));
+	state->save_item(NAME(state->DMActrl));
+	state->save_item(NAME(state->OldPort4));
+	machine->state().register_postload(crystal_banksw_postload, NULL);
 }
 
 static MACHINE_RESET( crystal )
@@ -609,7 +609,7 @@ static MACHINE_RESET( crystal )
 	for (i = 0; i < 4; i++)
 	{
 		state->Timerctrl[i] = 0;
-		timer_adjust_oneshot(state->Timer[i], attotime_never, 0);
+		state->Timer[i]->adjust(attotime::never);
 	}
 
 	vr0_snd_set_areas(machine->device("vrender"), state->textureram, state->frameram);

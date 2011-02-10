@@ -10,7 +10,6 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "streams.h"
 #include "cpu/mcs48/mcs48.h"
 #include "sound/sp0250.h"
 #include "segasnd.h"
@@ -223,7 +222,7 @@ static TIMER_CALLBACK( delayed_speech_w )
 
 WRITE8_HANDLER( sega_speech_data_w )
 {
-	timer_call_after_resynch(space->machine, NULL, data, delayed_speech_w);
+	space->machine->scheduler().synchronize(FUNC(delayed_speech_w), data);
 }
 
 
@@ -357,10 +356,10 @@ static TIMER_CALLBACK( delayed_usb_data_w )
 WRITE8_HANDLER( sega_usb_data_w )
 {
 	LOG(("%04X:usb_data_w = %02X\n", cpu_get_pc(space->cpu), data));
-	timer_call_after_resynch(space->machine, NULL, data, delayed_usb_data_w);
+	space->machine->scheduler().synchronize(FUNC(delayed_usb_data_w), data);
 
 	/* boost the interleave so that sequences can be sent */
-	cpuexec_boost_interleave(space->machine, attotime_zero, ATTOTIME_IN_USEC(250));
+	space->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(250));
 }
 
 
@@ -651,7 +650,7 @@ static DEVICE_START( usb_sound )
 	usb.work_ram = auto_alloc_array(machine, UINT8, 0x400);
 
 	/* create a sound stream */
-	usb.stream = stream_create(device, 0, 1, SAMPLE_RATE, NULL, usb_stream_update);
+	usb.stream = device->machine->sound().stream_alloc(*device, 0, 1, SAMPLE_RATE, NULL, usb_stream_update);
 
 	/* initialize state */
 	usb.noise_shift = 0x15555;
@@ -758,7 +757,7 @@ static void timer_w(int which, UINT8 offset, UINT8 data)
 	timer8253_channel *ch;
 	int was_holding;
 
-	stream_update(usb.stream);
+	usb.stream->update();
 
 	/* switch off the offset */
 	switch (offset)
@@ -825,7 +824,7 @@ static void env_w(int which, UINT8 offset, UINT8 data)
 {
 	timer8253 *g = &usb.timer_group[which];
 
-	stream_update(usb.stream);
+	usb.stream->update();
 
 	if (offset < 3)
 		g->env[offset] = (double)data;
@@ -922,7 +921,7 @@ MACHINE_CONFIG_FRAGMENT( sega_universal_sound_board )
 	MCFG_CPU_PROGRAM_MAP(usb_map)
 	MCFG_CPU_IO_MAP(usb_portmap)
 
-	MCFG_TIMER_ADD_PERIODIC("usb_timer", increment_t1_clock, HZ(USB_2MHZ_CLOCK / 256))
+	MCFG_TIMER_ADD_PERIODIC("usb_timer", increment_t1_clock, attotime::from_hz(USB_2MHZ_CLOCK / 256))
 
 	/* sound hardware */
 	MCFG_SOUND_ADD("usbsnd", USB, 0)

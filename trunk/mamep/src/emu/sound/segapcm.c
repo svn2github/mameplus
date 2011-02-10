@@ -3,7 +3,6 @@
 /*********************************************************/
 
 #include "emu.h"
-#include "streams.h"
 #include "segapcm.h"
 
 typedef struct _segapcm_state segapcm_state;
@@ -128,24 +127,24 @@ static DEVICE_START( segapcm )
 
 	spcm->bankmask = mask & (rom_mask >> spcm->bankshift);
 
-	spcm->stream = stream_create(device, 0, 2, device->clock() / 128, spcm, SEGAPCM_update);
+	spcm->stream = device->machine->sound().stream_alloc(*device, 0, 2, device->clock() / 128, spcm, SEGAPCM_update);
 
-	state_save_register_device_item_array(device, 0, spcm->low);
-	state_save_register_device_item_pointer(device, 0, spcm->ram, 0x800);
+	device->save_item(NAME(spcm->low));
+	device->save_pointer(NAME(spcm->ram), 0x800);
 }
 
 
 WRITE8_DEVICE_HANDLER( sega_pcm_w )
 {
 	segapcm_state *spcm = get_safe_token(device);
-	stream_update(spcm->stream);
+	spcm->stream->update();
 	spcm->ram[offset & 0x07ff] = data;
 }
 
 READ8_DEVICE_HANDLER( sega_pcm_r )
 {
 	segapcm_state *spcm = get_safe_token(device);
-	stream_update(spcm->stream);
+	spcm->stream->update();
 	return spcm->ram[offset & 0x07ff];
 }
 

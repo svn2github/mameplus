@@ -641,7 +641,7 @@ static void namcona1_blit( running_machine *machine )
 	(void)src0;
 /*
     logerror( "%s: blt(%08x,%08x,numBytes=%04x);src=%04x %04x %04x; dst=%04x %04x %04x; gfx=%04x\n",
-        cpuexec_describe_context(machine),
+        machine->describe_context(),
         dst_baseaddr,src_baseaddr,num_bytes,
         src0,src1,src2,
         dst0,dst1,dst2,
@@ -1018,7 +1018,7 @@ static MACHINE_CONFIG_START( namcona1, namcona1_state )
 	MCFG_NVRAM_HANDLER(namcosna1)
 	MCFG_MACHINE_START(namcona1)
 	MCFG_MACHINE_RESET(namcona1_mcu)
-	MCFG_QUANTUM_TIME(HZ(2400))
+	MCFG_QUANTUM_TIME(attotime::from_hz(2400))
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)

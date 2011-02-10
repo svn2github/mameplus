@@ -35,6 +35,7 @@ enum
 	FM_ERASEAMD3,	// part 3 of AMD erase sequence
 	FM_ERASEAMD4,	// part 4 of AMD erase sequence
 	FM_BYTEPROGRAM,
+	FM_BANKSELECT,
 };
 
 
@@ -249,7 +250,8 @@ intelfsh_device::intelfsh_device(running_machine &_machine, const intelfsh_devic
 	  m_erase_sector(0),
 	  m_flash_mode(FM_NORMAL),
 	  m_flash_master_lock(false),
-	  m_timer(NULL)
+	  m_timer(NULL),
+	  m_bank(0)
 {
 }
 
@@ -266,11 +268,11 @@ intelfsh16_device::intelfsh16_device(running_machine &_machine, const intelfsh_d
 
 void intelfsh_device::device_start()
 {
-	m_timer = device_timer_alloc(*this);
+	m_timer = timer_alloc();
 
-	state_save_register_device_item( this, 0, m_status );
-	state_save_register_device_item( this, 0, m_flash_mode );
-	state_save_register_device_item( this, 0, m_flash_master_lock );
+	save_item( NAME(m_status) );
+	save_item( NAME(m_flash_mode) );
+	save_item( NAME(m_flash_master_lock) );
 }
 
 
@@ -364,6 +366,7 @@ void intelfsh_device::nvram_write(mame_file &file)
 UINT32 intelfsh_device::read_full(UINT32 address)
 {
 	UINT32 data = 0;
+	address += m_bank << 16;
 	switch( m_flash_mode )
 	{
 	default:
@@ -458,6 +461,8 @@ void intelfsh_device::write_full(UINT32 address, UINT32 data)
 {
 //  logerror( "intelflash_write( %d, %08x, %08x )\n", chip, address, data );
 
+	address += m_bank << 16;
+
 	switch( m_flash_mode )
 	{
 	case FM_NORMAL:
@@ -549,6 +554,10 @@ void intelfsh_device::write_full(UINT32 address, UINT32 data)
 		{
 			m_flash_mode = FM_NORMAL;
 		}
+		else if( ( address & 0xffff ) == 0x5555 && ( data & 0xff ) == 0xb0 && m_config.m_maker_id == 0x62 && m_config.m_device_id == 0x13 )
+		{
+			m_flash_mode = FM_BANKSELECT;
+		}
 		else
 		{
 			logerror( "unexpected %08x=%02x in FM_READAMDID2\n", address, data & 0xff );
@@ -591,11 +600,11 @@ void intelfsh_device::write_full(UINT32 address, UINT32 data)
 
 			if (m_config.m_sector_is_4k)
 			{
-				timer_adjust_oneshot( m_timer, ATTOTIME_IN_SEC( 1 ), 0 );
+				m_timer->adjust( attotime::from_seconds( 1 ) );
 			}
 			else
 			{
-				timer_adjust_oneshot( m_timer, ATTOTIME_IN_SEC( 16 ), 0 );
+				m_timer->adjust( attotime::from_seconds( 16 ) );
 			}
 		}
 		else if( ( data & 0xff ) == 0x30 )
@@ -608,14 +617,14 @@ void intelfsh_device::write_full(UINT32 address, UINT32 data)
 				for (offs_t offs = 0; offs < 4 * 1024; offs++)
 					m_addrspace[0]->write_byte((base & ~0xfff) + offs, 0xff);
 				m_erase_sector = address & ((m_config.m_bits == 16) ? ~0x7ff : ~0xfff);
-				timer_adjust_oneshot( m_timer, ATTOTIME_IN_MSEC( 125 ), 0 );
+				m_timer->adjust( attotime::from_msec( 125 ) );
 			}
 			else
 			{
 				for (offs_t offs = 0; offs < 64 * 1024; offs++)
 					m_addrspace[0]->write_byte((base & ~0xffff) + offs, 0xff);
 				m_erase_sector = address & ((m_config.m_bits == 16) ? ~0x7fff : ~0xffff);
-				timer_adjust_oneshot( m_timer, ATTOTIME_IN_SEC( 1 ), 0 );
+				m_timer->adjust( attotime::from_seconds( 1 ) );
 			}
 
 			m_status = 1 << 3;
@@ -671,7 +680,7 @@ void intelfsh_device::write_full(UINT32 address, UINT32 data)
 			m_status = 0x00;
 			m_flash_mode = FM_READSTATUS;
 
-			timer_adjust_oneshot( m_timer, ATTOTIME_IN_SEC( 1 ), 0 );
+			m_timer->adjust( attotime::from_seconds( 1 ) );
 			break;
 		}
 		else
@@ -692,6 +701,10 @@ void intelfsh_device::write_full(UINT32 address, UINT32 data)
 			logerror( "unexpected %08x=%02x in FM_SETMASTER:\n", address, data & 0xff );
 			break;
 		}
+		m_flash_mode = FM_NORMAL;
+		break;
+	case FM_BANKSELECT:
+		m_bank = data & 0xff;
 		m_flash_mode = FM_NORMAL;
 		break;
 	}

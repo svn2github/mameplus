@@ -118,7 +118,7 @@ static void execute_blit(running_machine *machine)
 	static FILE *f;
 
 	logerror("%s:Blit from %06X to (%d,%d) %dx%d -- %04X %04X %04X %04X %04X %04X %04X %04X\n",
-				cpuexec_describe_context(machine), offset, x, y, w, h,
+				machine->describe_context(), offset, x, y, w, h,
 				blitter_data[0], blitter_data[1],
 				blitter_data[2], blitter_data[3],
 				blitter_data[4], blitter_data[5],
@@ -136,7 +136,7 @@ static void execute_blit(running_machine *machine)
 
 		fprintf(f, "----------------------\n"
 				   "%s:Blit from %06X to (%d,%d) %dx%d -- %04X %04X %04X %04X %04X %04X %04X %04X\n",
-					cpuexec_describe_context(machine), offset, x, y, w, h,
+					machine->describe_context(), offset, x, y, w, h,
 					blitter_data[0], blitter_data[1],
 					blitter_data[2], blitter_data[3],
 					blitter_data[4], blitter_data[5],
@@ -308,7 +308,7 @@ static void execute_blit(running_machine *machine)
 	g_profiler.stop();
 
 #if (!INSTANT_BLIT)
-	blitter_busy_until = attotime_add(timer_get_time(machine), ATTOTIME_IN_NSEC(w*h*20));
+	blitter_busy_until = machine->time() + attotime::from_nsec(w*h*20);
 #endif
 }
 
@@ -322,7 +322,7 @@ READ16_HANDLER( artmagic_blitter_r )
     */
 	UINT16 result = 0xffef | (blitter_page << 4);
 #if (!INSTANT_BLIT)
-	if (attotime_compare(timer_get_time(space->machine), blitter_busy_until) < 0)
+	if (space->machine->time() < blitter_busy_until)
 		result ^= 6;
 #endif
 	return result;

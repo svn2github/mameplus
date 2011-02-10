@@ -221,9 +221,9 @@ static MACHINE_START( atarisy1 )
 	atarisy1_state *state = machine->driver_data<atarisy1_state>();
 	atarigen_init(machine);
 
-	state_save_register_global(machine, state->joystick_int);
-	state_save_register_global(machine, state->joystick_int_enable);
-	state_save_register_global(machine, state->joystick_value);
+	state->save_item(NAME(state->joystick_int));
+	state->save_item(NAME(state->joystick_int_enable));
+	state->save_item(NAME(state->joystick_value));
 }
 
 
@@ -283,7 +283,7 @@ static READ16_HANDLER( joystick_r )
 
 	/* clear any existing interrupt and set a timer for a new one */
 	state->joystick_int = 0;
-	state->joystick_timer->adjust(ATTOTIME_IN_USEC(50), newval);
+	state->joystick_timer->adjust(attotime::from_usec(50), newval);
 	atarigen_update_interrupts(space->machine);
 
 	return state->joystick_value;
@@ -313,7 +313,6 @@ static READ16_HANDLER( trakball_r )
 	/* Marble Madness trackball type -- rotated 45 degrees! */
 	if (state->trackball_type == 1)
 	{
-		static UINT8 cur[2][2];
 		int player = (offset >> 1) & 1;
 		int which = offset & 1;
 
@@ -333,11 +332,11 @@ static READ16_HANDLER( trakball_r )
 				posy = (INT8)input_port_read(space->machine, "IN3");
 			}
 
-			cur[player][0] = posx + posy;
-			cur[player][1] = posx - posy;
+			state->cur[player][0] = posx + posy;
+			state->cur[player][1] = posx - posy;
 		}
 
-		result = cur[player][which];
+		result = state->cur[player][which];
 	}
 
 	/* Road Blasters steering wheel */

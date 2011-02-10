@@ -49,7 +49,7 @@ TIMER_DEVICE_CALLBACK( balsente_interrupt_timer )
 	cputag_set_input_line(timer.machine, "maincpu", M6809_IRQ_LINE, ASSERT_LINE);
 
 	/* it will turn off on the next HBLANK */
-	timer_set(timer.machine, timer.machine->primary_screen->time_until_pos(param, BALSENTE_HBSTART), NULL, 0, irq_off);
+	timer.machine->scheduler().timer_set(timer.machine->primary_screen->time_until_pos(param, BALSENTE_HBSTART), FUNC(irq_off));
 
 	/* if this is Grudge Match, update the steering */
 	if (state->grudge_steering_result & 0x80)
@@ -104,36 +104,36 @@ MACHINE_START( balsente )
 		state_save_register_item(machine, "8253counter", NULL, i, state->counter[i].writebyte);
 	}
 
-	state_save_register_global(machine, state->counter_control);
-	state_save_register_global(machine, state->counter_0_ff);
-	state_save_register_global(machine, state->counter_0_timer_active);
+	state->save_item(NAME(state->counter_control));
+	state->save_item(NAME(state->counter_0_ff));
+	state->save_item(NAME(state->counter_0_timer_active));
 
-	state_save_register_global_array(machine, state->analog_input_data);
-	state_save_register_global(machine, state->adc_value);
+	state->save_item(NAME(state->analog_input_data));
+	state->save_item(NAME(state->adc_value));
 
-	state_save_register_global(machine, state->dac_value);
-	state_save_register_global(machine, state->dac_register);
-	state_save_register_global(machine, state->chip_select);
+	state->save_item(NAME(state->dac_value));
+	state->save_item(NAME(state->dac_register));
+	state->save_item(NAME(state->chip_select));
 
-	state_save_register_global(machine, state->m6850_status);
-	state_save_register_global(machine, state->m6850_control);
-	state_save_register_global(machine, state->m6850_input);
-	state_save_register_global(machine, state->m6850_output);
-	state_save_register_global(machine, state->m6850_data_ready);
+	state->save_item(NAME(state->m6850_status));
+	state->save_item(NAME(state->m6850_control));
+	state->save_item(NAME(state->m6850_input));
+	state->save_item(NAME(state->m6850_output));
+	state->save_item(NAME(state->m6850_data_ready));
 
-	state_save_register_global(machine, state->m6850_sound_status);
-	state_save_register_global(machine, state->m6850_sound_control);
-	state_save_register_global(machine, state->m6850_sound_input);
-	state_save_register_global(machine, state->m6850_sound_output);
+	state->save_item(NAME(state->m6850_sound_status));
+	state->save_item(NAME(state->m6850_sound_control));
+	state->save_item(NAME(state->m6850_sound_input));
+	state->save_item(NAME(state->m6850_sound_output));
 
-	state_save_register_global_array(machine, state->noise_position);
+	state->save_item(NAME(state->noise_position));
 
-	state_save_register_global(machine, state->nstocker_bits);
-	state_save_register_global(machine, state->spiker_expand_color);
-	state_save_register_global(machine, state->spiker_expand_bgcolor);
-	state_save_register_global(machine, state->spiker_expand_bits);
-	state_save_register_global(machine, state->grudge_steering_result);
-	state_save_register_global_array(machine, state->grudge_last_steering);
+	state->save_item(NAME(state->nstocker_bits));
+	state->save_item(NAME(state->spiker_expand_color));
+	state->save_item(NAME(state->spiker_expand_bgcolor));
+	state->save_item(NAME(state->spiker_expand_bits));
+	state->save_item(NAME(state->grudge_steering_result));
+	state->save_item(NAME(state->grudge_last_steering));
 }
 
 
@@ -482,7 +482,7 @@ static TIMER_CALLBACK( m6850_w_callback )
 
 	/* set a timer for 500usec later to actually transmit the data */
 	/* (this is very important for several games, esp Snacks'n Jaxson) */
-	timer_set(machine, ATTOTIME_IN_USEC(500), NULL, param, m6850_data_ready_callback);
+	machine->scheduler().timer_set(attotime::from_usec(500), FUNC(m6850_data_ready_callback), param);
 }
 
 
@@ -501,7 +501,7 @@ WRITE8_HANDLER( balsente_m6850_w )
 
 	/* output register is at offset 1; set a timer to synchronize the CPUs */
 	else
-		timer_call_after_resynch(space->machine, NULL, data, m6850_w_callback);
+		space->machine->scheduler().synchronize(FUNC(m6850_w_callback), data);
 }
 
 
@@ -628,7 +628,7 @@ WRITE8_HANDLER( balsente_adc_select_w )
 	/* set a timer to go off and read the value after 50us */
 	/* it's important that we do this for Mini Golf */
 logerror("adc_select %d\n", offset & 7);
-	timer_set(space->machine, ATTOTIME_IN_USEC(50), NULL, offset & 7, adc_finished);
+	space->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(adc_finished), offset & 7);
 }
 
 
@@ -650,7 +650,7 @@ INLINE void counter_start(balsente_state *state, int which)
 		if (state->counter[which].gate && !state->counter[which].timer_active)
 		{
 			state->counter[which].timer_active = 1;
-			state->counter[which].timer->adjust(attotime_mul(ATTOTIME_IN_HZ(2000000), state->counter[which].count), which);
+			state->counter[which].timer->adjust(attotime::from_hz(2000000) * state->counter[which].count, which);
 		}
 	}
 }
@@ -671,7 +671,7 @@ INLINE void counter_update_count(balsente_state *state, int which)
 	if (state->counter[which].timer_active)
 	{
 		/* determine how many 2MHz cycles are remaining */
-		int count = attotime_to_double(attotime_mul(state->counter[which].timer->time_left(), 2000000));
+		int count = (state->counter[which].timer->time_left() * 2000000).as_double();
 		state->counter[which].count = (count < 0) ? 0 : count;
 	}
 }
@@ -935,7 +935,7 @@ static void update_counter_0_timer(balsente_state *state)
 	if (maxfreq > 0.0)
 	{
 		state->counter_0_timer_active = 1;
-		state->counter_0_timer->adjust(ATTOTIME_IN_HZ(maxfreq), 0, ATTOTIME_IN_HZ(maxfreq));
+		state->counter_0_timer->adjust(attotime::from_hz(maxfreq), 0, attotime::from_hz(maxfreq));
 	}
 }
 
@@ -974,7 +974,7 @@ WRITE8_HANDLER( balsente_counter_control_w )
 	{
 		int ch;
 		for (ch = 0; ch < 6; ch++)
-			sound_set_output_gain(state->cem_device[ch], 0, (data & 0x01) ? 1.0 : 0);
+			state->cem_device[ch]->set_output_gain(0, (data & 0x01) ? 1.0 : 0);
 	}
 
 	/* bit D1 is hooked to counter 0's gate */

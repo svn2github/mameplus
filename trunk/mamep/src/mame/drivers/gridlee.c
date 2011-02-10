@@ -123,15 +123,15 @@ static TIMER_CALLBACK( irq_timer_tick )
 {
 	/* next interrupt after scanline 256 is scanline 64 */
 	if (param == 256)
-        timer_adjust_oneshot(irq_timer, machine->primary_screen->time_until_pos(64), 64);
+        irq_timer->adjust(machine->primary_screen->time_until_pos(64), 64);
 	else
-        timer_adjust_oneshot(irq_timer, machine->primary_screen->time_until_pos(param + 64), param + 64);
+        irq_timer->adjust(machine->primary_screen->time_until_pos(param + 64), param + 64);
 
 	/* IRQ starts on scanline 0, 64, 128, etc. */
 	cputag_set_input_line(machine, "maincpu", M6809_IRQ_LINE, ASSERT_LINE);
 
 	/* it will turn off on the next HBLANK */
-    timer_adjust_oneshot(irq_off, machine->primary_screen->time_until_pos(param, BALSENTE_HBSTART), 0);
+    irq_off->adjust(machine->primary_screen->time_until_pos(param, BALSENTE_HBSTART));
 }
 
 
@@ -144,13 +144,13 @@ static TIMER_CALLBACK( firq_off_tick )
 static TIMER_CALLBACK( firq_timer_tick )
 {
 	/* same time next frame */
-    timer_adjust_oneshot(firq_timer, machine->primary_screen->time_until_pos(FIRQ_SCANLINE), 0);
+    firq_timer->adjust(machine->primary_screen->time_until_pos(FIRQ_SCANLINE));
 
 	/* IRQ starts on scanline FIRQ_SCANLINE? */
 	cputag_set_input_line(machine, "maincpu", M6809_FIRQ_LINE, ASSERT_LINE);
 
 	/* it will turn off on the next HBLANK */
-    timer_adjust_oneshot(firq_off, machine->primary_screen->time_until_pos(FIRQ_SCANLINE, BALSENTE_HBSTART), 0);
+    firq_off->adjust(machine->primary_screen->time_until_pos(FIRQ_SCANLINE, BALSENTE_HBSTART));
 }
 
 static MACHINE_START( gridlee )
@@ -163,18 +163,18 @@ static MACHINE_START( gridlee )
     state_save_register_global_array(machine, last_analog_input);
     state_save_register_global_array(machine, last_analog_output);
 
-    irq_off = timer_alloc(machine, irq_off_tick, 0);
-    irq_timer = timer_alloc(machine, irq_timer_tick, 0);
-    firq_off = timer_alloc(machine, firq_off_tick, 0);
-    firq_timer = timer_alloc(machine, firq_timer_tick, 0);
+    irq_off = machine->scheduler().timer_alloc(FUNC(irq_off_tick));
+    irq_timer = machine->scheduler().timer_alloc(FUNC(irq_timer_tick));
+    firq_off = machine->scheduler().timer_alloc(FUNC(firq_off_tick));
+    firq_timer = machine->scheduler().timer_alloc(FUNC(firq_timer_tick));
 }
 
 
 static MACHINE_RESET( gridlee )
 {
 	/* start timers to generate interrupts */
-    timer_adjust_oneshot(irq_timer, machine->primary_screen->time_until_pos(0), 0);
-    timer_adjust_oneshot(firq_timer, machine->primary_screen->time_until_pos(FIRQ_SCANLINE), 0);
+    irq_timer->adjust(machine->primary_screen->time_until_pos(0));
+    firq_timer->adjust(machine->primary_screen->time_until_pos(FIRQ_SCANLINE));
 }
 
 

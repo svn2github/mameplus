@@ -76,7 +76,7 @@
           The Kaypro doesn't care timewise, but the busy flag must turn off
           sometime or it hangs.
             -       w->status |= STA_2_BUSY;
-            +       wd17xx_set_busy(device, ATTOTIME_IN_USEC(400));
+            +       wd17xx_set_busy(device, attotime::from_usec(400));
 
     2009-June-4 Roberto Lavarone:
         - Initial support for wd1771
@@ -125,9 +125,9 @@
     2010-March-22 Curt Coder:
     - Implemented immediate and index pulse interrupts.
 
-	2010-Dec-31 Phill Harvey-Smith
-	- Copied multi-sector write code from r7263, for some reason this had been
-	  silently removed, but is required for the rmnimbus driver.
+    2010-Dec-31 Phill Harvey-Smith
+    - Copied multi-sector write code from r7263, for some reason this had been
+      silently removed, but is required for the rmnimbus driver.
 
     TODO:
         - What happens if a track is read that doesn't have any id's on it?
@@ -350,8 +350,8 @@ struct _wd1770_state
 	/* pause time when writing/reading sector */
 	int pause_time;
 
-    /* complete command delay */
-    int complete_command_delay;
+	/* complete command delay */
+	int complete_command_delay;
 
 	/* Were we busy when we received a FORCE_INT command */
 	UINT8	was_busy;
@@ -394,6 +394,10 @@ static void wd17xx_timed_read_sector_request(device_t *device);
 INLINE wd1770_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
+	assert(device->type() == WD1770 || device->type() == WD1771 || device->type() == WD1772 ||
+		device->type() == WD1773 || device->type() == WD179X || device->type() == WD1793 ||
+		device->type() == WD2793 || device->type() == WD2797 || device->type() == WD177X ||
+		device->type() == MB8877);
 
 	return (wd1770_state *)downcast<legacy_device_base *>(device)->token();
 }
@@ -549,7 +553,7 @@ static TIMER_CALLBACK( wd17xx_data_callback )
 		else
 		{
 			/* requeue us for more data */
-			timer_adjust_oneshot(w->timer_data, ATTOTIME_IN_USEC(wd17xx_dden(device) ? 128 : 32), 0);
+			w->timer_data->adjust(attotime::from_usec(wd17xx_dden(device) ? 128 : 32));
 		}
 	}
 	else
@@ -565,7 +569,7 @@ static void wd17xx_set_busy(device_t *device, attotime duration)
 
 	w->status |= STA_1_BUSY;
 
-	timer_adjust_oneshot(w->timer_cmd, duration, 0);
+	w->timer_cmd->adjust(duration);
 }
 
 
@@ -614,7 +618,7 @@ static void wd17xx_command_restore(device_t *device)
 	/* when command completes set irq */
 	wd17xx_set_intrq(device);
 #endif
-	wd17xx_set_busy(device, ATTOTIME_IN_USEC(100));
+	wd17xx_set_busy(device, attotime::from_usec(100));
 }
 
 /*
@@ -1032,11 +1036,11 @@ static void wd17xx_complete_command(device_t *device, int delay)
     usecs   = w->complete_command_delay;
 
 	/* set new timer */
-	timer_adjust_oneshot(w->timer_cmd, ATTOTIME_IN_USEC(usecs), 0);
-	
+	w->timer_cmd->adjust(attotime::from_usec(usecs));
+
 	/* Kill onshot read/write sector timers */
-	timer_adjust_oneshot(w->timer_rs, attotime_never, 0);
-	timer_adjust_oneshot(w->timer_ws, attotime_never, 0);
+	w->timer_rs->adjust(attotime::never);
+	w->timer_ws->adjust(attotime::never);
 }
 
 
@@ -1185,7 +1189,7 @@ static void wd17xx_timed_data_request(device_t *device)
 	wd1770_state *w = get_safe_token(device);
 
 	/* set new timer */
-	timer_adjust_oneshot(w->timer_data, ATTOTIME_IN_USEC(wd17xx_dden(device) ? 128 : 32), 0);
+	w->timer_data->adjust(attotime::from_usec(wd17xx_dden(device) ? 128 : 32));
 }
 
 
@@ -1196,7 +1200,7 @@ static void wd17xx_timed_read_sector_request(device_t *device)
 	wd1770_state *w = get_safe_token(device);
 
 	/* set new timer */
-	timer_adjust_oneshot(w->timer_rs, ATTOTIME_IN_USEC(w->pause_time), 0);
+	w->timer_rs->adjust(attotime::from_usec(w->pause_time));
 }
 
 
@@ -1207,7 +1211,7 @@ static void wd17xx_timed_write_sector_request(device_t *device)
 	wd1770_state *w = get_safe_token(device);
 
 	/* set new timer */
-	timer_adjust_oneshot(w->timer_ws, ATTOTIME_IN_USEC(w->pause_time), 0);
+	w->timer_ws->adjust(attotime::from_usec(w->pause_time));
 }
 
 
@@ -1704,7 +1708,7 @@ WRITE8_DEVICE_HANDLER( wd17xx_command_w )
 #if 0
 		wd17xx_set_intrq(device);
 #endif
-		wd17xx_set_busy(device, ATTOTIME_IN_USEC(100));
+		wd17xx_set_busy(device, attotime::from_usec(100));
 
 	}
 
@@ -1726,7 +1730,7 @@ WRITE8_DEVICE_HANDLER( wd17xx_command_w )
 #if 0
 		wd17xx_set_intrq(device);
 #endif
-		wd17xx_set_busy(device, ATTOTIME_IN_USEC(100));
+		wd17xx_set_busy(device, attotime::from_usec(100));
 
 
 	}
@@ -1748,7 +1752,7 @@ WRITE8_DEVICE_HANDLER( wd17xx_command_w )
 #if 0
 		wd17xx_set_intrq(device);
 #endif
-		wd17xx_set_busy(device, ATTOTIME_IN_USEC(100));
+		wd17xx_set_busy(device, attotime::from_usec(100));
 
 	}
 
@@ -1771,7 +1775,7 @@ WRITE8_DEVICE_HANDLER( wd17xx_command_w )
 #if 0
 		wd17xx_set_intrq(device);
 #endif
-		wd17xx_set_busy(device, ATTOTIME_IN_USEC(100));
+		wd17xx_set_busy(device, attotime::from_usec(100));
 	}
 
 	if (w->command_type == TYPE_I)
@@ -1840,7 +1844,7 @@ WRITE8_DEVICE_HANDLER( wd17xx_data_w )
                         w->data_offset = 0;
 
 						/* Check we should handle the next sector for a multi record write */
-						if ( w->command_type == TYPE_II && w->command == FDC_WRITE_SEC && ( w->write_cmd & FDC_MULTI_REC ) ) 
+						if ( w->command_type == TYPE_II && w->command == FDC_WRITE_SEC && ( w->write_cmd & FDC_MULTI_REC ) )
 						{
 							w->sector++;
 							if (wd17xx_locate_sector(device))
@@ -2014,10 +2018,10 @@ static DEVICE_START( wd1770 )
     w->complete_command_delay = 12;
 
 	/* allocate timers */
-	w->timer_cmd = timer_alloc(device->machine, wd17xx_command_callback, (void *)device);
-	w->timer_data = timer_alloc(device->machine, wd17xx_data_callback, (void *)device);
-	w->timer_rs = timer_alloc(device->machine, wd17xx_read_sector_callback, (void *)device);
-	w->timer_ws = timer_alloc(device->machine, wd17xx_write_sector_callback, (void *)device);
+	w->timer_cmd = device->machine->scheduler().timer_alloc(FUNC(wd17xx_command_callback), (void *)device);
+	w->timer_data = device->machine->scheduler().timer_alloc(FUNC(wd17xx_data_callback), (void *)device);
+	w->timer_rs = device->machine->scheduler().timer_alloc(FUNC(wd17xx_read_sector_callback), (void *)device);
+	w->timer_ws = device->machine->scheduler().timer_alloc(FUNC(wd17xx_write_sector_callback), (void *)device);
 
 	/* resolve callbacks */
 	devcb_resolve_read_line(&w->in_dden_func, &w->intf->in_dden_func, device);

@@ -210,8 +210,8 @@ static MACHINE_START( ikki )
 {
 	ikki_state *state = machine->driver_data<ikki_state>();
 
-	state_save_register_global(machine, state->flipscreen);
-	state_save_register_global(machine, state->punch_through_pen);
+	state->save_item(NAME(state->flipscreen));
+	state->save_item(NAME(state->punch_through_pen));
 }
 
 static MACHINE_RESET( ikki )
@@ -232,7 +232,7 @@ static MACHINE_CONFIG_START( ikki, ikki_state )
 	MCFG_CPU_PROGRAM_MAP(ikki_cpu2)
 	MCFG_CPU_VBLANK_INT_HACK(irq0_line_hold,2)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(ikki)
 	MCFG_MACHINE_RESET(ikki)

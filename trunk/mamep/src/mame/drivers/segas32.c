@@ -524,7 +524,7 @@ static void int_control_w(address_space *space, int offset, UINT8 data)
 			duration = v60_irq_control[8] + ((v60_irq_control[9] << 8) & 0xf00);
 			if (duration)
 			{
-				attotime period = attotime_make(0, attotime_to_attoseconds(ATTOTIME_IN_HZ(TIMER_0_CLOCK)) * duration);
+				attotime period = attotime::from_hz(TIMER_0_CLOCK) * duration;
 				v60_irq_timer[0]->adjust(period, MAIN_IRQ_TIMER0);
 			}
 			break;
@@ -535,7 +535,7 @@ static void int_control_w(address_space *space, int offset, UINT8 data)
 			duration = v60_irq_control[10] + ((v60_irq_control[11] << 8) & 0xf00);
 			if (duration)
 			{
-				attotime period = attotime_make(0, attotime_to_attoseconds(ATTOTIME_IN_HZ(TIMER_1_CLOCK)) * duration);
+				attotime period = attotime::from_hz(TIMER_1_CLOCK) * duration;
 				v60_irq_timer[1]->adjust(period, MAIN_IRQ_TIMER1);
 			}
 			break;
@@ -615,7 +615,7 @@ static INTERRUPT_GEN( start_of_vblank_int )
 {
 	signal_v60_irq(device->machine, MAIN_IRQ_VBSTART);
 	system32_set_vblank(device->machine, 1);
-	timer_set(device->machine, device->machine->primary_screen->time_until_pos(0), NULL, 0, end_of_vblank_int);
+	device->machine->scheduler().timer_set(device->machine->primary_screen->time_until_pos(0), FUNC(end_of_vblank_int));
 	if (system32_prot_vblank)
 		(*system32_prot_vblank)(device);
 }

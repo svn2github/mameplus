@@ -290,7 +290,7 @@ static TIMER_CALLBACK( nmi_callback )
 static WRITE8_HANDLER( sound_command_w )
 {
 	soundlatch_w(space, 0, data);
-	timer_call_after_resynch(space->machine, NULL, data, nmi_callback);
+	space->machine->scheduler().synchronize(FUNC(nmi_callback), data);
 }
 
 static WRITE8_HANDLER( nmi_disable_w )
@@ -784,29 +784,29 @@ static MACHINE_START( nycaptor )
 	state->subcpu = machine->device("sub");
 	state->mcu = machine->device("mcu");
 
-	state_save_register_global(machine, state->generic_control_reg);
-	state_save_register_global(machine, state->sound_nmi_enable);
-	state_save_register_global(machine, state->pending_nmi);
-	state_save_register_global(machine, state->snd_data);
-	state_save_register_global_array(machine, state->vol_ctrl);
+	state->save_item(NAME(state->generic_control_reg));
+	state->save_item(NAME(state->sound_nmi_enable));
+	state->save_item(NAME(state->pending_nmi));
+	state->save_item(NAME(state->snd_data));
+	state->save_item(NAME(state->vol_ctrl));
 
-	state_save_register_global(machine, state->char_bank);
-	state_save_register_global(machine, state->palette_bank);
-	state_save_register_global(machine, state->gfxctrl);
+	state->save_item(NAME(state->char_bank));
+	state->save_item(NAME(state->palette_bank));
+	state->save_item(NAME(state->gfxctrl));
 
-	state_save_register_global(machine, state->port_a_in);
-	state_save_register_global(machine, state->port_a_out);
-	state_save_register_global(machine, state->ddr_a);
-	state_save_register_global(machine, state->port_b_in);
-	state_save_register_global(machine, state->port_b_out);
-	state_save_register_global(machine, state->ddr_b);
-	state_save_register_global(machine, state->port_c_in);
-	state_save_register_global(machine, state->port_c_out);
-	state_save_register_global(machine, state->ddr_c);
-	state_save_register_global(machine, state->mcu_sent);
-	state_save_register_global(machine, state->main_sent);
-	state_save_register_global(machine, state->from_main);
-	state_save_register_global(machine, state->from_mcu);
+	state->save_item(NAME(state->port_a_in));
+	state->save_item(NAME(state->port_a_out));
+	state->save_item(NAME(state->ddr_a));
+	state->save_item(NAME(state->port_b_in));
+	state->save_item(NAME(state->port_b_out));
+	state->save_item(NAME(state->ddr_b));
+	state->save_item(NAME(state->port_c_in));
+	state->save_item(NAME(state->port_c_out));
+	state->save_item(NAME(state->ddr_c));
+	state->save_item(NAME(state->mcu_sent));
+	state->save_item(NAME(state->main_sent));
+	state->save_item(NAME(state->from_main));
+	state->save_item(NAME(state->from_mcu));
 }
 
 static MACHINE_RESET( nycaptor )
@@ -859,7 +859,7 @@ static MACHINE_CONFIG_START( nycaptor, nycaptor_state )
 	MCFG_CPU_ADD("mcu", M68705,2000000)
 	MCFG_CPU_PROGRAM_MAP(nycaptor_m68705_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))	/* 100 CPU slices per frame - an high value to ensure proper synchronization of the CPUs */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* 100 CPU slices per frame - an high value to ensure proper synchronization of the CPUs */
 
 	MCFG_MACHINE_START(nycaptor)
 	MCFG_MACHINE_RESET(nycaptor)
@@ -923,7 +923,7 @@ static MACHINE_CONFIG_START( cyclshtg, nycaptor_state )
 	MCFG_CPU_PROGRAM_MAP(nycaptor_m68705_map)
 #endif
 
-	MCFG_QUANTUM_TIME(HZ(60))
+	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 	MCFG_MACHINE_START(nycaptor)
 	MCFG_MACHINE_RESET(nycaptor)
 
@@ -981,7 +981,7 @@ static MACHINE_CONFIG_START( bronx, nycaptor_state )
 	MCFG_CPU_PROGRAM_MAP(nycaptor_sound_map)
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
 
-	MCFG_QUANTUM_TIME(HZ(120))
+	MCFG_QUANTUM_TIME(attotime::from_hz(120))
 	MCFG_MACHINE_START(nycaptor)
 	MCFG_MACHINE_RESET(nycaptor)
 

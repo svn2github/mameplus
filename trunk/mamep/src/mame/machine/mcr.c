@@ -168,7 +168,7 @@ MACHINE_START( mcr )
 MACHINE_START( nflfoot )
 {
 	/* allocate a timer for the IPU watchdog */
-	ipu_watchdog_timer = timer_alloc(machine, ipu_watchdog_reset, NULL);
+	ipu_watchdog_timer = machine->scheduler().timer_alloc(FUNC(ipu_watchdog_reset));
 }
 
 
@@ -335,7 +335,7 @@ READ8_HANDLER( mcr_ipu_watchdog_r )
 {
 	/* watchdog counter is clocked by 7.3728MHz crystal / 16 */
 	/* watchdog is tripped when 14-bit counter overflows => / 32768 = 14.0625Hz*/
-	timer_adjust_oneshot(ipu_watchdog_timer, ATTOTIME_IN_HZ(7372800 / 16 / 32768), 0);
+	ipu_watchdog_timer->adjust(attotime::from_hz(7372800 / 16 / 32768));
 	return 0xff;
 }
 

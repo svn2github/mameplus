@@ -587,7 +587,7 @@ static void stv_SMPC_w8 (address_space *space, int offset, UINT8 data)
 				if(LOG_SMPC) logerror ("SMPC: Slave OFF\n");
 				smpc_ram[0x5f]=0x03;
 				stv_enable_slave_sh2 = 0;
-				cpuexec_trigger(space->machine, 1000);
+				space->machine->scheduler().trigger(1000);
 				cputag_set_input_line(space->machine, "slave", INPUT_LINE_RESET, ASSERT_LINE);
 				break;
 			case 0x06:
@@ -1531,7 +1531,7 @@ static void dma_direct_lv0(address_space *space)
 	if(LOG_SCU) logerror("DMA transfer END\n");
 
 	/*TODO: timing of this*/
-	timer_set(space->machine, ATTOTIME_IN_USEC(300), NULL, 0, dma_lv0_ended);
+	space->machine->scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv0_ended));
 
 	if(scu_add_tmp & 0x80000000)
 	{
@@ -1632,7 +1632,7 @@ static void dma_direct_lv1(address_space *space)
 
 	if(LOG_SCU) logerror("DMA transfer END\n");
 
-	timer_set(space->machine, ATTOTIME_IN_USEC(300), NULL, 0, dma_lv1_ended);
+	space->machine->scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv1_ended));
 
 	if(scu_add_tmp & 0x80000000)
 	{
@@ -1733,7 +1733,7 @@ static void dma_direct_lv2(address_space *space)
 
 	if(LOG_SCU) logerror("DMA transfer END\n");
 
-	timer_set(space->machine, ATTOTIME_IN_USEC(300), NULL, 0, dma_lv2_ended);
+	space->machine->scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv2_ended));
 
 	if(scu_add_tmp & 0x80000000)
 	{
@@ -1808,7 +1808,7 @@ static void dma_indirect_lv0(address_space *space)
 
 	}while(job_done == 0);
 
-	timer_set(space->machine, ATTOTIME_IN_USEC(300), NULL, 0, dma_lv0_ended);
+	space->machine->scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv0_ended));
 }
 
 static void dma_indirect_lv1(address_space *space)
@@ -1877,7 +1877,7 @@ static void dma_indirect_lv1(address_space *space)
 
 	}while(job_done == 0);
 
-	timer_set(space->machine, ATTOTIME_IN_USEC(300), NULL, 0, dma_lv1_ended);
+	space->machine->scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv1_ended));
 }
 
 static void dma_indirect_lv2(address_space *space)
@@ -1945,7 +1945,7 @@ static void dma_indirect_lv2(address_space *space)
 
 	}while(job_done == 0);
 
-	timer_set(space->machine, ATTOTIME_IN_USEC(300), NULL, 0, dma_lv2_ended);
+	space->machine->scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv2_ended));
 }
 
 
@@ -1969,15 +1969,15 @@ static READ32_HANDLER( stv_sh2_soundram_r )
 static WRITE32_HANDLER( minit_w )
 {
 	logerror("cpu %s (PC=%08X) MINIT write = %08x\n", space->cpu->tag(), cpu_get_pc(space->cpu),data);
-	cpuexec_boost_interleave(space->machine, minit_boost_timeslice, ATTOTIME_IN_USEC(minit_boost));
-	cpuexec_trigger(space->machine, 1000);
+	space->machine->scheduler().boost_interleave(minit_boost_timeslice, attotime::from_usec(minit_boost));
+	space->machine->scheduler().trigger(1000);
 	sh2_set_frt_input(space->machine->device("slave"), PULSE_LINE);
 }
 
 static WRITE32_HANDLER( sinit_w )
 {
 	logerror("cpu %s (PC=%08X) SINIT write = %08x\n", space->cpu->tag(), cpu_get_pc(space->cpu),data);
-	cpuexec_boost_interleave(space->machine, sinit_boost_timeslice, ATTOTIME_IN_USEC(sinit_boost));
+	space->machine->scheduler().boost_interleave(sinit_boost_timeslice, attotime::from_usec(sinit_boost));
 	sh2_set_frt_input(space->machine->device("maincpu"), PULSE_LINE);
 }
 
@@ -2343,8 +2343,8 @@ DRIVER_INIT ( stv )
 	/* amount of time to boost interleave for on MINIT / SINIT, needed for communication to work */
 	minit_boost = 400;
 	sinit_boost = 400;
-	minit_boost_timeslice = attotime_zero;
-	sinit_boost_timeslice = attotime_zero;
+	minit_boost_timeslice = attotime::zero;
+	sinit_boost_timeslice = attotime::zero;
 
 	smpc_ram = auto_alloc_array(machine, UINT8, 0x80);
 	stv_scu = auto_alloc_array(machine, UINT32, 0x100/4);
@@ -2633,7 +2633,7 @@ static MACHINE_START( stv )
     smpc_ram[0x2d] = DectoBCD(systime.local_time.minute);
     smpc_ram[0x2f] = DectoBCD(systime.local_time.second);
 
-	stv_rtc_timer = timer_alloc(machine, stv_rtc_increment, 0);
+	stv_rtc_timer = machine->scheduler().timer_alloc(FUNC(stv_rtc_increment));
 }
 
 /*
@@ -2816,7 +2816,7 @@ static INTERRUPT_GEN( stv_interrupt )
 
 	/*TODO: timing of this one (related to the VDP1 speed)*/
 	/*      (NOTE: value shouldn't be at h_sync/v_sync position (will break shienryu))*/
-	timer_set(device->machine, device->machine->primary_screen->time_until_pos(0), NULL, 0, vdp1_irq);
+	device->machine->scheduler().timer_set(device->machine->primary_screen->time_until_pos(0), FUNC(vdp1_irq));
 }
 
 static MACHINE_RESET( stv )
@@ -2848,7 +2848,7 @@ static MACHINE_RESET( stv )
 	vblank_out_timer->adjust(machine->primary_screen->time_until_pos(0));
 	scan_timer->adjust(machine->primary_screen->time_until_pos(224, 352));
 
-	timer_adjust_periodic(stv_rtc_timer, attotime_zero, 0, ATTOTIME_IN_SEC(1));
+	stv_rtc_timer->adjust(attotime::zero, 0, attotime::from_seconds(1));
 }
 
 

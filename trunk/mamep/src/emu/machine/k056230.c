@@ -76,7 +76,7 @@ void k056230_device::device_start()
 
 	m_ram = auto_alloc_array(&m_machine, UINT32, 0x2000);
 
-	state_save_register_device_item_pointer(this, 0, m_ram, 0x2000);
+	save_pointer(NAME(m_ram), 0x2000);
 }
 
 
@@ -128,7 +128,7 @@ WRITE8_DEVICE_HANDLER_TRAMPOLINE(k056230, k056230_w)
 					{
 						cpu_set_input_line(m_cpu, INPUT_LINE_IRQ2, ASSERT_LINE);
 					}
-					timer_set(&m_machine, ATTOTIME_IN_USEC(10), (void*)this, 0, network_irq_clear_callback);
+					m_machine.scheduler().timer_set(attotime::from_usec(10), FUNC(network_irq_clear_callback), 0, (void*)this);
 				}
 			}
 //          else

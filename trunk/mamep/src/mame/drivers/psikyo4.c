@@ -708,11 +708,11 @@ static MACHINE_START( psikyo4 )
 //  memory_configure_bank(machine, "bank2", 0, 0x2000, machine->region("gfx1")->base(), 0x2000);
 
 	state->sample_offs = 0;
-	state_save_register_global(machine, state->sample_offs);
+	state->save_item(NAME(state->sample_offs));
 #endif
 
-	state_save_register_global(machine, state->oldbrt1);
-	state_save_register_global(machine, state->oldbrt2);
+	state->save_item(NAME(state->oldbrt1));
+	state->save_item(NAME(state->oldbrt2));
 }
 
 static MACHINE_RESET( psikyo4 )
@@ -1072,8 +1072,8 @@ static void install_hotgmck_pcm_bank(running_machine *machine)
 	set_hotgmck_pcm_bank(machine, 1);
 
 	memory_install_write32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x5800008, 0x580000b, 0, 0, hotgmck_pcm_bank_w );
-	state_save_register_postload(machine, hotgmck_pcm_bank_postload, (void *)0);
-	state_save_register_postload(machine, hotgmck_pcm_bank_postload, (void *)1);
+	machine->state().register_postload(hotgmck_pcm_bank_postload, (void *)0);
+	machine->state().register_postload(hotgmck_pcm_bank_postload, (void *)1);
 }
 
 static DRIVER_INIT( hotgmck )

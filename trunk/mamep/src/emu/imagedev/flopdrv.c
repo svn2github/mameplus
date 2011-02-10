@@ -70,7 +70,7 @@ struct _floppy_drive
 	int current_track;
 
 	/* index pulse timer */
-	void	*index_timer;
+	emu_timer	*index_timer;
 	/* index pulse callback */
 	void	(*index_pulse_callback)(device_t *controller,device_t *image, int state);
 	/* rotation per minute => gives index pulse frequency */
@@ -214,7 +214,7 @@ static void floppy_drive_init(device_t *img)
 	pDrive->flags = 0;
 	pDrive->index_pulse_callback = NULL;
 	pDrive->ready_state_change_callback = NULL;
-	pDrive->index_timer = timer_alloc(img->machine, floppy_drive_index_callback, (void *) img);
+	pDrive->index_timer = img->machine->scheduler().timer_alloc(FUNC(floppy_drive_index_callback), (void *) img);
 	pDrive->idx = 0;
 
 	floppy_drive_set_geometry(img, ((floppy_config*)img->baseconfig().static_config())->floppy_type);
@@ -244,12 +244,12 @@ static void floppy_drive_index_func(device_t *img)
 	if (drive->idx)
 	{
 		drive->idx = 0;
-		timer_adjust_oneshot((emu_timer*)drive->index_timer, double_to_attotime(ms*19/20/1000.0), 0);
+		drive->index_timer->adjust(attotime::from_double(ms*19/20/1000.0));
 	}
 	else
 	{
 		drive->idx = 1;
-		timer_adjust_oneshot((emu_timer*)drive->index_timer, double_to_attotime(ms/20/1000.0), 0);
+		drive->index_timer->adjust(attotime::from_double(ms/20/1000.0));
 	}
 
 	devcb_call_write_line(&drive->out_idx_func, drive->idx);
@@ -674,7 +674,7 @@ DEVICE_IMAGE_LOAD( floppy )
 	else
 		next_wpt = CLEAR_LINE;
 
-	timer_set(image.device().machine, ATTOTIME_IN_MSEC(250), flopimg, next_wpt, set_wpt);
+	image.device().machine->scheduler().timer_set(attotime::from_msec(250), FUNC(set_wpt), next_wpt, flopimg);
 
 	return retVal;
 }
@@ -702,7 +702,7 @@ DEVICE_IMAGE_UNLOAD( floppy )
 	devcb_call_write_line(&flopimg->out_wpt_func, flopimg->wpt);
 
 	/* set timer for disk eject */
-	timer_set(image.device().machine, ATTOTIME_IN_MSEC(250), flopimg, ASSERT_LINE, set_wpt);
+	image.device().machine->scheduler().timer_set(attotime::from_msec(250), FUNC(set_wpt), ASSERT_LINE, flopimg);
 }
 
 device_t *floppy_get_device(running_machine *machine,int drive)
@@ -843,7 +843,7 @@ WRITE_LINE_DEVICE_HANDLER( floppy_mon_w )
 
 	/* on -> off */
 	else if (drive->mon == CLEAR_LINE && state)
-		timer_adjust_oneshot((emu_timer*)drive->index_timer, attotime_zero, 0);
+		drive->index_timer->adjust(attotime::zero);
 
 	drive->mon = state;
 }

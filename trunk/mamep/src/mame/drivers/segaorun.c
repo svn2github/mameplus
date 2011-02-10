@@ -375,7 +375,7 @@ static TIMER_CALLBACK( delayed_sound_data_w )
 
 static void sound_data_w(running_machine *machine, UINT8 data)
 {
-	timer_call_after_resynch(machine, NULL, data, delayed_sound_data_w);
+	machine->scheduler().synchronize(FUNC(delayed_sound_data_w), data);
 }
 
 
@@ -420,9 +420,9 @@ static void outrun_generic_init(running_machine *machine)
 	if (nvram != NULL)
 		nvram->set_base(workram, 0x8000);
 
-	state_save_register_global(machine, state->adc_select);
-	state_save_register_global(machine, state->vblank_irq_state);
-	state_save_register_global(machine, state->irq2_state);
+	state->save_item(NAME(state->adc_select));
+	state->save_item(NAME(state->vblank_irq_state));
+	state->save_item(NAME(state->irq2_state));
 	state_save_register_global_pointer(machine, segaic16_spriteram_0, 0x01000/2);
 	state_save_register_global_pointer(machine, segaic16_paletteram,  0x02000/2);
 	state_save_register_global_pointer(machine, segaic16_tileram_0,   0x10000/2);
@@ -447,7 +447,7 @@ static void update_main_irqs(running_machine *machine)
 	cpu_set_input_line(state->maincpu, 6, state->vblank_irq_state && state->irq2_state ? ASSERT_LINE : CLEAR_LINE);
 
 	if (state->vblank_irq_state || state->irq2_state)
-		cpuexec_boost_interleave(machine, attotime_zero, ATTOTIME_IN_USEC(100));
+		machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
 
@@ -461,9 +461,9 @@ static TIMER_CALLBACK( irq2_gen )
 }
 
 
-static TIMER_CALLBACK( scanline_callback )
+static TIMER_DEVICE_CALLBACK( scanline_callback )
 {
-	segas1x_state *state = machine->driver_data<segas1x_state>();
+	segas1x_state *state = timer.machine->driver_data<segas1x_state>();
 	int scanline = param;
 	int next_scanline = scanline;
 
@@ -474,7 +474,7 @@ static TIMER_CALLBACK( scanline_callback )
 		case 65:
 		case 129:
 		case 193:
-			timer_set(machine, machine->primary_screen->time_until_pos(scanline, machine->primary_screen->visible_area().max_x + 1), NULL, 0, irq2_gen);
+			timer.machine->scheduler().timer_set(timer.machine->primary_screen->time_until_pos(scanline, timer.machine->primary_screen->visible_area().max_x + 1), FUNC(irq2_gen));
 			next_scanline = scanline + 1;
 			break;
 
@@ -502,10 +502,10 @@ static TIMER_CALLBACK( scanline_callback )
 	}
 
 	/* update IRQs on the main CPU */
-	update_main_irqs(machine);
+	update_main_irqs(timer.machine);
 
 	/* come back at the next targeted scanline */
-	timer_set(machine, machine->primary_screen->time_until_pos(next_scanline), NULL, next_scanline, scanline_callback);
+	timer.adjust(timer.machine->primary_screen->time_until_pos(next_scanline), next_scanline);
 }
 
 
@@ -538,7 +538,7 @@ static MACHINE_RESET( outrun )
 	m68k_set_reset_callback(machine->device("maincpu"), outrun_reset);
 
 	/* start timers to track interrupts */
-	timer_set(machine, machine->primary_screen->time_until_pos(223), NULL, 223, scanline_callback);
+	state->interrupt_timer->adjust(machine->primary_screen->time_until_pos(223), 223);
 }
 
 
@@ -699,7 +699,7 @@ static WRITE16_HANDLER( outrun_custom_io_w )
                     D7: /MUTE
                     D6-D0: unknown
                 */
-				sound_global_enable(space->machine, data & 0x80);
+				space->machine->sound().system_enable(data & 0x80);
 			}
 			return;
 
@@ -1116,7 +1116,9 @@ static MACHINE_CONFIG_START( outrun_base, segas1x_state )
 	MCFG_CPU_IO_MAP(sound_portmap)
 
 	MCFG_MACHINE_RESET(outrun)
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
+
+	MCFG_TIMER_ADD("int_timer", scanline_callback)
 
 	MCFG_PPI8255_ADD( "ppi8255", single_ppi_intf )
 

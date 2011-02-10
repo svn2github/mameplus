@@ -780,10 +780,10 @@ static MACHINE_START( ninjaw )
 	state->_2610_2l = machine->device("2610.2.l");
 	state->_2610_2r = machine->device("2610.2.r");
 
-	state_save_register_global(machine, state->cpua_ctrl);
-	state_save_register_global(machine, state->banknum);
-	state_save_register_global_array(machine, state->pandata);
-	state_save_register_postload(machine, ninjaw_postload, NULL);
+	state->save_item(NAME(state->cpua_ctrl));
+	state->save_item(NAME(state->banknum));
+	state->save_item(NAME(state->pandata));
+	machine->state().register_postload(ninjaw_postload, NULL);
 }
 
 static MACHINE_RESET( ninjaw )
@@ -794,7 +794,7 @@ static MACHINE_RESET( ninjaw )
 	memset(state->pandata, 0, sizeof(state->pandata));
 
 	/**** mixer control enable ****/
-	sound_global_enable(machine, 1);	/* mixer enabled */
+	machine->sound().system_enable(true);	/* mixer enabled */
 }
 
 static MACHINE_CONFIG_START( ninjaw, ninjaw_state )
@@ -811,7 +811,7 @@ static MACHINE_CONFIG_START( ninjaw, ninjaw_state )
 	MCFG_CPU_PROGRAM_MAP(ninjaw_slave_map)
 	MCFG_CPU_VBLANK_INT("lscreen", irq4_line_hold)
 
-	MCFG_QUANTUM_TIME(HZ(6000))	/* CPU slices */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* CPU slices */
 
 	MCFG_MACHINE_START(ninjaw)
 	MCFG_MACHINE_RESET(ninjaw)
@@ -895,7 +895,7 @@ static MACHINE_CONFIG_START( darius2, ninjaw_state )
 	MCFG_CPU_PROGRAM_MAP(darius2_slave_map)
 	MCFG_CPU_VBLANK_INT("lscreen", irq4_line_hold)
 
-	MCFG_QUANTUM_TIME(HZ(6000))	/* CPU slices */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* CPU slices */
 
 	MCFG_MACHINE_START(ninjaw)
 	MCFG_MACHINE_RESET(ninjaw)

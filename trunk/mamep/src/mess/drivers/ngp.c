@@ -604,8 +604,8 @@ static MACHINE_START( ngp )
 {
 	ngp_state *state = machine->driver_data<ngp_state>();
 
-	state->seconds_timer = timer_alloc( machine, ngp_seconds_callback, NULL );
-	timer_adjust_periodic( state->seconds_timer, ATTOTIME_IN_SEC(1), 0, ATTOTIME_IN_SEC(1) );
+	state->seconds_timer = machine->scheduler().timer_alloc(FUNC(ngp_seconds_callback));
+	state->seconds_timer->adjust( attotime::from_seconds(1), 0, attotime::from_seconds(1) );
 }
 
 

@@ -897,8 +897,8 @@ static MACHINE_START( taitox )
 	seta_state *state = machine->driver_data<seta_state>();
 
 	state->taitox_banknum = -1;
-	state_save_register_global(machine, state->taitox_banknum);
-	state_save_register_postload(machine, taitox_postload, NULL);
+	state->save_item(NAME(state->taitox_banknum));
+	machine->state().register_postload(taitox_postload, NULL);
 }
 
 static const tc0140syt_interface taitox_tc0140syt_intf =
@@ -919,7 +919,7 @@ static MACHINE_CONFIG_START( superman, seta_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
 	MCFG_MACHINE_START(taitox)
 	MCFG_MACHINE_RESET(cchip1)
@@ -961,7 +961,7 @@ static MACHINE_CONFIG_START( daisenpu, seta_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(daisenpu_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
 	MCFG_MACHINE_START(taitox)
 
@@ -1000,7 +1000,7 @@ static MACHINE_CONFIG_START( gigandes, seta_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
 	MCFG_MACHINE_START(taitox)
 
@@ -1041,7 +1041,7 @@ static MACHINE_CONFIG_START( ballbros, seta_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
 	MCFG_MACHINE_START(taitox)
 

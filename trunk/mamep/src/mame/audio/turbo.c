@@ -111,7 +111,7 @@ WRITE8_DEVICE_HANDLER( turbo_sound_a_w )
 #else
 
 	if (((data ^ last_sound_a) & 0x1e) && (last_sound_a & 0x1e) != 0x1e)
-		timer_set(space->machine, ATTOTIME_IN_HZ(20000), NULL, data, update_sound_a);
+		space->machine->scheduler().timer_set(attotime::from_hz(20000), FUNC(update_sound_a), data);
 	else
 		update_sound_a(data);
 
@@ -415,7 +415,7 @@ WRITE8_DEVICE_HANDLER( subroc3d_sound_c_w )
 	sample_set_volume(samples, 11, (data & 0x40) ? 0 : 1.0);
 
 	/* /GAME START */
-	sound_global_enable(device->machine, !(data & 0x80));
+	device->machine->sound().system_mute(data & 0x80);
 }
 
 
@@ -570,7 +570,7 @@ WRITE8_DEVICE_HANDLER( buckrog_sound_b_w )
 	if ((diff & 0x40) && !(data & 0x40) &&  sample_playing(samples, 5)) sample_stop(samples, 5);
 
 	/* GAME ON */
-	sound_global_enable(device->machine, data & 0x80);
+	device->machine->sound().system_enable(data & 0x80);
 }
 
 

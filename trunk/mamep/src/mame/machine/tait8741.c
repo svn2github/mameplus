@@ -204,7 +204,7 @@ static void taito8741_update(address_space *space, int num)
 				st->txd[0] = st->portHandler ? st->portHandler(space,0) : st->portName ? input_port_read(space->machine, st->portName) : 0;
 				if( sst )
 				{
-					timer_call_after_resynch(space->machine, NULL, num, taito8741_serial_tx);
+					space->machine->scheduler().synchronize(FUNC(taito8741_serial_tx), num);
 					st->serial_out = 0;
 					st->status |= 0x04;
 					st->phase = CMD_08;
@@ -277,7 +277,7 @@ static int I8741_status_r(address_space *space, int num)
 {
 	I8741 *st = &taito8741[num];
 	taito8741_update(space, num);
-	LOG(("%s:8741-%d ST Read %02x\n",cpuexec_describe_context(space->machine),num,st->status));
+	LOG(("%s:8741-%d ST Read %02x\n",space->machine->describe_context(),num,st->status));
 	return st->status;
 }
 
@@ -287,7 +287,7 @@ static int I8741_data_r(address_space *space, int num)
 	I8741 *st = &taito8741[num];
 	int ret = st->toData;
 	st->status &= 0xfe;
-	LOG(("%s:8741-%d DATA Read %02x\n",cpuexec_describe_context(space->machine),num,ret));
+	LOG(("%s:8741-%d DATA Read %02x\n",space->machine->describe_context(),num,ret));
 
 	/* update chip */
 	taito8741_update(space, num);
@@ -305,7 +305,7 @@ static int I8741_data_r(address_space *space, int num)
 static void I8741_data_w(address_space *space, int num, int data)
 {
 	I8741 *st = &taito8741[num];
-	LOG(("%s:8741-%d DATA Write %02x\n",cpuexec_describe_context(space->machine),num,data));
+	LOG(("%s:8741-%d DATA Write %02x\n",space->machine->describe_context(),num,data));
 	st->fromData = data;
 	st->status |= 0x02;
 	/* update chip */
@@ -316,7 +316,7 @@ static void I8741_data_w(address_space *space, int num, int data)
 static void I8741_command_w(address_space *space, int num, int data)
 {
 	I8741 *st = &taito8741[num];
-	LOG(("%s:8741-%d CMD Write %02x\n",cpuexec_describe_context(space->machine),num,data));
+	LOG(("%s:8741-%d CMD Write %02x\n",space->machine->describe_context(),num,data));
 	st->fromCmd = data;
 	st->status |= 0x04;
 	/* update chip */
@@ -440,7 +440,7 @@ static void josvolly_8741_do(running_machine *machine, int num)
 	if( (i8741[num].sts & 0x02) )
 	{
 		/* transmit data */
-		timer_set (machine, ATTOTIME_IN_USEC(1), NULL, num, josvolly_8741_tx);
+		machine->scheduler().timer_set (attotime::from_usec(1), FUNC(josvolly_8741_tx), num);
 	}
 }
 
@@ -450,7 +450,7 @@ static void josvolly_8741_w(address_space *space, int num, int offset, int data)
 
 	if(offset==1)
 	{
-		LOG(("%s:8741[%d] CW %02X\n", cpuexec_describe_context(space->machine), num, data));
+		LOG(("%s:8741[%d] CW %02X\n", space->machine->describe_context(), num, data));
 
 		/* read pointer */
 		mcu->cmd = data;
@@ -488,7 +488,7 @@ static void josvolly_8741_w(address_space *space, int num, int offset, int data)
 	else
 	{
 		/* data */
-		LOG(("%s:8741[%d] DW %02X\n", cpuexec_describe_context(space->machine), num, data));
+		LOG(("%s:8741[%d] DW %02X\n", space->machine->describe_context(), num, data));
 
 		mcu->txd = data ^ 0x40; /* parity reverce ? */
 		mcu->sts |= 0x02;     /* TXD busy         */
@@ -517,14 +517,14 @@ static INT8 josvolly_8741_r(address_space *space,int num,int offset)
 		if(mcu->rst)
 			mcu->rxd = input_port_read(space->machine, mcu->initReadPort); /* port in */
 		ret = mcu->sts;
-		LOG(("%s:8741[%d]       SR %02X\n",cpuexec_describe_context(space->machine),num,ret));
+		LOG(("%s:8741[%d]       SR %02X\n",space->machine->describe_context(),num,ret));
 	}
 	else
 	{
 		/* clear status port */
 		mcu->sts &= ~0x01; /* RD ready */
 		ret = mcu->rxd;
-		LOG(("%s:8741[%d]       DR %02X\n",cpuexec_describe_context(space->machine),num,ret));
+		LOG(("%s:8741[%d]       DR %02X\n",space->machine->describe_context(),num,ret));
 		mcu->rst = 0;
 	}
 	return ret;

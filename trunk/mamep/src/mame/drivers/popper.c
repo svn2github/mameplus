@@ -311,9 +311,9 @@ static MACHINE_START( popper )
 
 	state->audiocpu = machine->device("audiocpu");
 
-	state_save_register_global(machine, state->flipscreen);
-	state_save_register_global(machine, state->e002);
-	state_save_register_global(machine, state->gfx_bank);
+	state->save_item(NAME(state->flipscreen));
+	state->save_item(NAME(state->e002));
+	state->save_item(NAME(state->gfx_bank));
 }
 
 static MACHINE_RESET( popper )
@@ -336,7 +336,7 @@ static MACHINE_CONFIG_START( popper, popper_state )
 	MCFG_CPU_PROGRAM_MAP(popper_sound_map)
 	MCFG_CPU_VBLANK_INT_HACK(irq0_line_hold,4)		//NMIs caused by the main CPU
 
-	MCFG_QUANTUM_TIME(HZ(1800))
+	MCFG_QUANTUM_TIME(attotime::from_hz(1800))
 
 	MCFG_MACHINE_START(popper)
 	MCFG_MACHINE_RESET(popper)

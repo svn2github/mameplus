@@ -341,7 +341,7 @@ static TIMER_CALLBACK( hblank_callback )
 	if (ppu2c0x->hblank_callback_proc)
 		(*ppu2c0x->hblank_callback_proc) (device, ppu2c0x->scanline, vblank, blanked);
 
-	timer_adjust_oneshot(ppu2c0x->hblank_timer, attotime_never, 0);
+	ppu2c0x->hblank_timer->adjust(attotime::never);
 }
 
 static TIMER_CALLBACK( nmi_callback )
@@ -354,7 +354,7 @@ static TIMER_CALLBACK( nmi_callback )
 	if (ppu2c0x->nmi_callback_proc != NULL)
 		(*ppu2c0x->nmi_callback_proc) (device, ppu_regs);
 
-	timer_adjust_oneshot(ppu2c0x->nmi_timer, attotime_never, 0);
+	ppu2c0x->nmi_timer->adjust(attotime::never);
 }
 
 static void draw_background( device_t *device, UINT8 *line_priority )
@@ -867,7 +867,7 @@ static TIMER_CALLBACK( scanline_callback )
 			// a game can read the high bit of $2002 before the NMI is called (potentially resetting the bit
 			// via a read from $2002 in the NMI handler).
 			// B-Wings is an example game that needs this.
-			timer_adjust_oneshot(ppu2c0x->nmi_timer, device->machine->device<cpu_device>("maincpu")->cycles_to_attotime(4), 0);
+			ppu2c0x->nmi_timer->adjust(device->machine->device<cpu_device>("maincpu")->cycles_to_attotime(4));
 		}
 	}
 
@@ -895,10 +895,10 @@ static TIMER_CALLBACK( scanline_callback )
 		next_scanline = 0;
 
 	// Call us back when the hblank starts for this scanline
-	timer_adjust_oneshot(ppu2c0x->hblank_timer, device->machine->device<cpu_device>("maincpu")->cycles_to_attotime(86.67), 0); // ??? FIXME - hardcoding NTSC, need better calculation
+	ppu2c0x->hblank_timer->adjust(device->machine->device<cpu_device>("maincpu")->cycles_to_attotime(86.67)); // ??? FIXME - hardcoding NTSC, need better calculation
 
 	// trigger again at the start of the next scanline
-	timer_adjust_oneshot(ppu2c0x->scanline_timer, device->machine->primary_screen->time_until_pos(next_scanline * ppu2c0x->scan_scale), 0);
+	ppu2c0x->scanline_timer->adjust(device->machine->primary_screen->time_until_pos(next_scanline * ppu2c0x->scan_scale));
 }
 
 /*************************************
@@ -1301,14 +1301,14 @@ static DEVICE_START( ppu2c0x )
 		ppu2c0x->security_value = 0x1b;
 
 	/* initialize the scanline handling portion */
-	ppu2c0x->scanline_timer = timer_alloc(device->machine, scanline_callback, (void *) device);
-	timer_adjust_oneshot(ppu2c0x->scanline_timer, device->machine->primary_screen->time_until_pos(1), 0);
+	ppu2c0x->scanline_timer = device->machine->scheduler().timer_alloc(FUNC(scanline_callback), (void *) device);
+	ppu2c0x->scanline_timer->adjust(device->machine->primary_screen->time_until_pos(1));
 
-	ppu2c0x->hblank_timer = timer_alloc(device->machine, hblank_callback, (void *) device);
-	timer_adjust_oneshot(ppu2c0x->hblank_timer, device->machine->device<cpu_device>("maincpu")->cycles_to_attotime(86.67), 0); // ??? FIXME - hardcoding NTSC, need better calculation
+	ppu2c0x->hblank_timer = device->machine->scheduler().timer_alloc(FUNC(hblank_callback), (void *) device);
+	ppu2c0x->hblank_timer->adjust(device->machine->device<cpu_device>("maincpu")->cycles_to_attotime(86.67)); // ??? FIXME - hardcoding NTSC, need better calculation
 
-	ppu2c0x->nmi_timer = timer_alloc(device->machine, nmi_callback, (void *) device);
-	timer_adjust_oneshot(ppu2c0x->nmi_timer, attotime_never, 0);
+	ppu2c0x->nmi_timer = device->machine->scheduler().timer_alloc(FUNC(nmi_callback), (void *) device);
+	ppu2c0x->nmi_timer->adjust(attotime::never);
 
 	ppu2c0x->nmi_callback_proc = intf->nmi_handler;
 	ppu2c0x->color_base = intf->color_base;
@@ -1319,27 +1319,27 @@ static DEVICE_START( ppu2c0x )
 	ppu2c0x->colortable = auto_alloc_array(device->machine, pen_t, ARRAY_LENGTH(default_colortable));
 	ppu2c0x->colortable_mono = auto_alloc_array(device->machine, pen_t, ARRAY_LENGTH(default_colortable_mono));
 
-	state_save_register_device_item(device, 0, ppu2c0x->scanline);
-	state_save_register_device_item(device, 0, ppu2c0x->refresh_data);
-	state_save_register_device_item(device, 0, ppu2c0x->refresh_latch);
-	state_save_register_device_item(device, 0, ppu2c0x->x_fine);
-	state_save_register_device_item(device, 0, ppu2c0x->toggle);
-	state_save_register_device_item(device, 0, ppu2c0x->add);
-	state_save_register_device_item(device, 0, ppu2c0x->videomem_addr);
-	state_save_register_device_item(device, 0, ppu2c0x->addr_latch);
-	state_save_register_device_item(device, 0, ppu2c0x->data_latch);
-	state_save_register_device_item(device, 0, ppu2c0x->buffered_data);
-	state_save_register_device_item(device, 0, ppu2c0x->tile_page);
-	state_save_register_device_item(device, 0, ppu2c0x->sprite_page);
-	state_save_register_device_item(device, 0, ppu2c0x->back_color);
-	state_save_register_device_item(device, 0, ppu2c0x->scan_scale);
-	state_save_register_device_item(device, 0, ppu2c0x->scanlines_per_frame);
-	state_save_register_device_item_array(device, 0, ppu2c0x->regs);
-	state_save_register_device_item_array(device, 0, ppu2c0x->palette_ram);
-	state_save_register_device_item_pointer(device, 0, ppu2c0x->spriteram, SPRITERAM_SIZE);
-	state_save_register_device_item_pointer(device, 0, ppu2c0x->colortable, ARRAY_LENGTH(default_colortable));
-	state_save_register_device_item_pointer(device, 0, ppu2c0x->colortable_mono, ARRAY_LENGTH(default_colortable_mono));
-	state_save_register_device_item_bitmap(device, 0, ppu2c0x->bitmap);
+	device->save_item(NAME(ppu2c0x->scanline));
+	device->save_item(NAME(ppu2c0x->refresh_data));
+	device->save_item(NAME(ppu2c0x->refresh_latch));
+	device->save_item(NAME(ppu2c0x->x_fine));
+	device->save_item(NAME(ppu2c0x->toggle));
+	device->save_item(NAME(ppu2c0x->add));
+	device->save_item(NAME(ppu2c0x->videomem_addr));
+	device->save_item(NAME(ppu2c0x->addr_latch));
+	device->save_item(NAME(ppu2c0x->data_latch));
+	device->save_item(NAME(ppu2c0x->buffered_data));
+	device->save_item(NAME(ppu2c0x->tile_page));
+	device->save_item(NAME(ppu2c0x->sprite_page));
+	device->save_item(NAME(ppu2c0x->back_color));
+	device->save_item(NAME(ppu2c0x->scan_scale));
+	device->save_item(NAME(ppu2c0x->scanlines_per_frame));
+	device->save_item(NAME(ppu2c0x->regs));
+	device->save_item(NAME(ppu2c0x->palette_ram));
+	device->save_pointer(NAME(ppu2c0x->spriteram), SPRITERAM_SIZE);
+	device->save_pointer(NAME(ppu2c0x->colortable), ARRAY_LENGTH(default_colortable));
+	device->save_pointer(NAME(ppu2c0x->colortable_mono), ARRAY_LENGTH(default_colortable_mono));
+	device->save_item(NAME(*ppu2c0x->bitmap));
 }
 
 /*************************************

@@ -3936,7 +3936,7 @@ static MACHINE_CONFIG_START( tdragon, driver_device )
 	MCFG_VIDEO_START(macross)
 	MCFG_VIDEO_EOF(nmk)
 	MCFG_VIDEO_UPDATE(tdragon)
-	MCFG_TIMER_ADD_PERIODIC("coinsim", tdragon_mcu_sim, HZ(10000)) // not real, but for simulating the MCU
+	MCFG_TIMER_ADD_PERIODIC("coinsim", tdragon_mcu_sim, attotime::from_hz(10000)) // not real, but for simulating the MCU
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3987,7 +3987,6 @@ static MACHINE_CONFIG_START( ssmissin, driver_device )
 	MCFG_OKIM6295_ADD("oki1", 8000000/8, OKIM6295_PIN7_HIGH) /* 1 Mhz, pin 7 high */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_NMK112_ADD("nmk112", nmk16_nmk112_intf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( strahl, driver_device )
@@ -4056,7 +4055,7 @@ static MACHINE_CONFIG_START( hachamf, driver_device )
 	MCFG_VIDEO_START(macross)
 	MCFG_VIDEO_EOF(nmk)
 	MCFG_VIDEO_UPDATE(hachamf)
-	MCFG_TIMER_ADD_PERIODIC("coinsim", hachamf_mcu_sim, HZ(10000)) // not real, but for simulating the MCU
+	MCFG_TIMER_ADD_PERIODIC("coinsim", hachamf_mcu_sim, attotime::from_hz(10000)) // not real, but for simulating the MCU
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -4731,7 +4730,7 @@ static WRITE8_DEVICE_HANDLER( twinactn_oki_bank_w )
 	downcast<okim6295_device *>(device)->set_bank_base((data & 3) * 0x40000);
 
 	if (data & (~3))
-		logerror("%s: invalid oki bank %02x\n", cpuexec_describe_context(device->machine), data);
+		logerror("%s: invalid oki bank %02x\n", device->machine->describe_context(), data);
 
 //  logerror("%04x: oki bank %02x\n", cpu_get_pc(space->cpu), data);
 }

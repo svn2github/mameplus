@@ -806,24 +806,24 @@ static MACHINE_START( cntsteer )
 	state->audiocpu = machine->device("audiocpu");
 	state->subcpu = machine->device("subcpu");
 
-	state_save_register_global(machine, state->flipscreen);
-	state_save_register_global(machine, state->bg_bank);
-	state_save_register_global(machine, state->scrolly);
-	state_save_register_global(machine, state->scrollx);
-	state_save_register_global(machine, state->scrollx_hi);
-	state_save_register_global(machine, state->scrolly_hi);
-	state_save_register_global(machine, state->rotation_x);
-	state_save_register_global(machine, state->rotation_sign);
+	state->save_item(NAME(state->flipscreen));
+	state->save_item(NAME(state->bg_bank));
+	state->save_item(NAME(state->scrolly));
+	state->save_item(NAME(state->scrollx));
+	state->save_item(NAME(state->scrollx_hi));
+	state->save_item(NAME(state->scrolly_hi));
+	state->save_item(NAME(state->rotation_x));
+	state->save_item(NAME(state->rotation_sign));
 
-	state_save_register_global(machine, state->bg_color_bank);
-	state_save_register_global(machine, state->disable_roz);
+	state->save_item(NAME(state->bg_color_bank));
+	state->save_item(NAME(state->disable_roz));
 }
 
 static MACHINE_START( zerotrgt )
 {
 	cntsteer_state *state = machine->driver_data<cntsteer_state>();
 
-	state_save_register_global(machine, state->nmimask);
+	state->save_item(NAME(state->nmimask));
 	MACHINE_START_CALL(cntsteer);
 }
 
@@ -890,7 +890,7 @@ static MACHINE_CONFIG_START( cntsteer, cntsteer_state )
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_GFXDECODE(cntsteer)
 	MCFG_PALETTE_LENGTH(256)
@@ -927,7 +927,7 @@ static MACHINE_CONFIG_START( zerotrgt, cntsteer_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_PERIODIC_INT(sound_interrupt, 480)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(zerotrgt)
 	MCFG_MACHINE_RESET(zerotrgt)

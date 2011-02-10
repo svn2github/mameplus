@@ -82,7 +82,7 @@ static WRITE8_HANDLER( sound_arm_nmi_w )
 	asterix_state *state = space->machine->driver_data<asterix_state>();
 
 	cpu_set_input_line(state->audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
-	timer_set(space->machine, ATTOTIME_IN_USEC(5), NULL, 0, nmi_callback);
+	space->machine->scheduler().timer_set(attotime::from_usec(5), FUNC(nmi_callback));
 }
 
 static WRITE16_HANDLER( sound_irq_w )
@@ -260,15 +260,15 @@ static MACHINE_START( asterix )
 	state->k053244 = machine->device("k053244");
 	state->k053251 = machine->device("k053251");
 
-	state_save_register_global(machine, state->cur_control2);
-	state_save_register_global_array(machine, state->prot);
+	state->save_item(NAME(state->cur_control2));
+	state->save_item(NAME(state->prot));
 
-	state_save_register_global(machine, state->sprite_colorbase);
-	state_save_register_global(machine, state->spritebank);
-	state_save_register_global_array(machine, state->layerpri);
-	state_save_register_global_array(machine, state->layer_colorbase);
-	state_save_register_global_array(machine, state->tilebanks);
-	state_save_register_global_array(machine, state->spritebanks);
+	state->save_item(NAME(state->sprite_colorbase));
+	state->save_item(NAME(state->spritebank));
+	state->save_item(NAME(state->layerpri));
+	state->save_item(NAME(state->layer_colorbase));
+	state->save_item(NAME(state->tilebanks));
+	state->save_item(NAME(state->spritebanks));
 }
 
 static MACHINE_RESET( asterix )

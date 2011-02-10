@@ -137,7 +137,7 @@ INLINE void ATTR_PRINTF(3,4) verboselog( psx_machine *p_psx, int n_level, const 
 		va_start( v, s_fmt );
 		vsprintf( buf, s_fmt, v );
 		va_end( v );
-		logerror( "%s: %s", cpuexec_describe_context(p_psx->machine), buf );
+		logerror( "%s: %s", p_psx->machine->describe_context(), buf );
 	}
 }
 
@@ -245,7 +245,7 @@ static void dma_start_timer( psx_machine *p_psx, int n_channel, UINT32 n_ticks )
 {
 	psx_dma_channel *dma = &p_psx->channel[ n_channel ];
 
-	timer_adjust_oneshot( dma->timer, attotime_mul(ATTOTIME_IN_HZ(33868800), n_ticks), n_channel);
+	dma->timer->adjust( attotime::from_hz(33868800) * n_ticks, n_channel);
 	dma->n_ticks = n_ticks;
 	dma->b_running = 1;
 }
@@ -254,7 +254,7 @@ static void dma_stop_timer( psx_machine *p_psx, int n_channel )
 {
 	psx_dma_channel *dma = &p_psx->channel[ n_channel ];
 
-	timer_adjust_oneshot( dma->timer, attotime_never, 0);
+	dma->timer->adjust( attotime::never);
 	dma->b_running = 0;
 }
 
@@ -656,7 +656,7 @@ static void root_timer_adjust( psx_machine *p_psx, int n_counter )
 
 	if( ( root->n_mode & PSX_RC_STOP ) != 0 )
 	{
-		timer_adjust_oneshot( root->timer, attotime_never, n_counter);
+		root->timer->adjust( attotime::never, n_counter);
 	}
 	else
 	{
@@ -670,7 +670,7 @@ static void root_timer_adjust( psx_machine *p_psx, int n_counter )
 
 		n_duration *= root_divider( p_psx, n_counter );
 
-		timer_adjust_oneshot( root->timer, attotime_mul(ATTOTIME_IN_HZ(33868800), n_duration), n_counter);
+		root->timer->adjust( attotime::from_hz(33868800) * n_duration, n_counter);
 	}
 }
 
@@ -813,21 +813,21 @@ static void sio_timer_adjust( psx_machine *p_psx, int n_port )
 
 		if( sio->n_baud != 0 && n_prescaler != 0 )
 		{
-			n_time = attotime_mul(ATTOTIME_IN_HZ(33868800), n_prescaler * sio->n_baud);
-			verboselog( p_psx, 2, "sio_timer_adjust( %d ) = %s ( %d x %d )\n", n_port, attotime_string(n_time, 9), n_prescaler, sio->n_baud );
+			n_time = attotime::from_hz(33868800) * (n_prescaler * sio->n_baud);
+			verboselog( p_psx, 2, "sio_timer_adjust( %d ) = %s ( %d x %d )\n", n_port, n_time.as_string(), n_prescaler, sio->n_baud );
 		}
 		else
 		{
-			n_time = attotime_never;
+			n_time = attotime::never;
 			verboselog( p_psx, 0, "sio_timer_adjust( %d ) invalid baud rate ( %d x %d )\n", n_port, n_prescaler, sio->n_baud );
 		}
 	}
 	else
 	{
-		n_time = attotime_never;
+		n_time = attotime::never;
 		verboselog( p_psx, 2, "sio_timer_adjust( %d ) finished\n", n_port );
 	}
-	timer_adjust_oneshot( sio->timer, n_time, n_port);
+	sio->timer->adjust( n_time, n_port);
 }
 
 static TIMER_CALLBACK( sio_clock )
@@ -1661,19 +1661,19 @@ void psx_driver_init( running_machine *machine )
 
 	for( n = 0; n < 7; n++ )
 	{
-		p_psx->channel[ n ].timer = timer_alloc( machine, dma_finished_callback, machine );
+		p_psx->channel[ n ].timer = machine->scheduler().timer_alloc( FUNC(dma_finished_callback), machine );
 		p_psx->channel[ n ].fn_read = NULL;
 		p_psx->channel[ n ].fn_write = NULL;
 	}
 
 	for( n = 0; n < 3; n++ )
 	{
-		p_psx->root[ n ].timer = timer_alloc( machine, root_finished , NULL);
+		p_psx->root[ n ].timer = machine->scheduler().timer_alloc( FUNC(root_finished ));
 	}
 
 	for( n = 0; n < 2; n++ )
 	{
-		p_psx->sio[ n ].timer = timer_alloc( machine, sio_clock , NULL);
+		p_psx->sio[ n ].timer = machine->scheduler().timer_alloc( FUNC(sio_clock ));
 		p_psx->sio[ n ].fn_handler = NULL;
 	}
 
@@ -1749,5 +1749,5 @@ void psx_driver_init( running_machine *machine )
 	state_save_register_global_array( machine, p_psx->mdec.p_n_quantize_uv );
 	state_save_register_global_array( machine, p_psx->mdec.p_n_cos );
 
-	state_save_register_postload( machine, psx_postload, NULL );
+	machine->state().register_postload( psx_postload, NULL );
 }

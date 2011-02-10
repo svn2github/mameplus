@@ -70,23 +70,23 @@ static void init_common( running_machine *machine )
 	tilemap_set_transparent_pen(state->fg_tilemap, 15);
 
 	/* reset the timer */
-	state->crtc_timer = timer_alloc(machine, crtc_interrupt_gen, NULL);
+	state->crtc_timer = machine->scheduler().timer_alloc(FUNC(crtc_interrupt_gen));
 
 	/* state save */
-	state_save_register_global(machine, state->selected_videoram);
-	state_save_register_global_pointer(machine, state->local_videoram[0], 0x1000 * 3);
-	state_save_register_global_pointer(machine, state->local_videoram[1], 0x1000 * 3);
-	state_save_register_global(machine, state->selected_paletteram);
-	state_save_register_global_array(machine, state->scrollx);
-	state_save_register_global_array(machine, state->scrolly);
-	state_save_register_global(machine, state->gfxreg);
-	state_save_register_global(machine, state->flipscreen);
-	state_save_register_global(machine, state->flipscreen_old);
-	state_save_register_global(machine, state->scrollx_ofs);
-	state_save_register_global(machine, state->scrolly_ofs);
-	state_save_register_global(machine, state->crtc_register);
-	state_save_register_global_array(machine, state->crtc_data);
-	state_save_register_global_pointer(machine, state->local_paletteram, 0x800 * 2);
+	state->save_item(NAME(state->selected_videoram));
+	state->save_pointer(NAME(state->local_videoram[0]), 0x1000 * 3);
+	state->save_pointer(NAME(state->local_videoram[1]), 0x1000 * 3);
+	state->save_item(NAME(state->selected_paletteram));
+	state->save_item(NAME(state->scrollx));
+	state->save_item(NAME(state->scrolly));
+	state->save_item(NAME(state->gfxreg));
+	state->save_item(NAME(state->flipscreen));
+	state->save_item(NAME(state->flipscreen_old));
+	state->save_item(NAME(state->scrollx_ofs));
+	state->save_item(NAME(state->scrolly_ofs));
+	state->save_item(NAME(state->crtc_register));
+	state->save_item(NAME(state->crtc_data));
+	state->save_pointer(NAME(state->local_paletteram), 0x800 * 2);
 }
 
 VIDEO_START( fromance )
@@ -266,7 +266,7 @@ static TIMER_CALLBACK( crtc_interrupt_gen )
 	fromance_state *state = machine->driver_data<fromance_state>();
 	cpu_set_input_line(state->subcpu, 0, HOLD_LINE);
 	if (param != 0)
-		timer_adjust_periodic(state->crtc_timer, attotime_div(machine->primary_screen->frame_period(), param), 0, attotime_div(machine->primary_screen->frame_period(), param));
+		state->crtc_timer->adjust(machine->primary_screen->frame_period() / param, 0, machine->primary_screen->frame_period() / param);
 }
 
 
@@ -279,7 +279,7 @@ WRITE8_HANDLER( fromance_crtc_data_w )
 	{
 		/* only register we know about.... */
 		case 0x0b:
-			timer_adjust_oneshot(state->crtc_timer, space->machine->primary_screen->time_until_vblank_start(), (data > 0x80) ? 2 : 1);
+			state->crtc_timer->adjust(space->machine->primary_screen->time_until_vblank_start(), (data > 0x80) ? 2 : 1);
 			break;
 
 		default:

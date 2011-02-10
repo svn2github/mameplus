@@ -51,7 +51,7 @@ void spacefev_start_red_cannon( running_machine *machine )
 	n8080_state *state = machine->driver_data<n8080_state>();
 
 	state->spacefev_red_cannon = 1;
-	timer_adjust_oneshot(state->cannon_timer, ATTOTIME_IN_USEC(550 * 68 * 10), 0);
+	state->cannon_timer->adjust(attotime::from_usec(550 * 68 * 10));
 }
 
 
@@ -60,7 +60,7 @@ static TIMER_CALLBACK( spacefev_stop_red_cannon )
 	n8080_state *state = machine->driver_data<n8080_state>();
 
 	state->spacefev_red_cannon = 0;
-	timer_adjust_oneshot(state->cannon_timer, attotime_never, 0);
+	state->cannon_timer->adjust(attotime::never);
 }
 
 
@@ -93,12 +93,12 @@ VIDEO_START( spacefev )
 {
 	n8080_state *state = machine->driver_data<n8080_state>();
 
-	state->cannon_timer = timer_alloc(machine, spacefev_stop_red_cannon, NULL);
+	state->cannon_timer = machine->scheduler().timer_alloc(FUNC(spacefev_stop_red_cannon));
 
 	flip_screen_set_no_update(machine, 0);
 
-	state_save_register_global(machine, state->spacefev_red_screen);
-	state_save_register_global(machine, state->spacefev_red_cannon);
+	state->save_item(NAME(state->spacefev_red_screen));
+	state->save_item(NAME(state->spacefev_red_cannon));
 }
 
 
@@ -108,8 +108,8 @@ VIDEO_START( sheriff )
 
 	flip_screen_set_no_update(machine, 0);
 
-	state_save_register_global(machine, state->sheriff_color_mode);
-	state_save_register_global(machine, state->sheriff_color_data);
+	state->save_item(NAME(state->sheriff_color_mode));
+	state->save_item(NAME(state->sheriff_color_data));
 }
 
 
@@ -119,10 +119,10 @@ VIDEO_START( helifire )
 	UINT8 data = 0;
 	int i;
 
-	state_save_register_global(machine, state->helifire_mv);
-	state_save_register_global(machine, state->helifire_sc);
-	state_save_register_global(machine, state->helifire_flash);
-	state_save_register_global_array(machine, state->helifire_LSFR);
+	state->save_item(NAME(state->helifire_mv));
+	state->save_item(NAME(state->helifire_sc));
+	state->save_item(NAME(state->helifire_flash));
+	state->save_item(NAME(state->helifire_LSFR));
 
 	for (i = 0; i < 63; i++)
 	{

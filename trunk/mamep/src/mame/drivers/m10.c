@@ -201,9 +201,9 @@ static MACHINE_START( m10 )
 	state->ic8j2 = machine->device("ic8j2");
 	state->samples = machine->device("samples");
 
-	state_save_register_global(machine, state->bottomline);
-	state_save_register_global(machine, state->flip);
-	state_save_register_global(machine, state->last);
+	state->save_item(NAME(state->bottomline));
+	state->save_item(NAME(state->flip));
+	state->save_item(NAME(state->last));
 }
 
 static MACHINE_RESET( m10 )
@@ -256,7 +256,7 @@ static WRITE8_HANDLER( m10_ctrl_w )
 		state->flip = ~data & 0x10;
 
 	if (!(input_port_read(space->machine, "CAB") & 0x02))
-		sound_global_enable(space->machine, ~data & 0x80);
+		space->machine->sound().system_mute(data & 0x80);
 
 	/* sound command in lower 4 bytes */
 	switch (data & 0x07)
@@ -332,7 +332,7 @@ static WRITE8_HANDLER( m11_ctrl_w )
 		state->flip = ~data & 0x10;
 
 	if (!(input_port_read(space->machine, "CAB") & 0x02))
-		sound_global_enable(space->machine, ~data & 0x80);
+		space->machine->sound().system_mute(data & 0x80);
 }
 
 /*
@@ -361,7 +361,7 @@ static WRITE8_HANDLER( m15_ctrl_w )
 	if (input_port_read(space->machine, "CAB") & 0x01)
 		state->flip = ~data & 0x04;
 	if (!(input_port_read(space->machine, "CAB") & 0x02))
-		sound_global_enable(space->machine, ~data & 0x08);
+		space->machine->sound().system_mute(data & 0x08);
 }
 
 
@@ -520,12 +520,12 @@ static TIMER_CALLBACK( interrupt_callback )
 	if (param == 0)
 	{
 		cpu_set_input_line(state->maincpu, 0, ASSERT_LINE);
-		timer_set(machine, machine->primary_screen->time_until_pos(IREMM10_VBSTART + 16), NULL, 1, interrupt_callback);
+		machine->scheduler().timer_set(machine->primary_screen->time_until_pos(IREMM10_VBSTART + 16), FUNC(interrupt_callback), 1);
 	}
 	if (param == 1)
 	{
 		cpu_set_input_line(state->maincpu, 0, ASSERT_LINE);
-		timer_set(machine, machine->primary_screen->time_until_pos(IREMM10_VBSTART + 24), NULL, 2, interrupt_callback);
+		machine->scheduler().timer_set(machine->primary_screen->time_until_pos(IREMM10_VBSTART + 24), FUNC(interrupt_callback), 2);
 	}
 	if (param == -1)
 		cpu_set_input_line(state->maincpu, 0, CLEAR_LINE);
@@ -536,7 +536,7 @@ static TIMER_CALLBACK( interrupt_callback )
 static INTERRUPT_GEN( m11_interrupt )
 {
 	cpu_set_input_line(device, 0, ASSERT_LINE);
-	//timer_set(device->machine, machine->primary_screen->time_until_pos(IREMM10_VBEND), NULL, -1, interrupt_callback);
+	//device->machine->scheduler().timer_set(machine->primary_screen->time_until_pos(IREMM10_VBEND), FUNC(interrupt_callback), -1);
 }
 
 static INTERRUPT_GEN( m10_interrupt )
@@ -548,7 +548,7 @@ static INTERRUPT_GEN( m10_interrupt )
 static INTERRUPT_GEN( m15_interrupt )
 {
 	cpu_set_input_line(device, 0, ASSERT_LINE);
-	timer_set(device->machine, device->machine->primary_screen->time_until_pos(IREMM10_VBSTART + 1, 80), NULL, -1, interrupt_callback);
+	device->machine->scheduler().timer_set(device->machine->primary_screen->time_until_pos(IREMM10_VBSTART + 1, 80), FUNC(interrupt_callback), -1);
 }
 
 /*************************************

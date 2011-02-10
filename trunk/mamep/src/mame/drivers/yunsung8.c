@@ -102,7 +102,7 @@ static WRITE8_DEVICE_HANDLER( yunsung8_sound_bankswitch_w )
 	memory_set_bank(device->machine, "bank2", data & 0x07);
 
 	if (data != (data & (~0x27)))
-		logerror("%s: Bank %02X\n", cpuexec_describe_context(device->machine), data);
+		logerror("%s: Bank %02X\n", device->machine->describe_context(), data);
 }
 
 static WRITE8_HANDLER( yunsung8_adpcm_w )
@@ -471,7 +471,6 @@ static MACHINE_START( yunsung8 )
 	UINT8 *MAIN = machine->region("maincpu")->base();
 	UINT8 *AUDIO = machine->region("audiocpu")->base();
 
-	state->videoram = auto_alloc_array(machine, UINT8, 0x4000);
 	state->videoram_0 = state->videoram + 0x0000;	// Ram is banked
 	state->videoram_1 = state->videoram + 0x2000;
 
@@ -482,11 +481,11 @@ static MACHINE_START( yunsung8 )
 
 	state->audiocpu = machine->device("audiocpu");
 
-	state_save_register_global_pointer(machine, state->videoram, 0x4000);
-	state_save_register_global(machine, state->layers_ctrl);
-	state_save_register_global(machine, state->videobank);
-	state_save_register_global(machine, state->adpcm);
-	state_save_register_global(machine, state->toggle);
+	state->save_item(NAME(state->videoram));
+	state->save_item(NAME(state->layers_ctrl));
+	state->save_item(NAME(state->videobank));
+	state->save_item(NAME(state->adpcm));
+	state->save_item(NAME(state->toggle));
 }
 
 static MACHINE_RESET( yunsung8 )

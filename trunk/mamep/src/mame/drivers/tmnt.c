@@ -301,8 +301,7 @@ static SAMPLES_START( tmnt_decode_sample )
 	int i;
 	UINT8 *source = machine->region("title")->base();
 
-	state->sampledata = auto_alloc_array(machine, INT16, 0x40000);
-	state_save_register_global_pointer(machine, state->sampledata, 0x40000);
+	state->save_item(NAME(state->sampledata));
 
 	/*  Sound sample for TMNT.D05 is stored in the following mode (ym3012 format):
      *
@@ -348,7 +347,7 @@ static WRITE8_HANDLER( sound_arm_nmi_w )
 	tmnt_state *state = space->machine->driver_data<tmnt_state>();
 //  sound_nmi_enabled = 1;
 	cpu_set_input_line(state->audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
-	timer_set(space->machine, ATTOTIME_IN_USEC(50), NULL, 0, nmi_callback);	/* kludge until the K053260 is emulated correctly */
+	space->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(nmi_callback));	/* kludge until the K053260 is emulated correctly */
 }
 
 
@@ -2248,15 +2247,15 @@ static MACHINE_START( common )
 	state->k053936 = machine->device("k053936");
 	state->k054000 = machine->device("k054000");
 
-	state_save_register_global(machine, state->toggle);
-	state_save_register_global(machine, state->last);
-	state_save_register_global(machine, state->tmnt_soundlatch);
-	state_save_register_global(machine, state->cuebrick_snd_irqlatch);
-	state_save_register_global(machine, state->cuebrick_nvram_bank);
-	state_save_register_global(machine, state->sprite_colorbase);
-	state_save_register_global_array(machine, state->layer_colorbase);
-	state_save_register_global_array(machine, state->layerpri);
-	state_save_register_global_array(machine, state->sorted_layer);
+	state->save_item(NAME(state->toggle));
+	state->save_item(NAME(state->last));
+	state->save_item(NAME(state->tmnt_soundlatch));
+	state->save_item(NAME(state->cuebrick_snd_irqlatch));
+	state->save_item(NAME(state->cuebrick_nvram_bank));
+	state->save_item(NAME(state->sprite_colorbase));
+	state->save_item(NAME(state->layer_colorbase));
+	state->save_item(NAME(state->layerpri));
+	state->save_item(NAME(state->sorted_layer));
 }
 
 static MACHINE_RESET( common )

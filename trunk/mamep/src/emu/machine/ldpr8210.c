@@ -55,12 +55,12 @@
 
 /* serial timing, mostly from the service manual, derived from the XTAL */
 #define SERIAL_CLOCK					XTAL_455kHz
-#define SERIAL_0_BIT_TIME				ATTOTIME_IN_HZ((double)SERIAL_CLOCK / 512)
-#define SERIAL_1_BIT_TIME				ATTOTIME_IN_HZ((double)SERIAL_CLOCK / 1024)
-#define SERIAL_MIDPOINT_TIME			ATTOTIME_IN_HZ((double)SERIAL_CLOCK / 600)
-#define SERIAL_MAX_BIT_TIME				ATTOTIME_IN_HZ((double)SERIAL_CLOCK / 4096)
-#define SERIAL_MAX_WORD_TIME			ATTOTIME_IN_HZ((double)SERIAL_CLOCK / 11520)
-#define SERIAL_REJECT_DUPLICATE_TIME	ATTOTIME_IN_HZ((double)SERIAL_CLOCK / 11520 / 4)
+#define SERIAL_0_BIT_TIME				attotime::from_hz((double)SERIAL_CLOCK / 512)
+#define SERIAL_1_BIT_TIME				attotime::from_hz((double)SERIAL_CLOCK / 1024)
+#define SERIAL_MIDPOINT_TIME			attotime::from_hz((double)SERIAL_CLOCK / 600)
+#define SERIAL_MAX_BIT_TIME				attotime::from_hz((double)SERIAL_CLOCK / 4096)
+#define SERIAL_MAX_WORD_TIME			attotime::from_hz((double)SERIAL_CLOCK / 11520)
+#define SERIAL_REJECT_DUPLICATE_TIME	attotime::from_hz((double)SERIAL_CLOCK / 11520 / 4)
 
 
 
@@ -340,7 +340,7 @@ const ldplayer_interface pr8210_interface =
 static void pr8210_init(laserdisc_state *ld)
 {
 	astring tempstring;
-	attotime curtime = timer_get_time(ld->device->machine);
+	attotime curtime = ld->device->machine->time();
 	ldplayer_data *player = ld->player;
 
 	/* reset our state */
@@ -380,10 +380,10 @@ static void pr8210_vsync(laserdisc_state *ld, const vbi_metadata *vbi, int field
 
 	/* signal VSYNC and set a timer to turn it off */
 	player->vsync = TRUE;
-	timer_set(ld->device->machine, attotime_mul(ld->screen->scan_period(), 4), ld, 0, vsync_off);
+	ld->device->machine->scheduler().timer_set(ld->screen->scan_period() * 4, FUNC(vsync_off), 0, ld);
 
 	/* also set a timer to fetch the VBI data when it is ready */
-	timer_set(ld->device->machine, ld->screen->time_until_pos(19*2), ld, 0, vbi_data_fetch);
+	ld->device->machine->scheduler().timer_set(ld->screen->time_until_pos(19*2), FUNC(vbi_data_fetch), 0, ld);
 }
 
 
@@ -451,18 +451,18 @@ static void pr8210_control_w(laserdisc_state *ld, UINT8 prev, UINT8 data)
 	/* handle rising edge */
 	if (prev != ASSERT_LINE && data == ASSERT_LINE)
 	{
-		attotime curtime = timer_get_time(ld->device->machine);
+		attotime curtime = ld->device->machine->time();
 		attotime delta, overalldelta;
 		int longpulse;
 
 		/* get the time difference from the last assert */
 		/* and update our internal command time */
-		delta = attotime_sub(curtime, player->lastbittime);
+		delta = curtime - player->lastbittime;
 		player->lastbittime = curtime;
 
 		/* if we timed out since the first bit, reset the accumulator */
-		overalldelta = attotime_sub(curtime, player->firstbittime);
-		if (attotime_compare(overalldelta, SERIAL_MAX_WORD_TIME) > 0 || attotime_compare(delta, SERIAL_MAX_BIT_TIME) > 0)
+		overalldelta = curtime - player->firstbittime;
+		if (overalldelta > SERIAL_MAX_WORD_TIME || delta > SERIAL_MAX_BIT_TIME)
 		{
 			player->firstbittime = curtime;
 			player->accumulator = 0x5555;
@@ -471,7 +471,7 @@ static void pr8210_control_w(laserdisc_state *ld, UINT8 prev, UINT8 data)
 		}
 
 		/* 0 bit delta is 1.05 msec, 1 bit delta is 2.11 msec */
-		longpulse = (attotime_compare(delta, SERIAL_MIDPOINT_TIME) < 0) ? 0 : 1;
+		longpulse = (delta < SERIAL_MIDPOINT_TIME) ? 0 : 1;
 		player->accumulator = (player->accumulator << 1) | longpulse;
 
 		/* log the deltas for debugging */
@@ -494,9 +494,9 @@ static void pr8210_control_w(laserdisc_state *ld, UINT8 prev, UINT8 data)
 			/* the MCU logic requires a 0 to execute many commands; however, nobody
                consistently sends a 0, whereas they do tend to send duplicate commands...
                if we assume that each duplicate causes a 0, we get the correct results */
-			rejectuntil = attotime_add(player->lastcommandtime, SERIAL_REJECT_DUPLICATE_TIME);
+			rejectuntil = player->lastcommandtime + SERIAL_REJECT_DUPLICATE_TIME;
 			player->lastcommandtime = curtime;
-			if (player->pia.porta == player->lastcommand && attotime_compare(curtime, rejectuntil) < 0)
+			if (player->pia.porta == player->lastcommand && curtime < rejectuntil)
 				player->pia.porta = 0x00;
 			else
 				player->lastcommand = player->pia.porta;
@@ -506,7 +506,7 @@ static void pr8210_control_w(laserdisc_state *ld, UINT8 prev, UINT8 data)
 				printf("--- Command = %02X\n", player->pia.porta >> 3);
 
 			/* reset the first bit time so that the accumulator clears on the next write */
-			player->firstbittime = attotime_sub(curtime, SERIAL_MAX_WORD_TIME);
+			player->firstbittime = curtime - SERIAL_MAX_WORD_TIME;
 		}
 	}
 }
@@ -746,7 +746,6 @@ static READ8_HANDLER( pr8210_bus_r )
 		result |= 0x02;
 
 	/* bus bit 0: SLOW TIMER OUT */
-//  if (attotime_compare(attotime_sub(timer_get_time(ld->device->machine), player->slowtrg),
 
 	/* loop at beginning waits for $40=0, $02=1 */
 	return result;
@@ -841,7 +840,7 @@ static WRITE8_HANDLER( pr8210_port2_w )
 
 	/* on the falling edge of bit 5, start the slow timer */
 	if (!(data & 0x20) && (prev & 0x20))
-		player->slowtrg = timer_get_time(space->machine);
+		player->slowtrg = space->machine->time();
 
 	/* bit 6 when low triggers an IRQ on the MCU */
 	if (player->cpu != NULL)
@@ -1120,7 +1119,7 @@ static void simutrek_vsync(laserdisc_state *ld, const vbi_metadata *vbi, int fie
 		if (LOG_SIMUTREK)
 			printf("%3d:VSYNC IRQ\n", ld->screen->vpos());
 		cpu_set_input_line(player->simutrek.cpu, MCS48_INPUT_IRQ, ASSERT_LINE);
-		timer_set(ld->device->machine, ld->screen->scan_period(), ld, 0, irq_off);
+		ld->device->machine->scheduler().timer_set(ld->screen->scan_period(), FUNC(irq_off), 0, ld);
 	}
 }
 
@@ -1165,7 +1164,7 @@ static UINT8 simutrek_status_r(laserdisc_state *ld)
 
 static void simutrek_data_w(laserdisc_state *ld, UINT8 prev, UINT8 data)
 {
-	timer_call_after_resynch(ld->device->machine, ld, data, simutrek_latched_data_w);
+	ld->device->machine->scheduler().synchronize(FUNC(simutrek_latched_data_w), data, ld);
 	if (LOG_SIMUTREK)
 		printf("%03d:**** Simutrek Command = %02X\n", ld->screen->vpos(), data);
 }

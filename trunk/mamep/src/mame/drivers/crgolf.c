@@ -60,11 +60,11 @@ static MACHINE_START( crgolf )
 	memory_set_bank(machine, "bank1", 0);
 
 	/* register for save states */
-	state_save_register_global(machine, state->port_select);
-	state_save_register_global(machine, state->main_to_sound_data);
-	state_save_register_global(machine, state->sound_to_main_data);
-	state_save_register_global(machine, state->sample_offset);
-	state_save_register_global(machine, state->sample_count);
+	state->save_item(NAME(state->port_select));
+	state->save_item(NAME(state->main_to_sound_data));
+	state->save_item(NAME(state->sound_to_main_data));
+	state->save_item(NAME(state->sample_offset));
+	state->save_item(NAME(state->sample_count));
 }
 
 
@@ -139,7 +139,7 @@ static TIMER_CALLBACK( main_to_sound_callback )
 
 static WRITE8_HANDLER( main_to_sound_w )
 {
-	timer_call_after_resynch(space->machine, NULL, data, main_to_sound_callback);
+	space->machine->scheduler().synchronize(FUNC(main_to_sound_callback), data);
 }
 
 
@@ -170,7 +170,7 @@ static TIMER_CALLBACK( sound_to_main_callback )
 
 static WRITE8_HANDLER( sound_to_main_w )
 {
-	timer_call_after_resynch(space->machine, NULL, data, sound_to_main_callback);
+	space->machine->scheduler().synchronize(FUNC(sound_to_main_callback), data);
 }
 
 
@@ -395,7 +395,7 @@ static MACHINE_CONFIG_START( crgolf, crgolf_state )
 
 	MCFG_MACHINE_START(crgolf)
 	MCFG_MACHINE_RESET(crgolf)
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
 	MCFG_FRAGMENT_ADD(crgolf_video)

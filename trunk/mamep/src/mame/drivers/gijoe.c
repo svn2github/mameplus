@@ -43,7 +43,7 @@ Known Issues
 #include "includes/gijoe.h"
 
 #define JOE_DEBUG 0
-#define JOE_DMADELAY attotime_add(ATTOTIME_IN_NSEC(42700), ATTOTIME_IN_NSEC(341300))
+#define JOE_DMADELAY (attotime::from_nsec(42700 + 341300))
 
 
 static const eeprom_interface eeprom_intf =
@@ -131,7 +131,7 @@ static INTERRUPT_GEN( gijoe_interrupt )
 		gijoe_objdma(device->machine);
 
 		// 42.7us(clr) + 341.3us(xfer) delay at 6Mhz dotclock
-		timer_adjust_oneshot(state->dmadelay_timer, JOE_DMADELAY, 0);
+		state->dmadelay_timer->adjust(JOE_DMADELAY);
 	}
 
 	// trigger V-blank interrupt
@@ -285,9 +285,9 @@ static MACHINE_START( gijoe )
 	state->k053246 = machine->device("k053246");
 	state->k053251 = machine->device("k053251");
 
-	state->dmadelay_timer = timer_alloc(machine, dmaend_callback, NULL);
+	state->dmadelay_timer = machine->scheduler().timer_alloc(FUNC(dmaend_callback));
 
-	state_save_register_global(machine, state->cur_control2);
+	state->save_item(NAME(state->cur_control2));
 }
 
 static MACHINE_RESET( gijoe )

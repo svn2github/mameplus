@@ -431,20 +431,20 @@ static MACHINE_START( mexico86 )
 	state->subcpu = machine->device("sub");
 	state->mcu = machine->device("mcu");
 
-	state_save_register_global(machine, state->port_a_in);
-	state_save_register_global(machine, state->port_a_out);
-	state_save_register_global(machine, state->ddr_a);
-	state_save_register_global(machine, state->port_b_in);
-	state_save_register_global(machine, state->port_b_out);
-	state_save_register_global(machine, state->ddr_b);
-	state_save_register_global(machine, state->address);
-	state_save_register_global(machine, state->latch);
+	state->save_item(NAME(state->port_a_in));
+	state->save_item(NAME(state->port_a_out));
+	state->save_item(NAME(state->ddr_a));
+	state->save_item(NAME(state->port_b_in));
+	state->save_item(NAME(state->port_b_out));
+	state->save_item(NAME(state->ddr_b));
+	state->save_item(NAME(state->address));
+	state->save_item(NAME(state->latch));
 
-	state_save_register_global(machine, state->mcu_running);
-	state_save_register_global(machine, state->mcu_initialised);
-	state_save_register_global(machine, state->coin_last);
+	state->save_item(NAME(state->mcu_running));
+	state->save_item(NAME(state->mcu_initialised));
+	state->save_item(NAME(state->coin_last));
 
-	state_save_register_global(machine, state->charbank);
+	state->save_item(NAME(state->charbank));
 }
 
 static MACHINE_RESET( mexico86 )
@@ -489,7 +489,7 @@ static MACHINE_CONFIG_START( mexico86, mexico86_state )
 	MCFG_CPU_PROGRAM_MAP(mexico86_sub_cpu_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_QUANTUM_TIME(HZ(6000))    /* 100 CPU slices per frame - an high value to ensure proper synchronization of the CPUs */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))    /* 100 CPU slices per frame - an high value to ensure proper synchronization of the CPUs */
 
 	MCFG_MACHINE_START(mexico86)
 	MCFG_MACHINE_RESET(mexico86)

@@ -175,7 +175,7 @@ static MACHINE_START( zerozone )
 
 	state->audiocpu = machine->device("audiocpu");
 
-	state_save_register_global(machine, state->tilebank);
+	state->save_item(NAME(state->tilebank));
 }
 
 static MACHINE_RESET( zerozone )
@@ -194,7 +194,7 @@ static MACHINE_CONFIG_START( zerozone, zerozone_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 1000000)	/* 1 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(zerozone)
 	MCFG_MACHINE_RESET(zerozone)

@@ -102,15 +102,15 @@ video_manager::video_manager(running_machine &machine)
 	: m_machine(machine),
 	  m_screenless_frame_timer(NULL),
 	  m_throttle_last_ticks(0),
-	  m_throttle_realtime(attotime_zero),
-	  m_throttle_emutime(attotime_zero),
+	  m_throttle_realtime(attotime::zero),
+	  m_throttle_emutime(attotime::zero),
 	  m_throttle_history(0),
 	  m_speed_last_realtime(0),
-	  m_speed_last_emutime(attotime_zero),
+	  m_speed_last_emutime(attotime::zero),
 	  m_speed_percent(1.0),
 	  m_overall_real_seconds(0),
 	  m_overall_real_ticks(0),
-	  m_overall_emutime(attotime_zero),
+	  m_overall_emutime(attotime::zero),
 	  m_overall_valid_counter(0),
 	  m_throttle(options_get_bool(machine.options(), OPTION_THROTTLE)),
 	  m_fastforward(false),
@@ -130,13 +130,13 @@ video_manager::video_manager(running_machine &machine)
 	  m_snap_height(0),
 	  m_mngfile(NULL),
 	  m_avifile(NULL),
-	  m_movie_frame_period(attotime_zero),
-	  m_movie_next_frame_time(attotime_zero),
+	  m_movie_frame_period(attotime::zero),
+	  m_movie_next_frame_time(attotime::zero),
 	  m_movie_frame(0)
 {
 	// request a callback upon exiting
 	machine.add_notifier(MACHINE_NOTIFY_EXIT, exit_static);
-	state_save_register_postload(&machine, state_postload_stub<video_manager, &video_manager::postload>, this);
+	machine.state().register_postload(state_postload_stub<video_manager, &video_manager::postload>, this);
 
 	// extract initial execution state from global configuration settings
 	update_refresh_speed();
@@ -180,8 +180,8 @@ video_manager::video_manager(running_machine &machine)
 	// if no screens, create a periodic timer to drive updates
 	if (machine.primary_screen == NULL)
 	{
-		m_screenless_frame_timer = timer_alloc(&machine, &screenless_update_callback, this);
-		timer_adjust_periodic(m_screenless_frame_timer, screen_device::DEFAULT_FRAME_PERIOD, 0, screen_device::DEFAULT_FRAME_PERIOD);
+		m_screenless_frame_timer = machine.scheduler().timer_alloc(FUNC(&screenless_update_callback), this);
+		m_screenless_frame_timer->adjust(screen_device::DEFAULT_FRAME_PERIOD, 0, screen_device::DEFAULT_FRAME_PERIOD);
 	}
 }
 
@@ -240,7 +240,7 @@ void video_manager::frame_update(bool debug)
 	debugint_update_during_game(&m_machine);
 
 	// if we're throttling, synchronize before rendering
-	attotime current_time = timer_get_time(&m_machine);
+	attotime current_time = m_machine.time();
 	if (!debug && !skipped_it && effective_throttle())
 		update_throttle(current_time);
 
@@ -407,7 +407,7 @@ void video_manager::begin_recording(const char *name, movie_format format)
 
 	// reset the state
 	m_movie_frame = 0;
-	m_movie_next_frame_time = timer_get_time(&m_machine);
+	m_movie_next_frame_time = m_machine.time();
 
 	// start up an AVI recording
 	if (format == MF_AVI)
@@ -439,7 +439,7 @@ void video_manager::begin_recording(const char *name, movie_format format)
 			filerr = mame_fopen_next(SEARCHPATH_MOVIE, "avi", tempfile);
 
 		// compute the frame time
-		m_movie_frame_period = attotime_div(ATTOTIME_IN_SEC(1000), info.video_timescale);
+		m_movie_frame_period = attotime::from_seconds(1000) / info.video_timescale;
 
 		// if we succeeded, make a copy of the name and create the real file over top
 		if (filerr == FILERR_NONE)
@@ -471,7 +471,7 @@ void video_manager::begin_recording(const char *name, movie_format format)
 			return end_recording();
 
 		// compute the frame time
-		m_movie_frame_period = ATTOTIME_IN_HZ(rate);
+		m_movie_frame_period = attotime::from_hz(rate);
 	}
 }
 
@@ -560,8 +560,8 @@ void video_manager::exit()
 	{
 		osd_ticks_t tps = osd_ticks_per_second();
 		double final_real_time = (double)m_overall_real_seconds + (double)m_overall_real_ticks / (double)tps;
-		double final_emu_time = attotime_to_double(m_overall_emutime);
-		mame_printf_info(_("Average speed: %.2f%% (%d seconds)\n"), 100 * final_emu_time / final_real_time, attotime_add_attoseconds(m_overall_emutime, ATTOSECONDS_PER_SECOND / 2).seconds);
+		double final_emu_time = m_overall_emutime.as_double();
+		mame_printf_info(_("Average speed: %.2f%% (%d seconds)\n"), 100 * final_emu_time / final_real_time, (m_overall_emutime + attotime(0, ATTOSECONDS_PER_SECOND / 2)).seconds);
 	}
 }
 
@@ -585,7 +585,7 @@ TIMER_CALLBACK( video_manager::screenless_update_callback )
 
 void video_manager::postload()
 {
-	m_movie_next_frame_time = timer_get_time(&m_machine);
+	m_movie_next_frame_time = m_machine.time();
 }
 
 
@@ -750,7 +750,7 @@ void video_manager::update_throttle(attotime emutime)
 		if (m_speed != 0 && m_speed != 100)
 		{
 			// multiply emutime by 100, then divide by the global speed factor
-			emutime = attotime_div(attotime_mul(emutime, 100), m_speed);
+			emutime = (emutime * 100) / m_speed;
 		}
 
 		// compute conversion factors up front
@@ -764,7 +764,7 @@ void video_manager::update_throttle(attotime emutime)
 	    // ago, and was in sync in both real and emulated time
 		if (m_machine.paused())
 		{
-			m_throttle_emutime = attotime_sub_attoseconds(emutime, ATTOSECONDS_PER_SECOND / PAUSED_REFRESH_RATE);
+			m_throttle_emutime = emutime - attotime(0, ATTOSECONDS_PER_SECOND / PAUSED_REFRESH_RATE);
 			m_throttle_realtime = m_throttle_emutime;
 		}
 
@@ -772,11 +772,11 @@ void video_manager::update_throttle(attotime emutime)
 	    // reported value from our current value; this should be a small value somewhere
 	    // between 0 and 1/10th of a second ... anything outside of this range is obviously
 	    // wrong and requires a resync
-		attoseconds_t emu_delta_attoseconds = attotime_to_attoseconds(attotime_sub(emutime, m_throttle_emutime));
+		attoseconds_t emu_delta_attoseconds = (emutime - m_throttle_emutime).as_attoseconds();
 		if (emu_delta_attoseconds < 0 || emu_delta_attoseconds > ATTOSECONDS_PER_SECOND / 10)
 		{
 			if (LOG_THROTTLE)
-				logerror("Resync due to weird emutime delta: %s\n", attotime_string(attotime_make(0, emu_delta_attoseconds), 18));
+				logerror("Resync due to weird emutime delta: %s\n", attotime(0, emu_delta_attoseconds).as_string(18));
 			break;
 		}
 
@@ -800,7 +800,7 @@ void video_manager::update_throttle(attotime emutime)
 
 		// now update our real and emulated timers with the current values
 		m_throttle_emutime = emutime;
-		m_throttle_realtime = attotime_add_attoseconds(m_throttle_realtime, real_delta_attoseconds);
+		m_throttle_realtime += attotime(0, real_delta_attoseconds);
 
 		// keep a history of whether or not emulated time beat real time over the last few
 	    // updates; this can be used for future heuristics
@@ -809,7 +809,7 @@ void video_manager::update_throttle(attotime emutime)
 		// determine how far ahead real time is versus emulated time; note that we use the
 	    // accumulated times for this instead of the deltas for the current update because
 	    // we want to track time over a longer duration than a single update
-		attoseconds_t real_is_ahead_attoseconds = attotime_to_attoseconds(attotime_sub(m_throttle_emutime, m_throttle_realtime));
+		attoseconds_t real_is_ahead_attoseconds = (m_throttle_emutime - m_throttle_realtime).as_attoseconds();
 
 		// if we're more than 1/10th of a second out, or if we are behind at all and emulation
 	    // is taking longer than the real frame, we just need to resync
@@ -817,7 +817,7 @@ void video_manager::update_throttle(attotime emutime)
 			(real_is_ahead_attoseconds < 0 && popcount[m_throttle_history & 0xff] < 6))
 		{
 			if (LOG_THROTTLE)
-				logerror("Resync due to being behind: %s (history=%08X)\n", attotime_string(attotime_make(0, -real_is_ahead_attoseconds), 18), m_throttle_history);
+				logerror("Resync due to being behind: %s (history=%08X)\n", attotime(0, -real_is_ahead_attoseconds).as_string(18), m_throttle_history);
 			break;
 		}
 
@@ -831,7 +831,7 @@ void video_manager::update_throttle(attotime emutime)
 		// throttle until we read the target, and update real time to match the final time
 		diff_ticks = throttle_until_ticks(target_ticks) - m_throttle_last_ticks;
 		m_throttle_last_ticks += diff_ticks;
-		m_throttle_realtime = attotime_add_attoseconds(m_throttle_realtime, diff_ticks * attoseconds_per_tick);
+		m_throttle_realtime += attotime(0, diff_ticks * attoseconds_per_tick);
 		return;
 	}
 
@@ -1006,14 +1006,14 @@ void video_manager::recompute_speed(attotime emutime)
 	}
 
 	// if it has been more than the update interval, update the time
-	attoseconds_t delta_emutime = attotime_to_attoseconds(attotime_sub(emutime, m_speed_last_emutime));
-	if (delta_emutime > SUBSECONDS_PER_SPEED_UPDATE)
+	attotime delta_emutime = emutime - m_speed_last_emutime;
+	if (delta_emutime > attotime(0, ATTOSECONDS_PER_SPEED_UPDATE))
 	{
 		// convert from ticks to attoseconds
 		osd_ticks_t realtime = osd_ticks();
 		osd_ticks_t delta_realtime = realtime - m_speed_last_realtime;
 		osd_ticks_t tps = osd_ticks_per_second();
-		m_speed_percent = (double)delta_emutime * (double)tps / ((double)delta_realtime * (double)ATTOSECONDS_PER_SECOND);
+		m_speed_percent = delta_emutime.as_double() * (double)tps / (double)delta_realtime;
 
 		// remember the last times
 		m_speed_last_realtime = realtime;
@@ -1034,7 +1034,7 @@ void video_manager::recompute_speed(attotime emutime)
 				m_overall_real_ticks -= tps;
 				m_overall_real_seconds++;
 			}
-			m_overall_emutime = attotime_add_attoseconds(m_overall_emutime, delta_emutime);
+			m_overall_emutime += delta_emutime;
 		}
 	}
 
@@ -1072,7 +1072,7 @@ void video_manager::create_snapshot_bitmap(device_t *screen)
 	// select the appropriate view in our dummy target
 	if (m_snap_native && screen != NULL)
 	{
-		int view_index = m_machine.m_devicelist.index(SCREEN, screen->tag());
+		int view_index = m_machine.m_devicelist.indexof(SCREEN, screen->tag());
 		assert(view_index != -1);
 		m_snap_target->set_view(view_index);
 	}
@@ -1238,13 +1238,13 @@ void video_manager::record_frame()
 
 	// start the profiler and get the current time
 	g_profiler.start(PROFILER_MOVIE_REC);
-	attotime curtime = timer_get_time(&m_machine);
+	attotime curtime = m_machine.time();
 
 	// create the bitmap
 	create_snapshot_bitmap(NULL);
 
 	// loop until we hit the right time
-	while (attotime_compare(m_movie_next_frame_time, curtime) <= 0)
+	while (m_movie_next_frame_time <= curtime)
 	{
 		// handle an AVI recording
 		if (m_avifile != NULL)
@@ -1283,7 +1283,7 @@ void video_manager::record_frame()
 		}
 
 		// advance time
-		m_movie_next_frame_time = attotime_add(m_movie_next_frame_time, m_movie_frame_period);
+		m_movie_next_frame_time += m_movie_frame_period;
 		m_movie_frame++;
 	}
 	g_profiler.stop();

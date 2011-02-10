@@ -149,32 +149,32 @@ static CPU_INIT( mb88 )
 	cpustate->data = device->space(AS_DATA);
 	cpustate->io = device->space(AS_IO);
 
-	cpustate->serial = timer_alloc(device->machine, serial_timer, (void *)device);
+	cpustate->serial = device->machine->scheduler().timer_alloc(FUNC(serial_timer), (void *)device);
 
-	state_save_register_device_item(device, 0, cpustate->PC);
-	state_save_register_device_item(device, 0, cpustate->PA);
-	state_save_register_device_item(device, 0, cpustate->SP[0]);
-	state_save_register_device_item(device, 0, cpustate->SP[1]);
-	state_save_register_device_item(device, 0, cpustate->SP[2]);
-	state_save_register_device_item(device, 0, cpustate->SP[3]);
-	state_save_register_device_item(device, 0, cpustate->SI);
-	state_save_register_device_item(device, 0, cpustate->A);
-	state_save_register_device_item(device, 0, cpustate->X);
-	state_save_register_device_item(device, 0, cpustate->Y);
-	state_save_register_device_item(device, 0, cpustate->st);
-	state_save_register_device_item(device, 0, cpustate->zf);
-	state_save_register_device_item(device, 0, cpustate->cf);
-	state_save_register_device_item(device, 0, cpustate->vf);
-	state_save_register_device_item(device, 0, cpustate->sf);
-	state_save_register_device_item(device, 0, cpustate->nf);
-	state_save_register_device_item(device, 0, cpustate->pio);
-	state_save_register_device_item(device, 0, cpustate->TH);
-	state_save_register_device_item(device, 0, cpustate->TL);
-	state_save_register_device_item(device, 0, cpustate->TP);
-	state_save_register_device_item(device, 0, cpustate->ctr);
-	state_save_register_device_item(device, 0, cpustate->SB);
-	state_save_register_device_item(device, 0, cpustate->SBcount);
-	state_save_register_device_item(device, 0, cpustate->pending_interrupt);
+	device->save_item(NAME(cpustate->PC));
+	device->save_item(NAME(cpustate->PA));
+	device->save_item(NAME(cpustate->SP[0]));
+	device->save_item(NAME(cpustate->SP[1]));
+	device->save_item(NAME(cpustate->SP[2]));
+	device->save_item(NAME(cpustate->SP[3]));
+	device->save_item(NAME(cpustate->SI));
+	device->save_item(NAME(cpustate->A));
+	device->save_item(NAME(cpustate->X));
+	device->save_item(NAME(cpustate->Y));
+	device->save_item(NAME(cpustate->st));
+	device->save_item(NAME(cpustate->zf));
+	device->save_item(NAME(cpustate->cf));
+	device->save_item(NAME(cpustate->vf));
+	device->save_item(NAME(cpustate->sf));
+	device->save_item(NAME(cpustate->nf));
+	device->save_item(NAME(cpustate->pio));
+	device->save_item(NAME(cpustate->TH));
+	device->save_item(NAME(cpustate->TL));
+	device->save_item(NAME(cpustate->TP));
+	device->save_item(NAME(cpustate->ctr));
+	device->save_item(NAME(cpustate->SB));
+	device->save_item(NAME(cpustate->SBcount));
+	device->save_item(NAME(cpustate->pending_interrupt));
 }
 
 static CPU_RESET( mb88 )
@@ -217,7 +217,7 @@ static TIMER_CALLBACK( serial_timer )
 	/* if we get too many interrupts with no servicing, disable the timer
        until somebody does something */
 	if (cpustate->SBcount >= SERIAL_DISABLE_THRESH)
-		timer_adjust_oneshot(cpustate->serial, attotime_never, 0);
+		cpustate->serial->adjust(attotime::never);
 
 	/* only read if not full; this is needed by the Namco 52xx to ensure that
        the program can write to S and recover the value even if serial is enabled */
@@ -261,9 +261,9 @@ static void update_pio_enable( mb88_state *cpustate, UINT8 newpio )
 	if ((cpustate->pio ^ newpio) & 0x30)
 	{
 		if ((newpio & 0x30) == 0)
-			timer_adjust_oneshot(cpustate->serial, attotime_never, 0);
+			cpustate->serial->adjust(attotime::never);
 		else if ((newpio & 0x30) == 0x20)
-			timer_adjust_periodic(cpustate->serial, ATTOTIME_IN_HZ(cpustate->device->clock() / SERIAL_PRESCALE), 0, ATTOTIME_IN_HZ(cpustate->device->clock() / SERIAL_PRESCALE));
+			cpustate->serial->adjust(attotime::from_hz(cpustate->device->clock() / SERIAL_PRESCALE), 0, attotime::from_hz(cpustate->device->clock() / SERIAL_PRESCALE));
 		else
 			fatalerror("mb88xx: update_pio_enable set serial enable to unsupported value %02X\n", newpio & 0x30);
 	}
@@ -625,7 +625,7 @@ static CPU_EXECUTE( mb88 )
 				{
 					/* re-enable the timer if we disabled it previously */
 					if (cpustate->SBcount >= SERIAL_DISABLE_THRESH)
-						timer_adjust_periodic(cpustate->serial, ATTOTIME_IN_HZ(cpustate->device->clock() / SERIAL_PRESCALE), 0, ATTOTIME_IN_HZ(cpustate->device->clock() / SERIAL_PRESCALE));
+						cpustate->serial->adjust(attotime::from_hz(cpustate->device->clock() / SERIAL_PRESCALE), 0, attotime::from_hz(cpustate->device->clock() / SERIAL_PRESCALE));
 					cpustate->SBcount = 0;
 				}
 				cpustate->sf = 0;

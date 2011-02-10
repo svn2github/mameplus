@@ -583,7 +583,7 @@ static TIMER_CALLBACK( taitof2_interrupt6 )
 
 static INTERRUPT_GEN( taitof2_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(500), NULL, 0, taitof2_interrupt6);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(500), FUNC(taitof2_interrupt6));
 	cpu_set_input_line(device, 5, HOLD_LINE);
 }
 
@@ -5702,7 +5702,7 @@ static DRIVER_INIT( cameltry )
 	state->last[0] = 0;
 	state->last[1] = 0;
 
-	state_save_register_global_array(machine, state->last);
+	state->save_item(NAME(state->last));
 }
 
 
@@ -5725,7 +5725,7 @@ static DRIVER_INIT( mjnquest )
 
 	state->mjnquest_input = 0;
 
-	state_save_register_global(machine, state->mjnquest_input);
+	state->save_item(NAME(state->mjnquest_input));
 }
 
 static STATE_POSTLOAD( driveout_postload )
@@ -5741,10 +5741,10 @@ static DRIVER_INIT( driveout )
 	state->oki_bank = 0;
 	state->nibble = 0;
 
-	state_save_register_global(machine, state->driveout_sound_latch);
-	state_save_register_global(machine, state->oki_bank);
-	state_save_register_global(machine, state->nibble);
-	state_save_register_postload(machine, driveout_postload, NULL);
+	state->save_item(NAME(state->driveout_sound_latch));
+	state->save_item(NAME(state->oki_bank));
+	state->save_item(NAME(state->nibble));
+	machine->state().register_postload(driveout_postload, NULL);
 }
 
 

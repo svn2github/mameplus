@@ -55,7 +55,7 @@ static MACHINE_RESET( espial )
 	state->flipscreen = 0;
 
 	/* we must start with NMI interrupts disabled */
-	timer_call_after_resynch(machine, NULL, 0, interrupt_disable);
+	machine->scheduler().synchronize(FUNC(interrupt_disable));
 	state->sound_nmi_enabled = FALSE;
 }
 
@@ -67,7 +67,7 @@ static MACHINE_START( espial )
 	state->audiocpu = machine->device("audiocpu");
 
 	//state_save_register_global_array(machine, mcu_out[1]);
-	state_save_register_global(machine, state->sound_nmi_enabled);
+	state->save_item(NAME(state->sound_nmi_enabled));
 }
 
 

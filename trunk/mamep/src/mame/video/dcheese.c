@@ -64,9 +64,9 @@ static void update_scanline_irq( running_machine *machine )
 
 		/* determine the time; if it's in this scanline, bump to the next frame */
 		time = machine->primary_screen->time_until_pos(effscan);
-		if (attotime_compare(time, machine->primary_screen->scan_period()) < 0)
-			time = attotime_add(time, machine->primary_screen->frame_period());
-		timer_adjust_oneshot(state->blitter_timer, time, 0);
+		if (time < machine->primary_screen->scan_period())
+			time += machine->primary_screen->frame_period();
+		state->blitter_timer->adjust(time);
 	}
 }
 
@@ -98,14 +98,14 @@ VIDEO_START( dcheese )
 	state->dstbitmap = auto_bitmap_alloc(machine, DSTBITMAP_WIDTH, DSTBITMAP_HEIGHT, machine->primary_screen->format());
 
 	/* create a timer */
-	state->blitter_timer = timer_alloc(machine, blitter_scanline_callback, NULL);
+	state->blitter_timer = machine->scheduler().timer_alloc(FUNC(blitter_scanline_callback));
 
 	/* register for saving */
-	state_save_register_global_array(machine, state->blitter_color);
-	state_save_register_global_array(machine, state->blitter_xparam);
-	state_save_register_global_array(machine, state->blitter_yparam);
-	state_save_register_global_array(machine, state->blitter_vidparam);
-	state_save_register_global_bitmap(machine, state->dstbitmap);
+	state->save_item(NAME(state->blitter_color));
+	state->save_item(NAME(state->blitter_xparam));
+	state->save_item(NAME(state->blitter_yparam));
+	state->save_item(NAME(state->blitter_vidparam));
+	state->save_item(NAME(*state->dstbitmap));
 }
 
 
@@ -151,7 +151,7 @@ static void do_clear( running_machine *machine )
 		memset(BITMAP_ADDR16(state->dstbitmap, y % DSTBITMAP_HEIGHT, 0), 0, DSTBITMAP_WIDTH * 2);
 
 	/* signal an IRQ when done (timing is just a guess) */
-	timer_set(machine, machine->primary_screen->scan_period(), NULL, 1, dcheese_signal_irq_callback);
+	machine->scheduler().timer_set(machine->primary_screen->scan_period(), FUNC(dcheese_signal_irq_callback), 1);
 }
 
 
@@ -206,13 +206,13 @@ static void do_blit( running_machine *machine )
 	}
 
 	/* signal an IRQ when done (timing is just a guess) */
-	timer_set(machine, attotime_make(0, attotime_to_attoseconds(machine->primary_screen->scan_period()) / 2), NULL, 2, dcheese_signal_irq_callback);
+	machine->scheduler().timer_set(machine->primary_screen->scan_period() / 2, FUNC(dcheese_signal_irq_callback), 2);
 
 	/* these extra parameters are written but they are always zero, so I don't know what they do */
 	if (state->blitter_xparam[8] != 0 || state->blitter_xparam[9] != 0 || state->blitter_xparam[10] != 0 || state->blitter_xparam[11] != 0 ||
 		state->blitter_yparam[8] != 0 || state->blitter_yparam[9] != 0 || state->blitter_yparam[10] != 0 || state->blitter_yparam[11] != 0)
 	{
-		logerror("%s:blit! (%04X)\n", cpuexec_describe_context(machine), state->blitter_color[0]);
+		logerror("%s:blit! (%04X)\n", machine->describe_context(), state->blitter_color[0]);
 		logerror("   %04X %04X %04X %04X - %04X %04X %04X %04X - %04X %04X %04X %04X - %04X %04X %04X %04X\n",
 				state->blitter_xparam[0], state->blitter_xparam[1], state->blitter_xparam[2], state->blitter_xparam[3],
 				state->blitter_xparam[4], state->blitter_xparam[5], state->blitter_xparam[6], state->blitter_xparam[7],

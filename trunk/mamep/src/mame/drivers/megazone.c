@@ -232,8 +232,8 @@ static MACHINE_START( megazone )
 	state->audiocpu = machine->device<cpu_device>("audiocpu");
 	state->daccpu = machine->device<cpu_device>("daccpu");
 
-	state_save_register_global(machine, state->flipscreen);
-	state_save_register_global(machine, state->i8039_status);
+	state->save_item(NAME(state->flipscreen));
+	state->save_item(NAME(state->i8039_status));
 }
 
 static MACHINE_RESET( megazone )
@@ -260,7 +260,7 @@ static MACHINE_CONFIG_START( megazone, megazone_state )
 	MCFG_CPU_PROGRAM_MAP(megazone_i8039_map)
 	MCFG_CPU_IO_MAP(megazone_i8039_io_map)
 
-	MCFG_QUANTUM_TIME(HZ(900))
+	MCFG_QUANTUM_TIME(attotime::from_hz(900))
 	MCFG_MACHINE_START(megazone)
 	MCFG_MACHINE_RESET(megazone)
 

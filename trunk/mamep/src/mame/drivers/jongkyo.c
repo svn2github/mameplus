@@ -38,13 +38,13 @@ public:
 	jongkyo_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	/* memory pointers */
-	UINT8 *  videoram;
-	UINT8 *  videoram2;
-
 	/* misc */
 	UINT8    rom_bank;
 	UINT8    mux_data;
+
+	/* memory pointers */
+	UINT8 *  videoram;
+	UINT8    videoram2[0x4000];
 };
 
 
@@ -468,11 +468,9 @@ static MACHINE_START( jongkyo )
 {
 	jongkyo_state *state = machine->driver_data<jongkyo_state>();
 
-	state->videoram2 = auto_alloc_array(machine, UINT8, 0x4000);
-	state_save_register_global_pointer(machine, state->videoram2, 0x4000);
-
-	state_save_register_global(machine, state->rom_bank);
-	state_save_register_global(machine, state->mux_data);
+	state->save_item(NAME(state->videoram2));
+	state->save_item(NAME(state->rom_bank));
+	state->save_item(NAME(state->mux_data));
 }
 
 static MACHINE_RESET( jongkyo )

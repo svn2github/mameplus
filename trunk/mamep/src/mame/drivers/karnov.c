@@ -123,7 +123,7 @@ static void karnov_i8751_w( running_machine *machine, int data )
 	if (data == 0x401) state->i8751_return = 0x4138; /* ^Whistling wind */
 	if (data == 0x408) state->i8751_return = 0x4276; /* ^Heavy Gates */
 
-//  if (!state->i8751_return && data != 0x300) logerror("%s - Unknown Write %02x intel\n", cpuexec_describe_context(machine), data);
+//  if (!state->i8751_return && data != 0x300) logerror("%s - Unknown Write %02x intel\n", machine->describe_context(), data);
 
 	cpu_set_input_line(state->maincpu, 6, HOLD_LINE); /* Signal main cpu task is complete */
 	state->i8751_needs_ack = 1;
@@ -159,7 +159,7 @@ static void wndrplnt_i8751_w( running_machine *machine, int data )
 			case 0x18:	state->i8751_return = 0x5341; break;
 		}
 	}
-//  else logerror("%s - Unknown Write %02x intel\n", cpuexec_describe_context(machine), data);
+//  else logerror("%s - Unknown Write %02x intel\n", machine->describe_context(), data);
 
 	/* These are 68k function call addresses - different address for each power-up */
 	if (data == 0x400) state->i8751_return = 0x594;
@@ -315,7 +315,7 @@ static void chelnov_i8751_w( running_machine *machine, int data )
 		}
 	}
 
-	//  logerror("%s - Unknown Write %02x intel\n", cpuexec_describe_context(machine), data);
+	//  logerror("%s - Unknown Write %02x intel\n", machine->describe_context(), data);
 
 	cpu_set_input_line(state->maincpu, 6, HOLD_LINE); /* Signal main cpu task is complete */
 	state->i8751_needs_ack = 1;
@@ -779,15 +779,15 @@ static MACHINE_START( karnov )
 	state->maincpu = machine->device("maincpu");
 	state->audiocpu = machine->device("audiocpu");
 
-	state_save_register_global(machine, state->flipscreen);
-	state_save_register_global_array(machine, state->scroll);
+	state->save_item(NAME(state->flipscreen));
+	state->save_item(NAME(state->scroll));
 
-	state_save_register_global(machine, state->i8751_return);
-	state_save_register_global(machine, state->i8751_needs_ack);
-	state_save_register_global(machine, state->i8751_coin_pending);
-	state_save_register_global(machine, state->i8751_command_queue);
-	state_save_register_global(machine, state->i8751_level);
-	state_save_register_global(machine, state->latch);
+	state->save_item(NAME(state->i8751_return));
+	state->save_item(NAME(state->i8751_needs_ack));
+	state->save_item(NAME(state->i8751_coin_pending));
+	state->save_item(NAME(state->i8751_command_queue));
+	state->save_item(NAME(state->i8751_level));
+	state->save_item(NAME(state->latch));
 
 }
 

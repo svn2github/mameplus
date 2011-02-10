@@ -96,7 +96,7 @@ static void palette_notifier(running_machine *machine, int addr)
 
 	if (addr > 0x200)
 	{
-		logerror("%s:Large palette ? %03x\n", cpuexec_describe_context(machine), addr);
+		logerror("%s:Large palette ? %03x\n", machine->describe_context(), addr);
 	}
 	else
 	{
@@ -111,32 +111,32 @@ static void state_register( running_machine *machine )
 {
 	taitol_state *state = machine->driver_data<taitol_state>();
 
-	state_save_register_global_array(machine, state->irq_adr_table);
-	state_save_register_global(machine, state->irq_enable);
-	state_save_register_global_array(machine, state->cur_rambank);
-	state_save_register_global(machine, state->cur_rombank);
-	state_save_register_global(machine, state->cur_rombank2);
+	state->save_item(NAME(state->irq_adr_table));
+	state->save_item(NAME(state->irq_enable));
+	state->save_item(NAME(state->cur_rambank));
+	state->save_item(NAME(state->cur_rombank));
+	state->save_item(NAME(state->cur_rombank2));
 
-	state_save_register_global(machine, state->adpcm_pos);
-	state_save_register_global(machine, state->adpcm_data);
-	state_save_register_global(machine, state->trackx);
-	state_save_register_global(machine, state->tracky);
-	state_save_register_global(machine, state->mux_ctrl);
-	state_save_register_global(machine, state->extport);
-	state_save_register_global(machine, state->last_irq_level);
-	state_save_register_global(machine, state->high);
-	state_save_register_global(machine, state->high2);
+	state->save_item(NAME(state->adpcm_pos));
+	state->save_item(NAME(state->adpcm_data));
+	state->save_item(NAME(state->trackx));
+	state->save_item(NAME(state->tracky));
+	state->save_item(NAME(state->mux_ctrl));
+	state->save_item(NAME(state->extport));
+	state->save_item(NAME(state->last_irq_level));
+	state->save_item(NAME(state->high));
+	state->save_item(NAME(state->high2));
 
-	state_save_register_global(machine, state->mcu_pos);
-	state_save_register_global(machine, state->mcu_reply_len);
-	state_save_register_global(machine, state->last_data_adr);
-	state_save_register_global(machine, state->last_data);
-	state_save_register_global(machine, state->cur_bank);
+	state->save_item(NAME(state->mcu_pos));
+	state->save_item(NAME(state->mcu_reply_len));
+	state->save_item(NAME(state->last_data_adr));
+	state->save_item(NAME(state->last_data));
+	state->save_item(NAME(state->cur_bank));
 
-	state_save_register_global_array(machine, state->bankc);
-	state_save_register_global(machine, state->horshoes_gfxbank);
-	state_save_register_global(machine, state->cur_ctrl);
-	state_save_register_global(machine, state->flipscreen);
+	state->save_item(NAME(state->bankc));
+	state->save_item(NAME(state->horshoes_gfxbank));
+	state->save_item(NAME(state->cur_ctrl));
+	state->save_item(NAME(state->flipscreen));
 }
 
 static MACHINE_START( taito_l )
@@ -146,13 +146,9 @@ static MACHINE_START( taito_l )
 	state->maincpu = machine->device("maincpu");
 	state->audiocpu = machine->device("audiocpu");
 
-	state->rambanks = auto_alloc_array(machine, UINT8, 0x1000 * 12);
-	state->palette_ram = auto_alloc_array(machine, UINT8, 0x1000);
-	state->empty_ram = auto_alloc_array(machine, UINT8, 0x1000);
-
-	state_save_register_global_pointer(machine, state->rambanks, 0x1000 * 12);
-	state_save_register_global_pointer(machine, state->palette_ram, 0x1000);
-	state_save_register_global_pointer(machine, state->empty_ram, 0x1000);
+	state->save_item(NAME(state->rambanks));
+	state->save_item(NAME(state->palette_ram));
+	state->save_item(NAME(state->empty_ram));
 
 	state_register(machine);
 }
@@ -658,7 +654,9 @@ static WRITE8_DEVICE_HANDLER( champwr_msm5205_stop_w )
 
 static WRITE8_DEVICE_HANDLER( champwr_msm5205_volume_w )
 {
-	sound_set_output_gain(device, 0, data / 255.0);
+	device_sound_interface *sound;
+	device->interface(sound);
+	sound->set_output_gain(0, data / 255.0);
 }
 
 static READ8_HANDLER( horshoes_tracky_reset_r )
@@ -2034,7 +2032,7 @@ static MACHINE_CONFIG_START( fhawk, taitol_state )
 	MCFG_CPU_PROGRAM_MAP(fhawk_2_map)
 	MCFG_CPU_VBLANK_INT_HACK(irq0_line_hold,3) /* fixes slow down problems */
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(taito_l)
 	MCFG_MACHINE_RESET(fhawk)
@@ -2131,7 +2129,7 @@ static MACHINE_CONFIG_START( kurikint, taitol_state )
 	MCFG_CPU_PROGRAM_MAP(kurikint_2_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(taito_l)
 	MCFG_MACHINE_RESET(kurikint)
@@ -2271,7 +2269,7 @@ static MACHINE_CONFIG_START( evilston, taitol_state )
 	MCFG_CPU_PROGRAM_MAP(evilston_2_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(taito_l)
 	MCFG_MACHINE_RESET(evilston)

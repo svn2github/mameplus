@@ -128,7 +128,7 @@ static READ8_HANDLER( aquarium_oki_r )
 
 static WRITE8_HANDLER( aquarium_oki_w )
 {
-	logerror("%s:Writing %04x to the OKI M6295\n", cpuexec_describe_context(space->machine), aquarium_snd_bitswap(data));
+	logerror("%s:Writing %04x to the OKI M6295\n", space->machine->describe_context(), aquarium_snd_bitswap(data));
 	okim6295_device *oki = space->machine->device<okim6295_device>("oki");
 	oki->write(*space, offset, (aquarium_snd_bitswap(data)));
 }
@@ -346,7 +346,7 @@ static MACHINE_START( aquarium )
 
 	state->audiocpu = machine->device("audiocpu");
 
-	state_save_register_global(machine, state->aquarium_snd_ack);
+	state->save_item(NAME(state->aquarium_snd_ack));
 }
 
 static MACHINE_RESET( aquarium )

@@ -206,7 +206,7 @@ WRITE16_DEVICE_HANDLER( kickgoal_snd_w )
 static WRITE16_DEVICE_HANDLER( actionhw_snd_w )
 {
 	kickgoal_state *state = device->machine->driver_data<kickgoal_state>();
-	logerror("%s: Writing %04x to Sound CPU - mask %04x\n",cpuexec_describe_context(device->machine),data,mem_mask);
+	logerror("%s: Writing %04x to Sound CPU - mask %04x\n",device->machine->describe_context(),data,mem_mask);
 
 	if (!ACCESSING_BITS_0_7)
 		data >>= 8;
@@ -649,12 +649,12 @@ static MACHINE_START( kickgoal )
 {
 	kickgoal_state *state = machine->driver_data<kickgoal_state>();
 
-	state_save_register_global_array(machine, state->snd_sam);
-	state_save_register_global(machine, state->melody_loop);
-	state_save_register_global(machine, state->snd_new);
-	state_save_register_global(machine, state->m6295_comm);
-	state_save_register_global(machine, state->m6295_bank);
-	state_save_register_global(machine, state->m6295_key_delay);
+	state->save_item(NAME(state->snd_sam));
+	state->save_item(NAME(state->melody_loop));
+	state->save_item(NAME(state->snd_new));
+	state->save_item(NAME(state->m6295_comm));
+	state->save_item(NAME(state->m6295_bank));
+	state->save_item(NAME(state->m6295_key_delay));
 }
 
 static MACHINE_RESET( kickgoal )

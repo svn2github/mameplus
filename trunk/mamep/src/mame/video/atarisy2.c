@@ -110,13 +110,13 @@ VIDEO_START( atarisy2 )
 	tilemap_set_transparent_pen(state->alpha_tilemap, 0);
 
 	/* reset the statics */
-	state->yscroll_reset_timer = timer_alloc(machine, reset_yscroll_callback, NULL);
+	state->yscroll_reset_timer = machine->scheduler().timer_alloc(FUNC(reset_yscroll_callback));
 	state->videobank = 0;
 
 	/* save states */
-	state_save_register_global_array(machine, state->playfield_tile_bank);
-	state_save_register_global(machine, state->videobank);
-	state_save_register_global_array(machine, state->vram);
+	state->save_item(NAME(state->playfield_tile_bank));
+	state->save_item(NAME(state->videobank));
+	state->save_item(NAME(state->vram));
 }
 
 
@@ -175,7 +175,7 @@ WRITE16_HANDLER( atarisy2_yscroll_w )
 	if (!(newscroll & 0x10))
 		tilemap_set_scrolly(state->playfield_tilemap, 0, (newscroll >> 6) - space->machine->primary_screen->vpos());
 	else
-		timer_adjust_oneshot(state->yscroll_reset_timer, space->machine->primary_screen->time_until_pos(0), newscroll >> 6);
+		state->yscroll_reset_timer->adjust(space->machine->primary_screen->time_until_pos(0), newscroll >> 6);
 
 	/* update the playfield banking */
 	if (state->playfield_tile_bank[1] != (newscroll & 0x0f) * 0x400)

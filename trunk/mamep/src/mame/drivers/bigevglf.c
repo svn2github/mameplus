@@ -83,14 +83,14 @@ static TIMER_CALLBACK( from_sound_latch_callback )
 }
 static WRITE8_HANDLER( beg_fromsound_w )	/* write to D800 sets bit 1 in status */
 {
-	timer_call_after_resynch(space->machine, NULL, (cpu_get_pc(space->cpu) << 16) | data, from_sound_latch_callback);
+	space->machine->scheduler().synchronize(FUNC(from_sound_latch_callback), (cpu_get_pc(space->cpu) << 16) | data);
 }
 
 static READ8_HANDLER( beg_fromsound_r )
 {
 	bigevglf_state *state = space->machine->driver_data<bigevglf_state>();
 	/* set a timer to force synchronization after the read */
-	timer_call_after_resynch(space->machine, NULL, 0, NULL);
+	space->machine->scheduler().synchronize();
 	return state->from_sound;
 }
 
@@ -99,7 +99,7 @@ static READ8_HANDLER( beg_soundstate_r )
 	bigevglf_state *state = space->machine->driver_data<bigevglf_state>();
 	UINT8 ret = state->sound_state;
 	/* set a timer to force synchronization after the read */
-	timer_call_after_resynch(space->machine, NULL, 0, NULL);
+	space->machine->scheduler().synchronize();
 	state->sound_state &= ~2; /* read from port 21 clears bit 1 in status */
 	return ret;
 }
@@ -108,7 +108,7 @@ static READ8_HANDLER( soundstate_r )
 {
 	bigevglf_state *state = space->machine->driver_data<bigevglf_state>();
 	/* set a timer to force synchronization after the read */
-	timer_call_after_resynch(space->machine, NULL, 0, NULL);
+	space->machine->scheduler().synchronize();
 	return state->sound_state;
 }
 
@@ -127,7 +127,7 @@ static WRITE8_HANDLER( sound_command_w )	/* write to port 20 clears bit 0 in sta
 {
 	bigevglf_state *state = space->machine->driver_data<bigevglf_state>();
 	state->for_sound = data;
-	timer_call_after_resynch(space->machine, NULL, data, nmi_callback);
+	space->machine->scheduler().synchronize(FUNC(nmi_callback), data);
 }
 
 static READ8_HANDLER( sound_command_r )	/* read from D800 sets bit 0 in status */
@@ -165,22 +165,22 @@ static TIMER_CALLBACK( deferred_ls74_w )
 /* do this on a timer to let the CPUs synchronize */
 static WRITE8_HANDLER( beg13_a_clr_w )
 {
-	timer_call_after_resynch(space->machine, NULL, (0 << 8) | 0, deferred_ls74_w);
+	space->machine->scheduler().synchronize(FUNC(deferred_ls74_w), (0 << 8) | 0);
 }
 
 static WRITE8_HANDLER( beg13_b_clr_w )
 {
-	timer_call_after_resynch(space->machine, NULL, (1 << 8) | 0, deferred_ls74_w);
+	space->machine->scheduler().synchronize(FUNC(deferred_ls74_w), (1 << 8) | 0);
 }
 
 static WRITE8_HANDLER( beg13_a_set_w )
 {
-	timer_call_after_resynch(space->machine, NULL, (0 << 8) | 1, deferred_ls74_w);
+	space->machine->scheduler().synchronize(FUNC(deferred_ls74_w), (0 << 8) | 1);
 }
 
 static WRITE8_HANDLER( beg13_b_set_w )
 {
-	timer_call_after_resynch(space->machine, NULL, (1 << 8) | 1, deferred_ls74_w);
+	space->machine->scheduler().synchronize(FUNC(deferred_ls74_w), (1 << 8) | 1);
 }
 
 static READ8_HANDLER( beg_status_r )
@@ -197,7 +197,7 @@ static READ8_HANDLER( beg_status_r )
 
 */
 	/* set a timer to force synchronization after the read */
-	timer_call_after_resynch(space->machine, NULL, 0, NULL);
+	space->machine->scheduler().synchronize();
 	return (state->beg13_ls74[0] << 0) | (state->beg13_ls74[1] << 1);
 }
 
@@ -437,34 +437,34 @@ static MACHINE_START( bigevglf )
 	state->audiocpu = machine->device("audiocpu");
 	state->mcu = machine->device("mcu");
 
-	state_save_register_global(machine, state->vidram_bank);
-	state_save_register_global(machine, state->plane_selected);
-	state_save_register_global(machine, state->plane_visible);
+	state->save_item(NAME(state->vidram_bank));
+	state->save_item(NAME(state->plane_selected));
+	state->save_item(NAME(state->plane_visible));
 
-	state_save_register_global_array(machine, state->beg13_ls74);
-	state_save_register_global(machine, state->beg_bank);
-	state_save_register_global(machine, state->port_select);
+	state->save_item(NAME(state->beg13_ls74));
+	state->save_item(NAME(state->beg_bank));
+	state->save_item(NAME(state->port_select));
 
-	state_save_register_global(machine, state->sound_nmi_enable);
-	state_save_register_global(machine, state->pending_nmi);
-	state_save_register_global(machine, state->for_sound);
-	state_save_register_global(machine, state->from_sound);
-	state_save_register_global(machine, state->sound_state);
+	state->save_item(NAME(state->sound_nmi_enable));
+	state->save_item(NAME(state->pending_nmi));
+	state->save_item(NAME(state->for_sound));
+	state->save_item(NAME(state->from_sound));
+	state->save_item(NAME(state->sound_state));
 
-	state_save_register_global(machine, state->main_sent);
-	state_save_register_global(machine, state->mcu_sent);
-	state_save_register_global(machine, state->mcu_coin_bit5);
+	state->save_item(NAME(state->main_sent));
+	state->save_item(NAME(state->mcu_sent));
+	state->save_item(NAME(state->mcu_coin_bit5));
 
-	state_save_register_global(machine, state->port_a_in);
-	state_save_register_global(machine, state->port_a_out);
-	state_save_register_global(machine, state->ddr_a);
-	state_save_register_global(machine, state->port_b_in);
-	state_save_register_global(machine, state->port_b_out);
-	state_save_register_global(machine, state->ddr_b);
-	state_save_register_global(machine, state->port_c_in);
-	state_save_register_global(machine, state->port_c_out);
-	state_save_register_global(machine, state->ddr_c);
-	state_save_register_global(machine, state->from_mcu);
+	state->save_item(NAME(state->port_a_in));
+	state->save_item(NAME(state->port_a_out));
+	state->save_item(NAME(state->ddr_a));
+	state->save_item(NAME(state->port_b_in));
+	state->save_item(NAME(state->port_b_out));
+	state->save_item(NAME(state->ddr_b));
+	state->save_item(NAME(state->port_c_in));
+	state->save_item(NAME(state->port_c_out));
+	state->save_item(NAME(state->ddr_c));
+	state->save_item(NAME(state->from_mcu));
 }
 
 static MACHINE_RESET( bigevglf )
@@ -525,7 +525,7 @@ static MACHINE_CONFIG_START( bigevglf, bigevglf_state )
 	MCFG_CPU_ADD("mcu", M68705,2000000)	/* ??? */
 	MCFG_CPU_PROGRAM_MAP(m68705_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))	/* 10 CPU slices per frame - interleaving is forced on the fly */
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - interleaving is forced on the fly */
 
 	MCFG_MACHINE_START(bigevglf)
 	MCFG_MACHINE_RESET(bigevglf)

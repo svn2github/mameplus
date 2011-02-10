@@ -246,14 +246,14 @@ static MACHINE_START( system16a )
 {
 	segas1x_state *state = machine->driver_data<segas1x_state>();
 
-	state_save_register_global(machine, state->video_control);
-	state_save_register_global(machine, state->mcu_control);
-	state_save_register_global(machine, state->n7751_command);
-	state_save_register_global(machine, state->n7751_rom_address);
-	state_save_register_global(machine, state->mj_input_num);
-	state_save_register_global(machine, state->last_buttons1);
-	state_save_register_global(machine, state->last_buttons2);
-	state_save_register_global(machine, state->read_port);
+	state->save_item(NAME(state->video_control));
+	state->save_item(NAME(state->mcu_control));
+	state->save_item(NAME(state->n7751_command));
+	state->save_item(NAME(state->n7751_rom_address));
+	state->save_item(NAME(state->mj_input_num));
+	state->save_item(NAME(state->last_buttons1));
+	state->save_item(NAME(state->last_buttons2));
+	state->save_item(NAME(state->read_port));
 }
 
 
@@ -265,7 +265,7 @@ static MACHINE_RESET( system16a )
 
 	/* if we have a fake i8751 handler, disable the actual 8751 */
 	if (state->i8751_vblank_hook != NULL)
-		timer_call_after_resynch(machine, NULL, 0, suspend_i8751);
+		machine->scheduler().synchronize(FUNC(suspend_i8751));
 
 	state->mcu_control = 0x00;
 }
@@ -317,7 +317,7 @@ static WRITE16_HANDLER( standard_io_w )
 			/* the port C handshaking signals control the Z80 NMI, */
 			/* so we have to sync whenever we access this PPI */
 			if (ACCESSING_BITS_0_7)
-				timer_call_after_resynch(space->machine, NULL, ((offset & 3) << 8) | (data & 0xff), delayed_ppi8255_w);
+				space->machine->scheduler().synchronize(FUNC(delayed_ppi8255_w), ((offset & 3) << 8) | (data & 0xff));
 			return;
 	}
 	logerror("%06X:standard_io_w - unknown write access to address %04X = %04X & %04X\n", cpu_get_pc(space->cpu), offset * 2, data, mem_mask);
@@ -473,7 +473,7 @@ static WRITE8_DEVICE_HANDLER( n7751_control_w )
 
 	cpu_set_input_line(state->n7751, INPUT_LINE_RESET, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
 	cpu_set_input_line(state->n7751, 0, (data & 0x02) ? CLEAR_LINE : ASSERT_LINE);
-	cpuexec_boost_interleave(device->machine, attotime_zero, ATTOTIME_IN_USEC(100));
+	device->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
 
@@ -887,7 +887,7 @@ static WRITE8_HANDLER( mcu_control_w )
 		segaic16_set_display_enable(space->machine, 1);
 
 	if ((state->mcu_control ^ data) & 0x40)
-		cpuexec_boost_interleave(space->machine, attotime_zero, ATTOTIME_IN_USEC(10));
+		space->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(10));
 
 	state->mcu_control = data;
 }
@@ -991,7 +991,7 @@ static INTERRUPT_GEN( mcu_irq_assert )
 	cpu_set_input_line(device, MCS51_INT0_LINE, CLEAR_LINE);
 
 	/* boost interleave to ensure that the MCU can break the M68000 out of a STOP */
-	cpuexec_boost_interleave(device->machine, attotime_zero, ATTOTIME_IN_USEC(100));
+	device->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
 

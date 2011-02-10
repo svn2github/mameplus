@@ -131,7 +131,7 @@ static WRITE8_HANDLER( dec8_i8751_w )
 	case 0: /* High byte - SECIRQ is trigged on activating this latch */
 		state->i8751_value = (state->i8751_value & 0xff) | (data << 8);
 		cpu_set_input_line(state->mcu, MCS51_INT1_LINE, ASSERT_LINE);
-		timer_set(space->machine, state->mcu->clocks_to_attotime(64), NULL, 0, dec8_i8751_timer_callback); // 64 clocks not confirmed
+		space->machine->scheduler().timer_set(state->mcu->clocks_to_attotime(64), FUNC(dec8_i8751_timer_callback)); // 64 clocks not confirmed
 		break;
 	case 1: /* Low byte */
 		state->i8751_value = (state->i8751_value & 0xff00) | data;
@@ -1936,21 +1936,21 @@ static MACHINE_START( dec8 )
 	state->audiocpu = machine->device("audiocpu");
 	state->mcu = machine->device("mcu");
 
-	state_save_register_global(machine, state->latch);
-	state_save_register_global(machine, state->nmi_enable);
-	state_save_register_global(machine, state->i8751_port0);
-	state_save_register_global(machine, state->i8751_port1);
-	state_save_register_global(machine, state->i8751_return);
-	state_save_register_global(machine, state->i8751_value);
-	state_save_register_global(machine, state->coin1);
-	state_save_register_global(machine, state->coin2);
-	state_save_register_global(machine, state->snd);
-	state_save_register_global(machine, state->msm5205next);
-	state_save_register_global(machine, state->toggle);
+	state->save_item(NAME(state->latch));
+	state->save_item(NAME(state->nmi_enable));
+	state->save_item(NAME(state->i8751_port0));
+	state->save_item(NAME(state->i8751_port1));
+	state->save_item(NAME(state->i8751_return));
+	state->save_item(NAME(state->i8751_value));
+	state->save_item(NAME(state->coin1));
+	state->save_item(NAME(state->coin2));
+	state->save_item(NAME(state->snd));
+	state->save_item(NAME(state->msm5205next));
+	state->save_item(NAME(state->toggle));
 
-	state_save_register_global_array(machine, state->scroll2);
-	state_save_register_global_array(machine, state->pf0_control);
-	state_save_register_global_array(machine, state->pf1_control);
+	state->save_item(NAME(state->scroll2));
+	state->save_item(NAME(state->pf0_control));
+	state->save_item(NAME(state->pf1_control));
 }
 
 static MACHINE_RESET( dec8 )
@@ -2172,7 +2172,7 @@ static MACHINE_CONFIG_START( oscar, dec8_state )
 	MCFG_CPU_ADD("audiocpu", M6502, XTAL_12MHz/8)
 	MCFG_CPU_PROGRAM_MAP(oscar_s_map)
 								/* NMIs are caused by the main CPU */
-	MCFG_QUANTUM_TIME(HZ(2400)) /* 40 CPU slices per frame */
+	MCFG_QUANTUM_TIME(attotime::from_hz(2400)) /* 40 CPU slices per frame */
 
 	MCFG_MACHINE_START(dec8)
 	MCFG_MACHINE_RESET(dec8)
@@ -2219,7 +2219,7 @@ static MACHINE_CONFIG_START( lastmisn, dec8_state )
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)
 	MCFG_CPU_PROGRAM_MAP(ym3526_s_map)
 								/* NMIs are caused by the main CPU */
-	MCFG_QUANTUM_TIME(HZ(12000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
 	MCFG_MACHINE_START(dec8)
 	MCFG_MACHINE_RESET(dec8)
@@ -2266,7 +2266,7 @@ static MACHINE_CONFIG_START( shackled, dec8_state )
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)
 	MCFG_CPU_PROGRAM_MAP(ym3526_s_map)
 								/* NMIs are caused by the main CPU */
-	MCFG_QUANTUM_TIME(HZ(4800))
+	MCFG_QUANTUM_TIME(attotime::from_hz(4800))
 
 	MCFG_MACHINE_START(dec8)
 	MCFG_MACHINE_RESET(dec8)
@@ -2314,7 +2314,7 @@ static MACHINE_CONFIG_START( csilver, dec8_state )
 	MCFG_CPU_ADD("audiocpu", M6502, XTAL_12MHz/8) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(csilver_s_map)
 								/* NMIs are caused by the main CPU */
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(dec8)
 	MCFG_MACHINE_RESET(dec8)

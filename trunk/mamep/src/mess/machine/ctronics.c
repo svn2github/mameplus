@@ -105,11 +105,11 @@ static DEVICE_START( centronics )
 	devcb_resolve_write_line(&centronics->out_not_busy_func, &intf->out_not_busy_func, device);
 
 	/* register for state saving */
-	state_save_register_device_item(device, 0, centronics->auto_fd);
-	state_save_register_device_item(device, 0, centronics->strobe);
-	state_save_register_device_item(device, 0, centronics->busy);
-	state_save_register_device_item(device, 0, centronics->ack);
-	state_save_register_device_item(device, 0, centronics->data);
+	device->save_item(NAME(centronics->auto_fd));
+	device->save_item(NAME(centronics->strobe));
+	device->save_item(NAME(centronics->busy));
+	device->save_item(NAME(centronics->ack));
+	device->save_item(NAME(centronics->data));
 }
 
 static DEVICE_RESET( centronics )
@@ -176,7 +176,7 @@ static TIMER_CALLBACK( ack_callback )
 		printer_output(centronics->printer, centronics->data);
 
 		/* ready to receive more data, return BUSY to low */
-		timer_set(machine, ATTOTIME_IN_USEC(7), ptr, FALSE, busy_callback);
+		machine->scheduler().timer_set(attotime::from_usec(7), FUNC(busy_callback), FALSE, ptr);
 	}
 }
 
@@ -193,12 +193,12 @@ static TIMER_CALLBACK( busy_callback )
 	if (param == TRUE)
 	{
 		/* timer to turn ACK low to receive data */
-		timer_set(machine, ATTOTIME_IN_USEC(10), ptr, FALSE, ack_callback);
+		machine->scheduler().timer_set(attotime::from_usec(10), FUNC(ack_callback), FALSE, ptr);
 	}
 	else
 	{
 		/* timer to return ACK to high state */
-		timer_set(machine, ATTOTIME_IN_USEC(5), ptr, TRUE, ack_callback);
+		machine->scheduler().timer_set(attotime::from_usec(5), FUNC(ack_callback), TRUE, ptr);
 	}
 }
 
@@ -267,7 +267,7 @@ WRITE_LINE_DEVICE_HANDLER( centronics_strobe_w )
 	if (centronics->strobe == TRUE && state == FALSE && centronics->busy == FALSE)
 	{
 		/* STROBE has gone low, data is ready */
-		timer_set(device->machine, attotime_zero, centronics, TRUE, busy_callback);
+		device->machine->scheduler().timer_set(attotime::zero, FUNC(busy_callback), TRUE, centronics);
 	}
 
 	centronics->strobe = state;

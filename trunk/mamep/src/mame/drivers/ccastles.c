@@ -148,7 +148,7 @@ INLINE void schedule_next_irq( running_machine *machine, int curscanline )
 			break;
 
 	/* next one at the start of this scanline */
-	timer_adjust_oneshot(state->irq_timer, machine->primary_screen->time_until_pos(curscanline), curscanline);
+	state->irq_timer->adjust(machine->primary_screen->time_until_pos(curscanline), curscanline);
 }
 
 
@@ -220,13 +220,13 @@ static MACHINE_START( ccastles )
 	memory_configure_bank(machine, "bank1", 0, 2, machine->region("maincpu")->base() + 0xa000, 0x6000);
 
 	/* create a timer for IRQs and set up the first callback */
-	state->irq_timer = timer_alloc(machine, clock_irq, NULL);
+	state->irq_timer = machine->scheduler().timer_alloc(FUNC(clock_irq));
 	state->irq_state = 0;
 	schedule_next_irq(machine, 0);
 
 	/* setup for save states */
-	state_save_register_global(machine, state->irq_state);
-	state_save_register_global_array(machine, state->nvram_store);
+	state->save_item(NAME(state->irq_state));
+	state->save_item(NAME(state->nvram_store));
 }
 
 

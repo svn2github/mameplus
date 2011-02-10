@@ -695,7 +695,7 @@ static TIMER_CALLBACK( cchip_timer )
 	{
 		// Simulate time for command to execute (exact timing unknown, this is close)
 		state->current_cmd = 0xf5;
-		timer_set(machine, state->maincpu->cycles_to_attotime(80000), NULL, 0, opwolf_timer_callback);
+		machine->scheduler().timer_set(state->maincpu->cycles_to_attotime(80000), FUNC(opwolf_timer_callback));
 	}
 	state->cchip_last_7a = state->cchip_ram[0x7a];
 
@@ -724,18 +724,18 @@ void opwolf_cchip_init( running_machine *machine )
 
 	state->cchip_ram = auto_alloc_array_clear(machine, UINT8, 0x400 * 8);
 
-	state_save_register_global(machine, state->current_bank);
-	state_save_register_global(machine, state->current_cmd);
-	state_save_register_global(machine, state->cchip_last_7a);
-	state_save_register_global(machine, state->cchip_last_04);
-	state_save_register_global(machine, state->cchip_last_05);
-	state_save_register_global(machine, state->c588);
-	state_save_register_global(machine, state->c589);
-	state_save_register_global(machine, state->c58a);
-	state_save_register_global_array(machine, state->cchip_coins);
-	state_save_register_global_array(machine, state->cchip_coins_for_credit);
-	state_save_register_global_array(machine, state->cchip_credits_for_coin);
-	state_save_register_global_pointer(machine, state->cchip_ram, 0x400 * 8);
+	state->save_item(NAME(state->current_bank));
+	state->save_item(NAME(state->current_cmd));
+	state->save_item(NAME(state->cchip_last_7a));
+	state->save_item(NAME(state->cchip_last_04));
+	state->save_item(NAME(state->cchip_last_05));
+	state->save_item(NAME(state->c588));
+	state->save_item(NAME(state->c589));
+	state->save_item(NAME(state->c58a));
+	state->save_item(NAME(state->cchip_coins));
+	state->save_item(NAME(state->cchip_coins_for_credit));
+	state->save_item(NAME(state->cchip_credits_for_coin));
+	state->save_pointer(NAME(state->cchip_ram), 0x400 * 8);
 
 	state->current_bank = 0;
 	state->current_cmd = 0;
@@ -752,5 +752,5 @@ void opwolf_cchip_init( running_machine *machine )
 	state->cchip_coins_for_credit[1] = 1;
 	state->cchip_credits_for_coin[1] = 1;
 
-	timer_pulse(machine, ATTOTIME_IN_HZ(60), NULL, 0, cchip_timer);
+	machine->scheduler().timer_pulse(attotime::from_hz(60), FUNC(cchip_timer));
 }

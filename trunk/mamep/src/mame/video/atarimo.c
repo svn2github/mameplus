@@ -295,9 +295,9 @@ static void init_savestate(running_machine *machine, int index, atarimo_data *mo
 	state_save_register_item(machine, "atarimo", NULL, index, mo->dirtyheight);
 #endif
 
-	state_save_register_bitmap(machine, "atarimo", NULL, index, "bitmap", mo->bitmap, __FILE__, __LINE__);
+	machine->state().save_item("atarimo", NULL, index, *mo->bitmap, "bitmap");
 
-	state_save_register_memory(machine, "atarimo", NULL, index, "spriteram", mo->spriteram, sizeof(atarimo_entry), mo->spriteramsize, __FILE__, __LINE__);
+	machine->state().save_memory("atarimo", NULL, index, "spriteram", mo->spriteram, sizeof(atarimo_entry), mo->spriteramsize);
 
 	state_save_register_item_pointer(machine, "atarimo", NULL, index, mo->codelookup, round_to_powerof2(mo->codemask.mask));
 
@@ -323,7 +323,7 @@ static TIMER_CALLBACK( force_update )
 	scanline += 64;
 	if (scanline >= machine->primary_screen->visible_area().max_y)
 		scanline = 0;
-	timer_adjust_oneshot(force_update_timer, machine->primary_screen->time_until_pos(scanline), scanline);
+	force_update_timer->adjust(machine->primary_screen->time_until_pos(scanline), scanline);
 }
 
 /*---------------------------------------------------------------
@@ -440,8 +440,8 @@ void atarimo_init(running_machine *machine, int map, const atarimo_desc *desc)
 	init_gfxelement(mo, desc->gfxindex);
 
 	/* start a timer to update a few times during refresh */
-	force_update_timer = timer_alloc(machine, force_update, NULL);
-	timer_adjust_oneshot(force_update_timer,machine->primary_screen->time_until_pos(0), 0);
+	force_update_timer = machine->scheduler().timer_alloc(FUNC(force_update));
+	force_update_timer->adjust(machine->primary_screen->time_until_pos(0));
 
 	init_savestate(machine, map, mo);
 

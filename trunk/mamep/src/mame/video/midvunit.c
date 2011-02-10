@@ -60,8 +60,8 @@ static TIMER_CALLBACK( scanline_timer_cb )
 	if (scanline != -1)
 	{
 		cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
-		timer_adjust_oneshot(scanline_timer, machine->primary_screen->time_until_pos(scanline + 1), scanline);
-		timer_set(machine, ATTOTIME_IN_HZ(25000000), NULL, -1, scanline_timer_cb);
+		scanline_timer->adjust(machine->primary_screen->time_until_pos(scanline + 1), scanline);
+		machine->scheduler().timer_set(attotime::from_hz(25000000), FUNC(scanline_timer_cb), -1);
 	}
 	else
 		cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
@@ -76,7 +76,7 @@ static void midvunit_exit(running_machine &machine)
 
 VIDEO_START( midvunit )
 {
-	scanline_timer = timer_alloc(machine, scanline_timer_cb, NULL);
+	scanline_timer = machine->scheduler().timer_alloc(FUNC(scanline_timer_cb));
 	poly = poly_alloc(machine, 4000, sizeof(poly_extra_data), POLYFLAG_ALLOW_QUADS);
 	machine->add_notifier(MACHINE_NOTIFY_EXIT, midvunit_exit);
 
@@ -309,7 +309,7 @@ static void process_dma_queue(running_machine *machine)
 	poly_vertex vert[4];
 
 	/* if we're rendering to the same page we're viewing, it has changed */
-	if ((((page_control >> 2) ^ page_control) & 1) == 0)
+	if ((((page_control >> 2) ^ page_control) & 1) == 0 || WATCH_RENDER)
 		video_changed = TRUE;
 
 	/* fill in the vertex data */
@@ -448,7 +448,7 @@ WRITE32_HANDLER( midvunit_video_control_w )
 
 	/* update the scanline timer */
 	if (offset == 0)
-		timer_adjust_oneshot(scanline_timer, space->machine->primary_screen->time_until_pos((data & 0x1ff) + 1, 0), data & 0x1ff);
+		scanline_timer->adjust(space->machine->primary_screen->time_until_pos((data & 0x1ff) + 1), data & 0x1ff);
 
 	/* if something changed, update our parameters */
 	if (old != video_regs[offset] && video_regs[6] != 0 && video_regs[11] != 0)

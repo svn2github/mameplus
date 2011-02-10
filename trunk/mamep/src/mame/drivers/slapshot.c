@@ -182,7 +182,7 @@ static TIMER_CALLBACK( slapshot_interrupt6 )
 
 static INTERRUPT_GEN( slapshot_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), NULL, 0, slapshot_interrupt6);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(slapshot_interrupt6));
 	cpu_set_input_line(device, 5, HOLD_LINE);
 }
 
@@ -546,8 +546,8 @@ static MACHINE_START( slapshot )
 	state->tc0640fio = machine->device("tc0640fio");
 
 	state->banknum = 0;
-	state_save_register_global(machine, state->banknum);
-	state_save_register_postload(machine, slapshot_postload, NULL);
+	state->save_item(NAME(state->banknum));
+	machine->state().register_postload(slapshot_postload, NULL);
 }
 
 
@@ -561,7 +561,7 @@ static MACHINE_CONFIG_START( slapshot, slapshot_state )
 	MCFG_CPU_ADD("audiocpu", Z80,32000000/8)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(opwolf3_z80_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(slapshot)
 
@@ -610,7 +610,7 @@ static MACHINE_CONFIG_START( opwolf3, slapshot_state )
 	MCFG_CPU_ADD("audiocpu", Z80,32000000/8)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(opwolf3_z80_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(slapshot)
 

@@ -804,13 +804,13 @@ static MACHINE_START( liberate )
 	state->maincpu = machine->device("maincpu");
 	state->audiocpu = machine->device("audiocpu");
 
-	state_save_register_global(machine, state->background_disable);
-	state_save_register_global(machine, state->background_color);
-	state_save_register_global(machine, state->gfx_rom_readback);
-	state_save_register_global(machine, state->latch);
-	state_save_register_global(machine, state->bank);
+	state->save_item(NAME(state->background_disable));
+	state->save_item(NAME(state->background_color));
+	state->save_item(NAME(state->gfx_rom_readback));
+	state->save_item(NAME(state->latch));
+	state->save_item(NAME(state->bank));
 
-	state_save_register_global_array(machine, state->io_ram);
+	state->save_item(NAME(state->io_ram));
 }
 
 static MACHINE_RESET( liberate )
@@ -838,7 +838,7 @@ static MACHINE_CONFIG_START( liberate, liberate_state )
 	MCFG_CPU_PROGRAM_MAP(liberate_sound_map)
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,16*60) /* ??? */
 
-	MCFG_QUANTUM_TIME(HZ(12000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
 	MCFG_MACHINE_START(liberate)
 	MCFG_MACHINE_RESET(liberate)
@@ -894,7 +894,7 @@ static MACHINE_CONFIG_DERIVED( prosoccr, liberate )
 	MCFG_CPU_CLOCK(10000000/8) //xtal is 12 Mhz, divider is unknown
 	MCFG_CPU_PROGRAM_MAP(prosoccr_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(12000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 0*8, 32*8-1)
@@ -917,7 +917,7 @@ static MACHINE_CONFIG_START( prosport, liberate_state )
 	MCFG_CPU_PROGRAM_MAP(liberate_sound_map)
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,16*60) /* ??? */
 
-//  MCFG_QUANTUM_TIME(HZ(12000))
+//  MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
 	MCFG_MACHINE_START(liberate)
 	MCFG_MACHINE_RESET(liberate)

@@ -2352,11 +2352,11 @@ static void t90_start_timer(t90_Regs *cpustate, int i)
 	}
 
 
-	period = attotime_mul(cpustate->timer_period, prescaler);
+	period = cpustate->timer_period * prescaler;
 
-	timer_adjust_periodic(cpustate->timer[i], period, i, period);
+	cpustate->timer[i]->adjust(period, i, period);
 
-	logerror("%04X: CPU Timer %d started at %lf Hz\n", cpustate->pc.w.l, i, 1.0 / attotime_to_double(period));
+	logerror("%04X: CPU Timer %d started at %lf Hz\n", cpustate->pc.w.l, i, 1.0 / period.as_double());
 }
 
 static void t90_start_timer4(t90_Regs *cpustate)
@@ -2374,17 +2374,17 @@ static void t90_start_timer4(t90_Regs *cpustate)
 					return;
 	}
 
-	period = attotime_mul(cpustate->timer_period, prescaler);
+	period = cpustate->timer_period * prescaler;
 
-	timer_adjust_periodic(cpustate->timer[4], period, 4, period);
+	cpustate->timer[4]->adjust(period, 4, period);
 
-	logerror("%04X: CPU Timer 4 started at %lf Hz\n", cpustate->pc.w.l, 1.0 / attotime_to_double(period));
+	logerror("%04X: CPU Timer 4 started at %lf Hz\n", cpustate->pc.w.l, 1.0 / period.as_double());
 }
 
 
 static void t90_stop_timer(t90_Regs *cpustate, int i)
 {
-	timer_adjust_oneshot(cpustate->timer[i], attotime_never, i);
+	cpustate->timer[i]->adjust(attotime::never, i);
 	logerror("%04X: CPU Timer %d stopped\n", cpustate->pc.w.l, i);
 }
 
@@ -2636,45 +2636,45 @@ static void state_register( legacy_cpu_device *device )
 {
 	t90_Regs *cpustate = get_safe_token(device);
 
-	state_save_register_device_item(device, 0, cpustate->prvpc.w.l);
-	state_save_register_device_item(device, 0, cpustate->pc.w.l);
-	state_save_register_device_item(device, 0, cpustate->sp.w.l);
-	state_save_register_device_item(device, 0, cpustate->af.w.l);
-	state_save_register_device_item(device, 0, cpustate->bc.w.l);
-	state_save_register_device_item(device, 0, cpustate->de.w.l);
-	state_save_register_device_item(device, 0, cpustate->hl.w.l);
-	state_save_register_device_item(device, 0, cpustate->ix.w.l);
-	state_save_register_device_item(device, 0, cpustate->iy.w.l);
-	state_save_register_device_item(device, 0, cpustate->af2.w.l);
-	state_save_register_device_item(device, 0, cpustate->bc2.w.l);
-	state_save_register_device_item(device, 0, cpustate->de2.w.l);
-	state_save_register_device_item(device, 0, cpustate->hl2.w.l);
-	state_save_register_device_item(device, 0, cpustate->halt);
-	state_save_register_device_item(device, 0, cpustate->after_EI);
-	state_save_register_device_item(device, 0, cpustate->irq_state);
-	state_save_register_device_item(device, 0, cpustate->irq_mask);
-	state_save_register_device_item(device, 0, cpustate->icount);
-	state_save_register_device_item(device, 0, cpustate->extra_cycles);
+	device->save_item(NAME(cpustate->prvpc.w.l));
+	device->save_item(NAME(cpustate->pc.w.l));
+	device->save_item(NAME(cpustate->sp.w.l));
+	device->save_item(NAME(cpustate->af.w.l));
+	device->save_item(NAME(cpustate->bc.w.l));
+	device->save_item(NAME(cpustate->de.w.l));
+	device->save_item(NAME(cpustate->hl.w.l));
+	device->save_item(NAME(cpustate->ix.w.l));
+	device->save_item(NAME(cpustate->iy.w.l));
+	device->save_item(NAME(cpustate->af2.w.l));
+	device->save_item(NAME(cpustate->bc2.w.l));
+	device->save_item(NAME(cpustate->de2.w.l));
+	device->save_item(NAME(cpustate->hl2.w.l));
+	device->save_item(NAME(cpustate->halt));
+	device->save_item(NAME(cpustate->after_EI));
+	device->save_item(NAME(cpustate->irq_state));
+	device->save_item(NAME(cpustate->irq_mask));
+	device->save_item(NAME(cpustate->icount));
+	device->save_item(NAME(cpustate->extra_cycles));
 
-	state_save_register_device_item_array(device, 0, cpustate->internal_registers);
-	state_save_register_device_item(device, 0, cpustate->ixbase);
-	state_save_register_device_item(device, 0, cpustate->iybase);
+	device->save_item(NAME(cpustate->internal_registers));
+	device->save_item(NAME(cpustate->ixbase));
+	device->save_item(NAME(cpustate->iybase));
 
-	state_save_register_device_item_array(device, 0, cpustate->timer_value);
-	state_save_register_device_item(device, 0, cpustate->timer4_value);
+	device->save_item(NAME(cpustate->timer_value));
+	device->save_item(NAME(cpustate->timer4_value));
 
 	// Work registers
-	state_save_register_device_item(device, 0, cpustate->op);
-	state_save_register_device_item(device, 0, cpustate->mode1);
-	state_save_register_device_item(device, 0, cpustate->r1);
-	state_save_register_device_item(device, 0, cpustate->r1b);
-	state_save_register_device_item(device, 0, cpustate->mode2);
-	state_save_register_device_item(device, 0, cpustate->r2);
-	state_save_register_device_item(device, 0, cpustate->r2b);
+	device->save_item(NAME(cpustate->op));
+	device->save_item(NAME(cpustate->mode1));
+	device->save_item(NAME(cpustate->r1));
+	device->save_item(NAME(cpustate->r1b));
+	device->save_item(NAME(cpustate->mode2));
+	device->save_item(NAME(cpustate->r2));
+	device->save_item(NAME(cpustate->r2b));
 
-	state_save_register_device_item(device, 0, cpustate->cyc_t);
-	state_save_register_device_item(device, 0, cpustate->cyc_f);
-	state_save_register_device_item(device, 0, cpustate->addr);
+	device->save_item(NAME(cpustate->cyc_t));
+	device->save_item(NAME(cpustate->cyc_f));
+	device->save_item(NAME(cpustate->addr));
 }
 
 
@@ -2715,7 +2715,7 @@ static CPU_INIT( t90 )
 	cpustate->program = device->space(AS_PROGRAM);
 	cpustate->io = device->space(AS_IO);
 
-	cpustate->timer_period = attotime_mul(ATTOTIME_IN_HZ(device->unscaled_clock()), 8);
+	cpustate->timer_period = attotime::from_hz(device->unscaled_clock()) * 8;
 
 	// Reset registers to their initial values
 
@@ -2725,9 +2725,9 @@ static CPU_INIT( t90 )
 	// Timers
 
 	for (i = 0; i < 4; i++)
-		cpustate->timer[i] = timer_alloc(device->machine, t90_timer_callback, cpustate);
+		cpustate->timer[i] = device->machine->scheduler().timer_alloc(FUNC(t90_timer_callback), cpustate);
 
-	cpustate->timer[4] = timer_alloc(device->machine, t90_timer4_callback, cpustate);
+	cpustate->timer[4] = device->machine->scheduler().timer_alloc(FUNC(t90_timer4_callback), cpustate);
 }
 
 static ADDRESS_MAP_START(tmp90840_mem, ADDRESS_SPACE_PROGRAM, 8)

@@ -236,21 +236,21 @@ static TIMER_CALLBACK( auto_animation_timer_callback )
 	else
 		state->auto_animation_frame_counter = state->auto_animation_frame_counter - 1;
 
-	timer_adjust_oneshot(state->auto_animation_timer, machine->primary_screen->time_until_pos(NEOGEO_VSSTART), 0);
+	state->auto_animation_timer->adjust(machine->primary_screen->time_until_pos(NEOGEO_VSSTART));
 }
 
 
 static void create_auto_animation_timer( running_machine *machine )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
-	state->auto_animation_timer = timer_alloc(machine, auto_animation_timer_callback, NULL);
+	state->auto_animation_timer = machine->scheduler().timer_alloc(FUNC(auto_animation_timer_callback));
 }
 
 
 static void start_auto_animation_timer( running_machine *machine )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
-	timer_adjust_oneshot(state->auto_animation_timer, machine->primary_screen->time_until_pos(NEOGEO_VSSTART), 0);
+	state->auto_animation_timer->adjust(machine->primary_screen->time_until_pos(NEOGEO_VSSTART));
 }
 
 
@@ -658,21 +658,21 @@ static TIMER_CALLBACK( sprite_line_timer_callback )
 	/* let's come back at the beginning of the next line */
 	scanline = (scanline + 1) % NEOGEO_VTOTAL;
 
-	timer_adjust_oneshot(state->sprite_line_timer, machine->primary_screen->time_until_pos(scanline), scanline);
+	state->sprite_line_timer->adjust(machine->primary_screen->time_until_pos(scanline), scanline);
 }
 
 
 static void create_sprite_line_timer( running_machine *machine )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
-	state->sprite_line_timer = timer_alloc(machine, sprite_line_timer_callback, NULL);
+	state->sprite_line_timer = machine->scheduler().timer_alloc(FUNC(sprite_line_timer_callback));
 }
 
 
 static void start_sprite_line_timer( running_machine *machine )
 {
 	neogeo_state *state = machine->driver_data<neogeo_state>();
-	timer_adjust_oneshot(state->sprite_line_timer, machine->primary_screen->time_until_pos(0), 0);
+	state->sprite_line_timer->adjust(machine->primary_screen->time_until_pos(0));
 }
 
 
@@ -776,7 +776,7 @@ static UINT16 get_video_control( running_machine *machine )
 
 	ret = (v_counter << 7) | (neogeo_get_auto_animation_counter(machine) & 0x0007);
 
-	if (VERBOSE) logerror("%s: video_control read (%04x)\n", cpuexec_describe_context(machine), ret);
+	if (VERBOSE) logerror("%s: video_control read (%04x)\n", machine->describe_context(), ret);
 
 	return ret;
 }
@@ -785,7 +785,7 @@ static UINT16 get_video_control( running_machine *machine )
 static void set_video_control( running_machine *machine, UINT16 data )
 {
 	/* this does much more than this, but I'm not sure exactly what */
-	if (VERBOSE) logerror("%s: video control write %04x\n", cpuexec_describe_context(machine), data);
+	if (VERBOSE) logerror("%s: video control write %04x\n", machine->describe_context(), data);
 
 	set_auto_animation_speed(machine, data >> 8);
 	set_auto_animation_disabled(machine, data & 0x0008);
@@ -879,21 +879,21 @@ VIDEO_START( neogeo )
 	state->auto_animation_frame_counter = 0;
 
 	/* register for state saving */
-	state_save_register_global_pointer(machine, state->palettes[0], NUM_PENS);
-	state_save_register_global_pointer(machine, state->palettes[1], NUM_PENS);
-	state_save_register_global_pointer(machine, state->videoram, 0x20000/2);
-	state_save_register_global(machine, state->videoram_read_buffer);
-	state_save_register_global(machine, state->videoram_modulo);
-	state_save_register_global(machine, state->videoram_offset);
-	state_save_register_global(machine, state->fixed_layer_source);
-	state_save_register_global(machine, state->screen_dark);
-	state_save_register_global(machine, state->palette_bank);
-	state_save_register_global(machine, state->auto_animation_speed);
-	state_save_register_global(machine, state->auto_animation_disabled);
-	state_save_register_global(machine, state->auto_animation_counter);
-	state_save_register_global(machine, state->auto_animation_frame_counter);
+	state->save_pointer(NAME(state->palettes[0]), NUM_PENS);
+	state->save_pointer(NAME(state->palettes[1]), NUM_PENS);
+	state->save_pointer(NAME(state->videoram), 0x20000/2);
+	state->save_item(NAME(state->videoram_read_buffer));
+	state->save_item(NAME(state->videoram_modulo));
+	state->save_item(NAME(state->videoram_offset));
+	state->save_item(NAME(state->fixed_layer_source));
+	state->save_item(NAME(state->screen_dark));
+	state->save_item(NAME(state->palette_bank));
+	state->save_item(NAME(state->auto_animation_speed));
+	state->save_item(NAME(state->auto_animation_disabled));
+	state->save_item(NAME(state->auto_animation_counter));
+	state->save_item(NAME(state->auto_animation_frame_counter));
 
-	state_save_register_postload(machine, regenerate_pens, NULL);
+	machine->state().register_postload(regenerate_pens, NULL);
 
 	state->region_zoomy = machine->region("zoomy")->base();
 }

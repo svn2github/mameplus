@@ -918,23 +918,23 @@ static MACHINE_START( arkanoid )
 
 	state->mcu = machine->device("mcu");
 
-	state_save_register_global(machine, state->bootleg_cmd);
+	state->save_item(NAME(state->bootleg_cmd));
 
-	state_save_register_global(machine, state->paddle_select);
-	state_save_register_global(machine, state->z80write);
-	state_save_register_global(machine, state->fromz80);
-	state_save_register_global(machine, state->m68705write);
-	state_save_register_global(machine, state->toz80);
+	state->save_item(NAME(state->paddle_select));
+	state->save_item(NAME(state->z80write));
+	state->save_item(NAME(state->fromz80));
+	state->save_item(NAME(state->m68705write));
+	state->save_item(NAME(state->toz80));
 
-	state_save_register_global(machine, state->port_a_in);
-	state_save_register_global(machine, state->port_a_out);
-	state_save_register_global(machine, state->ddr_a);
+	state->save_item(NAME(state->port_a_in));
+	state->save_item(NAME(state->port_a_out));
+	state->save_item(NAME(state->ddr_a));
 
-	state_save_register_global(machine, state->port_c_out);
-	state_save_register_global(machine, state->ddr_c);
+	state->save_item(NAME(state->port_c_out));
+	state->save_item(NAME(state->ddr_c));
 
-	state_save_register_global(machine, state->gfxbank);
-	state_save_register_global(machine, state->palettebank);
+	state->save_item(NAME(state->gfxbank));
+	state->save_item(NAME(state->palettebank));
 }
 
 static MACHINE_RESET( arkanoid )
@@ -967,7 +967,7 @@ static MACHINE_CONFIG_START( arkanoid, arkanoid_state )
 	MCFG_CPU_ADD("mcu", M68705, XTAL_12MHz/4) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(mcu_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))					// 100 CPU slices per second to synchronize between the MCU and the main CPU
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))					// 100 CPU slices per second to synchronize between the MCU and the main CPU
 
 	MCFG_MACHINE_START(arkanoid)
 	MCFG_MACHINE_RESET(arkanoid)

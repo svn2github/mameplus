@@ -101,7 +101,6 @@ $8000 - $ffff   ROM
 ***************************************************************************/
 
 #include "emu.h"
-#include "streams.h"
 #include "deprecat.h"
 #include "cpu/m6502/m6502.h"
 #include "cpu/m6809/m6809.h"
@@ -174,7 +173,7 @@ static DEVICE_START( renegade_adpcm )
 	running_machine *machine = device->machine;
 	struct renegade_adpcm_state *state = &renegade_adpcm;
 	state->playing = 0;
-	state->stream = stream_create(device, 0, 1, device->clock(), state, renegade_adpcm_callback);
+	state->stream = device->machine->sound().stream_alloc(*device, 0, 1, device->clock(), state, renegade_adpcm_callback);
 	state->base = machine->region("adpcm")->base();
 	state->adpcm.reset();
 }
@@ -266,7 +265,7 @@ static MACHINE_START( renegade )
 	state_save_register_global(machine, mcu_key);
 
 	state_save_register_global(machine, bank);
-	state_save_register_postload(machine, renegade_postload, NULL);
+	machine->state().register_postload(renegade_postload, NULL);
 }
 
 static DRIVER_INIT( renegade )

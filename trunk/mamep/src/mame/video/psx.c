@@ -270,7 +270,7 @@ INLINE void ATTR_PRINTF(3,4) verboselog( psx_gpu *p_psxgpu, int n_level, const c
 		va_start( v, s_fmt );
 		vsprintf( buf, s_fmt, v );
 		va_end( v );
-		logerror( "%s: %s", cpuexec_describe_context(p_psxgpu->machine), buf );
+		logerror( "%s: %s", p_psxgpu->machine->describe_context(), buf );
 	}
 }
 
@@ -749,7 +749,7 @@ static void psx_gpu_init( running_machine *machine, int n_gputype )
 	}
 
 	// icky!!!
-	state_save_register_memory( machine, "globals", NULL, 0, "m_packet", (UINT8 *)&p_psxgpu->m_packet, 1, sizeof( p_psxgpu->m_packet ), __FILE__, __LINE__ );
+	machine->state().save_memory( "globals", NULL, 0, "m_packet", (UINT8 *)&p_psxgpu->m_packet, 1, sizeof( p_psxgpu->m_packet ) );
 
 	state_save_register_global_pointer( machine, p_psxgpu->p_vram, p_psxgpu->n_vram_size );
 	state_save_register_global( machine, p_psxgpu->n_gpu_buffer_offset );
@@ -783,7 +783,7 @@ static void psx_gpu_init( running_machine *machine, int n_gputype )
 	state_save_register_global( machine, p_psxgpu->n_iy );
 	state_save_register_global( machine, p_psxgpu->n_ti );
 
-	state_save_register_postload( machine, updatevisiblearea, NULL );
+	machine->state().register_postload( updatevisiblearea, NULL );
 	machine->driver_data<psx_state>()->p_psxgpu = p_psxgpu;
 }
 

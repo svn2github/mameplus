@@ -846,12 +846,7 @@ static void create_window_class(void)
 		// initialize the description of the window class
 		wc.lpszClassName	= TEXT("MAME");
 		wc.hInstance		= GetModuleHandle(NULL);
-#ifdef MENU_BAR
-		LRESULT CALLBACK winwindow_video_window_proc_ui(HWND wnd, UINT message, WPARAM wparam, LPARAM lparam);
 		wc.lpfnWndProc		= winwindow_video_window_proc_ui;
-#else
-		wc.lpfnWndProc		= winwindow_video_window_proc;
-#endif
 		wc.hCursor			= LoadCursor(NULL, IDC_ARROW);
 		// mamep: show mame icon in-game window title
 		wc.hIcon			= LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_MAME_ICON));
@@ -1143,11 +1138,10 @@ static int complete_create(win_window_info *window)
 	monitorbounds = window->monitor->info.rcMonitor;
 
 	// create the window menu if needed
-#if HAS_WINDOW_MENU
-	// mamep: menu failure shouldn't block window creation
-	win_create_menu(window->machine, &menu);
-	//	return 1;
-#endif
+	if (options_get_bool(mame_options(), "menu")) {
+		if (win_create_menu(window->machine, &menu))
+			return 1;
+	}
 
 	// create the window, but don't show it yet
 	window->hwnd = win_create_window_ex_utf8(
@@ -1239,7 +1233,7 @@ LRESULT CALLBACK winwindow_video_window_proc(HWND wnd, UINT message, WPARAM wpar
 
 		// non-client paint: punt if full screen
 		case WM_NCPAINT:
-			if (!window->fullscreen || HAS_WINDOW_MENU)
+			if (!window->fullscreen || win_has_menu(window))
 				return DefWindowProc(wnd, message, wparam, lparam);
 			break;
 

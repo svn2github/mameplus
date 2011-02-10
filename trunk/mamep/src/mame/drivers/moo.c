@@ -134,7 +134,7 @@ static INTERRUPT_GEN( moo_interrupt )
 		moo_objdma(device->machine, state->game_type);
 
 		// schedule DMA end interrupt (delay shortened to catch up with V-blank)
-        timer_adjust_oneshot(state->dmaend_timer, ATTOTIME_IN_USEC(MOO_DMADELAY), 0);
+        state->dmaend_timer->adjust(attotime::from_usec(MOO_DMADELAY));
 	}
 
 	// trigger V-blank interrupt
@@ -148,7 +148,7 @@ static INTERRUPT_GEN( moobl_interrupt )
 	moo_objdma(device->machine, state->game_type);
 
 	// schedule DMA end interrupt (delay shortened to catch up with V-blank)
-    timer_adjust_oneshot(state->dmaend_timer, ATTOTIME_IN_USEC(MOO_DMADELAY), 0);
+    state->dmaend_timer->adjust(attotime::from_usec(MOO_DMADELAY));
 
 	// trigger V-blank interrupt
 	cpu_set_input_line(device, 5, HOLD_LINE);
@@ -441,14 +441,14 @@ static MACHINE_START( moo )
 	state->k056832 = machine->device("k056832");
 	state->k054338 = machine->device("k054338");
 
-	state_save_register_global(machine, state->cur_control2);
-	state_save_register_global(machine, state->alpha_enabled);
-	state_save_register_global(machine, state->sprite_colorbase);
-	state_save_register_global_array(machine, state->layer_colorbase);
-	state_save_register_global_array(machine, state->layerpri);
-	state_save_register_global_array(machine, state->protram);
+	state->save_item(NAME(state->cur_control2));
+	state->save_item(NAME(state->alpha_enabled));
+	state->save_item(NAME(state->sprite_colorbase));
+	state->save_item(NAME(state->layer_colorbase));
+	state->save_item(NAME(state->layerpri));
+	state->save_item(NAME(state->protram));
 
-    state->dmaend_timer = timer_alloc(machine, dmaend_callback, 0);
+    state->dmaend_timer = machine->scheduler().timer_alloc(FUNC(dmaend_callback));
 }
 
 static MACHINE_RESET( moo )

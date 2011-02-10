@@ -116,8 +116,8 @@ static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_portmap, ADDRESS_SPACE_IO, 8 )
-	AM_RANGE(M6803_PORT1, M6803_PORT1) AM_DEVREADWRITE("aysnd", m6803_port1_r, m6803_port1_w)
-	AM_RANGE(M6803_PORT2, M6803_PORT2) AM_DEVREADWRITE("aysnd", m6803_port2_r, m6803_port2_w)
+	AM_RANGE(M6801_PORT1, M6801_PORT1) AM_DEVREADWRITE("aysnd", m6803_port1_r, m6803_port1_w)
+	AM_RANGE(M6801_PORT2, M6801_PORT2) AM_DEVREADWRITE("aysnd", m6803_port2_r, m6803_port2_w)
 ADDRESS_MAP_END
 
 
@@ -254,11 +254,11 @@ static MACHINE_START( kncljoe )
 
 	state->soundcpu = machine->device("soundcpu");
 
-	state_save_register_global(machine, state->port1);
-	state_save_register_global(machine, state->port2);
-	state_save_register_global(machine, state->tile_bank);
-	state_save_register_global(machine, state->sprite_bank);
-	state_save_register_global(machine, state->flipscreen);
+	state->save_item(NAME(state->port1));
+	state->save_item(NAME(state->port2));
+	state->save_item(NAME(state->tile_bank));
+	state->save_item(NAME(state->sprite_bank));
+	state->save_item(NAME(state->flipscreen));
 }
 
 static MACHINE_RESET( kncljoe )

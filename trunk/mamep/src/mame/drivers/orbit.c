@@ -50,7 +50,7 @@ static TIMER_CALLBACK( irq_off )
 static INTERRUPT_GEN( orbit_interrupt )
 {
 	cpu_set_input_line(device, 0, ASSERT_LINE);
-	timer_set(device->machine, device->machine->primary_screen->time_until_vblank_end(), NULL, 0, irq_off);
+	device->machine->scheduler().timer_set(device->machine->primary_screen->time_until_vblank_end(), FUNC(irq_off));
 }
 
 
@@ -279,8 +279,8 @@ static MACHINE_START( orbit )
 	state->maincpu = machine->device("maincpu");
 	state->discrete = machine->device("discrete");
 
-	state_save_register_global(machine, state->misc_flags);
-	state_save_register_global(machine, state->flip_screen);
+	state->save_item(NAME(state->misc_flags));
+	state->save_item(NAME(state->flip_screen));
 }
 
 static MACHINE_RESET( orbit )

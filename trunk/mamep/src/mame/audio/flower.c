@@ -5,7 +5,6 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "streams.h"
 #include "includes/flower.h"
 
 
@@ -172,7 +171,7 @@ static DEVICE_START( flower_sound )
 	int i;
 
 	/* get stream channels */
-	state->stream = stream_create(device, 0, 1, samplerate, 0, flower_update_mono);
+	state->stream = device->machine->sound().stream_alloc(*device, 0, 1, samplerate, 0, flower_update_mono);
 
 	/* allocate a pair of buffers to mix into - 1 second's worth should be more than enough */
 	state->mixer_buffer = auto_alloc_array(device->machine, short, 2 * samplerate);
@@ -192,8 +191,8 @@ static DEVICE_START( flower_sound )
 	state->sound_enable = 1;
 
 	/* save globals */
-	state_save_register_device_item(device, 0, state->num_voices);
-	state_save_register_device_item(device, 0, state->sound_enable);
+	device->save_item(NAME(state->num_voices));
+	device->save_item(NAME(state->sound_enable));
 
 	/* reset all the voices */
 	for (i = 0; i < state->num_voices; i++)
@@ -205,12 +204,12 @@ static DEVICE_START( flower_sound )
 		voice->counter = 0;
 		voice->rom_offset = 0;
 
-		state_save_register_device_item(device, i+1, voice->frequency);
-		state_save_register_device_item(device, i+1, voice->counter);
-		state_save_register_device_item(device, i+1, voice->volume);
-		state_save_register_device_item(device, i+1, voice->oneshot);
-		state_save_register_device_item(device, i+1, voice->oneshotplaying);
-		state_save_register_device_item(device, i+1, voice->rom_offset);
+		device->save_item(NAME(voice->frequency), i+1);
+		device->save_item(NAME(voice->counter), i+1);
+		device->save_item(NAME(voice->volume), i+1);
+		device->save_item(NAME(voice->oneshot), i+1);
+		device->save_item(NAME(voice->oneshotplaying), i+1);
+		device->save_item(NAME(voice->rom_offset), i+1);
 	}
 }
 
@@ -241,7 +240,7 @@ WRITE8_DEVICE_HANDLER( flower_sound1_w )
 	int base;
 
 	/* update the streams */
-	stream_update(state->stream);
+	state->stream->update();
 
 	/* set the register */
 	state->soundregs1[offset] = data;
@@ -291,7 +290,7 @@ popmessage("%02x%02x %02x%02x %02x%02x %02x%02x %02x%02x %02x%02x %02x%02x %02x%
 */
 
 	/* update the streams */
-	stream_update(state->stream);
+	state->stream->update();
 
 	/* set the register */
 	state->soundregs2[offset] = data;

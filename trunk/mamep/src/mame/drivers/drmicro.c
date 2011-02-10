@@ -232,9 +232,9 @@ static MACHINE_START( drmicro )
 
 	state->msm = machine->device("msm");
 
-	state_save_register_global(machine, state->nmi_enable);
-	state_save_register_global(machine, state->pcm_adr);
-	state_save_register_global(machine, state->flipscreen);
+	state->save_item(NAME(state->nmi_enable));
+	state->save_item(NAME(state->pcm_adr));
+	state->save_item(NAME(state->flipscreen));
 }
 
 static MACHINE_RESET( drmicro )
@@ -255,7 +255,7 @@ static MACHINE_CONFIG_START( drmicro, drmicro_state )
 	MCFG_CPU_IO_MAP(io_map)
 	MCFG_CPU_VBLANK_INT("screen", drmicro_interrupt)
 
-	MCFG_QUANTUM_TIME(HZ(60))
+	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
 	MCFG_MACHINE_START(drmicro)
 	MCFG_MACHINE_RESET(drmicro)

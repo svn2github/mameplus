@@ -727,7 +727,7 @@ static WRITE8_DEVICE_HANDLER( buckrog_ppi8255_0_w )
 {
 	/* the port C handshaking signals control the sub CPU IRQ, */
 	/* so we have to sync whenever we access this PPI */
-	timer_call_after_resynch(device->machine, NULL, ((offset & 3) << 8) | (data & 0xff), delayed_ppi8255_w);
+	device->machine->scheduler().synchronize(FUNC(delayed_ppi8255_w), ((offset & 3) << 8) | (data & 0xff));
 }
 
 
@@ -1143,7 +1143,7 @@ static MACHINE_CONFIG_START( buckrog, turbo_state )
 	MCFG_CPU_PROGRAM_MAP(buckrog_cpu2_map)
 	MCFG_CPU_IO_MAP(buckrog_cpu2_portmap)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 	MCFG_MACHINE_RESET(buckrog)
 
 	MCFG_PPI8255_ADD( "ppi8255_0", buckrog_8255_intf[0] )

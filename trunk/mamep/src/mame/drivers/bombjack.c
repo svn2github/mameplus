@@ -110,7 +110,7 @@ static TIMER_CALLBACK( soundlatch_callback )
 static WRITE8_HANDLER( bombjack_soundlatch_w )
 {
 	/* make all the CPUs synchronize, and only AFTER that write the new command to the latch */
-	timer_call_after_resynch(space->machine, NULL, data, soundlatch_callback);
+	space->machine->scheduler().synchronize(FUNC(soundlatch_callback), data);
 }
 
 static READ8_HANDLER( bombjack_soundlatch_r )
@@ -330,8 +330,8 @@ static MACHINE_START( bombjack )
 {
 	bombjack_state *state = machine->driver_data<bombjack_state>();
 
-	state_save_register_global(machine, state->latch);
-	state_save_register_global(machine, state->background_image);
+	state->save_item(NAME(state->latch));
+	state->save_item(NAME(state->background_image));
 }
 
 

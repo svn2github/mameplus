@@ -579,12 +579,12 @@ static MACHINE_START( angelkds )
 
 	state->subcpu = machine->device("sub");
 
-	state_save_register_global(machine, state->layer_ctrl);
-	state_save_register_global(machine, state->txbank);
-	state_save_register_global(machine, state->bgbotbank);
-	state_save_register_global(machine, state->bgtopbank);
-	state_save_register_global_array(machine, state->sound);
-	state_save_register_global_array(machine, state->sound2);
+	state->save_item(NAME(state->layer_ctrl));
+	state->save_item(NAME(state->txbank));
+	state->save_item(NAME(state->bgbotbank));
+	state->save_item(NAME(state->bgtopbank));
+	state->save_item(NAME(state->sound));
+	state->save_item(NAME(state->sound2));
 }
 
 static MACHINE_RESET( angelkds )
@@ -618,7 +618,7 @@ static MACHINE_CONFIG_START( angelkds, angelkds_state )
 	MCFG_MACHINE_START(angelkds)
 	MCFG_MACHINE_RESET(angelkds)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

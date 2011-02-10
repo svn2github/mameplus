@@ -303,14 +303,14 @@ static TIMER_CALLBACK( topspeed_cpub_interrupt6 )
 static INTERRUPT_GEN( topspeed_interrupt )
 {
 	/* Unsure how many int6's per frame */
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), NULL, 0, topspeed_interrupt6);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(topspeed_interrupt6));
 	cpu_set_input_line(device, 5, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( topspeed_cpub_interrupt )
 {
 	/* Unsure how many int6's per frame */
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), NULL, 0, topspeed_cpub_interrupt6);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(topspeed_cpub_interrupt6));
 	cpu_set_input_line(device, 5, HOLD_LINE);
 }
 
@@ -659,10 +659,10 @@ static MACHINE_START( topspeed )
 	state->pc080sn_1 = machine->device("pc080sn_1");
 	state->pc080sn_2 = machine->device("pc080sn_2");
 
-	state_save_register_global(machine, state->cpua_ctrl);
-	state_save_register_global(machine, state->ioc220_port);
-	state_save_register_global(machine, state->banknum);
-	state_save_register_postload(machine, topspeed_postload, NULL);
+	state->save_item(NAME(state->cpua_ctrl));
+	state->save_item(NAME(state->ioc220_port));
+	state->save_item(NAME(state->banknum));
+	machine->state().register_postload(topspeed_postload, NULL);
 }
 
 static MACHINE_RESET( topspeed )

@@ -80,7 +80,7 @@ static WRITE8_HANDLER( mcu_portB_w )
 		cputag_set_input_line(space->machine, "mcu", M6805_IRQ_LINE, CLEAR_LINE );
 
 	/* AUDMUTE */
-	sound_global_enable(space->machine, (data >> 5) & 1);
+	space->machine->sound().system_enable((data >> 5) & 1);
 
 	/* RES600 */
 	if (diff & 0x10)
@@ -199,7 +199,7 @@ static WRITE8_HANDLER( mcu_tcr_w )
 			divider = divider * (1 << (tcr & 0x7));
 		}
 
-		period = attotime_mul(ATTOTIME_IN_HZ(3579545), divider);
+		period = attotime::from_hz(3579545) * divider;
 		mcu_timer->adjust(period, 0, period);
 	}
 }

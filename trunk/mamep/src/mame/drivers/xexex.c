@@ -71,7 +71,7 @@ Unresolved Issues:
 
 #define XE_DEBUG      0
 #define XE_SKIPIDLE   1
-#define XE_DMADELAY   ATTOTIME_IN_USEC(256)
+#define XE_DMADELAY   attotime::from_usec(256)
 
 static const eeprom_interface eeprom_intf =
 {
@@ -275,7 +275,7 @@ static TIMER_CALLBACK( dmaend_callback )
 		if (state->suspension_active)
 		{
 			state->suspension_active = 0;
-			cpuexec_trigger(machine, state->resume_trigger);
+			machine->scheduler().trigger(state->resume_trigger);
 		}
 
 		// IRQ 5 is the "object DMA end interrupt" and shouldn't be triggered
@@ -291,7 +291,7 @@ static INTERRUPT_GEN( xexex_interrupt )
 	if (state->suspension_active)
 	{
 		state->suspension_active = 0;
-		cpuexec_trigger(device->machine, state->resume_trigger);
+		device->machine->scheduler().trigger(state->resume_trigger);
 	}
 
 	switch (cpu_getiloops(device))
@@ -309,7 +309,7 @@ static INTERRUPT_GEN( xexex_interrupt )
 				xexex_objdma(device->machine, 0);
 
 				// schedule DMA end interrupt
-				timer_adjust_oneshot(state->dmadelay_timer, XE_DMADELAY, 0);
+				state->dmadelay_timer->adjust(XE_DMADELAY);
 			}
 
 			// IRQ 4 is the V-blank interrupt. It controls color, sound and
@@ -483,19 +483,19 @@ static MACHINE_START( xexex )
 	state->filter2l = machine->device("filter2l");
 	state->filter2r = machine->device("filter2r");
 
-	state_save_register_global(machine, state->cur_alpha);
-	state_save_register_global(machine, state->sprite_colorbase);
-	state_save_register_global_array(machine, state->layer_colorbase);
-	state_save_register_global_array(machine, state->layerpri);
+	state->save_item(NAME(state->cur_alpha));
+	state->save_item(NAME(state->sprite_colorbase));
+	state->save_item(NAME(state->layer_colorbase));
+	state->save_item(NAME(state->layerpri));
 
-	state_save_register_global(machine, state->suspension_active);
-	state_save_register_global(machine, state->frame);
+	state->save_item(NAME(state->suspension_active));
+	state->save_item(NAME(state->frame));
 
-	state_save_register_global(machine, state->cur_control2);
-	state_save_register_global(machine, state->cur_sound_region);
-	state_save_register_postload(machine, xexex_postload, NULL);
+	state->save_item(NAME(state->cur_control2));
+	state->save_item(NAME(state->cur_sound_region));
+	machine->state().register_postload(xexex_postload, NULL);
 
-	state->dmadelay_timer = timer_alloc(machine, dmaend_callback, NULL);
+	state->dmadelay_timer = machine->scheduler().timer_alloc(FUNC(dmaend_callback));
 }
 
 static MACHINE_RESET( xexex )
@@ -531,7 +531,7 @@ static MACHINE_CONFIG_START( xexex, xexex_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 8000000)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(1920))
+	MCFG_QUANTUM_TIME(attotime::from_hz(1920))
 
 	MCFG_MACHINE_START(xexex)
 	MCFG_MACHINE_RESET(xexex)

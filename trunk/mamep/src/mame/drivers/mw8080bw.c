@@ -852,7 +852,7 @@ static MACHINE_CONFIG_DERIVED( zzzap, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(zzzap_io_map)
-	MCFG_WATCHDOG_TIME_INIT(NSEC(PERIOD_OF_555_MONOSTABLE_NSEC(RES_M(1), CAP_U(1)))) /* 1.1s */
+	MCFG_WATCHDOG_TIME_INIT(PERIOD_OF_555_MONOSTABLE(RES_M(1), CAP_U(1))) /* 1.1s */
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")
@@ -893,14 +893,14 @@ static MACHINE_START( maze )
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 
 	/* create astable timer for IC B1 */
-	timer_pulse(machine, MAZE_555_B1_PERIOD, NULL, 0, maze_tone_timing_timer_callback);
+	machine->scheduler().timer_pulse(MAZE_555_B1_PERIOD, FUNC(maze_tone_timing_timer_callback));
 
 	/* initialize state of Tone Timing FF, IC C1 */
 	state->maze_tone_timing_state = 0;
 
 	/* setup for save states */
-	state_save_register_global(machine, state->maze_tone_timing_state);
-	state_save_register_postload(machine, maze_update_discrete, NULL);
+	state->save_item(NAME(state->maze_tone_timing_state));
+	machine->state().register_postload(maze_update_discrete, NULL);
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -966,7 +966,7 @@ static MACHINE_CONFIG_DERIVED( maze, mw8080bw_root )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(maze_io_map)
 	MCFG_MACHINE_START(maze)
-	MCFG_WATCHDOG_TIME_INIT(NSEC(PERIOD_OF_555_MONOSTABLE_NSEC(RES_K(270), CAP_U(10)))) /* 2.97s */
+	MCFG_WATCHDOG_TIME_INIT(PERIOD_OF_555_MONOSTABLE(RES_K(270), CAP_U(10))) /* 2.97s */
 
 	/* audio hardware */
 	MCFG_FRAGMENT_ADD(maze_audio)
@@ -986,7 +986,7 @@ static MACHINE_START( boothill )
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state_save_register_global(machine, state->rev_shift_res);
+	state->save_item(NAME(state->rev_shift_res));
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -1058,7 +1058,7 @@ static MACHINE_CONFIG_DERIVED( boothill, mw8080bw_root )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(boothill_io_map)
 	MCFG_MACHINE_START(boothill)
-	MCFG_WATCHDOG_TIME_INIT(NSEC(PERIOD_OF_555_MONOSTABLE_NSEC(RES_K(270), CAP_U(10)))) /* 2.97s */
+	MCFG_WATCHDOG_TIME_INIT(PERIOD_OF_555_MONOSTABLE(RES_K(270), CAP_U(10))) /* 2.97s */
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")
@@ -1164,7 +1164,7 @@ static MACHINE_CONFIG_DERIVED( checkmat, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(checkmat_io_map)
-	MCFG_WATCHDOG_TIME_INIT(NSEC(PERIOD_OF_555_MONOSTABLE_NSEC(RES_K(270), CAP_U(10)))) /* 2.97s */
+	MCFG_WATCHDOG_TIME_INIT(PERIOD_OF_555_MONOSTABLE(RES_K(270), CAP_U(10))) /* 2.97s */
 
 	/* audio hardware */
 	MCFG_FRAGMENT_ADD(checkmat_audio)
@@ -1188,7 +1188,7 @@ static MACHINE_START( desertgu )
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state_save_register_global(machine, state->desertgun_controller_select);
+	state->save_item(NAME(state->desertgun_controller_select));
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -1294,7 +1294,7 @@ static MACHINE_CONFIG_DERIVED( desertgu, mw8080bw_root )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(desertgu_io_map)
 	MCFG_MACHINE_START(desertgu)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")
@@ -1493,7 +1493,7 @@ static MACHINE_CONFIG_DERIVED( dplay, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(dplay_io_map)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")
@@ -1516,7 +1516,7 @@ static MACHINE_START( gmissile )
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state_save_register_global(machine, state->rev_shift_res);
+	state->save_item(NAME(state->rev_shift_res));
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -1612,7 +1612,7 @@ static MACHINE_START( m4 )
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state_save_register_global(machine, state->rev_shift_res);
+	state->save_item(NAME(state->rev_shift_res));
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -1683,7 +1683,7 @@ static MACHINE_CONFIG_DERIVED( m4, mw8080bw_root )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(m4_io_map)
 	MCFG_MACHINE_START(m4)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")
@@ -1710,7 +1710,7 @@ static MACHINE_START( clowns )
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state_save_register_global(machine, state->clowns_controller_select);
+	state->save_item(NAME(state->clowns_controller_select));
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -1853,7 +1853,7 @@ static MACHINE_CONFIG_DERIVED( clowns, mw8080bw_root )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(clowns_io_map)
 	MCFG_MACHINE_START(clowns)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")
@@ -1947,7 +1947,7 @@ static MACHINE_CONFIG_DERIVED( spacwalk, mw8080bw_root )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(spacwalk_io_map)
 	MCFG_MACHINE_START(clowns)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")
@@ -2027,7 +2027,7 @@ static MACHINE_CONFIG_DERIVED( shuffle, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(shuffle_io_map)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")
@@ -2114,7 +2114,7 @@ static MACHINE_CONFIG_DERIVED( dogpatch, mw8080bw_root )
 	MCFG_CPU_IO_MAP(dogpatch_io_map)
 	/* the watch dog time is unknown, but all other */
 	/* Midway boards of the era used the same circuit */
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")
@@ -2148,10 +2148,10 @@ static MACHINE_START( spcenctr )
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state_save_register_global(machine, state->spcenctr_strobe_state);
-	state_save_register_global(machine, state->spcenctr_trench_width);
-	state_save_register_global(machine, state->spcenctr_trench_center);
-	state_save_register_global_array(machine, state->spcenctr_trench_slope);
+	state->save_item(NAME(state->spcenctr_strobe_state));
+	state->save_item(NAME(state->spcenctr_trench_width));
+	state->save_item(NAME(state->spcenctr_trench_center));
+	state->save_item(NAME(state->spcenctr_trench_slope));
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -2278,14 +2278,14 @@ static MACHINE_CONFIG_DERIVED( spcenctr, mw8080bw_root )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(spcenctr_io_map)
 	MCFG_MACHINE_START(spcenctr)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* timers */
-	MCFG_TIMER_ADD_PERIODIC("strobeon", spcenctr_strobe_timer_callback, HZ(SPCENCTR_STROBE_FREQ))
+	MCFG_TIMER_ADD_PERIODIC("strobeon", spcenctr_strobe_timer_callback, attotime::from_hz(SPCENCTR_STROBE_FREQ))
 	MCFG_TIMER_PARAM(TRUE)	/* indicates strobe ON */
 
-	MCFG_TIMER_ADD_PERIODIC("strobeoff", spcenctr_strobe_timer_callback, HZ(SPCENCTR_STROBE_FREQ))
-	MCFG_TIMER_START_DELAY(HZ(SPCENCTR_STROBE_FREQ * 100 / SPCENCTR_STROBE_DUTY_CYCLE))
+	MCFG_TIMER_ADD_PERIODIC("strobeoff", spcenctr_strobe_timer_callback, attotime::from_hz(SPCENCTR_STROBE_FREQ))
+	MCFG_TIMER_START_DELAY(attotime::from_hz(SPCENCTR_STROBE_FREQ * 100 / SPCENCTR_STROBE_DUTY_CYCLE))
 	MCFG_TIMER_PARAM(FALSE)	/* indicates strobe OFF */
 
 	/* video hardware */
@@ -2310,7 +2310,7 @@ static MACHINE_START( phantom2 )
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state_save_register_global(machine, state->phantom2_cloud_counter);
+	state->save_item(NAME(state->phantom2_cloud_counter));
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -2373,7 +2373,7 @@ static MACHINE_CONFIG_DERIVED( phantom2, mw8080bw_root )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(phantom2_io_map)
 	MCFG_MACHINE_START(phantom2)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* video hardware */
 	MCFG_VIDEO_UPDATE(phantom2)
@@ -2511,7 +2511,7 @@ static MACHINE_CONFIG_DERIVED( bowler, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(bowler_io_map)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")
@@ -2539,7 +2539,7 @@ static MACHINE_START( invaders )
 	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state_save_register_global(machine, state->invaders_flip_screen);
+	state->save_item(NAME(state->invaders_flip_screen));
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -2728,7 +2728,7 @@ MACHINE_CONFIG_DERIVED( invaders, mw8080bw_root )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(invaders_io_map)
 	MCFG_MACHINE_START(invaders)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* video hardware */
 	MCFG_VIDEO_UPDATE(invaders)
@@ -2809,7 +2809,7 @@ static MACHINE_CONFIG_DERIVED( blueshrk, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(blueshrk_io_map)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")
@@ -2909,7 +2909,7 @@ static MACHINE_CONFIG_DERIVED( invad2ct, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(invad2ct_io_map)
-	MCFG_WATCHDOG_TIME_INIT(USEC(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(255000000 / (MW8080BW_PIXEL_CLOCK / MW8080BW_HTOTAL / MW8080BW_VTOTAL)))
 
 	/* add shifter */
 	MCFG_MB14241_ADD("mb14241")

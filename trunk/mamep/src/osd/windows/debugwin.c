@@ -742,7 +742,17 @@ static LRESULT CALLBACK debugwin_window_proc(HWND wnd, UINT message, WPARAM wpar
 		// mouse wheel: forward to the first view
 		case WM_MOUSEWHEEL:
 		{
-			int delta = (INT16)HIWORD(wparam) / WHEEL_DELTA;
+			static int units_carryover = 0;
+
+			UINT lines_per_click;
+			if (!SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &lines_per_click, 0))
+				lines_per_click = 3;
+
+			int units = GET_WHEEL_DELTA_WPARAM(wparam) + units_carryover;
+			int clicks = units / WHEEL_DELTA;
+			units_carryover = units % WHEEL_DELTA;
+
+			int delta = clicks * lines_per_click;
 			int viewnum = 0;
 			POINT point;
 			HWND child;
@@ -763,10 +773,10 @@ static LRESULT CALLBACK debugwin_window_proc(HWND wnd, UINT message, WPARAM wpar
 			// send the appropriate message to this view's scrollbar
 			if (info->view[viewnum].wnd && info->view[viewnum].vscroll)
 			{
-				int message_type = SB_LINELEFT;
+				int message_type = SB_LINEUP;
 				if (delta < 0)
 				{
-					message_type = SB_LINERIGHT;
+					message_type = SB_LINEDOWN;
 					delta = -delta;
 				}
 				while (delta > 0)
@@ -2400,9 +2410,6 @@ void console_create_window(running_machine *machine)
 	info->handle_command = disasm_handle_command;
 	info->handle_key = disasm_handle_key;
 
-	// set up the disassembly view to track the current pc
-	downcast<debug_view_disasm *>(info->view[0].view)->set_expression("curpc");
-
 	// create an edit box and override its key handling
 	info->editwnd = CreateWindowEx(EDIT_BOX_STYLE_EX, TEXT("EDIT"), NULL, EDIT_BOX_STYLE,
 			0, 0, 100, 100, info->wnd, NULL, GetModuleHandle(NULL), NULL);
@@ -2475,6 +2482,9 @@ void console_create_window(running_machine *machine)
 
 	// recompute the children
 	console_set_cpu(debug_cpu_get_visible_cpu(machine));
+
+	// set up the disassembly view to track the current pc
+	downcast<debug_view_disasm *>(info->view[0].view)->set_expression("curpc");
 
 	// mark the edit box as the default focus and set it
 	info->focuswnd = info->editwnd;

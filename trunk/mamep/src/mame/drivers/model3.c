@@ -1608,7 +1608,7 @@ static WRITE64_HANDLER(model3_sound_w)
 		scsp_midi_in(space->machine->device("scsp1"), 0, (data>>56)&0xff, 0);
 
 		// give the 68k time to notice
-		cpu_spinuntil_time(space->cpu, ATTOTIME_IN_USEC(40));
+		cpu_spinuntil_time(space->cpu, attotime::from_usec(40));
 	}
 }
 
@@ -1766,6 +1766,7 @@ static WRITE64_HANDLER(daytona2_rombank_w)
 		data >>= 56;
 		data = (~data) & 0xf;
 		memory_set_bankptr(space->machine,  "bank1", space->machine->region( "user1" )->base() + 0x800000 + (data * 0x800000)); /* banked CROM */
+		memory_set_bankptr(space->machine,  "bank2", space->machine->region( "user1" )->base() + 0x800000 + (data * 0x800000)); /* banked CROM */
 	}
 }
 
@@ -4977,7 +4978,7 @@ static MACHINE_CONFIG_START( model3_10, driver_device )
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model3_snd)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(model3_10)
 	MCFG_MACHINE_RESET(model3_10)
@@ -5468,6 +5469,7 @@ static DRIVER_INIT( daytona2 )
 	DRIVER_INIT_CALL(model3_20);
 
 	memory_install_write64_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xc3800000, 0xc3800007, 0, 0, daytona2_rombank_w );
+	memory_install_read_bank(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xc3000000, 0xc37fffff, 0, 0, "bank2" );
 
 	//rom[(0x68468c^4)/4] = 0x60000000;
 	rom[(0x6063c4^4)/4] = 0x60000000;
@@ -5481,6 +5483,7 @@ static DRIVER_INIT( dayto2pe )
 	DRIVER_INIT_CALL(model3_20);
 
 	memory_install_write64_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xc3800000, 0xc3800007, 0, 0, daytona2_rombank_w );
+	memory_install_read_bank(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xc3000000, 0xc37fffff, 0, 0, "bank2" );
 
 	rom[(0x606784^4)/4] = 0x60000000;
 	rom[(0x69a3fc^4)/4] = 0x60000000;		// jump to encrypted code

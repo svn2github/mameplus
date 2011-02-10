@@ -366,12 +366,12 @@ static READ8_DEVICE_HANDLER ( combatsc_ym2203_r )
 		if (state->boost)
 		{
 			state->boost = 0;
-			timer_adjust_periodic(state->interleave_timer, attotime_zero, 0, state->audiocpu->cycles_to_attotime(80));
+			state->interleave_timer->adjust(attotime::zero, 0, state->audiocpu->cycles_to_attotime(80));
 		}
 		else if (status & 2)
 		{
 			state->boost = 1;
-			timer_adjust_oneshot(state->interleave_timer, attotime_zero, 0);
+			state->interleave_timer->adjust(attotime::zero);
 		}
 	}
 
@@ -689,7 +689,7 @@ static MACHINE_START( combatsc )
 	state->page[0] = MEM + 0x4000;
 	state->page[1] = MEM + 0x6000;
 
-	state->interleave_timer = timer_alloc(machine, NULL, NULL);
+	state->interleave_timer = machine->scheduler().timer_alloc(FUNC(NULL));
 
 	state->audiocpu = machine->device<cpu_device>("audiocpu");
 	state->k007121_1 = machine->device("k007121_1");
@@ -697,14 +697,14 @@ static MACHINE_START( combatsc )
 
 	memory_configure_bank(machine, "bank1", 0, 10, machine->region("maincpu")->base() + 0x10000, 0x4000);
 
-	state_save_register_global(machine, state->priority);
-	state_save_register_global(machine, state->vreg);
-	state_save_register_global(machine, state->bank_select);
-	state_save_register_global(machine, state->video_circuit);
-	state_save_register_global(machine, state->boost);
-	state_save_register_global_array(machine, state->prot);
-	state_save_register_global_array(machine, state->pos);
-	state_save_register_global_array(machine, state->sign);
+	state->save_item(NAME(state->priority));
+	state->save_item(NAME(state->vreg));
+	state->save_item(NAME(state->bank_select));
+	state->save_item(NAME(state->video_circuit));
+	state->save_item(NAME(state->boost));
+	state->save_item(NAME(state->prot));
+	state->save_item(NAME(state->pos));
+	state->save_item(NAME(state->sign));
 }
 
 
@@ -744,7 +744,7 @@ static MACHINE_CONFIG_START( combatsc, combatsc_state )
 	MCFG_CPU_ADD("audiocpu", Z80,3579545)	/* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(combatsc_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(1200))
+	MCFG_QUANTUM_TIME(attotime::from_hz(1200))
 
 	MCFG_MACHINE_START(combatsc)
 	MCFG_MACHINE_RESET(combatsc)
@@ -789,7 +789,7 @@ static MACHINE_CONFIG_START( combatscb, combatsc_state )
 	MCFG_CPU_ADD("audiocpu", Z80,3579545)	/* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(combatsc_sound_map) /* FAKE */
 
-	MCFG_QUANTUM_TIME(HZ(1200))
+	MCFG_QUANTUM_TIME(attotime::from_hz(1200))
 
 	MCFG_MACHINE_START(combatsc)
 	MCFG_MACHINE_RESET(combatsc)

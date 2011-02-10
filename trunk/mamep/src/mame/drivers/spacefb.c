@@ -141,19 +141,19 @@ static TIMER_CALLBACK( interrupt_callback )
 	else
 		next_vpos = SPACEFB_INT_TRIGGER_COUNT_1;
 
-	timer_adjust_oneshot(interrupt_timer, machine->primary_screen->time_until_pos(next_vpos), 0);
+	interrupt_timer->adjust(machine->primary_screen->time_until_pos(next_vpos));
 }
 
 
 static void create_interrupt_timer(running_machine *machine)
 {
-	interrupt_timer = timer_alloc(machine, interrupt_callback, NULL);
+	interrupt_timer = machine->scheduler().timer_alloc(FUNC(interrupt_callback));
 }
 
 
 static void start_interrupt_timer(running_machine *machine)
 {
-	timer_adjust_oneshot(interrupt_timer, machine->primary_screen->time_until_pos(SPACEFB_INT_TRIGGER_COUNT_1), 0);
+	interrupt_timer->adjust(machine->primary_screen->time_until_pos(SPACEFB_INT_TRIGGER_COUNT_1));
 }
 
 
@@ -344,7 +344,7 @@ static MACHINE_CONFIG_START( spacefb, driver_device )
 	MCFG_CPU_PROGRAM_MAP(spacefb_audio_map)
 	MCFG_CPU_IO_MAP(spacefb_audio_io_map)
 
-	MCFG_QUANTUM_TIME(HZ(180))
+	MCFG_QUANTUM_TIME(attotime::from_hz(180))
 
 	MCFG_MACHINE_START(spacefb)
 	MCFG_MACHINE_RESET(spacefb)

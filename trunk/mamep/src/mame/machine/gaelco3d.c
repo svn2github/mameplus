@@ -275,8 +275,8 @@ static TIMER_CALLBACK( set_status_cb )
 
 static void set_status(gaelco_serial_state *state, UINT8 mask, UINT8 set, int wait)
 {
-	timer_set(state->device->machine, ATTOTIME_IN_HZ(wait),
-			state, (mask << 8)|set, set_status_cb);
+	state->device->machine->scheduler().timer_set(attotime::from_hz(wait), FUNC(set_status_cb), (mask << 8)|set,
+			state);
 }
 
 static void process_in(gaelco_serial_state *state)
@@ -465,14 +465,14 @@ static DEVICE_START( gaelco_serial )
 	state->device = device;
 
 	devcb_resolve_write_line(&state->irq_func, &intf->irq_func, device);
-	state->sync_timer = timer_alloc(device->machine, link_cb, state);
+	state->sync_timer = device->machine->scheduler().timer_alloc(FUNC(link_cb), state);
 
 	/* register for save states */
-	//state_save_register_device_item(device, 0, earom->offset);
-	//state_save_register_device_item(device, 0, earom->data);
+	//device->save_item(NAME(earom->offset));
+	//device->save_item(NAME(earom->data));
 
 #ifdef SHARED_MEM_DRIVER
-	timer_adjust_periodic(state->sync_timer, attotime_zero,0,ATTOTIME_IN_HZ(SYNC_FREQ));
+	state->sync_timer->adjust(attotime::zero,0,attotime::from_hz(SYNC_FREQ));
 #endif
 
 	state->os_shmem = osd_sharedmem_alloc(PATH_NAME, 0, sizeof(shmem_t));

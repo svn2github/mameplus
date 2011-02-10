@@ -93,7 +93,7 @@ void cdislave_device::readback_trigger()
     verboselog(&m_machine, 0, "Asserting IRQ2\n" );
     cpu_set_input_line_vector(m_machine.device("maincpu"), M68K_IRQ_2, 26);
     cputag_set_input_line(&m_machine, "maincpu", M68K_IRQ_2, ASSERT_LINE);
-    timer_adjust_oneshot(m_interrupt_timer, attotime_never, 0);
+    m_interrupt_timer->adjust(attotime::never);
 }
 
 void cdislave_device::prepare_readback(attotime delay, UINT8 channel, UINT8 count, UINT8 data0, UINT8 data1, UINT8 data2, UINT8 data3, UINT8 cmd)
@@ -106,7 +106,7 @@ void cdislave_device::prepare_readback(attotime delay, UINT8 channel, UINT8 coun
     m_channel[channel].m_out_buf[3] = data3;
     m_channel[channel].m_out_cmd = cmd;
 
-    timer_adjust_oneshot(m_interrupt_timer, delay, 0);
+    m_interrupt_timer->adjust(delay);
 }
 
 void cdislave_device::perform_mouse_update()
@@ -145,7 +145,7 @@ void cdislave_device::perform_mouse_update()
 
     if(m_polling_active)
     {
-        prepare_readback(attotime_zero, 0, 4, ((x & 0x380) >> 7) | (buttons << 4), x & 0x7f, (y & 0x380) >> 7, y & 0x7f, 0xf7);
+        prepare_readback(attotime::zero, 0, 4, ((x & 0x380) >> 7) | (buttons << 4), x & 0x7f, (y & 0x380) >> 7, y & 0x7f, 0xf7);
     }
 }
 
@@ -209,7 +209,7 @@ void cdislave_device::set_mouse_position()
 
     if(m_polling_active)
     {
-        //prepare_readback(attotime_zero, 0, 4, (x & 0x380) >> 7, x & 0x7f, (y & 0x380) >> 7, y & 0x7f, 0xf7);
+        //prepare_readback(attotime::zero, 0, 4, (x & 0x380) >> 7, x & 0x7f, (y & 0x380) >> 7, y & 0x7f, 0xf7);
     }
 }
 
@@ -344,7 +344,7 @@ void cdislave_device::register_write(const UINT32 offset, const UINT16 data, con
                         dmadac_enable(&state->dmadac[0], 2, 0);
                         m_in_index = 0;
                         m_in_count = 0;
-                        //timer_adjust_oneshot(cdic->audio_sample_timer, attotime_never, 0);
+                        //cdic->audio_sample_timer->adjust(attotime::never);
                         break;
                     case 0x83: // Unmute Audio
                         verboselog(&m_machine, 0, "slave_w: Channel %d: Unmute Audio (0x83)\n", offset );
@@ -379,13 +379,13 @@ void cdislave_device::register_write(const UINT32 offset, const UINT16 data, con
                             memset(m_in_buf, 0, 17);
                             m_in_index = 0;
                             m_in_count = 0;
-                            prepare_readback(ATTOTIME_IN_HZ(4), 3, 4, 0xb0, 0x00, 0x02, 0x15, 0xb0);
+                            prepare_readback(attotime::from_hz(4), 3, 4, 0xb0, 0x00, 0x02, 0x15, 0xb0);
                             break;
                         //case 0xb1: // Request Disc Base
                             //memset(m_in_buf, 0, 17);
                             //m_in_index = 0;
                             //m_in_count = 0;
-                            //prepare_readback(ATTOTIME_IN_HZ(10000), 3, 4, 0xb1, 0x00, 0x00, 0x00, 0xb1);
+                            //prepare_readback(attotime::from_hz(10000), 3, 4, 0xb1, 0x00, 0x00, 0x00, 0xb1);
                             //break;
                         default:
                             memset(m_in_buf, 0, 17);
@@ -411,22 +411,22 @@ void cdislave_device::register_write(const UINT32 offset, const UINT16 data, con
                         break;
                     case 0xf0: // Request SLAVE Revision
                         verboselog(&m_machine, 0, "slave_w: Channel %d: Request SLAVE Revision (0xf0)\n", offset );
-                        prepare_readback(ATTOTIME_IN_HZ(10000), 2, 2, 0xf0, 0x32, 0x31, 0, 0xf0);
+                        prepare_readback(attotime::from_hz(10000), 2, 2, 0xf0, 0x32, 0x31, 0, 0xf0);
                         m_in_index = 0;
                         break;
                     case 0xf3: // Request Pointer Type
                         verboselog(&m_machine, 0, "slave_w: Channel %d: Request Pointer Type (0xf3)\n", offset );
                         m_in_index = 0;
-                        prepare_readback(ATTOTIME_IN_HZ(10000), 2, 2, 0xf3, 1, 0, 0, 0xf3);
+                        prepare_readback(attotime::from_hz(10000), 2, 2, 0xf3, 1, 0, 0, 0xf3);
                         break;
                     case 0xf4: // Request Test Plug Status
                         verboselog(&m_machine, 0, "slave_w: Channel %d: Request Test Plug Status (0xf4)\n", offset );
                         m_in_index = 0;
-                        prepare_readback(ATTOTIME_IN_HZ(10000), 2, 2, 0xf4, 0, 0, 0, 0xf4);
+                        prepare_readback(attotime::from_hz(10000), 2, 2, 0xf4, 0, 0, 0, 0xf4);
                         break;
                     case 0xf6: // Request NTSC/PAL Status
                         verboselog(&m_machine, 0, "slave_w: Channel %d: Request NTSC/PAL Status (0xf6)\n", offset );
-                        prepare_readback(attotime_never, 2, 2, 0xf6, 2, 0, 0, 0xf6);
+                        prepare_readback(attotime::never, 2, 2, 0xf6, 2, 0, 0, 0xf6);
                         m_in_index = 0;
                         break;
                     case 0xf7: // Enable Input Polling
@@ -474,8 +474,8 @@ void cdislave_device::device_start()
 {
     register_globals();
 
-    m_interrupt_timer = timer_alloc(&m_machine, trigger_readback_int, 0);
-    timer_adjust_oneshot(m_interrupt_timer, attotime_never, 0);
+    m_interrupt_timer = m_machine.scheduler().timer_alloc(FUNC(trigger_readback_int));
+    m_interrupt_timer->adjust(attotime::never);
 }
 
 //-------------------------------------------------
@@ -519,50 +519,50 @@ void cdislave_device::init()
 
 void cdislave_device::register_globals()
 {
-    state_save_register_device_item(this, 0, m_channel[0].m_out_buf[0]);
-    state_save_register_device_item(this, 0, m_channel[0].m_out_buf[1]);
-    state_save_register_device_item(this, 0, m_channel[0].m_out_buf[2]);
-    state_save_register_device_item(this, 0, m_channel[0].m_out_buf[3]);
-    state_save_register_device_item(this, 0, m_channel[0].m_out_index);
-    state_save_register_device_item(this, 0, m_channel[0].m_out_count);
-    state_save_register_device_item(this, 0, m_channel[0].m_out_cmd);
-    state_save_register_device_item(this, 0, m_channel[1].m_out_buf[0]);
-    state_save_register_device_item(this, 0, m_channel[1].m_out_buf[1]);
-    state_save_register_device_item(this, 0, m_channel[1].m_out_buf[2]);
-    state_save_register_device_item(this, 0, m_channel[1].m_out_buf[3]);
-    state_save_register_device_item(this, 0, m_channel[1].m_out_index);
-    state_save_register_device_item(this, 0, m_channel[1].m_out_count);
-    state_save_register_device_item(this, 0, m_channel[1].m_out_cmd);
-    state_save_register_device_item(this, 0, m_channel[2].m_out_buf[0]);
-    state_save_register_device_item(this, 0, m_channel[2].m_out_buf[1]);
-    state_save_register_device_item(this, 0, m_channel[2].m_out_buf[2]);
-    state_save_register_device_item(this, 0, m_channel[2].m_out_buf[3]);
-    state_save_register_device_item(this, 0, m_channel[2].m_out_index);
-    state_save_register_device_item(this, 0, m_channel[2].m_out_count);
-    state_save_register_device_item(this, 0, m_channel[2].m_out_cmd);
-    state_save_register_device_item(this, 0, m_channel[3].m_out_buf[0]);
-    state_save_register_device_item(this, 0, m_channel[3].m_out_buf[1]);
-    state_save_register_device_item(this, 0, m_channel[3].m_out_buf[2]);
-    state_save_register_device_item(this, 0, m_channel[3].m_out_buf[3]);
-    state_save_register_device_item(this, 0, m_channel[3].m_out_index);
-    state_save_register_device_item(this, 0, m_channel[3].m_out_count);
-    state_save_register_device_item(this, 0, m_channel[3].m_out_cmd);
+    save_item(NAME(m_channel[0].m_out_buf[0]));
+    save_item(NAME(m_channel[0].m_out_buf[1]));
+    save_item(NAME(m_channel[0].m_out_buf[2]));
+    save_item(NAME(m_channel[0].m_out_buf[3]));
+    save_item(NAME(m_channel[0].m_out_index));
+    save_item(NAME(m_channel[0].m_out_count));
+    save_item(NAME(m_channel[0].m_out_cmd));
+    save_item(NAME(m_channel[1].m_out_buf[0]));
+    save_item(NAME(m_channel[1].m_out_buf[1]));
+    save_item(NAME(m_channel[1].m_out_buf[2]));
+    save_item(NAME(m_channel[1].m_out_buf[3]));
+    save_item(NAME(m_channel[1].m_out_index));
+    save_item(NAME(m_channel[1].m_out_count));
+    save_item(NAME(m_channel[1].m_out_cmd));
+    save_item(NAME(m_channel[2].m_out_buf[0]));
+    save_item(NAME(m_channel[2].m_out_buf[1]));
+    save_item(NAME(m_channel[2].m_out_buf[2]));
+    save_item(NAME(m_channel[2].m_out_buf[3]));
+    save_item(NAME(m_channel[2].m_out_index));
+    save_item(NAME(m_channel[2].m_out_count));
+    save_item(NAME(m_channel[2].m_out_cmd));
+    save_item(NAME(m_channel[3].m_out_buf[0]));
+    save_item(NAME(m_channel[3].m_out_buf[1]));
+    save_item(NAME(m_channel[3].m_out_buf[2]));
+    save_item(NAME(m_channel[3].m_out_buf[3]));
+    save_item(NAME(m_channel[3].m_out_index));
+    save_item(NAME(m_channel[3].m_out_count));
+    save_item(NAME(m_channel[3].m_out_cmd));
 
-    state_save_register_device_item_array(this, 0, m_in_buf);
-    state_save_register_device_item(this, 0, m_in_index);
-    state_save_register_device_item(this, 0, m_in_count);
+    save_item(NAME(m_in_buf));
+    save_item(NAME(m_in_index));
+    save_item(NAME(m_in_count));
 
-    state_save_register_device_item(this, 0, m_polling_active);
+    save_item(NAME(m_polling_active));
 
-    state_save_register_device_item(this, 0, m_xbus_interrupt_enable);
+    save_item(NAME(m_xbus_interrupt_enable));
 
-    state_save_register_device_item_array(this, 0, m_lcd_state);
+    save_item(NAME(m_lcd_state));
 
-    state_save_register_device_item(this, 0, m_real_mouse_x);
-    state_save_register_device_item(this, 0, m_real_mouse_y);
+    save_item(NAME(m_real_mouse_x));
+    save_item(NAME(m_real_mouse_y));
 
-    state_save_register_device_item(this, 0, m_fake_mouse_x);
-    state_save_register_device_item(this, 0, m_fake_mouse_y);
+    save_item(NAME(m_fake_mouse_x));
+    save_item(NAME(m_fake_mouse_y));
 }
 
 const device_type MACHINE_CDISLAVE = cdislave_device_config::static_alloc_device_config;

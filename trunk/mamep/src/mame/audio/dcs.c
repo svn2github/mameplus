@@ -865,7 +865,7 @@ static TIMER_CALLBACK( dcs_reset )
 
 	/* start the SPORT0 timer */
 	if (dcs.sport_timer != NULL)
-		dcs.sport_timer->adjust(ATTOTIME_IN_HZ(1000), 0, ATTOTIME_IN_HZ(1000));
+		dcs.sport_timer->adjust(attotime::from_hz(1000), 0, attotime::from_hz(1000));
 
 	/* reset the HLE transfer states */
 	transfer.dcs_state = transfer.state = 0;
@@ -929,7 +929,7 @@ static void dcs_register_state(running_machine *machine)
 		state_save_register_global_pointer(machine, dcs_sram, 0x8000*4 / sizeof(dcs_sram[0]));
 
 	if (dcs.rev == 2)
-		state_save_register_postload(machine, sdrc_postload, NULL);
+		machine->state().register_postload(sdrc_postload, NULL);
 }
 
 void dcs_init(running_machine *machine)
@@ -1502,7 +1502,7 @@ int dcs_control_r(void)
 {
 	/* only boost for DCS2 boards */
 	if (!dcs.auto_ack && !transfer.hle_enabled)
-		cpuexec_boost_interleave(dcs.cpu->machine, ATTOTIME_IN_NSEC(500), ATTOTIME_IN_USEC(5));
+		dcs.cpu->machine->scheduler().boost_interleave(attotime::from_nsec(500), attotime::from_usec(5));
 	return dcs.latch_control;
 }
 
@@ -1512,10 +1512,10 @@ void dcs_reset_w(int state)
 	/* going high halts the CPU */
 	if (state)
 	{
-		logerror("%s: DCS reset = %d\n", cpuexec_describe_context(dcs.cpu->machine), state);
+		logerror("%s: DCS reset = %d\n", dcs.cpu->machine->describe_context(), state);
 
 		/* just run through the init code again */
-		timer_call_after_resynch(dcs.cpu->machine, NULL, 0, dcs_reset);
+		dcs.cpu->machine->scheduler().synchronize(FUNC(dcs_reset));
 		cpu_set_input_line(dcs.cpu, INPUT_LINE_RESET, ASSERT_LINE);
 	}
 
@@ -1557,10 +1557,10 @@ static READ16_HANDLER( fifo_input_r )
 static void dcs_delayed_data_w(running_machine *machine, int data)
 {
 	if (LOG_DCS_IO)
-		logerror("%s:dcs_data_w(%04X)\n", cpuexec_describe_context(machine), data);
+		logerror("%s:dcs_data_w(%04X)\n", machine->describe_context(), data);
 
 	/* boost the interleave temporarily */
-	cpuexec_boost_interleave(machine, ATTOTIME_IN_NSEC(500), ATTOTIME_IN_USEC(5));
+	machine->scheduler().boost_interleave(attotime::from_nsec(500), attotime::from_usec(5));
 
 	/* set the IRQ line on the ADSP */
 	cpu_set_input_line(dcs.cpu, ADSP2105_IRQ2, ASSERT_LINE);
@@ -1589,7 +1589,7 @@ void dcs_data_w(int data)
 
 	/* if we are DCS1, set a timer to latch the data */
 	if (dcs.sport_timer == NULL)
-		timer_call_after_resynch(dcs.cpu->machine, NULL, data, dcs_delayed_data_w_callback);
+		dcs.cpu->machine->scheduler().synchronize(FUNC(dcs_delayed_data_w_callback), data);
 	else
 		dcs_delayed_data_w(dcs.cpu->machine, data);
 }
@@ -1632,7 +1632,7 @@ static WRITE16_HANDLER( output_latch_w )
 {
 	if (LOG_DCS_IO)
 		logerror("%08X:output_latch_w(%04X) (empty=%d)\n", cpu_get_pc(space->cpu), data, IS_OUTPUT_EMPTY());
-	timer_call_after_resynch(space->machine, NULL, data, latch_delayed_w);
+	space->machine->scheduler().synchronize(FUNC(latch_delayed_w), data);
 }
 
 
@@ -1650,7 +1650,7 @@ static TIMER_CALLBACK( delayed_ack_w_callback )
 
 void dcs_ack_w(void)
 {
-	timer_call_after_resynch(dcs.cpu->machine, NULL, 0, delayed_ack_w_callback);
+	dcs.cpu->machine->scheduler().synchronize(FUNC(delayed_ack_w_callback));
 }
 
 
@@ -1663,7 +1663,7 @@ int dcs_data_r(void)
 		delayed_ack_w();
 
 	if (LOG_DCS_IO)
-		logerror("%s:dcs_data_r(%04X)\n", cpuexec_describe_context(dcs.cpu->machine), dcs.output_data);
+		logerror("%s:dcs_data_r(%04X)\n", dcs.cpu->machine->describe_context(), dcs.output_data);
 	return dcs.output_data;
 }
 
@@ -1686,7 +1686,7 @@ static WRITE16_HANDLER( output_control_w )
 {
 	if (LOG_DCS_IO)
 		logerror("%04X:output_control = %04X\n", cpu_get_pc(space->cpu), data);
-	timer_call_after_resynch(space->machine, NULL, data, output_control_delayed_w);
+	space->machine->scheduler().synchronize(FUNC(output_control_delayed_w), data);
 }
 
 
@@ -1991,17 +1991,17 @@ static void recompute_sample_rate(running_machine *machine)
 	/* calculate how long until we generate an interrupt */
 
 	/* frequency the time per each bit sent */
-	attotime sample_period = attotime_mul(ATTOTIME_IN_HZ(dcs.cpu->unscaled_clock()), 2 * (dcs.control_regs[S1_SCLKDIV_REG] + 1));
+	attotime sample_period = attotime::from_hz(dcs.cpu->unscaled_clock()) * (2 * (dcs.control_regs[S1_SCLKDIV_REG] + 1));
 
 	/* now put it down to samples, so we know what the channel frequency has to be */
-	sample_period = attotime_mul(sample_period, 16 * dcs.channels);
+	sample_period = sample_period * (16 * dcs.channels);
 	dmadac_set_frequency(&dcs.dmadac[0], dcs.channels, ATTOSECONDS_TO_HZ(sample_period.attoseconds));
 	dmadac_enable(&dcs.dmadac[0], dcs.channels, 1);
 
 	/* fire off a timer wich will hit every half-buffer */
 	if (dcs.incs)
 	{
-		attotime period = attotime_div(attotime_mul(sample_period, dcs.size), (2 * dcs.channels * dcs.incs));
+		attotime period = (sample_period * dcs.size) / (2 * dcs.channels * dcs.incs);
 		dcs.reg_timer->adjust(period, 0, period);
 	}
 }
@@ -2113,7 +2113,7 @@ static TIMER_DEVICE_CALLBACK( transfer_watchdog_callback )
 			preprocess_write(timer.machine, (*dcs.fifo_data_r)(dcs.cpu));
 	}
 	if (transfer.watchdog != NULL)
-		transfer.watchdog->adjust(ATTOTIME_IN_MSEC(1), transfer.writes_left);
+		transfer.watchdog->adjust(attotime::from_msec(1), transfer.writes_left);
 }
 
 
@@ -2122,7 +2122,7 @@ static TIMER_CALLBACK( s1_ack_callback2 )
 	/* if the output is full, stall for a usec */
 	if (IS_OUTPUT_FULL())
 	{
-		timer_set(machine, ATTOTIME_IN_USEC(1), NULL, param, s1_ack_callback2);
+		machine->scheduler().timer_set(attotime::from_usec(1), FUNC(s1_ack_callback2), param);
 		return;
 	}
 	output_latch_w(cpu_get_address_space(dcs.cpu, ADDRESS_SPACE_PROGRAM), 0, 0x000a, 0xffff);
@@ -2134,13 +2134,13 @@ static TIMER_CALLBACK( s1_ack_callback1 )
 	/* if the output is full, stall for a usec */
 	if (IS_OUTPUT_FULL())
 	{
-		timer_set(machine, ATTOTIME_IN_USEC(1), NULL, param, s1_ack_callback1);
+		machine->scheduler().timer_set(attotime::from_usec(1), FUNC(s1_ack_callback1), param);
 		return;
 	}
 	output_latch_w(cpu_get_address_space(dcs.cpu, ADDRESS_SPACE_PROGRAM), 0, param, 0xffff);
 
 	/* chain to the next word we need to write back */
-	timer_set(machine, ATTOTIME_IN_USEC(1), NULL, 0, s1_ack_callback2);
+	machine->scheduler().timer_set(attotime::from_usec(1), FUNC(s1_ack_callback2));
 }
 
 
@@ -2153,7 +2153,7 @@ static int preprocess_stage_1(running_machine *machine, UINT16 data)
 			if (data == 0x001a)
 			{
 				if (LOG_DCS_TRANSFERS)
-					logerror("%s:DCS Transfer command %04X\n", cpuexec_describe_context(machine), data);
+					logerror("%s:DCS Transfer command %04X\n", machine->describe_context(), data);
 				transfer.state++;
 				if (transfer.hle_enabled)
 					return 1;
@@ -2163,7 +2163,7 @@ static int preprocess_stage_1(running_machine *machine, UINT16 data)
 			else if (data == 0x002a)
 			{
 				if (LOG_DCS_TRANSFERS)
-					logerror("%s:DCS State change %04X\n", cpuexec_describe_context(machine), data);
+					logerror("%s:DCS State change %04X\n", machine->describe_context(), data);
 				transfer.dcs_state = 1;
 			}
 
@@ -2256,7 +2256,7 @@ static int preprocess_stage_1(running_machine *machine, UINT16 data)
 
 				/* if we're done, start a timer to send the response words */
 				if (transfer.state == 0)
-					timer_set(machine, ATTOTIME_IN_USEC(1), NULL, transfer.sum, s1_ack_callback1);
+					machine->scheduler().timer_set(attotime::from_usec(1), FUNC(s1_ack_callback1), transfer.sum);
 				return 1;
 			}
 			break;
@@ -2272,7 +2272,7 @@ static TIMER_CALLBACK( s2_ack_callback )
 	/* if the output is full, stall for a usec */
 	if (IS_OUTPUT_FULL())
 	{
-		timer_set(machine, ATTOTIME_IN_USEC(1), NULL, param, s2_ack_callback);
+		machine->scheduler().timer_set(attotime::from_usec(1), FUNC(s2_ack_callback), param);
 		return;
 	}
 	output_latch_w(space, 0, param, 0xffff);
@@ -2289,7 +2289,7 @@ static int preprocess_stage_2(running_machine *machine, UINT16 data)
 			if (data == 0x55d0 || data == 0x55d1)
 			{
 				if (LOG_DCS_TRANSFERS)
-					logerror("%s:DCS Transfer command %04X\n", cpuexec_describe_context(machine), data);
+					logerror("%s:DCS Transfer command %04X\n", machine->describe_context(), data);
 				transfer.state++;
 				if (transfer.hle_enabled)
 					return 1;
@@ -2299,7 +2299,7 @@ static int preprocess_stage_2(running_machine *machine, UINT16 data)
 			else
 			{
 				if (LOG_DCS_TRANSFERS)
-					logerror("%s:Command: %04X\n", cpuexec_describe_context(machine), data);
+					logerror("%s:Command: %04X\n", machine->describe_context(), data);
 			}
 			break;
 
@@ -2343,7 +2343,7 @@ static int preprocess_stage_2(running_machine *machine, UINT16 data)
 			transfer.sum = 0;
 			if (transfer.hle_enabled)
 			{
-				transfer.watchdog->adjust(ATTOTIME_IN_MSEC(1), transfer.writes_left);
+				transfer.watchdog->adjust(attotime::from_msec(1), transfer.writes_left);
 				return 1;
 			}
 			break;
@@ -2369,7 +2369,7 @@ static int preprocess_stage_2(running_machine *machine, UINT16 data)
 				/* if we're done, start a timer to send the response words */
 				if (transfer.state == 0)
 				{
-					timer_set(machine, ATTOTIME_IN_USEC(1), NULL, transfer.sum, s2_ack_callback);
+					machine->scheduler().timer_set(attotime::from_usec(1), FUNC(s2_ack_callback), transfer.sum);
 					transfer.watchdog->reset();
 				}
 				return 1;

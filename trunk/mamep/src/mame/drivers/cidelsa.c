@@ -447,7 +447,7 @@ static MACHINE_START( cidelsa )
 	cidelsa_state *state = machine->driver_data<cidelsa_state>();
 
 	/* register for state saving */
-	state_save_register_global(machine, state->m_reset);
+	state->save_item(NAME(state->m_reset));
 }
 
 static MACHINE_START( draco )
@@ -461,8 +461,8 @@ static MACHINE_START( draco )
 	memory_set_bank(machine, "bank1", 0);
 
 	/* register for state saving */
-	state_save_register_global(machine, state->m_draco_sound);
-	state_save_register_global(machine, state->m_draco_ay_latch);
+	state->save_item(NAME(state->m_draco_sound));
+	state->save_item(NAME(state->m_draco_ay_latch));
 }
 
 /* Machine Reset */
@@ -471,7 +471,7 @@ void cidelsa_state::machine_reset()
 {
 	/* reset the CPU */
 	m_reset = 0;
-	timer_set(&m_machine, ATTOTIME_IN_MSEC(200), NULL, 0, set_cpu_mode);
+	m_machine.scheduler().timer_set(attotime::from_msec(200), FUNC(set_cpu_mode));
 }
 
 /* Machine Drivers */

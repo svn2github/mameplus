@@ -194,7 +194,7 @@ static TIMER_CALLBACK( rsaga2_interrupt2  )
 
 static INTERRUPT_GEN( rastansaga2_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(5000), NULL, 0, rsaga2_interrupt2);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(rsaga2_interrupt2));
 	cpu_set_input_line(device, 4, HOLD_LINE);
 }
 
@@ -207,7 +207,7 @@ static TIMER_CALLBACK( crimec_interrupt3 )
 
 static INTERRUPT_GEN( crimec_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(5000), NULL, 0, crimec_interrupt3);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(crimec_interrupt3));
 	cpu_set_input_line(device, 5, HOLD_LINE);
 }
 
@@ -220,7 +220,7 @@ static TIMER_CALLBACK( hitice_interrupt6 )
 
 static INTERRUPT_GEN( hitice_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(5000), NULL, 0, hitice_interrupt6);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(hitice_interrupt6));
 	cpu_set_input_line(device, 4, HOLD_LINE);
 }
 
@@ -233,7 +233,7 @@ static TIMER_CALLBACK( rambo3_interrupt1 )
 
 static INTERRUPT_GEN( rambo3_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(5000), NULL, 0, rambo3_interrupt1);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(rambo3_interrupt1));
 	cpu_set_input_line(device, 6, HOLD_LINE);
 }
 
@@ -246,7 +246,7 @@ static TIMER_CALLBACK( pbobble_interrupt5 )
 
 static INTERRUPT_GEN( pbobble_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(5000), NULL, 0, pbobble_interrupt5);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(pbobble_interrupt5));
 	cpu_set_input_line(device, 3, HOLD_LINE);
 }
 
@@ -258,7 +258,7 @@ static TIMER_CALLBACK( viofight_interrupt1 )
 
 static INTERRUPT_GEN( viofight_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(5000), NULL, 0, viofight_interrupt1);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(viofight_interrupt1));
 	cpu_set_input_line(device, 4, HOLD_LINE);
 }
 
@@ -270,7 +270,7 @@ static TIMER_CALLBACK( masterw_interrupt4 )
 
 static INTERRUPT_GEN( masterw_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(5000), NULL, 0, masterw_interrupt4);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(masterw_interrupt4));
 	cpu_set_input_line(device, 5, HOLD_LINE);
 }
 
@@ -282,7 +282,7 @@ static TIMER_CALLBACK( silentd_interrupt4 )
 
 static INTERRUPT_GEN( silentd_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(5000), NULL, 0, silentd_interrupt4);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(silentd_interrupt4));
 	cpu_set_input_line(device, 6, HOLD_LINE);
 }
 
@@ -294,7 +294,7 @@ static TIMER_CALLBACK( selfeena_interrupt4 )
 
 static INTERRUPT_GEN( selfeena_interrupt )
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(5000), NULL, 0, selfeena_interrupt4);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(selfeena_interrupt4));
 	cpu_set_input_line(device, 6, HOLD_LINE);
 }
 
@@ -306,7 +306,7 @@ static TIMER_CALLBACK( sbm_interrupt5 )//4
 
 static INTERRUPT_GEN( sbm_interrupt )//5
 {
-	timer_set(device->machine, downcast<cpu_device *>(device)->cycles_to_attotime(10000), NULL, 0, sbm_interrupt5);
+	device->machine->scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(10000), FUNC(sbm_interrupt5));
 	cpu_set_input_line(device, 4, HOLD_LINE);
 }
 
@@ -2130,9 +2130,11 @@ static void mb87078_gain_changed( running_machine *machine, int channel, int per
 
 	if (channel == 1)
 	{
-		sound_set_output_gain(state->ym, 0, percent / 100.0);
-		sound_set_output_gain(state->ym, 1, percent / 100.0);
-		sound_set_output_gain(state->ym, 2, percent / 100.0);
+		device_sound_interface *sound;
+		state->ym->interface(sound);
+		sound->set_output_gain(0, percent / 100.0);
+		sound->set_output_gain(1, percent / 100.0);
+		sound->set_output_gain(2, percent / 100.0);
 		//popmessage("MB87078 gain ch#%i percent=%i", channel, percent);
 	}
 }
@@ -2202,8 +2204,8 @@ static MACHINE_START( taitob )
 	state->tc0640fio = machine->device("tc0640fio");
 	state->tc0220ioc = machine->device("tc0220ioc");
 
-	state_save_register_global(machine, state->eep_latch);
-	state_save_register_global(machine, state->coin_word);
+	state->save_item(NAME(state->eep_latch));
+	state->save_item(NAME(state->coin_word));
 }
 
 static MACHINE_RESET( taitob )
@@ -2224,7 +2226,7 @@ static MACHINE_CONFIG_START( rastsag2, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2271,7 +2273,7 @@ static MACHINE_CONFIG_START( ashura, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2318,7 +2320,7 @@ static MACHINE_CONFIG_START( crimec, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2365,7 +2367,7 @@ static MACHINE_CONFIG_START( tetrist, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2411,7 +2413,7 @@ static MACHINE_CONFIG_START( tetrista, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(masterw_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2458,7 +2460,7 @@ static MACHINE_CONFIG_START( hitice, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(viofight_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2510,7 +2512,7 @@ static MACHINE_CONFIG_START( rambo3, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_24MHz/6)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2557,7 +2559,7 @@ static MACHINE_CONFIG_START( rambo3a, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_24MHz/6)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2606,7 +2608,7 @@ static MACHINE_CONFIG_START( pbobble, taitob_state )
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_EEPROM_ADD("eeprom", taitob_eeprom_intf)
 
@@ -2654,7 +2656,7 @@ static MACHINE_CONFIG_START( spacedx, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2705,7 +2707,7 @@ static MACHINE_CONFIG_START( spacedxo, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2752,7 +2754,7 @@ static MACHINE_CONFIG_START( qzshowby, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2803,7 +2805,7 @@ static MACHINE_CONFIG_START( viofight, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 6000000)	/* 6 MHz verified */
 	MCFG_CPU_PROGRAM_MAP(viofight_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2853,7 +2855,7 @@ static MACHINE_CONFIG_START( masterw, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(masterw_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2901,7 +2903,7 @@ static MACHINE_CONFIG_START( silentd, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -2948,7 +2950,7 @@ static MACHINE_CONFIG_START( selfeena, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -3004,7 +3006,7 @@ static MACHINE_CONFIG_START( ryujin, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)
@@ -3058,7 +3060,7 @@ static MACHINE_CONFIG_START( sbm, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitob)
 	MCFG_MACHINE_RESET(taitob)

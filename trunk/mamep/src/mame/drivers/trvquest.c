@@ -160,7 +160,7 @@ static void via_irq( device_t *device, int state )
 	/* Kaos sits in a tight loop polling the VIA irq flags register, but that register is
        cleared by the irq handler. Therefore, I wait a bit before triggering the irq to
        leave time for the program to see the flag change. */
-	timer_set(device->machine, ATTOTIME_IN_USEC(50), NULL, state, via_irq_delayed);
+	device->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(via_irq_delayed), state);
 }
 
 
@@ -190,10 +190,10 @@ static MACHINE_START( trvquest )
 	state->maincpu = machine->device("maincpu");
 
 	/* register for save states */
-	state_save_register_global(machine, state->video_x);
-	state_save_register_global(machine, state->video_y);
-	state_save_register_global(machine, state->video_command);
-	state_save_register_global(machine, state->video_data);
+	state->save_item(NAME(state->video_x));
+	state->save_item(NAME(state->video_y));
+	state->save_item(NAME(state->video_command));
+	state->save_item(NAME(state->video_data));
 }
 
 static MACHINE_RESET( trvquest )

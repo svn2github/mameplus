@@ -132,7 +132,7 @@ static DEVICE_START( snapquick )
 	snapquick_token *token = get_token(device);
 
 	/* allocate a timer */
-	token->timer = timer_alloc(device->machine, process_snapshot_or_quickload, (void *) dynamic_cast<device_image_interface *>(device));
+	token->timer = device->machine->scheduler().timer_alloc(FUNC(process_snapshot_or_quickload), (void *) dynamic_cast<device_image_interface *>(device));
 
 }
 
@@ -151,9 +151,9 @@ static DEVICE_IMAGE_LOAD( snapquick )
 	token->load = (snapquick_load_func) reinterpret_cast<snapquick_load_func>(image.get_device_specific_call());
 
 	/* adjust the timer */
-	timer_adjust_oneshot(
-		token->timer,
-		attotime_make(config->delay_seconds, config->delay_attoseconds),
+
+		token->timer->adjust(
+		attotime(config->delay_seconds, config->delay_attoseconds),
 		0);
 
 	return IMAGE_INIT_PASS;

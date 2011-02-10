@@ -88,7 +88,7 @@ static UINT8 pce_io_port_options;
 /* system RAM */
 #if 0 //def MESS
 unsigned char *pce_user_ram;    /* scratch RAM at F8 */
-#else 
+#else
 extern unsigned char *pce_user_ram;    /* scratch RAM at F8 */
 #endif
 
@@ -378,7 +378,7 @@ MACHINE_RESET( pce_mess )
 	//pce_cd.regs[0x03] = (pce_cd.regs[0x03] & ~0x0c) | (PCE_CD_SAMPLE_STOP_PLAY);
 
 	/* Note: Arcade Card BIOS contents are the same as System 3, only internal HW differs.
-	   We use a category to select between modes (some games can be run in either S-CD or A-CD modes) */
+       We use a category to select between modes (some games can be run in either S-CD or A-CD modes) */
 	pce_acard = input_port_read(machine, "A_CARD") & 1;
 }
 
@@ -432,12 +432,12 @@ READ8_HANDLER ( pce_mess_joystick_r )
 				break;
 			case 2: //6-buttons pad
 				/*
-				Two packets:
-				1st packet: directions + I, II, Run, Select
-				2nd packet: 6 buttons "header" (high 4 bits active low) + III, IV, V, VI
-				Note that six buttons pad just doesn't work with (almost?) every single 2-button-only games, it's really just an after-thought and it is like this
-				on real HW.
-				*/
+                Two packets:
+                1st packet: directions + I, II, Run, Select
+                2nd packet: 6 buttons "header" (high 4 bits active low) + III, IV, V, VI
+                Note that six buttons pad just doesn't work with (almost?) every single 2-button-only games, it's really just an after-thought and it is like this
+                on real HW.
+                */
 				data = input_port_read(space->machine, joyname[2][joystick_port_select]) >> (joy_6b_packet[joystick_port_select]*8);
 				break;
 			default:
@@ -508,7 +508,7 @@ static void pce_cd_msm5205_int(device_t *device)
 {
 	UINT8 msm_data;
 
-//	popmessage("%08x %08x %08x %02x %02x",pce_cd.msm_start_addr,pce_cd.msm_end_addr,pce_cd.msm_half_addr,pce_cd.regs[0x0c],pce_cd.regs[0x0d]);
+//  popmessage("%08x %08x %08x %02x %02x",pce_cd.msm_start_addr,pce_cd.msm_end_addr,pce_cd.msm_half_addr,pce_cd.regs[0x0c],pce_cd.regs[0x0d]);
 
 	if ( pce_cd.msm_idle )
 		return;
@@ -607,7 +607,7 @@ static void pce_cd_read_6( running_machine *machine )
 	}
 	else
 	{
-		timer_adjust_periodic(pce_cd.data_timer, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND ), 0, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND ));
+		pce_cd.data_timer->adjust(attotime::from_hz( PCE_CD_DATA_FRAMES_PER_SECOND ), 0, attotime::from_hz( PCE_CD_DATA_FRAMES_PER_SECOND ));
 	}
 }
 
@@ -1048,7 +1048,7 @@ static void pce_cd_update( running_machine *machine )
 			pce_cd.selected = 0;
 			pce_cd.cdda_status = PCE_CD_CDDA_OFF;
 			cdda_stop_audio( machine->device( "cdda" ) );
-			timer_adjust_oneshot(pce_cd.adpcm_dma_timer, attotime_never, 0); // stop ADPCM DMA here
+			pce_cd.adpcm_dma_timer->adjust(attotime::never); // stop ADPCM DMA here
 		}
 		pce_cd.scsi_last_RST = pce_cd.scsi_RST;
 	}
@@ -1210,7 +1210,7 @@ static TIMER_CALLBACK( pce_cd_data_timer_callback )
 			/* We are done, disable the timer */
 			logerror("Last frame read from CD\n");
 			pce_cd.data_transferred = 1;
-			timer_adjust_oneshot(pce_cd.data_timer, attotime_never, 0);
+			pce_cd.data_timer->adjust(attotime::never);
 		}
 		else
 		{
@@ -1269,20 +1269,20 @@ static void pce_cd_init( running_machine *machine )
 		}
 	}
 
-	pce_cd.data_timer = timer_alloc(machine,  pce_cd_data_timer_callback , NULL);
-	timer_adjust_oneshot(pce_cd.data_timer, attotime_never, 0);
-	pce_cd.adpcm_dma_timer = timer_alloc(machine,  pce_cd_adpcm_dma_timer_callback , NULL);
-	timer_adjust_oneshot(pce_cd.adpcm_dma_timer, attotime_never, 0);
+	pce_cd.data_timer = machine->scheduler().timer_alloc(FUNC(pce_cd_data_timer_callback));
+	pce_cd.data_timer->adjust(attotime::never);
+	pce_cd.adpcm_dma_timer = machine->scheduler().timer_alloc(FUNC(pce_cd_adpcm_dma_timer_callback));
+	pce_cd.adpcm_dma_timer->adjust(attotime::never);
 
-	pce_cd.cdda_fadeout_timer = timer_alloc(machine,  pce_cd_cdda_fadeout_callback , NULL);
-	timer_adjust_oneshot(pce_cd.cdda_fadeout_timer, attotime_never, 0);
-	pce_cd.cdda_fadein_timer = timer_alloc(machine,  pce_cd_cdda_fadein_callback , NULL);
-	timer_adjust_oneshot(pce_cd.cdda_fadein_timer, attotime_never, 0);
+	pce_cd.cdda_fadeout_timer = machine->scheduler().timer_alloc(FUNC(pce_cd_cdda_fadeout_callback));
+	pce_cd.cdda_fadeout_timer->adjust(attotime::never);
+	pce_cd.cdda_fadein_timer = machine->scheduler().timer_alloc(FUNC(pce_cd_cdda_fadein_callback));
+	pce_cd.cdda_fadein_timer->adjust(attotime::never);
 
-	pce_cd.adpcm_fadeout_timer = timer_alloc(machine,  pce_cd_adpcm_fadeout_callback , NULL);
-	timer_adjust_oneshot(pce_cd.adpcm_fadeout_timer, attotime_never, 0);
-	pce_cd.adpcm_fadein_timer = timer_alloc(machine,  pce_cd_adpcm_fadein_callback , NULL);
-	timer_adjust_oneshot(pce_cd.adpcm_fadein_timer, attotime_never, 0);
+	pce_cd.adpcm_fadeout_timer = machine->scheduler().timer_alloc(FUNC(pce_cd_adpcm_fadeout_callback));
+	pce_cd.adpcm_fadeout_timer->adjust(attotime::never);
+	pce_cd.adpcm_fadein_timer = machine->scheduler().timer_alloc(FUNC(pce_cd_adpcm_fadein_callback));
+	pce_cd.adpcm_fadein_timer->adjust(attotime::never);
 }
 
 WRITE8_HANDLER( pce_cd_bram_w )
@@ -1315,12 +1315,12 @@ static TIMER_CALLBACK( pce_cd_cdda_fadeout_callback )
 	{
 		pce_cd.cdda_volume = 0.0;
 		cdda_set_volume(machine->device("cdda"), 0.0);
-		timer_adjust_oneshot(pce_cd.cdda_fadeout_timer, attotime_never, 0);
+		pce_cd.cdda_fadeout_timer->adjust(attotime::never);
 	}
 	else
 	{
 		cdda_set_volume(machine->device("cdda"), pce_cd.cdda_volume);
-		timer_adjust_oneshot(pce_cd.cdda_fadeout_timer, ATTOTIME_IN_USEC(param), param);
+		pce_cd.cdda_fadeout_timer->adjust(attotime::from_usec(param), param);
 	}
 }
 
@@ -1332,12 +1332,12 @@ static TIMER_CALLBACK( pce_cd_cdda_fadein_callback )
 	{
 		pce_cd.cdda_volume = 100.0;
 		cdda_set_volume(machine->device("cdda"), 100.0);
-		timer_adjust_oneshot(pce_cd.cdda_fadein_timer, attotime_never, 0);
+		pce_cd.cdda_fadein_timer->adjust(attotime::never);
 	}
 	else
 	{
 		cdda_set_volume(machine->device("cdda"), pce_cd.cdda_volume);
-		timer_adjust_oneshot(pce_cd.cdda_fadein_timer, ATTOTIME_IN_USEC(param), param);
+		pce_cd.cdda_fadein_timer->adjust(attotime::from_usec(param), param);
 	}
 }
 
@@ -1349,12 +1349,12 @@ static TIMER_CALLBACK( pce_cd_adpcm_fadeout_callback )
 	{
 		pce_cd.adpcm_volume = 0.0;
 		msm5205_set_volume(machine->device("msm5205"), 0.0);
-		timer_adjust_oneshot(pce_cd.adpcm_fadeout_timer, attotime_never, 0);
+		pce_cd.adpcm_fadeout_timer->adjust(attotime::never);
 	}
 	else
 	{
 		msm5205_set_volume(machine->device("msm5205"), pce_cd.adpcm_volume);
-		timer_adjust_oneshot(pce_cd.adpcm_fadeout_timer, ATTOTIME_IN_USEC(param), param);
+		pce_cd.adpcm_fadeout_timer->adjust(attotime::from_usec(param), param);
 	}
 }
 
@@ -1366,12 +1366,12 @@ static TIMER_CALLBACK( pce_cd_adpcm_fadein_callback )
 	{
 		pce_cd.adpcm_volume = 100.0;
 		msm5205_set_volume(machine->device("msm5205"), 100.0);
-		timer_adjust_oneshot(pce_cd.adpcm_fadein_timer, attotime_never, 0);
+		pce_cd.adpcm_fadein_timer->adjust(attotime::never);
 	}
 	else
 	{
 		msm5205_set_volume(machine->device("msm5205"), pce_cd.adpcm_volume);
-		timer_adjust_oneshot(pce_cd.adpcm_fadein_timer, ATTOTIME_IN_USEC(param), param);
+		pce_cd.adpcm_fadein_timer->adjust(attotime::from_usec(param), param);
 	}
 }
 
@@ -1392,7 +1392,7 @@ WRITE8_HANDLER( pce_cd_intf_w )
 		pce_cd.scsi_SEL = 1;
 		pce_cd_update(space->machine);
 		pce_cd.scsi_SEL = 0;
-		timer_adjust_oneshot(pce_cd.adpcm_dma_timer, attotime_never, 0); // stop ADPCM DMA here
+		pce_cd.adpcm_dma_timer->adjust(attotime::never); // stop ADPCM DMA here
 		/* any write here clears CD transfer irqs */
 		pce_cd.regs[0x03] &= ~0x70;
 		cputag_set_input_line(space->machine, "maincpu", 1, CLEAR_LINE );
@@ -1435,7 +1435,7 @@ WRITE8_HANDLER( pce_cd_intf_w )
 		if ( data & 0x03 )
 		{
 			/* Start CD to ADPCM transfer */
-			timer_adjust_periodic(pce_cd.adpcm_dma_timer, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND * 2048 ), 0, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND * 2048 ) );
+			pce_cd.adpcm_dma_timer->adjust(attotime::from_hz( PCE_CD_DATA_FRAMES_PER_SECOND * 2048 ), 0, attotime::from_hz( PCE_CD_DATA_FRAMES_PER_SECOND * 2048 ) );
 			pce_cd.regs[0x0c] |= 4;
 		}
 		break;
@@ -1502,52 +1502,52 @@ WRITE8_HANDLER( pce_cd_intf_w )
 			{
 				case 0x00: //CD-DA / ADPCM enable (100 msecs)
 					pce_cd.cdda_volume = 0.0;
-					timer_adjust_oneshot(pce_cd.cdda_fadein_timer, ATTOTIME_IN_USEC(100), 100);
+					pce_cd.cdda_fadein_timer->adjust(attotime::from_usec(100), 100);
 					pce_cd.adpcm_volume = 0.0;
-					timer_adjust_oneshot(pce_cd.adpcm_fadein_timer, ATTOTIME_IN_USEC(100), 100);
-					timer_adjust_oneshot(pce_cd.cdda_fadeout_timer, attotime_never, 0);
-					timer_adjust_oneshot(pce_cd.adpcm_fadeout_timer, attotime_never, 0);
+					pce_cd.adpcm_fadein_timer->adjust(attotime::from_usec(100), 100);
+					pce_cd.cdda_fadeout_timer->adjust(attotime::never);
+					pce_cd.adpcm_fadeout_timer->adjust(attotime::never);
 					break;
 				case 0x01: //CD-DA enable (100 msecs)
 					pce_cd.cdda_volume = 0.0;
-					timer_adjust_oneshot(pce_cd.cdda_fadein_timer, ATTOTIME_IN_USEC(100), 100);
-					timer_adjust_oneshot(pce_cd.cdda_fadeout_timer, attotime_never, 0);
+					pce_cd.cdda_fadein_timer->adjust(attotime::from_usec(100), 100);
+					pce_cd.cdda_fadeout_timer->adjust(attotime::never);
 					break;
 				case 0x08: //CD-DA short (1500 msecs) fade out / ADPCM enable
 					pce_cd.cdda_volume = 100.0;
-					timer_adjust_oneshot(pce_cd.cdda_fadeout_timer, ATTOTIME_IN_USEC(1500), 1500);
+					pce_cd.cdda_fadeout_timer->adjust(attotime::from_usec(1500), 1500);
 					pce_cd.adpcm_volume = 0.0;
-					timer_adjust_oneshot(pce_cd.adpcm_fadein_timer, ATTOTIME_IN_USEC(100), 100);
-					timer_adjust_oneshot(pce_cd.cdda_fadein_timer, attotime_never, 0);
-					timer_adjust_oneshot(pce_cd.adpcm_fadeout_timer, attotime_never, 0);
+					pce_cd.adpcm_fadein_timer->adjust(attotime::from_usec(100), 100);
+					pce_cd.cdda_fadein_timer->adjust(attotime::never);
+					pce_cd.adpcm_fadeout_timer->adjust(attotime::never);
 					break;
 				case 0x09: //CD-DA long (5000 msecs) fade out
 					pce_cd.cdda_volume = 100.0;
-					timer_adjust_oneshot(pce_cd.cdda_fadeout_timer, ATTOTIME_IN_USEC(5000), 5000);
-					timer_adjust_oneshot(pce_cd.cdda_fadein_timer, attotime_never, 0);
+					pce_cd.cdda_fadeout_timer->adjust(attotime::from_usec(5000), 5000);
+					pce_cd.cdda_fadein_timer->adjust(attotime::never);
 					break;
 				case 0x0a: //ADPCM long (5000 msecs) fade out
 					pce_cd.adpcm_volume = 100.0;
-					timer_adjust_oneshot(pce_cd.adpcm_fadeout_timer, ATTOTIME_IN_USEC(5000), 5000);
-					timer_adjust_oneshot(pce_cd.adpcm_fadein_timer, attotime_never, 0);
+					pce_cd.adpcm_fadeout_timer->adjust(attotime::from_usec(5000), 5000);
+					pce_cd.adpcm_fadein_timer->adjust(attotime::never);
 					break;
 				case 0x0c: //CD-DA short (1500 msecs) fade out / ADPCM enable
 					pce_cd.cdda_volume = 100.0;
-					timer_adjust_oneshot(pce_cd.cdda_fadeout_timer, ATTOTIME_IN_USEC(1500), 1500);
+					pce_cd.cdda_fadeout_timer->adjust(attotime::from_usec(1500), 1500);
 					pce_cd.adpcm_volume = 0.0;
-					timer_adjust_oneshot(pce_cd.adpcm_fadein_timer, ATTOTIME_IN_USEC(100), 100);
-					timer_adjust_oneshot(pce_cd.cdda_fadein_timer, attotime_never, 0);
-					timer_adjust_oneshot(pce_cd.adpcm_fadeout_timer, attotime_never, 0);
+					pce_cd.adpcm_fadein_timer->adjust(attotime::from_usec(100), 100);
+					pce_cd.cdda_fadein_timer->adjust(attotime::never);
+					pce_cd.adpcm_fadeout_timer->adjust(attotime::never);
 					break;
 				case 0x0d: //CD-DA short (1500 msecs) fade out
 					pce_cd.cdda_volume = 100.0;
-					timer_adjust_oneshot(pce_cd.cdda_fadeout_timer, ATTOTIME_IN_USEC(1500), 1500);
-					timer_adjust_oneshot(pce_cd.cdda_fadein_timer, attotime_never, 0);
+					pce_cd.cdda_fadeout_timer->adjust(attotime::from_usec(1500), 1500);
+					pce_cd.cdda_fadein_timer->adjust(attotime::never);
 					break;
 				case 0x0e: //ADPCM short (1500 msecs) fade out
 					pce_cd.adpcm_volume = 100.0;
-					timer_adjust_oneshot(pce_cd.adpcm_fadeout_timer, ATTOTIME_IN_USEC(1500), 1500);
-					timer_adjust_oneshot(pce_cd.adpcm_fadein_timer, attotime_never, 0);
+					pce_cd.adpcm_fadeout_timer->adjust(attotime::from_usec(1500), 1500);
+					pce_cd.adpcm_fadein_timer->adjust(attotime::never);
 					break;
 				default:
 					popmessage("CD-DA / ADPCM Fade effect mode %02x, contact MESSdev",data & 0x0f);
@@ -1581,7 +1581,7 @@ static UINT8 pce_cd_get_cd_data_byte(running_machine *machine)
 		if ( pce_cd.scsi_IO )
 		{
 			pce_cd.scsi_ACK = 1;
-			timer_set(machine, machine->device<cpu_device>("maincpu")->cycles_to_attotime(15), NULL, 0, pce_cd_clear_ack );
+			machine->scheduler().timer_set(machine->device<cpu_device>("maincpu")->cycles_to_attotime(15), FUNC(pce_cd_clear_ack));
 		}
 	}
 	return data;
@@ -1786,8 +1786,8 @@ WRITE8_HANDLER( pce_cd_acard_w )
 					if(pce_cd.acard_shift_reg != 0)
 					{
 						 pce_cd.acard_shift = (pce_cd.acard_shift_reg < 8) ?
-						 					(pce_cd.acard_shift << pce_cd.acard_shift_reg)
-						 					: (pce_cd.acard_shift >> (16 - pce_cd.acard_shift_reg));
+											(pce_cd.acard_shift << pce_cd.acard_shift_reg)
+											: (pce_cd.acard_shift >> (16 - pce_cd.acard_shift_reg));
 					}
 				}
 				break;
@@ -1822,10 +1822,10 @@ WRITE8_HANDLER( pce_cd_acard_w )
 
 				break;
 
-			case 0x02: pce_cd.acard_base_addr[w_num] = (data & 0xff) | (pce_cd.acard_base_addr[w_num] & 0xffff00); 	break;
-			case 0x03: pce_cd.acard_base_addr[w_num] = (data << 8) | (pce_cd.acard_base_addr[w_num] & 0xff00ff); 		break;
-			case 0x04: pce_cd.acard_base_addr[w_num] = (data << 16) | (pce_cd.acard_base_addr[w_num] & 0x00ffff); 	break;
-			case 0x05: pce_cd.acard_addr_offset[w_num] = (data & 0xff) | (pce_cd.acard_addr_offset[w_num] & 0xff00); 	break;
+			case 0x02: pce_cd.acard_base_addr[w_num] = (data & 0xff) | (pce_cd.acard_base_addr[w_num] & 0xffff00);	break;
+			case 0x03: pce_cd.acard_base_addr[w_num] = (data << 8) | (pce_cd.acard_base_addr[w_num] & 0xff00ff);		break;
+			case 0x04: pce_cd.acard_base_addr[w_num] = (data << 16) | (pce_cd.acard_base_addr[w_num] & 0x00ffff);	break;
+			case 0x05: pce_cd.acard_addr_offset[w_num] = (data & 0xff) | (pce_cd.acard_addr_offset[w_num] & 0xff00);	break;
 			case 0x06:
 				pce_cd.acard_addr_offset[w_num] = (data << 8) | (pce_cd.acard_addr_offset[w_num] & 0x00ff);
 
@@ -1835,9 +1835,9 @@ WRITE8_HANDLER( pce_cd_acard_w )
 					pce_cd.acard_base_addr[w_num] &= 0xffffff;
 				}
 				break;
-			case 0x07: pce_cd.acard_addr_inc[w_num] = (data & 0xff) | (pce_cd.acard_addr_inc[w_num] & 0xff00); 		break;
-			case 0x08: pce_cd.acard_addr_inc[w_num] = (data << 8) | (pce_cd.acard_addr_inc[w_num] & 0x00ff); 			break;
-			case 0x09: pce_cd.acard_ctrl[w_num] = data & 0x7f; 												break;
+			case 0x07: pce_cd.acard_addr_inc[w_num] = (data & 0xff) | (pce_cd.acard_addr_inc[w_num] & 0xff00);		break;
+			case 0x08: pce_cd.acard_addr_inc[w_num] = (data << 8) | (pce_cd.acard_addr_inc[w_num] & 0x00ff);			break;
+			case 0x09: pce_cd.acard_ctrl[w_num] = data & 0x7f;												break;
 			case 0x0a:
 				if((pce_cd.acard_ctrl[w_num] & 0x60) == 0x60)
 				{

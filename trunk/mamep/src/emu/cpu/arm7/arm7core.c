@@ -571,13 +571,13 @@ static void arm7_core_init(device_t *device, const char *cpuname)
 {
     arm_state *cpustate = get_safe_token(device);
 
-    state_save_register_device_item_array(device, 0, cpustate->sArmRegister);
-    state_save_register_device_item(device, 0, cpustate->pendingIrq);
-    state_save_register_device_item(device, 0, cpustate->pendingFiq);
-    state_save_register_device_item(device, 0, cpustate->pendingAbtD);
-    state_save_register_device_item(device, 0, cpustate->pendingAbtP);
-    state_save_register_device_item(device, 0, cpustate->pendingUnd);
-    state_save_register_device_item(device, 0, cpustate->pendingSwi);
+    device->save_item(NAME(cpustate->sArmRegister));
+    device->save_item(NAME(cpustate->pendingIrq));
+    device->save_item(NAME(cpustate->pendingFiq));
+    device->save_item(NAME(cpustate->pendingAbtD));
+    device->save_item(NAME(cpustate->pendingAbtP));
+    device->save_item(NAME(cpustate->pendingUnd));
+    device->save_item(NAME(cpustate->pendingSwi));
 }
 
 // CPU RESET
@@ -1843,7 +1843,12 @@ static void HandleMemBlock(arm_state *cpustate, UINT32 insn)
                     if (rb == 15)
                         LOG(("%08x:  Illegal LDRM writeback to r15\n", R15));
 #endif
-                SET_REGISTER(cpustate, rb, GET_REGISTER(cpustate, rb) + result * 4);
+				// "A LDM will always overwrite the updated base if the base is in the list." (also for a user bank transfer?)
+				// GBA "V-Rally 3" expects R0 not to be overwritten with the updated base value [BP 8077B0C]
+				if (((insn >> rb) & 1) == 0)
+				{
+					SET_REGISTER(cpustate, rb, GET_REGISTER(cpustate, rb) + result * 4);
+				}
             }
 
             // R15 included? (NOTE: CPSR restore must occur LAST otherwise wrong registers restored!)
@@ -1896,7 +1901,11 @@ static void HandleMemBlock(arm_state *cpustate, UINT32 insn)
             {
                 if (rb == 0xf)
                     LOG(("%08x:  Illegal LDRM writeback to r15\n", R15));
-                SET_REGISTER(cpustate, rb, GET_REGISTER(cpustate, rb)-result*4);
+				// "A LDM will always overwrite the updated base if the base is in the list." (also for a user bank transfer?)
+				if (((insn >> rb) & 1) == 0)
+				{
+					SET_REGISTER(cpustate, rb, GET_REGISTER(cpustate, rb) - result * 4);
+				}
             }
 
             // R15 included? (NOTE: CPSR restore must occur LAST otherwise wrong registers restored!)

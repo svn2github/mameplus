@@ -343,9 +343,9 @@ static MACHINE_START( quasar )
 	MACHINE_START_CALL(cvs);
 
 	/* register state save */
-	state_save_register_global(machine, state->effectcontrol);
-	state_save_register_global(machine, state->page);
-	state_save_register_global(machine, state->io_page);
+	state->save_item(NAME(state->effectcontrol));
+	state->save_item(NAME(state->page));
+	state->save_item(NAME(state->io_page));
 }
 
 static MACHINE_RESET( quasar )
@@ -374,7 +374,7 @@ static MACHINE_CONFIG_START( quasar, cvs_state )
 	MCFG_MACHINE_START(quasar)
 	MCFG_MACHINE_RESET(quasar)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

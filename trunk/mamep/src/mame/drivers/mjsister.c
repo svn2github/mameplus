@@ -21,9 +21,6 @@ public:
 	mjsister_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	/* memory pointers */
-	UINT8 *     videoram0, *videoram1;
-
 	/* video-related */
 	bitmap_t *tmpbitmap0, *tmpbitmap1;
 	int  flip_screen;
@@ -43,6 +40,10 @@ public:
 	/* devices */
 	device_t *maincpu;
 	device_t *dac;
+
+	/* memory */
+	UINT8 videoram0[0x8000];
+	UINT8 videoram1[0x8000];
 };
 
 
@@ -57,11 +58,9 @@ static VIDEO_START( mjsister )
 	mjsister_state *state = machine->driver_data<mjsister_state>();
 	state->tmpbitmap0 = auto_bitmap_alloc(machine, 256, 256, machine->primary_screen->format());
 	state->tmpbitmap1 = auto_bitmap_alloc(machine, 256, 256, machine->primary_screen->format());
-	state->videoram0 = auto_alloc_array(machine, UINT8, 0x8000);
-	state->videoram1 = auto_alloc_array(machine, UINT8, 0x8000);
 
-	state_save_register_global_pointer(machine, state->videoram0, 0x8000);
-	state_save_register_global_pointer(machine, state->videoram1, 0x8000);
+	state->save_item(NAME(state->videoram0));
+	state->save_item(NAME(state->videoram1));
 }
 
 static void mjsister_plot0( running_machine *machine, int offset, UINT8 data )
@@ -160,7 +159,7 @@ static TIMER_CALLBACK( dac_callback )
 	dac_data_w(state->dac, DACROM[(state->dac_bank * 0x10000 + state->dac_adr++) & 0x1ffff]);
 
 	if (((state->dac_adr & 0xff00 ) >> 8) !=  state->dac_adr_e)
-		timer_set(machine, attotime_mul(ATTOTIME_IN_HZ(MCLK), 1024), NULL, 0, dac_callback);
+		machine->scheduler().timer_set(attotime::from_hz(MCLK) * 1024, FUNC(dac_callback));
 	else
 		state->dac_busy = 0;
 }
@@ -178,7 +177,7 @@ static WRITE8_HANDLER( mjsister_dac_adr_e_w )
 	state->dac_adr = state->dac_adr_s << 8;
 
 	if (state->dac_busy == 0)
-		timer_call_after_resynch(space->machine, NULL, 0, dac_callback);
+		space->machine->scheduler().synchronize(FUNC(dac_callback));
 
 	state->dac_busy = 1;
 }
@@ -454,20 +453,20 @@ static MACHINE_START( mjsister )
 	state->maincpu = machine->device("maincpu");
 	state->dac = machine->device("dac");
 
-	state_save_register_global(machine, state->dac_busy);
-	state_save_register_global(machine, state->flip_screen);
-	state_save_register_global(machine, state->video_enable);
-	state_save_register_global(machine, state->vrambank);
-	state_save_register_global(machine, state->colorbank);
-	state_save_register_global(machine, state->input_sel1);
-	state_save_register_global(machine, state->input_sel2);
-	state_save_register_global(machine, state->rombank0);
-	state_save_register_global(machine, state->rombank1);
-	state_save_register_global(machine, state->dac_adr);
-	state_save_register_global(machine, state->dac_bank);
-	state_save_register_global(machine, state->dac_adr_s);
-	state_save_register_global(machine, state->dac_adr_e);
-	state_save_register_postload(machine, mjsister_redraw, 0);
+	state->save_item(NAME(state->dac_busy));
+	state->save_item(NAME(state->flip_screen));
+	state->save_item(NAME(state->video_enable));
+	state->save_item(NAME(state->vrambank));
+	state->save_item(NAME(state->colorbank));
+	state->save_item(NAME(state->input_sel1));
+	state->save_item(NAME(state->input_sel2));
+	state->save_item(NAME(state->rombank0));
+	state->save_item(NAME(state->rombank1));
+	state->save_item(NAME(state->dac_adr));
+	state->save_item(NAME(state->dac_bank));
+	state->save_item(NAME(state->dac_adr_s));
+	state->save_item(NAME(state->dac_adr_e));
+	machine->state().register_postload(mjsister_redraw, 0);
 }
 
 static MACHINE_RESET( mjsister )

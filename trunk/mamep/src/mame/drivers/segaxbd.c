@@ -272,13 +272,13 @@ static void xboard_generic_init(running_machine *machine)
 	state->subcpu = machine->device("sub");
 	state->_315_5250_1 = machine->device("5250_main");
 
-	state_save_register_global(machine, state->iochip_force_input);
-	state_save_register_global(machine, state->vblank_irq_state);
-	state_save_register_global(machine, state->timer_irq_state);
-	state_save_register_global(machine, state->gprider_hack);
-	state_save_register_global_array(machine, state->iochip_regs[0]);
-	state_save_register_global_array(machine, state->iochip_regs[1]);
-	state_save_register_global_array(machine, state->adc_reverse);
+	state->save_item(NAME(state->iochip_force_input));
+	state->save_item(NAME(state->vblank_irq_state));
+	state->save_item(NAME(state->timer_irq_state));
+	state->save_item(NAME(state->gprider_hack));
+	state->save_item(NAME(state->iochip_regs[0]));
+	state->save_item(NAME(state->iochip_regs[1]));
+	state->save_item(NAME(state->adc_reverse));
 }
 
 
@@ -313,14 +313,14 @@ static void update_main_irqs(running_machine *machine)
 	if (irq)
 	{
 		cpu_set_input_line(state->maincpu, irq, ASSERT_LINE);
-		cpuexec_boost_interleave(machine, attotime_zero, ATTOTIME_IN_USEC(100));
+		machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 	}
 }
 
 
-static TIMER_CALLBACK( scanline_callback )
+static TIMER_DEVICE_CALLBACK( scanline_callback )
 {
-	segas1x_state *state = machine->driver_data<segas1x_state>();
+	segas1x_state *state = timer.machine->driver_data<segas1x_state>();
 
 	int scanline = param;
 	int next_scanline = (scanline + 2) % 262;
@@ -349,10 +349,10 @@ static TIMER_CALLBACK( scanline_callback )
 
 	/* update IRQs on the main CPU */
 	if (update)
-		update_main_irqs(machine);
+		update_main_irqs(timer.machine);
 
 	/* come back in 2 scanlines */
-	timer_set(machine, machine->primary_screen->time_until_pos(next_scanline), NULL, next_scanline, scanline_callback);
+	timer.adjust(timer.machine->primary_screen->time_until_pos(next_scanline), next_scanline);
 }
 
 
@@ -385,7 +385,7 @@ static TIMER_CALLBACK( delayed_sound_data_w )
 
 static void sound_data_w(running_machine *machine, UINT8 data)
 {
-	timer_call_after_resynch(machine, NULL, data, delayed_sound_data_w);
+	machine->scheduler().synchronize(FUNC(delayed_sound_data_w), data);
 }
 
 
@@ -418,12 +418,13 @@ static void xboard_reset(device_t *device)
 	segas1x_state *state = device->machine->driver_data<segas1x_state>();
 
 	cpu_set_input_line(state->subcpu, INPUT_LINE_RESET, PULSE_LINE);
-	cpuexec_boost_interleave(device->machine, attotime_zero, ATTOTIME_IN_USEC(100));
+	device->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
 
 static MACHINE_RESET( xboard )
 {
+	segas1x_state *state = machine->driver_data<segas1x_state>();
 	fd1094_machine_init(machine->device("maincpu"));
 	segaic16_tilemap_reset(machine, 0);
 
@@ -431,7 +432,7 @@ static MACHINE_RESET( xboard )
 	m68k_set_reset_callback(machine->device("maincpu"), xboard_reset);
 
 	/* start timers to track interrupts */
-	timer_set(machine, machine->primary_screen->time_until_pos(1), NULL, 1, scanline_callback);
+	state->interrupt_timer->adjust(machine->primary_screen->time_until_pos(1), 1);
 }
 
 
@@ -571,7 +572,7 @@ static WRITE16_HANDLER( iochip_0_w )
                 D7: Amplifier mute control (1= sounding, 0= muted)
                 D6-D0: CN D pin A17-A23 (output level 1= high, 0= low)
             */
-			sound_global_enable(space->machine, data & 0x80);
+			space->machine->sound().system_enable(data & 0x80);
 			return;
 	}
 
@@ -661,7 +662,7 @@ static WRITE16_HANDLER( aburner2_iochip_0_D_w )
 	coin_counter_w(space->machine, 0, (data >> 4) & 0x01);
 	output_set_lamp_value(0, (data >> 5) & 0x01);	/* lock on lamp */
 	output_set_lamp_value(1, (data >> 6) & 0x01);	/* danger lamp */
-	sound_global_enable(space->machine, (data >> 7) & 0x01);
+	space->machine->sound().system_enable((data >> 7) & 0x01);
 }
 
 
@@ -677,7 +678,7 @@ static WRITE16_HANDLER( loffire_sync0_w )
 	segas1x_state *state = space->machine->driver_data<segas1x_state>();
 
 	COMBINE_DATA(&state->loffire_sync[offset]);
-	cpuexec_boost_interleave(space->machine, attotime_zero, ATTOTIME_IN_USEC(10));
+	space->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(10));
 }
 
 
@@ -1347,7 +1348,9 @@ static MACHINE_CONFIG_START( xboard, segas1x_state )
 	MCFG_MACHINE_RESET(xboard)
 	MCFG_NVRAM_ADD_0FILL("backup1")
 	MCFG_NVRAM_ADD_0FILL("backup2")
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
+
+	MCFG_TIMER_ADD("int_timer", scanline_callback)
 
 	MCFG_315_5248_ADD("5248_main")
 	MCFG_315_5248_ADD("5248_subx")

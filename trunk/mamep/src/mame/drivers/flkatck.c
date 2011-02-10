@@ -205,9 +205,9 @@ static MACHINE_START( flkatck )
 	state->audiocpu = machine->device("audiocpu");
 	state->k007121 = machine->device("k007121");
 
-	state_save_register_global(machine, state->irq_enabled);
-	state_save_register_global_array(machine, state->multiply_reg);
-	state_save_register_global(machine, state->flipscreen);
+	state->save_item(NAME(state->irq_enabled));
+	state->save_item(NAME(state->multiply_reg));
+	state->save_item(NAME(state->flipscreen));
 }
 
 static MACHINE_RESET( flkatck )
@@ -232,7 +232,7 @@ static MACHINE_CONFIG_START( flkatck, flkatck_state )
 	MCFG_CPU_ADD("audiocpu", Z80,3579545)	/* NEC D780C-1, 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(flkatck_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(flkatck)
 	MCFG_MACHINE_RESET(flkatck)

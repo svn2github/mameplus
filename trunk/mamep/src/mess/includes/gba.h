@@ -182,6 +182,7 @@ public:
 	UINT32 dma_src[4], dma_dst[4], dma_cnt[4], dma_srcadd[4], dma_dstadd[4];
 	UINT32 timer_regs[4];
 	UINT16 timer_reload[4];
+	int timer_recalc[4];
 
 	UINT32 gba_sram[0x10000/4];
 	UINT8 gba_eeprom[0x2000];
@@ -204,9 +205,11 @@ public:
 	int fifo_a_ptr, fifo_b_ptr, fifo_a_in, fifo_b_in;
 	UINT8 fifo_a[20], fifo_b[20];
 	UINT32 xferscan[7][240+2048];
-	
+
 	UINT32 bios_last_address;
 	int bios_protected;
+
+	int flash_battery_load;
 };
 
 /*----------- defined in video/gba.c -----------*/

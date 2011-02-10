@@ -34,7 +34,7 @@ static TIMER_CALLBACK( nmi_callback )
 static WRITE8_HANDLER( sound_command_w )
 {
 	soundlatch_w(space, 0, data);
-	timer_call_after_resynch(space->machine, NULL, data, nmi_callback);
+	space->machine->scheduler().synchronize(FUNC(nmi_callback), data);
 }
 
 static WRITE8_HANDLER( nmi_disable_w )
@@ -246,14 +246,16 @@ static WRITE8_DEVICE_HANDLER( sound_control_0_w )
 	state->snd_ctrl0 = data & 0xff;
 	//popmessage("SND0 0=%2x 1=%2x", state->snd_ctrl0, state->snd_ctrl1);
 
-	sound_set_output_gain(device, 0, state->vol_ctrl[state->snd_ctrl0 & 15] / 100.0);	/* group1 from msm5232 */
-	sound_set_output_gain(device, 1, state->vol_ctrl[state->snd_ctrl0 & 15] / 100.0);	/* group1 from msm5232 */
-	sound_set_output_gain(device, 2, state->vol_ctrl[state->snd_ctrl0 & 15] / 100.0);	/* group1 from msm5232 */
-	sound_set_output_gain(device, 3, state->vol_ctrl[state->snd_ctrl0 & 15] / 100.0);	/* group1 from msm5232 */
-	sound_set_output_gain(device, 4, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
-	sound_set_output_gain(device, 5, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
-	sound_set_output_gain(device, 6, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
-	sound_set_output_gain(device, 7, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
+	device_sound_interface *sound;
+	device->interface(sound);
+	sound->set_output_gain(0, state->vol_ctrl[state->snd_ctrl0 & 15] / 100.0);	/* group1 from msm5232 */
+	sound->set_output_gain(1, state->vol_ctrl[state->snd_ctrl0 & 15] / 100.0);	/* group1 from msm5232 */
+	sound->set_output_gain(2, state->vol_ctrl[state->snd_ctrl0 & 15] / 100.0);	/* group1 from msm5232 */
+	sound->set_output_gain(3, state->vol_ctrl[state->snd_ctrl0 & 15] / 100.0);	/* group1 from msm5232 */
+	sound->set_output_gain(4, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
+	sound->set_output_gain(5, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
+	sound->set_output_gain(6, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
+	sound->set_output_gain(7, state->vol_ctrl[(state->snd_ctrl0 >> 4) & 15] / 100.0);	/* group2 from msm5232 */
 }
 static WRITE8_HANDLER( sound_control_1_w )
 {
@@ -441,18 +443,18 @@ static MACHINE_START( msisaac )
 	state->audiocpu = machine->device("audiocpu");
 
 	/* video */
-	state_save_register_global(machine, state->bg2_textbank);
+	state->save_item(NAME(state->bg2_textbank));
 	/* sound */
-	state_save_register_global(machine, state->sound_nmi_enable);
-	state_save_register_global(machine, state->pending_nmi);
-	state_save_register_global_array(machine, state->vol_ctrl);
-	state_save_register_global(machine, state->snd_ctrl0);
-	state_save_register_global(machine, state->snd_ctrl1);
+	state->save_item(NAME(state->sound_nmi_enable));
+	state->save_item(NAME(state->pending_nmi));
+	state->save_item(NAME(state->vol_ctrl));
+	state->save_item(NAME(state->snd_ctrl0));
+	state->save_item(NAME(state->snd_ctrl1));
 
 #ifdef USE_MCU
 #else
-	state_save_register_global(machine, state->mcu_val);
-	state_save_register_global(machine, state->direction);
+	state->save_item(NAME(state->mcu_val));
+	state->save_item(NAME(state->direction));
 #endif
 }
 

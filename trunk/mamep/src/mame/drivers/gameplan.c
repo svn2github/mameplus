@@ -146,7 +146,7 @@ static WRITE8_DEVICE_HANDLER( audio_reset_w )
 	if (data == 0)
 	{
 		state->riot->reset();
-		cpuexec_boost_interleave(device->machine, attotime_zero, ATTOTIME_IN_USEC(10));
+		device->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(10));
 	}
 }
 
@@ -188,7 +188,7 @@ static WRITE_LINE_DEVICE_HANDLER( r6532_irq )
 
 	cpu_set_input_line(gameplan->audiocpu, 0, state);
 	if (state == ASSERT_LINE)
-		cpuexec_boost_interleave(device->machine, attotime_zero, ATTOTIME_IN_USEC(10));
+		device->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(10));
 }
 
 
@@ -989,11 +989,11 @@ static MACHINE_START( gameplan )
 	state->riot = machine->device("riot");
 
 	/* register for save states */
-	state_save_register_global(machine, state->current_port);
-	state_save_register_global(machine, state->video_x);
-	state_save_register_global(machine, state->video_y);
-	state_save_register_global(machine, state->video_command);
-	state_save_register_global(machine, state->video_data);
+	state->save_item(NAME(state->current_port));
+	state->save_item(NAME(state->video_x));
+	state->save_item(NAME(state->video_y));
+	state->save_item(NAME(state->video_command));
+	state->save_item(NAME(state->video_data));
 }
 
 

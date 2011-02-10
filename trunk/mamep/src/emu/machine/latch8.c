@@ -105,7 +105,7 @@ WRITE8_DEVICE_HANDLER( latch8_w )
 	assert(offset == 0);
 
 	if (latch8->intf->nosync != 0xff)
-		timer_call_after_resynch(device->machine, (void *)device, (0xFF << 8) | data, latch8_timerproc);
+		device->machine->scheduler().synchronize(FUNC(latch8_timerproc), (0xFF << 8) | data, (void *)device);
 	else
 		update(device, data, 0xFF);
 }
@@ -165,7 +165,7 @@ INLINE void latch8_bitx_w(device_t *device, int bit, offs_t offset, UINT8 data)
 	if (latch8->intf->nosync & mask)
 		update(device, masked_data, mask);
 	else
-		timer_call_after_resynch(device->machine, (void *) device, (mask << 8) | masked_data, latch8_timerproc);
+		device->machine->scheduler().synchronize(FUNC(latch8_timerproc), (mask << 8) | masked_data, (void *) device);
 }
 
 WRITE8_DEVICE_HANDLER( latch8_bit0_w ) { latch8_bitx_w(device, 0, offset, data); }
@@ -221,7 +221,7 @@ static DEVICE_START( latch8 )
 			latch8->has_read = 1;
 		}
 
-	state_save_register_device_item(device, 0, latch8->value);
+	device->save_item(NAME(latch8->value));
 }
 
 

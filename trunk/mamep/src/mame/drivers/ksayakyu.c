@@ -257,9 +257,9 @@ static MACHINE_START( ksayakyu )
 
 	memory_configure_bank(machine, "bank1", 0, 2, &ROM[0x10000], 0x4000);
 
-	state_save_register_global(machine, state->sound_status);
-	state_save_register_global(machine, state->video_ctrl);
-	state_save_register_global(machine, state->flipscreen);
+	state->save_item(NAME(state->sound_status));
+	state->save_item(NAME(state->video_ctrl));
+	state->save_item(NAME(state->flipscreen));
 }
 
 static MACHINE_RESET( ksayakyu )
@@ -282,7 +282,7 @@ static MACHINE_CONFIG_START( ksayakyu, ksayakyu_state )
 	MCFG_CPU_PROGRAM_MAP(soundcpu_map)
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold,60) //guess, controls music tempo
 
-	MCFG_QUANTUM_TIME(HZ(60000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(60000))
 
 	MCFG_MACHINE_START(ksayakyu)
 	MCFG_MACHINE_RESET(ksayakyu)

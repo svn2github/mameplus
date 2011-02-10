@@ -9,7 +9,6 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "streams.h"
 #include "includes/amiga.h"
 #include "cpu/m68000/m68000.h"
 
@@ -87,7 +86,7 @@ static void dma_reload(amiga_state *state, audio_channel *chan)
 {
 	chan->curlocation = CUSTOM_REG_LONG(REG_AUD0LCH + chan->index * 8);
 	chan->curlength = CUSTOM_REG(REG_AUD0LEN + chan->index * 8);
-	timer_adjust_oneshot(chan->irq_timer, ATTOTIME_IN_HZ(15750), chan->index);
+	chan->irq_timer->adjust(attotime::from_hz(15750), chan->index);
 	LOG(("dma_reload(%d): offs=%05X len=%04X\n", chan->index, chan->curlocation, chan->curlength));
 }
 
@@ -118,7 +117,7 @@ void amiga_audio_update(device_t *device)
 {
 	amiga_audio *audio_state = get_safe_token(device);
 
-	stream_update(audio_state->stream);
+	audio_state->stream->update();
 }
 
 
@@ -271,11 +270,11 @@ static DEVICE_START( amiga_sound )
 	for (i = 0; i < 4; i++)
 	{
 		audio_state->channel[i].index = i;
-		audio_state->channel[i].irq_timer = timer_alloc(device->machine, signal_irq, NULL);
+		audio_state->channel[i].irq_timer = device->machine->scheduler().timer_alloc(FUNC(signal_irq));
 	}
 
 	/* create the stream */
-	audio_state->stream = stream_create(device, 0, 4, device->clock() / CLOCK_DIVIDER, audio_state, amiga_stream_update);
+	audio_state->stream = device->machine->sound().stream_alloc(*device, 0, 4, device->clock() / CLOCK_DIVIDER, audio_state, amiga_stream_update);
 }
 
 

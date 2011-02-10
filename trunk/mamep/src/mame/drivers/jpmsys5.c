@@ -263,7 +263,7 @@ static WRITE16_DEVICE_HANDLER( jpm_upd7759_w )
 	}
 	else
 	{
-		logerror("%s: upd7759: Unknown write to %x with %x\n", cpuexec_describe_context(device->machine),  offset, data);
+		logerror("%s: upd7759: Unknown write to %x with %x\n", device->machine->describe_context(),  offset, data);
 	}
 }
 
@@ -351,7 +351,7 @@ static TIMER_CALLBACK( touch_cb )
 
 			if (++touch_data_count == 3)
 			{
-				timer_reset(touch_timer, attotime_never);
+				touch_timer->reset();
 				touch_state = IDLE;
 			}
 			else
@@ -368,7 +368,7 @@ static INPUT_CHANGED( touchscreen_press )
 {
 	if (newval == 0)
 	{
-		attotime rx_period = attotime_mul(ATTOTIME_IN_HZ(10000), 16);
+		attotime rx_period = attotime::from_hz(10000) * 16;
 
 		/* Each touch screen packet is 3 bytes */
 		touch_data[0] = 0x2a;
@@ -378,7 +378,7 @@ static INPUT_CHANGED( touchscreen_press )
 		/* Start sending the data to the 68000 serially */
 		touch_data_count = 0;
 		touch_state = START;
-		timer_adjust_periodic(touch_timer, rx_period, 0, rx_period);
+		touch_timer->adjust(rx_period, 0, rx_period);
 	}
 }
 
@@ -577,12 +577,12 @@ static ACIA6850_INTERFACE( acia2_if )
 static MACHINE_START( jpmsys5v )
 {
 	memory_set_bankptr(machine, "bank1", machine->region("maincpu")->base());
-	touch_timer = timer_alloc(machine, touch_cb, NULL);
+	touch_timer = machine->scheduler().timer_alloc(FUNC(touch_cb));
 }
 
 static MACHINE_RESET( jpmsys5v )
 {
-	timer_reset(touch_timer, attotime_never);
+	touch_timer->reset();
 	touch_state = IDLE;
 	a2_data_in = 1;
 	a2_acia_dcd = 0;

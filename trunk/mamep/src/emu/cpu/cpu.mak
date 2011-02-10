@@ -176,6 +176,20 @@ $(CPUOBJ)/apexc/apexc.o:	$(CPUSRC)/apexc/apexc.c \
 
 
 #-------------------------------------------------
+# AT&T DSP16A
+#-------------------------------------------------
+
+ifneq ($(filter DSP16A,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/dsp16
+CPUOBJS += $(CPUOBJ)/dsp16/dsp16.o
+DASMOBJS += $(CPUOBJ)/dsp16/dsp16dis.o
+endif
+
+$(CPUOBJ)/dsp16/dsp16.o:	$(CPUSRC)/dsp16/dsp16.c \
+							$(CPUSRC)/dsp16/dsp16.h
+
+
+#-------------------------------------------------
 # AT&T DSP32C
 #-------------------------------------------------
 
@@ -459,6 +473,21 @@ $(CPUOBJ)/h83002/h8disasm.o:	$(CPUSRC)/h83002/h8disasm.c
 
 $(CPUOBJ)/h83002/h8periph.o:	$(CPUSRC)/h83002/h8periph.c \
 								$(CPUSRC)/h83002/h8priv.h
+
+#-------------------------------------------------
+# Hitachi HCD62121
+#-------------------------------------------------
+
+ifneq ($(filter HCD62121,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/hcd62121
+CPUOBJS += $(CPUOBJ)/hcd62121/hcd62121.o
+DASMOBJS += $(CPUOBJ)/hcd62121/hcd62121d.o
+endif
+
+$(CPUOBJ)/hcd62121/hcd62121.o:	$(CPUSRC)/hcd62121/hcd62121.c \
+							$(CPUSRC)/hcd62121/hcd62121.h \
+							$(CPUSRC)/hcd62121/hcd62121_ops.h
+
 
 #-------------------------------------------------
 # Hitachi SH1/SH2
@@ -1602,13 +1631,19 @@ $(CPUOBJ)/tms32051/tms32051.o:	$(CPUSRC)/tms32051/tms32051.c \
 
 ifneq ($(filter TMS57002,$(CPUS)),)
 OBJDIRS += $(CPUOBJ)/tms57002
-CPUOBJS += $(CPUOBJ)/tms57002/tms57002.o
+CPUOBJS += $(CPUOBJ)/tms57002/tms57002.o $(CPUOBJ)/tms57002/tms57kdec.o
 DASMOBJS += $(CPUOBJ)/tms57002/57002dsm.o
 TMSMAKE += $(BUILDOUT)/tmsmake$(BUILD_EXE)
 endif
 
 $(CPUOBJ)/tms57002/tms57002.o:	$(CPUSRC)/tms57002/tms57002.c \
 								$(CPUSRC)/tms57002/tms57002.h \
+								$(CPUSRC)/tms57002/tms57kpr.h \
+								$(CPUOBJ)/tms57002/tms57002.inc
+
+$(CPUOBJ)/tms57002/tms57kdec.o:	$(CPUSRC)/tms57002/tms57kdec.c \
+								$(CPUSRC)/tms57002/tms57002.h \
+								$(CPUSRC)/tms57002/tms57kpr.h \
 								$(CPUOBJ)/tms57002/tms57002.inc
 
 $(CPUOBJ)/tms57002/57002dsm.o:	$(CPUSRC)/tms57002/57002dsm.c \

@@ -59,7 +59,7 @@ static MACHINE_RESET( marineb )
 	state->marineb_active_low_flipscreen = 0;
 
 	/* we must start with NMI interrupts disabled */
-	timer_call_after_resynch(machine, NULL, 0, interrupt_disable);
+	machine->scheduler().synchronize(FUNC(interrupt_disable));
 }
 
 static MACHINE_RESET( springer )
@@ -78,7 +78,7 @@ static MACHINE_START( marineb )
 	state->maincpu = machine->device("maincpu");
 	state->audiocpu = NULL;
 
-	state_save_register_global(machine, state->marineb_active_low_flipscreen);
+	state->save_item(NAME(state->marineb_active_low_flipscreen));
 }
 
 static ADDRESS_MAP_START( marineb_map, ADDRESS_SPACE_PROGRAM, 8 )

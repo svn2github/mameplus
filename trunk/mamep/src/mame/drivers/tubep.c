@@ -325,7 +325,7 @@ static TIMER_CALLBACK( tubep_scanline_callback )
 	if (scanline >= 264)
 		scanline = 0;
 
-	timer_adjust_oneshot(interrupt_timer, machine->primary_screen->time_until_pos(scanline), scanline);
+	interrupt_timer->adjust(machine->primary_screen->time_until_pos(scanline), scanline);
 }
 
 
@@ -349,7 +349,7 @@ static void tubep_setup_save_state(running_machine *machine)
 static MACHINE_START( tubep )
 {
 	/* Create interrupt timer */
-	interrupt_timer = timer_alloc(machine, tubep_scanline_callback, NULL);
+	interrupt_timer = machine->scheduler().timer_alloc(FUNC(tubep_scanline_callback));
 
 	tubep_setup_save_state(machine);
 }
@@ -357,7 +357,7 @@ static MACHINE_START( tubep )
 
 static MACHINE_RESET( tubep )
 {
-	timer_adjust_oneshot(interrupt_timer, machine->primary_screen->time_until_pos(0), 0);
+	interrupt_timer->adjust(machine->primary_screen->time_until_pos(0));
 }
 
 
@@ -505,21 +505,21 @@ static TIMER_CALLBACK( rjammer_scanline_callback )
 	if (scanline >= 264)
 		scanline = 0;
 
-	timer_adjust_oneshot(interrupt_timer, machine->primary_screen->time_until_pos(scanline), scanline);
+	interrupt_timer->adjust(machine->primary_screen->time_until_pos(scanline), scanline);
 }
 
 
 static MACHINE_START( rjammer )
 {
 	/* Create interrupt timer */
-	interrupt_timer = timer_alloc(machine, rjammer_scanline_callback, NULL);
+	interrupt_timer = machine->scheduler().timer_alloc(FUNC(rjammer_scanline_callback));
 
 	tubep_setup_save_state(machine);
 }
 
 static MACHINE_RESET( rjammer )
 {
-	timer_adjust_oneshot(interrupt_timer, machine->primary_screen->time_until_pos(0), 0);
+	interrupt_timer->adjust(machine->primary_screen->time_until_pos(0));
 }
 
 
@@ -910,7 +910,7 @@ static MACHINE_CONFIG_START( tubep, driver_device )
 	MCFG_CPU_ADD("mcu",NSC8105,6000000)	/* 6 MHz Xtal - divided internally ??? */
 	MCFG_CPU_PROGRAM_MAP(nsc_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(tubep)
 	MCFG_MACHINE_RESET(tubep)

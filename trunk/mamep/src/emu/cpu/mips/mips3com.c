@@ -105,23 +105,23 @@ void mips3com_init(mips3_state *mips, mips3_flavor flavor, int bigendian, legacy
 	mips->vtlb = vtlb_alloc(device, ADDRESS_SPACE_PROGRAM, 2 * mips->tlbentries + 2, 0);
 
 	/* allocate a timer for the compare interrupt */
-	mips->compare_int_timer = timer_alloc(device->machine, compare_int_callback, (void *)device);
+	mips->compare_int_timer = device->machine->scheduler().timer_alloc(FUNC(compare_int_callback), (void *)device);
 
 	/* reset the state */
 	mips3com_reset(mips);
 
 	/* register for save states */
-	state_save_register_device_item(device, 0, mips->pc);
-	state_save_register_device_item_array(device, 0, mips->r);
-	state_save_register_device_item_2d_array(device, 0, mips->cpr);
-	state_save_register_device_item_2d_array(device, 0, mips->ccr);
-	state_save_register_device_item(device, 0, mips->llbit);
-	state_save_register_device_item(device, 0, mips->count_zero_time);
+	device->save_item(NAME(mips->pc));
+	device->save_item(NAME(mips->r));
+	device->save_item(NAME(mips->cpr));
+	device->save_item(NAME(mips->ccr));
+	device->save_item(NAME(mips->llbit));
+	device->save_item(NAME(mips->count_zero_time));
 	for (tlbindex = 0; tlbindex < mips->tlbentries; tlbindex++)
 	{
-		state_save_register_device_item(device, tlbindex, mips->tlb[tlbindex].page_mask);
-		state_save_register_device_item(device, tlbindex, mips->tlb[tlbindex].entry_hi);
-		state_save_register_device_item_array(device, tlbindex, mips->tlb[tlbindex].entry_lo);
+		device->save_item(NAME(mips->tlb[tlbindex].page_mask), tlbindex);
+		device->save_item(NAME(mips->tlb[tlbindex].entry_hi), tlbindex);
+		device->save_item(NAME(mips->tlb[tlbindex].entry_lo), tlbindex);
 	}
 }
 
@@ -205,10 +205,10 @@ void mips3com_update_cycle_counting(mips3_state *mips)
 		UINT32 compare = mips->cpr[0][COP0_Compare];
 		UINT32 delta = compare - count;
 		attotime newtime = mips->device->cycles_to_attotime((UINT64)delta * 2);
-		timer_adjust_oneshot(mips->compare_int_timer, newtime, 0);
+		mips->compare_int_timer->adjust(newtime);
 		return;
 	}
-	timer_adjust_oneshot(mips->compare_int_timer, attotime_never, 0);
+	mips->compare_int_timer->adjust(attotime::never);
 }
 
 

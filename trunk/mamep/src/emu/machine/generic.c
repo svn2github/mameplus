@@ -100,16 +100,16 @@ void generic_machine_init(running_machine *machine)
 		state->interrupt_device[index++] = &exec->device();
 
 	/* register coin save state */
-	state_save_register_item_array(machine, "coin", NULL, 0, state->coin_count);
-	state_save_register_item_array(machine, "coin", NULL, 0, state->coinlockedout);
-	state_save_register_item_array(machine, "coin", NULL, 0, state->lastcoin);
+	machine->state().save_item(NAME(state->coin_count));
+	machine->state().save_item(NAME(state->coinlockedout));
+	machine->state().save_item(NAME(state->lastcoin));
 
 	/* reset memory card info */
 	state->memcard_inserted = -1;
 
 	/* register a reset callback and save state for interrupt enable */
 	machine->add_notifier(MACHINE_NOTIFY_RESET, interrupt_reset);
-	state_save_register_item_array(machine, "cpu", NULL, 0, state->interrupt_enable);
+	machine->state().save_item(NAME(state->interrupt_enable));
 
 	/* register for configuration */
 	config_register(machine, "counters", counters_load, counters_save);
@@ -621,8 +621,8 @@ void generic_pulse_irq_line(device_t *device, int irqline)
 	cpu_set_input_line(device, irqline, ASSERT_LINE);
 
 	cpu_device *cpudevice = downcast<cpu_device *>(device);
-	attotime target_time = attotime_add(cpudevice->local_time(), cpudevice->cycles_to_attotime(cpudevice->min_cycles()));
-	timer_set(device->machine, attotime_sub(target_time, timer_get_time(device->machine)), (void *)device, irqline, irq_pulse_clear);
+	attotime target_time = cpudevice->local_time() + cpudevice->cycles_to_attotime(cpudevice->min_cycles());
+	device->machine->scheduler().timer_set(target_time - device->machine->time(), FUNC(irq_pulse_clear), irqline, (void *)device);
 }
 
 
@@ -638,8 +638,8 @@ void generic_pulse_irq_line_and_vector(device_t *device, int irqline, int vector
 	cpu_set_input_line_and_vector(device, irqline, ASSERT_LINE, vector);
 
 	cpu_device *cpudevice = downcast<cpu_device *>(device);
-	attotime target_time = attotime_add(cpudevice->local_time(), cpudevice->cycles_to_attotime(cpudevice->min_cycles()));
-	timer_set(device->machine, attotime_sub(target_time, timer_get_time(device->machine)), (void *)device, irqline, irq_pulse_clear);
+	attotime target_time = cpudevice->local_time() + cpudevice->cycles_to_attotime(cpudevice->min_cycles());
+	device->machine->scheduler().timer_set(target_time - device->machine->time(), FUNC(irq_pulse_clear), irqline, (void *)device);
 }
 
 
@@ -665,7 +665,7 @@ void cpu_interrupt_enable(device_t *device, int enabled)
 
 	/* make sure there are no queued interrupts */
 	if (enabled == 0)
-		timer_call_after_resynch(device->machine, (void *)cpudevice, 0, clear_all_lines);
+		device->machine->scheduler().synchronize(FUNC(clear_all_lines), 0, (void *)cpudevice);
 }
 
 

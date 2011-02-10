@@ -163,7 +163,7 @@ static IRQ_CALLBACK( metro_irq_callback )
 {
 	metro_state *state = device->machine->driver_data<metro_state>();
 
-	// logerror("%s: irq callback returns %04X\n", cpuexec_describe_context(device->machine), state->irq_vectors[int_level]);
+	// logerror("%s: irq callback returns %04X\n", device->machine->describe_context(), state->irq_vectors[int_level]);
 	return state->irq_vectors[irqline] & 0xff;
 }
 
@@ -256,7 +256,7 @@ static INTERRUPT_GEN( karatour_interrupt )
 			state->requested_int[0] = 1;
 			state->requested_int[5] = 1;	// write the scroll registers
 			/* the duration is a guess */
-			timer_set(device->machine, ATTOTIME_IN_USEC(2500), NULL, 0, vblank_end_callback);
+			device->machine->scheduler().timer_set(attotime::from_usec(2500), FUNC(vblank_end_callback));
 			update_irq_state(device->machine);
 			break;
 
@@ -281,7 +281,7 @@ static WRITE16_HANDLER( mouja_irq_timer_ctrl_w )
 	metro_state *state = space->machine->driver_data<metro_state>();
 	double freq = 58.0 + (0xff - (data & 0xff)) / 2.2;					/* 0xff=58Hz, 0x80=116Hz? */
 
-	timer_adjust_periodic(state->mouja_irq_timer, attotime_zero, 0, ATTOTIME_IN_HZ(freq));
+	state->mouja_irq_timer->adjust(attotime::zero, 0, attotime::from_hz(freq));
 }
 
 static INTERRUPT_GEN( mouja_interrupt )
@@ -673,7 +673,7 @@ INLINE void blt_write( address_space *space, const int tmap, const offs_t offs, 
 		case 2:	metro_vram_1_w(space, offs, data, mask);	break;
 		case 3:	metro_vram_2_w(space, offs, data, mask);	break;
 	}
-//  logerror("%s : Blitter %X] %04X <- %04X & %04X\n", cpuexec_describe_context(space->machine), tmap, offs, data, mask);
+//  logerror("%s : Blitter %X] %04X <- %04X & %04X\n", space->machine->describe_context(), tmap, offs, data, mask);
 }
 
 
@@ -729,7 +729,7 @@ static WRITE16_HANDLER( metro_blitter_w )
                        another blit. */
 				if (b1 == 0)
 				{
-					timer_set(space->machine, ATTOTIME_IN_USEC(500), NULL, 0, metro_blit_done);
+					space->machine->scheduler().timer_set(attotime::from_usec(500), FUNC(metro_blit_done));
 					return;
 				}
 
@@ -3579,19 +3579,19 @@ static MACHINE_START( metro )
 {
 	metro_state *state = machine->driver_data<metro_state>();
 
-	state_save_register_global(machine, state->blitter_bit);
-	state_save_register_global(machine, state->irq_line);
-	state_save_register_global_array(machine, state->requested_int);
-	state_save_register_global(machine, state->soundstatus);
-	state_save_register_global(machine, state->porta);
-	state_save_register_global(machine, state->portb);
-	state_save_register_global(machine, state->busy_sndcpu);
-	state_save_register_global(machine, state->gakusai_oki_bank_lo);
-	state_save_register_global(machine, state->gakusai_oki_bank_hi);
-	state_save_register_global(machine, state->sprite_xoffs);
-	state_save_register_global(machine, state->sprite_yoffs);
-	state_save_register_global_array(machine, state->bg_tilemap_enable);
-	state_save_register_global_array(machine, state->bg_tilemap_enable16);
+	state->save_item(NAME(state->blitter_bit));
+	state->save_item(NAME(state->irq_line));
+	state->save_item(NAME(state->requested_int));
+	state->save_item(NAME(state->soundstatus));
+	state->save_item(NAME(state->porta));
+	state->save_item(NAME(state->portb));
+	state->save_item(NAME(state->busy_sndcpu));
+	state->save_item(NAME(state->gakusai_oki_bank_lo));
+	state->save_item(NAME(state->gakusai_oki_bank_hi));
+	state->save_item(NAME(state->sprite_xoffs));
+	state->save_item(NAME(state->sprite_yoffs));
+	state->save_item(NAME(state->bg_tilemap_enable));
+	state->save_item(NAME(state->bg_tilemap_enable16));
 }
 
 static MACHINE_RESET( metro )
@@ -6048,9 +6048,9 @@ static DRIVER_INIT( karatour )
 
 	DRIVER_INIT_CALL(metro);
 
-	state_save_register_global_pointer(machine, state->vram_0, 0x20000/2);
-	state_save_register_global_pointer(machine, state->vram_1, 0x20000/2);
-	state_save_register_global_pointer(machine, state->vram_2, 0x20000/2);
+	state->save_pointer(NAME(state->vram_0), 0x20000/2);
+	state->save_pointer(NAME(state->vram_1), 0x20000/2);
+	state->save_pointer(NAME(state->vram_2), 0x20000/2);
 }
 
 static DRIVER_INIT( daitorid )
@@ -6123,7 +6123,7 @@ static DRIVER_INIT( mouja )
 	metro_state *state = machine->driver_data<metro_state>();
 	metro_common(machine);
 	state->irq_line = -1;	/* split interrupt handlers */
-	state->mouja_irq_timer = timer_alloc(machine, mouja_irq_callback, NULL);
+	state->mouja_irq_timer = machine->scheduler().timer_alloc(FUNC(mouja_irq_callback));
 }
 
 static DRIVER_INIT( gakusai )

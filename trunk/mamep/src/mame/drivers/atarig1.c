@@ -44,7 +44,7 @@ static MACHINE_START( atarig1 )
 {
 	atarig1_state *state = machine->driver_data<atarig1_state>();
 	atarigen_init(machine);
-	state_save_register_global(machine, state->which_input);
+	state->save_item(NAME(state->which_input));
 }
 
 
@@ -1174,9 +1174,9 @@ static void init_g1_common(running_machine *machine, offs_t slapstic_base, int s
 	if (slapstic == -1)
 	{
 		pitfightb_cheap_slapstic_init(machine);
-		state_save_register_global(machine, state->bslapstic_bank);
-		state_save_register_global(machine, state->bslapstic_primed);
-		state_save_register_postload(machine, pitfightb_state_postload, NULL);
+		state->save_item(NAME(state->bslapstic_bank));
+		state->save_item(NAME(state->bslapstic_primed));
+		machine->state().register_postload(pitfightb_state_postload, NULL);
 	}
 	else if (slapstic != 0)
 		atarigen_slapstic_init(machine->device("maincpu"), slapstic_base, 0, slapstic);

@@ -71,7 +71,7 @@ static TIMER_CALLBACK( deferred_commanddata_w )
 static WRITE8_HANDLER( fromance_commanddata_w )
 {
 	/* do this on a timer to let the slave CPU synchronize */
-	timer_call_after_resynch(space->machine, NULL, data, deferred_commanddata_w);
+	space->machine->scheduler().synchronize(FUNC(deferred_commanddata_w), data);
 }
 
 
@@ -80,7 +80,7 @@ static READ8_HANDLER( fromance_busycheck_main_r )
 	fromance_state *state = space->machine->driver_data<fromance_state>();
 
 	/* set a timer to force synchronization after the read */
-	timer_call_after_resynch(space->machine, NULL, 0, NULL);
+	space->machine->scheduler().synchronize();
 
 	if (!state->directionflag)
 		return 0x00;		// standby
@@ -967,13 +967,13 @@ static MACHINE_START( fromance )
 
 	state->subcpu = machine->device("sub");
 
-	state_save_register_global(machine, state->directionflag);
-	state_save_register_global(machine, state->commanddata);
-	state_save_register_global(machine, state->portselect);
+	state->save_item(NAME(state->directionflag));
+	state->save_item(NAME(state->commanddata));
+	state->save_item(NAME(state->portselect));
 
-	state_save_register_global(machine, state->adpcm_reset);
-	state_save_register_global(machine, state->adpcm_data);
-	state_save_register_global(machine, state->vclk_left);
+	state->save_item(NAME(state->adpcm_reset));
+	state->save_item(NAME(state->adpcm_data));
+	state->save_item(NAME(state->vclk_left));
 
 	/* video-related elements are saved in VIDEO_START */
 }

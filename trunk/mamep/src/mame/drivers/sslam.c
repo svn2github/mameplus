@@ -238,7 +238,7 @@ static TIMER_CALLBACK( music_playback )
 			state->track = 0;
 			state->melody = 0;
 			state->bar = 0;
-			timer_enable(state->music_timer,0);
+			state->music_timer->enable(false);
 		}
 		if (pattern) {
 			logerror("Changing bar in music track to pattern %02x\n",pattern);
@@ -270,7 +270,7 @@ static void sslam_play(device_t *device, int track, int data)
 					oki->write_command(0x40);
 				oki->write_command((0x80 | data));
 				oki->write_command(0x81);
-				timer_adjust_periodic(state->music_timer, ATTOTIME_IN_MSEC(4), 0, ATTOTIME_IN_HZ(250));	/* 250Hz for smooth sequencing */
+				state->music_timer->adjust(attotime::from_msec(4), 0, attotime::from_hz(250));	/* 250Hz for smooth sequencing */
 			}
 		}
 		else {
@@ -290,7 +290,7 @@ static void sslam_play(device_t *device, int track, int data)
 	}
 	else {		/* use above 0x80 to turn off channels */
 		if (track) {
-			timer_enable(state->music_timer,0);
+			state->music_timer->enable(false);
 			state->track = 0;
 			state->melody = 0;
 			state->bar = 0;
@@ -306,7 +306,7 @@ static WRITE16_DEVICE_HANDLER( sslam_snd_w )
 	{
 		sslam_state *state = device->machine->driver_data<sslam_state>();
 
-		logerror("%s Writing %04x to Sound CPU\n",cpuexec_describe_context(device->machine),data);
+		logerror("%s Writing %04x to Sound CPU\n",device->machine->describe_context(),data);
 		if (data >= 0x40) {
 			if (data == 0xfe) {
 				/* This should reset the sound MCU and stop audio playback, but here, it */
@@ -933,21 +933,21 @@ static DRIVER_INIT( sslam )
 	state->melody = 0;
 	state->bar = 0;
 
-	state_save_register_global(machine, state->track);
-	state_save_register_global(machine, state->melody);
-	state_save_register_global(machine, state->bar);
-	state_save_register_global(machine, state->snd_bank);
+	state->save_item(NAME(state->track));
+	state->save_item(NAME(state->melody));
+	state->save_item(NAME(state->bar));
+	state->save_item(NAME(state->snd_bank));
 
-	state->music_timer = timer_alloc(machine, music_playback, NULL);
+	state->music_timer = machine->scheduler().timer_alloc(FUNC(music_playback));
 }
 
 static DRIVER_INIT( powerbls )
 {
 	sslam_state *state = machine->driver_data<sslam_state>();
 
-	state_save_register_global(machine, state->oki_control);
-	state_save_register_global(machine, state->oki_command);
-	state_save_register_global(machine, state->oki_bank);
+	state->save_item(NAME(state->oki_control));
+	state->save_item(NAME(state->oki_command));
+	state->save_item(NAME(state->oki_bank));
 }
 
 

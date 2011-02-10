@@ -262,6 +262,31 @@ struct _input_type_state
 };
 
 
+typedef struct _inputx_code inputx_code;
+struct _inputx_code
+{
+	unicode_char ch;
+	const input_field_config * field[NUM_SIMUL_KEYS];
+};
+
+typedef struct _key_buffer key_buffer;
+struct _key_buffer
+{
+	int begin_pos;
+	int end_pos;
+	unsigned int status_keydown : 1;
+	unicode_char buffer[4096];
+};
+
+typedef struct _char_info char_info;
+struct _char_info
+{
+	unicode_char ch;
+	const char *name;
+	const char *alternate;	/* alternative string, in UTF-8 */
+};
+
+
 /* private input port state */
 struct _input_port_private
 {
@@ -287,32 +312,17 @@ struct _input_port_private
 #endif /* INP_CAPTION */
 	UINT64						playback_accumulated_speed;/* accumulated speed during playback */
 	UINT32						playback_accumulated_frames;/* accumulated frames during playback */
+
+	/* inputx */
+	inputx_code *codes;
+	key_buffer *keybuffer;
+	emu_timer *inputx_timer;
+	int (*queue_chars)(running_machine *machine, const unicode_char *text, size_t text_len);
+	int (*accept_char)(running_machine *machine, unicode_char ch);
+	int (*charqueue_empty)(running_machine *machine);
+	attotime current_rate;
 };
 
-
-typedef struct _inputx_code inputx_code;
-struct _inputx_code
-{
-	unicode_char ch;
-	const input_field_config * field[NUM_SIMUL_KEYS];
-};
-
-typedef struct _key_buffer key_buffer;
-struct _key_buffer
-{
-	int begin_pos;
-	int end_pos;
-	unsigned int status_keydown : 1;
-	unicode_char buffer[4096];
-};
-
-typedef struct _char_info char_info;
-struct _char_info
-{
-	unicode_char ch;
-	const char *name;
-	const char *alternate;	/* alternative string, in UTF-8 */
-};
 
 /***************************************************************************
     MACROS
@@ -650,14 +660,6 @@ static const char_info charinfo[] =
 	{ UCHAR_MAMEKEY(MENU),		"Menu",			NULL },		/* Menu key */
 	{ UCHAR_MAMEKEY(CANCEL),	"Break",		NULL }		/* Break/Pause key */
 };
-
-static inputx_code *codes;
-static key_buffer *keybuffer;
-static emu_timer *inputx_timer;
-static int (*queue_chars)(const unicode_char *text, size_t text_len);
-static int (*accept_char)(unicode_char ch);
-static int (*charqueue_empty)(void);
-static attotime current_rate;
 
 static TIMER_CALLBACK(inputx_timerproc);
 
@@ -1765,7 +1767,7 @@ input_port_value input_port_read_direct(const input_port_config *port)
 			/* interpolate if appropriate and if time has passed since the last update */
 			if (analog->interpolate && !(analog->field->flags & ANALOG_FLAG_RESET) && portdata->last_delta_nsec != 0)
 			{
-				attoseconds_t nsec_since_last = attotime_to_attoseconds(attotime_sub(timer_get_time(port->machine), portdata->last_frame_time)) / ATTOSECONDS_PER_NANOSECOND;
+				attoseconds_t nsec_since_last = (port->machine->time() - portdata->last_frame_time).as_attoseconds() / ATTOSECONDS_PER_NANOSECOND;
 				value = analog->previous + ((INT64)(analog->accum - analog->previous) * nsec_since_last / portdata->last_delta_nsec);
 			}
 
@@ -2627,13 +2629,14 @@ static void frame_update_callback(running_machine &machine)
 
 static key_buffer *get_buffer(running_machine *machine)
 {
+	input_port_private *portdata = machine->input_port_data;
 	assert(inputx_can_post(machine));
-	return (key_buffer *) keybuffer;
+	return (key_buffer *)portdata->keybuffer;
 }
 
 
 
-static const inputx_code *find_code(unicode_char ch)
+static const inputx_code *find_code(inputx_code *codes, unicode_char ch)
 {
 	int i;
 
@@ -2653,6 +2656,7 @@ static const inputx_code *find_code(unicode_char ch)
 
 static void input_port_update_hook(running_machine *machine, const input_port_config *port, input_port_value *digital)
 {
+	input_port_private *portdata = machine->input_port_data;
 	const key_buffer *keybuf;
 	const inputx_code *code;
 	unicode_char ch;
@@ -2668,7 +2672,7 @@ static void input_port_update_hook(running_machine *machine, const input_port_co
 		{
 			/* identify the character that is down right now, and its component codes */
 			ch = keybuf->buffer[keybuf->begin_pos];
-			code = find_code(ch);
+			code = find_code(portdata->codes, ch);
 
 			/* loop through this character's component codes */
 			if (code != NULL)
@@ -2697,7 +2701,7 @@ static void frame_update(running_machine *machine)
 	input_port_private *portdata = machine->input_port_data;
 	const input_field_config *mouse_field = NULL;
 	int ui_visible = ui_is_menu_active();
-	attotime curtime = timer_get_time(machine);
+	attotime curtime = machine->time();
 	const input_port_config *port;
 	render_target *mouse_target;
 	INT32 mouse_target_x;
@@ -2711,7 +2715,7 @@ g_profiler.start(PROFILER_INPUT);
 	record_frame(machine, curtime);
 
 	/* track the duration of the previous frame */
-	portdata->last_delta_nsec = attotime_to_attoseconds(attotime_sub(curtime, portdata->last_frame_time)) / ATTOSECONDS_PER_NANOSECOND;
+	portdata->last_delta_nsec = (curtime - portdata->last_frame_time).as_attoseconds() / ATTOSECONDS_PER_NANOSECOND;
 	portdata->last_frame_time = curtime;
 
 	/* update the digital joysticks */
@@ -3178,7 +3182,7 @@ static void port_config_detokenize(ioport_list &portlist, const input_port_token
 				maskbits = 0;
 
 				string = TOKEN_GET_STRING(ipt);
-				curport = portlist.append(string, global_alloc(input_port_config(string)));
+				curport = &portlist.append(string, *global_alloc(input_port_config(string)));
 				curfield = NULL;
 				cursetting = NULL;
 				break;
@@ -4845,7 +4849,7 @@ static void playback_frame(running_machine *machine, attotime curtime)
 		/* first the absolute time */
 		readtime.seconds = playback_read_uint32(machine);
 		readtime.attoseconds = playback_read_uint64(machine);
-		if (attotime_compare(readtime, curtime) != 0)
+		if (readtime != curtime)
 			playback_end(machine, _("Out of sync"));
 
 		/* then the speed */
@@ -5281,17 +5285,19 @@ int validate_natural_keyboard_statics(void)
 
 static void clear_keybuffer(running_machine &machine)
 {
-	keybuffer = NULL;
-	queue_chars = NULL;
-	codes = NULL;
+	input_port_private *portdata = machine.input_port_data;
+	portdata->keybuffer = NULL;
+	portdata->queue_chars = NULL;
+	portdata->codes = NULL;
 }
 
 
 
 static void setup_keybuffer(running_machine *machine)
 {
-	inputx_timer = timer_alloc(machine, inputx_timerproc, NULL);
-	keybuffer = auto_alloc_clear(machine, key_buffer);
+	input_port_private *portdata = machine->input_port_data;
+	portdata->inputx_timer = machine->scheduler().timer_alloc(FUNC(inputx_timerproc));
+	portdata->keybuffer = auto_alloc_clear(machine, key_buffer);
 	machine->add_notifier(MACHINE_NOTIFY_EXIT, clear_keybuffer);
 }
 
@@ -5299,12 +5305,13 @@ static void setup_keybuffer(running_machine *machine)
 
 void inputx_init(running_machine *machine)
 {
-	codes = NULL;
-	inputx_timer = NULL;
-	queue_chars = NULL;
-	accept_char = NULL;
-	charqueue_empty = NULL;
-	keybuffer = NULL;
+	input_port_private *portdata = machine->input_port_data;
+	portdata->codes = NULL;
+	portdata->inputx_timer = NULL;
+	portdata->queue_chars = NULL;
+	portdata->accept_char = NULL;
+	portdata->charqueue_empty = NULL;
+	portdata->keybuffer = NULL;
 
 	if (machine->debug_flags & DEBUG_FLAG_ENABLED)
 	{
@@ -5315,7 +5322,7 @@ void inputx_init(running_machine *machine)
 	/* posting keys directly only makes sense for a computer */
 	if (input_machine_has_keyboard(machine))
 	{
-		codes = build_codes(machine, machine->m_portlist.first());
+		portdata->codes = build_codes(machine, machine->m_portlist.first());
 		setup_keybuffer(machine);
 	}
 }
@@ -5323,33 +5330,37 @@ void inputx_init(running_machine *machine)
 
 
 void inputx_setup_natural_keyboard(
-	int (*queue_chars_)(const unicode_char *text, size_t text_len),
-	int (*accept_char_)(unicode_char ch),
-	int (*charqueue_empty_)(void))
+	running_machine *machine,
+	int (*queue_chars)(running_machine *machine, const unicode_char *text, size_t text_len),
+	int (*accept_char)(running_machine *machine, unicode_char ch),
+	int (*charqueue_empty)(running_machine *machine))
 {
-	queue_chars = queue_chars_;
-	accept_char = accept_char_;
-	charqueue_empty = charqueue_empty_;
+	input_port_private *portdata = machine->input_port_data;
+	portdata->queue_chars = queue_chars;
+	portdata->accept_char = accept_char;
+	portdata->charqueue_empty = charqueue_empty;
 }
 
 int inputx_can_post(running_machine *machine)
 {
-	return queue_chars || codes;
+	input_port_private *portdata = machine->input_port_data;
+	return portdata->queue_chars || portdata->codes;
 }
 
 
-static int can_post_key_directly(unicode_char ch)
+static int can_post_key_directly(running_machine *machine, unicode_char ch)
 {
+	input_port_private *portdata = machine->input_port_data;
 	int rc = FALSE;
 	const inputx_code *code;
 
-	if (queue_chars)
+	if (portdata->queue_chars)
 	{
-		rc = accept_char ? accept_char(ch) : TRUE;
+		rc = portdata->accept_char ? (*portdata->accept_char)(machine, ch) : TRUE;
 	}
 	else
 	{
-		code = find_code(ch);
+		code = find_code(portdata->codes, ch);
 		if (code)
 			rc = code->field[0] != NULL;
 	}
@@ -5358,7 +5369,7 @@ static int can_post_key_directly(unicode_char ch)
 
 
 
-static int can_post_key_alternate(unicode_char ch)
+static int can_post_key_alternate(running_machine *machine, unicode_char ch)
 {
 	const char *s;
 	const char_info *ci;
@@ -5375,44 +5386,44 @@ static int can_post_key_alternate(unicode_char ch)
 		rc = uchar_from_utf8(&uchar, s, strlen(s));
 		if (rc <= 0)
 			return 0;
-		if (!can_post_key_directly(uchar))
+		if (!can_post_key_directly(machine, uchar))
 			return 0;
 		s += rc;
 	}
 	return 1;
 }
 
-static attotime choose_delay(unicode_char ch)
+static attotime choose_delay(input_port_private *portdata, unicode_char ch)
 {
-	attoseconds_t delay = 0;
+	if (portdata->current_rate != attotime::zero)
+		return portdata->current_rate;
 
-	if (attotime_compare(current_rate, attotime_zero) != 0)
-		return current_rate;
-
-	if (queue_chars)
+	attotime delay = attotime::zero;
+	if (portdata->queue_chars)
 	{
 		/* systems with queue_chars can afford a much smaller delay */
-		delay = DOUBLE_TO_ATTOSECONDS(0.01);
+		delay = attotime::from_msec(10);
 	}
 	else
 	{
 		switch(ch) {
 		case '\r':
-			delay = DOUBLE_TO_ATTOSECONDS(0.2);
+			delay = attotime::from_msec(200);
 			break;
 
 		default:
-			delay = DOUBLE_TO_ATTOSECONDS(0.05);
+			delay = attotime::from_msec(50);
 			break;
 		}
 	}
-	return attotime_make(0, delay);
+	return delay;
 }
 
 
 
 static void internal_post_key(running_machine *machine, unicode_char ch)
 {
+	input_port_private *portdata = machine->input_port_data;
 	key_buffer *keybuf;
 
 	keybuf = get_buffer(machine);
@@ -5420,7 +5431,7 @@ static void internal_post_key(running_machine *machine, unicode_char ch)
 	/* need to start up the timer? */
 	if (keybuf->begin_pos == keybuf->end_pos)
 	{
-		timer_adjust_oneshot(inputx_timer, choose_delay(ch), 0);
+		portdata->inputx_timer->adjust(choose_delay(portdata, ch));
 		keybuf->status_keydown = 0;
 	}
 
@@ -5441,13 +5452,14 @@ static int buffer_full(running_machine *machine)
 
 static void inputx_postn_rate(running_machine *machine, const unicode_char *text, size_t text_len, attotime rate)
 {
+	input_port_private *portdata = machine->input_port_data;
 	int last_cr = 0;
 	unicode_char ch;
 	const char *s;
 	const char_info *ci;
 	const inputx_code *code;
 
-	current_rate = rate;
+	portdata->current_rate = rate;
 
 	if (inputx_can_post(machine))
 	{
@@ -5466,16 +5478,16 @@ static void inputx_postn_rate(running_machine *machine, const unicode_char *text
 
 				if (LOG_INPUTX)
 				{
-					code = find_code(ch);
+					code = find_code(portdata->codes, ch);
 					logerror("inputx_postn(): code=%i (%s) field->name='%s'\n", (int) ch, code_point_string(machine, ch), (code && code->field[0]) ? code->field[0]->name : "<null>");
 				}
 
-				if (can_post_key_directly(ch))
+				if (can_post_key_directly(machine, ch))
 				{
 					/* we can post this key in the queue directly */
 					internal_post_key(machine, ch);
 				}
-				else if (can_post_key_alternate(ch))
+				else if (can_post_key_alternate(machine, ch))
 				{
 					/* we can post this key with an alternate representation */
 					ci = find_charinfo(ch);
@@ -5500,20 +5512,21 @@ static void inputx_postn_rate(running_machine *machine, const unicode_char *text
 
 static TIMER_CALLBACK(inputx_timerproc)
 {
+	input_port_private *portdata = machine->input_port_data;
 	key_buffer *keybuf;
 	attotime delay;
 
 	keybuf = get_buffer(machine);
 
-	if (queue_chars)
+	if (portdata->queue_chars)
 	{
 		/* the driver has a queue_chars handler */
-		while((keybuf->begin_pos != keybuf->end_pos) && queue_chars(&keybuf->buffer[keybuf->begin_pos], 1))
+		while((keybuf->begin_pos != keybuf->end_pos) && (*portdata->queue_chars)(machine, &keybuf->buffer[keybuf->begin_pos], 1))
 		{
 			keybuf->begin_pos++;
 			keybuf->begin_pos %= ARRAY_LENGTH(keybuf->buffer);
 
-			if (attotime_compare(current_rate, attotime_zero) != 0)
+			if (portdata->current_rate != attotime::zero)
 				break;
 		}
 	}
@@ -5535,16 +5548,17 @@ static TIMER_CALLBACK(inputx_timerproc)
 	/* need to make sure timerproc is called again if buffer not empty */
 	if (keybuf->begin_pos != keybuf->end_pos)
 	{
-		delay = choose_delay(keybuf->buffer[keybuf->begin_pos]);
-		timer_adjust_oneshot(inputx_timer, delay, 0);
+		delay = choose_delay(portdata, keybuf->buffer[keybuf->begin_pos]);
+		portdata->inputx_timer->adjust(delay);
 	}
 }
 
 int inputx_is_posting(running_machine *machine)
 {
+	input_port_private *portdata = machine->input_port_data;
 	const key_buffer *keybuf;
 	keybuf = get_buffer(machine);
-	return (keybuf->begin_pos != keybuf->end_pos) || (charqueue_empty && !charqueue_empty());
+	return (keybuf->begin_pos != keybuf->end_pos) || (portdata->charqueue_empty && !(*portdata->charqueue_empty)(machine));
 }
 
 /***************************************************************************
@@ -5638,7 +5652,7 @@ static void inputx_postc_rate(running_machine *machine, unicode_char ch, attotim
 
 void inputx_postc(running_machine *machine, unicode_char ch)
 {
-	inputx_postc_rate(machine, ch, attotime_make(0, 0));
+	inputx_postc_rate(machine, ch, attotime::zero);
 }
 
 static void inputx_postn_utf8_rate(running_machine *machine, const char *text, size_t text_len, attotime rate)
@@ -5652,7 +5666,7 @@ static void inputx_postn_utf8_rate(running_machine *machine, const char *text, s
 	{
 		if (len == ARRAY_LENGTH(buf))
 		{
-			inputx_postn_rate(machine, buf, len, attotime_make(0, 0));
+			inputx_postn_rate(machine, buf, len, attotime::zero);
 			len = 0;
 		}
 
@@ -5671,7 +5685,7 @@ static void inputx_postn_utf8_rate(running_machine *machine, const char *text, s
 
 void inputx_post_utf8(running_machine *machine, const char *text)
 {
-	inputx_postn_utf8_rate(machine, text, strlen(text), attotime_make(0, 0));
+	inputx_postn_utf8_rate(machine, text, strlen(text), attotime::zero);
 }
 
 void inputx_post_utf8_rate(running_machine *machine, const char *text, attotime rate)
@@ -5868,7 +5882,7 @@ int input_category_active(running_machine *machine, int category)
 
 static void execute_input(running_machine *machine, int ref, int params, const char *param[])
 {
-	inputx_postn_coded_rate(machine, param[0], strlen(param[0]), attotime_make(0, 0));
+	inputx_postn_coded_rate(machine, param[0], strlen(param[0]), attotime::zero);
 }
 
 
@@ -5880,6 +5894,7 @@ static void execute_input(running_machine *machine, int ref, int params, const c
 
 static void execute_dumpkbd(running_machine *machine, int ref, int params, const char *param[])
 {
+	inputx_code *codes = machine->input_port_data->codes;
 	const char *filename;
 	FILE *file = NULL;
 	const inputx_code *code;
@@ -6068,7 +6083,7 @@ INLINE void copy_command_buffer(running_machine *machine, char log)
 		return;
 
 	command_buffer[len].code = uchar;
-	command_buffer[len].time = attotime_to_double(timer_get_time(machine));
+	command_buffer[len].time = machine->time().as_double();
 	command_buffer[++len].code = '\0';
 }
 

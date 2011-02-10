@@ -575,7 +575,7 @@ ReadWordFromSlaveInput( address_space *space )
 		{
 			mpDspState->slaveBytesAdvertised--;
 		}
-		if (ENABLE_LOGGING) logerror( "%s:-%04x(0x%04x)\n", cpuexec_describe_context(space->machine), data, mpDspState->slaveBytesAvailable );
+		if (ENABLE_LOGGING) logerror( "%s:-%04x(0x%04x)\n", space->machine->describe_context(), data, mpDspState->slaveBytesAvailable );
 	}
 	return data;
 } /* ReadWordFromSlaveInput */
@@ -1551,7 +1551,7 @@ static MACHINE_CONFIG_START( s21base, namcos21_state )
 	MCFG_CPU_DATA_MAP(slave_dsp_data)
 	MCFG_CPU_IO_MAP(slave_dsp_io)
 
-	MCFG_QUANTUM_TIME(HZ(12000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
 	MCFG_MACHINE_START(namcos2)
 	MCFG_MACHINE_RESET(namcos2)
@@ -1623,7 +1623,7 @@ static MACHINE_CONFIG_START( driveyes, namcos21_state )
 	MCFG_CPU_DATA_MAP(winrun_dsp_data)
 	MCFG_CPU_IO_MAP(winrun_dsp_io)
 
-	MCFG_QUANTUM_TIME(HZ(6000)) /* 100 CPU slices per frame */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* 100 CPU slices per frame */
 
 	MCFG_MACHINE_START(namcos2)
 	MCFG_MACHINE_RESET(namcos2)
@@ -1682,7 +1682,7 @@ static MACHINE_CONFIG_START( winrun_c140_typeB, namcos21_state )
 	MCFG_CPU_PROGRAM_MAP(am_gpu_winrun)
 	MCFG_CPU_VBLANK_INT("screen", namcos2_68k_gpu_vblank)
 
-	MCFG_QUANTUM_TIME(HZ(6000)) /* 100 CPU slices per frame */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* 100 CPU slices per frame */
 
 	MCFG_MACHINE_START(namcos2)
 	MCFG_MACHINE_RESET(namcos2)

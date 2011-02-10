@@ -730,10 +730,10 @@ static MACHINE_START( common )
 	state->audiocpu = machine->device("audiocpu");
 	state->slave = machine->device("slave");
 
-	state_save_register_global(machine, state->sound_nmi_enable);
-	state_save_register_global(machine, state->pending_nmi);
-	state_save_register_global(machine, state->sound_status);
-	state_save_register_global(machine, state->video_enable);
+	state->save_item(NAME(state->sound_nmi_enable));
+	state->save_item(NAME(state->pending_nmi));
+	state->save_item(NAME(state->sound_status));
+	state->save_item(NAME(state->video_enable));
 }
 
 static MACHINE_RESET( common )
@@ -752,7 +752,7 @@ static MACHINE_START( tokio )
 
 	MACHINE_START_CALL(common);
 
-	state_save_register_global(machine, state->tokio_prot_count);
+	state->save_item(NAME(state->tokio_prot_count));
 }
 
 static MACHINE_RESET( tokio )
@@ -778,7 +778,7 @@ static MACHINE_CONFIG_START( tokio, bublbobl_state )
 	MCFG_CPU_ADD("audiocpu", Z80, MAIN_XTAL/8)	// 3 MHz
 	MCFG_CPU_PROGRAM_MAP(tokio_sound_map) // NMIs are triggered by the main CPU, IRQs are triggered by the YM2203
 
-	MCFG_QUANTUM_TIME(HZ(6000)) // 100 CPU slices per frame - a high value to ensure proper synchronization of the CPUs
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) // 100 CPU slices per frame - a high value to ensure proper synchronization of the CPUs
 
 	MCFG_MACHINE_START(tokio)
 	MCFG_MACHINE_RESET(tokio)
@@ -811,18 +811,18 @@ static MACHINE_START( bublbobl )
 
 	MACHINE_START_CALL(common);
 
-	state_save_register_global(machine, state->ddr1);
-	state_save_register_global(machine, state->ddr2);
-	state_save_register_global(machine, state->ddr3);
-	state_save_register_global(machine, state->ddr4);
-	state_save_register_global(machine, state->port1_in);
-	state_save_register_global(machine, state->port2_in);
-	state_save_register_global(machine, state->port3_in);
-	state_save_register_global(machine, state->port4_in);
-	state_save_register_global(machine, state->port1_out);
-	state_save_register_global(machine, state->port2_out);
-	state_save_register_global(machine, state->port3_out);
-	state_save_register_global(machine, state->port4_out);
+	state->save_item(NAME(state->ddr1));
+	state->save_item(NAME(state->ddr2));
+	state->save_item(NAME(state->ddr3));
+	state->save_item(NAME(state->ddr4));
+	state->save_item(NAME(state->port1_in));
+	state->save_item(NAME(state->port2_in));
+	state->save_item(NAME(state->port3_in));
+	state->save_item(NAME(state->port4_in));
+	state->save_item(NAME(state->port1_out));
+	state->save_item(NAME(state->port2_out));
+	state->save_item(NAME(state->port3_out));
+	state->save_item(NAME(state->port4_out));
 }
 
 static MACHINE_RESET( bublbobl )
@@ -863,7 +863,7 @@ static MACHINE_CONFIG_START( bublbobl, bublbobl_state )
 	MCFG_CPU_PROGRAM_MAP(mcu_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_pulse) // comes from the same clock that latches the INT pin on the second Z80
 
-	MCFG_QUANTUM_TIME(HZ(6000)) // 100 CPU slices per frame - a high value to ensure proper synchronization of the CPUs
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) // 100 CPU slices per frame - a high value to ensure proper synchronization of the CPUs
 
 	MCFG_MACHINE_START(bublbobl)
 	MCFG_MACHINE_RESET(bublbobl)
@@ -896,8 +896,8 @@ static MACHINE_START( boblbobl )
 
 	MACHINE_START_CALL(common);
 
-	state_save_register_global(machine, state->ic43_a);
-	state_save_register_global(machine, state->ic43_b);
+	state->save_item(NAME(state->ic43_a));
+	state->save_item(NAME(state->ic43_b));
 }
 
 static MACHINE_RESET( boblbobl )
@@ -929,14 +929,14 @@ static MACHINE_START( bub68705 )
 
 	MACHINE_START_CALL(common);
 
-	state_save_register_global(machine, state->port_a_in);
-	state_save_register_global(machine, state->port_a_out);
-	state_save_register_global(machine, state->ddr_a);
-	state_save_register_global(machine, state->port_b_in);
-	state_save_register_global(machine, state->port_b_out);
-	state_save_register_global(machine, state->ddr_b);
-	state_save_register_global(machine, state->address);
-	state_save_register_global(machine, state->latch);
+	state->save_item(NAME(state->port_a_in));
+	state->save_item(NAME(state->port_a_out));
+	state->save_item(NAME(state->ddr_a));
+	state->save_item(NAME(state->port_b_in));
+	state->save_item(NAME(state->port_b_out));
+	state->save_item(NAME(state->ddr_b));
+	state->save_item(NAME(state->address));
+	state->save_item(NAME(state->latch));
 }
 
 static MACHINE_RESET( bub68705 )

@@ -71,7 +71,7 @@ static INTERRUPT_GEN( hyprduel_interrupt )
 		state->requested_int |= 0x20;
 		cpu_set_input_line(device, 2, HOLD_LINE);
 		/* the duration is a guess */
-		timer_set(device->machine, ATTOTIME_IN_USEC(2500), NULL, 0x20, vblank_end_callback);
+		device->machine->scheduler().timer_set(attotime::from_usec(2500), FUNC(vblank_end_callback), 0x20);
 	}
 	else
 		state->requested_int |= 0x12;		/* hsync */
@@ -138,7 +138,7 @@ static READ16_HANDLER( hyprduel_cpusync_trigger1_r )
 	hyprduel_state *state = space->machine->driver_data<hyprduel_state>();
 	if (state->cpu_trigger == 1001)
 	{
-		cpuexec_trigger(space->machine, 1001);
+		space->machine->scheduler().trigger(1001);
 		state->cpu_trigger = 0;
 	}
 
@@ -166,7 +166,7 @@ static READ16_HANDLER( hyprduel_cpusync_trigger2_r )
 	hyprduel_state *state = space->machine->driver_data<hyprduel_state>();
 	if (state->cpu_trigger == 1002)
 	{
-		cpuexec_trigger(space->machine, 1002);
+		space->machine->scheduler().trigger(1002);
 		state->cpu_trigger = 0;
 	}
 
@@ -285,7 +285,7 @@ INLINE void blt_write( address_space *space, const int tmap, const offs_t offs, 
 		case 2:	hyprduel_vram_1_w(space, offs, data, mask);	break;
 		case 3:	hyprduel_vram_2_w(space, offs, data, mask);	break;
 	}
-//  logerror("%s : Blitter %X] %04X <- %04X & %04X\n", cpuexec_describe_context(space->machine), tmap, offs, data, mask);
+//  logerror("%s : Blitter %X] %04X <- %04X & %04X\n", space->machine->describe_context(), tmap, offs, data, mask);
 }
 
 
@@ -342,7 +342,7 @@ static WRITE16_HANDLER( hyprduel_blitter_w )
                        another blit. */
 					if (b1 == 0)
 					{
-						timer_set(space->machine, ATTOTIME_IN_USEC(500), NULL, 0, hyprduel_blit_done);
+						space->machine->scheduler().timer_set(attotime::from_usec(500), FUNC(hyprduel_blit_done));
 						return;
 					}
 
@@ -657,10 +657,10 @@ static MACHINE_START( hyprduel )
 	state->maincpu = machine->device("maincpu");
 	state->subcpu = machine->device("sub");
 
-	state_save_register_global(machine, state->blitter_bit);
-	state_save_register_global(machine, state->requested_int);
-	state_save_register_global(machine, state->subcpu_resetline);
-	state_save_register_global(machine, state->cpu_trigger);
+	state->save_item(NAME(state->blitter_bit));
+	state->save_item(NAME(state->requested_int));
+	state->save_item(NAME(state->subcpu_resetline));
+	state->save_item(NAME(state->cpu_trigger));
 }
 
 static MACHINE_START( magerror )
@@ -668,7 +668,7 @@ static MACHINE_START( magerror )
 	hyprduel_state *state = machine->driver_data<hyprduel_state>();
 
 	MACHINE_START_CALL(hyprduel);
-	timer_adjust_periodic(state->magerror_irq_timer, attotime_zero, 0, ATTOTIME_IN_HZ(968));		/* tempo? */
+	state->magerror_irq_timer->adjust(attotime::zero, 0, attotime::from_hz(968));		/* tempo? */
 }
 
 static MACHINE_CONFIG_START( hyprduel, hyprduel_state )
@@ -823,7 +823,7 @@ static DRIVER_INIT( magerror )
 	hyprduel_state *state = machine->driver_data<hyprduel_state>();
 
 	state->int_num = 0x01;
-	state->magerror_irq_timer = timer_alloc(machine, magerror_irq_callback, NULL);
+	state->magerror_irq_timer = machine->scheduler().timer_alloc(FUNC(magerror_irq_callback));
 }
 
 

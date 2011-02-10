@@ -891,15 +891,15 @@ static MACHINE_START( darius )
 	state->msm5205_l = machine->device("msm5205.l");
 	state->msm5205_r = machine->device("msm5205.r");
 
-	state_save_register_global(machine, state->cpua_ctrl);
-	state_save_register_global(machine, state->coin_word);
+	state->save_item(NAME(state->cpua_ctrl));
+	state->save_item(NAME(state->coin_word));
 
-	state_save_register_global(machine, state->banknum);
-	state_save_register_global(machine, state->adpcm_command);
-	state_save_register_global(machine, state->nmi_enable);
-	state_save_register_global_array(machine, state->vol);
-	state_save_register_global_array(machine, state->pan);
-	state_save_register_postload(machine, darius_postload, NULL);
+	state->save_item(NAME(state->banknum));
+	state->save_item(NAME(state->adpcm_command));
+	state->save_item(NAME(state->nmi_enable));
+	state->save_item(NAME(state->vol));
+	state->save_item(NAME(state->pan));
+	machine->state().register_postload(darius_postload, NULL);
 }
 
 
@@ -914,7 +914,7 @@ static MACHINE_RESET( darius )
 	state->adpcm_command = 0;
 	state->nmi_enable = 0;
 
-	sound_global_enable(machine, 1);	/* mixer enabled */
+	machine->sound().system_enable(true);	/* mixer enabled */
 
 	for (i = 0; i < DARIUS_VOL_MAX; i++)
 		state->vol[i] = 0x00;	/* min volume */
@@ -948,7 +948,7 @@ static MACHINE_CONFIG_START( darius, darius_state )
 	MCFG_CPU_PROGRAM_MAP(darius_sound2_map)
 	MCFG_CPU_IO_MAP(darius_sound2_io_map)
 
-	MCFG_QUANTUM_TIME(HZ(600))	/* 10 CPU slices per frame ? */
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame ? */
 
 	MCFG_MACHINE_START(darius)
 	MCFG_MACHINE_RESET(darius)

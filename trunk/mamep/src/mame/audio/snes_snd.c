@@ -26,7 +26,6 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "streams.h"
 #include "audio/snes_snd.h"
 
 /***************************************************************************
@@ -1059,7 +1058,7 @@ static READ8_DEVICE_HANDLER( snes_dsp_io_r )
 {
 	snes_sound_state *spc700 = get_safe_token(device);
 
-	stream_update(spc700->channel);
+	spc700->channel->update();
 
 #ifdef NO_ENVX
 	if (8 == (spc700->ram[0xf2] & 0x0f))
@@ -1074,7 +1073,7 @@ static WRITE8_DEVICE_HANDLER( snes_dsp_io_w )
 {
 	snes_sound_state *spc700 = get_safe_token(device);
 
-	stream_update(spc700->channel);
+	spc700->channel->update();
 
 	if (offset == 0x7c)
 	{
@@ -1152,7 +1151,7 @@ WRITE8_DEVICE_HANDLER( spc_io_w )
 				}
 
 				spc700->enabled[i] = BIT(data, i);
-				timer_enable(spc700->timer[i], spc700->enabled[i]);
+				spc700->timer[i]->enable(spc700->enabled[i]);
 			}
 
 			if (BIT(data, 4))
@@ -1187,7 +1186,7 @@ WRITE8_DEVICE_HANDLER( spc_io_w )
 		case 0x7:		/* Port 3 */
 			// mame_printf_debug("SPC: %02x to APU @ %d (PC=%x)\n", data, offset & 3, cpu_get_pc(space->cpu));
 			spc700->port_out[offset - 4] = data;
-			cpuexec_boost_interleave(device->machine, attotime_zero, ATTOTIME_IN_USEC(20));
+			device->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(20));
 			break;
 		case 0xa:		/* Timer 0 */
 		case 0xb:		/* Timer 1 */
@@ -1262,46 +1261,46 @@ static void state_register( device_t *device )
 	snes_sound_state *spc700 = get_safe_token(device);
 	int v;
 
-	state_save_register_device_item_array(device, 0, spc700->dsp_regs);
-	state_save_register_device_item_array(device, 0, spc700->ipl_region);
+	device->save_item(NAME(spc700->dsp_regs));
+	device->save_item(NAME(spc700->ipl_region));
 
-	state_save_register_device_item(device, 0, spc700->keyed_on);
-	state_save_register_device_item(device, 0, spc700->keys);
+	device->save_item(NAME(spc700->keyed_on));
+	device->save_item(NAME(spc700->keys));
 
-	state_save_register_device_item(device, 0, spc700->noise_cnt);
-	state_save_register_device_item(device, 0, spc700->noise_lev);
+	device->save_item(NAME(spc700->noise_cnt));
+	device->save_item(NAME(spc700->noise_lev));
 
 #ifndef NO_ECHO
-	state_save_register_device_item_array(device, 0, spc700->fir_lbuf);
-	state_save_register_device_item_array(device, 0, spc700->fir_rbuf);
-	state_save_register_device_item(device, 0, spc700->fir_ptr);
-	state_save_register_device_item(device, 0, spc700->echo_ptr);
+	device->save_item(NAME(spc700->fir_lbuf));
+	device->save_item(NAME(spc700->fir_rbuf));
+	device->save_item(NAME(spc700->fir_ptr));
+	device->save_item(NAME(spc700->echo_ptr));
 #endif
 
-	state_save_register_device_item_array(device, 0, spc700->enabled);
-	state_save_register_device_item_array(device, 0, spc700->counter);
-	state_save_register_device_item_array(device, 0, spc700->port_in);
-	state_save_register_device_item_array(device, 0, spc700->port_out);
+	device->save_item(NAME(spc700->enabled));
+	device->save_item(NAME(spc700->counter));
+	device->save_item(NAME(spc700->port_in));
+	device->save_item(NAME(spc700->port_out));
 
 	for (v = 0; v < 8; v++)
 	{
-		state_save_register_device_item(device, v, spc700->voice_state[v].mem_ptr);
-		state_save_register_device_item(device, v, spc700->voice_state[v].end);
-		state_save_register_device_item(device, v, spc700->voice_state[v].envcnt);
-		state_save_register_device_item(device, v, spc700->voice_state[v].envstate);
-		state_save_register_device_item(device, v, spc700->voice_state[v].envx);
-		state_save_register_device_item(device, v, spc700->voice_state[v].filter);
-		state_save_register_device_item(device, v, spc700->voice_state[v].half);
-		state_save_register_device_item(device, v, spc700->voice_state[v].header_cnt);
-		state_save_register_device_item(device, v, spc700->voice_state[v].mixfrac);
-		state_save_register_device_item(device, v, spc700->voice_state[v].on_cnt);
-		state_save_register_device_item(device, v, spc700->voice_state[v].pitch);
-		state_save_register_device_item(device, v, spc700->voice_state[v].range);
-		state_save_register_device_item(device, v, spc700->voice_state[v].samp_id);
-		state_save_register_device_item(device, v, spc700->voice_state[v].sampptr);
-		state_save_register_device_item(device, v, spc700->voice_state[v].smp1);
-		state_save_register_device_item(device, v, spc700->voice_state[v].smp2);
-		state_save_register_device_item_array(device, v, spc700->voice_state[v].sampbuf);
+		device->save_item(NAME(spc700->voice_state[v].mem_ptr), v);
+		device->save_item(NAME(spc700->voice_state[v].end), v);
+		device->save_item(NAME(spc700->voice_state[v].envcnt), v);
+		device->save_item(NAME(spc700->voice_state[v].envstate), v);
+		device->save_item(NAME(spc700->voice_state[v].envx), v);
+		device->save_item(NAME(spc700->voice_state[v].filter), v);
+		device->save_item(NAME(spc700->voice_state[v].half), v);
+		device->save_item(NAME(spc700->voice_state[v].header_cnt), v);
+		device->save_item(NAME(spc700->voice_state[v].mixfrac), v);
+		device->save_item(NAME(spc700->voice_state[v].on_cnt), v);
+		device->save_item(NAME(spc700->voice_state[v].pitch), v);
+		device->save_item(NAME(spc700->voice_state[v].range), v);
+		device->save_item(NAME(spc700->voice_state[v].samp_id), v);
+		device->save_item(NAME(spc700->voice_state[v].sampptr), v);
+		device->save_item(NAME(spc700->voice_state[v].smp1), v);
+		device->save_item(NAME(spc700->voice_state[v].smp2), v);
+		device->save_item(NAME(spc700->voice_state[v].sampbuf), v);
 	}
 }
 
@@ -1310,7 +1309,7 @@ static DEVICE_START( snes_sound )
 	snes_sound_state *spc700 = get_safe_token(device);
 	running_machine *machine = device->machine;
 
-	spc700->channel = stream_create(device, 0, 2, 32000, 0, snes_sh_update);
+	spc700->channel = device->machine->sound().stream_alloc(*device, 0, 2, 32000, 0, snes_sh_update);
 
 	spc700->ram = auto_alloc_array_clear(device->machine, UINT8, SNES_SPCRAM_SIZE);
 
@@ -1321,18 +1320,18 @@ static DEVICE_START( snes_sound )
 	memcpy(spc700->ipl_region, machine->region("user5")->base(), 64);
 
 	/* Initialize the timers */
-	spc700->timer[0] = timer_alloc(machine, snes_spc_timer, spc700);
-	timer_adjust_periodic(spc700->timer[0], ATTOTIME_IN_HZ(8000),  0, ATTOTIME_IN_HZ(8000));
-	timer_enable(spc700->timer[0], 0);
-	spc700->timer[1] = timer_alloc(machine, snes_spc_timer, spc700);
-	timer_adjust_periodic(spc700->timer[1], ATTOTIME_IN_HZ(8000),  1, ATTOTIME_IN_HZ(8000));
-	timer_enable(spc700->timer[1], 0);
-	spc700->timer[2] = timer_alloc(machine, snes_spc_timer, spc700);
-	timer_adjust_periodic(spc700->timer[2], ATTOTIME_IN_HZ(64000), 2, ATTOTIME_IN_HZ(64000));
-	timer_enable(spc700->timer[2], 0);
+	spc700->timer[0] = machine->scheduler().timer_alloc(FUNC(snes_spc_timer), spc700);
+	spc700->timer[0]->adjust(attotime::from_hz(8000),  0, attotime::from_hz(8000));
+	spc700->timer[0]->enable(false);
+	spc700->timer[1] = machine->scheduler().timer_alloc(FUNC(snes_spc_timer), spc700);
+	spc700->timer[1]->adjust(attotime::from_hz(8000),  1, attotime::from_hz(8000));
+	spc700->timer[1]->enable(false);
+	spc700->timer[2] = machine->scheduler().timer_alloc(FUNC(snes_spc_timer), spc700);
+	spc700->timer[2]->adjust(attotime::from_hz(64000), 2, attotime::from_hz(64000));
+	spc700->timer[2]->enable(false);
 
 	state_register(device);
-	state_save_register_device_item_pointer(device, 0, spc700->ram, SNES_SPCRAM_SIZE);
+	device->save_pointer(NAME(spc700->ram), SNES_SPCRAM_SIZE);
 }
 
 static DEVICE_RESET( snes_sound )

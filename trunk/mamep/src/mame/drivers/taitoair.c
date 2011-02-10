@@ -620,9 +620,9 @@ static MACHINE_START( taitoair )
 	state->dsp = machine->device("dsp");
 	state->tc0080vco = machine->device("tc0080vco");
 
-	state_save_register_global(machine, state->banknum);
-	state_save_register_global(machine, state->q.col);
-	state_save_register_global(machine, state->q.pcount);
+	state->save_item(NAME(state->banknum));
+	state->save_item(NAME(state->q.col));
+	state->save_item(NAME(state->q.pcount));
 
 	for (i = 0; i < TAITOAIR_POLY_MAX_PT; i++)
 	{
@@ -630,7 +630,7 @@ static MACHINE_START( taitoair )
 		state_save_register_item(machine, "globals", NULL, i, state->q.p[i].y);
 	}
 
-	state_save_register_postload(machine, taitoair_postload, NULL);
+	machine->state().register_postload(taitoair_postload, NULL);
 }
 
 static MACHINE_RESET( taitoair )
@@ -663,7 +663,7 @@ static MACHINE_CONFIG_START( airsys, taitoair_state )
 	MCFG_CPU_DATA_MAP(DSP_map_data)
 	MCFG_CPU_IO_MAP(DSP_map_io)
 
-	MCFG_QUANTUM_TIME(HZ(600))
+	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(taitoair)
 	MCFG_MACHINE_RESET(taitoair)

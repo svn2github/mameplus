@@ -104,7 +104,7 @@ static void hangon_generic_init( running_machine *machine )
 	state->ppi8255_1 = machine->device("ppi8255_1");
 	state->ppi8255_2 = machine->device("ppi8255_2");
 
-	state_save_register_global(machine, state->adc_select);
+	state->save_item(NAME(state->adc_select));
 }
 
 
@@ -133,7 +133,7 @@ static MACHINE_RESET( hangon )
 
 	/* if we have a fake i8751 handler, disable the actual 8751 */
 	if (state->i8751_vblank_hook != NULL)
-		timer_call_after_resynch(machine, NULL, 0, suspend_i8751);
+		machine->scheduler().synchronize(FUNC(suspend_i8751));
 
 	/* reset global state */
 	state->adc_select = 0;
@@ -204,7 +204,7 @@ static WRITE16_HANDLER( hangon_io_w )
 			case 0x0000/2: /* PPI @ 4B */
 				/* the port C handshaking signals control the Z80 NMI, */
 				/* so we have to sync whenever we access this PPI */
-				timer_call_after_resynch(space->machine, NULL, ((offset & 3) << 8) | (data & 0xff), delayed_ppi8255_w);
+				space->machine->scheduler().synchronize(FUNC(delayed_ppi8255_w), ((offset & 3) << 8) | (data & 0xff));
 				return;
 
 			case 0x3000/2: /* PPI @ 4C */
@@ -260,7 +260,7 @@ static WRITE16_HANDLER( sharrier_io_w )
 			case 0x0000/2:
 				/* the port C handshaking signals control the Z80 NMI, */
 				/* so we have to sync whenever we access this PPI */
-				timer_call_after_resynch(space->machine, NULL, ((offset & 3) << 8) | (data & 0xff), delayed_ppi8255_w);
+				space->machine->scheduler().synchronize(FUNC(delayed_ppi8255_w), ((offset & 3) << 8) | (data & 0xff));
 				return;
 
 			case 0x0020/2: /* PPI @ 4C */
@@ -327,7 +327,7 @@ static WRITE8_DEVICE_HANDLER( tilemap_sound_w )
 	cpu_set_input_line(state->soundcpu, INPUT_LINE_NMI, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
 	segaic16_tilemap_set_colscroll(device->machine, 0, ~data & 0x04);
 	segaic16_tilemap_set_rowscroll(device->machine, 0, ~data & 0x02);
-	sound_global_enable(device->machine, data & 0x01);
+	device->machine->sound().system_enable(data & 0x01);
 }
 
 
@@ -924,7 +924,7 @@ static MACHINE_CONFIG_START( hangon_base, segas1x_state )
 	MCFG_CPU_PROGRAM_MAP(sub_map)
 
 	MCFG_MACHINE_RESET(hangon)
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_PPI8255_ADD( "ppi8255_1", hangon_ppi_intf[0] )
 	MCFG_PPI8255_ADD( "ppi8255_2", hangon_ppi_intf[1] )

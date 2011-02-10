@@ -192,7 +192,7 @@ static void refresh_timer(mn102_info *cpustate, int tmr)
 				rate /= cpustate->simple_timer[tmr].base;
 
 				if (tmr != 8)	// HACK: timer 8 is run at 500 kHz by the Taito program for no obvious reason, which kills performance
-					timer_adjust_oneshot(cpustate->timer_timers[tmr], ATTOTIME_IN_HZ(rate), tmr);
+					cpustate->timer_timers[tmr]->adjust(attotime::from_hz(rate), tmr);
 			}
 			else
 			{
@@ -202,7 +202,7 @@ static void refresh_timer(mn102_info *cpustate, int tmr)
 	}
 	else	// disabled, so stop it
 	{
-		timer_adjust_oneshot(cpustate->timer_timers[tmr], attotime_never, tmr);
+		cpustate->timer_timers[tmr]->adjust(attotime::never, tmr);
 	}
 }
 
@@ -278,25 +278,25 @@ static CPU_INIT(mn10200)
 	cpustate->program = device->space(AS_PROGRAM);
 	cpustate->io = device->space(AS_IO);
 
-	state_save_register_device_item(device, 0, cpustate->pc);
-	state_save_register_device_item_array(device, 0, cpustate->d);
-	state_save_register_device_item_array(device, 0, cpustate->a);
-	state_save_register_device_item(device, 0, cpustate->nmicr);
-	state_save_register_device_item(device, 0, cpustate->iagr);
-	state_save_register_device_item_array(device, 0, cpustate->icrl);
-	state_save_register_device_item_array(device, 0, cpustate->icrh);
-	state_save_register_device_item(device, 0, cpustate->psw);
-	state_save_register_device_item(device, 0, cpustate->mdr);
-//  state_save_register_device_item_array(device, 0, cpustate->simple_timer);
-//  state_save_register_device_item_array(device, 0, cpustate->prescaler);
-//  state_save_register_device_item_array(device, 0, cpustate->dma);
-//  state_save_register_device_item_array(device, 0, cpustate->serial);
-	state_save_register_device_item_array(device, 0, cpustate->ddr);
+	device->save_item(NAME(cpustate->pc));
+	device->save_item(NAME(cpustate->d));
+	device->save_item(NAME(cpustate->a));
+	device->save_item(NAME(cpustate->nmicr));
+	device->save_item(NAME(cpustate->iagr));
+	device->save_item(NAME(cpustate->icrl));
+	device->save_item(NAME(cpustate->icrh));
+	device->save_item(NAME(cpustate->psw));
+	device->save_item(NAME(cpustate->mdr));
+//  device->save_item(NAME(cpustate->simple_timer));
+//  device->save_item(NAME(cpustate->prescaler));
+//  device->save_item(NAME(cpustate->dma));
+//  device->save_item(NAME(cpustate->serial));
+	device->save_item(NAME(cpustate->ddr));
 
 	for (tmr = 0; tmr < NUM_TIMERS_8BIT; tmr++)
 	{
-		cpustate->timer_timers[tmr] = timer_alloc(device->machine, simple_timer_cb, cpustate);
-		timer_adjust_oneshot(cpustate->timer_timers[tmr], attotime_never, tmr);
+		cpustate->timer_timers[tmr] = device->machine->scheduler().timer_alloc(FUNC(simple_timer_cb), cpustate);
+		cpustate->timer_timers[tmr]->adjust(attotime::never, tmr);
 	}
 }
 
@@ -319,7 +319,7 @@ static CPU_RESET(mn10200)
 		cpustate->simple_timer[tmr].mode = 0;
 		cpustate->simple_timer[tmr].cur = 0;
 		cpustate->simple_timer[tmr].base = 0;
-		timer_adjust_oneshot(cpustate->timer_timers[tmr], attotime_never, tmr);
+		cpustate->timer_timers[tmr]->adjust(attotime::never, tmr);
 	}
 
 	// clear all interrupt groups

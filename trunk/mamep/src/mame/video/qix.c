@@ -49,10 +49,10 @@ static VIDEO_START( qix )
 	state->videoram = auto_alloc_array(machine, UINT8, 256 * 256);
 
 	/* set up save states */
-	state_save_register_global_pointer(machine, state->videoram, 256 * 256);
-	state_save_register_global(machine, state->flip);
-	state_save_register_global(machine, state->palette_bank);
-	state_save_register_global(machine, state->leds);
+	state->save_pointer(NAME(state->videoram), 256 * 256);
+	state->save_item(NAME(state->flip));
+	state->save_item(NAME(state->palette_bank));
+	state->save_item(NAME(state->leds));
 }
 
 
@@ -215,8 +215,6 @@ static WRITE8_HANDLER( slither_addresslatch_w )
  *
  *************************************/
 
-#define NUM_PENS	(0x100)
-
 
 static WRITE8_HANDLER( qix_paletteram_w )
 {
@@ -316,11 +314,9 @@ static MC6845_BEGIN_UPDATE( begin_update )
 #endif
 
 	/* create the pens */
-	static pen_t pens[NUM_PENS];
+	get_pens(state, state->pens);
 
-	get_pens(state, pens);
-
-	return pens;
+	return state->pens;
 }
 
 

@@ -575,22 +575,22 @@ static MACHINE_START( lsasquad )
 	state->audiocpu = machine->device("audiocpu");
 	state->mcu = machine->device("mcu");
 
-	state_save_register_global(machine, state->port_a_in);
-	state_save_register_global(machine, state->port_a_out);
-	state_save_register_global(machine, state->ddr_a);
-	state_save_register_global(machine, state->port_b_in);
-	state_save_register_global(machine, state->port_b_out);
-	state_save_register_global(machine, state->ddr_b);
-	state_save_register_global(machine, state->mcu_sent);
-	state_save_register_global(machine, state->main_sent);
-	state_save_register_global(machine, state->from_main);
-	state_save_register_global(machine, state->from_mcu);
+	state->save_item(NAME(state->port_a_in));
+	state->save_item(NAME(state->port_a_out));
+	state->save_item(NAME(state->ddr_a));
+	state->save_item(NAME(state->port_b_in));
+	state->save_item(NAME(state->port_b_out));
+	state->save_item(NAME(state->ddr_b));
+	state->save_item(NAME(state->mcu_sent));
+	state->save_item(NAME(state->main_sent));
+	state->save_item(NAME(state->from_main));
+	state->save_item(NAME(state->from_mcu));
 
-	state_save_register_global(machine, state->sound_pending);
-	state_save_register_global(machine, state->sound_nmi_enable);
-	state_save_register_global(machine, state->pending_nmi);
-	state_save_register_global(machine, state->sound_cmd);
-	state_save_register_global(machine, state->sound_result);
+	state->save_item(NAME(state->sound_pending));
+	state->save_item(NAME(state->sound_nmi_enable));
+	state->save_item(NAME(state->pending_nmi));
+	state->save_item(NAME(state->sound_cmd));
+	state->save_item(NAME(state->sound_result));
 }
 
 static MACHINE_RESET( lsasquad )
@@ -629,7 +629,7 @@ static MACHINE_CONFIG_START( lsasquad, lsasquad_state )
 	MCFG_CPU_ADD("mcu", M68705, MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(lsasquad_m68705_map)
 
-	MCFG_QUANTUM_TIME(HZ(30000))	/* 500 CPU slices per frame - an high value to ensure proper */
+	MCFG_QUANTUM_TIME(attotime::from_hz(30000))	/* 500 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
 							/* main<->sound synchronization depends on this */
 
@@ -686,7 +686,7 @@ static MACHINE_CONFIG_START( daikaiju, lsasquad_state )
 	MCFG_CPU_ADD("mcu", M68705, MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(lsasquad_m68705_map)
 
-	MCFG_QUANTUM_TIME(HZ(30000))	/* 500 CPU slices per frame - an high value to ensure proper */
+	MCFG_QUANTUM_TIME(attotime::from_hz(30000))	/* 500 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
 							/* main<->sound synchronization depends on this */
 

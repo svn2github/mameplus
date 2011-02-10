@@ -57,7 +57,6 @@
 
 
 #include "emu.h"
-#include "streams.h"
 #include "sound/mos6560.h"
 
 /***************************************************************************
@@ -146,7 +145,7 @@ INLINE const mos6560_interface *get_interface( device_t *device )
 		if(VERBOSE_LEVEL >= N) \
 		{ \
 			if( M ) \
-				logerror("%11.6f: %-24s", attotime_to_double(timer_get_time(device->machine)), (char*) M ); \
+				logerror("%11.6f: %-24s", device->machine->time().as_double(), (char*) M ); \
 			logerror A; \
 		} \
 	} while (0)
@@ -461,7 +460,7 @@ READ8_DEVICE_HANDLER( mos6560_port_r )
 		break;
 	case 6:						   /*lightpen horizontal */
 	case 7:						   /*lightpen vertical */
-		if (LIGHTPEN_BUTTON && ((attotime_to_double(timer_get_time(device->machine)) - mos6560->lightpenreadtime) * MOS656X_VRETRACERATE >= 1))
+		if (LIGHTPEN_BUTTON && ((device->machine->time().as_double() - mos6560->lightpenreadtime) * MOS656X_VRETRACERATE >= 1))
 		{
 			/* only 1 update each frame */
 			/* and diode must recognize light */
@@ -470,7 +469,7 @@ READ8_DEVICE_HANDLER( mos6560_port_r )
 				mos6560->reg[6] = MOS656X_X_VALUE;
 				mos6560->reg[7] = MOS656X_Y_VALUE;
 			}
-			mos6560->lightpenreadtime = attotime_to_double(timer_get_time(device->machine));
+			mos6560->lightpenreadtime = device->machine->time().as_double();
 		}
 		val = mos6560->reg[offset];
 		break;
@@ -579,7 +578,7 @@ static void mos6560_soundport_w( device_t *device, int offset, int data )
 {
 	mos6560_state *mos6560 = get_safe_token(device);
 	int old = mos6560->reg[offset];
-	stream_update(mos6560->channel);
+	mos6560->channel->update();
 
 	switch (offset)
 	{
@@ -740,7 +739,7 @@ static void mos6560_sound_start( device_t *device )
 	mos6560_state *mos6560 = get_safe_token(device);
 	int i;
 
-	mos6560->channel = stream_create(device, 0, 1, device->machine->sample_rate, 0, mos6560_update);
+	mos6560->channel = device->machine->sound().stream_alloc(*device, 0, 1, device->machine->sample_rate, 0, mos6560_update);
 
 	/* buffer for fastest played sample for 5 second so we have enough data for min 5 second */
 	mos6560->noisesize = NOISE_FREQUENCY_MAX * NOISE_BUFFER_SIZE_SEC;
@@ -848,43 +847,43 @@ static DEVICE_START( mos6560 )
 
 	mos6560_sound_start(device);
 
-	state_save_register_device_item(device, 0, mos6560->lightpenreadtime);
-	state_save_register_device_item(device, 0, mos6560->rasterline);
-	state_save_register_device_item(device, 0, mos6560->lastline);
+	device->save_item(NAME(mos6560->lightpenreadtime));
+	device->save_item(NAME(mos6560->rasterline));
+	device->save_item(NAME(mos6560->lastline));
 
-	state_save_register_device_item(device, 0, mos6560->charheight);
-	state_save_register_device_item(device, 0, mos6560->matrix8x16);
-	state_save_register_device_item(device, 0, mos6560->inverted);
-	state_save_register_device_item(device, 0, mos6560->chars_x);
-	state_save_register_device_item(device, 0, mos6560->chars_y);
-	state_save_register_device_item(device, 0, mos6560->xsize);
-	state_save_register_device_item(device, 0, mos6560->ysize);
-	state_save_register_device_item(device, 0, mos6560->xpos);
-	state_save_register_device_item(device, 0, mos6560->ypos);
-	state_save_register_device_item(device, 0, mos6560->chargenaddr);
-	state_save_register_device_item(device, 0, mos6560->videoaddr);
+	device->save_item(NAME(mos6560->charheight));
+	device->save_item(NAME(mos6560->matrix8x16));
+	device->save_item(NAME(mos6560->inverted));
+	device->save_item(NAME(mos6560->chars_x));
+	device->save_item(NAME(mos6560->chars_y));
+	device->save_item(NAME(mos6560->xsize));
+	device->save_item(NAME(mos6560->ysize));
+	device->save_item(NAME(mos6560->xpos));
+	device->save_item(NAME(mos6560->ypos));
+	device->save_item(NAME(mos6560->chargenaddr));
+	device->save_item(NAME(mos6560->videoaddr));
 
-	state_save_register_device_item(device, 0, mos6560->backgroundcolor);
-	state_save_register_device_item(device, 0, mos6560->framecolor);
-	state_save_register_device_item(device, 0, mos6560->helpercolor);
+	device->save_item(NAME(mos6560->backgroundcolor));
+	device->save_item(NAME(mos6560->framecolor));
+	device->save_item(NAME(mos6560->helpercolor));
 
-	state_save_register_device_item_array(device, 0, mos6560->reg);
+	device->save_item(NAME(mos6560->reg));
 
-	state_save_register_device_item_array(device, 0, mos6560->mono);
-	state_save_register_device_item_array(device, 0, mos6560->monoinverted);
-	state_save_register_device_item_array(device, 0, mos6560->multi);
-	state_save_register_device_item_array(device, 0, mos6560->multiinverted);
+	device->save_item(NAME(mos6560->mono));
+	device->save_item(NAME(mos6560->monoinverted));
+	device->save_item(NAME(mos6560->multi));
+	device->save_item(NAME(mos6560->multiinverted));
 
-	state_save_register_device_item_bitmap(device, 0, mos6560->bitmap);
+	device->save_item(NAME(*mos6560->bitmap));
 
-	state_save_register_device_item(device, 0, mos6560->tone1pos);
-	state_save_register_device_item(device, 0, mos6560->tone2pos);
-	state_save_register_device_item(device, 0, mos6560->tone3pos);
-	state_save_register_device_item(device, 0, mos6560->tone1samples);
-	state_save_register_device_item(device, 0, mos6560->tone2samples);
-	state_save_register_device_item(device, 0, mos6560->tone3samples);
-	state_save_register_device_item(device, 0, mos6560->noisepos);
-	state_save_register_device_item(device, 0, mos6560->noisesamples);
+	device->save_item(NAME(mos6560->tone1pos));
+	device->save_item(NAME(mos6560->tone2pos));
+	device->save_item(NAME(mos6560->tone3pos));
+	device->save_item(NAME(mos6560->tone1samples));
+	device->save_item(NAME(mos6560->tone2samples));
+	device->save_item(NAME(mos6560->tone3samples));
+	device->save_item(NAME(mos6560->noisepos));
+	device->save_item(NAME(mos6560->noisesamples));
 }
 
 /*-------------------------------------------------

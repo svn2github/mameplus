@@ -313,7 +313,7 @@ static WRITE8_HANDLER( thunderx_1f98_w )
 		calculate_collisions(space->machine);
 
 		/* 100 cycle delay is arbitrary */
-		timer_set(space->machine, downcast<cpu_device *>(space->cpu)->cycles_to_attotime(100), NULL, 0, thunderx_firq_callback);
+		space->machine->scheduler().timer_set(downcast<cpu_device *>(space->cpu)->cycles_to_attotime(100), FUNC(thunderx_firq_callback));
 	}
 
 	state->_1f98_data = data;
@@ -637,11 +637,11 @@ static MACHINE_START( scontra )
 	state->k052109 = machine->device("k052109");
 	state->k051960 = machine->device("k051960");
 
-	state_save_register_global(machine, state->priority);
-	state_save_register_global(machine, state->_1f98_data);
-	state_save_register_global(machine, state->palette_selected);
-	state_save_register_global(machine, state->rambank);
-	state_save_register_global(machine, state->pmcbank);
+	state->save_item(NAME(state->priority));
+	state->save_item(NAME(state->_1f98_data));
+	state->save_item(NAME(state->palette_selected));
+	state->save_item(NAME(state->rambank));
+	state->save_item(NAME(state->pmcbank));
 	state_save_register_global_pointer(machine, machine->generic.paletteram.u8, 0x800);
 }
 
@@ -654,11 +654,11 @@ static MACHINE_START( thunderx )
 	memory_configure_bank(machine, "bank1", 12, 4, &ROM[0x08000], 0x2000);
 	memory_set_bank(machine, "bank1", 0);
 
-	state->pmcram = auto_alloc_array_clear(machine, UINT8, 0x800);
+	memset(state->pmcram, 0, sizeof(state->pmcram));
 
 	MACHINE_START_CALL(scontra);
 
-	state_save_register_global_pointer(machine, state->pmcram, 0x800);
+	state->save_item(NAME(state->pmcram));
 }
 
 static MACHINE_RESET( scontra )

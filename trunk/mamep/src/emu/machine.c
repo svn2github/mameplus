@@ -112,7 +112,6 @@
 #include "ui.h"
 #include "uimenu.h"
 #include "uiinput.h"
-#include "streams.h"
 #include "crsshair.h"
 #include "validity.h"
 #include "debug/debugcon.h"
@@ -158,16 +157,10 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 	  sample_rate(options_get_int(&options, OPTION_SAMPLERATE)),
 	  debug_flags(0),
       ui_active(false),
-	  mame_data(NULL),
-	  timer_data(NULL),
-	  state_data(NULL),
 	  memory_data(NULL),
 	  palette_data(NULL),
 	  tilemap_data(NULL),
-	  streams_data(NULL),
-	  devices_data(NULL),
 	  romload_data(NULL),
-	  sound_data(NULL),
 	  input_data(NULL),
 	  input_port_data(NULL),
 	  ui_input_data(NULL),
@@ -176,6 +169,7 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 	  generic_video_data(NULL),
 	  generic_audio_data(NULL),
 	  m_logerror_list(NULL),
+	  m_state(*this),
 	  m_scheduler(*this),
 	  m_options(options),
 	  m_osd(osd),
@@ -189,12 +183,13 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 	  m_soft_reset_timer(NULL),
 	  m_logfile(NULL),
 	  m_saveload_schedule(SLS_NONE),
-	  m_saveload_schedule_time(attotime_zero),
+	  m_saveload_schedule_time(attotime::zero),
 	  m_saveload_searchpath(NULL),
 	  m_rand_seed(0x9d14abd7),
 	  m_driver_device(NULL),
 	  m_cheat(NULL),
 	  m_render(NULL),
+	  m_sound(NULL),
 	  m_video(NULL),
 	  m_debug_view(NULL)
 {
@@ -277,17 +272,13 @@ void running_machine::start()
 	config_init(this);
 	input_init(this);
 	output_init(this);
-	state_init(this);
-	state_save_allow_registration(this, true);
 	palette_init(this);
 	m_render = auto_alloc(this, render_manager(*this));
 	generic_machine_init(this);
 	generic_sound_init(this);
 
-	// initialize the timers and allocate a soft_reset timer
-	// this must be done before cpu_init so that CPU's can allocate timers
-	timer_init(this);
-	m_soft_reset_timer = timer_alloc(this, static_soft_reset, NULL);
+	// allocate a soft_reset timer
+	m_soft_reset_timer = m_scheduler.timer_alloc(MSTUB(timer_expired, running_machine, soft_reset), this);
 
 	// init the osd layer
 	m_osd.init(*this);
@@ -297,7 +288,7 @@ void running_machine::start()
 	ui_init(this);
 
 	// initialize the base time (needed for doing record/playback)
-	time(&m_base_time);
+	::time(&m_base_time);
 
 	// initialize the input system and input ports for the game
 	// this must be done before memory_init in order to allow specifying
@@ -310,7 +301,7 @@ void running_machine::start()
 	ui_input_init(this);
 
 	// initialize the streams engine before the sound devices start
-	streams_init(this);
+	m_sound = auto_alloc(this, sound_manager(*this));
 
 	// first load ROMs, then populate memory, and finally initialize CPUs
 	// these operations must proceed in this order
@@ -331,7 +322,6 @@ void running_machine::start()
 	image_init(this);
 	tilemap_init(this);
 	crosshair_init(this);
-	sound_init(this);
 
 	// initialize the debugger
 	if ((debug_flags & DEBUG_FLAG_ENABLED) != 0)
@@ -363,7 +353,7 @@ void running_machine::start()
 #endif /* USE_HISCORE */
 
 	// disallow save state registrations starting here
-	state_save_allow_registration(this, false);
+	m_state.allow_registration(false);
 }
 
 
@@ -395,13 +385,13 @@ int running_machine::run(bool firstrun)
 		// load the configuration settings and NVRAM
 		bool settingsloaded = config_load_settings(this);
 		nvram_load(this);
-		sound_mute(this, FALSE);
+		sound().ui_mute(false);
 
 		// display the startup screens
 		ui_display_startup_screens(this, firstrun, !settingsloaded);
 
 		// perform a soft reset -- this takes us to the running phase
-		soft_reset();
+		soft_reset(*this);
 
 		// run the CPUs until a reset or exit
 		m_hard_reset_pending = false;
@@ -428,7 +418,7 @@ int running_machine::run(bool firstrun)
 		m_current_phase = MACHINE_PHASE_EXIT;
 
 		// save the NVRAM and configuration
-		sound_mute(this, true);
+		sound().ui_mute(true);
 		nvram_save(this);
 		// mamep: dont save settings during playback
 		if (!has_playback_file(this))
@@ -483,7 +473,7 @@ void running_machine::schedule_exit()
 	m_scheduler.eat_all_cycles();
 
 	// if we're autosaving on exit, schedule a save as well
-	if (options_get_bool(&m_options, OPTION_AUTOSAVE) && (m_game.flags & GAME_SUPPORTS_SAVE) && attotime_compare(timer_get_time(this), attotime_zero) > 0)
+	if (options_get_bool(&m_options, OPTION_AUTOSAVE) && (m_game.flags & GAME_SUPPORTS_SAVE) && this->time() > attotime::zero)
 		schedule_save("auto");
 }
 
@@ -509,7 +499,7 @@ void running_machine::schedule_hard_reset()
 
 void running_machine::schedule_soft_reset()
 {
-	timer_adjust_oneshot(m_soft_reset_timer, attotime_zero, 0);
+	m_soft_reset_timer->adjust(attotime::zero);
 
 	// we can't be paused since the timer needs to fire
 	resume();
@@ -567,7 +557,7 @@ void running_machine::schedule_save(const char *filename)
 
 	// note the start time and set a timer for the next timeslice to actually schedule it
 	m_saveload_schedule = SLS_SAVE;
-	m_saveload_schedule_time = timer_get_time(this);
+	m_saveload_schedule_time = this->time();
 
 	// we can't be paused since we need to clear out anonymous timers
 	resume();
@@ -586,7 +576,7 @@ void running_machine::schedule_load(const char *filename)
 
 	// note the start time and set a timer for the next timeslice to actually schedule it
 	m_saveload_schedule = SLS_LOAD;
-	m_saveload_schedule_time = timer_get_time(this);
+	m_saveload_schedule_time = this->time();
 
 	// we can't be paused since we need to clear out anonymous timers
 	resume();
@@ -637,7 +627,7 @@ memory_region *running_machine::region_alloc(const char *name, UINT32 length, UI
 		fatalerror("region_alloc called with duplicate region name \"%s\"\n", name);
 
 	// allocate the region
-	return m_regionlist.append(name, auto_alloc(this, memory_region(*this, name, length, flags)));
+	return &m_regionlist.append(name, *auto_alloc(this, memory_region(*this, name, length, flags)));
 }
 
 
@@ -752,7 +742,7 @@ void running_machine::base_datetime(system_time &systime)
 
 void running_machine::current_datetime(system_time &systime)
 {
-	systime.set(m_base_time + timer_get_time(this).seconds);
+	systime.set(m_base_time + this->time().seconds);
 }
 
 
@@ -800,10 +790,10 @@ void running_machine::handle_saveload()
 
 	// if there are anonymous timers, we can't save just yet, and we can't load yet either
 	// because the timers might overwrite data we have loaded
-	if (timer_count_anonymous(this) > 0)
+	if (m_scheduler.can_save())
 	{
 		// if more than a second has passed, we're probably screwed
-		if (attotime_sub(timer_get_time(this), m_saveload_schedule_time).seconds > 0)
+		if ((this->time() - m_saveload_schedule_time) > attotime::from_seconds(1))
 		{
 			popmessage(_("Unable to %s due to pending anonymous timers. See error.log for details."), opname);
 			goto cancel;
@@ -819,7 +809,7 @@ void running_machine::handle_saveload()
 		astring fullname(mame_file_full_name(file));
 
 		// read/write the save state
-		state_save_error staterr = (m_saveload_schedule == SLS_LOAD) ? state_save_read_file(this, file) : state_save_write_file(this, file);
+		state_save_error staterr = (m_saveload_schedule == SLS_LOAD) ? m_state.read_file(file) : m_state.write_file(file);
 
 		// handle the result
 		switch (staterr)
@@ -873,9 +863,7 @@ cancel:
 //  of the system
 //-------------------------------------------------
 
-TIMER_CALLBACK( running_machine::static_soft_reset ) { machine->soft_reset(); }
-
-void running_machine::soft_reset()
+void running_machine::soft_reset(running_machine &machine, int param)
 {
 	logerror("Soft reset\n");
 
@@ -887,9 +875,6 @@ void running_machine::soft_reset()
 
 	// now we're running
 	m_current_phase = MACHINE_PHASE_RUNNING;
-
-	// allow 0-time queued callbacks to run before any CPUs execute
-	timer_execute_timers(this);
 }
 
 

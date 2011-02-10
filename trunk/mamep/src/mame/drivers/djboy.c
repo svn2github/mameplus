@@ -554,20 +554,20 @@ static MACHINE_START( djboy )
 	state->beast = machine->device("beast");
 	state->pandora = machine->device("pandora");
 
-	state_save_register_global(machine, state->videoreg);
-	state_save_register_global(machine, state->scrollx);
-	state_save_register_global(machine, state->scrolly);
+	state->save_item(NAME(state->videoreg));
+	state->save_item(NAME(state->scrollx));
+	state->save_item(NAME(state->scrolly));
 
 	/* Kaneko BEAST */
-	state_save_register_global(machine, state->data_to_beast);
-	state_save_register_global(machine, state->data_to_z80);
-	state_save_register_global(machine, state->beast_to_z80_full);
-	state_save_register_global(machine, state->z80_to_beast_full);
-	state_save_register_global(machine, state->beast_int0_l);
-	state_save_register_global(machine, state->beast_p0);
-	state_save_register_global(machine, state->beast_p1);
-	state_save_register_global(machine, state->beast_p2);
-	state_save_register_global(machine, state->beast_p3);
+	state->save_item(NAME(state->data_to_beast));
+	state->save_item(NAME(state->data_to_z80));
+	state->save_item(NAME(state->beast_to_z80_full));
+	state->save_item(NAME(state->z80_to_beast_full));
+	state->save_item(NAME(state->beast_int0_l));
+	state->save_item(NAME(state->beast_p0));
+	state->save_item(NAME(state->beast_p1));
+	state->save_item(NAME(state->beast_p2));
+	state->save_item(NAME(state->beast_p3));
 }
 
 static MACHINE_RESET( djboy )
@@ -603,7 +603,7 @@ static MACHINE_CONFIG_START( djboy, djboy_state )
 	MCFG_CPU_ADD("beast", I80C51, 6000000)
 	MCFG_CPU_IO_MAP(djboy_mcu_io_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(djboy)
 	MCFG_MACHINE_RESET(djboy)

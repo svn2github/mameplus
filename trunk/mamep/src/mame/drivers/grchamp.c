@@ -404,7 +404,7 @@ static TIMER_CALLBACK( main_to_sub_comm_sync_w )
 
 static WRITE8_HANDLER( main_to_sub_comm_w )
 {
-	timer_call_after_resynch(space->machine, NULL, data | (offset << 8), main_to_sub_comm_sync_w);
+	space->machine->scheduler().synchronize(FUNC(main_to_sub_comm_sync_w), data | (offset << 8));
 }
 
 
@@ -693,7 +693,7 @@ static MACHINE_CONFIG_START( grchamp, grchamp_state )
 
 	MCFG_MACHINE_RESET(grchamp)
 	MCFG_WATCHDOG_VBLANK_INIT(8)
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_ALWAYS_UPDATE)

@@ -103,14 +103,14 @@ static TIMER_CALLBACK( interrupt_callback )
 	next_interrupt_number = (interrupt_number + 1) % INTERRUPTS_PER_FRAME;
 	next_vpos = interrupt_lines[next_interrupt_number];
 
-	timer_adjust_oneshot(state->interrupt_timer, machine->primary_screen->time_until_pos(next_vpos), next_interrupt_number);
+	state->interrupt_timer->adjust(machine->primary_screen->time_until_pos(next_vpos), next_interrupt_number);
 }
 
 
 static void create_interrupt_timer( running_machine *machine )
 {
 	beaminv_state *state = machine->driver_data<beaminv_state>();
-	state->interrupt_timer = timer_alloc(machine, interrupt_callback, NULL);
+	state->interrupt_timer = machine->scheduler().timer_alloc(FUNC(interrupt_callback));
 }
 
 
@@ -118,7 +118,7 @@ static void start_interrupt_timer( running_machine *machine )
 {
 	beaminv_state *state = machine->driver_data<beaminv_state>();
 	int vpos = interrupt_lines[0];
-	timer_adjust_oneshot(state->interrupt_timer, machine->primary_screen->time_until_pos(vpos), 0);
+	state->interrupt_timer->adjust(machine->primary_screen->time_until_pos(vpos));
 }
 
 
@@ -137,7 +137,7 @@ static MACHINE_START( beaminv )
 	state->maincpu = machine->device("maincpu");
 
 	/* setup for save states */
-	state_save_register_global(machine, state->controller_select);
+	state->save_item(NAME(state->controller_select));
 }
 
 

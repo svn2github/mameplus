@@ -43,7 +43,7 @@
 #define SCAN_SPEED						(2000 / 30)			/* 2000 frames/second */
 #define SEEK_FAST_SPEED					(4000 / 30)			/* 4000 frames/second */
 
-#define MULTIJUMP_TRACK_TIME			ATTOTIME_IN_USEC(50)
+#define MULTIJUMP_TRACK_TIME			attotime::from_usec(50)
 
 
 
@@ -257,13 +257,13 @@ static void ldv1000_vsync(laserdisc_state *ld, const vbi_metadata *vbi, int fiel
 
 	/* signal VSYNC and set a timer to turn it off */
 	player->vsync = TRUE;
-	timer_set(ld->device->machine, attotime_mul(ld->screen->scan_period(), 4), ld, 0, vsync_off);
+	ld->device->machine->scheduler().timer_set(ld->screen->scan_period() * 4, FUNC(vsync_off), 0, ld);
 
 	/* also set a timer to fetch the VBI data when it is ready */
-	timer_set(ld->device->machine, ld->screen->time_until_pos(19*2), ld, 0, vbi_data_fetch);
+	ld->device->machine->scheduler().timer_set(ld->screen->time_until_pos(19*2), FUNC(vbi_data_fetch), 0, ld);
 
 	/* boost interleave for the first 1ms to improve communications */
-	cpuexec_boost_interleave(ld->device->machine, attotime_zero, ATTOTIME_IN_MSEC(1));
+	ld->device->machine->scheduler().boost_interleave(attotime::zero, attotime::from_msec(1));
 }
 
 
@@ -525,7 +525,7 @@ static WRITE8_DEVICE_HANDLER( ppi0_porta_w )
 	laserdisc_state *ld = ldcore_get_safe_token(device->owner());
 	ld->player->counter_start = data;
 	if (LOG_PORT_IO)
-		printf("%s:PORTA.0=%02X\n", cpuexec_describe_context(device->machine), data);
+		printf("%s:PORTA.0=%02X\n", device->machine->describe_context(), data);
 }
 
 
@@ -588,7 +588,7 @@ static WRITE8_DEVICE_HANDLER( ppi0_portc_w )
 	player->portc0 = data;
 	if (LOG_PORT_IO && ((data ^ prev) & 0x0f) != 0)
 	{
-		printf("%s:PORTC.0=%02X", cpuexec_describe_context(device->machine), data);
+		printf("%s:PORTC.0=%02X", device->machine->describe_context(), data);
 		if (data & 0x01) printf(" PRELOAD");
 		if (!(data & 0x02)) printf(" /MULTIJUMP");
 		if (data & 0x04) printf(" SCANMODE");
@@ -684,7 +684,7 @@ static WRITE8_DEVICE_HANDLER( ppi1_portb_w )
 	player->portb1 = data;
 	if (LOG_PORT_IO && ((data ^ prev) & 0xff) != 0)
 	{
-		printf("%s:PORTB.1=%02X:", cpuexec_describe_context(device->machine), data);
+		printf("%s:PORTB.1=%02X:", device->machine->describe_context(), data);
 		if (!(data & 0x01)) printf(" FOCSON");
 		if (!(data & 0x02)) printf(" SPDLRUN");
 		if (!(data & 0x04)) printf(" JUMPTRIG");
@@ -740,7 +740,7 @@ static WRITE8_DEVICE_HANDLER( ppi1_portc_w )
 	player->portc1 = data;
 	if (LOG_PORT_IO && ((data ^ prev) & 0xcf) != 0)
 	{
-		printf("%s:PORTC.1=%02X", cpuexec_describe_context(device->machine), data);
+		printf("%s:PORTC.1=%02X", device->machine->describe_context(), data);
 		if (data & 0x01) printf(" AUD1");
 		if (data & 0x02) printf(" AUD2");
 		if (data & 0x04) printf(" AUDEN");

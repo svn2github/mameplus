@@ -107,7 +107,7 @@ static TIMER_CALLBACK( snes_nmi_tick )
 	cpu_set_input_line(state->maincpu, G65816_LINE_NMI, ASSERT_LINE);
 
 	// don't happen again
-	timer_adjust_oneshot(state->nmi_timer, attotime_never, 0);
+	state->nmi_timer->adjust(attotime::never);
 }
 
 static void snes_hirq_tick( running_machine *machine )
@@ -121,7 +121,7 @@ static void snes_hirq_tick( running_machine *machine )
 	cpu_set_input_line(state->maincpu, G65816_LINE_IRQ, ASSERT_LINE);
 
 	// don't happen again
-	timer_adjust_oneshot(state->hirq_timer, attotime_never, 0);
+	state->hirq_timer->adjust(attotime::never);
 }
 
 static TIMER_CALLBACK( snes_hirq_tick_callback )
@@ -157,7 +157,7 @@ static TIMER_CALLBACK( snes_update_io )
 	state->io_read(cpu0space->machine);
 	snes_ram[HVBJOY] &= 0xfe;		/* Clear busy bit */
 
-	timer_adjust_oneshot(state->io_timer, attotime_never, 0);
+	state->io_timer->adjust(attotime::never);
 }
 
 static TIMER_CALLBACK( snes_scanline_tick )
@@ -205,7 +205,7 @@ static TIMER_CALLBACK( snes_scanline_tick )
 			}
 			else
 			{
-				timer_adjust_oneshot(state->hirq_timer, machine->primary_screen->time_until_pos(snes_ppu.beam.current_vert, pixel * state->htmult), 0);
+				state->hirq_timer->adjust(machine->primary_screen->time_until_pos(snes_ppu.beam.current_vert, pixel * state->htmult));
 			}
 		}
 	}
@@ -213,7 +213,7 @@ static TIMER_CALLBACK( snes_scanline_tick )
 	/* Start of VBlank */
 	if (snes_ppu.beam.current_vert == snes_ppu.beam.last_visible_line)
 	{
-		timer_set(machine, machine->primary_screen->time_until_pos(snes_ppu.beam.current_vert, 10), NULL, 0, snes_reset_oam_address);
+		machine->scheduler().timer_set(machine->primary_screen->time_until_pos(snes_ppu.beam.current_vert, 10), FUNC(snes_reset_oam_address));
 
 		snes_ram[HVBJOY] |= 0x81;		/* Set vblank bit to on & indicate controllers being read */
 		snes_ram[RDNMI] |= 0x80;		/* Set NMI occured bit */
@@ -221,11 +221,11 @@ static TIMER_CALLBACK( snes_scanline_tick )
 		if (snes_ram[NMITIMEN] & 0x80)	/* NMI only signaled if this bit set */
 		{
 			// NMI goes off about 12 cycles after this (otherwise Chrono Trigger, NFL QB Club, etc. lock up)
-			timer_adjust_oneshot(state->nmi_timer, state->maincpu->cycles_to_attotime(12), 0);
+			state->nmi_timer->adjust(state->maincpu->cycles_to_attotime(12));
 		}
 
 		/* three lines after start of vblank we update the controllers (value from snes9x) */
-		timer_adjust_oneshot(state->io_timer, machine->primary_screen->time_until_pos(snes_ppu.beam.current_vert + 2, state->hblank_offset * state->htmult), 0);
+		state->io_timer->adjust(machine->primary_screen->time_until_pos(snes_ppu.beam.current_vert + 2, state->hblank_offset * state->htmult));
 	}
 
 	// hdma reset happens at scanline 0, H=~6
@@ -245,8 +245,8 @@ static TIMER_CALLBACK( snes_scanline_tick )
 		cpu_set_input_line(state->maincpu, G65816_LINE_NMI, CLEAR_LINE );
 	}
 
-	timer_adjust_oneshot(state->scanline_timer, attotime_never, 0);
-	timer_adjust_oneshot(state->hblank_timer, machine->primary_screen->time_until_pos(snes_ppu.beam.current_vert, state->hblank_offset * state->htmult), 0);
+	state->scanline_timer->adjust(attotime::never);
+	state->hblank_timer->adjust(machine->primary_screen->time_until_pos(snes_ppu.beam.current_vert, state->hblank_offset * state->htmult));
 
 //  printf("%02x %d\n",snes_ram[HVBJOY],snes_ppu.beam.current_vert);
 }
@@ -261,7 +261,7 @@ static TIMER_CALLBACK( snes_hblank_tick )
 	snes_ppu.beam.current_vert = machine->primary_screen->vpos();
 
 	/* make sure we halt */
-	timer_adjust_oneshot(state->hblank_timer, attotime_never, 0);
+	state->hblank_timer->adjust(attotime::never);
 
 	/* draw a scanline */
 	if (snes_ppu.beam.current_vert <= snes_ppu.beam.last_visible_line)
@@ -286,7 +286,7 @@ static TIMER_CALLBACK( snes_hblank_tick )
 		nextscan = 0;
 	}
 
-	timer_adjust_oneshot(state->scanline_timer, machine->primary_screen->time_until_pos(nextscan), 0);
+	state->scanline_timer->adjust(machine->primary_screen->time_until_pos(nextscan));
 }
 
 /* FIXME: multiplication should take 8 CPU cycles & division 16 CPU cycles, but
@@ -616,7 +616,7 @@ WRITE8_HANDLER( snes_w_io )
 	{
 //      printf("816: %02x to APU @ %d (PC=%06x)\n", data, offset & 3,cpu_get_pc(space->cpu));
 		spc_port_in(state->spc700, offset & 0x3, data);
-		cpuexec_boost_interleave(space->machine, attotime_zero, ATTOTIME_IN_USEC(20));
+		space->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(20));
 		return;
 	}
 
@@ -711,7 +711,7 @@ WRITE8_HANDLER( snes_w_io )
 			break;
 		case WRMPYB:	/* Multiplier B */
 			snes_ram[WRMPYB] = data;
-//          timer_adjust_oneshot(state->mult_timer, state->maincpu->cycles_to_attotime(8), 0);
+//          state->mult_timer->adjust(state->maincpu->cycles_to_attotime(8));
 			{
 				UINT32 c = snes_ram[WRMPYA] * snes_ram[WRMPYB];
 				snes_ram[RDMPYL] = c & 0xff;
@@ -723,7 +723,7 @@ WRITE8_HANDLER( snes_w_io )
 			break;
 		case WRDVDD:	/* Divisor */
 			snes_ram[WRDVDD] = data;
-//          timer_adjust_oneshot(state->div_timer, state->maincpu->cycles_to_attotime(16), 0);
+//          state->div_timer->adjust(state->maincpu->cycles_to_attotime(16));
 			{
 				UINT16 value, dividend, remainder;
 				dividend = remainder = 0;
@@ -766,7 +766,7 @@ WRITE8_HANDLER( snes_w_io )
 			break;
 		case HDMAEN:	/* HDMA channel designation */
 			if (data) //if a HDMA is enabled, data is inited at the next scanline
-				timer_set(space->machine, space->machine->primary_screen->time_until_pos(snes_ppu.beam.current_vert + 1), NULL, 0, snes_reset_hdma);
+				space->machine->scheduler().timer_set(space->machine->primary_screen->time_until_pos(snes_ppu.beam.current_vert + 1), FUNC(snes_reset_hdma));
 			break;
 		case MEMSEL:	/* Access cycle designation in memory (2) area */
 			/* FIXME: Need to adjust the speed only during access of banks 0x80+
@@ -1708,25 +1708,25 @@ static void snes_init_timers( running_machine *machine )
 	snes_state *state = machine->driver_data<snes_state>();
 
 	/* init timers and stop them */
-	state->scanline_timer = timer_alloc(machine, snes_scanline_tick, NULL);
-	timer_adjust_oneshot(state->scanline_timer, attotime_never, 0);
-	state->hblank_timer = timer_alloc(machine, snes_hblank_tick, NULL);
-	timer_adjust_oneshot(state->hblank_timer, attotime_never, 0);
-	state->nmi_timer = timer_alloc(machine, snes_nmi_tick, NULL);
-	timer_adjust_oneshot(state->nmi_timer, attotime_never, 0);
-	state->hirq_timer = timer_alloc(machine, snes_hirq_tick_callback, NULL);
-	timer_adjust_oneshot(state->hirq_timer, attotime_never, 0);
-	state->div_timer = timer_alloc(machine, snes_div_callback, NULL);
-	timer_adjust_oneshot(state->div_timer, attotime_never, 0);
-	state->mult_timer = timer_alloc(machine, snes_mult_callback, NULL);
-	timer_adjust_oneshot(state->mult_timer, attotime_never, 0);
-	state->io_timer = timer_alloc(machine, snes_update_io, NULL);
-	timer_adjust_oneshot(state->io_timer, attotime_never, 0);
+	state->scanline_timer = machine->scheduler().timer_alloc(FUNC(snes_scanline_tick));
+	state->scanline_timer->adjust(attotime::never);
+	state->hblank_timer = machine->scheduler().timer_alloc(FUNC(snes_hblank_tick));
+	state->hblank_timer->adjust(attotime::never);
+	state->nmi_timer = machine->scheduler().timer_alloc(FUNC(snes_nmi_tick));
+	state->nmi_timer->adjust(attotime::never);
+	state->hirq_timer = machine->scheduler().timer_alloc(FUNC(snes_hirq_tick_callback));
+	state->hirq_timer->adjust(attotime::never);
+	state->div_timer = machine->scheduler().timer_alloc(FUNC(snes_div_callback));
+	state->div_timer->adjust(attotime::never);
+	state->mult_timer = machine->scheduler().timer_alloc(FUNC(snes_mult_callback));
+	state->mult_timer->adjust(attotime::never);
+	state->io_timer = machine->scheduler().timer_alloc(FUNC(snes_update_io));
+	state->io_timer->adjust(attotime::never);
 
 	// SNES hcounter has a 0-339 range.  hblank starts at counter 260.
 	// clayfighter sets an HIRQ at 260, apparently it wants it to be before hdma kicks off, so we'll delay 2 pixels.
 	state->hblank_offset = 274;
-	timer_adjust_oneshot(state->hblank_timer, machine->primary_screen->time_until_pos(((snes_ram[STAT78] & 0x10) == SNES_NTSC) ? SNES_VTOTAL_NTSC - 1 : SNES_VTOTAL_PAL - 1, state->hblank_offset), 0);
+	state->hblank_timer->adjust(machine->primary_screen->time_until_pos(((snes_ram[STAT78] & 0x10) == SNES_NTSC) ? SNES_VTOTAL_NTSC - 1 : SNES_VTOTAL_PAL - 1, state->hblank_offset));
 }
 
 static void snes_init_ram( running_machine *machine )
@@ -1895,34 +1895,34 @@ MACHINE_START( snes )
 		state_save_register_item(machine, "snes_dma", NULL, i, state->dma_channel[i].dma_disabled);
 	}
 
-	state_save_register_global(machine, state->htmult);
-	state_save_register_global(machine, state->cgram_address);
-	state_save_register_global(machine, state->vram_read_offset);
-	state_save_register_global(machine, state->read_ophct);
-	state_save_register_global(machine, state->read_opvct);
-	state_save_register_global(machine, state->hblank_offset);
-	state_save_register_global(machine, state->vram_fgr_high);
-	state_save_register_global(machine, state->vram_fgr_increment);
-	state_save_register_global(machine, state->vram_fgr_count);
-	state_save_register_global(machine, state->vram_fgr_mask);
-	state_save_register_global(machine, state->vram_fgr_shift);
-	state_save_register_global(machine, state->vram_read_buffer);
-	state_save_register_global(machine, state->wram_address);
-	state_save_register_global(machine, state->htime);
-	state_save_register_global(machine, state->vtime);
-	state_save_register_global(machine, state->vmadd);
-	state_save_register_global(machine, state->hdmaen);
-	state_save_register_global(machine, state->joy1l);
-	state_save_register_global(machine, state->joy1h);
-	state_save_register_global(machine, state->joy2l);
-	state_save_register_global(machine, state->joy2h);
-	state_save_register_global(machine, state->joy3l);
-	state_save_register_global(machine, state->joy3h);
-	state_save_register_global(machine, state->joy4l);
-	state_save_register_global(machine, state->joy4h);
-	state_save_register_global_array(machine, state->data1);
-	state_save_register_global_array(machine, state->data2);
-	state_save_register_global_array(machine, state->read_idx);
+	state->save_item(NAME(state->htmult));
+	state->save_item(NAME(state->cgram_address));
+	state->save_item(NAME(state->vram_read_offset));
+	state->save_item(NAME(state->read_ophct));
+	state->save_item(NAME(state->read_opvct));
+	state->save_item(NAME(state->hblank_offset));
+	state->save_item(NAME(state->vram_fgr_high));
+	state->save_item(NAME(state->vram_fgr_increment));
+	state->save_item(NAME(state->vram_fgr_count));
+	state->save_item(NAME(state->vram_fgr_mask));
+	state->save_item(NAME(state->vram_fgr_shift));
+	state->save_item(NAME(state->vram_read_buffer));
+	state->save_item(NAME(state->wram_address));
+	state->save_item(NAME(state->htime));
+	state->save_item(NAME(state->vtime));
+	state->save_item(NAME(state->vmadd));
+	state->save_item(NAME(state->hdmaen));
+	state->save_item(NAME(state->joy1l));
+	state->save_item(NAME(state->joy1h));
+	state->save_item(NAME(state->joy2l));
+	state->save_item(NAME(state->joy2h));
+	state->save_item(NAME(state->joy3l));
+	state->save_item(NAME(state->joy3h));
+	state->save_item(NAME(state->joy4l));
+	state->save_item(NAME(state->joy4h));
+	state->save_item(NAME(state->data1));
+	state->save_item(NAME(state->data2));
+	state->save_item(NAME(state->read_idx));
 
 	for (i = 0; i < 2; i++)
 	{

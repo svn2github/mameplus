@@ -772,10 +772,10 @@ static INTERRUPT_GEN( superpac_interrupt_1 )
 						// so don't replace with cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
 
 	if (!namcoio_read_reset_line(namcoio_1))		/* give the cpu a tiny bit of time to write the command before processing it */
-		timer_set(device->machine, ATTOTIME_IN_USEC(50), NULL, 0, superpac_io_run);
+		device->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(superpac_io_run));
 
 	if (!namcoio_read_reset_line(namcoio_2))		/* give the cpu a tiny bit of time to write the command before processing it */
-		timer_set(device->machine, ATTOTIME_IN_USEC(50), NULL, 1, superpac_io_run);
+		device->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(superpac_io_run), 1);
 }
 
 static TIMER_CALLBACK( pacnpal_io_run )
@@ -803,10 +803,10 @@ static INTERRUPT_GEN( pacnpal_interrupt_1 )
 						// so don't replace with cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
 
 	if (!namcoio_read_reset_line(namcoio_1))		/* give the cpu a tiny bit of time to write the command before processing it */
-		timer_set(device->machine, ATTOTIME_IN_USEC(50), NULL, 0, pacnpal_io_run);
+		device->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(pacnpal_io_run));
 
 	if (!namcoio_read_reset_line(namcoio_2))		/* give the cpu a tiny bit of time to write the command before processing it */
-		timer_set(device->machine, ATTOTIME_IN_USEC(50), NULL, 1, pacnpal_io_run);
+		device->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(pacnpal_io_run), 1);
 }
 
 static TIMER_CALLBACK( phozon_io_run )
@@ -834,10 +834,10 @@ static INTERRUPT_GEN( phozon_interrupt_1 )
 						// so don't replace with cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
 
 	if (!namcoio_read_reset_line(namcoio_1))		/* give the cpu a tiny bit of time to write the command before processing it */
-		timer_set(device->machine, ATTOTIME_IN_USEC(50), NULL, 0, phozon_io_run);
+		device->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(phozon_io_run));
 
 	if (!namcoio_read_reset_line(namcoio_2))		/* give the cpu a tiny bit of time to write the command before processing it */
-		timer_set(device->machine, ATTOTIME_IN_USEC(50), NULL, 1, phozon_io_run);
+		device->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(phozon_io_run), 1);
 }
 
 static TIMER_CALLBACK( mappy_io_run )
@@ -865,10 +865,10 @@ static INTERRUPT_GEN( mappy_interrupt_1 )
 						// so don't replace with cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
 
 	if (!namcoio_read_reset_line(namcoio_1))		/* give the cpu a tiny bit of time to write the command before processing it */
-		timer_set(device->machine, ATTOTIME_IN_USEC(50), NULL, 0, mappy_io_run);
+		device->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(mappy_io_run));
 
 	if (!namcoio_read_reset_line(namcoio_2))		/* give the cpu a tiny bit of time to write the command before processing it */
-		timer_set(device->machine, ATTOTIME_IN_USEC(50), NULL, 1, mappy_io_run);
+		device->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(mappy_io_run), 1);
 }
 
 
@@ -956,10 +956,10 @@ ADDRESS_MAP_END
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY\
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY\
 	PORT_START("P2") /* 56XX #0 pins 22-29 */\
-	PORT_BIT( 0x0, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_COCKTAIL\
-	PORT_BIT( 0x0, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_COCKTAIL\
-	PORT_BIT( 0x0, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_COCKTAIL\
-	PORT_BIT( 0x0, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_COCKTAIL
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_COCKTAIL\
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_COCKTAIL\
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_COCKTAIL\
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_COCKTAIL
 
 #define NAMCO_56IN1\
 	PORT_START("BUTTONS")	/* 56XX #0 pins 30-33 and 38-41 */\
@@ -1614,7 +1614,7 @@ static MACHINE_CONFIG_START( superpac, mappy_state )
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
-	MCFG_QUANTUM_TIME(HZ(6000))    /* 100 CPU slices per frame - an high value to ensure proper */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))    /* 100 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
 	MCFG_MACHINE_RESET(superpac)
 
@@ -1687,7 +1687,7 @@ static MACHINE_CONFIG_START( phozon, mappy_state )
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
-	MCFG_QUANTUM_TIME(HZ(6000))    /* 100 CPU slices per frame - an high value to ensure proper */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))    /* 100 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
 	MCFG_MACHINE_RESET(phozon)
 
@@ -1727,7 +1727,7 @@ static MACHINE_CONFIG_START( mappy, mappy_state )
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
-	MCFG_QUANTUM_TIME(HZ(6000))    /* 100 CPU slices per frame - an high value to ensure proper */
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))    /* 100 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
 	MCFG_MACHINE_RESET(mappy)
 

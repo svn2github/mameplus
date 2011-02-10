@@ -118,7 +118,7 @@ INLINE void schedule_next_irq(running_machine *machine, int curscanline)
 	curscanline = (curscanline + 64) & 255;
 
 	/* next one at the start of this scanline */
-	timer_adjust_oneshot(state->irq_timer, machine->primary_screen->time_until_pos(curscanline), curscanline);
+	state->irq_timer->adjust(machine->primary_screen->time_until_pos(curscanline), curscanline);
 }
 
 
@@ -186,12 +186,12 @@ static MACHINE_START( cloud9 )
 	machine->primary_screen->configure(320, 256, visarea, HZ_TO_ATTOSECONDS(PIXEL_CLOCK) * VTOTAL * HTOTAL);
 
 	/* create a timer for IRQs and set up the first callback */
-	state->irq_timer = timer_alloc(machine, clock_irq, NULL);
+	state->irq_timer = machine->scheduler().timer_alloc(FUNC(clock_irq));
 	state->irq_state = 0;
 	schedule_next_irq(machine, 0-64);
 
 	/* setup for save states */
-	state_save_register_global(machine, state->irq_state);
+	state->save_item(NAME(state->irq_state));
 }
 
 

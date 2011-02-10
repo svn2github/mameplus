@@ -105,10 +105,10 @@ mb3773_device::mb3773_device( running_machine &_machine, const mb3773_device_con
 
 void mb3773_device::device_start()
 {
-	m_watchdog_timer = timer_alloc( &m_machine, watchdog_timeout, this );
+	m_watchdog_timer = m_machine.scheduler().timer_alloc( FUNC(watchdog_timeout), this );
 	reset_timer();
 
-	state_save_register_device_item( this, 0, m_ck );
+	save_item( NAME(m_ck) );
 }
 
 
@@ -151,7 +151,7 @@ void mb3773_device::set_ck( int state )
 
 void mb3773_device::reset_timer()
 {
-	timer_adjust_oneshot( m_watchdog_timer, ATTOTIME_IN_SEC( 5 ), 0 );
+	m_watchdog_timer->adjust( attotime::from_seconds( 5 ) );
 }
 
 TIMER_CALLBACK( mb3773_device::watchdog_timeout )

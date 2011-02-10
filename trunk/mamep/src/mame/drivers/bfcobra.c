@@ -440,7 +440,7 @@ static void RunBlit(address_space *space)
 		/* This debug is now wrong ! */
 		if (DEBUG_BLITTER)
 		{
-			mame_printf_debug("\n%s:Blitter: Running command from 0x%.5x\n\n", cpuexec_describe_context(device->machine), blitter.program.addr - 12);
+			mame_printf_debug("\n%s:Blitter: Running command from 0x%.5x\n\n", device->machine->describe_context(), blitter.program.addr - 12);
 			mame_printf_debug("Command Reg         %.2x",	blitter.command);
 			mame_printf_debug("		%s %s %s %s %s %s %s\n",
 				blitter.command & CMD_RUN ? "RUN" : "     ",
@@ -692,7 +692,7 @@ static void RunBlit(address_space *space)
 	} while (blitter.command  & CMD_RUN);
 
 	/* Burn Z80 cycles while blitter is in operation */
-	cpu_spinuntil_time(space->cpu,  ATTOTIME_IN_NSEC( (1000000000 / Z80_XTAL)*cycles_used * 2 ) );
+	cpu_spinuntil_time(space->cpu,  attotime::from_nsec( (1000000000 / Z80_XTAL)*cycles_used * 2 ) );
 }
 
 
@@ -1360,7 +1360,6 @@ static WRITE8_HANDLER( meter_w )
 {
 	int i;
 	int  changed = meter_latch ^ data;
-	UINT64 cycles = downcast<cpu_device *>(space->cpu)->total_cycles();
 
 	meter_latch = data;
 
@@ -1372,7 +1371,7 @@ static WRITE8_HANDLER( meter_w )
 	{
 		if (changed & (1 << i))
 		{
-			Mechmtr_update(i, cycles, data & (1 << i) );
+			MechMtr_update(i, data & (1 << i) );
 			generic_pulse_irq_line(space->cpu, M6809_FIRQ_LINE);
 		}
 	}

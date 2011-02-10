@@ -115,7 +115,7 @@ void device_list::import_config_list(const device_config_list &list, running_mac
 	for (const device_config *devconfig = list.first(); devconfig != NULL; devconfig = devconfig->next())
 	{
 		device_t *newdevice = devconfig->alloc_device(*m_machine);
-		append(devconfig->tag(), newdevice);
+		append(devconfig->tag(), *newdevice);
 		newdevice->find_interfaces();
 	}
 }
@@ -134,8 +134,8 @@ void device_list::start_all()
 	m_machine->add_notifier(MACHINE_NOTIFY_EXIT, static_exit);
 
 	// add pre-save and post-load callbacks
-	state_save_register_presave(m_machine, static_pre_save, this);
-	state_save_register_postload(m_machine, static_post_load, this);
+	m_machine->state().register_presave(static_pre_save, this);
+	m_machine->state().register_postload(static_post_load, this);
 
 	// iterate over devices to start them
 	device_t *nextdevice;
@@ -156,8 +156,8 @@ void device_list::start_all()
 			mame_printf_verbose(_("  (missing dependencies; rescheduling)\n"));
 			if (nextdevice == NULL)
 				throw emu_fatalerror("Circular dependency in device startup; unable to start %s '%s'\n", device->name(), device->tag());
-			detach(device);
-			append(device->tag(), device);
+			detach(*device);
+			append(device->tag(), *device);
 		}
 	}
 }
@@ -535,6 +535,7 @@ void device_interface::interface_debug_setup()
 device_t::device_t(running_machine &_machine, const device_config &config)
 	: machine(&_machine),
 	  m_machine(_machine),
+	  m_state_manager(_machine.state()),
 	  m_debug(NULL),
 	  m_execute(NULL),
 	  m_memory(NULL),
@@ -650,12 +651,12 @@ void device_t::set_clock_scale(double clockscale)
 attotime device_t::clocks_to_attotime(UINT64 numclocks) const
 {
 	if (numclocks < m_clock)
-		return attotime_make(0, numclocks * m_attoseconds_per_clock);
+		return attotime(0, numclocks * m_attoseconds_per_clock);
 	else
 	{
 		UINT32 remainder;
 		UINT32 quotient = divu_64x32_rem(numclocks, m_clock, &remainder);
-		return attotime_make(quotient, (UINT64)remainder * (UINT64)m_attoseconds_per_clock);
+		return attotime(quotient, (UINT64)remainder * (UINT64)m_attoseconds_per_clock);
 	}
 }
 
@@ -668,6 +669,28 @@ attotime device_t::clocks_to_attotime(UINT64 numclocks) const
 UINT64 device_t::attotime_to_clocks(attotime duration) const
 {
 	return mulu_32x32(duration.seconds, m_clock) + (UINT64)duration.attoseconds / (UINT64)m_attoseconds_per_clock;
+}
+
+
+//-------------------------------------------------
+//  timer_alloc - allocate a timer for our device
+//  callback
+//-------------------------------------------------
+
+emu_timer *device_t::timer_alloc(device_timer_id id, void *ptr)
+{
+	return m_machine.scheduler().timer_alloc(*this, id, ptr);
+}
+
+
+//-------------------------------------------------
+//  timer_set - set a temporary timer that will
+//  call our device callback
+//-------------------------------------------------
+
+void device_t::timer_set(attotime duration, device_timer_id id, int param, void *ptr)
+{
+	m_machine.scheduler().timer_set(duration, *this, id, param, ptr);
 }
 
 
@@ -702,13 +725,13 @@ void device_t::start()
 		intf->interface_pre_start();
 
 	// remember the number of state registrations
-	int state_registrations = state_save_get_reg_count(machine);
+	int state_registrations = machine->state().registration_count();
 
 	// start the device
 	device_start();
 
 	// complain if nothing was registered by the device
-	state_registrations = state_save_get_reg_count(machine) - state_registrations;
+	state_registrations = machine->state().registration_count() - state_registrations;
 	device_execute_interface *exec;
 	device_sound_interface *sound;
 	if (state_registrations == 0 && (interface(exec) || interface(sound)))
@@ -733,9 +756,9 @@ void device_t::start()
 	}
 
 	// register our save states
-	state_save_register_device_item(this, 0, m_clock);
-	state_save_register_device_item(this, 0, m_unscaled_clock);
-	state_save_register_device_item(this, 0, m_clock_scale);
+	save_item(NAME(m_clock));
+	save_item(NAME(m_unscaled_clock));
+	save_item(NAME(m_clock_scale));
 
 	// we're now officially started
 	m_started = true;

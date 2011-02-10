@@ -308,10 +308,10 @@ static MACHINE_START( overdriv )
 	state->k053246 = machine->device("k053246");
 	state->k053251 = machine->device("k053251");
 
-	state_save_register_global(machine, state->cpuB_ctrl);
-	state_save_register_global(machine, state->sprite_colorbase);
-	state_save_register_global_array(machine, state->zoom_colorbase);
-	state_save_register_global_array(machine, state->road_colorbase);
+	state->save_item(NAME(state->cpuB_ctrl));
+	state->save_item(NAME(state->sprite_colorbase));
+	state->save_item(NAME(state->zoom_colorbase));
+	state->save_item(NAME(state->road_colorbase));
 }
 
 static MACHINE_RESET( overdriv )
@@ -346,7 +346,7 @@ static MACHINE_CONFIG_START( overdriv, overdriv_state )
 						/* 60 fps, that's how I fixed it for now. */
 	MCFG_CPU_PROGRAM_MAP(overdriv_sound_map)
 
-	MCFG_QUANTUM_TIME(HZ(12000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
 	MCFG_MACHINE_START(overdriv)
 	MCFG_MACHINE_RESET(overdriv)

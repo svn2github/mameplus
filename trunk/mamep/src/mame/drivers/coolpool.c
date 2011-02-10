@@ -177,7 +177,7 @@ static WRITE16_HANDLER( nvram_thrash_w )
 	{
 		nvram_write_enable = 1;
 		timer_device *nvram_timer = space->machine->device<timer_device>("nvram_timer");
-		nvram_timer->adjust(ATTOTIME_IN_MSEC(1000));
+		nvram_timer->adjust(attotime::from_msec(1000));
 	}
 }
 
@@ -477,14 +477,14 @@ static TIMER_CALLBACK( deferred_iop_w )
 	cputag_set_input_line(machine, "dsp", 0, HOLD_LINE);	/* ???  I have no idea who should generate this! */
 															/* the DSP polls the status bit so it isn't strictly */
 															/* necessary to also have an IRQ */
-	cpuexec_boost_interleave(machine, attotime_zero, ATTOTIME_IN_USEC(50));
+	machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
 }
 
 
 static WRITE16_HANDLER( coolpool_iop_w )
 {
 	logerror("%08x:IOP write %04x\n", cpu_get_pc(space->cpu), data);
-	timer_call_after_resynch(space->machine, NULL, data, deferred_iop_w);
+	space->machine->scheduler().synchronize(FUNC(deferred_iop_w), data);
 }
 
 
@@ -1182,15 +1182,15 @@ static void register_state_save(running_machine *machine)
 {
 	coolpool_state *state = machine->driver_data<coolpool_state>();
 
-	state_save_register_global_array(machine, state->oldx);
-	state_save_register_global_array(machine, state->oldy);
-	state_save_register_global(machine, state->result);
-	state_save_register_global(machine, state->lastresult);
+	state->save_item(NAME(state->oldx));
+	state->save_item(NAME(state->oldy));
+	state->save_item(NAME(state->result));
+	state->save_item(NAME(state->lastresult));
 
-	state_save_register_global(machine, state->cmd_pending);
-	state_save_register_global(machine, state->iop_cmd);
-	state_save_register_global(machine, state->iop_answer);
-	state_save_register_global(machine, state->iop_romaddr);
+	state->save_item(NAME(state->cmd_pending));
+	state->save_item(NAME(state->iop_cmd));
+	state->save_item(NAME(state->iop_answer));
+	state->save_item(NAME(state->iop_romaddr));
 }
 
 

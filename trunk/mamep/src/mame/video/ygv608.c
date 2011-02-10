@@ -492,7 +492,7 @@ static void ygv608_register_state_save(running_machine *machine)
 	state_save_register_item_2d_array(machine, "ygv608", NULL, 0, ygv608.scroll_data_table);
 	state_save_register_item_2d_array(machine, "ygv608", NULL, 0, ygv608.colour_palette);
 
-	state_save_register_postload(machine, ygv608_postload, NULL);
+	machine->state().register_postload(ygv608_postload, NULL);
 }
 
 static void ygv608_exit(running_machine &machine)
@@ -1412,7 +1412,7 @@ static void SetPostShortcuts( running_machine *machine, int reg )
       UINT8 yTile = ygv608.regs.s.r0 & r0_pny;
 
       if (yTile >= ygv608.page_y)
-        logerror ("%s:setting pny(%d) >= page_y(%d)\n", cpuexec_describe_context(machine),
+        logerror ("%s:setting pny(%d) >= page_y(%d)\n", machine->describe_context(),
             yTile, ygv608.page_y );
       yTile &= (ygv608.page_y - 1);
       ygv608.regs.s.r0 &= ~r0_pny;
@@ -1425,7 +1425,7 @@ static void SetPostShortcuts( running_machine *machine, int reg )
       UINT8 xTile = ygv608.regs.s.r1 & r1_pnx;
 
       if (xTile >= ygv608.page_x)
-        logerror ("%s:setting pnx(%d) >= page_x(%d)\n", cpuexec_describe_context(machine),
+        logerror ("%s:setting pnx(%d) >= page_x(%d)\n", machine->describe_context(),
             xTile, ygv608.page_x );
       xTile &= (ygv608.page_x - 1);
       ygv608.regs.s.r1 &= ~r1_pnx;

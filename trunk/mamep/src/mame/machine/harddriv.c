@@ -519,7 +519,7 @@ INLINE int duart_clock(harddriv_state *state)
 
 INLINE attotime duart_clock_period(harddriv_state *state)
 {
-	return ATTOTIME_IN_HZ(duart_clock(state));
+	return attotime::from_hz(duart_clock(state));
 }
 
 
@@ -534,7 +534,7 @@ TIMER_DEVICE_CALLBACK( hd68k_duart_callback )
 		state->duart_irq_state = (state->duart_read_data[0x05] & state->duart_write_data[0x05]) != 0;
 		atarigen_update_interrupts(timer.machine);
 	}
-	timer.adjust(attotime_mul(duart_clock_period(state), 65536));
+	timer.adjust(duart_clock_period(state) * 65536);
 }
 
 
@@ -562,13 +562,13 @@ READ16_HANDLER( hd68k_duart_r )
 		case 0x0e:		/* Start-Counter Command 3 */
 		{
 			int reps = (state->duart_write_data[0x06] << 8) | state->duart_write_data[0x07];
-			state->duart_timer->adjust(attotime_mul(duart_clock_period(state), reps));
-			logerror("DUART timer started (period=%f)\n", attotime_to_double(attotime_mul(duart_clock_period(state), reps)));
+			state->duart_timer->adjust(duart_clock_period(state) * reps);
+			logerror("DUART timer started (period=%f)\n", (duart_clock_period(state) * reps).as_double());
 			return 0x00ff;
 		}
 		case 0x0f:		/* Stop-Counter Command 3 */
 			{
-				int reps = attotime_to_double(attotime_mul(state->duart_timer->time_left(), duart_clock(state)));
+				int reps = (state->duart_timer->time_left() * duart_clock(state)).as_double();
 				state->duart_timer->reset();
 				state->duart_read_data[0x06] = reps >> 8;
 				state->duart_read_data[0x07] = reps & 0xff;
@@ -697,7 +697,7 @@ INLINE void stmsp_sync_w(address_space *space, offs_t offset, UINT16 data, UINT1
 
 	/* if being written from the 68000, synchronize on it */
 	if (state->hd34010_host_access)
-		timer_call_after_resynch(space->machine, NULL, newdata | (offset << 16) | (which << 28), stmsp_sync_update);
+		space->machine->scheduler().synchronize(FUNC(stmsp_sync_update), newdata | (offset << 16) | (which << 28));
 
 	/* otherwise, just update */
 	else
@@ -790,7 +790,7 @@ WRITE16_HANDLER( hd68k_adsp_data_w )
 	if (offset == 0x1fff)
 	{
 		logerror("%06X:ADSP sync address written (%04X)\n", cpu_get_previouspc(space->cpu), data);
-		timer_call_after_resynch(space->machine, NULL, 0, 0);
+		space->machine->scheduler().synchronize();
 		cpu_triggerint(state->adsp);
 	}
 	else
@@ -897,7 +897,7 @@ WRITE16_HANDLER( hd68k_adsp_control_w )
 
 		case 3:
 			logerror("ADSP bank = %d (deferred)\n", val);
-			timer_call_after_resynch(space->machine, NULL, val, deferred_adsp_bank_switch);
+			space->machine->scheduler().synchronize(FUNC(deferred_adsp_bank_switch), val);
 			break;
 
 		case 5:
@@ -1181,7 +1181,7 @@ READ16_HANDLER( hd68k_ds3_gdata_r )
 	/* it is important that all the CPUs be in sync before we continue, so spin a little */
 	/* while to let everyone else catch up */
 	cpu_spinuntil_trigger(space->cpu, DS3_TRIGGER);
-	cpuexec_triggertime(space->machine, DS3_TRIGGER, ATTOTIME_IN_USEC(5));
+	space->machine->scheduler().trigger(DS3_TRIGGER, attotime::from_usec(5));
 
 	return state->ds3_gdata;
 }
@@ -1277,7 +1277,7 @@ WRITE16_HANDLER( hdds3_special_w )
 			update_ds3_irq(state);
 
 			/* once we've written data, trigger the main CPU to wake up again */
-			cpuexec_trigger(space->machine, DS3_TRIGGER);
+			space->machine->scheduler().trigger(DS3_TRIGGER);
 			break;
 
 		case 1:
@@ -1372,11 +1372,11 @@ WRITE16_HANDLER( hd68k_ds3_program_w )
  *
  *************************************/
 
-void hddsk_update_pif(device_t *device, UINT32 pins)
+void hddsk_update_pif(dsp32c_device &device, UINT32 pins)
 {
-	atarigen_state *atarigen = device->machine->driver_data<atarigen_state>();
+	atarigen_state *atarigen = device.machine->driver_data<atarigen_state>();
 	atarigen->sound_int_state = ((pins & DSP32_OUTPUT_PIF) != 0);
-	hd68k_update_interrupts(device->machine);
+	hd68k_update_interrupts(device.machine);
 }
 
 
@@ -1481,7 +1481,7 @@ WRITE16_HANDLER( hd68k_dsk_dsp32_w )
 {
 	harddriv_state *state = space->machine->driver_data<harddriv_state>();
 	state->dsk_pio_access = TRUE;
-	dsp32c_pio_w(state->dsp32, offset, data);
+	state->dsp32->pio_w(offset, data);
 	state->dsk_pio_access = FALSE;
 }
 
@@ -1491,7 +1491,7 @@ READ16_HANDLER( hd68k_dsk_dsp32_r )
 	harddriv_state *state = space->machine->driver_data<harddriv_state>();
 	UINT16 result;
 	state->dsk_pio_access = TRUE;
-	result = dsp32c_pio_r(state->dsp32, offset);
+	result = state->dsp32->pio_r(offset);
 	state->dsk_pio_access = FALSE;
 	return result;
 }
@@ -1520,7 +1520,7 @@ WRITE32_HANDLER( rddsp32_sync0_w )
 		COMBINE_DATA(&newdata);
 		state->dataptr[state->next_msp_sync % MAX_MSP_SYNC] = dptr;
 		state->dataval[state->next_msp_sync % MAX_MSP_SYNC] = newdata;
-		timer_call_after_resynch(space->machine, NULL, state->next_msp_sync++ % MAX_MSP_SYNC, rddsp32_sync_cb);
+		space->machine->scheduler().synchronize(FUNC(rddsp32_sync_cb), state->next_msp_sync++ % MAX_MSP_SYNC);
 	}
 	else
 		COMBINE_DATA(&state->rddsp32_sync[0][offset]);
@@ -1537,7 +1537,7 @@ WRITE32_HANDLER( rddsp32_sync1_w )
 		COMBINE_DATA(&newdata);
 		state->dataptr[state->next_msp_sync % MAX_MSP_SYNC] = dptr;
 		state->dataval[state->next_msp_sync % MAX_MSP_SYNC] = newdata;
-		timer_call_after_resynch(space->machine, NULL, state->next_msp_sync++ % MAX_MSP_SYNC, rddsp32_sync_cb);
+		space->machine->scheduler().synchronize(FUNC(rddsp32_sync_cb), state->next_msp_sync++ % MAX_MSP_SYNC);
 	}
 	else
 		COMBINE_DATA(&state->rddsp32_sync[1][offset]);

@@ -216,20 +216,20 @@ void timekeeper_device::device_start()
 		assert( region()->bytes() == m_size );
 	}
 
-	state_save_register_device_item( this, 0, m_control );
-	state_save_register_device_item( this, 0, m_seconds );
-	state_save_register_device_item( this, 0, m_minutes );
-	state_save_register_device_item( this, 0, m_hours );
-	state_save_register_device_item( this, 0, m_day );
-	state_save_register_device_item( this, 0, m_date );
-	state_save_register_device_item( this, 0, m_month );
-	state_save_register_device_item( this, 0, m_year );
-	state_save_register_device_item( this, 0, m_century );
-	state_save_register_device_item_pointer( this, 0, m_data, m_size );
+	save_item( NAME(m_control) );
+	save_item( NAME(m_seconds) );
+	save_item( NAME(m_minutes) );
+	save_item( NAME(m_hours) );
+	save_item( NAME(m_day) );
+	save_item( NAME(m_date) );
+	save_item( NAME(m_month) );
+	save_item( NAME(m_year) );
+	save_item( NAME(m_century) );
+	save_pointer( NAME(m_data), m_size );
 
-	timer = timer_alloc( &m_machine, timekeeper_tick_callback, (void *)this );
-	duration = ATTOTIME_IN_SEC(1);
-	timer_adjust_periodic( timer, duration, 0, duration );
+	timer = m_machine.scheduler().timer_alloc( FUNC(timekeeper_tick_callback), (void *)this );
+	duration = attotime::from_seconds(1);
+	timer->adjust( duration, 0, duration );
 }
 
 void m48t02_device::device_start()

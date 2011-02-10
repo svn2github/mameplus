@@ -392,12 +392,12 @@ WRITE16_HANDLER( volfied_cchip_ram_w )
 			// Palette request cmd - verified to take around 122242 68000 cycles to complete
 			if (state->current_cmd >= 0x1 && state->current_cmd < 0x12)
 			{
-				timer_set(space->machine, downcast<cpu_device *>(space->cpu)->cycles_to_attotime(122242), NULL, 0, volfied_timer_callback);
+				space->machine->scheduler().timer_set(downcast<cpu_device *>(space->cpu)->cycles_to_attotime(122242), FUNC(volfied_timer_callback));
 			}
 			// Unknown cmd - verified to take around 105500 68000 cycles to complete
 			else if (state->current_cmd >= 0x81 && state->current_cmd < 0x92)
 			{
-				timer_set(space->machine, downcast<cpu_device *>(space->cpu)->cycles_to_attotime(105500), NULL, 0, volfied_timer_callback);
+				space->machine->scheduler().timer_set(downcast<cpu_device *>(space->cpu)->cycles_to_attotime(105500), FUNC(volfied_timer_callback));
 			}
 			else
 			{
@@ -491,11 +491,11 @@ void volfied_cchip_init( running_machine *machine )
 
 	state->cchip_ram = auto_alloc_array_clear(machine, UINT8, 0x400 * 8);
 
-	state_save_register_global(machine, state->current_bank);
-	state_save_register_global(machine, state->current_cmd);
-	state_save_register_global(machine, state->current_flag);
-	state_save_register_global(machine, state->cc_port);
-	state_save_register_global_pointer(machine, state->cchip_ram, 0x400 * 8);
+	state->save_item(NAME(state->current_bank));
+	state->save_item(NAME(state->current_cmd));
+	state->save_item(NAME(state->current_flag));
+	state->save_item(NAME(state->cc_port));
+	state->save_pointer(NAME(state->cchip_ram), 0x400 * 8);
 }
 
 void volfied_cchip_reset( running_machine *machine )

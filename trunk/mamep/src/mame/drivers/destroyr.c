@@ -130,8 +130,8 @@ static TIMER_CALLBACK( destroyr_frame_callback )
 	state->potsense[1] = 0;
 
 	/* PCB supports two dials, but cab has only got one */
-	timer_set(machine, machine->primary_screen->time_until_pos(input_port_read(machine, "PADDLE"), 0), NULL, 0, destroyr_dial_callback);
-	timer_set(machine, machine->primary_screen->time_until_pos(0), NULL, 0, destroyr_frame_callback);
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(input_port_read(machine, "PADDLE")), FUNC(destroyr_dial_callback));
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(0), FUNC(destroyr_frame_callback));
 }
 
 
@@ -139,7 +139,7 @@ static MACHINE_RESET( destroyr )
 {
 	destroyr_state *state = machine->driver_data<destroyr_state>();
 
-	timer_set(machine, machine->primary_screen->time_until_pos(0), NULL, 0, destroyr_frame_callback);
+	machine->scheduler().timer_set(machine->primary_screen->time_until_pos(0), FUNC(destroyr_frame_callback));
 
 	state->cursor = 0;
 	state->wavemod = 0;
@@ -437,13 +437,13 @@ static MACHINE_START( destroyr )
 
 	state->maincpu = machine->device("maincpu");
 
-	state_save_register_global(machine, state->cursor);
-	state_save_register_global(machine, state->wavemod);
-	state_save_register_global(machine, state->attract);
-	state_save_register_global(machine, state->motor_speed);
-	state_save_register_global(machine, state->noise);
-	state_save_register_global_array(machine, state->potmask);
-	state_save_register_global_array(machine, state->potsense);
+	state->save_item(NAME(state->cursor));
+	state->save_item(NAME(state->wavemod));
+	state->save_item(NAME(state->attract));
+	state->save_item(NAME(state->motor_speed));
+	state->save_item(NAME(state->noise));
+	state->save_item(NAME(state->potmask));
+	state->save_item(NAME(state->potsense));
 }
 
 static MACHINE_CONFIG_START( destroyr, destroyr_state )

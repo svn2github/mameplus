@@ -212,7 +212,7 @@ static WRITE8_HANDLER( z80_arm_nmi_w )
 	vendetta_state *state = space->machine->driver_data<vendetta_state>();
 	cpu_set_input_line(state->audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
 
-	timer_set(space->machine, ATTOTIME_IN_USEC(25), NULL, 0, z80_nmi_callback);
+	space->machine->scheduler().timer_set(attotime::from_usec(25), FUNC(z80_nmi_callback));
 }
 
 static WRITE8_HANDLER( z80_irq_w )
@@ -470,10 +470,10 @@ static MACHINE_START( vendetta )
 	state->k054000 = machine->device("k054000");
 	state->k053260 = machine->device("k053260");
 
-	state_save_register_global(machine, state->irq_enabled);
-	state_save_register_global(machine, state->sprite_colorbase);
-	state_save_register_global_array(machine, state->layer_colorbase);
-	state_save_register_global_array(machine, state->layerpri);
+	state->save_item(NAME(state->irq_enabled));
+	state->save_item(NAME(state->sprite_colorbase));
+	state->save_item(NAME(state->layer_colorbase));
+	state->save_item(NAME(state->layerpri));
 	state_save_register_global_pointer(machine, machine->generic.paletteram.u8, 0x1000);
 }
 

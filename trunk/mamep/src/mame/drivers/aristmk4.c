@@ -446,7 +446,7 @@ static READ8_DEVICE_HANDLER(via_b_r)
 		case 0x02:
 			ret=ret^0x20;
 			inscrd++;
-			timer_set(device->machine, ATTOTIME_IN_MSEC(150), NULL, 0, coin_input_reset);
+			device->machine->scheduler().timer_set(attotime::from_msec(150), FUNC(coin_input_reset));
 			break;
 
 		default:
@@ -460,7 +460,7 @@ static READ8_DEVICE_HANDLER(via_b_r)
 	{
 		case 0x00:
 			ret=ret^0x40;
-			timer_set(device->machine, ATTOTIME_IN_MSEC(175), NULL, 0, hopper_reset);
+			device->machine->scheduler().timer_set(attotime::from_msec(175), FUNC(hopper_reset));
 			hopper_motor=0x02;
 			break;
 		case 0x01:
@@ -1170,13 +1170,14 @@ static DRIVER_INIT( aristmk4 )
 {
 	shapeRomPtr = (UINT8 *)machine->region("tile_gfx")->base();
     memcpy(shapeRom,shapeRomPtr,sizeof(shapeRom)); // back up
+	nvram = auto_alloc_array(machine, UINT8, 0x1000);
 }
 
 static MACHINE_START( aristmk4 )
 {
 
 	samples = machine->device("samples");
-    state_save_register_global_pointer(machine, nvram,0x1000); // nvram
+    state_save_register_global_pointer(machine, nvram, 0x1000); // nvram
 }
 
 

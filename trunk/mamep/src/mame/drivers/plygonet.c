@@ -90,12 +90,6 @@
 
 enum { BANK_GROUP_A, BANK_GROUP_B, INVALID_BANK_GROUP };
 
-static const UINT16 dsp56k_bank00_size = 0x1000;
-static const UINT16 dsp56k_bank01_size = 0x1000;
-static const UINT16 dsp56k_bank02_size = 0x4000;
-static const UINT16 dsp56k_shared_ram_16_size = 0x2000;
-static const UINT16 dsp56k_bank04_size = 0x1fc0;
-
 static const eeprom_interface eeprom_intf =
 {
 	7,				/* address bits */
@@ -657,7 +651,7 @@ static MACHINE_CONFIG_START( plygonet, polygonet_state )
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
 	/* TODO: TEMPORARY!  UNTIL A MORE LOCALIZED SYNC CAN BE MADE */
-	MCFG_QUANTUM_TIME(HZ(1200000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(1200000))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -755,25 +749,23 @@ static DRIVER_INIT(polygonet)
 	reset_sound_region(machine);
 
 	/* Allocate space for the dsp56k banking */
-	state->dsp56k_bank00_ram    = auto_alloc_array_clear(machine, UINT16, 2 * 8 * dsp56k_bank00_size);		/* 2 bank sets, 8 potential banks each */
-	state->dsp56k_bank01_ram    = auto_alloc_array_clear(machine, UINT16, 2 * 8 * dsp56k_bank01_size);
-	state->dsp56k_bank02_ram    = auto_alloc_array_clear(machine, UINT16, 2 * 8 * dsp56k_bank02_size);
-	state->dsp56k_shared_ram_16 = auto_alloc_array_clear(machine, UINT16, 2 * 8 * dsp56k_shared_ram_16_size);
-	state->dsp56k_bank04_ram    = auto_alloc_array_clear(machine, UINT16, 2 * 8 * dsp56k_bank04_size);
+	memset(state->dsp56k_bank00_ram, 0, sizeof(state->dsp56k_bank00_ram));
+	memset(state->dsp56k_bank01_ram, 0, sizeof(state->dsp56k_bank01_ram));
+	memset(state->dsp56k_bank02_ram, 0, sizeof(state->dsp56k_bank02_ram));
+	memset(state->dsp56k_shared_ram_16, 0, sizeof(state->dsp56k_shared_ram_16));
+	memset(state->dsp56k_bank04_ram, 0, sizeof(state->dsp56k_bank04_ram));
 
 	/* The dsp56k occasionally executes out of mapped memory */
 	address_space *space = machine->device<dsp56k_device>("dsp")->space(AS_PROGRAM);
 	state->dsp56k_update_handler = space->set_direct_update_handler(direct_update_delegate_create_static(plygonet_dsp56k_direct_handler, *machine));
 
     /* save states */
-	state_save_register_global_pointer(machine, state->dsp56k_p_mirror,      2 * 0x1000);
-	state_save_register_global_pointer(machine, state->dsp56k_p_8000,        2 * 0x800);
-	state_save_register_global_pointer(machine, state->dsp56k_bank00_ram,    2 * 8 * dsp56k_bank00_size);
-	state_save_register_global_pointer(machine, state->dsp56k_bank01_ram,    2 * 8 * dsp56k_bank01_size);
-	state_save_register_global_pointer(machine, state->dsp56k_bank02_ram,    2 * 8 * dsp56k_bank02_size);
-	state_save_register_global_pointer(machine, state->dsp56k_shared_ram_16, 2 * 8 * dsp56k_shared_ram_16_size);
-	state_save_register_global_pointer(machine, state->dsp56k_bank04_ram,    2 * 8 * dsp56k_bank04_size);
-	state_save_register_global(machine, state->cur_sound_region);
+	state->save_item(NAME(state->dsp56k_bank00_ram));
+	state->save_item(NAME(state->dsp56k_bank01_ram));
+	state->save_item(NAME(state->dsp56k_bank02_ram));
+	state->save_item(NAME(state->dsp56k_shared_ram_16));
+	state->save_item(NAME(state->dsp56k_bank04_ram));
+	state->save_item(NAME(state->cur_sound_region));
 }
 
 

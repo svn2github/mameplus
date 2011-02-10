@@ -182,21 +182,15 @@ class gfx_element;
 class colortable_t;
 class cheat_manager;
 class render_manager;
+class sound_manager;
 class video_manager;
 class debug_view_manager;
 class osd_interface;
 
-typedef struct _mame_private mame_private;
-typedef struct _cpuexec_private cpuexec_private;
-typedef struct _timer_private timer_private;
-typedef struct _state_private state_private;
 typedef struct _memory_private memory_private;
 typedef struct _palette_private palette_private;
 typedef struct _tilemap_private tilemap_private;
-typedef struct _streams_private streams_private;
-typedef struct _devices_private devices_private;
 typedef struct _romload_private romload_private;
-typedef struct _sound_private sound_private;
 typedef struct _input_private input_private;
 typedef struct _input_port_private input_port_private;
 typedef struct _ui_input_private ui_input_private;
@@ -226,7 +220,7 @@ class memory_region
 	DISABLE_COPYING(memory_region);
 
 	friend class running_machine;
-	template<class T> friend class tagged_list;
+	friend class simple_list<memory_region>;
 	friend resource_pool_object<memory_region>::~resource_pool_object();
 
 	// construction/destruction
@@ -361,9 +355,11 @@ public:
 	bool exit_pending() const { return m_exit_pending; }
 	bool new_driver_pending() const { return (m_new_driver_pending != NULL); }
 	const char *new_driver_name() const { return m_new_driver_pending->name; }
+	state_manager &state() { return m_state; }
 	device_scheduler &scheduler() { return m_scheduler; }
 	osd_interface &osd() const { return m_osd; }
 	screen_device *first_screen() const { return primary_screen; }
+	attotime time() const { return m_scheduler.time(); }
 
 	// immediate operations
 	int run(bool firstrun);
@@ -381,7 +377,7 @@ public:
 	void schedule_save(const char *filename);
 	void schedule_load(const char *filename);
 
-	// time
+	// date & time
 	void base_datetime(system_time &systime);
 	void current_datetime(system_time &systime);
 
@@ -392,6 +388,7 @@ public:
 	// managers
 	cheat_manager &cheat() const { assert(m_cheat != NULL); return *m_cheat; }
 	render_manager &render() const { assert(m_render != NULL); return *m_render; }
+	sound_manager &sound() const { assert(m_sound != NULL); return *m_sound; }
 	video_manager &video() const { assert(m_video != NULL); return *m_video; }
 	debug_view_manager &debug_view() const { assert(m_debug_view != NULL); return *m_debug_view; }
 
@@ -446,16 +443,10 @@ public:
 	generic_pointers		generic;			// generic pointers
 
 	// internal core information
-	mame_private *			mame_data;			// internal data from mame.c
-	timer_private *			timer_data;			// internal data from timer.c
-	state_private *			state_data;			// internal data from state.c
 	memory_private *		memory_data;		// internal data from memory.c
 	palette_private *		palette_data;		// internal data from palette.c
 	tilemap_private *		tilemap_data;		// internal data from tilemap.c
-	streams_private *		streams_data;		// internal data from streams.c
-	devices_private *		devices_data;		// internal data from devices.c
 	romload_private *		romload_data;		// internal data from romload.c
-	sound_private *			sound_data;			// internal data from sound.c
 	input_private *			input_data;			// internal data from input.c
 	input_port_private *	input_port_data;	// internal data from inptport.c
 	ui_input_private *		ui_input_data;		// internal data from uiinput.c
@@ -475,9 +466,7 @@ private:
 	void set_saveload_filename(const char *filename);
 	void fill_systime(system_time &systime, time_t t);
 	void handle_saveload();
-
-	static TIMER_CALLBACK( static_soft_reset );
-	void soft_reset();
+	void soft_reset(running_machine &machine, int param = 0);
 
 	static void logfile_callback(running_machine &machine, const char *buffer);
 
@@ -499,6 +488,7 @@ private:
 	};
 	logerror_callback_item *m_logerror_list;
 
+	state_manager			m_state;			// state manager
 	device_scheduler		m_scheduler;		// scheduler object
 	core_options &			m_options;
 	osd_interface &			m_osd;
@@ -536,6 +526,7 @@ private:
 	driver_device *			m_driver_device;
 	cheat_manager *			m_cheat;			// internal data from cheat.c
 	render_manager *		m_render;			// internal data from render.c
+	sound_manager *			m_sound;			// internal data from sound.c
 	video_manager *			m_video;			// internal data from video.c
 	debug_view_manager *	m_debug_view;		// internal data from debugvw.c
 };

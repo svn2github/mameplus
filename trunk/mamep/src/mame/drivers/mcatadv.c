@@ -437,8 +437,8 @@ static MACHINE_START( mcatadv )
 	state->maincpu = machine->device("maincpu");
 	state->soundcpu = machine->device("soundcpu");
 
-	state_save_register_global(machine, state->palette_bank1);
-	state_save_register_global(machine, state->palette_bank2);
+	state->save_item(NAME(state->palette_bank1));
+	state->save_item(NAME(state->palette_bank2));
 }
 
 static MACHINE_CONFIG_START( mcatadv, mcatadv_state )
@@ -465,7 +465,7 @@ static MACHINE_CONFIG_START( mcatadv, mcatadv_state )
 	MCFG_GFXDECODE(mcatadv)
 	MCFG_PALETTE_LENGTH(0x2000/2)
 
-	MCFG_WATCHDOG_TIME_INIT(SEC(3))	/* a guess, and certainly wrong */
+	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(3))	/* a guess, and certainly wrong */
 
 	MCFG_VIDEO_START(mcatadv)
 	MCFG_VIDEO_EOF(mcatadv) // Buffer Spriteram

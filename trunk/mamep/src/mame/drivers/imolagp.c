@@ -102,12 +102,14 @@ public:
 	UINT8 control;
 	UINT8 scroll;
 	UINT8 steerlatch;
-	UINT8 *videoram[3];
 	int   draw_mode;
 	int   oldsteer;
 
 	/* devices */
 	device_t *slavecpu;
+
+	/* memory */
+	UINT8  videoram[3][0x4000];
 };
 
 
@@ -185,16 +187,9 @@ static void initialize_colors( running_machine *machine )
 static VIDEO_START( imolagp )
 {
 	imolagp_state *state = machine->driver_data<imolagp_state>();
-	int i;
-	for (i = 0; i < 3; i++)
-	{
-		state->videoram[i] = auto_alloc_array(machine, UINT8, 0x4000);
-		memset(state->videoram[i], 0x00, 0x4000);
-	}
 
-	state_save_register_global_pointer(machine, state->videoram[0], 0x4000);
-	state_save_register_global_pointer(machine, state->videoram[1], 0x4000);
-	state_save_register_global_pointer(machine, state->videoram[2], 0x4000);
+	memset(state->videoram, 0, sizeof(state->videoram));
+	state->save_item(NAME(state->videoram));
 
 	initialize_colors(machine);
 }
@@ -519,16 +514,16 @@ static MACHINE_START( imolagp )
 
 	state->slavecpu = machine->device("slave");
 
-	state_save_register_global(machine, state->control);
-	state_save_register_global(machine, state->scroll);
-	state_save_register_global(machine, state->steerlatch);
-	state_save_register_global(machine, state->draw_mode);
-	state_save_register_global(machine, state->oldsteer);
+	state->save_item(NAME(state->control));
+	state->save_item(NAME(state->scroll));
+	state->save_item(NAME(state->steerlatch));
+	state->save_item(NAME(state->draw_mode));
+	state->save_item(NAME(state->oldsteer));
 #ifdef HLE_COM
-	state_save_register_global_array(machine, state->mComData);
-	state_save_register_global(machine, state->mComCount);
+	state->save_item(NAME(state->mComData));
+	state->save_item(NAME(state->mComCount));
 #else
-	state_save_register_global_array(machine, state->mLatchedData);
+	state->save_item(NAME(state->mLatchedData));
 #endif
 }
 
@@ -562,7 +557,7 @@ static MACHINE_CONFIG_START( imolagp, imolagp_state )
 	MCFG_CPU_IO_MAP(readport_slave)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(imolagp)
 	MCFG_MACHINE_RESET(imolagp)

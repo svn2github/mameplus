@@ -7,7 +7,6 @@
 #include "emu.h"
 #include "cpu/z80/z80.h"
 #include "machine/rescap.h"
-#include "streams.h"
 #include "cpu/m6502/m6502.h"
 #include "machine/6821pia.h"
 #include "machine/6532riot.h"
@@ -245,34 +244,34 @@ static void sh6840_register_state_globals(device_t *device)
 {
 	exidy_sound_state *state = get_safe_token(device);
 
-	state_save_register_device_item_array(device, 0, state->sh6840_volume);
-	state_save_register_device_item(device, 0, state->sh6840_MSB_latch);
-	state_save_register_device_item(device, 0, state->sh6840_LSB_latch);
-	state_save_register_device_item(device, 0, state->sh6840_LFSR_oldxor);
-	state_save_register_device_item(device, 0, state->sh6840_LFSR_0);
-	state_save_register_device_item(device, 0, state->sh6840_LFSR_1);
-	state_save_register_device_item(device, 0, state->sh6840_LFSR_2);
-	state_save_register_device_item(device, 0, state->sh6840_LFSR_3);
-	state_save_register_device_item(device, 0, state->sh6840_clock_count);
-	state_save_register_device_item(device, 0, state->sfxctrl);
-	state_save_register_device_item(device, 0, state->sh6840_timer[0].cr);
-	state_save_register_device_item(device, 0, state->sh6840_timer[0].state);
-	state_save_register_device_item(device, 0, state->sh6840_timer[0].leftovers);
-	state_save_register_device_item(device, 0, state->sh6840_timer[0].timer);
-	state_save_register_device_item(device, 0, state->sh6840_timer[0].clocks);
-	state_save_register_device_item(device, 0, state->sh6840_timer[0].counter.w);
-	state_save_register_device_item(device, 0, state->sh6840_timer[1].cr);
-	state_save_register_device_item(device, 0, state->sh6840_timer[1].state);
-	state_save_register_device_item(device, 0, state->sh6840_timer[1].leftovers);
-	state_save_register_device_item(device, 0, state->sh6840_timer[1].timer);
-	state_save_register_device_item(device, 0, state->sh6840_timer[1].clocks);
-	state_save_register_device_item(device, 0, state->sh6840_timer[1].counter.w);
-	state_save_register_device_item(device, 0, state->sh6840_timer[2].cr);
-	state_save_register_device_item(device, 0, state->sh6840_timer[2].state);
-	state_save_register_device_item(device, 0, state->sh6840_timer[2].leftovers);
-	state_save_register_device_item(device, 0, state->sh6840_timer[2].timer);
-	state_save_register_device_item(device, 0, state->sh6840_timer[2].clocks);
-	state_save_register_device_item(device, 0, state->sh6840_timer[2].counter.w);
+	device->save_item(NAME(state->sh6840_volume));
+	device->save_item(NAME(state->sh6840_MSB_latch));
+	device->save_item(NAME(state->sh6840_LSB_latch));
+	device->save_item(NAME(state->sh6840_LFSR_oldxor));
+	device->save_item(NAME(state->sh6840_LFSR_0));
+	device->save_item(NAME(state->sh6840_LFSR_1));
+	device->save_item(NAME(state->sh6840_LFSR_2));
+	device->save_item(NAME(state->sh6840_LFSR_3));
+	device->save_item(NAME(state->sh6840_clock_count));
+	device->save_item(NAME(state->sfxctrl));
+	device->save_item(NAME(state->sh6840_timer[0].cr));
+	device->save_item(NAME(state->sh6840_timer[0].state));
+	device->save_item(NAME(state->sh6840_timer[0].leftovers));
+	device->save_item(NAME(state->sh6840_timer[0].timer));
+	device->save_item(NAME(state->sh6840_timer[0].clocks));
+	device->save_item(NAME(state->sh6840_timer[0].counter.w));
+	device->save_item(NAME(state->sh6840_timer[1].cr));
+	device->save_item(NAME(state->sh6840_timer[1].state));
+	device->save_item(NAME(state->sh6840_timer[1].leftovers));
+	device->save_item(NAME(state->sh6840_timer[1].timer));
+	device->save_item(NAME(state->sh6840_timer[1].clocks));
+	device->save_item(NAME(state->sh6840_timer[1].counter.w));
+	device->save_item(NAME(state->sh6840_timer[2].cr));
+	device->save_item(NAME(state->sh6840_timer[2].state));
+	device->save_item(NAME(state->sh6840_timer[2].leftovers));
+	device->save_item(NAME(state->sh6840_timer[2].timer));
+	device->save_item(NAME(state->sh6840_timer[2].clocks));
+	device->save_item(NAME(state->sh6840_timer[2].counter.w));
 }
 
 
@@ -402,7 +401,7 @@ static DEVICE_START( common_sh_start )
 	state->sh6840_clocks_per_sample = (int)((double)SH6840_CLOCK / (double)sample_rate * (double)(1 << 24));
 
 	/* allocate the stream */
-	state->stream = stream_create(device, 0, 1, sample_rate, NULL, exidy_stream_update);
+	state->stream = device->machine->sound().stream_alloc(*device, 0, 1, sample_rate, NULL, exidy_stream_update);
 	state->maincpu = device->machine->device("maincpu");
 
 	sh6840_register_state_globals(device);
@@ -496,7 +495,7 @@ static WRITE8_DEVICE_HANDLER( r6532_porta_w )
 
 	if (state->tms != NULL)
 	{
-		logerror("(%f)%s:TMS5220 data write = %02X\n", attotime_to_double(timer_get_time(device->machine)), cpuexec_describe_context(device->machine), riot6532_porta_out_get(state->riot));
+		logerror("(%f)%s:TMS5220 data write = %02X\n", device->machine->time().as_double(), device->machine->describe_context(), riot6532_porta_out_get(state->riot));
 		tms5220_data_w(state->tms, 0, data);
 	}
 }
@@ -506,7 +505,7 @@ static READ8_DEVICE_HANDLER( r6532_porta_r )
 	exidy_sound_state *state = get_safe_token(device);
 	if (state->tms != NULL)
 	{
-		logerror("(%f)%s:TMS5220 status read = %02X\n", attotime_to_double(timer_get_time(device->machine)), cpuexec_describe_context(device->machine), tms5220_status_r(state->tms, 0));
+		logerror("(%f)%s:TMS5220 status read = %02X\n", device->machine->time().as_double(), device->machine->describe_context(), tms5220_status_r(state->tms, 0));
 		return tms5220_status_r(state->tms, 0);
 	}
 	else
@@ -560,21 +559,21 @@ static void sh8253_register_state_globals(device_t *device)
 {
 	exidy_sound_state *state = get_safe_token(device);
 
-	state_save_register_device_item(device, 0, state->sh8253_timer[0].clstate);
-	state_save_register_device_item(device, 0, state->sh8253_timer[0].enable);
-	state_save_register_device_item(device, 0, state->sh8253_timer[0].count);
-	state_save_register_device_item(device, 0, state->sh8253_timer[0].step);
-	state_save_register_device_item(device, 0, state->sh8253_timer[0].fraction);
-	state_save_register_device_item(device, 0, state->sh8253_timer[1].clstate);
-	state_save_register_device_item(device, 0, state->sh8253_timer[1].enable);
-	state_save_register_device_item(device, 0, state->sh8253_timer[1].count);
-	state_save_register_device_item(device, 0, state->sh8253_timer[1].step);
-	state_save_register_device_item(device, 0, state->sh8253_timer[1].fraction);
-	state_save_register_device_item(device, 0, state->sh8253_timer[2].clstate);
-	state_save_register_device_item(device, 0, state->sh8253_timer[2].enable);
-	state_save_register_device_item(device, 0, state->sh8253_timer[2].count);
-	state_save_register_device_item(device, 0, state->sh8253_timer[2].step);
-	state_save_register_device_item(device, 0, state->sh8253_timer[2].fraction);
+	device->save_item(NAME(state->sh8253_timer[0].clstate));
+	device->save_item(NAME(state->sh8253_timer[0].enable));
+	device->save_item(NAME(state->sh8253_timer[0].count));
+	device->save_item(NAME(state->sh8253_timer[0].step));
+	device->save_item(NAME(state->sh8253_timer[0].fraction));
+	device->save_item(NAME(state->sh8253_timer[1].clstate));
+	device->save_item(NAME(state->sh8253_timer[1].enable));
+	device->save_item(NAME(state->sh8253_timer[1].count));
+	device->save_item(NAME(state->sh8253_timer[1].step));
+	device->save_item(NAME(state->sh8253_timer[1].fraction));
+	device->save_item(NAME(state->sh8253_timer[2].clstate));
+	device->save_item(NAME(state->sh8253_timer[2].enable));
+	device->save_item(NAME(state->sh8253_timer[2].count));
+	device->save_item(NAME(state->sh8253_timer[2].step));
+	device->save_item(NAME(state->sh8253_timer[2].fraction));
 }
 
 /*************************************
@@ -588,7 +587,7 @@ static WRITE8_DEVICE_HANDLER( exidy_sh8253_w )
 	exidy_sound_state *state = get_safe_token(device);
 	int chan;
 
-	stream_update(state->stream);
+	state->stream->update();
 
 	switch (offset)
 	{
@@ -640,7 +639,7 @@ READ8_DEVICE_HANDLER( exidy_sh6840_r )
 	exidy_sound_state *state = get_safe_token(device);
 
 	/* force an update of the stream */
-	stream_update(state->stream);
+	state->stream->update();
 
 	switch (offset)
 	{
@@ -668,7 +667,7 @@ WRITE8_DEVICE_HANDLER( exidy_sh6840_w )
 	struct sh6840_timer_channel *sh6840_timer = state->sh6840_timer;
 
 	/* force an update of the stream */
-	stream_update(state->stream);
+	state->stream->update();
 
 	switch (offset)
 	{
@@ -729,7 +728,7 @@ WRITE8_DEVICE_HANDLER( exidy_sfxctrl_w )
 {
 	exidy_sound_state *state = get_safe_token(device);
 
-	stream_update(state->stream);
+	state->stream->update();
 
 	switch (offset)
 	{
@@ -819,7 +818,7 @@ static DEVICE_START( venture_common_sh_start )
 	/* 8253 */
 	state->freq_to_step = (double)(1 << 24) / (double)SH8253_CLOCK;
 
-	state_save_register_device_item(device, 0, state->riot_irq_state);
+	device->save_item(NAME(state->riot_irq_state));
 	sh8253_register_state_globals(device);
 }
 
@@ -1009,7 +1008,7 @@ WRITE8_DEVICE_HANDLER( victory_sound_command_w )
 
 	if (VICTORY_LOG_SOUND) logerror("%04X:!!!! Sound command = %02X\n", cpu_get_previouspc(state->maincpu), data);
 
-	timer_call_after_resynch(device->machine, state->pia1, data, delayed_command_w);
+	device->machine->scheduler().synchronize(FUNC(delayed_command_w), data, state->pia1);
 }
 
 
@@ -1017,7 +1016,7 @@ static WRITE8_DEVICE_HANDLER( victory_sound_irq_clear_w )
 {
 	exidy_sound_state *state = get_safe_token(device);
 
-	if (VICTORY_LOG_SOUND) logerror("%s:!!!! Sound IRQ clear = %02X\n", cpuexec_describe_context(device->machine), data);
+	if (VICTORY_LOG_SOUND) logerror("%s:!!!! Sound IRQ clear = %02X\n", device->machine->describe_context(), data);
 
 	if (!data) pia6821_ca1_w(state->pia1, 1);
 }
@@ -1027,7 +1026,7 @@ static WRITE8_DEVICE_HANDLER( victory_main_ack_w )
 {
 	exidy_sound_state *state = get_safe_token(device);
 
-	if (VICTORY_LOG_SOUND) logerror("%s:!!!! Sound Main ACK W = %02X\n", cpuexec_describe_context(device->machine), data);
+	if (VICTORY_LOG_SOUND) logerror("%s:!!!! Sound Main ACK W = %02X\n", device->machine->describe_context(), data);
 
 	if (state->victory_sound_response_ack_clk && !data)
 		pia6821_cb1_w(state->pia1, 1);
@@ -1058,7 +1057,7 @@ static DEVICE_START( victory_sound )
 {
 	exidy_sound_state *state = get_safe_token(device);
 
-	state_save_register_device_item(device, 0, state->victory_sound_response_ack_clk);
+	device->save_item(NAME(state->victory_sound_response_ack_clk));
 
 	DEVICE_START_CALL(venture_common_sh_start);
 	state->tms = device->machine->device("tms");

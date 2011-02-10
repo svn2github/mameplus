@@ -265,7 +265,7 @@ static void wave_dma_execute(address_space *space)
 	wave_dma.flag = (wave_dma.indirect & 1) ? 1 : 0;
 	/* Note: if you trigger an instant DMA IRQ trigger, sfz3upper doesn't play any bgm. */
 	/* TODO: timing of this */
-	timer_set(space->machine, ATTOTIME_IN_USEC(300), NULL, 0, aica_dma_irq);
+	space->machine->scheduler().timer_set(attotime::from_usec(300), FUNC(aica_dma_irq));
 }
 
 static void pvr_dma_execute(address_space *space)
@@ -303,7 +303,7 @@ static void pvr_dma_execute(address_space *space)
 	}
 	/* Note: do not update the params, since this DMA type doesn't support it. */
 	/* TODO: timing of this */
-	timer_set(space->machine, ATTOTIME_IN_USEC(250), NULL, 0, pvr_dma_irq);
+	space->machine->scheduler().timer_set(attotime::from_usec(250), FUNC(pvr_dma_irq));
 }
 
 // register decode helpers
@@ -318,7 +318,7 @@ INLINE int decode_reg32_64(running_machine *machine, UINT32 offset, UINT64 mem_m
 	// non 32-bit accesses have not yet been seen here, we need to know when they are
 	if ((mem_mask != U64(0xffffffff00000000)) && (mem_mask != U64(0x00000000ffffffff)))
 	{
-		mame_printf_verbose("%s:Wrong mask!\n", cpuexec_describe_context(machine));
+		mame_printf_verbose("%s:Wrong mask!\n", machine->describe_context());
 //      debugger_break(machine);
 	}
 
@@ -342,7 +342,7 @@ INLINE int decode_reg3216_64(running_machine *machine, UINT32 offset, UINT64 mem
 	if ((mem_mask != U64(0x0000ffff00000000)) && (mem_mask != U64(0x000000000000ffff)) &&
 	    (mem_mask != U64(0xffffffff00000000)) && (mem_mask != U64(0x00000000ffffffff)))
 	{
-		mame_printf_verbose("%s:Wrong mask!\n", cpuexec_describe_context(machine));
+		mame_printf_verbose("%s:Wrong mask!\n", machine->describe_context());
 //      debugger_break(machine);
 	}
 
@@ -689,10 +689,10 @@ WRITE64_HANDLER( dc_sysctrl_w )
 					dc_sysctrl_regs[SB_C2DSTAT]=address+ddtdata.length;
 
 				/* 200 usecs breaks sfz3upper */
-				timer_set(space->machine, ATTOTIME_IN_USEC(50), NULL, 0, ch2_dma_irq);
+				space->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(ch2_dma_irq));
 				/* simulate YUV FIFO processing here */
 				if((address & 0x1800000) == 0x0800000)
-					timer_set(space->machine, ATTOTIME_IN_USEC(500), NULL, 0, yuv_fifo_irq);
+					space->machine->scheduler().timer_set(attotime::from_usec(500), FUNC(yuv_fifo_irq));
 			}
 			break;
 
@@ -1066,7 +1066,7 @@ WRITE64_HANDLER( naomi_maple_w )
 
 					if (endflag)
 					{
-						timer_set(space->machine, ATTOTIME_IN_USEC(200), NULL, 0, maple_dma_irq);
+						space->machine->scheduler().timer_set(attotime::from_usec(200), FUNC(maple_dma_irq));
 						break;
 					}
 					// skip fixed packet header
@@ -1215,7 +1215,7 @@ WRITE64_HANDLER( dc_maple_w )
 
 					if (endflag)
 					{
-						timer_set(space->machine, ATTOTIME_IN_USEC(200), NULL, 0, maple_dma_irq);
+						space->machine->scheduler().timer_set(attotime::from_usec(200), FUNC(maple_dma_irq));
 						break;
 					}
 					// skip fixed packet header
@@ -1333,7 +1333,7 @@ WRITE64_HANDLER( dc_g1_ctrl_w )
 			sh4_dma_ddt(space->machine->device("maincpu"), &ddtdata);
 			/* Note: KOF Neowave definitely wants this to be delayed (!) */
 			/* FIXME: timing of this */
-			timer_set(space->machine, ATTOTIME_IN_USEC(500), NULL, 0, gdrom_dma_irq);
+			space->machine->scheduler().timer_set(attotime::from_usec(500), FUNC(gdrom_dma_irq));
 		}
 		break;
 	}
@@ -1556,7 +1556,7 @@ WRITE64_HANDLER( dc_rtc_w )
 		if (dc_rtcregister[RTC3] == 0)
 			dc_rtcregister[reg] = old;
 		else
-			timer_adjust_periodic(dc_rtc_timer, attotime_zero, 0, ATTOTIME_IN_SEC(1));
+			dc_rtc_timer->adjust(attotime::zero, 0, attotime::from_seconds(1));
 		break;
 	case RTC3:
 		dc_rtcregister[RTC3] &= 1;
@@ -1609,7 +1609,7 @@ static void rtc_initial_setup(running_machine *machine)
 	dc_rtcregister[RTC2] = current_time & 0x0000ffff;
 	dc_rtcregister[RTC1] = (current_time & 0xffff0000) >> 16;
 
-	dc_rtc_timer = timer_alloc(machine, dc_rtc_increment, 0);
+	dc_rtc_timer = machine->scheduler().timer_alloc(FUNC(dc_rtc_increment));
 }
 
 MACHINE_START( dc )
@@ -1626,7 +1626,7 @@ MACHINE_RESET( dc )
 	memset(maple_regs, 0, sizeof(maple_regs));
 	memset(dc_coin_counts, 0, sizeof(dc_coin_counts));
 
-	timer_adjust_periodic(dc_rtc_timer, attotime_zero, 0, ATTOTIME_IN_SEC(1));
+	dc_rtc_timer->adjust(attotime::zero, 0, attotime::from_seconds(1));
 
 	dc_sysctrl_regs[SB_SBREV] = 0x0b;
 

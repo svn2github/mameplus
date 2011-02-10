@@ -9,7 +9,6 @@
 */
 
 #include "emu.h"
-#include "streams.h"
 #include "aica.h"
 #include "aicadsp.h"
 
@@ -518,9 +517,9 @@ static void AICA_Init(device_t *device, aica_state *AICA, const aica_interface *
 		}
 	}
 
-	AICA->timerA = timer_alloc(device->machine, timerA_cb, AICA);
-	AICA->timerB = timer_alloc(device->machine, timerB_cb, AICA);
-	AICA->timerC = timer_alloc(device->machine, timerC_cb, AICA);
+	AICA->timerA = device->machine->scheduler().timer_alloc(FUNC(timerA_cb), AICA);
+	AICA->timerB = device->machine->scheduler().timer_alloc(FUNC(timerB_cb), AICA);
+	AICA->timerC = device->machine->scheduler().timer_alloc(FUNC(timerC_cb), AICA);
 
 	for(i=0;i<0x400;++i)
 	{
@@ -723,7 +722,7 @@ static void AICA_UpdateReg(aica_state *AICA, int reg)
 					time = (44100 / AICA->TimPris[0]) / (255-(AICA->udata.data[0x90/2]&0xff));
 					if (time)
 					{
-						timer_adjust_oneshot(AICA->timerA, ATTOTIME_IN_HZ(time), 0);
+						AICA->timerA->adjust(attotime::from_hz(time));
 					}
 				}
 			}
@@ -742,7 +741,7 @@ static void AICA_UpdateReg(aica_state *AICA, int reg)
 					time = (44100 / AICA->TimPris[1]) / (255-(AICA->udata.data[0x94/2]&0xff));
 					if (time)
 					{
-						timer_adjust_oneshot(AICA->timerB, ATTOTIME_IN_HZ(time), 0);
+						AICA->timerB->adjust(attotime::from_hz(time));
 					}
 				}
 			}
@@ -761,7 +760,7 @@ static void AICA_UpdateReg(aica_state *AICA, int reg)
 					time = (44100 / AICA->TimPris[2]) / (255-(AICA->udata.data[0x98/2]&0xff));
 					if (time)
 					{
-						timer_adjust_oneshot(AICA->timerC, ATTOTIME_IN_HZ(time), 0);
+						AICA->timerC->adjust(attotime::from_hz(time));
 					}
 				}
 			}
@@ -1255,7 +1254,7 @@ static DEVICE_START( aica )
 	{
 		AICA->IntARMCB = intf->irq_callback;
 
-		AICA->stream = stream_create(device, 0, 2, 44100, AICA, AICA_Update);
+		AICA->stream = device->machine->sound().stream_alloc(*device, 0, 2, 44100, AICA, AICA_Update);
 	}
 }
 

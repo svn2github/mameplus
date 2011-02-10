@@ -38,7 +38,7 @@ static WRITE8_HANDLER( jamma_if_control_latch_w )
 	UINT8 diff = data ^ jamma_if_control_latch;
 	jamma_if_control_latch = data;
 
-	sound_global_enable( space->machine, (data >> 7) & 1 );
+	space->machine->sound().system_enable( (data >> 7) & 1 );
 
 	if ( diff & 0x40 )
 	{
@@ -193,7 +193,7 @@ static MACHINE_CONFIG_START( uapce, driver_device )
 	MCFG_CPU_ADD("sub", Z80, 1400000)
 	MCFG_CPU_PROGRAM_MAP(z80_map)
 
-	MCFG_QUANTUM_TIME(HZ(60))
+	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
 	MCFG_MACHINE_RESET( uapce )
 

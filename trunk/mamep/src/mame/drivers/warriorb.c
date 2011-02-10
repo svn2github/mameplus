@@ -556,9 +556,9 @@ static MACHINE_START( warriorb )
 	state->_2610_2l = machine->device("2610.2.l");
 	state->_2610_2r = machine->device("2610.2.r");
 
-	state_save_register_global(machine, state->banknum);
-	state_save_register_global_array(machine, state->pandata);
-	state_save_register_postload(machine, warriorb_postload, NULL);
+	state->save_item(NAME(state->banknum));
+	state->save_item(NAME(state->pandata));
+	machine->state().register_postload(warriorb_postload, NULL);
 }
 
 static MACHINE_RESET( taito_dualscreen )
@@ -568,7 +568,7 @@ static MACHINE_RESET( taito_dualscreen )
 	state->banknum = 0;
 
 	/**** mixer control enable ****/
-	sound_global_enable(machine, 1);	/* mixer enabled */
+	machine->sound().system_enable(true);	/* mixer enabled */
 }
 
 static MACHINE_CONFIG_START( darius2d, warriorb_state )

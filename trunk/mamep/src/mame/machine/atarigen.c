@@ -54,8 +54,8 @@
     CONSTANTS
 ***************************************************************************/
 
-#define SOUND_TIMER_RATE			ATTOTIME_IN_USEC(5)
-#define SOUND_TIMER_BOOST			ATTOTIME_IN_USEC(100)
+#define SOUND_TIMER_RATE			attotime::from_usec(5)
+#define SOUND_TIMER_BOOST			attotime::from_usec(100)
 
 
 
@@ -119,53 +119,53 @@ void atarigen_init(running_machine *machine)
 	for (i = 0, screen = machine->first_screen(); screen != NULL; i++, screen = screen->next_screen())
 	{
 		state->screen_timer[i].screen = screen;
-		state->screen_timer[i].scanline_interrupt_timer = timer_alloc(machine, scanline_interrupt_callback, (void *)screen);
-		state->screen_timer[i].scanline_timer = timer_alloc(machine, scanline_timer_callback, (void *)screen);
-		state->screen_timer[i].atarivc_eof_update_timer = timer_alloc(machine, atarivc_eof_update, (void *)screen);
+		state->screen_timer[i].scanline_interrupt_timer = machine->scheduler().timer_alloc(FUNC(scanline_interrupt_callback), (void *)screen);
+		state->screen_timer[i].scanline_timer = machine->scheduler().timer_alloc(FUNC(scanline_timer_callback), (void *)screen);
+		state->screen_timer[i].atarivc_eof_update_timer = machine->scheduler().timer_alloc(FUNC(atarivc_eof_update), (void *)screen);
 	}
 
-	state_save_register_global(machine, state->scanline_int_state);
-	state_save_register_global(machine, state->sound_int_state);
-	state_save_register_global(machine, state->video_int_state);
+	state->save_item(NAME(state->scanline_int_state));
+	state->save_item(NAME(state->sound_int_state));
+	state->save_item(NAME(state->video_int_state));
 
-	state_save_register_global(machine, state->cpu_to_sound_ready);
-	state_save_register_global(machine, state->sound_to_cpu_ready);
+	state->save_item(NAME(state->cpu_to_sound_ready));
+	state->save_item(NAME(state->sound_to_cpu_ready));
 
-	state_save_register_global(machine, state->atarivc_state.latch1);				/* latch #1 value (-1 means disabled) */
-	state_save_register_global(machine, state->atarivc_state.latch2);				/* latch #2 value (-1 means disabled) */
-	state_save_register_global(machine, state->atarivc_state.rowscroll_enable);		/* true if row-scrolling is enabled */
-	state_save_register_global(machine, state->atarivc_state.palette_bank);			/* which palette bank is enabled */
-	state_save_register_global(machine, state->atarivc_state.pf0_xscroll);			/* playfield 1 xscroll */
-	state_save_register_global(machine, state->atarivc_state.pf0_xscroll_raw);		/* playfield 1 xscroll raw value */
-	state_save_register_global(machine, state->atarivc_state.pf0_yscroll);			/* playfield 1 yscroll */
-	state_save_register_global(machine, state->atarivc_state.pf1_xscroll);			/* playfield 2 xscroll */
-	state_save_register_global(machine, state->atarivc_state.pf1_xscroll_raw);		/* playfield 2 xscroll raw value */
-	state_save_register_global(machine, state->atarivc_state.pf1_yscroll);			/* playfield 2 yscroll */
-	state_save_register_global(machine, state->atarivc_state.mo_xscroll);			/* sprite xscroll */
-	state_save_register_global(machine, state->atarivc_state.mo_yscroll);			/* sprite xscroll */
+	state->save_item(NAME(state->atarivc_state.latch1));				/* latch #1 value (-1 means disabled) */
+	state->save_item(NAME(state->atarivc_state.latch2));				/* latch #2 value (-1 means disabled) */
+	state->save_item(NAME(state->atarivc_state.rowscroll_enable));		/* true if row-scrolling is enabled */
+	state->save_item(NAME(state->atarivc_state.palette_bank));			/* which palette bank is enabled */
+	state->save_item(NAME(state->atarivc_state.pf0_xscroll));			/* playfield 1 xscroll */
+	state->save_item(NAME(state->atarivc_state.pf0_xscroll_raw));		/* playfield 1 xscroll raw value */
+	state->save_item(NAME(state->atarivc_state.pf0_yscroll));			/* playfield 1 yscroll */
+	state->save_item(NAME(state->atarivc_state.pf1_xscroll));			/* playfield 2 xscroll */
+	state->save_item(NAME(state->atarivc_state.pf1_xscroll_raw));		/* playfield 2 xscroll raw value */
+	state->save_item(NAME(state->atarivc_state.pf1_yscroll));			/* playfield 2 yscroll */
+	state->save_item(NAME(state->atarivc_state.mo_xscroll));			/* sprite xscroll */
+	state->save_item(NAME(state->atarivc_state.mo_yscroll));			/* sprite xscroll */
 
-	state_save_register_global(machine, state->eeprom_unlocked);
+	state->save_item(NAME(state->eeprom_unlocked));
 
-	state_save_register_global(machine, state->slapstic_num);
-	state_save_register_global(machine, state->slapstic_bank);
-	state_save_register_global(machine, state->slapstic_last_pc);
-	state_save_register_global(machine, state->slapstic_last_address);
+	state->save_item(NAME(state->slapstic_num));
+	state->save_item(NAME(state->slapstic_bank));
+	state->save_item(NAME(state->slapstic_last_pc));
+	state->save_item(NAME(state->slapstic_last_address));
 
-	state_save_register_global(machine, state->cpu_to_sound);
-	state_save_register_global(machine, state->sound_to_cpu);
-	state_save_register_global(machine, state->timed_int);
-	state_save_register_global(machine, state->ym2151_int);
+	state->save_item(NAME(state->cpu_to_sound));
+	state->save_item(NAME(state->sound_to_cpu));
+	state->save_item(NAME(state->timed_int));
+	state->save_item(NAME(state->ym2151_int));
 
-	state_save_register_global(machine, state->scanlines_per_callback);
+	state->save_item(NAME(state->scanlines_per_callback));
 
-	state_save_register_global(machine, state->actual_vc_latch0);
-	state_save_register_global(machine, state->actual_vc_latch1);
+	state->save_item(NAME(state->actual_vc_latch0));
+	state->save_item(NAME(state->actual_vc_latch1));
 
-	state_save_register_global(machine, state->playfield_latch);
-	state_save_register_global(machine, state->playfield2_latch);
+	state->save_item(NAME(state->playfield_latch));
+	state->save_item(NAME(state->playfield2_latch));
 
 	/* need a postload to reset the state */
-	state_save_register_postload(machine, slapstic_postload, NULL);
+	machine->state().register_postload(slapstic_postload, NULL);
 }
 
 
@@ -210,7 +210,7 @@ void atarigen_update_interrupts(running_machine *machine)
 void atarigen_scanline_int_set(screen_device &screen, int scanline)
 {
 	emu_timer *timer = get_screen_timer(screen)->scanline_interrupt_timer;
-	timer_adjust_oneshot(timer, screen.time_until_pos(scanline), 0);
+	timer->adjust(screen.time_until_pos(scanline));
 }
 
 
@@ -326,7 +326,7 @@ static TIMER_CALLBACK( scanline_interrupt_callback )
 	atarigen_scanline_int_gen(machine->device("maincpu"));
 
 	/* set a new timer to go off at the same scan line next frame */
-	timer_adjust_oneshot(timer, screen.frame_period(), 0);
+	timer->adjust(screen.frame_period());
 }
 
 
@@ -639,7 +639,7 @@ void atarigen_ym2151_irq_gen(device_t *device, int irq)
 
 WRITE16_HANDLER( atarigen_sound_reset_w )
 {
-	timer_call_after_resynch(space->machine, NULL, 0, delayed_sound_reset);
+	space->machine->scheduler().synchronize(FUNC(delayed_sound_reset));
 }
 
 
@@ -650,7 +650,7 @@ WRITE16_HANDLER( atarigen_sound_reset_w )
 
 void atarigen_sound_reset(running_machine *machine)
 {
-	timer_call_after_resynch(machine, NULL, 1, delayed_sound_reset);
+	machine->scheduler().synchronize(FUNC(delayed_sound_reset), 1);
 }
 
 
@@ -664,19 +664,19 @@ void atarigen_sound_reset(running_machine *machine)
 WRITE16_HANDLER( atarigen_sound_w )
 {
 	if (ACCESSING_BITS_0_7)
-		timer_call_after_resynch(space->machine, NULL, data & 0xff, delayed_sound_w);
+		space->machine->scheduler().synchronize(FUNC(delayed_sound_w), data & 0xff);
 }
 
 WRITE16_HANDLER( atarigen_sound_upper_w )
 {
 	if (ACCESSING_BITS_8_15)
-		timer_call_after_resynch(space->machine, NULL, (data >> 8) & 0xff, delayed_sound_w);
+		space->machine->scheduler().synchronize(FUNC(delayed_sound_w), (data >> 8) & 0xff);
 }
 
 WRITE32_HANDLER( atarigen_sound_upper32_w )
 {
 	if (ACCESSING_BITS_24_31)
-		timer_call_after_resynch(space->machine, NULL, (data >> 24) & 0xff, delayed_sound_w);
+		space->machine->scheduler().synchronize(FUNC(delayed_sound_w), (data >> 24) & 0xff);
 }
 
 
@@ -719,7 +719,7 @@ READ32_HANDLER( atarigen_sound_upper32_r )
 
 WRITE8_HANDLER( atarigen_6502_sound_w )
 {
-	timer_call_after_resynch(space->machine, NULL, data, delayed_6502_sound_w);
+	space->machine->scheduler().synchronize(FUNC(delayed_6502_sound_w), data);
 }
 
 
@@ -777,7 +777,7 @@ static TIMER_CALLBACK( delayed_sound_reset )
 
 	/* allocate a high frequency timer until a response is generated */
 	/* the main CPU is *very* sensistive to the timing of the response */
-	cpuexec_boost_interleave(machine, SOUND_TIMER_RATE, SOUND_TIMER_BOOST);
+	machine->scheduler().boost_interleave(SOUND_TIMER_RATE, SOUND_TIMER_BOOST);
 }
 
 
@@ -801,7 +801,7 @@ static TIMER_CALLBACK( delayed_sound_w )
 
 	/* allocate a high frequency timer until a response is generated */
 	/* the main CPU is *very* sensistive to the timing of the response */
-	cpuexec_boost_interleave(machine, SOUND_TIMER_RATE, SOUND_TIMER_BOOST);
+	machine->scheduler().boost_interleave(SOUND_TIMER_RATE, SOUND_TIMER_BOOST);
 }
 
 
@@ -840,7 +840,7 @@ void atarigen_set_vol(running_machine *machine, int volume, device_type type)
 	device_sound_interface *sound = NULL;
 	for (bool gotone = machine->m_devicelist.first(sound); gotone; gotone = sound->next(sound))
 		if (sound->device().type() == type)
-			sound_set_output_gain(*sound, ALL_OUTPUTS, volume / 100.0);
+			sound->set_output_gain(ALL_OUTPUTS, volume / 100.0);
 }
 
 
@@ -896,7 +896,7 @@ void atarigen_scanline_timer_reset(screen_device &screen, atarigen_scanline_func
 	if (state->scanline_callback != NULL)
 	{
 		emu_timer *timer = get_screen_timer(screen)->scanline_timer;
-		timer_adjust_oneshot(timer, screen.time_until_pos(0), 0);
+		timer->adjust(screen.time_until_pos(0));
 	}
 }
 
@@ -921,7 +921,7 @@ static TIMER_CALLBACK( scanline_timer_callback )
 		scanline += state->scanlines_per_callback;
 		if (scanline >= screen.height())
 			scanline = 0;
-		timer_adjust_oneshot(get_screen_timer(screen)->scanline_timer, screen.time_until_pos(scanline), scanline);
+		get_screen_timer(screen)->scanline_timer->adjust(screen.time_until_pos(scanline), scanline);
 	}
 }
 
@@ -960,7 +960,7 @@ static TIMER_CALLBACK( atarivc_eof_update )
 		tilemap_set_scrollx(state->playfield2_tilemap, 0, state->atarivc_state.pf1_xscroll);
 		tilemap_set_scrolly(state->playfield2_tilemap, 0, state->atarivc_state.pf1_yscroll);
 	}
-	timer_adjust_oneshot(timer, screen.time_until_pos(0), 0);
+	timer->adjust(screen.time_until_pos(0));
 
 	/* use this for debugging the video controller values */
 #if 0
@@ -1003,7 +1003,7 @@ void atarivc_reset(screen_device &screen, UINT16 *eof_data, int playfields)
 	if (state->atarivc_eof_data)
 	{
 		emu_timer *timer = get_screen_timer(screen)->atarivc_eof_update_timer;
-		timer_adjust_oneshot(timer, screen.time_until_pos(0), 0);
+		timer->adjust(screen.time_until_pos(0));
 	}
 }
 
@@ -1376,15 +1376,13 @@ void atarigen_halt_until_hblank_0(screen_device &screen)
 	int hpos = screen.hpos();
 	int width = screen.width();
 	int hblank = width * 9 / 10;
-	double fraction;
 
 	/* if we're in hblank, set up for the next one */
 	if (hpos >= hblank)
 		hblank += width;
 
 	/* halt and set a timer to wake up */
-	fraction = (double)(hblank - hpos) / (double)width;
-	timer_set(screen.machine, double_to_attotime(attotime_to_double(screen.scan_period()) * fraction), (void *)cpu, 0, unhalt_cpu);
+	screen.machine->scheduler().timer_set(screen.scan_period() * (hblank - hpos) / width, FUNC(unhalt_cpu), 0, (void *)cpu);
 	cpu_set_input_line(cpu, INPUT_LINE_HALT, ASSERT_LINE);
 }
 
@@ -1564,8 +1562,8 @@ void atarigen_state::machine_start()
 	// until everyone is converted to modern devices, call our parent
 	driver_device::machine_start();
 
-	state_save_register_device_item(this, 0, m_earom_data);
-	state_save_register_device_item(this, 0, m_earom_control);
+	save_item(NAME(m_earom_data));
+	save_item(NAME(m_earom_control));
 }
 
 

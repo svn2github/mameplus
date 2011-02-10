@@ -136,7 +136,7 @@ static TIMER_CALLBACK( generate_interrupt )
 	scanline += 32;
 	if (scanline > 256)
 		scanline = 32;
-	timer_adjust_oneshot(state->interrupt_timer, machine->primary_screen->time_until_pos(scanline), scanline);
+	state->interrupt_timer->adjust(machine->primary_screen->time_until_pos(scanline), scanline);
 }
 
 
@@ -158,14 +158,14 @@ static MACHINE_START( jedi )
 	jedi_state *state = machine->driver_data<jedi_state>();
 
 	/* set a timer to run the interrupts */
-	state->interrupt_timer = timer_alloc(machine, generate_interrupt, NULL);
-	timer_adjust_oneshot(state->interrupt_timer, machine->primary_screen->time_until_pos(32), 32);
+	state->interrupt_timer = machine->scheduler().timer_alloc(FUNC(generate_interrupt));
+	state->interrupt_timer->adjust(machine->primary_screen->time_until_pos(32), 32);
 
 	/* configure the banks */
 	memory_configure_bank(machine, "bank1", 0, 3, machine->region("maincpu")->base() + 0x10000, 0x4000);
 
 	/* set up save state */
-	state_save_register_global(machine, state->nvram_enabled);
+	state->save_item(NAME(state->nvram_enabled));
 }
 
 
@@ -348,7 +348,7 @@ static MACHINE_CONFIG_START( jedi, jedi_state )
 	MCFG_CPU_ADD("maincpu", M6502, JEDI_MAIN_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
-	MCFG_QUANTUM_TIME(HZ(240))
+	MCFG_QUANTUM_TIME(attotime::from_hz(240))
 
 	MCFG_MACHINE_START(jedi)
 	MCFG_MACHINE_RESET(jedi)

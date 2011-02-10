@@ -374,7 +374,7 @@ static void draw_sprites(screen_device &screen, bitmap_t *bitmap, const rectangl
 
 						/* check the collisions bit */
 						if (check_collision && (palette[2 * pen] & 0x80) && (count++ < 128))
-							timer_set(screen.machine, screen.time_until_pos(yoffs, currx), NULL, currx, collide_firq_callback);
+							screen.machine->scheduler().timer_set(screen.time_until_pos(yoffs, currx), FUNC(collide_firq_callback), currx);
 					}
 					currx++;
 
@@ -387,7 +387,7 @@ static void draw_sprites(screen_device &screen, bitmap_t *bitmap, const rectangl
 
 						/* check the collisions bit */
 						if (check_collision && (palette[2 * pen] & 0x80) && (count++ < 128))
-							timer_set(screen.machine, screen.time_until_pos(yoffs, currx), NULL, currx, collide_firq_callback);
+							screen.machine->scheduler().timer_set(screen.time_until_pos(yoffs, currx), FUNC(collide_firq_callback), currx);
 					}
 					currx++;
 				}
@@ -454,12 +454,12 @@ static VIDEO_UPDATE( exidy440 )
             From this, it appears that they are expecting to get beams over
             a 12 scanline period, and trying to pick roughly the middle one.
             This is how it is implemented. */
-		attoseconds_t increment = attotime_to_attoseconds(screen->scan_period());
-		attotime time = attotime_sub(screen->time_until_pos(beamy, beamx), attotime_make(0, increment * 6));
+		attotime increment = screen->scan_period();
+		attotime time = screen->time_until_pos(beamy, beamx) - increment * 6;
 		for (i = 0; i <= 12; i++)
 		{
-			timer_set(screen->machine, time, NULL, beamx, beam_firq_callback);
-			time = attotime_add(time, attotime_make(0, increment));
+			screen->machine->scheduler().timer_set(time, FUNC(beam_firq_callback), beamx);
+			time += increment;
 		}
 	}
 

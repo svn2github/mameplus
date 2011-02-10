@@ -848,7 +848,7 @@ static MACHINE_START( hornet )
 	state_save_register_global_pointer(machine, jvs_sdata, 1024);
 	state_save_register_global(machine, jvs_sdata_ptr);
 
-    sound_irq_timer = timer_alloc(machine, irq_off, 0);
+    sound_irq_timer = machine->scheduler().timer_alloc(FUNC(irq_off));
 }
 
 static MACHINE_RESET( hornet )
@@ -886,7 +886,7 @@ static void sound_irq_callback( running_machine *machine, int irq )
 	int line = (irq == 0) ? INPUT_LINE_IRQ1 : INPUT_LINE_IRQ2;
 
 	cputag_set_input_line(machine, "audiocpu", line, ASSERT_LINE);
-    timer_adjust_oneshot(sound_irq_timer, ATTOTIME_IN_USEC(1), line);
+    sound_irq_timer->adjust(attotime::from_usec(1), line);
 }
 
 static const k056800_interface hornet_k056800_interface =
@@ -932,7 +932,7 @@ static MACHINE_CONFIG_START( hornet, driver_device )
 	MCFG_CPU_CONFIG(sharc_cfg)
 	MCFG_CPU_DATA_MAP(sharc0_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START( hornet )
 	MCFG_MACHINE_RESET( hornet )

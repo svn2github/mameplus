@@ -1123,7 +1123,7 @@ static MACHINE_CONFIG_START( driver_nomsp, harddriv_state )
 	MCFG_CPU_PROGRAM_MAP(driver_gsp_map)
 	MCFG_CPU_CONFIG(gsp_config_driver)
 
-	MCFG_QUANTUM_TIME(HZ(30000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(30000))
 
 	MCFG_MACHINE_START(harddriv)
 	MCFG_MACHINE_RESET(harddriv)
@@ -1218,7 +1218,7 @@ static MACHINE_CONFIG_FRAGMENT( ds3 )
 	MCFG_CPU_PROGRAM_MAP(ds3_program_map)
 	MCFG_CPU_DATA_MAP(ds3_data_map)
 
-	MCFG_QUANTUM_TIME(HZ(60000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(60000))
 MACHINE_CONFIG_END
 
 
@@ -1258,7 +1258,7 @@ static MACHINE_CONFIG_FRAGMENT( dsk )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("dsp32", DSP32C, 40000000)
-	MCFG_CPU_CONFIG(dsp32c_config)
+	MCFG_DSP32C_CONFIG(dsp32c_config)
 	MCFG_CPU_PROGRAM_MAP(dsk_dsp32_map)
 
 	/* ASIC65 */
@@ -1271,7 +1271,7 @@ static MACHINE_CONFIG_FRAGMENT( dsk2 )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("dsp32", DSP32C, 40000000)
-	MCFG_CPU_CONFIG(dsp32c_config)
+	MCFG_DSP32C_CONFIG(dsp32c_config)
 	MCFG_CPU_PROGRAM_MAP(dsk2_dsp32_map)
 
 	/* ASIC65 */

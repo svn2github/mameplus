@@ -117,8 +117,8 @@ static WRITE8_HANDLER( analog_reset_w )
 
 	state->analog_port_val = 0xff;
 
-	timer_adjust_oneshot(state->analog_timer_1, compute_duration(space->cpu, input_port_read(space->machine, "AN1")), 0x02);
-	timer_adjust_oneshot(state->analog_timer_2, compute_duration(space->cpu, input_port_read(space->machine, "AN2")), 0x01);
+	state->analog_timer_1->adjust(compute_duration(space->cpu, input_port_read(space->machine, "AN1")), 0x02);
+	state->analog_timer_2->adjust(compute_duration(space->cpu, input_port_read(space->machine, "AN2")), 0x01);
 }
 
 
@@ -132,8 +132,8 @@ static READ8_HANDLER( analog_r )
 static void create_analog_timers( running_machine *machine )
 {
 	clayshoo_state *state = machine->driver_data<clayshoo_state>();
-	state->analog_timer_1 = timer_alloc(machine, reset_analog_bit, NULL);
-	state->analog_timer_2 = timer_alloc(machine, reset_analog_bit, NULL);
+	state->analog_timer_1 = machine->scheduler().timer_alloc(FUNC(reset_analog_bit));
+	state->analog_timer_2 = machine->scheduler().timer_alloc(FUNC(reset_analog_bit));
 }
 
 
@@ -171,8 +171,8 @@ static MACHINE_START( clayshoo )
 	create_analog_timers(machine);
 
 	/* register for state saving */
-	state_save_register_global(machine, state->input_port_select);
-	state_save_register_global(machine, state->analog_port_val);
+	state->save_item(NAME(state->input_port_select));
+	state->save_item(NAME(state->analog_port_val));
 }
 
 

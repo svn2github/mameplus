@@ -27,7 +27,6 @@
 */
 
 #include "emu.h"
-#include "streams.h"
 #include "scsp.h"
 #include "scspdsp.h"
 
@@ -548,9 +547,9 @@ static void SCSP_Init(device_t *device, scsp_state *scsp, const scsp_interface *
 		scsp->SCSPRAM += intf->roffset;
 	}
 
-	scsp->timerA = timer_alloc(device->machine, timerA_cb, scsp);
-	scsp->timerB = timer_alloc(device->machine, timerB_cb, scsp);
-	scsp->timerC = timer_alloc(device->machine, timerC_cb, scsp);
+	scsp->timerA = device->machine->scheduler().timer_alloc(FUNC(timerA_cb), scsp);
+	scsp->timerB = device->machine->scheduler().timer_alloc(FUNC(timerB_cb), scsp);
+	scsp->timerC = device->machine->scheduler().timer_alloc(FUNC(timerC_cb), scsp);
 
 	for(i=0;i<0x400;++i)
 	{
@@ -740,7 +739,7 @@ static void SCSP_UpdateReg(scsp_state *scsp, int reg)
 					time = (44100 / scsp->TimPris[0]) / (255-(scsp->udata.data[0x18/2]&0xff));
 					if (time)
 					{
-						timer_adjust_oneshot(scsp->timerA, ATTOTIME_IN_HZ(time), 0);
+						scsp->timerA->adjust(attotime::from_hz(time));
 					}
 				}
 			}
@@ -759,7 +758,7 @@ static void SCSP_UpdateReg(scsp_state *scsp, int reg)
 					time = (44100 / scsp->TimPris[1]) / (255-(scsp->udata.data[0x1A/2]&0xff));
 					if (time)
 					{
-						timer_adjust_oneshot(scsp->timerB, ATTOTIME_IN_HZ(time), 0);
+						scsp->timerB->adjust(attotime::from_hz(time));
 					}
 				}
 			}
@@ -778,7 +777,7 @@ static void SCSP_UpdateReg(scsp_state *scsp, int reg)
 					time = (44100 / scsp->TimPris[2]) / (255-(scsp->udata.data[0x1C/2]&0xff));
 					if (time)
 					{
-						timer_adjust_oneshot(scsp->timerC, ATTOTIME_IN_HZ(time), 0);
+						scsp->timerC->adjust(attotime::from_hz(time));
 					}
 				}
 			}
@@ -1250,7 +1249,7 @@ static DEVICE_START( scsp )
 	{
 		scsp->Int68kCB = intf->irq_callback;
 
-		scsp->stream = stream_create(device, 0, 2, 44100, scsp, SCSP_Update);
+		scsp->stream = device->machine->sound().stream_alloc(*device, 0, 2, 44100, scsp, SCSP_Update);
 	}
 }
 
@@ -1272,7 +1271,7 @@ READ16_DEVICE_HANDLER( scsp_r )
 {
 	scsp_state *scsp = get_safe_token(device);
 
-	stream_update(scsp->stream);
+	scsp->stream->update();
 
 	return SCSP_r16(scsp, offset*2);
 }
@@ -1284,7 +1283,7 @@ WRITE16_DEVICE_HANDLER( scsp_w )
 	scsp_state *scsp = get_safe_token(device);
 	UINT16 tmp, *scsp_regs;
 
-	stream_update(scsp->stream);
+	scsp->stream->update();
 
 	tmp = SCSP_r16(scsp, offset*2);
 	COMBINE_DATA(&tmp);

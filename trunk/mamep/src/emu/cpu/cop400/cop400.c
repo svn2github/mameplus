@@ -886,61 +886,61 @@ static void cop400_init(legacy_cpu_device *device, UINT8 g_mask, UINT8 d_mask, U
 
 	/* allocate serial timer */
 
-	cpustate->serial_timer = timer_alloc(device->machine, serial_tick, cpustate);
-	timer_adjust_periodic(cpustate->serial_timer, attotime_zero, 0, ATTOTIME_IN_HZ(device->clock() / 16));
+	cpustate->serial_timer = device->machine->scheduler().timer_alloc(FUNC(serial_tick), cpustate);
+	cpustate->serial_timer->adjust(attotime::zero, 0, attotime::from_hz(device->clock() / 16));
 
 	/* allocate counter timer */
 
 	if (has_counter)
 	{
-		cpustate->counter_timer = timer_alloc(device->machine, counter_tick, cpustate);
-		timer_adjust_periodic(cpustate->counter_timer, attotime_zero, 0, ATTOTIME_IN_HZ(device->clock() / 16 / 4));
+		cpustate->counter_timer = device->machine->scheduler().timer_alloc(FUNC(counter_tick), cpustate);
+		cpustate->counter_timer->adjust(attotime::zero, 0, attotime::from_hz(device->clock() / 16 / 4));
 	}
 
 	/* allocate IN latch timer */
 
 	if (has_inil)
 	{
-		cpustate->inil_timer = timer_alloc(device->machine, inil_tick, cpustate);
-		timer_adjust_periodic(cpustate->inil_timer, attotime_zero, 0, ATTOTIME_IN_HZ(device->clock() / 16));
+		cpustate->inil_timer = device->machine->scheduler().timer_alloc(FUNC(inil_tick), cpustate);
+		cpustate->inil_timer->adjust(attotime::zero, 0, attotime::from_hz(device->clock() / 16));
 	}
 
 	/* allocate Microbus timer */
 
 	if (cpustate->intf->microbus == COP400_MICROBUS_ENABLED)
 	{
-		cpustate->microbus_timer = timer_alloc(device->machine, microbus_tick, cpustate);
-		timer_adjust_periodic(cpustate->microbus_timer, attotime_zero, 0, ATTOTIME_IN_HZ(device->clock() / 16));
+		cpustate->microbus_timer = device->machine->scheduler().timer_alloc(FUNC(microbus_tick), cpustate);
+		cpustate->microbus_timer->adjust(attotime::zero, 0, attotime::from_hz(device->clock() / 16));
 	}
 
 	/* register for state saving */
 
-	state_save_register_device_item(device, 0, cpustate->pc);
-	state_save_register_device_item(device, 0, cpustate->prevpc);
-	state_save_register_device_item(device, 0, cpustate->n);
-	state_save_register_device_item(device, 0, cpustate->sa);
-	state_save_register_device_item(device, 0, cpustate->sb);
-	state_save_register_device_item(device, 0, cpustate->sc);
-	state_save_register_device_item(device, 0, cpustate->a);
-	state_save_register_device_item(device, 0, cpustate->b);
-	state_save_register_device_item(device, 0, cpustate->c);
-	state_save_register_device_item(device, 0, cpustate->g);
-	state_save_register_device_item(device, 0, cpustate->h);
-	state_save_register_device_item(device, 0, cpustate->q);
-	state_save_register_device_item(device, 0, cpustate->r);
-	state_save_register_device_item(device, 0, cpustate->en);
-	state_save_register_device_item(device, 0, cpustate->sio);
-	state_save_register_device_item(device, 0, cpustate->skl);
-	state_save_register_device_item(device, 0, cpustate->t);
-	state_save_register_device_item(device, 0, cpustate->skip);
-	state_save_register_device_item(device, 0, cpustate->skip_lbi);
-	state_save_register_device_item(device, 0, cpustate->skt_latch);
-	state_save_register_device_item(device, 0, cpustate->si);
-	state_save_register_device_item(device, 0, cpustate->last_skip);
-	state_save_register_device_item_array(device, 0, cpustate->in);
-	state_save_register_device_item(device, 0, cpustate->microbus_int);
-	state_save_register_device_item(device, 0, cpustate->halt);
-	state_save_register_device_item(device, 0, cpustate->idle);
+	device->save_item(NAME(cpustate->pc));
+	device->save_item(NAME(cpustate->prevpc));
+	device->save_item(NAME(cpustate->n));
+	device->save_item(NAME(cpustate->sa));
+	device->save_item(NAME(cpustate->sb));
+	device->save_item(NAME(cpustate->sc));
+	device->save_item(NAME(cpustate->a));
+	device->save_item(NAME(cpustate->b));
+	device->save_item(NAME(cpustate->c));
+	device->save_item(NAME(cpustate->g));
+	device->save_item(NAME(cpustate->h));
+	device->save_item(NAME(cpustate->q));
+	device->save_item(NAME(cpustate->r));
+	device->save_item(NAME(cpustate->en));
+	device->save_item(NAME(cpustate->sio));
+	device->save_item(NAME(cpustate->skl));
+	device->save_item(NAME(cpustate->t));
+	device->save_item(NAME(cpustate->skip));
+	device->save_item(NAME(cpustate->skip_lbi));
+	device->save_item(NAME(cpustate->skt_latch));
+	device->save_item(NAME(cpustate->si));
+	device->save_item(NAME(cpustate->last_skip));
+	device->save_item(NAME(cpustate->in));
+	device->save_item(NAME(cpustate->microbus_int));
+	device->save_item(NAME(cpustate->halt));
+	device->save_item(NAME(cpustate->idle));
 }
 
 static void cop410_init_opcodes(device_t *device)

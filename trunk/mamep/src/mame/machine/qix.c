@@ -238,8 +238,8 @@ MACHINE_START( qixmcu )
 	qix_state *state = machine->driver_data<qix_state>();
 
 	/* set up save states */
-	state_save_register_global_array(machine, state->_68705_port_in);
-	state_save_register_global(machine, state->coinctrl);
+	state->save_item(NAME(state->_68705_port_in));
+	state->save_item(NAME(state->coinctrl));
 }
 
 
@@ -375,7 +375,7 @@ static WRITE8_DEVICE_HANDLER( qixmcu_coinctrl_w )
 		cputag_set_input_line(device->machine, "mcu", M68705_IRQ_LINE, ASSERT_LINE);
 		/* temporarily boost the interleave to sync things up */
 		/* note: I'm using 50 because 30 is not enough for space dungeon at game over */
-		cpuexec_boost_interleave(device->machine, attotime_zero, ATTOTIME_IN_USEC(50));
+		device->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
 	}
 	else
 		cputag_set_input_line(device->machine, "mcu", M68705_IRQ_LINE, CLEAR_LINE);
@@ -480,7 +480,7 @@ WRITE8_DEVICE_HANDLER( qix_pia_w )
 {
 	/* make all the CPUs synchronize, and only AFTER that write the command to the PIA */
 	/* otherwise the 68705 will miss commands */
-	timer_call_after_resynch(device->machine, (void *)device, data | (offset << 8), pia_w_callback);
+	device->machine->scheduler().synchronize(FUNC(pia_w_callback), data | (offset << 8), (void *)device);
 }
 
 

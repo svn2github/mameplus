@@ -193,7 +193,7 @@ INLINE void set_decrementer(powerpc_state *ppc, UINT32 newdec)
 	}
 
 	ppc->dec_zero_cycles = ppc->device->total_cycles() + cycles_until_done;
-	timer_adjust_oneshot(ppc->decrementer_int_timer, ppc->device->cycles_to_attotime(cycles_until_done), 0);
+	ppc->decrementer_int_timer->adjust(ppc->device->cycles_to_attotime(cycles_until_done));
 
 	if ((INT32)curdec >= 0 && (INT32)newdec < 0)
 		ppc->irq_pending |= 0x02;
@@ -328,47 +328,47 @@ void ppccom_init(powerpc_state *ppc, powerpc_flavor flavor, UINT8 cap, int tb_di
 
 	/* allocate a timer for the compare interrupt */
 	if ((cap & PPCCAP_OEA) && (ppc->tb_divisor))
-		ppc->decrementer_int_timer = timer_alloc(device->machine, decrementer_int_callback, ppc);
+		ppc->decrementer_int_timer = device->machine->scheduler().timer_alloc(FUNC(decrementer_int_callback), ppc);
 
 	/* and for the 4XX interrupts if needed */
 	if (cap & PPCCAP_4XX)
 	{
-		ppc->fit_timer = timer_alloc(device->machine, ppc4xx_fit_callback, ppc);
-		ppc->pit_timer = timer_alloc(device->machine, ppc4xx_pit_callback, ppc);
-		ppc->spu.timer = timer_alloc(device->machine, ppc4xx_spu_callback, ppc);
+		ppc->fit_timer = device->machine->scheduler().timer_alloc(FUNC(ppc4xx_fit_callback), ppc);
+		ppc->pit_timer = device->machine->scheduler().timer_alloc(FUNC(ppc4xx_pit_callback), ppc);
+		ppc->spu.timer = device->machine->scheduler().timer_alloc(FUNC(ppc4xx_spu_callback), ppc);
 	}
 
 	/* register for save states */
-	state_save_register_device_item(device, 0, ppc->pc);
-	state_save_register_device_item_array(device, 0, ppc->r);
-	state_save_register_device_item_array(device, 0, ppc->f);
-	state_save_register_device_item_array(device, 0, ppc->cr);
-	state_save_register_device_item(device, 0, ppc->xerso);
-	state_save_register_device_item(device, 0, ppc->fpscr);
-	state_save_register_device_item(device, 0, ppc->msr);
-	state_save_register_device_item_array(device, 0, ppc->sr);
-	state_save_register_device_item_array(device, 0, ppc->spr);
-	state_save_register_device_item_array(device, 0, ppc->dcr);
+	device->save_item(NAME(ppc->pc));
+	device->save_item(NAME(ppc->r));
+	device->save_item(NAME(ppc->f));
+	device->save_item(NAME(ppc->cr));
+	device->save_item(NAME(ppc->xerso));
+	device->save_item(NAME(ppc->fpscr));
+	device->save_item(NAME(ppc->msr));
+	device->save_item(NAME(ppc->sr));
+	device->save_item(NAME(ppc->spr));
+	device->save_item(NAME(ppc->dcr));
 	if (cap & PPCCAP_4XX)
 	{
-		state_save_register_device_item_array(device, 0, ppc->spu.regs);
-		state_save_register_device_item(device, 0, ppc->spu.txbuf);
-		state_save_register_device_item(device, 0, ppc->spu.rxbuf);
-		state_save_register_device_item_array(device, 0, ppc->spu.rxbuffer);
-		state_save_register_device_item(device, 0, ppc->spu.rxin);
-		state_save_register_device_item(device, 0, ppc->spu.rxout);
-		state_save_register_device_item(device, 0, ppc->pit_reload);
-		state_save_register_device_item(device, 0, ppc->irqstate);
+		device->save_item(NAME(ppc->spu.regs));
+		device->save_item(NAME(ppc->spu.txbuf));
+		device->save_item(NAME(ppc->spu.rxbuf));
+		device->save_item(NAME(ppc->spu.rxbuffer));
+		device->save_item(NAME(ppc->spu.rxin));
+		device->save_item(NAME(ppc->spu.rxout));
+		device->save_item(NAME(ppc->pit_reload));
+		device->save_item(NAME(ppc->irqstate));
 	}
 	if (cap & PPCCAP_603_MMU)
 	{
-		state_save_register_device_item(device, 0, ppc->mmu603_cmp);
-		state_save_register_device_item_array(device, 0, ppc->mmu603_hash);
-		state_save_register_device_item_array(device, 0, ppc->mmu603_r);
+		device->save_item(NAME(ppc->mmu603_cmp));
+		device->save_item(NAME(ppc->mmu603_hash));
+		device->save_item(NAME(ppc->mmu603_r));
 	}
-	state_save_register_device_item(device, 0, ppc->irq_pending);
-	state_save_register_device_item(device, 0, ppc->tb_zero_cycles);
-	state_save_register_device_item(device, 0, ppc->dec_zero_cycles);
+	device->save_item(NAME(ppc->irq_pending));
+	device->save_item(NAME(ppc->tb_zero_cycles));
+	device->save_item(NAME(ppc->dec_zero_cycles));
 }
 
 
@@ -1538,7 +1538,7 @@ static TIMER_CALLBACK( decrementer_int_callback )
 	/* advance by another full rev */
 	ppc->dec_zero_cycles += (UINT64)ppc->tb_divisor << 32;
 	cycles_until_next = ppc->dec_zero_cycles - ppc->device->total_cycles();
-	timer_adjust_oneshot(ppc->decrementer_int_timer, ppc->device->cycles_to_attotime(cycles_until_next), 0);
+	ppc->decrementer_int_timer->adjust(ppc->device->cycles_to_attotime(cycles_until_next));
 }
 
 
@@ -1804,12 +1804,12 @@ static TIMER_CALLBACK( ppc4xx_fit_callback )
 		UINT32 timebase = get_timebase(ppc);
 		UINT32 interval = 0x200 << (4 * ((ppc->spr[SPR4XX_TCR] & PPC4XX_TCR_FP_MASK) >> 24));
 		UINT32 target = (timebase + interval) & ~(interval - 1);
-		timer_adjust_oneshot(ppc->fit_timer, ppc->device->cycles_to_attotime((target + 1 - timebase) / ppc->tb_divisor), TRUE);
+		ppc->fit_timer->adjust(ppc->device->cycles_to_attotime((target + 1 - timebase) / ppc->tb_divisor), TRUE);
 	}
 
 	/* otherwise, turn ourself off */
 	else
-		timer_adjust_oneshot(ppc->fit_timer, attotime_never, FALSE);
+		ppc->fit_timer->adjust(attotime::never, FALSE);
 }
 
 
@@ -1835,12 +1835,12 @@ static TIMER_CALLBACK( ppc4xx_pit_callback )
 		UINT32 timebase = get_timebase(ppc);
 		UINT32 interval = ppc->pit_reload;
 		UINT32 target = timebase + interval;
-		timer_adjust_oneshot(ppc->pit_timer, ppc->device->cycles_to_attotime((target + 1 - timebase) / ppc->tb_divisor), TRUE);
+		ppc->pit_timer->adjust(ppc->device->cycles_to_attotime((target + 1 - timebase) / ppc->tb_divisor), TRUE);
 	}
 
 	/* otherwise, turn ourself off */
 	else
-		timer_adjust_oneshot(ppc->pit_timer, attotime_never, FALSE);
+		ppc->pit_timer->adjust(attotime::never, FALSE);
 }
 
 
@@ -1908,18 +1908,18 @@ static void ppc4xx_spu_timer_reset(powerpc_state *ppc)
 	/* if we're enabled, reset at the current baud rate */
 	if (enabled)
 	{
-		attotime clockperiod = ATTOTIME_IN_HZ((ppc->dcr[DCR4XX_IOCR] & 0x02) ? 3686400 : 33333333);
+		attotime clockperiod = attotime::from_hz((ppc->dcr[DCR4XX_IOCR] & 0x02) ? 3686400 : 33333333);
 		int divisor = ((ppc->spu.regs[SPU4XX_BAUD_DIVISOR_H] * 256 + ppc->spu.regs[SPU4XX_BAUD_DIVISOR_L]) & 0xfff) + 1;
 		int bpc = 7 + ((ppc->spu.regs[SPU4XX_CONTROL] & 8) >> 3) + 1 + (ppc->spu.regs[SPU4XX_CONTROL] & 1);
-		attotime charperiod = attotime_mul(clockperiod, divisor * 16 * bpc);
-		timer_adjust_periodic(ppc->spu.timer, charperiod, 0, charperiod);
+		attotime charperiod = clockperiod * (divisor * 16 * bpc);
+		ppc->spu.timer->adjust(charperiod, 0, charperiod);
 		if (PRINTF_SPU)
 			printf("ppc4xx_spu_timer_reset: baud rate = %.0f\n", ATTOSECONDS_TO_HZ(charperiod.attoseconds) * bpc);
 	}
 
 	/* otherwise, disable the timer */
 	else
-		timer_adjust_oneshot(ppc->spu.timer, attotime_never, 0);
+		ppc->spu.timer->adjust(attotime::never);
 }
 
 

@@ -241,25 +241,25 @@ static CPU_INIT(h8bit)
 	h8->direct = &h8->program->direct();
 	h8->io = device->space(AS_IO);
 
-	h8->timer[0] = timer_alloc(h8->device->machine, h8_timer_0_cb, h8);
-	h8->timer[1] = timer_alloc(h8->device->machine, h8_timer_1_cb, h8);
-	h8->timer[2] = timer_alloc(h8->device->machine, h8_timer_2_cb, h8);
-	h8->timer[3] = timer_alloc(h8->device->machine, h8_timer_3_cb, h8);
+	h8->timer[0] = h8->device->machine->scheduler().timer_alloc(FUNC(h8_timer_0_cb), h8);
+	h8->timer[1] = h8->device->machine->scheduler().timer_alloc(FUNC(h8_timer_1_cb), h8);
+	h8->timer[2] = h8->device->machine->scheduler().timer_alloc(FUNC(h8_timer_2_cb), h8);
+	h8->timer[3] = h8->device->machine->scheduler().timer_alloc(FUNC(h8_timer_3_cb), h8);
 
-	state_save_register_device_item(device, 0, h8->h8err);
-	state_save_register_device_item_array(device, 0, h8->regs);
-	state_save_register_device_item(device, 0, h8->pc);
-	state_save_register_device_item(device, 0, h8->ppc);
-	state_save_register_device_item(device, 0, h8->h8_IRQrequestH);
-	state_save_register_device_item(device, 0, h8->h8_IRQrequestL);
-	state_save_register_device_item(device, 0, h8->ccr);
-	state_save_register_device_item(device, 0, h8->mode_8bit);
+	device->save_item(NAME(h8->h8err));
+	device->save_item(NAME(h8->regs));
+	device->save_item(NAME(h8->pc));
+	device->save_item(NAME(h8->ppc));
+	device->save_item(NAME(h8->h8_IRQrequestH));
+	device->save_item(NAME(h8->h8_IRQrequestL));
+	device->save_item(NAME(h8->ccr));
+	device->save_item(NAME(h8->mode_8bit));
 
-	state_save_register_device_item_array(device, 0, h8->per_regs);
-	state_save_register_device_item(device, 0, h8->h8TSTR);
-	state_save_register_device_item_array(device, 0, h8->h8TCNT);
+	device->save_item(NAME(h8->per_regs));
+	device->save_item(NAME(h8->h8TSTR));
+	device->save_item(NAME(h8->h8TCNT));
 
-	state_save_register_postload(h8->device->machine, h8_onstateload, h8);
+	h8->device->machine->state().register_postload(h8_onstateload, h8);
 }
 
 static CPU_RESET(h8bit)
@@ -410,21 +410,21 @@ static void recalc_8bit_timer(h83xx_state *h8, int t)
 	// if "no clock source", stop
 	if (div < 2)
 	{
-		timer_adjust_oneshot(h8->timer[(t*2)], attotime_never, 0);
-		timer_adjust_oneshot(h8->timer[(t*2)+1], attotime_never, 0);
+		h8->timer[(t*2)]->adjust(attotime::never);
+		h8->timer[(t*2)+1]->adjust(attotime::never);
 		return;
 	}
 
 	if (h8->TCORA[t])
 	{
 		time = (h8->device->unscaled_clock() / dividers[div]) / (h8->TCORA[t] - h8->TCNT[t]);
-		timer_adjust_oneshot(h8->timer[(t*2)], ATTOTIME_IN_HZ(time), 0);
+		h8->timer[(t*2)]->adjust(attotime::from_hz(time));
 	}
 
 	if (h8->TCORB[t])
 	{
 		time = (h8->device->unscaled_clock() / dividers[div]) / (h8->TCORB[t] - h8->TCNT[t]);
-		timer_adjust_oneshot(h8->timer[(t*2)+1], ATTOTIME_IN_HZ(time), 0);
+		h8->timer[(t*2)+1]->adjust(attotime::from_hz(time));
 	}
 }
 
@@ -433,7 +433,7 @@ static void timer_8bit_expire(h83xx_state *h8, int t, int sel)
 {
 	static const int irqbase[2] = { 19, 22 };
 
-	timer_adjust_oneshot(h8->timer[(t*2)+sel], attotime_never, 0);
+	h8->timer[(t*2)+sel]->adjust(attotime::never);
 
 	h8->TCSR[t] |= ((0x40)<<sel);
 

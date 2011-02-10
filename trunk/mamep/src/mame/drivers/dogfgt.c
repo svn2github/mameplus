@@ -219,14 +219,14 @@ static MACHINE_START( dogfgt )
 
 	state->subcpu = machine->device("sub");
 
-	state_save_register_global(machine, state->bm_plane);
-	state_save_register_global(machine, state->lastflip);
-	state_save_register_global(machine, state->pixcolor);
-	state_save_register_global(machine, state->lastpixcolor);
-	state_save_register_global(machine, state->soundlatch);
-	state_save_register_global(machine, state->last_snd_ctrl);
+	state->save_item(NAME(state->bm_plane));
+	state->save_item(NAME(state->lastflip));
+	state->save_item(NAME(state->pixcolor));
+	state->save_item(NAME(state->lastpixcolor));
+	state->save_item(NAME(state->soundlatch));
+	state->save_item(NAME(state->last_snd_ctrl));
 
-	state_save_register_global_array(machine, state->scroll);
+	state->save_item(NAME(state->scroll));
 }
 
 static MACHINE_RESET( dogfgt )
@@ -256,7 +256,7 @@ static MACHINE_CONFIG_START( dogfgt, dogfgt_state )
 	MCFG_CPU_ADD("sub", M6502, 1500000)	/* 1.5 MHz ???? */
 	MCFG_CPU_PROGRAM_MAP(sub_map)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	MCFG_MACHINE_START(dogfgt)
 	MCFG_MACHINE_RESET(dogfgt)

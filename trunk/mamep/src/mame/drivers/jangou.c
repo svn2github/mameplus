@@ -40,11 +40,6 @@ public:
 	jangou_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	/* video-related */
-	UINT8        *blit_buffer;
-	UINT8        pen_data[0x10];
-	UINT8        blit_data[6];
-
 	/* sound-related */
 	// Jangou CVSD Sound
 	emu_timer    *cvsd_bit_timer;
@@ -63,6 +58,11 @@ public:
 	device_t *cpu_1;
 	device_t *cvsd;
 	device_t *nsc;
+
+	/* video-related */
+	UINT8        pen_data[0x10];
+	UINT8        blit_data[6];
+	UINT8        blit_buffer[256 * 256];
 };
 
 
@@ -116,8 +116,7 @@ static VIDEO_START( jangou )
 {
 	jangou_state *state = machine->driver_data<jangou_state>();
 
-	state->blit_buffer = auto_alloc_array(machine, UINT8, 256 * 256);
-	state_save_register_global_pointer(machine, state->blit_buffer, 256 * 256);
+	state->save_item(NAME(state->blit_buffer));
 }
 
 static VIDEO_UPDATE( jangou )
@@ -894,8 +893,8 @@ static SOUND_START( jangou )
 	jangou_state *state = machine->driver_data<jangou_state>();
 
 	/* Create a timer to feed the CVSD DAC with sample bits */
-	state->cvsd_bit_timer = timer_alloc(machine, cvsd_bit_timer_callback, NULL);
-	timer_adjust_periodic(state->cvsd_bit_timer, ATTOTIME_IN_HZ(MASTER_CLOCK / 1024), 0, ATTOTIME_IN_HZ(MASTER_CLOCK / 1024));
+	state->cvsd_bit_timer = machine->scheduler().timer_alloc(FUNC(cvsd_bit_timer_callback));
+	state->cvsd_bit_timer->adjust(attotime::from_hz(MASTER_CLOCK / 1024), 0, attotime::from_hz(MASTER_CLOCK / 1024));
 }
 
 
@@ -914,9 +913,9 @@ static MACHINE_START( common )
 	state->cvsd = machine->device("cvsd");
 	state->nsc = machine->device("nsc");
 
-	state_save_register_global_array(machine, state->pen_data);
-	state_save_register_global_array(machine, state->blit_data);
-	state_save_register_global(machine, state->mux_data);
+	state->save_item(NAME(state->pen_data));
+	state->save_item(NAME(state->blit_data));
+	state->save_item(NAME(state->mux_data));
 }
 
 static MACHINE_START( jangou )
@@ -925,8 +924,8 @@ static MACHINE_START( jangou )
 
 	MACHINE_START_CALL(common);
 
-	state_save_register_global(machine, state->cvsd_shiftreg);
-	state_save_register_global(machine, state->cvsd_shift_cnt);
+	state->save_item(NAME(state->cvsd_shiftreg));
+	state->save_item(NAME(state->cvsd_shift_cnt));
 }
 
 static MACHINE_START( jngolady )
@@ -935,10 +934,10 @@ static MACHINE_START( jngolady )
 
 	MACHINE_START_CALL(common);
 
-	state_save_register_global(machine, state->adpcm_byte);
-	state_save_register_global(machine, state->msm5205_vclk_toggle);
-	state_save_register_global(machine, state->nsc_latch);
-	state_save_register_global(machine, state->z80_latch);
+	state->save_item(NAME(state->adpcm_byte));
+	state->save_item(NAME(state->msm5205_vclk_toggle));
+	state->save_item(NAME(state->nsc_latch));
+	state->save_item(NAME(state->z80_latch));
 }
 
 static MACHINE_RESET( common )

@@ -376,7 +376,7 @@ static WRITE32_HANDLER( aga_overlay_w )
 static WRITE8_DEVICE_HANDLER( cd32_cia_0_porta_w )
 {
 	/* bit 1 = cd audio mute */
-	sound_set_output_gain(device->machine->device("cdda"), 0, ( data & 1 ) ? 0.0 : 1.0 );
+	device->machine->device<cdda_device>("cdda")->set_output_gain( 0, ( data & 1 ) ? 0.0 : 1.0 );
 
 	/* bit 2 = Power Led on Amiga */
 	set_led_status(device->machine, 0, (data & 2) ? 0 : 1);
@@ -402,14 +402,14 @@ static WRITE8_DEVICE_HANDLER( cd32_cia_0_porta_w )
 static READ8_DEVICE_HANDLER( cd32_cia_0_portb_r )
 {
 	/* parallel port */
-	logerror("%s:CIA0_portb_r\n", cpuexec_describe_context(device->machine));
+	logerror("%s:CIA0_portb_r\n", device->machine->describe_context());
 	return 0xff;
 }
 
 static WRITE8_DEVICE_HANDLER( cd32_cia_0_portb_w )
 {
 	/* parallel port */
-	logerror("%s:CIA0_portb_w(%02x)\n", cpuexec_describe_context(device->machine), data);
+	logerror("%s:CIA0_portb_w(%02x)\n", device->machine->describe_context(), data);
 }
 
 static ADDRESS_MAP_START( cd32_map, ADDRESS_SPACE_PROGRAM, 32 )

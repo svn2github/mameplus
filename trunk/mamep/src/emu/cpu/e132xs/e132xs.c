@@ -609,7 +609,7 @@ static void adjust_timer_interrupt(hyperstone_state *cpustate)
 	{
 		UINT64 clocks_until_int = cpustate->tr_clocks_per_tick - (clocks_since_base % cpustate->tr_clocks_per_tick);
 		UINT64 cycles_until_int = (clocks_until_int << cpustate->clock_scale) + cycles_until_next_clock;
-		timer_adjust_oneshot(cpustate->timer, cpustate->device->cycles_to_attotime(cycles_until_int + 1), 1);
+		cpustate->timer->adjust(cpustate->device->cycles_to_attotime(cycles_until_int + 1), 1);
 	}
 
 	/* else if the timer interrupt is enabled, configure it to fire at the appropriate time */
@@ -620,19 +620,19 @@ static void adjust_timer_interrupt(hyperstone_state *cpustate)
 		if (delta > 0x80000000)
 		{
 			if (!cpustate->timer_int_pending)
-				timer_adjust_oneshot(cpustate->timer, attotime_zero, 0);
+				cpustate->timer->adjust(attotime::zero);
 		}
 		else
 		{
 			UINT64 clocks_until_int = mulu_32x32(delta, cpustate->tr_clocks_per_tick);
 			UINT64 cycles_until_int = (clocks_until_int << cpustate->clock_scale) + cycles_until_next_clock;
-			timer_adjust_oneshot(cpustate->timer, cpustate->device->cycles_to_attotime(cycles_until_int), 0);
+			cpustate->timer->adjust(cpustate->device->cycles_to_attotime(cycles_until_int));
 		}
 	}
 
 	/* otherwise, disable the timer */
 	else
-		timer_adjust_oneshot(cpustate->timer, attotime_never, 0);
+		cpustate->timer->adjust(attotime::never);
 }
 
 static TIMER_CALLBACK( e132xs_timer_callback )
@@ -1531,22 +1531,22 @@ static void hyperstone_init(legacy_cpu_device *device, device_irq_callback irqca
 {
 	hyperstone_state *cpustate = get_safe_token(device);
 
-	state_save_register_device_item_array(device, 0, cpustate->global_regs);
-	state_save_register_device_item_array(device, 0, cpustate->local_regs);
-	state_save_register_device_item(device, 0, cpustate->ppc);
-	state_save_register_device_item(device, 0, cpustate->trap_entry);
-	state_save_register_device_item(device, 0, cpustate->delay.delay_pc);
-	state_save_register_device_item(device, 0, cpustate->instruction_length);
-	state_save_register_device_item(device, 0, cpustate->intblock);
-	state_save_register_device_item(device, 0, cpustate->delay.delay_cmd);
-	state_save_register_device_item(device, 0, cpustate->tr_clocks_per_tick);
+	device->save_item(NAME(cpustate->global_regs));
+	device->save_item(NAME(cpustate->local_regs));
+	device->save_item(NAME(cpustate->ppc));
+	device->save_item(NAME(cpustate->trap_entry));
+	device->save_item(NAME(cpustate->delay.delay_pc));
+	device->save_item(NAME(cpustate->instruction_length));
+	device->save_item(NAME(cpustate->intblock));
+	device->save_item(NAME(cpustate->delay.delay_cmd));
+	device->save_item(NAME(cpustate->tr_clocks_per_tick));
 
 	cpustate->irq_callback = irqcallback;
 	cpustate->device = device;
 	cpustate->program = device->space(AS_PROGRAM);
 	cpustate->direct = &cpustate->program->direct();
 	cpustate->io = device->space(AS_IO);
-	cpustate->timer = timer_alloc(device->machine, e132xs_timer_callback, (void *)device);
+	cpustate->timer = device->machine->scheduler().timer_alloc(FUNC(e132xs_timer_callback), (void *)device);
 	cpustate->clock_scale_mask = scale_mask;
 }
 

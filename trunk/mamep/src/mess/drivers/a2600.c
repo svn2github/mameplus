@@ -1682,7 +1682,7 @@ static void common_init(running_machine *machine)
 	state->extra_RAM = machine->region_alloc("user2", 0x8600, ROM_REQUIRED );
 	memset( state->riot_ram, 0x00, 0x80 );
 	state->current_reset_bank_counter = 0xFF;
-	state->dpc.oscillator = timer_alloc(machine, modeDPC_timer_callback, NULL);
+	state->dpc.oscillator = machine->scheduler().timer_alloc(FUNC(modeDPC_timer_callback));
 }
 
 static MACHINE_START( a2600 )
@@ -2023,7 +2023,7 @@ static MACHINE_RESET( a2600 )
 				state->dpc.df[data_fetcher].music_mode = 0;
 			}
 		}
-		timer_adjust_periodic(state->dpc.oscillator, ATTOTIME_IN_HZ(42000), 0, ATTOTIME_IN_HZ(42000));
+		state->dpc.oscillator->adjust(attotime::from_hz(42000), 0, attotime::from_hz(42000));
 		break;
 
 	case mode32in1:

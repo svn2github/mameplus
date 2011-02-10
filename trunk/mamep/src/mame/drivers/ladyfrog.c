@@ -87,7 +87,7 @@ static TIMER_CALLBACK( nmi_callback )
 static WRITE8_HANDLER( sound_command_w )
 {
 	soundlatch_w(space, 0, data);
-	timer_call_after_resynch(space->machine, NULL, data, nmi_callback);
+	space->machine->scheduler().synchronize(FUNC(nmi_callback), data);
 }
 
 static WRITE8_HANDLER( nmi_disable_w )
@@ -289,12 +289,12 @@ static MACHINE_START( ladyfrog )
 
 	state->audiocpu = machine->device("audiocpu");
 
-	state_save_register_global(machine, state->tilebank);
-	state_save_register_global(machine, state->palette_bank);
-	state_save_register_global(machine, state->sound_nmi_enable);
-	state_save_register_global(machine, state->pending_nmi);
-	state_save_register_global(machine, state->snd_flag);
-	state_save_register_global(machine, state->snd_data);
+	state->save_item(NAME(state->tilebank));
+	state->save_item(NAME(state->palette_bank));
+	state->save_item(NAME(state->sound_nmi_enable));
+	state->save_item(NAME(state->pending_nmi));
+	state->save_item(NAME(state->snd_flag));
+	state->save_item(NAME(state->snd_data));
 }
 
 static MACHINE_RESET( ladyfrog )
@@ -323,7 +323,7 @@ static MACHINE_CONFIG_START( ladyfrog, ladyfrog_state )
 	MCFG_MACHINE_START(ladyfrog)
 	MCFG_MACHINE_RESET(ladyfrog)
 
-	MCFG_QUANTUM_TIME(HZ(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

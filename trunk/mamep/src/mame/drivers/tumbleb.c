@@ -784,8 +784,8 @@ static WRITE16_HANDLER( semicom_soundcmd_w )
 	{
 		soundlatch_w(space, 0, data & 0xff);
 		// needed for Super Trio which reads the sound with polling
-		// cpu_spinuntil_time(space->cpu, ATTOTIME_IN_USEC(100));
-		cpuexec_boost_interleave(space->machine, attotime_zero, ATTOTIME_IN_USEC(20));
+		// cpu_spinuntil_time(space->cpu, attotime::from_usec(100));
+		space->machine->scheduler().boost_interleave(attotime::zero, attotime::from_usec(20));
 
 	}
 }
@@ -2053,13 +2053,13 @@ static MACHINE_START( tumbleb )
 	state->audiocpu = machine->device("audiocpu");
 	state->oki = machine->device("oki");
 
-	state_save_register_global(machine, state->music_command);
-	state_save_register_global(machine, state->music_bank);
-	state_save_register_global(machine, state->music_is_playing);
+	state->save_item(NAME(state->music_command));
+	state->save_item(NAME(state->music_bank));
+	state->save_item(NAME(state->music_is_playing));
 
-	state_save_register_global_array(machine, state->control_0);
-	state_save_register_global(machine, state->flipscreen);
-	state_save_register_global(machine, state->tilebank);
+	state->save_item(NAME(state->control_0));
+	state->save_item(NAME(state->flipscreen));
+	state->save_item(NAME(state->tilebank));
 }
 
 static MACHINE_RESET( tumbleb )

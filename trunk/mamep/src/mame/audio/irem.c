@@ -48,8 +48,8 @@ static DEVICE_START( irem_audio )
 	state->ay1 = machine->device("ay1");
 	state->ay2 = machine->device("ay2");
 
-	state_save_register_device_item(device, 0, state->port1);
-	state_save_register_device_item(device, 0, state->port2);
+	device->save_item(NAME(state->port1));
+	device->save_item(NAME(state->port2));
 }
 
 
@@ -399,8 +399,8 @@ ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( irem_sound_portmap, ADDRESS_SPACE_IO, 8 )
-	AM_RANGE(M6803_PORT1, M6803_PORT1) AM_DEVREADWRITE("irem_audio", m6803_port1_r, m6803_port1_w)
-	AM_RANGE(M6803_PORT2, M6803_PORT2) AM_DEVREADWRITE("irem_audio", m6803_port2_r, m6803_port2_w)
+	AM_RANGE(M6801_PORT1, M6801_PORT1) AM_DEVREADWRITE("irem_audio", m6803_port1_r, m6803_port1_w)
+	AM_RANGE(M6801_PORT2, M6801_PORT2) AM_DEVREADWRITE("irem_audio", m6803_port2_r, m6803_port2_w)
 ADDRESS_MAP_END
 
 

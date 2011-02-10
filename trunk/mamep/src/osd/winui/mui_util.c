@@ -515,7 +515,7 @@ static void UpdateController(void)
 
 int numberOfSpeakers(const machine_config *config)
 {
-	int speakers = speaker_output_count(config);
+	int speakers = config->m_devicelist.count(SPEAKER);
 	return speakers;
 }
 
@@ -767,7 +767,7 @@ BOOL DriverIsVertical(int driver_index) {
 BOOL DriverIsConsole(int driver_index)
 {
 #ifdef MAMEMESS
-	return drivers[driver_index]->flags & GAME_CONSOLE;
+	return drivers[driver_index]->flags & (GAME_TYPE_CONSOLE|GAME_TYPE_COMPUTER);
 #else /* MAMEMESS */
 	return FALSE;
 #endif /* MAMEMESS */

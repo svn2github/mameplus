@@ -183,10 +183,6 @@ static int  get_scorpion2_uart_status(void);	// retrieve status of uart on scorp
 static int  read_e2ram(void);
 static void e2ram_reset(void);
 
-// global vars ////////////////////////////////////////////////////////////
-
-static int sc2gui_update_mmtr;	// bit pattern which mechanical meter needs updating
-
 // local vars /////////////////////////////////////////////////////////////
 
 static UINT8 key[16];		// security device on gamecard (video games only)
@@ -321,7 +317,6 @@ static void on_scorpion2_reset(running_machine *machine)
 
 	hopper_running    = 0;  // for video games
 	hopper_coin_sense = 0;
-	sc2gui_update_mmtr= 0xFF;
 
 	slide_states[0] = 0;
 	slide_states[1] = 0;
@@ -583,7 +578,6 @@ static WRITE8_HANDLER( mmtr_w )
 {
 	int i;
 	int  changed = mmtr_latch ^ data;
-	UINT64 cycles  = downcast<cpu_device *>(space->cpu)->total_cycles();
 
 	mmtr_latch = data;
 
@@ -591,10 +585,7 @@ static WRITE8_HANDLER( mmtr_w )
 	{
 		if ( changed & (1 << i) )
 		{
-			if ( Mechmtr_update(i, cycles, data & (1 << i) ) )
-			{
-				sc2gui_update_mmtr |= (1 << i);
-			}
+			MechMtr_update(i, data & (1 << i) );
 		}
 	}
 	if ( data & 0x1F ) cputag_set_input_line(space->machine, "maincpu", M6809_FIRQ_LINE, ASSERT_LINE );
@@ -681,13 +672,13 @@ static WRITE8_HANDLER( volume_override_w )
 
 	if ( old != volume_override )
 	{
-		device_t *ym = space->machine->device("ymsnd");
-		device_t *upd = space->machine->device("upd");
+		ym2413_device *ym = space->machine->device<ym2413_device>("ymsnd");
+		upd7759_device *upd = space->machine->device<upd7759_device>("upd");
 		float percent = volume_override? 1.0f : (32-global_volume)/32.0f;
 
-		sound_set_output_gain(ym, 0, percent);
-		sound_set_output_gain(ym, 1, percent);
-		sound_set_output_gain(upd, 0, percent);
+		ym->set_output_gain(0, percent);
+		ym->set_output_gain(1, percent);
+		upd->set_output_gain(0, percent);
 	}
 }
 
@@ -778,13 +769,13 @@ static WRITE8_HANDLER( expansion_latch_w )
 			}
 
 			{
-				device_t *ym = space->machine->device("ymsnd");
-				device_t *upd = space->machine->device("upd");
+				ym2413_device *ym = space->machine->device<ym2413_device>("ymsnd");
+				upd7759_device *upd = space->machine->device<upd7759_device>("upd");
 				float percent = volume_override ? 1.0f : (32-global_volume)/32.0f;
 
-				sound_set_output_gain(ym, 0, percent);
-				sound_set_output_gain(ym, 1, percent);
-				sound_set_output_gain(upd, 0, percent);
+				ym->set_output_gain(0, percent);
+				ym->set_output_gain(1, percent);
+				upd->set_output_gain(0, percent);
 			}
 		}
 	}
@@ -2184,7 +2175,7 @@ INPUT_PORTS_END
 
 static MACHINE_CONFIG_START( scorpion2_vid, driver_device )
 	MCFG_MACHINE_RESET( init )							// main scorpion2 board initialisation
-	MCFG_QUANTUM_TIME(HZ(960))									// needed for serial communication !!
+	MCFG_QUANTUM_TIME(attotime::from_hz(960))									// needed for serial communication !!
 	MCFG_CPU_ADD("maincpu", M6809, MASTER_CLOCK/4 )	// 6809 CPU at 2 Mhz
 	MCFG_CPU_PROGRAM_MAP(memmap_vid)					// setup scorpion2 board memorymap
 	MCFG_CPU_PERIODIC_INT(timer_irq, 1000)				// generate 1000 IRQ's per second
@@ -2251,7 +2242,7 @@ static DRIVER_INIT (quintoon)
 {
 	sc2_common_init(machine, 1);
 	adder2_decode_char_roms(machine);
-	Mechmtr_init(8);					// setup mech meters
+	MechMtr_config(machine,8);					// setup mech meters
 
 	has_hopper = 0;
 
@@ -3965,7 +3956,7 @@ MACHINE_CONFIG_END
 /* machine driver for scorpion2 board + matrix board */
 static MACHINE_CONFIG_START( scorpion2_dm01, driver_device )
 	MCFG_MACHINE_RESET(dm01_init)
-	MCFG_QUANTUM_TIME(HZ(960))									// needed for serial communication !!
+	MCFG_QUANTUM_TIME(attotime::from_hz(960))									// needed for serial communication !!
 	MCFG_CPU_ADD("maincpu", M6809, MASTER_CLOCK/4 )
 	MCFG_CPU_PROGRAM_MAP(memmap_sc2_dm01)
 	MCFG_CPU_PERIODIC_INT(timer_irq, 1000 )
@@ -4005,7 +3996,7 @@ static void sc2awp_common_init(running_machine *machine,int reels, int decrypt)
 static DRIVER_INIT (bbrkfst)
 {
 	sc2awp_common_init(machine,5, 1);
-	Mechmtr_init(8);
+	MechMtr_config(machine,8);
 
 	BFM_BD1_init(0);
 	BFM_BD1_init(1);
@@ -4027,7 +4018,7 @@ static DRIVER_INIT (bbrkfst)
 static DRIVER_INIT (drwho)
 {
 	sc2awp_common_init(machine,4, 1);
-	Mechmtr_init(8);
+	MechMtr_config(machine,8);
 
 	BFM_BD1_init(0);
 	BFM_BD1_init(1);
@@ -4047,7 +4038,7 @@ static DRIVER_INIT (drwho)
 static DRIVER_INIT (drwhon)
 {
 	sc2awp_common_init(machine,4, 0);
-	Mechmtr_init(8);
+	MechMtr_config(machine,8);
 
 	BFM_BD1_init(0);
 	BFM_BD1_init(1);
@@ -4068,7 +4059,7 @@ static DRIVER_INIT (drwhon)
 static DRIVER_INIT (focus)
 {
 	sc2awp_common_init(machine,6, 1);
-	Mechmtr_init(5);
+	MechMtr_config(machine,5);
 
 	BFM_BD1_init(0);
 }
@@ -4077,7 +4068,7 @@ static DRIVER_INIT (cpeno1)
 {
 	sc2awp_common_init(machine,6, 1);
 
-	Mechmtr_init(5);
+	MechMtr_config(machine,5);
 
 	Scorpion2_SetSwitchState(3,3,1);	/*  5p play */
 	Scorpion2_SetSwitchState(3,4,1);	/* 20p play */
@@ -4120,7 +4111,7 @@ static DRIVER_INIT (cpeno1)
 static DRIVER_INIT (bfmcgslm)
 {
 	sc2awp_common_init(machine,6, 1);
-	Mechmtr_init(8);
+	MechMtr_config(machine,8);
 	BFM_BD1_init(0);
 	has_hopper = 0;
 }
@@ -4128,7 +4119,7 @@ static DRIVER_INIT (bfmcgslm)
 static DRIVER_INIT (luvjub)
 {
 	sc2awp_common_init(machine,6, 1);
-	Mechmtr_init(8);
+	MechMtr_config(machine,8);
 	has_hopper = 0;
 
 	Scorpion2_SetSwitchState(3,0,1);
