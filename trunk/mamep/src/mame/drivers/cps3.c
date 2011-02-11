@@ -2799,7 +2799,7 @@ MACHINE_CONFIG_END
 #define SFIII_970204_CDROM \
 	DISK_REGION( "cdrom" ) DISK_IMAGE_READONLY( "sf3000", 0, SHA1(606e62cc5f46275e366e7dbb412dbaeb7e54cd0c) ) \
 
-#define SFIII2_970204_FLASH \
+#define SFIII2_970930_FLASH \
 	ROM_REGION( 0x200000, "simm1.0", 0 ) ROM_LOAD( "sfiii2-simm1.0", 0x00000, 0x200000, CRC(2d666f0b) SHA1(68de034b3a3aeaf4b26122a84ad48b0b763e4122) ) \
 	ROM_REGION( 0x200000, "simm1.1", 0 ) ROM_LOAD( "sfiii2-simm1.1", 0x00000, 0x200000, CRC(2a3a8ef6) SHA1(31fb58fd1360ed8c951e2c4ac898a5a7104528d6) ) \
 	ROM_REGION( 0x200000, "simm1.2", 0 ) ROM_LOAD( "sfiii2-simm1.2", 0x00000, 0x200000, CRC(161d2206) SHA1(58999f876e64c1a088e8765962a9cd504f22a706) ) \
@@ -2833,7 +2833,7 @@ MACHINE_CONFIG_END
 	ROM_REGION( 0x200000, "simm5.6", 0 ) ROM_LOAD( "sfiii2-simm5.6", 0x00000, 0x200000, CRC(2edc5986) SHA1(761ab2c67d0d873ffd74158eb77f7722c076f3e3) ) \
 	ROM_REGION( 0x200000, "simm5.7", 0 ) ROM_LOAD( "sfiii2-simm5.7", 0x00000, 0x200000, CRC(93ffa199) SHA1(33ec2379f30c6fdf47ba72c1d0cad8bdd02f17df) ) \
 
-#define SFIII2_970204_CDROM \
+#define SFIII2_970930_CDROM \
 	DISK_REGION( "cdrom" ) DISK_IMAGE_READONLY( "3ga000", 0, SHA1(4e162885b0b3265a56e0265037bcf247e820f027) ) \
 
 #define SFIII3_990608_FLASH \
@@ -3079,6 +3079,29 @@ MACHINE_CONFIG_END
 #define REDEARTH_961023_CDROM \
 	DISK_REGION( "cdrom" )	DISK_IMAGE_READONLY( "cap-wzd-3", 0, SHA1(a6ff67093db6bc80ee5fc46e4300e0177b213a52) ) \
 
+#define REDEARTN_FLASH \
+	ROM_REGION( 0x200000, "simm1.0", 0 ) ROM_LOAD( "redeartn-simm1.0", 0x00000, 0x200000, CRC(cad468f8) SHA1(b3aa4f7d3fae84e8821417ccde9528d3eda2b7a6) ) \
+	ROM_REGION( 0x200000, "simm1.1", 0 ) ROM_LOAD( "redeartn-simm1.1", 0x00000, 0x200000, CRC(e9721d89) SHA1(5c63d10bdbce52d50b6dde14d4a0f1369383d656) ) \
+	ROM_REGION( 0x200000, "simm1.2", 0 ) ROM_LOAD( "redeartn-simm1.2", 0x00000, 0x200000, CRC(2889ec98) SHA1(a94310eb4777f908d87e9d90969db8504b4140ff) ) \
+	ROM_REGION( 0x200000, "simm1.3", 0 ) ROM_LOAD( "redeartn-simm1.3", 0x00000, 0x200000, CRC(5a6cd148) SHA1(d65c6e8378a91828474a16a3bbcd13c4b3b15f13) ) \
+	ROM_REGION( 0x200000, "simm3.0", 0 ) ROM_LOAD( "redeartn-simm3.0", 0x00000, 0x200000, CRC(83350cc5) SHA1(922b1abf80a4a89f35279b66311a7369d3965bd0) ) \
+	ROM_REGION( 0x200000, "simm3.1", 0 ) ROM_LOAD( "redeartn-simm3.1", 0x00000, 0x200000, CRC(56734de6) SHA1(75699fa6efe5bec335e4b02e15b3c45726b68fa8) ) \
+	ROM_REGION( 0x200000, "simm3.2", 0 ) ROM_LOAD( "redeartn-simm3.2", 0x00000, 0x200000, CRC(800ea0f1) SHA1(33871ab56dc1cd24441389d53e43fb8e43b149d9) ) \
+	ROM_REGION( 0x200000, "simm3.3", 0 ) ROM_LOAD( "redeartn-simm3.3", 0x00000, 0x200000, CRC(97e9146c) SHA1(ab7744709615081440bee72f4080d6fd5b938668) ) \
+	ROM_REGION( 0x200000, "simm3.4", 0 ) ROM_LOAD( "redeartn-simm3.4", 0x00000, 0x200000, CRC(0cb1d648) SHA1(7042a590c2b7ec55323062127e254da3cdc790a1) ) \
+	ROM_REGION( 0x200000, "simm3.5", 0 ) ROM_LOAD( "redeartn-simm3.5", 0x00000, 0x200000, CRC(7a1099f0) SHA1(c6a92ec86eb24485f1db530e0e78f647e8432231) ) \
+	ROM_REGION( 0x200000, "simm3.6", 0 ) ROM_LOAD( "redeartn-simm3.6", 0x00000, 0x200000, CRC(aeff8f54) SHA1(fd760e237c2e5fb2da45e32a1c12fd3defb4c3e4) ) \
+	ROM_REGION( 0x200000, "simm3.7", 0 ) ROM_LOAD( "redeartn-simm3.7", 0x00000, 0x200000, CRC(f770acd0) SHA1(4b3ccb6f91568f95f04ede6c574144918d131201) ) \
+	ROM_REGION( 0x200000, "simm4.0", 0 ) ROM_LOAD( "redeartn-simm4.0", 0x00000, 0x200000, CRC(301e56f2) SHA1(4847d971bff70a2aeed4599e1201c7ec9677da60) ) \
+	ROM_REGION( 0x200000, "simm4.1", 0 ) ROM_LOAD( "redeartn-simm4.1", 0x00000, 0x200000, CRC(2048e103) SHA1(b21f95b05cd99749bd3f25cc71b2671c2026847b) ) \
+	ROM_REGION( 0x200000, "simm4.2", 0 ) ROM_LOAD( "redeartn-simm4.2", 0x00000, 0x200000, CRC(c9433455) SHA1(63a269d76bac332c2e991d0f6a20c35e0e88680a) ) \
+	ROM_REGION( 0x200000, "simm4.3", 0 ) ROM_LOAD( "redeartn-simm4.3", 0x00000, 0x200000, CRC(c02171a8) SHA1(2e9228729b27a6113d9f2e42af310a834979f714) ) \
+	ROM_REGION( 0x200000, "simm4.4", 0 ) ROM_LOAD( "redeartn-simm4.4", 0x00000, 0x200000, CRC(2ddbf276) SHA1(b232baaa8edc8db18f8a3bdcc2d38fe984a94a34) ) \
+	ROM_REGION( 0x200000, "simm4.5", 0 ) ROM_LOAD( "redeartn-simm4.5", 0x00000, 0x200000, CRC(fea820a6) SHA1(55ee8ef95751f5a509fb126513e1b2a70a3414e5) ) \
+	ROM_REGION( 0x200000, "simm4.6", 0 ) ROM_LOAD( "redeartn-simm4.6", 0x00000, 0x200000, CRC(c7528df1) SHA1(aa312f80c2d7759d18d1aa8d416cf932b2850824) ) \
+	ROM_REGION( 0x200000, "simm4.7", 0 ) ROM_LOAD( "redeartn-simm4.7", 0x00000, 0x200000, CRC(2449cf3b) SHA1(c60d8042136d74e547f668ad787cae529c42eed9) ) \
+	ROM_REGION( 0x200000, "simm5.0", 0 ) ROM_LOAD( "redeartn-simm5.0", 0x00000, 0x200000, CRC(424451b9) SHA1(250fb92254c9e7ff5bc8dbeea5872f8a771dc9bd) ) \
+	ROM_REGION( 0x200000, "simm5.1", 0 ) ROM_LOAD( "redeartn-simm5.1", 0x00000, 0x200000, CRC(9b8cb56b) SHA1(2ff1081dc99bb7c2f1e036f4c112137c96b83d23) ) \
 
 /* CD sets - use CD BIOS roms */
 // we load the default flashed ROMs anyway
@@ -3104,16 +3127,16 @@ ROM_START( sfiii2 )
 	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
 	ROM_LOAD( "sfiii2_usa.29f400.u2", 0x000000, 0x080000, CRC(75dd72e0) SHA1(5a12d6ea6734df5de00ecee6f9ef470749d2f242) )
 
-	SFIII2_970204_FLASH
-	SFIII2_970204_CDROM
+	SFIII2_970930_FLASH
+	SFIII2_970930_CDROM
 ROM_END
 
 ROM_START( sfiii2j )
 	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
 	ROM_LOAD( "sfiii2_japan.29f400.u2", 0x000000, 0x080000, CRC(faea0a3e) SHA1(a03cd63bcf52e4d57f7a598c8bc8e243694624ec) )
 
-	SFIII2_970204_FLASH
-	SFIII2_970204_CDROM
+	SFIII2_970930_FLASH
+	SFIII2_970930_CDROM
 ROM_END
 
 ROM_START( sfiii3 )
@@ -3219,7 +3242,7 @@ ROM_START( sfiii2n )
 	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
 	ROM_LOAD( "sfiii2_asia_nocd.29f400.u2", 0x000000, 0x080000, CRC(fd297c0d) SHA1(4323deda2789f104b53f32a663196ec16de73215) )
 
-	SFIII2_970204_FLASH
+	SFIII2_970930_FLASH
 ROM_END
 
 ROM_START( sfiii3n )
@@ -3262,6 +3285,13 @@ ROM_START( jojobane )
 	ROM_LOAD( "jojoba_euro_nocd.29f400.u2", 0x000000, 0x080000, CRC(1ee2d679) SHA1(9e129b454a376606b3f7e8aec64de425cf9c635c) )
 
 	JOJOBA_990913_FLASH
+ROM_END
+
+ROM_START( redeartn )
+	ROM_REGION32_BE( 0x080000, "user1", 0 ) /* bios region */
+	ROM_LOAD( "warzard_euro.29f400.u2", 0x000000, 0x080000, CRC(02e0f336) SHA1(acc37e830dfeb9674f5a0fb24f4cc23217ae4ff5) )
+
+	REDEARTN_FLASH
 ROM_END
 
 
@@ -3427,10 +3457,12 @@ GAME( 1999, jojoba,   0,        jojoba,   jojo, jojoba,   ROT0, "Capcom", "JoJo 
 
 /* NO CD sets */
 
-GAME( 1997, sfiiin,   sfiii,    sfiii,    cps3, sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiii2n,  sfiii2,   sfiii2,   cps3, sfiii2,   ROT0, "Capcom", "Street Fighter III 2nd Impact: Giant Attack (Asia 970930, NO CD)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, jojon,    jojo,     jojo,     cps3, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 990108, NO CD)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, jojoan,   jojo,     jojo,     cps3, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 981202, NO CD)", GAME_IMPERFECT_GRAPHICS )
+// We don't have any actual red earth / warzard NO CD bios sets, but keep this here anyway
+GAME( 1996, redeartn, redearth, redearth, redeartn, nocd, ROT0, "Capcom", "Red Earth (961121, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiin,   sfiii,    sfiii, sfiiiws, sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiii2n,  sfiii2,   sfiii2,sfiiiws, sfiii2,   ROT0, "Capcom", "Street Fighter III 2nd Impact: Giant Attack (Asia 970930, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, jojon,    jojo,     jojo,     jojo, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 990108, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, jojoan,   jojo,     jojo,     jojo, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 981202, NO CD)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1999, sfiii3n,  sfiii3,   sfiii3,   cps3, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Japan 990608, NO CD)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1999, sfiii3an, sfiii3,   sfiii3,   cps3, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Japan 990512, NO CD)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1999, jojoban,  jojoba,   jojoba,   jojo, jojoba,   ROT0, "Capcom", "JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913, NO CD)", GAME_IMPERFECT_GRAPHICS )

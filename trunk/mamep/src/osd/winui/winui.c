@@ -6736,16 +6736,13 @@ static void MameLoadState()
 		}
 
 		// call the MAME core function to check the save state file
-//FIXME
-#if 0
 		stemp = utf8_from_wstring(selected_filename);
 		//mamep: mamecore use utf8 string instead of TCHAR string
-		rc = state_save_check_file(NULL, pSaveState, stemp, MameMessageBoxUTF8);
+		rc = state_manager::check_file(NULL, pSaveState, stemp, MameMessageBoxUTF8);
 		osd_free(stemp);
 		mame_fclose(pSaveState);
 		if (rc)
 			return;
-#endif
 
 		memset(&playopts, 0, sizeof(playopts));
 #ifdef MESS

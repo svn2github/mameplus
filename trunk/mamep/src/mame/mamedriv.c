@@ -3145,24 +3145,25 @@ V-V                           TP-027
 
 	/* Capcom CPS3 games */
 	DRIVER( redearth )	/* 21/11/1996 (c) 1996 (Euro) */
-	DRIVER( redeartha ) /* 23/10/1996 (c) 1996 (Euro) */
+	DRIVER( redeartha )	/* 23/10/1996 (c) 1996 (Euro) */
 	DRIVER( warzard )	/* 21/11/1996 (c) 1996 (Japan) */
 	DRIVER( warzarda )	/* 23/10/1996 (c) 1996 (Japan) */
-	DRIVER( sfiii )	/* 04/02/1997 (c) 1997 (USA) */
+	DRIVER( sfiii )		/* 04/02/1997 (c) 1997 (USA) */
 	DRIVER( sfiiij )	/* 04/02/1997 (c) 1997 (Japan) */
 	DRIVER( sfiii2 )	/* 30/09/1997 (c) 1997 (USA) */
 	DRIVER( sfiii2j )	/* 30/09/1997 (c) 1997 (Japan) */
-	DRIVER( jojo )	/* 08/01/1999 (c) 1998 (USA) */
-	DRIVER( jojoa )	/* 02/12/1998 (c) 1998 (USA) */
-	DRIVER( jojoj )	/* 08/01/1999 (c) 1998 (Japan) */
+	DRIVER( jojo )		/* 08/01/1999 (c) 1998 (USA) */
+	DRIVER( jojoa )		/* 02/12/1998 (c) 1998 (USA) */
+	DRIVER( jojoj )		/* 08/01/1999 (c) 1998 (Japan) */
 	DRIVER( jojoaj )	/* 02/12/1998 (c) 1998 (Japan) */
 	DRIVER( sfiii3 )	/* 08/06/1999 (c) 1999 (USA) */
 	DRIVER( sfiii3a )	/* 12/05/1999 (c) 1999 (USA) */
 	DRIVER( jojoba )	/* 13/09/1999 (c) 1999 (Japan) */
 
+	DRIVER( redeartn )	/* 21/11/1996 (c) 1996 (?) */
 	DRIVER( sfiiin )	/* 04/02/1997 (c) 1997 (Asia) */
 	DRIVER( sfiii2n )	/* 30/09/1997 (c) 1997 (Asia) */
-	DRIVER( jojon )	/* 08/01/1999 (c) 1998 (Asia) */
+	DRIVER( jojon )		/* 08/01/1999 (c) 1998 (Asia) */
 	DRIVER( jojoan )	/* 02/12/1998 (c) 1998 (Asia) */
 	DRIVER( sfiii3n )	/* 08/06/1999 (c) 1999 (Japan) */
 	DRIVER( sfiii3an )	/* 12/05/1999 (c) 1999 (Japan) */
