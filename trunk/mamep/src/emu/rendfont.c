@@ -123,6 +123,7 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 		{
 			glyph &glyph_ch = m_glyphs_cmd[chnum / 256][chnum % 256];
 			float scale = (float)m_height / (float)m_height_cmd;
+			if (m_format == FF_OSD) scale *= 0.90f;
 
 			if (glyph_ch.bitmap  == NULL)
 				char_expand(chnum, glyph_ch);
