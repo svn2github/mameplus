@@ -163,10 +163,6 @@ int cli_execute(int argc, char **argv, osd_interface &osd, const options_entry *
 		//mamep: ignore error for options added by callback later
 		mame_set_output_channel(OUTPUT_CHANNEL_ERROR, mame_null_output_callback, NULL, &prevcb, &prevparam);
 
-		//mamep: ignore error
-		/* parse the command line first */
-		options_parse_command_line(options, argc, argv, OPTION_PRIORITY_CMDLINE, FALSE);
-
 		setup_language(options);
 
 		/* parse the simple commmands before we go any further */
@@ -188,7 +184,7 @@ int cli_execute(int argc, char **argv, osd_interface &osd, const options_entry *
 
 		//mamep: try command line again
 		/* parse the command line again; if we fail here, we're screwed */
-		if (options_parse_command_line(options, argc, argv, OPTION_PRIORITY_CMDLINE, FALSE))
+		if (options_parse_command_line(options, argc, argv, OPTION_PRIORITY_CMDLINE, TRUE))
 		{
 			result = MAMERR_INVALID_CONFIG;
 			goto error;

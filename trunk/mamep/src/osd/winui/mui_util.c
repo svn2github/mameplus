@@ -515,8 +515,7 @@ static void UpdateController(void)
 
 int numberOfSpeakers(const machine_config *config)
 {
-	int speakers = config->m_devicelist.count(SPEAKER);
-	return speakers;
+	return config->m_devicelist.count(SPEAKER);
 }
 
 static struct DriversInfo* GetDriversInfo(int driver_index)
