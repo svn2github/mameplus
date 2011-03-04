@@ -540,12 +540,12 @@ static NVRAM_HANDLER( neogeo )
 {
 	if (read_or_write)
 		/* save the SRAM settings */
-		mame_fwrite(file, save_ram, 0x2000);
+		file->write(save_ram, 0x2000);
 	else
 	{
 		/* load the SRAM settings */
 		if (file)
-			mame_fread(file, save_ram, 0x2000);
+			file->read(save_ram, 0x2000);
 		else
 			memset(save_ram, 0, 0x10000);
 	}
@@ -615,15 +615,15 @@ static MEMCARD_HANDLER( neogeo )
 	{
 	case MEMCARD_CREATE:
 		memset(memcard_data, 0, MEMCARD_SIZE);
-		mame_fwrite(file, memcard_data, MEMCARD_SIZE);
+		file.write(memcard_data, MEMCARD_SIZE);
 		break;
 
 	case MEMCARD_INSERT:
-		mame_fread(file, memcard_data, MEMCARD_SIZE);
+		file.read(memcard_data, MEMCARD_SIZE);
 		break;
 
 	case MEMCARD_EJECT:
-		mame_fwrite(file, memcard_data, MEMCARD_SIZE);
+		file.write(memcard_data, MEMCARD_SIZE);
 		break;
 	}
 }
@@ -1364,12 +1364,12 @@ static MACHINE_CONFIG_START( neogeo, neogeo_state )
 	/* video hardware */
 	MCFG_VIDEO_START(neogeo)
 	MCFG_VIDEO_RESET(neogeo)
-	MCFG_VIDEO_UPDATE(neogeo)
 	MCFG_DEFAULT_LAYOUT(layout_neogeo)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_RAW_PARAMS(NEOGEO_PIXEL_CLOCK, NEOGEO_HTOTAL, NEOGEO_HBEND, NEOGEO_HBSTART, NEOGEO_VTOTAL, NEOGEO_VBEND, NEOGEO_VBSTART)
+	MCFG_SCREEN_UPDATE(neogeo)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

@@ -269,7 +269,7 @@ void device_config_interface::interface_config_complete()
 //  constructed
 //-------------------------------------------------
 
-bool device_config_interface::interface_validity_check(const game_driver &driver) const
+bool device_config_interface::interface_validity_check(core_options &options, const game_driver &driver) const
 {
 	return false;
 }
@@ -336,17 +336,17 @@ void device_config::config_complete()
 //  configuration has been constructed
 //-------------------------------------------------
 
-bool device_config::validity_check(const game_driver &driver) const
+bool device_config::validity_check(core_options &options, const game_driver &driver) const
 {
 	bool error = false;
 
 	// validate via the interfaces
 	for (device_config_interface *intf = m_interface_list; intf != NULL; intf = intf->interface_next())
-		if (intf->interface_validity_check(driver))
+		if (intf->interface_validity_check(options, driver))
 			error = true;
 
 	// let the device itself validate
-	if (device_validity_check(driver))
+	if (device_validity_check(options, driver))
 		error = true;
 
 	return error;
@@ -370,7 +370,7 @@ void device_config::device_config_complete()
 //  the configuration has been constructed
 //-------------------------------------------------
 
-bool device_config::device_validity_check(const game_driver &driver) const
+bool device_config::device_validity_check(core_options &options, const game_driver &driver) const
 {
 	// indicate no error by default
 	return false;
@@ -399,6 +399,17 @@ machine_config_constructor device_config::machine_config_additions() const
 	return NULL;
 }
 
+
+
+//-------------------------------------------------
+//  input_ports - return a pointer to the implicit
+//  input ports description for this device
+//-------------------------------------------------
+
+const input_port_token *device_config::input_ports() const
+{
+	return NULL;
+}
 
 
 //**************************************************************************

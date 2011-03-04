@@ -218,7 +218,7 @@ static INTERRUPT_GEN( hexion_interrupt )
 		cpu_set_input_line(device, 0, HOLD_LINE);
 }
 
-static MACHINE_CONFIG_START( hexion, driver_device )
+static MACHINE_CONFIG_START( hexion, hexion_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80,24000000/4)	/* Z80B 6 MHz */
@@ -232,13 +232,13 @@ static MACHINE_CONFIG_START( hexion, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 32*8-1)
+	MCFG_SCREEN_UPDATE(hexion)
 
 	MCFG_GFXDECODE(hexion)
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
 	MCFG_VIDEO_START(hexion)
-	MCFG_VIDEO_UPDATE(hexion)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

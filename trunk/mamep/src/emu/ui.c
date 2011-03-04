@@ -333,7 +333,7 @@ INLINE int is_fullwidth_char(unicode_char uchar)
     setup_palette - set up the ui palette
 -------------------------------------------------*/
 
-static void setup_palette(void)
+static void setup_palette(running_machine *machine)
 {
 	static struct
 	{
@@ -365,17 +365,17 @@ static void setup_palette(void)
 #ifdef TRANS_UI
 	ui_transparency = 255;
 
-	ui_transparency = options_get_int(mame_options(), OPTION_UI_TRANSPARENCY);
+	ui_transparency = options_get_int(&machine->options(), OPTION_UI_TRANSPARENCY);
 	if (ui_transparency < 0 || ui_transparency > 255)
 	{
-		mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, options_get_string(mame_options(), OPTION_UI_TRANSPARENCY));
+		mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, options_get_string(&machine->options(), OPTION_UI_TRANSPARENCY));
 		ui_transparency = 215;
 	}
 #endif /* TRANS_UI */
 
 	for (i = 0; palette_decode_table[i].name; i++)
 	{
-		const char *value = options_get_string(mame_options(), palette_decode_table[i].name);
+		const char *value = options_get_string(&machine->options(), palette_decode_table[i].name);
 		int col = palette_decode_table[i].color;
 		int r = palette_decode_table[i].defval[0];
 		int g = palette_decode_table[i].defval[1];
@@ -429,7 +429,7 @@ int ui_init(running_machine *machine)
 	machine->add_notifier(MACHINE_NOTIFY_EXIT, ui_exit);
 
 #ifdef UI_COLOR_DISPLAY
-	setup_palette();
+	setup_palette(machine);
 #endif /* UI_COLOR_DISPLAY */
 	build_bgtexture(machine);
 	ui_bgcolor = UI_BACKGROUND_COLOR;
@@ -439,14 +439,14 @@ int ui_init(running_machine *machine)
 	ui_gfx_init(machine);
 
 #ifdef CMD_LIST
-	datafile_init(machine->options());
+	datafile_init(&machine->options());
 #endif /* CMD_LIST */
 
 	/* reset globals */
 	single_step = FALSE;
 	ui_set_handler(handler_messagebox, 0);
 	/* retrieve options */
-	ui_use_natural_keyboard = options_get_bool(machine->options(), OPTION_NATURAL_KEYBOARD);
+	ui_use_natural_keyboard = options_get_bool(&machine->options(), OPTION_NATURAL_KEYBOARD);
 
 	return 0;
 }
@@ -476,8 +476,8 @@ static void ui_exit(running_machine &machine)
 int ui_display_startup_screens(running_machine *machine, int first_time, int show_disclaimer)
 {
 	const int maxstate = 3;
-	int str = options_get_int(machine->options(), OPTION_SECONDS_TO_RUN);
-	int show_gameinfo = !options_get_bool(machine->options(), OPTION_SKIP_GAMEINFO);
+	int str = options_get_int(&machine->options(), OPTION_SECONDS_TO_RUN);
+	int show_gameinfo = !options_get_bool(&machine->options(), OPTION_SKIP_GAMEINFO);
 	int show_warnings = TRUE;
 	int state;
 
@@ -578,7 +578,7 @@ void ui_update_and_render(running_machine *machine, render_container *container)
 	/* if we're paused, dim the whole screen */
 	if (machine->phase() >= MACHINE_PHASE_RESET && (single_step || machine->paused()))
 	{
-		int alpha = (1.0f - options_get_float(machine->options(), OPTION_PAUSE_BRIGHTNESS)) * 255.0f;
+		int alpha = (1.0f - options_get_float(&machine->options(), OPTION_PAUSE_BRIGHTNESS)) * 255.0f;
 		if (ui_menu_is_force_game_select())
 			alpha = 255;
 		if (alpha > 255)
@@ -615,7 +615,7 @@ render_font *ui_get_font(running_machine &machine)
 {
 	/* allocate the font and messagebox string */
 	if (ui_font == NULL)
-		ui_font = machine.render().font_alloc(options_get_string(machine.options(), OPTION_UI_FONT));
+		ui_font = machine.render().font_alloc(options_get_string(&machine.options(), OPTION_UI_FONT));
 	return ui_font;
 }
 
@@ -1416,7 +1416,7 @@ static astring &warnings_string(running_machine *machine, astring &string)
 	string.reset();
 
 	/* if no warnings, nothing to return */
-	if (rom_load_warnings(machine) == 0 && !(machine->gamedrv->flags & WARNING_FLAGS))
+	if (rom_load_warnings(machine) == 0 && rom_load_knownbad(machine) == 0 && !(machine->gamedrv->flags & WARNING_FLAGS))
 		return string;
 
 	/* add a warning if any ROMs were loaded with warnings */
@@ -1428,9 +1428,13 @@ static astring &warnings_string(running_machine *machine, astring &string)
 	}
 
 	/* if we have at least one warning flag, print the general header */
-	if (machine->gamedrv->flags & WARNING_FLAGS)
+	if ((machine->gamedrv->flags & WARNING_FLAGS) || rom_load_knownbad(machine) > 0)
 	{
 		string.cat(_("There are known problems with this " GAMENOUN "\n\n"));
+
+		/* add a warning if any ROMs are flagged BAD_DUMP/NO_DUMP */
+		if (rom_load_knownbad(machine) > 0)
+			string.cat("One or more ROMs/CHDs for this "  GAMENOUN " have not been correctly dumped.\n");
 
 		/* add one line per warning flag */
 		if (input_machine_has_keyboard(machine))
@@ -2162,7 +2166,7 @@ static UINT32 handler_confirm_quit(running_machine *machine, render_container *c
 		"Press Select key/button to quit,\n"
 		"Cancel key/button to continue.";
 
-	if (!options_get_bool(machine->options(), OPTION_CONFIRM_QUIT))
+	if (!options_get_bool(&machine->options(), OPTION_CONFIRM_QUIT))
 	{
 		machine->schedule_exit();
 		return ui_set_handler(ui_menu_ui_handler, 0);
@@ -2268,7 +2272,7 @@ static slider_state *slider_init(running_machine *machine)
 			}
 
 	/* add CPU overclocking (cheat only) */
-	if (options_get_bool(machine->options(), OPTION_CHEAT))
+	if (options_get_bool(&machine->options(), OPTION_CHEAT))
 	{
 		device_execute_interface *exec = NULL;
 		for (bool gotone = machine->m_devicelist.first(exec); gotone; gotone = exec->next(exec))
@@ -2291,7 +2295,7 @@ static slider_state *slider_init(running_machine *machine)
 		void *param = (void *)screen;
 
 		/* add refresh rate tweaker */
-		if (options_get_bool(machine->options(), OPTION_CHEAT))
+		if (options_get_bool(&machine->options(), OPTION_CHEAT))
 		{
 			string.printf(_("%s Refresh Rate"), slider_get_screen_desc(*screen));
 			*tailptr = slider_alloc(machine, string, -33000, 0, 33000, 1000, slider_refresh, param);
@@ -2843,7 +2847,7 @@ int ui_get_use_natural_keyboard(running_machine *machine)
 void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keyboard)
 {
 	ui_use_natural_keyboard = use_natural_keyboard;
-	options_set_bool(machine->options(), OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE);
+	options_set_bool(&machine->options(), OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE);
 }
 
 

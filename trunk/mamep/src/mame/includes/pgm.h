@@ -93,7 +93,6 @@ void pgm_oldsplus_decrypt(running_machine *machine);
 void pgm_kovshp_decrypt(running_machine *machine);
 void pgm_killbldp_decrypt(running_machine *machine);
 void pgm_svg_decrypt(running_machine *machine);
-void pgm_dw2001_decrypt(running_machine *machine);
 void pgm_ket_decrypt(running_machine *machine);
 void pgm_espgal_decrypt(running_machine *machine);
 
@@ -120,5 +119,5 @@ WRITE16_HANDLER( pgm_tx_videoram_w );
 WRITE16_HANDLER( pgm_bg_videoram_w );
 
 VIDEO_START( pgm );
-VIDEO_EOF( pgm );
-VIDEO_UPDATE( pgm );
+SCREEN_EOF( pgm );
+SCREEN_UPDATE( pgm );

@@ -67,7 +67,7 @@ static ADDRESS_MAP_START( main_cpu, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe301, 0xe301) AM_WRITE(tryout_flipscreen_w)
 	AM_RANGE(0xe302, 0xe302) AM_WRITE(tryout_bankswitch_w)
 	AM_RANGE(0xe401, 0xe401) AM_WRITE(tryout_vram_bankswitch_w)
-	AM_RANGE(0xe402, 0xe404) AM_WRITEONLY AM_BASE(&tryout_gfx_control)
+	AM_RANGE(0xe402, 0xe404) AM_WRITEONLY AM_BASE_MEMBER(tryout_state, gfx_control)
 	AM_RANGE(0xe414, 0xe414) AM_WRITE(tryout_sound_w)
 	AM_RANGE(0xe417, 0xe417) AM_WRITE(tryout_nmi_ack_w)
 	AM_RANGE(0xfff0, 0xffff) AM_ROM AM_REGION("maincpu", 0xbff0) /* reset vectors */
@@ -201,13 +201,13 @@ static MACHINE_CONFIG_START( tryout, tryout_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
+	MCFG_SCREEN_UPDATE(tryout)
 
 	MCFG_GFXDECODE(tryout)
 	MCFG_PALETTE_LENGTH(0x20)
 	MCFG_PALETTE_INIT(tryout)
 
 	MCFG_VIDEO_START(tryout)
-	MCFG_VIDEO_UPDATE(tryout)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

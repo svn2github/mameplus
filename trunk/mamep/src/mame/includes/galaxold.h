@@ -88,8 +88,8 @@ VIDEO_START( ad2083 );
 void galaxold_init_stars(running_machine *machine, int colors_offset);
 void galaxold_draw_stars(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect);
 
-VIDEO_UPDATE( galaxold );
-VIDEO_UPDATE( dambustr );
+SCREEN_UPDATE( galaxold );
+SCREEN_UPDATE( dambustr );
 
 WRITE8_HANDLER( galaxold_gfxbank_w );
 WRITE8_HANDLER( galaxold_flip_screen_x_w );
@@ -153,6 +153,7 @@ DRIVER_INIT( mimonscr );
 DRIVER_INIT( rescue );
 DRIVER_INIT( minefld );
 DRIVER_INIT( hustler );
+DRIVER_INIT( hustlerd );
 DRIVER_INIT( billiard );
 DRIVER_INIT( mrkougar );
 DRIVER_INIT( mrkougb );

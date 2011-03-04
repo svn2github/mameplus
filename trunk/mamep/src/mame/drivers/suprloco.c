@@ -37,9 +37,9 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe001, 0xe001) AM_READ_PORT("DSW2")
 	AM_RANGE(0xe800, 0xe800) AM_WRITE(suprloco_soundport_w)
 	AM_RANGE(0xe801, 0xe801) AM_READWRITE(suprloco_control_r, suprloco_control_w)
-	AM_RANGE(0xf000, 0xf6ff) AM_RAM_WRITE(suprloco_videoram_w) AM_BASE(&suprloco_videoram)
+	AM_RANGE(0xf000, 0xf6ff) AM_RAM_WRITE(suprloco_videoram_w) AM_BASE_MEMBER(suprloco_state, videoram)
 	AM_RANGE(0xf700, 0xf7df) AM_RAM /* unused */
-	AM_RANGE(0xf7e0, 0xf7ff) AM_RAM_WRITE(suprloco_scrollram_w) AM_BASE(&suprloco_scrollram)
+	AM_RANGE(0xf7e0, 0xf7ff) AM_RAM_WRITE(suprloco_scrollram_w) AM_BASE_MEMBER(suprloco_state, scrollram)
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -152,7 +152,7 @@ GFXDECODE_END
 
 
 
-static MACHINE_CONFIG_START( suprloco, driver_device )
+static MACHINE_CONFIG_START( suprloco, suprloco_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 4000000)	/* 4 MHz (?) */
@@ -170,13 +170,13 @@ static MACHINE_CONFIG_START( suprloco, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 31*8-1, 0*8, 28*8-1)
+	MCFG_SCREEN_UPDATE(suprloco)
 
 	MCFG_GFXDECODE(suprloco)
 	MCFG_PALETTE_LENGTH(512+256)
 
 	MCFG_PALETTE_INIT(suprloco)
 	MCFG_VIDEO_START(suprloco)
-	MCFG_VIDEO_UPDATE(suprloco)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

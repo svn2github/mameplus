@@ -1071,9 +1071,9 @@ static NVRAM_HANDLER(system24)
 	if(!track_size || !file)
 		return;
 	if(read_or_write)
-		mame_fwrite(file, machine->region("floppy")->base(), 2*track_size);
+		file->write(machine->region("floppy")->base(), 2*track_size);
 	else
-		mame_fread(file, machine->region("floppy")->base(), 2*track_size);
+		file->read(machine->region("floppy")->base(), 2*track_size);
 }
 
 static MACHINE_START( system24 )
@@ -1794,11 +1794,11 @@ static MACHINE_CONFIG_START( system24, driver_device )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK/2, 656, 0/*+69*/, 496/*+69*/, 424, 0/*+25*/, 384/*+25*/)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MCFG_SCREEN_UPDATE(system24)
 
 	MCFG_PALETTE_LENGTH(8192*2)
 
 	MCFG_VIDEO_START(system24)
-	MCFG_VIDEO_UPDATE(system24)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

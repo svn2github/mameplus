@@ -100,7 +100,9 @@ screen_device_config::screen_device_config(const machine_config &mconfig, const 
 	  m_xoffset(0.0f),
 	  m_yoffset(0.0f),
 	  m_xscale(1.0f),
-	  m_yscale(1.0f)
+	  m_yscale(1.0f),
+	  m_screen_update(NULL),
+	  m_screen_eof(NULL)
 {
 }
 
@@ -243,7 +245,7 @@ void screen_device_config::static_set_default_position(device_config *device, do
 //  configuration
 //-------------------------------------------------
 
-bool screen_device_config::device_validity_check(const game_driver &driver) const
+bool screen_device_config::device_validity_check(core_options &options, const game_driver &driver) const
 {
 	bool error = false;
 
@@ -283,6 +285,34 @@ bool screen_device_config::device_validity_check(const game_driver &driver) cons
 		error = true;
 	}
 	return error;
+}
+
+
+
+
+//-------------------------------------------------
+//  static_set_screen_update - set the legacy
+//  screen update callback in the device
+//  configuration
+//-------------------------------------------------
+
+void screen_device_config::static_set_screen_update(device_config *device, screen_update_func callback)
+{
+	assert(device != NULL);
+	downcast<screen_device_config *>(device)->m_screen_update = callback;
+}
+
+
+//-------------------------------------------------
+//  static_set_screen_eof - set the legacy
+//  screen eof callback in the device
+//  configuration
+//-------------------------------------------------
+
+void screen_device_config::static_set_screen_eof(device_config *device, screen_eof_func callback)
+{
+	assert(device != NULL);
+	downcast<screen_device_config *>(device)->m_screen_eof = callback;
 }
 
 
@@ -604,10 +634,10 @@ void screen_device::device_start()
 		m_scanline_timer->adjust(time_until_pos(0));
 
 	// create burn-in bitmap
-	if (options_get_int(machine->options(), OPTION_BURNIN) > 0)
+	if (options_get_int(&machine->options(), OPTION_BURNIN) > 0)
 	{
 		int width, height;
-		if (sscanf(options_get_string(machine->options(), OPTION_SNAPSIZE), "%dx%d", &width, &height) != 2 || width == 0 || height == 0)
+		if (sscanf(options_get_string(&machine->options(), OPTION_SNAPSIZE), "%dx%d", &width, &height) != 2 || width == 0 || height == 0)
 			width = height = 300;
 		m_burnin = auto_alloc(machine, bitmap_t(width, height, BITMAP_FORMAT_INDEXED64));
 		if (m_burnin == NULL)
@@ -616,7 +646,7 @@ void screen_device::device_start()
 	}
 
 	// load the effect overlay
-	const char *overname = options_get_string(machine->options(), OPTION_EFFECT);
+	const char *overname = options_get_string(&machine->options(), OPTION_EFFECT);
 	if (overname != NULL && strcmp(overname, "none") != 0)
 		load_effect_overlay(overname);
 
@@ -937,7 +967,7 @@ bool screen_device::update_partial(int scanline)
 		g_profiler.start(PROFILER_VIDEO);
 		LOG_PARTIAL_UPDATES(("updating %d-%d\n", clip.min_y, clip.max_y));
 
-		flags = machine->driver_data<driver_device>()->video_update(*this, *m_bitmap[m_curbitmap], clip);
+		flags = screen_update(*m_bitmap[m_curbitmap], clip);
 		m_partial_updates_this_frame++;
 		g_profiler.stop();
 
@@ -1350,10 +1380,8 @@ void screen_device::finalize_burnin()
 	// write the final PNG
 
 	// compute the name and create the file
-	astring fname;
-	fname.printf("%s" PATH_SEPARATOR "burnin-%s.png", machine->basename(), tag());
-	mame_file *file;
-	file_error filerr = mame_fopen(SEARCHPATH_SCREENSHOT, fname, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &file);
+	emu_file file(m_machine.options(), SEARCHPATH_SCREENSHOT, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+	file_error filerr = file.open(machine->basename(), PATH_SEPARATOR "burnin-", tag());
 	if (filerr == FILERR_NONE)
 	{
 		png_info pnginfo = { 0 };
@@ -1367,11 +1395,10 @@ void screen_device::finalize_burnin()
 		png_add_text(&pnginfo, "System", text);
 
 		// now do the actual work
-		pngerr = png_write_bitmap(mame_core_file(file), &pnginfo, finalmap, 0, NULL);
+		pngerr = png_write_bitmap(file, &pnginfo, finalmap, 0, NULL);
 
 		// free any data allocated
 		png_free(&pnginfo);
-		mame_fclose(file);
 	}
 }
 
@@ -1390,9 +1417,40 @@ void screen_device::load_effect_overlay(const char *filename)
 	fullname.cat(".png");
 
 	// load the file
-	m_screen_overlay_bitmap = render_load_png(OPTION_ARTPATH, NULL, fullname, NULL, NULL);
+	emu_file file(m_machine.options(), OPTION_ARTPATH, OPEN_FLAG_READ);
+	m_screen_overlay_bitmap = render_load_png(file, NULL, fullname, NULL, NULL);
 	if (m_screen_overlay_bitmap != NULL)
 		m_container->set_overlay(m_screen_overlay_bitmap);
 	else
 		mame_printf_warning(_("Unable to load effect PNG file '%s'\n"), fullname.cstr());
 }
+
+//-------------------------------------------------
+//  screen_update - default implementation which
+//  calls to the legacy screen_update function
+//-------------------------------------------------
+
+bool screen_device::screen_update(bitmap_t &bitmap, const rectangle &cliprect)
+{
+	if (m_config.m_screen_update != NULL) {
+		return (*m_config.m_screen_update)(this, &bitmap, &cliprect);
+	} else {
+		m_machine.driver_data<driver_device>()->screen_update(*this, bitmap, cliprect);
+	}
+	return 0;
+}
+
+//-------------------------------------------------
+//  screen_eof - default implementation which
+//  calls to the legacy screen_update function
+//-------------------------------------------------
+
+void screen_device::screen_eof()
+{
+	if (m_config.m_screen_eof != NULL) {
+		return (*m_config.m_screen_eof)(this, machine);
+	} else {
+		m_machine.driver_data<driver_device>()->screen_eof();
+	}
+}
+

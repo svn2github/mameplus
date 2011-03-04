@@ -33,14 +33,25 @@ Changes 02/06/2009 - Palindrome
 #include "sound/ay8910.h"
 #include "machine/6522via.h"
 
-static UINT8 *lions_vram;
+
+class _86lions_state : public driver_device
+{
+public:
+	_86lions_state(running_machine &machine, const driver_device_config_base &config)
+		: driver_device(machine, config) { }
+
+	UINT8 *lions_vram;
+};
+
+
 
 static VIDEO_START(lions)
 {
 }
 
-static VIDEO_UPDATE(lions)
+static SCREEN_UPDATE(lions)
 {
+	_86lions_state *state = screen->machine->driver_data<_86lions_state>();
 	const gfx_element *gfx = screen->machine->gfx[0];
 	int count = 0;
 
@@ -50,7 +61,7 @@ static VIDEO_UPDATE(lions)
 	{
 		for (x=0;x<38;x++)
 		{
-			int tile = lions_vram[count+1]|lions_vram[count]<<8;
+			int tile = state->lions_vram[count+1]|state->lions_vram[count]<<8;
 			tile&=0x1ff;
 			//int colour = tile>>12;
 			drawgfx_opaque(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8);
@@ -75,7 +86,7 @@ static READ8_HANDLER( test_r )
 
 
 static ADDRESS_MAP_START( lions_map, ADDRESS_SPACE_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_BASE(&lions_vram)
+	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_BASE_MEMBER(_86lions_state, lions_vram)
 	AM_RANGE(0x0800, 0x0fff) AM_RAM
 	AM_RANGE(0x1800, 0x1800) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0x1801, 0x1801) AM_DEVREADWRITE("crtc", mc6845_register_r, mc6845_register_w)
@@ -340,7 +351,7 @@ static PALETTE_INIT( lions )
 	}
 }
 
-static MACHINE_CONFIG_START( lions, driver_device )
+static MACHINE_CONFIG_START( lions, _86lions_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6809, MAIN_CLOCK/4)		 /* 3 MHz.(guess) */
 	MCFG_CPU_PROGRAM_MAP(lions_map)
@@ -353,13 +364,13 @@ static MACHINE_CONFIG_START( lions, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(304, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 304-1, 0, 216-1)	/* from the crtc registers... updated by crtc */
+	MCFG_SCREEN_UPDATE(lions)
 
 	MCFG_GFXDECODE(lions)
 	MCFG_PALETTE_LENGTH(64)
 	MCFG_PALETTE_INIT(lions)
 
 	MCFG_VIDEO_START(lions)
-	MCFG_VIDEO_UPDATE(lions)
 
 	MCFG_VIA6522_ADD("via6522_0", MAIN_CLOCK/12, via_interface)	/* 1 MHz.(only 1 or 2 MHz.are valid) */
 

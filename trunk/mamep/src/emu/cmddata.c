@@ -90,7 +90,7 @@ static int mame32jp_wrap;
 /****************************************************************************
  *      private data for parsing functions
  ****************************************************************************/
-static mame_file *fp;				/* Our file pointer */
+static emu_file *fp;				/* Our file pointer */
 static UINT64 dwFilePos;				/* file position */
 static UINT8 bToken[MAX_TOKEN_LENGTH];		/* Our current token */
 
@@ -210,12 +210,12 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 
 	while (1)
 	{
-		dwFilePos = mame_ftell(fp);
-		bData = mame_fgetc(fp);		/* Get next character */
+		dwFilePos = fp->tell();
+		bData = fp->getc();		/* Get next character */
 
 		/* If we're at the end of the file, bail out */
 
-		if (mame_feof(fp))
+		if (fp->eof())
 			return(TOKEN_INVALID);
 
 		/* If it's not whitespace, then let's start eating characters */
@@ -237,7 +237,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 			{
 				*pbTokenPtr++ = bData;
 				*pbTokenPtr = '\0';
-				dwFilePos = mame_ftell(fp);
+				dwFilePos = fp->tell();
 
 				if (',' == bData)
 					return(TOKEN_COMMA);
@@ -267,22 +267,22 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 				       bData != '\t' &&
 				       bData != '\n' &&
 				       bData != '\r' &&
-				       mame_feof(fp) == 0)
+				       fp->eof() == 0)
 				{
-					dwFilePos = mame_ftell(fp);
+					dwFilePos = fp->tell();
 					*pbTokenPtr++ = bData;	/* Store our byte */
 					++dwLength;
 					assert(dwLength < MAX_TOKEN_LENGTH);
-					bData = mame_fgetc(fp);
+					bData = fp->getc();
 				}
 
 				/* If it's not the end of the file, put the last received byte */
 				/* back. We don't want to touch the file position, though if */
 				/* we're past the end of the file. Otherwise, adjust it. */
 
-				if (0 == mame_feof(fp))
+				if (0 == fp->eof())
 				{
-					mame_fseek(fp, dwFilePos, SEEK_SET);
+					fp->seek(dwFilePos, SEEK_SET);
 				}
 
 				/* Null terminate the token */
@@ -306,10 +306,10 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 
 				/* Unix style perhaps? */
 
-				dwFilePos = mame_ftell(fp);
-				bData = mame_fgetc(fp);		/* Peek ahead */
-				dwPos = mame_ftell(fp);
-				mame_fseek(fp, dwFilePos, SEEK_SET);	/* Force a retrigger if subsequent LF's */
+				dwFilePos = fp->tell();
+				bData = fp->getc();		/* Peek ahead */
+				dwPos = fp->tell();
+				fp->seek(dwFilePos, SEEK_SET);	/* Force a retrigger if subsequent LF's */
 
 				if (LF == bData)		/* Two LF's in a row - it's a UNIX hard CR */
 				{
@@ -327,8 +327,8 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 			{
 				/* Figure out if it's Mac or MSDOS format */
 
-				dwFilePos = mame_ftell(fp);
-				bData = mame_fgetc(fp);		/* Peek ahead */
+				dwFilePos = fp->tell();
+				bData = fp->getc();		/* Peek ahead */
 
 				/* We don't need to bother with EOF checking. It will be 0xff if */
 				/* it's the end of the file and will be caught by the outer loop. */
@@ -340,7 +340,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 
 					/* Stuff our character back upstream for successive CR's */
 
-					mame_fseek(fp, dwFilePos, SEEK_SET);
+					fp->seek(dwFilePos, SEEK_SET);
 
 					*pbTokenPtr++ = bData;	/* A real carriage return (hard) */
 					*pbTokenPtr = '\0';
@@ -352,7 +352,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 #ifdef CMD_LIST
 					if (mame32jp_wrap)
 					{
-						dwFilePos = mame_ftell(fp);
+						dwFilePos = fp->tell();
 
 						*pbTokenPtr++ = bData;	/* A real carriage return (hard) */
 						*pbTokenPtr = '\0';
@@ -364,20 +364,20 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 #endif /* CMD_LIST */
 						UINT64 dwPos;
 
-						dwFilePos = mame_ftell(fp);	/* Our file position to reset to */
+						dwFilePos = fp->tell();	/* Our file position to reset to */
 						dwPos = dwFilePos;	/* Here so we can reposition things */
 
 						/* Look for a followup CR/LF */
 
-						bData = mame_fgetc(fp);	/* Get the next byte */
+						bData = fp->getc();	/* Get the next byte */
 
 						if (CR == bData)	/* CR! Good! */
 						{
-							bData = mame_fgetc(fp);	/* Get the next byte */
+							bData = fp->getc();	/* Get the next byte */
 
 							/* We need to do this to pick up subsequent CR/LF sequences */
 
-							mame_fseek(fp, dwPos, SEEK_SET);
+							fp->seek(dwPos, SEEK_SET);
 
 							if (pdwPosition)
 								*pdwPosition = dwPos;
@@ -393,7 +393,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 						}
 						else
 						{
-							mame_fseek(fp, dwFilePos, SEEK_SET);	/* Put the character back. No good */
+							fp->seek(dwFilePos, SEEK_SET);	/* Put the character back. No good */
 						}
 					}
 #ifdef CMD_LIST
@@ -401,7 +401,7 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 #endif /* CMD_LIST */
 				else
 				{
-					mame_fseek(fp, dwFilePos, SEEK_SET);	/* Put the character back. No good */
+					fp->seek(dwFilePos, SEEK_SET);	/* Put the character back. No good */
 				}
 
 				/* Otherwise, fall through and keep parsing */
@@ -426,12 +426,12 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 
 	while (1)
 	{
-		dwFilePos = mame_ftell(fp);
-		bData = mame_fgetc(fp);		/* Get next character */
+		dwFilePos = fp->tell();
+		bData = fp->getc();		/* Get next character */
 
 		/* If we're at the end of the file, bail out */
 
-		if (mame_feof(fp))
+		if (fp->eof())
 			return(TOKEN_INVALID);
 
 		/* If it's not whitespace, then let's start eating characters */
@@ -450,7 +450,7 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 			{
 				*pbTokenPtr++ = bData;
 				*pbTokenPtr = '\0';
-				dwFilePos = mame_ftell(fp);
+				dwFilePos = fp->tell();
 
 				return(TOKEN_EQUALS);
 			}
@@ -469,22 +469,22 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 				       bData != '\t' &&
 				       bData != '\n' &&
 				       bData != '\r' &&
-				       mame_feof(fp) == 0)
+				       fp->eof() == 0)
 				{
-					dwFilePos = mame_ftell(fp);
+					dwFilePos = fp->tell();
 					*pbTokenPtr++ = bData;	/* Store our byte */
 					++dwLength;
 					assert(dwLength < MAX_TOKEN_LENGTH);
-					bData = mame_fgetc(fp);
+					bData = fp->getc();
 				}
 
 				/* If it's not the end of the file, put the last received byte */
 				/* back. We don't want to touch the file position, though if */
 				/* we're past the end of the file. Otherwise, adjust it. */
 
-				if (0 == mame_feof(fp))
+				if (0 == fp->eof())
 				{
-					mame_fseek(fp, dwFilePos, SEEK_SET);
+					fp->seek(dwFilePos, SEEK_SET);
 				}
 
 				/* Null terminate the token */
@@ -508,10 +508,10 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 
 				/* Unix style perhaps? */
 
-				dwFilePos = mame_ftell(fp);
-				bData = mame_fgetc(fp);		/* Peek ahead */
-				dwPos = mame_ftell(fp);
-				mame_fseek(fp, dwFilePos, SEEK_SET);	/* Force a retrigger if subsequent LF's */
+				dwFilePos = fp->tell();
+				bData = fp->getc();		/* Peek ahead */
+				dwPos = fp->tell();
+				fp->seek(dwFilePos, SEEK_SET);	/* Force a retrigger if subsequent LF's */
 
 				if (LF == bData)		/* Two LF's in a row - it's a UNIX hard CR */
 				{
@@ -528,8 +528,8 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 			{
 				/* Figure out if it's Mac or MSDOS format */
 
-				dwFilePos = mame_ftell(fp);
-				bData = mame_fgetc(fp);		/* Peek ahead */
+				dwFilePos = fp->tell();
+				bData = fp->getc();		/* Peek ahead */
 
 				/* We don't need to bother with EOF checking. It will be 0xff if */
 				/* it's the end of the file and will be caught by the outer loop. */
@@ -541,7 +541,7 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 
 					/* Stuff our character back upstream for successive CR's */
 
-					mame_fseek(fp, dwFilePos, SEEK_SET);
+					fp->seek(dwFilePos, SEEK_SET);
 
 					*pbTokenPtr++ = bData;	/* A real carriage return (hard) */
 					*pbTokenPtr = '\0';
@@ -552,7 +552,7 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 				{
 					if (mame32jp_wrap)
 					{
-						dwFilePos = mame_ftell(fp);
+						dwFilePos = fp->tell();
 
 						*pbTokenPtr++ = bData;	/* A real carriage return (hard) */
 						*pbTokenPtr = '\0';
@@ -563,20 +563,20 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 					{
 						UINT64 dwPos;
 
-						dwFilePos = mame_ftell(fp);	/* Our file position to reset to */
+						dwFilePos = fp->tell();	/* Our file position to reset to */
 						dwPos = dwFilePos;	/* Here so we can reposition things */
 
 						/* Look for a followup CR/LF */
 
-						bData = mame_fgetc(fp);	/* Get the next byte */
+						bData = fp->getc();	/* Get the next byte */
 
 						if (CR == bData)	/* CR! Good! */
 						{
-							bData = mame_fgetc(fp);	/* Get the next byte */
+							bData = fp->getc();	/* Get the next byte */
 
 							/* We need to do this to pick up subsequent CR/LF sequences */
 
-							mame_fseek(fp, dwPos, SEEK_SET);
+							fp->seek(dwPos, SEEK_SET);
 
 							if (pdwPosition)
 								*pdwPosition = dwPos;
@@ -592,13 +592,13 @@ static UINT32 GetNextToken_ex(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 						}
 						else
 						{
-							mame_fseek(fp, dwFilePos, SEEK_SET);	/* Put the character back. No good */
+							fp->seek(dwFilePos, SEEK_SET);	/* Put the character back. No good */
 						}
 					}
 				}
 				else
 				{
-					mame_fseek(fp, dwFilePos, SEEK_SET);	/* Put the character back. No good */
+					fp->seek(dwFilePos, SEEK_SET);	/* Put the character back. No good */
 				}
 
 				/* Otherwise, fall through and keep parsing */
@@ -618,7 +618,7 @@ static void ParseClose(void)
 
 	if (fp)
         {
-		mame_fclose(fp);
+		fp->close();
         }
 
 	fp = NULL;
@@ -633,7 +633,9 @@ static UINT8 ParseOpen(const char *pszFilename)
 	file_error filerr;
 
 	/* Open file up in binary mode */
-	filerr = mame_fopen_options(datafile_options, NULL, pszFilename, OPEN_FLAG_READ, &fp);
+//FIXME
+//	fp = auto_alloc(machine, emu_file(datafile_options, NULL, OPEN_FLAG_READ));
+	filerr = fp->open(pszFilename);
 	if (filerr != FILERR_NONE)
 		return(FALSE);
 
@@ -642,8 +644,8 @@ static UINT8 ParseOpen(const char *pszFilename)
 	dwFilePos = 0;
 
 	/* identify text file type first */
-	mame_fgetc(fp);
-	mame_fseek(fp, dwFilePos, SEEK_SET);
+	fp->getc();
+	fp->seek(dwFilePos, SEEK_SET);
 
 	return(TRUE);
 }
@@ -654,11 +656,11 @@ static UINT8 ParseOpen(const char *pszFilename)
  ****************************************************************************/
 static UINT8 ParseSeek(UINT64 offset, int whence)
 {
-	int result = mame_fseek(fp, offset, whence);
+	int result = fp->seek(offset, whence);
 
 	if (0 == result)
 	{
-		dwFilePos = mame_ftell(fp);
+		dwFilePos = fp->tell();
 	}
 	return (UINT8)result;
 }

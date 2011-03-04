@@ -55,9 +55,9 @@ static WRITE16_HANDLER( stadhero_control_w )
 
 static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x01ffff) AM_ROM
-	AM_RANGE(0x200000, 0x2007ff) AM_RAM_WRITE(stadhero_pf1_data_w) AM_BASE(&stadhero_pf1_data)
-	AM_RANGE(0x240000, 0x240007) AM_RAM AM_BASE(&stadhero_pf2_control_0)
-	AM_RANGE(0x240010, 0x240017) AM_WRITEONLY AM_BASE(&stadhero_pf2_control_1)
+	AM_RANGE(0x200000, 0x2007ff) AM_RAM_WRITE(stadhero_pf1_data_w) AM_BASE_MEMBER(stadhero_state, pf1_data)
+	AM_RANGE(0x240000, 0x240007) AM_RAM AM_BASE_MEMBER(stadhero_state, pf2_control_0)
+	AM_RANGE(0x240010, 0x240017) AM_WRITEONLY AM_BASE_MEMBER(stadhero_state, pf2_control_1)
 	AM_RANGE(0x260000, 0x261fff) AM_READWRITE(stadhero_pf2_data_r, stadhero_pf2_data_w)
 	AM_RANGE(0x30c000, 0x30c00b) AM_READWRITE(stadhero_control_r, stadhero_control_w)
 	AM_RANGE(0x310000, 0x3107ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_BASE_GENERIC(paletteram)
@@ -208,7 +208,7 @@ static const ym3812_interface ym3812_config =
 
 /******************************************************************************/
 
-static MACHINE_CONFIG_START( stadhero, driver_device )
+static MACHINE_CONFIG_START( stadhero, stadhero_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 10000000)
@@ -225,12 +225,12 @@ static MACHINE_CONFIG_START( stadhero, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
+	MCFG_SCREEN_UPDATE(stadhero)
 
 	MCFG_GFXDECODE(stadhero)
 	MCFG_PALETTE_LENGTH(1024)
 
 	MCFG_VIDEO_START(stadhero)
-	MCFG_VIDEO_UPDATE(stadhero)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

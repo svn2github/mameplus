@@ -10,7 +10,7 @@ public:
 	virtual device_t *alloc_device(running_machine &machine) const;
 	static void static_set_gfx_region(device_config *device, int gfxregion);
 protected:
-	virtual bool device_validity_check(const game_driver &driver) const;
+	virtual bool device_validity_check(core_options &options, const game_driver &driver) const;
 	virtual const address_space_config *memory_space_config(int spacenum = 0) const;
 	address_space_config		m_space_config;
 	UINT8						m_gfxregion;
@@ -71,7 +71,7 @@ public:
 	void draw_sprites( running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, const UINT8* primap );
 	void gp9001_draw_custom_tilemap(running_machine* machine, bitmap_t* bitmap, tilemap_t* tilemap, const UINT8* priremap, const UINT8* pri_enable );
 	void gp9001_render_vdp(running_machine* machine, bitmap_t* bitmap, const rectangle* cliprect);
-	void gp9001_video_eof(void);
+	void gp9001_screen_eof(void);
 	void create_tilemaps(int region);
 	void init_scroll_regs(void);
 

@@ -71,10 +71,10 @@ ADDRESS_MAP_END
 //  i2cmem_device_config - constructor
 //-------------------------------------------------
 
-i2cmem_device_config::i2cmem_device_config( const machine_config &mconfig, const char *tag, const device_config *owner, UINT32 clock ) :
-	device_config( mconfig, static_alloc_device_config, "I2CMEM", tag, owner, clock),
-	device_config_memory_interface(mconfig, *this),
-	device_config_nvram_interface(mconfig, *this)
+i2cmem_device_config::i2cmem_device_config( const machine_config &mconfig, const char *tag, const device_config *owner, UINT32 clock )
+	: device_config(mconfig, static_alloc_device_config, "I2CMEM", tag, owner, clock),
+	  device_config_memory_interface(mconfig, *this),
+	  device_config_nvram_interface(mconfig, *this)
 {
 	m_address_bits = 0;
 
@@ -139,7 +139,7 @@ void i2cmem_device_config::device_config_complete()
 //  on this device
 //-------------------------------------------------
 
-bool i2cmem_device_config::device_validity_check( const game_driver &driver ) const
+bool i2cmem_device_config::device_validity_check( core_options &options, const game_driver &driver ) const
 {
 	bool error = false;
 	return error;
@@ -259,12 +259,12 @@ void i2cmem_device::nvram_default()
 //  .nv file
 //-------------------------------------------------
 
-void i2cmem_device::nvram_read( mame_file &file )
+void i2cmem_device::nvram_read( emu_file &file )
 {
 	int i2cmem_bytes = m_config.m_data_size;
 	UINT8 *buffer = auto_alloc_array( &m_machine, UINT8, i2cmem_bytes );
 
-	mame_fread( &file, buffer, i2cmem_bytes );
+	file.read( buffer, i2cmem_bytes );
 
 	for( offs_t offs = 0; offs < i2cmem_bytes; offs++ )
 	{
@@ -279,7 +279,7 @@ void i2cmem_device::nvram_read( mame_file &file )
 //  .nv file
 //-------------------------------------------------
 
-void i2cmem_device::nvram_write( mame_file &file )
+void i2cmem_device::nvram_write( emu_file &file )
 {
 	int i2cmem_bytes = m_config.m_data_size;
 	UINT8 *buffer = auto_alloc_array( &m_machine, UINT8, i2cmem_bytes );
@@ -289,7 +289,7 @@ void i2cmem_device::nvram_write( mame_file &file )
 		buffer[ offs ] = m_addrspace[ 0 ]->read_byte( offs );
 	}
 
-	mame_fwrite( &file, buffer, i2cmem_bytes );
+	file.write( buffer, i2cmem_bytes );
 
 	auto_free( &m_machine, buffer );
 }

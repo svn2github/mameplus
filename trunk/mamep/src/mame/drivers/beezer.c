@@ -13,9 +13,6 @@
 #include "sound/dac.h"
 #include "includes/beezer.h"
 
-extern const via6522_interface b_via_0_interface;
-extern const via6522_interface b_via_1_interface;
-
 static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_RAM AM_BASE_MEMBER(beezer_state, videoram)
 	AM_RANGE(0xc000, 0xcfff) AM_ROMBANK("bank1")
@@ -95,9 +92,9 @@ static MACHINE_CONFIG_START( beezer, beezer_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(256, 384)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 303)
-	MCFG_PALETTE_LENGTH(16)
+	MCFG_SCREEN_UPDATE(beezer)
 
-	MCFG_VIDEO_UPDATE(beezer)
+	MCFG_PALETTE_LENGTH(16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

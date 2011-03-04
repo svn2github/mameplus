@@ -1212,7 +1212,7 @@ void laserdisc_overlay_enable(device_t *device, int enable)
     video update callback
 -------------------------------------------------*/
 
-VIDEO_UPDATE( laserdisc )
+SCREEN_UPDATE( laserdisc )
 {
 	device_t *laserdisc = screen->machine->m_devicelist.first(LASERDISC);
 	if (laserdisc != NULL)
@@ -1653,6 +1653,7 @@ DEVICE_GET_INFO( laserdisc )
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case DEVINFO_STR_NAME:					intf = get_interface(device); strcpy(info->s, (intf != NULL) ? intf->name : "Unknown Laserdisc Player");	break;
+		case DEVINFO_STR_SHORTNAME:				intf = get_interface(device); strcpy(info->s, (intf != NULL) ? intf->shortname : "unkldplay");	break;
 		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Laserdisc Player");				break;
 		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");								break;
 		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);							break;

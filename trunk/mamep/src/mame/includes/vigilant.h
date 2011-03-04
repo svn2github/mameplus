@@ -5,6 +5,14 @@ public:
 		: driver_device(machine, config) { }
 
 	UINT8 *videoram;
+	int horiz_scroll_low;
+	int horiz_scroll_high;
+	int rear_horiz_scroll_low;
+	int rear_horiz_scroll_high;
+	int rear_color;
+	int rear_disable;
+	int rear_refresh;
+	bitmap_t *bg_bitmap;
 };
 
 
@@ -16,5 +24,5 @@ WRITE8_HANDLER( vigilant_paletteram_w );
 WRITE8_HANDLER( vigilant_horiz_scroll_w );
 WRITE8_HANDLER( vigilant_rear_horiz_scroll_w );
 WRITE8_HANDLER( vigilant_rear_color_w );
-VIDEO_UPDATE( vigilant );
-VIDEO_UPDATE( kikcubic );
+SCREEN_UPDATE( vigilant );
+SCREEN_UPDATE( kikcubic );

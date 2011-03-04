@@ -56,11 +56,11 @@ static NVRAM_HANDLER( seicross )
 	size_t nvram_size = state->nvram_size;
 
 	if (read_or_write)
-		mame_fwrite(file,nvram,nvram_size);
+		file->write(nvram,nvram_size);
 	else
 	{
 		if (file)
-			mame_fread(file,nvram,nvram_size);
+			file->read(nvram,nvram_size);
 		else
 		{
 			/* fill in the default values */
@@ -414,13 +414,13 @@ static MACHINE_CONFIG_START( nvram, seicross_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MCFG_SCREEN_UPDATE(seicross)
 
 	MCFG_GFXDECODE(seicross)
 	MCFG_PALETTE_LENGTH(64)
 
 	MCFG_PALETTE_INIT(seicross)
 	MCFG_VIDEO_START(seicross)
-	MCFG_VIDEO_UPDATE(seicross)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

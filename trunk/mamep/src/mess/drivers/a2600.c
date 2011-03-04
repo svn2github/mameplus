@@ -13,6 +13,7 @@
 #include "imagedev/cassette.h"
 #include "formats/a26_cas.h"
 #include "video/tia.h"
+#include "hashfile.h"
 
 typedef struct {
 	UINT8	top;
@@ -109,39 +110,6 @@ enum
 	mode32in1,
 	modeJVP
 };
-
-struct _extrainfo_banking_def {
-	char	extrainfo[10];
-	int		bank_mode;
-};
-
-static const struct _extrainfo_banking_def extrainfo_banking_defs[] = {
-	/* banking schemes */
-	{ "F8",	modeF8 },
-	{ "FA", modeFA },
-	{ "F6", modeF6 },
-	{ "F4", modeF4 },
-	{ "FE", modeFE },
-	{ "E0", modeE0 },
-	{ "3F", mode3F },
-	{ "UA", modeUA },
-	{ "E7", modeE7 },
-	{ "DC", modeDC },
-	{ "CV", modeCV },
-	{ "3E", mode3E },
-	{ "SS", modeSS },
-	{ "FV", modeFV },
-	{ "DPC", modeDPC },
-	{ "32in1", mode32in1 },
-	{ "JVP", modeJVP },
-
-	/* end of list - do not remove */
-	{ "\0", 0 },
-};
-
-
-
-
 
 static const UINT16 supported_screen_heights[4] = { 262, 312, 328, 342 };
 
@@ -581,7 +549,7 @@ static int detect_super_chip(running_machine *machine)
 static DEVICE_START( a2600_cart )
 {
 	a2600_state *state = device->machine->driver_data<a2600_state>();
-	state->banking_mode = 0xFF;
+	state->banking_mode = 0xff;
 }
 
 
@@ -589,9 +557,7 @@ static DEVICE_IMAGE_LOAD( a2600_cart )
 {
 	a2600_state *state = image.device().machine->driver_data<a2600_state>();
 	running_machine *machine = image.device().machine;
-	const struct _extrainfo_banking_def *eibd;
 	UINT8 *cart = CART;
-	const char	*extrainfo = NULL;
 
 	state->cart_size = image.length();
 
@@ -627,19 +593,6 @@ static DEVICE_IMAGE_LOAD( a2600_cart )
 		}
 	}
 
-	if (strcmp(image.extrainfo(), ""))
-		extrainfo = image.extrainfo();
-
-	if (extrainfo && extrainfo[0])
-	{
-		for (eibd = extrainfo_banking_defs; eibd->extrainfo[0]; eibd++)
-		{
-			if (! mame_stricmp(eibd->extrainfo, extrainfo))
-			{
-				state->banking_mode = eibd->bank_mode;
-			}
-		}
-	}
 	return 0;
 }
 
@@ -2248,11 +2201,12 @@ static MACHINE_CONFIG_START( a2600, a2600_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_RAW_PARAMS( MASTER_CLOCK_NTSC, 228, 26, 26 + 160 + 16, 262, 24 , 24 + 192 + 31 )
+	MCFG_SCREEN_UPDATE(tia)
+
 	MCFG_PALETTE_LENGTH( TIA_PALETTE_LENGTH )
 	MCFG_PALETTE_INIT(tia_NTSC)
 
 	MCFG_VIDEO_START(tia)
-	MCFG_VIDEO_UPDATE(tia)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2280,11 +2234,12 @@ static MACHINE_CONFIG_START( a2600p, a2600_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_RAW_PARAMS( MASTER_CLOCK_PAL, 228, 26, 26 + 160 + 16, 312, 32, 32 + 228 + 31 )
+	MCFG_SCREEN_UPDATE(tia)
+
 	MCFG_PALETTE_LENGTH( TIA_PALETTE_LENGTH )
 	MCFG_PALETTE_INIT(tia_PAL)
 
 	MCFG_VIDEO_START(tia)
-	MCFG_VIDEO_UPDATE(tia)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -234,7 +234,7 @@ void gp9001vdp_device_config::static_set_gfx_region(device_config *device, int g
 	vdp->m_gfxregion = gfxregion;
 }
 
-bool gp9001vdp_device_config::device_validity_check(const game_driver &driver) const
+bool gp9001vdp_device_config::device_validity_check(core_options &options, const game_driver &driver) const
 {
 	bool error = false;
 	return error;
@@ -1051,7 +1051,7 @@ void gp9001vdp_device::gp9001_render_vdp(running_machine* machine, bitmap_t* bit
 }
 
 
-void gp9001vdp_device::gp9001_video_eof(void)
+void gp9001vdp_device::gp9001_screen_eof(void)
 {
 	/** Shift sprite RAM buffers  ***  Used to fix sprite lag **/
 	if (sp.use_sprite_buffer) memcpy(sp.vram16_buffer,sp.vram16,GP9001_SPRITERAM_SIZE);

@@ -39,6 +39,8 @@ public:
 	/* devices */
 	optional_device<cpu_device> audiocpu;
 	optional_device<okim6295_device> oki;
+	UINT8 *nvram;
+	size_t nvram_size;
 };
 
 
@@ -65,4 +67,4 @@ WRITE8_HANDLER( mstworld_gfxctrl_w );
 WRITE8_HANDLER( mstworld_video_bank_w );
 
 VIDEO_START( pang );
-VIDEO_UPDATE( pang );
+SCREEN_UPDATE( pang );

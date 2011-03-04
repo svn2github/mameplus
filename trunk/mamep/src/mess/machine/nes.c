@@ -7,6 +7,7 @@
 #include "machine/nes_mmc.h"
 #include "imagedev/cartslot.h"
 #include "imagedev/flopdrv.h"
+#include "hashfile.h"
 
 /***************************************************************************
     CONSTANTS
@@ -665,8 +666,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 			state->prg_ram = 1;	// always map state->wram in bank5 (eventually, this should be enabled only for some mappers)
 
 			// check if the image is recognized by nes.hsi
-			if (strcmp(image.extrainfo(), ""))
-				mapinfo = image.extrainfo();
+			mapinfo = hashfile_extrainfo(image);
 
 			// image_extrainfo() resets the file position back to start.
 			// Let's skip past the magic header once again.
@@ -1515,11 +1515,12 @@ DEVICE_IMAGE_LOAD( nes_cart )
 
 
 
-void nes_partialhash( char *dest, const unsigned char *data, unsigned long length, unsigned int functions )
+void nes_partialhash(hash_collection &dest, const unsigned char *data,
+	unsigned long length, const char *functions)
 {
 	if (length <= 16)
 		return;
-	hash_compute(dest, &data[16], length - 16, functions);
+	dest.compute(&data[16], length - 16, functions);	
 }
 
 /**************************

@@ -287,13 +287,13 @@ static INPUT_PORTS_START( pce )
 INPUT_PORTS_END
 
 
-static void pce_partialhash(char *dest, const unsigned char *data,
-        unsigned long length, unsigned int functions)
+static void pce_partialhash(hash_collection &dest, const unsigned char *data,
+	unsigned long length, const char *functions)
 {
 	if ( ( length <= PCE_HEADER_SIZE ) || ( length & PCE_HEADER_SIZE ) ) {
-	        hash_compute(dest, &data[PCE_HEADER_SIZE], length - PCE_HEADER_SIZE, functions);
-	} else {
-		hash_compute(dest, data, length, functions);
+			dest.compute(&data[PCE_HEADER_SIZE], length - PCE_HEADER_SIZE, functions);	
+	} else {		
+		dest.compute(data, length, functions);	
 	}
 }
 
@@ -355,12 +355,13 @@ static MACHINE_CONFIG_START( pce_common, driver_device )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_RAW_PARAMS(MAIN_CLOCK/2, VDC_WPF, 70, 70 + 512 + 32, VDC_LPF, 14, 14+242)
+	MCFG_SCREEN_UPDATE( pce )
+
 	/* MCFG_GFXDECODE( pce ) */
 	MCFG_PALETTE_LENGTH(1024)
 	MCFG_PALETTE_INIT( vce )
 
 	MCFG_VIDEO_START( pce )
-	MCFG_VIDEO_UPDATE( pce )
 
 	MCFG_NVRAM_HANDLER( pce )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -406,11 +407,12 @@ static MACHINE_CONFIG_START( sgx, driver_device )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_RAW_PARAMS(MAIN_CLOCK/2, VDC_WPF, 70, 70 + 512 + 32, VDC_LPF, 14, 14+242)
+	MCFG_SCREEN_UPDATE( pce )
+
 	MCFG_PALETTE_LENGTH(1024)
 	MCFG_PALETTE_INIT( vce )
 
 	MCFG_VIDEO_START( pce )
-	MCFG_VIDEO_UPDATE( pce )
 
 	MCFG_NVRAM_HANDLER( pce )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

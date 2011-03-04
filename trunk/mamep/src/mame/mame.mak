@@ -177,6 +177,7 @@ SOUNDS += MSM5232
 SOUNDS += OKIM6258
 SOUNDS += OKIM6295
 SOUNDS += OKIM6376
+SOUNDS += OKIM9810
 SOUNDS += UPD7759
 SOUNDS += HC55516
 SOUNDS += K005289
@@ -203,7 +204,7 @@ SOUNDS += GAELCO_CG1V
 SOUNDS += GAELCO_GAE1
 SOUNDS += C6280
 SOUNDS += SP0250
-SOUNDS += PSXSPU
+SOUNDS += SPU
 SOUNDS += CDDA
 SOUNDS += ICS2115
 SOUNDS += ST0016
@@ -383,26 +384,26 @@ $(MAMEOBJ)/amiga.a: \
 	$(DRIVERS)/alg.o \
 	$(MACHINE)/amiga.o $(AUDIO)/amiga.o $(VIDEO)/amiga.o $(VIDEO)/amigaaga.o\
 	$(DRIVERS)/arcadia.o \
-	$(DRIVERS)/cubocd32.o $(MACHINE)/cubocd32.o \
+	$(DRIVERS)/cd32.o $(MACHINE)/cd32.o \
 	$(DRIVERS)/mquake.o \
 	$(DRIVERS)/upscope.o \
 
 $(MAMEOBJ)/aristocr.a: \
 	$(DRIVERS)/86lions.o \
-	$(DRIVERS)/caswin.o \
 	$(DRIVERS)/aristmk4.o \
 	$(DRIVERS)/aristmk5.o \
+	$(DRIVERS)/caswin.o \
 	$(MACHINE)/archimds.o \
 	$(VIDEO)/archimds.o \
 
 $(MAMEOBJ)/atari.a: \
-	$(DRIVERS)/atarigx2.o $(VIDEO)/atarigx2.o \
 	$(DRIVERS)/arcadecl.o $(VIDEO)/arcadecl.o \
 	$(DRIVERS)/asteroid.o $(MACHINE)/asteroid.o $(AUDIO)/asteroid.o $(AUDIO)/llander.o \
 	$(DRIVERS)/atarifb.o $(MACHINE)/atarifb.o $(AUDIO)/atarifb.o $(VIDEO)/atarifb.o \
 	$(DRIVERS)/atarig1.o $(VIDEO)/atarig1.o \
 	$(DRIVERS)/atarig42.o $(VIDEO)/atarig42.o \
 	$(DRIVERS)/atarigt.o $(VIDEO)/atarigt.o \
+	$(DRIVERS)/atarigx2.o $(VIDEO)/atarigx2.o \
 	$(DRIVERS)/atarisy1.o $(VIDEO)/atarisy1.o \
 	$(DRIVERS)/atarisy2.o $(VIDEO)/atarisy2.o \
 	$(DRIVERS)/atarisy4.o \
@@ -494,10 +495,10 @@ $(MAMEOBJ)/atlus.a: \
 	$(DRIVERS)/powerins.o $(VIDEO)/powerins.o \
 
 $(MAMEOBJ)/barcrest.a: \
-	$(VIDEO)/awpvid.o \
-	$(MACHINE)/meters.o \
 	$(DRIVERS)/mpu4.o \
 	$(DRIVERS)/mpu5.o \
+	$(VIDEO)/awpvid.o \
+	$(MACHINE)/meters.o \
 	$(MACHINE)/steppers.o \
 
 $(MAMEOBJ)/bfm.a: \
@@ -522,10 +523,10 @@ $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/cps2.o \
 	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o \
 	$(DRIVERS)/egghunt.o \
+	$(DRIVERS)/exedexes.o $(VIDEO)/exedexes.o \
 	$(DRIVERS)/fcrash.o \
 	$(DRIVERS)/gng.o $(VIDEO)/gng.o \
 	$(DRIVERS)/gunsmoke.o $(VIDEO)/gunsmoke.o \
-	$(DRIVERS)/exedexes.o $(VIDEO)/exedexes.o \
 	$(DRIVERS)/higemaru.o $(VIDEO)/higemaru.o \
 	$(DRIVERS)/lastduel.o $(VIDEO)/lastduel.o \
 	$(DRIVERS)/lwings.o $(VIDEO)/lwings.o \
@@ -534,8 +535,8 @@ $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/sidearms.o $(VIDEO)/sidearms.o \
 	$(DRIVERS)/sonson.o $(VIDEO)/sonson.o \
 	$(DRIVERS)/srumbler.o $(VIDEO)/srumbler.o \
-	$(DRIVERS)/vulgus.o $(VIDEO)/vulgus.o \
 	$(DRIVERS)/tigeroad.o $(VIDEO)/tigeroad.o \
+	$(DRIVERS)/vulgus.o $(VIDEO)/vulgus.o \
 	$(DRIVERS)/zn.o $(MACHINE)/znsec.o \
 	$(DRIVERS)/taitogn.o \
 	$(MACHINE)/cps2crpt.o \
@@ -568,10 +569,9 @@ $(MAMEOBJ)/dataeast.a: \
 	$(DRIVERS)/boogwing.o $(VIDEO)/boogwing.o \
 	$(DRIVERS)/brkthru.o $(VIDEO)/brkthru.o \
 	$(DRIVERS)/btime.o $(MACHINE)/btime.o $(VIDEO)/btime.o \
-	$(DRIVERS)/chanbara.o \
 	$(DRIVERS)/bwing.o $(VIDEO)/bwing.o \
-	$(DRIVERS)/deshoros.o \
 	$(DRIVERS)/cbuster.o $(VIDEO)/cbuster.o \
+	$(DRIVERS)/chanbara.o \
 	$(DRIVERS)/cninja.o $(VIDEO)/cninja.o \
 	$(DRIVERS)/cntsteer.o \
 	$(DRIVERS)/compgolf.o $(VIDEO)/compgolf.o \
@@ -585,6 +585,7 @@ $(MAMEOBJ)/dataeast.a: \
 	$(DRIVERS)/deco156.o $(MACHINE)/deco156.o \
 	$(DRIVERS)/deco32.o $(VIDEO)/deco32.o \
 	$(DRIVERS)/decocass.o $(MACHINE)/decocass.o $(VIDEO)/decocass.o \
+	$(DRIVERS)/deshoros.o \
 	$(DRIVERS)/dietgo.o $(VIDEO)/dietgo.o \
 	$(DRIVERS)/exprraid.o $(VIDEO)/exprraid.o \
 	$(DRIVERS)/firetrap.o $(VIDEO)/firetrap.o \
@@ -633,10 +634,10 @@ $(MAMEOBJ)/edevices.a: \
 	$(DRIVERS)/fantland.o $(VIDEO)/fantland.o \
 	$(DRIVERS)/mwarr.o \
 	$(DRIVERS)/mugsmash.o $(VIDEO)/mugsmash.o \
-	$(DRIVERS)/stlforce.o $(VIDEO)/stlforce.o \
 	$(DRIVERS)/ppmast93.o \
-	$(DRIVERS)/twins.o \
 	$(DRIVERS)/pzletime.o \
+	$(DRIVERS)/stlforce.o $(VIDEO)/stlforce.o \
+	$(DRIVERS)/twins.o \
 
 $(MAMEOBJ)/eolith.a: \
 	$(DRIVERS)/eolith.o $(VIDEO)/eolith.o \
@@ -681,9 +682,9 @@ $(MAMEOBJ)/gaelco.a: \
 	$(DRIVERS)/splash.o $(VIDEO)/splash.o \
 	$(DRIVERS)/targeth.o $(VIDEO)/targeth.o \
 	$(DRIVERS)/thoop2.o $(VIDEO)/thoop2.o \
-	$(DRIVERS)/xorworld.o $(VIDEO)/xorworld.o \
-	$(DRIVERS)/wrally.o $(MACHINE)/wrally.o $(VIDEO)/wrally.o \
 	$(DRIVERS)/tokyocop.o \
+	$(DRIVERS)/wrally.o $(MACHINE)/wrally.o $(VIDEO)/wrally.o \
+	$(DRIVERS)/xorworld.o $(VIDEO)/xorworld.o \
 
 $(MAMEOBJ)/gameplan.a: \
 	$(DRIVERS)/enigma2.o \
@@ -691,9 +692,9 @@ $(MAMEOBJ)/gameplan.a: \
 	$(DRIVERS)/toratora.o \
 
 $(MAMEOBJ)/gametron.a: \
+	$(DRIVERS)/gatron.o $(VIDEO)/gatron.o \
 	$(DRIVERS)/gotya.o $(AUDIO)/gotya.o $(VIDEO)/gotya.o \
 	$(DRIVERS)/sbugger.o $(VIDEO)/sbugger.o \
-	$(DRIVERS)/gatron.o $(VIDEO)/gatron.o \
 
 $(MAMEOBJ)/gottlieb.a: \
 	$(DRIVERS)/exterm.o $(VIDEO)/exterm.o \
@@ -710,10 +711,10 @@ $(MAMEOBJ)/igs.a: \
 	$(DRIVERS)/igs011.o \
 	$(DRIVERS)/igs017.o \
 	$(DRIVERS)/igs_m027.o \
-	$(DRIVERS)/spoker.o \
 	$(DRIVERS)/iqblock.o $(VIDEO)/iqblock.o \
 	$(DRIVERS)/lordgun.o $(VIDEO)/lordgun.o \
 	$(DRIVERS)/pgm.o $(VIDEO)/pgm.o \
+	$(DRIVERS)/spoker.o \
 	$(MACHINE)/pgmcrypt.o \
 	$(MACHINE)/pgmprot.o \
 
@@ -745,7 +746,6 @@ $(MAMEOBJ)/itech.a: \
 $(MAMEOBJ)/jaleco.a: \
 	$(DRIVERS)/aeroboto.o $(VIDEO)/aeroboto.o \
 	$(DRIVERS)/argus.o $(VIDEO)/argus.o \
-	$(VIDEO)/jalblend.o \
 	$(DRIVERS)/bestleag.o \
 	$(DRIVERS)/bigstrkb.o $(VIDEO)/bigstrkb.o \
 	$(DRIVERS)/blueprnt.o $(VIDEO)/blueprnt.o \
@@ -765,6 +765,8 @@ $(MAMEOBJ)/jaleco.a: \
 	$(DRIVERS)/skyfox.o $(VIDEO)/skyfox.o \
 	$(DRIVERS)/stepstag.o \
 	$(DRIVERS)/tetrisp2.o $(VIDEO)/tetrisp2.o \
+	$(MACHINE)/ms32crpt.o \
+	$(VIDEO)/jalblend.o \
 
 $(MAMEOBJ)/jpm.a: \
 	$(DRIVERS)/guab.o \
@@ -774,13 +776,13 @@ $(MAMEOBJ)/jpm.a: \
 $(MAMEOBJ)/kaneko.a: \
 	$(DRIVERS)/airbustr.o $(VIDEO)/airbustr.o \
 	$(DRIVERS)/djboy.o $(VIDEO)/djboy.o \
+	$(DRIVERS)/expro02.o \
 	$(DRIVERS)/galpanic.o $(VIDEO)/galpanic.o \
 	$(DRIVERS)/galpani2.o $(VIDEO)/galpani2.o \
 	$(DRIVERS)/galpani3.o \
 	$(DRIVERS)/hvyunit.o \
 	$(DRIVERS)/jchan.o \
 	$(DRIVERS)/kaneko16.o $(MACHINE)/kaneko16.o $(VIDEO)/kaneko16.o \
-	$(DRIVERS)/expro02.o \
 	$(DRIVERS)/sandscrp.o \
 	$(DRIVERS)/suprnova.o $(VIDEO)/suprnova.o \
 
@@ -827,7 +829,6 @@ $(MAMEOBJ)/konami.a: \
 	$(DRIVERS)/konamim2.o \
 	$(DRIVERS)/kongambl.o \
 	$(DRIVERS)/ksys573.o $(MACHINE)/zs01.o \
-	$(DRIVERS)/twinkle.o \
 	$(DRIVERS)/labyrunr.o $(VIDEO)/labyrunr.o \
 	$(DRIVERS)/lethal.o $(VIDEO)/lethal.o \
 	$(DRIVERS)/mainevt.o $(VIDEO)/mainevt.o \
@@ -865,6 +866,7 @@ $(MAMEOBJ)/konami.a: \
 	$(DRIVERS)/trackfld.o $(MACHINE)/konami1.o $(AUDIO)/trackfld.o $(VIDEO)/trackfld.o \
 	$(DRIVERS)/tutankhm.o $(VIDEO)/tutankhm.o \
 	$(DRIVERS)/twin16.o $(VIDEO)/twin16.o \
+	$(DRIVERS)/twinkle.o \
 	$(DRIVERS)/ultrsprt.o \
 	$(DRIVERS)/ultraman.o $(VIDEO)/ultraman.o \
 	$(DRIVERS)/vendetta.o $(VIDEO)/vendetta.o \
@@ -954,6 +956,7 @@ $(MAMEOBJ)/namco.a: \
 	$(DRIVERS)/namcona1.o $(VIDEO)/namcona1.o \
 	$(DRIVERS)/namconb1.o $(VIDEO)/namconb1.o \
 	$(DRIVERS)/namcond1.o $(MACHINE)/namcond1.o $(VIDEO)/ygv608.o \
+	$(DRIVERS)/namcops2.o \
 	$(DRIVERS)/namcos1.o $(MACHINE)/namcos1.o $(VIDEO)/namcos1.o \
 	$(DRIVERS)/namcos10.o \
 	$(DRIVERS)/namcos11.o \
@@ -971,9 +974,8 @@ $(MAMEOBJ)/namco.a: \
 	$(DRIVERS)/tceptor.o $(VIDEO)/tceptor.o \
 	$(DRIVERS)/toypop.o $(VIDEO)/toypop.o \
 	$(DRIVERS)/turrett.o \
-	$(DRIVERS)/warpwarp.o $(AUDIO)/warpwarp.o $(VIDEO)/warpwarp.o \
+	$(DRIVERS)/warpwarp.o $(AUDIO)/geebee.o $(AUDIO)/warpwarp.o $(VIDEO)/warpwarp.o \
 	$(MACHINE)/namcoio.o \
-	$(AUDIO)/geebee.o \
 	$(MACHINE)/namco06.o \
 	$(MACHINE)/namco50.o \
 	$(MACHINE)/namco51.o \
@@ -986,7 +988,6 @@ $(MAMEOBJ)/namco.a: \
 	$(VIDEO)/digdug.o \
 	$(MACHINE)/psx.o $(VIDEO)/psx.o \
 	$(MACHINE)/xevious.o $(VIDEO)/xevious.o \
-	$(DRIVERS)/namcops2.o \
 
 $(MAMEOBJ)/nasco.a: \
 	$(DRIVERS)/crgolf.o $(VIDEO)/crgolf.o \
@@ -1026,9 +1027,8 @@ $(MAMEOBJ)/nichibut.a: \
 	$(MACHINE)/nb1413m3.o \
 
 $(MAMEOBJ)/nintendo.a: \
-	$(DRIVERS)/dkong.o $(AUDIO)/dkong.o $(VIDEO)/dkong.o \
 	$(DRIVERS)/cham24.o \
-	$(DRIVERS)/snesb.o \
+	$(DRIVERS)/dkong.o $(AUDIO)/dkong.o $(VIDEO)/dkong.o \
 	$(DRIVERS)/mario.o $(AUDIO)/mario.o $(VIDEO)/mario.o \
 	$(DRIVERS)/multigam.o \
 	$(DRIVERS)/n8080.o $(AUDIO)/n8080.o $(VIDEO)/n8080.o \
@@ -1037,6 +1037,7 @@ $(MAMEOBJ)/nintendo.a: \
 	$(DRIVERS)/popeye.o $(VIDEO)/popeye.o \
 	$(DRIVERS)/punchout.o $(VIDEO)/punchout.o \
 	$(DRIVERS)/sfcbox.o \
+	$(DRIVERS)/snesb.o \
 	$(DRIVERS)/spacefb.o $(AUDIO)/spacefb.o  $(VIDEO)/spacefb.o \
 	$(DRIVERS)/vsnes.o $(MACHINE)/vsnes.o $(VIDEO)/vsnes.o \
 	$(VIDEO)/ppu2c0x.o \
@@ -1088,9 +1089,9 @@ $(MAMEOBJ)/pacman.a: \
 	$(MACHINE)/theglobp.o \
 
 $(MAMEOBJ)/pce.a: \
-	$(DRIVERS)/uapce.o \
-	$(DRIVERS)/paranoia.o \
 	$(DRIVERS)/ggconnie.o \
+	$(DRIVERS)/paranoia.o \
+	$(DRIVERS)/uapce.o \
 	$(MACHINE)/pcecommn.o $(VIDEO)/vdc.o \
 
 $(MAMEOBJ)/phoenix.a: \
@@ -1135,6 +1136,7 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/bingoc.o \
 	$(DRIVERS)/blockade.o $(AUDIO)/blockade.o $(VIDEO)/blockade.o \
 	$(DRIVERS)/calorie.o \
+	$(DRIVERS)/chihiro.o \
 	$(DRIVERS)/coolridr.o \
 	$(DRIVERS)/deniam.o $(VIDEO)/deniam.o \
 	$(DRIVERS)/dotrikun.o \
@@ -1153,9 +1155,10 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/model2.o $(VIDEO)/model2.o \
 	$(DRIVERS)/model3.o $(VIDEO)/model3.o $(MACHINE)/model3.o \
 	$(DRIVERS)/naomi.o $(MACHINE)/dc.o $(VIDEO)/dc.o $(MACHINE)/gdcrypt.o $(MACHINE)/naomibd.o $(MACHINE)/naomi.o \
-	$(DRIVERS)/triforce.o $(DRIVERS)/chihiro.o \
+	$(DRIVERS)/triforce.o \
 	$(DRIVERS)/puckpkmn.o \
 	$(DRIVERS)/segac2.o \
+	$(DRIVERS)/segae.o $(MACHINE)/segamsys.o \
 	$(DRIVERS)/segag80r.o $(MACHINE)/segag80.o $(AUDIO)/segag80r.o $(VIDEO)/segag80r.o \
 	$(DRIVERS)/segag80v.o $(AUDIO)/segag80v.o $(VIDEO)/segag80v.o \
 	$(DRIVERS)/segahang.o $(VIDEO)/segahang.o \
@@ -1166,7 +1169,6 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/segas18.o $(VIDEO)/segas18.o \
 	$(DRIVERS)/segas24.o $(MACHINE)/segas24.o $(VIDEO)/segas24.o \
 	$(DRIVERS)/segas32.o $(MACHINE)/segas32.o $(VIDEO)/segas32.o \
-	$(MACHINE)/segamsys.o $(DRIVERS)/segae.o \
 	$(DRIVERS)/segaxbd.o $(VIDEO)/segaxbd.o \
 	$(DRIVERS)/segaybd.o $(VIDEO)/segaybd.o \
 	$(DRIVERS)/sg1000a.o \
@@ -1198,31 +1200,31 @@ $(MAMEOBJ)/sega.a: \
 	$(VIDEO)/stvvdp1.o $(VIDEO)/stvvdp2.o \
 
 $(MAMEOBJ)/seibu.a: \
+	$(DRIVERS)/bloodbro.o $(VIDEO)/bloodbro.o \
+	$(DRIVERS)/cabal.o $(VIDEO)/cabal.o \
 	$(DRIVERS)/cshooter.o \
 	$(DRIVERS)/dcon.o $(VIDEO)/dcon.o \
 	$(DRIVERS)/deadang.o $(VIDEO)/deadang.o \
 	$(DRIVERS)/dynduke.o $(VIDEO)/dynduke.o \
+	$(DRIVERS)/feversoc.o \
+	$(DRIVERS)/goal92.o $(VIDEO)/goal92.o \
+	$(DRIVERS)/goodejan.o \
 	$(DRIVERS)/kncljoe.o $(VIDEO)/kncljoe.o \
+	$(DRIVERS)/legionna.o $(VIDEO)/legionna.o \
 	$(DRIVERS)/mustache.o $(VIDEO)/mustache.o \
 	$(DRIVERS)/panicr.o \
 	$(DRIVERS)/raiden.o $(VIDEO)/raiden.o \
 	$(DRIVERS)/raiden2.o $(MACHINE)/r2crypt.o \
 	$(DRIVERS)/r2dx_v33.o \
 	$(DRIVERS)/seibuspi.o $(MACHINE)/seibuspi.o $(VIDEO)/seibuspi.o \
-	$(VIDEO)/sei_crtc.o \
 	$(DRIVERS)/sengokmj.o \
-	$(DRIVERS)/goodejan.o \
 	$(DRIVERS)/stfight.o $(MACHINE)/stfight.o $(VIDEO)/stfight.o \
+	$(DRIVERS)/toki.o $(VIDEO)/toki.o \
 	$(DRIVERS)/wiz.o $(VIDEO)/wiz.o \
+	$(MACHINE)/seicop.o \
 	$(MACHINE)/spisprit.o \
 	$(AUDIO)/seibu.o \
-	$(DRIVERS)/bloodbro.o $(VIDEO)/bloodbro.o \
-	$(DRIVERS)/cabal.o $(VIDEO)/cabal.o \
-	$(DRIVERS)/goal92.o $(VIDEO)/goal92.o \
-	$(DRIVERS)/legionna.o $(VIDEO)/legionna.o \
-	$(MACHINE)/seicop.o \
-	$(DRIVERS)/toki.o $(VIDEO)/toki.o \
-	$(DRIVERS)/feversoc.o \
+	$(VIDEO)/sei_crtc.o \
 
 $(MAMEOBJ)/seta.a: \
 	$(DRIVERS)/aleck64.o $(MACHINE)/n64.o $(VIDEO)/n64.o $(VIDEO)/rdpblend.o $(VIDEO)/rdpfb.o $(VIDEO)/rdpspn16.o $(VIDEO)/rdptpipe.o \
@@ -1283,10 +1285,10 @@ $(MAMEOBJ)/sun.a: \
 	$(DRIVERS)/strnskil.o $(VIDEO)/strnskil.o \
 
 $(MAMEOBJ)/suna.a: \
+	$(DRIVERS)/go2000.o \
 	$(DRIVERS)/goindol.o $(VIDEO)/goindol.o \
 	$(DRIVERS)/suna8.o $(AUDIO)/suna8.o $(VIDEO)/suna8.o \
 	$(DRIVERS)/suna16.o $(VIDEO)/suna16.o \
-	$(DRIVERS)/go2000.o \
 
 $(MAMEOBJ)/taito.a: \
 	$(DRIVERS)/40love.o $(VIDEO)/40love.o \
@@ -1328,11 +1330,11 @@ $(MAMEOBJ)/taito.a: \
 	$(DRIVERS)/msisaac.o $(VIDEO)/msisaac.o \
 	$(DRIVERS)/ninjaw.o $(VIDEO)/ninjaw.o \
 	$(DRIVERS)/nycaptor.o $(MACHINE)/nycaptor.o $(VIDEO)/nycaptor.o \
-	$(DRIVERS)/opwolf.o $(MACHINE)/opwolf.o \
+	$(DRIVERS)/opwolf.o $(MACHINE)/opwolf.o $(VIDEO)/opwolf.o \
 	$(DRIVERS)/othunder.o $(VIDEO)/othunder.o \
 	$(DRIVERS)/pitnrun.o $(MACHINE)/pitnrun.o $(VIDEO)/pitnrun.o \
 	$(DRIVERS)/qix.o $(MACHINE)/qix.o $(AUDIO)/qix.o $(VIDEO)/qix.o \
-	$(DRIVERS)/rainbow.o $(MACHINE)/rainbow.o \
+	$(DRIVERS)/rainbow.o $(MACHINE)/rainbow.o $(VIDEO)/rainbow.o \
 	$(DRIVERS)/rastan.o $(VIDEO)/rastan.o \
 	$(DRIVERS)/retofinv.o $(MACHINE)/retofinv.o $(VIDEO)/retofinv.o \
 	$(DRIVERS)/rollrace.o $(VIDEO)/rollrace.o \
@@ -1620,7 +1622,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/coinmvga.o \
 	$(DRIVERS)/comebaby.o \
 	$(DRIVERS)/coolpool.o \
-	$(DRIVERS)/crystal.o $(DRIVERS)/psattack.o $(VIDEO)/vrender0.o \
+	$(DRIVERS)/crystal.o $(VIDEO)/vrender0.o \
 	$(DRIVERS)/cubeqst.o \
 	$(DRIVERS)/cybertnk.o \
 	$(DRIVERS)/dcheese.o $(VIDEO)/dcheese.o \
@@ -1728,6 +1730,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/polyplay.o $(AUDIO)/polyplay.o $(VIDEO)/polyplay.o \
 	$(DRIVERS)/poker72.o \
 	$(DRIVERS)/poo.o \
+	$(DRIVERS)/psattack.o \
 	$(DRIVERS)/quakeat.o \
 	$(DRIVERS)/queen.o \
 	$(DRIVERS)/quizo.o \
@@ -1822,6 +1825,8 @@ $(DRIVERS)/bfm_sc2.o:	$(LAYOUT)/bfm_sc2.lh \
 						$(LAYOUT)/slots.lh \
 						$(LAYOUT)/sltblgpo.lh \
 						$(LAYOUT)/sltblgtk.lh
+
+$(DRIVERS)/blockade.o:	$(LAYOUT)/blockade.lh
 
 $(DRIVERS)/buggychl.o:	$(LAYOUT)/buggychl.lh
 
@@ -2009,6 +2014,7 @@ $(DRIVERS)/videopkr.o:	$(LAYOUT)/videopkr.lh \
 						$(LAYOUT)/babydad.lh
 
 $(DRIVERS)/warpwarp.o:	$(LAYOUT)/geebee.lh \
+						$(LAYOUT)/navarone.lh \
 						$(LAYOUT)/sos.lh
 
 $(DRIVERS)/wecleman.o:	$(LAYOUT)/wecleman.lh

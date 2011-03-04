@@ -36,10 +36,10 @@ ADDRESS_MAP_END
 //  at28c16_device_config - constructor
 //-------------------------------------------------
 
-at28c16_device_config::at28c16_device_config( const machine_config &mconfig, const char *tag, const device_config *owner, UINT32 clock ) :
-	device_config( mconfig, static_alloc_device_config, "AT28C16", tag, owner, clock),
-	device_config_memory_interface(mconfig, *this),
-	device_config_nvram_interface(mconfig, *this)
+at28c16_device_config::at28c16_device_config( const machine_config &mconfig, const char *tag, const device_config *owner, UINT32 clock )
+	: device_config(mconfig, static_alloc_device_config, "AT28C16", tag, owner, clock),
+	  device_config_memory_interface(mconfig, *this),
+	  device_config_nvram_interface(mconfig, *this)
 {
 }
 
@@ -84,7 +84,7 @@ void at28c16_device_config::device_config_complete()
 //  on this device
 //-------------------------------------------------
 
-bool at28c16_device_config::device_validity_check( const game_driver &driver ) const
+bool at28c16_device_config::device_validity_check( core_options &options, const game_driver &driver ) const
 {
 	return false;
 }
@@ -185,11 +185,11 @@ void at28c16_device::nvram_default()
 //  .nv file
 //-------------------------------------------------
 
-void at28c16_device::nvram_read( mame_file &file )
+void at28c16_device::nvram_read( emu_file &file )
 {
 	UINT8 *buffer = auto_alloc_array( &m_machine, UINT8, AT28C16_TOTAL_BYTES );
 
-	mame_fread( &file, buffer, AT28C16_TOTAL_BYTES );
+	file.read( buffer, AT28C16_TOTAL_BYTES );
 
 	for( offs_t offs = 0; offs < AT28C16_TOTAL_BYTES; offs++ )
 	{
@@ -204,7 +204,7 @@ void at28c16_device::nvram_read( mame_file &file )
 //  .nv file
 //-------------------------------------------------
 
-void at28c16_device::nvram_write( mame_file &file )
+void at28c16_device::nvram_write( emu_file &file )
 {
 	UINT8 *buffer = auto_alloc_array( &m_machine, UINT8, AT28C16_TOTAL_BYTES );
 
@@ -213,7 +213,7 @@ void at28c16_device::nvram_write( mame_file &file )
 		buffer[ offs ] = m_addrspace[ 0 ]->read_byte( offs );
 	}
 
-	mame_fwrite( &file, buffer, AT28C16_TOTAL_BYTES );
+	file.write( buffer, AT28C16_TOTAL_BYTES );
 
 	auto_free( &m_machine, buffer );
 }

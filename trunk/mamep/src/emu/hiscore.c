@@ -216,11 +216,11 @@ static void hiscore_free (void)
 static void hiscore_load (running_machine *machine)
 {
 	file_error filerr;
-	mame_file *f;
 	if (is_highscore_enabled(machine))
 	{
 		astring fname(machine->basename(), ".hi");
-		filerr = mame_fopen(SEARCHPATH_HISCORE, fname, OPEN_FLAG_READ, &f);
+		emu_file f = emu_file(machine->options(), SEARCHPATH_HISCORE, OPEN_FLAG_READ);
+		filerr = f.open(fname);
 		state.hiscores_have_been_loaded = 1;
 		LOG(("hiscore_load\n"));
 		if (filerr == FILERR_NONE)
@@ -236,13 +236,13 @@ static void hiscore_load (running_machine *machine)
                         enough to be dynamically allocated, but let's
                         avoid memory trashing just in case
                     */
-					mame_fread (f, data, mem_range->num_bytes);
+					f.read(data, mem_range->num_bytes);
 					copy_to_memory (machine,mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
 					global_free (data);
 				}
 				mem_range = mem_range->next;
 			}
-			mame_fclose (f);
+			f.close();
 		}
 	}
 }
@@ -250,11 +250,11 @@ static void hiscore_load (running_machine *machine)
 static void hiscore_save (running_machine *machine)
 {
     file_error filerr;
- 	mame_file *f;
 	if (is_highscore_enabled(machine))
 	{
 		astring fname(machine->basename(), ".hi");
-		filerr = mame_fopen(SEARCHPATH_HISCORE, fname, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &f);
+ 		emu_file f = emu_file(machine->options(), SEARCHPATH_HISCORE, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+		filerr = f.open(fname);
 		LOG(("hiscore_save\n"));
 		if (filerr == FILERR_NONE)
 		{
@@ -270,12 +270,12 @@ static void hiscore_save (running_machine *machine)
                         avoid memory trashing just in case
                     */
 					copy_from_memory (machine, mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
-					mame_fwrite(f, data, mem_range->num_bytes);
+					f.write(data, mem_range->num_bytes);
 					global_free (data);
 				}
 				mem_range = mem_range->next;
 			}
-			mame_fclose(f);
+			f.close();
 		}
 	}
 }
@@ -314,8 +314,7 @@ void hiscore_init (running_machine *machine)
 {
 	memory_range *mem_range = state.mem_range;
 	file_error filerr;
-	mame_file *f;
-	const char *db_filename = options_get_string(mame_options(), OPTION_HISCORE_FILE); /* high score definition file */
+	const char *db_filename = options_get_string(&machine->options(), OPTION_HISCORE_FILE); /* high score definition file */
     const char *name = machine->gamedrv->name;
 	state.hiscores_have_been_loaded = 0;
 
@@ -337,7 +336,7 @@ void hiscore_init (running_machine *machine)
 			cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_PROGRAM)->write_byte(mem_range->addr,
 				~mem_range->start_value
 			);
-		  cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_PROGRAM)->write_byte(mem_range->addr + mem_range->num_bytes-1,
+			cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_PROGRAM)->write_byte(mem_range->addr + mem_range->num_bytes-1,
 				~mem_range->end_value
 			);
 			mem_range = mem_range->next;
@@ -345,14 +344,15 @@ void hiscore_init (running_machine *machine)
 	}
 
 	state.mem_range = NULL;
-	filerr = mame_fopen(NULL, db_filename, OPEN_FLAG_READ, &f);
+	emu_file f = emu_file(machine->options(), NULL, OPEN_FLAG_READ);
+	filerr = f.open(db_filename);
 	if (filerr == FILERR_NONE)
 	{
 		char buffer[MAX_CONFIG_LINE_SIZE];
 		enum { FIND_NAME, FIND_DATA, FETCH_DATA } mode;
 		mode = FIND_NAME;
 
-		while (mame_fgets (buffer, MAX_CONFIG_LINE_SIZE, f))
+		while (f.gets (buffer, MAX_CONFIG_LINE_SIZE))
 		{
 			if (mode==FIND_NAME)
 			{
@@ -402,7 +402,7 @@ void hiscore_init (running_machine *machine)
 				if (mode == FETCH_DATA) break;
 			}
 		}
-		mame_fclose (f);
+		f.close ();
 	}
 
 	timer = machine->scheduler().timer_alloc(FUNC(hiscore_periodic), NULL);

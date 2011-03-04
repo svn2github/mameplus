@@ -61,7 +61,7 @@ static int info_listsoftware(core_options *options, const char *gamename);
 static void romident(core_options *options, const char *filename, romident_status *status);
 static void identify_file(core_options *options, const char *name, romident_status *status);
 static void identify_data(core_options *options, const char *name, const UINT8 *data, int length, romident_status *status);
-static void match_roms(core_options *options, const char *hash, int length, int *found);
+static void match_roms(core_options *options, const hash_collection &hashes, int length, int *found);
 static void display_suggestions(const char *gamename);
 static void namecopy(char *name_ref, const char *desc);
 
@@ -294,12 +294,11 @@ static int execute_simple_commands(core_options *options, const char *exename)
 	/* validate? */
 	if (options_get_bool(options, CLIOPTION_VALIDATE))
 	{
-		set_mame_options(options);
 #ifdef DRIVER_SWITCH
 		options_set_string(options, OPTION_DRIVER_CONFIG, "all", OPTION_PRIORITY_INI);
 		assign_drivers(options);
 #endif /* DRIVER_SWITCH */
-		return mame_validitychecks(NULL);
+		return mame_validitychecks(*options, NULL);
 	}
 
 	return -1;
@@ -340,14 +339,13 @@ static int execute_commands(core_options *options, const char *exename, const ga
 	/* createconfig? */
 	if (options_get_bool(options, CLIOPTION_CREATECONFIG))
 	{
-		file_error filerr;
-		mame_file *file;
+		emu_file file(*options, NULL, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 
 		/* parse any relevant INI files before proceeding */
 		mame_parse_ini_files(options, driver);
 
 		/* make the output filename */
-		filerr = mame_fopen_options(options, NULL, CONFIGNAME ".ini", OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &file);
+		file_error filerr = file.open(CONFIGNAME ".ini");
 
 		/* error if unable to create the file */
 		if (filerr != FILERR_NONE)
@@ -357,8 +355,7 @@ static int execute_commands(core_options *options, const char *exename, const ga
 		}
 
 		/* output the configuration and exit cleanly */
-		options_output_ini_file(options, mame_core_file(file));
-		mame_fclose(file);
+		options_output_ini_file(options, file);
 		return MAMERR_NONE;
 	}
 
@@ -758,11 +755,10 @@ int cli_info_listcrc(core_options *options, const char *gamename)
 				for (region = rom_first_region(*source); region; region = rom_next_region(region))
 					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 					{
-						char hashbuf[HASH_BUF_SIZE];
-
 						/* if we have a CRC, display it */
-						if (hash_data_extract_printable_checksum(ROM_GETHASHDATA(rom), HASH_CRC, hashbuf))
-							mame_printf_info("%s %-12s %s\n", hashbuf, ROM_GETNAME(rom), _LST(drivers[drvindex]->description));
+						UINT32 crc;
+						if (hash_collection(ROM_GETHASHDATA(rom)).crc(crc))
+							mame_printf_info("%08x %-12s %s\n", crc, ROM_GETNAME(rom), _LST(drivers[drvindex]->description));
 					}
 
 			count++;
@@ -781,14 +777,13 @@ int cli_info_listcrc(core_options *options, const char *gamename)
 int cli_info_listroms(core_options *options, const char *gamename)
 {
 	int drvindex, count = 0;
+	astring tempstr;
 
 	/* iterate over drivers */
 	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			machine_config config(*drivers[drvindex]);
-			const rom_entry *region, *rom;
-			const rom_source *source;
 
 			/* print the header */
 			if (count > 0)
@@ -797,20 +792,17 @@ int cli_info_listroms(core_options *options, const char *gamename)
 					"Name            Size Checksum\n"), drivers[drvindex]->name);
 
 			/* iterate over sources, regions and then ROMs within the region */
-			for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
-				for (region = rom_first_region(*source); region != NULL; region = rom_next_region(region))
-					for (rom = rom_first_file(region); rom != NULL; rom = rom_next_file(rom))
+			for (const rom_source *source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
+				for (const rom_entry *region = rom_first_region(*source); region != NULL; region = rom_next_region(region))
+					for (const rom_entry *rom = rom_first_file(region); rom != NULL; rom = rom_next_file(rom))
 					{
-						const char *name = ROM_GETNAME(rom);
-						const char *hash = ROM_GETHASHDATA(rom);
-						char hashbuf[HASH_BUF_SIZE];
-						int length = -1;
-
 						/* accumulate the total length of all chunks */
+						int length = -1;
 						if (ROMREGION_ISROMDATA(region))
 							length = rom_file_size(rom);
 
 						/* start with the name */
+						const char *name = ROM_GETNAME(rom);
 						mame_printf_info("%-12s ", name);
 
 						/* output the length next */
@@ -820,13 +812,12 @@ int cli_info_listroms(core_options *options, const char *gamename)
 							mame_printf_info("       ");
 
 						/* output the hash data */
-						if (!hash_data_has_info(hash, HASH_INFO_NO_DUMP))
+						hash_collection hashes(ROM_GETHASHDATA(rom));
+						if (!hashes.flag(hash_collection::FLAG_NO_DUMP))
 						{
-							if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
+							if (hashes.flag(hash_collection::FLAG_BAD_DUMP))
 								mame_printf_info(_(" BAD"));
-
-							hash_data_print(hash, 0, hashbuf);
-							mame_printf_info(" %s", hashbuf);
+							mame_printf_info(" %s", hashes.macro_string(tempstr));
 						}
 						else
 							mame_printf_info(_(" NO GOOD DUMP KNOWN"));
@@ -1123,7 +1114,7 @@ static int info_listsoftware(core_options *options, const char *gamename)
 				{
 					if ( swlist->list_name[i] && *swlist->list_name[i] && (swlist->list_type == SOFTWARE_LIST_ORIGINAL_SYSTEM))
 					{
-						software_list *list = software_list_open( options, swlist->list_name[i], FALSE, NULL );
+						software_list *list = software_list_open( *options, swlist->list_name[i], FALSE, NULL );
 
 						if ( list )
 						{
@@ -1198,23 +1189,20 @@ static int info_listsoftware(core_options *options, const char *gamename)
 														fprintf( out, "\t\t\t\t\t<disk name=\"%s\"", xml_normalize_string(ROM_GETNAME(rom)) );
 
 													/* dump checksum information only if there is a known dump */
-													if (!hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP))
+													hash_collection hashes(ROM_GETHASHDATA(rom));
+													if (!hashes.flag(hash_collection::FLAG_NO_DUMP))
 													{
-														char checksum[HASH_BUF_SIZE];
-														int hashtype;
-
-														/* iterate over hash function types and print out their values */
-														for (hashtype = 0; hashtype < HASH_NUM_FUNCTIONS; hashtype++)
-															if (hash_data_extract_printable_checksum(ROM_GETHASHDATA(rom), 1 << hashtype, checksum))
-																fprintf(out, " %s=\"%s\"", hash_function_name(1 << hashtype), checksum);
+														astring tempstr;
+														for (hash_base *hash = hashes.first(); hash != NULL; hash = hash->next())
+															fprintf(out, " %s=\"%s\"", hash->name(), hash->string(tempstr));
 													}
 
 													if (!is_disk)
 														fprintf( out, " offset=\"0x%x\"", ROM_GETOFFSET(rom) );
 
-													if ( hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP) )
+													if ( hashes.flag(hash_collection::FLAG_BAD_DUMP) )
 														fprintf( out, " status=\"baddump\"" );
-													if ( hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP) )
+													if ( hashes.flag(hash_collection::FLAG_NO_DUMP) )
 														fprintf( out, " status=\"nodump\"" );
 
 													if (is_disk)
@@ -1304,7 +1292,7 @@ static int info_listsoftware(core_options *options, const char *gamename)
     softlist_match_roms - scan for a matching
     software ROM by hash
 -------------------------------------------------*/
-static void softlist_match_roms(core_options *options, const char *hash, int length, int *found)
+static void softlist_match_roms(core_options *options, const hash_collection &hashes, int length, int *found)
 {
 	int drvindex;
 
@@ -1321,7 +1309,7 @@ static void softlist_match_roms(core_options *options, const char *hash, int len
 			{
 				if ( swlist->list_name[i] )
 				{
-					software_list *list = software_list_open( options, swlist->list_name[i], FALSE, NULL );
+					software_list *list = software_list_open( *options, swlist->list_name[i], FALSE, NULL );
 
 					for ( software_info *swinfo = software_list_find( list, "*", NULL ); swinfo != NULL; swinfo = software_list_find( list, "*", swinfo ) )
 					{
@@ -1331,9 +1319,10 @@ static void softlist_match_roms(core_options *options, const char *hash, int len
 							{
 								for ( const rom_entry *rom = rom_first_file(region); rom != NULL; rom = rom_next_file(rom) )
 								{
-									if ( hash_data_is_equal(hash, ROM_GETHASHDATA(rom), 0) )
+									hash_collection romhashes(ROM_GETHASHDATA(rom));
+									if ( hashes == romhashes )
 									{
-										int baddump = hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP);
+										bool baddump = romhashes.flag(hash_collection::FLAG_BAD_DUMP);
 
 										/* output information about the match */
 										if (*found != 0)
@@ -1687,20 +1676,18 @@ static void identify_file(core_options *options, const char *name, romident_stat
 			}
 			else
 			{
-				static const UINT8 nullhash[HASH_BUF_SIZE] = { 0 };
-				char			hash[HASH_BUF_SIZE];	/* actual hash information */
-
-				hash_data_clear(hash);
+				static const UINT8 nullhash[20] = { 0 };
+				hash_collection hashes;
 
 				/* if there's an MD5 or SHA1 hash, add them to the output hash */
 				if (memcmp(nullhash, header.md5, sizeof(header.md5)) != 0)
-					hash_data_insert_binary_checksum(hash, HASH_MD5, header.md5);
+					hashes.add_from_buffer(hash_collection::HASH_MD5, header.md5, sizeof(header.md5));
 				if (memcmp(nullhash, header.sha1, sizeof(header.sha1)) != 0)
-					hash_data_insert_binary_checksum(hash, HASH_SHA1, header.sha1);
+					hashes.add_from_buffer(hash_collection::HASH_SHA1, header.sha1, sizeof(header.sha1));
 
 				length = header.logicalbytes;
 
-				match_roms(options, hash, length, &found);
+				match_roms(options, hashes, length, &found);
 
 				if (found == 0)
 				{
@@ -1746,7 +1733,6 @@ static void identify_file(core_options *options, const char *name, romident_stat
 
 static void identify_data(core_options *options, const char *name, const UINT8 *data, int length, romident_status *status)
 {
-	char hash[HASH_BUF_SIZE];
 	UINT8 *tempjed = NULL;
 	astring basename;
 	int found = 0;
@@ -1767,8 +1753,8 @@ static void identify_data(core_options *options, const char *name, const UINT8 *
 	}
 
 	/* compute the hash of the data */
-	hash_data_clear(hash);
-	hash_compute(hash, data, length, HASH_SHA1 | HASH_CRC);
+	hash_collection hashes;
+	hashes.compute(data, length, hash_collection::HASH_TYPES_CRC_SHA1);
 
 	/* output the name */
 	status->total++;
@@ -1776,7 +1762,7 @@ static void identify_data(core_options *options, const char *name, const UINT8 *
 	mame_printf_info("%-20s", basename.cstr());
 
 	/* see if we can find a match in the ROMs */
-	match_roms(options, hash, length, &found);
+	match_roms(options, hashes, length, &found);
 
 	/* if we didn't find it, try to guess what it might be */
 	if (found == 0)
@@ -1807,7 +1793,7 @@ static void identify_data(core_options *options, const char *name, const UINT8 *
     match_roms - scan for a matching ROM by hash
 -------------------------------------------------*/
 
-static void match_roms(core_options *options, const char *hash, int length, int *found)
+static void match_roms(core_options *options, const hash_collection &hashes, int length, int *found)
 {
 	int drvindex;
 
@@ -1822,9 +1808,11 @@ static void match_roms(core_options *options, const char *hash, int length, int 
 		for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
 			for (region = rom_first_region(*source); region; region = rom_next_region(region))
 				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
-					if (hash_data_is_equal(hash, ROM_GETHASHDATA(rom), 0))
+				{
+					hash_collection romhashes(ROM_GETHASHDATA(rom));
+					if (!romhashes.flag(hash_collection::FLAG_NO_DUMP) && hashes == romhashes)
 					{
-						int baddump = hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP);
+						bool baddump = romhashes.flag(hash_collection::FLAG_BAD_DUMP);
 
 						/* output information about the match */
 						if (*found != 0)
@@ -1832,9 +1820,10 @@ static void match_roms(core_options *options, const char *hash, int length, int 
 						mame_printf_info("= %s%-20s  %-10s %s\n", baddump ? _("(BAD) ") : "", ROM_GETNAME(rom), drivers[drvindex]->name, _LST(drivers[drvindex]->description));
 						(*found)++;
 					}
+				}
 	}
 
-	softlist_match_roms( options, hash, length, found );
+	softlist_match_roms( options, hashes, length, found );
 }
 
 

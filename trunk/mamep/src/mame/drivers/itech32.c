@@ -180,7 +180,7 @@ PCB Layout
 Top (2 separate PCBs plugged into the main board)
 ---
 
-P/N 1060 REV 0
+P/N 1060 REV 0                         P/N 1061 REV1
 |---------------------------------|    |---------------------------------|
 |6522          SND.U17    SROM0   |    |  GROM15            GROM10       |
 |   6809     6264   ENSONIC       |    |                                 |
@@ -364,33 +364,8 @@ Notes:
 
 
 
-/*************************************
- *
- *  Static data
- *
- *************************************/
-
-static UINT8 vint_state;
-static UINT8 xint_state;
-static UINT8 qint_state;
-
-static UINT8 sound_data;
-static UINT8 sound_return;
-static UINT8 sound_int_state;
-
-static UINT16 *main_rom;
-static UINT16 *main_ram;
-
-static offs_t itech020_prot_address;
-
-static UINT8 is_drivedge;
-
-static UINT32 *tms1_ram, *tms2_ram;
-static UINT32 *tms1_boot;
-static UINT8 tms_spinning[2];
-
-#define START_TMS_SPINNING(n)			do { cpu_spinuntil_trigger(space->cpu, 7351 + n); tms_spinning[n] = 1; } while (0)
-#define STOP_TMS_SPINNING(machine, n)	do { machine->scheduler().trigger(7351 + n); tms_spinning[n] = 0; } while (0)
+#define START_TMS_SPINNING(n)			do { cpu_spinuntil_trigger(space->cpu, 7351 + n); space->machine->driver_data<itech32_state>()->tms_spinning[n] = 1; } while (0)
+#define STOP_TMS_SPINNING(machine, n)	do { machine->scheduler().trigger(7351 + n); machine->driver_data<itech32_state>()->tms_spinning[n] = 0; } while (0)
 
 
 
@@ -400,18 +375,18 @@ static UINT8 tms_spinning[2];
  *
  *************************************/
 
-INLINE int determine_irq_state(int vint, int xint, int qint)
+INLINE int determine_irq_state(itech32_state *state, int vint, int xint, int qint)
 {
 	int level = 0;
 
 
 	/* determine which level is active */
-	if (vint_state) level = 1;
-	if (xint_state) level = 2;
-	if (qint_state) level = 3;
+	if (state->vint_state) level = 1;
+	if (state->xint_state) level = 2;
+	if (state->qint_state) level = 3;
 
 	/* Driver's Edge shifts the interrupts a bit */
-	if (is_drivedge && level) level += 2;
+	if (state->is_drivedge && level) level += 2;
 
 	return level;
 }
@@ -419,22 +394,23 @@ INLINE int determine_irq_state(int vint, int xint, int qint)
 
 void itech32_update_interrupts(running_machine *machine, int vint, int xint, int qint)
 {
+	itech32_state *state = machine->driver_data<itech32_state>();
 	/* update the states */
-	if (vint != -1) vint_state = vint;
-	if (xint != -1) xint_state = xint;
-	if (qint != -1) qint_state = qint;
+	if (vint != -1) state->vint_state = vint;
+	if (xint != -1) state->xint_state = xint;
+	if (qint != -1) state->qint_state = qint;
 
-	if (is_drivedge)
+	if (state->is_drivedge)
 	{
-		cputag_set_input_line(machine, "maincpu", 3, vint_state ? ASSERT_LINE : CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 4, xint_state ? ASSERT_LINE : CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 5, qint_state ? ASSERT_LINE : CLEAR_LINE);
+		cputag_set_input_line(machine, "maincpu", 3, state->vint_state ? ASSERT_LINE : CLEAR_LINE);
+		cputag_set_input_line(machine, "maincpu", 4, state->xint_state ? ASSERT_LINE : CLEAR_LINE);
+		cputag_set_input_line(machine, "maincpu", 5, state->qint_state ? ASSERT_LINE : CLEAR_LINE);
 	}
 	else
 	{
-		cputag_set_input_line(machine, "maincpu", 1, vint_state ? ASSERT_LINE : CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 2, xint_state ? ASSERT_LINE : CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 3, qint_state ? ASSERT_LINE : CLEAR_LINE);
+		cputag_set_input_line(machine, "maincpu", 1, state->vint_state ? ASSERT_LINE : CLEAR_LINE);
+		cputag_set_input_line(machine, "maincpu", 2, state->xint_state ? ASSERT_LINE : CLEAR_LINE);
+		cputag_set_input_line(machine, "maincpu", 3, state->qint_state ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -462,10 +438,11 @@ static WRITE16_HANDLER( int1_ack_w )
 
 static MACHINE_RESET( itech32 )
 {
-	vint_state = xint_state = qint_state = 0;
-	sound_data = 0;
-	sound_return = 0;
-	sound_int_state = 0;
+	itech32_state *state = machine->driver_data<itech32_state>();
+	state->vint_state = state->xint_state = state->qint_state = 0;
+	state->sound_data = 0;
+	state->sound_return = 0;
+	state->sound_int_state = 0;
 }
 
 
@@ -487,14 +464,14 @@ static MACHINE_RESET( drivedge )
  *
  *************************************/
 
-static int special_result = 0;
 
 static CUSTOM_INPUT( special_port_r )
 {
-	if (sound_int_state)
-		special_result ^= 1;
+	itech32_state *state = field->port->machine->driver_data<itech32_state>();
+	if (state->sound_int_state)
+		state->special_result ^= 1;
 
-	return special_result;
+	return state->special_result;
 }
 
 static READ16_HANDLER( trackball_r )
@@ -515,14 +492,12 @@ static READ32_HANDLER( trackball32_8bit_r )
 }
 
 
-static READ32_HANDLER( trackball32_4bit_r )
+static READ32_HANDLER( trackball32_4bit_p1_r )
 {
-	static int effx, effy;
-	static int lastresult;
-	static attotime lasttime;
+	itech32_state *state = space->machine->driver_data<itech32_state>();
 	attotime curtime = space->machine->time();
 
-	if ((curtime - lasttime) > space->machine->primary_screen->scan_period())
+	if ((curtime - state->p1_lasttime) > space->machine->primary_screen->scan_period())
 	{
 		int upper, lower;
 		int dx, dy;
@@ -530,38 +505,36 @@ static READ32_HANDLER( trackball32_4bit_r )
 		int curx = input_port_read(space->machine, "TRACKX1");
 		int cury = input_port_read(space->machine, "TRACKY1");
 
-		dx = curx - effx;
+		dx = curx - state->p1_effx;
 		if (dx < -0x80) dx += 0x100;
 		else if (dx > 0x80) dx -= 0x100;
 		if (dx > 7) dx = 7;
 		else if (dx < -7) dx = -7;
-		effx = (effx + dx) & 0xff;
-		lower = effx & 15;
+		state->p1_effx = (state->p1_effx + dx) & 0xff;
+		lower = state->p1_effx & 15;
 
-		dy = cury - effy;
+		dy = cury - state->p1_effy;
 		if (dy < -0x80) dy += 0x100;
 		else if (dy > 0x80) dy -= 0x100;
 		if (dy > 7) dy = 7;
 		else if (dy < -7) dy = -7;
-		effy = (effy + dy) & 0xff;
-		upper = effy & 15;
+		state->p1_effy = (state->p1_effy + dy) & 0xff;
+		upper = state->p1_effy & 15;
 
-		lastresult = lower | (upper << 4);
+		state->p1_lastresult = lower | (upper << 4);
 	}
 
-	lasttime = curtime;
-	return lastresult | (lastresult << 16);
+	state->p1_lasttime = curtime;
+	return state->p1_lastresult | (state->p1_lastresult << 16);
 }
 
 
 static READ32_HANDLER( trackball32_4bit_p2_r )
 {
-	static int effx, effy;
-	static int lastresult;
-	static attotime lasttime;
+	itech32_state *state = space->machine->driver_data<itech32_state>();
 	attotime curtime = space->machine->time();
 
-	if ((curtime - lasttime) > space->machine->primary_screen->scan_period())
+	if ((curtime - state->p2_lasttime) > space->machine->primary_screen->scan_period())
 	{
 		int upper, lower;
 		int dx, dy;
@@ -569,33 +542,33 @@ static READ32_HANDLER( trackball32_4bit_p2_r )
 		int curx = input_port_read(space->machine, "TRACKX2");
 		int cury = input_port_read(space->machine, "TRACKY2");
 
-		dx = curx - effx;
+		dx = curx - state->p2_effx;
 		if (dx < -0x80) dx += 0x100;
 		else if (dx > 0x80) dx -= 0x100;
 		if (dx > 7) dx = 7;
 		else if (dx < -7) dx = -7;
-		effx = (effx + dx) & 0xff;
-		lower = effx & 15;
+		state->p2_effx = (state->p2_effx + dx) & 0xff;
+		lower = state->p2_effx & 15;
 
-		dy = cury - effy;
+		dy = cury - state->p2_effy;
 		if (dy < -0x80) dy += 0x100;
 		else if (dy > 0x80) dy -= 0x100;
 		if (dy > 7) dy = 7;
 		else if (dy < -7) dy = -7;
-		effy = (effy + dy) & 0xff;
-		upper = effy & 15;
+		state->p2_effy = (state->p2_effy + dy) & 0xff;
+		upper = state->p2_effy & 15;
 
-		lastresult = lower | (upper << 4);
+		state->p2_lastresult = lower | (upper << 4);
 	}
 
-	lasttime = curtime;
-	return lastresult | (lastresult << 16);
+	state->p2_lasttime = curtime;
+	return state->p2_lastresult | (state->p2_lastresult << 16);
 }
 
 
 static READ32_HANDLER( trackball32_4bit_combined_r )
 {
-	return trackball32_4bit_r(space, offset, mem_mask) |
+	return trackball32_4bit_p1_r(space, offset, mem_mask) |
 			(trackball32_4bit_p2_r(space, offset, mem_mask) << 8);
 }
 
@@ -623,14 +596,16 @@ static READ32_HANDLER( drivedge_gas_r )
 
 static READ16_HANDLER( wcbowl_prot_result_r )
 {
-	return main_ram[0x111d/2];
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	return state->main_ram[0x111d/2];
 }
 
 
 static READ32_HANDLER( itech020_prot_result_r )
 {
-	UINT32 result = ((UINT32 *)main_ram)[itech020_prot_address >> 2];
-	result >>= (~itech020_prot_address & 3) * 8;
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	UINT32 result = ((UINT32 *)state->main_ram)[state->itech020_prot_address >> 2];
+	result >>= (~state->itech020_prot_address & 3) * 8;
 	return (result & 0xff) << 8;
 }
 
@@ -669,8 +644,9 @@ static WRITE8_HANDLER( sound_bank_w )
 
 static TIMER_CALLBACK( delayed_sound_data_w )
 {
-	sound_data = param;
-	sound_int_state = 1;
+	itech32_state *state = machine->driver_data<itech32_state>();
+	state->sound_data = param;
+	state->sound_int_state = 1;
 	cputag_set_input_line(machine, "soundcpu", M6809_IRQ_LINE, ASSERT_LINE);
 }
 
@@ -684,7 +660,8 @@ static WRITE16_HANDLER( sound_data_w )
 
 static READ32_HANDLER( sound_data32_r )
 {
-	return sound_return << 16;
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	return state->sound_return << 16;
 }
 
 
@@ -697,15 +674,17 @@ static WRITE32_HANDLER( sound_data32_w )
 
 static READ8_HANDLER( sound_data_r )
 {
+	itech32_state *state = space->machine->driver_data<itech32_state>();
 	cputag_set_input_line(space->machine, "soundcpu", M6809_IRQ_LINE, CLEAR_LINE);
-	sound_int_state = 0;
-	return sound_data;
+	state->sound_int_state = 0;
+	return state->sound_data;
 }
 
 
 static WRITE8_HANDLER( sound_return_w )
 {
-	sound_return = data;
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	state->sound_return = data;
 }
 
 
@@ -816,13 +795,14 @@ static WRITE32_HANDLER( tms_reset_assert_w )
 
 static WRITE32_HANDLER( tms_reset_clear_w )
 {
+	itech32_state *state = space->machine->driver_data<itech32_state>();
 	/* kludge to prevent crash on first boot */
-	if ((tms1_ram[0] & 0xff000000) == 0)
+	if ((state->tms1_ram[0] & 0xff000000) == 0)
 	{
 		cputag_set_input_line(space->machine, "dsp1", INPUT_LINE_RESET, CLEAR_LINE);
 		STOP_TMS_SPINNING(space->machine, 0);
 	}
-	if ((tms2_ram[0] & 0xff000000) == 0)
+	if ((state->tms2_ram[0] & 0xff000000) == 0)
 	{
 		cputag_set_input_line(space->machine, "dsp2", INPUT_LINE_RESET, CLEAR_LINE);
 		STOP_TMS_SPINNING(space->machine, 1);
@@ -832,48 +812,54 @@ static WRITE32_HANDLER( tms_reset_clear_w )
 
 static WRITE32_HANDLER( tms1_68k_ram_w )
 {
-	COMBINE_DATA(&tms1_ram[offset]);
-	if (offset == 0) COMBINE_DATA(tms1_boot);
-	if (offset == 0x382 && tms_spinning[0]) STOP_TMS_SPINNING(space->machine, 0);
-	if (!tms_spinning[0])
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	COMBINE_DATA(&state->tms1_ram[offset]);
+	if (offset == 0) COMBINE_DATA(state->tms1_boot);
+	if (offset == 0x382 && state->tms_spinning[0]) STOP_TMS_SPINNING(space->machine, 0);
+	if (!state->tms_spinning[0])
 		space->machine->scheduler().boost_interleave(attotime::from_hz(CPU020_CLOCK/256), attotime::from_usec(20));
 }
 
 
 static WRITE32_HANDLER( tms2_68k_ram_w )
 {
-	COMBINE_DATA(&tms2_ram[offset]);
-	if (offset == 0x382 && tms_spinning[1]) STOP_TMS_SPINNING(space->machine, 1);
-	if (!tms_spinning[1])
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	COMBINE_DATA(&state->tms2_ram[offset]);
+	if (offset == 0x382 && state->tms_spinning[1]) STOP_TMS_SPINNING(space->machine, 1);
+	if (!state->tms_spinning[1])
 		space->machine->scheduler().boost_interleave(attotime::from_hz(CPU020_CLOCK/256), attotime::from_usec(20));
 }
 
 
 static WRITE32_HANDLER( tms1_trigger_w )
 {
-	COMBINE_DATA(&tms1_ram[offset]);
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	COMBINE_DATA(&state->tms1_ram[offset]);
 	space->machine->scheduler().boost_interleave(attotime::from_hz(CPU020_CLOCK/256), attotime::from_usec(20));
 }
 
 
 static WRITE32_HANDLER( tms2_trigger_w )
 {
-	COMBINE_DATA(&tms2_ram[offset]);
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	COMBINE_DATA(&state->tms2_ram[offset]);
 	space->machine->scheduler().boost_interleave(attotime::from_hz(CPU020_CLOCK/256), attotime::from_usec(20));
 }
 
 
 static READ32_HANDLER( drivedge_tms1_speedup_r )
 {
-	if (tms1_ram[0x382] == 0 && cpu_get_pc(space->cpu) == 0xee) START_TMS_SPINNING(0);
-	return tms1_ram[0x382];
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	if (state->tms1_ram[0x382] == 0 && cpu_get_pc(space->cpu) == 0xee) START_TMS_SPINNING(0);
+	return state->tms1_ram[0x382];
 }
 
 
 static READ32_HANDLER( drivedge_tms2_speedup_r )
 {
-	if (tms2_ram[0x382] == 0 && cpu_get_pc(space->cpu) == 0x809808) START_TMS_SPINNING(1);
-	return tms2_ram[0x382];
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	if (state->tms2_ram[0x382] == 0 && cpu_get_pc(space->cpu) == 0x809808) START_TMS_SPINNING(1);
+	return state->tms2_ram[0x382];
 }
 
 
@@ -909,14 +895,15 @@ static READ32_DEVICE_HANDLER( timekeeper_32be_r )
 
 void itech32_state::nvram_init(nvram_device &nvram, void *base, size_t length)
 {
+	itech32_state *state = machine->driver_data<itech32_state>();
 	// if nvram is the main RAM, don't overwrite exception vectors
-	int start = (base == main_ram) ? 0x80 : 0x00;
+	int start = (base == state->main_ram) ? 0x80 : 0x00;
 	for (int i = start; i < length; i++)
 		((UINT8 *)base)[i] = machine->rand();
 
 	// due to accessing uninitialized RAM, we need this hack
-	if (is_drivedge)
-		((UINT32 *)main_ram)[0x2ce4/4] = 0x0000001e;
+	if (state->is_drivedge)
+		((UINT32 *)state->main_ram)[0x2ce4/4] = 0x0000001e;
 }
 
 
@@ -928,7 +915,7 @@ void itech32_state::nvram_init(nvram_device &nvram, void *base, size_t length)
 
 /*------ Time Killers memory layout ------*/
 static ADDRESS_MAP_START( timekill_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x000000, 0x003fff) AM_RAM AM_BASE(&main_ram) AM_SHARE("nvram")
+	AM_RANGE(0x000000, 0x003fff) AM_RAM AM_BASE_MEMBER(itech32_state, main_ram) AM_SHARE("nvram")
 	AM_RANGE(0x040000, 0x040001) AM_READ_PORT("P1")
 	AM_RANGE(0x048000, 0x048001) AM_READ_PORT("P2")
 	AM_RANGE(0x050000, 0x050001) AM_READ_PORT("SYSTEM") AM_WRITE(timekill_intensity_w)
@@ -937,16 +924,16 @@ static ADDRESS_MAP_START( timekill_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x068000, 0x068001) AM_WRITE(timekill_colorbc_w)
 	AM_RANGE(0x070000, 0x070001) AM_WRITENOP	/* noisy */
 	AM_RANGE(0x078000, 0x078001) AM_WRITE(sound_data_w)
-	AM_RANGE(0x080000, 0x08007f) AM_READWRITE(itech32_video_r, itech32_video_w) AM_BASE(&itech32_video)
+	AM_RANGE(0x080000, 0x08007f) AM_READWRITE(itech32_video_r, itech32_video_w) AM_BASE_MEMBER(itech32_state, video)
 	AM_RANGE(0x0a0000, 0x0a0001) AM_WRITE(int1_ack_w)
 	AM_RANGE(0x0c0000, 0x0c7fff) AM_RAM_WRITE(timekill_paletteram_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x100000, 0x17ffff) AM_ROM AM_REGION("user1", 0) AM_BASE(&main_rom)
+	AM_RANGE(0x100000, 0x17ffff) AM_ROM AM_REGION("user1", 0) AM_BASE_MEMBER(itech32_state, main_rom)
 ADDRESS_MAP_END
 
 
 /*------ BloodStorm and later games memory layout ------*/
 static ADDRESS_MAP_START( bloodstm_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x000000, 0x00ffff) AM_RAM AM_BASE(&main_ram) AM_SHARE("nvram")
+	AM_RANGE(0x000000, 0x00ffff) AM_RAM AM_BASE_MEMBER(itech32_state, main_ram) AM_SHARE("nvram")
 	AM_RANGE(0x080000, 0x080001) AM_READ_PORT("P1") AM_WRITE(int1_ack_w)
 	AM_RANGE(0x100000, 0x100001) AM_READ_PORT("P2")
 	AM_RANGE(0x180000, 0x180001) AM_READ_PORT("P3")
@@ -956,53 +943,56 @@ static ADDRESS_MAP_START( bloodstm_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x380000, 0x380001) AM_WRITE(bloodstm_color2_w)
 	AM_RANGE(0x400000, 0x400001) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE(0x480000, 0x480001) AM_WRITE(sound_data_w)
-	AM_RANGE(0x500000, 0x5000ff) AM_READWRITE(bloodstm_video_r, bloodstm_video_w) AM_BASE(&itech32_video)
+	AM_RANGE(0x500000, 0x5000ff) AM_READWRITE(bloodstm_video_r, bloodstm_video_w) AM_BASE_MEMBER(itech32_state, video)
 	AM_RANGE(0x580000, 0x59ffff) AM_RAM_WRITE(bloodstm_paletteram_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x700000, 0x700001) AM_WRITE(bloodstm_plane_w)
 	AM_RANGE(0x780000, 0x780001) AM_READ_PORT("EXTRA")
-	AM_RANGE(0x800000, 0x87ffff) AM_MIRROR(0x780000) AM_ROM AM_REGION("user1", 0) AM_BASE(&main_rom)
+	AM_RANGE(0x800000, 0x87ffff) AM_MIRROR(0x780000) AM_ROM AM_REGION("user1", 0) AM_BASE_MEMBER(itech32_state, main_rom)
 ADDRESS_MAP_END
 
 
 /*------ Driver's Edge memory layouts ------*/
 
 #if LOG_DRIVEDGE_UNINIT_RAM
-static UINT8 written[0x8000];
 
 static READ32_HANDLER( test1_r )
 {
-	if (ACCESSING_BITS_24_31 && !written[0x100 + offset*4+0]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0x100 + offset*4+0);
-	if (ACCESSING_BITS_16_23 && !written[0x100 + offset*4+1]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0x100 + offset*4+1);
-	if (ACCESSING_BITS_8_15 && !written[0x100 + offset*4+2]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0x100 + offset*4+2);
-	if (ACCESSING_BITS_0_7 && !written[0x100 + offset*4+3]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0x100 + offset*4+3);
-	return ((UINT32 *)main_ram)[0x100/4 + offset];
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	if (ACCESSING_BITS_24_31 && !state->written[0x100 + offset*4+0]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0x100 + offset*4+0);
+	if (ACCESSING_BITS_16_23 && !state->written[0x100 + offset*4+1]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0x100 + offset*4+1);
+	if (ACCESSING_BITS_8_15 && !state->written[0x100 + offset*4+2]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0x100 + offset*4+2);
+	if (ACCESSING_BITS_0_7 && !state->written[0x100 + offset*4+3]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0x100 + offset*4+3);
+	return ((UINT32 *)state->main_ram)[0x100/4 + offset];
 }
 
 static WRITE32_HANDLER( test1_w )
 {
-	if (ACCESSING_BITS_24_31) written[0x100 + offset*4+0] = 1;
-	if (ACCESSING_BITS_16_23) written[0x100 + offset*4+1] = 1;
-	if (ACCESSING_BITS_8_15) written[0x100 + offset*4+2] = 1;
-	if (ACCESSING_BITS_0_7) written[0x100 + offset*4+3] = 1;
-	COMBINE_DATA(&((UINT32 *)main_ram)[0x100/4 + offset]);
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	if (ACCESSING_BITS_24_31) state->written[0x100 + offset*4+0] = 1;
+	if (ACCESSING_BITS_16_23) state->written[0x100 + offset*4+1] = 1;
+	if (ACCESSING_BITS_8_15) state->written[0x100 + offset*4+2] = 1;
+	if (ACCESSING_BITS_0_7) state->written[0x100 + offset*4+3] = 1;
+	COMBINE_DATA(&((UINT32 *)state->main_ram)[0x100/4 + offset]);
 }
 
 static READ32_HANDLER( test2_r )
 {
-	if (ACCESSING_BITS_24_31 && !written[0xc00 + offset*4+0]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0xc00 + offset*4+0);
-	if (ACCESSING_BITS_16_23 && !written[0xc00 + offset*4+1]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0xc00 + offset*4+1);
-	if (ACCESSING_BITS_8_15 && !written[0xc00 + offset*4+2]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0xc00 + offset*4+2);
-	if (ACCESSING_BITS_0_7 && !written[0xc00 + offset*4+3]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0xc00 + offset*4+3);
-	return ((UINT32 *)main_ram)[0xc00/4 + offset];
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	if (ACCESSING_BITS_24_31 && !state->written[0xc00 + offset*4+0]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0xc00 + offset*4+0);
+	if (ACCESSING_BITS_16_23 && !state->written[0xc00 + offset*4+1]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0xc00 + offset*4+1);
+	if (ACCESSING_BITS_8_15 && !state->written[0xc00 + offset*4+2]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0xc00 + offset*4+2);
+	if (ACCESSING_BITS_0_7 && !state->written[0xc00 + offset*4+3]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(space->cpu), 0xc00 + offset*4+3);
+	return ((UINT32 *)state->main_ram)[0xc00/4 + offset];
 }
 
 static WRITE32_HANDLER( test2_w )
 {
-	if (ACCESSING_BITS_24_31) written[0xc00 + offset*4+0] = 1;
-	if (ACCESSING_BITS_16_23) written[0xc00 + offset*4+1] = 1;
-	if (ACCESSING_BITS_8_15) written[0xc00 + offset*4+2] = 1;
-	if (ACCESSING_BITS_0_7) written[0xc00 + offset*4+3] = 1;
-	COMBINE_DATA(&((UINT32 *)main_ram)[0xc00/4 + offset]);
+	itech32_state *state = space->machine->driver_data<itech32_state>();
+	if (ACCESSING_BITS_24_31) state->written[0xc00 + offset*4+0] = 1;
+	if (ACCESSING_BITS_16_23) state->written[0xc00 + offset*4+1] = 1;
+	if (ACCESSING_BITS_8_15) state->written[0xc00 + offset*4+2] = 1;
+	if (ACCESSING_BITS_0_7) state->written[0xc00 + offset*4+3] = 1;
+	COMBINE_DATA(&((UINT32 *)state->main_ram)[0xc00/4 + offset]);
 }
 #endif
 
@@ -1011,7 +1001,7 @@ static ADDRESS_MAP_START( drivedge_map, ADDRESS_SPACE_PROGRAM, 32 )
 AM_RANGE(0x000100, 0x0003ff) AM_MIRROR(0x40000) AM_READWRITE(test1_r, test1_w)
 AM_RANGE(0x000c00, 0x007fff) AM_MIRROR(0x40000) AM_READWRITE(test2_r, test2_w)
 #endif
-	AM_RANGE(0x000000, 0x03ffff) AM_MIRROR(0x40000) AM_RAM AM_BASE((UINT32 **)&main_ram) AM_SHARE("nvram")
+	AM_RANGE(0x000000, 0x03ffff) AM_MIRROR(0x40000) AM_RAM AM_BASE_MEMBER(itech32_state, main_ram) AM_SHARE("nvram")
 	AM_RANGE(0x080000, 0x080003) AM_READ_PORT("80000")
 	AM_RANGE(0x082000, 0x082003) AM_READ_PORT("82000")
 	AM_RANGE(0x084000, 0x084003) AM_READWRITE(sound_data32_r, sound_data32_w)
@@ -1020,35 +1010,35 @@ AM_RANGE(0x000c00, 0x007fff) AM_MIRROR(0x40000) AM_READWRITE(test2_r, test2_w)
 	AM_RANGE(0x08a000, 0x08a003) AM_READ(drivedge_gas_r) AM_WRITENOP
 	AM_RANGE(0x08c000, 0x08c003) AM_READ_PORT("8c000")
 	AM_RANGE(0x08e000, 0x08e003) AM_READ_PORT("8e000") AM_WRITENOP
-	AM_RANGE(0x100000, 0x10000f) AM_WRITE(drivedge_zbuf_control_w) AM_BASE(&drivedge_zbuf_control)
+	AM_RANGE(0x100000, 0x10000f) AM_WRITE(drivedge_zbuf_control_w) AM_BASE_MEMBER(itech32_state, drivedge_zbuf_control)
 	AM_RANGE(0x180000, 0x180003) AM_WRITE(drivedge_color0_w)
 	AM_RANGE(0x1a0000, 0x1bffff) AM_RAM_WRITE(drivedge_paletteram_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x1c0000, 0x1c0003) AM_WRITENOP
-	AM_RANGE(0x1e0000, 0x1e0113) AM_READWRITE(itech020_video_r, itech020_video_w) AM_BASE((UINT32 **)&itech32_video)
+	AM_RANGE(0x1e0000, 0x1e0113) AM_READWRITE(itech020_video_r, itech020_video_w) AM_BASE_MEMBER(itech32_state, video)
 	AM_RANGE(0x1e4000, 0x1e4003) AM_WRITE(tms_reset_assert_w)
 	AM_RANGE(0x1ec000, 0x1ec003) AM_WRITE(tms_reset_clear_w)
 	AM_RANGE(0x200000, 0x200003) AM_READ_PORT("200000")
 	AM_RANGE(0x280000, 0x280fff) AM_RAM_WRITE(tms1_68k_ram_w) AM_SHARE("share1")
 	AM_RANGE(0x300000, 0x300fff) AM_RAM_WRITE(tms2_68k_ram_w) AM_SHARE("share2")
 	AM_RANGE(0x380000, 0x380003) AM_WRITENOP // AM_WRITE(watchdog_reset16_w)
-	AM_RANGE(0x600000, 0x607fff) AM_ROM AM_REGION("user1", 0) AM_BASE((UINT32 **)&main_rom)
+	AM_RANGE(0x600000, 0x607fff) AM_ROM AM_REGION("user1", 0) AM_BASE_MEMBER(itech32_state, main_rom)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( drivedge_tms1_map, ADDRESS_SPACE_PROGRAM, 32 )
-	AM_RANGE(0x000000, 0x001fff) AM_RAM AM_BASE(&tms1_boot)
-	AM_RANGE(0x008000, 0x0083ff) AM_MIRROR(0x400) AM_RAM_WRITE(tms1_trigger_w) AM_SHARE("share1") AM_BASE(&tms1_ram)
+	AM_RANGE(0x000000, 0x001fff) AM_RAM AM_BASE_MEMBER(itech32_state, tms1_boot)
+	AM_RANGE(0x008000, 0x0083ff) AM_MIRROR(0x400) AM_RAM_WRITE(tms1_trigger_w) AM_SHARE("share1") AM_BASE_MEMBER(itech32_state, tms1_ram)
 	AM_RANGE(0x080000, 0x0bffff) AM_RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( drivedge_tms2_map, ADDRESS_SPACE_PROGRAM, 32 )
-	AM_RANGE(0x008000, 0x0083ff) AM_MIRROR(0x8400) AM_RAM_WRITE(tms2_trigger_w) AM_SHARE("share2") AM_BASE(&tms2_ram)
+	AM_RANGE(0x008000, 0x0083ff) AM_MIRROR(0x8400) AM_RAM_WRITE(tms2_trigger_w) AM_SHARE("share2") AM_BASE_MEMBER(itech32_state, tms2_ram)
 	AM_RANGE(0x080000, 0x08ffff) AM_RAM
 ADDRESS_MAP_END
 
 
 /*------ 68EC020-based memory layout ------*/
 static ADDRESS_MAP_START( itech020_map, ADDRESS_SPACE_PROGRAM, 32 )
-	AM_RANGE(0x000000, 0x007fff) AM_RAM AM_BASE((UINT32 **)&main_ram)
+	AM_RANGE(0x000000, 0x007fff) AM_RAM AM_BASE_MEMBER(itech32_state, main_ram)
 	AM_RANGE(0x080000, 0x080003) AM_READ_PORT("P1") AM_WRITE(int1_ack32_w)
 	AM_RANGE(0x100000, 0x100003) AM_READ_PORT("P2")
 	AM_RANGE(0x180000, 0x180003) AM_READ_PORT("P3")
@@ -1058,7 +1048,7 @@ static ADDRESS_MAP_START( itech020_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x380000, 0x380003) AM_WRITE(itech020_color2_w)
 	AM_RANGE(0x400000, 0x400003) AM_WRITE(watchdog_reset32_w)
 	AM_RANGE(0x480000, 0x480003) AM_WRITE(sound_data32_w)
-	AM_RANGE(0x500000, 0x5000ff) AM_READWRITE(itech020_video_r, itech020_video_w) AM_BASE((UINT32 **)&itech32_video)
+	AM_RANGE(0x500000, 0x5000ff) AM_READWRITE(itech020_video_r, itech020_video_w) AM_BASE_MEMBER(itech32_state, video)
 	AM_RANGE(0x578000, 0x57ffff) AM_READNOP				/* touched by protection */
 	AM_RANGE(0x580000, 0x59ffff) AM_RAM_WRITE(itech020_paletteram_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x600000, 0x603fff) AM_RAM AM_SHARE("nvram")
@@ -1066,7 +1056,7 @@ static ADDRESS_MAP_START( itech020_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x680000, 0x680003) AM_READ(itech020_prot_result_r) AM_WRITENOP
 /* ! */	AM_RANGE(0x680800, 0x68083f) AM_READONLY AM_WRITENOP /* Serial DUART Channel A/B & Top LED sign - To Do! */
 	AM_RANGE(0x700000, 0x700003) AM_WRITE(itech020_plane_w)
-	AM_RANGE(0x800000, 0xbfffff) AM_ROM AM_REGION("user1", 0) AM_BASE((UINT32 **)&main_rom)
+	AM_RANGE(0x800000, 0xbfffff) AM_ROM AM_REGION("user1", 0) AM_BASE_MEMBER(itech32_state, main_rom)
 ADDRESS_MAP_END
 
 
@@ -1725,9 +1715,9 @@ static MACHINE_CONFIG_START( timekill, itech32_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK, 508, 0, 384, 262, 0, 256)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MCFG_SCREEN_UPDATE(itech32)
 
 	MCFG_VIDEO_START(itech32)
-	MCFG_VIDEO_UPDATE(itech32)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2101,10 +2091,10 @@ ROM_START( hardyard10 )	/* Version 1.0 (3-tier board set: P/N 1059 Rev 3, P/N 10
 ROM_END
 
 
-ROM_START( pairs )	/* Version 1.2 (3-tier board set: P/N 1059 Rev 3, P/N ???? Rev ? &  P/N 1060 Rev 0) */
+ROM_START( pairs )	/* Version 1.2 (3-tier board set: P/N 1059 Rev 3, P/N 1061 Rev 1 &  P/N 1060 Rev 0) */
 	ROM_REGION16_BE( 0x80000, "user1", 0 )
-	ROM_LOAD16_BYTE( "pair0v12.u83", 0x00000, 0x20000, CRC(a9c761d8) SHA1(2618c9c3f336cf30f760fd88f12c09985cfd4ee7) )
-	ROM_LOAD16_BYTE( "pair1v12.u88", 0x00001, 0x20000, CRC(5141eb86) SHA1(3bb10d588e6334a33e5c2c468651699e84f46cdc) )
+	ROM_LOAD16_BYTE( "pair0_v1.2.u83", 0x00000, 0x20000, CRC(a9c761d8) SHA1(2618c9c3f336cf30f760fd88f12c09985cfd4ee7) )
+	ROM_LOAD16_BYTE( "pair1_v1.2.u88", 0x00001, 0x20000, CRC(5141eb86) SHA1(3bb10d588e6334a33e5c2c468651699e84f46cdc) )
 
 	ROM_REGION( 0x28000, "soundcpu", 0 )
 	ROM_LOAD( "snd.u17", 0x10000, 0x18000, CRC(7a514cfd) SHA1(ef5bc74c9560d2c058298051070fa748e58f07e1) )
@@ -2128,7 +2118,7 @@ ROM_START( pairs )	/* Version 1.2 (3-tier board set: P/N 1059 Rev 3, P/N ???? Re
 ROM_END
 
 
-ROM_START( pairsa )	/* Version ?? (3-tier board set: P/N 1059 Rev 3, P/N ???? Rev ? &  P/N 1060 Rev 0) */
+ROM_START( pairsa )	/* Version ?? (3-tier board set: P/N 1059 Rev 3, P/N 1061 Rev 1 &  P/N 1060 Rev 0) */
 	ROM_REGION16_BE( 0x80000, "user1", 0 )
 	ROM_LOAD16_BYTE( "pair0.u83", 0x00000, 0x20000, CRC(774995a3) SHA1(93df91378b56802d14c105f7f48ed8a4f7bafffd) )
 	ROM_LOAD16_BYTE( "pair1.u88", 0x00001, 0x20000, CRC(85d0b73a) SHA1(48a6ac6de94be13e407da13e3e2440d858714b4b) )
@@ -2154,10 +2144,10 @@ ROM_START( pairsa )	/* Version ?? (3-tier board set: P/N 1059 Rev 3, P/N ???? Re
 	ROM_LOAD16_BYTE( "srom0", 0x000000, 0x80000, CRC(1d96c581) SHA1(3b7c84b7db3b098ec28c7058c16f97e9cf0e4733) )
 ROM_END
 
-ROM_START( hotmemry )	/* Version 1.2 (3-tier board set: P/N 1059 Rev 3, P/N ???? Rev ? &  P/N 1060 Rev 0) */
+ROM_START( hotmemry )	/* Version 1.2 (3-tier board set: P/N 1059 Rev 3, P/N 1061 Rev 1 &  P/N 1060 Rev 0) */
 	ROM_REGION16_BE( 0x80000, "user1", 0 )
-	ROM_LOAD16_BYTE( "hotmem0.u83", 0x00000, 0x40000, CRC(5b9d87a2) SHA1(5a1ca7b622832fcb641e081d0c2a49c38ca795cd) )
-	ROM_LOAD16_BYTE( "hotmem1.u88", 0x00001, 0x40000, CRC(aeea087c) SHA1(3a8bdc04bc4051691823d0c5a1a3429475692100) )
+	ROM_LOAD16_BYTE( "hotmem0_v1.2.u83", 0x00000, 0x40000, CRC(5b9d87a2) SHA1(5a1ca7b622832fcb641e081d0c2a49c38ca795cd) )
+	ROM_LOAD16_BYTE( "hotmem1_v1.2.u88", 0x00001, 0x40000, CRC(aeea087c) SHA1(3a8bdc04bc4051691823d0c5a1a3429475692100) )
 
 	ROM_REGION( 0x28000, "soundcpu", 0 )
 	ROM_LOAD( "hotmem_snd.u17", 0x10000, 0x18000, CRC(805941c7) SHA1(4a6832d93ff2b986cb54052658af62584782cb59) )
@@ -2178,6 +2168,32 @@ ROM_START( hotmemry )	/* Version 1.2 (3-tier board set: P/N 1059 Rev 3, P/N ????
 
 	ROM_REGION16_BE( 0x400000, "ensoniq.2", ROMREGION_ERASE00 )
 	ROM_LOAD16_BYTE( "hotmem.srom0", 0x000000, 0x80000, CRC(c1103224) SHA1(52cf341ff9092ecb8cb94f66a96ee0c726bf1412) )
+ROM_END
+
+ROM_START( hotmemry11 )	/* Version 1.1 (3-tier board set: P/N 1059 Rev 3, P/N 1061 Rev 1 &  P/N 1060 Rev 0) */
+	ROM_REGION16_BE( 0x80000, "user1", ROMREGION_ERASEFF )
+	ROM_LOAD16_BYTE( "hotmem0_v1.1.u83", 0x00000, 0x20000, CRC(8d614b1b) SHA1(46567b83c595f166573ce6cf93456dbd10ab5b80) )
+	ROM_LOAD16_BYTE( "hotmem1_v1.1.u88", 0x00001, 0x20000, CRC(009639fb) SHA1(8f559a838a12a4e3d39acbea87a9816a66a3f8f8) )
+
+	ROM_REGION( 0x28000, "soundcpu", 0 )
+	ROM_LOAD( "hotmem_snd.u17", 0x10000, 0x18000, CRC(805941c7) SHA1(4a6832d93ff2b986cb54052658af62584782cb59) )
+	ROM_CONTINUE(               0x08000, 0x08000 )
+
+	ROM_REGION( 0x880000, "gfx1", 0 )
+	ROM_LOAD32_BYTE( "hotmem.grom0",  0x000000, 0x80000, CRC(68f279ef) SHA1(66098e68474e692676662b03835d1b74f581b0f4) )
+	ROM_LOAD32_BYTE( "hotmem.grom5",  0x000001, 0x80000, CRC(295bb43d) SHA1(ccecdbc9dc9ef925fe59a53eeff89135d2ae748d) )
+	ROM_LOAD32_BYTE( "hotmem.grom10", 0x000002, 0x80000, CRC(f8cc939b) SHA1(cbd35346f057f1e615705acb2595ba550f6d8772) )
+	ROM_LOAD32_BYTE( "hotmem.grom15", 0x000003, 0x80000, CRC(a03d9bcd) SHA1(e75be35fd5cfec1e7ab3e0db468bff4d76a9cb27) )
+	ROM_LOAD32_BYTE( "hotmem.grom1",  0x200000, 0x40000, CRC(b446105e) SHA1(25b5067c09490086095fcf10085f0eeffd53b27f) )
+	ROM_LOAD32_BYTE( "hotmem.grom6",  0x200001, 0x40000, CRC(3a7ba9eb) SHA1(dd7548afb8ee92af369732f4159b0ad0d1b58259) )
+	ROM_LOAD32_BYTE( "hotmem.grom11", 0x200002, 0x40000, CRC(9ec4ea41) SHA1(5bc4489b881c9736cb39891b6ab5e75f5c45907c) )
+	ROM_LOAD32_BYTE( "hotmem.grom16", 0x200003, 0x40000, CRC(4507a895) SHA1(3d6cd6cd81b62545f7be5991f67803cf11c96ee6) )
+
+	ROM_REGION16_BE( 0x400000, "ensoniq.0", ROMREGION_ERASE00 )
+	ROM_LOAD16_BYTE( "ensoniq.2m", 0x000000, 0x200000, CRC(9fdc4825) SHA1(71e5255c66d9010be7e6f27916b605441fc53839) ) /* Ensoniq 2m 1350901601 */
+
+	ROM_REGION16_BE( 0x400000, "ensoniq.2", ROMREGION_ERASE00 )
+	ROM_LOAD16_BYTE( "hotmem_v1.srom0", 0x000000, 0x80000, CRC(c18b76cd) SHA1(2d9ddda3b1d199289792c2e8b8add4a0f35c4a48) )
 ROM_END
 
 ROM_START( wcbowldx )	/* Deluxe version 2.00 (PCB P/N 1083 Rev 2), This version is derived from the Tournament version, but tournament features have be removed/disabled */
@@ -3949,43 +3965,48 @@ ROM_END
 
 static void init_program_rom(running_machine *machine)
 {
-	memcpy(main_ram, main_rom, 0x80);
+	itech32_state *state = machine->driver_data<itech32_state>();
+	memcpy(state->main_ram, state->main_rom, 0x80);
 }
 
 
 static DRIVER_INIT( timekill )
 {
+	itech32_state *state = machine->driver_data<itech32_state>();
 	init_program_rom(machine);
-	itech32_vram_height = 512;
-	itech32_planes = 2;
-	is_drivedge = 0;
+	state->vram_height = 512;
+	state->planes = 2;
+	state->is_drivedge = 0;
 }
 
 
 static DRIVER_INIT( hardyard )
 {
+	itech32_state *state = machine->driver_data<itech32_state>();
 	init_program_rom(machine);
-	itech32_vram_height = 1024;
-	itech32_planes = 1;
-	is_drivedge = 0;
+	state->vram_height = 1024;
+	state->planes = 1;
+	state->is_drivedge = 0;
 }
 
 
 static DRIVER_INIT( bloodstm )
 {
+	itech32_state *state = machine->driver_data<itech32_state>();
 	init_program_rom(machine);
-	itech32_vram_height = 1024;
-	itech32_planes = 1;
-	is_drivedge = 0;
+	state->vram_height = 1024;
+	state->planes = 1;
+	state->is_drivedge = 0;
 }
 
 
 static DRIVER_INIT( drivedge )
 {
+	itech32_state *state = machine->driver_data<itech32_state>();
 	init_program_rom(machine);
-	itech32_vram_height = 1024;
-	itech32_planes = 1;
-	is_drivedge = 1;
+	state->vram_height = 1024;
+	state->planes = 1;
+	state->is_drivedge = 1;
 
 	memory_install_read32_handler(cputag_get_address_space(machine, "dsp1", ADDRESS_SPACE_PROGRAM), 0x8382, 0x8382, 0, 0, drivedge_tms1_speedup_r);
 	memory_install_read32_handler(cputag_get_address_space(machine, "dsp2", ADDRESS_SPACE_PROGRAM), 0x8382, 0x8382, 0, 0, drivedge_tms2_speedup_r);
@@ -3994,6 +4015,7 @@ static DRIVER_INIT( drivedge )
 
 static DRIVER_INIT( wcbowl )
 {
+	itech32_state *state = machine->driver_data<itech32_state>();
 	/*
         This is the 3 tier PCB set:
           Main  P/N 1059 Rev 3 (see Hot Memory PCB layout above)
@@ -4001,8 +4023,8 @@ static DRIVER_INIT( wcbowl )
           Sound P/N 1060 Rev 0 (see Hot Memory PCB layout above)
     */
 	init_program_rom(machine);
-	itech32_vram_height = 1024;
-	itech32_planes = 1;
+	state->vram_height = 1024;
+	state->planes = 1;
 
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x680000, 0x680001, 0, 0, trackball_r);
 
@@ -4014,12 +4036,13 @@ static DRIVER_INIT( wcbowl )
 
 static void init_sftm_common(running_machine *machine, int prot_addr)
 {
+	itech32_state *state = machine->driver_data<itech32_state>();
 	init_program_rom(machine);
-	itech32_vram_height = 1024;
-	itech32_planes = 1;
-	is_drivedge = 0;
+	state->vram_height = 1024;
+	state->planes = 1;
+	state->is_drivedge = 0;
 
-	itech020_prot_address = prot_addr;
+	state->itech020_prot_address = prot_addr;
 
 	memory_install_write32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x300000, 0x300003, 0, 0, itech020_color2_w);
 	memory_install_write32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x380000, 0x380003, 0, 0, itech020_color1_w);
@@ -4040,21 +4063,22 @@ static DRIVER_INIT( sftm110 )
 
 static void init_shuffle_bowl_common(running_machine *machine, int prot_addr)
 {
+	itech32_state *state = machine->driver_data<itech32_state>();
 	/*
         The newest versions of World Class Bowling are on the same exact
         platform as Shuffle Shot. So We'll use the same general INIT
         routine for these two programs.  IE: PCB P/N 1083 Rev 2
     */
 	init_program_rom(machine);
-	itech32_vram_height = 1024;
-	itech32_planes = 1;
-	is_drivedge = 0;
+	state->vram_height = 1024;
+	state->planes = 1;
+	state->is_drivedge = 0;
 
-	itech020_prot_address = prot_addr;
+	state->itech020_prot_address = prot_addr;
 
 	memory_install_write32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x300000, 0x300003, 0, 0, itech020_color2_w);
 	memory_install_write32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x380000, 0x380003, 0, 0, itech020_color1_w);
-	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x180800, 0x180803, 0, 0, trackball32_4bit_r);
+	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x180800, 0x180803, 0, 0, trackball32_4bit_p1_r);
 	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x181000, 0x181003, 0, 0, trackball32_4bit_p2_r);
 }
 
@@ -4087,12 +4111,13 @@ static DRIVER_INIT( wcbowlt )	/* PIC 16C54 labeled as ITBWL-3 */
 
 static void init_gt_common(running_machine *machine)
 {
+	itech32_state *state = machine->driver_data<itech32_state>();
 	init_program_rom(machine);
-	itech32_vram_height = 1024;
-	itech32_planes = 2;
-	is_drivedge = 0;
+	state->vram_height = 1024;
+	state->planes = 2;
+	state->is_drivedge = 0;
 
-	itech020_prot_address = 0x112f;
+	state->itech020_prot_address = 0x112f;
 }
 
 
@@ -4118,7 +4143,7 @@ static DRIVER_INIT( aama )
         board share the same sound CPU code and sample ROMs.
         This board has all versions of GT for it, GT3D through GTClassic
     */
-	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x180800, 0x180803, 0, 0, trackball32_4bit_r);
+	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x180800, 0x180803, 0, 0, trackball32_4bit_p1_r);
 	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x181000, 0x181003, 0, 0, trackball32_4bit_p2_r);
 	init_gt_common(machine);
 }
@@ -4143,7 +4168,7 @@ static DRIVER_INIT( s_ver )
         board: GT97 v1.21S, GT98, GT99, GT2K & GT Classic Versions 1.00S
         Trackball info is read through 200202 (actually 200203).
     */
-	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x200200, 0x200203, 0, 0, trackball32_4bit_r);
+	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x200200, 0x200203, 0, 0, trackball32_4bit_p1_r);
 	init_gt_common(machine);
 }
 
@@ -4223,6 +4248,7 @@ GAME( 1994, bloodstm11,  bloodstm, bloodstm, bloodstm, bloodstm, ROT0, "Strata/I
 GAME( 1994, pairs,       0,        bloodstm, pairs,    bloodstm, ROT0, "Strata/Incredible Technologies",   "Pairs (V1.2, 09/30/94)", 0 )
 GAME( 1994, pairsa,      pairs,    bloodstm, pairs,    bloodstm, ROT0, "Strata/Incredible Technologies",   "Pairs (09/07/94)", 0 )
 GAME( 1994, hotmemry,    pairs,    bloodstm, pairs,    bloodstm, ROT0, "Tuning/Incredible Technologies",   "Hot Memory (V1.2, Germany)", 0 )
+GAME( 1994, hotmemry11,  pairs,    bloodstm, pairs,    bloodstm, ROT0, "Tuning/Incredible Technologies",   "Hot Memory (V1.1, Germany)", 0 )
 GAME( 1994, drivedge,    0,        drivedge, drivedge, drivedge, ROT0, "Strata/Incredible Technologies",   "Driver's Edge", GAME_IMPERFECT_GRAPHICS )
 GAME( 1995, wcbowl,      0,        sftm,     wcbowln,  wcbowln,  ROT0, "Incredible Technologies",          "World Class Bowling (v1.66)" , 0) /* PIC 16C54 labeled as ITBWL-3 */
 GAME( 1995, wcbowl165,   wcbowl,   sftm,     shufbowl, wcbowln,  ROT0, "Incredible Technologies",          "World Class Bowling (v1.65)" , 0) /* PIC 16C54 labeled as ITBWL-3 */

@@ -74,7 +74,7 @@ public:
 	virtual device_t *alloc_device(running_machine &machine) const;
 protected:
 	virtual void device_config_complete();
-	virtual bool device_validity_check(const game_driver &driver) const;
+	virtual bool device_validity_check(core_options &options, const game_driver &driver) const;
 	virtual const address_space_config *memory_space_config(int spacenum = 0) const;
 	address_space_config		m_space_config;
 };
@@ -117,7 +117,7 @@ void janshi_vdp_device_config::device_config_complete()
 //  m_space_config = address_space_config("janshi_vdp", ENDIANNESS_BIG, 8,  address_bits, 0, *ADDRESS_MAP_NAME(janshi_vdp_map8));
 }
 
-bool janshi_vdp_device_config::device_validity_check(const game_driver &driver) const
+bool janshi_vdp_device_config::device_validity_check(core_options &options, const game_driver &driver) const
 {
 	bool error = false;
 	return error;
@@ -189,7 +189,7 @@ ronjan
 
 */
 
-static VIDEO_UPDATE( pinkiri8 )
+static SCREEN_UPDATE( pinkiri8 )
 {
 	static int col_bank;
 	const gfx_element *gfx = screen->machine->gfx[0];
@@ -1119,11 +1119,12 @@ static MACHINE_CONFIG_START( pinkiri8, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 64*8-1)
+	MCFG_SCREEN_UPDATE(pinkiri8)
+
 	MCFG_GFXDECODE(pinkiri8)
 	MCFG_PALETTE_LENGTH(0x2000)
 
 	MCFG_VIDEO_START(pinkiri8)
-	MCFG_VIDEO_UPDATE(pinkiri8)
 
 	MCFG_DEVICE_ADD("janshivdp", JANSHIVDP, 0)
 

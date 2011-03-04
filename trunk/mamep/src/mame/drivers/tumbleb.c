@@ -888,8 +888,6 @@ static READ8_HANDLER( prot_io_r )
 	return 0x00;
 }
 
-static UINT8 semicom_prot_offset = 0x00;
-static UINT16 protbase = 0x0000;
 
 // probably not endian safe
 static WRITE8_HANDLER( prot_io_w )
@@ -900,25 +898,25 @@ static WRITE8_HANDLER( prot_io_w )
 	{
 		case 0x00:
 		{
-			UINT16 word = state->mainram[(protbase/2) + semicom_prot_offset];
+			UINT16 word = state->mainram[(state->protbase/2) + state->semicom_prot_offset];
 			word = (word & 0xff00) | (data << 0);
-			state->mainram[(protbase/2) + semicom_prot_offset] = word;
+			state->mainram[(state->protbase/2) + state->semicom_prot_offset] = word;
 
 			break;
 		}
 
 		case 0x01:
 		{
-			UINT16 word = state->mainram[(protbase/2) + semicom_prot_offset];
+			UINT16 word = state->mainram[(state->protbase/2) + state->semicom_prot_offset];
 			word = (word & 0x00ff) | (data << 8);
-			state->mainram[(protbase/2) + semicom_prot_offset] = word;
+			state->mainram[(state->protbase/2) + state->semicom_prot_offset] = word;
 
 			break;
 		}
 
 		case 0x02: // offset
 		{
-			semicom_prot_offset = data;
+			state->semicom_prot_offset = data;
 			break;
 		}
 
@@ -2091,12 +2089,12 @@ static MACHINE_CONFIG_START( tumblepb, tumbleb_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
+	MCFG_SCREEN_UPDATE(tumblepb)
 
 	MCFG_GFXDECODE(tumbleb)
 	MCFG_PALETTE_LENGTH(1024)
 
 	MCFG_VIDEO_START(tumblepb)
-	MCFG_VIDEO_UPDATE(tumblepb)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2123,12 +2121,12 @@ static MACHINE_CONFIG_START( tumbleb2, tumbleb_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
+	MCFG_SCREEN_UPDATE(tumblepb)
 
 	MCFG_GFXDECODE(tumbleb)
 	MCFG_PALETTE_LENGTH(1024)
 
 	MCFG_VIDEO_START(tumblepb)
-	MCFG_VIDEO_UPDATE(tumblepb)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2158,12 +2156,12 @@ static MACHINE_CONFIG_START( jumpkids, tumbleb_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
+	MCFG_SCREEN_UPDATE(jumpkids)
 
 	MCFG_GFXDECODE(tumbleb)
 	MCFG_PALETTE_LENGTH(1024)
 
 	MCFG_VIDEO_START(tumblepb)
-	MCFG_VIDEO_UPDATE(jumpkids)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2189,12 +2187,12 @@ static MACHINE_CONFIG_START( fncywld, tumbleb_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
+	MCFG_SCREEN_UPDATE(fncywld)
 
 	MCFG_GFXDECODE(fncywld)
 	MCFG_PALETTE_LENGTH(0x800)
 
 	MCFG_VIDEO_START(fncywld)
-	MCFG_VIDEO_UPDATE(fncywld)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2256,12 +2254,12 @@ static MACHINE_CONFIG_START( htchctch, tumbleb_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
+	MCFG_SCREEN_UPDATE(semicom)
 
 	MCFG_GFXDECODE(tumbleb)
 	MCFG_PALETTE_LENGTH(1024)
 
 	MCFG_VIDEO_START(tumblepb)
-	MCFG_VIDEO_UPDATE(semicom)
 
 	/* sound hardware - same as hyperpac */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2277,7 +2275,8 @@ static MACHINE_CONFIG_START( htchctch, tumbleb_state )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( cookbib, htchctch )
-	MCFG_VIDEO_UPDATE( semicom_altoffsets )
+	MCFG_SCREEN_MODIFY("screen")
+	MCFG_SCREEN_UPDATE( semicom_altoffsets )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( cookbib_mcu, htchctch )
@@ -2288,11 +2287,13 @@ static MACHINE_CONFIG_DERIVED( cookbib_mcu, htchctch )
 	MCFG_CPU_IO_MAP(protection_iomap)
 
 	/* video hardware */
-	MCFG_VIDEO_UPDATE( semicom_altoffsets )
+	MCFG_SCREEN_MODIFY("screen")
+	MCFG_SCREEN_UPDATE( semicom_altoffsets )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( bcstory, htchctch )
-	MCFG_VIDEO_UPDATE(bcstory)
+	MCFG_SCREEN_MODIFY("screen")
+	MCFG_SCREEN_UPDATE(bcstory)
 
 	MCFG_SOUND_REPLACE("ymsnd", YM2151, 3427190)
 	MCFG_SOUND_CONFIG(semicom_ym2151_interface)
@@ -2301,12 +2302,14 @@ static MACHINE_CONFIG_DERIVED( bcstory, htchctch )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( semibase, bcstory )
-	MCFG_VIDEO_UPDATE(semibase )
+	MCFG_SCREEN_MODIFY("screen")
+	MCFG_SCREEN_UPDATE(semibase )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( sdfight, bcstory )
 	MCFG_VIDEO_START(sdfight)
-	MCFG_VIDEO_UPDATE(sdfight)
+	MCFG_SCREEN_MODIFY("screen")
+	MCFG_SCREEN_UPDATE(sdfight)
 MACHINE_CONFIG_END
 
 
@@ -2340,12 +2343,12 @@ static MACHINE_CONFIG_START( jumppop, tumbleb_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
+	MCFG_SCREEN_UPDATE(jumppop)
 
 	MCFG_GFXDECODE(jumppop)
 	MCFG_PALETTE_LENGTH(1024)
 
 	MCFG_VIDEO_START(jumppop)
-	MCFG_VIDEO_UPDATE(jumppop)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -2378,12 +2381,12 @@ static MACHINE_CONFIG_START( suprtrio, tumbleb_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8-1, 31*8-2)
+	MCFG_SCREEN_UPDATE(suprtrio)
 
 	MCFG_GFXDECODE(suprtrio)
 	MCFG_PALETTE_LENGTH(1024)
 
 	MCFG_VIDEO_START(suprtrio)
-	MCFG_VIDEO_UPDATE(suprtrio)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2410,12 +2413,12 @@ static MACHINE_CONFIG_START( pangpang, tumbleb_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
+	MCFG_SCREEN_UPDATE(pangpang)
 
 	MCFG_GFXDECODE(tumbleb)
 	MCFG_PALETTE_LENGTH(1024)
 
 	MCFG_VIDEO_START(pangpang)
-	MCFG_VIDEO_UPDATE(pangpang)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3443,7 +3446,7 @@ static DRIVER_INIT( htchctch )
 	int i, len = machine->region("user1")->bytes();
 	/* simulate RAM initialization done by the protection MCU */
 	/* verified on real hardware */
-//  static UINT16 htchctch_mcu68k[] =
+//  static const UINT16 htchctch_mcu68k[] =
 //  {
 //      /* moved to protdata.bin file .. */
 //  };
@@ -3744,18 +3747,20 @@ static DRIVER_INIT( chokchok )
 
 static DRIVER_INIT( wlstar )
 {
+	tumbleb_state *state = machine->driver_data<tumbleb_state>();
 	tumblepb_gfx1_rearrange(machine);
 
 	/* slightly different banking */
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x100002, 0x100003, 0, 0, wlstar_tilebank_w);
 
-	protbase = 0x0000;
+	state->protbase = 0x0000;
 }
 
 static DRIVER_INIT( wondl96 )
 {
+	tumbleb_state *state = machine->driver_data<tumbleb_state>();
 	DRIVER_INIT_CALL( wlstar );
-	protbase = 0x0200;
+	state->protbase = 0x0200;
 }
 
 static DRIVER_INIT ( dquizgo )

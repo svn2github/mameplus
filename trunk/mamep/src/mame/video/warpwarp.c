@@ -12,11 +12,10 @@
 
 
 UINT8 *geebee_videoram,*warpwarp_videoram;
-int geebee_handleoverlay;
 int geebee_bgw;
 int warpwarp_ball_on;
 int warpwarp_ball_h,warpwarp_ball_v;
-int warpwarp_ball_sizex, warpwarp_ball_sizey;
+int warpwarp_ball_pen, warpwarp_ball_sizex, warpwarp_ball_sizey;
 
 static tilemap_t *bg_tilemap;
 
@@ -43,10 +42,9 @@ PALETTE_INIT( geebee )
 PALETTE_INIT( navarone )
 {
 	palette_set_color(machine, 0, geebee_palette[0]);
-	palette_set_color(machine, 1, geebee_palette[2]);
-	palette_set_color(machine, 2, geebee_palette[2]);
+	palette_set_color(machine, 1, geebee_palette[1]);
+	palette_set_color(machine, 2, geebee_palette[1]);
 	palette_set_color(machine, 3, geebee_palette[0]);
-	palette_set_color(machine, 4, geebee_palette[1]);
 }
 
 
@@ -122,7 +120,7 @@ PALETTE_INIT( warpwarp )
 ***************************************************************************/
 
 /* convert from 32x32 to 34x28 */
-static UINT32 tilemap_scan(UINT32 col,UINT32 row,UINT32 num_cols,UINT32 num_rows)
+static TILEMAP_MAPPER( tilemap_scan )
 {
 	int offs;
 
@@ -238,32 +236,10 @@ static void draw_ball(bitmap_t *bitmap, const rectangle *cliprect,pen_t pen)
 	}
 }
 
-VIDEO_UPDATE( geebee )
-{
-	/* use an overlay only in upright mode */
-	if (geebee_handleoverlay)
-		output_set_value("overlay", (input_port_read(screen->machine, "DSW2") & 0x01) == 0);
-
-	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
-
-	draw_ball(bitmap,cliprect,1);
-	return 0;
-}
-
-
-VIDEO_UPDATE( navarone )
+SCREEN_UPDATE( geebee )
 {
 	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
 
-	draw_ball(bitmap,cliprect,4);
-	return 0;
-}
-
-
-VIDEO_UPDATE( warpwarp )
-{
-	tilemap_draw(bitmap,cliprect,bg_tilemap,0,0);
-
-	draw_ball(bitmap,cliprect,0x200);
+	draw_ball(bitmap,cliprect,warpwarp_ball_pen);
 	return 0;
 }

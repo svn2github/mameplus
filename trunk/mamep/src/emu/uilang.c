@@ -142,7 +142,6 @@ static void load_mmo(int msgcat)
 {
 	struct mmo *p = &mmo_table[current_lang][msgcat];
 	file_error filerr;
-	mame_file *file;
 	UINT32 *mmo_index_buf = NULL;
 	const UINT8 mmo_data_ptr_size = sizeof (UINT32);
 	int str_size;
@@ -156,13 +155,14 @@ static void load_mmo(int msgcat)
 		return;
 
 	astring fname(ui_lang_info[current_lang].name, PATH_SEPARATOR, mmo_config[msgcat].filename, ".mmo");
-	filerr = mame_fopen_options(lang_options, SEARCHPATH_LANGDATA, fname, OPEN_FLAG_READ, &file);
+	emu_file file = emu_file(*lang_options, SEARCHPATH_LANGDATA, OPEN_FLAG_READ);
+	filerr = file.open(fname);
 
 	if (filerr != FILERR_NONE)
 		goto mmo_readerr;
 
 	size = sizeof p->header;
-	if (mame_fread(file, &p->header, size) != size)
+	if (file.read(&p->header, size) != size)
 		goto mmo_readerr;
 
 	if (p->header.dummy)
@@ -178,12 +178,12 @@ static void load_mmo(int msgcat)
 		goto mmo_readerr;
 
 	//read mmo_index to buffer
-	if (mame_fread(file, mmo_index_buf, size) != size)
+	if (file.read(mmo_index_buf, size) != size)
 		goto mmo_readerr;
 
 	//get str data size
 	size = sizeof str_size;
-	if (mame_fread(file, &str_size, size) != size)
+	if (file.read(&str_size, size) != size)
 		goto mmo_readerr;
 
 	//alloc str data
@@ -192,10 +192,10 @@ static void load_mmo(int msgcat)
 		goto mmo_readerr;
 
 	//read str data
-	if (mame_fread(file, p->mmo_str, str_size) != str_size)
+	if (file.read(p->mmo_str, str_size) != str_size)
 		goto mmo_readerr;
 
-	mame_fclose(file);
+	file.close();
 
 	//fill mmo_index
 	p->mmo_index = global_alloc_array(mmo_data, p->header.num_msg * sizeof p->mmo_index[0]);
@@ -229,9 +229,6 @@ mmo_readerr:
 	}
 
 	global_free(mmo_index_buf);
-	
-	if (file)
-		mame_fclose(file);
 
 	p->status = mmo::MMO_NOT_FOUND;
 }

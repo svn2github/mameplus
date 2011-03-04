@@ -5,6 +5,9 @@ public:
 		: driver_device(machine, config) { }
 
 	UINT8 *videoram;
+	int msm5205next;
+	int toggle;
+	tilemap_t *bg_tilemap;
 };
 
 
@@ -15,4 +18,4 @@ WRITE8_HANDLER( pcktgal_flipscreen_w );
 
 PALETTE_INIT( pcktgal );
 VIDEO_START( pcktgal );
-VIDEO_UPDATE( pcktgal );
+SCREEN_UPDATE( pcktgal );

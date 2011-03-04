@@ -1946,7 +1946,7 @@ static NVRAM_HANDLER( namcos22 )
 			data[1] = (dword&0x00ff0000)>>16;
 			data[2] = (dword&0x0000ff00)>>8;
 			data[3] = dword&0xff;
-			mame_fwrite( file, data, 4 );
+			file->write( data, 4 );
 		}
 	}
 	else
@@ -1955,7 +1955,7 @@ static NVRAM_HANDLER( namcos22 )
 		{
 			for( i=0; i<namcos22_nvmem_size/4; i++ )
 			{
-				mame_fread( file, data, 4 );
+				file->read( data, 4 );
 				namcos22_nvmem[i] = (data[0]<<24)|(data[1]<<16)|(data[2]<<8)|data[3];
 			}
 		}
@@ -2898,11 +2898,11 @@ static MACHINE_CONFIG_START( namcos22s, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(NAMCOS22_NUM_COLS*16,NAMCOS22_NUM_ROWS*16)
 	MCFG_SCREEN_VISIBLE_AREA(0,NAMCOS22_NUM_COLS*16-1,0,NAMCOS22_NUM_ROWS*16-1)
+	MCFG_SCREEN_UPDATE(namcos22s)
 
 	MCFG_PALETTE_LENGTH(NAMCOS22_PALETTE_SIZE)
 	MCFG_GFXDECODE(super)
 	MCFG_VIDEO_START(namcos22s)
-	MCFG_VIDEO_UPDATE(namcos22s)
 	MCFG_MACHINE_RESET(namcoss22)
 
 	/* sound hardware */
@@ -3311,11 +3311,11 @@ static MACHINE_CONFIG_START( namcos22, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(NAMCOS22_NUM_COLS*16,NAMCOS22_NUM_ROWS*16)
 	MCFG_SCREEN_VISIBLE_AREA(0,NAMCOS22_NUM_COLS*16-1,0,NAMCOS22_NUM_ROWS*16-1)
+	MCFG_SCREEN_UPDATE(namcos22)
 
 	MCFG_PALETTE_LENGTH(NAMCOS22_PALETTE_SIZE)
 	MCFG_GFXDECODE(namcos22)
 	MCFG_VIDEO_START(namcos22)
-	MCFG_VIDEO_UPDATE(namcos22)
 	MCFG_MACHINE_RESET(namcos22)
 
 	/* sound hardware */

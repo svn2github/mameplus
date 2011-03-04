@@ -590,12 +590,12 @@ static MACHINE_CONFIG_START( chinagat, ddragon_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 256, 272, 0, 240)	/* based on ddragon driver */
+	MCFG_SCREEN_UPDATE(ddragon)
 
 	MCFG_GFXDECODE(chinagat)
 	MCFG_PALETTE_LENGTH(384)
 
 	MCFG_VIDEO_START(chinagat)
-	MCFG_VIDEO_UPDATE(ddragon)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -635,12 +635,12 @@ static MACHINE_CONFIG_START( saiyugoub1, ddragon_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 256, 272, 0, 240)	/* based on ddragon driver */
+	MCFG_SCREEN_UPDATE(ddragon)
 
 	MCFG_GFXDECODE(chinagat)
 	MCFG_PALETTE_LENGTH(384)
 
 	MCFG_VIDEO_START(chinagat)
-	MCFG_VIDEO_UPDATE(ddragon)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -677,12 +677,12 @@ static MACHINE_CONFIG_START( saiyugoub2, ddragon_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 256, 272, 0, 240)	/* based on ddragon driver */
+	MCFG_SCREEN_UPDATE(ddragon)
 
 	MCFG_GFXDECODE(chinagat)
 	MCFG_PALETTE_LENGTH(384)
 
 	MCFG_VIDEO_START(chinagat)
-	MCFG_VIDEO_UPDATE(ddragon)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -928,7 +928,7 @@ static DRIVER_INIT( chinagat )
 
 
 /*   ( YEAR  NAME      PARENT    MACHINE   INPUT     INIT    MONITOR COMPANY    FULLNAME     FLAGS ) */
-GAME( 1988, chinagat,   0,        chinagat,   chinagat, chinagat, ROT0, "Technos Japan (Taito / Romstar license)", "China Gate (US)", GAME_SUPPORTS_SAVE )
+GAME( 1988, chinagat,   0,        chinagat,   chinagat, chinagat, ROT0, "Technos Japan (Taito / Romstar license)", "China Gate (US)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 GAME( 1988, saiyugou,   chinagat, chinagat,   chinagat, chinagat, ROT0, "Technos Japan", "Sai Yu Gou Ma Roku (Japan)", GAME_SUPPORTS_SAVE )
 GAME( 1988, saiyugoub1, chinagat, saiyugoub1, chinagat, chinagat, ROT0, "bootleg", "Sai Yu Gou Ma Roku (Japan bootleg 1)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 GAME( 1988, saiyugoub2, chinagat, saiyugoub2, chinagat, chinagat, ROT0, "bootleg", "Sai Yu Gou Ma Roku (Japan bootleg 2)", GAME_SUPPORTS_SAVE )

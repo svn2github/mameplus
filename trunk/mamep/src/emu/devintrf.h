@@ -127,6 +127,7 @@ class device_state_interface;
 struct rom_entry;
 class machine_config;
 class emu_timer;
+typedef union _input_port_token input_port_token;
 
 
 // exception classes
@@ -284,13 +285,14 @@ public:
 	device_type type() const { return m_type; }
 	UINT32 clock() const { return m_clock; }
 	const char *name() const { return m_name; }
+	const char *shortname() const { return m_shortname; }
 	const char *tag() const { return m_tag; }
 	const void *static_config() const { return m_static_config; }
 	const machine_config &mconfig() const { return m_machine_config; }
 
 	// methods that wrap both interface-level and device-level behavior
 	void config_complete();
-	bool validity_check(const game_driver &driver) const;
+	bool validity_check(core_options &options, const game_driver &driver) const;
 
 	// configuration helpers
 	static void static_set_clock(device_config *device, UINT32 clock) { device->m_clock = clock; }
@@ -304,12 +306,13 @@ public:
 	// optional operation overrides
 protected:
 	virtual void device_config_complete();
-	virtual bool device_validity_check(const game_driver &driver) const;
+	virtual bool device_validity_check(core_options &options, const game_driver &driver) const;
 
 public:
 	// optional information overrides
 	virtual const rom_entry *rom_region() const;
 	virtual machine_config_constructor machine_config_additions() const;
+	virtual const input_port_token *input_ports() const;
 
 	//------------------- end derived class overrides
 
@@ -326,7 +329,7 @@ protected:
 	const void *			m_static_config;		// static device configuration
 
 	astring					m_name;					// name of the device
-
+	astring					m_shortname;			// short name of the device, used for potential romload
 private:
 	astring 				m_tag;					// tag for this instance
 	bool					m_config_complete;		// have we completed our configuration?
@@ -358,7 +361,7 @@ public:
 
 	// optional operation overrides
 	virtual void interface_config_complete();
-	virtual bool interface_validity_check(const game_driver &driver) const;
+	virtual bool interface_validity_check(core_options &options, const game_driver &driver) const;
 
 protected:
 	const device_config &		m_device_config;
@@ -454,6 +457,7 @@ public:
 	// machine and ROM configuration getters ... pass through to underlying config
 	const rom_entry *rom_region() const { return m_baseconfig.rom_region(); }
 	machine_config_constructor machine_config_additions() const { return m_baseconfig.machine_config_additions(); }
+	const input_port_token *input_ports() const { return m_baseconfig.input_ports(); }
 
 public:
 	running_machine *		machine;

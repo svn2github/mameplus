@@ -55,6 +55,7 @@ UINT16 kaneko16_sprite_xoffs, kaneko16_sprite_flipx;
 UINT16 kaneko16_sprite_yoffs, kaneko16_sprite_flipy;
 UINT16 *kaneko16_sprites_regs;
 
+UINT8 kaneko16_nvram_save[128];
 
 UINT16 *kaneko16_bg15_select, *kaneko16_bg15_reg;
 static bitmap_t *kaneko16_bg15_bitmap;
@@ -1008,7 +1009,7 @@ static void kaneko16_fill_bitmap(running_machine *machine, bitmap_t *bitmap, con
 		bitmap_fill(bitmap,cliprect,0);
 }
 
-static VIDEO_UPDATE( common )
+static SCREEN_UPDATE( common )
 {
 	int i;
 
@@ -1026,7 +1027,7 @@ static VIDEO_UPDATE( common )
 	return 0;
 }
 
-VIDEO_UPDATE(berlwall)
+SCREEN_UPDATE(berlwall)
 {
 	// berlwall uses a 15bpp bitmap as a bg, not a solid fill
 	kaneko16_render_15bpp_bitmap(screen->machine,bitmap,cliprect);
@@ -1034,17 +1035,17 @@ VIDEO_UPDATE(berlwall)
 	// if the display is disabled, do nothing?
 	if (!kaneko16_disp_enable) return 0;
 
-	VIDEO_UPDATE_CALL(common);
+	SCREEN_UPDATE_CALL(common);
 	kaneko16_render_sprites(screen->machine,bitmap,cliprect);
 	return 0;
 }
 
 
-VIDEO_UPDATE( jchan_view2 )
+SCREEN_UPDATE( jchan_view2 )
 {
 	int dx,dy;
 
-	VIDEO_UPDATE_CALL(common);
+	SCREEN_UPDATE_CALL(common);
 
 	/* override the offsets set in common - tuned to char select in jchan2 */
 	dx = 25;dy = 11;
@@ -1059,19 +1060,19 @@ VIDEO_UPDATE( jchan_view2 )
 }
 
 
-VIDEO_UPDATE( kaneko16 )
+SCREEN_UPDATE( kaneko16 )
 {
 	kaneko16_fill_bitmap(screen->machine,bitmap,cliprect);
 
 	// if the display is disabled, do nothing?
 	if (!kaneko16_disp_enable) return 0;
 
-	VIDEO_UPDATE_CALL(common);
+	SCREEN_UPDATE_CALL(common);
 	kaneko16_render_sprites(screen->machine,bitmap,cliprect);
 	return 0;
 }
 
-VIDEO_UPDATE( galsnew )
+SCREEN_UPDATE( galsnew )
 {
 //  kaneko16_fill_bitmap(screen->machine,bitmap,cliprect);
 	int y,x;
@@ -1112,14 +1113,14 @@ VIDEO_UPDATE( galsnew )
 	// if the display is disabled, do nothing?
 	if (!kaneko16_disp_enable) return 0;
 
-	VIDEO_UPDATE_CALL(common);
+	SCREEN_UPDATE_CALL(common);
 
 	kaneko16_render_sprites(screen->machine,bitmap,cliprect);
 	return 0;
 }
 
 
-VIDEO_UPDATE( sandscrp )
+SCREEN_UPDATE( sandscrp )
 {
 	device_t *pandora = screen->machine->device("pandora");
 	kaneko16_fill_bitmap(screen->machine,bitmap,cliprect);
@@ -1127,7 +1128,7 @@ VIDEO_UPDATE( sandscrp )
 	// if the display is disabled, do nothing?
 	if (!kaneko16_disp_enable) return 0;
 
-	VIDEO_UPDATE_CALL(common);
+	SCREEN_UPDATE_CALL(common);
 
 	// copy sprite bitmap to screen
 	pandora_update(pandora, bitmap, cliprect);

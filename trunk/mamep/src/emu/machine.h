@@ -139,13 +139,6 @@ const int DEBUG_FLAG_OSD_ENABLED	= 0x00001000;		// The OSD debugger is enabled
 #define PALETTE_INIT(name)			void PALETTE_INIT_NAME(name)(running_machine *machine, const UINT8 *color_prom)
 #define PALETTE_INIT_CALL(name)		PALETTE_INIT_NAME(name)(machine, color_prom)
 
-#define VIDEO_EOF_NAME(name)		video_eof_##name
-#define VIDEO_EOF(name)				void VIDEO_EOF_NAME(name)(running_machine *machine)
-#define VIDEO_EOF_CALL(name)		VIDEO_EOF_NAME(name)(machine)
-
-#define VIDEO_UPDATE_NAME(name)		video_update_##name
-#define VIDEO_UPDATE(name)			UINT32 VIDEO_UPDATE_NAME(name)(screen_device *screen, bitmap_t *bitmap, const rectangle *cliprect)
-#define VIDEO_UPDATE_CALL(name)		VIDEO_UPDATE_NAME(name)(screen, bitmap, cliprect)
 
 
 // NULL versions
@@ -156,8 +149,6 @@ const int DEBUG_FLAG_OSD_ENABLED	= 0x00001000;		// The OSD debugger is enabled
 #define video_start_0				NULL
 #define video_reset_0				NULL
 #define palette_init_0				NULL
-#define video_eof_0 				NULL
-#define video_update_0				NULL
 
 
 
@@ -208,7 +199,6 @@ typedef tagged_list<memory_region> region_list;
 // legacy callback functions
 typedef void   (*legacy_callback_func)(running_machine *machine);
 typedef void   (*palette_init_func)(running_machine *machine, const UINT8 *color_prom);
-typedef UINT32 (*video_update_func)(screen_device *screen, bitmap_t *bitmap, const rectangle *cliprect);
 
 
 
@@ -347,7 +337,7 @@ public:
 
 	// getters
 	const char *basename() const { return m_basename; }
-	core_options *options() const { return &m_options; }
+	core_options &options() const { return m_options; }
 	machine_phase phase() const { return m_current_phase; }
 	bool paused() const { return m_paused || (m_current_phase != MACHINE_PHASE_RUNNING); }
 	bool scheduled_event_pending() const { return m_exit_pending || m_hard_reset_pending; }
@@ -503,7 +493,7 @@ private:
 	bool					m_exit_to_game_select;
 	const game_driver *		m_new_driver_pending;
 	emu_timer *				m_soft_reset_timer;
-	mame_file *				m_logfile;
+	emu_file *				m_logfile;
 
 	// load/save
 	enum saveload_schedule
@@ -554,7 +544,6 @@ public:
 		CB_SOUND_RESET,
 		CB_VIDEO_START,
 		CB_VIDEO_RESET,
-		CB_VIDEO_EOF,
 		CB_COUNT
 	};
 
@@ -562,7 +551,6 @@ public:
 	static void static_set_game(device_config *device, const game_driver *game);
 	static void static_set_callback(device_config *device, callback_type type, legacy_callback_func callback);
 	static void static_set_palette_init(device_config *device, palette_init_func callback);
-	static void static_set_video_update(device_config *device, video_update_func callback);
 
 protected:
 	// optional information overrides
@@ -573,7 +561,6 @@ protected:
 
 	legacy_callback_func	m_callbacks[CB_COUNT];		// generic legacy callbacks
 	palette_init_func		m_palette_init;				// one-time palette init callback
-	video_update_func		m_video_update;				// video update callback
 };
 
 
@@ -617,8 +604,8 @@ public:
 	virtual ~driver_device();
 
 	// additional video helpers
-	virtual bool video_update(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect);
-	virtual void video_eof();
+	virtual bool screen_update(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect);
+	virtual void screen_eof();
 
 protected:
 	// helpers called at startup

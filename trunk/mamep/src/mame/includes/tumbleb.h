@@ -31,6 +31,8 @@ public:
 	device_t *maincpu;
 	device_t *audiocpu;
 	device_t *oki;
+	UINT8 semicom_prot_offset;
+	UINT16 protbase;
 };
 
 /*----------- defined in video/tumbleb.c -----------*/
@@ -55,14 +57,14 @@ VIDEO_START( sdfight );
 VIDEO_START( suprtrio );
 VIDEO_START( pangpang );
 
-VIDEO_UPDATE( tumblepb );
-VIDEO_UPDATE( jumpkids );
-VIDEO_UPDATE( fncywld );
-VIDEO_UPDATE( jumppop );
-VIDEO_UPDATE( semicom );
-VIDEO_UPDATE( semicom_altoffsets );
-VIDEO_UPDATE( bcstory );
-VIDEO_UPDATE(semibase );
-VIDEO_UPDATE( suprtrio );
-VIDEO_UPDATE( pangpang );
-VIDEO_UPDATE( sdfight );
+SCREEN_UPDATE( tumblepb );
+SCREEN_UPDATE( jumpkids );
+SCREEN_UPDATE( fncywld );
+SCREEN_UPDATE( jumppop );
+SCREEN_UPDATE( semicom );
+SCREEN_UPDATE( semicom_altoffsets );
+SCREEN_UPDATE( bcstory );
+SCREEN_UPDATE(semibase );
+SCREEN_UPDATE( suprtrio );
+SCREEN_UPDATE( pangpang );
+SCREEN_UPDATE( sdfight );

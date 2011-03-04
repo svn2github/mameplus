@@ -180,6 +180,19 @@ public:
 	UINT8             dma_latch;
 	UINT8             flip;
 
+	/* radarscp_step */
+	double cv1;
+	double cv2;
+	double vg1;
+	double vg2;
+	double vg3;
+	double cv3;
+	double cv4;
+	int pixelcnt;
+
+	/* radarscp_scanline */
+	int counter;
+
 	/* reverse address lookup map - hunchbkd */
 	INT16             rev_map[0x200];
 };
@@ -202,9 +215,9 @@ PALETTE_INIT( radarscp1 );
 PALETTE_INIT( dkong3 );
 
 VIDEO_START( dkong );
-VIDEO_UPDATE( dkong );
-VIDEO_UPDATE( pestplce );
-VIDEO_UPDATE( spclforc );
+SCREEN_UPDATE( dkong );
+SCREEN_UPDATE( pestplce );
+SCREEN_UPDATE( spclforc );
 
 /*----------- defined in audio/dkong.c -----------*/
 

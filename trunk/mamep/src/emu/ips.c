@@ -77,7 +77,6 @@ static const rom_entry *find_rom_entry(const rom_entry *romp, const char *name)
 
 static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_name, rom_load_data *romdata)
 {
-	mame_file *file;
 	file_error filerr;
 	UINT32 pos = 0;
 	UINT8 buffer[8];
@@ -86,7 +85,8 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 	mame_printf_verbose(_("IPS: loading ips \"%s/%s%s\"\n"), ips_dir, ips_name, IPS_EXT);
 
 	astring fname(ips_dir, PATH_SEPARATOR, ips_name, IPS_EXT);
-	filerr = mame_fopen(SEARCHPATH_IPS, fname, OPEN_FLAG_READ, &file);
+	emu_file file = emu_file(machine, SEARCHPATH_IPS, OPEN_FLAG_READ);
+	filerr = file.open(fname);
 
 	if (filerr != FILERR_NONE)
 	{
@@ -98,20 +98,20 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 	}
 
 	len = strlen(IPS_SIGNATURE);
-	if (mame_fread(file, buffer, len) != len || strncmp((const char *)buffer, IPS_SIGNATURE, len) != 0)
+	if (file.read(buffer, len) != len || strncmp((const char *)buffer, IPS_SIGNATURE, len) != 0)
 	{
 		romdata->errorstring.catprintf(
 			_("ERROR: %s/%s: incorrect IPS header\n"), ips_dir, ips_name);
 		goto load_ips_file_fail;
 	}
 
-	while (!mame_feof(file))
+	while (!file.eof())
 	{
 		UINT32 offset;
 		UINT16 size;
 		int bRLE = 0;
 
-		if (mame_fread(file, buffer, 3) != 3)
+		if (file.read(buffer, 3) != 3)
 			goto load_ips_file_unexpected_eof;
 
 		if (strncmp((const char *)buffer, IPS_TAG_EOF, 3) == 0)
@@ -119,13 +119,13 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 
 		offset = BYTE3_TO_UINT(buffer);
 
-		if (mame_fread(file, buffer, 2) != 2)
+		if (file.read(buffer, 2) != 2)
 			goto load_ips_file_unexpected_eof;
 
 		size = BYTE2_TO_UINT(buffer);
 		if (size == 0)
 		{
-			if (mame_fread(file, buffer, 3) != 3)
+			if (file.read(buffer, 3) != 3)
 				goto load_ips_file_unexpected_eof;
 
 			size = BYTE2_TO_UINT(buffer);
@@ -146,7 +146,7 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 			memset((*p)->data, buffer[2], size);
 		else
 		{
-			if (mame_fread(file, (*p)->data, size) != size)
+			if (file.read((*p)->data, size) != size)
 				goto load_ips_file_unexpected_eof;
 		}
 
@@ -160,7 +160,7 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 		pos += offset + size;
 	}
 
-	mame_fclose(file);
+	file.close();
 
 	return 1;
 
@@ -169,7 +169,7 @@ load_ips_file_unexpected_eof:
 		_("ERROR: %s/%s: unexpected EOF\n"), ips_dir, ips_name);
 
 load_ips_file_fail:
-	mame_fclose(file);
+	file.close();
 
 	romdata->warnings++;
 
@@ -211,14 +211,14 @@ static int check_crc(char *crc, const char *rom_hash)
 static int parse_ips_patch(running_machine *machine, ips_entry **ips_p, const char *patch_name, rom_load_data *romdata, const rom_entry *romp)
 {
 	UINT8 buffer[1024];
-	mame_file *fpDat;
 	file_error filerr;
 	int result = 0;
 
 	mame_printf_verbose(_("IPS: parsing ips \"%s/%s%s\"\n"), machine->gamedrv->name, patch_name, INDEX_EXT);
 
 	astring fname(machine->gamedrv->name, PATH_SEPARATOR, patch_name, INDEX_EXT);
-	filerr = mame_fopen(SEARCHPATH_IPS, fname, OPEN_FLAG_READ, &fpDat);
+	emu_file fpDat = emu_file(machine, SEARCHPATH_IPS, OPEN_FLAG_READ);
+	filerr = fpDat.open(fname);
 
 	if (filerr != FILERR_NONE)
 	{
@@ -229,9 +229,9 @@ static int parse_ips_patch(running_machine *machine, ips_entry **ips_p, const ch
 		return 0;
 	}
 
-	while (!mame_feof(fpDat))
+	while (!fpDat.eof())
 	{
-		if (mame_fgets((char *)buffer, sizeof (buffer), fpDat) != NULL)
+		if (fpDat.gets((char *)buffer, sizeof (buffer)) != NULL)
 		{
 			ips_entry *entry;
 			const rom_entry *current;
@@ -314,12 +314,12 @@ static int parse_ips_patch(running_machine *machine, ips_entry **ips_p, const ch
 			}
 		}
 	}
-	mame_fclose(fpDat);
+	fpDat.close();
 
 	return result;
 
 parse_ips_patch_fail:
-	mame_fclose(fpDat);
+	fpDat.close();
 
 	romdata->warnings++;
 
@@ -355,7 +355,7 @@ int open_ips_entry(running_machine *machine, const char *patch_name, rom_load_da
 			list = &(*list)->next;
 	}
 
-	global_free(s);
+	osd_free(s);
 
 	if (!result)
 	{
@@ -394,10 +394,10 @@ int close_ips_entry(rom_load_data *romdata)
 		}
 
 		if (p->ips_name)
-			global_free(p->ips_name);
+			osd_free(p->ips_name);
 
 		if (p->rom_name)
-			global_free(p->rom_name);
+			osd_free(p->rom_name);
 
 		next = p->next;
 		global_free(p);

@@ -13,8 +13,6 @@ public:
 		: atarigen_state(machine, config) { }
 
 	UINT16			playfield_base;
-	UINT16			motion_object_base;
-	UINT16			motion_object_mask;
 
 	UINT16			current_control;
 	UINT8			playfield_tile_bank;
@@ -30,13 +28,17 @@ public:
 	int 			sloop_offset;
 	int 			sloop_state;
 	UINT16 *		sloop_base;
+
+	device_t *		rle;
+	UINT32			last_accesses[8];
 };
 
 
 /*----------- defined in video/atarig42.c -----------*/
 
 VIDEO_START( atarig42 );
-VIDEO_UPDATE( atarig42 );
+SCREEN_EOF( atarig42 );
+SCREEN_UPDATE( atarig42 );
 
 WRITE16_HANDLER( atarig42_mo_control_w );
 

@@ -57,7 +57,7 @@ static VIDEO_START( gunpey )
 	blit_buffer = auto_alloc_array(machine, UINT16, 512*512);
 }
 
-static VIDEO_UPDATE( gunpey )
+static SCREEN_UPDATE( gunpey )
 {
 	int x,y;
 	int count;
@@ -156,11 +156,11 @@ static WRITE8_HANDLER( gunpey_blitter_w )
 		}
 
 
-		printf("%02x %02x %02x %02x|%02x %02x %02x %02x|%02x %02x %02x %02x|%02x %02x %02x %02x\n"
-		,blit_ram[0],blit_ram[1],blit_ram[2],blit_ram[3]
-		,blit_ram[4],blit_ram[5],blit_ram[6],blit_ram[7]
-		,blit_ram[8],blit_ram[9],blit_ram[0xa],blit_ram[0xb]
-		,blit_ram[0xc],blit_ram[0xd],blit_ram[0xe],blit_ram[0xf]);
+//      printf("%02x %02x %02x %02x|%02x %02x %02x %02x|%02x %02x %02x %02x|%02x %02x %02x %02x\n"
+//      ,blit_ram[0],blit_ram[1],blit_ram[2],blit_ram[3]
+//      ,blit_ram[4],blit_ram[5],blit_ram[6],blit_ram[7]
+//      ,blit_ram[8],blit_ram[9],blit_ram[0xa],blit_ram[0xb]
+//      ,blit_ram[0xc],blit_ram[0xd],blit_ram[0xe],blit_ram[0xf]);
 	}
 }
 
@@ -328,12 +328,12 @@ static MACHINE_CONFIG_START( gunpey, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(512, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 512-1, 0*8, 512-1)
+	MCFG_SCREEN_UPDATE(gunpey)
 
 	MCFG_PALETTE_LENGTH(0x800)
 	MCFG_PALETTE_INIT(gunpey)
 
 	MCFG_VIDEO_START(gunpey)
-	MCFG_VIDEO_UPDATE(gunpey)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker","rspeaker")
 

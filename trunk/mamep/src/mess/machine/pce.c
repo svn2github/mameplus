@@ -60,6 +60,7 @@ CD Interface Register 0x0f - ADPCM fade in/out register
 #include "imagedev/chd_cd.h"
 #include "sound/msm5205.h"
 #include "sound/cdda.h"
+#include "hashfile.h"
 
 
 #define PCE_BRAM_SIZE				0x800
@@ -239,8 +240,7 @@ DEVICE_IMAGE_LOAD(pce_cart)
 	{
 		image.fseek(offset, SEEK_SET);
 		image.fread( ROM, size);
-		if (strcmp(image.extrainfo(), ""))
-			extrainfo = image.extrainfo();
+		extrainfo = hashfile_extrainfo(image);
 	}
 	else
 		memcpy(ROM, image.get_software_region("rom") + offset, size);
@@ -464,13 +464,13 @@ NVRAM_HANDLER( pce )
 {
 	if (read_or_write)
 	{
-		mame_fwrite(file, pce_cd.bram, PCE_BRAM_SIZE);
+		file->write(pce_cd.bram, PCE_BRAM_SIZE);
 	}
 	else
 	{
 		/* load battery backed memory from disk */
 		if (file)
-			mame_fread(file, pce_cd.bram, PCE_BRAM_SIZE);
+			file->read(pce_cd.bram, PCE_BRAM_SIZE);
 	}
 }
 

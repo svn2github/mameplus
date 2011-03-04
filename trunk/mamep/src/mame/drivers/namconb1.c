@@ -574,7 +574,7 @@ static NVRAM_HANDLER( namconb1 )
 			data[1] = (dword&0x00ff0000)>>16;
 			data[2] = (dword&0x0000ff00)>>8;
 			data[3] = dword&0xff;
-			mame_fwrite( file, data, 4 );
+			file->write( data, 4 );
 		}
 	}
 	else
@@ -583,7 +583,7 @@ static NVRAM_HANDLER( namconb1 )
 		{
 			for( i=0; i<NB1_NVMEM_SIZE/4; i++ )
 			{
-				mame_fread( file, data, 4 );
+				file->read( data, 4 );
 				nvmem32[i] = (data[0]<<24)|(data[1]<<16)|(data[2]<<8)|data[3];
 			}
 		}
@@ -1030,11 +1030,11 @@ static MACHINE_CONFIG_START( namconb1, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(NAMCONB1_HTOTAL, NAMCONB1_VTOTAL)
 	MCFG_SCREEN_VISIBLE_AREA(0, NAMCONB1_HBSTART-1, 0, NAMCONB1_VBSTART-1)
+	MCFG_SCREEN_UPDATE(namconb1)
 
 	MCFG_GFXDECODE(namconb1)
 	MCFG_PALETTE_LENGTH(0x2000)
 	MCFG_VIDEO_START(namconb1)
-	MCFG_VIDEO_UPDATE(namconb1)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("c352", C352, MASTER_CLOCK_HZ/3)
@@ -1063,11 +1063,11 @@ static MACHINE_CONFIG_START( namconb2, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(NAMCONB1_HTOTAL, NAMCONB1_VTOTAL)
 	MCFG_SCREEN_VISIBLE_AREA(0, NAMCONB1_HBSTART-1, 0, NAMCONB1_VBSTART-1)
+	MCFG_SCREEN_UPDATE(namconb2)
 
 	MCFG_GFXDECODE(2)
 	MCFG_PALETTE_LENGTH(0x2000)
 	MCFG_VIDEO_START(namconb2)
-	MCFG_VIDEO_UPDATE(namconb2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("c352", C352, MASTER_CLOCK_HZ/3)

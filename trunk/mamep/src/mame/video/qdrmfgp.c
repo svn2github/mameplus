@@ -12,7 +12,8 @@
 
 void qdrmfgp_tile_callback(running_machine *machine, int layer, int *code, int *color, int *flags)
 {
-	*color = ((*color>>2) & 0x0f) | qdrmfgp_get_palette();
+	qdrmfgp_state *state = machine->driver_data<qdrmfgp_state>();
+	*color = ((*color>>2) & 0x0f) | state->pal;
 }
 
 void qdrmfgp2_tile_callback(running_machine *machine, int layer, int *code, int *color, int *flags)
@@ -56,7 +57,7 @@ VIDEO_START( qdrmfgp2 )
 
 ***************************************************************************/
 
-VIDEO_UPDATE( qdrmfgp )
+SCREEN_UPDATE( qdrmfgp )
 {
 	device_t *k056832 = screen->machine->device("k056832");
 	bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine));

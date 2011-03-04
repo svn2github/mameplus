@@ -67,10 +67,12 @@ enum state_save_error
 //  MACROS
 //**************************************************************************
 
+// macros to declare presave/postload functions with the appropriate parameters
 #define STATE_PRESAVE(name) void name(running_machine *machine, void *param)
 #define STATE_POSTLOAD(name) void name(running_machine *machine, void *param)
 
 
+// templates to assume the 'param' of a presave/postload function is a class pointer
 template<class T, void (T::*func)()>
 void state_presave_stub(running_machine *machine, void *param)
 {
@@ -84,6 +86,13 @@ void state_postload_stub(running_machine *machine, void *param)
 	T *target = reinterpret_cast<T *>(param);
 	(target->*func)();
 }
+
+
+// use this to declare a given type is a simple, non-pointer type that can be
+// saved; in general, this is intended only to be used for specific enum types
+// defined by your device
+#define ALLOW_SAVE_TYPE(TYPE) template<> struct state_manager::type_checker<TYPE> { static const bool is_atom = true; static const bool is_pointer = false; }
+
 
 
 // register items with explicit tags
@@ -193,9 +202,9 @@ public:
 	void save_pointer(T *value, const char *valname, UINT32 count, int index = 0) { save_pointer("global", NULL, index, value, valname, count); }
 
 	// file processing
-	static state_save_error check_file(running_machine *machine, mame_file *file, const char *gamename, void (CLIB_DECL *errormsg)(const char *fmt, ...));
-	state_save_error write_file(mame_file *file);
-	state_save_error read_file(mame_file *file);
+	static state_save_error check_file(running_machine *machine, emu_file &file, const char *gamename, void (CLIB_DECL *errormsg)(const char *fmt, ...));
+	state_save_error write_file(emu_file &file);
+	state_save_error read_file(emu_file &file);
 
 private:
 	// internal helpers
@@ -254,19 +263,20 @@ private:
 
 
 // template specializations to enumerate the fundamental atomic types you are allowed to save
-template<> struct state_manager::type_checker<bool>   { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<INT8>   { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<UINT8>  { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<INT16>  { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<UINT16> { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<INT32>  { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<UINT32> { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<INT64>  { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<UINT64> { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<PAIR>   { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<PAIR64> { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<float>  { static const bool is_atom = true; static const bool is_pointer = false; };
-template<> struct state_manager::type_checker<double> { static const bool is_atom = true; static const bool is_pointer = false; };
+ALLOW_SAVE_TYPE(bool);
+ALLOW_SAVE_TYPE(INT8);
+ALLOW_SAVE_TYPE(UINT8);
+ALLOW_SAVE_TYPE(INT16);
+ALLOW_SAVE_TYPE(UINT16);
+ALLOW_SAVE_TYPE(INT32);
+ALLOW_SAVE_TYPE(UINT32);
+ALLOW_SAVE_TYPE(INT64);
+ALLOW_SAVE_TYPE(UINT64);
+ALLOW_SAVE_TYPE(PAIR);
+ALLOW_SAVE_TYPE(PAIR64);
+ALLOW_SAVE_TYPE(float);
+ALLOW_SAVE_TYPE(double);
+ALLOW_SAVE_TYPE(endianness_t);
 
 
 

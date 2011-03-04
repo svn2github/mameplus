@@ -3289,9 +3289,9 @@ static MACHINE_CONFIG_START( system16b, segas1x_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK_25MHz/4, 400, 0, 320, 262, 0, 224)
+	MCFG_SCREEN_UPDATE(system16b)
 
 	MCFG_VIDEO_START(system16b)
-	MCFG_VIDEO_UPDATE(system16b)
 
 	MCFG_SEGA16SP_ADD_16B("segaspr1")
 
@@ -5561,7 +5561,8 @@ ROM_END
     Shinobi, Sega System 16B
     CPU: 68000 + MC8123B (317-0054)
     ROM Board: 171-5521
- Game Nunmber: 834-6499-03
+ Game Nunmber: 834-6496-04
+    ROM board: 834-6499-03
 */
 ROM_START( shinobi4 )
 	ROM_REGION( 0x40000, "maincpu", 0 ) /* 68000 code */

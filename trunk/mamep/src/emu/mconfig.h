@@ -84,11 +84,11 @@
 
 
 #define NVRAM_HANDLER_NAME(name)	nvram_handler_##name
-#define NVRAM_HANDLER(name)			void NVRAM_HANDLER_NAME(name)(running_machine *machine, mame_file *file, int read_or_write)
+#define NVRAM_HANDLER(name)			void NVRAM_HANDLER_NAME(name)(running_machine *machine, emu_file *file, int read_or_write)
 #define NVRAM_HANDLER_CALL(name)	NVRAM_HANDLER_NAME(name)(machine, file, read_or_write)
 
 #define MEMCARD_HANDLER_NAME(name)	memcard_handler_##name
-#define MEMCARD_HANDLER(name)		void MEMCARD_HANDLER_NAME(name)(running_machine *machine, mame_file *file, int action)
+#define MEMCARD_HANDLER(name)		void MEMCARD_HANDLER_NAME(name)(running_machine *machine, emu_file &file, int action)
 #define MEMCARD_HANDLER_CALL(name)	MEMCARD_HANDLER_NAME(name)(machine, file, action)
 
 
@@ -110,8 +110,8 @@ class screen_device_config;
 
 
 // various callback functions
-typedef void   (*nvram_handler_func)(running_machine *machine, mame_file *file, int read_or_write);
-typedef void   (*memcard_handler_func)(running_machine *machine, mame_file *file, int action);
+typedef void   (*nvram_handler_func)(running_machine *machine, emu_file *file, int read_or_write);
+typedef void   (*memcard_handler_func)(running_machine *machine, emu_file &file, int action);
 
 
 
@@ -276,12 +276,6 @@ device_config *MACHINE_CONFIG_NAME(_name)(machine_config &config, device_config 
 
 #define MCFG_VIDEO_RESET(_func) \
 	driver_device_config_base::static_set_callback(owner, driver_device_config_base::CB_VIDEO_RESET, VIDEO_RESET_NAME(_func)); \
-
-#define MCFG_VIDEO_EOF(_func) \
-	driver_device_config_base::static_set_callback(owner, driver_device_config_base::CB_VIDEO_EOF, VIDEO_EOF_NAME(_func)); \
-
-#define MCFG_VIDEO_UPDATE(_func) \
-	driver_device_config_base::static_set_video_update(owner, VIDEO_UPDATE_NAME(_func)); \
 
 
 // add/remove devices

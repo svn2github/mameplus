@@ -113,6 +113,7 @@ bsmt2000_device_config::bsmt2000_device_config(const machine_config &mconfig, co
 	  m_space_config("samples", ENDIANNESS_LITTLE, 8, 32, 0, NULL, *ADDRESS_MAP_NAME(bsmt2000)),
 	  m_ready_callback(NULL)
 {
+	m_shortname = "bsmt2000";
 }
 
 

@@ -218,7 +218,7 @@ void kof10thu_decrypt_68K(running_machine *machine);
 
 VIDEO_START( neogeo );
 VIDEO_RESET( neogeo );
-VIDEO_UPDATE( neogeo );
+SCREEN_UPDATE( neogeo );
 
 READ16_HANDLER( neogeo_video_register_r );
 WRITE16_HANDLER( neogeo_video_register_w );

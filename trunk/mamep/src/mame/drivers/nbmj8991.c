@@ -1475,7 +1475,7 @@ static const ay8910_interface ay8910_config =
 };
 
 
-static MACHINE_CONFIG_START( nbmjdrv1, driver_device )	// galkoku
+static MACHINE_CONFIG_START( nbmjdrv1, nbmj8991_state )	// galkoku
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 25000000/5)		/* 5.00 MHz ? */
@@ -1492,11 +1492,11 @@ static MACHINE_CONFIG_START( nbmjdrv1, driver_device )	// galkoku
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(1024, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 240-1)
+	MCFG_SCREEN_UPDATE(nbmj8991_type1)
 
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_VIDEO_START(nbmj8991)
-	MCFG_VIDEO_UPDATE(nbmj8991_type1)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1508,7 +1508,7 @@ static MACHINE_CONFIG_START( nbmjdrv1, driver_device )	// galkoku
 MACHINE_CONFIG_END
 
 
-static MACHINE_CONFIG_START( nbmjdrv2, driver_device )	// pstadium
+static MACHINE_CONFIG_START( nbmjdrv2, nbmj8991_state )	// pstadium
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 6000000/2)	/* 3.00 MHz */
@@ -1530,11 +1530,11 @@ static MACHINE_CONFIG_START( nbmjdrv2, driver_device )	// pstadium
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(1024, 512)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640-1, 0, 240-1)
+	MCFG_SCREEN_UPDATE(nbmj8991_type2)
 
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_VIDEO_START(nbmj8991)
-	MCFG_VIDEO_UPDATE(nbmj8991_type2)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

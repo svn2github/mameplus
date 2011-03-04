@@ -5,12 +5,18 @@ public:
 		: driver_device(machine, config) { }
 
 	UINT16 *videoram;
+	const UINT16 *mpProtData;
+	UINT8 mAmazonProtCmd;
+	UINT8 mAmazonProtReg[6];
+	UINT16 *amazon_videoram;
+	UINT16 xscroll;
+	UINT16 yscroll;
+	tilemap_t *background;
+	tilemap_t *foreground;
 };
 
 
 /*----------- defined in video/terracre.c -----------*/
-
-extern UINT16 *amazon_videoram;
 
 PALETTE_INIT( amazon );
 WRITE16_HANDLER( amazon_background_w );
@@ -19,4 +25,4 @@ WRITE16_HANDLER( amazon_scrolly_w );
 WRITE16_HANDLER( amazon_scrollx_w );
 WRITE16_HANDLER( amazon_flipscreen_w );
 VIDEO_START( amazon );
-VIDEO_UPDATE( amazon );
+SCREEN_UPDATE( amazon );

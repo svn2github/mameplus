@@ -41,7 +41,6 @@
 #include "emu.h"
 #include "emuopts.h"
 #include "devlegcy.h"
-#include "hashfile.h"
 #include "zippath.h"
 
 
@@ -313,19 +312,16 @@ bool legacy_image_device_base::load_software(char *swlist, char *swname, rom_ent
 			/* handle files */
 			if (ROMENTRY_ISFILE(romp))
 			{
-				UINT32 crc = 0;
-				UINT8 crcbytes[4];
 				file_error filerr = FILERR_NOT_FOUND;
 
-				bool has_crc = hash_data_extract_binary_checksum(ROM_GETHASHDATA(romp), HASH_CRC, crcbytes);
-				if (has_crc)
-					crc = (crcbytes[0] << 24) | (crcbytes[1] << 16) | (crcbytes[2] << 8) | crcbytes[3];
+				UINT32 crc = 0;
+				bool has_crc = hash_collection(ROM_GETHASHDATA(romp)).crc(crc);
 
 				// attempt reading up the chain through the parents and create a locationtag astring in the format
 				// " swlist % clonename % parentname "
 				// below, we have the code to split the elements and to create paths to load from
 
-				software_list *software_list_ptr = software_list_open(mame_options(), swlist, FALSE, NULL);
+				software_list *software_list_ptr = software_list_open(m_machine.options(), swlist, FALSE, NULL);
 				if (software_list_ptr)
 				{
 					for (software_info *swinfo = software_list_find(software_list_ptr, swname, NULL); swinfo != NULL; )
@@ -337,7 +333,7 @@ bool legacy_image_device_base::load_software(char *swlist, char *swname, rom_ent
 							locationtag.cat(breakstr);
 							//printf("%s\n", locationtag.cstr());
 						}
-						const char *parentname = software_get_clone(swlist, swinfo->shortname);
+						const char *parentname = software_get_clone(m_machine.options(), swlist, swinfo->shortname);
 						if (parentname != NULL)
 							swinfo = software_list_find(software_list_ptr, parentname, NULL);
 						else
@@ -348,10 +344,10 @@ bool legacy_image_device_base::load_software(char *swlist, char *swname, rom_ent
 					software_list_close(software_list_ptr);
 				}
 
-				if (software_get_support(swlist, swname) == SOFTWARE_SUPPORTED_PARTIAL)
+				if (software_get_support(m_machine.options(), swlist, swname) == SOFTWARE_SUPPORTED_PARTIAL)
 					mame_printf_error("WARNING: support for software %s (in list %s) is only partial\n", swname, swlist);
 
-				if (software_get_support(swlist, swname) == SOFTWARE_SUPPORTED_NO)
+				if (software_get_support(m_machine.options(), swlist, swname) == SOFTWARE_SUPPORTED_NO)
 					mame_printf_error("WARNING: support for software %s (in list %s) is only preliminary\n", swname, swlist);
 
 				// check if locationtag actually contains two locations separated by '%'
@@ -381,20 +377,20 @@ bool legacy_image_device_base::load_software(char *swlist, char *swname, rom_ent
 				// - if we are using lists, we have: list/clonename, list/parentname, clonename, parentname
 				// try to load from list/setname
 				if ((m_mame_file == NULL) && (tag2.cstr() != NULL))
-					filerr = common_process_file(tag2.cstr(), has_crc, crc, romp, &m_mame_file);
+					filerr = common_process_file(m_machine.options(), tag2.cstr(), has_crc, crc, romp, &m_mame_file);
 				// try to load from list/parentname
 				if ((m_mame_file == NULL) && (tag3.cstr() != NULL))
-					filerr = common_process_file(tag3.cstr(), has_crc, crc, romp, &m_mame_file);
+					filerr = common_process_file(m_machine.options(), tag3.cstr(), has_crc, crc, romp, &m_mame_file);
 				// try to load from setname
 				if ((m_mame_file == NULL) && (tag4.cstr() != NULL))
-					filerr = common_process_file(tag4.cstr(), has_crc, crc, romp, &m_mame_file);
+					filerr = common_process_file(m_machine.options(), tag4.cstr(), has_crc, crc, romp, &m_mame_file);
 				// try to load from parentname
 				if ((m_mame_file == NULL) && (tag5.cstr() != NULL))
-					filerr = common_process_file(tag5.cstr(), has_crc, crc, romp, &m_mame_file);
+					filerr = common_process_file(m_machine.options(), tag5.cstr(), has_crc, crc, romp, &m_mame_file);
 
 				if (filerr == FILERR_NONE)
 				{
-					m_file = mame_core_file(m_mame_file);
+					m_file = *m_mame_file;
 					retVal = TRUE;
 				}
 
@@ -588,7 +584,7 @@ void legacy_image_device_base::clear()
 {
 	if (m_mame_file)
     {
-		mame_fclose(m_mame_file);
+		global_free(m_mame_file);
 		m_mame_file = NULL;
 		m_file = NULL;
 	} else {
@@ -606,8 +602,6 @@ void legacy_image_device_base::clear()
     m_longname.reset();
     m_manufacturer.reset();
     m_year.reset();
-    m_playable.reset();
-    m_extrainfo.reset();
 	m_basename.reset();
     m_basename_noext.reset();
 	m_filetype.reset();

@@ -2606,7 +2606,7 @@ static const ay8910_interface ay8910_config =
 
 
 
-static MACHINE_CONFIG_START( gionbana, driver_device )
+static MACHINE_CONFIG_START( gionbana, nbmj8891_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 20000000/4)	/* 5.00 MHz ? */
@@ -2624,11 +2624,11 @@ static MACHINE_CONFIG_START( gionbana, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 8, 248-1)
+	MCFG_SCREEN_UPDATE(nbmj8891)
 
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_VIDEO_START(nbmj8891_2layer)
-	MCFG_VIDEO_UPDATE(nbmj8891)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

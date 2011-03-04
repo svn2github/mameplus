@@ -10,15 +10,59 @@
 #include "pool.h"
 #include "expat.h"
 #include "emuopts.h"
+#include "hash.h"
+
+
+/***************************************************************************
+    TYPE DEFINITIONS
+***************************************************************************/
+
+typedef struct _hash_info hash_info;
+struct _hash_info
+{
+	hash_collection *hashes;
+	const char *longname;
+	const char *manufacturer;
+	const char *year;
+	const char *playable;
+	const char *pcb;
+	const char *extrainfo;
+};
+
+typedef struct _hash_file hash_file;
+
+typedef void (*hashfile_error_func)(const char *message);
+
+
+
+/***************************************************************************
+    FUNCTION PROTOTYPES
+***************************************************************************/
+
+/* opens a hash file; if is_preload is non-zero, the entire file is preloaded */
+hash_file *hashfile_open(core_options &options, const char *sysname, int is_preload, hashfile_error_func error_proc);
+
+/* closes a hash file and associated resources */
+void hashfile_close(hash_file *hashfile);
+
+/* looks up information in a hash file */
+const hash_info *hashfile_lookup(hash_file *hashfile, const hash_collection *hashes);
+
+/* performs a syntax check on a hash file */
+int hashfile_verify(const char *sysname, void (*error_proc)(const char *message));
+
+/* returns the functions used in this hash file */
+const char *hashfile_functions_used(hash_file *hashfile, iodevice_t devtype);
+
 /***************************************************************************
     TYPE DEFINITIONS
 ***************************************************************************/
 
 struct _hash_file
 {
-	mame_file *file;
+	emu_file *file;
 	object_pool *pool;
-	unsigned int functions[IO_COUNT];
+	astring functions[IO_COUNT];
 
 	hash_info **preloaded_hashes;
 	int preloaded_hash_count;
@@ -43,7 +87,7 @@ struct hash_parse_state
 	hash_file *hashfile;
 	int done;
 
-	int (*selector_proc)(hash_file *hashfile, void *param, const char *name, const char *hash);
+	int (*selector_proc)(hash_file *hashfile, void *param, const char *name, const hash_collection *hashes);
 	void (*use_proc)(hash_file *hashfile, void *param, hash_info *hi);
 	void (*error_proc)(const char *message);
 	void *param;
@@ -142,8 +186,9 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 	const char *name;
 	hash_info *hi;
 	char **text_dest;
-	char hash_string[HASH_BUF_SIZE];
-	unsigned int functions, all_functions;
+	hash_collection hashes;
+	astring all_functions;
+	char functions;
 	iodevice_t device;
 	int i;
 
@@ -164,8 +209,6 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 			{
 				// we are now examining a hash tag
 				name = NULL;
-				memset(hash_string, 0, sizeof(hash_string));
-				all_functions = 0;
 				device = IO_COUNT;
 
 				while(attributes[0])
@@ -179,17 +222,17 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					else if (!strcmp(attributes[0], "crc32"))
 					{
 						/* crc32 attribute */
-						functions = HASH_CRC;
+						functions = hash_collection::HASH_CRC;
 					}
 					else if (!strcmp(attributes[0], "md5"))
 					{
 						/* md5 attribute */
-						functions = HASH_MD5;
+						functions = hash_collection::HASH_MD5;
 					}
 					else if (!strcmp(attributes[0], "sha1"))
 					{
 						/* sha1 attribute */
-						functions = HASH_SHA1;
+						functions = hash_collection::HASH_SHA1;
 					}
 					else if (!strcmp(attributes[0], "type"))
 					{
@@ -208,25 +251,21 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 
 					if (functions)
 					{
-						hash_data_insert_printable_checksum(hash_string, functions, attributes[1]);
-						all_functions |= functions;
+						hashes.add_from_string(functions, attributes[1], strlen(attributes[1]));
+						all_functions.cat(functions);
 					}
 
 					attributes += 2;
 				}
 
-				if (device == IO_COUNT)
-				{
-					for (i = 0; i < IO_COUNT; i++)
-						state->hashfile->functions[i] |= all_functions;
-				}
-				else
-					state->hashfile->functions[device] |= all_functions;
+				//for (i = 0; i < IO_COUNT; i++)
+					//if (i == device || device == IO_COUNT)
+						//state->hashfile->functions[i] = all_functions;
 
 				/* do we use this hash? */
-				if (!state->selector_proc || state->selector_proc(state->hashfile, state->param, name, hash_string))
+				if (!state->selector_proc || state->selector_proc(state->hashfile, state->param, name, &hashes))
 				{
-					hi = (hash_info*)pool_malloc_lib(state->hashfile->pool, sizeof(hash_info));
+					hi = (hash_info*)pool_malloc_lib(state->hashfile->pool, sizeof(hash_info));					
 					if (!hi)
 						return;
 					memset(hi, 0, sizeof(*hi));
@@ -234,8 +273,7 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					hi->longname = pool_strdup_lib(state->hashfile->pool, name);
 					if (!hi->longname)
 						return;
-
-					strcpy(hi->hash, hash_string);
+					hi->hashes = &hashes;
 					state->hi = hi;
 				}
 			}
@@ -256,11 +294,12 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 				text_dest = (char **) &state->hi->playable;
 			else if (!strcmp(tagname, "pcb"))
 				text_dest = (char **) &state->hi->pcb;
-			else if (!strcmp(tagname, "extrainfo"))
-				text_dest = (char **) &state->hi->extrainfo;
+			else if (!strcmp(tagname, "extrainfo")) {
+				text_dest = (char **) &state->hi->extrainfo;		
+			}
 			else
 				unknown_tag(state, tagname);
-
+			
 			if (text_dest && state->hi)
 				state->text_dest = text_dest;
 			break;
@@ -331,7 +370,7 @@ static void data_handler(void *data, const XML_Char *s, int len)
 -------------------------------------------------*/
 
 static void hashfile_parse(hash_file *hashfile,
-	int (*selector_proc)(hash_file *hashfile, void *param, const char *name, const char *hash),
+	int (*selector_proc)(hash_file *hashfile, void *param, const char *name, const hash_collection *hashes),
 	void (*use_proc)(hash_file *hashfile, void *param, hash_info *hi),
 	void (*error_proc)(const char *message),
 	void *param)
@@ -341,7 +380,7 @@ static void hashfile_parse(hash_file *hashfile,
 	UINT32 len;
 	XML_Memory_Handling_Suite memcallbacks;
 
-	mame_fseek(hashfile->file, 0, SEEK_SET);
+	hashfile->file->seek(0, SEEK_SET);
 
 	memset(&state, 0, sizeof(state));
 	state.hashfile = hashfile;
@@ -364,8 +403,8 @@ static void hashfile_parse(hash_file *hashfile,
 
 	while(!state.done)
 	{
-		len = mame_fread(hashfile->file, buf, sizeof(buf));
-		state.done = mame_feof(hashfile->file);
+		len = hashfile->file->read(buf, sizeof(buf));
+		state.done = hashfile->file->eof();
 		if (XML_Parse(state.parser, buf, len, state.done) == XML_STATUS_ERROR)
 		{
 			parse_error(&state, "[%lu:%lu]: %s\n",
@@ -403,16 +442,15 @@ static void preload_use_proc(hash_file *hashfile, void *param, hash_info *hi)
 
 
 /*-------------------------------------------------
-    hashfile_open_options
+    hashfile_open
 -------------------------------------------------*/
 
-hash_file *hashfile_open_options(core_options *opts, const char *sysname, int is_preload,
+hash_file *hashfile_open(core_options &options, const char *sysname, int is_preload,
 	void (*error_proc)(const char *message))
 {
-	file_error filerr;
-	astring *fname;
 	hash_file *hashfile = NULL;
 	object_pool *pool = NULL;
+	file_error filerr;
 
 	/* create a pool for this hash file */
 	pool = pool_alloc_lib(error_proc);
@@ -430,12 +468,14 @@ hash_file *hashfile_open_options(core_options *opts, const char *sysname, int is
 	hashfile->error_proc = error_proc;
 
 	/* open a file */
-	fname = astring_assemble_2(astring_alloc(), sysname, ".hsi");
-	filerr = mame_fopen_options(opts, SEARCHPATH_HASH, astring_c(fname), OPEN_FLAG_READ, &hashfile->file);
-	astring_free(fname);
-
+	hashfile->file = global_alloc(emu_file(options, SEARCHPATH_HASH, OPEN_FLAG_READ));
+	filerr = hashfile->file->open(sysname, ".hsi");
 	if (filerr != FILERR_NONE)
+	{
+		global_free(hashfile->file);
+		hashfile->file = NULL;
 		goto error;
+	}
 
 	if (is_preload)
 		hashfile_parse(hashfile, NULL, preload_use_proc, hashfile->error_proc, NULL);
@@ -451,25 +491,12 @@ error:
 
 
 /*-------------------------------------------------
-    hashfile_open
--------------------------------------------------*/
-
-hash_file *hashfile_open(const char *sysname, int is_preload,
-	void (*error_proc)(const char *message))
-{
-	return hashfile_open_options(mame_options(), sysname, is_preload, error_proc);
-}
-
-
-
-/*-------------------------------------------------
     hashfile_close
 -------------------------------------------------*/
 
 void hashfile_close(hash_file *hashfile)
 {
-	if (hashfile->file)
-		mame_fclose(hashfile->file);
+	global_free(hashfile->file);
 	pool_free_lib(hashfile->pool);
 }
 
@@ -481,15 +508,15 @@ void hashfile_close(hash_file *hashfile)
 
 struct hashlookup_params
 {
-	const char *hash;
+	const hash_collection *hashes;
 	hash_info *hi;
 };
 
-static int singular_selector_proc(hash_file *hashfile, void *param, const char *name, const char *hash)
+static int singular_selector_proc(hash_file *hashfile, void *param, const char *name, const hash_collection *hashes)
 {
+	astring tempstr;
 	struct hashlookup_params *hlparams = (struct hashlookup_params *) param;
-	return hash_data_is_equal(hash, hlparams->hash,
-		hash_data_used_functions(hash)) == 1;
+	return (*hashes == *hlparams->hashes);
 }
 
 
@@ -510,17 +537,17 @@ static void singular_use_proc(hash_file *hashfile, void *param, hash_info *hi)
     hashfile_lookup
 -------------------------------------------------*/
 
-const hash_info *hashfile_lookup(hash_file *hashfile, const char *hash)
+const hash_info *hashfile_lookup(hash_file *hashfile, const hash_collection *hashes)
 {
 	struct hashlookup_params param;
 	int i;
 
-	param.hash = hash;
+	param.hashes = hashes;
 	param.hi = NULL;
-
+	
 	for (i = 0; i < hashfile->preloaded_hash_count; i++)
 	{
-		if (singular_selector_proc(hashfile, &param, NULL, hashfile->preloaded_hashes[i]->hash))
+		if (singular_selector_proc(hashfile, &param, NULL, hashfile->preloaded_hashes[i]->hashes))
 			return hashfile->preloaded_hashes[i];
 	}
 
@@ -535,7 +562,7 @@ const hash_info *hashfile_lookup(hash_file *hashfile, const char *hash)
     hashfile_functions_used
 -------------------------------------------------*/
 
-unsigned int hashfile_functions_used(hash_file *hashfile, iodevice_t devtype)
+const char *hashfile_functions_used(hash_file *hashfile, iodevice_t devtype)
 {
 	assert(devtype >= 0);
 	assert(devtype < IO_COUNT);
@@ -548,11 +575,11 @@ unsigned int hashfile_functions_used(hash_file *hashfile, iodevice_t devtype)
     hashfile_verify
 -------------------------------------------------*/
 
-int hashfile_verify(const char *sysname, void (*my_error_proc)(const char *message))
+int hashfile_verify(core_options &options, const char *sysname, void (*my_error_proc)(const char *message))
 {
 	hash_file *hashfile;
 
-	hashfile = hashfile_open(sysname, FALSE, my_error_proc);
+	hashfile = hashfile_open(options, sysname, FALSE, my_error_proc);
 	if (!hashfile)
 		return -1;
 
@@ -561,7 +588,57 @@ int hashfile_verify(const char *sysname, void (*my_error_proc)(const char *messa
 	return 0;
 }
 
+const char *extra_info = NULL;
 
+const char *read_hash_config(device_image_interface &image, const char *sysname)
+{
+	hash_file *hashfile = NULL;
+	const hash_info *info = NULL;
+	
+	/* open the hash file */
+	hashfile = hashfile_open(image.device().machine->options(), sysname, FALSE, NULL);
+	if (!hashfile)
+		return NULL;
+	
+	/* look up this entry in the hash file */
+	info = hashfile_lookup(hashfile, &image.hash());
+	
+	if (!info || !info->extrainfo)
+	{
+		hashfile_close(hashfile);
+		return NULL;
+	}
+	
+	extra_info = auto_strdup(image.device().machine,info->extrainfo);
+	if (!extra_info)
+	{
+		hashfile_close(hashfile);
+		return NULL;
+	}
+		
+	/* copy the relevant entries */
+	hashfile_close(hashfile);
+	
+	return extra_info;
+}
+
+const char *hashfile_extrainfo(device_image_interface &image)
+{
+	const game_driver *drv;
+	const char *rc;	
+
+	/* now read the hash file */
+	image.crc();
+	extra_info = NULL;
+	drv = image.device().machine->gamedrv;
+	do
+	{
+		rc = read_hash_config(image, drv->name);
+		drv = driver_get_compatible(drv);
+	}
+	while(rc!=NULL && drv != NULL);
+	return rc;
+}
 
 /***************************************************************************
     EXPAT INTERFACES

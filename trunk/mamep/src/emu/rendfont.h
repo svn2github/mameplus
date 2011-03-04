@@ -107,8 +107,8 @@ private:
 	void char_expand(unicode_char chnum, glyph &ch);
 	bool load_cached_bdf(const char *filename);
 	bool load_bdf();
-	bool load_cached(mame_file *file, UINT32 hash);
-	bool load_cached_cmd(mame_file *file, UINT32 hash);
+	bool load_cached(emu_file &file, UINT32 hash);
+	bool load_cached_cmd(emu_file &file, UINT32 hash);
 	bool save_cached(const char *filename, UINT32 hash);
 
 	// internal state

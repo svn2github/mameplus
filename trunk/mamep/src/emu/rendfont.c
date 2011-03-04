@@ -166,18 +166,18 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 //mamep: allocate command glyph font
 void render_font::render_font_command_glyph()
 {
-	mame_file *ramfile;
+	emu_file *ramfile = auto_alloc(&m_manager.machine(), emu_file(m_manager.machine().options(), NULL, OPEN_FLAG_READ));
 	file_error filerr;
 
 	if (m_height >= 14)
-		filerr = mame_fopen_ram(font_uicmd14, sizeof(font_uicmd14), OPEN_FLAG_READ, &ramfile);
+		filerr = ramfile->open_ram(font_uicmd14, sizeof(font_uicmd14));
 	else
-		filerr = mame_fopen_ram(font_uicmd11, sizeof(font_uicmd11), OPEN_FLAG_READ, &ramfile);
+		filerr = ramfile->open_ram(font_uicmd11, sizeof(font_uicmd11));
 
 	if (filerr == FILERR_NONE)
 	{
-		load_cached_cmd(ramfile, 0);
-		mame_fclose(ramfile);
+		load_cached_cmd(*ramfile, 0);
+		auto_free(&m_manager.machine(), ramfile);
 	}
 }
 
@@ -244,7 +244,7 @@ render_font::render_font(render_manager &manager, const char *filename)
 	}
 
 	// load the raw data instead
-	mame_file *ramfile;
+	emu_file *ramfile = auto_alloc(&manager.machine(), emu_file(manager.machine().options(), "", OPEN_FLAG_READ));
 	file_error filerr;
 	//mamep: embedded CJK font
 	switch (lang_get_langcode())
@@ -253,18 +253,17 @@ render_font::render_font(render_manager &manager, const char *filename)
 	case UI_LANG_ZH_CN:
 	case UI_LANG_ZH_TW:
 	case UI_LANG_KO_KR:
-		filerr = mame_fopen_ram(font_uismall14, sizeof(font_uismall14), OPEN_FLAG_READ, &ramfile);
+		filerr = ramfile->open_ram(font_uismall14, sizeof(font_uismall14));
 		break;
 
 	default:
-		filerr = mame_fopen_ram(font_uismall11, sizeof(font_uismall11), OPEN_FLAG_READ, &ramfile);
+		filerr = ramfile->open_ram(font_uismall11, sizeof(font_uismall11));
 	}
 
 	if (filerr == FILERR_NONE)
-	{
-		load_cached(ramfile, 0);
-		mame_fclose(ramfile);
-	}
+		load_cached(*ramfile, 0);
+
+	auto_free(&manager.machine(), ramfile);
 
 	//mamep: allocate command glyph font
 	render_font_command_glyph();
@@ -603,22 +602,19 @@ float render_font::utf8string_width(float height, float aspect, const char *utf8
 bool render_font::load_cached_bdf(const char *filename)
 {
 	// first try to open the BDF itself
-	mame_file *file;
-	file_error filerr = mame_fopen(SEARCHPATH_FONT, filename, OPEN_FLAG_READ, &file);
+	emu_file file(manager().machine().options(), SEARCHPATH_FONT, OPEN_FLAG_READ);
+	file_error filerr = file.open(filename);
 	if (filerr != FILERR_NONE)
 		return false;
 
 	// determine the file size and allocate memory
-	m_rawsize = mame_fsize(file);
+	m_rawsize = file.size();
 	char *data = auto_alloc_array_clear(&m_manager.machine(), char, m_rawsize + 1);
 
 	// read the first chunk
-	UINT32 bytes = mame_fread(file, data, MIN(CACHED_BDF_HASH_SIZE, m_rawsize));
+	UINT32 bytes = file.read(data, MIN(CACHED_BDF_HASH_SIZE, m_rawsize));
 	if (bytes != MIN(CACHED_BDF_HASH_SIZE, m_rawsize))
-	{
-		mame_fclose(file);
 		return false;
-	}
 
 	// has the chunk
 	UINT32 hash = crc32(0, (const UINT8 *)data, bytes) ^ (UINT32)m_rawsize;
@@ -628,30 +624,29 @@ bool render_font::load_cached_bdf(const char *filename)
 	cachedname.del(cachedname.len() - 3, 3).cat("bdc");
 
 	// attempt to open the cached version of the font
-	mame_file *cachefile;
-	filerr = mame_fopen(SEARCHPATH_FONT, cachedname, OPEN_FLAG_READ, &cachefile);
-	if (filerr == FILERR_NONE)
 	{
-		// if we have a cached version, load it
-		bool result = load_cached(cachefile, hash);
-		mame_fclose(cachefile);
-
-		// if that worked, we're done
-		if (result)
+		emu_file cachefile(manager().machine().options(), SEARCHPATH_FONT, OPEN_FLAG_READ);
+		filerr = cachefile.open(cachedname);
+		if (filerr == FILERR_NONE)
 		{
-			mame_fclose(file);
-			auto_free(&m_manager.machine(), data);
-			return true;
+			// if we have a cached version, load it
+			bool result = load_cached(cachefile, hash);
+
+			// if that worked, we're done
+			if (result)
+			{
+				auto_free(&m_manager.machine(), data);
+				return true;
+			}
 		}
 	}
 
 	// read in the rest of the font
 	if (bytes < m_rawsize)
 	{
-		UINT32 read = mame_fread(file, data + bytes, m_rawsize - bytes);
+		UINT32 read = file.read(data + bytes, m_rawsize - bytes);
 		if (read != m_rawsize - bytes)
 		{
-			mame_fclose(file);
 			auto_free(&m_manager.machine(), data);
 			return false;
 		}
@@ -669,7 +664,6 @@ bool render_font::load_cached_bdf(const char *filename)
 		save_cached(cachedname, hash);
 
 	// close the file
-	mame_fclose(file);
 	return result;
 }
 
@@ -792,14 +786,14 @@ bool render_font::load_bdf()
 //  load_cached - load a font in cached format
 //-------------------------------------------------
 
-bool render_font::load_cached(mame_file *file, UINT32 hash)
+bool render_font::load_cached(emu_file &file, UINT32 hash)
 {
 	// get the file size
-	UINT64 filesize = mame_fsize(file);
+	UINT64 filesize = file.size();
 
 	// first read the header
 	UINT8 header[CACHED_HEADER_SIZE];
-	UINT32 bytes_read = mame_fread(file, header, CACHED_HEADER_SIZE);
+	UINT32 bytes_read = file.read(header, CACHED_HEADER_SIZE);
 	if (bytes_read != CACHED_HEADER_SIZE)
 		return false;
 
@@ -817,7 +811,7 @@ bool render_font::load_cached(mame_file *file, UINT32 hash)
 
 	// now read the rest of the data
 	UINT8 *data = auto_alloc_array(&m_manager.machine(), UINT8, filesize - CACHED_HEADER_SIZE);
-	bytes_read = mame_fread(file, data, filesize - CACHED_HEADER_SIZE);
+	bytes_read = file.read(data, filesize - CACHED_HEADER_SIZE);
 	if (bytes_read != filesize - CACHED_HEADER_SIZE)
 	{
 		auto_free(&m_manager.machine(), data);
@@ -859,18 +853,18 @@ bool render_font::load_cached(mame_file *file, UINT32 hash)
 	return true;
 }
 
-bool render_font::load_cached_cmd(mame_file *file, UINT32 hash)
+bool render_font::load_cached_cmd(emu_file &file, UINT32 hash)
 {
 #ifdef UI_COLOR_DISPLAY
 	//mamep: color glyph
 	#include "cmdtable.c"
 #endif /* UI_COLOR_DISPLAY */
 	// get the file size
-	UINT64 filesize = mame_fsize(file);
+	UINT64 filesize = file.size();
 
 	// first read the header
 	UINT8 header[CACHED_HEADER_SIZE];
-	UINT32 bytes_read = mame_fread(file, header, CACHED_HEADER_SIZE);
+	UINT32 bytes_read = file.read(header, CACHED_HEADER_SIZE);
 	if (bytes_read != CACHED_HEADER_SIZE)
 		return false;
 
@@ -888,7 +882,7 @@ bool render_font::load_cached_cmd(mame_file *file, UINT32 hash)
 
 	// now read the rest of the data
 	UINT8 *data = auto_alloc_array(&m_manager.machine(), UINT8, filesize - CACHED_HEADER_SIZE);
-	bytes_read = mame_fread(file, data, filesize - CACHED_HEADER_SIZE);
+	bytes_read = file.read(data, filesize - CACHED_HEADER_SIZE);
 	if (bytes_read != filesize - CACHED_HEADER_SIZE)
 	{
 		auto_free(&m_manager.machine(), data);
@@ -945,8 +939,8 @@ bool render_font::save_cached(const char *filename, UINT32 hash)
 	mame_printf_warning("Generating cached BDF font...\n");
 
 	// attempt to open the file
-	mame_file *file;
-	file_error filerr = mame_fopen(SEARCHPATH_FONT, filename, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	emu_file file(manager().machine().options(), SEARCHPATH_FONT, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE);
+	file_error filerr = file.open(filename);
 	if (filerr != FILERR_NONE)
 		return false;
 
@@ -992,12 +986,12 @@ bool render_font::save_cached(const char *filename, UINT32 hash)
 		*dest++ = numchars >> 8;
 		*dest++ = numchars & 0xff;
 		assert(dest - tempbuffer == CACHED_HEADER_SIZE);
-		UINT32 bytes_written = mame_fwrite(file, tempbuffer, dest - tempbuffer);
+		UINT32 bytes_written = file.write(tempbuffer, dest - tempbuffer);
 		if (bytes_written != dest - tempbuffer)
 			throw emu_fatalerror("Error writing cached file");
 
 		// write the empty table to the beginning of the file
-		bytes_written = mame_fwrite(file, chartable, numchars * CACHED_CHAR_SIZE);
+		bytes_written = file.write(chartable, numchars * CACHED_CHAR_SIZE);
 		if (bytes_written != numchars * CACHED_CHAR_SIZE)
 			throw emu_fatalerror("Error writing cached file");
 
@@ -1039,7 +1033,7 @@ bool render_font::save_cached(const char *filename, UINT32 hash)
 						*dest++ = accum;
 
 					// write the data
-					bytes_written = mame_fwrite(file, tempbuffer, dest - tempbuffer);
+					bytes_written = file.write(tempbuffer, dest - tempbuffer);
 					if (bytes_written != dest - tempbuffer)
 						throw emu_fatalerror("Error writing cached file");
 
@@ -1068,21 +1062,19 @@ bool render_font::save_cached(const char *filename, UINT32 hash)
 		}
 
 		// seek back to the beginning and rewrite the table
-		mame_fseek(file, CACHED_HEADER_SIZE, SEEK_SET);
-		bytes_written = mame_fwrite(file, chartable, numchars * CACHED_CHAR_SIZE);
+		file.seek(CACHED_HEADER_SIZE, SEEK_SET);
+		bytes_written = file.write(chartable, numchars * CACHED_CHAR_SIZE);
 		if (bytes_written != numchars * CACHED_CHAR_SIZE)
 			throw emu_fatalerror("Error writing cached file");
 
 		// all done
-		mame_fclose(file);
 		auto_free(&m_manager.machine(), tempbuffer);
 		auto_free(&m_manager.machine(), chartable);
 		return true;
 	}
 	catch (...)
 	{
-		mame_fclose(file);
-		osd_rmfile(filename);
+		file.remove_on_close();
 		auto_free(&m_manager.machine(), tempbuffer);
 		auto_free(&m_manager.machine(), chartable);
 		return false;

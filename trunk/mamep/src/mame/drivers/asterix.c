@@ -134,15 +134,14 @@ static WRITE16_HANDLER( protection_w )
 }
 #endif
 
-static UINT16 prot[2];
-
 static WRITE16_HANDLER( protection_w )
 {
-	COMBINE_DATA(prot + offset);
+	asterix_state *state = space->machine->driver_data<asterix_state>();
+	COMBINE_DATA(state->prot + offset);
 
 	if (offset == 1)
 	{
-		UINT32 cmd = (prot[0] << 16) | prot[1];
+		UINT32 cmd = (state->prot[0] << 16) | state->prot[1];
 		switch (cmd >> 24)
 		{
 		case 0x64:
@@ -318,9 +317,9 @@ static MACHINE_CONFIG_START( asterix, asterix_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_SCREEN_UPDATE(asterix)
 
-	MCFG_VIDEO_UPDATE(asterix)
+	MCFG_PALETTE_LENGTH(2048)
 
 	MCFG_K056832_ADD("k056832", asterix_k056832_intf)
 	MCFG_K053244_ADD("k053244", asterix_k05324x_intf)

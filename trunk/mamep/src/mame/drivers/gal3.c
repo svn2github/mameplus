@@ -130,7 +130,6 @@ better notes (complete chip lists) for each board still needed
 #include "cpu/tms32025/tms32025.h"
 #include "includes/namcoic.h"
 #include "sound/c140.h"
-#include "includes/namcos21.h"
 #include "rendlay.h"
 
 static UINT32 *mpSharedRAM0;
@@ -176,7 +175,7 @@ static void update_palette( running_machine *machine )
 	}
 } /* update_palette */
 
-static VIDEO_UPDATE(gal3)
+static SCREEN_UPDATE(gal3)
 {
 	int i;
 	char mst[18], slv[18];
@@ -242,7 +241,7 @@ static NVRAM_HANDLER( gal3 )
 			data[1] = (dword&0x00ff0000)>>16;
 			data[2] = (dword&0x0000ff00)>>8;
 			data[3] = dword&0xff;
-			mame_fwrite( file, data, 4 );
+			file->write( data, 4 );
 		}
 	}
 	else
@@ -251,7 +250,7 @@ static NVRAM_HANDLER( gal3 )
 		{
 			for( i=0; i<gal3_nvmem_size/4; i++ )
 			{
-				mame_fread( file, data, 4 );
+				file->read( data, 4 );
 				gal3_nvmem[i] = (data[0]<<24)|(data[1]<<16)|(data[2]<<8)|data[3];
 			}
 		}
@@ -665,6 +664,7 @@ static MACHINE_CONFIG_START( gal3, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 512-1, 0*8, 512-1)
+	MCFG_SCREEN_UPDATE(gal3)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -672,12 +672,12 @@ static MACHINE_CONFIG_START( gal3, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 512-1, 0*8, 512-1)
+	MCFG_SCREEN_UPDATE(gal3)
 
 	MCFG_GFXDECODE(namcos21)
 	MCFG_PALETTE_LENGTH(NAMCOS21_NUM_COLORS)
 
 	MCFG_VIDEO_START(gal3)
-	MCFG_VIDEO_UPDATE(gal3)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

@@ -390,7 +390,7 @@ void TMS9928A_set_spriteslimit (int limit) {
 /*
 ** Updates the screen (the dMem memory area).
 */
-VIDEO_UPDATE( tms9928a )
+SCREEN_UPDATE( tms9928a )
 {
     INT32 BackColour = tms.Regs[7] & 15;
     rgb_t oldcolor = palette_get_color(screen->machine, 0);
@@ -596,10 +596,10 @@ static void draw_mode3 (device_t *screen, bitmap_t *bitmap, const rectangle *cli
 			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+1) = fg;
 			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+2) = fg;
 			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+3) = fg;
-			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+4) = fg;
-			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+5) = fg;
-			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+6) = fg;
-			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+7) = fg;
+			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+4) = bg;
+			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+5) = bg;
+			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+6) = bg;
+			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+7) = bg;
                 }
             }
         }
@@ -627,10 +627,10 @@ static void draw_mode23 (device_t *screen, bitmap_t *bitmap, const rectangle *cl
 			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+1) = fg;
 			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+2) = fg;
 			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+3) = fg;
-			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+4) = fg;
-			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+5) = fg;
-			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+6) = fg;
-			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+7) = fg;
+			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+4) = bg;
+			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+5) = bg;
+			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+6) = bg;
+			*BITMAP_ADDR16(bitmap, y*8+yy*4+yyy, x*8+7) = bg;
                 }
             }
         }
@@ -825,11 +825,11 @@ MACHINE_CONFIG_FRAGMENT( tms9928a )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(LEFT_BORDER+32*8+RIGHT_BORDER, TOP_BORDER_60HZ+24*8+BOTTOM_BORDER_60HZ)
 	MCFG_SCREEN_VISIBLE_AREA(LEFT_BORDER-12, LEFT_BORDER+32*8+12-1, TOP_BORDER_60HZ-9, TOP_BORDER_60HZ+24*8+9-1)
+	MCFG_SCREEN_UPDATE(tms9928a)
 
 	MCFG_PALETTE_LENGTH(TMS9928A_PALETTE_SIZE)
 	MCFG_PALETTE_INIT(tms9928a)
 
 	MCFG_VIDEO_START(tms9928a)
-	MCFG_VIDEO_UPDATE(tms9928a)
 MACHINE_CONFIG_END
 

@@ -48,7 +48,7 @@
 		: timekeeper_device(_machine, config) \
 	{ }
 
-#define TIMEKPR_DEVCFG_DERIVED_CTOR(devtype, name) \
+#define TIMEKPR_DEVCFG_DERIVED_CTOR(devtype, name, shortname) \
 	devtype##_device_config::devtype##_device_config(const machine_config &mconfig, const char *tag, const device_config *owner, UINT32 clock) \
     : timekeeper_device_config(mconfig, name, tag, owner, clock) \
 	{ }
@@ -61,9 +61,9 @@
 	device_t *devtype##_device_config::alloc_device(running_machine &machine) const \
 	{ return auto_alloc(&machine, devtype##_device(machine, *this)); }
 
-#define TIMEKPR_DERIVE(devtype, name) \
+#define TIMEKPR_DERIVE(devtype, name, shortname) \
 	TIMEKPR_DEV_DERIVED_CTOR(devtype) \
-	TIMEKPR_DEVCFG_DERIVED_CTOR(devtype, name) \
+	TIMEKPR_DEVCFG_DERIVED_CTOR(devtype, name, shortname) \
 	TIMEKPR_DEVCFG_DERIVED_STATIC_ALLOC(devtype) \
 	TIMEKPR_DEVCFG_DERIVED_DEV_ALLOC(devtype)
 
@@ -167,10 +167,10 @@ const device_type M48T35 = m48t35_device_config::static_alloc_device_config;
 const device_type M48T58 = m48t58_device_config::static_alloc_device_config;
 const device_type MK48T08 = mk48t08_device_config::static_alloc_device_config;
 
-TIMEKPR_DERIVE(m48t02, "M48T02")
-TIMEKPR_DERIVE(m48t35, "M48T35")
-TIMEKPR_DERIVE(m48t58, "M48T58")
-TIMEKPR_DERIVE(mk48t08, "MK48T08")
+TIMEKPR_DERIVE(m48t02, "M48T02", "m48t02")
+TIMEKPR_DERIVE(m48t35, "M48T35", "m48t35")
+TIMEKPR_DERIVE(m48t58, "M48T58", "m48t58")
+TIMEKPR_DERIVE(mk48t08, "MK48T08", "mk48t08")
 
 //-------------------------------------------------
 //  timekeeper_device - constructor
@@ -471,9 +471,9 @@ void timekeeper_device::nvram_default()
 //  .nv file
 //-------------------------------------------------
 
-void timekeeper_device::nvram_read(mame_file &file)
+void timekeeper_device::nvram_read(emu_file &file)
 {
-	mame_fread( &file, m_data, m_size );
+	file.read( m_data, m_size );
 
 	counters_to_ram();
 }
@@ -484,9 +484,9 @@ void timekeeper_device::nvram_read(mame_file &file)
 //  .nv file
 //-------------------------------------------------
 
-void timekeeper_device::nvram_write(mame_file &file)
+void timekeeper_device::nvram_write(emu_file &file)
 {
-	mame_fwrite( &file, m_data, m_size );
+	file.write( m_data, m_size );
 }
 
 

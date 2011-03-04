@@ -1817,13 +1817,13 @@ static MACHINE_CONFIG_START( berlwall, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
+	MCFG_SCREEN_UPDATE(berlwall)
 
 	MCFG_GFXDECODE(1x4bit_1x4bit)
 	MCFG_PALETTE_LENGTH(2048 + 32768)	/* 32768 static colors for the bg */
 
 	MCFG_PALETTE_INIT(berlwall)
 	MCFG_VIDEO_START(berlwall)
-	MCFG_VIDEO_UPDATE(berlwall)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1864,12 +1864,12 @@ static MACHINE_CONFIG_START( bakubrkr, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 240-1)
+	MCFG_SCREEN_UPDATE(kaneko16)
 
 	MCFG_GFXDECODE(1x4bit_2x4bit)
 	MCFG_PALETTE_LENGTH(2048)
 
 	MCFG_VIDEO_START(kaneko16_2xVIEW2)
-	MCFG_VIDEO_UPDATE(kaneko16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1922,12 +1922,12 @@ static MACHINE_CONFIG_START( blazeon, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1 -8)
+	MCFG_SCREEN_UPDATE(kaneko16)
 
 	MCFG_GFXDECODE(1x4bit_1x4bit)
 	MCFG_PALETTE_LENGTH(2048)
 
 	MCFG_VIDEO_START(kaneko16_1xVIEW2)
-	MCFG_VIDEO_UPDATE(kaneko16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1961,6 +1961,7 @@ static MACHINE_CONFIG_START( gtmr, driver_device )
 	MCFG_CPU_VBLANK_INT_HACK(kaneko16_interrupt,KANEKO16_INTERRUPTS_NUM)
 
 	MCFG_MACHINE_RESET(gtmr)
+	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
@@ -1971,12 +1972,12 @@ static MACHINE_CONFIG_START( gtmr, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 240-1)
+	MCFG_SCREEN_UPDATE(kaneko16)
 
 	MCFG_GFXDECODE(1x8bit_2x4bit)
 	MCFG_PALETTE_LENGTH(32768)
 
 	MCFG_VIDEO_START(kaneko16_2xVIEW2)
-	MCFG_VIDEO_UPDATE(kaneko16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2059,12 +2060,12 @@ static MACHINE_CONFIG_START( mgcrystl, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0+16, 256-16-1)
+	MCFG_SCREEN_UPDATE(kaneko16)
 
 	MCFG_GFXDECODE(1x4bit_2x4bit)
 	MCFG_PALETTE_LENGTH(2048)
 
 	MCFG_VIDEO_START(kaneko16_2xVIEW2)
-	MCFG_VIDEO_UPDATE(kaneko16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2176,12 +2177,12 @@ static MACHINE_CONFIG_START( shogwarr, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(40, 296-1, 16, 240-1)
+	MCFG_SCREEN_UPDATE(kaneko16)
 
 	MCFG_GFXDECODE(1x4bit_1x4bit)
 	MCFG_PALETTE_LENGTH(2048)
 
 	MCFG_VIDEO_START(kaneko16_1xVIEW2)
-	MCFG_VIDEO_UPDATE(kaneko16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3842,12 +3843,14 @@ ROM_END
 
 static DRIVER_INIT( bloodwar )
 {
+	machine->device<nvram_device>("nvram")->set_base(kaneko16_nvram_save, sizeof(kaneko16_nvram_save));
 	DRIVER_INIT_CALL(samplebank);
 	DRIVER_INIT_CALL(decrypt_toybox_rom);
 }
 
 static DRIVER_INIT( gtmr2 )
 {
+	machine->device<nvram_device>("nvram")->set_base(kaneko16_nvram_save, sizeof(kaneko16_nvram_save));
 	DRIVER_INIT_CALL(samplebank);
 	DRIVER_INIT_CALL(decrypt_toybox_rom_alt);
 }

@@ -297,6 +297,18 @@ Contra III   CONTRA_III_1   TC574000   CONTRA_III_0   TC574000    GAME1_NSSU    
 #include "cpu/z80/z80.h"
 #include "includes/snes.h"
 
+
+class nss_state : public snes_state
+{
+public:
+	nss_state(running_machine &machine, const driver_device_config_base &config)
+		: snes_state(machine, config) { }
+
+	UINT8 m50458_rom_bank;
+	UINT8 vblank_bit;
+};
+
+
 static ADDRESS_MAP_START( snes_map, ADDRESS_SPACE_PROGRAM, 8)
 	AM_RANGE(0x000000, 0x2fffff) AM_READWRITE(snes_r_bank1, snes_w_bank1)	/* I/O and ROM (repeats for each bank) */
 	AM_RANGE(0x300000, 0x3fffff) AM_READWRITE(snes_r_bank2, snes_w_bank2)	/* I/O and ROM (repeats for each bank) */
@@ -366,11 +378,11 @@ static WRITE8_HANDLER( nss_eeprom_w )
 //  printf("EEPROM write %02x\n",data);
 }
 
-static UINT8 m50458_rom_bank;
 
 static READ8_HANDLER( m50458_r )
 {
-	if(m50458_rom_bank)
+	nss_state *state = space->machine->driver_data<nss_state>();
+	if(state->m50458_rom_bank)
 	{
 		UINT8 *gfx_rom = space->machine->region("m50458_gfx")->base();
 
@@ -388,7 +400,8 @@ static READ8_HANDLER( m50458_r )
 
 static WRITE8_HANDLER( m50458_w )
 {
-	if(m50458_rom_bank)
+	nss_state *state = space->machine->driver_data<nss_state>();
+	if(state->m50458_rom_bank)
 		logerror("Warning: write to M50458 GFX ROM!\n");
 	else
 	{
@@ -411,15 +424,15 @@ ADDRESS_MAP_END
 
 static READ8_HANDLER( port00_r )
 {
+	nss_state *state = space->machine->driver_data<nss_state>();
 	/*
     -x-- ---- almost certainly tied to the vblank signal
     */
 
-	static UINT8 vblank_bit;
 
-	vblank_bit^=0x40;
+	state->vblank_bit^=0x40;
 
-	return vblank_bit | 0xbf;
+	return state->vblank_bit | 0xbf;
 }
 
 
@@ -451,6 +464,7 @@ static READ8_HANDLER( port03_r )
 
 static WRITE8_HANDLER( port80_w )
 {
+	nss_state *state = space->machine->driver_data<nss_state>();
 	/*
     ---- -x-- written when 0x9000-0x9fff is read, probably a bankswitch
     ---- --x- see port 0x02 note
@@ -458,7 +472,7 @@ static WRITE8_HANDLER( port80_w )
     */
 
 	memory_set_bank(space->machine, "bank1", data & 1);
-	m50458_rom_bank = data & 4;
+	state->m50458_rom_bank = data & 4;
 }
 
 static WRITE8_HANDLER( port82_w ) // EEPROM2?
@@ -485,12 +499,13 @@ ADDRESS_MAP_END
 
 static MACHINE_START( nss )
 {
+	nss_state *state = machine->driver_data<nss_state>();
 	UINT8 *ROM = machine->region("bios")->base();
 
 	memory_configure_bank(machine, "bank1", 0, 2, &ROM[0x10000], 0x8000);
 	memory_set_bank(machine, "bank1", 0);
 
-	m50458_rom_bank = 0;
+	state->m50458_rom_bank = 0;
 
 	MACHINE_START_CALL(snes);
 }
@@ -557,7 +572,7 @@ static INPUT_PORTS_START( snes )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
-#ifdef SNES_LAYER_DEBUG
+#if SNES_LAYER_DEBUG
 	PORT_START("DEBUG1")
 	PORT_CONFNAME( 0x03, 0x00, "Select BG1 priority" )
 	PORT_CONFSETTING(    0x00, "All" )
@@ -639,7 +654,7 @@ static GFXDECODE_START( nss )
 	GFXDECODE_ENTRY( "m50458_gfx",   0x00000, nss_char_layout_16x16,    0, 1 )
 GFXDECODE_END
 
-static MACHINE_CONFIG_START( snes, snes_state )
+static MACHINE_CONFIG_START( snes, nss_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", _5A22, 3580000*6)	/* 2.68Mhz, also 3.58Mhz */
@@ -656,11 +671,11 @@ static MACHINE_CONFIG_START( snes, snes_state )
 
 	/* video hardware */
 	MCFG_VIDEO_START( snes )
-	MCFG_VIDEO_UPDATE( snes )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_RAW_PARAMS(DOTCLK_NTSC, SNES_HTOTAL, 0, SNES_SCR_WIDTH, SNES_VTOTAL_NTSC, 0, SNES_SCR_HEIGHT_NTSC)
+	MCFG_SCREEN_UPDATE( snes )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

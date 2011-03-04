@@ -356,6 +356,10 @@ endif
 # OKI ADPCM sample players
 #-------------------------------------------------
 
+ifneq ($(filter OKIM6258 OKIM9810,$(SOUNDS)),)
+SOUNDOBJS += $(SOUNDOBJ)/okiadpcm.o
+endif
+
 ifneq ($(filter MSM5205,$(SOUNDS)),)
 SOUNDOBJS += $(SOUNDOBJ)/msm5205.o
 endif
@@ -374,6 +378,10 @@ endif
 
 ifneq ($(filter OKIM6258,$(SOUNDS)),)
 SOUNDOBJS += $(SOUNDOBJ)/okim6258.o
+endif
+
+ifneq ($(filter OKIM9810,$(SOUNDS)),)
+SOUNDOBJS += $(SOUNDOBJ)/okim9810.o
 endif
 
 
@@ -499,10 +507,9 @@ endif
 # Sony custom sound chips
 #-------------------------------------------------
 
-ifneq ($(filter PSXSPU,$(SOUNDS)),)
-SOUNDOBJS += $(SOUNDOBJ)/psx.o
+ifneq ($(filter SPU,$(SOUNDS)),)
+SOUNDOBJS += $(SOUNDOBJ)/spu.o $(SOUNDOBJ)/spu_tables.o $(SOUNDOBJ)/spureverb.o
 endif
-
 
 
 #-------------------------------------------------

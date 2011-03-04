@@ -64,17 +64,6 @@
 
 /*************************************
  *
- *  Statics
- *
- *************************************/
-
-static UINT16 control_word;
-static UINT8 protection_data[5];
-
-
-
-/*************************************
- *
  *  Zwackery-specific handlers
  *
  *************************************/
@@ -112,9 +101,10 @@ static READ16_HANDLER( zwackery_6840_r )
 
 static WRITE16_HANDLER( xenophobe_control_w )
 {
-	COMBINE_DATA(&control_word);
-/*  soundsgood_reset_w(~control_word & 0x0020);*/
-	soundsgood_data_w(space, offset, ((control_word & 0x000f) << 1) | ((control_word & 0x0010) >> 4));
+	mcr68_state *state = space->machine->driver_data<mcr68_state>();
+	COMBINE_DATA(&state->control_word);
+/*  soundsgood_reset_w(~state->control_word & 0x0020);*/
+	soundsgood_data_w(space, offset, ((state->control_word & 0x000f) << 1) | ((state->control_word & 0x0010) >> 4));
 }
 
 
@@ -127,9 +117,10 @@ static WRITE16_HANDLER( xenophobe_control_w )
 
 static WRITE16_HANDLER( blasted_control_w )
 {
-	COMBINE_DATA(&control_word);
-/*  soundsgood_reset_w(~control_word & 0x0020);*/
-	soundsgood_data_w(space, offset, (control_word >> 8) & 0x1f);
+	mcr68_state *state = space->machine->driver_data<mcr68_state>();
+	COMBINE_DATA(&state->control_word);
+/*  soundsgood_reset_w(~state->control_word & 0x0020);*/
+	soundsgood_data_w(space, offset, (state->control_word >> 8) & 0x1f);
 }
 
 
@@ -142,9 +133,10 @@ static WRITE16_HANDLER( blasted_control_w )
 
 static READ16_HANDLER( spyhunt2_port_0_r )
 {
+	mcr68_state *state = space->machine->driver_data<mcr68_state>();
 	static const char *const portnames[] = { "AN1", "AN2", "AN3", "AN4" };
 	int result = input_port_read(space->machine, "IN0");
-	int which = (control_word >> 3) & 3;
+	int which = (state->control_word >> 3) & 3;
 	int analog = input_port_read(space->machine, portnames[which]);
 
 	return result | ((soundsgood_status_r(space, 0) & 1) << 5) | (analog << 8);
@@ -160,13 +152,14 @@ static READ16_HANDLER( spyhunt2_port_1_r )
 
 static WRITE16_HANDLER( spyhunt2_control_w )
 {
-	COMBINE_DATA(&control_word);
+	mcr68_state *state = space->machine->driver_data<mcr68_state>();
+	COMBINE_DATA(&state->control_word);
 
-/*  turbocs_reset_w(~control_word & 0x0080);*/
-	turbocs_data_w(space, offset, (control_word >> 8) & 0x001f);
+/*  turbocs_reset_w(~state->control_word & 0x0080);*/
+	turbocs_data_w(space, offset, (state->control_word >> 8) & 0x001f);
 
-	soundsgood_reset_w(space->machine, ~control_word & 0x2000);
-	soundsgood_data_w(space, offset, (control_word >> 8) & 0x001f);
+	soundsgood_reset_w(space->machine, ~state->control_word & 0x2000);
+	soundsgood_data_w(space, offset, (state->control_word >> 8) & 0x001f);
 }
 
 
@@ -215,9 +208,10 @@ static READ16_HANDLER( archrivl_port_1_r )
 
 static WRITE16_HANDLER( archrivl_control_w )
 {
-	COMBINE_DATA(&control_word);
-	williams_cvsd_reset_w(~control_word & 0x0400);
-	williams_cvsd_data_w(space->machine, control_word & 0x3ff);
+	mcr68_state *state = space->machine->driver_data<mcr68_state>();
+	COMBINE_DATA(&state->control_word);
+	williams_cvsd_reset_w(~state->control_word & 0x0400);
+	williams_cvsd_data_w(space->machine, state->control_word & 0x3ff);
 }
 
 
@@ -230,15 +224,16 @@ static WRITE16_HANDLER( archrivl_control_w )
 
 static WRITE16_HANDLER( pigskin_protection_w )
 {
+	mcr68_state *state = space->machine->driver_data<mcr68_state>();
 	/* ignore upper-byte only */
 	if (ACCESSING_BITS_0_7)
 	{
 		/* track the last 5 bytes */
-		protection_data[0] = protection_data[1];
-		protection_data[1] = protection_data[2];
-		protection_data[2] = protection_data[3];
-		protection_data[3] = protection_data[4];
-		protection_data[4] = data & 0xff;
+		state->protection_data[0] = state->protection_data[1];
+		state->protection_data[1] = state->protection_data[2];
+		state->protection_data[2] = state->protection_data[3];
+		state->protection_data[3] = state->protection_data[4];
+		state->protection_data[4] = data & 0xff;
 
 		logerror("%06X:protection_w=%02X\n", cpu_get_previouspc(space->cpu), data & 0xff);
 	}
@@ -247,19 +242,20 @@ static WRITE16_HANDLER( pigskin_protection_w )
 
 static READ16_HANDLER( pigskin_protection_r )
 {
+	mcr68_state *state = space->machine->driver_data<mcr68_state>();
 	/* based on the last 5 bytes return a value */
-	if (protection_data[4] == 0xe3 && protection_data[3] == 0x94)
+	if (state->protection_data[4] == 0xe3 && state->protection_data[3] == 0x94)
 		return 0x00;	/* must be <= 1 */
-	if (protection_data[4] == 0xc7 && protection_data[3] == 0x7b && protection_data[2] == 0x36)
+	if (state->protection_data[4] == 0xc7 && state->protection_data[3] == 0x7b && state->protection_data[2] == 0x36)
 		return 0x00;	/* must be <= 1 */
-	if (protection_data[4] == 0xc7 && protection_data[3] == 0x7b)
+	if (state->protection_data[4] == 0xc7 && state->protection_data[3] == 0x7b)
 		return 0x07;	/* must be > 5 */
-	if (protection_data[4] == 0xc7 && protection_data[3] == 0x1f && protection_data[2] == 0x03 &&
-		protection_data[1] == 0x25 && protection_data[0] == 0x36)
+	if (state->protection_data[4] == 0xc7 && state->protection_data[3] == 0x1f && state->protection_data[2] == 0x03 &&
+		state->protection_data[1] == 0x25 && state->protection_data[0] == 0x36)
 		return 0x00;	/* must be < 3 */
 
 	logerror("Protection read after unrecognized sequence: %02X %02X %02X %02X %02X\n",
-			protection_data[0], protection_data[1], protection_data[2], protection_data[3], protection_data[4]);
+			state->protection_data[0], state->protection_data[1], state->protection_data[2], state->protection_data[3], state->protection_data[4]);
 
 	return 0x00;
 }
@@ -994,12 +990,12 @@ static MACHINE_CONFIG_START( zwackery, mcr68_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*16, 30*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 32*16-1, 0, 30*16-1)
+	MCFG_SCREEN_UPDATE(zwackery)
 
 	MCFG_GFXDECODE(zwackery)
 	MCFG_PALETTE_LENGTH(4096)
 
 	MCFG_VIDEO_START(zwackery)
-	MCFG_VIDEO_UPDATE(zwackery)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(chip_squeak_deluxe)
@@ -1024,12 +1020,12 @@ static MACHINE_CONFIG_START( mcr68, mcr68_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*16, 30*16)
 	MCFG_SCREEN_VISIBLE_AREA(0, 32*16-1, 0, 30*16-1)
+	MCFG_SCREEN_UPDATE(mcr68)
 
 	MCFG_GFXDECODE(mcr68)
 	MCFG_PALETTE_LENGTH(64)
 
 	MCFG_VIDEO_START(mcr68)
-	MCFG_VIDEO_UPDATE(mcr68)
 
 	/* sound hardware -- determined by specific machine */
 MACHINE_CONFIG_END
@@ -1471,6 +1467,33 @@ ROM_START( pigskin ) /* Initial boot screen reports KIT CODE REV 1.1K 8/01/90 */
 ROM_END
 
 
+ROM_START( pigskina ) /* Initial boot screen reports REV 2.0 7/06/90 */
+	ROM_REGION( 0x40000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "pigskin_la2.a5",  0x00000, 0x10000, CRC(f75d36dd) SHA1(6afc8fbc900e17f9281ee214097d8ebd651d9291) )
+	ROM_LOAD16_BYTE( "pigskin_la2.b5",  0x00001, 0x10000, CRC(c5ffdfad) SHA1(3b234f3629c8f21199f4845df7f44c43fd775c9b) )
+	ROM_LOAD16_BYTE( "pigskin_la2.a6",  0x20000, 0x10000, CRC(2fc91002) SHA1(64d270b78c69d3f4fb36d1233a1632d6ba3d87a5) )
+	ROM_LOAD16_BYTE( "pigskin_la2.b6",  0x20001, 0x10000, CRC(0b93dc66) SHA1(f3b516a1d1e4abd7b0d56243949e9cd7ac79178b) )
+
+	ROM_REGION( 0x90000, "cvsdcpu", 0 )  /* Audio System board */
+	ROM_LOAD( "pigskin_sl1.u4",  0x10000, 0x10000, CRC(6daf2d37) SHA1(4c8098520fe44e36b01389bcfcfe3ad1d027cbde) )
+	ROM_RELOAD(                  0x20000, 0x10000 )
+	ROM_LOAD( "pigskin_sl1.u19", 0x30000, 0x10000, CRC(56fd16a3) SHA1(b91aabdbd3185355f2b7177fc4d3a86fa110f51d) )
+	ROM_RELOAD(                  0x40000, 0x10000 )
+	ROM_LOAD( "pigskin_sl1.u20", 0x50000, 0x10000, CRC(5d032fb8) SHA1(a236cdc64856637e560bec7119b051fac13efbe0) )
+	ROM_RELOAD(                  0x60000, 0x10000 )
+
+	ROM_REGION( 0x20000, "gfx1", ROMREGION_INVERT )
+	ROM_LOAD( "pigskin_la1.e2",  0x00000, 0x10000, CRC(12d5737b) SHA1(73040233bb86eaa42257112e2f0540de1206e310) )
+	ROM_LOAD( "pigskin_la1.e1",  0x10000, 0x10000, CRC(460202a9) SHA1(8c2f7ae3615519e13e750c99b89ccb28e9946bb8) )
+
+	ROM_REGION( 0x80000, "gfx2", 0 )
+	ROM_LOAD( "pigskin_la1.h15", 0x00000, 0x20000, CRC(e43d5d93) SHA1(e7592ba11601f2d20d54d52f436a239671c4d3ac) )
+	ROM_LOAD( "pigskin_la1.h17", 0x20000, 0x20000, CRC(6b780f1e) SHA1(a0689feb38ad31eff5604d80562d9a936b30a011) )
+	ROM_LOAD( "pigskin_la1.h18", 0x40000, 0x20000, CRC(5e50f940) SHA1(c9593b11934fd6da2b6c971859c0581fd92a915f) )
+	ROM_LOAD( "pigskin_la1.h14", 0x60000, 0x20000, CRC(f26279f4) SHA1(9a8cd5aa359f408c93aa7f322b6eac17be52f3d3) )
+ROM_END
+
+
 ROM_START( trisport )
 	ROM_REGION( 0x40000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "la3.a5",  0x00000, 0x10000, CRC(fe1e9e37) SHA1(583f18531583e038ca57a592b6a6c305896bf2c5) )
@@ -1523,30 +1546,33 @@ ROM_END
 
 static void mcr68_common_init(running_machine *machine, int sound_board, int clip, int xoffset)
 {
+	mcr68_state *state = machine->driver_data<mcr68_state>();
 	mcr_sound_init(machine, sound_board);
 
-	mcr68_sprite_clip = clip;
-	mcr68_sprite_xoffset = xoffset;
+	state->sprite_clip = clip;
+	state->sprite_xoffset = xoffset;
 
-	state_save_register_global(machine, control_word);
+	state_save_register_global(machine, state->control_word);
 }
 
 
 static DRIVER_INIT( zwackery )
 {
+	mcr68_state *state = machine->driver_data<mcr68_state>();
 	mcr68_common_init(machine, MCR_CHIP_SQUEAK_DELUXE, 0, 0);
 
 	/* Zwackery doesn't care too much about this value; currently taken from Blasted */
-	mcr68_timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
+	state->timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
 }
 
 
 static DRIVER_INIT( xenophob )
 {
+	mcr68_state *state = machine->driver_data<mcr68_state>();
 	mcr68_common_init(machine, MCR_SOUNDS_GOOD, 0, -4);
 
 	/* Xenophobe doesn't care too much about this value; currently taken from Blasted */
-	mcr68_timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
+	state->timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
 
 	/* install control port handler */
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x0c0000, 0x0cffff, 0, 0, xenophobe_control_w);
@@ -1555,10 +1581,11 @@ static DRIVER_INIT( xenophob )
 
 static DRIVER_INIT( spyhunt2 )
 {
+	mcr68_state *state = machine->driver_data<mcr68_state>();
 	mcr68_common_init(machine, MCR_TURBO_CHIP_SQUEAK | MCR_SOUNDS_GOOD, 0, -6);
 
 	/* Spy Hunter 2 doesn't care too much about this value; currently taken from Blasted */
-	mcr68_timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
+	state->timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
 
 	/* analog port handling is a bit tricky */
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x0c0000, 0x0cffff, 0, 0, spyhunt2_control_w);
@@ -1569,12 +1596,13 @@ static DRIVER_INIT( spyhunt2 )
 
 static DRIVER_INIT( blasted )
 {
+	mcr68_state *state = machine->driver_data<mcr68_state>();
 	mcr68_common_init(machine, MCR_SOUNDS_GOOD, 0, 0);
 
 	/* Blasted checks the timing of VBLANK relative to the 493 interrupt */
 	/* VBLANK is required to come within 220-256 E clocks (i.e., 2200-2560 CPU clocks) */
 	/* after the 493; we also allow 16 E clocks for latency  */
-	mcr68_timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
+	state->timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
 
 	/* handle control writes */
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x0c0000, 0x0cffff, 0, 0, blasted_control_w);
@@ -1585,10 +1613,11 @@ static DRIVER_INIT( blasted )
 
 static DRIVER_INIT( intlaser )
 {
+	mcr68_state *state = machine->driver_data<mcr68_state>();
 	mcr68_common_init(machine, MCR_SOUNDS_GOOD, 0, 0);
 
 	/* Copied from Blasted */
-	mcr68_timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
+	state->timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
 
 	/* handle control writes */
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x0c0000, 0x0cffff, 0, 0, blasted_control_w);
@@ -1599,10 +1628,11 @@ static DRIVER_INIT( intlaser )
 
 static DRIVER_INIT( archrivl )
 {
+	mcr68_state *state = machine->driver_data<mcr68_state>();
 	mcr68_common_init(machine, MCR_WILLIAMS_SOUND, 16, 0);
 
 	/* Arch Rivals doesn't care too much about this value; currently taken from Blasted */
-	mcr68_timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
+	state->timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * (256 + 16);
 
 	/* handle control writes */
 	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x0c0000, 0x0cffff, 0, 0, archrivl_control_w);
@@ -1617,23 +1647,25 @@ static DRIVER_INIT( archrivl )
 
 static DRIVER_INIT( pigskin )
 {
+	mcr68_state *state = machine->driver_data<mcr68_state>();
 	mcr68_common_init(machine, MCR_WILLIAMS_SOUND, 16, 0);
 
 	/* Pigskin doesn't care too much about this value; currently taken from Tri-Sports */
-	mcr68_timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * 115;
+	state->timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * 115;
 
-	state_save_register_global_array(machine, protection_data);
+	state_save_register_global_array(machine, state->protection_data);
 }
 
 
 static DRIVER_INIT( trisport )
 {
+	mcr68_state *state = machine->driver_data<mcr68_state>();
 	mcr68_common_init(machine, MCR_WILLIAMS_SOUND, 0, 0);
 
 	/* Tri-Sports checks the timing of VBLANK relative to the 493 interrupt */
 	/* VBLANK is required to come within 87-119 E clocks (i.e., 870-1190 CPU clocks) */
 	/* after the 493 */
-	mcr68_timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * 115;
+	state->timing_factor = attotime::from_hz(cputag_get_clock(machine, "maincpu") / 10) * 115;
 }
 
 
@@ -1654,3 +1686,4 @@ GAME( 1989, archrivl, 0,        archrivl, archrivl, archrivl, ROT0,   "Bally Mid
 GAME( 1989, archrivl2,archrivl, archrivl, archrivl, archrivl, ROT0,   "Bally Midway", "Arch Rivals (rev 2.0 5/03/89)", GAME_SUPPORTS_SAVE )
 GAME( 1989, trisport, 0,        trisport, trisport, trisport, ROT270, "Bally Midway", "Tri-Sports", GAME_SUPPORTS_SAVE )
 GAME( 1990, pigskin,  0,        pigskin,  pigskin,  pigskin,  ROT0,   "Midway", "Pigskin 621AD (rev 1.1K 8/01/90)", GAME_SUPPORTS_SAVE )
+GAME( 1990, pigskina, pigskin,  pigskin,  pigskin,  pigskin,  ROT0,   "Midway", "Pigskin 621AD (rev 2.0 7/06/90)", GAME_SUPPORTS_SAVE )

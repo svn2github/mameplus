@@ -217,7 +217,7 @@ WRITE8_HANDLER( pacman_flipscreen_w )
 }
 
 
-VIDEO_UPDATE( pacman )
+SCREEN_UPDATE( pacman )
 {
 	if (bgpriority != 0)
 		bitmap_fill(bitmap,cliprect,0);
@@ -313,6 +313,9 @@ VIDEO_START( pengo )
 	xoffsethack = 0;
 
 	bg_tilemap = tilemap_create( machine, pacman_get_tile_info, pacman_scan_rows,  8, 8, 36, 28 );
+
+	tilemap_set_scrolldx( bg_tilemap, 0, 384 - 288 );
+	tilemap_set_scrolldy( bg_tilemap, 0, 264 - 224 );
 }
 
 WRITE8_HANDLER( pengo_palettebank_w )
@@ -393,7 +396,7 @@ VIDEO_START( s2650games )
 	tilemap_set_scroll_cols(bg_tilemap, 32);
 }
 
-VIDEO_UPDATE( s2650games )
+SCREEN_UPDATE( s2650games )
 {
 	UINT8 *spriteram = screen->machine->generic.spriteram.u8;
 	UINT8 *spriteram_2 = screen->machine->generic.spriteram2.u8;

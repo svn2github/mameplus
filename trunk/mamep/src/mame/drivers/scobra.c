@@ -39,6 +39,17 @@ Notes/Tidbits:
 #include "includes/galaxold.h"
 #include "sound/ay8910.h"
 
+
+class scobra_state : public driver_device
+{
+public:
+	scobra_state(running_machine &machine, const driver_device_config_base &config)
+		: driver_device(machine, config) { }
+
+	UINT8 *soundram;
+};
+
+
 static const gfx_layout scobra_charlayout =
 {
 	8,8,
@@ -302,22 +313,23 @@ static ADDRESS_MAP_START( anteatgb_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xfe00, 0xfe03) AM_DEVREADWRITE("ppi8255_1", ppi8255_r, ppi8255_w)
 ADDRESS_MAP_END
 
-static UINT8 *scobra_soundram;
 
 static READ8_HANDLER(scobra_soundram_r)
 {
-	return scobra_soundram[offset & 0x03ff];
+	scobra_state *state = space->machine->driver_data<scobra_state>();
+	return state->soundram[offset & 0x03ff];
 }
 
 static WRITE8_HANDLER(scobra_soundram_w)
 {
-	scobra_soundram[offset & 0x03ff] = data;
+	scobra_state *state = space->machine->driver_data<scobra_state>();
+	state->soundram[offset & 0x03ff] = data;
 }
 
 static ADDRESS_MAP_START( scobra_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x2fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_READWRITE(scobra_soundram_r, scobra_soundram_w)
-	AM_RANGE(0x8000, 0x83ff) AM_WRITENOP AM_BASE(&scobra_soundram)  /* only here to initialize pointer */
+	AM_RANGE(0x8000, 0x83ff) AM_WRITENOP AM_BASE_MEMBER(scobra_state, soundram)  /* only here to initialize pointer */
 	AM_RANGE(0x9000, 0x9fff) AM_WRITE(scramble_filter_w)
 ADDRESS_MAP_END
 
@@ -325,7 +337,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( hustlerb_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x2fff) AM_ROM
 	AM_RANGE(0x6000, 0x6fff) AM_WRITE(frogger_filter_w)
-	AM_RANGE(0x8000, 0x8fff) AM_RAM_READ(scobra_soundram_r) AM_BASE(&scobra_soundram)  /* only here to initialize pointer */
+	AM_RANGE(0x8000, 0x8fff) AM_RAM_READ(scobra_soundram_r) AM_BASE_MEMBER(scobra_state, soundram)  /* only here to initialize pointer */
 ADDRESS_MAP_END
 
 
@@ -850,7 +862,7 @@ static const ay8910_interface scobra_ay8910_interface_2 =
 };
 
 
-static MACHINE_CONFIG_START( type1, driver_device )
+static MACHINE_CONFIG_START( type1, scobra_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 18432000/6)	/* 3.072 MHz */
@@ -879,13 +891,13 @@ static MACHINE_CONFIG_START( type1, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MCFG_SCREEN_UPDATE(galaxold)
 
 	MCFG_GFXDECODE(scobra)
 	MCFG_PALETTE_LENGTH(32+64+2+1)	/* 32 for characters, 64 for stars, 2 for bullets, 1 for background */
 
 	MCFG_PALETTE_INIT(scrambold)
 	MCFG_VIDEO_START(scrambold)
-	MCFG_VIDEO_UPDATE(galaxold)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -975,7 +987,7 @@ static MACHINE_CONFIG_DERIVED( darkplnt, type2 )
 MACHINE_CONFIG_END
 
 
-static MACHINE_CONFIG_START( hustler, driver_device )
+static MACHINE_CONFIG_START( hustler, scobra_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", Z80, 18432000/6)	/* 3.072 MHz */
@@ -1005,13 +1017,13 @@ static MACHINE_CONFIG_START( hustler, driver_device )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
+	MCFG_SCREEN_UPDATE(galaxold)
 
 	MCFG_GFXDECODE(scobra)
 	MCFG_PALETTE_LENGTH(32+64+2)	/* 32 for characters, 64 for stars, 2 for bullets */
 
 	MCFG_PALETTE_INIT(galaxold)
 	MCFG_VIDEO_START(scrambold)
-	MCFG_VIDEO_UPDATE(galaxold)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1299,6 +1311,25 @@ ROM_START( hustler )
 	ROM_LOAD( "hustler.clr",  0x0000, 0x0020, CRC(aa1f7f5e) SHA1(311dd17aa11490a1173c76223e4ccccf8ea29850) )
 ROM_END
 
+ROM_START( hustlerd )
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "vh1.ic5",    0x0000, 0x1000, CRC(7cb6a940) SHA1(8b51072563f7a63aab5d5ee4e835dc7275a2b98a) )
+	ROM_LOAD( "vh2.ic6",    0x1000, 0x1000, CRC(4ca45239) SHA1(729ec16c0a192f957ba454d4acbe873a71030a22) )
+	ROM_LOAD( "vh3.ic7",    0x2000, 0x1000, CRC(4c752453) SHA1(467ffd6e3ec13a27fc2979883678a1e7531d98ac) )
+	/* 3000-3fff space for diagnostics ROM */
+
+	ROM_REGION( 0x10000, "audiocpu", 0 )
+	ROM_LOAD( "ho1.ic32",    0x0000, 0x0800, CRC(7a946544) SHA1(7ee2ad3fdf996f08534fb87fc02b619c168f420c) )
+	ROM_LOAD( "ho2.ic33",    0x0800, 0x0800, CRC(3db57351) SHA1(e5075a7130a80d2bf24f0556c2589dff0625ee60) )
+
+	ROM_REGION( 0x1000, "gfx1", 0 )
+	ROM_LOAD( "hc2",   0x0000, 0x0800, CRC(0bdfad0e) SHA1(8e6f1737604f3801c03fa2e9a5e6a2778b54bae8) )
+	ROM_LOAD( "hc1",   0x0800, 0x0800, CRC(8e062177) SHA1(7e52a1669804b6c2f694cfc64b04abc8246bb0c2) )
+
+	ROM_REGION( 0x0020, "proms", 0 )
+	ROM_LOAD( "hustler.clr",  0x0000, 0x0020, CRC(aa1f7f5e) SHA1(311dd17aa11490a1173c76223e4ccccf8ea29850) )
+ROM_END
+
 ROM_START( billiard )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "a",            0x0000, 0x1000, CRC(b7eb50c0) SHA1(213d177d2b2af648a18d196b83e96d804947fd40) )
@@ -1417,6 +1448,7 @@ GAME( 1982, rescue,   0,        rescue,   rescue,   rescue,       ROT90,  "Stern
 GAME( 1982, aponow,   rescue,   rescue,   rescue,   rescue,       ROT90,  "bootleg", "Apocaljpse Now", GAME_SUPPORTS_SAVE )
 GAME( 1983, minefld,  0,        minefld,  minefld,  minefld,      ROT90,  "Stern Electronics", "Minefield", GAME_SUPPORTS_SAVE )
 GAME( 1981, hustler,  0,        hustler,  hustler,  hustler,      ROT90,  "Konami", "Video Hustler", GAME_SUPPORTS_SAVE )
+GAME( 1981, hustlerd, hustler,  hustler,  hustler,  hustlerd,     ROT90,  "Konami (Dynamo Games license)", "Video Hustler (Dynamo Games)", GAME_SUPPORTS_SAVE )
 GAME( 1981, billiard, hustler,  hustler,  hustler,  billiard,     ROT90,  "bootleg", "The Billiards (Video Hustler bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1981, hustlerb, hustler,  hustlerb, hustler,  scramble_ppi, ROT90,  "bootleg (Digimatic)", "Video Hustler (bootleg)", GAME_NOT_WORKING ) // broken?
 GAME( 1981, hustlerb2,hustler,  hustler,  hustler,  scramble_ppi, ROT90,  "bootleg", "Fatsy Gambler (Video Hustler bootleg)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
