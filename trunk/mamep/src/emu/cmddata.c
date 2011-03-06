@@ -90,7 +90,7 @@ static int mame32jp_wrap;
 /****************************************************************************
  *      private data for parsing functions
  ****************************************************************************/
-static emu_file *fp;				/* Our file pointer */
+static emu_file *fp = NULL;				/* Our file pointer */
 static UINT64 dwFilePos;				/* file position */
 static UINT8 bToken[MAX_TOKEN_LENGTH];		/* Our current token */
 
@@ -619,6 +619,7 @@ static void ParseClose(void)
 	if (fp)
         {
 		fp->close();
+		global_free(fp);
         }
 
 	fp = NULL;
@@ -633,8 +634,7 @@ static UINT8 ParseOpen(const char *pszFilename)
 	file_error filerr;
 
 	/* Open file up in binary mode */
-//FIXME
-//	fp = auto_alloc(machine, emu_file(datafile_options, NULL, OPEN_FLAG_READ));
+	fp = global_alloc(emu_file(*datafile_options, NULL, OPEN_FLAG_READ));
 	filerr = fp->open(pszFilename);
 	if (filerr != FILERR_NONE)
 		return(FALSE);
@@ -960,7 +960,7 @@ static int find_command (const game_driver *drv)
 	int i;
 
 	if (menu_filename)
-		global_free(menu_filename);
+		osd_free(menu_filename);
 
 	for (where = 0; where <= FILE_ROOT; where += FILE_ROOT)
 	{

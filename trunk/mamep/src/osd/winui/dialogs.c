@@ -872,7 +872,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			WCHAR buf[MAX_PATH];
 			char *stemp;
 			const WCHAR *szDir = GetPcbInfoDir();
-			mame_file *mfile;
+			emu_file *mfile = global_alloc(emu_file(*(MameUISettings()), NULL, OPEN_FLAG_READ));
 			file_error filerr;
 			long filelen;
 			int nParentIndex = -1;
@@ -925,19 +925,20 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			swprintf(buf, TEXT("%s\\%s.txt"), szDir, szGame);
 
 			stemp = utf8_from_wstring(buf);
-			filerr = mame_fopen_options(MameUISettings(), NULL, stemp, OPEN_FLAG_READ, &mfile);
+			filerr = mfile->open(stemp);
 			osd_free(stemp);
 			if (filerr != FILERR_NONE)
 			{
 				swprintf(buf, TEXT("%s\\pcbinfo\\%s.txt"), szDir, szGame);
 				stemp = utf8_from_wstring(buf);
-				filerr = mame_fopen_options(MameUISettings(), NULL, stemp, OPEN_FLAG_READ, &mfile);
+				mfile->close();
+				filerr = mfile->open(stemp);
 				osd_free(stemp);
 			}
 
 			if (filerr == FILERR_NONE)
 			{
-				filelen = (long)mame_fsize(mfile);
+				filelen = (long)mfile->size();
 
 				PcbData = (char *)malloc(filelen+1);
 
@@ -945,7 +946,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 				{
 					WCHAR buf[256];
 
-					mame_fread(mfile, PcbData, filelen);
+					mfile->read(PcbData, filelen);
 					
 					PcbData[filelen] = '\0';
 
@@ -990,7 +991,8 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 					free(PcbData);
 				}
 
-				mame_fclose(mfile);
+				mfile->close();
+				global_free(mfile);
 			}
 			else
 			{

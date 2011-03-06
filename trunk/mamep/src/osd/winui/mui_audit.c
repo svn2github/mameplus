@@ -184,16 +184,16 @@ static BOOL RomsetNotExist(int game)
 	for (drv = drivers[game]; drv != NULL; drv = driver_get_clone(drv))
 	{
 		file_error filerr;
-		mame_file *file;
 		astring *fname;
 
 		// open the file if we can
 		fname = astring_assemble_2(astring_alloc(), drv->name, ".zip");
-		filerr = mame_fopen_options(MameUIGlobal(), SEARCHPATH_ROM, astring_c(fname), OPEN_FLAG_READ, &file);
+		emu_file file = emu_file(*(MameUIGlobal()), SEARCHPATH_ROM, OPEN_FLAG_READ);;
+		filerr = file.open(astring_c(fname));
 		astring_free(fname);
 		if (filerr == FILERR_NONE)
 		{
-			mame_fclose(file);
+			file.close();
 			return FALSE;
 		}
 

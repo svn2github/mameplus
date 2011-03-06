@@ -1484,8 +1484,10 @@ void UpdateScreenShot(void)
 		if (g_IPSMenuSelectName)
 			LoadScreenShot(Picker_GetSelectedItem(hwndList), g_IPSMenuSelectName, TAB_IPS);
 		else
+			LoadScreenShot(Picker_GetSelectedItem(hwndList), NULL, TabView_GetCurrentTab(hTabCtrl));
+#else
+		LoadScreenShot(Picker_GetSelectedItem(hwndList), TabView_GetCurrentTab(hTabCtrl));
 #endif /* USE_IPS */
-		LoadScreenShot(Picker_GetSelectedItem(hwndList), NULL, TabView_GetCurrentTab(hTabCtrl));
 	}
 
 	// figure out if we have a history or not, to place our other windows properly
@@ -2130,14 +2132,14 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 
 #ifdef DRIVER_SWITCH
 	{
-		mame_file *file;
 		file_error filerr;
 
-		filerr = mame_fopen_options(options, SEARCHPATH_RAW, CONFIGNAME ".ini", OPEN_FLAG_READ, &file);
+		emu_file file = emu_file(*options, SEARCHPATH_RAW, OPEN_FLAG_READ);
+		filerr = file.open(CONFIGNAME ".ini");
 		if (filerr == FILERR_NONE)
 		{
-			options_parse_ini_file(options, mame_core_file(file), OPTION_PRIORITY_CMDLINE, FALSE);
-			mame_fclose(file);
+			options_parse_ini_file(options, file, OPTION_PRIORITY_CMDLINE, FALSE);
+			file.close();
 		}
 
 		assign_drivers(options);
@@ -6596,7 +6598,6 @@ static void MamePlayBackGame()
 	if (CommonFileDialog(GetOpenFileName, filename, FILETYPE_INPUT_FILES))
 	{
 		file_error fileerr;
-		mame_file* pPlayBack;
 		WCHAR drive[_MAX_DRIVE];
 		WCHAR dir[_MAX_DIR];
 		WCHAR bare_fname[_MAX_FNAME];
@@ -6615,7 +6616,8 @@ static void MamePlayBackGame()
 			path[wcslen(path)-1] = 0; // take off trailing back slash
 
 		stemp = utf8_from_wstring(fname);
-		fileerr = mame_fopen_options(MameUIGlobal(), SEARCHPATH_INPUTLOG, stemp, OPEN_FLAG_READ, &pPlayBack);
+		emu_file pPlayBack = emu_file(*(MameUIGlobal()), SEARCHPATH_INPUTLOG, OPEN_FLAG_READ);
+		fileerr = pPlayBack.open(stemp);
 		osd_free(stemp);
 		if (fileerr != FILERR_NONE)
 		{
@@ -6630,7 +6632,7 @@ static void MamePlayBackGame()
 			inp_header ihdr;
 
 			/* read the header and verify that it is a modern version; if not, print an error */
-			if (mame_fread(pPlayBack, &ihdr, sizeof(inp_header)) != sizeof(inp_header))
+			if (pPlayBack.read(&ihdr, sizeof(inp_header)) != sizeof(inp_header))
 			{
 				MameMessageBox(_UIW(TEXT("Input file is corrupt or invalid (missing header)")));
 				return;
@@ -6656,7 +6658,7 @@ static void MamePlayBackGame()
 					}
 				}
 		}
-		mame_fclose(pPlayBack);
+		pPlayBack.close();
 
 		memset(&playopts, 0, sizeof(playopts));
 		playopts.playback = fname;
@@ -6681,7 +6683,6 @@ static void MameLoadState()
 	}
 	if (CommonFileDialog(GetOpenFileName, filename, FILETYPE_SAVESTATE_FILES))
 	{
-		mame_file* pSaveState;
 		file_error filerr;
 		WCHAR drive[_MAX_DRIVE];
 		WCHAR dir[_MAX_DIR];
@@ -6727,7 +6728,8 @@ static void MameLoadState()
 #endif // MESS
 
 		stemp = utf8_from_wstring(state_fname);
-		filerr = mame_fopen_options(MameUIGlobal(), SEARCHPATH_STATE, stemp, OPEN_FLAG_READ, &pSaveState);
+		emu_file pSaveState = emu_file(*(MameUIGlobal()), SEARCHPATH_STATE, OPEN_FLAG_READ);
+		filerr = pSaveState.open(stemp);
 		osd_free(stemp);
 		if (filerr != FILERR_NONE)
 		{
@@ -6740,7 +6742,7 @@ static void MameLoadState()
 		//mamep: mamecore use utf8 string instead of TCHAR string
 		rc = state_manager::check_file(NULL, pSaveState, stemp, MameMessageBoxUTF8);
 		osd_free(stemp);
-		mame_fclose(pSaveState);
+		pSaveState.close();
 		if (rc)
 			return;
 
@@ -7140,9 +7142,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 {
 	HMENU hMenuLoad;
 	HMENU hMenu;
-	HMENU hSubMenu = NULL;
 
-	int  nGame = Picker_GetSelectedItem(hwndList);
 	TPMPARAMS tpmp;
 	ZeroMemory(&tpmp,sizeof(tpmp));
 	tpmp.cbSize = sizeof(tpmp);
@@ -7158,6 +7158,8 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 #ifdef USE_IPS
 	if (have_selection)
 	{
+		HMENU hSubMenu = NULL;
+		int  nGame = Picker_GetSelectedItem(hwndList);
 		core_options *o = load_options(OPTIONS_GAME, nGame);
 		int patch_count = GetPatchCount(driversw[nGame]->name, TEXT("*"));
 		WCHAR *ips = options_get_wstring(o, OPTION_IPS);

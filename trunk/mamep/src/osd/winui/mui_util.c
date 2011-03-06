@@ -407,7 +407,7 @@ static void UpdateController(void)
 			b = 0;
 			p = 0;
 
-			input_port_list_init(portlist, last_ipt, NULL, 0, FALSE);
+			input_port_list_init(portlist, last_ipt, NULL, 0, FALSE, NULL);
 
 			for (port = portlist.first(); port != NULL; port = port->next())
 			{
@@ -650,8 +650,14 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				const input_port_config *port;
 				ioport_list portlist;
 				
-				input_port_list_init(portlist, gamedrv->ipt, NULL, 0, FALSE);
-				
+				input_port_list_init(portlist, gamedrv->ipt, NULL, 0, FALSE, NULL);
+				for (device_config *cfg = config.m_devicelist.first(); cfg != NULL; cfg = cfg->next())
+				{
+					if (cfg->input_ports()!=NULL) {
+						input_port_list_init(portlist, cfg->input_ports(), NULL, 0, FALSE, cfg);
+					}
+				}
+
 				for (port = portlist.first(); port != NULL; port = port->next())
 				{
 					const input_field_config *field;
