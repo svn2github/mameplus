@@ -439,7 +439,7 @@ int ui_init(running_machine *machine)
 	ui_gfx_init(machine);
 
 #ifdef CMD_LIST
-	datafile_init(&machine->options());
+	datafile_init(machine, &machine->options());
 #endif /* CMD_LIST */
 
 	/* reset globals */

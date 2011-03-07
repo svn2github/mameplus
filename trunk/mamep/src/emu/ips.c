@@ -75,7 +75,7 @@ static const rom_entry *find_rom_entry(const rom_entry *romp, const char *name)
 	return NULL;
 }
 
-static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_name, rom_load_data *romdata)
+static int load_ips_file(running_machine *machine, ips_chunk **p, const char *ips_dir, const char *ips_name, rom_load_data *romdata)
 {
 	file_error filerr;
 	UINT32 pos = 0;
@@ -85,7 +85,7 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 	mame_printf_verbose(_("IPS: loading ips \"%s/%s%s\"\n"), ips_dir, ips_name, IPS_EXT);
 
 	astring fname(ips_dir, PATH_SEPARATOR, ips_name, IPS_EXT);
-	emu_file file = emu_file(machine, SEARCHPATH_IPS, OPEN_FLAG_READ);
+	emu_file file = emu_file(machine->options(), SEARCHPATH_IPS, OPEN_FLAG_READ);
 	filerr = file.open(fname);
 
 	if (filerr != FILERR_NONE)
@@ -178,7 +178,7 @@ load_ips_file_fail:
 
 static int check_crc(char *crc, const char *rom_hash)
 {
-	char ips_hash[HASH_BUF_SIZE];
+	hash_collection	ips_hash;
 	char tmp[10];
 	int slen = strlen(CRC_STAG);
 	int elen = strlen(CRC_ETAG);
@@ -198,11 +198,9 @@ static int check_crc(char *crc, const char *rom_hash)
 	strcpy(tmp, crc + slen);
 	tmp[8] = '\0';
 
-	hash_data_clear(ips_hash);
-	if (hash_data_insert_printable_checksum(ips_hash, HASH_CRC, tmp) != 1)
-		return 0;
+	ips_hash.add_from_string(hash_collection::HASH_CRC, tmp, strlen(tmp));
 
-	if (hash_data_is_equal(rom_hash, ips_hash, HASH_CRC) != 1)
+	if (ips_hash == hash_collection(rom_hash))
 		return 0;
 
 	return 1;
@@ -217,7 +215,7 @@ static int parse_ips_patch(running_machine *machine, ips_entry **ips_p, const ch
 	mame_printf_verbose(_("IPS: parsing ips \"%s/%s%s\"\n"), machine->gamedrv->name, patch_name, INDEX_EXT);
 
 	astring fname(machine->gamedrv->name, PATH_SEPARATOR, patch_name, INDEX_EXT);
-	emu_file fpDat = emu_file(machine, SEARCHPATH_IPS, OPEN_FLAG_READ);
+	emu_file fpDat = emu_file(machine->options(), SEARCHPATH_IPS, OPEN_FLAG_READ);
 	filerr = fpDat.open(fname);
 
 	if (filerr != FILERR_NONE)
@@ -303,7 +301,7 @@ static int parse_ips_patch(running_machine *machine, ips_entry **ips_p, const ch
 				goto parse_ips_patch_fail;
 			}
 
-			if (!load_ips_file(&entry->chunk, ips_dir, entry->ips_name, romdata))
+			if (!load_ips_file(machine, &entry->chunk, ips_dir, entry->ips_name, romdata))
 				goto parse_ips_patch_fail;
 
 			if (entry->chunk == NULL)

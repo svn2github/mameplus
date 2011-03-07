@@ -19,7 +19,7 @@
 #ifndef __CMDDATA_H__
 #define __CMDDATA_H__
 
-extern void datafile_init(core_options *options);
+extern void datafile_init(running_machine *machine, core_options *options);
 extern void datafile_exit(void);
 
 #ifdef CMD_LIST
