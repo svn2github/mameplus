@@ -200,7 +200,7 @@ static int check_crc(char *crc, const char *rom_hash)
 
 	ips_hash.add_from_string(hash_collection::HASH_CRC, tmp, strlen(tmp));
 
-	if (ips_hash == hash_collection(rom_hash))
+	if (ips_hash != hash_collection(rom_hash))
 		return 0;
 
 	return 1;
