@@ -245,8 +245,6 @@ galaxian_extend_sprite_info_func galaxian_extend_sprite_info_ptr;
 /* global tweaks */
 UINT8 galaxian_frogger_adjust;
 UINT8 galaxian_sfx_tilemap;
-UINT8 galaxian_sprite_clip_start;
-UINT8 galaxian_sprite_clip_end;
 
 
 
@@ -427,7 +425,6 @@ PALETTE_INIT( moonwar )
 {
 	PALETTE_INIT_CALL(galaxian);
 
-
 	/* wire mod to connect the bullet blue output to the 220 ohm resistor */
 	bullet_color[7] = MAKE_RGB(0xef,0xef,0x97);
 }
@@ -519,6 +516,17 @@ SCREEN_UPDATE( galaxian )
 }
 
 
+SCREEN_UPDATE( zigzag )
+{
+	SCREEN_UPDATE_CALL(galaxian);
+
+	/* zigzag has an extra sprite generator instead of bullets (note: ideally, this should be rendered in parallel) */
+	sprites_draw(screen->machine, bitmap, cliprect, &screen->machine->generic.spriteram.u8[0x60]);
+
+	return 0;
+}
+
+
 
 /*************************************
  *
@@ -600,13 +608,11 @@ static void sprites_draw(running_machine *machine, bitmap_t *bitmap, const recta
 {
 	rectangle clip = *cliprect;
 	int sprnum;
-	int clip_ofs = (flipscreen_x ? 16 : 0);
 
 	/* 16 of the 256 pixels of the sprites are hard-clipped at the line buffer */
-	/* according to the schematics, it should be the first 16 pixels; however, */
-	/* some bootlegs demonstrate that this can be shifted to other positions. */
-	clip.min_x = MAX(clip.min_x, (galaxian_sprite_clip_start - clip_ofs) * GALAXIAN_XSCALE);
-	clip.max_x = MIN(clip.max_x, (galaxian_sprite_clip_end - clip_ofs + 1) * GALAXIAN_XSCALE - 1);
+	/* according to the schematics, it should be the first 16 pixels */
+	clip.min_x = MAX(clip.min_x, (!flipscreen_x) * 16 * GALAXIAN_XSCALE);
+	clip.max_x = MIN(clip.max_x, (256 - flipscreen_x * 16) * GALAXIAN_XSCALE - 1);
 
 	/* The line buffer is only written if it contains a '0' currently; */
 	/* it is cleared during the visible area, and populated during HBLANK */
@@ -623,7 +629,7 @@ static void sprites_draw(running_machine *machine, bitmap_t *bitmap, const recta
 		UINT8 flipx = base[1] & 0x40;
 		UINT8 flipy = base[1] & 0x80;
 		UINT8 color = base[2] & 7;
-		UINT8 sx = base[3];
+		UINT8 sx = base[3] + 1;
 
 		/* extend the sprite information */
 		if (galaxian_extend_sprite_info_ptr != NULL)
@@ -632,7 +638,7 @@ static void sprites_draw(running_machine *machine, bitmap_t *bitmap, const recta
 		/* apply flipscreen in X direction */
 		if (flipscreen_x)
 		{
-			sx = 242 - sx; // + 8 - HOFS
+			sx = 240 - sx;
 			flipx = !flipx;
 		}
 
@@ -747,7 +753,8 @@ WRITE8_HANDLER( galaxian_flip_screen_xy_w )
 WRITE8_HANDLER( galaxian_stars_enable_w )
 {
 	if ((stars_enabled ^ data) & 0x01)
-	space->machine->primary_screen->update_now();
+		space->machine->primary_screen->update_now();
+
 	if (!stars_enabled && (data & 0x01))
 	{
 		/* on the rising edge of this, the CLR on the shift registers is released */
@@ -762,28 +769,36 @@ WRITE8_HANDLER( galaxian_stars_enable_w )
 
 WRITE8_HANDLER( scramble_background_enable_w )
 {
-	space->machine->primary_screen->update_now();
+	if ((background_enable ^ data) & 0x01)
+		space->machine->primary_screen->update_now();
+
 	background_enable = data & 0x01;
 }
 
 
 WRITE8_HANDLER( scramble_background_red_w )
 {
-	space->machine->primary_screen->update_now();
+	if ((background_red ^ data) & 0x01)
+		space->machine->primary_screen->update_now();
+
 	background_red = data & 0x01;
 }
 
 
 WRITE8_HANDLER( scramble_background_green_w )
 {
-	space->machine->primary_screen->update_now();
+	if ((background_green ^ data) & 0x01)
+		space->machine->primary_screen->update_now();
+
 	background_green = data & 0x01;
 }
 
 
 WRITE8_HANDLER( scramble_background_blue_w )
 {
-	space->machine->primary_screen->update_now();
+	if ((background_blue ^ data) & 0x01)
+		space->machine->primary_screen->update_now();
+
 	background_blue = data & 0x01;
 }
 
@@ -954,26 +969,6 @@ static void stars_draw_row(bitmap_t *bitmap, int maxx, int y, UINT32 star_offs, 
  *
  *************************************/
 
-#ifdef UNUSED_FUNCTION
-static int flip_and_clip(rectangle *draw, int xstart, int xend, const rectangle *cliprect)
-{
-	*draw = *cliprect;
-	if (!flipscreen_x)
-	{
-		draw->min_x = xstart * GALAXIAN_XSCALE;
-		draw->max_x = xend * GALAXIAN_XSCALE + (GALAXIAN_XSCALE - 1);
-	}
-	else
-	{
-		draw->min_x = (xend ^ 255) * GALAXIAN_XSCALE;
-		draw->max_x = (xstart ^ 255) * GALAXIAN_XSCALE + (GALAXIAN_XSCALE - 1);
-	}
-	sect_rect(draw, cliprect);
-	return (draw->min_x <= draw->max_x);
-}
-#endif
-
-
 void galaxian_draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
 	/* erase the background to black first */
@@ -997,43 +992,129 @@ void galaxian_draw_background(running_machine *machine, bitmap_t *bitmap, const 
 }
 
 
-void frogger_draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void background_draw_colorsplit(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, rgb_t color, int split, int split_flipped)
 {
-	rectangle draw;
-
+	/* horizontal bgcolor split */
 	if (flipscreen_x)
 	{
-		/* color split point verified on real machine */
-		/* hmmm, according to schematics it is at 128+8; which is right? */
-		draw = *cliprect;
-		draw.max_x = MIN(draw.max_x, (128-8) * GALAXIAN_XSCALE - 1);
+		rectangle draw = *cliprect;
+		draw.max_x = MIN(draw.max_x, split_flipped * GALAXIAN_XSCALE - 1);
 		if (draw.min_x <= draw.max_x)
 			bitmap_fill(bitmap, &draw, RGB_BLACK);
 
 		draw = *cliprect;
-		draw.min_x = MAX(draw.min_x, (128-8) * GALAXIAN_XSCALE);
+		draw.min_x = MAX(draw.min_x, split_flipped * GALAXIAN_XSCALE);
 		if (draw.min_x <= draw.max_x)
-			bitmap_fill(bitmap, &draw, MAKE_RGB(0,0,0x47));
+			bitmap_fill(bitmap, &draw, color);
 	}
 	else
 	{
-		/* color split point verified on real machine */
-		/* hmmm, according to schematics it is at 128+8; which is right? */
-		draw = *cliprect;
-		draw.max_x = MIN(draw.max_x, (128+8) * GALAXIAN_XSCALE - 1);
+		rectangle draw = *cliprect;
+		draw.max_x = MIN(draw.max_x, split * GALAXIAN_XSCALE - 1);
 		if (draw.min_x <= draw.max_x)
-			bitmap_fill(bitmap, &draw, MAKE_RGB(0,0,0x47));
+			bitmap_fill(bitmap, &draw, color);
 
 		draw = *cliprect;
-		draw.min_x = MAX(draw.min_x, (128+8) * GALAXIAN_XSCALE);
+		draw.min_x = MAX(draw.min_x, split * GALAXIAN_XSCALE);
 		if (draw.min_x <= draw.max_x)
 			bitmap_fill(bitmap, &draw, RGB_BLACK);
 	}
+}
 
+
+static void scramble_draw_stars(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int maxx)
+{
+	/* update the star origin to the current frame */
+	stars_update_origin(machine);
+
+	/* render stars if enabled */
+	if (stars_enabled)
+	{
+		int blink_state = stars_blink_state & 3;
+		int y;
+
+		/* iterate over scanlines */
+		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+		{
+			/* blink state 2 suppressed stars when 2V == 0 */
+			if (blink_state != 2 || (y & 2) != 0)
+			{
+				/* blink states 0 and 1 suppress stars when certain bits of the color == 0 */
+				static const UINT8 colormask_table[4] = { 0x20, 0x08, 0xff, 0xff };
+				stars_draw_row(bitmap, maxx, y, y * 512, colormask_table[blink_state]);
+			}
+		}
+	}
+}
+
+
+void scramble_draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+{
+	/* blue background - 390 ohm resistor */
+	bitmap_fill(bitmap, cliprect, background_enable ? MAKE_RGB(0,0,0x56) : RGB_BLACK);
+
+	scramble_draw_stars(machine, bitmap, cliprect, 256);
+}
+
+
+void anteater_draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+{
+	/* blue background, horizontal split as seen on flyer and real cabinet */
+	background_draw_colorsplit(machine, bitmap, cliprect, background_enable ? MAKE_RGB(0,0,0x56) : RGB_BLACK, 56, 256-56);
+
+	scramble_draw_stars(machine, bitmap, cliprect, 256);
+}
+
+
+void jumpbug_draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+{
+	/* blue background - 390 ohm resistor */
+	bitmap_fill(bitmap, cliprect, background_enable ? MAKE_RGB(0,0,0x56) : RGB_BLACK);
+
+	/* render stars same as scramble but nothing in the status area */
+	scramble_draw_stars(machine, bitmap, cliprect, 240);
+}
+
+
+void turtles_draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+{
+	/*
+        The background color generator is connected this way:
+
+            RED   - 390 ohm resistor
+            GREEN - 470 ohm resistor
+            BLUE  - 390 ohm resistor
+    */
+	bitmap_fill(bitmap, cliprect, MAKE_RGB(background_red * 0x55, background_green * 0x47, background_blue * 0x55));
+}
+
+
+void frogger_draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+{
+	/* color split point verified on real machine */
+	/* hmmm, according to schematics it is at 128+8; which is right? */
+	background_draw_colorsplit(machine, bitmap, cliprect, MAKE_RGB(0,0,0x47), 128+8, 128-8);
 }
 
 
 #ifdef UNUSED_FUNCTION
+static int flip_and_clip(rectangle *draw, int xstart, int xend, const rectangle *cliprect)
+{
+	*draw = *cliprect;
+	if (!flipscreen_x)
+	{
+		draw->min_x = xstart * GALAXIAN_XSCALE;
+		draw->max_x = xend * GALAXIAN_XSCALE + (GALAXIAN_XSCALE - 1);
+	}
+	else
+	{
+		draw->min_x = (xend ^ 255) * GALAXIAN_XSCALE;
+		draw->max_x = (xstart ^ 255) * GALAXIAN_XSCALE + (GALAXIAN_XSCALE - 1);
+	}
+	sect_rect(draw, cliprect);
+	return (draw->min_x <= draw->max_x);
+}
+
 void amidar_draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
 	const UINT8 *prom = machine->region("user1")->base();
@@ -1064,77 +1145,6 @@ void amidar_draw_background(running_machine *machine, bitmap_t *bitmap, const re
 		}
 }
 #endif
-
-
-void turtles_draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
-{
-	/*
-        The background color generator is connected this way:
-
-            RED   - 390 ohm resistor
-            GREEN - 470 ohm resistor
-            BLUE  - 390 ohm resistor
-    */
-	bitmap_fill(bitmap, cliprect, MAKE_RGB(background_red * 0x55, background_green * 0x47, background_blue * 0x55));
-}
-
-
-void scramble_draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
-{
-	/* blue background - 390 ohm resistor */
-	bitmap_fill(bitmap, cliprect, background_enable ? MAKE_RGB(0,0,0x56) : RGB_BLACK);
-
-	/* update the star origin to the current frame */
-	stars_update_origin(machine);
-
-	/* render stars if enabled */
-	if (stars_enabled)
-	{
-		int blink_state = stars_blink_state & 3;
-		int y;
-
-		/* iterate over scanlines */
-		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
-		{
-			/* blink state 2 suppressed stars when 2V == 0 */
-			if (blink_state != 2 || (y & 2) != 0)
-			{
-				/* blink states 0 and 1 suppress stars when certain bits of the color == 0 */
-				static const UINT8 colormask_table[4] = { 0x20, 0x08, 0xff, 0xff };
-				stars_draw_row(bitmap, 256, y, y * 512, colormask_table[blink_state]);
-			}
-		}
-	}
-}
-
-
-void jumpbug_draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
-{
-	/* blue background - 390 ohm resistor */
-	bitmap_fill(bitmap, cliprect, background_enable ? MAKE_RGB(0,0,0x56) : RGB_BLACK);
-
-	/* update the star origin to the current frame */
-	stars_update_origin(machine);
-
-	/* render stars if enabled -- same as scramble but nothing in the status area */
-	if (stars_enabled)
-	{
-		int blink_state = stars_blink_state & 3;
-		int y;
-
-		/* iterate over scanlines */
-		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
-		{
-			/* blink state 2 suppressed stars when 2V == 0 */
-			if (blink_state != 2 || (y & 2) != 0)
-			{
-				/* blink states 0 and 1 suppress stars when certain bits of the color == 0 */
-				static const UINT8 colormask_table[4] = { 0x20, 0x08, 0xff, 0xff };
-				stars_draw_row(bitmap, 240, y, y * 512, colormask_table[blink_state]);
-			}
-		}
-	}
-}
 
 
 
@@ -1235,16 +1245,16 @@ void theend_draw_bullet(running_machine *machine, bitmap_t *bitmap, const rectan
 
 /*************************************
  *
- *  Generic extensions
+ *  Video extensions
  *
  *************************************/
 
+/*** generic ***/
 void upper_extend_tile_info(UINT16 *code, UINT8 *color, UINT8 attrib, UINT8 x)
 {
 	/* tiles are in the upper half of a larger ROM */
 	*code += 0x100;
 }
-
 
 void upper_extend_sprite_info(const UINT8 *base, UINT8 *sx, UINT8 *sy, UINT8 *flipx, UINT8 *flipy, UINT16 *code, UINT8 *color)
 {
@@ -1253,13 +1263,7 @@ void upper_extend_sprite_info(const UINT8 *base, UINT8 *sx, UINT8 *sy, UINT8 *fl
 }
 
 
-
-/*************************************
- *
- *  Frogger extensions
- *
- *************************************/
-
+/*** Frogger ***/
 void frogger_extend_tile_info(UINT16 *code, UINT8 *color, UINT8 attrib, UINT8 x)
 {
 	*color = ((*color >> 1) & 0x03) | ((*color << 2) & 0x04);
@@ -1271,13 +1275,7 @@ void frogger_extend_sprite_info(const UINT8 *base, UINT8 *sx, UINT8 *sy, UINT8 *
 }
 
 
-
-/*************************************
- *
- *  Ghostmuncher Galaxian extensions
- *
- *************************************/
-
+/*** Ghostmuncher Galaxian ***/
 void gmgalax_extend_tile_info(UINT16 *code, UINT8 *color, UINT8 attrib, UINT8 x)
 {
 	*code |= gfxbank[0] << 9;
@@ -1291,13 +1289,7 @@ void gmgalax_extend_sprite_info(const UINT8 *base, UINT8 *sx, UINT8 *sy, UINT8 *
 }
 
 
-
-/*************************************
- *
- *  Pisces extensions
- *
- *************************************/
-
+/*** Pisces ***/
 void pisces_extend_tile_info(UINT16 *code, UINT8 *color, UINT8 attrib, UINT8 x)
 {
 	*code |= gfxbank[0] << 8;
@@ -1309,13 +1301,7 @@ void pisces_extend_sprite_info(const UINT8 *base, UINT8 *sx, UINT8 *sy, UINT8 *f
 }
 
 
-
-/*************************************
- *
- *  Batman Part 2 extensions
- *
- *************************************/
-
+/*** Batman Part 2 ***/
 void batman2_extend_tile_info(UINT16 *code, UINT8 *color, UINT8 attrib, UINT8 x)
 {
 	if (*code & 0x80)
@@ -1323,13 +1309,7 @@ void batman2_extend_tile_info(UINT16 *code, UINT8 *color, UINT8 attrib, UINT8 x)
 }
 
 
-
-/*************************************
- *
- *  Moon Cresta extensions
- *
- *************************************/
-
+/*** Moon Cresta ***/
 void mooncrst_extend_tile_info(UINT16 *code, UINT8 *color, UINT8 attrib, UINT8 x)
 {
 	if (gfxbank[2] && (*code & 0xc0) == 0x80)
@@ -1343,13 +1323,7 @@ void mooncrst_extend_sprite_info(const UINT8 *base, UINT8 *sx, UINT8 *sy, UINT8 
 }
 
 
-
-/*************************************
- *
- *  Moon Quasar extensions
- *
- *************************************/
-
+/*** Moon Quasar ***/
 void moonqsr_extend_tile_info(UINT16 *code, UINT8 *color, UINT8 attrib, UINT8 x)
 {
 	*code |= (attrib & 0x20) << 3;
@@ -1361,13 +1335,7 @@ void moonqsr_extend_sprite_info(const UINT8 *base, UINT8 *sx, UINT8 *sy, UINT8 *
 }
 
 
-
-/*************************************
- *
- *  Moon Shuttle extensions
- *
- *************************************/
-
+/*** Moon Shuttle ***/
 void mshuttle_extend_tile_info(UINT16 *code, UINT8 *color, UINT8 attrib, UINT8 x)
 {
 	*code |= (attrib & 0x30) << 4;
@@ -1379,12 +1347,7 @@ void mshuttle_extend_sprite_info(const UINT8 *base, UINT8 *sx, UINT8 *sy, UINT8 
 }
 
 
-/*************************************
- *
- *  Calipso extensions
- *
- *************************************/
-
+/*** Calipso ***/
 void calipso_extend_sprite_info(const UINT8 *base, UINT8 *sx, UINT8 *sy, UINT8 *flipx, UINT8 *flipy, UINT16 *code, UINT8 *color)
 {
 	/* same as the others, but no sprite flipping, but instead the bits are used
@@ -1395,12 +1358,8 @@ void calipso_extend_sprite_info(const UINT8 *base, UINT8 *sx, UINT8 *sy, UINT8 *
 	*flipy = 0;
 }
 
-/*************************************
- *
- *  Jumpbug extensions
- *
- *************************************/
 
+/*** Jumpbug ***/
 void jumpbug_extend_tile_info(UINT16 *code, UINT8 *color, UINT8 attrib, UINT8 x)
 {
 	if ((*code & 0xc0) == 0x80 && (gfxbank[2] & 0x01))

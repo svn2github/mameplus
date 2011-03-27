@@ -86,7 +86,7 @@ struct mmo {
 };
 
 static int current_lang = UI_LANG_EN_US;
-static core_options *lang_options;
+static emu_options *lang_options;
 static struct mmo mmo_table[UI_LANG_MAX][UI_MSG_MAX];
 static int mmo_disabled[UI_MSG_MAX];
 
@@ -119,9 +119,9 @@ int lang_find_codepage(int cp)
 }
 
 
-void lang_set_langcode(core_options *options, int langcode)
+void lang_set_langcode(emu_options &options, int langcode)
 {
-	lang_options = options;
+	lang_options = &options;
 	current_lang = langcode;
 }
 
@@ -155,7 +155,7 @@ static void load_mmo(int msgcat)
 		return;
 
 	astring fname(ui_lang_info[current_lang].name, PATH_SEPARATOR, mmo_config[msgcat].filename, ".mmo");
-	emu_file file = emu_file(*lang_options, SEARCHPATH_LANGDATA, OPEN_FLAG_READ);
+	emu_file file = emu_file(lang_options->value(OPTION_LANGPATH), OPEN_FLAG_READ);
 	filerr = file.open(fname);
 
 	if (filerr != FILERR_NONE)

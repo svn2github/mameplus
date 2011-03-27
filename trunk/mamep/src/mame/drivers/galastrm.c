@@ -42,7 +42,6 @@ $305.b invincibility
 #include "video/taitoic.h"
 #include "machine/eeprom.h"
 #include "sound/es5506.h"
-#include "includes/taito_f3.h"
 #include "audio/taito_en.h"
 #include "includes/galastrm.h"
 
@@ -176,13 +175,13 @@ static WRITE32_HANDLER( galastrm_adstick_ctrl_w )
 static ADDRESS_MAP_START( galastrm_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x200000, 0x21ffff) AM_RAM AM_BASE_MEMBER(galastrm_state, ram)								/* main CPUA ram */
-	AM_RANGE(0x300000, 0x303fff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
+	AM_RANGE(0x300000, 0x303fff) AM_RAM AM_BASE_SIZE_MEMBER(galastrm_state, spriteram, spriteram_size)
 	AM_RANGE(0x400000, 0x400003) AM_READ_PORT("IN0")
 	AM_RANGE(0x400004, 0x400007) AM_READ_PORT("IN1")
 	AM_RANGE(0x400000, 0x400007) AM_WRITE(galastrm_input_w)									/* eerom etc. */
 	AM_RANGE(0x40fff0, 0x40fff3) AM_WRITENOP
 	AM_RANGE(0x500000, 0x500007) AM_READWRITE(galastrm_adstick_ctrl_r, galastrm_adstick_ctrl_w)
-	AM_RANGE(0x600000, 0x6007ff) AM_RAM AM_BASE(&f3_shared_ram)								/* Sound shared ram */
+	AM_RANGE(0x600000, 0x6007ff) AM_RAM AM_SHARE("f3_shared")								/* Sound shared ram */
 	AM_RANGE(0x800000, 0x80ffff) AM_DEVREADWRITE("tc0480scp", tc0480scp_long_r, tc0480scp_long_w)		/* tilemaps */
 	AM_RANGE(0x830000, 0x83002f) AM_DEVREADWRITE("tc0480scp", tc0480scp_ctrl_long_r, tc0480scp_ctrl_long_w)
 	AM_RANGE(0x900000, 0x900003) AM_WRITE(galastrm_palette_w)								/* TC0110PCR */

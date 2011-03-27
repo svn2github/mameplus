@@ -5,13 +5,16 @@ public:
 		: driver_device(machine, config) { }
 
 	UINT8 *videoram;
+	UINT8 *spriteram;
+	UINT8 bbx_sound_enable;
+	UINT8 sound_latch;
+	UINT8 *videoreg;
+	int gfx_type;
+	tilemap_t *background;
 };
 
 
 /*----------- defined in video/shangkid.c -----------*/
-
-extern UINT8 *shangkid_videoreg;
-extern int shangkid_gfx_type;
 
 VIDEO_START( shangkid );
 SCREEN_UPDATE( shangkid );

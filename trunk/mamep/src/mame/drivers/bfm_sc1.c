@@ -133,14 +133,6 @@ public:
 #define MASTER_CLOCK	(XTAL_4MHz)
 #define ADDER_CLOCK		(XTAL_8MHz)
 
-// local vars /////////////////////////////////////////////////////////////
-
-
-
-
-// user interface stuff ///////////////////////////////////////////////////
-
-
 ///////////////////////////////////////////////////////////////////////////
 
 static void Scorpion1_SetSwitchState(bfm_sc1_state *drvstate, int strobe, int data, int state)
@@ -220,8 +212,8 @@ static WRITE8_HANDLER( reel12_w )
 	}
 	else
 	{
-		if ( stepper_update(0, data>>4) ) state->reel_changed |= 0x01;
-		if ( stepper_update(1, data   ) ) state->reel_changed |= 0x02;
+		if ( stepper_update(0, (data>>4)&0x0f) ) state->reel_changed |= 0x01;
+		if ( stepper_update(1, data&0x0f   ) ) state->reel_changed |= 0x02;
 
 		if ( stepper_optic_state(0) ) state->optic_pattern |=  0x01;
 		else                          state->optic_pattern &= ~0x01;
@@ -243,8 +235,8 @@ static WRITE8_HANDLER( reel34_w )
 	}
 	else
 	{
-		if ( stepper_update(2, data>>4) ) state->reel_changed |= 0x04;
-		if ( stepper_update(3, data   ) ) state->reel_changed |= 0x08;
+		if ( stepper_update(2, (data>>4)&0x0f) ) state->reel_changed |= 0x04;
+		if ( stepper_update(3, data&0x0f   ) ) state->reel_changed |= 0x08;
 
 		if ( stepper_optic_state(2) ) state->optic_pattern |=  0x04;
 		else                          state->optic_pattern &= ~0x04;
@@ -260,8 +252,8 @@ static WRITE8_HANDLER( reel34_w )
 static WRITE8_HANDLER( reel56_w )
 {
 	bfm_sc1_state *state = space->machine->driver_data<bfm_sc1_state>();
-	if ( stepper_update(4, data>>4) ) state->reel_changed |= 0x10;
-	if ( stepper_update(5, data   ) ) state->reel_changed |= 0x20;
+	if ( stepper_update(4, (data>>4)&0x0f) ) state->reel_changed |= 0x10;
+	if ( stepper_update(5, data&0x0f   ) ) state->reel_changed |= 0x20;
 
 	if ( stepper_optic_state(4) ) state->optic_pattern |=  0x10;
 	else                          state->optic_pattern &= ~0x10;
@@ -383,25 +375,6 @@ static const UINT8 BFM_strcnv[] =
 };
 
 //ACIA helper functions
-
-static void send_to_adder(running_machine *machine, int data)
-{
-	adder2_data_from_sc2 = 1;		// set flag, data from scorpion2 board available
-	adder2_sc2data       = data;	// store data
-
-	adder2_acia_triggered = 1;		// set flag, acia IRQ triggered
-	cputag_set_input_line(machine, "adder2", M6809_IRQ_LINE, ASSERT_LINE );//HOLD_LINE);// trigger IRQ
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-static int receive_from_adder(void)
-{
-	int data = adder2_data;
-	adder2_data_to_sc2 = 0;	  // clr flag, data from adder available
-
-	return data;
-}
 
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -637,7 +610,8 @@ static WRITE8_DEVICE_HANDLER( nec_latch_w )
 
 static WRITE8_HANDLER( vid_uart_tx_w )
 {
-	send_to_adder(space->machine,data);
+	adder2_send(data);
+	cputag_set_input_line(space->machine, "adder2", M6809_IRQ_LINE, ASSERT_LINE );//HOLD_LINE);// trigger IRQ
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -650,21 +624,14 @@ static WRITE8_HANDLER( vid_uart_ctrl_w )
 
 static READ8_HANDLER( vid_uart_rx_r )
 {
-	int data = receive_from_adder();
-
-	return data;
+	return adder2_receive();
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 static READ8_HANDLER( vid_uart_ctrl_r )
 {
-	int status = 0;
-
-	if ( adder2_data_to_sc2  ) status |= 0x01; // receive  buffer full
-	if ( !adder2_data_from_sc2) status |= 0x02; // transmit buffer empty
-
-	return status;
+	return adder2_status();
 }
 
 // scorpion1 board init ///////////////////////////////////////////////////

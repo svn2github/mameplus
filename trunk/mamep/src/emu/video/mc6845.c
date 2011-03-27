@@ -26,7 +26,7 @@
 #include "mc6845.h"
 
 
-#define LOG		(1)
+#define LOG		(0)
 
 
 /* device types */
@@ -837,7 +837,18 @@ void mc6845_update(device_t *device, bitmap_t *bitmap, const rectangle *cliprect
 			INT8 cursor_x = cursor_visible ? (mc6845->cursor_addr - mc6845->current_disp_addr) : -1;
 
 			/* call the external system to draw it */
-			mc6845->intf->update_row(device, bitmap, cliprect, mc6845->current_disp_addr, ra, y, mc6845->horiz_disp, cursor_x, param);
+			if (MODE_ROW_COLUMN_ADDRESSING(mc6845))
+			{
+				UINT8 cc = 0;
+				UINT8 cr = y / (mc6845->max_ras_addr + 1);
+				UINT16 ma = (cr << 8) | cc;
+
+				mc6845->intf->update_row(device, bitmap, cliprect, ma, ra, y, mc6845->horiz_disp, cursor_x, param);
+			}
+			else
+			{
+				mc6845->intf->update_row(device, bitmap, cliprect, mc6845->current_disp_addr, ra, y, mc6845->horiz_disp, cursor_x, param);
+			}
 
 			/* update MA if the last raster address */
 			if (ra == mc6845->max_ras_addr)
@@ -883,6 +894,10 @@ static void common_start(device_t *device, int device_type)
 		if ( mc6845->intf->screen_tag != NULL )
 		{
 			mc6845->screen = downcast<screen_device *>(device->machine->device(mc6845->intf->screen_tag));
+			if (mc6845->screen == NULL) {
+				astring tempstring;
+				mc6845->screen = downcast<screen_device *>(device->machine->device(device->owner()->subtag(tempstring,mc6845->intf->screen_tag)));
+			}
 			assert(mc6845->screen != NULL);
 		}
 		else

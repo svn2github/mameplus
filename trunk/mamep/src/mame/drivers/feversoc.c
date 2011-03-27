@@ -60,8 +60,20 @@ U0564 LH28F800SU OBJ4-1
 
 #include "emu.h"
 #include "cpu/sh2/sh2.h"
-#include "includes/seibuspi.h"
+#include "machine/seibuspi.h"
 #include "sound/okim6295.h"
+
+
+class feversoc_state : public driver_device
+{
+public:
+	feversoc_state(running_machine &machine, const driver_device_config_base &config)
+		: driver_device(machine, config) { }
+
+	UINT16 x;
+	UINT32 *spriteram;
+};
+
 
 #define MASTER_CLOCK XTAL_28_63636MHz
 
@@ -72,7 +84,8 @@ static VIDEO_START( feversoc )
 
 static SCREEN_UPDATE( feversoc )
 {
-	UINT32 *spriteram32 = screen->machine->generic.spriteram.u32;
+	feversoc_state *state = screen->machine->driver_data<feversoc_state>();
+	UINT32 *spriteram32 = state->spriteram;
 	int offs,spr_offs,colour,sx,sy,h,w,dx,dy;
 
 	bitmap_fill(bitmap, cliprect, screen->machine->pens[0]); //black pen
@@ -119,10 +132,10 @@ static WRITE32_HANDLER( fs_paletteram_w )
 
 static READ32_HANDLER( in0_r )
 {
-	static UINT16 x;
+	feversoc_state *state = space->machine->driver_data<feversoc_state>();
 
-	x^=0x40; //vblank? eeprom read bit?
-	return (input_port_read(space->machine, "IN0") | x) | (input_port_read(space->machine, "IN1")<<16);
+	state->x^=0x40; //vblank? eeprom read bit?
+	return (input_port_read(space->machine, "IN0") | state->x) | (input_port_read(space->machine, "IN1")<<16);
 }
 
 static WRITE32_HANDLER( output_w )
@@ -150,7 +163,7 @@ static WRITE32_HANDLER( output_w )
 static ADDRESS_MAP_START( feversoc_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x0003ffff) AM_ROM
 	AM_RANGE(0x02000000, 0x0203dfff) AM_RAM //work ram
-	AM_RANGE(0x0203e000, 0x0203ffff) AM_RAM AM_BASE_GENERIC(spriteram)
+	AM_RANGE(0x0203e000, 0x0203ffff) AM_RAM AM_BASE_MEMBER(feversoc_state, spriteram)
 	AM_RANGE(0x06000000, 0x06000003) AM_WRITE(output_w)
 	AM_RANGE(0x06000004, 0x06000007) AM_WRITENOP //???
 	AM_RANGE(0x06000008, 0x0600000b) AM_READ(in0_r)
@@ -234,7 +247,7 @@ static INTERRUPT_GEN( feversoc_irq )
 	cputag_set_input_line(device->machine, "maincpu", 8, HOLD_LINE );
 }
 
-static MACHINE_CONFIG_START( feversoc, driver_device )
+static MACHINE_CONFIG_START( feversoc, feversoc_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",SH2,MASTER_CLOCK)

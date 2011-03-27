@@ -273,9 +273,6 @@ static void reset_common(running_machine *machine)
 	state->bg_status = 0x01;
 	state->flipscreen = 0;
 	state->palette_intensity = 0;
-
-	if (jal_blend_table != NULL)
-		memset(jal_blend_table, 0, 0xc00);
 }
 
 VIDEO_START( argus )
@@ -292,7 +289,7 @@ VIDEO_START( argus )
 	/* dummy RAM for back ground */
 	state->dummy_bg0ram = auto_alloc_array(machine, UINT8, 0x800);
 
-	jal_blend_table = auto_alloc_array(machine, UINT8, 0xc00);
+	jal_blend_init(machine, 1);
 }
 
 VIDEO_RESET( argus )
@@ -317,7 +314,7 @@ VIDEO_START( valtric )
 
 	state->mosaicbitmap = machine->primary_screen->alloc_compatible_bitmap();
 
-	jal_blend_table = auto_alloc_array(machine, UINT8, 0xc00);
+	jal_blend_init(machine, 1);
 }
 
 VIDEO_RESET( valtric )
@@ -346,8 +343,7 @@ VIDEO_START( butasan )
 	state->butasan_txram      = &state->butasan_pagedram[1][0x000];
 	state->butasan_txbackram  = &state->butasan_pagedram[1][0x800];
 
-	jal_blend_table = auto_alloc_array(machine, UINT8, 0xc00);
-	//jal_blend_table = NULL;
+	jal_blend_init(machine, 1);
 }
 
 VIDEO_RESET( butasan )
@@ -396,7 +392,7 @@ static void argus_change_palette(running_machine *machine, int color, int lo_off
 	argus_state *state = machine->driver_data<argus_state>();
 	UINT8 lo = state->paletteram[lo_offs];
 	UINT8 hi = state->paletteram[hi_offs];
-	if (jal_blend_table != NULL) jal_blend_table[color] = hi & 0x0f;
+	jal_blend_set(color, hi & 0x0f);
 	palette_set_color_rgb(machine, color, pal4bit(lo >> 4), pal4bit(lo), pal4bit(hi >> 4));
 }
 
@@ -855,11 +851,11 @@ static void argus_bg0_scroll_handle(running_machine *machine)
 static void argus_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int priority)
 {
 	argus_state *state = machine->driver_data<argus_state>();
-	UINT8 *spriteram = machine->generic.spriteram.u8;
+	UINT8 *spriteram = state->spriteram;
 	int offs;
 
 	/* Draw the sprites */
-	for (offs = 0; offs < machine->generic.spriteram_size; offs += 16)
+	for (offs = 0; offs < state->spriteram_size; offs += 16)
 	{
 		if (!(spriteram[offs+15] == 0 && spriteram[offs+11] == 0xf0))
 		{
@@ -988,11 +984,11 @@ static void valtric_draw_mosaic(screen_device &screen, bitmap_t *bitmap, const r
 static void valtric_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
 	argus_state *state = machine->driver_data<argus_state>();
-	UINT8 *spriteram = machine->generic.spriteram.u8;
+	UINT8 *spriteram = state->spriteram;
 	int offs;
 
 	/* Draw the sprites */
-	for (offs = 0; offs < machine->generic.spriteram_size; offs += 16)
+	for (offs = 0; offs < state->spriteram_size; offs += 16)
 	{
 		if (!(spriteram[offs+15] == 0 && spriteram[offs+11] == 0xf0))
 		{
@@ -1028,11 +1024,11 @@ static void valtric_draw_sprites(running_machine *machine, bitmap_t *bitmap, con
 static void butasan_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
 	argus_state *state = machine->driver_data<argus_state>();
-	UINT8 *spriteram = machine->generic.spriteram.u8;
+	UINT8 *spriteram = state->spriteram;
 	int offs;
 
 	/* Draw the sprites */
-	for (offs = 0; offs < machine->generic.spriteram_size; offs += 16)
+	for (offs = 0; offs < state->spriteram_size; offs += 16)
 	{
 		int sx, sy, tile, flipx, flipy, color;
 		int fx, fy;
@@ -1144,12 +1140,12 @@ static void butasan_log_vram(running_machine *machine)
 
 	if (input_code_pressed(machine, KEYCODE_M))
 	{
-		UINT8 *spriteram = machine->generic.spriteram.u8;
+		UINT8 *spriteram = state->spriteram;
 		int i;
 		logerror("\nSprite RAM\n");
 		logerror("---------------------------------------\n");
 		logerror("       +0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +a +b +c +d +e +f\n");
-		for (offs = 0; offs < machine->generic.spriteram_size; offs += 16)
+		for (offs = 0; offs < state->spriteram_size; offs += 16)
 		{
 			for (i = 0; i < 16; i++)
 			{

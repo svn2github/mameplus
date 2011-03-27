@@ -1314,7 +1314,7 @@ Note: on screen copyright is (c)1998 Coinmaster.
 #include "sound/3812intf.h"
 #include "sound/okim6295.h"
 #include "sound/x1_010.h"
-
+#include "sound/2151intf.h"
 
 
 #if __uPD71054_TIMER
@@ -1939,6 +1939,48 @@ static ADDRESS_MAP_START( wrofaero_map, ADDRESS_SPACE_PROGRAM, 16 )
 /**/AM_RANGE(0xa80000, 0xa80001) AM_RAM								// ? 0x4000
 	AM_RANGE(0xb00000, 0xb03fff) AM_RAM	AM_BASE_MEMBER(seta_state, spriteram2)		// Sprites Code + X + Attr
 	AM_RANGE(0xc00000, 0xc03fff) AM_DEVREADWRITE("x1snd", seta_sound_word_r,seta_sound_word_w)	// Sound
+#if __uPD71054_TIMER
+	AM_RANGE(0xd00000, 0xd00007) AM_WRITE(timer_regs_w)				// ?
+#else
+	AM_RANGE(0xd00000, 0xd00007) AM_WRITENOP						// ?
+#endif
+	AM_RANGE(0xe00000, 0xe00001) AM_WRITENOP						// ? VBlank IRQ Ack
+	AM_RANGE(0xf00000, 0xf00001) AM_WRITENOP						// ? Sound  IRQ Ack
+ADDRESS_MAP_END
+
+static READ16_HANDLER( zingzipbl_unknown_r )
+{
+	return 0x0000;
+}
+
+static ADDRESS_MAP_START( zingzipbl_map, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x1fffff) AM_ROM								// ROM (up to 2MB)
+	AM_RANGE(0x200000, 0x20ffff) AM_RAM AM_BASE_MEMBER(seta_state, workram)		// RAM (pointer for zombraid crosshair hack)
+	AM_RANGE(0x210000, 0x21ffff) AM_RAM								// RAM (gundhara)
+	AM_RANGE(0x300000, 0x30ffff) AM_RAM								// RAM (wrofaero only?)
+//  AM_RANGE(0x400000, 0x400001) AM_READ_PORT("P1")                 // P1
+//  AM_RANGE(0x400002, 0x400003) AM_READ_PORT("P2")                 // P2
+	AM_RANGE(0x400002, 0x400003) AM_READ(zingzipbl_unknown_r)		// P2
+//  AM_RANGE(0x400004, 0x400005) AM_READ_PORT("COINS")              // Coins
+	AM_RANGE(0x500000, 0x500005) AM_RAM_WRITE(seta_vregs_w) AM_BASE_MEMBER(seta_state, vregs)	// (gundhara) Coin Lockout + Video Registers
+
+	//AM_RANGE(0x600000, 0x600003) AM_READ(seta_dsw_r)              // DSW
+	AM_RANGE(0x700000, 0x7003ff) AM_RAM								// (rezon,jjsquawk)
+	AM_RANGE(0x700400, 0x700fff) AM_RAM AM_BASE_SIZE_MEMBER(seta_state, paletteram, paletteram_size)	// Palette
+	AM_RANGE(0x701000, 0x70ffff) AM_RAM								//
+	AM_RANGE(0x800000, 0x803fff) AM_RAM_WRITE(seta_vram_0_w) AM_BASE_MEMBER(seta_state, vram_0)	// VRAM 0&1
+	AM_RANGE(0x804000, 0x80ffff) AM_RAM								// (jjsquawk)
+	AM_RANGE(0x880000, 0x883fff) AM_RAM_WRITE(seta_vram_2_w) AM_BASE_MEMBER(seta_state, vram_2)	// VRAM 2&3
+	AM_RANGE(0x884000, 0x88ffff) AM_RAM								// (jjsquawk)
+/**/AM_RANGE(0x900000, 0x900005) AM_RAM AM_BASE_MEMBER(seta_state, vctrl_0)		// VRAM 0&1 Ctrl
+
+	AM_RANGE(0x902010, 0x902013) AM_READ( zingzipbl_unknown_r )
+
+/**/AM_RANGE(0x980000, 0x980005) AM_RAM AM_BASE_MEMBER(seta_state, vctrl_2)		// VRAM 2&3 Ctrl
+/**/AM_RANGE(0xa00000, 0xa00607) AM_RAM AM_BASE_MEMBER(seta_state, spriteram)		// Sprites Y
+/**/AM_RANGE(0xa80000, 0xa80001) AM_RAM								// ? 0x4000
+	AM_RANGE(0xb00000, 0xb03fff) AM_RAM	AM_BASE_MEMBER(seta_state, spriteram2)		// Sprites Code + X + Attr
+	AM_RANGE(0xc00000, 0xc03fff) AM_RAM // soundram on original
 #if __uPD71054_TIMER
 	AM_RANGE(0xd00000, 0xd00007) AM_WRITE(timer_regs_w)				// ?
 #else
@@ -2603,6 +2645,28 @@ static ADDRESS_MAP_START( thunderl_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xe04000, 0xe07fff) AM_RAM								// (wits)
 ADDRESS_MAP_END
 
+
+static ADDRESS_MAP_START( thunderlbl_map, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x00ffff) AM_ROM								// ROM
+	AM_RANGE(0xffc000, 0xffffff) AM_RAM								// RAM
+//  AM_RANGE(0x100000, 0x103fff) AM_DEVREADWRITE("x1snd", seta_sound_word_r,seta_sound_word_w)  // Sound
+	AM_RANGE(0x200000, 0x200001) AM_WRITENOP						// ?
+	AM_RANGE(0x300000, 0x300001) AM_WRITENOP						// ?
+//  AM_RANGE(0x400000, 0x40ffff) AM_WRITE(thunderl_protection_w)    // Protection (not in wits)
+	AM_RANGE(0x500000, 0x500001) AM_RAM_WRITE(seta_vregs_w) AM_BASE_MEMBER(seta_state, vregs)	// Coin Lockout
+	AM_RANGE(0x600000, 0x600003) AM_READ(seta_dsw_r)				// DSW
+	AM_RANGE(0x700000, 0x7003ff) AM_RAM AM_BASE_SIZE_MEMBER(seta_state, paletteram, paletteram_size)	// Palette
+	AM_RANGE(0xb00000, 0xb00001) AM_READ_PORT("P1")					// P1
+	AM_RANGE(0xb00002, 0xb00003) AM_READ_PORT("P2")					// P2
+	AM_RANGE(0xb00004, 0xb00005) AM_READ_PORT("COINS")				// Coins
+//  AM_RANGE(0xb0000c, 0xb0000d) AM_READ(thunderl_protection_r  )   // Protection (not in wits)
+	AM_RANGE(0xb00008, 0xb00009) AM_READ_PORT("P3")					// P3 (wits)
+	AM_RANGE(0xb0000a, 0xb0000b) AM_READ_PORT("P4")					// P4 (wits)
+/**/AM_RANGE(0xc00000, 0xc00001) AM_RAM								// ? 0x4000
+/**/AM_RANGE(0xd00000, 0xd00607) AM_RAM AM_BASE_MEMBER(seta_state, spriteram)		// Sprites Y
+	AM_RANGE(0xe00000, 0xe03fff) AM_RAM AM_BASE_MEMBER(seta_state, spriteram2)		// Sprites Code + X + Attr
+	AM_RANGE(0xe04000, 0xe07fff) AM_RAM								// (wits)
+ADDRESS_MAP_END
 
 /***************************************************************************
                     Wiggie Waggie
@@ -6559,6 +6623,8 @@ static const gfx_layout layout_planes_2roms =
 };
 
 
+
+
 /* The bitplanes are separated (but there are 2 per rom).
    Each 8x8 tile is additionally split in 2 vertical halves four bits wide,
    stored one after the other */
@@ -6771,6 +6837,42 @@ static GFXDECODE_START( zingzip )
 	GFXDECODE_ENTRY( "gfx2", 0, layout_packed_6bits_2roms, 16*32*2, 		32 ) // [1] Layer 1
 	GFXDECODE_ENTRY( "gfx3", 0, layout_packed,             16*32*1, 		32 ) // [2] Layer 2
 	GFXDECODE_ENTRY( "gfx2", 0, layout_packed_6bits_2roms, 16*32*2+64*32*1, 32 ) // [3] Layer 1
+GFXDECODE_END
+
+static const gfx_layout layout_zzbl =
+{
+	16,16,
+	RGN_FRAC(1,2),
+	4,
+	{RGN_FRAC(1,2)+8, RGN_FRAC(1,2)+0, 8, 0},
+	{0,1,2,3,4,5,6,7, 256,257,258,259,260,261,262,263},
+	{0*16,1*16,2*16,3*16,4*16,5*16,6*16,7*16,
+	 8*16,9*16,10*16,11*16,12*16,13*16,14*16,15*16 },
+	16*16*2
+};
+
+static const gfx_layout layout_zzbl_6bpp =
+{
+	16,16,
+	RGN_FRAC(1,4),
+	6,
+	{ RGN_FRAC(3,4)+0, RGN_FRAC(2,4)+0, RGN_FRAC(1,4)+8, RGN_FRAC(1,4)+0, 8, 0},
+	{256,257,258,259,260,261,262,263,0,1,2,3,4,5,6,7},
+	{
+	 0*16,1*16,2*16,3*16,4*16,5*16,6*16,7*16,
+	 8*16,9*16,10*16,11*16,12*16,13*16,14*16,15*16
+
+	},
+	16*16*2
+};
+
+
+
+static GFXDECODE_START( zingzipbl )
+	GFXDECODE_ENTRY( "gfx1", 0, layout_zzbl,       16*32*0, 		32 ) // [0] Sprites
+	GFXDECODE_ENTRY( "gfx2", 0, layout_zzbl_6bpp, 16*32*2,		32 ) // [1] Layer 1
+	GFXDECODE_ENTRY( "gfx3", 0, layout_zzbl, 16*32*1,		32 ) // [2] Layer 2
+	GFXDECODE_ENTRY( "gfx2", 0, layout_zzbl_6bpp, 16*32*2+64*32*1, 32 ) // [3] Layer 1
 GFXDECODE_END
 
 
@@ -8058,6 +8160,42 @@ static MACHINE_CONFIG_START( thunderl, seta_state )
 MACHINE_CONFIG_END
 
 
+static ADDRESS_MAP_START( thunderlbl_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+	ADDRESS_MAP_UNMAP_HIGH
+	AM_RANGE(0x0000, 0x7fff) AM_ROM
+	AM_RANGE(0x8000, 0xdfff) AM_ROM//ROMBANK("bank1")
+	AM_RANGE(0xe800, 0xe800) AM_READ(soundlatch_r)
+	AM_RANGE(0xf800, 0xffff) AM_RAM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( thunderlbl_sound_portmap, ADDRESS_SPACE_IO, 8 )
+	ADDRESS_MAP_UNMAP_HIGH
+	ADDRESS_MAP_GLOBAL_MASK(0xff)
+	AM_RANGE(0x00, 0x01) AM_MIRROR(0x3e) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)
+	//AM_RANGE(0x40, 0x40) AM_MIRROR(0x3f) AM_DEVWRITE("upd", upd7759_control_w)
+	//AM_RANGE(0x80, 0x80) AM_MIRROR(0x3f) AM_DEVREADWRITE("upd", upd7759_status_r, upd7759_port_w)
+	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x3f) AM_READ(soundlatch_r)
+ADDRESS_MAP_END
+
+
+static MACHINE_CONFIG_DERIVED( thunderlbl, thunderl )
+
+	/* basic machine hardware */
+	MCFG_CPU_MODIFY("maincpu")
+	MCFG_CPU_PROGRAM_MAP(thunderlbl_map)
+	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
+
+	MCFG_CPU_ADD("audiocpu", Z80, 10000000/2)
+	MCFG_CPU_PROGRAM_MAP(thunderlbl_sound_map)
+	MCFG_CPU_IO_MAP(thunderlbl_sound_portmap)
+
+	/* the sound hardware / program is ripped from Tetris (S16B) */
+	MCFG_SOUND_ADD("ymsnd", YM2151, 16000000/2)
+	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
+	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
+MACHINE_CONFIG_END
+
+
 static MACHINE_CONFIG_START( wiggie, seta_state )
 
 	/* basic machine hardware */
@@ -8287,6 +8425,21 @@ static MACHINE_CONFIG_START( zingzip, seta_state )
 	MCFG_SOUND_CONFIG(seta_sound_intf)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
+MACHINE_CONFIG_END
+
+
+static MACHINE_CONFIG_DERIVED( zingzipbl, zingzip )
+	MCFG_GFXDECODE(zingzipbl)
+
+	MCFG_CPU_MODIFY("maincpu")
+	MCFG_CPU_PROGRAM_MAP(zingzipbl_map)
+	MCFG_CPU_VBLANK_INT_HACK(seta_interrupt_1_and_2,SETA_INTERRUPTS_NUM) // irq3 isn't valid on the bootleg
+
+	MCFG_DEVICE_REMOVE("x1snd")
+
+	MCFG_OKIM6295_ADD("oki", 1000000, OKIM6295_PIN7_HIGH)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 MACHINE_CONFIG_END
 
 /***************************************************************************
@@ -8845,6 +8998,24 @@ ROM_START( thunderl )
 	ROM_LOAD( "r27", 0x080000, 0x080000, CRC(cb8425a3) SHA1(655afa295fbe99acc79c4004f03ed832560cff5b) )
 ROM_END
 
+ROM_START( thunderlbl )
+	ROM_REGION( 0x010000, "maincpu", 0 )		/* 68000 Code */
+	ROM_LOAD16_BYTE( "20.g11", 0x000000, 0x008000, CRC(83500006) SHA1(f078e614078296df48bb8b953c3ba88f6f288255) )
+	ROM_LOAD16_BYTE( "19.f11", 0x000001, 0x008000, CRC(1bb4cd03) SHA1(1a22bf02f2116b9f01ff01e18ef31497016df0d2) )
+
+	// they ripped the sound CPU program from Tetris!
+	ROM_REGION( 0x40000, "audiocpu", 0 ) /* sound cpu code */
+	ROM_LOAD( "21.d5", 0x00000, 0x08000, CRC(bd9ba01b) SHA1(fafa7dc36cc057a50ae4cdf7a35f3594292336f4) )
+
+	ROM_REGION( 0x080000, "gfx1", 0 )	/* Sprites */
+	ROM_LOAD16_BYTE( "25.a10", 0x000000, 0x020000, CRC(599a632a) SHA1(29da423dfe1f971cbb205767cf902d199d968d85) )
+	ROM_LOAD16_BYTE( "24.a8", 0x000001, 0x020000, CRC(3aeef91c) SHA1(a5dc8c22a7bcc1199bdd09c7d0f1f8a378e757c5) )
+	ROM_LOAD16_BYTE( "23.a5", 0x040000, 0x020000, CRC(b97a7b56) SHA1(c08d3586d489947af21f3493356e3a88d79746e8) )
+	ROM_LOAD16_BYTE( "22.a3", 0x040001, 0x020000, CRC(79c707be) SHA1(f67fa40c8f6ab0fbce44997fdfbf699fea1f0df6) )
+ROM_END
+
+
+
 /*
 
 Wiggie Waggie & Super Bar run on a bootleg SETA board with an OKI M6295 replacing the X1-010 sound chip.
@@ -9136,6 +9307,38 @@ ROM_START( zingzip )
 
 	ROM_REGION( 0x100000, "x1snd", 0 )	/* Samples */
 	ROM_LOAD( "uy001011.70",  0x000000, 0x100000, CRC(bd845f55) SHA1(345b79cfcd8c924d6ba365814286e518438f10bc) ) // uy001017 + uy001018
+ROM_END
+
+ROM_START( zingzipbl )
+	ROM_REGION( 0x200000, "maincpu", 0 )		/* 68000 Code */
+	ROM_LOAD16_BYTE( "prg9.bin",   0x000000, 0x040000, CRC(bf47a8cf) SHA1(87ef35c2dc4d25bbd90cd7528616d06362b20fc8) )
+	ROM_LOAD16_BYTE( "prg10.bin",  0x000001, 0x040000, CRC(561501ba) SHA1(f9d488b6d6b313e543738905f11ebbc5f644eb09) )
+
+	ROM_REGION( 0x100000, "gfx1", 0 )	/* Sprites */
+	ROM_LOAD16_BYTE( "17",  0x000000, 0x040000,  CRC(2d59ce97) SHA1(c24f863057721bd568caff6d9e3b4abd235f92fc) )
+	ROM_LOAD16_BYTE( "18",  0x000001, 0x040000,  CRC(4e23144a) SHA1(1c4543687e693e7e9bf3a5790cb6e7458571964f) )
+	ROM_LOAD16_BYTE( "19",  0x080000, 0x040000,  CRC(101beade) SHA1(2a7261583eb7326fbb50aa48fe5f0bc50e7a5180) )
+	ROM_LOAD16_BYTE( "20",  0x080001, 0x040000,  CRC(ebff804d) SHA1(a0fc4ed6104cfc17c33697ff8ae75949c2e9945e) )
+
+	ROM_REGION( 0x200000, "gfxtemp", 0 )	/* Layer 1 + 2 combined (4bpp data) */
+	ROM_LOAD16_BYTE( "11",  0x000000, 0x080000,  CRC(2f3b292d) SHA1(931abc0b7570b32e41a11555c9d55a67cfdcd1df) )
+	ROM_LOAD16_BYTE( "12",  0x000001, 0x080000,  CRC(b9d1cb25) SHA1(45cab6c2fb459f78ab9177f64e5c5039cbaa9e09) )
+	ROM_LOAD16_BYTE( "13",  0x100000, 0x080000,  CRC(cabc66d9) SHA1(cf1777eb95822cd705edf9b7e4b2d4d6e75f33cf) )
+	ROM_LOAD16_BYTE( "14",  0x100001, 0x080000,  CRC(fefad62f) SHA1(13aaf6cc6af4b42a1184f3fc6c07d9d966153dc1) )
+
+	ROM_REGION( 0x200000, "gfx2", 0 )	/* Layer 1 */
+	ROM_COPY( "gfxtemp", 0x000000, 0x000000, 0x80000 )
+	ROM_COPY( "gfxtemp", 0x100000, 0x080000, 0x80000 )
+	// 2bpp of extra planes for this layer
+	ROM_LOAD16_BYTE( "15",  0x100000, 0x040000, CRC(af7a786f) SHA1(de67960f529ebfff0f1d55c79912685f9eca9623) )
+	ROM_LOAD16_BYTE( "16",  0x180000, 0x040000, CRC(06dee8f3) SHA1(8c5f489e53bc10e2bad9f98445328e2ec0eac7d2) )
+
+	ROM_REGION( 0x100000, "gfx3", 0 )	/* Layer 2 */
+	ROM_COPY( "gfxtemp", 0x080000, 0x000000, 0x80000 )
+	ROM_COPY( "gfxtemp", 0x180000, 0x080000, 0x80000 )
+
+	ROM_REGION( 0x100000, "oki", 0 )	/* OKI Samples - Not Seta */
+	ROM_LOAD( "8",  0x000000, 0x40000, CRC(7927a200) SHA1(fd6163d2867959ec14b418d6207ae024afd3b654) )
 ROM_END
 
 ROM_START( atehate )
@@ -10084,9 +10287,9 @@ static DRIVER_INIT( inttootea )
 GAME( 1987, tndrcade, 0,        tndrcade, tndrcade, 0,        ROT270, "Seta (Taito license)",   "Thundercade / Twin Formation" , 0) // Title/License: DSW
 GAME( 1987, tndrcadej,tndrcade, tndrcade, tndrcadj, 0,        ROT270, "Seta (Taito license)",   "Tokusyu Butai U.A.G. (Japan)" , 0) // License: DSW
 GAME( 1988, twineagl, 0,        twineagl, twineagl, twineagl, ROT270, "Seta (Taito license)",   "Twin Eagle - Revenge Joe's Brother" , 0) // Country/License: DSW
-GAME( 1989, downtown, 0,        downtown, downtown, downtown, ROT270, "Seta",                   "DownTown / Mokugeki (Set 1)" , 0) // Country/License: DSW
-GAME( 1989, downtown2,downtown, downtown, downtown, downtown, ROT270, "Seta",                   "DownTown / Mokugeki (Set 2)" , 0) // Country/License: DSW
-GAME( 1989, downtownj,downtown, downtown, downtown, downtown, ROT270, "Seta",                   "DownTown / Mokugeki (Joystick Hack)" , 0) // Country/License: DSW
+GAME( 1989, downtown, 0,        downtown, downtown, downtown, ROT270, "Seta",                   "DownTown / Mokugeki (set 1)" , 0) // Country/License: DSW
+GAME( 1989, downtown2,downtown, downtown, downtown, downtown, ROT270, "Seta",                   "DownTown / Mokugeki (set 2)" , 0) // Country/License: DSW
+GAME( 1989, downtownj,downtown, downtown, downtown, downtown, ROT270, "Seta",                   "DownTown / Mokugeki (joystick hack)" , 0) // Country/License: DSW
 GAME( 1989, downtownp,downtown, downtown, downtown, downtown, ROT270, "Seta",                   "DownTown / Mokugeki (prototype)" , 0) // Country/License: DSW
 GAME( 1989, usclssic, 0,        usclssic, usclssic, 0,        ROT270, "Seta",                   "U.S. Classic" , 0) // Country/License: DSW
 GAME( 1989, calibr50, 0,        calibr50, calibr50, 0,        ROT270, "Athena / Seta",          "Caliber 50" , 0) // Country/License: DSW
@@ -10098,6 +10301,7 @@ GAME( 198?, setaroul, 0,        setaroul, setaroul, 0,        ROT270, "Seta / Vi
 GAME( 1989, drgnunit, 0,        drgnunit, drgnunit, 0,        ROT0,   "Seta",                   "Dragon Unit / Castle of Dragon", 0 )
 GAME( 1989, wits,     0,        wits,     wits,     0,        ROT0,   "Athena (Visco license)", "Wit's (Japan)" , 0) // Country/License: DSW
 GAME( 1990, thunderl, 0,        thunderl, thunderl, 0,        ROT270, "Seta",                   "Thunder & Lightning" , 0) // Country/License: DSW
+GAME( 1990, thunderlbl,thunderl,thunderlbl,thunderl,0,        ROT270, "bootleg",                "Thunder & Lightning (bootleg with Tetris sound)" , GAME_NO_SOUND) // Country/License: DSW
 GAME( 1994, wiggie,   0,        wiggie,   thunderl, wiggie,   ROT270, "Promat",                 "Wiggie Waggie", GAME_IMPERFECT_GRAPHICS ) // hack of Thunder & Lightning
 GAME( 1994, superbar, wiggie,   superbar, thunderl, wiggie,   ROT270, "Promat",                 "Super Bar", GAME_IMPERFECT_GRAPHICS ) // hack of Thunder & Lightning
 GAME( 1990, jockeyc,  0,        jockeyc,  jockeyc,  0,        ROT0,   "Seta (Visco license)",   "Jockey Club", 0 )
@@ -10114,6 +10318,7 @@ GAME( 1992, qzkklogy, 0,        drgnunit, qzkklogy, 0,        ROT0,   "Tecmo",  
 GAME( 1992, neobattl, 0,        umanclub, neobattl, 0,        ROT270, "Banpresto / Sotsu Agency. Sunrise", "SD Gundam Neo Battling (Japan)", 0 )
 GAME( 1992, umanclub, 0,        umanclub, umanclub, 0,        ROT0,   "Banpresto / Tsuburaya Productions", "Ultraman Club - Tatakae! Ultraman Kyoudai!!", 0 )
 GAME( 1992, zingzip,  0,        zingzip,  zingzip,  0,        ROT270, "Allumer / Tecmo",        "Zing Zing Zip", 0 )
+GAME( 1992, zingzipbl,zingzip,  zingzipbl,zingzip,  0,        ROT270, "bootleg",                "Zing Zing Zip (bootleg)", GAME_NOT_WORKING )
 GAME( 1993, atehate,  0,        atehate,  atehate,  0,        ROT0,   "Athena",                 "Athena no Hatena ?", 0 )
 GAME( 1993, daioh,    0,        daioh,    daioh,    0,        ROT270, "Athena",                 "Daioh", 0 )
 GAME( 1993, jjsquawk, 0,        jjsquawk, jjsquawk, 0,        ROT0,   "Athena / Able",          "J. J. Squawkers", GAME_IMPERFECT_SOUND )

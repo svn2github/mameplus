@@ -72,36 +72,50 @@ U.S.A. Trivia              New Sports                 General Facts
 #include "machine/nvram.h"
 #include "sound/dac.h"
 
-static UINT8 drawctrl[3];
-static UINT8 color[8];
+
+class gei_state : public driver_device
+{
+public:
+	gei_state(running_machine &machine, const driver_device_config_base &config)
+		: driver_device(machine, config) { }
+
+	UINT8 drawctrl[3];
+	UINT8 color[8];
+	int prevoffset;
+	int yadd;
+	int signature_answer;
+	int signature_pos;
+};
+
 
 static WRITE8_HANDLER( gei_drawctrl_w )
 {
-	drawctrl[offset] = data;
+	gei_state *state = space->machine->driver_data<gei_state>();
+	state->drawctrl[offset] = data;
 	if (offset == 2)
 	{
 		int i;
 		for (i = 0; i < 8; i++)
-			if (BIT(drawctrl[1],i)) color[i] = drawctrl[0] & 7;
+			if (BIT(state->drawctrl[1],i)) state->color[i] = state->drawctrl[0] & 7;
 	}
 }
 
 static WRITE8_HANDLER( gei_bitmap_w )
 {
+	gei_state *state = space->machine->driver_data<gei_state>();
 	int sx,sy;
-	static int prevoffset, yadd;
 	int i;
 
-	yadd = (offset==prevoffset) ? (yadd+1):0;
-	prevoffset = offset;
+	state->yadd = (offset==state->prevoffset) ? (state->yadd+1):0;
+	state->prevoffset = offset;
 
 	sx = 8 * (offset % 64);
 	sy = offset / 64;
-	sy = (sy + yadd) & 0xff;
+	sy = (sy + state->yadd) & 0xff;
 
 
 	for (i = 0; i < 8; i++)
-		*BITMAP_ADDR16(space->machine->generic.tmpbitmap, sy, sx+i) = color[8-i-1];
+		*BITMAP_ADDR16(space->machine->generic.tmpbitmap, sy, sx+i) = state->color[8-i-1];
 }
 
 static PALETTE_INIT(gei)
@@ -332,36 +346,38 @@ static READ8_HANDLER(banksel_5_r)
 }
 
 /* This signature is used to validate the ROMs in sportauth. Simple protection check? */
-static int signature_answer,signature_pos;
 
 static READ8_HANDLER( signature_r )
 {
-	return signature_answer;
+	gei_state *state = space->machine->driver_data<gei_state>();
+	return state->signature_answer;
 }
 
 static WRITE8_HANDLER( signature_w )
 {
-	if (data == 0) signature_pos = 0;
+	gei_state *state = space->machine->driver_data<gei_state>();
+	if (data == 0) state->signature_pos = 0;
 	else
 	{
 		static const UINT8 signature[8] = { 0xff, 0x01, 0xfd, 0x05, 0xf5, 0x15, 0xd5, 0x55 };
 
-		signature_answer = signature[signature_pos++];
+		state->signature_answer = signature[state->signature_pos++];
 
-		signature_pos &= 7;	/* safety; shouldn't happen */
+		state->signature_pos &= 7;	/* safety; shouldn't happen */
 	}
 }
 
 static WRITE8_HANDLER( signature2_w )
 {
-	if (data == 0) signature_pos = 0;
+	gei_state *state = space->machine->driver_data<gei_state>();
+	if (data == 0) state->signature_pos = 0;
 	else
 	{
 		static const UINT8 signature[8] = { 0xff, 0x01, 0xf7, 0x11, 0xd7, 0x51, 0x57, 0x51 };
 
-		signature_answer = signature[signature_pos++];
+		state->signature_answer = signature[state->signature_pos++];
 
-		signature_pos &= 7;	/* safety; shouldn't happen */
+		state->signature_pos &= 7;	/* safety; shouldn't happen */
 	}
 }
 
@@ -1047,7 +1063,7 @@ static const ppi8255_interface findout_ppi8255_intf[2] =
 	}
 };
 
-static MACHINE_CONFIG_START( getrivia, driver_device )
+static MACHINE_CONFIG_START( getrivia, gei_state )
 	MCFG_CPU_ADD("maincpu",Z80,4000000) /* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(getrivia_map)
 	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
@@ -1853,15 +1869,15 @@ GAME( 1984, gt103asx, gtsers8,  findout,  gt103a,   0,       ROT0, "Greyhound El
 GAME( 1985, sextriv1, 0,        getrivia, sextriv1, 0,       ROT0, "Kinky Kit and Game Co.", "Sexual Trivia (Version 1.02SB, set 1)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1985, sextriv2, sextriv1, getrivia, sextriv1, 0,       ROT0, "Kinky Kit and Game Co.", "Sexual Trivia (Version 1.02SB, set 2)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAME( 1986, gt507uk,  0,        findout,  gt507uk,  0,       ROT0, "Greyhound Electronics", "Trivia (UK Version 5.07)",                GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1986, gt5,      0,        findout,  gt103,    0,       ROT0, "Greyhound Electronics", "Trivia (Version 5.06)",                   GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1986, gt507uk,  0,        findout,  gt507uk,  0,       ROT0, "Grayhound Electronics", "Trivia (UK Version 5.07)",                GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1986, gt5,      0,        findout,  gt103,    0,       ROT0, "Grayhound Electronics", "Trivia (Version 5.06)",                   GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
 GAME( 1986, quiz,     0,        findout,  quiz,     0,       ROT0, "bootleg",               "Quiz (Revision 2)",                       GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
 GAME( 1986, quizvid,  0,        quizvid,  quiz,     0,       ROT0, "bootleg",               "Video Quiz",                              GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAME( 1986, reelfun,  0,        findout,  reelfun,  0,       ROT0, "Greyhound Electronics", "Reel Fun (Version 7.03)",                 GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1986, reelfun1, reelfun,  findout,  reelfun,  0,       ROT0, "Greyhound Electronics", "Reel Fun (Version 7.01)",                 GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1986, reelfun,  0,        findout,  reelfun,  0,       ROT0, "Grayhound Electronics", "Reel Fun (Version 7.03)",                 GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1986, reelfun1, reelfun,  findout,  reelfun,  0,       ROT0, "Grayhound Electronics", "Reel Fun (Version 7.01)",                 GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1987, findout,  0,        findout,  findout,  0,       ROT0, "Elettronolo",           "Find Out (Version 4.04)",                 GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
 GAME( 1986, suprpokr, 0,        suprpokr, suprpokr, 0,       ROT0, "Grayhound Electronics", "Super Poker (Version 10.19S)",            GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
@@ -1869,5 +1885,5 @@ GAME( 1986, suprpkr1, suprpokr, suprpokr, suprpokr, 0,       ROT0, "Grayhound El
 
 GAME( 1991, quiz211,  0,        findout,  quiz,     0,       ROT0, "Elettronolo",           "Quiz (Revision 2.11)",                    GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
-GAME( 1992, geimulti, 0,        geimulti, geimulti, geimulti,ROT0, "Greyhound Electronics",  "GEI Multi Game",                         GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1992, sprtauth, 0,        sprtauth, sprtauth, geimulti,ROT0, "Classic Games",          "Sports Authority",                       GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1992, geimulti, 0,        geimulti, geimulti, geimulti,ROT0, "Grayhound Electronics", "GEI Multi Game",                          GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1992, sprtauth, 0,        sprtauth, sprtauth, geimulti,ROT0, "Classic Games",         "Sports Authority",                        GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

@@ -14,27 +14,45 @@
 ***************************************************************************/
 
 
-/***************************************************************************
+class megasys1_state : public driver_device
+{
+public:
+	megasys1_state(running_machine &machine, const driver_device_config_base &config)
+		: driver_device(machine, config) { }
 
-                            Scrolling Layers Handling
+	UINT16 *spriteram;
+	UINT16 ip_select;
+	UINT16 ip_select_values[5];
+	UINT8 ignore_oki_status;
+	UINT16 protection_val;
+	int bank;
+	UINT16 *scrollram[3];
+	UINT16 *objectram;
+	UINT16 *vregs;
+	UINT16 *ram;
+	int scrollx[3];
+	int scrolly[3];
+	int active_layers;
+	int bits_per_color_code;
+	int scroll_flag[3];
+	int sprite_bank;
+	int screen_flag;
+	int sprite_flag;
+	int _8x8_scroll_factor[3];
+	int _16x16_scroll_factor[3];
+	tilemap_t *tmap[3];
+	tilemap_t *tilemap[3][2][4];
+	int hardware_type_z;
+	UINT16 *buffer_objectram;
+	UINT16 *buffer2_objectram;
+	UINT16 *buffer_spriteram16;
+	UINT16 *buffer2_spriteram16;
+	int layers_order[16];
+};
 
-***************************************************************************/
 
 /*----------- defined in video/megasys1.c -----------*/
 
-/* Variables */
-extern tilemap_t *megasys1_tmap[3];
-
-extern UINT16 *megasys1_scrollram[3];
-extern UINT16 *megasys1_objectram, *megasys1_vregs, *megasys1_ram;
-
-extern int megasys1_scrollx[3], megasys1_scrolly[3];
-extern int megasys1_active_layers;
-//extern int megasys1_screen_flag, megasys1_sprite_flag;
-extern int megasys1_bits_per_color_code;
-
-
-/* Functions */
 VIDEO_START( megasys1 );
 SCREEN_UPDATE( megasys1 );
 SCREEN_EOF( megasys1 );
@@ -50,12 +68,3 @@ WRITE16_HANDLER( megasys1_vregs_D_w );
 WRITE16_HANDLER( megasys1_scrollram_0_w );
 WRITE16_HANDLER( megasys1_scrollram_1_w );
 WRITE16_HANDLER( megasys1_scrollram_2_w );
-
-void megasys1_set_vreg_flag(int which, int data);
-
-
-/*----------- defined in drivers/megasys1.c -----------*/
-
-void astyanax_rom_decode(running_machine *machine, const char *region);
-void phantasm_rom_decode(running_machine *machine, const char *region);
-void rodland_rom_decode (running_machine *machine, const char *region);

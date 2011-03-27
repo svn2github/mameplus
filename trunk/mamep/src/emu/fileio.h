@@ -48,50 +48,10 @@
 
 
 //**************************************************************************
-//  CONSTANTS
-//**************************************************************************
-
-// search paths
-#define SEARCHPATH_RAW             NULL
-#define SEARCHPATH_LANGUAGE        NULL
-#define SEARCHPATH_DEBUGLOG        NULL
-
-#define SEARCHPATH_ROM             OPTION_ROMPATH
-#define SEARCHPATH_IMAGE           OPTION_ROMPATH
-#define SEARCHPATH_HASH            OPTION_HASHPATH
-#define SEARCHPATH_SAMPLE          OPTION_SAMPLEPATH
-#define SEARCHPATH_ARTWORK         OPTION_ARTPATH
-#define SEARCHPATH_CTRLR           OPTION_CTRLRPATH
-#define SEARCHPATH_INI             OPTION_INIPATH
-#define SEARCHPATH_FONT            OPTION_FONTPATH
-#define SEARCHPATH_CHEAT           OPTION_CHEATPATH
-#define SEARCHPATH_CROSSHAIRPATH   OPTION_CROSSHAIRPATH
-#define SEARCHPATH_LANGDATA        OPTION_LANGPATH
-#ifdef USE_IPS
-#define SEARCHPATH_IPS             OPTION_IPSPATH
-#endif /* USE_IPS */
-
-#define SEARCHPATH_IMAGE_DIFF      OPTION_DIFF_DIRECTORY
-#define SEARCHPATH_NVRAM           OPTION_NVRAM_DIRECTORY
-#define SEARCHPATH_CONFIG          OPTION_CFG_DIRECTORY
-#define SEARCHPATH_INPUTLOG        OPTION_INPUT_DIRECTORY
-#define SEARCHPATH_STATE           OPTION_STATE_DIRECTORY
-#define SEARCHPATH_MEMCARD         OPTION_MEMCARD_DIRECTORY
-#define SEARCHPATH_SCREENSHOT      OPTION_SNAPSHOT_DIRECTORY
-#define SEARCHPATH_MOVIE           OPTION_SNAPSHOT_DIRECTORY
-#define SEARCHPATH_COMMENT         OPTION_COMMENT_DIRECTORY
-#ifdef USE_HISCORE
-#define SEARCHPATH_HISCORE         OPTION_HISCORE_DIRECTORY
-#endif /* USE_HISCORE */
-
-
-
-//**************************************************************************
 //  TYPE DEFINITIONS
 //**************************************************************************
 
 // forward declarations
-typedef struct _core_options core_options;
 typedef struct _zip_file_header zip_file_header;
 typedef struct _zip_file zip_file;
 
@@ -103,10 +63,10 @@ class path_iterator
 {
 public:
 	// construction/destruction
-	path_iterator(core_options &options, const char *searchpath = "");
+	path_iterator(const char *searchpath);
 
 	// getters
-	bool next(astring &buffer);
+	bool next(astring &buffer, const char *name = NULL);
 
 	// reset
 	void reset() { m_current = m_base; m_index = 0; }
@@ -127,7 +87,7 @@ class file_enumerator
 {
 public:
 	// construction/destruction
-	file_enumerator(core_options &opts, const char *searchpath);
+	file_enumerator(const char *searchpath);
 	~file_enumerator();
 
 	// iterator
@@ -149,12 +109,14 @@ class emu_file
 {
 public:
 	// file open/creation
-	emu_file(core_options &options, const char *searchpath, UINT32 openflags);
+	emu_file(UINT32 openflags);
+	emu_file(const char *searchpath, UINT32 openflags);
 	virtual ~emu_file();
 
 	// getters
 	operator core_file *();
-	bool open() const { return (m_file != NULL); }
+	operator core_file &();
+	bool is_open() const { return (m_file != NULL); }
 	const char *filename() const { return m_filename; }
 	const char *fullpath() const { return m_fullpath; }
 	UINT32 openflags() const { return m_openflags; }

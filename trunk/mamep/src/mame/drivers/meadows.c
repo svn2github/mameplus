@@ -346,7 +346,7 @@ static ADDRESS_MAP_START( meadows_main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0c02, 0x0c02) AM_READ(hsync_chain_r)
 	AM_RANGE(0x0c03, 0x0c03) AM_READ_PORT("DSW")
 	AM_RANGE(0x0c00, 0x0c03) AM_WRITE(meadows_audio_w)
-	AM_RANGE(0x0d00, 0x0d0f) AM_WRITE(meadows_spriteram_w) AM_BASE_GENERIC(spriteram)
+	AM_RANGE(0x0d00, 0x0d0f) AM_WRITE(meadows_spriteram_w) AM_BASE_MEMBER(meadows_state, spriteram)
 	AM_RANGE(0x0e00, 0x0eff) AM_RAM
 	AM_RANGE(0x1000, 0x1bff) AM_ROM
 	AM_RANGE(0x1c00, 0x1fff) AM_RAM_WRITE(meadows_videoram_w) AM_BASE_MEMBER(meadows_state, videoram)
@@ -359,7 +359,7 @@ static ADDRESS_MAP_START( bowl3d_main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0c02, 0x0c02) AM_READ(hsync_chain_r)
 	AM_RANGE(0x0c03, 0x0c03) AM_READ_PORT("DSW")
 	AM_RANGE(0x0c00, 0x0c03) AM_WRITE(meadows_audio_w)
-	AM_RANGE(0x0d00, 0x0d0f) AM_WRITE(meadows_spriteram_w) AM_BASE_GENERIC(spriteram)
+	AM_RANGE(0x0d00, 0x0d0f) AM_WRITE(meadows_spriteram_w) AM_BASE_MEMBER(meadows_state, spriteram)
 	AM_RANGE(0x0e00, 0x0eff) AM_RAM
 	AM_RANGE(0x1000, 0x1bff) AM_ROM
 	AM_RANGE(0x1c00, 0x1fff) AM_RAM_WRITE(meadows_videoram_w) AM_BASE_MEMBER(meadows_state, videoram)
@@ -919,7 +919,7 @@ static DRIVER_INIT( minferno )
  *
  *************************************/
 
-GAMEL( 1978, deadeye,  0, meadows,  meadows,  0,        ROT0,  "Meadows", "Dead Eye", 0, layout_deadeye )
-GAME ( 1978, bowl3d,   0, bowl3d,   bowl3d,   0,        ROT90, "Meadows", "3-D Bowling", GAME_NO_SOUND )
-GAMEL( 1978, gypsyjug, 0, meadows,  meadows,  gypsyjug, ROT0,  "Meadows", "Gypsy Juggler", GAME_IMPERFECT_GRAPHICS, layout_gypsyjug )
-GAME ( 1978, minferno, 0, minferno, minferno, minferno, ROT0,  "Meadows", "Inferno (Meadows)", GAME_NO_SOUND )
+GAMEL( 1978, deadeye,  0, meadows,  meadows,  0,        ROT0,  "Meadows Games, Inc.", "Dead Eye", 0, layout_deadeye )
+GAME ( 1978, bowl3d,   0, bowl3d,   bowl3d,   0,        ROT90, "Meadows Games, Inc.", "3-D Bowling", GAME_NO_SOUND )
+GAMEL( 1978, gypsyjug, 0, meadows,  meadows,  gypsyjug, ROT0,  "Meadows Games, Inc.", "Gypsy Juggler", GAME_IMPERFECT_GRAPHICS, layout_gypsyjug )
+GAME ( 1978, minferno, 0, minferno, minferno, minferno, ROT0,  "Meadows Games, Inc.", "Inferno (Meadows)", GAME_NO_SOUND )

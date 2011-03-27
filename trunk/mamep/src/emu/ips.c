@@ -85,7 +85,7 @@ static int load_ips_file(running_machine *machine, ips_chunk **p, const char *ip
 	mame_printf_verbose(_("IPS: loading ips \"%s/%s%s\"\n"), ips_dir, ips_name, IPS_EXT);
 
 	astring fname(ips_dir, PATH_SEPARATOR, ips_name, IPS_EXT);
-	emu_file file = emu_file(machine->options(), SEARCHPATH_IPS, OPEN_FLAG_READ);
+	emu_file file = emu_file(machine->options().value(OPTION_LANGPATH), OPEN_FLAG_READ);
 	filerr = file.open(fname);
 
 	if (filerr != FILERR_NONE)
@@ -215,7 +215,7 @@ static int parse_ips_patch(running_machine *machine, ips_entry **ips_p, const ch
 	mame_printf_verbose(_("IPS: parsing ips \"%s/%s%s\"\n"), machine->gamedrv->name, patch_name, INDEX_EXT);
 
 	astring fname(machine->gamedrv->name, PATH_SEPARATOR, patch_name, INDEX_EXT);
-	emu_file fpDat = emu_file(machine->options(), SEARCHPATH_IPS, OPEN_FLAG_READ);
+	emu_file fpDat = emu_file(machine->options().value(OPTION_LANGPATH), OPEN_FLAG_READ);
 	filerr = fpDat.open(fname);
 
 	if (filerr != FILERR_NONE)

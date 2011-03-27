@@ -44,7 +44,7 @@ public:
 	const game_driver *drv;
 	machine_config mconfig;
 
-	parent_info(const game_driver *drv) : mconfig(*drv)
+	parent_info(const game_driver *drv, emu_options &options) : mconfig(*drv, options)
 	{
 		this->drv = drv;
 	}
@@ -471,11 +471,14 @@ static const char *get_merge_name(const hash_collection &romhashes, int parents,
 		for (psource = rom_first_source(*pconfig); psource != NULL; psource = rom_next_source(*psource))
 			for (pregion = rom_first_region(*psource); pregion != NULL; pregion = rom_next_region(pregion))
 				for (prom = rom_first_file(pregion); prom != NULL; prom = rom_next_file(prom))
-					if (romhashes == hash_collection(ROM_GETHASHDATA(prom)))
+				{
+					hash_collection phashes(ROM_GETHASHDATA(prom));
+					if (!phashes.flag(hash_collection::FLAG_NO_DUMP) && romhashes == phashes)
 					{
 						merge_name = ROM_GETNAME(prom);
 						break;
 					}
+				}
 	}
 
 	return merge_name;
@@ -498,7 +501,7 @@ static void print_game_rom(FILE *out, const game_driver *game, const machine_con
 	for (; clone_of != NULL; clone_of = driver_get_clone(clone_of))
 	{
 		assert_always(parents < ARRAY_LENGTH(pinfoarray), "too many parents");
-		pinfoarray[parents++] = global_alloc(parent_info(clone_of));
+		pinfoarray[parents++] = global_alloc(parent_info(clone_of, config.options()));
 	}
 
 	/* iterate over 3 different ROM "types": BIOS, ROMs, DISKs */
@@ -1039,10 +1042,10 @@ static void print_game_ramoptions(FILE *out, const game_driver *game, const mach
     for one particular game driver
 -------------------------------------------------*/
 
-static void print_game_info(FILE *out, const game_driver *game)
+static void print_game_info(FILE *out, const game_driver *game, emu_options &options)
 {
 	const game_driver *clone_of;
-	machine_config config(*game);
+	machine_config config(*game, options);
 	ioport_list portlist;
 	const char *start;
 
@@ -1128,7 +1131,7 @@ static void print_game_info(FILE *out, const game_driver *game)
     for all known games
 -------------------------------------------------*/
 
-void print_mame_xml(FILE *out, const game_driver *const games[], const char *gamename)
+void print_mame_xml(FILE *out, const game_driver *const games[], const char *gamename, emu_options &options)
 {
 	int drvnum;
 
@@ -1275,7 +1278,7 @@ void print_mame_xml(FILE *out, const game_driver *const games[], const char *gam
 
 	for (drvnum = 0; games[drvnum] != NULL; drvnum++)
 		if (mame_strwildcmp(gamename, games[drvnum]->name) == 0)
-			print_game_info(out, games[drvnum]);
+			print_game_info(out, games[drvnum], options);
 
 	fprintf(out, "</" XML_ROOT ">\n");
 }

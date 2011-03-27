@@ -1,4 +1,4 @@
-// dgPix 'VRender 2 Beta Rev4' hardware
+// dgPIX 'VRender 2 Beta Rev4' hardware
 // MEDIAGX CPU + 3dFX VooDoo chipset
 
 /***************************************************************************
@@ -66,6 +66,15 @@ Notes:
 #include "devconv.h"
 
 
+class funkball_state : public driver_device
+{
+public:
+	funkball_state(running_machine &machine, const driver_device_config_base &config)
+		: driver_device(machine, config) { }
+
+};
+
+
 static VIDEO_START(funkball)
 {
 }
@@ -85,7 +94,7 @@ ADDRESS_MAP_END
 static INPUT_PORTS_START( funkball )
 INPUT_PORTS_END
 
-static MACHINE_CONFIG_START( funkball, driver_device )
+static MACHINE_CONFIG_START( funkball, funkball_state )
 	MCFG_CPU_ADD("maincpu", MEDIAGX, 66666666*3.5)
 	MCFG_CPU_PROGRAM_MAP(funkball_map)
 	MCFG_CPU_IO_MAP(funkball_io)
@@ -116,4 +125,4 @@ ROM_START( funkball )
 ROM_END
 
 
-GAME(1998, funkball, 0, funkball, funkball, 0, ROT0, "dgPix", "Funky Ball", GAME_NO_SOUND|GAME_NOT_WORKING)
+GAME(1998, funkball, 0, funkball, funkball, 0, ROT0, "dgPIX Entertainment Inc.", "Funky Ball", GAME_NO_SOUND|GAME_NOT_WORKING)

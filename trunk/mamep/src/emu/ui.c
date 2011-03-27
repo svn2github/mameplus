@@ -365,17 +365,17 @@ static void setup_palette(running_machine *machine)
 #ifdef TRANS_UI
 	ui_transparency = 255;
 
-	ui_transparency = options_get_int(&machine->options(), OPTION_UI_TRANSPARENCY);
+	ui_transparency = machine->options().int_value(OPTION_UI_TRANSPARENCY);
 	if (ui_transparency < 0 || ui_transparency > 255)
 	{
-		mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, options_get_string(&machine->options(), OPTION_UI_TRANSPARENCY));
+		mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, machine->options().value(OPTION_UI_TRANSPARENCY));
 		ui_transparency = 215;
 	}
 #endif /* TRANS_UI */
 
 	for (i = 0; palette_decode_table[i].name; i++)
 	{
-		const char *value = options_get_string(&machine->options(), palette_decode_table[i].name);
+		const char *value = machine->options().value(palette_decode_table[i].name);
 		int col = palette_decode_table[i].color;
 		int r = palette_decode_table[i].defval[0];
 		int g = palette_decode_table[i].defval[1];
@@ -446,7 +446,7 @@ int ui_init(running_machine *machine)
 	single_step = FALSE;
 	ui_set_handler(handler_messagebox, 0);
 	/* retrieve options */
-	ui_use_natural_keyboard = options_get_bool(&machine->options(), OPTION_NATURAL_KEYBOARD);
+	ui_use_natural_keyboard = machine->options().natural_keyboard();
 
 	return 0;
 }
@@ -476,8 +476,8 @@ static void ui_exit(running_machine &machine)
 int ui_display_startup_screens(running_machine *machine, int first_time, int show_disclaimer)
 {
 	const int maxstate = 3;
-	int str = options_get_int(&machine->options(), OPTION_SECONDS_TO_RUN);
-	int show_gameinfo = !options_get_bool(&machine->options(), OPTION_SKIP_GAMEINFO);
+	int str = machine->options().seconds_to_run();
+	int show_gameinfo = !machine->options().skip_gameinfo();
 	int show_warnings = TRUE;
 	int state;
 
@@ -578,7 +578,7 @@ void ui_update_and_render(running_machine *machine, render_container *container)
 	/* if we're paused, dim the whole screen */
 	if (machine->phase() >= MACHINE_PHASE_RESET && (single_step || machine->paused()))
 	{
-		int alpha = (1.0f - options_get_float(&machine->options(), OPTION_PAUSE_BRIGHTNESS)) * 255.0f;
+		int alpha = (1.0f - machine->options().pause_brightness()) * 255.0f;
 		if (ui_menu_is_force_game_select())
 			alpha = 255;
 		if (alpha > 255)
@@ -615,7 +615,7 @@ render_font *ui_get_font(running_machine &machine)
 {
 	/* allocate the font and messagebox string */
 	if (ui_font == NULL)
-		ui_font = machine.render().font_alloc(options_get_string(&machine.options(), OPTION_UI_FONT));
+		ui_font = machine.render().font_alloc(machine.options().ui_font());
 	return ui_font;
 }
 
@@ -2166,7 +2166,7 @@ static UINT32 handler_confirm_quit(running_machine *machine, render_container *c
 		"Press Select key/button to quit,\n"
 		"Cancel key/button to continue.";
 
-	if (!options_get_bool(&machine->options(), OPTION_CONFIRM_QUIT))
+	if (!machine->options().bool_value(OPTION_CONFIRM_QUIT))
 	{
 		machine->schedule_exit();
 		return ui_set_handler(ui_menu_ui_handler, 0);
@@ -2272,7 +2272,7 @@ static slider_state *slider_init(running_machine *machine)
 			}
 
 	/* add CPU overclocking (cheat only) */
-	if (options_get_bool(&machine->options(), OPTION_CHEAT))
+	if (machine->options().cheat())
 	{
 		device_execute_interface *exec = NULL;
 		for (bool gotone = machine->m_devicelist.first(exec); gotone; gotone = exec->next(exec))
@@ -2295,7 +2295,7 @@ static slider_state *slider_init(running_machine *machine)
 		void *param = (void *)screen;
 
 		/* add refresh rate tweaker */
-		if (options_get_bool(&machine->options(), OPTION_CHEAT))
+		if (machine->options().cheat())
 		{
 			string.printf(_("%s Refresh Rate"), slider_get_screen_desc(*screen));
 			*tailptr = slider_alloc(machine, string, -33000, 0, 33000, 1000, slider_refresh, param);
@@ -2411,7 +2411,11 @@ static INT32 slider_mixervol(running_machine *machine, void *arg, astring *strin
 	if (!machine->sound().indexed_speaker_input((FPTR)arg, info))
 		return 0;
 	if (newval != SLIDER_NOCHANGE)
+	{
+		INT32 curval = floor(info.stream->input_gain(info.inputnum) * 1000.0f + 0.5f);
+		if (newval > curval && (newval - curval) <= 4) newval += 4; // round up on increment
 		info.stream->set_input_gain(info.inputnum, (float)newval * 0.001f);
+	}
 	if (string != NULL)
 		string->printf("%4.2f", info.stream->input_gain(info.inputnum));
 	return floor(info.stream->input_gain(info.inputnum) * 1000.0f + 0.5f);
@@ -2847,7 +2851,9 @@ int ui_get_use_natural_keyboard(running_machine *machine)
 void ui_set_use_natural_keyboard(running_machine *machine, int use_natural_keyboard)
 {
 	ui_use_natural_keyboard = use_natural_keyboard;
-	options_set_bool(&machine->options(), OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE);
+	astring error;
+	machine->options().set_value(OPTION_NATURAL_KEYBOARD, use_natural_keyboard, OPTION_PRIORITY_CMDLINE, error);
+	assert(!error);
 }
 
 

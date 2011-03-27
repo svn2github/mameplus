@@ -12,13 +12,12 @@
 #ifndef UILANG_H
 #define UILANG_H
 
-#include "options.h"
-
-
 #define _(str)		lang_message(UI_MSG_MAME, str)
 #define _LST(str)	lang_message(UI_MSG_LIST, str)
 #define _READINGS(str)	lang_message(UI_MSG_READINGS, str)
 #define _MANUFACT(str)	lang_message(UI_MSG_MANUFACTURE, str)
+
+class emu_options;
 
 enum {
 	UI_LANG_EN_US = 0,
@@ -67,7 +66,7 @@ extern struct ui_lang_info_t ui_lang_info[UI_LANG_MAX];
 extern int lang_find_langname(const char *name);
 extern int lang_find_codepage(int cp);
 
-extern void lang_set_langcode(core_options *options, int langcode);
+extern void lang_set_langcode(emu_options &options, int langcode);
 extern int lang_get_langcode(void);
 extern void assign_msg_catategory(int msgcat, const char *name);
 extern char *lang_message(int msgcat, const char *str);

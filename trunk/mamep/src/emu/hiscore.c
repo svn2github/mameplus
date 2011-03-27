@@ -219,7 +219,7 @@ static void hiscore_load (running_machine *machine)
 	if (is_highscore_enabled(machine))
 	{
 		astring fname(machine->basename(), ".hi");
-		emu_file f = emu_file(machine->options(), SEARCHPATH_HISCORE, OPEN_FLAG_READ);
+		emu_file f = emu_file(machine->options().value(OPTION_HISCORE_DIRECTORY), OPEN_FLAG_READ);
 		filerr = f.open(fname);
 		state.hiscores_have_been_loaded = 1;
 		LOG(("hiscore_load\n"));
@@ -253,7 +253,7 @@ static void hiscore_save (running_machine *machine)
 	if (is_highscore_enabled(machine))
 	{
 		astring fname(machine->basename(), ".hi");
- 		emu_file f = emu_file(machine->options(), SEARCHPATH_HISCORE, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+ 		emu_file f = emu_file(machine->options().value(OPTION_HISCORE_DIRECTORY), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 		filerr = f.open(fname);
 		LOG(("hiscore_save\n"));
 		if (filerr == FILERR_NONE)
@@ -314,7 +314,7 @@ void hiscore_init (running_machine *machine)
 {
 	memory_range *mem_range = state.mem_range;
 	file_error filerr;
-	const char *db_filename = options_get_string(&machine->options(), OPTION_HISCORE_FILE); /* high score definition file */
+	const char *db_filename = machine->options().value(OPTION_HISCORE_FILE); /* high score definition file */
     const char *name = machine->gamedrv->name;
 	state.hiscores_have_been_loaded = 0;
 
@@ -344,7 +344,7 @@ void hiscore_init (running_machine *machine)
 	}
 
 	state.mem_range = NULL;
-	emu_file f = emu_file(machine->options(), NULL, OPEN_FLAG_READ);
+	emu_file f = emu_file(OPEN_FLAG_READ);
 	filerr = f.open(db_filename);
 	if (filerr == FILERR_NONE)
 	{

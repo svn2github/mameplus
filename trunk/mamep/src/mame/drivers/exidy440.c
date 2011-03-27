@@ -346,7 +346,7 @@ static READ8_HANDLER( exidy440_input_port_3_r )
 static READ8_HANDLER( sound_command_ack_r )
 {
 	/* sound command acknowledgements come on bit 3 here */
-	return exidy440_sound_command_ack ? 0xf7 : 0xff;
+	return exidy440_sound_command_ack() ? 0xf7 : 0xff;
 }
 
 
@@ -359,11 +359,7 @@ static READ8_HANDLER( sound_command_ack_r )
 
 static TIMER_CALLBACK( delayed_sound_command_w )
 {
-	exidy440_sound_command = param;
-	exidy440_sound_command_ack = 0;
-
-	/* cause an FIRQ on the sound CPU */
-	cputag_set_input_line(machine, "audiocpu", 1, ASSERT_LINE);
+	exidy440_sound_command(machine, param);
 }
 
 
@@ -473,7 +469,7 @@ static MACHINE_RESET( exidy440 )
 
 static ADDRESS_MAP_START( exidy440_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x1fff) AM_RAM AM_BASE_MEMBER(exidy440_state, imageram)
-	AM_RANGE(0x2000, 0x209f) AM_RAM_WRITE(exidy440_spriteram_w) AM_BASE_GENERIC(spriteram)
+	AM_RANGE(0x2000, 0x209f) AM_RAM_WRITE(exidy440_spriteram_w) AM_BASE_MEMBER(exidy440_state, spriteram)
 	AM_RANGE(0x20a0, 0x29ff) AM_RAM
 	AM_RANGE(0x2a00, 0x2aff) AM_READWRITE(exidy440_videoram_r, exidy440_videoram_w)
 	AM_RANGE(0x2b00, 0x2b00) AM_READ(exidy440_vertical_pos_r)

@@ -5,8 +5,11 @@ public:
 		: driver_device(machine, config) { }
 
 	UINT8 *videoram;
-
-    emu_timer *clear_irq_timer;
+	emu_timer *clear_irq_timer;
+	tilemap_t *bg_tilemap;
+	int control_byte;
+	UINT8 *spriteram;
+	size_t spriteram_size;
 };
 
 

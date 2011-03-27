@@ -1,3 +1,11 @@
+struct iox_t
+{
+	int reset,ff_event,ff_1,protcheck[4],protlatch[4];
+	UINT8 data;
+	UINT8 mux;
+	UINT8 ff;
+};
+
 class srmp2_state : public driver_device
 {
 public:
@@ -19,6 +27,8 @@ public:
 		UINT8 *u8;
 		UINT16 *u16;
 	} spriteram1, spriteram2, spriteram3;
+
+	iox_t iox;
 };
 
 

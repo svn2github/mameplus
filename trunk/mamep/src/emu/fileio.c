@@ -40,7 +40,6 @@
 #include "emu.h"
 #include "hash.h"
 #include "unzip.h"
-#include "options.h"
 #include "fileio.h"
 
 
@@ -56,8 +55,8 @@ const UINT32 OPEN_FLAG_HAS_CRC	= 0x10000;
 //  path_iterator - constructor
 //-------------------------------------------------
 
-path_iterator::path_iterator(core_options &opts, const char *searchpath)
-	: m_base((searchpath != NULL && !osd_is_absolute_path(searchpath)) ? options_get_string(&opts, searchpath) : ""),
+path_iterator::path_iterator(const char *rawsearchpath)
+	: m_base(rawsearchpath),
 	  m_current(m_base),
 	  m_index(0)
 {
@@ -69,7 +68,7 @@ path_iterator::path_iterator(core_options &opts, const char *searchpath)
 //  in a multipath sequence
 //-------------------------------------------------
 
-bool path_iterator::next(astring &buffer)
+bool path_iterator::next(astring &buffer, const char *name)
 {
 	// if none left, return FALSE to indicate we are done
 	if (m_index != 0 && *m_current == 0)
@@ -81,6 +80,15 @@ bool path_iterator::next(astring &buffer)
 		semi = m_current + strlen(m_current);
 	buffer.cpy(m_current, semi - m_current);
 	m_current = (*semi == 0) ? semi : semi + 1;
+
+	// append the name if we have one
+	if (name != NULL)
+	{
+		// compute the full pathname
+		if (buffer.len() > 0)
+			buffer.cat(PATH_SEPARATOR);
+		buffer.cat(name);
+	}
 
 	// bump the index and return TRUE
 	m_index++;
@@ -97,8 +105,8 @@ bool path_iterator::next(astring &buffer)
 //  file_enumerator - constructor
 //-------------------------------------------------
 
-file_enumerator::file_enumerator(core_options &options, const char *searchpath)
-	: m_iterator(options, searchpath),
+file_enumerator::file_enumerator(const char *searchpath)
+	: m_iterator(searchpath),
 	  m_curdir(NULL),
 	  m_buflen(0)
 {
@@ -159,9 +167,24 @@ const osd_directory_entry *file_enumerator::next()
 //  emu_file - constructor
 //-------------------------------------------------
 
-emu_file::emu_file(core_options &options, const char *searchpath, UINT32 openflags)
+emu_file::emu_file(UINT32 openflags)
 	: m_file(NULL),
-	  m_iterator(options, searchpath),
+	  m_iterator(""),
+	  m_crc(0),
+	  m_openflags(openflags),
+	  m_zipfile(NULL),
+	  m_zipdata(NULL),
+	  m_ziplength(0),
+	  m_remove_on_close(false)
+{
+	// sanity check the open flags
+	if ((m_openflags & OPEN_FLAG_HAS_CRC) && (m_openflags & OPEN_FLAG_WRITE))
+		throw emu_fatalerror("Attempted to open a file for write with OPEN_FLAG_HAS_CRC");
+}
+
+emu_file::emu_file(const char *searchpath, UINT32 openflags)
+	: m_file(NULL),
+	  m_iterator(searchpath),
 	  m_crc(0),
 	  m_openflags(openflags),
 	  m_zipfile(NULL),
@@ -199,6 +222,16 @@ emu_file::operator core_file *()
 
 	// return the core file
 	return m_file;
+}
+
+emu_file::operator core_file &()
+{
+	// load the ZIP file now if we haven't yet
+	if (m_zipfile != NULL && load_zipped_file() != FILERR_NONE)
+		throw emu_fatalerror("operator core_file & used on invalid file");
+
+	// return the core file
+	return *m_file;
 }
 
 
@@ -326,13 +359,8 @@ file_error emu_file::open_next()
 
 	// loop over paths
 	file_error filerr = FILERR_NOT_FOUND;
-	while (m_iterator.next(m_fullpath))
+	while (m_iterator.next(m_fullpath, m_filename))
 	{
-		// compute the full pathname
-		if (m_fullpath.len() > 0)
-			m_fullpath.cat(PATH_SEPARATOR);
-		m_fullpath.cat(m_filename);
-
 		// attempt to open the file directly
 		filerr = core_fopen(m_fullpath, m_openflags, &m_file);
 		if (filerr == FILERR_NONE)

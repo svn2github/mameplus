@@ -42,17 +42,6 @@ YM2151:
 #define YM_CLOCK    (XTAL1/4)
 
 
-static READ8_HANDLER(t5182shared_r)
-{
-	return t5182_sharedram[offset];
-}
-
-static WRITE8_HANDLER(t5182shared_w)
-{
-	t5182_sharedram[offset] = data;
-}
-
-
 static ADDRESS_MAP_START( memmap, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROM
@@ -61,7 +50,7 @@ static ADDRESS_MAP_START( memmap, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xd001, 0xd001) AM_READ(t5182_sharedram_semaphore_snd_r)
 	AM_RANGE(0xd002, 0xd002) AM_WRITE(t5182_sharedram_semaphore_main_acquire_w)
 	AM_RANGE(0xd003, 0xd003) AM_WRITE(t5182_sharedram_semaphore_main_release_w)
-	AM_RANGE(0xd400, 0xd4ff) AM_READWRITE(t5182shared_r, t5182shared_w)
+	AM_RANGE(0xd400, 0xd4ff) AM_READWRITE(t5182_sharedram_r, t5182_sharedram_w)
 	AM_RANGE(0xd800, 0xd800) AM_READ_PORT("P1")
 	AM_RANGE(0xd801, 0xd801) AM_READ_PORT("P2")
 	AM_RANGE(0xd802, 0xd802) AM_READ_PORT("START")
@@ -69,7 +58,7 @@ static ADDRESS_MAP_START( memmap, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xd804, 0xd804) AM_READ_PORT("DSWB")
 	AM_RANGE(0xd806, 0xd806) AM_WRITE(mustache_scroll_w)
 	AM_RANGE(0xd807, 0xd807) AM_WRITE(mustache_video_control_w)
-	AM_RANGE(0xe800, 0xefff) AM_WRITEONLY AM_BASE_SIZE_GENERIC(spriteram)
+	AM_RANGE(0xe800, 0xefff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(mustache_state, spriteram, spriteram_size)
 	AM_RANGE(0xf000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 

@@ -119,11 +119,11 @@ static void			dsound_destroy_buffers(void);
 void winsound_init(running_machine *machine)
 {
 	// if no sound, don't create anything
-	if (!options_get_bool(&machine->options(), OPTION_SOUND))
+	if (!machine->options().sound())
 		return;
 
 #ifdef USE_AUDIO_SYNC
-	audio_sync = options_get_bool(&machine->options(), WINOPTION_AUDIO_SYNC);
+	audio_sync = machine->options().bool_value(WINOPTION_AUDIO_SYNC);
 #endif /* USE_AUDIO_SYNC */
 
 	// ensure we get called on the way out
@@ -321,7 +321,7 @@ static HRESULT dsound_init(running_machine *machine)
 	stream_format.nAvgBytesPerSec	= stream_format.nSamplesPerSec * stream_format.nBlockAlign;
 
 	// compute the buffer size based on the output sample rate
-	stream_buffer_size = stream_format.nSamplesPerSec * stream_format.nBlockAlign * options_get_int(&machine->options(), WINOPTION_AUDIO_LATENCY) / 10;
+	stream_buffer_size = stream_format.nSamplesPerSec * stream_format.nBlockAlign * downcast<windows_options &>(machine->options()).audio_latency() / 10;
 	stream_buffer_size = (stream_buffer_size / 1024) * 1024;
 	if (stream_buffer_size < 1024)
 		stream_buffer_size = 1024;

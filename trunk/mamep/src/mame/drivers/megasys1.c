@@ -123,28 +123,25 @@ RAM         RW      0f0000-0f3fff       0e0000-0effff?      <
 #include "cpu/z80/z80.h"
 #include "cpu/m68000/m68000.h"
 #include "deprecat.h"
-#include "includes/megasys1.h"
 #include "sound/2203intf.h"
 #include "sound/2151intf.h"
 #include "sound/okim6295.h"
-
-
-/* Variables only used here: */
-
-static UINT16 ip_select, ip_select_values[5];
-static UINT8 megasys1_ignore_oki_status = 0;	/* used in MACHINE_RESET */
+#include "machine/jalcrpt.h"
+#include "includes/megasys1.h"
 
 
 static MACHINE_RESET( megasys1 )
 {
-	megasys1_ignore_oki_status = 1;	/* ignore oki status due 'protection' */
-	ip_select = 0;	/* reset protection */
+	megasys1_state *state = machine->driver_data<megasys1_state>();
+	state->ignore_oki_status = 1;	/* ignore oki status due 'protection' */
+	state->ip_select = 0;	/* reset protection */
 }
 
 static MACHINE_RESET( megasys1_hachoo )
 {
-	megasys1_ignore_oki_status = 0;	/* strangely hachoo need real oki status */
-	ip_select = 0;	/* reset protection */
+	megasys1_state *state = machine->driver_data<megasys1_state>();
+	state->ignore_oki_status = 0;	/* strangely hachoo need real oki status */
+	state->ip_select = 0;	/* reset protection */
 }
 
 
@@ -179,13 +176,13 @@ static ADDRESS_MAP_START( megasys1A_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x080004, 0x080005) AM_READ_PORT("P2")
 	AM_RANGE(0x080006, 0x080007) AM_READ_PORT("DSW")
 	AM_RANGE(0x080008, 0x080009) AM_READ(soundlatch2_word_r)	/* from sound cpu */
-	AM_RANGE(0x084000, 0x0843ff) AM_RAM_WRITE(megasys1_vregs_A_w) AM_BASE(&megasys1_vregs)
+	AM_RANGE(0x084000, 0x0843ff) AM_RAM_WRITE(megasys1_vregs_A_w) AM_BASE_MEMBER(megasys1_state, vregs)
 	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x08e000, 0x08ffff) AM_RAM AM_BASE(&megasys1_objectram)
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(megasys1_scrollram_0_w) AM_BASE(&megasys1_scrollram[0])
-	AM_RANGE(0x094000, 0x097fff) AM_RAM_WRITE(megasys1_scrollram_1_w) AM_BASE(&megasys1_scrollram[1])
-	AM_RANGE(0x098000, 0x09bfff) AM_RAM_WRITE(megasys1_scrollram_2_w) AM_BASE(&megasys1_scrollram[2])
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_BASE(&megasys1_ram)
+	AM_RANGE(0x08e000, 0x08ffff) AM_RAM AM_BASE_MEMBER(megasys1_state, objectram)
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(megasys1_scrollram_0_w) AM_BASE_MEMBER(megasys1_state, scrollram[0])
+	AM_RANGE(0x094000, 0x097fff) AM_RAM_WRITE(megasys1_scrollram_1_w) AM_BASE_MEMBER(megasys1_state, scrollram[1])
+	AM_RANGE(0x098000, 0x09bfff) AM_RAM_WRITE(megasys1_scrollram_2_w) AM_BASE_MEMBER(megasys1_state, scrollram[2])
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_BASE_MEMBER(megasys1_state, ram)
 ADDRESS_MAP_END
 
 
@@ -217,6 +214,7 @@ static INTERRUPT_GEN( interrupt_B )
 
 static READ16_HANDLER( ip_select_r )
 {
+	megasys1_state *state = space->machine->driver_data<megasys1_state>();
 	int i;
 
 //  Coins   P1      P2      DSW1    DSW2
@@ -229,9 +227,9 @@ static READ16_HANDLER( ip_select_r )
 
 
 	/* f(x) = ((x*x)>>4)&0xFF ; f(f($D)) == 6 */
-	if ((ip_select & 0xF0) == 0xF0) return 0x000D;
+	if ((state->ip_select & 0xF0) == 0xF0) return 0x000D;
 
-	for (i = 0; i < 5; i++)	if (ip_select == ip_select_values[i]) break;
+	for (i = 0; i < 5; i++)	if (state->ip_select == state->ip_select_values[i]) break;
 
 	switch (i)
 	{
@@ -246,7 +244,8 @@ static READ16_HANDLER( ip_select_r )
 
 static WRITE16_HANDLER( ip_select_w )
 {
-	COMBINE_DATA(&ip_select);
+	megasys1_state *state = space->machine->driver_data<megasys1_state>();
+	COMBINE_DATA(&state->ip_select);
 	cputag_set_input_line(space->machine, "maincpu", 2, HOLD_LINE);
 }
 
@@ -254,13 +253,13 @@ static WRITE16_HANDLER( ip_select_w )
 static ADDRESS_MAP_START( megasys1B_map, ADDRESS_SPACE_PROGRAM, 16 )
 	ADDRESS_MAP_GLOBAL_MASK(0xfffff)
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
-	AM_RANGE(0x044000, 0x0443ff) AM_RAM_WRITE(megasys1_vregs_A_w) AM_BASE(&megasys1_vregs)
+	AM_RANGE(0x044000, 0x0443ff) AM_RAM_WRITE(megasys1_vregs_A_w) AM_BASE_MEMBER(megasys1_state, vregs)
 	AM_RANGE(0x048000, 0x0487ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x04e000, 0x04ffff) AM_RAM AM_BASE(&megasys1_objectram)
-	AM_RANGE(0x050000, 0x053fff) AM_RAM_WRITE(megasys1_scrollram_0_w) AM_BASE(&megasys1_scrollram[0])
-	AM_RANGE(0x054000, 0x057fff) AM_RAM_WRITE(megasys1_scrollram_1_w) AM_BASE(&megasys1_scrollram[1])
-	AM_RANGE(0x058000, 0x05bfff) AM_RAM_WRITE(megasys1_scrollram_2_w) AM_BASE(&megasys1_scrollram[2])
-	AM_RANGE(0x060000, 0x07ffff) AM_RAM AM_BASE(&megasys1_ram)
+	AM_RANGE(0x04e000, 0x04ffff) AM_RAM AM_BASE_MEMBER(megasys1_state, objectram)
+	AM_RANGE(0x050000, 0x053fff) AM_RAM_WRITE(megasys1_scrollram_0_w) AM_BASE_MEMBER(megasys1_state, scrollram[0])
+	AM_RANGE(0x054000, 0x057fff) AM_RAM_WRITE(megasys1_scrollram_1_w) AM_BASE_MEMBER(megasys1_state, scrollram[1])
+	AM_RANGE(0x058000, 0x05bfff) AM_RAM_WRITE(megasys1_scrollram_2_w) AM_BASE_MEMBER(megasys1_state, scrollram[2])
+	AM_RANGE(0x060000, 0x07ffff) AM_RAM AM_BASE_MEMBER(megasys1_state, ram)
 	AM_RANGE(0x080000, 0x0bffff) AM_ROM
 	AM_RANGE(0x0e0000, 0x0e0001) AM_READWRITE(ip_select_r,ip_select_w)
 ADDRESS_MAP_END
@@ -277,14 +276,14 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( megasys1C_map, ADDRESS_SPACE_PROGRAM, 16 )
 	ADDRESS_MAP_GLOBAL_MASK(0x1fffff)
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0x0c0000, 0x0cffff) AM_READWRITE(megasys1_vregs_C_r,megasys1_vregs_C_w) AM_BASE(&megasys1_vregs)
-	AM_RANGE(0x0d2000, 0x0d3fff) AM_RAM AM_BASE(&megasys1_objectram)
-	AM_RANGE(0x0e0000, 0x0e3fff) AM_RAM_WRITE(megasys1_scrollram_0_w) AM_BASE(&megasys1_scrollram[0])
-	AM_RANGE(0x0e8000, 0x0ebfff) AM_RAM_WRITE(megasys1_scrollram_1_w) AM_BASE(&megasys1_scrollram[1])
-	AM_RANGE(0x0f0000, 0x0f3fff) AM_RAM_WRITE(megasys1_scrollram_2_w) AM_BASE(&megasys1_scrollram[2])
+	AM_RANGE(0x0c0000, 0x0cffff) AM_READWRITE(megasys1_vregs_C_r,megasys1_vregs_C_w) AM_BASE_MEMBER(megasys1_state, vregs)
+	AM_RANGE(0x0d2000, 0x0d3fff) AM_RAM AM_BASE_MEMBER(megasys1_state, objectram)
+	AM_RANGE(0x0e0000, 0x0e3fff) AM_RAM_WRITE(megasys1_scrollram_0_w) AM_BASE_MEMBER(megasys1_state, scrollram[0])
+	AM_RANGE(0x0e8000, 0x0ebfff) AM_RAM_WRITE(megasys1_scrollram_1_w) AM_BASE_MEMBER(megasys1_state, scrollram[1])
+	AM_RANGE(0x0f0000, 0x0f3fff) AM_RAM_WRITE(megasys1_scrollram_2_w) AM_BASE_MEMBER(megasys1_state, scrollram[2])
 	AM_RANGE(0x0f8000, 0x0f87ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x0d8000, 0x0d8001) AM_READWRITE(ip_select_r,ip_select_w)
-	AM_RANGE(0x1f0000, 0x1fffff) AM_RAM AM_BASE(&megasys1_ram)
+	AM_RANGE(0x1f0000, 0x1fffff) AM_RAM AM_BASE_MEMBER(megasys1_state, ram)
 ADDRESS_MAP_END
 
 
@@ -299,17 +298,17 @@ static INTERRUPT_GEN( interrupt_D )
 
 static ADDRESS_MAP_START( megasys1D_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
-	AM_RANGE(0x0c0000, 0x0c9fff) AM_RAM_WRITE(megasys1_vregs_D_w) AM_BASE(&megasys1_vregs)
-	AM_RANGE(0x0ca000, 0x0cbfff) AM_RAM AM_BASE(&megasys1_objectram)
-	AM_RANGE(0x0d0000, 0x0d3fff) AM_RAM_WRITE(megasys1_scrollram_1_w) AM_BASE(&megasys1_scrollram[1])
-	AM_RANGE(0x0d4000, 0x0d7fff) AM_RAM_WRITE(megasys1_scrollram_2_w) AM_BASE(&megasys1_scrollram[2])
+	AM_RANGE(0x0c0000, 0x0c9fff) AM_RAM_WRITE(megasys1_vregs_D_w) AM_BASE_MEMBER(megasys1_state, vregs)
+	AM_RANGE(0x0ca000, 0x0cbfff) AM_RAM AM_BASE_MEMBER(megasys1_state, objectram)
+	AM_RANGE(0x0d0000, 0x0d3fff) AM_RAM_WRITE(megasys1_scrollram_1_w) AM_BASE_MEMBER(megasys1_state, scrollram[1])
+	AM_RANGE(0x0d4000, 0x0d7fff) AM_RAM_WRITE(megasys1_scrollram_2_w) AM_BASE_MEMBER(megasys1_state, scrollram[2])
 	AM_RANGE(0x0d8000, 0x0d87ff) AM_MIRROR(0x3000) AM_RAM_WRITE(paletteram16_RRRRRGGGGGBBBBBx_word_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x0e0000, 0x0e0001) AM_READ_PORT("DSW")
-	AM_RANGE(0x0e8000, 0x0ebfff) AM_RAM_WRITE(megasys1_scrollram_0_w) AM_BASE(&megasys1_scrollram[0])
+	AM_RANGE(0x0e8000, 0x0ebfff) AM_RAM_WRITE(megasys1_scrollram_0_w) AM_BASE_MEMBER(megasys1_state, scrollram[0])
 	AM_RANGE(0x0f0000, 0x0f0001) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x0f8000, 0x0f8001) AM_DEVREADWRITE8_MODERN("oki1", okim6295_device, read, write, 0x00ff)
 //  AM_RANGE(0x100000, 0x100001) // protection
-	AM_RANGE(0x1f0000, 0x1fffff) AM_RAM AM_BASE(&megasys1_ram)
+	AM_RANGE(0x1f0000, 0x1fffff) AM_RAM AM_BASE_MEMBER(megasys1_state, ram)
 ADDRESS_MAP_END
 
 
@@ -379,7 +378,8 @@ static void megasys1_sound_irq(device_t *device, int irq)
 
 static READ8_DEVICE_HANDLER( oki_status_r )
 {
-	if (megasys1_ignore_oki_status == 1)
+	megasys1_state *state = device->machine->driver_data<megasys1_state>();
+	if (state->ignore_oki_status == 1)
 		return 0;
 	else
 		return downcast<okim6295_device *>(device)->read_status();
@@ -1357,35 +1357,35 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static UINT16 protection_val;
 
 /* Read the input ports, through a protection device */
 static READ16_HANDLER( protection_peekaboo_r )
 {
-	switch (protection_val)
+	megasys1_state *state = space->machine->driver_data<megasys1_state>();
+	switch (state->protection_val)
 	{
 		case 0x02:	return 0x03;
 		case 0x51:	return input_port_read(space->machine, "P1");
 		case 0x52:	return input_port_read(space->machine, "P2");
-		default:	return protection_val;
+		default:	return state->protection_val;
 	}
 }
 
 static WRITE16_HANDLER( protection_peekaboo_w )
 {
-	static int bank;
+	megasys1_state *state = space->machine->driver_data<megasys1_state>();
 
-	COMBINE_DATA(&protection_val);
+	COMBINE_DATA(&state->protection_val);
 
-	if ((protection_val & 0x90) == 0x90)
+	if ((state->protection_val & 0x90) == 0x90)
 	{
 		UINT8 *RAM = space->machine->region("oki1")->base();
-		int new_bank = (protection_val & 0x7) % 7;
+		int new_bank = (state->protection_val & 0x7) % 7;
 
-		if (bank != new_bank)
+		if (state->bank != new_bank)
 		{
 			memcpy(&RAM[0x20000],&RAM[0x40000 + 0x20000*new_bank],0x20000);
-			bank = new_bank;
+			state->bank = new_bank;
 		}
 	}
 
@@ -1454,7 +1454,7 @@ static const ym2151_interface ym2151_config =
 	megasys1_sound_irq
 };
 
-static MACHINE_CONFIG_START( system_A, driver_device )
+static MACHINE_CONFIG_START( system_A, megasys1_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, SYS_A_CPU_CLOCK) /* 6MHz verified */
@@ -1519,7 +1519,7 @@ static MACHINE_CONFIG_DERIVED( system_B, system_A )
 MACHINE_CONFIG_END
 
 
-static MACHINE_CONFIG_START( system_Bbl, driver_device )
+static MACHINE_CONFIG_START( system_Bbl, megasys1_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, SYS_B_CPU_CLOCK)
@@ -1591,7 +1591,7 @@ MACHINE_CONFIG_END
 ***************************************************************************/
 
 
-static MACHINE_CONFIG_START( system_D, driver_device )
+static MACHINE_CONFIG_START( system_D, megasys1_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, SYS_D_CPU_CLOCK)	/* 8MHz */
@@ -1653,7 +1653,7 @@ static const ym2203_interface ym2203_config =
 	irq_handler
 };
 
-static MACHINE_CONFIG_START( system_Z, driver_device )
+static MACHINE_CONFIG_START( system_Z, megasys1_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, SYS_A_CPU_CLOCK) /* 6MHz (12MHz / 2) */
@@ -3550,115 +3550,6 @@ ROM_START( tshingen )
 ROM_END
 
 
-/*************************************
- *
- *  Code Decryption
- *
- *************************************/
-
-void phantasm_rom_decode(running_machine *machine, const char *region)
-{
-	UINT16	*RAM	=	(UINT16 *) machine->region(region)->base();
-	int i,		size	=	machine->region(region)->bytes();
-	if (size > 0x40000)	size = 0x40000;
-
-	for (i = 0 ; i < size/2 ; i++)
-	{
-		UINT16 x,y;
-
-		x = RAM[i];
-
-// [0] def0 189a bc56 7234
-// [1] fdb9 7531 eca8 6420
-// [2] 0123 4567 ba98 fedc
-#define BITSWAP_0	BITSWAP16(x,0xd,0xe,0xf,0x0,0x1,0x8,0x9,0xa,0xb,0xc,0x5,0x6,0x7,0x2,0x3,0x4)
-#define BITSWAP_1	BITSWAP16(x,0xf,0xd,0xb,0x9,0x7,0x5,0x3,0x1,0xe,0xc,0xa,0x8,0x6,0x4,0x2,0x0)
-#define BITSWAP_2	BITSWAP16(x,0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7,0xb,0xa,0x9,0x8,0xf,0xe,0xd,0xc)
-
-		if		(i < 0x08000/2)	{ if ( (i | (0x248/2)) != i ) {y = BITSWAP_0;} else {y = BITSWAP_1;} }
-		else if	(i < 0x10000/2)	{ y = BITSWAP_2; }
-		else if	(i < 0x18000/2)	{ if ( (i | (0x248/2)) != i ) {y = BITSWAP_0;} else {y = BITSWAP_1;} }
-		else if	(i < 0x20000/2)	{ y = BITSWAP_1; }
-		else					{ y = BITSWAP_2; }
-
-#undef	BITSWAP_0
-#undef	BITSWAP_1
-#undef	BITSWAP_2
-
-		RAM[i] = y;
-	}
-
-}
-
-void astyanax_rom_decode(running_machine *machine, const char *region)
-{
-	UINT16	*RAM	=	(UINT16 *) machine->region(region)->base();
-	int i,		size	=	machine->region(region)->bytes();
-	if (size > 0x40000)	size = 0x40000;
-
-	for (i = 0 ; i < size/2 ; i++)
-	{
-		UINT16 x,y;
-
-		x = RAM[i];
-
-// [0] def0 a981 65cb 7234
-// [1] fdb9 7531 8ace 0246
-// [2] 4567 0123 ba98 fedc
-
-#define BITSWAP_0	BITSWAP16(x,0xd,0xe,0xf,0x0,0xa,0x9,0x8,0x1,0x6,0x5,0xc,0xb,0x7,0x2,0x3,0x4)
-#define BITSWAP_1	BITSWAP16(x,0xf,0xd,0xb,0x9,0x7,0x5,0x3,0x1,0x8,0xa,0xc,0xe,0x0,0x2,0x4,0x6)
-#define BITSWAP_2	BITSWAP16(x,0x4,0x5,0x6,0x7,0x0,0x1,0x2,0x3,0xb,0xa,0x9,0x8,0xf,0xe,0xd,0xc)
-
-		if		(i < 0x08000/2)	{ if ( (i | (0x248/2)) != i ) {y = BITSWAP_0;} else {y = BITSWAP_1;} }
-		else if	(i < 0x10000/2)	{ y = BITSWAP_2; }
-		else if	(i < 0x18000/2)	{ if ( (i | (0x248/2)) != i ) {y = BITSWAP_0;} else {y = BITSWAP_1;} }
-		else if	(i < 0x20000/2)	{ y = BITSWAP_1; }
-		else					{ y = BITSWAP_2; }
-
-#undef	BITSWAP_0
-#undef	BITSWAP_1
-#undef	BITSWAP_2
-
-		RAM[i] = y;
-	}
-}
-
-void rodland_rom_decode(running_machine *machine, const char *region)
-{
-	UINT16	*RAM	=	(UINT16 *) machine->region(region)->base();
-	int i,		size	=	machine->region(region)->bytes();
-	if (size > 0x40000)	size = 0x40000;
-
-	for (i = 0 ; i < size/2 ; i++)
-	{
-		UINT16 x,y;
-
-		x = RAM[i];
-
-// [0] d0a9 6ebf 5c72 3814  [1] 4567 0123 ba98 fedc
-// [2] fdb9 ce07 5318 a246  [3] 4512 ed3b a967 08fc
-#define BITSWAP_0	BITSWAP16(x,0xd,0x0,0xa,0x9,0x6,0xe,0xb,0xf,0x5,0xc,0x7,0x2,0x3,0x8,0x1,0x4);
-#define BITSWAP_1	BITSWAP16(x,0x4,0x5,0x6,0x7,0x0,0x1,0x2,0x3,0xb,0xa,0x9,0x8,0xf,0xe,0xd,0xc);
-#define	BITSWAP_2	BITSWAP16(x,0xf,0xd,0xb,0x9,0xc,0xe,0x0,0x7,0x5,0x3,0x1,0x8,0xa,0x2,0x4,0x6);
-#define	BITSWAP_3	BITSWAP16(x,0x4,0x5,0x1,0x2,0xe,0xd,0x3,0xb,0xa,0x9,0x6,0x7,0x0,0x8,0xf,0xc);
-
-		if		(i < 0x08000/2)	{	if ( (i | (0x248/2)) != i ) {y = BITSWAP_0;} else {y = BITSWAP_1;} }
-		else if	(i < 0x10000/2)	{	if ( (i | (0x248/2)) != i ) {y = BITSWAP_2;} else {y = BITSWAP_3;} }
-		else if	(i < 0x18000/2)	{	if ( (i | (0x248/2)) != i ) {y = BITSWAP_0;} else {y = BITSWAP_1;} }
-		else if	(i < 0x20000/2)	{ y = BITSWAP_1; }
-		else					{ y = BITSWAP_3; }
-
-#undef	BITSWAP_0
-#undef	BITSWAP_1
-#undef	BITSWAP_2
-#undef	BITSWAP_3
-
-		RAM[i] = y;
-	}
-}
-
-
 static void rodlandj_gfx_unmangle(running_machine *machine, const char *region)
 {
 	UINT8 *rom = machine->region(region)->base();
@@ -3726,15 +3617,16 @@ static void jitsupro_gfx_unmangle(running_machine *machine, const char *region)
 
 static DRIVER_INIT( 64street )
 {
+	megasys1_state *state = machine->driver_data<megasys1_state>();
 //  UINT16 *RAM = (UINT16 *) machine->region("maincpu")->base();
 //  RAM[0x006b8/2] = 0x6004;        // d8001 test
 //  RAM[0x10EDE/2] = 0x6012;        // watchdog
 
-	ip_select_values[0] = 0x57;
-	ip_select_values[1] = 0x53;
-	ip_select_values[2] = 0x54;
-	ip_select_values[3] = 0x55;
-	ip_select_values[4] = 0x56;
+	state->ip_select_values[0] = 0x57;
+	state->ip_select_values[1] = 0x53;
+	state->ip_select_values[2] = 0x54;
+	state->ip_select_values[3] = 0x55;
+	state->ip_select_values[4] = 0x56;
 }
 
 static DRIVER_INIT( astyanax )
@@ -3749,53 +3641,58 @@ static DRIVER_INIT( astyanax )
 
 static DRIVER_INIT( avspirit )
 {
-	ip_select_values[0] = 0x37;
-	ip_select_values[1] = 0x35;
-	ip_select_values[2] = 0x36;
-	ip_select_values[3] = 0x33;
-	ip_select_values[4] = 0x34;
+	megasys1_state *state = machine->driver_data<megasys1_state>();
+	state->ip_select_values[0] = 0x37;
+	state->ip_select_values[1] = 0x35;
+	state->ip_select_values[2] = 0x36;
+	state->ip_select_values[3] = 0x33;
+	state->ip_select_values[4] = 0x34;
 
 	/* kludge: avspirit has 0x10000 bytes of RAM while edf has 0x20000. The */
 	/* following is needed to make vh_start() pick the correct address */
 	/* for spriteram16. */
-	megasys1_ram += 0x10000/2;
+	state->ram += 0x10000/2;
 }
 
 static DRIVER_INIT( bigstrik )
 {
-	ip_select_values[0] = 0x58;
-	ip_select_values[1] = 0x54;
-	ip_select_values[2] = 0x55;
-	ip_select_values[3] = 0x56;
-	ip_select_values[4] = 0x57;
+	megasys1_state *state = machine->driver_data<megasys1_state>();
+	state->ip_select_values[0] = 0x58;
+	state->ip_select_values[1] = 0x54;
+	state->ip_select_values[2] = 0x55;
+	state->ip_select_values[3] = 0x56;
+	state->ip_select_values[4] = 0x57;
 }
 
 static DRIVER_INIT( chimerab )
 {
+	megasys1_state *state = machine->driver_data<megasys1_state>();
 	/* same as cybattlr */
-	ip_select_values[0] = 0x56;
-	ip_select_values[1] = 0x52;
-	ip_select_values[2] = 0x53;
-	ip_select_values[3] = 0x54;
-	ip_select_values[4] = 0x55;
+	state->ip_select_values[0] = 0x56;
+	state->ip_select_values[1] = 0x52;
+	state->ip_select_values[2] = 0x53;
+	state->ip_select_values[3] = 0x54;
+	state->ip_select_values[4] = 0x55;
 }
 
 static DRIVER_INIT( cybattlr )
 {
-	ip_select_values[0] = 0x56;
-	ip_select_values[1] = 0x52;
-	ip_select_values[2] = 0x53;
-	ip_select_values[3] = 0x54;
-	ip_select_values[4] = 0x55;
+	megasys1_state *state = machine->driver_data<megasys1_state>();
+	state->ip_select_values[0] = 0x56;
+	state->ip_select_values[1] = 0x52;
+	state->ip_select_values[2] = 0x53;
+	state->ip_select_values[3] = 0x54;
+	state->ip_select_values[4] = 0x55;
 }
 
 static DRIVER_INIT( edf )
 {
-	ip_select_values[0] = 0x20;
-	ip_select_values[1] = 0x21;
-	ip_select_values[2] = 0x22;
-	ip_select_values[3] = 0x23;
-	ip_select_values[4] = 0x24;
+	megasys1_state *state = machine->driver_data<megasys1_state>();
+	state->ip_select_values[0] = 0x20;
+	state->ip_select_values[1] = 0x21;
+	state->ip_select_values[2] = 0x22;
+	state->ip_select_values[3] = 0x23;
+	state->ip_select_values[4] = 0x24;
 }
 
 static READ16_HANDLER( edfbl_input_r )
@@ -3821,11 +3718,12 @@ static DRIVER_INIT( hachoo )
 
 static DRIVER_INIT( hayaosi1 )
 {
-	ip_select_values[0] = 0x51;
-	ip_select_values[1] = 0x52;
-	ip_select_values[2] = 0x53;
-	ip_select_values[3] = 0x54;
-	ip_select_values[4] = 0x55;
+	megasys1_state *state = machine->driver_data<megasys1_state>();
+	state->ip_select_values[0] = 0x51;
+	state->ip_select_values[1] = 0x52;
+	state->ip_select_values[2] = 0x53;
+	state->ip_select_values[3] = 0x54;
+	state->ip_select_values[4] = 0x55;
 }
 
 static DRIVER_INIT( iganinju )
@@ -3902,11 +3800,13 @@ static DRIVER_INIT( rodlandj )
 
 static READ16_HANDLER( soldamj_spriteram16_r )
 {
-	return space->machine->generic.spriteram.u16[offset];
+	megasys1_state *state = space->machine->driver_data<megasys1_state>();
+	return state->spriteram[offset];
 }
 static WRITE16_HANDLER( soldamj_spriteram16_w )
 {
-	if (offset < 0x800/2)	COMBINE_DATA(&space->machine->generic.spriteram.u16[offset]);
+	megasys1_state *state = space->machine->driver_data<megasys1_state>();
+	if (offset < 0x800/2)	COMBINE_DATA(&state->spriteram[offset]);
 }
 
 static DRIVER_INIT( soldamj )
@@ -3943,12 +3843,13 @@ static READ16_HANDLER( monkelf_input_r )
 
 static DRIVER_INIT( monkelf )
 {
+	megasys1_state *state = machine->driver_data<megasys1_state>();
 	UINT16 *ROM = (UINT16*)machine->region("maincpu")->base();
 	ROM[0x00744/2] = 0x4e71;
 
 	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xe0000, 0xe000f, 0, 0, monkelf_input_r);
 
-	megasys1_ram += 0x10000/2;
+	state->ram += 0x10000/2;
 
 }
 
@@ -3972,7 +3873,7 @@ GAME( 1989, lordofk,  astyanax, system_A,          astyanax, astyanax, ROT0,   "
 GAME( 1989, hachoo,   0,        system_A_hachoo,   hachoo,   hachoo,   ROT0,   "Jaleco", "Hachoo!", 0 )
 GAME( 1989, jitsupro, 0,        system_A,          jitsupro, jitsupro, ROT0,   "Jaleco", "Jitsuryoku!! Pro Yakyuu (Japan)", 0 )
 GAME( 1989, plusalph, 0,        system_A,          plusalph, plusalph, ROT270, "Jaleco", "Plus Alpha", 0 )
-GAME( 1989, stdragon, 0,        system_A,          stdragon, stdragon, ROT0,   "Jaleco", "Saint Dragon", 0 )
+GAME( 1989, stdragon, 0,        system_A,          stdragon, stdragon, ROT0,   "Jaleco", "Tensei Ryuu Saint Dragon", 0 )
 GAME( 1990, rodland,  0,        system_A,          rodland,  rodland,  ROT0,   "Jaleco", "Rod-Land (World)", 0 )
 GAME( 1990, rodlandj, rodland,  system_A,          rodland,  rodlandj, ROT0,   "Jaleco", "Rod-Land (Japan)", 0 )
 GAME( 1990, rodlandjb,rodland,  system_A,          rodland,  0,        ROT0,   "bootleg","Rod-Land (Japan bootleg)", 0 )

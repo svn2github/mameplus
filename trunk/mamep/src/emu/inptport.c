@@ -1724,6 +1724,52 @@ int has_playback_file(running_machine *machine)
 
 
 /***************************************************************************
+    PORT CHECKING
+***************************************************************************/
+
+
+/*-------------------------------------------------
+    input_port_exists - return whether an input
+    port exists
+-------------------------------------------------*/
+
+bool input_port_exists(running_machine *machine, const char *tag)
+{
+	return machine->port(tag) != 0;
+}
+
+
+/*-------------------------------------------------
+    input_port_active - return a bitmask of which
+    bits of an input port are active (i.e. not
+    unused or unknown)
+-------------------------------------------------*/
+
+input_port_value input_port_active(running_machine *machine, const char *tag)
+{
+	const input_port_config *port = machine->port(tag);
+	if (port == NULL)
+		fatalerror("Unable to locate input port '%s'", tag);
+	return port->active;
+}
+
+
+/*-------------------------------------------------
+    input_port_active_safe - return a bitmask of
+    which bits of an input port are active (i.e.
+    not unused or unknown), or a default value if
+    the port does not exist
+-------------------------------------------------*/
+
+input_port_value input_port_active_safe(running_machine *machine, const char *tag, input_port_value defvalue)
+{
+	const input_port_config *port = machine->port(tag);
+	return port == NULL ? defvalue : port->active;
+}
+
+
+
+/***************************************************************************
     PORT READING
 ***************************************************************************/
 
@@ -1815,13 +1861,13 @@ input_port_value input_port_read(running_machine *machine, const char *tag)
 
 /*-------------------------------------------------
     input_port_read - return the value of
-    an device input port specified by tag
+    a device input port specified by tag
 -------------------------------------------------*/
 
-input_port_value input_port_read(running_machine *machine, device_t *device, const char *tag)
+input_port_value input_port_read(device_t *device, const char *tag)
 {
 	astring tempstring;
-	const input_port_config *port = machine->port(device->baseconfig().subtag(tempstring, tag));
+	const input_port_config *port = device->machine->port(device->baseconfig().subtag(tempstring, tag));
 	if (port == NULL)
 		fatalerror("Unable to locate input port '%s'", tag);
 	return input_port_read_direct(port);
@@ -2267,7 +2313,7 @@ static astring *get_keyboard_key_name(const input_field_config *field)
 
 static void init_port_state(running_machine *machine)
 {
-	const char *joystick_map_default = options_get_string(&machine->options(), OPTION_JOYSTICK_MAP);
+	const char *joystick_map_default = machine->options().joystick_map();
 	input_port_private *portdata = machine->input_port_data;
 	const input_field_config *field;
 	const input_port_config *port;
@@ -2384,7 +2430,7 @@ static void init_port_state(running_machine *machine)
 static void init_autoselect_devices(running_machine &machine, int type1, int type2, int type3, const char *option, const char *ananame)
 {
 	const ioport_list &portlist = machine.m_portlist;
-	const char *stemp = options_get_string(&machine.options(), option);
+	const char *stemp = machine.options().value(option);
 	input_device_class autoenable = DEVICE_CLASS_KEYBOARD;
 	const char *autostring = "keyboard";
 	const input_field_config *field;
@@ -3142,7 +3188,7 @@ static int frame_get_digital_field_state(const input_field_config *field, int mo
 	}
 
 	/* skip locked-out coin inputs */
-	if (curstate && field->type >= IPT_COIN1 && field->type <= IPT_COIN12 && coin_lockout_get_state(field->port->machine, field->type - IPT_COIN1) && options_get_bool(&field->port->machine->options(), OPTION_COIN_LOCKOUT))
+	if (curstate && field->type >= IPT_COIN1 && field->type <= IPT_COIN12 && coin_lockout_get_state(field->port->machine, field->type - IPT_COIN1) && field->port->machine->options().coin_lockout())
 	{
 		ui_popup_time(3, _("Coinlock disabled %s."), _(input_field_name(field)));
 		return FALSE;
@@ -3155,6 +3201,29 @@ static int frame_get_digital_field_state(const input_field_config *field, int mo
 /***************************************************************************
     PORT CONFIGURATION HELPERS
 ***************************************************************************/
+
+/*-------------------------------------------------
+    port_default_value - updates default value
+    of port settings according to device settings
+-------------------------------------------------*/
+
+static UINT32 port_default_value(const char *fulltag, UINT32 mask, UINT32 defval, device_config *owner)
+{
+	astring tempstring;
+	const input_device_default *def = NULL;
+	if (owner!=NULL) {
+		def = owner->input_ports_defaults();
+		if (def!=NULL) {
+			while (def->tag!=NULL) {
+				if ((strcmp(fulltag,owner->subtag(tempstring,def->tag))==0) &&  (def->mask == mask)) {
+					return def->defvalue;
+				}
+				def++;
+			}
+		}
+	}
+	return defval;
+}
 
 /*-------------------------------------------------
     port_config_detokenize - recursively
@@ -3241,6 +3310,9 @@ static void port_config_detokenize(ioport_list &portlist, const input_port_token
 					error_buf_append(errorbuf, errorbuflen, "INPUT_TOKEN_FIELD encountered with no active port (mask=%X defval=%X)\n", mask, defval);
 					return;
 				}
+
+				if (type != IPT_UNKNOWN && type != IPT_UNUSED)
+					curport->active |= mask;
 
 				if (curfield != NULL)
 					field_config_insert(curfield, &maskbits, errorbuf, errorbuflen);
@@ -3632,6 +3704,7 @@ static void port_config_detokenize(ioport_list &portlist, const input_port_token
 				TOKEN_GET_UINT64_UNPACK2(ipt, mask, 32, defval, 32);
 				if (curfield != NULL)
 					field_config_insert(curfield, &maskbits, errorbuf, errorbuflen);
+				defval = port_default_value(fulltag,mask,defval,owner);
 				curfield = field_config_alloc(curport, IPT_DIPSWITCH, defval, mask);
 				cursetting = NULL;
 				curfield->name = input_port_string_from_token(*ipt++);
@@ -3710,6 +3783,7 @@ static void port_config_detokenize(ioport_list &portlist, const input_port_token
 				TOKEN_GET_UINT64_UNPACK2(ipt, mask, 32, defval, 32);
 				if (curfield != NULL)
 					field_config_insert(curfield, &maskbits, errorbuf, errorbuflen);
+				defval = port_default_value(fulltag,mask,defval,owner);
 				curfield = field_config_alloc(curport, IPT_CONFIG, defval, mask);
 				cursetting = NULL;
 				curfield->name = input_port_string_from_token(*ipt++);
@@ -3741,6 +3815,7 @@ static void port_config_detokenize(ioport_list &portlist, const input_port_token
 				TOKEN_GET_UINT64_UNPACK2(ipt, mask, 32, defval, 32);
 				if (curfield != NULL)
 					field_config_insert(curfield, &maskbits, errorbuf, errorbuflen);
+				defval = port_default_value(fulltag,mask,defval,owner);
 				curfield = field_config_alloc(curport, IPT_CATEGORY, defval, mask);
 				cursetting = NULL;
 				curfield->name = input_port_string_from_token(*ipt++);
@@ -3841,7 +3916,9 @@ input_port_config::input_port_config(const char *_tag)
 	  tag(_tag),
 	  fieldlist(NULL),
 	  state(NULL),
-	  machine(NULL)
+	  machine(NULL),
+	  owner(NULL),
+	  active(0)
 {
 }
 
@@ -4778,7 +4855,7 @@ static UINT64 playback_read_uint64(running_machine *machine)
 
 static time_t playback_init(running_machine *machine)
 {
-	const char *filename = options_get_string(&machine->options(), OPTION_PLAYBACK);
+	const char *filename = machine->options().playback();
 	input_port_private *portdata = machine->input_port_data;
 	UINT8 header[INP_HEADER_SIZE];
 	time_t basetime;
@@ -4793,7 +4870,7 @@ static time_t playback_init(running_machine *machine)
 		return 0;
 
 	/* open the playback file */
-	portdata->playback_file = auto_alloc(machine, emu_file(machine->options(), SEARCHPATH_INPUTLOG, OPEN_FLAG_READ));
+	portdata->playback_file = auto_alloc(machine, emu_file(machine->options().input_directory(), OPEN_FLAG_READ));
 	file_error filerr = portdata->playback_file->open(filename);
 	assert_always(filerr == FILERR_NONE, _("Failed to open file for playback"));
 
@@ -4825,7 +4902,7 @@ static time_t playback_init(running_machine *machine)
 		if (fname)
 		{
 			strcpy(fname + strlen(fname) - 4, ".cap");
-			portdata->caption_file = auto_alloc(machine, emu_file(machine->options(), SEARCHPATH_INPUTLOG, OPEN_FLAG_READ));
+			portdata->caption_file = auto_alloc(machine, emu_file(machine->options().input_directory(), OPEN_FLAG_READ));
 			filerr = portdata->caption_file->open(fname);
 			osd_free(fname);
 		}
@@ -4867,7 +4944,7 @@ static void playback_end(running_machine *machine, const char *message)
 			popmessage(_("Playback Ended\nReason: %s"), message);
 
 #ifdef PLAYBACK_END_PAUSE
-		if (options_get_bool(&machine->options(), OPTION_PLAYBACK_END_PAUSE))
+		if (machine->options().bool_value(OPTION_PLAYBACK_END_PAUSE))
 			machine->pause();
 #endif /* PLAYBACK_END_PAUSE */
 
@@ -5009,7 +5086,7 @@ static void record_write_uint64(running_machine *machine, UINT64 data)
 
 static void record_init(running_machine *machine)
 {
-	const char *filename = options_get_string(&machine->options(), OPTION_RECORD);
+	const char *filename = machine->options().record();
 	input_port_private *portdata = machine->input_port_data;
 	UINT8 header[INP_HEADER_SIZE];
 	system_time systime;
@@ -5019,7 +5096,7 @@ static void record_init(running_machine *machine)
 		return;
 
 	/* open the record file  */
-	portdata->record_file = auto_alloc(machine, emu_file(machine->options(), SEARCHPATH_INPUTLOG, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS));
+	portdata->record_file = auto_alloc(machine, emu_file(machine->options().input_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS));
 	file_error filerr = portdata->record_file->open(filename);
 	assert_always(filerr == FILERR_NONE, "Failed to open file for recording");
 

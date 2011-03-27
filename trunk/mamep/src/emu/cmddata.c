@@ -65,7 +65,7 @@ static const char *DATAFILE_TAG_END = "$end";
 #define FILE_TYPEMAX	((FILE_MERGED | FILE_ROOT) + 1)
 
 static running_machine *m_machine;
-static core_options *datafile_options;
+static emu_options *datafile_options;
 
 struct tDatafileIndex
 {
@@ -111,7 +111,7 @@ static void flush_index(void);
  *      startup and shutdown functions
  ****************************************************************************/
 
-void datafile_init(running_machine *machine, core_options *options)
+void datafile_init(running_machine *machine, emu_options *options)
 {
 	m_machine = machine;
 	datafile_options = options;
@@ -636,7 +636,7 @@ static UINT8 ParseOpen(const char *pszFilename)
 	file_error filerr;
 
 	/* Open file up in binary mode */
-	fp = auto_alloc(m_machine, emu_file(*datafile_options, NULL, OPEN_FLAG_READ));
+	fp = auto_alloc(m_machine, emu_file(OPEN_FLAG_READ));
 	filerr = fp->open(pszFilename);
 	if (filerr != FILERR_NONE)
 		return(FALSE);
@@ -974,7 +974,7 @@ static int find_command (const game_driver *drv)
 		if (where != FILE_ROOT)
 		{
 			sprintf(filename, "%s\\%s\\",
-		        	options_get_string(datafile_options, OPTION_LANGPATH),
+		        	datafile_options->value(OPTION_LANGPATH),
 				ui_lang_info[lang_get_langcode()].name);
 		}
 
@@ -987,7 +987,7 @@ static int find_command (const game_driver *drv)
 			if (i & FILE_MERGED)
 			{
 				if (where & FILE_ROOT)
-					strcpy(base, options_get_string(datafile_options, OPTION_COMMAND_FILE));
+					strcpy(base, datafile_options->value(OPTION_COMMAND_FILE));
 				else
 					strcpy(base, "command.dat");
 

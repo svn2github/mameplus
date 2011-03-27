@@ -141,7 +141,7 @@ static char giant_string_buffer[65536] = { 0 };
 //  running_machine - constructor
 //-------------------------------------------------
 
-running_machine::running_machine(const machine_config &_config, osd_interface &osd, core_options &options, bool exit_to_game_select)
+running_machine::running_machine(const machine_config &_config, osd_interface &osd, bool exit_to_game_select)
 	: m_regionlist(m_respool),
 	  m_devicelist(m_respool),
 	  config(&_config),
@@ -155,7 +155,7 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 	  colortable(NULL),
 	  shadow_table(NULL),
 	  priority_bitmap(NULL),
-	  sample_rate(options_get_int(&options, OPTION_SAMPLERATE)),
+	  sample_rate(_config.options().sample_rate()),
 	  debug_flags(0),
       ui_active(false),
 	  memory_data(NULL),
@@ -172,7 +172,6 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 	  m_logerror_list(NULL),
 	  m_state(*this),
 	  m_scheduler(*this),
-	  m_options(options),
 	  m_osd(osd),
 	  m_basename(_config.gamedrv().name),
 	  m_current_phase(MACHINE_PHASE_PREINIT),
@@ -224,8 +223,8 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 #endif /* USE_HISCORE */
 
 	// fetch core options
-	if (options_get_bool(&m_options, OPTION_DEBUG))
-		debug_flags = (DEBUG_FLAG_ENABLED | DEBUG_FLAG_CALL_HOOK) | (options_get_bool(&m_options, OPTION_DEBUG_INTERNAL) ? 0 : DEBUG_FLAG_OSD_ENABLED);
+	if (options().debug())
+		debug_flags = (DEBUG_FLAG_ENABLED | DEBUG_FLAG_CALL_HOOK) | (options().debug_internal() ? 0 : DEBUG_FLAG_OSD_ENABLED);
 }
 
 
@@ -336,12 +335,12 @@ void running_machine::start()
 	m_devicelist.start_all();
 
 	// if we're coming in with a savegame request, process it now
-	const char *savegame = options_get_string(&m_options, OPTION_STATE);
+	const char *savegame = options().state();
 	if (savegame[0] != 0)
 		schedule_load(savegame);
 
 	// if we're in autosave mode, schedule a load
-	else if (options_get_bool(&m_options, OPTION_AUTOSAVE) && (m_game.flags & GAME_SUPPORTS_SAVE) != 0)
+	else if (options().autosave() && (m_game.flags & GAME_SUPPORTS_SAVE) != 0)
 		schedule_load("auto");
 
 	// set up the cheat engine
@@ -372,9 +371,9 @@ int running_machine::run(bool firstrun)
 		m_current_phase = MACHINE_PHASE_INIT;
 
 		// if we have a logfile, set up the callback
-		if (options_get_bool(&m_options, OPTION_LOG))
+		if (options().log())
 		{
-			m_logfile = auto_alloc(this, emu_file(m_options, SEARCHPATH_DEBUGLOG, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS));
+			m_logfile = auto_alloc(this, emu_file(OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS));
 			file_error filerr = m_logfile->open("error.log");
 			assert_always(filerr == FILERR_NONE, "unable to open log file");
 			add_logerror_callback(logfile_callback);
@@ -460,9 +459,9 @@ int running_machine::run(bool firstrun)
 void running_machine::schedule_exit()
 {
 	// if we are in-game but we started with the select game menu, return to that instead
-	if (m_exit_to_game_select && options_get_string(&m_options, OPTION_GAMENAME)[0] != 0)
+	if (m_exit_to_game_select && options().system_name()[0] != 0)
 	{
-		options_set_string(&m_options, OPTION_GAMENAME, "", OPTION_PRIORITY_CMDLINE);
+		options().set_system_name("");
 		ui_menu_force_game_select(this, &render().ui_container());
 	}
 
@@ -474,7 +473,7 @@ void running_machine::schedule_exit()
 	m_scheduler.eat_all_cycles();
 
 	// if we're autosaving on exit, schedule a save as well
-	if (options_get_bool(&m_options, OPTION_AUTOSAVE) && (m_game.flags & GAME_SUPPORTS_SAVE) && this->time() > attotime::zero)
+	if (options().autosave() && (m_game.flags & GAME_SUPPORTS_SAVE) && this->time() > attotime::zero)
 		schedule_save("auto");
 }
 
@@ -540,7 +539,7 @@ void running_machine::set_saveload_filename(const char *filename)
 	}
 	else
 	{
-		m_saveload_searchpath = SEARCHPATH_STATE;
+		m_saveload_searchpath = options().state_directory();
 		m_saveload_pending_file.cpy(basename()).cat(PATH_SEPARATOR).cat(filename).cat(".sta");
 	}
 }
@@ -620,7 +619,7 @@ void running_machine::resume()
 //  region_alloc - allocates memory for a region
 //-------------------------------------------------
 
-memory_region *running_machine::region_alloc(const char *name, UINT32 length, UINT32 flags)
+memory_region *running_machine::region_alloc(const char *name, UINT32 length, UINT8 width, endianness_t endian)
 {
     // make sure we don't have a region of the same name; also find the end of the list
     memory_region *info = m_regionlist.find(name);
@@ -628,7 +627,7 @@ memory_region *running_machine::region_alloc(const char *name, UINT32 length, UI
 		fatalerror("region_alloc called with duplicate region name \"%s\"\n", name);
 
 	// allocate the region
-	return &m_regionlist.append(name, *auto_alloc(this, memory_region(*this, name, length, flags)));
+	return &m_regionlist.append(name, *auto_alloc(this, memory_region(*this, name, length, width, endian)));
 }
 
 
@@ -786,7 +785,7 @@ void running_machine::handle_saveload()
 	file_error filerr = FILERR_NONE;
 
 	// if no name, bail
-	emu_file file(m_options, m_saveload_searchpath, openflags);
+	emu_file file(m_saveload_searchpath, openflags);
 	if (!m_saveload_pending_file)
 		goto cancel;
 
@@ -897,13 +896,15 @@ void running_machine::logfile_callback(running_machine &machine, const char *buf
 //  memory_region - constructor
 //-------------------------------------------------
 
-memory_region::memory_region(running_machine &machine, const char *name, UINT32 length, UINT32 flags)
+memory_region::memory_region(running_machine &machine, const char *name, UINT32 length, UINT8 width, endianness_t endian)
 	: m_machine(machine),
 	  m_next(NULL),
 	  m_name(name),
 	  m_length(length),
-	  m_flags(flags)
+	  m_width(width),
+	  m_endianness(endian)
 {
+	assert(width == 1 || width == 2 || width == 4 || width == 8);
 	m_base.u8 = auto_alloc_array(&machine, UINT8, length);
 }
 

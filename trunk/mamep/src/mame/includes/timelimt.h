@@ -5,13 +5,19 @@ public:
 		: driver_device(machine, config) { }
 
 	UINT8 *videoram;
+	int nmi_enabled;
+	UINT8 *bg_videoram;
+	size_t bg_videoram_size;
+	int scrollx;
+	int scrolly;
+	tilemap_t *bg_tilemap;
+	tilemap_t *fg_tilemap;
+	UINT8 *spriteram;
+	size_t spriteram_size;
 };
 
 
 /*----------- defined in video/timelimt.c -----------*/
-
-extern UINT8 *timelimt_bg_videoram;
-extern size_t timelimt_bg_videoram_size;
 
 VIDEO_START( timelimt );
 PALETTE_INIT( timelimt );

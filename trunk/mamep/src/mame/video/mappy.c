@@ -399,13 +399,13 @@ WRITE8_HANDLER( mappy_scroll_w )
 
 ***************************************************************************/
 
-/* also used by toypop.c */
-void mappy_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, UINT8 *spriteram_base, int xoffs, int yoffs, int transcolor)
+static void mappy_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, UINT8 *spriteram_base)
 {
 	UINT8 *spriteram = spriteram_base + 0x780;
 	UINT8 *spriteram_2 = spriteram + 0x800;
 	UINT8 *spriteram_3 = spriteram_2 + 0x800;
 	int offs;
+	enum { xoffs = 0, yoffs = 0 };
 
 	for (offs = 0;offs < 0x80;offs += 2)
 	{
@@ -449,7 +449,7 @@ void mappy_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectan
 						color,
 						flipx,flipy,
 						sx + 16*x,sy + 16*y,
-						colortable_get_transpen_mask(machine->colortable, machine->gfx[1], color, transcolor));
+						colortable_get_transpen_mask(machine->colortable, machine->gfx[1], color, 15));
 				}
 			}
 		}
@@ -478,7 +478,7 @@ spriteram_3
 1   -------x  X position MSB
 */
 
-static void phozon_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, UINT8 *spriteram_base )
+static void phozon_draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, UINT8 *spriteram_base)
 {
 	UINT8 *spriteram = spriteram_base + 0x780;
 	UINT8 *spriteram_2 = spriteram + 0x800;
@@ -547,19 +547,21 @@ SCREEN_UPDATE( superpac )
 	tilemap_draw(bitmap,cliprect,state->bg_tilemap,TILEMAP_DRAW_OPAQUE | TILEMAP_DRAW_ALL_CATEGORIES,0);
 
 	bitmap_fill(sprite_bitmap,cliprect,15);
-	mappy_draw_sprites(screen->machine,sprite_bitmap,cliprect,state->spriteram,0,0,15);
+	mappy_draw_sprites(screen->machine,sprite_bitmap,cliprect,state->spriteram);
 	copybitmap_trans(bitmap,sprite_bitmap,0,0,0,0,cliprect,15);
 
 	/* Redraw the high priority characters */
 	tilemap_draw(bitmap,cliprect,state->bg_tilemap,1,0);
 
-	/* sprite color 0 still has priority over that (ghost eyes in Pac 'n Pal) */
+	/* sprite color 0/1 still has priority over that (ghost eyes in Pac 'n Pal) */
 	for (y = 0;y < sprite_bitmap->height;y++)
 	{
 		for (x = 0;x < sprite_bitmap->width;x++)
 		{
-			if (*BITMAP_ADDR16(sprite_bitmap, y, x) == 0)
-				*BITMAP_ADDR16(bitmap, y, x) = 0;
+			int spr_entry = *BITMAP_ADDR16(sprite_bitmap, y, x);
+			int spr_pen = colortable_entry_get_value(screen->machine->colortable, spr_entry);
+			if (spr_pen == 0 || spr_pen == 1)
+				*BITMAP_ADDR16(bitmap, y, x) = spr_entry;
 		}
 	}
 	return 0;
@@ -597,7 +599,7 @@ SCREEN_UPDATE( mappy )
 
 	tilemap_draw(bitmap,cliprect,state->bg_tilemap,TILEMAP_DRAW_OPAQUE | TILEMAP_DRAW_ALL_CATEGORIES,0);
 
-	mappy_draw_sprites(screen->machine,bitmap,cliprect,state->spriteram,0,0,15);
+	mappy_draw_sprites(screen->machine,bitmap,cliprect,state->spriteram);
 
 	/* Redraw the high priority characters */
 	tilemap_draw(bitmap,cliprect,state->bg_tilemap,1,0);

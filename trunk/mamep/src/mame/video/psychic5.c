@@ -28,7 +28,7 @@ static void psychic5_change_palette(running_machine *machine, int color, int off
 	psychic5_state *state = machine->driver_data<psychic5_state>();
 	UINT8 lo = state->ps5_palette_ram[offset & ~1];
 	UINT8 hi = state->ps5_palette_ram[offset | 1];
-	if (jal_blend_table != NULL) jal_blend_table[color] = hi & 0x0f;
+	jal_blend_set(color, hi & 0x0f);
 	palette_set_color_rgb(machine, color, pal4bit(lo >> 4), pal4bit(lo), pal4bit(hi >> 4));
 }
 
@@ -252,7 +252,7 @@ VIDEO_START( psychic5 )
 	state->ps5_palette_ram       = &state->ps5_pagedram[1][0x0400];
 	state->fg_videoram  = &state->ps5_pagedram[1][0x1000];
 
-	jal_blend_table = auto_alloc_array(machine, UINT8, 0xc00);
+	jal_blend_init(machine, 1);
 
 	state->bg_palette_ram_base = 0x400;
 	state->bg_palette_base = 0x100;
@@ -276,8 +276,7 @@ VIDEO_START( bombsa )
 	state->fg_videoram  = &state->ps5_pagedram[1][0x0800];
 	state->ps5_palette_ram       = &state->ps5_pagedram[1][0x1000];
 
-	//jal_blend_table = auto_alloc_array(machine, UINT8, 0xc00);
-	jal_blend_table = NULL;
+	jal_blend_init(machine, 0);
 
 	state->bg_palette_ram_base = 0x000;
 	state->bg_palette_base = 0x000;
@@ -292,7 +291,6 @@ VIDEO_RESET( psychic5 )
 	memset(state->ps5_pagedram[0],0,0x2000);
 	memset(state->ps5_pagedram[1],0,0x2000);
 	state->palette_intensity = 0;
-	if (jal_blend_table != NULL) memset(jal_blend_table,0,0xc00);
 }
 
 VIDEO_RESET( bombsa )
@@ -304,7 +302,6 @@ VIDEO_RESET( bombsa )
 	memset(state->ps5_pagedram[0],0,0x2000);
 	memset(state->ps5_pagedram[1],0,0x2000);
 	state->palette_intensity = 0;
-	if (jal_blend_table != NULL) memset(jal_blend_table,0,0xc00);
 }
 
 
@@ -316,11 +313,12 @@ VIDEO_RESET( bombsa )
 
 static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
-	UINT8 *spriteram = machine->generic.spriteram.u8;
+	psychic5_state *state = machine->driver_data<psychic5_state>();
+	UINT8 *spriteram = state->spriteram;
 	int offs;
 
 	/* Draw the sprites */
-	for (offs = 0; offs < machine->generic.spriteram_size; offs += 16)
+	for (offs = 0; offs < state->spriteram_size; offs += 16)
 	{
 		int attr  = spriteram[offs + 13];
 		int code  = spriteram[offs + 14] | ((attr & 0xc0) << 2);
@@ -370,7 +368,7 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 static void draw_background(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
 	psychic5_state *state = machine->driver_data<psychic5_state>();
-	UINT8 *spriteram = machine->generic.spriteram.u8;
+	UINT8 *spriteram = state->spriteram;
 
 	rectangle clip = *cliprect;
 

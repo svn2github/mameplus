@@ -240,25 +240,6 @@ public:
 static int  read_e2ram(running_machine *machine);
 static void e2ram_reset(running_machine *machine);
 
-// global vars ////////////////////////////////////////////////////////////
-
-
-// local vars /////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-// user interface stuff ///////////////////////////////////////////////////
-
-
-
 /*      INPUTS layout
 
      b7 b6 b5 b4 b3 b2 b1 b0
@@ -276,42 +257,6 @@ static void e2ram_reset(running_machine *machine);
       0  1  1  0  0  0
 
 */
-///////////////////////////////////////////////////////////////////////////
-
-static void send_to_adder(running_machine *machine, int data)
-{
-	adder2_data_from_sc2 = 1;
-	adder2_sc2data       = data;
-
-	adder2_acia_triggered = 1;
-	cputag_set_input_line(machine, "adder2", M6809_IRQ_LINE, HOLD_LINE );
-
-	LOG_SERIAL(("sadder  %02X  (%c)\n",data, data ));
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-static int receive_from_adder(void)
-{
-	int data = adder2_data;
-	adder2_data_to_sc2 = 0;
-
-	LOG_SERIAL(("radder:  %02X(%c)\n",data, data ));
-
-	return data;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-static int get_scorpion2_uart_status(running_machine *machine)
-{
-	int status = 0;
-
-	if ( adder2_data_to_sc2  ) status |= 0x01;	// receive  buffer full
-	if ( !adder2_data_from_sc2) status |= 0x02; // transmit buffer empty
-
-	return status;
-}
 
 ///////////////////////////////////////////////////////////////////////////
 // called if board is reset ///////////////////////////////////////////////
@@ -570,8 +515,8 @@ static WRITE8_HANDLER( reel34_w )
 	bfm_sc2_state *state = space->machine->driver_data<bfm_sc2_state>();
 	state->reel34_latch = data;
 
-	if ( stepper_update(2, data   ) ) state->reel_changed |= 0x04;
-	if ( stepper_update(3, data>>4) ) state->reel_changed |= 0x08;
+	if ( stepper_update(2, data&0x0f ) ) state->reel_changed |= 0x04;
+	if ( stepper_update(3, (data>>4)&0x0f) ) state->reel_changed |= 0x08;
 
 	if ( stepper_optic_state(2) ) state->optic_pattern |=  0x04;
 	else                          state->optic_pattern &= ~0x04;
@@ -589,8 +534,8 @@ static WRITE8_HANDLER( reel56_w )
 	bfm_sc2_state *state = space->machine->driver_data<bfm_sc2_state>();
 	state->reel56_latch = data;
 
-	if ( stepper_update(4, data   ) ) state->reel_changed |= 0x10;
-	if ( stepper_update(5, data>>4) ) state->reel_changed |= 0x20;
+	if ( stepper_update(4, data&0x0f   ) ) state->reel_changed |= 0x10;
+	if ( stepper_update(5, (data>>4)&0x0f) ) state->reel_changed |= 0x20;
 
 	if ( stepper_optic_state(4) ) state->optic_pattern |=  0x10;
 	else                          state->optic_pattern &= ~0x10;
@@ -1081,7 +1026,10 @@ static WRITE8_HANDLER( uart2data_w )
 
 static WRITE8_HANDLER( vid_uart_tx_w )
 {
-	send_to_adder(space->machine, data);
+	adder2_send(data);
+	cputag_set_input_line(space->machine, "adder2", M6809_IRQ_LINE, HOLD_LINE );
+
+	LOG_SERIAL(("sadder  %02X  (%c)\n",data, data ));
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1094,14 +1042,18 @@ static WRITE8_HANDLER( vid_uart_ctrl_w )
 
 static READ8_HANDLER( vid_uart_rx_r )
 {
-	return receive_from_adder();
+	int data = adder2_receive();
+
+	LOG_SERIAL(("radder:  %02X(%c)\n",data, data ));
+
+	return data;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 static READ8_HANDLER( vid_uart_ctrl_r )
 {
-	return get_scorpion2_uart_status(space->machine);
+	return adder2_status();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -2660,8 +2612,8 @@ static WRITE8_HANDLER( reel12_w )
 	bfm_sc2_state *state = space->machine->driver_data<bfm_sc2_state>();
 	state->reel12_latch = data;
 
-	if ( stepper_update(0, data   ) ) state->reel_changed |= 0x01;
-	if ( stepper_update(1, data>>4) ) state->reel_changed |= 0x02;
+	if ( stepper_update(0, data&0x0f   ) ) state->reel_changed |= 0x01;
+	if ( stepper_update(1, (data>>4))&0x0f ) state->reel_changed |= 0x02;
 
 	if ( stepper_optic_state(0) ) state->optic_pattern |=  0x01;
 	else                          state->optic_pattern &= ~0x01;
@@ -4485,12 +4437,12 @@ GAMEL( 1994, m_bdrw15, m_bdrwho,  scorpion2,	 drwho,		drwho,		0,		 "BFM",      "
 GAMEL( 1994, m_bdrw16, m_bdrwho,  scorpion2,	 drwho,		drwho,		0,		 "BFM",      "Dr.Who The Timelord (set 17)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL,layout_drwho)
 GAMEL( 1994, m_bdrw17, m_bdrwho,  scorpion2,	 drwho,		drwhon,		0,		 "BFM",      "Dr.Who The Timelord (set 18, not encrypted)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL,layout_drwho)
 
-GAME( 1994, m_brkfst, 0,          scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (Set 1 UK, Game Card 95-750-524)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 1994, m_brkfs1, m_brkfst,	  scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (Set 2)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 1994, m_brkfs2, m_brkfst,	  scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (Set 3)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 1994, m_brkfs3, m_brkfst,	  scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (Set 4)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 1994, m_brkfs4, m_brkfst,	  scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (Set 5)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 1994, m_brkfs5, m_brkfst,	  scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (Set 6)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 1994, m_brkfst, 0,          scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (set 1 UK, Game Card 95-750-524)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 1994, m_brkfs1, m_brkfst,	  scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (set 2)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 1994, m_brkfs2, m_brkfst,	  scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (set 3)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 1994, m_brkfs3, m_brkfst,	  scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (set 4)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 1994, m_brkfs4, m_brkfst,	  scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (set 5)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 1994, m_brkfs5, m_brkfst,	  scorpion2,	 bbrkfst,	bbrkfst,	0,		 "BFM",      "The Big Breakfast (set 6)", GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
 
 GAME( 1995, m_bfocus, 0,          scorpion3,	 scorpion3,	focus,		0,		 "BFM/ELAM", "Focus (Dutch, Game Card 95-750-347)", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL)
 GAME( 1996, m_bcgslm, 0,          scorpion2,	 bfmcgslm,	bfmcgslm,	0,		 "BFM",      "Club Grandslam (UK, Game Card 95-750-843)", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL)

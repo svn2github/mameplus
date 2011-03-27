@@ -89,9 +89,9 @@ static void rom_exit(running_machine &machine);
     HELPERS (also used by devimage.c)
  ***************************************************************************/
 
-file_error common_process_file(core_options &options, const char *location, const char *ext, const rom_entry *romp, emu_file **image_file)
+file_error common_process_file(emu_options &options, const char *location, const char *ext, const rom_entry *romp, emu_file **image_file)
 {
-	*image_file = global_alloc(emu_file(options, SEARCHPATH_IMAGE, OPEN_FLAG_READ));
+	*image_file = global_alloc(emu_file(options.media_path(), OPEN_FLAG_READ));
 	file_error filerr;
 
 	if (location != NULL && strcmp(location, "") != 0)
@@ -107,9 +107,9 @@ file_error common_process_file(core_options &options, const char *location, cons
 	return filerr;
 }
 
-file_error common_process_file(core_options &options, const char *location, bool has_crc, UINT32 crc, const rom_entry *romp, emu_file **image_file)
+file_error common_process_file(emu_options &options, const char *location, bool has_crc, UINT32 crc, const rom_entry *romp, emu_file **image_file)
 {
-	*image_file = global_alloc(emu_file(options, SEARCHPATH_IMAGE, OPEN_FLAG_READ));
+	*image_file = global_alloc(emu_file(options.media_path(), OPEN_FLAG_READ));
 	file_error filerr;
 
 	if (has_crc)
@@ -338,7 +338,7 @@ static void CLIB_DECL ATTR_PRINTF(1,2) debugload(const char *string, ...)
 
 static void determine_bios_rom(rom_load_data *romdata)
 {
-	const char *specbios = options_get_string(&romdata->machine->options(), OPTION_BIOS);
+	const char *specbios = romdata->machine->options().bios();
 	const char *defaultname = NULL;
 	const rom_entry *rom;
 	int default_no = 1;
@@ -575,7 +575,7 @@ static void display_rom_load_results(rom_load_data *romdata)
     byte swapping and inverting data as necessary
 -------------------------------------------------*/
 
-static void region_post_process(rom_load_data *romdata, const char *rgntag)
+static void region_post_process(rom_load_data *romdata, const char *rgntag, bool invert)
 {
 	const memory_region *region = romdata->machine->region(rgntag);
 	UINT8 *base;
@@ -588,7 +588,7 @@ static void region_post_process(rom_load_data *romdata, const char *rgntag)
 	LOG(("+ datawidth=%d little=%d\n", region->width(), region->endianness() == ENDIANNESS_LITTLE));
 
 	/* if the region is inverted, do that now */
-	if (region->invert())
+	if (invert)
 	{
 		LOG(("+ Inverting region\n"));
 		for (i = 0, base = region->base(); i < region->bytes(); i++)
@@ -1028,7 +1028,7 @@ static void process_rom_entries(rom_load_data *romdata, const char *regiontag, c
     checksum
 -------------------------------------------------*/
 
-chd_error open_disk_image(core_options &options, const game_driver *gamedrv, const rom_entry *romp, emu_file **image_file, chd_file **image_chd, const char *locationtag)
+chd_error open_disk_image(emu_options &options, const game_driver *gamedrv, const rom_entry *romp, emu_file **image_file, chd_file **image_chd, const char *locationtag)
 {
 	const game_driver *drv, *searchdrv;
 	const rom_entry *region, *rom;
@@ -1139,7 +1139,7 @@ chd_error open_disk_image(core_options &options, const game_driver *gamedrv, con
 	hash_collection romphashes(ROM_GETHASHDATA(romp));
 	for (drv = gamedrv; drv != NULL; drv = driver_get_clone(drv))
 	{
-		machine_config config(*drv);
+		machine_config config(*drv, options);
 		for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
 			for (region = rom_first_region(*source); region != NULL; region = rom_next_region(region))
 				if (ROMREGION_ISDISKDATA(region))
@@ -1180,7 +1180,7 @@ chd_error open_disk_image(core_options &options, const game_driver *gamedrv, con
     open_disk_diff - open a DISK diff file
 -------------------------------------------------*/
 
-static chd_error open_disk_diff(core_options &options, const rom_entry *romp, chd_file *source, emu_file **diff_file, chd_file **diff_chd)
+static chd_error open_disk_diff(emu_options &options, const rom_entry *romp, chd_file *source, emu_file **diff_file, chd_file **diff_chd)
 {
 	astring fname(ROM_GETNAME(romp), ".dif");
 	chd_error err;
@@ -1190,7 +1190,7 @@ static chd_error open_disk_diff(core_options &options, const rom_entry *romp, ch
 
 	/* try to open the diff */
 	LOG(("Opening differencing image file: %s\n", fname.cstr()));
-	*diff_file = global_alloc(emu_file(options, SEARCHPATH_IMAGE_DIFF, OPEN_FLAG_READ | OPEN_FLAG_WRITE));
+	*diff_file = global_alloc(emu_file(options.diff_directory(), OPEN_FLAG_READ | OPEN_FLAG_WRITE));
 	file_error filerr = (*diff_file)->open(fname);
 	if (filerr != FILERR_NONE)
 	{
@@ -1313,7 +1313,7 @@ static void process_disk_entries(rom_load_data *romdata, const char *regiontag, 
     flags for the given device
 -------------------------------------------------*/
 
-static UINT32 normalize_flags_for_device(running_machine *machine, UINT32 startflags, const char *rgntag)
+static void normalize_flags_for_device(running_machine *machine, const char *rgntag, UINT8 &width, endianness_t &endian)
 {
 	device_t *device = machine->device(rgntag);
 	device_memory_interface *memory;
@@ -1325,26 +1325,23 @@ static UINT32 normalize_flags_for_device(running_machine *machine, UINT32 startf
 			int buswidth;
 
 			/* set the endianness */
-			startflags &= ~ROMREGION_ENDIANMASK;
 			if (spaceconfig->m_endianness == ENDIANNESS_LITTLE)
-				startflags |= ROMREGION_LE;
+				endian = ENDIANNESS_LITTLE;
 			else
-				startflags |= ROMREGION_BE;
+				endian = ENDIANNESS_BIG;
 
 			/* set the width */
-			startflags &= ~ROMREGION_WIDTHMASK;
 			buswidth = spaceconfig->m_databus_width;
 			if (buswidth <= 8)
-				startflags |= ROMREGION_8BIT;
+				width = 1;
 			else if (buswidth <= 16)
-				startflags |= ROMREGION_16BIT;
+				width = 2;
 			else if (buswidth <= 32)
-				startflags |= ROMREGION_32BIT;
+				width = 4;
 			else
-				startflags |= ROMREGION_64BIT;
+				width = 8;
 		}
 	}
-	return startflags;
 }
 
 
@@ -1413,7 +1410,6 @@ void load_software_part_region(device_t *device, char *swlist, char *swname, rom
 	for (region = start_region; region != NULL; region = rom_next_region(region))
 	{
 		UINT32 regionlength = ROMREGION_GETLENGTH(region);
-		UINT32 regionflags = ROMREGION_GETFLAGS(region);
 
 		device->subtag(regiontag, ROMREGION_GETTAG(region));
 		LOG(("Processing region \"%s\" (length=%X)\n", regiontag.cstr(), regionlength));
@@ -1422,18 +1418,20 @@ void load_software_part_region(device_t *device, char *swlist, char *swname, rom
 		assert(ROMENTRY_ISREGION(region));
 
 		/* if this is a device region, override with the device width and endianness */
+		endianness_t endianness = ROMREGION_ISBIGENDIAN(region) ? ENDIANNESS_BIG : ENDIANNESS_LITTLE;
+		UINT8 width = ROMREGION_GETWIDTH(region) / 8;
 		const memory_region *memregion = romdata->machine->region(regiontag);
 		if (memregion != NULL)
 		{
 			if (romdata->machine->device(regiontag) != NULL)
-				regionflags = normalize_flags_for_device(romdata->machine, regionflags, regiontag);
+				normalize_flags_for_device(romdata->machine, regiontag, width, endianness);
 
 			/* clear old region (todo: should be moved to an image unload function) */
 			romdata->machine->region_free(memregion->name());
 		}
 
 		/* remember the base and length */
-		romdata->region = romdata->machine->region_alloc(regiontag, regionlength, regionflags);
+		romdata->region = romdata->machine->region_alloc(regiontag, regionlength, width, endianness);
 		LOG(("Allocated %X bytes @ %p\n", romdata->region->bytes(), romdata->region->base()));
 
 		/* clear the region if it's requested */
@@ -1459,7 +1457,7 @@ void load_software_part_region(device_t *device, char *swlist, char *swname, rom
 
 	/* now go back and post-process all the regions */
 	for (region = start_region; region != NULL; region = rom_next_region(region))
-		region_post_process(romdata, ROMREGION_GETTAG(region));
+		region_post_process(romdata, ROMREGION_GETTAG(region), ROMREGION_ISINVERTED(region));
 
 	/* display the results and exit */
 	display_rom_load_results(romdata);
@@ -1481,7 +1479,6 @@ static void process_region_list(rom_load_data *romdata)
 		for (region = rom_first_region(*source); region != NULL; region = rom_next_region(region))
 		{
 			UINT32 regionlength = ROMREGION_GETLENGTH(region);
-			UINT32 regionflags = ROMREGION_GETFLAGS(region);
 
 			rom_region_name(regiontag, romdata->machine->gamedrv, source, region);
 			LOG(("Processing region \"%s\" (length=%X)\n", regiontag.cstr(), regionlength));
@@ -1492,11 +1489,13 @@ static void process_region_list(rom_load_data *romdata)
 			if (ROMREGION_ISROMDATA(region))
 			{
 				/* if this is a device region, override with the device width and endianness */
+				UINT8 width = ROMREGION_GETWIDTH(region) / 8;
+				endianness_t endianness = ROMREGION_ISBIGENDIAN(region) ? ENDIANNESS_BIG : ENDIANNESS_LITTLE;
 				if (romdata->machine->device(regiontag) != NULL)
-					regionflags = normalize_flags_for_device(romdata->machine, regionflags, regiontag);
+					normalize_flags_for_device(romdata->machine, regiontag, width, endianness);
 
 				/* remember the base and length */
-				romdata->region = romdata->machine->region_alloc(regiontag, regionlength, regionflags);
+				romdata->region = romdata->machine->region_alloc(regiontag, regionlength, width, endianness);
 				LOG(("Allocated %X bytes @ %p\n", romdata->region->bytes(), romdata->region->base()));
 
 				/* clear the region if it's requested */
@@ -1523,7 +1522,7 @@ static void process_region_list(rom_load_data *romdata)
 	/* now go back and post-process all the regions */
 	for (source = rom_first_source(*romdata->machine->config); source != NULL; source = rom_next_source(*source))
 		for (region = rom_first_region(*source); region != NULL; region = rom_next_region(region))
-			region_post_process(romdata, ROMREGION_GETTAG(region));
+			region_post_process(romdata, ROMREGION_GETTAG(region), ROMREGION_ISINVERTED(region));
 }
 
 
@@ -1536,7 +1535,7 @@ void rom_init(running_machine *machine)
 {
 	rom_load_data *romdata;
 #ifdef USE_IPS
-	const char *patchname = options_get_string(&machine->options(), OPTION_IPS);
+	const char *patchname = machine->options().value(OPTION_IPS);
 #endif /* USE_IPS */
 
 	/* allocate private data */
