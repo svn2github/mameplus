@@ -21,7 +21,7 @@ $(LIBOCORE): $(OSDCOREOBJS)
 
 $(LIBOCORE_NOMAIN): $(OSDCOREOBJS:$(WINOBJ)/main.o=)
 
-$CLIRESFILE): $(MESS_WINSRC)/mess.rc $(WINOBJ)/mamevers.rc
+$(CLIRESFILE): $(MESS_WINSRC)/mess.rc $(WINOBJ)/mamevers.rc
 
 #-------------------------------------------------
 # generic rules for the resource compiler

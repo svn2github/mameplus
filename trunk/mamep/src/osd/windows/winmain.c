@@ -363,21 +363,21 @@ const options_entry windows_options::s_option_entries[] =
 	{ NULL,                                           NULL,       OPTION_HEADER,     "WINDOWS SOUND OPTIONS" },
 	{ WINOPTION_AUDIO_LATENCY "(1-5)",                "2",        OPTION_INTEGER,    "set audio latency (increase to reduce glitches)" },
 #ifdef USE_AUDIO_SYNC
-	{ "audio_sync",               "0",        OPTION_BOOLEAN,    "enable audio sync" },
+	{ "audio_sync",                                   "0",        OPTION_BOOLEAN,    "enable audio sync" },
 #endif /* USE_AUDIO_SYNC */
 
 	// input options
 	{ NULL,                                           NULL,       OPTION_HEADER,     "INPUT DEVICE OPTIONS" },
 	{ WINOPTION_DUAL_LIGHTGUN ";dual",                "0",        OPTION_BOOLEAN,    "enable dual lightgun input" },
 #ifdef JOYSTICK_ID
-	{ "joyid1(0-7)",              "0",        0,                 "set joystick ID (Player1)" },
-	{ "joyid2(0-7)",              "1",        0,                 "set joystick ID (Player2)" },
-	{ "joyid3(0-7)",              "2",        0,                 "set joystick ID (Player3)" },
-	{ "joyid4(0-7)",              "3",        0,                 "set joystick ID (Player4)" },
-	{ "joyid5(0-7)",              "4",        0,                 "set joystick ID (Player5)" },
-	{ "joyid6(0-7)",              "5",        0,                 "set joystick ID (Player6)" },
-	{ "joyid7(0-7)",              "6",        0,                 "set joystick ID (Player7)" },
-	{ "joyid8(0-7)",              "7",        0,                 "set joystick ID (Player8)" },
+	{ "joyid1(0-7)",                                  "0",        OPTION_INTEGER,    "set joystick ID (Player1)" },
+	{ "joyid2(0-7)",                                  "1",        OPTION_INTEGER,    "set joystick ID (Player2)" },
+	{ "joyid3(0-7)",                                  "2",        OPTION_INTEGER,    "set joystick ID (Player3)" },
+	{ "joyid4(0-7)",                                  "3",        OPTION_INTEGER,    "set joystick ID (Player4)" },
+	{ "joyid5(0-7)",                                  "4",        OPTION_INTEGER,    "set joystick ID (Player5)" },
+	{ "joyid6(0-7)",                                  "5",        OPTION_INTEGER,    "set joystick ID (Player6)" },
+	{ "joyid7(0-7)",                                  "6",        OPTION_INTEGER,    "set joystick ID (Player7)" },
+	{ "joyid8(0-7)",                                  "7",        OPTION_INTEGER,    "set joystick ID (Player8)" },
 #endif /* JOYSTICK_ID */
 
 	{ NULL }
