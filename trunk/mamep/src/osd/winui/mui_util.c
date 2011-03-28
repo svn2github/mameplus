@@ -529,7 +529,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			const game_driver *gamedrv = drivers[ndriver];
 			struct DriversInfo *gameinfo = &drivers_info[ndriver];
 			const rom_entry *region, *rom;
-			machine_config config(*gamedrv);
+			machine_config config(*gamedrv, *(MameUIGlobal()));
 			const rom_source *source;
 			int num_speakers;
 

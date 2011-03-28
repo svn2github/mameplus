@@ -872,7 +872,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			WCHAR buf[MAX_PATH];
 			char *stemp;
 			const WCHAR *szDir = GetPcbInfoDir();
-			emu_file *mfile = global_alloc(emu_file(*(MameUISettings()), NULL, OPEN_FLAG_READ));
+			emu_file *mfile = global_alloc(emu_file(OPEN_FLAG_READ));
 			file_error filerr;
 			long filelen;
 			int nParentIndex = -1;

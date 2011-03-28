@@ -93,7 +93,7 @@ struct _datamap
 	datamap_entry *entries;
 };
 
-typedef void (*datamap_default_callback)(datamap *map, HWND control, core_options *opts, datamap_entry *entry, const char *option_name);
+typedef void (*datamap_default_callback)(datamap *map, HWND control, emu_options *opts, datamap_entry *entry, const char *option_name);
 
 
 
@@ -103,10 +103,10 @@ typedef void (*datamap_default_callback)(datamap *map, HWND control, core_option
 
 static datamap_entry *find_entry(datamap *map, int dlgitem);
 static control_type get_control_type(HWND control);
-static int control_operation(datamap *map, HWND dialog, core_options *opts,
+static int control_operation(datamap *map, HWND dialog, emu_options *opts,
 	datamap_entry *entry, datamap_callback_type callback_type);
-static void read_control(datamap *map, HWND control, core_options *opts, datamap_entry *entry, const char *option_name);
-static void populate_control(datamap *map, HWND control, core_options *opts, datamap_entry *entry, const char *option_name);
+static void read_control(datamap *map, HWND control, emu_options *opts, datamap_entry *entry, const char *option_name);
+static void populate_control(datamap *map, HWND control, emu_options *opts, datamap_entry *entry, const char *option_name);
 //mamep: for coloring of changed elements
 //static	char *tztrim(float float_value);
 
@@ -245,7 +245,7 @@ void datamap_set_float_format(datamap *map, int dlgitem, const char *format)
 //  datamap_read_control
 //============================================================
 
-BOOL datamap_read_control(datamap *map, HWND dialog, core_options *opts, int dlgitem)
+BOOL datamap_read_control(datamap *map, HWND dialog, emu_options *opts, int dlgitem)
 {
 	datamap_entry *entry = find_entry(map, dlgitem);
 	return control_operation(map, dialog, opts, entry, DCT_READ_CONTROL);
@@ -257,7 +257,7 @@ BOOL datamap_read_control(datamap *map, HWND dialog, core_options *opts, int dlg
 //  datamap_read_all_controls
 //============================================================
 
-void datamap_read_all_controls(datamap *map, HWND dialog, core_options *opts)
+void datamap_read_all_controls(datamap *map, HWND dialog, emu_options *opts)
 {
 	int i;
 	for (i = 0; i < map->entry_count; i++)
@@ -270,7 +270,7 @@ void datamap_read_all_controls(datamap *map, HWND dialog, core_options *opts)
 //  datamap_populate_control
 //============================================================
 
-void datamap_populate_control(datamap *map, HWND dialog, core_options *opts, int dlgitem)
+void datamap_populate_control(datamap *map, HWND dialog, emu_options *opts, int dlgitem)
 {
 	datamap_entry *entry = find_entry(map, dlgitem);
 	control_operation(map, dialog, opts, entry, DCT_POPULATE_CONTROL);
@@ -282,7 +282,7 @@ void datamap_populate_control(datamap *map, HWND dialog, core_options *opts, int
 //  datamap_populate_all_controls
 //============================================================
 
-void datamap_populate_all_controls(datamap *map, HWND dialog, core_options *opts)
+void datamap_populate_all_controls(datamap *map, HWND dialog, emu_options *opts)
 {
 	int i;
 	for (i = 0; i < map->entry_count; i++)
@@ -295,7 +295,7 @@ void datamap_populate_all_controls(datamap *map, HWND dialog, core_options *opts
 //  datamap_update_control
 //============================================================
 
-void datamap_update_control(datamap *map, HWND dialog, core_options *opts, int dlgitem)
+void datamap_update_control(datamap *map, HWND dialog, emu_options *opts, int dlgitem)
 {
 	datamap_entry *entry = find_entry(map, dlgitem);
 	control_operation(map, dialog, opts, entry, DCT_UPDATE_STATUS);
@@ -307,7 +307,7 @@ void datamap_update_control(datamap *map, HWND dialog, core_options *opts, int d
 //  datamap_update_all_controls
 //============================================================
 
-void datamap_update_all_controls(datamap *map, HWND dialog, core_options *opts)
+void datamap_update_all_controls(datamap *map, HWND dialog, emu_options *opts)
 {
 	int i;
 	for (i = 0; i < map->entry_count; i++)
@@ -400,7 +400,7 @@ static BOOL is_control_displayonly(HWND control)
 //  broadcast_changes
 //============================================================
 
-static void broadcast_changes(datamap *map, HWND dialog, core_options *opts, datamap_entry *entry, const char *option_name)
+static void broadcast_changes(datamap *map, HWND dialog, emu_options *opts, datamap_entry *entry, const char *option_name)
 {
 	HWND other_control;
 	const char *that_option_name;
@@ -427,7 +427,7 @@ static void broadcast_changes(datamap *map, HWND dialog, core_options *opts, dat
 //  control_operation
 //============================================================
 
-static int control_operation(datamap *map, HWND dialog, core_options *opts,
+static int control_operation(datamap *map, HWND dialog, emu_options *opts,
 	datamap_entry *entry, datamap_callback_type callback_type)
 {
 	static const datamap_default_callback default_callbacks[DCT_COUNT] =
@@ -462,7 +462,7 @@ static int control_operation(datamap *map, HWND dialog, core_options *opts,
 
 			// if reading, get the option value, solely for the purposes of comparison
 			if ((callback_type == DCT_READ_CONTROL) && (option_name != NULL))
-				snprintf(option_value, ARRAY_LENGTH(option_value), "%s", options_get_string(opts, option_name));
+				snprintf(option_value, ARRAY_LENGTH(option_value), "%s", opts->value(option_name));
 
 			if (entry->callbacks[callback_type] != NULL)
 			{
@@ -482,7 +482,7 @@ static int control_operation(datamap *map, HWND dialog, core_options *opts,
 					// For callbacks that returned TRUE, do not broadcast_changes.
 					if (!result) {
 						// do a check to see if the control changed
-						result = (option_name != NULL) && (strcmp(option_value, options_get_string(opts, option_name)) != 0);
+						result = (option_name != NULL) && (strcmp(option_value, opts->value(option_name)) != 0);
 						if (result)
 						{
 							// the value has changed; we may need to broadcast the change
@@ -538,7 +538,7 @@ static int trackbar_position_from_value(datamap_entry *entry, float value)
 //  read_control
 //============================================================
 
-static void read_control(datamap *map, HWND control, core_options *opts, datamap_entry *entry, const char *option_name)
+static void read_control(datamap *map, HWND control, emu_options *opts, datamap_entry *entry, const char *option_name)
 {
 	BOOL bool_value;
 	int int_value;
@@ -546,6 +546,7 @@ static void read_control(datamap *map, HWND control, core_options *opts, datamap
 	const char *string_value;
 	int selected_index;
 	int trackbar_pos;
+	astring error;
 
 	// use default read value behavior
 	switch(get_control_type(control))
@@ -553,7 +554,8 @@ static void read_control(datamap *map, HWND control, core_options *opts, datamap
 		case CT_BUTTON:
 			assert(entry->type == DM_BOOL);
 			bool_value = Button_GetCheck(control);
-			options_set_bool(opts, option_name, bool_value, OPTION_PRIORITY_CMDLINE);
+			opts->set_value(option_name, bool_value, OPTION_PRIORITY_CMDLINE, error);
+			assert(!error);
 			break;
 
 		case CT_COMBOBOX:
@@ -564,12 +566,14 @@ static void read_control(datamap *map, HWND control, core_options *opts, datamap
 				{
 					case DM_INT:
 						int_value = (int) ComboBox_GetItemData(control, selected_index);
-						options_set_int(opts, option_name, int_value, OPTION_PRIORITY_CMDLINE);
+						opts->set_value(option_name, int_value, OPTION_PRIORITY_CMDLINE, error);
+						assert(!error);
 						break;
 
 					case DM_STRING:
 						string_value = (const char *) ComboBox_GetItemData(control, selected_index);
-						options_set_string(opts, option_name, string_value ? string_value : "", OPTION_PRIORITY_CMDLINE);
+						opts->set_value(option_name, string_value ? string_value : "", OPTION_PRIORITY_CMDLINE, error);
+						assert(!error);
 						break;
 
 					default:
@@ -586,17 +590,20 @@ static void read_control(datamap *map, HWND control, core_options *opts, datamap
 			{
 				case DM_INT:
 					int_value = (int) float_value;
-					if (int_value != options_get_int(opts, option_name))
-						options_set_int(opts, option_name, int_value, OPTION_PRIORITY_CMDLINE);
+					if (int_value != opts->int_value(option_name))
+						opts->set_value(option_name, int_value, OPTION_PRIORITY_CMDLINE, error);
+						assert(!error);
 					break;
 
 				case DM_FLOAT:
 #if 0 //mamep: use options_set_float, options_equal() works fine.
 					// Use tztrim(float_value) or we get trailing zero's that break options_equal().
-					if (float_value != options_get_float(opts, option_name))
-						options_set_string(opts, option_name, tztrim(float_value), OPTION_PRIORITY_CMDLINE);
+					if (float_value != opts->float_value(option_name))
+						opts->set_value(option_name, tztrim(float_value), OPTION_PRIORITY_CMDLINE, error);
+						assert(!error);
 #else
-					options_set_float(opts, option_name, float_value, OPTION_PRIORITY_CMDLINE);
+					opts->set_value(option_name, float_value, OPTION_PRIORITY_CMDLINE, error);
+					assert(!error);
 #endif
 					break;
 
@@ -624,7 +631,7 @@ static void read_control(datamap *map, HWND control, core_options *opts, datamap
 //  populate_control
 //============================================================
 
-static void populate_control(datamap *map, HWND control, core_options *opts, datamap_entry *entry, const char *option_name)
+static void populate_control(datamap *map, HWND control, emu_options *opts, datamap_entry *entry, const char *option_name)
 {
 	int i;
 	BOOL bool_value;
@@ -645,7 +652,7 @@ static void populate_control(datamap *map, HWND control, core_options *opts, dat
 	{
 		case CT_BUTTON:
 			assert(entry->type == DM_BOOL);
-			bool_value = options_get_bool(opts, option_name);
+			bool_value = opts->bool_value(option_name);
 			Button_SetCheck(control, bool_value);
 			break;
 
@@ -654,11 +661,11 @@ static void populate_control(datamap *map, HWND control, core_options *opts, dat
 			switch(entry->type)
 			{
 				case DM_STRING:
-					string_value = options_get_string(opts, option_name);
+					string_value = opts->value(option_name);
 					break;
 
 				case DM_INT:
-					int_value = options_get_int(opts, option_name);
+					int_value = opts->int_value(option_name);
 					if (entry->int_format != NULL)
 						snprintf(buffer, ARRAY_LENGTH(buffer), entry->int_format, int_value);
 					else
@@ -667,7 +674,7 @@ static void populate_control(datamap *map, HWND control, core_options *opts, dat
 					break;
 
 				case DM_FLOAT:
-					float_value = options_get_float(opts, option_name);
+					float_value = opts->float_value(option_name);
 					if (entry->float_format != NULL)
 						snprintf(buffer, ARRAY_LENGTH(buffer), entry->float_format, float_value);
 					else
@@ -689,7 +696,7 @@ static void populate_control(datamap *map, HWND control, core_options *opts, dat
 			switch(entry->type)
 			{
 				case DM_INT:
-					int_value = options_get_int(opts, option_name);
+					int_value = opts->int_value(option_name);
 					for (i = 0; i < ComboBox_GetCount(control); i++)
 					{
 						if (int_value == (int) ComboBox_GetItemData(control, i))
@@ -701,7 +708,7 @@ static void populate_control(datamap *map, HWND control, core_options *opts, dat
 					break;
 
 				case DM_STRING:
-					string_value = options_get_string(opts, option_name);
+					string_value = opts->value(option_name);
 					for (i = 0; i < ComboBox_GetCount(control); i++)
 					{
 						item_string = (const char *) ComboBox_GetItemData(control, i);
@@ -721,6 +728,8 @@ static void populate_control(datamap *map, HWND control, core_options *opts, dat
 			break;
 
 		case CT_TRACKBAR:
+//FIXME
+#if 0
 			// do we need to set the trackbar options?
 			if (!entry->use_trackbar_options)
 			{
@@ -762,12 +771,12 @@ static void populate_control(datamap *map, HWND control, core_options *opts, dat
 			switch(entry->type)
 			{
 				case DM_INT:
-					int_value = options_get_int(opts, option_name);
+					int_value = opts->int_value(option_name);
 					trackbar_pos = trackbar_position_from_value(entry, int_value);
 					break;
 
 				case DM_FLOAT:
-					float_value = options_get_float(opts, option_name);
+					float_value = opts->float_value(option_name);
 					trackbar_pos = trackbar_position_from_value(entry, float_value);
 					break;
 
@@ -777,6 +786,7 @@ static void populate_control(datamap *map, HWND control, core_options *opts, dat
 					break;
 			}
 			SendMessage(control, TBM_SETPOS, (WPARAM) TRUE, (LPARAM) trackbar_pos);
+#endif
 			break;
 
 		case CT_LISTVIEW:

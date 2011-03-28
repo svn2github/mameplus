@@ -16,7 +16,7 @@
 #ifndef DATAFILE_H
 #define DATAFILE_H
 
-extern void winui_datafile_init(core_options *options);
+extern void winui_datafile_init(emu_options *options);
 extern void winui_datafile_exit(void);
 
 extern int load_driver_history(const game_driver *drv, char *buffer, int bufsize);
