@@ -39,7 +39,6 @@
 #include "mui_opts.h"
 #include "mui_util.h"
 #include "properties.h"
-#include "emuopts.h"
 #include "translate.h"
 
 
@@ -188,7 +187,7 @@ static BOOL RomsetNotExist(int game)
 
 		// open the file if we can
 		fname = astring_assemble_2(astring_alloc(), drv->name, ".zip");
-		emu_file file = emu_file(MameUIGlobal()->media_path(), OPEN_FLAG_READ);
+		emu_file file = emu_file(MameUIGlobal().media_path(), OPEN_FLAG_READ);
 		filerr = file.open(astring_c(fname));
 		astring_free(fname);
 		if (filerr == FILERR_NONE)
@@ -231,7 +230,7 @@ int MameUIVerifyRomSet(int game, BOOL isComplete)
 	}
 
 	// perform the audit
-	audit_records = audit_images(*(MameUIGlobal()), drivers[game], AUDIT_VALIDATE_FAST, &audit);
+	audit_records = audit_images(MameUIGlobal(), drivers[game], AUDIT_VALIDATE_FAST, &audit);
 	res = ProcessAuditResults(game, audit, audit_records, isComplete);
 	if (audit_records > 0)
 		global_free(audit);
@@ -248,7 +247,7 @@ int MameUIVerifySampleSet(int game, BOOL isComplete)
 	int res;
 
 	// perform the audit
-	audit_records = audit_samples(*(MameUIGlobal()), drivers[game], &audit);
+	audit_records = audit_samples(MameUIGlobal(), drivers[game], &audit);
 	res = ProcessAuditResults(game, audit, audit_records, isComplete);
 	if (audit_records > 0)
 		global_free(audit);

@@ -900,7 +900,7 @@ void CreateCPUFolders(int parent_index)
 
 	for (i = 0; drivers[i] != NULL; i++)
 	{
-		machine_config config(*drivers[i], *(MameUIGlobal()));
+		machine_config config(*drivers[i],MameUIGlobal());
 
 		// enumerate through all devices
 		for (bool gotone = config.m_devicelist.first(device); gotone; gotone = device->next(device))
@@ -950,7 +950,7 @@ void CreateSoundFolders(int parent_index)
 
 	for (i = 0; drivers[i] != NULL; i++)
 	{
-		machine_config config(*drivers[i], *(MameUIGlobal()));
+		machine_config config(*drivers[i],MameUIGlobal());
 
 		// enumerate through all devices
 		
@@ -1077,7 +1077,7 @@ void CreateDumpingFolders(int parent_index)
 		bBadDump = FALSE;
 		bNoDump = FALSE;
 		/* Allocate machine config */
-		machine_config config(*gamedrv, *(MameUIGlobal()));
+		machine_config config(*drivers[jj],MameUIGlobal());
 		
 		for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
 		{
@@ -1220,7 +1220,7 @@ void CreateResolutionFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		machine_config config(*drivers[jj], *(MameUIGlobal()));
+		machine_config config(*drivers[jj],MameUIGlobal());
 		const screen_device_config *screen;
 		screen = config.first_screen();
 		if (screen != NULL)
@@ -1288,7 +1288,7 @@ void CreateFPSFolders(int parent_index)
 	{
 		LPTREEFOLDER lpTemp;
 		float f;
-		machine_config config(*drivers[i], *(MameUIGlobal()));
+		machine_config config(*drivers[i],MameUIGlobal());
 		const screen_device_config *screen;
 		screen = config.first_screen();
 		if (screen != NULL)

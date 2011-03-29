@@ -54,7 +54,6 @@
 #include "winutf8.h"
 #include "strconv.h"
 #include "window.h"
-#include "winmain.h"
 #ifdef DRIVER_SWITCH
 #include "clifront.h"
 #endif /* DRIVER_SWITCH */
@@ -329,7 +328,7 @@ static BOOL             FolderCheck(void);
 
 static void             ToggleScreenShot(void);
 static void             AdjustMetrics(void);
-//static void             EnablePlayOptions(int nIndex, emu_options *o);
+//static void             EnablePlayOptions(int nIndex, windows_options *o);
 
 /* Icon routines */
 static DWORD            GetShellLargeIconSize(void);
@@ -973,17 +972,17 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 	double elapsedtime;
 	DWORD dwExitCode = 0;
 	int i;
-	emu_options *mame_opts;
-
+	windows_options mame_opts;
+	astring error_string;
 	// set up MAME options
-	mame_opts = mame_options_init(mame_win_options);
+//	mame_opts = mame_options_init(mame_win_options);
 
 	// Tell mame were to get the INIs
 	//mamep: we want parse MAME.ini in root directory with all INIs in inipath. not only parse inipath
-	//options_set_string(mame_opts, OPTION_INIPATH, GetIniDir(), OPTION_PRIORITY_CMDLINE);
+//	mame_opts.set_value(OPTION_INIPATH, GetIniDir(), OPTION_PRIORITY_CMDLINE,error_string);
 
 	// add image specific device options
-	image_add_device_options(mame_opts, drivers[nGameIndex]);
+	mame_opts.set_system_name(drivers[nGameIndex]->name);
 
 	// set any specified play options
 	if (playopts != NULL)
@@ -1004,7 +1003,7 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 
 #ifdef MESS
 	if (g_szSelectedSoftware[0] && g_szSelectedDevice[0]) {
-			options_set_string(mame_opts, g_szSelectedDevice, g_szSelectedSoftware, OPTION_PRIORITY_CMDLINE);
+			mame_opts.set_value(g_szSelectedDevice, g_szSelectedSoftware, OPTION_PRIORITY_CMDLINE,error_string);
 			// Add params and clear so next start of driver is without parameters			
 			g_szSelectedSoftware[0] = 0;
 			g_szSelectedDevice[0] = 0;
@@ -1019,11 +1018,11 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 		Picker_ClearIdle(GetDlgItem(hMain, s_nPickers[i]));
 
 	// run the emulation
-	mame_opts->set_system_name(drivers[nGameIndex]->name);
+	//mame_opts.set_value(OPTION_SYSTEMNAME, drivers[nGameIndex]->name, OPTION_PRIORITY_CMDLINE,error_string);
 	// Time the game run.
 	time(&start);
 	windows_osd_interface osd;
-	mame_execute(*mame_opts, osd);
+	mame_execute(mame_opts, osd);
 	// Calc the duration
 	time(&end);
 	elapsedtime = end - start;
@@ -2114,7 +2113,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	extern const FOLDERDATA g_folderData[];
 	extern const FILTER_ITEM g_filterList[];
 	LONG     common_control_version = GetCommonControlVersion();
-	emu_options *options;
+	windows_options options;
 	int validity_failed = 0;
 	//TCHAR* t_inpdir = NULL;
 	LONG_PTR l;
@@ -2125,10 +2124,10 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	mame_set_output_channel(OUTPUT_CHANNEL_ERROR, winui_output_error, NULL, NULL, NULL);
 
 	//mamep: set up initial option system
-	options = mame_options_init(mame_win_options);
+	CreateGameOptions(options, OPTIONS_TYPE_GLOBAL);
 
 	//mamep: initialzied ui lang system
-	lang_set_langcode(*options, UI_LANG_EN_US);
+	lang_set_langcode(options, UI_LANG_EN_US);
 
 #ifdef DRIVER_SWITCH
 	{
@@ -2139,11 +2138,11 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 		if (filerr == FILERR_NONE)
 		{
 			astring error;
-			options->parse_ini_file(file, OPTION_PRIORITY_CMDLINE, FALSE, error);
+			options.parse_ini_file(file, OPTION_PRIORITY_CMDLINE, FALSE, error);
 			file.close();
 		}
 
-		assign_drivers(*options);
+		assign_drivers(options);
 	}
 #endif /* DRIVER_SWITCH */
 
@@ -2215,7 +2214,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 
 	//mamep: finished initial option system
 //	options_free(options);
-	options = NULL;
+//	options = NULL;
 
 	dprintf("about to init options");
 	OptionsInit();
@@ -4871,7 +4870,8 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		if (GetPatchFilename(patch_filename, driversw[nGame]->name, id-ID_PLAY_IPS))
 		{
 			static WCHAR new_opt[MAX_PATCHNAME * MAX_PATCHES];
-			emu_options *o = load_options(OPTIONS_GAME, nGame);
+			windows_options o;
+			load_options(o, OPTIONS_GAME, nGame);
 			WCHAR *ips = options_get_wstring(o, OPTION_IPS);
 
 			new_opt[0] = '\0';
@@ -5761,7 +5761,7 @@ static const TCHAR *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nCo
 
 		case COLUMN_TYPE:
 			{
-				machine_config config(*drivers[nItem], *(MameUIGlobal()));
+				machine_config config(*drivers[nItem],MameUIGlobal());
 				/* Vector/Raster */
 				if (isDriverVector(&config))
 					s = _UIW(TEXT("Vector"));
@@ -6262,8 +6262,8 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 
 	case COLUMN_TYPE:
 		{
-			machine_config config1(*drivers[index1], *(MameUIGlobal()));
-			machine_config config2(*drivers[index2], *(MameUIGlobal()));
+			machine_config config1(*drivers[index1],MameUIGlobal());
+			machine_config config2(*drivers[index2],MameUIGlobal());
 
 			value = isDriverVector(&config1) - isDriverVector(&config2);
 		}
@@ -6617,7 +6617,7 @@ static void MamePlayBackGame()
 			path[wcslen(path)-1] = 0; // take off trailing back slash
 
 		stemp = utf8_from_wstring(fname);
-		emu_file pPlayBack = emu_file(MameUIGlobal()->input_directory(), OPEN_FLAG_READ);
+		emu_file pPlayBack = emu_file(MameUIGlobal().input_directory(), OPEN_FLAG_READ);
 		fileerr = pPlayBack.open(stemp);
 		osd_free(stemp);
 		if (fileerr != FILERR_NONE)
@@ -6729,7 +6729,7 @@ static void MameLoadState()
 #endif // MESS
 
 		stemp = utf8_from_wstring(state_fname);
-		emu_file pSaveState = emu_file(MameUIGlobal()->state_directory(), OPEN_FLAG_READ);
+		emu_file pSaveState = emu_file(MameUIGlobal().state_directory(), OPEN_FLAG_READ);
 		filerr = pSaveState.open(stemp);
 		osd_free(stemp);
 		if (filerr != FILERR_NONE)
@@ -7161,7 +7161,8 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 	{
 		HMENU hSubMenu = NULL;
 		int  nGame = Picker_GetSelectedItem(hwndList);
-		emu_options *o = load_options(OPTIONS_GAME, nGame);
+		windows_options o;
+		load_options(o, OPTIONS_GAME, nGame);
 		int patch_count = GetPatchCount(driversw[nGame]->name, TEXT("*"));
 		WCHAR *ips = options_get_wstring(o, OPTION_IPS);
 

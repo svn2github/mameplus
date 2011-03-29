@@ -20,7 +20,7 @@
 #ifndef _DATAMAP_H_
 #define _DATAMAP_H_
 
-class emu_options;
+#include "emu.h"
 
 
 //============================================================
@@ -52,7 +52,7 @@ typedef enum _datamap_callback_type datamap_callback_type;
 
 typedef struct _datamap datamap;
 // MSH - Callback can now return TRUE, signifying that changes have been made, but should NOT be broadcast.
-typedef BOOL (*datamap_callback)(datamap *map, HWND dialog, HWND control, emu_options *opts, const char *option_name);
+typedef BOOL (*datamap_callback)(datamap *map, HWND dialog, HWND control, windows_options *opts, const char *option_name);
 typedef void (*get_option_name_callback)(datamap *map, HWND dialog, HWND control, char *buffer, size_t buffer_size);
 
 
@@ -73,12 +73,12 @@ void datamap_set_int_format(datamap *map, int dlgitem, const char *format);
 void datamap_set_float_format(datamap *map, int dlgitem, const char *format);
 
 // datamap operations
-BOOL datamap_read_control(datamap *map, HWND dialog, emu_options *opts, int dlgitem);
-void datamap_read_all_controls(datamap *map, HWND dialog, emu_options *opts);
-void datamap_populate_control(datamap *map, HWND dialog, emu_options *opts, int dlgitem);
-void datamap_populate_all_controls(datamap *map, HWND dialog, emu_options *opts);
-void datamap_update_control(datamap *map, HWND dialog, emu_options *opts, int dlgitem);
-void datamap_update_all_controls(datamap *map, HWND dialog, emu_options *opts);
+BOOL datamap_read_control(datamap *map, HWND dialog, windows_options &opts, int dlgitem);
+void datamap_read_all_controls(datamap *map, HWND dialog, windows_options &opts);
+void datamap_populate_control(datamap *map, HWND dialog, windows_options &opts, int dlgitem);
+void datamap_populate_all_controls(datamap *map, HWND dialog, windows_options &opts);
+void datamap_update_control(datamap *map, HWND dialog, windows_options &opts, int dlgitem);
+void datamap_update_all_controls(datamap *map, HWND dialog, windows_options *opts);
 
 //mamep: for coloring of changed elements
 const char *datamap_get_contorl_option_name(datamap *map, HWND dialog, HWND control);

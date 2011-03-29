@@ -37,6 +37,7 @@
 // standard C headers
 #include <string.h>
 #include <tchar.h>
+#include <stdlib.h>
 
 // MAMEUI headers
 #include "bitmask.h"

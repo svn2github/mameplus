@@ -77,7 +77,7 @@ static const char *DATAFILE_TAG_DRIV = "$drv";
 #define FILE_ROOT	2
 #define FILE_TYPEMAX	((FILE_MERGED | FILE_ROOT) + 1)
 
-static emu_options *datafile_options;
+static windows_options *datafile_options;
 
 struct tDatafileIndex
 {
@@ -124,9 +124,9 @@ static void flush_index(void);
  *      startup and shutdown functions
  ****************************************************************************/
 
-void winui_datafile_init(emu_options *options)
+void winui_datafile_init(windows_options &options)
 {
-	datafile_options = options;
+	datafile_options = &options;
 
 	while (drivers[num_games] != NULL)
 		num_games++;
@@ -883,7 +883,7 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 	if (where != FILE_ROOT)
 	{
 		sprintf(filename, "%s\\%s\\",
-	        	MameUIGlobal()->value(OPTION_LANGPATH),
+	        	MameUIGlobal().value(OPTION_LANGPATH),
 			ui_lang_info[lang_get_langcode()].name);
 	}
 
@@ -1007,7 +1007,7 @@ int load_driver_history (const game_driver *drv, char *buffer, int bufsize)
 	                         "history/", "history.dat");
 	result &= load_datafile (drv, buffer, bufsize,
 	                         DATAFILE_TAG_BIO, FILE_ROOT, hist_idx,
-	                         "history/", MameUISettings()->value(MUIOPTION_HISTORY_FILE));
+	                         "history/", MameUISettings().value(MUIOPTION_HISTORY_FILE));
 
 	return result;
 }
@@ -1031,7 +1031,7 @@ int load_driver_story (const game_driver *drv, char *buffer, int bufsize)
 		                         "story/", "story.dat");
 		result &= load_datafile (drv, buffer, bufsize,
 		                         DATAFILE_TAG_STORY, FILE_ROOT, story_idx,
-		                         "story/", MameUISettings()->value(MUIOPTION_STORY_FILE));
+		                         "story/", MameUISettings().value(MUIOPTION_STORY_FILE));
 
 		if (buffer[check_pos] == '\0')
 			buffer[skip_pos] = '\0';
@@ -1098,7 +1098,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 	                         "mameinfo/", "mameinfo.dat");
 	result &= load_datafile (drv, buffer, bufsize,
 	                         DATAFILE_TAG_MAME, FILE_ROOT, mame_idx,
-	                         "mameinfo/", MameUISettings()->value(MUIOPTION_MAMEINFO_FILE));
+	                         "mameinfo/", MameUISettings().value(MUIOPTION_MAMEINFO_FILE));
 
 	clone_of = driver_get_clone(drv);
 	if (clone_of && !(clone_of->flags & GAME_IS_BIOS_ROOT))
@@ -1144,7 +1144,7 @@ int load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize)
 	sprintf (buffer, _("\nDRIVER: %s\n"), drv->source_file+17);
 
 	/* Try to open mameinfo datafile - driver section */
-	if (ParseOpen (MameUISettings()->value(MUIOPTION_MAMEINFO_FILE)))
+	if (ParseOpen (MameUISettings().value(MUIOPTION_MAMEINFO_FILE)))
 	{
 		int err;
 

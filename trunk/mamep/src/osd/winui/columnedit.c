@@ -26,6 +26,7 @@
 #include <shellapi.h>
 #include <commctrl.h>
 #include <commdlg.h>
+#include <stdlib.h>
 
 // MAME/MAMEUI headers
 #include "resource.h"

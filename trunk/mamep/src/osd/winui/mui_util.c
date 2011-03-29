@@ -37,9 +37,9 @@
 #include "winui.h"
 #include "mui_util.h"
 #include "translate.h"
+#include "mui_opts.h"
 
 #ifdef USE_IPS
-#include "mui_opts.h"
 #include "ips.h"
 #endif /* USE_IPS */
 
@@ -529,7 +529,9 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			const game_driver *gamedrv = drivers[ndriver];
 			struct DriversInfo *gameinfo = &drivers_info[ndriver];
 			const rom_entry *region, *rom;
-			machine_config config(*gamedrv, *(MameUIGlobal()));
+			windows_options pCurrentOpts;
+			load_options(pCurrentOpts, OPTIONS_GLOBAL, driver_index); 
+			machine_config config(*gamedrv, pCurrentOpts);
 			const rom_source *source;
 			int num_speakers;
 
