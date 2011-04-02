@@ -1363,12 +1363,14 @@ BOOL GetSortReverse(void)
 #if 0 //mamep
 const char* GetLanguage(void)
 {
-	return options_get_string(settings, MUIOPTION_LANGUAGE);
+	return settings.value(MUIOPTION_LANGUAGE);
 }
 
 void SetLanguage(const char* lang)
 {
-	options_set_string(settings, MUIOPTION_LANGUAGE, lang, OPTION_PRIORITY_CMDLINE);
+	astring error_string;
+	settings.set_value(MUIOPTION_LANGUAGE, lang, OPTION_PRIORITY_CMDLINE,error_string);
+	assert(!error_string);
 }
 #endif
 
@@ -3138,7 +3140,7 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 
 	CreateGameOptions(opts, game_num);
 	// Copy over the defaults 
-	opts = global;
+	ui_parse_ini_file(opts, CONFIGNAME);
 
 	if (opt_type == OPTIONS_GLOBAL)
 	{

@@ -2547,13 +2547,13 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const TCHAR *new_name)
 		if (TrySaveExtraFolder(lpFolder) == FALSE)
 		{
 			// failed, so free newly allocated title and restore old
-			free(lpFolder->m_lpTitle);
+			FreeIfAllocatedW(&lpFolder->m_lpTitle);
 			lpFolder->m_lpTitle = old_title;
 			return FALSE;
 		}
 		TryRenameCustomFolderIni(lpFolder, old_title, new_name);
 		// successful, so free old title
-		free(old_title);
+		FreeIfAllocatedW(&old_title);
 		return TRUE;
 	}
 	
@@ -2569,7 +2569,7 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const TCHAR *new_name)
 	if (retval)
 	{
 		TryRenameCustomFolderIni(lpFolder, lpFolder->m_lpTitle, new_name);
-		free(lpFolder->m_lpTitle);
+		FreeIfAllocatedW(&lpFolder->m_lpTitle);
 		lpFolder->m_lpTitle = win_tstring_strdup(new_name);
 	}
 	else

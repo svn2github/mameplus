@@ -529,9 +529,13 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			const game_driver *gamedrv = drivers[ndriver];
 			struct DriversInfo *gameinfo = &drivers_info[ndriver];
 			const rom_entry *region, *rom;
+#if 1 //mamep: less memory
+			machine_config config(*gamedrv, MameUIGlobal());
+#else
 			windows_options pCurrentOpts;
 			load_options(pCurrentOpts, OPTIONS_GLOBAL, driver_index); 
 			machine_config config(*gamedrv, pCurrentOpts);
+#endif
 			const rom_source *source;
 			int num_speakers;
 
