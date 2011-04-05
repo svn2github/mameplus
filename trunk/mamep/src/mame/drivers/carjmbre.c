@@ -50,7 +50,7 @@ Notes:
  *
  *************************************/
 
-static ADDRESS_MAP_START( carjmbre_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( carjmbre_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 //  AM_RANGE(0x8800, 0x8800) AM_READNOP         // watchdog?
@@ -60,20 +60,20 @@ static ADDRESS_MAP_START( carjmbre_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x8807, 0x8807) AM_WRITE(carjmbre_flipscreen_w)
 //  AM_RANGE(0x8fc1, 0x8fc1) AM_WRITENOP        // overrun during initial screen clear
 //  AM_RANGE(0x8fe1, 0x8fe1) AM_WRITENOP        // overrun during initial screen clear
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(carjmbre_videoram_w) AM_BASE_MEMBER(carjmbre_state, videoram)
-	AM_RANGE(0x9800, 0x985f) AM_MIRROR(0x80) AM_WRITEONLY AM_BASE_SIZE_MEMBER(carjmbre_state, spriteram, spriteram_size)
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(carjmbre_videoram_w) AM_BASE_MEMBER(carjmbre_state, m_videoram)
+	AM_RANGE(0x9800, 0x985f) AM_MIRROR(0x80) AM_WRITEONLY AM_BASE_SIZE_MEMBER(carjmbre_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0xa000, 0xa000) AM_READ_PORT("P1")
 	AM_RANGE(0xa800, 0xa800) AM_READ_PORT("P2")
 	AM_RANGE(0xb800, 0xb800) AM_READ_PORT("DSW") AM_WRITE(soundlatch_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( carjmbre_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( carjmbre_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x0fff) AM_MIRROR(0x1000) AM_ROM
 	AM_RANGE(0x2000, 0x27ff) AM_RAM
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( carjmbre_sound_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( carjmbre_sound_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ(soundlatch_r)
 	AM_RANGE(0x10, 0x10) AM_WRITENOP			//?? written on init/0xff sound command reset
@@ -178,10 +178,10 @@ GFXDECODE_END
 
 static MACHINE_RESET( carjmbre )
 {
-	carjmbre_state *state = machine->driver_data<carjmbre_state>();
+	carjmbre_state *state = machine.driver_data<carjmbre_state>();
 
-	state->flipscreen = 0;
-	state->bgcolor = 0;
+	state->m_flipscreen = 0;
+	state->m_bgcolor = 0;
 }
 
 static MACHINE_CONFIG_START( carjmbre, carjmbre_state )

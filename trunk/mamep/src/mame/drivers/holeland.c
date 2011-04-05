@@ -18,28 +18,28 @@
 #include "includes/holeland.h"
 
 
-static ADDRESS_MAP_START( holeland_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( holeland_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0xa000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc001) AM_WRITE(holeland_pal_offs_w)
 	AM_RANGE(0xc006, 0xc007) AM_WRITE(holeland_flipscreen_w)
-	AM_RANGE(0xe000, 0xe3ff) AM_WRITE(holeland_colorram_w) AM_BASE_MEMBER(holeland_state, colorram)
-	AM_RANGE(0xe400, 0xe7ff) AM_WRITE(holeland_videoram_w) AM_BASE_SIZE_MEMBER(holeland_state, videoram, videoram_size)
-	AM_RANGE(0xf000, 0xf3ff) AM_RAM AM_BASE_SIZE_MEMBER(holeland_state, spriteram, spriteram_size)
+	AM_RANGE(0xe000, 0xe3ff) AM_WRITE(holeland_colorram_w) AM_BASE_MEMBER(holeland_state, m_colorram)
+	AM_RANGE(0xe400, 0xe7ff) AM_WRITE(holeland_videoram_w) AM_BASE_SIZE_MEMBER(holeland_state, m_videoram, m_videoram_size)
+	AM_RANGE(0xf000, 0xf3ff) AM_RAM AM_BASE_SIZE_MEMBER(holeland_state, m_spriteram, m_spriteram_size)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( crzrally_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( crzrally_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0xe000, 0xe3ff) AM_WRITE(holeland_colorram_w) AM_BASE_MEMBER(holeland_state, colorram)
-	AM_RANGE(0xe400, 0xe7ff) AM_WRITE(holeland_videoram_w) AM_BASE_SIZE_MEMBER(holeland_state, videoram, videoram_size)
-	AM_RANGE(0xe800, 0xebff) AM_RAM AM_BASE_SIZE_MEMBER(holeland_state, spriteram, spriteram_size)
+	AM_RANGE(0xe000, 0xe3ff) AM_WRITE(holeland_colorram_w) AM_BASE_MEMBER(holeland_state, m_colorram)
+	AM_RANGE(0xe400, 0xe7ff) AM_WRITE(holeland_videoram_w) AM_BASE_SIZE_MEMBER(holeland_state, m_videoram, m_videoram_size)
+	AM_RANGE(0xe800, 0xebff) AM_RAM AM_BASE_SIZE_MEMBER(holeland_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(holeland_scroll_w)
 	AM_RANGE(0xf800, 0xf801) AM_WRITE(holeland_pal_offs_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x01, 0x01) AM_READ(watchdog_reset_r)	/* ? */
 	AM_RANGE(0x04, 0x04) AM_DEVREAD("ay1", ay8910_r)

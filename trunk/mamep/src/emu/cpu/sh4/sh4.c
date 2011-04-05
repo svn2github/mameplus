@@ -845,7 +845,7 @@ INLINE void LDCSR(sh4_state *sh4, UINT32 m)
 UINT32 reg;
 
 	reg = sh4->r[m];
-	if ((sh4->device->machine->debug_flags & DEBUG_FLAG_ENABLED) != 0)
+	if ((sh4->device->machine().debug_flags & DEBUG_FLAG_ENABLED) != 0)
 		sh4_syncronize_register_bank(sh4, (sh4->sr & sRB) >> 29);
 	if ((sh4->r[m] & sRB) != (sh4->sr & sRB))
 		sh4_change_register_bank(sh4, sh4->r[m] & sRB ? 1 : 0);
@@ -873,7 +873,7 @@ UINT32 old;
 	old = sh4->sr;
 	sh4->ea = sh4->r[m];
 	sh4->sr = RL(sh4, sh4->ea ) & FLAGS;
-	if ((sh4->device->machine->debug_flags & DEBUG_FLAG_ENABLED) != 0)
+	if ((sh4->device->machine().debug_flags & DEBUG_FLAG_ENABLED) != 0)
 		sh4_syncronize_register_bank(sh4, (old & sRB) >> 29);
 	if ((old & sRB) != (sh4->sr & sRB))
 		sh4_change_register_bank(sh4, sh4->sr & sRB ? 1 : 0);
@@ -1459,7 +1459,7 @@ INLINE void RTE(sh4_state *sh4)
 {
 	sh4->delay = sh4->pc;
 	sh4->pc = sh4->ea = sh4->spc;
-	if ((sh4->device->machine->debug_flags & DEBUG_FLAG_ENABLED) != 0)
+	if ((sh4->device->machine().debug_flags & DEBUG_FLAG_ENABLED) != 0)
 		sh4_syncronize_register_bank(sh4, (sh4->sr & sRB) >> 29);
 	if ((sh4->ssr & sRB) != (sh4->sr & sRB))
 		sh4_change_register_bank(sh4, sh4->ssr & sRB ? 1 : 0);
@@ -1750,7 +1750,7 @@ INLINE void TRAPA(sh4_state *sh4, UINT32 i)
 	sh4->sgr = sh4->r[15];
 
 	sh4->sr |= MD;
-	if ((sh4->device->machine->debug_flags & DEBUG_FLAG_ENABLED) != 0)
+	if ((sh4->device->machine().debug_flags & DEBUG_FLAG_ENABLED) != 0)
 		sh4_syncronize_register_bank(sh4, (sh4->sr & sRB) >> 29);
 	if (!(sh4->sr & sRB))
 		sh4_change_register_bank(sh4, 1);
@@ -3196,7 +3196,7 @@ INLINE void op1111(sh4_state *sh4, UINT16 opcode)
 									FRCHG(sh4);
 									break;
 								default:
-									debugger_break(sh4->device->machine);
+									debugger_break(sh4->device->machine());
 									break;
 							}
 						} else {
@@ -3207,7 +3207,7 @@ INLINE void op1111(sh4_state *sh4, UINT16 opcode)
 					}
 					break;
 				default:
-					debugger_break(sh4->device->machine);
+					debugger_break(sh4->device->machine());
 					break;
 			}
 			break;
@@ -3215,7 +3215,7 @@ INLINE void op1111(sh4_state *sh4, UINT16 opcode)
 			FMAC(sh4, Rm,Rn);
 			break;
 		default:
-			debugger_break(sh4->device->machine);
+			debugger_break(sh4->device->machine());
 			break;
 	}
 }
@@ -3609,7 +3609,7 @@ void sh4_set_ftcsr_callback(device_t *device, sh4_ftcsr_callback callback)
 
 #if 0
 /*When OC index mode is off (CCR.OIX = 0)*/
-static ADDRESS_MAP_START( sh4_internal_map, ADDRESS_SPACE_PROGRAM, 64 )
+static ADDRESS_MAP_START( sh4_internal_map, AS_PROGRAM, 64 )
 	AM_RANGE(0x1C000000, 0x1C000FFF) AM_RAM AM_MIRROR(0x03FFD000)
 	AM_RANGE(0x1C002000, 0x1C002FFF) AM_RAM AM_MIRROR(0x03FFD000)
 	AM_RANGE(0xE0000000, 0xE000003F) AM_RAM AM_MIRROR(0x03FFFFC0)
@@ -3624,7 +3624,7 @@ static WRITE32_HANDLER(sh4_test_w)
 #endif
 
 /*When OC index mode is on (CCR.OIX = 1)*/
-static ADDRESS_MAP_START( sh4_internal_map, ADDRESS_SPACE_PROGRAM, 64 )
+static ADDRESS_MAP_START( sh4_internal_map, AS_PROGRAM, 64 )
 	AM_RANGE(0x1C000000, 0x1C000FFF) AM_RAM AM_MIRROR(0x01FFF000)
 	AM_RANGE(0x1E000000, 0x1E000FFF) AM_RAM AM_MIRROR(0x01FFF000)
 	AM_RANGE(0xE0000000, 0xE000003F) AM_RAM AM_MIRROR(0x03FFFFC0) // todo: store queues should be write only on DC's SH4, executing PREFM shouldn't cause an actual memory read access!
@@ -3657,17 +3657,17 @@ CPU_GET_INFO( sh4 )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 1;						break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 4;						break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_PROGRAM:		info->i = 64;				break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM: 	info->i = 32;				break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_PROGRAM: 	info->i = 0;				break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_DATA:		info->i = 0;				break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_DATA:		info->i = 0;				break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_DATA:		info->i = 0;				break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 64;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 8;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_IO:		info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:		info->i = 64;				break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM:	info->i = 32;				break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM:	info->i = 0;				break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:		info->i = 0;				break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:		info->i = 0;				break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:		info->i = 0;				break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 64;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 8;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_PROGRAM: info->internal_map64 = ADDRESS_MAP_NAME(sh4_internal_map); break;
+		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map64 = ADDRESS_MAP_NAME(sh4_internal_map); break;
 
 		case CPUINFO_INT_INPUT_STATE + SH4_IRL0:		info->i = sh4->irq_line_state[SH4_IRL0]; break;
 		case CPUINFO_INT_INPUT_STATE + SH4_IRL1:		info->i = sh4->irq_line_state[SH4_IRL1]; break;

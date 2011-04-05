@@ -48,8 +48,8 @@ public:
 	cmmb_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram;
-	UINT8 irq_mask;
+	UINT8 *m_videoram;
+	UINT8 m_irq_mask;
 };
 
 
@@ -60,9 +60,9 @@ static VIDEO_START( cmmb )
 
 static SCREEN_UPDATE( cmmb )
 {
-	cmmb_state *state = screen->machine->driver_data<cmmb_state>();
-	UINT8 *videoram = state->videoram;
-	const gfx_element *gfx = screen->machine->gfx[0];
+	cmmb_state *state = screen->machine().driver_data<cmmb_state>();
+	UINT8 *videoram = state->m_videoram;
+	const gfx_element *gfx = screen->machine().gfx[0];
 	int count = 0x00000;
 
 	int y,x;
@@ -85,22 +85,22 @@ static SCREEN_UPDATE( cmmb )
 
 static READ8_HANDLER( cmmb_charram_r )
 {
-	UINT8 *GFX = space->machine->region("gfx")->base();
+	UINT8 *GFX = space->machine().region("gfx")->base();
 
 	return GFX[offset];
 }
 
 static WRITE8_HANDLER( cmmb_charram_w )
 {
-	UINT8 *GFX = space->machine->region("gfx")->base();
+	UINT8 *GFX = space->machine().region("gfx")->base();
 
 	GFX[offset] = data;
 
 	offset&=0xfff;
 
 	/* dirty char */
-	gfx_element_mark_dirty(space->machine->gfx[0], offset >> 4);
-    gfx_element_mark_dirty(space->machine->gfx[1], offset >> 5);
+	gfx_element_mark_dirty(space->machine().gfx[0], offset >> 4);
+    gfx_element_mark_dirty(space->machine().gfx[1], offset >> 5);
 }
 
 
@@ -115,10 +115,10 @@ static READ8_HANDLER( cmmb_input_r )
 	//printf("%02x R\n",offset);
 	switch(offset)
 	{
-		case 0x00: return input_port_read(space->machine, "IN2");
+		case 0x00: return input_port_read(space->machine(), "IN2");
 		case 0x03: return 4; //eeprom?
-		case 0x0e: return input_port_read(space->machine, "IN0");
-		case 0x0f: return input_port_read(space->machine, "IN1");
+		case 0x0e: return input_port_read(space->machine(), "IN0");
+		case 0x0f: return input_port_read(space->machine(), "IN1");
 	}
 
 	return 0xff;
@@ -127,31 +127,31 @@ static READ8_HANDLER( cmmb_input_r )
 
 /*
     {
-        UINT8 *ROM = space->machine->region("maincpu")->base();
+        UINT8 *ROM = space->machine().region("maincpu")->base();
         UINT32 bankaddress;
 
         bankaddress = 0x10000 + (0x10000 * (data & 0x03));
-        memory_set_bankptr(space->machine, "bank1", &ROM[bankaddress]);
+        memory_set_bankptr(space->machine(), "bank1", &ROM[bankaddress]);
     }
 */
 
 static WRITE8_HANDLER( cmmb_output_w )
 {
-	cmmb_state *state = space->machine->driver_data<cmmb_state>();
+	cmmb_state *state = space->machine().driver_data<cmmb_state>();
 	//printf("%02x -> [%02x] W\n",data,offset);
 	switch(offset)
 	{
 		case 0x01:
 			{
-				UINT8 *ROM = space->machine->region("maincpu")->base();
+				UINT8 *ROM = space->machine().region("maincpu")->base();
 				UINT32 bankaddress;
 
 				bankaddress = 0x1c000 + (0x10000 * (data & 0x03));
-				memory_set_bankptr(space->machine, "bank1", &ROM[bankaddress]);
+				memory_set_bankptr(space->machine(), "bank1", &ROM[bankaddress]);
 			}
 			break;
 		case 0x03:
-			state->irq_mask = data & 0x80;
+			state->m_irq_mask = data & 0x80;
 			break;
 		case 0x07:
 			break;
@@ -160,15 +160,15 @@ static WRITE8_HANDLER( cmmb_output_w )
 
 static READ8_HANDLER( kludge_r )
 {
-	return space->machine->rand();
+	return space->machine().rand();
 }
 
 /* overlap empty addresses */
-static ADDRESS_MAP_START( cmmb_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( cmmb_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xffff)
 	AM_RANGE(0x0000, 0x01ff) AM_RAM /* zero page address */
 //  AM_RANGE(0x13c0, 0x13ff) AM_RAM //spriteram
-	AM_RANGE(0x1000, 0x13ff) AM_RAM AM_BASE_MEMBER(cmmb_state, videoram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM AM_BASE_MEMBER(cmmb_state, m_videoram)
 	AM_RANGE(0x2480, 0x249f) AM_RAM_WRITE(cmmb_paletteram_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x4000, 0x400f) AM_READWRITE(cmmb_input_r,cmmb_output_w) //i/o
 	AM_RANGE(0x4900, 0x4900) AM_READ(kludge_r)
@@ -288,8 +288,8 @@ GFXDECODE_END
 
 static INTERRUPT_GEN( cmmb_irq )
 {
-	//if(input_code_pressed_once(device->machine, KEYCODE_Z))
-	//  cpu_set_input_line(device, 0, HOLD_LINE);
+	//if(input_code_pressed_once(device->machine(), KEYCODE_Z))
+	//  device_set_input_line(device, 0, HOLD_LINE);
 }
 
 static MACHINE_RESET( cmmb )

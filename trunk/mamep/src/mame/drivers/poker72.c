@@ -21,9 +21,9 @@ public:
 	poker72_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *vram;
-	UINT8 *pal;
-	UINT8 tile_bank;
+	UINT8 *m_vram;
+	UINT8 *m_pal;
+	UINT8 m_tile_bank;
 };
 
 
@@ -33,7 +33,7 @@ static VIDEO_START(poker72)
 
 static SCREEN_UPDATE(poker72)
 {
-	poker72_state *state = screen->machine->driver_data<poker72_state>();
+	poker72_state *state = screen->machine().driver_data<poker72_state>();
 	int x,y,count;
 
 	count = 0;
@@ -42,14 +42,14 @@ static SCREEN_UPDATE(poker72)
 	{
 		for (x=0;x<64;x++)
 		{
-			int tile = ((state->vram[count+1] & 0x0f) << 8 ) | (state->vram[count+0] & 0xff); //TODO: tile bank
-			int fx = (state->vram[count+1] & 0x10);
-			int fy = (state->vram[count+1] & 0x20);
-			int color = (state->vram[count+1] & 0xc0) >> 6;
+			int tile = ((state->m_vram[count+1] & 0x0f) << 8 ) | (state->m_vram[count+0] & 0xff); //TODO: tile bank
+			int fx = (state->m_vram[count+1] & 0x10);
+			int fy = (state->m_vram[count+1] & 0x20);
+			int color = (state->m_vram[count+1] & 0xc0) >> 6;
 
-			tile|= state->tile_bank << 12;
+			tile|= state->m_tile_bank << 12;
 
-			drawgfx_opaque(bitmap,cliprect,screen->machine->gfx[0],tile,color,fx,fy,x*8,y*8);
+			drawgfx_opaque(bitmap,cliprect,screen->machine().gfx[0],tile,color,fx,fy,x*8,y*8);
 
 			count+=2;
 		}
@@ -60,43 +60,43 @@ static SCREEN_UPDATE(poker72)
 
 static WRITE8_HANDLER( poker72_paletteram_w )
 {
-	poker72_state *state = space->machine->driver_data<poker72_state>();
+	poker72_state *state = space->machine().driver_data<poker72_state>();
 	int r,g,b;
-	state->pal[offset] = data;
+	state->m_pal[offset] = data;
 
-	r = state->pal[(offset & 0x3ff)+0x000] & 0x3f;
-	g = state->pal[(offset & 0x3ff)+0x400] & 0x3f;
-	b = state->pal[(offset & 0x3ff)+0x800] & 0x3f;
+	r = state->m_pal[(offset & 0x3ff)+0x000] & 0x3f;
+	g = state->m_pal[(offset & 0x3ff)+0x400] & 0x3f;
+	b = state->m_pal[(offset & 0x3ff)+0x800] & 0x3f;
 
-	palette_set_color_rgb( space->machine, offset & 0x3ff, pal6bit(r), pal6bit(g), pal6bit(b));
+	palette_set_color_rgb( space->machine(), offset & 0x3ff, pal6bit(r), pal6bit(g), pal6bit(b));
 }
 
 static WRITE8_HANDLER( output_w )
 {
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 
 	printf("%02x\n",data);
 
 /*  if((data & 0xc) == 0xc)
-        memory_set_bankptr(space->machine, "bank1", &ROM[0x10000]);
+        memory_set_bankptr(space->machine(), "bank1", &ROM[0x10000]);
     else*/
 	if(data & 8)
-		memory_set_bankptr(space->machine, "bank1", &ROM[0x08000]);
+		memory_set_bankptr(space->machine(), "bank1", &ROM[0x08000]);
 	else
-		memory_set_bankptr(space->machine, "bank1", &ROM[0x00000]);
+		memory_set_bankptr(space->machine(), "bank1", &ROM[0x00000]);
 }
 
 static WRITE8_HANDLER( tile_bank_w )
 {
-	poker72_state *state = space->machine->driver_data<poker72_state>();
-	state->tile_bank = (data & 4) >> 2;
+	poker72_state *state = space->machine().driver_data<poker72_state>();
+	state->m_tile_bank = (data & 4) >> 2;
 }
 
-static ADDRESS_MAP_START( poker72_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( poker72_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM //work ram
-	AM_RANGE(0xe000, 0xefff) AM_RAM AM_BASE_MEMBER(poker72_state, vram)
-	AM_RANGE(0xf000, 0xfbff) AM_RAM_WRITE(poker72_paletteram_w) AM_BASE_MEMBER(poker72_state, pal)
+	AM_RANGE(0xe000, 0xefff) AM_RAM AM_BASE_MEMBER(poker72_state, m_vram)
+	AM_RANGE(0xf000, 0xfbff) AM_RAM_WRITE(poker72_paletteram_w) AM_BASE_MEMBER(poker72_state, m_pal)
 	AM_RANGE(0xfc00, 0xfdff) AM_RAM //???
 	AM_RANGE(0xfe08, 0xfe08) AM_READ_PORT("IN0")
 	AM_RANGE(0xfe09, 0xfe09) AM_READ_PORT("IN1")
@@ -336,7 +336,7 @@ static const ay8910_interface ay8910_config =
 
 static MACHINE_RESET( poker72 )
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	memory_set_bankptr(machine, "bank1", &ROM[0]);
 }
@@ -391,7 +391,7 @@ ROM_END
 
 static DRIVER_INIT( poker72 )
 {
-	UINT8 *rom = machine->region("maincpu")->base();
+	UINT8 *rom = machine.region("maincpu")->base();
 
 	rom[0x4a9] = 0x28;
 }

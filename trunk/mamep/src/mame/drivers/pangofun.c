@@ -109,7 +109,7 @@ public:
 };
 
 
-static ADDRESS_MAP_START( pcat_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( pcat_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x0009ffff) AM_RAM
 	AM_RANGE(0x000a0000, 0x000bffff) AM_RAM
 	AM_RANGE(0x000c0000, 0x000c7fff) AM_ROM AM_REGION("video_bios", 0)
@@ -118,7 +118,7 @@ static ADDRESS_MAP_START( pcat_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0xffff0000, 0xffffffff) AM_ROM AM_REGION("bios", 0 )
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( pcat_io, ADDRESS_SPACE_IO, 32 )
+static ADDRESS_MAP_START( pcat_io, AS_IO, 32 )
 	AM_IMPORT_FROM(pcat32_io_common)
 	AM_RANGE(0x0070, 0x007f) AM_DEVREADWRITE8_MODERN("rtc", mc146818_device, read, write, 0xffffffff)
 ADDRESS_MAP_END
@@ -157,31 +157,31 @@ static INPUT_PORTS_START( pangofun )
 	PORT_START("pc_keyboard_7")
 INPUT_PORTS_END
 
-static void pangofun_set_keyb_int(running_machine *machine, int state)
+static void pangofun_set_keyb_int(running_machine &machine, int state)
 {
-	pic8259_ir1_w(machine->device("pic8259_1"), state);
+	pic8259_ir1_w(machine.device("pic8259_1"), state);
 }
 
 static const struct pc_vga_interface vga_interface ={
 	NULL,
 	NULL,
 	NULL,
-	ADDRESS_SPACE_IO,
+	AS_IO,
 	0x0000
 };
 
-static void set_gate_a20(running_machine *machine, int a20)
+static void set_gate_a20(running_machine &machine, int a20)
 {
 	cputag_set_input_line(machine, "maincpu", INPUT_LINE_A20, a20);
 }
 
-static void keyboard_interrupt(running_machine *machine, int state)
+static void keyboard_interrupt(running_machine &machine, int state)
 {
-	pic8259_ir1_w(machine->device("pic8259_1"), state);
+	pic8259_ir1_w(machine.device("pic8259_1"), state);
 }
 
-static int pcat_dyn_get_out2(running_machine *machine) {
-	return pit8253_get_output(machine->device("pit8254"), 2 );
+static int pcat_dyn_get_out2(running_machine &machine) {
+	return pit8253_get_output(machine.device("pit8254"), 2 );
 }
 
 
@@ -192,7 +192,7 @@ static const struct kbdc8042_interface at8042 =
 
 static MACHINE_START( pangofun )
 {
-	cpu_set_irq_callback(machine->device("maincpu"), pcat_irq_callback);
+	device_set_irq_callback(machine.device("maincpu"), pcat_irq_callback);
 	init_pc_common(machine, PCCOMMON_KEYBOARD_AT, pangofun_set_keyb_int);
 	kbdc8042_init(machine, &at8042);
 }

@@ -46,18 +46,18 @@ public:
 	skimaxx_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT32 *bg_buffer;
-	UINT16 *fg_buffer;
-	UINT32 *bg_buffer_front;
-	UINT32 *bg_buffer_back;
-	UINT32 *blitter_regs;
-	UINT16 *blitter_gfx;
-	UINT32 blitter_gfx_len;
-	UINT32 blitter_src_x;
-	UINT32 blitter_src_dx;
-	UINT32 blitter_src_y;
-	UINT32 blitter_src_dy;
-	UINT32 *fpga_ctrl;
+	UINT32 *m_bg_buffer;
+	UINT16 *m_fg_buffer;
+	UINT32 *m_bg_buffer_front;
+	UINT32 *m_bg_buffer_back;
+	UINT32 *m_blitter_regs;
+	UINT16 *m_blitter_gfx;
+	UINT32 m_blitter_gfx_len;
+	UINT32 m_blitter_src_x;
+	UINT32 m_blitter_src_dx;
+	UINT32 m_blitter_src_y;
+	UINT32 m_blitter_src_dy;
+	UINT32 *m_fpga_ctrl;
 };
 
 
@@ -70,27 +70,27 @@ public:
 // Set up blit parameters
 static WRITE32_HANDLER( skimaxx_blitter_w )
 {
-	skimaxx_state *state = space->machine->driver_data<skimaxx_state>();
-	UINT32 newdata = COMBINE_DATA( &state->blitter_regs[offset] );
+	skimaxx_state *state = space->machine().driver_data<skimaxx_state>();
+	UINT32 newdata = COMBINE_DATA( &state->m_blitter_regs[offset] );
 
 	switch (offset)
 	{
 		case 0:
-			state->blitter_src_dy = (newdata & 0x7fff) - (newdata & 0x8000);
+			state->m_blitter_src_dy = (newdata & 0x7fff) - (newdata & 0x8000);
 			break;
 
 		case 1:
-			state->blitter_src_x = (newdata & 0x1ff) << 8;
-			state->blitter_src_y = (newdata >> 9) << 8;
+			state->m_blitter_src_x = (newdata & 0x1ff) << 8;
+			state->m_blitter_src_y = (newdata >> 9) << 8;
 			break;
 
 		case 2:
 			if (ACCESSING_BITS_16_31)
-				state->blitter_src_dx = (newdata >> 16) & 0xffff;
+				state->m_blitter_src_dx = (newdata >> 16) & 0xffff;
 			if (ACCESSING_BITS_0_15)
-				state->blitter_src_dx = newdata & 0xffff;
+				state->m_blitter_src_dx = newdata & 0xffff;
 
-			state->blitter_src_dx = (state->blitter_src_dx & 0x7fff) - (state->blitter_src_dx & 0x8000);
+			state->m_blitter_src_dx = (state->m_blitter_src_dx & 0x7fff) - (state->m_blitter_src_dx & 0x8000);
 			break;
 
 		case 3:
@@ -102,10 +102,10 @@ static WRITE32_HANDLER( skimaxx_blitter_w )
 // A read by the 68030 from this area blits one pixel to the back buffer (at the same offset)
 static READ32_HANDLER( skimaxx_blitter_r )
 {
-	skimaxx_state *state = space->machine->driver_data<skimaxx_state>();
-	UINT32 penaddr = ((state->blitter_src_x >> 8) & 0x1ff) + ((state->blitter_src_y >> 8) << 9);
-	UINT16 *src = state->blitter_gfx + (penaddr % state->blitter_gfx_len);
-	UINT32 *dst = state->bg_buffer_back + offset;
+	skimaxx_state *state = space->machine().driver_data<skimaxx_state>();
+	UINT32 penaddr = ((state->m_blitter_src_x >> 8) & 0x1ff) + ((state->m_blitter_src_y >> 8) << 9);
+	UINT16 *src = state->m_blitter_gfx + (penaddr % state->m_blitter_gfx_len);
+	UINT32 *dst = state->m_bg_buffer_back + offset;
 
 	UINT16 pen = (*src) & 0x7fff;
 
@@ -117,8 +117,8 @@ static READ32_HANDLER( skimaxx_blitter_r )
 			*dst = (*dst & 0xffff0000) | pen;
 	}
 
-	state->blitter_src_x = (state->blitter_src_x & 0x10000) | ((state->blitter_src_x + state->blitter_src_dx) & 0xffff);
-	state->blitter_src_y = (state->blitter_src_y & 0xffff0000) | ((state->blitter_src_y + state->blitter_src_dy) & 0xffff);
+	state->m_blitter_src_x = (state->m_blitter_src_x & 0x10000) | ((state->m_blitter_src_x + state->m_blitter_src_dx) & 0xffff);
+	state->m_blitter_src_y = (state->m_blitter_src_y & 0xffff0000) | ((state->m_blitter_src_y + state->m_blitter_src_dy) & 0xffff);
 
 	return 0;
 }
@@ -126,20 +126,20 @@ static READ32_HANDLER( skimaxx_blitter_r )
 
 static VIDEO_START( skimaxx )
 {
-	skimaxx_state *state = machine->driver_data<skimaxx_state>();
-	state->blitter_gfx = (UINT16 *) machine->region( "blitter" )->base();
-	state->blitter_gfx_len = machine->region( "blitter" )->bytes() / 2;
+	skimaxx_state *state = machine.driver_data<skimaxx_state>();
+	state->m_blitter_gfx = (UINT16 *) machine.region( "blitter" )->base();
+	state->m_blitter_gfx_len = machine.region( "blitter" )->bytes() / 2;
 
-	state->bg_buffer = auto_alloc_array(machine, UINT32, 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * 2);	// 2 buffers
-	state->bg_buffer_back  = state->bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * 0;
-	state->bg_buffer_front = state->bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * 1;
-	memory_configure_bank(machine, "bank1", 0, 1, state->bg_buffer_back,  0);
-	memory_configure_bank(machine, "bank1", 1, 1, state->bg_buffer_front, 0);
+	state->m_bg_buffer = auto_alloc_array(machine, UINT32, 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * 2);	// 2 buffers
+	state->m_bg_buffer_back  = state->m_bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * 0;
+	state->m_bg_buffer_front = state->m_bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * 1;
+	memory_configure_bank(machine, "bank1", 0, 1, state->m_bg_buffer_back,  0);
+	memory_configure_bank(machine, "bank1", 1, 1, state->m_bg_buffer_front, 0);
 }
 
 static SCREEN_UPDATE( skimaxx )
 {
-//  popmessage("%02x %02x", input_port_read(screen->machine, "X"), input_port_read(screen->machine, "Y") );
+//  popmessage("%02x %02x", input_port_read(screen->machine(), "X"), input_port_read(screen->machine(), "Y") );
 
 	SCREEN_UPDATE_CALL(tms340x0);
 
@@ -155,14 +155,14 @@ static SCREEN_UPDATE( skimaxx )
 // TODO: Might not be used
 static void skimaxx_to_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
 {
-	skimaxx_state *state = space->machine->driver_data<skimaxx_state>();
-	memcpy(shiftreg, &state->fg_buffer[TOWORD(address)], 512 * sizeof(UINT16));
+	skimaxx_state *state = space->machine().driver_data<skimaxx_state>();
+	memcpy(shiftreg, &state->m_fg_buffer[TOWORD(address)], 512 * sizeof(UINT16));
 }
 
 static void skimaxx_from_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
 {
-	skimaxx_state *state = space->machine->driver_data<skimaxx_state>();
-	memcpy(&state->fg_buffer[TOWORD(address)], shiftreg, 512 * sizeof(UINT16));
+	skimaxx_state *state = space->machine().driver_data<skimaxx_state>();
+	memcpy(&state->m_fg_buffer[TOWORD(address)], shiftreg, 512 * sizeof(UINT16));
 }
 
 
@@ -174,14 +174,14 @@ static void skimaxx_from_shiftreg(address_space *space, UINT32 address, UINT16 *
 
 static void skimaxx_scanline_update(screen_device &screen, bitmap_t *bitmap, int scanline, const tms34010_display_params *params)
 {
-	skimaxx_state *state = screen.machine->driver_data<skimaxx_state>();
+	skimaxx_state *state = screen.machine().driver_data<skimaxx_state>();
 	// TODO: This isn't correct. I just hacked it together quickly so I could see something!
 
 	if (params->rowaddr >= 0x220)
 	{
 		UINT32 rowaddr = (params->rowaddr - 0x220);
-		UINT16 *fg = &state->fg_buffer[rowaddr << 8];
-		UINT32 *bg = &state->bg_buffer_front[rowaddr/2 * 1024/2];
+		UINT16 *fg = &state->m_fg_buffer[rowaddr << 8];
+		UINT32 *bg = &state->m_bg_buffer_front[rowaddr/2 * 1024/2];
 		UINT16 *dest = BITMAP_ADDR16(bitmap, scanline, 0);
 		//int coladdr = params->coladdr;
 		int x;
@@ -218,12 +218,12 @@ static void skimaxx_scanline_update(screen_device &screen, bitmap_t *bitmap, int
 
 static WRITE32_HANDLER( m68k_tms_w )
 {
-	tms34010_host_w(space->machine->device("tms"), offset, data);
+	tms34010_host_w(space->machine().device("tms"), offset, data);
 }
 
 static READ32_HANDLER( m68k_tms_r )
 {
-	return tms34010_host_r(space->machine->device("tms"), offset);
+	return tms34010_host_r(space->machine().device("tms"), offset);
 }
 
 
@@ -244,26 +244,26 @@ static READ32_HANDLER( m68k_tms_r )
 
 static WRITE32_HANDLER( skimaxx_fpga_ctrl_w )
 {
-	skimaxx_state *state = space->machine->driver_data<skimaxx_state>();
-	UINT32 newdata = COMBINE_DATA( state->fpga_ctrl );
+	skimaxx_state *state = space->machine().driver_data<skimaxx_state>();
+	UINT32 newdata = COMBINE_DATA( state->m_fpga_ctrl );
 
 	if (ACCESSING_BITS_0_7)
 	{
 		// double buffering
 		UINT8 bank_bg_buffer = (newdata & 0x40) ? 1 : 0;
 
-		state->bg_buffer_back  = state->bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * bank_bg_buffer;
-		state->bg_buffer_front = state->bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * (1 - bank_bg_buffer);
+		state->m_bg_buffer_back  = state->m_bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * bank_bg_buffer;
+		state->m_bg_buffer_front = state->m_bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * (1 - bank_bg_buffer);
 
-		memory_set_bank(space->machine, "bank1", bank_bg_buffer);
+		memory_set_bank(space->machine(), "bank1", bank_bg_buffer);
 	}
 }
 
 // 0x2000004c: bit 7, bit 0
 static READ32_HANDLER( unk_r )
 {
-	skimaxx_state *state = space->machine->driver_data<skimaxx_state>();
-	return (*state->fpga_ctrl & 0x20) ? 0x80 : 0x00;
+	skimaxx_state *state = space->machine().driver_data<skimaxx_state>();
+	return (*state->m_fpga_ctrl & 0x20) ? 0x80 : 0x00;
 }
 
 // 0x20000023
@@ -281,10 +281,10 @@ static WRITE32_HANDLER( skimaxx_sub_ctrl_w )
 	// 7e/7f at the start. 3f/7f, related to reads from 1018xxxx
 	if (ACCESSING_BITS_0_7)
 	{
-		device_t *subcpu = space->machine->device("subcpu");
+		device_t *subcpu = space->machine().device("subcpu");
 
-		cpu_set_input_line(subcpu, INPUT_LINE_RESET, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
-		cpu_set_input_line(subcpu, INPUT_LINE_HALT,  (data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
+		device_set_input_line(subcpu, INPUT_LINE_RESET, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+		device_set_input_line(subcpu, INPUT_LINE_HALT,  (data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
 	}
 }
 
@@ -299,7 +299,7 @@ static WRITE32_HANDLER( skimaxx_sub_ctrl_w )
 */
 static READ32_HANDLER( skimaxx_analog_r )
 {
-	return BITSWAP8(input_port_read(space->machine, offset ? "Y" : "X"), 0,1,2,3,4,5,6,7);
+	return BITSWAP8(input_port_read(space->machine(), offset ? "Y" : "X"), 0,1,2,3,4,5,6,7);
 }
 
 /*************************************
@@ -308,7 +308,7 @@ static READ32_HANDLER( skimaxx_analog_r )
  *
  *************************************/
 
-static ADDRESS_MAP_START( 68030_1_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( 68030_1_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x001fffff) AM_ROM
 	AM_RANGE(0x10000000, 0x10000003) AM_WRITE( skimaxx_sub_ctrl_w )
 	AM_RANGE(0x10100000, 0x1010000f) AM_READWRITE(m68k_tms_r, m68k_tms_w)//AM_NOP
@@ -341,13 +341,13 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( 68030_2_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( 68030_2_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x003fffff) AM_ROM
 
 	AM_RANGE(0x20000000, 0x2007ffff) AM_READ ( skimaxx_blitter_r )	// do blit
-	AM_RANGE(0x30000000, 0x3000000f) AM_WRITE( skimaxx_blitter_w ) AM_BASE_MEMBER(skimaxx_state, blitter_regs )
+	AM_RANGE(0x30000000, 0x3000000f) AM_WRITE( skimaxx_blitter_w ) AM_BASE_MEMBER(skimaxx_state, m_blitter_regs )
 
-	AM_RANGE(0x40000000, 0x40000003) AM_WRITE( skimaxx_fpga_ctrl_w ) AM_BASE_MEMBER(skimaxx_state, fpga_ctrl )
+	AM_RANGE(0x40000000, 0x40000003) AM_WRITE( skimaxx_fpga_ctrl_w ) AM_BASE_MEMBER(skimaxx_state, m_fpga_ctrl )
 
 	AM_RANGE(0x50000000, 0x5007ffff) AM_RAMBANK("bank1")	// background ram allocated here at video_start (skimaxx_bg_buffer_back/front)
 //  AM_RANGE(0xfffc0000, 0xfffc7fff) AM_RAM AM_SHARE("share1")
@@ -365,11 +365,11 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( tms_program_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( tms_program_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x00000000, 0x000100ff) AM_RAM
 	AM_RANGE(0x00008000, 0x0003ffff) AM_RAM
 	AM_RANGE(0x00050000, 0x0005ffff) AM_RAM
-	AM_RANGE(0x00220000, 0x003fffff) AM_RAM AM_BASE_MEMBER(skimaxx_state, fg_buffer)
+	AM_RANGE(0x00220000, 0x003fffff) AM_RAM AM_BASE_MEMBER(skimaxx_state, m_fg_buffer)
 	AM_RANGE(0x02000000, 0x0200000f) AM_RAM
 	AM_RANGE(0x02100000, 0x0210000f) AM_RAM
 	AM_RANGE(0x04000000, 0x047fffff) AM_ROM AM_REGION("tmsgfx", 0)

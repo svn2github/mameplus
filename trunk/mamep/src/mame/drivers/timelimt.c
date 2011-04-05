@@ -25,30 +25,30 @@ static MACHINE_START( timelimt )
 
 static MACHINE_RESET( timelimt )
 {
-	timelimt_state *state = machine->driver_data<timelimt_state>();
-	state->nmi_enabled = 0;
+	timelimt_state *state = machine.driver_data<timelimt_state>();
+	state->m_nmi_enabled = 0;
 }
 
 static WRITE8_HANDLER( nmi_enable_w )
 {
-	timelimt_state *state = space->machine->driver_data<timelimt_state>();
-	state->nmi_enabled = data & 1;	/* bit 0 = nmi enable */
+	timelimt_state *state = space->machine().driver_data<timelimt_state>();
+	state->m_nmi_enabled = data & 1;	/* bit 0 = nmi enable */
 }
 
 static WRITE8_HANDLER( sound_reset_w )
 {
 	if (data & 1)
-		cputag_set_input_line(space->machine, "audiocpu", INPUT_LINE_RESET, PULSE_LINE);
+		cputag_set_input_line(space->machine(), "audiocpu", INPUT_LINE_RESET, PULSE_LINE);
 }
 
 /***************************************************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM		/* rom */
 	AM_RANGE(0x8000, 0x87ff) AM_RAM		/* ram */
-	AM_RANGE(0x8800, 0x8bff) AM_RAM_WRITE(timelimt_videoram_w) AM_BASE_MEMBER(timelimt_state, videoram)	/* video ram */
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(timelimt_bg_videoram_w) AM_BASE_MEMBER(timelimt_state, bg_videoram) AM_SIZE_MEMBER(timelimt_state, bg_videoram_size)/* background ram */
-	AM_RANGE(0x9800, 0x98ff) AM_RAM AM_BASE_SIZE_MEMBER(timelimt_state, spriteram, spriteram_size)	/* sprite ram */
+	AM_RANGE(0x8800, 0x8bff) AM_RAM_WRITE(timelimt_videoram_w) AM_BASE_MEMBER(timelimt_state, m_videoram)	/* video ram */
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(timelimt_bg_videoram_w) AM_BASE_MEMBER(timelimt_state, m_bg_videoram) AM_SIZE_MEMBER(timelimt_state, m_bg_videoram_size)/* background ram */
+	AM_RANGE(0x9800, 0x98ff) AM_RAM AM_BASE_SIZE_MEMBER(timelimt_state, m_spriteram, m_spriteram_size)	/* sprite ram */
 	AM_RANGE(0xa000, 0xa000) AM_READ_PORT("INPUTS")
 	AM_RANGE(0xa800, 0xa800) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0xb000, 0xb000) AM_READ_PORT("DSW")
@@ -63,17 +63,17 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xc804, 0xc804) AM_WRITENOP		/* ???? not used */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( main_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( main_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ(watchdog_reset_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x3800, 0x3bff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( sound_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_WRITE(soundlatch_clear_w)
 	AM_RANGE(0x8c, 0x8d) AM_DEVREADWRITE("ay1", ay8910_r, ay8910_address_data_w)
@@ -224,9 +224,9 @@ static const ay8910_interface ay8910_config =
 
 static INTERRUPT_GEN( timelimt_irq )
 {
-	timelimt_state *state = device->machine->driver_data<timelimt_state>();
-	if ( state->nmi_enabled )
-		cpu_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	timelimt_state *state = device->machine().driver_data<timelimt_state>();
+	if ( state->m_nmi_enabled )
+		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
 }
 
 /***************************************************************************/

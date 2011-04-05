@@ -81,30 +81,30 @@ static WRITE8_HANDLER( bank_select_w )
         xxxxxxx  - unused ?
 
     */
-	memory_set_bank(space->machine, "bank1", data & 0x01);
+	memory_set_bank(space->machine(), "bank1", data & 0x01);
 }
 
 static WRITE8_HANDLER( latch_w )
 {
-	ksayakyu_state *state = space->machine->driver_data<ksayakyu_state>();
-	state->sound_status &= ~0x80;
+	ksayakyu_state *state = space->machine().driver_data<ksayakyu_state>();
+	state->m_sound_status &= ~0x80;
 	soundlatch_w(space, 0, data | 0x80);
 }
 
 static READ8_HANDLER (sound_status_r)
 {
-	ksayakyu_state *state = space->machine->driver_data<ksayakyu_state>();
-	return state->sound_status | 4;
+	ksayakyu_state *state = space->machine().driver_data<ksayakyu_state>();
+	return state->m_sound_status | 4;
 }
 
 static WRITE8_HANDLER(tomaincpu_w)
 {
-	ksayakyu_state *state = space->machine->driver_data<ksayakyu_state>();
-	state->sound_status |= 0x80;
+	ksayakyu_state *state = space->machine().driver_data<ksayakyu_state>();
+	state->m_sound_status |= 0x80;
 	soundlatch_w(space, 0, data);
 }
 
-static ADDRESS_MAP_START( maincpu_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( maincpu_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0x9fff) AM_ROM
@@ -118,11 +118,11 @@ static ADDRESS_MAP_START( maincpu_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xa806, 0xa806) AM_READ(sound_status_r)
 	AM_RANGE(0xa807, 0xa807) AM_READNOP /* watchdog ? */
 	AM_RANGE(0xa808, 0xa808) AM_WRITE(bank_select_w)
-	AM_RANGE(0xb000, 0xb7ff) AM_RAM_WRITE(ksayakyu_videoram_w) AM_BASE_MEMBER(ksayakyu_state, videoram)
-	AM_RANGE(0xb800, 0xbfff) AM_RAM AM_BASE_SIZE_MEMBER(ksayakyu_state, spriteram, spriteram_size)
+	AM_RANGE(0xb000, 0xb7ff) AM_RAM_WRITE(ksayakyu_videoram_w) AM_BASE_MEMBER(ksayakyu_state, m_videoram)
+	AM_RANGE(0xb800, 0xbfff) AM_RAM AM_BASE_SIZE_MEMBER(ksayakyu_state, m_spriteram, m_spriteram_size)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( soundcpu_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( soundcpu_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x83ff) AM_RAM
 	AM_RANGE(0xa001, 0xa001) AM_DEVREAD("ay1", ay8910_r)
@@ -252,23 +252,23 @@ GFXDECODE_END
 
 static MACHINE_START( ksayakyu )
 {
-	ksayakyu_state *state = machine->driver_data<ksayakyu_state>();
-	UINT8 *ROM = machine->region("maincpu")->base();
+	ksayakyu_state *state = machine.driver_data<ksayakyu_state>();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	memory_configure_bank(machine, "bank1", 0, 2, &ROM[0x10000], 0x4000);
 
-	state->save_item(NAME(state->sound_status));
-	state->save_item(NAME(state->video_ctrl));
-	state->save_item(NAME(state->flipscreen));
+	state->save_item(NAME(state->m_sound_status));
+	state->save_item(NAME(state->m_video_ctrl));
+	state->save_item(NAME(state->m_flipscreen));
 }
 
 static MACHINE_RESET( ksayakyu )
 {
-	ksayakyu_state *state = machine->driver_data<ksayakyu_state>();
+	ksayakyu_state *state = machine.driver_data<ksayakyu_state>();
 
-	state->sound_status = 0xff;
-	state->video_ctrl = 0;
-	state->flipscreen = 0;
+	state->m_sound_status = 0xff;
+	state->m_video_ctrl = 0;
+	state->m_flipscreen = 0;
 }
 
 static MACHINE_CONFIG_START( ksayakyu, ksayakyu_state )

@@ -67,8 +67,8 @@ static DRIVER_INIT( otonano )
 
 static DRIVER_INIT( mjcamera )
 {
-	UINT8 *rom = machine->region("voice")->base() + 0x20000;
-	UINT8 *prot = machine->region("user1")->base();
+	UINT8 *rom = machine.region("voice")->base() + 0x20000;
+	UINT8 *prot = machine.region("user1")->base();
 	int i;
 
 	/* this is one possible way to rearrange the protection ROM data to get the
@@ -87,7 +87,7 @@ static DRIVER_INIT( mjcamera )
 static DRIVER_INIT( kanatuen )
 {
 	/* uses the same protection data as mjcamer, but a different check */
-	UINT8 *rom = machine->region("voice")->base() + 0x30000;
+	UINT8 *rom = machine.region("voice")->base() + 0x30000;
 
 	rom[0x0004] = 0x09;
 	rom[0x0103] = 0x0e;
@@ -101,7 +101,7 @@ static DRIVER_INIT( kyuhito )
 {
 #if 1
 	/* uses the same protection data as ????, but a different check */
-	UINT8 *rom = machine->region("maincpu")->base();
+	UINT8 *rom = machine.region("maincpu")->base();
 
 	rom[0x0149] = 0x00;
 	rom[0x014a] = 0x00;
@@ -113,8 +113,8 @@ static DRIVER_INIT( kyuhito )
 
 static DRIVER_INIT( idhimitu )
 {
-	UINT8 *rom = machine->region("voice")->base() + 0x20000;
-	UINT8 *prot = machine->region("user1")->base();
+	UINT8 *rom = machine.region("voice")->base() + 0x20000;
+	UINT8 *prot = machine.region("user1")->base();
 	int i;
 
 	/* this is one possible way to rearrange the protection ROM data to get the
@@ -138,8 +138,8 @@ static DRIVER_INIT( kaguya )
 
 static DRIVER_INIT( kaguya2 )
 {
-	UINT8 *rom = machine->region("voice")->base() + 0x20000;
-	UINT8 *prot = machine->region("user1")->base();
+	UINT8 *rom = machine.region("voice")->base() + 0x20000;
+	UINT8 *prot = machine.region("user1")->base();
 	int i;
 
 	/* this is one possible way to rearrange the protection ROM data to get the
@@ -280,17 +280,17 @@ static DRIVER_INIT( barline )
 	nb1413m3_type = NB1413M3_BARLINE;
 }
 
-static ADDRESS_MAP_START( mjsikaku_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( mjsikaku_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xf7ff) AM_ROM
 	AM_RANGE(0xf800, 0xffff) AM_RAM AM_SHARE("nvram")
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( secolove_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( secolove_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_SHARE("nvram")
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ojousan_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( ojousan_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x6fff) AM_ROM
 	AM_RANGE(0x7000, 0x7fff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -304,7 +304,7 @@ static READ8_HANDLER( ff_r )
 	return 0xff;
 }
 
-static ADDRESS_MAP_START( secolove_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( secolove_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
 	AM_RANGE(0x00, 0x00) AM_WRITE(nb1413m3_nmi_clock_w)
@@ -325,11 +325,11 @@ ADDRESS_MAP_END
 
 static WRITE8_HANDLER( barline_output_w )
 {
-	coin_lockout_w(space->machine, 0,~data & 0x80);
-	coin_counter_w(space->machine, 0,data & 0x02);
+	coin_lockout_w(space->machine(), 0,~data & 0x80);
+	coin_counter_w(space->machine(), 0,data & 0x02);
 }
 
-static ADDRESS_MAP_START( barline_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( barline_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 //  AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
 	AM_RANGE(0x00, 0x00) AM_WRITE(nb1413m3_sndrombank1_w)
@@ -347,7 +347,7 @@ static ADDRESS_MAP_START( barline_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0xf1, 0xf1) AM_READ(nb1413m3_dipsw2_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( crystalg_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( crystalg_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
 	AM_RANGE(0x00, 0x00) AM_WRITE(nb1413m3_nmi_clock_w)
@@ -367,7 +367,7 @@ static ADDRESS_MAP_START( crystalg_io_map, ADDRESS_SPACE_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( otonano_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( otonano_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
 	AM_RANGE(0x00, 0x00) AM_WRITE(nb1413m3_nmi_clock_w)
@@ -386,7 +386,7 @@ static ADDRESS_MAP_START( otonano_io_map, ADDRESS_SPACE_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( kaguya_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( kaguya_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
 	AM_RANGE(0x00, 0x00) AM_WRITE(nb1413m3_nmi_clock_w)
@@ -406,7 +406,7 @@ static ADDRESS_MAP_START( kaguya_io_map, ADDRESS_SPACE_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( iemoto_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( iemoto_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
 	AM_RANGE(0x00, 0x00) AM_WRITE(nb1413m3_nmi_clock_w)
@@ -428,7 +428,7 @@ static ADDRESS_MAP_START( iemoto_io_map, ADDRESS_SPACE_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( seiha_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( seiha_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
 	AM_RANGE(0x00, 0x00) AM_WRITE(nb1413m3_nmi_clock_w)
@@ -449,7 +449,7 @@ static ADDRESS_MAP_START( seiha_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0xf0, 0xf0) AM_WRITE(mjsikaku_scrolly_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( mjgaiden_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( mjgaiden_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
 	AM_RANGE(0x00, 0x00) AM_WRITE(nb1413m3_nmi_clock_w)
@@ -469,7 +469,7 @@ static ADDRESS_MAP_START( mjgaiden_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0xf0, 0xf0) AM_WRITE(mjsikaku_scrolly_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( p16bit_LCD_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( p16bit_LCD_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
 	AM_RANGE(0x00, 0x00) AM_WRITE(nb1413m3_nmi_clock_w)
@@ -495,7 +495,7 @@ static ADDRESS_MAP_START( p16bit_LCD_io_map, ADDRESS_SPACE_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( mjsikaku_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( mjsikaku_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
 	AM_RANGE(0x00, 0x00) AM_WRITE(nb1413m3_nmi_clock_w)
@@ -516,7 +516,7 @@ static ADDRESS_MAP_START( mjsikaku_io_map, ADDRESS_SPACE_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( mmsikaku_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( mmsikaku_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
 	AM_RANGE(0x00, 0x00) AM_WRITE(nb1413m3_nmi_clock_w)

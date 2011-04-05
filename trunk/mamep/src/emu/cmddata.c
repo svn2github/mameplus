@@ -111,9 +111,9 @@ static void flush_index(void);
  *      startup and shutdown functions
  ****************************************************************************/
 
-void datafile_init(running_machine *machine, emu_options *options)
+void datafile_init(running_machine &machine, emu_options *options)
 {
-	m_machine = machine;
+	m_machine = &machine;
 	datafile_options = options;
 
 	while (drivers[num_games] != NULL)
@@ -126,7 +126,7 @@ void datafile_exit(void)
 
 	if (sorted_drivers == NULL)
 	{
-		auto_free(m_machine, sorted_drivers);
+		auto_free(*m_machine, sorted_drivers);
 		sorted_drivers = NULL;
 	}
 }
@@ -163,7 +163,7 @@ static int GetGameNameIndex(const char *name)
 		/* initialize array of game names/indices */
 		int i;
 
-		sorted_drivers = auto_alloc_array(m_machine, driver_data_type, sizeof(driver_data_type) * num_games);
+		sorted_drivers = auto_alloc_array(*m_machine, driver_data_type, sizeof(driver_data_type) * num_games);
 		for (i = 0; i < num_games; i++)
 		{
 			sorted_drivers[i].name = drivers[i]->name;
@@ -621,7 +621,7 @@ static void ParseClose(void)
 	if (fp)
         {
 		fp->close();
-		auto_free(m_machine, fp);
+		auto_free(*m_machine, fp);
         }
 
 	fp = NULL;
@@ -636,7 +636,7 @@ static UINT8 ParseOpen(const char *pszFilename)
 	file_error filerr;
 
 	/* Open file up in binary mode */
-	fp = auto_alloc(m_machine, emu_file(OPEN_FLAG_READ));
+	fp = auto_alloc(*m_machine, emu_file(OPEN_FLAG_READ));
 	filerr = fp->open(pszFilename);
 	if (filerr != FILERR_NONE)
 		return(FALSE);
@@ -684,7 +684,7 @@ static int index_datafile (struct tDatafileIndex **_index)
 	if (ParseSeek (0L, SEEK_SET)) return 0;
 
 	/* allocate index */
-        idx = *_index = auto_alloc_array(m_machine, tDatafileIndex, (num_games + 1) * sizeof (struct tDatafileIndex));
+        idx = *_index = auto_alloc_array(*m_machine, tDatafileIndex, (num_games + 1) * sizeof (struct tDatafileIndex));
 	if (NULL == idx) return 0;
 
 	/* loop through datafile */
@@ -754,7 +754,7 @@ static void flush_index(void)
 #ifdef CMD_LIST
 		if (cmnd_idx[i])
 		{
-			auto_free(m_machine, cmnd_idx[i]);
+			auto_free(*m_machine, cmnd_idx[i]);
 			cmnd_idx[i] = 0;
 		}
 #endif /* CMD_LIST */
@@ -805,7 +805,7 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 	if (ParseSeek (gd_idx->offset, SEEK_SET)) return 0;
 
 	/* allocate index */
-	m_idx = *_index = auto_alloc_array(m_machine, tMenuIndex, MAX_MENUIDX_ENTRIES * sizeof (struct tMenuIndex));
+	m_idx = *_index = auto_alloc_array(*m_machine, tMenuIndex, MAX_MENUIDX_ENTRIES * sizeof (struct tMenuIndex));
 	if (NULL == m_idx) return 0;
 
 	/* loop through between $cmd= */
@@ -859,7 +859,7 @@ static void free_menuidx(struct tMenuIndex **_index)
 			m_idx++;
 		}
 
-		auto_free(m_machine, *_index);
+		auto_free(*m_machine, *_index);
 		*_index = NULL;
 	}
 }
@@ -1028,7 +1028,7 @@ static int find_command (const game_driver *drv)
 
 					if (cmnd_idx[i])
 					{
-						auto_free(m_machine, cmnd_idx[i]);
+						auto_free(*m_machine, cmnd_idx[i]);
 						cmnd_idx[i] = 0;
 					}
 

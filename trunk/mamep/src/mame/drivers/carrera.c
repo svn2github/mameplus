@@ -58,19 +58,19 @@ public:
 	carrera_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8* tileram;
+	UINT8* m_tileram;
 };
 
 
-static ADDRESS_MAP_START( carrera_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( carrera_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x4fff) AM_ROM
 	AM_RANGE(0xe000, 0xe7ff) AM_RAM
 	AM_RANGE(0xe800, 0xe800) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0xe801, 0xe801) AM_DEVWRITE("crtc", mc6845_register_w)
-	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_MEMBER(carrera_state, tileram)
+	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_MEMBER(carrera_state, m_tileram)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN1")
@@ -246,7 +246,7 @@ GFXDECODE_END
 
 static SCREEN_UPDATE(carrera)
 {
-	carrera_state *state = screen->machine->driver_data<carrera_state>();
+	carrera_state *state = screen->machine().driver_data<carrera_state>();
 
 	int x,y;
 	int count = 0;
@@ -255,9 +255,9 @@ static SCREEN_UPDATE(carrera)
 	{
 		for (x=0;x<64;x++)
 		{
-			int tile = state->tileram[count&0x7ff] | state->tileram[(count&0x7ff)+0x800]<<8;
+			int tile = state->m_tileram[count&0x7ff] | state->m_tileram[(count&0x7ff)+0x800]<<8;
 
-			drawgfx_opaque(bitmap,cliprect,screen->machine->gfx[0],tile,0,0,0,x*8,y*8);
+			drawgfx_opaque(bitmap,cliprect,screen->machine().gfx[0],tile,0,0,0,x*8,y*8);
 			count++;
 		}
 	}
@@ -266,7 +266,7 @@ static SCREEN_UPDATE(carrera)
 
 static READ8_DEVICE_HANDLER( unknown_r )
 {
-	return device->machine->rand();
+	return device->machine().rand();
 }
 
 /* these are set as input, but I have no idea which input port it uses is for the AY */

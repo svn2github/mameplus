@@ -84,21 +84,21 @@ other supported games as well.
 
 static READ8_HANDLER( ldrun2_bankswitch_r )
 {
-	m62_state *state = space->machine->driver_data<m62_state>();
-	if (state->ldrun2_bankswap)
+	m62_state *state = space->machine().driver_data<m62_state>();
+	if (state->m_ldrun2_bankswap)
 	{
-		state->ldrun2_bankswap--;
+		state->m_ldrun2_bankswap--;
 
 		/* swap to bank #1 on second read */
-		if (state->ldrun2_bankswap == 0)
-			memory_set_bank(space->machine, "bank1", 1);
+		if (state->m_ldrun2_bankswap == 0)
+			memory_set_bank(space->machine(), "bank1", 1);
 	}
 	return 0;
 }
 
 static WRITE8_HANDLER( ldrun2_bankswitch_w )
 {
-	m62_state *state = space->machine->driver_data<m62_state>();
+	m62_state *state = space->machine().driver_data<m62_state>();
 	static const int banks[30] =
 	{
 		0,0,0,0,0,1,0,1,0,0,
@@ -107,7 +107,7 @@ static WRITE8_HANDLER( ldrun2_bankswitch_w )
 	};
 
 
-	state->bankcontrol[offset] = data;
+	state->m_bankcontrol[offset] = data;
 
 	if (offset == 0)
 	{
@@ -116,15 +116,15 @@ static WRITE8_HANDLER( ldrun2_bankswitch_w )
 			logerror("unknown bank select %02x\n",data);
 			return;
 		}
-		memory_set_bank(space->machine, "bank1", banks[data - 1]);
+		memory_set_bank(space->machine(), "bank1", banks[data - 1]);
 	}
 	else
 	{
-		if (state->bankcontrol[0] == 0x01 && data == 0x0d)
+		if (state->m_bankcontrol[0] == 0x01 && data == 0x0d)
 		/* special case for service mode */
-			state->ldrun2_bankswap = 2;
+			state->m_ldrun2_bankswap = 2;
 		else
-			state->ldrun2_bankswap = 0;
+			state->m_ldrun2_bankswap = 0;
 	}
 }
 
@@ -145,45 +145,45 @@ static READ8_HANDLER( ldrun3_prot_7_r )
 
 static WRITE8_HANDLER( ldrun4_bankswitch_w )
 {
-	memory_set_bank(space->machine, "bank1", data & 0x01);
+	memory_set_bank(space->machine(), "bank1", data & 0x01);
 }
 
 static WRITE8_HANDLER( kidniki_bankswitch_w )
 {
-	memory_set_bank(space->machine, "bank1", data & 0x0f);
+	memory_set_bank(space->machine(), "bank1", data & 0x0f);
 }
 
 #define battroad_bankswitch_w kidniki_bankswitch_w
 
 static WRITE8_HANDLER( spelunkr_bankswitch_w )
 {
-	memory_set_bank(space->machine, "bank1", data & 0x03);
+	memory_set_bank(space->machine(), "bank1", data & 0x03);
 }
 
 static WRITE8_HANDLER( spelunk2_bankswitch_w )
 {
-	memory_set_bank(space->machine, "bank1", (data & 0xc0) >> 6);
-	memory_set_bank(space->machine, "bank2", (data & 0x3c) >> 2);
+	memory_set_bank(space->machine(), "bank1", (data & 0xc0) >> 6);
+	memory_set_bank(space->machine(), "bank2", (data & 0x3c) >> 2);
 }
 
 static WRITE8_HANDLER( youjyudn_bankswitch_w )
 {
-	memory_set_bank(space->machine, "bank1", data & 0x01);
+	memory_set_bank(space->machine(), "bank1", data & 0x01);
 }
 
 
-static ADDRESS_MAP_START( kungfum_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( kungfum_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xa000, 0xa000) AM_WRITE(m62_hscroll_low_w)
 	AM_RANGE(0xb000, 0xb000) AM_WRITE(m62_hscroll_high_w)
-	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
+	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
 	/* Kung Fu Master is the only game in this driver to have separated (but */
 	/* contiguous) videoram and colorram. They are interleaved in all the others. */
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(kungfum_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(kungfum_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( kungfum_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( kungfum_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("SYSTEM") AM_WRITE(irem_sound_cmd_w)
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("P1") AM_WRITE(m62_flipscreen_w)	/* + coin counters */
@@ -192,16 +192,16 @@ static ADDRESS_MAP_START( kungfum_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x04, 0x04) AM_READ_PORT("DSW2")
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( battroad_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( battroad_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xa000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m62_textram)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
+	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m_m62_textram)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( battroad_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( battroad_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("SYSTEM") AM_WRITE(irem_sound_cmd_w)
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("P1") AM_WRITE(m62_flipscreen_w)	/* + coin counters */
@@ -214,22 +214,22 @@ static ADDRESS_MAP_START( battroad_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x83, 0x83) AM_WRITE(battroad_bankswitch_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ldrun_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( ldrun_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
+	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ldrun2_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( ldrun2_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x9fff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
+	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ldrun2_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( ldrun2_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("SYSTEM") AM_WRITE(irem_sound_cmd_w)
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("P1") AM_WRITE(m62_flipscreen_w)	/* + coin counters */
@@ -240,17 +240,17 @@ static ADDRESS_MAP_START( ldrun2_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x80, 0x81) AM_WRITE(ldrun2_bankswitch_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ldrun3_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( ldrun3_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc800, 0xc800) AM_READ(ldrun3_prot_5_r)
 	AM_RANGE(0xcc00, 0xcc00) AM_READ(ldrun3_prot_7_r)
 	AM_RANGE(0xcfff, 0xcfff) AM_READ(ldrun3_prot_7_r)
-	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
+	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
 	AM_RANGE(0xd000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ldrun3_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( ldrun3_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("SYSTEM") AM_WRITE(irem_sound_cmd_w)
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("P1") AM_WRITE(m62_flipscreen_w)	/* + coin counters */
@@ -261,16 +261,16 @@ static ADDRESS_MAP_START( ldrun3_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x81, 0x81) AM_WRITE(ldrun3_topbottom_mask_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ldrun4_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( ldrun4_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
+	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0xc800, 0xc800) AM_WRITE(ldrun4_bankswitch_w)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ldrun4_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( ldrun4_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("SYSTEM") AM_WRITE(irem_sound_cmd_w)
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("P1") AM_WRITE(m62_flipscreen_w)	/* + coin counters */
@@ -281,24 +281,24 @@ static ADDRESS_MAP_START( ldrun4_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x83, 0x83) AM_WRITE(m62_hscroll_low_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( lotlot_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( lotlot_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0xa000, 0xafff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m62_textram)
-	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
+	AM_RANGE(0xa000, 0xafff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m_m62_textram)
+	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( kidniki_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( kidniki_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x9fff) AM_ROMBANK("bank1")
-	AM_RANGE(0xa000, 0xafff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
-	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m62_textram)
+	AM_RANGE(0xa000, 0xafff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
+	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m_m62_textram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( kidniki_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( kidniki_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("SYSTEM") AM_WRITE(irem_sound_cmd_w)
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("P1") AM_WRITE(m62_flipscreen_w)	/* + coin counters */
@@ -313,12 +313,12 @@ static ADDRESS_MAP_START( kidniki_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x85, 0x85) AM_WRITE(kidniki_bankswitch_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( spelunkr_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( spelunkr_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x9fff) AM_ROMBANK("bank1")
-	AM_RANGE(0xa000, 0xbfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
-	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m62_textram)
+	AM_RANGE(0xa000, 0xbfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
+	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m_m62_textram)
 	AM_RANGE(0xd000, 0xd000) AM_WRITE(m62_vscroll_low_w)
 	AM_RANGE(0xd001, 0xd001) AM_WRITE(m62_vscroll_high_w)
 	AM_RANGE(0xd002, 0xd002) AM_WRITE(m62_hscroll_low_w)
@@ -328,13 +328,13 @@ static ADDRESS_MAP_START( spelunkr_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( spelunk2_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( spelunk2_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x9000, 0x9fff) AM_ROMBANK("bank2")
-	AM_RANGE(0xa000, 0xbfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
-	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m62_textram)
+	AM_RANGE(0xa000, 0xbfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
+	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m_m62_textram)
 	AM_RANGE(0xd000, 0xd000) AM_WRITE(m62_vscroll_low_w)
 	AM_RANGE(0xd001, 0xd001) AM_WRITE(m62_hscroll_low_w)
 	AM_RANGE(0xd002, 0xd002) AM_WRITE(spelunk2_gfxport_w)
@@ -342,16 +342,16 @@ static ADDRESS_MAP_START( spelunk2_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( youjyudn_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( youjyudn_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m62_textram)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
+	AM_RANGE(0xc000, 0xc0ff) AM_WRITEONLY AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(m62_textram_w) AM_BASE_MEMBER(m62_state, m_m62_textram)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( youjyudn_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( youjyudn_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("SYSTEM") AM_WRITE(irem_sound_cmd_w)
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("P1") AM_WRITE(m62_flipscreen_w)	/* + coin counters */
@@ -363,11 +363,11 @@ static ADDRESS_MAP_START( youjyudn_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x83, 0x83) AM_WRITE(youjyudn_bankswitch_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( horizon_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( horizon_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
-	AM_RANGE(0xc000, 0xc1ff) AM_RAM AM_BASE_SIZE_MEMBER(m62_state, spriteram, spriteram_size)
-	AM_RANGE(0xc800, 0xc83f) AM_RAM_WRITE(horizon_scrollram_w) AM_BASE_MEMBER(m62_state, scrollram)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m62_tileram)
+	AM_RANGE(0xc000, 0xc1ff) AM_RAM AM_BASE_SIZE_MEMBER(m62_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc800, 0xc83f) AM_RAM_WRITE(horizon_scrollram_w) AM_BASE_MEMBER(m62_state, m_scrollram)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(m62_tileram_w) AM_BASE_MEMBER(m62_state, m_m62_tileram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
@@ -932,27 +932,27 @@ GFXDECODE_END
 
 static MACHINE_START( m62 )
 {
-	m62_state *state = machine->driver_data<m62_state>();
+	m62_state *state = machine.driver_data<m62_state>();
 
-	state->save_item(NAME(state->ldrun2_bankswap));
-	state->save_item(NAME(state->bankcontrol));
+	state->save_item(NAME(state->m_ldrun2_bankswap));
+	state->save_item(NAME(state->m_bankcontrol));
 }
 
 static MACHINE_RESET( m62 )
 {
-	m62_state *state = machine->driver_data<m62_state>();
+	m62_state *state = machine.driver_data<m62_state>();
 
-	state->flipscreen = 0;
-	state->m62_background_hscroll = 0;
-	state->m62_background_vscroll = 0;
-	state->kidniki_background_bank = 0;
-	state->kidniki_text_vscroll = 0;
-	state->ldrun3_topbottom_mask = 0;
-	state->spelunkr_palbank = 0;
+	state->m_flipscreen = 0;
+	state->m_m62_background_hscroll = 0;
+	state->m_m62_background_vscroll = 0;
+	state->m_kidniki_background_bank = 0;
+	state->m_kidniki_text_vscroll = 0;
+	state->m_ldrun3_topbottom_mask = 0;
+	state->m_spelunkr_palbank = 0;
 
-	state->ldrun2_bankswap = 0;
-	state->bankcontrol[0] = 0;
-	state->bankcontrol[1] = 0;
+	state->m_ldrun2_bankswap = 0;
+	state->m_bankcontrol[0] = 0;
+	state->m_bankcontrol[1] = 0;
 }
 
 static MACHINE_CONFIG_START( ldrun, m62_state )
@@ -2161,50 +2161,50 @@ ROM_END
 static DRIVER_INIT( battroad )
 {
 	/* configure memory banks */
-	memory_configure_bank(machine, "bank1", 0, 16, machine->region("maincpu")->base() + 0x10000, 0x2000);
+	memory_configure_bank(machine, "bank1", 0, 16, machine.region("maincpu")->base() + 0x10000, 0x2000);
 }
 
 static DRIVER_INIT( ldrun2 )
 {
 	/* configure memory banks */
-	memory_configure_bank(machine, "bank1", 0, 2, machine->region("maincpu")->base() + 0x10000, 0x2000);
+	memory_configure_bank(machine, "bank1", 0, 2, machine.region("maincpu")->base() + 0x10000, 0x2000);
 }
 
 static DRIVER_INIT( ldrun4 )
 {
 	/* configure memory banks */
-	memory_configure_bank(machine, "bank1", 0, 2, machine->region("maincpu")->base() + 0x10000, 0x4000);
+	memory_configure_bank(machine, "bank1", 0, 2, machine.region("maincpu")->base() + 0x10000, 0x4000);
 }
 
 static DRIVER_INIT( kidniki )
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	/* in Kid Niki, bank 0 has code falling from 7fff to 8000, */
 	/* so I have to copy it there because bank switching wouldn't catch it */
 	memcpy(ROM + 0x08000, ROM + 0x10000, 0x2000);
 
 	/* configure memory banks */
-	memory_configure_bank(machine, "bank1", 0, 16, machine->region("maincpu")->base() + 0x10000, 0x2000);
+	memory_configure_bank(machine, "bank1", 0, 16, machine.region("maincpu")->base() + 0x10000, 0x2000);
 }
 
 static DRIVER_INIT( spelunkr )
 {
 	/* configure memory banks */
-	memory_configure_bank(machine, "bank1", 0, 4, machine->region("maincpu")->base() + 0x10000, 0x2000);
+	memory_configure_bank(machine, "bank1", 0, 4, machine.region("maincpu")->base() + 0x10000, 0x2000);
 }
 
 static DRIVER_INIT( spelunk2 )
 {
 	/* configure memory banks */
-	memory_configure_bank(machine, "bank1", 0,  4, machine->region("maincpu")->base() + 0x20000, 0x1000);
-	memory_configure_bank(machine, "bank2", 0, 16, machine->region("maincpu")->base() + 0x10000, 0x1000);
+	memory_configure_bank(machine, "bank1", 0,  4, machine.region("maincpu")->base() + 0x20000, 0x1000);
+	memory_configure_bank(machine, "bank2", 0, 16, machine.region("maincpu")->base() + 0x10000, 0x1000);
 }
 
 static DRIVER_INIT( youjyudn )
 {
 	/* configure memory banks */
-	memory_configure_bank(machine, "bank1", 0, 2, machine->region("maincpu")->base() + 0x10000, 0x4000);
+	memory_configure_bank(machine, "bank1", 0, 2, machine.region("maincpu")->base() + 0x10000, 0x4000);
 }
 
 GAME( 1984, kungfum,  0,        kungfum,  kungfum,  0,        ROT0,   "Irem", "Kung-Fu Master", GAME_SUPPORTS_SAVE )

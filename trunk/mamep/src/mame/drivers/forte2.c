@@ -32,17 +32,17 @@ public:
 	forte2_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 input_mask;
+	UINT8 m_input_mask;
 };
 
 
 
-static ADDRESS_MAP_START( program_mem, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( program_mem, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( io_mem, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( io_mem, AS_IO, 8 )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x98, 0x98) AM_READWRITE( TMS9928A_vram_r, TMS9928A_vram_w )
@@ -71,15 +71,15 @@ INPUT_PORTS_END
 
 static READ8_DEVICE_HANDLER(forte2_ay8910_read_input)
 {
-	forte2_state *state = device->machine->driver_data<forte2_state>();
-	return input_port_read(device->machine, "IN0") | (state->input_mask&0x3f);
+	forte2_state *state = device->machine().driver_data<forte2_state>();
+	return input_port_read(device->machine(), "IN0") | (state->m_input_mask&0x3f);
 }
 
 static WRITE8_DEVICE_HANDLER( forte2_ay8910_set_input_mask )
 {
-	forte2_state *state = device->machine->driver_data<forte2_state>();
+	forte2_state *state = device->machine().driver_data<forte2_state>();
 	/* PSG reg 15, writes 0 at coin insert, 0xff at boot and game over */
-	state->input_mask = data;
+	state->m_input_mask = data;
 }
 
 static const ay8910_interface forte2_ay8910_interface =
@@ -93,7 +93,7 @@ static const ay8910_interface forte2_ay8910_interface =
 };
 
 
-static void vdp_interrupt(running_machine *machine, int i)
+static void vdp_interrupt(running_machine &machine, int i)
 {
 	cputag_set_input_line(machine, "maincpu", 0, (i ? HOLD_LINE : CLEAR_LINE));
 }
@@ -113,14 +113,14 @@ static STATE_POSTLOAD ( forte2 )
 
 static MACHINE_START( forte2 )
 {
-	forte2_state *state = machine->driver_data<forte2_state>();
+	forte2_state *state = machine.driver_data<forte2_state>();
 	TMS9928A_configure(&tms9928a_interface);
 
-	state->input_mask = 0xff;
+	state->m_input_mask = 0xff;
 
 	/* register for save states */
-	state_save_register_global(machine, state->input_mask);
-	machine->state().register_postload(forte2, NULL);
+	state_save_register_global(machine, state->m_input_mask);
+	machine.state().register_postload(forte2, NULL);
 }
 
 static MACHINE_RESET( forte2 )
@@ -130,7 +130,7 @@ static MACHINE_RESET( forte2 )
 
 static INTERRUPT_GEN( pesadelo_interrupt )
 {
-	TMS9928A_interrupt(device->machine);
+	TMS9928A_interrupt(device->machine());
 }
 
 
@@ -161,8 +161,8 @@ MACHINE_CONFIG_END
 static DRIVER_INIT(pesadelo)
 {
 	int i;
-	UINT8 *mem = machine->region("maincpu")->base();
-	int memsize = machine->region("maincpu")->bytes();
+	UINT8 *mem = machine.region("maincpu")->base();
+	int memsize = machine.region("maincpu")->bytes();
 	UINT8 *buf;
 
 	// data swap

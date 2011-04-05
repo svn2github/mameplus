@@ -643,13 +643,13 @@ static READ16_HANDLER( io_r )
 	static const char *const inputnames[] = { "IN0", "IN1", "IN2" };
 
 	if(offset < 0x8)
-		return input_port_read_safe(space->machine, analognames[offset], 0x00);
+		return input_port_read_safe(space->machine(), analognames[offset], 0x00);
 
 	if(offset < 0x10)
 	{
 		offset -= 0x8;
 		if(offset < 3)
-			return input_port_read(space->machine, inputnames[offset]);
+			return input_port_read(space->machine(), inputnames[offset]);
 		return 0xff;
 	}
 
@@ -667,7 +667,7 @@ static WRITE16_HANDLER( bank_w )
 	if(ACCESSING_BITS_0_7) {
 		switch(data & 0xf) {
 		case 0x1: // 100000-1fffff data roms banking
-			memory_set_bankptr(space->machine, "bank1", space->machine->region("maincpu")->base() + 0x1000000 + 0x100000*((data >> 4) & 0xf));
+			memory_set_bankptr(space->machine(), "bank1", space->machine().region("maincpu")->base() + 0x1000000 + 0x100000*((data >> 4) & 0xf));
 			logerror("BANK %x\n", 0x1000000 + 0x100000*((data >> 4) & 0xf));
 			break;
 		case 0x2: // 200000-2fffff data roms banking (unused, all known games have only one bank)
@@ -680,19 +680,19 @@ static WRITE16_HANDLER( bank_w )
 
 
 
-static void irq_raise(running_machine *machine, int level)
+static void irq_raise(running_machine &machine, int level)
 {
-	model1_state *state = machine->driver_data<model1_state>();
+	model1_state *state = machine.driver_data<model1_state>();
 	//  logerror("irq: raising %d\n", level);
 	//  irq_status |= (1 << level);
-	state->last_irq = level;
+	state->m_last_irq = level;
 	cputag_set_input_line(machine, "maincpu", 0, HOLD_LINE);
 }
 
 static IRQ_CALLBACK(irq_callback)
 {
-	model1_state *state = device->machine->driver_data<model1_state>();
-	return state->last_irq;
+	model1_state *state = device->machine().driver_data<model1_state>();
+	return state->m_last_irq;
 }
 // vf
 // 1 = fe3ed4
@@ -708,62 +708,62 @@ static IRQ_CALLBACK(irq_callback)
 // 3 = ff54c
 // other = ff568/ff574
 
-static void irq_init(running_machine *machine)
+static void irq_init(running_machine &machine)
 {
 	cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
-	cpu_set_irq_callback(machine->device("maincpu"), irq_callback);
+	device_set_irq_callback(machine.device("maincpu"), irq_callback);
 }
 
 static INTERRUPT_GEN(model1_interrupt)
 {
-	model1_state *state = device->machine->driver_data<model1_state>();
+	model1_state *state = device->machine().driver_data<model1_state>();
 	if (cpu_getiloops(device))
 	{
-		irq_raise(device->machine, 1);
+		irq_raise(device->machine(), 1);
 	}
 	else
 	{
-		irq_raise(device->machine, state->sound_irq);
+		irq_raise(device->machine(), state->m_sound_irq);
 
 		// if the FIFO has something in it, signal the 68k too
-		if (state->fifo_rptr != state->fifo_wptr)
+		if (state->m_fifo_rptr != state->m_fifo_wptr)
 		{
-			cputag_set_input_line(device->machine, "audiocpu", 2, HOLD_LINE);
+			cputag_set_input_line(device->machine(), "audiocpu", 2, HOLD_LINE);
 		}
 	}
 }
 
 static MACHINE_RESET(model1)
 {
-	model1_state *state = machine->driver_data<model1_state>();
-	memory_set_bankptr(machine, "bank1", machine->region("maincpu")->base() + 0x1000000);
+	model1_state *state = machine.driver_data<model1_state>();
+	memory_set_bankptr(machine, "bank1", machine.region("maincpu")->base() + 0x1000000);
 	irq_init(machine);
-	model1_tgp_reset(machine, !strcmp(machine->gamedrv->name, "swa") || !strcmp(machine->gamedrv->name, "wingwar") || !strcmp(machine->gamedrv->name, "wingwaru") || !strcmp(machine->gamedrv->name, "wingwarj"));
-	if (!strcmp(machine->gamedrv->name, "swa"))
+	model1_tgp_reset(machine, !strcmp(machine.system().name, "swa") || !strcmp(machine.system().name, "wingwar") || !strcmp(machine.system().name, "wingwaru") || !strcmp(machine.system().name, "wingwarj"));
+	if (!strcmp(machine.system().name, "swa"))
 	{
-		state->sound_irq = 0;
+		state->m_sound_irq = 0;
 	}
 	else
 	{
-		state->sound_irq = 3;
+		state->m_sound_irq = 3;
 	}
 
 	// init the sound FIFO
-	state->fifo_rptr = state->fifo_wptr = 0;
-	memset(state->to_68k, 0, sizeof(state->to_68k));
+	state->m_fifo_rptr = state->m_fifo_wptr = 0;
+	memset(state->m_to_68k, 0, sizeof(state->m_to_68k));
 }
 
 static MACHINE_RESET(model1_vr)
 {
-	model1_state *state = machine->driver_data<model1_state>();
-	memory_set_bankptr(machine, "bank1", machine->region("maincpu")->base() + 0x1000000);
+	model1_state *state = machine.driver_data<model1_state>();
+	memory_set_bankptr(machine, "bank1", machine.region("maincpu")->base() + 0x1000000);
 	irq_init(machine);
 	model1_vr_tgp_reset(machine);
-	state->sound_irq = 3;
+	state->m_sound_irq = 3;
 
 	// init the sound FIFO
-	state->fifo_rptr = state->fifo_wptr = 0;
-	memset(state->to_68k, 0, sizeof(state->to_68k));
+	state->m_fifo_rptr = state->m_fifo_wptr = 0;
+	memset(state->m_to_68k, 0, sizeof(state->m_to_68k));
 }
 
 static READ16_HANDLER( network_ctl_r )
@@ -780,72 +780,72 @@ static WRITE16_HANDLER( network_ctl_w )
 
 static WRITE16_HANDLER(md1_w)
 {
-	model1_state *state = space->machine->driver_data<model1_state>();
-	COMBINE_DATA(state->display_list1+offset);
+	model1_state *state = space->machine().driver_data<model1_state>();
+	COMBINE_DATA(state->m_display_list1+offset);
 	if(0 && offset)
 		return;
-	if(1 && state->dump)
-		logerror("TGP: md1_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, cpu_get_pc(space->cpu));
+	if(1 && state->m_dump)
+		logerror("TGP: md1_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, cpu_get_pc(&space->device()));
 }
 
 static WRITE16_HANDLER(md0_w)
 {
-	model1_state *state = space->machine->driver_data<model1_state>();
-	COMBINE_DATA(state->display_list0+offset);
+	model1_state *state = space->machine().driver_data<model1_state>();
+	COMBINE_DATA(state->m_display_list0+offset);
 	if(0 && offset)
 		return;
-	if(1 && state->dump)
-		logerror("TGP: md0_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, cpu_get_pc(space->cpu));
+	if(1 && state->m_dump)
+		logerror("TGP: md0_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, cpu_get_pc(&space->device()));
 }
 
 static WRITE16_HANDLER(p_w)
 {
-	UINT16 old = space->machine->generic.paletteram.u16[offset];
+	UINT16 old = space->machine().generic.paletteram.u16[offset];
 	paletteram16_xBBBBBGGGGGRRRRR_word_w(space, offset, data, mem_mask);
-	if(0 && space->machine->generic.paletteram.u16[offset] != old)
-		logerror("XVIDEO: p_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, cpu_get_pc(space->cpu));
+	if(0 && space->machine().generic.paletteram.u16[offset] != old)
+		logerror("XVIDEO: p_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, cpu_get_pc(&space->device()));
 }
 
 static WRITE16_HANDLER(mr_w)
 {
-	model1_state *state = space->machine->driver_data<model1_state>();
-	COMBINE_DATA(state->mr+offset);
+	model1_state *state = space->machine().driver_data<model1_state>();
+	COMBINE_DATA(state->m_mr+offset);
 	if(0 && offset == 0x1138/2)
-		logerror("MR.w %x, %04x @ %04x (%x)\n", offset*2+0x500000, data, mem_mask, cpu_get_pc(space->cpu));
+		logerror("MR.w %x, %04x @ %04x (%x)\n", offset*2+0x500000, data, mem_mask, cpu_get_pc(&space->device()));
 }
 
 static WRITE16_HANDLER(mr2_w)
 {
-	model1_state *state = space->machine->driver_data<model1_state>();
-	COMBINE_DATA(state->mr2+offset);
+	model1_state *state = space->machine().driver_data<model1_state>();
+	COMBINE_DATA(state->m_mr2+offset);
 #if 0
 	if(0 && offset == 0x6e8/2) {
-		logerror("MR.w %x, %04x @ %04x (%x)\n", offset*2+0x400000, data, mem_mask, cpu_get_pc(space->cpu));
+		logerror("MR.w %x, %04x @ %04x (%x)\n", offset*2+0x400000, data, mem_mask, cpu_get_pc(&space->device()));
 	}
 	if(offset/2 == 0x3680/4)
-		logerror("MW f80[r25], %04x%04x (%x)\n", state->mr2[0x3680/2+1], state->mr2[0x3680/2], cpu_get_pc(space->cpu));
+		logerror("MW f80[r25], %04x%04x (%x)\n", state->m_mr2[0x3680/2+1], state->m_mr2[0x3680/2], cpu_get_pc(&space->device()));
 	if(offset/2 == 0x06ca/4)
-		logerror("MW fca[r19], %04x%04x (%x)\n", state->mr2[0x06ca/2+1], state->mr2[0x06ca/2], cpu_get_pc(space->cpu));
+		logerror("MW fca[r19], %04x%04x (%x)\n", state->m_mr2[0x06ca/2+1], state->m_mr2[0x06ca/2], cpu_get_pc(&space->device()));
 	if(offset/2 == 0x1eca/4)
-		logerror("MW fca[r22], %04x%04x (%x)\n", state->mr2[0x1eca/2+1], state->mr2[0x1eca/2], cpu_get_pc(space->cpu));
+		logerror("MW fca[r22], %04x%04x (%x)\n", state->m_mr2[0x1eca/2+1], state->m_mr2[0x1eca/2], cpu_get_pc(&space->device()));
 #endif
 
 	// wingwar scene position, pc=e1ce -> d735
 	if(offset/2 == 0x1f08/4)
-		logerror("MW  8[r10], %f (%x)\n", *(float *)(state->mr2+0x1f08/2), cpu_get_pc(space->cpu));
+		logerror("MW  8[r10], %f (%x)\n", *(float *)(state->m_mr2+0x1f08/2), cpu_get_pc(&space->device()));
 	if(offset/2 == 0x1f0c/4)
-		logerror("MW  c[r10], %f (%x)\n", *(float *)(state->mr2+0x1f0c/2), cpu_get_pc(space->cpu));
+		logerror("MW  c[r10], %f (%x)\n", *(float *)(state->m_mr2+0x1f0c/2), cpu_get_pc(&space->device()));
 	if(offset/2 == 0x1f10/4)
-		logerror("MW 10[r10], %f (%x)\n", *(float *)(state->mr2+0x1f10/2), cpu_get_pc(space->cpu));
+		logerror("MW 10[r10], %f (%x)\n", *(float *)(state->m_mr2+0x1f10/2), cpu_get_pc(&space->device()));
 }
 
 static READ16_HANDLER( snd_68k_ready_r )
 {
-	int sr = cpu_get_reg(space->machine->device("audiocpu"), M68K_SR);
+	int sr = cpu_get_reg(space->machine().device("audiocpu"), M68K_SR);
 
 	if ((sr & 0x0700) > 0x0100)
 	{
-		cpu_spinuntil_time(space->cpu, attotime::from_usec(40));
+		device_spin_until_time(&space->device(), attotime::from_usec(40));
 		return 0;	// not ready yet, interrupts disabled
 	}
 
@@ -854,27 +854,27 @@ static READ16_HANDLER( snd_68k_ready_r )
 
 static WRITE16_HANDLER( snd_latch_to_68k_w )
 {
-	model1_state *state = space->machine->driver_data<model1_state>();
-	state->to_68k[state->fifo_wptr] = data;
-	state->fifo_wptr++;
-	if (state->fifo_wptr >= ARRAY_LENGTH(state->to_68k)) state->fifo_wptr = 0;
+	model1_state *state = space->machine().driver_data<model1_state>();
+	state->m_to_68k[state->m_fifo_wptr] = data;
+	state->m_fifo_wptr++;
+	if (state->m_fifo_wptr >= ARRAY_LENGTH(state->m_to_68k)) state->m_fifo_wptr = 0;
 
 	// signal the 68000 that there's data waiting
-	cputag_set_input_line(space->machine, "audiocpu", 2, HOLD_LINE);
+	cputag_set_input_line(space->machine(), "audiocpu", 2, HOLD_LINE);
 	// give the 68k time to reply
-	cpu_spinuntil_time(space->cpu, attotime::from_usec(40));
+	device_spin_until_time(&space->device(), attotime::from_usec(40));
 }
 
-static ADDRESS_MAP_START( model1_mem, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( model1_mem, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x1fffff) AM_ROMBANK("bank1")
 	AM_RANGE(0x200000, 0x2fffff) AM_ROM
 
-	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(mr2_w) AM_BASE_MEMBER(model1_state, mr2)
-	AM_RANGE(0x500000, 0x53ffff) AM_RAM_WRITE(mr_w)  AM_BASE_MEMBER(model1_state, mr)
+	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(mr2_w) AM_BASE_MEMBER(model1_state, m_mr2)
+	AM_RANGE(0x500000, 0x53ffff) AM_RAM_WRITE(mr_w)  AM_BASE_MEMBER(model1_state, m_mr)
 
-	AM_RANGE(0x600000, 0x60ffff) AM_RAM_WRITE(md0_w) AM_BASE_MEMBER(model1_state, display_list0)
-	AM_RANGE(0x610000, 0x61ffff) AM_RAM_WRITE(md1_w) AM_BASE_MEMBER(model1_state, display_list1)
+	AM_RANGE(0x600000, 0x60ffff) AM_RAM_WRITE(md0_w) AM_BASE_MEMBER(model1_state, m_display_list0)
+	AM_RANGE(0x610000, 0x61ffff) AM_RAM_WRITE(md1_w) AM_BASE_MEMBER(model1_state, m_display_list1)
 	AM_RANGE(0x680000, 0x680003) AM_READWRITE(model1_listctl_r, model1_listctl_w)
 
 	AM_RANGE(0x700000, 0x70ffff) AM_READWRITE(sys24_tile_r, sys24_tile_w)
@@ -885,7 +885,7 @@ static ADDRESS_MAP_START( model1_mem, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x780000, 0x7fffff) AM_READWRITE(sys24_char_r, sys24_char_w)
 
 	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(p_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x910000, 0x91bfff) AM_RAM  AM_BASE_MEMBER(model1_state, color_xlat)
+	AM_RANGE(0x910000, 0x91bfff) AM_RAM  AM_BASE_MEMBER(model1_state, m_color_xlat)
 
 	AM_RANGE(0xc00000, 0xc0003f) AM_READ(io_r) AM_WRITENOP
 
@@ -908,21 +908,21 @@ static ADDRESS_MAP_START( model1_mem, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xfc0000, 0xffffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( model1_io, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( model1_io, AS_IO, 16 )
 	AM_RANGE(0xd20000, 0xd20003) AM_READ(model1_tgp_copro_ram_r)
 	AM_RANGE(0xd80000, 0xd80003) AM_READ(model1_tgp_copro_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( model1_vr_mem, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( model1_vr_mem, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x1fffff) AM_ROMBANK("bank1")
 	AM_RANGE(0x200000, 0x2fffff) AM_ROM
 
-	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(mr2_w) AM_BASE_MEMBER(model1_state, mr2)
-	AM_RANGE(0x500000, 0x53ffff) AM_RAM_WRITE(mr_w)  AM_BASE_MEMBER(model1_state, mr)
+	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(mr2_w) AM_BASE_MEMBER(model1_state, m_mr2)
+	AM_RANGE(0x500000, 0x53ffff) AM_RAM_WRITE(mr_w)  AM_BASE_MEMBER(model1_state, m_mr)
 
-	AM_RANGE(0x600000, 0x60ffff) AM_RAM_WRITE(md0_w) AM_BASE_MEMBER(model1_state, display_list0)
-	AM_RANGE(0x610000, 0x61ffff) AM_RAM_WRITE(md1_w) AM_BASE_MEMBER(model1_state, display_list1)
+	AM_RANGE(0x600000, 0x60ffff) AM_RAM_WRITE(md0_w) AM_BASE_MEMBER(model1_state, m_display_list0)
+	AM_RANGE(0x610000, 0x61ffff) AM_RAM_WRITE(md1_w) AM_BASE_MEMBER(model1_state, m_display_list1)
 	AM_RANGE(0x680000, 0x680003) AM_READWRITE(model1_listctl_r, model1_listctl_w)
 
 	AM_RANGE(0x700000, 0x70ffff) AM_READWRITE(sys24_tile_r, sys24_tile_w)
@@ -933,7 +933,7 @@ static ADDRESS_MAP_START( model1_vr_mem, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x780000, 0x7fffff) AM_READWRITE(sys24_char_r, sys24_char_w)
 
 	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(p_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x910000, 0x91bfff) AM_RAM  AM_BASE_MEMBER(model1_state, color_xlat)
+	AM_RANGE(0x910000, 0x91bfff) AM_RAM  AM_BASE_MEMBER(model1_state, m_color_xlat)
 
 	AM_RANGE(0xc00000, 0xc0003f) AM_READ(io_r) AM_WRITENOP
 
@@ -956,20 +956,20 @@ static ADDRESS_MAP_START( model1_vr_mem, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xfc0000, 0xffffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( model1_vr_io, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( model1_vr_io, AS_IO, 16 )
 	AM_RANGE(0xd20000, 0xd20003) AM_READ(model1_vr_tgp_ram_r)
 	AM_RANGE(0xd80000, 0xd80003) AM_READ(model1_vr_tgp_r)
 ADDRESS_MAP_END
 
 static READ16_HANDLER( m1_snd_68k_latch_r )
 {
-	model1_state *state = space->machine->driver_data<model1_state>();
+	model1_state *state = space->machine().driver_data<model1_state>();
 	UINT16 retval;
 
-	retval = state->to_68k[state->fifo_rptr];
+	retval = state->m_to_68k[state->m_fifo_rptr];
 
-	state->fifo_rptr++;
-	if (state->fifo_rptr >= ARRAY_LENGTH(state->to_68k)) state->fifo_rptr = 0;
+	state->m_fifo_rptr++;
+	if (state->m_fifo_rptr >= ARRAY_LENGTH(state->m_to_68k)) state->m_fifo_rptr = 0;
 
 	return retval;
 }
@@ -992,7 +992,7 @@ static WRITE16_HANDLER( m1_snd_68k_latch2_w )
 {
 }
 
-static ADDRESS_MAP_START( model1_snd, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( model1_snd, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x0bffff) AM_ROM
 	AM_RANGE(0xc20000, 0xc20001) AM_READWRITE( m1_snd_68k_latch_r, m1_snd_68k_latch1_w )
 	AM_RANGE(0xc20002, 0xc20003) AM_READWRITE( m1_snd_v60_ready_r, m1_snd_68k_latch2_w )

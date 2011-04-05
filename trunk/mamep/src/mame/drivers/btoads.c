@@ -29,12 +29,12 @@
 
 static MACHINE_START( btoads )
 {
-	btoads_state *state = machine->driver_data<btoads_state>();
-	state_save_register_global(machine, state->main_to_sound_data);
-	state_save_register_global(machine, state->main_to_sound_ready);
-	state_save_register_global(machine, state->sound_to_main_data);
-	state_save_register_global(machine, state->sound_to_main_ready);
-	state_save_register_global(machine, state->sound_int_state);
+	btoads_state *state = machine.driver_data<btoads_state>();
+	state_save_register_global(machine, state->m_main_to_sound_data);
+	state_save_register_global(machine, state->m_main_to_sound_ready);
+	state_save_register_global(machine, state->m_sound_to_main_data);
+	state_save_register_global(machine, state->m_sound_to_main_ready);
+	state_save_register_global(machine, state->m_sound_int_state);
 }
 
 
@@ -47,42 +47,42 @@ static MACHINE_START( btoads )
 
 static TIMER_CALLBACK( delayed_sound_w )
 {
-	btoads_state *state = machine->driver_data<btoads_state>();
-	state->main_to_sound_data = param;
-	state->main_to_sound_ready = 1;
-	cpu_triggerint(machine->device("audiocpu"));
+	btoads_state *state = machine.driver_data<btoads_state>();
+	state->m_main_to_sound_data = param;
+	state->m_main_to_sound_ready = 1;
+	device_triggerint(machine.device("audiocpu"));
 
 	/* use a timer to make long transfers faster */
-	machine->scheduler().timer_set(attotime::from_usec(50), FUNC(NULL));
+	machine.scheduler().timer_set(attotime::from_usec(50), FUNC(NULL));
 }
 
 
 static WRITE16_HANDLER( main_sound_w )
 {
 	if (ACCESSING_BITS_0_7)
-		space->machine->scheduler().synchronize(FUNC(delayed_sound_w), data & 0xff);
+		space->machine().scheduler().synchronize(FUNC(delayed_sound_w), data & 0xff);
 }
 
 
 static READ16_HANDLER( main_sound_r )
 {
-	btoads_state *state = space->machine->driver_data<btoads_state>();
-	state->sound_to_main_ready = 0;
-	return state->sound_to_main_data;
+	btoads_state *state = space->machine().driver_data<btoads_state>();
+	state->m_sound_to_main_ready = 0;
+	return state->m_sound_to_main_data;
 }
 
 
 static CUSTOM_INPUT( main_to_sound_r )
 {
-	btoads_state *state = field->port->machine->driver_data<btoads_state>();
-	return state->main_to_sound_ready;
+	btoads_state *state = field->port->machine().driver_data<btoads_state>();
+	return state->m_main_to_sound_ready;
 }
 
 
 static CUSTOM_INPUT( sound_to_main_r )
 {
-	btoads_state *state = field->port->machine->driver_data<btoads_state>();
-	return state->sound_to_main_ready;
+	btoads_state *state = field->port->machine().driver_data<btoads_state>();
+	return state->m_sound_to_main_ready;
 }
 
 
@@ -94,33 +94,33 @@ static CUSTOM_INPUT( sound_to_main_r )
 
 static WRITE8_HANDLER( sound_data_w )
 {
-	btoads_state *state = space->machine->driver_data<btoads_state>();
-	state->sound_to_main_data = data;
-	state->sound_to_main_ready = 1;
+	btoads_state *state = space->machine().driver_data<btoads_state>();
+	state->m_sound_to_main_data = data;
+	state->m_sound_to_main_ready = 1;
 }
 
 
 static READ8_HANDLER( sound_data_r )
 {
-	btoads_state *state = space->machine->driver_data<btoads_state>();
-	state->main_to_sound_ready = 0;
-	return state->main_to_sound_data;
+	btoads_state *state = space->machine().driver_data<btoads_state>();
+	state->m_main_to_sound_ready = 0;
+	return state->m_main_to_sound_data;
 }
 
 
 static READ8_HANDLER( sound_ready_to_send_r )
 {
-	btoads_state *state = space->machine->driver_data<btoads_state>();
-	return state->sound_to_main_ready ? 0x00 : 0x80;
+	btoads_state *state = space->machine().driver_data<btoads_state>();
+	return state->m_sound_to_main_ready ? 0x00 : 0x80;
 }
 
 
 static READ8_HANDLER( sound_data_ready_r )
 {
-	btoads_state *state = space->machine->driver_data<btoads_state>();
-	if (cpu_get_pc(space->cpu) == 0xd50 && !state->main_to_sound_ready)
-		cpu_spinuntil_int(space->cpu);
-	return state->main_to_sound_ready ? 0x00 : 0x80;
+	btoads_state *state = space->machine().driver_data<btoads_state>();
+	if (cpu_get_pc(&space->device()) == 0xd50 && !state->m_main_to_sound_ready)
+		device_spin_until_interrupt(&space->device());
+	return state->m_main_to_sound_ready ? 0x00 : 0x80;
 }
 
 
@@ -133,14 +133,14 @@ static READ8_HANDLER( sound_data_ready_r )
 
 static WRITE8_HANDLER( sound_int_state_w )
 {
-	btoads_state *state = space->machine->driver_data<btoads_state>();
+	btoads_state *state = space->machine().driver_data<btoads_state>();
 	/* top bit controls BSMT2000 reset */
-	if (!(state->sound_int_state & 0x80) && (data & 0x80))
-		devtag_reset(space->machine, "bsmt");
+	if (!(state->m_sound_int_state & 0x80) && (data & 0x80))
+		devtag_reset(space->machine(), "bsmt");
 
 	/* also clears interrupts */
-	cputag_set_input_line(space->machine, "audiocpu", 0, CLEAR_LINE);
-	state->sound_int_state = data;
+	cputag_set_input_line(space->machine(), "audiocpu", 0, CLEAR_LINE);
+	state->m_sound_int_state = data;
 }
 
 
@@ -153,14 +153,14 @@ static WRITE8_HANDLER( sound_int_state_w )
 
 static READ8_HANDLER( bsmt_ready_r )
 {
-	bsmt2000_device *bsmt = space->machine->device<bsmt2000_device>("bsmt");
+	bsmt2000_device *bsmt = space->machine().device<bsmt2000_device>("bsmt");
 	return bsmt->read_status() << 7;
 }
 
 
 static WRITE8_HANDLER( bsmt2000_port_w )
 {
-	bsmt2000_device *bsmt = space->machine->device<bsmt2000_device>("bsmt");
+	bsmt2000_device *bsmt = space->machine().device<bsmt2000_device>("bsmt");
 	bsmt->write_reg(offset >> 8);
 	bsmt->write_data(((offset & 0xff) << 8) | data);
 }
@@ -173,7 +173,7 @@ static WRITE8_HANDLER( bsmt2000_port_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x00000000, 0x003fffff) AM_RAM
 	AM_RANGE(0x20000000, 0x2000007f) AM_READ_PORT("P1")
 	AM_RANGE(0x20000080, 0x200000ff) AM_READ_PORT("P2")
@@ -181,8 +181,8 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x20000180, 0x200001ff) AM_READ_PORT("UNK")
 	AM_RANGE(0x20000200, 0x2000027f) AM_READ_PORT("SPECIAL")
 	AM_RANGE(0x20000280, 0x200002ff) AM_READ_PORT("SW1")
-	AM_RANGE(0x20000000, 0x200000ff) AM_WRITEONLY AM_BASE_MEMBER(btoads_state, sprite_scale)
-	AM_RANGE(0x20000100, 0x2000017f) AM_WRITEONLY AM_BASE_MEMBER(btoads_state, sprite_control)
+	AM_RANGE(0x20000000, 0x200000ff) AM_WRITEONLY AM_BASE_MEMBER(btoads_state, m_sprite_scale)
+	AM_RANGE(0x20000100, 0x2000017f) AM_WRITEONLY AM_BASE_MEMBER(btoads_state, m_sprite_control)
 	AM_RANGE(0x20000180, 0x200001ff) AM_WRITE(btoads_display_control_w)
 	AM_RANGE(0x20000200, 0x2000027f) AM_WRITE(btoads_scroll0_w)
 	AM_RANGE(0x20000280, 0x200002ff) AM_WRITE(btoads_scroll1_w)
@@ -191,12 +191,12 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x20000400, 0x2000047f) AM_WRITE(btoads_misc_control_w)
 	AM_RANGE(0x40000000, 0x4000000f) AM_WRITENOP	/* watchdog? */
 	AM_RANGE(0x60000000, 0x6003ffff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0xa0000000, 0xa03fffff) AM_READWRITE(btoads_vram_fg_display_r, btoads_vram_fg_display_w) AM_BASE_MEMBER(btoads_state, vram_fg0)
-	AM_RANGE(0xa4000000, 0xa43fffff) AM_READWRITE(btoads_vram_fg_draw_r, btoads_vram_fg_draw_w) AM_BASE_MEMBER(btoads_state, vram_fg1)
-	AM_RANGE(0xa8000000, 0xa87fffff) AM_RAM AM_BASE_MEMBER(btoads_state, vram_fg_data)
+	AM_RANGE(0xa0000000, 0xa03fffff) AM_READWRITE(btoads_vram_fg_display_r, btoads_vram_fg_display_w) AM_BASE_MEMBER(btoads_state, m_vram_fg0)
+	AM_RANGE(0xa4000000, 0xa43fffff) AM_READWRITE(btoads_vram_fg_draw_r, btoads_vram_fg_draw_w) AM_BASE_MEMBER(btoads_state, m_vram_fg1)
+	AM_RANGE(0xa8000000, 0xa87fffff) AM_RAM AM_BASE_MEMBER(btoads_state, m_vram_fg_data)
 	AM_RANGE(0xa8800000, 0xa8ffffff) AM_WRITENOP
-	AM_RANGE(0xb0000000, 0xb03fffff) AM_READWRITE(btoads_vram_bg0_r, btoads_vram_bg0_w) AM_BASE_MEMBER(btoads_state, vram_bg0)
-	AM_RANGE(0xb4000000, 0xb43fffff) AM_READWRITE(btoads_vram_bg1_r, btoads_vram_bg1_w) AM_BASE_MEMBER(btoads_state, vram_bg1)
+	AM_RANGE(0xb0000000, 0xb03fffff) AM_READWRITE(btoads_vram_bg0_r, btoads_vram_bg0_w) AM_BASE_MEMBER(btoads_state, m_vram_bg0)
+	AM_RANGE(0xb4000000, 0xb43fffff) AM_READWRITE(btoads_vram_bg1_r, btoads_vram_bg1_w) AM_BASE_MEMBER(btoads_state, m_vram_bg1)
 	AM_RANGE(0xc0000000, 0xc00003ff) AM_READWRITE(tms34020_io_register_r, tms34020_io_register_w)
 	AM_RANGE(0xfc000000, 0xffffffff) AM_ROM AM_REGION("user1", 0)
 ADDRESS_MAP_END
@@ -209,12 +209,12 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( sound_io_map, AS_IO, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_WRITE(bsmt2000_port_w)
 	AM_RANGE(0x8000, 0x8000) AM_READWRITE(sound_data_r, sound_data_w)
 	AM_RANGE(0x8002, 0x8002) AM_WRITE(sound_int_state_w)

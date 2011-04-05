@@ -36,7 +36,7 @@ static WRITE8_HANDLER( battlera_sound_w )
 	if (offset == 0)
 	{
 		soundlatch_w(space,0,data);
-		cputag_set_input_line(space->machine, "audiocpu", 0, HOLD_LINE);
+		cputag_set_input_line(space->machine(), "audiocpu", 0, HOLD_LINE);
 	}
 }
 
@@ -44,20 +44,20 @@ static WRITE8_HANDLER( battlera_sound_w )
 
 static WRITE8_HANDLER( control_data_w )
 {
-	battlera_state *state = space->machine->driver_data<battlera_state>();
-	state->control_port_select=data;
+	battlera_state *state = space->machine().driver_data<battlera_state>();
+	state->m_control_port_select=data;
 }
 
 static READ8_HANDLER( control_data_r )
 {
-	battlera_state *state = space->machine->driver_data<battlera_state>();
-	switch (state->control_port_select)
+	battlera_state *state = space->machine().driver_data<battlera_state>();
+	switch (state->m_control_port_select)
 	{
-		case 0xfe: return input_port_read(space->machine, "IN0"); /* Player 1 */
-		case 0xfd: return input_port_read(space->machine, "IN1"); /* Player 2 */
-		case 0xfb: return input_port_read(space->machine, "IN2"); /* Coins */
-		case 0xf7: return input_port_read(space->machine, "DSW2"); /* Dip 2 */
-		case 0xef: return input_port_read(space->machine, "DSW1"); /* Dip 1 */
+		case 0xfe: return input_port_read(space->machine(), "IN0"); /* Player 1 */
+		case 0xfd: return input_port_read(space->machine(), "IN1"); /* Player 2 */
+		case 0xfb: return input_port_read(space->machine(), "IN2"); /* Coins */
+		case 0xf7: return input_port_read(space->machine(), "DSW2"); /* Dip 2 */
+		case 0xef: return input_port_read(space->machine(), "DSW1"); /* Dip 1 */
 	}
 
     return 0xff;
@@ -65,7 +65,7 @@ static READ8_HANDLER( control_data_r )
 
 /******************************************************************************/
 
-static ADDRESS_MAP_START( battlera_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( battlera_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x10ffff) AM_READWRITE(HuC6270_debug_r, HuC6270_debug_w) /* Cheat to edit vram data */
 	AM_RANGE(0x1e0800, 0x1e0801) AM_WRITE(battlera_sound_w)
@@ -77,7 +77,7 @@ static ADDRESS_MAP_START( battlera_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x1ff400, 0x1ff403) AM_WRITE(h6280_irq_status_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( battlera_portmap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( battlera_portmap, AS_IO, 8 )
 	AM_RANGE(0x00, 0x01) AM_WRITE(HuC6270_register_w)
 	AM_RANGE(0x02, 0x03) AM_WRITE(HuC6270_data_w)
 ADDRESS_MAP_END
@@ -87,20 +87,20 @@ ADDRESS_MAP_END
 
 static void battlera_adpcm_int(device_t *device)
 {
-	battlera_state *state = device->machine->driver_data<battlera_state>();
+	battlera_state *state = device->machine().driver_data<battlera_state>();
 
-	msm5205_data_w(device,state->msm5205next >> 4);
-	state->msm5205next <<= 4;
+	msm5205_data_w(device,state->m_msm5205next >> 4);
+	state->m_msm5205next <<= 4;
 
-	state->toggle = 1 - state->toggle;
-	if (state->toggle)
-		cputag_set_input_line(device->machine, "audiocpu", 1, HOLD_LINE);
+	state->m_toggle = 1 - state->m_toggle;
+	if (state->m_toggle)
+		cputag_set_input_line(device->machine(), "audiocpu", 1, HOLD_LINE);
 }
 
 static WRITE8_HANDLER( battlera_adpcm_data_w )
 {
-	battlera_state *state = space->machine->driver_data<battlera_state>();
-	state->msm5205next = data;
+	battlera_state *state = space->machine().driver_data<battlera_state>();
+	state->m_msm5205next = data;
 }
 
 static WRITE8_DEVICE_HANDLER( battlera_adpcm_reset_w )
@@ -108,7 +108,7 @@ static WRITE8_DEVICE_HANDLER( battlera_adpcm_reset_w )
 	msm5205_reset_w(device, 0);
 }
 
-static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
 	AM_RANGE(0x040000, 0x040001) AM_DEVWRITE("ymsnd", ym2203_w)
 	AM_RANGE(0x080000, 0x080001) AM_WRITE(battlera_adpcm_data_w)

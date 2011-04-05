@@ -45,23 +45,23 @@ static DRIVER_INIT( pastelg )
 
 static READ8_HANDLER( pastelg_sndrom_r )
 {
-	UINT8 *ROM = space->machine->region("voice")->base();
+	UINT8 *ROM = space->machine().region("voice")->base();
 
 	return ROM[pastelg_blitter_src_addr_r(space) & 0x7fff];
 }
 
-static ADDRESS_MAP_START( pastelg_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( pastelg_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("nvram")
 ADDRESS_MAP_END
 
 static READ8_HANDLER( pastelg_irq_ack_r )
 {
-	cpu_set_input_line(space->cpu, 0, CLEAR_LINE);
+	device_set_input_line(&space->device(), 0, CLEAR_LINE);
 	return 0;
 }
 
-static ADDRESS_MAP_START( pastelg_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( pastelg_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 //  AM_RANGE(0x00, 0x00) AM_WRITENOP
 	AM_RANGE(0x00, 0x7f) AM_READ(nb1413m3_sndrom_r)
@@ -80,14 +80,14 @@ ADDRESS_MAP_END
 
 static READ8_HANDLER( threeds_inputport1_r )
 {
-	pastelg_state *state = space->machine->driver_data<pastelg_state>();
-	switch(state->mux_data)
+	pastelg_state *state = space->machine().driver_data<pastelg_state>();
+	switch(state->m_mux_data)
 	{
-		case 0x01: return input_port_read(space->machine,"KEY0_PL1");
-		case 0x02: return input_port_read(space->machine,"KEY1_PL1");
-		case 0x04: return input_port_read(space->machine,"KEY2_PL1");
-		case 0x08: return input_port_read(space->machine,"KEY3_PL1");
-		case 0x10: return input_port_read(space->machine,"KEY4_PL1");
+		case 0x01: return input_port_read(space->machine(),"KEY0_PL1");
+		case 0x02: return input_port_read(space->machine(),"KEY1_PL1");
+		case 0x04: return input_port_read(space->machine(),"KEY2_PL1");
+		case 0x08: return input_port_read(space->machine(),"KEY3_PL1");
+		case 0x10: return input_port_read(space->machine(),"KEY4_PL1");
 	}
 
 	return 0xff;
@@ -95,14 +95,14 @@ static READ8_HANDLER( threeds_inputport1_r )
 
 static READ8_HANDLER( threeds_inputport2_r )
 {
-	pastelg_state *state = space->machine->driver_data<pastelg_state>();
-	switch(state->mux_data)
+	pastelg_state *state = space->machine().driver_data<pastelg_state>();
+	switch(state->m_mux_data)
 	{
-		case 0x01: return input_port_read(space->machine,"KEY0_PL2");
-		case 0x02: return input_port_read(space->machine,"KEY1_PL2");
-		case 0x04: return input_port_read(space->machine,"KEY2_PL2");
-		case 0x08: return input_port_read(space->machine,"KEY3_PL2");
-		case 0x10: return input_port_read(space->machine,"KEY4_PL2");
+		case 0x01: return input_port_read(space->machine(),"KEY0_PL2");
+		case 0x02: return input_port_read(space->machine(),"KEY1_PL2");
+		case 0x04: return input_port_read(space->machine(),"KEY2_PL2");
+		case 0x08: return input_port_read(space->machine(),"KEY3_PL2");
+		case 0x10: return input_port_read(space->machine(),"KEY4_PL2");
 	}
 
 	return 0xff;
@@ -110,11 +110,11 @@ static READ8_HANDLER( threeds_inputport2_r )
 
 static WRITE8_HANDLER( threeds_inputportsel_w )
 {
-	pastelg_state *state = space->machine->driver_data<pastelg_state>();
-	state->mux_data = ~data;
+	pastelg_state *state = space->machine().driver_data<pastelg_state>();
+	state->m_mux_data = ~data;
 }
 
-static ADDRESS_MAP_START( threeds_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( threeds_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x81, 0x81) AM_DEVREAD("aysnd", ay8910_r)
 	AM_RANGE(0x82, 0x83) AM_DEVWRITE("aysnd", ay8910_data_address_w)
@@ -217,7 +217,7 @@ INPUT_PORTS_END
 // stops the game hanging..
 static CUSTOM_INPUT( nb1413m3_hackbusyflag_r )
 {
-	return field->port->machine->rand() & 3;
+	return field->port->machine().rand() & 3;
 }
 
 static INPUT_PORTS_START( threeds )

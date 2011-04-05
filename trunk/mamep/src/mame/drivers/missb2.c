@@ -28,8 +28,8 @@ public:
 	missb2_state(running_machine &machine, const driver_device_config_base &config)
 		: bublbobl_state(machine, config) { }
 
-	UINT8 *  bgvram;
-	UINT8 *  bg_paletteram;
+	UINT8 *  m_bgvram;
+	UINT8 *  m_bg_paletteram;
 };
 
 
@@ -37,7 +37,7 @@ public:
 
 static SCREEN_UPDATE( missb2 )
 {
-	missb2_state *state = screen->machine->driver_data<missb2_state>();
+	missb2_state *state = screen->machine().driver_data<missb2_state>();
 	int offs;
 	int sx, sy, xc, yc;
 	int gfx_num, gfx_attr, gfx_offs;
@@ -51,14 +51,14 @@ static SCREEN_UPDATE( missb2 )
 
 	bitmap_fill(bitmap, cliprect, 255);
 
-	if (!state->video_enable)
+	if (!state->m_video_enable)
 		return 0;
 
 	/* background map register */
-	//popmessage("%02x",(*state->bgvram) & 0x1f);
-	for (bg_offs = ((*state->bgvram) << 4); bg_offs < (((*state->bgvram) << 4) | 0xf); bg_offs++)
+	//popmessage("%02x",(*state->m_bgvram) & 0x1f);
+	for (bg_offs = ((*state->m_bgvram) << 4); bg_offs < (((*state->m_bgvram) << 4) | 0xf); bg_offs++)
 	{
-		drawgfx_opaque(bitmap,cliprect,screen->machine->gfx[1],
+		drawgfx_opaque(bitmap,cliprect,screen->machine().gfx[1],
 				bg_offs,
 				1,
 				0,0,
@@ -68,24 +68,24 @@ static SCREEN_UPDATE( missb2 )
 
 	sx = 0;
 
-	prom = screen->machine->region("proms")->base();
-	for (offs = 0; offs < state->objectram_size; offs += 4)
+	prom = screen->machine().region("proms")->base();
+	for (offs = 0; offs < state->m_objectram_size; offs += 4)
 	{
 		/* skip empty sprites */
 		/* this is dword aligned so the UINT32 * cast shouldn't give problems */
 		/* on any architecture */
-		if (*(UINT32 *)(&state->objectram[offs]) == 0)
+		if (*(UINT32 *)(&state->m_objectram[offs]) == 0)
 			continue;
 
-		gfx_num = state->objectram[offs + 1];
-		gfx_attr = state->objectram[offs + 3];
+		gfx_num = state->m_objectram[offs + 1];
+		gfx_attr = state->m_objectram[offs + 3];
 		prom_line = prom + 0x80 + ((gfx_num & 0xe0) >> 1);
 
 		gfx_offs = ((gfx_num & 0x1f) * 0x80);
 		if ((gfx_num & 0xa0) == 0xa0)
 			gfx_offs |= 0x1000;
 
-		sy = -state->objectram[offs + 0];
+		sy = -state->m_objectram[offs + 0];
 
 		for (yc = 0; yc < 32; yc++)
 		{
@@ -93,7 +93,7 @@ static SCREEN_UPDATE( missb2 )
 
 			if (!(prom_line[yc / 2] & 0x04))	/* next column */
 			{
-				sx = state->objectram[offs + 2];
+				sx = state->m_objectram[offs + 2];
 				if (gfx_attr & 0x40) sx -= 256;
 			}
 
@@ -103,14 +103,14 @@ static SCREEN_UPDATE( missb2 )
 
 				goffs = gfx_offs + xc * 0x40 + (yc & 7) * 0x02 +
 						(prom_line[yc/2] & 0x03) * 0x10;
-				code = state->videoram[goffs] + 256 * (state->videoram[goffs + 1] & 0x03) + 1024 * (gfx_attr & 0x0f);
-				//color = (state->videoram[goffs + 1] & 0x3c) >> 2;
-				flipx = state->videoram[goffs + 1] & 0x40;
-				flipy = state->videoram[goffs + 1] & 0x80;
+				code = state->m_videoram[goffs] + 256 * (state->m_videoram[goffs + 1] & 0x03) + 1024 * (gfx_attr & 0x0f);
+				//color = (state->m_videoram[goffs + 1] & 0x3c) >> 2;
+				flipx = state->m_videoram[goffs + 1] & 0x40;
+				flipy = state->m_videoram[goffs + 1] & 0x80;
 				x = sx + xc * 8;
 				y = (sy + yc * 8) & 0xff;
 
-				if (flip_screen_get(screen->machine))
+				if (flip_screen_get(screen->machine()))
 				{
 					x = 248 - x;
 					y = 248 - y;
@@ -118,7 +118,7 @@ static SCREEN_UPDATE( missb2 )
 					flipy = !flipy;
 				}
 
-				drawgfx_transpen(bitmap,cliprect,screen->machine->gfx[0],
+				drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[0],
 						code,
 						0,
 						flipx,flipy,
@@ -131,16 +131,16 @@ static SCREEN_UPDATE( missb2 )
 	return 0;
 }
 
-INLINE void bg_changecolor_RRRRGGGGBBBBxxxx( running_machine *machine, pen_t color, int data )
+INLINE void bg_changecolor_RRRRGGGGBBBBxxxx( running_machine &machine, pen_t color, int data )
 {
 	palette_set_color_rgb(machine, color + 256, pal4bit(data >> 12), pal4bit(data >> 8), pal4bit(data >> 4));
 }
 
 static WRITE8_HANDLER( bg_paletteram_RRRRGGGGBBBBxxxx_be_w )
 {
-	missb2_state *state = space->machine->driver_data<missb2_state>();
-	state->bg_paletteram[offset] = data;
-	bg_changecolor_RRRRGGGGBBBBxxxx(space->machine, offset / 2, state->bg_paletteram[offset | 1] | (state->bg_paletteram[offset & ~1] << 8));
+	missb2_state *state = space->machine().driver_data<missb2_state>();
+	state->m_bg_paletteram[offset] = data;
+	bg_changecolor_RRRRGGGGBBBBxxxx(space->machine(), offset / 2, state->m_bg_paletteram[offset | 1] | (state->m_bg_paletteram[offset & ~1] << 8));
 }
 
 static WRITE8_HANDLER( missb2_bg_bank_w )
@@ -150,17 +150,17 @@ static WRITE8_HANDLER( missb2_bg_bank_w )
 	// I don't know how this is really connected, bit 1 is always high afaik...
 	bank = ((data & 2) ? 1 : 0) | ((data & 1) ? 4 : 0);
 
-	memory_set_bank(space->machine, "bank2", bank);
-	memory_set_bank(space->machine, "bank3", bank);
+	memory_set_bank(space->machine(), "bank2", bank);
+	memory_set_bank(space->machine(), "bank3", bank);
 }
 
 /* Memory Maps */
 
-static ADDRESS_MAP_START( master_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( master_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xdcff) AM_RAM AM_BASE_SIZE_MEMBER(missb2_state, videoram, videoram_size)
-	AM_RANGE(0xdd00, 0xdfff) AM_RAM AM_BASE_SIZE_MEMBER(missb2_state, objectram, objectram_size)
+	AM_RANGE(0xc000, 0xdcff) AM_RAM AM_BASE_SIZE_MEMBER(missb2_state, m_videoram, m_videoram_size)
+	AM_RANGE(0xdd00, 0xdfff) AM_RAM AM_BASE_SIZE_MEMBER(missb2_state, m_objectram, m_objectram_size)
 	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0xf800, 0xf9ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_be_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0xfa00, 0xfa00) AM_WRITE(bublbobl_sound_command_w)
@@ -179,22 +179,22 @@ static ADDRESS_MAP_START( master_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xff98, 0xff98) AM_WRITENOP	// ???
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( slave_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( slave_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x9000, 0x9fff) AM_ROMBANK("bank2")	// ROM data for the background palette ram
 	AM_RANGE(0xa000, 0xafff) AM_ROMBANK("bank3")	// ROM data for the background palette ram
 	AM_RANGE(0xb000, 0xb1ff) AM_ROM			// banked ???
-	AM_RANGE(0xc000, 0xc1ff) AM_RAM_WRITE(bg_paletteram_RRRRGGGGBBBBxxxx_be_w) AM_BASE_MEMBER(missb2_state, bg_paletteram)
+	AM_RANGE(0xc000, 0xc1ff) AM_RAM_WRITE(bg_paletteram_RRRRGGGGBBBBxxxx_be_w) AM_BASE_MEMBER(missb2_state, m_bg_paletteram)
 	AM_RANGE(0xc800, 0xcfff) AM_RAM			// main ???
 	AM_RANGE(0xd000, 0xd000) AM_WRITE(missb2_bg_bank_w)
 	AM_RANGE(0xd002, 0xd002) AM_WRITENOP
-	AM_RANGE(0xd003, 0xd003) AM_RAM AM_BASE_MEMBER(missb2_state, bgvram)
+	AM_RANGE(0xd003, 0xd003) AM_RAM AM_BASE_MEMBER(missb2_state, m_bgvram)
 	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share1")
 ADDRESS_MAP_END
 
 // Looks like the original bublbobl code modified to support the OKI M6295.
 
-static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
@@ -410,7 +410,7 @@ GFXDECODE_END
 static void irqhandler(device_t *device, int irq)
 {
 	logerror("YM3526 firing an IRQ\n");
-//  cputag_set_input_line(device->machine, "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+//  cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym3526_interface ym3526_config =
@@ -422,33 +422,33 @@ static const ym3526_interface ym3526_config =
 
 static INTERRUPT_GEN( missb2_interrupt )
 {
-	cpu_set_input_line(device, 0, HOLD_LINE);
+	device_set_input_line(device, 0, HOLD_LINE);
 }
 
 /* Machine Driver */
 
 static MACHINE_START( missb2 )
 {
-	missb2_state *state = machine->driver_data<missb2_state>();
+	missb2_state *state = machine.driver_data<missb2_state>();
 
-	state->maincpu = machine->device("maincpu");
-	state->audiocpu = machine->device("audiocpu");
-	state->slave = machine->device("slave");
-	state->mcu = NULL;
+	state->m_maincpu = machine.device("maincpu");
+	state->m_audiocpu = machine.device("audiocpu");
+	state->m_slave = machine.device("slave");
+	state->m_mcu = NULL;
 
-	state->save_item(NAME(state->sound_nmi_enable));
-	state->save_item(NAME(state->pending_nmi));
-	state->save_item(NAME(state->sound_status));
-	state->save_item(NAME(state->video_enable));
+	state->save_item(NAME(state->m_sound_nmi_enable));
+	state->save_item(NAME(state->m_pending_nmi));
+	state->save_item(NAME(state->m_sound_status));
+	state->save_item(NAME(state->m_video_enable));
 }
 
 static MACHINE_RESET( missb2 )
 {
-	missb2_state *state = machine->driver_data<missb2_state>();
+	missb2_state *state = machine.driver_data<missb2_state>();
 
-	state->sound_nmi_enable = 0;
-	state->pending_nmi = 0;
-	state->sound_status = 0;
+	state->m_sound_nmi_enable = 0;
+	state->m_pending_nmi = 0;
+	state->m_sound_status = 0;
 }
 
 static MACHINE_CONFIG_START( missb2, missb2_state )
@@ -568,10 +568,10 @@ ROM_START( bublpong )
 ROM_END
 
 
-static void configure_banks( running_machine* machine )
+static void configure_banks( running_machine& machine )
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
-	UINT8 *SLAVE = machine->region("slave")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *SLAVE = machine.region("slave")->base();
 
 	memory_configure_bank(machine, "bank1", 0, 8, &ROM[0x10000], 0x4000);
 
@@ -582,10 +582,10 @@ static void configure_banks( running_machine* machine )
 
 static DRIVER_INIT( missb2 )
 {
-	missb2_state *state = machine->driver_data<missb2_state>();
+	missb2_state *state = machine.driver_data<missb2_state>();
 
 	configure_banks(machine);
-	state->video_enable = 0;
+	state->m_video_enable = 0;
 }
 
 /* Game Drivers */

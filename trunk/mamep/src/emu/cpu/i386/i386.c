@@ -418,7 +418,7 @@ INLINE void CYCLES_RM(i386_state *cpustate,int modrm, int r, int m)
 	}
 }
 
-static void build_cycle_table(running_machine *machine)
+static void build_cycle_table(running_machine &machine)
 {
 	int i, j;
 	for (j=0; j < X86_NUM_CPUS; j++)
@@ -534,7 +534,7 @@ static CPU_INIT( i386 )
 	static const int regs32[8] = {EAX,ECX,EDX,EBX,ESP,EBP,ESI,EDI};
 	i386_state *cpustate = get_safe_token(device);
 
-	build_cycle_table(device->machine);
+	build_cycle_table(device->machine());
 
 	for( i=0; i < 256; i++ ) {
 		int c=0;
@@ -614,7 +614,7 @@ static CPU_INIT( i386 )
 	device->save_item(NAME(cpustate->ldtr.flags));
 	device->save_item(NAME(cpustate->irq_state));
 	device->save_item(NAME(cpustate->performed_intersegment_jump));
-	device->machine->state().register_postload(i386_postload, (void *)device);
+	device->machine().state().register_postload(i386_postload, (void *)device);
 }
 
 static void build_opcode_table(i386_state *cpustate, UINT32 features)
@@ -761,7 +761,7 @@ static CPU_TRANSLATE( i386 )
 {
 	i386_state *cpustate = get_safe_token(device);
 	int result = 1;
-	if (space == ADDRESS_SPACE_PROGRAM)
+	if (space == AS_PROGRAM)
 	{
 		if (cpustate->cr[0] & 0x80000000)
 			result = translate_address(cpustate,address);
@@ -896,17 +896,17 @@ CPU_GET_INFO( i386 )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 1;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 40;							break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_PROGRAM:	info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM: info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_PROGRAM: info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 32;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 32;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
 		case CPUINFO_INT_LOGADDR_WIDTH_PROGRAM: info->i = 32;					break;
 		case CPUINFO_INT_PAGE_SHIFT_PROGRAM:	info->i = 12;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_IO:		info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 32;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 32;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 
 		case CPUINFO_INT_INPUT_STATE:					info->i = CLEAR_LINE;					break;
 

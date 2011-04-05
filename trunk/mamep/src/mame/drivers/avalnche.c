@@ -47,22 +47,22 @@
 
 static SCREEN_UPDATE( avalnche )
 {
-	avalnche_state *state = screen->machine->driver_data<avalnche_state>();
+	avalnche_state *state = screen->machine().driver_data<avalnche_state>();
 	offs_t offs;
 
-	for (offs = 0; offs < state->videoram_size; offs++)
+	for (offs = 0; offs < state->m_videoram_size; offs++)
 	{
 		int i;
 
 		UINT8 x = offs << 3;
 		int y = offs >> 5;
-		UINT8 data = state->videoram[offs];
+		UINT8 data = state->m_videoram[offs];
 
 		for (i = 0; i < 8; i++)
 		{
 			pen_t pen;
 
-			if (state->avalance_video_inverted)
+			if (state->m_avalance_video_inverted)
 				pen = (data & 0x80) ? RGB_WHITE : RGB_BLACK;
 			else
 				pen = (data & 0x80) ? RGB_BLACK : RGB_WHITE;
@@ -86,34 +86,34 @@ static SCREEN_UPDATE( avalnche )
 
 static WRITE8_HANDLER( avalance_video_invert_w )
 {
-	avalnche_state *state = space->machine->driver_data<avalnche_state>();
-	state->avalance_video_inverted = data & 0x01;
+	avalnche_state *state = space->machine().driver_data<avalnche_state>();
+	state->m_avalance_video_inverted = data & 0x01;
 }
 
 static WRITE8_HANDLER( catch_coin_counter_w )
 {
-	coin_counter_w(space->machine, 0, data & 1);
-	coin_counter_w(space->machine, 1, data & 2);
+	coin_counter_w(space->machine(), 0, data & 1);
+	coin_counter_w(space->machine(), 1, data & 2);
 }
 
 static WRITE8_HANDLER( avalance_credit_1_lamp_w )
 {
-	set_led_status(space->machine, 0, data & 1);
+	set_led_status(space->machine(), 0, data & 1);
 }
 
 static WRITE8_HANDLER( avalance_credit_2_lamp_w )
 {
-	set_led_status(space->machine, 1, data & 1);
+	set_led_status(space->machine(), 1, data & 1);
 }
 
 static WRITE8_HANDLER( avalance_start_lamp_w )
 {
-	set_led_status(space->machine, 2, data & 1);
+	set_led_status(space->machine(), 2, data & 1);
 }
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
-	AM_RANGE(0x0000, 0x1fff) AM_RAM AM_BASE_SIZE_MEMBER(avalnche_state, videoram, videoram_size)
+	AM_RANGE(0x0000, 0x1fff) AM_RAM AM_BASE_SIZE_MEMBER(avalnche_state, m_videoram, m_videoram_size)
 	AM_RANGE(0x2000, 0x2000) AM_MIRROR(0x0ffc) AM_READ_PORT("IN0")
 	AM_RANGE(0x2001, 0x2001) AM_MIRROR(0x0ffc) AM_READ_PORT("IN1")
 	AM_RANGE(0x2002, 0x2002) AM_MIRROR(0x0ffc) AM_READ_PORT("PADDLE")
@@ -129,9 +129,9 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x6000, 0x7fff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( catch_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( catch_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
-	AM_RANGE(0x0000, 0x1fff) AM_RAM AM_BASE_SIZE_MEMBER(avalnche_state, videoram, videoram_size)
+	AM_RANGE(0x0000, 0x1fff) AM_RAM AM_BASE_SIZE_MEMBER(avalnche_state, m_videoram, m_videoram_size)
 	AM_RANGE(0x2000, 0x2000) AM_MIRROR(0x0ffc) AM_READ_PORT("IN0")
 	AM_RANGE(0x2001, 0x2001) AM_MIRROR(0x0ffc) AM_READ_PORT("IN1")
 	AM_RANGE(0x2002, 0x2002) AM_MIRROR(0x0ffc) AM_READ_PORT("PADDLE")
@@ -236,21 +236,21 @@ INPUT_PORTS_END
 
 static INTERRUPT_GEN( avalnche_interrupt )
 {
-	cpu_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_START( avalnche )
 {
-	avalnche_state *state = machine->driver_data<avalnche_state>();
+	avalnche_state *state = machine.driver_data<avalnche_state>();
 
-	state->save_item(NAME(state->avalance_video_inverted));
+	state->save_item(NAME(state->m_avalance_video_inverted));
 }
 
 static MACHINE_RESET( avalnche )
 {
-	avalnche_state *state = machine->driver_data<avalnche_state>();
+	avalnche_state *state = machine.driver_data<avalnche_state>();
 
-	state->avalance_video_inverted = 0;
+	state->m_avalance_video_inverted = 0;
 }
 
 static MACHINE_CONFIG_START( avalnche, avalnche_state )

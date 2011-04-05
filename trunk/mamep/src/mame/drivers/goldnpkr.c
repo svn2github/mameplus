@@ -705,11 +705,11 @@ public:
 	goldnpkr_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram;
-	UINT8 *colorram;
-	tilemap_t *bg_tilemap;
-	int mux_data;
-	UINT8 pia0_PA_data;
+	UINT8 *m_videoram;
+	UINT8 *m_colorram;
+	tilemap_t *m_bg_tilemap;
+	int m_mux_data;
+	UINT8 m_pia0_PA_data;
 };
 
 
@@ -720,21 +720,21 @@ public:
 
 static WRITE8_HANDLER( goldnpkr_videoram_w )
 {
-	goldnpkr_state *state = space->machine->driver_data<goldnpkr_state>();
-	state->videoram[offset] = data;
-	tilemap_mark_tile_dirty(state->bg_tilemap, offset);
+	goldnpkr_state *state = space->machine().driver_data<goldnpkr_state>();
+	state->m_videoram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_bg_tilemap, offset);
 }
 
 static WRITE8_HANDLER( goldnpkr_colorram_w )
 {
-	goldnpkr_state *state = space->machine->driver_data<goldnpkr_state>();
-	state->colorram[offset] = data;
-	tilemap_mark_tile_dirty(state->bg_tilemap, offset);
+	goldnpkr_state *state = space->machine().driver_data<goldnpkr_state>();
+	state->m_colorram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_bg_tilemap, offset);
 }
 
 static TILE_GET_INFO( get_bg_tile_info )
 {
-	goldnpkr_state *state = machine->driver_data<goldnpkr_state>();
+	goldnpkr_state *state = machine.driver_data<goldnpkr_state>();
 /*  - bits -
     7654 3210
     --xx xx--   tiles color.
@@ -743,8 +743,8 @@ static TILE_GET_INFO( get_bg_tile_info )
     xx-- ----   unused.
 */
 
-	int attr = state->colorram[tile_index];
-	int code = ((attr & 1) << 8) | state->videoram[tile_index];
+	int attr = state->m_colorram[tile_index];
+	int code = ((attr & 1) << 8) | state->m_videoram[tile_index];
 	int bank = (attr & 0x02) >> 1;	/* bit 1 switch the gfx banks */
 	int color = (attr & 0x3c) >> 2;	/* bits 2-3-4-5 for color */
 
@@ -753,7 +753,7 @@ static TILE_GET_INFO( get_bg_tile_info )
 
 static TILE_GET_INFO( xtnd_get_bg_tile_info )
 {
-	goldnpkr_state *state = machine->driver_data<goldnpkr_state>();
+	goldnpkr_state *state = machine.driver_data<goldnpkr_state>();
 /* 3 graphics banks system for VK extended cards
 
     - bits -
@@ -763,8 +763,8 @@ static TILE_GET_INFO( xtnd_get_bg_tile_info )
     -x-- ---x   unused.
 */
 
-	int attr = state->colorram[tile_index];
-	int code = ((attr & 1) << 8) | state->videoram[tile_index];
+	int attr = state->m_colorram[tile_index];
+	int code = ((attr & 1) << 8) | state->m_videoram[tile_index];
 	int bank = ((attr & 0x02) >> 1) + ((attr & 0x80) >> 7);	/* bit 1 & 7 switch the gfx banks */
 	int color = (attr & 0x3c) >> 2;	/* bits 2-3-4-5 for color */
 
@@ -773,20 +773,20 @@ static TILE_GET_INFO( xtnd_get_bg_tile_info )
 
 static VIDEO_START( goldnpkr )
 {
-	goldnpkr_state *state = machine->driver_data<goldnpkr_state>();
-	state->bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	goldnpkr_state *state = machine.driver_data<goldnpkr_state>();
+	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
 }
 
 static VIDEO_START( wcrdxtnd )
 {
-	goldnpkr_state *state = machine->driver_data<goldnpkr_state>();
-	state->bg_tilemap = tilemap_create(machine, xtnd_get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	goldnpkr_state *state = machine.driver_data<goldnpkr_state>();
+	state->m_bg_tilemap = tilemap_create(machine, xtnd_get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
 }
 
 static SCREEN_UPDATE( goldnpkr )
 {
-	goldnpkr_state *state = screen->machine->driver_data<goldnpkr_state>();
-	tilemap_draw(bitmap, cliprect, state->bg_tilemap, 0, 0);
+	goldnpkr_state *state = screen->machine().driver_data<goldnpkr_state>();
+	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 	return 0;
 }
 
@@ -805,7 +805,7 @@ static PALETTE_INIT( goldnpkr )
 	/* 0000IBGR */
 	if (color_prom == 0) return;
 
-	for (i = 0;i < machine->total_colors();i++)
+	for (i = 0;i < machine.total_colors();i++)
 	{
 		int bit0, bit1, bit2, r, g, b, inten, intenmin, intenmax;
 
@@ -856,7 +856,7 @@ static PALETTE_INIT( witchcrd )
 
 	if (color_prom == 0) return;
 
-	for (i = 0;i < machine->total_colors();i++)
+	for (i = 0;i < machine.total_colors();i++)
 	{
 		int bit0, bit1, bit2, bit3, r, g, b, bk;
 
@@ -899,7 +899,7 @@ static PALETTE_INIT( wcrdxtnd )
 
 	if (color_prom == 0) return;
 
-	for (i = 0;i < machine->total_colors();i++)
+	for (i = 0;i < machine.total_colors();i++)
 	{
 		int bit0, bit1, bit2, bit3, r, g, b, bk;
 
@@ -936,31 +936,31 @@ static PALETTE_INIT( wcrdxtnd )
 */
 static READ8_DEVICE_HANDLER( goldnpkr_mux_port_r )
 {
-	goldnpkr_state *state = device->machine->driver_data<goldnpkr_state>();
-	switch( state->mux_data & 0xf0 )		/* bits 4-7 */
+	goldnpkr_state *state = device->machine().driver_data<goldnpkr_state>();
+	switch( state->m_mux_data & 0xf0 )		/* bits 4-7 */
 	{
-		case 0x10: return input_port_read(device->machine, "IN0-0");
-		case 0x20: return input_port_read(device->machine, "IN0-1");
-		case 0x40: return input_port_read(device->machine, "IN0-2");
-		case 0x80: return input_port_read(device->machine, "IN0-3");
+		case 0x10: return input_port_read(device->machine(), "IN0-0");
+		case 0x20: return input_port_read(device->machine(), "IN0-1");
+		case 0x40: return input_port_read(device->machine(), "IN0-2");
+		case 0x80: return input_port_read(device->machine(), "IN0-3");
 	}
 	return 0xff;
 }
 
 static READ8_DEVICE_HANDLER( pottnpkr_mux_port_r )
 {
-	goldnpkr_state *state = device->machine->driver_data<goldnpkr_state>();
+	goldnpkr_state *state = device->machine().driver_data<goldnpkr_state>();
 	UINT8 pa_0_4 = 0xff, pa_7;	/* Temporary place holder for bits 0 to 4 & 7 */
 
-	switch( state->mux_data & 0xf0 )		/* bits 4-7 */
+	switch( state->m_mux_data & 0xf0 )		/* bits 4-7 */
 	{
-		case 0x10: return input_port_read(device->machine, "IN0-0");
-		case 0x20: return input_port_read(device->machine, "IN0-1");
-		case 0x40: return input_port_read(device->machine, "IN0-2");
-		case 0x80: return input_port_read(device->machine, "IN0-3");
+		case 0x10: return input_port_read(device->machine(), "IN0-0");
+		case 0x20: return input_port_read(device->machine(), "IN0-1");
+		case 0x40: return input_port_read(device->machine(), "IN0-2");
+		case 0x80: return input_port_read(device->machine(), "IN0-3");
 	}
 
-	pa_7 = (state->pia0_PA_data >> 7) & 1;	/* To do: bit PA5 to pin CB1 */
+	pa_7 = (state->m_pia0_PA_data >> 7) & 1;	/* To do: bit PA5 to pin CB1 */
 //  popmessage ("mux_port_r: %x ",((pa_0_4 & 0x3f) | (pa_7 << 6) | (pa_7 << 7))) ; /* Equates PA6 to PA7 */
 
 	return ( (pa_0_4 & 0x3f) | (pa_7 << 6) | (pa_7 << 7) ) ;
@@ -968,14 +968,14 @@ static READ8_DEVICE_HANDLER( pottnpkr_mux_port_r )
 
 static WRITE8_DEVICE_HANDLER( mux_w )
 {
-	goldnpkr_state *state = device->machine->driver_data<goldnpkr_state>();
-	state->mux_data = data ^ 0xff;	/* inverted */
+	goldnpkr_state *state = device->machine().driver_data<goldnpkr_state>();
+	state->m_mux_data = data ^ 0xff;	/* inverted */
 }
 
 static WRITE8_DEVICE_HANDLER( mux_port_w )
 {
-	goldnpkr_state *state = device->machine->driver_data<goldnpkr_state>();
-	state->pia0_PA_data = data;
+	goldnpkr_state *state = device->machine().driver_data<goldnpkr_state>();
+	state->m_pia0_PA_data = data;
 }
 
 
@@ -987,12 +987,12 @@ static WRITE8_DEVICE_HANDLER( wcfalcon_snd_w )
 {
 	if (wcfalcon_flag == 0)
 	{
-		ay8910_data_address_w(device->machine->device("ay8910"), 0, data);
+		ay8910_data_address_w(device->machine().device("ay8910"), 0, data);
 //      logerror("sound address: %02x %02x\n", data, wcfalcon_flag);
 	}
 	else
 	{
-		ay8910_data_address_w(device->machine->device("ay8910"), 1, data);
+		ay8910_data_address_w(device->machine().device("ay8910"), 1, data);
 //      logerror("sound data: %02x %02x\n", data, wcfalcon_flag);
 	}
 
@@ -1043,9 +1043,9 @@ static WRITE8_DEVICE_HANDLER( lamps_a_w )
 	output_set_lamp_value(4, 1 - ((data >> 4) & 1));	/* Lamp 4 */
 
 //  popmessage("written : %02X", data);
-	coin_counter_w(device->machine, 0, data & 0x40);	/* counter1 */
-	coin_counter_w(device->machine, 1, data & 0x80);	/* counter2 */
-	coin_counter_w(device->machine, 2, data & 0x20);	/* counter3 */
+	coin_counter_w(device->machine(), 0, data & 0x40);	/* counter1 */
+	coin_counter_w(device->machine(), 1, data & 0x80);	/* counter2 */
+	coin_counter_w(device->machine(), 2, data & 0x20);	/* counter3 */
 
 /*  Counters:
 
@@ -1075,39 +1075,39 @@ static WRITE8_DEVICE_HANDLER( sound_w )
 *           Memory Map Information           *
 *********************************************/
 
-static ADDRESS_MAP_START( goldnpkr_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( goldnpkr_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("nvram")	/* battery backed RAM */
 	AM_RANGE(0x0800, 0x0800) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_register_r, mc6845_register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_r, pia6821_w)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_r, pia6821_w)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, m_videoram)
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, m_colorram)
 	AM_RANGE(0x2000, 0x7fff) AM_ROM /* superdbl uses 0x2000..0x3fff address space */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( pottnpkr_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( pottnpkr_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x3fff)
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("nvram")	/* battery backed RAM */
 	AM_RANGE(0x0800, 0x0800) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_register_r, mc6845_register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_r, pia6821_w)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_r, pia6821_w)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, m_videoram)
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, m_colorram)
 	AM_RANGE(0x2000, 0x3fff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( witchcrd_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( witchcrd_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("nvram")	/* battery backed RAM */
 	AM_RANGE(0x0800, 0x0800) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_register_r, mc6845_register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_r, pia6821_w)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_r, pia6821_w)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, m_videoram)
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, m_colorram)
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("SW2")
 //  AM_RANGE(0x2108, 0x210b) AM_NOP /* unknown 40-pin device */
 	AM_RANGE(0x4000, 0x7fff) AM_ROM
@@ -1125,28 +1125,28 @@ ADDRESS_MAP_END
 
 */
 
-static ADDRESS_MAP_START( witchcrd_falcon_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( witchcrd_falcon_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("nvram")	/* battery backed RAM */
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_r, pia6821_w)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_r, pia6821_w)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, m_videoram)
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, m_colorram)
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("SW2")
 	AM_RANGE(0x2100, 0x2100) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0x2101, 0x2101) AM_DEVREADWRITE("crtc", mc6845_register_r, mc6845_register_w)
 	AM_RANGE(0x4000, 0x7fff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( wildcard_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( wildcard_map, AS_PROGRAM, 8 )
 //  ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("nvram")	/* battery backed RAM */
 	AM_RANGE(0x0800, 0x0800) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_register_r, mc6845_register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_r, pia6821_w)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_r, pia6821_w)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, m_videoram)
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, m_colorram)
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("SW2")
 	AM_RANGE(0x2200, 0x27ff) AM_ROM	/* for VK set */
 	AM_RANGE(0x2800, 0x2fff) AM_RAM	/* for VK set */
@@ -1160,14 +1160,14 @@ ADDRESS_MAP_END
 
 */
 
-static ADDRESS_MAP_START( wcrdxtnd_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( wcrdxtnd_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM //AM_SHARE("nvram") /* battery backed RAM */
 	AM_RANGE(0x0800, 0x0800) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_register_r, mc6845_register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_r, pia6821_w)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_r, pia6821_w)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, m_videoram)
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, m_colorram)
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("SW2")
 	AM_RANGE(0x2200, 0x27ff) AM_ROM	/* for VK hardware */
 	AM_RANGE(0x2800, 0x2fff) AM_RAM	AM_SHARE("nvram")	/* Dallas ds1210 + battery backed RAM */
@@ -1180,13 +1180,13 @@ ADDRESS_MAP_END
 
 */
 
-static ADDRESS_MAP_START( wildcrdb_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( wildcrdb_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("nvram")	/* battery backed RAM */
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_r, pia6821_w)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_r, pia6821_w)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, m_videoram)
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, m_colorram)
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("SW2")
 	AM_RANGE(0x2100, 0x2100) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0x2101, 0x2101) AM_DEVREADWRITE("crtc", mc6845_register_r, mc6845_register_w)
@@ -1194,13 +1194,13 @@ static ADDRESS_MAP_START( wildcrdb_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x3000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( wildcrdb_mcu_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( wildcrdb_mcu_map, AS_PROGRAM, 8 )
 //  ADDRESS_MAP_GLOBAL_MASK(0x3fff)
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x1000, 0x2fff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( wildcrdb_mcu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( wildcrdb_mcu_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 ADDRESS_MAP_END
 
@@ -1213,15 +1213,15 @@ ADDRESS_MAP_END
 
 */
 
-static ADDRESS_MAP_START( genie_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( genie_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x3fff)
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("nvram")	/* battery backed RAM */
 	AM_RANGE(0x0800, 0x0800) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_register_r, mc6845_register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_r, pia6821_w)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_r, pia6821_w)
-	AM_RANGE(0x1000, 0x17ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, videoram)
-	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, colorram)
+	AM_RANGE(0x1000, 0x17ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE_MEMBER(goldnpkr_state, m_videoram)
+	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE_MEMBER(goldnpkr_state, m_colorram)
 	AM_RANGE(0x2000, 0x3fff) AM_ROM
 ADDRESS_MAP_END
 
@@ -4617,7 +4617,7 @@ static DRIVER_INIT( royale )
 {
     /* $60bb, NOPing the ORA #$F0 (after read the PIA1 port B */
 
-//  UINT8 *ROM = machine->region("maincpu")->base();
+//  UINT8 *ROM = machine.region("maincpu")->base();
 
 //  ROM[0x60bb] = 0xea;
 //  ROM[0x60bc] = 0xea;
@@ -4647,8 +4647,8 @@ static DRIVER_INIT( flcnw )
 
     /* Attempt to decrypt the MCU program (we're sooo close!) */
 
-	UINT8 *ROM = machine->region("mcu")->base();
-	int size = machine->region("mcu")->bytes();
+	UINT8 *ROM = machine.region("mcu")->base();
+	int size = machine.region("mcu")->bytes();
 	int start = 0x0000;
 	int i;
 
@@ -4666,7 +4666,7 @@ static DRIVER_INIT( vkdlsa )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	ROM[0xe097] = 0xea;
 	ROM[0xe098] = 0xea;
@@ -4678,7 +4678,7 @@ static DRIVER_INIT( vkdlsb )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	ROM[0xe87b] = 0xea;
 	ROM[0xe87c] = 0xea;
@@ -4690,7 +4690,7 @@ static DRIVER_INIT( vkdlsc )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	ROM[0x453a] = 0xea;
 	ROM[0x453b] = 0xea;

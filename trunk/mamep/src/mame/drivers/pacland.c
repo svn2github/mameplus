@@ -181,15 +181,15 @@ Notes:
 static WRITE8_HANDLER( pacland_subreset_w )
 {
 	int bit = !BIT(offset,11);
-	cputag_set_input_line(space->machine, "mcu", INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
+	cputag_set_input_line(space->machine(), "mcu", INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
 }
 
 static WRITE8_HANDLER( pacland_flipscreen_w )
 {
 	int bit = !BIT(offset,11);
-	/* can't use flip_screen_set(space->machine, ) because the visible area is asymmetrical */
-	flip_screen_set_no_update(space->machine, bit);
-	tilemap_set_flip_all(space->machine,flip_screen_get(space->machine) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0);
+	/* can't use flip_screen_set(space->machine(), ) because the visible area is asymmetrical */
+	flip_screen_set_no_update(space->machine(), bit);
+	tilemap_set_flip_all(space->machine(),flip_screen_get(space->machine()) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0);
 }
 
 
@@ -198,47 +198,47 @@ static READ8_HANDLER( pacland_input_r )
 	int shift = 4 * (offset & 1);
 	int port = offset & 2;
 	static const char *const portnames[] = { "DSWA", "DSWB", "IN0", "IN1" };
-	int r = (input_port_read(space->machine, portnames[port]) << shift) & 0xf0;
-	r |= (input_port_read(space->machine, portnames[port+1]) >> (4 - shift)) & 0x0f;
+	int r = (input_port_read(space->machine(), portnames[port]) << shift) & 0xf0;
+	r |= (input_port_read(space->machine(), portnames[port+1]) >> (4 - shift)) & 0x0f;
 
 	return r;
 }
 
 static WRITE8_HANDLER( pacland_coin_w )
 {
-	coin_lockout_global_w(space->machine, data & 1);
-	coin_counter_w(space->machine, 0, ~data & 2);
-	coin_counter_w(space->machine, 1, ~data & 4);
+	coin_lockout_global_w(space->machine(), data & 1);
+	coin_counter_w(space->machine(), 0, ~data & 2);
+	coin_counter_w(space->machine(), 1, ~data & 4);
 }
 
 static WRITE8_HANDLER( pacland_led_w )
 {
-	set_led_status(space->machine, 0, data & 0x08);
-	set_led_status(space->machine, 1, data & 0x10);
+	set_led_status(space->machine(), 0, data & 0x08);
+	set_led_status(space->machine(), 1, data & 0x10);
 }
 
 static WRITE8_HANDLER( pacland_irq_1_ctrl_w )
 {
 	int bit = !BIT(offset, 11);
-	cpu_interrupt_enable(space->machine->device("maincpu"), bit);
+	cpu_interrupt_enable(space->machine().device("maincpu"), bit);
 	if (!bit)
-		cputag_set_input_line(space->machine, "maincpu", 0, CLEAR_LINE);
+		cputag_set_input_line(space->machine(), "maincpu", 0, CLEAR_LINE);
 }
 
 static WRITE8_HANDLER( pacland_irq_2_ctrl_w )
 {
 	int bit = !BIT(offset, 13);
-	cpu_interrupt_enable(space->machine->device("mcu"), bit);
+	cpu_interrupt_enable(space->machine().device("mcu"), bit);
 	if (!bit)
-		cputag_set_input_line(space->machine, "mcu", 0, CLEAR_LINE);
+		cputag_set_input_line(space->machine(), "mcu", 0, CLEAR_LINE);
 }
 
 
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x0fff) AM_RAM_WRITE(pacland_videoram_w) AM_BASE_MEMBER(pacland_state, videoram)
-	AM_RANGE(0x1000, 0x1fff) AM_RAM_WRITE(pacland_videoram2_w) AM_BASE_MEMBER(pacland_state, videoram2)
-	AM_RANGE(0x2000, 0x37ff) AM_RAM AM_BASE_MEMBER(pacland_state, spriteram)
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0x0fff) AM_RAM_WRITE(pacland_videoram_w) AM_BASE_MEMBER(pacland_state, m_videoram)
+	AM_RANGE(0x1000, 0x1fff) AM_RAM_WRITE(pacland_videoram2_w) AM_BASE_MEMBER(pacland_state, m_videoram2)
+	AM_RANGE(0x2000, 0x37ff) AM_RAM AM_BASE_MEMBER(pacland_state, m_spriteram)
 	AM_RANGE(0x3800, 0x3801) AM_WRITE(pacland_scroll0_w)
 	AM_RANGE(0x3a00, 0x3a01) AM_WRITE(pacland_scroll1_w)
 	AM_RANGE(0x3c00, 0x3c00) AM_WRITE(pacland_bankswitch_w)
@@ -251,7 +251,7 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x9000, 0x9fff) AM_WRITE(pacland_flipscreen_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( mcu_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( mcu_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x001f) AM_READWRITE(m6801_io_r, m6801_io_w)
 	AM_RANGE(0x0080, 0x00ff) AM_RAM
 	AM_RANGE(0x1000, 0x13ff) AM_DEVREADWRITE("namco", namcos1_cus30_r, namcos1_cus30_w)		/* PSG device, shared RAM */
@@ -269,7 +269,7 @@ static READ8_HANDLER( readFF )
 	return 0xff;
 }
 
-static ADDRESS_MAP_START( mcu_port_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( mcu_port_map, AS_IO, 8 )
 	AM_RANGE(M6801_PORT1, M6801_PORT1) AM_READ_PORT("IN2")
 	AM_RANGE(M6801_PORT1, M6801_PORT1) AM_WRITE(pacland_coin_w)
 	AM_RANGE(M6801_PORT2, M6801_PORT2) AM_READ(readFF)	/* leds won't work otherwise */

@@ -243,7 +243,7 @@ public:
 	goldngam_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT16 *videoram;
+	UINT16 *m_videoram;
 };
 
 
@@ -258,11 +258,11 @@ static VIDEO_START( goldngam )
 
 static SCREEN_UPDATE( goldngam )
 {
-	goldngam_state *state = screen->machine->driver_data<goldngam_state>();
+	goldngam_state *state = screen->machine().driver_data<goldngam_state>();
 
 	int x, y;
 
-	UINT8 *tmp = (UINT8 *) state->videoram;
+	UINT8 *tmp = (UINT8 *) state->m_videoram;
 	int index = 0;
 
 	for(y = 0; y < 512; ++y)
@@ -291,13 +291,13 @@ static PALETTE_INIT( goldngam )
 
 static READ16_HANDLER(unk_r)
 {
-    int test1 = (space->machine->rand() & 0xae00);
+    int test1 = (space->machine().rand() & 0xae00);
 //  popmessage("VAL = %02x", test1);
 
 	return test1;
 }
 
-static ADDRESS_MAP_START( swisspkr_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( swisspkr_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM
 	AM_RANGE(0x400002, 0x400003) AM_NOP // hopper status read ?
@@ -306,7 +306,7 @@ static ADDRESS_MAP_START( swisspkr_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x402000, 0x402001) AM_DEVREAD8("aysnd", ay8910_r, 0x00ff)
 	AM_RANGE(0x402000, 0x402003) AM_DEVWRITE8("aysnd", ay8910_address_data_w, 0x00ff) //wrong
 
-	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_MEMBER(goldngam_state, videoram)
+	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_MEMBER(goldngam_state, m_videoram)
 	AM_RANGE(0x500200, 0x50020f) AM_RAM //?
 	AM_RANGE(0x503000, 0x503001) AM_RAM //int ack ?
 	AM_RANGE(0x503002, 0x503003) AM_RAM //int ack ?
@@ -347,10 +347,10 @@ ADDRESS_MAP_END
 
 */
 
-static ADDRESS_MAP_START( moviecrd_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( moviecrd_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM
-	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_MEMBER(goldngam_state, videoram)
+	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_MEMBER(goldngam_state, m_videoram)
 	AM_RANGE(0x503000, 0x5031ff) AM_RAM //int ack ?
 ADDRESS_MAP_END
 

@@ -14,8 +14,8 @@ public:
 };
 
 
-static ADDRESS_MAP_START( williams_s6a_map, ADDRESS_SPACE_PROGRAM, 8 )
-	ADDRESS_MAP_UNMAP_HIGH
+static ADDRESS_MAP_START( williams_s6a_map, AS_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0xffff) AM_NOP
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( williams_s6a )

@@ -61,7 +61,7 @@ const device_type CDP1869 = cdp1869_device_config::static_alloc_device_config;
 
 
 // default address map
-static ADDRESS_MAP_START( cdp1869, 0, 8 )
+static ADDRESS_MAP_START( cdp1869, AS_0, 8 )
 	AM_RANGE(0x000, 0x7ff) AM_RAM
 ADDRESS_MAP_END
 
@@ -101,7 +101,7 @@ device_config *cdp1869_device_config::static_alloc_device_config(const machine_c
 
 device_t *cdp1869_device_config::alloc_device(running_machine &machine) const
 {
-	return auto_alloc(&machine, cdp1869_device(machine, *this));
+	return auto_alloc(machine, cdp1869_device(machine, *this));
 }
 
 
@@ -110,7 +110,7 @@ device_t *cdp1869_device_config::alloc_device(running_machine &machine) const
 //  any address spaces owned by this device
 //-------------------------------------------------
 
-const address_space_config *cdp1869_device_config::memory_space_config(int spacenum) const
+const address_space_config *cdp1869_device_config::memory_space_config(address_spacenum spacenum) const
 {
 	return (spacenum == 0) ? &m_space_config : NULL;
 }
@@ -434,7 +434,7 @@ void cdp1869_device::device_start()
 	initialize_palette();
 
 	// create sound stream
-	m_stream = m_machine.sound().stream_alloc(*this, 0, 1, m_machine.sample_rate);
+	m_stream = m_machine.sound().stream_alloc(*this, 0, 1, m_machine.sample_rate());
 
 	// register for state saving
 	save_item(NAME(m_prd));
@@ -496,7 +496,7 @@ void cdp1869_device::initialize_palette()
 
 	for (i = 0; i < 8; i++)
 	{
-		palette_set_color(machine, i, get_rgb(i, i, 15));
+		palette_set_color(m_machine, i, get_rgb(i, i, 15));
 	}
 
 	// tone-on-tone display (CFC=1)
@@ -504,7 +504,7 @@ void cdp1869_device::initialize_palette()
 	{
 		for (int l = 0; l < 8; l++)
 		{
-			palette_set_color(machine, i, get_rgb(i, c, l));
+			palette_set_color(m_machine, i, get_rgb(i, c, l));
 			i++;
 		}
 	}
@@ -529,7 +529,7 @@ void cdp1869_device::sound_stream_update(sound_stream &stream, stream_sample_t *
 		double frequency = (clock() / 2) / (512 >> m_tonefreq) / (m_tonediv + 1);
 //      double amplitude = m_toneamp * ((0.78*5) / 15);
 
-		int rate = m_machine.sample_rate / 2;
+		int rate = m_machine.sample_rate() / 2;
 
 		/* get progress through wave */
 		int incr = m_incr;

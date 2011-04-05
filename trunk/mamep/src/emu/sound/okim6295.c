@@ -75,7 +75,7 @@ const UINT8 okim6295_device::s_volume_table[16] =
 };
 
 // default address map
-static ADDRESS_MAP_START( okim6295, 0, 8 )
+static ADDRESS_MAP_START( okim6295, AS_0, 8 )
 	AM_RANGE(0x00000, 0x3ffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -115,7 +115,7 @@ device_config *okim6295_device_config::static_alloc_device_config(const machine_
 
 device_t *okim6295_device_config::alloc_device(running_machine &machine) const
 {
-	return auto_alloc(&machine, okim6295_device(machine, *this));
+	return auto_alloc(machine, okim6295_device(machine, *this));
 }
 
 
@@ -136,7 +136,7 @@ void okim6295_device_config::static_set_pin7(device_config *device, int pin7)
 //  any address spaces owned by this device
 //-------------------------------------------------
 
-const address_space_config *okim6295_device_config::memory_space_config(int spacenum) const
+const address_space_config *okim6295_device_config::memory_space_config(address_spacenum spacenum) const
 {
 	return (spacenum == 0) ? &m_space_config : NULL;
 }
@@ -258,7 +258,7 @@ void okim6295_device::set_bank_base(offs_t base)
 	if (!m_bank_installed && base != 0)
 	{
 		// override our memory map with a bank
-		memory_install_read_bank(space(), 0x00000, 0x3ffff, 0, 0, tag());
+		space()->install_read_bank(0x00000, 0x3ffff, tag());
 		m_bank_installed = true;
 	}
 
@@ -266,7 +266,7 @@ void okim6295_device::set_bank_base(offs_t base)
 	if (m_bank_installed)
 	{
 		m_bank_offs = base;
-		memory_set_bankptr(&m_machine, tag(), m_region->base() + base);
+		memory_set_bankptr(m_machine, tag(), m_region->base() + base);
 	}
 }
 

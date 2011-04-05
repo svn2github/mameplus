@@ -120,11 +120,11 @@ static WRITE16_HANDLER( seta2_sound_bank_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		UINT8 *ROM = space->machine->region( "x1snd" )->base();
-		int banks = (space->machine->region( "x1snd" )->bytes() - 0x100000) / 0x20000;
+		UINT8 *ROM = space->machine().region( "x1snd" )->base();
+		int banks = (space->machine().region( "x1snd" )->bytes() - 0x100000) / 0x20000;
 		if (data >= banks)
 		{
-			logerror("CPU #0 PC %06X: invalid sound bank %04X\n",cpu_get_pc(space->cpu),data);
+			logerror("CPU #0 PC %06X: invalid sound bank %04X\n",cpu_get_pc(&space->device()),data);
 			data %= banks;
 		}
 		memcpy(ROM + offset * 0x20000, ROM + 0x100000 + data * 0x20000, 0x20000);
@@ -141,13 +141,13 @@ static WRITE16_HANDLER( grdians_lockout_w )
 	if (ACCESSING_BITS_0_7)
 	{
 		// initially 0, then either $25 (coin 1) or $2a (coin 2)
-		coin_counter_w(space->machine, 0,data & 0x01);	// or 0x04
-		coin_counter_w(space->machine, 1,data & 0x02);	// or 0x08
+		coin_counter_w(space->machine(), 0,data & 0x01);	// or 0x04
+		coin_counter_w(space->machine(), 1,data & 0x02);	// or 0x08
 	}
 //  popmessage("%04X", data & 0xffff);
 }
 
-static ADDRESS_MAP_START( grdians_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( grdians_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM								// ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM								// RAM
 	AM_RANGE(0x304000, 0x30ffff) AM_RAM								// ? seems tile data
@@ -159,10 +159,10 @@ static ADDRESS_MAP_START( grdians_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x70000c, 0x70000d) AM_READ(watchdog_reset16_r)		// Watchdog
 	AM_RANGE(0x800000, 0x800001) AM_WRITE(grdians_lockout_w)
 	AM_RANGE(0xb00000, 0xb03fff) AM_DEVREADWRITE("x1snd", seta_sound_word_r,seta_sound_word_w)	// Sound
-	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, spriteram, spriteram_size)		// Sprites
+	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, m_spriteram, m_spriteram_size)		// Sprites
 	AM_RANGE(0xc40000, 0xc4ffff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)	// Palette
 	AM_RANGE(0xc50000, 0xc5ffff) AM_RAM								// cleared
-	AM_RANGE(0xc60000, 0xc6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, vregs)	// Video Registers
+	AM_RANGE(0xc60000, 0xc6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, m_vregs)	// Video Registers
 	AM_RANGE(0xe00010, 0xe0001f) AM_WRITE(seta2_sound_bank_w)		// Samples Banks
 	AM_RANGE(0xfffc00, 0xffffff) AM_READWRITE(tmp68301_regs_r, tmp68301_regs_w)	// TMP68301 Registers
 ADDRESS_MAP_END
@@ -183,7 +183,7 @@ static WRITE16_DEVICE_HANDLER( gundamex_eeprom_w )
 		eeprom_set_cs_line(device, (data & 0x4) ? CLEAR_LINE : ASSERT_LINE);
 }
 
-static ADDRESS_MAP_START( gundamex_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( gundamex_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM								// ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM								// RAM
 	AM_RANGE(0x500000, 0x57ffff) AM_ROM								// ROM
@@ -197,10 +197,10 @@ static ADDRESS_MAP_START( gundamex_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x70000c, 0x70000d) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE(0x800000, 0x800001) AM_WRITE(grdians_lockout_w)
 	AM_RANGE(0xb00000, 0xb03fff) AM_DEVREADWRITE("x1snd", seta_sound_word_r,seta_sound_word_w)	// Sound
-	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, spriteram, spriteram_size)	// Sprites
+	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, m_spriteram, m_spriteram_size)	// Sprites
 	AM_RANGE(0xc40000, 0xc4ffff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)	// Palette
 	AM_RANGE(0xc50000, 0xc5ffff) AM_RAM								// cleared
-	AM_RANGE(0xc60000, 0xc6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, vregs)	// Video Registers
+	AM_RANGE(0xc60000, 0xc6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, m_vregs)	// Video Registers
 	AM_RANGE(0xe00010, 0xe0001f) AM_WRITE(seta2_sound_bank_w)		// Samples Banks
 	AM_RANGE(0xfffd0a, 0xfffd0b) AM_DEVREADWRITE("eeprom", gundamex_eeprom_r,gundamex_eeprom_w)	// parallel data register
 	AM_RANGE(0xfffc00, 0xffffff) AM_READWRITE(tmp68301_regs_r, tmp68301_regs_w)	// TMP68301 Registers
@@ -213,43 +213,43 @@ ADDRESS_MAP_END
 
 static READ16_HANDLER( mj4simai_p1_r )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 
-	switch (state->keyboard_row)
+	switch (state->m_keyboard_row)
 	{
-		case 0x01: return input_port_read(space->machine, "P1_KEY0");
-		case 0x02: return input_port_read(space->machine, "P1_KEY1");
-		case 0x04: return input_port_read(space->machine, "P1_KEY2");
-		case 0x08: return input_port_read(space->machine, "P1_KEY3");
-		case 0x10: return input_port_read(space->machine, "P1_KEY4");
-		default:   logerror("p1_r with keyboard_row = %02x\n", state->keyboard_row); return 0xffff;
+		case 0x01: return input_port_read(space->machine(), "P1_KEY0");
+		case 0x02: return input_port_read(space->machine(), "P1_KEY1");
+		case 0x04: return input_port_read(space->machine(), "P1_KEY2");
+		case 0x08: return input_port_read(space->machine(), "P1_KEY3");
+		case 0x10: return input_port_read(space->machine(), "P1_KEY4");
+		default:   logerror("p1_r with keyboard_row = %02x\n", state->m_keyboard_row); return 0xffff;
 	}
 }
 
 static READ16_HANDLER( mj4simai_p2_r )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 
-	switch (state->keyboard_row)
+	switch (state->m_keyboard_row)
 	{
-		case 0x01: return input_port_read(space->machine, "P2_KEY0");
-		case 0x02: return input_port_read(space->machine, "P2_KEY1");
-		case 0x04: return input_port_read(space->machine, "P2_KEY2");
-		case 0x08: return input_port_read(space->machine, "P2_KEY3");
-		case 0x10: return input_port_read(space->machine, "P2_KEY4");
-		default:   logerror("p2_r with keyboard_row = %02x\n", state->keyboard_row); return 0xffff;
+		case 0x01: return input_port_read(space->machine(), "P2_KEY0");
+		case 0x02: return input_port_read(space->machine(), "P2_KEY1");
+		case 0x04: return input_port_read(space->machine(), "P2_KEY2");
+		case 0x08: return input_port_read(space->machine(), "P2_KEY3");
+		case 0x10: return input_port_read(space->machine(), "P2_KEY4");
+		default:   logerror("p2_r with keyboard_row = %02x\n", state->m_keyboard_row); return 0xffff;
 	}
 }
 
 static WRITE16_HANDLER( mj4simai_keyboard_w )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 
 	if (ACCESSING_BITS_0_7)
-		state->keyboard_row = data & 0xff;
+		state->m_keyboard_row = data & 0xff;
 }
 
-static ADDRESS_MAP_START( mj4simai_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( mj4simai_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM								// ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM								// RAM
 	AM_RANGE(0x600000, 0x600001) AM_READ(mj4simai_p1_r)				// P1
@@ -262,9 +262,9 @@ static ADDRESS_MAP_START( mj4simai_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x600302, 0x600303) AM_READ_PORT("DSW2")				// DSW 2
 	AM_RANGE(0x600300, 0x60030f) AM_WRITE(seta2_sound_bank_w)		// Samples Banks
 	AM_RANGE(0xb00000, 0xb03fff) AM_DEVREADWRITE("x1snd", seta_sound_word_r,seta_sound_word_w)	// Sound
-	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, spriteram, spriteram_size)	// Sprites
+	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, m_spriteram, m_spriteram_size)	// Sprites
 	AM_RANGE(0xc40000, 0xc4ffff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)	// Palette
-	AM_RANGE(0xc60000, 0xc6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, vregs)	// Video Registers
+	AM_RANGE(0xc60000, 0xc6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, m_vregs)	// Video Registers
 	AM_RANGE(0xfffc00, 0xffffff) AM_READWRITE(tmp68301_regs_r, tmp68301_regs_w)	// TMP68301 Registers
 ADDRESS_MAP_END
 
@@ -273,7 +273,7 @@ ADDRESS_MAP_END
                             Kosodate Quiz My Angel
 ***************************************************************************/
 
-static ADDRESS_MAP_START( myangel_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( myangel_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM								// ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM								// RAM
 	AM_RANGE(0x700000, 0x700001) AM_READ_PORT("P1")					// P1
@@ -285,9 +285,9 @@ static ADDRESS_MAP_START( myangel_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x700302, 0x700303) AM_READ_PORT("DSW2")				// DSW 2
 	AM_RANGE(0x700310, 0x70031f) AM_WRITE(seta2_sound_bank_w)		// Samples Banks
 	AM_RANGE(0xb00000, 0xb03fff) AM_DEVREADWRITE("x1snd", seta_sound_word_r,seta_sound_word_w)	// Sound
-	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, spriteram, spriteram_size)		// Sprites
+	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, m_spriteram, m_spriteram_size)		// Sprites
 	AM_RANGE(0xc40000, 0xc4ffff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)	// Palette
-	AM_RANGE(0xc60000, 0xc6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, vregs)				// Video Registers
+	AM_RANGE(0xc60000, 0xc6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, m_vregs)				// Video Registers
 	AM_RANGE(0xfffc00, 0xffffff) AM_READWRITE(tmp68301_regs_r, tmp68301_regs_w)		// TMP68301 Registers
 ADDRESS_MAP_END
 
@@ -296,7 +296,7 @@ ADDRESS_MAP_END
                             Kosodate Quiz My Angel 2
 ***************************************************************************/
 
-static ADDRESS_MAP_START( myangel2_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( myangel2_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM								// ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM								// RAM
 	AM_RANGE(0x600000, 0x600001) AM_READ_PORT("P1")					// P1
@@ -308,9 +308,9 @@ static ADDRESS_MAP_START( myangel2_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x600302, 0x600303) AM_READ_PORT("DSW2")				// DSW 2
 	AM_RANGE(0x600300, 0x60030f) AM_WRITE(seta2_sound_bank_w)		// Samples Banks
 	AM_RANGE(0xb00000, 0xb03fff) AM_DEVREADWRITE("x1snd", seta_sound_word_r,seta_sound_word_w)	// Sound
-	AM_RANGE(0xd00000, 0xd3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, spriteram, spriteram_size)		// Sprites
+	AM_RANGE(0xd00000, 0xd3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, m_spriteram, m_spriteram_size)		// Sprites
 	AM_RANGE(0xd40000, 0xd4ffff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)	// Palette
-	AM_RANGE(0xd60000, 0xd6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, vregs)			// Video Registers
+	AM_RANGE(0xd60000, 0xd6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, m_vregs)			// Video Registers
 	AM_RANGE(0xfffc00, 0xffffff) AM_READWRITE(tmp68301_regs_r, tmp68301_regs_w)		// TMP68301 Registers
 ADDRESS_MAP_END
 
@@ -324,24 +324,24 @@ ADDRESS_MAP_END
 static READ16_HANDLER( pzlbowl_protection_r )
 {
 	UINT32 address = (space->read_word(0x20ba16) << 16) | space->read_word(0x20ba18);
-	return space->machine->region("maincpu")->base()[address - 2];
+	return space->machine().region("maincpu")->base()[address - 2];
 }
 
 static READ16_HANDLER( pzlbowl_coins_r )
 {
-	return input_port_read(space->machine, "SYSTEM") | (space->machine->rand() & 0x80 );
+	return input_port_read(space->machine(), "SYSTEM") | (space->machine().rand() & 0x80 );
 }
 
 static WRITE16_HANDLER( pzlbowl_coin_counter_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		coin_counter_w(space->machine, 0,data & 0x10);
-		coin_counter_w(space->machine, 1,data & 0x20);
+		coin_counter_w(space->machine(), 0,data & 0x10);
+		coin_counter_w(space->machine(), 1,data & 0x20);
 	}
 }
 
-static ADDRESS_MAP_START( pzlbowl_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( pzlbowl_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM									// ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM									// RAM
 	AM_RANGE(0x400300, 0x400301) AM_READ_PORT("DSW1")					// DSW 1
@@ -352,9 +352,9 @@ static ADDRESS_MAP_START( pzlbowl_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x500004, 0x500005) AM_READWRITE(pzlbowl_coins_r,pzlbowl_coin_counter_w)	// Coins + Protection?
 	AM_RANGE(0x500006, 0x500007) AM_READ(watchdog_reset16_r)			// Watchdog
 	AM_RANGE(0x700000, 0x700001) AM_READ(pzlbowl_protection_r)			// Protection
-	AM_RANGE(0x800000, 0x83ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, spriteram, spriteram_size)		// Sprites
+	AM_RANGE(0x800000, 0x83ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, m_spriteram, m_spriteram_size)		// Sprites
 	AM_RANGE(0x840000, 0x84ffff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)	// Palette
-	AM_RANGE(0x860000, 0x86003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, vregs)				// Video Registers
+	AM_RANGE(0x860000, 0x86003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, m_vregs)				// Video Registers
 	AM_RANGE(0x900000, 0x903fff) AM_DEVREADWRITE("x1snd", seta_sound_word_r,seta_sound_word_w)	// Sound
 	AM_RANGE(0xfffc00, 0xffffff) AM_READWRITE(tmp68301_regs_r, tmp68301_regs_w)		// TMP68301 Registers
 ADDRESS_MAP_END
@@ -364,7 +364,7 @@ ADDRESS_MAP_END
                             Penguin Bros
 ***************************************************************************/
 
-static ADDRESS_MAP_START( penbros_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( penbros_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM								// ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM								// RAM
 	AM_RANGE(0x210000, 0x23ffff) AM_RAM								// RAM
@@ -378,9 +378,9 @@ static ADDRESS_MAP_START( penbros_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x600004, 0x600005) AM_WRITE(pzlbowl_coin_counter_w)	// Coins Counter
 	AM_RANGE(0x600006, 0x600007) AM_READ(watchdog_reset16_r)		// Watchdog
 	//AM_RANGE(0x700000, 0x700001) AM_READ(pzlbowl_protection_r)      // Protection
-	AM_RANGE(0xb00000, 0xb3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, spriteram, spriteram_size)		// Sprites
+	AM_RANGE(0xb00000, 0xb3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, m_spriteram, m_spriteram_size)		// Sprites
 	AM_RANGE(0xb40000, 0xb4ffff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)	// Palette
-	AM_RANGE(0xb60000, 0xb6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, vregs)
+	AM_RANGE(0xb60000, 0xb6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, m_vregs)
 	AM_RANGE(0xa00000, 0xa03fff) AM_DEVREADWRITE("x1snd", seta_sound_word_r,seta_sound_word_w)	// Sound
 	AM_RANGE(0xfffc00, 0xffffff) AM_READWRITE(tmp68301_regs_r, tmp68301_regs_w)		// TMP68301 Registers
 ADDRESS_MAP_END
@@ -394,17 +394,17 @@ static WRITE16_HANDLER( reelquak_leds_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		set_led_status( space->machine, 0, data & 0x0001 );	// start
-		set_led_status( space->machine, 1, data & 0x0002 );	// small
-		set_led_status( space->machine, 2, data & 0x0004 );	// bet
-		set_led_status( space->machine, 3, data & 0x0008 );	// big
-		set_led_status( space->machine, 4, data & 0x0010 );	// double up
-		set_led_status( space->machine, 5, data & 0x0020 );	// collect
-		set_led_status( space->machine, 6, data & 0x0040 );	// bet cancel
+		set_led_status( space->machine(), 0, data & 0x0001 );	// start
+		set_led_status( space->machine(), 1, data & 0x0002 );	// small
+		set_led_status( space->machine(), 2, data & 0x0004 );	// bet
+		set_led_status( space->machine(), 3, data & 0x0008 );	// big
+		set_led_status( space->machine(), 4, data & 0x0010 );	// double up
+		set_led_status( space->machine(), 5, data & 0x0020 );	// collect
+		set_led_status( space->machine(), 6, data & 0x0040 );	// bet cancel
 	}
 	if (ACCESSING_BITS_8_15)
 	{
-		ticket_dispenser_w(space->machine->device("ticket"), 0, (data & 0x0100) >> 1);	// ticket dispenser
+		ticket_dispenser_w(space->machine().device("ticket"), 0, (data & 0x0100) >> 1);	// ticket dispenser
 	}
 
 //  popmessage("LED %04X", data);
@@ -414,17 +414,17 @@ static WRITE16_HANDLER( reelquak_coin_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		coin_counter_w(space->machine, 0, data & 0x01);	// coin in
-		coin_counter_w(space->machine, 1, data & 0x02);	// coin in
-		coin_counter_w(space->machine, 2, data & 0x04);	// pay out
-		coin_counter_w(space->machine, 3, data & 0x08);	// key in
+		coin_counter_w(space->machine(), 0, data & 0x01);	// coin in
+		coin_counter_w(space->machine(), 1, data & 0x02);	// coin in
+		coin_counter_w(space->machine(), 2, data & 0x04);	// pay out
+		coin_counter_w(space->machine(), 3, data & 0x08);	// key in
 		//                                data & 0x10); // Sound IRQ Ack.? 1->0
 		//                                data & 0x20); // Vblank IRQ.? 1
 	}
 //  popmessage("COIN %04X", data & 0xffff);
 }
 
-static ADDRESS_MAP_START( reelquak_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( reelquak_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM								// ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM								// RAM
 	AM_RANGE(0x300000, 0x303fff) AM_RAM AM_SHARE("nvram")			// NVRAM (Battery Backed)
@@ -437,9 +437,9 @@ static ADDRESS_MAP_START( reelquak_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x400302, 0x400303) AM_READ_PORT("DSW2")				// DSW 2
 	AM_RANGE(0x400300, 0x40030f) AM_WRITE(seta2_sound_bank_w)		// Samples Banks
 	AM_RANGE(0xb00000, 0xb03fff) AM_DEVREADWRITE("x1snd", seta_sound_word_r,seta_sound_word_w)	// Sound
-	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, spriteram, spriteram_size)		// Sprites
+	AM_RANGE(0xc00000, 0xc3ffff) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, m_spriteram, m_spriteram_size)		// Sprites
 	AM_RANGE(0xc40000, 0xc4ffff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)	// Palette
-	AM_RANGE(0xc60000, 0xc6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, vregs)				// Video Registers
+	AM_RANGE(0xc60000, 0xc6003f) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, m_vregs)				// Video Registers
 	AM_RANGE(0xfffd0a, 0xfffd0b) AM_WRITE( reelquak_leds_w )		// parallel data register (leds)
 	AM_RANGE(0xfffc00, 0xffffff) AM_READWRITE(tmp68301_regs_r, tmp68301_regs_w)		// TMP68301 Registers
 ADDRESS_MAP_END
@@ -453,16 +453,16 @@ static WRITE16_HANDLER( samshoot_coin_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		coin_counter_w(space->machine, 0, data & 0x10);
-		coin_counter_w(space->machine, 1, data & 0x20);
+		coin_counter_w(space->machine(), 0, data & 0x10);
+		coin_counter_w(space->machine(), 1, data & 0x20);
 		// Are these connected? They are set in I/O test
-		coin_lockout_w(space->machine, 0,~data & 0x40);
-		coin_lockout_w(space->machine, 1,~data & 0x80);
+		coin_lockout_w(space->machine(), 0,~data & 0x40);
+		coin_lockout_w(space->machine(), 1,~data & 0x80);
 	}
 //  popmessage("%04x",data);
 }
 
-static ADDRESS_MAP_START( samshoot_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( samshoot_map, AS_PROGRAM, 16 )
 	AM_RANGE( 0x000000, 0x1fffff ) AM_ROM
 	AM_RANGE( 0x200000, 0x20ffff ) AM_RAM
 	AM_RANGE( 0x300000, 0x30ffff ) AM_RAM AM_SHARE("nvram")
@@ -480,9 +480,9 @@ static ADDRESS_MAP_START( samshoot_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE( 0x700004, 0x700005 ) AM_READ_PORT("COIN")	AM_WRITE( samshoot_coin_w )	// Coins
 	AM_RANGE( 0x700006, 0x700007 ) AM_READ( watchdog_reset16_r )	// Watchdog?
 
-	AM_RANGE( 0x800000, 0x83ffff ) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, spriteram, spriteram_size)	// Sprites
+	AM_RANGE( 0x800000, 0x83ffff ) AM_RAM AM_BASE_SIZE_MEMBER(seta2_state, m_spriteram, m_spriteram_size)	// Sprites
 	AM_RANGE( 0x840000, 0x84ffff ) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)	// Palette
-	AM_RANGE( 0x860000, 0x86003f ) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, vregs)	// Video Registers
+	AM_RANGE( 0x860000, 0x86003f ) AM_WRITE(seta2_vregs_w) AM_BASE_MEMBER(seta2_state, m_vregs)	// Video Registers
 
 	AM_RANGE( 0x900000, 0x903fff ) AM_DEVREADWRITE( "x1snd", seta_sound_word_r, seta_sound_word_w	)	// Sound
 
@@ -500,14 +500,14 @@ ADDRESS_MAP_END
 // RAM shared with the sub CPU
 static READ32_HANDLER( funcube_nvram_dword_r )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 	UINT16 val = state->m_nvram[offset];
 	return ((val & 0xff00) << 8) | (val & 0x00ff);
 }
 
 static WRITE32_HANDLER( funcube_nvram_dword_w )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 	if (ACCESSING_BITS_0_7)
 	{
 		state->m_nvram[offset] = (state->m_nvram[offset] & 0xff00) | (data & 0x000000ff);
@@ -520,21 +520,21 @@ static WRITE32_HANDLER( funcube_nvram_dword_w )
 
 static WRITE16_HANDLER( spriteram16_word_w )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 
-	COMBINE_DATA( &state->spriteram[offset] );
+	COMBINE_DATA( &state->m_spriteram[offset] );
 }
 
 static READ16_HANDLER( spriteram16_word_r )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 
-	return state->spriteram[offset];
+	return state->m_spriteram[offset];
 }
 
 static READ16_HANDLER( paletteram16_word_r )
 {
-	return space->machine->generic.paletteram.u16[offset];
+	return space->machine().generic.paletteram.u16[offset];
 }
 
 static READ16BETO32BE( spriteram32_dword, spriteram16_word_r );
@@ -556,33 +556,33 @@ enum {
 
 static WRITE32_HANDLER( coldfire_regs_w )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 
-	COMBINE_DATA( &state->coldfire_regs[offset] );
+	COMBINE_DATA( &state->m_coldfire_regs[offset] );
 }
 
 static READ32_HANDLER( coldfire_regs_r )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 
 	switch( offset )
 	{
 		case CF_MBSR:
-			return space->machine->rand();
+			return space->machine().rand();
 
 		case CF_PPDAT:
-			return input_port_read(space->machine, "BATTERY") << 16;
+			return input_port_read(space->machine(), "BATTERY") << 16;
 	}
 
-	return state->coldfire_regs[offset];
+	return state->m_coldfire_regs[offset];
 }
 
 static READ32_HANDLER( funcube_debug_r )
 {
-	UINT32 ret = input_port_read(space->machine,"DEBUG");
+	UINT32 ret = input_port_read(space->machine(),"DEBUG");
 
 	// This bits let you move the crosshair in the inputs / touch panel test with a joystick
-	if (!(space->machine->primary_screen->frame_number() % 3))
+	if (!(space->machine().primary_screen->frame_number() % 3))
 		ret |= 0x3f;
 
 	return ret;
@@ -603,7 +603,7 @@ static WRITE32_DEVICE_HANDLER( oki_write )
 }
 
 
-static ADDRESS_MAP_START( funcube_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( funcube_map, AS_PROGRAM, 32 )
 	AM_RANGE( 0x00000000, 0x0007ffff ) AM_ROM
 	AM_RANGE( 0x00200000, 0x0020ffff ) AM_RAM
 
@@ -612,19 +612,19 @@ static ADDRESS_MAP_START( funcube_map, ADDRESS_SPACE_PROGRAM, 32 )
 
 	AM_RANGE( 0x00600000, 0x00600003 ) AM_DEVWRITE("oki", oki_write)
 
-	AM_RANGE( 0x00800000, 0x0083ffff ) AM_READWRITE( spriteram32_dword_r,  spriteram32_dword_w  ) AM_BASE_SIZE_MEMBER(seta2_state, spriteram, spriteram_size)
+	AM_RANGE( 0x00800000, 0x0083ffff ) AM_READWRITE( spriteram32_dword_r,  spriteram32_dword_w  ) AM_BASE_SIZE_MEMBER(seta2_state, m_spriteram, m_spriteram_size)
 	AM_RANGE( 0x00840000, 0x0084ffff ) AM_READWRITE( paletteram32_dword_r, paletteram32_dword_w ) AM_BASE_GENERIC(paletteram)
-	AM_RANGE( 0x00860000, 0x0086003f ) AM_WRITE( seta2_vregs_dword_w )                            AM_BASE_MEMBER(seta2_state, vregs)
+	AM_RANGE( 0x00860000, 0x0086003f ) AM_WRITE( seta2_vregs_dword_w )                            AM_BASE_MEMBER(seta2_state, m_vregs)
 
 	AM_RANGE( 0x00c00000, 0x00c002ff ) AM_READWRITE( funcube_nvram_dword_r, funcube_nvram_dword_w )
 
-	AM_RANGE(0xf0000000, 0xf00001ff ) AM_READWRITE( coldfire_regs_r, coldfire_regs_w ) AM_BASE_MEMBER(seta2_state, coldfire_regs)	// Module
+	AM_RANGE(0xf0000000, 0xf00001ff ) AM_READWRITE( coldfire_regs_r, coldfire_regs_w ) AM_BASE_MEMBER(seta2_state, m_coldfire_regs)	// Module
 	AM_RANGE(0xffffe000, 0xffffffff ) AM_RAM	// SRAM
 ADDRESS_MAP_END
 
 // Sub CPU
 
-static ADDRESS_MAP_START( funcube_sub_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( funcube_sub_map, AS_PROGRAM, 16 )
 	AM_RANGE( 0x000000, 0x01ffff ) AM_ROM
 	AM_RANGE( 0x200000, 0x20017f ) AM_RAM AM_SHARE("nvram")
 ADDRESS_MAP_END
@@ -638,30 +638,30 @@ ADDRESS_MAP_END
 
 static READ8_HANDLER( funcube_coins_r )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
-	UINT8 ret = input_port_read(space->machine,"SWITCH");
+	seta2_state *state = space->machine().driver_data<seta2_state>();
+	UINT8 ret = input_port_read(space->machine(),"SWITCH");
 	UINT8 coin_bit0 = 1;	// active low
 	UINT8 coin_bit1 = 1;
 
-	UINT8 hopper_bit = (state->funcube_hopper_motor && !(space->machine->primary_screen->frame_number()%20)) ? 1 : 0;
+	UINT8 hopper_bit = (state->m_funcube_hopper_motor && !(space->machine().primary_screen->frame_number()%20)) ? 1 : 0;
 
 	const UINT64 coin_total_cycles = FUNCUBE_SUB_CPU_CLOCK / (1000/20);
 
-	if ( state->funcube_coin_start_cycles )
+	if ( state->m_funcube_coin_start_cycles )
 	{
-		UINT64 elapsed = downcast<cpu_device *>(space->cpu)->total_cycles() - state->funcube_coin_start_cycles;
+		UINT64 elapsed = downcast<cpu_device *>(&space->device())->total_cycles() - state->m_funcube_coin_start_cycles;
 
 		if ( elapsed < coin_total_cycles/2 )
 			coin_bit0 = 0;
 		else if ( elapsed < coin_total_cycles )
 			coin_bit1 = 0;
 		else
-			state->funcube_coin_start_cycles = 0;
+			state->m_funcube_coin_start_cycles = 0;
 	}
 	else
 	{
 		if (!(ret & 1))
-			state->funcube_coin_start_cycles = downcast<cpu_device *>(space->cpu)->total_cycles();
+			state->m_funcube_coin_start_cycles = downcast<cpu_device *>(&space->device())->total_cycles();
 	}
 
 	return (ret & ~7) | (hopper_bit << 2) | (coin_bit1 << 1) | coin_bit0;
@@ -669,19 +669,19 @@ static READ8_HANDLER( funcube_coins_r )
 
 static READ8_HANDLER( funcube_serial_r )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 	UINT8 ret = 0xff;
 
-	switch( state->funcube_serial_count )
+	switch( state->m_funcube_serial_count )
 	{
-		case 4:	ret = state->funcube_serial_fifo[0];	break;
-		case 3:	ret = state->funcube_serial_fifo[1];	break;
-		case 2:	ret = state->funcube_serial_fifo[2];	break;
-		case 1:	ret = state->funcube_serial_fifo[3];	break;
+		case 4:	ret = state->m_funcube_serial_fifo[0];	break;
+		case 3:	ret = state->m_funcube_serial_fifo[1];	break;
+		case 2:	ret = state->m_funcube_serial_fifo[2];	break;
+		case 1:	ret = state->m_funcube_serial_fifo[3];	break;
 	}
 
-	if (state->funcube_serial_count)
-		state->funcube_serial_count--;
+	if (state->m_funcube_serial_count)
+		state->m_funcube_serial_count--;
 
 	return ret;
 }
@@ -695,55 +695,55 @@ static void funcube_debug_outputs(void)
 
 static WRITE8_HANDLER( funcube_leds_w )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 
-	*state->funcube_leds = data;
+	*state->m_funcube_leds = data;
 
-	set_led_status( space->machine, 0, (~data) & 0x01 );	// win lamp (red)
-	set_led_status( space->machine, 1, (~data) & 0x02 );	// win lamp (green)
+	set_led_status( space->machine(), 0, (~data) & 0x01 );	// win lamp (red)
+	set_led_status( space->machine(), 1, (~data) & 0x02 );	// win lamp (green)
 
 	// Set in a moving pattern: 0111 -> 1011 -> 1101 -> 1110
-	set_led_status( space->machine, 2, (~data) & 0x10 );
-	set_led_status( space->machine, 3, (~data) & 0x20 );
-	set_led_status( space->machine, 4, (~data) & 0x40 );
-	set_led_status( space->machine, 5, (~data) & 0x80 );
+	set_led_status( space->machine(), 2, (~data) & 0x10 );
+	set_led_status( space->machine(), 3, (~data) & 0x20 );
+	set_led_status( space->machine(), 4, (~data) & 0x40 );
+	set_led_status( space->machine(), 5, (~data) & 0x80 );
 
 	funcube_debug_outputs();
 }
 
 static READ8_HANDLER( funcube_outputs_r )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 
 	// Bits 1,2,3 read
-	return *state->funcube_outputs;
+	return *state->m_funcube_outputs;
 }
 
 static WRITE8_HANDLER( funcube_outputs_w )
 {
-	seta2_state *state = space->machine->driver_data<seta2_state>();
+	seta2_state *state = space->machine().driver_data<seta2_state>();
 
-	*state->funcube_outputs = data;
+	*state->m_funcube_outputs = data;
 
 	// Bits 0,1,3 written
 
 	// Bit 0: hopper motor
-	state->funcube_hopper_motor = (~data) & 0x01;
+	state->m_funcube_hopper_motor = (~data) & 0x01;
 
 	// Bit 1: high on pay out
 
 	// Bit 3: low after coining up, blinks on pay out
-	set_led_status( space->machine, 6, (~data) & 0x08 );
+	set_led_status( space->machine(), 6, (~data) & 0x08 );
 
 	funcube_debug_outputs();
 }
 
 
-static ADDRESS_MAP_START( funcube_sub_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( funcube_sub_io, AS_IO, 8 )
 	AM_RANGE( H8_PORT_7,   H8_PORT_7   )	AM_READ( funcube_coins_r )
 	AM_RANGE( H8_PORT_4,   H8_PORT_4   )	AM_NOP	// unused
-	AM_RANGE( H8_PORT_A,   H8_PORT_A   )	AM_READWRITE( funcube_outputs_r, funcube_outputs_w ) AM_BASE_MEMBER( seta2_state, funcube_outputs )
-	AM_RANGE( H8_PORT_B,   H8_PORT_B   )	AM_WRITE( funcube_leds_w )                           AM_BASE_MEMBER( seta2_state, funcube_leds )
+	AM_RANGE( H8_PORT_A,   H8_PORT_A   )	AM_READWRITE( funcube_outputs_r, funcube_outputs_w ) AM_BASE_MEMBER( seta2_state, m_funcube_outputs )
+	AM_RANGE( H8_PORT_B,   H8_PORT_B   )	AM_WRITE( funcube_leds_w )                           AM_BASE_MEMBER( seta2_state, m_funcube_leds )
 //  AM_RANGE( H8_SERIAL_0, H8_SERIAL_0 )    // cabinets linking (jpunit)
 	AM_RANGE( H8_SERIAL_1, H8_SERIAL_1 )	AM_READ( funcube_serial_r )
 ADDRESS_MAP_END
@@ -1996,7 +1996,7 @@ static INTERRUPT_GEN( seta2_interrupt )
 	{
 		case 0:
 			/* VBlank is connected to INT0 (external interrupts pin 0) */
-			tmp68301_external_interrupt_0(device->machine);
+			tmp68301_external_interrupt_0(device->machine());
 			break;
 	}
 }
@@ -2006,10 +2006,10 @@ static INTERRUPT_GEN( samshoot_interrupt )
 	switch ( cpu_getiloops(device) )
 	{
 		case 0:
-			tmp68301_external_interrupt_0(device->machine);	// vblank
+			tmp68301_external_interrupt_0(device->machine());	// vblank
 			break;
 		case 1:
-			tmp68301_external_interrupt_2(device->machine);	// to do: hook up x1-10 interrupts
+			tmp68301_external_interrupt_2(device->machine());	// to do: hook up x1-10 interrupts
 			break;
 	}
 }
@@ -2164,46 +2164,46 @@ static INTERRUPT_GEN( funcube_interrupt )
 {
 	switch ( cpu_getiloops(device) )
 	{
-		case 1:  cpu_set_input_line(device, 2, HOLD_LINE); break;
-		case 0:  cpu_set_input_line(device, 1, HOLD_LINE); break;
+		case 1:  device_set_input_line(device, 2, HOLD_LINE); break;
+		case 0:  device_set_input_line(device, 1, HOLD_LINE); break;
 	}
 }
 
 static INTERRUPT_GEN( funcube_sub_timer_irq )
 {
-	seta2_state *state = device->machine->driver_data<seta2_state>();
+	seta2_state *state = device->machine().driver_data<seta2_state>();
 
-	if ( state->funcube_serial_count )
+	if ( state->m_funcube_serial_count )
 	{
-		cpu_set_input_line(device, H8_SCI_1_RX, HOLD_LINE);
+		device_set_input_line(device, H8_SCI_1_RX, HOLD_LINE);
 	}
 	else
 	{
-		UINT8 press   = input_port_read(device->machine,"TOUCH_PRESS");
-		UINT8 release = state->funcube_press && !press;
+		UINT8 press   = input_port_read(device->machine(),"TOUCH_PRESS");
+		UINT8 release = state->m_funcube_press && !press;
 
 		if ( press || release )
 		{
-			state->funcube_serial_fifo[0] = press ? 0xfe : 0xfd;
-			state->funcube_serial_fifo[1] = input_port_read(device->machine,"TOUCH_X");
-			state->funcube_serial_fifo[2] = input_port_read(device->machine,"TOUCH_Y");
-			state->funcube_serial_fifo[3] = 0xff;
-			state->funcube_serial_count = 4;
+			state->m_funcube_serial_fifo[0] = press ? 0xfe : 0xfd;
+			state->m_funcube_serial_fifo[1] = input_port_read(device->machine(),"TOUCH_X");
+			state->m_funcube_serial_fifo[2] = input_port_read(device->machine(),"TOUCH_Y");
+			state->m_funcube_serial_fifo[3] = 0xff;
+			state->m_funcube_serial_count = 4;
 		}
 
-		state->funcube_press = press;
+		state->m_funcube_press = press;
 	}
 
-	cpu_set_input_line(device, H8_METRO_TIMER_HACK, HOLD_LINE);
+	device_set_input_line(device, H8_METRO_TIMER_HACK, HOLD_LINE);
 }
 
 static MACHINE_RESET( funcube )
 {
-	seta2_state *state = machine->driver_data<seta2_state>();
-	state->funcube_coin_start_cycles = 0;
-	state->funcube_serial_count = 0;
-	state->funcube_press = 0;
-	state->funcube_hopper_motor = 0;
+	seta2_state *state = machine.driver_data<seta2_state>();
+	state->m_funcube_coin_start_cycles = 0;
+	state->m_funcube_serial_count = 0;
+	state->m_funcube_press = 0;
+	state->m_funcube_hopper_motor = 0;
 }
 
 static MACHINE_CONFIG_START( funcube, seta2_state )
@@ -2382,8 +2382,8 @@ ROM_END
 
 static DRIVER_INIT( funcube2 )
 {
-	UINT32 *main_cpu = (UINT32 *) machine->region("maincpu")->base();
-	UINT16 *sub_cpu  = (UINT16 *) machine->region("sub")->base();
+	UINT32 *main_cpu = (UINT32 *) machine.region("maincpu")->base();
+	UINT16 *sub_cpu  = (UINT16 *) machine.region("sub")->base();
 
 	main_cpu[0x810/4] = 0xe0214e71;
 	main_cpu[0x814/4] = 0x4e71203c;
@@ -2399,7 +2399,7 @@ static DRIVER_INIT( funcube2 )
 
     // Audio
     // The first half of the rom appears to be a dupe of the second half with 0xffs destructively interleaved
-	UINT8* oki = (UINT8*) machine->region("oki")->base();
+	UINT8* oki = (UINT8*) machine.region("oki")->base();
     for (int i = 0; i < 0x200000; i++)
     {
         oki[i] = oki[i+0x200000];
@@ -2409,8 +2409,8 @@ static DRIVER_INIT( funcube2 )
 // Note: same as funcube2
 static DRIVER_INIT( funcube4 )
 {
-	UINT32 *main_cpu = (UINT32 *) machine->region("maincpu")->base();
-	UINT16 *sub_cpu  = (UINT16 *) machine->region("sub")->base();
+	UINT32 *main_cpu = (UINT32 *) machine.region("maincpu")->base();
+	UINT16 *sub_cpu  = (UINT16 *) machine.region("sub")->base();
 
 	main_cpu[0x810/4] = 0xe0214e71;
 	main_cpu[0x814/4] = 0x4e71203c;
@@ -2426,7 +2426,7 @@ static DRIVER_INIT( funcube4 )
 
     // Audio
     // The first half of the rom appears to be a dupe of the second half with 0xffs destructively interleaved
-	UINT8* oki = (UINT8*) machine->region("oki")->base();
+	UINT8* oki = (UINT8*) machine.region("oki")->base();
     for (int i = 0; i < 0x200000; i++)
     {
         oki[i] = oki[i+0x200000];

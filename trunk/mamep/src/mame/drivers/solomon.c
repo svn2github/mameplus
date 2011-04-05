@@ -14,7 +14,7 @@ driver by Mirko Buffoni
 static WRITE8_HANDLER( solomon_sh_command_w )
 {
 	soundlatch_w(space, offset, data);
-	cputag_set_input_line(space->machine, "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	cputag_set_input_line(space->machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
 /* this is checked on the title screen and when you reach certain scores in the game
@@ -23,30 +23,30 @@ static WRITE8_HANDLER( solomon_sh_command_w )
 
 static READ8_HANDLER( solomon_0xe603_r )
 {
-	if (cpu_get_pc(space->cpu) == 0x161) // all the time .. return 0 to act as before  for coin / startup etc.
+	if (cpu_get_pc(&space->device()) == 0x161) // all the time .. return 0 to act as before  for coin / startup etc.
 	{
 		return 0;
 	}
-	else if (cpu_get_pc(space->cpu) == 0x4cf0) // stop it clearing the screen at certain scores
+	else if (cpu_get_pc(&space->device()) == 0x4cf0) // stop it clearing the screen at certain scores
 	{
-		return (cpu_get_reg(space->cpu, Z80_BC) & 0x08);
+		return (cpu_get_reg(&space->device(), Z80_BC) & 0x08);
 	}
 	else
 	{
-		mame_printf_debug("unhandled solomon_0xe603_r %04x\n", cpu_get_pc(space->cpu));
+		mame_printf_debug("unhandled solomon_0xe603_r %04x\n", cpu_get_pc(&space->device()));
 		return 0;
 	}
 }
 
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(solomon_colorram_w) AM_BASE_MEMBER(solomon_state, colorram)
-	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(solomon_videoram_w) AM_BASE_MEMBER(solomon_state, videoram)
-	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(solomon_colorram2_w) AM_BASE_MEMBER(solomon_state, colorram2)
-	AM_RANGE(0xdc00, 0xdfff) AM_RAM_WRITE(solomon_videoram2_w) AM_BASE_MEMBER(solomon_state, videoram2)
-	AM_RANGE(0xe000, 0xe07f) AM_RAM AM_BASE_SIZE_MEMBER(solomon_state, spriteram, spriteram_size)
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(solomon_colorram_w) AM_BASE_MEMBER(solomon_state, m_colorram)
+	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(solomon_videoram_w) AM_BASE_MEMBER(solomon_state, m_videoram)
+	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(solomon_colorram2_w) AM_BASE_MEMBER(solomon_state, m_colorram2)
+	AM_RANGE(0xdc00, 0xdfff) AM_RAM_WRITE(solomon_videoram2_w) AM_BASE_MEMBER(solomon_state, m_videoram2)
+	AM_RANGE(0xe000, 0xe07f) AM_RAM AM_BASE_SIZE_MEMBER(solomon_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0xe400, 0xe5ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_le_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0xe600, 0xe600) AM_READ_PORT("P1")
 	AM_RANGE(0xe601, 0xe601) AM_READ_PORT("P2")
@@ -61,14 +61,14 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xf000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x47ff) AM_RAM
 	AM_RANGE(0x8000, 0x8000) AM_READ(soundlatch_r)
 	AM_RANGE(0xffff, 0xffff) AM_WRITENOP	/* watchdog? */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_portmap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( sound_portmap, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x10, 0x11) AM_DEVWRITE("ay1", ay8910_address_data_w)
 	AM_RANGE(0x20, 0x21) AM_DEVWRITE("ay2", ay8910_address_data_w)

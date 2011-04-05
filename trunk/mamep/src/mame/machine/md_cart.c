@@ -193,13 +193,13 @@ static int md_get_pcb_id(const char *pcb)
  *************************************/
 static WRITE16_HANDLER( genesis_ssf2_bank_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 
-	if ((state->md_cart.ssf2_lastoff != offset) || (state->md_cart.ssf2_lastdata != data))
+	if ((state->m_md_cart.ssf2_lastoff != offset) || (state->m_md_cart.ssf2_lastdata != data))
 	{
-		state->md_cart.ssf2_lastoff = offset;
-		state->md_cart.ssf2_lastdata = data;
+		state->m_md_cart.ssf2_lastoff = offset;
+		state->m_md_cart.ssf2_lastdata = data;
 		switch (offset << 1)
 		{
 			case 0x00: /* write protect register */ // this is not a write protect, but seems to do nothing useful but reset bank0 after the checksum test (red screen otherwise)
@@ -240,20 +240,20 @@ static WRITE16_HANDLER( genesis_ssf2_bank_w )
 #ifdef UNUSED_FUNCTION
 static WRITE16_HANDLER( l3alt_pdat_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	state->md_cart.l3alt_pdat = data;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	state->m_md_cart.l3alt_pdat = data;
 }
 
 static WRITE16_HANDLER( l3alt_pcmd_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	state->md_cart.l3alt_pcmd = data;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	state->m_md_cart.l3alt_pcmd = data;
 }
 #endif
 
 static READ16_HANDLER( l3alt_prot_r )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
 	int retdata = 0;
 
 	offset &= 0x07;
@@ -263,27 +263,27 @@ static READ16_HANDLER( l3alt_prot_r )
 
 		case 2:
 
-			switch (state->md_cart.l3alt_pcmd)
+			switch (state->m_md_cart.l3alt_pcmd)
 			{
 				case 1:
-					retdata = state->md_cart.l3alt_pdat >> 1;
+					retdata = state->m_md_cart.l3alt_pdat >> 1;
 					break;
 
 				case 2:
-					retdata = state->md_cart.l3alt_pdat >> 4;
-					retdata |= (state->md_cart.l3alt_pdat & 0x0f) << 4;
+					retdata = state->m_md_cart.l3alt_pdat >> 4;
+					retdata |= (state->m_md_cart.l3alt_pdat & 0x0f) << 4;
 					break;
 
 				default:
 					/* printf("unk prot case %d\n", l3alt_pcmd); */
-					retdata =  (BIT(state->md_cart.l3alt_pdat, 7) << 0);
-					retdata |= (BIT(state->md_cart.l3alt_pdat, 6) << 1);
-					retdata |= (BIT(state->md_cart.l3alt_pdat, 5) << 2);
-					retdata |= (BIT(state->md_cart.l3alt_pdat, 4) << 3);
-					retdata |= (BIT(state->md_cart.l3alt_pdat, 3) << 4);
-					retdata |= (BIT(state->md_cart.l3alt_pdat, 2) << 5);
-					retdata |= (BIT(state->md_cart.l3alt_pdat, 1) << 6);
-					retdata |= (BIT(state->md_cart.l3alt_pdat, 0) << 7);
+					retdata =  (BIT(state->m_md_cart.l3alt_pdat, 7) << 0);
+					retdata |= (BIT(state->m_md_cart.l3alt_pdat, 6) << 1);
+					retdata |= (BIT(state->m_md_cart.l3alt_pdat, 5) << 2);
+					retdata |= (BIT(state->m_md_cart.l3alt_pdat, 4) << 3);
+					retdata |= (BIT(state->m_md_cart.l3alt_pdat, 3) << 4);
+					retdata |= (BIT(state->m_md_cart.l3alt_pdat, 2) << 5);
+					retdata |= (BIT(state->m_md_cart.l3alt_pdat, 1) << 6);
+					retdata |= (BIT(state->m_md_cart.l3alt_pdat, 0) << 7);
 					break;
 			}
 			break;
@@ -300,16 +300,16 @@ static READ16_HANDLER( l3alt_prot_r )
 
 static WRITE16_HANDLER( l3alt_prot_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
 	offset &= 0x7;
 
 	switch (offset)
 	{
 		case 0x0:
-			state->md_cart.l3alt_pdat = data;
+			state->m_md_cart.l3alt_pdat = data;
 			break;
 		case 0x1:
-			state->md_cart.l3alt_pcmd = data;
+			state->m_md_cart.l3alt_pcmd = data;
 			break;
 		default:
 			logerror("protection write, unknown offst\n");
@@ -325,7 +325,7 @@ static WRITE16_HANDLER( l3alt_bank_w )
 	{
 		case 0:
 		{
-			UINT8 *ROM = space->machine->region("maincpu")->base();
+			UINT8 *ROM = space->machine().region("maincpu")->base();
 			/* printf("%06x data %04x\n",activecpu_get_pc(), data); */
 			memcpy(&ROM[0x000000], &ROM[VIRGIN_COPY_GEN + (data & 0xffff) * 0x8000], 0x8000);
 		}
@@ -345,38 +345,38 @@ static WRITE16_HANDLER( l3alt_bank_w )
  *************************************/
 static WRITE16_HANDLER( realtec_402000_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	state->md_cart.realtec_bank_addr = 0;
-	state->md_cart.realtec_bank_size = (data >> 8) & 0x1f;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	state->m_md_cart.realtec_bank_addr = 0;
+	state->m_md_cart.realtec_bank_size = (data >> 8) & 0x1f;
 }
 
 static WRITE16_HANDLER( realtec_400000_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
 	int bankdata = (data >> 9) & 0x7;
 
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 
-	state->md_cart.realtec_old_bank_addr = state->md_cart.realtec_bank_addr;
-	state->md_cart.realtec_bank_addr = (state->md_cart.realtec_bank_addr & 0x7) | bankdata << 3;
+	state->m_md_cart.realtec_old_bank_addr = state->m_md_cart.realtec_bank_addr;
+	state->m_md_cart.realtec_bank_addr = (state->m_md_cart.realtec_bank_addr & 0x7) | bankdata << 3;
 
-	memcpy(ROM, ROM + (state->md_cart.realtec_bank_addr * 0x20000) + 0x400000, state->md_cart.realtec_bank_size * 0x20000);
-	memcpy(ROM + state->md_cart.realtec_bank_size * 0x20000, ROM + (state->md_cart.realtec_bank_addr * 0x20000) + 0x400000, state->md_cart.realtec_bank_size * 0x20000);
+	memcpy(ROM, ROM + (state->m_md_cart.realtec_bank_addr * 0x20000) + 0x400000, state->m_md_cart.realtec_bank_size * 0x20000);
+	memcpy(ROM + state->m_md_cart.realtec_bank_size * 0x20000, ROM + (state->m_md_cart.realtec_bank_addr * 0x20000) + 0x400000, state->m_md_cart.realtec_bank_size * 0x20000);
 }
 
 static WRITE16_HANDLER( realtec_404000_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
 	int bankdata = (data >> 8) & 0x3;
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 
-	state->md_cart.realtec_old_bank_addr = state->md_cart.realtec_bank_addr;
-	state->md_cart.realtec_bank_addr = (state->md_cart.realtec_bank_addr & 0xf8) | bankdata;
+	state->m_md_cart.realtec_old_bank_addr = state->m_md_cart.realtec_bank_addr;
+	state->m_md_cart.realtec_bank_addr = (state->m_md_cart.realtec_bank_addr & 0xf8) | bankdata;
 
-	if (state->md_cart.realtec_old_bank_addr != state->md_cart.realtec_bank_addr)
+	if (state->m_md_cart.realtec_old_bank_addr != state->m_md_cart.realtec_bank_addr)
 	{
-		memcpy(ROM, ROM + (state->md_cart.realtec_bank_addr * 0x20000)+ 0x400000, state->md_cart.realtec_bank_size * 0x20000);
-		memcpy(ROM + state->md_cart.realtec_bank_size * 0x20000, ROM + (state->md_cart.realtec_bank_addr * 0x20000) + 0x400000, state->md_cart.realtec_bank_size * 0x20000);
+		memcpy(ROM, ROM + (state->m_md_cart.realtec_bank_addr * 0x20000)+ 0x400000, state->m_md_cart.realtec_bank_size * 0x20000);
+		memcpy(ROM + state->m_md_cart.realtec_bank_size * 0x20000, ROM + (state->m_md_cart.realtec_bank_addr * 0x20000) + 0x400000, state->m_md_cart.realtec_bank_size * 0x20000);
 	}
 }
 
@@ -385,7 +385,7 @@ static WRITE16_HANDLER( realtec_404000_w )
  *************************************/
 static WRITE16_HANDLER( chifi3_bank_w )
 {
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 
 	if (data == 0xf100) // *hit player
 	{
@@ -421,7 +421,7 @@ static WRITE16_HANDLER( chifi3_bank_w )
 	}
 	else
 	{
-		logerror("%06x chifi3, bankw? %04x %04x\n", cpu_get_pc(space->cpu), offset, data);
+		logerror("%06x chifi3, bankw? %04x %04x\n", cpu_get_pc(&space->device()), offset, data);
 	}
 
 }
@@ -438,47 +438,47 @@ static READ16_HANDLER( chifi3_prot_r )
     04cefa chifi3, prot_r? 65262
     */
 
-	if (cpu_get_pc(space->cpu) == 0x01782) // makes 'VS' screen appear
+	if (cpu_get_pc(&space->device()) == 0x01782) // makes 'VS' screen appear
 	{
-		retdat = cpu_get_reg(space->cpu, M68K_D3) & 0xff;
+		retdat = cpu_get_reg(&space->device(), M68K_D3) & 0xff;
 		retdat <<= 8;
 		return retdat;
 	}
-	else if (cpu_get_pc(space->cpu) == 0x1c24) // background gfx etc.
+	else if (cpu_get_pc(&space->device()) == 0x1c24) // background gfx etc.
 	{
-		retdat = cpu_get_reg(space->cpu, M68K_D3) & 0xff;
+		retdat = cpu_get_reg(&space->device(), M68K_D3) & 0xff;
 		retdat <<= 8;
 		return retdat;
 	}
-	else if (cpu_get_pc(space->cpu) == 0x10c4a) // unknown
+	else if (cpu_get_pc(&space->device()) == 0x10c4a) // unknown
 	{
-		return space->machine->rand();
+		return space->machine().rand();
 	}
-	else if (cpu_get_pc(space->cpu) == 0x10c50) // unknown
+	else if (cpu_get_pc(&space->device()) == 0x10c50) // unknown
 	{
-		return space->machine->rand();
+		return space->machine().rand();
 	}
-	else if (cpu_get_pc(space->cpu) == 0x10c52) // relates to the game speed..
+	else if (cpu_get_pc(&space->device()) == 0x10c52) // relates to the game speed..
 	{
-		retdat = cpu_get_reg(space->cpu, M68K_D4) & 0xff;
+		retdat = cpu_get_reg(&space->device(), M68K_D4) & 0xff;
 		retdat <<= 8;
 		return retdat;
 	}
-	else if (cpu_get_pc(space->cpu) == 0x061ae)
+	else if (cpu_get_pc(&space->device()) == 0x061ae)
 	{
-		retdat = cpu_get_reg(space->cpu, M68K_D3) & 0xff;
+		retdat = cpu_get_reg(&space->device(), M68K_D3) & 0xff;
 		retdat <<= 8;
 		return retdat;
 	}
-	else if (cpu_get_pc(space->cpu) == 0x061b0)
+	else if (cpu_get_pc(&space->device()) == 0x061b0)
 	{
-		retdat = cpu_get_reg(space->cpu, M68K_D3) & 0xff;
+		retdat = cpu_get_reg(&space->device(), M68K_D3) & 0xff;
 		retdat <<= 8;
 		return retdat;
 	}
 	else
 	{
-		logerror("%06x chifi3, prot_r? %04x\n", cpu_get_pc(space->cpu), offset);
+		logerror("%06x chifi3, prot_r? %04x\n", cpu_get_pc(&space->device()), offset);
 	}
 
 	return 0;
@@ -489,7 +489,7 @@ static READ16_HANDLER( chifi3_prot_r )
  *************************************/
 static WRITE16_HANDLER( s19in1_bank )
 {
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 	memcpy(ROM + 0x000000, ROM + 0x400000 + ((offset << 1) * 0x10000), 0x80000);
 }
 
@@ -498,7 +498,7 @@ static WRITE16_HANDLER( s19in1_bank )
  *************************************/
 static WRITE16_HANDLER( kaiju_bank_w )
 {
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 	memcpy(ROM + 0x000000, ROM + 0x400000 + (data & 0x7f) * 0x8000, 0x8000);
 }
 
@@ -507,20 +507,20 @@ static WRITE16_HANDLER( kaiju_bank_w )
  *************************************/
 static READ16_HANDLER( soulb_400006_r )
 {
-//  printf("%06x soulb_400006_r\n",cpu_get_pc(space->cpu));
+//  printf("%06x soulb_400006_r\n",cpu_get_pc(&space->device()));
 	return 0xf000;
 }
 
 static READ16_HANDLER( soulb_400002_r )
 {
-//  printf("%06x soulb_400002_r\n",cpu_get_pc(space->cpu));
+//  printf("%06x soulb_400002_r\n",cpu_get_pc(&space->device()));
 	return 0x9800;
 }
 
 static READ16_HANDLER( soulb_400004_r )
 {
 //  return 0x9800;
-//  printf("%06x soulb_400004_r\n",cpu_get_pc(space->cpu));
+//  printf("%06x soulb_400004_r\n",cpu_get_pc(&space->device()));
 //
 	return 0xc900;
 //aa
@@ -605,7 +605,7 @@ static READ16_HANDLER( kof99_A13000_r )
 static READ16_HANDLER( radica_bank_select )
 {
 	int bank = offset & 0x3f;
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 	memcpy(ROM, ROM + 0x400000 + (bank * 0x10000), 0x400000);
 	return 0;
 }
@@ -628,14 +628,14 @@ static READ16_HANDLER( redclif_prot2_r )
  *************************************/
 static READ16_HANDLER( squirrel_king_extra_r )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	return state->md_cart.squirrel_king_extra;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	return state->m_md_cart.squirrel_king_extra;
 }
 
 static WRITE16_HANDLER( squirrel_king_extra_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	state->md_cart.squirrel_king_extra = data;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	state->m_md_cart.squirrel_king_extra = data;
 }
 
 /*************************************
@@ -643,26 +643,26 @@ static WRITE16_HANDLER( squirrel_king_extra_w )
  *************************************/
 static READ16_HANDLER( lion2_prot1_r )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	return state->md_cart.lion2_prot1_data;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	return state->m_md_cart.lion2_prot1_data;
 }
 
 static READ16_HANDLER( lion2_prot2_r )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	return state->md_cart.lion2_prot2_data;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	return state->m_md_cart.lion2_prot2_data;
 }
 
 static WRITE16_HANDLER ( lion2_prot1_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	state->md_cart.lion2_prot1_data = data;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	state->m_md_cart.lion2_prot1_data = data;
 }
 
 static WRITE16_HANDLER ( lion2_prot2_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	state->md_cart.lion2_prot2_data = data;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	state->m_md_cart.lion2_prot2_data = data;
 }
 
 /*************************************
@@ -745,11 +745,11 @@ static READ16_HANDLER( topfig_6BD294_r ) /* colours on title screen */
      cpu #0 (PC=001771A2): unmapped program memory word read from 006BD294 & 00FF
      */
 
-	if (cpu_get_pc(space->cpu)==0x1771a2) return 0x50;
+	if (cpu_get_pc(&space->device())==0x1771a2) return 0x50;
 	else
 	{
 		x++;
-		logerror("%06x topfig_6BD294_r %04x\n",cpu_get_pc(space->cpu), x);
+		logerror("%06x topfig_6BD294_r %04x\n",cpu_get_pc(&space->device()), x);
 		return x;
 	}
 }
@@ -758,25 +758,25 @@ static READ16_HANDLER( topfig_6F5344_r ) // after char select
 {
 	static int x = -1;
 
-	if (cpu_get_pc(space->cpu)==0x4C94E)
+	if (cpu_get_pc(&space->device())==0x4C94E)
 	{
-		return cpu_get_reg(space->machine->device("maincpu"), (M68K_D0)) & 0xff;
+		return cpu_get_reg(space->machine().device("maincpu"), (M68K_D0)) & 0xff;
 	}
 	else
 	{
 		x++;
-		logerror("%06x topfig_6F5344_r %04x\n",cpu_get_pc(space->cpu), x);
+		logerror("%06x topfig_6F5344_r %04x\n",cpu_get_pc(&space->device()), x);
 		return x;
 	}
 }
 
 static WRITE16_HANDLER( topfig_bank_w )
 {
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 	if (data == 0x002a)
 	{
 		memcpy(ROM + 0x060000, ROM + 0x570000, 0x8000); // == 0x2e*0x8000?!
-		//  printf("%06x offset %06x, data %04x\n",cpu_get_pc(space->cpu), offset, data);
+		//  printf("%06x offset %06x, data %04x\n",cpu_get_pc(&space->device()), offset, data);
 
 	}
 	else if (data==0x0035) // characters ingame
@@ -792,11 +792,11 @@ static WRITE16_HANDLER( topfig_bank_w )
 		memcpy(ROM + 0x060000, ROM + 0x460000, 0x8000);
 		memcpy(ROM + 0x020000, ROM + 0x420000, 0x8000);
 		memcpy(ROM + 0x058000, ROM + 0x458000, 0x8000);
-		//  printf("%06x offset %06x, data %04x\n",cpu_get_pc(space->cpu), offset, data);
+		//  printf("%06x offset %06x, data %04x\n",cpu_get_pc(&space->device()), offset, data);
 	}
 	else
 	{
-		logerror("%06x offset %06x, data %04x\n", cpu_get_pc(space->cpu), offset, data);
+		logerror("%06x offset %06x, data %04x\n", cpu_get_pc(&space->device()), offset, data);
 	}
 
 }
@@ -819,7 +819,7 @@ static READ16_HANDLER( topfig_645B44_r )
  *************************************/
 static WRITE16_HANDLER( mc_12in1_bank_w )
 {
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 	logerror("offset %06x", offset << 17);
 	memcpy(ROM + 0x000000, ROM + VIRGIN_COPY_GEN + ((offset & 0x3f) << 17), 0x100000);
 }
@@ -846,16 +846,16 @@ static WRITE16_HANDLER( genesis_TMSS_bank_w )
  *************************************/
 static READ16_HANDLER( genesis_sram_read )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
 	UINT8 *ROM;
 	int rom_offset;
 
-	if (state->md_cart.sram_active)
-		return state->md_cart.sram[offset];
+	if (state->m_md_cart.sram_active)
+		return state->m_md_cart.sram[offset];
 	else
 	{
-		ROM = space->machine->region("maincpu")->base();
-		rom_offset = state->md_cart.sram_start + (offset << 1);
+		ROM = space->machine().region("maincpu")->base();
+		rom_offset = state->m_md_cart.sram_start + (offset << 1);
 
 		return (UINT16) ROM[rom_offset] | (ROM[rom_offset + 1] << 8);
 	}
@@ -863,57 +863,57 @@ static READ16_HANDLER( genesis_sram_read )
 
 static WRITE16_HANDLER( genesis_sram_write )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	if (state->md_cart.sram_active)
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	if (state->m_md_cart.sram_active)
 	{
-		if (!state->md_cart.sram_readonly)
-			state->md_cart.sram[offset] = data;
+		if (!state->m_md_cart.sram_readonly)
+			state->m_md_cart.sram[offset] = data;
 	}
 }
 
-static void install_sram_rw_handlers(running_machine *machine, bool mask_addr)
+static void install_sram_rw_handlers(running_machine &machine, bool mask_addr)
 {
-	md_cons_state *state = machine->driver_data<md_cons_state>();
-	device_image_interface *image = dynamic_cast<device_image_interface *>(machine->device("cart"));
+	md_cons_state *state = machine.driver_data<md_cons_state>();
+	device_image_interface *image = dynamic_cast<device_image_interface *>(machine.device("cart"));
 	// if sram_start/end come from the cart header, they might be incorrect! from softlist, they are fine.
 	UINT32 mask = mask_addr ? 0x3fffff : 0xffffff;
 
-	mame_printf_debug("Allocing %d bytes for sram\n", state->md_cart.sram_end - state->md_cart.sram_start + 1);
-	state->md_cart.sram = auto_alloc_array(machine, UINT16, (state->md_cart.sram_end - state->md_cart.sram_start + 1) / sizeof(UINT16));
-	image->battery_load(state->md_cart.sram, state->md_cart.sram_end - state->md_cart.sram_start + 1, 0xff); // Dino Dini's Soccer needs backup RAM to be 1fill
-	memcpy(megadriv_backupram, state->md_cart.sram, state->md_cart.sram_end - state->md_cart.sram_start + 1);
+	mame_printf_debug("Allocing %d bytes for sram\n", state->m_md_cart.sram_end - state->m_md_cart.sram_start + 1);
+	state->m_md_cart.sram = auto_alloc_array(machine, UINT16, (state->m_md_cart.sram_end - state->m_md_cart.sram_start + 1) / sizeof(UINT16));
+	image->battery_load(state->m_md_cart.sram, state->m_md_cart.sram_end - state->m_md_cart.sram_start + 1, 0xff); // Dino Dini's Soccer needs backup RAM to be 1fill
+	memcpy(megadriv_backupram, state->m_md_cart.sram, state->m_md_cart.sram_end - state->m_md_cart.sram_start + 1);
 
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), state->md_cart.sram_start & mask, state->md_cart.sram_end & mask, 0, 0, genesis_sram_read);
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), state->md_cart.sram_start & mask, state->md_cart.sram_end & mask, 0, 0, genesis_sram_write);
-	state->md_cart.sram_handlers_installed = 1;
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(state->m_md_cart.sram_start & mask, state->m_md_cart.sram_end & mask, FUNC(genesis_sram_read));
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(state->m_md_cart.sram_start & mask, state->m_md_cart.sram_end & mask, FUNC(genesis_sram_write));
+	state->m_md_cart.sram_handlers_installed = 1;
 }
 
 static WRITE16_HANDLER( genesis_sram_toggle )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
 
 	/* unsure if this is actually supposed to toggle or just switch on?
     Yet to encounter game that utilizes */
-	state->md_cart.sram_active = (data & 1) ? 1 : 0;
-	state->md_cart.sram_readonly = (data & 2) ? 1 : 0;
+	state->m_md_cart.sram_active = (data & 1) ? 1 : 0;
+	state->m_md_cart.sram_readonly = (data & 2) ? 1 : 0;
 
-	if (state->md_cart.sram_active && !state->md_cart.sram_handlers_installed)
-		install_sram_rw_handlers(space->machine, TRUE);
+	if (state->m_md_cart.sram_active && !state->m_md_cart.sram_handlers_installed)
+		install_sram_rw_handlers(space->machine(), TRUE);
 }
 
 static READ16_HANDLER( sega_6658a_reg_r )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	return state->md_cart.sram_active;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	return state->m_md_cart.sram_active;
 }
 
 static WRITE16_HANDLER( sega_6658a_reg_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
 	if (data == 1)
-		state->md_cart.sram_active = 1;
+		state->m_md_cart.sram_active = 1;
 	if (data == 0)
-		state->md_cart.sram_active = 0;
+		state->m_md_cart.sram_active = 0;
 }
 
 /*************************************
@@ -924,88 +924,88 @@ static WRITE16_HANDLER( sega_6658a_reg_w )
 
 static READ16_HANDLER( nba_jam_eeprom_r )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-//  state->md_cart.i2c_mem = (i2cmem_sda_read(space->machine->device("i2cmem")) & 1);
-	return state->md_cart.i2c_mem & 1;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+//  state->m_md_cart.i2c_mem = (i2cmem_sda_read(space->machine().device("i2cmem")) & 1);
+	return state->m_md_cart.i2c_mem & 1;
 }
 
 static WRITE16_HANDLER( nba_jam_eeprom_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	state->md_cart.i2c_clk = (data & 0x0002) >> 1;
-	state->md_cart.i2c_mem = (data & 0x0001);
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	state->m_md_cart.i2c_clk = (data & 0x0002) >> 1;
+	state->m_md_cart.i2c_mem = (data & 0x0001);
 
-//  i2cmem_sda_write(space->machine->device("i2cmem"), state->md_cart.i2c_clk);
-//  i2cmem_scl_write(space->machine->device("i2cmem"), state->md_cart.i2c_mem);
+//  i2cmem_sda_write(space->machine().device("i2cmem"), state->m_md_cart.i2c_clk);
+//  i2cmem_scl_write(space->machine().device("i2cmem"), state->m_md_cart.i2c_mem);
 }
 
 static READ16_HANDLER( nba_jam_te_eeprom_r )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-//  state->md_cart.i2c_mem = (i2cmem_sda_read(space->machine->device("i2cmem")) & 1);
-	return (state->md_cart.i2c_mem & 1);
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+//  state->m_md_cart.i2c_mem = (i2cmem_sda_read(space->machine().device("i2cmem")) & 1);
+	return (state->m_md_cart.i2c_mem & 1);
 }
 
 static WRITE16_HANDLER( nba_jam_te_eeprom_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	state->md_cart.i2c_clk = ((data & 0x0100) >> 8);
-	state->md_cart.i2c_mem = data & 0x0001;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	state->m_md_cart.i2c_clk = ((data & 0x0100) >> 8);
+	state->m_md_cart.i2c_mem = data & 0x0001;
 
-//  i2cmem_sda_write(space->machine->device("i2cmem"), state->md_cart.i2c_clk);
-//  i2cmem_scl_write(space->machine->device("i2cmem"), state->md_cart.i2c_mem);
+//  i2cmem_sda_write(space->machine().device("i2cmem"), state->m_md_cart.i2c_clk);
+//  i2cmem_scl_write(space->machine().device("i2cmem"), state->m_md_cart.i2c_mem);
 }
 
 static READ16_HANDLER( ea_nhlpa_eeprom_r )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-//  state->md_cart.i2c_mem = (i2cmem_sda_read(space->machine->device("i2cmem")) & 1);
-	return (state->md_cart.i2c_mem & 1) << 7;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+//  state->m_md_cart.i2c_mem = (i2cmem_sda_read(space->machine().device("i2cmem")) & 1);
+	return (state->m_md_cart.i2c_mem & 1) << 7;
 }
 
 static WRITE16_HANDLER( ea_nhlpa_eeprom_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	state->md_cart.i2c_clk = ((data & 0x0040) >> 6);
-	state->md_cart.i2c_mem = ((data & 0x0080) >> 7);
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	state->m_md_cart.i2c_clk = ((data & 0x0040) >> 6);
+	state->m_md_cart.i2c_mem = ((data & 0x0080) >> 7);
 
-//  i2cmem_sda_write(space->machine->device("i2cmem"), state->md_cart.i2c_clk);
-//  i2cmem_scl_write(space->machine->device("i2cmem"), state->md_cart.i2c_mem);
+//  i2cmem_sda_write(space->machine().device("i2cmem"), state->m_md_cart.i2c_clk);
+//  i2cmem_scl_write(space->machine().device("i2cmem"), state->m_md_cart.i2c_mem);
 }
 
 /* TODO: identical as NBA Jam, used as kludge */
 static READ16_HANDLER( wboy_v_eeprom_r )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-//  state->md_cart.i2c_mem = (i2cmem_sda_read(space->machine->device("i2cmem")) & 1);
-	return ~state->md_cart.i2c_mem & 1;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+//  state->m_md_cart.i2c_mem = (i2cmem_sda_read(space->machine().device("i2cmem")) & 1);
+	return ~state->m_md_cart.i2c_mem & 1;
 }
 
 static WRITE16_HANDLER( wboy_v_eeprom_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	state->md_cart.i2c_clk = (data & 0x0002) >> 1;
-	state->md_cart.i2c_mem = (data & 0x0001);
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	state->m_md_cart.i2c_clk = (data & 0x0002) >> 1;
+	state->m_md_cart.i2c_mem = (data & 0x0001);
 
-//  i2cmem_sda_write(space->machine->device("i2cmem"), state->md_cart.i2c_clk);
-//  i2cmem_scl_write(space->machine->device("i2cmem"), state->md_cart.i2c_mem);
+//  i2cmem_sda_write(space->machine().device("i2cmem"), state->m_md_cart.i2c_clk);
+//  i2cmem_scl_write(space->machine().device("i2cmem"), state->m_md_cart.i2c_mem);
 }
 
 static READ16_HANDLER( codemasters_eeprom_r )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-//  state->md_cart.i2c_mem = (i2cmem_sda_read(space->machine->device("i2cmem")) & 1);
-	return (state->md_cart.i2c_mem & 1) << 7;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+//  state->m_md_cart.i2c_mem = (i2cmem_sda_read(space->machine().device("i2cmem")) & 1);
+	return (state->m_md_cart.i2c_mem & 1) << 7;
 }
 
 static WRITE16_HANDLER( codemasters_eeprom_w )
 {
-	md_cons_state *state = space->machine->driver_data<md_cons_state>();
-	state->md_cart.i2c_clk = (data & 0x0200) >> 9;
-	state->md_cart.i2c_mem = (data & 0x0100) >> 8;
+	md_cons_state *state = space->machine().driver_data<md_cons_state>();
+	state->m_md_cart.i2c_clk = (data & 0x0200) >> 9;
+	state->m_md_cart.i2c_mem = (data & 0x0100) >> 8;
 
-//  i2cmem_sda_write(space->machine->device("i2cmem"), state->md_cart.i2c_clk);
-//  i2cmem_scl_write(space->machine->device("i2cmem"), state->md_cart.i2c_mem);
+//  i2cmem_sda_write(space->machine().device("i2cmem"), state->m_md_cart.i2c_clk);
+//  i2cmem_scl_write(space->machine().device("i2cmem"), state->m_md_cart.i2c_mem);
 }
 
 /*************************************
@@ -1014,19 +1014,19 @@ static WRITE16_HANDLER( codemasters_eeprom_w )
  *
  *************************************/
 
-static void setup_megadriv_custom_mappers(running_machine *machine)
+static void setup_megadriv_custom_mappers(running_machine &machine)
 {
-	md_cons_state *state = machine->driver_data<md_cons_state>();
+	md_cons_state *state = machine.driver_data<md_cons_state>();
 	UINT32 mirroraddr;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
-	switch (state->md_cart.type)
+	switch (state->m_md_cart.type)
 	{
 		case CM_JCART:
 		case CM_JCART_SEPROM:
 			/* Codemasters PCB (J-Carts) */
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x38fffe, 0x38ffff, 0, 0, jcart_ctrl_r);
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x38fffe, 0x38ffff, 0, 0, jcart_ctrl_w);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x38fffe, 0x38ffff, FUNC(jcart_ctrl_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x38fffe, 0x38ffff, FUNC(jcart_ctrl_w));
 			break;
 
 		case SSF2:
@@ -1034,32 +1034,32 @@ static void setup_megadriv_custom_mappers(running_machine *machine)
 			memcpy(&ROM[0x400000], &ROM[VIRGIN_COPY_GEN], 0x400000);
 			memcpy(&ROM[0x000000], &ROM[VIRGIN_COPY_GEN], 0x400000);
 
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa130f0, 0xa130ff, 0, 0, genesis_ssf2_bank_w);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xa130f0, 0xa130ff, FUNC(genesis_ssf2_bank_w));
 			break;
 
 		case LIONK3:
 		case SKINGKONG:
-			state->md_cart.l3alt_pdat = state->md_cart.l3alt_pcmd = 0;
+			state->m_md_cart.l3alt_pdat = state->m_md_cart.l3alt_pcmd = 0;
 			memcpy(&ROM[0x000000], &ROM[VIRGIN_COPY_GEN], 0x200000); /* default rom */
 			memcpy(&ROM[0x200000], &ROM[VIRGIN_COPY_GEN], 0x200000); /* default rom */
 
-			memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x600000, 0x6fffff, 0, 0, l3alt_prot_r, l3alt_prot_w);
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x7fffff, 0, 0, l3alt_bank_w);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x600000, 0x6fffff, FUNC(l3alt_prot_r), FUNC(l3alt_prot_w));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x700000, 0x7fffff, FUNC(l3alt_bank_w));
 			break;
 
 		case SDK99:
-			state->md_cart.l3alt_pdat = state->md_cart.l3alt_pcmd = 0;
+			state->m_md_cart.l3alt_pdat = state->m_md_cart.l3alt_pcmd = 0;
 
 			memcpy(&ROM[0x000000], &ROM[VIRGIN_COPY_GEN], 0x300000); /* default rom */
 			memcpy(&ROM[0x300000], &ROM[VIRGIN_COPY_GEN], 0x100000); /* default rom */
 
-			memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x600000, 0x6fffff, 0, 0, l3alt_prot_r, l3alt_prot_w);
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x7fffff, 0, 0, l3alt_bank_w);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x600000, 0x6fffff, FUNC(l3alt_prot_r), FUNC(l3alt_prot_w));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x700000, 0x7fffff, FUNC(l3alt_bank_w));
 			break;
 
 		case REDCLIFF:
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400001, 0, 0, redclif_prot2_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400004, 0x400005, 0, 0, redclif_prot_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400000, 0x400001, FUNC(redclif_prot2_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400004, 0x400005, FUNC(redclif_prot_r));
 			break;
 
 		case REDCL_EN:
@@ -1067,8 +1067,8 @@ static void setup_megadriv_custom_mappers(running_machine *machine)
 				ROM[x] ^= 0x40;
 			memcpy(&ROM[0x000000], &ROM[VIRGIN_COPY_GEN + 4], 0x200000); /* default rom */
 
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400001, 0, 0, redclif_prot2_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400004, 0x400005, 0, 0, redclif_prot_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400000, 0x400001, FUNC(redclif_prot2_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400004, 0x400005, FUNC(redclif_prot_r));
 			break;
 
 		case RADICA:
@@ -1076,43 +1076,43 @@ static void setup_megadriv_custom_mappers(running_machine *machine)
 			memcpy(&ROM[0x400000], &ROM[VIRGIN_COPY_GEN], 0x400000); // keep a copy for later banking.. making use of huge ROM_REGION allocated to genesis driver
 			memcpy(&ROM[0x800000], &ROM[VIRGIN_COPY_GEN], 0x400000); // wraparound banking (from hazemd code)
 
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa13000, 0xa1307f, 0, 0, radica_bank_select);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xa13000, 0xa1307f, FUNC(radica_bank_select));
 			break;
 
 		case KOF99:
 			//memcpy(&ROM[0x000000],&ROM[VIRGIN_COPY_GEN],0x300000);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa13000, 0xa13001, 0, 0, kof99_A13000_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa13002, 0xa13003, 0, 0, kof99_A13002_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa1303e, 0xa1303f, 0, 0, kof99_00A1303E_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xa13000, 0xa13001, FUNC(kof99_A13000_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xa13002, 0xa13003, FUNC(kof99_A13002_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xa1303e, 0xa1303f, FUNC(kof99_00A1303E_r));
 			break;
 
 		case SOULBLAD:
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400002, 0x400003, 0, 0, soulb_400002_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400004, 0x400005, 0, 0, soulb_400004_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400006, 0x400007, 0, 0, soulb_400006_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400002, 0x400003, FUNC(soulb_400002_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400004, 0x400005, FUNC(soulb_400004_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400006, 0x400007, FUNC(soulb_400006_r));
 			break;
 
 		case MJLOVER:
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400001, 0, 0, mjlovr_prot_1_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x401000, 0x401001, 0, 0, mjlovr_prot_2_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400000, 0x400001, FUNC(mjlovr_prot_1_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x401000, 0x401001, FUNC(mjlovr_prot_2_r));
 			break;
 
 		case SQUIRRELK:
-			state->md_cart.squirrel_king_extra = 0;
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400007, 0, 0, squirrel_king_extra_r);
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400007, 0, 0, squirrel_king_extra_w);
+			state->m_md_cart.squirrel_king_extra = 0;
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400000, 0x400007, FUNC(squirrel_king_extra_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x400000, 0x400007, FUNC(squirrel_king_extra_w));
 			break;
 
 		case SMOUSE:
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400007, 0, 0, smous_prot_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400000, 0x400007, FUNC(smous_prot_r));
 			break;
 
 		case SMB:
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa13000, 0xa13001, 0, 0, smbro_prot_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xa13000, 0xa13001, FUNC(smbro_prot_r));
 			break;
 
 		case SMB2:
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa13000, 0xa13001, 0, 0, smb2_extra_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xa13000, 0xa13001, FUNC(smb2_extra_r));
 			break;
 
 		case KAIJU:
@@ -1120,7 +1120,7 @@ static void setup_megadriv_custom_mappers(running_machine *machine)
 			memcpy(&ROM[0x600000], &ROM[VIRGIN_COPY_GEN], 0x200000);
 			memcpy(&ROM[0x000000], &ROM[VIRGIN_COPY_GEN], 0x200000);
 
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x7fffff, 0, 0, kaiju_bank_w);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x700000, 0x7fffff, FUNC(kaiju_bank_w));
 			break;
 
 		case CHINFIGHT3:
@@ -1128,98 +1128,98 @@ static void setup_megadriv_custom_mappers(running_machine *machine)
 			memcpy(&ROM[0x600000], &ROM[VIRGIN_COPY_GEN], 0x200000);
 			memcpy(&ROM[0x000000], &ROM[VIRGIN_COPY_GEN], 0x200000);
 
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x4fffff, 0, 0, chifi3_prot_r);
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x600000, 0x6fffff, 0, 0, chifi3_bank_w);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400000, 0x4fffff, FUNC(chifi3_prot_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x600000, 0x6fffff, FUNC(chifi3_bank_w));
 			break;
 
 		case LIONK2:
-			state->md_cart.lion2_prot1_data = state->md_cart.lion2_prot2_data = 0;
+			state->m_md_cart.lion2_prot1_data = state->m_md_cart.lion2_prot2_data = 0;
 
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400002, 0x400003, 0, 0, lion2_prot1_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400006, 0x400007, 0, 0, lion2_prot2_r);
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400001, 0, 0, lion2_prot1_w);
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400004, 0x400005, 0, 0, lion2_prot2_w);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400002, 0x400003, FUNC(lion2_prot1_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400006, 0x400007, FUNC(lion2_prot2_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x400000, 0x400001, FUNC(lion2_prot1_w));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x400004, 0x400005, FUNC(lion2_prot2_w));
 			break;
 
 		case BUGSLIFE:
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa13000, 0xa13001, 0, 0, bugl_extra_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xa13000, 0xa13001, FUNC(bugl_extra_r));
 			break;
 
 		case ELFWOR:
 			/* It return (0x55 @ 0x400000 OR 0xc9 @ 0x400004) AND (0x0f @ 0x400002 OR 0x18 @ 0x400006). It is probably best to add handlers for all 4 addresses. */
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400001, 0, 0, elfwor_400000_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400002, 0x400003, 0, 0, elfwor_400002_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400004, 0x400005, 0, 0, elfwor_400004_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400006, 0x400007, 0, 0, elfwor_400006_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400000, 0x400001, FUNC(elfwor_400000_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400002, 0x400003, FUNC(elfwor_400002_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400004, 0x400005, FUNC(elfwor_400004_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400006, 0x400007, FUNC(elfwor_400006_r));
 			break;
 
 		case ROCKMANX3:
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa13000, 0xa13001, 0, 0, rx3_extra_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xa13000, 0xa13001, FUNC(rx3_extra_r));
 			break;
 
 		case SBUBBOB:
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400001, 0, 0, sbub_extra1_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400002, 0x400003, 0, 0, sbub_extra2_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400000, 0x400001, FUNC(sbub_extra1_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x400002, 0x400003, FUNC(sbub_extra2_r));
 			break;
 
 		case KOF98:
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x480000, 0x480001, 0, 0, kof98_aa_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x4800e0, 0x4800e1, 0, 0, kof98_aa_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x4824a0, 0x4824a1, 0, 0, kof98_aa_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x488880, 0x488881, 0, 0, kof98_aa_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x480000, 0x480001, FUNC(kof98_aa_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x4800e0, 0x4800e1, FUNC(kof98_aa_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x4824a0, 0x4824a1, FUNC(kof98_aa_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x488880, 0x488881, FUNC(kof98_aa_r));
 
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x4a8820, 0x4a8821, 0, 0, kof98_0a_r);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x4f8820, 0x4f8821, 0, 0, kof98_00_r);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x4a8820, 0x4a8821, FUNC(kof98_0a_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x4f8820, 0x4f8821, FUNC(kof98_00_r));
 			break;
 
 		case REALTEC:
 			/* Realtec mapper!*/
-			state->md_cart.realtec_bank_addr = state->md_cart.realtec_bank_size = 0;
-			state->md_cart.realtec_old_bank_addr = -1;
+			state->m_md_cart.realtec_bank_addr = state->m_md_cart.realtec_bank_size = 0;
+			state->m_md_cart.realtec_old_bank_addr = -1;
 
 			memcpy(&ROM[0x400000], &ROM[VIRGIN_COPY_GEN], 0x80000);
 
 			for (mirroraddr = 0; mirroraddr < 0x400000; mirroraddr += 0x2000)
 				memcpy(ROM + mirroraddr, ROM + VIRGIN_COPY_GEN + 0x7e000, 0x002000); /* copy last 8kb across the whole rom region */
 
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x400000, 0x400001, 0, 0, realtec_400000_w);
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x402000, 0x402001, 0, 0, realtec_402000_w);
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x404000, 0x404001, 0, 0, realtec_404000_w);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x400000, 0x400001, FUNC(realtec_400000_w));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x402000, 0x402001, FUNC(realtec_402000_w));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x404000, 0x404001, FUNC(realtec_404000_w));
 			break;
 
 		case MC_SUP19IN1:
 			memcpy(&ROM[0x400000], &ROM[VIRGIN_COPY_GEN], 0x400000); // allow hard reset to menu
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa13000, 0xa13039, 0, 0, s19in1_bank);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xa13000, 0xa13039, FUNC(s19in1_bank));
 			break;
 
 		case MC_SUP15IN1:
 			memcpy(&ROM[0x400000], &ROM[VIRGIN_COPY_GEN], 0x200000); // allow hard reset to menu
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa13000, 0xa13039, 0, 0, s19in1_bank);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xa13000, 0xa13039, FUNC(s19in1_bank));
 			break;
 
 		case MC_12IN1:
 			memcpy(&ROM[0x000000], &ROM[VIRGIN_COPY_GEN], 0x400000);  /* default rom */
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa13000, 0xa1303f, 0, 0, mc_12in1_bank_w);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xa13000, 0xa1303f, FUNC(mc_12in1_bank_w));
 			break;
 
 		case TOPFIGHTER:
 			memcpy(&ROM[0x000000], &ROM[VIRGIN_COPY_GEN], 0x400000);  /* default rom */
 
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x6f5344, 0x6f5345, 0, 0, topfig_6F5344_r );
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x6bd294, 0x6bd295, 0, 0, topfig_6BD294_r );
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x645b44, 0x645b45, 0, 0, topfig_645B44_r );
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x6f5344, 0x6f5345, FUNC(topfig_6F5344_r) );
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x6bd294, 0x6bd295, FUNC(topfig_6BD294_r) );
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x645b44, 0x645b45, FUNC(topfig_645B44_r) );
 
 			/* readd */
-			//memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x689b80, 0x689b81, 0, 0, MWA16_NOP);
-			//memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x6d8b02, 0x6d8b03, 0, 0, MWA16_NOP);
+			//machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x689b80, 0x689b81, FUNC(MWA16_NOP));
+			//machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x6d8b02, 0x6d8b03, FUNC(MWA16_NOP));
 
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x700000, 0x7fffff, 0, 0, topfig_bank_w );
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x700000, 0x7fffff, FUNC(topfig_bank_w) );
 			break;
 	}
 
 	/* games whose protection gets patched out */
 
-	if (state->md_cart.type == POKEMON)
+	if (state->m_md_cart.type == POKEMON)
 	{
 		/*todo: emulate protection instead
          0DD19E:47F8
@@ -1235,7 +1235,7 @@ static void setup_megadriv_custom_mappers(running_machine *machine)
          you need to return 1 @ 0xa13002 and 0???1f @ 0xa1303E (it does word reads).
 
          */
-		UINT16 *ROM16 = (UINT16 *)machine->region("maincpu")->base();
+		UINT16 *ROM16 = (UINT16 *)machine.region("maincpu")->base();
 
 		ROM16[0x0dd19e/2] = 0x47F8;
 		ROM16[0x0dd1a0/2] = 0xFFF0;
@@ -1245,7 +1245,7 @@ static void setup_megadriv_custom_mappers(running_machine *machine)
 		ROM16[0x0dd49c/2] = 0x6002;
 	}
 
-	if (state->md_cart.type == POKEMON2)
+	if (state->m_md_cart.type == POKEMON2)
 	{
 		/*todo: emulate protection instead
          006036:E000
@@ -1254,7 +1254,7 @@ static void setup_megadriv_custom_mappers(running_machine *machine)
          002476:6022
 
          */
-		UINT16 *ROM16 = (UINT16 *)machine->region("maincpu")->base();
+		UINT16 *ROM16 = (UINT16 *)machine.region("maincpu")->base();
 
 		ROM16[0x06036/2] = 0xE000;
 		ROM16[0x02540/2] = 0x6026;
@@ -1264,7 +1264,7 @@ static void setup_megadriv_custom_mappers(running_machine *machine)
 		ROM16[0x7E300/2] = 0x60FE;
 	}
 
-	if (state->md_cart.type == MULAN)
+	if (state->m_md_cart.type == MULAN)
 	{
 		/*todo: emulate protection instead
          006036:E000
@@ -1274,153 +1274,153 @@ static void setup_megadriv_custom_mappers(running_machine *machine)
 		//  ROM[0x01ED0/2] = 0xE000;
 		//  ROM[0x02540/2] = 0xE000;
 
-		UINT16 *ROM16 = (UINT16 *)machine->region("maincpu")->base();
+		UINT16 *ROM16 = (UINT16 *)machine.region("maincpu")->base();
 
 		ROM16[0x06036/2] = 0xE000;
 	}
 
 	/* install NOP handler for TMSS */
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa14000, 0xa14003, 0, 0, genesis_TMSS_bank_w);
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xa14000, 0xa14003, FUNC(genesis_TMSS_bank_w));
 }
 
 static void setup_megadriv_sram(device_image_interface &image)
 {
-	running_machine *machine = image.device().machine;
-	md_cons_state *state = machine->driver_data<md_cons_state>();
-	UINT8 *ROM = machine->region("maincpu")->base();
+	running_machine &machine = image.device().machine();
+	md_cons_state *state = machine.driver_data<md_cons_state>();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	megadriv_backupram = NULL;
-	state->md_cart.sram = NULL;
-	state->md_cart.sram_start = state->md_cart.sram_end = 0;
-	state->md_cart.has_serial_eeprom = 0;
-	state->md_cart.sram_detected = 0;
-	state->md_cart.sram_handlers_installed = 0;
-	state->md_cart.sram_readonly = 0;
-	state->md_cart.sram_active = 0;
+	state->m_md_cart.sram = NULL;
+	state->m_md_cart.sram_start = state->m_md_cart.sram_end = 0;
+	state->m_md_cart.has_serial_eeprom = 0;
+	state->m_md_cart.sram_detected = 0;
+	state->m_md_cart.sram_handlers_installed = 0;
+	state->m_md_cart.sram_readonly = 0;
+	state->m_md_cart.sram_active = 0;
 
 	/* install SRAM & i2c handlers for the specific type of cart */
-	switch (state->md_cart.type)
+	switch (state->m_md_cart.type)
 	{
 		// These types only come from xml
 		// TODO: Eventually megadriv_backupram should point to the allocated cart:sram region!
 		// For now, we only use the region as a placeholder to carry size info...
 		case SEGA_SRAM:
-			state->md_cart.sram_start = 0x200000;
-			state->md_cart.sram_end = state->md_cart.sram_start + image.get_software_region_length("sram") - 1;
-			state->md_cart.sram_detected = 1;
-			megadriv_backupram = (UINT16*) (ROM + state->md_cart.sram_start);
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa130f0, 0xa130f1, 0, 0, genesis_sram_toggle);
-			if (state->md_cart.last_loaded_image_length <= state->md_cart.sram_start)
+			state->m_md_cart.sram_start = 0x200000;
+			state->m_md_cart.sram_end = state->m_md_cart.sram_start + image.get_software_region_length("sram") - 1;
+			state->m_md_cart.sram_detected = 1;
+			megadriv_backupram = (UINT16*) (ROM + state->m_md_cart.sram_start);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xa130f0, 0xa130f1, FUNC(genesis_sram_toggle));
+			if (state->m_md_cart.last_loaded_image_length <= state->m_md_cart.sram_start)
 			{
-				state->md_cart.sram_active = 1;
+				state->m_md_cart.sram_active = 1;
 				install_sram_rw_handlers(machine, FALSE);
 			}
 			break;
 
 		case BEGGAR:
-			state->md_cart.sram_start = 0x400000;
-			state->md_cart.sram_end = state->md_cart.sram_start + 0xffff;
-			state->md_cart.sram_detected = 1;
-			state->md_cart.sram_active = 1;
-			megadriv_backupram = (UINT16*) (ROM + state->md_cart.sram_start);
+			state->m_md_cart.sram_start = 0x400000;
+			state->m_md_cart.sram_end = state->m_md_cart.sram_start + 0xffff;
+			state->m_md_cart.sram_detected = 1;
+			state->m_md_cart.sram_active = 1;
+			megadriv_backupram = (UINT16*) (ROM + state->m_md_cart.sram_start);
 			install_sram_rw_handlers(machine, FALSE);
 			break;
 
 		case SEGA_FRAM:
-			state->md_cart.sram_start = 0x200000;
-			state->md_cart.sram_end = state->md_cart.sram_start + image.get_software_region_length("fram") - 1;
-			state->md_cart.sram_detected = 1;
-			megadriv_backupram = (UINT16*) (ROM + state->md_cart.sram_start);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa130f0, 0xa130f1, 0, 0, sega_6658a_reg_r);
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa130f0, 0xa130f1, 0, 0, sega_6658a_reg_w);
+			state->m_md_cart.sram_start = 0x200000;
+			state->m_md_cart.sram_end = state->m_md_cart.sram_start + image.get_software_region_length("fram") - 1;
+			state->m_md_cart.sram_detected = 1;
+			megadriv_backupram = (UINT16*) (ROM + state->m_md_cart.sram_start);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xa130f0, 0xa130f1, FUNC(sega_6658a_reg_r));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xa130f0, 0xa130f1, FUNC(sega_6658a_reg_w));
 			install_sram_rw_handlers(machine, FALSE);
 			break;
 
 		// These types might come either from xml or from old-styele loading
 		case SEGA_EEPROM:
-			state->md_cart.has_serial_eeprom = 1;
-			memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x200000, 0x200001, 0, 0, wboy_v_eeprom_r, wboy_v_eeprom_w);
+			state->m_md_cart.has_serial_eeprom = 1;
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x200000, 0x200001, FUNC(wboy_v_eeprom_r), FUNC(wboy_v_eeprom_w));
 			break;
 
 		case NBA_JAM:
-			state->md_cart.has_serial_eeprom = 1;
-			memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x200000, 0x200001, 0, 0, nba_jam_eeprom_r, nba_jam_eeprom_w);
+			state->m_md_cart.has_serial_eeprom = 1;
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x200000, 0x200001, FUNC(nba_jam_eeprom_r), FUNC(nba_jam_eeprom_w));
 			break;
 
 		case NBA_JAM_TE:
 		case NFL_QB_96:
 		case C_SLAM: // same handling but different sizes
-			state->md_cart.has_serial_eeprom = 1;
-			memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x200000, 0x200001, 0, 0, nba_jam_te_eeprom_r, nba_jam_te_eeprom_w);
+			state->m_md_cart.has_serial_eeprom = 1;
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x200000, 0x200001, FUNC(nba_jam_te_eeprom_r), FUNC(nba_jam_te_eeprom_w));
 			break;
 
 		case EA_NHLPA:
-			state->md_cart.has_serial_eeprom = 1;
-			memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x200000, 0x200001, 0, 0, ea_nhlpa_eeprom_r, ea_nhlpa_eeprom_w);
+			state->m_md_cart.has_serial_eeprom = 1;
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x200000, 0x200001, FUNC(ea_nhlpa_eeprom_r), FUNC(ea_nhlpa_eeprom_w));
 			break;
 
 		case CODE_MASTERS:
 		case CM_JCART_SEPROM:
-			state->md_cart.has_serial_eeprom = 1;
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x300000, 0x300001, 0, 0, codemasters_eeprom_w);
-			memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x380000, 0x380001, 0, 0, codemasters_eeprom_r);
+			state->m_md_cart.has_serial_eeprom = 1;
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x300000, 0x300001, FUNC(codemasters_eeprom_w));
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x380000, 0x380001, FUNC(codemasters_eeprom_r));
 			break;
 	}
 
 	// If the cart is not of a special type, we check the header. Unfortunately, there are ROMs without correct info in the header,
 	// hence we do the mapping anyway, but we activate SRAM later only if the game will access it.
-	if (!state->md_cart.sram_detected && !state->md_cart.has_serial_eeprom)
+	if (!state->m_md_cart.sram_detected && !state->m_md_cart.has_serial_eeprom)
 	{
 		/* check if cart has battery save */
 		if (ROM[0x1b1] == 'R' && ROM[0x1b0] == 'A')
 		{
 			/* SRAM info found in header */
-			state->md_cart.sram_start = (ROM[0x1b5] << 24 | ROM[0x1b4] << 16 | ROM[0x1b7] << 8 | ROM[0x1b6]);
-			state->md_cart.sram_end = (ROM[0x1b9] << 24 | ROM[0x1b8] << 16 | ROM[0x1bb] << 8 | ROM[0x1ba]);
+			state->m_md_cart.sram_start = (ROM[0x1b5] << 24 | ROM[0x1b4] << 16 | ROM[0x1b7] << 8 | ROM[0x1b6]);
+			state->m_md_cart.sram_end = (ROM[0x1b9] << 24 | ROM[0x1b8] << 16 | ROM[0x1bb] << 8 | ROM[0x1ba]);
 
-			if ((state->md_cart.sram_start > state->md_cart.sram_end) || ((state->md_cart.sram_end - state->md_cart.sram_start) >= 0x10000))	// we assume at most 64k of SRAM (HazeMD uses at most 64k). is this correct?
-				state->md_cart.sram_end = state->md_cart.sram_start + 0x0FFFF;
+			if ((state->m_md_cart.sram_start > state->m_md_cart.sram_end) || ((state->m_md_cart.sram_end - state->m_md_cart.sram_start) >= 0x10000))	// we assume at most 64k of SRAM (HazeMD uses at most 64k). is this correct?
+				state->m_md_cart.sram_end = state->m_md_cart.sram_start + 0x0FFFF;
 
 			/* for some games using serial EEPROM, difference between SRAM
              end to start is 0 or 1. Currently EEPROM is not emulated. */
-			if ((state->md_cart.sram_end - state->md_cart.sram_start) < 2)
-				state->md_cart.has_serial_eeprom = 1;
+			if ((state->m_md_cart.sram_end - state->m_md_cart.sram_start) < 2)
+				state->m_md_cart.has_serial_eeprom = 1;
 			else
-				state->md_cart.sram_detected = 1;
+				state->m_md_cart.sram_detected = 1;
 		}
 		else
 		{
 			/* set default SRAM positions, with size = 64k */
-			state->md_cart.sram_start = 0x200000;
-			state->md_cart.sram_end = state->md_cart.sram_start + 0xffff;
+			state->m_md_cart.sram_start = 0x200000;
+			state->m_md_cart.sram_end = state->m_md_cart.sram_start + 0xffff;
 		}
 
-		if (state->md_cart.sram_start & 1)
-			state->md_cart.sram_start -= 1;
+		if (state->m_md_cart.sram_start & 1)
+			state->m_md_cart.sram_start -= 1;
 
-		if (!(state->md_cart.sram_end & 1))
-			state->md_cart.sram_end += 1;
+		if (!(state->m_md_cart.sram_end & 1))
+			state->m_md_cart.sram_end += 1;
 
 		/* calculate backup RAM location */
-		megadriv_backupram = (UINT16*) (ROM + (state->md_cart.sram_start & 0x3fffff));
+		megadriv_backupram = (UINT16*) (ROM + (state->m_md_cart.sram_start & 0x3fffff));
 
-		if (state->md_cart.sram_detected)
-			logerror("SRAM detected from header: starting location %X - SRAM Length %X\n", state->md_cart.sram_start, state->md_cart.sram_end - state->md_cart.sram_start + 1);
+		if (state->m_md_cart.sram_detected)
+			logerror("SRAM detected from header: starting location %X - SRAM Length %X\n", state->m_md_cart.sram_start, state->m_md_cart.sram_end - state->m_md_cart.sram_start + 1);
 
 		/* Enable SRAM handlers only if the game does not use EEPROM. */
-		if (!state->md_cart.has_serial_eeprom)
+		if (!state->m_md_cart.has_serial_eeprom)
 		{
 			/* Info from DGen: If SRAM does not overlap main ROM, set it active by
              default since a few games can't manage to properly switch it on/off. */
-			if (state->md_cart.last_loaded_image_length <= state->md_cart.sram_start)
-				state->md_cart.sram_active = 1;
+			if (state->m_md_cart.last_loaded_image_length <= state->m_md_cart.sram_start)
+				state->m_md_cart.sram_active = 1;
 
-			memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xa130f0, 0xa130f1, 0, 0, genesis_sram_toggle);
-			//printf("res: start %x, end %x, det %d, active %d\n", state->md_cart.sram_start, state->md_cart.sram_end, state->md_cart.sram_detected, state->md_cart.sram_active);
+			machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xa130f0, 0xa130f1, FUNC(genesis_sram_toggle));
+			//printf("res: start %x, end %x, det %d, active %d\n", state->m_md_cart.sram_start, state->m_md_cart.sram_end, state->m_md_cart.sram_detected, state->m_md_cart.sram_active);
 
 			/* Sonic 1 included in Sonic Classics doesn't have SRAM and
              does lots of ROM access at this range, then only install read/
              write handlers if SRAM is active to not slow down emulation. */
-			if (state->md_cart.sram_active)
+			if (state->m_md_cart.sram_active)
 				install_sram_rw_handlers(machine, TRUE);
 		}
 	}
@@ -1538,7 +1538,7 @@ static int genesis_is_SMD(unsigned char *buf,unsigned int len)
 
 static int megadrive_load_nonlist(device_image_interface &image)
 {
-	md_cons_state *state = image.device().machine->driver_data<md_cons_state>();
+	md_cons_state *state = image.device().machine().driver_data<md_cons_state>();
 	unsigned char *ROM, *rawROM, *tmpROMnew, *tmpROM, *secondhalf;
 	int relocate, length, ptr, x;
 #ifdef LSB_FIRST
@@ -1546,10 +1546,10 @@ static int megadrive_load_nonlist(device_image_interface &image)
 #endif
 
 	// STEP 1: determine the file type (SMD? MD? BIN?)
-	rawROM = image.device().machine->region("maincpu")->base();
+	rawROM = image.device().machine().region("maincpu")->base();
 	ROM = rawROM /*+ 512 */;
 
-	state->md_cart.last_loaded_image_length = -1;
+	state->m_md_cart.last_loaded_image_length = -1;
 
 	length = image.fread( rawROM + 0x2000, 0x600000);
 
@@ -1579,7 +1579,7 @@ static int megadrive_load_nonlist(device_image_interface &image)
 			tmpROMnew[ptr + 1] = fliptemp;
 		}
 #endif
-		state->md_cart.last_loaded_image_length = length - 512;
+		state->m_md_cart.last_loaded_image_length = length - 512;
 		memcpy(&ROM[VIRGIN_COPY_GEN], &ROM[0x000000], MAX_MD_CART_SIZE);  /* store a copy of data */
 
 		relocate = 0;
@@ -1615,7 +1615,7 @@ static int megadrive_load_nonlist(device_image_interface &image)
 			ROM[ptr+1] = fliptemp;
 		}
 #endif
-		state->md_cart.last_loaded_image_length = length;
+		state->m_md_cart.last_loaded_image_length = length;
 		memcpy(&ROM[VIRGIN_COPY_GEN], &ROM[0x000000], MAX_MD_CART_SIZE);  /* store a copy of data */
 		relocate = 0;
 
@@ -1624,7 +1624,7 @@ static int megadrive_load_nonlist(device_image_interface &image)
 	else
 	{
 		relocate = 0x2000;
-		state->md_cart.last_loaded_image_length = length;
+		state->m_md_cart.last_loaded_image_length = length;
 
 		for (ptr = 0; ptr < MAX_MD_CART_SIZE + relocate; ptr += 2)		/* mangle bytes for little endian machines */
 		{
@@ -1645,7 +1645,7 @@ static int megadrive_load_nonlist(device_image_interface &image)
 	// STEP 2: determine the cart type (to deal with pirate mappers & eeprom)
 
 	/* Default cartridge type */
-	state->md_cart.type = SEGA_STD;
+	state->m_md_cart.type = SEGA_STD;
 
 	/* Detect carts which need additional handlers */
 	{
@@ -1672,155 +1672,155 @@ static int megadrive_load_nonlist(device_image_interface &image)
 		s19in1_sig[]	= { 0x13, 0xc0, 0x00, 0xa1, 0x30, 0x38 },
 		rockman_sig[]	= { 0xea, 0x80 };
 
-		switch (state->md_cart.last_loaded_image_length)
+		switch (state->m_md_cart.last_loaded_image_length)
 		{
 			case 0x80000:
 			    if (!allendianmemcmp(&ROM[0x08c8], &smouse_sig[0], sizeof(smouse_sig)))
-					state->md_cart.type = SMOUSE;
+					state->m_md_cart.type = SMOUSE;
 
 			    if (!allendianmemcmp((char *)&ROM[0x7e30e], "SEGA", 4) ||
 					!allendianmemcmp((char *)&ROM[0x7e100], "SEGA", 4) ||
 					!allendianmemcmp((char *)&ROM[0x7e1e6], "SEGA", 4))
-					state->md_cart.type = REALTEC;
+					state->m_md_cart.type = REALTEC;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM T-50396", 10)) // NHLPA Hockey 93
-					state->md_cart.type = EA_NHLPA;
+					state->m_md_cart.type = EA_NHLPA;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM MK-1215", 10)) // Evander Holyfield
-					state->md_cart.type = SEGA_EEPROM;
+					state->m_md_cart.type = SEGA_EEPROM;
 
 			    break;
 
 			case 0xc0000:
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM G-4060 ", 8)) // Wonder Boy V
-					state->md_cart.type = SEGA_EEPROM;
+					state->m_md_cart.type = SEGA_EEPROM;
 
 			    break;
 
 			case 0x100000:
 			    if (!allendianmemcmp(&ROM[0x01b24], &mjlover_sig[0], sizeof(mjlover_sig)))
-					state->md_cart.type = MJLOVER;
+					state->m_md_cart.type = MJLOVER;
 
 			    if (!allendianmemcmp(&ROM[0x03b4], &squir_sig[0], sizeof(squir_sig)))
-					state->md_cart.type = SQUIRRELK;
+					state->m_md_cart.type = SQUIRRELK;
 
 			    if (!allendianmemcmp(&ROM[0xee0d0], &bugsl_sig[0], sizeof(bugsl_sig)))
-					state->md_cart.type = BUGSLIFE;
+					state->m_md_cart.type = BUGSLIFE;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0172], "GAME : ELF WOR", 14))
-					state->md_cart.type = ELFWOR;
+					state->m_md_cart.type = ELFWOR;
 
 			    if (!allendianmemcmp(&ROM[0x123e4], &sbub_sig[0], sizeof(sbub_sig)))
-					state->md_cart.type = SBUBBOB;
+					state->m_md_cart.type = SBUBBOB;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM T-50176", 10)) // Rings of Power
-					state->md_cart.type = EA_NHLPA;
+					state->m_md_cart.type = EA_NHLPA;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "MK 00001211-00", 14)) // Sports Talk Baseball
-					state->md_cart.type = SEGA_EEPROM;
+					state->m_md_cart.type = SEGA_EEPROM;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM T-120096-", 12)) // Micro Machines 2
-					state->md_cart.type = CODE_MASTERS;
+					state->m_md_cart.type = CODE_MASTERS;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM T-120146-", 12)) // Brian Lara Cricket 96 / Shane Wayne Cricket 96
-					state->md_cart.type = CODE_MASTERS;
+					state->m_md_cart.type = CODE_MASTERS;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0190], "OJKRPTBVFCA     ", 0x10)) // Micro Machines '96 / Military TODO: better way to recognize these?
-					state->md_cart.type = CODE_MASTERS;
+					state->m_md_cart.type = CODE_MASTERS;
 			    break;
 
 			case 0x200000:
 			    if (!allendianmemcmp(&ROM[0x18c6], &lk3_sig[0], sizeof(lk3_sig)))
-					state->md_cart.type = LIONK3;
+					state->m_md_cart.type = LIONK3;
 
 			    if (!allendianmemcmp(&ROM[0x220], &sdk_sig[0], sizeof(sdk_sig)))
-					state->md_cart.type = SKINGKONG;
+					state->m_md_cart.type = SKINGKONG;
 
 			    if (!allendianmemcmp(&ROM[0xce560], &redcliff_sig[0], sizeof(redcliff_sig)))
-					state->md_cart.type = REDCLIFF;
+					state->m_md_cart.type = REDCLIFF;
 
 			    if (!allendianmemcmp(&ROM[0xc8cb0], &smb_sig[0], sizeof(smb_sig)))
-					state->md_cart.type = SMB;
+					state->m_md_cart.type = SMB;
 
 			    if (!allendianmemcmp(&ROM[0xf24d6], &smb2_sig[0], sizeof(smb2_sig)))
-					state->md_cart.type = SMB2;
+					state->m_md_cart.type = SMB2;
 
 			    if (!allendianmemcmp(&ROM[0x674e], &kaiju_sig[0], sizeof(kaiju_sig)))
-					state->md_cart.type = KAIJU;
+					state->m_md_cart.type = KAIJU;
 
 			    if (!allendianmemcmp(&ROM[0x1780], &chifi3_sig[0], sizeof(chifi3_sig)))
-					state->md_cart.type = CHINFIGHT3;
+					state->m_md_cart.type = CHINFIGHT3;
 
 			    if (!allendianmemcmp(&ROM[0x03c2], &lionk2_sig[0], sizeof(lionk2_sig)))
-					state->md_cart.type = LIONK2;
+					state->m_md_cart.type = LIONK2;
 
 			    if (!allendianmemcmp(&ROM[0xc8b90], &rx3_sig[0], sizeof(rx3_sig)))
-					state->md_cart.type = ROCKMANX3;
+					state->m_md_cart.type = ROCKMANX3;
 
 			    if (!allendianmemcmp(&ROM[0x56ae2], &kof98_sig[0], sizeof(kof98_sig)))
-					state->md_cart.type = KOF98;
+					state->m_md_cart.type = KOF98;
 
 			    if (!allendianmemcmp(&ROM[0x17bb2], &s15in1_sig[0], sizeof(s15in1_sig)))
-					state->md_cart.type = MC_SUP15IN1;
+					state->m_md_cart.type = MC_SUP15IN1;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM T-081326 ", 12)) // NBA Jam
-					state->md_cart.type = NBA_JAM;
+					state->m_md_cart.type = NBA_JAM;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM MK-1228", 10)) // Greatest Heavyweight of the Ring
-					state->md_cart.type = SEGA_EEPROM;
+					state->m_md_cart.type = SEGA_EEPROM;
 
 			    if ((!allendianmemcmp((char *)&ROM[0x0180], "GM T-12046", 10)) || // Mega Man
 					(!allendianmemcmp((char *)&ROM[0x0180], "GM T-12053", 10) && !allendianmemcmp(&ROM[0x18e], &rockman_sig[0], sizeof(rockman_sig)))) // / Rock Man (EEPROM version)
-					state->md_cart.type = SEGA_EEPROM;
+					state->m_md_cart.type = SEGA_EEPROM;
 
 			    break;
 
 			case 0x200005:
 			    if (!allendianmemcmp(&ROM[0xce564], &redcl_en_sig[0], sizeof(redcliff_sig)))
-					state->md_cart.type = REDCL_EN;
+					state->m_md_cart.type = REDCL_EN;
 			    break;
 
 			case 0x300000:
 			    if (!allendianmemcmp(&ROM[0x220], &sdk_sig[0], sizeof(sdk_sig)))
-					state->md_cart.type = SDK99;
+					state->m_md_cart.type = SDK99;
 
 			    if (!allendianmemcmp(&ROM[0x1fd0d2], &kof99_sig[0], sizeof(kof99_sig)))
-					state->md_cart.type = KOF99;
+					state->m_md_cart.type = KOF99;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM T-81406", 10)) // NBA Jam TE
-					state->md_cart.type = NBA_JAM_TE;
+					state->m_md_cart.type = NBA_JAM_TE;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM T-081276 ", 12)) // NFL Quarterback Club
-					state->md_cart.type = NBA_JAM_TE;
+					state->m_md_cart.type = NBA_JAM_TE;
 
 			    break;
 
 			case 0x400000:
 			    if (!allendianmemcmp(&ROM[0x3c031c], &radica_sig[0], sizeof(radica_sig)) ||
 					!allendianmemcmp(&ROM[0x3f031c], &radica_sig[0], sizeof(radica_sig))) // ssf+gng + radica vol1
-					state->md_cart.type = RADICA;
+					state->m_md_cart.type = RADICA;
 
 			    if (!allendianmemcmp(&ROM[0x028460], &soulb_sig[0], sizeof(soulb_sig)))
-					state->md_cart.type = SOULBLAD;
+					state->m_md_cart.type = SOULBLAD;
 
 			    if (!allendianmemcmp(&ROM[0x1e700], &s19in1_sig[0], sizeof(s19in1_sig)))
-					state->md_cart.type = MC_SUP19IN1;
+					state->m_md_cart.type = MC_SUP19IN1;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM T-081586-", 12)) // NFL Quarterback Club 96
-					state->md_cart.type = NFL_QB_96;
+					state->m_md_cart.type = NFL_QB_96;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM T-081576 ", 12)) // College Slam
-					state->md_cart.type = C_SLAM;
+					state->m_md_cart.type = C_SLAM;
 
 			    if (!allendianmemcmp((char *)&ROM[0x0180], "GM T-81476", 10)) // Big Hurt Baseball
-					state->md_cart.type = C_SLAM;
+					state->m_md_cart.type = C_SLAM;
 
 			    break;
 
 			case 0x500000:
 			    if (!allendianmemcmp((char *)&ROM[0x0120], "SUPER STREET FIGHTER2 ", 22))
-					state->md_cart.type = SSF2;
+					state->m_md_cart.type = SSF2;
 			    break;
 
 			default:
@@ -1831,6 +1831,45 @@ static int megadrive_load_nonlist(device_image_interface &image)
 	return IMAGE_INIT_PASS;
 }
 
+static void megadrive_check_compat_list(device_image_interface &image)
+{
+	const char *compatibility = image.get_feature("compatibility");
+	const char *chips = image.get_feature("addon");
+	int md_region = megadrive_region_export + (megadrive_region_pal << 1);
+
+	if (chips)
+	{
+		if(!strcmp(chips, "SVP") && (image.device().machine().device<cpu_device>("svp") == NULL))
+		{
+			mame_printf_warning("This software requires emulation of the SVP CPU to work.\n");
+			mame_printf_warning("It might not work in the system you are using.\n");
+		}
+	}
+
+	if (compatibility)
+	{
+		if(!strcmp(compatibility, "PAL") && (md_region != 3))
+		{
+			mame_printf_warning("This software requires a PAL console to work.\n");
+			mame_printf_warning("It might not work in the system you are using.\n");
+		}
+		if(!strcmp(compatibility, "NTSC-J") && (md_region != 0))
+		{
+			mame_printf_warning("This software requires a JPN console to work.\n");
+			mame_printf_warning("It might not work in the system you are using.\n");
+		}
+		if(!strcmp(compatibility, "NTSC-U") && (md_region != 1))
+		{
+			mame_printf_warning("This software requires a USA console to work.\n");
+			mame_printf_warning("It might not work in the system you are using.\n");
+		}
+		if(!strcmp(compatibility, "EUR-JPN") && (md_region != 0 && md_region != 3))
+		{
+			mame_printf_warning("This software requires a PAL or a JPN console to work.\n");
+			mame_printf_warning("It might not work in the system you are using.\n");
+		}
+	}
+}
 
 /*************************************
  *  Loading a cart image from softlist
@@ -1838,18 +1877,20 @@ static int megadrive_load_nonlist(device_image_interface &image)
 
 static int megadrive_load_list(device_image_interface &image)
 {
-	md_cons_state *state = image.device().machine->driver_data<md_cons_state>();
-	UINT8 *ROM = image.device().machine->region("maincpu")->base();
+	md_cons_state *state = image.device().machine().driver_data<md_cons_state>();
+	UINT8 *ROM = image.device().machine().region("maincpu")->base();
 	UINT32 length = image.get_software_region_length("rom");
 	const char	*pcb_name;
 	memcpy(ROM, image.get_software_region("rom"), length);
 
-	state->md_cart.last_loaded_image_length = length;
+	state->m_md_cart.last_loaded_image_length = length;
 
 	if ((pcb_name = image.get_feature("pcb_type")) == NULL)
-		state->md_cart.type = SEGA_STD;
+		state->m_md_cart.type = SEGA_STD;
 	else
-		state->md_cart.type = md_get_pcb_id(pcb_name);
+		state->m_md_cart.type = md_get_pcb_id(pcb_name);
+
+	megadrive_check_compat_list(image);
 
 	memcpy(&ROM[VIRGIN_COPY_GEN], &ROM[0x000000], MAX_MD_CART_SIZE);  /* store a copy of data */
 
@@ -1858,8 +1899,8 @@ static int megadrive_load_list(device_image_interface &image)
 
 static DEVICE_IMAGE_LOAD( genesis_cart )
 {
-	md_cons_state *state = image.device().machine->driver_data<md_cons_state>();
-	state->md_cart.type = SEGA_STD;
+	md_cons_state *state = image.device().machine().driver_data<md_cons_state>();
+	state->m_md_cart.type = SEGA_STD;
 	int res;
 
 	// STEP 1: load the file image and keep a copy for later banking
@@ -1870,12 +1911,12 @@ static DEVICE_IMAGE_LOAD( genesis_cart )
 	else
 		res = megadrive_load_list(image);
 
-	logerror("cart type: %d\n", state->md_cart.type);
+	logerror("cart type: %d\n", state->m_md_cart.type);
 
 	if (res == IMAGE_INIT_PASS)
 	{
 		// STEP 3: install memory handlers for this type of cart
-		setup_megadriv_custom_mappers(image.device().machine);
+		setup_megadriv_custom_mappers(image.device().machine());
 
 		// STEP 4: take care of SRAM.
 		setup_megadriv_sram(image);
@@ -1894,16 +1935,16 @@ static void genesis_machine_stop(running_machine &machine)
 	md_cons_state *state = machine.driver_data<md_cons_state>();
 
 	/* Write out the battery file if necessary */
-	if (state->md_cart.sram != NULL)
+	if (state->m_md_cart.sram != NULL)
 	{
 		mame_printf_debug("Saving sram\n");
-		image->battery_save(state->md_cart.sram, state->md_cart.sram_end - state->md_cart.sram_start + 1);
+		image->battery_save(state->m_md_cart.sram, state->m_md_cart.sram_end - state->m_md_cart.sram_start + 1);
 	}
 }
 
 MACHINE_START( md_sram )
 {
-	machine->add_notifier(MACHINE_NOTIFY_EXIT, genesis_machine_stop);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, genesis_machine_stop);
 }
 
 /******* 32X image loading *******/
@@ -1921,31 +1962,31 @@ static DEVICE_IMAGE_LOAD( _32x_cart )
 	if (image.software_entry() == NULL)
 	{
 		length = image.length();
-		temp_copy = auto_alloc_array(image.device().machine, UINT8, length);
+		temp_copy = auto_alloc_array(image.device().machine(), UINT8, length);
 		image.fread( temp_copy, length);
 	}
 	else
 	{
 		length = image.get_software_region_length("rom");
-		temp_copy = auto_alloc_array(image.device().machine, UINT8, length);
+		temp_copy = auto_alloc_array(image.device().machine(), UINT8, length);
 		memcpy(temp_copy, image.get_software_region("rom"), length);
 	}
 
 	/* Copy the cart image in the locations the driver expects */
 	// Notice that, by using pick_integer, we are sure the code works on both LE and BE machines
-	ROM16 = (UINT16 *) image.device().machine->region("gamecart")->base();
+	ROM16 = (UINT16 *) image.device().machine().region("gamecart")->base();
 	for (i = 0; i < length; i += 2)
 		ROM16[i / 2] = pick_integer_be(temp_copy, i, 2);
 
-	ROM32 = (UINT32 *) image.device().machine->region("gamecart_sh2")->base();
+	ROM32 = (UINT32 *) image.device().machine().region("gamecart_sh2")->base();
 	for (i = 0; i < length; i += 4)
 		ROM32[i / 4] = pick_integer_be(temp_copy, i, 4);
 
-	ROM16 = (UINT16 *) image.device().machine->region("maincpu")->base();
+	ROM16 = (UINT16 *) image.device().machine().region("maincpu")->base();
 	for (i = 0x00; i < length; i += 2)
 		ROM16[i / 2] = pick_integer_be(temp_copy, i, 2);
 
-	auto_free(image.device().machine, temp_copy);
+	auto_free(image.device().machine(), temp_copy);
 
 	return IMAGE_INIT_PASS;
 }

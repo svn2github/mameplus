@@ -196,9 +196,9 @@ static int get_variable_value(running_machine &machine, const char *string, char
 	char temp[100];
 
 	// screen 0 parameters
-	for (const screen_device_config *devconfig = machine.m_config.first_screen(); devconfig != NULL; devconfig = devconfig->next_screen())
+	for (const screen_device_config *devconfig = machine.config().first_screen(); devconfig != NULL; devconfig = devconfig->next_screen())
 	{
-		int scrnum = machine.m_config.m_devicelist.indexof(SCREEN, devconfig->tag());
+		int scrnum = machine.config().m_devicelist.indexof(SCREEN, devconfig->tag());
 
 		// native X aspect factor
 		sprintf(temp, "~scr%dnativexaspect~", scrnum);
@@ -434,7 +434,7 @@ static void parse_orientation(running_machine &machine, xml_data_node *orientnod
 layout_element::layout_element(running_machine &machine, xml_data_node &elemnode, const char *dirname)
 	: m_next(NULL),
 	  m_machine(machine),
-	  m_complist(machine.m_respool),
+	  m_complist(machine.respool()),
 	  m_defstate(0),
 	  m_maxstate(0),
 	  m_elemtex(NULL)
@@ -454,7 +454,7 @@ layout_element::layout_element(running_machine &machine, xml_data_node &elemnode
 	for (xml_data_node *compnode = elemnode.child; compnode != NULL; compnode = compnode->next)
 	{
 		// allocate a new component
-		component &newcomp = m_complist.append(*auto_alloc(&machine, component(machine, *compnode, dirname)));
+		component &newcomp = m_complist.append(*auto_alloc(machine, component(machine, *compnode, dirname)));
 
 		// accumulate bounds
 		if (first)
@@ -494,7 +494,7 @@ layout_element::layout_element(running_machine &machine, xml_data_node &elemnode
 	}
 
 	// allocate an array of element textures for the states
-	m_elemtex = auto_alloc_array(&machine, texture, m_maxstate + 1);
+	m_elemtex = auto_alloc_array(machine, texture, m_maxstate + 1);
 }
 
 
@@ -505,7 +505,7 @@ layout_element::layout_element(running_machine &machine, xml_data_node &elemnode
 layout_element::~layout_element()
 {
 	// loop over all states and free their textures
-	auto_free(&m_machine, m_elemtex);
+	auto_free(m_machine, m_elemtex);
 }
 
 
@@ -1665,11 +1665,11 @@ layout_view::layout_view(running_machine &machine, xml_data_node &viewnode, simp
 	: m_next(NULL),
 	  m_aspect(1.0f),
 	  m_scraspect(1.0f),
-	  m_screens(machine.m_respool),
-	  m_backdrop_list(machine.m_respool),
-	  m_screen_list(machine.m_respool),
-	  m_overlay_list(machine.m_respool),
-	  m_bezel_list(machine.m_respool)
+	  m_screens(machine.respool()),
+	  m_backdrop_list(machine.respool()),
+	  m_screen_list(machine.respool()),
+	  m_overlay_list(machine.respool()),
+	  m_bezel_list(machine.respool())
 {
 	// allocate a copy of the name
 	m_name = xml_get_attribute_string_with_subst(machine, viewnode, "name", "");
@@ -1682,19 +1682,19 @@ layout_view::layout_view(running_machine &machine, xml_data_node &viewnode, simp
 
 	// load backdrop items
 	for (xml_data_node *itemnode = xml_get_sibling(viewnode.child, "backdrop"); itemnode != NULL; itemnode = xml_get_sibling(itemnode->next, "backdrop"))
-		m_backdrop_list.append(*auto_alloc(&machine, item(machine, *itemnode, elemlist)));
+		m_backdrop_list.append(*auto_alloc(machine, item(machine, *itemnode, elemlist)));
 
 	// load screen items
 	for (xml_data_node *itemnode = xml_get_sibling(viewnode.child, "screen"); itemnode != NULL; itemnode = xml_get_sibling(itemnode->next, "screen"))
-		m_screen_list.append(*auto_alloc(&machine, item(machine, *itemnode, elemlist)));
+		m_screen_list.append(*auto_alloc(machine, item(machine, *itemnode, elemlist)));
 
 	// load overlay items
 	for (xml_data_node *itemnode = xml_get_sibling(viewnode.child, "overlay"); itemnode != NULL; itemnode = xml_get_sibling(itemnode->next, "overlay"))
-		m_overlay_list.append(*auto_alloc(&machine, item(machine, *itemnode, elemlist)));
+		m_overlay_list.append(*auto_alloc(machine, item(machine, *itemnode, elemlist)));
 
 	// load bezel items
 	for (xml_data_node *itemnode = xml_get_sibling(viewnode.child, "bezel"); itemnode != NULL; itemnode = xml_get_sibling(itemnode->next, "bezel"))
-		m_bezel_list.append(*auto_alloc(&machine, item(machine, *itemnode, elemlist)));
+		m_bezel_list.append(*auto_alloc(machine, item(machine, *itemnode, elemlist)));
 
 	// recompute the data for the view based on a default layer config
 	recompute(render_layer_config());
@@ -1914,7 +1914,7 @@ int layout_view::item::state() const
 	{
 		const input_field_config *field = input_field_by_tag_and_mask(m_element->machine().m_portlist, m_input_tag, m_input_mask);
 		if (field != NULL)
-			state = ((input_port_read_safe(&m_element->machine(), m_input_tag, 0) ^ field->defvalue) & m_input_mask) ? 1 : 0;
+			state = ((input_port_read_safe(m_element->machine(), m_input_tag, 0) ^ field->defvalue) & m_input_mask) ? 1 : 0;
 	}
 	return state;
 }
@@ -1931,8 +1931,8 @@ int layout_view::item::state() const
 
 layout_file::layout_file(running_machine &machine, xml_data_node &rootnode, const char *dirname)
 	: m_next(NULL),
-	  m_elemlist(machine.m_respool),
-	  m_viewlist(machine.m_respool)
+	  m_elemlist(machine.respool()),
+	  m_viewlist(machine.respool())
 {
 	// find the layout node
 	xml_data_node *mamelayoutnode = xml_get_sibling(rootnode.child, "mamelayout");
@@ -1946,11 +1946,11 @@ layout_file::layout_file(running_machine &machine, xml_data_node &rootnode, cons
 
 	// parse all the elements
 	for (xml_data_node *elemnode = xml_get_sibling(mamelayoutnode->child, "element"); elemnode != NULL; elemnode = xml_get_sibling(elemnode->next, "element"))
-		m_elemlist.append(*auto_alloc(&machine, layout_element(machine, *elemnode, dirname)));
+		m_elemlist.append(*auto_alloc(machine, layout_element(machine, *elemnode, dirname)));
 
 	// parse all the views
 	for (xml_data_node *viewnode = xml_get_sibling(mamelayoutnode->child, "view"); viewnode != NULL; viewnode = xml_get_sibling(viewnode->next, "view"))
-		m_viewlist.append(*auto_alloc(&machine, layout_view(machine, *viewnode, m_elemlist)));
+		m_viewlist.append(*auto_alloc(machine, layout_view(machine, *viewnode, m_elemlist)));
 }
 
 

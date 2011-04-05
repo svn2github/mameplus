@@ -37,20 +37,20 @@ public:
 	thayers_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	device_t *laserdisc;
-	UINT8 laserdisc_data;
-	int rx_bit;
-	int keylatch;
-	UINT8 cop_data_latch;
-	int cop_data_latch_enable;
-	UINT8 cop_l;
-	UINT8 cop_cmd_latch;
-	int timer_int;
-	int data_rdy_int;
-	int ssi_data_request;
-	int cart_present;
-	int pr7820_enter;
-	struct ssi263_t ssi263;
+	device_t *m_laserdisc;
+	UINT8 m_laserdisc_data;
+	int m_rx_bit;
+	int m_keylatch;
+	UINT8 m_cop_data_latch;
+	int m_cop_data_latch_enable;
+	UINT8 m_cop_l;
+	UINT8 m_cop_cmd_latch;
+	int m_timer_int;
+	int m_data_rdy_int;
+	int m_ssi_data_request;
+	int m_cart_present;
+	int m_pr7820_enter;
+	struct ssi263_t m_ssi263;
 };
 
 
@@ -62,10 +62,10 @@ static const UINT8 led_map[16] = { 0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7c, 0x0
 
 /* Interrupts */
 
-static void check_interrupt(running_machine *machine)
+static void check_interrupt(running_machine &machine)
 {
-	thayers_state *state = machine->driver_data<thayers_state>();
-	if (!state->timer_int || !state->data_rdy_int || !state->ssi_data_request)
+	thayers_state *state = machine.driver_data<thayers_state>();
+	if (!state->m_timer_int || !state->m_data_rdy_int || !state->m_ssi_data_request)
 	{
 		cputag_set_input_line(machine, "maincpu", INPUT_LINE_IRQ0, HOLD_LINE);
 	}
@@ -84,14 +84,14 @@ static WRITE8_HANDLER( intrq_w )
 {
 	// T = 1.1 * R30 * C53 = 1.1 * 750K * 0.01uF = 8.25 ms
 
-	cputag_set_input_line(space->machine, "maincpu", INPUT_LINE_IRQ0, HOLD_LINE);
+	cputag_set_input_line(space->machine(), "maincpu", INPUT_LINE_IRQ0, HOLD_LINE);
 
-	space->machine->scheduler().timer_set(attotime::from_usec(8250), FUNC(intrq_tick));
+	space->machine().scheduler().timer_set(attotime::from_usec(8250), FUNC(intrq_tick));
 }
 
 static READ8_HANDLER( irqstate_r )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
+	thayers_state *state = space->machine().driver_data<thayers_state>();
 	/*
 
         bit     description
@@ -107,28 +107,28 @@ static READ8_HANDLER( irqstate_r )
 
     */
 
-	return (state->data_rdy_int << 5) | (state->timer_int << 4) | 0x08 | (state->ssi_data_request << 2);
+	return (state->m_data_rdy_int << 5) | (state->m_timer_int << 4) | 0x08 | (state->m_ssi_data_request << 2);
 }
 
 static WRITE8_HANDLER( timer_int_ack_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
-	state->timer_int = 1;
+	thayers_state *state = space->machine().driver_data<thayers_state>();
+	state->m_timer_int = 1;
 
-	check_interrupt(space->machine);
+	check_interrupt(space->machine());
 }
 
 static WRITE8_HANDLER( data_rdy_int_ack_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
-	state->data_rdy_int = 1;
+	thayers_state *state = space->machine().driver_data<thayers_state>();
+	state->m_data_rdy_int = 1;
 
-	check_interrupt(space->machine);
+	check_interrupt(space->machine());
 }
 
 static WRITE8_HANDLER( cop_d_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
+	thayers_state *state = space->machine().driver_data<thayers_state>();
 	/*
 
         bit     description
@@ -142,44 +142,44 @@ static WRITE8_HANDLER( cop_d_w )
 
 	if (!BIT(data, 0))
 	{
-		state->timer_int = 0;
+		state->m_timer_int = 0;
 	}
 
 	if (!BIT(data, 1))
 	{
-		state->data_rdy_int = 0;
+		state->m_data_rdy_int = 0;
 	}
 
-	check_interrupt(space->machine);
+	check_interrupt(space->machine());
 }
 
 /* COP Communication */
 
 static READ8_HANDLER( cop_data_r )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
-	if (!state->cop_data_latch_enable)
+	thayers_state *state = space->machine().driver_data<thayers_state>();
+	if (!state->m_cop_data_latch_enable)
 	{
-		return state->cop_data_latch;
+		return state->m_cop_data_latch;
 	}
 	else
 	{
-		return state->cop_l;
+		return state->m_cop_l;
 	}
 }
 
 static WRITE8_HANDLER( cop_data_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
-	state->cop_data_latch = data;
+	thayers_state *state = space->machine().driver_data<thayers_state>();
+	state->m_cop_data_latch = data;
 }
 
 static READ8_HANDLER( cop_l_r )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
-	if (!state->cop_data_latch_enable)
+	thayers_state *state = space->machine().driver_data<thayers_state>();
+	if (!state->m_cop_data_latch_enable)
 	{
-		return state->cop_data_latch;
+		return state->m_cop_data_latch;
 	}
 	else
 	{
@@ -189,13 +189,13 @@ static READ8_HANDLER( cop_l_r )
 
 static WRITE8_HANDLER( cop_l_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
-	state->cop_l = data;
+	thayers_state *state = space->machine().driver_data<thayers_state>();
+	state->m_cop_l = data;
 }
 
 static READ8_HANDLER( cop_g_r )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
+	thayers_state *state = space->machine().driver_data<thayers_state>();
 	/*
 
         bit     description
@@ -207,12 +207,12 @@ static READ8_HANDLER( cop_g_r )
 
     */
 
-	return state->cop_cmd_latch;
+	return state->m_cop_cmd_latch;
 }
 
 static WRITE8_HANDLER( control_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
+	thayers_state *state = space->machine().driver_data<thayers_state>();
 	/*
 
         bit     description
@@ -228,12 +228,12 @@ static WRITE8_HANDLER( control_w )
 
     */
 
-	state->cop_cmd_latch = (data >> 5) & 0x07;
+	state->m_cop_cmd_latch = (data >> 5) & 0x07;
 }
 
 static WRITE8_HANDLER( cop_g_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
+	thayers_state *state = space->machine().driver_data<thayers_state>();
 	/*
 
         bit     description
@@ -245,14 +245,14 @@ static WRITE8_HANDLER( cop_g_w )
 
     */
 
-	state->cop_data_latch_enable = BIT(data, 3);
+	state->m_cop_data_latch_enable = BIT(data, 3);
 }
 
 /* Keyboard */
 
 static READ8_HANDLER(cop_si_r)
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
+	thayers_state *state = space->machine().driver_data<thayers_state>();
 	/* keyboard data */
 
 	/*
@@ -263,7 +263,7 @@ static READ8_HANDLER(cop_si_r)
 
     */
 
-	switch (state->rx_bit)
+	switch (state->m_rx_bit)
 	{
 	case 0:
 	case 1:
@@ -271,7 +271,7 @@ static READ8_HANDLER(cop_si_r)
 		return 1;
 
 	case 4:
-		return (state->keylatch == 9);
+		return (state->m_keylatch == 9);
 
 	case 5:
 	case 6:
@@ -281,9 +281,9 @@ static READ8_HANDLER(cop_si_r)
 			UINT8 data;
 			char port[4];
 
-			sprintf(port, "R%d", state->keylatch);
+			sprintf(port, "R%d", state->m_keylatch);
 
-			data = BIT(input_port_read(space->machine, port), state->rx_bit - 5);
+			data = BIT(input_port_read(space->machine(), port), state->m_rx_bit - 5);
 
 			return data;
 		}
@@ -295,22 +295,22 @@ static READ8_HANDLER(cop_si_r)
 
 static WRITE8_HANDLER( cop_so_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
+	thayers_state *state = space->machine().driver_data<thayers_state>();
 	/* keyboard clock */
 
 	if (data)
 	{
-		state->rx_bit++;
+		state->m_rx_bit++;
 
-		if (state->rx_bit == 10)
+		if (state->m_rx_bit == 10)
 		{
-			state->rx_bit = 0;
+			state->m_rx_bit = 0;
 
-			state->keylatch++;
+			state->m_keylatch++;
 
-			if (state->keylatch == 10)
+			if (state->m_keylatch == 10)
 			{
-				state->keylatch = 0;
+				state->m_keylatch = 0;
 			}
 		}
 	}
@@ -320,7 +320,7 @@ static WRITE8_HANDLER( cop_so_w )
 
 static WRITE8_HANDLER( control2_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
+	thayers_state *state = space->machine().driver_data<thayers_state>();
 	/*
 
         bit     description
@@ -336,32 +336,32 @@ static WRITE8_HANDLER( control2_w )
 
     */
 
-	if ((!BIT(data, 2)) & state->cart_present)
+	if ((!BIT(data, 2)) & state->m_cart_present)
 	{
-		cputag_set_input_line(space->machine, "maincpu", INPUT_LINE_NMI, HOLD_LINE);
+		cputag_set_input_line(space->machine(), "maincpu", INPUT_LINE_NMI, HOLD_LINE);
 	}
 }
 
 static READ8_HANDLER( dsw_b_r )
 {
-	return (input_port_read(space->machine, "COIN") & 0xf0) | (input_port_read(space->machine, "DSWB") & 0x0f);
+	return (input_port_read(space->machine(), "COIN") & 0xf0) | (input_port_read(space->machine(), "DSWB") & 0x0f);
 }
 
 static READ8_HANDLER( laserdsc_data_r )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
-	return laserdisc_data_r(state->laserdisc);
+	thayers_state *state = space->machine().driver_data<thayers_state>();
+	return laserdisc_data_r(state->m_laserdisc);
 }
 
 static WRITE8_HANDLER( laserdsc_data_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
-	state->laserdisc_data = data;
+	thayers_state *state = space->machine().driver_data<thayers_state>();
+	state->m_laserdisc_data = data;
 }
 
 static WRITE8_HANDLER( laserdsc_control_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
+	thayers_state *state = space->machine().driver_data<thayers_state>();
 	/*
 
         bit     description
@@ -377,25 +377,25 @@ static WRITE8_HANDLER( laserdsc_control_w )
 
     */
 
-	coin_counter_w(space->machine, 0, BIT(data, 4));
+	coin_counter_w(space->machine(), 0, BIT(data, 4));
 
 	if (BIT(data, 5))
 	{
-		laserdisc_data_w(state->laserdisc, state->laserdisc_data);
+		laserdisc_data_w(state->m_laserdisc, state->m_laserdisc_data);
 	}
 
-	switch (laserdisc_get_type(state->laserdisc))
+	switch (laserdisc_get_type(state->m_laserdisc))
 	{
 		case LASERDISC_TYPE_PIONEER_PR7820:
-			state->pr7820_enter = BIT(data, 6) ? CLEAR_LINE : ASSERT_LINE;
+			state->m_pr7820_enter = BIT(data, 6) ? CLEAR_LINE : ASSERT_LINE;
 
-			laserdisc_line_w(state->laserdisc, LASERDISC_LINE_ENTER, state->pr7820_enter);
+			laserdisc_line_w(state->m_laserdisc, LASERDISC_LINE_ENTER, state->m_pr7820_enter);
 
 			// BIT(data, 7) is INT/_EXT, but there is no such input line in laserdsc.h
 			break;
 
 		case LASERDISC_TYPE_PIONEER_LDV1000:
-			laserdisc_line_w(state->laserdisc, LASERDISC_LINE_ENTER, BIT(data, 7) ? CLEAR_LINE : ASSERT_LINE);
+			laserdisc_line_w(state->m_laserdisc, LASERDISC_LINE_ENTER, BIT(data, 7) ? CLEAR_LINE : ASSERT_LINE);
 			break;
 	}
 }
@@ -460,15 +460,15 @@ static const char SSI263_PHONEMES[0x40][5] =
 
 static TIMER_CALLBACK( ssi263_phoneme_tick )
 {
-	thayers_state *state = machine->driver_data<thayers_state>();
-	state->ssi_data_request = 0;
+	thayers_state *state = machine.driver_data<thayers_state>();
+	state->m_ssi_data_request = 0;
 	check_interrupt(machine);
 }
 
 static WRITE8_HANDLER( ssi263_register_w )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
-	struct ssi263_t &ssi263 = state->ssi263;
+	thayers_state *state = space->machine().driver_data<thayers_state>();
+	struct ssi263_t &ssi263 = state->m_ssi263;
 	switch (offset)
 	{
 	case 0:
@@ -480,19 +480,19 @@ static WRITE8_HANDLER( ssi263_register_w )
 		ssi263.dr = (data >> 5) & 0x03;
 		ssi263.p = data & 0x3f;
 
-		state->ssi_data_request = 1;
-		check_interrupt(space->machine);
+		state->m_ssi_data_request = 1;
+		check_interrupt(space->machine());
 
 		switch (ssi263.mode)
 		{
 		case 0:
 		case 1:
 			// phoneme timing response
-			space->machine->scheduler().timer_set(attotime::from_usec(phoneme_time), FUNC(ssi263_phoneme_tick));
+			space->machine().scheduler().timer_set(attotime::from_usec(phoneme_time), FUNC(ssi263_phoneme_tick));
 			break;
 		case 2:
 			// frame timing response
-			space->machine->scheduler().timer_set(attotime::from_usec(frame_time), FUNC(ssi263_phoneme_tick));
+			space->machine().scheduler().timer_set(attotime::from_usec(frame_time), FUNC(ssi263_phoneme_tick));
 			break;
 		case 3:
 			// disable A/_R output
@@ -570,21 +570,21 @@ static WRITE8_HANDLER( ssi263_register_w )
 
 static READ8_HANDLER( ssi263_register_r )
 {
-	thayers_state *state = space->machine->driver_data<thayers_state>();
+	thayers_state *state = space->machine().driver_data<thayers_state>();
 	// D7 becomes an output, as the inverted state of A/_R. The register address bits are ignored.
 
-	return !state->ssi_data_request << 7;
+	return !state->m_ssi_data_request << 7;
 }
 
 /* Memory Maps */
 
-static ADDRESS_MAP_START( thayers_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( thayers_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_RAM
 	AM_RANGE(0xc000, 0xdfff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( thayers_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( thayers_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x07) AM_READWRITE(ssi263_register_r, ssi263_register_w)
 	AM_RANGE(0x20, 0x20) AM_WRITE(control_w)
@@ -602,7 +602,7 @@ static ADDRESS_MAP_START( thayers_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0xf7, 0xf7) AM_WRITE(den2_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( thayers_cop_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( thayers_cop_io_map, AS_IO, 8 )
 	AM_RANGE(COP400_PORT_L, COP400_PORT_L) AM_READWRITE(cop_l_r, cop_l_w)
 	AM_RANGE(COP400_PORT_G, COP400_PORT_G) AM_READWRITE(cop_g_r, cop_g_w)
 	AM_RANGE(COP400_PORT_D, COP400_PORT_D) AM_WRITE(cop_d_w)
@@ -614,14 +614,14 @@ ADDRESS_MAP_END
 
 static CUSTOM_INPUT( laserdisc_enter_r )
 {
-	thayers_state *state = field->port->machine->driver_data<thayers_state>();
-	switch (laserdisc_get_type(state->laserdisc))
+	thayers_state *state = field->port->machine().driver_data<thayers_state>();
+	switch (laserdisc_get_type(state->m_laserdisc))
 	{
 		case LASERDISC_TYPE_PIONEER_PR7820:
-			return state->pr7820_enter;
+			return state->m_pr7820_enter;
 
 		case LASERDISC_TYPE_PIONEER_LDV1000:
-			return (laserdisc_line_r(state->laserdisc, LASERDISC_LINE_STATUS) == ASSERT_LINE) ? 0 : 1;
+			return (laserdisc_line_r(state->m_laserdisc, LASERDISC_LINE_STATUS) == ASSERT_LINE) ? 0 : 1;
 	}
 
 	return 0;
@@ -629,14 +629,14 @@ static CUSTOM_INPUT( laserdisc_enter_r )
 
 static CUSTOM_INPUT( laserdisc_ready_r )
 {
-	thayers_state *state = field->port->machine->driver_data<thayers_state>();
-	switch (laserdisc_get_type(state->laserdisc))
+	thayers_state *state = field->port->machine().driver_data<thayers_state>();
+	switch (laserdisc_get_type(state->m_laserdisc))
 	{
 		case LASERDISC_TYPE_PIONEER_PR7820:
-			return (laserdisc_line_r(state->laserdisc, LASERDISC_LINE_READY) == ASSERT_LINE) ? 0 : 1;
+			return (laserdisc_line_r(state->m_laserdisc, LASERDISC_LINE_READY) == ASSERT_LINE) ? 0 : 1;
 
 		case LASERDISC_TYPE_PIONEER_LDV1000:
-			return (laserdisc_line_r(state->laserdisc, LASERDISC_LINE_COMMAND) == ASSERT_LINE) ? 0 : 1;
+			return (laserdisc_line_r(state->m_laserdisc, LASERDISC_LINE_COMMAND) == ASSERT_LINE) ? 0 : 1;
 	}
 
 	return 0;
@@ -747,35 +747,35 @@ INPUT_PORTS_END
 
 static MACHINE_START( thayers )
 {
-	thayers_state *state = machine->driver_data<thayers_state>();
-	state->laserdisc = machine->device("laserdisc");
-	memset(&state->ssi263, 0, sizeof(state->ssi263));
+	thayers_state *state = machine.driver_data<thayers_state>();
+	state->m_laserdisc = machine.device("laserdisc");
+	memset(&state->m_ssi263, 0, sizeof(state->m_ssi263));
 }
 
 static MACHINE_RESET( thayers )
 {
-	thayers_state *state = machine->driver_data<thayers_state>();
+	thayers_state *state = machine.driver_data<thayers_state>();
 	int newtype;
 
-	state->laserdisc_data = 0;
+	state->m_laserdisc_data = 0;
 
-	state->rx_bit = 0;
-	state->keylatch = 0;
+	state->m_rx_bit = 0;
+	state->m_keylatch = 0;
 
-	state->cop_data_latch = 0;
-	state->cop_data_latch_enable = 0;
-	state->cop_l = 0;
-	state->cop_cmd_latch = 0;
+	state->m_cop_data_latch = 0;
+	state->m_cop_data_latch_enable = 0;
+	state->m_cop_l = 0;
+	state->m_cop_cmd_latch = 0;
 
-	state->timer_int = 1;
-	state->data_rdy_int = 1;
-	state->ssi_data_request = 1;
+	state->m_timer_int = 1;
+	state->m_data_rdy_int = 1;
+	state->m_ssi_data_request = 1;
 
-	state->cart_present = 0;
-	state->pr7820_enter = 0;
+	state->m_cart_present = 0;
+	state->m_pr7820_enter = 0;
 
 	newtype = (input_port_read(machine, "DSWB") & 0x18) ? LASERDISC_TYPE_PIONEER_LDV1000 : LASERDISC_TYPE_PIONEER_PR7820;
-	laserdisc_set_type(state->laserdisc, newtype);
+	laserdisc_set_type(state->m_laserdisc, newtype);
 }
 
 /* COP400 Interface */

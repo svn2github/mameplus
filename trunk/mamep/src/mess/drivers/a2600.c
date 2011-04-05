@@ -43,33 +43,33 @@ public:
 	a2600_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	dpc_t dpc;
-	memory_region* extra_RAM;
-	UINT8* bank_base[5];
-	UINT8* ram_base;
-	UINT8* riot_ram;
-	UINT8 banking_mode;
-	UINT8 keypad_left_column;
-	UINT8 keypad_right_column;
-	unsigned cart_size;
-	unsigned number_banks;
-	unsigned current_bank;
-	unsigned current_reset_bank_counter;
-	unsigned mode3E_ram_enabled;
-	UINT8 modeSS_byte;
-	UINT32 modeSS_byte_started;
-	unsigned modeSS_write_delay;
-	unsigned modeSS_write_enabled;
-	unsigned modeSS_high_ram_enabled;
-	unsigned modeSS_diff_adjust;
-	unsigned FVlocked;
-	UINT16 current_screen_height;
-	int FETimer;
+	dpc_t m_dpc;
+	memory_region* m_extra_RAM;
+	UINT8* m_bank_base[5];
+	UINT8* m_ram_base;
+	UINT8* m_riot_ram;
+	UINT8 m_banking_mode;
+	UINT8 m_keypad_left_column;
+	UINT8 m_keypad_right_column;
+	unsigned m_cart_size;
+	unsigned m_number_banks;
+	unsigned m_current_bank;
+	unsigned m_current_reset_bank_counter;
+	unsigned m_mode3E_ram_enabled;
+	UINT8 m_modeSS_byte;
+	UINT32 m_modeSS_byte_started;
+	unsigned m_modeSS_write_delay;
+	unsigned m_modeSS_write_enabled;
+	unsigned m_modeSS_high_ram_enabled;
+	unsigned m_modeSS_diff_adjust;
+	unsigned m_FVlocked;
+	UINT16 m_current_screen_height;
+	int m_FETimer;
 };
 
 
 
-#define CART machine->region("user1")->base()
+#define CART machine.region("user1")->base()
 
 #define MASTER_CLOCK_NTSC	3579545
 #define MASTER_CLOCK_PAL	3546894
@@ -115,9 +115,9 @@ static const UINT16 supported_screen_heights[4] = { 262, 312, 328, 342 };
 
 // try to detect 2600 controller setup. returns 32bits with left/right controller info
 
-static unsigned long detect_2600controllers(running_machine *machine)
+static unsigned long detect_2600controllers(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 #define JOYS 0x001
 #define PADD 0x002
 #define KEYP 0x004
@@ -163,10 +163,10 @@ static unsigned long detect_2600controllers(running_machine *machine)
 	// it can be fixed here with a new signature (note that the Coleco Gemini has this setup also)
 	left = JOYS+PADD; right = JOYS+PADD;
 	// default for bad dumps and roms too large to have special controllers
-	if ((state->cart_size > 0x4000) || (state->cart_size & 0x7ff)) return (left << 16) + right;
+	if ((state->m_cart_size > 0x4000) || (state->m_cart_size & 0x7ff)) return (left << 16) + right;
 
 	cart = CART;
-	for (i = 0; i < state->cart_size - (sizeof signatures/sizeof signatures[0]); i++)
+	for (i = 0; i < state->m_cart_size - (sizeof signatures/sizeof signatures[0]); i++)
 	{
 		for (j = 0; j < (sizeof signatures/sizeof signatures[0]); j++)
 		{
@@ -193,16 +193,16 @@ static unsigned long detect_2600controllers(running_machine *machine)
 	return (left << 16) + right;
 }
 
-static int detect_modeDC(running_machine *machine)
+static int detect_modeDC(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,numfound = 0;
 	// signature is also in 'video reflex'.. maybe figure out that controller port someday...
 	static const unsigned char signature[3] = { 0x8d, 0xf0, 0xff };
-	if (state->cart_size == 0x10000)
+	if (state->m_cart_size == 0x10000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - sizeof signature; i++)
+		for (i = 0; i < state->m_cart_size - sizeof signature; i++)
 		{
 			if (!memcmp(&cart[i], signature,sizeof signature))
 			{
@@ -214,15 +214,15 @@ static int detect_modeDC(running_machine *machine)
 	return 0;
 }
 
-static int detect_modef6(running_machine *machine)
+static int detect_modef6(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,numfound = 0;
 	static const unsigned char signature[3] = { 0x8d, 0xf6, 0xff };
-	if (state->cart_size == 0x4000)
+	if (state->m_cart_size == 0x4000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - sizeof signature; i++)
+		for (i = 0; i < state->m_cart_size - sizeof signature; i++)
 		{
 			if (!memcmp(&cart[i], signature,sizeof signature))
 			{
@@ -234,19 +234,19 @@ static int detect_modef6(running_machine *machine)
 	return 0;
 }
 
-static int detect_mode3E(running_machine *machine)
+static int detect_mode3E(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	// this one is a little hacky.. looks for STY $3e, which is unique to
 	// 'not boulderdash', but is the only example i have (cow)
 	// Would have used STA $3e, but 'Alien' and 'Star Raiders' do that for unknown reasons
 
 	int i,numfound = 0;
 	static const unsigned char signature[3] = { 0x84, 0x3e, 0x9d };
-	if (state->cart_size == 0x0800 || state->cart_size == 0x1000)
+	if (state->m_cart_size == 0x0800 || state->m_cart_size == 0x1000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - sizeof signature; i++)
+		for (i = 0; i < state->m_cart_size - sizeof signature; i++)
 		{
 			if (!memcmp(&cart[i], signature,sizeof signature))
 			{
@@ -258,15 +258,15 @@ static int detect_mode3E(running_machine *machine)
 	return 0;
 }
 
-static int detect_modeSS(running_machine *machine)
+static int detect_modeSS(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,numfound = 0;
 	static const unsigned char signature[5] = { 0xbd, 0xe5, 0xff, 0x95, 0x81 };
-	if (state->cart_size == 0x0800 || state->cart_size == 0x1000)
+	if (state->m_cart_size == 0x0800 || state->m_cart_size == 0x1000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - sizeof signature; i++)
+		for (i = 0; i < state->m_cart_size - sizeof signature; i++)
 		{
 			if (!memcmp(&cart[i], signature,sizeof signature))
 			{
@@ -278,9 +278,9 @@ static int detect_modeSS(running_machine *machine)
 	return 0;
 }
 
-static int detect_modeFE(running_machine *machine)
+static int detect_modeFE(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,j,numfound = 0;
 	static const unsigned char signatures[][5] =  {
 									{ 0x20, 0x00, 0xd0, 0xc6, 0xc5 },
@@ -288,10 +288,10 @@ static int detect_modeFE(running_machine *machine)
 									{ 0xd0, 0xfb, 0x20, 0x73, 0xfe },
 									{ 0x20, 0x00, 0xf0, 0x84, 0xd6 }
 	};
-	if (state->cart_size == 0x2000)
+	if (state->m_cart_size == 0x2000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - (sizeof signatures/sizeof signatures[0]); i++)
+		for (i = 0; i < state->m_cart_size - (sizeof signatures/sizeof signatures[0]); i++)
 		{
 			for (j = 0; j < (sizeof signatures/sizeof signatures[0]) && !numfound; j++)
 			{
@@ -306,9 +306,9 @@ static int detect_modeFE(running_machine *machine)
 	return 0;
 }
 
-static int detect_modeE0(running_machine *machine)
+static int detect_modeE0(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,j,numfound = 0;
 	static const unsigned char signatures[][3] =  {
 									{ 0x8d, 0xe0, 0x1f },
@@ -318,10 +318,10 @@ static int detect_modeE0(running_machine *machine)
 									{ 0xad, 0xed, 0xff },
 									{ 0xad, 0xf3, 0xbf }
 	};
-	if (state->cart_size == 0x2000)
+	if (state->m_cart_size == 0x2000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - (sizeof signatures/sizeof signatures[0]); i++)
+		for (i = 0; i < state->m_cart_size - (sizeof signatures/sizeof signatures[0]); i++)
 		{
 			for (j = 0; j < (sizeof signatures/sizeof signatures[0]) && !numfound; j++)
 			{
@@ -336,18 +336,18 @@ static int detect_modeE0(running_machine *machine)
 	return 0;
 }
 
-static int detect_modeCV(running_machine *machine)
+static int detect_modeCV(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,j,numfound = 0;
 	static const unsigned char signatures[][3] = {
 									{ 0x9d, 0xff, 0xf3 },
 									{ 0x99, 0x00, 0xf4 }
 	};
-	if (state->cart_size == 0x0800 || state->cart_size == 0x1000)
+	if (state->m_cart_size == 0x0800 || state->m_cart_size == 0x1000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - (sizeof signatures/sizeof signatures[0]); i++)
+		for (i = 0; i < state->m_cart_size - (sizeof signatures/sizeof signatures[0]); i++)
 		{
 			for (j = 0; j < (sizeof signatures/sizeof signatures[0]) && !numfound; j++)
 			{
@@ -362,17 +362,17 @@ static int detect_modeCV(running_machine *machine)
 	return 0;
 }
 
-static int detect_modeFV(running_machine *machine)
+static int detect_modeFV(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,j,numfound = 0;
 	static const unsigned char signatures[][3] = {
 									{ 0x2c, 0xd0, 0xff }
 	};
-	if (state->cart_size == 0x2000)
+	if (state->m_cart_size == 0x2000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - (sizeof signatures/sizeof signatures[0]); i++)
+		for (i = 0; i < state->m_cart_size - (sizeof signatures/sizeof signatures[0]); i++)
 		{
 			for (j = 0; j < (sizeof signatures/sizeof signatures[0]) && !numfound; j++)
 			{
@@ -382,24 +382,24 @@ static int detect_modeFV(running_machine *machine)
 				}
 			}
 		}
-		state->FVlocked = 0;
+		state->m_FVlocked = 0;
 	}
 	if (numfound) return 1;
 	return 0;
 }
 
-static int detect_modeJVP(running_machine *machine)
+static int detect_modeJVP(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,j,numfound = 0;
 	static const unsigned char signatures[][4] = {
 									{ 0x2c, 0xc0, 0xef, 0x60 },
 									{ 0x8d, 0xa0, 0x0f, 0xf0 }
 	};
-	if (state->cart_size == 0x4000 || state->cart_size == 0x2000)
+	if (state->m_cart_size == 0x4000 || state->m_cart_size == 0x2000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - (sizeof signatures/sizeof signatures[0]); i++)
+		for (i = 0; i < state->m_cart_size - (sizeof signatures/sizeof signatures[0]); i++)
 		{
 			for (j = 0; j < (sizeof signatures/sizeof signatures[0]) && !numfound; j++)
 			{
@@ -414,18 +414,18 @@ static int detect_modeJVP(running_machine *machine)
 	return 0;
 }
 
-static int detect_modeE7(running_machine *machine)
+static int detect_modeE7(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,j,numfound = 0;
 	static const unsigned char signatures[][3] = {
 									{ 0xad, 0xe5, 0xff },
 									{ 0x8d, 0xe7, 0xff }
 	};
-	if (state->cart_size == 0x2000 || state->cart_size == 0x4000)
+	if (state->m_cart_size == 0x2000 || state->m_cart_size == 0x4000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - (sizeof signatures/sizeof signatures[0]); i++)
+		for (i = 0; i < state->m_cart_size - (sizeof signatures/sizeof signatures[0]); i++)
 		{
 			for (j = 0; j < (sizeof signatures/sizeof signatures[0]) && !numfound; j++)
 			{
@@ -440,15 +440,15 @@ static int detect_modeE7(running_machine *machine)
 	return 0;
 }
 
-static int detect_modeUA(running_machine *machine)
+static int detect_modeUA(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,numfound = 0;
 	static const unsigned char signature[3] = { 0x8d, 0x40, 0x02 };
-	if (state->cart_size == 0x2000)
+	if (state->m_cart_size == 0x2000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - sizeof signature; i++)
+		for (i = 0; i < state->m_cart_size - sizeof signature; i++)
 		{
 			if (!memcmp(&cart[i], signature,sizeof signature))
 			{
@@ -460,17 +460,17 @@ static int detect_modeUA(running_machine *machine)
 	return 0;
 }
 
-static int detect_8K_mode3F(running_machine *machine)
+static int detect_8K_mode3F(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,numfound = 0;
 	static const unsigned char signature1[4] = { 0xa9, 0x01, 0x85, 0x3f };
 	static const unsigned char signature2[4] = { 0xa9, 0x02, 0x85, 0x3f };
 	// have to look for two signatures because 'not boulderdash' gives false positive otherwise
-	if (state->cart_size == 0x2000)
+	if (state->m_cart_size == 0x2000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - sizeof signature1; i++)
+		for (i = 0; i < state->m_cart_size - sizeof signature1; i++)
 		{
 			if (!memcmp(&cart[i], signature1,sizeof signature1))
 			{
@@ -486,15 +486,15 @@ static int detect_8K_mode3F(running_machine *machine)
 	return 0;
 }
 
-static int detect_32K_mode3F(running_machine *machine)
+static int detect_32K_mode3F(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,numfound = 0;
 	static const unsigned char signature[4] = { 0xa9, 0x0e, 0x85, 0x3f };
-	if (state->cart_size >= 0x8000)
+	if (state->m_cart_size >= 0x8000)
 	{
 		UINT8 *cart = CART;
-		for (i = 0; i < state->cart_size - sizeof signature; i++)
+		for (i = 0; i < state->m_cart_size - sizeof signature; i++)
 		{
 			if (!memcmp(&cart[i], signature,sizeof signature))
 			{
@@ -506,9 +506,9 @@ static int detect_32K_mode3F(running_machine *machine)
 	return 0;
 }
 
-static int detect_super_chip(running_machine *machine)
+static int detect_super_chip(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i,j;
 	UINT8 *cart = CART;
 	static const unsigned char signatures[][5] = {
@@ -516,9 +516,9 @@ static int detect_super_chip(running_machine *machine)
 									{ 0xae, 0xf6, 0xff, 0x4c, 0x00 } // off the wall
 	};
 
-	if (state->cart_size == 0x4000)
+	if (state->m_cart_size == 0x4000)
 	{
-		for (i = 0; i < state->cart_size - (sizeof signatures/sizeof signatures[0]); i++)
+		for (i = 0; i < state->m_cart_size - (sizeof signatures/sizeof signatures[0]); i++)
 		{
 			for (j = 0; j < (sizeof signatures/sizeof signatures[0]); j++)
 			{
@@ -529,7 +529,7 @@ static int detect_super_chip(running_machine *machine)
 			}
 		}
 	}
-	for (i = 0x1000; i < state->cart_size; i += 0x1000)
+	for (i = 0x1000; i < state->m_cart_size; i += 0x1000)
 	{
 		if (memcmp(cart, cart + i, 0x100))
 		{
@@ -548,20 +548,20 @@ static int detect_super_chip(running_machine *machine)
 
 static DEVICE_START( a2600_cart )
 {
-	a2600_state *state = device->machine->driver_data<a2600_state>();
-	state->banking_mode = 0xff;
+	a2600_state *state = device->machine().driver_data<a2600_state>();
+	state->m_banking_mode = 0xff;
 }
 
 
 static DEVICE_IMAGE_LOAD( a2600_cart )
 {
-	a2600_state *state = image.device().machine->driver_data<a2600_state>();
-	running_machine *machine = image.device().machine;
+	a2600_state *state = image.device().machine().driver_data<a2600_state>();
+	running_machine &machine = image.device().machine();
 	UINT8 *cart = CART;
 
-	state->cart_size = image.length();
+	state->m_cart_size = image.length();
 
-	switch (state->cart_size)
+	switch (state->m_cart_size)
 	{
 	case 0x00800:
 	case 0x01000:
@@ -580,15 +580,15 @@ static DEVICE_IMAGE_LOAD( a2600_cart )
 		return 1; /* unsupported image format */
 	}
 
-	state->current_bank = 0;
+	state->m_current_bank = 0;
 
-	image.fread(cart, state->cart_size);
+	image.fread(cart, state->m_cart_size);
 
-	if (!(state->cart_size == 0x4000 && detect_modef6(image.device().machine)))
+	if (!(state->m_cart_size == 0x4000 && detect_modef6(image.device().machine())))
 	{
-		while (state->cart_size > 0x00800)
+		while (state->m_cart_size > 0x00800)
 		{
-			if (!memcmp(cart, &cart[state->cart_size/2],state->cart_size/2)) state->cart_size /= 2;
+			if (!memcmp(cart, &cart[state->m_cart_size/2],state->m_cart_size/2)) state->m_cart_size /= 2;
 			else break;
 		}
 	}
@@ -599,218 +599,218 @@ static DEVICE_IMAGE_LOAD( a2600_cart )
 
 static int next_bank(a2600_state *state)
 {
-	return state->current_bank = (state->current_bank + 1) % 16;
+	return state->m_current_bank = (state->m_current_bank + 1) % 16;
 }
 
 
-static void modeF8_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void modeF8_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	state->bank_base[1] = CART + 0x1000 * offset;
-	memory_set_bankptr(machine,"bank1", state->bank_base[1]);
+	a2600_state *state = machine.driver_data<a2600_state>();
+	state->m_bank_base[1] = CART + 0x1000 * offset;
+	memory_set_bankptr(machine,"bank1", state->m_bank_base[1]);
 }
-static void modeFA_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void modeFA_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	state->bank_base[1] = CART + 0x1000 * offset;
-	memory_set_bankptr(machine,"bank1", state->bank_base[1]);
+	a2600_state *state = machine.driver_data<a2600_state>();
+	state->m_bank_base[1] = CART + 0x1000 * offset;
+	memory_set_bankptr(machine,"bank1", state->m_bank_base[1]);
 }
-static void modeF6_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void modeF6_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	state->bank_base[1] = CART + 0x1000 * offset;
-	memory_set_bankptr(machine,"bank1", state->bank_base[1]);
+	a2600_state *state = machine.driver_data<a2600_state>();
+	state->m_bank_base[1] = CART + 0x1000 * offset;
+	memory_set_bankptr(machine,"bank1", state->m_bank_base[1]);
 }
-static void modeF4_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void modeF4_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	state->bank_base[1] = CART + 0x1000 * offset;
-	memory_set_bankptr(machine,"bank1", state->bank_base[1]);
+	a2600_state *state = machine.driver_data<a2600_state>();
+	state->m_bank_base[1] = CART + 0x1000 * offset;
+	memory_set_bankptr(machine,"bank1", state->m_bank_base[1]);
 }
-static void mode3F_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void mode3F_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	state->bank_base[1] = CART + 0x800 * (data & (state->number_banks - 1));
-	memory_set_bankptr(machine,"bank1", state->bank_base[1]);
+	a2600_state *state = machine.driver_data<a2600_state>();
+	state->m_bank_base[1] = CART + 0x800 * (data & (state->m_number_banks - 1));
+	memory_set_bankptr(machine,"bank1", state->m_bank_base[1]);
 }
-static void modeUA_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void modeUA_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	state->bank_base[1] = CART + (offset >> 6) * 0x1000;
-	memory_set_bankptr(machine,"bank1", state->bank_base[1]);
+	a2600_state *state = machine.driver_data<a2600_state>();
+	state->m_bank_base[1] = CART + (offset >> 6) * 0x1000;
+	memory_set_bankptr(machine,"bank1", state->m_bank_base[1]);
 }
-static void modeE0_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void modeE0_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int bank = 1 + (offset >> 3);
 	char bank_name[10];
 	sprintf(bank_name,"bank%d",bank);
-	state->bank_base[bank] = CART + 0x400 * (offset & 7);
-	memory_set_bankptr(machine,bank_name, state->bank_base[bank]);
+	state->m_bank_base[bank] = CART + 0x400 * (offset & 7);
+	memory_set_bankptr(machine,bank_name, state->m_bank_base[bank]);
 }
-static void modeE7_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void modeE7_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	state->bank_base[1] = CART + 0x800 * offset;
-	memory_set_bankptr(machine,"bank1", state->bank_base[1]);
+	a2600_state *state = machine.driver_data<a2600_state>();
+	state->m_bank_base[1] = CART + 0x800 * offset;
+	memory_set_bankptr(machine,"bank1", state->m_bank_base[1]);
 }
-static void modeE7_RAM_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void modeE7_RAM_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	memory_set_bankptr(machine,"bank9", state->extra_RAM->base() + (4 + offset) * 256 );
+	a2600_state *state = machine.driver_data<a2600_state>();
+	memory_set_bankptr(machine,"bank9", state->m_extra_RAM->base() + (4 + offset) * 256 );
 }
-static void modeDC_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void modeDC_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	state->bank_base[1] = CART + 0x1000 * next_bank(state);
-	memory_set_bankptr(machine,"bank1", state->bank_base[1]);
+	a2600_state *state = machine.driver_data<a2600_state>();
+	state->m_bank_base[1] = CART + 0x1000 * next_bank(state);
+	memory_set_bankptr(machine,"bank1", state->m_bank_base[1]);
 }
-static void mode3E_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void mode3E_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	state->bank_base[1] = CART + 0x800 * (data & (state->number_banks - 1));
-	memory_set_bankptr(machine,"bank1", state->bank_base[1]);
-	state->mode3E_ram_enabled = 0;
+	a2600_state *state = machine.driver_data<a2600_state>();
+	state->m_bank_base[1] = CART + 0x800 * (data & (state->m_number_banks - 1));
+	memory_set_bankptr(machine,"bank1", state->m_bank_base[1]);
+	state->m_mode3E_ram_enabled = 0;
 }
-static void mode3E_RAM_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void mode3E_RAM_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	state->ram_base = state->extra_RAM->base() + 0x200 * ( data & 0x3F );
-	memory_set_bankptr(machine,"bank1", state->ram_base );
-	state->mode3E_ram_enabled = 1;
+	a2600_state *state = machine.driver_data<a2600_state>();
+	state->m_ram_base = state->m_extra_RAM->base() + 0x200 * ( data & 0x3F );
+	memory_set_bankptr(machine,"bank1", state->m_ram_base );
+	state->m_mode3E_ram_enabled = 1;
 }
-static void modeFV_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void modeFV_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	//printf("ModeFV %04x\n",offset);
-	if (!state->FVlocked && ( cpu_get_pc(machine->device("maincpu")) & 0x1F00 ) == 0x1F00 )
+	if (!state->m_FVlocked && ( cpu_get_pc(machine.device("maincpu")) & 0x1F00 ) == 0x1F00 )
 	{
-		state->FVlocked = 1;
-		state->current_bank = state->current_bank ^ 0x01;
-		state->bank_base[1] = CART + 0x1000 * state->current_bank;
-		memory_set_bankptr(machine,"bank1", state->bank_base[1]);
+		state->m_FVlocked = 1;
+		state->m_current_bank = state->m_current_bank ^ 0x01;
+		state->m_bank_base[1] = CART + 0x1000 * state->m_current_bank;
+		memory_set_bankptr(machine,"bank1", state->m_bank_base[1]);
 	}
 }
-static void modeJVP_switch(running_machine *machine, UINT16 offset, UINT8 data)
+static void modeJVP_switch(running_machine &machine, UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	switch( offset )
 	{
 	case 0x00:
 	case 0x20:
-		state->current_bank ^= 1;
+		state->m_current_bank ^= 1;
 		break;
 	default:
-		printf("%04X: write to unknown mapper address %02X\n", cpu_get_pc(machine->device("maincpu")), 0xfa0 + offset );
+		printf("%04X: write to unknown mapper address %02X\n", cpu_get_pc(machine.device("maincpu")), 0xfa0 + offset );
 		break;
 	}
-	state->bank_base[1] = CART + 0x1000 * state->current_bank;
-	memory_set_bankptr(machine, "bank1", state->bank_base[1] );
+	state->m_bank_base[1] = CART + 0x1000 * state->m_current_bank;
+	memory_set_bankptr(machine, "bank1", state->m_bank_base[1] );
 }
 
 
 /* These read handlers will return the byte from the new bank */
 static  READ8_HANDLER(modeF8_switch_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	modeF8_switch(space->machine, offset, 0);
-	return state->bank_base[1][0xff8 + offset];
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	modeF8_switch(space->machine(), offset, 0);
+	return state->m_bank_base[1][0xff8 + offset];
 }
 
 static  READ8_HANDLER(modeFA_switch_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	modeFA_switch(space->machine, offset, 0);
-	return state->bank_base[1][0xff8 + offset];
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	modeFA_switch(space->machine(), offset, 0);
+	return state->m_bank_base[1][0xff8 + offset];
 }
 
 static  READ8_HANDLER(modeF6_switch_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	modeF6_switch(space->machine, offset, 0);
-	return state->bank_base[1][0xff6 + offset];
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	modeF6_switch(space->machine(), offset, 0);
+	return state->m_bank_base[1][0xff6 + offset];
 }
 
 static  READ8_HANDLER(modeF4_switch_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	modeF4_switch(space->machine, offset, 0);
-	return state->bank_base[1][0xff4 + offset];
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	modeF4_switch(space->machine(), offset, 0);
+	return state->m_bank_base[1][0xff4 + offset];
 }
 
 static  READ8_HANDLER(modeE0_switch_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	modeE0_switch(space->machine, offset, 0);
-	return state->bank_base[4][0x3e0 + offset];
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	modeE0_switch(space->machine(), offset, 0);
+	return state->m_bank_base[4][0x3e0 + offset];
 }
 
 static  READ8_HANDLER(modeE7_switch_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	modeE7_switch(space->machine, offset, 0);
-	return state->bank_base[1][0xfe0 + offset];
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	modeE7_switch(space->machine(), offset, 0);
+	return state->m_bank_base[1][0xfe0 + offset];
 }
 
 static  READ8_HANDLER(modeE7_RAM_switch_r)
 {
-	modeE7_RAM_switch(space->machine, offset, 0);
+	modeE7_RAM_switch(space->machine(), offset, 0);
 	return 0;
 }
 
 static  READ8_HANDLER(modeUA_switch_r)
 {
-	modeUA_switch(space->machine, offset, 0);
+	modeUA_switch(space->machine(), offset, 0);
 	return 0;
 }
 
 static  READ8_HANDLER(modeDC_switch_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	modeDC_switch(space->machine, offset, 0);
-	return state->bank_base[1][0xff0 + offset];
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	modeDC_switch(space->machine(), offset, 0);
+	return state->m_bank_base[1][0xff0 + offset];
 }
 
 static  READ8_HANDLER(modeFV_switch_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	modeFV_switch(space->machine, offset, 0);
-	return state->bank_base[1][0xfd0 + offset];
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	modeFV_switch(space->machine(), offset, 0);
+	return state->m_bank_base[1][0xfd0 + offset];
 }
 
 static  READ8_HANDLER(modeJVP_switch_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	modeJVP_switch(space->machine, offset, 0);
-	return state->riot_ram[ 0x20 + offset ];
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	modeJVP_switch(space->machine(), offset, 0);
+	return state->m_riot_ram[ 0x20 + offset ];
 }
 
 
-static WRITE8_HANDLER(modeF8_switch_w) { modeF8_switch(space->machine, offset, data); }
-static WRITE8_HANDLER(modeFA_switch_w) { modeFA_switch(space->machine, offset, data); }
-static WRITE8_HANDLER(modeF6_switch_w) { modeF6_switch(space->machine, offset, data); }
-static WRITE8_HANDLER(modeF4_switch_w) { modeF4_switch(space->machine, offset, data); }
-static WRITE8_HANDLER(modeE0_switch_w) { modeE0_switch(space->machine, offset, data); }
-static WRITE8_HANDLER(modeE7_switch_w) { modeE7_switch(space->machine, offset, data); }
-static WRITE8_HANDLER(modeE7_RAM_switch_w) { modeE7_RAM_switch(space->machine, offset, data); }
-static WRITE8_HANDLER(mode3F_switch_w) { mode3F_switch(space->machine, offset, data); }
-static WRITE8_HANDLER(modeUA_switch_w) { modeUA_switch(space->machine, offset, data); }
-static WRITE8_HANDLER(modeDC_switch_w) { modeDC_switch(space->machine, offset, data); }
-static WRITE8_HANDLER(mode3E_switch_w) { mode3E_switch(space->machine, offset, data); }
-static WRITE8_HANDLER(mode3E_RAM_switch_w) { mode3E_RAM_switch(space->machine, offset, data); }
+static WRITE8_HANDLER(modeF8_switch_w) { modeF8_switch(space->machine(), offset, data); }
+static WRITE8_HANDLER(modeFA_switch_w) { modeFA_switch(space->machine(), offset, data); }
+static WRITE8_HANDLER(modeF6_switch_w) { modeF6_switch(space->machine(), offset, data); }
+static WRITE8_HANDLER(modeF4_switch_w) { modeF4_switch(space->machine(), offset, data); }
+static WRITE8_HANDLER(modeE0_switch_w) { modeE0_switch(space->machine(), offset, data); }
+static WRITE8_HANDLER(modeE7_switch_w) { modeE7_switch(space->machine(), offset, data); }
+static WRITE8_HANDLER(modeE7_RAM_switch_w) { modeE7_RAM_switch(space->machine(), offset, data); }
+static WRITE8_HANDLER(mode3F_switch_w) { mode3F_switch(space->machine(), offset, data); }
+static WRITE8_HANDLER(modeUA_switch_w) { modeUA_switch(space->machine(), offset, data); }
+static WRITE8_HANDLER(modeDC_switch_w) { modeDC_switch(space->machine(), offset, data); }
+static WRITE8_HANDLER(mode3E_switch_w) { mode3E_switch(space->machine(), offset, data); }
+static WRITE8_HANDLER(mode3E_RAM_switch_w) { mode3E_RAM_switch(space->machine(), offset, data); }
 static WRITE8_HANDLER(mode3E_RAM_w)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	if ( state->mode3E_ram_enabled )
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	if ( state->m_mode3E_ram_enabled )
 	{
-		state->ram_base[offset] = data;
+		state->m_ram_base[offset] = data;
 	}
 }
-static WRITE8_HANDLER(modeFV_switch_w) { modeFV_switch(space->machine, offset, data); }
+static WRITE8_HANDLER(modeFV_switch_w) { modeFV_switch(space->machine(), offset, data); }
 static WRITE8_HANDLER(modeJVP_switch_w)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	modeJVP_switch(space->machine, offset, data); state->riot_ram[ 0x20 + offset ] = data;
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	modeJVP_switch(space->machine(), offset, data); state->m_riot_ram[ 0x20 + offset ] = data;
 }
 
 
@@ -818,7 +818,7 @@ DIRECT_UPDATE_HANDLER( modeF6_opbase )
 {
 	if ( ( address & 0x1FFF ) >= 0x1FF6 && ( address & 0x1FFF ) <= 0x1FF9 )
 	{
-		modeF6_switch_w( cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), ( address & 0x1FFF ) - 0x1FF6, 0 );
+		modeF6_switch_w( machine->device("maincpu")->memory().space(AS_PROGRAM), ( address & 0x1FFF ) - 0x1FF6, 0 );
 	}
 	return address;
 }
@@ -830,11 +830,11 @@ DIRECT_UPDATE_HANDLER( modeSS_opbase )
 	{
 		if ( address & 0x800 )
 		{
-			direct.explicit_configure(( address & 0xf800 ), ( address & 0xf800 ) | 0x7ff, 0x7ff, state->bank_base[2]);
+			direct.explicit_configure(( address & 0xf800 ), ( address & 0xf800 ) | 0x7ff, 0x7ff, state->m_bank_base[2]);
 		}
 		else
 		{
-			direct.explicit_configure(( address & 0xf800 ), ( address & 0xf800 ) | 0x7ff, 0x7ff, state->bank_base[1]);
+			direct.explicit_configure(( address & 0xf800 ), ( address & 0xf800 ) | 0x7ff, 0x7ff, state->m_bank_base[1]);
 		}
 		return ~0;
 	}
@@ -843,67 +843,67 @@ DIRECT_UPDATE_HANDLER( modeSS_opbase )
 
 static READ8_HANDLER(modeSS_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	UINT8 data = ( offset & 0x800 ) ? state->bank_base[2][offset & 0x7FF] : state->bank_base[1][offset];
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	UINT8 data = ( offset & 0x800 ) ? state->m_bank_base[2][offset & 0x7FF] : state->m_bank_base[1][offset];
 
-	//logerror("%04X: read from modeSS area offset = %04X\n", cpu_get_pc(space->machine->device("maincpu")), offset);
+	//logerror("%04X: read from modeSS area offset = %04X\n", cpu_get_pc(space->machine().device("maincpu")), offset);
 	/* Check for control register "write" */
 	if ( offset == 0xFF8 )
 	{
-		//logerror("%04X: write to modeSS control register data = %02X\n", cpu_get_pc(space->machine->device("maincpu")), state->modeSS_byte);
-		state->modeSS_write_enabled = state->modeSS_byte & 0x02;
-		state->modeSS_write_delay = state->modeSS_byte >> 5;
-		switch ( state->modeSS_byte & 0x1C )
+		//logerror("%04X: write to modeSS control register data = %02X\n", cpu_get_pc(space->machine().device("maincpu")), state->m_modeSS_byte);
+		state->m_modeSS_write_enabled = state->m_modeSS_byte & 0x02;
+		state->m_modeSS_write_delay = state->m_modeSS_byte >> 5;
+		switch ( state->m_modeSS_byte & 0x1C )
 		{
 		case 0x00:
-			state->bank_base[1] = state->extra_RAM->base() + 2 * 0x800;
-			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? space->machine->region("maincpu")->base() + 0x1800 : space->machine->region("user1")->base();
-			state->modeSS_high_ram_enabled = 0;
+			state->m_bank_base[1] = state->m_extra_RAM->base() + 2 * 0x800;
+			state->m_bank_base[2] = ( state->m_modeSS_byte & 0x01 ) ? space->machine().region("maincpu")->base() + 0x1800 : space->machine().region("user1")->base();
+			state->m_modeSS_high_ram_enabled = 0;
 			break;
 		case 0x04:
-			state->bank_base[1] = state->extra_RAM->base();
-			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? space->machine->region("maincpu")->base() + 0x1800 : space->machine->region("user1")->base();
-			state->modeSS_high_ram_enabled = 0;
+			state->m_bank_base[1] = state->m_extra_RAM->base();
+			state->m_bank_base[2] = ( state->m_modeSS_byte & 0x01 ) ? space->machine().region("maincpu")->base() + 0x1800 : space->machine().region("user1")->base();
+			state->m_modeSS_high_ram_enabled = 0;
 			break;
 		case 0x08:
-			state->bank_base[1] = state->extra_RAM->base() + 2 * 0x800;
-			state->bank_base[2] = state->extra_RAM->base();
-			state->modeSS_high_ram_enabled = 1;
+			state->m_bank_base[1] = state->m_extra_RAM->base() + 2 * 0x800;
+			state->m_bank_base[2] = state->m_extra_RAM->base();
+			state->m_modeSS_high_ram_enabled = 1;
 			break;
 		case 0x0C:
-			state->bank_base[1] = state->extra_RAM->base();
-			state->bank_base[2] = state->extra_RAM->base() + 2 * 0x800;
-			state->modeSS_high_ram_enabled = 1;
+			state->m_bank_base[1] = state->m_extra_RAM->base();
+			state->m_bank_base[2] = state->m_extra_RAM->base() + 2 * 0x800;
+			state->m_modeSS_high_ram_enabled = 1;
 			break;
 		case 0x10:
-			state->bank_base[1] = state->extra_RAM->base() + 2 * 0x800;
-			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? space->machine->region("maincpu")->base() + 0x1800 : space->machine->region("user1")->base();
-			state->modeSS_high_ram_enabled = 0;
+			state->m_bank_base[1] = state->m_extra_RAM->base() + 2 * 0x800;
+			state->m_bank_base[2] = ( state->m_modeSS_byte & 0x01 ) ? space->machine().region("maincpu")->base() + 0x1800 : space->machine().region("user1")->base();
+			state->m_modeSS_high_ram_enabled = 0;
 			break;
 		case 0x14:
-			state->bank_base[1] = state->extra_RAM->base() + 0x800;
-			state->bank_base[2] = ( state->modeSS_byte & 0x01 ) ? space->machine->region("maincpu")->base() + 0x1800 : space->machine->region("user1")->base();
-			state->modeSS_high_ram_enabled = 0;
+			state->m_bank_base[1] = state->m_extra_RAM->base() + 0x800;
+			state->m_bank_base[2] = ( state->m_modeSS_byte & 0x01 ) ? space->machine().region("maincpu")->base() + 0x1800 : space->machine().region("user1")->base();
+			state->m_modeSS_high_ram_enabled = 0;
 			break;
 		case 0x18:
-			state->bank_base[1] = state->extra_RAM->base() + 2 * 0x800;
-			state->bank_base[2] = state->extra_RAM->base() + 0x800;
-			state->modeSS_high_ram_enabled = 1;
+			state->m_bank_base[1] = state->m_extra_RAM->base() + 2 * 0x800;
+			state->m_bank_base[2] = state->m_extra_RAM->base() + 0x800;
+			state->m_modeSS_high_ram_enabled = 1;
 			break;
 		case 0x1C:
-			state->bank_base[1] = state->extra_RAM->base() + 0x800;
-			state->bank_base[2] = state->extra_RAM->base() + 2 * 0x800;
-			state->modeSS_high_ram_enabled = 1;
+			state->m_bank_base[1] = state->m_extra_RAM->base() + 0x800;
+			state->m_bank_base[2] = state->m_extra_RAM->base() + 2 * 0x800;
+			state->m_modeSS_high_ram_enabled = 1;
 			break;
 		}
-		memory_set_bankptr(space->machine, "bank1", state->bank_base[1] );
-		memory_set_bankptr(space->machine, "bank2", state->bank_base[2] );
+		memory_set_bankptr(space->machine(), "bank1", state->m_bank_base[1] );
+		memory_set_bankptr(space->machine(), "bank2", state->m_bank_base[2] );
 	}
 	else if ( offset == 0xFF9 )
 	{
 		/* Cassette port read */
-		double tap_val = cassette_input( space->machine->device("cassette") );
-		//logerror("%04X: Cassette port read, tap_val = %f\n", cpu_get_pc(space->machine->device("maincpu")), tap_val);
+		double tap_val = cassette_input( space->machine().device("cassette") );
+		//logerror("%04X: Cassette port read, tap_val = %f\n", cpu_get_pc(space->machine().device("maincpu")), tap_val);
 		if ( tap_val < 0 )
 		{
 			data = 0x00;
@@ -916,51 +916,51 @@ static READ8_HANDLER(modeSS_r)
 	else
 	{
 		/* Possible RAM write */
-		if ( state->modeSS_write_enabled )
+		if ( state->m_modeSS_write_enabled )
 		{
-			int diff = space->machine->device<cpu_device>("maincpu")->total_cycles() - state->modeSS_byte_started;
-			//logerror("%04X: offset = %04X, %d\n", cpu_get_pc(space->machine->device("maincpu")), offset, diff);
-			if ( diff - state->modeSS_diff_adjust == 5 )
+			int diff = space->machine().device<cpu_device>("maincpu")->total_cycles() - state->m_modeSS_byte_started;
+			//logerror("%04X: offset = %04X, %d\n", cpu_get_pc(space->machine().device("maincpu")), offset, diff);
+			if ( diff - state->m_modeSS_diff_adjust == 5 )
 			{
-				//logerror("%04X: RAM write offset = %04X, data = %02X\n", cpu_get_pc(space->machine->device("maincpu")), offset, state->modeSS_byte );
+				//logerror("%04X: RAM write offset = %04X, data = %02X\n", cpu_get_pc(space->machine().device("maincpu")), offset, state->m_modeSS_byte );
 				if ( offset & 0x800 )
 				{
-					if ( state->modeSS_high_ram_enabled )
+					if ( state->m_modeSS_high_ram_enabled )
 					{
-						state->bank_base[2][offset & 0x7FF] = state->modeSS_byte;
-						data = state->modeSS_byte;
+						state->m_bank_base[2][offset & 0x7FF] = state->m_modeSS_byte;
+						data = state->m_modeSS_byte;
 					}
 				}
 				else
 				{
-					state->bank_base[1][offset] = state->modeSS_byte;
-					data = state->modeSS_byte;
+					state->m_bank_base[1][offset] = state->m_modeSS_byte;
+					data = state->m_modeSS_byte;
 				}
 			}
 			else if ( offset < 0x0100 )
 			{
-				state->modeSS_byte = offset;
-				state->modeSS_byte_started = space->machine->device<cpu_device>("maincpu")->total_cycles();
+				state->m_modeSS_byte = offset;
+				state->m_modeSS_byte_started = space->machine().device<cpu_device>("maincpu")->total_cycles();
 			}
 			/* Check for dummy read from same address */
 			if ( diff == 2 )
 			{
-				state->modeSS_diff_adjust = 1;
+				state->m_modeSS_diff_adjust = 1;
 			}
 			else
 			{
-				state->modeSS_diff_adjust = 0;
+				state->m_modeSS_diff_adjust = 0;
 			}
 		}
 		else if ( offset < 0x0100 )
 		{
-			state->modeSS_byte = offset;
-			state->modeSS_byte_started = space->machine->device<cpu_device>("maincpu")->total_cycles();
+			state->m_modeSS_byte = offset;
+			state->m_modeSS_byte_started = space->machine().device<cpu_device>("maincpu")->total_cycles();
 		}
 	}
 	/* Because the mame core caches opcode data and doesn't perform reads like normal */
 	/* we have to put in this little hack here to get Suicide Mission to work. */
-	if ( offset != 0xFF8 && ( cpu_get_pc(space->machine->device("maincpu")) & 0x1FFF ) == 0x1FF8 )
+	if ( offset != 0xFF8 && ( cpu_get_pc(space->machine().device("maincpu")) & 0x1FFF ) == 0x1FF8 )
 	{
 		modeSS_r( space, 0xFF8 );
 	}
@@ -970,26 +970,26 @@ static READ8_HANDLER(modeSS_r)
 INLINE void modeDPC_check_flag(a2600_state *state, UINT8 data_fetcher)
 {
 	/* Set flag when low counter equals top */
-	if ( state->dpc.df[data_fetcher].low == state->dpc.df[data_fetcher].top )
+	if ( state->m_dpc.df[data_fetcher].low == state->m_dpc.df[data_fetcher].top )
 	{
-		state->dpc.df[data_fetcher].flag = 1;
+		state->m_dpc.df[data_fetcher].flag = 1;
 	}
 	/* Reset flag when low counter equals bottom */
-	if ( state->dpc.df[data_fetcher].low == state->dpc.df[data_fetcher].bottom )
+	if ( state->m_dpc.df[data_fetcher].low == state->m_dpc.df[data_fetcher].bottom )
 	{
-		state->dpc.df[data_fetcher].flag = 0;
+		state->m_dpc.df[data_fetcher].flag = 0;
 	}
 }
 
 INLINE void modeDPC_decrement_counter(a2600_state *state, UINT8 data_fetcher)
 {
-	state->dpc.df[data_fetcher].low -= 1;
-	if ( state->dpc.df[data_fetcher].low == 0xFF )
+	state->m_dpc.df[data_fetcher].low -= 1;
+	if ( state->m_dpc.df[data_fetcher].low == 0xFF )
 	{
-		state->dpc.df[data_fetcher].high -= 1;
-		if ( data_fetcher > 4 && state->dpc.df[data_fetcher].music_mode )
+		state->m_dpc.df[data_fetcher].high -= 1;
+		if ( data_fetcher > 4 && state->m_dpc.df[data_fetcher].music_mode )
 		{
-			state->dpc.df[data_fetcher].low = state->dpc.df[data_fetcher].top;
+			state->m_dpc.df[data_fetcher].low = state->m_dpc.df[data_fetcher].top;
 		}
 	}
 
@@ -998,11 +998,11 @@ INLINE void modeDPC_decrement_counter(a2600_state *state, UINT8 data_fetcher)
 
 static TIMER_CALLBACK(modeDPC_timer_callback)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int data_fetcher;
 	for( data_fetcher = 5; data_fetcher < 8; data_fetcher++ )
 	{
-		if ( state->dpc.df[data_fetcher].osc_clk )
+		if ( state->m_dpc.df[data_fetcher].osc_clk )
 		{
 			modeDPC_decrement_counter( state, data_fetcher );
 		}
@@ -1013,52 +1013,52 @@ DIRECT_UPDATE_HANDLER(modeDPC_opbase_handler)
 {
 	a2600_state *state = machine->driver_data<a2600_state>();
 	UINT8	new_bit;
-	new_bit = ( state->dpc.shift_reg & 0x80 ) ^ ( ( state->dpc.shift_reg & 0x20 ) << 2 );
-	new_bit = new_bit ^ ( ( ( state->dpc.shift_reg & 0x10 ) << 3 ) ^ ( ( state->dpc.shift_reg & 0x08 ) << 4 ) );
+	new_bit = ( state->m_dpc.shift_reg & 0x80 ) ^ ( ( state->m_dpc.shift_reg & 0x20 ) << 2 );
+	new_bit = new_bit ^ ( ( ( state->m_dpc.shift_reg & 0x10 ) << 3 ) ^ ( ( state->m_dpc.shift_reg & 0x08 ) << 4 ) );
 	new_bit = new_bit ^ 0x80;
-	state->dpc.shift_reg = new_bit | ( state->dpc.shift_reg >> 1 );
+	state->m_dpc.shift_reg = new_bit | ( state->m_dpc.shift_reg >> 1 );
 	return address;
 }
 
 static READ8_HANDLER(modeDPC_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
+	a2600_state *state = space->machine().driver_data<a2600_state>();
 	static const UINT8 dpc_amplitude[8] = { 0x00, 0x04, 0x05, 0x09, 0x06, 0x0A, 0x0B, 0x0F };
 	UINT8	data_fetcher = offset & 0x07;
 	UINT8	data = 0xFF;
 
-	logerror("%04X: Read from DPC offset $%02X\n", cpu_get_pc(space->machine->device("maincpu")), offset);
+	logerror("%04X: Read from DPC offset $%02X\n", cpu_get_pc(space->machine().device("maincpu")), offset);
 	if ( offset < 0x08 )
 	{
 		switch( offset & 0x06 )
 		{
 		case 0x00:		/* Random number generator */
 		case 0x02:
-			return state->dpc.shift_reg;
+			return state->m_dpc.shift_reg;
 		case 0x04:		/* Sound value, MOVAMT value AND'd with Draw Line Carry; with Draw Line Add */
-			state->dpc.latch_62 = state->dpc.latch_64;
+			state->m_dpc.latch_62 = state->m_dpc.latch_64;
 		case 0x06:		/* Sound value, MOVAMT value AND'd with Draw Line Carry; without Draw Line Add */
-			state->dpc.latch_64 = state->dpc.latch_62 + state->dpc.df[4].top;
-			state->dpc.dlc = ( state->dpc.latch_62 + state->dpc.df[4].top > 0xFF ) ? 1 : 0;
+			state->m_dpc.latch_64 = state->m_dpc.latch_62 + state->m_dpc.df[4].top;
+			state->m_dpc.dlc = ( state->m_dpc.latch_62 + state->m_dpc.df[4].top > 0xFF ) ? 1 : 0;
 			data = 0;
-			if ( state->dpc.df[5].music_mode && state->dpc.df[5].flag )
+			if ( state->m_dpc.df[5].music_mode && state->m_dpc.df[5].flag )
 			{
 				data |= 0x01;
 			}
-			if ( state->dpc.df[6].music_mode && state->dpc.df[6].flag )
+			if ( state->m_dpc.df[6].music_mode && state->m_dpc.df[6].flag )
 			{
 				data |= 0x02;
 			}
-			if ( state->dpc.df[7].music_mode && state->dpc.df[7].flag )
+			if ( state->m_dpc.df[7].music_mode && state->m_dpc.df[7].flag )
 			{
 				data |= 0x04;
 			}
-			return ( state->dpc.dlc ? state->dpc.movamt & 0xF0 : 0 ) | dpc_amplitude[data];
+			return ( state->m_dpc.dlc ? state->m_dpc.movamt & 0xF0 : 0 ) | dpc_amplitude[data];
 		}
 	}
 	else
 	{
-		UINT8	display_data = space->machine->region("user1")->base()[0x2000 + ( ~ ( ( state->dpc.df[data_fetcher].low | ( state->dpc.df[data_fetcher].high << 8 ) ) ) & 0x7FF ) ];
+		UINT8	display_data = space->machine().region("user1")->base()[0x2000 + ( ~ ( ( state->m_dpc.df[data_fetcher].low | ( state->m_dpc.df[data_fetcher].high << 8 ) ) ) & 0x7FF ) ];
 
 		switch( offset & 0x38 )
 		{
@@ -1066,26 +1066,26 @@ static READ8_HANDLER(modeDPC_r)
 			data = display_data;
 			break;
 		case 0x10:			/* display data AND'd w/flag */
-			data = state->dpc.df[data_fetcher].flag ? display_data : 0x00;
+			data = state->m_dpc.df[data_fetcher].flag ? display_data : 0x00;
 			break;
 		case 0x18:			/* display data AND'd w/flag, nibbles swapped */
-			data = state->dpc.df[data_fetcher].flag ? BITSWAP8(display_data,3,2,1,0,7,6,5,4) : 0x00;
+			data = state->m_dpc.df[data_fetcher].flag ? BITSWAP8(display_data,3,2,1,0,7,6,5,4) : 0x00;
 			break;
 		case 0x20:			/* display data AND'd w/flag, byte reversed */
-			data = state->dpc.df[data_fetcher].flag ? BITSWAP8(display_data,0,1,2,3,4,5,6,7) : 0x00;
+			data = state->m_dpc.df[data_fetcher].flag ? BITSWAP8(display_data,0,1,2,3,4,5,6,7) : 0x00;
 			break;
 		case 0x28:			/* display data AND'd w/flag, rotated right */
-			data = state->dpc.df[data_fetcher].flag ? ( display_data >> 1 ) : 0x00;
+			data = state->m_dpc.df[data_fetcher].flag ? ( display_data >> 1 ) : 0x00;
 			break;
 		case 0x30:			/* display data AND'd w/flag, rotated left */
-			data = state->dpc.df[data_fetcher].flag ? ( display_data << 1 ) : 0x00;
+			data = state->m_dpc.df[data_fetcher].flag ? ( display_data << 1 ) : 0x00;
 			break;
 		case 0x38:			/* flag */
-			data = state->dpc.df[data_fetcher].flag ? 0xFF : 0x00;
+			data = state->m_dpc.df[data_fetcher].flag ? 0xFF : 0x00;
 			break;
 		}
 
-		if ( data_fetcher < 5 || ! state->dpc.df[data_fetcher].osc_clk )
+		if ( data_fetcher < 5 || ! state->m_dpc.df[data_fetcher].osc_clk )
 		{
 			modeDPC_decrement_counter( state, data_fetcher );
 		}
@@ -1095,53 +1095,53 @@ static READ8_HANDLER(modeDPC_r)
 
 static WRITE8_HANDLER(modeDPC_w)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
+	a2600_state *state = space->machine().driver_data<a2600_state>();
 	UINT8	data_fetcher = offset & 0x07;
 
 	switch( offset & 0x38 )
 	{
 	case 0x00:			/* Top count */
-		state->dpc.df[data_fetcher].top = data;
-		state->dpc.df[data_fetcher].flag = 0;
+		state->m_dpc.df[data_fetcher].top = data;
+		state->m_dpc.df[data_fetcher].flag = 0;
 		modeDPC_check_flag( state, data_fetcher );
 		break;
 	case 0x08:			/* Bottom count */
-		state->dpc.df[data_fetcher].bottom = data;
+		state->m_dpc.df[data_fetcher].bottom = data;
 		modeDPC_check_flag( state, data_fetcher );
 		break;
 	case 0x10:			/* Counter low */
-		state->dpc.df[data_fetcher].low = data;
+		state->m_dpc.df[data_fetcher].low = data;
 		if ( data_fetcher == 4 )
 		{
-			state->dpc.latch_64 = data;
+			state->m_dpc.latch_64 = data;
 		}
-		if ( data_fetcher > 4 && state->dpc.df[data_fetcher].music_mode )
+		if ( data_fetcher > 4 && state->m_dpc.df[data_fetcher].music_mode )
 		{
-			state->dpc.df[data_fetcher].low = state->dpc.df[data_fetcher].top;
+			state->m_dpc.df[data_fetcher].low = state->m_dpc.df[data_fetcher].top;
 		}
 		modeDPC_check_flag( state, data_fetcher );
 		break;
 	case 0x18:			/* Counter high */
-		state->dpc.df[data_fetcher].high = data;
-		state->dpc.df[data_fetcher].music_mode = data & 0x10;
-		state->dpc.df[data_fetcher].osc_clk = data & 0x20;
-		if ( data_fetcher > 4 && state->dpc.df[data_fetcher].music_mode && state->dpc.df[data_fetcher].low == 0xFF )
+		state->m_dpc.df[data_fetcher].high = data;
+		state->m_dpc.df[data_fetcher].music_mode = data & 0x10;
+		state->m_dpc.df[data_fetcher].osc_clk = data & 0x20;
+		if ( data_fetcher > 4 && state->m_dpc.df[data_fetcher].music_mode && state->m_dpc.df[data_fetcher].low == 0xFF )
 		{
-			state->dpc.df[data_fetcher].low = state->dpc.df[data_fetcher].top;
+			state->m_dpc.df[data_fetcher].low = state->m_dpc.df[data_fetcher].top;
 			modeDPC_check_flag( state, data_fetcher );
 		}
 		break;
 	case 0x20:			/* Draw line movement value / MOVAMT */
-		state->dpc.movamt = data;
+		state->m_dpc.movamt = data;
 		break;
 	case 0x28:			/* Not used */
-		logerror("%04X: Write to unused DPC register $%02X, data $%02X\n", cpu_get_pc(space->machine->device("maincpu")), offset, data);
+		logerror("%04X: Write to unused DPC register $%02X, data $%02X\n", cpu_get_pc(space->machine().device("maincpu")), offset, data);
 		break;
 	case 0x30:			/* Random number generator reset */
-		state->dpc.shift_reg = 0;
+		state->m_dpc.shift_reg = 0;
 		break;
 	case 0x38:			/* Not used */
-		logerror("%04X: Write to unused DPC register $%02X, data $%02X\n", cpu_get_pc(space->machine->device("maincpu")), offset, data);
+		logerror("%04X: Write to unused DPC register $%02X, data $%02X\n", cpu_get_pc(space->machine().device("maincpu")), offset, data);
 		break;
 	}
 }
@@ -1163,80 +1163,80 @@ direct_update_delegate FE_old_opbase_handler;
 DIRECT_UPDATE_HANDLER(modeFE_opbase_handler)
 {
 	a2600_state *state = machine->driver_data<a2600_state>();
-	if ( ! state->FETimer )
+	if ( ! state->m_FETimer )
 	{
 		/* Still cheating a bit here by looking bit 13 of the address..., but the high byte of the
            cpu should be the last byte that was on the data bus and so should determine the bank
            we should switch in. */
-		state->bank_base[1] = machine->region("user1")->base() + 0x1000 * ( ( address & 0x2000 ) ? 0 : 1 );
-		memory_set_bankptr(machine, "bank1", state->bank_base[1] );
+		state->m_bank_base[1] = machine->region("user1")->base() + 0x1000 * ( ( address & 0x2000 ) ? 0 : 1 );
+		memory_set_bankptr(*machine, "bank1", state->m_bank_base[1] );
 		/* and restore old opbase handler */
-		cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM)->set_direct_update_handler(FE_old_opbase_handler);
+		machine->device("maincpu")->memory().space(AS_PROGRAM)->set_direct_update_handler(FE_old_opbase_handler);
 	}
 	else
 	{
 		/* Wait for one memory access to have passed (reading of new PCH either from code or from stack) */
-		state->FETimer--;
+		state->m_FETimer--;
 	}
 	return address;
 }
 
-static void modeFE_switch(running_machine *machine,UINT16 offset, UINT8 data)
+static void modeFE_switch(running_machine &machine,UINT16 offset, UINT8 data)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	address_space* space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+	a2600_state *state = machine.driver_data<a2600_state>();
+	address_space* space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	/* Retrieve last byte read by the cpu (for this mapping scheme this
        should be the last byte that was on the data bus
     */
-	state->FETimer = 1;
-	FE_old_opbase_handler = space->set_direct_update_handler(direct_update_delegate_create_static(modeFE_opbase_handler, *machine));
+	state->m_FETimer = 1;
+	FE_old_opbase_handler = space->set_direct_update_handler(direct_update_delegate_create_static(modeFE_opbase_handler, machine));
 }
 
 static READ8_HANDLER(modeFE_switch_r)
 {
-	modeFE_switch(space->machine,offset, 0 );
+	modeFE_switch(space->machine(),offset, 0 );
 	return space->read_byte(0xFE );
 }
 
 static WRITE8_HANDLER(modeFE_switch_w)
 {
 	space->write_byte(0xFE, data );
-	modeFE_switch(space->machine,offset, 0 );
+	modeFE_switch(space->machine(),offset, 0 );
 }
 
 static  READ8_HANDLER(current_bank_r)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
-	return state->current_bank;
+	a2600_state *state = space->machine().driver_data<a2600_state>();
+	return state->m_current_bank;
 }
 
-static ADDRESS_MAP_START(a2600_mem, ADDRESS_SPACE_PROGRAM, 8)
+static ADDRESS_MAP_START(a2600_mem, AS_PROGRAM, 8)
 	ADDRESS_MAP_GLOBAL_MASK(0x1fff)
 	AM_RANGE(0x0000, 0x007F) AM_MIRROR(0x0F00) AM_READWRITE(tia_r, tia_w)
-	AM_RANGE(0x0080, 0x00FF) AM_MIRROR(0x0D00) AM_RAM AM_BASE_MEMBER(a2600_state, riot_ram)
+	AM_RANGE(0x0080, 0x00FF) AM_MIRROR(0x0D00) AM_RAM AM_BASE_MEMBER(a2600_state, m_riot_ram)
 	AM_RANGE(0x0280, 0x029F) AM_MIRROR(0x0D00) AM_DEVREADWRITE("riot", riot6532_r, riot6532_w)
 	AM_RANGE(0x1000, 0x1FFF)                   AM_ROMBANK("bank1")
 ADDRESS_MAP_END
 
 static WRITE8_DEVICE_HANDLER(switch_A_w)
 {
-	a2600_state *state = device->machine->driver_data<a2600_state>();
-	running_machine *machine = device->machine;
+	a2600_state *state = device->machine().driver_data<a2600_state>();
+	running_machine &machine = device->machine();
 
 	/* Left controller port */
 	if ( input_port_read(machine, "CONTROLLERS") / CATEGORY_SELECT == 0x03 )
 	{
-		state->keypad_left_column = data / 16;
+		state->m_keypad_left_column = data / 16;
 	}
 
 	/* Right controller port */
 	switch( input_port_read(machine, "CONTROLLERS") % CATEGORY_SELECT )
 	{
 	case 0x03:	/* Keypad */
-		state->keypad_right_column = data & 0x0F;
+		state->m_keypad_right_column = data & 0x0F;
 		break;
 	case 0x0a:	/* KidVid voice module */
-		cassette_change_state( machine->device("cassette"), ( data & 0x02 ) ? (cassette_state)CASSETTE_MOTOR_DISABLED : (cassette_state)(CASSETTE_MOTOR_ENABLED | CASSETTE_PLAY), (cassette_state)CASSETTE_MOTOR_DISABLED );
+		cassette_change_state( machine.device("cassette"), ( data & 0x02 ) ? (cassette_state)CASSETTE_MOTOR_DISABLED : (cassette_state)(CASSETTE_MOTOR_ENABLED | CASSETTE_PLAY), (cassette_state)CASSETTE_MOTOR_DISABLED );
 		break;
 	}
 }
@@ -1244,7 +1244,7 @@ static WRITE8_DEVICE_HANDLER(switch_A_w)
 static READ8_DEVICE_HANDLER( switch_A_r )
 {
 	static const UINT8 driving_lookup[4] = { 0x00, 0x02, 0x03, 0x01 };
-	running_machine *machine = device->machine;
+	running_machine &machine = device->machine();
 	UINT8 val = 0;
 
 	/* Left controller port PINs 1-4 ( 4321 ) */
@@ -1304,7 +1304,7 @@ static WRITE_LINE_DEVICE_HANDLER( irq_callback )
 
 static READ8_DEVICE_HANDLER( riot_input_port_8_r )
 {
-	return input_port_read(device->machine, "SWB");
+	return input_port_read(device->machine(), "SWB");
 }
 
 static const riot6532_interface r6532_interface =
@@ -1317,9 +1317,9 @@ static const riot6532_interface r6532_interface =
 };
 
 
-static void install_banks(running_machine *machine, int count, unsigned init)
+static void install_banks(running_machine &machine, int count, unsigned init)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
+	a2600_state *state = machine.driver_data<a2600_state>();
 	int i;
 	UINT8 *cart = CART;
 
@@ -1333,35 +1333,35 @@ static void install_banks(running_machine *machine, int count, unsigned init)
 			"bank4",
 		};
 
-		memory_install_read_bank(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM),
+		machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(
 			0x1000 + (i + 0) * 0x1000 / count - 0,
-			0x1000 + (i + 1) * 0x1000 / count - 1, 0, 0, handler[i]);
+			0x1000 + (i + 1) * 0x1000 / count - 1, handler[i]);
 
-		state->bank_base[i + 1] = cart + init;
-		memory_set_bankptr(machine,handler[i], state->bank_base[i + 1]);
+		state->m_bank_base[i + 1] = cart + init;
+		memory_set_bankptr(machine,handler[i], state->m_bank_base[i + 1]);
 	}
 }
 
 static READ16_HANDLER(a2600_read_input_port)
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
+	a2600_state *state = space->machine().driver_data<a2600_state>();
 	int i;
 
 	switch( offset )
 	{
 	case 0:	/* Left controller port PIN 5 */
-		switch ( input_port_read(space->machine, "CONTROLLERS") / CATEGORY_SELECT )
+		switch ( input_port_read(space->machine(), "CONTROLLERS") / CATEGORY_SELECT )
 		{
 		case 0x00:	/* Joystick */
 			return TIA_INPUT_PORT_ALWAYS_OFF;
 		case 0x01:	/* Paddle */
-			return input_port_read(space->machine, "PADDLE1");
+			return input_port_read(space->machine(), "PADDLE1");
 		case 0x03:	/* Keypad */
 			for ( i = 0; i < 4; i++ )
 			{
-				if ( ! ( ( state->keypad_left_column >> i ) & 0x01 ) )
+				if ( ! ( ( state->m_keypad_left_column >> i ) & 0x01 ) )
 				{
-					if ( ( input_port_read(space->machine, "KEYPAD_L") >> 3*i ) & 0x01 )
+					if ( ( input_port_read(space->machine(), "KEYPAD_L") >> 3*i ) & 0x01 )
 					{
 						return TIA_INPUT_PORT_ALWAYS_ON;
 					}
@@ -1373,24 +1373,24 @@ static READ16_HANDLER(a2600_read_input_port)
 			}
 			return TIA_INPUT_PORT_ALWAYS_ON;
 		case 0x05:	/* Boostergrip joystick */
-			return ( input_port_read(space->machine, "BUTTONS_L") & 0x40 ) ? TIA_INPUT_PORT_ALWAYS_OFF : TIA_INPUT_PORT_ALWAYS_ON;
+			return ( input_port_read(space->machine(), "BUTTONS_L") & 0x40 ) ? TIA_INPUT_PORT_ALWAYS_OFF : TIA_INPUT_PORT_ALWAYS_ON;
 		default:
 			return TIA_INPUT_PORT_ALWAYS_OFF;
 		}
 		break;
 	case 1:	/* Right controller port PIN 5 */
-		switch ( input_port_read(space->machine, "CONTROLLERS") / CATEGORY_SELECT )
+		switch ( input_port_read(space->machine(), "CONTROLLERS") / CATEGORY_SELECT )
 		{
 		case 0x00:	/* Joystick */
 			return TIA_INPUT_PORT_ALWAYS_OFF;
 		case 0x01:	/* Paddle */
-			return input_port_read(space->machine, "PADDLE3");
+			return input_port_read(space->machine(), "PADDLE3");
 		case 0x03:	/* Keypad */
 			for ( i = 0; i < 4; i++ )
 			{
-				if ( ! ( ( state->keypad_left_column >> i ) & 0x01 ) )
+				if ( ! ( ( state->m_keypad_left_column >> i ) & 0x01 ) )
 				{
-					if ( ( input_port_read(space->machine, "KEYPAD_L") >> 3*i ) & 0x02 )
+					if ( ( input_port_read(space->machine(), "KEYPAD_L") >> 3*i ) & 0x02 )
 					{
 						return TIA_INPUT_PORT_ALWAYS_ON;
 					}
@@ -1402,24 +1402,24 @@ static READ16_HANDLER(a2600_read_input_port)
 			}
 			return TIA_INPUT_PORT_ALWAYS_ON;
 		case 0x05:	/* Joystick w/Boostergrip */
-			return ( input_port_read(space->machine, "BUTTONS_L") & 0x20 ) ? TIA_INPUT_PORT_ALWAYS_OFF : TIA_INPUT_PORT_ALWAYS_ON;
+			return ( input_port_read(space->machine(), "BUTTONS_L") & 0x20 ) ? TIA_INPUT_PORT_ALWAYS_OFF : TIA_INPUT_PORT_ALWAYS_ON;
 		default:
 			return TIA_INPUT_PORT_ALWAYS_OFF;
 		}
 		break;
 	case 2:	/* Left controller port PIN 9 */
-		switch ( input_port_read(space->machine, "CONTROLLERS") % CATEGORY_SELECT )
+		switch ( input_port_read(space->machine(), "CONTROLLERS") % CATEGORY_SELECT )
 		{
 		case 0x00:	/* Joystick */
 			return TIA_INPUT_PORT_ALWAYS_OFF;
 		case 0x01:	/* Paddle */
-			return input_port_read(space->machine, "PADDLE2");
+			return input_port_read(space->machine(), "PADDLE2");
 		case 0x03:	/* Keypad */
 			for ( i = 0; i < 4; i++ )
 			{
-				if ( ! ( ( state->keypad_right_column >> i ) & 0x01 ) )
+				if ( ! ( ( state->m_keypad_right_column >> i ) & 0x01 ) )
 				{
-					if ( ( input_port_read(space->machine, "KEYPAD_R") >> 3*i ) & 0x01 )
+					if ( ( input_port_read(space->machine(), "KEYPAD_R") >> 3*i ) & 0x01 )
 					{
 						return TIA_INPUT_PORT_ALWAYS_ON;
 					}
@@ -1431,24 +1431,24 @@ static READ16_HANDLER(a2600_read_input_port)
 			}
 			return TIA_INPUT_PORT_ALWAYS_ON;
 		case 0x05:	/* Joystick w/Boostergrip */
-			return ( input_port_read(space->machine, "BUTTONS_R") & 0x40 ) ? TIA_INPUT_PORT_ALWAYS_OFF : TIA_INPUT_PORT_ALWAYS_ON;
+			return ( input_port_read(space->machine(), "BUTTONS_R") & 0x40 ) ? TIA_INPUT_PORT_ALWAYS_OFF : TIA_INPUT_PORT_ALWAYS_ON;
 		default:
 			return TIA_INPUT_PORT_ALWAYS_OFF;
 		}
 		break;
 	case 3:	/* Right controller port PIN 9 */
-		switch ( input_port_read(space->machine, "CONTROLLERS") % CATEGORY_SELECT )
+		switch ( input_port_read(space->machine(), "CONTROLLERS") % CATEGORY_SELECT )
 		{
 		case 0x00:	/* Joystick */
 			return TIA_INPUT_PORT_ALWAYS_OFF;
 		case 0x01:	/* Paddle */
-			return input_port_read(space->machine, "PADDLE4");
+			return input_port_read(space->machine(), "PADDLE4");
 		case 0x03:	/* Keypad */
 			for ( i = 0; i < 4; i++ )
 			{
-				if ( ! ( ( state->keypad_right_column >> i ) & 0x01 ) )
+				if ( ! ( ( state->m_keypad_right_column >> i ) & 0x01 ) )
 				{
-					if ( ( input_port_read(space->machine, "KEYPAD_R") >> 3*i ) & 0x02 )
+					if ( ( input_port_read(space->machine(), "KEYPAD_R") >> 3*i ) & 0x02 )
 					{
 						return TIA_INPUT_PORT_ALWAYS_ON;
 					}
@@ -1460,27 +1460,27 @@ static READ16_HANDLER(a2600_read_input_port)
 			}
 			return TIA_INPUT_PORT_ALWAYS_ON;
 		case 0x05:	/* Joystick w/Boostergrip */
-			return ( input_port_read(space->machine, "BUTTONS_R") & 0x20 ) ? TIA_INPUT_PORT_ALWAYS_OFF : TIA_INPUT_PORT_ALWAYS_ON;
+			return ( input_port_read(space->machine(), "BUTTONS_R") & 0x20 ) ? TIA_INPUT_PORT_ALWAYS_OFF : TIA_INPUT_PORT_ALWAYS_ON;
 		default:
 			return TIA_INPUT_PORT_ALWAYS_OFF;
 		}
 		break;
 	case 4:	/* Left controller port PIN 6 */
-		switch ( input_port_read(space->machine, "CONTROLLERS") / CATEGORY_SELECT )
+		switch ( input_port_read(space->machine(), "CONTROLLERS") / CATEGORY_SELECT )
 		{
 		case 0x00:	/* Joystick */
 		case 0x05:	/* Joystick w/Boostergrip */
-			return input_port_read(space->machine, "BUTTONS_L");
+			return input_port_read(space->machine(), "BUTTONS_L");
 		case 0x01:	/* Paddle */
 			return 0xff;
 		case 0x02:	/* Driving */
-			return input_port_read(space->machine, "BUTTONS_L") << 3;
+			return input_port_read(space->machine(), "BUTTONS_L") << 3;
 		case 0x03:	/* Keypad */
 			for ( i = 0; i < 4; i++ )
 			{
-				if ( ! ( ( state->keypad_left_column >> i ) & 0x01 ) )
+				if ( ! ( ( state->m_keypad_left_column >> i ) & 0x01 ) )
 				{
-					if ( ( input_port_read(space->machine, "KEYPAD_L") >> 3*i ) & 0x04 )
+					if ( ( input_port_read(space->machine(), "KEYPAD_L") >> 3*i ) & 0x04 )
 					{
 						return 0xff;
 					}
@@ -1492,27 +1492,27 @@ static READ16_HANDLER(a2600_read_input_port)
 			}
 			return 0xff;
 		case 0x06:	/* Trakball CX-22 */
-			return input_port_read(space->machine, "BUTTONS_L") << 4;
+			return input_port_read(space->machine(), "BUTTONS_L") << 4;
 		default:
 			return 0xff;
 		}
 		break;
 	case 5:	/* Right controller port PIN 6 */
-		switch ( input_port_read(space->machine, "CONTROLLERS") % CATEGORY_SELECT )
+		switch ( input_port_read(space->machine(), "CONTROLLERS") % CATEGORY_SELECT )
 		{
 		case 0x00:	/* Joystick */
 		case 0x05:	/* Joystick w/Boostergrip */
-			return input_port_read(space->machine, "BUTTONS_R");
+			return input_port_read(space->machine(), "BUTTONS_R");
 		case 0x01:	/* Paddle */
 			return 0xff;
 		case 0x02:	/* Driving */
-			return input_port_read(space->machine, "BUTTONS_R") << 3;
+			return input_port_read(space->machine(), "BUTTONS_R") << 3;
 		case 0x03:	/* Keypad */
 			for ( i = 0; i < 4; i++ )
 			{
-				if ( ! ( ( state->keypad_right_column >> i ) & 0x01 ) )
+				if ( ! ( ( state->m_keypad_right_column >> i ) & 0x01 ) )
 				{
-					if ( ( input_port_read(space->machine, "KEYPAD_R") >> 3*i ) & 0x04 )
+					if ( ( input_port_read(space->machine(), "KEYPAD_R") >> 3*i ) & 0x04 )
 					{
 						return 0xff;
 					}
@@ -1524,7 +1524,7 @@ static READ16_HANDLER(a2600_read_input_port)
 			}
 			return 0xff;
 		case 0x06:	/* Trakball CX-22 */
-			return input_port_read(space->machine, "BUTTONS_R") << 4;
+			return input_port_read(space->machine(), "BUTTONS_R") << 4;
 		default:
 			return 0xff;
 		}
@@ -1546,7 +1546,7 @@ static READ8_HANDLER(a2600_get_databus_contents)
 	UINT16	last_address, prev_address;
 	UINT8	last_byte, prev_byte;
 
-	last_address = cpu_get_pc(space->machine->device("maincpu")) - 1;
+	last_address = cpu_get_pc(space->machine().device("maincpu")) - 1;
 	if ( ! ( last_address & 0x1080 ) )
 	{
 		return offset;
@@ -1578,17 +1578,17 @@ static const rectangle visarea[4] = {
 
 static WRITE16_HANDLER( a2600_tia_vsync_callback )
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
+	a2600_state *state = space->machine().driver_data<a2600_state>();
 	int i;
 
 	for ( i = 0; i < ARRAY_LENGTH(supported_screen_heights); i++ )
 	{
 		if ( data >= supported_screen_heights[i] - 3 && data <= supported_screen_heights[i] + 3 )
 		{
-			if ( supported_screen_heights[i] != state->current_screen_height )
+			if ( supported_screen_heights[i] != state->m_current_screen_height )
 			{
-				state->current_screen_height = supported_screen_heights[i];
-//              machine->primary_screen->configure(228, state->current_screen_height, &visarea[i], HZ_TO_ATTOSECONDS( MASTER_CLOCK_NTSC ) * 228 * state->current_screen_height );
+				state->m_current_screen_height = supported_screen_heights[i];
+//              machine.primary_screen->configure(228, state->m_current_screen_height, &visarea[i], HZ_TO_ATTOSECONDS( MASTER_CLOCK_NTSC ) * 228 * state->m_current_screen_height );
 			}
 		}
 	}
@@ -1596,17 +1596,17 @@ static WRITE16_HANDLER( a2600_tia_vsync_callback )
 
 static WRITE16_HANDLER( a2600_tia_vsync_callback_pal )
 {
-	a2600_state *state = space->machine->driver_data<a2600_state>();
+	a2600_state *state = space->machine().driver_data<a2600_state>();
 	int i;
 
 	for ( i = 0; i < ARRAY_LENGTH(supported_screen_heights); i++ )
 	{
 		if ( data >= supported_screen_heights[i] - 3 && data <= supported_screen_heights[i] + 3 )
 		{
-			if ( supported_screen_heights[i] != state->current_screen_height )
+			if ( supported_screen_heights[i] != state->m_current_screen_height )
 			{
-				state->current_screen_height = supported_screen_heights[i];
-//              machine->primary_screen->configure(228, state->current_screen_height, &visarea[i], HZ_TO_ATTOSECONDS( MASTER_CLOCK_PAL ) * 228 * state->current_screen_height );
+				state->m_current_screen_height = supported_screen_heights[i];
+//              machine.primary_screen->configure(228, state->m_current_screen_height, &visarea[i], HZ_TO_ATTOSECONDS( MASTER_CLOCK_PAL ) * 228 * state->m_current_screen_height );
 			}
 		}
 	}
@@ -1627,15 +1627,15 @@ static const struct tia_interface tia_interface_pal =
 };
 
 
-static void common_init(running_machine *machine)
+static void common_init(running_machine &machine)
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	screen_device *screen = machine->first_screen();
-	state->current_screen_height = screen->height();
-	state->extra_RAM = machine->region_alloc("user2", 0x8600, 1, ENDIANNESS_LITTLE);
-	memset( state->riot_ram, 0x00, 0x80 );
-	state->current_reset_bank_counter = 0xFF;
-	state->dpc.oscillator = machine->scheduler().timer_alloc(FUNC(modeDPC_timer_callback));
+	a2600_state *state = machine.driver_data<a2600_state>();
+	screen_device *screen = machine.first_screen();
+	state->m_current_screen_height = screen->height();
+	state->m_extra_RAM = machine.region_alloc("user2", 0x8600, 1, ENDIANNESS_LITTLE);
+	memset( state->m_riot_ram, 0x00, 0x80 );
+	state->m_current_reset_bank_counter = 0xFF;
+	state->m_dpc.oscillator = machine.scheduler().timer_alloc(FUNC(modeDPC_timer_callback));
 }
 
 static MACHINE_START( a2600 )
@@ -1650,14 +1650,14 @@ static MACHINE_START( a2600p )
 	tia_init( machine, &tia_interface_pal );
 }
 
-static void set_category_value( running_machine *machine, const char* cat, const char *cat_selection )
+static void set_category_value( running_machine &machine, const char* cat, const char *cat_selection )
 {
 	/* NPW 22-May-2008 - FIXME */
 #if 0
 	input_port_entry	*cat_in = NULL;
 	input_port_entry	*in;
 
-	for( in = machine->input_ports; in->type != IPT_END; in++ )
+	for( in = machine.input_ports; in->type != IPT_END; in++ )
 	{
 		if ( in->type == IPT_CATEGORY_NAME && ! mame_stricmp( cat, input_port_name(in) ) )
 		{
@@ -1672,7 +1672,7 @@ static void set_category_value( running_machine *machine, const char* cat, const
 #endif
 }
 
-static void set_controller( running_machine *machine, const char *controller, unsigned int selection )
+static void set_controller( running_machine &machine, const char *controller, unsigned int selection )
 {
 	/* Defaulting to only joystick when joysstick and paddle are set for now... */
 	if ( selection == JOYS + PADD )
@@ -1697,13 +1697,13 @@ static void set_controller( running_machine *machine, const char *controller, un
 
 static MACHINE_RESET( a2600 )
 {
-	a2600_state *state = machine->driver_data<a2600_state>();
-	address_space* space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+	a2600_state *state = machine.driver_data<a2600_state>();
+	address_space* space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	int chip = 0xFF;
 	unsigned long controltemp;
 	static const unsigned char snowwhite[] = { 0x10, 0xd0, 0xff, 0xff }; // Snow White Proto
 
-	state->current_reset_bank_counter++;
+	state->m_current_reset_bank_counter++;
 
 	/* auto-detect special controllers */
 	controltemp = detect_2600controllers(machine);
@@ -1712,50 +1712,50 @@ static MACHINE_RESET( a2600 )
 
 	/* auto-detect bank mode */
 
-	if (state->banking_mode == 0xff) if (detect_modeDC(machine)) state->banking_mode = modeDC;
-	if (state->banking_mode == 0xff) if (detect_mode3E(machine)) state->banking_mode = mode3E;
-	if (state->banking_mode == 0xff) if (detect_modeFE(machine)) state->banking_mode = modeFE;
-	if (state->banking_mode == 0xff) if (detect_modeSS(machine)) state->banking_mode = modeSS;
-	if (state->banking_mode == 0xff) if (detect_modeE0(machine)) state->banking_mode = modeE0;
-	if (state->banking_mode == 0xff) if (detect_modeCV(machine)) state->banking_mode = modeCV;
-	if (state->banking_mode == 0xff) if (detect_modeFV(machine)) state->banking_mode = modeFV;
-	if (state->banking_mode == 0xff) if (detect_modeJVP(machine)) state->banking_mode = modeJVP;
-	if (state->banking_mode == 0xff) if (detect_modeUA(machine)) state->banking_mode = modeUA;
-	if (state->banking_mode == 0xff) if (detect_8K_mode3F(machine)) state->banking_mode = mode3F;
-	if (state->banking_mode == 0xff) if (detect_32K_mode3F(machine)) state->banking_mode = mode3F;
-	if (state->banking_mode == 0xff) if (detect_modeE7(machine)) state->banking_mode = modeE7;
+	if (state->m_banking_mode == 0xff) if (detect_modeDC(machine)) state->m_banking_mode = modeDC;
+	if (state->m_banking_mode == 0xff) if (detect_mode3E(machine)) state->m_banking_mode = mode3E;
+	if (state->m_banking_mode == 0xff) if (detect_modeFE(machine)) state->m_banking_mode = modeFE;
+	if (state->m_banking_mode == 0xff) if (detect_modeSS(machine)) state->m_banking_mode = modeSS;
+	if (state->m_banking_mode == 0xff) if (detect_modeE0(machine)) state->m_banking_mode = modeE0;
+	if (state->m_banking_mode == 0xff) if (detect_modeCV(machine)) state->m_banking_mode = modeCV;
+	if (state->m_banking_mode == 0xff) if (detect_modeFV(machine)) state->m_banking_mode = modeFV;
+	if (state->m_banking_mode == 0xff) if (detect_modeJVP(machine)) state->m_banking_mode = modeJVP;
+	if (state->m_banking_mode == 0xff) if (detect_modeUA(machine)) state->m_banking_mode = modeUA;
+	if (state->m_banking_mode == 0xff) if (detect_8K_mode3F(machine)) state->m_banking_mode = mode3F;
+	if (state->m_banking_mode == 0xff) if (detect_32K_mode3F(machine)) state->m_banking_mode = mode3F;
+	if (state->m_banking_mode == 0xff) if (detect_modeE7(machine)) state->m_banking_mode = modeE7;
 
-	if (state->banking_mode == 0xff)
+	if (state->m_banking_mode == 0xff)
 	{
-		switch (state->cart_size)
+		switch (state->m_cart_size)
 		{
 		case 0x800:
-			state->banking_mode = mode2K;
+			state->m_banking_mode = mode2K;
 			break;
 		case 0x1000:
-			state->banking_mode = mode4K;
+			state->m_banking_mode = mode4K;
 			break;
 		case 0x2000:
-			state->banking_mode = modeF8;
+			state->m_banking_mode = modeF8;
 			break;
 		case 0x28FF:
 		case 0x2900:
-			state->banking_mode = modeDPC;
+			state->m_banking_mode = modeDPC;
 			break;
 		case 0x3000:
-			state->banking_mode = modeFA;
+			state->m_banking_mode = modeFA;
 			break;
 		case 0x4000:
-			state->banking_mode = modeF6;
+			state->m_banking_mode = modeF6;
 			break;
 		case 0x8000:
-			state->banking_mode = modeF4;
+			state->m_banking_mode = modeF4;
 			break;
 		case 0x10000:
-			state->banking_mode = mode32in1;
+			state->m_banking_mode = mode32in1;
 			break;
 		case 0x80000:
-			state->banking_mode = mode3F;
+			state->m_banking_mode = mode3F;
 			break;
 		}
 	}
@@ -1764,7 +1764,7 @@ static MACHINE_RESET( a2600 )
 
 	chip = 0;
 
-	if (state->cart_size == 0x2000 || state->cart_size == 0x4000 || state->cart_size == 0x8000)
+	if (state->m_cart_size == 0x2000 || state->m_cart_size == 0x4000 || state->m_cart_size == 0x8000)
 	{
 		chip = detect_super_chip(machine);
 	}
@@ -1777,7 +1777,7 @@ static MACHINE_RESET( a2600 )
 
 	/* set up ROM banks */
 
-	switch (state->banking_mode)
+	switch (state->m_banking_mode)
 	{
 	case mode2K:
 		install_banks(machine, 2, 0x0000);
@@ -1819,8 +1819,8 @@ static MACHINE_RESET( a2600 )
 		break;
 
 	case mode3F:
-		install_banks(machine, 2, state->cart_size - 0x800);
-		state->number_banks = state->cart_size / 0x800;
+		install_banks(machine, 2, state->m_cart_size - 0x800);
+		state->m_number_banks = state->m_cart_size / 0x800;
 		break;
 
 	case modeUA:
@@ -1832,7 +1832,7 @@ static MACHINE_RESET( a2600 )
 		break;
 
 	case modeDC:
-		install_banks(machine, 1, 0x1000 * state->current_bank);
+		install_banks(machine, 1, 0x1000 * state->m_current_bank);
 		break;
 
 	case modeCV:
@@ -1840,9 +1840,9 @@ static MACHINE_RESET( a2600 )
 		break;
 
 	case mode3E:
-		install_banks(machine, 2, state->cart_size - 0x800);
-		state->number_banks = state->cart_size / 0x800;
-		state->mode3E_ram_enabled = 0;
+		install_banks(machine, 2, state->m_cart_size - 0x800);
+		state->m_number_banks = state->m_cart_size / 0x800;
+		state->m_mode3E_ram_enabled = 0;
 		break;
 
 	case modeSS:
@@ -1851,7 +1851,7 @@ static MACHINE_RESET( a2600 )
 
 	case modeFV:
 		install_banks(machine, 1, 0x0000);
-		state->current_bank = 0;
+		state->m_current_bank = 0;
 		break;
 
 	case modeDPC:
@@ -1860,164 +1860,164 @@ static MACHINE_RESET( a2600 )
 
 	case mode32in1:
 		install_banks(machine, 2, 0x0000);
-		state->current_reset_bank_counter = state->current_reset_bank_counter & 0x1F;
+		state->m_current_reset_bank_counter = state->m_current_reset_bank_counter & 0x1F;
 		break;
 
 	case modeJVP:
-		state->current_reset_bank_counter = state->current_reset_bank_counter & 1;
-		if ( state->cart_size == 0x2000 )
-			state->current_reset_bank_counter = 0;
-		state->current_bank = state->current_reset_bank_counter * 2;
-		install_banks(machine, 1, 0x1000 * state->current_bank);
+		state->m_current_reset_bank_counter = state->m_current_reset_bank_counter & 1;
+		if ( state->m_cart_size == 0x2000 )
+			state->m_current_reset_bank_counter = 0;
+		state->m_current_bank = state->m_current_reset_bank_counter * 2;
+		install_banks(machine, 1, 0x1000 * state->m_current_bank);
 		break;
 	}
 
 	/* set up bank counter */
 
-	if (state->banking_mode == modeDC)
+	if (state->m_banking_mode == modeDC)
 	{
-		memory_install_read8_handler(space, 0x1fec, 0x1fec, 0, 0, current_bank_r);
+		space->install_legacy_read_handler(0x1fec, 0x1fec, FUNC(current_bank_r));
 	}
 
 	/* set up bank switch registers */
 
-	switch (state->banking_mode)
+	switch (state->m_banking_mode)
 	{
 	case modeF8:
-		memory_install_write8_handler(space, 0x1ff8, 0x1ff9, 0, 0, modeF8_switch_w);
-		memory_install_read8_handler(space, 0x1ff8, 0x1ff9, 0, 0, modeF8_switch_r);
+		space->install_legacy_write_handler(0x1ff8, 0x1ff9, FUNC(modeF8_switch_w));
+		space->install_legacy_read_handler(0x1ff8, 0x1ff9, FUNC(modeF8_switch_r));
 		break;
 
 	case modeFA:
-		memory_install_write8_handler(space, 0x1ff8, 0x1ffa, 0, 0, modeFA_switch_w);
-		memory_install_read8_handler(space, 0x1ff8, 0x1ffa, 0, 0, modeFA_switch_r);
+		space->install_legacy_write_handler(0x1ff8, 0x1ffa, FUNC(modeFA_switch_w));
+		space->install_legacy_read_handler(0x1ff8, 0x1ffa, FUNC(modeFA_switch_r));
 		break;
 
 	case modeF6:
-		memory_install_write8_handler(space, 0x1ff6, 0x1ff9, 0, 0, modeF6_switch_w);
-		memory_install_read8_handler(space, 0x1ff6, 0x1ff9, 0, 0, modeF6_switch_r);
-		space->set_direct_update_handler(direct_update_delegate_create_static(modeF6_opbase, *machine));
+		space->install_legacy_write_handler(0x1ff6, 0x1ff9, FUNC(modeF6_switch_w));
+		space->install_legacy_read_handler(0x1ff6, 0x1ff9, FUNC(modeF6_switch_r));
+		space->set_direct_update_handler(direct_update_delegate_create_static(modeF6_opbase, machine));
 		break;
 
 	case modeF4:
-		memory_install_write8_handler(space, 0x1ff4, 0x1ffb, 0, 0, modeF4_switch_w);
-		memory_install_read8_handler(space, 0x1ff4, 0x1ffb, 0, 0, modeF4_switch_r);
+		space->install_legacy_write_handler(0x1ff4, 0x1ffb, FUNC(modeF4_switch_w));
+		space->install_legacy_read_handler(0x1ff4, 0x1ffb, FUNC(modeF4_switch_r));
 		break;
 
 	case modeE0:
-		memory_install_write8_handler(space, 0x1fe0, 0x1ff8, 0, 0, modeE0_switch_w);
-		memory_install_read8_handler(space, 0x1fe0, 0x1ff8, 0, 0, modeE0_switch_r);
+		space->install_legacy_write_handler(0x1fe0, 0x1ff8, FUNC(modeE0_switch_w));
+		space->install_legacy_read_handler(0x1fe0, 0x1ff8, FUNC(modeE0_switch_r));
 		break;
 
 	case mode3F:
-		memory_install_write8_handler(space, 0x00, 0x3f, 0, 0, mode3F_switch_w);
+		space->install_legacy_write_handler(0x00, 0x3f, FUNC(mode3F_switch_w));
 		break;
 
 	case modeUA:
-		memory_install_write8_handler(space, 0x200, 0x27f, 0, 0, modeUA_switch_w);
-		memory_install_read8_handler(space, 0x200, 0x27f, 0, 0, modeUA_switch_r);
+		space->install_legacy_write_handler(0x200, 0x27f, FUNC(modeUA_switch_w));
+		space->install_legacy_read_handler(0x200, 0x27f, FUNC(modeUA_switch_r));
 		break;
 
 	case modeE7:
-		memory_install_write8_handler(space, 0x1fe0, 0x1fe7, 0, 0, modeE7_switch_w);
-		memory_install_read8_handler(space, 0x1fe0, 0x1fe7, 0, 0, modeE7_switch_r);
-		memory_install_write8_handler(space, 0x1fe8, 0x1feb, 0, 0, modeE7_RAM_switch_w);
-		memory_install_read8_handler(space, 0x1fe8, 0x1feb, 0, 0, modeE7_RAM_switch_r);
-		memory_install_readwrite_bank(space, 0x1800, 0x18ff, 0, 0, "bank9");
-		memory_set_bankptr(machine, "bank9", state->extra_RAM->base() + 4 * 256 );
+		space->install_legacy_write_handler(0x1fe0, 0x1fe7, FUNC(modeE7_switch_w));
+		space->install_legacy_read_handler(0x1fe0, 0x1fe7, FUNC(modeE7_switch_r));
+		space->install_legacy_write_handler(0x1fe8, 0x1feb, FUNC(modeE7_RAM_switch_w));
+		space->install_legacy_read_handler(0x1fe8, 0x1feb, FUNC(modeE7_RAM_switch_r));
+		space->install_readwrite_bank(0x1800, 0x18ff, "bank9");
+		memory_set_bankptr(machine, "bank9", state->m_extra_RAM->base() + 4 * 256 );
 		break;
 
 	case modeDC:
-		memory_install_write8_handler(space, 0x1ff0, 0x1ff0, 0, 0, modeDC_switch_w);
-		memory_install_read8_handler(space, 0x1ff0, 0x1ff0, 0, 0, modeDC_switch_r);
+		space->install_legacy_write_handler(0x1ff0, 0x1ff0, FUNC(modeDC_switch_w));
+		space->install_legacy_read_handler(0x1ff0, 0x1ff0, FUNC(modeDC_switch_r));
 		break;
 
 	case modeFE:
-		memory_install_write8_handler(space, 0x01fe, 0x01fe, 0, 0, modeFE_switch_w);
-		memory_install_read8_handler(space, 0x01fe, 0x01fe, 0, 0, modeFE_switch_r);
+		space->install_legacy_write_handler(0x01fe, 0x01fe, FUNC(modeFE_switch_w));
+		space->install_legacy_read_handler(0x01fe, 0x01fe, FUNC(modeFE_switch_r));
 		break;
 
 	case mode3E:
-		memory_install_write8_handler(space, 0x3e, 0x3e, 0, 0, mode3E_RAM_switch_w);
-		memory_install_write8_handler(space, 0x3f, 0x3f, 0, 0, mode3E_switch_w);
-		memory_install_write8_handler(space, 0x1400, 0x15ff, 0, 0, mode3E_RAM_w);
+		space->install_legacy_write_handler(0x3e, 0x3e, FUNC(mode3E_RAM_switch_w));
+		space->install_legacy_write_handler(0x3f, 0x3f, FUNC(mode3E_switch_w));
+		space->install_legacy_write_handler(0x1400, 0x15ff, FUNC(mode3E_RAM_w));
 		break;
 
 	case modeSS:
-		memory_install_read8_handler(space, 0x1000, 0x1fff, 0, 0, modeSS_r);
-		state->bank_base[1] = state->extra_RAM->base() + 2 * 0x800;
-		state->bank_base[2] = CART;
-		memory_set_bankptr(machine, "bank1", state->bank_base[1] );
-		memory_set_bankptr(machine, "bank2", state->bank_base[2] );
-		state->modeSS_write_enabled = 0;
-		state->modeSS_byte_started = 0;
-		space->set_direct_update_handler(direct_update_delegate_create_static(modeSS_opbase, *machine));
+		space->install_legacy_read_handler(0x1000, 0x1fff, FUNC(modeSS_r));
+		state->m_bank_base[1] = state->m_extra_RAM->base() + 2 * 0x800;
+		state->m_bank_base[2] = CART;
+		memory_set_bankptr(machine, "bank1", state->m_bank_base[1] );
+		memory_set_bankptr(machine, "bank2", state->m_bank_base[2] );
+		state->m_modeSS_write_enabled = 0;
+		state->m_modeSS_byte_started = 0;
+		space->set_direct_update_handler(direct_update_delegate_create_static(modeSS_opbase, machine));
 		/* The Supercharger has no motor control so just enable it */
-		cassette_change_state( machine->device("cassette"), CASSETTE_MOTOR_ENABLED, CASSETTE_MOTOR_DISABLED );
+		cassette_change_state( machine.device("cassette"), CASSETTE_MOTOR_ENABLED, CASSETTE_MOTOR_DISABLED );
 		break;
 
 	case modeFV:
-		memory_install_write8_handler(space, 0x1fd0, 0x1fd0, 0, 0, modeFV_switch_w);
-		memory_install_read8_handler(space, 0x1fd0, 0x1fd0, 0, 0, modeFV_switch_r);
+		space->install_legacy_write_handler(0x1fd0, 0x1fd0, FUNC(modeFV_switch_w));
+		space->install_legacy_read_handler(0x1fd0, 0x1fd0, FUNC(modeFV_switch_r));
 		break;
 
 	case modeDPC:
-		memory_install_read8_handler(space, 0x1000, 0x103f, 0, 0, modeDPC_r);
-		memory_install_write8_handler(space, 0x1040, 0x107f, 0, 0, modeDPC_w);
-		memory_install_write8_handler(space, 0x1ff8, 0x1ff9, 0, 0, modeF8_switch_w);
-		memory_install_read8_handler(space, 0x1ff8, 0x1ff9, 0, 0, modeF8_switch_r);
-		space->set_direct_update_handler(direct_update_delegate_create_static(modeDPC_opbase_handler, *machine));
+		space->install_legacy_read_handler(0x1000, 0x103f, FUNC(modeDPC_r));
+		space->install_legacy_write_handler(0x1040, 0x107f, FUNC(modeDPC_w));
+		space->install_legacy_write_handler(0x1ff8, 0x1ff9, FUNC(modeF8_switch_w));
+		space->install_legacy_read_handler(0x1ff8, 0x1ff9, FUNC(modeF8_switch_r));
+		space->set_direct_update_handler(direct_update_delegate_create_static(modeDPC_opbase_handler, machine));
 		{
 			int	data_fetcher;
 			for( data_fetcher = 0; data_fetcher < 8; data_fetcher++ )
 			{
-				state->dpc.df[data_fetcher].osc_clk = 0;
-				state->dpc.df[data_fetcher].flag = 0;
-				state->dpc.df[data_fetcher].music_mode = 0;
+				state->m_dpc.df[data_fetcher].osc_clk = 0;
+				state->m_dpc.df[data_fetcher].flag = 0;
+				state->m_dpc.df[data_fetcher].music_mode = 0;
 			}
 		}
-		state->dpc.oscillator->adjust(attotime::from_hz(42000), 0, attotime::from_hz(42000));
+		state->m_dpc.oscillator->adjust(attotime::from_hz(42000), 0, attotime::from_hz(42000));
 		break;
 
 	case mode32in1:
-		memory_set_bankptr(machine, "bank1", CART + state->current_reset_bank_counter * 0x800 );
-		memory_set_bankptr(machine, "bank2", CART + state->current_reset_bank_counter * 0x800 );
+		memory_set_bankptr(machine, "bank1", CART + state->m_current_reset_bank_counter * 0x800 );
+		memory_set_bankptr(machine, "bank2", CART + state->m_current_reset_bank_counter * 0x800 );
 		break;
 
 	case modeJVP:
-		memory_install_read8_handler(space, 0x0FA0, 0x0FC0, 0, 0, modeJVP_switch_r);
-		memory_install_write8_handler(space, 0x0FA0, 0x0FC0, 0, 0, modeJVP_switch_w);
+		space->install_legacy_read_handler(0x0FA0, 0x0FC0, FUNC(modeJVP_switch_r));
+		space->install_legacy_write_handler(0x0FA0, 0x0FC0, FUNC(modeJVP_switch_w));
 		break;
 	}
 
 	/* set up extra RAM */
 
-	if (state->banking_mode == modeFA)
+	if (state->m_banking_mode == modeFA)
 	{
-		memory_install_write_bank(space, 0x1000, 0x10ff, 0, 0, "bank9");
-		memory_install_read_bank(space, 0x1100, 0x11ff, 0, 0, "bank9");
+		space->install_write_bank(0x1000, 0x10ff, "bank9");
+		space->install_read_bank(0x1100, 0x11ff, "bank9");
 
-		memory_set_bankptr(machine,"bank9", state->extra_RAM->base());
+		memory_set_bankptr(machine,"bank9", state->m_extra_RAM->base());
 	}
 
-	if (state->banking_mode == modeCV)
+	if (state->m_banking_mode == modeCV)
 	{
-		memory_install_write_bank(space, 0x1400, 0x17ff, 0, 0, "bank9");
-		memory_install_read_bank(space, 0x1000, 0x13ff, 0, 0, "bank9");
+		space->install_write_bank(0x1400, 0x17ff, "bank9");
+		space->install_read_bank(0x1000, 0x13ff, "bank9");
 
-		memory_set_bankptr(machine,"bank9", state->extra_RAM->base());
+		memory_set_bankptr(machine,"bank9", state->m_extra_RAM->base());
 	}
 
 	if (chip)
 	{
-		memory_install_write_bank(space, 0x1000, 0x107f, 0, 0, "bank9");
-		memory_install_read_bank(space, 0x1080, 0x10ff, 0, 0, "bank9");
+		space->install_write_bank(0x1000, 0x107f, "bank9");
+		space->install_read_bank(0x1080, 0x10ff, "bank9");
 
-		memory_set_bankptr(machine,"bank9", state->extra_RAM->base());
+		memory_set_bankptr(machine,"bank9", state->m_extra_RAM->base());
 	}
 
 	/* Banks may have changed, reset the cpu so it uses the correct reset vector */
-	machine->device("maincpu")->reset();
+	machine.device("maincpu")->reset();
 }
 
 

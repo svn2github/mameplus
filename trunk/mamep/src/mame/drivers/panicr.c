@@ -72,12 +72,12 @@ public:
 	panicr_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram;
-	tilemap_t *bgtilemap;
-	tilemap_t *txttilemap;
-	UINT8 *scrollram;
-	UINT8 *mainram;
-	UINT8 *spriteram;
+	UINT8 *m_videoram;
+	tilemap_t *m_bgtilemap;
+	tilemap_t *m_txttilemap;
+	UINT8 *m_scrollram;
+	UINT8 *m_mainram;
+	UINT8 *m_spriteram;
 };
 
 
@@ -91,7 +91,7 @@ static PALETTE_INIT( panicr )
 	int i;
 
 	/* allocate the colortable */
-	machine->colortable = colortable_alloc(machine, 0x100);
+	machine.colortable = colortable_alloc(machine, 0x100);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x100; i++)
@@ -100,7 +100,7 @@ static PALETTE_INIT( panicr )
 		int g = pal4bit(color_prom[i + 0x100]);
 		int b = pal4bit(color_prom[i + 0x200]);
 
-		colortable_palette_set_color(machine->colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* color_prom now points to the beginning of the lookup table */
@@ -116,7 +116,7 @@ static PALETTE_INIT( panicr )
 		else
 			ctabentry = (color_prom[i] & 0x3f) | 0x80;
 
-		colortable_entry_set_value(machine->colortable, i, ctabentry);
+		colortable_entry_set_value(machine.colortable, i, ctabentry);
 	}
 
 	// tile lookup table
@@ -124,7 +124,7 @@ static PALETTE_INIT( panicr )
 	{
 		UINT8 ctabentry = (color_prom[i] & 0x3f) | 0x00;
 
-		colortable_entry_set_value(machine->colortable, i, ctabentry);
+		colortable_entry_set_value(machine.colortable, i, ctabentry);
 	}
 
 	// sprite lookup table
@@ -137,7 +137,7 @@ static PALETTE_INIT( panicr )
 		else
 			ctabentry = (color_prom[i] & 0x3f) | 0x40;
 
-		colortable_entry_set_value(machine->colortable, i, ctabentry);
+		colortable_entry_set_value(machine.colortable, i, ctabentry);
 	}
 }
 
@@ -145,8 +145,8 @@ static TILE_GET_INFO( get_bgtile_info )
 {
 	int code,attr;
 
-	code=machine->region("user1")->base()[tile_index];
-	attr=machine->region("user2")->base()[tile_index];
+	code=machine.region("user1")->base()[tile_index];
+	attr=machine.region("user2")->base()[tile_index];
 	code+=((attr&7)<<8);
 	SET_TILE_INFO(
 		1,
@@ -157,8 +157,8 @@ static TILE_GET_INFO( get_bgtile_info )
 
 static TILE_GET_INFO( get_txttile_info )
 {
-	panicr_state *state = machine->driver_data<panicr_state>();
-	UINT8 *videoram = state->videoram;
+	panicr_state *state = machine.driver_data<panicr_state>();
+	UINT8 *videoram = state->m_videoram;
 	int code=videoram[tile_index*4];
 	int attr=videoram[tile_index*4+2];
 	int color = attr & 0x07;
@@ -187,12 +187,12 @@ static WRITE8_HANDLER(t5182shared_w)
 }
 
 
-static ADDRESS_MAP_START( panicr_map, ADDRESS_SPACE_PROGRAM, 8 )
-	AM_RANGE(0x00000, 0x01fff) AM_RAM AM_BASE_MEMBER(panicr_state, mainram)
-	AM_RANGE(0x02000, 0x02fff) AM_RAM AM_BASE_MEMBER(panicr_state, spriteram)
+static ADDRESS_MAP_START( panicr_map, AS_PROGRAM, 8 )
+	AM_RANGE(0x00000, 0x01fff) AM_RAM AM_BASE_MEMBER(panicr_state, m_mainram)
+	AM_RANGE(0x02000, 0x02fff) AM_RAM AM_BASE_MEMBER(panicr_state, m_spriteram)
 	AM_RANGE(0x03000, 0x03fff) AM_RAM
 	AM_RANGE(0x08000, 0x0bfff) AM_RAM AM_REGION("user3", 0) //attribue map ?
-	AM_RANGE(0x0c000, 0x0cfff) AM_RAM AM_BASE_MEMBER(panicr_state, videoram)
+	AM_RANGE(0x0c000, 0x0cfff) AM_RAM AM_BASE_MEMBER(panicr_state, m_videoram)
 	AM_RANGE(0x0d000, 0x0d000) AM_WRITE(t5182_sound_irq_w)
 	AM_RANGE(0x0d002, 0x0d002) AM_READ(t5182_sharedram_semaphore_snd_r)
 	AM_RANGE(0x0d004, 0x0d004) AM_WRITE(t5182_sharedram_semaphore_main_acquire_w)
@@ -203,23 +203,23 @@ static ADDRESS_MAP_START( panicr_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0d404, 0x0d404) AM_READ_PORT("START")
 	AM_RANGE(0x0d406, 0x0d406) AM_READ_PORT("DSW1")
 	AM_RANGE(0x0d407, 0x0d407) AM_READ_PORT("DSW2")
-	AM_RANGE(0x0d800, 0x0d81f) AM_RAM AM_BASE_MEMBER(panicr_state, scrollram)
+	AM_RANGE(0x0d800, 0x0d81f) AM_RAM AM_BASE_MEMBER(panicr_state, m_scrollram)
 	AM_RANGE(0xf0000, 0xfffff) AM_ROM
 ADDRESS_MAP_END
 
 static VIDEO_START( panicr )
 {
-	panicr_state *state = machine->driver_data<panicr_state>();
-	state->bgtilemap = tilemap_create( machine, get_bgtile_info,tilemap_scan_rows,16,16,1024,16 );
+	panicr_state *state = machine.driver_data<panicr_state>();
+	state->m_bgtilemap = tilemap_create( machine, get_bgtile_info,tilemap_scan_rows,16,16,1024,16 );
 
-	state->txttilemap = tilemap_create( machine, get_txttile_info,tilemap_scan_rows,8,8,32,32 );
-	colortable_configure_tilemap_groups(machine->colortable, state->txttilemap, machine->gfx[0], 0);
+	state->m_txttilemap = tilemap_create( machine, get_txttile_info,tilemap_scan_rows,8,8,32,32 );
+	colortable_configure_tilemap_groups(machine.colortable, state->m_txttilemap, machine.gfx[0], 0);
 }
 
-static void draw_sprites(running_machine *machine, bitmap_t *bitmap,const rectangle *cliprect )
+static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect )
 {
-	panicr_state *state = machine->driver_data<panicr_state>();
-	UINT8 *spriteram = state->spriteram;
+	panicr_state *state = machine.driver_data<panicr_state>();
+	UINT8 *spriteram = state->m_spriteram;
 	int offs,flipx,flipy,x,y,color,sprite;
 
 	for (offs = 0; offs<0x1000; offs+=16)
@@ -231,24 +231,24 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap,const rectan
 		if (spriteram[offs+1] & 0x40) x -= 0x100;
 
 		color = spriteram[offs+1] & 0x0f;
-		sprite = spriteram[offs+0]+(state->scrollram[0x0c]<<8);
+		sprite = spriteram[offs+0]+(state->m_scrollram[0x0c]<<8);
 
-		drawgfx_transmask(bitmap,cliprect,machine->gfx[2],
+		drawgfx_transmask(bitmap,cliprect,machine.gfx[2],
 				sprite,
 				color,flipx,flipy,x,y,
-				colortable_get_transpen_mask(machine->colortable, machine->gfx[2], color, 0));
+				colortable_get_transpen_mask(machine.colortable, machine.gfx[2], color, 0));
 	}
 }
 
 static SCREEN_UPDATE( panicr)
 {
-	panicr_state *state = screen->machine->driver_data<panicr_state>();
-	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine));
-	tilemap_mark_all_tiles_dirty( state->txttilemap );
-	tilemap_set_scrollx( state->bgtilemap,0, ((state->scrollram[0x02]&0x0f)<<12)+((state->scrollram[0x02]&0xf0)<<4)+((state->scrollram[0x04]&0x7f)<<1)+((state->scrollram[0x04]&0x80)>>7) );
-	tilemap_draw(bitmap,cliprect,state->bgtilemap,0,0);
-	draw_sprites(screen->machine,bitmap,cliprect);
-	tilemap_draw(bitmap,cliprect,state->txttilemap,0,0);
+	panicr_state *state = screen->machine().driver_data<panicr_state>();
+	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
+	tilemap_mark_all_tiles_dirty( state->m_txttilemap );
+	tilemap_set_scrollx( state->m_bgtilemap,0, ((state->m_scrollram[0x02]&0x0f)<<12)+((state->m_scrollram[0x02]&0xf0)<<4)+((state->m_scrollram[0x04]&0x7f)<<1)+((state->m_scrollram[0x04]&0x80)>>7) );
+	tilemap_draw(bitmap,cliprect,state->m_bgtilemap,0,0);
+	draw_sprites(screen->machine(),bitmap,cliprect);
+	tilemap_draw(bitmap,cliprect,state->m_txttilemap,0,0);
 
 	return 0;
 }
@@ -256,9 +256,9 @@ static SCREEN_UPDATE( panicr)
 static INTERRUPT_GEN( panicr_interrupt )
 {
 	if (cpu_getiloops(device))
-		cpu_set_input_line_and_vector(device, 0, HOLD_LINE, 0xc8/4);
+		device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xc8/4);
 	else
-		cpu_set_input_line_and_vector(device, 0, HOLD_LINE, 0xc4/4);
+		device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xc4/4);
 }
 
 static INPUT_PORTS_START( panicr )
@@ -461,8 +461,8 @@ static DRIVER_INIT( panicr )
 	int size;
 	int i;
 
-	rom = machine->region("gfx1")->base();
-	size = machine->region("gfx1")->bytes();
+	rom = machine.region("gfx1")->base();
+	size = machine.region("gfx1")->bytes();
 
 	// text data lines
 	for (i = 0;i < size/2;i++)
@@ -484,8 +484,8 @@ static DRIVER_INIT( panicr )
 	}
 
 
-	rom = machine->region("gfx2")->base();
-	size = machine->region("gfx2")->bytes();
+	rom = machine.region("gfx2")->base();
+	size = machine.region("gfx2")->bytes();
 
 	// tiles data lines
 	for (i = 0;i < size/4;i++)
@@ -511,8 +511,8 @@ static DRIVER_INIT( panicr )
 	}
 
 
-	rom = machine->region("gfx3")->base();
-	size = machine->region("gfx3")->bytes();
+	rom = machine.region("gfx3")->base();
+	size = machine.region("gfx3")->bytes();
 
 	// sprites data lines
 	for (i = 0;i < size/2;i++)
@@ -537,8 +537,8 @@ static DRIVER_INIT( panicr )
 
 	//rearrange  bg tilemaps a bit....
 
-	rom = machine->region("user1")->base();
-	size = machine->region("user1")->bytes();
+	rom = machine.region("user1")->base();
+	size = machine.region("user1")->bytes();
 	memcpy(buf,rom, size);
 
 	{
@@ -550,8 +550,8 @@ static DRIVER_INIT( panicr )
 			}
 	}
 
-	rom = machine->region("user2")->base();
-	size = machine->region("user2")->bytes();
+	rom = machine.region("user2")->base();
+	size = machine.region("user2")->bytes();
 
 	memcpy(buf,rom, size);
 	{

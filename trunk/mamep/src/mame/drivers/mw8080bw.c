@@ -167,8 +167,8 @@
 
 static READ8_HANDLER( mw8080bw_shift_result_rev_r )
 {
-	mw8080bw_state *state = space->machine->driver_data<mw8080bw_state>();
-	UINT8 ret = mb14241_shift_result_r(state->mb14241, 0);
+	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
+	UINT8 ret = mb14241_shift_result_r(state->m_mb14241, 0);
 
 	return BITSWAP8(ret,0,1,2,3,4,5,6,7);
 }
@@ -176,16 +176,16 @@ static READ8_HANDLER( mw8080bw_shift_result_rev_r )
 
 static READ8_HANDLER( mw8080bw_reversable_shift_result_r )
 {
-	mw8080bw_state *state = space->machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 	UINT8 ret;
 
-	if (state->rev_shift_res)
+	if (state->m_rev_shift_res)
 	{
 		ret = mw8080bw_shift_result_rev_r(space, 0);
 	}
 	else
 	{
-		ret = mb14241_shift_result_r(state->mb14241, 0);
+		ret = mb14241_shift_result_r(state->m_mb14241, 0);
 	}
 
 	return ret;
@@ -193,10 +193,10 @@ static READ8_HANDLER( mw8080bw_reversable_shift_result_r )
 
 static WRITE8_HANDLER( mw8080bw_reversable_shift_count_w)
 {
-	mw8080bw_state *state = space->machine->driver_data<mw8080bw_state>();
-	mb14241_shift_count_w(state->mb14241, offset, data);
+	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
+	mb14241_shift_count_w(state->m_mb14241, offset, data);
 
-	state->rev_shift_res = data & 0x08;
+	state->m_rev_shift_res = data & 0x08;
 }
 
 
@@ -207,10 +207,10 @@ static WRITE8_HANDLER( mw8080bw_reversable_shift_count_w)
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x1fff) AM_ROM AM_WRITENOP
-	AM_RANGE(0x2000, 0x3fff) AM_MIRROR(0x4000) AM_RAM AM_BASE_SIZE_MEMBER(mw8080bw_state, main_ram, main_ram_size)
+	AM_RANGE(0x2000, 0x3fff) AM_MIRROR(0x4000) AM_RAM AM_BASE_SIZE_MEMBER(mw8080bw_state, m_main_ram, m_main_ram_size)
 	AM_RANGE(0x4000, 0x5fff) AM_ROM AM_WRITENOP
 ADDRESS_MAP_END
 
@@ -319,12 +319,12 @@ static WRITE8_HANDLER( seawolf_periscope_lamp_w )
 
 static CUSTOM_INPUT( seawolf_erase_input_r )
 {
-	return input_port_read(field->port->machine, SEAWOLF_ERASE_SW_PORT_TAG) &
-		   input_port_read(field->port->machine, SEAWOLF_ERASE_DIP_PORT_TAG);
+	return input_port_read(field->port->machine(), SEAWOLF_ERASE_SW_PORT_TAG) &
+		   input_port_read(field->port->machine(), SEAWOLF_ERASE_DIP_PORT_TAG);
 }
 
 
-static ADDRESS_MAP_START( seawolf_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( seawolf_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ(mw8080bw_shift_result_rev_r)
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN0")
@@ -424,20 +424,20 @@ MACHINE_CONFIG_END
 
 static WRITE8_HANDLER( gunfight_io_w )
 {
-	mw8080bw_state *state = space->machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 	if (offset & 0x01)
 		gunfight_audio_w(space, 0, data);
 
 	if (offset & 0x02)
-		mb14241_shift_count_w(state->mb14241, 0, data);
+		mb14241_shift_count_w(state->m_mb14241, 0, data);
 
 	if (offset & 0x04)
-		mb14241_shift_data_w(state->mb14241, 0, data);
+		mb14241_shift_data_w(state->m_mb14241, 0, data);
 
 }
 
 
-static ADDRESS_MAP_START( gunfight_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( gunfight_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -551,7 +551,7 @@ MACHINE_CONFIG_END
 #define TORNBASE_CAB_TYPE_PORT_TAG		("CAB")
 
 
-UINT8 tornbase_get_cabinet_type(running_machine *machine)
+UINT8 tornbase_get_cabinet_type(running_machine &machine)
 {
 	return input_port_read(machine, TORNBASE_CAB_TYPE_PORT_TAG);
 }
@@ -559,7 +559,7 @@ UINT8 tornbase_get_cabinet_type(running_machine *machine)
 
 static CUSTOM_INPUT( tornbase_hit_left_input_r )
 {
-	return input_port_read(field->port->machine, TORNBASE_L_HIT_PORT_TAG);
+	return input_port_read(field->port->machine(), TORNBASE_L_HIT_PORT_TAG);
 }
 
 
@@ -567,16 +567,16 @@ static CUSTOM_INPUT( tornbase_hit_right_input_r )
 {
 	UINT32 ret;
 
-	switch (tornbase_get_cabinet_type(field->port->machine))
+	switch (tornbase_get_cabinet_type(field->port->machine()))
 	{
 	case TORNBASE_CAB_TYPE_UPRIGHT_OLD:
-		ret = input_port_read(field->port->machine, TORNBASE_L_HIT_PORT_TAG);
+		ret = input_port_read(field->port->machine(), TORNBASE_L_HIT_PORT_TAG);
 		break;
 
 	case TORNBASE_CAB_TYPE_UPRIGHT_NEW:
 	case TORNBASE_CAB_TYPE_COCKTAIL:
 	default:
-		ret = input_port_read(field->port->machine, TORNBASE_R_HIT_PORT_TAG);
+		ret = input_port_read(field->port->machine(), TORNBASE_R_HIT_PORT_TAG);
 		break;
 	}
 
@@ -588,16 +588,16 @@ static CUSTOM_INPUT( tornbase_pitch_left_input_r )
 {
 	UINT32 ret;
 
-	switch (tornbase_get_cabinet_type(field->port->machine))
+	switch (tornbase_get_cabinet_type(field->port->machine()))
 	{
 	case TORNBASE_CAB_TYPE_UPRIGHT_OLD:
 	case TORNBASE_CAB_TYPE_UPRIGHT_NEW:
-		ret = input_port_read(field->port->machine, TORNBASE_L_PITCH_PORT_TAG);
+		ret = input_port_read(field->port->machine(), TORNBASE_L_PITCH_PORT_TAG);
 		break;
 
 	case TORNBASE_CAB_TYPE_COCKTAIL:
 	default:
-		ret = input_port_read(field->port->machine, TORNBASE_R_PITCH_PORT_TAG);
+		ret = input_port_read(field->port->machine(), TORNBASE_R_PITCH_PORT_TAG);
 		break;
 	}
 
@@ -607,33 +607,33 @@ static CUSTOM_INPUT( tornbase_pitch_left_input_r )
 
 static CUSTOM_INPUT( tornbase_pitch_right_input_r )
 {
-	return input_port_read(field->port->machine, TORNBASE_L_PITCH_PORT_TAG);
+	return input_port_read(field->port->machine(), TORNBASE_L_PITCH_PORT_TAG);
 }
 
 
 static CUSTOM_INPUT( tornbase_score_input_r )
 {
-	return input_port_read(field->port->machine, TORNBASE_SCORE_SW_PORT_TAG) &
-		   input_port_read(field->port->machine, TORNBASE_SCORE_DIP_PORT_TAG);
+	return input_port_read(field->port->machine(), TORNBASE_SCORE_SW_PORT_TAG) &
+		   input_port_read(field->port->machine(), TORNBASE_SCORE_DIP_PORT_TAG);
 }
 
 
 static WRITE8_HANDLER( tornbase_io_w )
 {
-	mw8080bw_state *state = space->machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 
 	if (offset & 0x01)
-		tornbase_audio_w(space->machine->device("discrete"), 0, data);
+		tornbase_audio_w(space->machine().device("discrete"), 0, data);
 
 	if (offset & 0x02)
-		mb14241_shift_count_w(state->mb14241, 0, data);
+		mb14241_shift_count_w(state->m_mb14241, 0, data);
 
 	if (offset & 0x04)
-		mb14241_shift_data_w(state->mb14241, 0, data);
+		mb14241_shift_data_w(state->m_mb14241, 0, data);
 }
 
 
-static ADDRESS_MAP_START( tornbase_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( tornbase_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -753,7 +753,7 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( zzzap_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( zzzap_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -873,32 +873,32 @@ MACHINE_CONFIG_END
 
 static STATE_POSTLOAD( maze_update_discrete )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
-	maze_write_discrete(machine->device("discrete"), state->maze_tone_timing_state);
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
+	maze_write_discrete(machine.device("discrete"), state->m_maze_tone_timing_state);
 }
 
 
 static TIMER_CALLBACK( maze_tone_timing_timer_callback )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
-	state->maze_tone_timing_state = !state->maze_tone_timing_state;
-	maze_write_discrete(state->discrete, state->maze_tone_timing_state);
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
+	state->m_maze_tone_timing_state = !state->m_maze_tone_timing_state;
+	maze_write_discrete(state->m_discrete, state->m_maze_tone_timing_state);
 }
 
 
 static MACHINE_START( maze )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* create astable timer for IC B1 */
-	machine->scheduler().timer_pulse(MAZE_555_B1_PERIOD, FUNC(maze_tone_timing_timer_callback));
+	machine.scheduler().timer_pulse(MAZE_555_B1_PERIOD, FUNC(maze_tone_timing_timer_callback));
 
 	/* initialize state of Tone Timing FF, IC C1 */
-	state->maze_tone_timing_state = 0;
+	state->m_maze_tone_timing_state = 0;
 
 	/* setup for save states */
-	state->save_item(NAME(state->maze_tone_timing_state));
-	machine->state().register_postload(maze_update_discrete, NULL);
+	state->save_item(NAME(state->m_maze_tone_timing_state));
+	machine.state().register_postload(maze_update_discrete, NULL);
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -907,8 +907,8 @@ static MACHINE_START( maze )
 static WRITE8_HANDLER( maze_coin_counter_w )
 {
 	/* the data is not used, just pulse the counter */
-	coin_counter_w(space->machine, 0, 0);
-	coin_counter_w(space->machine, 0, 1);
+	coin_counter_w(space->machine(), 0, 0);
+	coin_counter_w(space->machine(), 0, 1);
 }
 
 
@@ -920,7 +920,7 @@ static WRITE8_HANDLER( maze_io_w )
 }
 
 
-static ADDRESS_MAP_START( maze_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( maze_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x3)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN1")
@@ -981,16 +981,16 @@ MACHINE_CONFIG_END
 
 static MACHINE_START( boothill )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->rev_shift_res));
+	state->save_item(NAME(state->m_rev_shift_res));
 
 	MACHINE_START_CALL(mw8080bw);
 }
 
 
-static ADDRESS_MAP_START( boothill_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( boothill_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -1076,15 +1076,15 @@ MACHINE_CONFIG_END
 
 static WRITE8_HANDLER( checkmat_io_w )
 {
-	mw8080bw_state *state = space->machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 
-	if (offset & 0x01)  checkmat_audio_w(state->discrete, 0, data);
+	if (offset & 0x01)  checkmat_audio_w(state->m_discrete, 0, data);
 
 	if (offset & 0x02)  watchdog_reset_w(space, 0, data);
 }
 
 
-static ADDRESS_MAP_START( checkmat_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( checkmat_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x3)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN1")
@@ -1183,10 +1183,10 @@ MACHINE_CONFIG_END
 
 static MACHINE_START( desertgu )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->desertgun_controller_select));
+	state->save_item(NAME(state->m_desertgun_controller_select));
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -1194,13 +1194,13 @@ static MACHINE_START( desertgu )
 
 static CUSTOM_INPUT( desertgu_gun_input_r )
 {
-	mw8080bw_state *state = field->port->machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = field->port->machine().driver_data<mw8080bw_state>();
 	UINT32 ret;
 
-	if (state->desertgun_controller_select)
-		ret = input_port_read(field->port->machine, DESERTGU_GUN_X_PORT_TAG);
+	if (state->m_desertgun_controller_select)
+		ret = input_port_read(field->port->machine(), DESERTGU_GUN_X_PORT_TAG);
 	else
-		ret = input_port_read(field->port->machine, DESERTGU_GUN_Y_PORT_TAG);
+		ret = input_port_read(field->port->machine(), DESERTGU_GUN_Y_PORT_TAG);
 
 	return ret;
 }
@@ -1208,19 +1208,19 @@ static CUSTOM_INPUT( desertgu_gun_input_r )
 
 static CUSTOM_INPUT( desertgu_dip_sw_0_1_r )
 {
-	mw8080bw_state *state = field->port->machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = field->port->machine().driver_data<mw8080bw_state>();
 	UINT32 ret;
 
-	if (state->desertgun_controller_select)
-		ret = input_port_read(field->port->machine, DESERTGU_DIP_SW_0_1_SET_2_TAG);
+	if (state->m_desertgun_controller_select)
+		ret = input_port_read(field->port->machine(), DESERTGU_DIP_SW_0_1_SET_2_TAG);
 	else
-		ret = input_port_read(field->port->machine, DESERTGU_DIP_SW_0_1_SET_1_TAG);
+		ret = input_port_read(field->port->machine(), DESERTGU_DIP_SW_0_1_SET_1_TAG);
 
 	return ret;
 }
 
 
-static ADDRESS_MAP_START( desertgu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( desertgu_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ(mw8080bw_shift_result_rev_r)
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN0")
@@ -1327,10 +1327,10 @@ static CUSTOM_INPUT( dplay_pitch_left_input_r )
 {
 	UINT32 ret;
 
-	if (input_port_read(field->port->machine, DPLAY_CAB_TYPE_PORT_TAG) == DPLAY_CAB_TYPE_UPRIGHT)
-		ret = input_port_read(field->port->machine, DPLAY_L_PITCH_PORT_TAG);
+	if (input_port_read(field->port->machine(), DPLAY_CAB_TYPE_PORT_TAG) == DPLAY_CAB_TYPE_UPRIGHT)
+		ret = input_port_read(field->port->machine(), DPLAY_L_PITCH_PORT_TAG);
 	else
-		ret = input_port_read(field->port->machine, DPLAY_R_PITCH_PORT_TAG);
+		ret = input_port_read(field->port->machine(), DPLAY_R_PITCH_PORT_TAG);
 
 	return ret;
 }
@@ -1338,11 +1338,11 @@ static CUSTOM_INPUT( dplay_pitch_left_input_r )
 
 static CUSTOM_INPUT( dplay_pitch_right_input_r )
 {
-	return input_port_read(field->port->machine, DPLAY_L_PITCH_PORT_TAG);
+	return input_port_read(field->port->machine(), DPLAY_L_PITCH_PORT_TAG);
 }
 
 
-static ADDRESS_MAP_START( dplay_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( dplay_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -1511,16 +1511,16 @@ MACHINE_CONFIG_END
 
 static MACHINE_START( gmissile )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->rev_shift_res));
+	state->save_item(NAME(state->m_rev_shift_res));
 
 	MACHINE_START_CALL(mw8080bw);
 }
 
 
-static ADDRESS_MAP_START( gmissile_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( gmissile_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -1607,16 +1607,16 @@ MACHINE_CONFIG_END
 
 static MACHINE_START( m4 )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->rev_shift_res));
+	state->save_item(NAME(state->m_rev_shift_res));
 
 	MACHINE_START_CALL(mw8080bw);
 }
 
 
-static ADDRESS_MAP_START( m4_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( m4_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -1705,10 +1705,10 @@ MACHINE_CONFIG_END
 
 static MACHINE_START( clowns )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->clowns_controller_select));
+	state->save_item(NAME(state->m_clowns_controller_select));
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -1716,23 +1716,23 @@ static MACHINE_START( clowns )
 
 static CUSTOM_INPUT( clowns_controller_r )
 {
-	mw8080bw_state *state = field->port->machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = field->port->machine().driver_data<mw8080bw_state>();
 	UINT32 ret;
 
-	if (state->clowns_controller_select)
+	if (state->m_clowns_controller_select)
 	{
-		ret = input_port_read(field->port->machine, CLOWNS_CONTROLLER_P2_TAG);
+		ret = input_port_read(field->port->machine(), CLOWNS_CONTROLLER_P2_TAG);
 	}
 	else
 	{
-		ret = input_port_read(field->port->machine, CLOWNS_CONTROLLER_P1_TAG);
+		ret = input_port_read(field->port->machine(), CLOWNS_CONTROLLER_P1_TAG);
 	}
 
 	return ret;
 }
 
 
-static ADDRESS_MAP_START( clowns_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( clowns_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -1869,7 +1869,7 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( spacwalk_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( spacwalk_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("IN0")
@@ -1963,7 +1963,7 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( shuffle_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( shuffle_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)	/* yes, 4, and no mirroring on the read handlers */
 	AM_RANGE(0x01, 0x01) AM_DEVREAD("mb14241", mb14241_shift_result_r)
 	AM_RANGE(0x02, 0x02) AM_READ_PORT("IN0")
@@ -2043,7 +2043,7 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( dogpatch_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( dogpatch_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -2136,79 +2136,79 @@ MACHINE_CONFIG_END
 
 static TIMER_DEVICE_CALLBACK( spcenctr_strobe_timer_callback )
 {
-	mw8080bw_state *state = timer.machine->driver_data<mw8080bw_state>();
-	output_set_value("STROBE", param && state->spcenctr_strobe_state);
+	mw8080bw_state *state = timer.machine().driver_data<mw8080bw_state>();
+	output_set_value("STROBE", param && state->m_spcenctr_strobe_state);
 }
 
 
 static MACHINE_START( spcenctr )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->spcenctr_strobe_state));
-	state->save_item(NAME(state->spcenctr_trench_width));
-	state->save_item(NAME(state->spcenctr_trench_center));
-	state->save_item(NAME(state->spcenctr_trench_slope));
+	state->save_item(NAME(state->m_spcenctr_strobe_state));
+	state->save_item(NAME(state->m_spcenctr_trench_width));
+	state->save_item(NAME(state->m_spcenctr_trench_center));
+	state->save_item(NAME(state->m_spcenctr_trench_slope));
 
 	MACHINE_START_CALL(mw8080bw);
 }
 
 #if 0
-UINT8 spcenctr_get_trench_width( *running_machine *machine )
+UINT8 spcenctr_get_trench_width( *running_machine &machine )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
-	return state->spcenctr_trench_width;
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
+	return state->m_spcenctr_trench_width;
 }
 
 
-UINT8 spcenctr_get_trench_center( *running_machine *machine )
+UINT8 spcenctr_get_trench_center( *running_machine &machine )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
-	return state->spcenctr_trench_center;
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
+	return state->m_spcenctr_trench_center;
 }
 
 
-UINT8 spcenctr_get_trench_slope( *running_machine *machine , UINT8 addr )
+UINT8 spcenctr_get_trench_slope( *running_machine &machine , UINT8 addr )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
-	return state->spcenctr_trench_slope[addr & 0x0f];
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
+	return state->m_spcenctr_trench_slope[addr & 0x0f];
 }
 #endif
 
 static WRITE8_HANDLER( spcenctr_io_w )
 {												/* A7 A6 A5 A4 A3 A2 A1 A0 */
-	mw8080bw_state *state = space->machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 
 	if ((offset & 0x07) == 0x02)
 		watchdog_reset_w(space, 0, data);		/*  -  -  -  -  -  0  1  0 */
 
 	else if ((offset & 0x5f) == 0x01)
-		spcenctr_audio_1_w(state->discrete, 0, data);	/*  -  0  -  0  0  0  0  1 */
+		spcenctr_audio_1_w(state->m_discrete, 0, data);	/*  -  0  -  0  0  0  0  1 */
 
 	else if ((offset & 0x5f) == 0x09)
-		spcenctr_audio_2_w(state->discrete, 0, data);	/*  -  0  -  0  1  0  0  1 */
+		spcenctr_audio_2_w(state->m_discrete, 0, data);	/*  -  0  -  0  1  0  0  1 */
 
 	else if ((offset & 0x5f) == 0x11)
-		spcenctr_audio_3_w(state->discrete, 0, data);	/*  -  0  -  1  0  0  0  1 */
+		spcenctr_audio_3_w(state->m_discrete, 0, data);	/*  -  0  -  1  0  0  0  1 */
 
 	else if ((offset & 0x07) == 0x03)
 	{											/*  -  -  -  -  -  0  1  1 */
 		UINT8 addr = ((offset & 0xc0) >> 4) | ((offset & 0x18) >> 3);
-		state->spcenctr_trench_slope[addr] = data;
+		state->m_spcenctr_trench_slope[addr] = data;
 	}
 	else if ((offset & 0x07) == 0x04)
-		state->spcenctr_trench_center = data;			/*  -  -  -  -  -  1  0  0 */
+		state->m_spcenctr_trench_center = data;			/*  -  -  -  -  -  1  0  0 */
 
 	else if ((offset & 0x07) == 0x07)
-		state->spcenctr_trench_width = data;			/*  -  -  -  -  -  1  1  1 */
+		state->m_spcenctr_trench_width = data;			/*  -  -  -  -  -  1  1  1 */
 
 	else
-		logerror("%04x:  Unmapped I/O port write to %02x = %02x\n", cpu_get_pc(space->cpu), offset, data);
+		logerror("%04x:  Unmapped I/O port write to %02x = %02x\n", cpu_get_pc(&space->device()), offset, data);
 }
 
 
-static ADDRESS_MAP_START( spcenctr_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( spcenctr_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0xfc) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0xfc) AM_READ_PORT("IN1")
@@ -2306,16 +2306,16 @@ MACHINE_CONFIG_END
 
 static MACHINE_START( phantom2 )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->phantom2_cloud_counter));
+	state->save_item(NAME(state->m_phantom2_cloud_counter));
 
 	MACHINE_START_CALL(mw8080bw);
 }
 
 
-static ADDRESS_MAP_START( phantom2_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( phantom2_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ(mw8080bw_shift_result_rev_r)
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN0")
@@ -2400,9 +2400,9 @@ static READ8_HANDLER( bowler_shift_result_r )
 	/* ZV - not too sure why this is needed, I don't see
        anything unusual on the schematics that would cause
        the bits to flip */
-	mw8080bw_state *state = space->machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 
-	return ~mb14241_shift_result_r(state->mb14241, 0);
+	return ~mb14241_shift_result_r(state->m_mb14241, 0);
 }
 
 static WRITE8_HANDLER( bowler_lights_1_w )
@@ -2441,7 +2441,7 @@ static WRITE8_HANDLER( bowler_lights_2_w )
 }
 
 
-static ADDRESS_MAP_START( bowler_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( bowler_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)  /* no masking on the reads, all 4 bits are decoded */
 	AM_RANGE(0x01, 0x01) AM_READ(bowler_shift_result_r)
 	AM_RANGE(0x02, 0x02) AM_READ_PORT("IN0")
@@ -2536,10 +2536,10 @@ MACHINE_CONFIG_END
 
 static MACHINE_START( invaders )
 {
-	mw8080bw_state *state = machine->driver_data<mw8080bw_state>();
+	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->invaders_flip_screen));
+	state->save_item(NAME(state->m_invaders_flip_screen));
 
 	MACHINE_START_CALL(mw8080bw);
 }
@@ -2548,9 +2548,9 @@ static MACHINE_START( invaders )
 
 static CUSTOM_INPUT( invaders_coin_input_r )
 {
-	UINT32 ret = input_port_read(field->port->machine, INVADERS_COIN_INPUT_PORT_TAG);
+	UINT32 ret = input_port_read(field->port->machine(), INVADERS_COIN_INPUT_PORT_TAG);
 
-	coin_counter_w(field->port->machine, 0, !ret);
+	coin_counter_w(field->port->machine(), 0, !ret);
 
 	return ret;
 }
@@ -2563,10 +2563,10 @@ static CUSTOM_INPUT( invaders_sw6_sw7_r )
 	/* upright PCB : switches visible
        cocktail PCB: HI */
 
-	if (invaders_is_cabinet_cocktail(field->port->machine))
+	if (invaders_is_cabinet_cocktail(field->port->machine()))
 		ret = 0x03;
 	else
-		ret = input_port_read(field->port->machine, INVADERS_SW6_SW7_PORT_TAG);
+		ret = input_port_read(field->port->machine(), INVADERS_SW6_SW7_PORT_TAG);
 
 	return ret;
 }
@@ -2579,10 +2579,10 @@ static CUSTOM_INPUT( invaders_sw5_r )
 	/* upright PCB : switch visible
        cocktail PCB: HI */
 
-	if (invaders_is_cabinet_cocktail(field->port->machine))
+	if (invaders_is_cabinet_cocktail(field->port->machine()))
 		ret = 0x01;
 	else
-		ret = input_port_read(field->port->machine, INVADERS_SW5_PORT_TAG);
+		ret = input_port_read(field->port->machine(), INVADERS_SW5_PORT_TAG);
 
 	return ret;
 }
@@ -2595,10 +2595,10 @@ static CUSTOM_INPUT( invaders_in0_control_r )
 	/* upright PCB : P1 controls
        cocktail PCB: HI */
 
-	if (invaders_is_cabinet_cocktail(field->port->machine))
+	if (invaders_is_cabinet_cocktail(field->port->machine()))
 		ret = 0x07;
 	else
-		ret = input_port_read(field->port->machine, INVADERS_P1_CONTROL_PORT_TAG);
+		ret = input_port_read(field->port->machine(), INVADERS_P1_CONTROL_PORT_TAG);
 
 	return ret;
 }
@@ -2606,7 +2606,7 @@ static CUSTOM_INPUT( invaders_in0_control_r )
 
 CUSTOM_INPUT( invaders_in1_control_r )
 {
-	return input_port_read(field->port->machine, INVADERS_P1_CONTROL_PORT_TAG);
+	return input_port_read(field->port->machine(), INVADERS_P1_CONTROL_PORT_TAG);
 }
 
 
@@ -2617,22 +2617,22 @@ CUSTOM_INPUT( invaders_in2_control_r )
 	/* upright PCB : P1 controls
        cocktail PCB: P2 controls */
 
-	if (invaders_is_cabinet_cocktail(field->port->machine))
-		ret = input_port_read(field->port->machine, INVADERS_P2_CONTROL_PORT_TAG);
+	if (invaders_is_cabinet_cocktail(field->port->machine()))
+		ret = input_port_read(field->port->machine(), INVADERS_P2_CONTROL_PORT_TAG);
 	else
-		ret = input_port_read(field->port->machine, INVADERS_P1_CONTROL_PORT_TAG);
+		ret = input_port_read(field->port->machine(), INVADERS_P1_CONTROL_PORT_TAG);
 
 	return ret;
 }
 
 
-int invaders_is_cabinet_cocktail(running_machine *machine)
+int invaders_is_cabinet_cocktail(running_machine &machine)
 {
 	return input_port_read(machine, INVADERS_CAB_TYPE_PORT_TAG);
 }
 
 
-static ADDRESS_MAP_START( invaders_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( invaders_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -2755,15 +2755,15 @@ MACHINE_CONFIG_END
 
 static CUSTOM_INPUT( blueshrk_coin_input_r )
 {
-	UINT32 ret = input_port_read(field->port->machine, BLUESHRK_COIN_INPUT_PORT_TAG);
+	UINT32 ret = input_port_read(field->port->machine(), BLUESHRK_COIN_INPUT_PORT_TAG);
 
-	coin_counter_w(field->port->machine, 0, !ret);
+	coin_counter_w(field->port->machine(), 0, !ret);
 
 	return ret;
 }
 
 
-static ADDRESS_MAP_START( blueshrk_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( blueshrk_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ(mw8080bw_shift_result_rev_r)
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN0")
@@ -2843,7 +2843,7 @@ static UINT32 invad2ct_coin_input_r(void *param)
 #endif
 
 
-static ADDRESS_MAP_START( invad2ct_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( invad2ct_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")

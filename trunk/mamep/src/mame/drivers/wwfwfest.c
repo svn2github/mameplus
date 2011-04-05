@@ -66,12 +66,12 @@ static WRITE16_HANDLER ( wwfwfest_irq_ack_w );
  still some unknown writes however, sound cpu memory map is the same as dd3
 *******************************************************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0x0c0000, 0x0c1fff) AM_RAM_WRITE(wwfwfest_fg0_videoram_w) AM_BASE_MEMBER(wwfwfest_state, fg0_videoram)	/* FG0 Ram - 4 bytes per tile */
+	AM_RANGE(0x0c0000, 0x0c1fff) AM_RAM_WRITE(wwfwfest_fg0_videoram_w) AM_BASE_MEMBER(wwfwfest_state, m_fg0_videoram)	/* FG0 Ram - 4 bytes per tile */
 	AM_RANGE(0x0c2000, 0x0c3fff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)						/* SPR Ram */
-	AM_RANGE(0x080000, 0x080fff) AM_RAM_WRITE(wwfwfest_bg0_videoram_w) AM_BASE_MEMBER(wwfwfest_state, bg0_videoram)	/* BG0 Ram - 4 bytes per tile */
-	AM_RANGE(0x082000, 0x082fff) AM_RAM_WRITE(wwfwfest_bg1_videoram_w) AM_BASE_MEMBER(wwfwfest_state, bg1_videoram)	/* BG1 Ram - 2 bytes per tile */
+	AM_RANGE(0x080000, 0x080fff) AM_RAM_WRITE(wwfwfest_bg0_videoram_w) AM_BASE_MEMBER(wwfwfest_state, m_bg0_videoram)	/* BG0 Ram - 4 bytes per tile */
+	AM_RANGE(0x082000, 0x082fff) AM_RAM_WRITE(wwfwfest_bg1_videoram_w) AM_BASE_MEMBER(wwfwfest_state, m_bg1_videoram)	/* BG1 Ram - 2 bytes per tile */
 	AM_RANGE(0x100000, 0x100007) AM_WRITE(wwfwfest_scroll_write)
 	AM_RANGE(0x10000a, 0x10000b) AM_WRITE(wwfwfest_flipscreen_w)
 	AM_RANGE(0x140000, 0x140003) AM_WRITE(wwfwfest_irq_ack_w)
@@ -85,7 +85,7 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x1c0000, 0x1c3fff) AM_RAM /* Work Ram */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xc800, 0xc801) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)
@@ -103,15 +103,15 @@ ADDRESS_MAP_END
 static WRITE16_HANDLER( wwfwfest_irq_ack_w )
 {
 	if (offset == 0)
-		cputag_set_input_line(space->machine, "maincpu", 3, CLEAR_LINE);
+		cputag_set_input_line(space->machine(), "maincpu", 3, CLEAR_LINE);
 
 	else
-		cputag_set_input_line(space->machine, "maincpu", 2, CLEAR_LINE);
+		cputag_set_input_line(space->machine(), "maincpu", 2, CLEAR_LINE);
 }
 
 static WRITE16_HANDLER( wwfwfest_flipscreen_w )
 {
-	flip_screen_set(space->machine, data&1);
+	flip_screen_set(space->machine(), data&1);
 }
 
 /*- Palette Reads/Writes -*/
@@ -119,7 +119,7 @@ static WRITE16_HANDLER( wwfwfest_flipscreen_w )
 static READ16_HANDLER( wwfwfest_paletteram16_xxxxBBBBGGGGRRRR_word_r )
 {
 	offset = (offset & 0x000f) | (offset & 0x7fc0) >> 2;
-	return space->machine->generic.paletteram.u16[offset];
+	return space->machine().generic.paletteram.u16[offset];
 }
 
 static WRITE16_HANDLER( wwfwfest_paletteram16_xxxxBBBBGGGGRRRR_word_w )
@@ -133,27 +133,27 @@ static WRITE16_HANDLER( wwfwfest_paletteram16_xxxxBBBBGGGGRRRR_word_w )
 
 static WRITE16_HANDLER( wwfwfest_1410_write )
 {
-	wwfwfest_state *state = space->machine->driver_data<wwfwfest_state>();
-	state->pri = data;
+	wwfwfest_state *state = space->machine().driver_data<wwfwfest_state>();
+	state->m_pri = data;
 }
 
 /*- Scroll Control -*/
 
 static WRITE16_HANDLER( wwfwfest_scroll_write )
 {
-	wwfwfest_state *state = space->machine->driver_data<wwfwfest_state>();
+	wwfwfest_state *state = space->machine().driver_data<wwfwfest_state>();
 	switch (offset) {
 		case 0x00:
-			state->bg0_scrollx = data;
+			state->m_bg0_scrollx = data;
 			break;
 		case 0x01:
-			state->bg0_scrolly = data;
+			state->m_bg0_scrolly = data;
 			break;
 		case 0x02:
-			state->bg1_scrollx = data;
+			state->m_bg1_scrollx = data;
 			break;
 		case 0x03:
-			state->bg1_scrolly = data;
+			state->m_bg1_scrolly = data;
 			break;
 	}
 }
@@ -168,7 +168,7 @@ static WRITE8_DEVICE_HANDLER( oki_bankswitch_w )
 static WRITE16_HANDLER ( wwfwfest_soundwrite )
 {
 	soundlatch_w(space,1,data & 0xff);
-	cputag_set_input_line(space->machine, "audiocpu", INPUT_LINE_NMI, PULSE_LINE );
+	cputag_set_input_line(space->machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE );
 }
 
 /*******************************************************************************
@@ -181,13 +181,13 @@ static WRITE16_HANDLER ( wwfwfest_soundwrite )
 static CUSTOM_INPUT( dsw_3f_r )
 {
 	const char *tag = (const char *)param;
-	return input_port_read(field->port->machine, tag) & 0x3f;
+	return input_port_read(field->port->machine(), tag) & 0x3f;
 }
 
 static CUSTOM_INPUT( dsw_c0_r )
 {
 	const char *tag = (const char *)param;
-	return (input_port_read(field->port->machine, tag) & 0xc0) >> 6;
+	return (input_port_read(field->port->machine(), tag) & 0xc0) >> 6;
 }
 
 
@@ -353,15 +353,15 @@ static TIMER_DEVICE_CALLBACK( wwfwfest_scanline )
 	if (scanline % 16 == 0)
 	{
 		if (scanline > 0)
-			timer.machine->primary_screen->update_partial(scanline - 1);
-		cputag_set_input_line(timer.machine, "maincpu", 2, ASSERT_LINE);
+			timer.machine().primary_screen->update_partial(scanline - 1);
+		cputag_set_input_line(timer.machine(), "maincpu", 2, ASSERT_LINE);
 	}
 
 	/* Vblank is raised on scanline 248 */
 	if (scanline == 248)
 	{
-		timer.machine->primary_screen->update_partial(scanline - 1);
-		cputag_set_input_line(timer.machine, "maincpu", 3, ASSERT_LINE);
+		timer.machine().primary_screen->update_partial(scanline - 1);
+		cputag_set_input_line(timer.machine(), "maincpu", 3, ASSERT_LINE);
 	}
 }
 
@@ -373,7 +373,7 @@ static TIMER_DEVICE_CALLBACK( wwfwfest_scanline )
 
 static void dd3_ymirq_handler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine, "audiocpu", 0 , irq ? ASSERT_LINE : CLEAR_LINE );
+	cputag_set_input_line(device->machine(), "audiocpu", 0 , irq ? ASSERT_LINE : CLEAR_LINE );
 }
 
 static const ym2151_interface ym2151_config =
@@ -383,7 +383,7 @@ static const ym2151_interface ym2151_config =
 
 static SCREEN_EOF( wwfwfest )
 {
-	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 
 	buffer_spriteram16_w(space,0,0,0xffff);
 }

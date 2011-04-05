@@ -241,10 +241,10 @@ static CPU_INIT(h8bit)
 	h8->direct = &h8->program->direct();
 	h8->io = device->space(AS_IO);
 
-	h8->timer[0] = h8->device->machine->scheduler().timer_alloc(FUNC(h8_timer_0_cb), h8);
-	h8->timer[1] = h8->device->machine->scheduler().timer_alloc(FUNC(h8_timer_1_cb), h8);
-	h8->timer[2] = h8->device->machine->scheduler().timer_alloc(FUNC(h8_timer_2_cb), h8);
-	h8->timer[3] = h8->device->machine->scheduler().timer_alloc(FUNC(h8_timer_3_cb), h8);
+	h8->timer[0] = h8->device->machine().scheduler().timer_alloc(FUNC(h8_timer_0_cb), h8);
+	h8->timer[1] = h8->device->machine().scheduler().timer_alloc(FUNC(h8_timer_1_cb), h8);
+	h8->timer[2] = h8->device->machine().scheduler().timer_alloc(FUNC(h8_timer_2_cb), h8);
+	h8->timer[3] = h8->device->machine().scheduler().timer_alloc(FUNC(h8_timer_3_cb), h8);
 
 	device->save_item(NAME(h8->h8err));
 	device->save_item(NAME(h8->regs));
@@ -259,7 +259,7 @@ static CPU_INIT(h8bit)
 	device->save_item(NAME(h8->h8TSTR));
 	device->save_item(NAME(h8->h8TCNT));
 
-	h8->device->machine->state().register_postload(h8_onstateload, h8);
+	h8->device->machine().state().register_postload(h8_onstateload, h8);
 }
 
 static CPU_RESET(h8bit)
@@ -516,7 +516,7 @@ static READ8_HANDLER( h8330_itu_r )
 	UINT8 reg;
 	UINT64 frc;
 	static const UINT64 divider[4] = { 2, 8, 32, 1 };
-	h83xx_state *h8 = get_safe_token(space->cpu);
+	h83xx_state *h8 = get_safe_token(&space->device());
 
 	reg = (offset + 0x88) & 0xff;
 
@@ -604,7 +604,7 @@ static READ8_HANDLER( h8330_itu_r )
 static WRITE8_HANDLER( h8330_itu_w )
 {
 	UINT8 reg;
-	h83xx_state *h8 = get_safe_token(space->cpu);
+	h83xx_state *h8 = get_safe_token(&space->device());
 
 	reg = (offset + 0x88) & 0xff;
 
@@ -744,7 +744,7 @@ static TIMER_CALLBACK( h8_timer_3_cb )
 	timer_8bit_expire(h8, 1, 1);
 }
 
-static ADDRESS_MAP_START( h8_3334_internal_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( h8_3334_internal_map, AS_PROGRAM, 8 )
 	// 512B RAM
 	AM_RANGE(0xfb80, 0xff7f) AM_RAM
 	AM_RANGE(0xff88, 0xffff) AM_READWRITE( h8330_itu_r, h8330_itu_w )
@@ -769,20 +769,20 @@ CPU_GET_INFO( h8_3334 )
 	case CPUINFO_INT_MAX_INSTRUCTION_BYTES:		info->i           = 10;							break;
 
 		// Bus sizes
-	case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_PROGRAM:	info->i = 8;						break;
-	case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM:	info->i = 16;						break;
-	case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_PROGRAM:	info->i = 0;						break;
-	case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_DATA:	info->i = 0;						break;
-	case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_DATA:	info->i = 0;						break;
-	case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_DATA:	info->i = 0;						break;
-	case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_IO:	info->i = 8;						break;
-	case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_IO:	info->i = 16;						break;
-	case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_IO:	info->i = 0;						break;
+	case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 8;						break;
+	case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM:	info->i = 16;						break;
+	case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM:	info->i = 0;						break;
+	case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;						break;
+	case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;						break;
+	case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;						break;
+	case DEVINFO_INT_DATABUS_WIDTH + AS_IO:	info->i = 8;						break;
+	case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:	info->i = 16;						break;
+	case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:	info->i = 0;						break;
 
 		// Internal maps
-	case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_PROGRAM: info->internal_map8 = ADDRESS_MAP_NAME(h8_3334_internal_map); break;
-	case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_DATA:    info->internal_map8 = NULL;	break;
-	case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_IO:      info->internal_map16 = NULL;	break;
+	case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map8 = ADDRESS_MAP_NAME(h8_3334_internal_map); break;
+	case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_DATA:    info->internal_map8 = NULL;	break;
+	case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_IO:      info->internal_map16 = NULL;	break;
 
 		// CPU misc parameters
 	case DEVINFO_STR_NAME:					strcpy(info->s, "H8/3334");						break;

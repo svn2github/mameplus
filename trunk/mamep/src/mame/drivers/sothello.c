@@ -49,9 +49,9 @@ public:
 	sothello_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	int subcpu_status;
-	int soundcpu_busy;
-	int msm_data;
+	int m_subcpu_status;
+	int m_soundcpu_busy;
+	int m_msm_data;
 };
 
 
@@ -68,7 +68,7 @@ public:
 
 static WRITE8_HANDLER(bank_w)
 {
-    UINT8 *RAM = space->machine->region("maincpu")->base();
+    UINT8 *RAM = space->machine().region("maincpu")->base();
     int bank=0;
     switch(data^0xff)
     {
@@ -77,57 +77,57 @@ static WRITE8_HANDLER(bank_w)
         case 4: bank=2; break;
         case 8: bank=3; break;
     }
-    memory_set_bankptr(space->machine,"bank1",&RAM[bank*0x4000+0x10000]);
+    memory_set_bankptr(space->machine(),"bank1",&RAM[bank*0x4000+0x10000]);
 }
 
 static TIMER_CALLBACK( subcpu_suspend )
 {
-    machine->device<cpu_device>("sub")->suspend(SUSPEND_REASON_HALT, 1);
+    machine.device<cpu_device>("sub")->suspend(SUSPEND_REASON_HALT, 1);
 }
 
 static TIMER_CALLBACK( subcpu_resume )
 {
-    machine->device<cpu_device>("sub")->resume(SUSPEND_REASON_HALT);
+    machine.device<cpu_device>("sub")->resume(SUSPEND_REASON_HALT);
     cputag_set_input_line(machine, "sub", INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static READ8_HANDLER( subcpu_halt_set )
 {
-	sothello_state *state = space->machine->driver_data<sothello_state>();
-    space->machine->scheduler().synchronize(FUNC(subcpu_suspend));
-    state->subcpu_status|=2;
+	sothello_state *state = space->machine().driver_data<sothello_state>();
+    space->machine().scheduler().synchronize(FUNC(subcpu_suspend));
+    state->m_subcpu_status|=2;
     return 0;
 }
 
 static READ8_HANDLER( subcpu_halt_clear )
 {
-	sothello_state *state = space->machine->driver_data<sothello_state>();
-    space->machine->scheduler().synchronize(FUNC(subcpu_resume));
-    state->subcpu_status&=~1;
-    state->subcpu_status&=~2;
+	sothello_state *state = space->machine().driver_data<sothello_state>();
+    space->machine().scheduler().synchronize(FUNC(subcpu_resume));
+    state->m_subcpu_status&=~1;
+    state->m_subcpu_status&=~2;
     return 0;
 }
 
 static READ8_HANDLER(subcpu_comm_status )
 {
-	sothello_state *state = space->machine->driver_data<sothello_state>();
-    return state->subcpu_status;
+	sothello_state *state = space->machine().driver_data<sothello_state>();
+    return state->m_subcpu_status;
 }
 
 static READ8_HANDLER( soundcpu_status_r )
 {
-	sothello_state *state = space->machine->driver_data<sothello_state>();
-    return state->soundcpu_busy;
+	sothello_state *state = space->machine().driver_data<sothello_state>();
+    return state->m_soundcpu_busy;
 }
 
-static ADDRESS_MAP_START( maincpu_mem_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( maincpu_mem_map, AS_PROGRAM, 8 )
     AM_RANGE(0x0000, 0x7fff) AM_ROM
     AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
     AM_RANGE(0xc000, 0xdfff) AM_RAM AM_MIRROR(0x1800) AM_SHARE("share1")
     AM_RANGE(0xe000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( maincpu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( maincpu_io_map, AS_IO, 8 )
     ADDRESS_MAP_GLOBAL_MASK(0xff)
     AM_RANGE( 0x00, 0x0f) AM_READ_PORT("INPUT1")
     AM_RANGE( 0x10, 0x1f) AM_READ_PORT("INPUT2")
@@ -162,34 +162,34 @@ static WRITE8_DEVICE_HANDLER(msm_cfg_w)
 
 static WRITE8_HANDLER( msm_data_w )
 {
-	sothello_state *state = space->machine->driver_data<sothello_state>();
-    state->msm_data = data;
+	sothello_state *state = space->machine().driver_data<sothello_state>();
+    state->m_msm_data = data;
 
 }
 
 static WRITE8_HANDLER(soundcpu_busyflag_set_w)
 {
-	sothello_state *state = space->machine->driver_data<sothello_state>();
-    state->soundcpu_busy=1;
+	sothello_state *state = space->machine().driver_data<sothello_state>();
+    state->m_soundcpu_busy=1;
 }
 
 static WRITE8_HANDLER(soundcpu_busyflag_reset_w)
 {
-	sothello_state *state = space->machine->driver_data<sothello_state>();
-    state->soundcpu_busy=0;
+	sothello_state *state = space->machine().driver_data<sothello_state>();
+    state->m_soundcpu_busy=0;
 }
 
 static WRITE8_HANDLER(soundcpu_int_clear_w)
 {
-    cputag_set_input_line(space->machine, "soundcpu", 0, CLEAR_LINE );
+    cputag_set_input_line(space->machine(), "soundcpu", 0, CLEAR_LINE );
 }
 
-static ADDRESS_MAP_START( soundcpu_mem_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( soundcpu_mem_map, AS_PROGRAM, 8 )
     AM_RANGE(0x0000, 0xdfff) AM_ROM
     AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( soundcpu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( soundcpu_io_map, AS_IO, 8 )
     ADDRESS_MAP_GLOBAL_MASK(0xff)
     AM_RANGE(0x00, 0x00) AM_READ(soundlatch_r)
     AM_RANGE(0x01, 0x01) AM_WRITE(msm_data_w)
@@ -203,14 +203,14 @@ ADDRESS_MAP_END
 
 static void unlock_shared_ram(address_space *space)
 {
-	sothello_state *state = space->machine->driver_data<sothello_state>();
-    if(!space->machine->device<cpu_device>("sub")->suspended(SUSPEND_REASON_HALT))
+	sothello_state *state = space->machine().driver_data<sothello_state>();
+    if(!space->machine().device<cpu_device>("sub")->suspended(SUSPEND_REASON_HALT))
     {
-        state->subcpu_status|=1;
+        state->m_subcpu_status|=1;
     }
     else
     {
-        logerror("Sub cpu active! @%x\n",cpu_get_pc(space->cpu));
+        logerror("Sub cpu active! @%x\n",cpu_get_pc(&space->device()));
     }
 }
 
@@ -225,7 +225,7 @@ static READ8_HANDLER(subcpu_status_r)
     return 0;
 }
 
-static ADDRESS_MAP_START( subcpu_mem_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( subcpu_mem_map, AS_PROGRAM, 8 )
     AM_RANGE(0x0000, 0x1fff) AM_READWRITE(subcpu_status_r,subcpu_status_w)
     AM_RANGE(0x2000, 0x77ff) AM_RAM
     AM_RANGE(0x7800, 0x7fff) AM_RAM AM_SHARE("share1")  /* upper 0x800 of 6264 is shared  with main cpu */
@@ -309,25 +309,25 @@ INPUT_PORTS_END
 
 static void irqhandler(device_t *device, int irq)
 {
-    cputag_set_input_line(device->machine, "sub", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+    cputag_set_input_line(device->machine(), "sub", 0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static void sothello_vdp_interrupt(running_machine *machine, int i)
+static void sothello_vdp_interrupt(running_machine &machine, int i)
 {
     cputag_set_input_line(machine, "maincpu", 0, (i ? HOLD_LINE : CLEAR_LINE));
 }
 
 static INTERRUPT_GEN( sothello_interrupt )
 {
-    v9938_interrupt(device->machine, 0);
+    v9938_interrupt(device->machine(), 0);
 }
 
 static void adpcm_int(device_t *device)
 {
-	sothello_state *state = device->machine->driver_data<sothello_state>();
+	sothello_state *state = device->machine().driver_data<sothello_state>();
     /* only 4 bits are used */
-    msm5205_data_w( device, state->msm_data & 0x0f );
-    cputag_set_input_line(device->machine, "soundcpu", 0, ASSERT_LINE );
+    msm5205_data_w( device, state->m_msm_data & 0x0f );
+    cputag_set_input_line(device->machine(), "soundcpu", 0, ASSERT_LINE );
 }
 
 
@@ -340,7 +340,7 @@ static const msm5205_interface msm_interface =
 static VIDEO_START( sothello )
 {
     VIDEO_START_CALL(generic_bitmapped);
-    v9938_init (machine, 0, *machine->primary_screen, machine->generic.tmpbitmap, MODEL_V9938, VDP_MEM, sothello_vdp_interrupt);
+    v9938_init (machine, 0, *machine.primary_screen, machine.generic.tmpbitmap, MODEL_V9938, VDP_MEM, sothello_vdp_interrupt);
     v9938_reset(0);
 }
 

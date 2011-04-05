@@ -40,7 +40,7 @@ static struct
 	memory_range *mem_range;
 } state;
 
-static int is_highscore_enabled(running_machine *machine)
+static int is_highscore_enabled(running_machine &machine)
 {
 	/* disable high score when record/playback is on */
 	if (has_record_file(machine) || has_playback_file(machine))
@@ -53,17 +53,17 @@ static int is_highscore_enabled(running_machine *machine)
 
 /*****************************************************************************/
 
-static void copy_to_memory (running_machine *machine, int cpu, int addr, const UINT8 *source, int num_bytes)
+static void copy_to_memory (running_machine &machine, int cpu, int addr, const UINT8 *source, int num_bytes)
 {
 	int i;
 	address_space *targetspace;
-	if (strstr(machine->gamedrv->source_file,"cinemat.c") > 0)
+	if (strstr(machine.system().source_file,"cinemat.c") > 0)
 	{
-		 targetspace = cpu_get_address_space(machine->cpu[cpu], ADDRESS_SPACE_DATA);
+		 targetspace = machine.cpu[cpu]->memory().space(AS_DATA);
 	}
 	else
 	{
-		 targetspace = cpu_get_address_space(machine->cpu[cpu], ADDRESS_SPACE_PROGRAM);
+		 targetspace = machine.cpu[cpu]->memory().space(AS_PROGRAM);
 	}
 
 	for (i=0; i<num_bytes; i++)
@@ -72,17 +72,17 @@ static void copy_to_memory (running_machine *machine, int cpu, int addr, const U
 	}
 }
 
-static void copy_from_memory (running_machine *machine, int cpu, int addr, UINT8 *dest, int num_bytes)
+static void copy_from_memory (running_machine &machine, int cpu, int addr, UINT8 *dest, int num_bytes)
 {
 	int i;
 	address_space *targetspace;
-	if (strstr(machine->gamedrv->source_file,"cinemat.c") > 0)
+	if (strstr(machine.system().source_file,"cinemat.c") > 0)
 	{
-		 targetspace = cpu_get_address_space(machine->cpu[cpu], ADDRESS_SPACE_DATA);
+		 targetspace = machine.cpu[cpu]->memory().space(AS_DATA);
 	}
 	else
 	{
-		 targetspace = cpu_get_address_space(machine->cpu[cpu], ADDRESS_SPACE_PROGRAM);
+		 targetspace = machine.cpu[cpu]->memory().space(AS_PROGRAM);
 	}
 	for (i=0; i<num_bytes; i++)
 	{
@@ -171,17 +171,17 @@ static int matching_game_name (const char *pBuf, const char *name)
 /*****************************************************************************/
 
 /* safe_to_load checks the start and end values of each memory range */
-static int safe_to_load (running_machine *machine)
+static int safe_to_load (running_machine &machine)
 {
 	memory_range *mem_range = state.mem_range;
 	address_space *srcspace;
-	if (strstr(machine->gamedrv->source_file,"cinemat.c") > 0)
+	if (strstr(machine.system().source_file,"cinemat.c") > 0)
 	{
-		srcspace = cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_DATA);
+		srcspace = machine.cpu[mem_range->cpu]->memory().space(AS_DATA);
 	}
 	else
 	{
-		srcspace = cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_PROGRAM);
+		srcspace = machine.cpu[mem_range->cpu]->memory().space(AS_PROGRAM);
 	}
 	while (mem_range)
 	{
@@ -213,13 +213,13 @@ static void hiscore_free (void)
 	state.mem_range = NULL;
 }
 
-static void hiscore_load (running_machine *machine)
+static void hiscore_load (running_machine &machine)
 {
 	file_error filerr;
 	if (is_highscore_enabled(machine))
 	{
-		astring fname(machine->basename(), ".hi");
-		emu_file f = emu_file(machine->options().value(OPTION_HISCORE_DIRECTORY), OPEN_FLAG_READ);
+		astring fname(machine.basename(), ".hi");
+		emu_file f = emu_file(machine.options().value(OPTION_HISCORE_DIRECTORY), OPEN_FLAG_READ);
 		filerr = f.open(fname);
 		state.hiscores_have_been_loaded = 1;
 		LOG(("hiscore_load\n"));
@@ -247,13 +247,13 @@ static void hiscore_load (running_machine *machine)
 	}
 }
 
-static void hiscore_save (running_machine *machine)
+static void hiscore_save (running_machine &machine)
 {
     file_error filerr;
 	if (is_highscore_enabled(machine))
 	{
-		astring fname(machine->basename(), ".hi");
- 		emu_file f = emu_file(machine->options().value(OPTION_HISCORE_DIRECTORY), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+		astring fname(machine.basename(), ".hi");
+ 		emu_file f = emu_file(machine.options().value(OPTION_HISCORE_DIRECTORY), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 		filerr = f.open(fname);
 		LOG(("hiscore_save\n"));
 		if (filerr == FILERR_NONE)
@@ -301,7 +301,7 @@ static TIMER_CALLBACK( hiscore_periodic )
 /* call hiscore_close when done playing game */
 void hiscore_close (running_machine &machine)
 {
-	if (state.hiscores_have_been_loaded) hiscore_save(&machine);
+	if (state.hiscores_have_been_loaded) hiscore_save(machine);
 	hiscore_free();
 }
 
@@ -310,33 +310,33 @@ void hiscore_close (running_machine &machine)
 /* public API */
 
 /* call hiscore_open once after loading a game */
-void hiscore_init (running_machine *machine)
+void hiscore_init (running_machine &machine)
 {
 	memory_range *mem_range = state.mem_range;
 	file_error filerr;
-	const char *db_filename = machine->options().value(OPTION_HISCORE_FILE); /* high score definition file */
-    const char *name = machine->gamedrv->name;
+	const char *db_filename = machine.options().value(OPTION_HISCORE_FILE); /* high score definition file */
+    const char *name = machine.system().name;
 	state.hiscores_have_been_loaded = 0;
 
 	while (mem_range)
 	{
 
-		if (strstr(machine->gamedrv->source_file,"cinemat.c") > 0)
+		if (strstr(machine.system().source_file,"cinemat.c") > 0)
 		{
-			cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_DATA)->write_byte(mem_range->addr,
+			machine.cpu[mem_range->cpu]->memory().space(AS_DATA)->write_byte(mem_range->addr,
 				~mem_range->start_value
 			);
-			cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_DATA)->write_byte(mem_range->addr + mem_range->num_bytes-1,
+			machine.cpu[mem_range->cpu]->memory().space(AS_DATA)->write_byte(mem_range->addr + mem_range->num_bytes-1,
 				~mem_range->end_value
 			);
 			mem_range = mem_range->next;
 		}
 		else
 		{
-			cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_PROGRAM)->write_byte(mem_range->addr,
+			machine.cpu[mem_range->cpu]->memory().space(AS_PROGRAM)->write_byte(mem_range->addr,
 				~mem_range->start_value
 			);
-			cpu_get_address_space(machine->cpu[mem_range->cpu], ADDRESS_SPACE_PROGRAM)->write_byte(mem_range->addr + mem_range->num_bytes-1,
+			machine.cpu[mem_range->cpu]->memory().space(AS_PROGRAM)->write_byte(mem_range->addr + mem_range->num_bytes-1,
 				~mem_range->end_value
 			);
 			mem_range = mem_range->next;
@@ -405,8 +405,8 @@ void hiscore_init (running_machine *machine)
 		f.close ();
 	}
 
-	timer = machine->scheduler().timer_alloc(FUNC(hiscore_periodic), NULL);
-	timer->adjust(machine->primary_screen->frame_period(), 0, machine->primary_screen->frame_period());
+	timer = machine.scheduler().timer_alloc(FUNC(hiscore_periodic), NULL);
+	timer->adjust(machine.primary_screen->frame_period(), 0, machine.primary_screen->frame_period());
 
-	machine->add_notifier(MACHINE_NOTIFY_EXIT, hiscore_close);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, hiscore_close);
 }

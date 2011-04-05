@@ -204,7 +204,7 @@ There is not a rev 03 known or dumped. An Asteroids rev 03 is not mentioned in a
 
 static WRITE8_HANDLER( astdelux_coin_counter_w )
 {
-	coin_counter_w(space->machine, offset,data);
+	coin_counter_w(space->machine(), offset,data);
 }
 
 
@@ -234,11 +234,11 @@ static WRITE8_HANDLER( llander_led_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( asteroid_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( asteroid_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x01ff) AM_RAM
-	AM_RANGE(0x0200, 0x02ff) AM_RAMBANK("bank1") AM_BASE_MEMBER(asteroid_state, ram1)
-	AM_RANGE(0x0300, 0x03ff) AM_RAMBANK("bank2") AM_BASE_MEMBER(asteroid_state, ram2)
+	AM_RANGE(0x0200, 0x02ff) AM_RAMBANK("bank1") AM_BASE_MEMBER(asteroid_state, m_ram1)
+	AM_RANGE(0x0300, 0x03ff) AM_RAMBANK("bank2") AM_BASE_MEMBER(asteroid_state, m_ram2)
 	AM_RANGE(0x2000, 0x2007) AM_READ(asteroid_IN0_r)	/* IN0 */
 	AM_RANGE(0x2400, 0x2407) AM_READ(asteroid_IN1_r)	/* IN1 */
 	AM_RANGE(0x2800, 0x2803) AM_READ(asteroid_DSW1_r)	/* DSW1 */
@@ -255,11 +255,11 @@ static ADDRESS_MAP_START( asteroid_map, ADDRESS_SPACE_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( astdelux_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( astdelux_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x01ff) AM_RAM
-	AM_RANGE(0x0200, 0x02ff) AM_RAMBANK("bank1") AM_BASE_MEMBER(asteroid_state, ram1)
-	AM_RANGE(0x0300, 0x03ff) AM_RAMBANK("bank2") AM_BASE_MEMBER(asteroid_state, ram2)
+	AM_RANGE(0x0200, 0x02ff) AM_RAMBANK("bank1") AM_BASE_MEMBER(asteroid_state, m_ram1)
+	AM_RANGE(0x0300, 0x03ff) AM_RAMBANK("bank2") AM_BASE_MEMBER(asteroid_state, m_ram2)
 	AM_RANGE(0x2000, 0x2007) AM_READ(asteroid_IN0_r)	/* IN0 */
 	AM_RANGE(0x2400, 0x2407) AM_READ(asteroid_IN1_r)	/* IN1 */
 	AM_RANGE(0x2800, 0x2803) AM_READ(asteroid_DSW1_r)	/* DSW1 */
@@ -281,7 +281,7 @@ static ADDRESS_MAP_START( astdelux_map, ADDRESS_SPACE_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( llander_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( llander_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x00ff) AM_RAM AM_MIRROR(0x1f00)
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("IN0")
@@ -308,7 +308,7 @@ ADDRESS_MAP_END
 
 static CUSTOM_INPUT( clock_r )
 {
-	return (field->port->machine->device<cpu_device>("maincpu")->total_cycles() & 0x100) ? 1 : 0;
+	return (field->port->machine().device<cpu_device>("maincpu")->total_cycles() & 0x100) ? 1 : 0;
 }
 
 static INPUT_PORTS_START( asteroid )
@@ -921,14 +921,14 @@ ROM_END
 
 static DRIVER_INIT( asteroidb )
 {
-	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x2000, 0x2000, 0, 0, "IN0");
-	memory_install_read_port(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x2003, 0x2003, 0, 0, "HS");
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x2000, 0x2000, "IN0");
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0x2003, 0x2003, "HS");
 }
 
 
 static DRIVER_INIT( asterock )
 {
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x2000, 0x2007, 0, 0, asterock_IN0_r);
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x2000, 0x2007, FUNC(asterock_IN0_r));
 }
 
 

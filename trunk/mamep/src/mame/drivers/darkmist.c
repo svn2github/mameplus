@@ -32,32 +32,32 @@ TODO:
 
 static WRITE8_HANDLER(darkmist_hw_w)
 {
-	darkmist_state *state = space->machine->driver_data<darkmist_state>();
-	state->hw=data;
-	memory_set_bankptr(space->machine, "bank1",&space->machine->region("maincpu")->base()[0x010000+((data&0x80)?0x4000:0)]);
+	darkmist_state *state = space->machine().driver_data<darkmist_state>();
+	state->m_hw=data;
+	memory_set_bankptr(space->machine(), "bank1",&space->machine().region("maincpu")->base()[0x010000+((data&0x80)?0x4000:0)]);
 }
 
-static ADDRESS_MAP_START( memmap, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( memmap, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc801, 0xc801) AM_READ_PORT("P1")
 	AM_RANGE(0xc802, 0xc802) AM_READ_PORT("P2")
 	AM_RANGE(0xc803, 0xc803) AM_READ_PORT("START")
 	AM_RANGE(0xc804, 0xc804) AM_WRITE(darkmist_hw_w)
-	AM_RANGE(0xc805, 0xc805) AM_WRITEONLY AM_BASE_MEMBER(darkmist_state, spritebank)
+	AM_RANGE(0xc805, 0xc805) AM_WRITEONLY AM_BASE_MEMBER(darkmist_state, m_spritebank)
 	AM_RANGE(0xc806, 0xc806) AM_READ_PORT("DSW1")
 	AM_RANGE(0xc807, 0xc807) AM_READ_PORT("DSW2")
 	AM_RANGE(0xc808, 0xc808) AM_READ_PORT("UNK")
 	AM_RANGE(0xd000, 0xd3ff) AM_RAM AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0xd400, 0xd41f) AM_RAM AM_BASE_MEMBER(darkmist_state, scroll)
+	AM_RANGE(0xd400, 0xd41f) AM_RAM AM_BASE_MEMBER(darkmist_state, m_scroll)
 	AM_RANGE(0xd600, 0xd67f) AM_READWRITE(t5182_sharedram_r, t5182_sharedram_w)
 	AM_RANGE(0xd680, 0xd680) AM_WRITE(t5182_sound_irq_w)
 	AM_RANGE(0xd681, 0xd681) AM_READ(t5182_sharedram_semaphore_snd_r)
 	AM_RANGE(0xd682, 0xd682) AM_WRITE(t5182_sharedram_semaphore_main_acquire_w)
 	AM_RANGE(0xd683, 0xd683) AM_WRITE(t5182_sharedram_semaphore_main_release_w)
-	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_BASE_MEMBER(darkmist_state, videoram)
-	AM_RANGE(0xe000, 0xefff) AM_RAM AM_BASE_MEMBER(darkmist_state, workram)
-	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_SIZE_MEMBER(darkmist_state, spriteram, spriteram_size)
+	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_BASE_MEMBER(darkmist_state, m_videoram)
+	AM_RANGE(0xe000, 0xefff) AM_RAM AM_BASE_MEMBER(darkmist_state, m_workram)
+	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_SIZE_MEMBER(darkmist_state, m_spriteram, m_spriteram_size)
 ADDRESS_MAP_END
 
 
@@ -218,9 +218,9 @@ GFXDECODE_END
 static INTERRUPT_GEN( darkmist_interrupt )
 {
 	if(cpu_getiloops(device))
-		cpu_set_input_line_and_vector(device, 0, HOLD_LINE, 0x08);
+		device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x08);
 	else
-		cpu_set_input_line_and_vector(device, 0, HOLD_LINE, 0x10);
+		device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x10);
 }
 
 
@@ -313,15 +313,15 @@ ROM_START( darkmist )
 ROM_END
 
 
-static void decrypt_gfx(running_machine *machine)
+static void decrypt_gfx(running_machine &machine)
 {
 	UINT8 *buf = auto_alloc_array(machine, UINT8, 0x40000);
 	UINT8 *rom;
 	int size;
 	int i;
 
-	rom = machine->region("gfx1")->base();
-	size = machine->region("gfx1")->bytes();
+	rom = machine.region("gfx1")->base();
+	size = machine.region("gfx1")->bytes();
 
 	/* data lines */
 	for (i = 0;i < size/2;i++)
@@ -343,8 +343,8 @@ static void decrypt_gfx(running_machine *machine)
 	}
 
 
-	rom = machine->region("gfx2")->base();
-	size = machine->region("gfx2")->bytes();
+	rom = machine.region("gfx2")->base();
+	size = machine.region("gfx2")->bytes();
 
 	/* data lines */
 	for (i = 0;i < size/2;i++)
@@ -366,8 +366,8 @@ static void decrypt_gfx(running_machine *machine)
 	}
 
 
-	rom = machine->region("gfx3")->base();
-	size = machine->region("gfx3")->bytes();
+	rom = machine.region("gfx3")->base();
+	size = machine.region("gfx3")->bytes();
 
 	/* data lines */
 	for (i = 0;i < size/2;i++)
@@ -391,10 +391,10 @@ static void decrypt_gfx(running_machine *machine)
 	auto_free(machine, buf);
 }
 
-static void decrypt_snd(running_machine *machine)
+static void decrypt_snd(running_machine &machine)
 {
 	int i;
-	UINT8 *ROM = machine->region("t5182")->base();
+	UINT8 *ROM = machine.region("t5182")->base();
 
 	for(i=0x8000;i<0x10000;i++)
 		ROM[i] = BITSWAP8(ROM[i], 7,1,2,3,4,5,6,0);
@@ -402,9 +402,9 @@ static void decrypt_snd(running_machine *machine)
 
 static DRIVER_INIT(darkmist)
 {
-	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	int i, len;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	UINT8 *buffer = auto_alloc_array(machine, UINT8, 0x10000);
 	UINT8 *decrypt = auto_alloc_array(machine, UINT8, 0x8000);
 
@@ -437,11 +437,11 @@ static DRIVER_INIT(darkmist)
 	}
 
 	space->set_decrypted_region(0x0000, 0x7fff, decrypt);
-	memory_set_bankptr(space->machine, "bank1",&ROM[0x010000]);
+	memory_set_bankptr(space->machine(), "bank1",&ROM[0x010000]);
 
 	/* adr line swaps */
-	ROM = machine->region("user1")->base();
-	len = machine->region("user1")->bytes();
+	ROM = machine.region("user1")->base();
+	len = machine.region("user1")->bytes();
 	memcpy( buffer, ROM, len );
 
 	for(i=0;i<len;i++)
@@ -449,24 +449,24 @@ static DRIVER_INIT(darkmist)
 		ROM[i]=buffer[BITSWAP24(i,23,22,21,20,19,18,17,16,15,6,5,4,3,2,14,13,12,11,8,7,1,0,10,9)];
 	}
 
-	ROM = machine->region("user2")->base();
-	len = machine->region("user2")->bytes();
+	ROM = machine.region("user2")->base();
+	len = machine.region("user2")->bytes();
 	memcpy( buffer, ROM, len );
 	for(i=0;i<len;i++)
 	{
 		ROM[i]=buffer[BITSWAP24(i,23,22,21,20,19,18,17,16,15,6,5,4,3,2,14,13,12,11,8,7,1,0,10,9)];
 	}
 
-	ROM = machine->region("user3")->base();
-	len = machine->region("user3")->bytes();
+	ROM = machine.region("user3")->base();
+	len = machine.region("user3")->bytes();
 	memcpy( buffer, ROM, len );
 	for(i=0;i<len;i++)
 	{
 		ROM[i]=buffer[BITSWAP24(i,23,22,21,20,19,18,17,16,15,14 ,5,4,3,2,11,10,9,8,13,12,1,0,7,6)];
 	}
 
-	ROM = machine->region("user4")->base();
-	len = machine->region("user4")->bytes();
+	ROM = machine.region("user4")->base();
+	len = machine.region("user4")->bytes();
 	memcpy( buffer, ROM, len );
 	for(i=0;i<len;i++)
 	{

@@ -288,7 +288,7 @@ static void set_irq_line(h6280_Regs* cpustate, int irqline, int state)
 READ8_HANDLER( h6280_irq_status_r )
 {
 	int status;
-	h6280_Regs *cpustate = get_safe_token(space->cpu);
+	h6280_Regs *cpustate = get_safe_token(&space->device());
 
 	switch (offset&3)
 	{
@@ -307,7 +307,7 @@ READ8_HANDLER( h6280_irq_status_r )
 
 WRITE8_HANDLER( h6280_irq_status_w )
 {
-	h6280_Regs *cpustate = get_safe_token(space->cpu);
+	h6280_Regs *cpustate = get_safe_token(&space->device());
 	cpustate->io_buffer=data;
 	switch (offset&3)
 	{
@@ -326,13 +326,13 @@ WRITE8_HANDLER( h6280_irq_status_w )
 READ8_HANDLER( h6280_timer_r )
 {
 	/* only returns countdown */
-	h6280_Regs *cpustate = get_safe_token(space->cpu);
+	h6280_Regs *cpustate = get_safe_token(&space->device());
 	return ((cpustate->timer_value >> 10)&0x7F)|(cpustate->io_buffer&0x80);
 }
 
 WRITE8_HANDLER( h6280_timer_w )
 {
-	h6280_Regs *cpustate = get_safe_token(space->cpu);
+	h6280_Regs *cpustate = get_safe_token(&space->device());
 	cpustate->io_buffer=data;
 	switch (offset & 1) {
 		case 0: /* Counter preload */
@@ -353,7 +353,7 @@ static CPU_TRANSLATE( h6280 )
 {
 	h6280_Regs* cpustate = get_safe_token(device);
 
-	if (space == ADDRESS_SPACE_PROGRAM)
+	if (space == AS_PROGRAM)
 		*address = TRANSLATED(*address);
 
 	return TRUE;
@@ -438,16 +438,16 @@ CPU_GET_INFO( h6280 )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 2;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 17 + 6*65536;					break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_PROGRAM:	info->i = 8;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM: info->i = 21;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_PROGRAM: info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 8;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 21;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
 		case CPUINFO_INT_LOGADDR_WIDTH_PROGRAM: info->i = 16;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 8;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 2;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_IO:		info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 8;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 2;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 
 		case CPUINFO_INT_INPUT_STATE + 0:				info->i = cpustate->irq_state[0];		break;
 		case CPUINFO_INT_INPUT_STATE + 1:				info->i = cpustate->irq_state[1];		break;

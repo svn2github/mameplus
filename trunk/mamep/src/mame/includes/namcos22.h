@@ -35,7 +35,7 @@ public:
 	namcos22_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT32 *spriteram;
+	UINT32 *m_spriteram;
 };
 
 
@@ -81,6 +81,6 @@ SCREEN_UPDATE( namcos22 );
 VIDEO_START( namcos22s );
 SCREEN_UPDATE( namcos22s );
 
-void namcos22_draw_direct_poly( running_machine *machine, const UINT16 *pSource );
+void namcos22_draw_direct_poly( running_machine &machine, const UINT16 *pSource );
 extern UINT32 namcos22_point_rom_r( offs_t offs );
 extern void namcos22_enable_slave_simulation( void );

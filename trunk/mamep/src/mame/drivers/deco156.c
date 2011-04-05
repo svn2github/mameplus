@@ -28,49 +28,49 @@ class deco156_state : public driver_device
 public:
 	deco156_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config),
-		  maincpu(*this, "maincpu"),
-		  deco16ic(*this, "deco_custom"),
-		  oki2(*this, "oki2") { }
+		  m_maincpu(*this, "maincpu"),
+		  m_deco_tilegen1(*this, "tilegen1"),
+		  m_oki2(*this, "oki2") { }
 
 	/* devices */
-	required_device<arm_device> maincpu;
-	required_device<deco16ic_device> deco16ic;
-	optional_device<okim6295_device> oki2;
+	required_device<arm_device> m_maincpu;
+	required_device<deco16ic_device> m_deco_tilegen1;
+	optional_device<okim6295_device> m_oki2;
 
 	/* memory */
-	UINT16   pf1_rowscroll[0x800/2];
-	UINT16   pf2_rowscroll[0x800/2];
-	UINT16* spriteram;
+	UINT16   m_pf1_rowscroll[0x800/2];
+	UINT16   m_pf2_rowscroll[0x800/2];
+	UINT16* m_spriteram;
 };
 
 
 static VIDEO_START( wcvol95 )
 {
-	deco156_state *state = machine->driver_data<deco156_state>();
-	state->spriteram = auto_alloc_array(machine, UINT16, 0x2000/2);
+	deco156_state *state = machine.driver_data<deco156_state>();
+	state->m_spriteram = auto_alloc_array(machine, UINT16, 0x2000/2);
 
 	/* and register the allocated ram so that save states still work */
-	state->save_item(NAME(state->pf1_rowscroll));
-	state->save_item(NAME(state->pf2_rowscroll));
-	state->save_pointer(NAME(state->spriteram), 0x2000/2);
+	state->save_item(NAME(state->m_pf1_rowscroll));
+	state->save_item(NAME(state->m_pf2_rowscroll));
+	state->save_pointer(NAME(state->m_spriteram), 0x2000/2);
 }
 
 
 static SCREEN_UPDATE( wcvol95 )
 {
 	//FIXME: flip_screen_x should not be written!
-	flip_screen_set_no_update(screen->machine, 1);
+	flip_screen_set_no_update(screen->machine(), 1);
 
-	deco156_state *state = screen->machine->driver_data<deco156_state>();
+	deco156_state *state = screen->machine().driver_data<deco156_state>();
 
-	bitmap_fill(screen->machine->priority_bitmap, NULL, 0);
+	bitmap_fill(screen->machine().priority_bitmap, NULL, 0);
 	bitmap_fill(bitmap, NULL, 0);
 
-	deco16ic_pf12_update(state->deco16ic, state->pf1_rowscroll, state->pf2_rowscroll);
+	deco16ic_pf_update(state->m_deco_tilegen1, state->m_pf1_rowscroll, state->m_pf2_rowscroll);
 
-	deco16ic_tilemap_2_draw(state->deco16ic, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
-	screen->machine->device<decospr_device>("spritegen")->draw_sprites(screen->machine, bitmap, cliprect, state->spriteram, 0x800);
-	deco16ic_tilemap_1_draw(state->deco16ic, bitmap, cliprect, 0, 0);
+	deco16ic_tilemap_2_draw(state->m_deco_tilegen1, bitmap, cliprect, TILEMAP_DRAW_OPAQUE, 0);
+	screen->machine().device<decospr_device>("spritegen")->draw_sprites(screen->machine(), bitmap, cliprect, state->m_spriteram, 0x800);
+	deco16ic_tilemap_1_draw(state->m_deco_tilegen1, bitmap, cliprect, 0, 0);
 	return 0;
 }
 
@@ -78,11 +78,11 @@ static SCREEN_UPDATE( wcvol95 )
 
 static WRITE32_HANDLER(hvysmsh_eeprom_w)
 {
-	deco156_state *state = space->machine->driver_data<deco156_state>();
+	deco156_state *state = space->machine().driver_data<deco156_state>();
 	if (ACCESSING_BITS_0_7)
 	{
-		state->oki2->set_bank_base(0x40000 * (data & 0x7));
-		input_port_write(space->machine, "EEPROMOUT", data, 0xff);
+		state->m_oki2->set_bank_base(0x40000 * (data & 0x7));
+		input_port_write(space->machine(), "EEPROMOUT", data, 0xff);
 	}
 }
 
@@ -94,8 +94,8 @@ static WRITE32_DEVICE_HANDLER( hvysmsh_oki_0_bank_w )
 
 static WRITE32_HANDLER(wcvol95_nonbuffered_palette_w)
 {
-	COMBINE_DATA(&space->machine->generic.paletteram.u32[offset]);
-	palette_set_color_rgb(space->machine,offset,pal5bit(space->machine->generic.paletteram.u32[offset] >> 0),pal5bit(space->machine->generic.paletteram.u32[offset] >> 5),pal5bit(space->machine->generic.paletteram.u32[offset] >> 10));
+	COMBINE_DATA(&space->machine().generic.paletteram.u32[offset]);
+	palette_set_color_rgb(space->machine(),offset,pal5bit(space->machine().generic.paletteram.u32[offset] >> 0),pal5bit(space->machine().generic.paletteram.u32[offset] >> 5),pal5bit(space->machine().generic.paletteram.u32[offset] >> 10));
 }
 
 /* This is the same as deco32_nonbuffered_palette_w in video/deco32.c */
@@ -103,24 +103,24 @@ static WRITE32_HANDLER( deco156_nonbuffered_palette_w )
 {
 	int r,g,b;
 
-	COMBINE_DATA(&space->machine->generic.paletteram.u32[offset]);
+	COMBINE_DATA(&space->machine().generic.paletteram.u32[offset]);
 
-	b = (space->machine->generic.paletteram.u32[offset] >>16) & 0xff;
-	g = (space->machine->generic.paletteram.u32[offset] >> 8) & 0xff;
-	r = (space->machine->generic.paletteram.u32[offset] >> 0) & 0xff;
+	b = (space->machine().generic.paletteram.u32[offset] >>16) & 0xff;
+	g = (space->machine().generic.paletteram.u32[offset] >> 8) & 0xff;
+	r = (space->machine().generic.paletteram.u32[offset] >> 0) & 0xff;
 
-	palette_set_color(space->machine,offset,MAKE_RGB(r,g,b));
+	palette_set_color(space->machine(),offset,MAKE_RGB(r,g,b));
 }
 
-static READ32_HANDLER( wcvol95_pf1_rowscroll_r ) { deco156_state *state = space->machine->driver_data<deco156_state>(); return state->pf1_rowscroll[offset] ^ 0xffff0000; }
-static READ32_HANDLER( wcvol95_pf2_rowscroll_r ) { deco156_state *state = space->machine->driver_data<deco156_state>();	return state->pf2_rowscroll[offset] ^ 0xffff0000; }
-static READ32_HANDLER( wcvol95_spriteram_r )     { deco156_state *state = space->machine->driver_data<deco156_state>(); return state->spriteram[offset] ^ 0xffff0000; }
-static WRITE32_HANDLER( wcvol95_pf1_rowscroll_w ) { deco156_state *state = space->machine->driver_data<deco156_state>(); data &= 0x0000ffff; mem_mask &= 0x0000ffff; COMBINE_DATA(&state->pf1_rowscroll[offset]); }
-static WRITE32_HANDLER( wcvol95_pf2_rowscroll_w ) { deco156_state *state = space->machine->driver_data<deco156_state>(); data &= 0x0000ffff; mem_mask &= 0x0000ffff; COMBINE_DATA(&state->pf2_rowscroll[offset]); }
-static WRITE32_HANDLER( wcvol95_spriteram_w )    { deco156_state *state = space->machine->driver_data<deco156_state>(); data &= 0x0000ffff; mem_mask &= 0x0000ffff;	COMBINE_DATA(&state->spriteram[offset]); }
+static READ32_HANDLER( wcvol95_pf1_rowscroll_r ) { deco156_state *state = space->machine().driver_data<deco156_state>(); return state->m_pf1_rowscroll[offset] ^ 0xffff0000; }
+static READ32_HANDLER( wcvol95_pf2_rowscroll_r ) { deco156_state *state = space->machine().driver_data<deco156_state>();	return state->m_pf2_rowscroll[offset] ^ 0xffff0000; }
+static READ32_HANDLER( wcvol95_spriteram_r )     { deco156_state *state = space->machine().driver_data<deco156_state>(); return state->m_spriteram[offset] ^ 0xffff0000; }
+static WRITE32_HANDLER( wcvol95_pf1_rowscroll_w ) { deco156_state *state = space->machine().driver_data<deco156_state>(); data &= 0x0000ffff; mem_mask &= 0x0000ffff; COMBINE_DATA(&state->m_pf1_rowscroll[offset]); }
+static WRITE32_HANDLER( wcvol95_pf2_rowscroll_w ) { deco156_state *state = space->machine().driver_data<deco156_state>(); data &= 0x0000ffff; mem_mask &= 0x0000ffff; COMBINE_DATA(&state->m_pf2_rowscroll[offset]); }
+static WRITE32_HANDLER( wcvol95_spriteram_w )    { deco156_state *state = space->machine().driver_data<deco156_state>(); data &= 0x0000ffff; mem_mask &= 0x0000ffff;	COMBINE_DATA(&state->m_spriteram[offset]); }
 
 
-static ADDRESS_MAP_START( hvysmsh_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( hvysmsh_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x107fff) AM_RAM
 	AM_RANGE(0x120000, 0x120003) AM_READ_PORT("INPUTS")
@@ -130,9 +130,9 @@ static ADDRESS_MAP_START( hvysmsh_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x12000c, 0x12000f) AM_DEVWRITE("oki1", hvysmsh_oki_0_bank_w)
 	AM_RANGE(0x140000, 0x140003) AM_DEVREADWRITE8_MODERN("oki1", okim6295_device, read, write, 0x000000ff)
 	AM_RANGE(0x160000, 0x160003) AM_DEVREADWRITE8_MODERN("oki2", okim6295_device, read, write, 0x000000ff)
-	AM_RANGE(0x180000, 0x18001f) AM_DEVREADWRITE("deco_custom", deco16ic_pf12_control_dword_r, deco16ic_pf12_control_dword_w)
-	AM_RANGE(0x190000, 0x191fff) AM_DEVREADWRITE("deco_custom", deco16ic_pf1_data_dword_r, deco16ic_pf1_data_dword_w)
-	AM_RANGE(0x194000, 0x195fff) AM_DEVREADWRITE("deco_custom", deco16ic_pf2_data_dword_r, deco16ic_pf2_data_dword_w)
+	AM_RANGE(0x180000, 0x18001f) AM_DEVREADWRITE("tilegen1", deco16ic_pf_control_dword_r, deco16ic_pf_control_dword_w)
+	AM_RANGE(0x190000, 0x191fff) AM_DEVREADWRITE("tilegen1", deco16ic_pf1_data_dword_r, deco16ic_pf1_data_dword_w)
+	AM_RANGE(0x194000, 0x195fff) AM_DEVREADWRITE("tilegen1", deco16ic_pf2_data_dword_r, deco16ic_pf2_data_dword_w)
 	AM_RANGE(0x1a0000, 0x1a0fff) AM_READWRITE(wcvol95_pf1_rowscroll_r, wcvol95_pf1_rowscroll_w)
 	AM_RANGE(0x1a4000, 0x1a4fff) AM_READWRITE(wcvol95_pf2_rowscroll_r, wcvol95_pf2_rowscroll_w)
 	AM_RANGE(0x1c0000, 0x1c0fff) AM_RAM_WRITE(deco156_nonbuffered_palette_w) AM_BASE_GENERIC(paletteram)
@@ -140,11 +140,11 @@ static ADDRESS_MAP_START( hvysmsh_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x1e0000, 0x1e1fff) AM_READWRITE(wcvol95_spriteram_r, wcvol95_spriteram_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( wcvol95_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( wcvol95_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x100000, 0x10001f) AM_DEVREADWRITE("deco_custom", deco16ic_pf12_control_dword_r, deco16ic_pf12_control_dword_w)
-	AM_RANGE(0x110000, 0x111fff) AM_DEVREADWRITE("deco_custom", deco16ic_pf1_data_dword_r, deco16ic_pf1_data_dword_w)
-	AM_RANGE(0x114000, 0x115fff) AM_DEVREADWRITE("deco_custom", deco16ic_pf2_data_dword_r, deco16ic_pf2_data_dword_w)
+	AM_RANGE(0x100000, 0x10001f) AM_DEVREADWRITE("tilegen1", deco16ic_pf_control_dword_r, deco16ic_pf_control_dword_w)
+	AM_RANGE(0x110000, 0x111fff) AM_DEVREADWRITE("tilegen1", deco16ic_pf1_data_dword_r, deco16ic_pf1_data_dword_w)
+	AM_RANGE(0x114000, 0x115fff) AM_DEVREADWRITE("tilegen1", deco16ic_pf2_data_dword_r, deco16ic_pf2_data_dword_w)
 	AM_RANGE(0x120000, 0x120fff) AM_READWRITE(wcvol95_pf1_rowscroll_r, wcvol95_pf1_rowscroll_w)
 	AM_RANGE(0x124000, 0x124fff) AM_READWRITE(wcvol95_pf2_rowscroll_r, wcvol95_pf2_rowscroll_w)
 	AM_RANGE(0x130000, 0x137fff) AM_RAM
@@ -304,7 +304,7 @@ static const ymz280b_interface ymz280b_intf =
 
 static INTERRUPT_GEN( deco32_vbl_interrupt )
 {
-	cpu_set_input_line(device, ARM_IRQ_LINE, HOLD_LINE);
+	device_set_input_line(device, ARM_IRQ_LINE, HOLD_LINE);
 }
 
 static int deco156_bank_callback(const int bank)
@@ -312,17 +312,16 @@ static int deco156_bank_callback(const int bank)
 	return ((bank >> 4) & 0x7) * 0x1000;
 }
 
-static const deco16ic_interface deco156_deco16ic_intf =
+static const deco16ic_interface deco156_deco16ic_tilegen1_intf =
 {
 	"screen",
-	1, 0, 1, 1,
-	0x0f, 0x0f, 0x0f, 0x0f,	/* trans masks (default values) */
-	0, 16, 0, 16, /* color base (default values) */
-	0x0f, 0x0f, 0x0f, 0x0f,	/* color masks (default values) */
+	0, 1,
+	0x0f, 0x0f,	/* trans masks (default values) */
+	0, 16, /* color base (default values) */
+	0x0f, 0x0f,	/* color masks (default values) */
 	deco156_bank_callback,
 	deco156_bank_callback,
-	NULL,
-	NULL
+	0,1,
 };
 
 UINT16 deco156_pri_callback(UINT16 x)
@@ -361,7 +360,7 @@ static MACHINE_CONFIG_START( hvysmsh, deco156_state )
 
 	MCFG_VIDEO_START(wcvol95)
 
-	MCFG_DECO16IC_ADD("deco_custom", deco156_deco16ic_intf)
+	MCFG_DECO16IC_ADD("tilegen1", deco156_deco16ic_tilegen1_intf)
 	MCFG_DEVICE_ADD("spritegen", decospr_, 0)
 	decospr_device_config::set_gfx_region(device, 2);
 	decospr_device_config::set_pri_callback(device, deco156_pri_callback);
@@ -400,7 +399,7 @@ static MACHINE_CONFIG_START( wcvol95, deco156_state )
 
 	MCFG_VIDEO_START(wcvol95)
 
-	MCFG_DECO16IC_ADD("deco_custom", deco156_deco16ic_intf)
+	MCFG_DECO16IC_ADD("tilegen1", deco156_deco16ic_tilegen1_intf)
 	MCFG_DEVICE_ADD("spritegen", decospr_, 0)
 	decospr_device_config::set_gfx_region(device, 2);
 	decospr_device_config::set_pri_callback(device, deco156_pri_callback);
@@ -607,10 +606,10 @@ ROM_END
 
 /**********************************************************************************/
 
-static void descramble_sound( running_machine *machine, const char *tag )
+static void descramble_sound( running_machine &machine, const char *tag )
 {
-	UINT8 *rom = machine->region(tag)->base();
-	int length = machine->region(tag)->bytes();
+	UINT8 *rom = machine.region(tag)->base();
+	int length = machine.region(tag)->bytes();
 	UINT8 *buf1 = auto_alloc_array(machine, UINT8, length);
 	UINT32 x;
 

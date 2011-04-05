@@ -35,7 +35,7 @@ TODO:
 #include "imagedev/chd_cd.h"
 
 #if ENABLE_VERBOSE_LOG
-INLINE void verboselog(running_machine *machine, int n_level, const char *s_fmt, ...)
+INLINE void verboselog(running_machine &machine, int n_level, const char *s_fmt, ...)
 {
     if( VERBOSE_LEVEL >= n_level )
     {
@@ -44,7 +44,7 @@ INLINE void verboselog(running_machine *machine, int n_level, const char *s_fmt,
         va_start( v, s_fmt );
         vsprintf( buf, s_fmt, v );
         va_end( v );
-        logerror( "%08x: %s", cpu_get_pc(machine->device("maincpu")), buf );
+        logerror( "%08x: %s", cpu_get_pc(machine.device("maincpu")), buf );
     }
 }
 #else
@@ -55,14 +55,14 @@ INLINE void verboselog(running_machine *machine, int n_level, const char *s_fmt,
 *      Memory maps       *
 *************************/
 
-static ADDRESS_MAP_START( cdimono1_mem, ADDRESS_SPACE_PROGRAM, 16 )
-    AM_RANGE(0x00000000, 0x0007ffff) AM_RAM AM_BASE_MEMBER(cdi_state,planea)
-    AM_RANGE(0x00200000, 0x0027ffff) AM_RAM AM_BASE_MEMBER(cdi_state,planeb)
+static ADDRESS_MAP_START( cdimono1_mem, AS_PROGRAM, 16 )
+    AM_RANGE(0x00000000, 0x0007ffff) AM_RAM AM_BASE_MEMBER(cdi_state,m_planea)
+    AM_RANGE(0x00200000, 0x0027ffff) AM_RAM AM_BASE_MEMBER(cdi_state,m_planeb)
 #if ENABLE_UART_PRINTING
     AM_RANGE(0x00301400, 0x00301403) AM_READ(uart_loopback_enable)
 #endif
 	AM_RANGE(0x00300000, 0x00303bff) AM_DEVREADWRITE("cdic", cdic_ram_r, cdic_ram_w)
-    //AM_RANGE(0x00300000, 0x00303bff) AM_RAM AM_BASE_MEMBER(cdi_state,cdic_regs.ram)
+    //AM_RANGE(0x00300000, 0x00303bff) AM_RAM AM_BASE_MEMBER(cdi_state,m_cdic_regs.ram)
 	AM_RANGE(0x00303c00, 0x00303fff) AM_DEVREADWRITE("cdic", cdic_r, cdic_w)
 	AM_RANGE(0x00310000, 0x00317fff) AM_DEVREADWRITE("slave", slave_r, slave_w)
     //AM_RANGE(0x00318000, 0x0031ffff) AM_NOP
@@ -81,49 +81,49 @@ ADDRESS_MAP_END
 
 static INPUT_CHANGED( mcu_input )
 {
-    cdi_state *state = field->port->machine->driver_data<cdi_state>();
-    scc68070_regs_t *scc68070 = &state->scc68070_regs;
+    cdi_state *state = field->port->machine().driver_data<cdi_state>();
+    scc68070_regs_t *scc68070 = &state->m_scc68070_regs;
 	bool send = false;
 
 	switch((FPTR)param)
 	{
 		case 0x39:
-			if(input_port_read(field->port->machine, "INPUT1") & 0x01) send = true;
+			if(input_port_read(field->port->machine(), "INPUT1") & 0x01) send = true;
 			break;
 		case 0x37:
-			if(input_port_read(field->port->machine, "INPUT1") & 0x02) send = true;
+			if(input_port_read(field->port->machine(), "INPUT1") & 0x02) send = true;
 			break;
 		case 0x31:
-			if(input_port_read(field->port->machine, "INPUT1") & 0x04) send = true;
+			if(input_port_read(field->port->machine(), "INPUT1") & 0x04) send = true;
 			break;
 		case 0x32:
-			if(input_port_read(field->port->machine, "INPUT1") & 0x08) send = true;
+			if(input_port_read(field->port->machine(), "INPUT1") & 0x08) send = true;
 			break;
 		case 0x33:
-			if(input_port_read(field->port->machine, "INPUT1") & 0x10) send = true;
+			if(input_port_read(field->port->machine(), "INPUT1") & 0x10) send = true;
 			break;
 
 		case 0x30:
-			if(input_port_read(field->port->machine, "INPUT2") & 0x01) send = true;
+			if(input_port_read(field->port->machine(), "INPUT2") & 0x01) send = true;
 			break;
 		case 0x38:
-			if(input_port_read(field->port->machine, "INPUT2") & 0x02) send = true;
+			if(input_port_read(field->port->machine(), "INPUT2") & 0x02) send = true;
 			break;
 		case 0x34:
-			if(input_port_read(field->port->machine, "INPUT2") & 0x04) send = true;
+			if(input_port_read(field->port->machine(), "INPUT2") & 0x04) send = true;
 			break;
 		case 0x35:
-			if(input_port_read(field->port->machine, "INPUT2") & 0x08) send = true;
+			if(input_port_read(field->port->machine(), "INPUT2") & 0x08) send = true;
 			break;
 		case 0x36:
-			if(input_port_read(field->port->machine, "INPUT2") & 0x10) send = true;
+			if(input_port_read(field->port->machine(), "INPUT2") & 0x10) send = true;
 			break;
 	}
 
 	if(send)
 	{
 		UINT8 data = (UINT8)((FPTR)param & 0x000000ff);
-		scc68070_quizard_rx(field->port->machine, scc68070, data);
+		scc68070_quizard_rx(field->port->machine(), scc68070, data);
 	}
 }
 
@@ -192,25 +192,25 @@ INPUT_PORTS_END
 
 static MACHINE_START( cdi )
 {
-    cdi_state *state = machine->driver_data<cdi_state>();
+    cdi_state *state = machine.driver_data<cdi_state>();
 
-    scc68070_register_globals(machine, &state->scc68070_regs);
+    scc68070_register_globals(machine, &state->m_scc68070_regs);
 }
 
 static MACHINE_RESET( cdi )
 {
-    cdi_state *state = machine->driver_data<cdi_state>();
-    UINT16 *src   = (UINT16*)machine->region("maincpu")->base();
-    UINT16 *dst   = state->planea;
-    //device_t *cdrom_dev = machine->device("cdrom");
+    cdi_state *state = machine.driver_data<cdi_state>();
+    UINT16 *src   = (UINT16*)machine.region("maincpu")->base();
+    UINT16 *dst   = state->m_planea;
+    //device_t *cdrom_dev = machine.device("cdrom");
     memcpy(dst, src, 0x8);
 
-    scc68070_init(machine, &state->scc68070_regs);
+    scc68070_init(machine, &state->m_scc68070_regs);
 
-    machine->device("maincpu")->reset();
+    machine.device("maincpu")->reset();
 
-    state->dmadac[0] = machine->device<dmadac_sound_device>("dac1");
-    state->dmadac[1] = machine->device<dmadac_sound_device>("dac2");
+    state->m_dmadac[0] = machine.device<dmadac_sound_device>("dac1");
+    state->m_dmadac[1] = machine.device<dmadac_sound_device>("dac2");
 }
 
 static MACHINE_RESET( quizrd12 )

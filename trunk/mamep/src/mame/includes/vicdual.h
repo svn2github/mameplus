@@ -28,17 +28,17 @@ public:
 	vicdual_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT32 coin_status;
-	UINT8 *videoram;
-	UINT8 *characterram;
-	UINT8 samurai_protection_data;
-	UINT8 palette_bank;
+	UINT32 m_coin_status;
+	UINT8 *m_videoram;
+	UINT8 *m_characterram;
+	UINT8 m_samurai_protection_data;
+	UINT8 m_palette_bank;
 };
 
 
 /*----------- defined in drivers/vicdual.c -----------*/
 
-int vicdual_is_cabinet_color(running_machine *machine);
+int vicdual_is_cabinet_color(running_machine &machine);
 
 
 /*----------- defined in video/vicdual.c -----------*/

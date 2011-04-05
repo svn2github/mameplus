@@ -46,8 +46,8 @@ static TILEMAP_MAPPER( marvins_tx_scan_cols )
 
 static TILE_GET_INFO( get_tx_tile_info )
 {
-	mainsnk_state *state = machine->driver_data<mainsnk_state>();
-	int code = state->fgram[tile_index];
+	mainsnk_state *state = machine.driver_data<mainsnk_state>();
+	int code = state->m_fgram[tile_index];
 
 	SET_TILE_INFO(0,
 			code,
@@ -57,12 +57,12 @@ static TILE_GET_INFO( get_tx_tile_info )
 
 static TILE_GET_INFO( get_bg_tile_info )
 {
-	mainsnk_state *state = machine->driver_data<mainsnk_state>();
-	int code = (state->bgram[tile_index]);
+	mainsnk_state *state = machine.driver_data<mainsnk_state>();
+	int code = (state->m_bgram[tile_index]);
 
 	SET_TILE_INFO(
 			0,
-			state->bg_tile_offset + code,
+			state->m_bg_tile_offset + code,
 			0,
 			0);
 }
@@ -70,29 +70,29 @@ static TILE_GET_INFO( get_bg_tile_info )
 
 VIDEO_START(mainsnk)
 {
-	mainsnk_state *state = machine->driver_data<mainsnk_state>();
+	mainsnk_state *state = machine.driver_data<mainsnk_state>();
 
-	state->tx_tilemap = tilemap_create(machine, get_tx_tile_info, marvins_tx_scan_cols, 8, 8, 36, 28);
-	state->bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_cols,    8, 8, 32, 32);
+	state->m_tx_tilemap = tilemap_create(machine, get_tx_tile_info, marvins_tx_scan_cols, 8, 8, 36, 28);
+	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_cols,    8, 8, 32, 32);
 
-	tilemap_set_transparent_pen(state->tx_tilemap, 15);
-	tilemap_set_scrolldy(state->tx_tilemap, 8, 8);
+	tilemap_set_transparent_pen(state->m_tx_tilemap, 15);
+	tilemap_set_scrolldy(state->m_tx_tilemap, 8, 8);
 
-	tilemap_set_scrolldx(state->bg_tilemap, 16, 16);
-	tilemap_set_scrolldy(state->bg_tilemap,  8,  8);
+	tilemap_set_scrolldx(state->m_bg_tilemap, 16, 16);
+	tilemap_set_scrolldy(state->m_bg_tilemap,  8,  8);
 }
 
 
 WRITE8_HANDLER(mainsnk_c600_w)
 {
-	mainsnk_state *state = space->machine->driver_data<mainsnk_state>();
+	mainsnk_state *state = space->machine().driver_data<mainsnk_state>();
 	int bank;
-	int total_elements = space->machine->gfx[0]->total_elements;
+	int total_elements = space->machine().gfx[0]->total_elements;
 
-	flip_screen_set(space->machine, ~data & 0x80);
+	flip_screen_set(space->machine(), ~data & 0x80);
 
-	tilemap_set_palette_offset(state->bg_tilemap, (data & 0x07) << 4);
-	tilemap_set_palette_offset(state->tx_tilemap, (data & 0x07) << 4);
+	tilemap_set_palette_offset(state->m_bg_tilemap, (data & 0x07) << 4);
+	tilemap_set_palette_offset(state->m_tx_tilemap, (data & 0x07) << 4);
 
 	bank = 0;
 	if (total_elements == 0x400)	// mainsnk
@@ -100,37 +100,37 @@ WRITE8_HANDLER(mainsnk_c600_w)
 	else if (total_elements == 0x800)	// canvas
 		bank = ((data & 0x40) >> 6) | ((data & 0x30) >> 3);
 
-	if (state->bg_tile_offset != (bank << 8))
+	if (state->m_bg_tile_offset != (bank << 8))
 	{
-		state->bg_tile_offset = bank << 8;
-		tilemap_mark_all_tiles_dirty(state->bg_tilemap);
+		state->m_bg_tile_offset = bank << 8;
+		tilemap_mark_all_tiles_dirty(state->m_bg_tilemap);
 	}
 }
 
 WRITE8_HANDLER( mainsnk_fgram_w )
 {
-	mainsnk_state *state = space->machine->driver_data<mainsnk_state>();
+	mainsnk_state *state = space->machine().driver_data<mainsnk_state>();
 
-	state->fgram[offset] = data;
-	tilemap_mark_tile_dirty(state->tx_tilemap, offset);
+	state->m_fgram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_tx_tilemap, offset);
 }
 
 WRITE8_HANDLER( mainsnk_bgram_w )
 {
-	mainsnk_state *state = space->machine->driver_data<mainsnk_state>();
+	mainsnk_state *state = space->machine().driver_data<mainsnk_state>();
 
-	state->bgram[offset] = data;
-	tilemap_mark_tile_dirty(state->bg_tilemap, offset);
+	state->m_bgram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_bg_tilemap, offset);
 }
 
 
 
-static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect, int scrollx, int scrolly )
+static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int scrollx, int scrolly )
 {
-	mainsnk_state *state = machine->driver_data<mainsnk_state>();
-	const gfx_element *gfx = machine->gfx[1];
+	mainsnk_state *state = machine.driver_data<mainsnk_state>();
+	const gfx_element *gfx = machine.gfx[1];
 	const UINT8 *source, *finish;
-	source =  state->spriteram;
+	source =  state->m_spriteram;
 	finish =  source + 25*4;
 
 	while( source<finish )
@@ -170,11 +170,11 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE(mainsnk)
 {
-	mainsnk_state *state = screen->machine->driver_data<mainsnk_state>();
+	mainsnk_state *state = screen->machine().driver_data<mainsnk_state>();
 
-	tilemap_draw(bitmap, cliprect, state->bg_tilemap, 0, 0);
-	draw_sprites(screen->machine, bitmap, cliprect, 0, 0);
-	tilemap_draw(bitmap, cliprect, state->tx_tilemap, 0, 0);
+	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
+	draw_sprites(screen->machine(), bitmap, cliprect, 0, 0);
+	tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 0, 0);
 
 	return 0;
 }

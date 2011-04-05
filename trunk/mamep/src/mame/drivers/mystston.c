@@ -37,7 +37,7 @@
  *
  *************************************/
 
-void mystston_on_scanline_interrupt(running_machine *machine)
+void mystston_on_scanline_interrupt(running_machine &machine)
 {
 	cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
 }
@@ -45,7 +45,7 @@ void mystston_on_scanline_interrupt(running_machine *machine)
 
 static WRITE8_HANDLER( irq_clear_w )
 {
-	cputag_set_input_line(space->machine, "maincpu", 0, CLEAR_LINE);
+	cputag_set_input_line(space->machine(), "maincpu", 0, CLEAR_LINE);
 }
 
 
@@ -59,7 +59,7 @@ static WRITE8_HANDLER( irq_clear_w )
 static INPUT_CHANGED( coin_inserted )
 {
 	/* coin insertion causes an NMI */
-	cputag_set_input_line(field->port->machine, "maincpu", INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
+	cputag_set_input_line(field->port->machine(), "maincpu", INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
@@ -72,23 +72,23 @@ static INPUT_CHANGED( coin_inserted )
 
 static WRITE8_HANDLER( mystston_ay8910_select_w )
 {
-	mystston_state *state = space->machine->driver_data<mystston_state>();
+	mystston_state *state = space->machine().driver_data<mystston_state>();
 
 	/* bit 5 goes to 8910 #0 BDIR pin */
-	if (((*state->ay8910_select & 0x20) == 0x20) && ((data & 0x20) == 0x00))
+	if (((*state->m_ay8910_select & 0x20) == 0x20) && ((data & 0x20) == 0x00))
 	{
 		/* bit 4 goes to the 8910 #0 BC1 pin */
-		ay8910_data_address_w(space->machine->device("ay1"), *state->ay8910_select >> 4, *state->ay8910_data);
+		ay8910_data_address_w(space->machine().device("ay1"), *state->m_ay8910_select >> 4, *state->m_ay8910_data);
 	}
 
 	/* bit 7 goes to 8910 #1 BDIR pin */
-	if (((*state->ay8910_select & 0x80) == 0x80) && ((data & 0x80) == 0x00))
+	if (((*state->m_ay8910_select & 0x80) == 0x80) && ((data & 0x80) == 0x00))
 	{
 		/* bit 6 goes to the 8910 #1 BC1 pin */
-		ay8910_data_address_w(space->machine->device("ay2"), *state->ay8910_select >> 6, *state->ay8910_data);
+		ay8910_data_address_w(space->machine().device("ay2"), *state->m_ay8910_select >> 6, *state->m_ay8910_data);
 	}
 
-	*state->ay8910_select = data;
+	*state->m_ay8910_select = data;
 }
 
 
@@ -99,19 +99,19 @@ static WRITE8_HANDLER( mystston_ay8910_select_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x077f) AM_RAM
-	AM_RANGE(0x0780, 0x07df) AM_RAM AM_BASE_MEMBER(mystston_state, spriteram)
+	AM_RANGE(0x0780, 0x07df) AM_RAM AM_BASE_MEMBER(mystston_state, m_spriteram)
 	AM_RANGE(0x07e0, 0x0fff) AM_RAM
-	AM_RANGE(0x1000, 0x17ff) AM_RAM AM_BASE_MEMBER(mystston_state, fg_videoram)
-	AM_RANGE(0x1800, 0x1fff) AM_RAM AM_BASE_MEMBER(mystston_state, bg_videoram)
-	AM_RANGE(0x2000, 0x2000) AM_MIRROR(0x1f8f) AM_READ_PORT("IN0") AM_WRITE(mystston_video_control_w) AM_BASE_MEMBER(mystston_state, video_control)
+	AM_RANGE(0x1000, 0x17ff) AM_RAM AM_BASE_MEMBER(mystston_state, m_fg_videoram)
+	AM_RANGE(0x1800, 0x1fff) AM_RAM AM_BASE_MEMBER(mystston_state, m_bg_videoram)
+	AM_RANGE(0x2000, 0x2000) AM_MIRROR(0x1f8f) AM_READ_PORT("IN0") AM_WRITE(mystston_video_control_w) AM_BASE_MEMBER(mystston_state, m_video_control)
 	AM_RANGE(0x2010, 0x2010) AM_MIRROR(0x1f8f) AM_READ_PORT("IN1") AM_WRITE(irq_clear_w)
-	AM_RANGE(0x2020, 0x2020) AM_MIRROR(0x1f8f) AM_READ_PORT("DSW0") AM_WRITEONLY AM_BASE_MEMBER(mystston_state, scroll)
-	AM_RANGE(0x2030, 0x2030) AM_MIRROR(0x1f8f) AM_READ_PORT("DSW1") AM_WRITEONLY AM_BASE_MEMBER(mystston_state, ay8910_data)
-	AM_RANGE(0x2040, 0x2040) AM_MIRROR(0x1f8f) AM_READNOP AM_WRITE(mystston_ay8910_select_w) AM_BASE_MEMBER(mystston_state, ay8910_select)
+	AM_RANGE(0x2020, 0x2020) AM_MIRROR(0x1f8f) AM_READ_PORT("DSW0") AM_WRITEONLY AM_BASE_MEMBER(mystston_state, m_scroll)
+	AM_RANGE(0x2030, 0x2030) AM_MIRROR(0x1f8f) AM_READ_PORT("DSW1") AM_WRITEONLY AM_BASE_MEMBER(mystston_state, m_ay8910_data)
+	AM_RANGE(0x2040, 0x2040) AM_MIRROR(0x1f8f) AM_READNOP AM_WRITE(mystston_ay8910_select_w) AM_BASE_MEMBER(mystston_state, m_ay8910_select)
 	AM_RANGE(0x2050, 0x2050) AM_MIRROR(0x1f8f) AM_NOP
-	AM_RANGE(0x2060, 0x207f) AM_MIRROR(0x1f80) AM_RAM AM_BASE_MEMBER(mystston_state, paletteram)
+	AM_RANGE(0x2060, 0x207f) AM_MIRROR(0x1f80) AM_RAM AM_BASE_MEMBER(mystston_state, m_paletteram)
 	AM_RANGE(0x4000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 

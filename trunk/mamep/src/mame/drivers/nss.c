@@ -304,12 +304,12 @@ public:
 	nss_state(running_machine &machine, const driver_device_config_base &config)
 		: snes_state(machine, config) { }
 
-	UINT8 m50458_rom_bank;
-	UINT8 vblank_bit;
+	UINT8 m_m50458_rom_bank;
+	UINT8 m_vblank_bit;
 };
 
 
-static ADDRESS_MAP_START( snes_map, ADDRESS_SPACE_PROGRAM, 8)
+static ADDRESS_MAP_START( snes_map, AS_PROGRAM, 8)
 	AM_RANGE(0x000000, 0x2fffff) AM_READWRITE(snes_r_bank1, snes_w_bank1)	/* I/O and ROM (repeats for each bank) */
 	AM_RANGE(0x300000, 0x3fffff) AM_READWRITE(snes_r_bank2, snes_w_bank2)	/* I/O and ROM (repeats for each bank) */
 	AM_RANGE(0x400000, 0x5fffff) AM_READ(snes_r_bank3)						/* ROM (and reserved in Mode 20) */
@@ -330,7 +330,7 @@ static WRITE8_DEVICE_HANDLER( spc_ram_100_w )
 	spc_ram_w(device, offset + 0x100, data);
 }
 
-static ADDRESS_MAP_START( spc_mem, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( spc_mem, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x00ef) AM_DEVREADWRITE("spc700", spc_ram_r, spc_ram_w)	/* lower 32k ram */
 	AM_RANGE(0x00f0, 0x00ff) AM_DEVREADWRITE("spc700", spc_io_r, spc_io_w)  	/* spc io */
 	AM_RANGE(0x0100, 0xffff) AM_DEVWRITE("spc700", spc_ram_100_w)
@@ -381,16 +381,16 @@ static WRITE8_HANDLER( nss_eeprom_w )
 
 static READ8_HANDLER( m50458_r )
 {
-	nss_state *state = space->machine->driver_data<nss_state>();
-	if(state->m50458_rom_bank)
+	nss_state *state = space->machine().driver_data<nss_state>();
+	if(state->m_m50458_rom_bank)
 	{
-		UINT8 *gfx_rom = space->machine->region("m50458_gfx")->base();
+		UINT8 *gfx_rom = space->machine().region("m50458_gfx")->base();
 
 		return gfx_rom[offset & 0xfff];
 	}
 	else
 	{
-		UINT8 *gfx_ram = space->machine->region("m50458_vram")->base();
+		UINT8 *gfx_ram = space->machine().region("m50458_vram")->base();
 
 		return gfx_ram[offset & 0xfff];
 	}
@@ -400,19 +400,19 @@ static READ8_HANDLER( m50458_r )
 
 static WRITE8_HANDLER( m50458_w )
 {
-	nss_state *state = space->machine->driver_data<nss_state>();
-	if(state->m50458_rom_bank)
+	nss_state *state = space->machine().driver_data<nss_state>();
+	if(state->m_m50458_rom_bank)
 		logerror("Warning: write to M50458 GFX ROM!\n");
 	else
 	{
-		UINT8 *gfx_ram = space->machine->region("m50458_vram")->base();
+		UINT8 *gfx_ram = space->machine().region("m50458_vram")->base();
 
 		gfx_ram[offset & 0xfff] = data;
 	}
 }
 
 
-static ADDRESS_MAP_START( bios_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( bios_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x8800, 0x8fff) AM_RAM // vram perhaps?
@@ -424,15 +424,15 @@ ADDRESS_MAP_END
 
 static READ8_HANDLER( port00_r )
 {
-	nss_state *state = space->machine->driver_data<nss_state>();
+	nss_state *state = space->machine().driver_data<nss_state>();
 	/*
     -x-- ---- almost certainly tied to the vblank signal
     */
 
 
-	state->vblank_bit^=0x40;
+	state->m_vblank_bit^=0x40;
 
-	return state->vblank_bit | 0xbf;
+	return state->m_vblank_bit | 0xbf;
 }
 
 
@@ -464,15 +464,15 @@ static READ8_HANDLER( port03_r )
 
 static WRITE8_HANDLER( port80_w )
 {
-	nss_state *state = space->machine->driver_data<nss_state>();
+	nss_state *state = space->machine().driver_data<nss_state>();
 	/*
     ---- -x-- written when 0x9000-0x9fff is read, probably a bankswitch
     ---- --x- see port 0x02 note
     ---- ---x BIOS bankswitch
     */
 
-	memory_set_bank(space->machine, "bank1", data & 1);
-	state->m50458_rom_bank = data & 4;
+	memory_set_bank(space->machine(), "bank1", data & 1);
+	state->m_m50458_rom_bank = data & 4;
 }
 
 static WRITE8_HANDLER( port82_w ) // EEPROM2?
@@ -484,7 +484,7 @@ static WRITE8_HANDLER( port82_w ) // EEPROM2?
     */
 }
 
-static ADDRESS_MAP_START( bios_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( bios_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ(port00_r)
 	AM_RANGE(0x01, 0x01) AM_READ(port01_r)
@@ -499,13 +499,13 @@ ADDRESS_MAP_END
 
 static MACHINE_START( nss )
 {
-	nss_state *state = machine->driver_data<nss_state>();
-	UINT8 *ROM = machine->region("bios")->base();
+	nss_state *state = machine.driver_data<nss_state>();
+	UINT8 *ROM = machine.region("bios")->base();
 
 	memory_configure_bank(machine, "bank1", 0, 2, &ROM[0x10000], 0x8000);
 	memory_set_bank(machine, "bank1", 0);
 
-	state->m50458_rom_bank = 0;
+	state->m_m50458_rom_bank = 0;
 
 	MACHINE_START_CALL(snes);
 }

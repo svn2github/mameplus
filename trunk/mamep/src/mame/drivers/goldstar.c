@@ -122,33 +122,33 @@
 
 static WRITE8_HANDLER( protection_w )
 {
-	goldstar_state *state = space->machine->driver_data<goldstar_state>();
+	goldstar_state *state = space->machine().driver_data<goldstar_state>();
 
 	if (data == 0x2a)
-		state->dataoffset = 0;
+		state->m_dataoffset = 0;
 }
 
 static READ8_HANDLER( protection_r )
 {
-	goldstar_state *state = space->machine->driver_data<goldstar_state>();
+	goldstar_state *state = space->machine().driver_data<goldstar_state>();
 	static const int data[4] = { 0x47, 0x4f, 0x4c, 0x44 };
 
-	state->dataoffset %= 4;
-	return data[state->dataoffset++];
+	state->m_dataoffset %= 4;
+	return data[state->m_dataoffset++];
 }
 
-static ADDRESS_MAP_START( goldstar_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( goldstar_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xb7ff) AM_ROM
 	AM_RANGE(0xb800, 0xbfff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0xc000, 0xc7ff) AM_ROM
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE( goldstar_fg_vidram_w ) AM_BASE_MEMBER(goldstar_state,fg_vidram)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE( goldstar_fg_atrram_w ) AM_BASE_MEMBER(goldstar_state,fg_atrram)
-	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE( goldstar_reel1_ram_w ) AM_BASE_MEMBER(goldstar_state,reel1_ram)
-	AM_RANGE(0xe000, 0xe1ff) AM_RAM_WRITE( goldstar_reel2_ram_w ) AM_BASE_MEMBER(goldstar_state,reel2_ram)
-	AM_RANGE(0xe800, 0xe9ff) AM_RAM_WRITE( goldstar_reel3_ram_w ) AM_BASE_MEMBER(goldstar_state,reel3_ram)
-	AM_RANGE(0xf040, 0xf07f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel1_scroll)
-	AM_RANGE(0xf080, 0xf0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,reel2_scroll)
-	AM_RANGE(0xf0c0, 0xf0ff) AM_RAM AM_BASE_MEMBER(goldstar_state,reel3_scroll)
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE( goldstar_fg_vidram_w ) AM_BASE_MEMBER(goldstar_state,m_fg_vidram)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE( goldstar_fg_atrram_w ) AM_BASE_MEMBER(goldstar_state,m_fg_atrram)
+	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE( goldstar_reel1_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel1_ram)
+	AM_RANGE(0xe000, 0xe1ff) AM_RAM_WRITE( goldstar_reel2_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel2_ram)
+	AM_RANGE(0xe800, 0xe9ff) AM_RAM_WRITE( goldstar_reel3_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel3_ram)
+	AM_RANGE(0xf040, 0xf07f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel1_scroll)
+	AM_RANGE(0xf080, 0xf0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel2_scroll)
+	AM_RANGE(0xf0c0, 0xf0ff) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel3_scroll)
 
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("IN0")
 	AM_RANGE(0xf801, 0xf801) AM_READ_PORT("IN1")	/* Test Mode */
@@ -168,7 +168,7 @@ static ADDRESS_MAP_START( goldstar_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xfe00, 0xfe00) AM_READWRITE(protection_r,protection_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( goldstar_readport, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( goldstar_readport, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x10, 0x10) AM_READ_PORT("DSW6")
 ADDRESS_MAP_END
@@ -180,18 +180,18 @@ static WRITE8_HANDLER( ncb3_port81_w )
 }
 
 
-static ADDRESS_MAP_START( ncb3_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( ncb3_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xb7ff) AM_ROM
 	AM_RANGE(0xb800, 0xbfff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0xc000, 0xc7ff) AM_ROM
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,fg_vidram)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,fg_atrram)
-	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,reel1_ram)
-	AM_RANGE(0xe000, 0xe1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,reel2_ram)
-	AM_RANGE(0xe800, 0xe9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,reel3_ram)
-	AM_RANGE(0xf040, 0xf07f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel1_scroll)
-	AM_RANGE(0xf080, 0xf0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,reel2_scroll)
-	AM_RANGE(0xf100, 0xf17f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel3_scroll) // moved compared to goldstar
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,m_fg_vidram)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,m_fg_atrram)
+	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel1_ram)
+	AM_RANGE(0xe000, 0xe1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel2_ram)
+	AM_RANGE(0xe800, 0xe9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel3_ram)
+	AM_RANGE(0xf040, 0xf07f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel1_scroll)
+	AM_RANGE(0xf080, 0xf0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel2_scroll)
+	AM_RANGE(0xf100, 0xf17f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel3_scroll) // moved compared to goldstar
 
 	AM_RANGE(0xf800, 0xf803) AM_DEVREADWRITE("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xf810, 0xf813) AM_DEVREADWRITE("ppi8255_1", ppi8255_r, ppi8255_w)	/* Input Ports */
@@ -205,7 +205,7 @@ static ADDRESS_MAP_START( ncb3_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xf870, 0xf870) AM_DEVWRITE("snsnd", sn76496_w)	/* guess... device is initialized, but doesn't seems to be used.*/
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ncb3_readwriteport, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( ncb3_readwriteport, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 //  AM_RANGE(0x00, 0x00) AM_READ(ncb3_unkread_r)    // read from 0x00 when controls set1 is used...
 //  AM_RANGE(0x02, 0x02) AM_READ(ncb3_unkread_r)    // read from 0x02 when controls set2 is used...
@@ -252,53 +252,53 @@ static WRITE8_HANDLER( cm_outport1_w )
 	/* lamps? */
 }
 
-static ADDRESS_MAP_START( cm_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( cm_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xcfff) AM_ROM AM_WRITENOP
 
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("nvram")
 
 
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,fg_vidram)
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,fg_atrram)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,m_fg_vidram)
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,m_fg_atrram)
 
-	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE( goldstar_reel1_ram_w ) AM_BASE_MEMBER(goldstar_state,reel1_ram)
-	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE( goldstar_reel2_ram_w ) AM_BASE_MEMBER(goldstar_state,reel2_ram)
-	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE( goldstar_reel3_ram_w ) AM_BASE_MEMBER(goldstar_state,reel3_ram)
+	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE( goldstar_reel1_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel1_ram)
+	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE( goldstar_reel2_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel2_ram)
+	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE( goldstar_reel3_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel3_ram)
 	AM_RANGE(0xf600, 0xf7ff) AM_RAM
 
-	AM_RANGE(0xf800, 0xf87f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel1_scroll)
+	AM_RANGE(0xf800, 0xf87f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel1_scroll)
 	AM_RANGE(0xf880, 0xf9ff) AM_RAM
-	AM_RANGE(0xfa00, 0xfa7f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel2_scroll)
+	AM_RANGE(0xfa00, 0xfa7f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel2_scroll)
 	AM_RANGE(0xfa80, 0xfbff) AM_RAM
-	AM_RANGE(0xfc00, 0xfc7f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel3_scroll)
+	AM_RANGE(0xfc00, 0xfc7f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel3_scroll)
 	AM_RANGE(0xfc80, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( nfm_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( nfm_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xd7ff) AM_ROM AM_WRITENOP
 
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("nvram")
 
 
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,fg_vidram)
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,fg_atrram)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,m_fg_vidram)
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,m_fg_atrram)
 
-	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE( goldstar_reel1_ram_w ) AM_BASE_MEMBER(goldstar_state,reel1_ram)
-	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE( goldstar_reel2_ram_w ) AM_BASE_MEMBER(goldstar_state,reel2_ram)
-	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE( goldstar_reel3_ram_w ) AM_BASE_MEMBER(goldstar_state,reel3_ram)
+	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE( goldstar_reel1_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel1_ram)
+	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE( goldstar_reel2_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel2_ram)
+	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE( goldstar_reel3_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel3_ram)
 	AM_RANGE(0xf600, 0xf7ff) AM_RAM
 
-	AM_RANGE(0xf800, 0xf87f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel1_scroll)
+	AM_RANGE(0xf800, 0xf87f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel1_scroll)
 	AM_RANGE(0xf880, 0xf9ff) AM_RAM
-	AM_RANGE(0xfa00, 0xfa7f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel2_scroll)
+	AM_RANGE(0xfa00, 0xfa7f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel2_scroll)
 	AM_RANGE(0xfa80, 0xfbff) AM_RAM
-	AM_RANGE(0xfc00, 0xfc7f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel3_scroll)
+	AM_RANGE(0xfc00, 0xfc7f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel3_scroll)
 	AM_RANGE(0xfc80, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
 
 
-static ADDRESS_MAP_START( cm_portmap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( cm_portmap, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x01, 0x01) AM_DEVREAD("aysnd", ay8910_r)
 	AM_RANGE(0x02, 0x03) AM_DEVWRITE("aysnd", ay8910_data_address_w)
@@ -312,7 +312,7 @@ static ADDRESS_MAP_START( cm_portmap, ADDRESS_SPACE_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( cmast91_portmap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( cmast91_portmap, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE("ppi8255_1", ppi8255_r, ppi8255_w)	/* DIP switches */
@@ -321,7 +321,7 @@ static ADDRESS_MAP_START( cmast91_portmap, ADDRESS_SPACE_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( amcoe1_portmap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( amcoe1_portmap, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x01, 0x01) AM_DEVREAD("aysnd", ay8910_r)
 	AM_RANGE(0x02, 0x03) AM_DEVWRITE("aysnd", ay8910_data_address_w)
@@ -334,7 +334,7 @@ static ADDRESS_MAP_START( amcoe1_portmap, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x20, 0x20) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( amcoe2_portmap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( amcoe2_portmap, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x01, 0x01) AM_DEVREAD("aysnd", ay8910_r)
 	AM_RANGE(0x02, 0x03) AM_DEVWRITE("aysnd", ay8910_data_address_w)
@@ -360,17 +360,17 @@ static WRITE8_HANDLER( lucky8_outport_w )
 
 }
 
-static ADDRESS_MAP_START( lucky8_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( lucky8_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,fg_vidram)
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,fg_atrram)
-	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,reel1_ram)
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,reel2_ram)
-	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,reel3_ram)
-	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel1_scroll)
-	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,reel2_scroll)
-	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel3_scroll)
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,m_fg_vidram)
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,m_fg_atrram)
+	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel1_ram)
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel2_ram)
+	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel3_ram)
+	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel1_scroll)
+	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel2_scroll)
+	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel3_scroll)
 
 	AM_RANGE(0xb800, 0xb803) AM_DEVREADWRITE("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xb810, 0xb813) AM_DEVREADWRITE("ppi8255_1", ppi8255_r, ppi8255_w)	/* Input Ports */
@@ -386,16 +386,16 @@ static WRITE8_HANDLER( magodds_outb850_w )
 {
 	// guess, could be wrong, this might just be lights
 
-	goldstar_state *state = space->machine->driver_data<goldstar_state>();
+	goldstar_state *state = space->machine().driver_data<goldstar_state>();
 
 	if (data&0x20)
-		state->tile_bank = 1;
+		state->m_tile_bank = 1;
 	else
-		state->tile_bank = 0;
+		state->m_tile_bank = 0;
 
 	//popmessage("magodds_outb850_w %02x\n", data);
 
-	tilemap_mark_all_tiles_dirty (state->fg_tilemap);
+	tilemap_mark_all_tiles_dirty (state->m_fg_tilemap);
 
 }
 
@@ -404,18 +404,18 @@ static WRITE8_HANDLER( magodds_outb860_w )
 //  popmessage("magodds_outb860_w %02x\n", data);
 }
 
-static ADDRESS_MAP_START(magodds_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START(magodds_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	// where does the extra rom data map?? it seems like it should come straight after the existing rom, but it can't if this is a plain z80?
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("share1") AM_SHARE("nvram")
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,fg_vidram)
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,fg_atrram)
-	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,reel1_ram)
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,reel2_ram)
-	AM_RANGE(0xa900, 0xaaff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,reel3_ram) // +0x100 compared to lucky8
-	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel1_scroll)
-	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,reel2_scroll)
-	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel3_scroll)
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,m_fg_vidram)
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,m_fg_atrram)
+	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel1_ram)
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel2_ram)
+	AM_RANGE(0xa900, 0xaaff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel3_ram) // +0x100 compared to lucky8
+	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel1_scroll)
+	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel2_scroll)
+	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel3_scroll)
 
 	AM_RANGE(0xb800, 0xb803) AM_DEVREADWRITE("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xb810, 0xb813) AM_DEVREADWRITE("ppi8255_1", ppi8255_r, ppi8255_w)	/* Input Ports */
@@ -428,17 +428,17 @@ static ADDRESS_MAP_START(magodds_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xc000, 0xffff) AM_ROM AM_REGION("maincpu",0xc000)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( kkojnoli_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( kkojnoli_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM	/* definitely no NVRAM */
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,fg_vidram)
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,fg_atrram)
-	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,reel1_ram)
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,reel2_ram)
-	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,reel3_ram)
-	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel1_scroll)
-	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,reel2_scroll)
-	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel3_scroll)
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,m_fg_vidram)
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,m_fg_atrram)
+	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel1_ram)
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel2_ram)
+	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel3_ram)
+	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel1_scroll)
+	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel2_scroll)
+	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel3_scroll)
 
 	AM_RANGE(0xb800, 0xb803) AM_DEVREADWRITE("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xb810, 0xb813) AM_DEVREADWRITE("ppi8255_1", ppi8255_r, ppi8255_w)	/* Input Ports */
@@ -467,17 +467,17 @@ ADDRESS_MAP_END
 //  popmessage("Output: %02X", data);
 //}
 
-static ADDRESS_MAP_START( ladylinr_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( ladylinr_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,fg_vidram)
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,fg_atrram)
-	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,reel1_ram)
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,reel2_ram)
-	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,reel3_ram)
-	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel1_scroll)
-	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,reel2_scroll)
-	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel3_scroll)
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,m_fg_vidram)
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,m_fg_atrram)
+	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel1_ram)
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel2_ram)
+	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel3_ram)
+	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel1_scroll)
+	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel2_scroll)
+	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel3_scroll)
 
 	AM_RANGE(0xb800, 0xb803) AM_DEVREADWRITE("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xb810, 0xb813) AM_DEVREADWRITE("ppi8255_1", ppi8255_r, ppi8255_w)	/* DSW bank */
@@ -488,17 +488,17 @@ static ADDRESS_MAP_START( ladylinr_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( wcat3_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( wcat3_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,fg_vidram)
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,fg_atrram)
-	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,reel1_ram)
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,reel2_ram)
-	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,reel3_ram)
-	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel1_scroll)
-	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,reel2_scroll)
-	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel3_scroll)
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,m_fg_vidram)
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,m_fg_atrram)
+	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel1_ram)
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel2_ram)
+	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE_MEMBER(goldstar_state,m_reel3_ram)
+	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel1_scroll)
+	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel2_scroll)
+	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel3_scroll)
 
 	AM_RANGE(0xb800, 0xb803) AM_DEVREADWRITE("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xb810, 0xb813) AM_DEVREADWRITE("ppi8255_1", ppi8255_r, ppi8255_w)	/* Input Ports */
@@ -522,28 +522,28 @@ static READ8_HANDLER( unkch_unk_r )
 
 
 /* newer / more capable hw */
-static ADDRESS_MAP_START( unkch_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( unkch_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x9fff) AM_ROM
 	AM_RANGE(0xc000, 0xc1ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split1_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0xc800, 0xc9ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split2_w) AM_BASE_GENERIC(paletteram2)
 
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("nvram")
 
-	AM_RANGE(0xd840, 0xd87f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel1_scroll)
-	AM_RANGE(0xd880, 0xd8bf) AM_RAM AM_BASE_MEMBER(goldstar_state,reel2_scroll)
-	AM_RANGE(0xd900, 0xd93f) AM_RAM AM_BASE_MEMBER(goldstar_state,reel3_scroll)
+	AM_RANGE(0xd840, 0xd87f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel1_scroll)
+	AM_RANGE(0xd880, 0xd8bf) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel2_scroll)
+	AM_RANGE(0xd900, 0xd93f) AM_RAM AM_BASE_MEMBER(goldstar_state,m_reel3_scroll)
 	AM_RANGE(0xdfc0, 0xdfff) AM_RAM
 
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,fg_vidram)
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,fg_atrram)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE_MEMBER(goldstar_state,m_fg_vidram)
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE_MEMBER(goldstar_state,m_fg_atrram)
 
-	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE( goldstar_reel1_ram_w ) AM_BASE_MEMBER(goldstar_state,reel1_ram)
-	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE( goldstar_reel2_ram_w ) AM_BASE_MEMBER(goldstar_state,reel2_ram)
-	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE( goldstar_reel3_ram_w ) AM_BASE_MEMBER(goldstar_state,reel3_ram)
+	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE( goldstar_reel1_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel1_ram)
+	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE( goldstar_reel2_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel2_ram)
+	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE( goldstar_reel3_ram_w ) AM_BASE_MEMBER(goldstar_state,m_reel3_ram)
 	AM_RANGE(0xf600, 0xf7ff) AM_RAM
-	AM_RANGE(0xf800, 0xf9ff) AM_RAM_WRITE( unkch_reel1_attrram_w ) AM_BASE_MEMBER(goldstar_state,reel1_attrram)
-	AM_RANGE(0xfa00, 0xfbff) AM_RAM_WRITE( unkch_reel2_attrram_w ) AM_BASE_MEMBER(goldstar_state,reel2_attrram)
-	AM_RANGE(0xfc00, 0xfdff) AM_RAM_WRITE( unkch_reel3_attrram_w ) AM_BASE_MEMBER(goldstar_state,reel3_attrram)
+	AM_RANGE(0xf800, 0xf9ff) AM_RAM_WRITE( unkch_reel1_attrram_w ) AM_BASE_MEMBER(goldstar_state,m_reel1_attrram)
+	AM_RANGE(0xfa00, 0xfbff) AM_RAM_WRITE( unkch_reel2_attrram_w ) AM_BASE_MEMBER(goldstar_state,m_reel2_attrram)
+	AM_RANGE(0xfc00, 0xfdff) AM_RAM_WRITE( unkch_reel3_attrram_w ) AM_BASE_MEMBER(goldstar_state,m_reel3_attrram)
 	AM_RANGE(0xfe00, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -555,9 +555,9 @@ static WRITE8_HANDLER( unkcm_0x02_w )
 static WRITE8_HANDLER( unkcm_0x03_w )
 {
 	//popmessage("unkcm_0x03_w %02x", data);
-	goldstar_state *state = space->machine->driver_data<goldstar_state>();
+	goldstar_state *state = space->machine().driver_data<goldstar_state>();
 
-	state->unkch_vidreg = data;
+	state->m_unkch_vidreg = data;
 
 	// -x-- ----   seems to toggle when a 'normal' tilemap should be displayed instead of the reels?
 }
@@ -574,7 +574,7 @@ static WRITE8_HANDLER( unkcm_0x12_w )
 }
 
 
-static ADDRESS_MAP_START( unkch_portmap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( unkch_portmap, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 //  AM_RANGE(0x01, 0x01) AM_DEVREAD("aysnd", ay8910_r)
 	AM_RANGE(0x02, 0x02) AM_WRITE(unkcm_0x02_w)
@@ -5502,24 +5502,24 @@ static const ppi8255_interface cm_ppi8255_intf[2] =
 
 static WRITE8_DEVICE_HANDLER( system_outputa_w )
 {
-	//goldstar_state *state = device->machine->driver_data<goldstar_state>();
+	//goldstar_state *state = device->machine().driver_data<goldstar_state>();
 	//popmessage("system_outputa_w %02x",data);
 }
 
 
 static WRITE8_DEVICE_HANDLER( system_outputb_w )
 {
-	//goldstar_state *state = device->machine->driver_data<goldstar_state>();
+	//goldstar_state *state = device->machine().driver_data<goldstar_state>();
 	//popmessage("system_outputb_w %02x",data);
 }
 
 
 static WRITE8_DEVICE_HANDLER( system_outputc_w )
 {
-	goldstar_state *state = device->machine->driver_data<goldstar_state>();
+	goldstar_state *state = device->machine().driver_data<goldstar_state>();
 
-	state->lucky8_nmi_enable = data & 8;
-	state->unkch_vidreg = data & 2;
+	state->m_lucky8_nmi_enable = data & 8;
+	state->m_unkch_vidreg = data & 2;
 	//popmessage("system_outputc_w %02x",data);
 }
 
@@ -5622,13 +5622,13 @@ static const ay8910_interface cm_ay8910_config =
 
 static WRITE8_DEVICE_HANDLER( ay8910_outputa_w )
 {
-	//goldstar_state *state = device->machine->driver_data<goldstar_state>();
+	//goldstar_state *state = device->machine().driver_data<goldstar_state>();
 	//popmessage("ay8910_outputa_w %02x",data);
 }
 
 static WRITE8_DEVICE_HANDLER( ay8910_outputb_w )
 {
-	//goldstar_state *state = device->machine->driver_data<goldstar_state>();
+	//goldstar_state *state = device->machine().driver_data<goldstar_state>();
 	//popmessage("ay8910_outputb_w %02x",data);
 }
 
@@ -5764,7 +5764,7 @@ static PALETTE_INIT(cm)
 	for (i = 0; i < 0x100; i++)
 	{
 		UINT8 data;
-		UINT8*proms = machine->region("proms")->base();
+		UINT8*proms = machine.region("proms")->base();
 
 		data = proms[0x000 + i] | (proms[0x100 + i] << 4);
 
@@ -5779,7 +5779,7 @@ static PALETTE_INIT(cmast91)
 	{
 		int r,g,b;
 
-		UINT8*proms = machine->region("proms")->base();
+		UINT8*proms = machine.region("proms")->base();
 
 		b = proms[0x000 + i] << 4;
 		g = proms[0x100 + i] << 4;
@@ -5797,7 +5797,7 @@ static PALETTE_INIT(lucky8)
 	UINT8 data;
 	UINT8 *proms;
 
-	proms = machine->region("proms")->base();
+	proms = machine.region("proms")->base();
 	for (i = 0; i < 0x100; i++)
 	{
 
@@ -5806,7 +5806,7 @@ static PALETTE_INIT(lucky8)
 		palette_set_color_rgb(machine, i, pal3bit(data >> 0), pal3bit(data >> 3), pal2bit(data >> 6));
 	}
 
-	proms = machine->region("proms2")->base();
+	proms = machine.region("proms2")->base();
 	for (i=0; i < 0x20; i++)
 	{
 		data = proms[i];
@@ -6055,10 +6055,10 @@ MACHINE_CONFIG_END
 
 static INTERRUPT_GEN( lucky8_irq )
 {
-	goldstar_state *state = device->machine->driver_data<goldstar_state>();
+	goldstar_state *state = device->machine().driver_data<goldstar_state>();
 
-	if(state->lucky8_nmi_enable)
-		cpu_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	if(state->m_lucky8_nmi_enable)
+		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( lucky8, goldstar_state )
@@ -6109,7 +6109,7 @@ static PALETTE_INIT(magodds)
 	{
 		int r,g,b;
 
-		UINT8*proms = machine->region("proms")->base();
+		UINT8*proms = machine.region("proms")->base();
 
 		b = proms[0x000 + i] << 4;
 		g = proms[0x100 + i] << 4;
@@ -8082,7 +8082,7 @@ YM2203
 static DRIVER_INIT(magoddsc)
 {
 	int A;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	for (A = 0;A < 0x8000;A++)
 	{
@@ -9620,7 +9620,7 @@ ROM_END
 static DRIVER_INIT(goldstar)
 {
 	int A;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	for (A = 0;A < 0x10000;A++)
 	{
@@ -9633,7 +9633,7 @@ static DRIVER_INIT(goldstar)
 
 // this block swapping is the same for chry10, chrygld and cb3
 //  the underlying bitswaps / xors are different however
-static void do_blockswaps(running_machine *machine, UINT8* ROM)
+static void do_blockswaps(running_machine &machine, UINT8* ROM)
 {
 	int A;
 	UINT8 *buffer;
@@ -9664,13 +9664,13 @@ static void do_blockswaps(running_machine *machine, UINT8* ROM)
 	auto_free(machine, buffer);
 }
 
-static void dump_to_file(running_machine* machine, UINT8* ROM)
+static void dump_to_file(running_machine& machine, UINT8* ROM)
 {
 	#if 0
 	{
 		FILE *fp;
 		char filename[256];
-		sprintf(filename,"decrypted_%s", machine->gamedrv->name);
+		sprintf(filename,"decrypted_%s", machine.system().name);
 		fp=fopen(filename, "w+b");
 		if (fp)
 		{
@@ -9705,8 +9705,8 @@ static UINT8 chry10_decrypt(UINT8 cipherText)
 
 static DRIVER_INIT( chry10 )
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
-	int size = machine->region("maincpu")->bytes();
+	UINT8 *ROM = machine.region("maincpu")->base();
+	int size = machine.region("maincpu")->bytes();
 	int start = 0;
 
 	int i;
@@ -9729,8 +9729,8 @@ static DRIVER_INIT( chry10 )
 
 static DRIVER_INIT( cb3 )
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
-	int size = machine->region("maincpu")->bytes();
+	UINT8 *ROM = machine.region("maincpu")->base();
+	int size = machine.region("maincpu")->bytes();
 	int start = 0;
 
 	int i;
@@ -9748,7 +9748,7 @@ static DRIVER_INIT( cb3 )
 static DRIVER_INIT( chrygld )
 {
 	int A;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	do_blockswaps(machine, ROM);
 
 	// a data bitswap
@@ -9764,7 +9764,7 @@ static DRIVER_INIT( chrygld )
 
 static DRIVER_INIT(cm)
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 /*  forcing PPI mode 0 for all, and A, B & C as input.
     the mixed modes 2-0 are not working properly.
@@ -9775,7 +9775,7 @@ static DRIVER_INIT(cm)
 
 static DRIVER_INIT(cmv4)
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 /*  forcing PPI mode 0 for all, and A, B & C as input.
     the mixed modes 2-0 are not working properly.
@@ -9786,7 +9786,7 @@ static DRIVER_INIT(cmv4)
 
 static DRIVER_INIT(cmast91)
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 /*  forcing PPI mode 0 for all, and A, B & C as input.
     the mixed modes 2-0 are not working properly.
@@ -9797,7 +9797,7 @@ static DRIVER_INIT(cmast91)
 
 static DRIVER_INIT(lucky8a)
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	ROM[0x0010] = 0x21;
 }
@@ -9805,7 +9805,7 @@ static DRIVER_INIT(lucky8a)
 static DRIVER_INIT( nfb96sea )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	for (i = 0;i < 0x10000;i++)
 	{
@@ -9838,7 +9838,7 @@ static READ8_HANDLER( fixedvala8_r )
 static DRIVER_INIT( schery97 )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -9853,8 +9853,8 @@ static DRIVER_INIT( schery97 )
 		ROM[i] = x;
 	}
 
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x1d, 0x1d, 0, 0, fixedvala8_r);
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x2a, 0x2a, 0, 0, fixedvalb4_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x1d, 0x1d, FUNC(fixedvala8_r));
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x2a, 0x2a, FUNC(fixedvalb4_r));
 	/* Oki 6295 at 0x20 */
 }
 
@@ -9866,7 +9866,7 @@ static READ8_HANDLER( fixedval38_r )
 static DRIVER_INIT( schery97a )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -9883,7 +9883,7 @@ static DRIVER_INIT( schery97a )
 
 
 
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x16, 0x16, 0, 0, fixedval38_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x16, 0x16, FUNC(fixedval38_r));
 	/* Oki 6295 at 0x20 */
 }
 
@@ -9895,7 +9895,7 @@ static READ8_HANDLER( fixedvalea_r )
 static DRIVER_INIT( skill98 )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -9910,7 +9910,7 @@ static DRIVER_INIT( skill98 )
 		ROM[i] = x;
 	}
 
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x1e, 0x1e, 0, 0, fixedvalea_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x1e, 0x1e, FUNC(fixedvalea_r));
 	/* Oki 6295 at 0x20 */
 }
 
@@ -9922,7 +9922,7 @@ static READ8_HANDLER( fixedval68_r )
 static DRIVER_INIT( fb36xc1 )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -9937,7 +9937,7 @@ static DRIVER_INIT( fb36xc1 )
 		ROM[i] = x;
 	}
 
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x31, 0x31, 0, 0, fixedval68_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x31, 0x31, FUNC(fixedval68_r));
 
 }
 
@@ -9959,7 +9959,7 @@ static READ8_HANDLER( fixedvalaa_r )
 static DRIVER_INIT( fbse354 )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -9974,11 +9974,11 @@ static DRIVER_INIT( fbse354 )
 		ROM[i] = x;
 	}
 	// nfb96b needs both of these
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x23, 0x23, 0, 0, fixedval80_r);
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x5a, 0x5a, 0, 0, fixedvalaa_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x23, 0x23, FUNC(fixedval80_r));
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x5a, 0x5a, FUNC(fixedvalaa_r));
 
 	// csel96b
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x6e, 0x6e, 0, 0, fixedval96_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x6e, 0x6e, FUNC(fixedval96_r));
 
 }
 
@@ -9991,7 +9991,7 @@ static READ8_HANDLER( fixedvalbe_r )
 static DRIVER_INIT( fbse362 )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10006,7 +10006,7 @@ static DRIVER_INIT( fbse362 )
 		ROM[i] = x;
 	}
 
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x2e, 0x2e, 0, 0, fixedvalbe_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x2e, 0x2e, FUNC(fixedvalbe_r));
 
 }
 
@@ -10023,7 +10023,7 @@ static READ8_HANDLER( fixedval84_r )
 static DRIVER_INIT( rp35 )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10038,8 +10038,8 @@ static DRIVER_INIT( rp35 )
 		ROM[i] = x;
 	}
 
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x5e, 0x5e, 0, 0, fixedval84_r);
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x36, 0x36, 0, 0, fixedval90_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x5e, 0x5e, FUNC(fixedval84_r));
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x36, 0x36, FUNC(fixedval90_r));
 }
 
 static READ8_HANDLER( fixedvalb2_r )
@@ -10050,7 +10050,7 @@ static READ8_HANDLER( fixedvalb2_r )
 static DRIVER_INIT( rp36 )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10066,7 +10066,7 @@ static DRIVER_INIT( rp36 )
 		ROM[i] = x;
 	}
 
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x34, 0x34, 0, 0, fixedvalb2_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x34, 0x34, FUNC(fixedvalb2_r));
 }
 
 static READ8_HANDLER( fixedval48_r )
@@ -10077,7 +10077,7 @@ static READ8_HANDLER( fixedval48_r )
 static DRIVER_INIT( rp36c3 )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10093,7 +10093,7 @@ static DRIVER_INIT( rp36c3 )
 		ROM[i] = x;
 	}
 
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x17, 0x17, 0, 0, fixedval48_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x17, 0x17, FUNC(fixedval48_r));
 }
 
 static READ8_HANDLER( fixedval09_r )
@@ -10110,7 +10110,7 @@ static READ8_HANDLER( fixedval74_r )
 static DRIVER_INIT( po33 )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10125,8 +10125,8 @@ static DRIVER_INIT( po33 )
 
 		ROM[i] = x;
 	}
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x32, 0x32, 0, 0, fixedval74_r);
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x12, 0x12, 0, 0, fixedval09_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x32, 0x32, FUNC(fixedval74_r));
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x12, 0x12, FUNC(fixedval09_r));
 	/* oki6295 at 0x20 */
 }
 
@@ -10138,7 +10138,7 @@ static READ8_HANDLER( fixedval58_r )
 static DRIVER_INIT( tc132axt )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10154,7 +10154,7 @@ static DRIVER_INIT( tc132axt )
 		ROM[i] = x;
 	}
 
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x21, 0x21, 0, 0, fixedval58_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x21, 0x21, FUNC(fixedval58_r));
 }
 
 static READ8_HANDLER( fixedvale4_r )
@@ -10170,7 +10170,7 @@ static READ8_HANDLER( fixedvalc7_r )
 static DRIVER_INIT( match133 )
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10186,14 +10186,14 @@ static DRIVER_INIT( match133 )
 		ROM[i] = x;
 	}
 
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x16, 0x16, 0, 0, fixedvalc7_r);
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x1a, 0x1a, 0, 0, fixedvale4_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x16, 0x16, FUNC(fixedvalc7_r));
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x1a, 0x1a, FUNC(fixedvale4_r));
 }
 
 static DRIVER_INIT(cherrys)
 {
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	unsigned char rawData[256] = {
 		0xCC, 0xCD, 0xCE, 0xCF, 0xC8, 0xC9, 0xCA, 0xCB, 0xC4, 0xC5, 0xC6, 0xC7,
@@ -10230,21 +10230,21 @@ static DRIVER_INIT(cherrys)
 /* todo: remove these patches! */
 static DRIVER_INIT( unkch1 )
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	ROM[0x9d52] = 0x00;
 	ROM[0x9d53] = 0x00;
 }
 
 static DRIVER_INIT( unkch3 )
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	ROM[0x9b86] = 0x00;
 	ROM[0x9b87] = 0x00;
 }
 
 static DRIVER_INIT( unkch4 )
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	ROM[0x9a6e] = 0x00;
 	ROM[0x9a6f] = 0x00;
 }
@@ -10252,10 +10252,10 @@ static DRIVER_INIT( unkch4 )
 static DRIVER_INIT( tonypok )
 {
 	// the ppi doesn't seem to work properly, so just install the inputs directly
-	address_space *io = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO);
-	memory_install_read_port(io, 0x04, 0x04, 0, 0, "IN0" );
-	memory_install_read_port(io, 0x05, 0x05, 0, 0, "IN1" );
-	memory_install_read_port(io, 0x06, 0x06, 0, 0, "IN2" );
+	address_space *io = machine.device("maincpu")->memory().space(AS_IO);
+	io->install_read_port(0x04, 0x04, "IN0" );
+	io->install_read_port(0x05, 0x05, "IN1" );
+	io->install_read_port(0x06, 0x06, "IN2" );
 
 }
 

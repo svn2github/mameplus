@@ -25,7 +25,7 @@
 /* Roc'n'Rope has the IRQ vectors in RAM. The rom contains $FFFF at this address! */
 static WRITE8_HANDLER( rocnrope_interrupt_vector_w )
 {
-	UINT8 *RAM = space->machine->region("maincpu")->base();
+	UINT8 *RAM = space->machine().region("maincpu")->base();
 
 	RAM[0xfff2 + offset] = data;
 }
@@ -37,18 +37,18 @@ static WRITE8_HANDLER( rocnrope_interrupt_vector_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( rocnrope_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( rocnrope_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x3080, 0x3080) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x3081, 0x3081) AM_READ_PORT("P1")
 	AM_RANGE(0x3082, 0x3082) AM_READ_PORT("P2")
 	AM_RANGE(0x3083, 0x3083) AM_READ_PORT("DSW1")
 	AM_RANGE(0x3000, 0x3000) AM_READ_PORT("DSW2")
 	AM_RANGE(0x3100, 0x3100) AM_READ_PORT("DSW3")
-	AM_RANGE(0x4000, 0x402f) AM_RAM AM_BASE_MEMBER(rocnrope_state, spriteram2)
-	AM_RANGE(0x4400, 0x442f) AM_RAM AM_BASE_SIZE_MEMBER(rocnrope_state, spriteram, spriteram_size)
+	AM_RANGE(0x4000, 0x402f) AM_RAM AM_BASE_MEMBER(rocnrope_state, m_spriteram2)
+	AM_RANGE(0x4400, 0x442f) AM_RAM AM_BASE_SIZE_MEMBER(rocnrope_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0x4000, 0x47ff) AM_RAM
-	AM_RANGE(0x4800, 0x4bff) AM_RAM_WRITE(rocnrope_colorram_w) AM_BASE_MEMBER(rocnrope_state, colorram)
-	AM_RANGE(0x4c00, 0x4fff) AM_RAM_WRITE(rocnrope_videoram_w) AM_BASE_MEMBER(rocnrope_state, videoram)
+	AM_RANGE(0x4800, 0x4bff) AM_RAM_WRITE(rocnrope_colorram_w) AM_BASE_MEMBER(rocnrope_state, m_colorram)
+	AM_RANGE(0x4c00, 0x4fff) AM_RAM_WRITE(rocnrope_videoram_w) AM_BASE_MEMBER(rocnrope_state, m_videoram)
 	AM_RANGE(0x5000, 0x5fff) AM_RAM
 	AM_RANGE(0x8000, 0x8000) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x8080, 0x8080) AM_WRITE(rocnrope_flipscreen_w)

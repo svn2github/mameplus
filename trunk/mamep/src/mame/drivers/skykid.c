@@ -22,36 +22,36 @@ Notes:
 
 static WRITE8_HANDLER( inputport_select_w )
 {
-	skykid_state *state = space->machine->driver_data<skykid_state>();
+	skykid_state *state = space->machine().driver_data<skykid_state>();
 	if ((data & 0xe0) == 0x60)
-		state->inputport_selected = data & 0x07;
+		state->m_inputport_selected = data & 0x07;
 	else if ((data & 0xe0) == 0xc0)
 	{
-		coin_lockout_global_w(space->machine, ~data & 1);
-		coin_counter_w(space->machine, 0,data & 2);
-		coin_counter_w(space->machine, 1,data & 4);
+		coin_lockout_global_w(space->machine(), ~data & 1);
+		coin_counter_w(space->machine(), 0,data & 2);
+		coin_counter_w(space->machine(), 1,data & 4);
 	}
 }
 
 static READ8_HANDLER( inputport_r )
 {
-	skykid_state *state = space->machine->driver_data<skykid_state>();
-	switch (state->inputport_selected)
+	skykid_state *state = space->machine().driver_data<skykid_state>();
+	switch (state->m_inputport_selected)
 	{
 		case 0x00:	/* DSW B (bits 0-4) */
-			return (input_port_read(space->machine, "DSWB") & 0xf8) >> 3;
+			return (input_port_read(space->machine(), "DSWB") & 0xf8) >> 3;
 		case 0x01:	/* DSW B (bits 5-7), DSW A (bits 0-1) */
-			return ((input_port_read(space->machine, "DSWB") & 0x07) << 2) | ((input_port_read(space->machine, "DSWA") & 0xc0) >> 6);
+			return ((input_port_read(space->machine(), "DSWB") & 0x07) << 2) | ((input_port_read(space->machine(), "DSWA") & 0xc0) >> 6);
 		case 0x02:	/* DSW A (bits 2-6) */
-			return (input_port_read(space->machine, "DSWA") & 0x3e) >> 1;
+			return (input_port_read(space->machine(), "DSWA") & 0x3e) >> 1;
 		case 0x03:	/* DSW A (bit 7), DSW C (bits 0-3) */
-			return ((input_port_read(space->machine, "DSWA") & 0x01) << 4) | (input_port_read(space->machine, "BUTTON2") & 0x0f);
+			return ((input_port_read(space->machine(), "DSWA") & 0x01) << 4) | (input_port_read(space->machine(), "BUTTON2") & 0x0f);
 		case 0x04:	/* coins, start */
-			return input_port_read(space->machine, "SYSTEM");
+			return input_port_read(space->machine(), "SYSTEM");
 		case 0x05:	/* 2P controls */
-			return input_port_read(space->machine, "P2");
+			return input_port_read(space->machine(), "P2");
 		case 0x06:	/* 1P controls */
-			return input_port_read(space->machine, "P1");
+			return input_port_read(space->machine(), "P1");
 		default:
 			return 0xff;
 	}
@@ -59,53 +59,53 @@ static READ8_HANDLER( inputport_r )
 
 static WRITE8_HANDLER( skykid_led_w )
 {
-	set_led_status(space->machine, 0,data & 0x08);
-	set_led_status(space->machine, 1,data & 0x10);
+	set_led_status(space->machine(), 0,data & 0x08);
+	set_led_status(space->machine(), 1,data & 0x10);
 }
 
 static WRITE8_HANDLER( skykid_subreset_w )
 {
 	int bit = !BIT(offset,11);
-	cputag_set_input_line(space->machine, "mcu", INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
+	cputag_set_input_line(space->machine(), "mcu", INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
 }
 
 static WRITE8_HANDLER( skykid_bankswitch_w )
 {
-	memory_set_bank(space->machine, "bank1", !BIT(offset,11));
+	memory_set_bank(space->machine(), "bank1", !BIT(offset,11));
 }
 
 static WRITE8_HANDLER( skykid_irq_1_ctrl_w )
 {
 	int bit = !BIT(offset,11);
-	cpu_interrupt_enable(space->machine->device("maincpu"), bit);
+	cpu_interrupt_enable(space->machine().device("maincpu"), bit);
 	if (!bit)
-		cputag_set_input_line(space->machine, "maincpu", 0, CLEAR_LINE);
+		cputag_set_input_line(space->machine(), "maincpu", 0, CLEAR_LINE);
 }
 
 static WRITE8_HANDLER( skykid_irq_2_ctrl_w )
 {
 	int bit = !BIT(offset,13);
-	cpu_interrupt_enable(space->machine->device("mcu"), bit);
+	cpu_interrupt_enable(space->machine().device("mcu"), bit);
 	if (!bit)
-		cputag_set_input_line(space->machine, "mcu", 0, CLEAR_LINE);
+		cputag_set_input_line(space->machine(), "mcu", 0, CLEAR_LINE);
 }
 
 static MACHINE_START( skykid )
 {
-	skykid_state *state = machine->driver_data<skykid_state>();
+	skykid_state *state = machine.driver_data<skykid_state>();
 	/* configure the banks */
-	memory_configure_bank(machine, "bank1", 0, 2, machine->region("maincpu")->base() + 0x10000, 0x2000);
+	memory_configure_bank(machine, "bank1", 0, 2, machine.region("maincpu")->base() + 0x10000, 0x2000);
 
-	state_save_register_global(machine, state->inputport_selected);
+	state_save_register_global(machine, state->m_inputport_selected);
 }
 
 
 
-static ADDRESS_MAP_START( skykid_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( skykid_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x1fff) AM_ROMBANK("bank1")				/* banked ROM */
-	AM_RANGE(0x2000, 0x2fff) AM_READWRITE(skykid_videoram_r,skykid_videoram_w) AM_BASE_MEMBER(skykid_state, videoram)/* Video RAM (background) */
-	AM_RANGE(0x4000, 0x47ff) AM_READWRITE(skykid_textram_r,skykid_textram_w) AM_BASE_MEMBER(skykid_state, textram)	/* video RAM (text layer) */
-	AM_RANGE(0x4800, 0x5fff) AM_RAM AM_BASE_MEMBER(skykid_state, spriteram)	/* RAM + Sprite RAM */
+	AM_RANGE(0x2000, 0x2fff) AM_READWRITE(skykid_videoram_r,skykid_videoram_w) AM_BASE_MEMBER(skykid_state, m_videoram)/* Video RAM (background) */
+	AM_RANGE(0x4000, 0x47ff) AM_READWRITE(skykid_textram_r,skykid_textram_w) AM_BASE_MEMBER(skykid_state, m_textram)	/* video RAM (text layer) */
+	AM_RANGE(0x4800, 0x5fff) AM_RAM AM_BASE_MEMBER(skykid_state, m_spriteram)	/* RAM + Sprite RAM */
 	AM_RANGE(0x6000, 0x60ff) AM_WRITE(skykid_scroll_y_w)		/* Y scroll register map */
 	AM_RANGE(0x6200, 0x63ff) AM_WRITE(skykid_scroll_x_w)		/* X scroll register map */
 	AM_RANGE(0x6800, 0x6bff) AM_DEVREADWRITE("namco", namcos1_cus30_r, namcos1_cus30_w) /* PSG device, shared RAM */
@@ -117,7 +117,7 @@ static ADDRESS_MAP_START( skykid_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xa000, 0xa001) AM_WRITE(skykid_flipscreen_priority_w)	/* flip screen & priority */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( mcu_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( mcu_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x001f) AM_READWRITE(m6801_io_r, m6801_io_w)
 	AM_RANGE(0x0080, 0x00ff) AM_RAM
 	AM_RANGE(0x1000, 0x13ff) AM_DEVREADWRITE("namco", namcos1_cus30_r, namcos1_cus30_w) /* PSG device, shared RAM */
@@ -134,7 +134,7 @@ static READ8_HANDLER( readFF )
 	return 0xff;
 }
 
-static ADDRESS_MAP_START( mcu_port_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( mcu_port_map, AS_IO, 8 )
 	AM_RANGE(M6801_PORT1, M6801_PORT1) AM_READ(inputport_r)			/* input ports read */
 	AM_RANGE(M6801_PORT1, M6801_PORT1) AM_WRITE(inputport_select_w)	/* input port select */
 	AM_RANGE(M6801_PORT2, M6801_PORT2) AM_READ(readFF)	/* leds won't work otherwise */
@@ -625,7 +625,7 @@ static DRIVER_INIT( skykid )
 	int i;
 
 	/* unpack the third sprite ROM */
-	rom = machine->region("gfx3")->base() + 0x4000;
+	rom = machine.region("gfx3")->base() + 0x4000;
 	for (i = 0;i < 0x2000;i++)
 	{
 		rom[i + 0x4000] = rom[i];		// sprite set #1, plane 3

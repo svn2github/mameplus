@@ -138,26 +138,26 @@ public:
 	wardner_state(running_machine &machine, const driver_device_config_base &config)
 		: twincobr_state(machine, config) { }
 
-	UINT8 *rambase_ae00;
-	UINT8 *rambase_c000;
+	UINT8 *m_rambase_ae00;
+	UINT8 *m_rambase_c000;
 };
 
 
 static WRITE8_HANDLER( wardner_ramrom_bank_sw )
 {
-	wardner_state *state = space->machine->driver_data<wardner_state>();
-	if (state->wardner_membank != data) {
+	wardner_state *state = space->machine().driver_data<wardner_state>();
+	if (state->m_wardner_membank != data) {
 		int bankaddress = 0;
 
 		address_space *mainspace;
-		UINT8 *RAM = space->machine->region("maincpu")->base();
+		UINT8 *RAM = space->machine().region("maincpu")->base();
 
-		mainspace = cputag_get_address_space(space->machine, "maincpu", ADDRESS_SPACE_PROGRAM);
-		state->wardner_membank = data;
+		mainspace = space->machine().device("maincpu")->memory().space(AS_PROGRAM);
+		state->m_wardner_membank = data;
 
 		if (data)
 		{
-			memory_install_read_bank(mainspace, 0x8000, 0xffff, 0, 0, "bank1");
+			mainspace->install_read_bank(0x8000, 0xffff, "bank1");
 			switch (data)
 			{
 				case 2:  bankaddress = 0x10000; break;
@@ -169,35 +169,35 @@ static WRITE8_HANDLER( wardner_ramrom_bank_sw )
 				case 6:  bankaddress = 0x30000; break; /* not used */
 				default: bankaddress = 0x00000; break; /* not used */
 			}
-			memory_set_bankptr(space->machine, "bank1",&RAM[bankaddress]);
+			memory_set_bankptr(space->machine(), "bank1",&RAM[bankaddress]);
 		}
 		else
 		{
-			memory_install_read8_handler(mainspace, 0x8000, 0x8fff, 0, 0, wardner_sprite_r);
-			memory_install_read_bank(mainspace, 0xa000, 0xadff, 0, 0, "bank4");
-			memory_install_read_bank(mainspace, 0xae00, 0xafff, 0, 0, "bank2");
-			memory_install_read_bank(mainspace, 0xc000, 0xc7ff, 0, 0, "bank3");
-			memory_set_bankptr(space->machine, "bank1", &RAM[0x0000]);
-			memory_set_bankptr(space->machine, "bank2", state->rambase_ae00);
-			memory_set_bankptr(space->machine, "bank3", state->rambase_c000);
-			memory_set_bankptr(space->machine, "bank4", space->machine->generic.paletteram.v);
+			mainspace->install_legacy_read_handler(0x8000, 0x8fff, FUNC(wardner_sprite_r));
+			mainspace->install_read_bank(0xa000, 0xadff, "bank4");
+			mainspace->install_read_bank(0xae00, 0xafff, "bank2");
+			mainspace->install_read_bank(0xc000, 0xc7ff, "bank3");
+			memory_set_bankptr(space->machine(), "bank1", &RAM[0x0000]);
+			memory_set_bankptr(space->machine(), "bank2", state->m_rambase_ae00);
+			memory_set_bankptr(space->machine(), "bank3", state->m_rambase_c000);
+			memory_set_bankptr(space->machine(), "bank4", space->machine().generic.paletteram.v);
 		}
 	}
 }
 
 STATE_POSTLOAD( wardner_restore_bank )
 {
-	wardner_state *state = machine->driver_data<wardner_state>();
-	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+	wardner_state *state = machine.driver_data<wardner_state>();
+	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 
 	wardner_ramrom_bank_sw(space,0,1);	/* Dummy value to ensure restoration */
-	wardner_ramrom_bank_sw(space,0,state->wardner_membank);
+	wardner_ramrom_bank_sw(space,0,state->m_wardner_membank);
 }
 
 
 /***************************** Z80 Main Memory Map **************************/
 
-static ADDRESS_MAP_START( main_program_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_program_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x6fff) AM_ROM
 	AM_RANGE(0x7000, 0x7fff) AM_RAM
 
@@ -206,13 +206,13 @@ static ADDRESS_MAP_START( main_program_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x8000, 0x8fff) AM_WRITE(wardner_sprite_w) AM_BASE_SIZE_GENERIC(spriteram)
 	AM_RANGE(0x9000, 0x9fff) AM_ROM
 	AM_RANGE(0xa000, 0xadff) AM_WRITE(paletteram_xBBBBBGGGGGRRRRR_le_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0xae00, 0xafff) AM_RAM AM_BASE_MEMBER(wardner_state, rambase_ae00)
+	AM_RANGE(0xae00, 0xafff) AM_RAM AM_BASE_MEMBER(wardner_state, m_rambase_ae00)
 	AM_RANGE(0xb000, 0xbfff) AM_ROM
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_BASE_MEMBER(wardner_state, rambase_c000) AM_SHARE("share1")	/* Shared RAM with Sound Z80 */
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_BASE_MEMBER(wardner_state, m_rambase_c000) AM_SHARE("share1")	/* Shared RAM with Sound Z80 */
 	AM_RANGE(0xc800, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( main_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( main_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0x02, 0x02) AM_DEVWRITE("crtc", mc6845_register_w)
@@ -237,7 +237,7 @@ ADDRESS_MAP_END
 
 /***************************** Z80 Sound Memory Map *************************/
 
-static ADDRESS_MAP_START( sound_program_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_program_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x807f) AM_RAM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("share1")	/* Shared RAM with Main Z80 */
@@ -245,7 +245,7 @@ static ADDRESS_MAP_START( sound_program_map, ADDRESS_SPACE_PROGRAM, 8 )
 
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( sound_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE("ymsnd", ym3812_r, ym3812_w)
 ADDRESS_MAP_END
@@ -253,13 +253,13 @@ ADDRESS_MAP_END
 
 /***************************** TMS32010 Memory Map **************************/
 
-static ADDRESS_MAP_START( DSP_program_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( DSP_program_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000, 0x5ff) AM_ROM
 ADDRESS_MAP_END
 
 	/* $000 - 08F  TMS32010 Internal Data RAM in Data Address Space */
 
-static ADDRESS_MAP_START( DSP_io_map, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( DSP_io_map, AS_IO, 16 )
 	AM_RANGE(0, 0) AM_WRITE(wardner_dsp_addrsel_w)
 	AM_RANGE(1, 1) AM_READWRITE(wardner_dsp_r, wardner_dsp_w)
 	AM_RANGE(3, 3) AM_WRITE(twincobr_dsp_bio_w)
@@ -383,7 +383,7 @@ static const gfx_layout spritelayout =
 /* handler called by the 3812 emulator when the internal timers cause an IRQ */
 static void irqhandler(device_t *device, int linestate)
 {
-	cputag_set_input_line(device->machine, "audiocpu", 0, linestate);
+	cputag_set_input_line(device->machine(), "audiocpu", 0, linestate);
 }
 
 static const ym3812_interface ym3812_config =

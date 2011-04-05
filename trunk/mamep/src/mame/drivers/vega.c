@@ -25,7 +25,7 @@ public:
 };
 
 
-static ADDRESS_MAP_START( vega_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( vega_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 ADDRESS_MAP_END
 
@@ -107,7 +107,7 @@ UINT8 ascii_to_bin( UINT8 ascii )
 DRIVER_INIT(vegaa)
 {
 	UINT8* buf = (UINT8*)malloc(0x10000);
-	UINT8* rom = machine->region("maincpu")->base();
+	UINT8* rom = machine.region("maincpu")->base();
 	int i;
 	int count = 0;
 	// last 0xc bytes of file are just some settings, ignore
@@ -135,7 +135,7 @@ DRIVER_INIT(vegaa)
 	{
 		FILE *fp;
 		char filename[256];
-		sprintf(filename,"vega_%s", machine->gamedrv->name);
+		sprintf(filename,"vega_%s", machine.system().name);
 		fp=fopen(filename, "w+b");
 		if (fp)
 		{

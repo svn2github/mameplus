@@ -81,15 +81,15 @@ Extract a standard version of this
 static WRITE32_HANDLER( color_ram_w )
 {
 	int a,r,g,b;
-	COMBINE_DATA(&space->machine->generic.paletteram.u32[offset]);
+	COMBINE_DATA(&space->machine().generic.paletteram.u32[offset]);
 
 	{
-		a = space->machine->generic.paletteram.u32[offset];
+		a = space->machine().generic.paletteram.u32[offset];
 		r = (a &0xff0000) >> 16;
 		g = (a &0xff00) >> 8;
 		b = (a &0xff);
 
-		palette_set_color(space->machine,offset,MAKE_RGB(r,g,b));
+		palette_set_color(space->machine(),offset,MAKE_RGB(r,g,b));
 	}
 }
 
@@ -126,30 +126,30 @@ static const eeprom_interface groundfx_eeprom_interface =
 
 static CUSTOM_INPUT( frame_counter_r )
 {
-	groundfx_state *state = field->port->machine->driver_data<groundfx_state>();
-	return state->frame_counter;
+	groundfx_state *state = field->port->machine().driver_data<groundfx_state>();
+	return state->m_frame_counter;
 }
 
 static CUSTOM_INPUT( coin_word_r )
 {
-	groundfx_state *state = field->port->machine->driver_data<groundfx_state>();
-	return state->coin_word;
+	groundfx_state *state = field->port->machine().driver_data<groundfx_state>();
+	return state->m_coin_word;
 }
 
 static WRITE32_HANDLER( groundfx_input_w )
 {
-	groundfx_state *state = space->machine->driver_data<groundfx_state>();
+	groundfx_state *state = space->machine().driver_data<groundfx_state>();
 	switch (offset)
 	{
 		case 0x00:
 			if (ACCESSING_BITS_24_31)	/* $500000 is watchdog */
 			{
-				watchdog_reset(space->machine);
+				watchdog_reset(space->machine());
 			}
 
 			if (ACCESSING_BITS_0_7)
 			{
-				input_port_write(space->machine, "EEPROMOUT", data, 0xff);
+				input_port_write(space->machine(), "EEPROMOUT", data, 0xff);
 			}
 
 			break;
@@ -157,11 +157,11 @@ static WRITE32_HANDLER( groundfx_input_w )
 		case 0x01:
 			if (ACCESSING_BITS_24_31)
 			{
-				coin_lockout_w(space->machine, 0,~data & 0x01000000);
-				coin_lockout_w(space->machine, 1,~data & 0x02000000);
-				coin_counter_w(space->machine, 0, data & 0x04000000);
-				coin_counter_w(space->machine, 1, data & 0x08000000);
-				state->coin_word = (data >> 16) &0xffff;
+				coin_lockout_w(space->machine(), 0,~data & 0x01000000);
+				coin_lockout_w(space->machine(), 1,~data & 0x02000000);
+				coin_counter_w(space->machine(), 0, data & 0x04000000);
+				coin_counter_w(space->machine(), 1, data & 0x08000000);
+				state->m_coin_word = (data >> 16) &0xffff;
 			}
 			break;
 	}
@@ -169,28 +169,28 @@ static WRITE32_HANDLER( groundfx_input_w )
 
 static READ32_HANDLER( groundfx_adc_r )
 {
-	return (input_port_read(space->machine, "AN0") << 8) | input_port_read(space->machine, "AN1");
+	return (input_port_read(space->machine(), "AN0") << 8) | input_port_read(space->machine(), "AN1");
 }
 
 static WRITE32_HANDLER( groundfx_adc_w )
 {
 	/* One interrupt per input port (4 per frame, though only 2 used).
         1000 cycle delay is arbitrary */
-	space->machine->scheduler().timer_set(downcast<cpu_device *>(space->cpu)->cycles_to_attotime(1000), FUNC(groundfx_interrupt5));
+	space->machine().scheduler().timer_set(downcast<cpu_device *>(&space->device())->cycles_to_attotime(1000), FUNC(groundfx_interrupt5));
 }
 
 static WRITE32_HANDLER( rotate_control_w )	/* only a guess that it's rotation */
 {
-	groundfx_state *state = space->machine->driver_data<groundfx_state>();
+	groundfx_state *state = space->machine().driver_data<groundfx_state>();
 		if (ACCESSING_BITS_0_15)
 		{
-			state->rotate_ctrl[state->port_sel] = data;
+			state->m_rotate_ctrl[state->m_port_sel] = data;
 			return;
 		}
 
 		if (ACCESSING_BITS_16_31)
 		{
-			state->port_sel = (data &0x70000) >> 16;
+			state->m_port_sel = (data &0x70000) >> 16;
 		}
 }
 
@@ -215,10 +215,10 @@ static WRITE32_HANDLER( motor_control_w )
              MEMORY STRUCTURES
 ***********************************************************/
 
-static ADDRESS_MAP_START( groundfx_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( groundfx_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
-	AM_RANGE(0x200000, 0x21ffff) AM_RAM	AM_BASE_MEMBER(groundfx_state, ram) /* main CPUA ram */
-	AM_RANGE(0x300000, 0x303fff) AM_RAM	AM_BASE_SIZE_MEMBER(groundfx_state, spriteram, spriteram_size) /* sprite ram */
+	AM_RANGE(0x200000, 0x21ffff) AM_RAM	AM_BASE_MEMBER(groundfx_state, m_ram) /* main CPUA ram */
+	AM_RANGE(0x300000, 0x303fff) AM_RAM	AM_BASE_SIZE_MEMBER(groundfx_state, m_spriteram, m_spriteram_size) /* sprite ram */
 	AM_RANGE(0x400000, 0x400003) AM_WRITE(motor_control_w)	/* gun vibration */
 	AM_RANGE(0x500000, 0x500003) AM_READ_PORT("BUTTONS")
 	AM_RANGE(0x500004, 0x500007) AM_READ_PORT("SYSTEM")
@@ -360,9 +360,9 @@ static const tc0480scp_interface groundfx_tc0480scp_intf =
 
 static INTERRUPT_GEN( groundfx_interrupt )
 {
-	groundfx_state *state = device->machine->driver_data<groundfx_state>();
-	state->frame_counter^=1;
-	cpu_set_input_line(device, 4, HOLD_LINE);
+	groundfx_state *state = device->machine().driver_data<groundfx_state>();
+	state->m_frame_counter^=1;
+	device_set_input_line(device, 4, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( groundfx, groundfx_state )
@@ -441,30 +441,30 @@ ROM_END
 
 static READ32_HANDLER( irq_speedup_r_groundfx )
 {
-	groundfx_state *state = space->machine->driver_data<groundfx_state>();
-	cpu_device *cpu = downcast<cpu_device *>(space->cpu);
+	groundfx_state *state = space->machine().driver_data<groundfx_state>();
+	cpu_device *cpu = downcast<cpu_device *>(&space->device());
 	int ptr;
 	offs_t sp = cpu->sp();
-	if ((sp&2)==0) ptr=state->ram[(sp&0x1ffff)/4];
-	else ptr=(((state->ram[(sp&0x1ffff)/4])&0x1ffff)<<16) |
-	(state->ram[((sp&0x1ffff)/4)+1]>>16);
+	if ((sp&2)==0) ptr=state->m_ram[(sp&0x1ffff)/4];
+	else ptr=(((state->m_ram[(sp&0x1ffff)/4])&0x1ffff)<<16) |
+	(state->m_ram[((sp&0x1ffff)/4)+1]>>16);
 
 	if (cpu->pc()==0x1ece && ptr==0x1b9a)
 		cpu->spin_until_interrupt();
 
-	return state->ram[0xb574/4];
+	return state->m_ram[0xb574/4];
 }
 
 
 static DRIVER_INIT( groundfx )
 {
 	UINT32 offset,i;
-	UINT8 *gfx = machine->region("gfx3")->base();
-	int size=machine->region("gfx3")->bytes();
+	UINT8 *gfx = machine.region("gfx3")->base();
+	int size=machine.region("gfx3")->bytes();
 	int data;
 
 	/* Speedup handlers */
-	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x20b574, 0x20b577, 0, 0, irq_speedup_r_groundfx);
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x20b574, 0x20b577, FUNC(irq_speedup_r_groundfx));
 
 	/* make piv tile GFX format suitable for gfxdecode */
 	offset = size/2;

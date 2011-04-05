@@ -280,27 +280,27 @@ public:
 	sfbonus_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	bitmap_t *temp_reel_bitmap;
-	tilemap_t *tilemap;
-	tilemap_t *reel_tilemap;
-	tilemap_t *reel2_tilemap;
-	tilemap_t *reel3_tilemap;
-	tilemap_t *reel4_tilemap;
-	UINT8 *tilemap_ram;
-	UINT8 *reel_ram;
-	UINT8 *reel2_ram;
-	UINT8 *reel3_ram;
-	UINT8 *reel4_ram;
-	UINT8* videoram;
-	UINT8 *vregs;
-	UINT8 *nvram;
-	size_t nvram_size;
-	UINT8* _1800_regs;
-	UINT8* _3800_regs;
-	UINT8* _3000_regs;
-	UINT8* _2801_regs;
-	UINT8* _2c01_regs;
-	struct { int r,g,b,offs,offs_internal; } pal;
+	bitmap_t *m_temp_reel_bitmap;
+	tilemap_t *m_tilemap;
+	tilemap_t *m_reel_tilemap;
+	tilemap_t *m_reel2_tilemap;
+	tilemap_t *m_reel3_tilemap;
+	tilemap_t *m_reel4_tilemap;
+	UINT8 *m_tilemap_ram;
+	UINT8 *m_reel_ram;
+	UINT8 *m_reel2_ram;
+	UINT8 *m_reel3_ram;
+	UINT8 *m_reel4_ram;
+	UINT8* m_videoram;
+	UINT8 *m_vregs;
+	UINT8 *m_nvram;
+	size_t m_nvram_size;
+	UINT8* m_1800_regs;
+	UINT8* m_3800_regs;
+	UINT8* m_3000_regs;
+	UINT8* m_2801_regs;
+	UINT8* m_2c01_regs;
+	struct { int r,g,b,offs,offs_internal; } m_pal;
 };
 
 
@@ -625,10 +625,10 @@ INPUT_PORTS_END
 
 static TILE_GET_INFO( get_sfbonus_tile_info )
 {
-	sfbonus_state *state = machine->driver_data<sfbonus_state>();
-	int code = state->tilemap_ram[(tile_index*2)+0] | (state->tilemap_ram[(tile_index*2)+1]<<8);
-	int flipx = (state->tilemap_ram[(tile_index*2)+1] & 0x80)>>7;
-	int flipy = (state->tilemap_ram[(tile_index*2)+1] & 0x40)>>5;
+	sfbonus_state *state = machine.driver_data<sfbonus_state>();
+	int code = state->m_tilemap_ram[(tile_index*2)+0] | (state->m_tilemap_ram[(tile_index*2)+1]<<8);
+	int flipx = (state->m_tilemap_ram[(tile_index*2)+1] & 0x80)>>7;
+	int flipy = (state->m_tilemap_ram[(tile_index*2)+1] & 0x40)>>5;
 
 	SET_TILE_INFO(
 			0,
@@ -639,12 +639,12 @@ static TILE_GET_INFO( get_sfbonus_tile_info )
 
 static TILE_GET_INFO( get_sfbonus_reel_tile_info )
 {
-	sfbonus_state *state = machine->driver_data<sfbonus_state>();
-	int code = state->reel_ram[(tile_index*2)+0] | (state->reel_ram[(tile_index*2)+1]<<8);
-	int flipx = (state->reel_ram[(tile_index*2)+1] & 0x80)>>7;
-	int flipy = 0;//(state->reel_ram[(tile_index*2)+1] & 0x40)>>5;
+	sfbonus_state *state = machine.driver_data<sfbonus_state>();
+	int code = state->m_reel_ram[(tile_index*2)+0] | (state->m_reel_ram[(tile_index*2)+1]<<8);
+	int flipx = (state->m_reel_ram[(tile_index*2)+1] & 0x80)>>7;
+	int flipy = 0;//(state->m_reel_ram[(tile_index*2)+1] & 0x40)>>5;
 
-	int priority = (state->reel_ram[(tile_index*2)+1] & 0x40)>>6;
+	int priority = (state->m_reel_ram[(tile_index*2)+1] & 0x40)>>6;
 
 	SET_TILE_INFO(
 			1,
@@ -655,12 +655,12 @@ static TILE_GET_INFO( get_sfbonus_reel_tile_info )
 
 static TILE_GET_INFO( get_sfbonus_reel2_tile_info )
 {
-	sfbonus_state *state = machine->driver_data<sfbonus_state>();
-	int code = state->reel2_ram[(tile_index*2)+0] | (state->reel2_ram[(tile_index*2)+1]<<8);
-	int flipx = (state->reel2_ram[(tile_index*2)+1] & 0x80)>>7;
-	int flipy = 0;//(state->reel2_ram[(tile_index*2)+1] & 0x40)>>5;
+	sfbonus_state *state = machine.driver_data<sfbonus_state>();
+	int code = state->m_reel2_ram[(tile_index*2)+0] | (state->m_reel2_ram[(tile_index*2)+1]<<8);
+	int flipx = (state->m_reel2_ram[(tile_index*2)+1] & 0x80)>>7;
+	int flipy = 0;//(state->m_reel2_ram[(tile_index*2)+1] & 0x40)>>5;
 
-	int priority = (state->reel2_ram[(tile_index*2)+1] & 0x40)>>6;
+	int priority = (state->m_reel2_ram[(tile_index*2)+1] & 0x40)>>6;
 
 	SET_TILE_INFO(
 			1,
@@ -671,12 +671,12 @@ static TILE_GET_INFO( get_sfbonus_reel2_tile_info )
 
 static TILE_GET_INFO( get_sfbonus_reel3_tile_info )
 {
-	sfbonus_state *state = machine->driver_data<sfbonus_state>();
-	int code = state->reel3_ram[(tile_index*2)+0] | (state->reel3_ram[(tile_index*2)+1]<<8);
-	int flipx = (state->reel3_ram[(tile_index*2)+1] & 0x80)>>7;
-	int flipy = 0;//(state->reel3_ram[(tile_index*2)+1] & 0x40)>>5;
+	sfbonus_state *state = machine.driver_data<sfbonus_state>();
+	int code = state->m_reel3_ram[(tile_index*2)+0] | (state->m_reel3_ram[(tile_index*2)+1]<<8);
+	int flipx = (state->m_reel3_ram[(tile_index*2)+1] & 0x80)>>7;
+	int flipy = 0;//(state->m_reel3_ram[(tile_index*2)+1] & 0x40)>>5;
 
-	int priority = (state->reel3_ram[(tile_index*2)+1] & 0x40)>>6;
+	int priority = (state->m_reel3_ram[(tile_index*2)+1] & 0x40)>>6;
 
 	SET_TILE_INFO(
 			1,
@@ -687,12 +687,12 @@ static TILE_GET_INFO( get_sfbonus_reel3_tile_info )
 
 static TILE_GET_INFO( get_sfbonus_reel4_tile_info )
 {
-	sfbonus_state *state = machine->driver_data<sfbonus_state>();
-	int code = state->reel4_ram[(tile_index*2)+0] | (state->reel4_ram[(tile_index*2)+1]<<8);
-	int flipx = (state->reel4_ram[(tile_index*2)+1] & 0x80)>>7;
-	int flipy = 0;//(state->reel4_ram[(tile_index*2)+1] & 0x40)>>5;
+	sfbonus_state *state = machine.driver_data<sfbonus_state>();
+	int code = state->m_reel4_ram[(tile_index*2)+0] | (state->m_reel4_ram[(tile_index*2)+1]<<8);
+	int flipx = (state->m_reel4_ram[(tile_index*2)+1] & 0x80)>>7;
+	int flipy = 0;//(state->m_reel4_ram[(tile_index*2)+1] & 0x40)>>5;
 
-	int priority = (state->reel4_ram[(tile_index*2)+1] & 0x40)>>6;
+	int priority = (state->m_reel4_ram[(tile_index*2)+1] & 0x40)>>6;
 
 	SET_TILE_INFO(
 			1,
@@ -704,46 +704,46 @@ static TILE_GET_INFO( get_sfbonus_reel4_tile_info )
 
 static WRITE8_HANDLER( sfbonus_videoram_w )
 {
-	sfbonus_state *state = space->machine->driver_data<sfbonus_state>();
+	sfbonus_state *state = space->machine().driver_data<sfbonus_state>();
 	if (offset<0x4000) /* 0x0000 - 0x3fff */
 	{
-		state->tilemap_ram[offset] = data;
-		tilemap_mark_tile_dirty(state->tilemap,offset/2);
+		state->m_tilemap_ram[offset] = data;
+		tilemap_mark_tile_dirty(state->m_tilemap,offset/2);
 	}
 	else if (offset<0x4800) /* 0x4000 - 0x47ff */
 	{
 		offset-=0x4000;
 
-		state->reel_ram[offset] = data;
-		tilemap_mark_tile_dirty(state->reel_tilemap,offset/2);
+		state->m_reel_ram[offset] = data;
+		tilemap_mark_tile_dirty(state->m_reel_tilemap,offset/2);
 	}
 	else if (offset<0x5000)  /* 0x4800 - 0x4fff */
 	{
 		offset-=0x4800;
 
-		state->reel2_ram[offset] = data;
-		tilemap_mark_tile_dirty(state->reel2_tilemap,offset/2);
+		state->m_reel2_ram[offset] = data;
+		tilemap_mark_tile_dirty(state->m_reel2_tilemap,offset/2);
 	}
 	else if (offset<0x5800) /* 0x5000 - 0x57ff */
 	{
 		offset-=0x5000;
 
-		state->reel3_ram[offset] = data;
-		tilemap_mark_tile_dirty(state->reel3_tilemap,offset/2);
+		state->m_reel3_ram[offset] = data;
+		tilemap_mark_tile_dirty(state->m_reel3_tilemap,offset/2);
 	}
 	else if (offset<0x6000) /* 0x5800 - 0x5fff */
 	{
 		offset-=0x5800;
 
-		state->reel4_ram[offset] = data;
-		tilemap_mark_tile_dirty(state->reel4_tilemap,offset/2);
+		state->m_reel4_ram[offset] = data;
+		tilemap_mark_tile_dirty(state->m_reel4_tilemap,offset/2);
 	}
 	else if (offset<0x8000)
 	{
 		offset -=0x6000;
 		// scroll regs etc.
 		//logerror("access vram at [%04x] <- %02x\n",offset,data);
-		state->videoram[offset] = data;
+		state->m_videoram[offset] = data;
 	}
 	else
 	{
@@ -756,43 +756,43 @@ static WRITE8_HANDLER( sfbonus_videoram_w )
 
 static VIDEO_START(sfbonus)
 {
-	sfbonus_state *state = machine->driver_data<sfbonus_state>();
-	state->temp_reel_bitmap = auto_bitmap_alloc(machine,1024,512,BITMAP_FORMAT_INDEXED16);
+	sfbonus_state *state = machine.driver_data<sfbonus_state>();
+	state->m_temp_reel_bitmap = auto_bitmap_alloc(machine,1024,512,BITMAP_FORMAT_INDEXED16);
 
-	state->tilemap = tilemap_create(machine,get_sfbonus_tile_info,tilemap_scan_rows,8,8, 128, 64);
-	state->reel_tilemap = tilemap_create(machine,get_sfbonus_reel_tile_info,tilemap_scan_rows,8,32, 64, 16);
-	state->reel2_tilemap = tilemap_create(machine,get_sfbonus_reel2_tile_info,tilemap_scan_rows,8,32, 64, 16);
-	state->reel3_tilemap = tilemap_create(machine,get_sfbonus_reel3_tile_info,tilemap_scan_rows,8,32, 64, 16);
-	state->reel4_tilemap = tilemap_create(machine,get_sfbonus_reel4_tile_info,tilemap_scan_rows,8,32, 64, 16);
+	state->m_tilemap = tilemap_create(machine,get_sfbonus_tile_info,tilemap_scan_rows,8,8, 128, 64);
+	state->m_reel_tilemap = tilemap_create(machine,get_sfbonus_reel_tile_info,tilemap_scan_rows,8,32, 64, 16);
+	state->m_reel2_tilemap = tilemap_create(machine,get_sfbonus_reel2_tile_info,tilemap_scan_rows,8,32, 64, 16);
+	state->m_reel3_tilemap = tilemap_create(machine,get_sfbonus_reel3_tile_info,tilemap_scan_rows,8,32, 64, 16);
+	state->m_reel4_tilemap = tilemap_create(machine,get_sfbonus_reel4_tile_info,tilemap_scan_rows,8,32, 64, 16);
 
-	tilemap_set_transparent_pen(state->tilemap,0);
-	tilemap_set_transparent_pen(state->reel_tilemap,255);
-	tilemap_set_transparent_pen(state->reel2_tilemap,255);
-	tilemap_set_transparent_pen(state->reel3_tilemap,255);
-	tilemap_set_transparent_pen(state->reel4_tilemap,255);
+	tilemap_set_transparent_pen(state->m_tilemap,0);
+	tilemap_set_transparent_pen(state->m_reel_tilemap,255);
+	tilemap_set_transparent_pen(state->m_reel2_tilemap,255);
+	tilemap_set_transparent_pen(state->m_reel3_tilemap,255);
+	tilemap_set_transparent_pen(state->m_reel4_tilemap,255);
 
-	tilemap_set_scroll_rows(state->tilemap,64);
+	tilemap_set_scroll_rows(state->m_tilemap,64);
 
-	tilemap_set_scroll_cols(state->reel_tilemap, 64);
-	tilemap_set_scroll_cols(state->reel2_tilemap, 64);
-	tilemap_set_scroll_cols(state->reel3_tilemap, 64);
-	tilemap_set_scroll_cols(state->reel4_tilemap, 64);
+	tilemap_set_scroll_cols(state->m_reel_tilemap, 64);
+	tilemap_set_scroll_cols(state->m_reel2_tilemap, 64);
+	tilemap_set_scroll_cols(state->m_reel3_tilemap, 64);
+	tilemap_set_scroll_cols(state->m_reel4_tilemap, 64);
 
 
 }
 
 static void sfbonus_draw_reel_layer(screen_device *screen, bitmap_t *bitmap, const rectangle *cliprect, int catagory)
 {
-	sfbonus_state *state = screen->machine->driver_data<sfbonus_state>();
+	sfbonus_state *state = screen->machine().driver_data<sfbonus_state>();
 	int zz;
 	int i;
 	int startclipmin;
 	const rectangle &visarea = screen->visible_area();
-	UINT8* selectbase = &state->videoram[0x600];
-	UINT8* bg_scroll = &state->videoram[0x000];
-	UINT8* reels_rowscroll = &state->videoram[0x400];
-	int globalyscrollreels = (state->vregs[6] | state->vregs[7]<<8);
-	int globalxscrollreels = (state->vregs[4] | state->vregs[5]<<8);
+	UINT8* selectbase = &state->m_videoram[0x600];
+	UINT8* bg_scroll = &state->m_videoram[0x000];
+	UINT8* reels_rowscroll = &state->m_videoram[0x400];
+	int globalyscrollreels = (state->m_vregs[6] | state->m_vregs[7]<<8);
+	int globalxscrollreels = (state->m_vregs[4] | state->m_vregs[5]<<8);
 	globalyscrollreels += 8;
 	globalxscrollreels += 8;
 
@@ -802,16 +802,16 @@ static void sfbonus_draw_reel_layer(screen_device *screen, bitmap_t *bitmap, con
 	{
 		int scroll;
 		scroll = bg_scroll[(i*2)+0x000] | (bg_scroll[(i*2)+0x001]<<8);
-		tilemap_set_scrolly(state->reel_tilemap, i, scroll + globalyscrollreels );
+		tilemap_set_scrolly(state->m_reel_tilemap, i, scroll + globalyscrollreels );
 
 		scroll = bg_scroll[(i*2)+0x080] | (bg_scroll[(i*2)+0x081]<<8);
-		tilemap_set_scrolly(state->reel2_tilemap, i, scroll + globalyscrollreels);
+		tilemap_set_scrolly(state->m_reel2_tilemap, i, scroll + globalyscrollreels);
 
 		scroll = bg_scroll[(i*2)+0x100] | (bg_scroll[(i*2)+0x101]<<8);
-		tilemap_set_scrolly(state->reel3_tilemap, i, scroll + globalyscrollreels);
+		tilemap_set_scrolly(state->m_reel3_tilemap, i, scroll + globalyscrollreels);
 
 		scroll = bg_scroll[(i*2)+0x180] | (bg_scroll[(i*2)+0x181]<<8);
-		tilemap_set_scrolly(state->reel4_tilemap, i, scroll + globalyscrollreels);
+		tilemap_set_scrolly(state->m_reel4_tilemap, i, scroll + globalyscrollreels);
 	}
 
 //  printf("------------\n");
@@ -842,73 +842,73 @@ static void sfbonus_draw_reel_layer(screen_device *screen, bitmap_t *bitmap, con
 		{
 			rowscroll = reels_rowscroll[((line/8)*2)+0x000] | (reels_rowscroll[((line/8)*2)+0x001]<<8);
 			xxxscroll = globalxscrollreels + rowscroll;
-			tilemap_set_scrollx(state->reel_tilemap, 0, xxxscroll  );
-			tilemap_set_scrollx(state->reel2_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->reel3_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->reel4_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel_tilemap, 0, xxxscroll  );
+			tilemap_set_scrollx(state->m_reel2_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel3_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel4_tilemap, 0, xxxscroll );
 		}
 		else if (rowenable==0x1)
 		{
 			rowscroll = reels_rowscroll[((line/8)*2)+0x080] | (reels_rowscroll[((line/8)*2)+0x081]<<8);
 			xxxscroll = globalxscrollreels + rowscroll;
-			tilemap_set_scrollx(state->reel_tilemap, 0, xxxscroll  );
-			tilemap_set_scrollx(state->reel2_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->reel3_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->reel4_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel_tilemap, 0, xxxscroll  );
+			tilemap_set_scrollx(state->m_reel2_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel3_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel4_tilemap, 0, xxxscroll );
 		}
 		else if (rowenable==0x2)
 		{
 			rowscroll = reels_rowscroll[((line/8)*2)+0x100] | (reels_rowscroll[((line/8)*2)+0x101]<<8);
 			xxxscroll = globalxscrollreels + rowscroll;
-			tilemap_set_scrollx(state->reel_tilemap, 0, xxxscroll  );
-			tilemap_set_scrollx(state->reel2_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->reel3_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->reel4_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel_tilemap, 0, xxxscroll  );
+			tilemap_set_scrollx(state->m_reel2_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel3_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel4_tilemap, 0, xxxscroll );
 		}
 		else if (rowenable==0x3)
 		{
 			rowscroll = reels_rowscroll[((line/8)*2)+0x180] | (reels_rowscroll[((line/8)*2)+0x181]<<8);
 			xxxscroll = globalxscrollreels + rowscroll;
-			tilemap_set_scrollx(state->reel_tilemap, 0, xxxscroll  );
-			tilemap_set_scrollx(state->reel2_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->reel3_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->reel4_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel_tilemap, 0, xxxscroll  );
+			tilemap_set_scrollx(state->m_reel2_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel3_tilemap, 0, xxxscroll );
+			tilemap_set_scrollx(state->m_reel4_tilemap, 0, xxxscroll );
 		}
 
 		if (rowenable2==0)
 		{
-			tilemap_draw(state->temp_reel_bitmap,&clip,state->reel_tilemap,TILEMAP_DRAW_CATEGORY(catagory),3);
+			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel_tilemap,TILEMAP_DRAW_CATEGORY(catagory),3);
 		}
 		if (rowenable==0)
 		{
-			tilemap_draw(state->temp_reel_bitmap,&clip,state->reel_tilemap,TILEMAP_DRAW_CATEGORY(catagory),3);
+			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel_tilemap,TILEMAP_DRAW_CATEGORY(catagory),3);
 		}
 
 		if (rowenable2==0x1)
 		{
-			tilemap_draw(state->temp_reel_bitmap,&clip,state->reel2_tilemap,TILEMAP_DRAW_CATEGORY(catagory),2);
+			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel2_tilemap,TILEMAP_DRAW_CATEGORY(catagory),2);
 		}
 		if (rowenable==0x1)
 		{
-			tilemap_draw(state->temp_reel_bitmap,&clip,state->reel2_tilemap,TILEMAP_DRAW_CATEGORY(catagory),2);
+			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel2_tilemap,TILEMAP_DRAW_CATEGORY(catagory),2);
 		}
 
 		if (rowenable2==0x2)
 		{
-			tilemap_draw(state->temp_reel_bitmap,&clip,state->reel3_tilemap,TILEMAP_DRAW_CATEGORY(catagory),1);
+			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel3_tilemap,TILEMAP_DRAW_CATEGORY(catagory),1);
 		}
 		if (rowenable==0x2)
 		{
-			tilemap_draw(state->temp_reel_bitmap,&clip,state->reel3_tilemap,TILEMAP_DRAW_CATEGORY(catagory),1);
+			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel3_tilemap,TILEMAP_DRAW_CATEGORY(catagory),1);
 		}
 
 		if (rowenable2==0x3)
 		{
-			tilemap_draw(state->temp_reel_bitmap,&clip,state->reel4_tilemap,TILEMAP_DRAW_CATEGORY(catagory),4);
+			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel4_tilemap,TILEMAP_DRAW_CATEGORY(catagory),4);
 		}
 		if (rowenable==0x3)
 		{
-			tilemap_draw(state->temp_reel_bitmap,&clip,state->reel4_tilemap,TILEMAP_DRAW_CATEGORY(catagory),4);
+			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel4_tilemap,TILEMAP_DRAW_CATEGORY(catagory),4);
 		}
 
 
@@ -922,11 +922,11 @@ static void sfbonus_draw_reel_layer(screen_device *screen, bitmap_t *bitmap, con
 
 static SCREEN_UPDATE(sfbonus)
 {
-	sfbonus_state *state = screen->machine->driver_data<sfbonus_state>();
+	sfbonus_state *state = screen->machine().driver_data<sfbonus_state>();
 
-	int globalyscroll = (state->vregs[2] | state->vregs[3]<<8);
-	int globalxscroll = (state->vregs[0] | state->vregs[1]<<8);
-	UINT8* front_rowscroll = &state->videoram[0x200];
+	int globalyscroll = (state->m_vregs[2] | state->m_vregs[3]<<8);
+	int globalxscroll = (state->m_vregs[0] | state->m_vregs[1]<<8);
+	UINT8* front_rowscroll = &state->m_videoram[0x200];
 	const input_port_token *ipt;
 	int i;
 
@@ -934,11 +934,11 @@ static SCREEN_UPDATE(sfbonus)
 	globalyscroll += 8;
 	globalxscroll += 8;
 
-	bitmap_fill(bitmap,cliprect,screen->machine->pens[0]);
-	bitmap_fill(state->temp_reel_bitmap,cliprect,screen->machine->pens[0]);
+	bitmap_fill(bitmap,cliprect,screen->machine().pens[0]);
+	bitmap_fill(state->m_temp_reel_bitmap,cliprect,screen->machine().pens[0]);
 
 	/* render reels to bitmap */
-	sfbonus_draw_reel_layer(screen,state->temp_reel_bitmap,cliprect,0);
+	sfbonus_draw_reel_layer(screen,state->m_temp_reel_bitmap,cliprect,0);
 
 	{
 		int y,x;
@@ -947,7 +947,7 @@ static SCREEN_UPDATE(sfbonus)
 		{
 			for (x=0;x<512;x++)
 			{
-				UINT16* src = BITMAP_ADDR16(state->temp_reel_bitmap, y, x);
+				UINT16* src = BITMAP_ADDR16(state->m_temp_reel_bitmap, y, x);
 				UINT16* dst = BITMAP_ADDR16(bitmap, y, x);
 
 				if ((src[0]&0x100)==0x000)
@@ -957,14 +957,14 @@ static SCREEN_UPDATE(sfbonus)
 	}
 
 	/* Normal Tilemap */
-	tilemap_set_scrolly(state->tilemap, 0, globalyscroll );
+	tilemap_set_scrolly(state->m_tilemap, 0, globalyscroll );
 	for (i=0;i<64;i++)
 	{
 		int scroll;
 		scroll = front_rowscroll[(i*2)+0x000] | (front_rowscroll[(i*2)+0x001]<<8);
-		tilemap_set_scrollx(state->tilemap, i, scroll+globalxscroll );
+		tilemap_set_scrollx(state->m_tilemap, i, scroll+globalxscroll );
 	}
-	tilemap_draw(bitmap,cliprect,state->tilemap,0,0);
+	tilemap_draw(bitmap,cliprect,state->m_tilemap,0,0);
 
 	{
 		int y,x;
@@ -973,7 +973,7 @@ static SCREEN_UPDATE(sfbonus)
 		{
 			for (x=0;x<512;x++)
 			{
-				UINT16* src = BITMAP_ADDR16(state->temp_reel_bitmap, y, x);
+				UINT16* src = BITMAP_ADDR16(state->m_temp_reel_bitmap, y, x);
 				UINT16* dst = BITMAP_ADDR16(bitmap, y, x);
 
 				if ((src[0]&0x100)==0x100)
@@ -983,75 +983,75 @@ static SCREEN_UPDATE(sfbonus)
 	}
 #if 0
     popmessage("%02x %02x %02x %02x %02x %02x %02x %02x -- %02x -- %02x %02x -- %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x",
-    state->_3800_regs[0],
-    state->_3800_regs[1],
-    state->_3800_regs[2],
-    state->_3800_regs[3],
-    state->_3800_regs[4],
-    state->_3800_regs[5],
-    state->_3800_regs[6],
-    state->_3800_regs[7],
-    state->_3000_regs[0],
-    state->_2801_regs[0],
-    state->_2c01_regs[0],
-    state->vregs[8],
-    state->vregs[0],
-    state->vregs[10],
-    state->vregs[11],
-    state->vregs[12],
-    state->vregs[13],
-    state->vregs[14],
-    state->vregs[15],
-    state->vregs[16],
-    state->vregs[17],
-    state->vregs[18],
-    state->vregs[19],
-    state->vregs[20],
-    state->vregs[21],
-    state->vregs[22],
-    state->vregs[23],
-    state->vregs[24],
-    state->vregs[25],
-    state->vregs[26],
-    state->vregs[27],
-    state->vregs[28],
-    state->vregs[29],
-    state->vregs[30],
-    state->vregs[31]
+    state->m_3800_regs[0],
+    state->m_3800_regs[1],
+    state->m_3800_regs[2],
+    state->m_3800_regs[3],
+    state->m_3800_regs[4],
+    state->m_3800_regs[5],
+    state->m_3800_regs[6],
+    state->m_3800_regs[7],
+    state->m_3000_regs[0],
+    state->m_2801_regs[0],
+    state->m_2c01_regs[0],
+    state->m_vregs[8],
+    state->m_vregs[0],
+    state->m_vregs[10],
+    state->m_vregs[11],
+    state->m_vregs[12],
+    state->m_vregs[13],
+    state->m_vregs[14],
+    state->m_vregs[15],
+    state->m_vregs[16],
+    state->m_vregs[17],
+    state->m_vregs[18],
+    state->m_vregs[19],
+    state->m_vregs[20],
+    state->m_vregs[21],
+    state->m_vregs[22],
+    state->m_vregs[23],
+    state->m_vregs[24],
+    state->m_vregs[25],
+    state->m_vregs[26],
+    state->m_vregs[27],
+    state->m_vregs[28],
+    state->m_vregs[29],
+    state->m_vregs[30],
+    state->m_vregs[31]
     );
 
     popmessage("-- %02x %02x %02x %02x %02x %02x %02x %02x",
-    state->_1800_regs[0],
-    state->_1800_regs[1],
-    state->_1800_regs[2],
-    state->_1800_regs[3],
-    state->_1800_regs[4],
-    state->_1800_regs[5],
-    state->_1800_regs[6],
-    state->_1800_regs[7]);
+    state->m_1800_regs[0],
+    state->m_1800_regs[1],
+    state->m_1800_regs[2],
+    state->m_1800_regs[3],
+    state->m_1800_regs[4],
+    state->m_1800_regs[5],
+    state->m_1800_regs[6],
+    state->m_1800_regs[7]);
 #endif
 
-	ipt = screen->machine->gamedrv->ipt;
+	ipt = screen->machine().system().ipt;
 	if ((ipt == INPUT_PORTS_NAME(amcoe2_reels3)) || (ipt == INPUT_PORTS_NAME(amcoe2_reels4))
 		|| (ipt == INPUT_PORTS_NAME(amcoe2_poker)))
 	{
 		// based on pirpok2
-		output_set_lamp_value(0, (state->_1800_regs[6] & 0x1) >> 0);
-		output_set_lamp_value(1, (state->_1800_regs[6] & 0x4) >> 2);
-		output_set_lamp_value(2, (state->_1800_regs[5] & 0x4) >> 2);
-		output_set_lamp_value(3, (state->_1800_regs[5] & 0x1) >> 0);
-		output_set_lamp_value(4, (state->_1800_regs[4] & 0x4) >> 2);
-		output_set_lamp_value(5, (state->_1800_regs[4] & 0x1) >> 0);
+		output_set_lamp_value(0, (state->m_1800_regs[6] & 0x1) >> 0);
+		output_set_lamp_value(1, (state->m_1800_regs[6] & 0x4) >> 2);
+		output_set_lamp_value(2, (state->m_1800_regs[5] & 0x4) >> 2);
+		output_set_lamp_value(3, (state->m_1800_regs[5] & 0x1) >> 0);
+		output_set_lamp_value(4, (state->m_1800_regs[4] & 0x4) >> 2);
+		output_set_lamp_value(5, (state->m_1800_regs[4] & 0x1) >> 0);
 	}
 	else if ((ipt == INPUT_PORTS_NAME(amcoe1_reels3)) || (ipt == INPUT_PORTS_NAME(amcoe1_reels4))
 		|| (ipt == INPUT_PORTS_NAME(amcoe1_poker)))
 	{
-		output_set_lamp_value(0, (state->_1800_regs[0] & 0x2) >> 1);
-		output_set_lamp_value(1, (state->_1800_regs[4] & 0x2) >> 1);
-		output_set_lamp_value(2, (state->_1800_regs[3] & 0x2) >> 1);
-		output_set_lamp_value(3, (state->_1800_regs[6] & 0x4) >> 2);
-		output_set_lamp_value(4, (state->_1800_regs[4] & 0x4) >> 2);
-		output_set_lamp_value(5, (state->_1800_regs[3] & 0x4) >> 2);
+		output_set_lamp_value(0, (state->m_1800_regs[0] & 0x2) >> 1);
+		output_set_lamp_value(1, (state->m_1800_regs[4] & 0x2) >> 1);
+		output_set_lamp_value(2, (state->m_1800_regs[3] & 0x2) >> 1);
+		output_set_lamp_value(3, (state->m_1800_regs[6] & 0x4) >> 2);
+		output_set_lamp_value(4, (state->m_1800_regs[4] & 0x4) >> 2);
+		output_set_lamp_value(5, (state->m_1800_regs[3] & 0x4) >> 2);
 	}
 
 	return 0;
@@ -1060,31 +1060,31 @@ static SCREEN_UPDATE(sfbonus)
 
 static WRITE8_HANDLER( paletteram_io_w )
 {
-	sfbonus_state *state = space->machine->driver_data<sfbonus_state>();
+	sfbonus_state *state = space->machine().driver_data<sfbonus_state>();
 	switch(offset)
 	{
 		case 0:
-			state->pal.offs = data;
+			state->m_pal.offs = data;
 			break;
 		case 2:
-			state->pal.offs_internal = 0;
+			state->m_pal.offs_internal = 0;
 			break;
 		case 1:
-			switch(state->pal.offs_internal)
+			switch(state->m_pal.offs_internal)
 			{
 				case 0:
-					state->pal.r = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-					state->pal.offs_internal++;
+					state->m_pal.r = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
+					state->m_pal.offs_internal++;
 					break;
 				case 1:
-					state->pal.g = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-					state->pal.offs_internal++;
+					state->m_pal.g = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
+					state->m_pal.offs_internal++;
 					break;
 				case 2:
-					state->pal.b = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-					palette_set_color(space->machine, state->pal.offs, MAKE_RGB(state->pal.r, state->pal.g, state->pal.b));
-					state->pal.offs_internal = 0;
-					state->pal.offs++;
+					state->m_pal.b = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
+					palette_set_color(space->machine(), state->m_pal.offs, MAKE_RGB(state->m_pal.r, state->m_pal.g, state->m_pal.b));
+					state->m_pal.offs_internal = 0;
+					state->m_pal.offs++;
 					break;
 			}
 
@@ -1094,41 +1094,41 @@ static WRITE8_HANDLER( paletteram_io_w )
 
 
 
-static ADDRESS_MAP_START( sfbonus_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sfbonus_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xefff) AM_ROMBANK("bank1") AM_WRITE(sfbonus_videoram_w)
-	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_MEMBER(sfbonus_state, nvram) AM_SIZE_MEMBER(sfbonus_state, nvram_size)
+	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_MEMBER(sfbonus_state, m_nvram) AM_SIZE_MEMBER(sfbonus_state, m_nvram_size)
 ADDRESS_MAP_END
 
 static WRITE8_HANDLER( sfbonus_bank_w )
 {
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 	UINT8 bank;
 
 	bank = data & 7;
 
-	memory_set_bankptr(space->machine, "bank1", &ROM[bank * 0x10000]);
+	memory_set_bankptr(space->machine(), "bank1", &ROM[bank * 0x10000]);
 }
 
 
 
 static READ8_HANDLER( sfbonus_2800_r )
 {
-	return space->machine->rand();
+	return space->machine().rand();
 }
 
 static READ8_HANDLER( sfbonus_2801_r )
 {
-	return space->machine->rand();
+	return space->machine().rand();
 }
 
 static READ8_HANDLER( sfbonus_2c00_r )
 {
-	return space->machine->rand();
+	return space->machine().rand();
 }
 
 static READ8_HANDLER( sfbonus_2c01_r )
 {
-	return space->machine->rand();
+	return space->machine().rand();
 }
 
 static READ8_HANDLER( sfbonus_3800_r )
@@ -1140,36 +1140,36 @@ static READ8_HANDLER( sfbonus_3800_r )
 // lamps and coin counters
 static WRITE8_HANDLER( sfbonus_1800_w )
 {
-	sfbonus_state *state = space->machine->driver_data<sfbonus_state>();
-	state->_1800_regs[offset] = data;
+	sfbonus_state *state = space->machine().driver_data<sfbonus_state>();
+	state->m_1800_regs[offset] = data;
 }
 
 static WRITE8_HANDLER( sfbonus_3800_w )
 {
-	sfbonus_state *state = space->machine->driver_data<sfbonus_state>();
-	state->_3800_regs[offset] = data;
+	sfbonus_state *state = space->machine().driver_data<sfbonus_state>();
+	state->m_3800_regs[offset] = data;
 }
 
 static WRITE8_HANDLER( sfbonus_3000_w )
 {
-	sfbonus_state *state = space->machine->driver_data<sfbonus_state>();
-	state->_3000_regs[offset] = data;
+	sfbonus_state *state = space->machine().driver_data<sfbonus_state>();
+	state->m_3000_regs[offset] = data;
 }
 
 static WRITE8_HANDLER( sfbonus_2801_w )
 {
-	sfbonus_state *state = space->machine->driver_data<sfbonus_state>();
-	state->_2801_regs[offset] = data;
+	sfbonus_state *state = space->machine().driver_data<sfbonus_state>();
+	state->m_2801_regs[offset] = data;
 }
 
 static WRITE8_HANDLER( sfbonus_2c01_w )
 {
-	sfbonus_state *state = space->machine->driver_data<sfbonus_state>();
-	state->_2c01_regs[offset] = data;
+	sfbonus_state *state = space->machine().driver_data<sfbonus_state>();
+	state->m_2c01_regs[offset] = data;
 }
 
 
-static ADDRESS_MAP_START( sfbonus_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( sfbonus_io, AS_IO, 8 )
 	AM_RANGE(0x0400, 0x0400) AM_READ_PORT("KEY1")
 	AM_RANGE(0x0408, 0x0408) AM_READ_PORT("KEY2")
 	AM_RANGE(0x0410, 0x0410) AM_READ_PORT("KEY3")
@@ -1184,21 +1184,21 @@ static ADDRESS_MAP_START( sfbonus_io, ADDRESS_SPACE_IO, 8 )
 
 	AM_RANGE(0x0c00, 0x0c03) AM_WRITE( paletteram_io_w )
 
-	AM_RANGE(0x1800, 0x1807) AM_WRITE(sfbonus_1800_w) AM_BASE_MEMBER(sfbonus_state, _1800_regs) // lamps and coin counters
+	AM_RANGE(0x1800, 0x1807) AM_WRITE(sfbonus_1800_w) AM_BASE_MEMBER(sfbonus_state, m_1800_regs) // lamps and coin counters
 
-	AM_RANGE(0x2400, 0x241f) AM_RAM AM_BASE_MEMBER(sfbonus_state, vregs)
+	AM_RANGE(0x2400, 0x241f) AM_RAM AM_BASE_MEMBER(sfbonus_state, m_vregs)
 
 	AM_RANGE(0x2800, 0x2800) AM_READ(sfbonus_2800_r)
-	AM_RANGE(0x2801, 0x2801) AM_READ(sfbonus_2801_r) AM_WRITE(sfbonus_2801_w) AM_BASE_MEMBER(sfbonus_state, _2801_regs)
+	AM_RANGE(0x2801, 0x2801) AM_READ(sfbonus_2801_r) AM_WRITE(sfbonus_2801_w) AM_BASE_MEMBER(sfbonus_state, m_2801_regs)
 
 	AM_RANGE(0x2c00, 0x2c00) AM_READ(sfbonus_2c00_r)
-	AM_RANGE(0x2c01, 0x2c01) AM_READ(sfbonus_2c01_r) AM_WRITE(sfbonus_2c01_w) AM_BASE_MEMBER(sfbonus_state, _2c01_regs)
+	AM_RANGE(0x2c01, 0x2c01) AM_READ(sfbonus_2c01_r) AM_WRITE(sfbonus_2c01_w) AM_BASE_MEMBER(sfbonus_state, m_2c01_regs)
 
-	AM_RANGE(0x3000, 0x3000) AM_WRITE(sfbonus_3000_w) AM_BASE_MEMBER(sfbonus_state, _3000_regs)
+	AM_RANGE(0x3000, 0x3000) AM_WRITE(sfbonus_3000_w) AM_BASE_MEMBER(sfbonus_state, m_3000_regs)
 	AM_RANGE(0x3400, 0x3400) AM_WRITE(sfbonus_bank_w)
 	AM_RANGE(0x3800, 0x3800) AM_READ(sfbonus_3800_r)
 
-	AM_RANGE(0x3800, 0x3807) AM_WRITE(sfbonus_3800_w) AM_BASE_MEMBER(sfbonus_state, _3800_regs)
+	AM_RANGE(0x3800, 0x3807) AM_WRITE(sfbonus_3800_w) AM_BASE_MEMBER(sfbonus_state, m_3800_regs)
 ADDRESS_MAP_END
 
 
@@ -1238,31 +1238,31 @@ GFXDECODE_END
 
 static MACHINE_RESET( sfbonus )
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	memory_set_bankptr(machine, "bank1", &ROM[0]);
 }
 
 static NVRAM_HANDLER( sfbonus )
 {
-	sfbonus_state *state = machine->driver_data<sfbonus_state>();
+	sfbonus_state *state = machine.driver_data<sfbonus_state>();
 	if (read_or_write)
-		file->write(state->nvram,state->nvram_size);
+		file->write(state->m_nvram,state->m_nvram_size);
 	else
 	{
 		if (file)
 		{
-			memset(state->nvram,0x00,state->nvram_size);
-			file->read(state->nvram,state->nvram_size);
+			memset(state->m_nvram,0x00,state->m_nvram_size);
+			file->read(state->m_nvram,state->m_nvram_size);
 		}
 		else
 		{
-			UINT8* defaultram = machine->region("defaults")->base();
-			memset(state->nvram,0x00,state->nvram_size);
+			UINT8* defaultram = machine.region("defaults")->base();
+			memset(state->m_nvram,0x00,state->m_nvram_size);
 
 			if (defaultram)
 				if ((defaultram[0x02]==0x00) && (defaultram[0x03]==0x00)) // hack! rom region optional regions get cleared with garbage if no rom is present, this is not good!
-					memcpy(state->nvram, machine->region("defaults")->base(), machine->region("defaults")->bytes());
+					memcpy(state->m_nvram, machine.region("defaults")->base(), machine.region("defaults")->bytes());
 		}
 	}
 }
@@ -5466,41 +5466,41 @@ ROM_END
 
 static DRIVER_INIT( sfbonus_common)
 {
-	sfbonus_state *state = machine->driver_data<sfbonus_state>();
-	state->tilemap_ram = auto_alloc_array(machine, UINT8, 0x4000);
-	memset(state->tilemap_ram, 0xff, 0x4000);
-	state_save_register_global_pointer(machine, state->tilemap_ram , 0x4000);
+	sfbonus_state *state = machine.driver_data<sfbonus_state>();
+	state->m_tilemap_ram = auto_alloc_array(machine, UINT8, 0x4000);
+	memset(state->m_tilemap_ram, 0xff, 0x4000);
+	state_save_register_global_pointer(machine, state->m_tilemap_ram , 0x4000);
 
-	state->reel_ram = auto_alloc_array(machine, UINT8, 0x0800);
-	memset(state->reel_ram, 0xff ,0x0800);
-	state_save_register_global_pointer(machine, state->reel_ram , 0x0800);
+	state->m_reel_ram = auto_alloc_array(machine, UINT8, 0x0800);
+	memset(state->m_reel_ram, 0xff ,0x0800);
+	state_save_register_global_pointer(machine, state->m_reel_ram , 0x0800);
 
-	state->reel2_ram = auto_alloc_array(machine, UINT8, 0x0800);
-	memset(state->reel2_ram, 0xff, 0x0800);
-	state_save_register_global_pointer(machine, state->reel2_ram , 0x0800);
+	state->m_reel2_ram = auto_alloc_array(machine, UINT8, 0x0800);
+	memset(state->m_reel2_ram, 0xff, 0x0800);
+	state_save_register_global_pointer(machine, state->m_reel2_ram , 0x0800);
 
-	state->reel3_ram = auto_alloc_array(machine, UINT8, 0x0800);
-	memset(state->reel3_ram, 0xff, 0x0800);
-	state_save_register_global_pointer(machine, state->reel3_ram , 0x0800);
+	state->m_reel3_ram = auto_alloc_array(machine, UINT8, 0x0800);
+	memset(state->m_reel3_ram, 0xff, 0x0800);
+	state_save_register_global_pointer(machine, state->m_reel3_ram , 0x0800);
 
-	state->reel4_ram = auto_alloc_array(machine, UINT8, 0x0800);
-	memset(state->reel4_ram, 0xff, 0x0800);
-	state_save_register_global_pointer(machine, state->reel4_ram , 0x0800);
+	state->m_reel4_ram = auto_alloc_array(machine, UINT8, 0x0800);
+	memset(state->m_reel4_ram, 0xff, 0x0800);
+	state_save_register_global_pointer(machine, state->m_reel4_ram , 0x0800);
 
 	// hack, because the debugger is broken
-	state->videoram = machine->region("debugram")->base();
-	if (!state->videoram)
-		state->videoram = auto_alloc_array(machine, UINT8, 0x10000);
+	state->m_videoram = machine.region("debugram")->base();
+	if (!state->m_videoram)
+		state->m_videoram = auto_alloc_array(machine, UINT8, 0x10000);
 
-	memset(state->videoram, 0xff, 0x10000);
+	memset(state->m_videoram, 0xff, 0x10000);
 
-	state_save_register_global_pointer(machine, state->videoram, 0x10000);
+	state_save_register_global_pointer(machine, state->m_videoram, 0x10000);
 
 	// dummy.rom helper
 	{
-		UINT8 *ROM = machine->region("maincpu")->base();
-		int length = machine->region("maincpu")->bytes();
-		UINT8* ROM2 = machine->region("user1")->base();
+		UINT8 *ROM = machine.region("maincpu")->base();
+		int length = machine.region("maincpu")->bytes();
+		UINT8* ROM2 = machine.region("user1")->base();
 
 		if (ROM2)
 		{
@@ -5526,7 +5526,7 @@ static DRIVER_INIT( sfbonus_common)
 			{
 				FILE *fp;
 				char filename[256];
-				sprintf(filename,"decr_%s", machine->gamedrv->name);
+				sprintf(filename,"decr_%s", machine.system().name);
 				fp = fopen(filename, "w+b");
 				if (fp)
 				{
@@ -5538,7 +5538,7 @@ static DRIVER_INIT( sfbonus_common)
 	}
 }
 
-static void sfbonus_bitswap( running_machine* machine,
+static void sfbonus_bitswap( running_machine& machine,
 						UINT8 xor0, UINT8 b00, UINT8 b01, UINT8 b02, UINT8 b03, UINT8 b04, UINT8 b05, UINT8 b06,UINT8 b07,
                         UINT8 xor1, UINT8 b10, UINT8 b11, UINT8 b12, UINT8 b13, UINT8 b14, UINT8 b15, UINT8 b16,UINT8 b17,
 	                    UINT8 xor2, UINT8 b20, UINT8 b21, UINT8 b22, UINT8 b23, UINT8 b24, UINT8 b25, UINT8 b26,UINT8 b27,
@@ -5550,9 +5550,9 @@ static void sfbonus_bitswap( running_machine* machine,
 {
 
 	int i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
-	for(i = 0; i < machine->region("maincpu")->bytes(); i++)
+	for(i = 0; i < machine.region("maincpu")->bytes(); i++)
 	{
 		UINT8 x = ROM[i];
 

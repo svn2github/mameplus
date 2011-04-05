@@ -44,17 +44,17 @@ public:
 		  m_nvram(*this, "nvram") { }
 
 	optional_shared_ptr<UINT16>	m_nvram;
-	UINT8 *blit_buffer;
-	UINT16 *frame_buffer;
-	struct { int r,g,b,offs,offs_internal; } pal;
-	struct { UINT8 r, g, b, offs, offs_internal, ram[256*3]; } btpal;
-	UINT16 *blit_romaddr;
-	UINT16 *blit_attr1_ram;
-	UINT16 *blit_dst_ram_loword;
-	UINT16 *blit_attr2_ram;
-	UINT16 *blit_dst_ram_hiword;
-	UINT16 *blit_vregs;
-	UINT16 *blit_transpen;
+	UINT8 *m_blit_buffer;
+	UINT16 *m_frame_buffer;
+	struct { int r,g,b,offs,offs_internal; } m_pal;
+	struct { UINT8 r, g, b, offs, offs_internal, ram[256*3]; } m_btpal;
+	UINT16 *m_blit_romaddr;
+	UINT16 *m_blit_attr1_ram;
+	UINT16 *m_blit_dst_ram_loword;
+	UINT16 *m_blit_attr2_ram;
+	UINT16 *m_blit_dst_ram_hiword;
+	UINT16 *m_blit_vregs;
+	UINT16 *m_blit_transpen;
 };
 
 /*************************************************************************************************************
@@ -78,8 +78,8 @@ struct blit_t
 
 static VIDEO_START(blitz68k)
 {
-	blitz68k_state *state = machine->driver_data<blitz68k_state>();
-	state->blit_buffer = auto_alloc_array(machine, UINT8, 512*256);
+	blitz68k_state *state = machine.driver_data<blitz68k_state>();
+	state->m_blit_buffer = auto_alloc_array(machine, UINT8, 512*256);
 	blit.addr_factor = 2;
 }
 
@@ -91,16 +91,16 @@ static VIDEO_START(blitz68k_addr_factor1)
 
 static SCREEN_UPDATE(blitz68k)
 {
-	blitz68k_state *state = screen->machine->driver_data<blitz68k_state>();
+	blitz68k_state *state = screen->machine().driver_data<blitz68k_state>();
 	int x,y;
 
-	UINT8 *src = state->blit_buffer;
+	UINT8 *src = state->m_blit_buffer;
 
 	for(y = 0; y < 256; y++)
 	{
 		for(x = 0; x < 512; x++)
 		{
-			*BITMAP_ADDR32(bitmap, y, x) = screen->machine->pens[*src++];
+			*BITMAP_ADDR32(bitmap, y, x) = screen->machine().pens[*src++];
 		}
 	}
 
@@ -112,20 +112,20 @@ static SCREEN_UPDATE(blitz68k)
 
 static SCREEN_UPDATE(blitz68k_noblit)
 {
-	blitz68k_state *state = screen->machine->driver_data<blitz68k_state>();
+	blitz68k_state *state = screen->machine().driver_data<blitz68k_state>();
 	int x,y;
 
-	UINT16 *src = state->frame_buffer;
+	UINT16 *src = state->m_frame_buffer;
 
 	for(y = 0; y < 256; y++)
 	{
 		for(x = 0; x < 512; )
 		{
 			UINT16 pen = *src++;
-			*BITMAP_ADDR32(bitmap, y, x++) = screen->machine->pens[(pen >>  8) & 0xf];
-			*BITMAP_ADDR32(bitmap, y, x++) = screen->machine->pens[(pen >> 12) & 0xf];
-			*BITMAP_ADDR32(bitmap, y, x++) = screen->machine->pens[(pen >>  0) & 0xf];
-			*BITMAP_ADDR32(bitmap, y, x++) = screen->machine->pens[(pen >>  4) & 0xf];
+			*BITMAP_ADDR32(bitmap, y, x++) = screen->machine().pens[(pen >>  8) & 0xf];
+			*BITMAP_ADDR32(bitmap, y, x++) = screen->machine().pens[(pen >> 12) & 0xf];
+			*BITMAP_ADDR32(bitmap, y, x++) = screen->machine().pens[(pen >>  0) & 0xf];
+			*BITMAP_ADDR32(bitmap, y, x++) = screen->machine().pens[(pen >>  4) & 0xf];
 		}
 	}
 
@@ -140,36 +140,36 @@ static SCREEN_UPDATE(blitz68k_noblit)
 
 static WRITE16_HANDLER( paletteram_io_w )
 {
-	blitz68k_state *state = space->machine->driver_data<blitz68k_state>();
+	blitz68k_state *state = space->machine().driver_data<blitz68k_state>();
 	int pal_data;
 
 	switch(offset*2)
 	{
 		case 0:
-			state->pal.offs = (data & 0xff00) >> 8;
+			state->m_pal.offs = (data & 0xff00) >> 8;
 			break;
 		case 4:
-			state->pal.offs_internal = 0;
+			state->m_pal.offs_internal = 0;
 			break;
 		case 2:
-			switch(state->pal.offs_internal)
+			switch(state->m_pal.offs_internal)
 			{
 				case 0:
 					pal_data = (data & 0xff00) >> 8;
-					state->pal.r = ((pal_data & 0x3f) << 2) | ((pal_data & 0x30) >> 4);
-					state->pal.offs_internal++;
+					state->m_pal.r = ((pal_data & 0x3f) << 2) | ((pal_data & 0x30) >> 4);
+					state->m_pal.offs_internal++;
 					break;
 				case 1:
 					pal_data = (data & 0xff00) >> 8;
-					state->pal.g = ((pal_data & 0x3f) << 2) | ((pal_data & 0x30) >> 4);
-					state->pal.offs_internal++;
+					state->m_pal.g = ((pal_data & 0x3f) << 2) | ((pal_data & 0x30) >> 4);
+					state->m_pal.offs_internal++;
 					break;
 				case 2:
 					pal_data = (data & 0xff00) >> 8;
-					state->pal.b = ((pal_data & 0x3f) << 2) | ((pal_data & 0x30) >> 4);
-					palette_set_color(space->machine, state->pal.offs, MAKE_RGB(state->pal.r, state->pal.g, state->pal.b));
-					state->pal.offs_internal = 0;
-					state->pal.offs++;
+					state->m_pal.b = ((pal_data & 0x3f) << 2) | ((pal_data & 0x30) >> 4);
+					palette_set_color(space->machine(), state->m_pal.offs, MAKE_RGB(state->m_pal.r, state->m_pal.g, state->m_pal.b));
+					state->m_pal.offs_internal = 0;
+					state->m_pal.offs++;
 					break;
 			}
 
@@ -187,35 +187,35 @@ static WRITE16_HANDLER( paletteram_io_w )
 
 static WRITE8_HANDLER( paletteram_bt476_w )
 {
-	blitz68k_state *state = space->machine->driver_data<blitz68k_state>();
+	blitz68k_state *state = space->machine().driver_data<blitz68k_state>();
 	switch(offset)
 	{
 		case 0:
-			state->btpal.offs = data;
-			state->btpal.offs_internal = 0;
+			state->m_btpal.offs = data;
+			state->m_btpal.offs_internal = 0;
 			break;
 		case 2:
-			state->btpal.offs = data;
-			state->btpal.offs_internal = 0;
+			state->m_btpal.offs = data;
+			state->m_btpal.offs_internal = 0;
 			break;
 		case 1:
 			data &= 0x3f;
-			state->btpal.ram[state->btpal.offs * 3 + state->btpal.offs_internal] = data;
-			switch(state->btpal.offs_internal)
+			state->m_btpal.ram[state->m_btpal.offs * 3 + state->m_btpal.offs_internal] = data;
+			switch(state->m_btpal.offs_internal)
 			{
 				case 0:
-					state->btpal.r = data << 2;
-					state->btpal.offs_internal++;
+					state->m_btpal.r = data << 2;
+					state->m_btpal.offs_internal++;
 					break;
 				case 1:
-					state->btpal.g = data << 2;
-					state->btpal.offs_internal++;
+					state->m_btpal.g = data << 2;
+					state->m_btpal.offs_internal++;
 					break;
 				case 2:
-					state->btpal.b = data << 2;
-					palette_set_color(space->machine, state->btpal.offs, MAKE_RGB(state->btpal.r, state->btpal.g, state->btpal.b));
-					state->btpal.offs_internal = 0;
-					state->btpal.offs++;
+					state->m_btpal.b = data << 2;
+					palette_set_color(space->machine(), state->m_btpal.offs, MAKE_RGB(state->m_btpal.r, state->m_btpal.g, state->m_btpal.b));
+					state->m_btpal.offs_internal = 0;
+					state->m_btpal.offs++;
 					break;
 			}
 			break;
@@ -224,22 +224,22 @@ static WRITE8_HANDLER( paletteram_bt476_w )
 
 static READ8_HANDLER( paletteram_bt476_r )
 {
-	blitz68k_state *state = space->machine->driver_data<blitz68k_state>();
+	blitz68k_state *state = space->machine().driver_data<blitz68k_state>();
 	UINT8 ret = 0xff;
 
 	switch(offset)
 	{
 		case 0:
-			ret = state->btpal.offs;
+			ret = state->m_btpal.offs;
 			break;
 
 		case 1:
-			ret = state->btpal.ram[state->btpal.offs * 3 + state->btpal.offs_internal];
-			state->btpal.offs_internal++;
-			if (state->btpal.offs_internal >= 3)
+			ret = state->m_btpal.ram[state->m_btpal.offs * 3 + state->m_btpal.offs_internal];
+			state->m_btpal.offs_internal++;
+			if (state->m_btpal.offs_internal >= 3)
 			{
-				state->btpal.offs_internal = 0;
-				state->btpal.offs++;
+				state->m_btpal.offs_internal = 0;
+				state->m_btpal.offs++;
 			}
 			break;
 	}
@@ -267,23 +267,23 @@ static READ8_HANDLER( paletteram_bt476_r )
 
 static WRITE16_HANDLER( blit_copy_w )
 {
-	blitz68k_state *state = space->machine->driver_data<blitz68k_state>();
-	UINT8 *blit_rom = space->machine->region("blitter")->base();
+	blitz68k_state *state = space->machine().driver_data<blitz68k_state>();
+	UINT8 *blit_rom = space->machine().region("blitter")->base();
 	UINT32 blit_dst_xpos;
 	UINT32 blit_dst_ypos;
 	int x,y,x_size,y_size;
 	UINT32 src;
 
-	logerror("blit copy %04x %04x %04x %04x %04x\n", state->blit_romaddr[0], state->blit_attr1_ram[0], state->blit_dst_ram_loword[0], state->blit_attr2_ram[0], state->blit_dst_ram_hiword[0] );
-	logerror("blit vregs %04x %04x %04x %04x\n",state->blit_vregs[0/2],state->blit_vregs[2/2],state->blit_vregs[4/2],state->blit_vregs[6/2]);
-	logerror("blit transpen %04x %04x %04x %04x %04x %04x %04x %04x\n",state->blit_transpen[0/2],state->blit_transpen[2/2],state->blit_transpen[4/2],state->blit_transpen[6/2],
-	                                                               state->blit_transpen[8/2],state->blit_transpen[10/2],state->blit_transpen[12/2],state->blit_transpen[14/2]);
+	logerror("blit copy %04x %04x %04x %04x %04x\n", state->m_blit_romaddr[0], state->m_blit_attr1_ram[0], state->m_blit_dst_ram_loword[0], state->m_blit_attr2_ram[0], state->m_blit_dst_ram_hiword[0] );
+	logerror("blit vregs %04x %04x %04x %04x\n",state->m_blit_vregs[0/2],state->m_blit_vregs[2/2],state->m_blit_vregs[4/2],state->m_blit_vregs[6/2]);
+	logerror("blit transpen %04x %04x %04x %04x %04x %04x %04x %04x\n",state->m_blit_transpen[0/2],state->m_blit_transpen[2/2],state->m_blit_transpen[4/2],state->m_blit_transpen[6/2],
+	                                                               state->m_blit_transpen[8/2],state->m_blit_transpen[10/2],state->m_blit_transpen[12/2],state->m_blit_transpen[14/2]);
 
-	blit_dst_xpos = (state->blit_dst_ram_loword[0] & 0x00ff)*2;
-	blit_dst_ypos = ((state->blit_dst_ram_loword[0] & 0xff00)>>8);
+	blit_dst_xpos = (state->m_blit_dst_ram_loword[0] & 0x00ff)*2;
+	blit_dst_ypos = ((state->m_blit_dst_ram_loword[0] & 0xff00)>>8);
 
-	y_size = (0x100-((state->blit_attr2_ram[0] & 0xff00)>>8));
-	x_size = (state->blit_attr2_ram[0] & 0x00ff)*2;
+	y_size = (0x100-((state->m_blit_attr2_ram[0] & 0xff00)>>8));
+	x_size = (state->m_blit_attr2_ram[0] & 0x00ff)*2;
 
 	/* rounding around for 0 size */
 	if(x_size == 0) { x_size = 0x200; }
@@ -291,8 +291,8 @@ static WRITE16_HANDLER( blit_copy_w )
 	/* TODO: used by steaser "Game Over" msg on attract mode*/
 //  if(y_size == 1) { y_size = 32; }
 
-	src = state->blit_romaddr[0] | (state->blit_attr1_ram[0] & 0x1f00)<<8;
-//  src|= (state->blit_transpen[0xc/2] & 0x0100)<<12;
+	src = state->m_blit_romaddr[0] | (state->m_blit_attr1_ram[0] & 0x1f00)<<8;
+//  src|= (state->m_blit_transpen[0xc/2] & 0x0100)<<12;
 
 	for(y=0;y<y_size;y++)
 	{
@@ -300,20 +300,20 @@ static WRITE16_HANDLER( blit_copy_w )
 		{
 			int drawx = (blit_dst_xpos+x)&0x1ff;
 			int drawy = (blit_dst_ypos+y)&0x0ff;
-			if(state->blit_transpen[0x8/2] & 0x100)
-				state->blit_buffer[drawy*512+drawx] = ((state->blit_vregs[0] & 0xf00)>>8);
+			if(state->m_blit_transpen[0x8/2] & 0x100)
+				state->m_blit_buffer[drawy*512+drawx] = ((state->m_blit_vregs[0] & 0xf00)>>8);
 			else
 			{
 				UINT8 pen_helper;
 
 				pen_helper = blit_rom[src] & 0xff;
-				if(state->blit_transpen[0xa/2] & 0x100) //pen is opaque register
+				if(state->m_blit_transpen[0xa/2] & 0x100) //pen is opaque register
 				{
 					if(pen_helper)
-						state->blit_buffer[drawy*512+drawx] = ((pen_helper & 0xff) <= 3) ? ((state->blit_vregs[pen_helper] & 0xf00)>>8) : blit_rom[src];
+						state->m_blit_buffer[drawy*512+drawx] = ((pen_helper & 0xff) <= 3) ? ((state->m_blit_vregs[pen_helper] & 0xf00)>>8) : blit_rom[src];
 				}
 				else
-					state->blit_buffer[drawy*512+drawx] = ((pen_helper & 0xff) <= 3) ? ((state->blit_vregs[pen_helper] & 0xf00)>>8) : blit_rom[src];
+					state->m_blit_buffer[drawy*512+drawx] = ((pen_helper & 0xff) <= 3) ? ((state->m_blit_vregs[pen_helper] & 0xf00)>>8) : blit_rom[src];
 			}
 
 			src++;
@@ -456,15 +456,15 @@ static WRITE8_HANDLER( blit_flags_w )
 
 static WRITE8_HANDLER( blit_draw_w )
 {
-	blitz68k_state *state = space->machine->driver_data<blitz68k_state>();
-	UINT8 *blit_rom  = space->machine->region("blitter")->base();
-	int blit_romsize = space->machine->region("blitter")->bytes();
+	blitz68k_state *state = space->machine().driver_data<blitz68k_state>();
+	UINT8 *blit_rom  = space->machine().region("blitter")->base();
+	int blit_romsize = space->machine().region("blitter")->bytes();
 	UINT32 blit_dst_xpos;
 	UINT32 blit_dst_ypos;
 	int x, y, x_size, y_size;
 	UINT32 src;
 
-	logerror("%s: blit x=%02x y=%02x w=%02x h=%02x addr=%02x%02x%02x pens=%02x %02x %02x %02x flag=%02x %02x %02x %02x - %02x %02x %02x %02x\n", space->machine->describe_context(),
+	logerror("%s: blit x=%02x y=%02x w=%02x h=%02x addr=%02x%02x%02x pens=%02x %02x %02x %02x flag=%02x %02x %02x %02x - %02x %02x %02x %02x\n", space->machine().describe_context(),
 				blit.x,  blit.y, blit.w, blit.h,
 				blit.addr[2], blit.addr[1], blit.addr[0],
 				blit.pen[0], blit.pen[1], blit.pen[2], blit.pen[3],
@@ -511,7 +511,7 @@ static WRITE8_HANDLER( blit_draw_w )
 				if (pen <= 3)
 					pen = blit.pen[pen] & 0xf;
 
-				state->blit_buffer[drawy * 512 + drawx] = pen;
+				state->m_blit_buffer[drawy * 512 + drawx] = pen;
 			}
 		}
 	}
@@ -577,14 +577,14 @@ static WRITE16_HANDLER( lamps_w )
 
 static READ16_HANDLER( test_r )
 {
-	return 0xffff;//space->machine->rand();
+	return 0xffff;//space->machine().rand();
 }
 
 #if 0
 static WRITE16_HANDLER( irq_callback_w )
 {
 //  popmessage("%02x",data);
-	cputag_set_input_line(space->machine, "maincpu", 3, HOLD_LINE );
+	cputag_set_input_line(space->machine(), "maincpu", 3, HOLD_LINE );
 }
 
 static WRITE16_HANDLER( sound_write_w )
@@ -594,7 +594,7 @@ static WRITE16_HANDLER( sound_write_w )
 }
 #endif
 
-static ADDRESS_MAP_START( ilpag_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( ilpag_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x1fffff) AM_ROM AM_REGION("blitter", 0)
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM AM_SHARE("nvram")
@@ -603,13 +603,13 @@ static ADDRESS_MAP_START( ilpag_map, ADDRESS_SPACE_PROGRAM, 16 )
 //  AM_RANGE(0x880000, 0x880001) AM_READ(test_r)
 
 	AM_RANGE(0x900000, 0x900005) AM_WRITE( paletteram_io_w ) //RAMDAC
-	AM_RANGE(0x980000, 0x98000f) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_transpen) //video registers for the blitter write
-	AM_RANGE(0x990000, 0x990007) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_vregs) //pens
-	AM_RANGE(0x998000, 0x998001) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_romaddr)
-	AM_RANGE(0x9a0000, 0x9a0001) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_attr1_ram)
-	AM_RANGE(0x9a8000, 0x9a8001) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_dst_ram_loword)
-	AM_RANGE(0x9b0000, 0x9b0001) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_attr2_ram)
-	AM_RANGE(0x9b8000, 0x9b8001) AM_RAM_WRITE( blit_copy_w ) AM_BASE_MEMBER(blitz68k_state, blit_dst_ram_hiword)
+	AM_RANGE(0x980000, 0x98000f) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_transpen) //video registers for the blitter write
+	AM_RANGE(0x990000, 0x990007) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_vregs) //pens
+	AM_RANGE(0x998000, 0x998001) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_romaddr)
+	AM_RANGE(0x9a0000, 0x9a0001) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_attr1_ram)
+	AM_RANGE(0x9a8000, 0x9a8001) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_dst_ram_loword)
+	AM_RANGE(0x9b0000, 0x9b0001) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_attr2_ram)
+	AM_RANGE(0x9b8000, 0x9b8001) AM_RAM_WRITE( blit_copy_w ) AM_BASE_MEMBER(blitz68k_state, m_blit_dst_ram_hiword)
 	AM_RANGE(0x9e0000, 0x9e0001) AM_READ(blitter_status_r)
 
 	AM_RANGE(0xc00000, 0xc00001) AM_WRITE(lamps_w)
@@ -619,7 +619,7 @@ static ADDRESS_MAP_START( ilpag_map, ADDRESS_SPACE_PROGRAM, 16 )
 //  AM_RANGE(0xc00300, 0xc00301) AM_WRITE(irq_callback_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( steaser_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( steaser_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x100000, 0x1fffff) AM_ROM AM_REGION("blitter", 0)
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM AM_SHARE("nvram")
@@ -631,13 +631,13 @@ static ADDRESS_MAP_START( steaser_map, ADDRESS_SPACE_PROGRAM, 16 )
 
 	AM_RANGE(0x900000, 0x900005) AM_WRITE( paletteram_io_w ) //RAMDAC
 	AM_RANGE(0x940000, 0x940001) AM_WRITENOP //? Seems a dword write for some read, written consecutively
-	AM_RANGE(0x980000, 0x98000f) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_transpen)//probably transparency pens
-	AM_RANGE(0x990000, 0x990005) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_vregs)
-	AM_RANGE(0x998000, 0x998001) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_romaddr)
-	AM_RANGE(0x9a0000, 0x9a0001) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_attr1_ram)
-	AM_RANGE(0x9a8000, 0x9a8001) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_dst_ram_loword)
-	AM_RANGE(0x9b0000, 0x9b0001) AM_RAM AM_BASE_MEMBER(blitz68k_state, blit_attr2_ram)
-	AM_RANGE(0x9b8000, 0x9b8001) AM_RAM_WRITE( blit_copy_w ) AM_BASE_MEMBER(blitz68k_state, blit_dst_ram_hiword)
+	AM_RANGE(0x980000, 0x98000f) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_transpen)//probably transparency pens
+	AM_RANGE(0x990000, 0x990005) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_vregs)
+	AM_RANGE(0x998000, 0x998001) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_romaddr)
+	AM_RANGE(0x9a0000, 0x9a0001) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_attr1_ram)
+	AM_RANGE(0x9a8000, 0x9a8001) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_dst_ram_loword)
+	AM_RANGE(0x9b0000, 0x9b0001) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_blit_attr2_ram)
+	AM_RANGE(0x9b8000, 0x9b8001) AM_RAM_WRITE( blit_copy_w ) AM_BASE_MEMBER(blitz68k_state, m_blit_dst_ram_hiword)
 	AM_RANGE(0x9c0002, 0x9c0003) AM_READNOP //pen control?
 	AM_RANGE(0x9d0000, 0x9d0001) AM_READNOP //?
 	AM_RANGE(0x9e0000, 0x9e0001) AM_READ(blitter_status_r)
@@ -657,14 +657,14 @@ ADDRESS_MAP_END
 // MCU simulation (to be done)
 static READ8_HANDLER( bankrob_mcu1_r )
 {
-	UINT8 ret = 0;	// space->machine->rand() gives "interesting" results
-	logerror("%s: mcu1 reads %02x\n", space->machine->describe_context(), ret);
+	UINT8 ret = 0;	// space->machine().rand() gives "interesting" results
+	logerror("%s: mcu1 reads %02x\n", space->machine().describe_context(), ret);
 	return ret;
 }
 static READ8_HANDLER( bankrob_mcu2_r )
 {
-	UINT8 ret = 0;	// space->machine->rand() gives "interesting" results
-	logerror("%s: mcu2 reads %02x\n", space->machine->describe_context(), ret);
+	UINT8 ret = 0;	// space->machine().rand() gives "interesting" results
+	logerror("%s: mcu2 reads %02x\n", space->machine().describe_context(), ret);
 	return ret;
 }
 
@@ -680,14 +680,14 @@ static READ8_HANDLER( bankrob_mcu_status_write_r )
 
 static WRITE8_HANDLER( bankrob_mcu1_w )
 {
-	logerror("%s: mcu1 written with %02x\n", space->machine->describe_context(), data);
+	logerror("%s: mcu1 written with %02x\n", space->machine().describe_context(), data);
 }
 static WRITE8_HANDLER( bankrob_mcu2_w )
 {
-	logerror("%s: mcu2 written with %02x\n", space->machine->describe_context(), data);
+	logerror("%s: mcu2 written with %02x\n", space->machine().describe_context(), data);
 }
 
-static ADDRESS_MAP_START( bankrob_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( bankrob_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x100000, 0x10ffff) AM_RAM
 
@@ -740,14 +740,14 @@ ADDRESS_MAP_END
 // MCU simulation (to be done)
 static READ8_HANDLER( bankroba_mcu1_r )
 {
-	UINT8 ret = space->machine->rand();	// space->machine->rand() gives "interesting" results
-	logerror("%s: mcu1 reads %02x\n", space->machine->describe_context(), ret);
+	UINT8 ret = space->machine().rand();	// space->machine().rand() gives "interesting" results
+	logerror("%s: mcu1 reads %02x\n", space->machine().describe_context(), ret);
 	return ret;
 }
 static READ8_HANDLER( bankroba_mcu2_r )
 {
-	UINT8 ret = space->machine->rand();	// space->machine->rand() gives "interesting" results
-	logerror("%s: mcu2 reads %02x\n", space->machine->describe_context(), ret);
+	UINT8 ret = space->machine().rand();	// space->machine().rand() gives "interesting" results
+	logerror("%s: mcu2 reads %02x\n", space->machine().describe_context(), ret);
 	return ret;
 }
 
@@ -762,14 +762,14 @@ static READ8_HANDLER( bankroba_mcu2_status_write_r )
 
 static WRITE8_HANDLER( bankroba_mcu1_w )
 {
-	logerror("%s: mcu1 written with %02x\n", space->machine->describe_context(), data);
+	logerror("%s: mcu1 written with %02x\n", space->machine().describe_context(), data);
 }
 static WRITE8_HANDLER( bankroba_mcu2_w )
 {
-	logerror("%s: mcu2 written with %02x\n", space->machine->describe_context(), data);
+	logerror("%s: mcu2 written with %02x\n", space->machine().describe_context(), data);
 }
 
-static ADDRESS_MAP_START( bankroba_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( bankroba_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM
 
@@ -828,14 +828,14 @@ static WRITE16_HANDLER( cjffruit_leds1_w )
 	data = COMBINE_DATA(leds1);
 	if (ACCESSING_BITS_8_15)
 	{
-		coin_counter_w(space->machine, 0, data & 0x0100);	// coin in
-		set_led_status(space->machine, 0, data & 0x0200);	// win???
+		coin_counter_w(space->machine(), 0, data & 0x0100);	// coin in
+		set_led_status(space->machine(), 0, data & 0x0200);	// win???
 //                                     1  data & 0x0400     // win???
-		set_led_status(space->machine, 2, data & 0x0800);	// small
-		set_led_status(space->machine, 3, data & 0x1000);	// big
-		set_led_status(space->machine, 4, data & 0x2000);	// take
-		set_led_status(space->machine, 5, data & 0x4000);	// double up
-		set_led_status(space->machine, 6, data & 0x8000);	// cancel
+		set_led_status(space->machine(), 2, data & 0x0800);	// small
+		set_led_status(space->machine(), 3, data & 0x1000);	// big
+		set_led_status(space->machine(), 4, data & 0x2000);	// take
+		set_led_status(space->machine(), 5, data & 0x4000);	// double up
+		set_led_status(space->machine(), 6, data & 0x8000);	// cancel
 		show_leds123();
 	}
 }
@@ -845,14 +845,14 @@ static WRITE16_HANDLER( cjffruit_leds2_w )
 	data = COMBINE_DATA(leds2);
 	if (ACCESSING_BITS_8_15)
 	{
-		set_led_status(space->machine,  7, data & 0x0100);	// start
-		set_led_status(space->machine,  8, data & 0x0200);	// bet
-		set_led_status(space->machine,  9, data & 0x0400);	// hold 5
-		set_led_status(space->machine, 10, data & 0x0800);	// hold 4
-		set_led_status(space->machine, 11, data & 0x1000);	// hold 3
-		set_led_status(space->machine, 12, data & 0x2000);	// hold 2
-		set_led_status(space->machine, 13, data & 0x4000);	// collect
-		set_led_status(space->machine, 14, data & 0x8000);	// call attendant
+		set_led_status(space->machine(),  7, data & 0x0100);	// start
+		set_led_status(space->machine(),  8, data & 0x0200);	// bet
+		set_led_status(space->machine(),  9, data & 0x0400);	// hold 5
+		set_led_status(space->machine(), 10, data & 0x0800);	// hold 4
+		set_led_status(space->machine(), 11, data & 0x1000);	// hold 3
+		set_led_status(space->machine(), 12, data & 0x2000);	// hold 2
+		set_led_status(space->machine(), 13, data & 0x4000);	// collect
+		set_led_status(space->machine(), 14, data & 0x8000);	// call attendant
 		show_leds123();
 	}
 }
@@ -862,8 +862,8 @@ static WRITE16_HANDLER( cjffruit_leds3_w )
 	data = COMBINE_DATA(leds3);
 	if (ACCESSING_BITS_8_15)
 	{
-		set_led_status(space->machine, 15, data & 0x0100);	// hopper coins?
-		set_led_status(space->machine, 16, data & 0x0400);	// coin out?
+		set_led_status(space->machine(), 15, data & 0x0100);	// hopper coins?
+		set_led_status(space->machine(), 16, data & 0x0400);	// coin out?
 		show_leds123();
 	}
 }
@@ -896,17 +896,17 @@ static WRITE16_DEVICE_HANDLER( crtc_lpen_w )
 // MCU simulation (to be done)
 static READ16_HANDLER( cjffruit_mcu_r )
 {
-	UINT8 ret = 0x00;	// space->machine->rand() gives "interesting" results
-	logerror("%s: mcu reads %02x\n", space->machine->describe_context(), ret);
+	UINT8 ret = 0x00;	// space->machine().rand() gives "interesting" results
+	logerror("%s: mcu reads %02x\n", space->machine().describe_context(), ret);
 	return ret << 8;
 }
 
 static WRITE16_HANDLER( cjffruit_mcu_w )
 {
-	logerror("%s: mcu written with %02x\n", space->machine->describe_context(),data >> 8);
+	logerror("%s: mcu written with %02x\n", space->machine().describe_context(),data >> 8);
 }
 
-static ADDRESS_MAP_START( cjffruit_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( cjffruit_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x400000, 0x41ffff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0x480000, 0x4807ff) AM_RAM
@@ -947,14 +947,14 @@ ADDRESS_MAP_END
 // MCU simulation (to be done)
 static READ16_HANDLER( deucesw2_mcu_r )
 {
-	UINT8 ret = 0x00;	// space->machine->rand() gives "interesting" results
-	logerror("%s: mcu reads %02x\n", space->machine->describe_context(), ret);
+	UINT8 ret = 0x00;	// space->machine().rand() gives "interesting" results
+	logerror("%s: mcu reads %02x\n", space->machine().describe_context(), ret);
 	return ret << 8;
 }
 
 static WRITE16_HANDLER( deucesw2_mcu_w )
 {
-	logerror("%s: mcu written with %02x\n", space->machine->describe_context(),data >> 8);
+	logerror("%s: mcu written with %02x\n", space->machine().describe_context(),data >> 8);
 }
 
 static WRITE16_HANDLER( deucesw2_leds1_w )
@@ -962,14 +962,14 @@ static WRITE16_HANDLER( deucesw2_leds1_w )
 	data = COMBINE_DATA(leds1);
 	if (ACCESSING_BITS_8_15)
 	{
-		coin_counter_w(space->machine, 0, data & 0x0100);	// coin in
-		set_led_status(space->machine, 0, data & 0x0200);	// win???
+		coin_counter_w(space->machine(), 0, data & 0x0100);	// coin in
+		set_led_status(space->machine(), 0, data & 0x0200);	// win???
 //                                     1  data & 0x0400     // win???
-		set_led_status(space->machine, 2, data & 0x0800);	// small
-		set_led_status(space->machine, 3, data & 0x1000);	// big
-		set_led_status(space->machine, 4, data & 0x2000);	// take
-		set_led_status(space->machine, 5, data & 0x4000);	// double up
-		set_led_status(space->machine, 6, data & 0x8000);	// cancel
+		set_led_status(space->machine(), 2, data & 0x0800);	// small
+		set_led_status(space->machine(), 3, data & 0x1000);	// big
+		set_led_status(space->machine(), 4, data & 0x2000);	// take
+		set_led_status(space->machine(), 5, data & 0x4000);	// double up
+		set_led_status(space->machine(), 6, data & 0x8000);	// cancel
 		show_leds123();
 	}
 }
@@ -979,14 +979,14 @@ static WRITE16_HANDLER( deucesw2_leds2_w )
 	data = COMBINE_DATA(leds2);
 	if (ACCESSING_BITS_8_15)
 	{
-		set_led_status(space->machine,  7, data & 0x0100);	// start
-		set_led_status(space->machine,  8, data & 0x0200);	// bet
-		set_led_status(space->machine,  9, data & 0x0400);	// hold 5
-		set_led_status(space->machine, 10, data & 0x0800);	// hold 4
-		set_led_status(space->machine, 11, data & 0x1000);	// hold 3
-		set_led_status(space->machine, 12, data & 0x2000);	// hold 2
-		set_led_status(space->machine, 13, data & 0x4000);	// hold 1
-		set_led_status(space->machine, 14, data & 0x8000);	// call attendant
+		set_led_status(space->machine(),  7, data & 0x0100);	// start
+		set_led_status(space->machine(),  8, data & 0x0200);	// bet
+		set_led_status(space->machine(),  9, data & 0x0400);	// hold 5
+		set_led_status(space->machine(), 10, data & 0x0800);	// hold 4
+		set_led_status(space->machine(), 11, data & 0x1000);	// hold 3
+		set_led_status(space->machine(), 12, data & 0x2000);	// hold 2
+		set_led_status(space->machine(), 13, data & 0x4000);	// hold 1
+		set_led_status(space->machine(), 14, data & 0x8000);	// call attendant
 		show_leds123();
 	}
 }
@@ -996,13 +996,13 @@ static WRITE16_HANDLER( deucesw2_leds3_w )
 	data = COMBINE_DATA(leds3);
 	if (ACCESSING_BITS_8_15)
 	{
-		set_led_status(space->machine, 15, data & 0x0100);	// hopper coins?
-		set_led_status(space->machine, 16, data & 0x0400);	// coin out?
+		set_led_status(space->machine(), 15, data & 0x0100);	// hopper coins?
+		set_led_status(space->machine(), 16, data & 0x0400);	// coin out?
 		show_leds123();
 	}
 }
 
-static ADDRESS_MAP_START( deucesw2_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( deucesw2_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x400000, 0x41ffff) AM_RAM
 
@@ -1043,14 +1043,14 @@ ADDRESS_MAP_END
 // MCU simulation (to be done)
 static READ8_HANDLER( dualgame_mcu1_r )
 {
-	UINT8 ret = 0;	// space->machine->rand() gives "interesting" results
-	logerror("%s: mcu1 reads %02x\n", space->machine->describe_context(), ret);
+	UINT8 ret = 0;	// space->machine().rand() gives "interesting" results
+	logerror("%s: mcu1 reads %02x\n", space->machine().describe_context(), ret);
 	return ret;
 }
 static READ8_HANDLER( dualgame_mcu2_r )
 {
-	UINT8 ret = 0;	// space->machine->rand() gives "interesting" results
-	logerror("%s: mcu2 reads %02x\n", space->machine->describe_context(), ret);
+	UINT8 ret = 0;	// space->machine().rand() gives "interesting" results
+	logerror("%s: mcu2 reads %02x\n", space->machine().describe_context(), ret);
 	return ret;
 }
 
@@ -1066,14 +1066,14 @@ static READ8_HANDLER( dualgame_mcu_status_write_r )
 
 static WRITE8_HANDLER( dualgame_mcu1_w )
 {
-	logerror("%s: mcu1 written with %02x\n", space->machine->describe_context(), data);
+	logerror("%s: mcu1 written with %02x\n", space->machine().describe_context(), data);
 }
 static WRITE8_HANDLER( dualgame_mcu2_w )
 {
-	logerror("%s: mcu2 written with %02x\n", space->machine->describe_context(), data);
+	logerror("%s: mcu2 written with %02x\n", space->machine().describe_context(), data);
 }
 
-static ADDRESS_MAP_START( dualgame_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( dualgame_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x100000, 0x10ffff) AM_RAM
 
@@ -1131,14 +1131,14 @@ ADDRESS_MAP_END
 // MCU simulation (to be done)
 static READ16_HANDLER( hermit_mcu_r )
 {
-	UINT8 ret = 0x00;	// space->machine->rand() gives "interesting" results
-	logerror("%s: mcu reads %02x\n", space->machine->describe_context(), ret);
+	UINT8 ret = 0x00;	// space->machine().rand() gives "interesting" results
+	logerror("%s: mcu reads %02x\n", space->machine().describe_context(), ret);
 	return ret << 8;
 }
 
 static WRITE16_HANDLER( hermit_mcu_w )
 {
-	logerror("%s: mcu written with %02x\n", space->machine->describe_context(),data >> 8);
+	logerror("%s: mcu written with %02x\n", space->machine().describe_context(),data >> 8);
 }
 
 static WRITE16_HANDLER( hermit_leds1_w )
@@ -1146,7 +1146,7 @@ static WRITE16_HANDLER( hermit_leds1_w )
 	data = COMBINE_DATA(leds1);
 	if (ACCESSING_BITS_8_15)
 	{
-		coin_counter_w(space->machine, 0, data & 0x0100);	// coin in
+		coin_counter_w(space->machine(), 0, data & 0x0100);	// coin in
 		show_leds12();
 	}
 }
@@ -1156,7 +1156,7 @@ static WRITE16_HANDLER( hermit_leds2_w )
 	data = COMBINE_DATA(leds2);
 	if (ACCESSING_BITS_8_15)
 	{
-		set_led_status(space->machine,  7, data & 0x0100);	// button
+		set_led_status(space->machine(),  7, data & 0x0100);	// button
 		show_leds12();
 	}
 }
@@ -1164,15 +1164,15 @@ static WRITE16_HANDLER( hermit_leds2_w )
 static READ16_HANDLER( hermit_track_r )
 {
 #ifdef MAME_DEBUG
-//  popmessage("track %02x %02x", input_port_read(space->machine, "TRACK_X"), input_port_read(space->machine, "TRACK_Y"));
+//  popmessage("track %02x %02x", input_port_read(space->machine(), "TRACK_X"), input_port_read(space->machine(), "TRACK_Y"));
 #endif
 
 	return
-		((0xf - ((input_port_read(space->machine, "TRACK_Y") + 0x7) & 0xf)) << 12) |
-		((0xf - ((input_port_read(space->machine, "TRACK_X") + 0x7) & 0xf)) << 8)  ;
+		((0xf - ((input_port_read(space->machine(), "TRACK_Y") + 0x7) & 0xf)) << 12) |
+		((0xf - ((input_port_read(space->machine(), "TRACK_X") + 0x7) & 0xf)) << 8)  ;
 }
 
-static ADDRESS_MAP_START( hermit_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( hermit_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM
 	AM_RANGE(0x400000, 0x41ffff) AM_RAM
@@ -1210,14 +1210,14 @@ ADDRESS_MAP_END
 // MCU simulation (to be done)
 static READ8_HANDLER( maxidbl_mcu1_r )
 {
-	UINT8 ret = 0;	// space->machine->rand() gives "interesting" results
-	logerror("%s: mcu1 reads %02x\n", space->machine->describe_context(), ret);
+	UINT8 ret = 0;	// space->machine().rand() gives "interesting" results
+	logerror("%s: mcu1 reads %02x\n", space->machine().describe_context(), ret);
 	return ret;
 }
 static READ8_HANDLER( maxidbl_mcu2_r )
 {
-	UINT8 ret = 0;	// space->machine->rand() gives "interesting" results
-	logerror("%s: mcu2 reads %02x\n", space->machine->describe_context(), ret);
+	UINT8 ret = 0;	// space->machine().rand() gives "interesting" results
+	logerror("%s: mcu2 reads %02x\n", space->machine().describe_context(), ret);
 	return ret;
 }
 
@@ -1233,18 +1233,18 @@ static READ8_HANDLER( maxidbl_mcu_status_write_r )
 
 static WRITE8_HANDLER( maxidbl_mcu1_w )
 {
-	logerror("%s: mcu1 written with %02x\n", space->machine->describe_context(), data);
+	logerror("%s: mcu1 written with %02x\n", space->machine().describe_context(), data);
 }
 static WRITE8_HANDLER( maxidbl_mcu2_w )
 {
-	logerror("%s: mcu2 written with %02x\n", space->machine->describe_context(), data);
+	logerror("%s: mcu2 written with %02x\n", space->machine().describe_context(), data);
 }
 
-static ADDRESS_MAP_START( maxidbl_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( maxidbl_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM
 
-	AM_RANGE(0x400000, 0x40ffff) AM_RAM AM_BASE_MEMBER(blitz68k_state, frame_buffer)
+	AM_RANGE(0x400000, 0x40ffff) AM_RAM AM_BASE_MEMBER(blitz68k_state, m_frame_buffer)
 
 	AM_RANGE(0x30000c, 0x30000d) AM_WRITENOP	// 0->1 (IRQ3 ack.?)
 	AM_RANGE(0x30000e, 0x30000f) AM_WRITENOP	// 1->0 (MCU related?)
@@ -1622,17 +1622,17 @@ static MC6845_ON_UPDATE_ADDR_CHANGED(crtc_addr)
 
 static WRITE_LINE_DEVICE_HANDLER(crtc_vsync_irq1)
 {
-	cputag_set_input_line(device->machine, "maincpu", 1, state ? ASSERT_LINE : CLEAR_LINE);
+	cputag_set_input_line(device->machine(), "maincpu", 1, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static WRITE_LINE_DEVICE_HANDLER(crtc_vsync_irq3)
 {
-	cputag_set_input_line(device->machine, "maincpu", 3, state ? ASSERT_LINE : CLEAR_LINE);
+	cputag_set_input_line(device->machine(), "maincpu", 3, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static WRITE_LINE_DEVICE_HANDLER(crtc_vsync_irq5)
 {
-	cputag_set_input_line(device->machine, "maincpu", 5, state ? ASSERT_LINE : CLEAR_LINE);
+	cputag_set_input_line(device->machine(), "maincpu", 5, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 const mc6845_interface mc6845_intf_irq1 =
@@ -1721,7 +1721,7 @@ MACHINE_CONFIG_END
 
 static TIMER_DEVICE_CALLBACK( steaser_mcu_sim )
 {
-	blitz68k_state *state = timer.machine->driver_data<blitz68k_state>();
+	blitz68k_state *state = timer.machine().driver_data<blitz68k_state>();
 //  static int i;
 	/*first off, signal the "MCU is running" flag*/
 	state->m_nvram[0x932/2] = 0xffff;
@@ -1729,21 +1729,21 @@ static TIMER_DEVICE_CALLBACK( steaser_mcu_sim )
 //  for(i=0;i<8;i+=2)
 //      state->m_nvram[((0x8a0)+i)/2] = 0;
 	/*finally, read the inputs*/
-	state->m_nvram[0x89e/2] = input_port_read(timer.machine, "MENU") & 0xffff;
-	state->m_nvram[0x8a0/2] = input_port_read(timer.machine, "STAT") & 0xffff;
-	state->m_nvram[0x8a2/2] = input_port_read(timer.machine, "BET_DEAL") & 0xffff;
-	state->m_nvram[0x8a4/2] = input_port_read(timer.machine, "TAKE_DOUBLE") & 0xffff;
-	state->m_nvram[0x8a6/2] = input_port_read(timer.machine, "SMALL_BIG") & 0xffff;
-	state->m_nvram[0x8a8/2] = input_port_read(timer.machine, "CANCEL_HOLD1") & 0xffff;
-	state->m_nvram[0x8aa/2] = input_port_read(timer.machine, "HOLD2_HOLD3") & 0xffff;
-	state->m_nvram[0x8ac/2] = input_port_read(timer.machine, "HOLD4_HOLD5") & 0xffff;
+	state->m_nvram[0x89e/2] = input_port_read(timer.machine(), "MENU") & 0xffff;
+	state->m_nvram[0x8a0/2] = input_port_read(timer.machine(), "STAT") & 0xffff;
+	state->m_nvram[0x8a2/2] = input_port_read(timer.machine(), "BET_DEAL") & 0xffff;
+	state->m_nvram[0x8a4/2] = input_port_read(timer.machine(), "TAKE_DOUBLE") & 0xffff;
+	state->m_nvram[0x8a6/2] = input_port_read(timer.machine(), "SMALL_BIG") & 0xffff;
+	state->m_nvram[0x8a8/2] = input_port_read(timer.machine(), "CANCEL_HOLD1") & 0xffff;
+	state->m_nvram[0x8aa/2] = input_port_read(timer.machine(), "HOLD2_HOLD3") & 0xffff;
+	state->m_nvram[0x8ac/2] = input_port_read(timer.machine(), "HOLD4_HOLD5") & 0xffff;
 }
 
 /* TODO: remove this hack.*/
 static INTERRUPT_GEN( steaser_irq )
 {
 	int num=cpu_getiloops(device)+3;
-	cpu_set_input_line(device, num, HOLD_LINE);
+	device_set_input_line(device, num, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_DERIVED( steaser, ilpag )
@@ -2688,7 +2688,7 @@ ROM_END
 
 static DRIVER_INIT( bankrob )
 {
-	UINT16 *ROM = (UINT16 *)machine->region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xb5e0/2] = 0x6028;
@@ -2703,7 +2703,7 @@ static DRIVER_INIT( bankrob )
 
 static DRIVER_INIT( bankroba )
 {
-	UINT16 *ROM = (UINT16 *)machine->region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0x11e4e/2] = 0x6028;
@@ -2718,7 +2718,7 @@ static DRIVER_INIT( bankroba )
 
 static DRIVER_INIT( cjffruit )
 {
-	UINT16 *ROM = (UINT16 *)machine->region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xf564/2] = 0x6028;
@@ -2729,7 +2729,7 @@ static DRIVER_INIT( cjffruit )
 
 static DRIVER_INIT( deucesw2 )
 {
-	UINT16 *ROM = (UINT16 *)machine->region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0x8fe4/2] = 0x6020;
@@ -2740,7 +2740,7 @@ static DRIVER_INIT( deucesw2 )
 
 static DRIVER_INIT( dualgame )
 {
-	UINT16 *ROM = (UINT16 *)machine->region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xa518/2] = 0x6024;
@@ -2751,7 +2751,7 @@ static DRIVER_INIT( dualgame )
 
 static DRIVER_INIT( hermit )
 {
-	UINT16 *ROM = (UINT16 *)machine->region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xdeba/2] = 0x602e;
@@ -2768,7 +2768,7 @@ static DRIVER_INIT( hermit )
 
 static DRIVER_INIT( maxidbl )
 {
-	UINT16 *ROM = (UINT16 *)machine->region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xb384/2] = 0x6036;
@@ -2779,7 +2779,7 @@ static DRIVER_INIT( maxidbl )
 
 static DRIVER_INIT( megadblj )
 {
-	UINT16 *ROM = (UINT16 *)machine->region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xe21c/2] = 0x6040;
@@ -2790,7 +2790,7 @@ static DRIVER_INIT( megadblj )
 
 static DRIVER_INIT( megadble )
 {
-	UINT16 *ROM = (UINT16 *)machine->region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xcfc2/2] = 0x4e71;

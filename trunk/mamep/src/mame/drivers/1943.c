@@ -43,14 +43,14 @@ static READ8_HANDLER( c1943_protection_r )
         if a read from this address doesn't return the value it expects.
     */
 
-	int data = cpu_get_reg(space->cpu, Z80_BC) >> 8;
-//  logerror("protection read, PC: %04x Result:%02x\n", cpu_get_pc(space->cpu), data);
+	int data = cpu_get_reg(&space->device(), Z80_BC) >> 8;
+//  logerror("protection read, PC: %04x Result:%02x\n", cpu_get_pc(&space->device()), data);
 	return data;
 }
 
 /* Memory Maps */
 
-static ADDRESS_MAP_START( c1943_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( c1943_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x9000, 0x9fff) AM_ROMBANK("bank2")
@@ -66,21 +66,21 @@ static ADDRESS_MAP_START( c1943_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xc804, 0xc804) AM_WRITE(c1943_c804_w)	// ROM bank switch, screen flip
 	AM_RANGE(0xc806, 0xc806) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0xc807, 0xc807) AM_WRITENOP // ???
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(c1943_videoram_w) AM_BASE_MEMBER(_1943_state, videoram)
-	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(c1943_colorram_w) AM_BASE_MEMBER(_1943_state, colorram)
-	AM_RANGE(0xd800, 0xd801) AM_RAM AM_BASE_MEMBER(_1943_state, scrollx)
-	AM_RANGE(0xd802, 0xd802) AM_RAM AM_BASE_MEMBER(_1943_state, scrolly)
-	AM_RANGE(0xd803, 0xd804) AM_RAM AM_BASE_MEMBER(_1943_state, bgscrollx)
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(c1943_videoram_w) AM_BASE_MEMBER(_1943_state, m_videoram)
+	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(c1943_colorram_w) AM_BASE_MEMBER(_1943_state, m_colorram)
+	AM_RANGE(0xd800, 0xd801) AM_RAM AM_BASE_MEMBER(_1943_state, m_scrollx)
+	AM_RANGE(0xd802, 0xd802) AM_RAM AM_BASE_MEMBER(_1943_state, m_scrolly)
+	AM_RANGE(0xd803, 0xd804) AM_RAM AM_BASE_MEMBER(_1943_state, m_bgscrollx)
 	AM_RANGE(0xd806, 0xd806) AM_WRITE(c1943_d806_w)	// sprites, bg1, bg2 enable
 	AM_RANGE(0xd808, 0xd808) AM_WRITENOP // ???
 	AM_RANGE(0xd868, 0xd868) AM_WRITENOP // ???
 	AM_RANGE(0xd888, 0xd888) AM_WRITENOP // ???
 	AM_RANGE(0xd8a8, 0xd8a8) AM_WRITENOP // ???
 	AM_RANGE(0xe000, 0xefff) AM_RAM
-	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_SIZE_MEMBER(_1943_state, spriteram, spriteram_size)
+	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_SIZE_MEMBER(_1943_state, m_spriteram, m_spriteram_size)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xc800, 0xc800) AM_READ(soundlatch_r)
@@ -248,12 +248,12 @@ GFXDECODE_END
 
 static MACHINE_RESET( 1943 )
 {
-	_1943_state *state = machine->driver_data<_1943_state>();
+	_1943_state *state = machine.driver_data<_1943_state>();
 
-	state->char_on = 0;
-	state->obj_on = 0;
-	state->bg1_on = 0;
-	state->bg2_on = 0;
+	state->m_char_on = 0;
+	state->m_obj_on = 0;
+	state->m_bg1_on = 0;
+	state->m_bg2_on = 0;
 }
 
 static MACHINE_CONFIG_START( 1943, _1943_state )
@@ -589,7 +589,7 @@ ROM_END
 
 static DRIVER_INIT( 1943 )
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	memory_configure_bank(machine, "bank1", 0, 29, &ROM[0x10000], 0x1000);
 	memory_configure_bank(machine, "bank2", 0, 29, &ROM[0x11000], 0x1000);
 	memory_configure_bank(machine, "bank3", 0, 29, &ROM[0x12000], 0x1000);
@@ -603,7 +603,7 @@ static DRIVER_INIT( 1943b )
 	DRIVER_INIT_CALL( 1943 );
 	//it expects 0x00 to be returned from the protection reads because the protection has been patched out.
 	//AM_RANGE(0xc007, 0xc007) AM_READ(c1943_protection_r)
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xc007, 0xc007, 0, 0, _1943b_c007_r);
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xc007, 0xc007, FUNC(_1943b_c007_r));
 
 }
 

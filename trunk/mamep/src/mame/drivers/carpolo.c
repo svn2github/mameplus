@@ -32,10 +32,10 @@
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x01ff) AM_RAM
-	AM_RANGE(0x3000, 0x30ff) AM_WRITEONLY AM_BASE_MEMBER(carpolo_state, alpharam)
-	AM_RANGE(0x4000, 0x400f) AM_WRITEONLY AM_BASE_MEMBER(carpolo_state, spriteram)
+	AM_RANGE(0x3000, 0x30ff) AM_WRITEONLY AM_BASE_MEMBER(carpolo_state, m_alpharam)
+	AM_RANGE(0x4000, 0x400f) AM_WRITEONLY AM_BASE_MEMBER(carpolo_state, m_spriteram)
 	AM_RANGE(0x5400, 0x5403) AM_DEVREADWRITE("pia0", pia6821_r, pia6821_w)
 	AM_RANGE(0x5800, 0x5803) AM_DEVREADWRITE("pia1", pia6821_r, pia6821_w)
 	AM_RANGE(0xa000, 0xa000) AM_READ(carpolo_ball_screen_collision_cause_r)
@@ -332,8 +332,8 @@ static DRIVER_INIT( carpolo )
 
 
 	/* invert gfx PROM since the bits are active LO */
-	ROM = machine->region("gfx2")->base();
-	len = machine->region("gfx2")->bytes();
+	ROM = machine.region("gfx2")->base();
+	len = machine.region("gfx2")->bytes();
 	for (i = 0;i < len; i++)
 		ROM[i] ^= 0x0f;
 }

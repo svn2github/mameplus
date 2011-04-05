@@ -4,20 +4,16 @@ public:
 	pcktgal_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram;
-	int msm5205next;
-	int toggle;
-	tilemap_t *bg_tilemap;
-	UINT8 *spriteram;
-	size_t spriteram_size;
+	int m_msm5205next;
+	int m_toggle;
+	UINT8 *m_spriteram;
+	size_t m_spriteram_size;
 };
 
 
 /*----------- defined in video/pcktgal.c -----------*/
 
-WRITE8_HANDLER( pcktgal_videoram_w );
-WRITE8_HANDLER( pcktgal_flipscreen_w );
 
 PALETTE_INIT( pcktgal );
-VIDEO_START( pcktgal );
 SCREEN_UPDATE( pcktgal );
+SCREEN_UPDATE( pcktgalb );

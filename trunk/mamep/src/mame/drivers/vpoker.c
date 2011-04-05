@@ -118,22 +118,22 @@ public:
 	vpoker_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram;
-	UINT8 blit_ram[8];
+	UINT8 *m_videoram;
+	UINT8 m_blit_ram[8];
 };
 
 
 static VIDEO_START( vpoker )
 {
-	vpoker_state *state = machine->driver_data<vpoker_state>();
-	state->videoram = auto_alloc_array(machine, UINT8, 0x200);
+	vpoker_state *state = machine.driver_data<vpoker_state>();
+	state->m_videoram = auto_alloc_array(machine, UINT8, 0x200);
 }
 
 static SCREEN_UPDATE( vpoker )
 {
-	vpoker_state *state = screen->machine->driver_data<vpoker_state>();
-	UINT8 *videoram = state->videoram;
-	const gfx_element *gfx = screen->machine->gfx[0];
+	vpoker_state *state = screen->machine().driver_data<vpoker_state>();
+	UINT8 *videoram = state->m_videoram;
+	const gfx_element *gfx = screen->machine().gfx[0];
 	int count = 0x0000;
 
 	int y,x;
@@ -156,30 +156,30 @@ static SCREEN_UPDATE( vpoker )
 static READ8_HANDLER( blitter_r )
 {
 	if(offset == 6)
-		return input_port_read(space->machine, "IN0");
+		return input_port_read(space->machine(), "IN0");
 
 	return 0;
 }
 
 static WRITE8_HANDLER( blitter_w )
 {
-	vpoker_state *state = space->machine->driver_data<vpoker_state>();
-	UINT8 *videoram = state->videoram;
+	vpoker_state *state = space->machine().driver_data<vpoker_state>();
+	UINT8 *videoram = state->m_videoram;
 
-	state->blit_ram[offset] = data;
+	state->m_blit_ram[offset] = data;
 
 	if(offset == 2)
 	{
 		int blit_offs;
 
-		blit_offs = (state->blit_ram[1] & 0x01)<<8|(state->blit_ram[2] & 0xff);
+		blit_offs = (state->m_blit_ram[1] & 0x01)<<8|(state->m_blit_ram[2] & 0xff);
 
-		videoram[blit_offs] = state->blit_ram[0];
-//      printf("%02x %02x %02x %02x %02x %02x %02x %02x\n",state->blit_ram[0],state->blit_ram[1],state->blit_ram[2],state->blit_ram[3],state->blit_ram[4],state->blit_ram[5],state->blit_ram[6],state->blit_ram[7]);
+		videoram[blit_offs] = state->m_blit_ram[0];
+//      printf("%02x %02x %02x %02x %02x %02x %02x %02x\n",state->m_blit_ram[0],state->m_blit_ram[1],state->m_blit_ram[2],state->m_blit_ram[3],state->m_blit_ram[4],state->m_blit_ram[5],state->m_blit_ram[6],state->m_blit_ram[7]);
 	}
 }
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x3fff)
 	AM_RANGE(0x0000, 0x01ff) AM_RAM		/* vpoker has 0x100, 5acespkr has 0x200 */
 	AM_RANGE(0x0400, 0x0407) AM_DEVREADWRITE("6840ptm", ptm6840_read, ptm6840_write)
@@ -637,7 +637,7 @@ static PALETTE_INIT( vpoker )
 
 static WRITE_LINE_DEVICE_HANDLER( ptm_irq )
 {
-	cputag_set_input_line(device->machine, "maincpu", M6809_IRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
+	cputag_set_input_line(device->machine(), "maincpu", M6809_IRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ptm6840_interface ptm_intf =

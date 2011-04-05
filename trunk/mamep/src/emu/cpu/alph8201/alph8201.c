@@ -298,7 +298,7 @@ INLINE void M_UNDEFINED(alpha8201_state *cpustate)
 	mame_printf_debug("alpha8201:  cpustate->PC = %03x,  Unimplemented opcode = %02x\n", cpustate->PC-1, M_RDMEM(cpustate->PC-1));
 #endif
 #if BREAK_ON_UNKNOWN_OPCODE
-	debugger_break(cpustate->device->machine);
+	debugger_break(cpustate->device->machine());
 #endif
 }
 
@@ -311,7 +311,7 @@ INLINE void M_UNDEFINED2(alpha8201_state *cpustate)
 	mame_printf_debug("alpha8201:  cpustate->PC = %03x,  Unimplemented opcode = %02x,%02x\n", cpustate->PC-2, op,imm);
 #endif
 #if BREAK_ON_UNKNOWN_OPCODE
-	debugger_break(cpustate->device->machine);
+	debugger_break(cpustate->device->machine());
 #endif
 }
 
@@ -893,15 +893,15 @@ static CPU_GET_INFO( alpha8xxx )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 1;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 16;							break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_PROGRAM:	info->i = 8;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM: info->i = 10;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_PROGRAM: info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 8;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 6;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_IO:		info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 8;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 10;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 8;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 6;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 #if HANDLE_HALT_LINE
 		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_HALT:		info->i = cpustate->halt ? ASSERT_LINE : CLEAR_LINE; break;
 #endif

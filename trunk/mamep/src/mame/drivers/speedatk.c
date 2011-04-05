@@ -82,7 +82,7 @@ PS / PD :  key matrix
 
 #define MASTER_CLOCK XTAL_12MHz
 
-static UINT8 iox_key_matrix_calc(running_machine *machine, UINT8 p_side)
+static UINT8 iox_key_matrix_calc(running_machine &machine, UINT8 p_side)
 {
 	static const char *const keynames[] = { "P1_ROW0", "P1_ROW1", "P2_ROW0", "P2_ROW1" };
 
@@ -106,29 +106,29 @@ static UINT8 iox_key_matrix_calc(running_machine *machine, UINT8 p_side)
 
 static READ8_HANDLER( key_matrix_r )
 {
-	speedatk_state *state = space->machine->driver_data<speedatk_state>();
+	speedatk_state *state = space->machine().driver_data<speedatk_state>();
 
-	if(state->coin_impulse > 0)
+	if(state->m_coin_impulse > 0)
 	{
-		state->coin_impulse--;
+		state->m_coin_impulse--;
 		return 0x80;
 	}
 
-	if((input_port_read(space->machine,"COINS") & 1) || (input_port_read(space->machine,"COINS") & 2))
+	if((input_port_read(space->machine(),"COINS") & 1) || (input_port_read(space->machine(),"COINS") & 2))
 	{
-		state->coin_impulse = state->coin_settings;
-		state->coin_impulse--;
+		state->m_coin_impulse = state->m_coin_settings;
+		state->m_coin_impulse--;
 		return 0x80;
 	}
 
-	if(state->mux_data != 1 && state->mux_data != 2 && state->mux_data != 4)
+	if(state->m_mux_data != 1 && state->m_mux_data != 2 && state->m_mux_data != 4)
 		return 0xff; //unknown command
 
 	/* both side checks */
-	if(state->mux_data == 1)
+	if(state->m_mux_data == 1)
 	{
-		UINT8 p1_side = iox_key_matrix_calc(space->machine,0);
-		UINT8 p2_side = iox_key_matrix_calc(space->machine,2);
+		UINT8 p1_side = iox_key_matrix_calc(space->machine(),0);
+		UINT8 p2_side = iox_key_matrix_calc(space->machine(),2);
 
 		if(p1_side != 0)
 			return p1_side;
@@ -137,23 +137,23 @@ static READ8_HANDLER( key_matrix_r )
 	}
 
 	/* check individual input side */
-	return iox_key_matrix_calc(space->machine,(state->mux_data == 2) ? 0 : 2);
+	return iox_key_matrix_calc(space->machine(),(state->m_mux_data == 2) ? 0 : 2);
 }
 
 static WRITE8_HANDLER( key_matrix_w )
 {
-	speedatk_state *state = space->machine->driver_data<speedatk_state>();
+	speedatk_state *state = space->machine().driver_data<speedatk_state>();
 
-	state->mux_data = data;
+	state->m_mux_data = data;
 }
 
 /* Key matrix status,used for coin settings and I don't know what else... */
 static READ8_HANDLER( key_matrix_status_r )
 {
-	speedatk_state *state = space->machine->driver_data<speedatk_state>();
+	speedatk_state *state = space->machine().driver_data<speedatk_state>();
 
 	/* bit 0: busy flag,active low */
-	return (state->km_status & 0xfe) | 1;
+	return (state->m_km_status & 0xfe) | 1;
 }
 
 /*
@@ -169,24 +169,24 @@ a1
 */
 static WRITE8_HANDLER( key_matrix_status_w )
 {
-	speedatk_state *state = space->machine->driver_data<speedatk_state>();
+	speedatk_state *state = space->machine().driver_data<speedatk_state>();
 
-	state->km_status = data;
-	if((state->km_status & 0xf0) == 0x80) //coinage setting command
-		state->coin_settings = state->km_status & 0xf;
+	state->m_km_status = data;
+	if((state->m_km_status & 0xf0) == 0x80) //coinage setting command
+		state->m_coin_settings = state->m_km_status & 0xf;
 }
 
-static ADDRESS_MAP_START( speedatk_mem, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( speedatk_mem, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x8000) AM_READWRITE(key_matrix_r,key_matrix_w)
 	AM_RANGE(0x8001, 0x8001) AM_READWRITE(key_matrix_status_r,key_matrix_status_w)
 	AM_RANGE(0x8800, 0x8fff) AM_RAM
-	AM_RANGE(0xa000, 0xa3ff) AM_RAM_WRITE(speedatk_videoram_w) AM_BASE_MEMBER(speedatk_state, videoram)
-	AM_RANGE(0xb000, 0xb3ff) AM_RAM_WRITE(speedatk_colorram_w) AM_BASE_MEMBER(speedatk_state, colorram)
+	AM_RANGE(0xa000, 0xa3ff) AM_RAM_WRITE(speedatk_videoram_w) AM_BASE_MEMBER(speedatk_state, m_videoram)
+	AM_RANGE(0xb000, 0xb3ff) AM_RAM_WRITE(speedatk_colorram_w) AM_BASE_MEMBER(speedatk_state, m_colorram)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( speedatk_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( speedatk_io, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_WRITE(speedatk_6845_w) //h46505 address / data routing
 	AM_RANGE(0x24, 0x24) AM_WRITE(watchdog_reset_w)
@@ -307,9 +307,9 @@ static const mc6845_interface mc6845_intf =
 
 static WRITE8_DEVICE_HANDLER( speedatk_output_w )
 {
-	speedatk_state *state = device->machine->driver_data<speedatk_state>();
+	speedatk_state *state = device->machine().driver_data<speedatk_state>();
 
-	state->flip_scr = data & 0x80;
+	state->m_flip_scr = data & 0x80;
 
 	if((data & 0x7f) != 0x7f)
 		logerror("%02x\n",data);

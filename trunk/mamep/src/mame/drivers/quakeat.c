@@ -69,8 +69,8 @@ public:
 	quakeat_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	device_t	*pic8259_1;
-	device_t	*pic8259_2;
+	device_t	*m_pic8259_1;
+	device_t	*m_pic8259_2;
 };
 
 
@@ -83,11 +83,11 @@ static SCREEN_UPDATE(quake)
 	return 0;
 }
 
-static ADDRESS_MAP_START( quake_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( quake_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x0000ffff) AM_ROM AM_REGION("pc_bios", 0) /* BIOS */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( quake_io, ADDRESS_SPACE_IO, 32 )
+static ADDRESS_MAP_START( quake_io, AS_IO, 32 )
 //  AM_RANGE(0x0000, 0x001f) AM_DEVREADWRITE8("dma8237_1", dma8237_r, dma8237_w, 0xffffffff)
 	AM_RANGE(0x0020, 0x003f) AM_DEVREADWRITE8("pic8259_1", pic8259_r, pic8259_w, 0xffffffff)
 //  AM_RANGE(0x0040, 0x005f) AM_DEVREADWRITE8("pit8254", pit8253_r, pit8253_w, 0xffffffff)
@@ -114,7 +114,7 @@ ADDRESS_MAP_END
 
 static WRITE_LINE_DEVICE_HANDLER( quakeat_pic8259_1_set_int_line )
 {
-	cputag_set_input_line(device->machine, "maincpu", 0, state ? HOLD_LINE : CLEAR_LINE);
+	cputag_set_input_line(device->machine(), "maincpu", 0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 static const struct pic8259_interface quakeat_pic8259_1_config =
@@ -136,23 +136,23 @@ INPUT_PORTS_END
 
 static IRQ_CALLBACK(irq_callback)
 {
-	quakeat_state *state = device->machine->driver_data<quakeat_state>();
+	quakeat_state *state = device->machine().driver_data<quakeat_state>();
 	int r = 0;
-	r = pic8259_acknowledge( state->pic8259_2);
+	r = pic8259_acknowledge( state->m_pic8259_2);
 	if (r==0)
 	{
-		r = pic8259_acknowledge( state->pic8259_1);
+		r = pic8259_acknowledge( state->m_pic8259_1);
 	}
 	return r;
 }
 
 static MACHINE_START(quakeat)
 {
-	quakeat_state *state = machine->driver_data<quakeat_state>();
-	cpu_set_irq_callback(machine->device("maincpu"), irq_callback);
+	quakeat_state *state = machine.driver_data<quakeat_state>();
+	device_set_irq_callback(machine.device("maincpu"), irq_callback);
 
-	state->pic8259_1 = machine->device( "pic8259_1" );
-	state->pic8259_2 = machine->device( "pic8259_2" );
+	state->m_pic8259_1 = machine.device( "pic8259_1" );
+	state->m_pic8259_2 = machine.device( "pic8259_2" );
 }
 /*************************************************************/
 

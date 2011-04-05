@@ -61,15 +61,15 @@ public:
 		: driver_device(machine, config) { }
 
 	/* video-related */
-	tilemap_t  *m14_tilemap;
-	UINT8 *  video_ram;
-	UINT8 *  color_ram;
+	tilemap_t  *m_m14_tilemap;
+	UINT8 *  m_video_ram;
+	UINT8 *  m_color_ram;
 
 	/* input-related */
-	UINT8 hop_mux;
+	UINT8 m_hop_mux;
 
 	/* devices */
-	device_t *maincpu;
+	device_t *m_maincpu;
 };
 
 
@@ -99,10 +99,10 @@ static PALETTE_INIT( m14 )
 
 static TILE_GET_INFO( m14_get_tile_info )
 {
-	m14_state *state = machine->driver_data<m14_state>();
+	m14_state *state = machine.driver_data<m14_state>();
 
-	int code = state->video_ram[tile_index];
-	int color = state->color_ram[tile_index] & 0x0f;
+	int code = state->m_video_ram[tile_index];
+	int color = state->m_color_ram[tile_index] & 0x0f;
 
 	/* colorram & 0xf0 used but unknown purpose*/
 
@@ -115,34 +115,34 @@ static TILE_GET_INFO( m14_get_tile_info )
 
 static VIDEO_START( m14 )
 {
-	m14_state *state = machine->driver_data<m14_state>();
+	m14_state *state = machine.driver_data<m14_state>();
 
-	state->m14_tilemap = tilemap_create(machine, m14_get_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	state->m_m14_tilemap = tilemap_create(machine, m14_get_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
 }
 
 static SCREEN_UPDATE( m14 )
 {
-	m14_state *state = screen->machine->driver_data<m14_state>();
+	m14_state *state = screen->machine().driver_data<m14_state>();
 
-	tilemap_draw(bitmap, cliprect, state->m14_tilemap, 0, 0);
+	tilemap_draw(bitmap, cliprect, state->m_m14_tilemap, 0, 0);
 	return 0;
 }
 
 
 static WRITE8_HANDLER( m14_vram_w )
 {
-	m14_state *state = space->machine->driver_data<m14_state>();
+	m14_state *state = space->machine().driver_data<m14_state>();
 
-	state->video_ram[offset] = data;
-	tilemap_mark_tile_dirty(state->m14_tilemap, offset);
+	state->m_video_ram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_m14_tilemap, offset);
 }
 
 static WRITE8_HANDLER( m14_cram_w )
 {
-	m14_state *state = space->machine->driver_data<m14_state>();
+	m14_state *state = space->machine().driver_data<m14_state>();
 
-	state->color_ram[offset] = data;
-	tilemap_mark_tile_dirty(state->m14_tilemap, offset);
+	state->m_color_ram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_m14_tilemap, offset);
 }
 
 /*************************************
@@ -154,21 +154,21 @@ static WRITE8_HANDLER( m14_cram_w )
 static READ8_HANDLER( m14_rng_r )
 {
 	/* graphic artifacts happens if this doesn't return random values. */
-	return (space->machine->rand() & 0x0f) | 0xf0; /* | (input_port_read(space->machine, "IN1") & 0x80)*/;
+	return (space->machine().rand() & 0x0f) | 0xf0; /* | (input_port_read(space->machine(), "IN1") & 0x80)*/;
 }
 
 /* Here routes the hopper & the inputs */
 static READ8_HANDLER( input_buttons_r )
 {
-	m14_state *state = space->machine->driver_data<m14_state>();
+	m14_state *state = space->machine().driver_data<m14_state>();
 
-	if (state->hop_mux)
+	if (state->m_hop_mux)
 	{
-		state->hop_mux = 0;
+		state->m_hop_mux = 0;
 		return 0; //0x43 status bits
 	}
 	else
-		return input_port_read(space->machine, "IN0");
+		return input_port_read(space->machine(), "IN0");
 }
 
 #if 0
@@ -184,11 +184,11 @@ static WRITE8_HANDLER( test_w )
 
 static WRITE8_HANDLER( hopper_w )
 {
-	m14_state *state = space->machine->driver_data<m14_state>();
+	m14_state *state = space->machine().driver_data<m14_state>();
 
 	/* ---- x--- coin out */
 	/* ---- --x- hopper/input mux? */
-	state->hop_mux = data & 2;
+	state->m_hop_mux = data & 2;
 	//popmessage("%02x",data);
 }
 
@@ -198,14 +198,14 @@ static WRITE8_HANDLER( hopper_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( m14_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( m14_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x2000, 0x23ff) AM_RAM
-	AM_RANGE(0xe000, 0xe3ff) AM_RAM_WRITE(m14_vram_w) AM_BASE_MEMBER(m14_state, video_ram)
-	AM_RANGE(0xe400, 0xe7ff) AM_RAM_WRITE(m14_cram_w) AM_BASE_MEMBER(m14_state, color_ram)
+	AM_RANGE(0xe000, 0xe3ff) AM_RAM_WRITE(m14_vram_w) AM_BASE_MEMBER(m14_state, m_video_ram)
+	AM_RANGE(0xe400, 0xe7ff) AM_RAM_WRITE(m14_cram_w) AM_BASE_MEMBER(m14_state, m_color_ram)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( m14_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( m14_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0xf8, 0xf8) AM_READ_PORT("AN_PADDLE") AM_WRITENOP
 	AM_RANGE(0xf9, 0xf9) AM_READ(input_buttons_r) AM_WRITENOP
@@ -222,18 +222,18 @@ ADDRESS_MAP_END
 
 static INPUT_CHANGED( left_coin_inserted )
 {
-	m14_state *state = field->port->machine->driver_data<m14_state>();
+	m14_state *state = field->port->machine().driver_data<m14_state>();
 	/* left coin insertion causes a rst6.5 (vector 0x34) */
 	if (newval)
-		cpu_set_input_line(state->maincpu, I8085_RST65_LINE, HOLD_LINE);
+		device_set_input_line(state->m_maincpu, I8085_RST65_LINE, HOLD_LINE);
 }
 
 static INPUT_CHANGED( right_coin_inserted )
 {
-	m14_state *state = field->port->machine->driver_data<m14_state>();
+	m14_state *state = field->port->machine().driver_data<m14_state>();
 	/* right coin insertion causes a rst5.5 (vector 0x2c) */
 	if (newval)
-		cpu_set_input_line(state->maincpu, I8085_RST55_LINE, HOLD_LINE);
+		device_set_input_line(state->m_maincpu, I8085_RST55_LINE, HOLD_LINE);
 }
 
 static INPUT_PORTS_START( m14 )
@@ -308,24 +308,24 @@ GFXDECODE_END
 
 static INTERRUPT_GEN( m14_irq )
 {
-	cpu_set_input_line(device, I8085_RST75_LINE, ASSERT_LINE);
-	cpu_set_input_line(device, I8085_RST75_LINE, CLEAR_LINE);
+	device_set_input_line(device, I8085_RST75_LINE, ASSERT_LINE);
+	device_set_input_line(device, I8085_RST75_LINE, CLEAR_LINE);
 }
 
 static MACHINE_START( m14 )
 {
-	m14_state *state = machine->driver_data<m14_state>();
+	m14_state *state = machine.driver_data<m14_state>();
 
-	state->maincpu = machine->device("maincpu");
+	state->m_maincpu = machine.device("maincpu");
 
-	state->save_item(NAME(state->hop_mux));
+	state->save_item(NAME(state->m_hop_mux));
 }
 
 static MACHINE_RESET( m14 )
 {
-	m14_state *state = machine->driver_data<m14_state>();
+	m14_state *state = machine.driver_data<m14_state>();
 
-	state->hop_mux = 0;
+	state->m_hop_mux = 0;
 }
 
 

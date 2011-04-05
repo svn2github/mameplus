@@ -23,7 +23,9 @@ typedef struct _am2901
 
 typedef struct _vector_generator
 {
-	running_machine *machine;
+	running_machine &machine() const { assert(m_machine != NULL); return *m_machine; }
+
+	running_machine *m_machine;
 	UINT32 sreg;	  /* shift register */
 	UINT32 l1;		  /* latch 1 adder operand only */
 	UINT32 l2;		  /* latch 2 adder operand only */
@@ -81,16 +83,16 @@ public:
 	vertigo_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT16 *vectorram;
-	device_t *ttl74148;
-	attotime irq4_time;
-	UINT8 irq_state;
-	UINT8 adc_result;
-	vproc vs;
-	am2901 bsp;
-	vector_generator vgen;
-	UINT16 *vectorrom;
-	microcode mc[MC_LENGTH];
+	UINT16 *m_vectorram;
+	device_t *m_ttl74148;
+	attotime m_irq4_time;
+	UINT8 m_irq_state;
+	UINT8 m_adc_result;
+	vproc m_vs;
+	am2901 m_bsp;
+	vector_generator m_vgen;
+	UINT16 *m_vectorrom;
+	microcode m_mc[MC_LENGTH];
 };
 
 
@@ -114,7 +116,7 @@ MACHINE_RESET( vertigo );
 
 /*----------- defined in video/vertigo.c -----------*/
 
-void vertigo_vproc_init(running_machine *machine);
-void vertigo_vproc_reset(running_machine *machine);
-void vertigo_vproc(running_machine *machine, int cycles, int irq4);
+void vertigo_vproc_init(running_machine &machine);
+void vertigo_vproc_reset(running_machine &machine);
+void vertigo_vproc(running_machine &machine, int cycles, int irq4);
 

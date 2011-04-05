@@ -157,10 +157,10 @@ public:
 	expro02_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT16 vram_0_bank_num;
-	UINT16 vram_1_bank_num;
-	UINT8 *spriteram;
-	size_t spriteram_size;
+	UINT16 m_vram_0_bank_num;
+	UINT16 m_vram_1_bank_num;
+	UINT8 *m_spriteram;
+	size_t m_spriteram_size;
 };
 
 
@@ -310,7 +310,7 @@ static WRITE16_HANDLER( galsnew_6295_bankswitch_w )
 {
 	if (ACCESSING_BITS_8_15)
 	{
-		UINT8 *rom = space->machine->region("oki")->base();
+		UINT8 *rom = space->machine().region("oki")->base();
 		memcpy(&rom[0x30000],&rom[0x40000 + ((data >> 8) & 0x0f) * 0x10000],0x10000);
 	}
 }
@@ -323,16 +323,16 @@ static WRITE16_HANDLER( galsnew_6295_bankswitch_w )
 
 static WRITE16_HANDLER( galsnew_paletteram_w )
 {
-	data = COMBINE_DATA(&space->machine->generic.paletteram.u16[offset]);
-	palette_set_color_rgb(space->machine,offset,pal5bit(data >> 6),pal5bit(data >> 11),pal5bit(data >> 1));
+	data = COMBINE_DATA(&space->machine().generic.paletteram.u16[offset]);
+	palette_set_color_rgb(space->machine(),offset,pal5bit(data >> 6),pal5bit(data >> 11),pal5bit(data >> 1));
 }
 
 
 static WRITE16_HANDLER(galsnew_vram_0_bank_w)
 {
-	expro02_state *state = space->machine->driver_data<expro02_state>();
+	expro02_state *state = space->machine().driver_data<expro02_state>();
 	int i;
-	if(state->vram_0_bank_num != data)
+	if(state->m_vram_0_bank_num != data)
 	{
 		for(i = 0; i < 0x1000 / 2; i += 2)
 		{
@@ -341,15 +341,15 @@ static WRITE16_HANDLER(galsnew_vram_0_bank_w)
 				kaneko16_vram_0_w(space, i+1, data << 8, 0xFF00);
 			}
 		}
-		state->vram_0_bank_num = data;
+		state->m_vram_0_bank_num = data;
 	}
 }
 
 static WRITE16_HANDLER(galsnew_vram_1_bank_w)
 {
-	expro02_state *state = space->machine->driver_data<expro02_state>();
+	expro02_state *state = space->machine().driver_data<expro02_state>();
 	int i;
-	if(state->vram_1_bank_num != data)
+	if(state->m_vram_1_bank_num != data)
 	{
 		for(i = 0; i < 0x1000 / 2; i += 2)
 		{
@@ -358,7 +358,7 @@ static WRITE16_HANDLER(galsnew_vram_1_bank_w)
 				kaneko16_vram_1_w(space, i+1, data << 8, 0xFF00);
 			}
 		}
-		state->vram_1_bank_num = data;
+		state->m_vram_1_bank_num = data;
 	}
 }
 
@@ -368,7 +368,7 @@ static WRITE16_HANDLER(galsnew_vram_1_bank_w)
  *
  *************************************/
 
-static ADDRESS_MAP_START( galsnew_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( galsnew_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM // main program
 	AM_RANGE(0x080000, 0x0fffff) AM_ROM AM_REGION("user2",0) // other data
 	AM_RANGE(0x100000, 0x3fffff) AM_ROM AM_REGION("user1",0) // main data
@@ -387,7 +387,7 @@ static ADDRESS_MAP_START( galsnew_map, ADDRESS_SPACE_PROGRAM, 16 )
 
 	AM_RANGE(0x680000, 0x68001f) AM_RAM_WRITE(kaneko16_layers_0_regs_w) AM_BASE(&kaneko16_layers_0_regs) // sprite regs? tileregs?
 
-	AM_RANGE(0x700000, 0x700fff) AM_RAM AM_BASE_SIZE_MEMBER(expro02_state, spriteram, spriteram_size)	 // sprites? 0x72f words tested
+	AM_RANGE(0x700000, 0x700fff) AM_RAM AM_BASE_SIZE_MEMBER(expro02_state, m_spriteram, m_spriteram_size)	 // sprites? 0x72f words tested
 
 	AM_RANGE(0x780000, 0x78001f) AM_RAM_WRITE(kaneko16_sprites_regs_w) AM_BASE(&kaneko16_sprites_regs) // sprite regs? tileregs?
 
@@ -411,7 +411,7 @@ ADDRESS_MAP_END
 
 // bigger rom space, OKI commands moved
 //  no CALC mcu
-static ADDRESS_MAP_START( fantasia_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( fantasia_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x4fffff) AM_ROM
 	AM_RANGE(0x500000, 0x51ffff) AM_RAM AM_BASE(&galsnew_bg_pixram)
 	AM_RANGE(0x520000, 0x53ffff) AM_RAM AM_BASE(&galsnew_fg_pixram)
@@ -421,7 +421,7 @@ static ADDRESS_MAP_START( fantasia_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x583000, 0x583fff) AM_RAM AM_BASE(&kaneko16_vscroll_0)									//
 	AM_RANGE(0x600000, 0x600fff) AM_RAM_WRITE(galsnew_paletteram_w) AM_BASE_GENERIC(paletteram) // palette?
 	AM_RANGE(0x680000, 0x68001f) AM_RAM_WRITE(kaneko16_layers_0_regs_w) AM_BASE(&kaneko16_layers_0_regs) // sprite regs? tileregs?
-	AM_RANGE(0x700000, 0x700fff) AM_RAM AM_BASE_SIZE_MEMBER(expro02_state, spriteram, spriteram_size)	 // sprites? 0x72f words tested
+	AM_RANGE(0x700000, 0x700fff) AM_RAM AM_BASE_SIZE_MEMBER(expro02_state, m_spriteram, m_spriteram_size)	 // sprites? 0x72f words tested
 	AM_RANGE(0x780000, 0x78001f) AM_RAM_WRITE(kaneko16_sprites_regs_w) AM_BASE(&kaneko16_sprites_regs) // sprite regs? tileregs?
 	AM_RANGE(0x800000, 0x800001) AM_READ_PORT("DSW1")
 	AM_RANGE(0x800002, 0x800003) AM_READ_PORT("DSW2")
@@ -444,7 +444,7 @@ ADDRESS_MAP_END
 
 static INTERRUPT_GEN( galsnew_interrupt )
 {
-	cpu_set_input_line(device, cpu_getiloops(device) + 3, HOLD_LINE);	/* IRQs 5, 4, and 3 */
+	device_set_input_line(device, cpu_getiloops(device) + 3, HOLD_LINE);	/* IRQs 5, 4, and 3 */
 }
 
 static MACHINE_RESET( galsnew )
@@ -739,8 +739,8 @@ ROM_END
 
 static DRIVER_INIT(galsnew)
 {
-	UINT32 *src = (UINT32 *)machine->region("gfx3" )->base();
-	UINT32 *dst = (UINT32 *)machine->region("gfx2" )->base();
+	UINT32 *src = (UINT32 *)machine.region("gfx3" )->base();
+	UINT32 *dst = (UINT32 *)machine.region("gfx2" )->base();
 	int x, offset;
 
 

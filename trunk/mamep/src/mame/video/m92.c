@@ -46,16 +46,16 @@
 
 static TIMER_CALLBACK( spritebuffer_callback )
 {
-	m92_state *state = machine->driver_data<m92_state>();
-	state->sprite_buffer_busy = 1;
-	if (state->game_kludge!=2) /* Major Title 2 doesn't like this interrupt!? */
+	m92_state *state = machine.driver_data<m92_state>();
+	state->m_sprite_buffer_busy = 1;
+	if (state->m_game_kludge!=2) /* Major Title 2 doesn't like this interrupt!? */
 		m92_sprite_interrupt(machine);
 }
 
 WRITE16_HANDLER( m92_spritecontrol_w )
 {
-	m92_state *state = space->machine->driver_data<m92_state>();
-	COMBINE_DATA(&state->spritecontrol[offset]);
+	m92_state *state = space->machine().driver_data<m92_state>();
+	COMBINE_DATA(&state->m_spritecontrol[offset]);
 
 	/* Sprite list size register - used in spriteroutine */
 
@@ -63,9 +63,9 @@ WRITE16_HANDLER( m92_spritecontrol_w )
 	if (offset==2 && ACCESSING_BITS_0_7)
 	{
 		if ((data & 0xff) == 8)
-			state->sprite_list = (((0x100 - state->spritecontrol[0]) & 0xff) * 4);
+			state->m_sprite_list = (((0x100 - state->m_spritecontrol[0]) & 0xff) * 4);
 		else
-			state->sprite_list = 0x400;
+			state->m_sprite_list = 0x400;
 
 		/* Bit 0 is also significant */
 	}
@@ -74,19 +74,19 @@ WRITE16_HANDLER( m92_spritecontrol_w )
 	if (offset==4)
 	{
 			buffer_spriteram16_w(space,0,0,0xffff);
-		state->sprite_buffer_busy = 0;
+		state->m_sprite_buffer_busy = 0;
 
 		/* Pixel clock is 26.6666 MHz, we have 0x800 bytes, or 0x400 words
            to copy from spriteram to the buffer.  It seems safe to assume 1
            word can be copied per clock.*/
-		space->machine->scheduler().timer_set(attotime::from_hz(26666000) * 0x400, FUNC(spritebuffer_callback));
+		space->machine().scheduler().timer_set(attotime::from_hz(26666000) * 0x400, FUNC(spritebuffer_callback));
 	}
-//  logerror("%04x: m92_spritecontrol_w %08x %08x\n",cpu_get_pc(space->cpu),offset,data);
+//  logerror("%04x: m92_spritecontrol_w %08x %08x\n",cpu_get_pc(&space->device()),offset,data);
 }
 
 WRITE16_HANDLER( m92_videocontrol_w )
 {
-	m92_state *state = space->machine->driver_data<m92_state>();
+	m92_state *state = space->machine().driver_data<m92_state>();
 	/*
         Many games write:
             0x2000
@@ -103,34 +103,34 @@ WRITE16_HANDLER( m92_videocontrol_w )
 	if (ACCESSING_BITS_0_7)
 	{
 		/* Access to upper palette bank */
-		state->palette_bank = (data >> 1) & 1;
+		state->m_palette_bank = (data >> 1) & 1;
 	}
-//  logerror("%04x: m92_videocontrol_w %d = %02x\n",cpu_get_pc(space->cpu),offset,data);
+//  logerror("%04x: m92_videocontrol_w %d = %02x\n",cpu_get_pc(&space->device()),offset,data);
 }
 
 READ16_HANDLER( m92_paletteram_r )
 {
-	m92_state *state = space->machine->driver_data<m92_state>();
-	return space->machine->generic.paletteram.u16[offset + 0x400 * state->palette_bank];
+	m92_state *state = space->machine().driver_data<m92_state>();
+	return space->machine().generic.paletteram.u16[offset + 0x400 * state->m_palette_bank];
 }
 
 WRITE16_HANDLER( m92_paletteram_w )
 {
-	m92_state *state = space->machine->driver_data<m92_state>();
-	paletteram16_xBBBBBGGGGGRRRRR_word_w(space, offset + 0x400 * state->palette_bank, data, mem_mask);
+	m92_state *state = space->machine().driver_data<m92_state>();
+	paletteram16_xBBBBBGGGGGRRRRR_word_w(space, offset + 0x400 * state->m_palette_bank, data, mem_mask);
 }
 
 /*****************************************************************************/
 
 static TILE_GET_INFO( get_pf_tile_info )
 {
-	m92_state *state = machine->driver_data<m92_state>();
+	m92_state *state = machine.driver_data<m92_state>();
 	pf_layer_info *layer = (pf_layer_info *)param;
 	int tile, attrib;
 	tile_index = 2 * tile_index + layer->vram_base;
 
-	attrib = state->vram_data[tile_index + 1];
-	tile = state->vram_data[tile_index] + ((attrib & 0x8000) << 1);
+	attrib = state->m_vram_data[tile_index + 1];
+	tile = state->m_vram_data[tile_index] + ((attrib & 0x8000) << 1);
 
 	SET_TILE_INFO(
 			0,
@@ -146,20 +146,20 @@ static TILE_GET_INFO( get_pf_tile_info )
 
 WRITE16_HANDLER( m92_vram_w )
 {
-	m92_state *state = space->machine->driver_data<m92_state>();
+	m92_state *state = space->machine().driver_data<m92_state>();
 	int laynum;
 
-	COMBINE_DATA(&state->vram_data[offset]);
+	COMBINE_DATA(&state->m_vram_data[offset]);
 
 	for (laynum = 0; laynum < 3; laynum++)
 	{
-		if ((offset & 0x6000) == state->pf_layer[laynum].vram_base)
+		if ((offset & 0x6000) == state->m_pf_layer[laynum].vram_base)
 		{
-			tilemap_mark_tile_dirty(state->pf_layer[laynum].tmap, (offset & 0x1fff) / 2);
-			tilemap_mark_tile_dirty(state->pf_layer[laynum].wide_tmap, (offset & 0x3fff) / 2);
+			tilemap_mark_tile_dirty(state->m_pf_layer[laynum].tmap, (offset & 0x1fff) / 2);
+			tilemap_mark_tile_dirty(state->m_pf_layer[laynum].wide_tmap, (offset & 0x3fff) / 2);
 		}
-		if ((offset & 0x6000) == state->pf_layer[laynum].vram_base + 0x2000)
-			tilemap_mark_tile_dirty(state->pf_layer[laynum].wide_tmap, (offset & 0x3fff) / 2);
+		if ((offset & 0x6000) == state->m_pf_layer[laynum].vram_base + 0x2000)
+			tilemap_mark_tile_dirty(state->m_pf_layer[laynum].wide_tmap, (offset & 0x3fff) / 2);
 	}
 }
 
@@ -167,54 +167,54 @@ WRITE16_HANDLER( m92_vram_w )
 
 WRITE16_HANDLER( m92_pf1_control_w )
 {
-	m92_state *state = space->machine->driver_data<m92_state>();
-	COMBINE_DATA(&state->pf_layer[0].control[offset]);
+	m92_state *state = space->machine().driver_data<m92_state>();
+	COMBINE_DATA(&state->m_pf_layer[0].control[offset]);
 }
 
 WRITE16_HANDLER( m92_pf2_control_w )
 {
-	m92_state *state = space->machine->driver_data<m92_state>();
-	COMBINE_DATA(&state->pf_layer[1].control[offset]);
+	m92_state *state = space->machine().driver_data<m92_state>();
+	COMBINE_DATA(&state->m_pf_layer[1].control[offset]);
 }
 
 WRITE16_HANDLER( m92_pf3_control_w )
 {
-	m92_state *state = space->machine->driver_data<m92_state>();
-	COMBINE_DATA(&state->pf_layer[2].control[offset]);
+	m92_state *state = space->machine().driver_data<m92_state>();
+	COMBINE_DATA(&state->m_pf_layer[2].control[offset]);
 }
 
 WRITE16_HANDLER( m92_master_control_w )
 {
-	m92_state *state = space->machine->driver_data<m92_state>();
-	UINT16 old = state->pf_master_control[offset];
+	m92_state *state = space->machine().driver_data<m92_state>();
+	UINT16 old = state->m_pf_master_control[offset];
 	pf_layer_info *layer;
 
-	COMBINE_DATA(&state->pf_master_control[offset]);
+	COMBINE_DATA(&state->m_pf_master_control[offset]);
 
 	switch (offset)
 	{
 		case 0: /* Playfield 1 (top layer) */
 		case 1: /* Playfield 2 (middle layer) */
 		case 2: /* Playfield 3 (bottom layer) */
-			layer = &state->pf_layer[offset];
+			layer = &state->m_pf_layer[offset];
 
 			/* update VRAM base (bits 0-1) */
-			layer->vram_base = (state->pf_master_control[offset] & 3) * 0x2000;
+			layer->vram_base = (state->m_pf_master_control[offset] & 3) * 0x2000;
 
 			/* update size (bit 2) */
-			if (state->pf_master_control[offset] & 0x04)
+			if (state->m_pf_master_control[offset] & 0x04)
 			{
 				tilemap_set_enable(layer->tmap, FALSE);
-				tilemap_set_enable(layer->wide_tmap, (~state->pf_master_control[offset] >> 4) & 1);
+				tilemap_set_enable(layer->wide_tmap, (~state->m_pf_master_control[offset] >> 4) & 1);
 			}
 			else
 			{
-				tilemap_set_enable(layer->tmap, (~state->pf_master_control[offset] >> 4) & 1);
+				tilemap_set_enable(layer->tmap, (~state->m_pf_master_control[offset] >> 4) & 1);
 				tilemap_set_enable(layer->wide_tmap, FALSE);
 			}
 
 			/* mark everything dirty of the VRAM base or size changes */
-			if ((old ^ state->pf_master_control[offset]) & 0x07)
+			if ((old ^ state->m_pf_master_control[offset]) & 0x07)
 			{
 				tilemap_mark_all_tiles_dirty(layer->tmap);
 				tilemap_mark_all_tiles_dirty(layer->wide_tmap);
@@ -222,7 +222,7 @@ WRITE16_HANDLER( m92_master_control_w )
 			break;
 
 		case 3:
-			state->raster_irq_position = state->pf_master_control[3] - 128;
+			state->m_raster_irq_position = state->m_pf_master_control[3] - 128;
 			break;
 	}
 }
@@ -231,21 +231,21 @@ WRITE16_HANDLER( m92_master_control_w )
 
 VIDEO_START( m92 )
 {
-	m92_state *state = machine->driver_data<m92_state>();
+	m92_state *state = machine.driver_data<m92_state>();
 	int laynum;
 
-	memset(&state->pf_layer, 0, sizeof(state->pf_layer));
+	memset(&state->m_pf_layer, 0, sizeof(state->m_pf_layer));
 	for (laynum = 0; laynum < 3; laynum++)
 	{
-		pf_layer_info *layer = &state->pf_layer[laynum];
+		pf_layer_info *layer = &state->m_pf_layer[laynum];
 
 		/* allocate two tilemaps per layer, one normal, one wide */
 		layer->tmap = tilemap_create(machine, get_pf_tile_info, tilemap_scan_rows,  8,8, 64,64);
 		layer->wide_tmap = tilemap_create(machine, get_pf_tile_info, tilemap_scan_rows,  8,8, 128,64);
 
 		/* set the user data for each one to point to the layer */
-		tilemap_set_user_data(layer->tmap, &state->pf_layer[laynum]);
-		tilemap_set_user_data(layer->wide_tmap, &state->pf_layer[laynum]);
+		tilemap_set_user_data(layer->tmap, &state->m_pf_layer[laynum]);
+		tilemap_set_user_data(layer->wide_tmap, &state->m_pf_layer[laynum]);
 
 		/* set scroll offsets */
 		tilemap_set_scrolldx(layer->tmap, 2 * laynum, -2 * laynum + 8);
@@ -269,32 +269,32 @@ VIDEO_START( m92 )
 		state_save_register_item_array(machine, "layer", NULL, laynum, layer->control);
 	}
 
-	machine->generic.paletteram.u16 = auto_alloc_array(machine, UINT16, 0x1000/2);
+	machine.generic.paletteram.u16 = auto_alloc_array(machine, UINT16, 0x1000/2);
 
-	memset(machine->generic.spriteram.u16,0,0x800);
-	memset(machine->generic.buffered_spriteram.u16,0,0x800);
+	memset(machine.generic.spriteram.u16,0,0x800);
+	memset(machine.generic.buffered_spriteram.u16,0,0x800);
 
-	state->save_item(NAME(state->pf_master_control));
+	state->save_item(NAME(state->m_pf_master_control));
 
-	state->save_item(NAME(state->sprite_list));
-	state->save_item(NAME(state->raster_irq_position));
-	state->save_item(NAME(state->sprite_buffer_busy));
-	state->save_item(NAME(state->palette_bank));
+	state->save_item(NAME(state->m_sprite_list));
+	state->save_item(NAME(state->m_raster_irq_position));
+	state->save_item(NAME(state->m_sprite_buffer_busy));
+	state->save_item(NAME(state->m_palette_bank));
 
-	state_save_register_global_pointer(machine, machine->generic.paletteram.u16, 0x1000);
+	state_save_register_global_pointer(machine, machine.generic.paletteram.u16, 0x1000);
 }
 
 /*****************************************************************************/
 
-static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
-	m92_state *state = machine->driver_data<m92_state>();
-	UINT16 *buffered_spriteram16 = machine->generic.buffered_spriteram.u16;
+	m92_state *state = machine.driver_data<m92_state>();
+	UINT16 *buffered_spriteram16 = machine.generic.buffered_spriteram.u16;
 	int offs,k;
 
 	for (k=0; k<8; k++)
 	{
-		for (offs = 0; offs < state->sprite_list; )
+		for (offs = 0; offs < state->m_sprite_list; )
 		{
 			int x,y,sprite,colour,fx,fy,x_multi,y_multi,i,j,s_ptr,pri_back,pri_sprite;
 
@@ -332,35 +332,35 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 				for (i=0; i<y_multi; i++)
 				{
 					if (flip_screen_get(machine)) {
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
+						pdrawgfx_transpen(bitmap,cliprect,machine.gfx[1],
 								sprite + s_ptr,
 								colour,
 								!fx,!fy,
 								464-x,240-(y-i*16),
-								machine->priority_bitmap,pri_back,0);
+								machine.priority_bitmap,pri_back,0);
 
 						// wrap around x
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
+						pdrawgfx_transpen(bitmap,cliprect,machine.gfx[1],
 								sprite + s_ptr,
 								colour,
 								!fx,!fy,
 								464-x+512,240-(y-i*16),
-								machine->priority_bitmap,pri_back,0);
+								machine.priority_bitmap,pri_back,0);
 					} else {
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
+						pdrawgfx_transpen(bitmap,cliprect,machine.gfx[1],
 								sprite + s_ptr,
 								colour,
 								fx,fy,
 								x,y-i*16,
-								machine->priority_bitmap,pri_back,0);
+								machine.priority_bitmap,pri_back,0);
 
 						// wrap around x
-						pdrawgfx_transpen(bitmap,cliprect,machine->gfx[1],
+						pdrawgfx_transpen(bitmap,cliprect,machine.gfx[1],
 								sprite + s_ptr,
 								colour,
 								fx,fy,
 								x-512,y-i*16,
-								machine->priority_bitmap,pri_back,0);
+								machine.priority_bitmap,pri_back,0);
 					}
 					if (fy) s_ptr++; else s_ptr--;
 				}
@@ -373,9 +373,9 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 
 /*****************************************************************************/
 
-static void m92_update_scroll_positions(running_machine *machine)
+static void m92_update_scroll_positions(running_machine &machine)
 {
-	m92_state *state = machine->driver_data<m92_state>();
+	m92_state *state = machine.driver_data<m92_state>();
 	int laynum;
 	int i;
 
@@ -392,11 +392,11 @@ static void m92_update_scroll_positions(running_machine *machine)
 
     for (laynum = 0; laynum < 3; laynum++)
     {
-    	pf_layer_info *layer = &state->pf_layer[laynum];
+    	pf_layer_info *layer = &state->m_pf_layer[laynum];
 
-		if (state->pf_master_control[laynum] & 0x40)
+		if (state->m_pf_master_control[laynum] & 0x40)
 		{
-			const UINT16 *scrolldata = state->vram_data + (0xf400 + 0x400 * laynum) / 2;
+			const UINT16 *scrolldata = state->m_vram_data + (0xf400 + 0x400 * laynum) / 2;
 
 			tilemap_set_scroll_rows(layer->tmap, 512);
 			tilemap_set_scroll_rows(layer->wide_tmap, 512);
@@ -421,30 +421,30 @@ static void m92_update_scroll_positions(running_machine *machine)
 
 /*****************************************************************************/
 
-static void m92_screenrefresh(running_machine *machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void m92_screenrefresh(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
 {
-	m92_state *state = machine->driver_data<m92_state>();
-	bitmap_fill(machine->priority_bitmap, cliprect, 0);
+	m92_state *state = machine.driver_data<m92_state>();
+	bitmap_fill(machine.priority_bitmap, cliprect, 0);
 
-	if ((~state->pf_master_control[2] >> 4) & 1)
+	if ((~state->m_pf_master_control[2] >> 4) & 1)
 	{
-		tilemap_draw(bitmap, cliprect, state->pf_layer[2].wide_tmap, TILEMAP_DRAW_LAYER1, 0);
-		tilemap_draw(bitmap, cliprect, state->pf_layer[2].tmap,      TILEMAP_DRAW_LAYER1, 0);
-		tilemap_draw(bitmap, cliprect, state->pf_layer[2].wide_tmap, TILEMAP_DRAW_LAYER0, 1);
-		tilemap_draw(bitmap, cliprect, state->pf_layer[2].tmap,      TILEMAP_DRAW_LAYER0, 1);
+		tilemap_draw(bitmap, cliprect, state->m_pf_layer[2].wide_tmap, TILEMAP_DRAW_LAYER1, 0);
+		tilemap_draw(bitmap, cliprect, state->m_pf_layer[2].tmap,      TILEMAP_DRAW_LAYER1, 0);
+		tilemap_draw(bitmap, cliprect, state->m_pf_layer[2].wide_tmap, TILEMAP_DRAW_LAYER0, 1);
+		tilemap_draw(bitmap, cliprect, state->m_pf_layer[2].tmap,      TILEMAP_DRAW_LAYER0, 1);
 	}
 	else
 		bitmap_fill(bitmap, cliprect, 0);
 
-	tilemap_draw(bitmap, cliprect, state->pf_layer[1].wide_tmap, TILEMAP_DRAW_LAYER1, 0);
-	tilemap_draw(bitmap, cliprect, state->pf_layer[1].tmap,      TILEMAP_DRAW_LAYER1, 0);
-	tilemap_draw(bitmap, cliprect, state->pf_layer[1].wide_tmap, TILEMAP_DRAW_LAYER0, 1);
-	tilemap_draw(bitmap, cliprect, state->pf_layer[1].tmap,      TILEMAP_DRAW_LAYER0, 1);
+	tilemap_draw(bitmap, cliprect, state->m_pf_layer[1].wide_tmap, TILEMAP_DRAW_LAYER1, 0);
+	tilemap_draw(bitmap, cliprect, state->m_pf_layer[1].tmap,      TILEMAP_DRAW_LAYER1, 0);
+	tilemap_draw(bitmap, cliprect, state->m_pf_layer[1].wide_tmap, TILEMAP_DRAW_LAYER0, 1);
+	tilemap_draw(bitmap, cliprect, state->m_pf_layer[1].tmap,      TILEMAP_DRAW_LAYER0, 1);
 
-	tilemap_draw(bitmap, cliprect, state->pf_layer[0].wide_tmap, TILEMAP_DRAW_LAYER1, 0);
-	tilemap_draw(bitmap, cliprect, state->pf_layer[0].tmap,      TILEMAP_DRAW_LAYER1, 0);
-	tilemap_draw(bitmap, cliprect, state->pf_layer[0].wide_tmap, TILEMAP_DRAW_LAYER0, 1);
-	tilemap_draw(bitmap, cliprect, state->pf_layer[0].tmap,      TILEMAP_DRAW_LAYER0, 1);
+	tilemap_draw(bitmap, cliprect, state->m_pf_layer[0].wide_tmap, TILEMAP_DRAW_LAYER1, 0);
+	tilemap_draw(bitmap, cliprect, state->m_pf_layer[0].tmap,      TILEMAP_DRAW_LAYER1, 0);
+	tilemap_draw(bitmap, cliprect, state->m_pf_layer[0].wide_tmap, TILEMAP_DRAW_LAYER0, 1);
+	tilemap_draw(bitmap, cliprect, state->m_pf_layer[0].tmap,      TILEMAP_DRAW_LAYER0, 1);
 
 	draw_sprites(machine, bitmap, cliprect);
 }
@@ -452,13 +452,13 @@ static void m92_screenrefresh(running_machine *machine, bitmap_t *bitmap,const r
 
 SCREEN_UPDATE( m92 )
 {
-	m92_update_scroll_positions(screen->machine);
-	m92_screenrefresh(screen->machine, bitmap, cliprect);
+	m92_update_scroll_positions(screen->machine());
+	m92_screenrefresh(screen->machine(), bitmap, cliprect);
 
 	/* Flipscreen appears hardwired to the dipswitch - strange */
-	if (input_port_read(screen->machine, "DSW") & 0x100)
-		flip_screen_set(screen->machine, 0);
+	if (input_port_read(screen->machine(), "DSW") & 0x100)
+		flip_screen_set(screen->machine(), 0);
 	else
-		flip_screen_set(screen->machine, 1);
+		flip_screen_set(screen->machine(), 1);
 	return 0;
 }

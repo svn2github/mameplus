@@ -332,7 +332,7 @@ St.     Instr.       Comment
 */
 
 /* jamtable disassembler */
-static void jamtable_disasm(running_machine *machine, address_space *space,UINT32 address,UINT32 size) // 0xff000080 == fff00080
+static void jamtable_disasm(running_machine &machine, address_space *space,UINT32 address,UINT32 size) // 0xff000080 == fff00080
 {
 	UINT32 base,addr;
 	UINT32 opcode,op1,op2;
@@ -426,9 +426,9 @@ static void jamtable_disasm(running_machine *machine, address_space *space,UINT3
 	}
 }
 
-void jamtable_disasm_command(running_machine *machine, int ref, int params, const char **param)
+void jamtable_disasm_command(running_machine &machine, int ref, int params, const char **param)
 {
-	address_space *space=machine->firstcpu->space();
+	address_space *space=machine.firstcpu->space();
 	UINT64	addr,size;
 
 	if (params < 2)
@@ -552,12 +552,12 @@ static WRITE32_HANDLER( smbus_w )
 }
 
 
-static ADDRESS_MAP_START( xbox_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( xbox_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x07ffffff) AM_RAM
 	AM_RANGE(0xff000000, 0xffffffff) AM_ROM AM_REGION("bios", 0) AM_MIRROR(0x00f80000)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START(xbox_map_io, ADDRESS_SPACE_IO, 32)
+static ADDRESS_MAP_START(xbox_map_io, AS_IO, 32)
 	AM_RANGE(0x0cf8, 0x0cff) AM_DEVREADWRITE("pcibus", pci_32le_r, pci_32le_w)
 	AM_RANGE(0x8000, 0x80ff) AM_READWRITE(dummy_r, dummy_w)
 	AM_RANGE(0xc000, 0xc0ff) AM_READWRITE(smbus_r, smbus_w)
@@ -569,7 +569,7 @@ INPUT_PORTS_END
 static MACHINE_START( chihiro )
 {
 	smbus_register_device(0x45,smbus_cx25871);
-	if (machine->debug_flags & DEBUG_FLAG_ENABLED)
+	if (machine.debug_flags & DEBUG_FLAG_ENABLED)
 		debug_console_register_command(machine,"jamdis",CMDFLAG_NONE,0,2,3,jamtable_disasm_command);
 }
 

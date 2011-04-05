@@ -234,7 +234,7 @@ DONE? (check on real board)
 #include "sound/msm5205.h"
 #include "includes/stfight.h"
 
-static ADDRESS_MAP_START( cpu1_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( cpu1_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")                  /* sf02.bin */
 	AM_RANGE(0xc000, 0xc0ff) AM_RAM AM_BASE_GENERIC(paletteram)
@@ -249,14 +249,14 @@ static ADDRESS_MAP_START( cpu1_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xc700, 0xc700) AM_WRITE(stfight_coin_w)             /* coin mech */
 	AM_RANGE(0xc804, 0xc806) AM_WRITENOP                    /* TBD */
 	AM_RANGE(0xc807, 0xc807) AM_WRITE(stfight_sprite_bank_w)
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(stfight_text_char_w) AM_BASE_MEMBER(stfight_state, text_char_ram)
-	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(stfight_text_attr_w) AM_BASE_MEMBER(stfight_state, text_attr_ram)
-	AM_RANGE(0xd800, 0xd808) AM_WRITE(stfight_vh_latch_w) AM_BASE_MEMBER(stfight_state, vh_latch_ram)
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(stfight_text_char_w) AM_BASE_MEMBER(stfight_state, m_text_char_ram)
+	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(stfight_text_attr_w) AM_BASE_MEMBER(stfight_state, m_text_attr_ram)
+	AM_RANGE(0xd800, 0xd808) AM_WRITE(stfight_vh_latch_w) AM_BASE_MEMBER(stfight_state, m_vh_latch_ram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
-	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_MEMBER(stfight_state, sprite_ram)
+	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_MEMBER(stfight_state, m_sprite_ram)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( cpu2_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( cpu2_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ym1", ym2203_r, ym2203_w)
 	AM_RANGE(0xc800, 0xc801) AM_DEVREADWRITE("ym2", ym2203_r, ym2203_w)

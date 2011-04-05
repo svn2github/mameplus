@@ -60,7 +60,7 @@ public:
 	dambustr_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	int noise_data;
+	int m_noise_data;
 };
 
 
@@ -68,15 +68,15 @@ public:
 /* FIXME: Really needed? - Should be handled by either interface */
 static WRITE8_DEVICE_HANDLER( dambustr_noise_enable_w )
 {
-	dambustr_state *state = device->machine->driver_data<dambustr_state>();
-	if (data != state->noise_data) {
-		state->noise_data = data;
+	dambustr_state *state = device->machine().driver_data<dambustr_state>();
+	if (data != state->m_noise_data) {
+		state->m_noise_data = data;
 		galaxian_noise_enable_w(device, offset, data);
 	}
 }
 
 
-static ADDRESS_MAP_START( dambustr_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( dambustr_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 
 	AM_RANGE(0x8000, 0x8000) AM_WRITE(dambustr_bg_color_w)
@@ -205,9 +205,9 @@ static DRIVER_INIT(dambustr)
 {
 	int i, j, tmp;
 	int tmpram[16];
-	UINT8 *rom = machine->region("maincpu")->base();
-	UINT8 *usr = machine->region("user1")->base();
-	UINT8 *gfx = machine->region("gfx1")->base();
+	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *usr = machine.region("user1")->base();
+	UINT8 *gfx = machine.region("gfx1")->base();
 
 	// Bit swap addresses
 	for(i=0; i<4096*4; i++) {

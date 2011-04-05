@@ -38,11 +38,11 @@ static WRITE8_DEVICE_HANDLER( psg_4017_w )
 
 static WRITE8_HANDLER(nes_vh_sprite_dma_w)
 {
-	nes_state *state = space->machine->driver_data<nes_state>();
-	ppu2c0x_spriteram_dma(space, state->ppu, data);
+	nes_state *state = space->machine().driver_data<nes_state>();
+	ppu2c0x_spriteram_dma(space, state->m_ppu, data);
 }
 
-static ADDRESS_MAP_START( nes_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( nes_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_MIRROR(0x1800)					/* RAM */
 	AM_RANGE(0x2000, 0x3fff) AM_DEVREADWRITE("ppu", ppu2c0x_r, ppu2c0x_w)		/* PPU registers */
 	AM_RANGE(0x4000, 0x4013) AM_DEVREADWRITE("nessound", nes_psg_r, nes_psg_w)		/* PSG primary registers */
@@ -441,7 +441,7 @@ static const nes_interface nes_apu_interface =
 
 static void ppu_nmi(device_t *device, int *ppu_regs)
 {
-	cputag_set_input_line(device->machine, "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+	cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
 

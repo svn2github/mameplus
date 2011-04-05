@@ -403,7 +403,7 @@ static const _DrawTemplate DrawTile[]=
 int vrender0_ProcessPacket(device_t *device, UINT32 PacketPtr, UINT16 *Dest, UINT8 *TEXTURE)
 {
 	vr0video_state *vr0 = get_safe_token(device);
-	address_space *space = cpu_get_address_space(vr0->cpu, ADDRESS_SPACE_PROGRAM);
+	address_space *space = vr0->cpu->memory().space(AS_PROGRAM);
 	UINT32 Dx = Packet(1) & 0x3ff;
 	UINT32 Dy = Packet(2) & 0x1ff;
 	UINT32 Endx = Packet(3) & 0x3ff;
@@ -566,7 +566,7 @@ static DEVICE_START( vr0video )
 	vr0video_state *vr0 = get_safe_token(device);
 	const vr0video_interface *intf = get_interface(device);
 
-	vr0->cpu = device->machine->device(intf->cpu);
+	vr0->cpu = device->machine().device(intf->cpu);
 
 	device->save_item(NAME(vr0->InternalPalette));
 	device->save_item(NAME(vr0->LastPalUpdate));

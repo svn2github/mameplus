@@ -32,20 +32,20 @@ public:
 
 static READ16_HANDLER( unknown_read_0xc00000 )
 {
-	return space->machine->rand();
+	return space->machine().rand();
 }
 
 static READ16_HANDLER( unknown_read_0xd00000 )
 {
-	return space->machine->rand();
+	return space->machine().rand();
 }
 
 static READ16_HANDLER( unknown_read_0xffff00 )
 {
-	return space->machine->rand();
+	return space->machine().rand();
 }
 
-static ADDRESS_MAP_START( stepstag_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( stepstag_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM
 
@@ -74,11 +74,11 @@ ADDRESS_MAP_END
 
 static READ16_HANDLER( unknown_sub_read_0xbe0004 )
 {
-	return space->machine->rand();
+	return space->machine().rand();
 }
 
 
-static ADDRESS_MAP_START( stepstag_sub_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( stepstag_sub_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0xbe0004, 0xbe0005) AM_READ(unknown_sub_read_0xbe0004)
 ADDRESS_MAP_END

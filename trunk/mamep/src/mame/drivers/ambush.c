@@ -47,13 +47,13 @@
 
 static WRITE8_HANDLER( ambush_coin_counter_w )
 {
-	coin_counter_w(space->machine, 0, data & 0x01);
-	coin_counter_w(space->machine, 1, data & 0x02);
+	coin_counter_w(space->machine(), 0, data & 0x01);
+	coin_counter_w(space->machine(), 1, data & 0x02);
 }
 
 static WRITE8_HANDLER( flip_screen_w )
 {
-	flip_screen_set(space->machine, data);
+	flip_screen_set(space->machine(), data);
 }
 
 
@@ -63,23 +63,23 @@ static WRITE8_HANDLER( flip_screen_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0xa000, 0xa000) AM_READ(watchdog_reset_r)
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xc080, 0xc09f) AM_BASE_MEMBER(ambush_state, scrollram)
-	AM_RANGE(0xc100, 0xc1ff) AM_BASE_MEMBER(ambush_state, colorram)
-	AM_RANGE(0xc200, 0xc3ff) AM_BASE_SIZE_MEMBER(ambush_state, spriteram, spriteram_size)
-	AM_RANGE(0xc400, 0xc7ff) AM_BASE_SIZE_MEMBER(ambush_state, videoram, videoram_size)
+	AM_RANGE(0xc080, 0xc09f) AM_BASE_MEMBER(ambush_state, m_scrollram)
+	AM_RANGE(0xc100, 0xc1ff) AM_BASE_MEMBER(ambush_state, m_colorram)
+	AM_RANGE(0xc200, 0xc3ff) AM_BASE_SIZE_MEMBER(ambush_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc400, 0xc7ff) AM_BASE_SIZE_MEMBER(ambush_state, m_videoram, m_videoram_size)
 	AM_RANGE(0xc800, 0xc800) AM_READ_PORT("DSW1")
 	AM_RANGE(0xcc00, 0xcc03) AM_WRITENOP
 	AM_RANGE(0xcc04, 0xcc04) AM_WRITE(flip_screen_w)
-	AM_RANGE(0xcc05, 0xcc05) AM_WRITEONLY AM_BASE_MEMBER(ambush_state, colorbank)
+	AM_RANGE(0xcc05, 0xcc05) AM_WRITEONLY AM_BASE_MEMBER(ambush_state, m_colorbank)
 	AM_RANGE(0xcc07, 0xcc07) AM_WRITE(ambush_coin_counter_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( main_portmap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( main_portmap, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_DEVREADWRITE("ay1", ay8910_r, ay8910_address_w)
 	AM_RANGE(0x01, 0x01) AM_DEVWRITE("ay1", ay8910_data_w)

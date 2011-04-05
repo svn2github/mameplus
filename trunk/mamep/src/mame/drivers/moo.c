@@ -66,8 +66,8 @@ static const eeprom_interface eeprom_intf =
 
 static READ16_HANDLER( control2_r )
 {
-	moo_state *state = space->machine->driver_data<moo_state>();
-	return state->cur_control2;
+	moo_state *state = space->machine().driver_data<moo_state>();
+	return state->m_cur_control2;
 }
 
 static WRITE16_HANDLER( control2_w )
@@ -80,27 +80,27 @@ static WRITE16_HANDLER( control2_w )
 	/* bit 10 is watchdog */
 	/* bit 11 is enable irq 4 (unconfirmed) */
 
-	moo_state *state = space->machine->driver_data<moo_state>();
-	COMBINE_DATA(&state->cur_control2);
+	moo_state *state = space->machine().driver_data<moo_state>();
+	COMBINE_DATA(&state->m_cur_control2);
 
-	input_port_write(space->machine, "EEPROMOUT", state->cur_control2, 0xff);
+	input_port_write(space->machine(), "EEPROMOUT", state->m_cur_control2, 0xff);
 
 	if (data & 0x100)
-		k053246_set_objcha_line(state->k053246, ASSERT_LINE);
+		k053246_set_objcha_line(state->m_k053246, ASSERT_LINE);
 	else
-		k053246_set_objcha_line(state->k053246, CLEAR_LINE);
+		k053246_set_objcha_line(state->m_k053246, CLEAR_LINE);
 }
 
 
-static void moo_objdma( running_machine *machine, int type )
+static void moo_objdma( running_machine &machine, int type )
 {
-	moo_state *state = machine->driver_data<moo_state>();
+	moo_state *state = machine.driver_data<moo_state>();
 	int num_inactive;
 	UINT16 *src, *dst, zmask;
-	int counter = k053247_get_dy(state->k053246);
+	int counter = k053247_get_dy(state->m_k053246);
 
-	k053247_get_ram(state->k053246, &dst);
-	src = state->spriteram;
+	k053247_get_ram(state->m_k053246, &dst);
+	src = state->m_spriteram;
 	num_inactive = counter = 256;
 
 	zmask = (type) ? 0x00ff : 0xffff;
@@ -121,37 +121,37 @@ static void moo_objdma( running_machine *machine, int type )
 
 static TIMER_CALLBACK( dmaend_callback )
 {
-	moo_state *state = machine->driver_data<moo_state>();
-	if (state->cur_control2 & 0x800)
-		cpu_set_input_line(state->maincpu, 4, HOLD_LINE);
+	moo_state *state = machine.driver_data<moo_state>();
+	if (state->m_cur_control2 & 0x800)
+		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( moo_interrupt )
 {
-	moo_state *state = device->machine->driver_data<moo_state>();
-	if (k053246_is_irq_enabled(state->k053246))
+	moo_state *state = device->machine().driver_data<moo_state>();
+	if (k053246_is_irq_enabled(state->m_k053246))
 	{
-		moo_objdma(device->machine, state->game_type);
+		moo_objdma(device->machine(), state->m_game_type);
 
 		// schedule DMA end interrupt (delay shortened to catch up with V-blank)
-        state->dmaend_timer->adjust(attotime::from_usec(MOO_DMADELAY));
+        state->m_dmaend_timer->adjust(attotime::from_usec(MOO_DMADELAY));
 	}
 
 	// trigger V-blank interrupt
-	if (state->cur_control2 & 0x20)
-		cpu_set_input_line(device, 5, HOLD_LINE);
+	if (state->m_cur_control2 & 0x20)
+		device_set_input_line(device, 5, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( moobl_interrupt )
 {
-	moo_state *state = device->machine->driver_data<moo_state>();
-	moo_objdma(device->machine, state->game_type);
+	moo_state *state = device->machine().driver_data<moo_state>();
+	moo_objdma(device->machine(), state->m_game_type);
 
 	// schedule DMA end interrupt (delay shortened to catch up with V-blank)
-    state->dmaend_timer->adjust(attotime::from_usec(MOO_DMADELAY));
+    state->m_dmaend_timer->adjust(attotime::from_usec(MOO_DMADELAY));
 
 	// trigger V-blank interrupt
-	cpu_set_input_line(device, 5, HOLD_LINE);
+	device_set_input_line(device, 5, HOLD_LINE);
 }
 
 static WRITE16_HANDLER( sound_cmd1_w )
@@ -171,8 +171,8 @@ static WRITE16_HANDLER( sound_cmd2_w )
 
 static WRITE16_HANDLER( sound_irq_w )
 {
-	moo_state *state = space->machine->driver_data<moo_state>();
-	cpu_set_input_line(state->audiocpu, 0, HOLD_LINE);
+	moo_state *state = space->machine().driver_data<moo_state>();
+	device_set_input_line(state->m_audiocpu, 0, HOLD_LINE);
 }
 
 static READ16_HANDLER( sound_status_r )
@@ -182,7 +182,7 @@ static READ16_HANDLER( sound_status_r )
 
 static WRITE8_HANDLER( sound_bankswitch_w )
 {
-	memory_set_bankptr(space->machine, "bank1", space->machine->region("soundcpu")->base() + 0x10000 + (data&0xf)*0x4000);
+	memory_set_bankptr(space->machine(), "bank1", space->machine().region("soundcpu")->base() + 0x10000 + (data&0xf)*0x4000);
 }
 
 
@@ -192,28 +192,28 @@ static WRITE8_HANDLER( sound_bankswitch_w )
 /* of RAM, but they put 0x10000 there. The CPU can access them all. */
 static READ16_HANDLER( K053247_scattered_word_r )
 {
-	moo_state *state = space->machine->driver_data<moo_state>();
+	moo_state *state = space->machine().driver_data<moo_state>();
 
 	if (offset & 0x0078)
-		return state->spriteram[offset];
+		return state->m_spriteram[offset];
 	else
 	{
 		offset = (offset & 0x0007) | ((offset & 0x7f80) >> 4);
-		return k053247_word_r(state->k053246, offset, mem_mask);
+		return k053247_word_r(state->m_k053246, offset, mem_mask);
 	}
 }
 
 static WRITE16_HANDLER( K053247_scattered_word_w )
 {
-	moo_state *state = space->machine->driver_data<moo_state>();
+	moo_state *state = space->machine().driver_data<moo_state>();
 
 	if (offset & 0x0078)
-		COMBINE_DATA(state->spriteram + offset);
+		COMBINE_DATA(state->m_spriteram + offset);
 	else
 	{
 		offset = (offset & 0x0007) | ((offset & 0x7f80) >> 4);
 
-		k053247_word_w(state->k053246, offset, data, mem_mask);
+		k053247_word_w(state->m_k053246, offset, data, mem_mask);
 	}
 }
 
@@ -222,17 +222,17 @@ static WRITE16_HANDLER( K053247_scattered_word_w )
 
 static WRITE16_HANDLER( moo_prot_w )
 {
-	moo_state *state = space->machine->driver_data<moo_state>();
+	moo_state *state = space->machine().driver_data<moo_state>();
 	UINT32 src1, src2, dst, length, a, b, res;
 
-	COMBINE_DATA(&state->protram[offset]);
+	COMBINE_DATA(&state->m_protram[offset]);
 
 	if (offset == 0xc)	// trigger operation
 	{
-		src1 = (state->protram[1] & 0xff) << 16 | state->protram[0];
-		src2 = (state->protram[3] & 0xff) << 16 | state->protram[2];
-		dst = (state->protram[5] & 0xff) << 16 | state->protram[4];
-		length = state->protram[0xf];
+		src1 = (state->m_protram[1] & 0xff) << 16 | state->m_protram[0];
+		src2 = (state->m_protram[3] & 0xff) << 16 | state->m_protram[2];
+		dst = (state->m_protram[5] & 0xff) << 16 | state->m_protram[4];
+		length = state->m_protram[0xf];
 
 		while (length)
 		{
@@ -258,7 +258,7 @@ static WRITE16_DEVICE_HANDLER( moobl_oki_bank_w )
 	downcast<okim6295_device *>(device)->set_bank_base((data & 0x0f) * 0x40000);
 }
 
-static ADDRESS_MAP_START( moo_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( moo_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x0c0000, 0x0c003f) AM_DEVWRITE("k056832", k056832_word_w)
 	AM_RANGE(0x0c2000, 0x0c2007) AM_DEVWRITE("k053246", k053246_word_w)
@@ -280,8 +280,8 @@ static ADDRESS_MAP_START( moo_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x0dc002, 0x0dc003) AM_READ_PORT("IN1")
 	AM_RANGE(0x0de000, 0x0de001) AM_READWRITE(control2_r, control2_w)
 	AM_RANGE(0x100000, 0x17ffff) AM_ROM
-	AM_RANGE(0x180000, 0x18ffff) AM_RAM	AM_BASE_MEMBER(moo_state, workram)		/* Work RAM */
-	AM_RANGE(0x190000, 0x19ffff) AM_RAM AM_BASE_MEMBER(moo_state, spriteram)	/* Sprite RAM */
+	AM_RANGE(0x180000, 0x18ffff) AM_RAM	AM_BASE_MEMBER(moo_state, m_workram)		/* Work RAM */
+	AM_RANGE(0x190000, 0x19ffff) AM_RAM AM_BASE_MEMBER(moo_state, m_spriteram)	/* Sprite RAM */
 	AM_RANGE(0x1a0000, 0x1a1fff) AM_DEVREADWRITE("k056832", k056832_ram_word_r, k056832_ram_word_w)	/* Graphic planes */
 	AM_RANGE(0x1a2000, 0x1a3fff) AM_DEVREADWRITE("k056832", k056832_ram_word_r, k056832_ram_word_w)	/* Graphic planes mirror */
 	AM_RANGE(0x1b0000, 0x1b1fff) AM_DEVREAD("k056832", k056832_rom_word_r)	/* Passthrough to tile roms */
@@ -296,7 +296,7 @@ static ADDRESS_MAP_START( moo_map, ADDRESS_SPACE_PROGRAM, 16 )
 #endif
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( moobl_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( moobl_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x0c0000, 0x0c003f) AM_DEVWRITE("k056832", k056832_word_w)
 	AM_RANGE(0x0c2000, 0x0c2007) AM_DEVWRITE("k053246", k053246_word_w)
@@ -314,18 +314,18 @@ static ADDRESS_MAP_START( moobl_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x0dc002, 0x0dc003) AM_READ_PORT("IN1")
 	AM_RANGE(0x0de000, 0x0de001) AM_READWRITE(control2_r, control2_w)
 	AM_RANGE(0x100000, 0x17ffff) AM_ROM
-	AM_RANGE(0x180000, 0x18ffff) AM_RAM AM_BASE_MEMBER(moo_state, workram)		 /* Work RAM */
-	AM_RANGE(0x190000, 0x19ffff) AM_RAM AM_BASE_MEMBER(moo_state, spriteram)	 /* Sprite RAM */
+	AM_RANGE(0x180000, 0x18ffff) AM_RAM AM_BASE_MEMBER(moo_state, m_workram)		 /* Work RAM */
+	AM_RANGE(0x190000, 0x19ffff) AM_RAM AM_BASE_MEMBER(moo_state, m_spriteram)	 /* Sprite RAM */
 	AM_RANGE(0x1a0000, 0x1a1fff) AM_DEVREADWRITE("k056832", k056832_ram_word_r, k056832_ram_word_w) /* Graphic planes */
 	AM_RANGE(0x1a2000, 0x1a3fff) AM_DEVREADWRITE("k056832", k056832_ram_word_r, k056832_ram_word_w)	/* Graphic planes mirror */
 	AM_RANGE(0x1b0000, 0x1b1fff) AM_DEVREAD("k056832", k056832_rom_word_r)	/* Passthrough to tile roms */
 	AM_RANGE(0x1c0000, 0x1c1fff) AM_RAM_WRITE(paletteram16_xrgb_word_be_w) AM_BASE_GENERIC(paletteram)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( bucky_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( bucky_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x080000, 0x08ffff) AM_RAM
-	AM_RANGE(0x090000, 0x09ffff) AM_RAM AM_BASE_MEMBER(moo_state, spriteram)	/* Sprite RAM */
+	AM_RANGE(0x090000, 0x09ffff) AM_RAM AM_BASE_MEMBER(moo_state, m_spriteram)	/* Sprite RAM */
 	AM_RANGE(0x0a0000, 0x0affff) AM_RAM							/* extra sprite RAM? */
 	AM_RANGE(0x0c0000, 0x0c003f) AM_DEVWRITE("k056832", k056832_word_w)
 	AM_RANGE(0x0c2000, 0x0c2007) AM_DEVWRITE("k053246", k053246_word_w)
@@ -362,7 +362,7 @@ static ADDRESS_MAP_START( bucky_map, ADDRESS_SPACE_PROGRAM, 16 )
 #endif
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
@@ -431,43 +431,43 @@ INPUT_PORTS_END
 
 static MACHINE_START( moo )
 {
-	moo_state *state = machine->driver_data<moo_state>();
+	moo_state *state = machine.driver_data<moo_state>();
 
-	state->maincpu = machine->device("maincpu");
-	state->audiocpu = machine->device("soundcpu");
-	state->k054539 = machine->device("k054539");
-	state->k053246 = machine->device("k053246");
-	state->k053251 = machine->device("k053251");
-	state->k056832 = machine->device("k056832");
-	state->k054338 = machine->device("k054338");
+	state->m_maincpu = machine.device("maincpu");
+	state->m_audiocpu = machine.device("soundcpu");
+	state->m_k054539 = machine.device("k054539");
+	state->m_k053246 = machine.device("k053246");
+	state->m_k053251 = machine.device("k053251");
+	state->m_k056832 = machine.device("k056832");
+	state->m_k054338 = machine.device("k054338");
 
-	state->save_item(NAME(state->cur_control2));
-	state->save_item(NAME(state->alpha_enabled));
-	state->save_item(NAME(state->sprite_colorbase));
-	state->save_item(NAME(state->layer_colorbase));
-	state->save_item(NAME(state->layerpri));
-	state->save_item(NAME(state->protram));
+	state->save_item(NAME(state->m_cur_control2));
+	state->save_item(NAME(state->m_alpha_enabled));
+	state->save_item(NAME(state->m_sprite_colorbase));
+	state->save_item(NAME(state->m_layer_colorbase));
+	state->save_item(NAME(state->m_layerpri));
+	state->save_item(NAME(state->m_protram));
 
-    state->dmaend_timer = machine->scheduler().timer_alloc(FUNC(dmaend_callback));
+    state->m_dmaend_timer = machine.scheduler().timer_alloc(FUNC(dmaend_callback));
 }
 
 static MACHINE_RESET( moo )
 {
-	moo_state *state = machine->driver_data<moo_state>();
+	moo_state *state = machine.driver_data<moo_state>();
 	int i;
 
 	for (i = 0; i < 16; i++)
-		state->protram[i] = 0;
+		state->m_protram[i] = 0;
 
 	for (i = 0; i < 4; i++)
-		state->layer_colorbase[i] = 0;
+		state->m_layer_colorbase[i] = 0;
 
 	for (i = 0; i < 3; i++)
-		state->layerpri[i] = 0;
+		state->m_layerpri[i] = 0;
 
-	state->cur_control2 = 0;
-	state->alpha_enabled = 0;
-	state->sprite_colorbase = 0;
+	state->m_cur_control2 = 0;
+	state->m_alpha_enabled = 0;
+	state->m_sprite_colorbase = 0;
 }
 
 static const k056832_interface moo_k056832_intf =
@@ -915,8 +915,8 @@ ROM_END
 
 static DRIVER_INIT( moo )
 {
-	moo_state *state = machine->driver_data<moo_state>();
-	state->game_type = (!strcmp(machine->gamedrv->name, "bucky") || !strcmp(machine->gamedrv->name, "buckyua"));
+	moo_state *state = machine.driver_data<moo_state>();
+	state->m_game_type = (!strcmp(machine.system().name, "bucky") || !strcmp(machine.system().name, "buckyua"));
 }
 
 

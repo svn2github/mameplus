@@ -93,44 +93,44 @@ public:
 		: driver_device(machine, config) { }
 
 	/* controls related */
-	int power;
-	int max_power;
-	int input_power;
-	int previous_power;
-	int cnt;
+	int m_power;
+	int m_max_power;
+	int m_input_power;
+	int m_previous_power;
+	int m_cnt;
 
-	UINT32 adpcm_pos;
-	UINT8 adpcm_idle;
-	UINT8 trigger;
-	UINT8 adpcm_data;
+	UINT32 m_adpcm_pos;
+	UINT8 m_adpcm_idle;
+	UINT8 m_trigger;
+	UINT8 m_adpcm_data;
 };
 
 static WRITE8_HANDLER(controls_w)
 {
     if(!data)
     {
-        pachifev_state *state = space->machine->driver_data<pachifev_state>();
+        pachifev_state *state = space->machine().driver_data<pachifev_state>();
 
         /*end of input read*/
-        state->power=0;
-        state->max_power=state->input_power;
-        if(--state->cnt <= 0) /* why to do it N times? no idea.. someone should fix it */
+        state->m_power=0;
+        state->m_max_power=state->m_input_power;
+        if(--state->m_cnt <= 0) /* why to do it N times? no idea.. someone should fix it */
         {
-            state->cnt=0;
-            state->input_power=0;
+            state->m_cnt=0;
+            state->m_input_power=0;
         }
     }
 }
 
 static READ8_HANDLER(controls_r)
 {
-    pachifev_state *state = space->machine->driver_data<pachifev_state>();
-    int output_bit=(state->power < state->max_power)?0:1;
-    ++state->power;
+    pachifev_state *state = space->machine().driver_data<pachifev_state>();
+    int output_bit=(state->m_power < state->m_max_power)?0:1;
+    ++state->m_power;
     return output_bit;
 }
 
-static ADDRESS_MAP_START( pachifev_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( pachifev_map, AS_PROGRAM, 8 )
     AM_RANGE(0x0000, 0xdfff) AM_ROM
 
     AM_RANGE(0xe000, 0xe7ff) AM_RAM
@@ -150,7 +150,7 @@ static ADDRESS_MAP_START( pachifev_map, ADDRESS_SPACE_PROGRAM, 8 )
     AM_RANGE(0xfffc, 0xffff) AM_NOP /* nmi */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( pachifev_cru, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( pachifev_cru, AS_IO, 8 )
     AM_RANGE(0x000, 0x000) AM_READ(controls_r)
 ADDRESS_MAP_END
 
@@ -250,26 +250,26 @@ INPUT_PORTS_END
 
 static void pf_adpcm_int(device_t *device)
 {
-	pachifev_state *state = device->machine->driver_data<pachifev_state>();
+	pachifev_state *state = device->machine().driver_data<pachifev_state>();
 
-    if (state->adpcm_pos >= 0x4000 || state->adpcm_idle)
+    if (state->m_adpcm_pos >= 0x4000 || state->m_adpcm_idle)
     {
-        state->adpcm_idle = 1;
+        state->m_adpcm_idle = 1;
         msm5205_reset_w(device,1);
-        state->trigger = 0;
+        state->m_trigger = 0;
     }
     else
     {
-        UINT8 *ROM = device->machine->region("adpcm")->base();
+        UINT8 *ROM = device->machine().region("adpcm")->base();
 
-        state->adpcm_data = ((state->trigger ? (ROM[state->adpcm_pos] & 0x0f) : (ROM[state->adpcm_pos] & 0xf0)>>4) );
-        msm5205_data_w(device,state->adpcm_data & 0xf);
-        state->trigger^=1;
-        if(state->trigger == 0)
+        state->m_adpcm_data = ((state->m_trigger ? (ROM[state->m_adpcm_pos] & 0x0f) : (ROM[state->m_adpcm_pos] & 0xf0)>>4) );
+        msm5205_data_w(device,state->m_adpcm_data & 0xf);
+        state->m_trigger^=1;
+        if(state->m_trigger == 0)
         {
-            state->adpcm_pos++;
-            if((ROM[state->adpcm_pos] & 0xff) == 0xff)
-              state->adpcm_idle = 1;
+            state->m_adpcm_pos++;
+            if((ROM[state->m_adpcm_pos] & 0xff) == 0xff)
+              state->m_adpcm_idle = 1;
         }
     }
 }
@@ -284,50 +284,50 @@ static const msm5205_interface msm5205_config =
 
 static MACHINE_RESET( pachifev )
 {
-    pachifev_state *state = machine->driver_data<pachifev_state>();
+    pachifev_state *state = machine.driver_data<pachifev_state>();
 
-    state->power=0;
-    state->max_power=0;
-    state->input_power=0;
-    state->previous_power=0;
-    state->cnt=0;
+    state->m_power=0;
+    state->m_max_power=0;
+    state->m_input_power=0;
+    state->m_previous_power=0;
+    state->m_cnt=0;
 
 #if USE_MSM
-    state->adpcm_pos = 0;
+    state->m_adpcm_pos = 0;
 #endif
 }
 
 
 static INTERRUPT_GEN( pachifev_vblank_irq )
 {
-    TMS9928A_interrupt(device->machine);
+    TMS9928A_interrupt(device->machine());
 
     {
 		static const char *const inname[2] = { "PLUNGER_P1", "PLUNGER_P2" };
-        pachifev_state *state = device->machine->driver_data<pachifev_state>();
+        pachifev_state *state = device->machine().driver_data<pachifev_state>();
 
 		/* I wish I had found a better way to handle cocktail inputs, but I can't find a way to access internal RAM */
 		/* (bit 5 of 0xf0aa : 0 = player 1 and 1 = player 2 - bit 6 of 0xf0aa : 0 = upright and 1 = cocktail). */
 		/* All I found is that in main RAM, 0xe00f.b determines the player : 0x00 = player 1 and 0x01 = player 2. */
-		address_space *ramspace = cpu_get_address_space(device, ADDRESS_SPACE_PROGRAM);
+		address_space *ramspace = device->memory().space(AS_PROGRAM);
 		UINT8 player = 0;
 
-		if ((ramspace->read_byte(0xe00f) == 0x01) && ((input_port_read(device->machine, "DSW1") & 0x08) == 0x00))
+		if ((ramspace->read_byte(0xe00f) == 0x01) && ((input_port_read(device->machine(), "DSW1") & 0x08) == 0x00))
 			player = 1;
 
-        int current_power=input_port_read(device->machine, inname[player]) & 0x3f;
-        if(current_power != state->previous_power)
+        int current_power=input_port_read(device->machine(), inname[player]) & 0x3f;
+        if(current_power != state->m_previous_power)
         {
             popmessage    ("%d%%", (current_power * 100) / 0x3f);
         }
 
-        if( (!current_power) && (state->previous_power) )
+        if( (!current_power) && (state->m_previous_power) )
         {
-            state->input_power=state->previous_power;
-            state->cnt=NUM_PLUNGER_REPEATS;
+            state->m_input_power=state->m_previous_power;
+            state->m_cnt=NUM_PLUNGER_REPEATS;
         }
 
-        state->previous_power=current_power;
+        state->m_previous_power=current_power;
     }
 
 }
@@ -345,13 +345,13 @@ static MACHINE_START( pachifev)
     /* configure VDP */
     TMS9928A_configure(&tms9928a_interface);
     {
-        pachifev_state *state = machine->driver_data<pachifev_state>();
+        pachifev_state *state = machine.driver_data<pachifev_state>();
 
-        state->save_item(NAME(state->power));
-        state->save_item(NAME(state->max_power));
-        state->save_item(NAME(state->input_power));
-        state->save_item(NAME(state->previous_power));
-        state->save_item(NAME(state->cnt));
+        state->save_item(NAME(state->m_power));
+        state->save_item(NAME(state->m_max_power));
+        state->save_item(NAME(state->m_input_power));
+        state->save_item(NAME(state->m_previous_power));
+        state->save_item(NAME(state->m_cnt));
     }
 }
 

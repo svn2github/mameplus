@@ -112,31 +112,31 @@ const int DEBUG_FLAG_OSD_ENABLED	= 0x00001000;		// The OSD debugger is enabled
 
 // macros to wrap legacy callbacks
 #define MACHINE_START_NAME(name)	machine_start_##name
-#define MACHINE_START(name)			void MACHINE_START_NAME(name)(running_machine *machine)
+#define MACHINE_START(name)			void MACHINE_START_NAME(name)(running_machine &machine)
 #define MACHINE_START_CALL(name)	MACHINE_START_NAME(name)(machine)
 
 #define MACHINE_RESET_NAME(name)	machine_reset_##name
-#define MACHINE_RESET(name)			void MACHINE_RESET_NAME(name)(running_machine *machine)
+#define MACHINE_RESET(name)			void MACHINE_RESET_NAME(name)(running_machine &machine)
 #define MACHINE_RESET_CALL(name)	MACHINE_RESET_NAME(name)(machine)
 
 #define SOUND_START_NAME(name)		sound_start_##name
-#define SOUND_START(name)			void SOUND_START_NAME(name)(running_machine *machine)
+#define SOUND_START(name)			void SOUND_START_NAME(name)(running_machine &machine)
 #define SOUND_START_CALL(name)		SOUND_START_NAME(name)(machine)
 
 #define SOUND_RESET_NAME(name)		sound_reset_##name
-#define SOUND_RESET(name)			void SOUND_RESET_NAME(name)(running_machine *machine)
+#define SOUND_RESET(name)			void SOUND_RESET_NAME(name)(running_machine &machine)
 #define SOUND_RESET_CALL(name)		SOUND_RESET_NAME(name)(machine)
 
 #define VIDEO_START_NAME(name)		video_start_##name
-#define VIDEO_START(name)			void VIDEO_START_NAME(name)(running_machine *machine)
+#define VIDEO_START(name)			void VIDEO_START_NAME(name)(running_machine &machine)
 #define VIDEO_START_CALL(name)		VIDEO_START_NAME(name)(machine)
 
 #define VIDEO_RESET_NAME(name)		video_reset_##name
-#define VIDEO_RESET(name)			void VIDEO_RESET_NAME(name)(running_machine *machine)
+#define VIDEO_RESET(name)			void VIDEO_RESET_NAME(name)(running_machine &machine)
 #define VIDEO_RESET_CALL(name)		VIDEO_RESET_NAME(name)(machine)
 
 #define PALETTE_INIT_NAME(name)		palette_init_##name
-#define PALETTE_INIT(name)			void PALETTE_INIT_NAME(name)(running_machine *machine, const UINT8 *color_prom)
+#define PALETTE_INIT(name)			void PALETTE_INIT_NAME(name)(running_machine &machine, const UINT8 *color_prom)
 #define PALETTE_INIT_CALL(name)		PALETTE_INIT_NAME(name)(machine, color_prom)
 
 
@@ -153,11 +153,11 @@ const int DEBUG_FLAG_OSD_ENABLED	= 0x00001000;		// The OSD debugger is enabled
 
 
 // global allocation helpers
-#define auto_alloc(m, t)				pool_alloc(static_cast<running_machine *>(m)->m_respool, t)
-#define auto_alloc_clear(m, t)			pool_alloc_clear(static_cast<running_machine *>(m)->m_respool, t)
-#define auto_alloc_array(m, t, c)		pool_alloc_array(static_cast<running_machine *>(m)->m_respool, t, c)
-#define auto_alloc_array_clear(m, t, c)	pool_alloc_array_clear(static_cast<running_machine *>(m)->m_respool, t, c)
-#define auto_free(m, v)					pool_free(static_cast<running_machine *>(m)->m_respool, v)
+#define auto_alloc(m, t)				pool_alloc(static_cast<running_machine &>(m).respool(), t)
+#define auto_alloc_clear(m, t)			pool_alloc_clear(static_cast<running_machine &>(m).respool(), t)
+#define auto_alloc_array(m, t, c)		pool_alloc_array(static_cast<running_machine &>(m).respool(), t, c)
+#define auto_alloc_array_clear(m, t, c)	pool_alloc_array_clear(static_cast<running_machine &>(m).respool(), t, c)
+#define auto_free(m, v)					pool_free(static_cast<running_machine &>(m).respool(), v)
 
 #define auto_bitmap_alloc(m, w, h, f)	auto_alloc(m, bitmap_t(w, h, f))
 #define auto_strdup(m, s)				strcpy(auto_alloc_array(m, char, strlen(s) + 1), s)
@@ -186,19 +186,14 @@ typedef struct _input_private input_private;
 typedef struct _input_port_private input_port_private;
 typedef struct _ui_input_private ui_input_private;
 typedef struct _debugcpu_private debugcpu_private;
-typedef struct _debugvw_private debugvw_private;
 typedef struct _generic_machine_private generic_machine_private;
 typedef struct _generic_video_private generic_video_private;
 typedef struct _generic_audio_private generic_audio_private;
 
 
-// template specializations
-typedef tagged_list<memory_region> region_list;
-
-
 // legacy callback functions
-typedef void   (*legacy_callback_func)(running_machine *machine);
-typedef void   (*palette_init_func)(running_machine *machine, const UINT8 *color_prom);
+typedef void   (*legacy_callback_func)(running_machine &machine);
+typedef void   (*palette_init_func)(running_machine &machine, const UINT8 *color_prom);
 
 
 
@@ -315,15 +310,50 @@ class running_machine : public bindable_object
 {
 	DISABLE_COPYING(running_machine);
 
-	friend void debugger_init(running_machine *machine);
+	friend void debugger_init(running_machine &machine);
+	friend class sound_manager;
 
 	typedef void (*notify_callback)(running_machine &machine);
 	typedef void (*logerror_callback)(running_machine &machine, const char *string);
+
+	// must be at top of member variables
+	resource_pool			m_respool;				// pool of resources for this machine
 
 public:
 	// construction/destruction
 	running_machine(const machine_config &config, osd_interface &osd, bool exit_to_game_select = false);
 	~running_machine();
+
+	// getters
+	const machine_config &config() const { return m_config; }
+	const game_driver &system() const { return m_system; }
+	osd_interface &osd() const { return m_osd; }
+	resource_pool &respool() { return m_respool; }
+	device_scheduler &scheduler() { return m_scheduler; }
+	state_manager &state() { return m_state; }
+	cheat_manager &cheat() const { assert(m_cheat != NULL); return *m_cheat; }
+	render_manager &render() const { assert(m_render != NULL); return *m_render; }
+	sound_manager &sound() const { assert(m_sound != NULL); return *m_sound; }
+	video_manager &video() const { assert(m_video != NULL); return *m_video; }
+	debug_view_manager &debug_view() const { assert(m_debug_view != NULL); return *m_debug_view; }
+	driver_device *driver_data() const { return m_driver_device; }
+	template<class T> T *driver_data() const { return downcast<T *>(m_driver_device); }
+	machine_phase phase() const { return m_current_phase; }
+	bool paused() const { return m_paused || (m_current_phase != MACHINE_PHASE_RUNNING); }
+	bool exit_pending() const { return m_exit_pending; }
+	bool new_driver_pending() const { return (m_new_driver_pending != NULL); }
+	const char *new_driver_name() const { return m_new_driver_pending->name; }
+	bool ui_active() const { return m_ui_active; }
+	const char *basename() const { return m_basename; }
+	int sample_rate() const { return m_sample_rate; }
+	bool save_or_load_pending() const { return m_saveload_pending_file; }
+	screen_device *first_screen() const { return primary_screen; }
+
+	// additional helpers
+	emu_options &options() const { return m_config.options(); }
+	memory_region *first_region() const { return m_regionlist.first(); }
+	attotime time() const { return m_scheduler.time(); }
+	bool scheduled_event_pending() const { return m_exit_pending || m_hard_reset_pending; }
 
 	// fetch items by name
 	inline device_t *device(const char *tag);
@@ -334,22 +364,6 @@ public:
 	// configuration helpers
 	UINT32 total_colors() const { return m_config.m_total_colors; }
 
-	// getters
-	const char *basename() const { return m_basename; }
-	emu_options &options() const { return m_config.options(); }
-	machine_phase phase() const { return m_current_phase; }
-	bool paused() const { return m_paused || (m_current_phase != MACHINE_PHASE_RUNNING); }
-	bool scheduled_event_pending() const { return m_exit_pending || m_hard_reset_pending; }
-	bool save_or_load_pending() const { return (m_saveload_pending_file); }
-	bool exit_pending() const { return m_exit_pending; }
-	bool new_driver_pending() const { return (m_new_driver_pending != NULL); }
-	const char *new_driver_name() const { return m_new_driver_pending->name; }
-	state_manager &state() { return m_state; }
-	device_scheduler &scheduler() { return m_scheduler; }
-	osd_interface &osd() const { return m_osd; }
-	screen_device *first_screen() const { return primary_screen; }
-	attotime time() const { return m_scheduler.time(); }
-
 	// immediate operations
 	int run(bool firstrun);
 	void pause();
@@ -357,6 +371,7 @@ public:
 	void add_notifier(machine_notification event, notify_callback callback);
 	void call_notifiers(machine_notification which);
 	void add_logerror_callback(logerror_callback callback);
+	void set_ui_active(bool active) { m_ui_active = active; }
 
 	// scheduled operations
 	void schedule_exit();
@@ -374,13 +389,6 @@ public:
 	memory_region *region_alloc(const char *name, UINT32 length, UINT8 width, endianness_t endian);
 	void region_free(const char *name);
 
-	// managers
-	cheat_manager &cheat() const { assert(m_cheat != NULL); return *m_cheat; }
-	render_manager &render() const { assert(m_render != NULL); return *m_render; }
-	sound_manager &sound() const { assert(m_sound != NULL); return *m_sound; }
-	video_manager &video() const { assert(m_video != NULL); return *m_video; }
-	debug_view_manager &debug_view() const { assert(m_debug_view != NULL); return *m_debug_view; }
-
 	// misc
 	void CLIB_DECL logerror(const char *format, ...);
 	void CLIB_DECL vlogerror(const char *format, va_list args);
@@ -388,13 +396,7 @@ public:
 	const char *describe_context();
 
 	// internals
-	resource_pool			m_respool;			// pool of resources for this machine
-	region_list				m_regionlist;		// list of memory regions
 	device_list				m_devicelist;		// list of running devices
-
-	// configuration data
-	const machine_config *	config;				// points to the constructed machine_config
-	const machine_config &	m_config;			// points to the constructed machine_config
 	ioport_list				m_portlist;			// points to a list of input port configurations
 
 	// CPU information
@@ -402,11 +404,6 @@ public:
 	device_t *			cpu[8];				// CPU array for hiscore support
 #endif /* USE_HISCORE */
 	cpu_device *			firstcpu;			// first CPU (allows for quick iteration via typenext)
-	address_space *			m_nonspecific_space;// a dummy address_space used for legacy compatibility
-
-	// game-related information
-	const game_driver *		gamedrv;			// points to the definition of the game machine
-	const game_driver &		m_game;				// points to the definition of the game machine
 
 	// video-related information
 	gfx_element *			gfx[MAX_GFX_ELEMENTS];// array of pointers to graphic sets (chars, sprites)
@@ -419,14 +416,8 @@ public:
 	pen_t *					shadow_table;		// table for looking up a shadowed pen
 	bitmap_t *				priority_bitmap;	// priority bitmap
 
-	// audio-related information
-	int						sample_rate;		// the digital audio sample rate
-
 	// debugger-related information
 	UINT32					debug_flags;		// the current debug flags
-
-	// UI-related
-	bool					ui_active;			// ui active or not (useful for games / systems with keyboard inputs)
 
 	// generic pointers
 	generic_pointers		generic;			// generic pointers
@@ -444,56 +435,56 @@ public:
 	generic_video_private *	generic_video_data;	// internal data from video/generic.c
 	generic_audio_private *	generic_audio_data;	// internal data from audio/generic.c
 
-	// driver-specific information
-	driver_device *driver_data() const { return m_driver_device; }
-
-	template<class T>
-	T *driver_data() const { return downcast<T *>(m_driver_device); }
-
 private:
+	// internal helpers
 	void start();
 	void set_saveload_filename(const char *filename);
 	void fill_systime(system_time &systime, time_t t);
 	void handle_saveload();
 	void soft_reset(running_machine &machine, int param = 0);
 
+	// internal callbacks
 	static void logfile_callback(running_machine &machine, const char *buffer);
 
-	// notifier callbacks
-	struct notifier_callback_item
-	{
-		notifier_callback_item(notify_callback func);
-		notifier_callback_item *	m_next;
-		notify_callback				m_func;
-	};
-	notifier_callback_item *m_notifier_list[MACHINE_NOTIFY_COUNT];
+	// internal state
+	const machine_config &	m_config;				// reference to the constructed machine_config
+	const game_driver &		m_system;				// reference to the definition of the game machine
+	osd_interface &			m_osd;					// reference to OSD system
 
-	// logerror callbacks
-	struct logerror_callback_item
-	{
-		logerror_callback_item(logerror_callback func);
-		logerror_callback_item *	m_next;
-		logerror_callback			m_func;
-	};
-	logerror_callback_item *m_logerror_list;
+	// embedded managers and objects
+	tagged_list<memory_region> m_regionlist;		// list of memory regions
+	state_manager			m_state;				// state manager
+	device_scheduler		m_scheduler;			// scheduler object
 
-	state_manager			m_state;			// state manager
-	device_scheduler		m_scheduler;		// scheduler object
-	osd_interface &			m_osd;
+	// managers
+	cheat_manager *			m_cheat;				// internal data from cheat.c
+	render_manager *		m_render;				// internal data from render.c
+	sound_manager *			m_sound;				// internal data from sound.c
+	video_manager *			m_video;				// internal data from video.c
+	debug_view_manager *	m_debug_view;			// internal data from debugvw.c
 
-	astring					m_context;			// context string
-	astring					m_basename;			// basename used for game-related paths
+	// driver state
+	driver_device *			m_driver_device;		// pointer to the current driver device
 
-	machine_phase			m_current_phase;
-	bool					m_paused;
-	bool					m_hard_reset_pending;
-	bool					m_exit_pending;
-	bool					m_exit_to_game_select;
-	const game_driver *		m_new_driver_pending;
-	emu_timer *				m_soft_reset_timer;
-	emu_file *				m_logfile;
+	// system state
+	machine_phase			m_current_phase;		// current execution phase
+	bool					m_paused;				// paused?
+	bool					m_hard_reset_pending;	// is a hard reset pending?
+	bool					m_exit_pending;			// is an exit pending?
+	bool					m_exit_to_game_select;	// when we exit, go we go back to the game select?
+	const game_driver *		m_new_driver_pending;	// pointer to the next pending driver
+	emu_timer *				m_soft_reset_timer;		// timer used to schedule a soft reset
 
-	// load/save
+	// misc state
+	UINT32					m_rand_seed;			// current random number seed
+	bool					m_ui_active;			// ui active or not (useful for games / systems with keyboard inputs)
+	time_t					m_base_time;			// real time at initial emulation time
+	astring					m_basename;				// basename used for game-related paths
+	astring					m_context;				// context string buffer
+	int						m_sample_rate;			// the digital audio sample rate
+	emu_file *				m_logfile;				// pointer to the active log file
+
+	// load/save management
 	enum saveload_schedule
 	{
 		SLS_NONE,
@@ -505,18 +496,36 @@ private:
 	astring					m_saveload_pending_file;
 	const char *			m_saveload_searchpath;
 
-	// random number seed
-	UINT32					m_rand_seed;
+	// notifier callbacks
+	struct notifier_callback_item
+	{
+		// construction/destruction
+		notifier_callback_item(notify_callback func);
 
-	// base time
-	time_t					m_base_time;
+		// getters
+		notifier_callback_item *next() const { return m_next; }
 
-	driver_device *			m_driver_device;
-	cheat_manager *			m_cheat;			// internal data from cheat.c
-	render_manager *		m_render;			// internal data from render.c
-	sound_manager *			m_sound;			// internal data from sound.c
-	video_manager *			m_video;			// internal data from video.c
-	debug_view_manager *	m_debug_view;		// internal data from debugvw.c
+		// state
+		notifier_callback_item *	m_next;
+		notify_callback				m_func;
+	};
+	simple_list<notifier_callback_item> m_notifier_list[MACHINE_NOTIFY_COUNT];
+
+	// logerror callbacks
+	class logerror_callback_item
+	{
+	public:
+		// construction/destruction
+		logerror_callback_item(logerror_callback func);
+
+		// getters
+		logerror_callback_item *next() const { return m_next; }
+
+		// state
+		logerror_callback_item *	m_next;
+		logerror_callback			m_func;
+	};
+	simple_list<logerror_callback_item> m_logerror_list;
 };
 
 
@@ -552,10 +561,10 @@ public:
 
 protected:
 	// optional information overrides
-	virtual const rom_entry *rom_region() const;
+	virtual const rom_entry *device_rom_region() const;
 
 	// internal state
-	const game_driver *		m_game;						// pointer to the game driver
+	const game_driver *		m_system;						// pointer to the game driver
 
 	legacy_callback_func	m_callbacks[CB_COUNT];		// generic legacy callbacks
 	palette_init_func		m_palette_init;				// one-time palette init callback
@@ -585,7 +594,7 @@ public:
 	{
 		// we clear here for historical reasons, as many existing driver states
 		// assume everything is NULL before starting
-		return auto_alloc_clear(&machine, _DeviceClass(machine, *this));
+		return auto_alloc_clear(machine, _DeviceClass(machine, *this));
 	}
 };
 

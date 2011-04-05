@@ -10,16 +10,16 @@ public:
 	suprridr_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 nmi_enable;
-	UINT8 sound_data;
-	UINT8 *fgram;
-	UINT8 *bgram;
-	tilemap_t *fg_tilemap;
-	tilemap_t *bg_tilemap;
-	tilemap_t *bg_tilemap_noscroll;
-	UINT8 flipx;
-	UINT8 flipy;
-	UINT8 *spriteram;
+	UINT8 m_nmi_enable;
+	UINT8 m_sound_data;
+	UINT8 *m_fgram;
+	UINT8 *m_bgram;
+	tilemap_t *m_fg_tilemap;
+	tilemap_t *m_bg_tilemap;
+	tilemap_t *m_bg_tilemap_noscroll;
+	UINT8 m_flipx;
+	UINT8 m_flipy;
+	UINT8 *m_spriteram;
 };
 
 
@@ -33,7 +33,7 @@ WRITE8_HANDLER( suprridr_flipy_w );
 WRITE8_HANDLER( suprridr_fgdisable_w );
 WRITE8_HANDLER( suprridr_fgscrolly_w );
 WRITE8_HANDLER( suprridr_bgscrolly_w );
-int suprridr_is_screen_flipped(running_machine *machine);
+int suprridr_is_screen_flipped(running_machine &machine);
 
 WRITE8_HANDLER( suprridr_fgram_w );
 WRITE8_HANDLER( suprridr_bgram_w );

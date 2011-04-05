@@ -490,7 +490,7 @@ static void defines_verbose(void)
 static void osd_sdl_info(void)
 {
 #if SDL_VERSION_ATLEAST(1,3,0)
-	int i, cur, num = SDL_GetNumVideoDrivers();
+	int i, num = SDL_GetNumVideoDrivers();
 
 	mame_printf_verbose("Available videodrivers: ");
 	for (i=0;i<num;i++)
@@ -501,17 +501,15 @@ static void osd_sdl_info(void)
 	mame_printf_verbose("\n");
 	mame_printf_verbose("Current Videodriver: %s\n", SDL_GetCurrentVideoDriver());
 	num = SDL_GetNumVideoDisplays();
-	cur = SDL_GetCurrentVideoDisplay();
 	for (i=0;i<num;i++)
 	{
 		SDL_DisplayMode mode;
 		int j;
 
-		SDL_SelectVideoDisplay(i);
 		mame_printf_verbose("\tDisplay #%d\n", i);
-		if (SDL_GetDesktopDisplayMode(&mode));
+		if (SDL_GetDesktopDisplayMode(i, &mode));
 			mame_printf_verbose("\t\tDesktop Mode:         %dx%d-%d@%d\n", mode.w, mode.h, SDL_BITSPERPIXEL(mode.format), mode.refresh_rate);
-		if (SDL_GetCurrentDisplayMode(&mode));
+		if (SDL_GetCurrentDisplayMode(i, &mode));
 			mame_printf_verbose("\t\tCurrent Display Mode: %dx%d-%d@%d\n", mode.w, mode.h, SDL_BITSPERPIXEL(mode.format), mode.refresh_rate);
 		mame_printf_verbose("\t\tRenderdrivers:\n");
 		for (j=0; j<SDL_GetNumRenderDrivers(); j++)
@@ -521,7 +519,6 @@ static void osd_sdl_info(void)
 			mame_printf_verbose("\t\t\t%10s (%dx%d)\n", info.name, info.max_texture_width, info.max_texture_height);
 		}
 	}
-	SDL_SelectVideoDisplay(cur);
 
 	mame_printf_verbose("Available audio drivers: \n");
 	num = SDL_GetNumAudioDrivers();
@@ -636,7 +633,7 @@ void sdl_osd_interface::init(running_machine &machine)
 			exit(-1);
 		}
 
-	if (sdlvideo_init(&machine))
+	if (sdlvideo_init(machine))
 	{
 		osd_exit(machine);
 		mame_printf_error("sdlvideo_init: Initialization failed!\n\n\n");
@@ -645,11 +642,11 @@ void sdl_osd_interface::init(running_machine &machine)
 		exit(-1);
 	}
 
-	sdlinput_init(&machine);
+	sdlinput_init(machine);
 
-	sdlaudio_init(&machine);
+	sdlaudio_init(machine);
 
-	sdloutput_init(&machine);
+	sdloutput_init(machine);
 
 	if (options.oslog())
 		machine.add_logerror_callback(output_oslog);
@@ -662,7 +659,7 @@ void sdl_osd_interface::init(running_machine &machine)
 	/* only enable watchdog if seconds_to_run is enabled *and* relatively short (time taken from ui.c) */
 	if ((watchdog_timeout != 0) && (str > 0) && (str < 60*5 ))
 	{
-		m_watchdog = auto_alloc(&machine, watchdog);
+		m_watchdog = auto_alloc(machine, watchdog);
 		m_watchdog->setTimeout(watchdog_timeout);
 	}
 
@@ -805,7 +802,7 @@ bitmap_t *sdl_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, 
       color_space = CGColorSpaceCreateDeviceRGB();
       bits_per_component = 8;
 
-      bitmap = auto_alloc(&machine(), bitmap_t(bitmap_width, bitmap_height, BITMAP_FORMAT_ARGB32));
+      bitmap = auto_alloc(machine(), bitmap_t(bitmap_width, bitmap_height, BITMAP_FORMAT_ARGB32));
 
       context_ref = CGBitmapContextCreate( bitmap->base, bitmap_width, bitmap_height, bits_per_component, bitmap->rowpixels*4, color_space, bitmap_info );
 
@@ -828,6 +825,20 @@ bitmap_t *sdl_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, 
    return bitmap;
 }
 #else // UNIX but not OSX
+
+static TTF_Font * TTF_OpenFont_Magic(astring name, int fsize)
+{
+	emu_file file(OPEN_FLAG_READ);
+	if (file.open(name) == FILERR_NONE)
+	{
+		unsigned char buffer[5] = { 0xff, 0xff, 0xff, 0xff, 0xff };
+		unsigned char magic[5] = { 0x00, 0x01, 0x00, 0x00, 0x00 };
+		file.read(buffer,5);
+		if (memcmp(buffer, magic, 5))
+			return NULL;
+	}
+	return TTF_OpenFont(name.cstr(), POINT_SIZE);
+}
 
 static TTF_Font *search_font_config(astring name, bool bold, bool italic, bool underline, bool &bakedstyles)
 {
@@ -882,7 +893,10 @@ static TTF_Font *search_font_config(astring name, bool bold, bool italic, bool u
 		}
 
 		mame_printf_verbose("Matching font: %s\n", val.u.s);
-		font = TTF_OpenFont((const char*)val.u.s, POINT_SIZE);
+		{
+			astring match_name((const char*)val.u.s);
+			font = TTF_OpenFont_Magic(match_name, POINT_SIZE);
+		}
 
 		if (font)
 		{
@@ -916,7 +930,10 @@ static TTF_Font *search_font_config(astring name, bool bold, bool italic, bool u
 			}
 
 			mame_printf_verbose("Matching unstyled font: %s\n", val.u.s);
-			font = TTF_OpenFont((const char*)val.u.s, POINT_SIZE);
+			{
+				astring match_name((const char*)val.u.s);
+				font = TTF_OpenFont_Magic(match_name, POINT_SIZE);
+			}
 
 			if (font)
 			{
@@ -956,7 +973,7 @@ osd_font sdl_osd_interface::font_open(const char *_name, int &height)
 	bool strike = (name.replace(0, "[S]", "") + name.replace(0, "[s]", "") > 0);
 
 	// first up, try it as a filename
-	font = TTF_OpenFont(name.cstr(), POINT_SIZE);
+	font = TTF_OpenFont_Magic(name, POINT_SIZE);
 
 	// if no success, try the font path
 
@@ -967,7 +984,7 @@ osd_font sdl_osd_interface::font_open(const char *_name, int &height)
 		if (file.open(name) == FILERR_NONE)
 		{
 			astring full_name = file.fullpath();
-			font = TTF_OpenFont(full_name.cstr(), POINT_SIZE);
+			font = TTF_OpenFont_Magic(full_name, POINT_SIZE);
 			if (font)
 				mame_printf_verbose("Found font %s\n", full_name.cstr());
 		}
@@ -1046,7 +1063,7 @@ bitmap_t *sdl_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, 
 	if (drawsurf)
 	{
 		// allocate a MAME destination bitmap
-		bitmap = auto_alloc(&machine(), bitmap_t(drawsurf->w, drawsurf->h, BITMAP_FORMAT_ARGB32));
+		bitmap = auto_alloc(machine(), bitmap_t(drawsurf->w, drawsurf->h, BITMAP_FORMAT_ARGB32));
 
 		// copy the rendered character image into it
 		for (int y = 0; y < bitmap->height; y++)

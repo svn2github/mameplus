@@ -55,16 +55,16 @@ Known Issues:
 
 
 
-#define CPUA_IRQ_ENABLE (state->CPUA_register & 0x20)
-#define CPUB_IRQ_ENABLE (state->CPUB_register & 0x02)
+#define CPUA_IRQ_ENABLE (state->m_CPUA_register & 0x20)
+#define CPUB_IRQ_ENABLE (state->m_CPUB_register & 0x02)
 
 
 
 
-int twin16_spriteram_process_enable( running_machine *machine )
+int twin16_spriteram_process_enable( running_machine &machine )
 {
-	twin16_state *state = machine->driver_data<twin16_state>();
-	return (state->CPUA_register & 0x40) == 0;
+	twin16_state *state = machine.driver_data<twin16_state>();
+	return (state->m_CPUA_register & 0x40) == 0;
 }
 
 /******************************************************************************************/
@@ -76,45 +76,45 @@ int twin16_spriteram_process_enable( running_machine *machine )
 
 static READ16_HANDLER( videoram16_r )
 {
-	twin16_state *state = space->machine->driver_data<twin16_state>();
-	UINT16 *videoram = state->videoram;
+	twin16_state *state = space->machine().driver_data<twin16_state>();
+	UINT16 *videoram = state->m_videoram;
 	return videoram[offset];
 }
 
 static WRITE16_HANDLER( videoram16_w )
 {
-	twin16_state *state = space->machine->driver_data<twin16_state>();
-	UINT16 *videoram = state->videoram;
+	twin16_state *state = space->machine().driver_data<twin16_state>();
+	UINT16 *videoram = state->m_videoram;
 	COMBINE_DATA(videoram + offset);
 }
 
 static READ16_HANDLER( extra_rom_r )
 {
-	return ((UINT16 *)space->machine->region("gfx3")->base())[offset];
+	return ((UINT16 *)space->machine().region("gfx3")->base())[offset];
 }
 
 static READ16_HANDLER( twin16_gfx_rom1_r )
 {
-	twin16_state *state = space->machine->driver_data<twin16_state>();
-	return state->gfx_rom[offset + ((state->CPUB_register&0x04)?0x40000:0)];
+	twin16_state *state = space->machine().driver_data<twin16_state>();
+	return state->m_gfx_rom[offset + ((state->m_CPUB_register&0x04)?0x40000:0)];
 }
 
 static READ16_HANDLER( twin16_gfx_rom2_r )
 {
-	twin16_state *state = space->machine->driver_data<twin16_state>();
-	return state->gfx_rom[offset + 0x80000 + ((state->CPUB_register&0x04)?0x40000:0)];
+	twin16_state *state = space->machine().driver_data<twin16_state>();
+	return state->m_gfx_rom[offset + 0x80000 + ((state->m_CPUB_register&0x04)?0x40000:0)];
 }
 
 static WRITE16_HANDLER( sound_command_w )
 {
-	twin16_state *state = space->machine->driver_data<twin16_state>();
-	COMBINE_DATA(&state->sound_command);
-	soundlatch_w( space, 0, state->sound_command&0xff );
+	twin16_state *state = space->machine().driver_data<twin16_state>();
+	COMBINE_DATA(&state->m_sound_command);
+	soundlatch_w( space, 0, state->m_sound_command&0xff );
 }
 
 static WRITE16_HANDLER( twin16_CPUA_register_w )
 {
-	twin16_state *state = space->machine->driver_data<twin16_state>();
+	twin16_state *state = space->machine().driver_data<twin16_state>();
 	/*
     7   6   5   4   3   2   1   0
         X                           sprite processing disable
@@ -123,60 +123,60 @@ static WRITE16_HANDLER( twin16_CPUA_register_w )
                     X               0->1 trigger IRQ on sound CPU
                         x   x   x   coin counters
     */
-	UINT16 old = state->CPUA_register;
-	COMBINE_DATA(&state->CPUA_register);
-	if (state->CPUA_register != old)
+	UINT16 old = state->m_CPUA_register;
+	COMBINE_DATA(&state->m_CPUA_register);
+	if (state->m_CPUA_register != old)
 	{
-		if ((old & 0x08) == 0 && (state->CPUA_register & 0x08))
-			cputag_set_input_line_and_vector(space->machine, "audiocpu", 0, HOLD_LINE, 0xff);
+		if ((old & 0x08) == 0 && (state->m_CPUA_register & 0x08))
+			cputag_set_input_line_and_vector(space->machine(), "audiocpu", 0, HOLD_LINE, 0xff);
 
-		if ((old & 0x40) && (state->CPUA_register & 0x40) == 0)
-			twin16_spriteram_process(space->machine);
+		if ((old & 0x40) && (state->m_CPUA_register & 0x40) == 0)
+			twin16_spriteram_process(space->machine());
 
-		if ((old & 0x10) == 0 && (state->CPUA_register & 0x10))
-			cputag_set_input_line(space->machine, "sub", M68K_IRQ_6, HOLD_LINE);
+		if ((old & 0x10) == 0 && (state->m_CPUA_register & 0x10))
+			cputag_set_input_line(space->machine(), "sub", M68K_IRQ_6, HOLD_LINE);
 
-		coin_counter_w(space->machine, 0, state->CPUA_register & 0x01);
-		coin_counter_w(space->machine, 1, state->CPUA_register & 0x02);
-		coin_counter_w(space->machine, 2, state->CPUA_register & 0x04);
+		coin_counter_w(space->machine(), 0, state->m_CPUA_register & 0x01);
+		coin_counter_w(space->machine(), 1, state->m_CPUA_register & 0x02);
+		coin_counter_w(space->machine(), 2, state->m_CPUA_register & 0x04);
 	}
 }
 
 static WRITE16_HANDLER( twin16_CPUB_register_w )
 {
-	twin16_state *state = space->machine->driver_data<twin16_state>();
+	twin16_state *state = space->machine().driver_data<twin16_state>();
 	/*
     7   6   5   4   3   2   1   0
                         X           gfx bank select
                             X       IRQ5 enable
                                 X   0->1 trigger IRQ6 on CPUA
     */
-	UINT16 old = state->CPUB_register;
-	COMBINE_DATA(&state->CPUB_register);
-	if( state->CPUB_register!=old )
+	UINT16 old = state->m_CPUB_register;
+	COMBINE_DATA(&state->m_CPUB_register);
+	if( state->m_CPUB_register!=old )
 	{
-		if ((old & 0x01) == 0 && (state->CPUB_register & 0x01))
-			cputag_set_input_line(space->machine, "maincpu", M68K_IRQ_6, HOLD_LINE);
+		if ((old & 0x01) == 0 && (state->m_CPUB_register & 0x01))
+			cputag_set_input_line(space->machine(), "maincpu", M68K_IRQ_6, HOLD_LINE);
 	}
 }
 
 static WRITE16_HANDLER( fround_CPU_register_w )
 {
-	twin16_state *state = space->machine->driver_data<twin16_state>();
+	twin16_state *state = space->machine().driver_data<twin16_state>();
 	/*
     7   6   5   4   3   2   1   0
                     X               0->1 trigger IRQ on sound CPU
                             x   x   coin counters
     */
-	UINT16 old = state->CPUA_register;
-	COMBINE_DATA(&state->CPUA_register);
-	if (state->CPUA_register != old)
+	UINT16 old = state->m_CPUA_register;
+	COMBINE_DATA(&state->m_CPUA_register);
+	if (state->m_CPUA_register != old)
 	{
-		if ((old & 0x08) == 0 && (state->CPUA_register & 0x08))
-			cputag_set_input_line_and_vector(space->machine, "audiocpu", 0, HOLD_LINE, 0xff);
+		if ((old & 0x08) == 0 && (state->m_CPUA_register & 0x08))
+			cputag_set_input_line_and_vector(space->machine(), "audiocpu", 0, HOLD_LINE, 0xff);
 
-		coin_counter_w(space->machine, 0, state->CPUA_register & 0x01);
-		coin_counter_w(space->machine, 1, state->CPUA_register & 0x02);
+		coin_counter_w(space->machine(), 0, state->m_CPUA_register & 0x01);
+		coin_counter_w(space->machine(), 1, state->m_CPUA_register & 0x02);
 	}
 }
 
@@ -184,13 +184,13 @@ static READ16_HANDLER( twin16_input_r )
 {
 	switch( offset )
 	{
-		case 0x00: return input_port_read(space->machine, "SYSTEM");
-		case 0x01: return input_port_read(space->machine, "P1");
-		case 0x02: return input_port_read(space->machine, "P2");
-		case 0x03: return input_port_read(space->machine, "P3");
-		case 0x08: return input_port_read(space->machine, "DSW2");
-		case 0x09: return input_port_read(space->machine, "DSW1");
-		case 0x0c: return input_port_read(space->machine, "DSW3");
+		case 0x00: return input_port_read(space->machine(), "SYSTEM");
+		case 0x01: return input_port_read(space->machine(), "P1");
+		case 0x02: return input_port_read(space->machine(), "P2");
+		case 0x03: return input_port_read(space->machine(), "P3");
+		case 0x08: return input_port_read(space->machine(), "DSW2");
+		case 0x09: return input_port_read(space->machine(), "DSW1");
+		case 0x0c: return input_port_read(space->machine(), "DSW3");
 		default: break;
 	}
 	return 0;
@@ -213,25 +213,25 @@ static WRITE8_DEVICE_HANDLER( twin16_upd_start_w )
 
 static READ16_HANDLER( cuebrickj_nvram_r )
 {
-	twin16_state *state = space->machine->driver_data<twin16_state>();
-	return state->cuebrickj_nvram[offset + (state->cuebrickj_nvram_bank * 0x400 / 2)];
+	twin16_state *state = space->machine().driver_data<twin16_state>();
+	return state->m_cuebrickj_nvram[offset + (state->m_cuebrickj_nvram_bank * 0x400 / 2)];
 }
 
 static WRITE16_HANDLER( cuebrickj_nvram_w )
 {
-	twin16_state *state = space->machine->driver_data<twin16_state>();
-	COMBINE_DATA(&state->cuebrickj_nvram[offset + (state->cuebrickj_nvram_bank * 0x400 / 2)]);
+	twin16_state *state = space->machine().driver_data<twin16_state>();
+	COMBINE_DATA(&state->m_cuebrickj_nvram[offset + (state->m_cuebrickj_nvram_bank * 0x400 / 2)]);
 }
 
 static WRITE16_HANDLER( cuebrickj_nvram_bank_w )
 {
-	twin16_state *state = space->machine->driver_data<twin16_state>();
-	state->cuebrickj_nvram_bank = (data >> 8);
+	twin16_state *state = space->machine().driver_data<twin16_state>();
+	state->m_cuebrickj_nvram_bank = (data >> 8);
 }
 
 /* Memory Maps */
 
-static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_DEVWRITE("upd", twin16_upd_reset_w)
@@ -243,7 +243,7 @@ static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xf000, 0xf000) AM_DEVREAD("upd", twin16_upd_busy_r)	// miaj writes 0 to it
 	ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x040000, 0x043fff) AM_READ_BANK(COMRAM_r) AM_WRITE_BANK(COMRAM_w)
 //  AM_RANGE(0x044000, 0x04ffff) AM_NOP             // miaj
@@ -258,13 +258,13 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x0b0400, 0x0b0401) AM_WRITE(cuebrickj_nvram_bank_w)
 	AM_RANGE(0x0c0000, 0x0c000f) AM_WRITE(twin16_video_register_w)
 	AM_RANGE(0x0c000e, 0x0c000f) AM_READ(twin16_sprite_status_r)
-	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(twin16_text_ram_w) AM_BASE_MEMBER(twin16_state, text_ram)
+	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(twin16_text_ram_w) AM_BASE_MEMBER(twin16_state, m_text_ram)
 //  AM_RANGE(0x104000, 0x105fff) AM_NOP             // miaj
-	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_BASE_MEMBER(twin16_state, videoram)
+	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_BASE_MEMBER(twin16_state, m_videoram)
 	AM_RANGE(0x140000, 0x143fff) AM_RAM AM_SHARE("share1") AM_BASE_SIZE_GENERIC(spriteram)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sub_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( sub_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x040000, 0x043fff) AM_READ_BANK(COMRAM_r) AM_WRITE_BANK(COMRAM_w)
 //  AM_RANGE(0x044000, 0x04ffff) AM_NOP             // miaj
@@ -273,13 +273,13 @@ static ADDRESS_MAP_START( sub_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x0a0000, 0x0a0001) AM_WRITE(twin16_CPUB_register_w)
 	AM_RANGE(0x400000, 0x403fff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0x480000, 0x483fff) AM_READWRITE(videoram16_r, videoram16_w)
-	AM_RANGE(0x500000, 0x53ffff) AM_RAM AM_BASE_MEMBER(twin16_state, tile_gfx_ram)
+	AM_RANGE(0x500000, 0x53ffff) AM_RAM AM_BASE_MEMBER(twin16_state, m_tile_gfx_ram)
 	AM_RANGE(0x600000, 0x6fffff) AM_READ(twin16_gfx_rom1_r)
 	AM_RANGE(0x700000, 0x77ffff) AM_READ(twin16_gfx_rom2_r)
-	AM_RANGE(0x780000, 0x79ffff) AM_RAM AM_BASE_MEMBER(twin16_state, sprite_gfx_ram)
+	AM_RANGE(0x780000, 0x79ffff) AM_RAM AM_BASE_MEMBER(twin16_state, m_sprite_gfx_ram)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( fround_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( fround_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x040000, 0x043fff) AM_READ_BANK(COMRAM_r) AM_WRITE_BANK(COMRAM_w)
 	AM_RANGE(0x060000, 0x063fff) AM_RAM
@@ -291,8 +291,8 @@ static ADDRESS_MAP_START( fround_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x0c0000, 0x0c000f) AM_WRITE(twin16_video_register_w)
 	AM_RANGE(0x0c000e, 0x0c000f) AM_READ(twin16_sprite_status_r)
 	AM_RANGE(0x0e0000, 0x0e0001) AM_WRITE(fround_gfx_bank_w)
-	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(twin16_text_ram_w) AM_BASE_MEMBER(twin16_state, text_ram)
-	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_BASE_MEMBER(twin16_state, videoram)
+	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(twin16_text_ram_w) AM_BASE_MEMBER(twin16_state, m_text_ram)
+	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_BASE_MEMBER(twin16_state, m_videoram)
 	AM_RANGE(0x140000, 0x143fff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
 	AM_RANGE(0x500000, 0x6fffff) AM_READ(twin16_gfx_rom1_r)
 ADDRESS_MAP_END
@@ -691,14 +691,14 @@ static const k007232_interface k007232_config =
 
 static INTERRUPT_GEN( CPUA_interrupt )
 {
-	twin16_state *state = device->machine->driver_data<twin16_state>();
-	if (CPUA_IRQ_ENABLE) cpu_set_input_line(device, 5, HOLD_LINE);
+	twin16_state *state = device->machine().driver_data<twin16_state>();
+	if (CPUA_IRQ_ENABLE) device_set_input_line(device, 5, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( CPUB_interrupt )
 {
-	twin16_state *state = device->machine->driver_data<twin16_state>();
-	if (CPUB_IRQ_ENABLE) cpu_set_input_line(device, 5, HOLD_LINE);
+	twin16_state *state = device->machine().driver_data<twin16_state>();
+	if (CPUB_IRQ_ENABLE) device_set_input_line(device, 5, HOLD_LINE);
 }
 
 /* Machine Drivers */
@@ -710,17 +710,17 @@ static MACHINE_RESET( twin16 )
 
 static MACHINE_START( twin16 )
 {
-	twin16_state *state = machine->driver_data<twin16_state>();
-	state->CPUA_register=0;
-	state->CPUB_register=0;
+	twin16_state *state = machine.driver_data<twin16_state>();
+	state->m_CPUA_register=0;
+	state->m_CPUB_register=0;
 
 	/* register for savestates */
-	state_save_register_global(machine, state->CPUA_register);
-	state_save_register_global(machine, state->CPUB_register);
+	state_save_register_global(machine, state->m_CPUA_register);
+	state_save_register_global(machine, state->m_CPUB_register);
 
-	state_save_register_global(machine, state->sound_command);
-	state_save_register_global(machine, state->cuebrickj_nvram_bank);
-	state_save_register_global_array(machine, state->cuebrickj_nvram);
+	state_save_register_global(machine, state->m_sound_command);
+	state_save_register_global(machine, state->m_cuebrickj_nvram_bank);
+	state_save_register_global_array(machine, state->m_cuebrickj_nvram);
 }
 
 static MACHINE_CONFIG_START( twin16, twin16_state )
@@ -1305,44 +1305,44 @@ ROM_END
 
 /* Driver Initialization */
 
-static void gfx_untangle( running_machine *machine )
+static void gfx_untangle( running_machine &machine )
 {
-	twin16_state *state = machine->driver_data<twin16_state>();
+	twin16_state *state = machine.driver_data<twin16_state>();
 	// sprite, tile data
 	int i;
 	UINT16 *temp = auto_alloc_array(machine, UINT16, 0x200000/2);
 
-	state->gfx_rom = (UINT16 *)machine->region("gfx2")->base();
-	memcpy( temp, state->gfx_rom, 0x200000 );
+	state->m_gfx_rom = (UINT16 *)machine.region("gfx2")->base();
+	memcpy( temp, state->m_gfx_rom, 0x200000 );
 
 	for( i=0; i<0x080000; i++ )
 	{
-		state->gfx_rom[i*2+0] = temp[i+0x080000];
-		state->gfx_rom[i*2+1] = temp[i];
+		state->m_gfx_rom[i*2+0] = temp[i+0x080000];
+		state->m_gfx_rom[i*2+1] = temp[i];
 	}
 	auto_free( machine, temp );
 }
 
 static DRIVER_INIT( twin16 )
 {
-	twin16_state *state = machine->driver_data<twin16_state>();
+	twin16_state *state = machine.driver_data<twin16_state>();
 	gfx_untangle(machine);
-	state->custom_video = 0;
+	state->m_custom_video = 0;
 }
 
 static DRIVER_INIT( fround )
 {
-	twin16_state *state = machine->driver_data<twin16_state>();
+	twin16_state *state = machine.driver_data<twin16_state>();
 	gfx_untangle(machine);
-	state->custom_video = 1;
+	state->m_custom_video = 1;
 }
 
 static DRIVER_INIT( cuebrickj )
 {
-	twin16_state *state = machine->driver_data<twin16_state>();
+	twin16_state *state = machine.driver_data<twin16_state>();
 	gfx_untangle(machine);
 
-	machine->device<nvram_device>("nvram")->set_base(state->cuebrickj_nvram, 0x400*0x20);
+	machine.device<nvram_device>("nvram")->set_base(state->m_cuebrickj_nvram, 0x400*0x20);
 }
 
 /* Game Drivers */

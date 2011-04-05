@@ -20,9 +20,9 @@ public:
 	xtheball_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT16 *vram_bg;
-	UINT16 *vram_fg;
-	UINT8 bitvals[32];
+	UINT16 *m_vram_bg;
+	UINT16 *m_vram_fg;
+	UINT8 m_bitvals[32];
 };
 
 
@@ -36,18 +36,18 @@ public:
 
 static void xtheball_scanline_update(screen_device &screen, bitmap_t *bitmap, int scanline, const tms34010_display_params *params)
 {
-	xtheball_state *state = screen.machine->driver_data<xtheball_state>();
-	UINT16 *srcbg = &state->vram_bg[(params->rowaddr << 8) & 0xff00];
+	xtheball_state *state = screen.machine().driver_data<xtheball_state>();
+	UINT16 *srcbg = &state->m_vram_bg[(params->rowaddr << 8) & 0xff00];
 	UINT32 *dest = BITMAP_ADDR32(bitmap, scanline, 0);
-	const rgb_t *pens = tlc34076_get_pens(screen.machine->device("tlc34076"));
+	const rgb_t *pens = tlc34076_get_pens(screen.machine().device("tlc34076"));
 	int coladdr = params->coladdr;
 	int x;
 
 	/* bit value 0x13 controls which foreground mode to use */
-	if (!state->bitvals[0x13])
+	if (!state->m_bitvals[0x13])
 	{
 		/* mode 0: foreground is the same as background */
-		UINT16 *srcfg = &state->vram_fg[(params->rowaddr << 8) & 0xff00];
+		UINT16 *srcfg = &state->m_vram_fg[(params->rowaddr << 8) & 0xff00];
 
 		for (x = params->heblnk; x < params->hsblnk; x += 2, coladdr++)
 		{
@@ -62,7 +62,7 @@ static void xtheball_scanline_update(screen_device &screen, bitmap_t *bitmap, in
 	{
 		/* mode 1: foreground is half background resolution in */
 		/* X and supports two pages */
-		UINT16 *srcfg = &state->vram_fg[(params->rowaddr << 7) & 0xff00];
+		UINT16 *srcfg = &state->m_vram_fg[(params->rowaddr << 7) & 0xff00];
 
 		for (x = params->heblnk; x < params->hsblnk; x += 2, coladdr++)
 		{
@@ -86,25 +86,25 @@ static void xtheball_scanline_update(screen_device &screen, bitmap_t *bitmap, in
 
 static void xtheball_to_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
 {
-	xtheball_state *state = space->machine->driver_data<xtheball_state>();
+	xtheball_state *state = space->machine().driver_data<xtheball_state>();
 	if (address >= 0x01000000 && address <= 0x010fffff)
-		memcpy(shiftreg, &state->vram_bg[TOWORD(address & 0xff000)], TOBYTE(0x1000));
+		memcpy(shiftreg, &state->m_vram_bg[TOWORD(address & 0xff000)], TOBYTE(0x1000));
 	else if (address >= 0x02000000 && address <= 0x020fffff)
-		memcpy(shiftreg, &state->vram_fg[TOWORD(address & 0xff000)], TOBYTE(0x1000));
+		memcpy(shiftreg, &state->m_vram_fg[TOWORD(address & 0xff000)], TOBYTE(0x1000));
 	else
-		logerror("%s:xtheball_to_shiftreg(%08X)\n", space->machine->describe_context(), address);
+		logerror("%s:xtheball_to_shiftreg(%08X)\n", space->machine().describe_context(), address);
 }
 
 
 static void xtheball_from_shiftreg(address_space *space, UINT32 address, UINT16 *shiftreg)
 {
-	xtheball_state *state = space->machine->driver_data<xtheball_state>();
+	xtheball_state *state = space->machine().driver_data<xtheball_state>();
 	if (address >= 0x01000000 && address <= 0x010fffff)
-		memcpy(&state->vram_bg[TOWORD(address & 0xff000)], shiftreg, TOBYTE(0x1000));
+		memcpy(&state->m_vram_bg[TOWORD(address & 0xff000)], shiftreg, TOBYTE(0x1000));
 	else if (address >= 0x02000000 && address <= 0x020fffff)
-		memcpy(&state->vram_fg[TOWORD(address & 0xff000)], shiftreg, TOBYTE(0x1000));
+		memcpy(&state->m_vram_fg[TOWORD(address & 0xff000)], shiftreg, TOBYTE(0x1000));
 	else
-		logerror("%s:xtheball_from_shiftreg(%08X)\n", space->machine->describe_context(), address);
+		logerror("%s:xtheball_from_shiftreg(%08X)\n", space->machine().describe_context(), address);
 }
 
 
@@ -117,22 +117,22 @@ static void xtheball_from_shiftreg(address_space *space, UINT32 address, UINT16 
 
 static WRITE16_HANDLER( bit_controls_w )
 {
-	xtheball_state *state = space->machine->driver_data<xtheball_state>();
-	UINT8 *bitvals = state->bitvals;
+	xtheball_state *state = space->machine().driver_data<xtheball_state>();
+	UINT8 *bitvals = state->m_bitvals;
 	if (ACCESSING_BITS_0_7)
 	{
 		if (bitvals[offset] != (data & 1))
 		{
-			logerror("%08x:bit_controls_w(%x,%d)\n", cpu_get_pc(space->cpu), offset, data & 1);
+			logerror("%08x:bit_controls_w(%x,%d)\n", cpu_get_pc(&space->device()), offset, data & 1);
 
 			switch (offset)
 			{
 				case 7:
-					ticket_dispenser_w(space->machine->device("ticket"), 0, data << 7);
+					ticket_dispenser_w(space->machine().device("ticket"), 0, data << 7);
 					break;
 
 				case 8:
-					set_led_status(space->machine, 0, data & 1);
+					set_led_status(space->machine(), 0, data & 1);
 					break;
 			}
 		}
@@ -187,7 +187,7 @@ static WRITE16_HANDLER( bit_controls_w )
 
 static READ16_HANDLER( analogx_r )
 {
-	return (input_port_read(space->machine, "ANALOGX") << 8) | 0x00ff;
+	return (input_port_read(space->machine(), "ANALOGX") << 8) | 0x00ff;
 }
 
 
@@ -195,7 +195,7 @@ static READ16_HANDLER( analogy_watchdog_r )
 {
 	/* doubles as a watchdog address */
 	watchdog_reset_w(space,0,0);
-	return (input_port_read(space->machine, "ANALOGY") << 8) | 0x00ff;
+	return (input_port_read(space->machine(), "ANALOGY") << 8) | 0x00ff;
 }
 
 
@@ -206,10 +206,10 @@ static READ16_HANDLER( analogy_watchdog_r )
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x00000000, 0x0001ffff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x01000000, 0x010fffff) AM_RAM AM_BASE_MEMBER(xtheball_state, vram_bg)
-	AM_RANGE(0x02000000, 0x020fffff) AM_RAM AM_BASE_MEMBER(xtheball_state, vram_fg)
+	AM_RANGE(0x01000000, 0x010fffff) AM_RAM AM_BASE_MEMBER(xtheball_state, m_vram_bg)
+	AM_RANGE(0x02000000, 0x020fffff) AM_RAM AM_BASE_MEMBER(xtheball_state, m_vram_fg)
 	AM_RANGE(0x03000000, 0x030000ff) AM_DEVREADWRITE8("tlc34076", tlc34076_r, tlc34076_w, 0x00ff)
 	AM_RANGE(0x03040000, 0x030401ff) AM_WRITE(bit_controls_w)
 	AM_RANGE(0x03040080, 0x0304008f) AM_READ_PORT("DSW")

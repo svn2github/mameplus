@@ -25,7 +25,7 @@ static INTERRUPT_GEN( popeye_interrupt )
 {
 	/* NMIs are enabled by the I register?? How can that be? */
 	if (cpu_get_reg(device, Z80_I) & 1)	/* skyskipr: 0/1, popeye: 2/3 but also 0/1 */
-		cpu_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -34,10 +34,10 @@ static INTERRUPT_GEN( popeye_interrupt )
 
 static READ8_HANDLER( protection_r )
 {
-	popeye_state *state = space->machine->driver_data<popeye_state>();
+	popeye_state *state = space->machine().driver_data<popeye_state>();
 	if (offset == 0)
 	{
-		return ((state->prot1 << state->prot_shift) | (state->prot0 >> (8-state->prot_shift))) & 0xff;
+		return ((state->m_prot1 << state->m_prot_shift) | (state->m_prot0 >> (8-state->m_prot_shift))) & 0xff;
 	}
 	else	/* offset == 1 */
 	{
@@ -48,63 +48,63 @@ static READ8_HANDLER( protection_r )
 
 static WRITE8_HANDLER( protection_w )
 {
-	popeye_state *state = space->machine->driver_data<popeye_state>();
+	popeye_state *state = space->machine().driver_data<popeye_state>();
 	if (offset == 0)
 	{
 		/* this is the same as the level number (1-3) */
-		state->prot_shift = data & 0x07;
+		state->m_prot_shift = data & 0x07;
 	}
 	else	/* offset == 1 */
 	{
-		state->prot0 = state->prot1;
-		state->prot1 = data;
+		state->m_prot0 = state->m_prot1;
+		state->m_prot1 = data;
 	}
 }
 
 
 
 
-static ADDRESS_MAP_START( skyskipr_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( skyskipr_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8c00, 0x8c02) AM_RAM AM_BASE_MEMBER(popeye_state, background_pos)
-	AM_RANGE(0x8c03, 0x8c03) AM_RAM AM_BASE_MEMBER(popeye_state, palettebank)
-	AM_RANGE(0x8c04, 0x8e7f) AM_RAM AM_BASE_SIZE_MEMBER(popeye_state, spriteram, spriteram_size)
+	AM_RANGE(0x8c00, 0x8c02) AM_RAM AM_BASE_MEMBER(popeye_state, m_background_pos)
+	AM_RANGE(0x8c03, 0x8c03) AM_RAM AM_BASE_MEMBER(popeye_state, m_palettebank)
+	AM_RANGE(0x8c04, 0x8e7f) AM_RAM AM_BASE_SIZE_MEMBER(popeye_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0x8e80, 0x8fff) AM_RAM
-	AM_RANGE(0xa000, 0xa3ff) AM_WRITE(popeye_videoram_w) AM_BASE_MEMBER(popeye_state, videoram)
-	AM_RANGE(0xa400, 0xa7ff) AM_WRITE(popeye_colorram_w) AM_BASE_MEMBER(popeye_state, colorram)
+	AM_RANGE(0xa000, 0xa3ff) AM_WRITE(popeye_videoram_w) AM_BASE_MEMBER(popeye_state, m_videoram)
+	AM_RANGE(0xa400, 0xa7ff) AM_WRITE(popeye_colorram_w) AM_BASE_MEMBER(popeye_state, m_colorram)
 	AM_RANGE(0xc000, 0xcfff) AM_WRITE(skyskipr_bitmap_w)
 	AM_RANGE(0xe000, 0xe001) AM_READWRITE(protection_r,protection_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( popeye_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( popeye_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x8800, 0x8bff) AM_RAM
-	AM_RANGE(0x8c00, 0x8c02) AM_RAM AM_BASE_MEMBER(popeye_state, background_pos)
-	AM_RANGE(0x8c03, 0x8c03) AM_RAM AM_BASE_MEMBER(popeye_state, palettebank)
-	AM_RANGE(0x8c04, 0x8e7f) AM_RAM AM_BASE_SIZE_MEMBER(popeye_state, spriteram, spriteram_size)
+	AM_RANGE(0x8c00, 0x8c02) AM_RAM AM_BASE_MEMBER(popeye_state, m_background_pos)
+	AM_RANGE(0x8c03, 0x8c03) AM_RAM AM_BASE_MEMBER(popeye_state, m_palettebank)
+	AM_RANGE(0x8c04, 0x8e7f) AM_RAM AM_BASE_SIZE_MEMBER(popeye_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0x8e80, 0x8fff) AM_RAM
-	AM_RANGE(0xa000, 0xa3ff) AM_WRITE(popeye_videoram_w) AM_BASE_MEMBER(popeye_state, videoram)
-	AM_RANGE(0xa400, 0xa7ff) AM_WRITE(popeye_colorram_w) AM_BASE_MEMBER(popeye_state, colorram)
+	AM_RANGE(0xa000, 0xa3ff) AM_WRITE(popeye_videoram_w) AM_BASE_MEMBER(popeye_state, m_videoram)
+	AM_RANGE(0xa400, 0xa7ff) AM_WRITE(popeye_colorram_w) AM_BASE_MEMBER(popeye_state, m_colorram)
 	AM_RANGE(0xc000, 0xdfff) AM_WRITE(popeye_bitmap_w)
 	AM_RANGE(0xe000, 0xe001) AM_READWRITE(protection_r,protection_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( popeyebl_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( popeyebl_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8c00, 0x8c02) AM_RAM AM_BASE_MEMBER(popeye_state, background_pos)
-	AM_RANGE(0x8c03, 0x8c03) AM_RAM AM_BASE_MEMBER(popeye_state, palettebank)
-	AM_RANGE(0x8c04, 0x8e7f) AM_RAM AM_BASE_SIZE_MEMBER(popeye_state, spriteram, spriteram_size)
+	AM_RANGE(0x8c00, 0x8c02) AM_RAM AM_BASE_MEMBER(popeye_state, m_background_pos)
+	AM_RANGE(0x8c03, 0x8c03) AM_RAM AM_BASE_MEMBER(popeye_state, m_palettebank)
+	AM_RANGE(0x8c04, 0x8e7f) AM_RAM AM_BASE_SIZE_MEMBER(popeye_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0x8e80, 0x8fff) AM_RAM
-	AM_RANGE(0xa000, 0xa3ff) AM_WRITE(popeye_videoram_w) AM_BASE_MEMBER(popeye_state, videoram)
-	AM_RANGE(0xa400, 0xa7ff) AM_WRITE(popeye_colorram_w) AM_BASE_MEMBER(popeye_state, colorram)
+	AM_RANGE(0xa000, 0xa3ff) AM_WRITE(popeye_videoram_w) AM_BASE_MEMBER(popeye_state, m_videoram)
+	AM_RANGE(0xa400, 0xa7ff) AM_WRITE(popeye_colorram_w) AM_BASE_MEMBER(popeye_state, m_colorram)
 	AM_RANGE(0xc000, 0xcfff) AM_WRITE(skyskipr_bitmap_w)
 	AM_RANGE(0xe000, 0xe01f) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( popeye_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( popeye_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE("aysnd", ay8910_address_data_w)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("P1")
@@ -395,22 +395,22 @@ GFXDECODE_END
 
 static WRITE8_DEVICE_HANDLER( popeye_portB_w )
 {
-	popeye_state *state = device->machine->driver_data<popeye_state>();
+	popeye_state *state = device->machine().driver_data<popeye_state>();
 	/* bit 0 flips screen */
-	flip_screen_set(device->machine, data & 1);
+	flip_screen_set(device->machine(), data & 1);
 
 	/* bits 1-3 select DSW1 bit to read */
-	state->dswbit = (data & 0x0e) >> 1;
+	state->m_dswbit = (data & 0x0e) >> 1;
 }
 
 static READ8_DEVICE_HANDLER( popeye_portA_r )
 {
-	popeye_state *state = device->machine->driver_data<popeye_state>();
+	popeye_state *state = device->machine().driver_data<popeye_state>();
 	int res;
 
 
-	res = input_port_read(device->machine, "DSW0");
-	res |= (input_port_read(device->machine, "DSW1") << (7-state->dswbit)) & 0x80;
+	res = input_port_read(device->machine(), "DSW0");
+	res |= (input_port_read(device->machine(), "DSW1") << (7-state->m_dswbit)) & 0x80;
 
 	return res;
 }
@@ -621,9 +621,9 @@ ROM_END
 
 static DRIVER_INIT( skyskipr )
 {
-	popeye_state *state = machine->driver_data<popeye_state>();
+	popeye_state *state = machine.driver_data<popeye_state>();
 	UINT8 *buffer;
-	UINT8 *rom = machine->region("maincpu")->base();
+	UINT8 *rom = machine.region("maincpu")->base();
 	int len = 0x10000;
 
 	/* decrypt the program ROMs */
@@ -636,16 +636,16 @@ static DRIVER_INIT( skyskipr )
 		auto_free(machine, buffer);
 	}
 
-    state_save_register_global(machine, state->prot0);
-    state_save_register_global(machine, state->prot1);
-    state_save_register_global(machine, state->prot_shift);
+    state_save_register_global(machine, state->m_prot0);
+    state_save_register_global(machine, state->m_prot1);
+    state_save_register_global(machine, state->m_prot_shift);
 }
 
 static DRIVER_INIT( popeye )
 {
-	popeye_state *state = machine->driver_data<popeye_state>();
+	popeye_state *state = machine.driver_data<popeye_state>();
 	UINT8 *buffer;
-	UINT8 *rom = machine->region("maincpu")->base();
+	UINT8 *rom = machine.region("maincpu")->base();
 	int len = 0x10000;
 
 	/* decrypt the program ROMs */
@@ -658,9 +658,9 @@ static DRIVER_INIT( popeye )
 		auto_free(machine, buffer);
 	}
 
-    state_save_register_global(machine, state->prot0);
-    state_save_register_global(machine, state->prot1);
-    state_save_register_global(machine, state->prot_shift);
+    state_save_register_global(machine, state->m_prot0);
+    state_save_register_global(machine, state->m_prot1);
+    state_save_register_global(machine, state->m_prot_shift);
 }
 
 

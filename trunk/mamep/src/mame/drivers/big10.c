@@ -70,7 +70,7 @@ public:
 	big10_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 mux_data;
+	UINT8 m_mux_data;
 };
 
 
@@ -81,21 +81,21 @@ public:
 *      Interrupt handling & Video      *
 ***************************************/
 
-static void big10_vdp_interrupt(running_machine *machine, int i)
+static void big10_vdp_interrupt(running_machine &machine, int i)
 {
 	cputag_set_input_line (machine, "maincpu", 0, (i ? ASSERT_LINE : CLEAR_LINE));
 }
 
 static INTERRUPT_GEN( big10_interrupt )
 {
-	v9938_interrupt(device->machine, 0);
+	v9938_interrupt(device->machine(), 0);
 }
 
 
 static VIDEO_START( big10 )
 {
 	VIDEO_START_CALL(generic_bitmapped);
-	v9938_init (machine, 0, *machine->primary_screen, machine->generic.tmpbitmap, MODEL_V9938, VDP_MEM, big10_vdp_interrupt);
+	v9938_init (machine, 0, *machine.primary_screen, machine.generic.tmpbitmap, MODEL_V9938, VDP_MEM, big10_vdp_interrupt);
 	v9938_reset(0);
 }
 
@@ -117,21 +117,21 @@ static MACHINE_RESET(big10)
 
 static WRITE8_DEVICE_HANDLER( mux_w )
 {
-	big10_state *state = device->machine->driver_data<big10_state>();
-	state->mux_data = ~data;
+	big10_state *state = device->machine().driver_data<big10_state>();
+	state->m_mux_data = ~data;
 }
 
 static READ8_HANDLER( mux_r )
 {
-	big10_state *state = space->machine->driver_data<big10_state>();
-	switch(state->mux_data)
+	big10_state *state = space->machine().driver_data<big10_state>();
+	switch(state->m_mux_data)
 	{
-		case 1: return input_port_read(space->machine, "IN1");
-		case 2: return input_port_read(space->machine, "IN2");
-		case 4: return input_port_read(space->machine, "IN3");
+		case 1: return input_port_read(space->machine(), "IN1");
+		case 2: return input_port_read(space->machine(), "IN2");
+		case 4: return input_port_read(space->machine(), "IN3");
 	}
 
-	return state->mux_data;
+	return state->m_mux_data;
 }
 
 
@@ -139,13 +139,13 @@ static READ8_HANDLER( mux_r )
 *             Memory Map              *
 **************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xdfff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0xf000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( main_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( main_io, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ(mux_r)			/* present in test mode */
 	AM_RANGE(0x02, 0x02) AM_READ_PORT("SYSTEM")	/* coins and service */

@@ -105,18 +105,18 @@ public:
 	murogem_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram;
+	UINT8 *m_videoram;
 };
 
 
-static ADDRESS_MAP_START( murogem_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( murogem_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x007f) AM_RAM
 	AM_RANGE(0x4000, 0x4000) AM_DEVWRITE("crtc", mc6845_address_w)
 	AM_RANGE(0x4001, 0x4001) AM_DEVWRITE("crtc", mc6845_register_w)
 	AM_RANGE(0x5000, 0x5000) AM_READ_PORT("IN0")
 	AM_RANGE(0x5800, 0x5800) AM_READ_PORT("IN1")
 	AM_RANGE(0x7000, 0x7000) AM_WRITENOP // sound? payout?
-	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_BASE_MEMBER(murogem_state, videoram)
+	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_BASE_MEMBER(murogem_state, m_videoram)
 	AM_RANGE(0xf000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -177,7 +177,7 @@ static PALETTE_INIT(murogem)
 
 static SCREEN_UPDATE(murogem)
 {
-	murogem_state *state = screen->machine->driver_data<murogem_state>();
+	murogem_state *state = screen->machine().driver_data<murogem_state>();
 	int xx,yy,count;
 	count = 0x000;
 
@@ -187,10 +187,10 @@ static SCREEN_UPDATE(murogem)
 	{
 		for(xx=0;xx<32;xx++)
 		{
-			int tileno = state->videoram[count]&0x3f;
-			int attr = state->videoram[count+0x400]&0x0f;
+			int tileno = state->m_videoram[count]&0x3f;
+			int attr = state->m_videoram[count+0x400]&0x0f;
 
-			drawgfx_transpen(bitmap,cliprect,screen->machine->gfx[0],tileno,attr,0,0,xx*8,yy*8,0);
+			drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[0],tileno,attr,0,0,xx*8,yy*8,0);
 
 			count++;
 

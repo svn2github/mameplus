@@ -9,7 +9,7 @@
 #include "includes/rampart.h"
 
 
-static void rampart_bitmap_render(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect);
+static void rampart_bitmap_render(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect);
 
 /*************************************
  *
@@ -78,7 +78,7 @@ SCREEN_UPDATE( rampart )
 	int x, y, r;
 
 	/* draw the playfield */
-	rampart_bitmap_render(screen->machine, bitmap, cliprect);
+	rampart_bitmap_render(screen->machine(), bitmap, cliprect);
 
 	/* draw and merge the MO */
 	mobitmap = atarimo_render(0, cliprect, &rectlist);
@@ -108,15 +108,15 @@ SCREEN_UPDATE( rampart )
  *
  *************************************/
 
-static void rampart_bitmap_render(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void rampart_bitmap_render(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
-	rampart_state *state = machine->driver_data<rampart_state>();
+	rampart_state *state = machine.driver_data<rampart_state>();
 	int x, y;
 
 	/* update any dirty scanlines */
 	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
 	{
-		const UINT16 *src = &state->bitmap[256 * y];
+		const UINT16 *src = &state->m_bitmap[256 * y];
 		UINT16 *dst = BITMAP_ADDR16(bitmap, y, 0);
 
 		/* regenerate the line */

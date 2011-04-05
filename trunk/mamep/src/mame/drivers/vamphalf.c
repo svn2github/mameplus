@@ -51,18 +51,18 @@ public:
 	vamphalf_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT16 *tiles;
-	UINT16 *wram;
-	UINT32 *tiles32;
-	UINT32 *wram32;
-	int flip_bit;
-	int flipscreen;
-	int palshift;
-	int semicom_prot_idx;
-	int semicom_prot_which;
-	UINT16 semicom_prot_data[2];
-	UINT16 finalgdr_backupram_bank;
-	UINT8 *finalgdr_backupram;
+	UINT16 *m_tiles;
+	UINT16 *m_wram;
+	UINT32 *m_tiles32;
+	UINT32 *m_wram32;
+	int m_flip_bit;
+	int m_flipscreen;
+	int m_palshift;
+	int m_semicom_prot_idx;
+	int m_semicom_prot_which;
+	UINT16 m_semicom_prot_data[2];
+	UINT16 m_finalgdr_backupram_bank;
+	UINT8 *m_finalgdr_backupram;
 };
 
 
@@ -107,23 +107,23 @@ static WRITE32_DEVICE_HANDLER( finalgdr_eeprom_w )
 
 static WRITE16_HANDLER( flipscreen_w )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
 	if(offset)
 	{
-		state->flipscreen = data & state->flip_bit;
+		state->m_flipscreen = data & state->m_flip_bit;
 	}
 }
 
 static WRITE32_HANDLER( flipscreen32_w )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	state->flipscreen = data & state->flip_bit;
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	state->m_flipscreen = data & state->m_flip_bit;
 }
 
 static WRITE16_HANDLER( jmpbreak_flipscreen_w )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	state->flipscreen = data & 0x8000;
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	state->m_flipscreen = data & 0x8000;
 }
 
 
@@ -131,39 +131,39 @@ static WRITE32_HANDLER( paletteram32_w )
 {
 	UINT16 paldata;
 
-	COMBINE_DATA(&space->machine->generic.paletteram.u32[offset]);
+	COMBINE_DATA(&space->machine().generic.paletteram.u32[offset]);
 
-	paldata = space->machine->generic.paletteram.u32[offset] & 0xffff;
-	palette_set_color_rgb(space->machine, offset*2 + 1, pal5bit(paldata >> 10), pal5bit(paldata >> 5), pal5bit(paldata >> 0));
+	paldata = space->machine().generic.paletteram.u32[offset] & 0xffff;
+	palette_set_color_rgb(space->machine(), offset*2 + 1, pal5bit(paldata >> 10), pal5bit(paldata >> 5), pal5bit(paldata >> 0));
 
-	paldata = (space->machine->generic.paletteram.u32[offset] >> 16) & 0xffff;
-	palette_set_color_rgb(space->machine, offset*2 + 0, pal5bit(paldata >> 10), pal5bit(paldata >> 5), pal5bit(paldata >> 0));
+	paldata = (space->machine().generic.paletteram.u32[offset] >> 16) & 0xffff;
+	palette_set_color_rgb(space->machine(), offset*2 + 0, pal5bit(paldata >> 10), pal5bit(paldata >> 5), pal5bit(paldata >> 0));
 }
 
 static READ32_HANDLER( wyvernwg_prot_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	state->semicom_prot_idx--;
-	return (state->semicom_prot_data[state->semicom_prot_which] & (1 << state->semicom_prot_idx)) >> state->semicom_prot_idx;
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	state->m_semicom_prot_idx--;
+	return (state->m_semicom_prot_data[state->m_semicom_prot_which] & (1 << state->m_semicom_prot_idx)) >> state->m_semicom_prot_idx;
 }
 
 static WRITE32_HANDLER( wyvernwg_prot_w )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	state->semicom_prot_which = data & 1;
-	state->semicom_prot_idx = 8;
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	state->m_semicom_prot_which = data & 1;
+	state->m_semicom_prot_idx = 8;
 }
 
 static READ32_HANDLER( finalgdr_prot_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	state->semicom_prot_idx--;
-	return (state->semicom_prot_data[state->semicom_prot_which] & (1 << state->semicom_prot_idx)) ? 0x8000 : 0;
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	state->m_semicom_prot_idx--;
+	return (state->m_semicom_prot_data[state->m_semicom_prot_which] & (1 << state->m_semicom_prot_idx)) ? 0x8000 : 0;
 }
 
 static WRITE32_HANDLER( finalgdr_prot_w )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
 /*
 41C6
 967E
@@ -171,11 +171,11 @@ static WRITE32_HANDLER( finalgdr_prot_w )
 F94B
 */
 	if(data == 0x41c6 || data == 0x446b)
-		state->semicom_prot_which = 0;
+		state->m_semicom_prot_which = 0;
 	else
-		state->semicom_prot_which =  1;
+		state->m_semicom_prot_which =  1;
 
-	state->semicom_prot_idx = 8;
+	state->m_semicom_prot_idx = 8;
 }
 
 static WRITE32_DEVICE_HANDLER( finalgdr_oki_bank_w )
@@ -185,20 +185,20 @@ static WRITE32_DEVICE_HANDLER( finalgdr_oki_bank_w )
 
 static WRITE32_HANDLER( finalgdr_backupram_bank_w )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	state->finalgdr_backupram_bank = (data & 0xff000000) >> 24;
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	state->m_finalgdr_backupram_bank = (data & 0xff000000) >> 24;
 }
 
 static READ32_HANDLER( finalgdr_backupram_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	return state->finalgdr_backupram[offset + state->finalgdr_backupram_bank * 0x80] << 24;
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	return state->m_finalgdr_backupram[offset + state->m_finalgdr_backupram_bank * 0x80] << 24;
 }
 
 static WRITE32_HANDLER( finalgdr_backupram_w )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	state->finalgdr_backupram[offset + state->finalgdr_backupram_bank * 0x80] = data >> 24;
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	state->m_finalgdr_backupram[offset + state->m_finalgdr_backupram_bank * 0x80] = data >> 24;
 }
 
 static WRITE32_HANDLER( finalgdr_prize_w )
@@ -225,21 +225,21 @@ static WRITE32_DEVICE_HANDLER( aoh_oki_bank_w )
 }
 
 
-static ADDRESS_MAP_START( common_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x00000000, 0x001fffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, wram)
-	AM_RANGE(0x40000000, 0x4003ffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, tiles)
+static ADDRESS_MAP_START( common_map, AS_PROGRAM, 16 )
+	AM_RANGE(0x00000000, 0x001fffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, m_wram)
+	AM_RANGE(0x40000000, 0x4003ffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, m_tiles)
 	AM_RANGE(0x80000000, 0x8000ffff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0xfff00000, 0xffffffff) AM_ROM AM_REGION("user1",0)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( common_32bit_map, ADDRESS_SPACE_PROGRAM, 32 )
-	AM_RANGE(0x00000000, 0x001fffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, wram32)
-	AM_RANGE(0x40000000, 0x4003ffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, tiles32)
+static ADDRESS_MAP_START( common_32bit_map, AS_PROGRAM, 32 )
+	AM_RANGE(0x00000000, 0x001fffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, m_wram32)
+	AM_RANGE(0x40000000, 0x4003ffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, m_tiles32)
 	AM_RANGE(0x80000000, 0x8000ffff) AM_RAM_WRITE(paletteram32_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0xfff00000, 0xffffffff) AM_ROM AM_REGION("user1",0)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( vamphalf_io, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( vamphalf_io, AS_IO, 16 )
 	AM_RANGE(0x0c0, 0x0c1) AM_NOP // return 0, when oki chip is read / written
 	AM_RANGE(0x0c2, 0x0c3) AM_DEVREADWRITE8_MODERN("oki", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x140, 0x143) AM_DEVWRITE8("ymsnd", ym2151_register_port_w, 0x00ff)
@@ -251,7 +251,7 @@ static ADDRESS_MAP_START( vamphalf_io, ADDRESS_SPACE_IO, 16 )
 	AM_RANGE(0x608, 0x60b) AM_DEVWRITE("eeprom", eeprom_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( misncrft_io, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( misncrft_io, AS_IO, 16 )
 	AM_RANGE(0x100, 0x103) AM_WRITE(flipscreen_w)
 	AM_RANGE(0x200, 0x203) AM_READ_PORT("P1_P2")
 	AM_RANGE(0x240, 0x243) AM_READ_PORT("SYSTEM")
@@ -259,7 +259,7 @@ static ADDRESS_MAP_START( misncrft_io, ADDRESS_SPACE_IO, 16 )
 	AM_RANGE(0x580, 0x583) AM_DEVREAD("eeprom", eeprom_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( coolmini_io, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( coolmini_io, AS_IO, 16 )
 	AM_RANGE(0x200, 0x203) AM_WRITE(flipscreen_w)
 	AM_RANGE(0x300, 0x303) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x304, 0x307) AM_READ_PORT("P1_P2")
@@ -271,7 +271,7 @@ static ADDRESS_MAP_START( coolmini_io, ADDRESS_SPACE_IO, 16 )
 	AM_RANGE(0x7c0, 0x7c3) AM_DEVREAD("eeprom", eeprom_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( suplup_io, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( suplup_io, AS_IO, 16 )
 	AM_RANGE(0x020, 0x023) AM_DEVWRITE("eeprom", eeprom_w)
 	AM_RANGE(0x040, 0x043) AM_READ_PORT("P1_P2")
 	AM_RANGE(0x060, 0x063) AM_READ_PORT("SYSTEM")
@@ -282,7 +282,7 @@ static ADDRESS_MAP_START( suplup_io, ADDRESS_SPACE_IO, 16 )
 	AM_RANGE(0x100, 0x103) AM_DEVREAD("eeprom", eeprom_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( wyvernwg_io, ADDRESS_SPACE_IO, 32 )
+static ADDRESS_MAP_START( wyvernwg_io, AS_IO, 32 )
 	AM_RANGE(0x1800, 0x1803) AM_READWRITE(wyvernwg_prot_r, wyvernwg_prot_w)
 	AM_RANGE(0x2000, 0x2003) AM_WRITE(flipscreen32_w)
 	AM_RANGE(0x2800, 0x2803) AM_READ_PORT("P1_P2")
@@ -292,7 +292,7 @@ static ADDRESS_MAP_START( wyvernwg_io, ADDRESS_SPACE_IO, 32 )
 	AM_RANGE(0x7c00, 0x7c03) AM_DEVREAD("eeprom", eeprom32_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( finalgdr_io, ADDRESS_SPACE_IO, 32 )
+static ADDRESS_MAP_START( finalgdr_io, AS_IO, 32 )
 	AM_RANGE(0x2400, 0x2403) AM_READ(finalgdr_prot_r)
 	AM_RANGE(0x2800, 0x2803) AM_WRITE(finalgdr_backupram_bank_w)
 	AM_RANGE(0x2c00, 0x2dff) AM_READWRITE(finalgdr_backupram_r, finalgdr_backupram_w)
@@ -309,7 +309,7 @@ static ADDRESS_MAP_START( finalgdr_io, ADDRESS_SPACE_IO, 32 )
 	AM_RANGE(0x60a0, 0x60a3) AM_DEVWRITE("oki", finalgdr_oki_bank_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( mrkicker_io, ADDRESS_SPACE_IO, 32 )
+static ADDRESS_MAP_START( mrkicker_io, AS_IO, 32 )
 	AM_RANGE(0x2400, 0x2403) AM_DEVREAD("eeprom", eeprom32_r)
 	AM_RANGE(0x4000, 0x4003) AM_READNOP //?
 	AM_RANGE(0x4000, 0x4003) AM_DEVWRITE("eeprom", finalgdr_eeprom_w)
@@ -324,7 +324,7 @@ static ADDRESS_MAP_START( mrkicker_io, ADDRESS_SPACE_IO, 32 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( jmpbreak_io, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( jmpbreak_io, AS_IO, 16 )
 	AM_RANGE(0x0c0, 0x0c3) AM_NOP // ?
 	AM_RANGE(0x100, 0x103) AM_WRITENOP // ?
 	AM_RANGE(0x240, 0x243) AM_READ_PORT("P1_P2")
@@ -337,7 +337,7 @@ static ADDRESS_MAP_START( jmpbreak_io, ADDRESS_SPACE_IO, 16 )
 	AM_RANGE(0x684, 0x687) AM_DEVREADWRITE8("ymsnd", ym2151_status_port_r, ym2151_data_port_w, 0x00ff)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( mrdig_io, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( mrdig_io, AS_IO, 16 )
 	AM_RANGE(0x500, 0x503) AM_READ_PORT("P1_P2")
 	AM_RANGE(0x3c0, 0x3c3) AM_DEVWRITE("eeprom", eeprom_w)
 	AM_RANGE(0x180, 0x183) AM_DEVREAD("eeprom", eeprom_r)
@@ -348,16 +348,16 @@ static ADDRESS_MAP_START( mrdig_io, ADDRESS_SPACE_IO, 16 )
 	AM_RANGE(0x0c4, 0x0c7) AM_DEVREADWRITE8("ymsnd", ym2151_status_port_r, ym2151_data_port_w, 0x00ff)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( aoh_map, ADDRESS_SPACE_PROGRAM, 32 )
-	AM_RANGE(0x00000000, 0x003fffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, wram32)
-	AM_RANGE(0x40000000, 0x4003ffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, tiles32)
+static ADDRESS_MAP_START( aoh_map, AS_PROGRAM, 32 )
+	AM_RANGE(0x00000000, 0x003fffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, m_wram32)
+	AM_RANGE(0x40000000, 0x4003ffff) AM_RAM AM_BASE_MEMBER(vamphalf_state, m_tiles32)
 	AM_RANGE(0x80000000, 0x8000ffff) AM_RAM_WRITE(paletteram32_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x80210000, 0x80210003) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x80220000, 0x80220003) AM_READ_PORT("P1_P2")
 	AM_RANGE(0xffc00000, 0xffffffff) AM_ROM AM_REGION("user1",0)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( aoh_io, ADDRESS_SPACE_IO, 32 )
+static ADDRESS_MAP_START( aoh_io, AS_IO, 32 )
 	AM_RANGE(0x0480, 0x0483) AM_DEVWRITE("eeprom", eeprom32_w)
 	AM_RANGE(0x0620, 0x0623) AM_DEVREADWRITE8_MODERN("oki_2", okim6295_device, read, write, 0x0000ff00)
 	AM_RANGE(0x0660, 0x0663) AM_DEVREADWRITE8_MODERN("oki_1", okim6295_device, read, write, 0x0000ff00)
@@ -387,8 +387,8 @@ Offset+3
 */
 static void draw_sprites(screen_device *screen, bitmap_t *bitmap)
 {
-	vamphalf_state *state = screen->machine->driver_data<vamphalf_state>();
-	const gfx_element *gfx = screen->machine->gfx[0];
+	vamphalf_state *state = screen->machine().driver_data<vamphalf_state>();
+	const gfx_element *gfx = screen->machine().gfx[0];
 	UINT32 cnt;
 	int block, offs;
 	int code,color,x,y,fx,fy;
@@ -399,7 +399,7 @@ static void draw_sprites(screen_device *screen, bitmap_t *bitmap)
 
 	for (block=0; block<0x8000; block+=0x800)
 	{
-		if(state->flipscreen)
+		if(state->m_flipscreen)
 		{
 			clip.min_y = 256 - (16-(block/0x800))*16;
 			clip.max_y = 256 - ((16-(block/0x800))*16)+15;
@@ -415,37 +415,37 @@ static void draw_sprites(screen_device *screen, bitmap_t *bitmap)
 			offs = (block + cnt) / 2;
 
 			// 16bit version
-			if(state->tiles != NULL)
+			if(state->m_tiles != NULL)
 			{
-				if(state->tiles[offs] & 0x0100) continue;
+				if(state->m_tiles[offs] & 0x0100) continue;
 
-				code  = state->tiles[offs+1];
-				color = (state->tiles[offs+2] >> state->palshift) & 0x7f;
+				code  = state->m_tiles[offs+1];
+				color = (state->m_tiles[offs+2] >> state->m_palshift) & 0x7f;
 
-				x = state->tiles[offs+3] & 0x01ff;
-				y = 256 - (state->tiles[offs] & 0x00ff);
+				x = state->m_tiles[offs+3] & 0x01ff;
+				y = 256 - (state->m_tiles[offs] & 0x00ff);
 
-				fx = state->tiles[offs] & 0x8000;
-				fy = state->tiles[offs] & 0x4000;
+				fx = state->m_tiles[offs] & 0x8000;
+				fy = state->m_tiles[offs] & 0x4000;
 			}
 			// 32bit version
 			else
 			{
 				offs /= 2;
 
-				if(state->tiles32[offs] & 0x01000000) continue;
+				if(state->m_tiles32[offs] & 0x01000000) continue;
 
-				code  = state->tiles32[offs] & 0xffff;
-				color = ((state->tiles32[offs+1] >> state->palshift) & 0x7f0000) >> 16;
+				code  = state->m_tiles32[offs] & 0xffff;
+				color = ((state->m_tiles32[offs+1] >> state->m_palshift) & 0x7f0000) >> 16;
 
-				x = state->tiles32[offs+1] & 0x01ff;
-				y = 256 - ((state->tiles32[offs] & 0x00ff0000) >> 16);
+				x = state->m_tiles32[offs+1] & 0x01ff;
+				y = 256 - ((state->m_tiles32[offs] & 0x00ff0000) >> 16);
 
-				fx = state->tiles32[offs] & 0x80000000;
-				fy = state->tiles32[offs] & 0x40000000;
+				fx = state->m_tiles32[offs] & 0x80000000;
+				fy = state->m_tiles32[offs] & 0x40000000;
 			}
 
-			if(state->flipscreen)
+			if(state->m_flipscreen)
 			{
 				fx = !fx;
 				fy = !fy;
@@ -461,8 +461,8 @@ static void draw_sprites(screen_device *screen, bitmap_t *bitmap)
 
 static void draw_sprites_aoh(screen_device *screen, bitmap_t *bitmap)
 {
-	vamphalf_state *state = screen->machine->driver_data<vamphalf_state>();
-	const gfx_element *gfx = screen->machine->gfx[0];
+	vamphalf_state *state = screen->machine().driver_data<vamphalf_state>();
+	const gfx_element *gfx = screen->machine().gfx[0];
 	UINT32 cnt;
 	int block, offs;
 	int code,color,x,y,fx,fy;
@@ -473,7 +473,7 @@ static void draw_sprites_aoh(screen_device *screen, bitmap_t *bitmap)
 
 	for (block=0; block<0x8000; block+=0x800)
 	{
-		if(state->flipscreen)
+		if(state->m_flipscreen)
 		{
 			clip.min_y = 256 - (16-(block/0x800))*16;
 			clip.max_y = 256 - ((16-(block/0x800))*16)+15;
@@ -489,17 +489,17 @@ static void draw_sprites_aoh(screen_device *screen, bitmap_t *bitmap)
 			offs = (block + cnt) / 2;
 			{
 				offs /= 2;
-				code  = (state->tiles32[offs] & 0xffff) | ((state->tiles32[offs] & 0x3000000) >> 8);
-				color = ((state->tiles32[offs+1] >> state->palshift) & 0x7f0000) >> 16;
+				code  = (state->m_tiles32[offs] & 0xffff) | ((state->m_tiles32[offs] & 0x3000000) >> 8);
+				color = ((state->m_tiles32[offs+1] >> state->m_palshift) & 0x7f0000) >> 16;
 
-				x = state->tiles32[offs+1] & 0x01ff;
-				y = 256 - ((state->tiles32[offs] & 0x00ff0000) >> 16);
+				x = state->m_tiles32[offs+1] & 0x01ff;
+				y = 256 - ((state->m_tiles32[offs] & 0x00ff0000) >> 16);
 
-				fx = state->tiles32[offs] & 0x4000000;
-				fy = 0; // not used ? or it's state->tiles32[offs] & 0x8000000?
+				fx = state->m_tiles32[offs] & 0x4000000;
+				fy = 0; // not used ? or it's state->m_tiles32[offs] & 0x8000000?
 			}
 
-			if(state->flipscreen)
+			if(state->m_flipscreen)
 			{
 				fx = !fx;
 				fy = !fy;
@@ -648,11 +648,11 @@ static GFXDECODE_START( vamphalf )
 GFXDECODE_END
 
 
-static ADDRESS_MAP_START( qs1000_prg_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( qs1000_prg_map, AS_PROGRAM, 8 )
 	AM_RANGE( 0x0000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( qs1000_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( qs1000_io_map, AS_IO, 8 )
 	AM_RANGE( 0x0000, 0x007f) AM_RAM	// RAM?  wavetable registers?  not sure.
 ADDRESS_MAP_END
 
@@ -1598,7 +1598,7 @@ ROM_END
 
 static int irq_active(address_space *space)
 {
-	UINT32 FCR = cpu_get_reg(space->cpu, 27);
+	UINT32 FCR = cpu_get_reg(&space->device(), 27);
 	if( !(FCR&(1<<29)) ) // int 2 (irq 4)
 		return 1;
 	else
@@ -1607,370 +1607,370 @@ static int irq_active(address_space *space)
 
 static READ16_HANDLER( vamphalf_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0x82de)
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0x82de)
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram[(0x4a840/2)+offset];
+	return state->m_wram[(0x4a840/2)+offset];
 }
 
 static READ16_HANDLER( vamphafk_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0x82de)
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0x82de)
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram[(0x4a6d0/2)+offset];
+	return state->m_wram[(0x4a6d0/2)+offset];
 }
 
 static READ16_HANDLER( misncrft_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0xecc8)
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0xecc8)
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram[(0x72eb4/2)+offset];
+	return state->m_wram[(0x72eb4/2)+offset];
 }
 
 static READ16_HANDLER( coolmini_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0x75f7a)
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0x75f7a)
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram[(0xd2e80/2)+offset];
+	return state->m_wram[(0xd2e80/2)+offset];
 }
 
 static READ16_HANDLER( suplup_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0xaf18a )
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0xaf18a )
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram[(0x11605c/2)+offset];
+	return state->m_wram[(0x11605c/2)+offset];
 }
 
 static READ16_HANDLER( luplup_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0xaefac )
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0xaefac )
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram[(0x115e84/2)+offset];
+	return state->m_wram[(0x115e84/2)+offset];
 }
 
 static READ16_HANDLER( luplup29_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0xae6c0 )
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0xae6c0 )
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram[(0x113f08/2)+offset];
+	return state->m_wram[(0x113f08/2)+offset];
 }
 
 static READ16_HANDLER( puzlbang_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0xae6d2 )
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0xae6d2 )
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram[(0x113ecc/2)+offset];
+	return state->m_wram[(0x113ecc/2)+offset];
 }
 
 static READ32_HANDLER( wyvernwg_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0x10758 )
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0x10758 )
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram32[0x00b56fc/4];
+	return state->m_wram32[0x00b56fc/4];
 }
 
 static READ32_HANDLER( finalgdr_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0x1c212)
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0x1c212)
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram32[0x005e874/4];
+	return state->m_wram32[0x005e874/4];
 }
 
 static READ32_HANDLER( mrkicker_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	UINT32 pc = cpu_get_pc(space->cpu);
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	UINT32 pc = cpu_get_pc(&space->device());
 	if(pc == 0x469de || pc == 0x46a36)
 	{
 //      if(irq_active(space))
-//          cpu_spinuntil_int(space->cpu);
+//          device_spin_until_interrupt(&space->device());
 //      else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram32[0x00701a4/4];
+	return state->m_wram32[0x00701a4/4];
 }
 
 
 static READ16_HANDLER( dquizgo2_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0xaa622)
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0xaa622)
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram[(0xcde70/2)+offset];
+	return state->m_wram[(0xcde70/2)+offset];
 }
 
 static READ32_HANDLER( aoh_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0xb994 )
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0xb994 )
 	{
-		cpu_eat_cycles(space->cpu, 500);
+		device_eat_cycles(&space->device(), 500);
 	}
-	else if (cpu_get_pc(space->cpu) == 0xba40 )
+	else if (cpu_get_pc(&space->device()) == 0xba40 )
 	{
-		cpu_eat_cycles(space->cpu, 500);
+		device_eat_cycles(&space->device(), 500);
 	}
 
 
-	return state->wram32[0x28a09c/4];
+	return state->m_wram32[0x28a09c/4];
 }
 
 static READ16_HANDLER( jmpbreak_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0x983c)
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0x983c)
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram[(0x00906fc / 2)+offset];
+	return state->m_wram[(0x00906fc / 2)+offset];
 }
 
 static READ16_HANDLER( mrdig_speedup_r )
 {
-	vamphalf_state *state = space->machine->driver_data<vamphalf_state>();
-	if(cpu_get_pc(space->cpu) == 0x1710)
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(cpu_get_pc(&space->device()) == 0x1710)
 	{
 		if(irq_active(space))
-			cpu_spinuntil_int(space->cpu);
+			device_spin_until_interrupt(&space->device());
 		else
-			cpu_eat_cycles(space->cpu, 50);
+			device_eat_cycles(&space->device(), 50);
 	}
 
-	return state->wram[(0x00a99c / 2)+offset];
+	return state->m_wram[(0x00a99c / 2)+offset];
 }
 
 static DRIVER_INIT( vamphalf )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x0004a840, 0x0004a843, 0, 0, vamphalf_speedup_r );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x0004a840, 0x0004a843, FUNC(vamphalf_speedup_r) );
 
-	state->palshift = 0;
-	state->flip_bit = 0x80;
+	state->m_palshift = 0;
+	state->m_flip_bit = 0x80;
 }
 
 static DRIVER_INIT( vamphafk )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x0004a6d0, 0x0004a6d3, 0, 0, vamphafk_speedup_r );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x0004a6d0, 0x0004a6d3, FUNC(vamphafk_speedup_r) );
 
-	state->palshift = 0;
-	state->flip_bit = 0x80;
+	state->m_palshift = 0;
+	state->m_flip_bit = 0x80;
 }
 
 static DRIVER_INIT( misncrft )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x00072eb4, 0x00072eb7, 0, 0, misncrft_speedup_r );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00072eb4, 0x00072eb7, FUNC(misncrft_speedup_r) );
 
-	state->palshift = 0;
-	state->flip_bit = 1;
+	state->m_palshift = 0;
+	state->m_flip_bit = 1;
 }
 
 static DRIVER_INIT( coolmini )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x000d2e80, 0x000d2e83, 0, 0, coolmini_speedup_r );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x000d2e80, 0x000d2e83, FUNC(coolmini_speedup_r) );
 
-	state->palshift = 0;
-	state->flip_bit = 1;
+	state->m_palshift = 0;
+	state->m_flip_bit = 1;
 }
 
 static DRIVER_INIT( suplup )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x0011605c, 0x0011605f, 0, 0, suplup_speedup_r );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x0011605c, 0x0011605f, FUNC(suplup_speedup_r) );
 
-	state->palshift = 8;
+	state->m_palshift = 8;
 	/* no flipscreen */
 }
 
 static DRIVER_INIT( luplup )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x00115e84, 0x00115e87, 0, 0, luplup_speedup_r );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00115e84, 0x00115e87, FUNC(luplup_speedup_r) );
 
-	state->palshift = 8;
+	state->m_palshift = 8;
 	/* no flipscreen */
 }
 
 static DRIVER_INIT( luplup29 )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x00113f08, 0x00113f0b, 0, 0, luplup29_speedup_r );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00113f08, 0x00113f0b, FUNC(luplup29_speedup_r) );
 
-	state->palshift = 8;
+	state->m_palshift = 8;
 	/* no flipscreen */
 }
 
 static DRIVER_INIT( puzlbang )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x00113ecc, 0x00113ecf, 0, 0, puzlbang_speedup_r );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00113ecc, 0x00113ecf, FUNC(puzlbang_speedup_r) );
 
-	state->palshift = 8;
+	state->m_palshift = 8;
 	/* no flipscreen */
 }
 
 static DRIVER_INIT( wyvernwg )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x00b56fc, 0x00b56ff, 0, 0, wyvernwg_speedup_r );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00b56fc, 0x00b56ff, FUNC(wyvernwg_speedup_r) );
 
-	state->palshift = 0;
-	state->flip_bit = 1;
+	state->m_palshift = 0;
+	state->m_flip_bit = 1;
 
-	state->semicom_prot_idx = 8;
-	state->semicom_prot_data[0] = 2;
-	state->semicom_prot_data[1] = 1;
+	state->m_semicom_prot_idx = 8;
+	state->m_semicom_prot_data[0] = 2;
+	state->m_semicom_prot_data[1] = 1;
 }
 
 static DRIVER_INIT( finalgdr )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	state->finalgdr_backupram_bank = 1;
-	state->finalgdr_backupram = auto_alloc_array(machine, UINT8, 0x80*0x100);
-	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x005e874, 0x005e877, 0, 0, finalgdr_speedup_r );
-	machine->device<nvram_device>("nvram")->set_base(state->finalgdr_backupram, 0x80*0x100);
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	state->m_finalgdr_backupram_bank = 1;
+	state->m_finalgdr_backupram = auto_alloc_array(machine, UINT8, 0x80*0x100);
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x005e874, 0x005e877, FUNC(finalgdr_speedup_r) );
+	machine.device<nvram_device>("nvram")->set_base(state->m_finalgdr_backupram, 0x80*0x100);
 
-	state->palshift = 0;
-	state->flip_bit = 1; //?
+	state->m_palshift = 0;
+	state->m_flip_bit = 1; //?
 
-	state->semicom_prot_idx = 8;
-	state->semicom_prot_data[0] = 2;
-	state->semicom_prot_data[1] = 3;
+	state->m_semicom_prot_idx = 8;
+	state->m_semicom_prot_data[0] = 2;
+	state->m_semicom_prot_data[1] = 3;
 }
 
 static DRIVER_INIT( mrkicker )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
 	// backup ram isn't used
-	state->finalgdr_backupram_bank = 1;
-	state->finalgdr_backupram = auto_alloc_array(machine, UINT8, 0x80*0x100);
-	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x00701a4, 0x00701a7, 0, 0, mrkicker_speedup_r );
-	machine->device<nvram_device>("nvram")->set_base(state->finalgdr_backupram, 0x80*0x100);
+	state->m_finalgdr_backupram_bank = 1;
+	state->m_finalgdr_backupram = auto_alloc_array(machine, UINT8, 0x80*0x100);
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00701a4, 0x00701a7, FUNC(mrkicker_speedup_r) );
+	machine.device<nvram_device>("nvram")->set_base(state->m_finalgdr_backupram, 0x80*0x100);
 
-	state->palshift = 0;
-	state->flip_bit = 1; //?
+	state->m_palshift = 0;
+	state->m_flip_bit = 1; //?
 
-	state->semicom_prot_idx = 8;
-	state->semicom_prot_data[0] = 2;
-	state->semicom_prot_data[1] = 3;
+	state->m_semicom_prot_idx = 8;
+	state->m_semicom_prot_data[0] = 2;
+	state->m_semicom_prot_data[1] = 3;
 }
 
 static DRIVER_INIT( dquizgo2 )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x00cde70, 0x00cde73, 0, 0, dquizgo2_speedup_r );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00cde70, 0x00cde73, FUNC(dquizgo2_speedup_r) );
 
-	state->palshift = 0;
-	state->flip_bit = 1;
+	state->m_palshift = 0;
+	state->m_flip_bit = 1;
 }
 
 static DRIVER_INIT( aoh )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x028a09c, 0x028a09f, 0, 0, aoh_speedup_r );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x028a09c, 0x028a09f, FUNC(aoh_speedup_r) );
 
-	state->palshift = 0;
+	state->m_palshift = 0;
 	/* no flipscreen */
 }
 
 static DRIVER_INIT( jmpbreak )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x00906fc, 0x00906ff, 0, 0, jmpbreak_speedup_r );
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xe0000000, 0xe0000003, 0, 0, jmpbreak_flipscreen_w );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00906fc, 0x00906ff, FUNC(jmpbreak_speedup_r) );
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xe0000000, 0xe0000003, FUNC(jmpbreak_flipscreen_w) );
 
-	state->palshift = 0;
+	state->m_palshift = 0;
 }
 
 static DRIVER_INIT( mrdig )
 {
-	vamphalf_state *state = machine->driver_data<vamphalf_state>();
-	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x00a99c, 0x00a99f, 0, 0, mrdig_speedup_r );
-	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xe0000000, 0xe0000003, 0, 0, jmpbreak_flipscreen_w );
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00a99c, 0x00a99f, FUNC(mrdig_speedup_r) );
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xe0000000, 0xe0000003, FUNC(jmpbreak_flipscreen_w) );
 
-	state->palshift = 0;
+	state->m_palshift = 0;
 }
 
 GAME( 1999, coolmini, 0,        coolmini, common,   coolmini, ROT0,   "SemiCom",           "Cool Minigame Collection", 0 )

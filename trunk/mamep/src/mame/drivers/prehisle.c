@@ -20,17 +20,17 @@
 static WRITE16_HANDLER( prehisle_sound16_w )
 {
 	soundlatch_w(space, 0, data & 0xff);
-	cputag_set_input_line(space->machine, "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	cputag_set_input_line(space->machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
 /*******************************************************************************/
 
-static ADDRESS_MAP_START( prehisle_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( prehisle_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x070000, 0x073fff) AM_RAM
-	AM_RANGE(0x090000, 0x0907ff) AM_RAM_WRITE(prehisle_fg_videoram16_w) AM_BASE_MEMBER(prehisle_state, videoram)
-	AM_RANGE(0x0a0000, 0x0a07ff) AM_RAM AM_BASE_MEMBER(prehisle_state, spriteram)
-	AM_RANGE(0x0b0000, 0x0b3fff) AM_RAM_WRITE(prehisle_bg_videoram16_w) AM_BASE_MEMBER(prehisle_state, bg_videoram16)
+	AM_RANGE(0x090000, 0x0907ff) AM_RAM_WRITE(prehisle_fg_videoram16_w) AM_BASE_MEMBER(prehisle_state, m_videoram)
+	AM_RANGE(0x0a0000, 0x0a07ff) AM_RAM AM_BASE_MEMBER(prehisle_state, m_spriteram)
+	AM_RANGE(0x0b0000, 0x0b3fff) AM_RAM_WRITE(prehisle_bg_videoram16_w) AM_BASE_MEMBER(prehisle_state, m_bg_videoram16)
 	AM_RANGE(0x0d0000, 0x0d07ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBxxxx_word_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x0e0000, 0x0e00ff) AM_READ(prehisle_control16_r)
 	AM_RANGE(0x0f0070, 0x0ff071) AM_WRITE(prehisle_sound16_w)
@@ -51,14 +51,14 @@ static WRITE8_DEVICE_HANDLER( D7759_upd_reset_w )
 	upd7759_reset_w(device, data & 0x80);
 }
 
-static ADDRESS_MAP_START( prehisle_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( prehisle_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
 	AM_RANGE(0xf800, 0xf800) AM_READ(soundlatch_r)
 	AM_RANGE(0xf800, 0xf800) AM_WRITENOP	// ???
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( prehisle_sound_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( prehisle_sound_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_DEVREADWRITE("ymsnd", ym3812_status_port_r, ym3812_control_port_w)
 	AM_RANGE(0x20, 0x20) AM_DEVWRITE("ymsnd", ym3812_write_port_w)
@@ -193,7 +193,7 @@ GFXDECODE_END
 
 static void irqhandler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine, "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym3812_interface ym3812_config =

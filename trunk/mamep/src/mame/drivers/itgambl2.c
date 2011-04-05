@@ -63,9 +63,9 @@ public:
 	itgambl2_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	int test_x;
-	int test_y;
-	int start_offs;
+	int m_test_x;
+	int m_test_y;
+	int m_start_offs;
 };
 
 
@@ -75,59 +75,59 @@ public:
 
 static VIDEO_START( itgambl2 )
 {
-	itgambl2_state *state = machine->driver_data<itgambl2_state>();
-	state->test_x = 256;
-	state->test_y = 256;
-	state->start_offs = 0;
+	itgambl2_state *state = machine.driver_data<itgambl2_state>();
+	state->m_test_x = 256;
+	state->m_test_y = 256;
+	state->m_start_offs = 0;
 }
 
 /* (dirty) debug code for looking 8bpps blitter-based gfxs */
 static SCREEN_UPDATE( itgambl2 )
 {
-	itgambl2_state *state = screen->machine->driver_data<itgambl2_state>();
+	itgambl2_state *state = screen->machine().driver_data<itgambl2_state>();
 	int x,y,count;
-	const UINT8 *blit_ram = screen->machine->region("gfx1")->base();
+	const UINT8 *blit_ram = screen->machine().region("gfx1")->base();
 
-	if(input_code_pressed(screen->machine, KEYCODE_Z))
-		state->test_x++;
+	if(input_code_pressed(screen->machine(), KEYCODE_Z))
+		state->m_test_x++;
 
-	if(input_code_pressed(screen->machine, KEYCODE_X))
-		state->test_x--;
+	if(input_code_pressed(screen->machine(), KEYCODE_X))
+		state->m_test_x--;
 
-	if(input_code_pressed(screen->machine, KEYCODE_A))
-		state->test_y++;
+	if(input_code_pressed(screen->machine(), KEYCODE_A))
+		state->m_test_y++;
 
-	if(input_code_pressed(screen->machine, KEYCODE_S))
-		state->test_y--;
+	if(input_code_pressed(screen->machine(), KEYCODE_S))
+		state->m_test_y--;
 
-	if(input_code_pressed(screen->machine, KEYCODE_Q))
-		state->start_offs+=0x200;
+	if(input_code_pressed(screen->machine(), KEYCODE_Q))
+		state->m_start_offs+=0x200;
 
-	if(input_code_pressed(screen->machine, KEYCODE_W))
-		state->start_offs-=0x200;
+	if(input_code_pressed(screen->machine(), KEYCODE_W))
+		state->m_start_offs-=0x200;
 
-	if(input_code_pressed(screen->machine, KEYCODE_E))
-		state->start_offs++;
+	if(input_code_pressed(screen->machine(), KEYCODE_E))
+		state->m_start_offs++;
 
-	if(input_code_pressed(screen->machine, KEYCODE_R))
-		state->start_offs--;
+	if(input_code_pressed(screen->machine(), KEYCODE_R))
+		state->m_start_offs--;
 
-	popmessage("%d %d %04x",state->test_x,state->test_y,state->start_offs);
+	popmessage("%d %d %04x",state->m_test_x,state->m_test_y,state->m_start_offs);
 
-	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine));
+	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
 
-	count = (state->start_offs);
+	count = (state->m_start_offs);
 
-	for(y=0;y<state->test_y;y++)
+	for(y=0;y<state->m_test_y;y++)
 	{
-		for(x=0;x<state->test_x;x++)
+		for(x=0;x<state->m_test_x;x++)
 		{
 			UINT32 color;
 
 			color = (blit_ram[count] & 0xff)>>0;
 
 			if((x)<screen->visible_area().max_x && ((y)+0)<screen->visible_area().max_y)
-				*BITMAP_ADDR32(bitmap, y, x) = screen->machine->pens[color];
+				*BITMAP_ADDR32(bitmap, y, x) = screen->machine().pens[color];
 
 			count++;
 		}
@@ -141,7 +141,7 @@ static SCREEN_UPDATE( itgambl2 )
 * Memory map information *
 *************************/
 
-static ADDRESS_MAP_START( itgambl2_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( itgambl2_map, AS_PROGRAM, 16 )
 	ADDRESS_MAP_GLOBAL_MASK(0xffffff)
 	AM_RANGE(0x000000, 0xffffff) AM_ROM
 ADDRESS_MAP_END

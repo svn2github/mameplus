@@ -36,10 +36,10 @@ Credits:
 static INTERRUPT_GEN( thief_interrupt )
 {
 	/* SLAM switch causes an NMI if it's pressed */
-	if( (input_port_read(device->machine, "P2") & 0x10) == 0 )
-		cpu_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	if( (input_port_read(device->machine(), "P2") & 0x10) == 0 )
+		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
 	else
-		cpu_set_input_line(device, 0, HOLD_LINE);
+		device_set_input_line(device, 0, HOLD_LINE);
 }
 
 /**********************************************************/
@@ -95,8 +95,8 @@ static void tape_set_motor( device_t *samples, int bOn )
 
 static WRITE8_HANDLER( thief_input_select_w )
 {
-	thief_state *state = space->machine->driver_data<thief_state>();
-	state->input_select = data;
+	thief_state *state = space->machine().driver_data<thief_state>();
+	state->m_input_select = data;
 }
 
 static WRITE8_DEVICE_HANDLER( tape_control_w )
@@ -140,24 +140,24 @@ static WRITE8_DEVICE_HANDLER( tape_control_w )
 
 static READ8_HANDLER( thief_io_r )
 {
-	thief_state *state = space->machine->driver_data<thief_state>();
-	switch( state->input_select )
+	thief_state *state = space->machine().driver_data<thief_state>();
+	switch( state->m_input_select )
 	{
-		case 0x01: return input_port_read(space->machine, "DSW1");
-		case 0x02: return input_port_read(space->machine, "DSW2");
-		case 0x04: return input_port_read(space->machine, "P1");
-		case 0x08: return input_port_read(space->machine, "P2");
+		case 0x01: return input_port_read(space->machine(), "DSW1");
+		case 0x02: return input_port_read(space->machine(), "DSW2");
+		case 0x04: return input_port_read(space->machine(), "P1");
+		case 0x08: return input_port_read(space->machine(), "P2");
 	}
 	return 0x00;
 }
 
-static ADDRESS_MAP_START( sharkatt_main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sharkatt_main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_RAM		/* 2114 */
 	AM_RANGE(0xc000, 0xdfff) AM_READWRITE(thief_videoram_r, thief_videoram_w)	/* 4116 */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( thief_main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( thief_main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x0000) AM_WRITE(thief_blit_w)
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_RAM		/* 2114 */
@@ -170,7 +170,7 @@ static ADDRESS_MAP_START( thief_main_map, ADDRESS_SPACE_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_WRITENOP /* watchdog */
 	AM_RANGE(0x10, 0x10) AM_WRITE(thief_video_control_w)
@@ -644,8 +644,8 @@ ROM_END
 
 static DRIVER_INIT( thief )
 {
-	UINT8 *dest = machine->region( "maincpu" )->base();
-	const UINT8 *source = machine->region( "cpu1" )->base();
+	UINT8 *dest = machine.region( "maincpu" )->base();
+	const UINT8 *source = machine.region( "cpu1" )->base();
 
 	/* C8 is mapped (banked) in CPU1's address space; it contains Z80 code */
 	memcpy( &dest[0xe010], &source[0x290], 0x20 );

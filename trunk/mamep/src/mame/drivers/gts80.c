@@ -16,8 +16,8 @@ public:
 		: driver_device(machine, config) { }
 };
 
-static ADDRESS_MAP_START( gts80_map, ADDRESS_SPACE_PROGRAM, 8 )
-	ADDRESS_MAP_UNMAP_HIGH
+static ADDRESS_MAP_START( gts80_map, AS_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0xffff) AM_NOP
 	AM_RANGE(0x1000, 0x17ff) AM_MIRROR(0xc000) AM_ROM
 	AM_RANGE(0x2000, 0x2fff) AM_MIRROR(0xc000) AM_ROM
 	AM_RANGE(0x3000, 0x3fff) AM_MIRROR(0xc000) AM_ROM

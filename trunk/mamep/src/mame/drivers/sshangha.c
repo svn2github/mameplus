@@ -52,6 +52,7 @@ Stephh's notes (based on the games M68000 code and some tests) :
 #include "sound/okim6295.h"
 #include "includes/sshangha.h"
 #include "video/decospr.h"
+#include "video/deco16ic.h"
 
 #define SSHANGHA_HACK	0
 
@@ -61,46 +62,46 @@ Stephh's notes (based on the games M68000 code and some tests) :
 
 static WRITE16_HANDLER( sshangha_protection16_w )
 {
-	sshangha_state *state = space->machine->driver_data<sshangha_state>();
-	COMBINE_DATA(&state->prot_data[offset]);
+	sshangha_state *state = space->machine().driver_data<sshangha_state>();
+	COMBINE_DATA(&state->m_prot_data[offset]);
 
-	logerror("CPU #0 PC %06x: warning - write unmapped control address %06x %04x\n",cpu_get_pc(space->cpu),offset<<1,data);
+	logerror("CPU #0 PC %06x: warning - write unmapped control address %06x %04x\n",cpu_get_pc(&space->device()),offset<<1,data);
 }
 
 /* Protection/IO chip 146 */
 static READ16_HANDLER( sshangha_protection16_r )
 {
-	sshangha_state *state = space->machine->driver_data<sshangha_state>();
+	sshangha_state *state = space->machine().driver_data<sshangha_state>();
 	switch (offset)
 	{
 		case 0x050 >> 1:
-			return input_port_read(space->machine, "INPUTS");
+			return input_port_read(space->machine(), "INPUTS");
 		case 0x76a >> 1:
-			return input_port_read(space->machine, "SYSTEM");
+			return input_port_read(space->machine(), "SYSTEM");
 		case 0x0ac >> 1:
-			return input_port_read(space->machine, "DSW");
+			return input_port_read(space->machine(), "DSW");
 
 		// Protection TODO
 	}
 
-	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x\n",cpu_get_pc(space->cpu),offset<<1);
-	return state->prot_data[offset];
+	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x\n",cpu_get_pc(&space->device()),offset<<1);
+	return state->m_prot_data[offset];
 }
 
 static READ16_HANDLER( sshanghb_protection16_r )
 {
-	sshangha_state *state = space->machine->driver_data<sshangha_state>();
+	sshangha_state *state = space->machine().driver_data<sshangha_state>();
 	switch (offset)
 	{
 		case 0x050 >> 1:
-			return input_port_read(space->machine, "INPUTS");
+			return input_port_read(space->machine(), "INPUTS");
 		case 0x76a >> 1:
-			return input_port_read(space->machine, "SYSTEM");
+			return input_port_read(space->machine(), "SYSTEM");
 		case 0x0ac >> 1:
-			return input_port_read(space->machine, "DSW");
+			return input_port_read(space->machine(), "DSW");
 	}
 
-	return state->prot_data[offset];
+	return state->m_prot_data[offset];
 }
 
 /* Probably returns 0xffff when sprite DMA is complete, the game waits on it */
@@ -113,28 +114,11 @@ static READ16_HANDLER( deco_71_r )
 
 static MACHINE_RESET( sshangha )
 {
-	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
-	/* Such thing is needed as there is no code to turn the screen
-       to normal orientation when the game is reset.
-       I'm using the value that forces the screen to be in normal
-         orientation when entering the "test mode"
-         (check the game code from 0x0006b8 to 0x0006f0).
-       I can't tell however if this is accurate or not. */
-	sshangha_control_0_w(space, 0, 0x10, 0x00ff);
 }
 
 /******************************************************************************/
 
-/*-------------------------------------------------
-    set_color_8888 - set a 8-8-8 RGB color using
-    the 32-bit data provided and the specified
-    shift values
--------------------------------------------------*/
-
-
-
-
-INLINE void set_color_888(running_machine *machine, pen_t color, int rshift, int gshift, int bshift, UINT32 data)
+INLINE void set_color_888(running_machine &machine, pen_t color, int rshift, int gshift, int bshift, UINT32 data)
 {
 	palette_set_color_rgb(machine, color, (data >> rshift) & 0xff, (data >> gshift) & 0xff, (data >> bshift) & 0xff);
 }
@@ -142,9 +126,9 @@ INLINE void set_color_888(running_machine *machine, pen_t color, int rshift, int
 
 WRITE16_HANDLER( paletteram16_xbgr_word_be_sprites2_w )
 {
-	sshangha_state *state = space->machine->driver_data<sshangha_state>();
-	COMBINE_DATA(&state->sprite_paletteram2[offset]);
-	set_color_888(space->machine, (offset/2)+0x100, 0, 8, 16, state->sprite_paletteram2[(offset) | 1] | (state->sprite_paletteram2[(offset) & ~1] << 16) );
+	sshangha_state *state = space->machine().driver_data<sshangha_state>();
+	COMBINE_DATA(&state->m_sprite_paletteram2[offset]);
+	set_color_888(space->machine(), (offset/2)+0x100, 0, 8, 16, state->m_sprite_paletteram2[(offset) | 1] | (state->m_sprite_paletteram2[(offset) & ~1] << 16) );
 }
 
 WRITE16_HANDLER( paletteram16_xbgr_word_be_sprites_w )
@@ -156,35 +140,35 @@ WRITE16_HANDLER( paletteram16_xbgr_word_be_sprites_w )
 	// maybe related to sprite DMA on the original, or the apparent lack of a 2nd sprite controller on the bootleg.
 	paletteram16_xbgr_word_be_sprites2_w(space,offset,data,mem_mask);
 
-	sshangha_state *state = space->machine->driver_data<sshangha_state>();
-	COMBINE_DATA(&state->sprite_paletteram[offset]);
-	set_color_888(space->machine, (offset/2)+0x000, 0, 8, 16, state->sprite_paletteram[(offset) | 1] | (state->sprite_paletteram[(offset) & ~1] << 16) );
+	sshangha_state *state = space->machine().driver_data<sshangha_state>();
+	COMBINE_DATA(&state->m_sprite_paletteram[offset]);
+	set_color_888(space->machine(), (offset/2)+0x000, 0, 8, 16, state->m_sprite_paletteram[(offset) | 1] | (state->m_sprite_paletteram[(offset) & ~1] << 16) );
 }
 
 WRITE16_HANDLER( paletteram16_xbgr_word_be_tilelow_w )
 {
-	sshangha_state *state = space->machine->driver_data<sshangha_state>();
-	COMBINE_DATA(&state->tile_paletteram1[offset]);
-	set_color_888(space->machine, (offset/2)+0x200, 0, 8, 16, state->tile_paletteram1[(offset) | 1] | (state->tile_paletteram1[(offset) & ~1] << 16) );
+	sshangha_state *state = space->machine().driver_data<sshangha_state>();
+	COMBINE_DATA(&state->m_tile_paletteram1[offset]);
+	set_color_888(space->machine(), (offset/2)+0x200, 0, 8, 16, state->m_tile_paletteram1[(offset) | 1] | (state->m_tile_paletteram1[(offset) & ~1] << 16) );
 }
 
 WRITE16_HANDLER( paletteram16_xbgr_word_be_tilehigh_w )
 {
-	sshangha_state *state = space->machine->driver_data<sshangha_state>();
-	COMBINE_DATA(&state->tile_paletteram2[offset]);
-	set_color_888(space->machine, (offset/2)+0x300, 0, 8, 16, state->tile_paletteram2[(offset) | 1] | (state->tile_paletteram2[(offset) & ~1] << 16) );
+	sshangha_state *state = space->machine().driver_data<sshangha_state>();
+	COMBINE_DATA(&state->m_tile_paletteram2[offset]);
+	set_color_888(space->machine(), (offset/2)+0x300, 0, 8, 16, state->m_tile_paletteram2[(offset) | 1] | (state->m_tile_paletteram2[(offset) & ~1] << 16) );
 }
 
-static ADDRESS_MAP_START( sshangha_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( sshangha_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
-	AM_RANGE(0x100000, 0x10000f) AM_RAM AM_BASE_MEMBER(sshangha_state, sound_shared_ram)
+	AM_RANGE(0x100000, 0x10000f) AM_RAM AM_BASE_MEMBER(sshangha_state, m_sound_shared_ram)
 
-	AM_RANGE(0x200000, 0x201fff) AM_RAM_WRITE(sshangha_pf1_data_w) AM_BASE_MEMBER(sshangha_state, pf1_data)
-	AM_RANGE(0x202000, 0x203fff) AM_RAM_WRITE(sshangha_pf2_data_w) AM_BASE_MEMBER(sshangha_state, pf2_data)
-	AM_RANGE(0x204000, 0x2047ff) AM_RAM AM_BASE_MEMBER(sshangha_state, pf1_rowscroll)
-	AM_RANGE(0x206000, 0x2067ff) AM_RAM AM_BASE_MEMBER(sshangha_state, pf2_rowscroll)
+	AM_RANGE(0x200000, 0x201fff) AM_DEVREADWRITE("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
+	AM_RANGE(0x202000, 0x203fff) AM_DEVREADWRITE("tilegen1", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
+	AM_RANGE(0x204000, 0x2047ff) AM_RAM AM_BASE_MEMBER(sshangha_state, m_pf1_rowscroll)
+	AM_RANGE(0x206000, 0x2067ff) AM_RAM AM_BASE_MEMBER(sshangha_state, m_pf2_rowscroll)
 	AM_RANGE(0x206800, 0x207fff) AM_RAM
-	AM_RANGE(0x300000, 0x30000f) AM_WRITE(sshangha_control_0_w)
+	AM_RANGE(0x300000, 0x30000f) AM_DEVWRITE("tilegen1", deco16ic_pf_control_w)
 	AM_RANGE(0x320000, 0x320001) AM_WRITE(sshangha_video_w)
 	AM_RANGE(0x320002, 0x320005) AM_WRITENOP
 	AM_RANGE(0x320006, 0x320007) AM_READNOP //irq ack
@@ -196,37 +180,37 @@ static ADDRESS_MAP_START( sshangha_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x370000, 0x370001) AM_READ(deco_71_r)
 	AM_RANGE(0x370000, 0x370007) AM_WRITENOP
 
-	AM_RANGE(0x380000, 0x3803ff) AM_RAM_WRITE(paletteram16_xbgr_word_be_sprites_w) AM_BASE_MEMBER(sshangha_state, sprite_paletteram)
-	AM_RANGE(0x380400, 0x3807ff) AM_RAM_WRITE(paletteram16_xbgr_word_be_tilehigh_w) AM_BASE_MEMBER(sshangha_state, tile_paletteram2)
-	AM_RANGE(0x380800, 0x380bff) AM_RAM_WRITE(paletteram16_xbgr_word_be_sprites2_w) AM_BASE_MEMBER(sshangha_state, sprite_paletteram2)
-	AM_RANGE(0x380c00, 0x380fff) AM_RAM_WRITE(paletteram16_xbgr_word_be_tilelow_w) AM_BASE_MEMBER(sshangha_state, tile_paletteram1)
+	AM_RANGE(0x380000, 0x3803ff) AM_RAM_WRITE(paletteram16_xbgr_word_be_sprites_w) AM_BASE_MEMBER(sshangha_state, m_sprite_paletteram)
+	AM_RANGE(0x380400, 0x3807ff) AM_RAM_WRITE(paletteram16_xbgr_word_be_tilehigh_w) AM_BASE_MEMBER(sshangha_state, m_tile_paletteram2)
+	AM_RANGE(0x380800, 0x380bff) AM_RAM_WRITE(paletteram16_xbgr_word_be_sprites2_w) AM_BASE_MEMBER(sshangha_state, m_sprite_paletteram2)
+	AM_RANGE(0x380c00, 0x380fff) AM_RAM_WRITE(paletteram16_xbgr_word_be_tilelow_w) AM_BASE_MEMBER(sshangha_state, m_tile_paletteram1)
 	AM_RANGE(0x381000, 0x383fff) AM_RAM // unused palette area
 
 	AM_RANGE(0xfec000, 0xff3fff) AM_RAM
-	AM_RANGE(0xff4000, 0xff47ff) AM_READWRITE(sshangha_protection16_r,sshangha_protection16_w) AM_BASE_MEMBER(sshangha_state, prot_data)
+	AM_RANGE(0xff4000, 0xff47ff) AM_READWRITE(sshangha_protection16_r,sshangha_protection16_w) AM_BASE_MEMBER(sshangha_state, m_prot_data)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sshanghb_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( sshanghb_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x084000, 0x0847ff) AM_READ(sshanghb_protection16_r)
-	AM_RANGE(0x101000, 0x10100f) AM_RAM AM_BASE_MEMBER(sshangha_state, sound_shared_ram) /* the bootleg writes here */
+	AM_RANGE(0x101000, 0x10100f) AM_RAM AM_BASE_MEMBER(sshangha_state, m_sound_shared_ram) /* the bootleg writes here */
 
-	AM_RANGE(0x200000, 0x201fff) AM_RAM_WRITE(sshangha_pf1_data_w) AM_BASE_MEMBER(sshangha_state, pf1_data)
-	AM_RANGE(0x202000, 0x203fff) AM_RAM_WRITE(sshangha_pf2_data_w) AM_BASE_MEMBER(sshangha_state, pf2_data)
-	AM_RANGE(0x204000, 0x2047ff) AM_RAM AM_BASE_MEMBER(sshangha_state, pf1_rowscroll)
-	AM_RANGE(0x206000, 0x2067ff) AM_RAM AM_BASE_MEMBER(sshangha_state, pf2_rowscroll)
+	AM_RANGE(0x200000, 0x201fff) AM_DEVREADWRITE("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
+	AM_RANGE(0x202000, 0x203fff) AM_DEVREADWRITE("tilegen1", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
+	AM_RANGE(0x204000, 0x2047ff) AM_RAM AM_BASE_MEMBER(sshangha_state, m_pf1_rowscroll)
+	AM_RANGE(0x206000, 0x2067ff) AM_RAM AM_BASE_MEMBER(sshangha_state, m_pf2_rowscroll)
 	AM_RANGE(0x206800, 0x207fff) AM_RAM
-	AM_RANGE(0x300000, 0x30000f) AM_WRITE(sshangha_control_0_w)
+	AM_RANGE(0x300000, 0x30000f) AM_DEVWRITE("tilegen1", deco16ic_pf_control_w)
 	AM_RANGE(0x320000, 0x320001) AM_WRITE(sshangha_video_w)
 	AM_RANGE(0x320002, 0x320005) AM_WRITENOP
 	AM_RANGE(0x320006, 0x320007) AM_READNOP //irq ack
 
 	AM_RANGE(0x340000, 0x340fff) AM_RAM // original spriteram
 
-	AM_RANGE(0x380000, 0x3803ff) AM_RAM_WRITE(paletteram16_xbgr_word_be_sprites_w) AM_BASE_MEMBER(sshangha_state, sprite_paletteram)
-	AM_RANGE(0x380400, 0x3807ff) AM_RAM_WRITE(paletteram16_xbgr_word_be_tilehigh_w) AM_BASE_MEMBER(sshangha_state, tile_paletteram2)
-	AM_RANGE(0x380800, 0x380bff) AM_RAM_WRITE(paletteram16_xbgr_word_be_sprites2_w) AM_BASE_MEMBER(sshangha_state, sprite_paletteram2)
-	AM_RANGE(0x380c00, 0x380fff) AM_RAM_WRITE(paletteram16_xbgr_word_be_tilelow_w) AM_BASE_MEMBER(sshangha_state, tile_paletteram1)
+	AM_RANGE(0x380000, 0x3803ff) AM_RAM_WRITE(paletteram16_xbgr_word_be_sprites_w) AM_BASE_MEMBER(sshangha_state, m_sprite_paletteram)
+	AM_RANGE(0x380400, 0x3807ff) AM_RAM_WRITE(paletteram16_xbgr_word_be_tilehigh_w) AM_BASE_MEMBER(sshangha_state, m_tile_paletteram2)
+	AM_RANGE(0x380800, 0x380bff) AM_RAM_WRITE(paletteram16_xbgr_word_be_sprites2_w) AM_BASE_MEMBER(sshangha_state, m_sprite_paletteram2)
+	AM_RANGE(0x380c00, 0x380fff) AM_RAM_WRITE(paletteram16_xbgr_word_be_tilelow_w) AM_BASE_MEMBER(sshangha_state, m_tile_paletteram1)
 	AM_RANGE(0x381000, 0x383fff) AM_RAM // unused palette area
 
 	AM_RANGE(0x3c0000, 0x3c0fff) AM_RAM AM_BASE_GENERIC(spriteram) // bootleg spriteram
@@ -240,18 +224,18 @@ ADDRESS_MAP_END
 
 static READ8_HANDLER(sshangha_sound_shared_r)
 {
-	sshangha_state *state = space->machine->driver_data<sshangha_state>();
-	return state->sound_shared_ram[offset] & 0xff;
+	sshangha_state *state = space->machine().driver_data<sshangha_state>();
+	return state->m_sound_shared_ram[offset] & 0xff;
 }
 
 static WRITE8_HANDLER(sshangha_sound_shared_w)
 {
-	sshangha_state *state = space->machine->driver_data<sshangha_state>();
-	state->sound_shared_ram[offset] = data & 0xff;
+	sshangha_state *state = space->machine().driver_data<sshangha_state>();
+	state->m_sound_shared_ram[offset] = data & 0xff;
 }
 
 /* Note: there's rom data after 0x8000 but the game never seem to call a rom bank, left-over? */
-static ADDRESS_MAP_START( sshangha_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sshangha_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ymsnd", ym2203_r,ym2203_w)
 	AM_RANGE(0xc200, 0xc201) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
@@ -383,7 +367,7 @@ GFXDECODE_END
 
 static void irqhandler(device_t *device, int state)
 {
-	cputag_set_input_line(device->machine, "audiocpu", 0, state);
+	cputag_set_input_line(device->machine(), "audiocpu", 0, state);
 }
 
 static const ym2203_interface ym2203_config =
@@ -395,6 +379,25 @@ static const ym2203_interface ym2203_config =
 	},
 	irqhandler
 };
+
+static int sshangha_bank_callback( int bank )
+{
+	bank = bank >> 4;
+	return bank * 0x1000;
+}
+
+static const deco16ic_interface sshangha_deco16ic_tilegen1_intf =
+{
+	"screen",
+	0, 1,
+	0x0f, 0x0f,	/* trans masks (default values) */
+	0x10, 0x00, /* color base */
+	0x0f, 0x0f,	/* color masks (default values) */
+	sshangha_bank_callback,
+	sshangha_bank_callback,
+	0,1
+};
+
 
 static MACHINE_CONFIG_START( sshangha, sshangha_state )
 
@@ -420,6 +423,8 @@ static MACHINE_CONFIG_START( sshangha, sshangha_state )
 
 	MCFG_GFXDECODE(sshangha)
 	MCFG_PALETTE_LENGTH(0x4000)
+
+	MCFG_DECO16IC_ADD("tilegen1", sshangha_deco16ic_tilegen1_intf)
 
 	MCFG_DEVICE_ADD("spritegen1", decospr_, 0)
 	decospr_device_config::set_gfx_region(device, 2);
@@ -497,7 +502,7 @@ static DRIVER_INIT( sshangha )
 #if SSHANGHA_HACK
 	/* This is a hack to allow you to use the extra features
          of the first "Unused" Dip Switch (see notes above). */
-	UINT16 *RAM = (UINT16 *)machine->region("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)machine.region("maincpu")->base();
 	RAM[0x000384/2] = 0x4e71;
 	RAM[0x000386/2] = 0x4e71;
 	RAM[0x000388/2] = 0x4e71;

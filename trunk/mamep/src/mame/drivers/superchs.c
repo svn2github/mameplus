@@ -49,24 +49,24 @@
 
 static READ16_HANDLER( shared_ram_r )
 {
-	superchs_state *state = space->machine->driver_data<superchs_state>();
-	if ((offset&1)==0) return (state->shared_ram[offset/2]&0xffff0000)>>16;
-	return (state->shared_ram[offset/2]&0x0000ffff);
+	superchs_state *state = space->machine().driver_data<superchs_state>();
+	if ((offset&1)==0) return (state->m_shared_ram[offset/2]&0xffff0000)>>16;
+	return (state->m_shared_ram[offset/2]&0x0000ffff);
 }
 
 static WRITE16_HANDLER( shared_ram_w )
 {
-	superchs_state *state = space->machine->driver_data<superchs_state>();
+	superchs_state *state = space->machine().driver_data<superchs_state>();
 	if ((offset&1)==0) {
 		if (ACCESSING_BITS_8_15)
-			state->shared_ram[offset/2]=(state->shared_ram[offset/2]&0x00ffffff)|((data&0xff00)<<16);
+			state->m_shared_ram[offset/2]=(state->m_shared_ram[offset/2]&0x00ffffff)|((data&0xff00)<<16);
 		if (ACCESSING_BITS_0_7)
-			state->shared_ram[offset/2]=(state->shared_ram[offset/2]&0xff00ffff)|((data&0x00ff)<<16);
+			state->m_shared_ram[offset/2]=(state->m_shared_ram[offset/2]&0xff00ffff)|((data&0x00ff)<<16);
 	} else {
 		if (ACCESSING_BITS_8_15)
-			state->shared_ram[offset/2]=(state->shared_ram[offset/2]&0xffff00ff)|((data&0xff00)<< 0);
+			state->m_shared_ram[offset/2]=(state->m_shared_ram[offset/2]&0xffff00ff)|((data&0xff00)<< 0);
 		if (ACCESSING_BITS_0_7)
-			state->shared_ram[offset/2]=(state->shared_ram[offset/2]&0xffffff00)|((data&0x00ff)<< 0);
+			state->m_shared_ram[offset/2]=(state->m_shared_ram[offset/2]&0xffffff00)|((data&0x00ff)<< 0);
 	}
 }
 
@@ -83,8 +83,8 @@ static WRITE32_HANDLER( cpua_ctrl_w )
 
 	if (ACCESSING_BITS_8_15)
 	{
-		cputag_set_input_line(space->machine, "sub", INPUT_LINE_RESET, (data &0x200) ? CLEAR_LINE : ASSERT_LINE);
-		if (data&0x8000) cputag_set_input_line(space->machine, "maincpu", 3, HOLD_LINE); /* Guess */
+		cputag_set_input_line(space->machine(), "sub", INPUT_LINE_RESET, (data &0x200) ? CLEAR_LINE : ASSERT_LINE);
+		if (data&0x8000) cputag_set_input_line(space->machine(), "maincpu", 3, HOLD_LINE); /* Guess */
 	}
 
 	if (ACCESSING_BITS_0_7)
@@ -96,26 +96,26 @@ static WRITE32_HANDLER( cpua_ctrl_w )
 static WRITE32_HANDLER( superchs_palette_w )
 {
 	int a,r,g,b;
-	COMBINE_DATA(&space->machine->generic.paletteram.u32[offset]);
+	COMBINE_DATA(&space->machine().generic.paletteram.u32[offset]);
 
-	a = space->machine->generic.paletteram.u32[offset];
+	a = space->machine().generic.paletteram.u32[offset];
 	r = (a &0xff0000) >> 16;
 	g = (a &0xff00) >> 8;
 	b = (a &0xff);
 
-	palette_set_color(space->machine,offset,MAKE_RGB(r,g,b));
+	palette_set_color(space->machine(),offset,MAKE_RGB(r,g,b));
 }
 
 static READ32_HANDLER( superchs_input_r )
 {
-	superchs_state *state = space->machine->driver_data<superchs_state>();
+	superchs_state *state = space->machine().driver_data<superchs_state>();
 	switch (offset)
 	{
 		case 0x00:
-			return input_port_read(space->machine, "INPUTS");
+			return input_port_read(space->machine(), "INPUTS");
 
 		case 0x01:
-			return state->coin_word<<16;
+			return state->m_coin_word<<16;
 	}
 
 	return 0xffffffff;
@@ -123,13 +123,13 @@ static READ32_HANDLER( superchs_input_r )
 
 static WRITE32_HANDLER( superchs_input_w )
 {
-	superchs_state *state = space->machine->driver_data<superchs_state>();
+	superchs_state *state = space->machine().driver_data<superchs_state>();
 
 	#if 0
 	{
 	char t[64];
-	COMBINE_DATA(&state->mem[offset]);
-	sprintf(t,"%08x %08x",state->mem[0],state->mem[1]);
+	COMBINE_DATA(&state->m_mem[offset]);
+	sprintf(t,"%08x %08x",state->m_mem[0],state->m_mem[1]);
 	//popmessage(t);
 	}
 	#endif
@@ -140,12 +140,12 @@ static WRITE32_HANDLER( superchs_input_w )
 		{
 			if (ACCESSING_BITS_24_31)	/* $300000 is watchdog */
 			{
-				watchdog_reset(space->machine);
+				watchdog_reset(space->machine());
 			}
 
 			if (ACCESSING_BITS_0_7)
 			{
-				device_t *device = space->machine->device("eeprom");
+				device_t *device = space->machine().device("eeprom");
 				eeprom_set_clock_line(device, (data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
 				eeprom_write_bit(device, data & 0x40);
 				eeprom_set_cs_line(device, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
@@ -161,11 +161,11 @@ static WRITE32_HANDLER( superchs_input_w )
 		{
 			if (ACCESSING_BITS_24_31)
 			{
-				coin_lockout_w(space->machine, 0,~data & 0x01000000);
-				coin_lockout_w(space->machine, 1,~data & 0x02000000);
-				coin_counter_w(space->machine, 0, data & 0x04000000);
-				coin_counter_w(space->machine, 1, data & 0x08000000);
-				state->coin_word=(data >> 16) &0xffff;
+				coin_lockout_w(space->machine(), 0,~data & 0x01000000);
+				coin_lockout_w(space->machine(), 1,~data & 0x02000000);
+				coin_counter_w(space->machine(), 0, data & 0x04000000);
+				coin_counter_w(space->machine(), 1, data & 0x08000000);
+				state->m_coin_word=(data >> 16) &0xffff;
 			}
 		}
 	}
@@ -173,13 +173,13 @@ static WRITE32_HANDLER( superchs_input_w )
 
 static READ32_HANDLER( superchs_stick_r )
 {
-	superchs_state *state = space->machine->driver_data<superchs_state>();
-	int fake = input_port_read(space->machine, "FAKE");
+	superchs_state *state = space->machine().driver_data<superchs_state>();
+	int fake = input_port_read(space->machine(), "FAKE");
 	int accel;
 
 	if (!(fake &0x10))	/* Analogue steer (the real control method) */
 	{
-		state->steer = input_port_read(space->machine, "WHEEL");
+		state->m_steer = input_port_read(space->machine(), "WHEEL");
 	}
 	else	/* Digital steer, with smoothing - speed depends on how often stick_r is called */
 	{
@@ -188,10 +188,10 @@ static READ32_HANDLER( superchs_stick_r )
 		if (fake &0x04) goal = 0xff;		/* pressing left */
 		if (fake &0x08) goal = 0x0;		/* pressing right */
 
-		if (state->steer!=goal)
+		if (state->m_steer!=goal)
 		{
-			delta = goal - state->steer;
-			if (state->steer < goal)
+			delta = goal - state->m_steer;
+			if (state->m_steer < goal)
 			{
 				if (delta >2) delta = 2;
 			}
@@ -199,18 +199,18 @@ static READ32_HANDLER( superchs_stick_r )
 			{
 				if (delta < (-2)) delta = -2;
 			}
-			state->steer += delta;
+			state->m_steer += delta;
 		}
 	}
 
 	/* Accelerator is an analogue input but the game treats it as digital (on/off) */
-	if (input_port_read(space->machine,  "FAKE") & 0x1)	/* pressing B1 */
+	if (input_port_read(space->machine(),  "FAKE") & 0x1)	/* pressing B1 */
 		accel = 0x0;
 	else
 		accel = 0xff;
 
 	/* Todo: Verify brake - and figure out other input */
-	return (state->steer << 24) | (accel << 16) | (input_port_read(space->machine, "SOUND") << 8) | input_port_read(space->machine, "UNKNOWN");
+	return (state->m_steer << 24) | (accel << 16) | (input_port_read(space->machine(), "SOUND") << 8) | input_port_read(space->machine(), "UNKNOWN");
 }
 
 static WRITE32_HANDLER( superchs_stick_w )
@@ -219,20 +219,20 @@ static WRITE32_HANDLER( superchs_stick_w )
         different byte in this long word before the RTE.  I assume all but the last
         (top) byte cause an IRQ with the final one being an ACK.  (Total guess but it works). */
 	if (mem_mask != 0xff000000)
-		cputag_set_input_line(space->machine, "maincpu", 3, HOLD_LINE);
+		cputag_set_input_line(space->machine(), "maincpu", 3, HOLD_LINE);
 }
 
 /***********************************************************
              MEMORY STRUCTURES
 ***********************************************************/
 
-static ADDRESS_MAP_START( superchs_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( superchs_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x100000, 0x11ffff) AM_RAM AM_BASE_MEMBER(superchs_state, ram)
-	AM_RANGE(0x140000, 0x141fff) AM_RAM AM_BASE_SIZE_MEMBER(superchs_state, spriteram, spriteram_size)
+	AM_RANGE(0x100000, 0x11ffff) AM_RAM AM_BASE_MEMBER(superchs_state, m_ram)
+	AM_RANGE(0x140000, 0x141fff) AM_RAM AM_BASE_SIZE_MEMBER(superchs_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0x180000, 0x18ffff) AM_DEVREADWRITE("tc0480scp", tc0480scp_long_r, tc0480scp_long_w)
 	AM_RANGE(0x1b0000, 0x1b002f) AM_DEVREADWRITE("tc0480scp", tc0480scp_ctrl_long_r, tc0480scp_ctrl_long_w)
-	AM_RANGE(0x200000, 0x20ffff) AM_RAM AM_BASE_MEMBER(superchs_state, shared_ram)
+	AM_RANGE(0x200000, 0x20ffff) AM_RAM AM_BASE_MEMBER(superchs_state, m_shared_ram)
 	AM_RANGE(0x240000, 0x240003) AM_WRITE(cpua_ctrl_w)
 	AM_RANGE(0x280000, 0x287fff) AM_RAM_WRITE(superchs_palette_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x2c0000, 0x2c07ff) AM_RAM AM_SHARE("f3_shared")
@@ -240,7 +240,7 @@ static ADDRESS_MAP_START( superchs_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x340000, 0x340003) AM_READWRITE(superchs_stick_r, superchs_stick_w)	/* stick int request */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( superchs_cpub_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( superchs_cpub_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM
 	AM_RANGE(0x600000, 0x60ffff) AM_DEVWRITE("tc0480scp", tc0480scp_word_w) /* Only written upon errors */
@@ -444,27 +444,27 @@ ROM_END
 
 static READ32_HANDLER( main_cycle_r )
 {
-	superchs_state *state = space->machine->driver_data<superchs_state>();
-	if (cpu_get_pc(space->cpu)==0x702)
-		cpu_spinuntil_int(space->cpu);
+	superchs_state *state = space->machine().driver_data<superchs_state>();
+	if (cpu_get_pc(&space->device())==0x702)
+		device_spin_until_interrupt(&space->device());
 
-	return state->ram[0];
+	return state->m_ram[0];
 }
 
 static READ16_HANDLER( sub_cycle_r )
 {
-	superchs_state *state = space->machine->driver_data<superchs_state>();
-	if (cpu_get_pc(space->cpu)==0x454)
-		cpu_spinuntil_int(space->cpu);
+	superchs_state *state = space->machine().driver_data<superchs_state>();
+	if (cpu_get_pc(&space->device())==0x454)
+		device_spin_until_interrupt(&space->device());
 
-	return state->ram[2]&0xffff;
+	return state->m_ram[2]&0xffff;
 }
 
 static DRIVER_INIT( superchs )
 {
 	/* Speedup handlers */
-	memory_install_read32_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x100000, 0x100003, 0, 0, main_cycle_r);
-	memory_install_read16_handler(cputag_get_address_space(machine, "sub", ADDRESS_SPACE_PROGRAM), 0x80000a, 0x80000b, 0, 0, sub_cycle_r);
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x100000, 0x100003, FUNC(main_cycle_r));
+	machine.device("sub")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x80000a, 0x80000b, FUNC(sub_cycle_r));
 }
 
 GAMEL( 1992, superchs, 0, superchs, superchs, superchs, ROT0, "Taito America Corporation", "Super Chase - Criminal Termination (US)", 0, layout_superchs )

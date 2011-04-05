@@ -1426,7 +1426,7 @@ static NVRAM_HANDLER( naomi_eeproms )
 
 			// some games require defaults to boot (vertical, 1 player etc.)
 			for (i=0; i<ARRAY_LENGTH(jvseeprom_default_game); i++)
-				if (!strcmp(machine->gamedrv->name, jvseeprom_default_game[i].name))
+				if (!strcmp(machine.system().name, jvseeprom_default_game[i].name))
 				{
 					jvseeprom_default = jvseeprom_default_game[i].eeprom;
 					break;
@@ -1554,7 +1554,7 @@ static WRITE64_DEVICE_HANDLER( eeprom_93c46a_w )
  * Naomi 1 address map
  */
 
-static ADDRESS_MAP_START( naomi_map, ADDRESS_SPACE_PROGRAM, 64 )
+static ADDRESS_MAP_START( naomi_map, AS_PROGRAM, 64 )
 	/* Area 0 */
 	AM_RANGE(0x00000000, 0x001fffff) AM_MIRROR(0xa2000000) AM_ROM AM_REGION("maincpu", 0) // BIOS
 
@@ -1603,7 +1603,7 @@ static ADDRESS_MAP_START( naomi_map, ADDRESS_SPACE_PROGRAM, 64 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( naomi_port, ADDRESS_SPACE_IO, 64 )
+static ADDRESS_MAP_START( naomi_port, AS_IO, 64 )
 	AM_RANGE(0x00, 0x0f) AM_DEVREADWRITE("main_eeprom", eeprom_93c46a_r, eeprom_93c46a_w)
 ADDRESS_MAP_END
 
@@ -1636,7 +1636,7 @@ static WRITE64_HANDLER( aw_flash_w )
 	awflash->write(addr, data);
 }
 
-INLINE int decode_reg32_64(running_machine *machine, UINT32 offset, UINT64 mem_mask, UINT64 *shift)
+INLINE int decode_reg32_64(running_machine &machine, UINT32 offset, UINT64 mem_mask, UINT64 *shift)
 {
 	int reg = offset * 2;
 
@@ -1645,7 +1645,7 @@ INLINE int decode_reg32_64(running_machine *machine, UINT32 offset, UINT64 mem_m
 	// non 32-bit accesses have not yet been seen here, we need to know when they are
 	if ((mem_mask != U64(0xffffffff00000000)) && (mem_mask != U64(0x00000000ffffffff)))
 	{
-		mame_printf_verbose("%s:Wrong mask!\n", machine->describe_context());
+		mame_printf_verbose("%s:Wrong mask!\n", machine.describe_context());
 //      debugger_break(machine);
 	}
 
@@ -1663,11 +1663,11 @@ static READ64_HANDLER( aw_modem_r )
 	int reg;
 	UINT64 shift;
 
-	reg = decode_reg32_64(space->machine, offset, mem_mask, &shift);
+	reg = decode_reg32_64(space->machine(), offset, mem_mask, &shift);
 
 	if (reg == 0x280/4)
 	{
-		UINT32 coins = input_port_read(space->machine, "COINS");
+		UINT32 coins = input_port_read(space->machine(), "COINS");
 
 		if (coins & 0x01)
 		{
@@ -1691,12 +1691,12 @@ static WRITE64_HANDLER( aw_modem_w )
 	UINT64 shift;
 	UINT32 dat;
 
-	reg = decode_reg32_64(space->machine, offset, mem_mask, &shift);
+	reg = decode_reg32_64(space->machine(), offset, mem_mask, &shift);
 	dat = (UINT32)(data >> shift);
 	mame_printf_verbose("MODEM: [%08x=%x] write %" I64FMT "x to %x, mask %" I64FMT "x\n", 0x600000+reg*4, dat, data, offset, mem_mask);
 }
 
-static ADDRESS_MAP_START( aw_map, ADDRESS_SPACE_PROGRAM, 64 )
+static ADDRESS_MAP_START( aw_map, AS_PROGRAM, 64 )
 	/* Area 0 */
 	AM_RANGE(0x00000000, 0x0001ffff) AM_READWRITE( aw_flash_r, aw_flash_w ) AM_REGION("awflash", 0)
 	AM_RANGE(0xa0000000, 0xa001ffff) AM_READWRITE( aw_flash_r, aw_flash_w ) AM_REGION("awflash", 0)
@@ -1758,7 +1758,7 @@ ADDRESS_MAP_END
  */
 static void aica_irq(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine, "soundcpu", ARM7_FIRQ_LINE, irq ? ASSERT_LINE : CLEAR_LINE);
+	cputag_set_input_line(device->machine(), "soundcpu", ARM7_FIRQ_LINE, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -1770,7 +1770,7 @@ static const aica_interface aica_config =
 };
 
 
-static ADDRESS_MAP_START( dc_audio_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( dc_audio_map, AS_PROGRAM, 32 )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x00000000, 0x007fffff) AM_RAM	AM_BASE( &dc_sound_ram )                /* shared with SH-4 */
 	AM_RANGE(0x00800000, 0x00807fff) AM_DEVREADWRITE("aica", dc_arm_aica_r, dc_arm_aica_w)
@@ -2005,7 +2005,7 @@ INPUT_PORTS_END
 static MACHINE_RESET( naomi )
 {
 	MACHINE_RESET_CALL(dc);
-	aica_set_ram_base(machine->device("aica"), dc_sound_ram, 8*1024*1024);
+	aica_set_ram_base(machine.device("aica"), dc_sound_ram, 8*1024*1024);
 }
 
 /*
@@ -6600,9 +6600,9 @@ static const UINT32 rumblef2_key = 0xd674a;
 
 static DRIVER_INIT( atomiswave )
 {
-	UINT64 *ROM = (UINT64 *)machine->region("awflash")->base();
+	UINT64 *ROM = (UINT64 *)machine.region("awflash")->base();
 #if 0
-	UINT8 *dcdata = (UINT8 *)machine->region("user1")->base();
+	UINT8 *dcdata = (UINT8 *)machine.region("user1")->base();
 	FILE *f;
 
 	f = fopen("aw.bin", "wb");
@@ -6612,15 +6612,15 @@ static DRIVER_INIT( atomiswave )
 	// patch out long startup delay
 	ROM[0x98e/8] = (ROM[0x98e/8] & U64(0xffffffffffff)) | (UINT64)0x0009<<48;
 
-	awflash = machine->device<macronix_29l001mc_device>("awflash");
+	awflash = machine.device<macronix_29l001mc_device>("awflash");
 }
 
 #define AW_DRIVER_INIT(DRIVER)	\
 static DRIVER_INIT(DRIVER)	\
 {	\
 	int i;	\
-	UINT16 *src = (UINT16 *)(machine->region("user1")->base());	\
-	int rom_size = machine->region("user1")->bytes();	\
+	UINT16 *src = (UINT16 *)(machine.region("user1")->base());	\
+	int rom_size = machine.region("user1")->bytes();	\
 	for(i=0; i<rom_size/2; i++)	\
 	{	\
 		src[i] = atomiswave_decrypt(src[i], i*2, DRIVER##_key);	\
@@ -7035,7 +7035,7 @@ ROM_END
 /* 0021C */ GAME( 2000, virnba,   naomi,    naomi,   naomi,    naomi,    ROT0, "Sega", "Virtua NBA (JPN, USA, EXP, KOR, AUS)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
 /* 0021C */ GAME( 2000, virnbao,  virnba,   naomi,   naomi,    naomi,    ROT0, "Sega", "Virtua NBA (JPN, USA, EXP, KOR, AUS) (original)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
 // 0022C Touch de Uno! 2
-/* 0023C */ GAME( 2000, 18wheelr, naomi,    naomi,   naomi,    naomi,    ROT0, "Sega", "18 Wheeler DELUXE (Rev A) (JPN)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
+/* 0023C */ GAME( 2000, 18wheelr, naomi,    naomi,   naomi,    naomi,    ROT0, "Sega", "18 Wheeler Deluxe (Rev A) (JPN)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
 // 0025C Mars TV
 /* 0026C */ GAME( 2000, totd,     naomi,    naomi,   naomi,    naomi,    ROT0, "Sega", "The Typing of the Dead (JPN, USA, EXP, KOR, AUS) (Rev A)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
 /* 0027C */ GAME( 2000, smarinef, naomi,    naomi,   naomi,    naomi,    ROT0, "Sega", "Sega Marine Fishing", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )

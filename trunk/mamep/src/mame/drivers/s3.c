@@ -13,8 +13,8 @@ public:
 		: driver_device(machine, config) { }
 };
 
-static ADDRESS_MAP_START( williams_s3_map, ADDRESS_SPACE_PROGRAM, 8 )
-	ADDRESS_MAP_UNMAP_HIGH
+static ADDRESS_MAP_START( williams_s3_map, AS_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0xffff) AM_NOP
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x6000, 0x67ff) AM_ROM
 	AM_RANGE(0x7000, 0x77ff) AM_ROM

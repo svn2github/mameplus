@@ -30,65 +30,65 @@ we need to decrement it by 114 (Each scanline consists of 341 dots and, on NTSC,
 there are 3 dots to every 1 CPU cycle, hence 114 is the number of cycles per scanline ) */
 static void ffe_irq( device_t *device, int scanline, int vblank, int blanked )
 {
-	nes_state *state = device->machine->driver_data<nes_state>();
+	nes_state *state = device->machine().driver_data<nes_state>();
 
 	/* 114 is the number of cycles per scanline */
 	/* TODO: change to reflect the actual number of cycles spent */
-	if (state->IRQ_enable)
+	if (state->m_IRQ_enable)
 	{
-		if ((0xffff - state->IRQ_count) < 114)
+		if ((0xffff - state->m_IRQ_count) < 114)
 		{
-			cpu_set_input_line(state->maincpu, M6502_IRQ_LINE, HOLD_LINE);
-			state->IRQ_count = 0xffff;
-			state->IRQ_enable = 0;
+			device_set_input_line(state->m_maincpu, M6502_IRQ_LINE, HOLD_LINE);
+			state->m_IRQ_count = 0xffff;
+			state->m_IRQ_enable = 0;
 		}
-		state->IRQ_count -= 114;
+		state->m_IRQ_count -= 114;
 	}
 }
 
 static WRITE8_HANDLER( mapper6_l_w )
 {
-	nes_state *state = space->machine->driver_data<nes_state>();
+	nes_state *state = space->machine().driver_data<nes_state>();
 	LOG_MMC(("mapper6_l_w, offset: %04x, data: %02x\n", offset, data));
 
 	switch (offset)
 	{
 		case 0x1fe:
-			state->mmc_latch1 = data & 0x80;
-			set_nt_mirroring(space->machine, BIT(data, 4) ? PPU_MIRROR_HIGH : PPU_MIRROR_LOW);
+			state->m_mmc_latch1 = data & 0x80;
+			set_nt_mirroring(space->machine(), BIT(data, 4) ? PPU_MIRROR_HIGH : PPU_MIRROR_LOW);
 			break;
 		case 0x1ff:
-			set_nt_mirroring(space->machine, BIT(data, 4) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT);
+			set_nt_mirroring(space->machine(), BIT(data, 4) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT);
 			break;
 
 		case 0x401:
-			state->IRQ_enable = data & 0x01;
+			state->m_IRQ_enable = data & 0x01;
 			break;
 		case 0x402:
-			state->IRQ_count = (state->IRQ_count & 0xff00) | data;
+			state->m_IRQ_count = (state->m_IRQ_count & 0xff00) | data;
 			break;
 		case 0x403:
-			state->IRQ_enable = 1;
-			state->IRQ_count = (state->IRQ_count & 0x00ff) | (data << 8);
+			state->m_IRQ_enable = 1;
+			state->m_IRQ_count = (state->m_IRQ_count & 0x00ff) | (data << 8);
 			break;
 	}
 }
 
 static WRITE8_HANDLER( mapper6_w )
 {
-	nes_state *state = space->machine->driver_data<nes_state>();
+	nes_state *state = space->machine().driver_data<nes_state>();
 	LOG_MMC(("mapper6_w, offset: %04x, data: %02x\n", offset, data));
 
-	if (!state->mmc_latch1)	// when in "FFE mode" we are forced to use CHRRAM/EXRAM bank?
+	if (!state->m_mmc_latch1)	// when in "FFE mode" we are forced to use CHRRAM/EXRAM bank?
 	{
-		prg16_89ab(space->machine, data >> 2);
-		// chr8(space->machine, data & 0x03, ???);
+		prg16_89ab(space->machine(), data >> 2);
+		// chr8(space->machine(), data & 0x03, ???);
 		// due to lack of info on the exact behavior, we simply act as if mmc_latch1=1
-		if (state->mmc_chr_source == CHRROM)
-			chr8(space->machine, data & 0x03, CHRROM);
+		if (state->m_mmc_chr_source == CHRROM)
+			chr8(space->machine(), data & 0x03, CHRROM);
 	}
-	else if (state->mmc_chr_source == CHRROM)			// otherwise, we can use CHRROM (when present)
-		chr8(space->machine, data, CHRROM);
+	else if (state->m_mmc_chr_source == CHRROM)			// otherwise, we can use CHRROM (when present)
+		chr8(space->machine(), data, CHRROM);
 }
 
 /*************************************************************
@@ -106,8 +106,8 @@ static WRITE8_HANDLER( mapper8_w )
 {
 	LOG_MMC(("mapper8_w, offset: %04x, data: %02x\n", offset, data));
 
-	chr8(space->machine, data & 0x07, CHRROM);
-	prg16_89ab(space->machine, data >> 3);
+	chr8(space->machine(), data & 0x07, CHRROM);
+	prg16_89ab(space->machine(), data >> 3);
 }
 
 /*************************************************************
@@ -124,40 +124,40 @@ static WRITE8_HANDLER( mapper8_w )
 
 static WRITE8_HANDLER( mapper17_l_w )
 {
-	nes_state *state = space->machine->driver_data<nes_state>();
+	nes_state *state = space->machine().driver_data<nes_state>();
 	LOG_MMC(("mapper17_l_w, offset: %04x, data: %02x\n", offset, data));
 
 	switch (offset)
 	{
 		case 0x1fe:
-			set_nt_mirroring(space->machine, BIT(data, 4) ? PPU_MIRROR_HIGH : PPU_MIRROR_LOW);
+			set_nt_mirroring(space->machine(), BIT(data, 4) ? PPU_MIRROR_HIGH : PPU_MIRROR_LOW);
 			break;
 		case 0x1ff:
-			set_nt_mirroring(space->machine, BIT(data, 4) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT);
+			set_nt_mirroring(space->machine(), BIT(data, 4) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT);
 			break;
 
 		case 0x401:
-			state->IRQ_enable = data & 0x01;
+			state->m_IRQ_enable = data & 0x01;
 			break;
 		case 0x402:
-			state->IRQ_count = (state->IRQ_count & 0xff00) | data;
+			state->m_IRQ_count = (state->m_IRQ_count & 0xff00) | data;
 			break;
 		case 0x403:
-			state->IRQ_enable = 1;
-			state->IRQ_count = (state->IRQ_count & 0x00ff) | (data << 8);
+			state->m_IRQ_enable = 1;
+			state->m_IRQ_count = (state->m_IRQ_count & 0x00ff) | (data << 8);
 			break;
 
 		case 0x404:
-			prg8_89(space->machine, data);
+			prg8_89(space->machine(), data);
 			break;
 		case 0x405:
-			prg8_ab(space->machine, data);
+			prg8_ab(space->machine(), data);
 			break;
 		case 0x406:
-			prg8_cd(space->machine, data);
+			prg8_cd(space->machine(), data);
 			break;
 		case 0x407:
-			prg8_ef(space->machine, data);
+			prg8_ef(space->machine(), data);
 			break;
 
 		case 0x410:
@@ -168,7 +168,7 @@ static WRITE8_HANDLER( mapper17_l_w )
 		case 0x415:
 		case 0x416:
 		case 0x417:
-			chr1_x(space->machine, offset & 7, data, CHRROM);
+			chr1_x(space->machine(), offset & 7, data, CHRROM);
 			break;
 	}
 }
@@ -454,7 +454,7 @@ const nes_mmc *nes_mapper_lookup( int mapper )
 	return NULL;
 }
 
-int nes_get_mmc_id( running_machine *machine, int mapper )
+int nes_get_mmc_id( running_machine &machine, int mapper )
 {
 	const nes_mmc *mmc = nes_mapper_lookup(mapper);
 

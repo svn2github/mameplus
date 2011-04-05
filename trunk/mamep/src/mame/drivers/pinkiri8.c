@@ -42,37 +42,37 @@ public:
 	pinkiri8_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8* janshi_vram1;
-	UINT8* janshi_vram2;
-	UINT8* janshi_back_vram;
-	UINT8* janshi_crtc_regs;
-	UINT8* janshi_unk1;
-	UINT8* janshi_widthflags;
-	UINT8* janshi_unk2;
-	UINT32 vram_addr;
-	int prev_writes;
-	UINT8 mux_data;
-	UINT8 prot_read_index;
-	UINT8 prot_char[6];
-	UINT8 prot_index;
+	UINT8* m_janshi_vram1;
+	UINT8* m_janshi_vram2;
+	UINT8* m_janshi_back_vram;
+	UINT8* m_janshi_crtc_regs;
+	UINT8* m_janshi_unk1;
+	UINT8* m_janshi_widthflags;
+	UINT8* m_janshi_unk2;
+	UINT32 m_vram_addr;
+	int m_prev_writes;
+	UINT8 m_mux_data;
+	UINT8 m_prot_read_index;
+	UINT8 m_prot_char[6];
+	UINT8 m_prot_index;
 };
 
 
-static ADDRESS_MAP_START( janshi_vdp_map8, 0, 8 )
+static ADDRESS_MAP_START( janshi_vdp_map8, AS_0, 8 )
 
-	AM_RANGE(0xfc0000, 0xfc1fff) AM_RAM AM_BASE_MEMBER(pinkiri8_state, janshi_back_vram) // bg tilemap?
-	AM_RANGE(0xfc2000, 0xfc2fff) AM_RAM AM_BASE_MEMBER(pinkiri8_state, janshi_vram1) // xpos, colour, tile number etc.
+	AM_RANGE(0xfc0000, 0xfc1fff) AM_RAM AM_BASE_MEMBER(pinkiri8_state, m_janshi_back_vram) // bg tilemap?
+	AM_RANGE(0xfc2000, 0xfc2fff) AM_RAM AM_BASE_MEMBER(pinkiri8_state, m_janshi_vram1) // xpos, colour, tile number etc.
 
-	AM_RANGE(0xfc3700, 0xfc377f) AM_RAM AM_BASE_MEMBER(pinkiri8_state, janshi_unk1) // ?? height related?
-	AM_RANGE(0xfc3780, 0xfc37bf) AM_RAM AM_BASE_MEMBER(pinkiri8_state, janshi_widthflags)
-	AM_RANGE(0xfc37c0, 0xfc37ff) AM_RAM AM_BASE_MEMBER(pinkiri8_state, janshi_unk2) // 2x increasing tables 00 10 20 30 etc.
+	AM_RANGE(0xfc3700, 0xfc377f) AM_RAM AM_BASE_MEMBER(pinkiri8_state, m_janshi_unk1) // ?? height related?
+	AM_RANGE(0xfc3780, 0xfc37bf) AM_RAM AM_BASE_MEMBER(pinkiri8_state, m_janshi_widthflags)
+	AM_RANGE(0xfc37c0, 0xfc37ff) AM_RAM AM_BASE_MEMBER(pinkiri8_state, m_janshi_unk2) // 2x increasing tables 00 10 20 30 etc.
 
-	AM_RANGE(0xfc3800, 0xfc3fff) AM_RAM AM_BASE_MEMBER(pinkiri8_state, janshi_vram2) // y pos + unknown
+	AM_RANGE(0xfc3800, 0xfc3fff) AM_RAM AM_BASE_MEMBER(pinkiri8_state, m_janshi_vram2) // y pos + unknown
 
 	AM_RANGE(0xff0000, 0xff07ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split1_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0xff2000, 0xff27ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split2_w) AM_BASE_GENERIC(paletteram2)
 
-	AM_RANGE(0xff6000, 0xff601f) AM_RAM AM_BASE_MEMBER(pinkiri8_state, janshi_crtc_regs)
+	AM_RANGE(0xff6000, 0xff601f) AM_RAM AM_BASE_MEMBER(pinkiri8_state, m_janshi_crtc_regs)
 ADDRESS_MAP_END
 
 
@@ -90,7 +90,7 @@ public:
 protected:
 	virtual void device_config_complete();
 	virtual bool device_validity_check(emu_options &options, const game_driver &driver) const;
-	virtual const address_space_config *memory_space_config(int spacenum = 0) const;
+	virtual const address_space_config *memory_space_config(address_spacenum spacenum = AS_0) const;
 	address_space_config		m_space_config;
 };
 
@@ -122,7 +122,7 @@ device_config *janshi_vdp_device_config::static_alloc_device_config(const machin
 
 device_t *janshi_vdp_device_config::alloc_device(running_machine &machine) const
 {
-	return auto_alloc(&machine, janshi_vdp_device(machine, *this));
+	return auto_alloc(machine, janshi_vdp_device(machine, *this));
 }
 
 void janshi_vdp_device_config::device_config_complete()
@@ -138,7 +138,7 @@ bool janshi_vdp_device_config::device_validity_check(emu_options &options, const
 	return error;
 }
 
-const address_space_config *janshi_vdp_device_config::memory_space_config(int spacenum) const
+const address_space_config *janshi_vdp_device_config::memory_space_config(address_spacenum spacenum) const
 {
 	return (spacenum == 0) ? &m_space_config : NULL;
 }
@@ -205,15 +205,15 @@ ronjan
 
 static SCREEN_UPDATE( pinkiri8 )
 {
-	pinkiri8_state *state = screen->machine->driver_data<pinkiri8_state>();
+	pinkiri8_state *state = screen->machine().driver_data<pinkiri8_state>();
 	int col_bank;
-	const gfx_element *gfx = screen->machine->gfx[0];
+	const gfx_element *gfx = screen->machine().gfx[0];
 
 	int game_type_hack = 0;
 
-	if (!strcmp(screen->machine->gamedrv->name,"janshi")) game_type_hack = 1;
+	if (!strcmp(screen->machine().system().name,"janshi")) game_type_hack = 1;
 
-	if ( input_code_pressed_once(screen->machine, KEYCODE_W) )
+	if ( input_code_pressed_once(screen->machine(), KEYCODE_W) )
 	{
 		int i;
 		int count2;
@@ -222,7 +222,7 @@ static SCREEN_UPDATE( pinkiri8 )
 		for (i=0x00;i<0x40;i+=2)
 		{
 
-			printf("%02x, ", state->janshi_widthflags[i+1]);
+			printf("%02x, ", state->m_janshi_widthflags[i+1]);
 
 			count2++;
 
@@ -240,10 +240,10 @@ static SCREEN_UPDATE( pinkiri8 )
 
 
 
-	//popmessage("%02x",state->janshi_crtc_regs[0x0a]);
-	col_bank = (state->janshi_crtc_regs[0x0a] & 0x40) >> 6;
+	//popmessage("%02x",state->m_janshi_crtc_regs[0x0a]);
+	col_bank = (state->m_janshi_crtc_regs[0x0a] & 0x40) >> 6;
 
-	bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine));
+	bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
 
 	/* FIXME: color is a bit of a mystery */
 	{
@@ -255,8 +255,8 @@ static SCREEN_UPDATE( pinkiri8 )
 		{
 			for(x=0;x<32;x++)
 			{
-				tile = state->janshi_back_vram[count+1]<<8 | state->janshi_back_vram[count+0];
-				attr = state->janshi_back_vram[count+2] ^ 0xf0;
+				tile = state->m_janshi_back_vram[count+1]<<8 | state->m_janshi_back_vram[count+0];
+				attr = state->m_janshi_back_vram[count+2] ^ 0xf0;
 				col = (attr >> 4) | 0x10;
 
 				drawgfx_transpen(bitmap,cliprect,gfx,tile,col,0,0,x*16,y*8,0);
@@ -292,15 +292,15 @@ static SCREEN_UPDATE( pinkiri8 )
 
           */
 
-			spr_offs = ((state->janshi_vram1[(i*4)+0] & 0xff) | (state->janshi_vram1[(i*4)+1]<<8)) & 0xffff;
-			col = (state->janshi_vram1[(i*4)+2] & 0xf8) >> 3;
-			x =   state->janshi_vram1[(i*4)+3];
+			spr_offs = ((state->m_janshi_vram1[(i*4)+0] & 0xff) | (state->m_janshi_vram1[(i*4)+1]<<8)) & 0xffff;
+			col = (state->m_janshi_vram1[(i*4)+2] & 0xf8) >> 3;
+			x =   state->m_janshi_vram1[(i*4)+3];
 
 			x &= 0xff;
 			x *= 2;
 
-			unk2 = state->janshi_vram2[(i*2)+1];
-			y = (state->janshi_vram2[(i*2)+0]);
+			unk2 = state->m_janshi_vram2[(i*2)+1];
+			y = (state->m_janshi_vram2[(i*2)+0]);
 
 			y = 0x100-y;
 
@@ -313,11 +313,11 @@ static SCREEN_UPDATE( pinkiri8 )
 
 
 			// these bits seem to somehow determine the sprite height / widths for the sprite ram region?
-			int bit = state->janshi_widthflags[(i/0x20)*2 + 1];
+			int bit = state->m_janshi_widthflags[(i/0x20)*2 + 1];
 
 			if (bit)
 			{
-				//col = screen->machine->rand();
+				//col = screen->machine().rand();
 				width = 2;
 			}
 			else
@@ -407,7 +407,7 @@ static SCREEN_UPDATE( pinkiri8 )
 	return 0;
 }
 
-static ADDRESS_MAP_START( pinkiri8_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( pinkiri8_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x00000, 0x0bfff) AM_ROM
 	AM_RANGE(0x0c000, 0x0dfff) AM_RAM
 	AM_RANGE(0x0e000, 0x0ffff) AM_ROM
@@ -417,7 +417,7 @@ ADDRESS_MAP_END
 static WRITE8_HANDLER( output_regs_w )
 {
 	if(data & 0x40)
-		cputag_set_input_line(space->machine, "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
+		cputag_set_input_line(space->machine(), "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
 	//data & 0x80 is probably NMI mask
 }
 
@@ -426,34 +426,34 @@ static WRITE8_HANDLER( output_regs_w )
 
 static WRITE8_HANDLER( pinkiri8_vram_w )
 {
-	pinkiri8_state *state = space->machine->driver_data<pinkiri8_state>();
+	pinkiri8_state *state = space->machine().driver_data<pinkiri8_state>();
 	switch(offset)
 	{
 		case 0:
-			state->vram_addr = (data << 0)  | (state->vram_addr&0xffff00);
-			if (LOG_VRAM) printf("\n prev writes was %04x\n\naddress set to %04x -\n", state->prev_writes, state->vram_addr );
-			state->prev_writes = 0;
+			state->m_vram_addr = (data << 0)  | (state->m_vram_addr&0xffff00);
+			if (LOG_VRAM) printf("\n prev writes was %04x\n\naddress set to %04x -\n", state->m_prev_writes, state->m_vram_addr );
+			state->m_prev_writes = 0;
 			break;
 
 		case 1:
-			state->vram_addr = (data << 8)  | (state->vram_addr & 0xff00ff);
-			if (LOG_VRAM)printf("\naddress set to %04x\n", state->vram_addr);
+			state->m_vram_addr = (data << 8)  | (state->m_vram_addr & 0xff00ff);
+			if (LOG_VRAM)printf("\naddress set to %04x\n", state->m_vram_addr);
 			break;
 
 		case 2:
-			state->vram_addr = (data << 16) | (state->vram_addr & 0x00ffff);
-			if (LOG_VRAM)printf("\naddress set to %04x\n", state->vram_addr);
+			state->m_vram_addr = (data << 16) | (state->m_vram_addr & 0x00ffff);
+			if (LOG_VRAM)printf("\naddress set to %04x\n", state->m_vram_addr);
 			break;
 
 		case 3:
 
-			address_space *vdp_space = space->machine->device<janshi_vdp_device>("janshivdp")->space();
+			address_space *vdp_space = space->machine().device<janshi_vdp_device>("janshivdp")->space();
 
 			if (LOG_VRAM) printf("%02x ", data);
-			state->prev_writes++;
-			state->vram_addr++;
+			state->m_prev_writes++;
+			state->m_vram_addr++;
 
-			vdp_space->write_byte(state->vram_addr, data);
+			vdp_space->write_byte(state->m_vram_addr, data);
 			break;
 	}
 }
@@ -461,20 +461,20 @@ static WRITE8_HANDLER( pinkiri8_vram_w )
 
 static WRITE8_HANDLER( mux_w )
 {
-	pinkiri8_state *state = space->machine->driver_data<pinkiri8_state>();
-	state->mux_data = data;
+	pinkiri8_state *state = space->machine().driver_data<pinkiri8_state>();
+	state->m_mux_data = data;
 }
 
 static READ8_HANDLER( mux_p2_r )
 {
-	pinkiri8_state *state = space->machine->driver_data<pinkiri8_state>();
-	switch(state->mux_data)
+	pinkiri8_state *state = space->machine().driver_data<pinkiri8_state>();
+	switch(state->m_mux_data)
 	{
-		case 0x01: return input_port_read(space->machine, "PL2_01");
-		case 0x02: return input_port_read(space->machine, "PL2_02");
-		case 0x04: return input_port_read(space->machine, "PL2_03");
-		case 0x08: return input_port_read(space->machine, "PL2_04");
-		case 0x10: return input_port_read(space->machine, "PL2_05");
+		case 0x01: return input_port_read(space->machine(), "PL2_01");
+		case 0x02: return input_port_read(space->machine(), "PL2_02");
+		case 0x04: return input_port_read(space->machine(), "PL2_03");
+		case 0x08: return input_port_read(space->machine(), "PL2_04");
+		case 0x10: return input_port_read(space->machine(), "PL2_05");
 	}
 
 	return 0xff;
@@ -482,20 +482,20 @@ static READ8_HANDLER( mux_p2_r )
 
 static READ8_HANDLER( mux_p1_r )
 {
-	pinkiri8_state *state = space->machine->driver_data<pinkiri8_state>();
-	switch(state->mux_data)
+	pinkiri8_state *state = space->machine().driver_data<pinkiri8_state>();
+	switch(state->m_mux_data)
 	{
-		case 0x01: return input_port_read(space->machine, "PL1_01");
-		case 0x02: return input_port_read(space->machine, "PL1_02");
-		case 0x04: return input_port_read(space->machine, "PL1_03");
-		case 0x08: return input_port_read(space->machine, "PL1_04");
-		case 0x10: return input_port_read(space->machine, "PL1_05");
+		case 0x01: return input_port_read(space->machine(), "PL1_01");
+		case 0x02: return input_port_read(space->machine(), "PL1_02");
+		case 0x04: return input_port_read(space->machine(), "PL1_03");
+		case 0x08: return input_port_read(space->machine(), "PL1_04");
+		case 0x10: return input_port_read(space->machine(), "PL1_05");
 	}
 
 	return 0xff;
 }
 
-static ADDRESS_MAP_START( pinkiri8_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( pinkiri8_io, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x3f) AM_RAM //Z180 internal I/O
 	AM_RANGE(0x60, 0x60) AM_WRITE(output_regs_w)
@@ -1209,32 +1209,32 @@ ROM_END
 
 static READ8_HANDLER( ronjan_prot_r )
 {
-	pinkiri8_state *state = space->machine->driver_data<pinkiri8_state>();
+	pinkiri8_state *state = space->machine().driver_data<pinkiri8_state>();
 	static const char wing_str[6] = { 'W', 'I', 'N', 'G', '8', '9' };
 
-	state->prot_read_index++;
+	state->m_prot_read_index++;
 
-	if(state->prot_read_index & 1)
+	if(state->m_prot_read_index & 1)
 		return 0xff; //value is discarded
 
-	return wing_str[(state->prot_read_index >> 1)-1];
+	return wing_str[(state->m_prot_read_index >> 1)-1];
 }
 
 static WRITE8_HANDLER( ronjan_prot_w )
 {
-	pinkiri8_state *state = space->machine->driver_data<pinkiri8_state>();
+	pinkiri8_state *state = space->machine().driver_data<pinkiri8_state>();
 
 	if(data == 0)
 	{
-		state->prot_index = 0;
+		state->m_prot_index = 0;
 	}
 	else
 	{
-		state->prot_char[state->prot_index] = data;
-		state->prot_index++;
+		state->m_prot_char[state->m_prot_index] = data;
+		state->m_prot_index++;
 
-		if(state->prot_char[0] == 'E' && state->prot_char[1] == 'R' && state->prot_char[2] == 'R' && state->prot_char[3] == 'O' && state->prot_char[4] == 'R')
-			state->prot_read_index = 0;
+		if(state->m_prot_char[0] == 'E' && state->m_prot_char[1] == 'R' && state->m_prot_char[2] == 'R' && state->m_prot_char[3] == 'O' && state->m_prot_char[4] == 'R')
+			state->m_prot_read_index = 0;
 	}
 }
 
@@ -1250,9 +1250,9 @@ static READ8_HANDLER( ronjan_patched_prot_r )
 
 static DRIVER_INIT( ronjan )
 {
-	memory_install_readwrite8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x90, 0x90, 0, 0, ronjan_prot_r, ronjan_prot_w);
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x66, 0x66, 0, 0, ronjan_prot_status_r);
-	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_IO), 0x9f, 0x9f, 0, 0, ronjan_patched_prot_r);
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_readwrite_handler(0x90, 0x90, FUNC(ronjan_prot_r), FUNC(ronjan_prot_w));
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x66, 0x66, FUNC(ronjan_prot_status_r));
+	machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x9f, 0x9f, FUNC(ronjan_patched_prot_r));
 }
 
 GAME( 1992,  janshi,    0,   pinkiri8, janshi,    0,      ROT0, "Eagle",         "Janshi",          GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )

@@ -222,16 +222,16 @@
 
 static MACHINE_START( bzone )
 {
-	bzone_state *state = machine->driver_data<bzone_state>();
-	state_save_register_global(machine, state->analog_data);
+	bzone_state *state = machine.driver_data<bzone_state>();
+	state_save_register_global(machine, state->m_analog_data);
 }
 
 
 static MACHINE_START( redbaron )
 {
-	bzone_state *state = machine->driver_data<bzone_state>();
-	state_save_register_global(machine, state->analog_data);
-	state_save_register_global(machine, state->rb_input_select);
+	bzone_state *state = machine.driver_data<bzone_state>();
+	state_save_register_global(machine, state->m_analog_data);
+	state_save_register_global(machine, state->m_rb_input_select);
 }
 
 
@@ -244,8 +244,8 @@ static MACHINE_START( redbaron )
 
 static INTERRUPT_GEN( bzone_interrupt )
 {
-	if (input_port_read(device->machine, "IN0") & 0x10)
-		cpu_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	if (input_port_read(device->machine(), "IN0") & 0x10)
+		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -258,13 +258,13 @@ static INTERRUPT_GEN( bzone_interrupt )
 
 static CUSTOM_INPUT( clock_r )
 {
-	return (field->port->machine->device<cpu_device>("maincpu")->total_cycles() & 0x100) ? 1 : 0;
+	return (field->port->machine().device<cpu_device>("maincpu")->total_cycles() & 0x100) ? 1 : 0;
 }
 
 
 static WRITE8_HANDLER( bzone_coin_counter_w )
 {
-	coin_counter_w(space->machine, offset,data);
+	coin_counter_w(space->machine(), offset,data);
 }
 
 
@@ -277,14 +277,14 @@ static WRITE8_HANDLER( bzone_coin_counter_w )
 
 static READ8_DEVICE_HANDLER( redbaron_joy_r )
 {
-	bzone_state *state = device->machine->driver_data<bzone_state>();
-	return input_port_read(device->machine, state->rb_input_select ? "FAKE1" : "FAKE2");
+	bzone_state *state = device->machine().driver_data<bzone_state>();
+	return input_port_read(device->machine(), state->m_rb_input_select ? "FAKE1" : "FAKE2");
 }
 
 static WRITE8_DEVICE_HANDLER( redbaron_joysound_w )
 {
-	bzone_state *state = device->machine->driver_data<bzone_state>();
-	state->rb_input_select = data & 1;
+	bzone_state *state = device->machine().driver_data<bzone_state>();
+	state->m_rb_input_select = data & 1;
 	redbaron_sounds_w(device, offset, data);
 }
 
@@ -296,7 +296,7 @@ static WRITE8_DEVICE_HANDLER( redbaron_joysound_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( bzone_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( bzone_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x03ff) AM_RAM
 	AM_RANGE(0x0800, 0x0800) AM_READ_PORT("IN0")
@@ -316,7 +316,7 @@ static ADDRESS_MAP_START( bzone_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x3000, 0x7fff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( redbaron_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( redbaron_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x03ff) AM_RAM
 	AM_RANGE(0x0800, 0x0800) AM_READ_PORT("IN0")
@@ -780,29 +780,29 @@ ROM_END
 
 static READ8_HANDLER( analog_data_r )
 {
-	bzone_state *state = space->machine->driver_data<bzone_state>();
-	return state->analog_data;
+	bzone_state *state = space->machine().driver_data<bzone_state>();
+	return state->m_analog_data;
 }
 
 
 static WRITE8_HANDLER( analog_select_w )
 {
-	bzone_state *state = space->machine->driver_data<bzone_state>();
+	bzone_state *state = space->machine().driver_data<bzone_state>();
 	static const char *const analog_port[] = { "AN0", "AN1", "AN2" };
 
 	if (offset <= 2)
-		state->analog_data = input_port_read(space->machine, analog_port[offset]);
+		state->m_analog_data = input_port_read(space->machine(), analog_port[offset]);
 }
 
 
 static DRIVER_INIT( bradley )
 {
-	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
-	memory_install_ram(space, 0x400, 0x7ff, 0, 0, NULL);
-	memory_install_read_port(space, 0x1808, 0x1808, 0, 0, "1808");
-	memory_install_read_port(space, 0x1809, 0x1809, 0, 0, "1809");
-	memory_install_read8_handler(space, 0x180a, 0x180a, 0, 0, analog_data_r);
-	memory_install_write8_handler(space, 0x1848, 0x1850, 0, 0, analog_select_w);
+	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	space->install_ram(0x400, 0x7ff);
+	space->install_read_port(0x1808, 0x1808, "1808");
+	space->install_read_port(0x1809, 0x1809, "1809");
+	space->install_legacy_read_handler(0x180a, 0x180a, FUNC(analog_data_r));
+	space->install_legacy_write_handler(0x1848, 0x1850, FUNC(analog_select_w));
 }
 
 

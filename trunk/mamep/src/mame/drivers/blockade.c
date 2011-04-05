@@ -60,13 +60,13 @@
 
 static INTERRUPT_GEN( blockade_interrupt )
 {
-	blockade_state *state = device->machine->driver_data<blockade_state>();
-	cpu_resume(device, SUSPEND_ANY_REASON);
+	blockade_state *state = device->machine().driver_data<blockade_state>();
+	device_resume(device, SUSPEND_ANY_REASON);
 
-	if ((input_port_read(device->machine, "IN0") & 0x80) == 0)
+	if ((input_port_read(device->machine(), "IN0") & 0x80) == 0)
 	{
-		state->just_been_reset = 1;
-		cpu_set_input_line(device, INPUT_LINE_RESET, PULSE_LINE);
+		state->m_just_been_reset = 1;
+		device_set_input_line(device, INPUT_LINE_RESET, PULSE_LINE);
 	}
 }
 
@@ -78,27 +78,27 @@ static INTERRUPT_GEN( blockade_interrupt )
 
 static READ8_HANDLER( blockade_input_port_0_r )
 {
-	blockade_state *state = space->machine->driver_data<blockade_state>();
+	blockade_state *state = space->machine().driver_data<blockade_state>();
 	/* coin latch is bit 7 */
-	UINT8 temp = (input_port_read(space->machine, "IN0") & 0x7f);
+	UINT8 temp = (input_port_read(space->machine(), "IN0") & 0x7f);
 
-	return (state->coin_latch << 7) | temp;
+	return (state->m_coin_latch << 7) | temp;
 }
 
 static WRITE8_HANDLER( blockade_coin_latch_w )
 {
-	blockade_state *state = space->machine->driver_data<blockade_state>();
+	blockade_state *state = space->machine().driver_data<blockade_state>();
 
 	if (data & 0x80)
 	{
 		if (BLOCKADE_LOG) mame_printf_debug("Reset Coin Latch\n");
-		if (state->just_been_reset)
+		if (state->m_just_been_reset)
 		{
-			state->just_been_reset = 0;
-			state->coin_latch = 0;
+			state->m_just_been_reset = 0;
+			state->m_coin_latch = 0;
 		}
 		else
-			state->coin_latch = 1;
+			state->m_coin_latch = 1;
 	}
 
 	if (data & 0x20)
@@ -120,13 +120,13 @@ static WRITE8_HANDLER( blockade_coin_latch_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
     AM_RANGE(0x0000, 0x07ff) AM_ROM AM_MIRROR(0x6000)
-    AM_RANGE(0x8000, 0x83ff) AM_RAM_WRITE(blockade_videoram_w) AM_BASE_MEMBER(blockade_state, videoram) AM_MIRROR(0x6c00)
+    AM_RANGE(0x8000, 0x83ff) AM_RAM_WRITE(blockade_videoram_w) AM_BASE_MEMBER(blockade_state, m_videoram) AM_MIRROR(0x6c00)
     AM_RANGE(0x9000, 0x90ff) AM_RAM AM_MIRROR(0x6f00)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( main_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( main_io_map, AS_IO, 8 )
     AM_RANGE(0x01, 0x01) AM_READWRITE(blockade_input_port_0_r, blockade_coin_latch_w)
     AM_RANGE(0x02, 0x02) AM_READ_PORT("IN1")
     AM_RANGE(0x02, 0x02) AM_DEVWRITE("discrete", blockade_sound_freq_w)
@@ -456,18 +456,18 @@ static PALETTE_INIT( blockade )
 
 static MACHINE_START( blockade )
 {
-	blockade_state *state = machine->driver_data<blockade_state>();
+	blockade_state *state = machine.driver_data<blockade_state>();
 
-	state->save_item(NAME(state->coin_latch));
-	state->save_item(NAME(state->just_been_reset));
+	state->save_item(NAME(state->m_coin_latch));
+	state->save_item(NAME(state->m_just_been_reset));
 }
 
 static MACHINE_RESET( blockade )
 {
-	blockade_state *state = machine->driver_data<blockade_state>();
+	blockade_state *state = machine.driver_data<blockade_state>();
 
-	state->coin_latch = 1;
-	state->just_been_reset = 0;
+	state->m_coin_latch = 1;
+	state->m_just_been_reset = 0;
 }
 
 static MACHINE_CONFIG_START( blockade, blockade_state )

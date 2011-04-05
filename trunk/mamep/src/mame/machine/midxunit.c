@@ -15,7 +15,7 @@
 
 /* prototype */
 static READ16_HANDLER( midxunit_sound_state_r );
-static void midxunit_dcs_output_full(running_machine *machine, int state);
+static void midxunit_dcs_output_full(running_machine &machine, int state);
 
 
 
@@ -25,15 +25,15 @@ static void midxunit_dcs_output_full(running_machine *machine, int state);
  *
  *************************************/
 
-static void register_state_saving(running_machine *machine)
+static void register_state_saving(running_machine &machine)
 {
-	midxunit_state *state = machine->driver_data<midxunit_state>();
-	state_save_register_global(machine, state->cmos_write_enable);
-	state_save_register_global_array(machine, state->iodata);
-	state_save_register_global_array(machine, state->ioshuffle);
-	state_save_register_global(machine, state->analog_port);
-	state_save_register_global_array(machine, state->uart);
-	state_save_register_global(machine, state->security_bits);
+	midxunit_state *state = machine.driver_data<midxunit_state>();
+	state_save_register_global(machine, state->m_cmos_write_enable);
+	state_save_register_global_array(machine, state->m_iodata);
+	state_save_register_global_array(machine, state->m_ioshuffle);
+	state_save_register_global(machine, state->m_analog_port);
+	state_save_register_global_array(machine, state->m_uart);
+	state_save_register_global(machine, state->m_security_bits);
 }
 
 
@@ -46,13 +46,13 @@ static void register_state_saving(running_machine *machine)
 
 READ16_HANDLER( midxunit_cmos_r )
 {
-	midxunit_state *state = space->machine->driver_data<midxunit_state>();
+	midxunit_state *state = space->machine().driver_data<midxunit_state>();
 	return state->m_nvram[offset];
 }
 
 WRITE16_HANDLER( midxunit_cmos_w )
 {
-	midxunit_state *state = space->machine->driver_data<midxunit_state>();
+	midxunit_state *state = space->machine().driver_data<midxunit_state>();
 	COMBINE_DATA(state->m_nvram+offset);
 }
 
@@ -65,11 +65,11 @@ WRITE16_HANDLER( midxunit_cmos_w )
 
 WRITE16_HANDLER( midxunit_io_w )
 {
-	midxunit_state *state = space->machine->driver_data<midxunit_state>();
+	midxunit_state *state = space->machine().driver_data<midxunit_state>();
 	int oldword, newword;
 
 	offset = (offset / 2) % 8;
-	oldword = state->iodata[offset];
+	oldword = state->m_iodata[offset];
 	newword = oldword;
 	COMBINE_DATA(&newword);
 
@@ -91,11 +91,11 @@ WRITE16_HANDLER( midxunit_io_w )
 			output_set_value("Player2_Gun_LED", (~data & 0x20) >> 5 );
 			output_set_value("Player3_Gun_LED", (~data & 0x40) >> 6 );
 
-			logerror("%08X:I/O write to %d = %04X\n", cpu_get_pc(space->cpu), offset, data);
-//          logerror("%08X:Unknown I/O write to %d = %04X\n", cpu_get_pc(space->cpu), offset, data);
+			logerror("%08X:I/O write to %d = %04X\n", cpu_get_pc(&space->device()), offset, data);
+//          logerror("%08X:Unknown I/O write to %d = %04X\n", cpu_get_pc(&space->device()), offset, data);
 			break;
 	}
-	state->iodata[offset] = newword;
+	state->m_iodata[offset] = newword;
 }
 
 
@@ -107,7 +107,7 @@ WRITE16_HANDLER( midxunit_unknown_w )
 		dcs_reset_w(data & 2);
 
 	if (ACCESSING_BITS_0_7 && offset % 0x40000 == 0)
-		logerror("%08X:midxunit_unknown_w @ %d = %02X\n", cpu_get_pc(space->cpu), offs, data & 0xff);
+		logerror("%08X:midxunit_unknown_w @ %d = %02X\n", cpu_get_pc(&space->device()), offs, data & 0xff);
 }
 
 
@@ -130,10 +130,10 @@ READ16_HANDLER( midxunit_io_r )
 		case 1:
 		case 2:
 		case 3:
-			return input_port_read(space->machine, portnames[offset]);
+			return input_port_read(space->machine(), portnames[offset]);
 
 		default:
-			logerror("%08X:Unknown I/O read from %d\n", cpu_get_pc(space->cpu), offset);
+			logerror("%08X:Unknown I/O read from %d\n", cpu_get_pc(&space->device()), offset);
 			break;
 	}
 	return ~0;
@@ -142,18 +142,18 @@ READ16_HANDLER( midxunit_io_r )
 
 READ16_HANDLER( midxunit_analog_r )
 {
-	midxunit_state *state = space->machine->driver_data<midxunit_state>();
+	midxunit_state *state = space->machine().driver_data<midxunit_state>();
 	static const char *const portnames[] = { "AN0", "AN1", "AN2", "AN3", "AN4", "AN5" };
 
-	return input_port_read(space->machine, portnames[state->analog_port]);
+	return input_port_read(space->machine(), portnames[state->m_analog_port]);
 }
 
 
 WRITE16_HANDLER( midxunit_analog_select_w )
 {
-	midxunit_state *state = space->machine->driver_data<midxunit_state>();
+	midxunit_state *state = space->machine().driver_data<midxunit_state>();
 	if (offset == 0 && ACCESSING_BITS_0_7)
-		state->analog_port = data - 8;
+		state->m_analog_port = data - 8;
 }
 
 
@@ -171,18 +171,18 @@ READ16_HANDLER( midxunit_status_r )
  *
  *************************************/
 
-static void midxunit_dcs_output_full(running_machine *machine, int state)
+static void midxunit_dcs_output_full(running_machine &machine, int state)
 {
-	midxunit_state *drvstate = machine->driver_data<midxunit_state>();
+	midxunit_state *drvstate = machine.driver_data<midxunit_state>();
 	/* only signal if not in loopback state */
-	if (drvstate->uart[1] != 0x66)
+	if (drvstate->m_uart[1] != 0x66)
 		cputag_set_input_line(machine, "maincpu", 1, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 READ16_HANDLER( midxunit_uart_r )
 {
-	midxunit_state *state = space->machine->driver_data<midxunit_state>();
+	midxunit_state *state = space->machine().driver_data<midxunit_state>();
 	int result = 0;
 
 	/* convert to a byte offset */
@@ -200,7 +200,7 @@ READ16_HANDLER( midxunit_uart_r )
 		case 1:	/* register 1 contains the status */
 
 			/* loopback case: data always ready, and always ok to send */
-			if (state->uart[1] == 0x66)
+			if (state->m_uart[1] == 0x66)
 				result |= 5;
 
 			/* non-loopback case: bit 0 means data ready, bit 2 means ok to send */
@@ -209,15 +209,15 @@ READ16_HANDLER( midxunit_uart_r )
 				int temp = midxunit_sound_state_r(space, 0, 0xffff);
 				result |= (temp & 0x800) >> 9;
 				result |= (~temp & 0x400) >> 10;
-				space->machine->scheduler().synchronize();
+				space->machine().scheduler().synchronize();
 			}
 			break;
 
 		case 3:	/* register 3 contains the data read */
 
 			/* loopback case: feed back last data wrtten */
-			if (state->uart[1] == 0x66)
-				result = state->uart[3];
+			if (state->m_uart[1] == 0x66)
+				result = state->m_uart[3];
 
 			/* non-loopback case: read from the DCS system */
 			else
@@ -227,7 +227,7 @@ READ16_HANDLER( midxunit_uart_r )
 		case 5:	/* register 5 seems to be like 3, but with in/out swapped */
 
 			/* loopback case: data always ready, and always ok to send */
-			if (state->uart[1] == 0x66)
+			if (state->m_uart[1] == 0x66)
 				result |= 5;
 
 			/* non-loopback case: bit 0 means data ready, bit 2 means ok to send */
@@ -236,23 +236,23 @@ READ16_HANDLER( midxunit_uart_r )
 				int temp = midxunit_sound_state_r(space, 0, 0xffff);
 				result |= (temp & 0x800) >> 11;
 				result |= (~temp & 0x400) >> 8;
-				space->machine->scheduler().synchronize();
+				space->machine().scheduler().synchronize();
 			}
 			break;
 
 		default: /* everyone else reads themselves */
-			result = state->uart[offset];
+			result = state->m_uart[offset];
 			break;
 	}
 
-/*  logerror("%08X:UART R @ %X = %02X\n", cpu_get_pc(space->cpu), offset, result);*/
+/*  logerror("%08X:UART R @ %X = %02X\n", cpu_get_pc(&space->device()), offset, result);*/
 	return result;
 }
 
 
 WRITE16_HANDLER( midxunit_uart_w )
 {
-	midxunit_state *state = space->machine->driver_data<midxunit_state>();
+	midxunit_state *state = space->machine().driver_data<midxunit_state>();
 	/* convert to a byte offset, ignoring MSB writes */
 	if ((offset & 1) || !ACCESSING_BITS_0_7)
 		return;
@@ -265,8 +265,8 @@ WRITE16_HANDLER( midxunit_uart_w )
 		case 3:	/* register 3 contains the data to be sent */
 
 			/* loopback case: don't feed through */
-			if (state->uart[1] == 0x66)
-				state->uart[3] = data;
+			if (state->m_uart[1] == 0x66)
+				state->m_uart[3] = data;
 
 			/* non-loopback case: send to the DCS system */
 			else
@@ -278,11 +278,11 @@ WRITE16_HANDLER( midxunit_uart_w )
 			break;
 
 		default: /* everyone else just stores themselves */
-			state->uart[offset] = data;
+			state->m_uart[offset] = data;
 			break;
 	}
 
-/*  logerror("%08X:UART W @ %X = %02X\n", cpu_get_pc(space->cpu), offset, data);*/
+/*  logerror("%08X:UART W @ %X = %02X\n", cpu_get_pc(&space->device()), offset, data);*/
 }
 
 
@@ -299,7 +299,7 @@ WRITE16_HANDLER( midxunit_uart_w )
 
 DRIVER_INIT( revx )
 {
-	midxunit_state *state = machine->driver_data<midxunit_state>();
+	midxunit_state *state = machine.driver_data<midxunit_state>();
 	UINT8 *base;
 	int i, j, len;
 
@@ -307,17 +307,17 @@ DRIVER_INIT( revx )
 	register_state_saving(machine);
 
 	/* load the graphics ROMs -- quadruples */
-	midtunit_gfx_rom = base = machine->region("gfx1")->base();
-	len = machine->region("gfx1")->bytes();
+	midtunit_gfx_rom = base = machine.region("gfx1")->base();
+	len = machine.region("gfx1")->bytes();
 	for (i = 0; i < len / 0x200000; i++)
 	{
-		memcpy(state->decode_memory, base, 0x200000);
+		memcpy(state->m_decode_memory, base, 0x200000);
 		for (j = 0; j < 0x80000; j++)
 		{
-			*base++ = state->decode_memory[0x000000 + j];
-			*base++ = state->decode_memory[0x080000 + j];
-			*base++ = state->decode_memory[0x100000 + j];
-			*base++ = state->decode_memory[0x180000 + j];
+			*base++ = state->m_decode_memory[0x000000 + j];
+			*base++ = state->m_decode_memory[0x080000 + j];
+			*base++ = state->m_decode_memory[0x100000 + j];
+			*base++ = state->m_decode_memory[0x180000 + j];
 		}
 	}
 
@@ -338,7 +338,7 @@ DRIVER_INIT( revx )
 
 MACHINE_RESET( midxunit )
 {
-	midxunit_state *state = machine->driver_data<midxunit_state>();
+	midxunit_state *state = machine.driver_data<midxunit_state>();
 	int i;
 
 	/* reset sound */
@@ -347,7 +347,7 @@ MACHINE_RESET( midxunit )
 
 	/* reset I/O shuffling */
 	for (i = 0; i < 16; i++)
-		state->ioshuffle[i] = i % 8;
+		state->m_ioshuffle[i] = i % 8;
 
 	dcs_set_io_callbacks(midxunit_dcs_output_full, NULL);
 }
@@ -367,17 +367,17 @@ READ16_HANDLER( midxunit_security_r )
 
 WRITE16_HANDLER( midxunit_security_w )
 {
-	midxunit_state *state = space->machine->driver_data<midxunit_state>();
+	midxunit_state *state = space->machine().driver_data<midxunit_state>();
 	if (ACCESSING_BITS_0_7)
-		state->security_bits = data & 0x0f;
+		state->m_security_bits = data & 0x0f;
 }
 
 
 WRITE16_HANDLER( midxunit_security_clock_w )
 {
-	midxunit_state *state = space->machine->driver_data<midxunit_state>();
+	midxunit_state *state = space->machine().driver_data<midxunit_state>();
 	if (offset == 0 && ACCESSING_BITS_0_7)
-		midway_serial_pic_w(space, ((~data & 2) << 3) | state->security_bits);
+		midway_serial_pic_w(space, ((~data & 2) << 3) | state->m_security_bits);
 }
 
 
@@ -390,7 +390,7 @@ WRITE16_HANDLER( midxunit_security_clock_w )
 
 READ16_HANDLER( midxunit_sound_r )
 {
-	logerror("%08X:Sound read\n", cpu_get_pc(space->cpu));
+	logerror("%08X:Sound read\n", cpu_get_pc(&space->device()));
 
 	return dcs_data_r() & 0xff;
 }
@@ -407,14 +407,14 @@ WRITE16_HANDLER( midxunit_sound_w )
 	/* check for out-of-bounds accesses */
 	if (offset)
 	{
-		logerror("%08X:Unexpected write to sound (hi) = %04X\n", cpu_get_pc(space->cpu), data);
+		logerror("%08X:Unexpected write to sound (hi) = %04X\n", cpu_get_pc(&space->device()), data);
 		return;
 	}
 
 	/* call through based on the sound type */
 	if (ACCESSING_BITS_0_7)
 	{
-		logerror("%08X:Sound write = %04X\n", cpu_get_pc(space->cpu), data);
+		logerror("%08X:Sound write = %04X\n", cpu_get_pc(&space->device()), data);
 		dcs_data_w(data & 0xff);
 	}
 }

@@ -240,7 +240,7 @@ public:
 
 static MACHINE_RESET( omegrace )
 {
-	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	/* Omega Race expects the vector processor to be ready. */
 	avgdvg_reset_w(space, 0, 0);
 }
@@ -293,7 +293,7 @@ static const UINT8 spinnerTable[64] =
 
 static READ8_HANDLER( omegrace_spinner1_r )
 {
-	return (spinnerTable[input_port_read(space->machine, "SPIN0") & 0x3f]);
+	return (spinnerTable[input_port_read(space->machine(), "SPIN0") & 0x3f]);
 }
 
 
@@ -307,14 +307,14 @@ static READ8_HANDLER( omegrace_spinner1_r )
 static WRITE8_HANDLER( omegrace_leds_w )
 {
 	/* bits 0 and 1 are coin counters */
-	coin_counter_w(space->machine, 0,data & 0x01);
-	coin_counter_w(space->machine, 1,data & 0x02);
+	coin_counter_w(space->machine(), 0,data & 0x01);
+	coin_counter_w(space->machine(), 1,data & 0x02);
 
 	/* bits 2 to 5 are the start leds (4 and 5 cocktail only) */
-	set_led_status(space->machine, 0,~data & 0x04);
-	set_led_status(space->machine, 1,~data & 0x08);
-	set_led_status(space->machine, 2,~data & 0x10);
-	set_led_status(space->machine, 3,~data & 0x20);
+	set_led_status(space->machine(), 0,~data & 0x04);
+	set_led_status(space->machine(), 1,~data & 0x08);
+	set_led_status(space->machine(), 2,~data & 0x10);
+	set_led_status(space->machine(), 3,~data & 0x20);
 
 	/* bit 6 flips screen (not supported) */
 }
@@ -323,7 +323,7 @@ static WRITE8_HANDLER( omegrace_leds_w )
 static WRITE8_HANDLER( omegrace_soundlatch_w )
 {
 	soundlatch_w (space, offset, data);
-	cputag_set_input_line(space->machine, "audiocpu", 0, HOLD_LINE);
+	cputag_set_input_line(space->machine(), "audiocpu", 0, HOLD_LINE);
 }
 
 
@@ -334,7 +334,7 @@ static WRITE8_HANDLER( omegrace_soundlatch_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x4bff) AM_RAM
 	AM_RANGE(0x5c00, 0x5cff) AM_RAM AM_SHARE("nvram") /* NVRAM */
@@ -343,7 +343,7 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( port_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( port_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x08, 0x08) AM_READ(omegrace_vg_go_r)
 	AM_RANGE(0x09, 0x09) AM_READ(watchdog_reset_r)
@@ -366,13 +366,13 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x07ff) AM_ROM
 	AM_RANGE(0x1000, 0x13ff) AM_RAM
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( sound_port, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( sound_port, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ(soundlatch_r)	/* likely ay8910 input port, not direct */
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE("ay1", ay8910_address_data_w)
@@ -585,8 +585,8 @@ ROM_END
 
 static DRIVER_INIT( omegrace )
 {
-	int i, len = machine->region("user1")->bytes();
-	UINT8 *prom = machine->region("user1")->base();
+	int i, len = machine.region("user1")->bytes();
+	UINT8 *prom = machine.region("user1")->base();
 
 	/* Omega Race has two pairs of the state PROM output
      * lines swapped before going into the decoder.

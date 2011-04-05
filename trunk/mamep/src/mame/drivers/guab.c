@@ -78,9 +78,9 @@ public:
 	guab_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	struct ef9369 pal;
-	emu_timer *fdc_timer;
-	struct wd1770 fdc;
+	struct ef9369 m_pal;
+	emu_timer *m_fdc_timer;
+	struct wd1770 m_fdc;
 };
 
 
@@ -92,7 +92,7 @@ public:
 
 static WRITE_LINE_DEVICE_HANDLER( ptm_irq )
 {
-	cputag_set_input_line(device->machine, "maincpu", INT_6840PTM, state);
+	cputag_set_input_line(device->machine(), "maincpu", INT_6840PTM, state);
 }
 
 static const ptm6840_interface ptm_intf =
@@ -114,7 +114,7 @@ static const ptm6840_interface ptm_intf =
  * TMS34061 CRTC
  *****************/
 
-static void tms_interrupt(running_machine *machine, int state)
+static void tms_interrupt(running_machine &machine, int state)
 {
 	cputag_set_input_line(machine, "maincpu", INT_TMS34061, state);
 }
@@ -177,8 +177,8 @@ static READ16_HANDLER( guab_tms34061_r )
 /* Non-multiplexed mode */
 static WRITE16_HANDLER( ef9369_w )
 {
-	guab_state *state = space->machine->driver_data<guab_state>();
-	struct ef9369 &pal = state->pal;
+	guab_state *state = space->machine().driver_data<guab_state>();
+	struct ef9369 &pal = state->m_pal;
 	data &= 0x00ff;
 
 	/* Address register */
@@ -207,7 +207,7 @@ static WRITE16_HANDLER( ef9369_w )
 			col = pal.clut[entry] & 0xfff;
 
 			/* Update the MAME palette */
-			palette_set_color_rgb(space->machine, entry, pal4bit(col >> 0), pal4bit(col >> 4), pal4bit(col >> 8));
+			palette_set_color_rgb(space->machine(), entry, pal4bit(col >> 0), pal4bit(col >> 4), pal4bit(col >> 8));
 		}
 
 			/* Address register auto-increment */
@@ -218,8 +218,8 @@ static WRITE16_HANDLER( ef9369_w )
 
 static READ16_HANDLER( ef9369_r )
 {
-	guab_state *state = space->machine->driver_data<guab_state>();
-	struct ef9369 &pal = state->pal;
+	guab_state *state = space->machine().driver_data<guab_state>();
+	struct ef9369 &pal = state->m_pal;
 	if ((offset & 1) == 0)
 	{
 		UINT16 col = pal.clut[pal.addr >> 1];
@@ -253,7 +253,7 @@ static SCREEN_UPDATE( guab )
 	/* If blanked, fill with black */
 	if (state.blanked)
 	{
-		bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine));
+		bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
 		return 0;
 	}
 
@@ -267,8 +267,8 @@ static SCREEN_UPDATE( guab )
 			UINT8 pen = src[x >> 1];
 
 			/* Draw two 4-bit pixels */
-			*dest++ = screen->machine->pens[pen >> 4];
-			*dest++ = screen->machine->pens[pen & 0x0f];
+			*dest++ = screen->machine().pens[pen >> 4];
+			*dest++ = screen->machine().pens[pen & 0x0f];
 		}
 	}
 
@@ -310,9 +310,9 @@ enum wd1770_status
 
 static TIMER_CALLBACK( fdc_data_callback )
 {
-	guab_state *state = machine->driver_data<guab_state>();
-	struct wd1770 &fdc = state->fdc;
-	UINT8* disk = (UINT8*)machine->region("user1")->base();
+	guab_state *state = machine.driver_data<guab_state>();
+	struct wd1770 &fdc = state->m_fdc;
+	UINT8* disk = (UINT8*)machine.region("user1")->base();
 	int more_data = 0;
 
 	/*
@@ -358,7 +358,7 @@ static TIMER_CALLBACK( fdc_data_callback )
 
 	if (more_data)
 	{
-		state->fdc_timer->adjust(attotime::from_usec(USEC_DELAY));
+		state->m_fdc_timer->adjust(attotime::from_usec(USEC_DELAY));
 	}
 	else
 	{
@@ -374,8 +374,8 @@ static TIMER_CALLBACK( fdc_data_callback )
 
 static WRITE16_HANDLER( wd1770_w )
 {
-	guab_state *state = space->machine->driver_data<guab_state>();
-	struct wd1770 &fdc = state->fdc;
+	guab_state *state = space->machine().driver_data<guab_state>();
+	struct wd1770 &fdc = state->m_fdc;
 	data &= 0xff;
 
 	switch (offset)
@@ -445,7 +445,7 @@ static WRITE16_HANDLER( wd1770_w )
 															fdc.sector));
 
 					/* Set the data read timer */
-					state->fdc_timer->adjust(attotime::from_usec(USEC_DELAY));
+					state->m_fdc_timer->adjust(attotime::from_usec(USEC_DELAY));
 
 					break;
 				}
@@ -464,7 +464,7 @@ static WRITE16_HANDLER( wd1770_w )
 															fdc.sector));
 
 					/* Trigger a DRQ interrupt on the CPU */
-					cputag_set_input_line(space->machine, "maincpu", INT_FLOPPYCTRL, ASSERT_LINE);
+					cputag_set_input_line(space->machine(), "maincpu", INT_FLOPPYCTRL, ASSERT_LINE);
 					fdc.status |= DATA_REQUEST;
 					break;
 				}
@@ -482,7 +482,7 @@ static WRITE16_HANDLER( wd1770_w )
 				case 13:
 				{
 					/* Stop any operation in progress */
-					state->fdc_timer->reset();
+					state->m_fdc_timer->reset();
 					fdc.status &= ~BUSY;
 					FDC_LOG(("Force Interrupt\n"));
 					break;
@@ -509,11 +509,11 @@ static WRITE16_HANDLER( wd1770_w )
 			fdc.data = data;
 
 			/* Clear the DRQ */
-			cputag_set_input_line(space->machine, "maincpu", INT_FLOPPYCTRL, CLEAR_LINE);
+			cputag_set_input_line(space->machine(), "maincpu", INT_FLOPPYCTRL, CLEAR_LINE);
 
 			/* Queue an event to write the data if write command was specified */
 			if (fdc.cmd & 0x20)
-				state->fdc_timer->adjust(attotime::from_usec(USEC_DELAY));
+				state->m_fdc_timer->adjust(attotime::from_usec(USEC_DELAY));
 
 			break;
 		}
@@ -522,8 +522,8 @@ static WRITE16_HANDLER( wd1770_w )
 
 static READ16_HANDLER( wd1770_r )
 {
-	guab_state *state = space->machine->driver_data<guab_state>();
-	struct wd1770 &fdc = state->fdc;
+	guab_state *state = space->machine().driver_data<guab_state>();
+	struct wd1770 &fdc = state->m_fdc;
 	UINT16 retval = 0;
 
 	switch (offset)
@@ -548,7 +548,7 @@ static READ16_HANDLER( wd1770_r )
 			retval = fdc.data;
 
 			/* Clear the DRQ */
-			cputag_set_input_line(space->machine, "maincpu", INT_FLOPPYCTRL, CLEAR_LINE);
+			cputag_set_input_line(space->machine(), "maincpu", INT_FLOPPYCTRL, CLEAR_LINE);
 			fdc.status &= ~DATA_REQUEST;
 			break;
 		}
@@ -574,7 +574,7 @@ static READ16_HANDLER( io_r )
 		case 0x01:
 		case 0x02:
 		{
-			return input_port_read(space->machine, portnames[offset]);
+			return input_port_read(space->machine(), portnames[offset]);
 		}
 		case 0x30:
 		{
@@ -594,7 +594,7 @@ static INPUT_CHANGED( coin_inserted )
 	if (newval == 0)
 	{
 		UINT32 credit;
-		address_space *space = cputag_get_address_space(field->port->machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+		address_space *space = field->port->machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 		/* Get the current credit value and add the new coin value */
 		credit = space->read_dword(0x8002c) + (UINT32)(FPTR)param;
@@ -610,8 +610,8 @@ static INPUT_CHANGED( coin_inserted )
 
 static WRITE16_HANDLER( io_w )
 {
-	guab_state *state = space->machine->driver_data<guab_state>();
-	struct wd1770 &fdc = state->fdc;
+	guab_state *state = space->machine().driver_data<guab_state>();
+	struct wd1770 &fdc = state->m_fdc;
 	switch (offset)
 	{
 		case 0x10:
@@ -646,7 +646,7 @@ static WRITE16_HANDLER( io_w )
 		}
 		case 0x30:
 		{
-			sn76496_w(space->machine->device("snsnd"), 0, data & 0xff);
+			sn76496_w(space->machine().device("snsnd"), 0, data & 0xff);
 			break;
 		}
 		case 0x31:
@@ -679,7 +679,7 @@ static WRITE16_HANDLER( io_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( guab_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( guab_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
 	AM_RANGE(0x040000, 0x04ffff) AM_ROM AM_REGION("maincpu", 0x10000)
 	AM_RANGE(0x0c0000, 0x0c007f) AM_READWRITE(io_r, io_w)
@@ -775,14 +775,14 @@ INPUT_PORTS_END
 
  static MACHINE_START( guab )
 {
-	guab_state *state = machine->driver_data<guab_state>();
-	state->fdc_timer = machine->scheduler().timer_alloc(FUNC(fdc_data_callback));
+	guab_state *state = machine.driver_data<guab_state>();
+	state->m_fdc_timer = machine.scheduler().timer_alloc(FUNC(fdc_data_callback));
 }
 
 static MACHINE_RESET( guab )
 {
-	guab_state *state = machine->driver_data<guab_state>();
-	memset(&state->fdc, 0, sizeof(state->fdc));
+	guab_state *state = machine.driver_data<guab_state>();
+	memset(&state->m_fdc, 0, sizeof(state->m_fdc));
 }
 
 static MACHINE_CONFIG_START( guab, guab_state )

@@ -22,9 +22,9 @@ public:
 	deshoros_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *io_ram;
-	char led_array[21];
-	UINT8 bank;
+	UINT8 *m_io_ram;
+	char m_led_array[21];
+	UINT8 m_bank;
 };
 
 
@@ -32,17 +32,17 @@ public:
 
 static VIDEO_START( deshoros )
 {
-	deshoros_state *state = machine->driver_data<deshoros_state>();
+	deshoros_state *state = machine.driver_data<deshoros_state>();
 	UINT8 i;
 	for(i=0;i<20;i++)
-		state->led_array[i] = 0x20;
-	state->led_array[20] = 0;
+		state->m_led_array[i] = 0x20;
+	state->m_led_array[20] = 0;
 }
 
 static SCREEN_UPDATE( deshoros )
 {
-	deshoros_state *state = screen->machine->driver_data<deshoros_state>();
-	popmessage("%s",state->led_array);
+	deshoros_state *state = screen->machine().driver_data<deshoros_state>();
+	popmessage("%s",state->m_led_array);
 	return 0;
 }
 
@@ -52,64 +52,64 @@ static void update_led_array(deshoros_state *state, UINT8 new_data)
 	UINT8 i;
 	/*scroll the data*/
 	for(i=0;i<19;i++)
-		state->led_array[i] = state->led_array[i+1];
+		state->m_led_array[i] = state->m_led_array[i+1];
 	/*update the data*/
-	state->led_array[19] = new_data;
+	state->m_led_array[19] = new_data;
 }
 
 
-static void answer_bankswitch(running_machine *machine,UINT8 new_bank)
+static void answer_bankswitch(running_machine &machine,UINT8 new_bank)
 {
-	deshoros_state *state = machine->driver_data<deshoros_state>();
-	if(state->bank!=new_bank)
+	deshoros_state *state = machine.driver_data<deshoros_state>();
+	if(state->m_bank!=new_bank)
 	{
-		UINT8 *ROM = machine->region("data")->base();
+		UINT8 *ROM = machine.region("data")->base();
 		UINT32 bankaddress;
 
-		state->bank = new_bank;
-		bankaddress = 0 + 0x6000 * state->bank;
+		state->m_bank = new_bank;
+		bankaddress = 0 + 0x6000 * state->m_bank;
 		memory_set_bankptr(machine, "bank1", &ROM[bankaddress]);
 	}
 }
 
 static READ8_HANDLER( io_r )
 {
-	deshoros_state *state = space->machine->driver_data<deshoros_state>();
+	deshoros_state *state = space->machine().driver_data<deshoros_state>();
 	switch(offset)
 	{
 		case 0x00: return 0xff; //printer read
-		case 0x03: return input_port_read(space->machine, "KEY0" );
-		case 0x04: return input_port_read(space->machine, "KEY1" );
-		case 0x05: return input_port_read(space->machine, "SYSTEM" );
-		case 0x0a: return state->io_ram[offset]; //"buzzer" 0 read
-		case 0x0b: return state->io_ram[offset]; //"buzzer" 1 read
+		case 0x03: return input_port_read(space->machine(), "KEY0" );
+		case 0x04: return input_port_read(space->machine(), "KEY1" );
+		case 0x05: return input_port_read(space->machine(), "SYSTEM" );
+		case 0x0a: return state->m_io_ram[offset]; //"buzzer" 0 read
+		case 0x0b: return state->m_io_ram[offset]; //"buzzer" 1 read
 	}
 //  printf("R -> [%02x]\n",offset);
 
-	return state->io_ram[offset];
+	return state->m_io_ram[offset];
 }
 
 static WRITE8_HANDLER( io_w )
 {
-	deshoros_state *state = space->machine->driver_data<deshoros_state>();
+	deshoros_state *state = space->machine().driver_data<deshoros_state>();
 	switch(offset)
 	{
 		case 0x00: /*Printer data*/						return;
 		case 0x02: update_led_array(state, data);              return;
-		case 0x05: coin_lockout_w(space->machine, 0,state->io_ram[offset] & 1);return;
+		case 0x05: coin_lockout_w(space->machine(), 0,state->m_io_ram[offset] & 1);return;
 		case 0x06: /*Printer IRQ enable*/   		    return;
 //      case 0x0a: "buzzer" 0 write
 //      case 0x0b: "buzzer" 1 write
-		case 0x0c: answer_bankswitch(space->machine,data&0x03); return; //data & 0x10 enabled too,dunno if it is worth to shift the data...
+		case 0x0c: answer_bankswitch(space->machine(),data&0x03); return; //data & 0x10 enabled too,dunno if it is worth to shift the data...
 	}
-	state->io_ram[offset] = data;
+	state->m_io_ram[offset] = data;
 //  printf("%02x -> [%02x]\n",data,offset);
 }
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x5fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x9000, 0x900f) AM_READWRITE(io_r,io_w) AM_BASE_MEMBER(deshoros_state, io_ram) //i/o area
+	AM_RANGE(0x9000, 0x900f) AM_READWRITE(io_r,io_w) AM_BASE_MEMBER(deshoros_state, m_io_ram) //i/o area
 	AM_RANGE(0xc000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -161,13 +161,13 @@ INPUT_PORTS_END
 /*Is it there an IRQ mask?*/
 static INTERRUPT_GEN( deshoros_irq )
 {
-	cputag_set_input_line(device->machine, "maincpu", M6809_IRQ_LINE, HOLD_LINE);
+	cputag_set_input_line(device->machine(), "maincpu", M6809_IRQ_LINE, HOLD_LINE);
 }
 
 static MACHINE_RESET( deshoros )
 {
-	deshoros_state *state = machine->driver_data<deshoros_state>();
-	state->bank = -1;
+	deshoros_state *state = machine.driver_data<deshoros_state>();
+	state->m_bank = -1;
 }
 
 static MACHINE_CONFIG_START( deshoros, deshoros_state )

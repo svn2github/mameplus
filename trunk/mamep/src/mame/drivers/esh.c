@@ -34,10 +34,10 @@ public:
 	esh_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	device_t *laserdisc;
-	UINT8 *tile_ram;
-	UINT8 *tile_control_ram;
-	UINT8 ld_video_visible;
+	device_t *m_laserdisc;
+	UINT8 *m_tile_ram;
+	UINT8 *m_tile_control_ram;
+	UINT8 m_ld_video_visible;
 };
 
 
@@ -48,7 +48,7 @@ public:
 /* VIDEO GOODS */
 static SCREEN_UPDATE( esh )
 {
-	esh_state *state = screen->machine->driver_data<esh_state>();
+	esh_state *state = screen->machine().driver_data<esh_state>();
 	int charx, chary;
 
 	/* clear */
@@ -61,13 +61,13 @@ static SCREEN_UPDATE( esh )
 		{
 			int current_screen_character = (chary*32) + charx;
 
-			int palIndex  = (state->tile_control_ram[current_screen_character] & 0x0f);
-			int tileOffs  = (state->tile_control_ram[current_screen_character] & 0x10) >> 4;
-			//int blinkLine = (state->tile_control_ram[current_screen_character] & 0x40) >> 6;
-			//int blinkChar = (state->tile_control_ram[current_screen_character] & 0x80) >> 7;
+			int palIndex  = (state->m_tile_control_ram[current_screen_character] & 0x0f);
+			int tileOffs  = (state->m_tile_control_ram[current_screen_character] & 0x10) >> 4;
+			//int blinkLine = (state->m_tile_control_ram[current_screen_character] & 0x40) >> 6;
+			//int blinkChar = (state->m_tile_control_ram[current_screen_character] & 0x80) >> 7;
 
-			drawgfx_transpen(bitmap, cliprect, screen->machine->gfx[0],
-					state->tile_ram[current_screen_character] + (0x100 * tileOffs),
+			drawgfx_transpen(bitmap, cliprect, screen->machine().gfx[0],
+					state->m_tile_ram[current_screen_character] + (0x100 * tileOffs),
 					palIndex,
 					0, 0, charx*8, chary*8, 0);
 		}
@@ -82,26 +82,26 @@ static SCREEN_UPDATE( esh )
 /* MEMORY HANDLERS */
 static READ8_HANDLER(ldp_read)
 {
-	esh_state *state = space->machine->driver_data<esh_state>();
-	return laserdisc_data_r(state->laserdisc);
+	esh_state *state = space->machine().driver_data<esh_state>();
+	return laserdisc_data_r(state->m_laserdisc);
 }
 
 static WRITE8_HANDLER(ldp_write)
 {
-	esh_state *state = space->machine->driver_data<esh_state>();
-	laserdisc_data_w(state->laserdisc,data);
+	esh_state *state = space->machine().driver_data<esh_state>();
+	laserdisc_data_w(state->m_laserdisc,data);
 }
 
 static WRITE8_HANDLER(misc_write)
 {
-	esh_state *state = space->machine->driver_data<esh_state>();
+	esh_state *state = space->machine().driver_data<esh_state>();
 	/* Bit 0 unknown */
 
 	if (data & 0x02)
 		logerror("BEEP!\n");
 
 	/* Bit 2 unknown */
-	state->ld_video_visible = !((data & 0x08) >> 3);
+	state->m_ld_video_visible = !((data & 0x08) >> 3);
 
 	/* Bits 4-7 unknown */
 	/* They cycle through a repeating pattern though */
@@ -141,9 +141,9 @@ static WRITE8_HANDLER(led_writes)
 static WRITE8_HANDLER(nmi_line_w)
 {
 	if (data == 0x00)
-		cputag_set_input_line(space->machine, "maincpu", INPUT_LINE_NMI, ASSERT_LINE);
+		cputag_set_input_line(space->machine(), "maincpu", INPUT_LINE_NMI, ASSERT_LINE);
 	if (data == 0x01)
-		cputag_set_input_line(space->machine, "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
+		cputag_set_input_line(space->machine(), "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
 
 	if (data != 0x00 && data != 0x01)
 		logerror("NMI line got a weird value!\n");
@@ -151,16 +151,16 @@ static WRITE8_HANDLER(nmi_line_w)
 
 
 /* PROGRAM MAPS */
-static ADDRESS_MAP_START( z80_0_mem, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( z80_0_mem, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000,0x3fff) AM_ROM
 	AM_RANGE(0xe000,0xe7ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0xf000,0xf3ff) AM_RAM AM_BASE_MEMBER(esh_state, tile_ram)
-	AM_RANGE(0xf400,0xf7ff) AM_RAM AM_BASE_MEMBER(esh_state, tile_control_ram)
+	AM_RANGE(0xf000,0xf3ff) AM_RAM AM_BASE_MEMBER(esh_state, m_tile_ram)
+	AM_RANGE(0xf400,0xf7ff) AM_RAM AM_BASE_MEMBER(esh_state, m_tile_control_ram)
 ADDRESS_MAP_END
 
 
 /* IO MAPS */
-static ADDRESS_MAP_START( z80_0_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( z80_0_io, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0xf0,0xf0) AM_READ_PORT("IN0")
 	AM_RANGE(0xf1,0xf1) AM_READ_PORT("IN1")
@@ -222,7 +222,7 @@ static PALETTE_INIT( esh )
 	int i;
 
 	/* Oddly enough, the top 4 bits of each byte is 0 */
-	for (i = 0; i < machine->total_colors(); i++)
+	for (i = 0; i < machine.total_colors(); i++)
 	{
 		int r,g,b;
 		int bit0,bit1,bit2;
@@ -277,14 +277,14 @@ static TIMER_CALLBACK( irq_stop )
 static INTERRUPT_GEN( vblank_callback_esh )
 {
 	// IRQ
-	cpu_set_input_line(device, 0, ASSERT_LINE);
-	device->machine->scheduler().timer_set(attotime::from_usec(50), FUNC(irq_stop));
+	device_set_input_line(device, 0, ASSERT_LINE);
+	device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(irq_stop));
 }
 
 static MACHINE_START( esh )
 {
-	esh_state *state = machine->driver_data<esh_state>();
-	state->laserdisc = machine->device("laserdisc");
+	esh_state *state = machine.driver_data<esh_state>();
+	state->m_laserdisc = machine.device("laserdisc");
 }
 
 

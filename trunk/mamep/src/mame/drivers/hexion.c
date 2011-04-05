@@ -89,14 +89,14 @@ Notes:
 
 static WRITE8_HANDLER( coincntr_w )
 {
-//logerror("%04x: coincntr_w %02x\n",cpu_get_pc(space->cpu),data);
+//logerror("%04x: coincntr_w %02x\n",cpu_get_pc(&space->device()),data);
 
 	/* bits 0/1 = coin counters */
-	coin_counter_w(space->machine, 0,data & 0x01);
-	coin_counter_w(space->machine, 1,data & 0x02);
+	coin_counter_w(space->machine(), 0,data & 0x01);
+	coin_counter_w(space->machine(), 1,data & 0x02);
 
 	/* bit 5 = flip screen */
-	flip_screen_set(space->machine, data & 0x20);
+	flip_screen_set(space->machine(), data & 0x20);
 
 	/* other bit unknown */
 if ((data & 0xdc) != 0x10) popmessage("coincntr %02x",data);
@@ -104,7 +104,7 @@ if ((data & 0xdc) != 0x10) popmessage("coincntr %02x",data);
 
 
 
-static ADDRESS_MAP_START( hexion_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( hexion_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x9fff) AM_ROMBANK("bank1")
 	AM_RANGE(0xa000, 0xbfff) AM_RAM
@@ -213,9 +213,9 @@ static INTERRUPT_GEN( hexion_interrupt )
 {
 	/* NMI handles start and coin inputs, origin unknown */
 	if (cpu_getiloops(device))
-		cpu_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
 	else
-		cpu_set_input_line(device, 0, HOLD_LINE);
+		device_set_input_line(device, 0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( hexion, hexion_state )

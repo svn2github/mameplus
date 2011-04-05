@@ -31,10 +31,10 @@ public:
 		: driver_device(machine, config) { }
 
 	/* memory pointers */
-	UINT8 *        dotrikun_bitmap;
+	UINT8 *        m_dotrikun_bitmap;
 
 	/* video-related */
-	UINT8          color;
+	UINT8          m_color;
 };
 
 
@@ -46,7 +46,7 @@ public:
 
 static WRITE8_HANDLER( dotrikun_color_w )
 {
-	dotrikun_state *state = space->machine->driver_data<dotrikun_state>();
+	dotrikun_state *state = space->machine().driver_data<dotrikun_state>();
 	/*
     x--- ---- screen color swap?
     ---- -x-- B
@@ -54,24 +54,24 @@ static WRITE8_HANDLER( dotrikun_color_w )
     ---- ---x R
     */
 
-	state->color = data;
-	space->machine->primary_screen->update_partial(space->machine->primary_screen->vpos());
+	state->m_color = data;
+	space->machine().primary_screen->update_partial(space->machine().primary_screen->vpos());
 }
 
 
 static SCREEN_UPDATE( dotrikun )
 {
-	dotrikun_state *state = screen->machine->driver_data<dotrikun_state>();
+	dotrikun_state *state = screen->machine().driver_data<dotrikun_state>();
 	int x,y,i;
 
-	pen_t back_pen = MAKE_RGB(pal1bit(state->color >> 3), pal1bit(state->color >> 4), pal1bit(state->color >> 5));
-	pen_t fore_pen = MAKE_RGB(pal1bit(state->color >> 0), pal1bit(state->color >> 1), pal1bit(state->color >> 2));
+	pen_t back_pen = MAKE_RGB(pal1bit(state->m_color >> 3), pal1bit(state->m_color >> 4), pal1bit(state->m_color >> 5));
+	pen_t fore_pen = MAKE_RGB(pal1bit(state->m_color >> 0), pal1bit(state->m_color >> 1), pal1bit(state->m_color >> 2));
 
 	for(y = (cliprect->min_y & ~1); y < cliprect->max_y; y+=2)
 	{
 		for (x = 0; x < 256; x+=16)
 		{
-			UINT8 data = state->dotrikun_bitmap[((x/16)+((y/2)*16))];
+			UINT8 data = state->m_dotrikun_bitmap[((x/16)+((y/2)*16))];
 
 			for (i = 0; i < 8; i++)
 			{
@@ -96,13 +96,13 @@ static SCREEN_UPDATE( dotrikun )
  *
  *************************************/
 
-static ADDRESS_MAP_START( dotrikun_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( dotrikun_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
-	AM_RANGE(0x8000, 0x85ff) AM_RAM AM_BASE_MEMBER(dotrikun_state, dotrikun_bitmap)
+	AM_RANGE(0x8000, 0x85ff) AM_RAM AM_BASE_MEMBER(dotrikun_state, m_dotrikun_bitmap)
 	AM_RANGE(0x8600, 0x87ff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("INPUTS") AM_WRITE(dotrikun_color_w)
 ADDRESS_MAP_END
@@ -135,15 +135,15 @@ INPUT_PORTS_END
 
 static MACHINE_START( dotrikun )
 {
-	dotrikun_state *state = machine->driver_data<dotrikun_state>();
-	state->save_item(NAME(state->color));
+	dotrikun_state *state = machine.driver_data<dotrikun_state>();
+	state->save_item(NAME(state->m_color));
 }
 
 static MACHINE_RESET( dotrikun )
 {
-	dotrikun_state *state = machine->driver_data<dotrikun_state>();
+	dotrikun_state *state = machine.driver_data<dotrikun_state>();
 
-	state->color = 0;
+	state->m_color = 0;
 }
 
 #define MASTER_CLOCK XTAL_4MHz

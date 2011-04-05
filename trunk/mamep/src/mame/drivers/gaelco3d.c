@@ -162,9 +162,9 @@ static void adsp_tx_callback(adsp21xx_device &device, int port, INT32 data);
 static WRITE_LINE_DEVICE_HANDLER( ser_irq )
 {
 	if (state)
-		cputag_set_input_line(device->machine, "maincpu", 6, ASSERT_LINE);
+		cputag_set_input_line(device->machine(), "maincpu", 6, ASSERT_LINE);
 	else
-		cputag_set_input_line(device->machine, "maincpu", 6, CLEAR_LINE);
+		cputag_set_input_line(device->machine(), "maincpu", 6, CLEAR_LINE);
 }
 
 
@@ -184,39 +184,39 @@ static const gaelco_serial_interface serial_interface =
 
 static MACHINE_START( gaelco3d )
 {
-	gaelco3d_state *state = machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = machine.driver_data<gaelco3d_state>();
 	/* Save state support */
-	state_save_register_global(machine, state->sound_data);
-	state_save_register_global(machine, state->sound_status);
-	state_save_register_global_array(machine, state->analog_ports);
-	state_save_register_global(machine, state->framenum);
-	state_save_register_global(machine, state->adsp_ireg);
-	state_save_register_global(machine, state->adsp_ireg_base);
-	state_save_register_global(machine, state->adsp_incs);
-	state_save_register_global(machine, state->adsp_size);
+	state_save_register_global(machine, state->m_sound_data);
+	state_save_register_global(machine, state->m_sound_status);
+	state_save_register_global_array(machine, state->m_analog_ports);
+	state_save_register_global(machine, state->m_framenum);
+	state_save_register_global(machine, state->m_adsp_ireg);
+	state_save_register_global(machine, state->m_adsp_ireg_base);
+	state_save_register_global(machine, state->m_adsp_incs);
+	state_save_register_global(machine, state->m_adsp_size);
 }
 
 
 static MACHINE_RESET( common )
 {
-	gaelco3d_state *state = machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = machine.driver_data<gaelco3d_state>();
 	UINT16 *src;
 	int i;
 
-	state->framenum = 0;
+	state->m_framenum = 0;
 
 	/* boot the ADSP chip */
-	src = (UINT16 *)machine->region("user1")->base();
+	src = (UINT16 *)machine.region("user1")->base();
 	for (i = 0; i < (src[3] & 0xff) * 8; i++)
 	{
 		UINT32 opcode = ((src[i*4+0] & 0xff) << 16) | ((src[i*4+1] & 0xff) << 8) | (src[i*4+2] & 0xff);
-		state->adsp_ram_base[i] = opcode;
+		state->m_adsp_ram_base[i] = opcode;
 	}
 
 	/* allocate a timer for feeding the autobuffer */
-	state->adsp_autobuffer_timer = machine->device<timer_device>("adsp_timer");
+	state->m_adsp_autobuffer_timer = machine.device<timer_device>("adsp_timer");
 
-	memory_configure_bank(machine, "bank1", 0, 256, machine->region("user1")->base(), 0x4000);
+	memory_configure_bank(machine, "bank1", 0, 256, machine.region("user1")->base(), 0x4000);
 	memory_set_bank(machine, "bank1", 0);
 
 	/* keep the TMS32031 halted until the code is ready to go */
@@ -226,24 +226,24 @@ static MACHINE_RESET( common )
 	{
 		char buffer[10];
 		sprintf(buffer, "dac%d", i + 1);
-		state->dmadac[i] = machine->device<dmadac_sound_device>(buffer);
+		state->m_dmadac[i] = machine.device<dmadac_sound_device>(buffer);
 	}
 }
 
 
 static MACHINE_RESET( gaelco3d )
 {
-	gaelco3d_state *state = machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = machine.driver_data<gaelco3d_state>();
 	MACHINE_RESET_CALL( common );
-	state->tms_offset_xor = 0;
+	state->m_tms_offset_xor = 0;
 }
 
 
 static MACHINE_RESET( gaelco3d2 )
 {
-	gaelco3d_state *state = machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = machine.driver_data<gaelco3d_state>();
 	MACHINE_RESET_CALL( common );
-	state->tms_offset_xor = BYTE_XOR_BE(0);
+	state->m_tms_offset_xor = BYTE_XOR_BE(0);
 }
 
 
@@ -256,14 +256,14 @@ static MACHINE_RESET( gaelco3d2 )
 
 static INTERRUPT_GEN( vblank_gen )
 {
-	gaelco3d_render(*device->machine->primary_screen);
-	cpu_set_input_line(device, 2, ASSERT_LINE);
+	gaelco3d_render(*device->machine().primary_screen);
+	device_set_input_line(device, 2, ASSERT_LINE);
 }
 
 
 static WRITE16_HANDLER( irq_ack_w )
 {
-	cputag_set_input_line(space->machine, "maincpu", 2, CLEAR_LINE);
+	cputag_set_input_line(space->machine(), "maincpu", 2, CLEAR_LINE);
 }
 
 static WRITE32_HANDLER( irq_ack32_w )
@@ -271,9 +271,9 @@ static WRITE32_HANDLER( irq_ack32_w )
 	if (mem_mask == 0xffff0000)
 		irq_ack_w(space, offset, data, mem_mask >> 16);
 	else if (ACCESSING_BITS_0_7)
-		gaelco_serial_tr_w(space->machine->device("serial"), 0, data & 0x01);
+		gaelco_serial_tr_w(space->machine().device("serial"), 0, data & 0x01);
 	else
-		logerror("%06X:irq_ack_w(%02X) = %08X & %08X\n", cpu_get_pc(space->cpu), offset, data, mem_mask);
+		logerror("%06X:irq_ack_w(%02X) = %08X & %08X\n", cpu_get_pc(&space->device()), offset, data, mem_mask);
 }
 
 
@@ -293,7 +293,7 @@ static READ16_DEVICE_HANDLER( eeprom_data_r )
 		/* bit 0 is clock */
 		/* bit 1 active */
 		result &= ~GAELCOSER_EXT_STATUS_MASK;
-		result |= gaelco_serial_status_r(device->machine->device("serial"), 0);
+		result |= gaelco_serial_status_r(device->machine().device("serial"), 0);
 	}
 
 	if (eeprom_read_bit(device))
@@ -309,13 +309,13 @@ static READ32_DEVICE_HANDLER( eeprom_data32_r )
 		return (eeprom_data_r(device, 0, mem_mask >> 16) << 16) | 0xffff;
 	else if (ACCESSING_BITS_0_7)
 	{
-		UINT8 data = gaelco_serial_data_r(device->machine->device("serial"),0);
+		UINT8 data = gaelco_serial_data_r(device->machine().device("serial"),0);
 		if (LOG)
-			logerror("%06X:read(%02X) = %08X & %08X\n", cpu_get_pc(device->machine->device("maincpu")), offset, data, mem_mask);
+			logerror("%06X:read(%02X) = %08X & %08X\n", cpu_get_pc(device->machine().device("maincpu")), offset, data, mem_mask);
 		return  data | 0xffffff00;
 	}
 	else
-		logerror("%06X:read(%02X) = mask %08X\n", cpu_get_pc(device->machine->device("maincpu")), offset, mem_mask);
+		logerror("%06X:read(%02X) = mask %08X\n", cpu_get_pc(device->machine().device("maincpu")), offset, mem_mask);
 
 	return 0xffffffff;
 }
@@ -353,10 +353,10 @@ static WRITE16_DEVICE_HANDLER( eeprom_cs_w )
 
 static TIMER_CALLBACK( delayed_sound_w )
 {
-	gaelco3d_state *state = machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = machine.driver_data<gaelco3d_state>();
 	if (LOG)
 		logerror("delayed_sound_w(%02X)\n", param);
-	state->sound_data = param;
+	state->m_sound_data = param;
 	cputag_set_input_line(machine, "adsp", ADSP2115_IRQ2, ASSERT_LINE);
 }
 
@@ -364,39 +364,39 @@ static TIMER_CALLBACK( delayed_sound_w )
 static WRITE16_HANDLER( sound_data_w )
 {
 	if (LOG)
-		logerror("%06X:sound_data_w(%02X) = %08X & %08X\n", cpu_get_pc(space->cpu), offset, data, mem_mask);
+		logerror("%06X:sound_data_w(%02X) = %08X & %08X\n", cpu_get_pc(&space->device()), offset, data, mem_mask);
 	if (ACCESSING_BITS_0_7)
-		space->machine->scheduler().synchronize(FUNC(delayed_sound_w), data & 0xff);
+		space->machine().scheduler().synchronize(FUNC(delayed_sound_w), data & 0xff);
 }
 
 
 static READ16_HANDLER( sound_data_r )
 {
-	gaelco3d_state *state = space->machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = space->machine().driver_data<gaelco3d_state>();
 	if (LOG)
-		logerror("sound_data_r(%02X)\n", state->sound_data);
-	cputag_set_input_line(space->machine, "adsp", ADSP2115_IRQ2, CLEAR_LINE);
-	return state->sound_data;
+		logerror("sound_data_r(%02X)\n", state->m_sound_data);
+	cputag_set_input_line(space->machine(), "adsp", ADSP2115_IRQ2, CLEAR_LINE);
+	return state->m_sound_data;
 }
 
 
 static READ16_HANDLER( sound_status_r )
 {
-	gaelco3d_state *state = space->machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = space->machine().driver_data<gaelco3d_state>();
 	if (LOG)
-		logerror("%06X:sound_status_r(%02X) = %02X\n", cpu_get_pc(space->cpu), offset, state->sound_status);
+		logerror("%06X:sound_status_r(%02X) = %02X\n", cpu_get_pc(&space->device()), offset, state->m_sound_status);
 	if (ACCESSING_BITS_0_7)
-		return state->sound_status;
+		return state->m_sound_status;
 	return 0xffff;
 }
 
 
 static WRITE16_HANDLER( sound_status_w )
 {
-	gaelco3d_state *state = space->machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = space->machine().driver_data<gaelco3d_state>();
 	if (LOG)
-		logerror("sound_status_w(%02X)\n", state->sound_data);
-	state->sound_status = data;
+		logerror("sound_status_w(%02X)\n", state->m_sound_data);
+	state->m_sound_status = data;
 }
 
 
@@ -409,52 +409,52 @@ static WRITE16_HANDLER( sound_status_w )
 
 static CUSTOM_INPUT( analog_bit_r )
 {
-	gaelco3d_state *state = field->port->machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = field->port->machine().driver_data<gaelco3d_state>();
 	int which = (FPTR)param;
-	return (state->analog_ports[which] >> 7) & 0x01;
+	return (state->m_analog_ports[which] >> 7) & 0x01;
 }
 
 
 static WRITE16_HANDLER( analog_port_clock_w )
 {
-	gaelco3d_state *state = space->machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = space->machine().driver_data<gaelco3d_state>();
 	/* a zero/one combo is written here to clock the next analog port bit */
 	if (ACCESSING_BITS_0_7)
 	{
 		if (!(data & 0xff))
 		{
-			state->analog_ports[0] <<= 1;
-			state->analog_ports[1] <<= 1;
-			state->analog_ports[2] <<= 1;
-			state->analog_ports[3] <<= 1;
+			state->m_analog_ports[0] <<= 1;
+			state->m_analog_ports[1] <<= 1;
+			state->m_analog_ports[2] <<= 1;
+			state->m_analog_ports[3] <<= 1;
 		}
 	}
 	else
 	{
 		if (LOG)
-			logerror("%06X:analog_port_clock_w(%02X) = %08X & %08X\n", cpu_get_pc(space->cpu), offset, data, mem_mask);
+			logerror("%06X:analog_port_clock_w(%02X) = %08X & %08X\n", cpu_get_pc(&space->device()), offset, data, mem_mask);
 	}
 }
 
 
 static WRITE16_HANDLER( analog_port_latch_w )
 {
-	gaelco3d_state *state = space->machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = space->machine().driver_data<gaelco3d_state>();
 	/* a zero is written here to read the analog ports, and a one is written when finished */
 	if (ACCESSING_BITS_0_7)
 	{
 		if (!(data & 0xff))
 		{
-			state->analog_ports[0] = input_port_read_safe(space->machine, "ANALOG0", 0);
-			state->analog_ports[1] = input_port_read_safe(space->machine, "ANALOG1", 0);
-			state->analog_ports[2] = input_port_read_safe(space->machine, "ANALOG2", 0);
-			state->analog_ports[3] = input_port_read_safe(space->machine, "ANALOG3", 0);
+			state->m_analog_ports[0] = input_port_read_safe(space->machine(), "ANALOG0", 0);
+			state->m_analog_ports[1] = input_port_read_safe(space->machine(), "ANALOG1", 0);
+			state->m_analog_ports[2] = input_port_read_safe(space->machine(), "ANALOG2", 0);
+			state->m_analog_ports[3] = input_port_read_safe(space->machine(), "ANALOG3", 0);
 		}
 	}
 	else
 	{
 		if (LOG)
-			logerror("%06X:analog_port_latch_w(%02X) = %08X & %08X\n", cpu_get_pc(space->cpu), offset, data, mem_mask);
+			logerror("%06X:analog_port_latch_w(%02X) = %08X & %08X\n", cpu_get_pc(&space->device()), offset, data, mem_mask);
 	}
 
 }
@@ -469,16 +469,16 @@ static WRITE16_HANDLER( analog_port_latch_w )
 
 static READ32_HANDLER( tms_m68k_ram_r )
 {
-	gaelco3d_state *state = space->machine->driver_data<gaelco3d_state>();
-//  logerror("%06X:tms_m68k_ram_r(%04X) = %08X\n", cpu_get_pc(space->cpu), offset, !(offset & 1) ? ((INT32)state->m68k_ram_base[offset/2] >> 16) : (int)(INT16)state->m68k_ram_base[offset/2]);
-	return (INT32)(INT16)state->m68k_ram_base[offset ^ state->tms_offset_xor];
+	gaelco3d_state *state = space->machine().driver_data<gaelco3d_state>();
+//  logerror("%06X:tms_m68k_ram_r(%04X) = %08X\n", cpu_get_pc(&space->device()), offset, !(offset & 1) ? ((INT32)state->m_m68k_ram_base[offset/2] >> 16) : (int)(INT16)state->m_m68k_ram_base[offset/2]);
+	return (INT32)(INT16)state->m_m68k_ram_base[offset ^ state->m_tms_offset_xor];
 }
 
 
 static WRITE32_HANDLER( tms_m68k_ram_w )
 {
-	gaelco3d_state *state = space->machine->driver_data<gaelco3d_state>();
-	state->m68k_ram_base[offset ^ state->tms_offset_xor] = data;
+	gaelco3d_state *state = space->machine().driver_data<gaelco3d_state>();
+	state->m_m68k_ram_base[offset ^ state->m_tms_offset_xor] = data;
 }
 
 
@@ -502,8 +502,8 @@ static WRITE16_HANDLER( tms_reset_w )
 	/* this is set to 0 while data is uploaded, then set to $ffff after it is done */
 	/* it does not ever appear to be touched after that */
 	if (LOG)
-		logerror("%06X:tms_reset_w(%02X) = %08X & %08X\n", cpu_get_pc(space->cpu), offset, data, mem_mask);
-		cputag_set_input_line(space->machine, "tms", INPUT_LINE_RESET, (data == 0xffff) ? CLEAR_LINE : ASSERT_LINE);
+		logerror("%06X:tms_reset_w(%02X) = %08X & %08X\n", cpu_get_pc(&space->device()), offset, data, mem_mask);
+		cputag_set_input_line(space->machine(), "tms", INPUT_LINE_RESET, (data == 0xffff) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
@@ -512,25 +512,25 @@ static WRITE16_HANDLER( tms_irq_w )
 	/* this is written twice, 0,1, in quick succession */
 	/* done after uploading, and after modifying the comm area */
 	if (LOG)
-		logerror("%06X:tms_irq_w(%02X) = %08X & %08X\n", cpu_get_pc(space->cpu), offset, data, mem_mask);
+		logerror("%06X:tms_irq_w(%02X) = %08X & %08X\n", cpu_get_pc(&space->device()), offset, data, mem_mask);
 	if (ACCESSING_BITS_0_7)
-		cputag_set_input_line(space->machine, "tms", 0, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+		cputag_set_input_line(space->machine(), "tms", 0, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
 static WRITE16_HANDLER( tms_control3_w )
 {
 	if (LOG)
-		logerror("%06X:tms_control3_w(%02X) = %08X & %08X\n", cpu_get_pc(space->cpu), offset, data, mem_mask);
+		logerror("%06X:tms_control3_w(%02X) = %08X & %08X\n", cpu_get_pc(&space->device()), offset, data, mem_mask);
 }
 
 
 static WRITE16_HANDLER( tms_comm_w )
 {
-	gaelco3d_state *state = space->machine->driver_data<gaelco3d_state>();
-	COMBINE_DATA(&state->tms_comm_base[offset ^ state->tms_offset_xor]);
+	gaelco3d_state *state = space->machine().driver_data<gaelco3d_state>();
+	COMBINE_DATA(&state->m_tms_comm_base[offset ^ state->m_tms_offset_xor]);
 	if (LOG)
-		logerror("%06X:tms_comm_w(%02X) = %08X & %08X\n", cpu_get_pc(space->cpu), offset*2, data, mem_mask);
+		logerror("%06X:tms_comm_w(%02X) = %08X & %08X\n", cpu_get_pc(&space->device()), offset*2, data, mem_mask);
 }
 
 
@@ -574,19 +574,19 @@ ADSP control 3FFF W = 0C08  (SYSCONTROL_REG)
 
 static WRITE16_HANDLER( adsp_control_w )
 {
-	gaelco3d_state *state = space->machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = space->machine().driver_data<gaelco3d_state>();
 	if (LOG)
 		logerror("ADSP control %04X W = %04X\n", 0x3fe0 + offset, data);
 
-	state->adsp_control_regs[offset] = data;
+	state->m_adsp_control_regs[offset] = data;
 	switch (offset)
 	{
 		case SYSCONTROL_REG:
 			/* see if SPORT1 got disabled */
 			if ((data & 0x0800) == 0)
 			{
-				dmadac_enable(&state->dmadac[0], SOUND_CHANNELS, 0);
-				state->adsp_autobuffer_timer->reset();
+				dmadac_enable(&state->m_dmadac[0], SOUND_CHANNELS, 0);
+				state->m_adsp_autobuffer_timer->reset();
 			}
 			break;
 
@@ -594,8 +594,8 @@ static WRITE16_HANDLER( adsp_control_w )
 			/* autobuffer off: nuke the timer, and disable the DAC */
 			if ((data & 0x0002) == 0)
 			{
-				dmadac_enable(&state->dmadac[0], SOUND_CHANNELS, 0);
-				state->adsp_autobuffer_timer->reset();
+				dmadac_enable(&state->m_dmadac[0], SOUND_CHANNELS, 0);
+				state->m_adsp_autobuffer_timer->reset();
 			}
 			break;
 
@@ -613,7 +613,7 @@ static WRITE16_HANDLER( adsp_rombank_w )
 {
 	if (LOG)
 		logerror("adsp_rombank_w(%d) = %04X\n", offset, data);
-	memory_set_bank(space->machine, "bank1", (offset & 1) * 0x80 + (data & 0x7f));
+	memory_set_bank(space->machine(), "bank1", (offset & 1) * 0x80 + (data & 0x7f));
 }
 
 
@@ -626,88 +626,88 @@ static WRITE16_HANDLER( adsp_rombank_w )
 
 static TIMER_DEVICE_CALLBACK( adsp_autobuffer_irq )
 {
-	gaelco3d_state *state = timer.machine->driver_data<gaelco3d_state>();
-	cpu_device *adsp = timer.machine->device<cpu_device>("adsp");
+	gaelco3d_state *state = timer.machine().driver_data<gaelco3d_state>();
+	cpu_device *adsp = timer.machine().device<cpu_device>("adsp");
 
 	/* get the index register */
-	int reg = adsp->state(ADSP2100_I0 + state->adsp_ireg);
+	int reg = adsp->state(ADSP2100_I0 + state->m_adsp_ireg);
 
 	/* copy the current data into the buffer */
-// logerror("ADSP buffer: I%d=%04X incs=%04X size=%04X\n", state->adsp_ireg, reg, state->adsp_incs, state->adsp_size);
-	if (state->adsp_incs)
-		dmadac_transfer(&state->dmadac[0], SOUND_CHANNELS, state->adsp_incs, SOUND_CHANNELS * state->adsp_incs, state->adsp_size / (SOUND_CHANNELS * state->adsp_incs), (INT16 *)&state->adsp_fastram_base[reg - 0x3800]);
+// logerror("ADSP buffer: I%d=%04X incs=%04X size=%04X\n", state->m_adsp_ireg, reg, state->m_adsp_incs, state->m_adsp_size);
+	if (state->m_adsp_incs)
+		dmadac_transfer(&state->m_dmadac[0], SOUND_CHANNELS, state->m_adsp_incs, SOUND_CHANNELS * state->m_adsp_incs, state->m_adsp_size / (SOUND_CHANNELS * state->m_adsp_incs), (INT16 *)&state->m_adsp_fastram_base[reg - 0x3800]);
 
 	/* increment it */
-	reg += state->adsp_size;
+	reg += state->m_adsp_size;
 
 	/* check for wrapping */
-	if (reg >= state->adsp_ireg_base + state->adsp_size)
+	if (reg >= state->m_adsp_ireg_base + state->m_adsp_size)
 	{
 		/* reset the base pointer */
-		reg = state->adsp_ireg_base;
+		reg = state->m_adsp_ireg_base;
 
 		/* generate the (internal, thats why the pulse) irq */
 		generic_pulse_irq_line(adsp, ADSP2105_IRQ1);
 	}
 
 	/* store it */
-	adsp->set_state(ADSP2100_I0 + state->adsp_ireg, reg);
+	adsp->set_state(ADSP2100_I0 + state->m_adsp_ireg, reg);
 }
 
 
 static void adsp_tx_callback(adsp21xx_device &device, int port, INT32 data)
 {
-	gaelco3d_state *state = device.machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = device.machine().driver_data<gaelco3d_state>();
 	/* check if it's for SPORT1 */
 	if (port != 1)
 		return;
 
 	/* check if SPORT1 is enabled */
-	if (state->adsp_control_regs[SYSCONTROL_REG] & 0x0800) /* bit 11 */
+	if (state->m_adsp_control_regs[SYSCONTROL_REG] & 0x0800) /* bit 11 */
 	{
 		/* we only support autobuffer here (wich is what this thing uses), bail if not enabled */
-		if (state->adsp_control_regs[S1_AUTOBUF_REG] & 0x0002) /* bit 1 */
+		if (state->m_adsp_control_regs[S1_AUTOBUF_REG] & 0x0002) /* bit 1 */
 		{
 			/* get the autobuffer registers */
 			int		mreg, lreg;
 			UINT16	source;
 			attotime sample_period;
 
-			state->adsp_ireg = (state->adsp_control_regs[S1_AUTOBUF_REG] >> 9) & 7;
-			mreg = (state->adsp_control_regs[S1_AUTOBUF_REG] >> 7) & 3;
-			mreg |= state->adsp_ireg & 0x04; /* msb comes from ireg */
-			lreg = state->adsp_ireg;
+			state->m_adsp_ireg = (state->m_adsp_control_regs[S1_AUTOBUF_REG] >> 9) & 7;
+			mreg = (state->m_adsp_control_regs[S1_AUTOBUF_REG] >> 7) & 3;
+			mreg |= state->m_adsp_ireg & 0x04; /* msb comes from ireg */
+			lreg = state->m_adsp_ireg;
 
 			/* now get the register contents in a more legible format */
 			/* we depend on register indexes to be continuous (wich is the case in our core) */
-			source = device.state(ADSP2100_I0 + state->adsp_ireg);
-			state->adsp_incs = device.state(ADSP2100_M0 + mreg);
-			state->adsp_size = device.state(ADSP2100_L0 + lreg);
+			source = device.state(ADSP2100_I0 + state->m_adsp_ireg);
+			state->m_adsp_incs = device.state(ADSP2100_M0 + mreg);
+			state->m_adsp_size = device.state(ADSP2100_L0 + lreg);
 
 			/* get the base value, since we need to keep it around for wrapping */
-			source -= state->adsp_incs;
+			source -= state->m_adsp_incs;
 
 			/* make it go back one so we dont lose the first sample */
-			device.set_state(ADSP2100_I0 + state->adsp_ireg, source);
+			device.set_state(ADSP2100_I0 + state->m_adsp_ireg, source);
 
 			/* save it as it is now */
-			state->adsp_ireg_base = source;
+			state->m_adsp_ireg_base = source;
 
 			/* calculate how long until we generate an interrupt */
 
 			/* period per each bit sent */
-			sample_period = attotime::from_hz(device.clock()) * (2 * (state->adsp_control_regs[S1_SCLKDIV_REG] + 1));
+			sample_period = attotime::from_hz(device.clock()) * (2 * (state->m_adsp_control_regs[S1_SCLKDIV_REG] + 1));
 
 			/* now put it down to samples, so we know what the channel frequency has to be */
 			sample_period *= 16 * SOUND_CHANNELS;
 
-			dmadac_set_frequency(&state->dmadac[0], SOUND_CHANNELS, ATTOSECONDS_TO_HZ(sample_period.attoseconds));
-			dmadac_enable(&state->dmadac[0], SOUND_CHANNELS, 1);
+			dmadac_set_frequency(&state->m_dmadac[0], SOUND_CHANNELS, ATTOSECONDS_TO_HZ(sample_period.attoseconds));
+			dmadac_enable(&state->m_dmadac[0], SOUND_CHANNELS, 1);
 
 			/* fire off a timer wich will hit every half-buffer */
-			sample_period = (sample_period * state->adsp_size) / (SOUND_CHANNELS * state->adsp_incs);
+			sample_period = (sample_period * state->m_adsp_size) / (SOUND_CHANNELS * state->m_adsp_incs);
 
-			state->adsp_autobuffer_timer->adjust(sample_period, 0, sample_period);
+			state->m_adsp_autobuffer_timer->adjust(sample_period, 0, sample_period);
 
 			return;
 		}
@@ -716,10 +716,10 @@ static void adsp_tx_callback(adsp21xx_device &device, int port, INT32 data)
 	}
 
 	/* if we get there, something went wrong. Disable playing */
-	dmadac_enable(&state->dmadac[0], SOUND_CHANNELS, 0);
+	dmadac_enable(&state->m_dmadac[0], SOUND_CHANNELS, 0);
 
 	/* remove timer */
-	state->adsp_autobuffer_timer->reset();
+	state->m_adsp_autobuffer_timer->reset();
 }
 
 
@@ -735,27 +735,27 @@ static WRITE32_HANDLER( radikalb_lamp_w )
 {
 	/* arbitrary data written */
 	if (ACCESSING_BITS_0_7)
-		logerror("%06X:unknown_127_w = %02X\n", cpu_get_pc(space->cpu), data & 0xff);
+		logerror("%06X:unknown_127_w = %02X\n", cpu_get_pc(&space->device()), data & 0xff);
 	else
-		logerror("%06X:unknown_127_w(%02X) = %08X & %08X\n", cpu_get_pc(space->cpu), offset, data, mem_mask);
+		logerror("%06X:unknown_127_w(%02X) = %08X & %08X\n", cpu_get_pc(&space->device()), offset, data, mem_mask);
 }
 
 static WRITE32_HANDLER( unknown_137_w )
 {
 	/* only written $00 or $ff */
 	if (ACCESSING_BITS_0_7)
-		logerror("%06X:unknown_137_w = %02X\n", cpu_get_pc(space->cpu), data & 0xff);
+		logerror("%06X:unknown_137_w = %02X\n", cpu_get_pc(&space->device()), data & 0xff);
 	else
-		logerror("%06X:unknown_137_w(%02X) = %08X & %08X\n", cpu_get_pc(space->cpu), offset, data, mem_mask);
+		logerror("%06X:unknown_137_w(%02X) = %08X & %08X\n", cpu_get_pc(&space->device()), offset, data, mem_mask);
 }
 
 static WRITE32_HANDLER( unknown_13a_w )
 {
 	/* only written $0000 or $0001 */
 	if (ACCESSING_BITS_0_15)
-		logerror("%06X:unknown_13a_w = %04X\n", cpu_get_pc(space->cpu), data & 0xffff);
+		logerror("%06X:unknown_13a_w = %04X\n", cpu_get_pc(&space->device()), data & 0xffff);
 	else
-		logerror("%06X:unknown_13a_w(%02X) = %08X & %08X\n", cpu_get_pc(space->cpu), offset, data, mem_mask);
+		logerror("%06X:unknown_13a_w(%02X) = %08X & %08X\n", cpu_get_pc(&space->device()), offset, data, mem_mask);
 }
 
 
@@ -766,7 +766,7 @@ static WRITE32_HANDLER( unknown_13a_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16 )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
 	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(gaelco3d_paletteram_w) AM_BASE_GENERIC(paletteram)
@@ -792,12 +792,12 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x510156, 0x510157) AM_WRITE(analog_port_clock_w)
 	AM_RANGE(0x510166, 0x510167) AM_WRITE(analog_port_latch_w)
 	AM_RANGE(0x510176, 0x510177) AM_DEVWRITE8("serial", gaelco_serial_unknown_w, 0x00ff)
-	AM_RANGE(0xfe7f80, 0xfe7fff) AM_WRITE(tms_comm_w) AM_BASE_MEMBER(gaelco3d_state, tms_comm_base)
-	AM_RANGE(0xfe0000, 0xfeffff) AM_RAM AM_BASE_MEMBER(gaelco3d_state, m68k_ram_base)
+	AM_RANGE(0xfe7f80, 0xfe7fff) AM_WRITE(tms_comm_w) AM_BASE_MEMBER(gaelco3d_state, m_tms_comm_base)
+	AM_RANGE(0xfe0000, 0xfeffff) AM_RAM AM_BASE_MEMBER(gaelco3d_state, m_m68k_ram_base)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( main020_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( main020_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
 	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(gaelco3d_paletteram_020_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x51000c, 0x51000f) AM_READ_PORT("IN0")
@@ -823,28 +823,28 @@ static ADDRESS_MAP_START( main020_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x510154, 0x510157) AM_WRITE16(analog_port_clock_w, 0x0000ffff)
 	AM_RANGE(0x510164, 0x510167) AM_WRITE16(analog_port_latch_w, 0x0000ffff)
 	AM_RANGE(0x510174, 0x510177) AM_DEVWRITE8("serial", gaelco_serial_unknown_w, 0x000000ff)
-	AM_RANGE(0xfe7f80, 0xfe7fff) AM_WRITE16(tms_comm_w, 0xffffffff) AM_BASE_MEMBER(gaelco3d_state, tms_comm_base)
-	AM_RANGE(0xfe0000, 0xfeffff) AM_RAM AM_BASE_MEMBER(gaelco3d_state, m68k_ram_base)
+	AM_RANGE(0xfe7f80, 0xfe7fff) AM_WRITE16(tms_comm_w, 0xffffffff) AM_BASE_MEMBER(gaelco3d_state, m_tms_comm_base)
+	AM_RANGE(0xfe0000, 0xfeffff) AM_RAM AM_BASE_MEMBER(gaelco3d_state, m_m68k_ram_base)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( tms_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( tms_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x000000, 0x007fff) AM_READWRITE(tms_m68k_ram_r, tms_m68k_ram_w)
 	AM_RANGE(0x400000, 0x5fffff) AM_ROM AM_REGION("user2", 0)
 	AM_RANGE(0xc00000, 0xc00007) AM_WRITE(gaelco3d_render_w)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( adsp_program_map, ADDRESS_SPACE_PROGRAM, 32 )
-	AM_RANGE(0x0000, 0x03ff) AM_RAM AM_BASE_MEMBER(gaelco3d_state, adsp_ram_base)		/* 1k words internal RAM */
+static ADDRESS_MAP_START( adsp_program_map, AS_PROGRAM, 32 )
+	AM_RANGE(0x0000, 0x03ff) AM_RAM AM_BASE_MEMBER(gaelco3d_state, m_adsp_ram_base)		/* 1k words internal RAM */
 	AM_RANGE(0x37ff, 0x37ff) AM_READNOP							/* speedup hammers this for no apparent reason */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( adsp_data_map, ADDRESS_SPACE_DATA, 16 )
+static ADDRESS_MAP_START( adsp_data_map, AS_DATA, 16 )
 	AM_RANGE(0x0000, 0x0001) AM_WRITE(adsp_rombank_w)
 	AM_RANGE(0x0000, 0x1fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x2000, 0x2000) AM_READWRITE(sound_data_r, sound_status_w)
-	AM_RANGE(0x3800, 0x39ff) AM_RAM AM_BASE_MEMBER(gaelco3d_state, adsp_fastram_base)	/* 512 words internal RAM */
-	AM_RANGE(0x3fe0, 0x3fff) AM_WRITE(adsp_control_w) AM_BASE_MEMBER(gaelco3d_state, adsp_control_regs)
+	AM_RANGE(0x3800, 0x39ff) AM_RAM AM_BASE_MEMBER(gaelco3d_state, m_adsp_fastram_base)	/* 512 words internal RAM */
+	AM_RANGE(0x3fe0, 0x3fff) AM_WRITE(adsp_control_w) AM_BASE_MEMBER(gaelco3d_state, m_adsp_control_regs)
 ADDRESS_MAP_END
 
 
@@ -1207,34 +1207,34 @@ ROM_END
 
 static DRIVER_INIT( gaelco3d )
 {
-	gaelco3d_state *state = machine->driver_data<gaelco3d_state>();
+	gaelco3d_state *state = machine.driver_data<gaelco3d_state>();
 	UINT8 *src, *dst;
 	int x, y;
 
 	/* allocate memory */
-	state->texture_size = machine->region("gfx1")->bytes();
-	state->texmask_size = machine->region("gfx2")->bytes() * 8;
-	state->texture = auto_alloc_array(machine, UINT8, state->texture_size);
-	state->texmask = auto_alloc_array(machine, UINT8, state->texmask_size);
+	state->m_texture_size = machine.region("gfx1")->bytes();
+	state->m_texmask_size = machine.region("gfx2")->bytes() * 8;
+	state->m_texture = auto_alloc_array(machine, UINT8, state->m_texture_size);
+	state->m_texmask = auto_alloc_array(machine, UINT8, state->m_texmask_size);
 
 	/* first expand the pixel data */
-	src = machine->region("gfx1")->base();
-	dst = state->texture;
-	for (y = 0; y < state->texture_size/4096; y += 2)
+	src = machine.region("gfx1")->base();
+	dst = state->m_texture;
+	for (y = 0; y < state->m_texture_size/4096; y += 2)
 		for (x = 0; x < 4096; x += 2)
 		{
-			dst[(y + 0) * 4096 + (x + 1)] = src[0*state->texture_size/4 + (y/2) * 2048 + (x/2)];
-			dst[(y + 1) * 4096 + (x + 1)] = src[1*state->texture_size/4 + (y/2) * 2048 + (x/2)];
-			dst[(y + 0) * 4096 + (x + 0)] = src[2*state->texture_size/4 + (y/2) * 2048 + (x/2)];
-			dst[(y + 1) * 4096 + (x + 0)] = src[3*state->texture_size/4 + (y/2) * 2048 + (x/2)];
+			dst[(y + 0) * 4096 + (x + 1)] = src[0*state->m_texture_size/4 + (y/2) * 2048 + (x/2)];
+			dst[(y + 1) * 4096 + (x + 1)] = src[1*state->m_texture_size/4 + (y/2) * 2048 + (x/2)];
+			dst[(y + 0) * 4096 + (x + 0)] = src[2*state->m_texture_size/4 + (y/2) * 2048 + (x/2)];
+			dst[(y + 1) * 4096 + (x + 0)] = src[3*state->m_texture_size/4 + (y/2) * 2048 + (x/2)];
 		}
 
 	/* then expand the mask data */
-	src = machine->region("gfx2")->base();
-	dst = state->texmask;
-	for (y = 0; y < state->texmask_size/4096; y++)
+	src = machine.region("gfx2")->base();
+	dst = state->m_texmask;
+	for (y = 0; y < state->m_texmask_size/4096; y++)
 		for (x = 0; x < 4096; x++)
-			dst[y * 4096 + x] = (src[(x / 1024) * (state->texmask_size/8/4) + (y * 1024 + x % 1024) / 8] >> (x % 8)) & 1;
+			dst[y * 4096 + x] = (src[(x / 1024) * (state->m_texmask_size/8/4) + (y * 1024 + x % 1024) / 8] >> (x % 8)) & 1;
 }
 
 

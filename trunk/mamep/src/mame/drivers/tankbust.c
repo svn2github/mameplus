@@ -26,29 +26,29 @@ To do:
 
 static TIMER_CALLBACK( soundlatch_callback )
 {
-	tankbust_state *state = machine->driver_data<tankbust_state>();
-	state->latch = param;
+	tankbust_state *state = machine.driver_data<tankbust_state>();
+	state->m_latch = param;
 }
 
 static WRITE8_HANDLER( tankbust_soundlatch_w )
 {
-	space->machine->scheduler().synchronize(FUNC(soundlatch_callback), data);
+	space->machine().scheduler().synchronize(FUNC(soundlatch_callback), data);
 }
 
 static READ8_DEVICE_HANDLER( tankbust_soundlatch_r )
 {
-	tankbust_state *state = device->machine->driver_data<tankbust_state>();
-	return state->latch;
+	tankbust_state *state = device->machine().driver_data<tankbust_state>();
+	return state->m_latch;
 }
 
 //port B of ay8910#0
 static READ8_DEVICE_HANDLER( tankbust_soundtimer_r )
 {
-	tankbust_state *state = device->machine->driver_data<tankbust_state>();
+	tankbust_state *state = device->machine().driver_data<tankbust_state>();
 	int ret;
 
-	state->timer1++;
-	ret = state->timer1;
+	state->m_timer1++;
+	ret = state->m_timer1;
 	return ret;
 }
 
@@ -64,15 +64,15 @@ static TIMER_CALLBACK( soundirqline_callback )
 
 static WRITE8_HANDLER( tankbust_e0xx_w )
 {
-	tankbust_state *state = space->machine->driver_data<tankbust_state>();
-	state->e0xx_data[offset] = data;
+	tankbust_state *state = space->machine().driver_data<tankbust_state>();
+	state->m_e0xx_data[offset] = data;
 
 #if 0
 	popmessage("e0: %x %x (%x cnt) %x %x %x %x",
-		state->e0xx_data[0], state->e0xx_data[1],
-		state->e0xx_data[2], state->e0xx_data[3],
-		state->e0xx_data[4], state->e0xx_data[5],
-		state->e0xx_data[6] );
+		state->m_e0xx_data[0], state->m_e0xx_data[1],
+		state->m_e0xx_data[2], state->m_e0xx_data[3],
+		state->m_e0xx_data[4], state->m_e0xx_data[5],
+		state->m_e0xx_data[6] );
 #endif
 
 	switch (offset)
@@ -82,11 +82,11 @@ static WRITE8_HANDLER( tankbust_e0xx_w )
 	break;
 
 	case 1:	/* 0xe001 (value 0 then 1) written right after the soundlatch_w */
-		space->machine->scheduler().synchronize(FUNC(soundirqline_callback), data);
+		space->machine().scheduler().synchronize(FUNC(soundirqline_callback), data);
 	break;
 
 	case 2:	/* 0xe002 coin counter */
-		coin_counter_w(space->machine, 0, data&1);
+		coin_counter_w(space->machine(), 0, data&1);
 	break;
 
 	case 6:	/* 0xe006 screen disable ?? or disable screen update */
@@ -100,16 +100,16 @@ static WRITE8_HANDLER( tankbust_e0xx_w )
 	case 7: /* 0xe007 bankswitch */
 		/* bank 1 at 0x6000-9fff = from 0x10000 when bit0=0 else from 0x14000 */
 		/* bank 2 at 0xa000-bfff = from 0x18000 when bit0=0 else from 0x1a000 */
-		memory_set_bankptr(space->machine,  "bank1", space->machine->region("maincpu")->base() + 0x10000 + ((data&1) * 0x4000) );
-		memory_set_bankptr(space->machine,  "bank2", space->machine->region("maincpu")->base() + 0x18000 + ((data&1) * 0x2000) ); /* verified (the game will reset after the "game over" otherwise) */
+		memory_set_bankptr(space->machine(),  "bank1", space->machine().region("maincpu")->base() + 0x10000 + ((data&1) * 0x4000) );
+		memory_set_bankptr(space->machine(),  "bank2", space->machine().region("maincpu")->base() + 0x18000 + ((data&1) * 0x2000) ); /* verified (the game will reset after the "game over" otherwise) */
 	break;
 	}
 }
 
 static READ8_HANDLER( debug_output_area_r )
 {
-	tankbust_state *state = space->machine->driver_data<tankbust_state>();
-	return state->e0xx_data[offset];
+	tankbust_state *state = space->machine().driver_data<tankbust_state>();
+	return state->m_e0xx_data[offset];
 }
 
 
@@ -174,19 +174,19 @@ static READ8_HANDLER( read_from_unmapped_memory )
 
 static READ8_HANDLER( some_changing_input )
 {
-	tankbust_state *state = space->machine->driver_data<tankbust_state>();
-	state->variable_data += 8;
-	return state->variable_data;
+	tankbust_state *state = space->machine().driver_data<tankbust_state>();
+	state->m_variable_data += 8;
+	return state->m_variable_data;
 }
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x9fff) AM_ROMBANK("bank1")
 	AM_RANGE(0xa000, 0xbfff) AM_ROMBANK("bank2")
-	AM_RANGE(0xc000, 0xc7ff) AM_READWRITE(tankbust_background_videoram_r, tankbust_background_videoram_w) AM_BASE_MEMBER(tankbust_state, videoram)
-	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(tankbust_background_colorram_r, tankbust_background_colorram_w) AM_BASE_MEMBER(tankbust_state, colorram)
-	AM_RANGE(0xd000, 0xd7ff) AM_READWRITE(tankbust_txtram_r, tankbust_txtram_w) AM_BASE_MEMBER(tankbust_state, txtram)
-	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_BASE_SIZE_MEMBER(tankbust_state, spriteram, spriteram_size)
+	AM_RANGE(0xc000, 0xc7ff) AM_READWRITE(tankbust_background_videoram_r, tankbust_background_videoram_w) AM_BASE_MEMBER(tankbust_state, m_videoram)
+	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(tankbust_background_colorram_r, tankbust_background_colorram_w) AM_BASE_MEMBER(tankbust_state, m_colorram)
+	AM_RANGE(0xd000, 0xd7ff) AM_READWRITE(tankbust_txtram_r, tankbust_txtram_w) AM_BASE_MEMBER(tankbust_state, m_txtram)
+	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_BASE_SIZE_MEMBER(tankbust_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0xe000, 0xe007) AM_READWRITE(debug_output_area_r, tankbust_e0xx_w)
 	AM_RANGE(0xe800, 0xe800) AM_READ_PORT("INPUTS") AM_WRITE(tankbust_yscroll_w)
 	AM_RANGE(0xe801, 0xe801) AM_READ_PORT("SYSTEM")
@@ -198,7 +198,7 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	//AM_RANGE(0xf800, 0xffff) AM_READ(read_from_unmapped_memory)   /* a bug in game code ? */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( port_map_cpu2, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( port_map_cpu2, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x10, 0x10) AM_DEVWRITE("ay2", ay8910_data_w)
 	AM_RANGE(0x30, 0x30) AM_DEVREADWRITE("ay2", ay8910_r, ay8910_address_w)
@@ -207,7 +207,7 @@ static ADDRESS_MAP_START( port_map_cpu2, ADDRESS_SPACE_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( map_cpu2, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( map_cpu2, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x2000, 0x3fff) AM_WRITENOP	/* garbage, written in initialization loop */
 	//0x4000 and 0x4040-0x4045 seem to be used (referenced in the code)
@@ -320,8 +320,8 @@ static const ay8910_interface ay8910_config =
 
 static MACHINE_RESET( tankbust )
 {
-	tankbust_state *state = machine->driver_data<tankbust_state>();
-	state->variable_data = 0x11;
+	tankbust_state *state = machine.driver_data<tankbust_state>();
+	state->m_variable_data = 0x11;
 }
 
 

@@ -54,14 +54,14 @@ public:
 	hitpoker_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *sys_regs;
-	UINT8 pic_data;
-	UINT8 *videoram;
-	UINT8 *paletteram;
-	UINT8 *colorram;
-	UINT8 eeprom_data[0x200];
-	UINT16 eeprom_index;
-	UINT8 tmp;
+	UINT8 *m_sys_regs;
+	UINT8 m_pic_data;
+	UINT8 *m_videoram;
+	UINT8 *m_paletteram;
+	UINT8 *m_colorram;
+	UINT8 m_eeprom_data[0x200];
+	UINT16 m_eeprom_index;
+	UINT8 m_tmp;
 };
 
 
@@ -69,15 +69,15 @@ public:
 
 static VIDEO_START(hitpoker)
 {
-	hitpoker_state *state = machine->driver_data<hitpoker_state>();
-	state->videoram = auto_alloc_array(machine, UINT8, 0x35ff);
-	state->paletteram = auto_alloc_array(machine, UINT8, 0x1000);
-	state->colorram = auto_alloc_array(machine, UINT8, 0x2000);
+	hitpoker_state *state = machine.driver_data<hitpoker_state>();
+	state->m_videoram = auto_alloc_array(machine, UINT8, 0x35ff);
+	state->m_paletteram = auto_alloc_array(machine, UINT8, 0x1000);
+	state->m_colorram = auto_alloc_array(machine, UINT8, 0x2000);
 }
 
 static SCREEN_UPDATE(hitpoker)
 {
-	hitpoker_state *state = screen->machine->driver_data<hitpoker_state>();
+	hitpoker_state *state = screen->machine().driver_data<hitpoker_state>();
 	int count = 0;
 	int y,x;
 
@@ -89,11 +89,11 @@ static SCREEN_UPDATE(hitpoker)
 		{
 			int tile,color,gfx_bpp;
 
-			tile = (((state->videoram[count]<<8)|(state->videoram[count+1])) & 0x3fff);
-			gfx_bpp = (state->colorram[count] & 0x80)>>7; //flag between 4 and 8 bpp
-			color = gfx_bpp ? ((state->colorram[count] & 0x70)>>4) : (state->colorram[count] & 0xf);
+			tile = (((state->m_videoram[count]<<8)|(state->m_videoram[count+1])) & 0x3fff);
+			gfx_bpp = (state->m_colorram[count] & 0x80)>>7; //flag between 4 and 8 bpp
+			color = gfx_bpp ? ((state->m_colorram[count] & 0x70)>>4) : (state->m_colorram[count] & 0xf);
 
-			drawgfx_opaque(bitmap,cliprect,screen->machine->gfx[gfx_bpp],tile,color,0,0,x*8,y*8);
+			drawgfx_opaque(bitmap,cliprect,screen->machine().gfx[gfx_bpp],tile,color,0,0,x*8,y*8);
 
 			count+=2;
 		}
@@ -104,66 +104,66 @@ static SCREEN_UPDATE(hitpoker)
 
 static READ8_HANDLER( hitpoker_vram_r )
 {
-	hitpoker_state *state = space->machine->driver_data<hitpoker_state>();
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	hitpoker_state *state = space->machine().driver_data<hitpoker_state>();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 
-	if(state->pic_data & 0x10)
-		return state->videoram[offset];
+	if(state->m_pic_data & 0x10)
+		return state->m_videoram[offset];
 	else
 		return ROM[offset+0x8000];
 }
 
 static WRITE8_HANDLER( hitpoker_vram_w )
 {
-	hitpoker_state *state = space->machine->driver_data<hitpoker_state>();
-//  UINT8 *ROM = space->machine->region("maincpu")->base();
+	hitpoker_state *state = space->machine().driver_data<hitpoker_state>();
+//  UINT8 *ROM = space->machine().region("maincpu")->base();
 
-//  if(state->sys_regs[0x00] & 0x10)
-	state->videoram[offset] = data;
+//  if(state->m_sys_regs[0x00] & 0x10)
+	state->m_videoram[offset] = data;
 }
 
 static READ8_HANDLER( hitpoker_cram_r )
 {
-	hitpoker_state *state = space->machine->driver_data<hitpoker_state>();
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	hitpoker_state *state = space->machine().driver_data<hitpoker_state>();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 
-	if(state->pic_data & 0x10)
-		return state->colorram[offset];
+	if(state->m_pic_data & 0x10)
+		return state->m_colorram[offset];
 	else
 		return ROM[offset+0xc000];
 }
 
 static WRITE8_HANDLER( hitpoker_cram_w )
 {
-	hitpoker_state *state = space->machine->driver_data<hitpoker_state>();
-	state->colorram[offset] = data;
+	hitpoker_state *state = space->machine().driver_data<hitpoker_state>();
+	state->m_colorram[offset] = data;
 }
 
 static READ8_HANDLER( hitpoker_paletteram_r )
 {
-	hitpoker_state *state = space->machine->driver_data<hitpoker_state>();
-	UINT8 *ROM = space->machine->region("maincpu")->base();
+	hitpoker_state *state = space->machine().driver_data<hitpoker_state>();
+	UINT8 *ROM = space->machine().region("maincpu")->base();
 
-	if(state->pic_data & 0x10)
-		return state->paletteram[offset];
+	if(state->m_pic_data & 0x10)
+		return state->m_paletteram[offset];
 	else
 		return ROM[offset+0xe000];
 }
 
 static WRITE8_HANDLER( hitpoker_paletteram_w )
 {
-	hitpoker_state *state = space->machine->driver_data<hitpoker_state>();
+	hitpoker_state *state = space->machine().driver_data<hitpoker_state>();
 	int r,g,b,datax;
-	state->paletteram[offset] = data;
+	state->m_paletteram[offset] = data;
 	offset>>=1;
-	datax=256*state->paletteram[offset*2]+state->paletteram[offset*2+1];
+	datax=256*state->m_paletteram[offset*2]+state->m_paletteram[offset*2+1];
 
 	/* RGB565 */
 	b = ((datax)&0xf800)>>11;
 	g = ((datax)&0x07e0)>>5;
 	r = ((datax)&0x001f)>>0;
 
-	palette_set_color_rgb(space->machine, offset, pal5bit(r), pal6bit(g), pal5bit(b));
+	palette_set_color_rgb(space->machine(), offset, pal5bit(r), pal6bit(g), pal5bit(b));
 }
 
 static READ8_HANDLER( rtc_r )
@@ -175,15 +175,15 @@ static READ8_HANDLER( rtc_r )
 /* tests 0x180, what EEPROM is this one??? */
 static WRITE8_HANDLER( eeprom_w )
 {
-	hitpoker_state *state = space->machine->driver_data<hitpoker_state>();
+	hitpoker_state *state = space->machine().driver_data<hitpoker_state>();
 	if(offset == 0)
 	{
-		state->eeprom_index = (state->eeprom_index & 0x100)|(data & 0xff);
+		state->m_eeprom_index = (state->m_eeprom_index & 0x100)|(data & 0xff);
 		//printf("W INDEX %02x\n",data);
 	}
 	if(offset == 1)
 	{
-		state->eeprom_index = (state->eeprom_index & 0xff)|((data & 0x1)<<8);
+		state->m_eeprom_index = (state->m_eeprom_index & 0xff)|((data & 0x1)<<8);
 		//data & 0x4: eeprom clock
 		//printf("W CLOCK + INDEX %02x\n",data);
 	}
@@ -191,53 +191,53 @@ static WRITE8_HANDLER( eeprom_w )
 
 static READ8_HANDLER( eeprom_r )
 {
-	hitpoker_state *state = space->machine->driver_data<hitpoker_state>();
-	state->tmp = state->eeprom_data[state->eeprom_index];
-	if((state->eeprom_index & 0x1f) == 0x1f)
-		state->tmp = 0xaa;
-	//printf("%02x\n",state->eeprom_index);
-	state->eeprom_index++;
-	//state->eeprom_index&=0x1f;
-	return state->tmp;
+	hitpoker_state *state = space->machine().driver_data<hitpoker_state>();
+	state->m_tmp = state->m_eeprom_data[state->m_eeprom_index];
+	if((state->m_eeprom_index & 0x1f) == 0x1f)
+		state->m_tmp = 0xaa;
+	//printf("%02x\n",state->m_eeprom_index);
+	state->m_eeprom_index++;
+	//state->m_eeprom_index&=0x1f;
+	return state->m_tmp;
 }
 
 static READ8_HANDLER( hitpoker_pic_r )
 {
-	hitpoker_state *state = space->machine->driver_data<hitpoker_state>();
+	hitpoker_state *state = space->machine().driver_data<hitpoker_state>();
 //  logerror("R\n");
 
 	if(offset == 0)
 	{
-		if(cpu_get_pc(space->cpu) == 0x3143 ||
-		   cpu_get_pc(space->cpu) == 0x314e ||
-		   cpu_get_pc(space->cpu) == 0x3164 ||
-		   cpu_get_pc(space->cpu) == 0x3179)
-			return state->pic_data;
+		if(cpu_get_pc(&space->device()) == 0x3143 ||
+		   cpu_get_pc(&space->device()) == 0x314e ||
+		   cpu_get_pc(&space->device()) == 0x3164 ||
+		   cpu_get_pc(&space->device()) == 0x3179)
+			return state->m_pic_data;
 
-		return (state->pic_data & 0x7f) | (state->pic_data & 0x40 ? 0x80 : 0x00);
+		return (state->m_pic_data & 0x7f) | (state->m_pic_data & 0x40 ? 0x80 : 0x00);
 	}
 
-	return state->sys_regs[offset];
+	return state->m_sys_regs[offset];
 }
 
 static WRITE8_HANDLER( hitpoker_pic_w )
 {
-	hitpoker_state *state = space->machine->driver_data<hitpoker_state>();
+	hitpoker_state *state = space->machine().driver_data<hitpoker_state>();
 	if(offset == 0)
-		state->pic_data = (data & 0xff);// | (data & 0x40) ? 0x80 : 0x00;
+		state->m_pic_data = (data & 0xff);// | (data & 0x40) ? 0x80 : 0x00;
 //  logerror("%02x W\n",data);
-	state->sys_regs[offset] = data;
+	state->m_sys_regs[offset] = data;
 }
 
 #if 0
 static READ8_HANDLER( test_r )
 {
-	return space->machine->rand();
+	return space->machine().rand();
 }
 #endif
 
 /* overlap empty rom addresses */
-static ADDRESS_MAP_START( hitpoker_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( hitpoker_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x00ff) AM_RAM // stack ram
 	AM_RANGE(0x1000, 0x103f) AM_RAM // internal I/O
 	AM_RANGE(0x8000, 0xb5ff) AM_READWRITE(hitpoker_vram_r,hitpoker_vram_w)
@@ -259,8 +259,8 @@ static ADDRESS_MAP_START( hitpoker_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xbf00, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( hitpoker_io, ADDRESS_SPACE_IO, 8 )
-	AM_RANGE(MC68HC11_IO_PORTA, MC68HC11_IO_PORTA) AM_READWRITE(hitpoker_pic_r,hitpoker_pic_w) AM_BASE_MEMBER(hitpoker_state, sys_regs)
+static ADDRESS_MAP_START( hitpoker_io, AS_IO, 8 )
+	AM_RANGE(MC68HC11_IO_PORTA, MC68HC11_IO_PORTA) AM_READWRITE(hitpoker_pic_r,hitpoker_pic_w) AM_BASE_MEMBER(hitpoker_state, m_sys_regs)
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( hitpoker )
@@ -479,7 +479,7 @@ static const hc11_config hitpoker_config =
 
 static INTERRUPT_GEN( hitpoker_irq )
 {
-	cpu_set_input_line(device, MC68HC11_IRQ_LINE, HOLD_LINE);
+	device_set_input_line(device, MC68HC11_IRQ_LINE, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( hitpoker, hitpoker_state )
@@ -514,7 +514,7 @@ MACHINE_CONFIG_END
 
 static DRIVER_INIT(hitpoker)
 {
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 
 	ROM[0x1220] = 0x01; //patch eeprom write?
 	ROM[0x1221] = 0x01;

@@ -31,10 +31,10 @@ public:
 	wldarrow_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram_0;
-	UINT8 *videoram_1;
-	UINT8 *videoram_2;
-	size_t videoram_size;
+	UINT8 *m_videoram_0;
+	UINT8 *m_videoram_1;
+	UINT8 *m_videoram_2;
+	size_t m_videoram_size;
 };
 
 
@@ -60,22 +60,22 @@ static void get_pens(pen_t *pens)
 
 static SCREEN_UPDATE( wldarrow )
 {
-	wldarrow_state *state = screen->machine->driver_data<wldarrow_state>();
+	wldarrow_state *state = screen->machine().driver_data<wldarrow_state>();
 	pen_t pens[NUM_PENS];
 	offs_t offs;
 
 	get_pens(pens);
 
-	for (offs = 0; offs < state->videoram_size; offs++)
+	for (offs = 0; offs < state->m_videoram_size; offs++)
 	{
 		int i;
 
 		UINT8 y = offs >> 5;
 		UINT8 x = offs << 3;
 
-		UINT8 data0 = state->videoram_0[offs];
-		UINT8 data1 = state->videoram_1[offs];
-		UINT8 data2 = state->videoram_2[offs];
+		UINT8 data0 = state->m_videoram_0[offs];
+		UINT8 data1 = state->m_videoram_1[offs];
+		UINT8 data2 = state->m_videoram_2[offs];
 
 		/* weird equations, but it matches every flyer screenshot -
            perhaphs they used a look-up PROM? */
@@ -124,7 +124,7 @@ static WRITE8_HANDLER( lights_2_w )
 
 static WRITE8_HANDLER( counter_w )
 {
-	coin_counter_w(space->machine, 0, data);
+	coin_counter_w(space->machine(), 0, data);
 }
 
 
@@ -171,12 +171,12 @@ static WRITE8_DEVICE_HANDLER( wldarrow_dac_4_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( wldarrow_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( wldarrow_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x37ff) AM_ROM
 	AM_RANGE(0x3800, 0x3800) AM_READ_PORT("IN0")
-	AM_RANGE(0x4000, 0x5fff) AM_RAM AM_BASE_MEMBER(wldarrow_state, videoram_0) AM_SIZE_MEMBER(wldarrow_state, videoram_size)
-	AM_RANGE(0x6000, 0x7fff) AM_RAM AM_BASE_MEMBER(wldarrow_state, videoram_1)
-	AM_RANGE(0x8000, 0x9fff) AM_RAM AM_BASE_MEMBER(wldarrow_state, videoram_2)
+	AM_RANGE(0x4000, 0x5fff) AM_RAM AM_BASE_MEMBER(wldarrow_state, m_videoram_0) AM_SIZE_MEMBER(wldarrow_state, m_videoram_size)
+	AM_RANGE(0x6000, 0x7fff) AM_RAM AM_BASE_MEMBER(wldarrow_state, m_videoram_1)
+	AM_RANGE(0x8000, 0x9fff) AM_RAM AM_BASE_MEMBER(wldarrow_state, m_videoram_2)
 	AM_RANGE(0xcd00, 0xcdff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0xf000, 0xf000) AM_READ_PORT("BITSW") AM_DEVWRITE("dac", wldarrow_dac_1_w)
 	AM_RANGE(0xf004, 0xf004) AM_READ_PORT("IN1") AM_WRITE(lights_1_w)
@@ -483,7 +483,7 @@ ROM_END
 static DRIVER_INIT( wldarrow )
 {
 	offs_t i;
-	UINT8 *rom = machine->region("maincpu")->base();
+	UINT8 *rom = machine.region("maincpu")->base();
 
 	for (i = 0; i < 0x3800; i++)
 		rom[i] ^= 0xff;

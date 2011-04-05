@@ -30,7 +30,7 @@ public:
 
 static VIDEO_START(kongambl)
 {
-	device_t *k056832 = machine->device("k056832");
+	device_t *k056832 = machine.device("k056832");
 
 	k056832_set_layer_association(k056832, 0);
 	k056832_set_layer_offs(k056832, 0, -2, 0);
@@ -41,10 +41,10 @@ static VIDEO_START(kongambl)
 
 static SCREEN_UPDATE(kongambl)
 {
-	device_t *k056832 = screen->machine->device("k056832");
+	device_t *k056832 = screen->machine().device("k056832");
 
 	bitmap_fill(bitmap, cliprect, 0);
-	bitmap_fill(screen->machine->priority_bitmap, cliprect, 0);
+	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
 
 //  k056832_tilemap_draw(k056832, bitmap, cliprect, 3, 0, 0);
 //  k056832_tilemap_draw(k056832, bitmap, cliprect, 2, 0, 0);
@@ -57,7 +57,7 @@ static READ32_HANDLER( eeprom_r )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		UINT32 rv = input_port_read(space->machine, "SYSTEM") & ~0x1;
+		UINT32 rv = input_port_read(space->machine(), "SYSTEM") & ~0x1;
 
 		return rv;	// bit 0 freezes the game if 1
 	}
@@ -69,11 +69,11 @@ static WRITE32_HANDLER( eeprom_w )
 {
 	if (ACCESSING_BITS_8_15)
 	{
-		input_port_write(space->machine, "EEPROMOUT", (data>>8)&0xf, 0xff);
+		input_port_write(space->machine(), "EEPROMOUT", (data>>8)&0xf, 0xff);
 	}
 }
 
-static ADDRESS_MAP_START( kongambl_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( kongambl_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM	// main program
 	AM_RANGE(0x080000, 0x0fffff) AM_ROM AM_REGION("maincpu", 0)	// mirror
 	AM_RANGE(0x100000, 0x11ffff) AM_RAM	// work RAM
@@ -103,17 +103,17 @@ static INPUT_PORTS_START( kongambl )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
 INPUT_PORTS_END
 
-static ADDRESS_MAP_START( kongamaud_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( kongamaud_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x01ffff) AM_ROM	// main program (mirrored?)
 	AM_RANGE(0x100000, 0x10ffff) AM_RAM	// work RAM
 	AM_RANGE(0x200000, 0x2000ff) AM_RAM	// unknown (YMZ280b?  Shared with 68020?)
 ADDRESS_MAP_END
 
-static void kongambl_sprite_callback( running_machine *machine, int *code, int *color, int *priority_mask )
+static void kongambl_sprite_callback( running_machine &machine, int *code, int *color, int *priority_mask )
 {
 }
 
-static void kongambl_tile_callback( running_machine *machine, int layer, int *code, int *color, int *flags )
+static void kongambl_tile_callback( running_machine &machine, int layer, int *code, int *color, int *flags )
 {
 }
 

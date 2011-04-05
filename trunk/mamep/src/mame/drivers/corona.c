@@ -380,13 +380,13 @@ static WRITE8_HANDLER( blitter_aux_w )
 static READ8_HANDLER( blitter_status_r )
 {
 /* code checks bit 6 and/or bit 7 */
-	//return space->machine->rand() & 0xc0;
+	//return space->machine().rand() & 0xc0;
 	/*
         x--- ---- blitter busy
         -x-- ---- vblank
     */
 
-	return 0x80 | ((space->machine->primary_screen->vblank() & 1) << 6);
+	return 0x80 | ((space->machine().primary_screen->vblank() & 1) << 6);
 }
 
 static void blitter_execute(int x, int y, int color, int width, int flag)
@@ -463,12 +463,12 @@ static SCREEN_UPDATE(luckyrlt)
 static WRITE8_HANDLER( sound_latch_w )
 {
 	soundlatch_w(space, 0, data & 0xff);
-	cputag_set_input_line(space->machine, "soundcpu", 0, ASSERT_LINE);
+	cputag_set_input_line(space->machine(), "soundcpu", 0, ASSERT_LINE);
 }
 
 static READ8_HANDLER( sound_latch_r )
 {
-	cputag_set_input_line(space->machine, "soundcpu", 0, CLEAR_LINE);
+	cputag_set_input_line(space->machine(), "soundcpu", 0, CLEAR_LINE);
 	return soundlatch_r(space, 0);
 }
 
@@ -491,12 +491,12 @@ static READ8_HANDLER( mux_port_r )
 {
 	switch( input_selector )
 	{
-		case 0x01: return input_port_read(space->machine, "IN0-1");
-		case 0x02: return input_port_read(space->machine, "IN0-2");
-		case 0x04: return input_port_read(space->machine, "IN0-3");
-		case 0x08: return input_port_read(space->machine, "IN0-4");
-		case 0x10: return input_port_read(space->machine, "IN0-5");
-		case 0x20: return input_port_read(space->machine, "IN0-6");
+		case 0x01: return input_port_read(space->machine(), "IN0-1");
+		case 0x02: return input_port_read(space->machine(), "IN0-2");
+		case 0x04: return input_port_read(space->machine(), "IN0-3");
+		case 0x08: return input_port_read(space->machine(), "IN0-4");
+		case 0x10: return input_port_read(space->machine(), "IN0-5");
+		case 0x20: return input_port_read(space->machine(), "IN0-6");
 	}
 
 	return 0xff;
@@ -515,8 +515,8 @@ static WRITE8_HANDLER( mux_port_w )
 */
 	input_selector = (data ^ 0xff) & 0x3f;	/* Input Selector,  */
 
-	coin_counter_w(space->machine, 0, (data ^ 0xff) & 0x40);	/* Credits In (mechanical meters) */
-	coin_counter_w(space->machine, 1, (data ^ 0xff) & 0x80);	/* Credits Out (mechanical meters) */
+	coin_counter_w(space->machine(), 0, (data ^ 0xff) & 0x40);	/* Credits In (mechanical meters) */
+	coin_counter_w(space->machine(), 1, (data ^ 0xff) & 0x80);	/* Credits Out (mechanical meters) */
 
 //  logerror("muxsel: %02x \n", input_selector);
 }
@@ -534,9 +534,9 @@ static WRITE8_HANDLER( wc_meters_w )
    Data is written inverted.
 
 */
-	coin_counter_w(space->machine, 0, (data ^ 0xff) & 0x01);	/* Credits In */
-	coin_counter_w(space->machine, 1, (data ^ 0xff) & 0x02);	/* Credits In (through Coin 3) */
-	coin_counter_w(space->machine, 2, (data ^ 0xff) & 0x04);	/* Credits Out */
+	coin_counter_w(space->machine(), 0, (data ^ 0xff) & 0x01);	/* Credits In */
+	coin_counter_w(space->machine(), 1, (data ^ 0xff) & 0x02);	/* Credits In (through Coin 3) */
+	coin_counter_w(space->machine(), 2, (data ^ 0xff) & 0x04);	/* Credits Out */
 
 //  popmessage("meters: %02x", (data ^ 0xff));
 }
@@ -579,13 +579,13 @@ static WRITE8_DEVICE_HANDLER(ay_port_b_out)
   RAM data is relocated to B800-B8FF
 
 */
-static ADDRESS_MAP_START( winner81_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( winner81_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0xb800, 0xb8ff) AM_RAM // copied from 8000 (0x10 bytes, repeated)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( winner81_cpu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( winner81_cpu_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x70, 0x70) AM_WRITE(blitter_x_w)
 	AM_RANGE(0x71, 0x71) AM_WRITE(blitter_unk_w)
@@ -607,12 +607,12 @@ static ADDRESS_MAP_START( winner81_cpu_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0xef, 0xef) AM_WRITE(wc_meters_w)	/* meters: coin1 = bit0, coin2 = bit1, coinout = bit2 */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START(  winner81_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START(  winner81_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x8000, 0x83ff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START(  winner81_sound_cpu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START(  winner81_sound_cpu_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ(sound_latch_r)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE("aysnd", ay8910_address_data_w)
@@ -636,13 +636,13 @@ ADDRESS_MAP_END
          FE ---> Sound Latch (writes 01, 02 and 03 during attract)...
 */
 
-static ADDRESS_MAP_START( winner82_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( winner82_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x4fff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0x8000, 0x80ff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( winner82_cpu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( winner82_cpu_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0xf0, 0xf0) AM_WRITE(blitter_x_w)
 	AM_RANGE(0xf1, 0xf1) AM_WRITE(blitter_y_w)
@@ -661,12 +661,12 @@ static ADDRESS_MAP_START( winner82_cpu_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0xff, 0xff) AM_READ_PORT("DSW2")	/* no idea */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( winner82_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( winner82_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x1000, 0x13ff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( winner82_sound_cpu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( winner82_sound_cpu_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ(sound_latch_r)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE("aysnd", ay8910_address_data_w)
@@ -700,13 +700,13 @@ ADDRESS_MAP_END
 
 */
 
-static ADDRESS_MAP_START( re800_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( re800_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x47ff) AM_RAM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram") //801a comm?
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( re800_cpu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( re800_cpu_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0xf0, 0xf0) AM_WRITE(blitter_x_w)
 	AM_RANGE(0xf1, 0xf1) AM_WRITE(blitter_y_w)
@@ -722,12 +722,12 @@ static ADDRESS_MAP_START( re800_cpu_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0xff, 0xff) AM_WRITE(ball_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( re800_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( re800_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x8000, 0x83ff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( re800_sound_cpu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( re800_sound_cpu_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ(sound_latch_r)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE("aysnd", ay8910_address_data_w)
@@ -760,12 +760,12 @@ ADDRESS_MAP_END
 
 */
 
-static ADDRESS_MAP_START( luckyrlt_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( luckyrlt_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_RAM AM_SHARE("nvram")
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( luckyrlt_cpu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( luckyrlt_cpu_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0xf0, 0xf0) AM_WRITE(blitter_x_w)
 	AM_RANGE(0xf1, 0xf1) AM_WRITE(blitter_y_w)
@@ -782,12 +782,12 @@ static ADDRESS_MAP_START( luckyrlt_cpu_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0xfe, 0xfe) AM_WRITE(sound_latch_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( luckyrlt_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( luckyrlt_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x1000, 0x13ff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( luckyrlt_sound_cpu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( luckyrlt_sound_cpu_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ(sound_latch_r)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE("aysnd", ay8910_address_data_w)

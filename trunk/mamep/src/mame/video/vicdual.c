@@ -23,15 +23,15 @@ static const pen_t pens_from_color_prom[] =
 
 WRITE8_HANDLER( vicdual_palette_bank_w )
 {
-	vicdual_state *state = space->machine->driver_data<vicdual_state>();
-	space->machine->primary_screen->update_partial(space->machine->primary_screen->vpos());
-	state->palette_bank = data & 3;
+	vicdual_state *state = space->machine().driver_data<vicdual_state>();
+	space->machine().primary_screen->update_partial(space->machine().primary_screen->vpos());
+	state->m_palette_bank = data & 3;
 }
 
 
 SCREEN_UPDATE( vicdual_bw )
 {
-	vicdual_state *state = screen->machine->driver_data<vicdual_state>();
+	vicdual_state *state = screen->machine().driver_data<vicdual_state>();
 	UINT8 x = 0;
 	UINT8 y = cliprect->min_y;
 	UINT8 video_data = 0;
@@ -47,11 +47,11 @@ SCREEN_UPDATE( vicdual_bw )
 
 			/* read the character code */
 			offs = (y >> 3 << 5) | (x >> 3);
-			char_code = state->videoram[offs];
+			char_code = state->m_videoram[offs];
 
 			/* read the appropriate line of the character ram */
 			offs = (char_code << 3) | (y & 0x07);
-			video_data = state->characterram[offs];
+			video_data = state->m_characterram[offs];
 		}
 
 		/* plot the current pixel */
@@ -82,8 +82,8 @@ SCREEN_UPDATE( vicdual_bw )
 
 SCREEN_UPDATE( vicdual_color )
 {
-	vicdual_state *state = screen->machine->driver_data<vicdual_state>();
-	UINT8 *color_prom = (UINT8 *)screen->machine->region("proms")->base();
+	vicdual_state *state = screen->machine().driver_data<vicdual_state>();
+	UINT8 *color_prom = (UINT8 *)screen->machine().region("proms")->base();
 	UINT8 x = 0;
 	UINT8 y = cliprect->min_y;
 	UINT8 video_data = 0;
@@ -101,14 +101,14 @@ SCREEN_UPDATE( vicdual_color )
 
 			/* read the character code */
 			offs = (y >> 3 << 5) | (x >> 3);
-			char_code = state->videoram[offs];
+			char_code = state->m_videoram[offs];
 
 			/* read the appropriate line of the character ram */
 			offs = (char_code << 3) | (y & 0x07);
-			video_data = state->characterram[offs];
+			video_data = state->m_characterram[offs];
 
 			/* get the foreground and background colors from the PROM */
-			offs = (char_code >> 5) | (state->palette_bank << 3);
+			offs = (char_code >> 5) | (state->m_palette_bank << 3);
 			back_pen = pens_from_color_prom[(color_prom[offs] >> 1) & 0x07];
 			fore_pen = pens_from_color_prom[(color_prom[offs] >> 5) & 0x07];
 		}
@@ -141,7 +141,7 @@ SCREEN_UPDATE( vicdual_color )
 
 SCREEN_UPDATE( vicdual_bw_or_color )
 {
-	if (vicdual_is_cabinet_color(screen->machine))
+	if (vicdual_is_cabinet_color(screen->machine()))
 		SCREEN_UPDATE_CALL(vicdual_color);
 	else
 		SCREEN_UPDATE_CALL(vicdual_bw);

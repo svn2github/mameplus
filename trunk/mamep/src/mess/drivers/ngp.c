@@ -130,7 +130,7 @@ public:
 
 	UINT8 m_io_reg[0x40];
 	UINT8 m_old_to3;
-	emu_timer* seconds_timer;
+	emu_timer* m_seconds_timer;
 
 	struct {
 		int		present;
@@ -170,7 +170,7 @@ public:
 
 static TIMER_CALLBACK( ngp_seconds_callback )
 {
-	ngp_state *state = machine->driver_data<ngp_state>();
+	ngp_state *state = machine.driver_data<ngp_state>();
 
 	state->m_io_reg[0x16] += 1;
 	if ( ( state->m_io_reg[0x16] & 0x0f ) == 0x0a )
@@ -210,10 +210,10 @@ READ8_MEMBER( ngp_state::ngp_io_r )
 	switch( offset )
 	{
 	case 0x30:	/* Read controls */
-		data = input_port_read( machine, "Controls" );
+		data = input_port_read( m_machine, "Controls" );
 		break;
 	case 0x31:
-		data = input_port_read( machine, "Power" ) & 0x01;
+		data = input_port_read( m_machine, "Power" ) & 0x01;
 		/* Sub-batttery OK */
 		data |= 0x02;
 		break;
@@ -259,18 +259,18 @@ WRITE8_MEMBER( ngp_state::ngp_io_w )
 		switch( data )
 		{
 		case 0x55:		/* Enable Z80 */
-			cpu_resume( m_z80, SUSPEND_REASON_HALT );
+			device_resume( m_z80, SUSPEND_REASON_HALT );
 			m_z80->reset();
-			cpu_set_input_line( m_z80, 0, CLEAR_LINE );
+			device_set_input_line( m_z80, 0, CLEAR_LINE );
 			break;
 		case 0xAA:		/* Disable Z80 */
-			cpu_suspend( m_z80, SUSPEND_REASON_HALT, 1 );
+			device_suspend( m_z80, SUSPEND_REASON_HALT, 1 );
 			break;
 		}
 		break;
 
 	case 0x3a:	/* Trigger Z80 NMI */
-		cpu_set_input_line( m_z80, INPUT_LINE_NMI, PULSE_LINE );
+		device_set_input_line( m_z80, INPUT_LINE_NMI, PULSE_LINE );
 		break;
 	}
 	m_io_reg[offset] = data;
@@ -500,7 +500,7 @@ WRITE8_MEMBER( ngp_state::flash1_w )
 }
 
 
-static ADDRESS_MAP_START( ngp_mem, ADDRESS_SPACE_PROGRAM, 8, ngp_state )
+static ADDRESS_MAP_START( ngp_mem, AS_PROGRAM, 8, ngp_state )
 	AM_RANGE( 0x000080, 0x0000bf )	AM_READWRITE(ngp_io_r, ngp_io_w)							/* ngp/c specific i/o */
 	AM_RANGE( 0x004000, 0x006fff )	AM_RAM														/* work ram */
 	AM_RANGE( 0x007000, 0x007fff )	AM_RAM AM_SHARE("share1")									/* shared with sound cpu */
@@ -526,11 +526,11 @@ WRITE8_MEMBER( ngp_state::ngp_z80_comm_w )
 
 WRITE8_MEMBER( ngp_state::ngp_z80_signal_main_w )
 {
-	cpu_set_input_line( m_tlcs900, TLCS900_INT5, ASSERT_LINE );
+	device_set_input_line( m_tlcs900, TLCS900_INT5, ASSERT_LINE );
 }
 
 
-static ADDRESS_MAP_START( z80_mem, ADDRESS_SPACE_PROGRAM, 8, ngp_state )
+static ADDRESS_MAP_START( z80_mem, AS_PROGRAM, 8, ngp_state )
 	AM_RANGE( 0x0000, 0x0FFF )	AM_RAM AM_SHARE("share1")								/* shared with tlcs900 */
 	AM_RANGE( 0x4000, 0x4001 )	AM_DEVWRITE_LEGACY( "t6w28", t6w28_w )					/* sound chip (right, left) */
 	AM_RANGE( 0x8000, 0x8000 )	AM_READWRITE( ngp_z80_comm_r, ngp_z80_comm_w )	/* main-sound communication */
@@ -540,26 +540,26 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER( ngp_state::ngp_z80_clear_irq )
 {
-	cpu_set_input_line( m_z80, 0, CLEAR_LINE );
+	device_set_input_line( m_z80, 0, CLEAR_LINE );
 
 	/* I am not exactly sure what causes the maincpu INT5 signal to be cleared. This will do for now. */
-	cpu_set_input_line( m_tlcs900, TLCS900_INT5, CLEAR_LINE );
+	device_set_input_line( m_tlcs900, TLCS900_INT5, CLEAR_LINE );
 }
 
 
-static ADDRESS_MAP_START( z80_io, ADDRESS_SPACE_IO, 8, ngp_state )
+static ADDRESS_MAP_START( z80_io, AS_IO, 8, ngp_state )
 	AM_RANGE( 0x0000, 0xffff )	AM_WRITE( ngp_z80_clear_irq )
 ADDRESS_MAP_END
 
 
 static INPUT_CHANGED( power_callback )
 {
-	ngp_state *state = field->port->machine->driver_data<ngp_state>();
+	ngp_state *state = field->port->machine().driver_data<ngp_state>();
 
 	if ( state->m_io_reg[0x33] & 0x04 )
 	{
-		cpu_set_input_line( state->m_tlcs900, TLCS900_NMI,
-			(input_port_read(field->port->machine, "Power") & 0x01 ) ? CLEAR_LINE : ASSERT_LINE );
+		device_set_input_line( state->m_tlcs900, TLCS900_NMI,
+			(input_port_read(field->port->machine(), "Power") & 0x01 ) ? CLEAR_LINE : ASSERT_LINE );
 	}
 }
 
@@ -582,20 +582,20 @@ INPUT_PORTS_END
 
 WRITE8_MEMBER( ngp_state::ngp_vblank_pin_w )
 {
-	cpu_set_input_line( m_tlcs900, TLCS900_INT4, data ? ASSERT_LINE : CLEAR_LINE );
+	device_set_input_line( m_tlcs900, TLCS900_INT4, data ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
 WRITE8_MEMBER( ngp_state::ngp_hblank_pin_w )
 {
-	cpu_set_input_line( m_tlcs900, TLCS900_TIO, data ? ASSERT_LINE : CLEAR_LINE );
+	device_set_input_line( m_tlcs900, TLCS900_TIO, data ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
 WRITE8_MEMBER( ngp_state::ngp_tlcs900_to3 )
 {
 	if ( data && ! m_old_to3 )
-		cpu_set_input_line( m_z80, 0, ASSERT_LINE );
+		device_set_input_line( m_z80, 0, ASSERT_LINE );
 
 	m_old_to3 = data;
 }
@@ -603,29 +603,29 @@ WRITE8_MEMBER( ngp_state::ngp_tlcs900_to3 )
 
 void ngp_state::machine_start()
 {
-	seconds_timer = machine->scheduler().timer_alloc(FUNC(ngp_seconds_callback));
-	seconds_timer->adjust( attotime::from_seconds(1), 0, attotime::from_seconds(1) );
+	m_seconds_timer = m_machine.scheduler().timer_alloc(FUNC(ngp_seconds_callback));
+	m_seconds_timer->adjust( attotime::from_seconds(1), 0, attotime::from_seconds(1) );
 }
 
 
 void ngp_state::machine_reset()
 {
 	m_old_to3 = 0;
-	m_tlcs900 = machine->device( "maincpu" );
-	m_z80 = machine->device( "soundcpu" );
-	m_t6w28 = machine->device( "t6w28" );
-	m_dac_l = machine->device( "dac_l" );
-	m_dac_r = machine->device( "dac_r" );
-	m_k1ge = machine->device( "k1ge" );
+	m_tlcs900 = m_machine.device( "maincpu" );
+	m_z80 = m_machine.device( "soundcpu" );
+	m_t6w28 = m_machine.device( "t6w28" );
+	m_dac_l = m_machine.device( "dac_l" );
+	m_dac_r = m_machine.device( "dac_r" );
+	m_k1ge = m_machine.device( "k1ge" );
 
-	cpu_suspend( m_z80, SUSPEND_REASON_HALT, 1 );
-	cpu_set_input_line( m_z80, 0, CLEAR_LINE );
+	device_suspend( m_z80, SUSPEND_REASON_HALT, 1 );
+	device_set_input_line( m_z80, 0, CLEAR_LINE );
 }
 
 
 static SCREEN_UPDATE( ngp )
 {
-	ngp_state *state = screen->machine->driver_data<ngp_state>();
+	ngp_state *state = screen->machine().driver_data<ngp_state>();
 
 	k1ge_update( state->m_k1ge, bitmap, cliprect );
 	return 0;
@@ -634,8 +634,8 @@ static SCREEN_UPDATE( ngp )
 
 static DEVICE_START( ngp_cart )
 {
-	ngp_state *state = device->machine->driver_data<ngp_state>();
-	UINT8 *cart = device->machine->region("cart")->base();
+	ngp_state *state = device->machine().driver_data<ngp_state>();
+	UINT8 *cart = device->machine().region("cart")->base();
 
 	state->m_flash_chip[0].present = 0;
 	state->m_flash_chip[0].state = F_READ;
@@ -649,7 +649,7 @@ static DEVICE_START( ngp_cart )
 
 static DEVICE_IMAGE_LOAD( ngp_cart )
 {
-	ngp_state *state = image.device().machine->driver_data<ngp_state>();
+	ngp_state *state = image.device().machine().driver_data<ngp_state>();
 	UINT32 filesize;
 
 	if (image.software_entry() == NULL)
@@ -662,7 +662,7 @@ static DEVICE_IMAGE_LOAD( ngp_cart )
 			return IMAGE_INIT_FAIL;
 		}
 
-		if (image.fread( image.device().machine->region("cart")->base(), filesize) != filesize)
+		if (image.fread( image.device().machine().region("cart")->base(), filesize) != filesize)
 		{
 			image.seterror(IMAGE_ERROR_UNSPECIFIED, "Error loading file");
 			return IMAGE_INIT_FAIL;
@@ -671,7 +671,7 @@ static DEVICE_IMAGE_LOAD( ngp_cart )
 	else
 	{
 		filesize = image.get_software_region_length("rom");
-		memcpy(image.device().machine->region("cart")->base(), image.get_software_region("rom"), filesize);
+		memcpy(image.device().machine().region("cart")->base(), image.get_software_region("rom"), filesize);
 	}
 
 	state->m_flash_chip[0].manufacturer_id = 0x98;
@@ -738,7 +738,7 @@ static DEVICE_IMAGE_LOAD( ngp_cart )
 
 static DEVICE_IMAGE_UNLOAD( ngp_cart )
 {
-	ngp_state *state = image.device().machine->driver_data<ngp_state>();
+	ngp_state *state = image.device().machine().driver_data<ngp_state>();
 
 	state->m_flash_chip[0].present = 0;
 	state->m_flash_chip[0].state = F_READ;
@@ -853,3 +853,4 @@ ROM_END
 
 CONS( 1998, ngp, 0, 0, ngp, ngp, 0,  "SNK", "NeoGeo Pocket", 0 )
 CONS( 1999, ngpc, ngp, 0, ngpc, ngp, 0, "SNK", "NeoGeo Pocket Color", 0 )
+

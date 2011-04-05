@@ -78,22 +78,22 @@ public:
 	subsino2_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *hm86171_colorram;
-	layer_t layers[2];
-	UINT8 ss9601_byte_lo;
-	UINT8 ss9601_byte_lo2;
-	UINT8 *ss9601_reelrams[2];
-	const rectangle *ss9601_reelrects;
-	UINT8 ss9601_scrollctrl;
-	UINT8 ss9601_tilesize;
-	UINT8 ss9601_disable;
-	int hm86171_offs;
-	UINT8 dsw_mask;
-	UINT8 *outputs;
-	UINT16 *outputs16;
-	UINT8 *am188em_regs;
-	UINT16 bishjan_sel;
-	UINT16 bishjan_input;
+	UINT8 *m_hm86171_colorram;
+	layer_t m_layers[2];
+	UINT8 m_ss9601_byte_lo;
+	UINT8 m_ss9601_byte_lo2;
+	UINT8 *m_ss9601_reelrams[2];
+	const rectangle *m_ss9601_reelrects;
+	UINT8 m_ss9601_scrollctrl;
+	UINT8 m_ss9601_tilesize;
+	UINT8 m_ss9601_disable;
+	int m_hm86171_offs;
+	UINT8 m_dsw_mask;
+	UINT8 *m_outputs;
+	UINT16 *m_outputs16;
+	UINT8 *m_am188em_regs;
+	UINT16 m_bishjan_sel;
+	UINT16 m_bishjan_input;
 };
 
 
@@ -102,7 +102,7 @@ public:
                               Tilemaps Access
 ***************************************************************************/
 
-INLINE void ss9601_get_tile_info(layer_t *l, running_machine *machine, tile_data *tileinfo, tilemap_memory_index tile_index, void *param)
+INLINE void ss9601_get_tile_info(layer_t *l, running_machine &machine, tile_data *tileinfo, tilemap_memory_index tile_index, void *param)
 {
 	int addr;
 	UINT16 offs;
@@ -119,27 +119,27 @@ INLINE void ss9601_get_tile_info(layer_t *l, running_machine *machine, tile_data
 // Layer 0
 static TILE_GET_INFO( ss9601_get_tile_info_0 )
 {
-	subsino2_state *state = machine->driver_data<subsino2_state>();
-	ss9601_get_tile_info(&state->layers[0], machine, tileinfo, tile_index, param);
+	subsino2_state *state = machine.driver_data<subsino2_state>();
+	ss9601_get_tile_info(&state->m_layers[0], machine, tileinfo, tile_index, param);
 }
 
 // Layer 1
 static TILE_GET_INFO( ss9601_get_tile_info_1 )
 {
-	subsino2_state *state = machine->driver_data<subsino2_state>();
-	ss9601_get_tile_info(&state->layers[1], machine, tileinfo, tile_index, param);
+	subsino2_state *state = machine.driver_data<subsino2_state>();
+	ss9601_get_tile_info(&state->m_layers[1], machine, tileinfo, tile_index, param);
 }
 
 
 static WRITE8_HANDLER( ss9601_byte_lo_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->ss9601_byte_lo = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_ss9601_byte_lo = data;
 }
 static WRITE8_HANDLER( ss9601_byte_lo2_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->ss9601_byte_lo2 = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_ss9601_byte_lo2 = data;
 }
 
 
@@ -172,98 +172,98 @@ INLINE void ss9601_videoram_w(layer_t *l, vram_t vram, address_space *space, off
 // Layer 0
 static WRITE8_HANDLER( ss9601_videoram_0_hi_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	ss9601_videoram_w(&state->layers[0], VRAM_HI, space, offset, data);
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	ss9601_videoram_w(&state->m_layers[0], VRAM_HI, space, offset, data);
 }
 
 static WRITE8_HANDLER( ss9601_videoram_0_lo_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	ss9601_videoram_w(&state->layers[0], VRAM_LO, space, offset, data);
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	ss9601_videoram_w(&state->m_layers[0], VRAM_LO, space, offset, data);
 }
 
 static WRITE8_HANDLER( ss9601_videoram_0_hi_lo_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	ss9601_videoram_w(&state->layers[0], VRAM_HI, space, offset, data);
-	ss9601_videoram_w(&state->layers[0], VRAM_LO, space, offset, state->ss9601_byte_lo);
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	ss9601_videoram_w(&state->m_layers[0], VRAM_HI, space, offset, data);
+	ss9601_videoram_w(&state->m_layers[0], VRAM_LO, space, offset, state->m_ss9601_byte_lo);
 }
 
 static WRITE8_HANDLER( ss9601_videoram_0_hi_lo2_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	ss9601_videoram_w(&state->layers[0], VRAM_HI, space, offset, data);
-	ss9601_videoram_w(&state->layers[0], VRAM_LO, space, offset, state->ss9601_byte_lo2);
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	ss9601_videoram_w(&state->m_layers[0], VRAM_HI, space, offset, data);
+	ss9601_videoram_w(&state->m_layers[0], VRAM_LO, space, offset, state->m_ss9601_byte_lo2);
 }
 
 static READ8_HANDLER( ss9601_videoram_0_hi_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return state->layers[0].videorams[VRAM_HI][offset];
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return state->m_layers[0].videorams[VRAM_HI][offset];
 }
 
 static READ8_HANDLER( ss9601_videoram_0_lo_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return state->layers[0].videorams[VRAM_LO][offset];
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return state->m_layers[0].videorams[VRAM_LO][offset];
 }
 
 // Layer 1
 static WRITE8_HANDLER( ss9601_videoram_1_hi_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	ss9601_videoram_w(&state->layers[1], VRAM_HI, space, offset, data);
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	ss9601_videoram_w(&state->m_layers[1], VRAM_HI, space, offset, data);
 }
 
 static WRITE8_HANDLER( ss9601_videoram_1_lo_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	ss9601_videoram_w(&state->layers[1], VRAM_LO, space, offset, data);
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	ss9601_videoram_w(&state->m_layers[1], VRAM_LO, space, offset, data);
 }
 
 static WRITE8_HANDLER( ss9601_videoram_1_hi_lo_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	ss9601_videoram_w(&state->layers[1], VRAM_HI, space, offset, data);
-	ss9601_videoram_w(&state->layers[1], VRAM_LO, space, offset, state->ss9601_byte_lo);
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	ss9601_videoram_w(&state->m_layers[1], VRAM_HI, space, offset, data);
+	ss9601_videoram_w(&state->m_layers[1], VRAM_LO, space, offset, state->m_ss9601_byte_lo);
 }
 
 static WRITE8_HANDLER( ss9601_videoram_1_hi_lo2_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	ss9601_videoram_w(&state->layers[1], VRAM_HI, space, offset, data);
-	ss9601_videoram_w(&state->layers[1], VRAM_LO, space, offset, state->ss9601_byte_lo2);
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	ss9601_videoram_w(&state->m_layers[1], VRAM_HI, space, offset, data);
+	ss9601_videoram_w(&state->m_layers[1], VRAM_LO, space, offset, state->m_ss9601_byte_lo2);
 }
 
 static READ8_HANDLER( ss9601_videoram_1_hi_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return state->layers[1].videorams[VRAM_HI][offset];
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return state->m_layers[1].videorams[VRAM_HI][offset];
 }
 
 static READ8_HANDLER( ss9601_videoram_1_lo_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return state->layers[1].videorams[VRAM_LO][offset];
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return state->m_layers[1].videorams[VRAM_LO][offset];
 }
 
 // Layer 0 Reels
 
 static WRITE8_HANDLER( ss9601_reelram_hi_lo_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->ss9601_reelrams[VRAM_HI][offset] = data;
-	state->ss9601_reelrams[VRAM_LO][offset] = state->ss9601_byte_lo;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_ss9601_reelrams[VRAM_HI][offset] = data;
+	state->m_ss9601_reelrams[VRAM_LO][offset] = state->m_ss9601_byte_lo;
 }
 static READ8_HANDLER( ss9601_reelram_hi_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return state->ss9601_reelrams[VRAM_HI][offset];
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return state->m_ss9601_reelrams[VRAM_HI][offset];
 }
 static READ8_HANDLER( ss9601_reelram_lo_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return state->ss9601_reelrams[VRAM_LO][offset];
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return state->m_ss9601_reelrams[VRAM_LO][offset];
 }
 
 
@@ -374,14 +374,14 @@ mtrain      saklove     xtrain,      expcard
 
 static WRITE8_HANDLER( ss9601_scrollctrl_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->ss9601_scrollctrl = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_ss9601_scrollctrl = data;
 }
 
 static WRITE8_HANDLER( ss9601_tilesize_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->ss9601_tilesize = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_ss9601_tilesize = data;
 
 	tilesize_t sizes[2];
 	switch (data)
@@ -405,14 +405,14 @@ static WRITE8_HANDLER( ss9601_tilesize_w )
 			sizes[0] = TILE_8x8;
 			sizes[1] = TILE_8x8;
 
-			logerror("%s: warning, unknown tilesize = %02x\n", space->machine->describe_context(), data);
+			logerror("%s: warning, unknown tilesize = %02x\n", space->machine().describe_context(), data);
 			popmessage("UNKNOWN TILESIZE %02X", data);
 			break;
 	}
 
 	for (int i = 0; i < 2; i++)
 	{
-		layer_t *l = &state->layers[i];
+		layer_t *l = &state->m_layers[i];
 
 		if (l->tilesize != sizes[i])
 		{
@@ -428,8 +428,8 @@ static WRITE8_HANDLER( ss9601_tilesize_w )
 
 static WRITE8_HANDLER( ss9601_scroll_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	layer_t *layers = state->layers;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	layer_t *layers = state->m_layers;
 	switch ( offset )
 	{
 		// Layer 0
@@ -449,65 +449,65 @@ static WRITE8_HANDLER( ss9601_scroll_w )
 // Layer 0
 static WRITE8_HANDLER( ss9601_scrollram_0_hi_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->layers[0].scrollrams[VRAM_HI][offset] = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_layers[0].scrollrams[VRAM_HI][offset] = data;
 }
 
 static WRITE8_HANDLER( ss9601_scrollram_0_lo_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->layers[0].scrollrams[VRAM_LO][offset] = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_layers[0].scrollrams[VRAM_LO][offset] = data;
 }
 
 static WRITE8_HANDLER( ss9601_scrollram_0_hi_lo_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->layers[0].scrollrams[VRAM_HI][offset] = data;
-	state->layers[0].scrollrams[VRAM_LO][offset] = state->ss9601_byte_lo;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_layers[0].scrollrams[VRAM_HI][offset] = data;
+	state->m_layers[0].scrollrams[VRAM_LO][offset] = state->m_ss9601_byte_lo;
 }
 
 static READ8_HANDLER ( ss9601_scrollram_0_hi_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return state->layers[0].scrollrams[VRAM_HI][offset];
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return state->m_layers[0].scrollrams[VRAM_HI][offset];
 }
 
 static READ8_HANDLER ( ss9601_scrollram_0_lo_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return state->layers[0].scrollrams[VRAM_LO][offset];
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return state->m_layers[0].scrollrams[VRAM_LO][offset];
 }
 
 // Layer 1
 static WRITE8_HANDLER( ss9601_scrollram_1_hi_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->layers[1].scrollrams[VRAM_HI][offset] = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_layers[1].scrollrams[VRAM_HI][offset] = data;
 }
 
 static WRITE8_HANDLER( ss9601_scrollram_1_lo_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->layers[1].scrollrams[VRAM_LO][offset] = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_layers[1].scrollrams[VRAM_LO][offset] = data;
 }
 
 static WRITE8_HANDLER( ss9601_scrollram_1_hi_lo_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->layers[1].scrollrams[VRAM_HI][offset] = data;
-	state->layers[1].scrollrams[VRAM_LO][offset] = state->ss9601_byte_lo;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_layers[1].scrollrams[VRAM_HI][offset] = data;
+	state->m_layers[1].scrollrams[VRAM_LO][offset] = state->m_ss9601_byte_lo;
 }
 
 static READ8_HANDLER ( ss9601_scrollram_1_hi_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return state->layers[1].scrollrams[VRAM_HI][offset];
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return state->m_layers[1].scrollrams[VRAM_HI][offset];
 }
 
 static READ8_HANDLER ( ss9601_scrollram_1_lo_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return state->layers[1].scrollrams[VRAM_LO][offset];
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return state->m_layers[1].scrollrams[VRAM_LO][offset];
 }
 
 
@@ -517,8 +517,8 @@ static READ8_HANDLER ( ss9601_scrollram_1_lo_r )
 
 static WRITE8_HANDLER( ss9601_disable_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->ss9601_disable = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_ss9601_disable = data;
 }
 
 
@@ -536,20 +536,20 @@ static const rectangle xtrain_reelrects[3] = {	{ 0, 0, 0x00*8, 0x08*8-1 },
 
 static VIDEO_START( subsino2 )
 {
-	subsino2_state *state = machine->driver_data<subsino2_state>();
-	state->hm86171_colorram = auto_alloc_array(machine, UINT8, 256*3);
+	subsino2_state *state = machine.driver_data<subsino2_state>();
+	state->m_hm86171_colorram = auto_alloc_array(machine, UINT8, 256*3);
 
 	// SS9601 Regs:
 
-	state->ss9601_tilesize		=	TILE_8x8;
-	state->ss9601_scrollctrl	=	0xfd;	// not written by mtrain, default to reels on
-	state->ss9601_disable		=	0x00;
+	state->m_ss9601_tilesize		=	TILE_8x8;
+	state->m_ss9601_scrollctrl	=	0xfd;	// not written by mtrain, default to reels on
+	state->m_ss9601_disable		=	0x00;
 
 	// SS9601 Layers:
 
 	for (int i = 0; i < 2; i++)
 	{
-		layer_t *l = &state->layers[i];
+		layer_t *l = &state->m_layers[i];
 
 		l->tmap = tilemap_create(machine, i ? ss9601_get_tile_info_1 : ss9601_get_tile_info_0, tilemap_scan_rows, 8,8, 0x80,0x40);
 
@@ -569,50 +569,50 @@ static VIDEO_START( subsino2 )
 
 	// SS9601 Reels:
 
-	state->ss9601_reelrams[VRAM_HI] = auto_alloc_array(machine, UINT8, 0x2000);
-	state->ss9601_reelrams[VRAM_LO] = auto_alloc_array(machine, UINT8, 0x2000);
-	memset(state->ss9601_reelrams[VRAM_HI], 0, 0x2000);
-	memset(state->ss9601_reelrams[VRAM_LO], 0, 0x2000);
-	state->ss9601_reelrects = mtrain_reelrects;
+	state->m_ss9601_reelrams[VRAM_HI] = auto_alloc_array(machine, UINT8, 0x2000);
+	state->m_ss9601_reelrams[VRAM_LO] = auto_alloc_array(machine, UINT8, 0x2000);
+	memset(state->m_ss9601_reelrams[VRAM_HI], 0, 0x2000);
+	memset(state->m_ss9601_reelrams[VRAM_LO], 0, 0x2000);
+	state->m_ss9601_reelrects = mtrain_reelrects;
 
 /*
-    state_save_register_global_pointer(machine, state->ss9601_reelrams[VRAM_HI], 0x2000);
-    state_save_register_global_pointer(machine, state->ss9601_reelrams[VRAM_LO], 0x2000);
+    state_save_register_global_pointer(machine, state->m_ss9601_reelrams[VRAM_HI], 0x2000);
+    state_save_register_global_pointer(machine, state->m_ss9601_reelrams[VRAM_LO], 0x2000);
 
-    state_save_register_global_pointer(machine, state->layers[0].scrollrams[VRAM_HI], 0x200);
-    state_save_register_global_pointer(machine, state->layers[0].scrollrams[VRAM_LO], 0x200);
+    state_save_register_global_pointer(machine, state->m_layers[0].scrollrams[VRAM_HI], 0x200);
+    state_save_register_global_pointer(machine, state->m_layers[0].scrollrams[VRAM_LO], 0x200);
 
-    state_save_register_global_pointer(machine, state->layers[1].scrollrams[VRAM_HI], 0x200);
-    state_save_register_global_pointer(machine, state->layers[1].scrollrams[VRAM_LO], 0x200);
+    state_save_register_global_pointer(machine, state->m_layers[1].scrollrams[VRAM_HI], 0x200);
+    state_save_register_global_pointer(machine, state->m_layers[1].scrollrams[VRAM_LO], 0x200);
 */
 }
 
 static VIDEO_START( mtrain )
 {
-	subsino2_state *state = machine->driver_data<subsino2_state>();
+	subsino2_state *state = machine.driver_data<subsino2_state>();
 	VIDEO_START_CALL( subsino2 );
-	state->ss9601_reelrects = mtrain_reelrects;
+	state->m_ss9601_reelrects = mtrain_reelrects;
 }
 
 static VIDEO_START( xtrain )
 {
-	subsino2_state *state = machine->driver_data<subsino2_state>();
+	subsino2_state *state = machine.driver_data<subsino2_state>();
 	VIDEO_START_CALL( subsino2 );
-	state->ss9601_reelrects = xtrain_reelrects;
+	state->m_ss9601_reelrects = xtrain_reelrects;
 }
 
 static SCREEN_UPDATE( subsino2 )
 {
-	subsino2_state *state = screen->machine->driver_data<subsino2_state>();
-	int layers_ctrl = ~state->ss9601_disable;
+	subsino2_state *state = screen->machine().driver_data<subsino2_state>();
+	int layers_ctrl = ~state->m_ss9601_disable;
 	int y;
 
 #ifdef MAME_DEBUG
-	if (input_code_pressed(screen->machine, KEYCODE_Z))
+	if (input_code_pressed(screen->machine(), KEYCODE_Z))
 	{
 		int msk = 0;
-		if (input_code_pressed(screen->machine, KEYCODE_Q))	msk |= 1;
-		if (input_code_pressed(screen->machine, KEYCODE_W))	msk |= 2;
+		if (input_code_pressed(screen->machine(), KEYCODE_Q))	msk |= 1;
+		if (input_code_pressed(screen->machine(), KEYCODE_W))	msk |= 2;
 		if (msk != 0) layers_ctrl &= msk;
 	}
 #endif
@@ -620,7 +620,7 @@ static SCREEN_UPDATE( subsino2 )
 	// Line Scroll / Reel Control
 	int mask_y[2] = {0, 0};
 	bool l0_reel = false;
-	switch ( state->ss9601_scrollctrl )
+	switch ( state->m_ss9601_scrollctrl )
 	{
 		case 0xbf:
 			mask_y[0] = ~(32-1);
@@ -639,7 +639,7 @@ static SCREEN_UPDATE( subsino2 )
 	// Scroll
 	for (int i = 0; i < 2; i++)
 	{
-		layer_t *l = &state->layers[i];
+		layer_t *l = &state->m_layers[i];
 
 		tilemap_set_scroll_cols(l->tmap, 1);
 		tilemap_set_scroll_rows(l->tmap, 0x200);
@@ -657,11 +657,11 @@ static SCREEN_UPDATE( subsino2 )
 		}
 	}
 
-	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine));
+	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
 
 	if (layers_ctrl & 1)
 	{
-		layer_t *l = &state->layers[0];
+		layer_t *l = &state->m_layers[0];
 
 		if (l0_reel)
 		{
@@ -670,7 +670,7 @@ static SCREEN_UPDATE( subsino2 )
 
 			for (int r = 0; r < 3; r++)
 			{
-				rectangle visible = state->ss9601_reelrects[r];
+				rectangle visible = state->m_ss9601_reelrects[r];
 
 				for (int x = 0; x < 0x40; x++)
 				{
@@ -678,7 +678,7 @@ static SCREEN_UPDATE( subsino2 )
 					visible.max_x = 8 * (x+1) - 1;
 
 					int reeladdr = (visible.min_y / 0x10) * 0x80 + x;
-					UINT16 reelscroll = (state->ss9601_reelrams[VRAM_HI][reeladdr] << 8) + state->ss9601_reelrams[VRAM_LO][reeladdr];
+					UINT16 reelscroll = (state->m_ss9601_reelrams[VRAM_HI][reeladdr] << 8) + state->m_ss9601_reelrams[VRAM_LO][reeladdr];
 
 					tilemap_set_scrollx(l->tmap, 0, (reelscroll >> 9) * 8 + l->scroll_x - visible.min_x);
 
@@ -716,9 +716,9 @@ static SCREEN_UPDATE( subsino2 )
 		}
 	}
 
-	if (layers_ctrl & 2)	tilemap_draw(bitmap,cliprect, state->layers[1].tmap, 0, 0);
+	if (layers_ctrl & 2)	tilemap_draw(bitmap,cliprect, state->m_layers[1].tmap, 0, 0);
 
-//  popmessage("scrl: %03x,%03x - %03x,%03x dis: %02x siz: %02x ctrl: %02x", state->layers[0].scroll_x,state->layers[0].scroll_y, state->layers[1].scroll_x,state->layers[1].scroll_y, state->ss9601_disable, state->ss9601_tilesize, state->ss9601_scrollctrl);
+//  popmessage("scrl: %03x,%03x - %03x,%03x dis: %02x siz: %02x ctrl: %02x", state->m_layers[0].scroll_x,state->m_layers[0].scroll_y, state->m_layers[1].scroll_x,state->m_layers[1].scroll_y, state->m_ss9601_disable, state->m_ss9601_tilesize, state->m_ss9601_scrollctrl);
 
 	return 0;
 }
@@ -730,21 +730,21 @@ static SCREEN_UPDATE( subsino2 )
 
 static WRITE8_HANDLER( hm86171_colorram_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
 	switch (offset)
 	{
 		case 0:
-			state->hm86171_offs = data * 3;
+			state->m_hm86171_offs = data * 3;
 			break;
 
 		case 1:
-			state->hm86171_colorram[state->hm86171_offs] = data;
-			palette_set_color_rgb(space->machine, state->hm86171_offs/3,
-				pal6bit(state->hm86171_colorram[(state->hm86171_offs/3)*3+0]),
-				pal6bit(state->hm86171_colorram[(state->hm86171_offs/3)*3+1]),
-				pal6bit(state->hm86171_colorram[(state->hm86171_offs/3)*3+2])
+			state->m_hm86171_colorram[state->m_hm86171_offs] = data;
+			palette_set_color_rgb(space->machine(), state->m_hm86171_offs/3,
+				pal6bit(state->m_hm86171_colorram[(state->m_hm86171_offs/3)*3+0]),
+				pal6bit(state->m_hm86171_colorram[(state->m_hm86171_offs/3)*3+1]),
+				pal6bit(state->m_hm86171_colorram[(state->m_hm86171_offs/3)*3+2])
 			);
-			state->hm86171_offs = (state->hm86171_offs+1) % (256*3);
+			state->m_hm86171_offs = (state->m_hm86171_offs+1) % (256*3);
 			break;
 
 		case 2:
@@ -763,27 +763,27 @@ static WRITE8_HANDLER( hm86171_colorram_w )
 
 static WRITE8_HANDLER( dsw_mask_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->dsw_mask = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_dsw_mask = data;
 }
 
 static READ8_HANDLER( dsw_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return	( (input_port_read(space->machine, "DSW1") & state->dsw_mask) ? 0x01 : 0 ) |
-			( (input_port_read(space->machine, "DSW2") & state->dsw_mask) ? 0x02 : 0 ) |
-			( (input_port_read(space->machine, "DSW3") & state->dsw_mask) ? 0x04 : 0 ) |
-			( (input_port_read(space->machine, "DSW4") & state->dsw_mask) ? 0x08 : 0 ) ;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return	( (input_port_read(space->machine(), "DSW1") & state->m_dsw_mask) ? 0x01 : 0 ) |
+			( (input_port_read(space->machine(), "DSW2") & state->m_dsw_mask) ? 0x02 : 0 ) |
+			( (input_port_read(space->machine(), "DSW3") & state->m_dsw_mask) ? 0x04 : 0 ) |
+			( (input_port_read(space->machine(), "DSW4") & state->m_dsw_mask) ? 0x08 : 0 ) ;
 }
 
 
 static READ8_HANDLER( vblank_bit2_r )
 {
-		return space->machine->primary_screen->vblank() ? 0x04 : 0x00;
+		return space->machine().primary_screen->vblank() ? 0x04 : 0x00;
 }
 static READ8_HANDLER( vblank_bit6_r )
 {
-	return space->machine->primary_screen->vblank() ? 0x40 : 0x00;
+	return space->machine().primary_screen->vblank() ? 0x40 : 0x00;
 }
 
 static WRITE8_DEVICE_HANDLER( oki_bank_bit0_w )
@@ -816,39 +816,39 @@ enum
 
 static READ8_HANDLER( am188em_regs_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	return state->am188em_regs[offset];
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	return state->m_am188em_regs[offset];
 }
 
 static WRITE8_HANDLER( am188em_regs_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->am188em_regs[offset] = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_am188em_regs[offset] = data;
 }
 
 static MACHINE_RESET( am188em )
 {
-	subsino2_state *state = machine->driver_data<subsino2_state>();
+	subsino2_state *state = machine.driver_data<subsino2_state>();
 	// start with masked interrupts
-	state->am188em_regs[AM188EM_IMASK+0] = 0xfd;
-	state->am188em_regs[AM188EM_IMASK+1] = 0x07;
-	state->am188em_regs[AM188EM_I0CON+0] = 0x0f;
-	state->am188em_regs[AM188EM_I0CON+1] = 0x00;
+	state->m_am188em_regs[AM188EM_IMASK+0] = 0xfd;
+	state->m_am188em_regs[AM188EM_IMASK+1] = 0x07;
+	state->m_am188em_regs[AM188EM_I0CON+0] = 0x0f;
+	state->m_am188em_regs[AM188EM_I0CON+1] = 0x00;
 }
 
 static INTERRUPT_GEN( am188em_int0_irq )
 {
-	subsino2_state *state = device->machine->driver_data<subsino2_state>();
-	if ( ((state->am188em_regs[AM188EM_IMASK+0] & 0x10) == 0) ||	// IMASK.I0 mask
-		 ((state->am188em_regs[AM188EM_I0CON+0] & 0x08) == 0) )	// I0CON.MSK mask
-		cpu_set_input_line_and_vector(device, 0, HOLD_LINE, 0x0c);	// INT0 (background scrolling in xplan)
+	subsino2_state *state = device->machine().driver_data<subsino2_state>();
+	if ( ((state->m_am188em_regs[AM188EM_IMASK+0] & 0x10) == 0) ||	// IMASK.I0 mask
+		 ((state->m_am188em_regs[AM188EM_I0CON+0] & 0x08) == 0) )	// I0CON.MSK mask
+		device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x0c);	// INT0 (background scrolling in xplan)
 }
 
 static TIMER_DEVICE_CALLBACK( am188em_timer2_irq )
 {
-	subsino2_state *state = timer.machine->driver_data<subsino2_state>();
-	if ((state->am188em_regs[AM188EM_IMASK+0] & 0x01) == 0)	// TMR mask
-		cputag_set_input_line_and_vector(timer.machine, "maincpu", 0, HOLD_LINE, 0x4c/4);
+	subsino2_state *state = timer.machine().driver_data<subsino2_state>();
+	if ((state->m_am188em_regs[AM188EM_IMASK+0] & 0x01) == 0)	// TMR mask
+		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0x4c/4);
 }
 
 /***************************************************************************
@@ -858,7 +858,7 @@ static TIMER_DEVICE_CALLBACK( am188em_timer2_irq )
 // To be removed when cpu core is updated
 static TIMER_DEVICE_CALLBACK( h8_timer_irq )
 {
-	cputag_set_input_line(timer.machine, "maincpu", H8_METRO_TIMER_HACK, HOLD_LINE);
+	cputag_set_input_line(timer.machine(), "maincpu", H8_METRO_TIMER_HACK, HOLD_LINE);
 }
 
 
@@ -873,50 +873,50 @@ static TIMER_DEVICE_CALLBACK( h8_timer_irq )
 
 static WRITE16_HANDLER( bishjan_sel_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
 	if (ACCESSING_BITS_8_15)
-		state->bishjan_sel = data >> 8;
+		state->m_bishjan_sel = data >> 8;
 }
 
 static READ16_HANDLER( bishjan_serial_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
 	return
-		(space->machine->rand() & 0x9800)	|	// bit 7 - serial communication
-		(((state->bishjan_sel==0x12) ? 0x40:0x00) << 8) |
-//      (machine->rand() & 0xff);
-//      (((space->machine->primary_screen->frame_number()%60)==0)?0x18:0x00);
+		(space->machine().rand() & 0x9800)	|	// bit 7 - serial communication
+		(((state->m_bishjan_sel==0x12) ? 0x40:0x00) << 8) |
+//      (machine.rand() & 0xff);
+//      (((space->machine().primary_screen->frame_number()%60)==0)?0x18:0x00);
 		0x18;
 }
 
 static WRITE16_HANDLER( bishjan_input_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
 	if (ACCESSING_BITS_8_15)
-		state->bishjan_input = data >> 8;
+		state->m_bishjan_input = data >> 8;
 }
 
 static READ16_HANDLER( bishjan_input_r )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
 	int i;
 	UINT16 res = 0xff;
 	static const char *const port[] = { "KEYB_0", "KEYB_1", "KEYB_2", "KEYB_3", "KEYB_4" };
 
 	for (i = 0; i < 5; i++)
-		if (state->bishjan_input & (1 << i))
-			res = input_port_read(space->machine, port[i]);
+		if (state->m_bishjan_input & (1 << i))
+			res = input_port_read(space->machine(), port[i]);
 
 	return	(res << 8) |									// high byte
-			input_port_read(space->machine, "SYSTEM") |		// low byte
-			(ticket_dispenser_r(space->machine->device("hopper"), 0) ? 0x00 : 0x04)	// bit 2: hopper sensor
+			input_port_read(space->machine(), "SYSTEM") |		// low byte
+			(ticket_dispenser_r(space->machine().device("hopper"), 0) ? 0x00 : 0x04)	// bit 2: hopper sensor
 	;
 }
 
 static WRITE16_HANDLER( bishjan_outputs_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->outputs16[offset] = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_outputs16[offset] = data;
 
 	switch (offset)
 	{
@@ -924,17 +924,17 @@ static WRITE16_HANDLER( bishjan_outputs_w )
 			if (ACCESSING_BITS_0_7)
 			{
 				// coin out         data & 0x01;
-				ticket_dispenser_w(space->machine->device("hopper"), 0, (data & 0x0002) ? 0x80 : 0);	// hopper
-				coin_counter_w(space->machine, 0,	data & 0x0010 );
+				ticket_dispenser_w(space->machine().device("hopper"), 0, (data & 0x0002) ? 0x80 : 0);	// hopper
+				coin_counter_w(space->machine(), 0,	data & 0x0010 );
 			}
 			break;
 	}
 
-//  popmessage("0: %04x", state->outputs16[0]);
+//  popmessage("0: %04x", state->m_outputs16[0]);
 }
 
 
-static ADDRESS_MAP_START( bishjan_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( bishjan_map, AS_PROGRAM, 16 )
 	ADDRESS_MAP_GLOBAL_MASK(0xffffff)
 
 	AM_RANGE( 0x000000, 0x07ffff ) AM_ROM AM_REGION("maincpu", 0)
@@ -979,7 +979,7 @@ static ADDRESS_MAP_START( bishjan_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE( 0xc00002, 0xc00003 ) AM_READ_PORT("JOY") AM_WRITE( bishjan_input_w )	// IN C
 	AM_RANGE( 0xc00004, 0xc00005 ) AM_READ( bishjan_input_r )						// IN A & B
 	AM_RANGE( 0xc00006, 0xc00007 ) AM_READ( bishjan_serial_r )						// IN D
-	AM_RANGE( 0xc00008, 0xc00009 ) AM_READ_PORT("RESET") AM_WRITE( bishjan_outputs_w ) AM_BASE_MEMBER(subsino2_state, outputs16 )
+	AM_RANGE( 0xc00008, 0xc00009 ) AM_READ_PORT("RESET") AM_WRITE( bishjan_outputs_w ) AM_BASE_MEMBER(subsino2_state, m_outputs16 )
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -988,8 +988,8 @@ ADDRESS_MAP_END
 
 static WRITE8_HANDLER( expcard_outputs_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->outputs[offset] = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_outputs[offset] = data;
 
 	switch (offset)
 	{
@@ -998,25 +998,25 @@ static WRITE8_HANDLER( expcard_outputs_w )
 			break;
 
 		case 1:	// C
-			set_led_status(space->machine, 0,	data & 0x02);	// raise
+			set_led_status(space->machine(), 0,	data & 0x02);	// raise
 			break;
 
 		case 2:	// B
-			set_led_status(space->machine, 1,	data & 0x04);	// hold 4 / small & hold 5 / big ?
-			set_led_status(space->machine, 2,	data & 0x08);	// hold 1 / bet
-			set_led_status(space->machine, 3,	data & 0x10);	// hold 2 / take ?
-			set_led_status(space->machine, 4,	data & 0x20);	// hold 3 / double up ?
+			set_led_status(space->machine(), 1,	data & 0x04);	// hold 4 / small & hold 5 / big ?
+			set_led_status(space->machine(), 2,	data & 0x08);	// hold 1 / bet
+			set_led_status(space->machine(), 3,	data & 0x10);	// hold 2 / take ?
+			set_led_status(space->machine(), 4,	data & 0x20);	// hold 3 / double up ?
 			break;
 
 		case 3:	// A
-			coin_counter_w(space->machine, 0,	data & 0x01 );	// coin in
-			coin_counter_w(space->machine, 1,	data & 0x02 );	// key in
+			coin_counter_w(space->machine(), 0,	data & 0x01 );	// coin in
+			coin_counter_w(space->machine(), 1,	data & 0x02 );	// key in
 
-			set_led_status(space->machine, 5,	data & 0x10);	// start
+			set_led_status(space->machine(), 5,	data & 0x10);	// start
 			break;
 	}
 
-//  popmessage("0: %02x - 1: %02x - 2: %02x - 3: %02x", state->outputs[0], state->outputs[1], state->outputs[2], state->outputs[3]);
+//  popmessage("0: %02x - 1: %02x - 2: %02x - 3: %02x", state->m_outputs[0], state->m_outputs[1], state->m_outputs[2], state->m_outputs[3]);
 }
 
 /***************************************************************************
@@ -1025,24 +1025,24 @@ static WRITE8_HANDLER( expcard_outputs_w )
 
 static WRITE8_HANDLER( mtrain_outputs_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->outputs[offset] = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_outputs[offset] = data;
 
 	switch (offset)
 	{
 		case 0:
-			coin_counter_w(space->machine, 0,	data & 0x01 );	// key in
-			coin_counter_w(space->machine, 1,	data & 0x02 );	// coin in
-			coin_counter_w(space->machine, 2,	data & 0x10 );	// pay out
-//          coin_counter_w(space->machine, 3,   data & 0x20 );  // hopper motor
+			coin_counter_w(space->machine(), 0,	data & 0x01 );	// key in
+			coin_counter_w(space->machine(), 1,	data & 0x02 );	// coin in
+			coin_counter_w(space->machine(), 2,	data & 0x10 );	// pay out
+//          coin_counter_w(space->machine(), 3,   data & 0x20 );  // hopper motor
 			break;
 
 		case 1:
-			set_led_status(space->machine, 0,	data & 0x01);	// stop reel?
-			set_led_status(space->machine, 1,	data & 0x02);	// stop reel? (double or take)
-			set_led_status(space->machine, 2,	data & 0x04);	// start all
-			set_led_status(space->machine, 3,	data & 0x08);	// bet / stop all
-			set_led_status(space->machine, 4,	data & 0x20);	// stop reel? (double or take)
+			set_led_status(space->machine(), 0,	data & 0x01);	// stop reel?
+			set_led_status(space->machine(), 1,	data & 0x02);	// stop reel? (double or take)
+			set_led_status(space->machine(), 2,	data & 0x04);	// start all
+			set_led_status(space->machine(), 3,	data & 0x08);	// bet / stop all
+			set_led_status(space->machine(), 4,	data & 0x20);	// stop reel? (double or take)
 			break;
 
 		case 2:
@@ -1052,29 +1052,29 @@ static WRITE8_HANDLER( mtrain_outputs_w )
 			break;
 	}
 
-//  popmessage("0: %02x - 1: %02x - 2: %02x - 3: %02x", state->outputs[0], state->outputs[1], state->outputs[2], state->outputs[3]);
+//  popmessage("0: %02x - 1: %02x - 2: %02x - 3: %02x", state->m_outputs[0], state->m_outputs[1], state->m_outputs[2], state->m_outputs[3]);
 }
 
 static WRITE8_HANDLER( mtrain_videoram_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	vram_t vram = (state->ss9601_byte_lo & 0x08) ? VRAM_HI : VRAM_LO;
-	switch (state->ss9601_byte_lo & (~0x08))
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	vram_t vram = (state->m_ss9601_byte_lo & 0x08) ? VRAM_HI : VRAM_LO;
+	switch (state->m_ss9601_byte_lo & (~0x08))
 	{
-		case 0x00:	ss9601_videoram_w(&state->layers[1], vram, space, offset,        data);
-					ss9601_videoram_w(&state->layers[1], vram, space, offset+0x1000, data);	break;
+		case 0x00:	ss9601_videoram_w(&state->m_layers[1], vram, space, offset,        data);
+					ss9601_videoram_w(&state->m_layers[1], vram, space, offset+0x1000, data);	break;
 
-		case 0x04:	ss9601_videoram_w(&state->layers[0], vram, space, offset,        data);
-					ss9601_videoram_w(&state->layers[0], vram, space, offset+0x1000, data);	break;
+		case 0x04:	ss9601_videoram_w(&state->m_layers[0], vram, space, offset,        data);
+					ss9601_videoram_w(&state->m_layers[0], vram, space, offset+0x1000, data);	break;
 
-		case 0x06:	state->ss9601_reelrams[vram][offset] = data;	break;
+		case 0x06:	state->m_ss9601_reelrams[vram][offset] = data;	break;
 	}
 }
 
 static WRITE8_HANDLER( mtrain_tilesize_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->ss9601_tilesize = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_ss9601_tilesize = data;
 
 	tilesize_t sizes[2];
 	switch (data)
@@ -1093,14 +1093,14 @@ static WRITE8_HANDLER( mtrain_tilesize_w )
 			sizes[0] = TILE_8x8;
 			sizes[1] = TILE_8x8;
 
-			logerror("%s: warning, unknown tilesize = %02x\n", space->machine->describe_context(), data);
+			logerror("%s: warning, unknown tilesize = %02x\n", space->machine().describe_context(), data);
 			popmessage("UNKNOWN TILESIZE %02X", data);
 			break;
 	}
 
 	for (int i = 0; i < 2; i++)
 	{
-		layer_t *l = &state->layers[i];
+		layer_t *l = &state->m_layers[i];
 
 		if (l->tilesize != sizes[i])
 		{
@@ -1115,7 +1115,7 @@ static READ8_HANDLER( mtrain_prot_r )
 	return "SUBSION"[offset];
 }
 
-static ADDRESS_MAP_START( mtrain_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( mtrain_map, AS_PROGRAM, 8 )
 	AM_RANGE( 0x00000, 0x06fff ) AM_ROM
 
 	AM_RANGE( 0x07800, 0x07fff ) AM_RAM AM_SHARE("nvram")	// battery
@@ -1127,7 +1127,7 @@ static ADDRESS_MAP_START( mtrain_map, ADDRESS_SPACE_PROGRAM, 8 )
 
 	AM_RANGE( 0x0912f, 0x0912f ) AM_WRITE( ss9601_byte_lo_w )
 
-	AM_RANGE( 0x09140, 0x09142 ) AM_WRITE( mtrain_outputs_w ) AM_BASE_MEMBER(subsino2_state, outputs )
+	AM_RANGE( 0x09140, 0x09142 ) AM_WRITE( mtrain_outputs_w ) AM_BASE_MEMBER(subsino2_state, m_outputs )
 	AM_RANGE( 0x09143, 0x09143 ) AM_READ_PORT( "IN D" )	// (not shown in system test) 0x40 serial out, 0x80 serial in
 	AM_RANGE( 0x09144, 0x09144 ) AM_READ_PORT( "IN A" )	// A
 	AM_RANGE( 0x09145, 0x09145 ) AM_READ_PORT( "IN B" )	// B
@@ -1148,7 +1148,7 @@ static ADDRESS_MAP_START( mtrain_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE( 0x0a000, 0x0ffff ) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( mtrain_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( mtrain_io, AS_IO, 8 )
 	AM_RANGE( 0x0000, 0x003f ) AM_RAM // internal regs
 ADDRESS_MAP_END
 
@@ -1158,14 +1158,14 @@ ADDRESS_MAP_END
 
 static WRITE8_HANDLER( saklove_outputs_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->outputs[offset] = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_outputs[offset] = data;
 
 	switch (offset)
 	{
 		case 0:
-			coin_counter_w(space->machine, 0,	data & 0x01 );	// coin in
-			coin_counter_w(space->machine, 1,	data & 0x02 );	// key in
+			coin_counter_w(space->machine(), 0,	data & 0x01 );	// coin in
+			coin_counter_w(space->machine(), 1,	data & 0x02 );	// key in
 			break;
 
 		case 1:
@@ -1179,10 +1179,10 @@ static WRITE8_HANDLER( saklove_outputs_w )
 			break;
 	}
 
-//  popmessage("0: %02x - 1: %02x - 2: %02x - 3: %02x", state->outputs[0], state->outputs[1], state->outputs[2], state->outputs[3]);
+//  popmessage("0: %02x - 1: %02x - 2: %02x - 3: %02x", state->m_outputs[0], state->m_outputs[1], state->m_outputs[2], state->m_outputs[3]);
 }
 
-static ADDRESS_MAP_START( saklove_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( saklove_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x00000, 0x07fff) AM_RAM AM_SHARE("nvram")	// battery
 
 	// read lo (L1)   (only half tilemap?)
@@ -1207,7 +1207,7 @@ static ADDRESS_MAP_START( saklove_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe0000, 0xfffff) AM_ROM AM_REGION("maincpu",0)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( saklove_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( saklove_io, AS_IO, 8 )
 	AM_RANGE(0x0000, 0x0000) AM_WRITE( ss9601_scrollctrl_w )
 
 	AM_RANGE(0x0020, 0x0020) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
@@ -1220,7 +1220,7 @@ static ADDRESS_MAP_START( saklove_io, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x021f, 0x021f) AM_WRITE( ss9601_disable_w )
 	AM_RANGE(0x0220, 0x0225) AM_WRITE( ss9601_scroll_w )
 
-	AM_RANGE(0x0300, 0x0303) AM_WRITE( saklove_outputs_w ) AM_BASE_MEMBER(subsino2_state, outputs )
+	AM_RANGE(0x0300, 0x0303) AM_WRITE( saklove_outputs_w ) AM_BASE_MEMBER(subsino2_state, m_outputs )
 	AM_RANGE(0x0303, 0x0303) AM_READ_PORT( "IN D" )	// 0x40 serial out, 0x80 serial in
 	AM_RANGE(0x0304, 0x0304) AM_READ_PORT( "IN A" )
 	AM_RANGE(0x0305, 0x0305) AM_READ_PORT( "IN B" )
@@ -1232,7 +1232,7 @@ static ADDRESS_MAP_START( saklove_io, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x0312, 0x0312) AM_READ( vblank_bit2_r ) AM_DEVWRITE( "oki", oki_bank_bit0_w )
 
 	// Peripheral Control Block
-	AM_RANGE(0xff00, 0xffff) AM_READWRITE( am188em_regs_r, am188em_regs_w ) AM_BASE_MEMBER(subsino2_state, am188em_regs )
+	AM_RANGE(0xff00, 0xffff) AM_READWRITE( am188em_regs_r, am188em_regs_w ) AM_BASE_MEMBER(subsino2_state, m_am188em_regs )
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -1241,8 +1241,8 @@ ADDRESS_MAP_END
 
 static WRITE8_HANDLER( xplan_outputs_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->outputs[offset] = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_outputs[offset] = data;
 
 	switch (offset)
 	{
@@ -1251,29 +1251,29 @@ static WRITE8_HANDLER( xplan_outputs_w )
 			break;
 
 		case 1:
-			set_led_status(space->machine, 0,	data & 0x02);	// raise
+			set_led_status(space->machine(), 0,	data & 0x02);	// raise
 			break;
 
 		case 2:	// B
-			set_led_status(space->machine, 1,	data & 0x04);	// hold 1 / big ?
-			set_led_status(space->machine, 2,	data & 0x08);	// hold 5 / bet
-			set_led_status(space->machine, 3,	data & 0x10);	// hold 4 ?
-			set_led_status(space->machine, 4,	data & 0x20);	// hold 2 / double up
-			set_led_status(space->machine, 5,	data & 0x40);	// hold 3 / small ?
+			set_led_status(space->machine(), 1,	data & 0x04);	// hold 1 / big ?
+			set_led_status(space->machine(), 2,	data & 0x08);	// hold 5 / bet
+			set_led_status(space->machine(), 3,	data & 0x10);	// hold 4 ?
+			set_led_status(space->machine(), 4,	data & 0x20);	// hold 2 / double up
+			set_led_status(space->machine(), 5,	data & 0x40);	// hold 3 / small ?
 			break;
 
 		case 3:	// A
-			coin_counter_w(space->machine, 0,	data & 0x01 );
-			coin_counter_w(space->machine, 1,	data & 0x02 );
+			coin_counter_w(space->machine(), 0,	data & 0x01 );
+			coin_counter_w(space->machine(), 1,	data & 0x02 );
 
-			set_led_status(space->machine, 6,	data & 0x10);	// start / take
+			set_led_status(space->machine(), 6,	data & 0x10);	// start / take
 			break;
 	}
 
-//  popmessage("0: %02x - 1: %02x - 2: %02x - 3: %02x", state->outputs[0], state->outputs[1], state->outputs[2], state->outputs[3]);
+//  popmessage("0: %02x - 1: %02x - 2: %02x - 3: %02x", state->m_outputs[0], state->m_outputs[1], state->m_outputs[2], state->m_outputs[3]);
 }
 
-static ADDRESS_MAP_START( xplan_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( xplan_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x00000, 0x07fff) AM_RAM AM_SHARE("nvram")	// battery
 
 	// write both (L1, byte_lo2)
@@ -1307,7 +1307,7 @@ static ADDRESS_MAP_START( xplan_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xc0000, 0xfffff) AM_ROM AM_REGION("maincpu",0)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( xplan_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( xplan_io, AS_IO, 8 )
 	AM_RANGE(0x0000, 0x0000) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
 
 	AM_RANGE(0x0020, 0x0020) AM_WRITE( ss9601_byte_lo2_w )
@@ -1332,10 +1332,10 @@ static ADDRESS_MAP_START( xplan_io, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x0306, 0x0306) AM_READ_PORT( "IN D" )	// 0x40 serial out, 0x80 serial in
 
 	// 306 = d, 307 = c, 308 = b, 309 = a
-	AM_RANGE(0x0306, 0x0309) AM_WRITE( xplan_outputs_w ) AM_BASE_MEMBER(subsino2_state, outputs )
+	AM_RANGE(0x0306, 0x0309) AM_WRITE( xplan_outputs_w ) AM_BASE_MEMBER(subsino2_state, m_outputs )
 
 	// Peripheral Control Block
-	AM_RANGE(0xff00, 0xffff) AM_READWRITE( am188em_regs_r, am188em_regs_w ) AM_BASE_MEMBER(subsino2_state, am188em_regs )
+	AM_RANGE(0xff00, 0xffff) AM_READWRITE( am188em_regs_r, am188em_regs_w ) AM_BASE_MEMBER(subsino2_state, m_am188em_regs )
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -1344,8 +1344,8 @@ ADDRESS_MAP_END
 
 static WRITE8_HANDLER( xtrain_outputs_w )
 {
-	subsino2_state *state = space->machine->driver_data<subsino2_state>();
-	state->outputs[offset] = data;
+	subsino2_state *state = space->machine().driver_data<subsino2_state>();
+	state->m_outputs[offset] = data;
 
 	switch (offset)
 	{
@@ -1354,39 +1354,39 @@ static WRITE8_HANDLER( xtrain_outputs_w )
 			break;
 
 		case 1:	// C
-			set_led_status(space->machine, 0,	data & 0x02);	// re-double
-			set_led_status(space->machine, 1,	data & 0x04);	// half double
+			set_led_status(space->machine(), 0,	data & 0x02);	// re-double
+			set_led_status(space->machine(), 1,	data & 0x04);	// half double
 			break;
 
 		case 2:	// B
-			set_led_status(space->machine, 2,	data & 0x02);	// hold 3 / small
-			set_led_status(space->machine, 3,	data & 0x04);	// hold 2 / big
-			set_led_status(space->machine, 4,	data & 0x08);	// bet
-			set_led_status(space->machine, 5,	data & 0x10);	// hold1 / take
-			set_led_status(space->machine, 6,	data & 0x20);	// double up
+			set_led_status(space->machine(), 2,	data & 0x02);	// hold 3 / small
+			set_led_status(space->machine(), 3,	data & 0x04);	// hold 2 / big
+			set_led_status(space->machine(), 4,	data & 0x08);	// bet
+			set_led_status(space->machine(), 5,	data & 0x10);	// hold1 / take
+			set_led_status(space->machine(), 6,	data & 0x20);	// double up
 			break;
 
 		case 3:	// A
-			coin_counter_w(space->machine, 0,	data & 0x01 );	// coin in
-			coin_counter_w(space->machine, 1,	data & 0x02 );	// key in
+			coin_counter_w(space->machine(), 0,	data & 0x01 );	// coin in
+			coin_counter_w(space->machine(), 1,	data & 0x02 );	// key in
 
-			set_led_status(space->machine, 7,	data & 0x10);	// start
+			set_led_status(space->machine(), 7,	data & 0x10);	// start
 			break;
 	}
 
-//  popmessage("0: %02x - 1: %02x - 2: %02x - 3: %02x", state->outputs[0], state->outputs[1], state->outputs[2], state->outputs[3]);
+//  popmessage("0: %02x - 1: %02x - 2: %02x - 3: %02x", state->m_outputs[0], state->m_outputs[1], state->m_outputs[2], state->m_outputs[3]);
 }
 
-static ADDRESS_MAP_START( expcard_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( expcard_io, AS_IO, 8 )
 	// 306 = d, 307 = c, 308 = b, 309 = a
-	AM_RANGE(0x0306, 0x0309) AM_WRITE( expcard_outputs_w ) AM_BASE_MEMBER(subsino2_state, outputs )
+	AM_RANGE(0x0306, 0x0309) AM_WRITE( expcard_outputs_w ) AM_BASE_MEMBER(subsino2_state, m_outputs )
 
 	AM_IMPORT_FROM( xplan_io )
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( xtrain_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( xtrain_io, AS_IO, 8 )
 	// 306 = d, 307 = c, 308 = b, 309 = a
-	AM_RANGE(0x0306, 0x0309) AM_WRITE( xtrain_outputs_w ) AM_BASE_MEMBER(subsino2_state, outputs )
+	AM_RANGE(0x0306, 0x0309) AM_WRITE( xtrain_outputs_w ) AM_BASE_MEMBER(subsino2_state, m_outputs )
 
 	AM_IMPORT_FROM( xplan_io )
 ADDRESS_MAP_END
@@ -2217,7 +2217,7 @@ ROM_END
 
 static DRIVER_INIT( bishjan )
 {
-	UINT16 *rom = (UINT16*)machine->region("maincpu")->base();
+	UINT16 *rom = (UINT16*)machine.region("maincpu")->base();
 
 	// patch serial protection test (it always enters test mode on boot otherwise)
 	rom[0x042EA/2] = 0x4008;
@@ -2281,7 +2281,7 @@ ROM_END
 
 static DRIVER_INIT( expcard )
 {
-	UINT8 *rom = machine->region("maincpu")->base();
+	UINT8 *rom = machine.region("maincpu")->base();
 
 	// patch protection test (it always enters test mode on boot otherwise)
 	rom[0xed4dc-0xc0000] = 0xeb;
@@ -2381,11 +2381,11 @@ static void crsbingo_bitswaps(UINT8* decrypt, int i)
 
 static const unsigned char crsbingo_xors[8] = { 0xbb, 0xcc, 0xcc, 0xdd, 0xaa, 0x11, 0x44, 0xee };
 
-static void subsino_decrypt(running_machine* machine, void (*bitswaps)(UINT8* decrypt, int i), const UINT8* xors, int size)
+static void subsino_decrypt(running_machine& machine, void (*bitswaps)(UINT8* decrypt, int i), const UINT8* xors, int size)
 {
 	int i;
 	UINT8 *decrypt = auto_alloc_array(machine, UINT8, 0x10000);
-	UINT8* region = machine->region("maincpu")->base();
+	UINT8* region = machine.region("maincpu")->base();
 
 	for (i=0;i<0x10000;i++)
 	{
@@ -2408,7 +2408,7 @@ DRIVER_INIT( mtrain )
 	subsino_decrypt(machine, crsbingo_bitswaps, crsbingo_xors, 0x8000);
 
 	// patch serial protection test (it always enters test mode on boot otherwise)
-	UINT8 *rom = machine->region("maincpu")->base();
+	UINT8 *rom = machine.region("maincpu")->base();
 	rom[0x0cec] = 0x18;
 	rom[0xb037] = 0x18;
 
@@ -2462,7 +2462,7 @@ ROM_END
 
 static DRIVER_INIT( saklove )
 {
-	UINT8 *rom = machine->region("maincpu")->base();
+	UINT8 *rom = machine.region("maincpu")->base();
 
 	// patch serial protection test (it always enters test mode on boot otherwise)
 	rom[0x0e029] = 0xeb;
@@ -2522,7 +2522,7 @@ ROM_END
 
 static DRIVER_INIT( xplan )
 {
-	UINT8 *rom = machine->region("maincpu")->base();
+	UINT8 *rom = machine.region("maincpu")->base();
 
 	// patch protection test (it always enters test mode on boot otherwise)
 	rom[0xeded9-0xc0000] = 0xeb;
@@ -2582,7 +2582,7 @@ ROM_END
 
 static DRIVER_INIT( xtrain )
 {
-	UINT8 *rom = machine->region("maincpu")->base();
+	UINT8 *rom = machine.region("maincpu")->base();
 
 	// patch protection test (it always enters test mode on boot otherwise)
 	rom[0xe190f-0xc0000] = 0xeb;

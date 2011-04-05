@@ -38,20 +38,20 @@ Encryption PAL 16R4 on CPU board
 
 DRIVER_INIT( empcity )
 {
-	stfight_state *state = machine->driver_data<stfight_state>();
-	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
-	UINT8 *rom = machine->region("maincpu")->base();
+	stfight_state *state = machine.driver_data<stfight_state>();
+	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	UINT8 *rom = machine.region("maincpu")->base();
 	int A;
 
-	state->decrypt = auto_alloc_array(machine, UINT8, 0x8000);
-	space->set_decrypted_region(0x0000, 0x7fff, state->decrypt);
+	state->m_decrypt = auto_alloc_array(machine, UINT8, 0x8000);
+	space->set_decrypted_region(0x0000, 0x7fff, state->m_decrypt);
 
 	for (A = 0;A < 0x8000;A++)
 	{
 		UINT8 src = rom[A];
 
 		// decode opcode
-		state->decrypt[A] =
+		state->m_decrypt[A] =
 				( src & 0xA6 ) |
 				( ( ( ( src << 2 ) ^ src ) << 3 ) & 0x40 ) |
 				( ~( ( src ^ ( A >> 1 ) ) >> 2 ) & 0x10 ) |
@@ -70,30 +70,30 @@ DRIVER_INIT( empcity )
 
 DRIVER_INIT( stfight )
 {
-	stfight_state *state = machine->driver_data<stfight_state>();
+	stfight_state *state = machine.driver_data<stfight_state>();
 	DRIVER_INIT_CALL(empcity);
 
 	/* patch out a tight loop during startup - is the code waiting */
 	/* for NMI to wake it up? */
-	state->decrypt[0xb1] = 0x00;
-	state->decrypt[0xb2] = 0x00;
-	state->decrypt[0xb3] = 0x00;
-	state->decrypt[0xb4] = 0x00;
-	state->decrypt[0xb5] = 0x00;
+	state->m_decrypt[0xb1] = 0x00;
+	state->m_decrypt[0xb2] = 0x00;
+	state->m_decrypt[0xb3] = 0x00;
+	state->m_decrypt[0xb4] = 0x00;
+	state->m_decrypt[0xb5] = 0x00;
 }
 
 MACHINE_RESET( stfight )
 {
-	stfight_state *state = machine->driver_data<stfight_state>();
-	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
-	state->adpcm_data_offs = state->adpcm_data_end = 0;
-	state->toggle = 0;
-	state->fm_data = 0;
-	state->coin_mech_latch[0] = 0x02;
-	state->coin_mech_latch[1] = 0x01;
+	stfight_state *state = machine.driver_data<stfight_state>();
+	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	state->m_adpcm_data_offs = state->m_adpcm_data_end = 0;
+	state->m_toggle = 0;
+	state->m_fm_data = 0;
+	state->m_coin_mech_latch[0] = 0x02;
+	state->m_coin_mech_latch[1] = 0x01;
 
-	state->coin_mech_query_active = 0;
-	state->coin_mech_query = 0;
+	state->m_coin_mech_query_active = 0;
+	state->m_coin_mech_query = 0;
 
     // initialise rom bank
     stfight_bank_w( space, 0, 0 );
@@ -103,9 +103,9 @@ MACHINE_RESET( stfight )
 // - in fact I don't even know how/where it's switched in!
 static WRITE8_HANDLER( stfight_bank_w )
 {
-	UINT8   *ROM2 = space->machine->region("maincpu")->base() + 0x10000;
+	UINT8   *ROM2 = space->machine().region("maincpu")->base() + 0x10000;
 
-	memory_set_bankptr(space->machine,  "bank1", &ROM2[data<<14] );
+	memory_set_bankptr(space->machine(),  "bank1", &ROM2[data<<14] );
 }
 
 /*
@@ -121,8 +121,8 @@ static TIMER_CALLBACK( stfight_interrupt_1 )
 INTERRUPT_GEN( stfight_vb_interrupt )
 {
     // Do a RST10
-    cpu_set_input_line_and_vector(device, 0, HOLD_LINE, 0xd7);
-    device->machine->scheduler().timer_set(attotime::from_hz(120), FUNC(stfight_interrupt_1));
+    device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xd7);
+    device->machine().scheduler().timer_set(attotime::from_hz(120), FUNC(stfight_interrupt_1));
 }
 
 /*
@@ -132,20 +132,20 @@ INTERRUPT_GEN( stfight_vb_interrupt )
 // Perhaps define dipswitches as active low?
 READ8_HANDLER( stfight_dsw_r )
 {
-    return( ~input_port_read(space->machine, offset ? "DSW1" : "DSW0") );
+    return( ~input_port_read(space->machine(), offset ? "DSW1" : "DSW0") );
 }
 
 READ8_HANDLER( stfight_coin_r )
 {
-	stfight_state *state = space->machine->driver_data<stfight_state>();
+	stfight_state *state = space->machine().driver_data<stfight_state>();
     int coin_mech_data;
     int i;
 
     // Was the coin mech queried by software?
-    if( state->coin_mech_query_active )
+    if( state->m_coin_mech_query_active )
     {
-        state->coin_mech_query_active = 0;
-        return( (~state->coin_mech_query) & 0x03 );
+        state->m_coin_mech_query_active = 0;
+        return( (~state->m_coin_mech_query) & 0x03 );
     }
 
     /*
@@ -155,13 +155,13 @@ READ8_HANDLER( stfight_coin_r )
      *        since it's read by the 30Hz interrupt ISR
      */
 
-    coin_mech_data = input_port_read(space->machine, "COIN");
+    coin_mech_data = input_port_read(space->machine(), "COIN");
 
     for( i=0; i<2; i++ )
     {
         /* Only valid on signal edge */
-        if( ( coin_mech_data & (1<<i) ) != state->coin_mech_latch[i] )
-            state->coin_mech_latch[i] = coin_mech_data & (1<<i);
+        if( ( coin_mech_data & (1<<i) ) != state->m_coin_mech_latch[i] )
+            state->m_coin_mech_latch[i] = coin_mech_data & (1<<i);
         else
             coin_mech_data |= coin_mech_data & (1<<i);
     }
@@ -171,10 +171,10 @@ READ8_HANDLER( stfight_coin_r )
 
 WRITE8_HANDLER( stfight_coin_w )
 {
-	stfight_state *state = space->machine->driver_data<stfight_state>();
+	stfight_state *state = space->machine().driver_data<stfight_state>();
     // interrogate coin mech
-    state->coin_mech_query_active = 1;
-    state->coin_mech_query = data;
+    state->m_coin_mech_query_active = 1;
+    state->m_coin_mech_query = data;
 }
 
 /*
@@ -193,35 +193,35 @@ static const int sampleLimits[] =
 
 void stfight_adpcm_int(device_t *device)
 {
-	stfight_state *state = device->machine->driver_data<stfight_state>();
-	UINT8 *SAMPLES = device->machine->region("adpcm")->base();
-	int adpcm_data = SAMPLES[state->adpcm_data_offs & 0x7fff];
+	stfight_state *state = device->machine().driver_data<stfight_state>();
+	UINT8 *SAMPLES = device->machine().region("adpcm")->base();
+	int adpcm_data = SAMPLES[state->m_adpcm_data_offs & 0x7fff];
 
     // finished playing sample?
-    if( state->adpcm_data_offs == state->adpcm_data_end )
+    if( state->m_adpcm_data_offs == state->m_adpcm_data_end )
     {
         msm5205_reset_w( device, 1 );
         return;
     }
 
-	if( state->toggle == 0 )
+	if( state->m_toggle == 0 )
 		msm5205_data_w( device, ( adpcm_data >> 4 ) & 0x0f );
 	else
 	{
 		msm5205_data_w( device, adpcm_data & 0x0f );
-		state->adpcm_data_offs++;
+		state->m_adpcm_data_offs++;
 	}
 
-	state->toggle ^= 1;
+	state->m_toggle ^= 1;
 }
 
 WRITE8_DEVICE_HANDLER( stfight_adpcm_control_w )
 {
-	stfight_state *state = device->machine->driver_data<stfight_state>();
+	stfight_state *state = device->machine().driver_data<stfight_state>();
     if( data < 0x08 )
     {
-        state->adpcm_data_offs = sampleLimits[data];
-        state->adpcm_data_end = sampleLimits[data+1];
+        state->m_adpcm_data_offs = sampleLimits[data];
+        state->m_adpcm_data_end = sampleLimits[data+1];
     }
 
     msm5205_reset_w( device, data & 0x08 ? 1 : 0 );
@@ -237,18 +237,18 @@ WRITE8_HANDLER( stfight_e800_w )
 
 WRITE8_HANDLER( stfight_fm_w )
 {
-	stfight_state *state = space->machine->driver_data<stfight_state>();
+	stfight_state *state = space->machine().driver_data<stfight_state>();
     // the sound cpu ignores any fm data without bit 7 set
-    state->fm_data = 0x80 | data;
+    state->m_fm_data = 0x80 | data;
 }
 
 READ8_HANDLER( stfight_fm_r )
 {
-	stfight_state *state = space->machine->driver_data<stfight_state>();
-    int data = state->fm_data;
+	stfight_state *state = space->machine().driver_data<stfight_state>();
+    int data = state->m_fm_data;
 
     // clear the latch?!?
-    state->fm_data &= 0x7f;
+    state->m_fm_data &= 0x7f;
 
     return( data );
 }

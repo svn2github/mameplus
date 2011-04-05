@@ -27,11 +27,11 @@
 
 PALETTE_INIT( polepos )
 {
-	polepos_state *state = machine->driver_data<polepos_state>();
+	polepos_state *state = machine.driver_data<polepos_state>();
 	int i, j;
 
 	/* allocate the colortable */
-	machine->colortable = colortable_alloc(machine, 128);
+	machine.colortable = colortable_alloc(machine, 128);
 
 	/*******************************************************
      * Color PROMs
@@ -77,7 +77,7 @@ PALETTE_INIT( polepos )
 		bit3 = (color_prom[0x200 + i] >> 3) & 1;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		colortable_palette_set_color(machine->colortable,i,MAKE_RGB(r,g,b));
+		colortable_palette_set_color(machine.colortable,i,MAKE_RGB(r,g,b));
 	}
 
 	/*******************************************************
@@ -88,8 +88,8 @@ PALETTE_INIT( polepos )
 	for (i = 0; i < 64*4; i++)
 	{
 		int color = color_prom[0x300 + i];
-		colortable_entry_set_value(machine->colortable, 0x0000 + i, (color != 15) ? (0x020 + color) : 0x2f);
-		colortable_entry_set_value(machine->colortable, 0x0100 + i, (color != 15) ? (0x060 + color) : 0x2f);
+		colortable_entry_set_value(machine.colortable, 0x0000 + i, (color != 15) ? (0x020 + color) : 0x2f);
+		colortable_entry_set_value(machine.colortable, 0x0100 + i, (color != 15) ? (0x060 + color) : 0x2f);
 	}
 
 	/*******************************************************
@@ -101,7 +101,7 @@ PALETTE_INIT( polepos )
 	for (i = 0; i < 64*4; i++)
 	{
 		int color = color_prom[0x400 + i];
-		colortable_entry_set_value(machine->colortable, 0x0200 + i, 0x000 + color);
+		colortable_entry_set_value(machine.colortable, 0x0200 + i, 0x000 + color);
 	}
 
 	/*******************************************************
@@ -112,8 +112,8 @@ PALETTE_INIT( polepos )
 	for (i = 0; i < 64*16; i++)
 	{
 		int color = color_prom[0xc00 + i];
-		colortable_entry_set_value(machine->colortable, 0x0300 + i, (color != 15) ? (0x010 + color) : 0x1f);
-		colortable_entry_set_value(machine->colortable, 0x0700 + i, (color != 15) ? (0x050 + color) : 0x1f);
+		colortable_entry_set_value(machine.colortable, 0x0300 + i, (color != 15) ? (0x010 + color) : 0x1f);
+		colortable_entry_set_value(machine.colortable, 0x0700 + i, (color != 15) ? (0x050 + color) : 0x1f);
 	}
 
 	/*******************************************************
@@ -125,14 +125,14 @@ PALETTE_INIT( polepos )
 	for (i = 0; i < 64*16; i++)
 	{
 		int color = color_prom[0x800 + i];
-		colortable_entry_set_value(machine->colortable, 0x0b00 + i, 0x040 + color);
+		colortable_entry_set_value(machine.colortable, 0x0b00 + i, 0x040 + color);
 	}
 
 	/* 136014-142, 136014-143, 136014-144 Vertical position modifiers */
 	for (i = 0; i < 256; i++)
 	{
 		j = color_prom[0x500 + i] + (color_prom[0x600 + i] << 4) + (color_prom[0x700 + i] << 8);
-		state->vertical_position_modifier[i] = j;
+		state->m_vertical_position_modifier[i] = j;
 	}
 }
 
@@ -146,8 +146,8 @@ PALETTE_INIT( polepos )
 
 static TILE_GET_INFO( bg_get_tile_info )
 {
-	polepos_state *state = machine->driver_data<polepos_state>();
-	UINT16 word = state->view16_memory[tile_index];
+	polepos_state *state = machine.driver_data<polepos_state>();
+	UINT16 word = state->m_view16_memory[tile_index];
 	int code = (word & 0xff) | ((word & 0x4000) >> 6);
 	int color = (word & 0x3f00) >> 8;
 	SET_TILE_INFO(
@@ -159,15 +159,15 @@ static TILE_GET_INFO( bg_get_tile_info )
 
 static TILE_GET_INFO( tx_get_tile_info )
 {
-	polepos_state *state = machine->driver_data<polepos_state>();
-	UINT16 word = state->alpha16_memory[tile_index];
+	polepos_state *state = machine.driver_data<polepos_state>();
+	UINT16 word = state->m_alpha16_memory[tile_index];
 	int code = (word & 0xff) | ((word & 0x4000) >> 6);
 	int color = (word & 0x3f00) >> 8;
 
 	/* I assume the purpose of CHACL is to allow the Z80 to control
        the display (therefore using only the bottom 8 bits of tilemap RAM)
        in case the Z8002 is not working. */
-	if (state->chacl == 0)
+	if (state->m_chacl == 0)
 	{
 		code &= 0xff;
 		color = 0;
@@ -194,11 +194,11 @@ static TILE_GET_INFO( tx_get_tile_info )
 
 VIDEO_START( polepos )
 {
-	polepos_state *state = machine->driver_data<polepos_state>();
-	state->bg_tilemap = tilemap_create(machine, bg_get_tile_info,tilemap_scan_cols,8,8,64,16);
-	state->tx_tilemap = tilemap_create(machine, tx_get_tile_info,tilemap_scan_rows,8,8,32,32);
+	polepos_state *state = machine.driver_data<polepos_state>();
+	state->m_bg_tilemap = tilemap_create(machine, bg_get_tile_info,tilemap_scan_cols,8,8,64,16);
+	state->m_tx_tilemap = tilemap_create(machine, tx_get_tile_info,tilemap_scan_rows,8,8,32,32);
 
-	colortable_configure_tilemap_groups(machine->colortable, state->tx_tilemap, machine->gfx[0], 0x2f);
+	colortable_configure_tilemap_groups(machine.colortable, state->m_tx_tilemap, machine.gfx[0], 0x2f);
 }
 
 
@@ -210,26 +210,26 @@ VIDEO_START( polepos )
 
 READ16_HANDLER( polepos_sprite16_r )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	return state->sprite16_memory[offset];
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	return state->m_sprite16_memory[offset];
 }
 
 WRITE16_HANDLER( polepos_sprite16_w )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	COMBINE_DATA(&state->sprite16_memory[offset]);
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	COMBINE_DATA(&state->m_sprite16_memory[offset]);
 }
 
 READ8_HANDLER( polepos_sprite_r )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	return state->sprite16_memory[offset] & 0xff;
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	return state->m_sprite16_memory[offset] & 0xff;
 }
 
 WRITE8_HANDLER( polepos_sprite_w )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	state->sprite16_memory[offset] = (state->sprite16_memory[offset] & 0xff00) | data;
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	state->m_sprite16_memory[offset] = (state->m_sprite16_memory[offset] & 0xff00) | data;
 }
 
 
@@ -241,32 +241,32 @@ WRITE8_HANDLER( polepos_sprite_w )
 
 READ16_HANDLER( polepos_road16_r )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	return state->road16_memory[offset];
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	return state->m_road16_memory[offset];
 }
 
 WRITE16_HANDLER( polepos_road16_w )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	COMBINE_DATA(&state->road16_memory[offset]);
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	COMBINE_DATA(&state->m_road16_memory[offset]);
 }
 
 READ8_HANDLER( polepos_road_r )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	return state->road16_memory[offset] & 0xff;
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	return state->m_road16_memory[offset] & 0xff;
 }
 
 WRITE8_HANDLER( polepos_road_w )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	state->road16_memory[offset] = (state->road16_memory[offset] & 0xff00) | data;
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	state->m_road16_memory[offset] = (state->m_road16_memory[offset] & 0xff00) | data;
 }
 
 WRITE16_HANDLER( polepos_road16_vscroll_w )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	COMBINE_DATA(&state->road16_vscroll);
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	COMBINE_DATA(&state->m_road16_vscroll);
 }
 
 
@@ -278,47 +278,47 @@ WRITE16_HANDLER( polepos_road16_vscroll_w )
 
 READ16_HANDLER( polepos_view16_r )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	return state->view16_memory[offset];
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	return state->m_view16_memory[offset];
 }
 
 WRITE16_HANDLER( polepos_view16_w )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	COMBINE_DATA(&state->view16_memory[offset]);
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	COMBINE_DATA(&state->m_view16_memory[offset]);
 	if (offset < 0x400)
-		tilemap_mark_tile_dirty(state->bg_tilemap,offset);
+		tilemap_mark_tile_dirty(state->m_bg_tilemap,offset);
 }
 
 READ8_HANDLER( polepos_view_r )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	return state->view16_memory[offset] & 0xff;
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	return state->m_view16_memory[offset] & 0xff;
 }
 
 WRITE8_HANDLER( polepos_view_w )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	state->view16_memory[offset] = (state->view16_memory[offset] & 0xff00) | data;
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	state->m_view16_memory[offset] = (state->m_view16_memory[offset] & 0xff00) | data;
 	if (offset < 0x400)
-		tilemap_mark_tile_dirty(state->bg_tilemap,offset);
+		tilemap_mark_tile_dirty(state->m_bg_tilemap,offset);
 }
 
 WRITE16_HANDLER( polepos_view16_hscroll_w )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
+	polepos_state *state = space->machine().driver_data<polepos_state>();
 
-	COMBINE_DATA(&state->scroll);
-	tilemap_set_scrollx(state->bg_tilemap,0,state->scroll);
+	COMBINE_DATA(&state->m_scroll);
+	tilemap_set_scrollx(state->m_bg_tilemap,0,state->m_scroll);
 }
 
 WRITE8_HANDLER( polepos_chacl_w )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	if (state->chacl != (data & 1))
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	if (state->m_chacl != (data & 1))
 	{
-		state->chacl = data & 1;
-		tilemap_mark_all_tiles_dirty(state->tx_tilemap);
+		state->m_chacl = data & 1;
+		tilemap_mark_all_tiles_dirty(state->m_tx_tilemap);
 	}
 }
 
@@ -331,28 +331,28 @@ WRITE8_HANDLER( polepos_chacl_w )
 
 READ16_HANDLER( polepos_alpha16_r )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	return state->alpha16_memory[offset];
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	return state->m_alpha16_memory[offset];
 }
 
 WRITE16_HANDLER( polepos_alpha16_w )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	COMBINE_DATA(&state->alpha16_memory[offset]);
-	tilemap_mark_tile_dirty(state->tx_tilemap,offset);
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	COMBINE_DATA(&state->m_alpha16_memory[offset]);
+	tilemap_mark_tile_dirty(state->m_tx_tilemap,offset);
 }
 
 READ8_HANDLER( polepos_alpha_r )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	return state->alpha16_memory[offset] & 0xff;
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	return state->m_alpha16_memory[offset] & 0xff;
 }
 
 WRITE8_HANDLER( polepos_alpha_w )
 {
-	polepos_state *state = space->machine->driver_data<polepos_state>();
-	state->alpha16_memory[offset] = (state->alpha16_memory[offset] & 0xff00) | data;
-	tilemap_mark_tile_dirty(state->tx_tilemap,offset);
+	polepos_state *state = space->machine().driver_data<polepos_state>();
+	state->m_alpha16_memory[offset] = (state->m_alpha16_memory[offset] & 0xff00) | data;
+	tilemap_mark_tile_dirty(state->m_tx_tilemap,offset);
 }
 
 
@@ -363,10 +363,10 @@ WRITE8_HANDLER( polepos_alpha_w )
 
 ***************************************************************************/
 
-static void draw_road(running_machine *machine, bitmap_t *bitmap)
+static void draw_road(running_machine &machine, bitmap_t *bitmap)
 {
-	polepos_state *state = machine->driver_data<polepos_state>();
-	const UINT8 *road_control = machine->region("gfx5")->base();
+	polepos_state *state = machine.driver_data<polepos_state>();
+	const UINT8 *road_control = machine.region("gfx5")->base();
 	const UINT8 *road_bits1 = road_control + 0x2000;
 	const UINT8 *road_bits2 = road_control + 0x4000;
 	int x, y, i;
@@ -380,16 +380,16 @@ static void draw_road(running_machine *machine, bitmap_t *bitmap)
 		pen_t pen_base;
 
 		/* first add the vertical position modifier and the vertical scroll */
-		yoffs = ((state->vertical_position_modifier[y] + state->road16_vscroll) >> 3) & 0x1ff;
+		yoffs = ((state->m_vertical_position_modifier[y] + state->m_road16_vscroll) >> 3) & 0x1ff;
 
 		/* then use that as a lookup into the road memory */
-		roadpal = state->road16_memory[yoffs] & 15;
+		roadpal = state->m_road16_memory[yoffs] & 15;
 
 		/* this becomes the palette base for the scanline */
 		pen_base = 0x0b00 + (roadpal << 6);
 
 		/* now fetch the horizontal scroll offset for this scanline */
-		xoffs = state->road16_memory[0x380 + (y & 0x7f)] & 0x3ff;
+		xoffs = state->m_road16_memory[0x380 + (y & 0x7f)] & 0x3ff;
 
 		/* the road is drawn in 8-pixel chunks, so round downward and adjust the base */
 		/* note that we assume there is at least 8 pixels of slop on the left/right */
@@ -439,14 +439,14 @@ static void draw_road(running_machine *machine, bitmap_t *bitmap)
 	}
 }
 
-static void zoom_sprite(running_machine *machine, bitmap_t *bitmap,int big,
+static void zoom_sprite(running_machine &machine, bitmap_t *bitmap,int big,
 		UINT32 code,UINT32 color,int flipx,int sx,int sy,
 		int sizex,int sizey)
 {
-	const gfx_element *gfx = machine->gfx[big ? 3 : 2];
+	const gfx_element *gfx = machine.gfx[big ? 3 : 2];
 	const UINT8 *gfxdata = gfx_element_get_data(gfx, code % gfx->total_elements);
-	UINT8 *scaling_rom = machine->region("gfx6")->base();
-	UINT32 transmask = colortable_get_transpen_mask(machine->colortable, gfx, color, 0x1f);
+	UINT8 *scaling_rom = machine.region("gfx6")->base();
+	UINT32 transmask = colortable_get_transpen_mask(machine.colortable, gfx, color, 0x1f);
 	int coloroffs = gfx->color_base + color * gfx->color_granularity;
 	int x,y;
 
@@ -490,11 +490,11 @@ static void zoom_sprite(running_machine *machine, bitmap_t *bitmap,int big,
 	}
 }
 
-static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
 {
-	polepos_state *state = machine->driver_data<polepos_state>();
-	UINT16 *posmem = &state->sprite16_memory[0x380];
-	UINT16 *sizmem = &state->sprite16_memory[0x780];
+	polepos_state *state = machine.driver_data<polepos_state>();
+	UINT16 *posmem = &state->m_sprite16_memory[0x380];
+	UINT16 *sizmem = &state->m_sprite16_memory[0x780];
 	int i;
 
 	for (i = 0; i < 64; i++, posmem += 2, sizmem += 2)
@@ -522,12 +522,12 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( polepos )
 {
-	polepos_state *state = screen->machine->driver_data<polepos_state>();
+	polepos_state *state = screen->machine().driver_data<polepos_state>();
 	rectangle clip = *cliprect;
 	clip.max_y = 127;
-	tilemap_draw(bitmap,&clip,state->bg_tilemap,0,0);
-	draw_road(screen->machine, bitmap);
-	draw_sprites(screen->machine, bitmap,cliprect);
-	tilemap_draw(bitmap,cliprect,state->tx_tilemap,0,0);
+	tilemap_draw(bitmap,&clip,state->m_bg_tilemap,0,0);
+	draw_road(screen->machine(), bitmap);
+	draw_sprites(screen->machine(), bitmap,cliprect);
+	tilemap_draw(bitmap,cliprect,state->m_tx_tilemap,0,0);
 	return 0;
 }

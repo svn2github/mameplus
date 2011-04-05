@@ -23,22 +23,22 @@
 static READ16_HANDLER( cps1_dsw_r )
 {
 	static const char *const dswname[] = { "IN0", "DSWA", "DSWB", "DSWC" };
-	int in = input_port_read(space->machine, dswname[offset]);
+	int in = input_port_read(space->machine(), dswname[offset]);
 	return (in << 8) | 0xff;
 }
 
 static WRITE8_HANDLER( cps1_snd_bankswitch_w )
 {
-	UINT8 *RAM = space->machine->region("audiocpu")->base();
+	UINT8 *RAM = space->machine().region("audiocpu")->base();
 	int bankaddr;
 
 	bankaddr = ((data & 1) * 0x4000);
-	memory_set_bankptr(space->machine, "bank1",&RAM[0x10000 + bankaddr]);
+	memory_set_bankptr(space->machine(), "bank1",&RAM[0x10000 + bankaddr]);
 }
 
 static WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w )
 {
-	okim6295_device *oki6295 = device->machine->device<okim6295_device>("oki");
+	okim6295_device *oki6295 = device->machine().device<okim6295_device>("oki");
 	oki6295->set_pin7((data & 1));
 }
 
@@ -58,10 +58,10 @@ static WRITE16_HANDLER( cps1_coinctrl_w )
 {
 	if (ACCESSING_BITS_8_15)
 	{
-		coin_counter_w(space->machine,0,data & 0x0100);
-		coin_counter_w(space->machine,1,data & 0x0200);
-		coin_lockout_w(space->machine,0,~data & 0x0400);
-		coin_lockout_w(space->machine,1,~data & 0x0800);
+		coin_counter_w(space->machine(),0,data & 0x0100);
+		coin_counter_w(space->machine(),1,data & 0x0200);
+		coin_lockout_w(space->machine(),0,~data & 0x0400);
+		coin_lockout_w(space->machine(),1,~data & 0x0800);
 	}
 }
 
@@ -69,16 +69,16 @@ static WRITE16_HANDLER( cpsq_coinctrl2_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		coin_counter_w(space->machine,2,data & 0x01);
-		coin_lockout_w(space->machine,2,~data & 0x02);
-		coin_counter_w(space->machine,3,data & 0x04);
-		coin_lockout_w(space->machine,3,~data & 0x08);
+		coin_counter_w(space->machine(),2,data & 0x01);
+		coin_lockout_w(space->machine(),2,~data & 0x02);
+		coin_counter_w(space->machine(),3,data & 0x04);
+		coin_lockout_w(space->machine(),3,~data & 0x08);
 	}
 }
 
 static INTERRUPT_GEN( cps1_interrupt )
 {
-	cpu_set_input_line(device, 2, HOLD_LINE);
+	device_set_input_line(device, 2, HOLD_LINE);
 }
 
 /********************************************************************
@@ -91,13 +91,13 @@ static INTERRUPT_GEN( cps1_interrupt )
 
 static INTERRUPT_GEN( cps1_qsound_interrupt )
 {
-	cpu_set_input_line(device, 2, HOLD_LINE);
+	device_set_input_line(device, 2, HOLD_LINE);
 }
 
 
 static READ16_HANDLER( qsound_rom_r )
 {
-	UINT8 *rom = space->machine->region("user1")->base();
+	UINT8 *rom = space->machine().region("user1")->base();
 
 	if (rom)
 		return rom[offset] | 0xff00;
@@ -107,39 +107,39 @@ static READ16_HANDLER( qsound_rom_r )
 
 static READ16_HANDLER( qsound_sharedram1_r )
 {
-	cpschngr_state *state = space->machine->driver_data<cpschngr_state>();
-	return state->qsound_sharedram1[offset] | 0xff00;
+	cpschngr_state *state = space->machine().driver_data<cpschngr_state>();
+	return state->m_qsound_sharedram1[offset] | 0xff00;
 }
 
 static WRITE16_HANDLER( qsound_sharedram1_w )
 {
-	cpschngr_state *state = space->machine->driver_data<cpschngr_state>();
+	cpschngr_state *state = space->machine().driver_data<cpschngr_state>();
 	if (ACCESSING_BITS_0_7)
-		state->qsound_sharedram1[offset] = data;
+		state->m_qsound_sharedram1[offset] = data;
 }
 
 static READ16_HANDLER( qsound_sharedram2_r )
 {
-	cpschngr_state *state = space->machine->driver_data<cpschngr_state>();
-	return state->qsound_sharedram2[offset] | 0xff00;
+	cpschngr_state *state = space->machine().driver_data<cpschngr_state>();
+	return state->m_qsound_sharedram2[offset] | 0xff00;
 }
 
 static WRITE16_HANDLER( qsound_sharedram2_w )
 {
-	cpschngr_state *state = space->machine->driver_data<cpschngr_state>();
+	cpschngr_state *state = space->machine().driver_data<cpschngr_state>();
 	if (ACCESSING_BITS_0_7)
-		state->qsound_sharedram2[offset] = data;
+		state->m_qsound_sharedram2[offset] = data;
 }
 
 static WRITE8_HANDLER( qsound_banksw_w )
 {
-	UINT8 *RAM = space->machine->region("audiocpu")->base();
+	UINT8 *RAM = space->machine().region("audiocpu")->base();
 	int bankaddress=0x10000+((data&0x0f)*0x4000);
 
-	if (bankaddress >= space->machine->region("audiocpu")->bytes())
+	if (bankaddress >= space->machine().region("audiocpu")->bytes())
 		bankaddress=0x10000;
 
-	memory_set_bankptr(space->machine, "bank1", &RAM[bankaddress]);
+	memory_set_bankptr(space->machine(), "bank1", &RAM[bankaddress]);
 }
 
 
@@ -164,13 +164,13 @@ static const eeprom_interface qsound_eeprom_interface =
 
 static READ16_HANDLER( cps1_eeprom_port_r )
 {
-	device_t *eeprom = space->machine->device("eeprom");
+	device_t *eeprom = space->machine().device("eeprom");
 	return eeprom_read_bit(eeprom);
 }
 
 static WRITE16_HANDLER( cps1_eeprom_port_w )
 {
-	device_t *eeprom = space->machine->device("eeprom");
+	device_t *eeprom = space->machine().device("eeprom");
 	if (ACCESSING_BITS_0_7)
 	{
 		/*
@@ -191,21 +191,21 @@ static WRITE16_HANDLER( cps1_eeprom_port_w )
 
 ****************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
 	AM_RANGE(0x800000, 0x800007) AM_READ_PORT("IN1")			/* Player input ports */
 	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)			/* System input ports / Dip Switches */
 	AM_RANGE(0x800020, 0x800021) AM_READNOP
 	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
-	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_mess_cps_a_w) AM_BASE_MEMBER(cpschngr_state, cps1_cps_a_regs)	/* CPS-A custom */
-	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_mess_cps_b_r, cps1_mess_cps_b_w) AM_BASE_MEMBER(cpschngr_state, cps1_cps_b_regs)
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_mess_cps_a_w) AM_BASE_MEMBER(cpschngr_state, m_cps1_cps_a_regs)	/* CPS-A custom */
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_mess_cps_b_r, cps1_mess_cps_b_w) AM_BASE_MEMBER(cpschngr_state, m_cps1_cps_b_regs)
 	AM_RANGE(0x800180, 0x800187) AM_WRITE(cps1_soundlatch_w)	/* Sound command */
 	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)	/* Sound timer fade */
-	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_mess_gfxram_w) AM_BASE_MEMBER(cpschngr_state, cps1_gfxram) AM_SIZE_MEMBER(cpschngr_state, cps1_gfxram_size)	/* SF2CE executes code from here */
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_mess_gfxram_w) AM_BASE_MEMBER(cpschngr_state, m_cps1_gfxram) AM_SIZE_MEMBER(cpschngr_state, m_cps1_gfxram_size)	/* SF2CE executes code from here */
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sub_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sub_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
@@ -217,14 +217,14 @@ static ADDRESS_MAP_START( sub_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xf00a, 0xf00a) AM_READ(soundlatch2_r) /* Sound timer fade */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( qsound_main_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( qsound_main_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
 	AM_RANGE(0x800000, 0x800007) AM_READ_PORT("IN1")			/* Player input ports */
 	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)			/* System input ports / Dip Switches */
 	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
-	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_mess_cps_a_w) AM_BASE_MEMBER(cpschngr_state, cps1_cps_a_regs)	/* CPS-A custom */
-	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_mess_cps_b_r, cps1_mess_cps_b_w) AM_BASE_MEMBER(cpschngr_state, cps1_cps_b_regs)	/* CPS-B custom (mapped by LWIO/IOB1 PAL on B-board) */
-	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_mess_gfxram_w) AM_BASE_MEMBER(cpschngr_state, cps1_gfxram) AM_SIZE_MEMBER(cpschngr_state, cps1_gfxram_size)	/* SF2CE executes code from here */
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_mess_cps_a_w) AM_BASE_MEMBER(cpschngr_state, m_cps1_cps_a_regs)	/* CPS-A custom */
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_mess_cps_b_r, cps1_mess_cps_b_w) AM_BASE_MEMBER(cpschngr_state, m_cps1_cps_b_regs)	/* CPS-B custom (mapped by LWIO/IOB1 PAL on B-board) */
+	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_mess_gfxram_w) AM_BASE_MEMBER(cpschngr_state, m_cps1_gfxram) AM_SIZE_MEMBER(cpschngr_state, m_cps1_gfxram_size)	/* SF2CE executes code from here */
 	AM_RANGE(0xf00000, 0xf0ffff) AM_READ(qsound_rom_r)			/* Slammasters protection */
 	AM_RANGE(0xf18000, 0xf19fff) AM_READWRITE(qsound_sharedram1_r, qsound_sharedram1_w)  /* Q RAM */
 	AM_RANGE(0xf1c000, 0xf1c001) AM_READ_PORT("IN2")			/* Player 3 controls (later games) */
@@ -235,14 +235,14 @@ static ADDRESS_MAP_START( qsound_main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( qsound_sub_map, ADDRESS_SPACE_PROGRAM, 8 )	// used by cps2.c too
+static ADDRESS_MAP_START( qsound_sub_map, AS_PROGRAM, 8 )	// used by cps2.c too
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")	/* banked (contains music data) */
-	AM_RANGE(0xc000, 0xcfff) AM_RAM AM_BASE_MEMBER(cpschngr_state, qsound_sharedram1)
+	AM_RANGE(0xc000, 0xcfff) AM_RAM AM_BASE_MEMBER(cpschngr_state, m_qsound_sharedram1)
 	AM_RANGE(0xd000, 0xd002) AM_DEVWRITE("qsound", qsound_w)
 	AM_RANGE(0xd003, 0xd003) AM_WRITE(qsound_banksw_w)
 	AM_RANGE(0xd007, 0xd007) AM_DEVREAD("qsound", qsound_r)
-	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_MEMBER(cpschngr_state, qsound_sharedram2)
+	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_MEMBER(cpschngr_state, m_qsound_sharedram2)
 ADDRESS_MAP_END
 
 /***********************************************************
@@ -366,7 +366,7 @@ GFXDECODE_END
 
 static void cps1_irq_handler_mus(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine, "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2151_interface ym2151_config =

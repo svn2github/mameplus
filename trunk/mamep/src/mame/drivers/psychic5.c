@@ -318,8 +318,8 @@ The first sprite data is located at f20b,then f21b and so on.
 
 static MACHINE_RESET( psychic5 )
 {
-	psychic5_state *state = machine->driver_data<psychic5_state>();
-	state->bank_latch = 0xff;
+	psychic5_state *state = machine.driver_data<psychic5_state>();
+	state->m_bank_latch = 0xff;
 	flip_screen_set(machine, 0);
 }
 
@@ -332,9 +332,9 @@ static MACHINE_RESET( psychic5 )
 static INTERRUPT_GEN( psychic5_interrupt )
 {
 	if (cpu_getiloops(device) == 0)
-		cpu_set_input_line_and_vector(device, 0, HOLD_LINE, 0xd7);		/* RST 10h */
+		device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xd7);		/* RST 10h */
 	else
-		cpu_set_input_line_and_vector(device, 0, HOLD_LINE, 0xcf);		/* RST 08h */
+		device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xcf);		/* RST 08h */
 }
 
 
@@ -346,47 +346,47 @@ static INTERRUPT_GEN( psychic5_interrupt )
 
 static READ8_HANDLER( psychic5_bankselect_r )
 {
-	psychic5_state *state = space->machine->driver_data<psychic5_state>();
-	return state->bank_latch;
+	psychic5_state *state = space->machine().driver_data<psychic5_state>();
+	return state->m_bank_latch;
 }
 
 static WRITE8_HANDLER( psychic5_bankselect_w )
 {
-	psychic5_state *state = space->machine->driver_data<psychic5_state>();
-	UINT8 *RAM = space->machine->region("maincpu")->base();
+	psychic5_state *state = space->machine().driver_data<psychic5_state>();
+	UINT8 *RAM = space->machine().region("maincpu")->base();
 	int bankaddress;
 
-	if (state->bank_latch != data)
+	if (state->m_bank_latch != data)
 	{
-		state->bank_latch = data;
+		state->m_bank_latch = data;
 		bankaddress = 0x10000 + ((data & 3) * 0x4000);
-		memory_set_bankptr(space->machine, "bank1",&RAM[bankaddress]);	 /* Select 4 banks of 16k */
+		memory_set_bankptr(space->machine(), "bank1",&RAM[bankaddress]);	 /* Select 4 banks of 16k */
 	}
 }
 
 static WRITE8_HANDLER( bombsa_bankselect_w )
 {
-	psychic5_state *state = space->machine->driver_data<psychic5_state>();
-	UINT8 *RAM = space->machine->region("maincpu")->base();
+	psychic5_state *state = space->machine().driver_data<psychic5_state>();
+	UINT8 *RAM = space->machine().region("maincpu")->base();
 	int bankaddress;
 
-	if (state->bank_latch != data)
+	if (state->m_bank_latch != data)
 	{
-		state->bank_latch = data;
+		state->m_bank_latch = data;
 		bankaddress = 0x10000 + ((data & 7) * 0x4000);
-		memory_set_bankptr(space->machine, "bank1", &RAM[bankaddress]);	 /* Select 8 banks of 16k */
+		memory_set_bankptr(space->machine(), "bank1", &RAM[bankaddress]);	 /* Select 8 banks of 16k */
 	}
 }
 
 static WRITE8_HANDLER( psychic5_coin_counter_w )
 {
-	coin_counter_w(space->machine, 0, data & 0x01);
-	coin_counter_w(space->machine, 1, data & 0x02);
+	coin_counter_w(space->machine(), 0, data & 0x01);
+	coin_counter_w(space->machine(), 1, data & 0x02);
 
 	// bit 7 toggles flip screen
 	if (data & 0x80)
 	{
-		flip_screen_set(space->machine, !flip_screen_get(space->machine));
+		flip_screen_set(space->machine(), !flip_screen_get(space->machine()));
 	}
 }
 
@@ -395,7 +395,7 @@ static WRITE8_HANDLER( bombsa_flipscreen_w )
 	// bit 7 toggles flip screen
 	if (data & 0x80)
 	{
-		flip_screen_set(space->machine, !flip_screen_get(space->machine));
+		flip_screen_set(space->machine(), !flip_screen_get(space->machine()));
 	}
 }
 
@@ -406,7 +406,7 @@ static WRITE8_HANDLER( bombsa_flipscreen_w )
 
 ***************************************************************************/
 
-static ADDRESS_MAP_START( psychic5_main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( psychic5_main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_RAMBANK("bank1")
 	AM_RANGE(0xc000, 0xdfff) AM_READWRITE(psychic5_paged_ram_r, psychic5_paged_ram_w)
@@ -418,24 +418,24 @@ static ADDRESS_MAP_START( psychic5_main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xf004, 0xf004) AM_NOP	// ???
 	AM_RANGE(0xf005, 0xf005) AM_READNOP AM_WRITE(psychic5_title_screen_w)
 	AM_RANGE(0xf006, 0xf1ff) AM_NOP
-	AM_RANGE(0xf200, 0xf7ff) AM_RAM AM_BASE_SIZE_MEMBER(psychic5_state, spriteram, spriteram_size)
+	AM_RANGE(0xf200, 0xf7ff) AM_RAM AM_BASE_SIZE_MEMBER(psychic5_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( psychic5_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( psychic5_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( psychic5_soundport_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( psychic5_soundport_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE("ym1", ym2203_w)
 	AM_RANGE(0x80, 0x81) AM_DEVWRITE("ym2", ym2203_w)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( bombsa_main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( bombsa_main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_RAMBANK("bank1")
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
@@ -448,20 +448,20 @@ static ADDRESS_MAP_START( bombsa_main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xd005, 0xd005) AM_WRITE(bombsa_unknown_w) // ?
 
 	AM_RANGE(0xd000, 0xd1ff) AM_RAM
-	AM_RANGE(0xd200, 0xd7ff) AM_RAM AM_BASE_SIZE_MEMBER(psychic5_state, spriteram, spriteram_size)
+	AM_RANGE(0xd200, 0xd7ff) AM_RAM AM_BASE_SIZE_MEMBER(psychic5_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0xd800, 0xdfff) AM_RAM
 
 	AM_RANGE(0xe000, 0xffff) AM_READWRITE(psychic5_paged_ram_r, bombsa_paged_ram_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( bombsa_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( bombsa_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
 	AM_RANGE(0xf000, 0xf000) AM_WRITEONLY								// Is this a confirm of some sort?
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( bombsa_soundport_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( bombsa_soundport_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE("ym1", ym2203_r, ym2203_w)
 	AM_RANGE(0x80, 0x81) AM_DEVREADWRITE("ym2", ym2203_r, ym2203_w)
@@ -646,7 +646,7 @@ GFXDECODE_END
 
 static void irqhandler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine, "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =

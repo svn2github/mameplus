@@ -51,8 +51,8 @@ public:
 	ttchamp_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT16 *peno_vram;
-	UINT16 paloff;
+	UINT16 *m_peno_vram;
+	UINT16 m_paloff;
 };
 
 
@@ -62,12 +62,12 @@ static VIDEO_START(ttchamp)
 
 static SCREEN_UPDATE(ttchamp)
 {
-	ttchamp_state *state = screen->machine->driver_data<ttchamp_state>();
+	ttchamp_state *state = screen->machine().driver_data<ttchamp_state>();
 	int y,x,count;
 //  int i;
 	static const int xxx=320,yyy=204;
 
-	bitmap_fill(bitmap, 0, get_black_pen(screen->machine));
+	bitmap_fill(bitmap, 0, get_black_pen(screen->machine()));
 
 //  for (i=0;i<256;i++)
 //  {
@@ -85,7 +85,7 @@ static SCREEN_UPDATE(ttchamp)
 	{
 		for(x=0;x<xxx;x++)
 		{
-			/*if(hotblock_port0&0x40)*/*BITMAP_ADDR16(bitmap, y, x) = ((UINT8 *)state->peno_vram)[BYTE_XOR_LE(count)]+0x300;
+			/*if(hotblock_port0&0x40)*/*BITMAP_ADDR16(bitmap, y, x) = ((UINT8 *)state->m_peno_vram)[BYTE_XOR_LE(count)]+0x300;
             count++;
         }
     }
@@ -95,50 +95,50 @@ static SCREEN_UPDATE(ttchamp)
 
 static WRITE16_HANDLER( paloff_w )
 {
-	ttchamp_state *state = space->machine->driver_data<ttchamp_state>();
-    COMBINE_DATA(&state->paloff);
+	ttchamp_state *state = space->machine().driver_data<ttchamp_state>();
+    COMBINE_DATA(&state->m_paloff);
 }
 
 #ifdef UNUSED_FUNCTION
 static WRITE16_HANDLER( pcup_prgbank_w )
 {
     int bank;
-    UINT8 *ROM1 = space->machine->region("user1")->base();
+    UINT8 *ROM1 = space->machine().region("user1")->base();
 
     if (ACCESSING_BITS_0_7)
     {
         bank = (data>>4) &0x07;
-        memory_set_bankptr(space->machine, "bank2",&ROM1[0x80000*(bank)]);
+        memory_set_bankptr(space->machine(), "bank2",&ROM1[0x80000*(bank)]);
     }
 }
 #endif
 
 static WRITE16_HANDLER( paldat_w )
 {
-	ttchamp_state *state = space->machine->driver_data<ttchamp_state>();
-    palette_set_color_rgb(space->machine,state->paloff & 0x7fff,pal5bit(data>>0),pal5bit(data>>5),pal5bit(data>>10));
+	ttchamp_state *state = space->machine().driver_data<ttchamp_state>();
+    palette_set_color_rgb(space->machine(),state->m_paloff & 0x7fff,pal5bit(data>>0),pal5bit(data>>5),pal5bit(data>>10));
 }
 
 static READ16_HANDLER( peno_rand )
 {
-    return 0xffff;// space->machine->rand();
+    return 0xffff;// space->machine().rand();
 }
 
 #ifdef UNUSED_FUNCTION
 static READ16_HANDLER( peno_rand2 )
 {
-    return space->machine->rand();
+    return space->machine().rand();
 }
 #endif
 
-static ADDRESS_MAP_START( ttchamp_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( ttchamp_map, AS_PROGRAM, 16 )
     AM_RANGE(0x00000, 0x0ffff) AM_RAM
-    AM_RANGE(0x10000, 0x1ffff) AM_RAM AM_BASE_MEMBER(ttchamp_state, peno_vram)
+    AM_RANGE(0x10000, 0x1ffff) AM_RAM AM_BASE_MEMBER(ttchamp_state, m_peno_vram)
     AM_RANGE(0x20000, 0x7ffff) AM_ROMBANK("bank1") // ?
     AM_RANGE(0x80000, 0xfffff) AM_ROMBANK("bank2") // ?
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ttchamp_io, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( ttchamp_io, AS_IO, 16 )
     AM_RANGE(0x0000, 0x0001) AM_WRITENOP
 
     AM_RANGE(0x0002, 0x0003) AM_READ_PORT("SYSTEM")
@@ -230,7 +230,7 @@ INPUT_PORTS_END
 
 static INTERRUPT_GEN( ttchamp_irq ) /* right? */
 {
-	cpu_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( ttchamp, ttchamp_state )
@@ -333,7 +333,7 @@ ROM_END
 
 static DRIVER_INIT (ttchamp)
 {
-	UINT8 *ROM1 = machine->region("user1")->base();
+	UINT8 *ROM1 = machine.region("user1")->base();
 	memory_set_bankptr(machine, "bank1",&ROM1[0x120000]);
 	memory_set_bankptr(machine, "bank2",&ROM1[0x180000]);
 }

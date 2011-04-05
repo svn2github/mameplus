@@ -87,27 +87,27 @@ be verified on real PCB.
 
 static WRITE8_HANDLER( lastday_bankswitch_w )
 {
-	memory_set_bank(space->machine, "bank1", data & 0x07);
+	memory_set_bank(space->machine(), "bank1", data & 0x07);
 
 	if (data & 0xf8) popmessage("bankswitch %02x",data);
 }
 
 static MACHINE_START( lastday )
 {
-	memory_configure_bank(machine, "bank1", 0, 8, machine->region("maincpu")->base() + 0x10000, 0x4000);
+	memory_configure_bank(machine, "bank1", 0, 8, machine.region("maincpu")->base() + 0x10000, 0x4000);
 }
 
 static WRITE8_HANDLER( flip_screen_w )
 {
-	flip_screen_set(space->machine, data);
+	flip_screen_set(space->machine(), data);
 }
 
 static MACHINE_RESET( sound_ym2203 )
 {
-	dooyong_state *state = machine->driver_data<dooyong_state>();
+	dooyong_state *state = machine.driver_data<dooyong_state>();
 
-	state->interrupt_line_1=0;
-	state->interrupt_line_2=0;
+	state->m_interrupt_line_1=0;
+	state->m_interrupt_line_2=0;
 }
 
 /***************************************************************************
@@ -116,7 +116,7 @@ static MACHINE_RESET( sound_ym2203 )
 
 ***************************************************************************/
 
-static ADDRESS_MAP_START( lastday_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( lastday_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xc007) AM_WRITE(dooyong_bgscroll8_w)
@@ -130,17 +130,17 @@ static ADDRESS_MAP_START( lastday_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xc013, 0xc013) AM_READ_PORT("DSWA")
 	AM_RANGE(0xc014, 0xc014) AM_READ_PORT("DSWB")
 	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_le_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, txvideoram)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, m_txvideoram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( pollux_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( pollux_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
 	AM_RANGE(0xd000, 0xdfff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
-	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, txvideoram)
+	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, m_txvideoram)
 	AM_RANGE(0xf000, 0xf000) AM_READ_PORT("DSWA") AM_WRITE(lastday_bankswitch_w)
 	AM_RANGE(0xf001, 0xf001) AM_READ_PORT("DSWB")
 	AM_RANGE(0xf002, 0xf002) AM_READ_PORT("P1")
@@ -153,12 +153,12 @@ static ADDRESS_MAP_START( pollux_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_le_w) AM_BASE_GENERIC(paletteram)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( gulfstrm_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( gulfstrm_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
 	AM_RANGE(0xd000, 0xdfff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
-	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, txvideoram)
+	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, m_txvideoram)
 	AM_RANGE(0xf000, 0xf000) AM_READ_PORT("DSWA")
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(lastday_bankswitch_w)
 	AM_RANGE(0xf001, 0xf001) AM_READ_PORT("DSWB")
@@ -172,7 +172,7 @@ static ADDRESS_MAP_START( gulfstrm_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_le_w) AM_BASE_GENERIC(paletteram)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( bluehawk_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( bluehawk_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xc000) AM_READ_PORT("DSWA")
@@ -187,12 +187,12 @@ static ADDRESS_MAP_START( bluehawk_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xc040, 0xc047) AM_WRITE(dooyong_bgscroll8_w)
 	AM_RANGE(0xc048, 0xc04f) AM_WRITE(dooyong_fgscroll8_w)
 	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_le_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, txvideoram)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, m_txvideoram)
 	AM_RANGE(0xe000, 0xefff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
 	AM_RANGE(0xf000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( flytiger_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( flytiger_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xcfff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
@@ -207,16 +207,16 @@ static ADDRESS_MAP_START( flytiger_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe020, 0xe020) AM_WRITE(soundlatch_w)
 	AM_RANGE(0xe030, 0xe037) AM_WRITE(dooyong_bgscroll8_w)
 	AM_RANGE(0xe040, 0xe047) AM_WRITE(dooyong_fgscroll8_w)
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(paletteram_flytiger_w) AM_BASE_MEMBER(dooyong_state, paletteram_flytiger)
-	AM_RANGE(0xf000, 0xffff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, txvideoram)
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(paletteram_flytiger_w) AM_BASE_MEMBER(dooyong_state, m_paletteram_flytiger)
+	AM_RANGE(0xf000, 0xffff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, m_txvideoram)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( primella_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( primella_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
 	AM_RANGE(0xd000, 0xd3ff) AM_RAM /* what is this? looks like a palette? scratchpad RAM maybe? */
-	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, txvideoram)
+	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(dooyong_txvideoram8_w) AM_BASE_MEMBER(dooyong_state, m_txvideoram)
 	AM_RANGE(0xf000, 0xf7ff) AM_WRITE(paletteram_xRRRRRGGGGGBBBBB_le_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("DSWA")
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(primella_ctrl_w)	/* bank switch, flip screen etc */
@@ -229,7 +229,7 @@ static ADDRESS_MAP_START( primella_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xfc08, 0xfc0f) AM_WRITE(dooyong_fgscroll8_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( rshark_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( rshark_map, AS_PROGRAM, 16 )
 	ADDRESS_MAP_GLOBAL_MASK(0xfffff)	/* super-x needs this and is similar */
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x040000, 0x04cfff) AM_RAM
@@ -247,7 +247,7 @@ static ADDRESS_MAP_START( rshark_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x0cc010, 0x0cc01f) AM_WRITE(dooyong_fg2scroll16_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( superx_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( superx_map, AS_PROGRAM, 16 )
 	ADDRESS_MAP_GLOBAL_MASK(0xfffff)
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x0d0000, 0x0dcfff) AM_RAM
@@ -265,7 +265,7 @@ static ADDRESS_MAP_START( superx_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x08c010, 0x08c01f) AM_WRITE(dooyong_fg2scroll16_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( popbingo_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( popbingo_map, AS_PROGRAM, 16 )
 	ADDRESS_MAP_GLOBAL_MASK(0xfffff)
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x040000, 0x04cfff) AM_RAM
@@ -285,7 +285,7 @@ static ADDRESS_MAP_START( popbingo_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x0dc000, 0x0dc01f) AM_RAM // registers of some kind?
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( lastday_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( lastday_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xc800, 0xc800) AM_READ(soundlatch_r)
@@ -293,7 +293,7 @@ static ADDRESS_MAP_START( lastday_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xf002, 0xf003) AM_DEVREADWRITE("ym2", ym2203_r, ym2203_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( pollux_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( pollux_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
 	AM_RANGE(0xf800, 0xf800) AM_READ(soundlatch_r)
@@ -301,7 +301,7 @@ static ADDRESS_MAP_START( pollux_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xf804, 0xf805) AM_DEVREADWRITE("ym2", ym2203_r, ym2203_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( bluehawk_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( bluehawk_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
 	AM_RANGE(0xf800, 0xf800) AM_READ(soundlatch_r)
@@ -777,21 +777,21 @@ static READ8_DEVICE_HANDLER( unk_r )
 
 static void irqhandler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine, "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static void irqhandler_2203_1(device_t *device, int irq)
 {
-	dooyong_state *state = device->machine->driver_data<dooyong_state>();
-	state->interrupt_line_1=irq;
-	cputag_set_input_line(device->machine, "audiocpu", 0, (state->interrupt_line_1 | state->interrupt_line_2) ? ASSERT_LINE : CLEAR_LINE);
+	dooyong_state *state = device->machine().driver_data<dooyong_state>();
+	state->m_interrupt_line_1=irq;
+	cputag_set_input_line(device->machine(), "audiocpu", 0, (state->m_interrupt_line_1 | state->m_interrupt_line_2) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static void irqhandler_2203_2(device_t *device, int irq)
 {
-	dooyong_state *state = device->machine->driver_data<dooyong_state>();
-	state->interrupt_line_2=irq;
-	cputag_set_input_line(device->machine, "audiocpu", 0, (state->interrupt_line_1 | state->interrupt_line_2) ? ASSERT_LINE : CLEAR_LINE);
+	dooyong_state *state = device->machine().driver_data<dooyong_state>();
+	state->m_interrupt_line_2=irq;
+	cputag_set_input_line(device->machine(), "audiocpu", 0, (state->m_interrupt_line_1 | state->m_interrupt_line_2) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_interface_1 =
@@ -1074,9 +1074,9 @@ MACHINE_CONFIG_END
 static INTERRUPT_GEN( rshark_interrupt )
 {
 	if (cpu_getiloops(device) == 0)
-		cpu_set_input_line(device, 5, HOLD_LINE);
+		device_set_input_line(device, 5, HOLD_LINE);
 	else
-		cpu_set_input_line(device, 6, HOLD_LINE);
+		device_set_input_line(device, 6, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( rshark, dooyong_state )

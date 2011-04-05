@@ -131,17 +131,17 @@ public:
 	pntnpuzl_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT16 eeprom;
-	UINT16* _3a0000ram;
-	UINT16* bank;
-	int indx;
-	int sub;
-	int rgb[3];
-	UINT16 pntpzl_200000;
-	UINT16 serial;
-	UINT16 serial_out;
-	UINT16 read_count;
-	int touchscr[5];
+	UINT16 m_eeprom;
+	UINT16* m_3a0000ram;
+	UINT16* m_bank;
+	int m_indx;
+	int m_sub;
+	int m_rgb[3];
+	UINT16 m_pntpzl_200000;
+	UINT16 m_serial;
+	UINT16 m_serial_out;
+	UINT16 m_read_count;
+	int m_touchscr[5];
 };
 
 
@@ -159,15 +159,15 @@ static const eeprom_interface eeprom_intf =
 
 static READ16_DEVICE_HANDLER( pntnpuzl_eeprom_r )
 {
-	pntnpuzl_state *state = device->machine->driver_data<pntnpuzl_state>();
+	pntnpuzl_state *state = device->machine().driver_data<pntnpuzl_state>();
 	/* bit 11 is EEPROM data */
-	return (state->eeprom & 0xf4ff) | (eeprom_read_bit(device)<<11) | (input_port_read(device->machine, "IN1") & 0x0300);
+	return (state->m_eeprom & 0xf4ff) | (eeprom_read_bit(device)<<11) | (input_port_read(device->machine(), "IN1") & 0x0300);
 }
 
 static WRITE16_DEVICE_HANDLER( pntnpuzl_eeprom_w )
 {
-	pntnpuzl_state *state = device->machine->driver_data<pntnpuzl_state>();
-	state->eeprom = data;
+	pntnpuzl_state *state = device->machine().driver_data<pntnpuzl_state>();
+	state->m_eeprom = data;
 
 	/* bit 12 is data */
 	/* bit 13 is clock (active high) */
@@ -184,13 +184,13 @@ static WRITE16_DEVICE_HANDLER( pntnpuzl_eeprom_w )
 /* vid */
 static VIDEO_START( pntnpuzl )
 {
-	pntnpuzl_state *state = machine->driver_data<pntnpuzl_state>();
-	state->_3a0000ram=auto_alloc_array(machine, UINT16, 0x100000/2);
+	pntnpuzl_state *state = machine.driver_data<pntnpuzl_state>();
+	state->m_3a0000ram=auto_alloc_array(machine, UINT16, 0x100000/2);
 }
 
 static SCREEN_UPDATE( pntnpuzl )
 {
-	pntnpuzl_state *state = screen->machine->driver_data<pntnpuzl_state>();
+	pntnpuzl_state *state = screen->machine().driver_data<pntnpuzl_state>();
 	int x,y;
 	int count;
 #if 0
@@ -198,37 +198,37 @@ static SCREEN_UPDATE( pntnpuzl )
 	static int yyy=512;
 	static int sss=0xa8;
 
-	if ( input_code_pressed_once(screen->machine, KEYCODE_Q) )
+	if ( input_code_pressed_once(screen->machine(), KEYCODE_Q) )
 	{
 		xxx--;
 		mame_printf_debug("xxx %04x\n",xxx);
 	}
 
-	if ( input_code_pressed_once(screen->machine, KEYCODE_W) )
+	if ( input_code_pressed_once(screen->machine(), KEYCODE_W) )
 	{
 		xxx++;
 		mame_printf_debug("xxx %04x\n",xxx);
 	}
 
-	if ( input_code_pressed_once(screen->machine, KEYCODE_A) )
+	if ( input_code_pressed_once(screen->machine(), KEYCODE_A) )
 	{
 		yyy--;
 		mame_printf_debug("yyy %04x\n",yyy);
 	}
 
-	if ( input_code_pressed_once(screen->machine, KEYCODE_S) )
+	if ( input_code_pressed_once(screen->machine(), KEYCODE_S) )
 	{
 		yyy++;
 		mame_printf_debug("yyy %04x\n",yyy);
 	}
 
-	if ( input_code_pressed_once(screen->machine, KEYCODE_Z) )
+	if ( input_code_pressed_once(screen->machine(), KEYCODE_Z) )
 	{
 		sss--;
 		mame_printf_debug("sss %04x\n",sss);
 	}
 
-	if ( input_code_pressed_once(screen->machine, KEYCODE_X) )
+	if ( input_code_pressed_once(screen->machine(), KEYCODE_X) )
 	{
 		sss++;
 		mame_printf_debug("sss %04x\n",sss);
@@ -246,8 +246,8 @@ static SCREEN_UPDATE( pntnpuzl )
 	{
 		for(x=0;x<xxx;x+=2)
 		{
-			*BITMAP_ADDR16(bitmap, y, x) = (state->_3a0000ram[count]&0x1f00)>>8;
-			*BITMAP_ADDR16(bitmap, y, x+1) = (state->_3a0000ram[count]&0x001f)>>0;
+			*BITMAP_ADDR16(bitmap, y, x) = (state->m_3a0000ram[count]&0x1f00)>>8;
+			*BITMAP_ADDR16(bitmap, y, x+1) = (state->m_3a0000ram[count]&0x001f)>>0;
 			count++;
 		}
 	}
@@ -256,21 +256,21 @@ static SCREEN_UPDATE( pntnpuzl )
 
 static WRITE16_HANDLER( pntnpuzl_palette_w )
 {
-	pntnpuzl_state *state = space->machine->driver_data<pntnpuzl_state>();
+	pntnpuzl_state *state = space->machine().driver_data<pntnpuzl_state>();
 
 	if (ACCESSING_BITS_8_15)
 	{
-		state->indx = data >> 8;
-		state->sub = 0;
+		state->m_indx = data >> 8;
+		state->m_sub = 0;
 	}
 	if (ACCESSING_BITS_0_7)
 	{
-		state->rgb[state->sub++] = data & 0xff;
-		if (state->sub == 3)
+		state->m_rgb[state->m_sub++] = data & 0xff;
+		if (state->m_sub == 3)
 		{
-			palette_set_color_rgb(space->machine,state->indx++,pal6bit(state->rgb[0]),pal6bit(state->rgb[1]),pal6bit(state->rgb[2]));
-			state->sub = 0;
-			if (state->indx == 256) state->indx = 0;
+			palette_set_color_rgb(space->machine(),state->m_indx++,pal6bit(state->m_rgb[0]),pal6bit(state->m_rgb[1]),pal6bit(state->m_rgb[2]));
+			state->m_sub = 0;
+			if (state->m_indx == 256) state->m_indx = 0;
 		}
 	}
 }
@@ -280,27 +280,27 @@ static WRITE16_HANDLER( pntnpuzl_palette_w )
 #ifdef UNUSED_FUNCTION
 READ16_HANDLER ( pntnpuzl_random_r )
 {
-	return space->machine->rand();
+	return space->machine().rand();
 }
 #endif
 
 static READ16_HANDLER( pntnpuzl_vid_r )
 {
-	pntnpuzl_state *state = space->machine->driver_data<pntnpuzl_state>();
-//  logerror("read_videoram: pc = %06x : offset %04x reg %04x\n",cpu_get_pc(space->cpu),offset*2, state->bank[0]);
-	return state->_3a0000ram[offset+ (state->bank[0]&0x0001)*0x8000 ];
+	pntnpuzl_state *state = space->machine().driver_data<pntnpuzl_state>();
+//  logerror("read_videoram: pc = %06x : offset %04x reg %04x\n",cpu_get_pc(&space->device()),offset*2, state->m_bank[0]);
+	return state->m_3a0000ram[offset+ (state->m_bank[0]&0x0001)*0x8000 ];
 }
 
 static WRITE16_HANDLER( pntnpuzl_vid_w )
 {
-	pntnpuzl_state *state = space->machine->driver_data<pntnpuzl_state>();
-//  logerror("write_to_videoram: pc = %06x : offset %04x data %04x reg %04x\n",cpu_get_pc(space->cpu),offset*2, data, state->bank[0]);
-	COMBINE_DATA(&state->_3a0000ram[offset+ (state->bank[0]&0x0001)*0x8000 ]);
+	pntnpuzl_state *state = space->machine().driver_data<pntnpuzl_state>();
+//  logerror("write_to_videoram: pc = %06x : offset %04x data %04x reg %04x\n",cpu_get_pc(&space->device()),offset*2, data, state->m_bank[0]);
+	COMBINE_DATA(&state->m_3a0000ram[offset+ (state->m_bank[0]&0x0001)*0x8000 ]);
 }
 
 static READ16_HANDLER( pntnpuzl_vblank_r )
 {
-	return (input_port_read(space->machine, "IN0") & 1) << 11;
+	return (input_port_read(space->machine(), "IN0") & 1) << 11;
 }
 
 
@@ -329,54 +329,54 @@ write                                     read
 
 static WRITE16_HANDLER( pntnpuzl_200000_w )
 {
-	pntnpuzl_state *state = space->machine->driver_data<pntnpuzl_state>();
+	pntnpuzl_state *state = space->machine().driver_data<pntnpuzl_state>();
 // logerror("200000: %04x\n",data);
 	// bit 12: set to 1 when going to serial output to 280018
-	if ((state->pntpzl_200000 & 0x1000) && !(data & 0x1000))
+	if ((state->m_pntpzl_200000 & 0x1000) && !(data & 0x1000))
 	{
-		state->serial_out = (state->serial>>1) & 0xff;
-		state->read_count = 0;
-		logerror("serial out: %02x\n",state->serial_out);
+		state->m_serial_out = (state->m_serial>>1) & 0xff;
+		state->m_read_count = 0;
+		logerror("serial out: %02x\n",state->m_serial_out);
 	}
 
-	state->pntpzl_200000 = data;
+	state->m_pntpzl_200000 = data;
 }
 
 static WRITE16_HANDLER( pntnpuzl_280018_w )
 {
-	pntnpuzl_state *state = space->machine->driver_data<pntnpuzl_state>();
-// logerror("%04x: 280018: %04x\n",cpu_get_pc(space->cpu),data);
-	state->serial >>= 1;
+	pntnpuzl_state *state = space->machine().driver_data<pntnpuzl_state>();
+// logerror("%04x: 280018: %04x\n",cpu_get_pc(&space->device()),data);
+	state->m_serial >>= 1;
 	if (data & 0x2000)
-		state->serial |= 0x400;
+		state->m_serial |= 0x400;
 }
 
 static READ16_HANDLER( pntnpuzl_280014_r )
 {
-	pntnpuzl_state *state = space->machine->driver_data<pntnpuzl_state>();
+	pntnpuzl_state *state = space->machine().driver_data<pntnpuzl_state>();
 	static const int startup[3] = { 0x80, 0x0c, 0x00 };
 	int res;
 
-	if (state->serial_out == 0x11)
+	if (state->m_serial_out == 0x11)
 	{
-		if (input_port_read(space->machine, "IN0") & 0x10)
+		if (input_port_read(space->machine(), "IN0") & 0x10)
 		{
-			state->touchscr[0] = 0x1b;
-			state->touchscr[2] = BITSWAP8(input_port_read(space->machine, "TOUCHX"),0,1,2,3,4,5,6,7);
-			state->touchscr[4] = BITSWAP8(input_port_read(space->machine, "TOUCHY"),0,1,2,3,4,5,6,7);
+			state->m_touchscr[0] = 0x1b;
+			state->m_touchscr[2] = BITSWAP8(input_port_read(space->machine(), "TOUCHX"),0,1,2,3,4,5,6,7);
+			state->m_touchscr[4] = BITSWAP8(input_port_read(space->machine(), "TOUCHY"),0,1,2,3,4,5,6,7);
 		}
 		else
-			state->touchscr[0] = 0;
+			state->m_touchscr[0] = 0;
 
-		if (state->read_count >= 10) state->read_count = 0;
-		res = state->touchscr[state->read_count/2];
-		state->read_count++;
+		if (state->m_read_count >= 10) state->m_read_count = 0;
+		res = state->m_touchscr[state->m_read_count/2];
+		state->m_read_count++;
 	}
 	else
 	{
-		if (state->read_count >= 6) state->read_count = 0;
-		res = startup[state->read_count/2];
-		state->read_count++;
+		if (state->m_read_count >= 6) state->m_read_count = 0;
+		res = startup[state->m_read_count/2];
+		state->m_read_count++;
 	}
 	logerror("read 280014: %02x\n",res);
 	return res << 8;
@@ -389,7 +389,7 @@ static READ16_HANDLER( pntnpuzl_28001a_r )
 
 
 
-static ADDRESS_MAP_START( pntnpuzl_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( pntnpuzl_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x080000, 0x080001) AM_READNOP //|
 	AM_RANGE(0x100000, 0x100001) AM_READNOP	//| irq lines clear
@@ -410,7 +410,7 @@ static ADDRESS_MAP_START( pntnpuzl_map, ADDRESS_SPACE_PROGRAM, 16 )
 
 	/* standard VGA */
 	AM_RANGE(0x3a0000, 0x3affff) AM_READWRITE(pntnpuzl_vid_r, pntnpuzl_vid_w)
-	AM_RANGE(0x3c03c4, 0x3c03c5) AM_RAM AM_BASE_MEMBER(pntnpuzl_state, bank)//??
+	AM_RANGE(0x3c03c4, 0x3c03c5) AM_RAM AM_BASE_MEMBER(pntnpuzl_state, m_bank)//??
 	AM_RANGE(0x3c03c8, 0x3c03c9) AM_WRITE(pntnpuzl_palette_w)
 	AM_RANGE(0x3c03da, 0x3c03db) AM_READ(pntnpuzl_vblank_r)
 
@@ -420,11 +420,11 @@ ADDRESS_MAP_END
 
 static INTERRUPT_GEN( pntnpuzl_irq )
 {
-	if (input_port_read(device->machine, "IN0") & 0x02)	/* coin */
+	if (input_port_read(device->machine(), "IN0") & 0x02)	/* coin */
 		generic_pulse_irq_line(device, 1);
-	else if (input_port_read(device->machine, "IN0") & 0x04)	/* service */
+	else if (input_port_read(device->machine(), "IN0") & 0x04)	/* service */
 		generic_pulse_irq_line(device, 2);
-	else if (input_port_read(device->machine, "IN0") & 0x08)	/* coin */
+	else if (input_port_read(device->machine(), "IN0") & 0x08)	/* coin */
 		generic_pulse_irq_line(device, 4);
 }
 
@@ -490,7 +490,7 @@ ROM_END
 
 static DRIVER_INIT(pip)
 {
-//  UINT16 *rom = (UINT16 *)machine->region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
 //  rom[0x2696/2] = 0x4e71;
 //  rom[0x26a0/2] = 0x4e71;
 }

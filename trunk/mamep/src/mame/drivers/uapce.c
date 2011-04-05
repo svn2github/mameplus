@@ -38,22 +38,22 @@ public:
 	uapce_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 jamma_if_control_latch;
+	UINT8 m_jamma_if_control_latch;
 };
 
 
 
 static WRITE8_HANDLER( jamma_if_control_latch_w )
 {
-	uapce_state *state = space->machine->driver_data<uapce_state>();
-	UINT8 diff = data ^ state->jamma_if_control_latch;
-	state->jamma_if_control_latch = data;
+	uapce_state *state = space->machine().driver_data<uapce_state>();
+	UINT8 diff = data ^ state->m_jamma_if_control_latch;
+	state->m_jamma_if_control_latch = data;
 
-	space->machine->sound().system_enable( (data >> 7) & 1 );
+	space->machine().sound().system_enable( (data >> 7) & 1 );
 
 	if ( diff & 0x40 )
 	{
-		cputag_set_input_line(space->machine, "maincpu", INPUT_LINE_RESET, (data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
+		cputag_set_input_line(space->machine(), "maincpu", INPUT_LINE_RESET, (data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
 	}
 
 	// bit 3 - enable 752 Hz (D-3) square wave output
@@ -63,15 +63,15 @@ static WRITE8_HANDLER( jamma_if_control_latch_w )
 
 static READ8_HANDLER( jamma_if_control_latch_r )
 {
-	uapce_state *state = space->machine->driver_data<uapce_state>();
-	return state->jamma_if_control_latch & 0x08;
+	uapce_state *state = space->machine().driver_data<uapce_state>();
+	return state->m_jamma_if_control_latch & 0x08;
 }
 
 static READ8_HANDLER( jamma_if_read_dsw )
 {
 	UINT8 dsw_val;
 
-	dsw_val = input_port_read(space->machine,  "DSW" );
+	dsw_val = input_port_read(space->machine(),  "DSW" );
 
 	if ( BIT( offset, 7 ) == 0 )
 	{
@@ -109,10 +109,10 @@ static READ8_HANDLER( jamma_if_read_dsw )
 	return dsw_val & 1;
 }
 
-static UINT8 jamma_if_read_joystick( running_machine *machine )
+static UINT8 jamma_if_read_joystick( running_machine &machine )
 {
-	uapce_state *state = machine->driver_data<uapce_state>();
-	if ( state->jamma_if_control_latch & 0x10 )
+	uapce_state *state = machine.driver_data<uapce_state>();
+	if ( state->m_jamma_if_control_latch & 0x10 )
 	{
 		return input_port_read(machine,  "JOY" );
 	}
@@ -124,12 +124,12 @@ static UINT8 jamma_if_read_joystick( running_machine *machine )
 
 static MACHINE_RESET( uapce )
 {
-	uapce_state *state = machine->driver_data<uapce_state>();
+	uapce_state *state = machine.driver_data<uapce_state>();
 	pce_set_joystick_readinputport_callback( jamma_if_read_joystick );
-	state->jamma_if_control_latch = 0;
+	state->m_jamma_if_control_latch = 0;
 }
 
-static ADDRESS_MAP_START( z80_map, ADDRESS_SPACE_PROGRAM, 8)
+static ADDRESS_MAP_START( z80_map, AS_PROGRAM, 8)
 	AM_RANGE( 0x0000, 0x07FF) AM_ROM
 	AM_RANGE( 0x0800, 0x0FFF) AM_RAM
 	AM_RANGE( 0x1000, 0x17FF) AM_WRITE( jamma_if_control_latch_w )
@@ -177,7 +177,7 @@ static INPUT_PORTS_START( uapce )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_IMPULSE(1)
 INPUT_PORTS_END
 
-static ADDRESS_MAP_START( pce_mem , ADDRESS_SPACE_PROGRAM, 8)
+static ADDRESS_MAP_START( pce_mem , AS_PROGRAM, 8)
 	AM_RANGE( 0x000000, 0x09FFFF) AM_ROM
 	AM_RANGE( 0x1F0000, 0x1F1FFF) AM_RAM AM_MIRROR(0x6000) AM_BASE( &pce_user_ram )
 	AM_RANGE( 0x1FE000, 0x1FE3FF) AM_READWRITE( vdc_0_r, vdc_0_w )
@@ -188,7 +188,7 @@ static ADDRESS_MAP_START( pce_mem , ADDRESS_SPACE_PROGRAM, 8)
 	AM_RANGE( 0x1FF400, 0x1FF7FF) AM_READWRITE( h6280_irq_status_r, h6280_irq_status_w )
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( pce_io , ADDRESS_SPACE_IO, 8)
+static ADDRESS_MAP_START( pce_io , AS_IO, 8)
 	AM_RANGE( 0x00, 0x03) AM_READWRITE( vdc_0_r, vdc_0_w )
 ADDRESS_MAP_END
 

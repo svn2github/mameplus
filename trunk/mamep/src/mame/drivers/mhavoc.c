@@ -206,9 +206,9 @@ static READ8_HANDLER( dual_pokey_r )
 	int pokey_reg = (offset % 8) | control;
 
 	if (pokey_num == 0)
-		return pokey_r(space->machine->device("pokey1"), pokey_reg);
+		return pokey_r(space->machine().device("pokey1"), pokey_reg);
 	else
-		return pokey_r(space->machine->device("pokey2"), pokey_reg);
+		return pokey_r(space->machine().device("pokey2"), pokey_reg);
 }
 
 
@@ -219,9 +219,9 @@ static WRITE8_HANDLER( dual_pokey_w )
 	int pokey_reg = (offset % 8) | control;
 
 	if (pokey_num == 0)
-		pokey_w(space->machine->device("pokey1"), pokey_reg, data);
+		pokey_w(space->machine().device("pokey1"), pokey_reg, data);
 	else
-		pokey_w(space->machine->device("pokey2"), pokey_reg, data);
+		pokey_w(space->machine().device("pokey2"), pokey_reg, data);
 }
 
 
@@ -231,11 +231,11 @@ static WRITE8_HANDLER( dual_pokey_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( alpha_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( alpha_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x01ff) AM_RAM
-	AM_RANGE(0x0200, 0x07ff) AM_RAMBANK("bank1") AM_BASE_MEMBER(mhavoc_state, zram0)
+	AM_RANGE(0x0200, 0x07ff) AM_RAMBANK("bank1") AM_BASE_MEMBER(mhavoc_state, m_zram0)
 	AM_RANGE(0x0800, 0x09ff) AM_RAM
-	AM_RANGE(0x0a00, 0x0fff) AM_RAMBANK("bank1") AM_BASE_MEMBER(mhavoc_state, zram1)
+	AM_RANGE(0x0a00, 0x0fff) AM_RAMBANK("bank1") AM_BASE_MEMBER(mhavoc_state, m_zram1)
 	AM_RANGE(0x1000, 0x1000) AM_READ(mhavoc_gamma_r)			/* Gamma Read Port */
 	AM_RANGE(0x1200, 0x1200) AM_READ_PORT("IN0") AM_WRITENOP	/* Alpha Input Port 0 */
 	AM_RANGE(0x1400, 0x141f) AM_RAM AM_BASE(&avgdvg_colorram)	/* ColorRAM */
@@ -262,7 +262,7 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( gamma_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( gamma_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM								/* Program RAM (2K) */
     AM_RANGE(0x0800, 0x0fff) AM_RAM AM_MIRROR (0x1800)
 	AM_RANGE(0x2000, 0x203f) AM_READWRITE(quad_pokey_r, quad_pokey_w)	/* Quad Pokey read  */
@@ -285,11 +285,11 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( alphaone_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( alphaone_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x01ff) AM_RAM
-	AM_RANGE(0x0200, 0x07ff) AM_RAMBANK("bank1") AM_BASE_MEMBER(mhavoc_state, zram0)
+	AM_RANGE(0x0200, 0x07ff) AM_RAMBANK("bank1") AM_BASE_MEMBER(mhavoc_state, m_zram0)
 	AM_RANGE(0x0800, 0x09ff) AM_RAM
-	AM_RANGE(0x0a00, 0x0fff) AM_RAMBANK("bank1") AM_BASE_MEMBER(mhavoc_state, zram1)
+	AM_RANGE(0x0a00, 0x0fff) AM_RAMBANK("bank1") AM_BASE_MEMBER(mhavoc_state, m_zram1)
 	AM_RANGE(0x1020, 0x103f) AM_READWRITE(dual_pokey_r, dual_pokey_w)
 	AM_RANGE(0x1040, 0x1040) AM_READ_PORT("IN0") AM_WRITENOP	/* Alpha Input Port 0 */
 	AM_RANGE(0x1060, 0x1060) AM_READ_PORT("IN1")				/* Gamma Input Port */
@@ -320,7 +320,7 @@ ADDRESS_MAP_END
 static CUSTOM_INPUT( clock_r )
 {
 	/* 2.4kHz (divide 2.5MHz by 1024) */
-	return (field->port->machine->device<cpu_device>("alpha")->total_cycles() & 0x400) ? 0 : 1;
+	return (field->port->machine().device<cpu_device>("alpha")->total_cycles() & 0x400) ? 0 : 1;
 }
 
 

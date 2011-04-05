@@ -8,7 +8,7 @@
     Visit http://mamedev.org for licensing and usage restrictions.
 
     ST-V status:
-    colmns97 & stress crash due to SCSP stream->machine getting corrupted.
+    colmns97 & stress crash due to SCSP stream->machine() getting corrupted.
 
     cottonbm w/US bios: run to 60323B4 on master, then MOV insn @ 602f5aa crashes?
     actually crash on slave @ 6032b38 after above.  reading wrong addr for jump vector.
@@ -683,7 +683,7 @@ static CPU_INIT( sh2 )
 	int regnum;
 
 	/* allocate enough space for the cache and the core */
-	cache = auto_alloc(device->machine, drc_cache(CACHE_SIZE + sizeof(sh2_state)));
+	cache = auto_alloc(device->machine(), drc_cache(CACHE_SIZE + sizeof(sh2_state)));
 
 	/* allocate the core memory */
 	*(sh2_state **)device->token() = sh2 = (sh2_state *)cache->alloc_near(sizeof(sh2_state));
@@ -705,7 +705,7 @@ static CPU_INIT( sh2 )
 		flags |= DRCUML_OPTION_LOG_UML;
 	if (LOG_NATIVE)
 		flags |= DRCUML_OPTION_LOG_NATIVE;
-	sh2->drcuml = auto_alloc(device->machine, drcuml_state(*device, *cache, flags, 1, 32, 1));
+	sh2->drcuml = auto_alloc(device->machine(), drcuml_state(*device, *cache, flags, 1, 32, 1));
 
 	/* add symbols for our stuff */
 	sh2->drcuml->symbol_add(&sh2->pc, sizeof(sh2->pc), "pc");
@@ -724,7 +724,7 @@ static CPU_INIT( sh2 )
 	sh2->drcuml->symbol_add(&sh2->mach, sizeof(sh2->macl), "mach");
 
 	/* initialize the front-end helper */
-	sh2->drcfe = auto_alloc(device->machine, sh2_frontend(*sh2, COMPILE_BACKWARDS_BYTES, COMPILE_FORWARDS_BYTES, SINGLE_INSTRUCTION_MODE ? 1 : COMPILE_MAX_SEQUENCE));
+	sh2->drcfe = auto_alloc(device->machine(), sh2_frontend(*sh2, COMPILE_BACKWARDS_BYTES, COMPILE_FORWARDS_BYTES, SINGLE_INSTRUCTION_MODE ? 1 : COMPILE_MAX_SEQUENCE));
 
 	/* compute the register parameters */
 	for (regnum = 0; regnum < 16; regnum++)
@@ -764,9 +764,9 @@ static CPU_EXIT( sh2 )
 	sh2_state *sh2 = get_safe_token(device);
 
 	/* clean up the DRC */
-	auto_free(device->machine, sh2->drcfe);
-	auto_free(device->machine, sh2->drcuml);
-	auto_free(device->machine, sh2->cache);
+	auto_free(device->machine(), sh2->drcfe);
+	auto_free(device->machine(), sh2->drcuml);
+	auto_free(device->machine(), sh2->cache);
 }
 
 
@@ -1577,7 +1577,7 @@ static void generate_sequence_instruction(sh2_state *sh2, drcuml_block *block, c
 	}
 
 	/* if we are debugging, call the debugger */
-	if ((sh2->device->machine->debug_flags & DEBUG_FLAG_ENABLED) != 0)
+	if ((sh2->device->machine().debug_flags & DEBUG_FLAG_ENABLED) != 0)
 	{
 		UML_MOV(block, mem(&sh2->pc), desc->pc);								// mov     [pc],desc->pc
 		save_fast_iregs(sh2, block);
@@ -3194,7 +3194,7 @@ static READ32_HANDLER(sh2_internal_a5)
     sh2_internal_map - maps SH2 built-ins
 -------------------------------------------------*/
 
-static ADDRESS_MAP_START( sh2_internal_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( sh2_internal_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x40000000, 0xbfffffff) AM_READ(sh2_internal_a5)
 	AM_RANGE(0xe0000000, 0xffffffff) AM_READWRITE(sh2_internal_r, sh2_internal_w)
 ADDRESS_MAP_END
@@ -3280,20 +3280,20 @@ CPU_GET_INFO( sh2 )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 1;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 4;							break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_PROGRAM:	info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM: info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_PROGRAM: info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_IO:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + ADDRESS_SPACE_IO:		info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 32;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 32;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
+		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 0;					break;
+		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 0;					break;
+		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 
 		// Internal maps
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_PROGRAM: info->internal_map32 = ADDRESS_MAP_NAME(sh2_internal_map); break;
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_DATA:    info->internal_map32 = NULL;	break;
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_IO:      info->internal_map32 = NULL;	break;
+		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map32 = ADDRESS_MAP_NAME(sh2_internal_map); break;
+		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_DATA:    info->internal_map32 = NULL;	break;
+		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_IO:      info->internal_map32 = NULL;	break;
 
 		case CPUINFO_INT_INPUT_STATE + SH2_INT_VBLIN:	info->i = sh2->irq_line_state[SH2_INT_VBLIN]; break;
 		case CPUINFO_INT_INPUT_STATE + SH2_INT_VBLOUT:	info->i = sh2->irq_line_state[SH2_INT_VBLOUT]; break;

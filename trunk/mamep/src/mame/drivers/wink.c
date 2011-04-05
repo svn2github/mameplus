@@ -23,19 +23,19 @@ public:
 	wink_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram;
-	tilemap_t *bg_tilemap;
-	UINT8 sound_flag;
-	UINT8 tile_bank;
+	UINT8 *m_videoram;
+	tilemap_t *m_bg_tilemap;
+	UINT8 m_sound_flag;
+	UINT8 m_tile_bank;
 };
 
 
 static TILE_GET_INFO( get_bg_tile_info )
 {
-	wink_state *state = machine->driver_data<wink_state>();
-	UINT8 *videoram = state->videoram;
+	wink_state *state = machine.driver_data<wink_state>();
+	UINT8 *videoram = state->m_videoram;
 	int code = videoram[tile_index];
-	code |= 0x200 * state->tile_bank;
+	code |= 0x200 * state->m_tile_bank;
 
 	// the 2 parts of the screen use different tile banking
 	if(tile_index < 0x360)
@@ -48,23 +48,23 @@ static TILE_GET_INFO( get_bg_tile_info )
 
 static VIDEO_START( wink )
 {
-	wink_state *state = machine->driver_data<wink_state>();
-	state->bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	wink_state *state = machine.driver_data<wink_state>();
+	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
 }
 
 static SCREEN_UPDATE( wink )
 {
-	wink_state *state = screen->machine->driver_data<wink_state>();
-	tilemap_draw(bitmap, cliprect, state->bg_tilemap, 0, 0);
+	wink_state *state = screen->machine().driver_data<wink_state>();
+	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 	return 0;
 }
 
 static WRITE8_HANDLER( bgram_w )
 {
-	wink_state *state = space->machine->driver_data<wink_state>();
-	UINT8 *videoram = state->videoram;
+	wink_state *state = space->machine().driver_data<wink_state>();
+	UINT8 *videoram = state->m_videoram;
 	videoram[offset] = data;
-	tilemap_mark_tile_dirty(state->bg_tilemap, offset);
+	tilemap_mark_tile_dirty(state->m_bg_tilemap, offset);
 }
 
 static WRITE8_HANDLER( player_mux_w )
@@ -75,38 +75,38 @@ static WRITE8_HANDLER( player_mux_w )
 
 static WRITE8_HANDLER( tile_banking_w )
 {
-	wink_state *state = space->machine->driver_data<wink_state>();
-	state->tile_bank = data & 1;
-	tilemap_mark_all_tiles_dirty(state->bg_tilemap);
+	wink_state *state = space->machine().driver_data<wink_state>();
+	state->m_tile_bank = data & 1;
+	tilemap_mark_all_tiles_dirty(state->m_bg_tilemap);
 }
 
 static WRITE8_HANDLER( wink_coin_counter_w )
 {
-	coin_counter_w(space->machine, offset,data & 1);
+	coin_counter_w(space->machine(), offset,data & 1);
 }
 
 static READ8_HANDLER( analog_port_r )
 {
-	return input_port_read(space->machine, /* player_mux ? "DIAL2" : */ "DIAL1");
+	return input_port_read(space->machine(), /* player_mux ? "DIAL2" : */ "DIAL1");
 }
 
 static READ8_HANDLER( player_inputs_r )
 {
-	return input_port_read(space->machine, /* player_mux ? "INPUTS2" : */ "INPUTS1");
+	return input_port_read(space->machine(), /* player_mux ? "INPUTS2" : */ "INPUTS1");
 }
 
 static WRITE8_HANDLER( sound_irq_w )
 {
-	cputag_set_input_line(space->machine, "audiocpu", 0, HOLD_LINE);
+	cputag_set_input_line(space->machine(), "audiocpu", 0, HOLD_LINE);
 	//sync with sound cpu (but it still loses some soundlatches...)
-	//space->machine->scheduler().synchronize();
+	//space->machine().scheduler().synchronize();
 }
 
-static ADDRESS_MAP_START( wink_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( wink_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x9000, 0x97ff) AM_RAM	AM_SHARE("nvram")
-	AM_RANGE(0xa000, 0xa3ff) AM_RAM_WRITE(bgram_w) AM_BASE_MEMBER(wink_state, videoram)
+	AM_RANGE(0xa000, 0xa3ff) AM_RAM_WRITE(bgram_w) AM_BASE_MEMBER(wink_state, m_videoram)
 ADDRESS_MAP_END
 
 
@@ -135,7 +135,7 @@ static WRITE8_HANDLER( prot_w )
 	//take a9-a15 and stuff them in a variable for later use.
 }
 
-static ADDRESS_MAP_START( wink_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( wink_io, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x1f) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_le_w) AM_BASE_GENERIC(paletteram) //0x10-0x1f is likely to be something else
 //  AM_RANGE(0x20, 0x20) AM_WRITENOP                //??? seems unused..
@@ -158,13 +158,13 @@ static ADDRESS_MAP_START( wink_io, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0xe0, 0xff) AM_READ(prot_r)		//load math unit from buffer & lower address-bus
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( wink_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( wink_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x4000, 0x43ff) AM_RAM
 	AM_RANGE(0x8000, 0x8000) AM_READ(soundlatch_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( wink_sound_io, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( wink_sound_io, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_DEVREADWRITE("aysnd", ay8910_r, ay8910_data_w)
 	AM_RANGE(0x80, 0x80) AM_DEVWRITE("aysnd", ay8910_address_w)
@@ -304,8 +304,8 @@ GFXDECODE_END
 
 static READ8_DEVICE_HANDLER( sound_r )
 {
-	wink_state *state = device->machine->driver_data<wink_state>();
-	return state->sound_flag;
+	wink_state *state = device->machine().driver_data<wink_state>();
+	return state->m_sound_flag;
 }
 
 static const ay8910_interface ay8912_interface =
@@ -321,14 +321,14 @@ static const ay8910_interface ay8912_interface =
 //AY portA is fed by an input clock at 15625 Hz
 static INTERRUPT_GEN( wink_sound )
 {
-	wink_state *state = device->machine->driver_data<wink_state>();
-	state->sound_flag ^= 0x80;
+	wink_state *state = device->machine().driver_data<wink_state>();
+	state->m_sound_flag ^= 0x80;
 }
 
 static MACHINE_RESET( wink )
 {
-	wink_state *state = machine->driver_data<wink_state>();
-	state->sound_flag = 0;
+	wink_state *state = machine.driver_data<wink_state>();
+	state->m_sound_flag = 0;
 }
 
 static MACHINE_CONFIG_START( wink, wink_state )
@@ -404,7 +404,7 @@ ROM_END
 static DRIVER_INIT( wink )
 {
 	UINT32 i;
-	UINT8 *ROM = machine->region("maincpu")->base();
+	UINT8 *ROM = machine.region("maincpu")->base();
 	UINT8 *buffer = auto_alloc_array(machine, UINT8, 0x8000);
 
 	// protection module reverse engineered by HIGHWAYMAN

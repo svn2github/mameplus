@@ -232,29 +232,29 @@ public:
 	subsino_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram;
-	UINT8 *colorram;
-	tilemap_t *tmap;
-	tilemap_t *reel1_tilemap;
-	tilemap_t *reel2_tilemap;
-	tilemap_t *reel3_tilemap;
-	int tiles_offset;
-	UINT8* reel1_ram;
-	UINT8* reel2_ram;
-	UINT8* reel3_ram;
-	UINT8* reel1_scroll;
-	UINT8* reel2_scroll;
-	UINT8* reel3_scroll;
-	UINT8 out_c;
-	UINT8* reel1_attr;
-	UINT8* reel2_attr;
-	UINT8* reel3_attr;
-	UINT8 flash_val;
-	UINT8 flash_packet;
-	UINT8 flash_packet_start;
-	int colordac_offs;
-	UINT8* stisub_colorram;
-	UINT8 stisub_outc;
+	UINT8 *m_videoram;
+	UINT8 *m_colorram;
+	tilemap_t *m_tmap;
+	tilemap_t *m_reel1_tilemap;
+	tilemap_t *m_reel2_tilemap;
+	tilemap_t *m_reel3_tilemap;
+	int m_tiles_offset;
+	UINT8* m_reel1_ram;
+	UINT8* m_reel2_ram;
+	UINT8* m_reel3_ram;
+	UINT8* m_reel1_scroll;
+	UINT8* m_reel2_scroll;
+	UINT8* m_reel3_scroll;
+	UINT8 m_out_c;
+	UINT8* m_reel1_attr;
+	UINT8* m_reel2_attr;
+	UINT8* m_reel3_attr;
+	UINT8 m_flash_val;
+	UINT8 m_flash_packet;
+	UINT8 m_flash_packet_start;
+	int m_colordac_offs;
+	UINT8* m_stisub_colorram;
+	UINT8 m_stisub_outc;
 };
 
 
@@ -266,40 +266,40 @@ public:
 
 static WRITE8_HANDLER( subsino_tiles_offset_w )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
-	state->tiles_offset = (data & 1) ? 0x1000: 0;
-	tilemap_mark_tile_dirty(state->tmap, offset);
+	subsino_state *state = space->machine().driver_data<subsino_state>();
+	state->m_tiles_offset = (data & 1) ? 0x1000: 0;
+	tilemap_mark_tile_dirty(state->m_tmap, offset);
 //  popmessage("gfx %02x",data);
 }
 
 static WRITE8_HANDLER( subsino_videoram_w )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
-	state->videoram[offset] = data;
-	tilemap_mark_tile_dirty(state->tmap, offset);
+	subsino_state *state = space->machine().driver_data<subsino_state>();
+	state->m_videoram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_tmap, offset);
 }
 
 static WRITE8_HANDLER( subsino_colorram_w )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
-	state->colorram[offset] = data;
-	tilemap_mark_tile_dirty(state->tmap, offset);
+	subsino_state *state = space->machine().driver_data<subsino_state>();
+	state->m_colorram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_tmap, offset);
 }
 
 static TILE_GET_INFO( get_tile_info )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	UINT16 code = state->videoram[ tile_index ] + (state->colorram[ tile_index ] << 8);
+	subsino_state *state = machine.driver_data<subsino_state>();
+	UINT16 code = state->m_videoram[ tile_index ] + (state->m_colorram[ tile_index ] << 8);
 	UINT16 color = (code >> 8) & 0x0f;
 	code = ((code & 0xf000) >> 4) + ((code & 0xff) >> 0);
-	code += state->tiles_offset;
+	code += state->m_tiles_offset;
 	SET_TILE_INFO(0, code, color, 0);
 }
 
 static TILE_GET_INFO( get_stisub_tile_info )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	UINT16 code = state->videoram[ tile_index ] + (state->colorram[ tile_index ] << 8);
+	subsino_state *state = machine.driver_data<subsino_state>();
+	UINT16 code = state->m_videoram[ tile_index ] + (state->m_colorram[ tile_index ] << 8);
 	code&= 0x3fff;
 	SET_TILE_INFO(0, code, 0, 0);
 }
@@ -307,26 +307,26 @@ static TILE_GET_INFO( get_stisub_tile_info )
 
 static VIDEO_START( subsino )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	state->tmap = tilemap_create(	machine, get_tile_info, tilemap_scan_rows, 8,8, 0x40,0x20 );
-	tilemap_set_transparent_pen( state->tmap, 0 );
-	state->tiles_offset = 0;
+	subsino_state *state = machine.driver_data<subsino_state>();
+	state->m_tmap = tilemap_create(	machine, get_tile_info, tilemap_scan_rows, 8,8, 0x40,0x20 );
+	tilemap_set_transparent_pen( state->m_tmap, 0 );
+	state->m_tiles_offset = 0;
 }
 
 
 
 static WRITE8_HANDLER( subsino_reel1_ram_w )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
-	state->reel1_ram[offset] = data;
-	tilemap_mark_tile_dirty(state->reel1_tilemap,offset);
+	subsino_state *state = space->machine().driver_data<subsino_state>();
+	state->m_reel1_ram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_reel1_tilemap,offset);
 }
 
 static TILE_GET_INFO( get_subsino_reel1_tile_info )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	int code = state->reel1_ram[tile_index];
-	int colour = (state->out_c&0x7) + 8;
+	subsino_state *state = machine.driver_data<subsino_state>();
+	int code = state->m_reel1_ram[tile_index];
+	int colour = (state->m_out_c&0x7) + 8;
 
 	SET_TILE_INFO(
 			1,
@@ -337,9 +337,9 @@ static TILE_GET_INFO( get_subsino_reel1_tile_info )
 
 static TILE_GET_INFO( get_stisub_reel1_tile_info )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	int code = state->reel1_ram[tile_index];
-	int attr = state->reel1_attr[tile_index];
+	subsino_state *state = machine.driver_data<subsino_state>();
+	int code = state->m_reel1_ram[tile_index];
+	int attr = state->m_reel1_attr[tile_index];
 
 	SET_TILE_INFO(
 			1,
@@ -351,16 +351,16 @@ static TILE_GET_INFO( get_stisub_reel1_tile_info )
 
 static WRITE8_HANDLER( subsino_reel2_ram_w )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
-	state->reel2_ram[offset] = data;
-	tilemap_mark_tile_dirty(state->reel2_tilemap,offset);
+	subsino_state *state = space->machine().driver_data<subsino_state>();
+	state->m_reel2_ram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_reel2_tilemap,offset);
 }
 
 static TILE_GET_INFO( get_subsino_reel2_tile_info )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	int code = state->reel2_ram[tile_index];
-	int colour = (state->out_c&0x7) + 8;
+	subsino_state *state = machine.driver_data<subsino_state>();
+	int code = state->m_reel2_ram[tile_index];
+	int colour = (state->m_out_c&0x7) + 8;
 
 	SET_TILE_INFO(
 			1,
@@ -371,9 +371,9 @@ static TILE_GET_INFO( get_subsino_reel2_tile_info )
 
 static TILE_GET_INFO( get_stisub_reel2_tile_info )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	int code = state->reel2_ram[tile_index];
-	int attr = state->reel2_attr[tile_index];
+	subsino_state *state = machine.driver_data<subsino_state>();
+	int code = state->m_reel2_ram[tile_index];
+	int attr = state->m_reel2_attr[tile_index];
 
 	SET_TILE_INFO(
 			1,
@@ -384,16 +384,16 @@ static TILE_GET_INFO( get_stisub_reel2_tile_info )
 
 static WRITE8_HANDLER( subsino_reel3_ram_w )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
-	state->reel3_ram[offset] = data;
-	tilemap_mark_tile_dirty(state->reel3_tilemap,offset);
+	subsino_state *state = space->machine().driver_data<subsino_state>();
+	state->m_reel3_ram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_reel3_tilemap,offset);
 }
 
 static TILE_GET_INFO( get_subsino_reel3_tile_info )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	int code = state->reel3_ram[tile_index];
-	int colour = (state->out_c&0x7) + 8;
+	subsino_state *state = machine.driver_data<subsino_state>();
+	int code = state->m_reel3_ram[tile_index];
+	int colour = (state->m_out_c&0x7) + 8;
 
 	SET_TILE_INFO(
 			1,
@@ -404,9 +404,9 @@ static TILE_GET_INFO( get_subsino_reel3_tile_info )
 
 static TILE_GET_INFO( get_stisub_reel3_tile_info )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	int code = state->reel3_ram[tile_index];
-	int attr = state->reel3_attr[tile_index];
+	subsino_state *state = machine.driver_data<subsino_state>();
+	int code = state->m_reel3_ram[tile_index];
+	int attr = state->m_reel3_attr[tile_index];
 
 	SET_TILE_INFO(
 			1,
@@ -418,42 +418,42 @@ static TILE_GET_INFO( get_stisub_reel3_tile_info )
 
 static VIDEO_START( subsino_reels )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
+	subsino_state *state = machine.driver_data<subsino_state>();
 	VIDEO_START_CALL( subsino );
 
-	state->reel1_tilemap = tilemap_create(machine,get_subsino_reel1_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
-	state->reel2_tilemap = tilemap_create(machine,get_subsino_reel2_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
-	state->reel3_tilemap = tilemap_create(machine,get_subsino_reel3_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
+	state->m_reel1_tilemap = tilemap_create(machine,get_subsino_reel1_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
+	state->m_reel2_tilemap = tilemap_create(machine,get_subsino_reel2_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
+	state->m_reel3_tilemap = tilemap_create(machine,get_subsino_reel3_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
 
-	tilemap_set_scroll_cols(state->reel1_tilemap, 64);
-	tilemap_set_scroll_cols(state->reel2_tilemap, 64);
-	tilemap_set_scroll_cols(state->reel3_tilemap, 64);
+	tilemap_set_scroll_cols(state->m_reel1_tilemap, 64);
+	tilemap_set_scroll_cols(state->m_reel2_tilemap, 64);
+	tilemap_set_scroll_cols(state->m_reel3_tilemap, 64);
 
 }
 
 static VIDEO_START( stisub )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	state->tmap = tilemap_create(	machine, get_stisub_tile_info, tilemap_scan_rows, 8,8, 0x40,0x20 );
-	tilemap_set_transparent_pen( state->tmap, 0 );
+	subsino_state *state = machine.driver_data<subsino_state>();
+	state->m_tmap = tilemap_create(	machine, get_stisub_tile_info, tilemap_scan_rows, 8,8, 0x40,0x20 );
+	tilemap_set_transparent_pen( state->m_tmap, 0 );
 
-	state->reel1_tilemap = tilemap_create(machine,get_stisub_reel1_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
-	state->reel2_tilemap = tilemap_create(machine,get_stisub_reel2_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
-	state->reel3_tilemap = tilemap_create(machine,get_stisub_reel3_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
+	state->m_reel1_tilemap = tilemap_create(machine,get_stisub_reel1_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
+	state->m_reel2_tilemap = tilemap_create(machine,get_stisub_reel2_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
+	state->m_reel3_tilemap = tilemap_create(machine,get_stisub_reel3_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
 
-	tilemap_set_scroll_cols(state->reel1_tilemap, 64);
-	tilemap_set_scroll_cols(state->reel2_tilemap, 64);
-	tilemap_set_scroll_cols(state->reel3_tilemap, 64);
+	tilemap_set_scroll_cols(state->m_reel1_tilemap, 64);
+	tilemap_set_scroll_cols(state->m_reel2_tilemap, 64);
+	tilemap_set_scroll_cols(state->m_reel3_tilemap, 64);
 
-	state->out_c = 0x08;
+	state->m_out_c = 0x08;
 }
 
 
 static SCREEN_UPDATE( subsino )
 {
-	subsino_state *state = screen->machine->driver_data<subsino_state>();
+	subsino_state *state = screen->machine().driver_data<subsino_state>();
 	bitmap_fill(bitmap,cliprect,0);
-	tilemap_draw(bitmap,cliprect, state->tmap, 0, 0);
+	tilemap_draw(bitmap,cliprect, state->m_tmap, 0, 0);
 	return 0;
 }
 
@@ -464,25 +464,25 @@ static const rectangle visible3 = { 0*8, (14+48)*8-1, 18*8, (18+7)*8-1 };
 
 static SCREEN_UPDATE( subsino_reels )
 {
-	subsino_state *state = screen->machine->driver_data<subsino_state>();
+	subsino_state *state = screen->machine().driver_data<subsino_state>();
 	int i;
 	bitmap_fill(bitmap,cliprect,0);
 
 	for (i= 0;i < 64;i++)
 	{
-		tilemap_set_scrolly(state->reel1_tilemap, i, state->reel1_scroll[i]);
-		tilemap_set_scrolly(state->reel2_tilemap, i, state->reel2_scroll[i]);
-		tilemap_set_scrolly(state->reel3_tilemap, i, state->reel3_scroll[i]);
+		tilemap_set_scrolly(state->m_reel1_tilemap, i, state->m_reel1_scroll[i]);
+		tilemap_set_scrolly(state->m_reel2_tilemap, i, state->m_reel2_scroll[i]);
+		tilemap_set_scrolly(state->m_reel3_tilemap, i, state->m_reel3_scroll[i]);
 	}
 
-	if (state->out_c&0x08)
+	if (state->m_out_c&0x08)
 	{
-		tilemap_draw(bitmap, &visible1, state->reel1_tilemap, 0, 0);
-		tilemap_draw(bitmap, &visible2, state->reel2_tilemap, 0, 0);
-		tilemap_draw(bitmap, &visible3, state->reel3_tilemap, 0, 0);
+		tilemap_draw(bitmap, &visible1, state->m_reel1_tilemap, 0, 0);
+		tilemap_draw(bitmap, &visible2, state->m_reel2_tilemap, 0, 0);
+		tilemap_draw(bitmap, &visible3, state->m_reel3_tilemap, 0, 0);
 	}
 
-	tilemap_draw(bitmap,cliprect, state->tmap, 0, 0);
+	tilemap_draw(bitmap,cliprect, state->m_tmap, 0, 0);
 	return 0;
 }
 
@@ -494,32 +494,32 @@ static const rectangle stisub_visible3 = { 0, 511,  144, 223 };
 
 static SCREEN_UPDATE( stisub_reels )
 {
-	subsino_state *state = screen->machine->driver_data<subsino_state>();
+	subsino_state *state = screen->machine().driver_data<subsino_state>();
 	int i;
 	bitmap_fill(bitmap,cliprect,0);
 
-	if (state->reel1_attr)
+	if (state->m_reel1_attr)
 	{
-		tilemap_mark_all_tiles_dirty (state->reel1_tilemap);
-		tilemap_mark_all_tiles_dirty (state->reel2_tilemap);
-		tilemap_mark_all_tiles_dirty (state->reel3_tilemap);
+		tilemap_mark_all_tiles_dirty (state->m_reel1_tilemap);
+		tilemap_mark_all_tiles_dirty (state->m_reel2_tilemap);
+		tilemap_mark_all_tiles_dirty (state->m_reel3_tilemap);
 	}
 
 	for (i= 0;i < 64;i++)
 	{
-		tilemap_set_scrolly(state->reel1_tilemap, i, state->reel1_scroll[i]);
-		tilemap_set_scrolly(state->reel2_tilemap, i, state->reel2_scroll[i]);
-		tilemap_set_scrolly(state->reel3_tilemap, i, state->reel3_scroll[i]);
+		tilemap_set_scrolly(state->m_reel1_tilemap, i, state->m_reel1_scroll[i]);
+		tilemap_set_scrolly(state->m_reel2_tilemap, i, state->m_reel2_scroll[i]);
+		tilemap_set_scrolly(state->m_reel3_tilemap, i, state->m_reel3_scroll[i]);
 	}
 
-	if (state->out_c&0x08)
+	if (state->m_out_c&0x08)
 	{
-		tilemap_draw(bitmap, &stisub_visible1, state->reel1_tilemap, 0, 0);
-		tilemap_draw(bitmap, &stisub_visible2, state->reel2_tilemap, 0, 0);
-		tilemap_draw(bitmap, &stisub_visible3, state->reel3_tilemap, 0, 0);
+		tilemap_draw(bitmap, &stisub_visible1, state->m_reel1_tilemap, 0, 0);
+		tilemap_draw(bitmap, &stisub_visible2, state->m_reel2_tilemap, 0, 0);
+		tilemap_draw(bitmap, &stisub_visible3, state->m_reel3_tilemap, 0, 0);
 	}
 
-	tilemap_draw(bitmap,cliprect, state->tmap, 0, 0);
+	tilemap_draw(bitmap,cliprect, state->m_tmap, 0, 0);
 	return 0;
 }
 
@@ -623,10 +623,10 @@ static WRITE8_HANDLER( subsino_out_a_w )
 	output_set_lamp_value(14, (data >> 6) & 1);	/* Lamp 14 */
 	output_set_lamp_value(15, (data >> 7) & 1);	/* Lamp 15 */
 
-	coin_counter_w( space->machine, 0, data & 0x01 );	/* coin / keyin */
-	coin_counter_w( space->machine, 1, data & 0x02 );	/* keyin / coin */
-	coin_counter_w( space->machine, 2, data & 0x10 );	/* keyout */
-	coin_counter_w( space->machine, 3, data & 0x20 );	/* payout */
+	coin_counter_w( space->machine(), 0, data & 0x01 );	/* coin / keyin */
+	coin_counter_w( space->machine(), 1, data & 0x02 );	/* keyin / coin */
+	coin_counter_w( space->machine(), 2, data & 0x10 );	/* keyout */
+	coin_counter_w( space->machine(), 3, data & 0x20 );	/* payout */
 
 //  popmessage("Out A %02x",data);
 
@@ -772,7 +772,7 @@ static WRITE8_HANDLER( subsino_out_b_w )
 *                              Memory Maps                                 *
 ***************************************************************************/
 
-static ADDRESS_MAP_START( srider_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( srider_map, AS_PROGRAM, 8 )
 	AM_RANGE( 0x00000, 0x0bfff ) AM_ROM
 
 	AM_RANGE( 0x0c000, 0x0cfff ) AM_RAM
@@ -796,12 +796,12 @@ static ADDRESS_MAP_START( srider_map, ADDRESS_SPACE_PROGRAM, 8 )
 
 	AM_RANGE( 0x0d01b, 0x0d01b ) AM_WRITE( subsino_tiles_offset_w )
 
-	AM_RANGE( 0x0e000, 0x0e7ff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, colorram )
-	AM_RANGE( 0x0e800, 0x0efff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, videoram )
+	AM_RANGE( 0x0e000, 0x0e7ff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, m_colorram )
+	AM_RANGE( 0x0e800, 0x0efff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, m_videoram )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( sharkpy_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sharkpy_map, AS_PROGRAM, 8 )
 	AM_RANGE( 0x09800, 0x09fff ) AM_RAM
 
 	AM_RANGE( 0x09000, 0x09000 ) AM_READ_PORT( "SW1" )
@@ -824,8 +824,8 @@ static ADDRESS_MAP_START( sharkpy_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE( 0x0901b, 0x0901b ) AM_WRITE( subsino_tiles_offset_w )
 
 	AM_RANGE( 0x07800, 0x07fff ) AM_RAM
-	AM_RANGE( 0x08000, 0x087ff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, colorram )
-	AM_RANGE( 0x08800, 0x08fff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, videoram )
+	AM_RANGE( 0x08000, 0x087ff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, m_colorram )
+	AM_RANGE( 0x08800, 0x08fff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, m_videoram )
 
 	AM_RANGE( 0x00000, 0x13fff ) AM_ROM //overlap unmapped regions
 ADDRESS_MAP_END
@@ -836,7 +836,7 @@ that announces to the player that the card deck changes. If the protection check
 this event makes the game to reset without any money in the bank.
 */
 
-static ADDRESS_MAP_START( victor21_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( victor21_map, AS_PROGRAM, 8 )
 	AM_RANGE( 0x09800, 0x09fff ) AM_RAM
 
 	AM_RANGE( 0x09000, 0x09000 ) AM_WRITE( subsino_out_a_w )
@@ -858,8 +858,8 @@ static ADDRESS_MAP_START( victor21_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE( 0x0900d, 0x0900d ) AM_WRITE( subsino_tiles_offset_w )
 
 	AM_RANGE( 0x07800, 0x07fff ) AM_RAM
-	AM_RANGE( 0x08000, 0x087ff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, videoram )
-	AM_RANGE( 0x08800, 0x08fff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, colorram )
+	AM_RANGE( 0x08000, 0x087ff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, m_videoram )
+	AM_RANGE( 0x08800, 0x08fff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, m_colorram )
 
 	AM_RANGE( 0x00000, 0x08fff ) AM_ROM //overlap unmapped regions
 	AM_RANGE( 0x10000, 0x13fff ) AM_ROM
@@ -886,14 +886,14 @@ what it is exactly and what it can possibly do.
 
 static READ8_HANDLER( flash_r )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
-//  printf("R %02x\n",state->flash_val);
+	subsino_state *state = space->machine().driver_data<subsino_state>();
+//  printf("R %02x\n",state->m_flash_val);
 
-	if(state->flash_val == 0xff)
+	if(state->m_flash_val == 0xff)
 		return 0xd9;
-	else if(state->flash_val <= 0xa)
-		return state->flash_val;
-	else if(state->flash_val == 0x92)
+	else if(state->m_flash_val <= 0xa)
+		return state->m_flash_val;
+	else if(state->m_flash_val == 0x92)
 		return 0xeb; //protected GFXs in Cross Bingo
 	else
 		return 0xd9;
@@ -901,25 +901,25 @@ static READ8_HANDLER( flash_r )
 
 static WRITE8_HANDLER( flash_w )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
-	switch(state->flash_packet_start)
+	subsino_state *state = space->machine().driver_data<subsino_state>();
+	switch(state->m_flash_packet_start)
 	{
 		case 0:
-			state->flash_packet = data;
-			if((state->flash_packet & 0xf8) == 0xd0)
-				state->flash_packet_start = 1; //start of packet
+			state->m_flash_packet = data;
+			if((state->m_flash_packet & 0xf8) == 0xd0)
+				state->m_flash_packet_start = 1; //start of packet
 			break;
 		case 1:
-			state->flash_packet = data;
-			if((state->flash_packet & 0xf8) == 0xe0)
-				state->flash_packet_start = 0; //end of packet
+			state->m_flash_packet = data;
+			if((state->m_flash_packet & 0xf8) == 0xe0)
+				state->m_flash_packet_start = 0; //end of packet
 			else
-				state->flash_val = data;
+				state->m_flash_val = data;
 			break;
 	}
 }
 
-static ADDRESS_MAP_START( victor5_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( victor5_map, AS_PROGRAM, 8 )
 	AM_IMPORT_FROM( victor21_map )
 	AM_RANGE( 0x0900a, 0x0900a ) AM_READWRITE( flash_r, flash_w )
 	AM_RANGE( 0x0900b, 0x0900b ) AM_READNOP //"flash" status, bit 0
@@ -932,7 +932,7 @@ static READ8_HANDLER( hwcheck_r )
 	return 0x55;
 }
 
-static ADDRESS_MAP_START( crsbingo_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( crsbingo_map, AS_PROGRAM, 8 )
 	AM_RANGE( 0x09800, 0x09fff ) AM_RAM
 
 	AM_RANGE( 0x09000, 0x09000 ) AM_READ_PORT( "SW1" )
@@ -956,8 +956,8 @@ static ADDRESS_MAP_START( crsbingo_map, ADDRESS_SPACE_PROGRAM, 8 )
 //  AM_RANGE( 0x0900d, 0x0900d ) AM_WRITE( subsino_tiles_offset_w )
 
 	AM_RANGE( 0x07800, 0x07fff ) AM_RAM
-	AM_RANGE( 0x08000, 0x087ff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, videoram )
-	AM_RANGE( 0x08800, 0x08fff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, colorram )
+	AM_RANGE( 0x08000, 0x087ff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, m_videoram )
+	AM_RANGE( 0x08800, 0x08fff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, m_colorram )
 
 	AM_RANGE( 0x00000, 0x8fff ) AM_ROM //overlap unmapped regions
 
@@ -967,21 +967,21 @@ ADDRESS_MAP_END
 
 static WRITE8_HANDLER( subsino_out_c_w )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
+	subsino_state *state = space->machine().driver_data<subsino_state>();
 	// not 100% sure on this
 
 	// ???? eccc
 	// e = enable reels?
 	// c = reel colour bank?
-	state->out_c = data;
+	state->m_out_c = data;
 
-	tilemap_mark_all_tiles_dirty (state->reel1_tilemap);
-	tilemap_mark_all_tiles_dirty (state->reel2_tilemap);
-	tilemap_mark_all_tiles_dirty (state->reel3_tilemap);
+	tilemap_mark_all_tiles_dirty (state->m_reel1_tilemap);
+	tilemap_mark_all_tiles_dirty (state->m_reel2_tilemap);
+	tilemap_mark_all_tiles_dirty (state->m_reel3_tilemap);
 //  popmessage("data %02x\n",data);
 }
 
-static ADDRESS_MAP_START( tisub_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( tisub_map, AS_PROGRAM, 8 )
 	AM_RANGE( 0x09800, 0x09fff ) AM_RAM
 
 	AM_RANGE( 0x09000, 0x09000 ) AM_READ_PORT( "SW1" )
@@ -1006,40 +1006,40 @@ static ADDRESS_MAP_START( tisub_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE( 0x0901b, 0x0901b ) AM_WRITE( subsino_tiles_offset_w )
 
 	AM_RANGE( 0x07800, 0x07fff ) AM_RAM
-	AM_RANGE( 0x08800, 0x08fff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, videoram )
-	AM_RANGE( 0x08000, 0x087ff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, colorram )
+	AM_RANGE( 0x08800, 0x08fff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, m_videoram )
+	AM_RANGE( 0x08000, 0x087ff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, m_colorram )
 
 	AM_RANGE( 0x00000, 0x0bfff ) AM_ROM // overlap unmapped regions
 	AM_RANGE( 0x10000, 0x13fff ) AM_ROM
 	AM_RANGE( 0x14000, 0x14fff ) AM_ROM // reads the card face data here (see rom copy in rom loading)
 
-	AM_RANGE( 0x150c0, 0x150ff ) AM_RAM AM_BASE_MEMBER(subsino_state, reel3_scroll)
-	AM_RANGE( 0x15140, 0x1517f ) AM_RAM AM_BASE_MEMBER(subsino_state, reel2_scroll)
-	AM_RANGE( 0x15180, 0x151bf ) AM_RAM AM_BASE_MEMBER(subsino_state, reel1_scroll)
+	AM_RANGE( 0x150c0, 0x150ff ) AM_RAM AM_BASE_MEMBER(subsino_state, m_reel3_scroll)
+	AM_RANGE( 0x15140, 0x1517f ) AM_RAM AM_BASE_MEMBER(subsino_state, m_reel2_scroll)
+	AM_RANGE( 0x15180, 0x151bf ) AM_RAM AM_BASE_MEMBER(subsino_state, m_reel1_scroll)
 
-	AM_RANGE( 0x15800, 0x159ff ) AM_RAM_WRITE(subsino_reel1_ram_w) AM_BASE_MEMBER(subsino_state, reel1_ram)
-	AM_RANGE( 0x15a00, 0x15bff ) AM_RAM_WRITE(subsino_reel2_ram_w) AM_BASE_MEMBER(subsino_state, reel2_ram)
-	AM_RANGE( 0x15c00, 0x15dff ) AM_RAM_WRITE(subsino_reel3_ram_w) AM_BASE_MEMBER(subsino_state, reel3_ram)
+	AM_RANGE( 0x15800, 0x159ff ) AM_RAM_WRITE(subsino_reel1_ram_w) AM_BASE_MEMBER(subsino_state, m_reel1_ram)
+	AM_RANGE( 0x15a00, 0x15bff ) AM_RAM_WRITE(subsino_reel2_ram_w) AM_BASE_MEMBER(subsino_state, m_reel2_ram)
+	AM_RANGE( 0x15c00, 0x15dff ) AM_RAM_WRITE(subsino_reel3_ram_w) AM_BASE_MEMBER(subsino_state, m_reel3_ram)
 ADDRESS_MAP_END
 
 
 static WRITE8_HANDLER(colordac_w)
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
+	subsino_state *state = space->machine().driver_data<subsino_state>();
 	switch ( offset )
 	{
 		case 0:
-			state->colordac_offs = data * 3;
+			state->m_colordac_offs = data * 3;
 			break;
 
 		case 1:
-			state->stisub_colorram[state->colordac_offs] = data;
-			palette_set_color_rgb(space->machine, state->colordac_offs/3,
-				pal6bit(state->stisub_colorram[(state->colordac_offs/3)*3+0]),
-				pal6bit(state->stisub_colorram[(state->colordac_offs/3)*3+1]),
-				pal6bit(state->stisub_colorram[(state->colordac_offs/3)*3+2])
+			state->m_stisub_colorram[state->m_colordac_offs] = data;
+			palette_set_color_rgb(space->machine(), state->m_colordac_offs/3,
+				pal6bit(state->m_stisub_colorram[(state->m_colordac_offs/3)*3+0]),
+				pal6bit(state->m_stisub_colorram[(state->m_colordac_offs/3)*3+1]),
+				pal6bit(state->m_stisub_colorram[(state->m_colordac_offs/3)*3+2])
 			);
-			state->colordac_offs = (state->colordac_offs+1) % (256*3);
+			state->m_colordac_offs = (state->m_colordac_offs+1) % (256*3);
 			break;
 
 		case 2:
@@ -1054,8 +1054,8 @@ static WRITE8_HANDLER(colordac_w)
 
 static WRITE8_HANDLER( stisub_out_c_w )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
-	state->stisub_outc = data;
+	subsino_state *state = space->machine().driver_data<subsino_state>();
+	state->m_stisub_outc = data;
 
 }
 
@@ -1063,20 +1063,20 @@ static WRITE8_HANDLER( stisub_out_c_w )
 // not 100% sure on the bank bits.. other bits are also set
 static WRITE8_HANDLER( reel_scrollattr_w )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
-	if (state->stisub_outc&0x20)
+	subsino_state *state = space->machine().driver_data<subsino_state>();
+	if (state->m_stisub_outc&0x20)
 	{
 		if (offset<0x200)
 		{
-			state->reel1_attr[offset&0x1ff] = data;
+			state->m_reel1_attr[offset&0x1ff] = data;
 		}
 		else if (offset<0x400)
 		{
-			state->reel2_attr[offset&0x1ff] = data;
+			state->m_reel2_attr[offset&0x1ff] = data;
 		}
 		else if (offset<0x600)
 		{
-			state->reel3_attr[offset&0x1ff] = data;
+			state->m_reel3_attr[offset&0x1ff] = data;
 		}
 		else
 		{
@@ -1093,26 +1093,26 @@ static WRITE8_HANDLER( reel_scrollattr_w )
 		}
 		else if (offset<0x80)
 		{
-			state->reel2_scroll[offset&0x3f] = data;
+			state->m_reel2_scroll[offset&0x3f] = data;
 		}
 		else if (offset<0xc0)
 		{
-			state->reel1_scroll[offset&0x3f] = data;
+			state->m_reel1_scroll[offset&0x3f] = data;
 		}
 		else
 		{
-			state->reel3_scroll[offset&0x3f] = data;
+			state->m_reel3_scroll[offset&0x3f] = data;
 		}
 	}
 }
 
 static READ8_HANDLER( reel_scrollattr_r )
 {
-	subsino_state *state = space->machine->driver_data<subsino_state>();
-	return state->reel1_attr[offset];
+	subsino_state *state = space->machine().driver_data<subsino_state>();
+	return state->m_reel1_attr[offset];
 }
 
-static ADDRESS_MAP_START( stisub_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( stisub_map, AS_PROGRAM, 8 )
 	AM_RANGE( 0x00000, 0x0bfff ) AM_ROM
 
 	AM_RANGE( 0x0c000, 0x0cfff ) AM_RAM
@@ -1138,14 +1138,14 @@ static ADDRESS_MAP_START( stisub_map, ADDRESS_SPACE_PROGRAM, 8 )
 
 //  AM_RANGE( 0x0d01b, 0x0d01b ) AM_WRITE( subsino_tiles_offset_w )
 
-	AM_RANGE( 0x0e000, 0x0e7ff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, colorram )
-	AM_RANGE( 0x0e800, 0x0efff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, videoram )
+	AM_RANGE( 0x0e000, 0x0e7ff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, m_colorram )
+	AM_RANGE( 0x0e800, 0x0efff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, m_videoram )
 
 	AM_RANGE( 0xf000, 0xf7ff ) AM_READWRITE(reel_scrollattr_r, reel_scrollattr_w)
 
-	AM_RANGE( 0xf800, 0xf9ff ) AM_RAM_WRITE(subsino_reel1_ram_w) AM_BASE_MEMBER(subsino_state, reel1_ram)
-	AM_RANGE( 0xfa00, 0xfbff ) AM_RAM_WRITE(subsino_reel2_ram_w) AM_BASE_MEMBER(subsino_state, reel2_ram)
-	AM_RANGE( 0xfc00, 0xfdff ) AM_RAM_WRITE(subsino_reel3_ram_w) AM_BASE_MEMBER(subsino_state, reel3_ram)
+	AM_RANGE( 0xf800, 0xf9ff ) AM_RAM_WRITE(subsino_reel1_ram_w) AM_BASE_MEMBER(subsino_state, m_reel1_ram)
+	AM_RANGE( 0xfa00, 0xfbff ) AM_RAM_WRITE(subsino_reel2_ram_w) AM_BASE_MEMBER(subsino_state, m_reel2_ram)
+	AM_RANGE( 0xfc00, 0xfdff ) AM_RAM_WRITE(subsino_reel3_ram_w) AM_BASE_MEMBER(subsino_state, m_reel3_ram)
 ADDRESS_MAP_END
 
 
@@ -1153,7 +1153,7 @@ ADDRESS_MAP_END
                         Magic Train (Clear NVRAM ROM?)
 ***************************************************************************/
 
-static ADDRESS_MAP_START( mtrainnv_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( mtrainnv_map, AS_PROGRAM, 8 )
 	AM_RANGE( 0x00000, 0x0bfff ) AM_ROM
 
 	AM_RANGE( 0x0c000, 0x0cfff ) AM_RAM
@@ -1179,18 +1179,18 @@ static ADDRESS_MAP_START( mtrainnv_map, ADDRESS_SPACE_PROGRAM, 8 )
 
 //  AM_RANGE( 0x0d018, 0x0d018 ) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
 
-	AM_RANGE( 0x0e000, 0x0e7ff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, colorram )
-	AM_RANGE( 0x0e800, 0x0efff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, videoram )
+	AM_RANGE( 0x0e000, 0x0e7ff ) AM_RAM_WRITE( subsino_colorram_w ) AM_BASE_MEMBER(subsino_state, m_colorram )
+	AM_RANGE( 0x0e800, 0x0efff ) AM_RAM_WRITE( subsino_videoram_w ) AM_BASE_MEMBER(subsino_state, m_videoram )
 
 	AM_RANGE( 0xf000, 0xf7ff ) AM_READWRITE(reel_scrollattr_r, reel_scrollattr_w)
 
-	AM_RANGE( 0xf800, 0xf9ff ) AM_RAM_WRITE(subsino_reel1_ram_w) AM_BASE_MEMBER(subsino_state, reel1_ram)
-	AM_RANGE( 0xfa00, 0xfbff ) AM_RAM_WRITE(subsino_reel2_ram_w) AM_BASE_MEMBER(subsino_state, reel2_ram)
-	AM_RANGE( 0xfc00, 0xfdff ) AM_RAM_WRITE(subsino_reel3_ram_w) AM_BASE_MEMBER(subsino_state, reel3_ram)
+	AM_RANGE( 0xf800, 0xf9ff ) AM_RAM_WRITE(subsino_reel1_ram_w) AM_BASE_MEMBER(subsino_state, m_reel1_ram)
+	AM_RANGE( 0xfa00, 0xfbff ) AM_RAM_WRITE(subsino_reel2_ram_w) AM_BASE_MEMBER(subsino_state, m_reel2_ram)
+	AM_RANGE( 0xfc00, 0xfdff ) AM_RAM_WRITE(subsino_reel3_ram_w) AM_BASE_MEMBER(subsino_state, m_reel3_ram)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( subsino_iomap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( subsino_iomap, AS_IO, 8 )
 	AM_RANGE( 0x0000, 0x003f ) AM_RAM // internal regs
 ADDRESS_MAP_END
 
@@ -3352,7 +3352,7 @@ ROM_END
 
 static DRIVER_INIT( smoto16 )
 {
-	UINT8 *rom = machine->region( "maincpu" )->base();
+	UINT8 *rom = machine.region( "maincpu" )->base();
 	rom[0x12d0] = 0x20;	// "ERROR 951010"
 }
 
@@ -3476,11 +3476,11 @@ ROM_END
 ***************************************************************************/
 
 #if 0
-void dump_decrypted(running_machine* machine, UINT8* decrypt)
+void dump_decrypted(running_machine& machine, UINT8* decrypt)
 {
     FILE *fp;
     char filename[256];
-    sprintf(filename,"dat_%s", machine->gamedrv->name);
+    sprintf(filename,"dat_%s", machine.system().name);
     fp=fopen(filename, "w+b");
     if (fp)
     {
@@ -3545,11 +3545,11 @@ static void sharkpy_bitswaps(UINT8* decrypt, int i)
 	if ((i&7) == 7) decrypt[i] = BITSWAP8(decrypt[i],3,6,1,4,7,2,5,0);
 }
 
-static void subsino_decrypt(running_machine* machine, void (*bitswaps)(UINT8* decrypt, int i), const UINT8* xors, int size)
+static void subsino_decrypt(running_machine& machine, void (*bitswaps)(UINT8* decrypt, int i), const UINT8* xors, int size)
 {
 	int i;
 	UINT8 *decrypt = auto_alloc_array(machine, UINT8, 0x10000);
-	UINT8* region = machine->region("maincpu")->base();
+	UINT8* region = machine.region("maincpu")->base();
 
 	for (i=0;i<0x10000;i++)
 	{
@@ -3596,13 +3596,13 @@ static DRIVER_INIT( sharkpye )
 
 static DRIVER_INIT( smoto20 )
 {
-	UINT8 *rom = machine->region( "maincpu" )->base();
+	UINT8 *rom = machine.region( "maincpu" )->base();
 	rom[0x12e1] = 0x20;	// "ERROR 951010"
 }
 
 static DRIVER_INIT( tisub )
 {
-	UINT8 *rom = machine->region( "maincpu" )->base();
+	UINT8 *rom = machine.region( "maincpu" )->base();
 
 	DRIVER_INIT_CALL(victor5);
 
@@ -3617,7 +3617,7 @@ static DRIVER_INIT( tisub )
 
 static DRIVER_INIT( tisuba )
 {
-	UINT8 *rom = machine->region( "maincpu" )->base();
+	UINT8 *rom = machine.region( "maincpu" )->base();
 
 	DRIVER_INIT_CALL(victor5);
 
@@ -3632,34 +3632,34 @@ static DRIVER_INIT( tisuba )
 
 static DRIVER_INIT( stisub )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	UINT8 *rom = machine->region( "maincpu" )->base();
+	subsino_state *state = machine.driver_data<subsino_state>();
+	UINT8 *rom = machine.region( "maincpu" )->base();
 	rom[0x1005] = 0x1d; //patch protection check
 	rom[0x7ab] = 0x18; //patch "winning protection" check
 	rom[0x957] = 0x18; //patch "losing protection" check
-	state->stisub_colorram = auto_alloc_array(machine, UINT8, 256*3);
+	state->m_stisub_colorram = auto_alloc_array(machine, UINT8, 256*3);
 
-	state->reel1_scroll = auto_alloc_array(machine, UINT8, 0x40);
-	state->reel2_scroll = auto_alloc_array(machine, UINT8, 0x40);
-	state->reel3_scroll = auto_alloc_array(machine, UINT8, 0x40);
+	state->m_reel1_scroll = auto_alloc_array(machine, UINT8, 0x40);
+	state->m_reel2_scroll = auto_alloc_array(machine, UINT8, 0x40);
+	state->m_reel3_scroll = auto_alloc_array(machine, UINT8, 0x40);
 
-	state->reel1_attr = auto_alloc_array(machine, UINT8, 0x200);
-	state->reel2_attr = auto_alloc_array(machine, UINT8, 0x200);
-	state->reel3_attr = auto_alloc_array(machine, UINT8, 0x200);
+	state->m_reel1_attr = auto_alloc_array(machine, UINT8, 0x200);
+	state->m_reel2_attr = auto_alloc_array(machine, UINT8, 0x200);
+	state->m_reel3_attr = auto_alloc_array(machine, UINT8, 0x200);
 }
 
 static DRIVER_INIT( mtrainnv )
 {
-	subsino_state *state = machine->driver_data<subsino_state>();
-	state->stisub_colorram = auto_alloc_array(machine, UINT8, 256*3);
+	subsino_state *state = machine.driver_data<subsino_state>();
+	state->m_stisub_colorram = auto_alloc_array(machine, UINT8, 256*3);
 
-	state->reel1_scroll = auto_alloc_array(machine, UINT8, 0x40);
-	state->reel2_scroll = auto_alloc_array(machine, UINT8, 0x40);
-	state->reel3_scroll = auto_alloc_array(machine, UINT8, 0x40);
+	state->m_reel1_scroll = auto_alloc_array(machine, UINT8, 0x40);
+	state->m_reel2_scroll = auto_alloc_array(machine, UINT8, 0x40);
+	state->m_reel3_scroll = auto_alloc_array(machine, UINT8, 0x40);
 
-	state->reel1_attr = auto_alloc_array(machine, UINT8, 0x200);
-	state->reel2_attr = auto_alloc_array(machine, UINT8, 0x200);
-	state->reel3_attr = auto_alloc_array(machine, UINT8, 0x200);
+	state->m_reel1_attr = auto_alloc_array(machine, UINT8, 0x200);
+	state->m_reel2_attr = auto_alloc_array(machine, UINT8, 0x200);
+	state->m_reel3_attr = auto_alloc_array(machine, UINT8, 0x200);
 }
 
 

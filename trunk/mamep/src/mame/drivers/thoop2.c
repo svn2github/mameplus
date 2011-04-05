@@ -51,7 +51,7 @@ GFXDECODE_END
 
 static WRITE16_HANDLER( OKIM6295_bankswitch_w )
 {
-	UINT8 *RAM = space->machine->region("oki")->base();
+	UINT8 *RAM = space->machine().region("oki")->base();
 
 	if (ACCESSING_BITS_0_7){
 		memcpy(&RAM[0x30000], &RAM[0x40000 + (data & 0x0f)*0x10000], 0x10000);
@@ -64,11 +64,11 @@ static WRITE16_HANDLER( thoop2_coin_w )
 		switch ((offset >> 3)){
 			case 0x00:	/* Coin Lockouts */
 			case 0x01:
-				coin_lockout_w(space->machine, (offset >> 3) & 0x01, ~data & 0x01);
+				coin_lockout_w(space->machine(), (offset >> 3) & 0x01, ~data & 0x01);
 				break;
 			case 0x02:	/* Coin Counters */
 			case 0x03:
-				coin_counter_w(space->machine, (offset >> 3) & 0x01, data & 0x01);
+				coin_counter_w(space->machine(), (offset >> 3) & 0x01, data & 0x01);
 				break;
 		}
 	}
@@ -84,13 +84,13 @@ static READ16_HANDLER( DS5002FP_R )
     return 0x55aa;
 }
 
-static ADDRESS_MAP_START( thoop2_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( thoop2_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM													/* ROM */
-	AM_RANGE(0x100000, 0x101fff) AM_RAM_WRITE(thoop2_vram_w) AM_BASE_MEMBER(thoop2_state, videoram)	/* Video RAM */
-	AM_RANGE(0x108000, 0x108007) AM_WRITEONLY AM_BASE_MEMBER(thoop2_state, vregs)					/* Video Registers */
+	AM_RANGE(0x100000, 0x101fff) AM_RAM_WRITE(thoop2_vram_w) AM_BASE_MEMBER(thoop2_state, m_videoram)	/* Video RAM */
+	AM_RANGE(0x108000, 0x108007) AM_WRITEONLY AM_BASE_MEMBER(thoop2_state, m_vregs)					/* Video Registers */
 	AM_RANGE(0x10800c, 0x10800d) AM_WRITE(watchdog_reset16_w)							/* INT 6 ACK/Watchdog timer */
 	AM_RANGE(0x200000, 0x2007ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC(paletteram)/* Palette */
-	AM_RANGE(0x440000, 0x440fff) AM_RAM AM_BASE_MEMBER(thoop2_state, spriteram)						/* Sprite RAM */
+	AM_RANGE(0x440000, 0x440fff) AM_RAM AM_BASE_MEMBER(thoop2_state, m_spriteram)						/* Sprite RAM */
 	AM_RANGE(0x700000, 0x700001) AM_READ_PORT("DSW2")
 	AM_RANGE(0x700002, 0x700003) AM_READ_PORT("DSW1")
 	AM_RANGE(0x700004, 0x700005) AM_READ_PORT("P1")

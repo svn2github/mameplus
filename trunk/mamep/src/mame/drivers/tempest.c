@@ -292,7 +292,7 @@ public:
 	tempest_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 player_select;
+	UINT8 m_player_select;
 };
 
 
@@ -308,8 +308,8 @@ public:
 
 static MACHINE_START( tempest )
 {
-	tempest_state *state = machine->driver_data<tempest_state>();
-	state->save_item(NAME(state->player_select));
+	tempest_state *state = machine.driver_data<tempest_state>();
+	state->save_item(NAME(state->m_player_select));
 }
 
 /*************************************
@@ -320,8 +320,8 @@ static MACHINE_START( tempest )
 
 static WRITE8_HANDLER( wdclr_w )
 {
-	cputag_set_input_line(space->machine, "maincpu", 0, CLEAR_LINE);
-	watchdog_reset(space->machine);
+	cputag_set_input_line(space->machine(), "maincpu", 0, CLEAR_LINE);
+	watchdog_reset(space->machine());
 }
 
 /*************************************
@@ -332,15 +332,15 @@ static WRITE8_HANDLER( wdclr_w )
 
 static CUSTOM_INPUT( tempest_knob_r )
 {
-	tempest_state *state = field->port->machine->driver_data<tempest_state>();
-	return input_port_read(field->port->machine, (state->player_select == 0) ?
+	tempest_state *state = field->port->machine().driver_data<tempest_state>();
+	return input_port_read(field->port->machine(), (state->m_player_select == 0) ?
 										TEMPEST_KNOB_P1_TAG : TEMPEST_KNOB_P2_TAG);
 }
 
 static CUSTOM_INPUT( tempest_buttons_r )
 {
-	tempest_state *state = field->port->machine->driver_data<tempest_state>();
-	return input_port_read(field->port->machine, (state->player_select == 0) ?
+	tempest_state *state = field->port->machine().driver_data<tempest_state>();
+	return input_port_read(field->port->machine(), (state->m_player_select == 0) ?
 										TEMPEST_BUTTONS_P1_TAG : TEMPEST_BUTTONS_P2_TAG);
 }
 
@@ -348,19 +348,19 @@ static CUSTOM_INPUT( tempest_buttons_r )
 static CUSTOM_INPUT( clock_r )
 {
 	/* Emulate the 3kHz source on bit 7 (divide 1.5MHz by 512) */
-	return (field->port->machine->device<cpu_device>("maincpu")->total_cycles() & 0x100) ? 1 : 0;
+	return (field->port->machine().device<cpu_device>("maincpu")->total_cycles() & 0x100) ? 1 : 0;
 }
 
 
 static READ8_DEVICE_HANDLER( input_port_1_bit_r )
 {
-	return (input_port_read(device->machine, "IN1/DSW0") & (1 << offset)) ? 0 : 228;
+	return (input_port_read(device->machine(), "IN1/DSW0") & (1 << offset)) ? 0 : 228;
 }
 
 
 static READ8_DEVICE_HANDLER( input_port_2_bit_r )
 {
-	return (input_port_read(device->machine, "IN2") & (1 << offset)) ? 0 : 228;
+	return (input_port_read(device->machine(), "IN2") & (1 << offset)) ? 0 : 228;
 }
 
 
@@ -373,19 +373,19 @@ static READ8_DEVICE_HANDLER( input_port_2_bit_r )
 
 static WRITE8_HANDLER( tempest_led_w )
 {
-	tempest_state *state = space->machine->driver_data<tempest_state>();
-	set_led_status(space->machine, 0, ~data & 0x02);
-	set_led_status(space->machine, 1, ~data & 0x01);
+	tempest_state *state = space->machine().driver_data<tempest_state>();
+	set_led_status(space->machine(), 0, ~data & 0x02);
+	set_led_status(space->machine(), 1, ~data & 0x01);
 	/* FLIP is bit 0x04 */
-	state->player_select = data & 0x04;
+	state->m_player_select = data & 0x04;
 }
 
 
 static WRITE8_HANDLER( tempest_coin_w )
 {
-	coin_counter_w(space->machine, 0, (data & 0x01));
-	coin_counter_w(space->machine, 1, (data & 0x02));
-	coin_counter_w(space->machine, 2, (data & 0x04));
+	coin_counter_w(space->machine(), 0, (data & 0x01));
+	coin_counter_w(space->machine(), 1, (data & 0x02));
+	coin_counter_w(space->machine(), 2, (data & 0x04));
 	avg_set_flip_x(data & 0x08);
 	avg_set_flip_y(data & 0x10);
 }
@@ -398,7 +398,7 @@ static WRITE8_HANDLER( tempest_coin_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
 	AM_RANGE(0x0800, 0x080f) AM_WRITEONLY AM_BASE(&avgdvg_colorram)
 	AM_RANGE(0x0c00, 0x0c00) AM_READ_PORT("IN0")

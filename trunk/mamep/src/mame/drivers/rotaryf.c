@@ -23,8 +23,8 @@ public:
 	rotaryf_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram;
-	size_t videoram_size;
+	UINT8 *m_videoram;
+	size_t m_videoram_size;
 };
 
 
@@ -40,12 +40,12 @@ public:
 
 static INTERRUPT_GEN( rotaryf_interrupt )
 {
-	if (device->machine->primary_screen->vblank())
-		cpu_set_input_line(device, I8085_RST55_LINE, HOLD_LINE);
+	if (device->machine().primary_screen->vblank())
+		device_set_input_line(device, I8085_RST55_LINE, HOLD_LINE);
 	else
 	{
-		cpu_set_input_line(device, I8085_RST75_LINE, ASSERT_LINE);
-		cpu_set_input_line(device, I8085_RST75_LINE, CLEAR_LINE);
+		device_set_input_line(device, I8085_RST75_LINE, ASSERT_LINE);
+		device_set_input_line(device, I8085_RST75_LINE, CLEAR_LINE);
 	}
 }
 
@@ -59,16 +59,16 @@ static INTERRUPT_GEN( rotaryf_interrupt )
 
 static SCREEN_UPDATE( rotaryf )
 {
-	rotaryf_state *state = screen->machine->driver_data<rotaryf_state>();
+	rotaryf_state *state = screen->machine().driver_data<rotaryf_state>();
 	offs_t offs;
 
-	for (offs = 0; offs < state->videoram_size; offs++)
+	for (offs = 0; offs < state->m_videoram_size; offs++)
 	{
 		int i;
 
 		UINT8 x = offs << 3;
 		int y = offs >> 5;
-		UINT8 data = state->videoram[offs];
+		UINT8 data = state->m_videoram[offs];
 
 		for (i = 0; i < 8; i++)
 		{
@@ -84,17 +84,17 @@ static SCREEN_UPDATE( rotaryf )
 }
 
 
-static ADDRESS_MAP_START( rotaryf_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( rotaryf_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x17ff) AM_MIRROR(0x4000) AM_ROM
 //  AM_RANGE(0x6ffb, 0x6ffb) AM_READ(random_r) ??
 //  AM_RANGE(0x6ffd, 0x6ffd) AM_READ(random_r) ??
 //  AM_RANGE(0x6fff, 0x6fff) AM_READ(random_r) ??
 	AM_RANGE(0x7000, 0x73ff) AM_RAM // clears to 1ff ?
-	AM_RANGE(0x8000, 0x9fff) AM_MIRROR(0x4000) AM_RAM AM_BASE_MEMBER(rotaryf_state, videoram) AM_SIZE_MEMBER(rotaryf_state, videoram_size)
+	AM_RANGE(0x8000, 0x9fff) AM_MIRROR(0x4000) AM_RAM AM_BASE_MEMBER(rotaryf_state, m_videoram) AM_SIZE_MEMBER(rotaryf_state, m_videoram_size)
 	AM_RANGE(0xa000, 0xa1ff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( rotaryf_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( rotaryf_io_map, AS_IO, 8 )
 //  AM_RANGE(0x00, 0x00) AM_READ_PORT("UNK")
 	AM_RANGE(0x21, 0x21) AM_READ_PORT("COIN")
 	AM_RANGE(0x26, 0x26) AM_READ_PORT("DSW")

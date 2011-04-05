@@ -225,8 +225,8 @@ public:
 	coinmvga_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT16 *vram;
-	struct { int r,g,b,offs,offs_internal; } bgpal, fgpal;
+	UINT16 *m_vram;
+	struct { int r,g,b,offs,offs_internal; } m_bgpal, m_fgpal;
 };
 
 
@@ -242,8 +242,8 @@ static VIDEO_START( coinmvga )
 
 static SCREEN_UPDATE( coinmvga )
 {
-	coinmvga_state *state = screen->machine->driver_data<coinmvga_state>();
-	const gfx_element *gfx = screen->machine->gfx[0];
+	coinmvga_state *state = screen->machine().driver_data<coinmvga_state>();
+	const gfx_element *gfx = screen->machine().gfx[0];
 	int count = 0x04000/2;
 
 	int y,x;
@@ -253,7 +253,7 @@ static SCREEN_UPDATE( coinmvga )
 	{
 		for (x=0;x<128;x++)
 		{
-			int tile = state->vram[count];
+			int tile = state->m_vram[count];
 			//int colour = tile>>12;
 			drawgfx_opaque(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8);
 
@@ -283,29 +283,29 @@ static PALETTE_INIT( coinmvga )
 
 static WRITE16_HANDLER( ramdac_bg_w )
 {
-	coinmvga_state *state = space->machine->driver_data<coinmvga_state>();
+	coinmvga_state *state = space->machine().driver_data<coinmvga_state>();
 	if(ACCESSING_BITS_8_15)
 	{
-		state->bgpal.offs = data >> 8;
-		state->bgpal.offs_internal = 0;
+		state->m_bgpal.offs = data >> 8;
+		state->m_bgpal.offs_internal = 0;
 	}
 	else //if(mem_mask == 0x00ff)
 	{
-		switch(state->bgpal.offs_internal)
+		switch(state->m_bgpal.offs_internal)
 		{
 			case 0:
-				state->bgpal.r = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-				state->bgpal.offs_internal++;
+				state->m_bgpal.r = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
+				state->m_bgpal.offs_internal++;
 				break;
 			case 1:
-				state->bgpal.g = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-				state->bgpal.offs_internal++;
+				state->m_bgpal.g = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
+				state->m_bgpal.offs_internal++;
 				break;
 			case 2:
-				state->bgpal.b = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-				palette_set_color(space->machine, state->bgpal.offs, MAKE_RGB(state->bgpal.r, state->bgpal.g, state->bgpal.b));
-				state->bgpal.offs_internal = 0;
-				state->bgpal.offs++;
+				state->m_bgpal.b = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
+				palette_set_color(space->machine(), state->m_bgpal.offs, MAKE_RGB(state->m_bgpal.r, state->m_bgpal.g, state->m_bgpal.b));
+				state->m_bgpal.offs_internal = 0;
+				state->m_bgpal.offs++;
 				break;
 		}
 	}
@@ -314,29 +314,29 @@ static WRITE16_HANDLER( ramdac_bg_w )
 
 static WRITE16_HANDLER( ramdac_fg_w )
 {
-	coinmvga_state *state = space->machine->driver_data<coinmvga_state>();
+	coinmvga_state *state = space->machine().driver_data<coinmvga_state>();
 	if(ACCESSING_BITS_8_15)
 	{
-		state->fgpal.offs = data >> 8;
-		state->fgpal.offs_internal = 0;
+		state->m_fgpal.offs = data >> 8;
+		state->m_fgpal.offs_internal = 0;
 	}
 	else
 	{
-		switch(state->fgpal.offs_internal)
+		switch(state->m_fgpal.offs_internal)
 		{
 			case 0:
-				state->fgpal.r = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-				state->fgpal.offs_internal++;
+				state->m_fgpal.r = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
+				state->m_fgpal.offs_internal++;
 				break;
 			case 1:
-				state->fgpal.g = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-				state->fgpal.offs_internal++;
+				state->m_fgpal.g = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
+				state->m_fgpal.offs_internal++;
 				break;
 			case 2:
-				state->fgpal.b = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
-				palette_set_color(space->machine, 0x100+state->fgpal.offs, MAKE_RGB(state->fgpal.r, state->fgpal.g, state->fgpal.b));
-				state->fgpal.offs_internal = 0;
-				state->fgpal.offs++;
+				state->m_fgpal.b = ((data & 0x3f) << 2) | ((data & 0x30) >> 4);
+				palette_set_color(space->machine(), 0x100+state->m_fgpal.offs, MAKE_RGB(state->m_fgpal.r, state->m_fgpal.g, state->m_fgpal.b));
+				state->m_fgpal.offs_internal = 0;
+				state->m_fgpal.offs++;
 				break;
 		}
 	}
@@ -345,20 +345,20 @@ static WRITE16_HANDLER( ramdac_fg_w )
 /*
 static READ16_HANDLER( test_r )
 {
-    return space->machine->rand();
+    return space->machine().rand();
 }*/
 
 /*************************
 * Memory Map Information *
 *************************/
 
-static ADDRESS_MAP_START( coinmvga_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( coinmvga_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x080000, 0x0fffff) AM_ROM AM_REGION("maincpu", 0) //maybe not
 
 //  AM_RANGE(0x0a0000, 0x0fffff) AM_RAM
 //  AM_RANGE(0x100000, 0x1fffff) AM_RAM //colorama
-	AM_RANGE(0x210000, 0x21ffff) AM_RAM AM_BASE_MEMBER(coinmvga_state, vram)
+	AM_RANGE(0x210000, 0x21ffff) AM_RAM AM_BASE_MEMBER(coinmvga_state, m_vram)
 //  AM_RANGE(0x40746e, 0x40746f) AM_READ(test_r) AM_WRITENOP //touch screen related, colorama
 //  AM_RANGE(0x403afa, 0x403afb) AM_READ(test_r) AM_WRITENOP //touch screen related, cmrltv75
 	AM_RANGE(0x400000, 0x40ffff) AM_RAM
@@ -373,7 +373,7 @@ static ADDRESS_MAP_START( coinmvga_map, ADDRESS_SPACE_PROGRAM, 16 )
 	//0x800008 "arrow" w?
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( coinmvga_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( coinmvga_io_map, AS_IO, 8 )
 /*  Digital I/O ports (ports 4-B are valid on 16-bit H8/3xx) */
 //  AM_RANGE(H8_PORT_4, H8_PORT_4)
 //  AM_RANGE(H8_PORT_5, H8_PORT_5)
@@ -652,7 +652,7 @@ static const ymz280b_interface ymz280b_intf =
 static INTERRUPT_GEN( vblank_irq )
 {
 	//printf("1\n");
-	cpu_set_input_line(device, 2, HOLD_LINE);
+	device_set_input_line(device, 2, HOLD_LINE);
 }
 
 
@@ -870,7 +870,7 @@ ROM_END
 static DRIVER_INIT( colorama )
 {
 	UINT16 *ROM;
-	ROM = (UINT16 *)machine->region("maincpu")->base();
+	ROM = (UINT16 *)machine.region("maincpu")->base();
 
 	// rte in non-irq routines? wtf? patch them to rts...
 	ROM[0x02B476/2] = 0x5470;
@@ -887,7 +887,7 @@ static DRIVER_INIT( colorama )
 static DRIVER_INIT( cmrltv75 )
 {
 	UINT16 *ROM;
-	ROM = (UINT16 *)machine->region("maincpu")->base();
+	ROM = (UINT16 *)machine.region("maincpu")->base();
 
 	// rte in non-irq routines? wtf? patch them to rts...
 	ROM[0x056fd6/2] = 0x5470;

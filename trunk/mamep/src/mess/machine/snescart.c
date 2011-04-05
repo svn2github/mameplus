@@ -120,20 +120,20 @@ static int char_to_int_conv( char id )
 ***************************************************************************/
 
 /* Loads the battery backed RAM into the appropriate memory area */
-static void snes_load_sram(running_machine *machine)
+static void snes_load_sram(running_machine &machine)
 {
-	snes_state *state = machine->driver_data<snes_state>();
+	snes_state *state = machine.driver_data<snes_state>();
 	UINT8 ii;
 	UINT8 *battery_ram, *ptr;
 
-	battery_ram = (UINT8*)malloc(state->cart[0].sram_max);
+	battery_ram = (UINT8*)malloc(state->m_cart[0].sram_max);
 	ptr = battery_ram;
-	device_image_interface *image = dynamic_cast<device_image_interface *>(machine->device("cart"));
-	image->battery_load(battery_ram, state->cart[0].sram_max, 0xff);
+	device_image_interface *image = dynamic_cast<device_image_interface *>(machine.device("cart"));
+	image->battery_load(battery_ram, state->m_cart[0].sram_max, 0xff);
 
-	if (state->cart[0].mode == SNES_MODE_20)
+	if (state->m_cart[0].mode == SNES_MODE_20)
 	{
-		UINT32 size = state->cart[0].small_sram ? 0x8000 : 0x10000;
+		UINT32 size = state->m_cart[0].small_sram ? 0x8000 : 0x10000;
 
 		/* There could be some larger image needing banks 0x70 to 0x7f at address 0x8000 for ROM
          * mirroring. These should be treated separately or data would be overwritten by SRAM */
@@ -146,7 +146,7 @@ static void snes_load_sram(running_machine *machine)
 			ptr += size;
 		}
 	}
-	else if (state->cart[0].mode == SNES_MODE_21)
+	else if (state->m_cart[0].mode == SNES_MODE_21)
 	{
 		for (ii = 0; ii < 16; ii++)
 		{
@@ -157,7 +157,7 @@ static void snes_load_sram(running_machine *machine)
 			ptr += 0x2000;
 		}
 	}
-	else if (state->cart[0].mode == SNES_MODE_25)
+	else if (state->m_cart[0].mode == SNES_MODE_25)
 	{
 		for (ii = 0; ii < 16; ii++)
 		{
@@ -170,18 +170,18 @@ static void snes_load_sram(running_machine *machine)
 }
 
 /* Saves the battery backed RAM from the appropriate memory area */
-static void snes_save_sram(running_machine *machine)
+static void snes_save_sram(running_machine &machine)
 {
-	snes_state *state = machine->driver_data<snes_state>();
+	snes_state *state = machine.driver_data<snes_state>();
 	UINT8 ii;
 	UINT8 *battery_ram, *ptr;
 
-	battery_ram = (UINT8*)malloc(state->cart[0].sram_max);
+	battery_ram = (UINT8*)malloc(state->m_cart[0].sram_max);
 	ptr = battery_ram;
 
-	if (state->cart[0].mode == SNES_MODE_20)
+	if (state->m_cart[0].mode == SNES_MODE_20)
 	{
-		UINT32 size = state->cart[0].small_sram ? 0x8000 : 0x10000;
+		UINT32 size = state->m_cart[0].small_sram ? 0x8000 : 0x10000;
 
 		for (ii = 0; ii < 16; ii++)
 		{
@@ -189,7 +189,7 @@ static void snes_save_sram(running_machine *machine)
 			ptr += size;
 		}
 	}
-	else if (state->cart[0].mode == SNES_MODE_21)
+	else if (state->m_cart[0].mode == SNES_MODE_21)
 	{
 		for (ii = 0; ii < 16; ii++)
 		{
@@ -197,7 +197,7 @@ static void snes_save_sram(running_machine *machine)
 			ptr += 0x2000;
 		}
 	}
-	else if (state->cart[0].mode == SNES_MODE_25)
+	else if (state->m_cart[0].mode == SNES_MODE_25)
 	{
 		for (ii = 0; ii < 16; ii++)
 		{
@@ -205,8 +205,8 @@ static void snes_save_sram(running_machine *machine)
 			ptr += 0x2000;
 		}
 	}
-	device_image_interface *image = dynamic_cast<device_image_interface *>(machine->device("cart"));
-	image->battery_save(battery_ram, state->cart[0].sram_max);
+	device_image_interface *image = dynamic_cast<device_image_interface *>(machine.device("cart"));
+	image->battery_save(battery_ram, state->m_cart[0].sram_max);
 
 	free(battery_ram);
 }
@@ -216,18 +216,18 @@ static void snes_machine_stop(running_machine &machine)
 	snes_state *state = machine.driver_data<snes_state>();
 
 	/* Save SRAM */
-	if (state->cart[0].sram > 0)
-		snes_save_sram(&machine);
+	if (state->m_cart[0].sram > 0)
+		snes_save_sram(machine);
 }
 
 MACHINE_START( snes_mess )
 {
-	machine->add_notifier(MACHINE_NOTIFY_EXIT, snes_machine_stop);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, snes_machine_stop);
 	MACHINE_START_CALL(snes);
 }
 
 
-static void sufami_load_sram(running_machine *machine, const char *cart_tag)
+static void sufami_load_sram(running_machine &machine, const char *cart_tag)
 {
 	UINT8 ii;
 	UINT8 *battery_ram, *ptr;
@@ -235,7 +235,7 @@ static void sufami_load_sram(running_machine *machine, const char *cart_tag)
 
 	battery_ram = (UINT8*)malloc(0x20000);
 	ptr = battery_ram;
-	device_image_interface *image = dynamic_cast<device_image_interface *>(machine->device(cart_tag));
+	device_image_interface *image = dynamic_cast<device_image_interface *>(machine.device(cart_tag));
 	image->battery_load(battery_ram, 0x20000, 0);
 
 	if (strcmp(cart_tag, "slot_a") == 0)
@@ -265,7 +265,7 @@ static void sufami_machine_stop(running_machine &machine)
 	battery_ram = (UINT8*)malloc(0x20000);
 	ptr = battery_ram;
 
-	if (state->cart[0].slot_in_use)
+	if (state->m_cart[0].slot_in_use)
 	{
 		for (ii = 0; ii < 4; ii++)
 		{
@@ -275,7 +275,7 @@ static void sufami_machine_stop(running_machine &machine)
 		image->battery_save(battery_ram, 0x20000);
 	}
 
-	if (state->cart[1].slot_in_use)
+	if (state->m_cart[1].slot_in_use)
 	{
 		for (ii = 0; ii < 4; ii++)
 		{
@@ -290,7 +290,7 @@ static void sufami_machine_stop(running_machine &machine)
 
 MACHINE_START( snesst )
 {
-	machine->add_notifier(MACHINE_NOTIFY_EXIT, sufami_machine_stop);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, sufami_machine_stop);
 	MACHINE_START_CALL(snes);
 }
 
@@ -448,12 +448,12 @@ static UINT32 snes_skip_header( device_image_interface &image, UINT32 snes_rom_s
 }
 
 
-/* This determines if a cart is in Mode 20, 21, 22 or 25; sets state->cart[0].mode and
- state->cart[0].sram accordingly; and returns the offset of the internal header (needed to
+/* This determines if a cart is in Mode 20, 21, 22 or 25; sets state->m_cart[0].mode and
+ state->m_cart[0].sram accordingly; and returns the offset of the internal header (needed to
  detect BSX and ST carts) */
 static UINT32 snes_find_hilo_mode( device_image_interface &image, UINT8 *buffer, UINT32 offset, int cartid )
 {
-	snes_state *state = image.device().machine->driver_data<snes_state>();
+	snes_state *state = image.device().machine().driver_data<snes_state>();
 	UINT8 valid_mode20, valid_mode21, valid_mode25;
 	UINT32 retvalue;
 
@@ -468,43 +468,43 @@ static UINT32 snes_find_hilo_mode( device_image_interface &image, UINT8 *buffer,
 
 	if ((valid_mode20 >= valid_mode21) && (valid_mode20 >= valid_mode25))
 	{
-		if ((buffer[0x007fd5] == 0x32) || ((state->cart_size - offset) > 0x401000))
-			state->cart[cartid].mode = SNES_MODE_22;	// ExLoRom
+		if ((buffer[0x007fd5] == 0x32) || ((state->m_cart_size - offset) > 0x401000))
+			state->m_cart[cartid].mode = SNES_MODE_22;	// ExLoRom
 		else
-			state->cart[cartid].mode = SNES_MODE_20;	// LoRom
+			state->m_cart[cartid].mode = SNES_MODE_20;	// LoRom
 
 		retvalue = 0x007fc0;
 
 		/* a few games require 512k, however we store twice as much to be sure to cover the various mirrors */
-		state->cart[cartid].sram_max = 0x100000;
+		state->m_cart[cartid].sram_max = 0x100000;
 	}
 	else if (valid_mode21 >= valid_mode25)
 	{
-		state->cart[cartid].mode = SNES_MODE_21;	// HiRom
+		state->m_cart[cartid].mode = SNES_MODE_21;	// HiRom
 		retvalue = 0x00ffc0;
-		state->cart[cartid].sram_max = 0x20000;
+		state->m_cart[cartid].sram_max = 0x20000;
 	}
 	else
 	{
-		state->cart[cartid].mode = SNES_MODE_25;	// ExHiRom
+		state->m_cart[cartid].mode = SNES_MODE_25;	// ExHiRom
 		retvalue = 0x40ffc0;
-		state->cart[cartid].sram_max = 0x20000;
+		state->m_cart[cartid].sram_max = 0x20000;
 	}
 
 	logerror( "\t HiROM/LoROM id: %s (LoROM: %d , HiROM: %d, ExHiROM: %d)\n",
-			 (state->cart[cartid].mode == SNES_MODE_20) ? "LoROM" :
-			 (state->cart[cartid].mode == SNES_MODE_21) ? "HiROM" :
-			 (state->cart[cartid].mode == SNES_MODE_22) ? "ExLoROM" :
-			 (state->cart[cartid].mode == SNES_MODE_25) ? "ExHiROM" : "Other (BSX or ST)",
+			 (state->m_cart[cartid].mode == SNES_MODE_20) ? "LoROM" :
+			 (state->m_cart[cartid].mode == SNES_MODE_21) ? "HiROM" :
+			 (state->m_cart[cartid].mode == SNES_MODE_22) ? "ExLoROM" :
+			 (state->m_cart[cartid].mode == SNES_MODE_25) ? "ExHiROM" : "Other (BSX or ST)",
 			 valid_mode20, valid_mode21, valid_mode25);
 
 	return retvalue;
 }
 
-static int snes_find_addon_chip( running_machine *machine )
+static int snes_find_addon_chip( running_machine &machine )
 {
-	snes_state *state = machine->driver_data<snes_state>();
-	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+	snes_state *state = machine.driver_data<snes_state>();
+	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	int supported_type = 1;
 	int dsp_prg_offset = 0;
 
@@ -514,42 +514,42 @@ static int snes_find_addon_chip( running_machine *machine )
 		case 0x00:
 		case 0x01:
 		case 0x02:
-			state->has_addon_chip = HAS_NONE;
+			state->m_has_addon_chip = HAS_NONE;
 			break;
 
 		case 0x03:
 			if (snes_r_bank1(space, 0x00ffd5) == 0x30)
 			{
-				state->has_addon_chip = HAS_DSP4;
+				state->m_has_addon_chip = HAS_DSP4;
 				dsp_prg_offset = SNES_DSP4_OFFSET;
 			}
 			else
 			{
-				state->has_addon_chip = HAS_DSP1;
+				state->m_has_addon_chip = HAS_DSP1;
 				dsp_prg_offset = SNES_DSP1B_OFFSET;
 			}
 			break;
 
 		case 0x04:
-			state->has_addon_chip = HAS_DSP1;
+			state->m_has_addon_chip = HAS_DSP1;
 			dsp_prg_offset = SNES_DSP1B_OFFSET;
 			break;
 
 		case 0x05:
 			if (snes_r_bank1(space, 0x00ffd5) == 0x20)
 			{
-				state->has_addon_chip = HAS_DSP2;
+				state->m_has_addon_chip = HAS_DSP2;
 				dsp_prg_offset = SNES_DSP2_OFFSET;
 			}
 			/* DSP-3 is hard to detect. We exploit the fact that the only game has been manufactured by Bandai */
 			else if ((snes_r_bank1(space, 0x00ffd5) == 0x30) && (snes_r_bank1(space, 0x00ffda) == 0xb2))
 			{
-				state->has_addon_chip = HAS_DSP3;
+				state->m_has_addon_chip = HAS_DSP3;
 				dsp_prg_offset = SNES_DSP3_OFFSET;
 			}
 			else
 			{
-				state->has_addon_chip = HAS_DSP1;
+				state->m_has_addon_chip = HAS_DSP1;
 				dsp_prg_offset = SNES_DSP1B_OFFSET;
 			}
 			break;
@@ -559,11 +559,11 @@ static int snes_find_addon_chip( running_machine *machine )
 		case 0x15:	// GSU-x
 		case 0x1a:	// GSU-1 (21 MHz at start)
 			if (snes_r_bank1(space, 0x00ffd5) == 0x20)
-				state->has_addon_chip = HAS_SUPERFX;
+				state->m_has_addon_chip = HAS_SUPERFX;
 			break;
 
 		case 0x25:
-			state->has_addon_chip = HAS_OBC1;
+			state->m_has_addon_chip = HAS_OBC1;
 			break;
 
 		case 0x32:	// needed by a Sample game (according to ZSNES)
@@ -571,7 +571,7 @@ static int snes_find_addon_chip( running_machine *machine )
 		case 0x35:
 			if (snes_r_bank1(space, 0x00ffd5) == 0x23)
 			{
-				state->has_addon_chip = HAS_SA1;
+				state->m_has_addon_chip = HAS_SA1;
 				supported_type = 0;
 				mame_printf_error("This is a SA-1 type game, currently unsupported by the driver\n");
 			}
@@ -581,35 +581,35 @@ static int snes_find_addon_chip( running_machine *machine )
 		case 0x45:
 			if (snes_r_bank1(space, 0x00ffd5) == 0x32)
 			{
-				state->has_addon_chip = HAS_SDD1;
+				state->m_has_addon_chip = HAS_SDD1;
 			}
 			break;
 
 		case 0x55:
 			if (snes_r_bank1(space, 0x00ffd5) == 0x35)
 			{
-				state->has_addon_chip = HAS_RTC;
+				state->m_has_addon_chip = HAS_RTC;
 			}
 			break;
 
 		case 0xe3:
-			state->has_addon_chip = HAS_Z80GB;
+			state->m_has_addon_chip = HAS_Z80GB;
 			supported_type = 0;
 			break;
 
 		case 0xf3:
-			state->has_addon_chip = HAS_CX4;
+			state->m_has_addon_chip = HAS_CX4;
 			break;
 
 		case 0xf5:
 			if (snes_r_bank1(space, 0x00ffd5) == 0x30)
 			{
-				state->has_addon_chip = HAS_ST018;
+				state->m_has_addon_chip = HAS_ST018;
 				supported_type = 0;
 			}
 			else if (snes_r_bank1(space, 0x00ffd5) == 0x3a)
 			{
-				state->has_addon_chip = HAS_SPC7110;
+				state->m_has_addon_chip = HAS_SPC7110;
 			}
 			break;
 
@@ -617,34 +617,34 @@ static int snes_find_addon_chip( running_machine *machine )
 			/* These Seta ST-01X chips have both 0x30 at 0x00ffd5,
              they only differ for the 'size' at 0x00ffd7 */
 			if (snes_r_bank1(space, 0x00ffd7) < 0x0a)
-				state->has_addon_chip = HAS_ST011;
+				state->m_has_addon_chip = HAS_ST011;
 			else
-				state->has_addon_chip = HAS_ST010;
+				state->m_has_addon_chip = HAS_ST010;
 
 			// if we are loading the game in a driver without the ST01X DSP, revert to HAS_NONE to avoid crash
-			if (!state->upd96050)
-				state->has_addon_chip = HAS_NONE;
+			if (!state->m_upd96050)
+				state->m_has_addon_chip = HAS_NONE;
 			break;
 
 		case 0xf9:
 			if (snes_r_bank1(space, 0x00ffd5) == 0x3a)
 			{
-				state->has_addon_chip = HAS_SPC7110_RTC;
+				state->m_has_addon_chip = HAS_SPC7110_RTC;
 				supported_type = 0;
 			}
 			break;
 
 		default:
-			state->has_addon_chip = HAS_UNK;
+			state->m_has_addon_chip = HAS_UNK;
 			supported_type = 0;
 			break;
 	}
 
-	if ((state->has_addon_chip >= HAS_DSP1) && (state->has_addon_chip <= HAS_DSP4))
+	if ((state->m_has_addon_chip >= HAS_DSP1) && (state->m_has_addon_chip <= HAS_DSP4))
 	{
-		UINT8 *dspsrc = (UINT8 *)machine->region("addons")->base();
-		UINT32 *dspprg = (UINT32 *)machine->region("dspprg")->base();
-		UINT16 *dspdata = (UINT16 *)machine->region("dspdata")->base();
+		UINT8 *dspsrc = (UINT8 *)machine.region("addons")->base();
+		UINT32 *dspprg = (UINT32 *)machine.region("dspprg")->base();
+		UINT16 *dspdata = (UINT16 *)machine.region("dspdata")->base();
 
 		// copy DSP program
 		for (int i = 0; i < 0x2000; i+= 4)
@@ -660,11 +660,11 @@ static int snes_find_addon_chip( running_machine *machine )
 		}
 	}
 
-	if ((state->has_addon_chip == HAS_ST010) || (state->has_addon_chip == HAS_ST011))
+	if ((state->m_has_addon_chip == HAS_ST010) || (state->m_has_addon_chip == HAS_ST011))
 	{
-		UINT8 *dspsrc = (UINT8 *)machine->region("addons")->base();
-		UINT32 *dspprg = (UINT32 *)machine->region("dspprg")->base();
-		UINT16 *dspdata = (UINT16 *)machine->region("dspdata")->base();
+		UINT8 *dspsrc = (UINT8 *)machine.region("addons")->base();
+		UINT32 *dspprg = (UINT32 *)machine.region("dspprg")->base();
+		UINT16 *dspdata = (UINT16 *)machine.region("dspdata")->base();
 
 		// copy DSP program
 		for (int i = 0; i < 0x10000; i+= 4)
@@ -683,10 +683,10 @@ static int snes_find_addon_chip( running_machine *machine )
 	return supported_type;
 }
 
-static void snes_cart_log_info( running_machine *machine, int total_blocks, int supported )
+static void snes_cart_log_info( running_machine &machine, int total_blocks, int supported )
 {
-	snes_state *state = machine->driver_data<snes_state>();
-	address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
+	snes_state *state = machine.driver_data<snes_state>();
+	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	char title[21], rom_id[4], company_id[2];
 	int i, company, has_ram = 0, has_sram = 0;
 
@@ -720,12 +720,12 @@ static void snes_cart_log_info( running_machine *machine, int total_blocks, int 
 
 	logerror( "ROM DETAILS\n" );
 	logerror( "===========\n\n" );
-	logerror( "\tTotal blocks:  %d (%dmb)\n", total_blocks, total_blocks / (state->cart[0].mode & 5 ? 32 : 16) );
+	logerror( "\tTotal blocks:  %d (%dmb)\n", total_blocks, total_blocks / (state->m_cart[0].mode & 5 ? 32 : 16) );
 	logerror( "\tROM bank size: %s \n",
-			 (state->cart[0].mode == SNES_MODE_20) ? "LoROM" :
-			 (state->cart[0].mode == SNES_MODE_21) ? "HiROM" :
-			 (state->cart[0].mode == SNES_MODE_22) ? "ExLoROM" :
-			 (state->cart[0].mode == SNES_MODE_25) ? "ExHiROM" : "Other (BSX or ST)" );
+			 (state->m_cart[0].mode == SNES_MODE_20) ? "LoROM" :
+			 (state->m_cart[0].mode == SNES_MODE_21) ? "HiROM" :
+			 (state->m_cart[0].mode == SNES_MODE_22) ? "ExLoROM" :
+			 (state->m_cart[0].mode == SNES_MODE_25) ? "ExHiROM" : "Other (BSX or ST)" );
 	logerror( "\tCompany:       %s [%.2s]\n", companies[company], company_id );
 	logerror( "\tROM ID:        %.4s\n\n", rom_id );
 
@@ -735,7 +735,7 @@ static void snes_cart_log_info( running_machine *machine, int total_blocks, int 
 	logerror( "\tSpeed:         %s [%d]\n", ((snes_r_bank1(space, 0x00ffd5) & 0xf0)) ? "FastROM" : "SlowROM", (snes_r_bank1(space, 0x00ffd5) & 0xf0) >> 4 );
 	logerror( "\tBank size:     %s [%d]\n", (snes_r_bank1(space, 0x00ffd5) & 0xf) ? "HiROM" : "LoROM", snes_r_bank1(space, 0x00ffd5) & 0xf );
 
-	logerror( "\tType:          %s", types[state->has_addon_chip]);
+	logerror( "\tType:          %s", types[state->m_has_addon_chip]);
 	if (has_ram)
 		logerror( ", RAM");
 	if (has_sram)
@@ -743,7 +743,7 @@ static void snes_cart_log_info( running_machine *machine, int total_blocks, int 
 	logerror( " [%d]\n", snes_r_bank1(space, 0x00ffd6) );
 
 	logerror( "\tSize:          %d megabits [%d]\n", 1 << (snes_r_bank1(space, 0x00ffd7) - 7), snes_r_bank1(space, 0x00ffd7) );
-	logerror( "\tSRAM:          %d kilobits [%d]\n", state->cart[0].sram * 8, snes_ram[0xffd8] );
+	logerror( "\tSRAM:          %d kilobits [%d]\n", state->m_cart[0].sram * 8, snes_ram[0xffd8] );
 	logerror( "\tCountry:       %s [%d]\n", countries[snes_r_bank1(space, 0x00ffd9)], snes_r_bank1(space, 0x00ffd9) );
 	logerror( "\tLicense:       %s [%X]\n", companies[snes_r_bank1(space, 0x00ffda)], snes_r_bank1(space, 0x00ffda) );
 	logerror( "\tVersion:       1.%d\n", snes_r_bank1(space, 0x00ffdb) );
@@ -752,39 +752,39 @@ static void snes_cart_log_info( running_machine *machine, int total_blocks, int 
 	logerror( "\tNMI Address:   %2X%2Xh\n", snes_r_bank1(space, 0x00fffb), snes_r_bank1(space, 0x00fffa) );
 	logerror( "\tStart Address: %2X%2Xh\n\n", snes_r_bank1(space, 0x00fffd), snes_r_bank1(space, 0x00fffc) );
 
-	logerror( "\tMode: %d\n", state->cart[0].mode);
+	logerror( "\tMode: %d\n", state->m_cart[0].mode);
 
 	if (!supported)
-		logerror("WARNING: This cart type \"%s\" is not supported yet!\n", types[state->has_addon_chip]);
+		logerror("WARNING: This cart type \"%s\" is not supported yet!\n", types[state->m_has_addon_chip]);
 }
 
 static DEVICE_IMAGE_LOAD( snes_cart )
 {
 	int supported_type = 1, i, j;
-	running_machine *machine = image.device().machine;
-	snes_state *state = machine->driver_data<snes_state>();
-	address_space *space = cputag_get_address_space( machine, "maincpu", ADDRESS_SPACE_PROGRAM );
+	running_machine &machine = image.device().machine();
+	snes_state *state = machine.driver_data<snes_state>();
+	address_space *space = machine.device( "maincpu")->memory().space( AS_PROGRAM );
 	int total_blocks, read_blocks, has_bsx_slot = 0, st_bios = 0;
 	UINT32 offset, int_header_offs;
-	UINT8 *ROM = image.device().machine->region("cart")->base();
+	UINT8 *ROM = image.device().machine().region("cart")->base();
 
 	if (image.software_entry() == NULL)
-		state->cart_size = image.length();
+		state->m_cart_size = image.length();
 	else
-		state->cart_size = image.get_software_region_length("rom");
+		state->m_cart_size = image.get_software_region_length("rom");
 
 	/* Check for a header (512 bytes), and skip it if found */
-	offset = snes_skip_header(image, state->cart_size);
+	offset = snes_skip_header(image, state->m_cart_size);
 
 	if (image.software_entry() == NULL)
 	{
 		image.fseek(offset, SEEK_SET);
-		image.fread( ROM, state->cart_size - offset);
+		image.fread( ROM, state->m_cart_size - offset);
 	}
 	else
-		memcpy(ROM, image.get_software_region("rom") + offset, state->cart_size - offset);
+		memcpy(ROM, image.get_software_region("rom") + offset, state->m_cart_size - offset);
 
-	if (SNES_CART_DEBUG) mame_printf_error("size %08X\n", state->cart_size - offset);
+	if (SNES_CART_DEBUG) mame_printf_error("size %08X\n", state->m_cart_size - offset);
 
 	/* First, look if the cart is HiROM or LoROM (and set snes_cart accordingly) */
 	int_header_offs = snes_find_hilo_mode(image, ROM, offset, 0);
@@ -800,7 +800,7 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 			if (ROM[int_header_offs + 0x1a] == 0x33 || ROM[int_header_offs + 0x1a] == 0xff)
 			{
 				// BS-X Flash Cart
-				state->cart[0].mode = SNES_MODE_BSX;
+				state->m_cart[0].mode = SNES_MODE_BSX;
 			}
 		}
 	}
@@ -825,12 +825,12 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 		if (!memcmp(ROM + int_header_offs, "Satellaview BS-X     ", 21))
 		{
 			//BS-X Base Cart
-			state->cart[0].mode = SNES_MODE_BSX;
+			state->m_cart[0].mode = SNES_MODE_BSX;
 			// handle RAM
 		}
 		else
 		{
-			state->cart[0].mode = (int_header_offs ==0x007fc0) ? SNES_MODE_BSLO : SNES_MODE_BSHI;
+			state->m_cart[0].mode = (int_header_offs ==0x007fc0) ? SNES_MODE_BSLO : SNES_MODE_BSHI;
 			// handle RAM?
 		}
 	}
@@ -838,17 +838,17 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 	/* Then, detect Sufami Turbo carts */
 	if (!memcmp(ROM, "BANDAI SFC-ADX", 14))
 	{
-		state->cart[0].mode = SNES_MODE_ST;
+		state->m_cart[0].mode = SNES_MODE_ST;
 		if (!memcmp(ROM + 16, "SFC-ADX BACKUP", 14))
 			st_bios = 1;
 	}
 
-	if (SNES_CART_DEBUG) mame_printf_error("mode %d\n", state->cart[0].mode);
+	if (SNES_CART_DEBUG) mame_printf_error("mode %d\n", state->m_cart[0].mode);
 
 	/* FIXME: Insert crc check here? */
 
 	/* How many blocks of data are available to be loaded? */
-	total_blocks = ((state->cart_size - offset) / (state->cart[0].mode & 0xa5 ? 0x8000 : 0x10000));
+	total_blocks = ((state->m_cart_size - offset) / (state->m_cart[0].mode & 0xa5 ? 0x8000 : 0x10000));
 	read_blocks = 0;
 
 	if (SNES_CART_DEBUG) mame_printf_error("blocks %d\n", total_blocks);
@@ -864,7 +864,7 @@ static DEVICE_IMAGE_LOAD( snes_cart )
      * This is likely what happens in the real SNES as well, because the unit cannot be aware of the exact
      * size of data in the cart (procedure confirmed by byuu)
      */
-	switch (state->cart[0].mode)
+	switch (state->m_cart[0].mode)
 	{
 		case SNES_MODE_21:
 		/* HiROM carts load data in banks 0xc0 to 0xff. Each bank is fully mirrored in banks 0x40 to 0x7f
@@ -1098,39 +1098,39 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 	/* Find the amount of cart ram (even if we call it sram...) */
 	if (image.software_entry() == NULL)
 	{
-		if ((state->has_addon_chip != HAS_SUPERFX))
-			state->cart[0].sram = snes_r_bank1(space, 0x00ffd8);
+		if ((state->m_has_addon_chip != HAS_SUPERFX))
+			state->m_cart[0].sram = snes_r_bank1(space, 0x00ffd8);
 		else
-			state->cart[0].sram = (snes_r_bank1(space, 0x00ffbd) & 0x07);
+			state->m_cart[0].sram = (snes_r_bank1(space, 0x00ffbd) & 0x07);
 
-		if (state->cart[0].sram > 0)
+		if (state->m_cart[0].sram > 0)
 		{
-			state->cart[0].sram = (1024 << state->cart[0].sram);
-			if (state->cart[0].sram > state->cart[0].sram_max)
-				state->cart[0].sram = state->cart[0].sram_max;
+			state->m_cart[0].sram = (1024 << state->m_cart[0].sram);
+			if (state->m_cart[0].sram > state->m_cart[0].sram_max)
+				state->m_cart[0].sram = state->m_cart[0].sram_max;
 		}
-//      printf("size %x\n", state->cart[0].sram);
+//      printf("size %x\n", state->m_cart[0].sram);
 	}
 	else
 	{
 		// if we are loading from softlist, take sram from the xml
-		state->cart[0].sram = image.get_software_region("sram") ? image.get_software_region_length("sram") : 0;
+		state->m_cart[0].sram = image.get_software_region("sram") ? image.get_software_region_length("sram") : 0;
 
-		if (state->cart[0].sram > 0)
+		if (state->m_cart[0].sram > 0)
 		{
-			if (state->cart[0].sram > state->cart[0].sram_max)
-				fatalerror("Found more SRAM than max allowed (found: %x, max: %x), check xml file!\n", state->cart[0].sram, state->cart[0].sram_max);
+			if (state->m_cart[0].sram > state->m_cart[0].sram_max)
+				fatalerror("Found more SRAM than max allowed (found: %x, max: %x), check xml file!\n", state->m_cart[0].sram, state->m_cart[0].sram_max);
 		}
 		// TODO: Eventually sram handlers should point to the allocated cart:sram region!
 		// For now, we only use the region as a placeholder to carry size info...
-//      printf("size %x\n", state->cart[0].sram);
+//      printf("size %x\n", state->m_cart[0].sram);
 	}
 
 	/* adjust size for very large carts */
-	if (state->cart[0].mode == SNES_MODE_20 && ((state->cart_size - offset) > 0x200000 || state->cart[0].sram > (32 * 1024)))
-		state->cart[0].small_sram = 1;
+	if (state->m_cart[0].mode == SNES_MODE_20 && ((state->m_cart_size - offset) > 0x200000 || state->m_cart[0].sram > (32 * 1024)))
+		state->m_cart[0].small_sram = 1;
 	else
-		state->cart[0].small_sram = 0;
+		state->m_cart[0].small_sram = 0;
 
 	/* Log snes_cart information */
 	snes_cart_log_info(machine, total_blocks, supported_type);
@@ -1144,14 +1144,14 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 
 static DEVICE_IMAGE_LOAD( sufami_cart )
 {
-	running_machine *machine = image.device().machine;
-	snes_state *state = machine->driver_data<snes_state>();
+	running_machine &machine = image.device().machine();
+	snes_state *state = machine.driver_data<snes_state>();
 	int total_blocks, read_blocks;
 	int st_bios = 0, slot_id = 0;
 	UINT32 offset, st_data_offset = 0;
-	UINT8 *ROM = image.device().machine->region(image.device().tag())->base();
+	UINT8 *ROM = image.device().machine().region(image.device().tag())->base();
 
-	snes_ram = machine->region("maincpu")->base();
+	snes_ram = machine.region("maincpu")->base();
 
 	if (strcmp(image.device().tag(), "slot_a") == 0)
 	{
@@ -1166,27 +1166,27 @@ static DEVICE_IMAGE_LOAD( sufami_cart )
 	}
 
 	if (image.software_entry() == NULL)
-		state->cart_size = image.length();
+		state->m_cart_size = image.length();
 	else
-		state->cart_size = image.get_software_region_length("rom");
+		state->m_cart_size = image.get_software_region_length("rom");
 
 	/* Check for a header (512 bytes), and skip it if found */
-	offset = snes_skip_header(image, state->cart_size);
+	offset = snes_skip_header(image, state->m_cart_size);
 
 	if (image.software_entry() == NULL)
 	{
 		image.fseek(offset, SEEK_SET);
-		image.fread( ROM, state->cart_size - offset);
+		image.fread( ROM, state->m_cart_size - offset);
 	}
 	else
-		memcpy(ROM, image.get_software_region("rom") + offset, state->cart_size - offset);
+		memcpy(ROM, image.get_software_region("rom") + offset, state->m_cart_size - offset);
 
-	if (SNES_CART_DEBUG) mame_printf_error("size %08X\n", state->cart_size - offset);
+	if (SNES_CART_DEBUG) mame_printf_error("size %08X\n", state->m_cart_size - offset);
 
 	/* Detect Sufami Turbo carts */
 	if (!memcmp(ROM, "BANDAI SFC-ADX", 14))
 	{
-		state->cart[slot_id].mode = SNES_MODE_ST;
+		state->m_cart[slot_id].mode = SNES_MODE_ST;
 		if (!memcmp(ROM + 16, "SFC-ADX BACKUP", 14))
 			st_bios = 1;
 	}
@@ -1207,7 +1207,7 @@ static DEVICE_IMAGE_LOAD( sufami_cart )
 	/* FIXME: Insert crc check here? */
 
 	/* How many blocks of data are available to be loaded? */
-	total_blocks = (state->cart_size - offset) / 0x8000;
+	total_blocks = (state->m_cart_size - offset) / 0x8000;
 	read_blocks = 0;
 
 	if (SNES_CART_DEBUG)
@@ -1240,39 +1240,39 @@ static DEVICE_IMAGE_LOAD( sufami_cart )
 
 	sufami_load_sram(machine, image.device().tag());
 
-	state->cart[slot_id].slot_in_use = 1;	// aknowledge the cart in this slot, for saving sram at exit
+	state->m_cart[slot_id].slot_in_use = 1;	// aknowledge the cart in this slot, for saving sram at exit
 
-	auto_free(image.device().machine, ROM);
+	auto_free(image.device().machine(), ROM);
 
 	return IMAGE_INIT_PASS;
 }
 
 static DEVICE_IMAGE_LOAD( bsx_cart )
 {
-	running_machine *machine = image.device().machine;
-	snes_state *state = machine->driver_data<snes_state>();
+	running_machine &machine = image.device().machine();
+	snes_state *state = machine.driver_data<snes_state>();
 	int total_blocks, read_blocks;
 	int has_bsx_slot = 0;
 	UINT32 offset, int_header_offs;
-	UINT8 *ROM = image.device().machine->region("cart")->base();
+	UINT8 *ROM = image.device().machine().region("cart")->base();
 
 	if (image.software_entry() == NULL)
-		state->cart_size = image.length();
+		state->m_cart_size = image.length();
 	else
-		state->cart_size = image.get_software_region_length("rom");
+		state->m_cart_size = image.get_software_region_length("rom");
 
 	/* Check for a header (512 bytes), and skip it if found */
-	offset = snes_skip_header(image, state->cart_size);
+	offset = snes_skip_header(image, state->m_cart_size);
 
 	if (image.software_entry() == NULL)
 	{
 		image.fseek(offset, SEEK_SET);
-		image.fread( ROM, state->cart_size - offset);
+		image.fread( ROM, state->m_cart_size - offset);
 	}
 	else
-		memcpy(ROM, image.get_software_region("rom") + offset, state->cart_size - offset);
+		memcpy(ROM, image.get_software_region("rom") + offset, state->m_cart_size - offset);
 
-	if (SNES_CART_DEBUG) mame_printf_error("size %08X\n", state->cart_size - offset);
+	if (SNES_CART_DEBUG) mame_printf_error("size %08X\n", state->m_cart_size - offset);
 
 	/* First, look if the cart is HiROM or LoROM (and set snes_cart accordingly) */
 	int_header_offs = snes_find_hilo_mode(image, ROM, offset, 0);
@@ -1297,12 +1297,12 @@ static DEVICE_IMAGE_LOAD( bsx_cart )
 		if (!memcmp(ROM + int_header_offs, "Satellaview BS-X     ", 21))
 		{
 			//BS-X Base Cart
-			state->cart[0].mode = SNES_MODE_BSX;
+			state->m_cart[0].mode = SNES_MODE_BSX;
 			// handle RAM
 		}
 		else
 		{
-			state->cart[0].mode = (int_header_offs ==0x007fc0) ? SNES_MODE_BSLO : SNES_MODE_BSHI;
+			state->m_cart[0].mode = (int_header_offs ==0x007fc0) ? SNES_MODE_BSLO : SNES_MODE_BSHI;
 			// handle RAM?
 		}
 	}
@@ -1317,7 +1317,7 @@ static DEVICE_IMAGE_LOAD( bsx_cart )
 	/* FIXME: Insert crc check here? */
 
 	/* How many blocks of data are available to be loaded? */
-	total_blocks = (state->cart_size - offset) / 0x8000;
+	total_blocks = (state->m_cart_size - offset) / 0x8000;
 	read_blocks = 0;
 
 	if (SNES_CART_DEBUG) mame_printf_error("blocks %d\n", total_blocks);
@@ -1351,28 +1351,28 @@ static DEVICE_IMAGE_LOAD( bsx_cart )
 
 static DEVICE_IMAGE_LOAD( bsx2slot_cart )
 {
-	running_machine *machine = image.device().machine;
-	snes_state *state = machine->driver_data<snes_state>();
+	running_machine &machine = image.device().machine();
+	snes_state *state = machine.driver_data<snes_state>();
 	UINT32 offset, int_header_offs;
-	UINT8 *ROM = image.device().machine->region("flash")->base();
+	UINT8 *ROM = image.device().machine().region("flash")->base();
 
 	if (image.software_entry() == NULL)
-		state->cart_size = image.length();
+		state->m_cart_size = image.length();
 	else
-		state->cart_size = image.get_software_region_length("rom");
+		state->m_cart_size = image.get_software_region_length("rom");
 
 	/* Check for a header (512 bytes), and skip it if found */
-	offset = snes_skip_header(image, state->cart_size);
+	offset = snes_skip_header(image, state->m_cart_size);
 
 	if (image.software_entry() == NULL)
 	{
 		image.fseek(offset, SEEK_SET);
-		image.fread( ROM, state->cart_size - offset);
+		image.fread( ROM, state->m_cart_size - offset);
 	}
 	else
-		memcpy(ROM, image.get_software_region("rom") + offset, state->cart_size - offset);
+		memcpy(ROM, image.get_software_region("rom") + offset, state->m_cart_size - offset);
 
-	if (SNES_CART_DEBUG) mame_printf_error("size %08X\n", state->cart_size - offset);
+	if (SNES_CART_DEBUG) mame_printf_error("size %08X\n", state->m_cart_size - offset);
 
 	/* First, look if the cart is HiROM or LoROM (and set snes_cart accordingly) */
 	int_header_offs = snes_find_hilo_mode(image, ROM, offset, 1);
@@ -1387,12 +1387,12 @@ static DEVICE_IMAGE_LOAD( bsx2slot_cart )
 			if (ROM[int_header_offs + 0x1a] == 0x33 || ROM[int_header_offs + 0x1a] == 0xff)
 			{
 				// BS-X Flash Cart
-				state->cart[1].mode = SNES_MODE_BSX;
+				state->m_cart[1].mode = SNES_MODE_BSX;
 			}
 		}
 	}
 
-	if (state->cart[1].mode != SNES_MODE_BSX)
+	if (state->m_cart[1].mode != SNES_MODE_BSX)
 	{
 		mame_printf_error("This is not a BS-X flash cart.\n");
 		mame_printf_error("This image cannot be loaded in the second cartslot of snesbsx.\n");
@@ -1452,18 +1452,18 @@ MACHINE_CONFIG_END
 
 DRIVER_INIT( snes_mess )
 {
-	snes_ram = machine->region("maincpu")->base();
+	snes_ram = machine.region("maincpu")->base();
 	memset(snes_ram, 0, 0x1000000);
 }
 
 DRIVER_INIT( snesst )
 {
-	snes_state *state = machine->driver_data<snes_state>();
-	UINT8 *STBIOS = machine->region("sufami")->base();
+	snes_state *state = machine.driver_data<snes_state>();
+	UINT8 *STBIOS = machine.region("sufami")->base();
 	int i, j;
 
-	state->cart[0].slot_in_use = 0;
-	state->cart[1].slot_in_use = 0;
+	state->m_cart[0].slot_in_use = 0;
+	state->m_cart[1].slot_in_use = 0;
 
 	DRIVER_INIT_CALL(snes_mess);
 

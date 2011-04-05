@@ -175,7 +175,7 @@ static CUSTOM_INPUT( adpcm_irq_state_r )
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x00000000, 0x001fffff) AM_READWRITE(midyunit_vram_r, midyunit_vram_w)
 	AM_RANGE(0x01000000, 0x010fffff) AM_RAM
 	AM_RANGE(0x01400000, 0x0140ffff) AM_READWRITE(midyunit_cmos_r, midyunit_cmos_w)
@@ -185,13 +185,13 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x01c00060, 0x01c0007f) AM_READWRITE(midyunit_protection_r, midyunit_cmos_enable_w)
 	AM_RANGE(0x01e00000, 0x01e0001f) AM_WRITE(midyunit_sound_w)
 	AM_RANGE(0x01f00000, 0x01f0001f) AM_WRITE(midyunit_control_w)
-	AM_RANGE(0x02000000, 0x05ffffff) AM_READ(midyunit_gfxrom_r) AM_BASE_MEMBER(midyunit_state, gfx_rom) AM_SIZE_MEMBER(midyunit_state, gfx_rom_size)
+	AM_RANGE(0x02000000, 0x05ffffff) AM_READ(midyunit_gfxrom_r) AM_BASE_MEMBER(midyunit_state, m_gfx_rom) AM_SIZE_MEMBER(midyunit_state, m_gfx_rom_size)
 	AM_RANGE(0xc0000000, 0xc00001ff) AM_READWRITE(tms34010_io_register_r, tms34010_io_register_w)
 	AM_RANGE(0xff800000, 0xffffffff) AM_ROM AM_REGION("user1", 0)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( yawdim_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( yawdim_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x9000, 0x97ff) AM_DEVWRITE("oki", yawdim_oki_bank_w)

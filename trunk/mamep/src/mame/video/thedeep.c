@@ -45,9 +45,9 @@ static TILEMAP_MAPPER( tilemap_scan_rows_back )
 
 static TILE_GET_INFO( get_tile_info_0 )
 {
-	thedeep_state *state = machine->driver_data<thedeep_state>();
-	UINT8 code	=	state->vram_0[ tile_index * 2 + 0 ];
-	UINT8 color	=	state->vram_0[ tile_index * 2 + 1 ];
+	thedeep_state *state = machine.driver_data<thedeep_state>();
+	UINT8 code	=	state->m_vram_0[ tile_index * 2 + 0 ];
+	UINT8 color	=	state->m_vram_0[ tile_index * 2 + 1 ];
 	SET_TILE_INFO(
 			1,
 			code + (color << 8),
@@ -57,9 +57,9 @@ static TILE_GET_INFO( get_tile_info_0 )
 
 static TILE_GET_INFO( get_tile_info_1 )
 {
-	thedeep_state *state = machine->driver_data<thedeep_state>();
-	UINT8 code	=	state->vram_1[ tile_index * 2 + 0 ];
-	UINT8 color	=	state->vram_1[ tile_index * 2 + 1 ];
+	thedeep_state *state = machine.driver_data<thedeep_state>();
+	UINT8 code	=	state->m_vram_1[ tile_index * 2 + 0 ];
+	UINT8 color	=	state->m_vram_1[ tile_index * 2 + 1 ];
 	SET_TILE_INFO(
 			2,
 			code + (color << 8),
@@ -69,16 +69,16 @@ static TILE_GET_INFO( get_tile_info_1 )
 
 WRITE8_HANDLER( thedeep_vram_0_w )
 {
-	thedeep_state *state = space->machine->driver_data<thedeep_state>();
-	state->vram_0[offset] = data;
-	tilemap_mark_tile_dirty(state->tilemap_0, offset / 2);
+	thedeep_state *state = space->machine().driver_data<thedeep_state>();
+	state->m_vram_0[offset] = data;
+	tilemap_mark_tile_dirty(state->m_tilemap_0, offset / 2);
 }
 
 WRITE8_HANDLER( thedeep_vram_1_w )
 {
-	thedeep_state *state = space->machine->driver_data<thedeep_state>();
-	state->vram_1[offset] = data;
-	tilemap_mark_tile_dirty(state->tilemap_1, offset / 2);
+	thedeep_state *state = space->machine().driver_data<thedeep_state>();
+	state->m_vram_1[offset] = data;
+	tilemap_mark_tile_dirty(state->m_tilemap_1, offset / 2);
 }
 
 
@@ -103,14 +103,14 @@ PALETTE_INIT( thedeep )
 
 VIDEO_START( thedeep )
 {
-	thedeep_state *state = machine->driver_data<thedeep_state>();
-	state->tilemap_0  = tilemap_create(machine, get_tile_info_0,tilemap_scan_rows_back,16,16,0x20,0x20);
-	state->tilemap_1  = tilemap_create(machine, get_tile_info_1,tilemap_scan_rows,8,8,0x20,0x20);
+	thedeep_state *state = machine.driver_data<thedeep_state>();
+	state->m_tilemap_0  = tilemap_create(machine, get_tile_info_0,tilemap_scan_rows_back,16,16,0x20,0x20);
+	state->m_tilemap_1  = tilemap_create(machine, get_tile_info_1,tilemap_scan_rows,8,8,0x20,0x20);
 
-	tilemap_set_transparent_pen( state->tilemap_0,  0 );
-	tilemap_set_transparent_pen( state->tilemap_1,  0 );
+	tilemap_set_transparent_pen( state->m_tilemap_0,  0 );
+	tilemap_set_transparent_pen( state->m_tilemap_1,  0 );
 
-	tilemap_set_scroll_cols(state->tilemap_0, 0x20);	// column scroll for the background
+	tilemap_set_scroll_cols(state->m_tilemap_0, 0x20);	// column scroll for the background
 }
 
 /***************************************************************************
@@ -147,10 +147,10 @@ Offset:     Bits:       Value:
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
-	thedeep_state *state = machine->driver_data<thedeep_state>();
-	UINT8 *s = state->spriteram, *end = s + state->spriteram_size;
+	thedeep_state *state = machine.driver_data<thedeep_state>();
+	UINT8 *s = state->m_spriteram, *end = s + state->m_spriteram_size;
 
 	while (s < end)
 	{
@@ -192,7 +192,7 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 
 			for (y = 0; y < ny; y++)
 			{
-				drawgfx_transpen(bitmap,cliprect,machine->gfx[0],
+				drawgfx_transpen(bitmap,cliprect,machine.gfx[0],
 						code + (flipy ? (ny - y - 1) :  y),
 						color,
 						flipx,flipy,
@@ -211,23 +211,23 @@ static void draw_sprites(running_machine *machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( thedeep )
 {
-	thedeep_state *state = screen->machine->driver_data<thedeep_state>();
-	int scrollx = state->scroll[0] + (state->scroll[1]<<8);
-	int scrolly = state->scroll[2] + (state->scroll[3]<<8);
+	thedeep_state *state = screen->machine().driver_data<thedeep_state>();
+	int scrollx = state->m_scroll[0] + (state->m_scroll[1]<<8);
+	int scrolly = state->m_scroll[2] + (state->m_scroll[3]<<8);
 	int x;
 
-	tilemap_set_scrollx(state->tilemap_0, 0, scrollx);
+	tilemap_set_scrollx(state->m_tilemap_0, 0, scrollx);
 
 	for (x = 0; x < 0x20; x++)
 	{
-		int y = state->scroll2[x*2+0] + (state->scroll2[x*2+1]<<8);
-		tilemap_set_scrolly(state->tilemap_0, x, y + scrolly);
+		int y = state->m_scroll2[x*2+0] + (state->m_scroll2[x*2+1]<<8);
+		tilemap_set_scrolly(state->m_tilemap_0, x, y + scrolly);
 	}
 
-	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine));
+	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
 
-	tilemap_draw(bitmap,cliprect,state->tilemap_0,0,0);
-	draw_sprites(screen->machine, bitmap,cliprect);
-	tilemap_draw(bitmap,cliprect,state->tilemap_1,0,0);
+	tilemap_draw(bitmap,cliprect,state->m_tilemap_0,0,0);
+	draw_sprites(screen->machine(), bitmap,cliprect);
+	tilemap_draw(bitmap,cliprect,state->m_tilemap_1,0,0);
 	return 0;
 }

@@ -12,8 +12,8 @@ public:
 		: driver_device(machine, config) { }
 };
 
-static ADDRESS_MAP_START( atari_s1_map, ADDRESS_SPACE_PROGRAM, 8 )
-	ADDRESS_MAP_UNMAP_HIGH
+static ADDRESS_MAP_START( atari_s1_map, AS_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0xffff) AM_NOP
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x01ff) AM_RAM
 	AM_RANGE(0x7000, 0x77ff) AM_ROM

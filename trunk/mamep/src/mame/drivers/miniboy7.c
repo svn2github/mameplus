@@ -158,9 +158,9 @@ public:
 	miniboy7_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram;
-	UINT8 *colorram;
-	tilemap_t *bg_tilemap;
+	UINT8 *m_videoram;
+	UINT8 *m_colorram;
+	tilemap_t *m_bg_tilemap;
 };
 
 
@@ -170,29 +170,29 @@ public:
 
 static WRITE8_HANDLER( miniboy7_videoram_w )
 {
-	miniboy7_state *state = space->machine->driver_data<miniboy7_state>();
-	state->videoram[offset] = data;
-	tilemap_mark_tile_dirty(state->bg_tilemap, offset);
+	miniboy7_state *state = space->machine().driver_data<miniboy7_state>();
+	state->m_videoram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_bg_tilemap, offset);
 }
 
 static WRITE8_HANDLER( miniboy7_colorram_w )
 {
-	miniboy7_state *state = space->machine->driver_data<miniboy7_state>();
-	state->colorram[offset] = data;
-	tilemap_mark_tile_dirty(state->bg_tilemap, offset);
+	miniboy7_state *state = space->machine().driver_data<miniboy7_state>();
+	state->m_colorram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_bg_tilemap, offset);
 }
 
 static TILE_GET_INFO( get_bg_tile_info )
 {
-	miniboy7_state *state = machine->driver_data<miniboy7_state>();
+	miniboy7_state *state = machine.driver_data<miniboy7_state>();
 /*  - bits -
     7654 3210
     --xx xx--   tiles color?.
     ---- --x-   tiles bank.
     xx-- ---x   seems unused. */
 
-	int attr = state->colorram[tile_index];
-	int code = state->videoram[tile_index];
+	int attr = state->m_colorram[tile_index];
+	int code = state->m_videoram[tile_index];
 	int bank = (attr & 0x02) >> 1;	/* bit 1 switch the gfx banks */
 	int color = (attr & 0x3c);	/* bits 2-3-4-5 for color? */
 
@@ -204,14 +204,14 @@ static TILE_GET_INFO( get_bg_tile_info )
 
 static VIDEO_START( miniboy7 )
 {
-	miniboy7_state *state = machine->driver_data<miniboy7_state>();
-	state->bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 37, 37);
+	miniboy7_state *state = machine.driver_data<miniboy7_state>();
+	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 37, 37);
 }
 
 static SCREEN_UPDATE( miniboy7 )
 {
-	miniboy7_state *state = screen->machine->driver_data<miniboy7_state>();
-	tilemap_draw(bitmap, cliprect, state->bg_tilemap, 0, 0);
+	miniboy7_state *state = screen->machine().driver_data<miniboy7_state>();
+	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 	return 0;
 }
 
@@ -233,7 +233,7 @@ static PALETTE_INIT( miniboy7 )
 	/* 0000IBGR */
 	if (color_prom == 0) return;
 
-	for (i = 0;i < machine->total_colors();i++)
+	for (i = 0;i < machine.total_colors();i++)
 	{
 		int bit0, bit1, bit2, r, g, b, inten, intenmin, intenmax;
 
@@ -266,10 +266,10 @@ static PALETTE_INIT( miniboy7 )
 *      Memory Map Information      *
 ***********************************/
 
-static ADDRESS_MAP_START( miniboy7_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( miniboy7_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM	AM_SHARE("nvram") /* battery backed RAM? */
-	AM_RANGE(0x0800, 0x0fff) AM_RAM_WRITE(miniboy7_videoram_w) AM_BASE_MEMBER(miniboy7_state, videoram)
-	AM_RANGE(0x1000, 0x17ff) AM_RAM_WRITE(miniboy7_colorram_w) AM_BASE_MEMBER(miniboy7_state, colorram)
+	AM_RANGE(0x0800, 0x0fff) AM_RAM_WRITE(miniboy7_videoram_w) AM_BASE_MEMBER(miniboy7_state, m_videoram)
+	AM_RANGE(0x1000, 0x17ff) AM_RAM_WRITE(miniboy7_colorram_w) AM_BASE_MEMBER(miniboy7_state, m_colorram)
 	AM_RANGE(0x1800, 0x25ff) AM_RAM	/* looks like videoram */
 	AM_RANGE(0x2600, 0x27ff) AM_RAM
 	AM_RANGE(0x2800, 0x2800) AM_DEVWRITE("crtc", mc6845_address_w)

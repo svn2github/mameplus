@@ -163,7 +163,7 @@ INLINE void unknown_attribute_value(parse_state *state,
     from the global pool. So they should be global_free'ed
     when they are not used anymore.
 -------------------------------------------------*/
-static void software_name_split(running_machine* machine, const char *swlist_swname, char **swlist_name, char **swname, char **swpart )
+static void software_name_split(running_machine& machine, const char *swlist_swname, char **swlist_name, char **swname, char **swpart )
 {
 	const char *split_1st_loc = strchr( swlist_swname, ':' );
 	const char *split_2nd_loc = ( split_1st_loc ) ? strchr( split_1st_loc + 1, ':' ) : NULL;
@@ -283,7 +283,7 @@ static void add_feature(software_list *swlist, char *feature_name, char *feature
 
 /*-------------------------------------------------
  add_info (same as add_feature, but its target
- is softinfo->other_info)
+ is softinfo->shared_info)
  -------------------------------------------------*/
 
 static void add_info(software_list *swlist, char *feature_name, char *feature_value)
@@ -301,9 +301,9 @@ static void add_info(software_list *swlist, char *feature_name, char *feature_va
 		new_entry->value = feature_value ? feature_value : feature_name;
 
 		/* Add new feature to end of feature list */
-		if ( info->other_info )
+		if ( info->shared_info )
 		{
-			feature_list *list = info->other_info;
+			feature_list *list = info->shared_info;
 			while ( list->next != NULL )
 			{
 				list = list->next;
@@ -312,7 +312,7 @@ static void add_info(software_list *swlist, char *feature_name, char *feature_va
 		}
 		else
 		{
-			info->other_info = new_entry;
+			info->shared_info = new_entry;
 		}
 	}
 	else
@@ -445,15 +445,15 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					elem->partdata = (software_part *)pool_malloc_lib(swlist->pool, swlist->part_entries * sizeof(software_part) );
 					if ( !elem->partdata )
 						return;
-					elem->other_info = (feature_list *)pool_malloc_lib(swlist->pool, sizeof(feature_list) );
-					if ( !elem->other_info )
+					elem->shared_info = (feature_list *)pool_malloc_lib(swlist->pool, sizeof(feature_list) );
+					if ( !elem->shared_info )
 						return;
 					else
 					{
-						elem->other_info->next = (feature_list *)pool_malloc_lib(swlist->pool, sizeof(feature_list) );
-						elem->other_info->next = NULL;
-						elem->other_info->name = NULL;
-						elem->other_info->value = NULL;
+						elem->shared_info->next = (feature_list *)pool_malloc_lib(swlist->pool, sizeof(feature_list) );
+						elem->shared_info->next = NULL;
+						elem->shared_info->name = NULL;
+						elem->shared_info->value = NULL;
 					}
 
 					/* Handle the supported flag */
@@ -498,7 +498,12 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 				text_dest = (char **) &swlist->softinfo->year;
 			else if (!strcmp(tagname, "publisher"))
 				text_dest = (char **) &swlist->softinfo->publisher;
-			else if ( !strcmp(tagname, "info") )
+			else if (!strcmp(tagname, "info"))
+			{
+				// the "info" field (containing info about actual developers, etc.) is not currently stored.
+				// full support will be added, but for the moment frontend have to get this info from the xml directly
+			}
+			else if (!strcmp(tagname, "sharedfeat"))
 			{
 				const char *str_feature_name = NULL;
 				const char *str_feature_value = NULL;
@@ -858,10 +863,10 @@ static void end_handler(void *data, const char *name)
 			break;
 
 		case POS_PART:
-			/* Add other_info inherited from the software_info level, if any */
-			if ( swlist->softinfo && swlist->softinfo->other_info )
+			/* Add shared_info inherited from the software_info level, if any */
+			if ( swlist->softinfo && swlist->softinfo->shared_info )
 			{
-				feature_list *list = swlist->softinfo->other_info;
+				feature_list *list = swlist->softinfo->shared_info;
 
 				while( list->next )
 				{
@@ -1378,7 +1383,7 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 	*sw_part = NULL;
 
 	/* Split full software name into software list name and short software name */
-	software_name_split( image->device().machine, path, &swlist_name, &swname, &swpart );
+	software_name_split( image->device().machine(), path, &swlist_name, &swname, &swpart );
 	swname_bckp = swname;
 
 	const char *interface = image->image_config().image_interface();
@@ -1386,7 +1391,7 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 	if ( swlist_name )
 	{
 		/* Try to open the software list xml file explicitly named by the user */
-		software_list_ptr = software_list_open( image->device().machine->options(), swlist_name, FALSE, NULL );
+		software_list_ptr = software_list_open( image->device().machine().options(), swlist_name, FALSE, NULL );
 
 		if ( software_list_ptr )
 		{
@@ -1401,7 +1406,7 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 	else
 	{
 		/* Loop through all the software lists named in the driver */
-		for (device_t *swlists = image->device().machine->m_devicelist.first(SOFTWARE_LIST); swlists != NULL; swlists = swlists->typenext())
+		for (device_t *swlists = image->device().machine().m_devicelist.first(SOFTWARE_LIST); swlists != NULL; swlists = swlists->typenext())
 		{
 			if ( swlists )
 			{
@@ -1420,7 +1425,7 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 							software_list_close( software_list_ptr );
 						}
 
-						software_list_ptr = software_list_open( image->device().machine->options(), swlist_name, FALSE, NULL );
+						software_list_ptr = software_list_open( image->device().machine().options(), swlist_name, FALSE, NULL );
 
 						if ( software_list_ptr )
 						{
@@ -1440,14 +1445,14 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 		/* If not found try to load the software list using the driver name */
 		if ( ! software_part_ptr )
 		{
-			swlist_name = (char *)image->device().machine->gamedrv->name;
+			swlist_name = (char *)image->device().machine().system().name;
 
 			if ( software_list_ptr )
 			{
 				software_list_close( software_list_ptr );
 			}
 
-			software_list_ptr = software_list_open( image->device().machine->options(), swlist_name, FALSE, NULL );
+			software_list_ptr = software_list_open( image->device().machine().options(), swlist_name, FALSE, NULL );
 
 			if ( software_list_ptr )
 			{
@@ -1473,7 +1478,7 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 				software_list_close( software_list_ptr );
 			}
 
-			software_list_ptr = software_list_open( image->device().machine->options(), swlist_name, FALSE, NULL );
+			software_list_ptr = software_list_open( image->device().machine().options(), swlist_name, FALSE, NULL );
 
 			if ( software_list_ptr )
 			{
@@ -1497,13 +1502,13 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 	if (software_info_ptr == NULL)
 	{
 		// check if there is at least a software list
-		if (image->device().machine->m_devicelist.first(SOFTWARE_LIST))
+		if (image->device().machine().m_devicelist.first(SOFTWARE_LIST))
 		{
 			mame_printf_error("\n\"%s\" approximately matches the following\n"
 							  "supported software items (best match first):\n\n", swname_bckp);
 		}
 
-		for (device_t *swlists = image->device().machine->m_devicelist.first(SOFTWARE_LIST); swlists != NULL; swlists = swlists->typenext())
+		for (device_t *swlists = image->device().machine().m_devicelist.first(SOFTWARE_LIST); swlists != NULL; swlists = swlists->typenext())
 		{
 			software_list_config *swlist = (software_list_config *)downcast<const legacy_device_config_base *>(&swlists->baseconfig())->inline_config();
 
@@ -1511,7 +1516,7 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 			{
 				if (swlist->list_name[i] && *swlist->list_name[i])
 				{
-					software_list *list = software_list_open(image->device().machine->options(), swlist->list_name[i], FALSE, NULL);
+					software_list *list = software_list_open(image->device().machine().options(), swlist->list_name[i], FALSE, NULL);
 
 					if (list)
 					{
@@ -1556,37 +1561,37 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 		}
 
 		/* Create a copy of the software and part information */
-		*sw_info = auto_alloc_clear( image->device().machine, software_info );
-		(*sw_info)->shortname = auto_strdup( image->device().machine, software_info_ptr->shortname );
-		(*sw_info)->longname = auto_strdup( image->device().machine, software_info_ptr->longname );
+		*sw_info = auto_alloc_clear( image->device().machine(), software_info );
+		(*sw_info)->shortname = auto_strdup( image->device().machine(), software_info_ptr->shortname );
+		(*sw_info)->longname = auto_strdup( image->device().machine(), software_info_ptr->longname );
 		if ( software_info_ptr->year )
-			(*sw_info)->year = auto_strdup( image->device().machine, software_info_ptr->year );
+			(*sw_info)->year = auto_strdup( image->device().machine(), software_info_ptr->year );
 		if ( software_info_ptr->publisher )
-			(*sw_info)->publisher = auto_strdup( image->device().machine, software_info_ptr->publisher );
+			(*sw_info)->publisher = auto_strdup( image->device().machine(), software_info_ptr->publisher );
 
-		*sw_part = auto_alloc_clear( image->device().machine, software_part );
-		(*sw_part)->name = auto_strdup( image->device().machine, software_part_ptr->name );
+		*sw_part = auto_alloc_clear( image->device().machine(), software_part );
+		(*sw_part)->name = auto_strdup( image->device().machine(), software_part_ptr->name );
 		if ( software_part_ptr->interface_ )
-			(*sw_part)->interface_ = auto_strdup( image->device().machine, software_part_ptr->interface_ );
+			(*sw_part)->interface_ = auto_strdup( image->device().machine(), software_part_ptr->interface_ );
 
 		if ( software_part_ptr->featurelist )
 		{
 			feature_list *list = software_part_ptr->featurelist;
-			feature_list *new_list = auto_alloc_clear( image->device().machine, feature_list );
+			feature_list *new_list = auto_alloc_clear( image->device().machine(), feature_list );
 
 			(*sw_part)->featurelist = new_list;
 
-			new_list->name = auto_strdup( image->device().machine, list->name );
-			new_list->value = auto_strdup( image->device().machine, list->value );
+			new_list->name = auto_strdup( image->device().machine(), list->name );
+			new_list->value = auto_strdup( image->device().machine(), list->value );
 
 			list = list->next;
 
 			while( list )
 			{
-				new_list->next = auto_alloc_clear( image->device().machine, feature_list );
+				new_list->next = auto_alloc_clear( image->device().machine(), feature_list );
 				new_list = new_list->next;
-				new_list->name = auto_strdup( image->device().machine, list->name );
-				new_list->value = auto_strdup( image->device().machine, list->value );
+				new_list->name = auto_strdup( image->device().machine(), list->name );
+				new_list->value = auto_strdup( image->device().machine(), list->value );
 
 				list = list->next;
 			}
@@ -1595,7 +1600,7 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 		}
 
 		/* Tell the world which part we actually loaded */
-		*full_sw_name = auto_alloc_array( image->device().machine, char, strlen(swlist_name) + strlen(software_info_ptr->shortname) + strlen(software_part_ptr->name) + 3 );
+		*full_sw_name = auto_alloc_array( image->device().machine(), char, strlen(swlist_name) + strlen(software_info_ptr->shortname) + strlen(software_part_ptr->name) + 3 );
 		sprintf( *full_sw_name, "%s:%s:%s", swlist_name, software_info_ptr->shortname, software_part_ptr->name );
 	}
 
@@ -1606,9 +1611,9 @@ bool load_software_part(device_image_interface *image, const char *path, softwar
 		software_info_ptr = NULL;
 		software_list_ptr = NULL;
 	}
-	auto_free( image->device().machine, swlist_name );
-	auto_free( image->device().machine, swname );
-	auto_free( image->device().machine, swpart );
+	auto_free( image->device().machine(), swlist_name );
+	auto_free( image->device().machine(), swname );
+	auto_free( image->device().machine(), swpart );
 
 	return result;
 }
@@ -1867,9 +1872,9 @@ struct _software_part_state
 };
 
 
-static void ui_mess_menu_populate_software_parts(running_machine *machine, ui_menu *menu, const char *swlist, const char *swinfo, const char *interface)
+static void ui_mess_menu_populate_software_parts(running_machine &machine, ui_menu *menu, const char *swlist, const char *swinfo, const char *interface)
 {
-	software_list *list = software_list_open(machine->options(), swlist, FALSE, NULL);
+	software_list *list = software_list_open(machine.options(), swlist, FALSE, NULL);
 
 	if (list)
 	{
@@ -1902,7 +1907,7 @@ static void ui_mess_menu_populate_software_parts(running_machine *machine, ui_me
 	}
 }
 
-void ui_mess_menu_software_parts(running_machine *machine, ui_menu *menu, void *parameter, void *state)
+void ui_mess_menu_software_parts(running_machine &machine, ui_menu *menu, void *parameter, void *state)
 {
 	const ui_menu_event *event;
 	software_entry_state *sw_state = (software_entry_state *)state;
@@ -1937,9 +1942,9 @@ void ui_mess_menu_software_parts(running_machine *machine, ui_menu *menu, void *
 }
 
 /* populate a specific list */
-static void ui_mess_menu_populate_software_entries(running_machine *machine, ui_menu *menu, char *list_name, device_image_interface* image)
+static void ui_mess_menu_populate_software_entries(running_machine &machine, ui_menu *menu, char *list_name, device_image_interface* image)
 {
-	software_list *list = software_list_open(machine->options(), list_name, FALSE, NULL);
+	software_list *list = software_list_open(machine.options(), list_name, FALSE, NULL);
 	const char *interface = image->image_config().image_interface();
 	if (list)
 	{
@@ -1978,7 +1983,7 @@ bool swinfo_has_multiple_parts(software_info *swinfo, const char *interface)
 	return (count > 1) ? TRUE : FALSE;
 }
 
-void ui_mess_menu_software_list(running_machine *machine, ui_menu *menu, void *parameter, void *state)
+void ui_mess_menu_software_list(running_machine &machine, ui_menu *menu, void *parameter, void *state)
 {
 	const ui_menu_event *event;
 	software_menu_state *sw_state = (software_menu_state *)state;
@@ -1998,13 +2003,13 @@ void ui_mess_menu_software_list(running_machine *machine, ui_menu *menu, void *p
 	{
 		device_image_interface *image = sw_state->image;
 		software_entry_state *entry = (software_entry_state *) event->itemref;
-		software_list *tmp_list = software_list_open(machine->options(), sw_state->list_name, FALSE, NULL);
+		software_list *tmp_list = software_list_open(machine.options(), sw_state->list_name, FALSE, NULL);
 		software_info *tmp_info = software_list_find(tmp_list, entry->short_name, NULL);
 
 		// if the selected software has multiple parts that can be loaded, open the submenu
 		if (swinfo_has_multiple_parts(tmp_info, image->image_config().image_interface()))
 		{
-			ui_menu *child_menu = ui_menu_alloc(machine, &machine->render().ui_container(), ui_mess_menu_software_parts, entry);
+			ui_menu *child_menu = ui_menu_alloc(machine, &machine.render().ui_container(), ui_mess_menu_software_parts, entry);
 			software_entry_state *child_menustate = (software_entry_state *)ui_menu_alloc_state(child_menu, sizeof(*child_menustate), NULL);
 			child_menustate->short_name = entry->short_name;
 			child_menustate->interface = image->image_config().image_interface();
@@ -2025,12 +2030,12 @@ void ui_mess_menu_software_list(running_machine *machine, ui_menu *menu, void *p
 }
 
 /* list of available software lists - i.e. cartridges, floppies */
-static void ui_mess_menu_populate_software_list(running_machine *machine, ui_menu *menu, device_image_interface* image)
+static void ui_mess_menu_populate_software_list(running_machine &machine, ui_menu *menu, device_image_interface* image)
 {
 	bool haveCompatible = FALSE;
 	const char *interface = image->image_config().image_interface();
 
-	for (const device_config *dev = machine->config->m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
+	for (const device_config *dev = machine.config().m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
 	{
 		software_list_config *swlist = (software_list_config *)downcast<const legacy_device_config_base *>(dev)->inline_config();
 
@@ -2038,7 +2043,7 @@ static void ui_mess_menu_populate_software_list(running_machine *machine, ui_men
 		{
 			if (swlist->list_name[i] && (swlist->list_type == SOFTWARE_LIST_ORIGINAL_SYSTEM))
 			{
-				software_list *list = software_list_open(machine->options(), swlist->list_name[i], FALSE, NULL);
+				software_list *list = software_list_open(machine.options(), swlist->list_name[i], FALSE, NULL);
 
 				if (list)
 				{
@@ -2060,7 +2065,7 @@ static void ui_mess_menu_populate_software_list(running_machine *machine, ui_men
 		}
 	}
 
-	for (const device_config *dev = machine->config->m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
+	for (const device_config *dev = machine.config().m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
 	{
 		software_list_config *swlist = (software_list_config *)downcast<const legacy_device_config_base *>(dev)->inline_config();
 
@@ -2068,7 +2073,7 @@ static void ui_mess_menu_populate_software_list(running_machine *machine, ui_men
 		{
 			if (swlist->list_name[i] && (swlist->list_type == SOFTWARE_LIST_COMPATIBLE_SYSTEM))
 			{
-				software_list *list = software_list_open(machine->options(), swlist->list_name[i], FALSE, NULL);
+				software_list *list = software_list_open(machine.options(), swlist->list_name[i], FALSE, NULL);
 
 				if (list)
 				{
@@ -2096,7 +2101,7 @@ static void ui_mess_menu_populate_software_list(running_machine *machine, ui_men
 
 }
 
-void ui_image_menu_software(running_machine *machine, ui_menu *menu, void *parameter, void *state)
+void ui_image_menu_software(running_machine &machine, ui_menu *menu, void *parameter, void *state)
 {
 	const ui_menu_event *event;
 	device_image_interface* image = (device_image_interface*)parameter;
@@ -2108,7 +2113,7 @@ void ui_image_menu_software(running_machine *machine, ui_menu *menu, void *param
 
 	if (event != NULL && event->iptkey == IPT_UI_SELECT)
 	{
-		ui_menu *child_menu = ui_menu_alloc(machine, &machine->render().ui_container(), ui_mess_menu_software_list, NULL);
+		ui_menu *child_menu = ui_menu_alloc(machine, &machine.render().ui_container(), ui_mess_menu_software_list, NULL);
 		software_menu_state *child_menustate = (software_menu_state *)ui_menu_alloc_state(child_menu, sizeof(*child_menustate), NULL);
 		child_menustate->list_name = (char *)event->itemref;
 		child_menustate->image = image;

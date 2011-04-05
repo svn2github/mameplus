@@ -113,13 +113,13 @@ enum msx_mem_type {
 };
 
 typedef struct {
-	int type;
-	int start_page;
-	int bank_mask;
-	int banks[4];
-	int size;
-	UINT8 *mem;
-	const char *sramfile;
+	int m_type;
+	int m_start_page;
+	int m_bank_mask;
+	int m_banks[4];
+	int m_size;
+	UINT8 *m_mem;
+	const char *m_sramfile;
 	union {
 		struct {
 			UINT8 *mem;
@@ -142,19 +142,19 @@ typedef struct {
 			int banks_saved[4];
 			int mode;
 		} sccp;
-	} cart;
+	} m_cart;
 } slot_state;
 
 typedef struct {
 	int slot_type;
 	int mem_type;
 	char name[32];
-	int (*init)(running_machine *machine, slot_state*, int page, UINT8 *mem, int size);
-	void (*reset)(running_machine *machine, slot_state*);
-	void (*map)(running_machine *machine, slot_state*, int page);
-	void (*write)(running_machine *machine, slot_state*, UINT16, UINT8);
-	int (*loadsram)(running_machine *machine, slot_state*);
-	int (*savesram)(running_machine *machine, slot_state*);
+	int (*init)(running_machine &machine, slot_state*, int page, UINT8 *mem, int size);
+	void (*reset)(running_machine &machine, slot_state*);
+	void (*map)(running_machine &machine, slot_state*, int page);
+	void (*write)(running_machine &machine, slot_state*, UINT16, UINT8);
+	int (*loadsram)(running_machine &machine, slot_state*);
+	int (*savesram)(running_machine &machine, slot_state*);
 } msx_slot;
 
 extern const msx_slot msx_slot_list[];
@@ -227,17 +227,17 @@ const msx_slot msx_slot_list[] = {
 };
 
 #define MSX_SLOT_INIT(nm)			 static int \
-	slot_##nm##_init (running_machine *machine, slot_state *state, int page, UINT8 *mem, int size)
+	slot_##nm##_init (running_machine &machine, slot_state *state, int page, UINT8 *mem, int size)
 #define MSX_SLOT_MAP(nm)			\
-	static void slot_##nm##_map (running_machine *machine, slot_state *state, int page)
+	static void slot_##nm##_map (running_machine &machine, slot_state *state, int page)
 #define MSX_SLOT_WRITE(nm)			\
-	static void slot_##nm##_write (running_machine *machine, slot_state *state, UINT16 addr, UINT8 val)
+	static void slot_##nm##_write (running_machine &machine, slot_state *state, UINT16 addr, UINT8 val)
 #define MSX_SLOT_RESET(nm)			\
-	static void slot_##nm##_reset (running_machine *machine, slot_state *state)
+	static void slot_##nm##_reset (running_machine &machine, slot_state *state)
 #define MSX_SLOT_LOADSRAM(nm)		\
-	static int slot_##nm##_loadsram (running_machine *machine, slot_state *state)
+	static int slot_##nm##_loadsram (running_machine &machine, slot_state *state)
 #define MSX_SLOT_SAVESRAM(nm)		\
-	static int slot_##nm##_savesram (running_machine *machine, slot_state *state)
+	static int slot_##nm##_savesram (running_machine &machine, slot_state *state)
 
 typedef struct {
 	char name[9];

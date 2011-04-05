@@ -25,7 +25,7 @@ static WRITE8_HANDLER( sound_bank_w );
 
 /****************************************************************************/
 
-static ADDRESS_MAP_START( ajax_main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( ajax_main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x01c0) AM_READWRITE(ajax_ls138_f10_r, ajax_ls138_f10_w)	/* bankswitch + sound command + FIRQ command */
 	AM_RANGE(0x0800, 0x0807) AM_DEVREADWRITE("k051960", k051937_r, k051937_w)					/* sprite control registers */
 	AM_RANGE(0x0c00, 0x0fff) AM_DEVREADWRITE("k051960", k051960_r, k051960_w)					/* sprite RAM 2128SL at J7 */
@@ -36,7 +36,7 @@ static ADDRESS_MAP_START( ajax_main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x8000, 0xffff) AM_ROM												/* ROM N11 */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ajax_sub_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( ajax_sub_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x07ff) AM_DEVREADWRITE("k051316", k051316_r, k051316_w)	/* 051316 zoom/rotation layer */
 	AM_RANGE(0x0800, 0x080f) AM_DEVWRITE("k051316", k051316_ctrl_w)				/* 051316 control registers */
 	AM_RANGE(0x1000, 0x17ff) AM_DEVREAD("k051316", k051316_rom_r)				/* 051316 (ROM test) */
@@ -47,7 +47,7 @@ static ADDRESS_MAP_START( ajax_sub_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xa000, 0xffff) AM_ROM									/* ROM I16 */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ajax_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( ajax_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM								/* ROM F6 */
 	AM_RANGE(0x8000, 0x87ff) AM_RAM								/* RAM 2128SL at D16 */
 	AM_RANGE(0x9000, 0x9000) AM_WRITE(sound_bank_w)				/* 007232 bankswitch */
@@ -137,18 +137,18 @@ INPUT_PORTS_END
 
 static WRITE8_HANDLER( sound_bank_w )
 {
-	ajax_state *state = space->machine->driver_data<ajax_state>();
+	ajax_state *state = space->machine().driver_data<ajax_state>();
 	int bank_A, bank_B;
 
 	/* banks # for the 007232 (chip 1) */
 	bank_A = BIT(data, 1);
 	bank_B = BIT(data, 0);
-	k007232_set_bank(state->k007232_1, bank_A, bank_B);
+	k007232_set_bank(state->m_k007232_1, bank_A, bank_B);
 
 	/* banks # for the 007232 (chip 2) */
 	bank_A = ((data >> 4) & 0x03);
 	bank_B = ((data >> 2) & 0x03);
-	k007232_set_bank(state->k007232_2, bank_A, bank_B);
+	k007232_set_bank(state->m_k007232_2, bank_A, bank_B);
 }
 
 static void volume_callback0(device_t *device, int v)

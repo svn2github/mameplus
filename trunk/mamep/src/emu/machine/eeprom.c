@@ -57,12 +57,12 @@ const eeprom_interface eeprom_interface_93C66B =
 };
 
 
-static ADDRESS_MAP_START( eeprom_map8, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( eeprom_map8, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( eeprom_map16, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( eeprom_map16, AS_PROGRAM, 16 )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
 ADDRESS_MAP_END
 
@@ -104,7 +104,7 @@ device_config *eeprom_device_config::static_alloc_device_config(const machine_co
 
 device_t *eeprom_device_config::alloc_device(running_machine &machine) const
 {
-	return auto_alloc(&machine, eeprom_device(machine, *this));
+	return auto_alloc(machine, eeprom_device(machine, *this));
 }
 
 
@@ -183,7 +183,7 @@ bool eeprom_device_config::device_validity_check(emu_options &options, const gam
 //  any address spaces owned by this device
 //-------------------------------------------------
 
-const address_space_config *eeprom_device_config::memory_space_config(int spacenum) const
+const address_space_config *eeprom_device_config::memory_space_config(address_spacenum spacenum) const
 {
 	return (spacenum == 0) ? &m_space_config : NULL;
 }
@@ -302,11 +302,11 @@ void eeprom_device::nvram_read(emu_file &file)
 	UINT32 eeprom_length = 1 << m_config.m_address_bits;
 	UINT32 eeprom_bytes = eeprom_length * m_config.m_data_bits / 8;
 
-	UINT8 *buffer = auto_alloc_array(&m_machine, UINT8, eeprom_bytes);
+	UINT8 *buffer = auto_alloc_array(m_machine, UINT8, eeprom_bytes);
 	file.read(buffer, eeprom_bytes);
 	for (offs_t offs = 0; offs < eeprom_bytes; offs++)
 		m_addrspace[0]->write_byte(offs, buffer[offs]);
-	auto_free(&m_machine, buffer);
+	auto_free(m_machine, buffer);
 }
 
 
@@ -320,11 +320,11 @@ void eeprom_device::nvram_write(emu_file &file)
 	UINT32 eeprom_length = 1 << m_config.m_address_bits;
 	UINT32 eeprom_bytes = eeprom_length * m_config.m_data_bits / 8;
 
-	UINT8 *buffer = auto_alloc_array(&m_machine, UINT8, eeprom_bytes);
+	UINT8 *buffer = auto_alloc_array(m_machine, UINT8, eeprom_bytes);
 	for (offs_t offs = 0; offs < eeprom_bytes; offs++)
 		buffer[offs] = m_addrspace[0]->read_byte(offs);
 	file.write(buffer, eeprom_bytes);
-	auto_free(&m_machine, buffer);
+	auto_free(m_machine, buffer);
 }
 
 

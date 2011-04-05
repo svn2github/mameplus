@@ -19,15 +19,15 @@
 
 MACHINE_START( namcond1 )
 {
-	namcond1_state *state = machine->driver_data<namcond1_state>();
-	state_save_register_global(machine, state->h8_irq5_enabled);
+	namcond1_state *state = machine.driver_data<namcond1_state>();
+	state_save_register_global(machine, state->m_h8_irq5_enabled);
 }
 
 MACHINE_RESET( namcond1 )
 {
-	namcond1_state *state = machine->driver_data<namcond1_state>();
+	namcond1_state *state = machine.driver_data<namcond1_state>();
 #ifdef MAME_DEBUG
-    /*UINT8   *ROM = machine->region(REGION_CPU1)->base();*/
+    /*UINT8   *ROM = machine.region(REGION_CPU1)->base();*/
     /*UINT32 debug_trigger_addr;*/
     /*int             i;*/
 
@@ -45,7 +45,7 @@ MACHINE_RESET( namcond1 )
 #endif
 
     // initialise MCU states
-    state->h8_irq5_enabled = 0;
+    state->m_h8_irq5_enabled = 0;
 
     // halt the MCU
     cputag_set_input_line(machine, "mcu", INPUT_LINE_RESET, ASSERT_LINE);
@@ -55,8 +55,8 @@ MACHINE_RESET( namcond1 )
 
 READ16_HANDLER( namcond1_shared_ram_r )
 {
-	namcond1_state *state = space->machine->driver_data<namcond1_state>();
-	return state->shared_ram[offset];
+	namcond1_state *state = space->machine().driver_data<namcond1_state>();
+	return state->m_shared_ram[offset];
 }
 
 // $c3ff00-$c3ffff
@@ -73,35 +73,35 @@ READ16_HANDLER( namcond1_cuskey_r )
 
         default :
             logerror( "offset $%X accessed from $%X\n",
-                      offset<<1, cpu_get_pc(space->cpu) );
+                      offset<<1, cpu_get_pc(&space->device()) );
             return( 0 );
     }
 }
 
 WRITE16_HANDLER( namcond1_shared_ram_w )
 {
-	namcond1_state *state = space->machine->driver_data<namcond1_state>();
+	namcond1_state *state = space->machine().driver_data<namcond1_state>();
 
     switch( offset )
     {
         default :
-            COMBINE_DATA( state->shared_ram + offset );
+            COMBINE_DATA( state->m_shared_ram + offset );
             break;
     }
 }
 
 WRITE16_HANDLER( namcond1_cuskey_w )
 {
-	namcond1_state *state = space->machine->driver_data<namcond1_state>();
+	namcond1_state *state = space->machine().driver_data<namcond1_state>();
     switch( offset )
     {
         case (0x0a>>1):
             // this is a kludge until we emulate the h8
-	    if ((state->h8_irq5_enabled == 0) && (data != 0x0000))
+	    if ((state->m_h8_irq5_enabled == 0) && (data != 0x0000))
 	    {
-	    	cputag_set_input_line(space->machine, "mcu", INPUT_LINE_RESET, CLEAR_LINE);
+	    	cputag_set_input_line(space->machine(), "mcu", INPUT_LINE_RESET, CLEAR_LINE);
 	    }
-            state->h8_irq5_enabled = ( data != 0x0000 );
+            state->m_h8_irq5_enabled = ( data != 0x0000 );
             break;
 
 		case (0x0c>>1):

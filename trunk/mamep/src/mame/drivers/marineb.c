@@ -43,50 +43,50 @@ write
 
 static TIMER_CALLBACK( interrupt_disable )
 {
-	marineb_state *state = machine->driver_data<marineb_state>();
+	marineb_state *state = machine.driver_data<marineb_state>();
 	//interrupt_enable = 0;
-	cpu_interrupt_enable(state->maincpu, 0);
+	cpu_interrupt_enable(state->m_maincpu, 0);
 }
 
 static MACHINE_RESET( marineb )
 {
-	marineb_state *state = machine->driver_data<marineb_state>();
+	marineb_state *state = machine.driver_data<marineb_state>();
 
-	state->palette_bank = 0;
-	state->column_scroll = 0;
-	state->flipscreen_x = 0;
-	state->flipscreen_y = 0;
-	state->marineb_active_low_flipscreen = 0;
+	state->m_palette_bank = 0;
+	state->m_column_scroll = 0;
+	state->m_flipscreen_x = 0;
+	state->m_flipscreen_y = 0;
+	state->m_marineb_active_low_flipscreen = 0;
 
 	/* we must start with NMI interrupts disabled */
-	machine->scheduler().synchronize(FUNC(interrupt_disable));
+	machine.scheduler().synchronize(FUNC(interrupt_disable));
 }
 
 static MACHINE_RESET( springer )
 {
-	marineb_state *state = machine->driver_data<marineb_state>();
+	marineb_state *state = machine.driver_data<marineb_state>();
 
 	MACHINE_RESET_CALL( marineb );
 
-	state->marineb_active_low_flipscreen = 1;
+	state->m_marineb_active_low_flipscreen = 1;
 }
 
 static MACHINE_START( marineb )
 {
-	marineb_state *state = machine->driver_data<marineb_state>();
+	marineb_state *state = machine.driver_data<marineb_state>();
 
-	state->maincpu = machine->device("maincpu");
-	state->audiocpu = NULL;
+	state->m_maincpu = machine.device("maincpu");
+	state->m_audiocpu = NULL;
 
-	state->save_item(NAME(state->marineb_active_low_flipscreen));
+	state->save_item(NAME(state->m_marineb_active_low_flipscreen));
 }
 
-static ADDRESS_MAP_START( marineb_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( marineb_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8800, 0x8bff) AM_RAM_WRITE(marineb_videoram_w) AM_BASE_MEMBER(marineb_state, videoram)
-	AM_RANGE(0x8c00, 0x8c3f) AM_RAM AM_BASE_MEMBER(marineb_state, spriteram)  /* Hoccer only */
-	AM_RANGE(0x9000, 0x93ff) AM_RAM_WRITE(marineb_colorram_w) AM_BASE_MEMBER(marineb_state, colorram)
+	AM_RANGE(0x8800, 0x8bff) AM_RAM_WRITE(marineb_videoram_w) AM_BASE_MEMBER(marineb_state, m_videoram)
+	AM_RANGE(0x8c00, 0x8c3f) AM_RAM AM_BASE_MEMBER(marineb_state, m_spriteram)  /* Hoccer only */
+	AM_RANGE(0x9000, 0x93ff) AM_RAM_WRITE(marineb_colorram_w) AM_BASE_MEMBER(marineb_state, m_colorram)
 	AM_RANGE(0x9800, 0x9800) AM_WRITE(marineb_column_scroll_w)
 	AM_RANGE(0x9a00, 0x9a00) AM_WRITE(marineb_palette_bank_0_w)
 	AM_RANGE(0x9c00, 0x9c00) AM_WRITE(marineb_palette_bank_1_w)
@@ -99,12 +99,12 @@ static ADDRESS_MAP_START( marineb_map, ADDRESS_SPACE_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( marineb_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( marineb_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x08, 0x09) AM_DEVWRITE("ay1", ay8910_address_data_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( wanted_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( wanted_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE("ay1", ay8910_address_data_w)
 	AM_RANGE(0x02, 0x03) AM_DEVWRITE("ay2", ay8910_address_data_w)

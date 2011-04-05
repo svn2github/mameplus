@@ -11,16 +11,16 @@ public:
 		: driver_device(machine, config) { }
 
 	/* memory pointers */
-	UINT8 *    paletteram;
+	UINT8 *    m_paletteram;
 
 	/* video-related */
-	int        layer_colorbase[2];
-	int        vreg;
+	int        m_layer_colorbase[2];
+	int        m_vreg;
 
 	/* devices */
-	device_t *audiocpu;
-	device_t *k007342;
-	device_t *k007420;
+	device_t *m_audiocpu;
+	device_t *m_k007342;
+	device_t *m_k007420;
 };
 
 
@@ -31,5 +31,5 @@ WRITE8_HANDLER( rockrage_vreg_w );
 SCREEN_UPDATE( rockrage );
 PALETTE_INIT( rockrage );
 
-void rockrage_tile_callback(running_machine *machine, int layer, int bank, int *code, int *color, int *flags);
-void rockrage_sprite_callback(running_machine *machine, int *code, int *color);
+void rockrage_tile_callback(running_machine &machine, int layer, int bank, int *code, int *color, int *flags);
+void rockrage_sprite_callback(running_machine &machine, int *code, int *color);

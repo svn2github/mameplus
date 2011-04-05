@@ -46,7 +46,7 @@
 #define MGNUMBER_USE_JOY	1
 
 
-static void handle_cd32_joystick_cia(running_machine *machine, UINT8 pra, UINT8 dra);
+static void handle_cd32_joystick_cia(running_machine &machine, UINT8 pra, UINT8 dra);
 
 static WRITE32_HANDLER( aga_overlay_w )
 {
@@ -55,15 +55,15 @@ static WRITE32_HANDLER( aga_overlay_w )
 		data = (data >> 16) & 1;
 
 		/* switch banks as appropriate */
-		memory_set_bank(space->machine, "bank1", data & 1);
+		memory_set_bank(space->machine(), "bank1", data & 1);
 
 		/* swap the write handlers between ROM and bank 1 based on the bit */
 		if ((data & 1) == 0)
 			/* overlay disabled, map RAM on 0x000000 */
-			memory_install_write_bank(space, 0x000000, 0x1fffff, 0, 0, "bank1");
+			space->install_write_bank(0x000000, 0x1fffff, "bank1");
 		else
 			/* overlay enabled, map Amiga system ROM on 0x000000 */
-			memory_unmap_write(space, 0x000000, 0x1fffff, 0, 0);
+			space->unmap_write(0x000000, 0x1fffff);
 	}
 }
 
@@ -85,12 +85,12 @@ static WRITE32_HANDLER( aga_overlay_w )
 static WRITE8_DEVICE_HANDLER( cd32_cia_0_porta_w )
 {
 	/* bit 1 = cd audio mute */
-	device->machine->device<cdda_device>("cdda")->set_output_gain( 0, ( data & 1 ) ? 0.0 : 1.0 );
+	device->machine().device<cdda_device>("cdda")->set_output_gain( 0, ( data & 1 ) ? 0.0 : 1.0 );
 
 	/* bit 2 = Power Led on Amiga */
-	set_led_status(device->machine, 0, (data & 2) ? 0 : 1);
+	set_led_status(device->machine(), 0, (data & 2) ? 0 : 1);
 
-	handle_cd32_joystick_cia(device->machine, data, mos6526_r(device, 2));
+	handle_cd32_joystick_cia(device->machine(), data, mos6526_r(device, 2));
 }
 
 /*************************************
@@ -111,25 +111,25 @@ static WRITE8_DEVICE_HANDLER( cd32_cia_0_porta_w )
 static READ8_DEVICE_HANDLER( cd32_cia_0_portb_r )
 {
 	/* parallel port */
-	logerror("%s:CIA0_portb_r\n", device->machine->describe_context());
+	logerror("%s:CIA0_portb_r\n", device->machine().describe_context());
 	return 0xff;
 }
 
 static WRITE8_DEVICE_HANDLER( cd32_cia_0_portb_w )
 {
 	/* parallel port */
-	logerror("%s:CIA0_portb_w(%02x)\n", device->machine->describe_context(), data);
+	logerror("%s:CIA0_portb_w(%02x)\n", device->machine().describe_context(), data);
 }
 
-static ADDRESS_MAP_START( cd32_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( cd32_map, AS_PROGRAM, 32 )
 	ADDRESS_MAP_UNMAP_HIGH
-	AM_RANGE(0x000000, 0x1fffff) AM_RAMBANK("bank1") AM_BASE_SIZE_MEMBER(cd32_state, chip_ram, chip_ram_size)
+	AM_RANGE(0x000000, 0x1fffff) AM_RAMBANK("bank1") AM_BASE_SIZE_MEMBER(cd32_state, m_chip_ram, m_chip_ram_size)
 	AM_RANGE(0x800000, 0x800003) AM_READ_PORT("DIPSW1")
 	AM_RANGE(0x800010, 0x800013) AM_READ_PORT("DIPSW2")
 	AM_RANGE(0xb80000, 0xb8003f) AM_DEVREADWRITE("akiko", amiga_akiko32_r, amiga_akiko32_w)
 	AM_RANGE(0xbfa000, 0xbfa003) AM_WRITE(aga_overlay_w)
 	AM_RANGE(0xbfd000, 0xbfefff) AM_READWRITE16(amiga_cia_r, amiga_cia_w, 0xffffffff)
-	AM_RANGE(0xc00000, 0xdfffff) AM_READWRITE16(amiga_custom_r, amiga_custom_w, 0xffffffff) AM_BASE_MEMBER(cd32_state, custom_regs)
+	AM_RANGE(0xc00000, 0xdfffff) AM_READWRITE16(amiga_custom_r, amiga_custom_w, 0xffffffff) AM_BASE_MEMBER(cd32_state, m_custom_regs)
 	AM_RANGE(0xe00000, 0xe7ffff) AM_ROM AM_REGION("user1", 0x80000)	/* CD32 Extended ROM */
 	AM_RANGE(0xa00000, 0xf7ffff) AM_NOP
 	AM_RANGE(0xf80000, 0xffffff) AM_ROM AM_REGION("user1", 0x0)		/* Kickstart */
@@ -141,16 +141,16 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static void cd32_potgo_w(running_machine *machine, UINT16 data)
+static void cd32_potgo_w(running_machine &machine, UINT16 data)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 	int i;
 
-	if (state->input_hack != NULL)
-		(*state->input_hack)(machine);
+	if (state->m_input_hack != NULL)
+		(*state->m_input_hack)(machine);
 
-	state->potgo_value = state->potgo_value & 0x5500;
-	state->potgo_value |= data & 0xaa00;
+	state->m_potgo_value = state->m_potgo_value & 0x5500;
+	state->m_potgo_value |= data & 0xaa00;
 
 	for (i = 0; i < 8; i += 2)
 	{
@@ -158,22 +158,22 @@ static void cd32_potgo_w(running_machine *machine, UINT16 data)
 		if (data & dir)
 		{
 			UINT16 d = 0x0100 << i;
-			state->potgo_value &= ~d;
-			state->potgo_value |= data & d;
+			state->m_potgo_value &= ~d;
+			state->m_potgo_value |= data & d;
 		}
 	}
 	for (i = 0; i < 2; i++)
 	{
 		UINT16 p5dir = 0x0200 << (i * 4); /* output enable P5 */
 		UINT16 p5dat = 0x0100 << (i * 4); /* data P5 */
-		if ((state->potgo_value & p5dir) && (state->potgo_value & p5dat))
-			state->cd32_shifter[i] = 8;
+		if ((state->m_potgo_value & p5dir) && (state->m_potgo_value & p5dat))
+			state->m_cd32_shifter[i] = 8;
 	}
 }
 
-static void handle_cd32_joystick_cia(running_machine *machine, UINT8 pra, UINT8 dra)
+static void handle_cd32_joystick_cia(running_machine &machine, UINT8 pra, UINT8 dra)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 	int i;
 
 	for (i = 0; i < 2; i++)
@@ -182,25 +182,25 @@ static void handle_cd32_joystick_cia(running_machine *machine, UINT8 pra, UINT8 
 		UINT16 p5dir = 0x0200 << (i * 4); /* output enable P5 */
 		UINT16 p5dat = 0x0100 << (i * 4); /* data P5 */
 
-		if (!(state->potgo_value & p5dir) || !(state->potgo_value & p5dat))
+		if (!(state->m_potgo_value & p5dir) || !(state->m_potgo_value & p5dat))
 		{
-			if ((dra & but) && (pra & but) != state->oldstate[i])
+			if ((dra & but) && (pra & but) != state->m_oldstate[i])
 			{
 				if (!(pra & but))
 				{
-					state->cd32_shifter[i]--;
-					if (state->cd32_shifter[i] < 0)
-						state->cd32_shifter[i] = 0;
+					state->m_cd32_shifter[i]--;
+					if (state->m_cd32_shifter[i] < 0)
+						state->m_cd32_shifter[i] = 0;
 				}
 			}
 		}
-		state->oldstate[i] = pra & but;
+		state->m_oldstate[i] = pra & but;
 	}
 }
 
-static UINT16 handle_joystick_potgor(running_machine *machine, UINT16 potgor)
+static UINT16 handle_joystick_potgor(running_machine &machine, UINT16 potgor)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 	static const char *const player_portname[] = { "P2", "P1" };
 	int i;
 
@@ -213,16 +213,16 @@ static UINT16 handle_joystick_potgor(running_machine *machine, UINT16 potgor)
 
 		/* p5 is floating in input-mode */
 		potgor &= ~p5dat;
-		potgor |= state->potgo_value & p5dat;
-		if (!(state->potgo_value & p9dir))
+		potgor |= state->m_potgo_value & p5dat;
+		if (!(state->m_potgo_value & p9dir))
 			potgor |= p9dat;
 		/* P5 output and 1 -> shift register is kept reset (Blue button) */
-		if ((state->potgo_value & p5dir) && (state->potgo_value & p5dat))
-			state->cd32_shifter[i] = 8;
+		if ((state->m_potgo_value & p5dir) && (state->m_potgo_value & p5dat))
+			state->m_cd32_shifter[i] = 8;
 		/* shift at 1 == return one, >1 = return button states */
-		if (state->cd32_shifter[i] == 0)
+		if (state->m_cd32_shifter[i] == 0)
 			potgor &= ~p9dat; /* shift at zero == return zero */
-		if (state->cd32_shifter[i] >= 2 && (input_port_read(machine, player_portname[i]) & (1 << (state->cd32_shifter[i] - 2))))
+		if (state->m_cd32_shifter[i] >= 2 && (input_port_read(machine, player_portname[i]) & (1 << (state->m_cd32_shifter[i] - 2))))
 			potgor &= ~p9dat;
 	}
 	return potgor;
@@ -230,8 +230,8 @@ static UINT16 handle_joystick_potgor(running_machine *machine, UINT16 potgor)
 
 static CUSTOM_INPUT(cubo_input)
 {
-	cd32_state *state = field->port->machine->driver_data<cd32_state>();
-	return handle_joystick_potgor(field->port->machine, state->potgo_value) >> 10;
+	cd32_state *state = field->port->machine().driver_data<cd32_state>();
+	return handle_joystick_potgor(field->port->machine(), state->m_potgo_value) >> 10;
 }
 
 static INPUT_PORTS_START( cd32 )
@@ -825,7 +825,7 @@ ROM_END
 
 static DRIVER_INIT( cd32 )
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 	static const amiga_machine_interface cd32_intf =
 	{
 		AGA_CHIP_RAM_MASK,
@@ -840,11 +840,11 @@ static DRIVER_INIT( cd32 )
 	amiga_machine_config(machine, &cd32_intf);
 
 	/* set up memory */
-	memory_configure_bank(machine, "bank1", 0, 1, state->chip_ram, 0);
-	memory_configure_bank(machine, "bank1", 1, 1, machine->region("user1")->base(), 0);
+	memory_configure_bank(machine, "bank1", 0, 1, state->m_chip_ram, 0);
+	memory_configure_bank(machine, "bank1", 1, 1, machine.region("user1")->base(), 0);
 
 	/* input hack */
-	state->input_hack = NULL;
+	state->m_input_hack = NULL;
 }
 
 /* BIOS */
@@ -1221,149 +1221,149 @@ ROM_END
  *
  *************************************/
 
-static void cndypuzl_input_hack(running_machine *machine)
+static void cndypuzl_input_hack(running_machine &machine)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine->device("maincpu")) < state->chip_ram_size)
+	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram_size)
 	{
-		//(*state->chip_ram_w)(0x051c02, 0x0000);
+		//(*state->m_chip_ram_w)(0x051c02, 0x0000);
 
-		UINT32 r_A5 = cpu_get_reg(machine->device("maincpu"), M68K_A5);
-		(*state->chip_ram_w)(state, r_A5 - 0x7ebe, 0x0000);
+		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		(*state->m_chip_ram_w)(state, r_A5 - 0x7ebe, 0x0000);
 	}
 }
 
 static DRIVER_INIT(cndypuzl)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 	DRIVER_INIT_CALL(cd32);
-	state->input_hack = cndypuzl_input_hack;
+	state->m_input_hack = cndypuzl_input_hack;
 }
 
-static void haremchl_input_hack(running_machine *machine)
+static void haremchl_input_hack(running_machine &machine)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine->device("maincpu")) < state->chip_ram_size)
+	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram_size)
 	{
 		//amiga_chip_ram_w8(state, 0x002907, 0x00);
 
-		UINT32 r_A5 = cpu_get_reg(machine->device("maincpu"), M68K_A5);
-		UINT32 r_A2 = ((*state->chip_ram_r)(state, r_A5 - 0x7f00 + 0) << 16) | ((*state->chip_ram_r)(state, r_A5 - 0x7f00 + 2));
+		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		UINT32 r_A2 = ((*state->m_chip_ram_r)(state, r_A5 - 0x7f00 + 0) << 16) | ((*state->m_chip_ram_r)(state, r_A5 - 0x7f00 + 2));
 		amiga_chip_ram_w8(state, r_A2 + 0x1f, 0x00);
 	}
 }
 
 static DRIVER_INIT(haremchl)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 	DRIVER_INIT_CALL(cd32);
-	state->input_hack = haremchl_input_hack;
+	state->m_input_hack = haremchl_input_hack;
 }
 
-static void lsrquiz_input_hack(running_machine *machine)
+static void lsrquiz_input_hack(running_machine &machine)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine->device("maincpu")) < state->chip_ram_size)
+	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram_size)
 	{
 		//amiga_chip_ram_w8(state, 0x001e1b, 0x00);
 
-		UINT32 r_A5 = cpu_get_reg(machine->device("maincpu"), M68K_A5);
-		UINT32 r_A2 = ((*state->chip_ram_r)(state, r_A5 - 0x7fe0 + 0) << 16) | ((*state->chip_ram_r)(state, r_A5 - 0x7fe0 + 2));
+		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		UINT32 r_A2 = ((*state->m_chip_ram_r)(state, r_A5 - 0x7fe0 + 0) << 16) | ((*state->m_chip_ram_r)(state, r_A5 - 0x7fe0 + 2));
 		amiga_chip_ram_w8(state, r_A2 + 0x13, 0x00);
 	}
 }
 
 static DRIVER_INIT(lsrquiz)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 	DRIVER_INIT_CALL(cd32);
-	state->input_hack = lsrquiz_input_hack;
+	state->m_input_hack = lsrquiz_input_hack;
 }
 
 /* The hack isn't working if you exit the test mode with P1 button 2 ! */
-static void lsrquiz2_input_hack(running_machine *machine)
+static void lsrquiz2_input_hack(running_machine &machine)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine->device("maincpu")) < state->chip_ram_size)
+	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram_size)
 	{
 		//amiga_chip_ram_w8(state, 0x046107, 0x00);
 
-		UINT32 r_A5 = cpu_get_reg(machine->device("maincpu"), M68K_A5);
-		UINT32 r_A2 = ((*state->chip_ram_r)(state, r_A5 - 0x7fdc + 0) << 16) | ((*state->chip_ram_r)(state, r_A5 - 0x7fdc + 2));
+		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		UINT32 r_A2 = ((*state->m_chip_ram_r)(state, r_A5 - 0x7fdc + 0) << 16) | ((*state->m_chip_ram_r)(state, r_A5 - 0x7fdc + 2));
 		amiga_chip_ram_w8(state, r_A2 + 0x17, 0x00);
 	}
 }
 
 static DRIVER_INIT(lsrquiz2)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 	DRIVER_INIT_CALL(cd32);
-	state->input_hack = lsrquiz2_input_hack;
+	state->m_input_hack = lsrquiz2_input_hack;
 }
 
-static void lasstixx_input_hack(running_machine *machine)
+static void lasstixx_input_hack(running_machine &machine)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine->device("maincpu")) < state->chip_ram_size)
+	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram_size)
 	{
 		//amiga_chip_ram_w8(state, 0x00281c, 0x00);
 
-		UINT32 r_A5 = cpu_get_reg(machine->device("maincpu"), M68K_A5);
-		UINT32 r_A2 = ((*state->chip_ram_r)(state, r_A5 - 0x7fa2 + 0) << 16) | ((*state->chip_ram_r)(state, r_A5 - 0x7fa2 + 2));
+		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		UINT32 r_A2 = ((*state->m_chip_ram_r)(state, r_A5 - 0x7fa2 + 0) << 16) | ((*state->m_chip_ram_r)(state, r_A5 - 0x7fa2 + 2));
 		amiga_chip_ram_w8(state, r_A2 + 0x24, 0x00);
 	}
 }
 
 static DRIVER_INIT(lasstixx)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 	DRIVER_INIT_CALL(cd32);
-	state->input_hack = lasstixx_input_hack;
+	state->m_input_hack = lasstixx_input_hack;
 }
 
-static void mgnumber_input_hack(running_machine *machine)
+static void mgnumber_input_hack(running_machine &machine)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine->device("maincpu")) < state->chip_ram_size)
+	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram_size)
 	{
-		//(*state->chip_ram_w)(0x04bfa0, 0x0000);
+		//(*state->m_chip_ram_w)(0x04bfa0, 0x0000);
 
-		UINT32 r_A5 = cpu_get_reg(machine->device("maincpu"), M68K_A5);
-		(*state->chip_ram_w)(state, r_A5 - 0x7ed8, 0x0000);
+		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		(*state->m_chip_ram_w)(state, r_A5 - 0x7ed8, 0x0000);
 	}
 }
 
 static DRIVER_INIT(mgnumber)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 	DRIVER_INIT_CALL(cd32);
-	state->input_hack = mgnumber_input_hack;
+	state->m_input_hack = mgnumber_input_hack;
 }
 
-static void mgprem11_input_hack(running_machine *machine)
+static void mgprem11_input_hack(running_machine &machine)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine->device("maincpu")) < state->chip_ram_size)
+	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram_size)
 	{
 		//amiga_chip_ram_w8(state, 0x044f7e, 0x00);
 
-		UINT32 r_A5 = cpu_get_reg(machine->device("maincpu"), M68K_A5);
+		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
 		amiga_chip_ram_w8(state, r_A5 - 0x7eca, 0x00);
 	}
 }
 
 static DRIVER_INIT(mgprem11)
 {
-	cd32_state *state = machine->driver_data<cd32_state>();
+	cd32_state *state = machine.driver_data<cd32_state>();
 	DRIVER_INIT_CALL(cd32);
-	state->input_hack = mgprem11_input_hack;
+	state->m_input_hack = mgprem11_input_hack;
 }
 
 /***************************************************************************************************/

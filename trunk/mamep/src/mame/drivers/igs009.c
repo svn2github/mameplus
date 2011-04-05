@@ -29,24 +29,24 @@ public:
 	igs009_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	tilemap_t *gp98_reel1_tilemap;
-	UINT8 *gp98_reel1_ram;
-	tilemap_t *gp98_reel2_tilemap;
-	UINT8 *gp98_reel2_ram;
-	tilemap_t *gp98_reel3_tilemap;
-	UINT8 *gp98_reel3_ram;
-	tilemap_t *gp98_reel4_tilemap;
-	UINT8 *gp98_reel4_ram;
-	UINT8 *fg_tile_ram;
-	UINT8 *fg_color_ram;
-	UINT8 *bg_scroll;
-	UINT8 *bg_scroll2;
-	tilemap_t *fg_tilemap;
-	int video_enable;
-	int nmi_enable;
-	int hopper;
-	UINT8 out[3];
-	UINT8 igs_magic[2];
+	tilemap_t *m_gp98_reel1_tilemap;
+	UINT8 *m_gp98_reel1_ram;
+	tilemap_t *m_gp98_reel2_tilemap;
+	UINT8 *m_gp98_reel2_ram;
+	tilemap_t *m_gp98_reel3_tilemap;
+	UINT8 *m_gp98_reel3_ram;
+	tilemap_t *m_gp98_reel4_tilemap;
+	UINT8 *m_gp98_reel4_ram;
+	UINT8 *m_fg_tile_ram;
+	UINT8 *m_fg_color_ram;
+	UINT8 *m_bg_scroll;
+	UINT8 *m_bg_scroll2;
+	tilemap_t *m_fg_tilemap;
+	int m_video_enable;
+	int m_nmi_enable;
+	int m_hopper;
+	UINT8 m_out[3];
+	UINT8 m_igs_magic[2];
 };
 
 
@@ -58,15 +58,15 @@ public:
 
 static WRITE8_HANDLER( gp98_reel1_ram_w )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	state->gp98_reel1_ram[offset] = data;
-	tilemap_mark_tile_dirty(state->gp98_reel1_tilemap,offset);
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	state->m_gp98_reel1_ram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_gp98_reel1_tilemap,offset);
 }
 
 static TILE_GET_INFO( get_jingbell_reel1_tile_info )
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	int code = state->gp98_reel1_ram[tile_index];
+	igs009_state *state = machine.driver_data<igs009_state>();
+	int code = state->m_gp98_reel1_ram[tile_index];
 
 	SET_TILE_INFO(
 			0,
@@ -78,8 +78,8 @@ static TILE_GET_INFO( get_jingbell_reel1_tile_info )
 
 static TILE_GET_INFO( get_gp98_reel1_tile_info )
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	int code = state->gp98_reel1_ram[tile_index];
+	igs009_state *state = machine.driver_data<igs009_state>();
+	int code = state->m_gp98_reel1_ram[tile_index];
 
 	SET_TILE_INFO(
 			0,
@@ -91,15 +91,15 @@ static TILE_GET_INFO( get_gp98_reel1_tile_info )
 
 static WRITE8_HANDLER( gp98_reel2_ram_w )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	state->gp98_reel2_ram[offset] = data;
-	tilemap_mark_tile_dirty(state->gp98_reel2_tilemap,offset);
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	state->m_gp98_reel2_ram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_gp98_reel2_tilemap,offset);
 }
 
 static TILE_GET_INFO( get_jingbell_reel2_tile_info )
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	int code = state->gp98_reel2_ram[tile_index];
+	igs009_state *state = machine.driver_data<igs009_state>();
+	int code = state->m_gp98_reel2_ram[tile_index];
 
 	SET_TILE_INFO(
 			0,
@@ -110,8 +110,8 @@ static TILE_GET_INFO( get_jingbell_reel2_tile_info )
 
 static TILE_GET_INFO( get_gp98_reel2_tile_info )
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	int code = state->gp98_reel2_ram[tile_index];
+	igs009_state *state = machine.driver_data<igs009_state>();
+	int code = state->m_gp98_reel2_ram[tile_index];
 
 	SET_TILE_INFO(
 			0,
@@ -124,15 +124,15 @@ static TILE_GET_INFO( get_gp98_reel2_tile_info )
 
 static WRITE8_HANDLER( gp98_reel3_ram_w )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	state->gp98_reel3_ram[offset] = data;
-	tilemap_mark_tile_dirty(state->gp98_reel3_tilemap,offset);
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	state->m_gp98_reel3_ram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_gp98_reel3_tilemap,offset);
 }
 
 static TILE_GET_INFO( get_jingbell_reel3_tile_info )
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	int code = state->gp98_reel3_ram[tile_index];
+	igs009_state *state = machine.driver_data<igs009_state>();
+	int code = state->m_gp98_reel3_ram[tile_index];
 
 	SET_TILE_INFO(
 			0,
@@ -143,8 +143,8 @@ static TILE_GET_INFO( get_jingbell_reel3_tile_info )
 
 static TILE_GET_INFO( get_gp98_reel3_tile_info )
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	int code = state->gp98_reel3_ram[tile_index];
+	igs009_state *state = machine.driver_data<igs009_state>();
+	int code = state->m_gp98_reel3_ram[tile_index];
 
 	SET_TILE_INFO(
 			0,
@@ -157,15 +157,15 @@ static TILE_GET_INFO( get_gp98_reel3_tile_info )
 
 static WRITE8_HANDLER( gp98_reel4_ram_w )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	state->gp98_reel4_ram[offset] = data;
-	tilemap_mark_tile_dirty(state->gp98_reel4_tilemap,offset);
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	state->m_gp98_reel4_ram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_gp98_reel4_tilemap,offset);
 }
 
 static TILE_GET_INFO( get_jingbell_reel4_tile_info )
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	int code = state->gp98_reel4_ram[tile_index];
+	igs009_state *state = machine.driver_data<igs009_state>();
+	int code = state->m_gp98_reel4_ram[tile_index];
 
 	SET_TILE_INFO(
 			0,
@@ -176,8 +176,8 @@ static TILE_GET_INFO( get_jingbell_reel4_tile_info )
 
 static TILE_GET_INFO( get_gp98_reel4_tile_info )
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	int code = state->gp98_reel4_ram[tile_index];
+	igs009_state *state = machine.driver_data<igs009_state>();
+	int code = state->m_gp98_reel4_ram[tile_index];
 
 	SET_TILE_INFO(
 			0,
@@ -194,82 +194,82 @@ static TILE_GET_INFO( get_gp98_reel4_tile_info )
 
 static WRITE8_HANDLER( bg_scroll_w )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	state->bg_scroll[offset] = data;
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	state->m_bg_scroll[offset] = data;
 //  tilemap_set_scrolly(bg_tilemap,offset,data);
 }
 
 
 static TILE_GET_INFO( get_fg_tile_info )
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	int code = state->fg_tile_ram[tile_index] | (state->fg_color_ram[tile_index] << 8);
+	igs009_state *state = machine.driver_data<igs009_state>();
+	int code = state->m_fg_tile_ram[tile_index] | (state->m_fg_color_ram[tile_index] << 8);
 	SET_TILE_INFO(1, code, (4*(code >> 14)+3), 0);
 }
 
 static WRITE8_HANDLER( fg_tile_w )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	state->fg_tile_ram[offset] = data;
-	tilemap_mark_tile_dirty(state->fg_tilemap,offset);
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	state->m_fg_tile_ram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_fg_tilemap,offset);
 }
 
 static WRITE8_HANDLER( fg_color_w )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	state->fg_color_ram[offset] = data;
-	tilemap_mark_tile_dirty(state->fg_tilemap,offset);
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	state->m_fg_color_ram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_fg_tilemap,offset);
 }
 
 static VIDEO_START(jingbell)
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	state->fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows,	8,  8,	0x80,0x20);
-	tilemap_set_transparent_pen(state->fg_tilemap, 0);
+	igs009_state *state = machine.driver_data<igs009_state>();
+	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows,	8,  8,	0x80,0x20);
+	tilemap_set_transparent_pen(state->m_fg_tilemap, 0);
 
-	state->gp98_reel1_tilemap = tilemap_create(machine,get_jingbell_reel1_tile_info,tilemap_scan_rows,8,32, 128, 8);
-	state->gp98_reel2_tilemap = tilemap_create(machine,get_jingbell_reel2_tile_info,tilemap_scan_rows,8,32, 128, 8);
-	state->gp98_reel3_tilemap = tilemap_create(machine,get_jingbell_reel3_tile_info,tilemap_scan_rows,8,32, 128, 8);
-	state->gp98_reel4_tilemap = tilemap_create(machine,get_jingbell_reel4_tile_info,tilemap_scan_rows,8,32, 128, 8);
+	state->m_gp98_reel1_tilemap = tilemap_create(machine,get_jingbell_reel1_tile_info,tilemap_scan_rows,8,32, 128, 8);
+	state->m_gp98_reel2_tilemap = tilemap_create(machine,get_jingbell_reel2_tile_info,tilemap_scan_rows,8,32, 128, 8);
+	state->m_gp98_reel3_tilemap = tilemap_create(machine,get_jingbell_reel3_tile_info,tilemap_scan_rows,8,32, 128, 8);
+	state->m_gp98_reel4_tilemap = tilemap_create(machine,get_jingbell_reel4_tile_info,tilemap_scan_rows,8,32, 128, 8);
 
-	tilemap_set_scroll_cols(state->gp98_reel1_tilemap, 128);
-	tilemap_set_scroll_cols(state->gp98_reel2_tilemap, 128);
-	tilemap_set_scroll_cols(state->gp98_reel3_tilemap, 128);
-	tilemap_set_scroll_cols(state->gp98_reel4_tilemap, 128);
+	tilemap_set_scroll_cols(state->m_gp98_reel1_tilemap, 128);
+	tilemap_set_scroll_cols(state->m_gp98_reel2_tilemap, 128);
+	tilemap_set_scroll_cols(state->m_gp98_reel3_tilemap, 128);
+	tilemap_set_scroll_cols(state->m_gp98_reel4_tilemap, 128);
 }
 
 
 static VIDEO_START(gp98)
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	state->fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows,	8,  8,	0x80,0x20);
-	tilemap_set_transparent_pen(state->fg_tilemap, 0);
+	igs009_state *state = machine.driver_data<igs009_state>();
+	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows,	8,  8,	0x80,0x20);
+	tilemap_set_transparent_pen(state->m_fg_tilemap, 0);
 
-	state->gp98_reel1_tilemap = tilemap_create(machine,get_gp98_reel1_tile_info,tilemap_scan_rows,8,32, 128, 8);
-	state->gp98_reel2_tilemap = tilemap_create(machine,get_gp98_reel2_tile_info,tilemap_scan_rows,8,32, 128, 8);
-	state->gp98_reel3_tilemap = tilemap_create(machine,get_gp98_reel3_tile_info,tilemap_scan_rows,8,32, 128, 8);
-	state->gp98_reel4_tilemap = tilemap_create(machine,get_gp98_reel4_tile_info,tilemap_scan_rows,8,32, 128, 8);
+	state->m_gp98_reel1_tilemap = tilemap_create(machine,get_gp98_reel1_tile_info,tilemap_scan_rows,8,32, 128, 8);
+	state->m_gp98_reel2_tilemap = tilemap_create(machine,get_gp98_reel2_tile_info,tilemap_scan_rows,8,32, 128, 8);
+	state->m_gp98_reel3_tilemap = tilemap_create(machine,get_gp98_reel3_tile_info,tilemap_scan_rows,8,32, 128, 8);
+	state->m_gp98_reel4_tilemap = tilemap_create(machine,get_gp98_reel4_tile_info,tilemap_scan_rows,8,32, 128, 8);
 
-	tilemap_set_scroll_cols(state->gp98_reel1_tilemap, 128);
-	tilemap_set_scroll_cols(state->gp98_reel2_tilemap, 128);
-	tilemap_set_scroll_cols(state->gp98_reel3_tilemap, 128);
-	tilemap_set_scroll_cols(state->gp98_reel4_tilemap, 128);
+	tilemap_set_scroll_cols(state->m_gp98_reel1_tilemap, 128);
+	tilemap_set_scroll_cols(state->m_gp98_reel2_tilemap, 128);
+	tilemap_set_scroll_cols(state->m_gp98_reel3_tilemap, 128);
+	tilemap_set_scroll_cols(state->m_gp98_reel4_tilemap, 128);
 
 }
 
 
 static SCREEN_UPDATE(jingbell)
 {
-	igs009_state *state = screen->machine->driver_data<igs009_state>();
-	int layers_ctrl = state->video_enable ? -1 : 0;
+	igs009_state *state = screen->machine().driver_data<igs009_state>();
+	int layers_ctrl = state->m_video_enable ? -1 : 0;
 
 #ifdef MAME_DEBUG
-	if (input_code_pressed(screen->machine, KEYCODE_Z))
+	if (input_code_pressed(screen->machine(), KEYCODE_Z))
 	{
 		int mask = 0;
-		if (input_code_pressed(screen->machine, KEYCODE_Q))	mask |= 1;
-		if (input_code_pressed(screen->machine, KEYCODE_W))	mask |= 2;
-		if (input_code_pressed(screen->machine, KEYCODE_A))	mask |= 4;
+		if (input_code_pressed(screen->machine(), KEYCODE_Q))	mask |= 1;
+		if (input_code_pressed(screen->machine(), KEYCODE_W))	mask |= 2;
+		if (input_code_pressed(screen->machine(), KEYCODE_A))	mask |= 4;
 		if (mask != 0) layers_ctrl &= mask;
 	}
 #endif
@@ -283,10 +283,10 @@ static SCREEN_UPDATE(jingbell)
 
 		for (i= 0;i < 0x80;i++)
 		{
-			tilemap_set_scrolly(state->gp98_reel1_tilemap, i, state->bg_scroll[i]*2);
-			tilemap_set_scrolly(state->gp98_reel2_tilemap, i, state->bg_scroll[i+0x80]*2);
-			tilemap_set_scrolly(state->gp98_reel3_tilemap, i, state->bg_scroll[i+0x100]*2);
-			tilemap_set_scrolly(state->gp98_reel4_tilemap, i, state->bg_scroll[i+0x180]*2);
+			tilemap_set_scrolly(state->m_gp98_reel1_tilemap, i, state->m_bg_scroll[i]*2);
+			tilemap_set_scrolly(state->m_gp98_reel2_tilemap, i, state->m_bg_scroll[i+0x80]*2);
+			tilemap_set_scrolly(state->m_gp98_reel3_tilemap, i, state->m_bg_scroll[i+0x100]*2);
+			tilemap_set_scrolly(state->m_gp98_reel4_tilemap, i, state->m_bg_scroll[i+0x180]*2);
 		}
 
 
@@ -295,7 +295,7 @@ static SCREEN_UPDATE(jingbell)
 		for (zz=0;zz<0x80-8;zz++) // -8 because of visible area (2*8 = 16)
 		{
 			rectangle clip;
-			int rowenable = state->bg_scroll2[zz];
+			int rowenable = state->m_bg_scroll2[zz];
 
 			/* draw top of screen */
 			clip.min_x = visarea.min_x;
@@ -303,23 +303,23 @@ static SCREEN_UPDATE(jingbell)
 			clip.min_y = startclipmin;
 			clip.max_y = startclipmin+2;
 
-			bitmap_fill(bitmap,&clip,screen->machine->pens[rowenable]);
+			bitmap_fill(bitmap,&clip,screen->machine().pens[rowenable]);
 
 			if (rowenable==0)
 			{ // 0 and 1 are the same? or is there a global switchoff?
-				tilemap_draw(bitmap,&clip,state->gp98_reel1_tilemap,0,0);
+				tilemap_draw(bitmap,&clip,state->m_gp98_reel1_tilemap,0,0);
 			}
 			else if (rowenable==1)
 			{
-				tilemap_draw(bitmap,&clip,state->gp98_reel2_tilemap,0,0);
+				tilemap_draw(bitmap,&clip,state->m_gp98_reel2_tilemap,0,0);
 			}
 			else if (rowenable==2)
 			{
-				tilemap_draw(bitmap,&clip,state->gp98_reel3_tilemap,0,0);
+				tilemap_draw(bitmap,&clip,state->m_gp98_reel3_tilemap,0,0);
 			}
 			else if (rowenable==3)
 			{
-				tilemap_draw(bitmap,&clip,state->gp98_reel4_tilemap,0,0);
+				tilemap_draw(bitmap,&clip,state->m_gp98_reel4_tilemap,0,0);
 			}
 
 
@@ -327,10 +327,10 @@ static SCREEN_UPDATE(jingbell)
 		}
 
 	}
-	else					bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine));
+	else					bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
 
 
-	if (layers_ctrl & 2)	tilemap_draw(bitmap, cliprect, state->fg_tilemap, 0, 0);
+	if (layers_ctrl & 2)	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 
 	return 0;
 }
@@ -342,102 +342,102 @@ static SCREEN_UPDATE(jingbell)
 
 static CUSTOM_INPUT( hopper_r )
 {
-	igs009_state *state = field->port->machine->driver_data<igs009_state>();
-	return state->hopper && !(field->port->machine->primary_screen->frame_number()%10);
+	igs009_state *state = field->port->machine().driver_data<igs009_state>();
+	return state->m_hopper && !(field->port->machine().primary_screen->frame_number()%10);
 }
 
 
 static void show_out(igs009_state *state)
 {
 #ifdef MAME_DEBUG
-	popmessage("%02x %02x %02x", state->out[0], state->out[1], state->out[2]);
+	popmessage("%02x %02x %02x", state->m_out[0], state->m_out[1], state->m_out[2]);
 #endif
 }
 
 static WRITE8_HANDLER( jingbell_nmi_and_coins_w )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	if ((state->nmi_enable ^ data) & (~0xdd))
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	if ((state->m_nmi_enable ^ data) & (~0xdd))
 	{
-		logerror("PC %06X: nmi_and_coins = %02x\n",cpu_get_pc(space->cpu),data);
+		logerror("PC %06X: nmi_and_coins = %02x\n",cpu_get_pc(&space->device()),data);
 //      popmessage("%02x",data);
 	}
 
-	coin_counter_w(space->machine, 0,		data & 0x01);	// coin_a
-	coin_counter_w(space->machine, 1,		data & 0x04);	// coin_c
-	coin_counter_w(space->machine, 2,		data & 0x08);	// key in
-	coin_counter_w(space->machine, 3,		data & 0x10);	// coin state->out mech
+	coin_counter_w(space->machine(), 0,		data & 0x01);	// coin_a
+	coin_counter_w(space->machine(), 1,		data & 0x04);	// coin_c
+	coin_counter_w(space->machine(), 2,		data & 0x08);	// key in
+	coin_counter_w(space->machine(), 3,		data & 0x10);	// coin state->m_out mech
 
-	set_led_status(space->machine, 6,		data & 0x40);	// led for coin state->out / state->hopper active
+	set_led_status(space->machine(), 6,		data & 0x40);	// led for coin state->m_out / state->m_hopper active
 
-	state->nmi_enable = data;	//  data & 0x80     // nmi enable?
+	state->m_nmi_enable = data;	//  data & 0x80     // nmi enable?
 
-	state->out[0] = data;
+	state->m_out[0] = data;
 	show_out(state);
 }
 
 static WRITE8_HANDLER( jingbell_video_and_leds_w )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	set_led_status(space->machine, 4,	  data & 0x01);	// start?
-	set_led_status(space->machine, 5,	  data & 0x04);	// l_bet?
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	set_led_status(space->machine(), 4,	  data & 0x01);	// start?
+	set_led_status(space->machine(), 5,	  data & 0x04);	// l_bet?
 
-	state->video_enable	=	  data & 0x40;
-	state->hopper			=	(~data)& 0x80;
+	state->m_video_enable	=	  data & 0x40;
+	state->m_hopper			=	(~data)& 0x80;
 
-	state->out[1] = data;
+	state->m_out[1] = data;
 	show_out(state);
 }
 
 static WRITE8_HANDLER( jingbell_leds_w )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	set_led_status(space->machine, 0, data & 0x01);	// stop_1
-	set_led_status(space->machine, 1, data & 0x02);	// stop_2
-	set_led_status(space->machine, 2, data & 0x04);	// stop_3
-	set_led_status(space->machine, 3, data & 0x08);	// stop
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	set_led_status(space->machine(), 0, data & 0x01);	// stop_1
+	set_led_status(space->machine(), 1, data & 0x02);	// stop_2
+	set_led_status(space->machine(), 2, data & 0x04);	// stop_3
+	set_led_status(space->machine(), 3, data & 0x08);	// stop
 	// data & 0x10?
 
-	state->out[2] = data;
+	state->m_out[2] = data;
 	show_out(state);
 }
 
 
 static WRITE8_HANDLER( jingbell_magic_w )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	state->igs_magic[offset] = data;
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	state->m_igs_magic[offset] = data;
 
 	if (offset == 0)
 		return;
 
-	switch(state->igs_magic[0])
+	switch(state->m_igs_magic[0])
 	{
 		case 0x01:
 			break;
 
 		default:
-//          popmessage("magic %x <- %04x",state->igs_magic[0],data);
-			logerror("%06x: warning, writing to igs_magic %02x = %02x\n", cpu_get_pc(space->cpu), state->igs_magic[0], data);
+//          popmessage("magic %x <- %04x",state->m_igs_magic[0],data);
+			logerror("%06x: warning, writing to igs_magic %02x = %02x\n", cpu_get_pc(&space->device()), state->m_igs_magic[0], data);
 	}
 }
 
 static READ8_HANDLER( jingbell_magic_r )
 {
-	igs009_state *state = space->machine->driver_data<igs009_state>();
-	switch(state->igs_magic[0])
+	igs009_state *state = space->machine().driver_data<igs009_state>();
+	switch(state->m_igs_magic[0])
 	{
 		case 0x00:
-			if ( !(state->igs_magic[1] & 0x01) )	return input_port_read(space->machine, "DSW1");
-			if ( !(state->igs_magic[1] & 0x02) )	return input_port_read(space->machine, "DSW2");
-			if ( !(state->igs_magic[1] & 0x04) )	return input_port_read(space->machine, "DSW3");
-			if ( !(state->igs_magic[1] & 0x08) )	return input_port_read(space->machine, "DSW4");
-			if ( !(state->igs_magic[1] & 0x10) )	return input_port_read(space->machine, "DSW5");
-			logerror("%06x: warning, reading dsw with igs_magic[1] = %02x\n", cpu_get_pc(space->cpu), state->igs_magic[1]);
+			if ( !(state->m_igs_magic[1] & 0x01) )	return input_port_read(space->machine(), "DSW1");
+			if ( !(state->m_igs_magic[1] & 0x02) )	return input_port_read(space->machine(), "DSW2");
+			if ( !(state->m_igs_magic[1] & 0x04) )	return input_port_read(space->machine(), "DSW3");
+			if ( !(state->m_igs_magic[1] & 0x08) )	return input_port_read(space->machine(), "DSW4");
+			if ( !(state->m_igs_magic[1] & 0x10) )	return input_port_read(space->machine(), "DSW5");
+			logerror("%06x: warning, reading dsw with igs_magic[1] = %02x\n", cpu_get_pc(&space->device()), state->m_igs_magic[1]);
 			break;
 
 		default:
-			logerror("%06x: warning, reading with igs_magic = %02x\n", cpu_get_pc(space->cpu), state->igs_magic[0]);
+			logerror("%06x: warning, reading with igs_magic = %02x\n", cpu_get_pc(&space->device()), state->m_igs_magic[0]);
 	}
 
 	return 0;
@@ -446,27 +446,27 @@ static READ8_HANDLER( jingbell_magic_r )
 
 
 
-static ADDRESS_MAP_START( jingbell_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( jingbell_map, AS_PROGRAM, 8 )
 	AM_RANGE( 0x00000, 0x0f3ff ) AM_ROM
 	AM_RANGE( 0x0f400, 0x0ffff ) AM_RAM AM_SHARE("nvram")
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( jingbell_portmap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( jingbell_portmap, AS_IO, 8 )
 	AM_RANGE( 0x0000, 0x003f ) AM_RAM // Z180 internal regs
 
-	AM_RANGE( 0x1000, 0x11ff ) AM_RAM_WRITE( bg_scroll_w ) AM_BASE_MEMBER(igs009_state, bg_scroll )
+	AM_RANGE( 0x1000, 0x11ff ) AM_RAM_WRITE( bg_scroll_w ) AM_BASE_MEMBER(igs009_state, m_bg_scroll )
 
 	AM_RANGE( 0x2000, 0x23ff ) AM_RAM_WRITE( paletteram_xBBBBBGGGGGRRRRR_split1_w ) AM_BASE_GENERIC( paletteram )
 	AM_RANGE( 0x2400, 0x27ff ) AM_RAM_WRITE( paletteram_xBBBBBGGGGGRRRRR_split2_w ) AM_BASE_GENERIC( paletteram2 )
 
-	AM_RANGE( 0x3000, 0x33ff ) AM_RAM_WRITE( gp98_reel1_ram_w )  AM_BASE_MEMBER(igs009_state, gp98_reel1_ram )
-	AM_RANGE( 0x3400, 0x37ff ) AM_RAM_WRITE( gp98_reel2_ram_w )  AM_BASE_MEMBER(igs009_state, gp98_reel2_ram )
-	AM_RANGE( 0x3800, 0x3bff ) AM_RAM_WRITE( gp98_reel3_ram_w )  AM_BASE_MEMBER(igs009_state, gp98_reel3_ram )
-	AM_RANGE( 0x3c00, 0x3fff ) AM_RAM_WRITE( gp98_reel4_ram_w )  AM_BASE_MEMBER(igs009_state, gp98_reel4_ram )
+	AM_RANGE( 0x3000, 0x33ff ) AM_RAM_WRITE( gp98_reel1_ram_w )  AM_BASE_MEMBER(igs009_state, m_gp98_reel1_ram )
+	AM_RANGE( 0x3400, 0x37ff ) AM_RAM_WRITE( gp98_reel2_ram_w )  AM_BASE_MEMBER(igs009_state, m_gp98_reel2_ram )
+	AM_RANGE( 0x3800, 0x3bff ) AM_RAM_WRITE( gp98_reel3_ram_w )  AM_BASE_MEMBER(igs009_state, m_gp98_reel3_ram )
+	AM_RANGE( 0x3c00, 0x3fff ) AM_RAM_WRITE( gp98_reel4_ram_w )  AM_BASE_MEMBER(igs009_state, m_gp98_reel4_ram )
 
-	AM_RANGE( 0x4000, 0x407f ) AM_RAM AM_BASE_MEMBER(igs009_state, bg_scroll2 )
+	AM_RANGE( 0x4000, 0x407f ) AM_RAM AM_BASE_MEMBER(igs009_state, m_bg_scroll2 )
 
-	AM_RANGE( 0x5000, 0x5fff ) AM_RAM_WRITE( fg_tile_w )  AM_BASE_MEMBER(igs009_state, fg_tile_ram )
+	AM_RANGE( 0x5000, 0x5fff ) AM_RAM_WRITE( fg_tile_w )  AM_BASE_MEMBER(igs009_state, m_fg_tile_ram )
 
 	AM_RANGE( 0x6480, 0x6480 ) AM_WRITE( jingbell_nmi_and_coins_w )
 
@@ -483,7 +483,7 @@ static ADDRESS_MAP_START( jingbell_portmap, ADDRESS_SPACE_IO, 8 )
 
 	AM_RANGE( 0x64d0, 0x64d1 ) AM_READWRITE( jingbell_magic_r, jingbell_magic_w )	// DSW1-5
 
-	AM_RANGE( 0x7000, 0x7fff ) AM_RAM_WRITE( fg_color_w ) AM_BASE_MEMBER(igs009_state, fg_color_ram )
+	AM_RANGE( 0x7000, 0x7fff ) AM_RAM_WRITE( fg_color_w ) AM_BASE_MEMBER(igs009_state, m_fg_color_ram )
 
 	AM_RANGE( 0x8000, 0xffff ) AM_ROM AM_REGION("data", 0)
 ADDRESS_MAP_END
@@ -658,17 +658,17 @@ GFXDECODE_END
 
 static MACHINE_RESET( jingbell )
 {
-	igs009_state *state = machine->driver_data<igs009_state>();
-	state->nmi_enable		=	0;
-	state->hopper			=	0;
-	state->video_enable	=	1;
+	igs009_state *state = machine.driver_data<igs009_state>();
+	state->m_nmi_enable		=	0;
+	state->m_hopper			=	0;
+	state->m_video_enable	=	1;
 }
 
 static INTERRUPT_GEN( jingbell_interrupt )
 {
-	igs009_state *state = device->machine->driver_data<igs009_state>();
-	 if (state->nmi_enable & 0x80)
-		cpu_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	igs009_state *state = device->machine().driver_data<igs009_state>();
+	 if (state->m_nmi_enable & 0x80)
+		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( jingbell, igs009_state )
@@ -778,8 +778,8 @@ ROM_END
 static DRIVER_INIT( jingbell )
 {
 	int i;
-	UINT8 *rom  = (UINT8 *)machine->region("maincpu")->base();
-	size_t size = machine->region("maincpu")->bytes();
+	UINT8 *rom  = (UINT8 *)machine.region("maincpu")->base();
+	size_t size = machine.region("maincpu")->bytes();
 
 	for (i=0; i<size; i++)
 	{

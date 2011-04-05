@@ -38,15 +38,15 @@ Notes:
 
 /***************************************************************************/
 
-static void set_m90_bank(running_machine *machine)
+static void set_m90_bank(running_machine &machine)
 {
-	m90_state *state = machine->driver_data<m90_state>();
-	UINT8 *rom = machine->region("user1")->base();
+	m90_state *state = machine.driver_data<m90_state>();
+	UINT8 *rom = machine.region("user1")->base();
 
 	if (!rom)
 		popmessage("bankswitch with no banked ROM!");
 	else
-		memory_set_bankptr(machine, "bank1",rom + state->bankaddress);
+		memory_set_bankptr(machine, "bank1",rom + state->m_bankaddress);
 }
 
 /***************************************************************************/
@@ -55,8 +55,8 @@ static WRITE16_HANDLER( m90_coincounter_w )
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		coin_counter_w(space->machine, 0,data & 0x01);
-		coin_counter_w(space->machine, 1,data & 0x02);
+		coin_counter_w(space->machine(), 0,data & 0x01);
+		coin_counter_w(space->machine(), 1,data & 0x02);
 
 		if (data&0xfe) logerror("Coin counter %02x\n",data);
 	}
@@ -64,11 +64,11 @@ static WRITE16_HANDLER( m90_coincounter_w )
 
 static WRITE16_HANDLER( quizf1_bankswitch_w )
 {
-	m90_state *state = space->machine->driver_data<m90_state>();
+	m90_state *state = space->machine().driver_data<m90_state>();
 	if (ACCESSING_BITS_0_7)
 	{
-		state->bankaddress = 0x10000 * (data & 0x0f);
-		set_m90_bank(space->machine);
+		state->m_bankaddress = 0x10000 * (data & 0x0f);
+		set_m90_bank(space->machine());
 	}
 }
 
@@ -81,34 +81,34 @@ static WRITE16_HANDLER( unknown_w )
 
 /***************************************************************************/
 
-static ADDRESS_MAP_START( m90_main_cpu_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( m90_main_cpu_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
 	AM_RANGE(0x80000, 0x8ffff) AM_ROMBANK("bank1")	/* Quiz F1 only */
 	AM_RANGE(0xa0000, 0xa3fff) AM_RAM
-	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_BASE_MEMBER(m90_state, video_data)
+	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_BASE_MEMBER(m90_state, m_video_data)
 	AM_RANGE(0xe0000, 0xe03ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( dynablsb_main_cpu_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( dynablsb_main_cpu_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x00000, 0x3ffff) AM_ROM
-	AM_RANGE(0x6000e, 0x60fff) AM_RAM AM_BASE_SIZE_MEMBER(m90_state, spriteram, spriteram_size)
+	AM_RANGE(0x6000e, 0x60fff) AM_RAM AM_BASE_SIZE_MEMBER(m90_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0xa0000, 0xa3fff) AM_RAM
-	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_BASE_MEMBER(m90_state, video_data)
+	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_BASE_MEMBER(m90_state, m_video_data)
 	AM_RANGE(0xe0000, 0xe03ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( bomblord_main_cpu_map, ADDRESS_SPACE_PROGRAM, 16 )
+static ADDRESS_MAP_START( bomblord_main_cpu_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
 	AM_RANGE(0xa0000, 0xa3fff) AM_RAM
-	AM_RANGE(0xc000e, 0xc0fff) AM_RAM AM_BASE_SIZE_MEMBER(m90_state, spriteram, spriteram_size)
-	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_BASE_MEMBER(m90_state, video_data)
+	AM_RANGE(0xc000e, 0xc0fff) AM_RAM AM_BASE_SIZE_MEMBER(m90_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_BASE_MEMBER(m90_state, m_video_data)
 	AM_RANGE(0xe0000, 0xe03ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( m90_main_cpu_io_map, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( m90_main_cpu_io_map, AS_IO, 16 )
 	AM_RANGE(0x00, 0x01) AM_WRITE(m72_sound_command_w)
 	AM_RANGE(0x00, 0x01) AM_READ_PORT("P1_P2")
 	AM_RANGE(0x02, 0x03) AM_WRITE(m90_coincounter_w)
@@ -119,7 +119,7 @@ static ADDRESS_MAP_START( m90_main_cpu_io_map, ADDRESS_SPACE_IO, 16 )
 	AM_RANGE(0x80, 0x8f) AM_WRITE(m90_video_control_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( dynablsb_cpu_io_map, ADDRESS_SPACE_IO, 16 )
+static ADDRESS_MAP_START( dynablsb_cpu_io_map, AS_IO, 16 )
 	AM_RANGE(0x00, 0x01) AM_WRITE(m72_sound_command_w)
 	AM_RANGE(0x00, 0x01) AM_READ_PORT("P1_P2")
 	AM_RANGE(0x02, 0x03) AM_WRITE(m90_coincounter_w)
@@ -133,12 +133,12 @@ ADDRESS_MAP_END
 
 /*****************************************************************************/
 
-static ADDRESS_MAP_START( m90_sound_cpu_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( m90_sound_cpu_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( m90_sound_cpu_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( m90_sound_cpu_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0x80, 0x80) AM_READ(soundlatch_r)
@@ -148,7 +148,7 @@ static ADDRESS_MAP_START( m90_sound_cpu_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x84, 0x84) AM_READ(m72_sample_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( bbmanw_sound_io_map, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( bbmanw_sound_io_map, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x40, 0x41) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0x42, 0x42) AM_READWRITE(soundlatch_r, m72_sound_irq_ack_w)
@@ -679,19 +679,19 @@ static const ym2151_interface ym2151_config =
 static INTERRUPT_GEN( m90_interrupt )
 {
 	if (cpu_getiloops(device) == 0)
-		cpu_set_input_line(device, NEC_INPUT_LINE_INTP0, ASSERT_LINE);
+		device_set_input_line(device, NEC_INPUT_LINE_INTP0, ASSERT_LINE);
 	else
-		cpu_set_input_line(device, NEC_INPUT_LINE_INTP0, CLEAR_LINE);
+		device_set_input_line(device, NEC_INPUT_LINE_INTP0, CLEAR_LINE);
 }
 
 static INTERRUPT_GEN( dynablsb_interrupt )
 {
-	cpu_set_input_line_and_vector(device, 0, HOLD_LINE, 0x60/4);
+	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x60/4);
 }
 
 static INTERRUPT_GEN( bomblord_interrupt )
 {
-	cpu_set_input_line_and_vector(device, 0, HOLD_LINE, 0x50/4);
+	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x50/4);
 }
 
 
@@ -1145,19 +1145,19 @@ static STATE_POSTLOAD( quizf1_postload )
 
 static DRIVER_INIT( quizf1 )
 {
-	m90_state *state = machine->driver_data<m90_state>();
-	state->bankaddress = 0;
+	m90_state *state = machine.driver_data<m90_state>();
+	state->m_bankaddress = 0;
 	set_m90_bank(machine);
 
-	state_save_register_global(machine, state->bankaddress);
-	machine->state().register_postload(quizf1_postload, NULL);
+	state_save_register_global(machine, state->m_bankaddress);
+	machine.state().register_postload(quizf1_postload, NULL);
 }
 
 
 
 static DRIVER_INIT( bomblord )
 {
-	UINT8 *RAM = machine->region("maincpu")->base();
+	UINT8 *RAM = machine.region("maincpu")->base();
 
 	int i;
 	for (i=0; i<0x100000; i+=8)

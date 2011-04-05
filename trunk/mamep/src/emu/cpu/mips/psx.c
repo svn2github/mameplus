@@ -232,7 +232,7 @@ void psxcpu_device::set_biu( UINT32 data, UINT32 mem_mask )
 
 void psxcpu_device::stop()
 {
-	debugger_break( machine );
+	debugger_break( m_machine );
 	debugger_instruction_hook( this,  m_pc );
 }
 
@@ -1256,16 +1256,16 @@ void psxcpu_device::update_scratchpad()
 {
 	if( ( m_biu & BIU_RAM ) == 0 )
 	{
-		memory_install_readwrite32_device_handler( m_program, this, 0x1f800000, 0x1f8003ff, 0, 0, psx_berr_r, psx_berr_w );
+		m_program->install_legacy_readwrite_handler( *this, 0x1f800000, 0x1f8003ff, FUNC(psx_berr_r), FUNC(psx_berr_w) );
 	}
 	else if( ( m_biu & BIU_DS ) == 0 )
 	{
-		memory_install_read32_device_handler( m_program, this, 0x1f800000, 0x1f8003ff, 0, 0, psx_berr_r );
-		memory_nop_write( m_program, 0x1f800000, 0x1f8003ff, 0, 0 );
+		m_program->install_legacy_read_handler( *this, 0x1f800000, 0x1f8003ff, FUNC(psx_berr_r) );
+		m_program->nop_write( 0x1f800000, 0x1f8003ff);
 	}
 	else
 	{
-		memory_install_ram( m_program, 0x1f800000, 0x1f8003ff, 0, 0, m_dcache );
+		m_program->install_ram( 0x1f800000, 0x1f8003ff, m_dcache );
 	}
 }
 
@@ -1536,7 +1536,7 @@ int psxcpu_device::store_data_address_breakpoint( UINT32 address )
 }
 
 // On-board RAM and peripherals
-static ADDRESS_MAP_START( psxcpu_internal_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( psxcpu_internal_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x00800000, 0x1effffff) AM_DEVREADWRITE(DEVICE_SELF,psx_berr_r, psx_berr_w)
 	AM_RANGE(0x1f800400, 0x1f800fff) AM_DEVREADWRITE(DEVICE_SELF,psx_berr_r, psx_berr_w)
 	AM_RANGE(0x20000000, 0x7fffffff) AM_DEVREADWRITE(DEVICE_SELF,psx_berr_r, psx_berr_w)
@@ -1546,7 +1546,7 @@ static ADDRESS_MAP_START( psxcpu_internal_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0xfffe0130, 0xfffe0133) AM_DEVREADWRITE(DEVICE_SELF,psx_biu_r, psx_biu_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( cxd8661r_internal_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( cxd8661r_internal_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x01000000, 0x1effffff) AM_DEVREADWRITE(DEVICE_SELF,psx_berr_r, psx_berr_w)
 	AM_RANGE(0x1f800400, 0x1f800fff) AM_DEVREADWRITE(DEVICE_SELF,psx_berr_r, psx_berr_w)
 	AM_RANGE(0x20000000, 0x7fffffff) AM_DEVREADWRITE(DEVICE_SELF,psx_berr_r, psx_berr_w)
@@ -1602,12 +1602,12 @@ device_config *cxd8661r_device_config::static_alloc_device_config(const machine_
 
 device_t *psxcpu_device_config::alloc_device(running_machine &machine) const
 {
-	return auto_alloc(&machine, psxcpu_device(machine, *this));
+	return auto_alloc(machine, psxcpu_device(machine, *this));
 }
 
 device_t *cxd8661r_device_config::alloc_device(running_machine &machine) const
 {
-	return auto_alloc(&machine, psxcpu_device(machine, *this));
+	return auto_alloc(machine, psxcpu_device(machine, *this));
 }
 
 

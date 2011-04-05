@@ -35,19 +35,19 @@ Updates:
 
 static WRITE8_HANDLER( sound_cmd_w )
 {
-	kncljoe_state *state = space->machine->driver_data<kncljoe_state>();
+	kncljoe_state *state = space->machine().driver_data<kncljoe_state>();
 
 	if ((data & 0x80) == 0)
 		soundlatch_w(space, 0, data & 0x7f);
 	else
-		cpu_set_input_line(state->soundcpu, 0, ASSERT_LINE);
+		device_set_input_line(state->m_soundcpu, 0, ASSERT_LINE);
 }
 
 
-static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
-	AM_RANGE(0xc000, 0xcfff) AM_RAM_WRITE(kncljoe_videoram_w) AM_BASE_MEMBER(kncljoe_state, videoram)
-	AM_RANGE(0xd000, 0xd001) AM_WRITE(kncljoe_scroll_w) AM_BASE_MEMBER(kncljoe_state, scrollregs)
+	AM_RANGE(0xc000, 0xcfff) AM_RAM_WRITE(kncljoe_videoram_w) AM_BASE_MEMBER(kncljoe_state, m_videoram)
+	AM_RANGE(0xd000, 0xd001) AM_WRITE(kncljoe_scroll_w) AM_BASE_MEMBER(kncljoe_state, m_scrollregs)
 	AM_RANGE(0xd800, 0xd800) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0xd801, 0xd801) AM_READ_PORT("P1")
 	AM_RANGE(0xd802, 0xd802) AM_READ_PORT("P2")
@@ -59,35 +59,35 @@ static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xd803, 0xd803) AM_DEVWRITE("sn2", sn76496_w)
 	AM_RANGE(0xd807, 0xd807) AM_READNOP		/* unknown read */
 	AM_RANGE(0xd817, 0xd817) AM_READNOP		/* unknown read */
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE_SIZE_MEMBER(kncljoe_state, spriteram, spriteram_size)
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE_SIZE_MEMBER(kncljoe_state, m_spriteram, m_spriteram_size)
 	AM_RANGE(0xf000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
 static WRITE8_DEVICE_HANDLER( m6803_port1_w )
 {
-	kncljoe_state *state = device->machine->driver_data<kncljoe_state>();
-	state->port1 = data;
+	kncljoe_state *state = device->machine().driver_data<kncljoe_state>();
+	state->m_port1 = data;
 }
 
 static WRITE8_DEVICE_HANDLER( m6803_port2_w )
 {
-	kncljoe_state *state = device->machine->driver_data<kncljoe_state>();
+	kncljoe_state *state = device->machine().driver_data<kncljoe_state>();
 
 	/* write latch */
-	if ((state->port2 & 0x01) && !(data & 0x01))
+	if ((state->m_port2 & 0x01) && !(data & 0x01))
 	{
 		/* control or data port? */
-		if (state->port2 & 0x08)
-			ay8910_data_address_w(device, state->port2 >> 2, state->port1);
+		if (state->m_port2 & 0x08)
+			ay8910_data_address_w(device, state->m_port2 >> 2, state->m_port1);
 	}
-	state->port2 = data;
+	state->m_port2 = data;
 }
 
 static READ8_DEVICE_HANDLER( m6803_port1_r )
 {
-	kncljoe_state *state = device->machine->driver_data<kncljoe_state>();
+	kncljoe_state *state = device->machine().driver_data<kncljoe_state>();
 
-	if (state->port2 & 0x08)
+	if (state->m_port2 & 0x08)
 		return ay8910_r(device, 0);
 	return 0xff;
 }
@@ -99,8 +99,8 @@ static READ8_DEVICE_HANDLER( m6803_port2_r )
 
 static WRITE8_HANDLER( sound_irq_ack_w )
 {
-	kncljoe_state *state = space->machine->driver_data<kncljoe_state>();
-	cpu_set_input_line(state->soundcpu, 0, CLEAR_LINE);
+	kncljoe_state *state = space->machine().driver_data<kncljoe_state>();
+	device_set_input_line(state->m_soundcpu, 0, CLEAR_LINE);
 }
 
 static WRITE8_DEVICE_HANDLER(unused_w)
@@ -108,14 +108,14 @@ static WRITE8_DEVICE_HANDLER(unused_w)
 	//unused - no MSM on the pcb
 }
 
-static ADDRESS_MAP_START( sound_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x0fff) AM_WRITENOP
 	AM_RANGE(0x1000, 0x1fff) AM_WRITE(sound_irq_ack_w)
 	AM_RANGE(0x2000, 0x7fff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_portmap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( sound_portmap, AS_IO, 8 )
 	AM_RANGE(M6801_PORT1, M6801_PORT1) AM_DEVREADWRITE("aysnd", m6803_port1_r, m6803_port1_w)
 	AM_RANGE(M6801_PORT2, M6801_PORT2) AM_DEVREADWRITE("aysnd", m6803_port2_r, m6803_port2_w)
 ADDRESS_MAP_END
@@ -245,31 +245,31 @@ static const ay8910_interface ay8910_config =
 
 static INTERRUPT_GEN (sound_nmi)
 {
-	cpu_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_START( kncljoe )
 {
-	kncljoe_state *state = machine->driver_data<kncljoe_state>();
+	kncljoe_state *state = machine.driver_data<kncljoe_state>();
 
-	state->soundcpu = machine->device("soundcpu");
+	state->m_soundcpu = machine.device("soundcpu");
 
-	state->save_item(NAME(state->port1));
-	state->save_item(NAME(state->port2));
-	state->save_item(NAME(state->tile_bank));
-	state->save_item(NAME(state->sprite_bank));
-	state->save_item(NAME(state->flipscreen));
+	state->save_item(NAME(state->m_port1));
+	state->save_item(NAME(state->m_port2));
+	state->save_item(NAME(state->m_tile_bank));
+	state->save_item(NAME(state->m_sprite_bank));
+	state->save_item(NAME(state->m_flipscreen));
 }
 
 static MACHINE_RESET( kncljoe )
 {
-	kncljoe_state *state = machine->driver_data<kncljoe_state>();
+	kncljoe_state *state = machine.driver_data<kncljoe_state>();
 
-	state->port1 = 0;
-	state->port2 = 0;
-	state->tile_bank = 0;
-	state->sprite_bank = 0;
-	state->flipscreen = 0;
+	state->m_port1 = 0;
+	state->m_port2 = 0;
+	state->m_tile_bank = 0;
+	state->m_sprite_bank = 0;
+	state->m_flipscreen = 0;
 }
 
 static MACHINE_CONFIG_START( kncljoe, kncljoe_state )

@@ -187,7 +187,14 @@ int cli_execute(cli_options &options, osd_interface &osd, int argc, char **argv)
 		// parse the command line, adding any system-specific options
 		astring option_errors;
 		if (!options.parse_command_line(argc, argv, option_errors))
+		{
+			// if we failed, check for no command and a system name first; in that case error on the name
+			if (strlen(options.command()) == 0 && options.system() == NULL && strlen(options.system_name()) > 0)
+				throw emu_fatalerror(MAMERR_NO_SUCH_GAME, "Unknown system '%s'", options.system_name());
+
+			// otherwise, error on the options
 			throw emu_fatalerror(MAMERR_INVALID_CONFIG, "%s", option_errors.trimspace().cstr());
+		}
 		if (option_errors)
 			printf("Error in command line:\n%s\n", option_errors.trimspace().cstr());
 
@@ -1012,13 +1019,26 @@ static void info_listsoftware(emu_options &options, const char *gamename)
 				"\t<!ELEMENT softwarelist (software+)>\n"
 				"\t\t<!ATTLIST softwarelist name CDATA #REQUIRED>\n"
 				"\t\t<!ATTLIST softwarelist description CDATA #IMPLIED>\n"
-				"\t\t<!ELEMENT software (description, year?, publisher, part*)>\n"
+				"\t\t<!ELEMENT software (description, year?, publisher, info*, sharedfeat*, part*)>\n"
 				"\t\t\t<!ATTLIST software name CDATA #REQUIRED>\n"
 				"\t\t\t<!ATTLIST software cloneof CDATA #IMPLIED>\n"
 				"\t\t\t<!ATTLIST software supported (yes|partial|no) \"yes\">\n"
 				"\t\t\t<!ELEMENT description (#PCDATA)>\n"
 				"\t\t\t<!ELEMENT year (#PCDATA)>\n"
 				"\t\t\t<!ELEMENT publisher (#PCDATA)>\n"
+				// we still do not store the info strings internally, so there is no output here
+				// TODO: add parsing info in softlist.c and then add output here!
+				"\t\t\t<!ELEMENT info EMPTY>\n"
+				"\t\t\t\t<!ATTLIST info name CDATA #REQUIRED>\n"
+				"\t\t\t\t<!ATTLIST info value CDATA #IMPLIED>\n"
+				// shared features get stored in the part->feature below and are output there
+				// this means that we don't output any <sharedfeat> and that -lsoft output will
+				// be different from the list in hash/ when the list uses sharedfeat. But this
+				// is by design: sharedfeat is only available to simplify the life to list creators,
+				// to e.g. avoid manually adding the same feature to each disk of a 9 floppies game!
+				"\t\t\t<!ELEMENT sharedfeat EMPTY>\n"
+				"\t\t\t\t<!ATTLIST sharedfeat name CDATA #REQUIRED>\n"
+				"\t\t\t\t<!ATTLIST sharedfeat value CDATA #IMPLIED>\n"
 				"\t\t\t<!ELEMENT part (feature*, dataarea*, diskarea*, dipswitch*)>\n"
 				"\t\t\t\t<!ATTLIST part name CDATA #REQUIRED>\n"
 				"\t\t\t\t<!ATTLIST part interface CDATA #REQUIRED>\n"
@@ -1032,7 +1052,8 @@ static void info_listsoftware(emu_options &options, const char *gamename)
 				"\t\t\t\t\t<!ATTLIST dataarea endian (big|little) \"little\">\n"
 				"\t\t\t\t\t<!ELEMENT rom EMPTY>\n"
 				"\t\t\t\t\t\t<!ATTLIST rom name CDATA #IMPLIED>\n"
-				"\t\t\t\t\t\t<!ATTLIST rom size CDATA #REQUIRED>\n"
+				"\t\t\t\t\t\t<!ATTLIST rom size CDATA #IMPLIED>\n"
+				"\t\t\t\t\t\t<!ATTLIST rom length CDATA #IMPLIED>\n"
 				"\t\t\t\t\t\t<!ATTLIST rom crc CDATA #IMPLIED>\n"
 				"\t\t\t\t\t\t<!ATTLIST rom md5 CDATA #IMPLIED>\n"
 				"\t\t\t\t\t\t<!ATTLIST rom sha1 CDATA #IMPLIED>\n"
@@ -1048,7 +1069,7 @@ static void info_listsoftware(emu_options &options, const char *gamename)
 				"\t\t\t\t\t\t<!ATTLIST disk sha1 CDATA #IMPLIED>\n"
 				"\t\t\t\t\t\t<!ATTLIST disk status (baddump|nodump|good) \"good\">\n"
 				"\t\t\t\t\t\t<!ATTLIST disk writeable (yes|no) \"no\">\n"
-				// we still do not store the dipswitch values in softlist, so there is no output here
+				// we still do not store the dipswitch values internally, so there is no output here
 				// TODO: add parsing dipsw in softlist.c and then add output here!
 				"\t\t\t\t<!ELEMENT dipswitch (dipvalue*)>\n"
 				"\t\t\t\t\t<!ATTLIST dipswitch name CDATA #REQUIRED>\n"
@@ -1170,7 +1191,7 @@ static void info_listsoftware(emu_options &options, const char *gamename)
 														fprintf( out, " status=\"nodump\"" );
 
 													if (is_disk)
-														fprintf( out, " writable=\"%s\"", (ROM_GETFLAGS(rom) & DISK_READONLYMASK) ? "no" : "yes");
+														fprintf( out, " writeable=\"%s\"", (ROM_GETFLAGS(rom) & DISK_READONLYMASK) ? "no" : "yes");
 
 													if ((ROM_GETFLAGS(rom) & ROM_SKIPMASK) == ROM_SKIP(1))
 														fprintf( out, " loadflag=\"load16_byte\"" );
@@ -1626,7 +1647,7 @@ static void identify_file(emu_options &options, const char *name, romident_statu
 			header = *chd_get_header(chd);
 			if (header.flags & CHDFLAGS_IS_WRITEABLE)
 			{
-				mame_printf_info(_("is a writable CHD\n"));
+				mame_printf_info(_("is a writeable CHD\n"));
 			}
 			else
 			{

@@ -120,11 +120,11 @@ const device_type TMS32031 = tms32031_device_config::static_alloc_device_config;
 const device_type TMS32032 = tms32032_device_config::static_alloc_device_config;
 
 // internal memory maps
-static ADDRESS_MAP_START( internal_32031, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( internal_32031, AS_PROGRAM, 32 )
 	AM_RANGE(0x809800, 0x809fff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( internal_32032, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( internal_32032, AS_PROGRAM, 32 )
 	AM_RANGE(0x87fe00, 0x87ffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -178,12 +178,12 @@ device_config *tms32032_device_config::static_alloc_device_config(const machine_
 
 device_t *tms32031_device_config::alloc_device(running_machine &machine) const
 {
-	return auto_alloc(&machine, tms32031_device(machine, *this));
+	return auto_alloc(machine, tms32031_device(machine, *this));
 }
 
 device_t *tms32032_device_config::alloc_device(running_machine &machine) const
 {
-	return auto_alloc(&machine, tms32032_device(machine, *this));
+	return auto_alloc(machine, tms32032_device(machine, *this));
 }
 
 
@@ -238,7 +238,7 @@ UINT32 tms3203x_device_config::execute_input_lines() const
 //  the space doesn't exist
 //-------------------------------------------------
 
-const address_space_config *tms3203x_device_config::memory_space_config(int spacenum) const
+const address_space_config *tms3203x_device_config::memory_space_config(address_spacenum spacenum) const
 {
 	return (spacenum == AS_PROGRAM) ? &m_program_config : NULL;
 }
@@ -854,7 +854,7 @@ void tms3203x_device::execute_run()
 		{
 			// watch for out-of-range stack pointers
 			if (IREG(TMR_SP) & 0xff000000)
-				debugger_break(&m_machine);
+				debugger_break(m_machine);
 			if ((IREG(TMR_ST) & RMFLAG) && m_pc == IREG(TMR_RE) + 1)
 			{
 				if ((INT32)--IREG(TMR_RC) >= 0)

@@ -61,7 +61,7 @@ static WRITE8_DEVICE_HANDLER( spc_ram_100_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( snes_map, ADDRESS_SPACE_PROGRAM, 8)
+static ADDRESS_MAP_START( snes_map, AS_PROGRAM, 8)
 	AM_RANGE(0x000000, 0x2fffff) AM_READWRITE(snes_r_bank1, snes_w_bank1)	/* I/O and ROM (repeats for each bank) */
 	AM_RANGE(0x300000, 0x3fffff) AM_READWRITE(snes_r_bank2, snes_w_bank2)	/* I/O and ROM (repeats for each bank) */
 	AM_RANGE(0x400000, 0x5fffff) AM_READ(snes_r_bank3)		/* ROM (and reserved in Mode 20) */
@@ -72,7 +72,7 @@ static ADDRESS_MAP_START( snes_map, ADDRESS_SPACE_PROGRAM, 8)
 	AM_RANGE(0xc00000, 0xffffff) AM_READWRITE(snes_r_bank7, snes_w_bank7)	/* Mirror and ROM */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( superfx_map, ADDRESS_SPACE_PROGRAM, 8)
+static ADDRESS_MAP_START( superfx_map, AS_PROGRAM, 8)
 	AM_RANGE(0x000000, 0x3fffff) AM_READWRITE(superfx_r_bank1, superfx_w_bank1)
 	AM_RANGE(0x400000, 0x5fffff) AM_READWRITE(superfx_r_bank2, superfx_w_bank2)
 	AM_RANGE(0x600000, 0x7dffff) AM_READWRITE(superfx_r_bank3, superfx_w_bank3)
@@ -81,7 +81,7 @@ static ADDRESS_MAP_START( superfx_map, ADDRESS_SPACE_PROGRAM, 8)
 	AM_RANGE(0xe00000, 0xffffff) AM_READWRITE(superfx_r_bank3, superfx_w_bank3)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( spc_map, ADDRESS_SPACE_PROGRAM, 8)
+static ADDRESS_MAP_START( spc_map, AS_PROGRAM, 8)
 	AM_RANGE(0x0000, 0x00ef) AM_DEVREADWRITE("spc700", spc_ram_r, spc_ram_w)	/* lower 32k ram */
 	AM_RANGE(0x00f0, 0x00ff) AM_DEVREADWRITE("spc700", spc_io_r, spc_io_w)  	/* spc io */
 	AM_RANGE(0x0100, 0xffff) AM_DEVWRITE("spc700", spc_ram_100_w)
@@ -89,19 +89,19 @@ static ADDRESS_MAP_START( spc_map, ADDRESS_SPACE_PROGRAM, 8)
 	AM_RANGE(0xffc0, 0xffff) AM_DEVREAD("spc700", spc_ipl_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( dsp_prg_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( dsp_prg_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x0000, 0x07ff) AM_ROM AM_REGION("dspprg", 0)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( dsp_data_map, ADDRESS_SPACE_DATA, 16 )
+static ADDRESS_MAP_START( dsp_data_map, AS_DATA, 16 )
 	AM_RANGE(0x0000, 0x03ff) AM_ROM AM_REGION("dspdata", 0)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( setadsp_prg_map, ADDRESS_SPACE_PROGRAM, 32 )
+static ADDRESS_MAP_START( setadsp_prg_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM AM_REGION("dspprg", 0)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( setadsp_data_map, ADDRESS_SPACE_DATA, 16 )
+static ADDRESS_MAP_START( setadsp_data_map, AS_DATA, 16 )
 	AM_RANGE(0x0000, 0x07ff) AM_ROM AM_REGION("dspdata", 0)
 ADDRESS_MAP_END
 
@@ -113,22 +113,22 @@ ADDRESS_MAP_END
 
 static CUSTOM_INPUT( snes_mouse_speed_input )
 {
-	snes_state *state = field->port->machine->driver_data<snes_state>();
+	snes_state *state = field->port->machine().driver_data<snes_state>();
 	int port = (FPTR)param;
 
 	if (snes_ram[OLDJOY1] & 0x1)
 	{
-		state->mouse[port].speed++;
-		if ((state->mouse[port].speed & 0x03) == 0x03)
-			state->mouse[port].speed = 0;
+		state->m_mouse[port].speed++;
+		if ((state->m_mouse[port].speed & 0x03) == 0x03)
+			state->m_mouse[port].speed = 0;
 	}
 
-	return state->mouse[port].speed;
+	return state->m_mouse[port].speed;
 }
 
 static CUSTOM_INPUT( snes_superscope_offscreen_input )
 {
-	snes_state *state = field->port->machine->driver_data<snes_state>();
+	snes_state *state = field->port->machine().driver_data<snes_state>();
 	int port = (FPTR)param;
 	static const char *const portnames[2][3] =
 			{
@@ -136,16 +136,16 @@ static CUSTOM_INPUT( snes_superscope_offscreen_input )
 				{ "SUPERSCOPE2", "SUPERSCOPE2_X", "SUPERSCOPE2_Y" },
 			};
 
-	INT16 x = input_port_read(field->port->machine, portnames[port][1]);
-	INT16 y = input_port_read(field->port->machine, portnames[port][2]);
+	INT16 x = input_port_read(field->port->machine(), portnames[port][1]);
+	INT16 y = input_port_read(field->port->machine(), portnames[port][2]);
 
 	/* these are the theoretical boundaries, but we currently are always onscreen... */
 	if (x < 0 || x >= SNES_SCR_WIDTH || y < 0 || y >= snes_ppu.beam.last_visible_line)
-		state->scope[port].offscreen = 1;
+		state->m_scope[port].offscreen = 1;
 	else
-		state->scope[port].offscreen = 0;
+		state->m_scope[port].offscreen = 0;
 
-	return state->scope[port].offscreen;
+	return state->m_scope[port].offscreen;
 }
 
 static TIMER_CALLBACK( lightgun_tick )
@@ -374,7 +374,7 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static void snes_gun_latch( running_machine *machine, INT16 x, INT16 y )
+static void snes_gun_latch( running_machine &machine, INT16 x, INT16 y )
 {
 	/* these are the theoretical boundaries */
 	if (x < 0)
@@ -392,32 +392,32 @@ static void snes_gun_latch( running_machine *machine, INT16 x, INT16 y )
 	snes_ram[STAT78] |= 0x40;
 }
 
-static void snes_input_read_joy( running_machine *machine, int port )
+static void snes_input_read_joy( running_machine &machine, int port )
 {
-	snes_state *state = machine->driver_data<snes_state>();
+	snes_state *state = machine.driver_data<snes_state>();
 	static const char *const portnames[2][4] =
 			{
 				{ "SERIAL1_DATA1_L", "SERIAL1_DATA1_H", "SERIAL1_DATA2_L", "SERIAL1_DATA2_H" },
 				{ "SERIAL2_DATA1_L", "SERIAL2_DATA1_H", "SERIAL2_DATA2_L", "SERIAL2_DATA2_H" },
 			};
 
-	state->data1[port] = input_port_read(machine, portnames[port][0]) | (input_port_read(machine, portnames[port][1]) << 8);
-	state->data2[port] = input_port_read(machine, portnames[port][2]) | (input_port_read(machine, portnames[port][3]) << 8);
+	state->m_data1[port] = input_port_read(machine, portnames[port][0]) | (input_port_read(machine, portnames[port][1]) << 8);
+	state->m_data2[port] = input_port_read(machine, portnames[port][2]) | (input_port_read(machine, portnames[port][3]) << 8);
 
 	// avoid sending signals that could crash games
 	// if left, no right
-	if (state->data1[port] & 0x200)
-		state->data1[port] &= ~0x100;
+	if (state->m_data1[port] & 0x200)
+		state->m_data1[port] &= ~0x100;
 	// if up, no down
-	if (state->data1[port] & 0x800)
-		state->data1[port] &= ~0x400;
+	if (state->m_data1[port] & 0x800)
+		state->m_data1[port] &= ~0x400;
 
-	state->joypad[port].buttons = state->data1[port];
+	state->m_joypad[port].buttons = state->m_data1[port];
 }
 
-static void snes_input_read_mouse( running_machine *machine, int port )
+static void snes_input_read_mouse( running_machine &machine, int port )
 {
-	snes_state *state = machine->driver_data<snes_state>();
+	snes_state *state = machine.driver_data<snes_state>();
 	INT16 var;
 	static const char *const portnames[2][3] =
 			{
@@ -425,62 +425,62 @@ static void snes_input_read_mouse( running_machine *machine, int port )
 				{ "MOUSE2", "MOUSE2_X", "MOUSE2_Y" },
 			};
 
-	state->mouse[port].buttons = input_port_read(machine, portnames[port][0]);
-	state->mouse[port].x = input_port_read(machine, portnames[port][1]);
-	state->mouse[port].y = input_port_read(machine, portnames[port][2]);
-	var = state->mouse[port].x - state->mouse[port].oldx;
+	state->m_mouse[port].buttons = input_port_read(machine, portnames[port][0]);
+	state->m_mouse[port].x = input_port_read(machine, portnames[port][1]);
+	state->m_mouse[port].y = input_port_read(machine, portnames[port][2]);
+	var = state->m_mouse[port].x - state->m_mouse[port].oldx;
 
 	if (var < -127)
 	{
-		state->mouse[port].deltax = 0xff;
-		state->mouse[port].oldx -= 127;
+		state->m_mouse[port].deltax = 0xff;
+		state->m_mouse[port].oldx -= 127;
 	}
 	else if (var < 0)
 	{
-		state->mouse[port].deltax = 0x80 | (-var);
-		state->mouse[port].oldx = state->mouse[port].x;
+		state->m_mouse[port].deltax = 0x80 | (-var);
+		state->m_mouse[port].oldx = state->m_mouse[port].x;
 	}
 	else if (var > 127)
 	{
-		state->mouse[port].deltax = 0x7f;
-		state->mouse[port].oldx += 127;
+		state->m_mouse[port].deltax = 0x7f;
+		state->m_mouse[port].oldx += 127;
 	}
 	else
 	{
-		state->mouse[port].deltax = var & 0xff;
-		state->mouse[port].oldx = state->mouse[port].x;
+		state->m_mouse[port].deltax = var & 0xff;
+		state->m_mouse[port].oldx = state->m_mouse[port].x;
 	}
 
-	var = state->mouse[port].y - state->mouse[port].oldy;
+	var = state->m_mouse[port].y - state->m_mouse[port].oldy;
 
 	if (var < -127)
 	{
-		state->mouse[port].deltay = 0xff;
-		state->mouse[port].oldy -= 127;
+		state->m_mouse[port].deltay = 0xff;
+		state->m_mouse[port].oldy -= 127;
 	}
 	else if (var < 0)
 	{
-		state->mouse[port].deltay = 0x80 | (-var);
-		state->mouse[port].oldy = state->mouse[port].y;
+		state->m_mouse[port].deltay = 0x80 | (-var);
+		state->m_mouse[port].oldy = state->m_mouse[port].y;
 	}
 	else if (var > 127)
 	{
-		state->mouse[port].deltay = 0x7f;
-		state->mouse[port].oldy += 127;
+		state->m_mouse[port].deltay = 0x7f;
+		state->m_mouse[port].oldy += 127;
 	}
 	else
 	{
-		state->mouse[port].deltay = var & 0xff;
-		state->mouse[port].oldy = state->mouse[port].y;
+		state->m_mouse[port].deltay = var & 0xff;
+		state->m_mouse[port].oldy = state->m_mouse[port].y;
 	}
 
-	state->data1[port] = state->mouse[port].buttons | (0x00 << 8);
-	state->data2[port] = 0;
+	state->m_data1[port] = state->m_mouse[port].buttons | (0x00 << 8);
+	state->m_data2[port] = 0;
 }
 
-static void snes_input_read_superscope( running_machine *machine, int port )
+static void snes_input_read_superscope( running_machine &machine, int port )
 {
-	snes_state *state = machine->driver_data<snes_state>();
+	snes_state *state = machine.driver_data<snes_state>();
 	static const char *const portnames[2][3] =
 			{
 				{ "SUPERSCOPE1", "SUPERSCOPE1_X", "SUPERSCOPE1_Y" },
@@ -489,65 +489,65 @@ static void snes_input_read_superscope( running_machine *machine, int port )
 	UINT8 input;
 
 	/* first read input bits */
-	state->scope[port].x = input_port_read(machine, portnames[port][1]);
-	state->scope[port].y = input_port_read(machine, portnames[port][2]);
+	state->m_scope[port].x = input_port_read(machine, portnames[port][1]);
+	state->m_scope[port].y = input_port_read(machine, portnames[port][2]);
 	input = input_port_read(machine, portnames[port][0]);
 
 	/* then start elaborating input bits: only keep old turbo value */
-	state->scope[port].buttons &= 0x20;
+	state->m_scope[port].buttons &= 0x20;
 
 	/* set onscreen/offscreen */
-	state->scope[port].buttons |= BIT(input, 1);
+	state->m_scope[port].buttons |= BIT(input, 1);
 
 	/* turbo is a switch; toggle is edge sensitive */
-	if (BIT(input, 5) && !state->scope[port].turbo_lock)
+	if (BIT(input, 5) && !state->m_scope[port].turbo_lock)
 	{
-		state->scope[port].buttons ^= 0x20;
-		state->scope[port].turbo_lock = 1;
+		state->m_scope[port].buttons ^= 0x20;
+		state->m_scope[port].turbo_lock = 1;
 	}
 	else if (!BIT(input, 5))
-		state->scope[port].turbo_lock = 0;
+		state->m_scope[port].turbo_lock = 0;
 
 	/* fire is a button; if turbo is active, trigger is level sensitive; otherwise it is edge sensitive */
-	if (BIT(input, 7) && (BIT(state->scope[port].buttons, 5) || !state->scope[port].fire_lock))
+	if (BIT(input, 7) && (BIT(state->m_scope[port].buttons, 5) || !state->m_scope[port].fire_lock))
 	{
-		state->scope[port].buttons |= 0x80;
-		state->scope[port].fire_lock = 1;
+		state->m_scope[port].buttons |= 0x80;
+		state->m_scope[port].fire_lock = 1;
 	}
 	else if (!BIT(input, 7))
-		state->scope[port].fire_lock = 0;
+		state->m_scope[port].fire_lock = 0;
 
 	/* cursor is a button; it is always level sensitive */
-	state->scope[port].buttons |= BIT(input, 6);
+	state->m_scope[port].buttons |= BIT(input, 6);
 
 	/* pause is a button; it is always edge sensitive */
-	if (BIT(input, 4) && !state->scope[port].pause_lock)
+	if (BIT(input, 4) && !state->m_scope[port].pause_lock)
 	{
-		state->scope[port].buttons |= 0x10;
-		state->scope[port].pause_lock = 1;
+		state->m_scope[port].buttons |= 0x10;
+		state->m_scope[port].pause_lock = 1;
 	}
 	else if (!BIT(input, 4))
-		state->scope[port].pause_lock = 0;
+		state->m_scope[port].pause_lock = 0;
 
 	/* If we have pressed fire or cursor and we are on-screen and SuperScope is in Port2, then latch video signal.
     Notice that we only latch Port2 because its IOBit pin is connected to bit7 of the IO Port, while Port1 has
     IOBit pin connected to bit6 of the IO Port, and the latter is not detected by the H/V Counters. In other
     words, you can connect SuperScope to Port1, but there is no way SNES could detect its on-screen position */
-	if ((state->scope[port].buttons & 0xc0) && !(state->scope[port].buttons & 0x02) && port == 1)
-		snes_gun_latch(machine, state->scope[port].x, state->scope[port].y);
+	if ((state->m_scope[port].buttons & 0xc0) && !(state->m_scope[port].buttons & 0x02) && port == 1)
+		snes_gun_latch(machine, state->m_scope[port].x, state->m_scope[port].y);
 
-	state->data1[port] = 0xff | (state->scope[port].buttons << 8);
-	state->data2[port] = 0;
+	state->m_data1[port] = 0xff | (state->m_scope[port].buttons << 8);
+	state->m_data2[port] = 0;
 }
 
-static void snes_input_read( running_machine *machine )
+static void snes_input_read( running_machine &machine )
 {
-	snes_state *state = machine->driver_data<snes_state>();
+	snes_state *state = machine.driver_data<snes_state>();
 	UINT8 ctrl1 = input_port_read(machine, "CTRLSEL") & 0x0f;
 	UINT8 ctrl2 = (input_port_read(machine, "CTRLSEL") & 0xf0) >> 4;
 
 	/* Check if lightgun has been chosen as input: if so, enable crosshair */
-	machine->scheduler().timer_set(attotime::zero, FUNC(lightgun_tick));
+	machine.scheduler().timer_set(attotime::zero, FUNC(lightgun_tick));
 
 	switch (ctrl1)
 	{
@@ -562,8 +562,8 @@ static void snes_input_read( running_machine *machine )
 		break;
 	case 0:	/* no controller in port1 */
 	default:
-		state->data1[0] = 0;
-		state->data2[0] = 0;
+		state->m_data1[0] = 0;
+		state->m_data2[0] = 0;
 		break;
 	}
 
@@ -580,8 +580,8 @@ static void snes_input_read( running_machine *machine )
 		break;
 	case 0:	/* no controller in port2 */
 	default:
-		state->data1[1] = 0;
-		state->data2[1] = 0;
+		state->m_data1[1] = 0;
+		state->m_data2[1] = 0;
 		break;
 	}
 
@@ -589,53 +589,53 @@ static void snes_input_read( running_machine *machine )
 	// this actually works like reading the first 16bits from oldjoy1/2 in reverse order
 	if (snes_ram[NMITIMEN] & 1)
 	{
-		state->joy1l = (state->data1[0] & 0x00ff) >> 0;
-		state->joy1h = (state->data1[0] & 0xff00) >> 8;
-		state->joy2l = (state->data1[1] & 0x00ff) >> 0;
-		state->joy2h = (state->data1[1] & 0xff00) >> 8;
-		state->joy3l = (state->data2[0] & 0x00ff) >> 0;
-		state->joy3h = (state->data2[0] & 0xff00) >> 8;
-		state->joy4l = (state->data2[1] & 0x00ff) >> 0;
-		state->joy4h = (state->data2[1] & 0xff00) >> 8;
+		state->m_joy1l = (state->m_data1[0] & 0x00ff) >> 0;
+		state->m_joy1h = (state->m_data1[0] & 0xff00) >> 8;
+		state->m_joy2l = (state->m_data1[1] & 0x00ff) >> 0;
+		state->m_joy2h = (state->m_data1[1] & 0xff00) >> 8;
+		state->m_joy3l = (state->m_data2[0] & 0x00ff) >> 0;
+		state->m_joy3h = (state->m_data2[0] & 0xff00) >> 8;
+		state->m_joy4l = (state->m_data2[1] & 0x00ff) >> 0;
+		state->m_joy4h = (state->m_data2[1] & 0xff00) >> 8;
 
 		// make sure read_idx starts returning all 1s because the auto-read reads it :-)
-		state->read_idx[0] = 16;
-		state->read_idx[1] = 16;
+		state->m_read_idx[0] = 16;
+		state->m_read_idx[1] = 16;
 	}
 
 }
 
-static UINT8 snes_oldjoy1_read( running_machine *machine )
+static UINT8 snes_oldjoy1_read( running_machine &machine )
 {
-	snes_state *state = machine->driver_data<snes_state>();
+	snes_state *state = machine.driver_data<snes_state>();
 	UINT8 ctrl1 = input_port_read(machine, "CTRLSEL") & 0x0f;
 	UINT8 res = 0;
 
 	switch (ctrl1)
 	{
 	case 1:	/* SNES joypad */
-		if (state->read_idx[0] >= 16)
+		if (state->m_read_idx[0] >= 16)
 			res = 0x01;
 		else
-			res = (state->joypad[0].buttons >> (15 - state->read_idx[0]++)) & 0x01;
+			res = (state->m_joypad[0].buttons >> (15 - state->m_read_idx[0]++)) & 0x01;
 		break;
 	case 2:	/* SNES Mouse */
-		if (state->read_idx[0] >= 32)
+		if (state->m_read_idx[0] >= 32)
 			res = 0x01;
-		else if (state->read_idx[0] >= 24)
-			res = (state->mouse[0].deltax >> (31 - state->read_idx[0]++)) & 0x01;
-		else if (state->read_idx[0] >= 16)
-			res = (state->mouse[0].deltay >> (23 - state->read_idx[0]++)) & 0x01;
-		else if (state->read_idx[0] >= 8)
-			res = (state->mouse[0].buttons >> (15 - state->read_idx[0]++)) & 0x01;
+		else if (state->m_read_idx[0] >= 24)
+			res = (state->m_mouse[0].deltax >> (31 - state->m_read_idx[0]++)) & 0x01;
+		else if (state->m_read_idx[0] >= 16)
+			res = (state->m_mouse[0].deltay >> (23 - state->m_read_idx[0]++)) & 0x01;
+		else if (state->m_read_idx[0] >= 8)
+			res = (state->m_mouse[0].buttons >> (15 - state->m_read_idx[0]++)) & 0x01;
 		else
 			res = 0;
 		break;
 	case 3:	/* SNES Superscope */
-		if (state->read_idx[0] >= 8)
+		if (state->m_read_idx[0] >= 8)
 			res = 0x01;
 		else
-			res = (state->scope[0].buttons >> (7 - state->read_idx[0]++)) & 0x01;
+			res = (state->m_scope[0].buttons >> (7 - state->m_read_idx[0]++)) & 0x01;
 		break;
 	case 0:	/* no controller in port2 */
 	default:
@@ -645,37 +645,37 @@ static UINT8 snes_oldjoy1_read( running_machine *machine )
 	return res;
 }
 
-static UINT8 snes_oldjoy2_read( running_machine *machine )
+static UINT8 snes_oldjoy2_read( running_machine &machine )
 {
-	snes_state *state = machine->driver_data<snes_state>();
+	snes_state *state = machine.driver_data<snes_state>();
 	UINT8 ctrl2 = (input_port_read(machine, "CTRLSEL") & 0xf0) >> 4;
 	UINT8 res = 0;
 
 	switch (ctrl2)
 	{
 	case 1:	/* SNES joypad */
-		if (state->read_idx[1] >= 16)
+		if (state->m_read_idx[1] >= 16)
 			res = 0x01;
 		else
-			res = (state->joypad[1].buttons >> (15 - state->read_idx[1]++)) & 0x01;
+			res = (state->m_joypad[1].buttons >> (15 - state->m_read_idx[1]++)) & 0x01;
 		break;
 	case 2:	/* SNES Mouse */
-		if (state->read_idx[1] >= 32)
+		if (state->m_read_idx[1] >= 32)
 			res = 0x01;
-		else if (state->read_idx[1] >= 24)
-			res = (state->mouse[1].deltax >> (31 - state->read_idx[1]++)) & 0x01;
-		else if (state->read_idx[1] >= 16)
-			res = (state->mouse[1].deltay >> (23 - state->read_idx[1]++)) & 0x01;
-		else if (state->read_idx[1] >= 8)
-			res = (state->mouse[1].buttons >> (15 - state->read_idx[1]++)) & 0x01;
+		else if (state->m_read_idx[1] >= 24)
+			res = (state->m_mouse[1].deltax >> (31 - state->m_read_idx[1]++)) & 0x01;
+		else if (state->m_read_idx[1] >= 16)
+			res = (state->m_mouse[1].deltay >> (23 - state->m_read_idx[1]++)) & 0x01;
+		else if (state->m_read_idx[1] >= 8)
+			res = (state->m_mouse[1].buttons >> (15 - state->m_read_idx[1]++)) & 0x01;
 		else
 			res = 0;
 		break;
 	case 3:	/* SNES Superscope */
-		if (state->read_idx[1] >= 8)
+		if (state->m_read_idx[1] >= 8)
 			res = 0x01;
 		else
-			res = (state->scope[1].buttons >> (7 - state->read_idx[1]++)) & 0x01;
+			res = (state->m_scope[1].buttons >> (7 - state->m_read_idx[1]++)) & 0x01;
 		break;
 	case 0:	/* no controller in port2 */
 	default:
@@ -693,13 +693,13 @@ static UINT8 snes_oldjoy2_read( running_machine *machine )
 
 static MACHINE_RESET( snes_mess )
 {
-	snes_state *state = machine->driver_data<snes_state>();
+	snes_state *state = machine.driver_data<snes_state>();
 
 	MACHINE_RESET_CALL(snes);
 
-	state->io_read = snes_input_read;
-	state->oldjoy1_read = snes_oldjoy1_read;
-	state->oldjoy2_read = snes_oldjoy2_read;
+	state->m_io_read = snes_input_read;
+	state->m_oldjoy1_read = snes_oldjoy1_read;
+	state->m_oldjoy2_read = snes_oldjoy2_read;
 }
 
 static MACHINE_CONFIG_START( snes_base, snes_state )

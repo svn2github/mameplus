@@ -70,9 +70,9 @@ public:
 	nsmpoker_state(running_machine &machine, const driver_device_config_base &config)
 		: driver_device(machine, config) { }
 
-	UINT8 *videoram;
-	UINT8 *colorram;
-	tilemap_t *bg_tilemap;
+	UINT8 *m_videoram;
+	UINT8 *m_colorram;
+	tilemap_t *m_bg_tilemap;
 };
 
 
@@ -83,31 +83,31 @@ public:
 
 static WRITE8_HANDLER( nsmpoker_videoram_w )
 {
-	nsmpoker_state *state = space->machine->driver_data<nsmpoker_state>();
-	state->videoram[offset] = data;
-	tilemap_mark_tile_dirty(state->bg_tilemap, offset);
+	nsmpoker_state *state = space->machine().driver_data<nsmpoker_state>();
+	state->m_videoram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_bg_tilemap, offset);
 }
 
 
 static WRITE8_HANDLER( nsmpoker_colorram_w )
 {
-	nsmpoker_state *state = space->machine->driver_data<nsmpoker_state>();
-	state->colorram[offset] = data;
-	tilemap_mark_tile_dirty(state->bg_tilemap, offset);
+	nsmpoker_state *state = space->machine().driver_data<nsmpoker_state>();
+	state->m_colorram[offset] = data;
+	tilemap_mark_tile_dirty(state->m_bg_tilemap, offset);
 }
 
 
 static TILE_GET_INFO( get_bg_tile_info )
 {
-	nsmpoker_state *state = machine->driver_data<nsmpoker_state>();
+	nsmpoker_state *state = machine.driver_data<nsmpoker_state>();
 /*  - bits -
     7654 3210
     ---- ----   bank select.
     ---- ----   color code.
     ---- ----   seems unused.
 */
-//  int attr = state->colorram[tile_index];
-	int code = state->videoram[tile_index];
+//  int attr = state->m_colorram[tile_index];
+	int code = state->m_videoram[tile_index];
 //  int bank = (attr & 0x08) >> 3;
 //  int color = (attr & 0x03);
 
@@ -117,15 +117,15 @@ static TILE_GET_INFO( get_bg_tile_info )
 
 static VIDEO_START( nsmpoker )
 {
-	nsmpoker_state *state = machine->driver_data<nsmpoker_state>();
-	state->bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	nsmpoker_state *state = machine.driver_data<nsmpoker_state>();
+	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
 }
 
 
 static SCREEN_UPDATE( nsmpoker )
 {
-	nsmpoker_state *state = screen->machine->driver_data<nsmpoker_state>();
-	tilemap_draw(bitmap, cliprect, state->bg_tilemap, 0, 0);
+	nsmpoker_state *state = screen->machine().driver_data<nsmpoker_state>();
+	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 	return 0;
 }
 
@@ -142,7 +142,7 @@ static PALETTE_INIT( nsmpoker )
 
 static INTERRUPT_GEN( nsmpoker_interrupt )
 {
-	cpu_set_input_line_and_vector(device, 0, ASSERT_LINE, 3);//2=nmi  3,4,5,6
+	device_set_input_line_and_vector(device, 0, ASSERT_LINE, 3);//2=nmi  3,4,5,6
 }
 
 //static WRITE8_HANDLER( debug_w )
@@ -152,7 +152,7 @@ static INTERRUPT_GEN( nsmpoker_interrupt )
 
 static READ8_HANDLER( debug_r )
 {
-	return space->machine->rand() & 0xff;
+	return space->machine().rand() & 0xff;
 }
 
 
@@ -160,15 +160,15 @@ static READ8_HANDLER( debug_r )
 * Memory Map Information *
 *************************/
 
-static ADDRESS_MAP_START( nsmpoker_map, ADDRESS_SPACE_PROGRAM, 8 )
+static ADDRESS_MAP_START( nsmpoker_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x9000, 0xafff) AM_RAM	// OK... cleared at beginning.
 	AM_RANGE(0xb000, 0xcfff) AM_ROM	// WRONG... just to map the last rom somewhere.
-	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(nsmpoker_videoram_w) AM_BASE_MEMBER(nsmpoker_state, videoram) // WRONG... just a placeholder.
-	AM_RANGE(0xf000, 0xffff) AM_RAM_WRITE(nsmpoker_colorram_w) AM_BASE_MEMBER(nsmpoker_state, colorram) // WRONG... just a placeholder.
+	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(nsmpoker_videoram_w) AM_BASE_MEMBER(nsmpoker_state, m_videoram) // WRONG... just a placeholder.
+	AM_RANGE(0xf000, 0xffff) AM_RAM_WRITE(nsmpoker_colorram_w) AM_BASE_MEMBER(nsmpoker_state, m_colorram) // WRONG... just a placeholder.
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( nsmpoker_portmap, ADDRESS_SPACE_IO, 8 )
+static ADDRESS_MAP_START( nsmpoker_portmap, AS_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0xf0, 0xf0) AM_READ(debug_r)	// kind of trap at begining
 ADDRESS_MAP_END
