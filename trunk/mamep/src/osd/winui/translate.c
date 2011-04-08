@@ -29,12 +29,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// MAMEUI headers
 #include "winui.h"
 #include "resource.h"
 #include "bitmask.h"
 #include "TreeView.h"
 #include "mui_util.h"
 #include "mui_opts.h"
+#include "translate.h"
 
 #if 0 //#if defined(__GNUC__)
 /* fix warning: cast does not match function type */
@@ -47,8 +49,6 @@
 #undef  PropSheet_GetCurrentPageHwnd
 #define PropSheet_GetCurrentPageHwnd(d) (HWND)(LRESULT)SendMessage(d,PSM_GETCURRENTPAGEHWND,0,0)
 #endif /* defined(__GNUC__) */
-
-#include "translate.h"
 
 #define MENUA		(ID_CONTEXT_SHOW_FOLDER_START)
 #define NUM_MENUA	((ID_LANGUAGE_ENGLISH_US + UI_LANG_MAX - 1) - MENUA + 1)
@@ -728,8 +728,10 @@ WCHAR *w_lang_message(int msgcat, const WCHAR *str)
 
 
 #if 0 //temporary to keep compatibility
-#undef realloc
+
 #undef malloc
+#undef realloc
+#undef free
 
 struct mb_msg
 {

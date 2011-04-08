@@ -105,6 +105,7 @@ typedef struct
 static driver_data_type *sorted_drivers = NULL;
 static int num_games;
 static void flush_index(void);
+static void ParseClose(void);
 
 
 /****************************************************************************
@@ -122,6 +123,8 @@ void datafile_init(running_machine &machine, emu_options *options)
 
 void datafile_exit(void)
 {
+	ParseClose();
+
 	flush_index();
 
 	if (sorted_drivers == NULL)
@@ -619,10 +622,10 @@ static void ParseClose(void)
 	/* If the file is open, time for fclose. */
 
 	if (fp)
-        {
+	{
 		fp->close();
 		auto_free(*m_machine, fp);
-        }
+	}
 
 	fp = NULL;
 }
@@ -634,6 +637,8 @@ static void ParseClose(void)
 static UINT8 ParseOpen(const char *pszFilename)
 {
 	file_error filerr;
+
+	ParseClose();
 
 	/* Open file up in binary mode */
 	fp = auto_alloc(*m_machine, emu_file(OPEN_FLAG_READ));

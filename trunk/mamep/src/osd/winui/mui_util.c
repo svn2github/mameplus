@@ -27,9 +27,8 @@
 #include <stdio.h>
 #include <tchar.h>
 
-#include "emu.h"
-
 // MAME/MAMEUI headers
+#include "emu.h"
 #include "unzip.h"
 #include "sound/samples.h"
 #include "winutf8.h"
@@ -688,6 +687,15 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 		UpdateController();
 	}
 	return &drivers_info[driver_index];
+}
+
+void FreeDriversInfo(void)
+{
+	if (drivers_info != NULL)
+	{
+		free(drivers_info);
+		drivers_info = NULL;
+	}
 }
 
 BOOL DriverIsClone(int driver_index)

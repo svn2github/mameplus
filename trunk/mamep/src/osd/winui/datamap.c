@@ -43,6 +43,10 @@
 #define snprintf _snprintf
 #endif
 
+#undef malloc
+#undef realloc
+#undef free
+
 //============================================================
 //  TYPE DEFINITIONS
 //============================================================
@@ -147,9 +151,6 @@ void datamap_free(datamap *map)
 //============================================================
 //  datamap_add
 //============================================================
-
-#undef realloc
-#undef malloc
 
 void datamap_add(datamap *map, int dlgitem, datamap_entry_type type, const char *option_name)
 {

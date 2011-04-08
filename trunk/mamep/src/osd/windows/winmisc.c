@@ -45,6 +45,7 @@
 #include <tchar.h>
 
 // MAME headers
+#include "emucore.h"
 #include "osdcore.h"
 
 // MAMEOS headers

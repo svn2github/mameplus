@@ -57,6 +57,10 @@
 #define snprintf _snprintf
 #endif
 
+#undef malloc
+#undef realloc
+#undef free
+
 /***************************************************************************
     Internal function prototypes
  ***************************************************************************/
@@ -2393,8 +2397,6 @@ void SetShowTreeSheet(BOOL val)
 
 
 #include <ctype.h>
-#undef realloc
-#undef malloc
 
 typedef struct
 {

@@ -118,6 +118,7 @@ static driver_data_type *sorted_drivers = NULL;
 static srcdriver_data_type *sorted_srcdrivers = NULL;
 static int num_games;
 static void flush_index(void);
+static void ParseClose(void);
 
 
 /****************************************************************************
@@ -134,6 +135,8 @@ void winui_datafile_init(windows_options &options)
 
 void winui_datafile_exit(void)
 {
+	ParseClose();
+
 	flush_index();
 
 	if (sorted_drivers)
@@ -447,10 +450,10 @@ static void ParseClose(void)
 	/* If the file is open, time for fclose. */
 
 	if (fp)
-        {
+	{
 		fp->close();
 		global_free(fp);
-        }
+	}
 
 	fp = NULL;
 }
@@ -462,6 +465,8 @@ static void ParseClose(void)
 static UINT8 ParseOpen(const char *pszFilename)
 {
 	file_error filerr;
+
+	ParseClose();
 
 	/* Open file up in binary mode */
 	fp = global_alloc(emu_file(OPEN_FLAG_READ));

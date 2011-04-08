@@ -2593,7 +2593,9 @@ static void Win32UI_exit()
 		DeleteFont(hFont);
 		hFont = NULL;
 	}
-	
+
+	SplittersExit();
+
 	DestroyIcons();
 
 	DestroyAcceleratorTable(hAccel);
@@ -2620,6 +2622,8 @@ static void Win32UI_exit()
 
 	pool_free_lib(mameui_pool);
 	mameui_pool = NULL;
+
+	FreeDriversInfo();
 
 	if (sorted_drivers != NULL)
 	{

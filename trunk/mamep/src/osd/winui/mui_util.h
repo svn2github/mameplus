@@ -67,6 +67,8 @@ int DriverNumPlayers(int driver_index);
 int DriverNumButtons(int driver_index);
 BOOL DriverUsesController(int driver_index, int type);
 
+void FreeDriversInfo(void);
+
 #ifdef USE_IPS
 int GetPatchCount(const WCHAR *game_name, const WCHAR *patch_name);
 int GetPatchFilename(WCHAR *patch_name, const WCHAR *game_name, const int patch_index);
