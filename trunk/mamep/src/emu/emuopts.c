@@ -91,7 +91,7 @@ const options_entry emu_options::s_option_entries[] =
 	{ OPTION_DIFF_DIRECTORY,                             "diff",      OPTION_STRING,     "directory to save hard drive image difference files" },
 	{ OPTION_COMMENT_DIRECTORY,                          "comments",  OPTION_STRING,     "directory to save debugger comments" },
 #ifdef USE_HISCORE
-	{ "hiscore_directory",           "hi",        0,                 "directory to save hiscores" },
+	{ "hiscore_directory",                               "hi",        OPTION_STRING,     "directory to save hiscores" },
 #endif /* USE_HISCORE */
 
 	// filename options

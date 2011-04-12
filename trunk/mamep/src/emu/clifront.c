@@ -91,9 +91,6 @@ static void match_roms(emu_options &options, const hash_collection &hashes, int 
 static void display_suggestions(const char *gamename);
 static void namecopy(char *name_ref, const char *desc);
 
-//mamep: required for using -listxml to parse -driver_config
-extern int parse_ini_file(emu_options &options, const char *name, int priority);
-
 
 //**************************************************************************
 //  COMMAND-LINE OPTIONS
@@ -196,7 +193,7 @@ int cli_execute(cli_options &options, osd_interface &osd, int argc, char **argv)
 			throw emu_fatalerror(MAMERR_INVALID_CONFIG, "%s", option_errors.trimspace().cstr());
 		}
 		if (option_errors)
-			printf("Error in command line:\n%s\n", option_errors.trimspace().cstr());
+			printf(_("Error in command line:\n%s\n"), option_errors.trimspace().cstr());
 
 		// determine the base name of the EXE
 		astring exename;
@@ -316,6 +313,10 @@ static void execute_commands(cli_options &options, const char *exename)
 	// showconfig?
 	if (strcmp(options.command(), CLICOMMAND_SHOWCONFIG) == 0)
 	{
+		//FIXME for mamepgui
+		if (!options.bool_value(OPTION_READCONFIG))
+			lang_set_langcode(options, UI_LANG_EN_US);
+
 		// print the INI text
 		astring initext;
 		printf("%s\n", options.output_ini(initext));

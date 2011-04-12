@@ -2073,7 +2073,7 @@ static void SetMainTitle(void)
 	WCHAR buffer[100];
 
 	sscanf(build_version,"%s",version);
-	swprintf(buffer, TEXT("%s Plus! %s"), TEXT(MAMEUINAME), _Unicode(GetVersionString()));
+	swprintf(buffer, TEXT("%s Plus! %s"), TEXT(MAMENAME), _Unicode(GetVersionString()));
 	SetWindowText(hMain, buffer);
 }
 
