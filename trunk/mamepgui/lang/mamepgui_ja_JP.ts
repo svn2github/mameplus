@@ -285,7 +285,7 @@
         <source>Could not load:
 
 </source>
-        <translation>ファイルを読み込むません:
+        <translation>ファイルを読み込めません:
 
 </translation>
     </message>
