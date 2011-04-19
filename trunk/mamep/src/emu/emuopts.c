@@ -39,6 +39,7 @@
 
 #include "emu.h"
 #include "emuopts.h"
+#include "clifront.h"
 
 #include <ctype.h>
 
@@ -348,14 +349,6 @@ bool emu_options::parse_command_line(int argc, char *argv[], astring &error_stri
 	// parse as normal
 	bool result = core_options::parse_command_line(argc, argv, OPTION_PRIORITY_CMDLINE, error_string);
 
-#ifdef DRIVER_SWITCH
-	{
-		void assign_drivers(emu_options &options);
-
-		assign_drivers(*this);
-	}
-#endif /* DRIVER_SWITCH */
-
 	// if the system name changed, fix up the device options
 	if (old_system_name != system_name())
 	{
@@ -386,6 +379,8 @@ void emu_options::parse_standard_inis(astring &error_string)
 	// we do this twice so that the first file can change the INI path
 	parse_one_ini(CONFIGNAME, OPTION_PRIORITY_MAME_INI);
 	parse_one_ini(CONFIGNAME, OPTION_PRIORITY_MAME_INI, &error_string);
+
+	setup_language(*this);
 
 	// debug mode: parse "debug.ini" as well
 	if (debug())
@@ -432,7 +427,7 @@ void emu_options::parse_standard_inis(astring &error_string)
 
 #ifdef USE_IPS
 	//mamep: hack, DO NOT INHERIT IPS CONFIGURATION
-	set_value(OPTION_IPS, NULL, OPTION_PRIORITY_INI, error);
+	set_value(OPTION_IPS, "", OPTION_PRIORITY_INI, error);
 	assert(!error);
 #endif /* USE_IPS */
 

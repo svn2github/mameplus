@@ -602,6 +602,7 @@ static void read_control(datamap *map, HWND control, windows_options *opts, data
 					break;
 
 				case DM_FLOAT:
+					// Use tztrim(float_value) or we get trailing zero's that break options_equal().
 					if (float_value != opts->float_value(option_name)) {
 						opts->set_value(option_name, tztrim(float_value), OPTION_PRIORITY_CMDLINE, error);
 						assert(!error);

@@ -52,7 +52,6 @@
 // core commands
 #define CLICOMMAND_HELP					"help"
 #define CLICOMMAND_VALIDATE				"validate"
-#define CLIOPTION_LISTGAMES				"listgames"		// for make tp_manufact.txt
 
 // configuration commands
 #define CLICOMMAND_CREATECONFIG			"createconfig"
@@ -74,6 +73,7 @@
 #define CLICOMMAND_LISTDEVICES			"listdevices"
 #define CLICOMMAND_LISTMEDIA			"listmedia"		// needed by MESS
 #define CLICOMMAND_LISTSOFTWARE			"listsoftware"
+#define CLICOMMAND_LISTGAMES			"listgames"		// for make tp_manufact.txt
 
 
 

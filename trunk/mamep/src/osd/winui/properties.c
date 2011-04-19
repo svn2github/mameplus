@@ -338,20 +338,20 @@ extern const DWORD dwHelpIDs[];
 static struct ComboBoxVideo
 {
 	const WCHAR*	m_pText;
-	const char* 	m_pData;
+	const char*		m_pData;
 } g_ComboBoxVideo[] = 
 {
 	{ TEXT("None"),                 "none"    },
-	{ TEXT("GDI"),                  "gdi"    },
-	{ TEXT("DirectDraw"),           "ddraw"  },
-	{ TEXT("Direct3D"),             "d3d"    },
+	{ TEXT("GDI"),                  "gdi"     },
+	{ TEXT("DirectDraw"),           "ddraw"   },
+	{ TEXT("Direct3D"),             "d3d"     },
 };
 #define NUMVIDEO ARRAY_LENGTH(g_ComboBoxVideo)
 
 static struct ComboBoxD3DVersion
 {
 	const WCHAR*	m_pText;
-	const int	 	m_pData;
+	const int		m_pData;
 } g_ComboBoxD3DVersion[] = 
 {
 	{ TEXT("Version 9"),  9   },
@@ -363,7 +363,7 @@ static struct ComboBoxD3DVersion
 static struct ComboBoxSelectScreen
 {
 	const WCHAR*	m_pText;
-	const int	 	m_pData;
+	const int		m_pData;
 } g_ComboBoxSelectScreen[] = 
 {
 	{ TEXT("All screens"),      0    },
@@ -381,8 +381,8 @@ static struct ComboBoxView
 } g_ComboBoxView[] = 
 {
 	{ TEXT("Auto"),             "auto"        },
-	{ TEXT("Standard"),         "standard"    }, 
-	{ TEXT("Pixel Aspect"),     "pixel"       }, 
+	{ TEXT("Standard"),         "standard"    },
+	{ TEXT("Pixel Aspect"),     "pixel"       },
 	{ TEXT("Cocktail"),         "cocktail"    },
 };
 #define NUMVIEW ARRAY_LENGTH(g_ComboBoxView)
@@ -3205,10 +3205,6 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_POSITIONAL,				DM_STRING,	OPTION_POSITIONAL_DEVICE);
 	datamap_add(properties_datamap, IDC_MOUSE,					DM_STRING,	OPTION_MOUSE_DEVICE);
 
-	// windows debugging options
-	datamap_add(properties_datamap, IDC_OSLOG,					DM_BOOL,	WINOPTION_OSLOG);
-	// watchdog missing
-
 	// core debugging options
 	datamap_add(properties_datamap, IDC_LOG,					DM_BOOL,	OPTION_LOG);
 	datamap_add(properties_datamap, IDC_DEBUG,					DM_BOOL,	OPTION_DEBUG);
@@ -3231,6 +3227,9 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_TRANSPARENCYDISP,		DM_INT,  	OPTION_UI_TRANSPARENCY);
 #endif /* TRANS_UI */
 
+	// windows debugging options
+	datamap_add(properties_datamap, IDC_OSLOG,					DM_BOOL,	WINOPTION_OSLOG);
+	// watchdog missing
 
 	// windows performance options
 	datamap_add(properties_datamap, IDC_HIGH_PRIORITY,			DM_INT,		WINOPTION_PRIORITY);

@@ -175,7 +175,6 @@ int mame_execute(emu_options &options, osd_interface &osd)
 			options.revert(OPTION_PRIORITY_INI);
 			astring errors;
 			options.parse_standard_inis(errors);
-			setup_language(options);
 		}
 
 		// create the machine configuration

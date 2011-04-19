@@ -253,15 +253,7 @@ static void remove_all_source_options(void);
     Internal structures
  ***************************************************************************/
 
-#if 0
-typedef struct
-{
-	int folder_index;
-	int filters;
-} folder_filter_type;
-#endif
-
-/***************************************************************************
+ /***************************************************************************
     Internal variables
  ***************************************************************************/
 
@@ -276,7 +268,7 @@ const options_entry winui_options::s_option_entries[] =
 {
 	// UI options
 	{ NULL,                                           NULL,                         OPTION_HEADER,     "DISPLAY STATE OPTIONS" },
-	{ MUIOPTION_DEFAULT_GAME,                         MUIDEFAULT_SELECTION, OPTION_STRING, NULL },
+	{ MUIOPTION_DEFAULT_GAME,                         MUIDEFAULT_SELECTION,         OPTION_STRING,     NULL },
 //	{ MUIOPTION_DEFAULT_GAME,                         "puckman",                    OPTION_STRING,     NULL },
 	{ MUIOPTION_DEFAULT_FOLDER_ID,                    "0",                          OPTION_INTEGER,    NULL },
 	{ MUIOPTION_SHOW_IMAGE_SECTION,                   "1",                          OPTION_BOOLEAN,    NULL },
@@ -505,7 +497,7 @@ winui_options::winui_options()
 */
 /*
 
-void AddOptions(emu_options *opts, const options_entry *entrylist, BOOL is_global)
+void AddOptions(winui_options *opts, const options_entry *entrylist, BOOL is_global)
 {
 	static const char *blacklist[] =
 	{
@@ -658,24 +650,6 @@ windows_options & MameUIGlobal(void)
 {
 	return global;
 }
-
-#if 0
-static void LoadFolderFilter(int folder_index,int filters)
-{
-	//dprintf("loaded folder filter %i %i\n",folder_index,filters);
-
-	if (num_folder_filters == size_folder_filters)
-	{
-		size_folder_filters *= 2;
-		folder_filters = (folder_filter_type *)realloc(
-			folder_filters,size_folder_filters * sizeof(folder_filter_type));
-	}
-	folder_filters[num_folder_filters].folder_index = folder_index;
-	folder_filters[num_folder_filters].filters = filters;
-
-	num_folder_filters++;
-}
-#endif
 
 // Restore ui settings to factory
 void ResetGUI(void)
@@ -1098,8 +1072,11 @@ void SetWindowArea(const AREA *area)
 {
 	astring error_string;
 	settings.set_value(MUIOPTION_WINDOW_X,		area->x, OPTION_PRIORITY_CMDLINE, error_string);
+	assert(!error_string);
 	settings.set_value(MUIOPTION_WINDOW_Y,		area->y, OPTION_PRIORITY_CMDLINE, error_string);
+	assert(!error_string);
 	settings.set_value(MUIOPTION_WINDOW_WIDTH,	area->width, OPTION_PRIORITY_CMDLINE, error_string);
+	assert(!error_string);
 	settings.set_value(MUIOPTION_WINDOW_HEIGHT,	area->height, OPTION_PRIORITY_CMDLINE, error_string);
 	assert(!error_string);
 }
@@ -2806,8 +2783,8 @@ static void TabFlagsDecodeString(const char *str, int *data)
 
 static file_error LoadSettingsFile(winui_options &opts, const char *filename)
 {
-	core_file *file;
 	file_error filerr;
+	core_file *file;
 
 	filerr = core_fopen(filename, OPEN_FLAG_READ, &file);
 	if (filerr == FILERR_NONE)
@@ -2820,8 +2797,8 @@ static file_error LoadSettingsFile(winui_options &opts, const char *filename)
 }
 static file_error LoadSettingsFile(windows_options &opts, const char *filename)
 {
-	core_file *file;
 	file_error filerr;
+	core_file *file;
 
 	filerr = core_fopen(filename, OPEN_FLAG_READ, &file);
 	if (filerr == FILERR_NONE)
@@ -2836,8 +2813,8 @@ static file_error LoadSettingsFile(windows_options &opts, const char *filename)
 
 static file_error SaveSettingsFile(winui_options &opts, winui_options *baseopts, const char *filename)
 {
-	core_file *file;
 	file_error filerr;
+	core_file *file;
 
 	//if ((opts != NULL) && ((baseopts == NULL) || !(opts == *baseopts)))
 	{
@@ -2863,8 +2840,8 @@ static file_error SaveSettingsFile(winui_options &opts, winui_options *baseopts,
 }
 static file_error SaveSettingsFile(windows_options &opts, windows_options *baseopts, const char *filename)
 {
-	core_file *file;
 	file_error filerr;
+	core_file *file;
 
 	//if ((opts != NULL) && ((baseopts == NULL) || !(opts == *baseopts)))
 	{
@@ -3135,6 +3112,16 @@ static void ui_parse_ini_file(windows_options &opts, const char *name)
 	astring_free(fname);
 }
 
+static void ui_parse_global_ini_file(windows_options &opts)
+{
+	astring *fname;
+
+	/* open the file; if we fail, that's ok */
+	fname = astring_assemble_2(astring_alloc(), CONFIGNAME, ".ini");
+	LoadSettingsFile(opts, astring_c(fname));
+	astring_free(fname);
+}
+
 
 /*  get options, based on passed in option level. */
 void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
@@ -3143,7 +3130,7 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 
 	CreateGameOptions(opts, game_num);
 	// Copy over the defaults 
-	ui_parse_ini_file(opts, CONFIGNAME);
+	ui_parse_global_ini_file(opts);
 
 	if (opt_type == OPTIONS_GLOBAL)
 	{
@@ -3224,7 +3211,7 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 #ifdef USE_IPS
 		//mamep: DO NOT INHERIT IPS CONFIGURATION
 		astring error_string;
-		opts.set_value(OPTION_IPS, NULL, OPTION_PRIORITY_CMDLINE, error_string);
+		opts.set_value(OPTION_IPS, "", OPTION_PRIORITY_CMDLINE, error_string);
 		assert(!error_string);
 #endif /* USE_IPS */
 
@@ -3253,17 +3240,18 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 	astring *filename = NULL;
 
 	//mamep: to remove ini file, load baseopts even if it is equals global
-/*	if (OPTIONS_GLOBAL != opt_type) // && NULL != opts && !(opts == global))
+	if (OPTIONS_GLOBAL != opt_type) // && NULL != opts && !(opts == global))
 	{
+		baseopts = global_alloc(windows_options());
 		if (OPTIONS_VERTICAL == opt_type) {
 			//since VERTICAL and HORIZONTAL are equally ranked
 			//we need to subtract 2 from vertical to also get to global
-			load_options(baseopts,(OPTIONS_TYPE)(opt_type - 2), game_num);
+			load_options(*baseopts, (OPTIONS_TYPE)(opt_type - 2), game_num);
 		}
 		else {
-			load_options(baseopts,(OPTIONS_TYPE)(opt_type - 1), game_num);
+			load_options(*baseopts, (OPTIONS_TYPE)(opt_type - 1), game_num);
 		}
-	}*/
+	}
 
 	if (game_num >= 0)
 	{
@@ -3293,7 +3281,7 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 		switch (opt_type)
 		{
 		case OPTIONS_SOURCE:
-			/* determine the <sourcefile> */
+			// determine the <sourcefile> 
 			basename = core_filename_extract_base(astring_alloc(), driver->source_file, TRUE);
 			srcname = astring_assemble_3(astring_alloc(), "source", PATH_SEPARATOR, astring_c(basename));
 			filename = astring_cpyc(astring_alloc(),astring_c(srcname));
@@ -3327,6 +3315,9 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 
 		SaveSettingsFile(opts, baseopts, astring_c(filepath));
 		astring_free(filepath);
+
+		if (baseopts != NULL)
+			global_free(baseopts);
 	}
 }
 
