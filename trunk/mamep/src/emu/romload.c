@@ -622,7 +622,6 @@ static int open_rom_file(rom_load_data *romdata, const char *regiontag, const ro
 {
 	file_error filerr = FILERR_NOT_FOUND;
 	UINT32 romsize = rom_file_size(romp);
-	const game_driver *drv;
 
 	/* update status display */
 	display_loading_rom_message(romdata, ROM_GETNAME(romp));
@@ -634,18 +633,17 @@ static int open_rom_file(rom_load_data *romdata, const char *regiontag, const ro
 	/* attempt reading up the chain through the parents. It automatically also
      attempts any kind of load by checksum supported by the archives. */
 	romdata->file = NULL;
-	for (drv = &romdata->machine().system(); romdata->file == NULL && drv != NULL; drv = driver_get_clone(drv))
-		if (drv->name != NULL && *drv->name != 0)
+	for (int drv = driver_list::find(romdata->machine().system()); romdata->file == NULL && drv != -1; drv = driver_list::clone(drv))
 #ifdef USE_IPS
-			{
+	{
 #endif /* USE_IPS */
-			filerr = common_process_file(romdata->machine().options(), drv->name, has_crc, crc, romp, &romdata->file);
+		filerr = common_process_file(romdata->machine().options(), driver_list::driver(drv).name, has_crc, crc, romp, &romdata->file);
 
 #ifdef USE_IPS
-			romdata->patch = assign_ips_patch(romp);
-			if (romdata->patch)
-				LOG(("ROM %s: has ips\n", ROM_GETNAME(romp)));
-			}
+		romdata->patch = assign_ips_patch(romp);
+		if (romdata->patch)
+			LOG(("ROM %s: has ips\n", ROM_GETNAME(romp)));
+	}
 #endif /* USE_IPS */
 
 	/* if the region is load by name, load the ROM from there */
@@ -1032,7 +1030,6 @@ static void process_rom_entries(rom_load_data *romdata, const char *regiontag, c
 
 chd_error open_disk_image(emu_options &options, const game_driver *gamedrv, const rom_entry *romp, emu_file **image_file, chd_file **image_chd, const char *locationtag)
 {
-	const game_driver *drv, *searchdrv;
 	const rom_entry *region, *rom;
 	const rom_source *source;
 	file_error filerr;
@@ -1043,8 +1040,8 @@ chd_error open_disk_image(emu_options &options, const game_driver *gamedrv, cons
 
 	/* attempt to open the properly named file, scanning up through parent directories */
 	filerr = FILERR_NOT_FOUND;
-	for (searchdrv = gamedrv; searchdrv != NULL && filerr != FILERR_NONE; searchdrv = driver_get_clone(searchdrv))
-		filerr = common_process_file(options, searchdrv->name, ".chd", romp, image_file);
+	for (int searchdrv = driver_list::find(*gamedrv); searchdrv != -1 && filerr != FILERR_NONE; searchdrv = driver_list::clone(searchdrv))
+		filerr = common_process_file(options, driver_list::driver(searchdrv).name, ".chd", romp, image_file);
 
 	if (filerr != FILERR_NONE)
 		filerr = common_process_file(options, NULL, ".chd", romp, image_file);
@@ -1139,9 +1136,9 @@ chd_error open_disk_image(emu_options &options, const game_driver *gamedrv, cons
 	/* otherwise, look at our parents for a CHD with an identical checksum */
 	/* and try to open that */
 	hash_collection romphashes(ROM_GETHASHDATA(romp));
-	for (drv = gamedrv; drv != NULL; drv = driver_get_clone(drv))
+	for (int drv = driver_list::find(*gamedrv); drv != -1; drv = driver_list::clone(drv))
 	{
-		machine_config config(*drv, options);
+		machine_config config(driver_list::driver(drv), options);
 		for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
 			for (region = rom_first_region(*source); region != NULL; region = rom_next_region(region))
 				if (ROMREGION_ISDISKDATA(region))
@@ -1153,8 +1150,8 @@ chd_error open_disk_image(emu_options &options, const game_driver *gamedrv, cons
 						{
 							/* attempt to open the properly named file, scanning up through parent directories */
 							filerr = FILERR_NOT_FOUND;
-							for (searchdrv = drv; searchdrv != NULL && filerr != FILERR_NONE; searchdrv = driver_get_clone(searchdrv))
-								filerr = common_process_file(options, searchdrv->name, ".chd", rom, image_file);
+							for (int searchdrv = drv; searchdrv != -1 && filerr != FILERR_NONE; searchdrv = driver_list::clone(searchdrv))
+								filerr = common_process_file(options, driver_list::driver(searchdrv).name, ".chd", rom, image_file);
 
 							if (filerr != FILERR_NONE)
 								filerr = common_process_file(options, NULL, ".chd", rom, image_file);

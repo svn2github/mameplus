@@ -107,13 +107,12 @@ ROM_END
 //-------------------------------------------------
 
 bsmt2000_device_config::bsmt2000_device_config(const machine_config &mconfig, const char *tag, const device_config *owner, UINT32 clock)
-	: device_config(mconfig, static_alloc_device_config, "BSMT2000", tag, owner, clock),
+	: device_config(mconfig, static_alloc_device_config, "BSMT2000", "bsmt2000", tag, owner, clock),
 	  device_config_sound_interface(mconfig, *this),
 	  device_config_memory_interface(mconfig, *this),
 	  m_space_config("samples", ENDIANNESS_LITTLE, 8, 32, 0, NULL, *ADDRESS_MAP_NAME(bsmt2000)),
 	  m_ready_callback(NULL)
 {
-	m_shortname = "bsmt2000";
 }
 
 
@@ -227,7 +226,7 @@ void bsmt2000_device::device_start()
 	// in theory we should generate a 24MHz stream, but that's certainly overkill
 	// internally at 24MHz the max output sample rate is 32kHz
 	// divided by 128 gives us 6x the max output rate which is plenty for oversampling
-	m_stream = m_machine.sound().stream_alloc(*this, 0, 2, clock() / 128);
+	m_stream = machine().sound().stream_alloc(*this, 0, 2, clock() / 128);
 
 	// register for save states
 	save_item(NAME(m_register_select));
@@ -327,7 +326,7 @@ void bsmt2000_device::write_data(UINT16 data)
 	synchronize(TIMER_ID_DATA_WRITE, data);
 
 	// boost the interleave on a write so that the caller detects the status more accurately
-	m_machine.scheduler().boost_interleave(attotime::from_usec(1), attotime::from_usec(10));
+	machine().scheduler().boost_interleave(attotime::from_usec(1), attotime::from_usec(10));
 }
 
 

@@ -1,0 +1,72 @@
+/******************************************************************************
+
+    mamedecrypted.lst
+
+    This is an unofficial version based on MAME.
+    Please do not send any reports from this build to the MAME team.
+
+    List of all enabled drivers in the system. This file is parsed by
+    makelist.exe, sorted, and output as C code describing the drivers.
+
+****************************************************************************
+
+    Copyright Aaron Giles
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are
+    met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in
+          the documentation and/or other materials provided with the
+          distribution.
+        * Neither the name 'MAME' nor the names of its contributors may be
+          used to endorse or promote products derived from this software
+          without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY AARON GILES ''AS IS'' AND ANY EXPRESS OR
+    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL AARON GILES BE LIABLE FOR ANY DIRECT,
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+    IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+
+******************************************************************************/
+
+// Neo Geo decrypted
+zupapad			// 0070 Zupapa - released in 2001, 1994 prototype probably exists
+kof99d			// 0251 (c) 1999 SNK
+ganryud			// 0252 (c) 1999 Visco
+garoud			// 0253 (c) 1999 SNK
+s1945pd			// 0254 (c) 1999 Psikyo
+preisl2d		// 0255 (c) 1999 Yumekobo
+mslug3d			// 0256 (c) 2000 SNK
+kof2000d		// 0257 (c) 2000 SNK
+nitdd			// 0260 (c) 2000 Eleven / Gavaking
+sengok3d		// 0261 (c) 2001 SNK
+kof2001d		// 0262 (c) 2001 Eolith / SNK
+mslug4d			// 0263 (c) 2002 Mega Enterprise
+rotdd			// 0264 (c) 2002 Evoga
+kof2002d		// 0265 (c) 2002 Eolith / Playmore
+matrimd			// 0266 (c) 2002 Atlus
+ct2k3ad			// Bootleg
+cthd2k3d		// Bootleg
+kof10thd		// Bootleg
+kof2003d		// 0271 (c) 2003 Playmore
+mslug5d			// 0268 (c) 2003 Playmore
+samsho5d		// 0270 (c) 2003 Playmore
+samsh5sd		// 0272 (c) 2003 Playmore
+lans2k4d		// Bootleg
+svcd			// 0269 (c) 2003 Playmore / Capcom
+jckeygpd
+kf2k3pcd		// 0271 (c) 2003 Playmore - JAMMA PCB
+kogd			// Bootleg
+pnyaad			// 0267 (c) 2003 Aiky / Taito

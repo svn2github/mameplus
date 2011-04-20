@@ -443,7 +443,8 @@ int main(int argc, char *argv[])
 	{
 		windows_options options;
 		windows_osd_interface osd;
-		result = cli_execute(options, osd, argc, argv);
+		cli_frontend frontend(options, osd);
+		result = frontend.execute(argc, argv);
 	}
 
 	// free symbols

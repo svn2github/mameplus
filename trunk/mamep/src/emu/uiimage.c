@@ -21,6 +21,7 @@
 #include "image.h"
 #include "ui.h"
 #include "uimenu.h"
+#include "uiswlist.h"
 #include "zippath.h"
 #include "unicode.h"
 #include "imagedev/cassette.h"
@@ -844,6 +845,10 @@ static void menu_file_selector(running_machine &machine, ui_menu *menu, void *pa
 					ui_menu_stack_pop(machine);
 					break;
 			}
+
+			// reset the char buffer when pressing IPT_UI_SELECT
+			if (menustate->filename_buffer[0] != '\0')
+				memset(menustate->filename_buffer, '\0', ARRAY_LENGTH(menustate->filename_buffer));
 		}
 		else if (event->iptkey == IPT_SPECIAL)
 		{
@@ -918,6 +923,12 @@ static void menu_file_selector(running_machine &machine, ui_menu *menu, void *pa
 					ui_menu_set_selection(menu, (void *) selected_entry);
 			}
 		}
+		else if (event->iptkey == IPT_UI_CANCEL)
+		{
+			// reset the char buffer also in this case
+			if (menustate->filename_buffer[0] != '\0')
+				memset(menustate->filename_buffer, '\0', ARRAY_LENGTH(menustate->filename_buffer));
+		}
 	}
 }
 
@@ -985,8 +996,8 @@ static void menu_file_manager_populate(running_machine &machine, ui_menu *menu, 
 	{
 		/* get the image type/id */
 		snprintf(buffer, ARRAY_LENGTH(buffer),
-			"%s",
-			image->image_config().devconfig().name());
+			"%s (%s)",
+			image->image_config().devconfig().name(), image->image_config().brief_instance_name());
 
 		/* get the base name */
 		if (image->basename() != NULL)

@@ -241,6 +241,8 @@ public:
 	device_list(resource_pool &pool = global_resource_pool);
 	void import_config_list(const device_config_list &list, running_machine &machine);
 
+	running_machine &machine() const { assert(m_machine != NULL); return *m_machine; }
+
 	void start_all();
 	void reset_all();
 };
@@ -262,6 +264,7 @@ class device_config
 protected:
 	// construction/destruction
 	device_config(const machine_config &mconfig, device_type type, const char *name, const char *tag, const device_config *owner, UINT32 clock, UINT32 param = 0);
+	device_config(const machine_config &mconfig, device_type type, const char *name, const char *shortname, const char *tag, const device_config *owner, UINT32 clock, UINT32 param = 0);
 	virtual ~device_config();
 
 public:
@@ -289,6 +292,7 @@ public:
 	UINT32 clock() const { return m_clock; }
 	const char *name() const { return m_name; }
 	const char *shortname() const { return m_shortname; }
+	const char *searchpath() const { return m_searchpath; }
 	const char *tag() const { return m_tag; }
 	const void *static_config() const { return m_static_config; }
 	const machine_config &mconfig() const { return m_machine_config; }
@@ -336,7 +340,9 @@ protected:
 	const input_device_default *m_input_defaults;   // devices input ports default overrides
 
 	astring					m_name;					// name of the device
-	astring					m_shortname;			// short name of the device, used for potential romload
+	astring					m_shortname;			// short name of the device
+	astring					m_searchpath;			// search path, used for media loading
+
 private:
 	astring 				m_tag;					// tag for this instance
 	bool					m_config_complete;		// have we completed our configuration?
@@ -496,7 +502,6 @@ protected:
 
 	//------------------- end derived class overrides
 
-	running_machine &		m_machine;
 	state_manager &			m_state_manager;
 	device_debug *			m_debug;
 
@@ -623,6 +628,9 @@ protected:
 	void register_auto_finder(auto_finder_base &autodev);
 
 	auto_finder_base *		m_auto_finder_list;
+
+private:
+	running_machine &		m_machine;
 };
 
 

@@ -1,0 +1,154 @@
+/******************************************************************************
+
+    tiny.lst
+
+    List of all enabled drivers in the system. This file is parsed by
+    makelist.exe, sorted, and output as C code describing the drivers.
+
+****************************************************************************
+
+    Copyright Aaron Giles
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are
+    met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in
+          the documentation and/or other materials provided with the
+          distribution.
+        * Neither the name 'MAME' nor the names of its contributors may be
+          used to endorse or promote products derived from this software
+          without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY AARON GILES ''AS IS'' AND ANY EXPRESS OR
+    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL AARON GILES BE LIABLE FOR ANY DIRECT,
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+    IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+
+******************************************************************************/
+
+robby			// (c) 1981 Bally Midway
+gridlee			// [1983 Videa] prototype - no copyright notice
+alienar			// (c) 1985 Duncan Brown
+
+carpolo			// (c) 1977 Exidy
+sidetrac		// (c) 1979 Exidy
+targ			// (c) 1980 Exidy
+spectar			// (c) 1980 Exidy
+teetert			// (c) 1982 Exidy
+hardhat			// (c) 1982
+fax				// (c) 1983
+fax2			// (c) 1983
+circus			// (c) 1977 Exidy
+robotbwl		// (c) 197? Exidy
+crash			// (c) 1979 Exidy
+ripcord			// (c) 1979 Exidy
+starfire		// (c) 1979 Exidy
+starfirea		// (c) 1979 Exidy
+fireone			// (c) 1979 Exidy
+starfir2		// (c) 1979 Exidy
+victory			// (c) 1982
+victorba		// (c) 1982
+topgunnr		// (c) 1986
+
+looping			// (c) 1982 Video Games GMBH
+supertnk		// (c) 1981 VIDEO GAMES GmbH, W.-GERMANY
+
+wrally			// (c) 1993 - Ref 930705
+
+// Cave games
+// Cave was formed in 1994 from the ruins of Toaplan, like Raizing was.
+pwrinst2		// (c) 1994 Atlus
+pwrinst2j		// (c) 1994 Atlus
+plegends		// (c) 1994 Atlus
+plegendsj		// (c) 1994 Atlus
+mazinger		// (c) 1994 Banpresto (country is in EEPROM)
+mazingerj		// (c) 1994 Banpresto (country is in EEPROM)
+donpachi		// (c) 1995 Atlus/Cave
+donpachij		// (c) 1995 Atlus/Cave
+donpachikr		// (c) 1995 Atlus/Cave
+donpachihk		// (c) 1995 Atlus/Cave
+metmqstr		// (c) 1995 Banpresto / Pandorabox
+nmaster			// (c) 1995 Banpresto / Pandorabox
+sailormn		// (c) 1995 Banpresto (country is in EEPROM)
+sailormnu		// (c) 1995 Banpresto (country is in EEPROM)
+sailormnj		// (c) 1995 Banpresto (country is in EEPROM)
+sailormnk		// (c) 1995 Banpresto (country is in EEPROM)
+sailormnt		// (c) 1995 Banpresto (country is in EEPROM)
+sailormnh		// (c) 1995 Banpresto (country is in EEPROM)
+sailormno		// (c) 1995 Banpresto (country is in EEPROM)
+sailormnou		// (c) 1995 Banpresto (country is in EEPROM)
+sailormnoj		// (c) 1995 Banpresto (country is in EEPROM)
+sailormnok		// (c) 1995 Banpresto (country is in EEPROM)
+sailormnot		// (c) 1995 Banpresto (country is in EEPROM)
+sailormnoh		// (c) 1995 Banpresto (country is in EEPROM)
+agallet			// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+agalletu		// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+agalletj		// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+agalletk		// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+agallett		// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+agalleth		// (c) 1996 Banpresto / Gazelle (country is in EEPROM)
+hotdogst		// (c) 1996 Marble
+pacslot			// (c) 1996 Namco
+ddonpach		// (c) 1997 Atlus/Cave
+ddonpachj		// (c) 1997 Atlus/Cave
+dfeveron		// (c) 1998 Cave + Nihon System license
+feversos		// (c) 1998 Cave + Nihon System license
+esprade			// (c) 1998 Atlus/Cave
+espradej		// (c) 1998 Atlus/Cave (Japan)
+espradejo		// (c) 1998 Atlus/Cave (Japan)
+uopoko			// (c) 1998 Cave + Jaleco license
+uopokoj			// (c) 1998 Cave + Jaleco license
+guwange			// (c) 1999 Atlus/Cave
+gaia			// (c) 1999 Noise Factory
+theroes			// (c) 2001 Primetek Investments
+korokoro		// (c) 1999 Takumi
+crusherm		// (c) 1999 Takumi
+tjumpman		// (c) 1999 Namco
+
+// Psikyo games
+samuraia		// (c) 1993 (World)
+sngkace			// (c) 1993 (Japan)
+gunbird			// (c) 1994
+gunbirdk		// (c) 1994
+gunbirdj		// (c) 1994
+btlkroad		// (c) 1994
+s1945			// (c) 1995
+s1945a			// (c) 1995
+s1945j			// (c) 1995
+s1945jn			// (c) 1995
+s1945bl			// (c) 1995 (Hong Kong bootleg)
+s1945k			// (c) 1995
+tengai			// (c) 1996
+tengaij			// (c) 1996
+s1945ii			// (c) 1997
+soldivid		// (c) 1997
+sbomber			// (c) 1998
+sbombera		// (c) 1998
+daraku			// (c) 1998
+gunbird2		// (c) 1998
+s1945iii		// (c) 1999
+dragnblz		// (c) 2000
+tgm2			// (c) 2000
+tgm2p			// (c) 2000
+gnbarich		// (c) 2001
+mjgtaste		// (c) 2002
+hotgmck			// (c) 1997
+hgkairak		// (c) 1998
+hotgmck3		// (c) 1999
+hotgm4ev		// (c) 2000
+hotgmcki		// (c) 2001
+loderndf		// (c) 2000
+loderndfa		// (c) 2000
+hotdebut		// (c) 2000

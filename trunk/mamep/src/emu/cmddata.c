@@ -117,8 +117,7 @@ void datafile_init(running_machine &machine, emu_options *options)
 	m_machine = &machine;
 	datafile_options = options;
 
-	while (drivers[num_games] != NULL)
-		num_games++;
+	num_games = driver_list::total();
 }
 
 void datafile_exit(void)
@@ -163,20 +162,21 @@ static int GetGameNameIndex(const char *name)
 
 	if (sorted_drivers == NULL)
 	{
+		driver_enumerator drivlist(*datafile_options, "*");
 		/* initialize array of game names/indices */
 		int i;
 
 		sorted_drivers = auto_alloc_array(*m_machine, driver_data_type, sizeof(driver_data_type) * num_games);
 		for (i = 0; i < num_games; i++)
 		{
-			sorted_drivers[i].name = drivers[i]->name;
+			sorted_drivers[i].name = driver_list::driver(i).name;
 			sorted_drivers[i].index = i;
 		}
 		qsort(sorted_drivers, num_games, sizeof(driver_data_type), DriverDataCompareFunc);
 	}
 
 	/* uses our sorted array of driver names to get the index in log time */
-	driver_index_info = (driver_data_type *)bsearch(&key, sorted_drivers,num_games, sizeof(driver_data_type),
+	driver_index_info = (driver_data_type *)bsearch(&key, sorted_drivers, num_games, sizeof(driver_data_type),
 	                            DriverDataCompareFunc);
 
 	if (driver_index_info == NULL)
@@ -720,7 +720,7 @@ static int index_datafile (struct tDatafileIndex **_index)
 					game_index = GetGameNameIndex((char *)s);
 					if (game_index >= 0)
 					{
-						idx->driver = drivers[game_index];
+						idx->driver = &driver_list::driver(game_index);
 						idx->offset = tell;
 						idx++;
 						count++;
@@ -779,6 +779,7 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 	struct tMenuIndex *m_idx;
 	const game_driver *gdrv;
 	struct tDatafileIndex *gd_idx;
+	int cl;
 	int m_count = 0;
 	UINT32 token = TOKEN_SYMBOL;
 
@@ -801,7 +802,9 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 		}
 
 		if (gd_idx->driver == gdrv) break;
-		gdrv = driver_get_clone(gdrv);
+		cl = driver_list::clone(*gdrv);
+		if (cl == -1) break;
+		gdrv = &driver_list::driver(cl);
 	} while (!gd_idx->driver && gdrv);
 
 	if (gdrv == 0) return 0;	/* driver not found in Data_file_index */
@@ -1020,8 +1023,9 @@ static int find_command (const game_driver *drv)
 			else
 			{
 				const game_driver *gdrv;
+				int cl;
 
-				for (gdrv = drv; !status && gdrv && gdrv->name[0]; gdrv = driver_get_clone(gdrv))
+				for (gdrv = drv; !status && gdrv && gdrv->name[0] && ((cl = driver_list::clone(*gdrv)) != -1); gdrv = &driver_list::driver(cl))
 				{
 					strcpy(base, "command\\");
 					strcat(base, gdrv->name);

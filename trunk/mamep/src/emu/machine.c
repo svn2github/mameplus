@@ -902,7 +902,7 @@ memory_region::memory_region(running_machine &machine, const char *name, UINT32 
 
 memory_region::~memory_region()
 {
-	auto_free(m_machine, m_base.v);
+	auto_free(machine(), m_base.v);
 }
 
 
@@ -958,8 +958,17 @@ driver_device_config_base::driver_device_config_base(const machine_config &mconf
 
 void driver_device_config_base::static_set_game(device_config *device, const game_driver *game)
 {
-	downcast<driver_device_config_base *>(device)->m_system = game;
-	downcast<driver_device_config_base *>(device)->m_shortname = game->name;
+	driver_device_config_base *base = downcast<driver_device_config_base *>(device);
+
+	base->m_system = game;
+
+	// set the short name to the game's name
+	base->m_shortname = game->name;
+
+	// and set the search path to include all parents
+	base->m_searchpath = game->name;
+	for (int parent = driver_list::clone(*game); parent != -1; parent = driver_list::clone(parent))
+		base->m_searchpath.cat(";").cat(driver_list::driver(parent).name);
 }
 
 
@@ -1041,7 +1050,7 @@ void driver_device::driver_start()
 void driver_device::machine_start()
 {
 	if (m_config.m_callbacks[driver_device_config_base::CB_MACHINE_START] != NULL)
-		(*m_config.m_callbacks[driver_device_config_base::CB_MACHINE_START])(m_machine);
+		(*m_config.m_callbacks[driver_device_config_base::CB_MACHINE_START])(machine());
 }
 
 
@@ -1053,7 +1062,7 @@ void driver_device::machine_start()
 void driver_device::sound_start()
 {
 	if (m_config.m_callbacks[driver_device_config_base::CB_SOUND_START] != NULL)
-		(*m_config.m_callbacks[driver_device_config_base::CB_SOUND_START])(m_machine);
+		(*m_config.m_callbacks[driver_device_config_base::CB_SOUND_START])(machine());
 }
 
 
@@ -1065,7 +1074,7 @@ void driver_device::sound_start()
 void driver_device::video_start()
 {
 	if (m_config.m_callbacks[driver_device_config_base::CB_VIDEO_START] != NULL)
-		(*m_config.m_callbacks[driver_device_config_base::CB_VIDEO_START])(m_machine);
+		(*m_config.m_callbacks[driver_device_config_base::CB_VIDEO_START])(machine());
 }
 
 
@@ -1087,7 +1096,7 @@ void driver_device::driver_reset()
 void driver_device::machine_reset()
 {
 	if (m_config.m_callbacks[driver_device_config_base::CB_MACHINE_RESET] != NULL)
-		(*m_config.m_callbacks[driver_device_config_base::CB_MACHINE_RESET])(m_machine);
+		(*m_config.m_callbacks[driver_device_config_base::CB_MACHINE_RESET])(machine());
 }
 
 
@@ -1099,7 +1108,7 @@ void driver_device::machine_reset()
 void driver_device::sound_reset()
 {
 	if (m_config.m_callbacks[driver_device_config_base::CB_SOUND_RESET] != NULL)
-		(*m_config.m_callbacks[driver_device_config_base::CB_SOUND_RESET])(m_machine);
+		(*m_config.m_callbacks[driver_device_config_base::CB_SOUND_RESET])(machine());
 }
 
 
@@ -1111,7 +1120,7 @@ void driver_device::sound_reset()
 void driver_device::video_reset()
 {
 	if (m_config.m_callbacks[driver_device_config_base::CB_VIDEO_RESET] != NULL)
-		(*m_config.m_callbacks[driver_device_config_base::CB_VIDEO_RESET])(m_machine);
+		(*m_config.m_callbacks[driver_device_config_base::CB_VIDEO_RESET])(machine());
 }
 
 
@@ -1149,14 +1158,14 @@ void driver_device::device_start()
 
 	// call the game-specific init
 	if (m_config.m_system->driver_init != NULL)
-		(*m_config.m_system->driver_init)(m_machine);
+		(*m_config.m_system->driver_init)(machine());
 
 	// finish image devices init process
-	image_postdevice_init(m_machine);
+	image_postdevice_init(machine());
 
 	// call palette_init if present
 	if (m_config.m_palette_init != NULL)
-		(*m_config.m_palette_init)(m_machine, m_machine.region("proms")->base());
+		(*m_config.m_palette_init)(machine(), machine().region("proms")->base());
 
 	// start the various pieces
 	driver_start();

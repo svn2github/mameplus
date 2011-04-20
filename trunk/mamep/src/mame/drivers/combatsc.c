@@ -3,10 +3,8 @@
 "Combat School" (also known as "Boot Camp") - (Konami GX611)
 
 TODO:
-- in combatsc (and more generally the 007121) the number of sprites can be
-  increased from 0x40 to 0x80. There is a hack in konamiic.c to handle that,
-  but it is wrong. If you don't pass the Iron Man stage, a few sprites are
-  left dangling on the screen.(*not a bug, 64 sprites are the maximum)
+- Ugly text flickering in various places, namely the text when you finish level 1.
+  This is due of completely busted sprite limit hook-up. (check konicdev.c and MT #00185)
 - it seems that to get correct target colors in firing range III we have to
   use the WRONG lookup table (the one for tiles instead of the one for
   sprites).
@@ -689,7 +687,7 @@ static MACHINE_START( combatsc )
 	state->m_page[0] = MEM + 0x4000;
 	state->m_page[1] = MEM + 0x6000;
 
-	state->m_interleave_timer = machine.scheduler().timer_alloc(FUNC(NULL));
+	state->m_interleave_timer = machine.scheduler().timer_alloc(FUNC_NULL);
 
 	state->m_audiocpu = machine.device<cpu_device>("audiocpu");
 	state->m_k007121_1 = machine.device("k007121_1");

@@ -1373,14 +1373,12 @@ static ADDRESS_MAP_START( model2_base_mem, AS_PROGRAM, 32 )
 
 	AM_RANGE(0x00f00000, 0x00f0000f) AM_READWRITE(timers_r, timers_w)
 
-	AM_RANGE(0x01000000, 0x0100ffff) AM_READWRITE(sys24_tile32_r, sys24_tile32_w) AM_MIRROR(0x100000)
+	AM_RANGE(0x01000000, 0x0100ffff) AM_DEVREADWRITE_MODERN("tile", segas24_tile, tile32_r, tile32_w) AM_MIRROR(0x110000)
 	AM_RANGE(0x01020000, 0x01020003) AM_WRITENOP AM_MIRROR(0x100000)		// Unknown, always 0
 	AM_RANGE(0x01040000, 0x01040003) AM_WRITENOP AM_MIRROR(0x100000)		// Horizontal synchronization register
 	AM_RANGE(0x01060000, 0x01060003) AM_WRITENOP AM_MIRROR(0x100000)		// Vertical synchronization register
 	AM_RANGE(0x01070000, 0x01070003) AM_WRITENOP AM_MIRROR(0x100000)		// Video synchronization switch
-	AM_RANGE(0x01080000, 0x010fffff) AM_READWRITE(sys24_char32_r, sys24_char32_w) AM_MIRROR(0x100000)
-	AM_RANGE(0x01100000, 0x0110ffff) AM_READWRITE(sys24_tile32_r, sys24_tile32_w) AM_MIRROR(0x10000)
-	AM_RANGE(0x01180000, 0x011fffff) AM_READWRITE(sys24_char32_r, sys24_char32_w) AM_MIRROR(0x100000)
+	AM_RANGE(0x01080000, 0x010fffff) AM_DEVREADWRITE_MODERN("tile", segas24_tile, char32_r, char32_w) AM_MIRROR(0x100000)
 
 	AM_RANGE(0x01800000, 0x01803fff) AM_RAM_WRITE(pal32_w) AM_BASE_MEMBER(model2_state, m_paletteram32)
 	AM_RANGE(0x01810000, 0x0181bfff) AM_RAM AM_BASE_MEMBER(model2_state, m_colorxlat)
@@ -2028,6 +2026,8 @@ static MACHINE_CONFIG_START( model2o, model2_state )
 	MCFG_TIMER_ADD("timer3", model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
 
+	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
+
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2084,6 +2084,8 @@ static MACHINE_CONFIG_START( model2a, model2_state )
 	MCFG_TIMER_PTR((FPTR)2)
 	MCFG_TIMER_ADD("timer3", model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
+
+	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
 
@@ -2188,6 +2190,8 @@ static MACHINE_CONFIG_START( model2b, model2_state )
 	MCFG_TIMER_ADD("timer3", model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
 
+	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
+
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2233,6 +2237,8 @@ static MACHINE_CONFIG_START( model2c, model2_state )
 	MCFG_TIMER_PTR((FPTR)2)
 	MCFG_TIMER_ADD("timer3", model2_timer_cb)
 	MCFG_TIMER_PTR((FPTR)3)
+
+	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK )
 
@@ -4141,10 +4147,10 @@ ROM_START( topskatr ) /* Top Skater Revision A (Export), Model 2C */
 	ROM_LOAD("mpr-19750.24s", 0xc00000, 0x400000, CRC(cd95d0bf) SHA1(40e2a2980c89049c339fefd48bf7aac79962cd2e) )
 ROM_END
 
-ROM_START( topskatru ) /* Top Skater (USA), Model 2C */
+ROM_START( topskatru ) /* Top Skater Revision A (USA), Model 2C */
 	ROM_REGION( 0x200000, "maincpu", 0 ) // i960 program
-	ROM_LOAD32_WORD( "epr-19753.15", 0x000000, 0x080000, CRC(3b3028de) SHA1(717ebf0ccd87128a24776e618cf15f07aaf48537) )
-	ROM_LOAD32_WORD( "epr-19754.16", 0x000002, 0x080000, CRC(17535b98) SHA1(a2329d09821900ec4f867caf1a93759085bd0a62) )
+	ROM_LOAD32_WORD( "epr-19753a.15", 0x000000, 0x080000, CRC(3b3028de) SHA1(717ebf0ccd87128a24776e618cf15f07aaf48537) )
+	ROM_LOAD32_WORD( "epr-19754a.16", 0x000002, 0x080000, CRC(17535b98) SHA1(a2329d09821900ec4f867caf1a93759085bd0a62) )
 
 	ROM_REGION32_LE( 0x2000000, "user1", 0 ) // Data
 	ROM_LOAD32_WORD("mpr-19735.11",  0x000000, 0x400000, CRC(8e509266) SHA1(49afc91467f08befaf34e743cbe823de3e3c9d85) )
@@ -5161,7 +5167,7 @@ GAME( 1997, hotd,            0, model2c, model2, 0, ROT0, "Sega", "House of the 
 GAME( 1997, overrev,         0, model2c, srallyc, overrev, ROT0, "Jaleco", "Over Rev (Revision A)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, segawski,        0, model2c, model2, 0, ROT0, "Sega", "Sega Water Ski (Japan, Revision A)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, topskatr,        0, model2c, model2, 0, ROT0, "Sega", "Top Skater (Export, Revision A)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, topskatru,topskatr, model2c, model2, 0, ROT0, "Sega", "Top Skater (USA)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, topskatru,topskatr, model2c, model2, 0, ROT0, "Sega", "Top Skater (USA, Revision A)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, topskatrj,topskatr, model2c, model2, 0, ROT0, "Sega", "Top Skater (Japan)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1998, bel,             0, model2c, bel,    0, ROT0, "Sega / EPL Productions", "Behind Enemy Lines", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1998, dynamcopc,dynamcop, model2c, model2, 0, ROT0, "Sega", "Dynamite Cop (USA, Model 2C)", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )

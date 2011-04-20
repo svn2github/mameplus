@@ -186,7 +186,6 @@ device_image_partialhash_func legacy_image_device_config_base::get_partial_hash(
 	return reinterpret_cast<device_image_partialhash_func>(get_legacy_config_fct(DEVINFO_FCT_IMAGE_PARTIAL_HASH));
 }
 
-
 //**************************************************************************
 //  LIVE LEGACY IMAGE DEVICE
 //**************************************************************************
@@ -321,7 +320,7 @@ bool legacy_image_device_base::load_software(char *swlist, char *swname, rom_ent
 				// " swlist % clonename % parentname "
 				// below, we have the code to split the elements and to create paths to load from
 
-				software_list *software_list_ptr = software_list_open(m_machine.options(), swlist, FALSE, NULL);
+				software_list *software_list_ptr = software_list_open(machine().options(), swlist, FALSE, NULL);
 				if (software_list_ptr)
 				{
 					for (software_info *swinfo = software_list_find(software_list_ptr, swname, NULL); swinfo != NULL; )
@@ -333,7 +332,7 @@ bool legacy_image_device_base::load_software(char *swlist, char *swname, rom_ent
 							locationtag.cat(breakstr);
 							//printf("%s\n", locationtag.cstr());
 						}
-						const char *parentname = software_get_clone(m_machine.options(), swlist, swinfo->shortname);
+						const char *parentname = software_get_clone(machine().options(), swlist, swinfo->shortname);
 						if (parentname != NULL)
 							swinfo = software_list_find(software_list_ptr, parentname, NULL);
 						else
@@ -344,10 +343,10 @@ bool legacy_image_device_base::load_software(char *swlist, char *swname, rom_ent
 					software_list_close(software_list_ptr);
 				}
 
-				if (software_get_support(m_machine.options(), swlist, swname) == SOFTWARE_SUPPORTED_PARTIAL)
+				if (software_get_support(machine().options(), swlist, swname) == SOFTWARE_SUPPORTED_PARTIAL)
 					mame_printf_error("WARNING: support for software %s (in list %s) is only partial\n", swname, swlist);
 
-				if (software_get_support(m_machine.options(), swlist, swname) == SOFTWARE_SUPPORTED_NO)
+				if (software_get_support(machine().options(), swlist, swname) == SOFTWARE_SUPPORTED_NO)
 					mame_printf_error("WARNING: support for software %s (in list %s) is only preliminary\n", swname, swlist);
 
 				// check if locationtag actually contains two locations separated by '%'
@@ -377,16 +376,16 @@ bool legacy_image_device_base::load_software(char *swlist, char *swname, rom_ent
 				// - if we are using lists, we have: list/clonename, list/parentname, clonename, parentname
 				// try to load from list/setname
 				if ((m_mame_file == NULL) && (tag2.cstr() != NULL))
-					filerr = common_process_file(m_machine.options(), tag2.cstr(), has_crc, crc, romp, &m_mame_file);
+					filerr = common_process_file(machine().options(), tag2.cstr(), has_crc, crc, romp, &m_mame_file);
 				// try to load from list/parentname
 				if ((m_mame_file == NULL) && (tag3.cstr() != NULL))
-					filerr = common_process_file(m_machine.options(), tag3.cstr(), has_crc, crc, romp, &m_mame_file);
+					filerr = common_process_file(machine().options(), tag3.cstr(), has_crc, crc, romp, &m_mame_file);
 				// try to load from setname
 				if ((m_mame_file == NULL) && (tag4.cstr() != NULL))
-					filerr = common_process_file(m_machine.options(), tag4.cstr(), has_crc, crc, romp, &m_mame_file);
+					filerr = common_process_file(machine().options(), tag4.cstr(), has_crc, crc, romp, &m_mame_file);
 				// try to load from parentname
 				if ((m_mame_file == NULL) && (tag5.cstr() != NULL))
-					filerr = common_process_file(m_machine.options(), tag5.cstr(), has_crc, crc, romp, &m_mame_file);
+					filerr = common_process_file(machine().options(), tag5.cstr(), has_crc, crc, romp, &m_mame_file);
 
 				if (filerr == FILERR_NONE)
 				{
@@ -411,6 +410,7 @@ bool legacy_image_device_base::load_internal(const char *path, bool is_create, i
     UINT32 open_plan[4];
     int i;
 	bool softload = FALSE;
+	m_from_swlist = FALSE;
 
 	// if the path contains no period, we are using softlists, so we won't create an image
 	astring pathstr(path);
@@ -439,6 +439,8 @@ bool legacy_image_device_base::load_internal(const char *path, bool is_create, i
 		// we would have recorded the wrong name, so record it again based on software_info
 		if (m_software_info_ptr && m_software_info_ptr->shortname)
 			m_err = set_image_filename(m_software_info_ptr->shortname);
+
+		m_from_swlist = TRUE;
 	}
 
 	if (is_create || filename_has_period)
@@ -487,7 +489,7 @@ done:
     if (m_err!=0) {
 		if (!m_init_phase)
 		{
-			if (m_machine.phase() == MACHINE_PHASE_RUNNING)
+			if (machine().phase() == MACHINE_PHASE_RUNNING)
 				popmessage("Error: Unable to %s image '%s': %s\n", is_create ? "create" : "load", path, error());
 			else
 				mame_printf_error("Error: Unable to %s image '%s': %s", is_create ? "create" : "load", path, error());
@@ -502,7 +504,7 @@ done:
 		{
 			if (!m_init_phase)
 			{
-				if (m_machine.phase() == MACHINE_PHASE_RUNNING)
+				if (machine().phase() == MACHINE_PHASE_RUNNING)
 					popmessage("Image '%s' was successfully %s.", path, is_create ? "created" : "loaded");
 				else
 					mame_printf_info("Image '%s' was successfully %s.\n", path, is_create ? "created" : "loaded");
@@ -537,7 +539,10 @@ bool legacy_image_device_base::finish_load()
     {
 		image_checkhash();
 
-        if (has_been_created() && m_config.get_legacy_config_fct(DEVINFO_FCT_IMAGE_CREATE)!=NULL)
+		if (m_from_swlist)
+			call_display_info();
+
+		if (has_been_created() && m_config.get_legacy_config_fct(DEVINFO_FCT_IMAGE_CREATE) != NULL)
         {
             err = call_create(m_create_format, m_create_args);
             if (err)
@@ -663,6 +668,12 @@ void legacy_image_device_base::call_unload()
 void legacy_image_device_base::call_display()
 {
 	device_image_display_func func = reinterpret_cast<device_image_display_func>(m_config.get_legacy_config_fct(DEVINFO_FCT_IMAGE_DISPLAY));
+	if (func) (*func)(*this);
+}
+
+void legacy_image_device_base::call_display_info()
+{
+	device_image_display_info_func func = reinterpret_cast<device_image_display_info_func>(m_config.get_legacy_config_fct(DEVINFO_FCT_IMAGE_DISPLAY_INFO));
 	if (func) (*func)(*this);
 }
 

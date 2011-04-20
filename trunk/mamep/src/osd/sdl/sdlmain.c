@@ -348,7 +348,8 @@ int main(int argc, char *argv[])
 	{
 		sdl_osd_interface osd;
 		sdl_options options;
-		res = cli_execute(options, osd, argc, argv);
+		cli_frontend frontend(options, osd);
+		res = frontend.execute(argc, argv);
 	}
 
 #ifdef MALLOC_DEBUG
@@ -696,6 +697,11 @@ osd_font sdl_osd_interface::font_open(const char *_name, int &height)
 	{
 		name = "LucidaGrande";
 	}
+
+	/* handle bdf fonts in the core */
+	if (name.len() > 4)
+		if (name.toupper().substr(name.len()-4,4) == ".BDF" )
+			return NULL;
 
 	font_name = CFStringCreateWithCString( NULL, _name, kCFStringEncodingUTF8 );
 

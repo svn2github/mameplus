@@ -1398,6 +1398,9 @@ void render_target::compute_minimum_size(INT32 &minwidth, INT32 &minheight)
 		return;
 	}
 
+	if (m_curview == NULL)
+		throw emu_fatalerror("Mandatory artwork is missing");
+
 	// scan the current view for all screens
 	for (item_layer layer = ITEM_LAYER_FIRST; layer < ITEM_LAYER_MAX; layer++)
 
@@ -1699,10 +1702,10 @@ void render_target::load_layout_files(const char *layoutfile, bool singlefile)
 		load_layout_file(NULL, m_manager.machine().config().m_default_layout);
 
 	// try to load another file based on the parent driver name
-	const game_driver *cloneof = driver_get_clone(&system);
-	if (cloneof != NULL)
-		if (!load_layout_file(cloneof->name, cloneof->name))
-			load_layout_file(cloneof->name, "default");
+	int cloneof = driver_list::clone(system);
+	if (cloneof != -1)
+		if (!load_layout_file(driver_list::driver(cloneof).name, driver_list::driver(cloneof).name))
+			load_layout_file(driver_list::driver(cloneof).name, "default");
 
 	// now do the built-in layouts for single-screen games
 	if (m_manager.machine().m_devicelist.count(SCREEN) == 1)
@@ -2584,7 +2587,7 @@ float render_manager::max_update_rate() const
 
 render_target *render_manager::target_alloc(const char *layoutfile, UINT32 flags)
 {
-	return &m_targetlist.append(*auto_alloc(m_machine, render_target(*this, layoutfile, flags)));
+	return &m_targetlist.append(*auto_alloc(machine(), render_target(*this, layoutfile, flags)));
 }
 
 
@@ -2678,7 +2681,7 @@ void render_manager::texture_free(render_texture *texture)
 
 render_font *render_manager::font_alloc(const char *filename)
 {
-	return auto_alloc(m_machine, render_font(*this, filename));
+	return auto_alloc(machine(), render_font(*this, filename));
 }
 
 
@@ -2688,7 +2691,7 @@ render_font *render_manager::font_alloc(const char *filename)
 
 void render_manager::font_free(render_font *font)
 {
-	auto_free(m_machine, font);
+	auto_free(machine(), font);
 }
 
 
@@ -2715,7 +2718,7 @@ void render_manager::invalidate_all(void *refptr)
 
 render_container *render_manager::container_alloc(screen_device *screen)
 {
-	render_container *container = auto_alloc(m_machine, render_container(*this, screen));
+	render_container *container = auto_alloc(machine(), render_container(*this, screen));
 	if (screen != NULL)
 		m_screen_container_list.append(*container);
 	return container;
@@ -2729,7 +2732,7 @@ render_container *render_manager::container_alloc(screen_device *screen)
 void render_manager::container_free(render_container *container)
 {
 	m_screen_container_list.detach(*container);
-	auto_free(m_machine, container);
+	auto_free(machine(), container);
 }
 
 
@@ -2853,19 +2856,19 @@ void render_manager::config_save(int config_type, xml_data_node *parentnode)
 			container->get_user_settings(settings);
 
 			// output the color controls
-			if (settings.m_brightness != m_machine.options().brightness())
+			if (settings.m_brightness != machine().options().brightness())
 			{
 				xml_set_attribute_float(screennode, "brightness", settings.m_brightness);
 				changed = true;
 			}
 
-			if (settings.m_contrast != m_machine.options().contrast())
+			if (settings.m_contrast != machine().options().contrast())
 			{
 				xml_set_attribute_float(screennode, "contrast", settings.m_contrast);
 				changed = true;
 			}
 
-			if (settings.m_gamma != m_machine.options().gamma())
+			if (settings.m_gamma != machine().options().gamma())
 			{
 				xml_set_attribute_float(screennode, "gamma", settings.m_gamma);
 				changed = true;
