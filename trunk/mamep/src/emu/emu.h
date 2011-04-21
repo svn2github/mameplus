@@ -117,9 +117,6 @@ typedef device_config * (*machine_config_constructor)(machine_config &config, de
 #include "image.h"
 
 // the running machine
-#ifdef MAMEMESS
-#include "mess.h"
-#endif /* MESS */
 #include "machine.h"
 #include "mame.h"
 

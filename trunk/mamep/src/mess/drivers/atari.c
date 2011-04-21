@@ -323,8 +323,8 @@ static ADDRESS_MAP_START(a5200_mem, AS_PROGRAM, 8)
 ADDRESS_MAP_END
 
 
-#if 0
-int atari_input_disabled(running_machine *machine)
+#ifdef MESS
+int atari_input_disabled(running_machine &machine)
 {
 	return 0;
 }
@@ -1012,6 +1012,41 @@ static const pia6821_interface xegs_pia_interface =
 	DEVCB_NULL		/* IRQB */
 };
 
+// FIXME: should there be anything connected where other system have the fdc?
+static const pokey_interface a5200_pokey_interface =
+{
+	{
+		DEVCB_INPUT_PORT("analog_0"),
+		DEVCB_INPUT_PORT("analog_1"),
+		DEVCB_INPUT_PORT("analog_2"),
+		DEVCB_INPUT_PORT("analog_3"),
+		DEVCB_INPUT_PORT("analog_4"),
+		DEVCB_INPUT_PORT("analog_5"),
+		DEVCB_INPUT_PORT("analog_6"),
+		DEVCB_INPUT_PORT("analog_7")
+	},
+	DEVCB_NULL,
+	DEVCB_NULL,	// FIXME: is there anything connected here?
+	DEVCB_NULL,	// FIXME: is there anything connected here?
+	atari_interrupt_cb,
+};
+
+static const pia6821_interface a5200_pia_interface =
+{
+	DEVCB_HANDLER(atari_pia_pa_r),		/* port A in */
+	DEVCB_HANDLER(atari_pia_pb_r),	/* port B in */
+	DEVCB_NULL,		/* line CA1 in */
+	DEVCB_NULL,		/* line CB1 in */
+	DEVCB_NULL,		/* line CA2 in */
+	DEVCB_NULL,		/* line CB2 in */
+	DEVCB_NULL,		/* port A out */
+	DEVCB_NULL,		/* port B out */
+	DEVCB_NULL,		/* line CA2 out */
+	DEVCB_NULL,		/* port CB2 out */	// FIXME: is there anything connected here
+	DEVCB_NULL,		/* IRQA */
+	DEVCB_NULL		/* IRQB */
+};
+
 
 /**************************************************************
  *
@@ -1070,14 +1105,14 @@ static MACHINE_CONFIG_START( atari_common_nodac, driver_device )
 	/* internal ram */
 	MCFG_RAM_ADD(RAM_TAG)
 	MCFG_RAM_DEFAULT_SIZE("40K")
-
-	MCFG_ATARI_FDC_ADD("fdc")
 MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_DERIVED( atari_common, atari_common_nodac )
 	MCFG_SOUND_ADD("dac", DAC, 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+
+	MCFG_ATARI_FDC_ADD("fdc")
 MACHINE_CONFIG_END
 
 
@@ -1249,6 +1284,13 @@ static MACHINE_CONFIG_DERIVED( a5200, atari_common_nodac )
 	MCFG_CPU_MODIFY( "maincpu" )
 	MCFG_CPU_PROGRAM_MAP(a5200_mem)
 	MCFG_CPU_VBLANK_INT_HACK(a5200_interrupt, TOTAL_LINES_60HZ)
+
+	MCFG_DEVICE_REMOVE("pokey")
+	MCFG_SOUND_ADD("pokey", POKEY, FREQ_17_EXACT)
+	MCFG_SOUND_CONFIG(a5200_pokey_interface)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
+
+	MCFG_PIA6821_MODIFY( "pia", a5200_pia_interface )
 
 	MCFG_MACHINE_START( a5200 )
 

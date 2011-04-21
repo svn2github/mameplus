@@ -21,11 +21,6 @@ typedef struct _hash_info hash_info;
 struct _hash_info
 {
 	hash_collection *hashes;
-	const char *longname;
-	const char *manufacturer;
-	const char *year;
-	const char *playable;
-	const char *pcb;
 	const char *extrainfo;
 };
 
@@ -48,12 +43,6 @@ void hashfile_close(hash_file *hashfile);
 /* looks up information in a hash file */
 const hash_info *hashfile_lookup(hash_file *hashfile, const hash_collection *hashes);
 
-/* performs a syntax check on a hash file */
-int hashfile_verify(const char *sysname, void (*error_proc)(const char *message));
-
-/* returns the functions used in this hash file */
-const char *hashfile_functions_used(hash_file *hashfile, iodevice_t devtype);
-
 /***************************************************************************
     TYPE DEFINITIONS
 ***************************************************************************/
@@ -74,9 +63,9 @@ struct _hash_file
 
 enum hash_parse_position
 {
-	POS_ROOT,
-	POS_MAIN,
-	POS_HASH
+	HASH_POS_ROOT,
+	HASH_POS_MAIN,
+	HASH_POS_HASH
 };
 
 
@@ -194,7 +183,7 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 
 	switch(state->pos)
 	{
-		case POS_ROOT:
+		case HASH_POS_ROOT:
 			if (!strcmp(tagname, "hashfile"))
 			{
 			}
@@ -204,7 +193,7 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 			}
 			break;
 
-		case POS_MAIN:
+		case HASH_POS_MAIN:
 			if (!strcmp(tagname, "hash"))
 			{
 				// we are now examining a hash tag
@@ -258,21 +247,14 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					attributes += 2;
 				}
 
-				//for (i = 0; i < IO_COUNT; i++)
-					//if (i == device || device == IO_COUNT)
-						//state->hashfile->functions[i] = all_functions;
-
 				/* do we use this hash? */
 				if (!state->selector_proc || state->selector_proc(state->hashfile, state->param, name, &hashes))
 				{
-					hi = (hash_info*)pool_malloc_lib(state->hashfile->pool, sizeof(hash_info));					
+					hi = (hash_info*)pool_malloc_lib(state->hashfile->pool, sizeof(hash_info));
 					if (!hi)
 						return;
 					memset(hi, 0, sizeof(*hi));
 
-					hi->longname = pool_strdup_lib(state->hashfile->pool, name);
-					if (!hi->longname)
-						return;
 					hi->hashes = &hashes;
 					state->hi = hi;
 				}
@@ -283,23 +265,23 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 			}
 			break;
 
-		case POS_HASH:
+		case HASH_POS_HASH:
 			text_dest = NULL;
 
-			if (!strcmp(tagname, "year"))
-				text_dest = (char **) &state->hi->year;
-			else if (!strcmp(tagname, "manufacturer"))
-				text_dest = (char **) &state->hi->manufacturer;
-			else if (!strcmp(tagname, "status"))
-				text_dest = (char **) &state->hi->playable;
-			else if (!strcmp(tagname, "pcb"))
-				text_dest = (char **) &state->hi->pcb;
+			if (!strcmp(tagname, "year")) {
+			}
+			else if (!strcmp(tagname, "manufacturer")){
+			}
+			else if (!strcmp(tagname, "status")){
+			}
+			else if (!strcmp(tagname, "pcb")){
+			}
 			else if (!strcmp(tagname, "extrainfo")) {
-				text_dest = (char **) &state->hi->extrainfo;		
+				text_dest = (char **) &state->hi->extrainfo;
 			}
 			else
 				unknown_tag(state, tagname);
-			
+
 			if (text_dest && state->hi)
 				state->text_dest = text_dest;
 			break;
@@ -321,11 +303,11 @@ static void end_handler(void *data, const char *name)
 	state->pos = (hash_parse_position) (state->pos - 1);
 	switch(state->pos)
 	{
-		case POS_ROOT:
-		case POS_HASH:
+		case HASH_POS_ROOT:
+		case HASH_POS_HASH:
 			break;
 
-		case POS_MAIN:
+		case HASH_POS_MAIN:
 			if (state->hi)
 			{
 				if (state->use_proc)
@@ -544,7 +526,7 @@ const hash_info *hashfile_lookup(hash_file *hashfile, const hash_collection *has
 
 	param.hashes = hashes;
 	param.hi = NULL;
-	
+
 	for (i = 0; i < hashfile->preloaded_hash_count; i++)
 	{
 		if (singular_selector_proc(hashfile, &param, NULL, hashfile->preloaded_hashes[i]->hashes))
@@ -556,87 +538,54 @@ const hash_info *hashfile_lookup(hash_file *hashfile, const hash_collection *has
 	return param.hi;
 }
 
-
-
-/*-------------------------------------------------
-    hashfile_functions_used
--------------------------------------------------*/
-
-const char *hashfile_functions_used(hash_file *hashfile, iodevice_t devtype)
-{
-	assert(devtype >= 0);
-	assert(devtype < IO_COUNT);
-	return hashfile->functions[devtype];
-}
-
-
-
-/*-------------------------------------------------
-    hashfile_verify
--------------------------------------------------*/
-
-int hashfile_verify(emu_options &options, const char *sysname, void (*my_error_proc)(const char *message))
-{
-	hash_file *hashfile;
-
-	hashfile = hashfile_open(options, sysname, FALSE, my_error_proc);
-	if (!hashfile)
-		return -1;
-
-	hashfile_parse(hashfile, NULL, NULL, my_error_proc, NULL);
-	hashfile_close(hashfile);
-	return 0;
-}
-
 const char *extra_info = NULL;
 
 const char *read_hash_config(device_image_interface &image, const char *sysname)
 {
 	hash_file *hashfile = NULL;
 	const hash_info *info = NULL;
-	
+
 	/* open the hash file */
 	hashfile = hashfile_open(image.device().machine().options(), sysname, FALSE, NULL);
 	if (!hashfile)
 		return NULL;
-	
+
 	/* look up this entry in the hash file */
 	info = hashfile_lookup(hashfile, &image.hash());
-	
+
 	if (!info || !info->extrainfo)
 	{
 		hashfile_close(hashfile);
 		return NULL;
 	}
-	
+
 	extra_info = auto_strdup(image.device().machine(),info->extrainfo);
 	if (!extra_info)
 	{
 		hashfile_close(hashfile);
 		return NULL;
 	}
-		
+
 	/* copy the relevant entries */
 	hashfile_close(hashfile);
-	
+
 	return extra_info;
 }
 
 const char *hashfile_extrainfo(device_image_interface &image)
 {
-	const game_driver *drv;
-	const char *rc;	
+	const char *rc;
 
 	/* now read the hash file */
 	image.crc();
 	extra_info = NULL;
-	drv = &image.device().machine().system();
+	int drv = driver_list::find(image.device().machine().system());
 	do
 	{
-		rc = read_hash_config(image, drv->name);
-		drv = driver_get_compatible(drv);
+		rc = read_hash_config(image,driver_list::driver(drv).name);
+		drv = driver_list::compatible_with(drv);
 	}
-	while(rc!=NULL && drv != NULL);
+	while(rc!=NULL && drv != -1);
 	return rc;
 }
 

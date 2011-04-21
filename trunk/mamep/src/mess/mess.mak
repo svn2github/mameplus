@@ -25,7 +25,6 @@ include $(SRC)/mess/messcore.mak
 #-------------------------------------------------
 
 DRVLIBS += \
-	$(MESSOBJ)/messdriv.o \
 	$(MESSOBJ)/ascii.a \
 	$(MESSOBJ)/atari.a \
 	$(MESSOBJ)/bandai.a \
@@ -51,7 +50,6 @@ $(MESSOBJ)/shared.a: \
 	$(MESS_FORMATS)/fdi_dsk.o	\
 	$(MESS_FORMATS)/basicdsk.o	\
 	$(MESS_MACHINE)/ctronics.o	\
-	$(MESS_MACHINE)/tc8521.o	\
 	$(MESS_MACHINE)/wd17xx.o	\
 	$(MESS_FORMATS)/msx_dsk.o	\
 
