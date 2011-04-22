@@ -192,7 +192,7 @@ const char * DirectXDecodeError(HRESULT errorval)
 {
 	int i;
 	static char tmp[64];
-	
+
 	for (i = 0; i < (sizeof(g_ErrorCode) / sizeof(g_ErrorCode[0])); i++)
 	{
 		if (g_ErrorCode[i].hr == errorval)

@@ -10,7 +10,7 @@
   that you have read the license and understand and accept it fully.
 
  ***************************************************************************/
- 
+
 /***************************************************************************
 
   history.c
@@ -58,7 +58,7 @@ LPCWSTR GetGameHistory(int driver_index)
 #endif /* STORY_DATAFILE */
 
 	*dataBuf = 0;
-	if (load_driver_history(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
+	if (load_driver_history(&driver_list::driver(driver_index), dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
 	{
 		p = ConvertToWindowsNewlines(dataBuf);
 		wcscat(historyBuf, _UTF8Unicode(p));
@@ -68,7 +68,7 @@ LPCWSTR GetGameHistory(int driver_index)
 	if (!GetShowTab(TAB_STORY))
 	{
 		*dataBuf = 0;
-		if (load_driver_story(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
+		if (load_driver_story(&driver_list::driver(driver_index), dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
 		{
 			p = ConvertToWindowsNewlines(dataBuf);
 			wcscat(historyBuf, _UTF8Unicode(p));
@@ -77,14 +77,14 @@ LPCWSTR GetGameHistory(int driver_index)
 #endif /* STORY_DATAFILE */
 
 	*dataBuf = 0;
-	if (load_driver_mameinfo(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
+	if (load_driver_mameinfo(&driver_list::driver(driver_index), dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
 	{
 		p = ConvertToWindowsNewlines(dataBuf);
 		wcscat(historyBuf, _UTF8Unicode(p));
 	}
 
 	*dataBuf = 0;
-	if (load_driver_drivinfo(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
+	if (load_driver_drivinfo(&driver_list::driver(driver_index), dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
 	{
 		p = ConvertToWindowsNewlines(dataBuf);
 		wcscat(historyBuf, _UTF8Unicode(p));
@@ -105,7 +105,7 @@ LPCWSTR GetGameStory(int driver_index)
 	GetStoryFileName();
 
 	*dataBuf = 0;
-	if (load_driver_story(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
+	if (load_driver_story(&driver_list::driver(driver_index), dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
 	{
 		p = ConvertToWindowsNewlines(dataBuf);
 		wcscat(historyBuf, _UTF8Unicode(p));

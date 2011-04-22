@@ -14,11 +14,11 @@
 /***************************************************************************
 
   Screenshot.c
-  
+
     Win32 DIB handling.
-    
+
       Created 7/1/98 by Mike Haaland (mhaaland@hypertech.com)
-      
+
 ***************************************************************************/
 
 // standard windows headers
@@ -114,11 +114,11 @@ BOOL LoadScreenShot(int nGame, int nType)
 	if (lpSoftwareName)
 	{
 		int nParentIndex = -1;
-		loaded = LoadSoftwareScreenShot(drivers[nGame], lpSoftwareName, nType);
+		loaded = LoadSoftwareScreenShot(&driver_list::driver(nGame), lpSoftwareName, nType);
 		if (!loaded && DriverIsClone(nGame) == TRUE)
 		{
 			nParentIndex = GetParentIndex(drivers[nGame]);
-			loaded = LoadSoftwareScreenShot(drivers[nParentIndex], lpSoftwareName, nType);
+			loaded = LoadSoftwareScreenShot(&driver_list::driver(nParentIndex), lpSoftwareName, nType);
 		}
 	}
 	if (!loaded)
@@ -138,7 +138,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 				wdrv = driversw[nIndex]->name;
 				wsprintf(buf, TEXT("%s/%s"), wdrv, lpIPSName);
 				loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
-				nIndex = GetParentIndex(drivers[nIndex]);
+				nIndex = GetParentIndex(&driver_list::driver(nIndex));
 			}
 		}
 		else
@@ -149,7 +149,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 			while (!loaded && nIndex >= 0)
 			{
 				loaded = LoadDIB(driversw[nIndex]->name, &m_hDIB, &m_hPal, nType);
-				nIndex = GetParentIndex(drivers[nIndex]);
+				nIndex = GetParentIndex(&driver_list::driver(nIndex));
 			}
 		}
 	}

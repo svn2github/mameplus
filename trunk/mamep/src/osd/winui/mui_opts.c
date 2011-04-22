@@ -551,7 +551,7 @@ static void MessSetupGameOptions(windows_options &opts, int driver_index)
 {
 	if (driver_index >= 0)
 	{
-		opts.set_system_name(drivers[driver_index]->name);
+		opts.set_system_name(driver_list::driver(driver_index).name);
 	}
 }
 #endif // MAMEMESS
@@ -600,12 +600,12 @@ BOOL OptionsInit()
 		while(perGameOptions[game_option_count].name)
 			game_option_count++;
 
-		for (i = 0; i < driver_list_get_count(drivers); i++)
+		for (i = 0; i < driver_list::total(); i++)
 		{
 			for (j = 0; j < game_option_count; j++)
 			{
 				options_entry entry[2] = { { 0 }, { 0 } };
-				snprintf(buffer, ARRAY_LENGTH(buffer), "%s%s", drivers[i]->name, perGameOptions[j].name);
+				snprintf(buffer, ARRAY_LENGTH(buffer), "%s%s", driver_list::driver(i).name, perGameOptions[j].name);
 				
 				entry[0].name = core_strdup(buffer);
 				entry[0].defvalue = perGameOptions[j].defvalue;
@@ -1692,7 +1692,7 @@ void ResetAllGameOptions(void)
 {
 	int i;
 
-	for (i = 0; i < driver_list_get_count(drivers); i++)
+	for (i = 0; i < driver_list::total(); i++)
 	{
 		ResetGameOptions(i);
 	}
@@ -1711,7 +1711,7 @@ void ResetAllGameOptions(void)
 static void GetDriverOptionName(int driver_index, const char *option_name, char *buffer, size_t buffer_len)
 {
 	assert(0 <= driver_index && driver_index < driver_list_get_count(drivers));
-	snprintf(buffer, buffer_len, "%s_%s", drivers[driver_index]->name, option_name);
+	snprintf(buffer, buffer_len, "%s_%s", driver_list::driver(driver_index).name, option_name);
 }
 
 int GetRomAuditResults(int driver_index)
@@ -1776,7 +1776,7 @@ static void ResetPlayVariable(int driver_index, const char *play_variable)
 	if (driver_index < 0)
 	{
 		/* all games */
-		for (i = 0; i< driver_list_get_count(drivers); i++)
+		for (i = 0; i< driver_list::total(); i++)
 		{
 			/* 20070808 MSH - Was passing in driver_index instead of i. Doh! */
 			ResetPlayVariable(i, play_variable);
@@ -2300,7 +2300,7 @@ BOOL FolderHasVector(const WCHAR *name)
 {
 	int i;
 
-	for (i = 0; drivers[i]; i++)
+	for (i = 0; i < driver_list::total(); i++)
 		if (DriverIsVector(i) && wcscmp(name, GetDriverFilename(i)) == 0)
 			return TRUE;
 
@@ -3129,7 +3129,7 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 	const game_driver *driver = NULL;
 
 	CreateGameOptions(opts, game_num);
-	// Copy over the defaults 
+	// Copy over the defaults
 	ui_parse_global_ini_file(opts);
 
 	if (opt_type == OPTIONS_GLOBAL)
@@ -3137,26 +3137,34 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 		return;
 	}
 
-	// debug builds: parse "debug.ini" as well 
+	// debug builds: parse "debug.ini" as well
 #ifdef MAME_DEBUG
 	ui_parse_ini_file(opts, "debug");
 #endif
 	if (game_num >= 0)
 	{
-		driver = drivers[game_num];
+		driver = &driver_list::driver(game_num);
 	}
 
-	// if we have a valid game driver, parse game-specific INI files 
+	// if we have a valid game driver, parse game-specific INI files
 	if (driver != NULL)
 	{
-		const game_driver *parent = driver_get_clone(driver);
-		const game_driver *gparent = (parent != NULL) ? driver_get_clone(parent) : NULL;
+		const game_driver *parent = NULL;
+		int cl = driver_list::clone(*driver);
+		if (cl!=-1) parent = &driver_list::driver(cl);
+		int gp = -1;
+		if (parent!=NULL) gp = driver_list::clone(*parent);
+		const game_driver *gparent = NULL;
+		if (parent != NULL) {
+			if (gp!=-1) gparent= &driver_list::driver(gp);
+		}
+
 
 		astring *basename;
 		astring *srcname;
 		machine_config config(*driver,opts);
 
-		// parse "vector.ini" for vector games 
+		// parse "vector.ini" for vector games
 		if (isDriverVector(&config))
 		{
 			ui_parse_ini_file(opts, "vector");
@@ -3165,7 +3173,7 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 		{
 			return;
 		}
-		// parse "horizont.ini" for horizontal games 
+		// parse "horizont.ini" for horizontal games
 		if (!DriverIsVertical(game_num))
 		{
 			ui_parse_ini_file(opts, "horizont");
@@ -3174,7 +3182,7 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 		{
 			return;
 		}
-		// parse "vertical.ini" for vertical games 
+		// parse "vertical.ini" for vertical games
 		if (DriverIsVertical(game_num))
 		{
 			ui_parse_ini_file(opts, "vertical");
@@ -3185,7 +3193,7 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 		}
 
 
-		// then parse "<sourcefile>.ini" 
+		// then parse "<sourcefile>.ini"
 		basename = core_filename_extract_base(astring_alloc(), driver->source_file, TRUE);
 		srcname = astring_assemble_3(astring_alloc(), "source", PATH_SEPARATOR, astring_c(basename));
 		ui_parse_ini_file(opts, astring_c(srcname));
@@ -3197,7 +3205,7 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 			return;
 		}
 
-		// then parent the grandparent, parent, and game-specific INIs 
+		// then parent the grandparent, parent, and game-specific INIs
 		if (gparent != NULL)
 			ui_parse_ini_file(opts, gparent->name);
 		if (parent != NULL)
@@ -3255,7 +3263,7 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 
 	if (game_num >= 0)
 	{
-		driver = drivers[game_num];
+		driver = &driver_list::driver(game_num);
 	}
 
 	if (opt_type == OPTIONS_GLOBAL)
@@ -3281,7 +3289,7 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 		switch (opt_type)
 		{
 		case OPTIONS_SOURCE:
-			// determine the <sourcefile> 
+			// determine the <sourcefile>
 			basename = core_filename_extract_base(astring_alloc(), driver->source_file, TRUE);
 			srcname = astring_assemble_3(astring_alloc(), "source", PATH_SEPARATOR, astring_c(basename));
 			filename = astring_cpyc(astring_alloc(),astring_c(srcname));

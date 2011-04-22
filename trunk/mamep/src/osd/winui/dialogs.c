@@ -23,7 +23,7 @@
 
 #ifdef _MSC_VER
 #ifndef NONAMELESSUNION
-#define NONAMELESSUNION 
+#define NONAMELESSUNION
 #endif
 #endif
 
@@ -368,7 +368,7 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 #ifdef TREE_SHEET
 			SetShowTreeSheet(Button_GetCheck(GetDlgItem(hDlg, IDC_SHOW_TREE_SHEET)));
 #endif /* TREE_SHEET */
-			
+
 			SetHideMouseOnStartup(Button_GetCheck(GetDlgItem(hDlg,IDC_HIDE_MOUSE)));
 
 			if( Button_GetCheck(GetDlgItem(hDlg,IDC_RESET_PLAYCOUNT ) ) )
@@ -477,7 +477,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 		if (folder != NULL)
 		{
 			WCHAR tmp[80];
-			
+
 			Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_EDIT), g_FilterText);
 			Edit_SetSel(GetDlgItem(hDlg, IDC_FILTER_EDIT), 0, -1);
 			// Mask out non filter flags
@@ -620,14 +620,14 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 		{
 		case IDOK:
 			dwFilters = 0;
-			
+
 			{
 				WCHAR buf[FILTERTEXT_LEN];
 				Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_EDIT), buf, FILTERTEXT_LEN);
 				StrTrim(buf, TEXT(" "));
 				wcsncpy(g_FilterText, buf, FILTERTEXT_LEN);
 			}
-			
+
 			// see which buttons are checked
 			for (i = 0; g_lpFilterList[i].m_dwFilterType; i++)
 			{
@@ -653,7 +653,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 		case IDCANCEL:
 			EndDialog(hDlg, 0);
 			return TRUE;
-			
+
 		default:
 			// Handle unchecking mutually exclusive filters
 			if (wNotifyCode == BN_CLICKED)
@@ -752,7 +752,7 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 #else
 					tvis.DUMMYUNIONNAME.item = tvi;
 #endif
-					
+
 					hti = TreeView_InsertItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),&tvis);
 
 					/* look for children of this custom folder */
@@ -772,7 +772,7 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 					        tvis.item = tvi;
 #else
 					        tvis.DUMMYUNIONNAME.item = tvi;
-#endif							
+#endif
 							hti_child = TreeView_InsertItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),&tvis);
 							if (folders[jj] == default_selection)
 							    res = TreeView_SelectItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),hti_child);
@@ -787,7 +787,7 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 					}
 
 				}
-				
+
 			}
 		}
 
@@ -917,7 +917,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			res = ListView_GetItem(hWndList, &lvi);
 
 			nGame = lvi.lParam;
-			nParentIndex = GetParentRomSetIndex(drivers[nGame]);
+			nParentIndex = GetParentRomSetIndex(&driver_list::driver(nGame));
 			if (nParentIndex >= 0)
 				wcscpy(szGame, driversw[nParentIndex]->name);
 			else
@@ -948,14 +948,14 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 					WCHAR buf[256];
 
 					mfile->read(PcbData, filelen);
-					
+
 					PcbData[filelen] = '\0';
 
-					swprintf(buf, 
-						_UIW(TEXT(MAMEUINAME " PCB Info: %s [%s]")), 
+					swprintf(buf,
+						_UIW(TEXT(MAMEUINAME " PCB Info: %s [%s]")),
 						ConvertAmpersandString(UseLangList() ?
 							_LSTW(driversw[nGame]->description) :
-							driversw[nGame]->modify_the), 
+							driversw[nGame]->modify_the),
 						driversw[nGame]->name);
 					SetWindowText(hDlg, buf);
 					SetWindowFont(GetDlgItem(hDlg, IDC_PCBINFO), hPcbFont, FALSE);
@@ -970,7 +970,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 					if( ( (rect.bottom - rect.top) / nLineHeight) < (nLines) )
 					{
 						//more than one Page, so show Scrollbar
-						SetScrollRange(GetDlgItem(hDlg, IDC_PCBINFO), SB_VERT, 0, nLines, TRUE); 
+						SetScrollRange(GetDlgItem(hDlg, IDC_PCBINFO), SB_VERT, 0, nLines, TRUE);
 					}
 					else
 					{

@@ -293,7 +293,7 @@ static void             UpdateStatusBar(void);
 static BOOL             TreeViewNotify(NMHDR *nm);
 
 static void             ResetBackground(const WCHAR *szFile);
-static void				RandomSelectBackground(void);
+static void             RandomSelectBackground(void);
 static void             LoadBackgroundBitmap(void);
 #ifndef USE_VIEW_PCBINFO
 static void             PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y);
@@ -307,10 +307,10 @@ static void             EnableSelection(int nGame);
 
 static HICON            GetSelectedPickItemIcon(void);
 static void             SetRandomPickItem(void);
-static void				PickColor(COLORREF *cDefault);
+static void             PickColor(COLORREF *cDefault);
 
 static LPTREEFOLDER     GetSelectedFolder(void);
-static HICON			GetSelectedFolderIcon(void);
+static HICON            GetSelectedFolderIcon(void);
 
 static LRESULT CALLBACK HistoryWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 static LRESULT CALLBACK PictureFrameWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -321,7 +321,7 @@ static void             MamePlayBackGame(void);
 static void             MamePlayRecordWave(void);
 static void             MamePlayRecordMNG(void);
 static void             MamePlayRecordAVI(void);
-static void				MameLoadState(void);
+static void             MameLoadState(void);
 static void             MamePlayGameWithOptions(int nGame, const play_options *playopts);
 static BOOL             GameCheck(void);
 static BOOL             FolderCheck(void);
@@ -344,8 +344,8 @@ static void             InitTreeContextMenu(HMENU hTreeMenu);
 static void             ToggleShowFolder(int folder);
 static BOOL             HandleTreeContextMenu( HWND hWnd, WPARAM wParam, LPARAM lParam);
 static BOOL             HandleScreenShotContextMenu( HWND hWnd, WPARAM wParam, LPARAM lParam);
-static void				GamePicker_OnHeaderContextMenu(POINT pt, int nColumn);
-static void				GamePicker_OnBodyContextMenu(POINT pt);
+static void             GamePicker_OnHeaderContextMenu(POINT pt, int nColumn);
+static void             GamePicker_OnBodyContextMenu(POINT pt);
 
 static void             InitListView(void);
 /* Re/initialize the ListView header columns */
@@ -982,7 +982,7 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 //	mame_opts.set_value(OPTION_INIPATH, GetIniDir(), OPTION_PRIORITY_CMDLINE,error_string);
 
 	// add image specific device options
-	mame_opts.set_system_name(drivers[nGameIndex]->name);
+	mame_opts.set_system_name(driver_list::driver(nGameIndex).name);
 
 	// set any specified play options
 	if (playopts != NULL)
@@ -1741,7 +1741,7 @@ int GetParentRomSetIndex(const game_driver *driver)
 
 	if( nParentIndex >= 0)
 	{
-		if ((drivers[nParentIndex]->flags & GAME_IS_BIOS_ROOT) == 0)
+		if ((driver_list::driver(nParentIndex).flags & GAME_IS_BIOS_ROOT) == 0)
 			return nParentIndex;
 	}
 
@@ -1891,16 +1891,16 @@ static void build_driversw(void)
 		driversw[i] = (_driverw *)malloc(sizeof *driversw[i]);
 		assert(driversw[i]);
 
-		driversw[i]->name = win_tstring_strdup(_Unicode(drivers[i]->name));
-		driversw[i]->description = win_tstring_strdup(_Unicode(drivers[i]->description));
-		driversw[i]->modify_the = win_tstring_strdup(_Unicode(ModifyThe(drivers[i]->description)));
+		driversw[i]->name = win_tstring_strdup(_Unicode(driver_list::driver(i).name));
+		driversw[i]->description = win_tstring_strdup(_Unicode(driver_list::driver(i).description));
+		driversw[i]->modify_the = win_tstring_strdup(_Unicode(ModifyThe(driver_list::driver(i).description)));
 		assert(driversw[i]->name && driversw[i]->description && driversw[i]->modify_the);
 
-		driversw[i]->manufacturer = win_tstring_strdup(_Unicode(drivers[i]->manufacturer));
-		driversw[i]->year = win_tstring_strdup(_Unicode(drivers[i]->year));
+		driversw[i]->manufacturer = win_tstring_strdup(_Unicode(driver_list::driver(i).manufacturer));
+		driversw[i]->year = win_tstring_strdup(_Unicode(driver_list::driver(i).year));
 		assert(driversw[i]->manufacturer && driversw[i]->year);
 
-		driversw[i]->source_file = win_tstring_strdup(_Unicode(drivers[i]->source_file));
+		driversw[i]->source_file = win_tstring_strdup(_Unicode(driver_list::driver(i).source_file));
 		assert(driversw[i]->source_file);
 	}
 }
@@ -2147,9 +2147,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 #endif /* DRIVER_SWITCH */
 
 	// Count the number of games
-	game_count = 0;
-	while (drivers[game_count] != 0)
-		game_count++;
+	game_count = driver_list::total();
 
 	build_driversw();
 	build_sort_index();
@@ -2168,7 +2166,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	memset(sorted_drivers, 0, sizeof(driver_data_type) * game_count);
 	for (i=0; i<game_count; i++)
 	{
-		sorted_drivers[i].name = drivers[i]->name;
+		sorted_drivers[i].name = driver_list::driver(i).name;
 		sorted_drivers[i].index = i;
 	}
 	qsort(sorted_drivers, game_count, sizeof (*sorted_drivers), DriverDataCompareFunc);
@@ -2808,7 +2806,7 @@ static LRESULT CALLBACK MameWindowProc(HWND hWnd, UINT message, WPARAM wParam, L
 
 			/* Save the users current game options and default game */
 			nItem = Picker_GetSelectedItem(hwndList);
-			SetDefaultGame(drivers[nItem]->name);
+			SetDefaultGame(driver_list::driver(nItem).name);
 
 			/* hide window to prevent orphan empty rectangles on the taskbar */
 			/* ShowWindow(hWnd,SW_HIDE); */
@@ -2958,11 +2956,11 @@ static LRESULT CALLBACK MameWindowProc(HWND hWnd, UINT message, WPARAM wParam, L
 				if (s)
 					*s = '\0';
 
-				for (nGameIndex = 0; drivers[nGameIndex]; nGameIndex++)
+				for (nGameIndex = 0; nGameIndex < driver_list::total(); nGameIndex++)
 				{
-					for (nParentIndex = nGameIndex; nGameIndex == -1; nParentIndex = GetParentIndex(drivers[nParentIndex]))
+					for (nParentIndex = nGameIndex; nGameIndex == -1; nParentIndex = GetParentIndex(&driver_list::driver(nParentIndex)))
 					{
-						if (!mame_stricmp(drivers[nParentIndex]->name, szFileName))
+						if (!mame_stricmp(driver_list::driver(nParentIndex).name, szFileName))
 						{
 							if (pfnGetAuditResults(nGameIndex) != UNKNOWN)
 							{
@@ -3961,7 +3959,7 @@ static void EnableSelection(int nGame)
 
 	if (bProgressShown && bListReady == TRUE)
 	{
-		SetDefaultGame(drivers[nGame]->name);
+		SetDefaultGame(driver_list::driver(nGame).name);
 	}
 	have_selection = TRUE;
 
@@ -4038,7 +4036,7 @@ static LPCWSTR GetCloneParentName(int nItem)
 
 	if (DriverIsClone(nItem) == TRUE)
 	{
-		nParentIndex = GetParentIndex(drivers[nItem]);
+		nParentIndex = GetParentIndex(&driver_list::driver(nItem));
 		if (nParentIndex >= 0)
 			return  UseLangList() ? _LSTW(driversw[nParentIndex]->description) : driversw[nParentIndex]->modify_the;
 	}
@@ -4829,7 +4827,7 @@ static int MMO2LST(void)
 			return 1;
 		}
 
-		for (i = 0; drivers[i]; i++)
+		for (i = 0; i < driver_list::total(); i++)
 		{
 			const WCHAR *lst = _LSTW(driversw[i]->description);
 			const WCHAR *readings = _READINGSW(driversw[i]->description);
@@ -4837,7 +4835,7 @@ static int MMO2LST(void)
 			if (readings == driversw[i]->description)
 				readings = lst;
 
-			fprintf(fp, "%s\t%s\t%s\t%s\n", drivers[i]->name, _String(lst), _String(readings), drivers[i]->manufacturer);
+			fprintf(fp, "%s\t%s\t%s\t%s\n", driver_list::driver(i).name, _String(lst), _String(readings), driver_list::driver(i).manufacturer);
 		}
 
 		fclose(fp);
@@ -5765,7 +5763,7 @@ static const TCHAR *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nCo
 
 		case COLUMN_TYPE:
 			{
-				machine_config config(*drivers[nItem],MameUIGlobal());
+				machine_config config(driver_list::driver(nItem), MameUIGlobal());
 				/* Vector/Raster */
 				if (isDriverVector(&config))
 					s = _UIW(TEXT("Vector"));
@@ -5852,7 +5850,7 @@ static void GamePicker_EnteringItem(HWND hwndPicker, int nItem)
 
 static int GamePicker_FindItemParent(HWND hwndPicker, int nItem)
 {
-	return GetParentRomSetIndex(drivers[nItem]);
+	return GetParentRomSetIndex(&driver_list::driver(nItem));
 }
 
 static int GamePicker_CheckItemBroken(HWND hwndPicker, int nItem)
@@ -5937,16 +5935,16 @@ static void AddDriverIcon(int nItem,int default_icon_index)
 	if (icon_index[nItem] == 1 || icon_index[nItem] == 3)
 		return;
 
-	hIcon = LoadIconFromFile((char *)drivers[nItem]->name);
+	hIcon = LoadIconFromFile((char *)driver_list::driver(nItem).name);
 	if (hIcon == NULL)
 	{
-		nParentIndex = GetParentIndex(drivers[nItem]);
+		nParentIndex = GetParentIndex(&driver_list::driver(nItem));
 		if( nParentIndex >= 0)
 		{
-			hIcon = LoadIconFromFile((char *)drivers[nParentIndex]->name);
-			nParentIndex = GetParentIndex(drivers[nParentIndex]);
+			hIcon = LoadIconFromFile((char *)driver_list::driver(nParentIndex).name);
+			nParentIndex = GetParentIndex(&driver_list::driver(nParentIndex));
 			if (hIcon == NULL && nParentIndex >= 0)
-				hIcon = LoadIconFromFile((char *)drivers[nParentIndex]->name);
+				hIcon = LoadIconFromFile((char *)driver_list::driver(nParentIndex).name);
 		}
 	}
 
@@ -6251,7 +6249,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
 	case COLUMN_DIRECTORY:
-		value = mame_stricmp(drivers[index1]->name, drivers[index2]->name);
+		value = mame_stricmp(driver_list::driver(index1).name, driver_list::driver(index2).name);
 		break;
 
    	case COLUMN_SRCDRIVERS:
@@ -6266,8 +6264,8 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 
 	case COLUMN_TYPE:
 		{
-			machine_config config1(*drivers[index1],MameUIGlobal());
-			machine_config config2(*drivers[index2],MameUIGlobal());
+			machine_config config1(driver_list::driver(index1), MameUIGlobal());
+			machine_config config2(driver_list::driver(index2), MameUIGlobal());
 
 			value = isDriverVector(&config1) - isDriverVector(&config2);
 		}
@@ -6282,11 +6280,11 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 	   break;
 
 	case COLUMN_MANUFACTURER:
-		value = mame_stricmp(drivers[index1]->manufacturer, drivers[index2]->manufacturer);
+		value = mame_stricmp(driver_list::driver(index1).manufacturer, driver_list::driver(index2).manufacturer);
 		break;
 
 	case COLUMN_YEAR:
-		value = mame_stricmp(drivers[index1]->year, drivers[index2]->year);
+		value = mame_stricmp(driver_list::driver(index1).year, driver_list::driver(index2).year);
 		break;
 
 	case COLUMN_CLONE:
@@ -6654,9 +6652,9 @@ static void MamePlayBackGame()
 				return;
 			}
 
-				for (i = 0; drivers[i] != 0; i++) // find game and play it
+				for (i = 0; i < driver_list::total(); i++) // find game and play it
 				{
-					if (strcmp(drivers[i]->name, ihdr.gamename) == 0)
+					if (strcmp(driver_list::driver(i).name, ihdr.gamename) == 0)
 					{
 						nGame = i;
 						break;
@@ -6698,7 +6696,7 @@ static void MameLoadState()
 		WCHAR bare_fname[_MAX_FNAME];
 		WCHAR *state_fname;
 		char *stemp;
-		int rc;
+//		int rc;
 
 		_wsplitpath(filename, drive, dir, bare_fname, ext);
 

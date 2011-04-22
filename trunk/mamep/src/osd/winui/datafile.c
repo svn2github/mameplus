@@ -129,8 +129,7 @@ void winui_datafile_init(windows_options &options)
 {
 	datafile_options = &options;
 
-	while (drivers[num_games] != NULL)
-		num_games++;
+	num_games = driver_list::total();
 }
 
 void winui_datafile_exit(void)
@@ -187,7 +186,7 @@ static int GetGameNameIndex(const char *name)
 		sorted_drivers = (driver_data_type *)malloc(sizeof(driver_data_type) * num_games);
 		for (i = 0; i < num_games; i++)
 		{
-			sorted_drivers[i].name = drivers[i]->name;
+			sorted_drivers[i].name = driver_list::driver(i).name;
 			sorted_drivers[i].index = i;
 		}
 		qsort(sorted_drivers, num_games, sizeof(driver_data_type), DriverDataCompareFunc);
@@ -237,7 +236,7 @@ static int GetSrcDriverIndex(const char *srcdriver)
 		sorted_srcdrivers = (srcdriver_data_type *)malloc(sizeof(srcdriver_data_type) * num_games);
 		for (i = 0; i < num_games; i++)
 		{
-			sorted_srcdrivers[i].srcdriver = drivers[i]->source_file+17;
+			sorted_srcdrivers[i].srcdriver = driver_list::driver(i).source_file+17;
 			sorted_srcdrivers[i].index = i;
 		}
 		qsort(sorted_srcdrivers,num_games,sizeof(srcdriver_data_type),SrcDriverDataCompareFunc);
@@ -517,11 +516,11 @@ static int index_datafile (struct tDatafileIndex **_index)
 	if (ParseSeek (0L, SEEK_SET)) return 0;
 
 	/* allocate index */
-        idx = *_index = (tDatafileIndex *)malloc ((num_games + 1) * sizeof (struct tDatafileIndex));
+	idx = *_index = (tDatafileIndex *)malloc ((num_games + 1) * sizeof (struct tDatafileIndex));
 	if (NULL == idx) return 0;
 
 	/* loop through datafile */
-        while (count < num_games && TOKEN_INVALID != token)
+	while (count < num_games && TOKEN_INVALID != token)
 	{
 		UINT64 tell;
 		UINT8 *s;
@@ -548,7 +547,7 @@ static int index_datafile (struct tDatafileIndex **_index)
 					game_index = GetGameNameIndex((char *)s);
 					if (game_index >= 0)
 					{
-						idx->driver = drivers[game_index];
+						idx->driver = &driver_list::driver(game_index);
 						idx->offset = tell;
 						idx++;
 						count++;
@@ -644,7 +643,7 @@ static int index_datafile_drivinfo (struct tDatafileIndex **_index)
 					src_index = GetSrcDriverIndex((const char*)s);
 					if (src_index >= 0)
 					{
-						idx->driver = drivers[src_index];
+						idx->driver = &driver_list::driver(src_index);
 						idx->offset = tell;
 						idx++;
 						count++;
@@ -882,6 +881,7 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 	const game_driver *gdrv;
 	char filename[80];
 	char *base;
+	int cl;
 
 	filename[0] = '\0';
 
@@ -894,7 +894,7 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 
 	base = filename + strlen(filename);
 
-	for (gdrv = drv; gdrv && gdrv->name[0]; gdrv = driver_get_clone(gdrv))
+	for (gdrv = drv; gdrv && gdrv->name[0] && ((cl = driver_list::clone(*gdrv)) != -1); gdrv = &driver_list::driver(cl))
 	{
 		int i;
 
@@ -957,7 +957,8 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 					if (pdrv == gdrv)
 						break;
 
-					pdrv = driver_get_clone(pdrv);
+					int cl = driver_list::clone(*pdrv);
+					if (cl !=-1) pdrv = &driver_list::driver(cl); else pdrv = NULL;
 				} while (err && pdrv);
 
 				if (err) status = 0;
@@ -1105,17 +1106,18 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 	                         DATAFILE_TAG_MAME, FILE_ROOT, mame_idx,
 	                         "mameinfo/", MameUISettings().value(MUIOPTION_MAMEINFO_FILE));
 
-	clone_of = driver_get_clone(drv);
+	int cl = driver_list::clone(*drv);
+	if (cl != -1) clone_of = &driver_list::driver(cl); else clone_of = NULL;
 	if (clone_of && !(clone_of->flags & GAME_IS_BIOS_ROOT))
 	{
 		strcat(buffer, _("\nORIGINAL:\n"));
 		strcat(buffer, _LST(clone_of->description));
 		strcat(buffer, _("\n\nCLONES:\n"));
-		for (i = 0; drivers[i]; i++)
+		for (i = 0; i < driver_list::total(); i++)
 		{
-			if (!mame_stricmp (drv->parent, drivers[i]->parent)) 
+			if (!mame_stricmp (drv->parent, driver_list::driver(i).parent)) 
 			{
-				strcat(buffer, _LST(drivers[i]->description));
+				strcat(buffer, _LST(driver_list::driver(i).description));
 				strcat(buffer, "\n");
 			}
 		}
@@ -1125,11 +1127,11 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 		strcat(buffer, _("\nORIGINAL:\n"));
 		strcat(buffer, _LST(drv->description));
 		strcat(buffer, _("\n\nCLONES:\n"));
-		for (i = 0; drivers[i]; i++)
+		for (i = 0; i < driver_list::total(); i++)
 		{
-			if (!mame_stricmp (drv->name, drivers[i]->parent)) 
+			if (!mame_stricmp (drv->name, driver_list::driver(i).parent)) 
 			{
-				strcat(buffer, _LST(drivers[i]->description));
+				strcat(buffer, _LST(driver_list::driver(i).description));
 				strcat(buffer, "\n");
 			}
 		}

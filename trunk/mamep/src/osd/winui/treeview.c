@@ -158,7 +158,7 @@ static BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder);
  *
  *      Returns zero if the first n characters of s1 and s2 are equal,
  *      ignoring case.
- *		stolen from datafile.c
+ *      stolen from datafile.c
  **************************************************************************/
 static int ci_strncmp (const char *s1, const char *s2, int n)
 {
@@ -353,7 +353,7 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 	//Filter out the Bioses on all Folders, except for the Bios Folder
 	if( lpFolder->m_nFolderId != FOLDER_BIOS )
 	{
-		if( !( (drivers[nGame]->flags & GAME_IS_BIOS_ROOT ) == 0) )
+		if( !( (driver_list::driver(nGame).flags & GAME_IS_BIOS_ROOT ) == 0) )
 			return TRUE;
 	}
 
@@ -417,7 +417,7 @@ BOOL GetParentFound(int nGame)
 
 	if( lpFolder )
 	{
-		nParentIndex = GetParentIndex(drivers[nGame]);
+		nParentIndex = GetParentIndex(&driver_list::driver(nGame));
 
 		/* return FALSE if no parent is there in this view */
 		if( nParentIndex == -1)
@@ -898,9 +898,9 @@ void CreateCPUFolders(int parent_index)
 	const device_config_execute_interface *device = NULL;
 	int nFolder = numFolders;
 
-	for (i = 0; drivers[i] != NULL; i++)
+	for (i = 0; i < driver_list::total(); i++)
 	{
-		machine_config config(*drivers[i],MameUIGlobal());
+		machine_config config(driver_list::driver(i), MameUIGlobal());
 
 		// enumerate through all devices
 		for (bool gotone = config.m_devicelist.first(device); gotone; gotone = device->next(device))
@@ -948,9 +948,9 @@ void CreateSoundFolders(int parent_index)
 	const device_config_sound_interface *device = NULL;
 	int nFolder = numFolders;
 
-	for (i = 0; drivers[i] != NULL; i++)
+	for (i = 0; &driver_list::driver(i) != NULL; i++)
 	{
-		machine_config config(*drivers[i],MameUIGlobal());
+		machine_config config(driver_list::driver(i), MameUIGlobal());
 
 		// enumerate through all devices
 		
@@ -1038,7 +1038,7 @@ void CreateDeficiencyFolders(int parent_index)
 
 	for (i = 0; i < nGames; i++)
 	{
-		UINT32 flag = drivers[i]->flags;
+		UINT32 flag = driver_list::driver(i).flags;
 
 		for (j = 0; j < NUM_FLAGS; j++)
 			if (flag & deficiency_flags[j])
@@ -1070,14 +1070,14 @@ void CreateDumpingFolders(int parent_index)
 	for (jj = 0; jj < nGames; jj++)
 	{
 		const rom_source *source;
-		gamedrv = drivers[jj];
+		gamedrv = &driver_list::driver(jj);
 
 		if (!gamedrv->rom) 
 			continue;
 		bBadDump = FALSE;
 		bNoDump = FALSE;
 		/* Allocate machine config */
-		machine_config config(*drivers[jj],MameUIGlobal());
+		machine_config config(driver_list::driver(jj), MameUIGlobal());
 		
 		for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
 		{
@@ -1170,15 +1170,15 @@ void CreateBIOSFolders(int parent_index)
 	{
 		if ( DriverIsClone(jj) )
 		{
-			nParentIndex = GetParentIndex(drivers[jj]);
+			nParentIndex = GetParentIndex(&driver_list::driver(jj));
 			if (nParentIndex < 0) return;
-			drv = drivers[nParentIndex];
+			drv = &driver_list::driver(nParentIndex);
 		}
 		else
-			drv = drivers[jj];
+			drv = &driver_list::driver(jj);
 		nParentIndex = GetParentIndex(drv);
 
-		if (nParentIndex < 0 || !drivers[nParentIndex]->description)
+		if (nParentIndex < 0 || !driver_list::driver(nParentIndex).description)
 			continue;
 
 		for (i = numFolders-1; i >= start_folder; i--)
@@ -1220,7 +1220,7 @@ void CreateResolutionFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		machine_config config(*drivers[jj],MameUIGlobal());
+		machine_config config(driver_list::driver(jj), MameUIGlobal());
 		const screen_device_config *screen;
 		screen = config.first_screen();
 		if (screen != NULL)
@@ -1229,7 +1229,7 @@ void CreateResolutionFolders(int parent_index)
 
 			if (isDriverVector(&config))
 			{
-				if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
+				if (driver_list::driver(jj).flags & ORIENTATION_SWAP_XY)
 				{
 					AddGame(lpVectorV,jj);
 				}
@@ -1239,7 +1239,7 @@ void CreateResolutionFolders(int parent_index)
 				}
 			}
 			else
-			if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
+			if (driver_list::driver(jj).flags & ORIENTATION_SWAP_XY)
 			{
 				swprintf(Resolution, TEXT("%dx%d (V)"),
 					visarea.max_y - visarea.min_y + 1,
@@ -1288,7 +1288,7 @@ void CreateFPSFolders(int parent_index)
 	{
 		LPTREEFOLDER lpTemp;
 		float f;
-		machine_config config(*drivers[i],MameUIGlobal());
+		machine_config config(driver_list::driver(i), MameUIGlobal());
 		const screen_device_config *screen;
 		screen = config.first_screen();
 		if (screen != NULL)
@@ -1337,7 +1337,7 @@ void CreateSaveStateFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		if (drivers[jj]->flags & GAME_SUPPORTS_SAVE)
+		if (driver_list::driver(jj).flags & GAME_SUPPORTS_SAVE)
 		{
 			AddGame(lpSupported,jj);
 		}
@@ -2689,7 +2689,7 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 		   int driver_index = GetIndexFromSortedIndex(i); 
 		   if (TestBit(folder_data->m_lpGameBits,driver_index))
 		   {
-			   fprintf(fp,"%s\n",drivers[driver_index]->name);
+			   fprintf(fp, "%s\n", driver_list::driver(driver_index).name);
 		   }
 	   }
 
@@ -2708,7 +2708,7 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 				   int driver_index = GetIndexFromSortedIndex(i); 
 				   if (TestBit(folder_data->m_lpGameBits,driver_index))
 				   {
-					   fprintf(fp,"%s\n",drivers[driver_index]->name);
+					   fprintf(fp, "%s\n", driver_list::driver(driver_index).name);
 				   }
 			   }
 		   }

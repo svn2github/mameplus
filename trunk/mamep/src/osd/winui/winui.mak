@@ -101,7 +101,7 @@ LIBOSD := $(UIOBJ)/mui_main.o $(LIBOSD)
 
 
 #-------------------------------------------------
-# rules for creating helpids.c 
+# rules for creating helpids.c
 #-------------------------------------------------
 
 $(UISRC)/helpids.c : $(UIOBJ)/mkhelp$(EXE) $(UISRC)/resource.h $(UISRC)/resource.hm $(UISRC)/mameui.rc

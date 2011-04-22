@@ -379,7 +379,7 @@ static void UpdateController(void)
 
 	for (i = 0; i < nGames; i++)
 	{
-		cache[i].ipt = (input_port_token *)drivers[i]->ipt;
+		cache[i].ipt = (input_port_token *)driver_list::driver(i).ipt;
 		cache[i].num = i;
 	}
 	qsort(cache, nGames, sizeof (*cache), cmp_ipt);
@@ -525,7 +525,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 		drivers_info = (DriversInfo*)malloc(sizeof(struct DriversInfo) * GetNumGames());
 		for (ndriver = 0; ndriver < GetNumGames(); ndriver++)
 		{
-			const game_driver *gamedrv = drivers[ndriver];
+			const game_driver *gamedrv = &driver_list::driver(ndriver);
 			struct DriversInfo *gameinfo = &drivers_info[ndriver];
 			const rom_entry *region, *rom;
 			machine_config config(*gamedrv, MameUIGlobal());
@@ -627,10 +627,10 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 
 				while (1)
 				{
-					parentIndex = GetGameNameIndex(drivers[parentIndex]->parent);
+					parentIndex = GetGameNameIndex(driver_list::driver(parentIndex).parent);
 					if (parentIndex == -1)
 					{
-						dprintf("bios for %s is not found", drivers[ndriver]->name);
+						dprintf("bios for %s is not found", driver_list::driver(ndriver).name);
 						break;
 					}
 
@@ -710,7 +710,7 @@ BOOL DriverIsHarddisk(int driver_index)
 BOOL DriverIsBios(int driver_index)
 {
 	BOOL bBios = FALSE;
-	if( !( (drivers[driver_index]->flags & GAME_IS_BIOS_ROOT ) == 0)   )
+	if( !( (driver_list::driver(driver_index).flags & GAME_IS_BIOS_ROOT ) == 0)   )
 		bBios = TRUE;
 	return bBios;
 }
@@ -718,7 +718,7 @@ BOOL DriverIsBios(int driver_index)
 BOOL DriverIsMechanical(int driver_index)
 {
 	BOOL bMechanical = FALSE;
-	if( !( (drivers[driver_index]->flags & GAME_MECHANICAL ) == 0)   )
+	if( !( (driver_list::driver(driver_index).flags & GAME_MECHANICAL ) == 0)   )
 		bMechanical = TRUE;
 	return bMechanical;
 }
@@ -780,7 +780,7 @@ BOOL DriverIsVertical(int driver_index) {
 BOOL DriverIsConsole(int driver_index)
 {
 #ifdef MAMEMESS
-	return drivers[driver_index]->flags & (GAME_TYPE_CONSOLE|GAME_TYPE_COMPUTER);
+	return driver_list::driver(driver_index).flags & (GAME_TYPE_CONSOLE|GAME_TYPE_COMPUTER);
 #else /* MAMEMESS */
 	return FALSE;
 #endif /* MAMEMESS */

@@ -12,11 +12,11 @@
  ***************************************************************************/
 
 /***************************************************************************
-	
+
   directinput.c
 
   Direct Input routines.
- 
+
  ***************************************************************************/
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
@@ -48,7 +48,7 @@ static LPDIRECTINPUT di = NULL;
 static HANDLE hDLL = NULL;
 
 /***************************************************************************
-	External functions	
+	External functions
  ***************************************************************************/
 
 /****************************************************************************
@@ -94,7 +94,7 @@ BOOL DirectInputInitialize()
 
 	hr = dic(GetModuleHandle(NULL), DIRECTINPUT_VERSION, &di, NULL);
 
-	if (FAILED(hr)) 
+	if (FAILED(hr))
 	{
 		hr = dic(GetModuleHandle(NULL), 0x0300, &di, NULL);
 
@@ -121,7 +121,7 @@ void DirectInputClose()
 	/*
 		Release any lingering IDirectInput object.
 	*/
-	if (di) 
+	if (di)
 	{
 		IDirectInput_Release(di);
 		di = NULL;
