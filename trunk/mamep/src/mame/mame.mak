@@ -238,15 +238,6 @@ SOUNDS += MAS3507D
 #-------------------------------------------------
 
 DRVLIBS += \
-
-ifneq ($(USE_DRIVER_SWITCH),)
-DRVLIBS += \
-	$(MAMEOBJ)/mameplusdriv.o \
-	$(MAMEOBJ)/mamehbdriv.o \
-	$(MAMEOBJ)/mamedecrypteddriv.o
-endif
-
-DRVLIBS += \
 	$(MAMEOBJ)/alba.a \
 	$(MAMEOBJ)/alliedl.a \
 	$(MAMEOBJ)/alpha.a \
@@ -2059,3 +2050,12 @@ $(VIDEO)/jaguar.o:		$(MAMESRC)/video/jagobj.c \
 $(VIDEO)/model2.o:		$(MAMESRC)/video/model2rd.c
 $(VIDEO)/model3.o:		$(MAMESRC)/video/m3raster.c
 $(VIDEO)/n64.o:			$(MAMESRC)/video/rdpfiltr.c
+
+#-------------------------------------------------
+# mamep: driver list dependencies
+#-------------------------------------------------
+
+#FXIXME
+$(OBJ)/$(TARGET)/$(SUBTARGET).lst:	$(SRC)/$(TARGET)/$(SUBTARGET)drv.h
+	@echo Generating $@...
+	$(CC) $(CDEFS) $(INCPATH) -E $< -o $@

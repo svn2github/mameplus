@@ -115,7 +115,7 @@ PTR64 = 1
 endif
 endif
 
-# Autodetect BIGENDIAN 
+# Autodetect BIGENDIAN
 # MacOSX
 ifndef BIGENDIAN
 ifneq (,$(findstring Power,$(UNAME)))
@@ -128,7 +128,7 @@ endif
 endif # BIGENDIAN
 
 endif # OS/2
-endif # CROSS_BUILD	
+endif # CROSS_BUILD
 endif # Windows_NT
 
 endif # TARGET_OS
@@ -868,7 +868,7 @@ $(DRIVLISTOBJ): $(DRIVLISTSRC)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
-$(DRIVLISTSRC): $(SRC)/$(TARGET)/$(SUBTARGET).lst $(MAKELIST_TARGET)
+$(DRIVLISTSRC): $(OBJ)/$(TARGET)/$(SUBTARGET).lst $(MAKELIST_TARGET)
 	@echo Building driver list $<...
 	@$(MAKELIST) $< >$@
 

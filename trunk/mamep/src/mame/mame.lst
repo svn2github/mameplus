@@ -38,6 +38,7 @@
 
 ******************************************************************************/
 
+#ifndef NCP
 // "Pacman hardware" games
 puckman			// (c) 1980 Namco
 puckmana		// (c) 1980 Namco
@@ -2712,6 +2713,7 @@ ledstorm2		//  1988 (c) 1988 (US)
 //  6/1991 Quiz Sangokushi - see below among "Mitchell" games
 // 10/1991 Block Block - see below among "Mitchell" games
 //  6/1995 Street Fighter - the Movie - see below among "Incredible Technologies" games
+#endif /* !NCP */
 
 
 // Capcom CPS1 games
@@ -3178,6 +3180,7 @@ sfiii3an		// 12/05/1999 (c) 1999 (Japan)
 jojoban			// 13/09/1999 (c) 1999 (Japan)
 jojobane		// 13/09/1999 (c) 1999 (Euro)
 
+#ifndef NCP
 // Capcom ZN1
 cpzn1
 ts2				// Battle Arena Toshinden 2 (USA 951124)
@@ -6614,6 +6617,7 @@ bbustersu		// A9003 'BB' (c) 1989
 // Electrocoin on early SNK hardware
 dmndrby			// G4001 'DD' (c) 1986
 dmndrbya		// G4001 'DD' (c) 1986
+#endif /* !NCP */
 
 // Neo Geo games
 // the four digits number is the game ID stored at address 0x0108 of the program ROM
@@ -6892,6 +6896,7 @@ vlinero
 // Nor does Digger Man
 diggerma		// No Game ID (unlicensed), (c) 2000 Kyle Hodgetts, prototype
 
+#ifndef NCP
 // Hyper NeoGeo 64 uses a 3 digit rom code?
 
 hng64
@@ -8681,6 +8686,7 @@ lhzb3			// (c) 200?
 lhzb4			// (c) 200?
 klxyj			// (c) 200?
 mgfx			// (c) 200?
+#endif /* !NCP */
 
 // IGS PGM System Games
 pgm
@@ -8754,6 +8760,7 @@ ddp3blk
 espgal
 orleg2			// (c) 2007
 
+#ifndef NCP
 // Spirit Tech. Corp.
 dunhuang		// (c) 1995
 
@@ -12227,3 +12234,4 @@ zankor
 skijump
 spacecty
 strike
+#endif /* !NCP */

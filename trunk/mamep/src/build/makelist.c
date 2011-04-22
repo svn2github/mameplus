@@ -141,6 +141,14 @@ int main(int argc, char *argv[])
 			continue;
 		}
 
+		// mamep: if we hit a preprocesser comment, scan to the end of line
+		if (c == '#' && *srcptr == ' ')
+		{
+			while (srcptr < endptr && *srcptr != 13 && *srcptr != 10)
+				srcptr++;
+			continue;
+		}
+
 		// extract the driver name
 		char drivname[32];
 		drivname[0] = 0;

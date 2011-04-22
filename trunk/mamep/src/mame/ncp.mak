@@ -70,15 +70,7 @@ SOUNDS += ICS2115
 #-------------------------------------------------
 
 DRVLIBS = \
-	$(MAMEOBJ)/mamedriv.o \
 	$(EMUDRIVERS)/emudummy.o \
-
-ifneq ($(USE_DRIVER_SWITCH),)
-DRVLIBS += \
-	$(MAMEOBJ)/mameplusdriv.o \
-	$(MAMEOBJ)/mamehbdriv.o \
-	$(MAMEOBJ)/mamedecrypteddriv.o
-endif
 
 DRVLIBS += \
 	$(MAMEOBJ)/capcom.a \
@@ -127,3 +119,12 @@ $(MAMEOBJ)/mamedriv.o:	$(LAYOUT)/pinball.lh
 #-------------------------------------------------
 
 $(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neodrvr.c
+
+#-------------------------------------------------
+# mamep: driver list dependencies
+#-------------------------------------------------
+
+#FXIXME
+$(OBJ)/$(TARGET)/$(SUBTARGET).lst:	$(SRC)/$(TARGET)/$(SUBTARGET)drv.h
+	@echo Generating $@...
+	$(CC) $(CDEFS) $(INCPATH) -E $< -o $@

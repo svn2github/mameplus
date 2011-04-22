@@ -148,3 +148,12 @@ $(DRIVERS)/circus.o:	$(LAYOUT)/circus.lh \
 						$(LAYOUT)/crash.lh
 
 $(MAMEOBJ)/mamedriv.o:	$(LAYOUT)/pinball.lh
+
+#-------------------------------------------------
+# mamep: driver list dependencies
+#-------------------------------------------------
+
+#FXIXME
+$(OBJ)/$(TARGET)/$(SUBTARGET).lst:	$(SRC)/$(TARGET)/$(SUBTARGET)drv.h
+	@echo Generating $@...
+	$(CC) $(CDEFS) $(INCPATH) -E $< -o $@
