@@ -44,7 +44,7 @@
 #ifndef NCP
 // Homebrew
 vantris			// http://web.utanet.at/nkehrer
-#endif /* !NCP */
+#endif // !NCP
 
 // Neo Geo homebrew
 frogfest		// (c) 2005 Rastersoft

@@ -150,6 +150,7 @@ BOOL IsAuditResultNo(int audit_result)
 /***************************************************************************
     Internal functions
  ***************************************************************************/
+#ifdef UNUSED_FUNCTION
 static BOOL RomsetNotExist(int game)
 {
 	const game_driver *drv;
@@ -193,6 +194,7 @@ static BOOL RomsetNotExist(int game)
 
 	return TRUE;
 }
+#endif
 
 // Verifies the ROM set while calling SetRomAuditResults
 int MameUIVerifyRomSet(int game, BOOL isComplete)
@@ -202,6 +204,7 @@ int MameUIVerifyRomSet(int game, BOOL isComplete)
 	media_auditor auditor(enumerator);
 	media_auditor::summary summary = auditor.audit_media(AUDIT_VALIDATE_FAST);
 
+#if 0
 	// mamep: if rom file doesn't exist, don't verify it
 	if (!isComplete && RomsetNotExist(game))
 	{
@@ -209,11 +212,12 @@ int MameUIVerifyRomSet(int game, BOOL isComplete)
 		SetRomAuditResults(game, summary);
 		return summary;
 	}
+#endif
 
 	// output the summary of the audit
 	astring summary_string;
 	auditor.summarize(&summary_string);
-	DetailsPrintf(TEXT("%s"), _Unicode(summary_string.cstr()));
+	DetailsPrintf(TEXT("%s"), wstring_from_utf8(ConvertToWindowsNewlines(summary_string.cstr())));
 
 	SetRomAuditResults(game, summary);
 	return summary;
@@ -230,7 +234,7 @@ int MameUIVerifySampleSet(int game, BOOL isComplete)
 	// output the summary of the audit
 	astring summary_string;
 	auditor.summarize(&summary_string);
-	DetailsPrintf(TEXT("%s"), _Unicode(summary_string.cstr()));
+	DetailsPrintf(TEXT("%s"), wstring_from_utf8(ConvertToWindowsNewlines(summary_string.cstr())));
 
 	SetSampleAuditResults(game, summary);
 	return summary;

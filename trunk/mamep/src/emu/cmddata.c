@@ -162,7 +162,6 @@ static int GetGameNameIndex(const char *name)
 
 	if (sorted_drivers == NULL)
 	{
-		driver_enumerator drivlist(*datafile_options, "*");
 		/* initialize array of game names/indices */
 		int i;
 

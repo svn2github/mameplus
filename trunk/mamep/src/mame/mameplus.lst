@@ -93,4 +93,4 @@ ironclad		// 0220 (c) 1996 Saurus - Wii Virtual Console to MVS Conversion
 #ifndef NCP
 // Konami "Nemesis hardware" games
 spclone			// GX587 (c) 1986 based
-#endif /* !NCP */
+#endif // !NCP

@@ -480,6 +480,9 @@ static const char *const image_tabs_short_name[MAX_TAB_TYPES] =
 
 static BOOL save_gui_settings = TRUE;
 static BOOL save_default_options = TRUE;
+static HANDLE hOptsMutex = NULL;
+
+#define MUTEX_STR TEXT(MAMEUINAME "PLUS_OPTION_MUTEX")
 
 /***************************************************************************
     External functions
@@ -579,7 +582,10 @@ void CreateGameOptions(windows_options &opts, int driver_index)
 
 BOOL OptionsInit()
 {
-	// create a memory pool for our data
+ 	//mamep: for save/load mameui.ini
+ 	hOptsMutex = CreateMutex(NULL , FALSE , MUTEX_STR);
+ 
+ 	// create a memory pool for our data
 	//options_memory_pool = pool_alloc_lib(memory_error);
 	//if (!options_memory_pool)
 //		return FALSE;
@@ -628,6 +634,9 @@ BOOL OptionsInit()
 
 void OptionsExit(void)
 {
+	//mamep: close mutex handle
+	if (hOptsMutex) CloseHandle(hOptsMutex);
+
 	// free global options
 	//options_free(global);
 	//global = NULL;
@@ -2786,13 +2795,20 @@ static file_error LoadSettingsFile(winui_options &opts, const char *filename)
 	file_error filerr;
 	core_file *file;
 
+	HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS , FALSE , MUTEX_STR);
+	dprintf("waiting for mutex...");
+	WaitForSingleObject(hMutex , INFINITE);
+	dprintf("loading %s...", UI_INI_FILENAME);
 	filerr = core_fopen(filename, OPEN_FLAG_READ, &file);
 	if (filerr == FILERR_NONE)
 	{
 		astring error_string;
 		opts.parse_ini_file(*file, OPTION_PRIORITY_CMDLINE, OPTION_PRIORITY_CMDLINE, error_string);
 		core_fclose(file);
+		dprintf("%s loaded", UI_INI_FILENAME);
 	}
+	ReleaseMutex(hMutex);
+	CloseHandle(hMutex);
 	return filerr;
 }
 static file_error LoadSettingsFile(windows_options &opts, const char *filename)
@@ -2818,6 +2834,10 @@ static file_error SaveSettingsFile(winui_options &opts, winui_options *baseopts,
 
 	//if ((opts != NULL) && ((baseopts == NULL) || !(opts == *baseopts)))
 	{
+		HANDLE hMutex = OpenMutex(MUTEX_ALL_ACCESS , FALSE , MUTEX_STR);
+		dprintf("waiting for mutex...");
+		WaitForSingleObject(hMutex , INFINITE);
+		dprintf("saving %s...", UI_INI_FILENAME);
 		filerr = core_fopen(filename, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &file);
 		if (filerr == FILERR_NONE)
 		{
@@ -2829,7 +2849,10 @@ static file_error SaveSettingsFile(winui_options &opts, winui_options *baseopts,
 #endif
 			core_fputs(file, initext);
 			core_fclose(file);
+			dprintf("%s saved", UI_INI_FILENAME);
 		}
+		ReleaseMutex(hMutex);
+		CloseHandle(hMutex);
 	}
 	/*else
 	{

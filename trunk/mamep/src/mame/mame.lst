@@ -2713,7 +2713,7 @@ ledstorm2		//  1988 (c) 1988 (US)
 //  6/1991 Quiz Sangokushi - see below among "Mitchell" games
 // 10/1991 Block Block - see below among "Mitchell" games
 //  6/1995 Street Fighter - the Movie - see below among "Incredible Technologies" games
-#endif /* !NCP */
+#endif // !NCP
 
 
 // Capcom CPS1 games
@@ -6617,7 +6617,7 @@ bbustersu		// A9003 'BB' (c) 1989
 // Electrocoin on early SNK hardware
 dmndrby			// G4001 'DD' (c) 1986
 dmndrbya		// G4001 'DD' (c) 1986
-#endif /* !NCP */
+#endif // !NCP
 
 // Neo Geo games
 // the four digits number is the game ID stored at address 0x0108 of the program ROM
@@ -8686,7 +8686,7 @@ lhzb3			// (c) 200?
 lhzb4			// (c) 200?
 klxyj			// (c) 200?
 mgfx			// (c) 200?
-#endif /* !NCP */
+#endif // !NCP
 
 // IGS PGM System Games
 pgm
@@ -12234,4 +12234,4 @@ zankor
 skijump
 spacecty
 strike
-#endif /* !NCP */
+#endif // !NCP
