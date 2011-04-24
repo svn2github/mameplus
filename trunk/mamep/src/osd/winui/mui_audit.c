@@ -217,7 +217,7 @@ int MameUIVerifyRomSet(int game, BOOL isComplete)
 	// output the summary of the audit
 	astring summary_string;
 	auditor.summarize(&summary_string);
-	DetailsPrintf(TEXT("%s"), wstring_from_utf8(ConvertToWindowsNewlines(summary_string.cstr())));
+	DetailsPrintf(TEXT("%s"), _UTF8Unicode(ConvertToWindowsNewlines(summary_string.cstr())));
 
 	SetRomAuditResults(game, summary);
 	return summary;
@@ -234,7 +234,7 @@ int MameUIVerifySampleSet(int game, BOOL isComplete)
 	// output the summary of the audit
 	astring summary_string;
 	auditor.summarize(&summary_string);
-	DetailsPrintf(TEXT("%s"), wstring_from_utf8(ConvertToWindowsNewlines(summary_string.cstr())));
+	DetailsPrintf(TEXT("%s"), _UTF8Unicode(ConvertToWindowsNewlines(summary_string.cstr())));
 
 	SetSampleAuditResults(game, summary);
 	return summary;
@@ -469,7 +469,7 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 {
 	HWND	hEdit;
 	va_list marker;
-	WCHAR	buffer[2000];
+	WCHAR	buffer[8000];
 	//TCHAR*  t_s;
 	int textLength;
 

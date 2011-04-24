@@ -1680,7 +1680,7 @@ void SetSnapName(const char* pattern)
 
 void ResetGameOptions(int driver_index)
 {
-	assert(0 <= driver_index && driver_index < driver_list_get_count(drivers));
+	assert(0 <= driver_index && driver_index < driver_list::total());
 
 	//save_options(OPTIONS_GAME, NULL, driver_index);
 }
@@ -1719,7 +1719,7 @@ void ResetAllGameOptions(void)
 
 static void GetDriverOptionName(int driver_index, const char *option_name, char *buffer, size_t buffer_len)
 {
-	assert(0 <= driver_index && driver_index < driver_list_get_count(drivers));
+	assert(0 <= driver_index && driver_index < driver_list::total());
 	snprintf(buffer, buffer_len, "%s_%s", driver_list::driver(driver_index).name, option_name);
 }
 
@@ -1828,7 +1828,7 @@ void GetTextPlayTime(int driver_index, WCHAR *buf)
 	int hour, minute, second;
 	int temp = GetPlayTime(driver_index);
 
-	assert(0 <= driver_index && driver_index < driver_list_get_count(drivers));
+	assert(0 <= driver_index && driver_index < driver_list::total());
 
 	hour = temp / 3600;
 	temp = temp - 3600*hour;
