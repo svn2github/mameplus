@@ -58,8 +58,9 @@ struct rp5c01_interface
 // ======================> rp5c01_device_config
 
 class rp5c01_device_config :   public device_config,
-							   public device_config_nvram_interface,
-                               public rp5c01_interface
+                               public rp5c01_interface,
+							   public device_config_rtc_interface,
+							   public device_config_nvram_interface
 {
     friend class rp5c01_device;
 
@@ -81,6 +82,7 @@ protected:
 // ======================> rp5c01_device
 
 class rp5c01_device :	public device_t,
+						public device_rtc_interface,
 						public device_nvram_interface
 {
     friend class rp5c01_device_config;
@@ -98,6 +100,10 @@ protected:
     virtual void device_start();
 	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
 
+	// device_rtc_interface overrides
+	virtual void rtc_set_time(int year, int month, int day, int day_of_week, int hour, int minute, int second);
+	virtual bool rtc_is_year_2000_compliant() { return false; }
+
 	// device_nvram_interface overrides
 	virtual void nvram_default();
 	virtual void nvram_read(emu_file &file);
@@ -109,6 +115,7 @@ private:
 	inline void write_counter(int counter, int value);
 	inline void advance_seconds();
 	inline void advance_minutes();
+	inline void adjust_seconds();
 	inline void check_alarm();
 
 	static const device_timer_id TIMER_CLOCK = 0;

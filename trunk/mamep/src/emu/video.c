@@ -136,7 +136,7 @@ video_manager::video_manager(running_machine &machine)
 {
 	// request a callback upon exiting
 	machine.add_notifier(MACHINE_NOTIFY_EXIT, exit_static);
-	machine.state().register_postload(state_postload_stub<video_manager, &video_manager::postload>, this);
+	machine.save().register_postload(state_postload_stub<video_manager, &video_manager::postload>, this);
 
 	// extract initial execution state from global configuration settings
 	update_refresh_speed();
@@ -290,7 +290,7 @@ astring &video_manager::speed_text(astring &string)
 	string.reset();
 
 #ifdef INP_CAPTION
-	string.catprintf(_("frame:%ld "), (long)m_machine.primary_screen->frame_number());
+	string.catprintf(_("frame:%ld "), (long)machine().primary_screen->frame_number());
 #endif /* INP_CAPTION */
 
 	// if we're paused, just display Paused
@@ -547,7 +547,7 @@ void video_manager::exit_static(running_machine &machine)
 void video_manager::exit()
 {
 #if 0 //mamep: remove this code to avert crash at exit
-	for (screen_device *screen = m_machine.first_screen(); screen != NULL; screen = screen->next_screen())
+	for (screen_device *screen = machine().first_screen(); screen != NULL; screen = screen->next_screen())
 		screen->video_exit_scale_effect();
 #endif /* USE_SCALE_EFFECTS */
 

@@ -66,6 +66,8 @@ snessfx   // Nintendo Super Nintendo NTSC w/SuperFX CPU
 snespsfx  // Nintendo Super Nintendo PAL w/SuperFX CPU
 snesdsp   // Nintendo Super Nintendo NTSC w/DSP-x CPU
 snespdsp  // Nintendo Super Nintendo PAL w/DSP-x CPU
+snesst10  // Nintendo Super Nintendo NTSC w/ST-010 CPU
+snesst11  // Nintendo Super Nintendo NTSC w/ST-011 CPU
 snesst    // Nintendo Super Nintendo NTSC w/Sufami Turbo base cart
 snesbsx   // Nintendo Super Nintendo NTSC w/BS-X compatible cart
 
@@ -90,6 +92,22 @@ megadriv  // 1990 Sega Mega Drive (Europe)
 pico	  // 1994 Sega Pico (Europe)
 picou	 // 1994 Sega Pico (USA)
 picoj	 // 1993 Sega Pico (Japan)
+segacd	// 1992 Sega Sega CD (USA)
+megacd	// 1993 Sega Mega-CD (Europe)
+megacda	// 1993 Sega Mega-CD (Asia)
+megacdj   // 1991 Sega Mega-CD (Japan)
+segacd2   // 1993 Sega Sega CD 2 (USA)
+megacd2   // 1993 Sega Mega-CD 2 (Europe)
+megacd2j  // 1993 Sega Mega-CD 2 (Japan)
+laseract  // 1993 Pioneer LaserActive (USA)
+laseractj // 1993 Pioneer LaserActive (Japan)
+xeye	  // 1993 JVC X'eye (USA)
+wmega	 // 1992 Sega Wondermega (Japan)
+wmegam2	// 1993 Victor Wondermega M2 (Japan)
+cdx	   // 1994 Sega CDX (USA)
+multmega  // 1994 Sega Multi-Mega (Europe)
+32x	   // 1994 Sega 32X (USA)
+32x_scd   // 1994 Sega Sega CD (USA w/32X addon)
 
 // NEC
 pce	   // PC/Engine NEC 1987-1993

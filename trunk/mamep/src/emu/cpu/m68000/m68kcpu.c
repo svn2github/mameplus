@@ -501,6 +501,7 @@ INLINE m68ki_cpu_core *get_safe_token(device_t *device)
 		   device->type() == M68010 ||
 		   device->type() == M68EC020 ||
 		   device->type() == M68020 ||
+		   device->type() == M68020HMMU ||
 		   device->type() == M68020PMMU ||
 		   device->type() == M68EC030 ||
 		   device->type() == M68030 ||
@@ -762,8 +763,8 @@ static CPU_INIT( m68k )
 	device->save_item(NAME(m68k->save_halted));
 	device->save_item(NAME(m68k->pref_addr));
 	device->save_item(NAME(m68k->pref_data));
-	device->machine().state().register_presave(m68k_presave, m68k);
-	device->machine().state().register_postload(m68k_postload, m68k);
+	device->machine().save().register_presave(m68k_presave, m68k);
+	device->machine().save().register_postload(m68k_postload, m68k);
 }
 
 /* Pulse the RESET line on the CPU */

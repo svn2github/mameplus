@@ -63,6 +63,7 @@ EMUOBJS = \
 	$(EMUOBJ)/diimage.o \
 	$(EMUOBJ)/dimemory.o \
 	$(EMUOBJ)/dinvram.o \
+	$(EMUOBJ)/dirtc.o \
 	$(EMUOBJ)/disound.o \
 	$(EMUOBJ)/distate.o \
 	$(EMUOBJ)/drawgfx.o \
@@ -89,12 +90,12 @@ EMUOBJS = \
 	$(EMUOBJ)/rendlay.o \
 	$(EMUOBJ)/rendutil.o \
 	$(EMUOBJ)/romload.o \
+	$(EMUOBJ)/save.o \
 	$(EMUOBJ)/schedule.o \
 	$(EMUOBJ)/screen.o \
 	$(EMUOBJ)/softlist.o \
 	$(EMUOBJ)/sound.o \
 	$(EMUOBJ)/speaker.o \
-	$(EMUOBJ)/state.o \
 	$(EMUOBJ)/tilemap.o \
 	$(EMUOBJ)/timer.o \
 	$(EMUOBJ)/ui.o \
@@ -209,10 +210,11 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/mc146818.o	\
 	$(EMUMACHINE)/mc6852.o		\
 	$(EMUMACHINE)/mc68901.o		\
-	$(EMUMACHINE)/msm5832.o	\
-	$(EMUMACHINE)/msm58321.o	\
+	$(EMUMACHINE)/mm74c922.o	\
 	$(EMUMACHINE)/microtch.o	\
 	$(EMUMACHINE)/mos6529.o		\
+	$(EMUMACHINE)/msm5832.o	\
+	$(EMUMACHINE)/msm58321.o	\
 	$(EMUMACHINE)/msm6242.o		\
 	$(EMUMACHINE)/nmc9306.o		\
 	$(EMUMACHINE)/nvram.o		\
@@ -224,6 +226,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/ram.o			\
 	$(EMUMACHINE)/roc10937.o	\
 	$(EMUMACHINE)/rp5c01.o		\
+	$(EMUMACHINE)/rp5c15.o		\
 	$(EMUMACHINE)/rp5h01.o		\
 	$(EMUMACHINE)/rtc65271.o	\
 	$(EMUMACHINE)/s3c2400.o		\

@@ -90,15 +90,13 @@ $(MESSOBJ)/bandai.a:			\
 	$(MESS_AUDIO)/wswan.o		\
 
 $(MESSOBJ)/capcom.a:			\
-	$(MESS_DRIVERS)/cpschngr.o	\
-	$(MESS_VIDEO)/cpschngr.o	\
-	$(MAME_MACHINE)/kabuki.o	\
+	$(MAME_DRIVERS)/cps1.o	\
+	$(MAME_VIDEO)/cps1.o	\
 
 $(MESSOBJ)/funtech.a:			\
 	$(MESS_DRIVERS)/supracan.o	\
 
 $(MESSOBJ)/nec.a:				\
-	$(MAME_VIDEO)/vdc.o			\
 	$(MESS_MACHINE)/pce.o		\
 	$(MESS_DRIVERS)/pce.o		\
 
@@ -108,14 +106,10 @@ $(MESSOBJ)/nintendo.a:			\
 	$(MESS_MACHINE)/gb.o		\
 	$(MESS_DRIVERS)/gb.o		\
 	$(MESS_MACHINE)/nes_mmc.o	\
-	$(MAME_VIDEO)/ppu2c0x.o		\
 	$(MESS_VIDEO)/nes.o			\
 	$(MESS_FORMATS)/nes_dsk.o	\
 	$(MESS_MACHINE)/nes.o		\
 	$(MESS_DRIVERS)/nes.o		\
-	$(MAME_AUDIO)/snes_snd.o	\
-	$(MAME_MACHINE)/snes.o		\
-	$(MAME_VIDEO)/snes.o		\
 	$(MESS_MACHINE)/snescart.o	\
 	$(MESS_DRIVERS)/snes.o		\
 	$(MESS_DRIVERS)/gba.o		\
@@ -125,9 +119,6 @@ $(MESSOBJ)/sega.a:				\
 	$(MESS_VIDEO)/smsvdp.o		\
 	$(MESS_MACHINE)/sms.o		\
 	$(MESS_DRIVERS)/sms.o		\
-	$(MAME_DRIVERS)/megadriv.o  \
-	$(MAME_MACHINE)/megadriv.o  \
-	$(MAME_MACHINE)/md_cart.o	\
 
 $(MESSOBJ)/snk.a:				\
 	$(MESS_DRIVERS)/ngp.o		\
