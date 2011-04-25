@@ -47,6 +47,11 @@
 
 static const char *drivlist[MAX_DRIVERS];
 
+#ifdef DRIVER_SWITCH
+static char filename[1024];
+static const char *extra_drivlist[MAX_DRIVERS];
+#endif /* DRIVER_SWITCH */
+
 
 //-------------------------------------------------
 //  driver_sort_callback - compare two items in
@@ -77,8 +82,27 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
+	bool header_outputed = false;
+	int drivcount = 0;
+	for (int src_idx = 1; src_idx < argc; src_idx++)
+	{
+
 	// extract arguments
-	const char *srcfile = argv[1];
+	const char *srcfile = argv[src_idx];
+
+#ifdef DRIVER_SWITCH
+	int extra_drivcount = 0;
+	{
+		char drive[_MAX_DRIVE];
+		char dir[_MAX_DIR];
+		char file[_MAX_FNAME];
+		char ext[_MAX_EXT];
+		_splitpath(srcfile, drive, dir, file, ext);
+		strcpy(filename, file);
+
+		if (stricmp(ext, ".lst")) continue;
+	}
+#endif /* DRIVER_SWITCH */
 
 	// read source file
 	void *buffer;
@@ -91,7 +115,6 @@ int main(int argc, char *argv[])
 	}
 
 	// rip through it to find all drivers
-	int drivcount = 0;
 	char *srcptr = (char *)buffer;
 	char *endptr = srcptr + length;
 	int linenum = 1;
@@ -172,6 +195,37 @@ int main(int argc, char *argv[])
 		char *name = (char *)malloc(strlen(drivname) + 1);
 		strcpy(name, drivname);
 		drivlist[drivcount++] = name;
+#ifdef DRIVER_SWITCH
+		extra_drivlist[extra_drivcount++] = name;
+#endif /* DRIVER_SWITCH */
+	}
+#ifdef DRIVER_SWITCH
+		// add a reference to the ___empty driver
+		extra_drivlist[extra_drivcount++] = "___empty";
+
+		// sort the list
+		qsort(extra_drivlist, extra_drivcount, sizeof(*extra_drivlist), sort_callback);
+
+		// start with a header
+		if (!header_outputed)
+		{
+			printf("#include \"emu.h\"\n\n");
+			header_outputed = true;
+		}
+
+		// output the list of externs first
+		for (int index = 0; index < extra_drivcount; index++)
+			printf("GAME_EXTERN(%s);\n", extra_drivlist[index]);
+		printf("\n");
+
+		// then output the array
+		printf("const game_driver * const driver_switch::%sdrivers[%d] =\n", filename, extra_drivcount);
+		printf("{\n");
+		for (int index = 0; index < extra_drivcount; index++)
+			printf("\t&GAME_NAME(%s)%s\n", extra_drivlist[index], (index == extra_drivcount - 1) ? "" : ",");
+		printf("};\n");
+		printf("\n");
+#endif /* DRIVER_SWITCH */
 	}
 
 	// add a reference to the ___empty driver
@@ -189,6 +243,7 @@ int main(int argc, char *argv[])
 	qsort(drivlist, drivcount, sizeof(*drivlist), sort_callback);
 
 	// start with a header
+	if (!header_outputed)
 	printf("#include \"emu.h\"\n\n");
 
 	// output the list of externs first
@@ -197,7 +252,11 @@ int main(int argc, char *argv[])
 	printf("\n");
 
 	// then output the array
+#ifdef DRIVER_SWITCH
+	printf("const game_driver * driver_list::s_drivers_sorted[%d] =\n", drivcount);
+#else
 	printf("const game_driver * const driver_list::s_drivers_sorted[%d] =\n", drivcount);
+#endif /* DRIVER_SWITCH */
 	printf("{\n");
 	for (int index = 0; index < drivcount; index++)
 		printf("\t&GAME_NAME(%s)%s\n", drivlist[index], (index == drivcount - 1) ? "" : ",");
@@ -206,6 +265,7 @@ int main(int argc, char *argv[])
 
 	// also output a global count
 	printf("int driver_list::s_driver_count = %d;\n", drivcount);
+
 
 	return 0;
 }

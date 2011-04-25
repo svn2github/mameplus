@@ -24,6 +24,9 @@ include $(SRC)/mess/messcore.mak
 # the list of drivers
 #-------------------------------------------------
 
+DRVLIST += \
+	$(MESSOBJ)/mess.lst \
+
 DRVLIBS += \
 	$(MESSOBJ)/ascii.a \
 	$(MESSOBJ)/atari.a \
@@ -110,7 +113,7 @@ $(MESSOBJ)/nintendo.a:			\
 	$(MESS_FORMATS)/nes_dsk.o	\
 	$(MESS_MACHINE)/nes.o		\
 	$(MESS_DRIVERS)/nes.o		\
-	$(MAME_AUDIO)/snes_snd.o		\
+	$(MAME_AUDIO)/snes_snd.o	\
 	$(MAME_MACHINE)/snes.o		\
 	$(MAME_VIDEO)/snes.o		\
 	$(MESS_MACHINE)/snescart.o	\
@@ -159,3 +162,14 @@ $(MESS_DRIVERS)/sms.o:		$(MESS_LAYOUT)/sms1.lh
 #-------------------------------------------------
 
 include $(MESSSRC)/osd/$(OSD)/$(OSD).mak
+
+#-------------------------------------------------
+# mamep: driver list dependencies
+#-------------------------------------------------
+
+#FXIXME
+$(MESSOBJ)/%.lst:	$(MESSSRC)/%.lst
+	@echo Generating $@...
+	@echo #include "$<" > $@.h
+	$(CC) $(CDEFS) $(INCPATH) -I. -E $@.h -o $@
+

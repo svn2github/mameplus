@@ -41,6 +41,105 @@
 #include <ctype.h>
 
 
+#ifdef DRIVER_SWITCH
+#include "emuopts.h"
+
+driver_switch::driver_switch()
+{
+}
+
+void driver_switch::init_assign_drivers(void)
+{
+	//direct change protected member
+	driver_list::s_drivers_sorted[0] = &GAME_NAME(___empty);
+	driver_list::s_driver_count = 1;
+}
+
+void driver_switch::assign_drivers(emu_options &opts)
+{
+	static const struct
+	{
+		const char *name;
+		const game_driver * const *driver;
+	} drivers_table[] =
+	{
+#ifndef TINY_BUILD
+		{ "mame",		mamedrivers },
+		{ "plus",		mameplusdrivers },
+		{ "homebrew",	mamehbdrivers },
+		{ "decrypted",	mamedecrypteddrivers },
+#ifdef MAMEMESS
+		{ "console",	messdrivers },
+#endif /* MAMEMESS */
+#else
+		{ "mame",		tinydrivers },
+#endif /* !TINY_BUILD */
+		{ NULL }
+	};
+
+	UINT32 enabled = 0;
+	int i, n;
+
+#ifndef TINY_BUILD
+	const char *drv_option = opts.value(OPTION_DRIVER_CONFIG);
+	if (drv_option)
+	{
+		char *temp = mame_strdup(drv_option);
+		if (temp)
+		{
+			char *p = strtok(temp, ",");
+ 			while (p)
+			{
+				char *s = core_strtrim(p);	//get individual driver name
+				if (s[0])
+				{
+					if (mame_stricmp(s, "all") == 0)
+					{
+						enabled = (UINT32)-1;
+						break;
+					}
+
+					for (i = 0; drivers_table[i].name; i++)
+						if (mame_stricmp(s, drivers_table[i].name) == 0)
+						{
+							enabled |= 1 << i;
+							break;
+						}
+
+					if (!drivers_table[i].name)
+						mame_printf_warning(_("Illegal value for %s = %s\n"), OPTION_DRIVER_CONFIG, s);
+				}
+				osd_free(s);
+ 				p = strtok(NULL, ",");
+			}
+ 			osd_free(temp);
+		}
+	}
+#endif /* !TINY_BUILD */
+
+	if (enabled == 0)
+		enabled = 1;	// default to mamedrivers
+
+	n = 0;
+	for (i = 0; drivers_table[i].name; i++)
+		if (enabled & (1 << i))
+		{
+			for (int c = 0; drivers_table[i].driver[c]; c++)
+				if (mame_stricmp(drivers_table[i].driver[c]->name, "___empty"))
+					driver_list::s_drivers_sorted[n++] = drivers_table[i].driver[c];
+		}
+
+	// ___empty driver add once
+	driver_list::s_drivers_sorted[n++] = &GAME_NAME(___empty);
+	driver_list::s_driver_count = n;
+
+	qsort(driver_list::s_drivers_sorted, n, sizeof(*driver_list::s_drivers_sorted), driver_list::driver_sort_callback);
+}
+
+void driver_switch::free_drivers(void)
+{
+}
+#endif /* DRIVER_SWITCH */
 
 //**************************************************************************
 //  DRIVER LIST

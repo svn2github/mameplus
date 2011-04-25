@@ -2142,7 +2142,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 			file.close();
 		}
 
-		assign_drivers(options);
+		driver_switch::assign_drivers(options);
 	}
 #endif /* DRIVER_SWITCH */
 
@@ -2632,7 +2632,7 @@ static void Win32UI_exit()
 	free(sort_index);
 	free_driversw();
 #ifdef DRIVER_SWITCH
-	global_free(drivers);
+	driver_switch::free_drivers();
 #endif /* DRIVER_SWITCH */
 	ui_lang_shutdown();
 	FreeTranslateBuffer();

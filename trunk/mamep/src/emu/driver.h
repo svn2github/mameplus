@@ -114,6 +114,10 @@ class driver_list
 {
 	DISABLE_COPYING(driver_list);
 
+#ifdef DRIVER_SWITCH
+	friend class driver_switch;
+#endif /* DRIVER_SWITCH */
+
 protected:
 	// construction/destruction
 	driver_list();
@@ -147,7 +151,11 @@ protected:
 
 	// internal state
 	static int							s_driver_count;
+#ifdef DRIVER_SWITCH
+	static const game_driver *			s_drivers_sorted[];
+#else
 	static const game_driver * const	s_drivers_sorted[];
+#endif /* DRIVER_SWITCH */
 };
 
 
@@ -210,6 +218,33 @@ private:
 	machine_config **	m_config;
 };
 
+#ifdef DRIVER_SWITCH
+class driver_switch
+{
+protected:
+	// construction/destruction
+	driver_switch();
+
+public:
+	static void init_assign_drivers();
+	static void assign_drivers(emu_options &opts);
+	static void free_drivers();
+
+private:
+	// internal state
+#ifndef TINY_BUILD
+	static const game_driver * const mamedrivers[];
+	static const game_driver * const mameplusdrivers[];
+	static const game_driver * const mamehbdrivers[];
+	static const game_driver * const mamedecrypteddrivers[];
+#ifdef MAMEMESS
+	static const game_driver * const messdrivers[];
+#endif /* MAMEMESS */
+#else
+	static const game_driver * const tinydrivers[];
+#endif /* !TINY_BUILD */
+};
+#endif /* DRIVER_SWITCH */
 
 
 /***************************************************************************

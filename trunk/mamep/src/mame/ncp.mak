@@ -69,6 +69,12 @@ SOUNDS += ICS2115
 # the list of drivers
 #-------------------------------------------------
 
+DRVLIST += \
+	$(MAMEOBJ)/mame.lst \
+	$(MAMEOBJ)/mameplus.lst \
+	$(MAMEOBJ)/mamehb.lst \
+	$(MAMEOBJ)/mamedecrypted.lst \
+
 DRVLIBS = \
 	$(EMUDRIVERS)/emudummy.o \
 
@@ -125,6 +131,8 @@ $(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neodrvr.c
 #-------------------------------------------------
 
 #FXIXME
-$(OBJ)/$(TARGET)/$(SUBTARGET).lst:	$(SRC)/$(TARGET)/$(SUBTARGET)drv.h
+$(MAMEOBJ)/%.lst:	$(MAMESRC)/%.lst
 	@echo Generating $@...
-	$(CC) $(CDEFS) $(INCPATH) -E $< -o $@
+	@echo #include "$<" > $@.h
+	$(CC) $(CDEFS) $(INCPATH) -I. -E $@.h -o $@
+

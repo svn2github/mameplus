@@ -948,7 +948,7 @@ void CreateSoundFolders(int parent_index)
 	const device_config_sound_interface *device = NULL;
 	int nFolder = numFolders;
 
-	for (i = 0; &driver_list::driver(i) != NULL; i++)
+	for (i = 0; i < driver_list::total(); i++)
 	{
 		machine_config config(driver_list::driver(i), MameUIGlobal());
 

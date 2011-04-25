@@ -162,8 +162,5 @@ private:
 };
 
 void setup_language(emu_options &options);
-#ifdef DRIVER_SWITCH
-void assign_drivers(emu_options &options);
-#endif /* DRIVER_SWITCH */
 
 #endif	/* __CLIFRONT_H__ */

@@ -134,7 +134,7 @@ cli_frontend::cli_frontend(cli_options &options, osd_interface &osd)
 cli_frontend::~cli_frontend()
 {
 #ifdef DRIVER_SWITCH
-	global_free(drivers);
+	driver_switch::free_drivers();
 #endif /* DRIVER_SWITCH */
 
 	// report any unfreed memory on clean exits
@@ -156,8 +156,8 @@ int cli_frontend::execute(int argc, char **argv)
 	try
 	{
 		setup_language(m_options);
-#ifdef DRIVER_SWITCH
-		assign_drivers(m_options);
+#if 0 //def DRIVER_SWITCH
+		driver_switch::init_assign_drivers();
 #endif /* DRIVER_SWITCH */
 
 		// parse the command line, adding any system-specific options
@@ -180,7 +180,7 @@ int cli_frontend::execute(int argc, char **argv)
 			printf("%s\n", option_errors.cstr());
 
 #ifdef DRIVER_SWITCH
-		assign_drivers(m_options);
+		driver_switch::assign_drivers(m_options);
 #endif /* DRIVER_SWITCH */
 
 		// determine the base name of the EXE
@@ -1222,9 +1222,9 @@ void cli_frontend::execute_commands(const char *exename)
 	{
 #ifdef DRIVER_SWITCH
 		astring error;
-		options.set_value(OPTION_DRIVER_CONFIG, "all", OPTION_PRIORITY_INI, error);
+		m_options.set_value(OPTION_DRIVER_CONFIG, "all", OPTION_PRIORITY_INI, error);
 		assert(!error);
-		assign_drivers(options);
+		driver_switch::assign_drivers(m_options);
 #endif /* DRIVER_SWITCH */
 		validate_drivers(m_options);
 		return;
@@ -1595,119 +1595,6 @@ int media_identifier::find_by_hash(const hash_collection &hashes, int length)
 
 	return found;
 }
-
-
-#ifdef DRIVER_SWITCH
-void assign_drivers(emu_options &options)
-{
-	static const struct
-	{
-		const char *name;
-		const game_driver * const *driver;
-	} drivers_table[] =
-	{
-		{ "mame",	mamedrivers },
-#ifndef TINY_BUILD
-		{ "plus",	plusdrivers },
-		{ "homebrew",	homebrewdrivers },
-		{ "decrypted",	decrypteddrivers },
-#ifdef MAMEMESS
-		{ "console",	consoledrivers },
-#endif /* MAMEMESS */
-#endif /* !TINY_BUILD */
-		{ NULL }
-	};
-
-	UINT32 enabled = 0;
-	int i, n;
-
-#ifndef TINY_BUILD
-	const char *drv_option = options.value(OPTION_DRIVER_CONFIG);
-	if (drv_option)
-	{
-		char *temp = mame_strdup(drv_option);
-		if (temp)
-		{
-			char *p = strtok(temp, ",");
- 			while (p)
-			{
-				char *s = core_strtrim(p);	//get individual driver name
-				if (s[0])
-				{
-					if (mame_stricmp(s, "all") == 0)
-					{
-						enabled = (UINT32)-1;
-						break;
-					}
-
-					for (i = 0; drivers_table[i].name; i++)
-						if (mame_stricmp(s, drivers_table[i].name) == 0)
-						{
-							enabled |= 1 << i;
-							break;
-						}
-
-					if (!drivers_table[i].name)
-						mame_printf_warning(_("Illegal value for %s = %s\n"), OPTION_DRIVER_CONFIG, s);
-				}
-				osd_free(s);
- 				p = strtok(NULL, ",");
-			}
- 			osd_free(temp);
-		}
-	}
-#endif /* !TINY_BUILD */
-
-	if (enabled == 0)
-		enabled = 1;	// default to mamedrivers
-
-	n = 0;
-	for (i = 0; drivers_table[i].name; i++)
-		if (enabled & (1 << i))
-		{
-			int c;
-
-			for (c = 0; drivers_table[i].driver[c]; c++)
-				n++;
-		}
-
-	if (drivers)
-		global_free(drivers);
-	drivers = global_alloc_array(const game_driver *, (n + 1) * sizeof (game_driver*));
-
-	n = 0;
-	for (i = 0; drivers_table[i].name; i++)
-		if (enabled & (1 << i))
-		{
-			int c;
-
-			for (c = 0; drivers_table[i].driver[c]; c++)
-				drivers[n++] = drivers_table[i].driver[c];
-		}
-
-	drivers[n] = NULL;
-
-#ifdef OPTION_ADDED_DEVICE_OPTIONS
-	options_set_bool(options, OPTION_ADDED_DEVICE_OPTIONS, FALSE, OPTION_PRIORITY_DEFAULT);
-
-	//add options by callback if we need
-	if (!options_get_bool(options, OPTION_ADDED_DEVICE_OPTIONS))
-	{
-		const char *gamename = options_get_string(options, OPTION_GAMENAME);
-		if (gamename)
-		{
-			const char *argv[2];
-
-			argv[0] = gamename;
-			argv[1] = NULL;
-
-			options_parse_command_line(options, ARRAY_LENGTH(argv) - 1, (char **)argv, OPTION_PRIORITY_CMDLINE, FALSE);
-		}
-	}
-#endif /* OPTION_ADDED_DEVICE_OPTIONS */
-}
-#endif /* DRIVER_SWITCH */
-
 
 
 /***************************************************************************

@@ -468,6 +468,10 @@ ifneq ($(USE_IPS),)
 DEFS += -DUSE_IPS
 endif
 
+ifeq ($(SUBTARGET),tiny)
+DEFS += -DTINY_BUILD
+endif
+
 ifneq ($(USE_DRIVER_SWITCH),)
 DEFS += -DDRIVER_SWITCH
 endif
@@ -654,7 +658,7 @@ LIBOSD = $(OBJ)/libosd.a
 VERSIONOBJ = $(OBJ)/version.o
 DRIVLISTSRC = $(OBJ)/drivlist.c
 DRIVLISTOBJ = $(OBJ)/drivlist.o
-
+DRVLIST =
 
 
 #-------------------------------------------------
@@ -868,9 +872,9 @@ $(DRIVLISTOBJ): $(DRIVLISTSRC)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
-$(DRIVLISTSRC): $(OBJ)/$(TARGET)/$(SUBTARGET).lst $(MAKELIST_TARGET)
+$(DRIVLISTSRC): $(DRVLIST) $(MAKELIST_TARGET)
 	@echo Building driver list $<...
-	@$(MAKELIST) $< >$@
+	@$(MAKELIST) $^ >$@
 
 $(OBJ)/%.a:
 	@echo Archiving $@...

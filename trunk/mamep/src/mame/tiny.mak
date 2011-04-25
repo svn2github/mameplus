@@ -82,6 +82,9 @@ SOUNDS += CEM3394
 # in tiny.c
 #-------------------------------------------------
 
+DRVLIST += \
+	$(MAMEOBJ)/tiny.lst \
+
 DRVLIBS = \
 	$(EMUDRIVERS)/emudummy.o \
 	$(MACHINE)/ticket.o \
@@ -154,6 +157,8 @@ $(MAMEOBJ)/mamedriv.o:	$(LAYOUT)/pinball.lh
 #-------------------------------------------------
 
 #FXIXME
-$(OBJ)/$(TARGET)/$(SUBTARGET).lst:	$(SRC)/$(TARGET)/$(SUBTARGET)drv.h
+$(MAMEOBJ)/%.lst:	$(MAMESRC)/%.lst
 	@echo Generating $@...
-	$(CC) $(CDEFS) $(INCPATH) -E $< -o $@
+	@echo #include "$<" > $@.h
+	$(CC) $(CDEFS) $(INCPATH) -I. -E $@.h -o $@
+

@@ -237,6 +237,12 @@ SOUNDS += MAS3507D
 # the list of drivers
 #-------------------------------------------------
 
+DRVLIST += \
+	$(MAMEOBJ)/mame.lst \
+	$(MAMEOBJ)/mameplus.lst \
+	$(MAMEOBJ)/mamehb.lst \
+	$(MAMEOBJ)/mamedecrypted.lst \
+
 DRVLIBS += \
 	$(MAMEOBJ)/alba.a \
 	$(MAMEOBJ)/alliedl.a \
@@ -2056,6 +2062,8 @@ $(VIDEO)/n64.o:			$(MAMESRC)/video/rdpfiltr.c
 #-------------------------------------------------
 
 #FXIXME
-$(OBJ)/$(TARGET)/$(SUBTARGET).lst:	$(SRC)/$(TARGET)/$(SUBTARGET)drv.h
+$(MAMEOBJ)/%.lst:	$(MAMESRC)/%.lst
 	@echo Generating $@...
-	$(CC) $(CDEFS) $(INCPATH) -E $< -o $@
+	@echo #include "$<" > $@.h
+	$(CC) $(CDEFS) $(INCPATH) -I. -E $@.h -o $@
+
