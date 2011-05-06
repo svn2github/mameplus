@@ -222,10 +222,11 @@ int main(int argc, char *argv[])
 		printf("\n");
 
 		// then output the array
-		printf("const game_driver * const driver_switch::%sdrivers[%d] =\n", filename, extra_drivcount);
+		printf("const game_driver * const driver_switch::%sdrivers[%d] =\n", filename, extra_drivcount+1);
 		printf("{\n");
 		for (int index = 0; index < extra_drivcount; index++)
-			printf("\t&GAME_NAME(%s)%s\n", extra_drivlist[index], (index == extra_drivcount - 1) ? "" : ",");
+			printf("\t&GAME_NAME(%s)%s\n", extra_drivlist[index], ",");
+		printf("\tNULL\n");
 		printf("};\n");
 		printf("\n");
 #endif /* DRIVER_SWITCH */
