@@ -273,10 +273,10 @@ const options_entry winui_options::s_option_entries[] =
 	{ MUIOPTION_DEFAULT_FOLDER_ID,                    "0",                          OPTION_INTEGER,    NULL },
 	{ MUIOPTION_SHOW_IMAGE_SECTION,                   "1",                          OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_FULL_SCREEN,                          "0",                          OPTION_BOOLEAN,    NULL },
-	{ MUIOPTION_CURRENT_TAB,                          "0",                          OPTION_INTEGER,    NULL },
+	{ MUIOPTION_CURRENT_TAB,                          "0",                          OPTION_STRING,     NULL },
 	{ MUIOPTION_SHOW_TOOLBAR,                         "1",                          OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_SHOW_STATUS_BAR,                      "1",                          OPTION_BOOLEAN,    NULL },
-	{ MUIOPTION_HIDE_FOLDERS,                         "",                           OPTION_INTEGER,    NULL },
+	{ MUIOPTION_HIDE_FOLDERS,                         "",                           OPTION_STRING,     NULL },
 #ifdef MESS
 	{ MUIOPTION_SHOW_FOLDER_SECTION,                  "0",                          OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_SHOW_TABS,                            "0",                          OPTION_BOOLEAN,    NULL },
