@@ -45,7 +45,7 @@
 
 
 #include "emu.h"
-#include "imageutl.h"
+#include "formats/imageutl.h"
 #include "cpu/m68000/m68000.h"
 
 #include "imagedev/cartslot.h"
@@ -1943,7 +1943,7 @@ static void genesis_machine_stop(running_machine &machine)
 
 MACHINE_START( md_sram )
 {
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, genesis_machine_stop);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(genesis_machine_stop), &machine));
 }
 
 /******* 32X image loading *******/

@@ -2,11 +2,11 @@
 class armedf_state : public driver_device
 {
 public:
-	armedf_state(running_machine &machine, const driver_device_config_base &config)
-		: driver_device(machine, config) { }
+	armedf_state(const machine_config &mconfig, device_type type, const char *tag)
+		: driver_device(mconfig, type, tag) { }
 
 	/* memory pointers */
-	UINT16 *  m_text_videoram;
+	UINT8  *  m_text_videoram;
 	UINT16 *  m_bg_videoram;
 	UINT16 *  m_fg_videoram;
 	UINT16 *  m_spr_pal_clut;
@@ -33,8 +33,8 @@ public:
 class bigfghtr_state : public armedf_state
 {
 public:
-	bigfghtr_state(running_machine &machine, const driver_device_config_base &config)
-		: armedf_state(machine, config) { }
+	bigfghtr_state(const machine_config &mconfig, device_type type, const char *tag)
+		: armedf_state(mconfig, type, tag) { }
 
 	UINT16 *      m_sharedram;
 
@@ -49,10 +49,14 @@ public:
 SCREEN_UPDATE( armedf );
 SCREEN_EOF( armedf );
 VIDEO_START( armedf );
+VIDEO_START( terraf );
 
 WRITE16_HANDLER( armedf_bg_videoram_w );
 WRITE16_HANDLER( armedf_fg_videoram_w );
-WRITE16_HANDLER( armedf_text_videoram_w );
+READ8_HANDLER( armedf_text_videoram_r );
+WRITE8_HANDLER( armedf_text_videoram_w );
+READ8_HANDLER( nb1414m4_text_videoram_r );
+WRITE8_HANDLER( nb1414m4_text_videoram_w );
 WRITE16_HANDLER( terraf_fg_scrollx_w );
 WRITE16_HANDLER( terraf_fg_scrolly_w );
 WRITE16_HANDLER( terraf_fg_scroll_msb_arm_w );
@@ -60,5 +64,3 @@ WRITE16_HANDLER( armedf_fg_scrollx_w );
 WRITE16_HANDLER( armedf_fg_scrolly_w );
 WRITE16_HANDLER( armedf_bg_scrollx_w );
 WRITE16_HANDLER( armedf_bg_scrolly_w );
-
-void nb_1414m4_exec(address_space *space,UINT16 mcu_cmd);

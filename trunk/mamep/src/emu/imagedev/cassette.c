@@ -7,9 +7,8 @@
 *********************************************************************/
 
 #include "emu.h"
-#include "imageutl.h"
+#include "formats/imageutl.h"
 #include "cassette.h"
-#include "cassimg.h"
 #include "ui.h"
 
 
@@ -50,11 +49,11 @@ INLINE dev_cassette_t *get_safe_token(device_t *device)
 	return (dev_cassette_t *) downcast<legacy_device_base *>(device)->token();
 }
 
-INLINE const inline_cassette_config *get_config_dev(const device_config *device)
+INLINE const inline_cassette_config *get_config_dev(const device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == CASSETTE);
-	return (const inline_cassette_config *)downcast<const legacy_device_config_base *>(device)->inline_config();
+	return (const inline_cassette_config *)downcast<const legacy_device_base *>(device)->inline_config();
 }
 
 /*********************************************************************
@@ -254,7 +253,7 @@ static DEVICE_START( cassette )
 	dev_cassette_t	*cassette = get_safe_token( device );
 
 	/* set to default state */
-	cassette->config = (const cassette_config*)device->baseconfig().static_config();
+	cassette->config = (const cassette_config*)device->static_config();
 	cassette->cassette = NULL;
 	cassette->state = cassette->config->default_state;
 }
@@ -288,7 +287,7 @@ static DEVICE_IMAGE_LOAD( cassette )
 		/* opening an image */
 		do
 		{
-			is_writable = image.is_writable();
+			is_writable = !image.is_readonly();
 			cassette_flags = is_writable ? (CASSETTE_FLAG_READWRITE|CASSETTE_FLAG_SAVEONEXIT) : CASSETTE_FLAG_READONLY;
 			extension = image.filetype();
 			err = cassette_open_choices((void *) &image, &image_ioprocs, extension, formats, cassette_flags, &cassette->cassette);
@@ -366,7 +365,7 @@ static DEVICE_IMAGE_DISPLAY(cassette)
 	x = 0.2f;
 	y = 0.5f;
 
-	dev = device->machine().m_devicelist.first(CASSETTE );
+	dev = device->machine().devicelist().first(CASSETTE );
 
 	while ( dev && strcmp( dev->tag(), device->tag() ) )
 	{
@@ -429,7 +428,7 @@ DEVICE_GET_INFO(cassette)
 		case DEVINFO_FCT_IMAGE_DISPLAY:				info->f = (genf *) DEVICE_IMAGE_DISPLAY_NAME(cassette); break;
 		case DEVINFO_FCT_IMAGE_SOFTLIST_LOAD:		info->f = (genf *) DEVICE_IMAGE_SOFTLIST_LOAD_NAME(cassette);	break;
 		case DEVINFO_FCT_IMAGE_DISPLAY_INFO:
-			if ( device && downcast<const legacy_image_device_config_base *>(device)->inline_config() && get_config_dev(device)->device_displayinfo) {
+			if ( device && downcast<const legacy_image_device_base *>(device)->inline_config() && get_config_dev(device)->device_displayinfo) {
 				info->f = (genf *) get_config_dev(device)->device_displayinfo;
 			} else {
 				info->f = NULL;

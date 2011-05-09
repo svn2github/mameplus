@@ -604,9 +604,8 @@ WRITE8_DEVICE_HANDLER( k054539_w )
 	regbase[offset] = data;
 }
 
-static STATE_POSTLOAD( reset_zones )
+static void reset_zones(k054539_state *info)
 {
-	k054539_state *info = (k054539_state *)param;
 	int data = info->regs[0x22e];
 	info->cur_zone =
 		data == 0x80 ? info->ram :
@@ -648,7 +647,7 @@ static DEVICE_START( k054539 )
 		info->k054539_gain[i] = 1.0;
 	info->k054539_flags = K054539_RESET_FLAGS;
 
-	info->intf = (device->baseconfig().static_config() != NULL) ? (const k054539_interface *)device->baseconfig().static_config() : &defintrf;
+	info->intf = (device->static_config() != NULL) ? (const k054539_interface *)device->static_config() : &defintrf;
 
 	/*
         I've tried various equations on volume control but none worked consistently.
@@ -674,7 +673,7 @@ static DEVICE_START( k054539 )
 
 	k054539_init_chip(device, info);
 
-	device->machine().save().register_postload(reset_zones, info);
+	device->machine().save().register_postload(save_prepost_delegate(FUNC(reset_zones), info));
 }
 
 

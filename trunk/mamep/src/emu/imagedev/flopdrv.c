@@ -12,7 +12,7 @@
 */
 
 #include "emu.h"
-#include "imageutl.h"
+#include "formats/imageutl.h"
 #include "flopdrv.h"
 
 #define VERBOSE		0
@@ -129,11 +129,11 @@ INLINE floppy_drive *get_safe_token(device_t *device)
 	return (floppy_drive *) downcast<legacy_device_base *>(device)->token();
 }
 
-INLINE const inline_floppy_config *get_config_dev(const device_config *device)
+INLINE const inline_floppy_config *get_config_dev(const device_t *device)
 {
 	assert(device != NULL);
 	assert( device->type() == FLOPPY || device->type() == FLOPPY_APPLE || device->type() == FLOPPY_SONY);
-	return (const inline_floppy_config *)downcast<const legacy_device_config_base *>(device)->inline_config();
+	return (const inline_floppy_config *)downcast<const legacy_device_base *>(device)->inline_config();
 }
 
 floppy_image *flopimg_get_image(device_t *image)
@@ -226,7 +226,7 @@ static void floppy_drive_init(device_t *img)
 	pDrive->index_timer = img->machine().scheduler().timer_alloc(FUNC(floppy_drive_index_callback), (void *) img);
 	pDrive->idx = 0;
 
-	floppy_drive_set_geometry(img, ((floppy_config*)img->baseconfig().static_config())->floppy_type);
+	floppy_drive_set_geometry(img, ((floppy_config*)img->static_config())->floppy_type);
 
 	/* initialise id index - not so important */
 	pDrive->id_index = 0;
@@ -261,7 +261,7 @@ static void floppy_drive_index_func(device_t *img)
 		drive->index_timer->adjust(attotime::from_double(ms/20/1000.0));
 	}
 
-	devcb_call_write_line(&drive->out_idx_func, drive->idx);
+	drive->out_idx_func(drive->idx);
 
 	if (drive->index_pulse_callback)
 		drive->index_pulse_callback(drive->controller, img, drive->idx);
@@ -300,7 +300,7 @@ void floppy_drive_set_flag_state(device_t *img, int flag, int state)
 		if (flag & FLOPPY_DRIVE_READY)
 		{
 			/* trigger state change callback */
-			devcb_call_write_line(&drv->out_rdy_func, new_state ? ASSERT_LINE : CLEAR_LINE);
+			drv->out_rdy_func(new_state ? ASSERT_LINE : CLEAR_LINE);
 
 			if (drv->ready_state_change_callback)
 				drv->ready_state_change_callback(drv->controller, img, new_state);
@@ -384,11 +384,11 @@ void floppy_drive_seek(device_t *img, signed int signed_tracks)
 
 	/* set track 0 flag */
 	pDrive->tk00 = (pDrive->current_track == 0) ? CLEAR_LINE : ASSERT_LINE;
-	devcb_call_write_line(&pDrive->out_tk00_func, pDrive->tk00);
+	pDrive->out_tk00_func(pDrive->tk00);
 
 	/* clear disk changed flag */
 	pDrive->dskchg = ASSERT_LINE;
-	//devcb_call_write_line(&flopimg->out_dskchg_func, flopimg->dskchg);
+	//flopimg->out_dskchg_func(flopimg->dskchg);
 
 	/* inform disk image of step operation so it can cache information */
 	if (image->exists())
@@ -574,34 +574,34 @@ void floppy_drive_set_controller(device_t *img, device_t *controller)
 DEVICE_START( floppy )
 {
 	floppy_drive *floppy = get_safe_token( device );
-	floppy->config = (const floppy_config*)device->baseconfig().static_config();
+	floppy->config = (const floppy_config*)device->static_config();
 	floppy_drive_init(device);
 
 	floppy->drive_id = floppy_get_drive(device);
 	floppy->active = FALSE;
 
 	/* resolve callbacks */
-	devcb_resolve_write_line(&floppy->out_idx_func, &floppy->config->out_idx_func, device);
-	devcb_resolve_read_line(&floppy->in_mon_func, &floppy->config->in_mon_func, device);
-	devcb_resolve_write_line(&floppy->out_tk00_func, &floppy->config->out_tk00_func, device);
-	devcb_resolve_write_line(&floppy->out_wpt_func, &floppy->config->out_wpt_func, device);
-	devcb_resolve_write_line(&floppy->out_rdy_func, &floppy->config->out_rdy_func, device);
-//  devcb_resolve_write_line(&floppy->out_dskchg_func, &floppy->config->out_dskchg_func, device);
+	floppy->out_idx_func.resolve(floppy->config->out_idx_func, *device);
+	floppy->in_mon_func.resolve(floppy->config->in_mon_func, *device);
+	floppy->out_tk00_func.resolve(floppy->config->out_tk00_func, *device);
+	floppy->out_wpt_func.resolve(floppy->config->out_wpt_func, *device);
+	floppy->out_rdy_func.resolve(floppy->config->out_rdy_func, *device);
+//  floppy->out_dskchg_func.resolve(floppy->config->out_dskchg_func, *device);
 
 	/* by default we are not write-protected */
 	floppy->wpt = ASSERT_LINE;
-	devcb_call_write_line(&floppy->out_wpt_func, floppy->wpt);
+	floppy->out_wpt_func(floppy->wpt);
 
 	/* not at track 0 */
 	floppy->tk00 = ASSERT_LINE;
-	devcb_call_write_line(&floppy->out_tk00_func, floppy->tk00);
+	floppy->out_tk00_func(floppy->tk00);
 
 	/* motor off */
 	floppy->mon = ASSERT_LINE;
 
 	/* disk changed */
 	floppy->dskchg = CLEAR_LINE;
-//  devcb_call_write_line(&floppy->out_dskchg_func, floppy->dskchg);
+//  floppy->out_dskchg_func(floppy->dskchg);
 }
 
 static int internal_floppy_device_load(device_image_interface *image, int create_format, option_resolution *create_args)
@@ -616,7 +616,7 @@ static int internal_floppy_device_load(device_image_interface *image, int create
 	flopimg = get_safe_token( &image->device() );
 
 	/* figure out the floppy options */
-	floppy_options = ((floppy_config*)image->device().baseconfig().static_config())->formats;
+	floppy_options = ((floppy_config*)image->device().static_config())->formats;
 
 	if (image->has_been_created())
 	{
@@ -629,7 +629,7 @@ static int internal_floppy_device_load(device_image_interface *image, int create
 	else
 	{
 		/* opening an image */
-		floppy_flags = image->is_writable() ? FLOPPY_FLAGS_READWRITE : FLOPPY_FLAGS_READONLY;
+		floppy_flags = !image->is_readonly() ? FLOPPY_FLAGS_READWRITE : FLOPPY_FLAGS_READONLY;
 		extension = image->filetype();
 		err = floppy_open_choices((void *) image, &image_ioprocs, extension, floppy_options, floppy_flags, &flopimg->floppy);
 		if (err)
@@ -657,7 +657,7 @@ static TIMER_CALLBACK( set_wpt )
 	floppy_drive *flopimg = (floppy_drive *)ptr;
 
 	flopimg->wpt = param;
-	devcb_call_write_line(&flopimg->out_wpt_func, param);
+	flopimg->out_wpt_func(param);
 }
 
 DEVICE_IMAGE_LOAD( floppy )
@@ -673,12 +673,12 @@ DEVICE_IMAGE_LOAD( floppy )
 
 	/* push disk halfway into drive */
 	flopimg->wpt = CLEAR_LINE;
-	devcb_call_write_line(&flopimg->out_wpt_func, flopimg->wpt);
+	flopimg->out_wpt_func(flopimg->wpt);
 
 	/* set timer for disk load */
 	int next_wpt;
 
-	if (image.is_writable())
+	if (!image.is_readonly())
 		next_wpt = ASSERT_LINE;
 	else
 		next_wpt = CLEAR_LINE;
@@ -704,11 +704,11 @@ DEVICE_IMAGE_UNLOAD( floppy )
 
 	/* disk changed */
 	flopimg->dskchg = CLEAR_LINE;
-	//devcb_call_write_line(&flopimg->out_dskchg_func, flopimg->dskchg);
+	//flopimg->out_dskchg_func(flopimg->dskchg);
 
 	/* pull disk halfway out of drive */
 	flopimg->wpt = CLEAR_LINE;
-	devcb_call_write_line(&flopimg->out_wpt_func, flopimg->wpt);
+	flopimg->out_wpt_func(flopimg->wpt);
 
 	/* set timer for disk eject */
 	image.device().machine().scheduler().timer_set(attotime::from_msec(250), FUNC(set_wpt), ASSERT_LINE, flopimg);
@@ -899,7 +899,7 @@ WRITE_LINE_DEVICE_HANDLER( floppy_stp_w )
 		}
 
 		/* update track 0 line with new status */
-		devcb_call_write_line(&drive->out_tk00_func, drive->tk00);
+		drive->out_tk00_func(drive->tk00);
 	}
 
 	drive->stp = state;
@@ -997,7 +997,7 @@ DEVICE_GET_INFO(floppy)
 		case DEVINFO_FCT_IMAGE_UNLOAD:				info->f = (genf *) DEVICE_IMAGE_UNLOAD_NAME(floppy); break;
 		case DEVINFO_FCT_IMAGE_SOFTLIST_LOAD:		info->f = (genf *) DEVICE_IMAGE_SOFTLIST_LOAD_NAME(floppy);	break;
 		case DEVINFO_FCT_IMAGE_DISPLAY_INFO:
-			if ( device && downcast<const legacy_image_device_config_base *>(device)->inline_config() && get_config_dev(device)->device_displayinfo) {
+			if ( device && downcast<const legacy_image_device_base *>(device)->inline_config() && get_config_dev(device)->device_displayinfo) {
 				info->f = (genf *) get_config_dev(device)->device_displayinfo;
 			} else {
 				info->f = NULL;

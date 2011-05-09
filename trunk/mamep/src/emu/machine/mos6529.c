@@ -21,20 +21,20 @@
 
 
 //**************************************************************************
-//  GLOBAL VARIABLES
+//  LIVE DEVICE
 //**************************************************************************
 
-// devices
-const device_type MOS6529 = mos6529_device_config::static_alloc_device_config;
+// device type definition
+const device_type MOS6529 = &device_creator<mos6529_device>;
 
+//-------------------------------------------------
+//  mos6529_device - constructor
+//-------------------------------------------------
 
-
-
-//**************************************************************************
-//  DEVICE CONFIGURATION
-//**************************************************************************
-
-GENERIC_DEVICE_CONFIG_SETUP(mos6529, "MOS6529")
+mos6529_device::mos6529_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+    : device_t(mconfig, MOS6529, "MOS6529", tag, owner, clock)
+{
+}
 
 
 //-------------------------------------------------
@@ -43,7 +43,7 @@ GENERIC_DEVICE_CONFIG_SETUP(mos6529, "MOS6529")
 //  complete
 //-------------------------------------------------
 
-void mos6529_device_config::device_config_complete()
+void mos6529_device::device_config_complete()
 {
 	// inherit a copy of the static data
 	const mos6529_interface *intf = reinterpret_cast<const mos6529_interface *>(static_config());
@@ -53,25 +53,9 @@ void mos6529_device_config::device_config_complete()
 	// or initialize to defaults if none provided
 	else
 	{
-		memset(&m_in_p_func, 0, sizeof(m_in_p_func));
-		memset(&m_out_p_func, 0, sizeof(m_out_p_func));
+		memset(&m_in_p_cb, 0, sizeof(m_in_p_cb));
+		memset(&m_out_p_cb, 0, sizeof(m_out_p_cb));
 	}
-}
-
-
-
-//**************************************************************************
-//  LIVE DEVICE
-//**************************************************************************
-
-//-------------------------------------------------
-//  mos6529_device - constructor
-//-------------------------------------------------
-
-mos6529_device::mos6529_device(running_machine &_machine, const mos6529_device_config &config)
-    : device_t(_machine, config),
-      m_config(config)
-{
 }
 
 
@@ -82,8 +66,8 @@ mos6529_device::mos6529_device(running_machine &_machine, const mos6529_device_c
 void mos6529_device::device_start()
 {
 	// resolve callbacks
-	devcb_resolve_read8(&m_in_p_func, &m_config.m_in_p_func, this);
-	devcb_resolve_write8(&m_out_p_func, &m_config.m_out_p_func, this);
+	m_in_p_func.resolve(m_in_p_cb, *this);
+	m_out_p_func.resolve(m_out_p_cb, *this);
 }
 
 
@@ -93,7 +77,7 @@ void mos6529_device::device_start()
 
 READ8_MEMBER( mos6529_device::read )
 {
-	return devcb_call_read8(&m_in_p_func, 0);
+	return m_in_p_func(0);
 }
 
 
@@ -103,5 +87,5 @@ READ8_MEMBER( mos6529_device::read )
 
 WRITE8_MEMBER( mos6529_device::write )
 {
-	devcb_call_write8(&m_out_p_func, 0, data);
+	m_out_p_func(0, data);
 }

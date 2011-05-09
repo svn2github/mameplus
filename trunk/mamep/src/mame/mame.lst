@@ -608,7 +608,11 @@ niyanpai		// (c) 1996
 
 jyunai			// (c) 1998
 csplayh5		// (c) 1998
+mjmania			// (c) 1999
 bikiniko		// (c) 1999
+thenanpa		// (c) 1999
+cspureh7		// (c) 1999
+fudol			// (c) 2000
 
 // "Phoenix hardware" (and variations) games
 safarir			// Shin Nihon Kikaku (SNK)
@@ -2537,6 +2541,10 @@ theroes			// (c) 2001 Primetek Investments
 korokoro		// (c) 1999 Takumi
 crusherm		// (c) 1999 Takumi
 tjumpman		// (c) 1999 Namco
+
+mushisam
+mushitam
+futari15
 
 // Kyugo games
 // Kyugo only made four games: Repulse, Flash Gal, SRD Mission and Air Wolf.
@@ -4705,56 +4713,53 @@ naomi
 naomigd
 naomi2
 
-hod2bios		// 1998.11 The House of the Dead 2
+hod2bios		// 1998.11 The House of the Dead 2 (BIOS)
 hotd2			// 1998.11 The House of the Dead 2
-hotd2o			// 1998.11 The House of the Dead 2
+hotd2o			// 1998.11 The House of the Dead 2 (original)
 dybbnao			// 1998.12 Dynamite Baseball NAOMI
-smlg99			// 1999.?? Super Major League '99
 pstone			// 1999.02 Power Stone
 crzytaxi		// 1999.02 Crazy Taxi
 zombrvn			// 1999.02 Zombie Revenge
-airlbios		// 1999.03 Airline Pilots
-alpiltdx
-alpilota
-ggram2			// 1999.04 Giant Gram Zen Nippon Pro-wres 2
+airlbios		// 1999.03 Airline Pilots (BIOS)
+alpilota		// 1999.03 Airline Pilots (Rev A)
+alpiltdx		// 1999.?? Airline Pilots Deluxe (Rev B)
+ggram2			// 1999.04 Giant Gram: All Japan Pro Wrestling 2
 				// 1999.05 Taisen Puzzle Kurutto Stone
-ringout			// 1999.06 Ringout 4x4
-f355bios		// 1999.07 F355 Challenge
-f355
+ringout			// 1999.06 Ring Out 4x4 (Rev A)
+f355bios		// 1999.07 F355 Challenge (BIOS)
+f355			// 1999.07 F355 Challenge
 f355twin		// 1999.07 F355 Challenge Twin
 shangril		// 1999.08 Dengen Tenshi Taisen Janshi Shangri-la
 				// 1999.08 Unou Nouryoku Check Machine Touch de UNO!
-vs2_2k			// 1999.08 Virtua Striker 2 version 2000
+vs2_2k			// 1999.08 Virtua Striker 2 version 2000 (Rev C)
 suchie3			// 1999.09 Idol Janshi Su-Chi-Pi 3
 toyfight		// 1999.09 Toy Fighter
-jambo			// 1999.09 Jambo! Safari
-				// 1999.09 Super Major League 99
+jambo			// 1999.09 Jambo! Safari (Rev A)
+smlg99			// 1999.09 Super Major League 99
 sgtetris		// 1999.10 Sega Tetris
-derbyoc			// 1999.10 Derby Owners Club
+derbyoc			// 1999.10 Derby Owners Club (Rev B)
 doa2			// 1999.11 Dead or Alive 2
-otrigger		// 1999.11 Out Trigger
-dybb99			// 1999.11 Dynamite Baseball '99
+otrigger		// 1999.11 OutTrigger
+dybb99			// 1999.11 Dynamite Baseball '99 (Rev B)
 				// 1999.12 Mars TV
-samba			// 1999.12 Samba de Amigo
+samba			// 1999.12 Samba de Amigo (Rev B)
 vtennis			// 1999.12 Virtua Tennis / Power Smash (ROM)
-vtennisg		// 1999.12 Virtua Tennis / Power Smash (GD-ROM)
-puyoda			// 1999.12 Puyopuyo DA!
-
-18wheelr		// 2000.01 18 Wheeler
-totd			// 2000.01 The Typing of the Dead
-spawn			// 2000.01 Spawn
+puyoda			// 1999.12 Puyo Puyo Da!
+spawn			// 1999.?? Spawn In the Demon's Hand
+18wheelr		// 2000.01 18 Wheeler Deluxe (Rev A)
+totd			// 2000.01 The Typing of the Dead (Rev A)
 doa2m			// 2000.01 Dead or Alive 2 Millenium
 				// 2000.02 Touch de UNO! 2
 virnba			// 2000.02 Virtua NBA
-virnbao
-mvsc2			// 2000.03 Marvel vs. Capcom 2
+virnbao			// 2000.02 Virtua NBA (original)
+mvsc2			// 2000.03 Marvel vs. Capcom 2 (Rev A)
 smarinef		// 2000.03 Sega Marine Fishing
 wldkicks		// 2000.03 World Kicks
 				// 2000.04 Shin Nippon Pro-wres Toukon Retsuden 4
 pstone2			// 2000.04 Power Stone 2
 qmegamis		// 2000.05 Quiz Ah Megamisama
-vonot			// 2000.06 Virtual-on Oratorio Tangram M.S.B.S. ver.5.66 2000 edition
-derbyo2k		// 2000.06 Derby Owners Club 2000
+vonot			// 2000.06 Virtual-on Oratorio Tangram M.S.B.S. ver.5.66 2000 Edition
+derbyo2k		// 2000.06 Derby Owners Club 2000 Ver.2 (Rev A)
 ggx				// 2000.07 Guilty Gear X
 slasho			// 2000.07 Slashout
 slashout
@@ -4778,6 +4783,7 @@ sprtjam			// 2000.12 Sports Jam
 				// 2000.?? World Kicks New ver.
 derbyocw		// 2001.?? Derby Owners Club World Edition (Rev. D)
 drbyocwc		// 2001.?? Derby Owners Club World Edition (Rev. C)
+vtennisg		// 2001.?? Virtua Tennis / Power Smash (GD-ROM)
 f355twn2		// 2001.01 F355 Challenge 2
 gwing2			// 2001.01 Giga Wing 2
 csmash			// 2001.01 Cosmic Smash
@@ -4823,7 +4829,7 @@ quizqgd			// 2003.01 Quiz Keitai Q mode
 ggxxrl			// 2003.03 Guilty Gear XX # Reload
 shikgam2		// 2003.04 Shikigami no Shiro 2
 bdrdown			// 2003.04 Border Down
-usagui			// 2003.06 Usagi Yamashiro Mahjong Hen
+usagiym			// 2003.06 Usagi Yamashiro Mahjong Hen
 				// 2003.07 Yonin Uchi Mahjong MJ Network Taisen ver. NEW
 oinori			// 2003.08 Oinori-daimyoujin Matsuri
 psyvar2			// 2003.11 Psyvariar 2
@@ -9708,10 +9714,11 @@ witchcrd		// (c) 1991, Video Klein
 witchcda		// 1991, Unknown
 witchcdb		// 1991, Unknown
 witchcdc		// 1991, Unknown
-witchcdd		// 1991, Unknown
+witchcdd		// (c) 1994, TV Game Elektronik - Proma
 witchcdf		// (c) 1991, PlayMan
 witchcdg		// (c) 199?, Falcon
-witchcdh		// (c) 1991, TV Game Elektronik - Proma
+witchcdh		// (c) 1994, TV Game Elektronik - Proma
+witchcdi		// (c) 1994, TV Game Elektronik - Proma
 witchgme		// (c) 1991 Video Klein
 witchjol		// 1994, Unknown
 wldwitch		// 1994, Video Klein
@@ -10066,6 +10073,7 @@ ronjan
 pinkiri8
 
 // Wing
+superwng		// (c) 1985 Wing Co. Ltd
 slotcarn		// (c) 1985 Wing Co. Ltd
 lucky74			// (c) 1988 Wing Co. Ltd
 lucky74a		// (c) 1988 Wing Co. Ltd
@@ -10419,20 +10427,20 @@ cmkenospa		// (c) 2000 Coinmaster-Gaming, Ltd.
 
 // Igrosoft Original sets
 // Multifish
-//mfish   		// (c) 2002
-//mfish_2 		// (c) 2002
-//mfish_4 		// (c) 2002
-//mfish_5 		// (c) 2002
-//mfish_7 		// (c) 2002
-//mfish_8 		// (c) 2002
-//mfish_9 		// (c) 2002
-//mfish_10    	// (c) 2002
-//mfish_13    	// (c) 2002
+//mfish 		// (c) 2002
+//mfish_2		// (c) 2002
 mfish_3			// (c) 2002
+//mfish_4		// (c) 2002
+//mfish_5		// (c) 2002
 mfish_6			// (c) 2002
+//mfish_7		// (c) 2002
+mfish_8		// (c) 2002
+//mfish_9		// (c) 2002
+//mfish_10  	// (c) 2002
 mfish_11		// (c) 2002
 mfish_12		// (c) 2002
 mfish_13		// (c) 2002
+mfish_14	// (c) 2002
 
 // Crazy Monkey
 //crzmon  		// (c) 2003
@@ -10473,6 +10481,8 @@ lhaunt_8		// (c) 2003
 // Rollfruit
 //rollfr  		// (c) 2003
 rollfr_2		// (c) 2003
+rollfr_3		// (c) 2003
+rollfr_4		// (c) 2003 (bootleg?)
 
 // Garage
 //garage  		// (c) 2004
@@ -10526,9 +10536,11 @@ keks_3			// (c) 2006
 // Gnome
 gnome			// (c) 2007
 gnome_2			// (c) 2007
+gnome_3			// (c) 2007
 
 // Sweet Life 2
 sweetl2			// (c) 2007
+sweetl2_2		// (c) 2007
 
 // Igrosoft bootleg sets
 
@@ -10624,15 +10636,27 @@ gnomec			// bootleg
 gnomed			// bootleg
 gnomee			// bootleg
 gnome_2a		// bootleg
+gnome_3a		// bootleg
+gnome_3b		// bootleg
+gnome_3c		// bootleg
+sweetl2_2a		// bootleg - Sweet Life 2
+sweetl2_2b		// bootleg
+sweetl2_2c		// bootleg
+sweetl2_2d		// bootleg
 
 // TAB Austria
 //cdimono1		// Base unit (enabled below, see MESS drivers)
-quizard			// (c) Disney 1996
-quizrd22		// (c) Disney 1995
-quizrd17		// (c) Disney 1996
-quizrd12		// (c) Disney 1996
-quizrr42		// (c) Disney 1998
-quizrr41		// (c) Disney 1998
+quizard			// (c) TAB Austria 1996
+quizrd22		// (c) TAB Austria 1995
+quizrd17		// (c) TAB Austria 1996
+quizrd12		// (c) TAB Austria 1996
+quizrr42		// (c) TAB Austria 1998
+quizrr41		// (c) TAB Austria 1998
+quizrr40		// (c) TAB Austria 1997
+
+// GCE / Roy Abel & Associates
+//vectrex		// Base unit (enabled below, see MESS drivers)
+raaspec			// (c) Roy Abel & Associates 1984
 
 /* Drivers below are mechanical games, usually with no video display, requiring external artwork to function.
   These are currently mostly 'fruit machine' style games, although this may later be extended to system logic
@@ -10703,6 +10727,7 @@ m_ccelbr
 m_gmball
 m_grtecp		// 199?
 m_blsbys		// BwB
+//m_frkstn
 
 // MPU5
 m_honmon
@@ -12257,6 +12282,260 @@ strike
 // most are commented out for now, the exceptions being sets which act as the parents to actual MAME drivers
 // due to the arcade units being based on stock retail console units.
 
+// 3DO
+// (used by Orbatak prototype, and Beavis + Butthead prototype)
+3do
+3do_pal
+
+// Acorn Archimedies
+// (hardware used by erotictac, Aristokrat MK5 and others)
+//a310
+//a7000
+//a7000p
+
+// ASCII & Microsoft
+// (hardware used by Sangho Soft games, and some bootlegs)
+//msx	   // 1983 MSX
+//ax170
+//canonv10
+//canonv20
+//dpc100	// 1984 MSX Korea
+//dpc180	// 1984 MSX Korea
+//dpc200	// 1984 MSX Korea
+//gsfc200
+//expert10  // 1983 MSX Brazil
+//expert11  // 1984 MSX Brazil
+//expert13  // 1984 MSX Brazil
+//expertdp  // 1985 MSX Brazil
+//expertpl  // 1984 MSX Brazil
+//jvchc7gb
+//mlf80
+//mlfx1
+//cf1200	// 1984 MSX Japan
+//cf2000	// 1983 MSX Japan
+//cf2700	// 1984 MSX Japan
+//cf3000	// 1984 MSX Japan
+//cf3300	// 1985 MSX Japan
+//fs1300	// 1985 MSX Japan
+//fs4000	// 1985 MSX Japan
+//nms801
+//vg8000
+//vg8010
+//vg8010f
+//vg802000
+//vg802020  // 1985 MSX
+//piopx7
+//mpc100
+//hotbit11  // 1985 MSX Brazil
+//hotbit12  // 1985 MSX Brazil
+//hotbi13b  // 1985 MSX Brazil
+//hotbi13p  // 1985 MSX Brazil
+//hotbit20  // 1986 MSX2 Brazil
+//hb10p
+//hb20p
+//hb201	 // 1985 MSX Japan
+//hb201p	// 1985 MSX
+//hb501p	// 1984 MSX
+//hb55d	 // 1983 MSX Germany
+//hb55p	 // 1983 MSX
+//hb75d	 // 1983 MSX Germany
+//hb75p	 // 1983 MSX
+//svi728	// 1985 MSX
+//svi738	// 1985 MSX
+//svi738sw  // 1985 MSX
+//tadpc200
+//tadpc20a
+//hx10	  // 1984 MSX
+//hx10s	 // 1984 MSX
+//hx20	  // 1984 MSX
+//cx5m
+//cx5m128
+//cx5m2
+//yis303
+//yis503
+//yis503ii
+//y503iir
+//y503iir2
+//yis503m
+//yc64
+//bruc100
+
+//msx2	  // 1985 MSX2
+//ax350
+//ax370
+//hbf9p	 // 1985 MSX2
+//hbf9s	 // 1985 MSX2
+//hbf500p   // 1985 MSX2
+//hbf700d   // 1985 MSX2 Germany
+//hbf700f   // 1985 MSX2
+//hbf700p   // 1985 MSX2
+//hbf700s   // 1985 MSX2 Spain
+//hbg900ap  // 1986 MSX2
+//hbg900p   // 1986 MSX2
+//nms8220   // 1986 MSX2
+//nms8220a  // 1986 MSX2
+//vg8230	// 1986 MSX2
+//vg8235	// 1986 MSX2
+//vg8235f	// 1986 MSX2
+//vg8240 // 1986 MSX2
+//nms8245   // 1986 MSX2
+//nms8245f   // 1986 MSX2
+//nms8250   // 1986 MSX2
+//nms8255   // 1986 MSX2
+//nms8280   // 1986 MSX2
+//nms8280g   // 1986 MSX2
+//tpc310   // 1986 MSX2
+//hx23	   // 1986 MSX2
+//hx23f	// 1986 MSX2
+//cx7m	   // 1986 MSX2
+//cx7m128	// 1986 MSX2
+//fs5500	// 1985 MSX2 Japan
+//fs4500	// 1986 MSX2 Japan
+//fs4700	// 1986 MSX2 Japan
+//fs5000	// 1986 MSX2 Japan
+//fs4600	// 1986 MSX2 Japan
+//fsa1	  // 1986 MSX2 Japan
+//fsa1a	 // 1986 MSX2 Japan
+//fsa1mk2   // 1987 MSX2 Japan
+//fsa1f	 // 1987 MSX2 Japan
+//fsa1fm	// 1988 MSX2 Japan
+//hbf500	// 1986 MSX2 Japan
+//hbf900	// 1986 MSX2 Japan
+//hbf900a   // 1986 MSX2 Japan
+//hbf1	  // 1986 MSX2 Japan
+//hbf12	 // 1987 MSX2 Japan
+//hbf1xd	// 1987 MSX2 Japan
+//hbf1xdm2  // 1988 MSX2 Japan
+//phc23	 // 1986 MSX2 Japan
+//cpc300	// 1986 MSX2 Korea
+//cpc300e   // 1986 MSX2 Korea
+//cpc400	// 1986 MSX2 Korea
+//cpc400s   // 1986 MSX2 Korea
+//expert20 // 1986 MSX2 Korea
+
+//msx2p	 // 1988 MSX2+ Japan
+//fsa1fx	// 1988 MSX2+ Japan
+//fsa1wx	// 1988 MSX2+ Japan
+//fsa1wxa   // 1988 MSX2+ Japan
+//fsa1wsx   // 1989 MSX2+ Japan
+//hbf1xdj   // 1988 MSX2+ Japan
+//hbf1xv	// 1989 MSX2+ Japan
+//phc70fd   // 1988 MSX2+ Japan
+//phc70fd2  // 1988 MSX2+ Japan
+//phc35j	// 1989 MSX2+ Japan
+
+
+// Atari A400
+// (hardware used by Maxaflex and Barroom Baseball)
+//a400
+//a400pal
+//a800
+//a800pal
+//a1200xl
+//a600xl
+//a800xl
+//a800xlp
+//a65xe
+//a65xea
+//a130xe
+//a800xe
+//xegs
+//a5200
+
+
+// Atari Jaguar
+// (hardware used by CoJag)
+//jaguar		// (c)1993 Atari
+//jaguarcd	// (c)1995 Atari
+
+// Capcom CPS Changer
+// (hardware is the same as CPS1)
+//sfzch		// (c)1995 Capcom
+//sfach		// (c)1995 Capcom
+//sfzbch		// (c)1995 Capcom
+//wofch		// (c)1995 Capcom
+
+// Commodore Amiga
+// (hardware used by Arcadia and others)
+//a1000n
+//a1000p
+//a500n
+//a500p
+//cdtv
+//a3000
+//a1200n
+//a1200p
+
+// Commodore CD32
+// (parent to Cubo32 sets)
+cd32		// (c)1993 Commodore
+
+// GCE Vectrex
+// (parent to Spectrum I+)
+vectrex		// (c)1982 GCE
+
+// NEC PC Engine
+// Hardware used by uapce.c, and several others (implementations could be merged)
+//pce
+//tg16
+//sgx
+
+// Nintendo NES
+// (used by vsnes, pc10, and others)
+//nes
+//nespal
+//famicom
+//fami_key
+//famitwin
+//m82
+//drpcjr
+//dendy
+
+// Nintendo SNES
+// (used by Nintendo Super System and various bootlegs)
+//snes
+//snespal
+//snesdsp
+//snespdsp
+//snessfx
+//snespsfx
+//snesst10
+//snesst11
+//snesst
+//snesbsx
+
+// Nintendo N64
+// (used by Aleck64)
+//n64
+
+// Phillips CDI
+// (parent to Quizzard sets)
+cdimono1	// (c)1991 Philips
+
+// Sega SG1000
+// (hardware used by Doki Doki Penguin Land + others)
+//sg1000
+//sg1000m2
+//sc3000
+//sc3000h
+//sf7000
+//omv1000
+//omv2000
+
+// Sega SMS / Game Gear
+// (Megatech runs some SMS games in the Genesis compatibility mode, VDPs used by Megatech, Megaplay, System E)
+// (MAME currently uses it's own implementation)
+//sg1000m3
+//sms1
+//sms1pal
+//smssdisp
+//smsj
+//sms
+//smspal
+//sms2kr
+//gamegear
+//gamegeaj
+
 // Sega Megadrive / Genesis and related systems
 // (hardware used by Megatech, Megaplay + many standalone boards)
 //genesis		// (c)1989 Sega
@@ -12289,23 +12568,15 @@ strike
 //vsaturn		// (c)1995 Sega/JVC
 //hisaturn	// (c)1995 Sega/Hitachi
 
-// Atari Jaguar
-// (hardware used by CoJag)
-//jaguar		// (c)1993 Atari
-//jaguarcd	// (c)1995 Atari
+// Sega Dreamcast
+// (hardware used by Naomi, Atomiswave etc.)
+//dc
+//dcjp
+//dceu
+//dcdev
 
-// Capcom CPS Changer
-// (hardware is the same as CPS1)
-//sfzch		// (c)1995 Capcom
-//sfach		// (c)1995 Capcom
-//sfzbch		// (c)1995 Capcom
-//wofch		// (c)1995 Capcom
-
-// Phillips CDI
-// (parent to Quizzard sets)
-cdimono1	// (c)1991 Philips
-
-// Commodore CD32
-// (parent to Cubo32 sets)
-cd32		// (c)1993 Commodore
+// SNK NeoGeo AES
+//aes
+//neocd
+//neocdz
 #endif // !NCP

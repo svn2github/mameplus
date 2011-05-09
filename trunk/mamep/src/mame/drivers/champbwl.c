@@ -155,13 +155,13 @@ Notes:
 #include "sound/x1_010.h"
 #include "machine/nvram.h"
 #include "includes/tnzs.h"
-
+#include "video/seta001.h"
 
 class champbwl_state : public tnzs_state
 {
 public:
-	champbwl_state(running_machine &machine, const driver_device_config_base &config)
-		: tnzs_state(machine, config) { }
+	champbwl_state(const machine_config &mconfig, device_type type, const char *tag)
+		: tnzs_state(mconfig, type, tag) { }
 
 	UINT8    m_last_trackball_val[2];
 //  UINT8 *  m_nvram; // currently this uses generic_nvram
@@ -195,25 +195,16 @@ static WRITE8_HANDLER( champbwl_misc_w )
 	memory_set_bank(space->machine(), "bank1", (data & 0x30) >> 4);
 }
 
-static WRITE8_HANDLER( champbwl_objctrl_w )
-{
-	champbwl_state *state = space->machine().driver_data<champbwl_state>();
-	if(offset != 0)
-		data ^= 0xff;
-
-	state->m_objctrl[offset] = data;
-}
-
 static ADDRESS_MAP_START( champbwl_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM AM_REGION("maincpu", 0x10000)
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0xa000, 0xbfff) AM_RAM AM_BASE_MEMBER(champbwl_state, m_objram)
+	AM_RANGE(0xa000, 0xafff) AM_RAM AM_DEVREADWRITE("spritegen", spritecodelow_r8, spritecodelow_w8)
+	AM_RANGE(0xb000, 0xbfff) AM_RAM AM_DEVREADWRITE("spritegen", spritecodehigh_r8, spritecodehigh_w8)
 	AM_RANGE(0xc000, 0xdfff) AM_DEVREADWRITE("x1snd", seta_sound_r, seta_sound_w)
-	AM_RANGE(0xe000, 0xe1ff) AM_RAM AM_BASE_MEMBER(champbwl_state, m_vdcram)
-	AM_RANGE(0xe200, 0xe2ff) AM_RAM AM_BASE_MEMBER(champbwl_state, m_scrollram) /* scrolling info */
-	AM_RANGE(0xe300, 0xe303) AM_MIRROR(0xfc) AM_WRITE(champbwl_objctrl_w) AM_BASE_MEMBER(champbwl_state, m_objctrl) /* control registers (0x80 mirror used by Arkanoid 2) */
-	AM_RANGE(0xe800, 0xe800) AM_WRITEONLY AM_BASE_MEMBER(champbwl_state, m_bg_flag)	/* enable / disable background transparency */
+	AM_RANGE(0xe000, 0xe2ff) AM_RAM AM_DEVREADWRITE("spritegen", spriteylow_r8, spriteylow_w8)
+	AM_RANGE(0xe300, 0xe303) AM_MIRROR(0xfc) AM_DEVWRITE("spritegen", spritectrl_w8) /* control registers (0x80 mirror used by Arkanoid 2) */
+	AM_RANGE(0xe800, 0xe800) AM_DEVWRITE("spritegen", spritebgflag_w8)	/* enable / disable background transparency */
 
 	AM_RANGE(0xf000, 0xf000) AM_READ(trackball_r)
 	AM_RANGE(0xf002, 0xf002) AM_READ_PORT("IN0")
@@ -367,6 +358,23 @@ static MACHINE_RESET( champbwl )
 
 }
 
+SCREEN_UPDATE( champbwl )
+{
+	bitmap_fill(bitmap, cliprect, 0x1f0);
+
+	screen->machine().device<seta001_device>("spritegen")->set_fg_yoffsets( -0x12, 0x0e );
+	screen->machine().device<seta001_device>("spritegen")->set_bg_yoffsets( 0x1, -0x1 );
+
+	screen->machine().device<seta001_device>("spritegen")->seta001_draw_sprites(screen->machine(), bitmap, cliprect, 0x800, 1 );
+	return 0;
+}
+
+SCREEN_EOF( champbwl )
+{
+	machine.device<seta001_device>("spritegen")->tnzs_eof();
+}
+
+
 static MACHINE_CONFIG_START( champbwl, champbwl_state )
 
 	/* basic machine hardware */
@@ -379,6 +387,8 @@ static MACHINE_CONFIG_START( champbwl, champbwl_state )
 	MCFG_MACHINE_START(champbwl)
 	MCFG_MACHINE_RESET(champbwl)
 
+	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
+
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(57.5)
@@ -386,8 +396,8 @@ static MACHINE_CONFIG_START( champbwl, champbwl_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE(tnzs)
-	MCFG_SCREEN_EOF(tnzs)
+	MCFG_SCREEN_UPDATE(champbwl)
+	MCFG_SCREEN_EOF(champbwl)
 
 	MCFG_GFXDECODE(champbwl)
 	MCFG_PALETTE_LENGTH(512)

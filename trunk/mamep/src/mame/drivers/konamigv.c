@@ -14,14 +14,14 @@ pbball96   Powerful Pro Baseball '96    GV999          GV017   JAPAN 1.03   96.0
 hyperath   Hyper Athlete                ZV610          GV021   JAPAN 1.00   96.06.09  19:00
 susume     Susume! Taisen Puzzle-Dama   ZV610          GV027   JAPAN 1.20   96.03.04  12:00
 btchamp    Beat the Champ               GV999          GV053   UAA01        ?
-kdeadeye   Dead Eye                     GV999          GV054   UA01         ?
+kdeadeye   Dead Eye                     GV999          GV054   UAA01        ?
 weddingr   Wedding Rhapsody             ?              GX624   JAA          97.05.29   9:12
 tokimosh   Tokimeki Memorial Oshiete    ?              GE755   JAA          97.08.06  11:52
            Your Heart
 tokimosp   Tokimeki Memorial Oshiete    ?              GE756   JAB          97.09.27   9:10
            Your Heart Seal version PLUS
 nagano98   Winter Olypmics in Nagano 98 GV999          GX720   EAA01 1.03   98.01.08  10:45
-simpbowl   Simpsons Bowling             ?              GQ829   UAA          ?
+simpbowl   Simpsons Bowling             GV999          GQ829   UAA          ?
 
 PCB Layouts
 -----------
@@ -75,7 +75,12 @@ GV999 PWB301949A
 |---------------------------------------|
 
 Notes:
-      - Simpsons Bowling uses an unknown board revision with 4 x 16M FLASHROMs & a trackball.
+      - Simpsons Bowling and Dead Eye use a GV999 with a daughtercard containing flash ROMs and CPLDs:
+        PWB402610
+        Xilinx XC3020A
+        Xilinx 1718DPC
+        74F244N (2 of these)
+        LVT245SS (2 of theses)
 
       - 000180 is used for driving the RGB output. It's a very thin piece of very brittle ceramic
         containing a circuit, a LM1203 chip, some smt transistors/caps/resistors etc (let's just say
@@ -114,7 +119,7 @@ Notes:
 
 #include "emu.h"
 #include "cdrom.h"
-#include "cpu/mips/psx.h"
+#include "cpu/psx/psx.h"
 #include "includes/psx.h"
 #include "machine/eeprom.h"
 #include "machine/intelfsh.h"
@@ -125,8 +130,8 @@ Notes:
 class konamigv_state : public psx_state
 {
 public:
-	konamigv_state(running_machine &machine, const driver_device_config_base &config)
-		: psx_state(machine, config) { }
+	konamigv_state(const machine_config &mconfig, device_type type, const char *tag)
+		: psx_state(mconfig, type, tag) { }
 
 	UINT32 m_flash_address;
 
@@ -168,22 +173,6 @@ static ADDRESS_MAP_START( konamigv_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x1f180000, 0x1f180003) AM_DEVWRITE("eeprom", eeprom_w)
 	AM_RANGE(0x1f680000, 0x1f68001f) AM_READWRITE(mb89371_r, mb89371_w)
 	AM_RANGE(0x1f780000, 0x1f780003) AM_WRITENOP /* watchdog? */
-	AM_RANGE(0x1f800000, 0x1f8003ff) AM_RAM /* scratchpad */
-	AM_RANGE(0x1f801000, 0x1f801007) AM_WRITENOP
-	AM_RANGE(0x1f801008, 0x1f80100b) AM_RAM /* ?? */
-	AM_RANGE(0x1f80100c, 0x1f80102f) AM_WRITENOP
-	AM_RANGE(0x1f801010, 0x1f801013) AM_READNOP
-	AM_RANGE(0x1f801014, 0x1f801017) AM_RAM
-	AM_RANGE(0x1f801040, 0x1f80105f) AM_READWRITE(psx_sio_r, psx_sio_w)
-	AM_RANGE(0x1f801060, 0x1f80106f) AM_WRITENOP
-	AM_RANGE(0x1f801070, 0x1f801077) AM_READWRITE(psx_irq_r, psx_irq_w)
-	AM_RANGE(0x1f801080, 0x1f8010ff) AM_READWRITE(psx_dma_r, psx_dma_w)
-	AM_RANGE(0x1f801100, 0x1f80112f) AM_READWRITE(psx_counter_r, psx_counter_w)
-	AM_RANGE(0x1f801810, 0x1f801817) AM_READWRITE(psx_gpu_r, psx_gpu_w)
-	AM_RANGE(0x1f801820, 0x1f801827) AM_READWRITE(psx_mdec_r, psx_mdec_w)
-	AM_RANGE(0x1f801c00, 0x1f801dff) AM_READWRITE16(spu_r, spu_w, 0xffffffff)
-	AM_RANGE(0x1f802020, 0x1f802033) AM_RAM /* ?? */
-	AM_RANGE(0x1f802040, 0x1f802043) AM_WRITENOP
 	AM_RANGE(0x1fc00000, 0x1fc7ffff) AM_ROM AM_SHARE("share2") AM_REGION("user1", 0) /* bios */
 	AM_RANGE(0x80000000, 0x801fffff) AM_RAM AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0x9fc00000, 0x9fc7ffff) AM_ROM AM_SHARE("share2") /* bios mirror */
@@ -306,9 +295,7 @@ static DRIVER_INIT( konamigv )
 
 	/* init the scsi controller and hook up it's DMA */
 	am53cf96_init(machine, &scsi_intf);
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, konamigv_exit);
-	psx_dma_install_read_handler(machine, 5, scsi_dma_read);
-	psx_dma_install_write_handler(machine, 5, scsi_dma_write);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(konamigv_exit), &machine));
 }
 
 static MACHINE_START( konamigv )
@@ -341,8 +328,10 @@ static void spu_irq(device_t *device, UINT32 data)
 
 static MACHINE_CONFIG_START( konamigv, konamigv_state )
 	/* basic machine hardware */
-	MCFG_CPU_ADD( "maincpu", PSXCPU, XTAL_67_7376MHz )
-	MCFG_CPU_PROGRAM_MAP( konamigv_map)
+	MCFG_CPU_ADD( "maincpu", CXD8530BQ, XTAL_67_7376MHz )
+	MCFG_PSX_DMA_CHANNEL_READ( 5, scsi_dma_read )
+	MCFG_PSX_DMA_CHANNEL_WRITE( 5, scsi_dma_write )
+	MCFG_CPU_PROGRAM_MAP( konamigv_map )
 	MCFG_CPU_VBLANK_INT("screen", psx_vblank)
 
 	MCFG_MACHINE_START( konamigv )
@@ -697,13 +686,6 @@ static DRIVER_INIT( tokimosh )
 /*
 Dead Eye
 
-Top board:
-    PWB402610
-    Xilinx XC3020A
-    Xilinx 1718DPC
-    74F244N (2 of these)
-    LVT245SS (2 of theses)
-
 CD:
     P/N 002715
     054
@@ -896,7 +878,7 @@ GAME( 1996, pbball96, konamigv, konamigv, konamigv, konamigv, ROT0, "Konami", "P
 GAME( 1996, hyperath, konamigv, konamigv, konamigv, konamigv, ROT0, "Konami", "Hyper Athlete (GV021 Japan 1.00)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1996, susume,   konamigv, konamigv, konamigv, konamigv, ROT0, "Konami", "Susume! Taisen Puzzle-Dama (GV027 Japan 1.20)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1996, btchamp,  konamigv, btchamp,  btchamp,  btchamp,  ROT0, "Konami", "Beat the Champ (GV053 UAA01)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, kdeadeye, konamigv, kdeadeye, kdeadeye, kdeadeye, ROT0, "Konami", "Dead Eye (GV054 UA01)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, kdeadeye, konamigv, kdeadeye, kdeadeye, kdeadeye, ROT0, "Konami", "Dead Eye (GV054 UAA01)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, weddingr, konamigv, konamigv, konamigv, konamigv, ROT0, "Konami", "Wedding Rhapsody (GX624 JAA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, tokimosh, konamigv, konamigv, konamigv, tokimosh, ROT0, "Konami", "Tokimeki Memorial Oshiete Your Heart (GE755 JAA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
 GAME( 1997, tokimosp, konamigv, konamigv, konamigv, tokimosh, ROT0, "Konami", "Tokimeki Memorial Oshiete Your Heart Seal version PLUS (GE756 JAB)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )

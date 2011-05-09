@@ -135,8 +135,8 @@ out:
 class wardner_state : public twincobr_state
 {
 public:
-	wardner_state(running_machine &machine, const driver_device_config_base &config)
-		: twincobr_state(machine, config) { }
+	wardner_state(const machine_config &mconfig, device_type type, const char *tag)
+		: twincobr_state(mconfig, type,tag) { }
 
 	UINT8 *m_rambase_ae00;
 	UINT8 *m_rambase_c000;
@@ -185,7 +185,7 @@ static WRITE8_HANDLER( wardner_ramrom_bank_sw )
 	}
 }
 
-STATE_POSTLOAD( wardner_restore_bank )
+void wardner_restore_bank(running_machine &machine)
 {
 	wardner_state *state = machine.driver_data<wardner_state>();
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);

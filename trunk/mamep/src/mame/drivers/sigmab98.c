@@ -100,8 +100,8 @@ Notes:
 class sigmab98_state : public driver_device
 {
 public:
-	sigmab98_state(running_machine &machine, const driver_device_config_base &config)
-		: driver_device(machine, config) { }
+	sigmab98_state(const machine_config &mconfig, device_type type, const char *tag)
+		: driver_device(mconfig, type, tag) { }
 
 	UINT8 *m_spriteram;
 	size_t m_spriteram_size;
@@ -1619,7 +1619,7 @@ MACHINE_CONFIG_END
                              Sammy Medal Games
 ***************************************************************************/
 
-static const eeprom_interface eeprom_interface_93C46_8bit =
+static const eeprom_interface eeprom_interface_93C46_8bit_delay =
 {
 	7,				// address bits 6
 	8,				// data bits    8

@@ -64,7 +64,7 @@
     STATIC FUNCTION DECLARATIONS
 ***************************************************************************/
 
-static STATE_POSTLOAD( slapstic_postload );
+static void slapstic_postload(running_machine &machine);
 
 static TIMER_CALLBACK( scanline_interrupt_callback );
 
@@ -116,7 +116,7 @@ void atarigen_init(running_machine &machine)
 	int i;
 
 	/* allocate timers for all screens */
-	assert(machine.m_devicelist.count(SCREEN) <= ARRAY_LENGTH(state->m_screen_timer));
+	assert(machine.devicelist().count(SCREEN) <= ARRAY_LENGTH(state->m_screen_timer));
 	for (i = 0, screen = machine.first_screen(); screen != NULL; i++, screen = screen->next_screen())
 	{
 		state->m_screen_timer[i].screen = screen;
@@ -166,7 +166,7 @@ void atarigen_init(running_machine &machine)
 	state->save_item(NAME(state->m_playfield2_latch));
 
 	/* need a postload to reset the state */
-	machine.save().register_postload(slapstic_postload, NULL);
+	machine.save().register_postload(save_prepost_delegate(FUNC(slapstic_postload), &machine));
 }
 
 
@@ -445,7 +445,7 @@ INLINE void update_bank(atarigen_state *state, int bank)
 }
 
 
-static STATE_POSTLOAD( slapstic_postload )
+static void slapstic_postload(running_machine &machine)
 {
 	atarigen_state *state = machine.driver_data<atarigen_state>();
 	update_bank(state, slapstic_bank());
@@ -839,7 +839,7 @@ static TIMER_CALLBACK( delayed_6502_sound_w )
 void atarigen_set_vol(running_machine &machine, int volume, device_type type)
 {
 	device_sound_interface *sound = NULL;
-	for (bool gotone = machine.m_devicelist.first(sound); gotone; gotone = sound->next(sound))
+	for (bool gotone = machine.devicelist().first(sound); gotone; gotone = sound->next(sound))
 		if (sound->device().type() == type)
 			sound->set_output_gain(ALL_OUTPUTS, volume / 100.0);
 }

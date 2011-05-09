@@ -215,7 +215,7 @@ INLINE const gaelco_serial_interface *get_interface(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == GAELCO_SERIAL);
-	return (gaelco_serial_interface *) downcast<legacy_device_base *>(device)->baseconfig().static_config();
+	return (gaelco_serial_interface *) downcast<legacy_device_base *>(device)->static_config();
 }
 
 INLINE void shmem_lock(shmem_t *shmem)
@@ -268,7 +268,7 @@ static void process_in(gaelco_serial_state *state)
 			LOGMSG(("command receive %02x at %d (%d)\n", state->m_in_ptr->data, state->m_out_ptr->cnt, state->m_in_ptr->cnt));
 			if ((state->m_status & GAELCOSER_STATUS_IRQ_ENABLE) != 0)
 			{
-				devcb_call_write_line(&state->m_irq_func, 1);
+				state->m_irq_func(1);
 				LOGMSG(("irq!\n"));
 			}
 		}
@@ -362,7 +362,7 @@ READ8_DEVICE_HANDLER( gaelco_serial_data_r)
 	process_in(serial);
 	ret = (serial->m_in_ptr->data & 0xff);
 
-	devcb_call_write_line(&serial->m_irq_func, 0);
+	serial->m_irq_func(0);
 	LOGMSG(("read %02x at %d (%d)\n", ret, serial->m_out_ptr->cnt, serial->m_in_ptr->cnt));
 
 	/* if we are not sending, mark as as ready */
@@ -435,7 +435,7 @@ static DEVICE_START( gaelco_serial )
 	memset(state, 0, sizeof(*state));
 	state->m_device = device;
 
-	devcb_resolve_write_line(&state->m_irq_func, &intf->irq_func, device);
+	state->m_irq_func.resolve(intf->irq_func, *device);
 	state->m_sync_timer = device->machine().scheduler().timer_alloc(FUNC(link_cb), state);
 
 	/* register for save states */

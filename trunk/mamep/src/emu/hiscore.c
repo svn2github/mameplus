@@ -408,5 +408,5 @@ void hiscore_init (running_machine &machine)
 	timer = machine.scheduler().timer_alloc(FUNC(hiscore_periodic), NULL);
 	timer->adjust(machine.primary_screen->frame_period(), 0, machine.primary_screen->frame_period());
 
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, hiscore_close);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(hiscore_close), &machine));
 }

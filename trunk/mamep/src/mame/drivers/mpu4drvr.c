@@ -345,29 +345,29 @@ static WRITE_LINE_DEVICE_HANDLER( cpu1_ptm_irq )
 
 static WRITE8_DEVICE_HANDLER( vid_o1_callback )
 {
-	ptm6840_set_c2(device, 0, data); /* this output is the clock for timer2 */
+	downcast<ptm6840_device *>(device)->set_c2(data); /* this output is the clock for timer2 */
 
 	if (data)
 	{
-		device_t *acia_0 = device->machine().device("acia6850_0");
-		device_t *acia_1 = device->machine().device("acia6850_1");
-		acia6850_tx_clock_in(acia_0);
-		acia6850_rx_clock_in(acia_0);
-		acia6850_tx_clock_in(acia_1);
-		acia6850_rx_clock_in(acia_1);
+		acia6850_device *acia_0 = device->machine().device<acia6850_device>("acia6850_0");
+		acia6850_device *acia_1 = device->machine().device<acia6850_device>("acia6850_1");
+		acia_0->tx_clock_in();
+		acia_0->rx_clock_in();
+		acia_1->tx_clock_in();
+		acia_1->rx_clock_in();
 	}
 }
 
 
 static WRITE8_DEVICE_HANDLER( vid_o2_callback )
 {
-	ptm6840_set_c3(device, 0, data); /* this output is the clock for timer3 */
+	downcast<ptm6840_device *>(device)->set_c3(data); /* this output is the clock for timer3 */
 }
 
 
 static WRITE8_DEVICE_HANDLER( vid_o3_callback )
 {
-	ptm6840_set_c1(device, 0, data); /* this output is the clock for timer1 */
+	downcast<ptm6840_device *>(device)->set_c1(data); /* this output is the clock for timer1 */
 }
 
 
@@ -1969,25 +1969,25 @@ static ADDRESS_MAP_START( mpu4_68k_map, AS_PROGRAM, 16 )
 /*  AM_RANGE(0xa00004, 0xa0000f) AM_READWRITE(mpu4_vid_unmap_r, mpu4_vid_unmap_w) */
 	AM_RANGE(0xb00000, 0xb0000f) AM_READWRITE(mpu4_vid_scn2674_r, mpu4_vid_scn2674_w)
 	AM_RANGE(0xc00000, 0xc1ffff) AM_READWRITE(mpu4_vid_vidram_r, mpu4_vid_vidram_w)
-	AM_RANGE(0xff8000, 0xff8001) AM_DEVREADWRITE8("acia6850_1", acia6850_stat_r, acia6850_ctrl_w, 0xff)
-	AM_RANGE(0xff8002, 0xff8003) AM_DEVREADWRITE8("acia6850_1", acia6850_data_r, acia6850_data_w, 0xff)
-	AM_RANGE(0xff9000, 0xff900f) AM_DEVREADWRITE8("6840ptm_68k", ptm6840_read, ptm6840_write, 0xff)
+	AM_RANGE(0xff8000, 0xff8001) AM_DEVREADWRITE8_MODERN("acia6850_1", acia6850_device, status_read, control_write, 0xff)
+	AM_RANGE(0xff8002, 0xff8003) AM_DEVREADWRITE8_MODERN("acia6850_1", acia6850_device, data_read, data_write, 0xff)
+	AM_RANGE(0xff9000, 0xff900f) AM_DEVREADWRITE8_MODERN("6840ptm_68k", ptm6840_device, read, write, 0xff)
 	AM_RANGE(0xffd000, 0xffd00f) AM_READWRITE(characteriser16_r, characteriser16_w)
 ADDRESS_MAP_END
 
 /* TODO: Fix up MPU4 map*/
 static ADDRESS_MAP_START( mpu4_6809_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x0800, 0x0800) AM_DEVREADWRITE("acia6850_0", acia6850_stat_r, acia6850_ctrl_w)
-	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("acia6850_0", acia6850_data_r, acia6850_data_w)
+	AM_RANGE(0x0800, 0x0800) AM_DEVREADWRITE_MODERN("acia6850_0", acia6850_device, status_read, control_write)
+	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE_MODERN("acia6850_0", acia6850_device, data_read, data_write)
 	AM_RANGE(0x0880, 0x0881) AM_NOP //Read/write here
-	AM_RANGE(0x0900, 0x0907) AM_DEVREADWRITE("ptm_ic2", ptm6840_read, ptm6840_write)
-	AM_RANGE(0x0a00, 0x0a03) AM_DEVREADWRITE("pia_ic3", pia6821_r, pia6821_w)
-	AM_RANGE(0x0b00, 0x0b03) AM_DEVREADWRITE("pia_ic4", pia6821_r, pia6821_w)
-	AM_RANGE(0x0c00, 0x0c03) AM_DEVREADWRITE("pia_ic5", pia6821_r, pia6821_w)
-	AM_RANGE(0x0d00, 0x0d03) AM_DEVREADWRITE("pia_ic6", pia6821_r, pia6821_w)
-	AM_RANGE(0x0e00, 0x0e03) AM_DEVREADWRITE("pia_ic7", pia6821_r, pia6821_w)
-	AM_RANGE(0x0f00, 0x0f03) AM_DEVREADWRITE("pia_ic8", pia6821_r, pia6821_w)
+	AM_RANGE(0x0900, 0x0907) AM_DEVREADWRITE_MODERN("ptm_ic2", ptm6840_device, read, write)
+	AM_RANGE(0x0a00, 0x0a03) AM_DEVREADWRITE_MODERN("pia_ic3", pia6821_device, read, write)
+	AM_RANGE(0x0b00, 0x0b03) AM_DEVREADWRITE_MODERN("pia_ic4", pia6821_device, read, write)
+	AM_RANGE(0x0c00, 0x0c03) AM_DEVREADWRITE_MODERN("pia_ic5", pia6821_device, read, write)
+	AM_RANGE(0x0d00, 0x0d03) AM_DEVREADWRITE_MODERN("pia_ic6", pia6821_device, read, write)
+	AM_RANGE(0x0e00, 0x0e03) AM_DEVREADWRITE_MODERN("pia_ic7", pia6821_device, read, write)
+	AM_RANGE(0x0f00, 0x0f03) AM_DEVREADWRITE_MODERN("pia_ic8", pia6821_device, read, write)
 	AM_RANGE(0x4000, 0x7fff) AM_RAM
 	AM_RANGE(0xbe00, 0xbfff) AM_RAM
 	AM_RANGE(0xc000, 0xffff) AM_ROM	AM_REGION("maincpu",0)  /* 64k EPROM on board, only this region read */
@@ -2004,24 +2004,24 @@ static ADDRESS_MAP_START( vp_68k_map, AS_PROGRAM, 16 )
 	AM_RANGE(0xb00000, 0xb0000f) AM_READWRITE(mpu4_vid_scn2674_r, mpu4_vid_scn2674_w)
 	AM_RANGE(0xc00000, 0xc1ffff) AM_READWRITE(mpu4_vid_vidram_r, mpu4_vid_vidram_w)
 /*  AM_RANGE(0xe05000, 0xe05001) AM_READWRITE(adpcm_r, adpcm_w) */
-	AM_RANGE(0xff8000, 0xff8001) AM_DEVREADWRITE8("acia6850_1", acia6850_stat_r, acia6850_ctrl_w, 0xff)
-	AM_RANGE(0xff8002, 0xff8003) AM_DEVREADWRITE8("acia6850_1", acia6850_data_r, acia6850_data_w, 0xff)
-	AM_RANGE(0xff9000, 0xff900f) AM_DEVREADWRITE8("6840ptm_68k", ptm6840_read, ptm6840_write, 0xff)
+	AM_RANGE(0xff8000, 0xff8001) AM_DEVREADWRITE8_MODERN("acia6850_1", acia6850_device, status_read, control_write, 0xff)
+	AM_RANGE(0xff8002, 0xff8003) AM_DEVREADWRITE8_MODERN("acia6850_1", acia6850_device, data_read, data_write, 0xff)
+	AM_RANGE(0xff9000, 0xff900f) AM_DEVREADWRITE8_MODERN("6840ptm_68k", ptm6840_device, read, write, 0xff)
 /*  AM_RANGE(0xffd000, 0xffd00f) AM_READWRITE(characteriser16_r, characteriser16_w) Word-based version of old CHR??? */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( bwbvid_6809_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x0800, 0x0800) AM_DEVREADWRITE("acia6850_0", acia6850_stat_r, acia6850_ctrl_w)
-	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("acia6850_0", acia6850_data_r, acia6850_data_w)
+	AM_RANGE(0x0800, 0x0800) AM_DEVREADWRITE_MODERN("acia6850_0", acia6850_device, status_read, control_write)
+	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE_MODERN("acia6850_0", acia6850_device, data_read, data_write)
 	AM_RANGE(0x0880, 0x0881) //AM_NOP //Read/write here
-	AM_RANGE(0x0900, 0x0907) AM_DEVREADWRITE("ptm_ic2", ptm6840_read, ptm6840_write)
-	AM_RANGE(0x0a00, 0x0a03) AM_DEVREADWRITE("pia_ic3", pia6821_r, pia6821_w)
-	AM_RANGE(0x0b00, 0x0b03) AM_DEVREADWRITE("pia_ic4", pia6821_r, pia6821_w)
-	AM_RANGE(0x0c00, 0x0c03) AM_DEVREADWRITE("pia_ic5", pia6821_r, pia6821_w)
-	AM_RANGE(0x0d00, 0x0d03) AM_DEVREADWRITE("pia_ic6", pia6821_r, pia6821_w)
-	AM_RANGE(0x0e00, 0x0e03) AM_DEVREADWRITE("pia_ic7", pia6821_r, pia6821_w)
-	AM_RANGE(0x0f00, 0x0f03) AM_DEVREADWRITE("pia_ic8", pia6821_r, pia6821_w)
+	AM_RANGE(0x0900, 0x0907) AM_DEVREADWRITE_MODERN("ptm_ic2", ptm6840_device, read, write)
+	AM_RANGE(0x0a00, 0x0a03) AM_DEVREADWRITE_MODERN("pia_ic3", pia6821_device, read, write)
+	AM_RANGE(0x0b00, 0x0b03) AM_DEVREADWRITE_MODERN("pia_ic4", pia6821_device, read, write)
+	AM_RANGE(0x0c00, 0x0c03) AM_DEVREADWRITE_MODERN("pia_ic5", pia6821_device, read, write)
+	AM_RANGE(0x0d00, 0x0d03) AM_DEVREADWRITE_MODERN("pia_ic6", pia6821_device, read, write)
+	AM_RANGE(0x0e00, 0x0e03) AM_DEVREADWRITE_MODERN("pia_ic7", pia6821_device, read, write)
+	AM_RANGE(0x0f00, 0x0f03) AM_DEVREADWRITE_MODERN("pia_ic8", pia6821_device, read, write)
 	AM_RANGE(0x4000, 0x7fff) AM_RAM
 	AM_RANGE(0xbe00, 0xbfff) AM_RAM
 	AM_RANGE(0xc000, 0xffff) AM_ROM	AM_REGION("maincpu",0)  /* 64k EPROM on board, only this region read */
@@ -2038,9 +2038,9 @@ static ADDRESS_MAP_START( bwbvid_68k_map, AS_PROGRAM, 16 )
 /*  AM_RANGE(0xa00004, 0xa0000f) AM_READWRITE(mpu4_vid_unmap_r, mpu4_vid_unmap_w) */
 	AM_RANGE(0xb00000, 0xb0000f) AM_READWRITE(mpu4_vid_scn2674_r, mpu4_vid_scn2674_w)
 	AM_RANGE(0xc00000, 0xc1ffff) AM_READWRITE(mpu4_vid_vidram_r, mpu4_vid_vidram_w)
-	AM_RANGE(0xe00000, 0xe00001) AM_DEVREADWRITE8("acia6850_1", acia6850_stat_r, acia6850_ctrl_w, 0xff)
-	AM_RANGE(0xe00002, 0xe00003) AM_DEVREADWRITE8("acia6850_1", acia6850_data_r, acia6850_data_w, 0xff)
-	AM_RANGE(0xe01000, 0xe0100f) AM_DEVREADWRITE8("6840ptm_68k", ptm6840_read, ptm6840_write, 0xff)
+	AM_RANGE(0xe00000, 0xe00001) AM_DEVREADWRITE8_MODERN("acia6850_1", acia6850_device, status_read, control_write, 0xff)
+	AM_RANGE(0xe00002, 0xe00003) AM_DEVREADWRITE8_MODERN("acia6850_1", acia6850_device, data_read, data_write, 0xff)
+	AM_RANGE(0xe01000, 0xe0100f) AM_DEVREADWRITE8_MODERN("6840ptm_68k", ptm6840_device, read, write, 0xff)
 	//AM_RANGE(0xa00004, 0xa0000f) AM_READWRITE(bwb_characteriser16_r, bwb_characteriser16_w)//AM_READWRITE(adpcm_r, adpcm_w)  CHR ?
 ADDRESS_MAP_END
 
@@ -2055,11 +2055,11 @@ static ADDRESS_MAP_START( bwbvid5_68k_map, AS_PROGRAM, 16 )
 /*  AM_RANGE(0xa00004, 0xa0000f) AM_READWRITE(mpu4_vid_unmap_r, mpu4_vid_unmap_w) */
 	AM_RANGE(0xb00000, 0xb0000f) AM_READWRITE(mpu4_vid_scn2674_r, mpu4_vid_scn2674_w)
 	AM_RANGE(0xc00000, 0xc1ffff) AM_READWRITE(mpu4_vid_vidram_r, mpu4_vid_vidram_w)
-	AM_RANGE(0xe00000, 0xe00001) AM_DEVREADWRITE8("acia6850_1", acia6850_stat_r, acia6850_ctrl_w, 0xff)
-	AM_RANGE(0xe00002, 0xe00003) AM_DEVREADWRITE8("acia6850_1", acia6850_data_r, acia6850_data_w, 0xff)
-	AM_RANGE(0xe01000, 0xe0100f) AM_DEVREADWRITE8("6840ptm_68k", ptm6840_read, ptm6840_write, 0xff)
-	AM_RANGE(0xe02000, 0xe02007) AM_DEVREADWRITE8("pia_ic4ss", pia6821_r, pia6821_w, 0xff)
-	AM_RANGE(0xe03000, 0xe0300f) AM_DEVREADWRITE8("6840ptm_ic3ss", ptm6840_read, ptm6840_write, 0xff)
+	AM_RANGE(0xe00000, 0xe00001) AM_DEVREADWRITE8_MODERN("acia6850_1", acia6850_device, status_read, control_write, 0xff)
+	AM_RANGE(0xe00002, 0xe00003) AM_DEVREADWRITE8_MODERN("acia6850_1", acia6850_device, data_read, data_write, 0xff)
+	AM_RANGE(0xe01000, 0xe0100f) AM_DEVREADWRITE8_MODERN("6840ptm_68k", ptm6840_device, read, write, 0xff)
+	AM_RANGE(0xe02000, 0xe02007) AM_DEVREADWRITE8_MODERN("pia_ic4ss", pia6821_device, read, write, 0xff)
+	AM_RANGE(0xe03000, 0xe0300f) AM_DEVREADWRITE8_MODERN("6840ptm_ic3ss", ptm6840_device, read, write, 0xff)
 	AM_RANGE(0xe04000, 0xe0400f) AM_READWRITE(bwb_characteriser16_r, bwb_characteriser16_w)//AM_READWRITE(adpcm_r, adpcm_w)  CHR ?
 ADDRESS_MAP_END
 
@@ -2202,14 +2202,14 @@ static ADDRESS_MAP_START( dealem_memmap, AS_PROGRAM, 8 )
 
 /*  AM_RANGE(0x08e0, 0x08e7) AM_READWRITE(68681_duart_r,68681_duart_w) */ //Runs hoppers
 
-	AM_RANGE(0x0900, 0x0907) AM_DEVREADWRITE("ptm_ic2", ptm6840_read, ptm6840_write)/* PTM6840 IC2 */
+	AM_RANGE(0x0900, 0x0907) AM_DEVREADWRITE_MODERN("ptm_ic2", ptm6840_device, read, write)/* PTM6840 IC2 */
 
-	AM_RANGE(0x0a00, 0x0a03) AM_DEVREADWRITE("pia_ic3", pia6821_r, pia6821_w)		/* PIA6821 IC3 */
-	AM_RANGE(0x0b00, 0x0b03) AM_DEVREADWRITE("pia_ic4", pia6821_r, pia6821_w)		/* PIA6821 IC4 */
-	AM_RANGE(0x0c00, 0x0c03) AM_DEVREADWRITE("pia_ic5", pia6821_r, pia6821_w)		/* PIA6821 IC5 */
-	AM_RANGE(0x0d00, 0x0d03) AM_DEVREADWRITE("pia_ic6", pia6821_r, pia6821_w)		/* PIA6821 IC6 */
-	AM_RANGE(0x0e00, 0x0e03) AM_DEVREADWRITE("pia_ic7", pia6821_r, pia6821_w)		/* PIA6821 IC7 */
-	AM_RANGE(0x0f00, 0x0f03) AM_DEVREADWRITE("pia_ic8", pia6821_r, pia6821_w)		/* PIA6821 IC8 */
+	AM_RANGE(0x0a00, 0x0a03) AM_DEVREADWRITE_MODERN("pia_ic3", pia6821_device, read, write)		/* PIA6821 IC3 */
+	AM_RANGE(0x0b00, 0x0b03) AM_DEVREADWRITE_MODERN("pia_ic4", pia6821_device, read, write)		/* PIA6821 IC4 */
+	AM_RANGE(0x0c00, 0x0c03) AM_DEVREADWRITE_MODERN("pia_ic5", pia6821_device, read, write)		/* PIA6821 IC5 */
+	AM_RANGE(0x0d00, 0x0d03) AM_DEVREADWRITE_MODERN("pia_ic6", pia6821_device, read, write)		/* PIA6821 IC6 */
+	AM_RANGE(0x0e00, 0x0e03) AM_DEVREADWRITE_MODERN("pia_ic7", pia6821_device, read, write)		/* PIA6821 IC7 */
+	AM_RANGE(0x0f00, 0x0f03) AM_DEVREADWRITE_MODERN("pia_ic8", pia6821_device, read, write)		/* PIA6821 IC8 */
 
 	AM_RANGE(0x1000, 0x2fff) AM_RAM AM_BASE_MEMBER(mpu4_state, m_dealem_videoram)
 	AM_RANGE(0x8000, 0xffff) AM_ROM	AM_WRITENOP/* 64k  paged ROM (4 pages) */
@@ -2807,30 +2807,41 @@ static const mpu4_chr_table prizeinv_data[8] = {
 static DRIVER_INIT (adders)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_current_chr_table = adders_data;
 }
 
 static DRIVER_INIT (crmaze)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_current_chr_table = crmaze_data;
 }
 
 static DRIVER_INIT (crmazea)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_current_chr_table = crmazea_data;
 }
 
 static DRIVER_INIT (crmaze2)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_current_chr_table = crmaze2_data;
+}
+
+static DRIVER_INIT (crmaze2a)
+{
+	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 }
 
 static DRIVER_INIT (crmaze3)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_reel_mux = FLUTTERBOX;
 	state->m_current_chr_table = crmaze3_data;
 }
@@ -2838,6 +2849,7 @@ static DRIVER_INIT (crmaze3)
 static DRIVER_INIT (crmaze3a)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_reel_mux = FLUTTERBOX;
 	state->m_current_chr_table = crmaze3a_data;
 }
@@ -2853,6 +2865,7 @@ static DRIVER_INIT (mating)
 
 	/* There is also an OKIM6376 present on the program card */
 	space->install_legacy_readwrite_handler(*device, 0xffa040, 0xffa0ff, FUNC(oki_r), FUNC(oki_w) );
+	state->m_reels = 0;//currently no hybrid games
 
 	state->m_current_chr_table = mating_data;
 }
@@ -2860,42 +2873,49 @@ static DRIVER_INIT (mating)
 static DRIVER_INIT (skiltrek)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_current_chr_table = skiltrek_data;
 }
 
 static DRIVER_INIT (timemchn)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_current_chr_table = timemchn_data;
 }
 
 static DRIVER_INIT (strikeit)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_current_chr_table = strikeit_data;
 }
 
 static DRIVER_INIT (turnover)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_current_chr_table = turnover_data;
 }
 
 static DRIVER_INIT (eyesdown)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_current_chr_table = eyesdown_data;
 }
 
 static DRIVER_INIT (quidgrid)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_current_chr_table = quidgrid_data;
 }
 
 static DRIVER_INIT (prizeinv)
 {
 	mpu4_state *state = machine.driver_data<mpu4_state>();
+	state->m_reels = 0;//currently no hybrid games
 	state->m_current_chr_table = prizeinv_data;
 }
 
@@ -3467,7 +3487,7 @@ GAME( 1993,  crmazea,   crmaze,   crmaze,   crmaze,   crmazea,  ROT0, "Barcrest"
 
 GAME( 1993,  crmaze2,   bctvidbs, crmaze,   crmaze,   crmaze2,  ROT0, "Barcrest",		"The New Crystal Maze Featuring Ocean Zone (v2.2)",					GAME_NOT_WORKING )//SWP 1.0
 GAME( 1993,  crmaze2d,  crmaze2,  crmaze,   crmaze,   crmaze2,  ROT0, "Barcrest",		"The New Crystal Maze Featuring Ocean Zone (v2.2, Datapak)",				GAME_NOT_WORKING )//SWP 1.0D
-GAME( 1993,  crmaze2a,  crmaze2,  crmaze,   crmaze,   0,        ROT0, "Barcrest",		"The New Crystal Maze Featuring Ocean Zone (v0.1, AMLD)",			GAME_NOT_WORKING )//SWP 1.0 /* unprotected? bootleg? */
+GAME( 1993,  crmaze2a,  crmaze2,  crmaze,   crmaze,   crmaze2a, ROT0, "Barcrest",		"The New Crystal Maze Featuring Ocean Zone (v0.1, AMLD)",			GAME_NOT_WORKING )//SWP 1.0 /* unprotected? bootleg? */
 
 GAME( 1994,  crmaze3,   bctvidbs, crmaze,   crmaze,   crmaze3,  ROT0, "Barcrest",		"The Crystal Maze Team Challenge (v0.9)",							GAME_NOT_WORKING )//SWP 0.7
 GAME( 1994,  crmaze3d,  crmaze3,  crmaze,   crmaze,   crmaze3,  ROT0, "Barcrest",		"The Crystal Maze Team Challenge (v0.9, Datapak)",					GAME_NOT_WORKING )//SWP 0.7D

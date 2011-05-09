@@ -84,7 +84,6 @@ enum read_or_write
 
 // referenced types from other classes
 class device_memory_interface;
-class device_config;
 class device_t;
 struct game_driver;
 
@@ -103,7 +102,7 @@ class address_table_write;
 typedef UINT32	offs_t;
 
 // address map constructors are functions that build up an address_map
-typedef void (*address_map_constructor)(address_map &map, const device_config &devconfig);
+typedef void (*address_map_constructor)(address_map &map, const device_t &devconfig);
 
 
 // legacy space read/write handlers
@@ -292,7 +291,7 @@ public:
 // ======================> address_space
 
 // address_space holds live information about an address space
-class address_space : public bindable_object
+class address_space
 {
 	friend class address_table;
 	friend class address_table_read;
@@ -304,7 +303,7 @@ class address_space : public bindable_object
 protected:
 	// construction/destruction
 	address_space(device_memory_interface &memory, address_spacenum spacenum, bool large);
-	~address_space();
+	virtual ~address_space();
 
 public:
 	// public allocator

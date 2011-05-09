@@ -195,9 +195,9 @@ void set_disk_handle(running_machine &machine, const char *region, emu_file &fil
 const rom_source *rom_first_source(const machine_config &config)
 {
 	/* look through devices */
-	for (const device_config *devconfig = config.m_devicelist.first(); devconfig != NULL; devconfig = devconfig->next())
-		if (devconfig->rom_region() != NULL)
-			return devconfig;
+	for (const device_t *device = config.devicelist().first(); device != NULL; device = device->next())
+		if (device->rom_region() != NULL)
+			return device;
 
 	return NULL;
 }
@@ -211,9 +211,9 @@ const rom_source *rom_first_source(const machine_config &config)
 const rom_source *rom_next_source(const rom_source &previous)
 {
 	/* look for further devices with ROM definitions */
-	for (const device_config *devconfig = previous.next(); devconfig != NULL; devconfig = devconfig->next())
-		if (devconfig->rom_region() != NULL)
-			return (rom_source *)devconfig;
+	for (const device_t *device = previous.next(); device != NULL; device = device->next())
+		if (device->rom_region() != NULL)
+			return (rom_source *)device;
 
 	return NULL;
 }
@@ -1541,7 +1541,7 @@ void rom_init(running_machine &machine)
 	machine.romload_data = romdata = auto_alloc_clear(machine, romload_private);
 
 	/* make sure we get called back on the way out */
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, rom_exit);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(rom_exit), &machine));
 
 	/* reset the romdata struct */
 	romdata->m_machine = &machine;

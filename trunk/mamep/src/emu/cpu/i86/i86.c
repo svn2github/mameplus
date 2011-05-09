@@ -220,12 +220,12 @@ static CPU_INIT( i80186 )
 	CPU_INIT_CALL(i8086);
 
 	/* resolve callbacks */
-	i80186_interface *intf = (i80186_interface *) device->baseconfig().static_config();
+	i80186_interface *intf = (i80186_interface *) device->static_config();
 
 	if (intf != NULL)
 	{
-		devcb_resolve_write_line(&cpustate->out_tmrout0_func, &intf->out_tmrout0_func, device);
-		devcb_resolve_write_line(&cpustate->out_tmrout1_func, &intf->out_tmrout1_func, device);
+		cpustate->out_tmrout0_func.resolve(intf->out_tmrout0_func, *device);
+		cpustate->out_tmrout1_func.resolve(intf->out_tmrout1_func, *device);
 	}
 }
 

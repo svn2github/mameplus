@@ -135,8 +135,8 @@ video_manager::video_manager(running_machine &machine)
 	  m_movie_frame(0)
 {
 	// request a callback upon exiting
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, exit_static);
-	machine.save().register_postload(state_postload_stub<video_manager, &video_manager::postload>, this);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(video_manager::exit), this));
+	machine.save().register_postload(save_prepost_delegate(FUNC(video_manager::postload), this));
 
 	// extract initial execution state from global configuration settings
 	update_refresh_speed();
@@ -180,7 +180,7 @@ video_manager::video_manager(running_machine &machine)
 	// if no screens, create a periodic timer to drive updates
 	if (machine.primary_screen == NULL)
 	{
-		m_screenless_frame_timer = machine.scheduler().timer_alloc(FUNC(screenless_update_callback), this);
+		m_screenless_frame_timer = machine.scheduler().timer_alloc(timer_expired_delegate(FUNC(video_manager::screenless_update_callback), this));
 		m_screenless_frame_timer->adjust(screen_device::DEFAULT_FRAME_PERIOD, 0, screen_device::DEFAULT_FRAME_PERIOD);
 	}
 }
@@ -539,11 +539,6 @@ void video_manager::add_sound_to_recording(const INT16 *sound, int numsamples)
 //  video_exit - close down the video system
 //-------------------------------------------------
 
-void video_manager::exit_static(running_machine &machine)
-{
-	machine.video().exit();
-}
-
 void video_manager::exit()
 {
 #if 0 //mamep: remove this code to avert crash at exit
@@ -579,10 +574,10 @@ void video_manager::exit()
 //  when there are no screens to drive it
 //-------------------------------------------------
 
-TIMER_CALLBACK( video_manager::screenless_update_callback )
+void video_manager::screenless_update_callback(void *ptr, int param)
 {
 	// force an update
-	reinterpret_cast<video_manager *>(ptr)->frame_update(false);
+	frame_update(false);
 }
 
 
@@ -1075,7 +1070,7 @@ void video_manager::create_snapshot_bitmap(device_t *screen)
 	// select the appropriate view in our dummy target
 	if (m_snap_native && screen != NULL)
 	{
-		int view_index = machine().m_devicelist.indexof(SCREEN, screen->tag());
+		int view_index = machine().devicelist().indexof(SCREEN, screen->tag());
 		assert(view_index != -1);
 		m_snap_target->set_view(view_index);
 	}
@@ -1163,10 +1158,10 @@ file_error video_manager::open_next(emu_file &file, const char *extension)
 
 			// verify that there is such a device for this system
 			device_image_interface *image = NULL;
-			for (bool gotone = machine().m_devicelist.first(image); gotone; gotone = image->next(image))
+			for (bool gotone = machine().devicelist().first(image); gotone; gotone = image->next(image))
 			{
 				// get the device name
-				astring tempdevname(image->image_config().brief_instance_name());
+				astring tempdevname(image->brief_instance_name());
 				//printf("check device: %s\n", tempdevname.cstr());
 
 				if (snapdevname.cmp(tempdevname) == 0)

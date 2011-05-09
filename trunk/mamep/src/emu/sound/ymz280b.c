@@ -196,16 +196,15 @@ INLINE void update_volumes(struct YMZ280BVoice *voice)
 }
 
 
-static STATE_POSTLOAD( YMZ280B_state_save_update_step )
+static void YMZ280B_state_save_update_step(ymz280b_state *chip)
 {
-	ymz280b_state *chip = (ymz280b_state *)param;
 	int j;
 	for (j = 0; j < 8; j++)
 	{
 		struct YMZ280BVoice *voice = &chip->voice[j];
 		update_step(chip, voice);
 		if(voice->irq_schedule)
-			machine.scheduler().timer_set(attotime::zero, update_irq_state_cb[j].func, update_irq_state_cb[j].name, 0, chip);
+			chip->device->machine().scheduler().timer_set(attotime::zero, update_irq_state_cb[j].func, update_irq_state_cb[j].name, 0, chip);
 	}
 }
 
@@ -635,12 +634,12 @@ static STREAM_UPDATE( ymz280b_update )
 static DEVICE_START( ymz280b )
 {
 	static const ymz280b_interface defintrf = { 0 };
-	const ymz280b_interface *intf = (device->baseconfig().static_config() != NULL) ? (const ymz280b_interface *)device->baseconfig().static_config() : &defintrf;
+	const ymz280b_interface *intf = (device->static_config() != NULL) ? (const ymz280b_interface *)device->static_config() : &defintrf;
 	ymz280b_state *chip = get_safe_token(device);
 
 	chip->device = device;
-	devcb_resolve_read8(&chip->ext_ram_read, &intf->ext_read, device);
-	devcb_resolve_write8(&chip->ext_ram_write, &intf->ext_write, device);
+	chip->ext_ram_read.resolve(intf->ext_read, *device);
+	chip->ext_ram_write.resolve(intf->ext_write, *device);
 
 	/* compute ADPCM tables */
 	compute_tables();
@@ -694,7 +693,7 @@ static DEVICE_START( ymz280b )
 		}
 	}
 
-	device->machine().save().register_postload(YMZ280B_state_save_update_step, chip);
+	device->machine().save().register_postload(save_prepost_delegate(FUNC(YMZ280B_state_save_update_step), chip));
 
 #if MAKE_WAVS
 	chip->wavresample = wav_open("resamp.wav", INTERNAL_SAMPLE_RATE, 2);
@@ -840,8 +839,8 @@ static void write_to_register(ymz280b_state *chip, int data)
 				break;
 
 			case 0x87:		/* RAM write */
-				if (chip->ext_ram_write.write)
-					devcb_call_write8(&chip->ext_ram_write, chip->rom_readback_addr, data);
+				if (!chip->ext_ram_write.isnull())
+					chip->ext_ram_write(chip->rom_readback_addr, data);
 				else
 					logerror("YMZ280B attempted RAM write to %X\n", chip->rom_readback_addr);
 				break;
@@ -926,7 +925,7 @@ READ8_DEVICE_HANDLER( ymz280b_r )
 	ymz280b_state *chip = get_safe_token(device);
 
 	if ((offset & 1) == 0)
-		return devcb_call_read8(&chip->ext_ram_read, chip->rom_readback_addr++ - 1);
+		return chip->ext_ram_read(chip->rom_readback_addr++ - 1);
 	else
 		return compute_status(chip);
 }

@@ -49,8 +49,8 @@ struct i8279_state
 class maygay1b_state : public driver_device
 {
 public:
-	maygay1b_state(running_machine &machine, const driver_device_config_base &config)
-		: driver_device(machine, config) { }
+	maygay1b_state(const machine_config &mconfig, device_type type, const char *tag)
+		: driver_device(mconfig, type, tag) { }
 
 	UINT8 m_lamppos;
 	int m_alpha_clock;
@@ -775,8 +775,8 @@ static ADDRESS_MAP_START( m1_memmap, AS_PROGRAM, 8 )
 	AM_RANGE(0x2090, 0x2091) AM_DEVWRITE("aysnd", ay8910_address_data_w)
 	AM_RANGE(0x20B0, 0x20B0) AM_DEVREAD("aysnd", ay8910_r)
 
-	AM_RANGE(0x20A0, 0x20A3) AM_DEVWRITE("pia", pia6821_w)
-	AM_RANGE(0x20A0, 0x20A3) AM_DEVREAD("pia", pia6821_r)
+	AM_RANGE(0x20A0, 0x20A3) AM_DEVWRITE_MODERN("pia", pia6821_device, write)
+	AM_RANGE(0x20A0, 0x20A3) AM_DEVREAD_MODERN("pia", pia6821_device, read)
 
 	AM_RANGE(0x20C0, 0x20C7) AM_WRITE(m1_latch_w)
 

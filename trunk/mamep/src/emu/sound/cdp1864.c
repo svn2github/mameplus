@@ -47,73 +47,7 @@ static const int CDP1864_BACKGROUND_COLOR_SEQUENCE[] = { 2, 0, 1, 4 };
 //**************************************************************************
 
 // devices
-const device_type CDP1864 = cdp1864_device_config::static_alloc_device_config;
-
-
-
-//**************************************************************************
-//  DEVICE CONFIGURATION
-//**************************************************************************
-
-
-//-------------------------------------------------
-//  cdp1864_device_config - constructor
-//-------------------------------------------------
-
-cdp1864_device_config::cdp1864_device_config(const machine_config &mconfig, const char *tag, const device_config *owner, UINT32 clock)
-	: device_config(mconfig, static_alloc_device_config, "CDP1864", tag, owner, clock),
-	  device_config_sound_interface(mconfig, *this)
-{
-}
-
-
-//-------------------------------------------------
-//  static_alloc_device_config - allocate a new
-//  configuration object
-//-------------------------------------------------
-
-device_config *cdp1864_device_config::static_alloc_device_config(const machine_config &mconfig, const char *tag, const device_config *owner, UINT32 clock)
-{
-	return global_alloc(cdp1864_device_config(mconfig, tag, owner, clock));
-}
-
-
-//-------------------------------------------------
-//  alloc_device - allocate a new device object
-//-------------------------------------------------
-
-device_t *cdp1864_device_config::alloc_device(running_machine &machine) const
-{
-	return auto_alloc(machine, cdp1864_device(machine, *this));
-}
-
-
-//-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void cdp1864_device_config::device_config_complete()
-{
-	// inherit a copy of the static data
-	const cdp1864_interface *intf = reinterpret_cast<const cdp1864_interface *>(static_config());
-	if (intf != NULL)
-		*static_cast<cdp1864_interface *>(this) = *intf;
-
-	// or initialize to defaults if none provided
-	else
-	{
-		memset(&m_in_inlace_func, 0, sizeof(m_in_inlace_func));
-		memset(&m_in_rdata_func, 0, sizeof(m_in_rdata_func));
-		memset(&m_in_bdata_func, 0, sizeof(m_in_bdata_func));
-		memset(&m_in_gdata_func, 0, sizeof(m_in_gdata_func));
-		memset(&m_out_int_func, 0, sizeof(m_out_int_func));
-		memset(&m_out_dmao_func, 0, sizeof(m_out_dmao_func));
-		memset(&m_out_efx_func, 0, sizeof(m_out_efx_func));
-		memset(&m_out_hsync_func, 0, sizeof(m_out_hsync_func));
-	}
-}
+const device_type CDP1864 = &device_creator<cdp1864_device>;
 
 
 
@@ -127,12 +61,12 @@ void cdp1864_device_config::device_config_complete()
 
 inline void cdp1864_device::initialize_palette()
 {
-	double res_total = m_config.m_res_r + m_config.m_res_g + m_config.m_res_b + m_config.m_res_bkg;
+	double res_total = m_res_r + m_res_g + m_res_b + m_res_bkg;
 
-	int weight_r = (m_config.m_res_r / res_total) * 100;
-	int weight_g = (m_config.m_res_g / res_total) * 100;
-	int weight_b = (m_config.m_res_b / res_total) * 100;
-	int weight_bkg = (m_config.m_res_bkg / res_total) * 100;
+	int weight_r = (m_res_r / res_total) * 100;
+	int weight_g = (m_res_g / res_total) * 100;
+	int weight_b = (m_res_b / res_total) * 100;
+	int weight_bkg = (m_res_bkg / res_total) * 100;
 
 	for (int i = 0; i < 16; i++)
 	{
@@ -163,17 +97,44 @@ inline void cdp1864_device::initialize_palette()
 //  cdp1864_device - constructor
 //-------------------------------------------------
 
-cdp1864_device::cdp1864_device(running_machine &_machine, const cdp1864_device_config &config)
-    : device_t(_machine, config),
-	  device_sound_interface(_machine, config, *this),
+cdp1864_device::cdp1864_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, CDP1864, "CDP1864", tag, owner, clock),
+	  device_sound_interface(mconfig, *this),
 	  m_disp(0),
 	  m_dmaout(0),
 	  m_bgcolor(0),
 	  m_con(0),
 	  m_aoe(0),
-	  m_latch(CDP1864_DEFAULT_LATCH),
-      m_config(config)
+	  m_latch(CDP1864_DEFAULT_LATCH)
 {
+}
+
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void cdp1864_device::device_config_complete()
+{
+	// inherit a copy of the static data
+	const cdp1864_interface *intf = reinterpret_cast<const cdp1864_interface *>(static_config());
+	if (intf != NULL)
+		*static_cast<cdp1864_interface *>(this) = *intf;
+
+	// or initialize to defaults if none provided
+	else
+	{
+		memset(&m_in_inlace_cb, 0, sizeof(m_in_inlace_cb));
+		memset(&m_in_rdata_cb, 0, sizeof(m_in_rdata_cb));
+		memset(&m_in_bdata_cb, 0, sizeof(m_in_bdata_cb));
+		memset(&m_in_gdata_cb, 0, sizeof(m_in_gdata_cb));
+		memset(&m_out_int_cb, 0, sizeof(m_out_int_cb));
+		memset(&m_out_dmao_cb, 0, sizeof(m_out_dmao_cb));
+		memset(&m_out_efx_cb, 0, sizeof(m_out_efx_cb));
+		memset(&m_out_hsync_cb, 0, sizeof(m_out_hsync_cb));
+	}
 }
 
 
@@ -184,14 +145,14 @@ cdp1864_device::cdp1864_device(running_machine &_machine, const cdp1864_device_c
 void cdp1864_device::device_start()
 {
 	// resolve callbacks
-	devcb_resolve_read_line(&m_in_inlace_func, &m_config.m_in_inlace_func, this);
-	devcb_resolve_read_line(&m_in_rdata_func, &m_config.m_in_rdata_func, this);
-	devcb_resolve_read_line(&m_in_bdata_func, &m_config.m_in_bdata_func, this);
-	devcb_resolve_read_line(&m_in_gdata_func, &m_config.m_in_gdata_func, this);
-	devcb_resolve_write_line(&m_out_int_func, &m_config.m_out_int_func, this);
-	devcb_resolve_write_line(&m_out_dmao_func, &m_config.m_out_dmao_func, this);
-	devcb_resolve_write_line(&m_out_efx_func, &m_config.m_out_efx_func, this);
-	devcb_resolve_write_line(&m_out_hsync_func, &m_config.m_out_hsync_func, this);
+	m_in_inlace_func.resolve(m_in_inlace_cb, *this);
+	m_in_rdata_func.resolve(m_in_rdata_cb, *this);
+	m_in_bdata_func.resolve(m_in_bdata_cb, *this);
+	m_in_gdata_func.resolve(m_in_gdata_cb, *this);
+	m_out_int_func.resolve(m_out_int_cb, *this);
+	m_out_dmao_func.resolve(m_out_dmao_cb, *this);
+	m_out_efx_func.resolve(m_out_efx_cb, *this);
+	m_out_hsync_func.resolve(m_out_hsync_cb, *this);
 
 	// initialize palette
 	initialize_palette();
@@ -206,8 +167,8 @@ void cdp1864_device::device_start()
 	m_hsync_timer = timer_alloc(TIMER_HSYNC);
 
 	// find devices
-	m_cpu = machine().device<cpu_device>(m_config.m_cpu_tag);
-	m_screen = machine().device<screen_device>(m_config.m_screen_tag);
+	m_cpu = machine().device<cpu_device>(m_cpu_tag);
+	m_screen = machine().device<screen_device>(m_screen_tag);
 	m_bitmap = auto_bitmap_alloc(machine(), m_screen->width(), m_screen->height(), m_screen->format());
 
 	// register for state saving
@@ -235,9 +196,9 @@ void cdp1864_device::device_reset()
 	m_disp = 0;
 	m_dmaout = 0;
 
-	devcb_call_write_line(&m_out_int_func, CLEAR_LINE);
-	devcb_call_write_line(&m_out_dmao_func, CLEAR_LINE);
-	devcb_call_write_line(&m_out_efx_func, CLEAR_LINE);
+	m_out_int_func(CLEAR_LINE);
+	m_out_dmao_func(CLEAR_LINE);
+	m_out_efx_func(CLEAR_LINE);
 }
 
 
@@ -256,7 +217,7 @@ void cdp1864_device::device_timer(emu_timer &timer, device_timer_id id, int para
 		{
 			if (m_disp)
 			{
-				devcb_call_write_line(&m_out_int_func, ASSERT_LINE);
+				m_out_int_func(ASSERT_LINE);
 			}
 
 			m_int_timer->adjust(m_screen->time_until_pos( CDP1864_SCANLINE_INT_END, 0));
@@ -265,7 +226,7 @@ void cdp1864_device::device_timer(emu_timer &timer, device_timer_id id, int para
 		{
 			if (m_disp)
 			{
-				devcb_call_write_line(&m_out_int_func, CLEAR_LINE);
+				m_out_int_func(CLEAR_LINE);
 			}
 
 			m_int_timer->adjust(m_screen->time_until_pos(CDP1864_SCANLINE_INT_START, 0));
@@ -276,22 +237,22 @@ void cdp1864_device::device_timer(emu_timer &timer, device_timer_id id, int para
 		switch (scanline)
 		{
 		case CDP1864_SCANLINE_EFX_TOP_START:
-			devcb_call_write_line(&m_out_efx_func, ASSERT_LINE);
+			m_out_efx_func(ASSERT_LINE);
 			m_efx_timer->adjust(m_screen->time_until_pos(CDP1864_SCANLINE_EFX_TOP_END, 0));
 			break;
 
 		case CDP1864_SCANLINE_EFX_TOP_END:
-			devcb_call_write_line(&m_out_efx_func, CLEAR_LINE);
+			m_out_efx_func(CLEAR_LINE);
 			m_efx_timer->adjust(m_screen->time_until_pos(CDP1864_SCANLINE_EFX_BOTTOM_START, 0));
 			break;
 
 		case CDP1864_SCANLINE_EFX_BOTTOM_START:
-			devcb_call_write_line(&m_out_efx_func, ASSERT_LINE);
+			m_out_efx_func(ASSERT_LINE);
 			m_efx_timer->adjust(m_screen->time_until_pos(CDP1864_SCANLINE_EFX_BOTTOM_END, 0));
 			break;
 
 		case CDP1864_SCANLINE_EFX_BOTTOM_END:
-			devcb_call_write_line(&m_out_efx_func, CLEAR_LINE);
+			m_out_efx_func(CLEAR_LINE);
 			m_efx_timer->adjust(m_screen->time_until_pos(CDP1864_SCANLINE_EFX_TOP_START, 0));
 			break;
 		}
@@ -304,7 +265,7 @@ void cdp1864_device::device_timer(emu_timer &timer, device_timer_id id, int para
 			{
 				if (scanline >= CDP1864_SCANLINE_DISPLAY_START && scanline < CDP1864_SCANLINE_DISPLAY_END)
 				{
-					devcb_call_write_line(&m_out_dmao_func, CLEAR_LINE);
+					m_out_dmao_func(CLEAR_LINE);
 				}
 			}
 
@@ -318,7 +279,7 @@ void cdp1864_device::device_timer(emu_timer &timer, device_timer_id id, int para
 			{
 				if (scanline >= CDP1864_SCANLINE_DISPLAY_START && scanline < CDP1864_SCANLINE_DISPLAY_END)
 				{
-					devcb_call_write_line(&m_out_dmao_func, ASSERT_LINE);
+					m_out_dmao_func(ASSERT_LINE);
 				}
 			}
 
@@ -401,8 +362,8 @@ READ8_MEMBER( cdp1864_device::dispoff_r )
 {
 	m_disp = 0;
 
-	devcb_call_write_line(&m_out_int_func, CLEAR_LINE);
-	devcb_call_write_line(&m_out_dmao_func, CLEAR_LINE);
+	m_out_int_func(CLEAR_LINE);
+	m_out_dmao_func(CLEAR_LINE);
 
 	return 0xff;
 }
@@ -447,9 +408,9 @@ WRITE8_MEMBER( cdp1864_device::dma_w )
 
 	if (!m_con)
 	{
-		rdata = devcb_call_read_line(&m_in_rdata_func);
-		bdata = devcb_call_read_line(&m_in_bdata_func);
-		gdata = devcb_call_read_line(&m_in_gdata_func);
+		rdata = m_in_rdata_func();
+		bdata = m_in_bdata_func();
+		gdata = m_in_gdata_func();
 	}
 
 	for (int x = 0; x < 8; x++)

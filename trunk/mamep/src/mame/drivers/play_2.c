@@ -9,8 +9,8 @@ extern const char layout_pinball[];
 class play_2_state : public driver_device
 {
 public:
-	play_2_state(running_machine &machine, const driver_device_config_base &config)
-		: driver_device(machine, config) { }
+	play_2_state(const machine_config &mconfig, device_type type, const char *tag)
+		: driver_device(mconfig, type, tag) { }
 };
 
 static ADDRESS_MAP_START( play_2_map, AS_PROGRAM, 8 )
@@ -107,7 +107,7 @@ ROM_START(evlfight)
 ROM_END
 
 /*-------------------------------------------------------------------
-/ Mad Race (1982)
+/ Mad Race (??/85?)
 /-------------------------------------------------------------------*/
 ROM_START(madrace)
 	ROM_REGION(0x10000, "maincpu", 0)
@@ -226,5 +226,5 @@ GAME(1980,	evlfight,	0,	play_2,	play_2,	play_2,	ROT0,	"Playmatic",	"Evil Fight",
 GAME(1980,	attack,		0,	play_2,	play_2,	play_2,	ROT0,	"Playmatic",	"Attack",	GAME_NOT_WORKING | GAME_NO_SOUND | GAME_MECHANICAL)
 GAME(1980,	blkfever,	0,	play_2,	play_2,	play_2,	ROT0,	"Playmatic",	"Black Fever",	GAME_NOT_WORKING | GAME_NO_SOUND | GAME_MECHANICAL)
 GAME(1982,	cerberup,	0,	play_2,	play_2,	play_2,	ROT0,	"Playmatic",	"Cerberus (Pinball)",	GAME_NOT_WORKING | GAME_NO_SOUND | GAME_MECHANICAL)
-GAME(1982,	madrace,	0,	play_2,	play_2,	play_2,	ROT0,	"Playmatic",	"Mad Race",		GAME_NOT_WORKING | GAME_NO_SOUND | GAME_MECHANICAL)
+GAME(1985,	madrace,	0,	play_2,	play_2,	play_2,	ROT0,	"Playmatic",	"Mad Race",		GAME_NOT_WORKING | GAME_NO_SOUND | GAME_MECHANICAL)
 

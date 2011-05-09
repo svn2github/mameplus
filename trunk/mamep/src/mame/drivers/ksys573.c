@@ -334,7 +334,7 @@ G: gun mania only, drives air soft gun (this game uses real BB bullet)
 
 #include "emu.h"
 #include "cdrom.h"
-#include "cpu/mips/psx.h"
+#include "cpu/psx/psx.h"
 #include "includes/psx.h"
 #include "machine/intelfsh.h"
 #include "machine/cr589.h"
@@ -383,8 +383,8 @@ G: gun mania only, drives air soft gun (this game uses real BB bullet)
 class ksys573_state : public psx_state
 {
 public:
-	ksys573_state(running_machine &machine, const driver_device_config_base &config)
-		: psx_state(machine, config) { }
+	ksys573_state(const machine_config &mconfig, device_type type, const char *tag)
+		: psx_state(mconfig, type, tag) { }
 
 	int m_flash_bank;
 	fujitsu_29f016a_device *m_flash_device[5][16];
@@ -1032,7 +1032,7 @@ static void atapi_init(running_machine &machine)
 			state->m_available_cdroms[ i ] = NULL;
 		}
 	}
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, atapi_exit);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(atapi_exit), &machine));
 
 
 	state->save_item( NAME(state->m_atapi_regs) );
@@ -1224,22 +1224,6 @@ static ADDRESS_MAP_START( konami573_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x1f620000, 0x1f623fff) AM_DEVREADWRITE8("m48t58", timekeeper_r, timekeeper_w, 0x00ff00ff)
 	AM_RANGE(0x1f680000, 0x1f68001f) AM_READWRITE(mb89371_r, mb89371_w)
 	AM_RANGE(0x1f6a0000, 0x1f6a0003) AM_READWRITE( security_r, security_w )
-	AM_RANGE(0x1f800000, 0x1f8003ff) AM_RAM /* scratchpad */
-	AM_RANGE(0x1f801000, 0x1f801007) AM_WRITENOP
-	AM_RANGE(0x1f801008, 0x1f80100b) AM_RAM /* ?? */
-	AM_RANGE(0x1f80100c, 0x1f80102f) AM_WRITENOP
-	AM_RANGE(0x1f801010, 0x1f801013) AM_READNOP
-	AM_RANGE(0x1f801014, 0x1f801017) AM_RAM
-	AM_RANGE(0x1f801040, 0x1f80105f) AM_READWRITE(psx_sio_r, psx_sio_w)
-	AM_RANGE(0x1f801060, 0x1f80106f) AM_WRITENOP
-	AM_RANGE(0x1f801070, 0x1f801077) AM_READWRITE(psx_irq_r, psx_irq_w)
-	AM_RANGE(0x1f801080, 0x1f8010ff) AM_READWRITE(psx_dma_r, psx_dma_w)
-	AM_RANGE(0x1f801100, 0x1f80112f) AM_READWRITE(psx_counter_r, psx_counter_w)
-	AM_RANGE(0x1f801810, 0x1f801817) AM_READWRITE(psx_gpu_r, psx_gpu_w)
-	AM_RANGE(0x1f801820, 0x1f801827) AM_READWRITE(psx_mdec_r, psx_mdec_w)
-	AM_RANGE(0x1f801c00, 0x1f801dff) AM_READWRITE16(spu_r, spu_w, 0xffffffff)
-	AM_RANGE(0x1f802020, 0x1f802033) AM_RAM /* ?? */
-	AM_RANGE(0x1f802040, 0x1f802043) AM_WRITENOP
 	AM_RANGE(0x1fc00000, 0x1fc7ffff) AM_ROM AM_SHARE("share2") AM_REGION("bios", 0)
 	AM_RANGE(0x80000000, 0x803fffff) AM_RAM AM_SHARE("share1") /* ram mirror */
 	AM_RANGE(0x9fc00000, 0x9fc7ffff) AM_ROM AM_SHARE("share2") /* bios mirror */
@@ -1281,8 +1265,6 @@ static DRIVER_INIT( konami573 )
 
 	psx_driver_init(machine);
 	atapi_init(machine);
-	psx_dma_install_read_handler(machine, 5, cdrom_dma_read);
-	psx_dma_install_write_handler(machine, 5, cdrom_dma_write);
 
 	state->save_item( NAME(state->m_n_security_control) );
 
@@ -2978,8 +2960,10 @@ static const adc083x_interface konami573_adc_interface = {
 
 static MACHINE_CONFIG_START( konami573, ksys573_state )
 	/* basic machine hardware */
-	MCFG_CPU_ADD( "maincpu", PSXCPU, XTAL_67_7376MHz )
-	MCFG_CPU_PROGRAM_MAP( konami573_map)
+	MCFG_CPU_ADD( "maincpu", CXD8530CQ, XTAL_67_7376MHz )
+	MCFG_PSX_DMA_CHANNEL_READ( 5, cdrom_dma_read )
+	MCFG_PSX_DMA_CHANNEL_WRITE( 5, cdrom_dma_write )
+	MCFG_CPU_PROGRAM_MAP( konami573_map )
 	MCFG_CPU_VBLANK_INT("screen", sys573_vblank)
 
 	MCFG_MACHINE_RESET( konami573 )

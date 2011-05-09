@@ -1208,11 +1208,16 @@ static CPU_INIT( m6801 )
 
 	state_register(cpustate, "m6801");
 
-	if (device->baseconfig().static_config() != NULL)
+	if (device->static_config() != NULL)
 	{
-		m6801_interface *intf = (m6801_interface *) device->baseconfig().static_config();
+		m6801_interface *intf = (m6801_interface *) device->static_config();
 
-		devcb_resolve_write_line(&cpustate->out_sc2_func, &intf->out_sc2_func, device);
+		cpustate->out_sc2_func.resolve(intf->out_sc2_func, *device);
+	}
+	else
+	{
+		devcb_write_line nullcb = DEVCB_NULL;
+		cpustate->out_sc2_func.resolve(nullcb, *device);
 	}
 }
 
@@ -1258,11 +1263,16 @@ static CPU_INIT( m6803 )
 
 	state_register(cpustate, "m6803");
 
-	if (device->baseconfig().static_config() != NULL)
+	if (device->static_config() != NULL)
 	{
-		m6801_interface *intf = (m6801_interface *) device->baseconfig().static_config();
+		m6801_interface *intf = (m6801_interface *) device->static_config();
 
-		devcb_resolve_write_line(&cpustate->out_sc2_func, &intf->out_sc2_func, device);
+		cpustate->out_sc2_func.resolve(intf->out_sc2_func, *device);
+	}
+	else
+	{
+		devcb_write_line nullcb = DEVCB_NULL;
+		cpustate->out_sc2_func.resolve(nullcb, *device);
 	}
 }
 
@@ -1379,7 +1389,7 @@ INLINE void set_os3(m6800_state *cpustate, int state)
 {
 	//logerror("M6801 '%s' OS3: %u\n", cpustate->device->tag(), state);
 
-	devcb_call_write_line(&cpustate->out_sc2_func, state);
+	cpustate->out_sc2_func(state);
 }
 
 READ8_HANDLER( m6801_io_r )

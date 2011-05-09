@@ -133,7 +133,7 @@ static void default_wdmem_id(address_space *space, offs_t offset, UINT8 data) { 
 static void m6502_common_init(legacy_cpu_device *device, device_irq_callback irqcallback, UINT8 subtype, void (*const *insn)(m6502_Regs *cpustate), const char *type)
 {
 	m6502_Regs *cpustate = get_safe_token(device);
-	const m6502_interface *intf = (const m6502_interface *)device->baseconfig().static_config();
+	const m6502_interface *intf = (const m6502_interface *)device->static_config();
 
 	cpustate->irq_callback = irqcallback;
 	cpustate->device = device;
@@ -152,8 +152,13 @@ static void m6502_common_init(legacy_cpu_device *device, device_irq_callback irq
 		if ( intf->write_indexed_func )
 			cpustate->wrmem_id = intf->write_indexed_func;
 
-		devcb_resolve_read8(&cpustate->in_port_func, &intf->in_port_func, device);
-		devcb_resolve_write8(&cpustate->out_port_func, &intf->out_port_func, device);
+		cpustate->in_port_func.resolve(intf->in_port_func, *device);
+		cpustate->out_port_func.resolve(intf->out_port_func, *device);
+	}
+	else
+	{
+		devcb_write8 nullcb = DEVCB_NULL;
+		cpustate->out_port_func.resolve(nullcb, *device);
 	}
 
 	device->save_item(NAME(cpustate->pc.w.l));
@@ -370,7 +375,7 @@ static READ8_HANDLER( m6510_read_0000 )
 			result = cpustate->ddr;
 			break;
 		case 0x0001:	/* Data Port */
-			result = devcb_call_read8(&cpustate->in_port_func, cpustate->ddr);
+			result = cpustate->in_port_func(cpustate->ddr);
 			result = (cpustate->ddr & cpustate->port) | (~cpustate->ddr & result);
 			break;
 	}
@@ -391,7 +396,7 @@ static WRITE8_HANDLER( m6510_write_0000 )
 			break;
 	}
 
-	devcb_call_write8(&cpustate->out_port_func, cpustate->ddr, cpustate->port & cpustate->ddr);
+	cpustate->out_port_func(cpustate->ddr, cpustate->port & cpustate->ddr);
 }
 
 static ADDRESS_MAP_START(m6510_mem, AS_PROGRAM, 8)

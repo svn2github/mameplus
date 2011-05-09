@@ -1402,9 +1402,9 @@ static TIMER_CALLBACK( ymf271_timer_b_tick )
 
 static UINT8 ymf271_read_ext_memory(YMF271Chip *chip, UINT32 address)
 {
-	if( chip->ext_mem_read.read )
+	if( !chip->ext_mem_read.isnull() )
 	{
-		return devcb_call_read8(&chip->ext_mem_read, address);
+		return chip->ext_mem_read(address);
 	}
 	else
 	{
@@ -1416,7 +1416,7 @@ static UINT8 ymf271_read_ext_memory(YMF271Chip *chip, UINT32 address)
 
 static void ymf271_write_ext_memory(YMF271Chip *chip, UINT32 address, UINT8 data)
 {
-	devcb_call_write8(&chip->ext_mem_write, address, data);
+	chip->ext_mem_write(address, data);
 }
 
 static void ymf271_write_timer(YMF271Chip *chip, int data)
@@ -1758,8 +1758,8 @@ static void ymf271_init(device_t *device, YMF271Chip *chip, UINT8 *rom, void (*c
 	chip->rom = rom;
 	chip->irq_callback = cb;
 
-	devcb_resolve_read8(&chip->ext_mem_read, ext_read, device);
-	devcb_resolve_write8(&chip->ext_mem_write, ext_write, device);
+	chip->ext_mem_read.resolve(*ext_read, *device);
+	chip->ext_mem_write.resolve(*ext_write, *device);
 
 	init_tables(device->machine());
 	init_state(chip, device);
@@ -1775,7 +1775,7 @@ static DEVICE_START( ymf271 )
 	chip->device = device;
 	chip->clock = device->clock();
 
-	intf = (device->baseconfig().static_config() != NULL) ? (const ymf271_interface *)device->baseconfig().static_config() : &defintrf;
+	intf = (device->static_config() != NULL) ? (const ymf271_interface *)device->static_config() : &defintrf;
 
 	ymf271_init(device, chip, *device->region(), intf->irq_callback, &intf->ext_read, &intf->ext_write);
 	chip->stream = device->machine().sound().stream_alloc(*device, 0, 2, device->clock()/384, chip, ymf271_update);

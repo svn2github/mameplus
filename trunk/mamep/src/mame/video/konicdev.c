@@ -1619,7 +1619,7 @@ INLINE const k007342_interface *k007342_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K007342));
-	return (const k007342_interface *) device->baseconfig().static_config();
+	return (const k007342_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -1903,7 +1903,7 @@ INLINE const k007420_interface *k007420_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K007420));
-	return (const k007420_interface *) device->baseconfig().static_config();
+	return (const k007420_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -2180,7 +2180,7 @@ INLINE const k052109_interface *k052109_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K052109));
-	return (const k052109_interface *) device->baseconfig().static_config();
+	return (const k052109_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -2655,9 +2655,8 @@ static TILE_GET_INFO_DEVICE( k052109_get_tile_info2 )
 }
 
 
-static STATE_POSTLOAD( k052109_tileflip_reset )
+static void k052109_tileflip_reset(k052109_state *k052109)
 {
-	k052109_state *k052109 = (k052109_state *)param;
 	int data = k052109->ram[0x1e80];
 	tilemap_set_flip(k052109->tilemap[0], (data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 	tilemap_set_flip(k052109->tilemap[1], (data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
@@ -2747,7 +2746,7 @@ static DEVICE_START( k052109 )
 	device->save_item(NAME(k052109->dx));
 	device->save_item(NAME(k052109->dy));
 	device->save_item(NAME(k052109->has_extra_video_ram));
-	device->machine().save().register_postload(k052109_tileflip_reset, k052109);
+	device->machine().save().register_postload(save_prepost_delegate(FUNC(k052109_tileflip_reset), k052109));
 }
 
 static DEVICE_RESET( k052109 )
@@ -2815,7 +2814,7 @@ INLINE const k051960_interface *k051960_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K051960));
-	return (const k051960_interface *) device->baseconfig().static_config();
+	return (const k051960_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -3357,7 +3356,7 @@ INLINE const k05324x_interface *k05324x_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K053244 || device->type() == K053245));
-	return (const k05324x_interface *) device->baseconfig().static_config();
+	return (const k05324x_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -4147,7 +4146,7 @@ INLINE const k053247_interface *k053247_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K053246 || device->type() == K053247 || device->type() == K055673));
-	return (const k053247_interface *) device->baseconfig().static_config();
+	return (const k053247_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -5138,7 +5137,7 @@ INLINE const k051316_interface *k051316_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert(device->type() == K051316);
-	return (const k051316_interface *) device->baseconfig().static_config();
+	return (const k051316_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -5426,7 +5425,7 @@ INLINE const k053936_interface *k053936_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert(device->type() == K053936);
-	return (const k053936_interface *) device->baseconfig().static_config();
+	return (const k053936_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -5734,10 +5733,8 @@ void k053251_set_tmap_dirty( device_t *device, int tmap_num, int data )
 	k053251->dirty_tmap[tmap_num] = data ? 1 : 0;
 }
 
-static STATE_POSTLOAD( k053251_reset_indexes )
+static void k053251_reset_indexes(k053251_state *k053251)
 {
-	k053251_state *k053251 = (k053251_state *)param;
-
 	k053251->palette_index[0] = 32 * ((k053251->ram[9] >> 0) & 0x03);
 	k053251->palette_index[1] = 32 * ((k053251->ram[9] >> 2) & 0x03);
 	k053251->palette_index[2] = 32 * ((k053251->ram[9] >> 4) & 0x03);
@@ -5758,7 +5755,7 @@ static DEVICE_START( k053251 )
 	device->save_item(NAME(k053251->tilemaps_set));
 	device->save_item(NAME(k053251->dirty_tmap));
 
-	device->machine().save().register_postload(k053251_reset_indexes, k053251);
+	device->machine().save().register_postload(save_prepost_delegate(FUNC(k053251_reset_indexes), k053251));
 }
 
 static DEVICE_RESET( k053251 )
@@ -5897,6 +5894,7 @@ typedef struct _k051733_state k051733_state;
 struct _k051733_state
 {
 	UINT8    ram[0x20];
+	UINT8    rng;
 };
 
 /*****************************************************************************
@@ -5956,8 +5954,6 @@ READ8_DEVICE_HANDLER( k051733_r )
 	int yobj2c = (k051733->ram[0x0c] << 8) | k051733->ram[0x0d];
 	int xobj2c = (k051733->ram[0x0e] << 8) | k051733->ram[0x0f];
 
-	//logerror("%04x: read 051733 address %02x\n", cpu_get_pc(&space->device()), offset);
-
 	switch (offset)
 	{
 		case 0x00:
@@ -5990,27 +5986,28 @@ READ8_DEVICE_HANDLER( k051733_r )
 			return k051733_int_sqrt(op3 << 16) & 0xff;
 
 		case 0x06:
-			return k051733->ram[0x13];
+			k051733->rng += k051733->ram[0x13];
+			return k051733->rng; //RNG read, used by Chequered Flag for differentiate cars, implementation is a raw guess
 
-		case 0x07:{
+		case 0x07:{ /* note: Chequered Flag definitely wants all these bits to be enabled */
 			if (xobj1c + rad < xobj2c)
-				return 0x80;
+				return 0xff;
 
 			if (xobj2c + rad < xobj1c)
-				return 0x80;
+				return 0xff;
 
 			if (yobj1c + rad < yobj2c)
-				return 0x80;
+				return 0xff;
 
 			if (yobj2c + rad < yobj1c)
-				return 0x80;
+				return 0xff;
 
 			return 0;
 		}
-		case 0x0e:
-			return ~k051733->ram[offset];
+		case 0x0e: /* best guess */
+			return (xobj2c - xobj1c) >> 8;
 		case 0x0f:
-			return ~k051733->ram[offset];
+			return (xobj2c - xobj1c) & 0xff;
 		default:
 			return k051733->ram[offset];
 	}
@@ -6025,6 +6022,7 @@ static DEVICE_START( k051733 )
 	k051733_state *k051733 = k051733_get_safe_token(device);
 
 	device->save_item(NAME(k051733->ram));
+	device->save_item(NAME(k051733->rng));
 }
 
 static DEVICE_RESET( k051733 )
@@ -6034,6 +6032,8 @@ static DEVICE_RESET( k051733 )
 
 	for (i = 0; i < 0x20; i++)
 		k051733->ram[i] = 0;
+
+	k051733->rng = 0;
 }
 
 
@@ -6119,7 +6119,7 @@ INLINE const k056832_interface *k056832_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert(device->type() == K056832);
-	return (const k056832_interface *) device->baseconfig().static_config();
+	return (const k056832_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -7744,10 +7744,8 @@ int k056832_read_register( device_t *device, int regnum )
 	return(k056832->regs[regnum]);
 }
 
-static STATE_POSTLOAD( k056832_postload )
+static void k056832_postload(k056832_state *k056832)
 {
-	k056832_state *k056832 = (k056832_state *)param;
-
 	k056832_update_page_layout(k056832);
 	k056832_change_rambank(k056832);
 	k056832_change_rombank(k056832);
@@ -8004,7 +8002,7 @@ static DEVICE_START( k056832 )
 		device->save_item(NAME(k056832->last_colorbase[i]), i);
 	}
 
-	device->machine().save().register_postload(k056832_postload, k056832);
+	device->machine().save().register_postload(save_prepost_delegate(FUNC(k056832_postload), k056832));
 }
 
 /***************************************************************************/
@@ -8165,7 +8163,7 @@ INLINE const k054338_interface *k054338_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert(device->type() == K054338);
-	return (const k054338_interface *) device->baseconfig().static_config();
+	return (const k054338_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -8468,7 +8466,7 @@ INLINE const k053250_interface *k053250_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K053250));
-	return (const k053250_interface *) device->baseconfig().static_config();
+	return (const k053250_interface *) device->static_config();
 }
 
 
@@ -9097,7 +9095,7 @@ INLINE const k001006_interface *k001006_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K001006));
-	return (const k001006_interface *) device->baseconfig().static_config();
+	return (const k001006_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -9307,7 +9305,7 @@ INLINE const k001005_interface *k001005_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K001005));
-	return (const k001005_interface *) device->baseconfig().static_config();
+	return (const k001005_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -10199,7 +10197,7 @@ INLINE const k001604_interface *k001604_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K001604));
-	return (const k001604_interface *) device->baseconfig().static_config();
+	return (const k001604_interface *) device->static_config();
 }
 
 /*****************************************************************************
@@ -10612,7 +10610,7 @@ INLINE const k037122_interface *k037122_get_interface( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K037122));
-	return (const k037122_interface *) device->baseconfig().static_config();
+	return (const k037122_interface *) device->static_config();
 }
 
 /*****************************************************************************

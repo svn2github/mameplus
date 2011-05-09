@@ -417,7 +417,7 @@ private:
 // ======================> handler_entry
 
 // a handler entry contains information about a memory handler
-class handler_entry : public bindable_object
+class handler_entry
 {
 	DISABLE_COPYING(handler_entry);
 
@@ -669,7 +669,7 @@ private:
 // ======================> address_table
 
 // address_table contains information about read/write accesses within an address space
-class address_table : public bindable_object
+class address_table
 {
 	// address map lookup table definitions
 	static const int LEVEL1_BITS	= 18;						// number of address bits in the level 1 table
@@ -684,7 +684,7 @@ class address_table : public bindable_object
 public:
 	// construction/destruction
 	address_table(address_space &space, bool large);
-	~address_table();
+	virtual ~address_table();
 
 	// getters
 	virtual handler_entry &handler(UINT32 index) const = 0;
@@ -777,7 +777,7 @@ class address_table_read : public address_table
 public:
 	// construction/destruction
 	address_table_read(address_space &space, bool large);
-	~address_table_read();
+	virtual ~address_table_read();
 
 	// getters
 	virtual handler_entry &handler(UINT32 index) const;
@@ -833,7 +833,7 @@ class address_table_write : public address_table
 public:
 	// construction/destruction
 	address_table_write(address_space &space, bool large);
-	~address_table_write();
+	virtual ~address_table_write();
 
 	// getters
 	virtual handler_entry &handler(UINT32 index) const;
@@ -1541,7 +1541,7 @@ UINT8 address_table::s_watchpoint_table[1 << LEVEL1_BITS];
 //**************************************************************************
 
 // banking helpers
-static STATE_POSTLOAD( bank_reattach );
+static void bank_reattach(running_machine &machine);
 
 // debugging
 static void generate_memdump(running_machine &machine);
@@ -1564,7 +1564,7 @@ void memory_init(running_machine &machine)
 
 	// loop over devices and spaces within each device
 	device_memory_interface *memory = NULL;
-	for (bool gotone = machine.m_devicelist.first(memory); gotone; gotone = memory->next(memory))
+	for (bool gotone = machine.devicelist().first(memory); gotone; gotone = memory->next(memory))
 		for (address_spacenum spacenum = AS_0; spacenum < ADDRESS_SPACES; spacenum++)
 		{
 			// if there is a configuration for this space, we need an address space
@@ -1590,7 +1590,7 @@ void memory_init(running_machine &machine)
 		space->locate_memory();
 
 	// register a callback to reset banks when reloading state
-	machine.save().register_postload(bank_reattach, NULL);
+	machine.save().register_postload(save_prepost_delegate(FUNC(bank_reattach), &machine));
 
 	// dump the final memory configuration
 	generate_memdump(machine);
@@ -1773,7 +1773,7 @@ static void generate_memdump(running_machine &machine)
 //  bank_reattach - reconnect banks after a load
 //-------------------------------------------------
 
-static STATE_POSTLOAD( bank_reattach )
+static void bank_reattach(running_machine &machine)
 {
 	// for each non-anonymous bank, explicitly reset its entry
 	for (memory_bank *bank = machine.memory_data->banklist.first(); bank != NULL; bank = bank->next())
@@ -1940,7 +1940,7 @@ void address_space::prepare_map()
 	UINT32 devregionsize = (devregion != NULL) ? devregion->bytes() : 0;
 
 	// allocate the address map
-	m_map = global_alloc(address_map(m_device.baseconfig(), m_spacenum));
+	m_map = global_alloc(address_map(m_device, m_spacenum));
 
 	// extract global parameters specified by the map
 	m_unmap = (m_map->m_unmapval == 0) ? 0 : ~0;
@@ -2039,7 +2039,7 @@ void address_space::populate_from_map()
 void address_space::populate_map_entry(const address_map_entry &entry, read_or_write readorwrite)
 {
 	const map_handler_data &data = (readorwrite == ROW_READ) ? entry.m_read : entry.m_write;
-	bindable_object *object;
+	void *object;
 	device_t *device;
 
 	// based on the handler type, alter the bits, name, funcptr, and object
@@ -2066,20 +2066,10 @@ void address_space::populate_map_entry(const address_map_entry &entry, read_or_w
 			unmap_generic(entry.m_addrstart, entry.m_addrend, entry.m_addrmask, entry.m_addrmirror, readorwrite, false);
 			break;
 
-		case AMH_DRIVER_DELEGATE:
 		case AMH_DEVICE_DELEGATE:
-			if (data.m_type == AMH_DRIVER_DELEGATE)
-			{
-				object = machine().driver_data<driver_device>();
-				if (object == NULL)
-					throw emu_fatalerror("Attempted to map a driver delegate in space %s of device '%s' when there is no driver data\n", m_name, m_device.tag());
-			}
-			else
-			{
-				object = machine().device(data.m_tag);
-				if (object == NULL)
-					throw emu_fatalerror("Attempted to map a non-existent device '%s' in space %s of device '%s'\n", data.m_tag, m_name, m_device.tag());
-			}
+			object = machine().device(data.m_tag);
+			if (object == NULL)
+				throw emu_fatalerror("Attempted to map a non-existent device '%s' in space %s of device '%s'\n", data.m_tag, m_name, m_device.tag());
 
 			if (readorwrite == ROW_READ)
 				switch (data.m_bits)

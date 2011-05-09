@@ -103,7 +103,7 @@ static int internal_load_hd(device_image_interface &image, const char *metadata)
 	/* open the CHD file */
 	do
 	{
-		is_writeable = image.is_writable();
+		is_writeable = !image.is_readonly();
 		harddisk->chd = NULL;
 		err = chd_open_file(image.image_core_file(), is_writeable ? CHD_OPEN_READWRITE : CHD_OPEN_READ, NULL, &harddisk->chd);
 
@@ -269,7 +269,7 @@ static DEVICE_START(hd)
 {
 	dev_harddisk_t	*harddisk = get_safe_token( device );
 
-	harddisk->config = (const harddisk_callback_config*)device->baseconfig().static_config();
+	harddisk->config = (const harddisk_callback_config*)device->static_config();
 	harddisk->chd = NULL;
 	harddisk->hard_disk_handle = NULL;
 }

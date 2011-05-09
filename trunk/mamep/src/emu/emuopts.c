@@ -287,11 +287,40 @@ void emu_options::add_device_options()
 	// create the configuration
 	machine_config config(*cursystem, *this);
 
-	// iterate through all image devices
-	const device_config_image_interface *image = NULL;
-	bool first = true;
+	// iterate through all slot devices
 	options_entry entry[2] = { { 0 }, { 0 } };
-	for (bool gotone = config.m_devicelist.first(image); gotone; gotone = image->next(image))
+	bool first = true;
+	const device_slot_interface *slot = NULL;
+	for (bool gotone = config.devicelist().first(slot); gotone; gotone = slot->next(slot))
+	{
+		// first device? add the header as to be pretty
+		if (first)
+		{
+			first = false;
+			entry[0].name = NULL;
+			entry[0].description = "SLOT DEVICES";
+			entry[0].flags = OPTION_HEADER | OPTION_FLAG_DEVICE;
+			entry[0].defvalue = NULL;
+			add_entries(entry);
+		}
+
+		// retrieve info about the device instance
+		astring option_name;
+		option_name.printf("%s;%s", slot->device().tag(), slot->device().tag());
+
+		// add the option
+		entry[0].name = option_name;
+		entry[0].description = NULL;
+		entry[0].flags = OPTION_STRING | OPTION_FLAG_DEVICE;
+		entry[0].defvalue = (slot->get_slot_interfaces() != NULL) ? slot->get_default_card() : NULL;
+		add_entries(entry, true);
+	}
+
+	// iterate through all image devices
+	const device_image_interface *image = NULL;
+	machine_config slot_config(*cursystem, *this);
+	first = true;
+	for (bool gotone = slot_config.devicelist().first(image); gotone; gotone = image->next(image))
 	{
 		// first device? add the header as to be pretty
 		if (first)
@@ -300,6 +329,7 @@ void emu_options::add_device_options()
 			entry[0].name = NULL;
 			entry[0].description = "IMAGE DEVICES";
 			entry[0].flags = OPTION_HEADER | OPTION_FLAG_DEVICE;
+			entry[0].defvalue = NULL;
 			add_entries(entry);
 		}
 
@@ -311,6 +341,7 @@ void emu_options::add_device_options()
 		entry[0].name = option_name;
 		entry[0].description = NULL;
 		entry[0].flags = OPTION_STRING | OPTION_FLAG_DEVICE;
+		entry[0].defvalue = NULL;
 		add_entries(entry, true);
 	}
 }
@@ -400,8 +431,8 @@ void emu_options::parse_standard_inis(astring &error_string)
 	// parse "vector.ini" for vector games
 	{
 		machine_config config(*cursystem, *this);
-		for (const screen_device_config *devconfig = config.first_screen(); devconfig != NULL; devconfig = devconfig->next_screen())
-			if (devconfig->screen_type() == SCREEN_TYPE_VECTOR)
+		for (const screen_device *device = config.first_screen(); device != NULL; device = device->next_screen())
+			if (device->screen_type() == SCREEN_TYPE_VECTOR)
 			{
 				parse_one_ini("vector", OPTION_PRIORITY_VECTOR_INI, &error_string);
 				break;
@@ -478,7 +509,7 @@ void emu_options::set_system_name(const char *name)
 
 const char *emu_options::device_option(device_image_interface &image)
 {
-	return image.device().machine().options().value(image.image_config().instance_name());
+	return value(image.instance_name());
 }
 
 

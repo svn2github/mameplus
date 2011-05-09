@@ -742,26 +742,26 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 {
 	static WCHAR buf[1024];
 	machine_config config(driver_list::driver(nIndex), pCurrentOpts);
-	const device_config_execute_interface *cpu;
+	const device_execute_interface *cpu;
 
 	ZeroMemory(buf, sizeof(buf));
 
-	bool gotone = config.m_devicelist.first(cpu);
+	bool gotone = config.devicelist().first(cpu);
 	while (gotone)
 	{
-		if (cpu->devconfig().clock() >= 1000000)
+		if (cpu->device().clock() >= 1000000)
 		{
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
-				 _Unicode(cpu->devconfig().name()),
-				cpu->devconfig().clock() / 1000000,
-				cpu->devconfig().clock() % 1000000);
+				 _Unicode(cpu->device().name()),
+				cpu->device().clock() / 1000000,
+				cpu->device().clock() % 1000000);
 		}
 		else
 		{
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
-				_Unicode(cpu->devconfig().name()),
-				cpu->devconfig().clock() / 1000,
-				cpu->devconfig().clock() % 1000);
+				_Unicode(cpu->device().name()),
+				cpu->device().clock() / 1000,
+				cpu->device().clock() % 1000);
 		}
 
 		wcscat(buf, TEXT("\n"));
@@ -782,25 +782,25 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 	machine_config config(driver_list::driver(nIndex), pCurrentOpts);
 
 	/* iterate over sound chips */
-	const device_config_sound_interface *sound = NULL;
-	bool gotone = config.m_devicelist.first(sound);
+	const device_sound_interface *sound = NULL;
+	bool gotone = config.devicelist().first(sound);
 	while(gotone)
 	{
 		int clock,count;
 		device_type sound_type_;
 		char tmpname[1024];
 
-		sprintf(tmpname,"%s",sound->devconfig().name());
+		sprintf(tmpname,"%s",sound->device().name());
 
-		sound_type_ = sound->devconfig().type();
-		clock = sound->devconfig().clock();
+		sound_type_ = sound->device().type();
+		clock = sound->device().clock();
 
 		count = 1;
 		gotone = sound->next(sound);
 		/* Matching chips at the same clock are aggregated */
 		while (gotone
-			&& sound->devconfig().type() == sound_type_
-			&& sound->devconfig().clock() == clock)
+			&& sound->device().type() == sound_type_
+			&& sound->device().clock() == clock)
 		{
 			count++;
 			gotone = sound->next(sound);
@@ -844,21 +844,21 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 
 	if (isDriverVector(&config))
 	{
-		const screen_device_config *screen = config.first_screen();
+		const screen_device *screen = config.first_screen();
 		if (driver_list::driver(nIndex).flags & ORIENTATION_SWAP_XY)
 		{
 			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
-					screen->refresh(), config.m_total_colors);
+					screen->refresh_attoseconds(), config.m_total_colors);
 		}
 		else
 		{
 			swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
-					screen->refresh(), config.m_total_colors);
+					screen->refresh_attoseconds(), config.m_total_colors);
 		}
 	}
 	else
 	{
-		const screen_device_config *screen = config.first_screen();
+		const screen_device *screen = config.first_screen();
 		if (screen == NULL) {
 			wcscpy(buf, _UIW(TEXT("Screenless Game"))); 
 		}
@@ -872,12 +872,12 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 					swprintf(tmpbuf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)\n")),
 							visarea.max_y - visarea.min_y + 1,
 							visarea.max_x - visarea.min_x + 1,
-							ATTOSECONDS_TO_HZ(screen->refresh()), config.m_total_colors);
+							ATTOSECONDS_TO_HZ(screen->refresh_attoseconds()), config.m_total_colors);
 				} else {
 					swprintf(tmpbuf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)\n")),
 							visarea.max_x - visarea.min_x + 1,
 							visarea.max_y - visarea.min_y + 1,
-							ATTOSECONDS_TO_HZ(screen->refresh()), config.m_total_colors);
+							ATTOSECONDS_TO_HZ(screen->refresh_attoseconds()), config.m_total_colors);
 				}
 				wcscat(buf, tmpbuf);
 			}
@@ -3404,14 +3404,14 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 	
 	if (hCtrl)
 	{
-		const device_config_sound_interface *sound;
+		const device_sound_interface *sound;
 		if ( nIndex > -1 ) {
 			machine_config config(driver_list::driver(nIndex), pCurrentOpts);
 		
-			for (bool gotone = config.m_devicelist.first(sound); gotone; gotone = sound->next(sound))
+			for (bool gotone = config.devicelist().first(sound); gotone; gotone = sound->next(sound))
 			{
-				if (sound->devconfig().type() == SAMPLES ||
-					sound->devconfig().type() == VLM5030) {
+				if (sound->device().type() == SAMPLES ||
+					sound->device().type() == VLM5030) {
 					enabled = TRUE;
 				}
 			}

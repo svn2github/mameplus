@@ -1097,7 +1097,7 @@ cheat_manager::cheat_manager(running_machine &machine)
 		return;
 
 	// request a callback
-	machine.add_notifier(MACHINE_NOTIFY_FRAME, frame_update_static);
+	machine.add_notifier(MACHINE_NOTIFY_FRAME, machine_notify_delegate(FUNC(cheat_manager::frame_update), this));
 
 	// create a global symbol table
 	m_symtable.add("frame", symbol_table::READ_ONLY, &m_framecount);
@@ -1175,7 +1175,7 @@ void cheat_manager::reload()
 	// load the cheat file, MESS will load a crc32.xml ( eg. 01234567.xml )
     // and MAME will load gamename.xml
 	device_image_interface *image = NULL;
-	for (bool gotone = machine().m_devicelist.first(image); gotone; gotone = image->next(image))
+	for (bool gotone = machine().devicelist().first(image); gotone; gotone = image->next(image))
 		if (image->exists())
 		{
 			// if we are loading through software lists, try to load shortname.xml
@@ -1379,11 +1379,6 @@ UINT64 cheat_manager::execute_tobcd(symbol_table &table, void *ref, int params, 
 //-------------------------------------------------
 //  frame_update - per-frame callback
 //-------------------------------------------------
-
-void cheat_manager::frame_update_static(running_machine &machine)
-{
-	machine.cheat().frame_update();
-}
 
 void cheat_manager::frame_update()
 {

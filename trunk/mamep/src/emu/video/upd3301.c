@@ -25,6 +25,9 @@
 #include "machine/devhelpr.h"
 
 
+// device type definition
+const device_type UPD3301 = &device_creator<upd3301_device>;
+
 
 //**************************************************************************
 //  MACROS / CONSTANTS
@@ -62,47 +65,6 @@ enum
 
 
 //**************************************************************************
-//  GLOBAL VARIABLES
-//**************************************************************************
-
-// devices
-const device_type UPD3301 = upd3301_device_config::static_alloc_device_config;
-
-
-
-//**************************************************************************
-//  DEVICE CONFIGURATION
-//**************************************************************************
-
-GENERIC_DEVICE_CONFIG_SETUP(upd3301, "UPD3301")
-
-
-//-------------------------------------------------
-//  device_config_complete - perform any
-//  operations now that the configuration is
-//  complete
-//-------------------------------------------------
-
-void upd3301_device_config::device_config_complete()
-{
-	// inherit a copy of the static data
-	const upd3301_interface *intf = reinterpret_cast<const upd3301_interface *>(static_config());
-	if (intf != NULL)
-		*static_cast<upd3301_interface *>(this) = *intf;
-
-	// or initialize to defaults if none provided
-	else
-	{
-		memset(&m_out_int_func, 0, sizeof(m_out_int_func));
-		memset(&m_out_drq_func, 0, sizeof(m_out_drq_func));
-		memset(&m_out_hrtc_func, 0, sizeof(m_out_hrtc_func));
-		memset(&m_out_vrtc_func, 0, sizeof(m_out_vrtc_func));
-	}
-}
-
-
-
-//**************************************************************************
 //  INLINE HELPERS
 //**************************************************************************
 
@@ -114,7 +76,7 @@ inline void upd3301_device::set_interrupt(int state)
 {
 	if (LOG) logerror("UPD3301 '%s' Interrupt: %u\n", tag(), state);
 
-	devcb_call_write_line(&m_out_int_func, state);
+	m_out_int_func(state);
 
 	if (!state)
 	{
@@ -131,7 +93,7 @@ inline void upd3301_device::set_drq(int state)
 {
 	if (LOG) logerror("UPD3301 '%s' DRQ: %u\n", tag(), state);
 
-	devcb_call_write_line(&m_out_drq_func, state);
+	m_out_drq_func(state);
 }
 
 
@@ -172,7 +134,7 @@ inline void upd3301_device::update_hrtc_timer(int state)
 	int y = m_screen->vpos();
 
 	int next_x = state ? m_h : 0;
-	int next_y = state ? y : ((y + 1) % ((m_l + m_v) * m_config.m_width));
+	int next_y = state ? y : ((y + 1) % ((m_l + m_v) * m_width));
 
 	attotime duration = m_screen->time_until_pos(next_y, next_x);
 
@@ -200,7 +162,7 @@ inline void upd3301_device::update_vrtc_timer(int state)
 
 inline void upd3301_device::recompute_parameters()
 {
-	int horiz_pix_total = (m_h + m_z) * m_config.m_width;
+	int horiz_pix_total = (m_h + m_z) * m_width;
 	int vert_pix_total = (m_l + m_v) * m_r;
 
 	attoseconds_t refresh = HZ_TO_ATTOSECONDS(clock()) * horiz_pix_total * vert_pix_total;
@@ -209,7 +171,7 @@ inline void upd3301_device::recompute_parameters()
 
 	visarea.min_x = 0;
 	visarea.min_y = 0;
-	visarea.max_x = (m_h * m_config.m_width) - 1;
+	visarea.max_x = (m_h * m_width) - 1;
 	visarea.max_y = (m_l * m_r) - 1;
 
 	if (LOG)
@@ -234,8 +196,8 @@ inline void upd3301_device::recompute_parameters()
 //  upd3301_device - constructor
 //-------------------------------------------------
 
-upd3301_device::upd3301_device(running_machine &_machine, const upd3301_device_config &config)
-    : device_t(_machine, config),
+upd3301_device::upd3301_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+    : device_t(mconfig, UPD3301, "UPD3301", tag, owner, clock),
 	  m_status(0),
 	  m_param_count(0),
 	  m_data_fifo_pos(0),
@@ -245,9 +207,32 @@ upd3301_device::upd3301_device(running_machine &_machine, const upd3301_device_c
 	  m_l(20),
 	  m_r(10),
 	  m_v(6),
-	  m_z(32),
-      m_config(config)
+	  m_z(32)
 {
+}
+
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void upd3301_device::device_config_complete()
+{
+	// inherit a copy of the static data
+	const upd3301_interface *intf = reinterpret_cast<const upd3301_interface *>(static_config());
+	if (intf != NULL)
+		*static_cast<upd3301_interface *>(this) = *intf;
+
+	// or initialize to defaults if none provided
+	else
+	{
+		memset(&m_out_int_cb, 0, sizeof(m_out_int_cb));
+		memset(&m_out_drq_cb, 0, sizeof(m_out_drq_cb));
+		memset(&m_out_hrtc_cb, 0, sizeof(m_out_hrtc_cb));
+		memset(&m_out_vrtc_cb, 0, sizeof(m_out_vrtc_cb));
+	}
 }
 
 
@@ -263,13 +248,13 @@ void upd3301_device::device_start()
 	m_drq_timer = timer_alloc(TIMER_DRQ);
 
 	// resolve callbacks
-	devcb_resolve_write_line(&m_out_int_func, &m_config.m_out_int_func, this);
-	devcb_resolve_write_line(&m_out_drq_func, &m_config.m_out_drq_func, this);
-	devcb_resolve_write_line(&m_out_hrtc_func, &m_config.m_out_hrtc_func, this);
-	devcb_resolve_write_line(&m_out_vrtc_func, &m_config.m_out_vrtc_func, this);
+	m_out_int_func.resolve(m_out_int_cb, *this);
+	m_out_drq_func.resolve(m_out_drq_cb, *this);
+	m_out_hrtc_func.resolve(m_out_hrtc_cb, *this);
+	m_out_vrtc_func.resolve(m_out_vrtc_cb, *this);
 
 	// get the screen device
-	m_screen = machine().device<screen_device>(m_config.m_screen_tag);
+	m_screen = machine().device<screen_device>(m_screen_tag);
 	assert(m_screen != NULL);
 
 	// state saving
@@ -341,7 +326,7 @@ void upd3301_device::device_timer(emu_timer &timer, device_timer_id id, int para
 	case TIMER_HRTC:
 		if (LOG) logerror("UPD3301 '%s' HRTC: %u\n", tag(), param);
 
-		devcb_call_write_line(&m_out_hrtc_func, param);
+		m_out_hrtc_func(param);
 		m_hrtc = param;
 
 		update_hrtc_timer(param);
@@ -350,7 +335,7 @@ void upd3301_device::device_timer(emu_timer &timer, device_timer_id id, int para
 	case TIMER_VRTC:
 		if (LOG) logerror("UPD3301 '%s' VRTC: %u\n", tag(), param);
 
-		devcb_call_write_line(&m_out_vrtc_func, param);
+		m_out_vrtc_func(param);
 		m_vrtc = param;
 
 		if (param && !m_me)
@@ -621,7 +606,7 @@ void upd3301_device::draw_scanline()
 			int csr = m_cm && m_cursor_blink && ((y / m_r) == m_cy) && (sx == m_cx);
 			int gpa = 0; // TODO
 
-			m_config.m_display_func(this, m_bitmap, y, sx, cc, lc, hlgt, rvv, vsp, sl0, sl12, csr, gpa);
+			m_display_cb(this, m_bitmap, y, sx, cc, lc, hlgt, rvv, vsp, sl0, sl12, csr, gpa);
 		}
 	}
 

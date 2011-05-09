@@ -39,101 +39,101 @@
 ******************************************************************************/
 
 // Atari
-a2600	 // Atari 2600
-a2600p	// Atari 2600 PAL
-a5200	 // Atari 5200
-a7800	 // Atari 7800 NTSC
-a7800p	// Atari 7800 PAL
+a2600			// Atari 2600
+a2600p			// Atari 2600 PAL
+a5200			// Atari 5200
+a7800			// Atari 7800 NTSC
+a7800p			// Atari 7800 PAL
 
 // Nintendo
-nes       // Nintendo Entertainment System
-nespal	// Nintendo Entertainment System PAL
-m82       // Nintendo M82 Display Unit
-famicom   // Nintendo Family Computer (a.k.a. Famicom) + Disk System add-on
-fami_key  // Nintendo Family Computer (a.k.a. Famicom) + Disk System add-on + Keyboard add-on
-famitwin  // Sharp Famicom Twin System
-drpcjr    // Bung Doctor PC Jr
-dendy     // Dendy (Classic russian famiclone)
-gameboy   // Nintendo Game Boy Handheld
-supergb   // Nintendo Super Game Boy SNES Cartridge
-gbpocket  // Nintendo Game Boy Pocket Handheld
-gblight   // Nintendo Game Boy Light Handheld
-gbcolor   // Nintendo Game Boy Color Handheld
-gba       // Nintendo Game Boy Advance Handheld
-snes      // Nintendo Super Nintendo NTSC
-snespal   // Nintendo Super Nintendo PAL
-snessfx   // Nintendo Super Nintendo NTSC w/SuperFX CPU
-snespsfx  // Nintendo Super Nintendo PAL w/SuperFX CPU
-snesdsp   // Nintendo Super Nintendo NTSC w/DSP-x CPU
-snespdsp  // Nintendo Super Nintendo PAL w/DSP-x CPU
-snesst10  // Nintendo Super Nintendo NTSC w/ST-010 CPU
-snesst11  // Nintendo Super Nintendo NTSC w/ST-011 CPU
-snesst    // Nintendo Super Nintendo NTSC w/Sufami Turbo base cart
-snesbsx   // Nintendo Super Nintendo NTSC w/BS-X compatible cart
+nes				// Nintendo Entertainment System
+nespal			// Nintendo Entertainment System PAL
+m82				// Nintendo M82 Display Unit
+famicom			// Nintendo Family Computer (a.k.a. Famicom) + Disk System add-on
+fami_key		// Nintendo Family Computer (a.k.a. Famicom) + Disk System add-on + Keyboard add-on
+famitwin		// Sharp Famicom Twin System
+drpcjr			// Bung Doctor PC Jr
+dendy			// Dendy (Classic russian famiclone)
+gameboy			// Nintendo Game Boy Handheld
+supergb			// Nintendo Super Game Boy SNES Cartridge
+gbpocket		// Nintendo Game Boy Pocket Handheld
+gblight			// Nintendo Game Boy Light Handheld
+gbcolor			// Nintendo Game Boy Color Handheld
+gba				// Nintendo Game Boy Advance Handheld
+snes			// Nintendo Super Nintendo NTSC
+snespal			// Nintendo Super Nintendo PAL
+snessfx			// Nintendo Super Nintendo NTSC w/SuperFX CPU
+snespsfx		// Nintendo Super Nintendo PAL w/SuperFX CPU
+snesdsp			// Nintendo Super Nintendo NTSC w/DSP-x CPU
+snespdsp		// Nintendo Super Nintendo PAL w/DSP-x CPU
+snesst10		// Nintendo Super Nintendo NTSC w/ST-010 CPU
+snesst11		// Nintendo Super Nintendo NTSC w/ST-011 CPU
+snesst			// Nintendo Super Nintendo NTSC w/Sufami Turbo base cart
+snesbsx			// Nintendo Super Nintendo NTSC w/BS-X compatible cart
 
-megaduck  // Megaduck
+megaduck		// Megaduck
 
 // SEGA
-gamegear  // Sega GameGear
-gamegeaj  // Sega GameGear (Japan)
-sms	   // Sega Master System II (NTSC)
-sms1	  // Sega Master System I (NTSC)
-sms1pal   // Sega Master System I (PAL)
-smspal	// Sega Master System II (PAL)
-smsj	  // Sega Master System (Japan) with FM Chip
-sg1000m3  // Sega SG-1000 Mark III (Japan)
-sms2kr	// Samsung Gam*Boy II (Korea)
-smssdisp  // Sega Master System Store Display Unit
+gamegear		// Sega GameGear
+gamegeaj		// Sega GameGear (Japan)
+sms				// Sega Master System II (NTSC)
+sms1			// Sega Master System I (NTSC)
+sms1pal			// Sega Master System I (PAL)
+smspal			// Sega Master System II (PAL)
+smsj			// Sega Master System (Japan) with FM Chip
+sg1000m3		// Sega SG-1000 Mark III (Japan)
+sms2kr			// Samsung Gam*Boy II (Korea)
+smssdisp		// Sega Master System Store Display Unit
 
-megadrij  // 1988 Sega Mega Drive (Japan)
-genesis   // 1989 Sega Genesis (USA)
-gensvp	// 1993 Sega Genesis (USA w/SVP chip)
-megadriv  // 1990 Sega Mega Drive (Europe)
-pico	  // 1994 Sega Pico (Europe)
-picou	 // 1994 Sega Pico (USA)
-picoj	 // 1993 Sega Pico (Japan)
-segacd	// 1992 Sega Sega CD (USA)
-megacd	// 1993 Sega Mega-CD (Europe)
-megacda	// 1993 Sega Mega-CD (Asia)
-megacdj   // 1991 Sega Mega-CD (Japan)
-segacd2   // 1993 Sega Sega CD 2 (USA)
-megacd2   // 1993 Sega Mega-CD 2 (Europe)
-megacd2j  // 1993 Sega Mega-CD 2 (Japan)
-laseract  // 1993 Pioneer LaserActive (USA)
-laseractj // 1993 Pioneer LaserActive (Japan)
-xeye	  // 1993 JVC X'eye (USA)
-wmega	 // 1992 Sega Wondermega (Japan)
-wmegam2	// 1993 Victor Wondermega M2 (Japan)
-cdx	   // 1994 Sega CDX (USA)
-multmega  // 1994 Sega Multi-Mega (Europe)
-32x	   // 1994 Sega 32X (USA)
-32x_scd   // 1994 Sega Sega CD (USA w/32X addon)
+megadrij		// 1988 Sega Mega Drive (Japan)
+genesis			// 1989 Sega Genesis (USA)
+gensvp			// 1993 Sega Genesis (USA w/SVP chip)
+megadriv		// 1990 Sega Mega Drive (Europe)
+pico			// 1994 Sega Pico (Europe)
+picou			// 1994 Sega Pico (USA)
+picoj			// 1993 Sega Pico (Japan)
+segacd			// 1992 Sega Sega CD (USA)
+megacd			// 1993 Sega Mega-CD (Europe)
+megacda			// 1993 Sega Mega-CD (Asia)
+megacdj			// 1991 Sega Mega-CD (Japan)
+segacd2			// 1993 Sega Sega CD 2 (USA)
+megacd2			// 1993 Sega Mega-CD 2 (Europe)
+megacd2j		// 1993 Sega Mega-CD 2 (Japan)
+laseract		// 1993 Pioneer LaserActive (USA)
+laseractj		// 1993 Pioneer LaserActive (Japan)
+xeye			// 1993 JVC X'eye (USA)
+wmega			// 1992 Sega Wondermega (Japan)
+wmegam2			// 1993 Victor Wondermega M2 (Japan)
+cdx				// 1994 Sega CDX (USA)
+multmega		// 1994 Sega Multi-Mega (Europe)
+32x				// 1994 Sega 32X (USA)
+32x_scd			// 1994 Sega Sega CD (USA w/32X addon)
 
 // NEC
-pce	   // PC/Engine NEC 1987-1993
-tg16	  // Turbo Grafix-16  NEC 1989-1993
-sgx	   // SuperGrafX NEC 1989
+pce				// PC/Engine NEC 1987-1993
+tg16			// Turbo Grafix-16  NEC 1989-1993
+sgx				// SuperGrafX NEC 1989
 
 // Capcom
-sfach	 // CPS Changer (Street Fighter Alpha)
-sfzbch	// CPS Changer (Street Fighter ZERO Brazil)
-sfzch	 // CPS Changer (Street Fighter ZERO)
-wofch	 // CPS Changer (Tenchi Wo Kurau II)
+sfach			// CPS Changer (Street Fighter Alpha)
+sfzbch			// CPS Changer (Street Fighter ZERO Brazil)
+sfzch			// CPS Changer (Street Fighter ZERO)
+wofch			// CPS Changer (Tenchi Wo Kurau II)
 
 // BANDAI
-wswan	 // Bandai WonderSwan Handheld
-wscolor   // Bandai WonderSwan Color Handheld
+wswan			// Bandai WonderSwan Handheld
+wscolor			// Bandai WonderSwan Color Handheld
 
 // SNK
-ngp	   // NeoGeo Pocket
-ngpc	  // NeoGeo Pocket Color
+ngp				// NeoGeo Pocket
+ngpc			// NeoGeo Pocket Color
 
 //***************COMPUTERS**************************************************
 
 // ASCII & Microsoft
-msx	   // 1983 MSX
-msx2	  // 1985 MSX2
-msx2p	 // 1988 MSX2+ Japan
+msx				// 1983 MSX
+msx2			// 1985 MSX2
+msx2p			// 1988 MSX2+ Japan
 
 //********** To sort (mostly skeleton drivers) *****************************
 

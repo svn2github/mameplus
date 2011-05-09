@@ -1200,7 +1200,7 @@ int render_target::configured_view(const char *viewname, int targetindex, int nu
 	}
 
 	// if we don't have a match, default to the nth view
-	int scrcount = m_manager.machine().m_devicelist.count(SCREEN);
+	int scrcount = m_manager.machine().devicelist().count(SCREEN);
 	if (view == NULL && scrcount > 0)
 	{
 		// if we have enough targets to be one per screen, assign in order
@@ -1391,7 +1391,7 @@ void render_target::compute_minimum_size(INT32 &minwidth, INT32 &minheight)
 	int screens_considered = 0;
 
 	// early exit in case we are called between device teardown and render teardown
-	if (m_manager.machine().m_devicelist.count() == 0)
+	if (m_manager.machine().devicelist().count() == 0)
 	{
 		minwidth = 640;
 		minheight = 480;
@@ -1708,7 +1708,7 @@ void render_target::load_layout_files(const char *layoutfile, bool singlefile)
 			load_layout_file(driver_list::driver(cloneof).name, "default");
 
 	// now do the built-in layouts for single-screen games
-	if (m_manager.machine().m_devicelist.count(SCREEN) == 1)
+	if (m_manager.machine().devicelist().count(SCREEN) == 1)
 	{
 		if (system.flags & ORIENTATION_SWAP_XY)
 			load_layout_file(NULL, layout_vertical);
@@ -2522,7 +2522,7 @@ render_manager::render_manager(running_machine &machine)
 	  m_screen_container_list(machine.respool())
 {
 	// register callbacks
-	config_register(machine, "video", config_load_static, config_save_static);
+	config_register(machine, "video", config_saveload_delegate(FUNC(render_manager::config_load), this), config_saveload_delegate(FUNC(render_manager::config_save), this));
 
 	// create one container per screen
 	for (screen_device *screen = machine.first_screen(); screen != NULL; screen = screen->next_screen())
@@ -2741,11 +2741,6 @@ void render_manager::container_free(render_container *container)
 //  configuration file
 //-------------------------------------------------
 
-void render_manager::config_load_static(running_machine &machine, int config_type, xml_data_node *parentnode)
-{
-	machine.render().config_load(config_type, parentnode);
-}
-
 void render_manager::config_load(int config_type, xml_data_node *parentnode)
 {
 	// we only care about game files
@@ -2804,11 +2799,6 @@ void render_manager::config_load(int config_type, xml_data_node *parentnode)
 //  config_save - save data to the configuration
 //  file
 //-------------------------------------------------
-
-void render_manager::config_save_static(running_machine &machine, int config_type, xml_data_node *parentnode)
-{
-	machine.render().config_save(config_type, parentnode);
-}
 
 void render_manager::config_save(int config_type, xml_data_node *parentnode)
 {

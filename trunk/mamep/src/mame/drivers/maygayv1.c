@@ -216,8 +216,8 @@ typedef struct
 class maygayv1_state : public driver_device
 {
 public:
-	maygayv1_state(running_machine &machine, const driver_device_config_base &config)
-		: driver_device(machine, config) { }
+	maygayv1_state(const machine_config &mconfig, device_type type, const char *tag)
+		: driver_device(mconfig, type, tag) { }
 
 	int m_vsync_latch_preset;
 	UINT8 m_p1;
@@ -676,7 +676,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x86000e, 0x86000f) AM_WRITE(vsync_int_ctrl)
 	AM_RANGE(0x880000, 0x89ffff) AM_READWRITE(i82716_r, i82716_w)
 	AM_RANGE(0x8a0000, 0x8a001f) AM_DEVREADWRITE8( "duart68681", duart68681_r, duart68681_w, 0xff)
-	AM_RANGE(0x8c0000, 0x8c000f) AM_DEVREADWRITE8("pia", pia6821_r, pia6821_w, 0xff)
+	AM_RANGE(0x8c0000, 0x8c000f) AM_DEVREADWRITE8_MODERN("pia", pia6821_device, read, write, 0xff)
 ADDRESS_MAP_END
 
 

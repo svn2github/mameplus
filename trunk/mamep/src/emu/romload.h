@@ -127,7 +127,7 @@ class machine_config;
 class memory_region;
 class emu_options;
 
-typedef device_config rom_source;
+typedef device_t rom_source;
 
 
 struct rom_entry

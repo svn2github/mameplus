@@ -90,7 +90,7 @@
 //  TYPE DEFINITIONS
 //**************************************************************************
 
-template<typename func_ptr>
+template<typename _FunctionPtr>
 class dynamic_bind
 {
 public:
@@ -100,17 +100,17 @@ public:
 	{
 		HMODULE module = LoadLibrary(dll);
 		if (module != NULL)
-			m_function = reinterpret_cast<func_ptr>(GetProcAddress(module, symbol));
+			m_function = reinterpret_cast<_FunctionPtr>(GetProcAddress(module, symbol));
 	}
 
 	// bool to test if the function is NULL or not
 	operator bool() const { return (m_function != NULL); }
 
 	// dereference to get the underlying pointer
-	func_ptr operator *() const { return m_function; }
+	_FunctionPtr operator *() const { return m_function; }
 
 private:
-	func_ptr	m_function;
+	_FunctionPtr	m_function;
 };
 
 
@@ -586,7 +586,7 @@ void windows_osd_interface::init(running_machine &machine)
 		SetThreadPriority(GetCurrentThread(), options.priority());
 
 	// ensure we get called on the way out
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, osd_exit);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(osd_exit), &machine));
 
 	// get number of processors
 	stemp = options.numprocessors();

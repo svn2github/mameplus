@@ -85,6 +85,7 @@ const options_entry cli_options::s_option_entries[] =
 	{ CLICOMMAND_VERIFYSAMPLES,         "0",       OPTION_COMMAND,    "report samplesets that have problems" },
 	{ CLICOMMAND_ROMIDENT,              "0",       OPTION_COMMAND,    "compare files with known MAME roms" },
 	{ CLICOMMAND_LISTDEVICES ";ld",     "0",       OPTION_COMMAND,    "list available devices" },
+	{ CLICOMMAND_LISTSLOTS ";lslot",    "0",       OPTION_COMMAND,    "list available slots and slot devices" },
 	{ CLICOMMAND_LISTMEDIA ";lm",       "0",       OPTION_COMMAND,    "list available media for the system" },
 	{ CLICOMMAND_LISTSOFTWARE ";lsoft", "0",       OPTION_COMMAND,    "list known software for the system" },
 	{ CLICOMMAND_LISTGAMES,             "0",       OPTION_COMMAND,    "year, manufacturer and full name" },		// for make tp_manufact.txt
@@ -505,11 +506,11 @@ void cli_frontend::listsamples(const char *gamename)
 	while (drivlist.next())
 	{
 		// see if we have samples
-		const device_config *devconfig;
-		for (devconfig = drivlist.config().first_device(); devconfig != NULL; devconfig = devconfig->next())
-			if (devconfig->type() == SAMPLES)
+		const device_t *device;
+		for (device = drivlist.config().first_device(); device != NULL; device = device->next())
+			if (device->type() == SAMPLES)
 				break;
-		if (devconfig == NULL)
+		if (device == NULL)
 			continue;
 
 		// print a header
@@ -519,11 +520,11 @@ void cli_frontend::listsamples(const char *gamename)
 		mame_printf_info(_("Samples required for driver \"%s\".\n"), drivlist.driver().name);
 
 		// iterate over samples devices
-		for ( ; devconfig != NULL; devconfig = devconfig->next())
-			if (devconfig->type() == SAMPLES)
+		for ( ; device != NULL; device = device->next())
+			if (device->type() == SAMPLES)
 			{
 				// if the list is legit, walk it and print the sample info
-				const char *const *samplenames = reinterpret_cast<const samples_interface *>(devconfig->static_config())->samplenames;
+				const char *const *samplenames = reinterpret_cast<const samples_interface *>(device->static_config())->samplenames;
 				if (samplenames != NULL)
 					for (int sampnum = 0; samplenames[sampnum] != NULL; sampnum++)
 						if (samplenames[sampnum][0] != '*')
@@ -556,11 +557,11 @@ void cli_frontend::listdevices(const char *gamename)
 		printf("Driver %s (%s):\n", drivlist.driver().name, _LST(drivlist.driver().description));
 
 		// iterate through devices
-		for (const device_config *devconfig = drivlist.config().first_device(); devconfig != NULL; devconfig = devconfig->next())
+		for (const device_t *device = drivlist.config().first_device(); device != NULL; device = device->next())
 		{
-			printf("   %s ('%s')", devconfig->name(), devconfig->tag());
+			printf("   %s ('%s')", device->name(), device->tag());
 
-			UINT32 clock = devconfig->clock();
+			UINT32 clock = device->clock();
 			if (clock >= 1000000000)
 				printf(" @ %d.%02d GHz\n", clock / 1000000000, (clock / 10000000) % 100);
 			else if (clock >= 1000000)
@@ -572,6 +573,56 @@ void cli_frontend::listdevices(const char *gamename)
 			else
 				printf("\n");
 		}
+	}
+}
+
+
+//-------------------------------------------------
+//  listslots - output the list of slot devices
+//  referenced by a given game or set of games
+//-------------------------------------------------
+
+void cli_frontend::listslots(const char *gamename)
+{
+	// determine which drivers to output; return an error if none found
+	driver_enumerator drivlist(m_options, gamename);
+	if (drivlist.count() == 0)
+		throw emu_fatalerror(MAMERR_NO_SUCH_GAME, "No matching games found for '%s'", gamename);
+
+	// print header
+	printf(" SYSTEM      SLOT NAME             SLOT OPTIONS SUPPORTED     \n");
+	printf("----------  --------------------  ------------------------------------\n");
+
+	// iterate over drivers
+	while (drivlist.next())
+	{
+		// iterate
+		const device_slot_interface *slot = NULL;
+		bool first = true;
+		for (bool gotone = drivlist.config().devicelist().first(slot); gotone; gotone = slot->next(slot))
+		{
+			// output the line, up to the list of extensions
+			printf("%-13s%-20s   ", first ? drivlist.driver().name : "", slot->device().tag());
+
+			// get the options and print them
+			const slot_interface* intf = slot->get_slot_interfaces();
+			for (int i = 0; intf[i].name != NULL; i++)
+			{
+				if (i==0) {
+					printf("%s\n", intf[i].name);
+				} else {
+					printf("%-33s   %s\n", "",intf[i].name);
+				}
+			}
+
+			// end the line
+			printf("\n");
+			first = false;
+		}
+
+		// if we didn't get any at all, just print a none line
+		if (first)
+			printf("%-13s(none)\n", drivlist.driver().name);
 	}
 }
 
@@ -596,9 +647,9 @@ void cli_frontend::listmedia(const char *gamename)
 	while (drivlist.next())
 	{
 		// iterate
-		const device_config_image_interface *imagedev = NULL;
+		const device_image_interface *imagedev = NULL;
 		bool first = true;
-		for (bool gotone = drivlist.config().m_devicelist.first(imagedev); gotone; gotone = imagedev->next(imagedev))
+		for (bool gotone = drivlist.config().devicelist().first(imagedev); gotone; gotone = imagedev->next(imagedev))
 		{
 			// extract the shortname with parentheses
 			astring paren_shortname;
@@ -829,9 +880,9 @@ static void info_listsoftware(const char *gamename)
 	// first determine the maximum number of lists we might encounter
 	int list_count = 0;
 	while (drivlist.next())
-		for (const device_config *dev = drivlist.config().m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
+		for (const device_t *dev = drivlist.config().devicelist().first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
 		{
-			software_list_config *swlist = (software_list_config *)downcast<const legacy_device_config_base *>(dev)->inline_config();
+			software_list_config *swlist = (software_list_config *)downcast<const legacy_device_base *>(dev)->inline_config();
 
 			for (int listnum = 0; listnum < DEVINFO_STR_SWLIST_MAX - DEVINFO_STR_SWLIST_0; listnum++)
 				if (swlist->list_name[listnum] && *swlist->list_name[listnum] && swlist->list_type == SOFTWARE_LIST_ORIGINAL_SYSTEM)
@@ -918,9 +969,9 @@ static void info_listsoftware(const char *gamename)
 	drivlist.reset();
 	list_count = 0;
 	while (drivlist.next())
-		for (const device_config *dev = drivlist.config().m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
+		for (const device_t *dev = drivlist.config().devicelist().first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
 		{
-			software_list_config *swlist = (software_list_config *)downcast<const legacy_device_config_base *>(dev)->inline_config();
+			software_list_config *swlist = (software_list_config *)downcast<const legacy_device_base *>(dev)->inline_config();
 
 			for (int listnum = 0; listnum < DEVINFO_STR_SWLIST_MAX - DEVINFO_STR_SWLIST_0; listnum++)
 			{
@@ -1277,6 +1328,7 @@ void cli_frontend::execute_commands(const char *exename)
 		{ CLICOMMAND_LISTBROTHERS,	&cli_frontend::listbrothers },
 		{ CLICOMMAND_LISTCRC,		&cli_frontend::listcrc },
 		{ CLICOMMAND_LISTDEVICES,	&cli_frontend::listdevices },
+		{ CLICOMMAND_LISTSLOTS,	    &cli_frontend::listslots },
 		{ CLICOMMAND_LISTROMS,		&cli_frontend::listroms },
 		{ CLICOMMAND_LISTSAMPLES,	&cli_frontend::listsamples },
 		{ CLICOMMAND_VERIFYROMS,	&cli_frontend::verifyroms },
@@ -1561,9 +1613,9 @@ int media_identifier::find_by_hash(const hash_collection &hashes, int length)
 				}
 
 		// next iterate over softlists
-		for (const device_config *dev = m_drivlist.config().m_devicelist.first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
+		for (const device_t *dev = m_drivlist.config().devicelist().first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
 		{
-			software_list_config *swlist = (software_list_config *)downcast<const legacy_device_config_base *>(dev)->inline_config();
+			software_list_config *swlist = (software_list_config *)downcast<const legacy_device_base *>(dev)->inline_config();
 
 			for (int listnum = 0; listnum < DEVINFO_STR_SWLIST_MAX - DEVINFO_STR_SWLIST_0; listnum++)
 				if (swlist->list_name[listnum] != NULL)

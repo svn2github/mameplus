@@ -830,7 +830,7 @@ static void frame_update_analog_field(running_machine &machine, analog_field_sta
 static int frame_get_digital_field_state(const input_field_config *field, int mouse_down);
 
 /* port configuration helpers */
-static void port_config_detokenize(ioport_list &portlist, const input_port_token *ipt, char *errorbuf, int errorbuflen, device_config *owner);
+static void port_config_detokenize(ioport_list &portlist, const input_port_token *ipt, char *errorbuf, int errorbuflen, device_t *owner);
 static input_field_config *field_config_alloc(input_port_config *port, int type, input_port_value defvalue, input_port_value maskbits);
 static void field_config_insert(input_field_config *field, input_port_value *disallowedbits, char *errorbuf, int errorbuflen);
 static void field_config_free(input_field_config **fieldptr);
@@ -874,7 +874,7 @@ static int auto_pressed(running_machine &machine, const input_field_config *fiel
 #endif /* USE_AUTOFIRE */
 
 #ifdef USE_CUSTOM_BUTTON
-static void input_port_list_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap, device_config *owner);
+static void input_port_list_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap, device_t *owner);
 #endif /* USE_CUSTOM_BUTTON */
 
 
@@ -1023,7 +1023,7 @@ static WRITE_LINE_DEVICE_HANDLER( changed_write_line_device )
     system
 -------------------------------------------------*/
 
-time_t input_port_init(running_machine &machine, const input_port_token *tokens, const device_config_list &devicelist)
+time_t input_port_init(running_machine &machine, const device_list &devicelist)
 {
 	//input_port_private *portdata;
 	char errorbuf[1024];
@@ -1037,8 +1037,8 @@ time_t input_port_init(running_machine &machine, const input_port_token *tokens,
 	//portdata = machine.input_port_data;
 
 	/* add an exit callback and a frame callback */
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, input_port_exit);
-	machine.add_notifier(MACHINE_NOTIFY_FRAME, frame_update_callback);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(input_port_exit), &machine));
+	machine.add_notifier(MACHINE_NOTIFY_FRAME, machine_notify_delegate(FUNC(frame_update_callback), &machine));
 
 #ifdef USE_AUTOFIRE
 	for (player = 0; player < MAX_PLAYERS; player++)
@@ -1057,30 +1057,21 @@ time_t input_port_init(running_machine &machine, const input_port_token *tokens,
 	init_port_types(machine);
 
 	/* if we have a token list, proceed */
-	if (tokens != NULL)
-	{
-#ifdef USE_CUSTOM_BUTTON
-		input_port_list_custom(machine.m_portlist, tokens, errorbuf, sizeof(errorbuf), TRUE, NULL);
-#else /* USE_CUSTOM_BUTTON */
-		input_port_list_init(machine.m_portlist, tokens, errorbuf, sizeof(errorbuf), TRUE, NULL);
-#endif /* USE_CUSTOM_BUTTON */
-		if (errorbuf[0] != 0)
-			mame_printf_error(_("Input port errors:\n%s"), errorbuf);
-	}
-
-	for (device_config *config = devicelist.first(); config != NULL; config = config->next())
-	{
-		if (config->input_ports() != NULL)
+	for (device_t *device = devicelist.first(); device != NULL; device = device->next())
+		if (device->input_ports() != NULL)
 		{
-			input_port_list_init(machine.m_portlist, config->input_ports(), errorbuf, sizeof(errorbuf), TRUE, config);
+#ifdef USE_CUSTOM_BUTTON
+			input_port_list_custom(machine.m_portlist, device->input_ports(), errorbuf, sizeof(errorbuf), TRUE, device);
+#else /* USE_CUSTOM_BUTTON */
+			input_port_list_init(machine.m_portlist, device->input_ports(), errorbuf, sizeof(errorbuf), TRUE, device);
+#endif /* USE_CUSTOM_BUTTON */
 			if (errorbuf[0] != 0)
 				mame_printf_error("Input port errors:\n%s", errorbuf);
 		}
-	}
 
 	init_port_state(machine);
 	/* register callbacks for when we load configurations */
-	config_register(machine, "input", load_config_callback, save_config_callback);
+	config_register(machine, "input", config_saveload_delegate(FUNC(load_config_callback), &machine), config_saveload_delegate(FUNC(save_config_callback), &machine));
 
 	/* open playback and record files if specified */
 	basetime = playback_init(machine);
@@ -1114,7 +1105,7 @@ static void input_port_exit(running_machine &machine)
     according to the given tokens
 -------------------------------------------------*/
 
-void input_port_list_init(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap, device_config *owner)
+void input_port_list_init(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap, device_t *owner)
 {
 	/* no tokens, no list */
 	if (tokens == NULL)
@@ -1136,7 +1127,7 @@ void input_port_list_init(ioport_list &portlist, const input_port_token *tokens,
     according to the given tokens
 -------------------------------------------------*/
 
-static void input_port_list_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap, device_config *owner)
+static void input_port_list_custom(ioport_list &portlist, const input_port_token *tokens, char *errorbuf, int errorbuflen, int allocmap, device_t *owner)
 {
 	const input_port_config *port;
 	const input_field_config *field;
@@ -1868,7 +1859,7 @@ input_port_value input_port_read(running_machine &machine, const char *tag)
 input_port_value input_port_read(device_t *device, const char *tag)
 {
 	astring tempstring;
-	const input_port_config *port = device->machine().port(device->baseconfig().subtag(tempstring, tag));
+	const input_port_config *port = device->machine().port(device->subtag(tempstring, tag));
 	if (port == NULL)
 		fatalerror("Unable to locate input port '%s'", tag);
 	return input_port_read_direct(port);
@@ -3208,7 +3199,7 @@ static int frame_get_digital_field_state(const input_field_config *field, int mo
     of port settings according to device settings
 -------------------------------------------------*/
 
-static UINT32 port_default_value(const char *fulltag, UINT32 mask, UINT32 defval, device_config *owner)
+static UINT32 port_default_value(const char *fulltag, UINT32 mask, UINT32 defval, device_t *owner)
 {
 	astring tempstring;
 	const input_device_default *def = NULL;
@@ -3231,7 +3222,7 @@ static UINT32 port_default_value(const char *fulltag, UINT32 mask, UINT32 defval
     detokenize a series of input port tokens
 -------------------------------------------------*/
 
-static void port_config_detokenize(ioport_list &portlist, const input_port_token *ipt, char *errorbuf, int errorbuflen, device_config *owner)
+static void port_config_detokenize(ioport_list &portlist, const input_port_token *ipt, char *errorbuf, int errorbuflen, device_t *owner)
 {
 	UINT32 entrytype = INPUT_TOKEN_INVALID;
 	input_setting_config *cursetting = NULL;
@@ -5423,7 +5414,7 @@ static void setup_keybuffer(running_machine &machine)
 	input_port_private *portdata = machine.input_port_data;
 	portdata->inputx_timer = machine.scheduler().timer_alloc(FUNC(inputx_timerproc));
 	portdata->keybuffer = auto_alloc_clear(machine, key_buffer);
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, clear_keybuffer);
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(clear_keybuffer), &machine));
 }
 
 
