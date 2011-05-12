@@ -132,7 +132,9 @@ INLINE floppy_drive *get_safe_token(device_t *device)
 INLINE const inline_floppy_config *get_config_dev(const device_t *device)
 {
 	assert(device != NULL);
+#if 0 //mamep:link error by debug build
 	assert( device->type() == FLOPPY || device->type() == FLOPPY_APPLE || device->type() == FLOPPY_SONY);
+#endif
 	return (const inline_floppy_config *)downcast<const legacy_device_base *>(device)->inline_config();
 }
 
