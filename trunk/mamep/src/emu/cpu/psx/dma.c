@@ -29,13 +29,6 @@ const device_type PSX_DMA = &device_creator<psxdma_device>;
 psxdma_device::psxdma_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
 	: device_t(mconfig, PSX_DMA, "PSX DMA", tag, owner, clock)
 {
-	for( int index = 0; index < 7; index++ )
-	{
-		psx_dma_channel *dma = &channel[ index ];
-
-		dma->fn_read = NULL;
-		dma->fn_write = NULL;
-	}
 }
 
 void psxdma_device::device_reset()
@@ -67,13 +60,13 @@ void psxdma_device::device_start()
 	{
 		psx_dma_channel *dma = &channel[ index ];
 
-		dma->timer = machine().scheduler().timer_alloc(timer_expired_delegate(FUNC(psxdma_device::dma_finished_callback), this));
+		dma->timer = machine().scheduler().timer_alloc( timer_expired_delegate( FUNC( psxdma_device::dma_finished_callback ), this) );
 
-		machine().save().save_item( "psxdma", tag(), index, NAME(dma->n_base) );
-		machine().save().save_item( "psxdma", tag(), index, NAME(dma->n_blockcontrol) );
-		machine().save().save_item( "psxdma", tag(), index, NAME(dma->n_channelcontrol) );
-		machine().save().save_item( "psxdma", tag(), index, NAME(dma->n_ticks) );
-		machine().save().save_item( "psxdma", tag(), index, NAME(dma->b_running) );
+		machine().save().save_item( "psxdma", tag(), index, NAME( dma->n_base ) );
+		machine().save().save_item( "psxdma", tag(), index, NAME( dma->n_blockcontrol ) );
+		machine().save().save_item( "psxdma", tag(), index, NAME( dma->n_channelcontrol ) );
+		machine().save().save_item( "psxdma", tag(), index, NAME( dma->n_ticks ) );
+		machine().save().save_item( "psxdma", tag(), index, NAME( dma->b_running ) );
 	}
 
 	save_item( NAME(n_dpcp) );
@@ -135,8 +128,8 @@ void psxdma_device::dma_interrupt_update()
 void psxdma_device::dma_finished( int index )
 {
 	psx_machine *p_psx = machine().driver_data<psx_state>()->m_p_psx;
-
 	UINT32 *p_n_psxram = p_psx->p_n_psxram;
+
 	psx_dma_channel *dma = &channel[ index ];
 
 	if( dma->n_channelcontrol == 0x01000401 && index == 2 )
@@ -171,7 +164,7 @@ void psxdma_device::dma_finished( int index )
 				n_address &= n_adrmask;
 				n_nextaddress = p_n_psxram[ n_address / 4 ];
 				n_size = n_nextaddress >> 24;
-				(*dma->fn_write)( machine(), n_address + 4, n_size );
+				dma->fn_write( n_address + 4, n_size );
 				//FIXME:
 				// The following conditions will cause an endless loop.
 				// If stopping the transfer is correct I cannot judge
@@ -202,12 +195,12 @@ void psxdma_device::dma_finished_callback(void *ptr, int param)
 	dma_finished(param);
 }
 
-void psxdma_device::install_read_handler( int index, psx_dma_read_handler p_fn_dma_read )
+void psxdma_device::install_read_handler( int index, psx_dma_read_delegate p_fn_dma_read )
 {
 	channel[ index ].fn_read = p_fn_dma_read;
 }
 
-void psxdma_device::install_write_handler( int index, psx_dma_read_handler p_fn_dma_write )
+void psxdma_device::install_write_handler( int index, psx_dma_read_delegate p_fn_dma_write )
 {
 	channel[ index ].fn_write = p_fn_dma_write;
 }
@@ -258,14 +251,14 @@ WRITE32_MEMBER( psxdma_device::write )
 				}
 
 				if( dma->n_channelcontrol == 0x01000000 &&
-					dma->fn_read != NULL )
+					!dma->fn_read.isnull() )
 				{
 					verboselog( machine(), 1, "dma %d read block %08x %08x\n", index, n_address, n_size );
-					(*dma->fn_read)( machine(), n_address, n_size );
+					dma->fn_read( n_address, n_size );
 					dma_finished( index );
 				}
 				else if (dma->n_channelcontrol == 0x11000000 &&	// CD DMA
-					dma->fn_read != NULL )
+					!dma->fn_read.isnull() )
 				{
 					verboselog( machine(), 1, "dma %d read block %08x %08x\n", index, n_address, n_size );
 
@@ -274,14 +267,14 @@ WRITE32_MEMBER( psxdma_device::write )
 					oursize = (oursize > 1) ? oursize : 1;
 					oursize *= (dma->n_blockcontrol&0xffff);
 
-					(*dma->fn_read)( machine(), n_address, oursize );
+					dma->fn_read( n_address, oursize );
 					dma_finished( index );
 				}
 				else if( dma->n_channelcontrol == 0x01000200 &&
-					dma->fn_read != NULL )
+					!dma->fn_read.isnull() )
 				{
 					verboselog( machine(), 1, "dma %d read block %08x %08x\n", index, n_address, n_size );
-					(*dma->fn_read)( machine(), n_address, n_size );
+					dma->fn_read( n_address, n_size );
 					if( index == 1 )
 					{
 						dma_start_timer( index, 26000 );
@@ -292,31 +285,31 @@ WRITE32_MEMBER( psxdma_device::write )
 					}
 				}
 				else if( dma->n_channelcontrol == 0x01000201 &&
-					dma->fn_write != NULL )
+					!dma->fn_write.isnull() )
 				{
 					verboselog( machine(), 1, "dma %d write block %08x %08x\n", index, n_address, n_size );
-					(*dma->fn_write)( machine(), n_address, n_size );
+					dma->fn_write( n_address, n_size );
 					dma_finished( index );
 				}
 				else if( dma->n_channelcontrol == 0x11050100 &&
-					dma->fn_write != NULL )
+					!dma->fn_write.isnull() )
 				{
 					/* todo: check this is a write not a read... */
 					verboselog( machine(), 1, "dma %d write block %08x %08x\n", index, n_address, n_size );
-					(*dma->fn_write)( machine(), n_address, n_size );
+					dma->fn_write( n_address, n_size );
 					dma_finished( index );
 				}
 				else if( dma->n_channelcontrol == 0x11150100 &&
-					dma->fn_write != NULL )
+					!dma->fn_write.isnull() )
 				{
 					/* todo: check this is a write not a read... */
 					verboselog( machine(), 1, "dma %d write block %08x %08x\n", index, n_address, n_size );
-					(*dma->fn_write)( machine(), n_address, n_size );
+					dma->fn_write( n_address, n_size );
 					dma_finished( index );
 				}
 				else if( dma->n_channelcontrol == 0x01000401 &&
 					index == 2 &&
-					dma->fn_write != NULL )
+					!dma->fn_write.isnull() )
 				{
 					verboselog( machine(), 1, "dma %d write linked list %08x\n",
 						index, dma->n_base );

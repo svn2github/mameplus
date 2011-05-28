@@ -150,9 +150,10 @@ public:
 
 static WRITE32_DEVICE_HANDLER( eeprom_w )
 {
-	eeprom_write_bit(device, (data&0x01) ? 1 : 0);
-	eeprom_set_clock_line(device, (data&0x04) ? ASSERT_LINE : CLEAR_LINE);
-	eeprom_set_cs_line(device, (data&0x02) ? CLEAR_LINE : ASSERT_LINE);
+	eeprom_device *eeprom = downcast<eeprom_device *>(device);
+	eeprom->write_bit((data&0x01) ? 1 : 0);
+	eeprom->set_clock_line((data&0x04) ? ASSERT_LINE : CLEAR_LINE);
+	eeprom->set_cs_line((data&0x02) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 static WRITE32_HANDLER( mb89371_w )
@@ -183,9 +184,8 @@ ADDRESS_MAP_END
 
 /* SCSI */
 
-static void scsi_dma_read( running_machine &machine, UINT32 n_address, INT32 n_size )
+static void scsi_dma_read( konamigv_state *state, UINT32 n_address, INT32 n_size )
 {
-	konamigv_state *state = machine.driver_data<konamigv_state>();
 	UINT32 *p_n_psxram = state->m_p_n_psxram;
 	UINT8 *sector_buffer = state->m_sector_buffer;
 	int i;
@@ -229,9 +229,8 @@ static void scsi_dma_read( running_machine &machine, UINT32 n_address, INT32 n_s
 	}
 }
 
-static void scsi_dma_write( running_machine &machine, UINT32 n_address, INT32 n_size )
+static void scsi_dma_write( konamigv_state *state, UINT32 n_address, INT32 n_size )
 {
-	konamigv_state *state = machine.driver_data<konamigv_state>();
 	UINT32 *p_n_psxram = state->m_p_n_psxram;
 	UINT8 *sector_buffer = state->m_sector_buffer;
 	int i;
@@ -329,10 +328,11 @@ static void spu_irq(device_t *device, UINT32 data)
 static MACHINE_CONFIG_START( konamigv, konamigv_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", CXD8530BQ, XTAL_67_7376MHz )
-	MCFG_PSX_DMA_CHANNEL_READ( 5, scsi_dma_read )
-	MCFG_PSX_DMA_CHANNEL_WRITE( 5, scsi_dma_write )
 	MCFG_CPU_PROGRAM_MAP( konamigv_map )
 	MCFG_CPU_VBLANK_INT("screen", psx_vblank)
+
+	MCFG_PSX_DMA_CHANNEL_READ( "maincpu", 5, psx_dma_read_delegate( FUNC( scsi_dma_read ), (konamigv_state *) owner ) )
+	MCFG_PSX_DMA_CHANNEL_WRITE( "maincpu", 5, psx_dma_write_delegate( FUNC( scsi_dma_write ), (konamigv_state *) owner ) )
 
 	MCFG_MACHINE_START( konamigv )
 	MCFG_MACHINE_RESET( konamigv )
@@ -381,7 +381,7 @@ static INPUT_PORTS_START( konamigv )
 	PORT_BIT( 0x00000400, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x00000800, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x00001000, IP_ACTIVE_LOW )
-	PORT_BIT( 0x00002000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE( "eeprom", eeprom_read_bit )
+	PORT_BIT( 0x00002000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER( "eeprom", eeprom_device, read_bit )
 	PORT_BIT( 0x00004000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x00008000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0xffff0000, IP_ACTIVE_LOW, IPT_UNKNOWN )

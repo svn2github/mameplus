@@ -26,8 +26,10 @@ class sega_837_13551 : public jvs_device
 public:
 	sega_837_13551(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 	static void static_set_port_tag(device_t &device, int port, const char *tag);
-	const input_port_token *device_input_ports() const;
+	ioport_constructor device_input_ports() const;
 
+	DECLARE_WRITE_LINE_MEMBER(jvs13551_coin_1_w);
+	DECLARE_WRITE_LINE_MEMBER(jvs13551_coin_2_w);
 	void inc_coin(int coin);
 
 protected:

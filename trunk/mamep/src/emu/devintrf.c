@@ -452,7 +452,7 @@ device_t *device_t::siblingdevice(const char *_tag) const
 
 	// build a fully-qualified name
 	astring tempstring;
-	return machine().device(siblingtag(tempstring, _tag));
+	return mconfig().devicelist().find((const char *)siblingtag(tempstring, _tag));
 }
 
 
@@ -809,7 +809,7 @@ machine_config_constructor device_t::device_mconfig_additions() const
 //  input ports description for this device
 //-------------------------------------------------
 
-const input_port_token *device_t::device_input_ports() const
+ioport_constructor device_t::device_input_ports() const
 {
 	// none by default
 	return NULL;

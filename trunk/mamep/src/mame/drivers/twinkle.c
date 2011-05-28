@@ -115,7 +115,7 @@ Notes:
       RTC-65271  - Epson Toyocom RTC-65271 real-time clock
       D481850GF  - NEC D481850GF-A12 128k x 32Bit x 2 Banks SGRAM (QFP100)
       CXD2925Q   - Sony CXD2925Q SPU (QFP100)
-      CXD8561Q   - Sony CXD8561Q GTE (QFP208)
+      CXD8561Q   - Sony CXD8561Q GPU (QFP208)
       CXD8530CQ  - Sony CXD8530CQ R3000-based CPU (QFP208)
       MC44200FT  - Motorola MC44200FT Triple 8-bit Video DAC (QFP44)
       KM48V514   - Samsung Electronics KM48V514BJ-6 512kx8 EDO DRAM (SOJ28)
@@ -745,9 +745,8 @@ ADDRESS_MAP_END
 
 /* SCSI */
 
-static void scsi_dma_read( running_machine &machine, UINT32 n_address, INT32 n_size )
+static void scsi_dma_read( twinkle_state *state, UINT32 n_address, INT32 n_size )
 {
-	twinkle_state *state = machine.driver_data<twinkle_state>();
 	UINT32 *p_n_psxram = state->m_p_n_psxram;
 	int i;
 	int n_this;
@@ -790,9 +789,8 @@ static void scsi_dma_read( running_machine &machine, UINT32 n_address, INT32 n_s
 	}
 }
 
-static void scsi_dma_write( running_machine &machine, UINT32 n_address, INT32 n_size )
+static void scsi_dma_write( twinkle_state *state, UINT32 n_address, INT32 n_size )
 {
-	twinkle_state *state = machine.driver_data<twinkle_state>();
 	UINT32 *p_n_psxram = state->m_p_n_psxram;
 	int i;
 	int n_this;
@@ -880,10 +878,11 @@ static const i2cmem_interface i2cmem_interface =
 static MACHINE_CONFIG_START( twinkle, twinkle_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", CXD8530CQ, XTAL_67_7376MHz )
-	MCFG_PSX_DMA_CHANNEL_READ( 5, scsi_dma_read )
-	MCFG_PSX_DMA_CHANNEL_WRITE( 5, scsi_dma_write )
 	MCFG_CPU_PROGRAM_MAP( main_map )
 	MCFG_CPU_VBLANK_INT( "mainscreen", psx_vblank )
+
+	MCFG_PSX_DMA_CHANNEL_READ( "maincpu", 5, psx_dma_read_delegate( FUNC( scsi_dma_read ), (twinkle_state *) owner ) )
+	MCFG_PSX_DMA_CHANNEL_WRITE( "maincpu", 5, psx_dma_write_delegate( FUNC( scsi_dma_write ), (twinkle_state *) owner ) )
 
 	MCFG_CPU_ADD("audiocpu", M68000, 32000000/2)	/* 16.000 MHz */
 	MCFG_CPU_PROGRAM_MAP( sound_map )

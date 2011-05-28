@@ -208,7 +208,7 @@ G: gun mania only, drives air soft gun (this game uses real BB bullet)
   LA4705    - Sanyo LA4705 15W 2-channel power amplifier (SIP18)
   LM358     - National Semiconductor LM358 low power dual operational amplifier (SOIC8, @ 33C)
   CXD2925Q  - Sony CXD2925Q SPU (QFP100, @ 15Q)
-  CXD8561Q  - Sony CXD8561Q GTE (QFP208, @ 10M)
+  CXD8561Q  - Sony CXD8561Q GPU (QFP208, @ 10M)
   CXD8530CQ - Sony CXD8530CQ R3000-based CPU (QFP208, @ 17M)
   9536      - Xilinx XC9536 in-system-programmable CPLD (PLCC44, @ 22J)
   3644      - Hitachi H8/3644 HD6473644H microcontroller with 32k ROM & 1k RAM (QFP64, @ 18E,
@@ -1072,25 +1072,23 @@ static WRITE32_HANDLER( atapi_reset_w )
 	}
 }
 
-static void cdrom_dma_read( running_machine &machine, UINT32 n_address, INT32 n_size )
+static void cdrom_dma_read( ksys573_state *state, UINT32 n_address, INT32 n_size )
 {
-	verboselog( machine, 2, "cdrom_dma_read( %08x, %08x )\n", n_address, n_size );
+	verboselog( state->machine(), 2, "cdrom_dma_read( %08x, %08x )\n", n_address, n_size );
 //  mame_printf_debug("DMA read: address %08x size %08x\n", n_address, n_size);
 }
 
-static void cdrom_dma_write( running_machine &machine, UINT32 n_address, INT32 n_size )
+static void cdrom_dma_write( ksys573_state *state, UINT32 n_address, INT32 n_size )
 {
-	ksys573_state *state = machine.driver_data<ksys573_state>();
-
-	verboselog( machine, 2, "cdrom_dma_write( %08x, %08x )\n", n_address, n_size );
+	verboselog( state->machine(), 2, "cdrom_dma_write( %08x, %08x )\n", n_address, n_size );
 //  mame_printf_debug("DMA write: address %08x size %08x\n", n_address, n_size);
 
 	state->m_atapi_xferbase = n_address;
 
-	verboselog( machine, 2, "atapi_xfer_end: %d %d\n", state->m_atapi_xferlen, state->m_atapi_xfermod );
+	verboselog( state->machine(), 2, "atapi_xfer_end: %d %d\n", state->m_atapi_xferlen, state->m_atapi_xfermod );
 
 	// set a transfer complete timer (Note: CYCLES_PER_SECTOR can't be lower than 2000 or the BIOS ends up "out of order")
-	state->m_atapi_timer->adjust(machine.device<cpu_device>("maincpu")->cycles_to_attotime((ATAPI_CYCLES_PER_SECTOR * (state->m_atapi_xferlen/2048))));
+	state->m_atapi_timer->adjust(state->machine().device<cpu_device>("maincpu")->cycles_to_attotime((ATAPI_CYCLES_PER_SECTOR * (state->m_atapi_xferlen/2048))));
 }
 
 static WRITE32_HANDLER( security_w )
@@ -1655,9 +1653,9 @@ static void gn845pwbb_clk_w( running_machine &machine, int offset, int data )
 
 static CUSTOM_INPUT( gn845pwbb_read )
 {
-	ksys573_state *state = field->port->machine().driver_data<ksys573_state>();
+	ksys573_state *state = field.machine().driver_data<ksys573_state>();
 
-	return input_port_read(field->port->machine(), "STAGE") & state->m_stage_mask;
+	return input_port_read(field.machine(), "STAGE") & state->m_stage_mask;
 }
 
 static void gn845pwbb_output_callback( running_machine &machine, int offset, int data )
@@ -2883,7 +2881,7 @@ static WRITE32_HANDLER( gunmania_w )
 
 static CUSTOM_INPUT( gunmania_tank_shutter_sensor )
 {
-	ksys573_state *state = field->port->machine().driver_data<ksys573_state>();
+	ksys573_state *state = field.machine().driver_data<ksys573_state>();
 
 	if( state->m_tank_shutter_position == 0 )
 	{
@@ -2895,7 +2893,7 @@ static CUSTOM_INPUT( gunmania_tank_shutter_sensor )
 
 static CUSTOM_INPUT( gunmania_cable_holder_sensor )
 {
-	ksys573_state *state = field->port->machine().driver_data<ksys573_state>();
+	ksys573_state *state = field.machine().driver_data<ksys573_state>();
 
 	return state->m_cable_holder_release;
 }
@@ -2961,10 +2959,11 @@ static const adc083x_interface konami573_adc_interface = {
 static MACHINE_CONFIG_START( konami573, ksys573_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", CXD8530CQ, XTAL_67_7376MHz )
-	MCFG_PSX_DMA_CHANNEL_READ( 5, cdrom_dma_read )
-	MCFG_PSX_DMA_CHANNEL_WRITE( 5, cdrom_dma_write )
 	MCFG_CPU_PROGRAM_MAP( konami573_map )
 	MCFG_CPU_VBLANK_INT("screen", sys573_vblank)
+
+	MCFG_PSX_DMA_CHANNEL_READ( "maincpu", 5, psx_dma_read_delegate( FUNC( cdrom_dma_read ), (ksys573_state *) owner ) )
+	MCFG_PSX_DMA_CHANNEL_WRITE( "maincpu", 5, psx_dma_write_delegate( FUNC( cdrom_dma_write ), (ksys573_state *) owner ) )
 
 	MCFG_MACHINE_RESET( konami573 )
 

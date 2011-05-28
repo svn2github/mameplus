@@ -336,7 +336,8 @@ frogger			// GX392 (c) 1981 Konami
 froggers1		// (c) 1981 Sega
 froggers2		// 834-0068 (c) 1981 Sega
 froggermc		// 800-3110 (c) 1981 Sega
-amidar			// GX337 (c) 1981 Konami
+amidar			// GX337 (c) 1982 Konami
+amidar1			// GX337 (c) 1981 Konami
 amidaru			// GX337 (c) 1982 Konami + Stern license
 amidaro			// GX337 (c) 1982 Konami + Olympia license
 amidarb			// bootleg
@@ -1925,6 +1926,7 @@ arktayt2		// bootleg
 arkatour		// ??? (c) 1987 Taito America Corporation + Romstar license (US)
 tetrsark		// ??? (c) D.R.Korea
 hexa			// D. R. Korea
+brixian			// (c) 1993 Cheil Computer System
 sqix			// B03 1987
 sqixr1			// B03 1987
 sqixu			// B03 1987
@@ -2018,6 +2020,7 @@ insectx			// B97 (c) 1989 Taito Corporation Japan (World)
 insectxj		// B97 (c) 1989 Taito Corporation (Japan)
 cchance			// (c)1987 Taito?
 champbwl		// (c)1989 Romstar.  not Taito, but the same Seta video chips
+doraemon		// Sunsoft / Epoch / Fujiko - Shogakukan - TV Asahi (prototype)
 
 // Taito L-System games
 raimais			// B36 (c) 1988 Taito Corporation (Japan)
@@ -3390,6 +3393,7 @@ pacapp			// 1998.12 Paca Paca Passion (Japan, PPP1/VER.A2)
 fgtlayer		// 1998.12 Fighting Layer (Japan, FTL0/VER.A)
 				// 1999.01 Bust A Move (Metro)
 ptblank2		// 1999.?? Point Blank 2 (GNB5/VER.A)
+gunbarl			// 1999.?? Gunbarl (Japan, GNB4/VER.A)
 sws99			// 1999.05 Super World Stadium '99 (Japan, SS91/VER.A3)
 ghlpanic		// 1999.?? Ghoul Panic (Asia, OB2/VER.A)
 				// 1999.07 Oh Bakyuun (Japan, OB1)
@@ -8633,6 +8637,7 @@ spk115it		// (c) 199? IGS
 spk116it		// (c) 199? IGS
 jackie			// (c) 1993 IGS
 pktet346		// (c) 199? IGS
+cpokerx			// (c) 1993 IGS
 chleague		// (c) 199? IGS
 chleagul		// (c) 199? IGS
 number10		// (c) IGS (Board labeled Playmark Srl)
@@ -9101,6 +9106,9 @@ crisscrs		// (c) 1986
 tenup			// (c) 1988
 tenup3			// (c) 1988
 
+// JPM System 5 Games
+m_popeye
+
 // JPM System 5 + video expansion 2 Games
 monopoly		// (c) 1994
 monoplcl		// (c) 1995
@@ -9511,6 +9519,7 @@ turbosub6		// (c) 1985 Entertainment Sciences
 pipeline		// (c) 1990 Daehyun Electronics
 ttchamp
 ttchampa
+baryon			// (c) 1997 SemiCom
 dreamwld		// (c) 2000 SemiCom
 cybertnk		// (c) 1990 Coreland
 cubeqst			// (c) 1983 Simutrek Inc.
@@ -10727,7 +10736,7 @@ m_ccelbr
 m_gmball
 m_grtecp		// 199?
 m_blsbys		// BwB
-//m_frkstn
+m_frkstn
 
 // MPU5
 m_honmon
@@ -12285,7 +12294,8 @@ strike
 // 3DO
 // (used by Orbatak prototype, and Beavis + Butthead prototype)
 3do
-3do_pal
+//3do_pal
+orbatak
 
 // Acorn Archimedies
 // (hardware used by erotictac, Aristokrat MK5 and others)
@@ -12472,7 +12482,7 @@ cd32		// (c)1993 Commodore
 
 // GCE Vectrex
 // (parent to Spectrum I+)
-vectrex		// (c)1982 GCE
+//vectrex		// (c)1982 GCE
 
 // NEC PC Engine
 // Hardware used by uapce.c, and several others (implementations could be merged)

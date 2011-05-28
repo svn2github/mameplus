@@ -46,10 +46,12 @@
 #define MAX_DRIVERS 65536
 
 static const char *drivlist[MAX_DRIVERS];
+static int drivcount;
 
 #ifdef DRIVER_SWITCH
 static char filename[_MAX_FNAME];
 static const char *extra_drivlist[MAX_DRIVERS];
+static int extra_drivcount;
 #endif /* DRIVER_SWITCH */
 
 
@@ -65,48 +67,8 @@ int sort_callback(const void *elem1, const void *elem2)
 	return strcmp(*item1, *item2);
 }
 
-
-//-------------------------------------------------
-//  main - primary entry point
-//-------------------------------------------------
-
-int main(int argc, char *argv[])
+int parse_file(const char *srcfile)
 {
-	// needs at least 1 argument
-	if (argc < 2)
-	{
-		fprintf(stderr,
-			"Usage:\n"
-			"  makelist <source.lst>\n"
-		);
-		return 0;
-	}
-
-	bool header_outputed = false;
-	int drivcount = 0;
-	for (int src_idx = 1; src_idx < argc; src_idx++)
-	{
-
-	// extract arguments
-	const char *srcfile = argv[src_idx];
-
-#ifdef DRIVER_SWITCH
-	int extra_drivcount = 0;
-#endif /* DRIVER_SWITCH */
-	{
-		char drive[_MAX_DRIVE];
-		char dir[_MAX_DIR];
-		char file[_MAX_FNAME];
-		char ext[_MAX_EXT];
-		_splitpath(srcfile, drive, dir, file, ext);
-#ifdef DRIVER_SWITCH
-		strcpy(filename, file);
-#endif /* DRIVER_SWITCH */
-
-		if (stricmp(ext, ".lst")) continue;
-	}
-
-
 	// read source file
 	void *buffer;
 	UINT32 length;
@@ -122,6 +84,7 @@ int main(int argc, char *argv[])
 	char *endptr = srcptr + length;
 	int linenum = 1;
 	bool in_comment = false;
+	bool in_import = false;
 	while (srcptr < endptr)
 	{
 		char c = *srcptr++;
@@ -159,14 +122,6 @@ int main(int argc, char *argv[])
 			continue;
 		}
 
-		// if we hit a C++ comment, scan to the end of line
-		if (c == '/' && *srcptr == '/')
-		{
-			while (srcptr < endptr && *srcptr != 13 && *srcptr != 10)
-				srcptr++;
-			continue;
-		}
-
 		// mamep: if we hit a preprocesser comment, scan to the end of line
 		if (c == '#' && *srcptr == ' ')
 		{
@@ -175,33 +130,110 @@ int main(int argc, char *argv[])
 			continue;
 		}
 
-		// extract the driver name
-		char drivname[32];
-		drivname[0] = 0;
-		srcptr--;
-		for (int pos = 0; srcptr < endptr && pos < ARRAY_LENGTH(drivname) - 1 && !isspace(*srcptr); pos++)
+		// look for start of import directive start
+		if (c == '#')
 		{
-			drivname[pos] = *srcptr++;
-			drivname[pos+1] = 0;
+			in_import = true;
+			continue;
 		}
 
-		// verify the name as valid
-		for (char *drivch = drivname; *drivch != 0; drivch++)
+		// if we hit a C++ comment, scan to the end of line
+		if (c == '/' && *srcptr == '/')
 		{
-			if ((*drivch >= 'a' && *drivch <= 'z') || (*drivch >= '0' && *drivch <= '9') || *drivch == '_')
-				continue;
-			fprintf(stderr, "%s:%d - Invalid character '%c' in driver \"%s\"\n", srcfile, linenum, *drivch, drivname);
+			while (srcptr < endptr && *srcptr != 13 && *srcptr != 10)
+				srcptr++;
+			continue;
+		}
+
+		if (in_import) {
+			in_import = false;
+			char filename[256];
+			filename[0] = 0;
+			srcptr--;
+			for (int pos = 0; srcptr < endptr && pos < ARRAY_LENGTH(filename) - 1 && !isspace(*srcptr); pos++)
+			{
+				filename[pos] = *srcptr++;
+				filename[pos+1] = 0;
+			}
+			fprintf(stderr, "Importing drivers from '%s'\n", filename);
+			parse_file(filename);
+		} else {
+			// extract the driver name
+			char drivname[32];
+			drivname[0] = 0;
+			srcptr--;
+			for (int pos = 0; srcptr < endptr && pos < ARRAY_LENGTH(drivname) - 1 && !isspace(*srcptr); pos++)
+			{
+				drivname[pos] = *srcptr++;
+				drivname[pos+1] = 0;
+			}
+
+			// verify the name as valid
+			for (char *drivch = drivname; *drivch != 0; drivch++)
+			{
+				if ((*drivch >= 'a' && *drivch <= 'z') || (*drivch >= '0' && *drivch <= '9') || *drivch == '_')
+					continue;
+				fprintf(stderr, "%s:%d - Invalid character '%c' in driver \"%s\"\n", srcfile, linenum, *drivch, drivname);
+				return 1;
+			}
+
+			// add it to the list
+			char *name = (char *)malloc(strlen(drivname) + 1);
+			strcpy(name, drivname);
+			drivlist[drivcount++] = name;
+#ifdef DRIVER_SWITCH
+			extra_drivlist[extra_drivcount++] = name;
+#endif /* DRIVER_SWITCH */
+		}
+	}
+	return 0;
+}
+//-------------------------------------------------
+//  main - primary entry point
+//-------------------------------------------------
+
+int main(int argc, char *argv[])
+{
+	// needs at least 1 argument
+	if (argc < 2)
+	{
+		fprintf(stderr,
+			"Usage:\n"
+			"  makelist <source.lst>\n"
+		);
+		return 0;
+	}
+
+	bool header_outputed = false;
+	drivcount = 0;
+
+	// extract arguments
+	for (int src_idx = 1; src_idx < argc; src_idx++)
+	{
+
+		// extract arguments
+		const char *srcfile = argv[src_idx];
+
+#ifdef DRIVER_SWITCH
+		extra_drivcount = 0;
+#endif /* DRIVER_SWITCH */
+		{
+			char drive[_MAX_DRIVE];
+			char dir[_MAX_DIR];
+			char file[_MAX_FNAME];
+			char ext[_MAX_EXT];
+			_splitpath(srcfile, drive, dir, file, ext);
+#ifdef DRIVER_SWITCH
+			strcpy(filename, file);
+#endif /* DRIVER_SWITCH */
+
+		if (stricmp(ext, ".lst")) continue;
+		}
+
+		if (parse_file(srcfile)) {
 			return 1;
 		}
 
-		// add it to the list
-		char *name = (char *)malloc(strlen(drivname) + 1);
-		strcpy(name, drivname);
-		drivlist[drivcount++] = name;
-#ifdef DRIVER_SWITCH
-		extra_drivlist[extra_drivcount++] = name;
-#endif /* DRIVER_SWITCH */
-	}
 #ifdef DRIVER_SWITCH
 		// add a reference to the ___empty driver
 		extra_drivlist[extra_drivcount++] = "___empty";
@@ -269,7 +301,6 @@ int main(int argc, char *argv[])
 
 	// also output a global count
 	printf("int driver_list::s_driver_count = %d;\n", drivcount);
-
 
 	return 0;
 }

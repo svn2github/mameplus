@@ -270,9 +270,8 @@ static const k054539_interface k054539_config =
 
 /* SCSI */
 
-static void scsi_dma_read( running_machine &machine, UINT32 n_address, INT32 n_size )
+static void scsi_dma_read( konamigq_state *state, UINT32 n_address, INT32 n_size )
 {
-	konamigq_state *state = machine.driver_data<konamigq_state>();
 	UINT32 *p_n_psxram = state->m_p_n_psxram;
 	UINT8 *sector_buffer = state->m_sector_buffer;
 	int i;
@@ -306,7 +305,7 @@ static void scsi_dma_read( running_machine &machine, UINT32 n_address, INT32 n_s
 	}
 }
 
-static void scsi_dma_write( running_machine &machine, UINT32 n_address, INT32 n_size )
+static void scsi_dma_write( konamigq_state *state, UINT32 n_address, INT32 n_size )
 {
 }
 
@@ -365,10 +364,11 @@ static MACHINE_RESET( konamigq )
 static MACHINE_CONFIG_START( konamigq, konamigq_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", CXD8530BQ, XTAL_67_7376MHz )
-	MCFG_PSX_DMA_CHANNEL_READ( 5, scsi_dma_read )
-	MCFG_PSX_DMA_CHANNEL_WRITE( 5, scsi_dma_write )
 	MCFG_CPU_PROGRAM_MAP( konamigq_map )
 	MCFG_CPU_VBLANK_INT("screen", psx_vblank)
+
+	MCFG_PSX_DMA_CHANNEL_READ( "maincpu", 5, psx_dma_read_delegate( FUNC( scsi_dma_read ), (konamigq_state *) owner ) )
+	MCFG_PSX_DMA_CHANNEL_WRITE( "maincpu", 5, psx_dma_write_delegate( FUNC( scsi_dma_write ), (konamigq_state *) owner ) )
 
 	MCFG_CPU_ADD( "soundcpu", M68000, 8000000 )
 	MCFG_CPU_PROGRAM_MAP( konamigq_sound_map)
@@ -483,12 +483,12 @@ static INPUT_PORTS_START( konamigq )
 	PORT_DIPSETTING(    0x00, "Independent" )
 	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x00000080, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x00010000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE("eeprom", eeprom_read_bit)
+	PORT_BIT( 0x00010000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
 
 	PORT_START( "EEPROMOUT" )
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_write_bit)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_cs_line)
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE("eeprom", eeprom_set_clock_line)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, write_bit)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_clock_line)
 INPUT_PORTS_END
 
 ROM_START( cryptklr )

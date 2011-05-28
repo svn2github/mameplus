@@ -28,10 +28,12 @@ DRVLIST += \
 	$(MESSOBJ)/mess.lst \
 
 DRVLIBS += \
+	$(MESSOBJ)/ascii.a \
 	$(MESSOBJ)/atari.a \
 	$(MESSOBJ)/bandai.a \
 	$(MESSOBJ)/capcom.a \
 	$(MESSOBJ)/funtech.a \
+	$(MESSOBJ)/nec.a \
 	$(MESSOBJ)/nintendo.a \
 	$(MESSOBJ)/sega.a \
 	$(MESSOBJ)/snk.a \
@@ -51,22 +53,6 @@ $(MESSOBJ)/mame.a: \
 	$(MAME_MACHINE)/atari.o		\
 	$(MAME_VIDEO)/atari.o		\
 	$(MAME_VIDEO)/antic.o		\
-	$(MAME_VIDEO)/smsvdp.o 		\
-	$(MAME_MACHINE)/segasms.o 	\
-	$(MAME_DRIVERS)/segasms.o 	\
-	$(MAME_DRIVERS)/msx.o		\
-	$(MAME_MACHINE)/msx_slot.o	\
-	$(MAME_MACHINE)/msx.o		\
-	$(MAME_MACHINE)/ataricrt.o	\
-	$(MAME_MACHINE)/atarifdc.o	\
-	$(MAME_MACHINE)/pce.o		\
-	$(MAME_DRIVERS)/pce.o		\
-	$(MAME_MACHINE)/nes_mmc.o	\
-	$(MAME_VIDEO)/nes.o		\
-	$(MAME_MACHINE)/nes.o			\
-	$(MAME_DRIVERS)/nes.o		\
-	$(MAME_MACHINE)/snescart.o	\
-	$(MAME_DRIVERS)/snes.o		\
 	$(MAME_DRIVERS)/cps1.o	\
 	$(MAME_VIDEO)/cps1.o	\
 
@@ -74,7 +60,15 @@ $(MESSOBJ)/mame.a: \
 # manufacturer-specific groupings for drivers
 #-------------------------------------------------
 
+$(MESSOBJ)/ascii.a:                     \
+	$(MESS_DRIVERS)/msx.o		\
+	$(MESS_MACHINE)/msx.o		\
+	$(MESS_MACHINE)/msx_slot.o	\
+
 $(MESSOBJ)/atari.a:				\
+	$(MESS_MACHINE)/ataricrt.o	\
+	$(MESS_MACHINE)/atarifdc.o	\
+	$(MESS_DRIVERS)/atari400.o	\
 	$(MESS_MACHINE)/a7800.o		\
 	$(MESS_DRIVERS)/a7800.o		\
 	$(MESS_VIDEO)/a7800.o		\
@@ -89,13 +83,30 @@ $(MESSOBJ)/bandai.a:			\
 $(MESSOBJ)/funtech.a:			\
 	$(MESS_DRIVERS)/supracan.o	\
 
+$(MESSOBJ)/nec.a:				\
+	$(MESS_MACHINE)/pce.o		\
+	$(MESS_DRIVERS)/pce.o		\
+
 $(MESSOBJ)/nintendo.a:			\
+	$(MESS_MACHINE)/nes_mmc.o	\
+	$(MESS_VIDEO)/nes.o			\
+	$(MESS_MACHINE)/nes.o		\
+	$(MESS_DRIVERS)/nes.o		\
+	$(MESS_MACHINE)/snescart.o	\
+	$(MESS_DRIVERS)/snes.o		\
 	$(MESS_AUDIO)/gb.o			\
 	$(MESS_VIDEO)/gb.o			\
 	$(MESS_MACHINE)/gb.o		\
 	$(MESS_DRIVERS)/gb.o		\
 	$(MESS_DRIVERS)/gba.o		\
 	$(MESS_VIDEO)/gba.o		\
+
+$(MESSOBJ)/sega.a:				\
+	$(MAME_MACHINE)/md_cart.o	\
+	$(MESS_DRIVERS)/megadriv.o  \
+	$(MESS_VIDEO)/smsvdp.o		\
+	$(MESS_MACHINE)/segasms.o	\
+	$(MESS_DRIVERS)/segasms.o	\
 
 $(MESSOBJ)/snk.a:				\
 	$(MESS_DRIVERS)/ngp.o		\
@@ -148,7 +159,7 @@ $(MESS_MACHINE)/nes_mmc.o:	$(MESSSRC)/machine/nes_ines.c \
 # layout dependencies
 #-------------------------------------------------
 
-$(MESS_DRIVERS)/sms.o:		$(MESS_LAYOUT)/sms1.lh
+$(MESS_DRIVERS)/segasms.o:		$(MESS_LAYOUT)/sms1.lh
 
 
 #-------------------------------------------------

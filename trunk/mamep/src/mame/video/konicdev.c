@@ -8981,72 +8981,8 @@ static DEVICE_RESET( k053250 )
 }
 
 
-/***************************************************************************/
-/*                                                                         */
-/*                                 053252                                  */
-/*                                                                         */
-/***************************************************************************/
 
-typedef struct _k053252_state k053252_state;
-struct _k053252_state
-{
-	UINT16   regs[16];
-};
 
-/*****************************************************************************
-    INLINE FUNCTIONS
-*****************************************************************************/
-
-INLINE k053252_state *k053252_get_safe_token( device_t *device )
-{
-	assert(device != NULL);
-	assert(device->type() == K053252);
-
-	return (k053252_state *)downcast<legacy_device_base *>(device)->token();
-}
-
-/*****************************************************************************
-    DEVICE HANDLERS
-*****************************************************************************/
-
-READ16_DEVICE_HANDLER( k053252_word_r )
-{
-	k053252_state *k053252 = k053252_get_safe_token(device);
-	return k053252->regs[offset];
-}
-
-WRITE16_DEVICE_HANDLER( k053252_word_w )
-{
-	k053252_state *k053252 = k053252_get_safe_token(device);
-	COMBINE_DATA(k053252->regs + offset);
-}
-
-WRITE32_DEVICE_HANDLER( k053252_long_w )
-{
-	offset <<= 1;
-	k053252_word_w(device, offset, data >> 16, mem_mask >> 16);
-	k053252_word_w(device, offset + 1, data, mem_mask);
-}
-
-/*****************************************************************************
-    DEVICE INTERFACE
-*****************************************************************************/
-
-static DEVICE_START( k053252 )
-{
-	k053252_state *k053252 = k053252_get_safe_token(device);
-
-	device->save_item(NAME(k053252->regs));
-}
-
-static DEVICE_RESET( k053252 )
-{
-	k053252_state *k053252 = k053252_get_safe_token(device);
-	int i;
-
-	for (i = 0; i < 16; i++)
-		k053252->regs[i] = 0;
-}
 
 
 // Newer Konami devices
@@ -11259,26 +11195,6 @@ DEVICE_GET_INFO( k053250 )
 	}
 }
 
-DEVICE_GET_INFO( k053252 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k053252_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k053252);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k053252);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 053252");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
 
 DEVICE_GET_INFO( k001006 )
 {
@@ -11385,7 +11301,6 @@ DEFINE_LEGACY_DEVICE(K056832, k056832);
 DEFINE_LEGACY_DEVICE(K055555, k055555);
 DEFINE_LEGACY_DEVICE(K054338, k054338);
 DEFINE_LEGACY_DEVICE(K053250, k053250);
-DEFINE_LEGACY_DEVICE(K053252, k053252);
 DEFINE_LEGACY_DEVICE(K001006, k001006);
 DEFINE_LEGACY_DEVICE(K001005, k001005);
 DEFINE_LEGACY_DEVICE(K001604, k001604);
