@@ -3928,7 +3928,7 @@ static void menu_custom_button(running_machine &machine, ui_menu *menu, void *pa
 		
 		//count the number of custom buttons
 		for (port = machine.m_portlist.first(); port != NULL; port = port->next())
-			for (field = port->fieldlist; field != NULL; field = field->next)
+			for (field = port->first_field(); field != NULL; field = field->next())
 			{
 				int type = field->type;
 
@@ -3983,7 +3983,7 @@ static void menu_custom_button_populate(running_machine &machine, ui_menu *menu)
 
 	/* loop over the input ports and add autofire toggle items */
 	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
-		for (field = port->fieldlist; field != NULL; field = field->next)
+		for (field = port->first_field(); field != NULL; field = field->next())
 		{
 			int player = field->player;
 			int type = field->type;
