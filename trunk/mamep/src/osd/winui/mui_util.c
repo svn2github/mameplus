@@ -351,7 +351,7 @@ int numberOfScreens(const machine_config *config)
 
 struct control_cache_t
 {
-	input_port_token *ipt;
+	ioport_constructor ipt;
 	int num;
 };
 
@@ -360,13 +360,13 @@ static int cmp_ipt(const void *m1, const void *m2)
 	struct control_cache_t *p1 = (struct control_cache_t *)m1;
 	struct control_cache_t *p2 = (struct control_cache_t *)m2;
 
-	return p1->ipt - p2->ipt;
+	return &p1->ipt - &p2->ipt;
 }
 
 static void UpdateController(void)
 {
 	struct control_cache_t *cache;
-	const input_port_token *last_ipt = NULL;
+	ioport_constructor last_ipt = NULL;
 	BOOL flags[CONTROLLER_MAX];
 	int nGames = GetNumGames();
 	int b = 0;
@@ -379,7 +379,7 @@ static void UpdateController(void)
 
 	for (i = 0; i < nGames; i++)
 	{
-		cache[i].ipt = (input_port_token *)driver_list::driver(i).ipt;
+		cache[i].ipt = driver_list::driver(i).ipt;
 		cache[i].num = i;
 	}
 	qsort(cache, nGames, sizeof (*cache), cmp_ipt);
@@ -395,6 +395,7 @@ static void UpdateController(void)
 		{
 			const input_port_config *port;
 			ioport_list portlist;
+			astring errors;
 
 			int w = CONTROLLER_JOY8WAY;
 			BOOL lr = FALSE;
@@ -406,12 +407,18 @@ static void UpdateController(void)
 			b = 0;
 			p = 0;
 
-			input_port_list_init(portlist, last_ipt, NULL, 0, FALSE, NULL);
+			machine_config config(driver_list::driver(i), MameUIGlobal());
+			for (device_t *cfg = config.devicelist().first(); cfg != NULL; cfg = cfg->next())
+			{
+				if (cfg->input_ports()!=NULL) {
+					input_port_list_init(*cfg, portlist, errors);
+				}
+			}
 
 			for (port = portlist.first(); port != NULL; port = port->next())
 			{
 				const input_field_config *field;
-				for (field = port->fieldlist; field != NULL; field = field->next)
+				for (field = port->first_field(); field != NULL; field = field->next())
 				{
 				    int n;
     
@@ -646,21 +653,20 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->usesLightGun = FALSE;
 			if (gamedrv->ipt != NULL)
 			{
-				const input_port_config *port;
+				input_port_config *port;
 				ioport_list portlist;
-				
-				input_port_list_init(portlist, gamedrv->ipt, NULL, 0, FALSE, NULL);
+				astring errors;
 				for (device_t *cfg = config.devicelist().first(); cfg != NULL; cfg = cfg->next())
 				{
 					if (cfg->input_ports()!=NULL) {
-						//input_port_list_init(portlist, cfg->input_ports(), NULL, 0, FALSE, cfg);
+						input_port_list_init(*cfg, portlist, errors);
 					}
 				}
 
 				for (port = portlist.first(); port != NULL; port = port->next())
 				{
 					const input_field_config *field;
-					for (field = port->fieldlist; field != NULL; field = field->next)
+					for (field = port->first_field(); field != NULL; field = field->next())
  					{
 						UINT32 type;
 						type = field->type;
