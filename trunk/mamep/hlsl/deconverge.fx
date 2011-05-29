@@ -34,7 +34,6 @@ struct VS_INPUT
 	float4 Position : POSITION;
 	float4 Color : COLOR0;
 	float2 TexCoord : TEXCOORD0;
-	float2 ExtraInfo : TEXCOORD1;
 };
 
 struct PS_INPUT
@@ -112,12 +111,36 @@ float4 ps_main(PS_INPUT Input) : COLOR
 	float2 MagnetCenter = float2(0.9f / WidthRatio, 0.9f / HeightRatio);
 	float MagnetDistance = length((MagnetCenter - Input.TexCoord) * float2(WidthRatio, HeightRatio));
 	float Deconverge = 1.0f - MagnetDistance / MagnetCenter;
-	Deconverge = clamp(Deconverge, 0.0f, 1.0f);
+	Deconverge = 1.0f;//clamp(Deconverge, 0.0f, 1.0f);
 	float Alpha = tex2D(DiffuseSampler, Input.TexCoord).a;
-	float RedTexel = tex2D(DiffuseSampler, lerp(Input.TexCoord, Input.RedCoord, Deconverge) + 0.5f / float2(RawWidth, RawHeight)).r;
-	float GrnTexel = tex2D(DiffuseSampler, lerp(Input.TexCoord, Input.GrnCoord, Deconverge) + 0.5f / float2(RawWidth, RawHeight)).g;
-	float BluTexel = tex2D(DiffuseSampler, lerp(Input.TexCoord, Input.BluCoord, Deconverge) + 0.5f / float2(RawWidth, RawHeight)).b;
 	
+	float2 RawDims = float2(RawWidth, RawHeight);
+	float2 TexCoord = Input.TexCoord * RawDims;
+	float2 RedCoord = Input.RedCoord * RawDims;
+	float2 GrnCoord = Input.GrnCoord * RawDims;
+	float2 BluCoord = Input.BluCoord * RawDims;
+	TexCoord.y = TexCoord.y - frac(TexCoord.y);
+	RedCoord.y = RedCoord.y - frac(RedCoord.y);
+	GrnCoord.y = GrnCoord.y - frac(GrnCoord.y);
+	BluCoord.y = BluCoord.y - frac(BluCoord.y);
+	
+	float RedTexel = tex2D(DiffuseSampler, lerp(TexCoord, RedCoord, Deconverge) / RawDims + 0.5f / RawDims).r;
+	float GrnTexel = tex2D(DiffuseSampler, lerp(TexCoord, GrnCoord, Deconverge) / RawDims + 0.5f / RawDims).g;
+	float BluTexel = tex2D(DiffuseSampler, lerp(TexCoord, BluCoord, Deconverge) / RawDims + 0.5f / RawDims).b;
+	
+	//RedTexel *= Input.RedCoord.x < (WidthRatio / RawWidth) ? 0.0f : 1.0f;
+	//RedTexel *= Input.RedCoord.y < (HeightRatio / RawHeight) ? 0.0f : 1.0f;
+	//RedTexel *= Input.RedCoord.x > (1.0f / WidthRatio + 1.0f / RawWidth) ? 0.0f : 1.0f;
+	//RedTexel *= Input.RedCoord.y > (1.0f / HeightRatio + 1.0f / RawHeight) ? 0.0f : 1.0f;
+	//GrnTexel *= Input.GrnCoord.x < (WidthRatio / RawWidth) ? 0.0f : 1.0f;
+	//GrnTexel *= Input.GrnCoord.y < (HeightRatio / RawHeight) ? 0.0f : 1.0f;
+	//GrnTexel *= Input.GrnCoord.x > (1.0f / WidthRatio + 1.0f / RawWidth) ? 0.0f : 1.0f;
+	//GrnTexel *= Input.GrnCoord.y > (1.0f / HeightRatio + 1.0f / RawHeight) ? 0.0f : 1.0f;
+	//BluTexel *= Input.BluCoord.x < (WidthRatio / RawWidth) ? 0.0f : 1.0f;
+	//BluTexel *= Input.BluCoord.y < (HeightRatio / RawHeight) ? 0.0f : 1.0f;
+	//BluTexel *= Input.BluCoord.x > (1.0f / WidthRatio + 1.0f / RawWidth) ? 0.0f : 1.0f;
+	//BluTexel *= Input.BluCoord.y > (1.0f / HeightRatio + 1.0f / RawHeight) ? 0.0f : 1.0f;
+
 	return float4(RedTexel, GrnTexel, BluTexel, Alpha);
 }
 
