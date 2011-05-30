@@ -9,13 +9,12 @@
 
  To do:
 
- - PSG control for Game Gear (needs custom SN76489 with stereo output for each channel)
  - SIO interface for Game Gear (needs netplay, I guess)
  - SMS lightgun support
  - LCD persistence emulation for GG
  - SMS 3D glass support
 
- The Game Gear SIO and PSG hardware are not emulated but have some
+ The Game Gear SIO hardware is not emulated but has some
  placeholders in 'machine/sms.c'
 
  Changes:
@@ -114,7 +113,7 @@ static ADDRESS_MAP_START( sms_io, AS_IO, 8 )
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x3e) AM_WRITE(sms_bios_w)
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x3e) AM_WRITE(sms_io_control_w)
 	AM_RANGE(0x40, 0x7f)                 AM_READ(sms_count_r)
-	AM_RANGE(0x40, 0x7f)                 AM_DEVWRITE("smsiii", sn76496_w)
+	AM_RANGE(0x40, 0x7f)                 AM_DEVWRITE("segapsg", sn76496_w)
 	AM_RANGE(0x80, 0x80) AM_MIRROR(0x3e) AM_DEVREADWRITE("sms_vdp", sms_vdp_data_r, sms_vdp_data_w)
 	AM_RANGE(0x81, 0x81) AM_MIRROR(0x3e) AM_DEVREADWRITE("sms_vdp", sms_vdp_ctrl_r, sms_vdp_ctrl_w)
 	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x1e) AM_READ(sms_input_port_0_r)
@@ -414,7 +413,7 @@ static MACHINE_CONFIG_START( sms_ntsc_base, sms_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("smsiii", SMSIII, XTAL_53_693175MHz/15)
+	MCFG_SOUND_ADD("segapsg", SEGAPSG, XTAL_53_693175MHz/15)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 
 	MCFG_FRAGMENT_ADD( sms_cartslot )
@@ -520,7 +519,7 @@ static MACHINE_CONFIG_START( sms_pal_base, sms_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("smsiii", SMSIII, MASTER_CLOCK_PAL/15)
+	MCFG_SOUND_ADD("segapsg", SEGAPSG, MASTER_CLOCK_PAL/15)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 
 	MCFG_FRAGMENT_ADD( sms_cartslot )
@@ -634,9 +633,9 @@ ROM_START(sms1)
 	ROM_SYSTEM_BIOS( 0, "bios13", "US/European BIOS v1.3 (1986)" )
 	ROMX_LOAD("bios13fx.rom", 0x0000, 0x2000, CRC(0072ED54) SHA1(c315672807d8ddb8d91443729405c766dd95cae7), ROM_BIOS(1))
 	ROM_SYSTEM_BIOS( 1, "hangonsh", "US/European BIOS v2.4 with Hang On and Safari Hunt (1988)" )
-	ROMX_LOAD("hshbios.rom", 0x0000, 0x20000, CRC(91E93385) SHA1(9e179392cd416af14024d8f31c981d9ee9a64517), ROM_BIOS(2))
+	ROMX_LOAD("mpr-11459a.rom", 0x0000, 0x20000, CRC(91E93385) SHA1(9e179392cd416af14024d8f31c981d9ee9a64517), ROM_BIOS(2))
 	ROM_SYSTEM_BIOS( 2, "hangon", "US/European BIOS v3.4 with Hang On (1988)" )
-	ROMX_LOAD("hangbios.rom", 0x0000, 0x20000, CRC(8EDF7AC6) SHA1(51fd6d7990f62cd9d18c9ecfc62ed7936169107e), ROM_BIOS(3))
+	ROMX_LOAD("mpr-11458.rom", 0x0000, 0x20000, CRC(8EDF7AC6) SHA1(51fd6d7990f62cd9d18c9ecfc62ed7936169107e), ROM_BIOS(3))
 	ROM_SYSTEM_BIOS( 3, "missiled", "US/European BIOS v4.4 with Missile Defense 3D (1988)" )
 	ROMX_LOAD("missiled.rom", 0x0000, 0x20000, CRC(E79BB689) SHA1(aa92ae576ca670b00855e278378d89e9f85e0351), ROM_BIOS(4))
 	ROM_SYSTEM_BIOS( 4, "proto", "US Master System Prototype BIOS" )
@@ -649,7 +648,7 @@ ROM_START(sms)
 
 	ROM_REGION(0x20000, "user1", 0)
 	ROM_SYSTEM_BIOS( 0, "alexkidd", "US/European BIOS with Alex Kidd in Miracle World (1990)" )
-	ROMX_LOAD("akbios.rom", 0x0000, 0x20000, CRC(CF4A09EA) SHA1(3af7b66248d34eb26da40c92bf2fa4c73a46a051), ROM_BIOS(1))
+	ROMX_LOAD("mpr-12808.ic2", 0x0000, 0x20000, CRC(CF4A09EA) SHA1(3af7b66248d34eb26da40c92bf2fa4c73a46a051), ROM_BIOS(1)) /* "SEGA // MPR-12808 W63 // 9114E9004" @ IC2 */
 ROM_END
 
 ROM_START(smssdisp)
@@ -671,9 +670,9 @@ ROM_START(sms1pal)
 	ROM_SYSTEM_BIOS( 0, "bios13", "US/European BIOS v1.3 (1986)" )
 	ROMX_LOAD("bios13fx.rom", 0x0000, 0x2000, CRC(0072ED54) SHA1(c315672807d8ddb8d91443729405c766dd95cae7), ROM_BIOS(1))
 	ROM_SYSTEM_BIOS( 1, "hangonsh", "US/European BIOS v2.4 with Hang On and Safari Hunt (1988)" )
-	ROMX_LOAD("hshbios.rom", 0x0000, 0x20000, CRC(91E93385) SHA1(9e179392cd416af14024d8f31c981d9ee9a64517), ROM_BIOS(2))
+	ROMX_LOAD("mpr-11459a.rom", 0x0000, 0x20000, CRC(91E93385) SHA1(9e179392cd416af14024d8f31c981d9ee9a64517), ROM_BIOS(2))
 	ROM_SYSTEM_BIOS( 2, "hangon", "Sega Master System - US/European BIOS v3.4 with Hang On (1988)" )
-	ROMX_LOAD("hangbios.rom", 0x0000, 0x20000, CRC(8EDF7AC6) SHA1(51fd6d7990f62cd9d18c9ecfc62ed7936169107e), ROM_BIOS(3))
+	ROMX_LOAD("mpr-11458.rom", 0x0000, 0x20000, CRC(8EDF7AC6) SHA1(51fd6d7990f62cd9d18c9ecfc62ed7936169107e), ROM_BIOS(3))
 	ROM_SYSTEM_BIOS( 3, "missiled", "US/European BIOS v4.4 with Missile Defense 3D (1988)" )
 	ROMX_LOAD("missiled.rom", 0x0000, 0x20000, CRC(E79BB689) SHA1(aa92ae576ca670b00855e278378d89e9f85e0351), ROM_BIOS(4))
 ROM_END
@@ -683,8 +682,8 @@ ROM_START(smspal)
 	ROM_FILL(0x0000, 0x4000, 0xff)
 
 	ROM_REGION(0x40000, "user1", 0)
-	ROM_SYSTEM_BIOS( 0, "alexkidd", "US/European BIOS with Alex Kidd in Miracle World (1990)" )
-	ROMX_LOAD("akbios.rom", 0x0000, 0x20000, CRC(CF4A09EA) SHA1(3af7b66248d34eb26da40c92bf2fa4c73a46a051), ROM_BIOS(1))
+	ROM_SYSTEM_BIOS( 0, "alexkidd", "US/European BIOS with Alex Kidd in Miracle World (1990)" ) /* PCB Label: SEGA // IC BD M4Jr. PAL" Master System II with 314-5246 (ZIP) VDP and 314-5237 (DIP48) IO */
+	ROMX_LOAD("mpr-12808.ic2", 0x0000, 0x20000, CRC(CF4A09EA) SHA1(3af7b66248d34eb26da40c92bf2fa4c73a46a051), ROM_BIOS(1)) /* "SEGA // MPR-12808 W63 // 9114E9004" @ IC2 */
 	ROM_SYSTEM_BIOS( 1, "sonic", "European/Brazilian BIOS with Sonic the Hedgehog (1991)" )
 	ROMX_LOAD("sonbios.rom", 0x0000, 0x40000, CRC(81C3476B) SHA1(6aca0e3dffe461ba1cb11a86cd4caf5b97e1b8df), ROM_BIOS(2))
 ROM_END
@@ -694,13 +693,14 @@ ROM_START(sg1000m3)
 	ROM_FILL(0x0000, 0x4000, 0x00)
 ROM_END
 
-ROM_START(smsj)
+ROM_START(smsj) /* PCB Label: "SEGA(R) IC BOARD M4J MAIN // 837-6418"; has "YM2413 // 78 04 71 G" at IC10; Back of pcb has traces marked "171-5541 (C)SEGA 1987 MADE IN JAPAN"
+	see http://www.smspower.org/Development/JapaneseSMS837-6418 */ 
 	ROM_REGION(0x4000, "maincpu", 0)
 	ROM_FILL(0x0000, 0x4000, 0xff)
 
 	ROM_REGION(0x4000, "user1", 0)
 	ROM_SYSTEM_BIOS( 0, "jbios21", "Japanese BIOS v2.1 (1987)" )
-	ROMX_LOAD("jbios21.rom", 0x0000, 0x2000, CRC(48D44A13) SHA1(a8c1b39a2e41137835eda6a5de6d46dd9fadbaf2), ROM_BIOS(1))
+	ROMX_LOAD("mpr-11124.ic2", 0x0000, 0x2000, CRC(48D44A13) SHA1(a8c1b39a2e41137835eda6a5de6d46dd9fadbaf2), ROM_BIOS(1)) /* "SONY 7J06 // MPR-11124 // JAPAN 021" @ IC2 */
 ROM_END
 
 ROM_START(sms2kr)
@@ -730,17 +730,17 @@ ROM_END
 
   US
    - Sega Master System I (sms1)
-     - prototype bios - 1986
+     - prototype (M404) bios - 1986
      - without built-in game v1.3 - 1986
      - built-in Hang On/Safari Hunt v2.4 - 1988
      - built-in Hang On v3.4 - 1988
      - built-in Missile Defense 3-D v4.4 - 1988
      - built-in Hang On/Astro Warrior ????
-   - Sega Master System II (sms/sms2)
+   - Sega Master System II (sms)
      - built-in Alex Kidd in Miracle World - 1990
 
   JP
-   - Sega SG-1000 Mark III (smsm3)
+   - Sega SG-1000 Mark III (sg1000m3)
      - no bios
    - Sega Master System (I) (smsj)
      - without built-in game v2.1 - 1987
@@ -756,7 +756,7 @@ ROM_END
      - built-in Hang On v3.4 - 1988
      - built-in Missile Defense 3-D v4.4 - 1988
      - built-in Hang On/Astro Warrior ????
-   - Sega Master System II (sms2pal)
+   - Sega Master System II (smspal)
      - built-in Alex Kidd in Miracle World - 1990
      - built-in Sonic the Hedgehog - 1991
 
