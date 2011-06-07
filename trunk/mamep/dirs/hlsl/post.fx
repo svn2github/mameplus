@@ -99,6 +99,7 @@ uniform float ScanlineScale = 1.0f;
 uniform float ScanlineBrightScale = 1.0f;
 uniform float ScanlineBrightOffset = 1.0f;
 uniform float ScanlineOffset = 1.0f;
+uniform float ScanlineHeight = 0.5f;
 
 uniform float UseShadow = 0.0f;
 uniform float ShadowBrightness = 1.0f;
@@ -111,6 +112,13 @@ uniform float ShadowV = 0.375f;
 uniform float ShadowWidth = 8.0f;
 uniform float ShadowHeight = 8.0f;
 
+uniform float RedFloor = 0.0f;
+uniform float GrnFloor = 0.0f;
+uniform float BluFloor = 0.0f;
+
+uniform float SnapX = 0.0f;
+uniform float SnapY = 0.0f;
+
 float4 ps_main(PS_INPUT Input) : COLOR
 {
 	float2 Ratios = float2(WidthRatio, HeightRatio);
@@ -121,16 +129,17 @@ float4 ps_main(PS_INPUT Input) : COLOR
 	float PincushionR2 = pow(length(PinUnitCoord), 2.0f) / pow(length(Ratios), 2.0f);
 	float2 PincushionCurve = PinUnitCoord * PincushionAmount * PincushionR2;
 	float2 BaseCoord = Input.TexCoord;
+	float2 ScanCoord = BaseCoord - 0.5f / float2(TargetWidth, TargetHeight);
+	
 	BaseCoord -= 0.5f / Ratios;
 	BaseCoord *= 1.0f - PincushionAmount * Ratios * 0.2f; // Warning: Magic constant
 	BaseCoord += 0.5f / Ratios;
 	BaseCoord += PincushionCurve;
 
-	float2 CurveViewpointOffset = float2(0.2f, 0.0f);
-	float2 CurveUnitCoord = (Input.TexCoord + CurveViewpointOffset) * 2.0f - 1.0f;
-	float CurvatureR2 = pow(length(CurveUnitCoord),2.0f) / pow(length(Ratios), 2.0f);
-	float2 CurvatureCurve = CurveUnitCoord * CurvatureAmount * CurvatureR2;
-	float2 ScreenCurveCoord = Input.TexCoord + CurvatureCurve;
+	ScanCoord -= 0.5f / Ratios;
+	ScanCoord *= 1.0f - PincushionAmount * Ratios * 0.2f; // Warning: Magic constant
+	ScanCoord += 0.5f / Ratios;
+	ScanCoord += PincushionCurve;
 
 	float2 CurveClipUnitCoord = Input.TexCoord * Ratios * 2.0f - 1.0f;
 	float CurvatureClipR2 = pow(length(CurveClipUnitCoord),2.0f) / pow(length(Ratios), 2.0f);
@@ -154,17 +163,20 @@ float4 ps_main(PS_INPUT Input) : COLOR
 	clip((BaseCoord.y > (1.0f / HeightRatio + 1.0f / RawHeight)) ? -1 : 1);
 
 	// -- Scanline Simulation --
-	float InnerSine = BaseCoord.y * RawHeight * ScanlineScale;
-	float3 ScanBrightness = lerp(1.0f, abs(sin(InnerSine * PI + ScanlineOffset * RawHeight)) * ScanlineBrightScale + 1.0f, ScanlineAmount);
-	//float3 Scanned = BaseTexel.rgb * ScanBrightness;
+	float InnerSine = ScanCoord.y * RawHeight * ScanlineScale;
+	float ScanBrightMod = sin(InnerSine * PI + ScanlineOffset * RawHeight);
+	float3 ScanBrightness = lerp(1.0f, (pow(ScanBrightMod * ScanBrightMod, ScanlineHeight) * ScanlineBrightScale + 1.0f) * 0.5f, ScanlineAmount);
 	float3 Scanned = BaseTexel.rgb * ScanBrightness;
+
+	// -- Color Compression (increasing the floor of the signal without affecting the ceiling) --
+	Scanned = float3(RedFloor + (1.0f - RedFloor) * Scanned.r, GrnFloor + (1.0f - GrnFloor) * Scanned.g, BluFloor + (1.0f - BluFloor) * Scanned.b);
 
 	float2 ShadowDims = float2(ShadowWidth, ShadowHeight);
 	float2 ShadowUV = float2(ShadowU, ShadowV);
 	float2 ShadowMaskSize = float2(ShadowMaskSizeX, ShadowMaskSizeY);
 	float2 ShadowFrac = frac(BaseCoord * ShadowMaskSize * 0.5f);
 	float2 ShadowCoord = ShadowFrac * ShadowUV + float2(1.5f / ShadowWidth, 1.5f / ShadowHeight);
-	float3 ShadowTexel = lerp(1.0f, tex2D(ShadowSampler, ShadowCoord), UseShadow);
+	float3 ShadowTexel = lerp(1.0f, tex2D(ShadowSampler, ShadowCoord).rgb, UseShadow);
 	
 	// -- Final Pixel --
 	float4 Output = float4(Scanned * lerp(1.0f, ShadowTexel, ShadowBrightness), BaseTexel.a) * Input.Color;
