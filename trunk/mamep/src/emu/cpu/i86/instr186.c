@@ -27,15 +27,15 @@ static void PREFIX186(_pusha)(i8086_state *cpustate)    /* Opcode 0x60 */
 	PUSH(cpustate->regs.w[DI]);
 }
 
+static unsigned i186_popa_tmp;  // hack around GCC 4.6 error because we need the side effects of POP
 static void PREFIX186(_popa)(i8086_state *cpustate)    /* Opcode 0x61 */
 {
-	 unsigned tmp;
 
 	ICOUNT -= timing.popa;
 	POP(cpustate->regs.w[DI]);
 	POP(cpustate->regs.w[SI]);
 	POP(cpustate->regs.w[BP]);
-	POP(tmp);
+	POP(i186_popa_tmp);
 	POP(cpustate->regs.w[BX]);
 	POP(cpustate->regs.w[DX]);
 	POP(cpustate->regs.w[CX]);
@@ -68,7 +68,7 @@ static void PREFIX186(_imul_d16)(i8086_state *cpustate)    /* Opcode 0x69 */
 {
 	DEF_r16w(dst,src);
 	unsigned src2=FETCH;
-	src+=(FETCH<<8);
+	src2+=(FETCH<<8);
 
 	ICOUNT -= (ModRM >= 0xc0) ? timing.imul_rri16 : timing.imul_rmi16;
 

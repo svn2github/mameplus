@@ -105,10 +105,10 @@ In other words,the first three types uses the offset and not the color allocated
 #include "profiler.h"
 #include "includes/stv.h"
 
-static void stv_vdp2_dynamic_res_change(running_machine &machine);
 static UINT8 get_hblank(running_machine &machine);
 static int get_vblank_duration(running_machine &machine);
 static int get_hblank_duration(running_machine &machine);
+static int get_pixel_clock(running_machine &machine);
 static UINT8 get_odd_bit(running_machine &machine);
 
 static void refresh_palette_data(running_machine &machine);
@@ -2209,10 +2209,10 @@ static void stv_vdp2_fill_rotation_parameter_table( running_machine &machine, UI
 	/*Attempt to show on screen the rotation table*/
 	if(LOG_ROZ == 2)
 	{
-		if(input_code_pressed_once(machine, JOYCODE_Y_UP_SWITCH))
+		if(machine.input().code_pressed_once(JOYCODE_Y_UP_SWITCH))
 			debug.roz++;
 
-		if(input_code_pressed_once(machine, JOYCODE_Y_DOWN_SWITCH))
+		if(machine.input().code_pressed_once(JOYCODE_Y_DOWN_SWITCH))
 			debug.roz--;
 
 		if(debug.roz > 10)
@@ -3859,14 +3859,14 @@ static void stv_vdp2_check_tilemap_with_linescroll(running_machine &machine, bit
 	int scroll_values_equal;
 	int lines;
 	INT16 scrollx, scrolly;
-	INT32 incx;
+//  INT32 incx;
 	int linescroll_enable, vertical_linescroll_enable, linezoom_enable;
 	int vertical_linescroll_index = -1;
 
 	// read original scroll values
 	scrollx = stv2_current_tilemap.scrollx;
 	scrolly = stv2_current_tilemap.scrolly;
-	incx = stv2_current_tilemap.incx;
+//  incx = stv2_current_tilemap.incx;
 
 	// prepare linescroll flags
 	linescroll_enable = stv2_current_tilemap.linescroll_enable;
@@ -3965,11 +3965,11 @@ static void stv_vdp2_check_tilemap_with_linescroll(running_machine &machine, bit
 		{
 			prev_scroll_values[i] &= 0x0007ff00;
 			if ( prev_scroll_values[i] & 0x00040000 ) prev_scroll_values[i] |= 0xfff80000;
-			stv2_current_tilemap.incx = prev_scroll_values[i];
+//          incx = prev_scroll_values[i];
 			i++;
 		}
 
-		if ( LOG_VDP2 ) logerror( "Linescroll: y < %d, %d >, scrollx = %d, scrolly = %d, incx = %f\n", mycliprect.min_y, mycliprect.max_y, stv2_current_tilemap.scrollx, stv2_current_tilemap.scrolly, (float)stv2_current_tilemap.incx/65536.0 );
+//      if ( LOG_VDP2 ) logerror( "Linescroll: y < %d, %d >, scrollx = %d, scrolly = %d, incx = %f\n", mycliprect.min_y, mycliprect.max_y, stv2_current_tilemap.scrollx, stv2_current_tilemap.scrolly, (float)stv2_current_tilemap.incx/65536.0 );
 		// render current tilemap portion
 		stv_vdp2_check_tilemap(machine, bitmap, &mycliprect );
 
@@ -4051,31 +4051,12 @@ static void stv_vdp2_copy_roz_bitmap(bitmap_t *bitmap,
 	UINT32 address;
 	UINT16 *line;
 	UINT16 pix;
-	UINT32 coeff_line_color_screen_data;
+	//UINT32 coeff_line_color_screen_data;
 	INT32 clipxmask = 0, clipymask = 0;
 
 
-	if((STV_VDP2_LSMD & 3) == 3)
-	{
-		vcnt_shift = 1;
-	}
-	else
-	{
-		vcnt_shift = 0;
-	}
-
-	switch( STV_VDP2_HRES & 7 )
-	{
-		case 2: /*640*/
-		case 3: /*704*/
-		case 6:
-		case 7:
-			hcnt_shift = 1;
-			break;
-		default:
-			hcnt_shift = 0;
-			break;
-	}
+	vcnt_shift = ((STV_VDP2_LSMD & 3) == 3);
+	hcnt_shift = ((STV_VDP2_HRES & 2) == 2);
 
 	planesizex--;
 	planesizey--;
@@ -4215,7 +4196,7 @@ static void stv_vdp2_copy_roz_bitmap(bitmap_t *bitmap,
 					case 0:
 						address = coeff_table_offset + ((RP.kast + RP.dkast*(vcnt>>vcnt_shift)) >> 16) * 4;
 						coeff_table_val = coeff_table_base[ address / 4 ];
-						coeff_line_color_screen_data = (coeff_table_val & 0x7f000000) >> 24;
+						//coeff_line_color_screen_data = (coeff_table_val & 0x7f000000) >> 24;
 						coeff_msb = (coeff_table_val & 0x80000000) > 0;
 						if ( coeff_table_val & 0x00800000 )
 						{
@@ -4234,7 +4215,7 @@ static void stv_vdp2_copy_roz_bitmap(bitmap_t *bitmap,
 							coeff_table_val >>= 16;
 						}
 						coeff_table_val &= 0xffff;
-						coeff_line_color_screen_data = 0;
+						//coeff_line_color_screen_data = 0;
 						coeff_msb = (coeff_table_val & 0x8000) > 0;
 						if ( coeff_table_val & 0x4000 )
 						{
@@ -4312,7 +4293,7 @@ static void stv_vdp2_copy_roz_bitmap(bitmap_t *bitmap,
 					case 0:
 						address = coeff_table_offset + ((RP.kast + RP.dkast*(vcnt>>vcnt_shift) + RP.dkax*hcnt) >> 16) * 4;
 						coeff_table_val = coeff_table_base[ address / 4 ];
-						coeff_line_color_screen_data = (coeff_table_val & 0x7f000000) >> 24;
+						//coeff_line_color_screen_data = (coeff_table_val & 0x7f000000) >> 24;
 						coeff_msb = (coeff_table_val & 0x80000000) > 0;
 						if ( coeff_table_val & 0x00800000 )
 						{
@@ -4331,7 +4312,7 @@ static void stv_vdp2_copy_roz_bitmap(bitmap_t *bitmap,
 							coeff_table_val >>= 16;
 						}
 						coeff_table_val &= 0xffff;
-						coeff_line_color_screen_data = 0;
+						//coeff_line_color_screen_data = 0;
 						coeff_msb = (coeff_table_val & 0x8000) > 0;
 						if ( coeff_table_val & 0x4000 )
 						{
@@ -5180,14 +5161,9 @@ READ32_HANDLER ( saturn_vdp2_regs_r )
 	{
 		case 0x4/4:
 		{
-			int stv_hblank,stv_vblank,stv_odd;
 			/*Screen Status Register*/
-			stv_vblank = stv_get_vblank(space->machine());
-			stv_hblank = get_hblank(space->machine());
-			stv_odd = get_odd_bit(space->machine());
-
-								   /*VBLANK              HBLANK            ODD               PAL    */
-			state->m_vdp2_regs[offset] = (stv_vblank<<19) | (stv_hblank<<18) | (stv_odd << 17) | (0 << 16);
+								       /*VBLANK              HBLANK            ODD               PAL    */
+			state->m_vdp2_regs[offset] = (get_vblank(space->machine())<<19) | (get_hblank(space->machine())<<18) | (get_odd_bit(space->machine()) << 17) | (state->m_vdp2.pal << 16);
 			break;
 		}
 		case 0x8/4:
@@ -5318,66 +5294,85 @@ WRITE32_HANDLER ( saturn_vdp2_regs_w )
 	}
 }
 
-static UINT8 get_hblank(running_machine &machine)
-{
-	static int cur_h;
-
-	const rectangle &visarea = machine.primary_screen->visible_area();
-	cur_h = machine.primary_screen->hpos();
-
-	if (cur_h > visarea.max_x)
-		return 1;
-	else
-		return 0;
-}
-
-/* the following is a complete guess-work */
 static int get_hblank_duration(running_machine &machine)
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
-	switch( STV_VDP2_HRES & 3 )
-	{
-		case 0: return 80;  //400-320
-		case 1: return 104; //456-352
-		case 2: return 160; //(400-320)*2
-		case 3: return 208; //(456-352)*2
-	}
+	int res;
+
+	res = (STV_VDP2_HRES & 1) ? 455 : 427;
+
+	/* double pump horizontal max res */
+	if(STV_VDP2_HRES & 2)
+		res<<=1;
+
+	return res;
+}
+
+/*some vblank lines measurements (according to Charles MacDonald)*/
+/* TODO: interlace mode "eats" one line, should be 262.5 */
+static int get_vblank_duration(running_machine &machine)
+{
+	saturn_state *state = machine.driver_data<saturn_state>();
+	int res;
+
+	res = (state->m_vdp2.pal) ? 313 : 263;
+
+	/* compensate for interlacing */
+	if((STV_VDP2_LSMD & 3) == 3)
+		res<<=1;
+
+	if(STV_VDP2_HRES & 4)
+		res = (STV_VDP2_HRES & 1) ? 561 : 525;  //Hi-Vision / 31kHz Monitor
+
+	return res;
+}
+
+static int get_pixel_clock(running_machine &machine)
+{
+	saturn_state *state = machine.driver_data<saturn_state>();
+	int res,divider;
+
+	res = state->m_vdp2.dotsel ? MASTER_CLOCK_352 : MASTER_CLOCK_320;
+	/* TODO: divider is ALWAYS 8, this thing is just to over-compensate for MAME framework faults ... */
+	divider = 8;
+
+	if(STV_VDP2_HRES & 2)
+		divider>>=1;
+
+	if((STV_VDP2_LSMD & 3) == 3)
+		divider>>=1;
+
+	if(STV_VDP2_HRES & 4) //TODO
+		divider>>=1;
+
+	return res/divider;
+}
+
+static UINT8 get_hblank(running_machine &machine)
+{
+	static int cur_h;
+	const rectangle &visarea = machine.primary_screen->visible_area();
+	cur_h = machine.primary_screen->hpos();
+
+	if (cur_h > visarea.max_x) //TODO
+		return 1;
 
 	return 0;
 }
 
-UINT8 stv_get_vblank(running_machine &machine)
-{
-	static int cur_v;
-	const rectangle &visarea = machine.primary_screen->visible_area();
-	cur_v = machine.primary_screen->vpos();
-
-	if (cur_v > visarea.max_y)
-		return 1;
-	else
-		return 0;
-}
-
-/*some vblank lines measurements (according to Charles MacDonald)*/
-static int get_vblank_duration(running_machine &machine)
+UINT8 get_vblank(running_machine &machine)
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
-	if(STV_VDP2_HRES & 4)
-	{
-		switch(STV_VDP2_HRES & 1)
-		{
-			case 0: return 45; //31kHz Monitor
-			case 1: return 82; //Hi-Vision Monitor
-		}
-	}
+	int cur_v,vblank;
+	cur_v = machine.primary_screen->vpos();
 
-	switch(STV_VDP2_VRES & 3)
-	{
-		case 0: return 40; //264-224
-		case 1: return 24; //264-240
-		case 2: return 8; //264-256
-		case 3: return 8; //264-256
-	}
+	vblank = (state->m_vdp2.pal) ? 288 : 240;
+
+	if((STV_VDP2_LSMD & 3) == 3)
+		vblank<<=1;
+
+	if (cur_v >= vblank)
+		return 1;
 
 	return 0;
 }
@@ -5385,7 +5380,7 @@ static int get_vblank_duration(running_machine &machine)
 static UINT8 get_odd_bit(running_machine &machine)
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
-	static int cur_v;
+	int cur_v;
 	cur_v = machine.primary_screen->vpos();
 
 	if(STV_VDP2_HRES & 4) //exclusive monitor mode makes this bit to be always 1
@@ -5393,8 +5388,8 @@ static UINT8 get_odd_bit(running_machine &machine)
 
 	if(cur_v % 2)
 		return 1;
-	else
-		return 0;
+
+	return 0;
 }
 
 static void stv_vdp2_state_save_postload(running_machine &machine)
@@ -5485,44 +5480,33 @@ VIDEO_START( stv_vdp2 )
 	gfx_element_set_source(machine.gfx[7], state->m_vdp1.gfx_decode);
 }
 
-static void stv_vdp2_dynamic_res_change(running_machine &machine)
+void stv_vdp2_dynamic_res_change(running_machine &machine)
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
+	const int d_vres[4] = { 224, 240, 256, 256 };
+	const int d_hres[4] = { 320, 352, 640, 704 };
 	int horz_res,vert_res;
+	int vres_mask;
 
-	switch( STV_VDP2_VRES & 3 )
-	{
-		case 0: vert_res = 224; break;
-		case 1: vert_res = 240; break;
-		case 2: vert_res = 256; break;
-		case 3:
-			if(LOG_VDP2) logerror("WARNING: V Res setting (3) not allowed!\n");
-			vert_res = 256;
-			break;
-	}
+	vres_mask = (state->m_vdp2.pal << 1)|1; //PAL uses mask 3, NTSC uses mask 1
+	vert_res = d_vres[STV_VDP2_VRES & vres_mask];
+
+	if((STV_VDP2_VRES & 3) == 3)
+		popmessage("Illegal VRES MODE, contact MAMEdev");
 
 	/*Double-density interlace mode,doubles the vertical res*/
 	if((STV_VDP2_LSMD & 3) == 3) { vert_res*=2;  }
 
-	switch( STV_VDP2_HRES & 7 )
-	{
-		case 0: horz_res = 320; break;
-		case 1: horz_res = 352; break;
-		case 2: horz_res = 640; break;
-		case 3: horz_res = 704; break;
-		/*Exclusive modes,they sets the Vertical Resolution without considering the
-            VRES register.*/
-		case 4: horz_res = 320; vert_res = 480; break;
-		case 5: horz_res = 352; vert_res = 480; break;
-		case 6: horz_res = 640; vert_res = 480; break;
-		case 7: horz_res = 704; vert_res = 480; break;
-	}
-//  horz_res+=1;
-//  vert_res*=2;
-	if(state->m_vdp2.old_vres != vert_res || state->m_vdp2.old_hres != horz_res)
+	horz_res = d_hres[STV_VDP2_HRES & 3];
+	/*Exclusive modes,they sets the Vertical Resolution without considering the
+      VRES register.*/
+	if(STV_VDP2_HRES & 4)
+		vert_res = 480;
+
 	{
 		int vblank_period,hblank_period;
 		rectangle visarea = machine.primary_screen->visible_area();
+		attoseconds_t refresh;;
 		visarea.min_x = 0;
 		visarea.max_x = horz_res-1;
 		visarea.min_y = 0;
@@ -5530,12 +5514,10 @@ static void stv_vdp2_dynamic_res_change(running_machine &machine)
 
 		vblank_period = get_vblank_duration(machine);
 		hblank_period = get_hblank_duration(machine);
-//      popmessage("%d",vblank_period);
-//      hblank_period = get_hblank_duration(machine.primary_screen);
-		machine.primary_screen->configure((horz_res+hblank_period), (vert_res+vblank_period), visarea, machine.primary_screen->frame_period().attoseconds );
+		refresh  = HZ_TO_ATTOSECONDS(get_pixel_clock(machine)) * (hblank_period) * vblank_period;
+		//printf("%d %d %d %d\n",horz_res,vert_res,horz_res+hblank_period,vblank_period);
 
-		state->m_vdp2.old_vres = vert_res;
-		state->m_vdp2.old_hres = horz_res;
+		machine.primary_screen->configure((hblank_period), (vblank_period), visarea, refresh );
 	}
 //  machine.primary_screen->set_visible_area(0*8, horz_res-1,0*8, vert_res-1);
 	//if(LOG_VDP2) popmessage("%04d %04d",horz_res-1,vert-1);
@@ -5639,8 +5621,8 @@ static void stv_vdp2_get_window0_coordinates(running_machine &machine,UINT16 *s_
 			*e_y = ((STV_VDP2_W0EY & 0x3ff) >> 0);
 			break;
 		case 3:
-			*s_y = ((STV_VDP2_W0SY & 0x7ff) >> 0);
-			*e_y = ((STV_VDP2_W0EY & 0x7ff) >> 0);
+			*s_y = ((STV_VDP2_W1SY & 0x7ff) >> 0) << 1;
+			*e_y = ((STV_VDP2_W1EY & 0x7ff) >> 0) << 1;
 			break;
 	}
 	switch(STV_VDP2_HRES & 6)
@@ -5686,8 +5668,8 @@ static void stv_vdp2_get_window1_coordinates(running_machine &machine,UINT16 *s_
 			*e_y = ((STV_VDP2_W1EY & 0x3ff) >> 0);
 			break;
 		case 3:
-			*s_y = ((STV_VDP2_W1SY & 0x3ff) >> 0);
-			*e_y = ((STV_VDP2_W1EY & 0x3ff) >> 0);
+			*s_y = ((STV_VDP2_W1SY & 0x3ff) >> 0) << 1;
+			*e_y = ((STV_VDP2_W1EY & 0x3ff) >> 0) << 1;
 			break;
 	}
 	switch(STV_VDP2_HRES & 6)
@@ -5950,6 +5932,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 	mycliprect.max_x = cliprect->max_x;
 	mycliprect.min_y = cliprect->min_y;
 	mycliprect.max_y = cliprect->max_y;
+
 	stv_vdp2_apply_window_on_layer(machine,&mycliprect);
 
 	if (interlace_framebuffer == 0 && double_x == 0 )
@@ -6130,7 +6113,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 	}
 	else
 	{
-		for ( y = mycliprect.min_y; y <= mycliprect.max_y; y++ )
+		for ( y = mycliprect.min_y; y <= mycliprect.max_y / (interlace_framebuffer+1); y++ )
 		{
 			if ( stv_sprite_priorities_usage_valid )
 				if (stv_sprite_priorities_in_fb_line[y][pri] == 0)
@@ -6147,7 +6130,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 				bitmap_line2 = BITMAP_ADDR16(bitmap, 2*y + 1, 0);
 			}
 
-			for ( x = mycliprect.min_x; double_x ? x <= ((mycliprect.max_x)/2) : (x <= mycliprect.max_x); x++ )
+			for ( x = mycliprect.min_x; x <= mycliprect.max_x /(double_x+1) ; x++ )
 			{
 				pix = framebuffer_line[x];
 				if ( (pix & 0x8000) && sprite_color_mode)
@@ -6329,32 +6312,32 @@ SCREEN_UPDATE( stv_vdp2 )
 	stv_vdp2_draw_back(screen->machine(), bitmap,cliprect);
 
 	#if DEBUG_MODE
-	if(input_code_pressed_once(screen->machine(), KEYCODE_T))
+	if(screen->machine().input().code_pressed_once(KEYCODE_T))
 	{
 		debug.l_en^=1;
 		popmessage("NBG3 %sabled",debug.l_en & 1 ? "en" : "dis");
 	}
-	if(input_code_pressed_once(screen->machine(), KEYCODE_Y))
+	if(screen->machine().input().code_pressed_once(KEYCODE_Y))
 	{
 		debug.l_en^=2;
 		popmessage("NBG2 %sabled",debug.l_en & 2 ? "en" : "dis");
 	}
-	if(input_code_pressed_once(screen->machine(), KEYCODE_U))
+	if(screen->machine().input().code_pressed_once(KEYCODE_U))
 	{
 		debug.l_en^=4;
 		popmessage("NBG1 %sabled",debug.l_en & 4 ? "en" : "dis");
 	}
-	if(input_code_pressed_once(screen->machine(), KEYCODE_I))
+	if(screen->machine().input().code_pressed_once(KEYCODE_I))
 	{
 		debug.l_en^=8;
 		popmessage("NBG0 %sabled",debug.l_en & 8 ? "en" : "dis");
 	}
-	if(input_code_pressed_once(screen->machine(), KEYCODE_K))
+	if(screen->machine().input().code_pressed_once(KEYCODE_K))
 	{
 		debug.l_en^=0x10;
 		popmessage("RBG0 %sabled",debug.l_en & 0x10 ? "en" : "dis");
 	}
-	if(input_code_pressed_once(screen->machine(), KEYCODE_O))
+	if(screen->machine().input().code_pressed_once(KEYCODE_O))
 	{
 		debug.l_en^=0x20;
 		popmessage("SPRITE %sabled",debug.l_en & 0x20 ? "en" : "dis");
@@ -6397,7 +6380,7 @@ SCREEN_UPDATE( stv_vdp2 )
     ,STV_VDP2_N1ZMXI,STV_VDP2_N1ZMXD
     ,STV_VDP2_N1ZMYI,STV_VDP2_N1ZMYD);*/
 
-	if ( input_code_pressed_once(screen->machine(), KEYCODE_W) )
+	if ( screen->machine().input().code_pressed_once(KEYCODE_W) )
 	{
 		int tilecode;
 
@@ -6441,26 +6424,26 @@ SCREEN_UPDATE( stv_vdp2 )
 		}
 	}
 
-	if ( input_code_pressed_once(screen->machine(), KEYCODE_N) )
+	if ( screen->machine().input().code_pressed_once(KEYCODE_N) )
 	{
 		FILE *fp;
 
 		fp=fopen("mamevdp1", "w+b");
 		if (fp)
 		{
-			fwrite(stv_vdp1_vram, 0x80000, 1, fp);
+			fwrite(state->m_vdp1_vram, 0x80000, 1, fp);
 			fclose(fp);
 		}
 	}
 
-	if ( input_code_pressed_once(screen->machine(), KEYCODE_M) )
+	if ( screen->machine().input().code_pressed_once(KEYCODE_M) )
 	{
 		FILE *fp;
 
 		fp=fopen("vdp1_vram.bin", "r+b");
 		if (fp)
 		{
-			fread(stv_vdp1_vram, 0x80000, 1, fp);
+			fread(state->m_vdp1_vram, 0x80000, 1, fp);
 			fclose(fp);
 		}
 	}

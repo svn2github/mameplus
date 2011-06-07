@@ -231,7 +231,7 @@ static WRITE8_HANDLER( doraemon_outputs_w )
 
 	memory_set_bank(space->machine(), "bank1", (data & 0x30) >> 4);
 
-//	popmessage("%02x", data);
+//  popmessage("%02x", data);
 }
 
 static ADDRESS_MAP_START( doraemon, AS_PROGRAM, 8 )
@@ -363,9 +363,9 @@ static INPUT_PORTS_START( doraemon )
 	PORT_DIPSETTING(    0x06,  "40 %" )
 	PORT_DIPSETTING(    0x05,  "60 %" )
 	PORT_DIPSETTING(    0x04,  "80 %" )
-//	PORT_DIPSETTING(    0x03, "100 %" )
-//	PORT_DIPSETTING(    0x02, "100 %" )
-//	PORT_DIPSETTING(    0x01, "100 %" )
+//  PORT_DIPSETTING(    0x03, "100 %" )
+//  PORT_DIPSETTING(    0x02, "100 %" )
+//  PORT_DIPSETTING(    0x01, "100 %" )
 	PORT_DIPSETTING(    0x00, "100 %" )
 	PORT_DIPNAME( 0x10, 0x10, "Games For 100 Yen" )
 	PORT_DIPSETTING(    0x10, "1" )
@@ -686,5 +686,5 @@ ROM_START( doraemon )
 	ROM_LOAD( "u27-01.bin", 0x00200, 0x200, CRC(66245fc7) SHA1(c94d9dce7b557c21a3dc1f3f8a1b29594715c994) )
 ROM_END
 
-GAME( ????, doraemon, 0, doraemon, doraemon, 0, ROT0,   "Sunsoft / Epoch / Fujiko - Shogakukan - TV Asahi", "Doraemon no Eawase Montage (prototype)", GAME_SUPPORTS_SAVE )
-GAME( 1989, champbwl, 0, champbwl, champbwl, 0, ROT270, "Seta / Romstar Inc.",                              "Championship Bowling",                   GAME_SUPPORTS_SAVE )
+GAME( ????, doraemon, 0, doraemon, doraemon, 0, ROT0,   "Sunsoft / Epoch", "Doraemon no Eawase Montage (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 1989, champbwl, 0, champbwl, champbwl, 0, ROT270, "Seta / Romstar Inc.", "Championship Bowling", GAME_SUPPORTS_SAVE )

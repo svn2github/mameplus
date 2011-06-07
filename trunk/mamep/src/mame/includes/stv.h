@@ -57,11 +57,10 @@ public:
 	}m_vdp1;
 
 	struct {
-	    int       old_vres;
-	    int       old_hres;
-
 	    UINT8     *gfx_decode;
 	    bitmap_t  *roz_bitmap[2];
+	    UINT8     dotsel;
+	    UINT8     pal;
 	}m_vdp2;
 
 	struct {
@@ -75,28 +74,35 @@ public:
         int   smpcSR;
         int   pmode;
         UINT8 SMEM[4];
+        UINT8 intback;
 	}m_smpc;
 
 	/* Saturn specific*/
-	int saturn_region;
+	int m_saturn_region;
+	UINT8 m_cart_type;
+	UINT32 *m_cart_dram;
 
 	/* ST-V specific */
 	UINT8     m_stv_multi_bank;
 	UINT8     m_prev_bankswitch;
     emu_timer *m_stv_rtc_timer;
 	UINT32    *m_ioga;
+	UINT8     m_instadma_hack;
 
 	legacy_cpu_device* m_maincpu;
 	legacy_cpu_device* m_slave;
 	legacy_cpu_device* m_audiocpu;
 };
 
+#define MASTER_CLOCK_352 57272800
+#define MASTER_CLOCK_320 53748200
 
 DRIVER_INIT ( stv );
 
 
 /*----------- defined in drivers/stvinit.c -----------*/
 
+UINT8 get_vblank(running_machine &machine);
 void install_stvbios_speedups(running_machine &machine);
 DRIVER_INIT(mausuke);
 DRIVER_INIT(puyosun);
@@ -147,6 +153,7 @@ extern UINT8* stv_vdp1_gfx_decode;
 
 int stv_vdp1_start ( running_machine &machine );
 void video_update_vdp1(running_machine &machine);
+void stv_vdp2_dynamic_res_change(running_machine &machine);
 
 READ32_HANDLER ( saturn_vdp1_regs_r );
 READ32_HANDLER ( saturn_vdp1_vram_r );
@@ -157,8 +164,6 @@ WRITE32_HANDLER ( saturn_vdp1_vram_w );
 WRITE32_HANDLER ( saturn_vdp1_framebuffer0_w );
 
 /*----------- defined in video/stvvdp2.c -----------*/
-
-UINT8 stv_get_vblank(running_machine &machine);
 
 READ32_HANDLER ( saturn_vdp2_vram_r );
 READ32_HANDLER ( saturn_vdp2_cram_r );

@@ -810,3 +810,15 @@ thread priority for the main game thread; range from -15 to 1
 video output method: none, gdi, ddraw, or d3d
 
 
+#
+Toggle Fullscreen
+
+
+#
+Take Rendered Snapshot
+
+
+#
+Record Rendered Video
+
+

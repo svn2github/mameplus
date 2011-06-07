@@ -1348,7 +1348,7 @@ void screen_device::finalize_burnin()
 	if (filerr == FILERR_NONE)
 	{
 		png_info pnginfo = { 0 };
-		png_error pngerr;
+//      png_error pngerr;
 		char text[256];
 
 		// add two text entries describing the image
@@ -1358,7 +1358,7 @@ void screen_device::finalize_burnin()
 		png_add_text(&pnginfo, "System", text);
 
 		// now do the actual work
-		pngerr = png_write_bitmap(file, &pnginfo, finalmap, 0, NULL);
+		png_write_bitmap(file, &pnginfo, finalmap, 0, NULL);
 
 		// free any data allocated
 		png_free(&pnginfo);

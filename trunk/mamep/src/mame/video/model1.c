@@ -943,15 +943,15 @@ static UINT16 *push_direct(model1_state *state, UINT16 *list)
 {
 	struct view *view = state->m_view;
 	UINT32 flags;
-	UINT32 tex_adr, lum, v1, v2;
+	UINT32 tex_adr, lum; //, v1, v2;
 	struct point *old_p0, *old_p1, *p0, *p1;
 	int link, type;
 	float z;
 	struct quad_m1 cquad;
 
 	tex_adr = readi(list);
-	v1      = readi(list+2);
-	v2      = readi(list+10);
+//  v1      = readi(list+2);
+//  v2      = readi(list+10);
 
 	old_p0 = state->m_pointpt++;
 	old_p1 = state->m_pointpt++;
@@ -999,7 +999,7 @@ static UINT16 *push_direct(model1_state *state, UINT16 *list)
 		p1 = state->m_pointpt++;
 
 		lum   = readi(list+2);
-		v1    = readi(list+4);
+//      v1    = readi(list+4);
 
 		if(type == 2) {
 			p0->x = readf(list+6);
@@ -1343,7 +1343,7 @@ static void tgp_scan(running_machine &machine)
 	model1_state *state = machine.driver_data<model1_state>();
 	struct view *view = state->m_view;
 #if 0
-	if (input_code_pressed_once(machine, KEYCODE_F))
+	if (machine.input().code_pressed_once(KEYCODE_F))
         {
 		FILE *fp;
 		fp=fopen("tgp-ram.bin", "w+b");
@@ -1478,35 +1478,35 @@ SCREEN_UPDATE(model1)
 		double delta;
 		delta = 1;
 
-		if(input_code_pressed(screen->machine(), KEYCODE_F)) {
+		if(screen->machine().input().code_pressed(KEYCODE_F)) {
 			mod = 1;
 			view->vxx -= delta;
 		}
-		if(input_code_pressed(screen->machine(), KEYCODE_G)) {
+		if(screen->machine().input().code_pressed(KEYCODE_G)) {
 			mod = 1;
 			view->vxx += delta;
 		}
-		if(input_code_pressed(screen->machine(), KEYCODE_H)) {
+		if(screen->machine().input().code_pressed(KEYCODE_H)) {
 			mod = 1;
 			view->vyy -= delta;
 		}
-		if(input_code_pressed(screen->machine(), KEYCODE_J)) {
+		if(screen->machine().input().code_pressed(KEYCODE_J)) {
 			mod = 1;
 			view->vyy += delta;
 		}
-		if(input_code_pressed(screen->machine(), KEYCODE_K)) {
+		if(screen->machine().input().code_pressed(KEYCODE_K)) {
 			mod = 1;
 			view->vzz -= delta;
 		}
-		if(input_code_pressed(screen->machine(), KEYCODE_L)) {
+		if(screen->machine().input().code_pressed(KEYCODE_L)) {
 			mod = 1;
 			view->vzz += delta;
 		}
-		if(input_code_pressed(screen->machine(), KEYCODE_U)) {
+		if(screen->machine().input().code_pressed(KEYCODE_U)) {
 			mod = 1;
 			view->ayy -= 0.05;
 		}
-		if(input_code_pressed(screen->machine(), KEYCODE_I)) {
+		if(screen->machine().input().code_pressed(KEYCODE_I)) {
 			mod = 1;
 			view->ayy += 0.05;
 		}

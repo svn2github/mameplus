@@ -206,31 +206,31 @@ SCREEN_UPDATE( test_vcu )
 
 	bitmap_fill(state->m_tmpbitmaps[0], NULL, color_base);
 
-	if (input_code_pressed_once(screen->machine(), KEYCODE_1))	/* plane 1 */
+	if (screen->machine().input().code_pressed_once(KEYCODE_1))	/* plane 1 */
 		planes_enabled[0] ^= 1;
 
-	if (input_code_pressed_once(screen->machine(), KEYCODE_2))	/* plane 2 */
+	if (screen->machine().input().code_pressed_once(KEYCODE_2))	/* plane 2 */
 		planes_enabled[1] ^= 1;
 
-	if (input_code_pressed_once(screen->machine(), KEYCODE_3))	/* plane 3 */
+	if (screen->machine().input().code_pressed_once(KEYCODE_3))	/* plane 3 */
 		planes_enabled[2] ^= 1;
 
-	if (input_code_pressed_once(screen->machine(), KEYCODE_4))	/* plane 4 */
+	if (screen->machine().input().code_pressed_once(KEYCODE_4))	/* plane 4 */
 		planes_enabled[3] ^= 1;
 
-	if (input_code_pressed_once(screen->machine(), KEYCODE_I))	/* show/hide debug info */
+	if (screen->machine().input().code_pressed_once(KEYCODE_I))	/* show/hide debug info */
 		state->m_dbg_info = !state->m_dbg_info;
 
-	if (input_code_pressed_once(screen->machine(), KEYCODE_G))	/* enable gfx area handling */
+	if (screen->machine().input().code_pressed_once(KEYCODE_G))	/* enable gfx area handling */
 		state->m_dbg_gfx_e = !state->m_dbg_gfx_e;
 
-	if (input_code_pressed_once(screen->machine(), KEYCODE_C))	/* enable color area handling */
+	if (screen->machine().input().code_pressed_once(KEYCODE_C))	/* enable color area handling */
 		state->m_dbg_clr_e = !state->m_dbg_clr_e;
 
-	if (input_code_pressed_once(screen->machine(), KEYCODE_V))	/* draw only when vbank==dbg_vbank */
+	if (screen->machine().input().code_pressed_once(KEYCODE_V))	/* draw only when vbank==dbg_vbank */
 		state->m_dbg_vbank ^= 1;
 
-	if (input_code_pressed_once(screen->machine(), KEYCODE_L))	/* showlookup ram */
+	if (screen->machine().input().code_pressed_once(KEYCODE_L))	/* showlookup ram */
 		state->m_dbg_lookup = (state->m_dbg_lookup + 1) % 5;	//0,1,2,3, 4-off
 
 
@@ -273,13 +273,13 @@ SCREEN_UPDATE( test_vcu )
 static SCREEN_UPDATE( mazerbla )
 {
 	mazerbla_state *state = screen->machine().driver_data<mazerbla_state>();
-	UINT32 color_base = 0;
+//  UINT32 color_base = 0;
 
 	if (state->m_game_id == MAZERBLA)
-		color_base = 0x80;	/* 0x80 constant: matches Mazer Blazer movie */
+//      color_base = 0x80;  /* 0x80 constant: matches Mazer Blazer movie */
 
-	if (state->m_game_id == GREATGUN)
-		color_base = 0x00;
+//  if (state->m_game_id == GREATGUN)
+//      color_base = 0x00;
 
 	//  bitmap_fill(bitmap, NULL, 0);
 

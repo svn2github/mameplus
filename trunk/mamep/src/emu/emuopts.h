@@ -212,9 +212,7 @@ enum
 #define OPTION_SKIP_GAMEINFO		"skip_gameinfo"
 #define OPTION_UI_FONT				"uifont"
 #define OPTION_RAMSIZE				"ramsize"
-#ifdef CONFIRM_QUIT
 #define OPTION_CONFIRM_QUIT			"confirm_quit"
-#endif /* CONFIRM_QUIT */
 #ifdef PLAYBACK_END_PAUSE
 #define OPTION_PLAYBACK_END_PAUSE	"playback_end_pause"
 #endif /* PLAYBACK_END_PAUSE */
@@ -393,6 +391,8 @@ public:
 	bool skip_gameinfo() const { return bool_value(OPTION_SKIP_GAMEINFO); }
 	const char *ui_font() const { return value(OPTION_UI_FONT); }
 	const char *ram_size() const { return value(OPTION_RAMSIZE); }
+
+	bool confirm_quit() const { return bool_value(OPTION_CONFIRM_QUIT); }
 
 	// device-specific options
 	const char *device_option(device_image_interface &image);

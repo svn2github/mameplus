@@ -79,6 +79,7 @@
 #define IDE_COMMAND_SECURITY_UNLOCK		0xf2
 #define IDE_COMMAND_UNKNOWN_F9			0xf9
 #define IDE_COMMAND_VERIFY_MULTIPLE		0x40
+#define IDE_COMMAND_VERIFY_NORETRY		0x41
 #define IDE_COMMAND_ATAPI_IDENTIFY		0xa1
 #define IDE_COMMAND_RECALIBRATE			0x10
 #define IDE_COMMAND_IDLE_IMMEDIATE		0xe1
@@ -1040,7 +1041,8 @@ static void handle_command(ide_state *ide, UINT8 command)
 			break;
 
 		case IDE_COMMAND_VERIFY_MULTIPLE:
-			LOGPRINT(("IDE Read verify multiple with retries: C=%d H=%d S=%d LBA=%d count=%d\n",
+		case IDE_COMMAND_VERIFY_NORETRY:
+			LOGPRINT(("IDE Read verify multiple with/without retries: C=%d H=%d S=%d LBA=%d count=%d\n",
 				ide->cur_cylinder, ide->cur_head, ide->cur_sector, lba_address(ide), ide->sector_count));
 
 			/* reset the buffer */
@@ -1177,6 +1179,8 @@ static void handle_command(ide_state *ide, UINT8 command)
 
 		case IDE_COMMAND_SET_CONFIG:
 			LOGPRINT(("IDE Set configuration (%d heads, %d sectors)\n", ide->cur_head + 1, ide->sector_count));
+			ide->status &= ~IDE_STATUS_ERROR;
+			ide->error = IDE_ERROR_NONE;
 
 			ide->num_sectors = ide->sector_count;
 			ide->num_heads = ide->cur_head + 1;

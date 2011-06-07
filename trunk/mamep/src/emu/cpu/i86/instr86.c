@@ -1177,8 +1177,8 @@ static void PREFIX86(_cmp_axd16)(i8086_state *cpustate)    /* Opcode 0x3d */
 
 static void PREFIX86(_aas)(i8086_state *cpustate)    /* Opcode 0x3f */
 {
-	UINT8 ALcarry=1;
-	if (cpustate->regs.b[AL]>0xf9) ALcarry=2;
+//  UINT8 ALcarry=1;
+//  if (cpustate->regs.b[AL]>0xf9) ALcarry=2;
 
 	if (AF || ((cpustate->regs.b[AL] & 0xf) > 9))
     {
@@ -1971,6 +1971,9 @@ static void PREFIX86(_call_far)(i8086_state *cpustate)
 
 static void PREFIX86(_wait)(i8086_state *cpustate)    /* Opcode 0x9b */
 {
+#ifdef I80286
+	if ((cpustate->msw&0x0a) == 0x0a) throw TRAP(FPU_UNAVAILABLE,-1);
+#endif
 	if (cpustate->test_state)
 	{
 		ICOUNT = 0;
@@ -2464,12 +2467,14 @@ static void PREFIX86(_xlat)(i8086_state *cpustate)    /* Opcode 0xd7 */
 	cpustate->regs.b[AL] = GetMemB(DS, dest);
 }
 
+#ifndef I80286
 static void PREFIX86(_escape)(i8086_state *cpustate)    /* Opcodes 0xd8, 0xd9, 0xda, 0xdb, 0xdc, 0xdd, 0xde and 0xdf */
 {
 	unsigned ModRM = FETCH;
 	ICOUNT -= timing.nop;
     GetRMByte(ModRM);
 }
+#endif
 
 static void PREFIX86(_loopne)(i8086_state *cpustate)    /* Opcode 0xe0 */
 {
@@ -3221,6 +3226,9 @@ static void PREFIX86(_ffpre)(i8086_state *cpustate)    /* Opcode 0xff */
 		tmp = GetRMWord(ModRM);
 		PUSH(tmp);
 		break;
+	default:
+		tmp = GetRMWord(ModRM);  // 286 doesn't matter but 8086?
+		return PREFIX(_invalid)(cpustate);
 	}
 }
 

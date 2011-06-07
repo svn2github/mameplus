@@ -12,6 +12,7 @@
 #include "cpu/m68000/m68000.h"
 #include "cpu/psx/psx.h"
 #include "cpu/z80/z80.h"
+#include "video/psx.h"
 #include "includes/psx.h"
 #include "machine/at28c16.h"
 #include "machine/nvram.h"
@@ -481,7 +482,6 @@ static void zn_machine_init( running_machine &machine )
 
 	state->m_n_dip_bit = 0;
 	state->m_b_lastclock = 1;
-	psx_machine_init(machine);
 }
 
 static MACHINE_CONFIG_START( zn1_1mb_vram, zn_state )
@@ -502,7 +502,7 @@ static MACHINE_CONFIG_START( zn1_1mb_vram, zn_state )
 	MCFG_PALETTE_LENGTH( 65536 )
 
 	MCFG_PALETTE_INIT( psx )
-	MCFG_VIDEO_START( psx_type2 )
+	MCFG_PSXGPU_ADD( "maincpu", "gpu", CXD8561Q, 0 )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -538,7 +538,7 @@ static MACHINE_CONFIG_START( zn2, zn_state )
 	MCFG_PALETTE_LENGTH( 65536 )
 
 	MCFG_PALETTE_INIT( psx )
-	MCFG_VIDEO_START( psx_type2 )
+	MCFG_PSXGPU_ADD( "maincpu", "gpu", CXD8654Q, 0 )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1495,15 +1495,14 @@ static MACHINE_RESET( coh1000w )
 	zn_machine_init(machine);
 
 	devtag_reset(machine, "ide");
-	psx_dma_install_read_handler( machine, 5, psx_dma_read_delegate( FUNC( atpsx_dma_read ), machine.driver_data<zn_state>() ) );
-	psx_dma_install_write_handler( machine, 5, psx_dma_write_delegate( FUNC( atpsx_dma_write ), machine.driver_data<zn_state>() ) );
 }
 
 static MACHINE_CONFIG_DERIVED( coh1000w, zn1_2mb_vram )
-
 	MCFG_MACHINE_RESET( coh1000w )
 
 	MCFG_IDE_CONTROLLER_ADD("ide", atpsx_interrupt)
+	MCFG_PSX_DMA_CHANNEL_READ( "maincpu", 5, psx_dma_read_delegate( FUNC( atpsx_dma_read ), (zn_state *) owner ) )
+	MCFG_PSX_DMA_CHANNEL_WRITE( "maincpu", 5, psx_dma_write_delegate( FUNC( atpsx_dma_write ), (zn_state *) owner ) )
 MACHINE_CONFIG_END
 
 /*

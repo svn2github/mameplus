@@ -1780,7 +1780,7 @@ static void
 BlitQuads( running_machine &machine, bitmap_t *bitmap, INT32 addr, float m[4][4], INT32 base )
 {
 	namcos22_state *state = machine.driver_data<namcos22_state>();
-	int numAdditionalNormals = 0;
+//  int numAdditionalNormals = 0;
 	int chunkLength = GetPolyData(state, addr++);
 	int finish = addr + chunkLength;
 
@@ -1857,7 +1857,7 @@ BlitQuads( running_machine &machine, bitmap_t *bitmap, INT32 addr, float m[4][4]
                 000000  000000  007fff // normal vector
                 000000  000000  007fff // normal vector
                 */
-				numAdditionalNormals = GetPolyData(state, addr+2);
+//              numAdditionalNormals = GetPolyData(state, addr+2);
 				state->m_mSurfaceNormalFormat = GetPolyData(state, addr+3);
 				state->m_mLitSurfaceCount = 0;
 				state->m_mLitSurfaceIndex = 0;
@@ -2090,7 +2090,7 @@ SimulateSlaveDSP( running_machine &machine, bitmap_t *bitmap )
 
 	for(;;)
 	{
-		INT16 marker, next;
+		INT16 next;
 		state->m_mPrimitiveID = *pSource++;
 		len  = (INT16)*pSource++;
 
@@ -2127,7 +2127,8 @@ SimulateSlaveDSP( running_machine &machine, bitmap_t *bitmap )
 
 		/* hackery! commands should be streamed, not parsed here */
 		pSource += len;
-		marker = (INT16)*pSource++; /* always 0xffff */
+//      marker = (INT16)*pSource++; /* always 0xffff */
+		pSource++;
 		next   = (INT16)*pSource++; /* link to next command */
 		if( (next&0x7fff) != (pSource - (INT32 *)state->m_polygonram) )
 		{ /* end of list */
@@ -2275,7 +2276,7 @@ SCREEN_UPDATE( namcos22s )
 	ApplyGamma( screen->machine(), bitmap );
 
 #ifdef MAME_DEBUG
-	if( input_code_pressed(screen->machine(), KEYCODE_D) )
+	if( screen->machine().input().code_pressed(KEYCODE_D) )
 	{
 		namcos22_state *state = screen->machine().driver_data<namcos22_state>();
 		FILE *f = fopen( "dump.txt", "wb" );
@@ -2308,7 +2309,7 @@ SCREEN_UPDATE( namcos22s )
 			Dump(space, f,0xc00000, 0xc1ffff, "polygonram");
 			fclose( f );
 		}
-		while( input_code_pressed(screen->machine(), KEYCODE_D) ){}
+		while( screen->machine().input().code_pressed(KEYCODE_D) ){}
 	}
 #endif
 	return 0;
@@ -2326,7 +2327,7 @@ SCREEN_UPDATE( namcos22 )
 	ApplyGamma( screen->machine(), bitmap );
 
 #ifdef MAME_DEBUG
-	if( input_code_pressed(screen->machine(), KEYCODE_D) )
+	if( screen->machine().input().code_pressed(KEYCODE_D) )
 	{
 		FILE *f = fopen( "dump.txt", "wb" );
 		if( f )
@@ -2340,7 +2341,7 @@ SCREEN_UPDATE( namcos22 )
 			//Dump(space, f,0x70000000, 0x7001ffff, "polygonram");
 			fclose( f );
 		}
-		while( input_code_pressed(screen->machine(), KEYCODE_D) ){}
+		while( screen->machine().input().code_pressed(KEYCODE_D) ){}
 	}
 #endif
 	return 0;

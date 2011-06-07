@@ -170,6 +170,7 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 	  m_scheduler(*this),
 	  m_cheat(NULL),
 	  m_render(NULL),
+	  m_input(NULL),
 	  m_sound(NULL),
 	  m_video(NULL),
 	  m_debug_view(NULL),
@@ -264,7 +265,7 @@ void running_machine::start()
 {
 	// initialize basic can't-fail systems here
 	config_init(*this);
-	input_init(*this);
+	m_input = auto_alloc(*this, input_manager(*this));
 	output_init(*this);
 	palette_init(*this);
 	m_render = auto_alloc(*this, render_manager(*this));
@@ -803,7 +804,7 @@ void running_machine::handle_saveload()
 
 	// if there are anonymous timers, we can't save just yet, and we can't load yet either
 	// because the timers might overwrite data we have loaded
-	if (m_scheduler.can_save())
+	if (!m_scheduler.can_save())
 	{
 		// if more than a second has passed, we're probably screwed
 		if ((this->time() - m_saveload_schedule_time) > attotime::from_seconds(1))

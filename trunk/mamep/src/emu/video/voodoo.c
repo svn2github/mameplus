@@ -416,7 +416,7 @@ int voodoo_update(device_t *device, bitmap_t *bitmap, const rectangle *cliprect)
 	}
 
 	/* debugging! */
-	if (input_code_pressed(device->machine(), KEYCODE_L))
+	if (device->machine().input().code_pressed(KEYCODE_L))
 		drawbuf = v->fbi.backbuf;
 
 	/* copy from the current front buffer */
@@ -430,7 +430,7 @@ int voodoo_update(device_t *device, bitmap_t *bitmap, const rectangle *cliprect)
 		}
 
 	/* update stats display */
-	statskey = (input_code_pressed(device->machine(), KEYCODE_BACKSLASH) != 0);
+	statskey = (device->machine().input().code_pressed(KEYCODE_BACKSLASH) != 0);
 	if (statskey && statskey != v->stats.lastkey)
 		v->stats.display = !v->stats.display;
 	v->stats.lastkey = statskey;
@@ -440,7 +440,7 @@ int voodoo_update(device_t *device, bitmap_t *bitmap, const rectangle *cliprect)
 		popmessage(v->stats.buffer, 0, 0);
 
 	/* update render override */
-	v->stats.render_override = input_code_pressed(device->machine(), KEYCODE_ENTER);
+	v->stats.render_override = device->machine().input().code_pressed(KEYCODE_ENTER);
 	if (DEBUG_DEPTH && v->stats.render_override)
 	{
 		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
@@ -3062,7 +3062,7 @@ static INT32 lfb_w(voodoo_state *v, offs_t offset, UINT32 data, UINT32 mem_mask,
 	/* simple case: no pipeline */
 	if (!LFBMODE_ENABLE_PIXEL_PIPELINE(v->reg[lfbMode].u))
 	{
-		DECLARE_DITHER_POINTERS;
+		DECLARE_DITHER_POINTERS_NO_DITHER_VAR;
 		UINT32 bufoffs;
 
 		if (LOG_LFB) logerror("VOODOO.%d.LFB:write raw mode %X (%d,%d) = %08X & %08X\n", v->index, LFBMODE_WRITE_FORMAT(v->reg[lfbMode].u), x, y, data, mem_mask);
@@ -3076,7 +3076,7 @@ static INT32 lfb_w(voodoo_state *v, offs_t offset, UINT32 data, UINT32 mem_mask,
 		bufoffs = scry * v->fbi.rowpixels + x;
 
 		/* compute dithering */
-		COMPUTE_DITHER_POINTERS(v->reg[fbzMode].u, y);
+		COMPUTE_DITHER_POINTERS_NO_DITHER_VAR(v->reg[fbzMode].u, y);
 
 		/* loop over up to two pixels */
 		for (pix = 0; mask; pix++)
@@ -4749,8 +4749,8 @@ static INT32 fastfill(voodoo_state *v)
 		/* determine the dither pattern */
 		for (y = 0; y < 4; y++)
 		{
-			DECLARE_DITHER_POINTERS;
-			COMPUTE_DITHER_POINTERS(v->reg[fbzMode].u, y);
+			DECLARE_DITHER_POINTERS_NO_DITHER_VAR;
+			COMPUTE_DITHER_POINTERS_NO_DITHER_VAR(v->reg[fbzMode].u, y);
 			for (x = 0; x < 4; x++)
 			{
 				int r = v->reg[color1].rgb.r;

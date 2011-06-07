@@ -214,9 +214,7 @@ const options_entry emu_options::s_option_entries[] =
 	{ OPTION_SKIP_GAMEINFO,                              "0",         OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
 	{ OPTION_UI_FONT,                                    "default",   OPTION_STRING,     "specify a font to use" },
 	{ OPTION_RAMSIZE ";ram",                             NULL,        OPTION_STRING,     "size of RAM (if supported by driver)" },
-#ifdef CONFIRM_QUIT
-	{ OPTION_CONFIRM_QUIT,                               "1",         OPTION_BOOLEAN,    "quit game with confirmation" },
-#endif /* CONFIRM_QUIT */
+	{ OPTION_CONFIRM_QUIT,                               "0",         OPTION_BOOLEAN,    "display confirm quit screen on exit" },
 #ifdef PLAYBACK_END_PAUSE
 	{ OPTION_PLAYBACK_END_PAUSE,                         "0",         OPTION_BOOLEAN,    "automatic pause when playback ended" },
 #endif /* PLAYBACK_END_PAUSE */

@@ -79,7 +79,6 @@ EMUOBJS = \
 	$(EMUOBJ)/image.o \
 	$(EMUOBJ)/info.o \
 	$(EMUOBJ)/input.o \
-	$(EMUOBJ)/inputseq.o \
 	$(EMUOBJ)/inptport.o \
 	$(EMUOBJ)/mame.o \
 	$(EMUOBJ)/machine.o \
@@ -276,12 +275,13 @@ EMUVIDEOOBJS = \
 	$(EMUVIDEO)/hd44102.o		\
 	$(EMUVIDEO)/hd61830.o		\
 	$(EMUVIDEO)/hd63484.o		\
-	$(EMUVIDEO)/i8275.o		\
+	$(EMUVIDEO)/i8275.o			\
+	$(EMUVIDEO)/k053250.o		\
 	$(EMUVIDEO)/mc6845.o		\
 	$(EMUVIDEO)/msm6255.o		\
 	$(EMUVIDEO)/pc_vga.o		\
-	$(EMUVIDEO)/pc_video.o		\
 	$(EMUVIDEO)/poly.o			\
+	$(EMUVIDEO)/psx.o			\
 	$(EMUVIDEO)/resnet.o		\
 	$(EMUVIDEO)/rgbutil.o		\
 	$(EMUVIDEO)/s2636.o			\

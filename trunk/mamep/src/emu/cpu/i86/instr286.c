@@ -212,8 +212,8 @@ static void i80286_switch_task(i80286_state *cpustate, UINT16 ntask, int type)
 	UINT32 naddr, oaddr, ldtaddr;
 	int i;
 	logerror("This program uses TSSs, how rare. Expect a crash.\n");
-	if (TBL(ntask)) TRAP(INVALID_TSS,IDXTBL(ntask));
-	if ((naddr = i80286_selector_address(cpustate,ntask)) == -1) TRAP(INVALID_TSS,IDXTBL(ntask));
+	if (TBL(ntask)) throw TRAP(INVALID_TSS,IDXTBL(ntask));
+	if ((naddr = i80286_selector_address(cpustate,ntask)) == -1) throw TRAP(INVALID_TSS,IDXTBL(ntask));
 	oaddr = i80286_selector_address(cpustate,cpustate->tr.sel);
 	ndesc[0] = ReadWord(naddr);
 	ndesc[1] = ReadWord(naddr+2);
@@ -222,7 +222,7 @@ static void i80286_switch_task(i80286_state *cpustate, UINT16 ntask, int type)
 	r = RIGHTS(ndesc);
 	if (SEGDESC(r) || (GATE(r) != TSSDESCIDLE)) throw TRAP(GENERAL_PROTECTION_FAULT,IDXTBL(ntask));
 	if (!PRES(r)) throw TRAP(SEG_NOT_PRESENT, IDXTBL(ntask));
-	if (LIMIT(ndesc) < 44) TRAP(INVALID_TSS,IDXTBL(ntask));
+	if (LIMIT(ndesc) < 44) throw TRAP(INVALID_TSS,IDXTBL(ntask));
 	for (i = 0; i < 44; i+=2) ntss[i/2] = ReadWord(BASE(ndesc)+i);
 
 	cpustate->flags = CompressFlags();
@@ -271,23 +271,28 @@ static void i80286_switch_task(i80286_state *cpustate, UINT16 ntask, int type)
 	cpustate->regs.w[SI] = ntss[TSS_SI];
 	cpustate->regs.w[DI] = ntss[TSS_DI];
 
-	if (TBL(ntss[TSS_LDT])) TRAP(INVALID_TSS,IDXTBL(ntss[TSS_LDT]));
-	if ((ldtaddr = i80286_selector_address(cpustate,ntss[TSS_LDT])) == -1) TRAP(INVALID_TSS,IDXTBL(ntss[TSS_LDT]));
-	desc[0] = ReadWord(ldtaddr);
-	desc[1] = ReadWord(ldtaddr+2);
-	desc[2] = ReadWord(ldtaddr+4);
-	r = RIGHTS(desc);
-	if (SEGDESC(r) || (GATE(r) != LDTDESC)) throw TRAP(INVALID_TSS,IDXTBL(ntss[TSS_LDT]));
-	if (!PRES(r)) TRAP(INVALID_TSS,IDXTBL(ntss[TSS_LDT]));
+	if (TBL(ntss[TSS_LDT])) throw TRAP(INVALID_TSS,IDXTBL(ntss[TSS_LDT]));
+	if (IDXTBL(ntss[TSS_LDT])) {
+		if ((ldtaddr = i80286_selector_address(cpustate,ntss[TSS_LDT])) == -1) throw TRAP(INVALID_TSS,IDXTBL(ntss[TSS_LDT]));
+		desc[0] = ReadWord(ldtaddr);
+		desc[1] = ReadWord(ldtaddr+2);
+		desc[2] = ReadWord(ldtaddr+4);
+		r = RIGHTS(desc);
+		if (SEGDESC(r) || (GATE(r) != LDTDESC)) throw TRAP(INVALID_TSS,IDXTBL(ntss[TSS_LDT]));
+		if (!PRES(r)) throw TRAP(INVALID_TSS,IDXTBL(ntss[TSS_LDT]));
+		cpustate->ldtr.sel=ntss[TSS_LDT];
+		cpustate->ldtr.limit=LIMIT(desc);
+		cpustate->ldtr.base=BASE(desc);
+		cpustate->ldtr.rights=RIGHTS(desc);
+	} else {
+		cpustate->ldtr.sel=0;
+		cpustate->ldtr.limit=0;
+		cpustate->ldtr.base=0;
+		cpustate->ldtr.rights=0;
+	}
 
 	if (type == CALL) cpustate->flags |= 0x4000;
 	cpustate->msw |= 8;
-
-	cpustate->ldtr.sel=ntss[TSS_LDT]; // docs say nothing about whether a null ldt can be in a tss
-	cpustate->ldtr.limit=LIMIT(desc);
-	cpustate->ldtr.base=BASE(desc);
-	cpustate->ldtr.rights=RIGHTS(desc);
-
 	i80286_data_descriptor_full(cpustate, SS, ntss[TSS_SS], RPL(ntss[TSS_CS]), TRAP(INVALID_TSS,IDXTBL(ntss[TSS_SS])));
 
 	cpustate->sregs[CS] = IDXTBL(cpustate->sregs[CS]) | RPL(ntss[TSS_CS]);  // fixme
@@ -505,7 +510,7 @@ static void PREFIX286(_0fpre)(i8086_state *cpustate)
 				desc[2] = ReadWord(addr+4);
 				r = RIGHTS(desc);
 				if (SEGDESC(r) || (GATE(r) != LDTDESC)) throw TRAP(GENERAL_PROTECTION_FAULT,IDXTBL(sel));
-				if (!PRES(r)) TRAP(SEG_NOT_PRESENT,IDXTBL(sel));
+				if (!PRES(r)) throw TRAP(SEG_NOT_PRESENT,IDXTBL(sel));
 			} else {
 				desc[0] = 0;
 				desc[1] = 0;
@@ -525,7 +530,7 @@ static void PREFIX286(_0fpre)(i8086_state *cpustate)
 			desc[2] = ReadWord(addr+4);
 			r = RIGHTS(desc);
 			if (SEGDESC(r) || (GATE(r) != TSSDESCIDLE)) throw TRAP(GENERAL_PROTECTION_FAULT,IDXTBL(sel));
-			if (!PRES(r)) TRAP(SEG_NOT_PRESENT,IDXTBL(sel));
+			if (!PRES(r)) throw TRAP(SEG_NOT_PRESENT,IDXTBL(sel));
 			desc[2] |= 0x200; // mark busy
 			WriteWord(addr+4, desc[2]);
 			cpustate->tr.sel=sel;
@@ -783,10 +788,10 @@ static UINT16 i80286_far_return(i8086_state *cpustate, int iret, int bytes)
 		cpustate->pc=(cpustate->base[CS]+off)&AMASK ;
 
 		// docs say check rpl but windows doesn't like it
-		if (i80286_verify(cpustate, cpustate->sregs[DS], I80286_READ, cpustate->rights[DS]) && (DPL(cpustate->rights[DS]) < CPL))
+		if (i80286_verify(cpustate, cpustate->sregs[DS], I80286_READ, cpustate->rights[DS]) || (DPL(cpustate->rights[DS]) < CPL))
 			i80286_data_descriptor(cpustate, DS, 0);
 
-		if (i80286_verify(cpustate, cpustate->sregs[ES], I80286_READ, cpustate->rights[ES]) && (DPL(cpustate->rights[ES]) < CPL))
+		if (i80286_verify(cpustate, cpustate->sregs[ES], I80286_READ, cpustate->rights[ES]) || (DPL(cpustate->rights[ES]) < CPL))
 			i80286_data_descriptor(cpustate, ES, 0);
 	} else {
 		cpustate->regs.w[SP] += (iret?6:4) + bytes;
@@ -823,13 +828,32 @@ static void PREFIX286(_retf)(i8086_state *cpustate)
 	ICOUNT -= timing.ret_far;
 }
 
+static void PREFIX286(_escape)(i8086_state *cpustate)    /* Opcodes 0xd8, 0xd9, 0xda, 0xdb, 0xdc, 0xdd, 0xde */
+{
+	if ((cpustate->msw&8) || (cpustate->msw&4)) throw TRAP(FPU_UNAVAILABLE,-1);
+	unsigned ModRM = FETCH;
+	ICOUNT -= timing.nop;
+    GetRMByte(ModRM);
+}
+
+static void PREFIX286(_escape_7)(i8086_state *cpustate)    /* Opcode 0xdf */
+{
+	if ((cpustate->msw&8) || (cpustate->msw&4)) throw TRAP(FPU_UNAVAILABLE,-1);
+	unsigned ModRM = FETCH;
+	ICOUNT -= timing.nop;
+    GetRMByte(ModRM);
+	if (ModRM == 0xe0) cpustate->regs.w[AX] = 0xffff;  // FPU not present
+}
+
 static void i80286_check_permission(i8086_state *cpustate, UINT8 check_seg, UINT16 offset, i80286_size size, i80286_operation operation)
 {
 	int trap = 0;
+	UINT8 rights;
 	if (PM) {
-		trap = i80286_verify(cpustate, cpustate->sregs[check_seg], operation, cpustate->rights[check_seg]);
-		if (!EXPDOWN(cpustate->rights[check_seg]) && ((offset+size-1) > cpustate->limit[check_seg])) trap = GENERAL_PROTECTION_FAULT;
-		if (EXPDOWN(cpustate->rights[check_seg]) && (offset < cpustate->limit[check_seg])) trap = GENERAL_PROTECTION_FAULT;
+		rights = cpustate->rights[check_seg];
+		trap = i80286_verify(cpustate, cpustate->sregs[check_seg], operation, rights);
+		if ((CODE(rights) || !EXPDOWN(rights)) && ((offset+size-1) > cpustate->limit[check_seg])) trap = GENERAL_PROTECTION_FAULT;
+		if (!CODE(rights) && EXPDOWN(rights) && (offset < cpustate->limit[check_seg])) trap = GENERAL_PROTECTION_FAULT;
 
 		if (trap) throw TRAP(trap, IDXTBL(cpustate->sregs[check_seg]));
 	}

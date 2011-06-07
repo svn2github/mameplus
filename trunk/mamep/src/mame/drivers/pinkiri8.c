@@ -183,7 +183,7 @@ static SCREEN_UPDATE( pinkiri8 )
 
 	if (!strcmp(screen->machine().system().name,"janshi")) game_type_hack = 1;
 
-	if ( input_code_pressed_once(screen->machine(), KEYCODE_W) )
+	if ( screen->machine().input().code_pressed_once(KEYCODE_W) )
 	{
 		int i;
 		int count2;
@@ -237,7 +237,7 @@ static SCREEN_UPDATE( pinkiri8 )
 	}
 
 	{
-		int x,y,unk2;
+		int x,y; //,unk2;
 		int col;
 
 		int spr_offs,i;
@@ -269,7 +269,7 @@ static SCREEN_UPDATE( pinkiri8 )
 			x &= 0xff;
 			x *= 2;
 
-			unk2 = state->m_janshi_vram2[(i*2)+1];
+//          unk2 = state->m_janshi_vram2[(i*2)+1];
 			y = (state->m_janshi_vram2[(i*2)+0]);
 
 			y = 0x100-y;
