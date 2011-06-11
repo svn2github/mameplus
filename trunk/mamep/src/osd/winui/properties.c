@@ -2378,12 +2378,14 @@ static void SetPropEnabledControls(HWND hWnd)
 	HWND hCtrl;
 	int  nIndex;
 	int  sound;
-	BOOL ddraw = FALSE;
-	BOOL d3d = FALSE;
-	BOOL gdi = FALSE;
+	bool ddraw = FALSE;
+	bool d3d = FALSE;
+	bool gdi = FALSE;
 	//BOOL useart = TRUE;
-	int joystick_attached = 0;
-	int in_window = 0;
+	bool joystick_attached = FALSE;
+	bool in_window = FALSE;
+	bool hlsl_on = FALSE;
+	int d3d_version = 8;
 
 	nIndex = g_nGame;
 
@@ -2399,7 +2401,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),              !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALE),               !gdi);
-	//mamep: added IDC_PRESCALETEXT
 	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALETEXT),           !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALEDISP),           !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_HWSTRETCH),              ddraw && DirectDraw_HasHWStretch());
@@ -2448,6 +2449,65 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_OVERLAYS),		useart);
 	EnableWindow(GetDlgItem(hWnd, IDC_ARTMISCTEXT),		useart);
 #endif
+
+	// HLSL - only enable if D3D selected, and Version 9 selected
+	if (d3d)
+	{
+		d3d_version = pCurrentOpts.int_value(WINOPTION_D3DVERSION);
+
+		if (d3d_version >= 9)
+			hlsl_on = pCurrentOpts.bool_value(WINOPTION_HLSL_ENABLE);
+	}
+
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ON), (d3d_version >= 9));
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ALPHATEXT),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ALPHADISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_ALPHA),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_CURVTEXT),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_CURVDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_CURV),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SATTEXT),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SATDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SAT),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SHADOWTEXT),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SHADOWDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SHADOW),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_PINTEXT),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_PINDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_PIN),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_XFOCUS),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_YFOCUS),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_XFOCUSDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_YFOCUSDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_FOCUSTEXT),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RSCALE),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GSCALE),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BSCALE),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RSCALEDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GSCALEDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BSCALEDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_SCALETEXT),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RPOWER),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GPOWER),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BPOWER),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RPOWERDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GPOWERDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BPOWERDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_POWERTEXT),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RPLIFE),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GPLIFE),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BPLIFE),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RPLIFEDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GPLIFEDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BPLIFEDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_PLIFETEXT),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RFLOOR),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GFLOOR),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BFLOOR),		hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_RFLOORDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_GFLOORDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_BFLOORDISP),	hlsl_on);
+	EnableWindow(GetDlgItem(hWnd, IDC_HLSL_FLOORTEXT),	hlsl_on);
 
 	/* Joystick options */
 	joystick_attached = DIJoystick.Available();
@@ -3274,8 +3334,8 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_SWITCHRES,				DM_BOOL,	WINOPTION_SWITCHRES);
 	datamap_add(properties_datamap, IDC_FSBRIGHTNESS,			DM_FLOAT,	WINOPTION_FULLSCREENBRIGHTNESS);
 	datamap_add(properties_datamap, IDC_FSBRIGHTNESSDISP,		DM_FLOAT,	WINOPTION_FULLSCREENBRIGHTNESS);
-	datamap_add(properties_datamap, IDC_FSCONTRAST,				DM_FLOAT,	WINOPTION_FULLLSCREENCONTRAST);
-	datamap_add(properties_datamap, IDC_FSCONTRASTDISP,			DM_FLOAT,	WINOPTION_FULLLSCREENCONTRAST);
+	datamap_add(properties_datamap, IDC_FSCONTRAST,				DM_FLOAT,	WINOPTION_FULLSCREENCONTRAST);
+	datamap_add(properties_datamap, IDC_FSCONTRASTDISP,			DM_FLOAT,	WINOPTION_FULLSCREENCONTRAST);
 	datamap_add(properties_datamap, IDC_FSGAMMA,				DM_FLOAT,	WINOPTION_FULLSCREENGAMMA);
 	datamap_add(properties_datamap, IDC_FSGAMMADISP,			DM_FLOAT,	WINOPTION_FULLSCREENGAMMA);
 
@@ -3304,6 +3364,47 @@ static void BuildDataMap(void)
 			datamap_add(properties_datamap, drivers_table[i].ctrl,	DM_STRING,	NULL);
 	}
 #endif /* DRIVER_SWITCH */
+
+	// hlsl
+	datamap_add(properties_datamap, IDC_HLSL_ON,				DM_BOOL,	WINOPTION_HLSL_ENABLE);
+	datamap_add(properties_datamap, IDC_HLSL_ALPHA,				DM_FLOAT,	WINOPTION_SCANLINE_AMOUNT);
+	datamap_add(properties_datamap, IDC_HLSL_ALPHADISP,			DM_FLOAT,	WINOPTION_SCANLINE_AMOUNT);
+	datamap_add(properties_datamap, IDC_HLSL_CURV,				DM_FLOAT,	WINOPTION_CURVATURE);
+	datamap_add(properties_datamap, IDC_HLSL_CURVDISP,			DM_FLOAT,	WINOPTION_CURVATURE);
+	datamap_add(properties_datamap, IDC_HLSL_SAT,				DM_FLOAT,	WINOPTION_SATURATION);
+	datamap_add(properties_datamap, IDC_HLSL_SATDISP,			DM_FLOAT,	WINOPTION_SATURATION);
+	datamap_add(properties_datamap, IDC_HLSL_SHADOW,			DM_FLOAT,	WINOPTION_SHADOW_MASK_ALPHA);
+	datamap_add(properties_datamap, IDC_HLSL_SHADOWDISP,		DM_FLOAT,	WINOPTION_SHADOW_MASK_ALPHA);
+	datamap_add(properties_datamap, IDC_HLSL_PIN,				DM_FLOAT,	WINOPTION_PINCUSHION);
+	datamap_add(properties_datamap, IDC_HLSL_PINDISP,			DM_FLOAT,	WINOPTION_PINCUSHION);
+	datamap_add(properties_datamap, IDC_HLSL_XFOCUS,			DM_FLOAT,	WINOPTION_DEFOCUS_X);
+	datamap_add(properties_datamap, IDC_HLSL_YFOCUS,			DM_FLOAT,	WINOPTION_DEFOCUS_Y);
+	datamap_add(properties_datamap, IDC_HLSL_XFOCUSDISP,		DM_FLOAT,	WINOPTION_DEFOCUS_X);
+	datamap_add(properties_datamap, IDC_HLSL_YFOCUSDISP,		DM_FLOAT,	WINOPTION_DEFOCUS_Y);
+	datamap_add(properties_datamap, IDC_HLSL_RSCALE,			DM_FLOAT,	WINOPTION_RED_SCALE);
+	datamap_add(properties_datamap, IDC_HLSL_GSCALE,			DM_FLOAT,	WINOPTION_GREEN_SCALE);
+	datamap_add(properties_datamap, IDC_HLSL_BSCALE,			DM_FLOAT,	WINOPTION_BLUE_SCALE);
+	datamap_add(properties_datamap, IDC_HLSL_RSCALEDISP,		DM_FLOAT,	WINOPTION_RED_SCALE);
+	datamap_add(properties_datamap, IDC_HLSL_GSCALEDISP,		DM_FLOAT,	WINOPTION_GREEN_SCALE);
+	datamap_add(properties_datamap, IDC_HLSL_BSCALEDISP,		DM_FLOAT,	WINOPTION_BLUE_SCALE);
+	datamap_add(properties_datamap, IDC_HLSL_RPOWER,			DM_FLOAT,	WINOPTION_RED_POWER);
+	datamap_add(properties_datamap, IDC_HLSL_GPOWER,			DM_FLOAT,	WINOPTION_GREEN_POWER);
+	datamap_add(properties_datamap, IDC_HLSL_BPOWER,			DM_FLOAT,	WINOPTION_BLUE_POWER);
+	datamap_add(properties_datamap, IDC_HLSL_RPOWERDISP,		DM_FLOAT,	WINOPTION_RED_POWER);
+	datamap_add(properties_datamap, IDC_HLSL_GPOWERDISP,		DM_FLOAT,	WINOPTION_GREEN_POWER);
+	datamap_add(properties_datamap, IDC_HLSL_BPOWERDISP,		DM_FLOAT,	WINOPTION_BLUE_POWER);
+	datamap_add(properties_datamap, IDC_HLSL_RPLIFE,			DM_FLOAT,	WINOPTION_RED_PHOSPHOR);
+	datamap_add(properties_datamap, IDC_HLSL_GPLIFE,			DM_FLOAT,	WINOPTION_GREEN_PHOSPHOR);
+	datamap_add(properties_datamap, IDC_HLSL_BPLIFE,			DM_FLOAT,	WINOPTION_BLUE_PHOSPHOR);
+	datamap_add(properties_datamap, IDC_HLSL_RPLIFEDISP,		DM_FLOAT,	WINOPTION_RED_PHOSPHOR);
+	datamap_add(properties_datamap, IDC_HLSL_GPLIFEDISP,		DM_FLOAT,	WINOPTION_GREEN_PHOSPHOR);
+	datamap_add(properties_datamap, IDC_HLSL_BPLIFEDISP,		DM_FLOAT,	WINOPTION_BLUE_PHOSPHOR);
+	datamap_add(properties_datamap, IDC_HLSL_RFLOOR,			DM_FLOAT,	WINOPTION_RED_FLOOR);
+	datamap_add(properties_datamap, IDC_HLSL_GFLOOR,			DM_FLOAT,	WINOPTION_GREEN_FLOOR);
+	datamap_add(properties_datamap, IDC_HLSL_BFLOOR,			DM_FLOAT,	WINOPTION_BLUE_FLOOR);
+	datamap_add(properties_datamap, IDC_HLSL_RFLOORDISP,		DM_FLOAT,	WINOPTION_RED_FLOOR);
+	datamap_add(properties_datamap, IDC_HLSL_GFLOORDISP,		DM_FLOAT,	WINOPTION_GREEN_FLOOR);
+	datamap_add(properties_datamap, IDC_HLSL_BFLOORDISP,		DM_FLOAT,	WINOPTION_BLUE_FLOOR);
 
 	// set up callbacks
 	datamap_set_callback(properties_datamap, IDC_ROTATE,		DCT_READ_CONTROL,		RotateReadControl);
@@ -3349,15 +3450,67 @@ static void BuildDataMap(void)
 	datamap_set_float_format(properties_datamap, IDC_JDZDISP,			"%03.2f");
 	datamap_set_float_format(properties_datamap, IDC_JSATDISP,			"%03.2f");
 	datamap_set_float_format(properties_datamap, IDC_SPEEDDISP,			"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_ALPHADISP,	"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_CURVDISP,		"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_SATDISP,		"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_SHADOWDISP,	"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_PINDISP,		"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_RFLOORDISP,	"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_GFLOORDISP,	"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_BFLOORDISP,	"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_RSCALEDISP,	"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_GSCALEDISP,	"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_BSCALEDISP,	"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_XFOCUSDISP,	"%1.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_YFOCUSDISP,	"%1.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_RPOWERDISP,	"%1.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_GPOWERDISP,	"%1.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_BPOWERDISP,	"%1.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_RPLIFEDISP,	"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_GPLIFEDISP,	"%03.2f");
+	datamap_set_float_format(properties_datamap, IDC_HLSL_BPLIFEDISP,	"%03.2f");
 
-	// trackbar ranges
+	// trackbar ranges - slider-name,start,end,step
 	datamap_set_trackbar_range(properties_datamap, IDC_PRESCALE,    1, 10, 1);
 	datamap_set_trackbar_range(properties_datamap, IDC_JDZ,         0.00,  1.00, (float)0.05);
 	datamap_set_trackbar_range(properties_datamap, IDC_JSAT,        0.00,  1.00, (float)0.05);
 	datamap_set_trackbar_range(properties_datamap, IDC_SPEED,       0.00,  3.00, (float)0.01);
 	datamap_set_trackbar_range(properties_datamap, IDC_BEAM,        (float)0.10, 10.00, (float)0.10);
+#if 0
+	datamap_set_trackbar_range(properties_datamap, IDC_AUDIO_LATENCY, 1,  5, 1);
+#endif
 	datamap_set_trackbar_range(properties_datamap, IDC_VOLUME,      -32,  0, 1);
 	datamap_set_trackbar_range(properties_datamap, IDC_SECONDSTORUN, 0,  60, 1);
+#if 0
+	datamap_set_trackbar_range(properties_datamap, IDC_NUMSCREENS,  1,     4,    1);
+	datamap_set_trackbar_range(properties_datamap, IDC_PRESCALE,    1,     10,   1);
+	datamap_set_trackbar_range(properties_datamap, IDC_FSGAMMA,     0.0,   3.0,  0.1);
+	datamap_set_trackbar_range(properties_datamap, IDC_FSBRIGHTNESS,0.00,  2.0,  (float)0.1);
+	datamap_set_trackbar_range(properties_datamap, IDC_FSCONTRAST,  0.0,   2.0,  (float)0.1);
+	datamap_set_trackbar_range(properties_datamap, IDC_GAMMA,       0.0,   3.0,  0.1);
+	datamap_set_trackbar_range(properties_datamap, IDC_BRIGHTCORRECT,0.00, 2.0,  (float)0.1);
+	datamap_set_trackbar_range(properties_datamap, IDC_CONTRAST,    0.0,   2.0,  (float)0.1);
+	datamap_set_trackbar_range(properties_datamap, IDC_PAUSEBRIGHT, 0.00,  1.00, (float)0.05);
+#endif
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_ALPHA,  0.00,  1.00, (float)0.05);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_CURV,   0.00,  1.00, (float)0.01);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_SAT,    0.00,  4.00, (float)0.05);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_SHADOW, 0.00,  1.00, (float)0.05);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_PIN,    0.00,  1.00, (float)0.01);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_RFLOOR, 0.00,  1.00, (float)0.01);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_GFLOOR, 0.00,  1.00, (float)0.01);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_BFLOOR, 0.00,  1.00, (float)0.01);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_RSCALE, 0.00,  2.00, (float)0.01);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_GSCALE, 0.00,  2.00, (float)0.01);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_BSCALE, 0.00,  2.00, (float)0.01);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_RPOWER, 0.0,   4.0,  (float)0.05);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_GPOWER, 0.0,   4.0,  (float)0.05);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_BPOWER, 0.0,   4.0,  (float)0.05);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_XFOCUS, 0.0,   16.0, (float)0.25);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_YFOCUS, 0.0,   16.0, (float)0.25);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_RPLIFE, 0.00,  1.00, (float)0.01);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_GPLIFE, 0.00,  1.00, (float)0.01);
+	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_BPLIFE, 0.00,  1.00, (float)0.01);
 #ifdef TRANS_UI
 	datamap_set_trackbar_range(properties_datamap, IDC_TRANSPARENCY, 0, 255, 1);
 #endif /* TRANS_UI */
@@ -3515,25 +3668,25 @@ static void InitializeSkippingUI(HWND hwnd)
 	{
 		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Draw every frame")));
 		(void)ComboBox_SetItemData(hCtrl, i++, 0);
-		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 1 of 10 frames")));
+		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 1 frame")));
 		(void)ComboBox_SetItemData(hCtrl, i++, 1);
-		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 2 of 10 frames")));
+		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 2 frames")));
 		(void)ComboBox_SetItemData(hCtrl, i++, 2);
-		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 3 of 10 frames")));
+		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 3 frames")));
 		(void)ComboBox_SetItemData(hCtrl, i++, 3);
-		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 4 of 10 frames")));
+		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 4 frames")));
 		(void)ComboBox_SetItemData(hCtrl, i++, 4);
-		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 5 of 10 frames")));
+		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 5 frames")));
 		(void)ComboBox_SetItemData(hCtrl, i++, 5);
-		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 6 of 10 frames")));
+		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 6 frames")));
 		(void)ComboBox_SetItemData(hCtrl, i++, 6);
-		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 7 of 10 frames")));
+		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 7 frames")));
 		(void)ComboBox_SetItemData(hCtrl, i++, 7);
-		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 8 of 10 frames")));
+		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 8 frames")));
 		(void)ComboBox_SetItemData(hCtrl, i++, 8);
-		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 9 of 10 frames")));
+		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 9 frames")));
 		(void)ComboBox_SetItemData(hCtrl, i++, 9);
-		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 10 of 10 frames")));
+		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 10 frames")));
 		(void)ComboBox_SetItemData(hCtrl, i++, 10);
 	}
 }

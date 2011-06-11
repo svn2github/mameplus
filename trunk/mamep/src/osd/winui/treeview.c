@@ -355,6 +355,8 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 	{
 		if( !( (driver_list::driver(nGame).flags & GAME_IS_BIOS_ROOT ) == 0) )
 			return TRUE;
+		if( driver_list::driver(nGame).name[0] == '_' )
+			return TRUE;
 	}
 
 	//mamep: filter for search box control, place it here for better performance

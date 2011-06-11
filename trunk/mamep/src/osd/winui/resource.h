@@ -87,6 +87,7 @@
 #define IDD_FILTERS                     169
 #define IDD_RESET                       170
 #define IDD_LOAD_PROGRESS               171
+#define IDD_PROP_HLSL                   172
 #define IDD_INTERFACE_OPTIONS           173
 #define IDR_CONTEXT_SCREENSHOT          181
 #define IDI_HEADER_UP                   182
@@ -327,6 +328,7 @@
 #define IDC_FSCONTRASTTEXT              1225
 #define IDC_VIDEO_MODE                  1226
 #define IDC_SCREENSELECTTEXT            1227
+#define IDC_PRESCALETEXT                1228
 #define IDC_MULTIMOUSE                  1230
 #define IDC_DEBUG                       1231
 #define IDC_REFRESHSPEED                1232
@@ -352,58 +354,105 @@
 #define IDC_SNAPSIZETEXT                0    // N/A
 #define IDC_SNAPSIZEX                   1253
 #define IDC_FILTER_MECHANICAL           1254
+#define IDC_HLSL_ALPHADISP              1260
+#define IDC_HLSL_CURVDISP               1261
+#define IDC_HLSL_SATDISP                1262
+#define IDC_HLSL_SHADOWDISP             1263
+#define IDC_HLSL_PINDISP                1264
+#define IDC_HLSL_ALPHA                  1270
+#define IDC_HLSL_CURV                   1271
+#define IDC_HLSL_SAT                    1272
+#define IDC_HLSL_SHADOW                 1273
+#define IDC_HLSL_PIN                    1274
+#define IDC_HLSL_ON                     1279
+#define IDC_HLSL_ALPHATEXT              1280
+#define IDC_HLSL_CURVTEXT               1281
+#define IDC_HLSL_SATTEXT                1282
+#define IDC_HLSL_SHADOWTEXT             1283
+#define IDC_HLSL_PINTEXT                1284
+#define IDC_HLSL_XFOCUS                 1290
+#define IDC_HLSL_YFOCUS                 1291
+#define IDC_HLSL_XFOCUSDISP             1292
+#define IDC_HLSL_YFOCUSDISP             1293
+#define IDC_HLSL_FOCUSTEXT              1294
+#define IDC_HLSL_RSCALE                 1300
+#define IDC_HLSL_GSCALE                 1301
+#define IDC_HLSL_BSCALE                 1302
+#define IDC_HLSL_RSCALEDISP             1303
+#define IDC_HLSL_GSCALEDISP             1304
+#define IDC_HLSL_BSCALEDISP             1305
+#define IDC_HLSL_SCALETEXT              1306
+#define IDC_HLSL_RPOWER                 1310
+#define IDC_HLSL_GPOWER                 1311
+#define IDC_HLSL_BPOWER                 1312
+#define IDC_HLSL_RPOWERDISP             1313
+#define IDC_HLSL_GPOWERDISP             1314
+#define IDC_HLSL_BPOWERDISP             1315
+#define IDC_HLSL_POWERTEXT              1316
+#define IDC_HLSL_RPLIFE                 1320
+#define IDC_HLSL_GPLIFE                 1321
+#define IDC_HLSL_BPLIFE                 1322
+#define IDC_HLSL_RPLIFEDISP             1323
+#define IDC_HLSL_GPLIFEDISP             1324
+#define IDC_HLSL_BPLIFEDISP             1325
+#define IDC_HLSL_PLIFETEXT              1326
+#define IDC_HLSL_RFLOOR                 1330
+#define IDC_HLSL_GFLOOR                 1331
+#define IDC_HLSL_BFLOOR                 1332
+#define IDC_HLSL_RFLOORDISP             1333
+#define IDC_HLSL_GFLOORDISP             1334
+#define IDC_HLSL_BFLOORDISP             1335
+#define IDC_HLSL_FLOORTEXT              1336
 
-#define IDC_PRESCALETEXT                1261
-#define IDC_DISPLAY_SPLASH_SCREEN       1262 // USE_SHOW_SPLASH_SCREEN
-#define IDC_SHOW_TREE_SHEET             1263 // USE_TREE_SHEET
+#define IDC_CONFIRM_QUIT                1401 // USE_CONFIRM_QUIT
+#define IDC_PLAYBACK_END_PAUSE          1402 // USE_PLAYBACK_END_PAUSE
+#define IDC_BROKEN_ICON                 1403 // use not working icon
+#define IDC_EDIT_BROKEN_COLOR           1404 // set not working color
+#define IDC_DISPLAY_SPLASH_SCREEN       1405 // USE_SHOW_SPLASH_SCREEN
+#define IDC_SHOW_TREE_SHEET             1406 // USE_TREE_SHEET
 
-#define IDC_CONFIRM_QUIT                1301 // USE_CONFIRM_QUIT
-#define IDC_PLAYBACK_END_PAUSE          1302 // USE_PLAYBACK_END_PAUSE
-#define IDC_BROKEN_ICON                 1303 // use not working icon
-#define IDC_EDIT_BROKEN_COLOR           1304 // set not working color
+#define IDC_JOYID1                      1411 // JOYSTICK_ID
+#define IDC_JOYID2                      1412 // JOYSTICK_ID
+#define IDC_JOYID3                      1413 // JOYSTICK_ID
+#define IDC_JOYID4                      1414 // JOYSTICK_ID
+#define IDC_JOYID5                      1415 // JOYSTICK_ID
+#define IDC_JOYID6                      1416 // JOYSTICK_ID
+#define IDC_JOYID7                      1417 // JOYSTICK_ID
+#define IDC_JOYID8                      1418 // JOYSTICK_ID
+#define IDC_JOYIDTEXT                   1419 // JOYSTICK_ID
+#define IDC_JOYID1TEXT                  1420 // JOYSTICK_ID
+#define IDC_JOYID2TEXT                  1421 // JOYSTICK_ID
+#define IDC_JOYID3TEXT                  1422 // JOYSTICK_ID
+#define IDC_JOYID4TEXT                  1423 // JOYSTICK_ID
+#define IDC_JOYID5TEXT                  1424 // JOYSTICK_ID
+#define IDC_JOYID6TEXT                  1425 // JOYSTICK_ID
+#define IDC_JOYID7TEXT                  1426 // JOYSTICK_ID
+#define IDC_JOYID8TEXT                  1427 // JOYSTICK_ID
 
-#define IDC_JOYID1                      1311 // JOYSTICK_ID
-#define IDC_JOYID2                      1312 // JOYSTICK_ID
-#define IDC_JOYID3                      1313 // JOYSTICK_ID
-#define IDC_JOYID4                      1314 // JOYSTICK_ID
-#define IDC_JOYID5                      1315 // JOYSTICK_ID
-#define IDC_JOYID6                      1316 // JOYSTICK_ID
-#define IDC_JOYID7                      1317 // JOYSTICK_ID
-#define IDC_JOYID8                      1318 // JOYSTICK_ID
-#define IDC_JOYIDTEXT                   1319 // JOYSTICK_ID
-#define IDC_JOYID1TEXT                  1320 // JOYSTICK_ID
-#define IDC_JOYID2TEXT                  1321 // JOYSTICK_ID
-#define IDC_JOYID3TEXT                  1322 // JOYSTICK_ID
-#define IDC_JOYID4TEXT                  1323 // JOYSTICK_ID
-#define IDC_JOYID5TEXT                  1324 // JOYSTICK_ID
-#define IDC_JOYID6TEXT                  1325 // JOYSTICK_ID
-#define IDC_JOYID7TEXT                  1326 // JOYSTICK_ID
-#define IDC_JOYID8TEXT                  1327 // JOYSTICK_ID
+#define IDC_USE_LIST                    1441 // local language gamelist
+#define IDC_SCALEEFFECT                 1442 // USE_SCALE_EFFECTS
 
-#define IDC_USE_LIST                    1341 // local language gamelist
-#define IDC_SCALEEFFECT                 1342 // USE_SCALE_EFFECTS
+#define IDC_PALETTE_COMBO               1453 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_R                   1444 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_G                   1445 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_B                   1446 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_VIEW                1447 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTR               1448 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTG               1449 // UI_COLOR_DISPLAY
+#define IDC_PALETTE_TEXTB               1450 // UI_COLOR_DISPLAY
 
-#define IDC_PALETTE_COMBO               1353 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_R                   1344 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_G                   1345 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_B                   1346 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_VIEW                1347 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_TEXTR               1348 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_TEXTG               1349 // UI_COLOR_DISPLAY
-#define IDC_PALETTE_TEXTB               1350 // UI_COLOR_DISPLAY
+#define IDC_TRANSPARENCY                1461 // TRANS_UI
+#define IDC_TRANSPARENCYDISP            1462 // TRANS_UI
+#define IDC_PROP_INPUT                  1463 // USE_MORE_FOLDER_INFO
+#define IDC_PROP_SAVESTATE              1464 // USE_MORE_FOLDER_INFO
+#define IDC_BIOSTEXT                    1465
 
-#define IDC_TRANSPARENCY                1361 // TRANS_UI
-#define IDC_TRANSPARENCYDISP            1362 // TRANS_UI
-#define IDC_PROP_INPUT                  1363 // USE_MORE_FOLDER_INFO
-#define IDC_PROP_SAVESTATE              1364 // USE_MORE_FOLDER_INFO
-#define IDC_BIOSTEXT                    1365
-
-#define IDC_DRV_TEXT                    1400 // DRIVER_SWITCH
-#define IDC_DRV_MAME                    1401 // DRIVER_SWITCH
-#define IDC_DRV_PLUS                    1402 // DRIVER_SWITCH
-#define IDC_DRV_HOMEBREW                1403 // DRIVER_SWITCH
-#define IDC_DRV_DECRYPTED               1404 // DRIVER_SWITCH
-#define IDC_DRV_CONSOLE                 1406 // DRIVER_SWITCH
+#define IDC_DRV_TEXT                    1500 // DRIVER_SWITCH
+#define IDC_DRV_MAME                    1501 // DRIVER_SWITCH
+#define IDC_DRV_PLUS                    1502 // DRIVER_SWITCH
+#define IDC_DRV_HOMEBREW                1503 // DRIVER_SWITCH
+#define IDC_DRV_DECRYPTED               1504 // DRIVER_SWITCH
+#define IDC_DRV_CONSOLE                 1506 // DRIVER_SWITCH
 
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
@@ -545,7 +594,7 @@
 #define _APS_3D_CONTROLS                1
 #define _APS_NEXT_RESOURCE_VALUE        192
 #define _APS_NEXT_COMMAND_VALUE         40102
-#define _APS_NEXT_CONTROL_VALUE         1254
+#define _APS_NEXT_CONTROL_VALUE         1337
 #define _APS_NEXT_SYMED_VALUE           93
 #endif
 #endif

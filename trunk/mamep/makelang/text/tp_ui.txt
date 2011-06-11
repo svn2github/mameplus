@@ -2255,43 +2255,43 @@ Show these fields in this order:
 
 
 # osd/winui/properties.c: 3500
-Skip 1 of 10 frames
+Skip 1 frame
 
 
 # osd/winui/properties.c: 3518
-Skip 10 of 10 frames
+Skip 10 frames
 
 
 # osd/winui/properties.c: 3502
-Skip 2 of 10 frames
+Skip 2 frames
 
 
 # osd/winui/properties.c: 3504
-Skip 3 of 10 frames
+Skip 3 frames
 
 
 # osd/winui/properties.c: 3506
-Skip 4 of 10 frames
+Skip 4 frames
 
 
 # osd/winui/properties.c: 3508
-Skip 5 of 10 frames
+Skip 5 frames
 
 
 # osd/winui/properties.c: 3510
-Skip 6 of 10 frames
+Skip 6 frames
 
 
 # osd/winui/properties.c: 3512
-Skip 7 of 10 frames
+Skip 7 frames
 
 
 # osd/winui/properties.c: 3514
-Skip 8 of 10 frames
+Skip 8 frames
 
 
 # osd/winui/properties.c: 3516
-Skip 9 of 10 frames
+Skip 9 frames
 
 
 # osd/winui/mameui.rc: 887

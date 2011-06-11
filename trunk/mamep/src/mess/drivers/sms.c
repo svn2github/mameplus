@@ -2,7 +2,7 @@
  Contributors:
 
     Marat Fayzullin (MG source)
-    Charles Mac Donald
+    Charles MacDonald
     Mathis Rosenhauer
     Brad Oliver
     Michael Luong
@@ -515,7 +515,7 @@ static MACHINE_CONFIG_START( sms_pal_base, sms_state )
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
 	MCFG_MACHINE_START(sms)
-	MCFG_MACHINE_RESET(sms)
+	MCFG_MACHINE_RESET(sms_mess)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -599,7 +599,7 @@ static MACHINE_CONFIG_START( gamegear, sms_state )
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
 	MCFG_MACHINE_START(sms)
-	MCFG_MACHINE_RESET(sms)
+	MCFG_MACHINE_RESET(sms_mess)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", LCD)
@@ -694,7 +694,7 @@ ROM_START(sg1000m3)
 ROM_END
 
 ROM_START(smsj) /* PCB Label: "SEGA(R) IC BOARD M4J MAIN // 837-6418"; has "YM2413 // 78 04 71 G" at IC10; Back of pcb has traces marked "171-5541 (C)SEGA 1987 MADE IN JAPAN"
-	see http://www.smspower.org/Development/JapaneseSMS837-6418 */ 
+    see http://www.smspower.org/Development/JapaneseSMS837-6418 */
 	ROM_REGION(0x4000, "maincpu", 0)
 	ROM_FILL(0x0000, 0x4000, 0xff)
 
