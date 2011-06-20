@@ -318,6 +318,7 @@ chd_error chdcd_parse_nero(const char *tocfname, cdrom_toc *outtoc, chdcd_track_
 	if (memcmp(buffer, "NER5", 4))
 	{
 		printf("ERROR: Not a Nero 5.5 or later image!\n");
+		fclose(infile);
 		return CHDERR_FILE_NOT_FOUND;
 	}
 
@@ -326,14 +327,15 @@ chd_error chdcd_parse_nero(const char *tocfname, cdrom_toc *outtoc, chdcd_track_
 	if ((buffer[7] != 0) || (buffer[6] != 0) || (buffer[5] != 0) || (buffer[4] != 0))
 	{
 		printf("ERROR: File size is > 4GB, this version of CHDMAN cannot handle it.");
+		fclose(infile);
 		return CHDERR_FILE_NOT_FOUND;
 	}
 
-//  printf("NER5 detected, chain offset: %x\n", chain_offs);
+//	printf("NER5 detected, chain offset: %x\n", chain_offs);
 
 	while (!done)
 	{
-		UINT32 toc_type, offset;
+		UINT32 offset;
 		UINT8 start, end;
 		int track;
 
@@ -342,7 +344,7 @@ chd_error chdcd_parse_nero(const char *tocfname, cdrom_toc *outtoc, chdcd_track_
 
 		chunk_size = (buffer[7] | buffer[6]<<8 | buffer[5]<<16 | buffer[4]<<24);
 
-//      printf("Chunk type: %c%c%c%c, size %x\n", buffer[0], buffer[1], buffer[2], buffer[3], chunk_size);
+//		printf("Chunk type: %c%c%c%c, size %x\n", buffer[0], buffer[1], buffer[2], buffer[3], chunk_size);
 
 		// we want the DAOX chunk, which has the TOC information
 		if (!memcmp(buffer, "DAOX", 4))
@@ -350,11 +352,11 @@ chd_error chdcd_parse_nero(const char *tocfname, cdrom_toc *outtoc, chdcd_track_
 			// skip second chunk size and UPC code
 			fseek(infile, 16, SEEK_CUR);
 
-			toc_type = read_uint32(infile);
+			read_uint32(infile);
 			fread(&start, 1, 1, infile);
 			fread(&end, 1, 1, infile);
 
-//          printf("TOC type: %08x.  Start track %d  End track: %d\n", toc_type, start, end);
+//			printf("TOC type: %08x.  Start track %d  End track: %d\n", toc_type, start, end);
 
 			outtoc->numtrks = (end-start) + 1;
 
@@ -371,7 +373,7 @@ chd_error chdcd_parse_nero(const char *tocfname, cdrom_toc *outtoc, chdcd_track_
 				index1 = read_uint64(infile);
 				index2 = read_uint64(infile);
 
-//              printf("Track %d: sector size %d mode %x index0 %llx index1 %llx index2 %llx (pregap %d sectors, length %d sectors)\n", track, size, mode, index0, index1, index2, (UINT32)(index1-index0)/size, (UINT32)(index2-index1)/size);
+//				printf("Track %d: sector size %d mode %x index0 %llx index1 %llx index2 %llx (pregap %d sectors, length %d sectors)\n", track, size, mode, index0, index1, index2, (UINT32)(index1-index0)/size, (UINT32)(index2-index1)/size);
 
 				strcpy(outinfo->fname[track-1], tocfname);
 				outinfo->offset[track-1] = offset + (UINT32)(index1-index0);
@@ -427,6 +429,7 @@ chd_error chdcd_parse_nero(const char *tocfname, cdrom_toc *outtoc, chdcd_track_
 		}
 	}
 
+	fclose(infile);
 
 	return CHDERR_NONE;
 }

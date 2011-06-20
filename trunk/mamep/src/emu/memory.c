@@ -553,7 +553,7 @@ public:
 		read32_delegate				r32;
 		read64_delegate				r64;
 	};
-
+		
 	// construction/destruction
 	handler_entry_read(UINT8 width, endianness_t endianness, UINT8 **rambaseptr)
 		: handler_entry(width, endianness, rambaseptr)
@@ -878,6 +878,8 @@ private:
 	UINT8 handler_free;
 	UINT8 get_free_handler();
 	void verify_reference_counts();
+	void setup_range_solid(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, std::list<UINT32> &entries);
+	void setup_range_masked(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, UINT64 mask, std::list<UINT32> &entries);
 
 	void handler_ref(UINT8 entry, int count)
 	{
@@ -1957,7 +1959,7 @@ address_space::address_space(device_memory_interface &memory, address_spacenum s
 	  m_log_unmap(true),
 	  m_direct(*auto_alloc(memory.device().machine(), direct_read_data(*this))),
 	  m_name(memory.space_config(spacenum)->name()),
-	  m_addrchars((m_config.m_databus_width + 3) / 4),
+	  m_addrchars((m_config.m_addrbus_width + 3) / 4),
 	  m_logaddrchars((m_config.m_logaddr_width + 3) / 4),
 	  m_machine(memory.device().machine())
 {
@@ -3302,6 +3304,41 @@ UINT8 address_table::get_free_handler()
 //  it
 //-------------------------------------------------
 
+void address_table::setup_range(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, UINT64 mask, std::list<UINT32> &entries)
+{
+	// Careful, you can't shift by 64 or more
+	UINT64 testmask = (1ULL << (m_space.data_width()-1) << 1) - 1;
+
+	if((mask & testmask) == 0 || (mask & testmask) == testmask)
+		setup_range_solid(addrstart, addrend, addrmask, addrmirror, entries);
+	else
+		setup_range_masked(addrstart, addrend, addrmask, addrmirror, mask, entries);
+}
+
+//-------------------------------------------------
+//  setup_range_solid - finds an appropriate handler
+//  entry and requests to populate the address map with
+//  it.  Replace what's there.
+//-------------------------------------------------
+
+void address_table::setup_range_solid(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, std::list<UINT32> &entries)
+{
+	// Grab a free entry
+	UINT8 entry = get_free_handler();
+
+	// Add it in the "to be setup" list
+	entries.push_back(entry);
+
+	// Configure and map it
+	map_range(addrstart, addrend, addrmask, addrmirror, entry);
+}
+
+//-------------------------------------------------
+//  setup_range_solid - finds an appropriate handler
+//  entry and requests to populate the address map with
+//  it.  Handle non-overlapping subunits.
+//-------------------------------------------------
+	
 namespace {
 	struct subrange {
 		offs_t start, end;
@@ -3309,7 +3346,7 @@ namespace {
 	};
 };
 
-void address_table::setup_range(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, UINT64 mask, std::list<UINT32> &entries)
+void address_table::setup_range_masked(offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, UINT64 mask, std::list<UINT32> &entries)
 {
 	// convert addresses to bytes
 	offs_t bytestart = addrstart;
@@ -3319,14 +3356,14 @@ void address_table::setup_range(offs_t addrstart, offs_t addrend, offs_t addrmas
 	m_space.adjust_addresses(bytestart, byteend, bytemask, bytemirror);
 
 	// Validity checks
-	assert_always(addrstart <= addrend, "address_table::map_range called with start greater than end");
-	assert_always((bytestart & (m_space.data_width() / 8 - 1)) == 0, "address_table::map_range called with misaligned start address");
-	assert_always((byteend & (m_space.data_width() / 8 - 1)) == (m_space.data_width() / 8 - 1), "address_table::map_range called with misaligned end address");
+	assert_always(addrstart <= addrend, "address_table::setup_range called with start greater than end");
+	assert_always((bytestart & (m_space.data_width() / 8 - 1)) == 0, "address_table::setup_range called with misaligned start address");
+	assert_always((byteend & (m_space.data_width() / 8 - 1)) == (m_space.data_width() / 8 - 1), "address_table::setup_range called with misaligned end address");
 
 	// Scan the memory to see what has to be done
 	std::list<subrange> range_override;
 	std::map<UINT8, std::list<subrange> > range_partial;
-
+	
 	offs_t base_mirror = 0;
 	do
 	{
@@ -3372,7 +3409,7 @@ void address_table::setup_range(offs_t addrstart, offs_t addrend, offs_t addrmas
 
 		// recompute any direct access on this space if it is a read modification
 		m_space.m_direct.force_update(entry);
-	}
+		}
 
 	// Ranges in range_partial must duplicated then partially changed
 	if (!range_partial.empty())
@@ -4740,7 +4777,7 @@ void handler_entry::configure_subunits(UINT64 handlermask, int handlerbits, int 
 			m_subunit_infos[m_subunits].m_multiplier = count;
 
 			m_subunits++;
-		}
+	}
 	}
 	end_slot = m_subunits;
 
@@ -4769,7 +4806,7 @@ void handler_entry::clear_conflicting_subunits(UINT64 handlermask)
 	// Start by the end to avoid unnecessary memmoves
 	for (int i=m_subunits-1; i>=0; i--)
 		if (((handlermask >> m_subunit_infos[i].m_shift) & m_subunit_infos[i].m_mask) != 0)
-		{
+	{
 			if (i != m_subunits-1)
 				memmove (m_subunit_infos+i, m_subunit_infos+i+1, (m_subunits-i-1)*sizeof(m_subunit_infos[0]));
 			remove_subunit(i);
@@ -4949,7 +4986,7 @@ void handler_entry_read::set_delegate(read8_delegate delegate, UINT64 mask, cons
 		m_read.r8 = delegate;
 		if (info)
 			m_legacy_info = *info;
-	}
+	}		
 }
 
 

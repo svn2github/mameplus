@@ -200,6 +200,72 @@ int cli_frontend::execute(int argc, char **argv)
 			if (system == NULL && strlen(m_options.system_name()) > 0)
 				throw emu_fatalerror(MAMERR_NO_SUCH_GAME, "Unknown system '%s'", m_options.system_name());
 
+			if (strlen(m_options.software_name()) > 0) {
+				machine_config config(*system, m_options);
+				if (!config.devicelist().first(SOFTWARE_LIST))
+					throw emu_fatalerror(MAMERR_FATALERROR, "No software lists defined for this system\n");
+
+				bool found = FALSE;
+				for (device_t *swlists = config.devicelist().first(SOFTWARE_LIST); swlists != NULL; swlists = swlists->typenext())
+				{
+					software_list_config *swlist = (software_list_config *)downcast<const legacy_device_base *>(swlists)->inline_config();
+
+					for (int i = 0; i < DEVINFO_STR_SWLIST_MAX - DEVINFO_STR_SWLIST_0; i++)
+					{
+						if (swlist->list_name[i] && *swlist->list_name[i])
+						{
+							software_list *list = software_list_open(m_options, swlist->list_name[i], FALSE, NULL);
+
+							if (list)
+							{
+								software_info *swinfo = software_list_find(list, m_options.software_name(), NULL);
+								if (swinfo!=NULL) {		
+									for (software_part *swpart = software_find_part(swinfo, NULL, NULL); swpart != NULL; swpart = software_part_next(swpart))
+									{
+										const char *mount = software_part_get_feature(swpart, "automount");
+										if (mount==NULL || strcmp(mount,"no")!=0) {										
+											// loop trough all parts 
+											// search for a device with the right interface										
+											const device_image_interface *image = NULL;
+											for (bool gotone = config.devicelist().first(image); gotone; gotone = image->next(image))
+											{
+												const char *interface = image->image_interface();																						
+												if (interface != NULL)
+												{												
+													if (!strcmp(interface, swpart->interface_))
+													{													
+														const char *option = m_options.value(image->brief_instance_name());
+														// mount only if not already mounted
+														if (strlen(option)==0) {
+															astring val;
+															astring error;
+															val.printf("%s:%s",m_options.software_name(),swpart->name);
+															m_options.set_value(image->brief_instance_name(), val.cstr(), OPTION_PRIORITY_CMDLINE, error);
+															assert(!error);														
+														}
+														break;
+													}
+												}
+											}
+										}
+									}
+									software_list_close(list);
+									found = TRUE;
+									break;
+								}
+
+							}
+							software_list_close(list);
+						}
+						if (found) break;
+					}
+					if (found) break;
+				}
+				if (!found) {
+					software_display_matches(config.devicelist(),m_options, NULL,m_options.software_name());
+					throw emu_fatalerror(MAMERR_FATALERROR, "");
+				}
+			}
 			// otherwise just run the game
 			m_result = mame_execute(m_options, m_osd);
 		}
@@ -350,7 +416,7 @@ void cli_frontend::listclones(const char *gamename)
 	while (drivlist.next())
 	{
 		int clone_of = drivlist.clone();
-		if (clone_of != -1)
+		if (clone_of != -1 && (drivlist.driver(clone_of).flags & GAME_IS_BIOS_ROOT) == 0)
 			mame_printf_info("%-16s %-8s\n", drivlist.driver().name, drivlist.driver(clone_of).name);
 	}
 }
@@ -1366,7 +1432,7 @@ void cli_frontend::display_help()
 		   "        " APPNAME " -showconfig   for a list of configuration options\n"
 		   "        " APPNAME " -listmedia    for a full list of supported media\n"
 		   "        " APPNAME " -createconfig to create a " CONFIGNAME ".ini\n\n"
-		   "For usage instructions, please consult the file windows.txt\n"),APPNAME,GAMENOUN);
+		   "For usage instructions, please consult the files config.txt and windows.txt.\n"),APPNAME,GAMENOUN);
 }
 
 

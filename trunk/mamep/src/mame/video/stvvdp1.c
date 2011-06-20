@@ -9,7 +9,6 @@ Framebuffer todo:
 - add proper framebuffer erase
 - 8 bpp support - now we always draw as 16 bpp, but this is not a problem since
   VDP2 interprets framebuffer as 8 bpp in these cases
-- make this to be inp record/playback safe
 
 */
 
@@ -91,9 +90,6 @@ struct shaded_point
    1 1024x256
    0 512x256
 */
-#define STV_VDP1_TVMR ((state->m_vdp1_regs[0x000/4] >> 16)&0x0000ffff)
-#define STV_VDP1_VBE  ((STV_VDP1_TVMR & 0x0008) >> 3)
-#define STV_VDP1_TVM  ((STV_VDP1_TVMR & 0x0007) >> 0)
 
 /*Frame Buffer Change Mode Register*/
 /*
@@ -104,7 +100,7 @@ struct shaded_point
    ---- ---- ---- --x- | Frame Buffer Change Trigger (FCM)
    ---- ---- ---- ---x | Frame Buffer Change Mode (FCT)
 */
-#define STV_VDP1_FBCR ((state->m_vdp1_regs[0x000/4] >> 0)&0x0000ffff)
+#define STV_VDP1_FBCR ((state->m_vdp1_regs[0x002/2] >> 0)&0xffff)
 #define STV_VDP1_EOS ((STV_VDP1_FBCR & 0x0010) >> 4)
 #define STV_VDP1_DIE ((STV_VDP1_FBCR & 0x0008) >> 3)
 #define STV_VDP1_DIL ((STV_VDP1_FBCR & 0x0004) >> 2)
@@ -122,9 +118,17 @@ struct shaded_point
    1 VDP1 draw by request
    0 VDP1 Idle (no access)
 */
-#define STV_VDP1_PTMR ((state->m_vdp1_regs[0x004/4] >> 16)&0x0000ffff)
+#define STV_VDP1_PTMR ((state->m_vdp1_regs[0x004/2])&0xffff)
 #define STV_VDP1_PTM  ((STV_VDP1_PTMR & 0x0003) >> 0)
-#define PTM_0         state->m_vdp1_regs[0x004/4]&=~0x00010000
+#define PTM_0         state->m_vdp1_regs[0x004/2]&=~0x0001
+
+/*
+	Erase/Write Data Register
+	16 bpp = data
+	8 bpp = erase/write data for even/odd X coordinates
+*/
+#define STV_VDP1_EWDR ((state->m_vdp1_regs[0x006/2])&0xffff)
+
 /*Erase/Write Upper-Left register*/
 /*
    x--- ---- ---- ---- | UNUSED
@@ -132,7 +136,7 @@ struct shaded_point
    ---- ---x xxxx xxxx | Y1 register
 
 */
-#define STV_VDP1_EWLR ((state->m_vdp1_regs[0x008/4] >> 16)&0x0000ffff)
+#define STV_VDP1_EWLR ((state->m_vdp1_regs[0x008/2])&0xffff)
 #define STV_VDP1_EWLR_X1 ((STV_VDP1_EWLR & 0x7e00) >> 9)
 #define STV_VDP1_EWLR_Y1 ((STV_VDP1_EWLR & 0x01ff) >> 0)
 /*Erase/Write Lower-Right register*/
@@ -141,7 +145,7 @@ struct shaded_point
    ---- ---x xxxx xxxx | Y3 register
 
 */
-#define STV_VDP1_EWRR ((state->m_vdp1_regs[0x008/4] >> 0)&0x0000ffff)
+#define STV_VDP1_EWRR ((state->m_vdp1_regs[0x00a/2])&0xffff)
 #define STV_VDP1_EWRR_X3 ((STV_VDP1_EWRR & 0xfe00) >> 9)
 #define STV_VDP1_EWRR_Y3 ((STV_VDP1_EWRR & 0x01ff) >> 0)
 /*Transfer End Status Register*/
@@ -151,24 +155,34 @@ struct shaded_point
    ---- ---- ---- ---x | BEF
 
 */
-#define STV_VDP1_EDSR ((state->m_vdp1_regs[0x010/4] >> 16)&0x0000ffff)
+#define STV_VDP1_EDSR ((state->m_vdp1_regs[0x010/2])&0xffff)
 #define STV_VDP1_CEF  (STV_VDP1_EDSR & 2)
 #define STV_VDP1_BEF  (STV_VDP1_EDSR & 1)
-#define CEF_1	state->m_vdp1_regs[0x010/4]|=0x00020000
-#define CEF_0   state->m_vdp1_regs[0x010/4]&=~0x00020000
 /**/
 
 
 
 static void stv_vdp1_process_list(running_machine &machine);
 
-READ32_HANDLER( saturn_vdp1_regs_r )
+READ16_HANDLER( saturn_vdp1_regs_r )
 {
 	saturn_state *state = space->machine().driver_data<saturn_state>();
 
 	//logerror ("cpu %s (PC=%08X) VDP1: Read from Registers, Offset %04x\n", space->device().tag(), cpu_get_pc(&space->device()), offset);
 
-	return state->m_vdp1_regs[offset];
+	switch(offset)
+	{
+		case 0x10/2:
+			break;
+		case 0x12/2:
+		case 0x14/2:
+		case 0x16/2:
+			printf ("cpu %s (PC=%08X) VDP1: Read from Registers, Offset %04x\n", space->device().tag(), cpu_get_pc(&space->device()), offset*2);
+
+			break;
+	}
+
+	return state->m_vdp1_regs[offset]; //TODO: write-only regs should return open bus or zero
 }
 
 static void stv_clear_framebuffer( running_machine &machine, int which_framebuffer )
@@ -257,58 +271,47 @@ static void stv_set_framebuffer_config( running_machine &machine )
 	stv_prepare_framebuffers(machine);
 }
 
-WRITE32_HANDLER( saturn_vdp1_regs_w )
+WRITE16_HANDLER( saturn_vdp1_regs_w )
 {
 	saturn_state *state = space->machine().driver_data<saturn_state>();
 	COMBINE_DATA(&state->m_vdp1_regs[offset]);
-	if ( offset == 0 )
+
+	switch(offset)
 	{
-		stv_set_framebuffer_config(space->machine());
-		if ( ACCESSING_BITS_0_15 )
-		{
-			if ( VDP1_LOG ) logerror( "VDP1: Access to register FBCR = %1X\n", STV_VDP1_FBCR );
-			state->m_vdp1.fbcr_accessed = 1;
-		}
-		else
-		{
+		case 0x00/2:
+			stv_set_framebuffer_config(space->machine());
 			if ( VDP1_LOG ) logerror( "VDP1: Access to register TVMR = %1X\n", STV_VDP1_TVMR );
 			if ( STV_VDP1_VBE && get_vblank(space->machine()) )
-			{
 				state->m_vdp1.framebuffer_clear_on_next_frame = 1;
-			}
 
-			/* needed by pblbeach, it doesn't clear local coordinates in its sprite list...*/
-			//if ( !strcmp(space->machine().system().name, "pblbeach") )
-			//{
-			//  state->m_vdp1.local_x = state->m_vdp1.local_y = 0;
-			//}
-		}
-	}
-	else if ( offset == 1 )
-	{
-		if ( ACCESSING_BITS_16_31 )
-		{
+			break;
+		case 0x02/2:
+			stv_set_framebuffer_config(space->machine());
+			if ( VDP1_LOG ) logerror( "VDP1: Access to register FBCR = %1X\n", STV_VDP1_FBCR );
+			state->m_vdp1.fbcr_accessed = 1;
+			break;
+		case 0x04/2:
+			if ( VDP1_LOG ) logerror( "VDP1: Access to register PTMR = %1X\n", STV_VDP1_PTM );
 			if ( STV_VDP1_PTMR == 1 )
-			{
-				if ( VDP1_LOG ) logerror( "VDP1: Access to register PTMR = %1X\n", STV_VDP1_PTMR );
 				stv_vdp1_process_list( space->machine() );
-			}
-		}
-		else if ( ACCESSING_BITS_0_15 )
-		{
+
+			break;
+		case 0x06/2:
 			if ( VDP1_LOG ) logerror( "VDP1: Erase data set %08X\n", data );
-		}
-	}
-	else if ( offset == 2 )
-	{
-		if ( ACCESSING_BITS_16_31 )
-		{
+
+			if(data && data != 0x8000)
+				popmessage("EWDR set %08x, contact MAMEdev",STV_VDP1_EWDR);
+
+			break;
+		case 0x08/2:
 			if ( VDP1_LOG ) logerror( "VDP1: Erase upper-left coord set: %08X\n", data );
-		}
-		else if ( ACCESSING_BITS_0_15 )
-		{
+			break;
+		case 0x0a/2:
 			if ( VDP1_LOG ) logerror( "VDP1: Erase lower-right coord set: %08X\n", data );
-		}
+			break;
+		default:
+			printf("Warning: write to unknown VDP1 reg %08x %08x\n",offset*2,data);
+			break;
 	}
 
 }
@@ -347,6 +350,7 @@ WRITE32_HANDLER ( saturn_vdp1_framebuffer0_w )
 	if ( STV_VDP1_TVM & 1 )
 	{
 		/* 8-bit mode */
+		printf("%08x %02x\n",offset,data);
 	}
 	else
 	{
@@ -370,6 +374,7 @@ READ32_HANDLER ( saturn_vdp1_framebuffer0_r )
 	if ( STV_VDP1_TVM & 1 )
 	{
 		/* 8-bit mode */
+		printf("%08x\n",offset);
 	}
 	else
 	{
@@ -1962,13 +1967,10 @@ static void stv_vdp1_process_list(running_machine &machine)
 					break;
 
 				default:
-					if (VDP1_LOG) logerror ("Sprite List Illegal!\n");
-					break;
-
-
+					popmessage ("VDP1: Sprite List Illegal, contact MAMEdev");
+					// TODO: LOPR/COPR hook-up
+					return;
 			}
-
-
 		}
 
 		spritecount++;
@@ -1977,12 +1979,8 @@ static void stv_vdp1_process_list(running_machine &machine)
 
 
 	end:
-	/*set CEF to 1*/
+	/* set CEF to 1*/
 	CEF_1;
-
-	/* not here! this is done every frame drawn even if the cpu isn't running eg in the debugger */
-//  if(!(stv_scu[40] & 0x2000)) /*Sprite draw end irq*/
-//      cputag_set_input_line_and_vector(machine, "maincpu", 2, HOLD_LINE , 0x4d);
 
 	if (VDP1_LOG) logerror ("End of list processing!\n");
 }
@@ -1990,7 +1988,7 @@ static void stv_vdp1_process_list(running_machine &machine)
 void video_update_vdp1(running_machine &machine)
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
-	int framebufer_changed = 0;
+	int framebuffer_changed = 0;
 
 //  int enable;
 //  if (machine.input().code_pressed (KEYCODE_R)) VDP1_LOG = 1;
@@ -2010,6 +2008,11 @@ void video_update_vdp1(running_machine &machine)
 	if (VDP1_LOG) logerror("video_update_vdp1 called\n");
 	if (VDP1_LOG) logerror( "FBCR = %0x, accessed = %d\n", STV_VDP1_FBCR, state->m_vdp1.fbcr_accessed );
 
+	if(STV_VDP1_CEF)
+		BEF_1;
+	else
+		BEF_0;
+
 	if ( state->m_vdp1.framebuffer_clear_on_next_frame )
 	{
 		if ( ((STV_VDP1_FBCR & 0x3) == 3) &&
@@ -2025,7 +2028,7 @@ void video_update_vdp1(running_machine &machine)
 		case 0: /* Automatic mode */
 			stv_vdp1_change_framebuffers(machine);
 			stv_clear_framebuffer(machine, state->m_vdp1.framebuffer_current_draw);
-			framebufer_changed = 1;
+			framebuffer_changed = 1;
 			break;
 		case 1: /* Setting prohibited */
 			break;
@@ -2043,7 +2046,7 @@ void video_update_vdp1(running_machine &machine)
 				{
 					stv_clear_framebuffer(machine, state->m_vdp1.framebuffer_current_draw);
 				}
-				framebufer_changed = 1;
+				framebuffer_changed = 1;
 			}
 			break;
 	}
@@ -2057,8 +2060,11 @@ void video_update_vdp1(running_machine &machine)
 		case 1:/*Draw by request*/
 			break;
 		case 2:/*Automatic Draw*/
-			if ( framebufer_changed )
+			if ( framebuffer_changed )
+			{
+				/*set CEF to 1*/
 				stv_vdp1_process_list(machine);
+			}
 			break;
 		case 3:	/*<invalid>*/
 			logerror("Warning: Invalid PTM mode set for VDP1!\n");
@@ -2093,7 +2099,7 @@ static void stv_vdp1_state_save_postload(running_machine &machine)
 int stv_vdp1_start ( running_machine &machine )
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
-	state->m_vdp1_regs = auto_alloc_array_clear(machine, UINT32, 0x040000/4 );
+	state->m_vdp1_regs = auto_alloc_array_clear(machine, UINT16, 0x020/2 );
 	state->m_vdp1_vram = auto_alloc_array_clear(machine, UINT32, 0x100000/4 );
 	state->m_vdp1.gfx_decode = auto_alloc_array(machine, UINT8, 0x100000 );
 
@@ -2120,7 +2126,7 @@ int stv_vdp1_start ( running_machine &machine )
 	state->m_vdp1.user_cliprect.min_y = state->m_vdp1.user_cliprect.max_y = 0;
 
 	// save state
-	state_save_register_global_pointer(machine, state->m_vdp1_regs, 0x040000/4);
+	state_save_register_global_pointer(machine, state->m_vdp1_regs, 0x020/2);
 	state_save_register_global_pointer(machine, state->m_vdp1_vram, 0x100000/4);
 	state_save_register_global(machine, state->m_vdp1.fbcr_accessed);
 	state_save_register_global(machine, state->m_vdp1.framebuffer_current_display);

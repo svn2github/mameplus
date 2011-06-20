@@ -55,7 +55,9 @@
 typedef struct _hlsl_options hlsl_options;
 struct _hlsl_options
 {
+	bool					params_dirty;
 	float					shadow_mask_alpha;
+	char					shadow_mask_texture[1024];
 	int						shadow_mask_count_x;
 	int						shadow_mask_count_y;
 	float					shadow_mask_u_size;
@@ -68,45 +70,32 @@ struct _hlsl_options
 	float					scanline_bright_scale;
 	float					scanline_bright_offset;
 	float					scanline_offset;
-	float					defocus_x;
-	float					defocus_y;
-	float					red_converge_x;
-	float					red_converge_y;
-	float					green_converge_x;
-	float					green_converge_y;
-	float					blue_converge_x;
-	float					blue_converge_y;
-	float					red_radial_converge_x;
-	float					red_radial_converge_y;
-	float					green_radial_converge_x;
-	float					green_radial_converge_y;
-	float					blue_radial_converge_x;
-	float					blue_radial_converge_y;
-	float					red_from_red;
-	float					red_from_green;
-	float					red_from_blue;
-	float					green_from_red;
-	float					green_from_green;
-	float					green_from_blue;
-	float					blue_from_red;
-	float					blue_from_green;
-	float					blue_from_blue;
-	float					red_offset;
-	float					green_offset;
-	float					blue_offset;
-	float					red_scale;
-	float					green_scale;
-	float					blue_scale;
-	float					red_power;
-	float					green_power;
-	float					blue_power;
-	float					red_floor;
-	float					green_floor;
-	float					blue_floor;
-	float					red_phosphor_life;
-	float					green_phosphor_life;
-	float					blue_phosphor_life;
+	float					defocus[4];
+	float					converge_x[3];
+	float					converge_y[3];
+	float					radial_converge_x[3];
+	float					radial_converge_y[3];
+	float					red_ratio[3];
+	float					grn_ratio[3];
+	float					blu_ratio[3];
+	float					offset[3];
+	float					scale[3];
+	float					power[3];
+	float					floor[3];
+	float					phosphor[3];
 	float					saturation;
+	bool					yiq_enable;
+	float					yiq_cc;
+	float					yiq_a;
+	float					yiq_b;
+	float					yiq_o;
+	float					yiq_p;
+	float					yiq_n;
+	float					yiq_y;
+	float					yiq_i;
+	float					yiq_q;
+	float					yiq_scan_time;
+	int						yiq_phase_count;
 };
 
 class hlsl_info
@@ -151,13 +140,15 @@ private:
 	void					end_avi_recording();
 	void					begin_avi_recording(const char *name);
 
-	bool					screen_encountered[9];		// whether a given screen was encountered this frame
+	bool 					screen_encountered[9];		// whether a given screen was encountered this frame
 
 	d3d *                   d3dintf;					// D3D interface
 	win_window_info *       window;						// D3D window info
 
 	bool					master_enable;				// overall enable flag
-	bool					yiq_enable;					// YIQ-convolution flag
+	bool					external_ini;				// external ini flag
+	int						prescale_force_x;			// prescale force x
+	int						prescale_force_y;			// prescale force y
 	int						prescale_size_x;			// prescale size x
 	int						prescale_size_y;			// prescale size y
 	int						preset;						// preset, if relevant

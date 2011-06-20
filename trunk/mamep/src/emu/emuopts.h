@@ -69,12 +69,13 @@ enum
 
 // core options
 #define OPTION_SYSTEMNAME			core_options::unadorned(0)
+#define OPTION_SOFTWARENAME			core_options::unadorned(1)
 
 // core configuration options
 #define OPTION_READCONFIG			"readconfig"
 #define OPTION_WRITECONFIG			"writeconfig"
 #ifdef DRIVER_SWITCH
-#define OPTION_DRIVER_CONFIG		"driver_config"
+#define OPTION_DRIVER_CONFIG			"driver_config"
 #endif /* DRIVER_SWITCH */
 
 // core search path options
@@ -86,23 +87,23 @@ enum
 #define OPTION_INIPATH				"inipath"
 #define OPTION_FONTPATH				"fontpath"
 #define OPTION_CHEATPATH			"cheatpath"
-#define OPTION_CROSSHAIRPATH		"crosshairpath"
+#define OPTION_CROSSHAIRPATH			"crosshairpath"
 #define OPTION_LANGPATH				"langpath"
 #ifdef USE_IPS
 #define OPTION_IPSPATH  			"ipspath"
 #endif /* USE_IPS */
 
 // core directory options
-#define OPTION_CFG_DIRECTORY		"cfg_directory"
-#define OPTION_NVRAM_DIRECTORY		"nvram_directory"
-#define OPTION_MEMCARD_DIRECTORY	"memcard_directory"
-#define OPTION_INPUT_DIRECTORY		"input_directory"
-#define OPTION_STATE_DIRECTORY		"state_directory"
-#define OPTION_SNAPSHOT_DIRECTORY	"snapshot_directory"
-#define OPTION_DIFF_DIRECTORY		"diff_directory"
-#define OPTION_COMMENT_DIRECTORY	"comment_directory"
+#define OPTION_CFG_DIRECTORY			"cfg_directory"
+#define OPTION_NVRAM_DIRECTORY			"nvram_directory"
+#define OPTION_MEMCARD_DIRECTORY		"memcard_directory"
+#define OPTION_INPUT_DIRECTORY			"input_directory"
+#define OPTION_STATE_DIRECTORY			"state_directory"
+#define OPTION_SNAPSHOT_DIRECTORY		"snapshot_directory"
+#define OPTION_DIFF_DIRECTORY			"diff_directory"
+#define OPTION_COMMENT_DIRECTORY		"comment_directory"
 #ifdef USE_HISCORE
-#define OPTION_HISCORE_DIRECTORY	"hiscore_directory"
+#define OPTION_HISCORE_DIRECTORY		"hiscore_directory"
 #endif /* USE_HISCORE */
 
 // core filename options
@@ -127,9 +128,9 @@ enum
 #define OPTION_BURNIN				"burnin"
 
 // core performance options
-#define OPTION_AUTOFRAMESKIP		"autoframeskip"
+#define OPTION_AUTOFRAMESKIP			"autoframeskip"
 #define OPTION_FRAMESKIP			"frameskip"
-#define OPTION_SECONDS_TO_RUN		"seconds_to_run"
+#define OPTION_SECONDS_TO_RUN			"seconds_to_run"
 #define OPTION_THROTTLE				"throttle"
 #define OPTION_SLEEP				"sleep"
 #define OPTION_SPEED				"speed"
@@ -146,7 +147,7 @@ enum
 
 // core artwork options
 #define OPTION_ARTWORK_CROP			"artwork_crop"
-#define OPTION_USE_BACKDROPS		"use_backdrops"
+#define OPTION_USE_BACKDROPS			"use_backdrops"
 #define OPTION_USE_OVERLAYS			"use_overlays"
 #define OPTION_USE_BEZELS			"use_bezels"
 #define OPTION_USE_CPANELS			"use_cpanels"
@@ -156,7 +157,7 @@ enum
 #define OPTION_BRIGHTNESS			"brightness"
 #define OPTION_CONTRAST				"contrast"
 #define OPTION_GAMMA				"gamma"
-#define OPTION_PAUSE_BRIGHTNESS		"pause_brightness"
+#define OPTION_PAUSE_BRIGHTNESS			"pause_brightness"
 #define OPTION_EFFECT				"effect"
 #ifdef USE_SCALE_EFFECTS
 #define OPTION_SCALE_EFFECT			"scale_effect"
@@ -179,72 +180,73 @@ enum
 #define OPTION_MOUSE				"mouse"
 #define OPTION_JOYSTICK				"joystick"
 #define OPTION_LIGHTGUN				"lightgun"
-#define OPTION_MULTIKEYBOARD		"multikeyboard"
+#define OPTION_MULTIKEYBOARD			"multikeyboard"
 #define OPTION_MULTIMOUSE			"multimouse"
 #define OPTION_STEADYKEY			"steadykey"
-#define OPTION_OFFSCREEN_RELOAD		"offscreen_reload"
+#define OPTION_OFFSCREEN_RELOAD			"offscreen_reload"
 #define OPTION_JOYSTICK_MAP			"joystick_map"
-#define OPTION_JOYSTICK_DEADZONE	"joystick_deadzone"
-#define OPTION_JOYSTICK_SATURATION	"joystick_saturation"
-#define OPTION_NATURAL_KEYBOARD		"natural"
+#define OPTION_JOYSTICK_DEADZONE		"joystick_deadzone"
+#define OPTION_JOYSTICK_SATURATION		"joystick_saturation"
+#define OPTION_NATURAL_KEYBOARD			"natural"
 
 // input autoenable options
-#define OPTION_PADDLE_DEVICE		"paddle_device"
-#define OPTION_ADSTICK_DEVICE		"adstick_device"
+#define OPTION_PADDLE_DEVICE			"paddle_device"
+#define OPTION_ADSTICK_DEVICE			"adstick_device"
 #define OPTION_PEDAL_DEVICE			"pedal_device"
 #define OPTION_DIAL_DEVICE			"dial_device"
-#define OPTION_TRACKBALL_DEVICE		"trackball_device"
-#define OPTION_LIGHTGUN_DEVICE		"lightgun_device"
-#define OPTION_POSITIONAL_DEVICE	"positional_device"
+#define OPTION_TRACKBALL_DEVICE			"trackball_device"
+#define OPTION_LIGHTGUN_DEVICE			"lightgun_device"
+#define OPTION_POSITIONAL_DEVICE		"positional_device"
 #define OPTION_MOUSE_DEVICE			"mouse_device"
 
 // core debugging options
-#define OPTION_LOG					"log"
+#define OPTION_LOG				"log"
 #define OPTION_VERBOSE				"verbose"
-#define OPTION_UPDATEINPAUSE		"update_in_pause"
+#define OPTION_UPDATEINPAUSE			"update_in_pause"
 #define OPTION_DEBUG				"debug"
-#define OPTION_DEBUG_INTERNAL		"debug_internal"
+#define OPTION_DEBUG_INTERNAL			"debug_internal"
 #define OPTION_DEBUGSCRIPT			"debugscript"
 
 // core misc options
-#define OPTION_BIOS					"bios"
+#define OPTION_BIOS				"bios"
 #define OPTION_CHEAT				"cheat"
-#define OPTION_SKIP_GAMEINFO		"skip_gameinfo"
+#define OPTION_SKIP_GAMEINFO			"skip_gameinfo"
 #define OPTION_UI_FONT				"uifont"
 #define OPTION_RAMSIZE				"ramsize"
+
 #define OPTION_CONFIRM_QUIT			"confirm_quit"
 #ifdef PLAYBACK_END_PAUSE
-#define OPTION_PLAYBACK_END_PAUSE	"playback_end_pause"
+#define OPTION_PLAYBACK_END_PAUSE		"playback_end_pause"
 #endif /* PLAYBACK_END_PAUSE */
 #ifdef TRANS_UI
-#define OPTION_UI_TRANSPARENCY		"ui_transparency"
+#define OPTION_UI_TRANSPARENCY			"ui_transparency"
 #endif /* TRANS_UI */
 #ifdef USE_IPS
-#define OPTION_IPS					"ips"
+#define OPTION_IPS				"ips"
 #endif /* USE_IPS */
 
 #ifdef UI_COLOR_DISPLAY
 // core palette options
-#define OPTION_SYSTEM_BACKGROUND	"main_background"
-#define OPTION_CURSOR_SELECTED_TEXT	"cursor_sel_text"
-#define OPTION_CURSOR_SELECTED_BG	"cursor_sel_background"
-#define OPTION_CURSOR_HOVER_TEXT	"cursor_hov_text"
-#define OPTION_CURSOR_HOVER_BG		"cursor_hov_background"
+#define OPTION_SYSTEM_BACKGROUND		"main_background"
+#define OPTION_CURSOR_SELECTED_TEXT		"cursor_sel_text"
+#define OPTION_CURSOR_SELECTED_BG		"cursor_sel_background"
+#define OPTION_CURSOR_HOVER_TEXT		"cursor_hov_text"
+#define OPTION_CURSOR_HOVER_BG			"cursor_hov_background"
 #define OPTION_BUTTON_RED			"button_red"
-#define OPTION_BUTTON_YELLOW		"button_yellow"
+#define OPTION_BUTTON_YELLOW			"button_yellow"
 #define OPTION_BUTTON_GREEN			"button_green"
 #define OPTION_BUTTON_BLUE			"button_blue"
-#define OPTION_BUTTON_PURPLE		"button_purple"
+#define OPTION_BUTTON_PURPLE			"button_purple"
 #define OPTION_BUTTON_PINK			"button_pink"
 #define OPTION_BUTTON_AQUA			"button_aqua"
-#define OPTION_BUTTON_SILVER		"button_silver"
+#define OPTION_BUTTON_SILVER			"button_silver"
 #define OPTION_BUTTON_NAVY			"button_navy"
 #define OPTION_BUTTON_LIME			"button_lime"
 #endif /* UI_COLOR_DISPLAY */
 
 // core language options
 #define OPTION_LANGUAGE				"language"
-#define OPTION_USE_LANG_LIST		"use_lang_list"
+#define OPTION_USE_LANG_LIST			"use_lang_list"
 
 
 //**************************************************************************
@@ -269,6 +271,7 @@ public:
 
 	// core options
 	const char *system_name() const { return value(OPTION_SYSTEMNAME); }
+	const char *software_name() const { return value(OPTION_SOFTWARENAME); }
 	const game_driver *system() const;
 	void set_system_name(const char *name);
 

@@ -235,9 +235,9 @@ INLINE void set_filter(d3d_info *d3d, int filter)
 		result = (*d3dintf->device.set_texture_stage_state)(d3d->device, 0, (D3DTEXTURESTAGESTATETYPE)D3DTSS_MAGFILTER, filter ? D3DTEXF_LINEAR : D3DTEXF_POINT);
 		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_texture_stage_state call\n"), (int)result);
 		result = (*d3dintf->device.set_texture_stage_state)(d3d->device, 1, (D3DTEXTURESTAGESTATETYPE)D3DTSS_MINFILTER, filter ? D3DTEXF_LINEAR : D3DTEXF_POINT);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_texture_stage_state call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_texture_stage_state call\n"), (int)result);
 		result = (*d3dintf->device.set_texture_stage_state)(d3d->device, 1, (D3DTEXTURESTAGESTATETYPE)D3DTSS_MAGFILTER, filter ? D3DTEXF_LINEAR : D3DTEXF_POINT);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_texture_stage_state call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_texture_stage_state call\n"), (int)result);
 	}
 }
 
@@ -253,9 +253,9 @@ INLINE void set_wrap(d3d_info *d3d, int wrap)
 		result = (*d3dintf->device.set_texture_stage_state)(d3d->device, 0, (D3DTEXTURESTAGESTATETYPE)D3DTSS_ADDRESSV, wrap ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
 		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_texture_stage_state call\n"), (int)result);
 		result = (*d3dintf->device.set_texture_stage_state)(d3d->device, 1, (D3DTEXTURESTAGESTATETYPE)D3DTSS_ADDRESSU, wrap ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_texture_stage_state call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_texture_stage_state call\n"), (int)result);
 		result = (*d3dintf->device.set_texture_stage_state)(d3d->device, 1, (D3DTEXTURESTAGESTATETYPE)D3DTSS_ADDRESSV, wrap ? D3DTADDRESS_WRAP : D3DTADDRESS_CLAMP);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_texture_stage_state call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_texture_stage_state call\n"), (int)result);
 	}
 }
 
@@ -269,7 +269,7 @@ INLINE void set_modmode(d3d_info *d3d, DWORD modmode)
 		result = (*d3dintf->device.set_texture_stage_state)(d3d->device, 0, D3DTSS_COLOROP, modmode);
 		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_texture_stage_state call\n"), (int)result);
 		result = (*d3dintf->device.set_texture_stage_state)(d3d->device, 1, D3DTSS_COLOROP, modmode);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_texture_stage_state call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_texture_stage_state call\n"), (int)result);
 	}
 }
 
@@ -584,7 +584,7 @@ static int drawd3d_window_draw(win_window_info *window, HDC dc, int update)
 
 mtlog_add("drawd3d_window_draw: begin");
 	result = (*d3dintf->device.clear)(d3d->device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0,0,0,0), 0, 0);
-	if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device clear call\n", (int)result);
+	if(result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device clear call\n"), (int)result);
 
 	d3d->hlsl->record_texture();
 
@@ -604,7 +604,7 @@ mtlog_add("drawd3d_window_draw: begin_scene");
 	// loop over primitives
 	if(d3d->hlsl->enabled())
 	{
-		d3d->hlsl_buf = (void*)primitive_alloc(d3d, 4);
+		d3d->hlsl_buf = (void*)primitive_alloc(d3d, 6);
 		d3d->hlsl->init_fsfx_quad(d3d->hlsl_buf);
 	}
 
@@ -966,7 +966,7 @@ static int device_verify_caps(d3d_info *d3d, win_window_info *window)
 	if (result != D3D_OK) mame_printf_verbose("Direct3D Error %08X during get_caps_dword call\n", (int)result);
 	if(tempcaps < 512)
 	{
-		mame_printf_verbose("Direct3D: Warning - Device does not support Pixel Shader 3.0, falling back to non-PS rendering\n");
+		mame_printf_verbose(_WINDOWS("Direct3D: Warning - Device does not support Pixel Shader 3.0, falling back to non-PS rendering\n"));
 		d3dintf->post_fx_available = false;
 	}
 
@@ -1341,7 +1341,7 @@ static void pick_best_mode(win_window_info *window)
 		final_score = size_score + refresh_score;
 
 		// best so far?
-		mame_printf_verbose("  %4dx%4d@%3dHz -> %f\n", mode.Width, mode.Height, mode.RefreshRate, final_score * 1000.0f);
+		mame_printf_verbose(_WINDOWS("  %4dx%4d@%3dHz -> %f\n"), mode.Width, mode.Height, mode.RefreshRate, final_score * 1000.0f);
 		if (final_score > best_score)
 		{
 			best_score = final_score;
@@ -1534,7 +1534,7 @@ static void draw_quad(d3d_info *d3d, const render_primitive *prim)
 	vertex[3].y = prim->bounds.y1 - 0.5f;
 
 	// set the texture coordinates
-	if(texture != NULL)
+	if (texture != NULL)
 	{
 		float du = texture->ustop - texture->ustart;
 		float dv = texture->vstop - texture->vstart;
@@ -1655,7 +1655,7 @@ static void primitive_flush_pending(d3d_info *d3d)
 	// first remember the original render target in case we need to set a new one
 	if(d3d->hlsl->enabled() && d3dintf->post_fx_available)
 	{
-		vertnum = 4;
+		vertnum = 6;
 	}
 	else
 	{
@@ -1793,7 +1793,7 @@ d3d_texture_info *texture_create(d3d_info *d3d, const render_texinfo *texsource,
 
 					int ret = d3d->hlsl->register_texture(texture);
 					if (ret != 0)
-						goto error;
+							goto error;
 
 					break;
 				}
@@ -1835,7 +1835,7 @@ d3d_texture_info *texture_create(d3d_info *d3d, const render_texinfo *texsource,
 				{
 					int ret = d3d->hlsl->register_prescaled_texture(texture, scwidth, scheight);
 					if (ret != 0)
-						goto error;
+							goto error;
 
 					break;
 				}
@@ -1858,7 +1858,7 @@ d3d_texture_info *texture_create(d3d_info *d3d, const render_texinfo *texsource,
 
 error:
 	d3dintf->post_fx_available = false;
-	mame_printf_verbose("Direct3D: Critical warning: A texture failed to allocate. Expect things to get bad quickly.\n");
+	mame_printf_verbose(_WINDOWS("Direct3D: Critical warning: A texture failed to allocate. Expect things to get bad quickly.\n"));
 	if (texture->d3dsurface != NULL)
 		(*d3dintf->surface.release)(texture->d3dsurface);
 	if (texture->d3dtex != NULL)

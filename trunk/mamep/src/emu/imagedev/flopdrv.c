@@ -57,7 +57,7 @@ struct _floppy_drive
 	int drive_id;
 	int active;
 
-	const floppy_config	*config;
+	const floppy_interface	*config;
 
 	/* flags */
 	int flags;
@@ -127,15 +127,6 @@ INLINE floppy_drive *get_safe_token(device_t *device)
 	assert( device->type() == FLOPPY || device->type() == FLOPPY_APPLE || device->type() == FLOPPY_SONY);
 #endif
 	return (floppy_drive *) downcast<legacy_device_base *>(device)->token();
-}
-
-INLINE const inline_floppy_config *get_config_dev(const device_t *device)
-{
-	assert(device != NULL);
-#if 0 //mamep:link error by debug build
-	assert( device->type() == FLOPPY || device->type() == FLOPPY_APPLE || device->type() == FLOPPY_SONY);
-#endif
-	return (const inline_floppy_config *)downcast<const legacy_device_base *>(device)->inline_config();
 }
 
 floppy_image *flopimg_get_image(device_t *image)
@@ -228,7 +219,7 @@ static void floppy_drive_init(device_t *img)
 	pDrive->index_timer = img->machine().scheduler().timer_alloc(FUNC(floppy_drive_index_callback), (void *) img);
 	pDrive->idx = 0;
 
-	floppy_drive_set_geometry(img, ((floppy_config*)img->static_config())->floppy_type);
+	floppy_drive_set_geometry(img, ((floppy_interface*)img->static_config())->floppy_type);
 
 	/* initialise id index - not so important */
 	pDrive->id_index = 0;
@@ -393,7 +384,7 @@ void floppy_drive_seek(device_t *img, signed int signed_tracks)
 	//flopimg->out_dskchg_func(flopimg->dskchg);
 
 	/* inform disk image of step operation so it can cache information */
-	if (image->exists())
+	if (image->exists()) 
 		pDrive->track = pDrive->current_track;
 
 	pDrive->id_index = 0;
@@ -576,7 +567,7 @@ void floppy_drive_set_controller(device_t *img, device_t *controller)
 DEVICE_START( floppy )
 {
 	floppy_drive *floppy = get_safe_token( device );
-	floppy->config = (const floppy_config*)device->static_config();
+	floppy->config = (const floppy_interface*)device->static_config();
 	floppy_drive_init(device);
 
 	floppy->drive_id = floppy_get_drive(device);
@@ -618,7 +609,7 @@ static int internal_floppy_device_load(device_image_interface *image, int create
 	flopimg = get_safe_token( &image->device() );
 
 	/* figure out the floppy options */
-	floppy_options = ((floppy_config*)image->device().static_config())->formats;
+	floppy_options = ((floppy_interface*)image->device().static_config())->formats;
 
 	if (image->has_been_created())
 	{
@@ -643,6 +634,9 @@ static int internal_floppy_device_load(device_image_interface *image, int create
 			floppy_get_tracks_per_disk(flopimg->floppy),
 			floppy_get_heads_per_disk(flopimg->floppy));
 	}
+	/* disk changed */
+	flopimg->dskchg = CLEAR_LINE;
+	
 	return IMAGE_INIT_PASS;
 
 error:
@@ -974,7 +968,7 @@ DEVICE_GET_INFO(floppy)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
 		case DEVINFO_INT_TOKEN_BYTES:				info->i = sizeof(floppy_drive); break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:		info->i = sizeof(inline_floppy_config); break;
+		case DEVINFO_INT_INLINE_CONFIG_BYTES:		info->i = 0; break;
 		case DEVINFO_INT_IMAGE_TYPE:				info->i = IO_FLOPPY; break;
 		case DEVINFO_INT_IMAGE_READABLE:			info->i = 1; break;
 		case DEVINFO_INT_IMAGE_WRITEABLE:			info->i = 1; break;
@@ -983,7 +977,7 @@ DEVICE_GET_INFO(floppy)
 												int cnt = 0;
 												if ( device && device->static_config() )
 												{
-													const struct FloppyFormat *floppy_options = ((floppy_config*)device->static_config())->formats;
+													const struct FloppyFormat *floppy_options = ((floppy_interface*)device->static_config())->formats;
 													int	i;
 													for ( i = 0; floppy_options[i].construct; i++ ) {
 														if(floppy_options[i].param_guidelines) cnt++;
@@ -998,23 +992,23 @@ DEVICE_GET_INFO(floppy)
 		case DEVINFO_FCT_IMAGE_LOAD:				info->f = (genf *) DEVICE_IMAGE_LOAD_NAME(floppy); break;
 		case DEVINFO_FCT_IMAGE_UNLOAD:				info->f = (genf *) DEVICE_IMAGE_UNLOAD_NAME(floppy); break;
 		case DEVINFO_FCT_IMAGE_SOFTLIST_LOAD:		info->f = (genf *) DEVICE_IMAGE_SOFTLIST_LOAD_NAME(floppy);	break;
-		case DEVINFO_FCT_IMAGE_DISPLAY_INFO:
+		case DEVINFO_FCT_IMAGE_DISPLAY_INFO:			
 			//mamep:link error
 			if (false /*device->type() == FLOPPY_APPLE*/) {
 				info->f = NULL;
 			} else {
-				if ( device && downcast<const legacy_image_device_base *>(device)->inline_config() && get_config_dev(device)->device_displayinfo) {
-					info->f = (genf *) get_config_dev(device)->device_displayinfo;
+				if ( device && downcast<const legacy_image_device_base *>(device)->static_config() && ((floppy_interface*)(device))->device_displayinfo) {
+					info->f = (genf *) ((floppy_interface*)(device))->device_displayinfo;
 				} else {
 					info->f = NULL;
 				}
 			}
 			break;
-
+		
 		case DEVINFO_PTR_IMAGE_CREATE_OPTGUIDE:		info->p = (void *)floppy_option_guide; break;
 		case DEVINFO_INT_IMAGE_CREATE_OPTCOUNT:
 		{
-			const struct FloppyFormat *floppy_options = ((floppy_config*)device->static_config())->formats;
+			const struct FloppyFormat *floppy_options = ((floppy_interface*)device->static_config())->formats;
 			int count;
 			for (count = 0; floppy_options[count].construct; count++)
 				;
@@ -1029,7 +1023,7 @@ DEVICE_GET_INFO(floppy)
 		case DEVINFO_STR_IMAGE_FILE_EXTENSIONS:
 			if ( device && device->static_config() )
 			{
-				const struct FloppyFormat *floppy_options = ((floppy_config*)device->static_config())->formats;
+				const struct FloppyFormat *floppy_options = ((floppy_interface*)device->static_config())->formats;
 				int		i;
 				/* set up a temporary string */
 				info->s[0] = '\0';
@@ -1038,16 +1032,16 @@ DEVICE_GET_INFO(floppy)
 			}
 			break;
 		case DEVINFO_STR_IMAGE_INTERFACE:
-			if ( device && device->static_config() && ((floppy_config *)device->static_config())->interface)
+			if ( device && device->static_config() && ((floppy_interface *)device->static_config())->interface)
 			{
-				strcpy(info->s, ((floppy_config *)device->static_config())->interface );
+				strcpy(info->s, ((floppy_interface *)device->static_config())->interface );
 			}
 			break;
 		default:
 			{
 				if ( device && device->static_config() )
 				{
-					const struct FloppyFormat *floppy_options = ((floppy_config*)device->static_config())->formats;
+					const struct FloppyFormat *floppy_options = ((floppy_interface*)device->static_config())->formats;
 					if ((state >= DEVINFO_PTR_IMAGE_CREATE_OPTSPEC) && (state < DEVINFO_PTR_IMAGE_CREATE_OPTSPEC + DEVINFO_IMAGE_CREATE_OPTMAX)) {
 						info->p = (void *) floppy_options[state - DEVINFO_PTR_IMAGE_CREATE_OPTSPEC].param_guidelines;
 					} else if ((state >= DEVINFO_STR_IMAGE_CREATE_OPTNAME) && (state < DEVINFO_STR_IMAGE_CREATE_OPTNAME + DEVINFO_IMAGE_CREATE_OPTMAX)) {

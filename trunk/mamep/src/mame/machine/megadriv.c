@@ -6103,12 +6103,10 @@ static MACHINE_RESET( segacd )
 	lc89510_Reset();
 
 	{
-		device_t *device;
-
-		device = machine.device("cdrom");
+		cdrom_image_device *device = machine.device<cdrom_image_device>("cdrom");
 		if ( device )
 		{
-			segacd.cd = cd_get_cdrom_file(device);
+			segacd.cd = device->get_cdrom_file();
 			if ( segacd.cd )
 			{
 				segacd.toc = cdrom_get_toc( segacd.cd );
@@ -7536,12 +7534,12 @@ static void genesis_render_videoline_to_videobuffer(int scanline)
 	UINT16 hsize = 64;
 	UINT16 vsize = 64;
 	UINT16 window_right;
-//  UINT16 window_hpos;
+//	UINT16 window_hpos;
 	UINT16 window_down;
-//  UINT16 window_vpos;
+//	UINT16 window_vpos;
 	UINT16 hscroll_base;
-//  UINT8  vscroll_mode;
-//  UINT8  hscroll_mode;
+//	UINT8  vscroll_mode;
+//	UINT8  hscroll_mode;
 	int window_firstline;
 	int window_lastline;
 	int window_firstcol;
@@ -7586,9 +7584,9 @@ static void genesis_render_videoline_to_videobuffer(int scanline)
 	base_b = MEGADRIVE_REG04_PATTERN_ADDR_B << 13;
 	size  = MEGADRIVE_REG10_HSCROLL_SIZE | (MEGADRIVE_REG10_VSCROLL_SIZE<<4);
 	window_right = MEGADRIVE_REG11_WINDOW_RIGHT;
-//  window_hpos = MEGADRIVE_REG11_WINDOW_HPOS;
+//	window_hpos = MEGADRIVE_REG11_WINDOW_HPOS;
 	window_down = MEGADRIVE_REG12_WINDOW_DOWN;
-//  window_vpos = MEGADRIVE_REG12_WINDOW_VPOS;
+//	window_vpos = MEGADRIVE_REG12_WINDOW_VPOS;
 
 	screenwidth = MEGADRIVE_REG0C_RS0 | (MEGADRIVE_REG0C_RS1 << 1);
 
@@ -9487,10 +9485,10 @@ int megadrive_z80irq_hpos = 320;
 	if (0)
 	{
 		//int xxx;
-//      UINT64 frametime;
+//		UINT64 frametime;
 
 	//  /* reference */
-//      frametime = ATTOSECONDS_PER_SECOND/megadriv_framerate;
+//		frametime = ATTOSECONDS_PER_SECOND/megadriv_framerate;
 
 		//time_elapsed_since_crap = frame_timer->time_elapsed();
 		//xxx = machine.device<cpudevice>("maincpu")->attotime_to_cycles(time_elapsed_since_crap);
@@ -9783,22 +9781,25 @@ MACHINE_CONFIG_DERIVED( genesis_scd, megadriv )
 	MCFG_QUANTUM_PERFECT_CPU("segacd_68k") // perfect sync to the fastest cpu
 MACHINE_CONFIG_END
 
+struct cdrom_interface scd_cdrom =
+{
+	"scd_cdrom",
+	NULL
+};
+
 /* Different Softlists for different regions (for now at least) */
 MACHINE_CONFIG_DERIVED( genesis_scd_scd, genesis_scd )
-	MCFG_CDROM_ADD( "cdrom" )
-	MCFG_CDROM_INTERFACE("scd_cdrom")
+	MCFG_CDROM_ADD( "cdrom",scd_cdrom )
 	MCFG_SOFTWARE_LIST_ADD("cd_list","segacd")
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_DERIVED( genesis_scd_mcd, genesis_scd )
-	MCFG_CDROM_ADD( "cdrom" )
-	MCFG_CDROM_INTERFACE("scd_cdrom")
+	MCFG_CDROM_ADD( "cdrom",scd_cdrom )
 	MCFG_SOFTWARE_LIST_ADD("cd_list","megacd")
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_DERIVED( genesis_scd_mcdj, genesis_scd )
-	MCFG_CDROM_ADD( "cdrom" )
-	MCFG_CDROM_INTERFACE("scd_cdrom")
+	MCFG_CDROM_ADD( "cdrom",scd_cdrom )
 	MCFG_SOFTWARE_LIST_ADD("cd_list","megacdj")
 MACHINE_CONFIG_END
 
@@ -9819,8 +9820,7 @@ MACHINE_CONFIG_DERIVED( genesis_32x_scd, genesis_32x )
 	MCFG_SOUND_ROUTE( 0, "lspeaker", 0.25 )
 	MCFG_SOUND_ROUTE( 1, "rspeaker", 0.25 )
 
-	MCFG_CDROM_ADD( "cdrom" )
-	MCFG_CDROM_INTERFACE("scd_cdrom")
+	MCFG_CDROM_ADD( "cdrom", scd_cdrom)
 	MCFG_SOFTWARE_LIST_ADD("cd_list","segacd")
 
 	MCFG_QUANTUM_PERFECT_CPU("32x_master_sh2")

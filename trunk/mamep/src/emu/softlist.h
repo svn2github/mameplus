@@ -69,10 +69,10 @@ struct _parse_state
 {
 	XML_Parser	parser;
 	int			done;
-
+	
 	void (*error_proc)(const char *message);
 	void *param;
-
+	
 	enum softlist_parse_position pos;
 	char **text_dest;
 };
@@ -114,6 +114,7 @@ const char *software_part_get_feature(software_part *part, const char *feature_n
 
 bool load_software_part(device_image_interface *image, const char *path, software_info **sw_info, software_part **sw_part, char **full_sw_name);
 
+void software_display_matches(const device_list &devlist, emu_options &options,const char *interface,const char *swname_bckp);
 
 /*********************************************************************
 

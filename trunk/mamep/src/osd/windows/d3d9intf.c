@@ -141,7 +141,7 @@ d3d *drawd3d9_init(void)
 	if (fxhandle == NULL)
 	{
 		post_available = false;
-		mame_printf_verbose("Direct3D: Warning - Unable to access d3dx9_43.dll; disabling post-effect rendering\n");
+		mame_printf_verbose(_WINDOWS("Direct3D: Warning - Unable to access d3dx9_43.dll; disabling post-effect rendering\n"));
 	}
 
 	// import the create function
@@ -161,7 +161,7 @@ d3d *drawd3d9_init(void)
 	{
 		g_load_effect = NULL;
 		post_available = false;
-		mame_printf_verbose("Direct3D: Warning - Unable to get a handle to D3DXCreateEffectFromFileW; disabling post-effect rendering\n");
+		mame_printf_verbose(_WINDOWS("Direct3D: Warning - Unable to get a handle to D3DXCreateEffectFromFileW; disabling post-effect rendering\n"));
 	}
 
 	// allocate an object to hold our data
@@ -717,10 +717,19 @@ static void d3d_effect_set_technique(d3d_effect *effect, const char *name)
 }
 
 
-static void d3d_effect_set_vector(d3d_effect *effect, const char *name, d3d_vector *vector)
+static void d3d_effect_set_vector(d3d_effect *effect, const char *name, int count, float *vector)
 {
+	static D3DXVECTOR4 out_vector;
 	ID3DXEffect *d3dfx = (ID3DXEffect*)effect;
-	d3dfx->SetVector(name, (D3DXVECTOR4*)vector);
+	if (count > 0)
+		out_vector.x = vector[0];
+	if (count > 1)
+		out_vector.y = vector[1];
+	if (count > 2)
+		out_vector.z = vector[2];
+	if (count > 3)
+		out_vector.w = vector[3];
+	d3dfx->SetVector(name, &out_vector);
 }
 
 

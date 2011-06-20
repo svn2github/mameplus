@@ -25,7 +25,7 @@ static TIMER_CALLBACK( busy_callback );
 typedef struct _centronics_state centronics_state;
 struct _centronics_state
 {
-	device_t *printer;
+	printer_image_device *printer;
 
 	devcb_resolved_write_line out_ack_func;
 	devcb_resolved_write_line out_busy_func;
@@ -71,10 +71,14 @@ const centronics_interface standard_centronics =
 /*****************************************************************************
     PRINTER INTERFACE
 *****************************************************************************/
+const struct printer_interface centronics_printer_config =
+{
+    DEVCB_LINE(centronics_printer_online)
+};
 
 static MACHINE_CONFIG_FRAGMENT( centronics )
 	MCFG_PRINTER_ADD("printer")
-	MCFG_PRINTER_ONLINE(centronics_printer_online)
+	MCFG_DEVICE_CONFIG(centronics_printer_config)
 MACHINE_CONFIG_END
 
 
@@ -97,7 +101,7 @@ static DEVICE_START( centronics )
 	centronics->strobe = TRUE;
 
 	/* get printer device */
-	centronics->printer = device->subdevice("printer");
+	centronics->printer = device->subdevice<printer_image_device>("printer");
 
 	/* resolve callbacks */
 	centronics->out_ack_func.resolve(intf->out_ack_func, *device);
@@ -151,7 +155,7 @@ DEVICE_GET_INFO( centronics )
     sets us busy when the printer goes offline
 -------------------------------------------------*/
 
-void centronics_printer_online(device_t *device, int state)
+WRITE_LINE_DEVICE_HANDLER(centronics_printer_online)
 {
 	centronics_state *centronics = get_safe_token(device->owner());
 
@@ -173,7 +177,7 @@ static TIMER_CALLBACK( ack_callback )
 	if (param == FALSE)
 	{
 		/* data is now ready, output it */
-		printer_output(centronics->printer, centronics->data);
+		centronics->printer->output(centronics->data);
 
 		/* ready to receive more data, return BUSY to low */
 		machine.scheduler().timer_set(attotime::from_usec(7), FUNC(busy_callback), FALSE, ptr);
