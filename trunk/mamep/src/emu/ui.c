@@ -2764,7 +2764,6 @@ static char *slider_get_screen_desc(screen_device &screen)
 	return descbuf;
 }
 
-
 /*-------------------------------------------------
     slider_get_laserdisc_desc - returns the
     description for a given laseridsc
@@ -2772,7 +2771,6 @@ static char *slider_get_screen_desc(screen_device &screen)
 static char *slider_get_laserdisc_desc(device_t *laserdisc)
 {
 	static char descbuf[256];
-
 	for (device_t *device = laserdisc->machine().devicelist().first(); device != NULL; device = device->next())
 		if (device_is_laserdisc(device) && device != laserdisc)
 		{

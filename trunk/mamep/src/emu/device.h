@@ -1,6 +1,6 @@
 /***************************************************************************
 
-    devintrf.h
+    device.h
 
     Device interface functions.
 
@@ -132,7 +132,7 @@ class device_list : public tagged_list<device_t>
 public:
 	// construction/destruction
 	device_list(resource_pool &pool = global_resource_pool);
-
+	
 	// getters
 	running_machine &machine() const { assert(m_machine != NULL); return *m_machine; }
 
@@ -159,7 +159,7 @@ public:
 	// provide interface-specific overrides
 	template<class _InterfaceClass>
 	bool first(_InterfaceClass *&intf) const;
-
+	
 private:
 	// internal helpers
 	void exit();
@@ -306,7 +306,7 @@ protected:
 	virtual void device_clock_changed();
 	virtual void device_debug_setup();
 	virtual void device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr);
-
+	
 	//------------------- end derived class overrides
 
 	device_debug *			m_debug;
