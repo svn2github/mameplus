@@ -439,9 +439,10 @@ youmab2			// bootleg
 legion			// (c) 1986
 legiono			// (c) 1986
 terraf			// (c) 1987
-terrafb			// (c) 1987
-terrafa			// (c) 1987
 terrafu			// (c) 1987 Nichibutsu USA
+terrafj			// (c) 1987 Nichibutsu Japan
+terrafjb		// (c) 1987
+terrafb			// (c) 1987
 kozure			// (c) 1987 (Japan)
 armedf			// (c) 1988
 armedff			// (c) 1988 Fillmore license
@@ -1279,10 +1280,10 @@ nss_sten		// 199? Nintendo
 
 // Super Famicom Box Games
 sfcbox
-//pss61 - Super Mario Kart / Super Mario Collection / Star Fox
+pss61			// 199? Nintendo
 pss62			// 199? T & E Soft / I'Max
-//pss63 - Super Donkey Kong / Super Tetris 2 + Bombliss
-//pss64 - Super Donkey Kong / Super Bomberman 2
+pss63			// 199? Nintendo / BPS
+pss64			// 199? Nintendo / Hudson Soft
 
 
 
@@ -2762,6 +2763,7 @@ area88			//  8/1989 (c) 1989 (Japan)
 area88r			//  8/1989 (c) 1989 (Japan)
 ffight			// 12/1989 (c) 1989 (World)
 ffightu			// 12/1989 (c) 1989 (USA)
+ffightu1		// 12/1989 (c) 1989 (USA) (4 eprom instead of mask rom)
 ffightua		// 12/01/1990 (c) 1989 (USA)
 ffightub		// 13/06/1990 (c) 1989 (USA)
 ffightj			// 12/1989 (c) 1989 (Japan)
@@ -2793,6 +2795,7 @@ sf2ee			// 28/02/1991 (c) 1991 (World)
 sf2ebbl			// 14/02/1991 (c) 1991 (World, bootleg)
 sf2ua			// 06/02/1991 (c) 1991 (USA)
 sf2ub			// 14/02/1991 (c) 1991 (USA)
+sf2uc			// 06/03/1991 (c) 1991 (USA)
 sf2ud			// 18/03/1991 (c) 1991 (USA)
 sf2ue			// 28/02/1991 (c) 1991 (USA)
 sf2uf			// 11/04/1991 (c) 1991 (USA)
@@ -4755,7 +4758,7 @@ smlg99			// 1999.09 Super Major League 99
 sgtetris		// 1999.10 Sega Tetris
 derbyoc			// 1999.10 Derby Owners Club (Rev B)
 doa2			// 1999.11 Dead or Alive 2
-otrigger		// 1999.11 OutTrigger
+otrigger		// 1999.11 Out Trigger
 dybb99			// 1999.11 Dynamite Baseball '99 (Rev B)
 				// 1999.12 Mars TV
 samba			// 1999.12 Samba de Amigo (Rev B)
@@ -7296,6 +7299,7 @@ crusnwld20		// (c) 1996 Midway
 crusnwld17		// (c) 1996 Midway
 crusnwld13		// (c) 1996 Midway
 offroadc		// (c) 1997 Midway (v1.63)
+offroadc5		// (c) 1997 Midway (v1.50)
 offroadc4		// (c) 1997 Midway (v1.40)
 offroadc3		// (c) 1997 Midway (v1.30)
 offroadc1		// (c) 1997 Midway (v1.10)
@@ -8967,6 +8971,7 @@ ar_dart2		// (c) 1987
 ar_fast			// (c) 1988
 ar_ldrb			// (c) 1988
 ar_ldrba		// (c) 1988
+ar_ldrbb		// (c) 1988
 ar_ninj			// (c) 1987
 ar_ninj2		// (c) 1987
 ar_rdwr			// (c) 1988
@@ -10273,7 +10278,7 @@ fb2ndc2			// (c) 2004 Amcoe
 fb2ndd2			// (c) 2004 Amcoe
 fb2ndv2			// (c) 2004 Amcoe
 fb2ndo			// (c) 2004 Amcoe
-fb4			// (c) 2004 Amcoe - Fruit Bonus 2004
+fb4				// (c) 2004 Amcoe - Fruit Bonus 2004
 fb4c1			// (c) 2004 Amcoe
 fb4d1			// (c) 2004 Amcoe
 fb4v1			// (c) 2004 Amcoe
@@ -10284,11 +10289,11 @@ fb4d2			// (c) 2004 Amcoe
 fb4v2			// (c) 2004 Amcoe
 fb4o			// (c) 2004 Amcoe
 fb4o2			// (c) 2004 Amcoe
-fb5			// (c) 2005 Amcoe - Fruit Bonus 2005
+fb5				// (c) 2005 Amcoe - Fruit Bonus 2005
 fb5c			// (c) 2005 Amcoe
 fb5d			// (c) 2005 Amcoe
 fb5v			// (c) 2005 Amcoe
-fb6			// (c) 2006 Amcoe - Fruit Bonus '06 - 10th anniversary
+fb6				// (c) 2006 Amcoe - Fruit Bonus '06 - 10th anniversary
 fb6v			// (c) 2006 Amcoe
 fb6d1			// (c) 2006 Amcoe
 fb6s1			// (c) 2006 Amcoe
@@ -10459,16 +10464,16 @@ cmkenospa		// (c) 2000 Coinmaster-Gaming, Ltd.
 
 // Igrosoft Original sets
 // Multifish
-//mfish 		// (c) 2002
-//mfish_2		// (c) 2002
+//mfish   		// (c) 2002
+//mfish_2 		// (c) 2002
 mfish_3			// (c) 2002
-//mfish_4		// (c) 2002
-//mfish_5		// (c) 2002
+//mfish_4 		// (c) 2002
+//mfish_5 		// (c) 2002
 mfish_6			// (c) 2002
-//mfish_7		// (c) 2002
+//mfish_7 		// (c) 2002
 mfish_8		// (c) 2002
-//mfish_9		// (c) 2002
-//mfish_10  	// (c) 2002
+//mfish_9 		// (c) 2002
+//mfish_10    	// (c) 2002
 mfish_11		// (c) 2002
 mfish_12		// (c) 2002
 mfish_13		// (c) 2002

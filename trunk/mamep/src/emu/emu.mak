@@ -51,6 +51,7 @@ EMUOBJS = \
 	$(EMUOBJ)/cheat.o \
 	$(EMUOBJ)/clifront.o \
 	$(EMUOBJ)/config.o \
+	$(EMUOBJ)/cothread.o \
 	$(EMUOBJ)/crsshair.o \
 	$(EMUOBJ)/debugger.o \
 	$(EMUOBJ)/delegate.o \
@@ -275,7 +276,7 @@ EMUVIDEOOBJS = \
 	$(EMUVIDEO)/hd44102.o		\
 	$(EMUVIDEO)/hd61830.o		\
 	$(EMUVIDEO)/hd63484.o		\
-	$(EMUVIDEO)/i8275.o			\
+	$(EMUVIDEO)/i8275.o		\
 	$(EMUVIDEO)/k053250.o		\
 	$(EMUVIDEO)/mc6845.o		\
 	$(EMUVIDEO)/msm6255.o		\

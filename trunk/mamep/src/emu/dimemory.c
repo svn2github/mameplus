@@ -317,8 +317,14 @@ bool device_memory_interface::interface_validity_check(emu_options &options, con
 							if (regiontag != NULL)
 							{
 								astring fulltag;
+								astring regiontag;
+								if (strchr(entry->m_region,':')) {
+									regiontag = entry->m_region;
+								} else {
+									device().siblingtag(regiontag, entry->m_region);
+								}
 								rom_region_name(fulltag, &driver, source, romp);
-								if (fulltag.cmp(entry->m_region) == 0)
+								if (fulltag.cmp(regiontag) == 0)
 								{
 									// verify the address range is within the region's bounds
 									offs_t length = ROMREGION_GETLENGTH(romp);

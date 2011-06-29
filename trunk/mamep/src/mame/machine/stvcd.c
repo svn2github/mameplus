@@ -114,7 +114,6 @@ static blockT curblock;
 
 static UINT8 tocbuf[102*4];
 static UINT8 finfbuf[256];
-static UINT8 onesectorstored;
 
 static INT32 sectlenin, sectlenout;
 
@@ -731,7 +730,7 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 
 						if (freeblocks == 200)
 						{
-							onesectorstored = 0;
+							sectorstore = 0;
 						}
 
 						hirqreg |= EHST;
@@ -803,6 +802,9 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 				cdda_pause_audio( machine.device( "cdda" ), 0 );
 				cdda_start_audio( machine.device( "cdda" ), cd_curfad, fadstoplay  );
 			}
+			else
+				cdda_stop_audio( machine.device( "cdda" ) ); //stop any pending CD-DA
+
 			//else
 			//{
 			//  sector_timer->reset();
@@ -1021,7 +1023,7 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 
 				// TODO: buffer full flag
 
-				if (freeblocks == 200) { onesectorstored = 0; }
+				if (freeblocks == 200) { sectorstore = 0; }
 
 				hirqreg |= (CMOK|ESEL);
 				cr_standard_return(cd_stat);
@@ -1642,9 +1644,10 @@ static void make_dir_current(running_machine &machine, UINT32 fad)
 {
 	int i;
 	UINT32 nextent, numentries;
-	UINT8 sect[MAX_DIR_SIZE];
+	UINT8 *sect;
 	direntryT *curentry;
 
+	sect = (UINT8 *)malloc(MAX_DIR_SIZE);
 	memset(sect, 0, MAX_DIR_SIZE);
 	for (i = 0; i < (curroot.length/2048); i++)
 	{
@@ -1701,6 +1704,8 @@ static void make_dir_current(running_machine &machine, UINT32 fad)
 			i = numfiles;
 		}
 	}
+
+	free(sect);
 }
 
 void stvcd_exit(running_machine& machine)
@@ -1952,8 +1957,19 @@ static partitionT *cd_read_filtered_sector(INT32 fad)
 		// find out the track's type
 		trktype = cdrom_get_track_type(cdrom, cdrom_get_track(cdrom, fad-150));
 
-		// now get a raw 2352 byte sector
-		cdrom_read_data(cdrom, fad-150, curblock.data, CD_TRACK_RAW_DONTCARE);
+		// now get a raw 2352 byte sector - if it's mode 1, get mode1_raw
+		if ((trktype == CD_TRACK_MODE1) || (trktype == CD_TRACK_MODE1_RAW))
+		{
+			cdrom_read_data(cdrom, fad-150, curblock.data, CD_TRACK_MODE1_RAW);
+		}
+		else if (trktype != CD_TRACK_AUDIO)	// if not audio it must be mode 2 so get mode2_raw
+		{
+			cdrom_read_data(cdrom, fad-150, curblock.data, CD_TRACK_MODE2_RAW);
+		}
+		else
+		{
+			cdrom_read_data(cdrom, fad-150, curblock.data, CD_TRACK_AUDIO);
+		}
 		cr3 = 0x100 | (fad>>16);	// update cr3/4 with the current fad
 		cr4 = fad;
 		curblock.size = sectlenin;

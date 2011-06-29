@@ -5366,6 +5366,9 @@ UINT8 get_vblank(running_machine &machine)
 	int cur_v,vblank;
 	cur_v = machine.primary_screen->vpos();
 
+	if(!STV_VDP2_DISP)
+		return 1;
+
 	vblank = (state->m_vdp2.pal) ? 288 : 240;
 
 	if((STV_VDP2_LSMD & 3) == 3)
@@ -5621,8 +5624,8 @@ static void stv_vdp2_get_window0_coordinates(running_machine &machine,UINT16 *s_
 			*e_y = ((STV_VDP2_W0EY & 0x3ff) >> 0);
 			break;
 		case 3:
-			*s_y = ((STV_VDP2_W1SY & 0x7ff) >> 0) << 1;
-			*e_y = ((STV_VDP2_W1EY & 0x7ff) >> 0) << 1;
+			*s_y = ((STV_VDP2_W0SY & 0x7ff) >> 0);
+			*e_y = ((STV_VDP2_W0EY & 0x7ff) >> 0);
 			break;
 	}
 	switch(STV_VDP2_HRES & 6)
@@ -5668,8 +5671,8 @@ static void stv_vdp2_get_window1_coordinates(running_machine &machine,UINT16 *s_
 			*e_y = ((STV_VDP2_W1EY & 0x3ff) >> 0);
 			break;
 		case 3:
-			*s_y = ((STV_VDP2_W1SY & 0x3ff) >> 0) << 1;
-			*e_y = ((STV_VDP2_W1EY & 0x3ff) >> 0) << 1;
+			*s_y = ((STV_VDP2_W1SY & 0x7ff) >> 0);
+			*e_y = ((STV_VDP2_W1EY & 0x7ff) >> 0);
 			break;
 	}
 	switch(STV_VDP2_HRES & 6)
@@ -6340,7 +6343,7 @@ SCREEN_UPDATE( stv_vdp2 )
 	}
 	#endif
 
-	if(STV_VDP2_DISP != 0)
+	if(STV_VDP2_DISP)
 	{
 		stv_sprite_priorities_usage_valid = 0;
 		memset(stv_sprite_priorities_used, 0, sizeof(stv_sprite_priorities_used));

@@ -2381,8 +2381,8 @@ static void SetPropEnabledControls(HWND hWnd)
 	bool ddraw = FALSE;
 	bool d3d = FALSE;
 	bool gdi = FALSE;
-	//BOOL useart = TRUE;
-	bool joystick_attached = FALSE;
+	//bool useart = TRUE;
+	BOOL joystick_attached = FALSE;
 	bool in_window = FALSE;
 	bool hlsl_on = FALSE;
 	int d3d_version = 8;

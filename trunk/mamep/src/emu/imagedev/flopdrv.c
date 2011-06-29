@@ -940,6 +940,17 @@ READ_LINE_DEVICE_HANDLER( floppy_twosid_r )
 		return !floppy_get_heads_per_disk(drive->floppy);
 }
 
+READ_LINE_DEVICE_HANDLER( floppy_index_r )
+{
+	floppy_drive *drive = get_safe_token(device);
+	return drive->idx;
+}
+
+READ_LINE_DEVICE_HANDLER( floppy_ready_r )
+{
+	return !(floppy_drive_get_flag_state(device, FLOPPY_DRIVE_READY) == FLOPPY_DRIVE_READY);
+}
+
 /*-------------------------------------------------
     DEVICE_IMAGE_SOFTLIST_LOAD(floppy)
 -------------------------------------------------*/
@@ -997,8 +1008,8 @@ DEVICE_GET_INFO(floppy)
 			if (false /*device->type() == FLOPPY_APPLE*/) {
 				info->f = NULL;
 			} else {
-				if ( device && downcast<const legacy_image_device_base *>(device)->static_config() && ((floppy_interface*)(device))->device_displayinfo) {
-					info->f = (genf *) ((floppy_interface*)(device))->device_displayinfo;
+				if ( device && downcast<const legacy_image_device_base *>(device)->static_config() && ((floppy_interface*)(device)->static_config())->device_displayinfo) {
+					info->f = (genf *) ((floppy_interface*)(device)->static_config())->device_displayinfo;
 				} else {
 					info->f = NULL;
 				}

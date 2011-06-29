@@ -174,8 +174,8 @@ READ16_HANDLER( saturn_vdp1_regs_r )
 	{
 		case 0x10/2:
 			break;
-		case 0x12/2:
-		case 0x14/2:
+		case 0x12/2: return state->m_vdp1.lopr;
+		case 0x14/2: return state->m_vdp1.copr;
 		case 0x16/2:
 			printf ("cpu %s (PC=%08X) VDP1: Read from Registers, Offset %04x\n", space->device().tag(), cpu_get_pc(&space->device()), offset*2);
 
@@ -916,7 +916,7 @@ static void drawpixel_generic(running_machine &machine, int x, int y, int patter
 		{
 			case 0x0000: // mode 0 16 colour bank mode (4bits) (hanagumi blocks)
 				// most of the shienryu sprites use this mode
-				pix = gfxdata[patterndata+offsetcnt/2];
+				pix = gfxdata[(patterndata+offsetcnt/2) & 0xfffff];
 				pix = offsetcnt&1 ? (pix & 0x0f):((pix & 0xf0)>>4) ;
 				pix = pix+((stv2_current_sprite.CMDCOLR&0xfff0));
 				mode = 0;
@@ -924,7 +924,7 @@ static void drawpixel_generic(running_machine &machine, int x, int y, int patter
 				break;
 			case 0x0008: // mode 1 16 colour lookup table mode (4bits)
 				// shienryu explosisons (and some enemies) use this mode
-				pix2 = gfxdata[patterndata+offsetcnt/2];
+				pix2 = gfxdata[(patterndata+offsetcnt/2) & 0xfffff];
 				pix2 = offsetcnt&1 ?  (pix2 & 0x0f):((pix2 & 0xf0)>>4);
 				pix = pix2&1 ?
 				((((state->m_vdp1_vram[(((stv2_current_sprite.CMDCOLR&0xffff)*8)>>2)+((pix2&0xfffe)/2)])) & 0x0000ffff) >> 0):
@@ -946,33 +946,33 @@ static void drawpixel_generic(running_machine &machine, int x, int y, int patter
 				}
 				break;
 			case 0x0010: // mode 2 64 colour bank mode (8bits) (character select portraits on hanagumi)
-				pix = gfxdata[patterndata+offsetcnt];
+				pix = gfxdata[(patterndata+offsetcnt) & 0xfffff];
 				mode = 2;
 				pix = pix+(stv2_current_sprite.CMDCOLR&0xffc0);
 				transmask = 0x3f;
 				break;
 			case 0x0018: // mode 3 128 colour bank mode (8bits) (little characters on hanagumi use this mode)
-				pix = gfxdata[patterndata+offsetcnt];
+				pix = gfxdata[(patterndata+offsetcnt) & 0xfffff];
 				pix = pix+(stv2_current_sprite.CMDCOLR&0xff80);
 				transmask = 0x7f;
 				mode = 3;
-			//  pix = machine.rand();
 				break;
 			case 0x0020: // mode 4 256 colour bank mode (8bits) (hanagumi title)
-				pix = gfxdata[patterndata+offsetcnt];
+				pix = gfxdata[(patterndata+offsetcnt) & 0xfffff];
 				pix = pix+(stv2_current_sprite.CMDCOLR&0xff00);
 				transmask = 0xff;
 				mode = 4;
 				break;
 			case 0x0028: // mode 5 32,768 colour RGB mode (16bits)
-				pix = gfxdata[patterndata+offsetcnt*2+1] | (gfxdata[patterndata+offsetcnt*2]<<8) ;
+				pix = gfxdata[(patterndata+offsetcnt*2+1) & 0xfffff] | (gfxdata[(patterndata+offsetcnt*2) & 0xfffff]<<8) ;
 				mode = 5;
-				transmask = 0xffff;
+				transmask = -1; /* TODO: check me */
 				break;
 			default: // other settings illegal
 				pix = machine.rand();
 				mode = 0;
 				transmask = 0xff;
+				popmessage("Illegal Sprite Mode, contact MAMEdev");
 		}
 
 
@@ -1968,7 +1968,8 @@ static void stv_vdp1_process_list(running_machine &machine)
 
 				default:
 					popmessage ("VDP1: Sprite List Illegal, contact MAMEdev");
-					// TODO: LOPR/COPR hook-up
+					state->m_vdp1.lopr = (position * 0x20) >> 3;
+					state->m_vdp1.copr = (position * 0x20) >> 3;
 					return;
 			}
 		}
@@ -1981,6 +1982,7 @@ static void stv_vdp1_process_list(running_machine &machine)
 	end:
 	/* set CEF to 1*/
 	CEF_1;
+	state->m_vdp1.copr = (position * 0x20) >> 3;
 
 	if (VDP1_LOG) logerror ("End of list processing!\n");
 }

@@ -1414,7 +1414,7 @@ static MACHINE_RESET( namcos12 )
 static ADDRESS_MAP_START( s12h8rwmap, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x080000, 0x08ffff) AM_READWRITE( sharedram_sub_r, sharedram_sub_w )
-	AM_RANGE(0x280000, 0x287fff) AM_DEVREADWRITE( "c352", c352_r, c352_w )
+	AM_RANGE(0x280000, 0x287fff) AM_DEVREADWRITE_MODERN("c352", c352_device, read, write)
 	AM_RANGE(0x300000, 0x300001) AM_READ_PORT("IN0")
 	AM_RANGE(0x300002, 0x300003) AM_READ_PORT("IN1")
 	AM_RANGE(0x300010, 0x300011) AM_NOP	// golgo13 writes here a lot, possibly also a wait state generator?
@@ -1679,7 +1679,7 @@ static MACHINE_CONFIG_START( coh700, namcos12_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("c352", C352, 16737350)
+	MCFG_C352_ADD("c352", 16737350)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 1.00)
 	MCFG_SOUND_ROUTE(1, "lspeaker", 1.00)
 	MCFG_SOUND_ROUTE(2, "rspeaker", 1.00)
@@ -1810,7 +1810,7 @@ ROM_START( aquarush )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "aq1vera.11s", 0x000000, 0x080000, CRC(78277e02) SHA1(577ebb6d7ab5e304fb1dc1e7fd5649762e0d1786) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "aq1wave0.2",          0x000000, 0x800000, CRC(0cf7278d) SHA1(aee31e4d9b3522f42325071768803c542aa6de09) )
 ROM_END
 
@@ -1832,7 +1832,7 @@ ROM_START( ehrgeiz )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "eg1vera.11s", 0x0000000, 0x080000, CRC(9e44645e) SHA1(374eb4a4c09d6b5b7af5ff0efec16b4d2aacbe2b) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "eg1wave0.2",          0x0000000, 0x800000, CRC(961fe69f) SHA1(0189a061959a8d94b9d2db627911264faf9f28fd) )
 ROM_END
 
@@ -1854,7 +1854,7 @@ ROM_START( ehrgeizaa )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "eg1vera.11s", 0x0000000, 0x080000, CRC(9e44645e) SHA1(374eb4a4c09d6b5b7af5ff0efec16b4d2aacbe2b) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "eg1wave0.2",          0x0000000, 0x800000, CRC(961fe69f) SHA1(0189a061959a8d94b9d2db627911264faf9f28fd) )
 ROM_END
 
@@ -1876,7 +1876,7 @@ ROM_START( ehrgeizja )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "eg1vera.11s", 0x0000000, 0x080000, CRC(9e44645e) SHA1(374eb4a4c09d6b5b7af5ff0efec16b4d2aacbe2b) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "eg1wave0.2",          0x0000000, 0x800000, CRC(961fe69f) SHA1(0189a061959a8d94b9d2db627911264faf9f28fd) )
 ROM_END
 
@@ -1968,7 +1968,7 @@ ROM_START( ghlpanic )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "ob2vera.11s", 0x0000000, 0x080000, CRC(f8c459f2) SHA1(681520c891f5c8a0f321652d8834910310c88d1a) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "ob1wave.ic2",           0x000000, 0x800000, CRC(e7bc7202) SHA1(f0f598304866ebe62642eaac6b7d8709baa14fe1) )
 ROM_END
 
@@ -1988,7 +1988,7 @@ ROM_START( kaiunqz )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "kw1vera.11s",  0x000000, 0x080000, CRC(d863fafa) SHA1(3c2bb38c24165e3a1a4d1d257fcfc019b63d5199) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "kw1wave0.2",   0x000000, 0x800000, CRC(060e52ae) SHA1(7ea95cae9d3c648163b225d0c7d365644be90241) )
 ROM_END
 
@@ -2006,7 +2006,7 @@ ROM_START( lbgrande )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "lg1vera.11s", 0x0000000, 0x080000, CRC(de717a09) SHA1(78f26ff630c50632916fa17fa870dcde7f13781d) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "lg1wave0.5",          0x0000000, 0x400000, CRC(4647fada) SHA1(99f5e9ded0c83f1a0d3670f6380bc15c1380671e) )
 ROM_END
 
@@ -2024,7 +2024,7 @@ ROM_START( lbgrandeja )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "lg1vera.11s", 0x0000000, 0x080000, CRC(de717a09) SHA1(78f26ff630c50632916fa17fa870dcde7f13781d) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "lg1wave0.5",          0x0000000, 0x400000, CRC(4647fada) SHA1(99f5e9ded0c83f1a0d3670f6380bc15c1380671e) )
 ROM_END
 
@@ -2044,7 +2044,7 @@ ROM_START( mdhorse )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "mdh1vera.11s", 0x0000000, 0x080000, CRC(20d7ba29) SHA1(95a056d1f1ac70dda8ced832b506076485348a33) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "mdh1wave0",           0x0000000, 0x800000, CRC(7b031123) SHA1(7cbc1f71d259405f9f1ef26026d51abcb255b057) )
 ROM_END
 
@@ -2060,7 +2060,7 @@ ROM_START( mrdrillr )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "dri1vera.11s", 0x0000000, 0x080000, CRC(33ea9c0e) SHA1(5018d7a1a45ec3133cd928435db8804f66321924) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "dri1wave0.5",         0x0000000, 0x800000, CRC(32928df1) SHA1(79af92a2d24a0e3d5bfe1785776b0f86a93882ce) )
 ROM_END
 
@@ -2170,7 +2170,7 @@ ROM_START( soulclbr )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "soc1wave0.2",         0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
 ROM_END
 
@@ -2189,7 +2189,7 @@ ROM_START( soulclbrwb )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "soc1wave0.2",         0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
 ROM_END
 
@@ -2208,7 +2208,7 @@ ROM_START( soulclbruc )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "soc1wave0.2",         0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
 ROM_END
 
@@ -2227,7 +2227,7 @@ ROM_START( soulclbrjc )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "soc1wave0.2",         0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
 ROM_END
 
@@ -2246,7 +2246,7 @@ ROM_START( soulclbrub )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "soc1wave0.2",         0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
 ROM_END
 
@@ -2265,7 +2265,7 @@ ROM_START( soulclbrjb )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "soc1wave0.2",         0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
 ROM_END
 
@@ -2284,7 +2284,7 @@ ROM_START( soulclbrja )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "soc1vera.11s", 0x0000000, 0x080000, CRC(52aa206a) SHA1(5abe9d6f800fa1b9623aa08b16e9b959b840e50b) )
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "soc1wave0.2",         0x0000000, 0x800000, CRC(c100618d) SHA1(b87f88ee42ad9c5affa674e5f816d902143fed99) )
 ROM_END
 
@@ -2389,7 +2389,7 @@ ROM_START( tekken3 )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "tet1verb.11s", 0x0000000, 0x080000, CRC(c92b98d1) SHA1(8ae6fba8c5b6b9a2ab9541eac8553b282f35750d) ) /* No label but different than tet1vera.11s */
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "tet1wave0.5",         0x0000000, 0x400000, CRC(77ba7975) SHA1(fe9434dcf0fb232c85efaaae1b4b13d36099620a) )
 	ROM_LOAD( "tet1wave1.4",         0x0400000, 0x400000, CRC(ffeba79f) SHA1(941412bbe9d0305d9a23c224c1bb774c4321f6df) )
 ROM_END
@@ -2412,7 +2412,7 @@ ROM_START( tekken3ae )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "tet1verb.11s", 0x0000000, 0x080000, CRC(c92b98d1) SHA1(8ae6fba8c5b6b9a2ab9541eac8553b282f35750d) ) /* No label but different than tet1vera.11s */
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "tet1wave0.5",         0x0000000, 0x400000, CRC(77ba7975) SHA1(fe9434dcf0fb232c85efaaae1b4b13d36099620a) )
 	ROM_LOAD( "tet1wave1.4",         0x0400000, 0x400000, CRC(ffeba79f) SHA1(941412bbe9d0305d9a23c224c1bb774c4321f6df) )
 ROM_END
@@ -2435,7 +2435,7 @@ ROM_START( tekken3ud )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "tet1verb.11s", 0x0000000, 0x080000, CRC(c92b98d1) SHA1(8ae6fba8c5b6b9a2ab9541eac8553b282f35750d) ) /* No label but different than tet1vera.11s */
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "tet1wave0.5",         0x0000000, 0x400000, CRC(77ba7975) SHA1(fe9434dcf0fb232c85efaaae1b4b13d36099620a) )
 	ROM_LOAD( "tet1wave1.4",         0x0400000, 0x400000, CRC(ffeba79f) SHA1(941412bbe9d0305d9a23c224c1bb774c4321f6df) )
 ROM_END
@@ -2458,7 +2458,7 @@ ROM_START( tekken3ab )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "tet1verb.11s", 0x0000000, 0x080000, CRC(c92b98d1) SHA1(8ae6fba8c5b6b9a2ab9541eac8553b282f35750d) ) /* No label but different than tet1vera.11s */
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "tet1wave0.5",         0x0000000, 0x400000, CRC(77ba7975) SHA1(fe9434dcf0fb232c85efaaae1b4b13d36099620a) )
 	ROM_LOAD( "tet1wave1.4",         0x0400000, 0x400000, CRC(ffeba79f) SHA1(941412bbe9d0305d9a23c224c1bb774c4321f6df) )
 ROM_END
@@ -2469,19 +2469,19 @@ ROM_START( tekken3ua )
 	ROM_LOAD16_BYTE( "tet3vera.2j",  0x0000001, 0x200000, CRC(968af792) SHA1(6187128d5ca07fd394f674b8dda0c190e6cd7f9d) )
 
 	ROM_REGION32_LE( 0x1c00000, "user2", 0 ) /* main data */
-	ROM_LOAD16_BYTE( "tet1rom0l.6",  0x0000000, 0x400000, CRC(2886bb32) SHA1(08ad9da2df25ad8c933a812ac238c81135072929) )
-	ROM_LOAD16_BYTE( "tet1rom0u.9",  0x0000001, 0x400000, CRC(c5705b92) SHA1(20df20c8d18eb4712d565a3df9a8d9270dee6aaa) )
-	ROM_LOAD16_BYTE( "tet1rom1l.7",  0x0800000, 0x400000, CRC(0397d283) SHA1(ebafcd14cdb2601214129a84fc6830846f5cd274) )
-	ROM_LOAD16_BYTE( "tet1rom1u.10", 0x0800001, 0x400000, CRC(502ba5cd) SHA1(19c1282245c6dbfc945c0bd0f3918968c3e5c3ed) )
-	ROM_LOAD16_BYTE( "tet1rom2l.8",  0x1000000, 0x400000, CRC(e03b1c24) SHA1(8579b95a8fd06b7d2893ff88b228fd794162dff1) )
-	ROM_LOAD16_BYTE( "tet1rom2u.11", 0x1000001, 0x400000, CRC(75eb2ab3) SHA1(dee43884e542391903f6aaae2c166e7921a86fb4) )
+	ROM_LOAD16_BYTE( "tet1rom0l.6",     0x0000000, 0x400000, CRC(2886bb32) SHA1(08ad9da2df25ad8c933a812ac238c81135072929) )
+	ROM_LOAD16_BYTE( "tet1rom0u.9",     0x0000001, 0x400000, CRC(c5705b92) SHA1(20df20c8d18eb4712d565a3df9a8d9270dee6aaa) )
+	ROM_LOAD16_BYTE( "tet1rom1l.7",     0x0800000, 0x400000, CRC(0397d283) SHA1(ebafcd14cdb2601214129a84fc6830846f5cd274) )
+	ROM_LOAD16_BYTE( "tet1rom1u.10",    0x0800001, 0x400000, CRC(502ba5cd) SHA1(19c1282245c6dbfc945c0bd0f3918968c3e5c3ed) )
+	ROM_LOAD16_BYTE( "tet1rom2l.8",     0x1000000, 0x400000, CRC(e03b1c24) SHA1(8579b95a8fd06b7d2893ff88b228fd794162dff1) )
+	ROM_LOAD16_BYTE( "tet1rom2u.11",    0x1000001, 0x400000, CRC(75eb2ab3) SHA1(dee43884e542391903f6aaae2c166e7921a86fb4) )
 	ROM_LOAD16_BYTE( "tet1verafl3l.12", 0x1800000, 0x200000, CRC(64fa1f83) SHA1(5bc8b4657826ead19827f63d04f67597970d5337) ) /* Specific to Ver A. */
 	ROM_LOAD16_BYTE( "tet1verafl3u.13", 0x1800001, 0x200000, CRC(32a2516b) SHA1(6f4e4fc1b11d17a867d3e7bdfdd351438390a5a2) ) /* Specific to Ver A. */
 
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "tet1vera.11s", 0x0000000, 0x080000, CRC(a74dfe7f) SHA1(854096a6f12ee9073fb1f38e41c8e6e0725a7521) ) /* Specific to Ver A. */
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "tet1wave0.5",         0x0000000, 0x400000, CRC(77ba7975) SHA1(fe9434dcf0fb232c85efaaae1b4b13d36099620a) )
 	ROM_LOAD( "tet1wave1.4",         0x0400000, 0x400000, CRC(ffeba79f) SHA1(941412bbe9d0305d9a23c224c1bb774c4321f6df) )
 ROM_END
@@ -2492,19 +2492,19 @@ ROM_START( tekken3aa )
 	ROM_LOAD16_BYTE( "tet2vera.2j",  0x0000001, 0x200000, CRC(94ceb446) SHA1(c730eb5c770991ae3ae0b9ba63681ce037e46746) )
 
 	ROM_REGION32_LE( 0x1c00000, "user2", 0 ) /* main data */
-	ROM_LOAD16_BYTE( "tet1rom0l.6",  0x0000000, 0x400000, CRC(2886bb32) SHA1(08ad9da2df25ad8c933a812ac238c81135072929) )
-	ROM_LOAD16_BYTE( "tet1rom0u.9",  0x0000001, 0x400000, CRC(c5705b92) SHA1(20df20c8d18eb4712d565a3df9a8d9270dee6aaa) )
-	ROM_LOAD16_BYTE( "tet1rom1l.7",  0x0800000, 0x400000, CRC(0397d283) SHA1(ebafcd14cdb2601214129a84fc6830846f5cd274) )
-	ROM_LOAD16_BYTE( "tet1rom1u.10", 0x0800001, 0x400000, CRC(502ba5cd) SHA1(19c1282245c6dbfc945c0bd0f3918968c3e5c3ed) )
-	ROM_LOAD16_BYTE( "tet1rom2l.8",  0x1000000, 0x400000, CRC(e03b1c24) SHA1(8579b95a8fd06b7d2893ff88b228fd794162dff1) )
-	ROM_LOAD16_BYTE( "tet1rom2u.11", 0x1000001, 0x400000, CRC(75eb2ab3) SHA1(dee43884e542391903f6aaae2c166e7921a86fb4) )
+	ROM_LOAD16_BYTE( "tet1rom0l.6",     0x0000000, 0x400000, CRC(2886bb32) SHA1(08ad9da2df25ad8c933a812ac238c81135072929) )
+	ROM_LOAD16_BYTE( "tet1rom0u.9",     0x0000001, 0x400000, CRC(c5705b92) SHA1(20df20c8d18eb4712d565a3df9a8d9270dee6aaa) )
+	ROM_LOAD16_BYTE( "tet1rom1l.7",     0x0800000, 0x400000, CRC(0397d283) SHA1(ebafcd14cdb2601214129a84fc6830846f5cd274) )
+	ROM_LOAD16_BYTE( "tet1rom1u.10",    0x0800001, 0x400000, CRC(502ba5cd) SHA1(19c1282245c6dbfc945c0bd0f3918968c3e5c3ed) )
+	ROM_LOAD16_BYTE( "tet1rom2l.8",     0x1000000, 0x400000, CRC(e03b1c24) SHA1(8579b95a8fd06b7d2893ff88b228fd794162dff1) )
+	ROM_LOAD16_BYTE( "tet1rom2u.11",    0x1000001, 0x400000, CRC(75eb2ab3) SHA1(dee43884e542391903f6aaae2c166e7921a86fb4) )
 	ROM_LOAD16_BYTE( "tet1verafl3l.12", 0x1800000, 0x200000, CRC(64fa1f83) SHA1(5bc8b4657826ead19827f63d04f67597970d5337) ) /* Specific to Ver A. */
 	ROM_LOAD16_BYTE( "tet1verafl3u.13", 0x1800001, 0x200000, CRC(32a2516b) SHA1(6f4e4fc1b11d17a867d3e7bdfdd351438390a5a2) ) /* Specific to Ver A. */
 
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "tet1vera.11s", 0x0000000, 0x080000, CRC(a74dfe7f) SHA1(854096a6f12ee9073fb1f38e41c8e6e0725a7521) ) /* Specific to Ver A. */
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "tet1wave0.5",         0x0000000, 0x400000, CRC(77ba7975) SHA1(fe9434dcf0fb232c85efaaae1b4b13d36099620a) )
 	ROM_LOAD( "tet1wave1.4",         0x0400000, 0x400000, CRC(ffeba79f) SHA1(941412bbe9d0305d9a23c224c1bb774c4321f6df) )
 ROM_END
@@ -2527,7 +2527,7 @@ ROM_START( tekken3ja )
 	ROM_REGION( 0x0080000, "sub", 0 ) /* sound prg */
 	ROM_LOAD16_WORD_SWAP( "tet1vera.11s", 0x0000000, 0x080000, CRC(a74dfe7f) SHA1(854096a6f12ee9073fb1f38e41c8e6e0725a7521) ) /* Specific to Ver A. */
 
-	ROM_REGION( 0x0800000, "c352", 0 ) /* samples */
+	ROM_REGION( 0x1000000, "c352", 0 ) /* samples */
 	ROM_LOAD( "tet1wave0.5",         0x0000000, 0x400000, CRC(77ba7975) SHA1(fe9434dcf0fb232c85efaaae1b4b13d36099620a) )
 	ROM_LOAD( "tet1wave1.4",         0x0400000, 0x400000, CRC(ffeba79f) SHA1(941412bbe9d0305d9a23c224c1bb774c4321f6df) )
 ROM_END

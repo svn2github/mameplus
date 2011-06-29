@@ -47,6 +47,10 @@
 #define __DIEXEC_H__
 
 
+// set to 1 to execute on cothread instead of directly
+#define USE_COTHREADS 0
+
+
 //**************************************************************************
 //  CONSTANTS
 //**************************************************************************
@@ -199,9 +203,16 @@ public:
 	UINT64 total_cycles() const;
 
 	// required operation overrides
+#if USE_COTHREADS
+	void run() { m_cothread.make_active(); }
+#else
 	void run() { execute_run(); }
+#endif
 
 protected:
+	// internal helpers
+	void run_thread_wrapper();
+
 	// clock and cycle information getters
 	virtual UINT64 execute_clocks_to_cycles(UINT64 clocks) const;
 	virtual UINT64 execute_cycles_to_clocks(UINT64 cycles) const;
@@ -258,6 +269,9 @@ protected:
 		static void static_empty_event_queue(running_machine &machine, void *ptr, int param);
 		void empty_event_queue();
 	};
+
+	// internal state
+	cothread				m_cothread;					// thread used for execution
 
 	// configuration
 	bool					m_disabled;					// disabled from executing?

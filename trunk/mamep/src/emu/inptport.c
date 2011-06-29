@@ -1296,9 +1296,8 @@ void input_field_set_user_settings(const input_field_config *field, const input_
 	for (seqtype = 0; seqtype < ARRAY_LENGTH(settings->seq); seqtype++)
 	{
 		const input_seq &defseq = input_type_seq(field->machine(), field->type, field->player, (input_seq_type)seqtype);
-		// TODO: find what the default_seq/ITEM_ID_SEQ_DEFAULT is supposed to do, besides crashing mame
-		if (false && defseq == settings->seq[seqtype])
-			field->state->seq[seqtype] = input_seq::default_seq;
+		if (defseq == settings->seq[seqtype])
+			field->state->seq[seqtype].set_default();
 		else
 			field->state->seq[seqtype] = settings->seq[seqtype];
 	}
@@ -1336,7 +1335,7 @@ const char *input_field_setting_name(const input_field_config *field)
 
 	/* scan the list of settings looking for a match on the current value */
 	for (setting = field->settinglist().first(); setting != NULL; setting = setting->next())
-		if (input_condition_true(field->machine(), &setting->condition))
+		if (input_condition_true(field->machine(), &setting->condition, field->port().owner()))
 			if (setting->value == field->state->value)
 				return setting->name;
 
@@ -1358,7 +1357,7 @@ int input_field_has_previous_setting(const input_field_config *field)
 
 	/* scan the list of settings looking for a match on the current value */
 	for (setting = field->settinglist().first(); setting != NULL; setting = setting->next())
-		if (input_condition_true(field->machine(), &setting->condition))
+		if (input_condition_true(field->machine(), &setting->condition, field->port().owner()))
 			return (setting->value != field->state->value);
 
 	return FALSE;
@@ -1382,7 +1381,7 @@ void input_field_select_previous_setting(const input_field_config *field)
 	/* scan the list of settings looking for a match on the current value */
 	prevsetting = NULL;
 	for (setting = field->settinglist().first(); setting != NULL; setting = setting->next())
-		if (input_condition_true(field->machine(), &setting->condition))
+		if (input_condition_true(field->machine(), &setting->condition, field->port().owner()))
 		{
 			if (setting->value == field->state->value)
 			{
@@ -1397,7 +1396,7 @@ void input_field_select_previous_setting(const input_field_config *field)
 	if (!found_match)
 	{
 		for (prevsetting = field->settinglist().first(); prevsetting != NULL; prevsetting = prevsetting->next())
-			if (input_condition_true(field->machine(), &prevsetting->condition))
+			if (input_condition_true(field->machine(), &prevsetting->condition, field->port().owner()))
 				break;
 	}
 
@@ -1422,7 +1421,7 @@ int input_field_has_next_setting(const input_field_config *field)
 
 	/* scan the list of settings looking for a match on the current value */
 	for (setting = field->settinglist().first(); setting != NULL; setting = setting->next())
-		if (input_condition_true(field->machine(), &setting->condition))
+		if (input_condition_true(field->machine(), &setting->condition, field->port().owner()))
 		{
 			if (found)
 				return TRUE;
@@ -1450,20 +1449,20 @@ void input_field_select_next_setting(const input_field_config *field)
 	/* scan the list of settings looking for a match on the current value */
 	nextsetting = NULL;
 	for (setting = field->settinglist().first(); setting != NULL; setting = setting->next())
-		if (input_condition_true(field->machine(), &setting->condition))
+		if (input_condition_true(field->machine(), &setting->condition, field->port().owner()))
 			if (setting->value == field->state->value)
 				break;
 
 	/* if we found one, scan forward for the next valid one */
 	if (setting != NULL)
 		for (nextsetting = setting->next(); nextsetting != NULL; nextsetting = nextsetting->next())
-			if (input_condition_true(field->machine(), &nextsetting->condition))
+			if (input_condition_true(field->machine(), &nextsetting->condition, field->port().owner()))
 				break;
 
 	/* if we hit the end, search from the beginning */
 	if (nextsetting == NULL)
 		for (nextsetting = field->settinglist().first(); nextsetting != NULL; nextsetting = nextsetting->next())
-			if (input_condition_true(field->machine(), &nextsetting->condition))
+			if (input_condition_true(field->machine(), &nextsetting->condition, field->port().owner()))
 				break;
 
 	/* update the value to the previous one */
@@ -1663,7 +1662,7 @@ input_port_value input_port_read_direct(const input_port_config *port)
 
 	/* update read values */
 	for (device_field = port->state->readdevicelist; device_field != NULL; device_field = device_field->next)
-		if (input_condition_true(port->machine(), &device_field->field->condition))
+		if (input_condition_true(port->machine(), &device_field->field->condition, port->owner()))
 		{
 			/* replace the bits with bits from the device */
 			input_port_value newval = device_field->field->read(*device_field->field, device_field->field->read_param);
@@ -1685,7 +1684,7 @@ input_port_value input_port_read_direct(const input_port_config *port)
 
 	/* merge in analog portions */
 	for (analog = port->state->analoglist; analog != NULL; analog = analog->next)
-		if (input_condition_true(port->machine(), &analog->field->condition))
+		if (input_condition_true(port->machine(), &analog->field->condition, port->owner()))
 		{
 			/* start with the raw value */
 			INT32 value = analog->accum;
@@ -1774,7 +1773,7 @@ int input_port_get_crosshair_position(running_machine &machine, int player, floa
 	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
 		for (field = port->first_field(); field != NULL; field = field->next())
 			if (field->player == player && field->crossaxis != CROSSHAIR_AXIS_NONE)
-				if (input_condition_true(machine, &field->condition))
+				if (input_condition_true(machine, &field->condition, port->owner()))
 				{
 					analog_field_state *analog = field->state->analog;
 					INT32 rawvalue = apply_analog_settings(analog->accum, analog) & (analog->field->mask >> analog->shift);
@@ -1850,7 +1849,7 @@ void input_port_update_defaults(running_machine &machine)
 
 			/* first compute the default value for the entire port */
 			for (field = port->first_field(); field != NULL; field = field->next())
-				if (input_condition_true(machine, &field->condition))
+				if (input_condition_true(machine, &field->condition, port->owner()))
 					port->state->defvalue = (port->state->defvalue & ~field->mask) | (field->state->value & field->mask);
 		}
 	}
@@ -1905,7 +1904,7 @@ void input_port_write_direct(const input_port_config *port, input_port_value dat
 	COMBINE_DATA(&port->state->outputvalue);
 
 	for (device_field = port->state->writedevicelist; device_field; device_field = device_field->next)
-		if (device_field->field->type == IPT_OUTPUT && input_condition_true(port->machine(), &device_field->field->condition))
+		if (device_field->field->type == IPT_OUTPUT && input_condition_true(port->machine(), &device_field->field->condition, port->owner()))
 		{
 			input_port_value newval = ( (port->state->outputvalue ^ device_field->field->defvalue ) & device_field->field->mask) >> device_field->shift;
 
@@ -1957,7 +1956,7 @@ void input_port_write_safe(running_machine &machine, const char *tag, input_port
     if the given condition attached is true
 -------------------------------------------------*/
 
-int input_condition_true(running_machine &machine, const input_condition *condition)
+int input_condition_true(running_machine &machine, const input_condition *condition,device_t &owner)
 {
 	input_port_value condvalue;
 
@@ -1966,7 +1965,9 @@ int input_condition_true(running_machine &machine, const input_condition *condit
 		return TRUE;
 
 	/* otherwise, read the referenced port */
-	condvalue = input_port_read(machine, condition->tag);
+	astring conditiontag;
+	owner.subtag(conditiontag, condition->tag);
+	condvalue = input_port_read(machine, conditiontag.cstr());
 
 	/* based on the condition encoded, determine truth */
 	switch (condition->condition)
@@ -2693,7 +2694,7 @@ g_profiler.start(PROFILER_INPUT);
 
 		/* now loop back and modify based on the inputs */
 		for (field = port->first_field(); field != NULL; field = field->next())
-			if (input_condition_true(port->machine(), &field->condition))
+			if (input_condition_true(port->machine(), &field->condition, port->owner()))
 			{
 #ifdef USE_AUTOFIRE
 #ifdef USE_CUSTOM_BUTTON
@@ -2738,7 +2739,7 @@ g_profiler.start(PROFILER_INPUT);
 		/* call device line write handlers */
 		newvalue = input_port_read_direct(port);
 		for (device_field = port->state->writedevicelist; device_field; device_field = device_field->next)
-			if (device_field->field->type != IPT_OUTPUT && input_condition_true(port->machine(), &device_field->field->condition))
+			if (device_field->field->type != IPT_OUTPUT && input_condition_true(port->machine(), &device_field->field->condition, port->owner()))
 			{
 				input_port_value newval = (newvalue & device_field->field->mask) >> device_field->shift;
 
@@ -5280,8 +5281,6 @@ input_type_entry::input_type_entry(UINT32 _type, ioport_group _group, int _playe
 	  m_next(NULL)
 {
 	defseq[SEQ_TYPE_STANDARD] = seq[SEQ_TYPE_STANDARD] = standard;
-	defseq[SEQ_TYPE_INCREMENT] = seq[SEQ_TYPE_INCREMENT] = input_seq::empty_seq;
-	defseq[SEQ_TYPE_DECREMENT] = seq[SEQ_TYPE_DECREMENT] = input_seq::empty_seq;
 }
 
 input_type_entry::input_type_entry(UINT32 _type, ioport_group _group, int _player, const char *_token, const char *_name, input_seq standard, input_seq decrement, input_seq increment)

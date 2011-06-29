@@ -69,6 +69,7 @@
 #include "hash.h"
 #include "fileio.h" // remove me once NVRAM is implemented as device
 #include "delegate.h"
+#include "cothread.h"
 
 // memory and address spaces
 #include "memory.h"
