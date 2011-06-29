@@ -694,6 +694,10 @@ SOFTFLOAT = $(OBJ)/libsoftfloat.a
 # add formats emulation library
 FORMATS_LIB = $(OBJ)/libformats.a
 
+# add cothread library
+COTHREAD = $(OBJ)/libco.a
+
+
 
 #-------------------------------------------------
 # 'default' target needs to go here, before the 
