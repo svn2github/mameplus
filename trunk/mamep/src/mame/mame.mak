@@ -396,6 +396,7 @@ $(MAMEOBJ)/amiga.a: \
 
 $(MAMEOBJ)/aristocr.a: \
 	$(DRIVERS)/aristmk4.o \
+	$(DRIVERS)/aristmk6.o \
 	$(DRIVERS)/caswin.o \
 
 $(MAMEOBJ)/ascii.a: \
@@ -1202,7 +1203,7 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/segaybd.o $(VIDEO)/segaybd.o \
 	$(DRIVERS)/sg1000a.o \
 	$(DRIVERS)/stactics.o $(VIDEO)/stactics.o \
-	$(DRIVERS)/saturn.o $(DRIVERS)/stvinit.o $(MACHINE)/smpc.o $(MACHINE)/stvprot.o $(MACHINE)/stvcd.o $(VIDEO)/stvvdp1.o $(VIDEO)/stvvdp2.o \
+	$(DRIVERS)/saturn.o $(DRIVERS)/stvinit.o $(MACHINE)/stvprot.o $(MACHINE)/stvcd.o $(MACHINE)/smpc.o $(VIDEO)/stvvdp1.o $(VIDEO)/stvvdp2.o \
 	$(DRIVERS)/suprloco.o $(VIDEO)/suprloco.o \
 	$(DRIVERS)/system1.o $(VIDEO)/system1.o \
 	$(DRIVERS)/system16.o $(VIDEO)/system16.o \
@@ -1789,6 +1790,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/statriv2.o \
 	$(DRIVERS)/supertnk.o \
 	$(DRIVERS)/superwng.o \
+	$(DRIVERS)/tapatune.o \
 	$(DRIVERS)/tattack.o \
 	$(DRIVERS)/taxidrvr.o $(VIDEO)/taxidrvr.o \
 	$(DRIVERS)/tcl.o \
@@ -1944,7 +1946,9 @@ $(DRIVERS)/mpoker.o:	$(LAYOUT)/mpoker.lh
 $(DRIVERS)/mpu4.o:	$(LAYOUT)/mpu4.lh \
 			$(LAYOUT)/connect4.lh \
 			$(LAYOUT)/mpu4ext.lh \
-			$(LAYOUT)/gamball.lh
+			$(LAYOUT)/gamball.lh \
+			$(LAYOUT)/crmaze2p.lh \
+			$(LAYOUT)/crmaze4p.lh
 
 $(DRIVERS)/mw18w.o:	$(LAYOUT)/18w.lh
 
@@ -2073,8 +2077,6 @@ $(DRIVERS)/warpwarp.o:	$(LAYOUT)/geebee.lh \
 $(DRIVERS)/wecleman.o:	$(LAYOUT)/wecleman.lh
 
 $(DRIVERS)/zac2650.o:	$(LAYOUT)/tinv2650.lh
-
-$(MAMEOBJ)/mamedriv.o:	$(LAYOUT)/pinball.lh
 
 #-------------------------------------------------
 # misc dependencies

@@ -77,13 +77,14 @@ machine_config::machine_config(const game_driver &gamedrv, emu_options &options)
 			device_t &owner = slot->device();
 			const char *selval = options.value(owner.tag());
 			if (!options.exists(owner.tag()))
-				selval = slot->get_default_card();
+				selval = slot->get_default_card(options);
 
 			if (selval != NULL)
 				for (int i = 0; intf[i].name != NULL; i++)
 					if (strcmp(selval, intf[i].name) == 0) {
 						device_t *new_dev = device_add(&owner, intf[i].name, intf[i].devtype, 0);
-						device_t::static_set_input_default(*new_dev, slot->input_ports_defaults());
+						if (!options.exists(owner.tag()))
+							device_t::static_set_input_default(*new_dev, slot->input_ports_defaults());
 					}
 		}
 	}

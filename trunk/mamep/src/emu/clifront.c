@@ -238,10 +238,9 @@ int cli_frontend::execute(int argc, char **argv)
 														// mount only if not already mounted
 														if (strlen(option)==0) {
 															astring val;
-															astring error;
 															val.printf("%s:%s",m_options.software_name(),swpart->name);
-															m_options.set_value(image->brief_instance_name(), val.cstr(), OPTION_PRIORITY_CMDLINE, error);
-															assert(!error);														
+															// call this in order to set slot devices according to mounting
+															m_options.parse_slot_devices(argc, argv, option_errors, image->instance_name(), val.cstr());
 														}
 														break;
 													}
@@ -669,8 +668,8 @@ void cli_frontend::listslots(const char *gamename)
 		{
 			// output the line, up to the list of extensions
 			printf("%-13s%-20s   ", first ? drivlist.driver().name : "", slot->device().tag());
-
-			// get the options and print them
+			
+			// get the options and print them		
 			const slot_interface* intf = slot->get_slot_interfaces();
 			for (int i = 0; intf[i].name != NULL; i++)
 			{
@@ -1391,13 +1390,13 @@ void cli_frontend::execute_commands(const char *exename)
 		{ CLICOMMAND_LISTBROTHERS,	&cli_frontend::listbrothers },
 		{ CLICOMMAND_LISTCRC,		&cli_frontend::listcrc },
 		{ CLICOMMAND_LISTDEVICES,	&cli_frontend::listdevices },
-		{ CLICOMMAND_LISTSLOTS,	    &cli_frontend::listslots },
+		{ CLICOMMAND_LISTSLOTS,		&cli_frontend::listslots },
 		{ CLICOMMAND_LISTROMS,		&cli_frontend::listroms },
 		{ CLICOMMAND_LISTSAMPLES,	&cli_frontend::listsamples },
 		{ CLICOMMAND_VERIFYROMS,	&cli_frontend::verifyroms },
 		{ CLICOMMAND_VERIFYSAMPLES,	&cli_frontend::verifysamples },
 		{ CLICOMMAND_LISTMEDIA,		&cli_frontend::listmedia },
-		{ CLICOMMAND_LISTSOFTWARE,  &cli_frontend::listsoftware },
+		{ CLICOMMAND_LISTSOFTWARE,	&cli_frontend::listsoftware },
 		{ CLICOMMAND_ROMIDENT,		&cli_frontend::romident },
 		{ CLICOMMAND_LISTGAMES,		&cli_frontend::listgames }		// for make tp_manufact.txt
 	};

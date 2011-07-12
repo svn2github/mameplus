@@ -3099,7 +3099,6 @@ UINT32 port_default_value(const char *fulltag, UINT32 mask, UINT32 defval, devic
 }
 
 
-
 /*-------------------------------------------------
     input_port_config - constructor for an
     I/O port configuration object

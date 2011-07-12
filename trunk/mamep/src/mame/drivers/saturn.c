@@ -511,8 +511,8 @@ static void scu_do_transfer(running_machine &machine,UINT8 event)
 	{
 		if(state->m_scu.enable_mask[i] && state->m_scu.start_factor[i] == event)
 		{
-			if(DIRECT_MODE(i)) 		{ scu_dma_direct(space,i);   }
-			else			   	    { scu_dma_indirect(space,i); }
+			if(DIRECT_MODE(i))		{ scu_dma_direct(space,i);   }
+			else				    { scu_dma_indirect(space,i); }
 		}
 	}
 }
@@ -606,7 +606,7 @@ static WRITE32_HANDLER( saturn_scu_w )
 		if(state->m_scu.enable_mask[DMA_CH] && state->m_scu.start_factor[DMA_CH] == 7 && state->m_scu_regs[offset] & 1)
 		{
 			if(DIRECT_MODE(DMA_CH)) { scu_dma_direct(space,DMA_CH);   }
-			else			   	    { scu_dma_indirect(space,DMA_CH); }
+			else				    { scu_dma_indirect(space,DMA_CH); }
 			state->m_scu_regs[offset]&=~1;//disable starting bit.
 		}
 		break;
@@ -1966,7 +1966,6 @@ static MACHINE_RESET( saturn )
 
 	machine.device("maincpu")->set_unscaled_clock(MASTER_CLOCK_320/2);
 	machine.device("slave")->set_unscaled_clock(MASTER_CLOCK_320/2);
-	machine.device("audiocpu")->set_unscaled_clock(MASTER_CLOCK_320/5);
 
 	stvcd_reset( machine );
 
@@ -2017,7 +2016,6 @@ static MACHINE_RESET( stv )
 
 	machine.device("maincpu")->set_unscaled_clock(MASTER_CLOCK_320/2);
 	machine.device("slave")->set_unscaled_clock(MASTER_CLOCK_320/2);
-	machine.device("audiocpu")->set_unscaled_clock(MASTER_CLOCK_320/5);
 
 	stvcd_reset(machine);
 
@@ -3289,6 +3287,8 @@ ROM_START( sfish2 )
 
 	DISK_REGION( "cdrom" )
 	DISK_IMAGE( "sfish2", 0, SHA1(a10073d83bbbe16e16f69ad48565821576557d61) )
+
+	ROM_REGION32_BE( 0x3000000, "abus", ROMREGION_ERASE00 ) /* SH2 code */ \
 ROM_END
 
 ROM_START( sfish2j )
@@ -3307,6 +3307,8 @@ ROM_START( sfish2j )
 
 	DISK_REGION( "cdrom" )
 	DISK_IMAGE( "sfish2", 0, SHA1(a10073d83bbbe16e16f69ad48565821576557d61) )
+
+	ROM_REGION32_BE( 0x3000000, "abus", ROMREGION_ERASE00 ) /* SH2 code */ \
 ROM_END
 
 

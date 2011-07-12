@@ -124,7 +124,7 @@ INLINE floppy_drive *get_safe_token(device_t *device)
 {
 	assert( device != NULL );
 #if 0 //mamep:link error by debug build
-	assert( device->type() == FLOPPY || device->type() == FLOPPY_APPLE || device->type() == FLOPPY_SONY);
+	assert( device->type() == LEGACY_FLOPPY || device->type() == FLOPPY_APPLE || device->type() == FLOPPY_SONY);
 #endif
 	return (floppy_drive *) downcast<legacy_device_base *>(device)->token();
 }
@@ -1071,4 +1071,4 @@ DEVICE_GET_INFO(floppy)
 	}
 }
 
-DEFINE_LEGACY_IMAGE_DEVICE(FLOPPY, floppy);
+DEFINE_LEGACY_IMAGE_DEVICE(LEGACY_FLOPPY, floppy);

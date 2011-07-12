@@ -161,6 +161,7 @@ struct _romload_private
 
 	running_machine *m_machine;			/* machine object where needed */
 	int				system_bios;		/* the system BIOS we wish to load */
+	int				default_bios;		/* the default system BIOS */
 
 	int				warnings;			/* warning count during processing */
 	int				knownbad;			/* BAD_DUMP/NO_DUMP count during processing */
@@ -319,6 +320,11 @@ int rom_load_warnings(running_machine &machine);
 /* return the number of BAD_DUMP/NO_DUMP warnings we generated */
 int rom_load_knownbad(running_machine &machine);
 
+/* return id of selected bios */
+int rom_system_bios(running_machine &machine);
+
+/* return id of default bios */
+int rom_default_bios(running_machine &machine);
 
 /* ----- Helpers ----- */
 
