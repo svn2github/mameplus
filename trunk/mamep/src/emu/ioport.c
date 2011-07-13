@@ -1137,10 +1137,8 @@ void input_port_list_init(device_t &device, ioport_list &portlist, astring &erro
 
 static void input_port_list_custom(device_t &device, ioport_list &portlist, astring &errorbuf)
 {
-	const input_port_config *port;
-	const input_field_config *field;
+	input_field_config *field;
 	int nplayer = 0;
-
 
 	/* no constructor, no list */
 	ioport_constructor constructor = device.input_ports();
@@ -1153,13 +1151,16 @@ static void input_port_list_custom(device_t &device, ioport_list &portlist, astr
 	/* detokenize into the list */
 	(*constructor)(device, portlist, errorbuf);
 
-	// calc total players
-	for (port = portlist.first(); port != NULL; port = port->next())
+	// collapse fields and sort the list 
+	for (input_port_config *port = portlist.first(); port != NULL; port = port->next())
+	{
 		for (field = port->first_field(); field != NULL; field = field->next())
 		{
 			if (nplayer < field->player+1)
 				nplayer = field->player+1;
 		}
+		port->collapse_fields(errorbuf);
+	}
 
 	// mamep: append custom ports if needed
 	if (nplayer > 0)
