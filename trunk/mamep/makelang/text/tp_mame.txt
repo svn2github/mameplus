@@ -5773,4 +5773,20 @@ writes configuration to (driver).ini on exit
 # emu/clifront.c: 106
 year, manufacturer and full name
 
+# osd/windows/input.c: 842
+Take Rendered Snapshot
 
+# osd/windows/input.c: 849
+Record Rendered Video
+
+# emu/inpttype.h: 679
+Keypad
+
+# mame/drivers/pgm.c: 1198
+Music
+
+# emu/uimenu.c: 3425
+CPanels
+
+# emu/uimenu.c: 3429
+Marquees

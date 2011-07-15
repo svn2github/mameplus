@@ -1033,9 +1033,10 @@ void ui_draw_text_full(render_container *container, const char *origs, float x, 
 		{
 			cury += lineheight;
 
-			//mamep: skip overflow text
-			if (draw != DRAW_NONE && curline == multiline_text_box_visible_lines - 1)
-				break;
+			//mamep: skip overflow text  
+			//there's a bug when viewing the game information and bookkeeping,so we have to commet it
+ 			/*if (draw != DRAW_NONE && curline == multiline_text_box_visible_lines - 1)
+				break; */
 
 			//mamep: controll scrolling text
 			if (draw_text_scroll_offset == 0)

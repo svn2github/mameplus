@@ -3422,11 +3422,11 @@ static void menu_video_options_populate(running_machine &machine, ui_menu *menu,
 
 	/* cpanel item */
 	enabled = target->cpanels_enabled();
-	ui_menu_item_append(menu, "CPanels", enabled ? "Enabled" : "Disabled", enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_CPANELS);
+	ui_menu_item_append(menu, _("CPanels"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_CPANELS);
 
 	/* marquee item */
 	enabled = target->marquees_enabled();
-	ui_menu_item_append(menu, "Marquees", enabled ? "Enabled" : "Disabled", enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_MARQUEES);
+	ui_menu_item_append(menu, _("Marquees"), enabled ? _("Enabled") : _("Disabled"), enabled ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_MARQUEES);
 
 	/* cropping */
 	enabled = target->zoom_to_screen();

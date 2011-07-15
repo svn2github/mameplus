@@ -694,6 +694,9 @@ void construct_core_types(simple_list<input_type_entry> &typelist)
 	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_SNAPSHOT,         "Save Snapshot",          input_seq(KEYCODE_F12, input_seq::not_code, KEYCODE_LSHIFT) )
 	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_RECORD_MOVIE,     "Record Movie",           input_seq(KEYCODE_F12, KEYCODE_LSHIFT) )
 	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_TOGGLE_CHEAT,     "Toggle Cheat",           input_seq(KEYCODE_F6) )
+#ifdef USE_SHOW_INPUT_LOG
+	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_SHOW_INPUT_LOG,   "Show Button Input",      input_seq(KEYCODE_F1, KEYCODE_LSHIFT) )
+#endif /* USE_SHOW_INPUT_LOG */
 	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_UP,               "UI Up",                  input_seq(KEYCODE_UP, input_seq::or_code, JOYCODE_Y_UP_SWITCH_INDEXED(0)) )
 	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_DOWN,             "UI Down",                input_seq(KEYCODE_DOWN, input_seq::or_code, JOYCODE_Y_DOWN_SWITCH_INDEXED(0)) )
 	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_LEFT,             "UI Left",                input_seq(KEYCODE_LEFT, input_seq::or_code, JOYCODE_X_LEFT_SWITCH_INDEXED(0)) )
