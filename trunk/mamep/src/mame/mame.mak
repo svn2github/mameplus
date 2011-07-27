@@ -230,6 +230,7 @@ SOUNDS += S2636
 SOUNDS += ASC
 SOUNDS += MAS3507D
 SOUNDS += LMC1992
+SOUNDS += AWACS
 
 
 #-------------------------------------------------
@@ -507,6 +508,7 @@ $(MAMEOBJ)/atlus.a: \
 $(MAMEOBJ)/barcrest.a: \
 	$(DRIVERS)/mpu3.o \
 	$(DRIVERS)/mpu4.o \
+	$(DRIVERS)/mpu4vid.o \
 	$(DRIVERS)/mpu5.o \
 	$(VIDEO)/awpvid.o \
 	$(MACHINE)/meters.o \
@@ -804,6 +806,8 @@ $(MAMEOBJ)/jaleco.a: \
 $(MAMEOBJ)/jpm.a: \
 	$(DRIVERS)/guab.o \
 	$(DRIVERS)/jpmsys5.o \
+	$(DRIVERS)/jpmmps.o \
+	$(DRIVERS)/jpms80.o \
 	$(DRIVERS)/jpmimpct.o $(VIDEO)/jpmimpct.o \
 
 $(MAMEOBJ)/kaneko.a: \
@@ -915,6 +919,7 @@ $(MAMEOBJ)/konami.a: \
 $(MAMEOBJ)/maygay.a: \
 	$(DRIVERS)/maygay1b.o \
 	$(DRIVERS)/maygayv1.o \
+	$(DRIVERS)/maygayep.o \
 
 $(MAMEOBJ)/meadows.a: \
 	$(DRIVERS)/lazercmd.o $(VIDEO)/lazercmd.o \
@@ -1651,6 +1656,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/buster.o \
 	$(DRIVERS)/calomega.o $(VIDEO)/calomega.o \
 	$(DRIVERS)/carrera.o \
+	$(DRIVERS)/castle.o \
 	$(DRIVERS)/cave.o $(VIDEO)/cave.o \
 	$(DRIVERS)/cavesh3.o \
 	$(DRIVERS)/cb2001.o \
@@ -1823,7 +1829,8 @@ $(MAMEOBJ)/misc.a: \
 #-------------------------------------------------
 
 $(DRIVERS)/8080bw.o:	$(LAYOUT)/invrvnge.lh \
-			$(LAYOUT)/shuttlei.lh
+			$(LAYOUT)/shuttlei.lh \
+			$(LAYOUT)/cosmicm.lh
 
 $(DRIVERS)/acefruit.o:	$(LAYOUT)/sidewndr.lh
 
@@ -1902,6 +1909,8 @@ $(DRIVERS)/corona.o:	$(LAYOUT)/re800.lh \
 
 $(DRIVERS)/darius.o:	$(LAYOUT)/darius.lh
 
+$(DRIVERS)/destroyr.o:	$(LAYOUT)/destroyr.lh
+
 $(DRIVERS)/dlair.o:	$(LAYOUT)/dlair.lh
 
 $(DRIVERS)/firebeat.o:	$(LAYOUT)/firebeat.lh
@@ -1946,8 +1955,9 @@ $(DRIVERS)/mpoker.o:	$(LAYOUT)/mpoker.lh
 $(DRIVERS)/mpu4.o:	$(LAYOUT)/mpu4.lh \
 			$(LAYOUT)/connect4.lh \
 			$(LAYOUT)/mpu4ext.lh \
-			$(LAYOUT)/gamball.lh \
-			$(LAYOUT)/crmaze2p.lh \
+            $(LAYOUT)/gamball.lh
+
+$(DRIVERS)/mpu4vid.o:	$(LAYOUT)/crmaze2p.lh \
 			$(LAYOUT)/crmaze4p.lh
 
 $(DRIVERS)/mw18w.o:	$(LAYOUT)/18w.lh
@@ -2083,7 +2093,6 @@ $(DRIVERS)/zac2650.o:	$(LAYOUT)/tinv2650.lh
 #-------------------------------------------------
 
 $(DRIVERS)/galaxian.o:	$(MAMESRC)/drivers/galdrvr.c
-$(DRIVERS)/mpu4.o:	$(MAMESRC)/drivers/mpu4drvr.c
 $(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neodrvr.c
 $(MACHINE)/snes.o:  	$(MAMESRC)/machine/snesobc1.c \
 			$(MAMESRC)/machine/snescx4.c \

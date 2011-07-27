@@ -115,7 +115,7 @@ also has a DSP;
 
 /* TODO: do this in a verboselog style */
 #define LOG_CDB  0
-#define LOG_SCU  0
+#define LOG_SCU  1
 #define LOG_IRQ  0
 #define LOG_IOGA 0
 
@@ -136,48 +136,9 @@ static int DectoBCD(int num)
 	return res;
 }
 
-
-/**************************************************************************************/
-/*to be added into a stv Header file,remember to remove all the static...*/
-
-//static void stv_dump_ram(void);
-
-/*VDP2 stuff*/
-/*SMPC stuff*/
-/*SCU stuff*/
-
 static void scu_do_transfer(running_machine &machine,UINT8 event);
 static void scu_dma_direct(address_space *space, UINT8 dma_ch);	/*DMA level 0 direct transfer function*/
 static void scu_dma_indirect(address_space *space, UINT8 dma_ch); /*DMA level 0 indirect transfer function*/
-
-
-
-//static int scanline;
-
-/*A-Bus IRQ checks,where they could be located these?*/
-#define ABUSIRQ(_irq_,_vector_) \
-	{ cputag_set_input_line_and_vector(device->machine(), "maincpu", _irq_, HOLD_LINE , _vector_); }
-#if 0
-if(state->m_scu_regs[42] & 1)//IRQ ACK
-{
-	ABUSIRQ(7,0x50,0x00010000);
-	ABUSIRQ(7,0x51,0x00020000);
-	ABUSIRQ(7,0x52,0x00040000);
-	ABUSIRQ(7,0x53,0x00080000);
-	ABUSIRQ(4,0x54,0x00100000);
-	ABUSIRQ(4,0x55,0x00200000);
-	ABUSIRQ(4,0x56,0x00400000);
-	ABUSIRQ(4,0x57,0x00800000);
-	ABUSIRQ(1,0x58,0x01000000);
-	ABUSIRQ(1,0x59,0x02000000);
-	ABUSIRQ(1,0x5a,0x04000000);
-	ABUSIRQ(1,0x5b,0x08000000);
-	ABUSIRQ(1,0x5c,0x10000000);
-	ABUSIRQ(1,0x5d,0x20000000);
-	ABUSIRQ(1,0x5e,0x40000000);
-	ABUSIRQ(1,0x5f,0x80000000);
-}
-#endif
 
 /**************************************************************************************/
 
@@ -517,58 +478,69 @@ static void scu_do_transfer(running_machine &machine,UINT8 event)
 	}
 }
 
+/* test pending irqs */
+static void scu_test_pending_irq(running_machine &machine)
+{
+	saturn_state *state = machine.driver_data<saturn_state>();
+	int i;
+	const int irq_level[32] = { 0x1, 0x1, 0x1, 0x1,
+								0x1, 0x1, 0x1, 0x1,
+								0x4, 0x4, 0x4, 0x4,
+								0x7, 0x7, 0x7, 0x7,
+								 -1,  -1, 0x2, 0x3,
+								0x5, 0x6, 0x6, 0x8,
+								0x8, 0x9, 0xa, 0xb,
+								0xc, 0xd, 0xe, 0xf };
+
+	for(i=0;i<31;i++)
+	{
+		if((!(state->m_scu.ism & 1 << i)) && (state->m_scu.ist & 1 << i))
+		{
+			if(irq_level[i] != -1) /* TODO: cheap check for undefined irqs */
+				device_set_input_line_and_vector(state->m_maincpu, irq_level[i], HOLD_LINE, 0x40 + i);
+			state->m_scu.ist &= ~(1 << i);
+		}
+	}
+}
+
 static READ32_HANDLER( saturn_scu_r )
 {
 	saturn_state *state = space->machine().driver_data<saturn_state>();
+	UINT32 res;
 
 	/*TODO: write only registers must return 0...*/
-	//popmessage("%02x",DMA_STATUS);
-	//if (offset == 23)
-	//{
-		//Super Major League reads here???
-	//}
-	if (offset == 31)
+	switch(offset)
 	{
-		if(LOG_SCU) logerror("(PC=%08x) DMA status reg read\n",cpu_get_pc(&space->device()));
-		return state->m_scu_regs[offset];
+		//case 0x5c/4:
+		//	Super Major League reads here???
+		//	break;
+	 	case 0x7c/4:
+			if(LOG_SCU) logerror("(PC=%08x) DMA status reg read\n",cpu_get_pc(&space->device()));
+			res = state->m_scu_regs[offset];
+			break;
+		case 0x8c/4:
+			if(LOG_SCU) logerror( "DSP mem read at %08X\n", state->m_scu_regs[34]);
+        	res = dsp_ram_addr_r();
+        	break;
+        case 0xa0/4:
+    		if(LOG_SCU) logerror("(PC=%08x) IRQ mask reg read %08x MASK=%08x\n",cpu_get_pc(&space->device()),mem_mask,state->m_scu_regs[0xa0/4]);
+    		res = state->m_scu.ism;
+    		break;
+    	case 0xa4/4:
+    		if(LOG_SCU) logerror("(PC=%08x) IRQ status reg read %08x MASK=%08x\n",cpu_get_pc(&space->device()),mem_mask,state->m_scu_regs[0xa0/4]);
+			res = state->m_scu.ist;
+			break;
+		case 0xc8/4:
+			logerror("(PC=%08x) SCU version reg read\n",cpu_get_pc(&space->device()));
+			res = 0x00000004;/*SCU Version 4, OK?*/
+			break;
+		default:
+	    	if(LOG_SCU) logerror("(PC=%08x) SCU reg read at %d = %08x\n",cpu_get_pc(&space->device()),offset,state->m_scu_regs[offset]);
+	    	res = state->m_scu_regs[offset];
+			break;
 	}
-	else if ( offset == 35 )
-	{
-        if(LOG_SCU) logerror( "DSP mem read at %08X\n", state->m_scu_regs[34]);
-        return dsp_ram_addr_r();
-    }
-    else if( offset == 41) /*IRQ reg status read*/
-    {
-		if(LOG_SCU) logerror("(PC=%08x) IRQ status reg read %08x\n",cpu_get_pc(&space->device()),mem_mask);
 
-		state->m_scu_regs[41] = (state->m_scu_irq.vblank_in & 1)<<0;
-		state->m_scu_regs[41]|= (state->m_scu_irq.vblank_out & 1)<<1;
-		state->m_scu_regs[41]|= (state->m_scu_irq.hblank_in & 1)<<2;
-		state->m_scu_regs[41]|= (state->m_scu_irq.timer_0 & 1)<<3;
-		state->m_scu_regs[41]|= (state->m_scu_irq.timer_1 & 1)<<4;
-		state->m_scu_regs[41]|= (state->m_scu_irq.dsp_end & 1)<<5;
-		state->m_scu_regs[41]|= (state->m_scu_irq.sound_req & 1)<<6;
-		state->m_scu_regs[41]|= (state->m_scu_irq.smpc & 1)<<7;
-		state->m_scu_regs[41]|= (state->m_scu_irq.pad & 1)<<8;
-		state->m_scu_regs[41]|= (state->m_scu_irq.dma_end[0] & 1)<<9;
-		state->m_scu_regs[41]|= (state->m_scu_irq.dma_end[1] & 1)<<10;
-		state->m_scu_regs[41]|= (state->m_scu_irq.dma_end[2] & 1)<<11;
-		state->m_scu_regs[41]|= (state->m_scu_irq.dma_ill & 1)<<12;
-		state->m_scu_regs[41]|= (state->m_scu_irq.vdp1_end & 1)<<13;
-		state->m_scu_regs[41]|= (state->m_scu_irq.abus & 1)<<15;
-
-		return state->m_scu_regs[41] ^ 0xffffffff; //TODO: this is WRONG (Choice Cuts is a good test case)
-	}
-	else if( offset == 50 )
-	{
-		logerror("(PC=%08x) SCU version reg read\n",cpu_get_pc(&space->device()));
-		return 0x00000000;/*SCU Version 0*/
-	}
-    else
-    {
-    	if(LOG_SCU) logerror("(PC=%08x) SCU reg read at %d = %08x\n",cpu_get_pc(&space->device()),offset,state->m_scu_regs[offset]);
-    	return state->m_scu_regs[offset];
-	}
+	return res;
 }
 
 #define DMA_CH ((offset & 0x18) / 8)
@@ -582,140 +554,76 @@ static WRITE32_HANDLER( saturn_scu_w )
 	switch(offset)
 	{
 		/*LV 0 DMA*/
-		case 0:	case 8: case 16:  state->m_scu.src[DMA_CH]  = ((state->m_scu_regs[offset] & 0x07ffffff) >> 0); break;
-		case 1:	case 9: case 17:  state->m_scu.dst[DMA_CH]  = ((state->m_scu_regs[offset] & 0x07ffffff) >> 0); break;
-		case 2: case 10: case 18: state->m_scu.size[DMA_CH] = ((state->m_scu_regs[offset] & ((offset == 2) ? 0x000fffff : 0x1fff)) >> 0); break;
-		case 3: case 11: case 19:
+		case 0x00/4: case 0x20/4: case 0x40/4:  state->m_scu.src[DMA_CH]  = ((state->m_scu_regs[offset] & 0x07ffffff) >> 0); break;
+		case 0x04/4: case 0x24/4: case 0x44/4:  state->m_scu.dst[DMA_CH]  = ((state->m_scu_regs[offset] & 0x07ffffff) >> 0); break;
+		case 0x08/4: case 0x28/4: case 0x48/4:  state->m_scu.size[DMA_CH] = ((state->m_scu_regs[offset] & ((offset == 2) ? 0x000fffff : 0x1fff)) >> 0); break;
+		case 0x0c/4: case 0x2c/4: case 0x4c/4:
 			/*Read address add value for DMA lv 0*/
-			state->m_scu.src_add[DMA_CH] = (state->m_scu_regs[offset] & 0x100) ? 4 : 1;
+			state->m_scu.src_add[DMA_CH] = (state->m_scu_regs[offset] & 0x100) ? 4 : 0;
 
 			/*Write address add value for DMA lv 0*/
 			state->m_scu.dst_add[DMA_CH] = 2 << (state->m_scu_regs[offset] & 7);
 			break;
-		case 4: case 12: case 20:
-/*
--state->m_scu_regs[4] bit 0 is DMA starting bit.
-    Used when the start factor is 7.Toggle after execution.
--state->m_scu_regs[4] bit 8 is DMA Enable bit.
-    This is an execution mask flag.
--state->m_scu_regs[5] bit 0,bit 1 and bit 2 is DMA starting factor.
-    It must be 7 for this specific condition.
--state->m_scu_regs[5] bit 24 is Indirect Mode/Direct Mode (0/1).
-*/
-		state->m_scu.enable_mask[DMA_CH] = (data & 0x100) >> 8;
-		if(state->m_scu.enable_mask[DMA_CH] && state->m_scu.start_factor[DMA_CH] == 7 && state->m_scu_regs[offset] & 1)
-		{
-			if(DIRECT_MODE(DMA_CH)) { scu_dma_direct(space,DMA_CH);   }
-			else				    { scu_dma_indirect(space,DMA_CH); }
-			state->m_scu_regs[offset]&=~1;//disable starting bit.
-		}
-		break;
-		case 5: case 13: case 21:
-		if(INDIRECT_MODE(DMA_CH))
-		{
-			if(LOG_SCU) logerror("Indirect Mode DMA lv %d set\n",DMA_CH);
-			if(!DWUP(DMA_CH)) state->m_scu.index[DMA_CH] = state->m_scu.dst[DMA_CH];
-		}
+		case 0x10/4: case 0x30/4: case 0x50/4:
+			state->m_scu.enable_mask[DMA_CH] = (data & 0x100) >> 8;
+			if(state->m_scu.enable_mask[DMA_CH] && state->m_scu.start_factor[DMA_CH] == 7 && state->m_scu_regs[offset] & 1)
+			{
+				if(DIRECT_MODE(DMA_CH)) { scu_dma_direct(space,DMA_CH);   }
+				else				    { scu_dma_indirect(space,DMA_CH); }
+				state->m_scu_regs[offset]&=~1;//disable starting bit.
+			}
+			break;
+		case 0x14/4: case 0x34/4: case 0x54/4:
+			if(INDIRECT_MODE(DMA_CH))
+			{
+				//if(LOG_SCU) logerror("Indirect Mode DMA lv %d set\n",DMA_CH);
+				if(!DWUP(DMA_CH)) state->m_scu.index[DMA_CH] = state->m_scu.dst[DMA_CH];
+			}
 
-		/*Start factor enable bits,bit 2,bit 1 and bit 0*/
-		state->m_scu.start_factor[DMA_CH] = state->m_scu_regs[offset] & 7;
-		break;
+			/*Start factor enable bits,bit 2,bit 1 and bit 0*/
+			state->m_scu.start_factor[DMA_CH] = state->m_scu_regs[offset] & 7;
+			break;
 
-		case 24:
-		if(LOG_SCU) logerror("DMA Forced Stop Register set = %02x\n",state->m_scu_regs[24]);
-		break;
-		case 31: if(LOG_SCU) logerror("Warning: DMA status WRITE! Offset %02x(%d)\n",offset*4,offset); break;
+		case 0x60/4:
+			if(LOG_SCU) logerror("DMA Forced Stop Register set = %02x\n",state->m_scu_regs[24]);
+			break;
+		case 0x7c/4: if(LOG_SCU) logerror("Warning: DMA status WRITE! Offset %02x(%d)\n",offset*4,offset); break;
 		/*DSP section*/
 		/*Use functions so it is easier to work out*/
-		case 32:
-		dsp_prg_ctrl(space, data);
-		if(LOG_SCU) logerror("SCU DSP: Program Control Port Access %08x\n",data);
-		break;
-		case 33:
-		dsp_prg_data(data);
-		if(LOG_SCU) logerror("SCU DSP: Program RAM Data Port Access %08x\n",data);
-		break;
-		case 34:
-		dsp_ram_addr_ctrl(data);
-		if(LOG_SCU) logerror("SCU DSP: Data RAM Address Port Access %08x\n",data);
-		break;
-		case 35:
-		dsp_ram_addr_w(data);
-		if(LOG_SCU) logerror("SCU DSP: Data RAM Data Port Access %08x\n",data);
-		break;
-		case 36: if(LOG_SCU) logerror("timer 0 compare data = %03x\n",state->m_scu_regs[36]);break;
-		case 37: if(LOG_SCU) logerror("timer 1 set data = %08x\n",state->m_scu_regs[37]); break;
-		case 38: if(LOG_SCU) logerror("timer 1 mode data = %08x\n",state->m_scu_regs[38]); break;
-		case 40:
+		case 0x80/4:
+			dsp_prg_ctrl(space, data);
+			if(LOG_SCU) logerror("SCU DSP: Program Control Port Access %08x\n",data);
+			break;
+		case 0x84/4:
+			dsp_prg_data(data);
+			if(LOG_SCU) logerror("SCU DSP: Program RAM Data Port Access %08x\n",data);
+			break;
+		case 0x88/4:
+			dsp_ram_addr_ctrl(data);
+			if(LOG_SCU) logerror("SCU DSP: Data RAM Address Port Access %08x\n",data);
+			break;
+		case 0x8c/4:
+			dsp_ram_addr_w(data);
+			if(LOG_SCU) logerror("SCU DSP: Data RAM Data Port Access %08x\n",data);
+			break;
+		case 0x90/4: if(LOG_SCU) logerror("timer 0 compare data = %03x\n",state->m_scu_regs[36]);break;
+		case 0x94/4: if(LOG_SCU) logerror("timer 1 set data = %08x\n",state->m_scu_regs[37]); break;
+		case 0x98/4: if(LOG_SCU) logerror("timer 1 mode data = %08x\n",state->m_scu_regs[38]); break;
+		case 0xa0/4:
 		/*An interrupt is masked when his specific bit is 1.*/
 		/*Are bit 16-bit 31 for External A-Bus irq mask like the status register?*/
 
-		state->m_scu_irq.vblank_in =  (((state->m_scu_regs[40] & 0x0001)>>0) ^ 1);
-		state->m_scu_irq.vblank_out = (((state->m_scu_regs[40] & 0x0002)>>1) ^ 1);
-		state->m_scu_irq.hblank_in =  (((state->m_scu_regs[40] & 0x0004)>>2) ^ 1);
-		state->m_scu_irq.timer_0 =	 (((state->m_scu_regs[40] & 0x0008)>>3) ^ 1);
-		state->m_scu_irq.timer_1 =    (((state->m_scu_regs[40] & 0x0010)>>4) ^ 1);
-		state->m_scu_irq.dsp_end =    (((state->m_scu_regs[40] & 0x0020)>>5) ^ 1);
-		state->m_scu_irq.sound_req =  (((state->m_scu_regs[40] & 0x0040)>>6) ^ 1);
-		state->m_scu_irq.smpc =       (((state->m_scu_regs[40] & 0x0080)>>7) ^ 1); //NOTE: SCU bug
-		state->m_scu_irq.pad =        (((state->m_scu_regs[40] & 0x0100)>>8) ^ 1);
-		state->m_scu_irq.dma_end[2] = (((state->m_scu_regs[40] & 0x0200)>>9) ^ 1);
-		state->m_scu_irq.dma_end[1] = (((state->m_scu_regs[40] & 0x0400)>>10) ^ 1);
-		state->m_scu_irq.dma_end[0] = (((state->m_scu_regs[40] & 0x0800)>>11) ^ 1);
-		state->m_scu_irq.dma_ill =    (((state->m_scu_regs[40] & 0x1000)>>12) ^ 1);
-		state->m_scu_irq.vdp1_end =   (((state->m_scu_regs[40] & 0x2000)>>13) ^ 1);
-		state->m_scu_irq.abus =       (((state->m_scu_regs[40] & 0x8000)>>15) ^ 1);
-
-		/*Take out the common settings to keep logging quiet.*/
-		if(state->m_scu_regs[40] != 0xfffffffe &&
-		   state->m_scu_regs[40] != 0xfffffffc &&
-		   state->m_scu_regs[40] != 0xffffffff)
-		{
-			if(LOG_SCU) logerror("cpu %s (PC=%08X) IRQ mask reg set %08x = %d%d%d%d|%d%d%d%d|%d%d%d%d|%d%d%d%d\n",
-			space->device().tag(), cpu_get_pc(&space->device()),
-			state->m_scu_regs[offset],
-			state->m_scu_regs[offset] & 0x8000 ? 1 : 0, /*A-Bus irq*/
-			state->m_scu_regs[offset] & 0x4000 ? 1 : 0, /*<reserved>*/
-			state->m_scu_regs[offset] & 0x2000 ? 1 : 0, /*Sprite draw end irq(VDP1)*/
-			state->m_scu_regs[offset] & 0x1000 ? 1 : 0, /*Illegal DMA irq*/
-			state->m_scu_regs[offset] & 0x0800 ? 1 : 0, /*Lv 0 DMA end irq*/
-			state->m_scu_regs[offset] & 0x0400 ? 1 : 0, /*Lv 1 DMA end irq*/
-			state->m_scu_regs[offset] & 0x0200 ? 1 : 0, /*Lv 2 DMA end irq*/
-			state->m_scu_regs[offset] & 0x0100 ? 1 : 0, /*PAD irq*/
-			state->m_scu_regs[offset] & 0x0080 ? 1 : 0, /*System Manager(SMPC) irq*/
-			state->m_scu_regs[offset] & 0x0040 ? 1 : 0, /*Snd req*/
-			state->m_scu_regs[offset] & 0x0020 ? 1 : 0, /*DSP irq end*/
-			state->m_scu_regs[offset] & 0x0010 ? 1 : 0, /*Timer 1 irq*/
-			state->m_scu_regs[offset] & 0x0008 ? 1 : 0, /*Timer 0 irq*/
-			state->m_scu_regs[offset] & 0x0004 ? 1 : 0, /*HBlank-IN*/
-			state->m_scu_regs[offset] & 0x0002 ? 1 : 0, /*VBlank-OUT*/
-			state->m_scu_regs[offset] & 0x0001 ? 1 : 0);/*VBlank-IN*/
-		}
+		state->m_scu.ism = state->m_scu_regs[0xa0/4];
+		scu_test_pending_irq(space->machine());
 		break;
 		/*Interrupt Control reg Set*/
-		case 41:
-		/*This is r/w by introdon...*/
-		if(LOG_SCU) logerror("IRQ status reg set:%08x %08x\n",state->m_scu_regs[41],mem_mask);
+		case 0xa4/4:
+		if(LOG_SCU) logerror("PC=%08x IRQ status reg set:%08x %08x\n",cpu_get_pc(&space->device()),state->m_scu_regs[41],mem_mask);
 
-		state->m_scu_irq.vblank_in =  ((state->m_scu_regs[41] & 0x0001)>>0);
-		state->m_scu_irq.vblank_out = ((state->m_scu_regs[41] & 0x0002)>>1);
-		state->m_scu_irq.hblank_in =  ((state->m_scu_regs[41] & 0x0004)>>2);
-		state->m_scu_irq.timer_0 =    ((state->m_scu_regs[41] & 0x0008)>>3);
-		state->m_scu_irq.timer_1 =    ((state->m_scu_regs[41] & 0x0010)>>4);
-		state->m_scu_irq.dsp_end =    ((state->m_scu_regs[41] & 0x0020)>>5);
-		state->m_scu_irq.sound_req =  ((state->m_scu_regs[41] & 0x0040)>>6);
-		state->m_scu_irq.smpc =       ((state->m_scu_regs[41] & 0x0080)>>7);
-		state->m_scu_irq.pad =        ((state->m_scu_regs[41] & 0x0100)>>8);
-		state->m_scu_irq.dma_end[2] = ((state->m_scu_regs[41] & 0x0200)>>9);
-		state->m_scu_irq.dma_end[1] = ((state->m_scu_regs[41] & 0x0400)>>10);
-		state->m_scu_irq.dma_end[0] = ((state->m_scu_regs[41] & 0x0800)>>11);
-		state->m_scu_irq.dma_ill =    ((state->m_scu_regs[41] & 0x1000)>>12);
-		state->m_scu_irq.vdp1_end =   ((state->m_scu_regs[41] & 0x2000)>>13);
-		state->m_scu_irq.abus =       ((state->m_scu_regs[41] & 0x8000)>>15);
-
+		state->m_scu.ist &= state->m_scu_regs[offset];
 		break;
-		case 42: if(LOG_SCU) logerror("A-Bus IRQ ACK %08x\n",state->m_scu_regs[42]); break;
-		case 49: if(LOG_SCU) logerror("SCU SDRAM set: %02x\n",state->m_scu_regs[49]); break;
+		case 0xa8/4: if(LOG_SCU) logerror("A-Bus IRQ ACK %08x\n",state->m_scu_regs[42]); break;
+		case 0xc4/4: if(LOG_SCU) logerror("SCU SDRAM set: %02x\n",state->m_scu_regs[49]); break;
 		default: if(LOG_SCU) logerror("Warning: unused SCU reg set %d = %08x\n",offset,data);
 	}
 }
@@ -725,7 +633,10 @@ static TIMER_CALLBACK( dma_lv0_ended )
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
 
-	if(state->m_scu_irq.dma_end[0]) device_set_input_line_and_vector(state->m_maincpu, 5, HOLD_LINE, 0x4b);
+	if(!(state->m_scu.ism & IRQ_DMALV0))
+		device_set_input_line_and_vector(state->m_maincpu, 5, HOLD_LINE, 0x4b);
+	else
+		state->m_scu.ist |= (IRQ_DMALV0);
 
 	DnMV_0(0);
 }
@@ -735,7 +646,10 @@ static TIMER_CALLBACK( dma_lv1_ended )
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
 
-	if(state->m_scu_irq.dma_end[1]) device_set_input_line_and_vector(state->m_maincpu, 6, HOLD_LINE, 0x4a);
+	if(!(state->m_scu.ism & IRQ_DMALV1))
+		device_set_input_line_and_vector(state->m_maincpu, 6, HOLD_LINE, 0x4a);
+	else
+		state->m_scu.ist |= (IRQ_DMALV1);
 
 	DnMV_0(1);
 }
@@ -745,7 +659,10 @@ static TIMER_CALLBACK( dma_lv2_ended )
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
 
-	if(state->m_scu_irq.dma_end[2]) device_set_input_line_and_vector(state->m_maincpu, 6, HOLD_LINE, 0x49);
+	if(!(state->m_scu.ism & IRQ_DMALV2))
+		device_set_input_line_and_vector(state->m_maincpu, 6, HOLD_LINE, 0x49);
+	else
+		state->m_scu.ist |= (IRQ_DMALV2);
 
 	DnMV_0(2);
 }
@@ -755,9 +672,12 @@ static void scu_dma_direct(address_space *space, UINT8 dma_ch)
 	saturn_state *state = space->machine().driver_data<saturn_state>();
 	static UINT32 tmp_src,tmp_dst,tmp_size;
 
+	if(0)
+	{
 	if(LOG_SCU) printf("DMA lv %d transfer START\n"
 			             "Start %08x End %08x Size %04x\n",dma_ch,state->m_scu.src[dma_ch],state->m_scu.dst[dma_ch],state->m_scu.size[dma_ch]);
 	if(LOG_SCU) printf("Start Add %04x Destination Add %04x\n",state->m_scu.src_add[dma_ch],state->m_scu.dst_add[dma_ch]);
+	}
 
 	DnMV_1(dma_ch);
 
@@ -844,16 +764,13 @@ static void scu_dma_direct(address_space *space, UINT8 dma_ch)
 	if(!(DRUP(dma_ch))) state->m_scu.src[dma_ch] = tmp_src;
 	if(!(DWUP(dma_ch))) state->m_scu.dst[dma_ch] = tmp_dst;
 
-	if(dma_ch != 2)
-	if(LOG_SCU) logerror("DMA transfer END\n");
-
 	{
 		/*TODO: this is completely wrong HW-wise ...  */
 		switch(dma_ch)
 		{
-			case 0: space->machine().scheduler().timer_set(attotime::from_usec(state->m_instadma_hack ? 0 : 300), FUNC(dma_lv0_ended)); break;
-			case 1: space->machine().scheduler().timer_set(attotime::from_usec(state->m_instadma_hack ? 0 : 300), FUNC(dma_lv1_ended)); break;
-			case 2: space->machine().scheduler().timer_set(attotime::from_usec(state->m_instadma_hack ? 0 : 300), FUNC(dma_lv2_ended)); break;
+			case 0: space->machine().scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv0_ended)); break;
+			case 1: space->machine().scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv1_ended)); break;
+			case 2: space->machine().scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv2_ended)); break;
 		}
 	}
 
@@ -891,9 +808,12 @@ static void scu_dma_indirect(address_space *space,UINT8 dma_ch)
 		if(indirect_src & 0x80000000)
 			job_done = 1;
 
-		if(LOG_SCU) printf("DMA lv %d indirect mode transfer START\n"
-				           "Index %08x Start %08x End %08x Size %04x\n",dma_ch,tmp_src,indirect_src,indirect_dst,indirect_size);
-		if(LOG_SCU) printf("Start Add %04x Destination Add %04x\n",state->m_scu.src_add[dma_ch],state->m_scu.dst_add[dma_ch]);
+		if(0)
+		{
+			if(LOG_SCU) printf("DMA lv %d indirect mode transfer START\n"
+					           "Index %08x Start %08x End %08x Size %04x\n",dma_ch,tmp_src,indirect_src,indirect_dst,indirect_size);
+			if(LOG_SCU) printf("Start Add %04x Destination Add %04x\n",state->m_scu.src_add[dma_ch],state->m_scu.dst_add[dma_ch]);
+		}
 
 		//guess,but I believe it's right.
 		indirect_src &=0x07ffffff;
@@ -931,9 +851,9 @@ static void scu_dma_indirect(address_space *space,UINT8 dma_ch)
 		/*TODO: this is completely wrong HW-wise ...  */
 		switch(dma_ch)
 		{
-			case 0: space->machine().scheduler().timer_set(attotime::from_usec(state->m_instadma_hack ? 0 : 300), FUNC(dma_lv0_ended)); break;
-			case 1: space->machine().scheduler().timer_set(attotime::from_usec(state->m_instadma_hack ? 0 : 300), FUNC(dma_lv1_ended)); break;
-			case 2: space->machine().scheduler().timer_set(attotime::from_usec(state->m_instadma_hack ? 0 : 300), FUNC(dma_lv2_ended)); break;
+			case 0: space->machine().scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv0_ended)); break;
+			case 1: space->machine().scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv1_ended)); break;
+			case 2: space->machine().scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv2_ended)); break;
 		}
 	}
 }
@@ -1037,7 +957,7 @@ static ADDRESS_MAP_START( saturn_mem, AS_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x0007ffff) AM_ROM AM_SHARE("share6")  // bios
 	AM_RANGE(0x00100000, 0x0010007f) AM_READWRITE8(saturn_SMPC_r, saturn_SMPC_w,0xffffffff)
 	AM_RANGE(0x00180000, 0x0018ffff) AM_READWRITE(saturn_backupram_r, saturn_backupram_w) AM_SHARE("share1") AM_BASE_MEMBER(saturn_state,m_backupram)
-	AM_RANGE(0x00200000, 0x002fffff) AM_RAM AM_MIRROR(0x100000) AM_SHARE("share2") AM_BASE_MEMBER(saturn_state,m_workram_l)
+	AM_RANGE(0x00200000, 0x002fffff) AM_RAM AM_MIRROR(0x20100000) AM_SHARE("share2") AM_BASE_MEMBER(saturn_state,m_workram_l)
 //  AM_RANGE(0x01000000, 0x01000003) AM_MIRROR(0x7ffffc) AM_WRITE(minit_w)
 	AM_RANGE(0x01000000, 0x017fffff) AM_WRITE(minit_w)
 //  AM_RANGE(0x01800000, 0x01800003) AM_MIRROR(0x7ffffc) AM_WRITE(sinit_w)
@@ -1057,16 +977,17 @@ static ADDRESS_MAP_START( saturn_mem, AS_PROGRAM, 32 )
 	AM_RANGE(0x05f00000, 0x05f7ffff) AM_READWRITE(saturn_vdp2_cram_r, saturn_vdp2_cram_w)
 	AM_RANGE(0x05f80000, 0x05fbffff) AM_READWRITE(saturn_vdp2_regs_r, saturn_vdp2_regs_w)
 	AM_RANGE(0x05fe0000, 0x05fe00cf) AM_READWRITE(saturn_scu_r, saturn_scu_w)
-	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_MIRROR(0x01f00000) AM_SHARE("share3") AM_BASE_MEMBER(saturn_state,m_workram_h)
+	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_MIRROR(0x21f00000) AM_SHARE("share3") AM_BASE_MEMBER(saturn_state,m_workram_h)
 	AM_RANGE(0x20000000, 0x2007ffff) AM_ROM AM_SHARE("share6")  // bios mirror
 	AM_RANGE(0x22000000, 0x24ffffff) AM_ROM AM_SHARE("share7")  // cart mirror
+	AM_RANGE(0xc0000000, 0xc00007ff) AM_RAM // cache RAM, Dragon Ball Z sprites needs this
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( stv_mem, AS_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x0007ffff) AM_ROM AM_SHARE("share6")  // bios
 	AM_RANGE(0x00100000, 0x0010007f) AM_READWRITE8(stv_SMPC_r, stv_SMPC_w,0xffffffff)
 	AM_RANGE(0x00180000, 0x0018ffff) AM_READWRITE(saturn_backupram_r,saturn_backupram_w) AM_SHARE("share1") AM_BASE_MEMBER(saturn_state,m_backupram)
-	AM_RANGE(0x00200000, 0x002fffff) AM_RAM AM_MIRROR(0x100000) AM_SHARE("share2") AM_BASE_MEMBER(saturn_state,m_workram_l)
+	AM_RANGE(0x00200000, 0x002fffff) AM_RAM AM_MIRROR(0x20100000) AM_SHARE("share2") AM_BASE_MEMBER(saturn_state,m_workram_l)
 	AM_RANGE(0x00400000, 0x0040001f) AM_READWRITE(stv_io_r32, stv_io_w32) AM_BASE_MEMBER(saturn_state,m_ioga) AM_SHARE("share4") AM_MIRROR(0x20)
 //  AM_RANGE(0x01000000, 0x01000003) AM_MIRROR(0x7ffffc) AM_WRITE(minit_w)
 	AM_RANGE(0x01000000, 0x017fffff) AM_WRITE(minit_w)
@@ -1085,9 +1006,10 @@ static ADDRESS_MAP_START( stv_mem, AS_PROGRAM, 32 )
 	AM_RANGE(0x05f00000, 0x05f7ffff) AM_READWRITE(saturn_vdp2_cram_r, saturn_vdp2_cram_w)
 	AM_RANGE(0x05f80000, 0x05fbffff) AM_READWRITE(saturn_vdp2_regs_r, saturn_vdp2_regs_w)
 	AM_RANGE(0x05fe0000, 0x05fe00cf) AM_READWRITE(saturn_scu_r, saturn_scu_w)
-	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_MIRROR(0x01f00000) AM_SHARE("share3") AM_BASE_MEMBER(saturn_state,m_workram_h)
+	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_MIRROR(0x21f00000) AM_SHARE("share3") AM_BASE_MEMBER(saturn_state,m_workram_h)
 	AM_RANGE(0x20000000, 0x2007ffff) AM_ROM AM_SHARE("share6")  // bios mirror
 	AM_RANGE(0x22000000, 0x24ffffff) AM_ROM AM_SHARE("share7")  // cart mirror
+	AM_RANGE(0xc0000000, 0xc00007ff) AM_RAM // cache RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_mem, AS_PROGRAM, 16 )
@@ -1156,8 +1078,8 @@ static INPUT_PORTS_START( saturn )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(1)
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(1)	// START
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("P1 A") PORT_PLAYER(1)	// A
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("P1 B") PORT_PLAYER(1)	// B
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("P1 C") PORT_PLAYER(1)	// C
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("P1 C") PORT_PLAYER(1)	// C
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("P1 B") PORT_PLAYER(1)	// B
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("P1 X") PORT_PLAYER(1)	// X
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("P1 Y") PORT_PLAYER(1)	// Y
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("P1 Z") PORT_PLAYER(1)	// Z
@@ -1172,8 +1094,8 @@ static INPUT_PORTS_START( saturn )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(2)
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(2)	// START
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("P2 A") PORT_PLAYER(2)	// A
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("P2 B") PORT_PLAYER(2)	// B
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("P2 C") PORT_PLAYER(2)	// C
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("P2 C") PORT_PLAYER(2)	// C
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("P2 B") PORT_PLAYER(2)	// B
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("P2 X") PORT_PLAYER(2)	// X
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("P2 Y") PORT_PLAYER(2)	// Y
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("P2 Z") PORT_PLAYER(2)	// Z
@@ -1509,7 +1431,6 @@ DRIVER_INIT ( stv )
 //  state->m_smpc_ram[0x33] = input_port_read(machine, "FAKE");
 	state->m_smpc_ram[0x5f] = 0x10;
 
-	state->m_instadma_hack = 0;
 	state->m_vdp2.pal = 0;
 
 	#ifdef MAME_DEBUG
@@ -1663,11 +1584,13 @@ static WRITE_LINE_DEVICE_HANDLER( scsp_to_main_irq )
 {
 	saturn_state *drvstate = device->machine().driver_data<saturn_state>();
 
-	if(drvstate->m_scu_irq.sound_req)
+	if(!(drvstate->m_scu.ism & IRQ_SOUND_REQ))
 	{
 		device_set_input_line_and_vector(drvstate->m_maincpu, 9, HOLD_LINE, 0x46);
 		scu_do_transfer(device->machine(),5);
 	}
+	else
+		drvstate->m_scu.ist |= (IRQ_SOUND_REQ);
 }
 
 static const scsp_interface scsp_config =
@@ -1864,57 +1787,71 @@ static TIMER_DEVICE_CALLBACK( saturn_scanline )
 
 	vblank_line = (state->m_vdp2.pal) ? 288 : 240;
 
-	//popmessage("%08x %d %08x %08x",state->m_scu_regs[40] ^ 0xffffffff,max_y,state->m_scu_regs[36],state->m_scu_regs[38]);
+//	popmessage("%08x %d %08x %08x",state->m_scu.ism ^ 0xffffffff,max_y,state->m_scu_regs[36],state->m_scu_regs[38]);
 
 	if(scanline == 0*y_step)
 	{
-		if(state->m_scu_irq.vblank_out)
+		if(!(state->m_scu.ism & IRQ_VBLANK_OUT))
 		{
-			device_set_input_line_and_vector(state->m_maincpu, 0xe, (state->m_scu_irq.vblank_out) ? HOLD_LINE : CLEAR_LINE , 0x41);
+			device_set_input_line_and_vector(state->m_maincpu, 0xe, HOLD_LINE, 0x41);
 			scu_do_transfer(timer.machine(),1);
 		}
+		else
+			state->m_scu.ist |= (IRQ_VBLANK_OUT);
+
 	}
 	else if(scanline == vblank_line*y_step)
 	{
-		if(state->m_scu_irq.vblank_in)
+		if(!(state->m_scu.ism & IRQ_VBLANK_IN))
 		{
 			device_set_input_line_and_vector(state->m_maincpu, 0xf, HOLD_LINE ,0x40);
 			scu_do_transfer(timer.machine(),0);
 		}
+		else
+			state->m_scu.ist |= (IRQ_VBLANK_IN);
 
-		if(state->m_scu_irq.vdp1_end)
+		if(!(state->m_scu.ism & IRQ_VDP1_END))
 		{
 			device_set_input_line_and_vector(state->m_maincpu, 0x2, HOLD_LINE, 0x4d);
 			scu_do_transfer(timer.machine(),6);
 		}
+		else
+			state->m_scu.ist |= (IRQ_VDP1_END);
+
 		video_update_vdp1(timer.machine());
 	}
 	else if((scanline % y_step) == 0 && scanline < vblank_line*y_step)
 	{
-		if(state->m_scu_irq.hblank_in)
+		if(!(state->m_scu.ism & IRQ_HBLANK_IN))
 		{
 			device_set_input_line_and_vector(state->m_maincpu, 0xd, HOLD_LINE, 0x42);
 			scu_do_transfer(timer.machine(),2);
 		}
+		else
+			state->m_scu.ist |= (IRQ_HBLANK_IN);
 	}
 
 	if(scanline == (state->m_scu_regs[36] & 0x3ff)*y_step)
 	{
-		if(state->m_scu_irq.timer_0)
+		if(!(state->m_scu.ism & IRQ_TIMER_0))
 		{
 			device_set_input_line_and_vector(state->m_maincpu, 0xc, HOLD_LINE, 0x43 );
 			scu_do_transfer(timer.machine(),3);
 		}
+		else
+			state->m_scu.ist |= (IRQ_TIMER_0);
 	}
 
 	/* TODO: this isn't completely correct */
 	if((state->m_scu_regs[38] & 0x81) == 0x01 && ((scanline % y_step) == 0))
 	{
-		if(state->m_scu_irq.timer_1)
+		if(!(state->m_scu.ism & IRQ_TIMER_1))
 		{
 			device_set_input_line_and_vector(state->m_maincpu, 0xb, HOLD_LINE, 0x44 );
 			scu_do_transfer(timer.machine(),4);
 		}
+		else
+			state->m_scu.ist |= (IRQ_TIMER_1);
 	}
 }
 
@@ -3508,8 +3445,8 @@ GAME( 1996, stvbios,   0,       stv_slot, stv,      stv,        ROT0,   "Sega", 
 //GAME YEAR, NAME,     PARENT,  MACH, INP, INIT,      MONITOR
 /* Playable */
 GAME( 1998, astrass,   stvbios, stv,      stv,      astrass,	ROT0,   "Sunsoft",  					"Astra SuperStars (J 980514 V1.002)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, bakubaku,  stvbios, stv,      stv,	    stv,    	ROT0,   "Sega",     					"Baku Baku Animal (J 950407 V1.000)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, batmanfr,  stvbios, stv,      batmanfr,	batmanfr,	ROT0,	"Acclaim",  					"Batman Forever (JUE 960507 V1.000)", GAME_NO_SOUND )
+GAME( 1995, bakubaku,  stvbios, stv,      stv,	    stv,    	ROT0,   "Sega",     					"Baku Baku Animal (J 950407 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, batmanfr,  stvbios, stv,      batmanfr,	batmanfr,	ROT0,	"Acclaim",  					"Batman Forever (JUE 960507 V1.000)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1996, colmns97,  stvbios, stv,      stv,		colmns97,	ROT0,   "Sega", 						"Columns '97 (JET 961209 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, cotton2,   stvbios, stv,      stv,		cotton2,	ROT0,   "Success",  					"Cotton 2 (JUET 970902 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1998, cottonbm,  stvbios, stv,      stv,		cottonbm,	ROT0,   "Success",  					"Cotton Boomerang (JUET 980709 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
@@ -3519,8 +3456,8 @@ GAME( 2000, danchiq,   stvbios, stv,      stv,		danchih,	ROT0,   "Altron",   			
 GAME( 1996, diehard,   stvbios, stv,      stv,		diehard,	ROT0,   "Sega", 						"Die Hard Arcade (UET 960515 V1.000)", GAME_IMPERFECT_SOUND  )
 GAME( 1996, dnmtdeka,  diehard, stv,      stv,		dnmtdeka,	ROT0,   "Sega", 						"Dynamite Deka (J 960515 V1.000)", GAME_IMPERFECT_SOUND  )
 GAME( 1995, ejihon,    stvbios, stv,      stv,		stv,    	ROT0,   "Sega", 						"Ejihon Tantei Jimusyo (J 950613 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, fhboxers,  stvbios, stv,      stv,		fhboxers,	ROT0,   "Sega", 						"Funky Head Boxers (JUETBKAL 951218 V1.000)", GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, gaxeduel,  stvbios, stv,      stv,		gaxeduel,	ROT0,   "Sega", 	    				"Golden Axe - The Duel (JUETL 950117 V1.000)", GAME_IMPERFECT_SOUND )
+GAME( 1995, fhboxers,  stvbios, stv,      stv,		fhboxers,	ROT0,   "Sega", 						"Funky Head Boxers (JUETBKAL 951218 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, gaxeduel,  stvbios, stv,      stv,		gaxeduel,	ROT0,   "Sega", 	    				"Golden Axe - The Duel (JUETL 950117 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS)
 GAME( 1998, grdforce,  stvbios, stv,      stv,		grdforce,	ROT0,   "Success",  					"Guardian Force (JUET 980318 V0.105)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1998, groovef,   stvbios, stv,      stv,		groovef,	ROT0,   "Atlus",    					"Groove on Fight - Gouketsuji Ichizoku 3 (J 970416 V1.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, hanagumi,  stvbios, stv,      stv,		hanagumi,	ROT0,   "Sega",     					"Hanagumi Taisen Columns - Sakura Wars (J 971007 V1.010)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
@@ -3539,15 +3476,15 @@ GAME( 1999, sanjeon,   sasissu, stv,      stv,		sanjeon,	ROT0,   "Sega / Deniam"
 GAME( 1997, seabass,   stvbios, stv,      stv,		seabass,	ROT0,   "A wave inc. (Able license)",	"Sea Bass Fishing (JUET 971110 V0.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1995, shanhigw,  stvbios, stv,      stv,		shanhigw,	ROT0,   "Sunsoft / Activision", 		"Shanghai - The Great Wall / Shanghai Triple Threat (JUE 950623 V1.005)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, shienryu,  stvbios, stv,      stv,		shienryu,	ROT270, "Warashi",  					"Shienryu (JUET 961226 V1.000)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, sss,       stvbios, stv,      stv,		sss,    	ROT0,   "Capcom / Cave / Victor",		"Steep Slope Sliders (JUET 981110 V1.000)", GAME_IMPERFECT_SOUND )
+GAME( 1998, sss,       stvbios, stv,      stv,		sss,    	ROT0,   "Capcom / Cave / Victor",		"Steep Slope Sliders (JUET 981110 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1995, sandor,    stvbios, stv,      stv,		sandor, 	ROT0,   "Sega", 	    				"Puzzle & Action: Sando-R (J 951114 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, thunt,     sandor,  stv,      stv,		thunt,  	ROT0,   "Sega",	                		"Puzzle & Action: Treasure Hunt (JUET 970901 V2.00E)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, thuntk,    sandor,  stv,      stv,		sandor, 	ROT0,   "Sega / Deniam",        		"Puzzle & Action: BoMulEul Chajara (JUET 970125 V2.00K)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1995, smleague,  stvbios, stv,      stv,		smleague,	ROT0,   "Sega", 	    				"Super Major League (U 960108 V1.000)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1995, finlarch,  smleague,stv,      stv,		finlarch,	ROT0,   "Sega", 	    				"Final Arch (J 950714 V1.001)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1996, sokyugrt,  stvbios, stv,      stv,		sokyugrt,	ROT0,   "Raizing / Eighting",   		"Soukyugurentai / Terra Diver (JUET 960821 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, suikoenb,  stvbios, stv,      stv,		suikoenb,	ROT0,   "Data East",                	"Suikoenbu / Outlaws of the Lost Dynasty (JUETL 950314 V2.001)", GAME_IMPERFECT_SOUND )
-GAME( 1996, vfkids,    stvbios, stv,      stv,		stv,    	ROT0,   "Sega", 						"Virtua Fighter Kids (JUET 960319 V0.000)", GAME_IMPERFECT_SOUND )
+GAME( 1995, suikoenb,  stvbios, stv,      stv,		suikoenb,	ROT0,   "Data East",                	"Suikoenbu / Outlaws of the Lost Dynasty (JUETL 950314 V2.001)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, vfkids,    stvbios, stv,      stv,		stv,    	ROT0,   "Sega", 						"Virtua Fighter Kids (JUET 960319 V0.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, vmahjong,  stvbios, stv,      stvmp,	stv,    	ROT0,   "Micronet",                 	"Virtual Mahjong (J 961214 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, winterht,  stvbios, stv,      stv,		winterht,	ROT0,   "Sega", 						"Winter Heat (JUET 971012 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, znpwfv,    stvbios, stv,      stv,		znpwfv, 	ROT0,   "Sega", 	    				"Zen Nippon Pro-Wrestling Featuring Virtua (J 971123 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
@@ -3564,8 +3501,8 @@ GAME( 1999, pclub2v3,  pclub2,  stv,      stv,		stv,    	ROT0,   "Atlus",	    		
 GAME( 1999, pclubpok,  stvbios, stv,      stv,      stv,        ROT0,   "Atlus",                        "Print Club Pokemon B (U 991126 V1.000)", GAME_NOT_WORKING )
 
 /* Doing something.. but not enough yet */
-GAME( 1995, vfremix,   stvbios, stv,      stv,		vfremix,	ROT0,   "Sega", 	    				"Virtua Fighter Remix (JUETBKAL 950428 V1.000)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1997, findlove,  stvbios, stv,      stv,		stv,		ROT0,   "Daiki / FCF",  	    		"Find Love (J 971212 V1.000)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1995, vfremix,   stvbios, stv,      stv,		vfremix,	ROT0,   "Sega", 	    				"Virtua Fighter Remix (JUETBKAL 950428 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
+GAME( 1997, findlove,  stvbios, stv,      stv,		stv,		ROT0,   "Daiki / FCF",  	    		"Find Love (J 971212 V1.000)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
 GAME( 1996, decathlt,  stvbios, stv,      stv,		decathlt,	ROT0,   "Sega", 	    				"Decathlete (JUET 960709 V1.001)", GAME_NO_SOUND | GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
 GAME( 1996, decathlto, decathlt,stv,      stv,		decathlt,	ROT0,	"Sega", 	    				"Decathlete (JUET 960424 V1.000)", GAME_NO_SOUND | GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
 
@@ -3575,7 +3512,7 @@ GAME( 1997, techbowl,  stvbios, stv,      stv,		stv,    	ROT0,   "Sega", 	    		
 GAME( 1999, micrombc,  stvbios, stv,      stv,		stv,    	ROT0,   "Sega", 	    				"Microman Battle Charge (J 990326 V1.000)", GAME_NOT_WORKING )
 
 /* Black screen */
-GAME( 1999, ffreveng,  stvbios, stv,      stv,		ffreveng,	ROT0,   "Capcom",   					"Final Fight Revenge (JUET 990714 V1.000)", GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 1999, ffreveng,  stvbios, stv,      stv,		ffreveng,	ROT0,   "Capcom",   					"Final Fight Revenge (JUET 990714 V1.000)", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
 
 /* CD games */
 GAME( 1995, sfish2,    0,		stv,      stv,		stv,		ROT0,   "Sega",	    					"Sport Fishing 2 (UET 951106 V1.10e)", GAME_NO_SOUND | GAME_NOT_WORKING )

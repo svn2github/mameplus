@@ -26,6 +26,7 @@
 #include "cdrom.h"
 #include "stvcd.h"
 #include "sound/cdda.h"
+#include "debugger.h"
 
 // super-verbose
 #if 0
@@ -42,7 +43,7 @@ static void cd_playdata(void);
 
 #define MAX_FILTERS	(24)
 #define MAX_BLOCKS	(200)
-#define MAX_DIR_SIZE	(128*1024)
+#define MAX_DIR_SIZE	(256*1024)
 #define CD_SPEED 75*1 /* TODO: should be x2 */
 
 typedef struct
@@ -181,6 +182,14 @@ static int firstfile;			// first non-directory file
 #define CD_STAT_WAIT     0x8000		// waiting for command if set, else executed immediately
 #define CD_STAT_REJECT   0xff00		// ultra-fatal error.
 
+static void cr_standard_return(UINT16 cur_status)
+{
+	cr1 = cur_status | 0x00; //options << 4 | repeat & 0xf
+	cr2 = (cur_track == 0xff) ? 0xffff : (cdrom_get_adr_control(cdrom, cur_track)<<8 | cur_track);
+	cr3 = (0x01<<8) | (cd_curfad>>16); //index & 0xff00
+	cr4 = cd_curfad;
+}
+
 TIMER_DEVICE_CALLBACK( stv_sector_cb )
 {
 	if (fadstoplay)
@@ -193,17 +202,7 @@ TIMER_DEVICE_CALLBACK( stv_sector_cb )
 	}
 
 	cd_stat |= CD_STAT_PERI;
-	cr1 = cd_stat;
-	if (cur_track == 0xff)
-	{
-		cr2 = 0xffff;
-	}
-	else
-	{
-		cr2 = cdrom_get_adr_control(cdrom, cur_track)<<8 | cur_track;
-	}
-	cr3 = (cd_curfad>>16)&0xff;
-	cr4 = cd_curfad&0xffff;
+	cr_standard_return(cd_stat);
 
 	timer.adjust(attotime::from_hz(CD_SPEED));
 }
@@ -450,8 +449,37 @@ static UINT16 cd_readWord(UINT32 addr)
 					}
 					break;
 
-				case XFERTYPE_FILEINFO_254:
-					CDROM_LOG(("STVCD: Unhandled xfer type 254\n"))
+				case XFERTYPE_FILEINFO_254: // Lunar 2
+					if((xfercount % (6 * 2)) == 0)
+					{
+						UINT32 temp = 2 + (xfercount / (0x6 * 2));
+
+						// first 4 bytes = FAD
+						finfbuf[0] = (curdir[temp].firstfad>>24)&0xff;
+						finfbuf[1] = (curdir[temp].firstfad>>16)&0xff;
+						finfbuf[2] = (curdir[temp].firstfad>>8)&0xff;
+						finfbuf[3] = (curdir[temp].firstfad&0xff);
+						// second 4 bytes = length of file
+						finfbuf[4] = (curdir[temp].length>>24)&0xff;
+						finfbuf[5] = (curdir[temp].length>>16)&0xff;
+						finfbuf[6] = (curdir[temp].length>>8)&0xff;
+						finfbuf[7] = (curdir[temp].length&0xff);
+						finfbuf[8] = 0x00;
+						finfbuf[9] = 0x00;
+						finfbuf[10] = temp;
+						finfbuf[11] = curdir[temp].flags;
+					}
+
+					rv = finfbuf[xfercount % (6 * 2)]<<8 | finfbuf[(xfercount % (6 * 2)) +1];
+
+					xfercount += 2;
+					xferdnum += 2;
+
+					if (xfercount > (254 * 6 * 2))
+					{
+						xfercount = 0;
+						xfertype = XFERTYPE_INVALID;
+					}
 					break;
 
 				default:
@@ -542,14 +570,6 @@ static UINT32 cd_readLong(UINT32 addr)
 	}
 }
 
-static void cr_standard_return(UINT16 cur_status)
-{
-	cr1 = cur_status | 0x00; //options << 4 | repeat & 0xf
-	cr2 = (cur_track == 0xff) ? 0xffff : (cdrom_get_adr_control(cdrom, cur_track)<<8 | cur_track);
-	cr3 = (0x01<<8) | (cd_curfad>>16); //index & 0xff00
-	cr4 = cd_curfad;
-}
-
 static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 {
 	UINT32 temp;
@@ -569,6 +589,10 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 	case 0x0018:
 	case 0x001a:
 //              CDROM_LOG(("WW CR1: %04x\n", data))
+		/* these are ERRORS from our core and mustn't happen! */
+		if(data == 0x2100 || data == 0x2300)
+			debugger_break(machine);
+
 		cr1 = data;
 		cd_stat &= ~CD_STAT_PERI;
 		break;
@@ -658,6 +682,7 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			hirqreg |= (CMOK);
 			break;
 
+		/* TODO: double check this */
 		case 0x0400:	// initialize CD system
 				// CR1 & 1 = reset software
 				// CR1 & 2 = decode RW subcode
@@ -669,6 +694,7 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			hirqreg |= (CMOK|ESEL);
 			cd_stat = CD_STAT_PAUSE;
 			cd_curfad = 150;
+			fadstoplay = 0;
 			in_buffer = 0;
 			buffull = 0;
 			cr_standard_return(cd_stat);
@@ -782,8 +808,21 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			}
 			else	// play until the end of the disc
 			{
-				fadstoplay = (cdrom_get_track_start(cdrom, 0xaa)) - cd_curfad;
-				printf("track mode %08x %08x\n",cd_curfad,fadstoplay);
+				UINT32 start_pos;
+
+				start_pos = ((cr1&0xff)<<16) | cr2;
+
+				if(start_pos != 0xffffff)
+				{
+					fadstoplay = (cdrom_get_track_start(cdrom, 0xaa)) - cd_curfad;
+					printf("track mode %08x %08x\n",cd_curfad,fadstoplay);
+				}
+				else /* Galaxy Fight calls 10ff ffff ffff ffff, resume/restart previously called track */
+				{
+					cd_curfad = cdrom_get_track_start(cdrom, cur_track-1);
+					fadstoplay = cdrom_get_track_start(cdrom, cur_track) - cd_curfad;
+					printf("track resume %08x %08x\n",cd_curfad,fadstoplay);
+				}
 			}
 
 			CDROM_LOG(("CD: Play Disc: start %x length %x\n", cd_curfad, fadstoplay))
@@ -828,7 +867,10 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 					cdda_pause_audio( machine.device( "cdda" ), 1 );
 				}
 				else
+				{
+					cd_curfad = ((cr1&0x7f)<<16) | cr2;
 					printf("disc seek with params %04x %04x\n",cr1,cr2); //Area 51 sets this up
+				}
 			}
 			else
 			{
@@ -883,7 +925,6 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			}
 			hirqreg |= CMOK|DRDY;
 			break;
-
 
 		case 0x3000:	// Set CD Device connection
 			{
@@ -1052,7 +1093,7 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 				cr1 = cd_stat;
 				cr2 = 0;
 				cr3 = 0;
-				/* TODO: Akumajou Dracula X reads 0 there, why? */
+
 				// is the partition empty?
 				if (partitions[bufnum].size == -1)
 				{
@@ -1232,7 +1273,6 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 
 				cd_getsectoroffsetnum(bufnum, &sectofs, &sectnum);
 
-				/* TODO: Cyber Doll crashes here with sectnum == 8*/
 				for (i = sectofs; i < (sectofs + sectnum); i++)
 				{
 					partitions[bufnum].size -= partitions[bufnum].blocks[i]->size;
@@ -1294,8 +1334,9 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			break;
 
 		case 0x6400:    // put sector data
-			/* TODO: Dungeon Master Nexus trips this */
+			/* TODO: After Burner 2 and Dungeon Master Nexus trips this */
 			// ...
+
 			hirqreg |= (CMOK|EHST);
 			break;
 
@@ -1385,7 +1426,8 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 							// - file #
 							// attributes flags
 
-				cr3 = cr4 = 0;
+				cr3 = 0;
+				cr4 = 0;
 
 				// first 4 bytes = FAD
 				finfbuf[0] = (curdir[temp].firstfad>>24)&0xff;
@@ -1448,7 +1490,7 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			xfertype32 = XFERTYPE32_INVALID;
 			xferdnum = 0;
 			cd_stat = CD_STAT_PAUSE;	// force to pause
-			cr1 = cd_stat;
+			cr_standard_return(cd_stat);
 			break;
 
 		case 0xe000:	// appears to be copy protection check.  needs only to return OK.
@@ -2010,7 +2052,9 @@ static void cd_playdata(void)
 				if(cdrom_get_track_type(cdrom, cdrom_get_track(cdrom, cd_curfad)) != CD_TRACK_AUDIO)
 					cd_read_filtered_sector(cd_curfad);
 
-				//popmessage("%08x %08x",cd_curfad,fadstoplay);
+				if(cdrom_get_track_type(cdrom, cdrom_get_track(cdrom, cd_curfad)) != CD_TRACK_AUDIO && 0)
+					popmessage("%08x %08x",cd_curfad,fadstoplay);
+
 				cd_curfad++;
 				fadstoplay--;
 

@@ -1033,7 +1033,7 @@ void ui_draw_text_full(render_container *container, const char *origs, float x, 
 		{
 			cury += lineheight;
 
-			//mamep: skip overflow text  
+			//mamep: skip overflow text
 			//there's a bug when viewing the game information and bookkeeping,so we have to commet it
  			/*if (draw != DRAW_NONE && curline == multiline_text_box_visible_lines - 1)
 				break; */
@@ -1522,7 +1522,7 @@ astring &game_info_astring(running_machine &machine, astring &string)
 		/* count how many identical CPUs we have */
 		int count = 1;
 		device_execute_interface *scan = NULL;
-		for (bool gotone = exec->next(scan); gotone; gotone = scan->next(scan))
+		for (bool gotanother = exec->next(scan); gotanother; gotanother = scan->next(scan))
 		{
 			if (exec->device().type() != scan->device().type() || exec->device().clock() != scan->device().clock())
 				break;

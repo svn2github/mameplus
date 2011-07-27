@@ -367,7 +367,7 @@ static void set_irq_line(v25_state_t *nec_state, int irqline, int state)
 			if (state == CLEAR_LINE)
 				nec_state->pending_irq &= ~INT_IRQ;
 			else
-			{	
+			{
 				nec_state->pending_irq |= INT_IRQ;
 				nec_state->halted = 0;
 			}
@@ -432,11 +432,11 @@ static void v25_init(legacy_cpu_device *device, device_irq_callback irqcallback)
 		Mod_RM.RM.b[i] = breg_name[i & 7];
 	}
 
-	memset(nec_state, 0, sizeof(nec_state));
+	memset(nec_state, 0, sizeof(*nec_state));
 
 	nec_state->config = config;
 
-	for (int i = 0; i < 4; i++)
+	for (i = 0; i < 4; i++)
 		nec_state->timers[i] = device->machine().scheduler().timer_alloc(FUNC(v25_timer_callback), nec_state);
 
 	device->save_item(NAME(nec_state->ram.w));
@@ -532,7 +532,7 @@ static CPU_EXECUTE( v25 )
 		debugger_instruction_hook(device, (Sreg(PS)<<4) + nec_state->ip);
 		return;
 	}
-	
+
 	while(nec_state->icount>0) {
 		/* Dispatch IRQ */
 		if (nec_state->no_interrupt==0 && (nec_state->pending_irq & nec_state->unmasked_irq))

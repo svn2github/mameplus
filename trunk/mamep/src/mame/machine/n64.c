@@ -1654,7 +1654,7 @@ static int pif_channel_handle_command(running_machine &machine, int channel, int
             mame_printf_debug("\n");*/
 
 			address = (sdata[1] << 8) | (sdata[2]);
-//          checksum = address & 0x1f;
+//			checksum = address & 0x1f;
 			address &= ~0x1f;
 
 			if (address == 0x400)
@@ -1682,7 +1682,6 @@ static int pif_channel_handle_command(running_machine &machine, int channel, int
 		case 0x03:
 		{
 			UINT32 address;
-			int i;
 			/*mame_printf_debug("Write to mempack, rlength = %d, slength = %d\n", rlength, slength);
             for (i=0; i < slength; i++)
             {
@@ -1691,7 +1690,7 @@ static int pif_channel_handle_command(running_machine &machine, int channel, int
             mame_printf_debug("\n");*/
 
 			address = (sdata[1] << 8) | (sdata[2]);
-//          checksum = address & 0x1f;
+//			checksum = address & 0x1f;
 			address &= ~0x1f;
 
 			if (address == 0x8000)

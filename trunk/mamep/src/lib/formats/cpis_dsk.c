@@ -12,7 +12,7 @@
 #include "formats/basicdsk.h"
 
 
-static int compis_get_tracks_and_sectors(floppy_image *floppy, int *tracks, int *sectors)
+static int compis_get_tracks_and_sectors(floppy_image_legacy *floppy, int *tracks, int *sectors)
 {
 	switch(floppy_image_size(floppy)) {
 	case 0x50000:	/* 320 KB */
@@ -86,8 +86,8 @@ static FLOPPY_CONSTRUCT(compis_dsk_construct)
 
 /* ----------------------------------------------------------------------- */
 
-FLOPPY_OPTIONS_START( compis )
-	FLOPPY_OPTION( compis_dsk, "dsk",		"Compis floppy disk image",	compis_dsk_identify, compis_dsk_construct, NULL,
+LEGACY_FLOPPY_OPTIONS_START( compis )
+	LEGACY_FLOPPY_OPTION( compis_dsk, "dsk",		"Compis floppy disk image",	compis_dsk_identify, compis_dsk_construct, NULL,
 		TRACKS(40/[80])
 		SECTORS(8/[9]/15))
-FLOPPY_OPTIONS_END
+LEGACY_FLOPPY_OPTIONS_END
