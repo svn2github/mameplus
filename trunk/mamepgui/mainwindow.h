@@ -82,6 +82,7 @@ public slots:
 	void on_actionKorean_triggered();
 	void on_actionBrazilian_triggered();
 	void on_actionRussian_triggered();
+	void on_actionItalian_triggered();
 	void on_actionLocalGameList_triggered();
 	void on_actionReadme_triggered();
 	void on_actionFAQ_triggered();

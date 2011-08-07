@@ -67,7 +67,8 @@ TRANSLATIONS = \
 	lang/mamepgui_hu_HU.ts \
 	lang/mamepgui_ko_KR.ts \
 	lang/mamepgui_pt_BR.ts \
-	lang/mamepgui_ru_RU.ts
+	lang/mamepgui_ru_RU.ts \
+	lang/mamepgui_it_IT.ts
 
 RESOURCES = mamepgui.qrc
 

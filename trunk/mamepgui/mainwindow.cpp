@@ -47,7 +47,7 @@ bool isMESS = false;
 
 QStringList validGuiSettings;
 
-#define MPGUI_VER "1.5.1"
+#define MPGUI_VER "1.5.2"
 
 void MainWindow::log(QString message)
 {
@@ -198,6 +198,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	langActions->addAction(actionKorean);
 	langActions->addAction(actionBrazilian);
 	langActions->addAction(actionRussian);
+	langActions->addAction(actionItalian);
 
 	QActionGroup *bgStretchActions = new QActionGroup(this);
 	bgStretchActions->addAction(actionBgStretch);
@@ -988,6 +989,12 @@ void MainWindow::on_actionRussian_triggered()
 	showRestartDialog();
 }
 
+void MainWindow::on_actionItalian_triggered()
+{
+	language = "it_IT";
+	showRestartDialog();
+}
+
 void MainWindow::on_actionLocalGameList_triggered()
 {
 	local_game_list = actionLocalGameList->isChecked();
@@ -1142,6 +1149,8 @@ void MainWindow::loadLayout()
 		actionBrazilian->setChecked(true);
 	else if (language == "ru_RU")
 		actionRussian->setChecked(true);
+	else if (language == "it_IT")
+		actionItalian->setChecked(true);
 	else
 		actionEnglish->setChecked(true);
 

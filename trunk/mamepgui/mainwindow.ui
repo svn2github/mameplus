@@ -169,6 +169,7 @@
      <addaction name="actionKorean"/>
      <addaction name="actionBrazilian"/>
      <addaction name="actionRussian"/>
+     <addaction name="actionItalian"/>
     </widget>
     <widget class="QMenu" name="menuBackground">
      <property name="title">
@@ -742,6 +743,14 @@
    </property>
    <property name="text">
     <string notr="true">Español</string>
+   </property>
+  </action>
+  <action name="actionItalian">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">L'italiano</string>
    </property>
   </action>
  </widget>
