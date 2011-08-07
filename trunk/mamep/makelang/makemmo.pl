@@ -86,11 +86,22 @@ sub MakeListFiles
 		next unless /(.*[^\s])\s+"(.*)"/;
 
 		my ($name, $desc) = ($1, $2);
-		if ($desc =~ /, The/)
+		if ($desc !~ /\(.*, The/)
+		{
+			if ($desc =~ /, The/)
+			{
+				print "Fix description: $desc\n -> ";
+
+				$desc = 'The ' . $` . $';
+				print $desc;
+				print "\n";
+			}
+		}
+		if ($desc =~ /"/)
 		{
 			print "Fix description: $desc\n -> ";
 
-			$desc = 'The ' . $` . $';
+			$desc =~ s/"/\\"/g;
 			print $desc;
 			print "\n";
 		}
