@@ -39,18 +39,29 @@ static cdrom_file *cdrom = (cdrom_file *)NULL;
 
 static void cd_readTOC(void);
 static void cd_readblock(UINT32 fad, UINT8 *dat);
-static void cd_playdata(void);
+static void cd_playdata(running_machine &machine);
 
 #define MAX_FILTERS	(24)
 #define MAX_BLOCKS	(200)
 #define MAX_DIR_SIZE	(256*1024)
-#define CD_SPEED 75*1 /* TODO: should be x2 */
 
 typedef struct
 {
-	UINT8 flags;		// iso9660 flags
-	UINT32 length;		// length of file
+	UINT8 record_size;
+	UINT8 xa_record_size;
 	UINT32 firstfad;		// first sector of file
+	UINT32 length;		// length of file
+	UINT8 year;
+	UINT8 month;
+	UINT8 day;
+	UINT8 hour;
+	UINT8 minute;
+	UINT8 second;
+	UINT8 gmt_offset;
+	UINT8 flags;		// iso9660 flags
+	UINT8 file_unit_size;
+	UINT8 interleave_gap_size;
+	UINT16 volume_sequencer_number;
 	UINT8 name[128];
 } direntryT;
 
@@ -107,6 +118,7 @@ typedef enum
 
 // local variables
 static timer_device *sector_timer;
+static timer_device *sh1_timer;
 static partitionT partitions[MAX_FILTERS];
 static partitionT *transpart;
 
@@ -133,11 +145,15 @@ static UINT16 cr1, cr2, cr3, cr4;
 static UINT16 hirqmask, hirqreg;
 static UINT16 cd_stat;
 static UINT32 cd_curfad = 0;
+static UINT32 fadstoplay = 0;
 static UINT32 in_buffer = 0;	// amount of data in the buffer
 static int oddframe = 0;
-static UINT32 fadstoplay = 0;
 static int buffull, sectorstore, freeblocks;
 static int cur_track;
+static UINT8 cmd_pending;
+static UINT8 cd_speed;
+static UINT8 cdda_maxrepeat;
+static UINT8 cdda_repeat_count;
 
 // iso9660 utilities
 static void read_new_dir(running_machine &machine, UINT32 fileno);
@@ -149,20 +165,20 @@ static int numfiles;			// # of entries in current directory
 static int firstfile;			// first non-directory file
 
 // HIRQ definitions
-#define CMOK 0x0001 // command ok / ready for new command
-#define DRDY 0x0002 // drive ready
-#define CSCT 0x0004 // sector ready (?)
-#define BFUL 0x0008 // buffer full
-#define PEND 0x0010 // command pending
+#define CMOK 0x0001 // command dispatch possible
+#define DRDY 0x0002 // data transfer preparations complete
+#define CSCT 0x0004 // finished reading 1 sector
+#define BFUL 0x0008 // CD buffer full
+#define PEND 0x0010 // CD playback completed
 #define DCHG 0x0020 // disc change / tray open
-#define ESEL 0x0040 // soft reset, end of blah
-#define EHST 0x0080 //
-#define ECPY 0x0100 //
-#define EFLS 0x0200 // stop execution of cd block filesystem
-#define SCDQ 0x0400 // subcode Q renewal complete
-#define MPED 0x0800 // MPEG
-#define MPCM 0x1000 // MPEG
-#define MPST 0x2000 // MPEG
+#define ESEL 0x0040 // selector settings processing complete
+#define EHST 0x0080 // host input/output processing complete
+#define ECPY 0x0100 // duplication/move processing complete
+#define EFLS 0x0200 // file system processing complete
+#define SCDQ 0x0400 // subcode Q update completed
+#define MPED 0x0800 // MPEG-related processing complete
+#define MPCM 0x1000 // MPEG action uncertain
+#define MPST 0x2000 // MPEG interrupt status report
 
 // CD status (hi byte of CR1) definitions:
 // (these defines are shifted up 8)
@@ -184,448 +200,36 @@ static int firstfile;			// first non-directory file
 
 static void cr_standard_return(UINT16 cur_status)
 {
-	cr1 = cur_status | 0x00; //options << 4 | repeat & 0xf
+	cr1 = cur_status | (playtype << 7) | 0x00 | (cdda_repeat_count & 0xf); //options << 4 | repeat & 0xf
 	cr2 = (cur_track == 0xff) ? 0xffff : (cdrom_get_adr_control(cdrom, cur_track)<<8 | cur_track);
 	cr3 = (0x01<<8) | (cd_curfad>>16); //index & 0xff00
 	cr4 = cd_curfad;
 }
 
-TIMER_DEVICE_CALLBACK( stv_sector_cb )
-{
-	if (fadstoplay)
-	{
-		cd_playdata();
-	}
-	else
-	{
-		hirqreg |= SCDQ;
-	}
-
-	cd_stat |= CD_STAT_PERI;
-	cr_standard_return(cd_stat);
-
-	timer.adjust(attotime::from_hz(CD_SPEED));
-}
-
-// global functions
-void stvcd_reset(running_machine &machine)
-{
-	INT32 i, j;
-
-	hirqmask = 0xffff;
-	hirqreg = 0xffff;
-	cr1 = 'C';
-	cr2 = ('D'<<8) | 'B';
-	cr3 = ('L'<<8) | 'O';
-	cr4 = ('C'<<8) | 'K';
-	cd_stat = CD_STAT_PAUSE;
-	cur_track = 0xff;
-
-	if (curdir != (direntryT *)NULL)
-		auto_free(machine, curdir);
-	curdir = (direntryT *)NULL;		// no directory yet
-
-	xfertype = XFERTYPE_INVALID;
-	xfertype32 = XFERTYPE32_INVALID;
-
-	// reset flag vars
-	buffull = sectorstore = 0;
-
-	freeblocks = 200;
-
-	sectlenin = sectlenout = 2048;
-
-	lastbuf = 0xff;
-
-	// reset buffer partitions
-	for (i = 0; i < MAX_FILTERS; i++)
-	{
-		partitions[i].size = -1;
-		partitions[i].numblks = 0;
-
-		for (j = 0; j < MAX_BLOCKS; j++)
-		{
-			partitions[i].blocks[j] = (blockT *)NULL;
-			partitions[i].bnum[j] = 0xff;
-		}
-	}
-
-	// reset blocks
-	for (i = 0; i < MAX_BLOCKS; i++)
-	{
-		blocks[i].size = -1;
-		memset(&blocks[i].data, 0, CD_MAX_SECTOR_DATA);
-	}
-
-	// open device
-	if (cdrom)
-	{
-		cdrom_close(cdrom);
-		cdrom = (cdrom_file *)NULL;
-	}
-
-	#ifdef MESS
-	cdrom = machine.device<cdrom_image_device>("cdrom")->get_cdrom_file();
-	#else
-	cdrom = cdrom_open(get_disk_handle(machine, "cdrom"));
-	#endif
-
-	cdda_set_cdrom( machine.device("cdda"), cdrom );
-
-	if (cdrom)
-	{
-		CDROM_LOG(("Opened CD-ROM successfully, reading root directory\n"))
-		read_new_dir(machine, 0xffffff);	// read root directory
-	}
-	else
-	{
-		cd_stat = CD_STAT_OPEN;
-	}
-
-	sector_timer = machine.device<timer_device>("sector_timer");
-	sector_timer->adjust(attotime::from_hz(CD_SPEED));	// 150 sectors / second = 300kBytes/second
-}
-
-static blockT *cd_alloc_block(UINT8 *blknum)
-{
-	INT32 i;
-
-	// search the 200 available blocks for a free one
-	for (i = 0; i < 200; i++)
-	{
-		if (blocks[i].size == -1)
-		{
-			freeblocks--;
-			if (freeblocks <= 0)
-			{
-				buffull = 1;
-			}
-
-			blocks[i].size = sectlenin;
-			*blknum = i;
-
-			CDROM_LOG(("CD: allocating block %d, size %x\n", i, sectlenin))
-
-			return &blocks[i];
-		}
-	}
-
-	buffull = 1;
-	return (blockT *)NULL;
-}
-
-static void cd_free_block(blockT *blktofree)
-{
-	INT32 i;
-
-	CDROM_LOG(("cd_free_block: %x\n", (UINT32)(FPTR)blktofree))
-
-	if(blktofree == NULL)
-		return;
-
-	for (i = 0; i < 200; i++)
-	{
-		if (&blocks[i] == blktofree)
-		{
-			CDROM_LOG(("CD: freeing block %d\n", i))
-		}
-	}
-
-	blktofree->size = -1;
-	freeblocks++;
-	buffull = 0;
-	hirqreg &= ~BFUL;
-}
-
-static void cd_getsectoroffsetnum(UINT32 bufnum, UINT32 *sectoffs, UINT32 *sectnum)
-{
-	if (*sectoffs == 0xffff)
-	{
-		// last sector
-		printf("CD: Don't know how to handle offset ffff\n");
-	}
-	else if (*sectnum == 0xffff)
-	{
-		*sectnum = partitions[bufnum].numblks - *sectoffs;
-	}
-}
-
-static void cd_defragblocks(partitionT *part)
-{
-	UINT32 i, j;
-	blockT *temp;
-	UINT8 temp2;
-
-	for (i = 0; i < (MAX_BLOCKS-1); i++)
-	{
-		for (j = i+1; j < MAX_BLOCKS; j++)
-		{
-			if ((part->blocks[i] == (blockT *)NULL) && (part->blocks[j] != (blockT *)NULL))
-			{
-				temp = part->blocks[i];
-				part->blocks[i] = part->blocks[j];
-				part->blocks[j] = temp;
-
-				temp2 = part->bnum[i];
-				part->bnum[i] = part->bnum[j];
-				part->bnum[j] = temp2;
-			}
-		}
-	}
-}
-
-static UINT16 cd_readWord(UINT32 addr)
-{
-	UINT16 rv;
-
-	switch (addr & 0xffff)
-	{
-		case 0x0008:	// read HIRQ register
-		case 0x000a:
-			rv = hirqreg;
-
-			rv &= ~DCHG;	// always clear bit 6 (tray open)
-
-			if (buffull) rv |= BFUL; else rv &= ~BFUL;
-			if (sectorstore) rv |= CSCT; else rv &= ~CSCT;
-
-			hirqreg = rv;
-
-//          CDROM_LOG(("RW HIRQ: %04x\n", rv))
-
-			return rv;
-
-		case 0x000c:
-		case 0x000e:
-			CDROM_LOG(("RW HIRM: %04x\n", hirqmask))
-			return hirqmask;
-
-		case 0x0018:
-		case 0x001a:
-//          CDROM_LOG(("RW CR1: %04x\n", cr1))
-			return cr1;
-
-		case 0x001c:
-		case 0x001e:
-//          CDROM_LOG(("RW CR2: %04x\n", cr2))
-			return cr2;
-
-		case 0x0020:
-		case 0x0022:
-//          CDROM_LOG(("RW CR3: %04x\n", cr3))
-			return cr3;
-
-		case 0x0024:
-		case 0x0026:
-//          CDROM_LOG(("RW CR4: %04x\n", cr4))
-			return cr4;
-
-		case 0x8000:
-			rv = 0xffff;
-			switch (xfertype)
-			{
-				case XFERTYPE_TOC:
-					rv = tocbuf[xfercount]<<8 | tocbuf[xfercount+1];
-
-					xfercount += 2;
-					xferdnum += 2;
-
-					if (xfercount > 102*4)
-					{
-						xfercount = 0;
-						xfertype = XFERTYPE_INVALID;
-					}
-					break;
-
-				case XFERTYPE_FILEINFO_1:
-					rv = finfbuf[xfercount]<<8 | finfbuf[xfercount+1];
-					xfercount += 2;
-					xferdnum += 2;
-
-					if (xfercount > 6*2)
-					{
-						xfercount = 0;
-						xfertype = XFERTYPE_INVALID;
-					}
-					break;
-
-				case XFERTYPE_FILEINFO_254: // Lunar 2
-					if((xfercount % (6 * 2)) == 0)
-					{
-						UINT32 temp = 2 + (xfercount / (0x6 * 2));
-
-						// first 4 bytes = FAD
-						finfbuf[0] = (curdir[temp].firstfad>>24)&0xff;
-						finfbuf[1] = (curdir[temp].firstfad>>16)&0xff;
-						finfbuf[2] = (curdir[temp].firstfad>>8)&0xff;
-						finfbuf[3] = (curdir[temp].firstfad&0xff);
-						// second 4 bytes = length of file
-						finfbuf[4] = (curdir[temp].length>>24)&0xff;
-						finfbuf[5] = (curdir[temp].length>>16)&0xff;
-						finfbuf[6] = (curdir[temp].length>>8)&0xff;
-						finfbuf[7] = (curdir[temp].length&0xff);
-						finfbuf[8] = 0x00;
-						finfbuf[9] = 0x00;
-						finfbuf[10] = temp;
-						finfbuf[11] = curdir[temp].flags;
-					}
-
-					rv = finfbuf[xfercount % (6 * 2)]<<8 | finfbuf[(xfercount % (6 * 2)) +1];
-
-					xfercount += 2;
-					xferdnum += 2;
-
-					if (xfercount > (254 * 6 * 2))
-					{
-						xfercount = 0;
-						xfertype = XFERTYPE_INVALID;
-					}
-					break;
-
-				default:
-					CDROM_LOG(("STVCD: Unhandled xfer type %d\n", (int)xfertype))
-					rv = 0;
-					break;
-			}
-
-			return rv;
-
-		default:
-			CDROM_LOG(("CD: RW %08x\n", addr))
-			return 0xffff;
-	}
-
-}
-
-static UINT32 cd_readLong(UINT32 addr)
-{
-	UINT32 rv = 0;
-
-	switch (addr & 0xffff)
-	{
-		case 0x8000:
-			switch (xfertype32)
-			{
-				case XFERTYPE32_GETSECTOR:
-				case XFERTYPE32_GETDELETESECTOR:
-					// make sure we have sectors left
-					if (xfersect < xfersectnum)
-					{
-						// get next longword
-						rv = transpart->blocks[xfersectpos+xfersect]->data[xferoffs]<<24 |
-						     transpart->blocks[xfersectpos+xfersect]->data[xferoffs + 1]<<16 |
-						     transpart->blocks[xfersectpos+xfersect]->data[xferoffs + 2]<<8 |
-						     transpart->blocks[xfersectpos+xfersect]->data[xferoffs + 3];
-
-						xferdnum += 4;
-						xferoffs += 4;
-
-						// did we run out of sector?
-						if (xferoffs >= transpart->blocks[xfersect]->size)
-						{
-							CDROM_LOG(("CD: finished xfer of block %d of %d\n", xfersect+1, xfersectnum))
-
-							xferoffs = 0;
-							xfersect++;
-						}
-					}
-					else	// sectors are done, kill 'em all if we can
-					{
-						if (xfertype32 == XFERTYPE32_GETDELETESECTOR)
-						{
-							INT32 i;
-
-							CDROM_LOG(("Killing sectors in done\n"))
-
-							// deallocate the blocks
-							for (i = xfersectpos; i < xfersectpos+xfersectnum; i++)
-							{
-								cd_free_block(transpart->blocks[i]);
-								transpart->blocks[i] = (blockT *)NULL;
-								transpart->bnum[i] = 0xff;
-							}
-
-							// defrag what's left
-							cd_defragblocks(transpart);
-
-							// clean up our state
-							transpart->size -= xferdnum;
-							transpart->numblks -= xfersectnum;
-
-							xfertype32 = XFERTYPE32_INVALID;
-						}
-					}
-					break;
-
-				default:
-					CDROM_LOG(("CD: unhandled 32-bit transfer type\n"))
-					break;
-			}
-
-			return rv;
-
-		default:
-			CDROM_LOG(("CD: RL %08x\n", addr))
-			return 0xffff;
-	}
-}
-
-static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
+static void cd_free_block(blockT *blktofree);
+static void cd_defragblocks(partitionT *part);
+static void cd_getsectoroffsetnum(UINT32 bufnum, UINT32 *sectoffs, UINT32 *sectnum);
+
+static void cd_exec_command(running_machine &machine)
 {
 	UINT32 temp;
 
-	switch(addr & 0xffff)
+	if (!cdrom)
 	{
-	case 0x0008:
-	case 0x000a:
-//              CDROM_LOG(("%s:WW HIRQ: %04x & %04x => %04x\n", machine.describe_context(), hirqreg, data, hirqreg & data))
-		hirqreg &= data;
+		cd_stat = CD_STAT_OPEN;
+		cr1 = cd_stat | 0xff;
+		cr2 = 0xffff;
+		cr3 = 0xffff;
+		cr4 = 0xffff;
+		hirqreg |= CMOK;
 		return;
-	case 0x000c:
-	case 0x000e:
-    		CDROM_LOG(("WW HIRM: %04x => %04x\n", hirqmask, data))
-		hirqmask = data;
-		return;
-	case 0x0018:
-	case 0x001a:
-//              CDROM_LOG(("WW CR1: %04x\n", data))
-		/* these are ERRORS from our core and mustn't happen! */
-		if(data == 0x2100 || data == 0x2300)
-			debugger_break(machine);
+	}
 
-		cr1 = data;
-		cd_stat &= ~CD_STAT_PERI;
-		break;
-	case 0x001c:
-	case 0x001e:
-//              CDROM_LOG(("WW CR2: %04x\n", data))
-		cr2 = data;
-		break;
-	case 0x0020:
-	case 0x0022:
-//              CDROM_LOG(("WW CR3: %04x\n", data))
-		cr3 = data;
-		break;
-	case 0x0024:
-	case 0x0026:
-//              CDROM_LOG(("WW CR4: %04x\n", data))
-		cr4 = data;
-		if(cr1 != 0 && ((cr1 & 0xff00) != 0x5100) && 1)
-    		printf("CD: command exec %02x %02x %02x %02x %02x (stat %04x)\n", hirqreg, cr1, cr2, cr3, cr4, cd_stat);
+	if(cr1 != 0 && ((cr1 & 0xff00) != 0x5100) && 1)
+   		printf("CD: command exec %04x %04x %04x %04x %04x (stat %04x)\n", hirqreg, cr1, cr2, cr3, cr4, cd_stat);
 
-		if (!cdrom)
-		{
-			cd_stat = CD_STAT_OPEN;
-			cr1 = cd_stat | 0xff;
-			cr2 = 0xffff;
-			cr3 = 0xffff;
-			cr4 = 0xffff;
-			hirqreg |= CMOK;
-			return;
-		}
-
-		switch (cr1 & 0xff00)
-		{
+	switch (cr1 & 0xff00)
+	{
 		case 0x0000:
 			//CDROM_LOG(("%s:CD: Get Status\n", machine.describe_context()))
 			hirqreg |= CMOK;
@@ -665,20 +269,28 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 				case 0:	// get total session info / disc end
 					cr3 = 0x0100 | tocbuf[(101*4)+1];
 					cr4 = tocbuf[(101*4)+2]<<8 | tocbuf[(101*4)+3];
+					cd_stat = CD_STAT_PAUSE;
+					cr1 = cd_stat;
+					cr2 = 0;
 					break;
 
 				case 1:	// get total session info / disc start
 					cr3 = 0x0100;	// sessions in high byte, session start in lower
 					cr4 = 0;
+					cd_stat = CD_STAT_PAUSE;
+					cr1 = cd_stat;
+					cr2 = 0;
 					break;
 
 				default:
 					mame_printf_error("CD: Unknown request to Get Session Info %x\n", cr1 & 0xff);
+					cr1 = cd_stat;
+					cr2 = 0;
+					cr3 = 0;
+					cr4 = 0;
 					break;
 			}
-			cd_stat = CD_STAT_PAUSE;
-			cr1 = cd_stat;
-			cr2 = 0;
+
 			hirqreg |= (CMOK);
 			break;
 
@@ -689,14 +301,41 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 				// CR1 & 4 = don't confirm mode 2 subheader
 				// CR1 & 8 = retry reading mode 2 sectors
 				// CR1 & 10 = force single-speed
+				// CR1 & 80 = no change flag (done by Assault Suit Leynos 2)
 			CDROM_LOG(("%s:CD: Initialize CD system\n", machine.describe_context()))
-			hirqreg &= 0xffe5;
+			if((cr1 & 0x81) == 0x00) //guess
+			{
+				int i;
+				cd_stat = CD_STAT_PAUSE;
+				cd_curfad = 150;
+				//cur_track = 1;
+				fadstoplay = 0;
+				in_buffer = 0;
+				buffull = 0;
+				hirqreg &= 0xffe5;
+				cd_speed = (cr1 & 0x10) ? 1 : 2;
+
+				/* reset filter connections */
+				/* Guess: X-Men COTA sequence is 0x48->0x48->0x04(01)->0x04(00)->0x30 then 0x10, without this game throws a FAD reject error */
+				/* X-Men vs. SF is even fussier, sequence is  0x04 (1) 0x04 (0) 0x03 (0) 0x03 (1) 0x30 */
+				for(i=0;i<MAX_FILTERS;i++)
+				{
+					filters[i].fad = 0;
+					filters[i].range = 0xffffffff;
+					filters[i].mode = 0;
+					filters[i].chan = 0;
+					filters[i].smmask = 0;
+					filters[i].cimask = 0;
+					filters[i].fid = 0;
+					filters[i].smval = 0;
+					filters[i].cival = 0;
+				}
+
+				/* reset CD device connection */
+				//cddevice = (filterT *)NULL;
+			}
+
 			hirqreg |= (CMOK|ESEL);
-			cd_stat = CD_STAT_PAUSE;
-			cd_curfad = 150;
-			fadstoplay = 0;
-			in_buffer = 0;
-			buffull = 0;
 			cr_standard_return(cd_stat);
 			break;
 
@@ -707,8 +346,6 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 
 			// clear the "transfer" flag
 			cd_stat &= ~CD_STAT_TRANS;
-			// hack for the bootloader (TODO: Falcom Classics doesn't want this!)
-			cd_stat |= CD_STAT_PERI;
 
 			if (xferdnum)
 			{
@@ -719,6 +356,7 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			}
 			else
 			{
+				printf("No xferdnum error\n");
 				cr1 = (cd_stat) | (0xff);	// is this right?
 				cr2 = 0xffff;
 				cr3 = 0;
@@ -767,8 +405,6 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 					break;
 			}
 
-			// and kick the CD if there's more to read
-			cd_playdata();
 
 			xferdnum = 0;
 			hirqreg |= CMOK;
@@ -777,22 +413,23 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			break;
 
 		case 0x1000: // Play Disc.  FAD is in lowest 7 bits of cr1 and all of cr2.
+			UINT32 start_pos,end_pos;
+			UINT8 play_mode;
+
 			CDROM_LOG(("%s:CD: Play Disc\n",   machine.describe_context()))
 			cd_stat = CD_STAT_PLAY;
 
+			play_mode = cr3 >> 8;
+
 			if (!(cr3 & 0x8000))	// preserve current position if bit 7 set
 			{
-				cd_curfad = ((cr1&0xff)<<16) | cr2;
-				fadstoplay = ((cr3&0xff)<<16) | cr4;
+				start_pos = ((cr1&0xff)<<16) | cr2;
+				end_pos = ((cr3&0xff)<<16) | cr4;
 
-				if (cd_curfad & 0x800000)
+				if (start_pos & 0x800000)
 				{
-					if (cd_curfad != 0xffffff)
-					{
-						// fad mode
-						cd_curfad &= 0xfffff;
-						fadstoplay &= 0xfffff;
-					}
+					if (start_pos != 0xffffff)
+						cd_curfad = start_pos & 0xfffff;
 
 					printf("fad mode\n");
 					cur_track = cdrom_get_track(cdrom, cd_curfad-150);
@@ -800,27 +437,57 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 				else
 				{
 					// track mode
-					cur_track = cd_curfad>>8;
+					cur_track = (start_pos)>>8;
 					printf("track mode %d\n",cur_track);
+					if(cur_track == 0)
+						cur_track = 1;
+
 					cd_curfad = cdrom_get_track_start(cdrom, cur_track-1);
-					fadstoplay = cdrom_get_track_start(cdrom, cur_track) - cd_curfad;
+				}
+
+				if (end_pos & 0x800000)
+				{
+					if (end_pos != 0xffffff)
+						fadstoplay = end_pos & 0xfffff;
+				}
+				else
+				{
+					UINT8 end_track;
+
+					end_track = (end_pos)>>8;
+					fadstoplay = cdrom_get_track_start(cdrom, end_track) - cd_curfad;
 				}
 			}
 			else	// play until the end of the disc
 			{
-				UINT32 start_pos;
-
 				start_pos = ((cr1&0xff)<<16) | cr2;
+				end_pos = ((cr3&0xff)<<16) | cr4;
 
 				if(start_pos != 0xffffff)
 				{
-					fadstoplay = (cdrom_get_track_start(cdrom, 0xaa)) - cd_curfad;
+					/* Madou Monogatari sets 0xff80xxxx as end position, needs investigation ... */
+					if(end_pos & 0x800000)
+						fadstoplay = end_pos & 0xfffff;
+					else
+					{
+						if(end_pos == 0)
+							fadstoplay = (cdrom_get_track_start(cdrom, 0xaa)) - cd_curfad;
+						else
+							fadstoplay = (cdrom_get_track_start(cdrom, (end_pos & 0xff00) >> 8)) - cd_curfad;
+					}
 					printf("track mode %08x %08x\n",cd_curfad,fadstoplay);
 				}
-				else /* Galaxy Fight calls 10ff ffff ffff ffff, resume/restart previously called track */
+				else
 				{
-					cd_curfad = cdrom_get_track_start(cdrom, cur_track-1);
-					fadstoplay = cdrom_get_track_start(cdrom, cur_track) - cd_curfad;
+					/* resume from a pause state */
+					/* TODO: Galaxy Fight calls 10ff ffff ffff ffff, but then it calls 0x04->0x02->0x06->0x11->0x04->0x02->0x06 command sequence
+					   (and current implementation nukes start/end FAD addresses at 0x04). I'm sure that this doesn't work like this, but there could
+					   be countless possible combinations ... */
+					if(fadstoplay == 0)
+					{
+						cd_curfad = cdrom_get_track_start(cdrom, cur_track-1);
+						fadstoplay = cdrom_get_track_start(cdrom, cur_track) - cd_curfad;
+					}
 					printf("track resume %08x %08x\n",cd_curfad,fadstoplay);
 				}
 			}
@@ -834,21 +501,21 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 
 			playtype = 0;
 
-			// and do the disc I/O
-			// make sure it doesn't come in too early
-			if (cdrom_get_track_type(cdrom, cur_track-1) == CD_TRACK_AUDIO)
+			// cdda
+			if(cdrom_get_track_type(cdrom, cdrom_get_track(cdrom, cd_curfad)) == CD_TRACK_AUDIO)
 			{
 				cdda_pause_audio( machine.device( "cdda" ), 0 );
-				cdda_start_audio( machine.device( "cdda" ), cd_curfad, fadstoplay  );
+				//cdda_start_audio( machine.device( "cdda" ), cd_curfad, fadstoplay  );
+				//cdda_repeat_count = 0;
 			}
-			else
-				cdda_stop_audio( machine.device( "cdda" ) ); //stop any pending CD-DA
 
-			//else
-			//{
-			//  sector_timer->reset();
-			//  sector_timer->adjust(attotime::from_hz(CD_SPEED));  // 150 sectors / second = 300kBytes/second
-			//}
+			if(play_mode != 0x7f)
+				cdda_maxrepeat = play_mode & 0xf;
+			else
+				cdda_maxrepeat = 0;
+
+			cdda_repeat_count = 0;
+
 			break;
 
 		case 0x1100: // disc seek
@@ -949,9 +616,15 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 					}
 				}
 
+
 				hirqreg |= (CMOK|ESEL);
 				cr_standard_return(cd_stat);
 			}
+			break;
+
+		case 0x3100:
+			popmessage("Get CD Device Connection, contact MAMEdev");
+			hirqreg |= CMOK;
 			break;
 
 		case 0x3200:	// Last Buffer Destination
@@ -978,8 +651,12 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			}
 			break;
 
+		case 0x4100:
+			popmessage("Get Filter Range, contact MAMEdev");
+			hirqreg |= CMOK;
+			break;
+
 		case 0x4200:	// Set Filter Subheader conditions
-		case 0x4300:    // (mirror for Astal)
 			{
 				UINT8 fnum = (cr3>>8)&0xff;
 
@@ -997,9 +674,22 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			}
 			break;
 
+		case 0x4300:    // Get Filter Subheader conditions
+			{
+				UINT8 fnum = (cr3>>8)&0xff;
+
+				CDROM_LOG(("%s:CD: Set Filter Subheader conditions %x => chan %x masks %x fid %x vals %x\n", machine.describe_context(), fnum, cr1&0xff, cr2, cr3&0xff, cr4))
+
+				cr1 = cd_stat | (filters[fnum].chan & 0xff);
+				cr2 = (filters[fnum].smmask << 8) | (filters[fnum].cimask & 0xff);
+				cr3 = filters[fnum].fid;
+				cr4 = (filters[fnum].smval << 8) | (filters[fnum].cival & 0xff);
+
+				hirqreg |= (CMOK|ESEL);
+			}
+			break;
 
 		case 0x4400:	// Set Filter Mode
-		case 0x4500:    // (mirror for Astal)
 			{
 				UINT8 fnum = (cr3>>8)&0xff;
 				UINT8 mode = (cr1 & 0xff);
@@ -1017,6 +707,18 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 				CDROM_LOG(("%s:CD: Set Filter Mode filt %x mode %x\n", machine.describe_context(), fnum, mode))
 				hirqreg |= (CMOK|ESEL);
 				cr_standard_return(cd_stat);
+			}
+			break;
+
+		case 0x4500:    // Get Filter Mode
+			{
+				UINT8 fnum = (cr3>>8)&0xff;
+
+				cr1 = cd_stat | (filters[fnum].mode & 0xff);
+				cr2 = 0;
+				cr3 = 0;
+				cr4 = 0;
+				hirqreg |= (CMOK|ESEL);
 			}
 			break;
 
@@ -1042,12 +744,14 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			break;
 
 		case 0x4800:	// Reset Selector
+			{
+			int i,j;
+
 			CDROM_LOG(("%s:CD: Reset Selector\n",   machine.describe_context()))
 
 			if((cr1 & 0xff) == 0x00)
 			{
 				UINT8 bufnum = cr3>>8;
-				int i;
 
 				if(bufnum < MAX_FILTERS)
 				{
@@ -1071,9 +775,59 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 				return;
 			}
 
-			// ...
+			/* reset false filter output conditions */
+			if(cr1 & 0x80)
+			{
+				for(i=0;i<MAX_FILTERS;i++)
+					filters[i].condfalse = 0xff;
+			}
+
+			/* reset true filter output conditions */
+			if(cr1 & 0x40)
+			{
+				for(i=0;i<MAX_FILTERS;i++)
+					filters[i].condtrue = i;
+			}
+
+			/* reset filter conditions*/
+			if(cr1 & 0x10)
+			{
+				for(i=0;i<MAX_FILTERS;i++)
+				{
+					filters[i].fad = 0;
+					filters[i].range = 0xffffffff;
+					filters[i].mode = 0;
+					filters[i].chan = 0;
+					filters[i].smmask = 0;
+					filters[i].cimask = 0;
+					filters[i].fid = 0;
+					filters[i].smval = 0;
+					filters[i].cival = 0;
+				}
+			}
+
+			/* reset partition buffer data */
+			if(cr1 & 0x4)
+			{
+				for(i=0;i<MAX_FILTERS;i++)
+				{
+					for (j = 0; j < MAX_BLOCKS; j++)
+					{
+						cd_free_block(partitions[i].blocks[j]);
+						partitions[i].blocks[j] = (blockT *)NULL;
+						partitions[i].bnum[j] = 0xff;
+					}
+
+					partitions[i].size = -1;
+					partitions[i].numblks = 0;
+				}
+
+				buffull = sectorstore = 0;
+			}
+
 			hirqreg |= (CMOK|ESEL);
 			cr_standard_return(cd_stat);
+			}
 			break;
 
 		case 0x5000:	// get Buffer Size
@@ -1285,6 +1039,11 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 
 				partitions[bufnum].numblks -= sectnum;
 
+				if (freeblocks == 200)
+				{
+					sectorstore = 0;
+				}
+
 				cd_stat &= ~CD_STAT_TRANS;
 				cr_standard_return(cd_stat);
 				hirqreg |= (CMOK|EHST);
@@ -1327,21 +1086,46 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 				xfersectnum = sectnum;
 				transpart = &partitions[bufnum];
 
-				cd_stat &= ~CD_STAT_TRANS;
+				cd_stat |= CD_STAT_TRANS;
 				cr_standard_return(cd_stat);
 				hirqreg |= (CMOK|EHST|DRDY);
 			}
 			break;
 
 		case 0x6400:    // put sector data
-			/* TODO: After Burner 2 and Dungeon Master Nexus trips this */
+			/* TODO: After Burner 2, Out Run, Fantasy Zone and Dungeon Master Nexus trips this */
 			// ...
+			{
+				//UINT8 sectnum = cr4 & 0xff;
+				//UINT8 filtnum = cr3>>8;
+
+
+			}
 
 			hirqreg |= (CMOK|EHST);
+			cr_standard_return(cd_stat);
 			break;
+
+		case 0x6500:
+			popmessage("Copy Sector data, contact MAMEdev");
+			hirqreg |= (CMOK);
+			break;
+
+		case 0x6600:    // move sector data
+			/* TODO: Sword & Sorcery */
+			{
+				//UINT8 src_filter = (cr3>>8)&0xff;
+				//UINT8 dst_filter = cr4;
+			}
+
+			hirqreg |= (CMOK|ECPY);
+			cr_standard_return(cd_stat);
+			break;
+
 
 		case 0x6700:	// get copy error
 			CDROM_LOG(("%s:CD: Get copy error\n",   machine.describe_context()))
+			printf("Get copy error\n");
 			cr1 = cd_stat;
 			cr2 = 0;
 			cr3 = 0;
@@ -1355,54 +1139,49 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 
 			temp = (cr3&0xff)<<16;
 			temp |= cr4;
-			#if 0
-			if(temp == 0xfffff8) /* TODO: Falcom Classics */
-				temp = 0;
-			#endif
+
 			read_new_dir(machine, temp);
 			cr_standard_return(cd_stat);
 			break;
 
 		case 0x7100:	// Read directory entry
 			CDROM_LOG(("%s:CD: Read Directory Entry\n",   machine.describe_context()))
-			hirqreg |= (CMOK|EFLS);
+//			UINT32 read_dir;
 
-			// TODO!
-			popmessage("X");
+//			read_dir = ((cr3&0xff)<<16)|cr4;
 
-			//temp = (cr3&0xff)<<16;
-			//temp |= cr4;
-			#if 0
-			if(temp == 0xfffff8) /* TODO: Falcom Classics */
-				temp = 0;
-			#endif
-			//cr2 = 0x4101; // CTRL/track
-			//cr3 = (curdir[temp].firstfad>>16)&0xff;
-			//cr4 = (curdir[temp].firstfad&0xffff);
+			if((cr3 >> 8) < 0x24)
+				cddevice = &filters[cr3 >> 8];
+			else
+				cddevice = (filterT *)NULL;
+
+			/* TODO:  */
+			//read_new_dir(machine, read_dir - 2);
+
 			cr_standard_return(cd_stat);
+			hirqreg |= (CMOK|EFLS);
 			break;
 
 		case 0x7200:	// Get file system scope
 			CDROM_LOG(("CD: Get file system scope\n"))
 			hirqreg |= (CMOK|EFLS);
+			cr1 = cd_stat;
 			cr2 = numfiles;	// # of files in directory
 			cr3 = 0x0100;	// report directory held
 			cr4 = firstfile;	// first file id
+			printf("%04x %04x %04x %04x\n",cr1,cr2,cr3,cr4);
 			break;
 
 		case 0x7300:	// Get File Info
 			CDROM_LOG(("%s:CD: Get File Info\n",   machine.describe_context()))
 			cd_stat |= CD_STAT_TRANS;
 			cd_stat &= 0xff00;		// clear top byte of return value
+			playtype = 0;
+			cdda_repeat_count = 0;
 			hirqreg |= (CMOK|DRDY);
 
 			temp = (cr3&0xff)<<16;
 			temp |= cr4;
-
-			#if 0
-			if(temp == 0xfffff8) /* TODO: Falcom Classics */
-				temp = 0;
-			#endif
 
 			if (temp == 0xffffff)	// special
 			{
@@ -1429,6 +1208,7 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 				cr3 = 0;
 				cr4 = 0;
 
+				printf("%08x %08x\n",curdir[temp].firstfad,curdir[temp].length);
 				// first 4 bytes = FAD
 				finfbuf[0] = (curdir[temp].firstfad>>24)&0xff;
 				finfbuf[1] = (curdir[temp].firstfad>>16)&0xff;
@@ -1439,8 +1219,8 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 				finfbuf[5] = (curdir[temp].length>>16)&0xff;
 				finfbuf[6] = (curdir[temp].length>>8)&0xff;
 				finfbuf[7] = (curdir[temp].length&0xff);
-				finfbuf[8] = 0x00;
-				finfbuf[9] = 0x00;
+				finfbuf[8] = curdir[temp].interleave_gap_size;
+				finfbuf[9] = curdir[temp].file_unit_size;
 				finfbuf[10] = temp;
 				finfbuf[11] = curdir[temp].flags;
 
@@ -1452,34 +1232,32 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 
 		case 0x7400:	// Read File
 			CDROM_LOG(("%s:CD: Read File\n",   machine.describe_context()))
-			temp = (cr3&0xff)<<16;
-			temp |= cr4;
+			UINT16 file_offset,file_filter,file_id,file_size;
+
+			file_offset = ((cr1 & 0xff)<<8)|(cr2 & 0xff); /* correct? */
+			file_filter = cr3 >> 8;
+			file_id = ((cr3 & 0xff) << 16)|(cr4);
+			file_size = ((curdir[file_id].length + sectlenin - 1) / sectlenin) - file_offset;
 
 			cd_stat = CD_STAT_PLAY|0x80;	// set "cd-rom" bit
-			cur_track = cdrom_get_track(cdrom, curdir[temp].firstfad-150);
-			cr2 = cdrom_get_adr_control(cdrom, cur_track)<<8 | cur_track;
-			cr3 = (curdir[temp].firstfad>>16)&0xff;
-			cr4 = (curdir[temp].firstfad&0xffff);
-
-			cd_curfad = curdir[temp].firstfad;
-			if (curdir[temp].length / 2048)
-			{
-				fadstoplay = curdir[temp].length/2048;
-				fadstoplay++;
-			}
+			cd_curfad = (curdir[file_id].firstfad + file_offset);
+			fadstoplay = file_size;
+			if(file_filter < 0x24)
+				cddevice = &filters[file_filter];
 			else
-			{
-				fadstoplay = curdir[temp].length/2048;
-			}
+				cddevice = (filterT *)NULL;
 
-			hirqreg |= (CMOK|DRDY);
+			printf("Read file %08x (%08x %08x) %02x %d\n",curdir[file_id].firstfad,cd_curfad,fadstoplay,file_filter,sectlenin);
+
+			cr_standard_return(cd_stat);
+
 			oddframe = 0;
 			in_buffer = 0;
 
 			playtype = 1;
 
-			// and do the disc I/O
-//          sector_timer->adjust(attotime::from_hz(CD_SPEED));  // 150 sectors / second = 300kBytes/second
+			hirqreg |= (CMOK|EHST);
+
 			break;
 
 		case 0x7500:
@@ -1515,8 +1293,453 @@ static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
 			CDROM_LOG(("CD: Unknown command %04x\n", cr1))
 			hirqreg |= (CMOK);
 			break;
+	}
+}
+
+TIMER_DEVICE_CALLBACK( stv_sh1_sim )
+{
+	sh1_timer->adjust(attotime::from_hz(16667));
+
+	if((cmd_pending == 0xf) && (!(hirqreg & CMOK)))
+	{
+		cd_exec_command(timer.machine());
+		return;
+	}
+
+	cd_stat |= CD_STAT_PERI;
+	cr_standard_return(cd_stat);
+	hirqreg |= SCDQ;
+}
+
+TIMER_DEVICE_CALLBACK( stv_sector_cb )
+{
+	//sector_timer->reset();
+
+	//popmessage("%08x %08x %d %d",cd_curfad,fadstoplay,cmd_pending,cd_speed);
+
+	cd_playdata(timer.machine());
+
+	if(cdrom_get_track_type(cdrom, cdrom_get_track(cdrom, cd_curfad)) == CD_TRACK_AUDIO)
+		sector_timer->adjust(attotime::from_hz(75));	// 75 sectors / second = 150kBytes/second (cdda track ignores cd_speed setting)
+	else
+		sector_timer->adjust(attotime::from_hz(75*cd_speed));	// 75 / 150 sectors / second = 150 / 300kBytes/second
+}
+
+// global functions
+void stvcd_reset(running_machine &machine)
+{
+	INT32 i, j;
+
+	hirqmask = 0xffff;
+	hirqreg = 0xffff;
+	cr1 = 'C';
+	cr2 = ('D'<<8) | 'B';
+	cr3 = ('L'<<8) | 'O';
+	cr4 = ('C'<<8) | 'K';
+	cd_stat = CD_STAT_PAUSE;
+	cur_track = 0xff;
+
+	if (curdir != (direntryT *)NULL)
+		auto_free(machine, curdir);
+	curdir = (direntryT *)NULL;		// no directory yet
+
+	xfertype = XFERTYPE_INVALID;
+	xfertype32 = XFERTYPE32_INVALID;
+
+	// reset flag vars
+	buffull = sectorstore = 0;
+
+	freeblocks = 200;
+
+	sectlenin = sectlenout = 2048;
+
+	lastbuf = 0xff;
+
+	// reset buffer partitions
+	for (i = 0; i < MAX_FILTERS; i++)
+	{
+		partitions[i].size = -1;
+		partitions[i].numblks = 0;
+
+		for (j = 0; j < MAX_BLOCKS; j++)
+		{
+			partitions[i].blocks[j] = (blockT *)NULL;
+			partitions[i].bnum[j] = 0xff;
 		}
-//      CDROM_LOG(("ret: %04x %04x %04x %04x %04x\n", hirqreg, cr1, cr2, cr3, cr4))
+	}
+
+	// reset blocks
+	for (i = 0; i < MAX_BLOCKS; i++)
+	{
+		blocks[i].size = -1;
+		memset(&blocks[i].data, 0, CD_MAX_SECTOR_DATA);
+	}
+
+	// open device
+	if (cdrom)
+	{
+		cdrom_close(cdrom);
+		cdrom = (cdrom_file *)NULL;
+	}
+
+	#ifdef MESS
+	cdrom = machine.device<cdrom_image_device>("cdrom")->get_cdrom_file();
+	#else
+	cdrom = cdrom_open(get_disk_handle(machine, "cdrom"));
+	#endif
+
+	cdda_set_cdrom( machine.device("cdda"), cdrom );
+
+	if (cdrom)
+	{
+		CDROM_LOG(("Opened CD-ROM successfully, reading root directory\n"))
+		read_new_dir(machine, 0xffffff);	// read root directory
+	}
+	else
+	{
+		cd_stat = CD_STAT_OPEN;
+	}
+
+	cd_speed = 2;
+	cdda_repeat_count = 0;
+
+	sector_timer = machine.device<timer_device>("sector_timer");
+	sector_timer->adjust(attotime::from_hz(150));	// 150 sectors / second = 300kBytes/second
+	sh1_timer = machine.device<timer_device>("sh1_cmd");
+	sh1_timer->adjust(attotime::from_hz(16667));
+}
+
+static blockT *cd_alloc_block(UINT8 *blknum)
+{
+	INT32 i;
+
+	// search the 200 available blocks for a free one
+	for (i = 0; i < 200; i++)
+	{
+		if (blocks[i].size == -1)
+		{
+			freeblocks--;
+			if (freeblocks <= 0)
+			{
+				buffull = 1;
+			}
+
+			blocks[i].size = sectlenin;
+			*blknum = i;
+
+			CDROM_LOG(("CD: allocating block %d, size %x\n", i, sectlenin))
+
+			return &blocks[i];
+		}
+	}
+
+	buffull = 1;
+	return (blockT *)NULL;
+}
+
+static void cd_free_block(blockT *blktofree)
+{
+	INT32 i;
+
+	CDROM_LOG(("cd_free_block: %x\n", (UINT32)(FPTR)blktofree))
+
+	if(blktofree == NULL)
+	{
+		return;
+	}
+
+	for (i = 0; i < 200; i++)
+	{
+		if (&blocks[i] == blktofree)
+		{
+			CDROM_LOG(("CD: freeing block %d\n", i))
+		}
+	}
+
+	blktofree->size = -1;
+	freeblocks++;
+	buffull = 0;
+	hirqreg &= ~BFUL;
+}
+
+static void cd_getsectoroffsetnum(UINT32 bufnum, UINT32 *sectoffs, UINT32 *sectnum)
+{
+	if (*sectoffs == 0xffff)
+	{
+		// last sector
+		printf("CD: Don't know how to handle offset ffff\n");
+	}
+	else if (*sectnum == 0xffff)
+	{
+		*sectnum = partitions[bufnum].numblks - *sectoffs;
+	}
+}
+
+static void cd_defragblocks(partitionT *part)
+{
+	UINT32 i, j;
+	blockT *temp;
+	UINT8 temp2;
+
+	for (i = 0; i < (MAX_BLOCKS-1); i++)
+	{
+		for (j = i+1; j < MAX_BLOCKS; j++)
+		{
+			if ((part->blocks[i] == (blockT *)NULL) && (part->blocks[j] != (blockT *)NULL))
+			{
+				temp = part->blocks[i];
+				part->blocks[i] = part->blocks[j];
+				part->blocks[j] = temp;
+
+				temp2 = part->bnum[i];
+				part->bnum[i] = part->bnum[j];
+				part->bnum[j] = temp2;
+			}
+		}
+	}
+}
+
+static UINT16 cd_readWord(UINT32 addr)
+{
+	UINT16 rv;
+
+	switch (addr & 0xffff)
+	{
+		case 0x0008:	// read HIRQ register
+		case 0x000a:
+			rv = hirqreg;
+
+			rv &= ~DCHG;	// always clear bit 6 (tray open)
+
+			if (buffull) rv |= BFUL; else rv &= ~BFUL;
+			if (sectorstore) rv |= CSCT; else rv &= ~CSCT;
+
+			hirqreg = rv;
+
+//          CDROM_LOG(("RW HIRQ: %04x\n", rv))
+
+			return rv;
+
+		case 0x000c:
+		case 0x000e:
+			CDROM_LOG(("RW HIRM: %04x\n", hirqmask))
+			return hirqmask;
+
+		case 0x0018:
+		case 0x001a:
+//          CDROM_LOG(("RW CR1: %04x\n", cr1))
+			return cr1;
+
+		case 0x001c:
+		case 0x001e:
+//          CDROM_LOG(("RW CR2: %04x\n", cr2))
+			return cr2;
+
+		case 0x0020:
+		case 0x0022:
+//          CDROM_LOG(("RW CR3: %04x\n", cr3))
+			return cr3;
+
+		case 0x0024:
+		case 0x0026:
+//          CDROM_LOG(("RW CR4: %04x\n", cr4))
+			//popmessage("%04x %04x %04x %04x",cr1,cr2,cr3,cr4);
+			cmd_pending = 0;
+			return cr4;
+
+		case 0x8000:
+			rv = 0xffff;
+			switch (xfertype)
+			{
+				case XFERTYPE_TOC:
+					rv = tocbuf[xfercount]<<8 | tocbuf[xfercount+1];
+
+					xfercount += 2;
+					xferdnum += 2;
+
+					if (xfercount > 102*4)
+					{
+						xfercount = 0;
+						xfertype = XFERTYPE_INVALID;
+					}
+					break;
+
+				case XFERTYPE_FILEINFO_1:
+					rv = finfbuf[xfercount]<<8 | finfbuf[xfercount+1];
+					xfercount += 2;
+					xferdnum += 2;
+
+					if (xfercount > 6*2)
+					{
+						xfercount = 0;
+						xfertype = XFERTYPE_INVALID;
+					}
+					break;
+
+				case XFERTYPE_FILEINFO_254: // Lunar 2
+					if((xfercount % (6 * 2)) == 0)
+					{
+						UINT32 temp = 2 + (xfercount / (0x6 * 2));
+
+						// first 4 bytes = FAD
+						finfbuf[0] = (curdir[temp].firstfad>>24)&0xff;
+						finfbuf[1] = (curdir[temp].firstfad>>16)&0xff;
+						finfbuf[2] = (curdir[temp].firstfad>>8)&0xff;
+						finfbuf[3] = (curdir[temp].firstfad&0xff);
+						// second 4 bytes = length of file
+						finfbuf[4] = (curdir[temp].length>>24)&0xff;
+						finfbuf[5] = (curdir[temp].length>>16)&0xff;
+						finfbuf[6] = (curdir[temp].length>>8)&0xff;
+						finfbuf[7] = (curdir[temp].length&0xff);
+						finfbuf[8] = curdir[temp].interleave_gap_size;
+						finfbuf[9] = curdir[temp].file_unit_size;
+						finfbuf[10] = temp;
+						finfbuf[11] = curdir[temp].flags;
+					}
+
+					rv = finfbuf[xfercount % (6 * 2)]<<8 | finfbuf[(xfercount % (6 * 2)) +1];
+
+					xfercount += 2;
+					xferdnum += 2;
+
+					if (xfercount > (254 * 6 * 2))
+					{
+						xfercount = 0;
+						xfertype = XFERTYPE_INVALID;
+					}
+					break;
+
+				default:
+					CDROM_LOG(("STVCD: Unhandled xfer type %d\n", (int)xfertype))
+					rv = 0;
+					break;
+			}
+
+			return rv;
+
+		default:
+			CDROM_LOG(("CD: RW %08x\n", addr))
+			return 0xffff;
+	}
+
+}
+
+static UINT32 cd_readLong(UINT32 addr)
+{
+	UINT32 rv = 0;
+
+	switch (addr & 0xffff)
+	{
+		case 0x8000:
+			switch (xfertype32)
+			{
+				case XFERTYPE32_GETSECTOR:
+				case XFERTYPE32_GETDELETESECTOR:
+					// make sure we have sectors left
+					if (xfersect < xfersectnum)
+					{
+						// get next longword
+						rv = transpart->blocks[xfersectpos+xfersect]->data[xferoffs]<<24 |
+						     transpart->blocks[xfersectpos+xfersect]->data[xferoffs + 1]<<16 |
+						     transpart->blocks[xfersectpos+xfersect]->data[xferoffs + 2]<<8 |
+						     transpart->blocks[xfersectpos+xfersect]->data[xferoffs + 3];
+
+						xferdnum += 4;
+						xferoffs += 4;
+
+						// did we run out of sector?
+						if (xferoffs >= transpart->blocks[xfersect]->size)
+						{
+							CDROM_LOG(("CD: finished xfer of block %d of %d\n", xfersect+1, xfersectnum))
+
+							xferoffs = 0;
+							xfersect++;
+						}
+					}
+					else	// sectors are done, kill 'em all if we can
+					{
+						if (xfertype32 == XFERTYPE32_GETDELETESECTOR)
+						{
+							INT32 i;
+
+							CDROM_LOG(("Killing sectors in done\n"))
+
+							// deallocate the blocks
+							for (i = xfersectpos; i < xfersectpos+xfersectnum; i++)
+							{
+								cd_free_block(transpart->blocks[i]);
+								transpart->blocks[i] = (blockT *)NULL;
+								transpart->bnum[i] = 0xff;
+							}
+
+							// defrag what's left
+							cd_defragblocks(transpart);
+
+							// clean up our state
+							transpart->size -= xferdnum;
+							transpart->numblks -= xfersectnum;
+
+							xfertype32 = XFERTYPE32_INVALID;
+						}
+					}
+					break;
+
+				default:
+					CDROM_LOG(("CD: unhandled 32-bit transfer type\n"))
+					break;
+			}
+
+			return rv;
+
+		default:
+			CDROM_LOG(("CD: RL %08x\n", addr))
+			return 0xffff;
+	}
+}
+
+static void cd_writeWord(running_machine &machine, UINT32 addr, UINT16 data)
+{
+	switch(addr & 0xffff)
+	{
+	case 0x0008:
+	case 0x000a:
+//              CDROM_LOG(("%s:WW HIRQ: %04x & %04x => %04x\n", machine.describe_context(), hirqreg, data, hirqreg & data))
+		hirqreg &= data;
+		if(!(hirqreg & CMOK))
+		{
+			sh1_timer->reset();
+			sh1_timer->adjust(attotime::from_hz(16667));
+		}
+		return;
+	case 0x000c:
+	case 0x000e:
+    		CDROM_LOG(("WW HIRM: %04x => %04x\n", hirqmask, data))
+		hirqmask = data;
+		return;
+	case 0x0018:
+	case 0x001a:
+//              CDROM_LOG(("WW CR1: %04x\n", data))
+		cr1 = data;
+		cd_stat &= ~CD_STAT_PERI;
+		cmd_pending |= 1;
+		break;
+	case 0x001c:
+	case 0x001e:
+//              CDROM_LOG(("WW CR2: %04x\n", data))
+		cr2 = data;
+		cmd_pending |= 2;
+		break;
+	case 0x0020:
+	case 0x0022:
+//              CDROM_LOG(("WW CR3: %04x\n", data))
+		cr3 = data;
+		cmd_pending |= 4;
+		break;
+	case 0x0024:
+	case 0x0026:
+//              CDROM_LOG(("WW CR4: %04x\n", data))
+		cr4 = data;
+		cmd_pending |= 8;
 		break;
 	default:
 		CDROM_LOG(("CD: WW %08x %04x\n", addr, data))
@@ -1617,6 +1840,9 @@ static void read_new_dir(running_machine &machine, UINT32 fileno)
 		foundpd = 0;	// search for primary vol. desc
 		while ((!foundpd) && (cfad < 200))
 		{
+			if(sectlenin != 2048)
+				popmessage("Sector Length %d, contact MAMEdev (0)",sectlenin);
+
 			memset(sect, 0, 2048);
 			cd_readblock(cfad++, sect);
 
@@ -1691,6 +1917,9 @@ static void make_dir_current(running_machine &machine, UINT32 fad)
 
 	sect = (UINT8 *)malloc(MAX_DIR_SIZE);
 	memset(sect, 0, MAX_DIR_SIZE);
+	if(sectlenin != 2048)
+		popmessage("Sector Length %d, contact MAMEdev (1)",sectlenin);
+
 	for (i = 0; i < (curroot.length/2048); i++)
 	{
 		cd_readblock(fad+i, &sect[2048*i]);
@@ -1723,14 +1952,49 @@ static void make_dir_current(running_machine &machine, UINT32 fad)
 	nextent = 0;
 	while (numentries)
 	{
+		// [0] record size
+		// [1] xa record size
+		// [2-5] lba
+		// [6-9] (lba?)
+		// [10-13] size
+		// [14-17] (size?)
+		// [18] year
+		// [19] month
+		// [20] day
+		// [21] hour
+		// [22] minute
+		// [23] second
+		// [24] gmt offset
+		// [25] flags
+		// [26] file unit size
+		// [27] interleave gap size
+		// [28-29] volume sequencer number
+		// [30-31] (volume sequencer number?)
+		// [32] name character size
+		// [33+ ...] file name
+
+		curentry->record_size = sect[nextent+0];
+		curentry->xa_record_size = sect[nextent+1];
 		curentry->firstfad = sect[nextent+2] | (sect[nextent+3]<<8) | (sect[nextent+4]<<16) | (sect[nextent+5]<<24);
 		curentry->firstfad += 150;
 		curentry->length = sect[nextent+10] | (sect[nextent+11]<<8) | (sect[nextent+12]<<16) | (sect[nextent+13]<<24);
+		curentry->year = sect[nextent+18];
+		curentry->month = sect[nextent+19];
+		curentry->day = sect[nextent+20];
+		curentry->hour = sect[nextent+21];
+		curentry->minute = sect[nextent+22];
+		curentry->second = sect[nextent+23];
+		curentry->gmt_offset = sect[nextent+24];
 		curentry->flags = sect[nextent+25];
+		curentry->file_unit_size = sect[nextent+26];
+		curentry->interleave_gap_size = sect[nextent+27];
+		curentry->volume_sequencer_number = sect[nextent+28] | (sect[nextent+29] << 8);
+
 		for (i = 0; i < sect[nextent+32]; i++)
 		{
 			curentry->name[i] = sect[nextent+33+i];
 		}
+		//printf("%08x %08x %s %d/%d/%d\n",curentry->firstfad,curentry->length,curentry->name,curentry->year,curentry->month,curentry->day);
 		curentry->name[i] = '\0';	// terminate
 
 		nextent += sect[nextent];
@@ -1857,7 +2121,7 @@ static void cd_readTOC(void)
 	tocbuf[tocptr+11] = fad&0xff;
 }
 
-static partitionT *cd_filterdata(filterT *flt, int trktype)
+static partitionT *cd_filterdata(filterT *flt, int trktype, UINT8 *p_ok)
 {
 	int match = 1, keepgoing = 2;
 	partitionT *filterprt = (partitionT *)NULL;
@@ -1880,17 +2144,29 @@ static partitionT *cd_filterdata(filterT *flt, int trktype)
 
 			if (flt->mode & 2)	// channel number
 			{
-				mame_printf_error("STVCD: unimplemented channel number match\n");
+				if (curblock.chan != flt->chan)
+				{
+					logerror("channel number reject\n");
+					match = 0;
+				}
 			}
 
 			if (flt->mode & 4)	// sub mode
 			{
-				mame_printf_error("STVCD: unimplemented sub mode match\n");
+				if((curblock.subm & flt->smmask) != flt->smval)
+				{
+					logerror("sub mode reject\n");
+					match = 0;
+				}
 			}
 
 			if (flt->mode & 8)	// coding information
 			{
-				mame_printf_error("STVCD: unimplemented coding information match\n");
+				if((curblock.cinf & flt->cimask) != flt->cival)
+				{
+					logerror("coding information reject\n");
+					match = 0;
+				}
 			}
 
 			if (flt->mode & 0x10)	// reverse subheader conditions
@@ -1904,7 +2180,7 @@ static partitionT *cd_filterdata(filterT *flt, int trktype)
 		{
 			if ((cd_curfad < flt->fad) || (cd_curfad > (flt->fad + flt->range)))
 			{
-				logerror("curfad reject\n");
+				printf("curfad reject %08x %08x %08x %08x\n",cd_curfad,fadstoplay,flt->fad,flt->fad+flt->range);
 				match = 0;
 			}
 		}
@@ -1923,6 +2199,7 @@ static partitionT *cd_filterdata(filterT *flt, int trktype)
 			// reject sector if no match on either connector
 			if ((lastbuf == 0xff) || (keepgoing < 2))
 			{
+				*p_ok = 0;
 				return (partitionT *)NULL;
 			}
 
@@ -1940,6 +2217,7 @@ static partitionT *cd_filterdata(filterT *flt, int trktype)
 	// did the allocation succeed?
 	if (filterprt->blocks[filterprt->numblks] == (blockT *)NULL)
 	{
+		*p_ok = 0;
 		return (partitionT *)NULL;
 	}
 
@@ -1986,11 +2264,12 @@ static partitionT *cd_filterdata(filterT *flt, int trktype)
 	filterprt->size += filterprt->blocks[filterprt->numblks]->size;
 	filterprt->numblks++;
 
+	*p_ok = 1;
 	return filterprt;
 }
 
 // read a single sector off the CD, applying the current filter(s) as necessary
-static partitionT *cd_read_filtered_sector(INT32 fad)
+static partitionT *cd_read_filtered_sector(INT32 fad, UINT8 *p_ok)
 {
 	int trktype;
 
@@ -2012,8 +2291,7 @@ static partitionT *cd_read_filtered_sector(INT32 fad)
 		{
 			cdrom_read_data(cdrom, fad-150, curblock.data, CD_TRACK_AUDIO);
 		}
-		cr3 = 0x100 | (fad>>16);	// update cr3/4 with the current fad
-		cr4 = fad;
+
 		curblock.size = sectlenin;
 		curblock.FAD = fad;
 
@@ -2032,14 +2310,15 @@ static partitionT *cd_read_filtered_sector(INT32 fad)
 			}
 		}
 
-		return cd_filterdata(cddevice, trktype);
+		return cd_filterdata(cddevice, trktype, &*p_ok);
 	}
 
+	*p_ok = 0;
 	return (partitionT *)NULL;
 }
 
 // loads in data set up by a CD-block PLAY command
-static void cd_playdata(void)
+static void cd_playdata(running_machine &machine)
 {
 	if ((cd_stat & 0x0f00) == CD_STAT_PLAY)
 	{
@@ -2049,28 +2328,49 @@ static void cd_playdata(void)
 
 			if (cdrom)
 			{
+				UINT8 p_ok;
+
 				if(cdrom_get_track_type(cdrom, cdrom_get_track(cdrom, cd_curfad)) != CD_TRACK_AUDIO)
-					cd_read_filtered_sector(cd_curfad);
-
-				if(cdrom_get_track_type(cdrom, cdrom_get_track(cdrom, cd_curfad)) != CD_TRACK_AUDIO && 0)
-					popmessage("%08x %08x",cd_curfad,fadstoplay);
-
-				cd_curfad++;
-				fadstoplay--;
-
-				hirqreg |= CSCT;
-
-				if (!fadstoplay)
 				{
-					CDROM_LOG(("cd_playdata: playback ended\n"))
-					cd_stat = CD_STAT_PAUSE;
+					cd_read_filtered_sector(cd_curfad,&p_ok);
+					cdda_stop_audio( machine.device( "cdda" ) ); //stop any pending CD-DA
+				}
+				else
+				{
+					p_ok = 1; // TODO
+					cdda_start_audio( machine.device( "cdda" ), cd_curfad, 1  );
+				}
 
-					hirqreg |= PEND;
+				if(p_ok)
+				{
+					cd_curfad++;
+					fadstoplay--;
+					hirqreg |= CSCT;
+					sectorstore = 1;
 
-					if (playtype == 1)
+					if (!fadstoplay)
 					{
-						CDROM_LOG(("cd_playdata: setting EFLS\n"))
-						hirqreg |= EFLS;
+						if(cdda_repeat_count >= cdda_maxrepeat)
+						{
+							CDROM_LOG(("cd_playdata: playback ended\n"))
+							cd_stat = CD_STAT_PAUSE;
+
+							hirqreg |= PEND;
+
+							if (playtype == 1)
+							{
+								CDROM_LOG(("cd_playdata: setting EFLS\n"))
+								hirqreg |= EFLS;
+							}
+						}
+						else
+						{
+							if(cdda_repeat_count < 0xe)
+								cdda_repeat_count++;
+
+							cd_curfad = cdrom_get_track_start(cdrom, cur_track-1) + 150;
+							fadstoplay = cdrom_get_track_start(cdrom, cur_track) - cd_curfad;
+						}
 					}
 				}
 			}

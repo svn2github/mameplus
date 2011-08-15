@@ -14,14 +14,6 @@ Notes:
 -Memo: Some tests done on the original & working PCB,to be implemented:
  -The AD-Stick returns 0x00 or a similar value.
  -The Ports E,F & G must return 0xff
- -The regular BIOS tests (Memory Test) changes his background color at some point to
-  several gradients of red,green and blue.Current implementation remains black.I dunno
-  if this is a framebuffer write or a funky transparency issue (i.e TRANSPARENT_NONE
-  should instead show the back layer).
- -RBG0 rotating can be checked on the "Advanced Test" menu thru the VDP1/VDP2 check.
-  It rotates clockwise IIRC.Also the ST-V logo when the game is in Multi mode rotates too.
- -The MIDI communication check fails even on a ST-V board,somebody needs to check if there
-  is a MIDI port on the real PCB...
 
 TODO:
 (Main issues)
@@ -30,23 +22,21 @@ TODO:
 - The Cart-Dev mode hangs even with the -dev bios,I would like to see what it does on the real HW.
 - IC13 games on the bios dev doesn't even load the cartridge / crashes the emulation at start-up,
   rom rearrange needed?
-- finish the DSP core.
+- SCU DSP still has its fair share of issues, it also needs to be converted to CPU structure;
 - Add the RS232c interface (serial port),needed by fhboxers.
-- (PCB owners) check if the clocks documented in the manuals are really right for ST-V.
-- We need to check every game if can be completed or there are any hanging/crash/protection
-  issues on them.
-- Clean-ups and split the various chips(SCU,SMPC) into their respective files (in progress).
 - Video emulation bugs: check stvvdp2.c file.
 - Reimplement the idle skip if possible.
 - clean up the I/Os, by using per-game specific mapped ports and rewrite it by using 16-bit trampolines
 - Properly emulate the protection chips, used by several games (check stvprot.c for more info)
+- Move SCU device into its respective files;
+- Split ST-V and Saturn files properly;
+- completely rewrite IOGA for ST-V;
 
 (per-game issues)
-- stress: accesses the Sound Memory Expansion Area (0x05a00000-0x05afffff), unknown purpose;
+- stress: accesses the Sound Memory Expansion Area (0x05a80000-0x05afffff), unknown purpose;
 - smleague / finlarch: it randomly hangs / crashes,it works if you use a ridiculous MCFG_INTERLEAVE number,might need strict
   SH-2 synching.
 - suikoenb/shanhigw + others: why do we get 2 credits on startup? Cause might be by a communication with the M68k
-- bakubaku: sound part is largely incomplete,caused by a tight loop at location PC=1048 of the sound cpu part.
 - myfairld: Apparently this game gives a black screen (either test mode and in-game mode),but let it wait for about
   10 seconds and the game will load everything. This is because of a hellishly slow m68k sub-routine located at 54c2.
   Likely to not be a bug but an in-game design issue.
@@ -55,10 +45,10 @@ TODO:
   the mahjong panel instead. Also the REACH and RON buttons are actually reversed.
 - danchih: hanafuda panel doesn't work.
 - findlove: controls doesn't work? Playing with the debugger at location $6063720 it makes it get furter,but controls
-  still doesn't work,missing irq?
+  still doesn't work, missing irq?
 - batmanfr: Missing sound,caused by an extra ADSP chip which is on the cart.The CPU is a
   ADSP-2181,and it's the same used by NBA Jam Extreme (ZN game).
-- vfremix: when you play Akira, there is a problem with third match: game doesn't upload all textures
+- vfremix: when you play as Akira, there is a problem with third match: game doesn't upload all textures
   and tiles and doesn't enable display, although gameplay is normal - wait a while to get back
   to title screen after losing a match
 
@@ -435,10 +425,9 @@ xxxx xxxx x--- xx-- xx-- xx-- xx-- xx-- UNUSED
 **********************************************************************************/
 /*
 DMA TODO:
+-Remove CD transfer DMA hack (tied with CD block bug(s)?)
 -Add timings(but how fast are each DMA?).
 -Add level priority & DMA status register.
--Add byte data type transfer.
--Set boundaries.
 */
 
 #define DIRECT_MODE(_lv_)			(!(state->m_scu_regs[5+(_lv_*8)] & 0x01000000))
@@ -451,15 +440,14 @@ DMA TODO:
 #define DnMV_1(_ch_) DMA_STATUS|=(0x10 << 4 * _ch_)
 #define DnMV_0(_ch_) DMA_STATUS&=~(0x10 << 4 * _ch_)
 
-static UINT32 scu_add_tmp;
-
 /*For area checking*/
-#define ABUS(_lv_)       ((state->m_scu.src[_lv_] & 0x07ffffff) >= 0x02000000) && ((state->m_scu.src[_lv_] & 0x07ffffff) <= 0x04ffffff)
+#define BIOS_BUS(var)   (var & 0x07000000) == 0
+#define ABUS(_lv_)       ((state->m_scu.src[_lv_] & 0x07000000) >= 0x02000000) && ((state->m_scu.src[_lv_] & 0x07000000) <= 0x04000000)
 #define BBUS(_lv_)       ((scu_##_lv_ & 0x07ffffff) >= 0x05a00000) && ((scu_##_lv_ & 0x07ffffff) <= 0x05ffffff)
 #define VDP1_REGS(_lv_)  ((scu_##_lv_ & 0x07ffffff) >= 0x05d00000) && ((scu_##_lv_ & 0x07ffffff) <= 0x05dfffff)
 #define VDP2(_lv_)       ((scu_##_lv_ & 0x07ffffff) >= 0x05e00000) && ((scu_##_lv_ & 0x07ffffff) <= 0x05fdffff)
 #define WORK_RAM_L(_lv_) ((scu_##_lv_ & 0x07ffffff) >= 0x00200000) && ((scu_##_lv_ & 0x07ffffff) <= 0x002fffff)
-#define WORK_RAM_H(_lv_) ((scu_##_lv_ & 0x07ffffff) >= 0x06000000) && ((scu_##_lv_ & 0x07ffffff) <= 0x060fffff)
+#define WORK_RAM_H(var) (var & 0x07000000) == 0x06000000
 #define SOUND_RAM(_lv_)  ((scu_##_lv_ & 0x07ffffff) >= 0x05a00000) && ((scu_##_lv_ & 0x07ffffff) <= 0x05afffff)
 
 static void scu_do_transfer(running_machine &machine,UINT8 event)
@@ -483,22 +471,25 @@ static void scu_test_pending_irq(running_machine &machine)
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
 	int i;
-	const int irq_level[32] = { 0x1, 0x1, 0x1, 0x1,
-								0x1, 0x1, 0x1, 0x1,
+	const int irq_level[32] = { 0xf, 0xe, 0xd, 0xc,
+								0xb, 0xa, 0x9, 0x8,
+								0x8, 0x6, 0x6, 0x5,
+								0x3, 0x2,  -1,  -1,
+   							    0x7, 0x7, 0x7, 0x7,
 								0x4, 0x4, 0x4, 0x4,
-								0x7, 0x7, 0x7, 0x7,
-								 -1,  -1, 0x2, 0x3,
-								0x5, 0x6, 0x6, 0x8,
-								0x8, 0x9, 0xa, 0xb,
-								0xc, 0xd, 0xe, 0xf };
+								0x1, 0x1, 0x1, 0x1,
+								0x1, 0x1, 0x1, 0x1  };
 
-	for(i=0;i<31;i++)
+	for(i=0;i<32;i++)
 	{
 		if((!(state->m_scu.ism & 1 << i)) && (state->m_scu.ist & 1 << i))
 		{
 			if(irq_level[i] != -1) /* TODO: cheap check for undefined irqs */
+			{
 				device_set_input_line_and_vector(state->m_maincpu, irq_level[i], HOLD_LINE, 0x40 + i);
-			state->m_scu.ist &= ~(1 << i);
+				state->m_scu.ist &= ~(1 << i);
+				return; /* avoid spurious irqs, correct? */
+			}
 		}
 	}
 }
@@ -511,12 +502,17 @@ static READ32_HANDLER( saturn_scu_r )
 	/*TODO: write only registers must return 0...*/
 	switch(offset)
 	{
-		//case 0x5c/4:
-		//	Super Major League reads here???
-		//	break;
-	 	case 0x7c/4:
+		case 0x5c/4:
+		//  Super Major League and Shin Megami Tensei - Akuma Zensho reads from there (undocumented), DMA status mirror?
+			if(LOG_SCU) logerror("(PC=%08x) DMA status reg read\n",cpu_get_pc(&space->device()));
+			res = state->m_scu_regs[0x7c/4];
+			break;
+		case 0x7c/4:
 			if(LOG_SCU) logerror("(PC=%08x) DMA status reg read\n",cpu_get_pc(&space->device()));
 			res = state->m_scu_regs[offset];
+			break;
+		case 0x80/4:
+			res = dsp_prg_ctrl_r(space);
 			break;
 		case 0x8c/4:
 			if(LOG_SCU) logerror( "DSP mem read at %08X\n", state->m_scu_regs[34]);
@@ -532,7 +528,7 @@ static READ32_HANDLER( saturn_scu_r )
 			break;
 		case 0xc8/4:
 			logerror("(PC=%08x) SCU version reg read\n",cpu_get_pc(&space->device()));
-			res = 0x00000004;/*SCU Version 4, OK?*/
+			res = 0x00000004;/*SCU Version 4, OK? */
 			break;
 		default:
 	    	if(LOG_SCU) logerror("(PC=%08x) SCU reg read at %d = %08x\n",cpu_get_pc(&space->device()),offset,state->m_scu_regs[offset]);
@@ -556,13 +552,11 @@ static WRITE32_HANDLER( saturn_scu_w )
 		/*LV 0 DMA*/
 		case 0x00/4: case 0x20/4: case 0x40/4:  state->m_scu.src[DMA_CH]  = ((state->m_scu_regs[offset] & 0x07ffffff) >> 0); break;
 		case 0x04/4: case 0x24/4: case 0x44/4:  state->m_scu.dst[DMA_CH]  = ((state->m_scu_regs[offset] & 0x07ffffff) >> 0); break;
-		case 0x08/4: case 0x28/4: case 0x48/4:  state->m_scu.size[DMA_CH] = ((state->m_scu_regs[offset] & ((offset == 2) ? 0x000fffff : 0x1fff)) >> 0); break;
+		case 0x08/4: case 0x28/4: case 0x48/4:  state->m_scu.size[DMA_CH] = ((state->m_scu_regs[offset] & ((offset == 2) ? 0x000fffff : 0xfff)) >> 0); break;
 		case 0x0c/4: case 0x2c/4: case 0x4c/4:
-			/*Read address add value for DMA lv 0*/
 			state->m_scu.src_add[DMA_CH] = (state->m_scu_regs[offset] & 0x100) ? 4 : 0;
-
-			/*Write address add value for DMA lv 0*/
-			state->m_scu.dst_add[DMA_CH] = 2 << (state->m_scu_regs[offset] & 7);
+			state->m_scu.dst_add[DMA_CH] = 1 << (state->m_scu_regs[offset] & 7);
+			if(state->m_scu.dst_add[DMA_CH] == 1) { state->m_scu.dst_add[DMA_CH] = 0; }
 			break;
 		case 0x10/4: case 0x30/4: case 0x50/4:
 			state->m_scu.enable_mask[DMA_CH] = (data & 0x100) >> 8;
@@ -580,7 +574,6 @@ static WRITE32_HANDLER( saturn_scu_w )
 				if(!DWUP(DMA_CH)) state->m_scu.index[DMA_CH] = state->m_scu.dst[DMA_CH];
 			}
 
-			/*Start factor enable bits,bit 2,bit 1 and bit 0*/
 			state->m_scu.start_factor[DMA_CH] = state->m_scu_regs[offset] & 7;
 			break;
 
@@ -589,39 +582,34 @@ static WRITE32_HANDLER( saturn_scu_w )
 			break;
 		case 0x7c/4: if(LOG_SCU) logerror("Warning: DMA status WRITE! Offset %02x(%d)\n",offset*4,offset); break;
 		/*DSP section*/
-		/*Use functions so it is easier to work out*/
 		case 0x80/4:
-			dsp_prg_ctrl(space, data);
+			/* TODO: you can't overwrite some flags with this */
+			dsp_prg_ctrl_w(space, state->m_scu_regs[offset]);
 			if(LOG_SCU) logerror("SCU DSP: Program Control Port Access %08x\n",data);
 			break;
 		case 0x84/4:
-			dsp_prg_data(data);
+			dsp_prg_data(state->m_scu_regs[offset]);
 			if(LOG_SCU) logerror("SCU DSP: Program RAM Data Port Access %08x\n",data);
 			break;
 		case 0x88/4:
-			dsp_ram_addr_ctrl(data);
+			dsp_ram_addr_ctrl(state->m_scu_regs[offset]);
 			if(LOG_SCU) logerror("SCU DSP: Data RAM Address Port Access %08x\n",data);
 			break;
 		case 0x8c/4:
-			dsp_ram_addr_w(data);
+			dsp_ram_addr_w(state->m_scu_regs[offset]);
 			if(LOG_SCU) logerror("SCU DSP: Data RAM Data Port Access %08x\n",data);
 			break;
-		case 0x90/4: if(LOG_SCU) logerror("timer 0 compare data = %03x\n",state->m_scu_regs[36]);break;
-		case 0x94/4: if(LOG_SCU) logerror("timer 1 set data = %08x\n",state->m_scu_regs[37]); break;
-		case 0x98/4: if(LOG_SCU) logerror("timer 1 mode data = %08x\n",state->m_scu_regs[38]); break;
-		case 0xa0/4:
-		/*An interrupt is masked when his specific bit is 1.*/
-		/*Are bit 16-bit 31 for External A-Bus irq mask like the status register?*/
-
-		state->m_scu.ism = state->m_scu_regs[0xa0/4];
-		scu_test_pending_irq(space->machine());
-		break;
-		/*Interrupt Control reg Set*/
-		case 0xa4/4:
-		if(LOG_SCU) logerror("PC=%08x IRQ status reg set:%08x %08x\n",cpu_get_pc(&space->device()),state->m_scu_regs[41],mem_mask);
-
-		state->m_scu.ist &= state->m_scu_regs[offset];
-		break;
+		case 0x90/4: /*if(LOG_SCU) logerror("timer 0 compare data = %03x\n",state->m_scu_regs[36]);*/ break;
+		case 0x94/4: /*if(LOG_SCU) logerror("timer 1 set data = %08x\n",state->m_scu_regs[37]);*/ break;
+		case 0x98/4: /*if(LOG_SCU) logerror("timer 1 mode data = %08x\n",state->m_scu_regs[38]);*/ break;
+		case 0xa0/4: /* IRQ mask */
+			state->m_scu.ism = state->m_scu_regs[0xa0/4];
+			scu_test_pending_irq(space->machine());
+			break;
+		case 0xa4/4: /* IRQ control */
+			if(LOG_SCU) logerror("PC=%08x IRQ status reg set:%08x %08x\n",cpu_get_pc(&space->device()),state->m_scu_regs[41],mem_mask);
+			state->m_scu.ist &= state->m_scu_regs[offset];
+			break;
 		case 0xa8/4: if(LOG_SCU) logerror("A-Bus IRQ ACK %08x\n",state->m_scu_regs[42]); break;
 		case 0xc4/4: if(LOG_SCU) logerror("SCU SDRAM set: %02x\n",state->m_scu_regs[49]); break;
 		default: if(LOG_SCU) logerror("Warning: unused SCU reg set %d = %08x\n",offset,data);
@@ -667,97 +655,91 @@ static TIMER_CALLBACK( dma_lv2_ended )
 	DnMV_0(2);
 }
 
+static void scu_single_transfer(address_space *space, UINT32 src, UINT32 dst,UINT8 *src_shift)
+{
+	UINT32 src_data;
+
+	if(src & 1)
+	{
+		/* Road Blaster does a work ram h to color ram with offsetted source address, do some data rotation */
+		src_data = ((space->read_dword(src & 0x07fffffc) & 0x00ffffff)<<8);
+		src_data |= ((space->read_dword((src & 0x07fffffc)+4) & 0xff000000) >> 24);
+		src_data >>= (*src_shift)*16;
+	}
+	else
+		src_data = space->read_dword(src & 0x07fffffc) >> (*src_shift)*16;
+
+	space->write_word(dst,src_data);
+
+	*src_shift ^= 1;
+}
+
 static void scu_dma_direct(address_space *space, UINT8 dma_ch)
 {
 	saturn_state *state = space->machine().driver_data<saturn_state>();
-	static UINT32 tmp_src,tmp_dst,tmp_size;
+	UINT32 tmp_src,tmp_dst,tmp_size;
+	UINT8 cd_transfer_flag;
 
-	if(0)
+	if(state->m_scu.src_add[dma_ch] == 0 || (state->m_scu.dst_add[dma_ch] != 2 && state->m_scu.dst_add[dma_ch] != 4))
 	{
 	if(LOG_SCU) printf("DMA lv %d transfer START\n"
 			             "Start %08x End %08x Size %04x\n",dma_ch,state->m_scu.src[dma_ch],state->m_scu.dst[dma_ch],state->m_scu.size[dma_ch]);
 	if(LOG_SCU) printf("Start Add %04x Destination Add %04x\n",state->m_scu.src_add[dma_ch],state->m_scu.dst_add[dma_ch]);
 	}
 
+	/* TODO: Game Basic trips this, bogus transfer from BIOS area to VDP1? */
+	if(BIOS_BUS(state->m_scu.src[dma_ch]))
+		popmessage("Warning: SCU transfer from BIOS area, contact MAMEdev");
+
 	DnMV_1(dma_ch);
 
 	/* max size */
-	if(state->m_scu.size[dma_ch] == 0) { state->m_scu.size[dma_ch] = (dma_ch == 0) ? 0x00100000 : 0x2000; }
+	if(state->m_scu.size[dma_ch] == 0) { state->m_scu.size[dma_ch] = (dma_ch == 0) ? 0x00100000 : 0x1000; }
 
-	/*set here the boundaries checks*/
-	/*...*/
-	if((state->m_scu.dst_add[dma_ch] != state->m_scu.src_add[dma_ch]) && (ABUS(dma_ch)))
-	{
-		logerror("A-Bus invalid transfer, sets to default\n");
-		scu_add_tmp = (state->m_scu.dst_add[dma_ch]*0x100) | (state->m_scu.src_add[dma_ch]);
-		state->m_scu.dst_add[dma_ch] = state->m_scu.src_add[dma_ch] = 4;
-		scu_add_tmp |= 0x80000000;
-	}
-
-	#if 0
-
-	/*Let me know if you encounter any of these three*/
-	if(ABUS(dst_0))
-	{
-		logerror("A-Bus invalid write\n");
-		/*...*/
-	}
-	if(WORK_RAM_L(dst_0))
-	{
-		logerror("WorkRam-L invalid write\n");
-		/*...*/
-	}
-	if(VDP2(src_0))
-	{
-		logerror("VDP-2 invalid read\n");
-		/*...*/
-	}
-	if(VDP1_REGS(dst_0))
-	{
-		logerror("VDP1 register access,must be in word units\n");
-		scu_add_tmp = (state->m_scu.dst_add[0]*0x100) | (state->m_scu.src_add[0]);
-		state->m_scu.dst_add[0] = state->m_scu.src_add[0] = 2;
-		scu_add_tmp |= 0x80000000;
-	}
-	if(DRUP(0))
-	{
-		logerror("Data read update = 1,read address add value must be 1 too\n");
-		scu_add_tmp = (state->m_scu.dst_add[0]*0x100) | (state->m_scu.src_add[0]);
-		state->m_scu.src_add[0] = 4;
-		scu_add_tmp |= 0x80000000;
-	}
-
-	if (WORK_RAM_H(dst_0) && (state->m_scu.dst_add[0] != 4))
-	{
-		scu_add_tmp = (state->m_scu.dst_add[0]*0x100) | (state->m_scu.src_add[0]);
-		state->m_scu.dst_add[0] = 4;
-		scu_add_tmp |= 0x80000000;
-	}
-	#endif
+	tmp_src = tmp_dst = 0;
 
 	tmp_size = state->m_scu.size[dma_ch];
 	if(!(DRUP(dma_ch))) tmp_src = state->m_scu.src[dma_ch];
 	if(!(DWUP(dma_ch))) tmp_dst = state->m_scu.dst[dma_ch];
 
-	for (; state->m_scu.size[dma_ch] > 0; state->m_scu.size[dma_ch]-=state->m_scu.dst_add[dma_ch])
-	{
-		if(state->m_scu.dst_add[dma_ch] == 2)
-			space->write_word(state->m_scu.dst[dma_ch],space->read_word(state->m_scu.src[dma_ch]));
-		else if(state->m_scu.dst_add[dma_ch] == 8)
-		{
-			space->write_word(state->m_scu.dst[dma_ch],  space->read_word(state->m_scu.src[dma_ch]  ));
-			space->write_word(state->m_scu.dst[dma_ch]+2,space->read_word(state->m_scu.src[dma_ch]  ));
-			space->write_word(state->m_scu.dst[dma_ch]+4,space->read_word(state->m_scu.src[dma_ch]+2));
-			space->write_word(state->m_scu.dst[dma_ch]+6,space->read_word(state->m_scu.src[dma_ch]+2));
-		}
-		else
-		{
-			space->write_word(state->m_scu.dst[dma_ch],  space->read_word(state->m_scu.src[dma_ch]  ));
-			space->write_word(state->m_scu.dst[dma_ch]+2,space->read_word(state->m_scu.src[dma_ch]+2));
-		}
+	cd_transfer_flag = state->m_scu.src_add[dma_ch] == 0 && state->m_scu.src[dma_ch] == 0x05818000;
 
-		state->m_scu.dst[dma_ch]+=state->m_scu.dst_add[dma_ch];
-		state->m_scu.src[dma_ch]+=state->m_scu.src_add[dma_ch];
+	/* TODO: Many games directly accesses CD-ROM register 0x05818000, it must be a dword access with current implementation otherwise it won't work */
+	if(cd_transfer_flag)
+	{
+		int i;
+		if(WORK_RAM_H(state->m_scu.dst[dma_ch]))
+			state->m_scu.dst_add[dma_ch] = 4;
+		else
+			state->m_scu.dst_add[dma_ch] <<= 1;
+
+		for (i = 0; i < state->m_scu.size[dma_ch];i+=state->m_scu.dst_add[dma_ch])
+		{
+			space->write_dword(state->m_scu.dst[dma_ch],space->read_dword(state->m_scu.src[dma_ch]));
+			if(state->m_scu.dst_add[dma_ch] == 8)
+				space->write_dword(state->m_scu.dst[dma_ch]+4,space->read_dword(state->m_scu.src[dma_ch]));
+
+			state->m_scu.src[dma_ch]+=state->m_scu.src_add[dma_ch];
+			state->m_scu.dst[dma_ch]+=state->m_scu.dst_add[dma_ch];
+		}
+	}
+	else
+	{
+		int i;
+		UINT8  src_shift;
+
+		src_shift = ((state->m_scu.src[dma_ch] & 2) >> 1) ^ 1;
+
+		for (i = 0; i < state->m_scu.size[dma_ch];i+=2)
+		{
+			scu_single_transfer(space,state->m_scu.src[dma_ch],state->m_scu.dst[dma_ch],&src_shift);
+
+			if(src_shift)
+				state->m_scu.src[dma_ch]+=state->m_scu.src_add[dma_ch];
+
+			/* if target is Work RAM H, the add value is fixed, behaviour confirmed by Final Romance 2, Virtual Mahjong and Burning Rangers */
+			state->m_scu.dst[dma_ch]+=(WORK_RAM_H(state->m_scu.dst[dma_ch])) ? 2 : state->m_scu.dst_add[dma_ch];
+		}
 	}
 
 	state->m_scu.size[dma_ch] = tmp_size;
@@ -772,13 +754,6 @@ static void scu_dma_direct(address_space *space, UINT8 dma_ch)
 			case 1: space->machine().scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv1_ended)); break;
 			case 2: space->machine().scheduler().timer_set(attotime::from_usec(300), FUNC(dma_lv2_ended)); break;
 		}
-	}
-
-	if(scu_add_tmp & 0x80000000)
-	{
-		state->m_scu.dst_add[dma_ch] = (scu_add_tmp & 0xff00) >> 8;
-		state->m_scu.src_add[dma_ch] = (scu_add_tmp & 0x00ff) >> 0;
-		scu_add_tmp&=~0x80000000;
 	}
 }
 
@@ -808,36 +783,34 @@ static void scu_dma_indirect(address_space *space,UINT8 dma_ch)
 		if(indirect_src & 0x80000000)
 			job_done = 1;
 
-		if(0)
+		if(state->m_scu.src_add[dma_ch] == 0 || (state->m_scu.dst_add[dma_ch] != 2))
 		{
 			if(LOG_SCU) printf("DMA lv %d indirect mode transfer START\n"
 					           "Index %08x Start %08x End %08x Size %04x\n",dma_ch,tmp_src,indirect_src,indirect_dst,indirect_size);
 			if(LOG_SCU) printf("Start Add %04x Destination Add %04x\n",state->m_scu.src_add[dma_ch],state->m_scu.dst_add[dma_ch]);
 		}
 
-		//guess,but I believe it's right.
 		indirect_src &=0x07ffffff;
 		indirect_dst &=0x07ffffff;
 		indirect_size &= ((dma_ch == 0) ? 0xfffff : 0x3ffff); //TODO: Guardian Heroes sets up a 0x23000 transfer for the FMV?
 
 		if(indirect_size == 0) { indirect_size = (dma_ch == 0) ? 0x00100000 : 0x2000; }
 
-		for (; indirect_size > 0; indirect_size-=state->m_scu.dst_add[dma_ch])
 		{
-			if(state->m_scu.dst_add[dma_ch] == 2)
-				space->write_word(indirect_dst,space->read_word(indirect_src));
-			else
+			int i;
+			UINT8  src_shift;
+
+			src_shift = ((indirect_src & 2) >> 1) ^ 1;
+
+			for (i = 0; i < indirect_size;i+=2)
 			{
-				/* some games, eg columns97 are a bit weird, I'm not sure this is correct
-                  they start a dma on a 2 byte boundary in 4 byte add mode, using the dword reads we
-                  can't access 2 byte boundaries, and the end of the sprite list never gets marked,
-                  the length of the transfer is also set to a 2 byte boundary, maybe the add values
-                  should be different, I don't know */
-				space->write_word(indirect_dst,space->read_word(indirect_src));
-				space->write_word(indirect_dst+2,space->read_word(indirect_src+2));
+				scu_single_transfer(space,indirect_src,indirect_dst,&src_shift);
+
+				if(src_shift)
+					indirect_src+=state->m_scu.src_add[dma_ch];
+
+				indirect_dst+= (WORK_RAM_H(indirect_dst)) ? 2 : state->m_scu.dst_add[dma_ch];
 			}
-			indirect_dst+=state->m_scu.dst_add[dma_ch];
-			indirect_src+=state->m_scu.src_add[dma_ch];
 		}
 
 		//if(DRUP(0))   space->write_dword(tmp_src+8,state->m_scu.src[0]|job_done ? 0x80000000 : 0);
@@ -899,48 +872,85 @@ static WRITE32_HANDLER( sinit_w )
 	sh2_set_frt_input(state->m_maincpu, PULSE_LINE);
 }
 
-static READ32_HANDLER(saturn_backupram_r)
+static READ8_HANDLER(saturn_backupram_r)
 {
 	saturn_state *state = space->machine().driver_data<saturn_state>();
 
-	return state->m_backupram[offset] & 0x00ff00ff;	// yes, it makes sure the "holes" are there.
+	if(!(offset & 1))
+		return 0; // yes, it makes sure the "holes" are there.
+
+	return state->m_backupram[offset >> 1] & 0xff;
 }
 
-static WRITE32_HANDLER(saturn_backupram_w)
+static WRITE8_HANDLER(saturn_backupram_w)
 {
 	saturn_state *state = space->machine().driver_data<saturn_state>();
 
-	COMBINE_DATA(&state->m_backupram[offset]);
+	if(!(offset & 1))
+		return;
+
+	state->m_backupram[offset >> 1] = data;
 }
 
+/* TODO: if you change the driver configuration then NVRAM contents gets screwed, needs mods in MAME framework */
 static NVRAM_HANDLER(saturn)
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
-
-	static const UINT32 init[8] =
+	static const UINT32 BUP_SIZE = 32*1024;
+	static const UINT32 EBUP_SIZE = 0;//0x100000; // TODO: can't support more than 8 Mbit
+	UINT8 backup_file[(BUP_SIZE)+EBUP_SIZE+4];
+	static const UINT8 init[16] =
 	{
-		0x420061, 0x63006b, 0x550070, 0x520061, 0x6d0020, 0x46006f, 0x72006d, 0x610074,
+		'B', 'a', 'c', 'k', 'U', 'p', 'R', 'a', 'm', ' ', 'F', 'o', 'r', 'm', 'a', 't'
 	};
-	int i;
+	UINT32 i;
 
 	if (read_or_write)
-		file->write(state->m_backupram, 64*1024/4);
+	{
+		for(i=0;i<BUP_SIZE;i++)
+			backup_file[i] = state->m_backupram[i];
+		#if 0
+		for(i=0;i<EBUP_SIZE;i++)
+			backup_file[i+BUP_SIZE] = state->m_cart_backupram[i];
+		#endif
+		for(i=0;i<4;i++)
+			backup_file[i+(BUP_SIZE)+EBUP_SIZE] = state->m_smpc.SMEM[i];
+
+		file->write(backup_file, (BUP_SIZE)+EBUP_SIZE+4);
+	}
 	else
 	{
 		if (file)
 		{
-			file->read(state->m_backupram, 64*1024/4);
+			file->read(backup_file, (BUP_SIZE)+EBUP_SIZE+4);
+
+			for(i=0;i<BUP_SIZE;i++)
+				state->m_backupram[i] = backup_file[i];
+			#if 0
+			for(i=0;i<EBUP_SIZE;i++)
+				state->m_cart_backupram[i] = backup_file[i+BUP_SIZE];
+			#endif
+			for(i=0;i<4;i++)
+				state->m_smpc.SMEM[i] = backup_file[i+BUP_SIZE+EBUP_SIZE];
 		}
 		else
 		{
-			memset(state->m_backupram, 0, 64*1024/4);
-			for (i = 0; i < 8; i++)
+			UINT8 j;
+			memset(state->m_backupram, 0, BUP_SIZE);
+			for (i = 0; i < 4; i++)
 			{
-				state->m_backupram[i] = init[i];
-				state->m_backupram[i+8] = init[i];
-				state->m_backupram[i+16] = init[i];
-				state->m_backupram[i+24] = init[i];
+				for(j=0;j<16;j++)
+					state->m_backupram[i*16+j] = init[j];
 			}
+			#if 0
+			memset(state->m_cart_backupram, 0, EBUP_SIZE);
+			for (i = 0; i < 32; i++)
+			{
+				for(j=0;j<16;j++)
+					state->m_cart_backupram[i*16+j] = init[j];
+			}
+			#endif
+			memset(state->m_smpc.SMEM, 0, 4); // TODO: default for each region
 		}
 	}
 }
@@ -948,7 +958,7 @@ static NVRAM_HANDLER(saturn)
 static READ8_HANDLER( saturn_cart_type_r )
 {
 	saturn_state *state = space->machine().driver_data<saturn_state>();
-	const int cart_ram_header[3] = { 0xff, 0x5a, 0x5c };
+	const int cart_ram_header[7] = { 0xff, 0x21, 0x22, 0x23, 0x24, 0x5a, 0x5c };
 
 	return cart_ram_header[state->m_cart_type];
 }
@@ -956,14 +966,13 @@ static READ8_HANDLER( saturn_cart_type_r )
 static ADDRESS_MAP_START( saturn_mem, AS_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x0007ffff) AM_ROM AM_SHARE("share6")  // bios
 	AM_RANGE(0x00100000, 0x0010007f) AM_READWRITE8(saturn_SMPC_r, saturn_SMPC_w,0xffffffff)
-	AM_RANGE(0x00180000, 0x0018ffff) AM_READWRITE(saturn_backupram_r, saturn_backupram_w) AM_SHARE("share1") AM_BASE_MEMBER(saturn_state,m_backupram)
+	AM_RANGE(0x00180000, 0x0018ffff) AM_READWRITE8(saturn_backupram_r, saturn_backupram_w,0xffffffff) AM_SHARE("share1")
 	AM_RANGE(0x00200000, 0x002fffff) AM_RAM AM_MIRROR(0x20100000) AM_SHARE("share2") AM_BASE_MEMBER(saturn_state,m_workram_l)
-//  AM_RANGE(0x01000000, 0x01000003) AM_MIRROR(0x7ffffc) AM_WRITE(minit_w)
 	AM_RANGE(0x01000000, 0x017fffff) AM_WRITE(minit_w)
-//  AM_RANGE(0x01800000, 0x01800003) AM_MIRROR(0x7ffffc) AM_WRITE(sinit_w)
 	AM_RANGE(0x01800000, 0x01ffffff) AM_WRITE(sinit_w)
 	AM_RANGE(0x02000000, 0x023fffff) AM_ROM AM_SHARE("share7") AM_REGION("maincpu", 0x80000)	// cartridge space
 //  AM_RANGE(0x02400000, 0x027fffff) AM_RAM //cart RAM area, dynamically allocated
+//	AM_RANGE(0x04000000, 0x047fffff) AM_RAM //backup RAM area, dynamically allocated
 	AM_RANGE(0x04fffffc, 0x04ffffff) AM_READ8(saturn_cart_type_r,0x000000ff)
 	AM_RANGE(0x05800000, 0x0589ffff) AM_READWRITE(stvcd_r, stvcd_w)
 	/* Sound */
@@ -980,18 +989,17 @@ static ADDRESS_MAP_START( saturn_mem, AS_PROGRAM, 32 )
 	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_MIRROR(0x21f00000) AM_SHARE("share3") AM_BASE_MEMBER(saturn_state,m_workram_h)
 	AM_RANGE(0x20000000, 0x2007ffff) AM_ROM AM_SHARE("share6")  // bios mirror
 	AM_RANGE(0x22000000, 0x24ffffff) AM_ROM AM_SHARE("share7")  // cart mirror
+	AM_RANGE(0x45000000, 0x46ffffff) AM_WRITENOP
 	AM_RANGE(0xc0000000, 0xc00007ff) AM_RAM // cache RAM, Dragon Ball Z sprites needs this
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( stv_mem, AS_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x0007ffff) AM_ROM AM_SHARE("share6")  // bios
 	AM_RANGE(0x00100000, 0x0010007f) AM_READWRITE8(stv_SMPC_r, stv_SMPC_w,0xffffffff)
-	AM_RANGE(0x00180000, 0x0018ffff) AM_READWRITE(saturn_backupram_r,saturn_backupram_w) AM_SHARE("share1") AM_BASE_MEMBER(saturn_state,m_backupram)
+	AM_RANGE(0x00180000, 0x0018ffff) AM_READWRITE8(saturn_backupram_r,saturn_backupram_w,0xffffffff) AM_SHARE("share1")
 	AM_RANGE(0x00200000, 0x002fffff) AM_RAM AM_MIRROR(0x20100000) AM_SHARE("share2") AM_BASE_MEMBER(saturn_state,m_workram_l)
 	AM_RANGE(0x00400000, 0x0040001f) AM_READWRITE(stv_io_r32, stv_io_w32) AM_BASE_MEMBER(saturn_state,m_ioga) AM_SHARE("share4") AM_MIRROR(0x20)
-//  AM_RANGE(0x01000000, 0x01000003) AM_MIRROR(0x7ffffc) AM_WRITE(minit_w)
 	AM_RANGE(0x01000000, 0x017fffff) AM_WRITE(minit_w)
-//  AM_RANGE(0x01800000, 0x01800003) AM_MIRROR(0x7ffffc) AM_WRITE(sinit_w)
 	AM_RANGE(0x01800000, 0x01ffffff) AM_WRITE(sinit_w)
 	AM_RANGE(0x02000000, 0x04ffffff) AM_ROM AM_SHARE("share7") AM_REGION("abus", 0) // cartridge
 	AM_RANGE(0x05800000, 0x0589ffff) AM_READWRITE(stvcd_r, stvcd_w)
@@ -1018,96 +1026,284 @@ static ADDRESS_MAP_START( sound_mem, AS_PROGRAM, 16 )
 ADDRESS_MAP_END
 
 
+/* keyboard code */
+/* TODO: needs a proper keycode table */
+static INPUT_CHANGED( key_stroke )
+{
+	saturn_state *state = field.machine().driver_data<saturn_state>();
+
+	if(newval && !oldval)
+	{
+		state->m_keyb.data = ((UINT8)(FPTR)(param) & 0xff);
+		state->m_keyb.status |= 8;
+	}
+
+	if(oldval && !newval)
+	{
+		//state->m_keyb.status &= ~8;
+		state->m_keyb.data = 0;
+	}
+}
+
 static INPUT_PORTS_START( saturn )
-	PORT_START("PDR1")
-	PORT_DIPNAME( 0x01, 0x01, "PDR1" )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
-	PORT_START("PDR2")
-	PORT_DIPNAME( 0x01, 0x01, "PDR2" )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-
 	PORT_START("JOY1")
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(1)
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(1)
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(1)
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(1)
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(1)	// START
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("P1 A") PORT_PLAYER(1)	// A
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("P1 C") PORT_PLAYER(1)	// C
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("P1 B") PORT_PLAYER(1)	// B
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("P1 X") PORT_PLAYER(1)	// X
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("P1 Y") PORT_PLAYER(1)	// Y
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("P1 Z") PORT_PLAYER(1)	// Z
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON7 ) PORT_NAME("P1 L") PORT_PLAYER(1)	// L
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON8 ) PORT_NAME("P1 R") PORT_PLAYER(1)	// R
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(1) PORT_CATEGORY(10)
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(1) PORT_CATEGORY(10)
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(1) PORT_CATEGORY(10)
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(1) PORT_CATEGORY(10)
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(1) PORT_CATEGORY(10) // START
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("P1 A") PORT_PLAYER(1) PORT_CATEGORY(10)	// A
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("P1 C") PORT_PLAYER(1) PORT_CATEGORY(10)	// C
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("P1 B") PORT_PLAYER(1) PORT_CATEGORY(10)	// B
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON8 ) PORT_NAME("P1 R") PORT_PLAYER(1) PORT_CATEGORY(10)	// R
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("P1 X") PORT_PLAYER(1) PORT_CATEGORY(10)	// X
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("P1 Y") PORT_PLAYER(1) PORT_CATEGORY(10)	// Y
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("P1 Z") PORT_PLAYER(1) PORT_CATEGORY(10)	// Z
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON7 ) PORT_NAME("P1 L") PORT_PLAYER(1) PORT_CATEGORY(10)	// L
 	PORT_BIT( 0x0007, IP_ACTIVE_LOW, IPT_UNUSED ) //read '1' when direct mode is polled
 
 	PORT_START("JOY2")
-	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(2)
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(2)
-	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(2)
-	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(2)
-	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(2)	// START
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("P2 A") PORT_PLAYER(2)	// A
-	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("P2 C") PORT_PLAYER(2)	// C
-	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("P2 B") PORT_PLAYER(2)	// B
-	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("P2 X") PORT_PLAYER(2)	// X
-	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("P2 Y") PORT_PLAYER(2)	// Y
-	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("P2 Z") PORT_PLAYER(2)	// Z
-	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON7 ) PORT_NAME("P2 L") PORT_PLAYER(2)	// L
-	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON8 ) PORT_NAME("P2 R") PORT_PLAYER(2)	// R
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_PLAYER(2) PORT_CATEGORY(20)
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(2) PORT_CATEGORY(20)
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(2) PORT_CATEGORY(20)
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(2) PORT_CATEGORY(20)
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_START ) PORT_PLAYER(2) PORT_CATEGORY(20) // START
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("P2 A") PORT_PLAYER(2) PORT_CATEGORY(20)	// A
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("P2 C") PORT_PLAYER(2) PORT_CATEGORY(20)	// C
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("P2 B") PORT_PLAYER(2) PORT_CATEGORY(20)	// B
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON8 ) PORT_NAME("P2 R") PORT_PLAYER(2)	PORT_CATEGORY(20)   // R
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("P2 X") PORT_PLAYER(2)	PORT_CATEGORY(20)   // X
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("P2 Y") PORT_PLAYER(2)	PORT_CATEGORY(20)   // Y
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("P2 Z") PORT_PLAYER(2)	PORT_CATEGORY(20)   // Z
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_BUTTON7 ) PORT_NAME("P2 L") PORT_PLAYER(2)	PORT_CATEGORY(20)   // L
 	PORT_BIT( 0x0007, IP_ACTIVE_LOW, IPT_UNUSED ) //read '1' when direct mode is polled
 
+	/* TODO: there's no info about the keycode used on Saturn keyboard, following is trial & error with Game Basic software */
+	PORT_START("KEY0") // 0x00 - 0x07
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_UNUSED) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F1") /*PORT_CODE(KEYCODE_F1)*/ PORT_CHANGED(key_stroke, 0x01) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("0-3") /*PORT_CODE(KEYCODE_2) PORT_CHAR('2')*/ PORT_CHANGED(key_stroke, 0x02) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F2") /*PORT_CODE(KEYCODE_F2)*/ PORT_CHANGED(key_stroke, 0x03) PORT_PLAYER(1) PORT_CATEGORY(15) // RUN
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F3") /*PORT_CODE(KEYCODE_F3)*/ PORT_CHANGED(key_stroke, 0x04) PORT_PLAYER(1) PORT_CATEGORY(15) // LIST
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F4") /*PORT_CODE(KEYCODE_F4)*/ PORT_CHANGED(key_stroke, 0x05) PORT_PLAYER(1) PORT_CATEGORY(15) // EDIT
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F5") /*PORT_CODE(KEYCODE_F5)*/ PORT_CHANGED(key_stroke, 0x06) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("CLR SCR") PORT_CHANGED(key_stroke, 0x07) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEY1") // 0x08 - 0x0f
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("1-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x08) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F6") /*PORT_CODE(KEYCODE_F6)*/ PORT_CHANGED(key_stroke, 0x09) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F7") /*PORT_CODE(KEYCODE_F7)*/ PORT_CHANGED(key_stroke, 0x0a) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F8") /*PORT_CODE(KEYCODE_F8)*/ PORT_CHANGED(key_stroke, 0x0b) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F9") /*PORT_CODE(KEYCODE_F9)*/ PORT_CHANGED(key_stroke, 0x0c) PORT_PLAYER(1) PORT_CATEGORY(15) // LIST again
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("1-6") /*PORT_CODE(KEYCODE_5) PORT_CHAR('5')*/ PORT_CHANGED(key_stroke, 0x0d) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("1-7") /*PORT_CODE(KEYCODE_6) PORT_CHAR('6')*/ PORT_CHANGED(key_stroke, 0x0e) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("1-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x0f) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEY2") // 0x10 - 0x17
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("2-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x10) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("2-2") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x11) PORT_PLAYER(1) PORT_CATEGORY(15)
+	/* TODO: break codes! */
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("SHIFT") /*PORT_CODE(KEYCODE_2) PORT_CHAR('2')*/ PORT_CHANGED(key_stroke, 0x12) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("KANA SHIFT") /*PORT_CODE(KEYCODE_3) PORT_CHAR('3')*/ PORT_CHANGED(key_stroke, 0x13) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("(special keys)") /*PORT_CODE(KEYCODE_4) PORT_CHAR('4')*/ PORT_CHANGED(key_stroke, 0x14) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("Q") PORT_CODE(KEYCODE_Q) PORT_CHAR('Q') PORT_CHANGED(key_stroke, 0x15) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("1") PORT_CODE(KEYCODE_1) PORT_CHAR('1') PORT_CHANGED(key_stroke, 0x16) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("2-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x17) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEY3") // 0x18 - 0x1f
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("3-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x18) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("3-2") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x19) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("Z") PORT_CODE(KEYCODE_Z) PORT_CHAR('Z') PORT_CHANGED(key_stroke, 0x1a) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("S") PORT_CODE(KEYCODE_S) PORT_CHAR('S') PORT_CHANGED(key_stroke, 0x1b) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("A") PORT_CODE(KEYCODE_A) PORT_CHAR('A') PORT_CHANGED(key_stroke, 0x1c) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("W") PORT_CODE(KEYCODE_W) PORT_CHAR('W') PORT_CHANGED(key_stroke, 0x1d) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("2") PORT_CODE(KEYCODE_2) PORT_CHAR('2') PORT_CHANGED(key_stroke, 0x1e) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("3-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x1f) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEY4") // 0x20 - 0x27
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("4-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x20) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("C") PORT_CODE(KEYCODE_C) PORT_CHAR('C') PORT_CHANGED(key_stroke, 0x21) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("X") PORT_CODE(KEYCODE_X) PORT_CHAR('X') PORT_CHANGED(key_stroke, 0x22) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("D") PORT_CODE(KEYCODE_D) PORT_CHAR('D') PORT_CHANGED(key_stroke, 0x23) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("E") PORT_CODE(KEYCODE_E) PORT_CHAR('E') PORT_CHANGED(key_stroke, 0x24) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("4") PORT_CODE(KEYCODE_4) PORT_CHAR('4') PORT_CHANGED(key_stroke, 0x25) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("3") PORT_CODE(KEYCODE_3) PORT_CHAR('3') PORT_CHANGED(key_stroke, 0x26) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("4-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x27) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEY5") // 0x28 - 0x2f
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("5-1") /*PORT_CODE(KEYCODE_F) PORT_CHAR('F')*/ PORT_CHANGED(key_stroke, 0x28) PORT_PLAYER(1) PORT_CATEGORY(15) // another F?
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("SPACE") PORT_CODE(KEYCODE_SPACE) PORT_CHAR(' ') PORT_CHANGED(key_stroke, 0x29) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("V") PORT_CODE(KEYCODE_V) PORT_CHAR('V') PORT_CHANGED(key_stroke, 0x2a) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F") PORT_CODE(KEYCODE_F) PORT_CHAR('F') PORT_CHANGED(key_stroke, 0x2b) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("T") PORT_CODE(KEYCODE_T) PORT_CHAR('T') PORT_CHANGED(key_stroke, 0x2c) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("R") PORT_CODE(KEYCODE_R) PORT_CHAR('R') PORT_CHANGED(key_stroke, 0x2d) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("5") PORT_CODE(KEYCODE_5) PORT_CHAR('5') PORT_CHANGED(key_stroke, 0x2e) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("5-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x2f) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEY6") // 0x30 - 0x37
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("6-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x30) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("N") PORT_CODE(KEYCODE_N) PORT_CHAR('N') PORT_CHANGED(key_stroke, 0x31) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("B") PORT_CODE(KEYCODE_B) PORT_CHAR('B') PORT_CHANGED(key_stroke, 0x32) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("H") PORT_CODE(KEYCODE_H) PORT_CHAR('H') PORT_CHANGED(key_stroke, 0x33) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("G") PORT_CODE(KEYCODE_G) PORT_CHAR('G') PORT_CHANGED(key_stroke, 0x34) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("Y") PORT_CODE(KEYCODE_Y) PORT_CHAR('Y') PORT_CHANGED(key_stroke, 0x35) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("6") PORT_CODE(KEYCODE_6) PORT_CHAR('6') PORT_CHANGED(key_stroke, 0x36) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("6-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x37) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEY7") // 0x38 - 0x3f
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("7-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x38) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("7-2") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x39) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("M") PORT_CODE(KEYCODE_M) PORT_CHAR('M') PORT_CHANGED(key_stroke, 0x3a) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("J") PORT_CODE(KEYCODE_J) PORT_CHAR('J') PORT_CHANGED(key_stroke, 0x3b) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("U") PORT_CODE(KEYCODE_U) PORT_CHAR('U') PORT_CHANGED(key_stroke, 0x3c) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("7") PORT_CODE(KEYCODE_7) PORT_CHAR('7') PORT_CHANGED(key_stroke, 0x3d) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("8") PORT_CODE(KEYCODE_8) PORT_CHAR('8') PORT_CHANGED(key_stroke, 0x3e) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("7-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x3f) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEY8") // 0x40 - 0x47
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("8-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x40) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME(",") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x41) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("K") PORT_CODE(KEYCODE_K) PORT_CHAR('K') PORT_CHANGED(key_stroke, 0x42) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("I") PORT_CODE(KEYCODE_I) PORT_CHAR('I') PORT_CHANGED(key_stroke, 0x43) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("O") PORT_CODE(KEYCODE_O) PORT_CHAR('O') PORT_CHANGED(key_stroke, 0x44) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("0") PORT_CODE(KEYCODE_0) PORT_CHAR('0') PORT_CHANGED(key_stroke, 0x45) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("9") PORT_CODE(KEYCODE_9) PORT_CHAR('9') PORT_CHANGED(key_stroke, 0x46) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("8-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x47) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEY9") // 0x48 - 0x4f
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("9-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x48) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME(".") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x49) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("/") /*PORT_CODE(KEYCODE_2) PORT_CHAR('2')*/ PORT_CHANGED(key_stroke, 0x4a) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("L") PORT_CODE(KEYCODE_L) PORT_CHAR('L') PORT_CHANGED(key_stroke, 0x4b) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME(";") /*PORT_CODE(KEYCODE_4) PORT_CHAR('4')*/ PORT_CHANGED(key_stroke, 0x4c) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("P") PORT_CODE(KEYCODE_P) PORT_CHAR('P') PORT_CHANGED(key_stroke, 0x4d) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("- / =") PORT_CODE(KEYCODE_MINUS) PORT_CHAR('-') PORT_CHANGED(key_stroke, 0x4e) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("9-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x4f) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEYA") // 0x50 - 0x57
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("A-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x50) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("\xC2\xA5") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x51) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME(":") /*PORT_CODE(KEYCODE_2) PORT_CHAR('2')*/ PORT_CHANGED(key_stroke, 0x52) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("A-4") /*PORT_CODE(KEYCODE_3) PORT_CHAR('3')*/ PORT_CHANGED(key_stroke, 0x53) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("@") /*PORT_CODE(KEYCODE_4) PORT_CHAR('4')*/ PORT_CHANGED(key_stroke, 0x54) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("^") /*PORT_CODE(KEYCODE_5) PORT_CHAR(0xd)*/ PORT_CHANGED(key_stroke, 0x55) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("A-7") /*PORT_CODE(KEYCODE_6) PORT_CHAR('6')*/ PORT_CHANGED(key_stroke, 0x56) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("A-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x57) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEYB") // 0x58 - 0x5f
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("B-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x58) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("B-2") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x59) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("ENTER") PORT_CODE(KEYCODE_ENTER) PORT_CHAR(0x0d) PORT_CHANGED(key_stroke, 0x5a) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("[") /*PORT_CODE(KEYCODE_3) PORT_CHAR('3')*/ PORT_CHANGED(key_stroke, 0x5b) PORT_PLAYER(1) PORT_CATEGORY(15) // {
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("B-5") /*PORT_CODE(KEYCODE_4) PORT_CHAR('4')*/ PORT_CHANGED(key_stroke, 0x5c) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("]") /*PORT_CODE(KEYCODE_5) PORT_CHAR(0xd)*/ PORT_CHANGED(key_stroke, 0x5d) PORT_PLAYER(1) PORT_CATEGORY(15) // }
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("B-7") /*PORT_CODE(KEYCODE_6) PORT_CHAR('6')*/ PORT_CHANGED(key_stroke, 0x5e) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("B-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x5f) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEYC") // 0x60 - 0x67
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("C-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x60) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("C-2") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x61) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("C-3") /*PORT_CODE(KEYCODE_2) PORT_CHAR('2')*/ PORT_CHANGED(key_stroke, 0x62) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("C-4") /*PORT_CODE(KEYCODE_3) PORT_CHAR('3')*/ PORT_CHANGED(key_stroke, 0x63) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("C-5") /*PORT_CODE(KEYCODE_4) PORT_CHAR('4')*/ PORT_CHANGED(key_stroke, 0x64) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("C-6") /*PORT_CODE(KEYCODE_5) PORT_CHAR(0xd)*/ PORT_CHANGED(key_stroke, 0x65) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("BACKSPACE") PORT_CODE(KEYCODE_BACKSPACE) /* PORT_CHAR('6')*/ PORT_CHANGED(key_stroke, 0x66) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("C-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x67) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEYD") // 0x68 - 0x6f
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("D-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x68) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("D-2") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x69) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("D-3") /*PORT_CODE(KEYCODE_2) PORT_CHAR('2')*/ PORT_CHANGED(key_stroke, 0x6a) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("D-4") /*PORT_CODE(KEYCODE_3) PORT_CHAR('3')*/ PORT_CHANGED(key_stroke, 0x6b) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("D-5") /*PORT_CODE(KEYCODE_4) PORT_CHAR('4')*/ PORT_CHANGED(key_stroke, 0x6c) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("D-6") /*PORT_CODE(KEYCODE_5) PORT_CHAR(0xd)*/ PORT_CHANGED(key_stroke, 0x6d) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("D-7") /*PORT_CODE(KEYCODE_6) PORT_CHAR('6')*/ PORT_CHANGED(key_stroke, 0x6e) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("D-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x6f) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEYE") // 0x70 - 0x77
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("E-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x70) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("E-2") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x71) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("E-3") /*PORT_CODE(KEYCODE_2) PORT_CHAR('2')*/ PORT_CHANGED(key_stroke, 0x72) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("E-4") /*PORT_CODE(KEYCODE_3) PORT_CHAR('3')*/ PORT_CHANGED(key_stroke, 0x73) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("E-5") /*PORT_CODE(KEYCODE_4) PORT_CHAR('4')*/ PORT_CHANGED(key_stroke, 0x74) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("E-6") /*PORT_CODE(KEYCODE_5) PORT_CHAR(0xd)*/ PORT_CHANGED(key_stroke, 0x75) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("E-7") /*PORT_CODE(KEYCODE_6) PORT_CHAR('6')*/ PORT_CHANGED(key_stroke, 0x76) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("E-8") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x77) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("KEYF") // 0x78 - 0x7f
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F-1") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x78) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F-2") /*PORT_CODE(KEYCODE_1) PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x79) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F-3") /*PORT_CODE(KEYCODE_2) PORT_CHAR('2')*/ PORT_CHANGED(key_stroke, 0x7a) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F-4") /*PORT_CODE(KEYCODE_3) PORT_CHAR('3')*/ PORT_CHANGED(key_stroke, 0x7b) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x10,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F-5") /*PORT_CODE(KEYCODE_4) PORT_CHAR('4')*/ PORT_CHANGED(key_stroke, 0x7c) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x20,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F-6") /*PORT_CODE(KEYCODE_5) PORT_CHAR(0xd)*/ PORT_CHANGED(key_stroke, 0x7d) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x40,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("F-7") /*PORT_CODE(KEYCODE_6) PORT_CHAR('6')*/ PORT_CHANGED(key_stroke, 0x7e) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x80,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("ESC") /*PORT_CODE(KEYCODE_7) PORT_CHAR('7')*/ PORT_CHANGED(key_stroke, 0x7f) PORT_PLAYER(1) PORT_CATEGORY(15) //SYSTEM CONFIGURATION
+
+	PORT_START("KEYS_1") // special keys
+	PORT_BIT(0x01,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("UP") PORT_CODE(KEYCODE_UP) /*PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x78) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x02,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("DOWN") PORT_CODE(KEYCODE_DOWN) /*PORT_CHAR('1')*/ PORT_CHANGED(key_stroke, 0x79) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x04,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("LEFT") PORT_CODE(KEYCODE_LEFT) /*PORT_CHAR('2')*/ PORT_CHANGED(key_stroke, 0x7a) PORT_PLAYER(1) PORT_CATEGORY(15)
+	PORT_BIT(0x08,IP_ACTIVE_HIGH,IPT_KEYPAD) PORT_NAME("RIGHT") PORT_CODE(KEYCODE_RIGHT) /*PORT_CHAR('3')*/ PORT_CHANGED(key_stroke, 0x7b) PORT_PLAYER(1) PORT_CATEGORY(15)
+
+	PORT_START("MOUSEB1")
+	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_NAME("P1 Mouse Left Button") PORT_PLAYER(1) PORT_CATEGORY(14)
+	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_BUTTON2 ) PORT_NAME("P1 Mouse Right Button") PORT_PLAYER(1) PORT_CATEGORY(14)
+	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_NAME("P1 Mouse Middle Button") PORT_PLAYER(1) PORT_CATEGORY(14)
+	PORT_BIT(0x08, IP_ACTIVE_HIGH, IPT_START ) PORT_NAME("P1 Mouse Start Button") PORT_PLAYER(1) PORT_CATEGORY(14)
+
+	PORT_START("MOUSEX1")
+    PORT_BIT(0xff, 0x00, IPT_MOUSE_X) PORT_SENSITIVITY(40) PORT_MINMAX(0x000, 0xff) PORT_KEYDELTA(2) PORT_RESET PORT_NAME("P1 Mouse X") PORT_PLAYER(1) PORT_CATEGORY(14)
+
+	PORT_START("MOUSEY1")
+    PORT_BIT(0xff, 0x00, IPT_MOUSE_Y) PORT_SENSITIVITY(40) PORT_MINMAX(0x000, 0xff) PORT_KEYDELTA(2) PORT_RESET PORT_REVERSE PORT_NAME("P1 Mouse Y") PORT_PLAYER(1) PORT_CATEGORY(14)
+
+	PORT_START("MOUSEB2")
+	PORT_BIT(0x01, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_NAME("P2 Mouse Left Button") PORT_PLAYER(2) PORT_CATEGORY(24)
+	PORT_BIT(0x02, IP_ACTIVE_HIGH, IPT_BUTTON2 ) PORT_NAME("P2 Mouse Right Button") PORT_PLAYER(2) PORT_CATEGORY(24)
+	PORT_BIT(0x04, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_NAME("P2 Mouse Middle Button") PORT_PLAYER(2) PORT_CATEGORY(24)
+	PORT_BIT(0x08, IP_ACTIVE_HIGH, IPT_START ) PORT_NAME("P2 Mouse Start Button") PORT_PLAYER(2) PORT_CATEGORY(24)
+
+	PORT_START("MOUSEX2")
+    PORT_BIT(0xff, 0x00, IPT_MOUSE_X) PORT_SENSITIVITY(40) PORT_MINMAX(0x000, 0xff) PORT_KEYDELTA(2) PORT_RESET PORT_NAME("P2 Mouse X") PORT_PLAYER(2) PORT_CATEGORY(24)
+
+	PORT_START("MOUSEY2")
+    PORT_BIT(0xff, 0x00, IPT_MOUSE_Y) PORT_SENSITIVITY(40) PORT_MINMAX(0x000, 0xff) PORT_KEYDELTA(2) PORT_RESET PORT_REVERSE PORT_NAME("P2 Mouse Y") PORT_PLAYER(2) PORT_CATEGORY(24)
+
 	PORT_START("CART_AREA")
-	PORT_CONFNAME( 0x03, 0x02, "Cart Type" )
+	PORT_CONFNAME( 0x07, 0x06, "Cart Type" )
 	PORT_CONFSETTING( 0x00, "None" )
-	PORT_CONFSETTING( 0x01, "8 Mbit Cart RAM" )
-	PORT_CONFSETTING( 0x02, "32 Mbit Cart RAM" )
+//	PORT_CONFSETTING( 0x01, "4 Mbit backup RAM" )
+//	PORT_CONFSETTING( 0x02, "8 Mbit backup RAM" )
+//	PORT_CONFSETTING( 0x03, "16 Mbit backup RAM" )
+//	PORT_CONFSETTING( 0x04, "32 Mbit backup RAM" )
+	PORT_CONFSETTING( 0x05, "8 Mbit Cart RAM" )
+	PORT_CONFSETTING( 0x06, "32 Mbit Cart RAM" )
+
+	PORT_START("INPUT_TYPE")
+	PORT_CATEGORY_CLASS(0x0f,0x00,"Port 1")
+	PORT_CATEGORY_ITEM(0x00,"Digital Device (standard Saturn pad)",10)
+//	PORT_CATEGORY_ITEM(0x01,"Racing Device",11)
+//	PORT_CATEGORY_ITEM(0x02,"Analog Device",12) //Nights pad?
+//	PORT_CATEGORY_ITEM(0x03,"Lightgun Device",13)
+	PORT_CATEGORY_ITEM(0x04,"Pointing Device",14)
+	PORT_CATEGORY_ITEM(0x05,"Keyboard Device",15)
+//	PORT_CATEGORY_ITEM(0x06,"Megadrive 3B Pad",16)
+//	PORT_CATEGORY_ITEM(0x07,"Megadrive 6B Pad",17)
+	PORT_CATEGORY_ITEM(0x08,"Saturn Mouse",14)
+//	PORT_CATEGORY_ITEM(0x09,"<unconnected>",19)
+	PORT_CATEGORY_CLASS(0xf0,0x00,"Port 2")
+	PORT_CATEGORY_ITEM(0x00,"Digital Device (standard Saturn pad)",20)
+//	PORT_CATEGORY_ITEM(0x10,"Racing Device",21)
+//	PORT_CATEGORY_ITEM(0x20,"Analog Device",22) //Nights pad?
+//	PORT_CATEGORY_ITEM(0x30,"Lightgun Device",23)
+	PORT_CATEGORY_ITEM(0x40,"Pointing Device",24)
+//	PORT_CATEGORY_ITEM(0x50,"Keyboard Device",25)
+//	PORT_CATEGORY_ITEM(0x60,"Megadrive 3B Pad",26)
+//	PORT_CATEGORY_ITEM(0x70,"Megadrive 6B Pad",27)
+	PORT_CATEGORY_ITEM(0x80,"Saturn Mouse",24)
+	PORT_CATEGORY_ITEM(0x90,"<unconnected>",29)
 INPUT_PORTS_END
 
 #define STV_PLAYER_INPUTS(_n_, _b1_, _b2_, _b3_)							\
@@ -1409,9 +1605,9 @@ DRIVER_INIT ( stv )
 	state->m_minit_boost_timeslice = attotime::zero;
 	state->m_sinit_boost_timeslice = attotime::zero;
 
-	state->m_smpc_ram = auto_alloc_array(machine, UINT8, 0x80);
 	state->m_scu_regs = auto_alloc_array(machine, UINT32, 0x100/4);
 	state->m_scsp_regs  = auto_alloc_array(machine, UINT16, 0x1000/2);
+	state->m_backupram = auto_alloc_array(machine, UINT8, 0x10000);
 
 	install_stvbios_speedups(machine);
 
@@ -1427,56 +1623,8 @@ DRIVER_INIT ( stv )
 	//machine.device("slave")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x60ffc44, 0x60ffc47, FUNC(w60ffc44_write) );
 	//machine.device("slave")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x60ffc48, 0x60ffc4b, FUNC(w60ffc48_write) );
 
-    state->m_smpc_ram[0x31] = 0x00; //CTG1=0 CTG0=0 (correct??)
-//  state->m_smpc_ram[0x33] = input_port_read(machine, "FAKE");
-	state->m_smpc_ram[0x5f] = 0x10;
-
 	state->m_vdp2.pal = 0;
-
-	#ifdef MAME_DEBUG
-	/*Uncomment this to enable header info*/
-	//print_game_info();
-	#endif
 }
-
-#define DATA_TRANSFER(_max_) \
-	for(dst_i=0;dst_i<_max_;dst_i++,src_i++)	\
-		STR[(dst_i & 0xfc) | (~dst_i & 3)] = ROM[src_i];
-
-#define DATA_DELETE \
-	for(dst_i=0;dst_i<0x100;dst_i++) \
-		STR[dst_i] = 0x00;
-
-#ifdef UNUSED_FUNCTION
-static void print_game_info(void)
-{
-	UINT8 *ROM = machine.region("game0")->base();
-	static FILE *print_file = NULL;
-	UINT8 STR[0x100];
-	UINT32 src_i,dst_i;
-
-	if(print_file == NULL)
-		print_file = fopen( "stvinfo.txt", "a" );
-
-	src_i = 0;
-
-	/*IC13?*/
-	if(ROM[src_i] == 0x00)
-		src_i+=0x200000;
-
-	DATA_TRANSFER(0x100);
-	for(src_i=0;src_i<0x100;src_i++)
-	{
-		if((src_i % 0x10) == 0) fprintf( print_file, "\n");
-		if(src_i < 0xc0)		fprintf( print_file, "%c",STR[src_i] );
-		else                    fprintf( print_file, "%02x",STR[src_i] );
-	}
-	DATA_DELETE;
-
-	fclose(print_file);
-	print_file = NULL;
-}
-#endif
 
 static const gfx_layout tiles8x8x4_layout =
 {
@@ -1607,67 +1755,67 @@ static TIMER_CALLBACK(stv_rtc_increment)
 	static int year_num, year_count;
 
 	/*
-        state->m_smpc_ram[0x23] = DectoBCD(systime.local_time.year /100);
-        state->m_smpc_ram[0x25] = DectoBCD(systime.local_time.year %100);
-        state->m_smpc_ram[0x27] = (systime.local_time.weekday << 4) | (systime.local_time.month+1);
-        state->m_smpc_ram[0x29] = DectoBCD(systime.local_time.mday);
-        state->m_smpc_ram[0x2b] = DectoBCD(systime.local_time.hour);
-        state->m_smpc_ram[0x2d] = DectoBCD(systime.local_time.minute);
-        state->m_smpc_ram[0x2f] = DectoBCD(systime.local_time.second);
+        state->m_smpc.rtc_data[0] = DectoBCD(systime.local_time.year /100);
+        state->m_smpc.rtc_data[1] = DectoBCD(systime.local_time.year %100);
+        state->m_smpc.rtc_data[2] = (systime.local_time.weekday << 4) | (systime.local_time.month+1);
+        state->m_smpc.rtc_data[3] = DectoBCD(systime.local_time.mday);
+        state->m_smpc.rtc_data[4] = DectoBCD(systime.local_time.hour);
+        state->m_smpc.rtc_data[5] = DectoBCD(systime.local_time.minute);
+        state->m_smpc.rtc_data[6] = DectoBCD(systime.local_time.second);
     */
 
-	state->m_smpc_ram[0x2f]++;
+	state->m_smpc.rtc_data[6]++;
 
 	/* seconds from 9 -> 10*/
-	if((state->m_smpc_ram[0x2f] & 0x0f) >= 0x0a)			{ state->m_smpc_ram[0x2f]+=0x10; state->m_smpc_ram[0x2f]&=0xf0; }
+	if((state->m_smpc.rtc_data[6] & 0x0f) >= 0x0a)			{ state->m_smpc.rtc_data[6]+=0x10; state->m_smpc.rtc_data[6]&=0xf0; }
 	/* seconds from 59 -> 0 */
-	if((state->m_smpc_ram[0x2f] & 0xf0) >= 0x60)			{ state->m_smpc_ram[0x2d]++;     state->m_smpc_ram[0x2f] = 0; }
+	if((state->m_smpc.rtc_data[6] & 0xf0) >= 0x60)			{ state->m_smpc.rtc_data[5]++;     state->m_smpc.rtc_data[6] = 0; }
 	/* minutes from 9 -> 10 */
-	if((state->m_smpc_ram[0x2d] & 0x0f) >= 0x0a)			{ state->m_smpc_ram[0x2d]+=0x10; state->m_smpc_ram[0x2d]&=0xf0; }
+	if((state->m_smpc.rtc_data[5] & 0x0f) >= 0x0a)			{ state->m_smpc.rtc_data[5]+=0x10; state->m_smpc.rtc_data[5]&=0xf0; }
 	/* minutes from 59 -> 0 */
-	if((state->m_smpc_ram[0x2d] & 0xf0) >= 0x60)			{ state->m_smpc_ram[0x2b]++;     state->m_smpc_ram[0x2d] = 0; }
+	if((state->m_smpc.rtc_data[5] & 0xf0) >= 0x60)			{ state->m_smpc.rtc_data[4]++;     state->m_smpc.rtc_data[5] = 0; }
 	/* hours from 9 -> 10 */
-	if((state->m_smpc_ram[0x2b] & 0x0f) >= 0x0a)			{ state->m_smpc_ram[0x2b]+=0x10; state->m_smpc_ram[0x2b]&=0xf0; }
+	if((state->m_smpc.rtc_data[4] & 0x0f) >= 0x0a)			{ state->m_smpc.rtc_data[4]+=0x10; state->m_smpc.rtc_data[4]&=0xf0; }
 	/* hours from 23 -> 0 */
-	if((state->m_smpc_ram[0x2b] & 0xff) >= 0x24)				{ state->m_smpc_ram[0x29]++; state->m_smpc_ram[0x27]+=0x10; state->m_smpc_ram[0x2b] = 0; }
+	if((state->m_smpc.rtc_data[4] & 0xff) >= 0x24)				{ state->m_smpc.rtc_data[3]++; state->m_smpc.rtc_data[2]+=0x10; state->m_smpc.rtc_data[4] = 0; }
 	/* week day name sunday -> monday */
-	if((state->m_smpc_ram[0x27] & 0xf0) >= 0x70)				{ state->m_smpc_ram[0x27]&=0x0f; }
+	if((state->m_smpc.rtc_data[2] & 0xf0) >= 0x70)				{ state->m_smpc.rtc_data[2]&=0x0f; }
 	/* day number 9 -> 10 */
-	if((state->m_smpc_ram[0x29] & 0x0f) >= 0x0a)				{ state->m_smpc_ram[0x29]+=0x10; state->m_smpc_ram[0x29]&=0xf0; }
+	if((state->m_smpc.rtc_data[3] & 0x0f) >= 0x0a)				{ state->m_smpc.rtc_data[3]+=0x10; state->m_smpc.rtc_data[3]&=0xf0; }
 
 	// year BCD to dec conversion (for the leap year stuff)
 	{
-		year_num = (state->m_smpc_ram[0x25] & 0xf);
+		year_num = (state->m_smpc.rtc_data[1] & 0xf);
 
-		for(year_count = 0; year_count < (state->m_smpc_ram[0x25] & 0xf0); year_count += 0x10)
+		for(year_count = 0; year_count < (state->m_smpc.rtc_data[1] & 0xf0); year_count += 0x10)
 			year_num += 0xa;
 
-		year_num += (state->m_smpc_ram[0x23] & 0xf)*0x64;
+		year_num += (state->m_smpc.rtc_data[0] & 0xf)*0x64;
 
-		for(year_count = 0; year_count < (state->m_smpc_ram[0x23] & 0xf0); year_count += 0x10)
+		for(year_count = 0; year_count < (state->m_smpc.rtc_data[0] & 0xf0); year_count += 0x10)
 			year_num += 0x3e8;
 	}
 
 	/* month +1 check */
 	/* the RTC have a range of 1980 - 2100, so we don't actually need to support the leap year special conditions */
-	if(((year_num % 4) == 0) && (state->m_smpc_ram[0x27] & 0xf) == 2)
+	if(((year_num % 4) == 0) && (state->m_smpc.rtc_data[2] & 0xf) == 2)
 	{
-		if((state->m_smpc_ram[0x29] & 0xff) >= dpm[(state->m_smpc_ram[0x27] & 0xf)-1]+1+1)
-			{ state->m_smpc_ram[0x27]++; state->m_smpc_ram[0x29] = 0x01; }
+		if((state->m_smpc.rtc_data[3] & 0xff) >= dpm[(state->m_smpc.rtc_data[2] & 0xf)-1]+1+1)
+			{ state->m_smpc.rtc_data[2]++; state->m_smpc.rtc_data[3] = 0x01; }
 	}
-	else if((state->m_smpc_ram[0x29] & 0xff) >= dpm[(state->m_smpc_ram[0x27] & 0xf)-1]+1){ state->m_smpc_ram[0x27]++; state->m_smpc_ram[0x29] = 0x01; }
+	else if((state->m_smpc.rtc_data[3] & 0xff) >= dpm[(state->m_smpc.rtc_data[2] & 0xf)-1]+1){ state->m_smpc.rtc_data[2]++; state->m_smpc.rtc_data[3] = 0x01; }
 	/* year +1 check */
-	if((state->m_smpc_ram[0x27] & 0x0f) > 12)				{ state->m_smpc_ram[0x25]++;  state->m_smpc_ram[0x27] = (state->m_smpc_ram[0x27] & 0xf0) | 0x01; }
+	if((state->m_smpc.rtc_data[2] & 0x0f) > 12)				{ state->m_smpc.rtc_data[1]++;  state->m_smpc.rtc_data[2] = (state->m_smpc.rtc_data[2] & 0xf0) | 0x01; }
 	/* year from 9 -> 10 */
-	if((state->m_smpc_ram[0x25] & 0x0f) >= 0x0a)				{ state->m_smpc_ram[0x25]+=0x10; state->m_smpc_ram[0x25]&=0xf0; }
+	if((state->m_smpc.rtc_data[1] & 0x0f) >= 0x0a)				{ state->m_smpc.rtc_data[1]+=0x10; state->m_smpc.rtc_data[1]&=0xf0; }
 	/* year from 99 -> 100 */
-	if((state->m_smpc_ram[0x25] & 0xf0) >= 0xa0)				{ state->m_smpc_ram[0x23]++; state->m_smpc_ram[0x25] = 0; }
+	if((state->m_smpc.rtc_data[1] & 0xf0) >= 0xa0)				{ state->m_smpc.rtc_data[0]++; state->m_smpc.rtc_data[1] = 0; }
 
 	// probably not SO precise, here just for reference ...
 	/* year from 999 -> 1000 */
-	//if((state->m_smpc_ram[0x23] & 0x0f) >= 0x0a)               { state->m_smpc_ram[0x23]+=0x10; state->m_smpc_ram[0x23]&=0xf0; }
+	//if((state->m_smpc.rtc_data[0] & 0x0f) >= 0x0a)               { state->m_smpc.rtc_data[0]+=0x10; state->m_smpc.rtc_data[0]&=0xf0; }
 	/* year from 9999 -> 0 */
-	//if((state->m_smpc_ram[0x23] & 0xf0) >= 0xa0)               { state->m_smpc_ram[0x23] = 0; } //roll over
+	//if((state->m_smpc.rtc_data[0] & 0xf0) >= 0xa0)               { state->m_smpc.rtc_data[0] = 0; } //roll over
 }
 
 static MACHINE_START( stv )
@@ -1683,7 +1831,6 @@ static MACHINE_START( stv )
 	scsp_set_ram_base(machine.device("scsp"), state->m_sound_ram);
 
 	// save states
-	state_save_register_global_pointer(machine, state->m_smpc_ram, 0x80);
 	state_save_register_global_pointer(machine, state->m_scu_regs, 0x100/4);
 	state_save_register_global_pointer(machine, state->m_scsp_regs,  0x1000/2);
 	state_save_register_global(machine, state->m_NMI_reset);
@@ -1703,13 +1850,13 @@ static MACHINE_START( stv )
 
 	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(stvcd_exit), &machine));
 
-	state->m_smpc_ram[0x23] = DectoBCD(systime.local_time.year /100);
-    state->m_smpc_ram[0x25] = DectoBCD(systime.local_time.year %100);
-    state->m_smpc_ram[0x27] = (systime.local_time.weekday << 4) | (systime.local_time.month+1);
-    state->m_smpc_ram[0x29] = DectoBCD(systime.local_time.mday);
-    state->m_smpc_ram[0x2b] = DectoBCD(systime.local_time.hour);
-    state->m_smpc_ram[0x2d] = DectoBCD(systime.local_time.minute);
-    state->m_smpc_ram[0x2f] = DectoBCD(systime.local_time.second);
+	state->m_smpc.rtc_data[0] = DectoBCD(systime.local_time.year /100);
+    state->m_smpc.rtc_data[1] = DectoBCD(systime.local_time.year %100);
+    state->m_smpc.rtc_data[2] = (systime.local_time.weekday << 4) | (systime.local_time.month+1);
+    state->m_smpc.rtc_data[3] = DectoBCD(systime.local_time.mday);
+    state->m_smpc.rtc_data[4] = DectoBCD(systime.local_time.hour);
+    state->m_smpc.rtc_data[5] = DectoBCD(systime.local_time.minute);
+    state->m_smpc.rtc_data[6] = DectoBCD(systime.local_time.second);
 
 	state->m_stv_rtc_timer = machine.scheduler().timer_alloc(FUNC(stv_rtc_increment));
 }
@@ -1718,6 +1865,8 @@ static MACHINE_START( stv )
 static MACHINE_START( saturn )
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
+	system_time systime;
+	machine.base_datetime(systime);
 
 	state->m_maincpu = downcast<legacy_cpu_device*>( machine.device("maincpu") );
 	state->m_slave = downcast<legacy_cpu_device*>( machine.device("slave") );
@@ -1726,7 +1875,6 @@ static MACHINE_START( saturn )
 	scsp_set_ram_base(machine.device("scsp"), state->m_sound_ram);
 
 	// save states
-	state_save_register_global_pointer(machine, state->m_smpc_ram, 0x80);
 	state_save_register_global_pointer(machine, state->m_scu_regs, 0x100/4);
 	state_save_register_global_pointer(machine, state->m_scsp_regs,  0x1000/2);
 	state_save_register_global(machine, state->m_NMI_reset);
@@ -1742,11 +1890,21 @@ static MACHINE_START( saturn )
 	state_save_register_global(machine, scsp_last_line);
 	state_save_register_global(machine, state->m_smpc.intback_stage);
 	state_save_register_global(machine, state->m_smpc.pmode);
-	state_save_register_global(machine, state->m_smpc.smpcSR);
+	state_save_register_global(machine, state->m_smpc.SR);
 	state_save_register_global_array(machine, state->m_smpc.SMEM);
 	state_save_register_global_pointer(machine, state->m_cart_dram, 0x400000/4);
 
 	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(stvcd_exit), &machine));
+
+	state->m_smpc.rtc_data[0] = DectoBCD(systime.local_time.year /100);
+    state->m_smpc.rtc_data[1] = DectoBCD(systime.local_time.year %100);
+    state->m_smpc.rtc_data[2] = (systime.local_time.weekday << 4) | (systime.local_time.month+1);
+    state->m_smpc.rtc_data[3] = DectoBCD(systime.local_time.mday);
+    state->m_smpc.rtc_data[4] = DectoBCD(systime.local_time.hour);
+    state->m_smpc.rtc_data[5] = DectoBCD(systime.local_time.minute);
+    state->m_smpc.rtc_data[6] = DectoBCD(systime.local_time.second);
+
+	state->m_stv_rtc_timer = machine.scheduler().timer_alloc(FUNC(stv_rtc_increment));
 }
 
 
@@ -1787,7 +1945,23 @@ static TIMER_DEVICE_CALLBACK( saturn_scanline )
 
 	vblank_line = (state->m_vdp2.pal) ? 288 : 240;
 
-//	popmessage("%08x %d %08x %08x",state->m_scu.ism ^ 0xffffffff,max_y,state->m_scu_regs[36],state->m_scu_regs[38]);
+	//popmessage("%08x %d T0 %d T1 %d %08x",state->m_scu.ism ^ 0xffffffff,max_y,state->m_scu_regs[36],state->m_scu_regs[37],state->m_scu_regs[38]);
+
+	if(scanline == (0)*y_step)
+	{
+		video_update_vdp1(timer.machine());
+
+		if(STV_VDP1_VBE)
+			state->m_vdp1.framebuffer_clear_on_next_frame = 1;
+
+		if(!(state->m_scu.ism & IRQ_VDP1_END))
+		{
+			device_set_input_line_and_vector(state->m_maincpu, 0x2, HOLD_LINE, 0x4d);
+			scu_do_transfer(timer.machine(),6);
+		}
+		else
+			state->m_scu.ist |= (IRQ_VDP1_END);
+	}
 
 	if(scanline == 0*y_step)
 	{
@@ -1809,16 +1983,6 @@ static TIMER_DEVICE_CALLBACK( saturn_scanline )
 		}
 		else
 			state->m_scu.ist |= (IRQ_VBLANK_IN);
-
-		if(!(state->m_scu.ism & IRQ_VDP1_END))
-		{
-			device_set_input_line_and_vector(state->m_maincpu, 0x2, HOLD_LINE, 0x4d);
-			scu_do_transfer(timer.machine(),6);
-		}
-		else
-			state->m_scu.ist |= (IRQ_VDP1_END);
-
-		video_update_vdp1(timer.machine());
 	}
 	else if((scanline % y_step) == 0 && scanline < vblank_line*y_step)
 	{
@@ -1843,16 +2007,51 @@ static TIMER_DEVICE_CALLBACK( saturn_scanline )
 	}
 
 	/* TODO: this isn't completely correct */
-	if((state->m_scu_regs[38] & 0x81) == 0x01 && ((scanline % y_step) == 0))
+	if(state->m_scu_regs[38] & 0x1)
 	{
-		if(!(state->m_scu.ism & IRQ_TIMER_1))
+		if((!(state->m_scu_regs[38] & 0x100) && (scanline % y_step) == 0) ||
+		    ((state->m_scu_regs[38] & 0x100) && (scanline == (state->m_scu_regs[36] & 0x3ff)*y_step)))
 		{
-			device_set_input_line_and_vector(state->m_maincpu, 0xb, HOLD_LINE, 0x44 );
-			scu_do_transfer(timer.machine(),4);
+			if(!(state->m_scu.ism & IRQ_TIMER_1))
+			{
+				device_set_input_line_and_vector(state->m_maincpu, 0xb, HOLD_LINE, 0x44 );
+				scu_do_transfer(timer.machine(),4);
+			}
+			else
+				state->m_scu.ist |= (IRQ_TIMER_1);
 		}
-		else
-			state->m_scu.ist |= (IRQ_TIMER_1);
 	}
+}
+
+static TIMER_DEVICE_CALLBACK( saturn_slave_scanline )
+{
+	saturn_state *state = timer.machine().driver_data<saturn_state>();
+	int scanline = param;
+	int max_y = timer.machine().primary_screen->height();
+	int y_step,vblank_line;
+
+	y_step = 2;
+
+	if((max_y == 263 && state->m_vdp2.pal == 0) || (max_y == 313 && state->m_vdp2.pal == 1))
+		y_step = 1;
+
+	vblank_line = (state->m_vdp2.pal) ? 288 : 240;
+
+	if(scanline == vblank_line*y_step)
+		device_set_input_line_and_vector(state->m_slave, 0x6, HOLD_LINE, 0x43);
+	else if((scanline % y_step) == 0 && scanline < vblank_line*y_step)
+		device_set_input_line_and_vector(state->m_slave, 0x2, HOLD_LINE, 0x41);
+}
+
+/* Die Hard Trilogy tests RAM address 0x25e7ffe bit 2 with Slave during FRT minit irq, in-development tool for breaking execution of it? */
+static READ32_HANDLER( saturn_null_ram_r )
+{
+	return 0xffffffff;
+}
+
+static WRITE32_HANDLER( saturn_null_ram_w )
+{
+
 }
 
 static READ32_HANDLER( saturn_cart_dram0_r )
@@ -1883,6 +2082,30 @@ static WRITE32_HANDLER( saturn_cart_dram1_w )
 	COMBINE_DATA(&state->m_cart_dram[offset+0x200000/4]);
 }
 
+static READ32_HANDLER( saturn_cs1_r )
+{
+	saturn_state *state = space->machine().driver_data<saturn_state>();
+	UINT32 res;
+
+	res = 0;
+	//res  = state->m_cart_backupram[offset*4+0] << 24;
+	res |= state->m_cart_backupram[offset*2+0] << 16;
+	//res |= state->m_cart_backupram[offset*4+2] << 8;
+	res |= state->m_cart_backupram[offset*2+1] << 0;
+
+	return res;
+}
+
+static WRITE32_HANDLER( saturn_cs1_w )
+{
+	saturn_state *state = space->machine().driver_data<saturn_state>();
+
+	if(ACCESSING_BITS_16_23)
+		state->m_cart_backupram[offset*2+0] = (data & 0x00ff0000) >> 16;
+	if(ACCESSING_BITS_0_7)
+		state->m_cart_backupram[offset*2+1] = (data & 0x000000ff) >> 0;
+}
+
 static MACHINE_RESET( saturn )
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
@@ -1890,11 +2113,10 @@ static MACHINE_RESET( saturn )
 	cputag_set_input_line(machine, "slave", INPUT_LINE_RESET, ASSERT_LINE);
 	cputag_set_input_line(machine, "audiocpu", INPUT_LINE_RESET, ASSERT_LINE);
 
-	state->m_smpc.smpcSR = 0x40;	// this bit is always on according to docs
+	state->m_smpc.SR = 0x40;	// this bit is always on according to docs
 
 	state->m_en_68k = 0;
 	state->m_NMI_reset = 1;
-	state->m_smpc_ram[0x21] = (0x80) | ((state->m_NMI_reset & 1) << 6);
 
 	DMA_STATUS = 0;
 
@@ -1906,33 +2128,61 @@ static MACHINE_RESET( saturn )
 
 	stvcd_reset( machine );
 
-	state->m_cart_type = input_port_read(machine,"CART_AREA") & 3;
+	state->m_cart_type = input_port_read(machine,"CART_AREA") & 7;
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_readwrite(0x02400000, 0x027fffff);
-	machine.device("slave")->memory().space(AS_PROGRAM)->nop_readwrite(0x02400000, 0x027fffff);
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x02400000, 0x027fffff, FUNC(saturn_null_ram_r), FUNC(saturn_null_ram_w));
+	machine.device("slave")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x02400000, 0x027fffff, FUNC(saturn_null_ram_r), FUNC(saturn_null_ram_w));
 
-	if(state->m_cart_type == 1)
+	if(state->m_cart_type == 5)
 	{
 		//  AM_RANGE(0x02400000, 0x027fffff) AM_RAM //cart RAM area, dynamically allocated
+		machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_readwrite(0x02400000, 0x027fffff);
+		machine.device("slave")->memory().space(AS_PROGRAM)->nop_readwrite(0x02400000, 0x027fffff);
+
 		machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x02400000, 0x0247ffff, FUNC(saturn_cart_dram0_r), FUNC(saturn_cart_dram0_w));
 		machine.device("slave")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x02400000, 0x0247ffff, FUNC(saturn_cart_dram0_r), FUNC(saturn_cart_dram0_w));
 		machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x02600000, 0x0267ffff, FUNC(saturn_cart_dram1_r), FUNC(saturn_cart_dram1_w));
 		machine.device("slave")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x02600000, 0x0267ffff, FUNC(saturn_cart_dram1_r), FUNC(saturn_cart_dram1_w));
 	}
 
-	if(state->m_cart_type == 2)
+	if(state->m_cart_type == 6)
 	{
 		//  AM_RANGE(0x02400000, 0x027fffff) AM_RAM //cart RAM area, dynamically allocated
+		machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_readwrite(0x02400000, 0x027fffff);
+		machine.device("slave")->memory().space(AS_PROGRAM)->nop_readwrite(0x02400000, 0x027fffff);
+
 		machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x02400000, 0x025fffff, FUNC(saturn_cart_dram0_r), FUNC(saturn_cart_dram0_w));
 		machine.device("slave")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x02400000, 0x025fffff, FUNC(saturn_cart_dram0_r), FUNC(saturn_cart_dram0_w));
 		machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x02600000, 0x027fffff, FUNC(saturn_cart_dram1_r), FUNC(saturn_cart_dram1_w));
 		machine.device("slave")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x02600000, 0x027fffff, FUNC(saturn_cart_dram1_r), FUNC(saturn_cart_dram1_w));
 	}
 
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_readwrite(0x04000000, 0x047fffff);
+	machine.device("slave")->memory().space(AS_PROGRAM)->nop_readwrite(0x04000000, 0x047fffff);
+
+	if(state->m_cart_type > 0 && state->m_cart_type < 5)
+	{
+	//	AM_RANGE(0x04000000, 0x047fffff) AM_RAM //backup RAM area, dynamically allocated
+		UINT32 mask;
+		mask = 0x7fffff >> (4-state->m_cart_type);
+		//mask = 0x7fffff >> 4-4 = 0x7fffff 32mbit
+		//mask = 0x7fffff >> 4-3 = 0x3fffff 16mbit
+		//mask = 0x7fffff >> 4-2 = 0x1fffff 8mbit
+		//mask = 0x7fffff >> 4-1 = 0x0fffff 4mbit
+		machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x04000000, 0x04000000 | mask, FUNC(saturn_cs1_r), FUNC(saturn_cs1_w));
+		machine.device("slave")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x04000000, 0x04000000 | mask, FUNC(saturn_cs1_r), FUNC(saturn_cs1_w));
+	}
+
+
 	/* TODO: default value is probably 7 */
 	state->m_scu.start_factor[0] = -1;
 	state->m_scu.start_factor[1] = -1;
 	state->m_scu.start_factor[2] = -1;
+
+	state->m_vdp2.old_crmd = -1;
+	state->m_vdp2.old_tvmd = -1;
+
+	state->m_stv_rtc_timer->adjust(attotime::zero, 0, attotime::from_seconds(1));
 }
 
 
@@ -1946,7 +2196,6 @@ static MACHINE_RESET( stv )
 
 	state->m_en_68k = 0;
 	state->m_NMI_reset = 1;
-	state->m_smpc_ram[0x21] = (0x80) | ((state->m_NMI_reset & 1) << 6);
 
 	port_sel = mux_data = 0;
 	port_i = -1;
@@ -1963,6 +2212,9 @@ static MACHINE_RESET( stv )
 	state->m_scu.start_factor[0] = -1;
 	state->m_scu.start_factor[1] = -1;
 	state->m_scu.start_factor[2] = -1;
+
+	state->m_vdp2.old_crmd = -1;
+	state->m_vdp2.old_tvmd = -1;
 }
 
 struct cdrom_interface saturn_cdrom =
@@ -1982,8 +2234,9 @@ static MACHINE_CONFIG_START( saturn, saturn_state )
 	MCFG_CPU_ADD("slave", SH2, MASTER_CLOCK_352/2) // 28.6364 MHz
 	MCFG_CPU_PROGRAM_MAP(saturn_mem)
 	MCFG_CPU_CONFIG(sh2_conf_slave)
+	MCFG_TIMER_ADD_SCANLINE("slave_scantimer", saturn_slave_scanline, "screen", 0, 1)
 
-	MCFG_CPU_ADD("audiocpu", M68000, 11289600) //11.2896 MHz
+	MCFG_CPU_ADD("audiocpu", M68000, 11289600) //256 x 44100 Hz = 11.2896 MHz
 	MCFG_CPU_PROGRAM_MAP(sound_mem)
 
 	MCFG_MACHINE_START(saturn)
@@ -1992,6 +2245,7 @@ static MACHINE_CONFIG_START( saturn, saturn_state )
 	MCFG_NVRAM_HANDLER(saturn)
 
 	MCFG_TIMER_ADD("sector_timer", stv_sector_cb)
+	MCFG_TIMER_ADD("sh1_cmd", stv_sh1_sim)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2031,6 +2285,7 @@ static MACHINE_CONFIG_START( stv, saturn_state )
 	MCFG_CPU_ADD("slave", SH2, MASTER_CLOCK_352/2) // 28.6364 MHz
 	MCFG_CPU_PROGRAM_MAP(stv_mem)
 	MCFG_CPU_CONFIG(sh2_conf_slave)
+	MCFG_TIMER_ADD_SCANLINE("slave_scantimer", saturn_slave_scanline, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", M68000, 11289600) //11.2896 MHz
 	MCFG_CPU_PROGRAM_MAP(sound_mem)
@@ -2041,6 +2296,7 @@ static MACHINE_CONFIG_START( stv, saturn_state )
 	MCFG_EEPROM_93C46_ADD("eeprom") /* Actually 93c45 */
 
 	MCFG_TIMER_ADD("sector_timer", stv_sector_cb)
+	MCFG_TIMER_ADD("sh1_cmd", stv_sh1_sim)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
@@ -2155,7 +2411,6 @@ MACHINE_CONFIG_END
 static void saturn_init_driver(running_machine &machine, int rgn)
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
-	system_time systime;
 
 	state->m_saturn_region = rgn;
 	state->m_vdp2.pal = (rgn == 12) ? 1 : 0;
@@ -2164,30 +2419,17 @@ static void saturn_init_driver(running_machine &machine, int rgn)
 	sh2drc_set_options(machine.device("maincpu"), SH2DRC_STRICT_VERIFY|SH2DRC_STRICT_PCREL);
 	sh2drc_set_options(machine.device("slave"), SH2DRC_STRICT_VERIFY|SH2DRC_STRICT_PCREL);
 
-	/* get the current date/time from the core */
-	machine.current_datetime(systime);
-
 	/* amount of time to boost interleave for on MINIT / SINIT, needed for communication to work */
 	state->m_minit_boost = 400;
 	state->m_sinit_boost = 400;
 	state->m_minit_boost_timeslice = attotime::zero;
 	state->m_sinit_boost_timeslice = attotime::zero;
 
-	state->m_smpc_ram = auto_alloc_array(machine, UINT8, 0x80);
 	state->m_scu_regs = auto_alloc_array(machine, UINT32, 0x100/4);
 	state->m_scsp_regs = auto_alloc_array(machine, UINT16, 0x1000/2);
 	state->m_cart_dram = auto_alloc_array(machine, UINT32, 0x400000/4);
-
-	state->m_smpc_ram[0x23] = dec_2_bcd(systime.local_time.year / 100);
-	state->m_smpc_ram[0x25] = dec_2_bcd(systime.local_time.year % 100);
-	state->m_smpc_ram[0x27] = (systime.local_time.weekday << 4) | (systime.local_time.month + 1);
-	state->m_smpc_ram[0x29] = dec_2_bcd(systime.local_time.mday);
-	state->m_smpc_ram[0x2b] = dec_2_bcd(systime.local_time.hour);
-	state->m_smpc_ram[0x2d] = dec_2_bcd(systime.local_time.minute);
-	state->m_smpc_ram[0x2f] = dec_2_bcd(systime.local_time.second);
-	state->m_smpc_ram[0x31] = 0x00; //CTG1=0 CTG0=0 (correct??)
-//  state->m_smpc_ram[0x33] = input_port_read(machine, "???");
-	state->m_smpc_ram[0x5f] = 0x10;
+	state->m_backupram = auto_alloc_array(machine, UINT8, 0x10000);
+	state->m_cart_backupram = auto_alloc_array(machine, UINT8, 0x400000);
 }
 
 static DRIVER_INIT( saturnus )

@@ -481,6 +481,7 @@ void cli_frontend::listcrc(const char *gamename)
 	// iterate through matches, and then through ROMs
 	while (drivlist.next())
 		for (const rom_source *source = rom_first_source(drivlist.config()); source != NULL; source = rom_next_source(*source))
+		{
 			for (const rom_entry *region = rom_first_region(*source); region; region = rom_next_region(region))
 				for (const rom_entry *rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 				{
@@ -489,6 +490,7 @@ void cli_frontend::listcrc(const char *gamename)
 					if (hash_collection(ROM_GETHASHDATA(rom)).crc(crc))
 						mame_printf_info("%08x %-16s %s\n", crc, ROM_GETNAME(rom), _LST(drivlist.driver().description));
 				}
+		}
 }
 
 
@@ -655,8 +657,8 @@ void cli_frontend::listslots(const char *gamename)
 		throw emu_fatalerror(MAMERR_NO_SUCH_GAME, "No matching games found for '%s'", gamename);
 
 	// print header
-	printf(" SYSTEM      SLOT NAME             SLOT OPTIONS SUPPORTED     \n");
-	printf("----------  --------------------  ------------------------------------\n");
+	printf(" SYSTEM      SLOT NAME    SLOT OPTIONS    SLOT DEVICE NAME     \n");
+	printf("----------  -----------  --------------  ----------------------\n");
 
 	// iterate over drivers
 	while (drivlist.next())
@@ -667,19 +669,21 @@ void cli_frontend::listslots(const char *gamename)
 		for (bool gotone = drivlist.config().devicelist().first(slot); gotone; gotone = slot->next(slot))
 		{
 			// output the line, up to the list of extensions
-			printf("%-13s%-20s   ", first ? drivlist.driver().name : "", slot->device().tag());
+			printf("%-13s%-10s   ", first ? drivlist.driver().name : "", slot->device().tag());
 			
 			// get the options and print them		
 			const slot_interface* intf = slot->get_slot_interfaces();
 			for (int i = 0; intf[i].name != NULL; i++)
 			{
+				device_t *dev = (*intf[i].devtype)(drivlist.config(), "dummy", drivlist.config().devicelist().first(), 0);
+				dev->config_complete();
 				if (i==0) {
-					printf("%s\n", intf[i].name);
+					printf("%-15s %s\n", intf[i].name,dev->name());
 				} else {
-					printf("%-33s   %s\n", "",intf[i].name);
+					printf("%-23s   %-15s %s\n", "",intf[i].name,dev->name());
 				}
+				global_free(dev);
 			}
-
 			// end the line
 			printf("\n");
 			first = false;
@@ -1561,8 +1565,6 @@ void media_identifier::identify_file(const char *name)
 		static const UINT8 nullhash[20] = { 0 };
 		hash_collection hashes;
 
-		if (memcmp(nullhash, header.md5, sizeof(header.md5)) != 0)
-			hashes.add_from_buffer(hash_collection::HASH_MD5, header.md5, sizeof(header.md5));
 		if (memcmp(nullhash, header.sha1, sizeof(header.sha1)) != 0)
 			hashes.add_from_buffer(hash_collection::HASH_SHA1, header.sha1, sizeof(header.sha1));
 
@@ -1582,7 +1584,10 @@ void media_identifier::identify_file(const char *name)
 		void *data;
 		file_error filerr = core_fload(name, &data, &length);
 		if (filerr == FILERR_NONE && length > 0)
+		{
 			identify_data(name, reinterpret_cast<UINT8 *>(data), length);
+			osd_free(data);
+		}
 	}
 }
 
@@ -1667,7 +1672,7 @@ int media_identifier::find_by_hash(const hash_collection &hashes, int length)
 						bool baddump = romhashes.flag(hash_collection::FLAG_BAD_DUMP);
 
 						// output information about the match
-						if (!found)
+						if (found)
 							mame_printf_info("                    ");
 						mame_printf_info("= %s%-20s  %-10s %s\n", baddump ? _("(BAD) ") : "", ROM_GETNAME(rom), m_drivlist.driver().name, _LST(m_drivlist.driver().description));
 						found++;
@@ -1695,7 +1700,7 @@ int media_identifier::find_by_hash(const hash_collection &hashes, int length)
 										bool baddump = romhashes.flag(hash_collection::FLAG_BAD_DUMP);
 
 										// output information about the match
-										if (!found)
+										if (found)
 											mame_printf_info("                    ");
 										mame_printf_info("= %s%-20s  %s:%s %s\n", baddump ? _("(BAD) ") : "", ROM_GETNAME(rom), swlist->list_name[listnum], swinfo->shortname, swinfo->longname);
 										found++;

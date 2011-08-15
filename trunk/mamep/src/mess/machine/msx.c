@@ -19,7 +19,6 @@
 #include "machine/wd17xx.h"
 #include "imagedev/flopdrv.h"
 #include "formats/basicdsk.h"
-#include "video/tms9928a.h"
 #include "cpu/z80/z80.h"
 #include "video/v9938.h"
 #include "machine/ctronics.h"
@@ -94,7 +93,7 @@ DEVICE_IMAGE_LOAD (msx_cart)
 	int size;
 	int size_aligned;
 	UINT8 *mem;
-	int type;
+	int type = -1;
 	const char *extra = NULL;
 	char *sramfile;
 	slot_state *st;
@@ -112,74 +111,133 @@ DEVICE_IMAGE_LOAD (msx_cart)
 		return IMAGE_INIT_FAIL;
 	}
 
-	size = image.length ();
-	if (size < 0x2000) {
-		logerror ("cart #%d: error: file is smaller than 2kb, too small "
-				  "to be true!\n", id);
-		return IMAGE_INIT_FAIL;
-	}
-
-	/* allocate memory and load */
-	size_aligned = 0x2000;
-	while (size_aligned < size) {
-		size_aligned *= 2;
-	}
-	mem = auto_alloc_array(image.device().machine(),UINT8,size_aligned);
-	if (!mem) {
-		logerror ("cart #%d: error: failed to allocate memory for cartridge\n",
-						id);
-		return IMAGE_INIT_FAIL;
-	}
-	if (size < size_aligned) {
-		memset (mem, 0xff, size_aligned);
-	}
-	if (image.fread(mem, size) != size) {
-		logerror ("cart #%d: %s: can't read full %d bytes\n",
-						id, image.filename (), size);
-		return IMAGE_INIT_FAIL;
-	}
-
-	/* see if msx.crc will tell us more */
-	extra = hashfile_extrainfo(image);
-
-	if (!extra)
+	if ( image.software_entry() != NULL )
 	{
-		logerror("cart #%d: warning: no information in crc file\n", id);
-		type = -1;
-	}
-	else if ((1 != sscanf(extra, "%d", &type) ) ||
-			type < 0 || type > SLOT_LAST_CARTRIDGE_TYPE)
-	{
-		logerror("cart #%d: warning: information in crc file not valid\n", id);
-		type = -1;
+		/* Load software from software list */
+		/* TODO: Add proper SRAM (size) handling */
+
+		const char *mapper = software_part_get_feature( (software_part*)image.part_entry(), "mapper" );
+		const char *sram = software_part_get_feature( (software_part*)image.part_entry(), "sram" );
+
+		if ( mapper != NULL )
+		{
+			/* TODO: Split out the SRAM recognition code and 8KB/16KB bank configuration */
+			static const struct { const char *mapper_name; bool sram_present; int mapper_type; } mapper_types[] =
+			{
+				{ "M60002-0125SP",		false,		SLOT_ASCII8 },
+				{ "M60002-0125SP",		true,		SLOT_ASCII8_SRAM },
+				{ "LZ93A13",			false,		SLOT_ASCII8 },
+				{ "LZ93A13",			true,		SLOT_ASCII8_SRAM },
+				{ "LZ93A13-16",			false,		SLOT_ASCII16 },
+				{ "LZ93A13-16",			true,		SLOT_ASCII16_SRAM },
+				{ "M60002-0125SP-16",	false,		SLOT_ASCII16 },
+				{ "IREM TAM-S1",		false,		SLOT_RTYPE },
+				{ "MR6401",				false,		SLOT_ASCII16 },
+				{ "NEOS MR6401",		false,		SLOT_ASCII8 },
+				{ "BS6202",				false,		SLOT_ASCII8 },
+			};
+
+			for ( int i = 0; i < ARRAY_LENGTH(mapper_types) && type < 0; i++ )
+			{
+				if ( !mame_stricmp( mapper, mapper_types[i].mapper_name ) )
+				{
+					if ( sram == NULL && ! mapper_types[i].sram_present )
+						type = mapper_types[i].mapper_type;
+
+
+					if ( sram != NULL && mapper_types[i].sram_present )
+						type = mapper_types[i].mapper_type;
+				}
+			}
+
+			if ( -1 == type )
+			{
+				logerror( "Mapper '%s' not recognized!\n", mapper );
+			}
+		}
+
+		UINT8 *rom_region = image.get_software_region( "rom" );
+		size = size_aligned = image.get_software_region_length( "rom" );
+
+		mem = auto_alloc_array( image.device().machine(), UINT8, size_aligned );
+		memcpy( mem, rom_region, size_aligned );
 	}
 	else
 	{
-		logerror ("cart #%d: info: cart extra info: '%s' = %s\n", id, extra,
-						msx_slot_list[type].name);
-	}
+		/* Old style image loading */
 
-	/* if not, attempt autodetection */
-	if (type < 0)
-	{
-		type = msx_probe_type (mem, size);
-
-		if (mem[0] != 'A' || mem[1] != 'B') {
-			logerror("cart #%d: %s: May not be a valid ROM file\n",
-							id, image.filename ());
+		size = image.length ();
+		if (size < 0x2000) {
+			logerror ("cart #%d: error: file is smaller than 2kb, too small "
+					  "to be true!\n", id);
+			return IMAGE_INIT_FAIL;
 		}
 
-		logerror("cart #%d: Probed cartridge mapper %d/%s\n", id,
-						type, msx_slot_list[type].name);
+		/* allocate memory and load */
+		size_aligned = 0x2000;
+		while (size_aligned < size) {
+			size_aligned *= 2;
+		}
+		mem = auto_alloc_array(image.device().machine(),UINT8,size_aligned);
+		if (!mem) {
+			logerror ("cart #%d: error: failed to allocate memory for cartridge\n",
+							id);
+			return IMAGE_INIT_FAIL;
+		}
+		if (size < size_aligned) {
+			memset (mem, 0xff, size_aligned);
+		}
+		if (image.fread(mem, size) != size) {
+			logerror ("cart #%d: %s: can't read full %d bytes\n",
+							id, image.filename (), size);
+			return IMAGE_INIT_FAIL;
+		}
+
+		/* see if msx.crc will tell us more */
+		extra = hashfile_extrainfo(image);
+
+		if (!extra)
+		{
+			logerror("cart #%d: warning: no information in crc file\n", id);
+			type = -1;
+		}
+		else if ((1 != sscanf(extra, "%d", &type) ) ||
+				type < 0 || type > SLOT_LAST_CARTRIDGE_TYPE)
+		{
+			logerror("cart #%d: warning: information in crc file not valid\n", id);
+			type = -1;
+		}
+		else
+		{
+			logerror ("cart #%d: info: cart extra info: '%s' = %s\n", id, extra,
+							msx_slot_list[type].name);
+		}
+
+		/* if not, attempt autodetection */
+		if (type < 0)
+		{
+			type = msx_probe_type (mem, size);
+
+			if (mem[0] != 'A' || mem[1] != 'B') {
+				logerror("cart #%d: %s: May not be a valid ROM file\n",
+								id, image.filename ());
+			}
+
+			logerror("cart #%d: Probed cartridge mapper %d/%s\n", id,
+							type, msx_slot_list[type].name);
+		}
 	}
 
 	/* mapper type 0 always needs 64kB */
 	if (!type && size_aligned != 0x10000)
 	{
+		UINT8 *old_mem = mem;
+		int old_size_aligned = size_aligned;
+
 		size_aligned = 0x10000;
-		auto_free(image.device().machine(),mem);
 		mem = auto_alloc_array(image.device().machine(),UINT8, 0x10000);
 		if (!mem) {
+			auto_free(image.device().machine(),old_mem);
 			logerror ("cart #%d: error: cannot allocate memory\n", id);
 			return IMAGE_INIT_FAIL;
 		}
@@ -193,6 +251,9 @@ DEVICE_IMAGE_LOAD (msx_cart)
 
 			size = 0x10000;
 		}
+		/* Copy old contents to newly claimed memory */
+		memcpy(mem,old_mem,old_size_aligned);
+		auto_free(image.device().machine(),old_mem);
 	}
 
 	/* mapper type 0 (ROM) might need moving around a bit */
@@ -322,17 +383,8 @@ static void msx_ch_reset_core (running_machine &machine)
 	msx_memory_map_all (machine);
 }
 
-static const TMS9928a_interface tms9928a_interface =
-{
-	TMS99x8A,
-	0x4000,
-	0, 0,
-	msx_vdp_interrupt
-};
-
 MACHINE_START( msx )
 {
-	TMS9928A_configure(&tms9928a_interface);
 	MACHINE_START_CALL( msx2 );
 }
 
@@ -345,7 +397,6 @@ MACHINE_START( msx2 )
 
 MACHINE_RESET( msx )
 {
-	TMS9928A_reset ();
 	msx_ch_reset_core (machine);
 }
 
@@ -512,9 +563,6 @@ INTERRUPT_GEN( msx_interrupt )
 		state->m_mouse[i] = input_port_read(device->machine(), i ? "MOUSE1" : "MOUSE0");
 		state->m_mouse_stat[i] = -1;
 	}
-
-	TMS9928A_set_spriteslimit (input_port_read(device->machine(), "DSW") & 0x20);
-	TMS9928A_interrupt(device->machine());
 }
 
 /*
@@ -529,62 +577,50 @@ static cassette_image_device *cassette_device_image(running_machine &machine)
 READ8_HANDLER ( msx_psg_port_a_r )
 {
 	msx_state *state = space->machine().driver_data<msx_state>();
-	int data, inp;
+	UINT8 data;
 
 	data = (cassette_device_image(space->machine())->input() > 0.0038 ? 0x80 : 0);
 
 	if ( (state->m_psg_b ^ input_port_read(space->machine(), "DSW") ) & 0x40)
 		{
 		/* game port 2 */
-		inp = input_port_read(space->machine(), "JOY1") & 0x7f;
-#if 0
+		UINT8 inp = input_port_read(space->machine(), "JOY1");
 		if ( !(inp & 0x80) )
 			{
-#endif
 			/* joystick */
-			return (inp & 0x7f) | data;
-#if 0
+			data |= ( inp & 0x7f );
 			}
 		else
 			{
 			/* mouse */
-			data |= inp & 0x70;
+			data |= ( inp & 0x70 );
 			if (state->m_mouse_stat[1] < 0)
-				inp = 0xf;
+				data |= 0xf;
 			else
-				inp = ~(state->m_mouse[1] >> (4*state->m_mouse_stat[1]) ) & 15;
-
-			return data | inp;
+				data |= ~(state->m_mouse[1] >> (4*state->m_mouse_stat[1]) ) & 15;
 			}
-#endif
 		}
 	else
 		{
 		/* game port 1 */
-		inp = input_port_read(space->machine(), "JOY0") & 0x7f;
-#if 0
+		UINT8 inp = input_port_read(space->machine(), "JOY0");
 		if ( !(inp & 0x80) )
 			{
-#endif
 			/* joystick */
-			return (inp & 0x7f) | data;
-#if 0
+			data |= ( inp & 0x7f );
 			}
 		else
 			{
 			/* mouse */
-			data |= inp & 0x70;
+			data |= ( inp & 0x70 );
 			if (state->m_mouse_stat[0] < 0)
-				inp = 0xf;
+				data |= 0xf;
 			else
-				inp = ~(state->m_mouse[0] >> (4*state->m_mouse_stat[0]) ) & 15;
-
-			return data | inp;
+				data |= ~(state->m_mouse[0] >> (4*state->m_mouse_stat[0]) ) & 15;
 			}
-#endif
 		}
 
-	return 0;
+	return data;
 }
 
 READ8_HANDLER ( msx_psg_port_b_r )

@@ -1161,6 +1161,8 @@ void hlsl_info::init_effect_info(d3d_poly_info *poly)
 		// just post-processing.
 		curr_effect = post_effect;
 
+		(*d3dintf->effect.set_float)(curr_effect, "ScanlineOffset", (poly->texture->cur_frame == 0) ? 0.0f : options->scanline_offset);
+
 		if(options->params_dirty)
 		{
 			(*d3dintf->effect.set_float)(curr_effect, "RawWidth", (float)poly->texture->rawwidth);
@@ -1188,7 +1190,7 @@ void hlsl_info::init_effect_info(d3d_poly_info *poly)
 			(*d3dintf->effect.set_float)(curr_effect, "ScanlineHeight", options->scanline_height);
 			(*d3dintf->effect.set_float)(curr_effect, "ScanlineBrightScale", options->scanline_bright_scale);
 			(*d3dintf->effect.set_float)(curr_effect, "ScanlineBrightOffset", options->scanline_bright_offset);
-			(*d3dintf->effect.set_float)(curr_effect, "ScanlineOffset", (poly->texture->cur_frame == 0) ? 0.0f : options->scanline_offset);
+			//(*d3dintf->effect.set_float)(curr_effect, "ScanlineOffset", (poly->texture->cur_frame == 0) ? 0.0f : options->scanline_offset);
 			(*d3dintf->effect.set_vector)(curr_effect, "Power", 3, options->power);
 		}
 	}
@@ -2175,10 +2177,7 @@ void hlsl_info::delete_resources()
 		avi_final_target = NULL;
 	}
 
-	if (options != NULL)
-	{
-		global_free(options);
-	}
+	global_free(options);
 
 	registered_targets = 0;
 

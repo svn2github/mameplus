@@ -8,8 +8,8 @@ public:
 
 	UINT32    *m_workram_l;
 	UINT32    *m_workram_h;
-	UINT8     *m_smpc_ram;
-	UINT32    *m_backupram;
+	UINT8     *m_backupram;
+	UINT8     *m_cart_backupram;
 	UINT32    *m_scu_regs;
 	UINT16    *m_sound_ram;
 	UINT16    *m_scsp_regs;
@@ -27,7 +27,7 @@ public:
 		UINT32    dst[3];		/* Destination DMA lv n address*/
 		UINT32    src_add[3];	/* Source Addition for DMA lv n*/
 		UINT32    dst_add[3];	/* Destination Addition for DMA lv n*/
-		INT32     size[3];		/* Transfer DMA size lv n*/
+		UINT32    size[3];		/* Transfer DMA size lv n*/
 		UINT32    index[3];
 		int       start_factor[3];
 		UINT8     enable_mask[3];
@@ -57,6 +57,7 @@ public:
 	    UINT8     *gfx_decode;
 		UINT16    lopr;
 		UINT16    copr;
+		UINT16    ewdr;
 
 		int       local_x;
 		int       local_y;
@@ -67,6 +68,12 @@ public:
 	    bitmap_t  *roz_bitmap[2];
 	    UINT8     dotsel;
 	    UINT8     pal;
+	    UINT16    h_count;
+	    UINT16    v_count;
+	    UINT8     exltfg;
+	    UINT8     exsyfg;
+		int       old_crmd;
+		int       old_tvmd;
 	}m_vdp2;
 
 	struct {
@@ -76,12 +83,23 @@ public:
         UINT8 EXLE2;
         UINT8 PDR1;
         UINT8 PDR2;
+        UINT8 DDR1;
+        UINT8 DDR2;
+        UINT8 SF;
+        UINT8 SR;
+        UINT8 IREG[7];
+        UINT8 OREG[32];
         int   intback_stage;
-        int   smpcSR;
         int   pmode;
         UINT8 SMEM[4];
         UINT8 intback;
+        UINT8 rtc_data[7];
 	}m_smpc;
+
+	struct {
+		UINT8 status;
+		UINT8 data;
+	}m_keyb;
 
 	/* Saturn specific*/
 	int m_saturn_region;
@@ -130,7 +148,6 @@ DRIVER_INIT ( stv );
 
 /*----------- defined in drivers/stvinit.c -----------*/
 
-UINT8 get_vblank(running_machine &machine);
 void install_stvbios_speedups(running_machine &machine);
 DRIVER_INIT(mausuke);
 DRIVER_INIT(puyosun);
@@ -203,4 +220,3 @@ WRITE32_HANDLER ( saturn_vdp2_regs_w );
 
 VIDEO_START ( stv_vdp2 );
 SCREEN_UPDATE( stv_vdp2 );
-
