@@ -179,7 +179,7 @@ READ16_HANDLER( saturn_vdp1_regs_r )
 		case 0x12/2: return state->m_vdp1.lopr;
 		case 0x14/2: return state->m_vdp1.copr;
 		/* MODR register, read register for the other VDP1 regs
-		   (Shienryu SS version abuses of this during intro) */
+           (Shienryu SS version abuses of this during intro) */
 		case 0x16/2:
 			UINT16 modr;
 
@@ -1944,7 +1944,10 @@ static void stv_vdp1_process_list(running_machine &machine)
 		{
 			if ( stv2_current_sprite.CMDPMOD & 0x0400 )
 			{
-				cliprect = &state->m_vdp1.user_cliprect;
+				//if(stv2_current_sprite.CMDPMOD & 0x0200) /* TODO: Bio Hazard inventory screen uses outside cliprect */
+				//	cliprect = &state->m_vdp1.system_cliprect;
+				//else
+					cliprect = &state->m_vdp1.user_cliprect;
 			}
 			else
 			{
@@ -1956,19 +1959,25 @@ static void stv_vdp1_process_list(running_machine &machine)
 			switch (stv2_current_sprite.CMDCTRL & 0x000f)
 			{
 				case 0x0000:
-					if (VDP1_LOG) logerror ("Sprite List Normal Sprite\n");
+					if (VDP1_LOG) logerror ("Sprite List Normal Sprite (%d %d)\n",stv2_current_sprite.CMDXA,stv2_current_sprite.CMDYA);
 					stv2_current_sprite.ispoly = 0;
 					stv_vpd1_draw_normal_sprite(machine, cliprect, 0);
 					break;
 
 				case 0x0001:
-					if (VDP1_LOG) logerror ("Sprite List Scaled Sprite\n");
+					if (VDP1_LOG) logerror ("Sprite List Scaled Sprite (%d %d)\n",stv2_current_sprite.CMDXA,stv2_current_sprite.CMDYA);
 					stv2_current_sprite.ispoly = 0;
 					stv_vpd1_draw_scaled_sprite(machine, cliprect);
 					break;
 
 				case 0x0002:
 					if (VDP1_LOG) logerror ("Sprite List Distorted Sprite\n");
+					if (VDP1_LOG) logerror ("(A: %d %d)\n",stv2_current_sprite.CMDXA,stv2_current_sprite.CMDYA);
+					if (VDP1_LOG) logerror ("(B: %d %d)\n",stv2_current_sprite.CMDXB,stv2_current_sprite.CMDYB);
+					if (VDP1_LOG) logerror ("(C: %d %d)\n",stv2_current_sprite.CMDXC,stv2_current_sprite.CMDYC);
+					if (VDP1_LOG) logerror ("(D: %d %d)\n",stv2_current_sprite.CMDXD,stv2_current_sprite.CMDYD);
+					if (VDP1_LOG) logerror ("CMDPMOD = %04x\n",stv2_current_sprite.CMDPMOD);
+
 					stv2_current_sprite.ispoly = 0;
 					stv_vpd1_draw_distorted_sprite(machine, cliprect);
 					break;
@@ -2008,7 +2017,7 @@ static void stv_vdp1_process_list(running_machine &machine)
 					break;
 
 				case 0x000a:
-					if (VDP1_LOG) logerror ("Sprite List Local Co-Ordinate Set\n");
+					if (VDP1_LOG) logerror ("Sprite List Local Co-Ordinate Set (%d %d)\n",(INT16)stv2_current_sprite.CMDXA,(INT16)stv2_current_sprite.CMDYA);
 					state->m_vdp1.local_x = (INT16)stv2_current_sprite.CMDXA;
 					state->m_vdp1.local_y = (INT16)stv2_current_sprite.CMDYA;
 					break;
@@ -2109,7 +2118,7 @@ void video_update_vdp1(running_machine &machine)
 		case 1:/*Draw by request*/
 			break;
 		case 2:/*Automatic Draw*/
-			if ( framebuffer_changed )
+			if ( framebuffer_changed || VDP1_LOG )
 			{
 				/*set CEF to 1*/
 				stv_vdp1_process_list(machine);
@@ -2171,8 +2180,11 @@ int stv_vdp1_start ( running_machine &machine )
 
 	state->m_vdp1.system_cliprect.min_x = state->m_vdp1.system_cliprect.max_x = 0;
 	state->m_vdp1.system_cliprect.min_y = state->m_vdp1.system_cliprect.max_y = 0;
-	state->m_vdp1.user_cliprect.min_x = state->m_vdp1.user_cliprect.max_x = 0;
-	state->m_vdp1.user_cliprect.min_y = state->m_vdp1.user_cliprect.max_y = 0;
+	/* Kidou Senshi Z Gundam - Zenpen Zeta no Kodou loves to use the user cliprect vars in an undefined state ... */
+	state->m_vdp1.user_cliprect.min_x = 0;
+	state->m_vdp1.user_cliprect.min_y = 0;
+	state->m_vdp1.user_cliprect.max_x = 512;
+	state->m_vdp1.user_cliprect.max_y = 256;
 
 	// save state
 	state_save_register_global_pointer(machine, state->m_vdp1_regs, 0x020/2);

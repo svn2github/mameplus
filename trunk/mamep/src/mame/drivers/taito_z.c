@@ -36,7 +36,7 @@ properties], and a text plane with character definitions held in ram.
 older TC0100SCN tilemap generator used in previous Taito Z games. The
 hardware for Taito's Super Chase was a further development of this, with a
 68020 for main CPU and Ensoniq sound - standard features of Taito's F3
-system. Taito's F3 system superceded both Taito B and F2 systems, but the
+system. Taito's F3 system superseded both Taito B and F2 systems, but the
 Taito Z system was enhanced with F3 features and continued in games like
 Super Chase and Under Fire up to the mid 1990s.)
 
@@ -384,15 +384,15 @@ Notes:
                TD62003 : PNP 50V 0.5A Quad Darlinton Switch (for driving coin meters)
                   D633 : Si NPN POWER transistor used in 68k reset circuit (TIP122 compatible)
       ROMs:
-            C09-12 thru C09-14 - MB834100
+            C09-12 to C09-14   - MB834100
             C09-07             - HN62404
-            C09-32 thru C09-33 - AM27C512
-            C09-30 thru C09-31 - TC571000
+            C09-32 to C09-33   - AM27C512
+            C09-30 to C09-31   - TC571000
             C09-38 and C09-36  - TC571000
             C09-23             - AM27S21
             C09-22 and C09-26  - MMI PAL16L8B
             C09-21 and
-            C09-24 thru C09-25 - MMI PAL20L8B
+            C09-24 to C09-25   - MMI PAL20L8B
 
 PINOUT CONNECTOR D (Note: All pinouts typed from an original Taito document)
 ------------------
@@ -468,9 +468,9 @@ VIDEO PCB  K1100491A  J1100210A
 
 Notes:
       ROMs:
-            C09-01 thru C09-05 - 234000
+            C09-01 to C09-05   - 234000
             C09-06             - HN62404
-            C09-17 thru C09-18 - MMI 63S441
+            C09-17 to C09-18   - MMI 63S441
             C09-19             - MMI PAL16L8B
             C09-20             - AM27S21
 
@@ -2089,7 +2089,7 @@ static INPUT_PORTS_START( contcirc )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_TILT )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_PLAYER(1)	/* gear shift lo/hi */
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_TOGGLE	/* gear shift lo/hi */
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON7 ) PORT_PLAYER(1)	/* 3 for brake [7 levels] */
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON6 ) PORT_PLAYER(1)
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON2 ) PORT_PLAYER(1)	/* main brake key */
@@ -2163,7 +2163,7 @@ static INPUT_PORTS_START( chasehq )	// IN3-6 perhaps used with cockpit setup? //
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_TILT )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_PLAYER(1)	/* gear */
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_PLAYER(1) PORT_TOGGLE	/* gear */
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_BUTTON1 ) PORT_PLAYER(1)	/* accel */
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
@@ -2388,7 +2388,7 @@ static INPUT_PORTS_START( sci )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_TILT )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_BUTTON6 ) PORT_PLAYER(1)	/* "center" */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_PLAYER(1)	/* gear */
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_PLAYER(1) PORT_TOGGLE	/* gear */
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_BUTTON1 ) PORT_PLAYER(1)	/* accel */
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
@@ -2684,7 +2684,7 @@ static INPUT_PORTS_START( dblaxle )
 
 	PORT_START("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1)	/* shift */
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1)	PORT_TOGGLE /* shift */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE1 )

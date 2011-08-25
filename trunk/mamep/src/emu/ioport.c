@@ -3066,7 +3066,12 @@ static int frame_get_digital_field_state(const input_field_config *field, int mo
 	/* skip locked-out coin inputs */
 	if (curstate && field->type >= IPT_COIN1 && field->type <= IPT_COIN12 && coin_lockout_get_state(field->machine(), field->type - IPT_COIN1) && field->machine().options().coin_lockout())
 	{
-		ui_popup_time(3, _("Coinlock disabled %s."), _(input_field_name(field)));
+		int verbose = field->machine().options().verbose();
+#ifdef MAME_DEBUG
+		verbose = 1;
+#endif
+		if (verbose)
+			ui_popup_time(3, _("Coinlock disabled %s."), _(input_field_name(field)));
 		return FALSE;
 	}
 	return curstate;
@@ -3132,7 +3137,6 @@ input_field_config::input_field_config(input_port_config &port, int _type, input
 	  defvalue(_defvalue & _maskbits),
 	  type(_type),
 	  player(0),
-	  category(0),
 	  flags(0),
 	  impulse(0),
 	  name(_name),
@@ -3168,7 +3172,6 @@ input_field_config::input_field_config(input_port_config &port, int _type, input
 input_setting_config::input_setting_config(input_field_config &field, input_port_value _value, const char *_name)
 	: value(_value),
 	  name(_name),
-	  category(0),
 	  m_field(field),
 	  m_next(NULL)
 {
@@ -4331,7 +4334,15 @@ int input_machine_has_keyboard(running_machine &machine)
 	{
 		for (field = port->first_field(); field != NULL; field = field->next())
 		{
-			if (field->type == IPT_KEYBOARD)
+			// if we are at init, check IPT_KEYBOARD for inputx_init
+			if (!port->machine().input_port_data->safe_to_read && field->type == IPT_KEYBOARD)
+			{
+				have_keyboard = TRUE;
+				break;
+			}
+
+			// else, check if there is a keyboard and if such a keyboard is enabled
+			if (field->type == IPT_KEYBOARD && input_condition_true(field->machine(), &field->condition, field->port().owner()))
 			{
 				have_keyboard = TRUE;
 				break;
@@ -4948,9 +4959,6 @@ int input_classify_port(const input_field_config *field)
 {
 	int result;
 
-	if (field->category && (field->type != IPT_CATEGORY))
-		return INPUT_CLASS_CATEGORIZED;
-
 	switch(field->type)
 	{
 		case IPT_JOYSTICK_UP:
@@ -5076,45 +5084,6 @@ int input_count_players(running_machine &machine)
 
 
 
-/*-------------------------------------------------
-    input_category_active - checks to see if a
-    specific category is active
--------------------------------------------------*/
-
-int input_category_active(running_machine &machine, int category)
-{
-	const input_port_config *port;
-	const input_field_config *field = NULL;
-	const input_setting_config *setting;
-	input_field_user_settings settings;
-
-	assert(category >= 1);
-
-	/* loop through the input ports */
-	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
-	{
-		for (field = port->first_field(); field != NULL; field = field->next())
-		{
-			/* is this field a category? */
-			if (field->type == IPT_CATEGORY)
-			{
-				/* get the settings value */
-				input_field_get_user_settings(field, &settings);
-
-				for (setting = field->settinglist().first(); setting != NULL; setting = setting->next())
-				{
-					/* is this the category we want?  if so, is this settings value correct? */
-					if ((setting->category == category) && (settings.value == setting->value))
-						return TRUE;
-				}
-			}
-		}
-	}
-	return FALSE;
-}
-
-
-
 /***************************************************************************
     DEBUGGER SUPPORT
 ***************************************************************************/
@@ -5230,7 +5199,7 @@ input_field_config *ioconfig_alloc_field(input_port_config &port, int type, inpu
 		throw emu_fatalerror("INPUT_TOKEN_FIELD encountered with no active port (mask=%X defval=%X)\n", mask, defval); \
 	if (type != IPT_UNKNOWN && type != IPT_UNUSED)
 		port.active |= mask;
-	if (type == IPT_DIPSWITCH || type == IPT_CONFIG || type == IPT_CATEGORY)
+	if (type == IPT_DIPSWITCH || type == IPT_CONFIG)
 		defval = port_default_value(port.tag(), mask, defval, port.owner());
 	return &port.fieldlist().append(*global_alloc(input_field_config(port, type, defval, mask, input_port_string_from_token(name))));
 }

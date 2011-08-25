@@ -31,7 +31,7 @@
 #define ALFO_MAX		(+65536)
 #define ALFO_MIN		(0)
 
-#define log2(n) (log((float) n)/log((float) 2))
+//#define log2(n) (log((float) n)/log((float) 2))
 
 typedef struct
 {
@@ -544,11 +544,13 @@ static void update_pcm(YMF271Chip *chip, int slotnum, INT32 *mixp, int length)
 	{
 		if (slot->bits == 8)
 		{
+			// 8bit
 			sample = rombase[slot->startaddr + (slot->stepptr>>16)]<<8;
 		}
 		else
 		{
-			if (slot->stepptr & 1)
+			// 12bit
+			if (slot->stepptr & 0x10000)
 				sample = rombase[slot->startaddr + (slot->stepptr>>17)*3 + 2]<<8 | ((rombase[slot->startaddr + (slot->stepptr>>17)*3 + 1] << 4) & 0xf0);
 			else
 				sample = rombase[slot->startaddr + (slot->stepptr>>17)*3]<<8 | (rombase[slot->startaddr + (slot->stepptr>>17)*3 + 1] & 0xf0);
@@ -561,8 +563,8 @@ static void update_pcm(YMF271Chip *chip, int slotnum, INT32 *mixp, int length)
 
 		ch0_vol = ((UINT64)final_volume * (UINT64)channel_attenuation[slot->ch0_level]) >> 16;
 		ch1_vol = ((UINT64)final_volume * (UINT64)channel_attenuation[slot->ch1_level]) >> 16;
-//      ch2_vol = ((UINT64)final_volume * (UINT64)channel_attenuation[slot->ch2_level]) >> 16;
-//      ch3_vol = ((UINT64)final_volume * (UINT64)channel_attenuation[slot->ch3_level]) >> 16;
+//		ch2_vol = ((UINT64)final_volume * (UINT64)channel_attenuation[slot->ch2_level]) >> 16;
+//		ch3_vol = ((UINT64)final_volume * (UINT64)channel_attenuation[slot->ch3_level]) >> 16;
 
 		if (ch0_vol > 65536) ch0_vol = 65536;
 		if (ch1_vol > 65536) ch1_vol = 65536;

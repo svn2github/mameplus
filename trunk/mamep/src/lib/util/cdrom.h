@@ -130,6 +130,8 @@ struct _cdrom_toc
 cdrom_file *cdrom_open(chd_file *chd);
 void cdrom_close(cdrom_file *file);
 
+cdrom_file *cdrom_open(const char *inputfile);
+
 /* core read access */
 UINT32 cdrom_read_data(cdrom_file *file, UINT32 lbasector, void *buffer, UINT32 datatype);
 UINT32 cdrom_read_subcode(cdrom_file *file, UINT32 lbasector, void *buffer);
@@ -180,12 +182,12 @@ INLINE UINT32 lba_to_msf(UINT32 lba)
 }
 
 // segacd needs it like this.. investigate
-// Angelo also says PCE tracks often start playing at the
+// Angelo also says PCE tracks often start playing at the 
 // wrong address.. related?
 INLINE UINT32 lba_to_msf_alt(int lba)
 {
 	UINT32 ret = 0;
-
+	
 	ret |= ((lba / (60 * 75))&0xff)<<16;
 	ret |= (((lba / 75) % 60)&0xff)<<8;
 	ret |= ((lba % 75)&0xff)<<0;

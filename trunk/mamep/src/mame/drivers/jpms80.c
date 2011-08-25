@@ -74,7 +74,7 @@ MACHINE_CONFIG_END
 
 static ADDRESS_MAP_START( jpms_older_e00_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x0bff) AM_ROM
-	AM_RANGE(0x0e00, 0x0eff) AM_RAM 
+	AM_RANGE(0x0e00, 0x0eff) AM_RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( jpms_older_e00_io, AS_IO, 8 )
@@ -143,6 +143,10 @@ ROM_START( j80fruit )
 	ROM_LOAD( "fruit_snappa_1-1.bin", 0x0000, 0x1000, CRC(f6eea72d) SHA1(ae994f9eb68aa6ea127586afb448cc8fbff0c314) )
 	ROM_LOAD( "fruit_snappa_1-2.bin", 0x1000, 0x1000, CRC(10eccac5) SHA1(3c9cc57a3b51fdae713c11a33677555be3f669bc) )
 	ROM_LOAD( "fruit_snappa_1-3.bin", 0x2000, 0x1000, CRC(6f938a9a) SHA1(edbf44ae7cb060420b6f952652f08271c4af35bd) )
+
+	ROM_REGION( 0x10000, "altrevs", 0 )
+	// from 'fruit chaser' set, other roms matched.
+	ROM_LOAD( "fruit31.p1", 0x0000, 0x001000, CRC(406ff4c1) SHA1(10ef59e66debb15b22d25b66ed19f45a242e30ac) )	
 ROM_END
 
 

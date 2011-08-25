@@ -100,7 +100,7 @@ struct game_driver
 	const char *		year;						/* year the game was released */
 	const char *		manufacturer;				/* manufacturer of the game */
 	machine_config_constructor machine_config;		/* machine driver tokens */
-	ioport_constructor	ipt;					/* pointer to array of input port tokens */
+	ioport_constructor 	ipt;					/* pointer to array of input port tokens */
 	void				(*driver_init)(running_machine &machine); /* DRIVER_INIT callback */
 	const rom_entry *	rom;						/* pointer to list of ROMs for the game */
 	const char *		compatible_with;
@@ -125,12 +125,12 @@ protected:
 public:
 	// getters
 	static int total() { return s_driver_count; }
-
+	
 	// any item by index
 	static const game_driver &driver(int index) { assert(index >= 0 && index < s_driver_count); return *s_drivers_sorted[index]; }
 	static int clone(int index) { return find(driver(index).parent); }
 	static int non_bios_clone(int index) { int result = find(driver(index).parent); return (result != -1 && (driver(result).flags & GAME_IS_BIOS_ROOT) == 0) ? result : -1; }
-	static int compatible_with(int index) { int result = clone(index); return (result != -1) ? result : find(driver(index).compatible_with); }
+	static int compatible_with(int index) { return find(driver(index).compatible_with); }
 
 	// any item by driver
 	static int clone(const game_driver &driver) { int index = find(driver); assert(index != -1); return clone(index); }
@@ -154,7 +154,7 @@ protected:
 #ifdef DRIVER_SWITCH
 	static const game_driver *			s_drivers_sorted[];
 #else
-	static const game_driver * const	s_drivers_sorted[];
+	static const game_driver * const 	s_drivers_sorted[];
 #endif /* DRIVER_SWITCH */
 };
 
@@ -170,12 +170,12 @@ public:
 	driver_enumerator(emu_options &options, const char *filter);
 	driver_enumerator(emu_options &options, const game_driver &filter);
 	~driver_enumerator();
-
+	
 	// getters
 	int count() const { return m_filtered_count; }
 	int current() const { return m_current; }
 	emu_options &options() const { return m_options; }
-
+	
 	// current item
 	const game_driver &driver() const { return driver_list::driver(m_current); }
 	machine_config &config() const { return config(m_current); }
@@ -214,24 +214,24 @@ private:
 	struct config_entry
 	{
 		friend class simple_list<config_entry>;
-
+		
 	public:
 		// construction/destruction
 		config_entry(machine_config &config, int index);
 		~config_entry();
-
+		
 		// getters
 		config_entry *next() const { return m_next; }
 		int index() const { return m_index; }
 		machine_config *config() const { return m_config; }
-
+	
 	private:
 		// internal state
 		config_entry *		m_next;
 		machine_config *	m_config;
 		int					m_index;
 	};
-
+	
 	static const int CONFIG_CACHE_COUNT = 100;
 
 	// internal state

@@ -155,6 +155,32 @@ TODO:
 #define LOG_SMPC 0
 #define LOG_PAD_CMD 0
 
+#if 0
+/* TODO: move this into video functions */
+static int vblank_line(running_machine &machine)
+{
+	saturn_state *state = machine.driver_data<saturn_state>();
+	int max_y = machine.primary_screen->height();
+	int y_step,vblank_line;
+
+	y_step = 2;
+
+	if((max_y == 263 && state->m_vdp2.pal == 0) || (max_y == 313 && state->m_vdp2.pal == 1))
+		y_step = 1;
+
+	vblank_line = (state->m_vdp2.pal) ? 288 : 240;
+
+	return vblank_line*y_step;
+}
+#endif
+
+
+/********************************************
+ *
+ * Bankswitch code for ST-V Multi Cart mode
+ *
+ *******************************************/
+
 static TIMER_CALLBACK( stv_bankswitch_state )
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
@@ -178,6 +204,12 @@ static void stv_select_game(running_machine &machine, int gameno)
 {
 	machine.scheduler().timer_set(attotime::zero, FUNC(stv_bankswitch_state), gameno);
 }
+
+/********************************************
+ *
+ * Command functions
+ *
+ *******************************************/
 
 static void smpc_master_on(running_machine &machine)
 {
@@ -224,22 +256,31 @@ static void smpc_system_reset(running_machine &machine)
 	device_set_input_line(state->m_maincpu, INPUT_LINE_RESET, PULSE_LINE);
 }
 
-static void smpc_change_clock(running_machine &machine, UINT8 cmd)
+static TIMER_CALLBACK( smpc_change_clock )
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
 	UINT32 xtal;
 
-	xtal = cmd ? MASTER_CLOCK_320 : MASTER_CLOCK_352;
+	if(LOG_SMPC) printf ("Clock change execute at (%d %d)\n",machine.primary_screen->hpos(),machine.primary_screen->vpos());
+
+	xtal = param ? MASTER_CLOCK_320 : MASTER_CLOCK_352;
 
 	machine.device("maincpu")->set_unscaled_clock(xtal/2);
 	machine.device("slave")->set_unscaled_clock(xtal/2);
 
-	state->m_vdp2.dotsel = cmd ^ 1;
+	state->m_vdp2.dotsel = param ^ 1;
 	stv_vdp2_dynamic_res_change(machine);
 
-	device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE); // ff said this causes nmi, should we set a timer then nmi?
-	device_set_input_line(state->m_slave, INPUT_LINE_RESET, ASSERT_LINE); // command also asserts slave cpu
-	/* TODO: VDP1 / VDP2 / SCU / SCSP default power ON values */
+	if(!state->m_NMI_reset)
+		device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+	device_set_input_line(state->m_slave, INPUT_LINE_RESET, ASSERT_LINE);
+
+	/* put issued command in OREG31 */
+	state->m_smpc.OREG[31] = 0x0e + param;
+	/* clear hand-shake flag */
+	state->m_smpc.SF = 0x00;
+
+	/* TODO: VDP1 / VDP2 / SCU / SCSP default power ON values? */
 }
 
 static TIMER_CALLBACK( stv_smpc_intback )
@@ -286,16 +327,16 @@ static TIMER_CALLBACK( stv_smpc_intback )
 }
 
 /*
-	[0] port status:
-		0x04 Sega-tap
-		0x16 Multi-tap
-		0x2x clock serial peripheral
-		0xf0 peripheral isn't connected
-	    0xf1 peripheral is connected
-	[1] Peripheral ID (note: lowest four bits determines the size of the input packet)
-		0x02 digital pad
-		0x25 (tested by Game Basic?)
-		0x34 keyboard
+    [0] port status:
+        0x04 Sega-tap
+        0x16 Multi-tap
+        0x2x clock serial peripheral
+        0xf0 peripheral isn't connected
+        0xf1 peripheral is connected
+    [1] Peripheral ID (note: lowest four bits determines the size of the input packet)
+        0x02 digital pad
+        0x25 (tested by Game Basic?)
+        0x34 keyboard
 */
 
 static void smpc_digital_pad(running_machine &machine, UINT8 pad_num, UINT8 offset)
@@ -309,6 +350,27 @@ static void smpc_digital_pad(running_machine &machine, UINT8 pad_num, UINT8 offs
 	state->m_smpc.OREG[1+pad_num*offset] = 0x02;
 	state->m_smpc.OREG[2+pad_num*offset] = pad_data>>8;
 	state->m_smpc.OREG[3+pad_num*offset] = pad_data & 0xff;
+}
+
+static void smpc_analog_pad(running_machine &machine, UINT8 pad_num, UINT8 offset, UINT8 id)
+{
+	saturn_state *state = machine.driver_data<saturn_state>();
+	static const char *const padnames[] = { "AN_JOY1", "AN_JOY2" };
+	static const char *const annames[2][3] = { { "AN_X1", "AN_Y1", "AN_Z1" },
+											   { "AN_X2", "AN_Y2", "AN_Z2" }};
+	UINT16 pad_data;
+
+	pad_data = input_port_read(machine, padnames[pad_num]);
+	state->m_smpc.OREG[0+pad_num*offset] = 0xf1;
+	state->m_smpc.OREG[1+pad_num*offset] = id;
+	state->m_smpc.OREG[2+pad_num*offset] = pad_data>>8;
+	state->m_smpc.OREG[3+pad_num*offset] = pad_data & 0xff;
+	state->m_smpc.OREG[4+pad_num*offset] = input_port_read(machine, annames[pad_num][0]);
+	if(id == 0x15)
+	{
+		state->m_smpc.OREG[5+pad_num*offset] = input_port_read(machine, annames[pad_num][1]);
+		state->m_smpc.OREG[6+pad_num*offset] = input_port_read(machine, annames[pad_num][2]);
+	}
 }
 
 static void smpc_keyboard(running_machine &machine, UINT8 pad_num, UINT8 offset)
@@ -337,15 +399,15 @@ static void smpc_keyboard(running_machine &machine, UINT8 pad_num, UINT8 offset)
 	state->m_smpc.OREG[2+pad_num*offset] = game_key>>8; // game buttons, TODO
 	state->m_smpc.OREG[3+pad_num*offset] = game_key & 0xff;
 	/*
-		x--- ---- 0
-		-x-- ---- caps lock
-		--x- ---- num lock
-		---x ---- scroll lock
-		---- x--- data ok
-		---- -x-- 1
-		---- --x- 1
-		---- ---x Break key
-	*/
+        x--- ---- 0
+        -x-- ---- caps lock
+        --x- ---- num lock
+        ---x ---- scroll lock
+        ---- x--- data ok
+        ---- -x-- 1
+        ---- --x- 1
+        ---- ---x Break key
+    */
 	state->m_smpc.OREG[4+pad_num*offset] = state->m_keyb.status | 6;
 	state->m_smpc.OREG[5+pad_num*offset] = state->m_keyb.data;
 }
@@ -355,13 +417,45 @@ static void smpc_mouse(running_machine &machine, UINT8 pad_num, UINT8 offset, UI
 	saturn_state *state = machine.driver_data<saturn_state>();
 	static const char *const mousenames[2][3] = { { "MOUSEB1", "MOUSEX1", "MOUSEY1" },
 												  { "MOUSEB2", "MOUSEX2", "MOUSEY2" }};
-	/* TODO: xy over / sign flags */
+	UINT8 mouse_ctrl;
+	INT16 mouse_x, mouse_y;
+
+	mouse_ctrl = input_port_read(machine, mousenames[pad_num][0]);
+	mouse_x = input_port_read(machine, mousenames[pad_num][1]);
+	mouse_y = input_port_read(machine, mousenames[pad_num][2]);
+
+	if(mouse_x < 0)
+		mouse_ctrl |= 0x10;
+
+	if(mouse_y < 0)
+		mouse_ctrl |= 0x20;
+
+	if((mouse_x & 0xff00) != 0xff00 && (mouse_x & 0xff00) != 0x0000)
+		mouse_ctrl |= 0x40;
+
+	if((mouse_y & 0xff00) != 0xff00 && (mouse_y & 0xff00) != 0x0000)
+		mouse_ctrl |= 0x80;
 
 	state->m_smpc.OREG[0+pad_num*offset] = 0xf1;
 	state->m_smpc.OREG[1+pad_num*offset] = id; // 0x23 / 0xe3
-	state->m_smpc.OREG[2+pad_num*offset] = input_port_read(machine, mousenames[pad_num][0]);
-	state->m_smpc.OREG[3+pad_num*offset] = input_port_read(machine, mousenames[pad_num][1]);
-	state->m_smpc.OREG[4+pad_num*offset] = input_port_read(machine, mousenames[pad_num][2]);
+	state->m_smpc.OREG[2+pad_num*offset] = mouse_ctrl;
+	state->m_smpc.OREG[3+pad_num*offset] = mouse_x & 0xff;
+	state->m_smpc.OREG[4+pad_num*offset] = mouse_y & 0xff;
+}
+
+/* TODO: is there ANY game on which the MD pad works? */
+static void smpc_md_pad(running_machine &machine, UINT8 pad_num, UINT8 offset, UINT8 id)
+{
+	saturn_state *state = machine.driver_data<saturn_state>();
+	static const char *const padnames[] = { "MD_JOY1", "MD_JOY2" };
+	UINT16 pad_data;
+
+	pad_data = input_port_read(machine, padnames[pad_num]);
+	state->m_smpc.OREG[0+pad_num*offset] = 0xf1;
+	state->m_smpc.OREG[1+pad_num*offset] = id;
+	state->m_smpc.OREG[2+pad_num*offset] = pad_data>>8;
+	if(id == 0xe2) // MD 6 Button PAD
+		state->m_smpc.OREG[3+pad_num*offset] = pad_data & 0xff;
 }
 
 static void smpc_unconnected(running_machine &machine, UINT8 pad_num, UINT8 offset)
@@ -396,8 +490,12 @@ static TIMER_CALLBACK( intback_peripheral )
 		switch(read_id[pad_num])
 		{
 			case 0: smpc_digital_pad(machine,pad_num,offset); break;
+			case 1: smpc_analog_pad(machine,pad_num,offset,peri_id[read_id[pad_num]]); break; /* Steering Wheel */
+			case 2: smpc_analog_pad(machine,pad_num,offset,peri_id[read_id[pad_num]]); break; /* Analog Pad */
 			case 4: smpc_mouse(machine,pad_num,offset,peri_id[read_id[pad_num]]); break; /* Pointing Device */
 			case 5: smpc_keyboard(machine,pad_num,offset); break;
+			case 6: smpc_md_pad(machine,pad_num,offset,peri_id[read_id[pad_num]]); break; /* MD 3B PAD */
+			case 7: smpc_md_pad(machine,pad_num,offset,peri_id[read_id[pad_num]]); break; /* MD 6B PAD */
 			case 8: smpc_mouse(machine,pad_num,offset,peri_id[read_id[pad_num]]); break; /* Saturn Mouse */
 			case 9: smpc_unconnected(machine,pad_num,offset); break;
 		}
@@ -510,7 +608,7 @@ static void smpc_nmi_req(running_machine &machine)
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
 
-	/*NMI is unconditionally requested?*/
+	/*NMI is unconditionally requested */
 	device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -518,8 +616,108 @@ static void smpc_nmi_set(running_machine &machine,UINT8 cmd)
 {
 	saturn_state *state = machine.driver_data<saturn_state>();
 
-	state->m_NMI_reset = cmd ^ 1;
-	state->m_smpc.OREG[0] = (0x80) | ((state->m_NMI_reset & 1) << 6);
+	state->m_NMI_reset = cmd;
+	//state->m_smpc.OREG[0] = (0x80) | ((state->m_NMI_reset & 1) << 6);
+}
+
+
+/********************************************
+ *
+ * COMREG sub-routine
+ *
+ *******************************************/
+
+static void smpc_comreg_exec(address_space *space, UINT8 data, UINT8 is_stv)
+{
+	saturn_state *state = space->machine().driver_data<saturn_state>();
+
+	switch (data)
+	{
+		case 0x00:
+			if(LOG_SMPC) printf ("SMPC: Master ON\n");
+			smpc_master_on(space->machine());
+			break;
+		//case 0x01: Master OFF?
+		case 0x02:
+		case 0x03:
+			if(LOG_SMPC) printf ("SMPC: Slave %s\n",(data & 1) ? "off" : "on");
+			space->machine().scheduler().timer_set(attotime::from_usec(100), FUNC(smpc_slave_enable),data & 1);
+			break;
+		case 0x06:
+		case 0x07:
+			if(LOG_SMPC) printf ("SMPC: Sound %s\n",(data & 1) ? "off" : "on");
+
+			if(!is_stv)
+				space->machine().scheduler().timer_set(attotime::from_usec(100), FUNC(smpc_sound_enable),data & 1);
+			break;
+		/*CD (SH-1) ON/OFF */
+		//case 0x08:
+		//case 0x09:
+		case 0x0d:
+			if(LOG_SMPC) printf ("SMPC: System Reset\n");
+			smpc_system_reset(space->machine());
+			break;
+		case 0x0e:
+		case 0x0f:
+			if(LOG_SMPC) printf ("SMPC: Change Clock to %s (%d %d)\n",data & 1 ? "320" : "352",space->machine().primary_screen->hpos(),space->machine().primary_screen->vpos());
+
+			/* on ST-V timing of this is pretty fussy, you get 2 credits at start-up otherwise
+			   sokyugurentai threshold is 74 lines
+			   shanhigw threshold is 90 lines
+ 			   I assume that it needs ~100 lines, so 6666,(6) usecs. Obviously needs HW tests ... */
+
+			space->machine().scheduler().timer_set(attotime::from_usec(6666), FUNC(smpc_change_clock),data & 1);
+			break;
+		/*"Interrupt Back"*/
+		case 0x10:
+			if(0)
+			{
+				saturn_state *state = space->machine().driver_data<saturn_state>();
+				printf ("SMPC: Status Acquire %02x %02x %02x %d\n",state->m_smpc.IREG[0],state->m_smpc.IREG[1],state->m_smpc.IREG[2],space->machine().primary_screen->vpos());
+			}
+
+			if(is_stv)
+				space->machine().scheduler().timer_set(attotime::from_usec(700), FUNC(stv_smpc_intback),0); //TODO: variable time
+			else
+			{
+				int timing;
+
+				timing = 100;
+
+				if(state->m_smpc.IREG[0] != 0) // non-peripheral data
+					timing += 100;
+
+				if(state->m_smpc.IREG[1] & 8) // peripheral data
+					timing += 700;
+
+				/* TODO: check if IREG[2] is setted to 0xf0 */
+
+				if(LOG_PAD_CMD) printf("INTBACK %02x %02x %d %d\n",state->m_smpc.IREG[0],state->m_smpc.IREG[1],space->machine().primary_screen->vpos(),(int)space->machine().primary_screen->frame_number());
+				space->machine().scheduler().timer_set(attotime::from_usec(timing), FUNC(saturn_smpc_intback),0); //TODO: is variable time correct?
+			}
+			break;
+		/* RTC write*/
+		case 0x16:
+			if(LOG_SMPC) printf("SMPC: RTC write\n");
+			smpc_rtc_write(space->machine());
+			break;
+		/* SMPC memory setting*/
+		case 0x17:
+			if(LOG_SMPC) printf ("SMPC: memory setting\n");
+			smpc_memory_setting(space->machine());
+			break;
+		case 0x18:
+			if(LOG_SMPC) printf ("SMPC: NMI request\n");
+			smpc_nmi_req(space->machine());
+			break;
+		case 0x19:
+		case 0x1a:
+			if(LOG_SMPC) printf ("SMPC: NMI %sable\n",data & 1 ? "Dis" : "En");
+			smpc_nmi_set(space->machine(),data & 1);
+			break;
+		default:
+			printf ("cpu '%s' (PC=%08X) SMPC: undocumented Command %02x\n", space->device().tag(), cpu_get_pc(&space->device()), data);
+	}
 }
 
 /********************************************
@@ -554,65 +752,6 @@ READ8_HANDLER( stv_SMPC_r )
 	return return_data;
 }
 
-static void stv_comreg_exec(address_space *space,UINT8 data)
-{
-	switch (data)
-	{
-		case 0x00:
-			if(LOG_SMPC) printf ("SMPC: Master ON\n");
-			smpc_master_on(space->machine());
-			break;
-		//in theory 0x01 is for Master OFF,but obviously is not used.
-		case 0x02:
-		case 0x03:
-			if(LOG_SMPC) printf ("SMPC: Slave %s\n",(data & 1) ? "off" : "on");
-			space->machine().scheduler().timer_set(attotime::from_usec(100), FUNC(smpc_slave_enable),data & 1);
-			break;
-		case 0x06:
-		case 0x07:
-			if(LOG_SMPC) printf ("SMPC: Sound %s, ignored\n",(data & 1) ? "off" : "on");
-			break;
-		/*CD (SH-1) ON/OFF,guess that this is needed for Sports Fishing games...*/
-		//case 0x08:
-		//case 0x09:
-		case 0x0d:
-			if(LOG_SMPC) printf ("SMPC: System Reset\n");
-			smpc_system_reset(space->machine());
-			break;
-		case 0x0e:
-		case 0x0f:
-			if(LOG_SMPC) printf ("SMPC: Change Clock to %s\n",data & 1 ? "320" : "352");
-			smpc_change_clock(space->machine(),data & 1);
-			break;
-		/*"Interrupt Back"*/
-		case 0x10:
-			if(LOG_SMPC) printf ("SMPC: Status Acquire\n");
-			space->machine().scheduler().timer_set(attotime::from_msec(16), FUNC(stv_smpc_intback),0); //TODO: variable time
-			break;
-		/* RTC write*/
-		case 0x16:
-			if(LOG_SMPC) printf("SMPC: RTC write\n");
-			smpc_rtc_write(space->machine());
-			break;
-		/* SMPC memory setting*/
-		case 0x17:
-			if(LOG_SMPC) printf ("SMPC: memory setting\n");
-			//smpc_memory_setting(space->machine());
-			break;
-		case 0x18:
-			if(LOG_SMPC) printf ("SMPC: NMI request\n");
-			smpc_nmi_req(space->machine());
-			break;
-		case 0x19:
-		case 0x1a:
-			if(LOG_SMPC) printf ("SMPC: NMI %sable\n",data & 1 ? "Dis" : "En");
-			smpc_nmi_set(space->machine(),data & 1);
-			break;
-		default:
-			printf ("cpu '%s' (PC=%08X) SMPC: undocumented Command %02x\n", space->device().tag(), cpu_get_pc(&space->device()), data);
-	}
-}
-
 WRITE8_HANDLER( stv_SMPC_w )
 {
 	saturn_state *state = space->machine().driver_data<saturn_state>();
@@ -627,10 +766,10 @@ WRITE8_HANDLER( stv_SMPC_w )
 
 	if (offset == 0x1f) // COMREG
 	{
-		stv_comreg_exec(space,data);
+		smpc_comreg_exec(space,data,1);
 
 		// we've processed the command, clear status flag
-		if(data != 0x10 && data != 0x02 && data != 0x03)
+		if(data != 0x10 && data != 0x02 && data != 0x03 && data != 0xe && data != 0xf)
 		{
 			state->m_smpc.OREG[31] = data; //read-back command
 			state->m_smpc.SF = 0x00;
@@ -750,81 +889,6 @@ READ8_HANDLER( saturn_SMPC_r )
 	return return_data;
 }
 
-static void saturn_comreg_exec(address_space *space,UINT8 data)
-{
-	saturn_state *state = space->machine().driver_data<saturn_state>();
-
-	switch (data)
-	{
-		case 0x00:
-			if(LOG_SMPC) printf ("SMPC: Master ON\n");
-			smpc_master_on(space->machine());
-			break;
-		//in theory 0x01 is for Master OFF
-		case 0x02:
-		case 0x03:
-			if(LOG_SMPC) printf ("SMPC: Slave %s\n",(data & 1) ? "off" : "on");
-			space->machine().scheduler().timer_set(attotime::from_usec(100), FUNC(smpc_slave_enable),data & 1);
-			break;
-		case 0x06:
-		case 0x07:
-			if(LOG_SMPC) printf ("SMPC: Sound %s\n",(data & 1) ? "off" : "on");
-			space->machine().scheduler().timer_set(attotime::from_usec(100), FUNC(smpc_sound_enable),data & 1);
-			break;
-		/*CD (SH-1) ON/OFF,guess that this is needed for Sports Fishing games...*/
-		//case 0x08:
-		//case 0x09:
-		case 0x0d:
-			if(LOG_SMPC) printf ("SMPC: System Reset\n");
-			smpc_system_reset(space->machine());
-			break;
-		case 0x0e:
-		case 0x0f:
-			if(LOG_SMPC) printf ("SMPC: Change Clock to %s\n",data & 1 ? "320" : "352");
-			smpc_change_clock(space->machine(),data & 1);
-			break;
-		/*"Interrupt Back"*/
-		case 0x10:
-			if(LOG_SMPC) printf ("SMPC: Status Acquire (IntBack)\n");
-			int timing;
-
-			timing = 100;
-
-			if(state->m_smpc.IREG[0] != 0) // non-peripheral data
-				timing += 100;
-
-			if(state->m_smpc.IREG[1] & 8) // peripheral data
-				timing += 700;
-
-			/* TODO: check if IREG[2] is setted to 0xf0 */
-
-			if(LOG_PAD_CMD) printf("INTBACK %02x %02x %d %d\n",state->m_smpc.IREG[0],state->m_smpc.IREG[1],space->machine().primary_screen->vpos(),(int)space->machine().primary_screen->frame_number());
-			space->machine().scheduler().timer_set(attotime::from_usec(timing), FUNC(saturn_smpc_intback),0); //TODO: is variable time correct?
-			break;
-		/* RTC write*/
-		case 0x16:
-			if(LOG_SMPC) printf("SMPC: RTC write\n");
-			smpc_rtc_write(space->machine());
-			break;
-		/* SMPC memory setting*/
-		case 0x17:
-			if(LOG_SMPC) printf ("SMPC: memory setting\n");
-			smpc_memory_setting(space->machine());
-			break;
-		case 0x18:
-			if(LOG_SMPC) printf ("SMPC: NMI request\n");
-			smpc_nmi_req(space->machine());
-			break;
-		case 0x19:
-		case 0x1a:
-			if(LOG_SMPC) printf ("SMPC: NMI %sable\n",data & 1 ? "Dis" : "En");
-			smpc_nmi_set(space->machine(),data & 1);
-			break;
-		default:
-			printf ("cpu %s (PC=%08X) SMPC: undocumented Command %02x\n", space->device().tag(), cpu_get_pc(&space->device()), data);
-	}
-}
-
 WRITE8_HANDLER( saturn_SMPC_w )
 {
 	saturn_state *state = space->machine().driver_data<saturn_state>();
@@ -859,10 +923,10 @@ WRITE8_HANDLER( saturn_SMPC_w )
 
 	if (offset == 0x1f)
 	{
-		saturn_comreg_exec(space,data);
+		smpc_comreg_exec(space,data,0);
 
 		// we've processed the command, clear status flag
-		if(data != 0x10 && data != 2 && data != 3 && data != 6 && data != 7)
+		if(data != 0x10 && data != 2 && data != 3 && data != 6 && data != 7 && data != 0x0e && data != 0x0f)
 		{
 			state->m_smpc.OREG[31] = data; //read-back for last command issued
 			state->m_smpc.SF = 0x00; //clear hand-shake flag

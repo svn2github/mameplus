@@ -219,8 +219,11 @@ static void oki_process(okim6376_state *info, int channel, int command)
 
 						/* also reset the ADPCM parameters */
 						reset_adpcm(voice);
-						/* FIX: no attenuation for now, handle for channel 2 separately */
-						voice->volume = volume_table[0];
+						if (channel == 0)
+						{
+							/* We set channel 2's audio separately */
+							voice->volume = volume_table[0];
+						}
 					}
 					else
 					{
@@ -574,6 +577,7 @@ WRITE_LINE_DEVICE_HANDLER( okim6376_st_w )
 			{
 
 				info->st_pulses ++;
+				MSM6376LOG(("OKIM6376:'%s' ST pulses %x\n",device->tag(),info->st_pulses));
 				if (info->st_pulses > 3)
 				{
 					info->st_pulses = 3; //undocumented behaviour beyond 3 pulses

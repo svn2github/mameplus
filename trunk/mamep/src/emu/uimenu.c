@@ -1673,7 +1673,6 @@ static void menu_main_populate(running_machine &machine, ui_menu *menu, void *st
 {
 	input_field_config *field;
 	input_port_config *port;
-	int has_categories = FALSE;
 	int has_configs = FALSE;
 	int has_analog = FALSE;
 	int has_dips = FALSE;
@@ -1686,8 +1685,6 @@ static void menu_main_populate(running_machine &machine, ui_menu *menu, void *st
 				has_dips = TRUE;
 			if (field->type == IPT_CONFIG)
 				has_configs = TRUE;
-			if (field->category > 0)
-				has_categories = TRUE;
 			if (input_type_is_analog(field->type))
 				has_analog = TRUE;
 		}
@@ -1707,8 +1704,6 @@ static void menu_main_populate(running_machine &machine, ui_menu *menu, void *st
 		ui_menu_item_append(menu, _("Dip Switches"), NULL, 0, (void *)menu_settings_dip_switches);
 	if (has_configs)
 		ui_menu_item_append(menu, _("Driver Configuration"), NULL, 0, (void *)menu_settings_driver_config);
-	if (has_categories)
-		ui_menu_item_append(menu, _("Categories"), NULL, 0, (void *)menu_settings_categories);
 	if (has_analog)
 		ui_menu_item_append(menu, _("Analog Controls"), NULL, 0, (void *)menu_analog);
 
@@ -1923,7 +1918,6 @@ static void menu_input_specific_populate(running_machine &machine, ui_menu *menu
 
 			/* add if we match the group and we have a valid name */
 			if (name != NULL && input_condition_true(machine, &field->condition, port->owner()) &&
-				(field->category == 0 || input_category_active(machine, field->category)) &&
 				((field->type == IPT_OTHER && field->name != NULL) || input_type_group(machine, field->type, field->player) != IPG_INVALID))
 			{
 				input_seq_type seqtype;
@@ -2178,17 +2172,6 @@ static void menu_settings_dip_switches(running_machine &machine, ui_menu *menu, 
 static void menu_settings_driver_config(running_machine &machine, ui_menu *menu, void *parameter, void *state)
 {
 	menu_settings_common(machine, menu, state, IPT_CONFIG);
-}
-
-
-/*-------------------------------------------------
-    menu_settings_categories - handle the
-    categories menu
--------------------------------------------------*/
-
-static void menu_settings_categories(running_machine &machine, ui_menu *menu, void *parameter, void *state)
-{
-	menu_settings_common(machine, menu, state, IPT_CATEGORY);
 }
 
 
@@ -4424,7 +4407,7 @@ static void menu_render_triangle(bitmap_t &dest, const bitmap_t &source, const r
 		{
 			int dalpha;
 
-			/* first colum we only consume one pixel */
+			/* first column we only consume one pixel */
 			if (x == 0)
 			{
 				dalpha = MIN(0xff, linewidth);

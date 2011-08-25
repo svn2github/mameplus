@@ -27,6 +27,7 @@
 #include "stvcd.h"
 #include "sound/cdda.h"
 #include "debugger.h"
+#include "coreutil.h"
 
 // super-verbose
 #if 0
@@ -105,7 +106,9 @@ typedef enum
 	XFERTYPE_INVALID,
 	XFERTYPE_TOC,
 	XFERTYPE_FILEINFO_1,
-	XFERTYPE_FILEINFO_254
+	XFERTYPE_FILEINFO_254,
+	XFERTYPE_SUBQ,
+	XFERTYPE_SUBRW
 } transT;
 
 // 32-bit transfer types
@@ -126,6 +129,8 @@ static blockT blocks[MAX_BLOCKS];
 static blockT curblock;
 
 static UINT8 tocbuf[102*4];
+static UINT8 subqbuf[5*2];
+static UINT8 subrwbuf[12*2];
 static UINT8 finfbuf[256];
 
 static INT32 sectlenin, sectlenout;
@@ -154,6 +159,7 @@ static UINT8 cmd_pending;
 static UINT8 cd_speed;
 static UINT8 cdda_maxrepeat;
 static UINT8 cdda_repeat_count;
+static UINT8 tray_is_closed;
 
 // iso9660 utilities
 static void read_new_dir(running_machine &machine, UINT32 fileno);
@@ -191,18 +197,37 @@ static int firstfile;			// first non-directory file
 #define CD_STAT_OPEN     0x0600		// tray is open
 #define CD_STAT_NODISC   0x0700		// no disc present
 #define CD_STAT_RETRY    0x0800		// read retry in progress
-#define CD_STAT_ERROR    0x0900		// read data error occured
+#define CD_STAT_ERROR    0x0900		// read data error occurred
 #define CD_STAT_FATAL    0x0a00		// fatal error (hard reset required)
 #define CD_STAT_PERI     0x2000		// periodic response if set, else command response
 #define CD_STAT_TRANS    0x4000		// data transfer request if set
 #define CD_STAT_WAIT     0x8000		// waiting for command if set, else executed immediately
 #define CD_STAT_REJECT   0xff00		// ultra-fatal error.
 
+/* FIXME: assume Saturn CD-ROMs to have a 2 secs pre-gap for now. */
+static int get_track_index(void)
+{
+	UINT32 rel_fad;
+	UINT8 track;
+
+	if(cdrom_get_track_type(cdrom, cdrom_get_track(cdrom, cd_curfad)) != CD_TRACK_AUDIO)
+		return 1;
+
+	track = cdrom_get_track( cdrom, cd_curfad );
+
+	rel_fad = cd_curfad - cdrom_get_track_start( cdrom, track );
+
+	if(rel_fad < 150)
+		return 0;
+
+	return 1;
+}
+
 static void cr_standard_return(UINT16 cur_status)
 {
 	cr1 = cur_status | (playtype << 7) | 0x00 | (cdda_repeat_count & 0xf); //options << 4 | repeat & 0xf
-	cr2 = (cur_track == 0xff) ? 0xffff : (cdrom_get_adr_control(cdrom, cur_track)<<8 | cur_track);
-	cr3 = (0x01<<8) | (cd_curfad>>16); //index & 0xff00
+	cr2 = (cur_track == 0xff) ? 0xffff : (cdrom_get_adr_control(cdrom, cur_track)<<8 | cur_track); // TODO: fix current track
+	cr3 = (get_track_index()<<8) | (cd_curfad>>16); //index & 0xff00
 	cr4 = cd_curfad;
 }
 
@@ -213,17 +238,6 @@ static void cd_getsectoroffsetnum(UINT32 bufnum, UINT32 *sectoffs, UINT32 *sectn
 static void cd_exec_command(running_machine &machine)
 {
 	UINT32 temp;
-
-	if (!cdrom)
-	{
-		cd_stat = CD_STAT_OPEN;
-		cr1 = cd_stat | 0xff;
-		cr2 = 0xffff;
-		cr3 = 0xffff;
-		cr4 = 0xffff;
-		hirqreg |= CMOK;
-		return;
-	}
 
 	if(cr1 != 0 && ((cr1 & 0xff00) != 0x5100) && 1)
    		printf("CD: command exec %04x %04x %04x %04x %04x (stat %04x)\n", hirqreg, cr1, cr2, cr3, cr4, cd_stat);
@@ -305,11 +319,13 @@ static void cd_exec_command(running_machine &machine)
 			CDROM_LOG(("%s:CD: Initialize CD system\n", machine.describe_context()))
 			if((cr1 & 0x81) == 0x00) //guess
 			{
-				int i;
-				cd_stat = CD_STAT_PAUSE;
-				cd_curfad = 150;
-				//cur_track = 1;
-				fadstoplay = 0;
+				if(cd_stat != CD_STAT_NODISC && cd_stat != CD_STAT_OPEN)
+				{
+					cd_stat = CD_STAT_PAUSE;
+					cd_curfad = 150;
+					//cur_track = 1;
+					fadstoplay = 0;
+				}
 				in_buffer = 0;
 				buffull = 0;
 				hirqreg &= 0xffe5;
@@ -318,6 +334,7 @@ static void cd_exec_command(running_machine &machine)
 				/* reset filter connections */
 				/* Guess: X-Men COTA sequence is 0x48->0x48->0x04(01)->0x04(00)->0x30 then 0x10, without this game throws a FAD reject error */
 				/* X-Men vs. SF is even fussier, sequence is  0x04 (1) 0x04 (0) 0x03 (0) 0x03 (1) 0x30 */
+				#if 0
 				for(i=0;i<MAX_FILTERS;i++)
 				{
 					filters[i].fad = 0;
@@ -330,6 +347,7 @@ static void cd_exec_command(running_machine &machine)
 					filters[i].smval = 0;
 					filters[i].cival = 0;
 				}
+				#endif
 
 				/* reset CD device connection */
 				//cddevice = (filterT *)NULL;
@@ -419,7 +437,7 @@ static void cd_exec_command(running_machine &machine)
 			CDROM_LOG(("%s:CD: Play Disc\n",   machine.describe_context()))
 			cd_stat = CD_STAT_PLAY;
 
-			play_mode = cr3 >> 8;
+			play_mode = (cr3 >> 8) & 0x7f;
 
 			if (!(cr3 & 0x8000))	// preserve current position if bit 7 set
 			{
@@ -437,12 +455,22 @@ static void cd_exec_command(running_machine &machine)
 				else
 				{
 					// track mode
-					cur_track = (start_pos)>>8;
-					printf("track mode %d\n",cur_track);
-					if(cur_track == 0)
-						cur_track = 1;
+					if(((start_pos)>>8) != 0)
+					{
+						cur_track = (start_pos)>>8;
+						cd_curfad = cdrom_get_track_start(cdrom, cur_track-1);
+					}
+					else
+					{
+						/* TODO: Waku Waku 7 sets up track 0, that basically doesn't make any sense. Just skip it for now. */
+						popmessage("Warning: track mode == 0, contact MAMEdev");
+						cr_standard_return(cd_stat);
+						hirqreg |= (CMOK);
+						return;
+					}
 
-					cd_curfad = cdrom_get_track_start(cdrom, cur_track-1);
+					printf("track mode %d\n",cur_track);
+
 				}
 
 				if (end_pos & 0x800000)
@@ -573,13 +601,51 @@ static void cd_exec_command(running_machine &machine)
 			switch(cr1 & 0xff)
 			{
 				case 0: // Get Q
+				{
+					UINT32 msf_abs,msf_rel;
+					UINT8 track;
 					cr1 = cd_stat | 0;
-					cr2 = 5;
+					cr2 = 10/2;
 					cr3 = 0;
 					cr4 = 0;
 
-					// ...
-					break;
+					/*
+					Subcode Q info should be:
+					---- --x- S0
+					---- ---x S1
+					xxxx ---- [0] Control (bit 7 Pre-emphasis, bit 6: copy permitted, bit 5 undefined, bit 4 number of channels)
+					---- xxxx [0] address (0x0001 Mode 1)
+					xxxx xxxx [1] track number (1-99, AA lead-out), BCD format
+					xxxx xxxx [2] index (01 lead-out), BCD format
+					xxxx xxxx [3] Time within' track M
+					xxxx xxxx [4] Time within' track S
+					xxxx xxxx [5] Time within' track F
+					xxxx xxxx [6] Zero
+					xxxx xxxx [7] Absolute M
+					xxxx xxxx [8] Absolute S
+					xxxx xxxx [9] Absolute F
+					xxxx xxxx [10] CRCC
+					xxxx xxxx [11] CRCC
+					*/
+
+					msf_abs = lba_to_msf_alt( cd_curfad - 150 );
+					track = cdrom_get_track( cdrom, cd_curfad );
+					msf_rel = lba_to_msf_alt( cd_curfad - 150 - cdrom_get_track_start( cdrom, track ) );
+
+					xfertype = XFERTYPE_SUBQ;
+					xfercount = 0;
+					subqbuf[0] = 0x01 | ((cdrom_get_track_type(cdrom, cdrom_get_track(cdrom, track+1)) == CD_TRACK_AUDIO) ? 0x00 : 0x40);
+					subqbuf[1] = dec_2_bcd(track+1);
+					subqbuf[2] = dec_2_bcd(get_track_index());
+					subqbuf[3] = dec_2_bcd((msf_rel >> 16) & 0xff);
+					subqbuf[4] = dec_2_bcd((msf_rel >> 8) & 0xff);
+					subqbuf[5] = dec_2_bcd((msf_rel >> 0) & 0xff);
+					subqbuf[6] = 0;
+					subqbuf[7] = dec_2_bcd((msf_abs >> 16) & 0xff);
+					subqbuf[8] = dec_2_bcd((msf_abs >> 8) & 0xff);
+					subqbuf[9] = dec_2_bcd((msf_abs >> 0) & 0xff);
+				}
+				break;
 
 				case 1: // Get RW
 					cr1 = cd_stat | 0;
@@ -587,7 +653,16 @@ static void cd_exec_command(running_machine &machine)
 					cr3 = 0;
 					cr4 = 0;
 
-					// ...
+					xfertype = XFERTYPE_SUBRW;
+					xfercount = 0;
+
+					/* return null data for now */
+					{
+						int i;
+
+						for(i=0;i<12*2;i++)
+							subrwbuf[i] = 0;
+					}
 					break;
 			}
 			hirqreg |= CMOK|DRDY;
@@ -642,6 +717,8 @@ static void cd_exec_command(running_machine &machine)
 				UINT8 fnum = (cr3>>8)&0xff;
 
 				CDROM_LOG(("%s:CD: Set Filter Range\n",   machine.describe_context()))
+
+				printf("%08x %08x %d\n",filters[fnum].fad,filters[fnum].range,fnum);
 
 				filters[fnum].fad = ((cr1 & 0xff)<<16) | cr2;
 				filters[fnum].range = ((cr3 & 0xff)<<16) | cr4;
@@ -857,6 +934,7 @@ static void cd_exec_command(running_machine &machine)
 				{
 					cr4 = partitions[bufnum].numblks;
 				}
+
 				hirqreg |= (CMOK|DRDY);
 			}
 			break;
@@ -1112,7 +1190,7 @@ static void cd_exec_command(running_machine &machine)
 			break;
 
 		case 0x6600:    // move sector data
-			/* TODO: Sword & Sorcery */
+			/* TODO: Sword & Sorcery / Riglord Saga 2 */
 			{
 				//UINT8 src_filter = (cr3>>8)&0xff;
 				//UINT8 dst_filter = cr4;
@@ -1267,13 +1345,15 @@ static void cd_exec_command(running_machine &machine)
 			sectorstore = 0;
 			xfertype32 = XFERTYPE32_INVALID;
 			xferdnum = 0;
-			cd_stat = CD_STAT_PAUSE;	// force to pause
+			if(cd_stat != CD_STAT_NODISC && cd_stat != CD_STAT_OPEN)
+				cd_stat = CD_STAT_PAUSE;	// force to pause
 			cr_standard_return(cd_stat);
 			break;
 
 		case 0xe000:	// appears to be copy protection check.  needs only to return OK.
 			CDROM_LOG(("%s:CD: Verify copy protection\n",   machine.describe_context()))
-			cd_stat = CD_STAT_PAUSE;
+			if(cd_stat != CD_STAT_NODISC && cd_stat != CD_STAT_OPEN)
+				cd_stat = CD_STAT_PAUSE;
 			cr1 = cd_stat;	// necessary to pass
 			cr2 = 0x4;
 //          hirqreg |= (CMOK|EFLS|CSCT);
@@ -1283,7 +1363,8 @@ static void cd_exec_command(running_machine &machine)
 
 		case 0xe100:	// get disc region
 			CDROM_LOG(("%s:CD: Get disc region\n",   machine.describe_context()))
-			cd_stat = CD_STAT_PAUSE;
+			if(cd_stat != CD_STAT_NODISC && cd_stat != CD_STAT_OPEN)
+				cd_stat = CD_STAT_PAUSE;
 			cr1 = cd_stat;	// necessary to pass
 			cr2 = 0x4;		// (must return this value to pass bios checks)
 			hirqreg |= (CMOK);
@@ -1307,8 +1388,11 @@ TIMER_DEVICE_CALLBACK( stv_sh1_sim )
 	}
 
 	cd_stat |= CD_STAT_PERI;
+
+	if(cd_stat != CD_STAT_NODISC && cd_stat != CD_STAT_OPEN)
+		hirqreg |= SCDQ;
+
 	cr_standard_return(cd_stat);
-	hirqreg |= SCDQ;
 }
 
 TIMER_DEVICE_CALLBACK( stv_sector_cb )
@@ -1397,11 +1481,12 @@ void stvcd_reset(running_machine &machine)
 	}
 	else
 	{
-		cd_stat = CD_STAT_OPEN;
+		cd_stat = CD_STAT_NODISC;
 	}
 
 	cd_speed = 2;
 	cdda_repeat_count = 0;
+	tray_is_closed = 1;
 
 	sector_timer = machine.device<timer_device>("sector_timer");
 	sector_timer->adjust(attotime::from_hz(150));	// 150 sectors / second = 300kBytes/second
@@ -1609,8 +1694,35 @@ static UINT16 cd_readWord(UINT32 addr)
 					}
 					break;
 
+				case XFERTYPE_SUBQ:
+					rv = subqbuf[xfercount]<<8 | subqbuf[xfercount+1];
+
+					xfercount += 2;
+					xferdnum += 2;
+
+					if (xfercount > 5*2)
+					{
+						xfercount = 0;
+						xfertype = XFERTYPE_INVALID;
+					}
+					break;
+
+
+				case XFERTYPE_SUBRW:
+					rv = subrwbuf[xfercount]<<8 | subrwbuf[xfercount+1];
+
+					xfercount += 2;
+					xferdnum += 2;
+
+					if (xfercount > 12*2)
+					{
+						xfercount = 0;
+						xfertype = XFERTYPE_INVALID;
+					}
+					break;
+
 				default:
-					CDROM_LOG(("STVCD: Unhandled xfer type %d\n", (int)xfertype))
+					printf("STVCD: Unhandled xfer type %d\n", (int)xfertype);
 					rv = 0;
 					break;
 			}
@@ -1685,7 +1797,7 @@ static UINT32 cd_readLong(UINT32 addr)
 					break;
 
 				default:
-					CDROM_LOG(("CD: unhandled 32-bit transfer type\n"))
+					printf("CD: unhandled 32-bit transfer type\n");
 					break;
 			}
 
@@ -2131,6 +2243,21 @@ static partitionT *cd_filterdata(filterT *flt, int trktype, UINT8 *p_ok)
 	// loop on the filters
 	do
 	{
+		// FAD range check?
+		/* according to an obscure document note, this switches the filter connector to be false if the range fails ... I think ... */
+		if (flt->mode & 0x40)
+		{
+			if ((cd_curfad < flt->fad) || (cd_curfad > (flt->fad + flt->range)))
+			{
+				printf("curfad reject %08x %08x %08x %08x\n",cd_curfad,fadstoplay,flt->fad,flt->fad+flt->range);
+				//match = 0;
+				lastbuf = flt->condfalse;
+				flt = &filters[lastbuf];
+
+				keepgoing--;
+			}
+		}
+
 		if ((trktype != CD_TRACK_AUDIO) && (curblock.data[15] == 2))
 		{
 			if (flt->mode & 1)	// file number
@@ -2172,16 +2299,6 @@ static partitionT *cd_filterdata(filterT *flt, int trktype, UINT8 *p_ok)
 			if (flt->mode & 0x10)	// reverse subheader conditions
 			{
 				match ^= 1;
-			}
-		}
-
-		// FAD range check?
-		if (flt->mode & 0x40)
-		{
-			if ((cd_curfad < flt->fad) || (cd_curfad > (flt->fad + flt->range)))
-			{
-				printf("curfad reject %08x %08x %08x %08x\n",cd_curfad,fadstoplay,flt->fad,flt->fad+flt->range);
-				match = 0;
 			}
 		}
 
@@ -2387,4 +2504,50 @@ static void cd_readblock(UINT32 fad, UINT8 *dat)
 	}
 }
 
+void stvcd_set_tray_open(running_machine &machine)
+{
+	if(!tray_is_closed)
+		return;
 
+	hirqreg |= DCHG;
+	cd_stat = CD_STAT_OPEN;
+
+	cdrom = (cdrom_file *)NULL;
+	tray_is_closed = 0;
+
+	popmessage("Tray Open");
+}
+
+void stvcd_set_tray_close(running_machine &machine)
+{
+	/* avoid user attempts to load a CD-ROM without opening the tray first (emulation asserts anyway with current framework) */
+	if(tray_is_closed)
+		return;
+
+	hirqreg |= DCHG;
+
+	#ifdef MESS
+	cdrom = machine.device<cdrom_image_device>("cdrom")->get_cdrom_file();
+	#else
+	cdrom = cdrom_open(get_disk_handle(machine, "cdrom"));
+	#endif
+
+	cdda_set_cdrom( machine.device("cdda"), cdrom );
+
+	if (cdrom)
+	{
+		CDROM_LOG(("Opened CD-ROM successfully, reading root directory\n"))
+		//read_new_dir(machine, 0xffffff);	// read root directory
+		cd_stat = CD_STAT_PAUSE;
+	}
+	else
+	{
+		cd_stat = CD_STAT_NODISC;
+	}
+
+	cd_speed = 2;
+	cdda_repeat_count = 0;
+	tray_is_closed = 1;
+
+	popmessage("Tray Close");
+}

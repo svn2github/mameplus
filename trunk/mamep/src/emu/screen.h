@@ -139,7 +139,7 @@ public:
 	attotime time_until_vblank_end() const;
 	attotime time_until_update() const { return (machine().config().m_video_attributes & VIDEO_UPDATE_AFTER_VBLANK) ? time_until_vblank_end() : time_until_vblank_start(); }
 	attotime scan_period() const { return attotime(0, m_scantime); }
-	attotime frame_period() const { return (this == NULL || !started()) ? DEFAULT_FRAME_PERIOD : attotime(0, m_frame_period); };
+	attotime frame_period() const { return (this == NULL) ? DEFAULT_FRAME_PERIOD : attotime(0, m_frame_period); };
 	UINT64 frame_number() const { return m_frame_number; }
 	int partial_updates() const { return m_partial_updates_this_frame; }
 
@@ -199,37 +199,37 @@ private:
 	screen_eof_func		m_screen_eof;				// screen eof callback
 
 	// internal state
-	render_container *	m_container;				// pointer to our container
+	render_container *		m_container;			// pointer to our container
 
 	// dimensions
-	int					m_width;					// current width (HTOTAL)
-	int					m_height;					// current height (VTOTAL)
-	rectangle			m_visarea;					// current visible area (HBLANK end/start, VBLANK end/start)
+	int						m_width;				// current width (HTOTAL)
+	int						m_height;				// current height (VTOTAL)
+	rectangle				m_visarea;				// current visible area (HBLANK end/start, VBLANK end/start)
 
 	// textures and bitmaps
-	render_texture *	m_texture[2];				// 2x textures for the screen bitmap
-	bitmap_t *			m_bitmap[2];				// 2x bitmaps for rendering
-	bitmap_t *			m_burnin;					// burn-in bitmap
-	UINT8				m_curbitmap;				// current bitmap index
-	UINT8				m_curtexture;				// current texture index
-	INT32				m_texture_format;			// texture format of bitmap for this screen
-	bool				m_changed;					// has this bitmap changed?
-	INT32				m_last_partial_scan;		// scanline of last partial update
-	bitmap_t *			m_screen_overlay_bitmap;	// screen overlay bitmap
+	render_texture *		m_texture[2];			// 2x textures for the screen bitmap
+	bitmap_t *				m_bitmap[2];			// 2x bitmaps for rendering
+	bitmap_t *				m_burnin;				// burn-in bitmap
+	UINT8					m_curbitmap;			// current bitmap index
+	UINT8					m_curtexture;			// current texture index
+	INT32					m_texture_format;		// texture format of bitmap for this screen
+	bool					m_changed;				// has this bitmap changed?
+	INT32					m_last_partial_scan;	// scanline of last partial update
+	bitmap_t *				m_screen_overlay_bitmap;// screen overlay bitmap
 
 	// screen timing
-	attoseconds_t		m_frame_period;				// attoseconds per frame
-	attoseconds_t		m_scantime;					// attoseconds per scanline
-	attoseconds_t		m_pixeltime;				// attoseconds per pixel
-	attoseconds_t		m_vblank_period;			// attoseconds per VBLANK period
-	attotime			m_vblank_start_time;		// time of last VBLANK start
-	attotime			m_vblank_end_time;			// time of last VBLANK end
-	emu_timer *			m_vblank_begin_timer;		// timer to signal VBLANK start
-	emu_timer *			m_vblank_end_timer;			// timer to signal VBLANK end
-	emu_timer *			m_scanline0_timer;			// scanline 0 timer
-	emu_timer *			m_scanline_timer;			// scanline timer
-	UINT64				m_frame_number;				// the current frame number
-	UINT32				m_partial_updates_this_frame;// partial update counter this frame
+	attoseconds_t			m_frame_period;			// attoseconds per frame
+	attoseconds_t			m_scantime;				// attoseconds per scanline
+	attoseconds_t			m_pixeltime;			// attoseconds per pixel
+	attoseconds_t			m_vblank_period;		// attoseconds per VBLANK period
+	attotime				m_vblank_start_time;	// time of last VBLANK start
+	attotime				m_vblank_end_time;		// time of last VBLANK end
+	emu_timer *				m_vblank_begin_timer;	// timer to signal VBLANK start
+	emu_timer *				m_vblank_end_timer;		// timer to signal VBLANK end
+	emu_timer *				m_scanline0_timer;		// scanline 0 timer
+	emu_timer *				m_scanline_timer;		// scanline timer
+	UINT64					m_frame_number;			// the current frame number
+	UINT32					m_partial_updates_this_frame;// partial update counter this frame
 
 	class callback_item
 	{
@@ -238,7 +238,7 @@ private:
 			: m_next(NULL),
 			  m_callback(callback) { }
 		callback_item *next() const { return m_next; }
-
+		
 		callback_item *				m_next;
 		vblank_state_delegate		m_callback;
 	};

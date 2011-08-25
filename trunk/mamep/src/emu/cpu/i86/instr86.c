@@ -6,7 +6,7 @@
 /*
  * file will be included in all cpu variants
  * put non i86 instructions in own files (i286, i386, nec)
- * function renaming will be added when neccessary
+ * function renaming will be added when necessary
  * timing value should move to separate array
  */
 
@@ -72,7 +72,7 @@ static void PREFIX86(_trap)(i8086_state *cpustate)
 #ifndef I80186
 static void PREFIX86(_rotate_shift_Byte)(i8086_state *cpustate, unsigned ModRM, unsigned count, unsigned src)
 {
-//	unsigned src = (unsigned)GetRMByte(ModRM);
+//  unsigned src = (unsigned)GetRMByte(ModRM);
 	unsigned dst=src;
 
 	if (count==0)
@@ -208,7 +208,7 @@ static void PREFIX86(_rotate_shift_Byte)(i8086_state *cpustate, unsigned ModRM, 
 
 static void PREFIX86(_rotate_shift_Word)(i8086_state *cpustate, unsigned ModRM, unsigned count, unsigned src)
 {
-//	unsigned src = GetRMWord(ModRM);
+//  unsigned src = GetRMWord(ModRM);
 	unsigned dst=src;
 
 	if (count==0)

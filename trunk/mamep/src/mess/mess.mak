@@ -105,8 +105,8 @@ $(MESSOBJ)/sega.a:				\
 	$(MAME_MACHINE)/md_cart.o	\
 	$(MESS_DRIVERS)/megadriv.o  \
 	$(MESS_VIDEO)/smsvdp.o		\
-	$(MESS_MACHINE)/segasms.o	\
-	$(MESS_DRIVERS)/segasms.o	\
+	$(MESS_MACHINE)/sms.o	\
+	$(MESS_DRIVERS)/sms.o	\
 
 $(MESSOBJ)/snk.a:				\
 	$(MESS_DRIVERS)/ngp.o		\
@@ -159,7 +159,7 @@ $(MESS_MACHINE)/nes_mmc.o:	$(MESSSRC)/machine/nes_ines.c \
 # layout dependencies
 #-------------------------------------------------
 
-$(MESS_DRIVERS)/segasms.o:		$(MESS_LAYOUT)/sms1.lh
+$(MESS_DRIVERS)/sms.o:		$(MESS_LAYOUT)/sms1.lh
 
 
 #-------------------------------------------------

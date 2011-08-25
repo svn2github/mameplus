@@ -58,7 +58,7 @@ Stephh's notes (based on the games M68000 code and some tests) :
   - Difficulty Dip Switch also affects "Bonus Life" Dip Switch
   - There are less degrees of difficulty in this version
   - DSW2 bit 5 effect remains unknown :
-      * it is checked at address 0x008d16 at the begining of each sub-level
+      * it is checked at address 0x008d16 at the beginning of each sub-level
       * it is checked at address 0x00c382 when you quickly push the joystick left or right twice
     Any info is welcome !
 
@@ -3481,7 +3481,7 @@ ROM_START( hotdogst )
 
 	ROM_REGION( 0x48000, "audiocpu", 0 )	/* Z80 code */
 	ROM_LOAD( "mp2.u19", 0x00000, 0x08000, CRC(ff979ebe) SHA1(4cb80086cfdc69a321c7f75455cef89e20488b76) )	// FIRST AND SECOND HALF IDENTICAL
-	ROM_CONTINUE(       0x10000, 0x38000             )
+	ROM_CONTINUE(        0x10000, 0x38000             )
 
 	ROM_REGION( 0x400000 * 2, "sprites", 0 )		/* Sprites: * 2 */
 	ROM_LOAD( "mp9.u55", 0x000000, 0x200000, CRC(258d49ec) SHA1(f39e30c82d8f680f248e1eb59d7c5acb479fa277) )

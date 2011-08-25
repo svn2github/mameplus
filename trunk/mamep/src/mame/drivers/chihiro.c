@@ -6,16 +6,16 @@ Games on this system include....
 
    Game (Known media)                                  Manufacturer            Media             Key Chip
 +-+---------------------------------------------------+-----------------------+-----------------+--------------|
-|*|The House of the Dead III                         | Sega, 2002            | GDROM GDX-0001  | 317-0348-COM |
-| |Crazy Taxi High Roller                            | Sega, 2003            | GDROM GDX-0002  | 317-0300-COM |
-| |Crazy Taxi High Roller (Rev A)                    | Sega, 2003            | GDROM GDX-0002A | 317-0300-COM |
-|*|Crazy Taxi High Roller (Rev B)                    | Sega, 2003            | GDROM GDX-0002B | 317-0300-COM |
-| |Virtua Cop 3                                      | Sega, 2003            | GDROM GDX-0003  | 317-0354-COM |
-|*|Virtua Cop 3 (Rev A)                              | Sega, 2003            | GDROM GDX-0003A | 317-0354-COM |
-| |Out Run 2                                         | Sega, 2003            | GDROM GDX-0004  | 317-0372-COM |
-|*|Out Run 2 (Rev A)                                 | Sega, 2003            | GDROM GDX-0004A | 317-0372-COM |
-| |Out Run 2 Beta (Rev P)                            | Sega, 2003            | GDROM GDX-0004P |              |
-| |Sega Golf Club Network Pro Tour                   | Sega, 2004            | GDROM GDX-0005  |              |
+|*|The House of the Dead III                          | Sega, 2002            | GDROM GDX-0001  | 317-0348-COM |
+| |Crazy Taxi High Roller                             | Sega, 2003            | GDROM GDX-0002  | 317-0300-COM |
+| |Crazy Taxi High Roller (Rev A)                     | Sega, 2003            | GDROM GDX-0002A | 317-0300-COM |
+|*|Crazy Taxi High Roller (Rev B)                     | Sega, 2003            | GDROM GDX-0002B | 317-0300-COM |
+| |Virtua Cop 3                                       | Sega, 2003            | GDROM GDX-0003  | 317-0354-COM |
+|*|Virtua Cop 3 (Rev A)                               | Sega, 2003            | GDROM GDX-0003A | 317-0354-COM |
+| |Out Run 2                                          | Sega, 2003            | GDROM GDX-0004  | 317-0372-COM |
+|*|Out Run 2 (Rev A)                                  | Sega, 2003            | GDROM GDX-0004A | 317-0372-COM |
+| |Out Run 2 Beta (Rev P)                             | Sega, 2003            | GDROM GDX-0004P |              |
+| |Sega Golf Club Network Pro Tour                    | Sega, 2004            | GDROM GDX-0005  |              |
 | |Sega Network Taisen Mahjong MJ 2                   | Sega, 2004            | GDROM GDX-0006  |              |
 | |Sega Network Taisen Mahjong MJ 2 (Rev A)           | Sega, 2004            | GDROM GDX-0006A |              |
 | |Sega Network Taisen Mahjong MJ 2 (Rev B)           | Sega, 2004            | GDROM GDX-0006B |              |
@@ -29,40 +29,40 @@ Games on this system include....
 | |Wangan Midnight Maximum Tune (Export)              | Sega, 2004            | GDROM GDX-0009  | 317-5101-COM |
 | |Wangan Midnight Maximum Tune (Export) (Rev A)      | Sega, 2004            | GDROM GDX-0009A | 317-5101-COM |
 |*|Wangan Midnight Maximum Tune (Export) (Rev B)      | Sega, 2004            | GDROM GDX-0009B | 317-5101-COM |
-| |Outrun 2 SP (Japan)                               | Sega, 2004            | GDROM GDX-0011  |              |
-| |Ghost Squad                                       | Sega, 2004            | GDROM GDX-0012  | 317-0398-COM |
+| |Outrun 2 SP (Japan)                                | Sega, 2004            | GDROM GDX-0011  |              |
+| |Ghost Squad                                        | Sega, 2004            | GDROM GDX-0012  | 317-0398-COM |
 |*|Ghost Squad (Rev A)                                | Sega, 2004            | GDROM GDX-0012A | 317-0398-COM |
-|*|Gundam Battle Operating Simulator                 | Banpresto, 2005       | GDROM GDX-0013  | 317-0400-JPN |
-| |Outrun 2 Special Tours                            | Sega, 2004            | GDROM GDX-0014  |              |
-|*|Outrun 2 Special Tours (Rev A)                    | Sega, 2004            | GDROM GDX-0014A |              |
-|*|Wangan Midnight Maximum Tune 2 (Export)           | Sega, 2005            | GDROM GDX-0015  | 317-5106-COM |
-| |Wangan Midnight Maximum Tune 2 (Japan)            | Sega, 2005            | GDROM GDX-0016  | 317-5106-JPN |
-|*|Wangan Midnight Maximum Tune 2 (Japan) (Rev A)    | Sega, 2005            | GDROM GDX-0016A | 317-5106-JPN |
-| |Sega Network Taisen Mahjong MJ 3                  | Sega, 2005            | GDROM GDX-0017  |              |
-| |Sega Network Taisen Mahjong MJ 3 (Rev A)          | Sega, 2005            | GDROM GDX-0017A |              |
-| |Sega Network Taisen Mahjong MJ 3 (Rev B)          | Sega, 2005            | GDROM GDX-0017B |              |
-| |Sega Network Taisen Mahjong MJ 3 (Rev C)          | Sega, 2005            | GDROM GDX-0017C |              |
-|*|Sega Network Taisen Mahjong MJ 3 (Rev D)          | Sega, 2005            | GDROM GDX-0017D |              |
-| |Sega Club Golf 2006: Next Tours                   | Sega, 2006            | GDROM GDX-0018  |              |
-|*|Sega Club Golf 2006: Next Tours (Rev A)           | Sega, 2006            | GDROM GDX-0018A |              |
+|*|Gundam Battle Operating Simulator                  | Banpresto, 2005       | GDROM GDX-0013  | 317-0400-JPN |
+| |Outrun 2 Special Tours                             | Sega, 2004            | GDROM GDX-0014  |              |
+|*|Outrun 2 Special Tours (Rev A)                     | Sega, 2004            | GDROM GDX-0014A |              |
+|*|Wangan Midnight Maximum Tune 2 (Export)            | Sega, 2005            | GDROM GDX-0015  | 317-5106-COM |
+| |Wangan Midnight Maximum Tune 2 (Japan)             | Sega, 2005            | GDROM GDX-0016  | 317-5106-JPN |
+|*|Wangan Midnight Maximum Tune 2 (Japan) (Rev A)     | Sega, 2005            | GDROM GDX-0016A | 317-5106-JPN |
+| |Sega Network Taisen Mahjong MJ 3                   | Sega, 2005            | GDROM GDX-0017  |              |
+| |Sega Network Taisen Mahjong MJ 3 (Rev A)           | Sega, 2005            | GDROM GDX-0017A |              |
+| |Sega Network Taisen Mahjong MJ 3 (Rev B)           | Sega, 2005            | GDROM GDX-0017B |              |
+| |Sega Network Taisen Mahjong MJ 3 (Rev C)           | Sega, 2005            | GDROM GDX-0017C |              |
+|*|Sega Network Taisen Mahjong MJ 3 (Rev D)           | Sega, 2005            | GDROM GDX-0017D |              |
+| |Sega Club Golf 2006: Next Tours                    | Sega, 2006            | GDROM GDX-0018  |              |
+|*|Sega Club Golf 2006: Next Tours (Rev A)            | Sega, 2006            | GDROM GDX-0018A |              |
 | |Sega Network Taisen Mahjong MJ 3 Evolution         | Sega, 2006            | GDROM GDX-0021  |              |
 | |Sega Network Taisen Mahjong MJ 3 Evolution (Rev A) | Sega, 2006            | GDROM GDX-0021A |              |
-| |Firmware Update For Compact Flash Box             | Sega, 200x            | GDROM GDX-0024  |              |
-| |Firmware Update For Compact Flash Box (Rev A)     | Sega, 200x            | GDROM GDX-0024A |              |
+| |Firmware Update For Compact Flash Box              | Sega, 200x            | GDROM GDX-0024  |              |
+| |Firmware Update For Compact Flash Box (Rev A)      | Sega, 200x            | GDROM GDX-0024A |              |
 +-+---------------------------------------------------+-----------------------+-----------------+--------------+
 * denotes these games are archived.
 
    Game (Unknown media)                                Manufacturer            Media             Key Chip
 +-+---------------------------------------------------+-----------------------+-----------------+--------------|
-| |Manic Panic Ghosts                                | Sega, 2007            |                 |              |
+| |Manic Panic Ghosts                                 | Sega, 2007            |                 |              |
 | |Mobile Suit Gundam 0079 - Card Builder             | Dimps/Banpresto, 2005 |                 |              |
 | |Mobile Suit Gundam 0079 - Card Builder (Ver 1.007) | Dimps/Banpresto, 2006 |                 |              |
-| |Mobile Suit Gundam 0079 - Card Builder (Ver 2.00) | Dimps/Banpresto, 2006 |                 |              |
-| |Mobile Suit Gundam 0079 - Card Builder (Ver 2.01) | Dimps/Banpresto, 2006 |                 |              |
-| |Mobile Suit Gundam 0079 - Card Builder (Ver 2.02) | Dimps/Banpresto, 2006 |                 |              |
-| |Quest Of D                                        | Sega, 2004            |                 |              |
+| |Mobile Suit Gundam 0079 - Card Builder (Ver 2.00)  | Dimps/Banpresto, 2006 |                 |              |
+| |Mobile Suit Gundam 0079 - Card Builder (Ver 2.01)  | Dimps/Banpresto, 2006 |                 |              |
+| |Mobile Suit Gundam 0079 - Card Builder (Ver 2.02)  | Dimps/Banpresto, 2006 |                 |              |
+| |Quest Of D                                         | Sega, 2004            |                 |              |
 | |Quest Of D (Ver 1.02)                              | Sega, 2004            |                 |              |
-| |Quest Of D (Ver 1.10)                             | Sega, 2004            |                 |              |
+| |Quest Of D (Ver 1.10)                              | Sega, 2004            |                 |              |
 | |Quest Of D (Ver 1.10a)                             | Sega, 2004            |                 |              |
 | |Quest Of D (Ver 1.20)                              | Sega, 2005            |                 |              |
 | |Quest Of D (Ver 1.20a)                             | Sega, 2005            |                 |              |
@@ -71,20 +71,20 @@ Games on this system include....
 | |Quest Of D (Ver 2.01)                              | Sega, 2005            |                 |              |
 | |Quest Of D (Ver 2.02b)                             | Sega, 2006            |                 |              |
 | |Quest Of D (Ver 3.00)                              | Sega, 2006            |                 |              |
-| |Quest Of D (Ver 3.01)                             | Sega, 2006            |                 |              |
+| |Quest Of D (Ver 3.01)                              | Sega, 2006            |                 |              |
 | |Quest Of D (Ver 4.00)                              | Sega, 2007            |                 |              |
 | |Quest Of D (Ver 4.00b)                             | Sega, 2008            |                 |              |
 | |Quest Of D (Ver 4.00c)                             | Sega, 2008            |                 |              |
 | |Quest Of D (Ver 4.01)                              | Sega, 2008            |                 |              |
 | |Quest Of D: The Battle Kingdom                     | Sega, 2007            |                 |              |
-| |Sangokushi Taisen                                 | Sega, 2005            |                 |              |
+| |Sangokushi Taisen                                  | Sega, 2005            |                 |              |
 | |Sangokushi Taisen (Ver 1.03)                       | Sega, 2005            |                 |              |
 | |Sangokushi Taisen (Ver 1.10)                       | Sega, 2005            |                 |              |
 | |Sangokushi Taisen (Ver 1.11)                       | Sega, 2005            |                 |              |
 | |Sangokushi Taisen (Ver 1.12)                       | Sega, 2006            |                 |              |
-| |Sangokushi Taisen 2                               | Sega, 2006            |                 |              |
+| |Sangokushi Taisen 2                                | Sega, 2006            |                 |              |
 | |Sangokushi Taisen 2 (Ver 2.01)                     | Sega, 2006            |                 |              |
-| |Sangokushi Taisen 3                               | Sega, 2008            |                 |              |
+| |Sangokushi Taisen 3                                | Sega, 2008            |                 |              |
 | |Sega Golf Club Network Pro Tour 2005               | Sega, 2005            |                 |              |
 +-+---------------------------------------------------+-----------------------+-----------------+--------------+
 If you can help with the undumped games or know of missing Chihiro games, please contact...
@@ -362,7 +362,7 @@ Thanks to Alex, Mr Mudkips, and Philip Burke for this info.
 #include "emu.h"
 #include "cpu/i386/i386.h"
 #include "machine/pci.h"
-#include "includes/naomibd.h"
+#include "machine/naomigd.h"
 #include "debug/debugcon.h"
 #include "debug/debugcmd.h"
 
@@ -389,7 +389,7 @@ static void jamtable_disasm(running_machine &machine, address_space *space,UINT3
 	char sop1[16];
 	char sop2[16];
 	char pcrel[16];
-//	int prefix;
+//  int prefix;
 
 	addr=address;
 	while (1)
@@ -409,14 +409,14 @@ static void jamtable_disasm(running_machine &machine, address_space *space,UINT3
 			sprintf(sop2,"%08X",op2);
 			sprintf(sop1,"ACC");
 			sprintf(pcrel,"PC+ACC");
-//			prefix=1;
+//          prefix=1;
 		}
 		else
 		{
 			sprintf(sop2,"%08X",op2);
 			sprintf(sop1,"%08X",op1);
 			sprintf(pcrel,"%08X",base+9+op1);
-//			prefix=0;
+//          prefix=0;
 		}
 		debug_console_printf(machine,"%08X ",base);
 		// dl=instr ebx=par1 eax=par2
@@ -661,7 +661,7 @@ static MACHINE_CONFIG_START( chihiro_base, driver_device )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( chihirogd, chihiro_base )
-	MCFG_NAOMI_DIMM_BOARD_ADD("rom_board", "gdrom", NULL, 512, "picreturn")
+	MCFG_NAOMI_GDROM_BOARD_ADD("rom_board", "gdrom", "picreturn", NULL, "maincpu", NULL)
 MACHINE_CONFIG_END
 
 #define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash) \

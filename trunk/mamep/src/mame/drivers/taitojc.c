@@ -22,7 +22,7 @@ Top board: MOTHER PCB-C K11X0838A  M43E0325A
 |           (QFP208)   E23-30.40             E23-34.72      93C46.87              |
 |E23-26.4                                                                         |
 |                              MC68040RC25            CXD1178Q    TCO640FIO       |
-|424260     TMS320C31          (PGA TYPE)                         (QFP120)        |
+|424260     TMS320C51          (PGA TYPE)                         (QFP120)        |
 |           (QFP132)                                                              |
 |           labelled                                              TEST_SW         |
 |424260     "Taito E07-11"                                      MB3771   RESET_SW |
@@ -108,21 +108,21 @@ SIDE BY SIDE  / 2       JC-SYSTEM TYPE-C
  ROMKIT : E38-01 to 21 , 23* to 26*
 
 --------------------------------------------------------------------------
-DENSYA DE GO (E35)     JC-SYSTEM TYPE-C with TRAIN BOARD (Ext.Sound)
+DENSHA DE GO! (E35)     JC-SYSTEM TYPE-C with TRAIN BOARD (Ext.Sound)
 --------------------------------------------------------------------------
- DENSYA DE GO VER 2.2J 1997/2/4
+ DENSHA DE GO! VER 2.2J 1997/2/4
  E35-01 to 26 + E35-28(TRAIN BOARD) + E17-23(BIOS?)
 
- DENSYA DE GO EX VER 2.4J 1997/4/18 13:38:34
+ DENSHA DE GO! EX VER 2.4J 1997/4/18 13:38:34
  ROMKIT : E35-30 to 33
 
 --------------------------------------------------------------------------
-DENSYA DE GO 2 (E52)   JC-SYSTEM TYPE-C with TRAIN BOARD (Ext.Sound)
+DENSHA DE GO! 2 (E52)   JC-SYSTEM TYPE-C with TRAIN BOARD (Ext.Sound)
 --------------------------------------------------------------------------
- DENSYA DE GO 2 (KOUSOKUHEN RYOUSANSYA) VER 2.5 J 1998/3/2 15:30:55
+ DENSHA DE GO! 2 (KOUSOKUHEN RYOUSANSYA) VER 2.5 J 1998/3/2 15:30:55
  E52-01 to 24 , 25-1 to 28-1, 29, 30 + E35-28(TRAIN BOARD) + E17-23(BIOS?)
 
- DENSYA DE GO! 2 EX (3000BANDAI KOUSOKUHEN) VER 2.20 J 1998/7/15 17:42:38
+ DENSHA DE GO! 2 (3000BANDAI KOUSOKUHEN) VER 2.20 J 1998/7/15 17:42:38
  ROMKIT :  E52-31 to 38
 
 ----
@@ -158,7 +158,7 @@ Top board: MOTHER PCB  K11X0835A  M43E0304A
 |TC514260 (QFP208)   uPD424210             E07-08.65              (QFP120)        |
 |E07-02.4                                                                         |
 |                                                                                 |
-|TMS320C31  43256                                                                 |
+|TMS320C51  43256                                                                 |
 |(QFP132)   43256              MC68040RC25          E07-10.116  93C46.91          |
 |labelled          TCO770CMU   (PGA TYPE)                    E07-04.115  TEST_SW  |
 |"Taito E07-11"    (QFP208)                         E07-09.82      MB3771         |
@@ -252,7 +252,7 @@ Top board: MOTHER PCB-C K11X0838A  M43E0325A
 |           (QFP208)   E23-30.40             E23-34.72      93C46.87              |
 |E23-26.4                                                                         |
 |                              MC68040RC25            CXD1178Q    TCO640FIO       |
-|424260     TMS320C31          (PGA TYPE)                         (QFP120)        |
+|424260     TMS320C51          (PGA TYPE)                         (QFP120)        |
 |           (QFP132)                                                              |
 |           labelled                                              TEST_SW         |
 |424260     "Taito E07-11"                                      MB3771   RESET_SW |
@@ -339,14 +339,17 @@ Notes:
 
 
     TODO:
-        - dendeg2 hangs on init step 10.
-        - The analog controls don't seem to work in landgear. They work in test mode though.
-        - landgear has some weird crashes (after playing one round, after a couple of loops in attract mode)
-        - dendeg2x usually crashes when starting the game (lots of read and writes to invalid addresses).
-        - All dendeg games have random wrong textures/palettes.
+        - dendego intro object RAM usage has various gfx bugs (check video file)
+        - dendego title screen builds up and it shouldn't
+        - dendego/dendego2 doesn't show the odometer (btanb, thanks ANY);
+        - landgear has some weird crashes (after playing one round, after a couple of loops in attract mode) (needs testing -AS)
+        - landgear has huge 3d problems on gameplay (CPU comms?)
+        - dendego2 shows a debug string during gameplay?
         - Train board (external sound board with OKI6295) is not emulated.
-        - dangcurv hangs on its DSP test. DSP execution may be jumping into internal ROM space?
-        - dangcurv needs correct controls hooking up.
+        - dangcurv DSP program crashes very soon, so no 3d is currently shown.
+        - add idle skips if possible
+        - dendego and clones needs output lamps and an artwork for the inputs (helps with the playability);
+        - POST has a PCB ID (shown at top of screen) that can't be faked without a proper reference.
 */
 
 #include "emu.h"
@@ -354,6 +357,7 @@ Notes:
 #include "cpu/m68000/m68000.h"
 #include "cpu/mc68hc11/mc68hc11.h"
 #include "sound/es5506.h"
+#include "sound/okim6295.h"
 #include "machine/eeprom.h"
 #include "audio/taito_en.h"
 #include "includes/taitojc.h"
@@ -385,8 +389,11 @@ static WRITE32_HANDLER( taitojc_palette_w )
 
 static READ32_HANDLER ( jc_control_r )
 {
+	taitojc_state *state = space->machine().driver_data<taitojc_state>();
 	UINT32 r = 0;
-//  mame_printf_debug("jc_control_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(&space->device()));
+
+	if(ACCESSING_BITS_0_15)
+		printf("jc_control_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(&space->device()));
 	switch(offset)
 	{
 		case 0x0:
@@ -423,9 +430,9 @@ static READ32_HANDLER ( jc_control_r )
 		}
 		case 0x4:
 		{
-			if (ACCESSING_BITS_24_31)
+			if (ACCESSING_BITS_16_31)
 			{
-				//r |= (space->machine().rand() & 0xff) << 24;
+				r |= state->m_outputs << 16;
 			}
 			return r;
 		}
@@ -446,9 +453,22 @@ static READ32_HANDLER ( jc_control_r )
 	return 0;
 }
 
+static WRITE32_HANDLER( jc_coin_counters_w )
+{
+	taitojc_state *state = space->machine().driver_data<taitojc_state>();
+
+	COMBINE_DATA(&state->m_outputs);
+
+	coin_lockout_w(space->machine(), 0, !(data & 0x01000000));
+	coin_lockout_w(space->machine(), 1, !(data & 0x02000000));
+	coin_counter_w(space->machine(), 0, data & 0x04000000);
+	coin_counter_w(space->machine(), 1, data & 0x08000000);
+}
+
 static WRITE32_HANDLER ( jc_control_w )
 {
 	//mame_printf_debug("jc_control_w: %08X, %08X, %08X\n", data, offset, mem_mask);
+
 	switch(offset)
 	{
 		case 0x3:
@@ -457,13 +477,15 @@ static WRITE32_HANDLER ( jc_control_w )
 			{
 				input_port_write(space->machine(), "EEPROMOUT", data >> 24, 0xff);
 			}
+			else
+				popmessage("jc_control_w: %08X, %08X, %08X\n", data, offset, mem_mask);
 			return;
 		}
 
 		default:
+			popmessage("jc_control_w: %08X, %08X, %08X\n", data, offset, mem_mask);
 			break;
 	}
-	logerror("jc_control_w: %08X, %08X, %08X\n", data, offset, mem_mask);
 }
 
 static WRITE32_HANDLER (jc_control1_w)
@@ -575,9 +597,12 @@ static WRITE32_HANDLER(mcu_comm_w)
 	}
 }
 
-static READ32_HANDLER(jc_unknown1_r)
+static READ8_HANDLER(jc_pcbid_r)
 {
-	return 0;
+	static const char pcb_id[0x40] =
+	{ "Needs proper PCB ID here!"};
+
+	return pcb_id[offset];
 }
 
 static READ32_HANDLER(dsp_shared_r)
@@ -592,10 +617,10 @@ static READ32_HANDLER(dsp_shared_r)
 
 #if DEBUG_DSP
 
-static void debug_dsp_command(void)
+static void debug_dsp_command(running_machine &machine)
 {
 	taitojc_state *state = machine.driver_data<taitojc_state>();
-	UINT16 *cmd = &dsp_shared_ram[0x7f0];
+	UINT16 *cmd = &state->m_dsp_shared_ram[0x1fc0/2];
 
 	switch (cmd[0])
 	{
@@ -634,7 +659,7 @@ static void debug_dsp_command(void)
 #endif
 					for (i=0; i < ll; i++)
 					{
-						UINT16 d = dsp_shared_ram[saddr++];
+						UINT16 d = state->m_dsp_shared_ram[saddr++];
 						if (daddr >= 0x8000 && daddr < 0x10000)
 						{
 							state->m_debug_dsp_ram[daddr-0x8000] = d;
@@ -740,15 +765,28 @@ static WRITE32_HANDLER(dsp_shared_w)
 #if DEBUG_DSP
 	if (offset == 0x1fc0/4)
 	{
-		debug_dsp_command();
+		debug_dsp_command(space->machine());
 	}
 #endif
+
+	if (offset == 0x1ff8/4)
+		cputag_set_input_line(space->machine(), "maincpu", 6, CLEAR_LINE);
 
 	if (offset == 0x1ffc/4)
 	{
 		if ((data & 0x80000) == 0)
 		{
-			if (!state->m_first_dsp_reset)
+			/*
+            All games minus Dangerous Curves tests if the DSP is alive with this code snippet:
+
+            0008C370: 4A79 1000 1FC0                                      tst.w   $10001fc0.l
+            0008C376: 33FC 0000 0660 0000                                 move.w  #$0, $6600000.l
+            0008C37E: 66F0                                                bne     $8c370
+
+            Problem is: that move.w in the middle makes the SR to always return a zero flag result,
+            hence it never branches like it should. CPU bug?
+            */
+			if (!state->m_first_dsp_reset || !state->m_has_dsp_hack)
 			{
 				cputag_set_input_line(space->machine(), "dsp", INPUT_LINE_RESET, CLEAR_LINE);
 			}
@@ -789,10 +827,27 @@ static WRITE32_HANDLER(f3_share_w)
 	}
 }
 
-static WRITE32_HANDLER(jc_output_w)
+static WRITE32_HANDLER(jc_meters_w)
 {
-	// speed and brake meter outputs in Densya De Go!
-	//mame_printf_debug("jc_output_w: %d, %d\n", offset, (data >> 16) & 0xffff);
+	taitojc_state *state = space->machine().driver_data<taitojc_state>();
+
+	// printf("jc_output_w: %08x, %08x %08x\n", offset, data,mem_mask);
+	if(offset == 0 && ACCESSING_BITS_16_31)
+		state->m_speed_meter = taitojc_odometer_table[(data >> 16) & 0xff];
+	else if(offset == 1 && ACCESSING_BITS_16_31)
+		state->m_brake_meter = taitojc_brake_table[(data >> 16) & 0xff];
+
+	if(input_port_read_safe(space->machine(), "METER", 0))
+	{
+		UINT8 mascon_lv = (input_port_read(space->machine(), "MASCON") & 0x70) >> 4;
+
+		popmessage("%d %.02f km/h %.02f MPa",mascon_lv,state->m_speed_meter,state->m_brake_meter/10);
+	}
+}
+
+static READ32_HANDLER( jc_lan_r )
+{
+	return 0xffffffff;
 }
 
 static ADDRESS_MAP_START( taitojc_map, AS_PROGRAM, 32 )
@@ -802,19 +857,19 @@ static ADDRESS_MAP_START( taitojc_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x040f8000, 0x040fbfff) AM_READWRITE(taitojc_tile_r, taitojc_tile_w)
 	AM_RANGE(0x040fc000, 0x040fefff) AM_READWRITE(taitojc_char_r, taitojc_char_w)
 	AM_RANGE(0x040ff000, 0x040fffff) AM_RAM AM_BASE_MEMBER(taitojc_state,m_objlist)
-	AM_RANGE(0x05800000, 0x05801fff) AM_READ(jc_unknown1_r)
+	AM_RANGE(0x05800000, 0x0580003f) AM_READ8(jc_pcbid_r,0xffffffff)
 	AM_RANGE(0x05900000, 0x05900007) AM_READWRITE(mcu_comm_r, mcu_comm_w)
 	//AM_RANGE(0x05a00000, 0x05a01fff)
 	//AM_RANGE(0x05fc0000, 0x05fc3fff)
 	AM_RANGE(0x06400000, 0x0641ffff) AM_READWRITE(taitojc_palette_r, taitojc_palette_w) AM_BASE_MEMBER(taitojc_state,m_palette_ram)
 	AM_RANGE(0x06600000, 0x0660001f) AM_READ(jc_control_r)
-	AM_RANGE(0x06600000, 0x06600003) AM_WRITE(jc_control1_w)
-	AM_RANGE(0x06600010, 0x06600013) AM_NOP		// unknown
+	AM_RANGE(0x06600000, 0x06600003) AM_WRITE(jc_control1_w) // watchdog
+	AM_RANGE(0x06600010, 0x06600013) AM_WRITE(jc_coin_counters_w)
 	AM_RANGE(0x06600040, 0x0660004f) AM_WRITE(jc_control_w)
-	AM_RANGE(0x06800000, 0x06801fff) AM_NOP		// unknown
+	//AM_RANGE(0x06800000, 0x06801fff) AM_NOP       // unknown
 	AM_RANGE(0x06a00000, 0x06a01fff) AM_READWRITE(f3_share_r, f3_share_w) AM_SHARE("f3_shared") AM_BASE_MEMBER(taitojc_state,m_f3_shared_ram)
-	//AM_RANGE(0x06c00000, 0x06c0ffff) AM_RAM
-	AM_RANGE(0x06e00000, 0x06e0ffff) AM_WRITE(jc_output_w)
+	AM_RANGE(0x06c00000, 0x06c0001f) AM_READ(jc_lan_r) AM_WRITENOP // Dangerous Curves
+	AM_RANGE(0x06e00000, 0x06e00007) AM_WRITE(jc_meters_w)
 	AM_RANGE(0x08000000, 0x080fffff) AM_RAM AM_BASE_MEMBER(taitojc_state,m_main_ram)
 	AM_RANGE(0x10000000, 0x10001fff) AM_READWRITE(dsp_shared_r, dsp_shared_w)
 ADDRESS_MAP_END
@@ -831,6 +886,7 @@ static READ8_HANDLER(hc11_comm_r)
 
 static WRITE8_HANDLER(hc11_comm_w)
 {
+
 }
 
 static READ8_HANDLER(hc11_data_r)
@@ -1048,12 +1104,28 @@ static READ16_HANDLER(dsp_intersection_r)
     0x7030: Unknown write
 */
 
+static READ16_HANDLER( dsp_to_main_r )
+{
+	taitojc_state *state = space->machine().driver_data<taitojc_state>();
+
+	return state->m_dsp_shared_ram[0x7fe];
+}
+
+static WRITE16_HANDLER( dsp_to_main_w )
+{
+	taitojc_state *state = space->machine().driver_data<taitojc_state>();
+
+	cputag_set_input_line(space->machine(), "maincpu", 6, ASSERT_LINE);
+
+	COMBINE_DATA(&state->m_dsp_shared_ram[0x7fe]);
+}
+
 static ADDRESS_MAP_START( tms_program_map, AS_PROGRAM, 16 )
+//  AM_RANGE(0x0000, 0x1fff) AM_READ(dsp_internal_rom_r) // TODO: Dangerous Curves tries to access 0x207?
 	AM_RANGE(0x4000, 0x7fff) AM_RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( tms_data_map, AS_DATA, 16 )
-	//AM_RANGE(0x1400, 0x1401) AM_RAM
 	AM_RANGE(0x6a01, 0x6a02) AM_WRITE(dsp_unk2_w)
 	AM_RANGE(0x6a11, 0x6a12) AM_NOP		// same as 0x6a01..02 for the second renderer chip?
 	AM_RANGE(0x6b20, 0x6b20) AM_WRITE(dsp_polygon_fifo_w)
@@ -1066,6 +1138,7 @@ static ADDRESS_MAP_START( tms_data_map, AS_DATA, 16 )
 	AM_RANGE(0x701b, 0x701b) AM_READ(dsp_intersection_r)
 	AM_RANGE(0x701d, 0x701f) AM_READ(dsp_projection_r)
 	AM_RANGE(0x7022, 0x7022) AM_READ(dsp_unk_r)
+	AM_RANGE(0x7ffe, 0x7ffe) AM_READWRITE(dsp_to_main_r,dsp_to_main_w)
 	AM_RANGE(0x7800, 0x7fff) AM_RAM AM_BASE_MEMBER(taitojc_state,m_dsp_shared_ram)
 	AM_RANGE(0x8000, 0xffff) AM_RAM
 ADDRESS_MAP_END
@@ -1114,17 +1187,36 @@ static INPUT_PORTS_START( taitojc )
 INPUT_PORTS_END
 #endif
 
-static INPUT_PORTS_START( dendeg )
+/* Mascon must always be in a defined state, Densha de Go 2 in particular returns black screen if the Mascon input is undefined
+   We convert the 6 lever "shifter" into a fake analog port for now. */
+static CUSTOM_INPUT( mascon_state_r )
+{
+	static const UINT8 mascon_table[6] = { 0x01, 0x10, 0x02, 0x20, 0x04, 0x40 };
+	UINT8 res = input_port_read(field.machine(), "MASCON");
+	int i;
+
+	//popmessage("%02x",res);
+
+	for(i=0;i<6;i++)
+	{
+		if((res & 0x70) == (0x10*i))
+			return mascon_table[i];
+	}
+
+	return mascon_table[5];
+}
+
+static INPUT_PORTS_START( dendego )
 	PORT_START("COINS")
-	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0xec, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SERVICE1 )
+	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
 
 	PORT_START("START")
-	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0xec, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
 
 	PORT_START( "EEPROMOUT" )
@@ -1133,34 +1225,43 @@ static INPUT_PORTS_START( dendeg )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
 
 	PORT_START("UNUSED")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON7 )		// Horn
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("Horn")		// Horn
 	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("BUTTONS")
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6 )		// Mascon 5
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON4 )		// Mascon 3
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 )		// Mascon 1
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON5 )		// Mascon 4
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 )		// Mascon 2
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )		// Mascon 0
+	/* TODO: fix this */
+	PORT_BIT( 0x88, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x77, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(mascon_state_r,NULL)
+//  PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("Mascon 5")      // Mascon 5
+//  PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Mascon 3")      // Mascon 3
+//  PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Mascon 1")      // Mascon 1
+//  PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("Mascon 4")      // Mascon 4
+//  PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Mascon 2")      // Mascon 2
+//  PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("Mascon 0")      // Mascon 0
+
+	PORT_START("MASCON")
+	PORT_BIT( 0x7f, 0x00, IPT_POSITIONAL ) PORT_POSITIONS(0x60) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_CENTERDELTA(0)
 
 	PORT_START("ANALOG1")		// Brake
-	PORT_BIT( 0xff, 0x00, IPT_PEDAL ) PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xff, 0x00, IPT_PEDAL ) PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_CENTERDELTA(0) PORT_NAME("Brake")
+
+	PORT_START("METER")
+	PORT_CONFNAME( 0x01, 0x01, "Show Meters" )
+	PORT_CONFSETTING(    0x01, DEF_STR( Yes ) )
+	PORT_CONFSETTING(    0x00, DEF_STR( No )  )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( landgear )
 	PORT_START("COINS")
-	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0xec, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SERVICE1 )
+	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
 
 	PORT_START("START")
-	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0xec, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
 
 	PORT_START( "EEPROMOUT" )
@@ -1169,35 +1270,33 @@ static INPUT_PORTS_START( landgear )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
 
 	PORT_START("UNUSED")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )		// View button
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("View button")
 	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("BUTTONS")
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("ANALOG1")		// Lever X
-	PORT_BIT( 0xff, 0x80, IPT_AD_STICK_X ) PORT_MINMAX(0xff, 0x00) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xff, 0x80, IPT_AD_STICK_X ) PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5) PORT_REVERSE
 
 	PORT_START("ANALOG2")		// Lever Y
-	PORT_BIT( 0xff, 0x80, IPT_AD_STICK_Y )  PORT_MINMAX(0xff, 0x00) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xff, 0x80, IPT_AD_STICK_Y )  PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
 
 	PORT_START("ANALOG3")		// Throttle
-	PORT_BIT( 0xff, 0x00, IPT_PEDAL )  PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xff, 0x00, IPT_PEDAL )  PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5) PORT_REVERSE
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( sidebs )
 	PORT_START("COINS")
-	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0xec, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SERVICE1 )
+	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
 
 	PORT_START("START")
-	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0xec, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE3 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE2 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
 
 	PORT_START( "EEPROMOUT" )
@@ -1207,37 +1306,35 @@ static INPUT_PORTS_START( sidebs )
 
 	PORT_START("UNUSED")
 	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )		// View button
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("View button")
 
 	PORT_START("BUTTONS")
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )		// Shift down
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 )		// Shift up
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Shift down")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Shift up")
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("ANALOG1")		// Steering
 	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
 
 	PORT_START("ANALOG2")		// Acceleration
-	PORT_BIT( 0xff, 0x00, IPT_PEDAL )  PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xff, 0x00, IPT_PEDAL )  PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(75) PORT_KEYDELTA(25)
 
 	PORT_START("ANALOG3")		// Brake
-	PORT_BIT( 0xff, 0x00, IPT_PEDAL2 )  PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xff, 0x00, IPT_PEDAL2 )  PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(75) PORT_KEYDELTA(25)
 INPUT_PORTS_END
 
 // TODO
 static INPUT_PORTS_START( dangcurv )
 	PORT_START("COINS")
-	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0xec, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SERVICE1 )
+	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
 
 	PORT_START("START")
-	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0xec, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE3 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE2 )
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_TILT )
 
 	PORT_START( "EEPROMOUT" )
@@ -1246,22 +1343,23 @@ static INPUT_PORTS_START( dangcurv )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("eeprom", eeprom_device, set_cs_line)
 
 	PORT_START("UNUSED")
-	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )		// View button
+	PORT_BIT( 0xec, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Rear button")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("View button")
 
 	PORT_START("BUTTONS")
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )		// Shift down
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 )		// Shift up
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Shift down")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Shift up")
 
 	PORT_START("ANALOG1")		// Steering
-	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5) PORT_REVERSE
 
 	PORT_START("ANALOG2")		// Acceleration
-	PORT_BIT( 0xff, 0x00, IPT_PEDAL )  PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xff, 0x00, IPT_PEDAL )  PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(75) PORT_KEYDELTA(25) PORT_REVERSE
 
 	PORT_START("ANALOG3")		// Brake
-	PORT_BIT( 0xff, 0x00, IPT_PEDAL2 )  PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xff, 0x00, IPT_PEDAL2 )  PORT_MINMAX(0x00, 0xff) PORT_SENSITIVITY(75) PORT_KEYDELTA(25) PORT_REVERSE
 INPUT_PORTS_END
 
 
@@ -1301,11 +1399,6 @@ static INTERRUPT_GEN( taitojc_vblank )
 	device_set_input_line_and_vector(device, 2, HOLD_LINE, 130);
 }
 
-static INTERRUPT_GEN( taitojc_int6 )
-{
-	device_set_input_line(device, 6, HOLD_LINE);
-}
-
 static const hc11_config taitojc_config =
 {
 	1, //has extended I/O
@@ -1318,7 +1411,7 @@ static MACHINE_CONFIG_START( taitojc, taitojc_state )
 	MCFG_CPU_ADD("maincpu", M68040, 25000000)
 	MCFG_CPU_PROGRAM_MAP(taitojc_map)
 	MCFG_CPU_VBLANK_INT("screen", taitojc_vblank)
-	MCFG_CPU_PERIODIC_INT(taitojc_int6, 1000)
+//  MCFG_CPU_PERIODIC_INT(taitojc_int6, 1000)
 
 	MCFG_CPU_ADD("sub", MC68HC11, 4000000) //MC68HC11M0
 	MCFG_CPU_PROGRAM_MAP(hc11_pgm_map)
@@ -1350,11 +1443,65 @@ static MACHINE_CONFIG_START( taitojc, taitojc_state )
 	MCFG_FRAGMENT_ADD(taito_f3_sound)
 MACHINE_CONFIG_END
 
+static MACHINE_CONFIG_DERIVED( dendego, taitojc )
+	MCFG_OKIM6295_ADD("oki", 32000000/32, OKIM6295_PIN7_HIGH)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.50)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.50)
+MACHINE_CONFIG_END
+
+static READ16_HANDLER( taitojc_dsp_idle_skip_r )
+{
+	taitojc_state *state = space->machine().driver_data<taitojc_state>();
+
+	if(cpu_get_pc(&space->device())==0x404c)
+		device_spin_until_time(&space->device(), attotime::from_usec(500));
+
+	return state->m_dsp_shared_ram[0x7f0];
+}
+
+static READ16_HANDLER( dendego2_dsp_idle_skip_r )
+{
+	taitojc_state *state = space->machine().driver_data<taitojc_state>();
+
+	if(cpu_get_pc(&space->device())==0x402e)
+		device_spin_until_time(&space->device(), attotime::from_usec(500));
+
+	return state->m_dsp_shared_ram[0x7f0];
+}
+
+static WRITE16_HANDLER( dsp_idle_skip_w )
+{
+	taitojc_state *state = space->machine().driver_data<taitojc_state>();
+
+	COMBINE_DATA(&state->m_dsp_shared_ram[0x7f0]);
+}
+
 static DRIVER_INIT( taitojc )
 {
 	taitojc_state *state = machine.driver_data<taitojc_state>();
 
 	state->m_polygon_fifo = auto_alloc_array(machine, UINT16, POLYGON_FIFO_SIZE);
+
+	state->m_has_dsp_hack = 1;
+
+	machine.device("dsp")->memory().space(AS_DATA)->install_legacy_readwrite_handler(0x7ff0, 0x7ff0, FUNC(taitojc_dsp_idle_skip_r), FUNC(dsp_idle_skip_w));
+}
+
+static DRIVER_INIT( dendego2 )
+{
+	DRIVER_INIT_CALL( taitojc );
+
+	machine.device("dsp")->memory().space(AS_DATA)->install_legacy_readwrite_handler(0x7ff0, 0x7ff0, FUNC(dendego2_dsp_idle_skip_r), FUNC(dsp_idle_skip_w));
+}
+
+
+static DRIVER_INIT( dangcurv )
+{
+	taitojc_state *state = machine.driver_data<taitojc_state>();
+
+	DRIVER_INIT_CALL( taitojc );
+
+	state->m_has_dsp_hack = 0;
 }
 
 ROM_START( sidebs )
@@ -1531,7 +1678,7 @@ ROM_START( sidebs2j )
     */
 ROM_END
 
-ROM_START( dendeg )
+ROM_START( dendego )
 	ROM_REGION(0x200000, "maincpu", 0)		/* 68040 code */
 	ROM_LOAD32_BYTE( "e35-21.036", 0x000000, 0x80000, CRC(bc70ca97) SHA1(724a24da9d6f163c26e7528ee2c15bd06f2c4382) )
 	ROM_LOAD32_BYTE( "e35-22.037", 0x000001, 0x80000, CRC(83b17de8) SHA1(538ddc16727e08e9a2a8ff6b4f030dc044993aa0) )
@@ -1568,7 +1715,7 @@ ROM_START( dendeg )
 	ROM_LOAD( "e35-11.020",  0x0c00000, 0x200000, CRC(dc8f5e88) SHA1(e311252db8a7232a5325a3eff5c1890d20bd3f8f) )
 	ROM_LOAD( "e35-12.021",  0x0e00000, 0x200000, CRC(039b604c) SHA1(7e394e7cddc6bf42f3834d5331203e8496597a90) )
 
-	ROM_REGION( 0x40000, "user3", 0 )		/* train board, OKI6295 sound samples */
+	ROM_REGION( 0x40000, "oki", 0 )		/* train board, OKI6295 sound samples */
 	ROM_LOAD( "e35-28.trn",  0x000000, 0x040000, CRC(d1b571c1) SHA1(cac7d3f0285544fe36b8b744edfbac0190cdecab) )
 
 	ROM_REGION16_BE( 0x1000000, "ensoniq.0", ROMREGION_ERASE00  )
@@ -1578,7 +1725,7 @@ ROM_START( dendeg )
 	ROM_LOAD16_BYTE( "e35-20.035",  0xc00000, 0x200000, CRC(a1d4b30d) SHA1(e02f613b93d3b3ee1eb23f5b7f62c5448ed3966d) )
 ROM_END
 
-ROM_START( dendegx )
+ROM_START( dendegox )
 	ROM_REGION(0x200000, "maincpu", 0)		/* 68040 code */
 	ROM_LOAD32_BYTE( "e35-30.036", 0x000000, 0x80000, CRC(57ee0975) SHA1(c7741a7e0e9c1fdebc6b942587d7ac5a6f26f66d) )//ex
 	ROM_LOAD32_BYTE( "e35-31.037", 0x000001, 0x80000, CRC(bd5f2651) SHA1(73b760df351170ace019e4b61c82d8c6296a3632) )//ex
@@ -1615,7 +1762,7 @@ ROM_START( dendegx )
 	ROM_LOAD( "e35-11.020",  0x0c00000, 0x200000, CRC(dc8f5e88) SHA1(e311252db8a7232a5325a3eff5c1890d20bd3f8f) )
 	ROM_LOAD( "e35-12.021",  0x0e00000, 0x200000, CRC(039b604c) SHA1(7e394e7cddc6bf42f3834d5331203e8496597a90) )
 
-	ROM_REGION( 0x40000, "user3", 0 )		/* train board, OKI6295 sound samples */
+	ROM_REGION( 0x40000, "oki", 0 )		/* train board, OKI6295 sound samples */
 	ROM_LOAD( "e35-28.trn",  0x000000, 0x040000, CRC(d1b571c1) SHA1(cac7d3f0285544fe36b8b744edfbac0190cdecab) )
 
 	ROM_REGION16_BE( 0x1000000, "ensoniq.0", ROMREGION_ERASE00  )
@@ -1625,7 +1772,7 @@ ROM_START( dendegx )
 	ROM_LOAD16_BYTE( "e35-20.035",  0xc00000, 0x200000, CRC(a1d4b30d) SHA1(e02f613b93d3b3ee1eb23f5b7f62c5448ed3966d) )
 ROM_END
 
-ROM_START( dendeg2 )
+ROM_START( dendego2 )
 	ROM_REGION(0x200000, "maincpu", 0)		/* 68040 code */
 	ROM_LOAD32_BYTE( "e52-25-1.036", 0x000000, 0x80000, CRC(fadf5b4c) SHA1(48f3e1425bb9552d472a2720e1c9a752db2b43ed) )
 	ROM_LOAD32_BYTE( "e52-26-1.037", 0x000001, 0x80000, CRC(7cf5230d) SHA1(b3416886d7cfc88520f6bf378529086bf0095db5) )
@@ -1643,10 +1790,10 @@ ROM_START( dendeg2 )
 	ROM_FILL( 0x0000, 0x0080, 0 )
 
 	ROM_REGION( 0x1800000, "gfx1", 0 )
-	ROM_LOAD32_WORD_SWAP( "e52-17.052",  0x0000002, 0x200000, CRC(4ac11921) SHA1(c4816e1d68bb52ee59e7a2e6de617c1093020944) )
-	ROM_LOAD32_WORD_SWAP( "e52-18.053",  0x0000000, 0x200000, CRC(7f3e4af7) SHA1(ab35744014175a802e73c8b70de4e7508f0a1cd1) )
-	ROM_LOAD32_WORD_SWAP( "e52-19.054",  0x0400002, 0x200000, CRC(2e5ff408) SHA1(91f95721b98198082e950c50f33324820719e9ed) )
-	ROM_LOAD32_WORD_SWAP( "e52-20.055",  0x0400000, 0x200000, CRC(e90eb71e) SHA1(f07518c718f773e20412393c0ebb3243f9b1d96c) )
+	ROM_LOAD32_WORD( "e52-17.052",  0x0000002, 0x200000, CRC(4ac11921) SHA1(c4816e1d68bb52ee59e7a2e6de617c1093020944) )
+	ROM_LOAD32_WORD( "e52-18.053",  0x0000000, 0x200000, CRC(7f3e4af7) SHA1(ab35744014175a802e73c8b70de4e7508f0a1cd1) )
+	ROM_LOAD32_WORD( "e52-19.054",  0x0400002, 0x200000, CRC(2e5ff408) SHA1(91f95721b98198082e950c50f33324820719e9ed) )
+	ROM_LOAD32_WORD( "e52-20.055",  0x0400000, 0x200000, CRC(e90eb71e) SHA1(f07518c718f773e20412393c0ebb3243f9b1d96c) )
 	ROM_LOAD32_WORD( "e52-05.009",  0x0800002, 0x200000, CRC(1ad0c612) SHA1(4ffc373fca8c1e1a5edbad3305b08f0867e9809c) )
 	ROM_LOAD32_WORD( "e52-13.022",  0x0800000, 0x200000, CRC(943af3f4) SHA1(bfc81aa5e5c22e44601428b9e980f09d0c65e38e) )
 	ROM_LOAD32_WORD( "e52-06.010",  0x0c00002, 0x200000, CRC(aa35e536) SHA1(2c1b2ee0d2587db6d6dd60b081bfcef3bb0dd9fa) )
@@ -1666,17 +1813,17 @@ ROM_START( dendeg2 )
 	ROM_LOAD( "e52-11.020",  0x0c00000, 0x200000, CRC(1bc22680) SHA1(1f71db88d6df3b4bdf090b77bc83a67906bb31da) )
 	ROM_LOAD( "e52-12.021",  0x0e00000, 0x200000, CRC(a8bb91c5) SHA1(959a9fedb7839e1e4e7658d920bd5da4fd8cae48) )
 
-	ROM_REGION( 0x40000, "user3", 0 )		/* train board, OKI6295 sound samples */
+	ROM_REGION( 0x40000, "oki", 0 )		/* train board, OKI6295 sound samples */
 	ROM_LOAD( "e35-28.trn",  0x000000, 0x040000, CRC(d1b571c1) SHA1(cac7d3f0285544fe36b8b744edfbac0190cdecab) )
 
 	ROM_REGION16_BE( 0x1000000, "ensoniq.0", ROMREGION_ERASE00  )
 	ROM_LOAD16_BYTE( "e52-21.032",  0x000000, 0x200000, CRC(ba58081d) SHA1(bcb6c8781191d48f906ed404a3e7388097a64781) )
 	ROM_LOAD16_BYTE( "e52-22.033",  0x400000, 0x200000, CRC(dda281b1) SHA1(4851a6bf7902548c5033090a0e5c15f74c00ef58) )
-	ROM_LOAD16_BYTE( "e52-23.034",  0x800000, 0x200000, CRC(ebe2dcef) SHA1(16ae41e0f3bb242cbc2922f53cacbd99961a3f97) ) // same as e35-19.034 from dendeg
+	ROM_LOAD16_BYTE( "e52-23.034",  0x800000, 0x200000, CRC(ebe2dcef) SHA1(16ae41e0f3bb242cbc2922f53cacbd99961a3f97) ) // same as e35-19.034 from dendego
 	ROM_LOAD16_BYTE( "e52-24.035",  0xc00000, 0x200000, CRC(a9a678da) SHA1(b980ae644ef0312acd63b017028af9bf2b084c29) )
 ROM_END
 
-ROM_START( dendeg2x )
+ROM_START( dendego23k )
 	ROM_REGION(0x200000, "maincpu", 0)		/* 68040 code */
 	ROM_LOAD32_BYTE( "e52-35.036", 0x000000, 0x80000, CRC(d5b33eb8) SHA1(e05ad73986741827b7bbeac72af0a8324384bf6b) ) //2ex
 	ROM_LOAD32_BYTE( "e52-36.037", 0x000001, 0x80000, CRC(f3f3fabd) SHA1(4f88080091af2208d671c491284d992b5036908c) ) //2ex
@@ -1717,13 +1864,13 @@ ROM_START( dendeg2x )
 	ROM_LOAD( "e52-11.020",  0x0c00000, 0x200000, CRC(1bc22680) SHA1(1f71db88d6df3b4bdf090b77bc83a67906bb31da) )
 	ROM_LOAD( "e52-12.021",  0x0e00000, 0x200000, CRC(a8bb91c5) SHA1(959a9fedb7839e1e4e7658d920bd5da4fd8cae48) )
 
-	ROM_REGION( 0x40000, "user3", 0 )		/* train board, OKI6295 sound samples */
+	ROM_REGION( 0x40000, "oki", 0 )		/* train board, OKI6295 sound samples */
 	ROM_LOAD( "e35-28.trn",  0x000000, 0x040000, CRC(d1b571c1) SHA1(cac7d3f0285544fe36b8b744edfbac0190cdecab) )
 
 	ROM_REGION16_BE( 0x1000000, "ensoniq.0", ROMREGION_ERASE00  )
 	ROM_LOAD16_BYTE( "e52-21.032",  0x000000, 0x200000, CRC(ba58081d) SHA1(bcb6c8781191d48f906ed404a3e7388097a64781) )
 	ROM_LOAD16_BYTE( "e52-22.033",  0x400000, 0x200000, CRC(dda281b1) SHA1(4851a6bf7902548c5033090a0e5c15f74c00ef58) )
-	ROM_LOAD16_BYTE( "e52-23.034",  0x800000, 0x200000, CRC(ebe2dcef) SHA1(16ae41e0f3bb242cbc2922f53cacbd99961a3f97) ) // same as e35-19.034 from dendeg
+	ROM_LOAD16_BYTE( "e52-23.034",  0x800000, 0x200000, CRC(ebe2dcef) SHA1(16ae41e0f3bb242cbc2922f53cacbd99961a3f97) ) // same as e35-19.034 from dendego
 	ROM_LOAD16_BYTE( "e52-24.035",  0xc00000, 0x200000, CRC(a9a678da) SHA1(b980ae644ef0312acd63b017028af9bf2b084c29) )
 ROM_END
 
@@ -1799,6 +1946,9 @@ ROM_START( dangcurv )
 	ROM_REGION( 0x00080, "user2", 0 )		/* eeprom */
 	ROM_FILL( 0x0000, 0x0080, 0 )
 
+	ROM_REGION( 0x2000, "dsprom", ROMREGION_ERASE00 ) /* this almost likely uses an internal ROM :/ */
+	ROM_LOAD( "tms320lc51", 0x0000, 0x2000, NO_DUMP )
+
 	ROM_REGION( 0x1800000, "gfx1", 0 )
 	ROM_LOAD32_WORD( "e09-05.009",  0x0800002, 0x200000, CRC(a948782f) SHA1(2a2b0d2955e036ddf424c54131435a20dbba3dd4) )
 	ROM_LOAD32_WORD( "e09-13.022",  0x0800000, 0x200000, CRC(985859e2) SHA1(8af9a73eba2151a5ef60799682fe667663a42743) )
@@ -1827,12 +1977,12 @@ ROM_START( dangcurv )
 ROM_END
 
 
-GAME( 1996, dendeg,   0,       taitojc, dendeg,   taitojc,  ROT0, "Taito", "Densya De Go (Japan)", GAME_NOT_WORKING )
-GAME( 1996, dendegx,  dendeg,  taitojc, dendeg,   taitojc,  ROT0, "Taito", "Densya De Go Ex (Japan)", GAME_NOT_WORKING )
-GAME( 1998, dendeg2,  0,       taitojc, dendeg,   taitojc,  ROT0, "Taito", "Densya De Go 2 (Japan)", GAME_NOT_WORKING )
-GAME( 1998, dendeg2x, dendeg2, taitojc, dendeg,   taitojc,  ROT0, "Taito", "Densya De Go 2 Ex (Japan)", GAME_NOT_WORKING )
-GAME( 1996, sidebs,   0,       taitojc, sidebs,   taitojc,  ROT0, "Taito", "Side By Side (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sidebs2,  0,       taitojc, sidebs,   taitojc,  ROT0, "Taito", "Side By Side 2 (North/South America)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sidebs2j, sidebs2, taitojc, sidebs,   taitojc,  ROT0, "Taito", "Side By Side 2 (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, landgear, 0,       taitojc, landgear, taitojc,  ROT0, "Taito", "Landing Gear", GAME_NOT_WORKING )
-GAME( 1995, dangcurv, 0,       taitojc, dangcurv, taitojc,  ROT0, "Taito", "Dangerous Curves", GAME_NOT_WORKING )
+GAME( 1996, dendego,   0,       dendego, dendego,  taitojc,  ROT0, "Taito", "Densha de GO!", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, dendegox,  dendego, dendego, dendego,  taitojc,  ROT0, "Taito", "Densha de GO! EX", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, dendego2,  0,       dendego, dendego,  dendego2, ROT0, "Taito", "Densha de GO! 2 Kousoku-hen", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, dendego23k,dendego2,dendego, dendego,  dendego2, ROT0, "Taito", "Densha de GO! 2 Kousoku-hen 3000-bandai", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, sidebs,    0,       taitojc, sidebs,   taitojc,  ROT0, "Taito", "Side by Side (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sidebs2,   0,       taitojc, sidebs,   taitojc,  ROT0, "Taito", "Side by Side 2 (North/South America)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sidebs2j,  sidebs2, taitojc, sidebs,   taitojc,  ROT0, "Taito", "Side by Side 2 (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, landgear,  0,       taitojc, landgear, taitojc,  ROT0, "Taito", "Landing Gear", GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, dangcurv,  0,       taitojc, dangcurv, dangcurv, ROT0, "Taito", "Dangerous Curves", GAME_NOT_WORKING )
