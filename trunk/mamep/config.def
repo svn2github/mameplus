@@ -24,6 +24,10 @@ USE_HISCORE=1
 #
 ifeq ($(TARGET),$(SUBTARGET))
 MAMEMESS=1
+else
+ifeq ($(SUBTARGET),mess)
+MAMEMESS=1
+endif
 endif
 
 #

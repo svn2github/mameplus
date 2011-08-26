@@ -293,7 +293,6 @@ static int CLIB_DECL menu_input_compare_items(const void *i1, const void *i2);
 static void menu_input_populate_and_sort(running_machine &machine, ui_menu *menu, input_item_data *itemlist, input_menu_state *menustate);
 static void menu_settings_dip_switches(running_machine &machine, ui_menu *menu, void *parameter, void *state);
 static void menu_settings_driver_config(running_machine &machine, ui_menu *menu, void *parameter, void *state);
-static void menu_settings_categories(running_machine &machine, ui_menu *menu, void *parameter, void *state);
 static void menu_settings_common(running_machine &machine, ui_menu *menu, void *state, UINT32 type);
 static void menu_settings_populate(running_machine &machine, ui_menu *menu, settings_menu_state *menustate, UINT32 type);
 static void menu_analog(running_machine &machine, ui_menu *menu, void *parameter, void *state);
