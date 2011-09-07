@@ -18,7 +18,7 @@ struct floppy_interface
 {
 	devcb_write_line 				m_out_idx_cb;  /* index */
 
-	const struct floppy_format_def *m_formats;
+	const floppy_format_type 		*m_formats;
 	const char *					m_interface;
 	device_image_display_info_func	m_device_displayinfo;
 	device_image_load_func			m_load_func;
@@ -32,6 +32,10 @@ class floppy_image_device :	public device_t,
 							public device_image_interface
 {
 public:
+	typedef delegate<int (floppy_image_device *)> load_cb;
+	typedef delegate<void (floppy_image_device *)> unload_cb;
+	typedef delegate<void (floppy_image_device *, int)> index_pulse_cb;
+
 	// construction/destruction
 	floppy_image_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 	virtual ~floppy_image_device();
@@ -53,7 +57,12 @@ public:
 	virtual const char *file_extensions() const { return m_extension_list; }
 	virtual const option_guide *create_option_guide() const { return NULL; }
 
-	UINT8* get_buffer() { return m_image->get_buffer(m_cyl,m_ss ^ 1); }
+	void setup_load_cb(load_cb cb);
+	void setup_unload_cb(unload_cb cb);
+	void setup_index_pulse_cb(index_pulse_cb cb);
+
+	UINT32* get_buffer() { return m_image->get_buffer(m_cyl,m_ss ^ 1); }
+	UINT32 get_len() { return m_image->get_track_size(m_cyl,m_ss ^ 1); }
 	
 	void mon_w(int state);
 	void index_func();
@@ -76,6 +85,7 @@ protected:
 	image_device_format m_format;
 	floppy_image 		*m_image;
 	char				m_extension_list[256];
+	floppy_image_format_t *m_fif_list;
 	
 	/* index pulse timer */
 	emu_timer	*m_index_timer;
@@ -99,6 +109,10 @@ protected:
 	
 	int m_cyl;
 	devcb_resolved_write_line m_out_idx_func;
+
+	load_cb cur_load_cb;
+	unload_cb cur_unload_cb;
+	index_pulse_cb cur_index_pulse_cb;
 };
 
 // device type definition

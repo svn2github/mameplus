@@ -167,8 +167,15 @@ ROM_START( ep_itjb3 )
 	EP_ITJB3_SOUND
 ROM_END
 
+ROM_START( ep_itj3a )
+	ROM_REGION( 0x200000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "itj3_dr.g0", 0x000000, 0x020000, CRC(1e62e440) SHA1(f7300a786efdb33d08aaa4348d93b8dd9707cbd2) )
+	ROM_LOAD16_BYTE( "itj3_dr.g1", 0x000001, 0x020000, CRC(93086180) SHA1(e17647ebbe613fd830ad17d455840882e797f54a) )
+	ROM_LOAD16_BYTE( "itj3_dr.g2", 0x040000, 0x020000, CRC(5a736057) SHA1(92c04470b204d290e7450a6dabf68ec260cb3a29) )
+	ROM_LOAD16_BYTE( "itj3_dr.g3", 0x040001, 0x020000, CRC(3c5a59a3) SHA1(a9507daa3af93f44ae829d4ce94581f0ba633c8b) )
 
-
+	EP_ITJB3_SOUND
+ROM_END
 
 #define EP_MERLN_SOUND \
 	ROM_REGION( 0x100000, "ymz", 0 ) \
@@ -406,6 +413,11 @@ ROM_START( ep_bvruc )
 	ROM_LOAD( "b_uncovr.g0", 0x0000, 0x020000, CRC(902b741f) SHA1(1f55f45a46444cfb0f91aa4f47b99d091844a19f) )
 	ROM_LOAD( "b_uncovr.go", 0x0000, 0x020000, CRC(72ff0f24) SHA1(85d232c6aa47fb55b823ad69114512e23c2a8174) )
 
+	/* don't know which roms these go with.. */
+	ROM_LOAD( "uncoverd.g2", 0x0000, 0x020000, CRC(31cfd4b2) SHA1(f215899f9de58a1d7200acfdc92e6c65a5f88c71) )
+	ROM_LOAD( "uncoverd.g3", 0x0000, 0x020000, CRC(e7ef6191) SHA1(3e0f4149b36286a6f2efd546d1c44385f2233421) )
+
+
 
 	ROM_REGION( 0x100000, "ymz", 0 )
 	ROM_LOAD( "bvunsnd.p0", 0x000000, 0x080000, CRC(422ddcd3) SHA1(fc0f5b19e32a47ab04bc76f23c2839a823dc6836) )
@@ -610,6 +622,8 @@ ROM_START( ep_grun )
 	// there appears to be an older game (maygay m1ab? hardware) of the same name, these samples MIGHT come from that.
 	ROM_LOAD( "gridrunnersound0.bin", 0x000000, 0x080000, CRC(dc8f0bbb) SHA1(a375eff2fa5d109491479e050c5267ae73f63ebc) )
 	ROM_LOAD( "gridrunnersound1.bin", 0x080000, 0x080000, CRC(d965860b) SHA1(ceaabf092777c50035baf13545a0280047d530ae) )
+	// this is verified EPOCH, but has no partner
+	ROM_LOAD( "grid run.s0", 0x0000, 0x080000, CRC(9c8938ef) SHA1(f6bc299097c64984cb8356d62bf935582b86d6bc) )
 ROM_END
 
 
@@ -774,6 +788,12 @@ ROM_START( ep_spook )
 	ROM_LOAD16_BYTE( "spky1-3p.p1", 0x000000, 0x020000, CRC(b6a21486) SHA1(15ddbef273d22fa899e95eba12dc9562f0e3cfa6) )
 	ROM_LOAD16_BYTE( "spky1-3p.p2", 0x000000, 0x020000, CRC(2b1235e9) SHA1(7046ee9db5fbbffab345d79e2f816516337f26be) )
 	ROM_LOAD16_BYTE( "spky1-3p.p3", 0x000000, 0x020000, CRC(4ad25dff) SHA1(6b2b96493ed7c1aff7463476a47094ed7e66c3fd) )
+
+	ROM_LOAD16_BYTE( "s_hollow.g0", 0x0000, 0x020000, CRC(449b03e1) SHA1(611c5b1d6aa68ebd622c10ecfcb109745e851744) )
+	ROM_LOAD16_BYTE( "s_hollow.g1", 0x0000, 0x020000, CRC(f09e8ad5) SHA1(7586a10429345a73d8853ee5302efadb27c6bb9c) )
+	ROM_LOAD16_BYTE( "s_hollow.g2", 0x0000, 0x020000, CRC(3b6103bc) SHA1(5c1576362910e587a63571150252bdd35193b5f9) )
+	ROM_LOAD16_BYTE( "s_hollow.g3", 0x0000, 0x020000, CRC(6ac5b510) SHA1(a6a20da671b52f834d8b31322e438121ec002b3e) )
+
 
 	ROM_REGION( 0x100000, "ymz", 0 )
 	ROM_LOAD( "spkysnd.p0", 0x000000, 0x080000, CRC(005a1383) SHA1(92d3400a89906c990ba2ab46a70ed1e3453e50fc) )
@@ -1138,7 +1158,7 @@ ROM_START( ep_mario )
 	ROM_LOAD16_BYTE( "sa990033.g1", 0x00001, 0x020000, CRC(3e0ac4bb) SHA1(99ead4110f5a90a9a5f41481f528ccb234a1ebf2) )
 	ROM_LOAD16_BYTE( "sa990034.g0", 0x00000, 0x020000, CRC(0bba0aa7) SHA1(21850b73fa8001a31ebea2d524396c0e62e1c0ce) )
 	ROM_LOAD16_BYTE( "sa990034.g1", 0x00001, 0x020000, CRC(802cd278) SHA1(45d547790093cb98890979220b1d4efc37c200c4) )
-	
+
 	ROM_LOAD16_BYTE( "15smg0", 0x00000, 0x020000, CRC(e66591c1) SHA1(e8c9b8ca3634d1a0847f9b243344a3bc6f2c9719) )
 	ROM_LOAD16_BYTE( "15smg1", 0x00001, 0x020000, CRC(8a8f8b5d) SHA1(850a72917046b94a800ade94d097e8262b3a49e7) )
 
@@ -1710,14 +1730,20 @@ ROM_END
 
 ROM_START( ep_fortg )
 	ROM_REGION( 0x200000, "maincpu", 0 )
-	ROM_LOAD16_BYTE( "i01nfg35.g0", 0x000000, 0x020000, CRC(99fd5271) SHA1(331ae4edafb13caae93a2a4e3f9bc53a56a081fa) )
-	ROM_LOAD16_BYTE( "i01nfg35.g1", 0x000001, 0x020000, CRC(ce7012d0) SHA1(b2496ee23a135920bceab5a2b8fbbc5d06ffcaa2) )
+	ROM_LOAD16_BYTE( "f_n_gl.g0", 0x000000, 0x020000, CRC(ea112032) SHA1(2e06447058f5d697fc4263348106342faf9c41ab) )
+	ROM_LOAD16_BYTE( "f_n_gl.g1", 0x000001, 0x020000, CRC(c35cbb80) SHA1(401e81a8ec2c23b3494f4603a4f9f6fb5f83c4dd) )
 
 	ROM_REGION( 0x080000, "altrevs", 0 ) /* split into clones later */
+	ROM_LOAD16_BYTE( "i01nfg35.g0", 0x000000, 0x020000, CRC(99fd5271) SHA1(331ae4edafb13caae93a2a4e3f9bc53a56a081fa) )
+	ROM_LOAD16_BYTE( "i01nfg35.g1", 0x000001, 0x020000, CRC(ce7012d0) SHA1(b2496ee23a135920bceab5a2b8fbbc5d06ffcaa2) )
 	ROM_LOAD16_BYTE( "i01pfg36.g0", 0x000000, 0x020000, CRC(99fd5271) SHA1(331ae4edafb13caae93a2a4e3f9bc53a56a081fa) )
 	ROM_LOAD16_BYTE( "i01pfg36.g1", 0x000000, 0x020000, CRC(25ee46e8) SHA1(44f86e9fad5ecf22a02d124b9792828f4b0e0791) )
-	MISSING_SOUND
+
+	ROM_REGION( 0x100000, "ymz", 0 )
+	ROM_LOAD( "f_n_g.s0", 0x000000, 0x080000, CRC(e257502d) SHA1(5be9ea39299582c0c68feeb9537d887c7562b293) )
+	ROM_LOAD( "f_n_g.s1", 0x080000, 0x080000, CRC(87e2f4bd) SHA1(b515b294384dbfa24bf3d7a561a572aa9c041831) )
 ROM_END
+
 
 
 
@@ -1881,6 +1907,9 @@ ROM_START( ep_geclb )
 	ROM_REGION( 0x080000, "altrevs", 0 ) /* split into clones later */
 	ROM_LOAD16_BYTE( "sc990032.g0", 0x000000, 0x020000, CRC(1077d58d) SHA1(734ea53b89118c030e0af2dbaddd1dbc40dbbe24) )
 	ROM_LOAD16_BYTE( "sc990032.g1", 0x000000, 0x020000, CRC(e4c8384f) SHA1(e62f876d8c1943fb5b6f8bd68ba52716a15383aa) )
+	ROM_LOAD16_BYTE( "gesccl.g0", 0x00000, 0x020000, CRC(98b4a0c1) SHA1(41810bc3e9da98573e89b7e474623494bf91eb37) )
+	ROM_LOAD16_BYTE( "gesccl.g1", 0x00001, 0x020000, CRC(8a38fa1b) SHA1(7cb29582a6ff72dd05dabbd8831bb5ddda3b7fbc) )
+
 	MISSING_SOUND
 ROM_END
 
@@ -2264,6 +2293,15 @@ ROM_START( ep_ijob )
 ROM_END
 
 
+ROM_START( ep_ijoba )
+	ROM_REGION( 0x200000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "i_job.g0", 0x000000, 0x020000, CRC(d3133b25) SHA1(b30268ab21a9e0c7193ae697710ff37d27af0a5b) )
+	ROM_LOAD16_BYTE( "i_job.g1", 0x000001, 0x020000, CRC(0765b48b) SHA1(32eaa458e7f693c7bbbed94342f5f78906137c49) )
+
+	ROM_REGION( 0x100000, "ymz", 0 )
+	ROM_LOAD( "it_job.s1", 0x000000, 0x080000, CRC(77ea2225) SHA1(fb02bccf4555797b60871070821afe2162be26c2) )
+	ROM_LOAD( "it_job.s2", 0x080000, 0x080000, CRC(b6f86703) SHA1(f09f9d88132919ca24fc1ed7094b5b22c1136eb8) )
+ROM_END
 
 
 
@@ -2772,6 +2810,8 @@ ROM_START( ep_react )
 	ROM_LOAD16_BYTE( "i00pre19.g1", 0x000000, 0x020000, CRC(98cbedd7) SHA1(7392970cadc7ee8a2b7a037f1ae9015e6ea85ed1) )
 	ROM_LOAD16_BYTE( "i00pre21.g0", 0x000000, 0x020000, CRC(b322e0ac) SHA1(fed9906fead45a4b4759fc6740fbc4437914e79c) )
 	ROM_LOAD16_BYTE( "i00pre21.g1", 0x000000, 0x020000, CRC(948643e6) SHA1(0aa32e6913e1382f051fa10506b1634695d55a7e) )
+	ROM_LOAD16_BYTE( "reactor.g0", 0x0000, 0x020000, CRC(b3e1bb2c) SHA1(41a11dd0dc6fb2c2b2ef01fa7afc56333c2b4506) )
+	ROM_LOAD16_BYTE( "reactor.g1", 0x0000, 0x020000, CRC(076973ad) SHA1(479ea988f82797635f5c3f51fdd15663f7e05be1) )
 	MISSING_SOUND
 ROM_END
 
@@ -3201,6 +3241,9 @@ ROM_START( ep_snw )
 	ROM_LOAD16_BYTE( "csnw011.g1", 0x000000, 0x020000, CRC(9be24de9) SHA1(d392430c195f4e2624a728c8ac958e47d75bc165) )
 	ROM_LOAD16_BYTE( "csnw012.g0", 0x000000, 0x020000, CRC(c55eff74) SHA1(4a89d0471aebdd7a28428f43f37551d8cf05ab8a) )
 	ROM_LOAD16_BYTE( "csnw012.g1", 0x000000, 0x020000, CRC(b00e9a6d) SHA1(6886e6295d0d2d78ccb4748aa9c63c23a9614f15) )
+	ROM_LOAD16_BYTE( "snw.g0", 0x00000, 0x020000, CRC(29a7f942) SHA1(766aa01a28eda1f4201c1a891010684758401216) )
+	ROM_LOAD16_BYTE( "snw.g1", 0x00001, 0x020000, CRC(549a0181) SHA1(41064c19fdf4ac270a4a904a32878ae541c9d593) )
+
 	MISSING_SOUND
 ROM_END
 
@@ -3326,6 +3369,12 @@ ROM_START( ep_tp )
 	ROM_LOAD16_BYTE( "msa02163.g1", 0x000000, 0x020000, CRC(4e098f03) SHA1(f031560549346e8091ed42e756c1c5c5d3d787e0) )
 	ROM_LOAD16_BYTE( "msa02163.g2", 0x000000, 0x020000, CRC(f000b66d) SHA1(f4d5662c1ad0f8d43f2836b0655a3d9c7b0d4e63) )
 	ROM_LOAD16_BYTE( "msa02163.g3", 0x000000, 0x020000, CRC(61d070bf) SHA1(4a9e38acf5e16a5b225c53e201a6cb7ee61fbca6) )
+
+	ROM_LOAD( "triv_pur.g0", 0x0000, 0x020000, CRC(3197e48e) SHA1(ae4328df20f27e0edf35ed5d872ad452c23e0094) )
+	ROM_LOAD( "triv_pur.g1", 0x0000, 0x020000, CRC(7d63c3bd) SHA1(6625361a549baed733e7d0d2b1eb87e417a73fc6) )
+	ROM_LOAD( "triv_pur.g2", 0x0000, 0x020000, CRC(aca47c0c) SHA1(c23926b98439cac5d7982a9ca7767b9e79ba096e) )
+	ROM_LOAD( "triv_pur.g3", 0x0000, 0x020000, CRC(e2a446cf) SHA1(9327f1fe39b8d012928892d1ebec9a6a1405df2a) )
+
 	MISSING_SOUND
 ROM_END
 
@@ -3401,6 +3450,12 @@ ROM_START( ep_vipjv )
 	ROM_LOAD16_BYTE( "jive22p.p1", 0x000000, 0x020000, CRC(7ade44e3) SHA1(254d7bad5aa19366f2111117cd2b6803d0a9be2e) )
 	ROM_LOAD16_BYTE( "jive22p.p2", 0x000000, 0x020000, CRC(d069946b) SHA1(76053c5292c361753e9cd9fb8961e7825f79eea5) )
 	ROM_LOAD16_BYTE( "jive22p.p3", 0x000000, 0x020000, CRC(7ca29581) SHA1(ada2432e4a06799ed2a5c23d1d32a58fa69d8b4b) )
+
+	ROM_LOAD( "viper_j.p0", 0x0000, 0x020000, CRC(fdad86da) SHA1(f0e0d9a780fbd4742810b5a3041b565a55811af0) )
+	ROM_LOAD( "viper_j.p1", 0x0000, 0x020000, CRC(c1708c70) SHA1(ccde16e0be806d90f4a5a5f063cfd9f8b156bb3b) )
+	ROM_LOAD( "viper_j.p2", 0x0000, 0x020000, CRC(20846c02) SHA1(ac11a4e4368f8cad5655b6903755616e5a46f8dd) )
+	ROM_LOAD( "viper_j.p3", 0x0000, 0x020000, CRC(68b217e4) SHA1(29ec2cd517a354d25cd5ec306f597ce15ae64883) )
+
 	MISSING_SOUND
 ROM_END
 
@@ -4359,7 +4414,7 @@ ROM_START( ep_makmv )
 	/* code doesn't end.. missing other roms? */
 
 	ROM_REGION( 0x200000, "altrevs", 0 ) /* split into clones later */
-//	ROM_LOAD16_BYTE( "make1-1n.p1", 0x00000, 0x020000, CRC(09323ee2) SHA1(f853d6d27b94cb7c2a19eae1868eed0ea1541b69) ) // this is wrong, can't be the same as p2!
+//  ROM_LOAD16_BYTE( "make1-1n.p1", 0x00000, 0x020000, CRC(09323ee2) SHA1(f853d6d27b94cb7c2a19eae1868eed0ea1541b69) ) // this is wrong, can't be the same as p2!
 	ROM_LOAD16_BYTE( "make1-1n.p2", 0x00001, 0x020000, CRC(09323ee2) SHA1(f853d6d27b94cb7c2a19eae1868eed0ea1541b69) )
 
 	MISSING_SOUND
@@ -4368,15 +4423,20 @@ ROM_END
 
 ROM_START( ep_lug )
 	ROM_REGION( 0x200000, "maincpu", 0 )
-	ROM_LOAD16_BYTE( "lond09g0", 0x00000, 0x020000, CRC(2d3343e0) SHA1(7618ab08c23f8f0e748a7b85ec3c7a52f1f64602) )
-	ROM_LOAD16_BYTE( "lond09g1", 0x00001, 0x020000, CRC(0f36cfbb) SHA1(61c9df9247ede89734f24a2838c49f5e44884993) )
+	ROM_LOAD16_BYTE( "undergr.g0", 0x00000, 0x020000, CRC(ad34ecc5) SHA1(b0122ed340e76b52529ec12b237e93773674d314) )
+	ROM_LOAD16_BYTE( "undergr.g1", 0x00001, 0x020000, CRC(e93d5f7e) SHA1(52fa3b57fc8b1143a43fa3d61dbfccd68fd7f200) )
 
 	ROM_REGION( 0x200000, "altrevs", 0 ) /* split into clones later */
+	ROM_LOAD16_BYTE( "lond09g0", 0x00000, 0x020000, CRC(2d3343e0) SHA1(7618ab08c23f8f0e748a7b85ec3c7a52f1f64602) )
+	ROM_LOAD16_BYTE( "lond09g1", 0x00001, 0x020000, CRC(0f36cfbb) SHA1(61c9df9247ede89734f24a2838c49f5e44884993) )
 	ROM_LOAD16_BYTE( "msa02176.g0", 0x00000, 0x020000, CRC(12c5414a) SHA1(a570093adb67da2c7a3bdab38a419848ee188cdc) )
 	ROM_LOAD16_BYTE( "msa02176.g1", 0x00001, 0x020000, CRC(c2aae470) SHA1(51e0523b68b0c45e80a7553ae5cadc74b7497b19) )
 	ROM_LOAD16_BYTE( "msa02177.g0", 0x00000, 0x020000, CRC(a97b9047) SHA1(362ad27401fc2ae889761349af7dcf403318a6b6) )
 	ROM_LOAD16_BYTE( "msa02177.g1", 0x00001, 0x020000, CRC(8f0d6b71) SHA1(83d81c528e72d5c0a754e47b0f0cbde7156ad908) )
-	MISSING_SOUND
+
+	ROM_REGION( 0x200000, "ymz", 0 )
+	ROM_LOAD( "udrgnd.sn0", 0x0000, 0x080000, CRC(743e3936) SHA1(89d34a36c0506ee690011951713c8bc1844955cf) )
+	ROM_LOAD( "udrgnd.s1", 0x080000, 0x080000, CRC(db9aa3db) SHA1(5688e21db228d0d7d195fd70fb1b32d75d350a54) )
 ROM_END
 
 ROM_START( ep_crzbn )
@@ -4399,15 +4459,55 @@ ROM_START( ep_cascz )
 	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_BYTE( "ccst0-2p.p0", 0x00000, 0x020000, CRC(b95f9d85) SHA1(00f9f568f28ffaff6bea0b8c06afb69459fff1de) )
 	ROM_LOAD16_BYTE( "ccst0-2p.p1", 0x00001, 0x020000, CRC(d348b0be) SHA1(ea41d845d92886634eba43e304acd457cba89213) )
+
+	ROM_REGION( 0x200000, "altrevs", 0 ) /* split into clones later */
+	ROM_LOAD16_BYTE( "casin.cra",  0x000000, 0x020000, CRC(b4f8c41d) SHA1(bb4d9b8ce807220a6bdd484e65276e4b08eb9640) )
+	ROM_LOAD16_BYTE( "c_crazy.p1", 0x000001, 0x020000, CRC(dc523e26) SHA1(77170d5b4b693c52bd7602e332ff15bf6a78678d) )
+	ROM_LOAD16_BYTE( "c_crazy.p2", 0x040000, 0x020000, CRC(3a6b3615) SHA1(b39d85090c816343cf1220dd0a54e3f7f4c6ad7e) )
+	ROM_LOAD16_BYTE( "c_crazy.p3", 0x040001, 0x020000, CRC(99f2f8be) SHA1(bcd8740c626bfb08094f31ffb9a9f0f3f03f1025) )
+
 	MISSING_SOUND
 ROM_END
 
+
+ROM_START( ep_wside )
+	ROM_REGION( 0x200000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "w_side.g0", 0x000000, 0x020000, CRC(30cff210) SHA1(e22578d0c86096b6b021e1b8a00b05cd3e734a22) )
+	ROM_LOAD16_BYTE( "w_side.g1", 0x000001, 0x020000, CRC(c8908cd4) SHA1(67e87f45d6df61161307ca3e8f378f6b8b00a604) )
+	ROM_LOAD16_BYTE( "w_side.g2", 0x040000, 0x020000, CRC(d23e430e) SHA1(76885d331fad3a916a74ef770dcc604e8532b0fb) )
+	ROM_LOAD16_BYTE( "w_side.g3", 0x040001, 0x020000, CRC(fbb09673) SHA1(5d0febf5ce46cb791cd4246a14f8c47badedb598) )
+
+	ROM_REGION( 0x200000, "altrevs", 0 )
+	ROM_LOAD16_BYTE( "wildside.g0", 0x0000, 0x018000, BAD_DUMP CRC(040e5f1d) SHA1(e5bade050871841ad13c19ff39a84918549cd699) )
+	MISSING_SOUND
+ROM_END
+
+ROM_START( ep_goldf )
+	ROM_REGION( 0x200000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "gfev_arc.g0", 0x00000, 0x020000, CRC(4a9e8304) SHA1(a28938702fdb760185b42a0d6e24bfdb3df4d757) )
+	ROM_LOAD16_BYTE( "gfev_arc.g1", 0x00001, 0x020000, CRC(96415731) SHA1(3e40358914af0efe1237bd83a48f9e3323e61dea) )
+
+//  ROM_REGION( 0x200000, "altrevs", 0 )
+//  ROM_LOAD16_BYTE( "gold_fev.g0", 0x00000, 0x020000, CRC(4a9e8304) SHA1(a28938702fdb760185b42a0d6e24bfdb3df4d757) )
+//  ROM_LOAD16_BYTE( "god_fev.g1",  0x00001, 0x020000, CRC(96415731) SHA1(3e40358914af0efe1237bd83a48f9e3323e61dea) )
+	MISSING_SOUND
+ROM_END
+
+ROM_START( ep_imj )
+	ROM_REGION( 0x200000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "imajacpo.g0", 0x000000, 0x020000, CRC(58284716) SHA1(526332ac2fc949c0cb7a811b0ef09d9885f1ba65) )
+	ROM_LOAD16_BYTE( "imajacpo.g1", 0x000001, 0x020000, CRC(fdd35c2d) SHA1(ac2d118262b3b0146bedc9de578900937d566cc9) )
+	ROM_LOAD16_BYTE( "imajacpo.g2", 0x040000, 0x020000, CRC(431474b7) SHA1(f2d5b88ba5c2e5e55f795e1750c99f203d4d761c) )
+	ROM_LOAD16_BYTE( "imajacpo.g3", 0x040001, 0x020000, CRC(1396cb7e) SHA1(c7efbdca676265412dbd6403c6f5b2f7880453a4) )
+	MISSING_SOUND
+ROM_END
 
 /* These have sound roms dumped */
 GAME( 1999, ep_simp,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "The Simpsons (Maygay) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 // roms below don't contain epoch in the header, but appear to be anyway
 GAME( 199?, ep_dblim	,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Double Impact (Maygay - Impulse) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 GAME( 199?, ep_itjb3	,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Italian Job 3 (Maygay) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
+GAME( 199?, ep_itj3a	,  ep_itjb3, maygayep,  maygayep,  0,  ROT0, "Maygay",        "Italian Job 3 (Maygay) (EPOCH, Set 2)",  GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 GAME( 199?, ep_merln	,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Merlin's Magic (Maygay) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 GAME( 199?, ep_wipeo	,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Wipeout (Maygay) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 
@@ -4478,7 +4578,8 @@ GAME( 199?, ep_icebg	,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",     
 GAME( 199?, ep_inca		,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Inca Dinka Do (Maygay - Extreme) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 GAME( 199?, ep_itjb2	,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Italian Job 2 (Maygay) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 GAME( 199?, ep_ijcl		,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Italian Job Club (Maygay) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
-GAME( 199?, ep_ijob		,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Italian Job (Maygay) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
+GAME( 2001, ep_ijob		,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Italian Job (Maygay) (EPOCH, v2.1)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
+GAME( 2001, ep_ijoba	,  ep_ijob,  maygayep,  maygayep,  0,  ROT0, "Maygay",        "Italian Job (Maygay) (EPOCH, v1.1)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 GAME( 199?, ep_jakbn	,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Jackpot & The Beanstreak (Extreme) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 GAME( 199?, ep_jsttt	,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Just The Ticket (Maygay) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 GAME( 199?, ep_loadd	,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Loaded (Maygay) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
@@ -4599,4 +4700,7 @@ GAME( 199?, ep_makmv	,  0,		 maygayep,  maygayep,  0,  ROT0, "Global",		  "Make 
 GAME( 199?, ep_lug		,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "London Underground (Maygay) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 GAME( 199?, ep_crzbn	,  0,        maygayep,  maygayep,  0,  ROT0, "Maygay",        "Crazy Bingo (Maygay) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 GAME( 199?, ep_cascz	,  0,        maygayep,  maygayep,  0,  ROT0, "Global",        "Casino Crazy (Global) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
+GAME( 199?, ep_wside	,  0,        maygayep,  maygayep,  0,  ROT0, "Global",        "Wildside (Global) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
+GAME( 199?, ep_goldf	,  0,        maygayep,  maygayep,  0,  ROT0, "Impulse",       "Gold Fever (Impulse) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
+GAME( 199?, ep_imj		,  0,        maygayep,  maygayep,  0,  ROT0, "Global",        "I'm A Jackpot (Global) (EPOCH)",        GAME_NO_SOUND | GAME_NOT_WORKING | GAME_MECHANICAL )
 

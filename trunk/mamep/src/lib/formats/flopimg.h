@@ -222,12 +222,22 @@ class floppy_image;
 class floppy_image_format_t
 {
 public:
-	floppy_image_format_t(const char *name,const char *extensions,const char *description,const char *param_guidelines);
+	floppy_image_format_t();
 	virtual ~floppy_image_format_t();
-	
+
 	virtual int identify(floppy_image *image) = 0;
 	virtual bool load(floppy_image *image) = 0;
-protected:	
+	virtual bool save(floppy_image *image);
+
+	virtual const char *name() const = 0;
+	virtual const char *description() const = 0;
+	virtual const char *extensions() const = 0;
+	virtual bool supports_save() const = 0;
+
+	floppy_image_format_t *next;
+	void append(floppy_image_format_t *_next);
+		
+protected:
 	// Struct designed for easy track data description
 	// Optional, you can always do things by hand, but useful nevertheless
 	// A vector of these structures describes one track.
@@ -257,7 +267,7 @@ protected:
 		SECTOR_DATA_O,     // Sector data to mfm-encode, odd bits only, which in p1, -1 for the current one per the sector id
 		SECTOR_DATA_E,     // Sector data to mfm-encode, even bits only, which in p1, -1 for the current one per the sector id
 
-		CRC_CCITT_START,   // Start a CCITT CRC calculation, with the usual x^16 + x^12 + x^5 + 1 (11021) polynomial, p1 = crc id, p2 = init value
+		CRC_CCITT_START,   // Start a CCITT CRC calculation, with the usual x^16 + x^12 + x^5 + 1 (11021) polynomial, p1 = crc id
 		CRC_AMIGA_START,   // Start an amiga checksum calculation, p1 = crc id
 		CRC_END,           // End the checksum, p1 = crc id
 		CRC,               // Write a checksum in the apporpriate format, p1 = crc id
@@ -271,18 +281,15 @@ protected:
 		int size;          // Sector size, int bytes
 		const UINT8 *data; // Sector data
 	};
-		
-	
+
+
 	// Generate one track according to the description vector
 	// "sect" is a vector indexed by sector id
 	// "track_size" is in _cells_, i.e. 100000 for a usual 2us-per-cell track at 300rpm
 
-	void generate_track(const desc_e *desc, UINT8 track, UINT8 head, const desc_s *sect, int sect_count, int track_size, UINT8 *buffer);
-
-	const char *m_name;
-	const char *m_extensions;
-	const char *m_description;
-	const char *m_param_guidelines;
+	void generate_track(const desc_e *desc, UINT8 track, UINT8 head, const desc_s *sect, int sect_count, int track_size, floppy_image *image);
+	void generate_track_from_bitstream(UINT8 track, UINT8 head, const UINT8 *trackbuf, int track_size, floppy_image *image);
+	void normalize_times(UINT32 *buffer, int bitlen);
 
 private:
 	enum { CRC_NONE, CRC_AMIGA, CRC_CCITT };
@@ -308,83 +315,84 @@ private:
 	void collect_crcs(const desc_e *desc, gen_crc_info *crcs);
 };
 
-
 // a device_type is simply a pointer to its alloc function
-typedef floppy_image_format_t *(*floppy_format_type)(const char *name,const char *extensions,const char *description,const char *param_guidelines);
+typedef floppy_image_format_t *(*floppy_format_type)();
 
 // this template function creates a stub which constructs a image format
 template<class _FormatClass>
-floppy_image_format_t *floppy_image_format_creator(const char *name,const char *extensions,const char *description,const char *param_guidelines)
+floppy_image_format_t *floppy_image_format_creator()
 {
-	return new _FormatClass(name, extensions, description, param_guidelines);
+	return new _FormatClass();
 }
 
-struct floppy_format_def
-{
-	const char *name;
-	const char *extensions;
-	const char *description;
-	const floppy_format_type type;
-	const char *param_guidelines;
-};
-
-#define FLOPPY_OPTIONS_NAME(name)	floppyoptions_##name
-
-#define FLOPPY_OPTIONS_START(name)												\
-	const struct floppy_format_def floppyoptions_##name[] =								\
-	{																			\
-
-#define FLOPPY_OPTIONS_END0 \
-		{ NULL, NULL, NULL, NULL, NULL }							\
-	};
-
-#define FLOPPY_OPTIONS_EXTERN(name)												\
-	extern const struct floppy_format_def floppyoptions_##name[]							\
-
-#define FLOPPY_OPTION(name, extensions_, description_, type_, ranges_)\
-	{ #name, extensions_, description_, type_, ranges_ },				\
-
-#define FLOPPY_OPTIONS_END													\
-	FLOPPY_OPTIONS_END0
-	
 // ======================> floppy_image
-
-#define MAX_FLOPPY_SIDES   2
-#define MAX_FLOPPY_TRACKS  84
-#define MAX_TRACK_DATA     16384
 
 // class representing floppy image
 class floppy_image
 {
 public:
+	// Internal format is close but not identical to the mfi format.
+	//
+	//
+	// Track data consists of a series of 32-bits lsb-first values
+	// representing magnetic cells.  Bits 0-27 indicate the absolute
+	// position of the start of the cell (not the size), and bits
+	// 28-31 the type.  Type can be:
+	// - 0, MG_A -> Magnetic orientation A
+	// - 1, MG_B -> Magnetic orientation B
+	// - 2, MG_N -> Non-magnetized zone (neutral)
+	// - 3, MG_D -> Damaged zone, reads as neutral but cannot be changed by writing
+	//
+	// The position is in angular units of 1/200,000,000th of a turn.
+	// The last cell implicit end position is of course 200,000,000.
+	//
+	// Unformatted tracks are encoded as zero-size.
+
+	enum {
+		TIME_MASK = 0x0fffffff,
+		MG_MASK   = 0xf0000000,
+		MG_SHIFT  = 28,
+
+		MG_A      = (0 << MG_SHIFT),
+		MG_B      = (1 << MG_SHIFT),
+		MG_N      = (2 << MG_SHIFT),
+		MG_D      = (3 << MG_SHIFT)
+	};
+
 	// construction/destruction
-	floppy_image(void *fp, const struct io_procs *procs,const struct floppy_format_def *formats);
+	floppy_image(void *fp, const struct io_procs *procs, const floppy_format_type *formats);
 	virtual ~floppy_image();
-	
+
 	void image_read(void *buffer, UINT64 offset, size_t length);
 	void image_write(const void *buffer, UINT64 offset, size_t length);
 	void image_write_filler(UINT8 filler, UINT64 offset, size_t length);
 	UINT64 image_size();
 	void close();
-	
-	void set_meta_data(UINT16 tracks, UINT8 sides, UINT16 rpm, UINT16 bitrate);
-	void set_track_size(UINT16 track, UINT8 side, UINT16 size) { m_track_size[(track << 1) + side] = size; }
-	const struct floppy_format_def *identify(int *best);
-	UINT8* get_buffer(UINT16 track, UINT8 side) { return m_native_data[(track << 1) + side]; }
-	UINT16 get_track_size(UINT16 track, UINT8 side) { return m_track_size[(track << 1) + side]; }
-	bool load(int num);
+
+	void set_meta_data(UINT16 tracks, UINT8 sides);
+	void set_track_size(UINT16 track, UINT8 side, UINT32 size) { track_size[(track << 1) + side] = size; ensure_alloc(track, side); }
+	floppy_image_format_t *identify(int *best);
+	UINT32 *get_buffer(UINT16 track, UINT8 side) { return cell_data[(track << 1) + side]; }
+	UINT32 get_track_size(UINT16 track, UINT8 side) { return track_size[(track << 1) + side]; }
 
 private:
+	enum {
+		MAX_FLOPPY_SIDES = 2,
+		MAX_FLOPPY_TRACKS = 84
+	};
+
 	void close_internal(bool close_file);
-	struct io_generic 		m_io;
-	const struct floppy_format_def *m_formats;
-	UINT16 m_tracks;
-	UINT8  m_sides;
-	UINT16 m_rpm;
-	UINT16 m_bitrate;
-	
-	UINT8 m_native_data[MAX_FLOPPY_SIDES * MAX_FLOPPY_TRACKS][MAX_TRACK_DATA];
-	UINT16 m_track_size[MAX_FLOPPY_SIDES * MAX_FLOPPY_TRACKS];
+	struct io_generic		m_io;
+	floppy_image_format_t *m_formats;
+
+	UINT16 tracks;
+	UINT8  sides;
+
+	UINT32 *cell_data[MAX_FLOPPY_SIDES * MAX_FLOPPY_TRACKS];
+	UINT32 track_size[MAX_FLOPPY_SIDES * MAX_FLOPPY_TRACKS];
+	UINT32 track_alloc_size[MAX_FLOPPY_SIDES * MAX_FLOPPY_TRACKS];
+
+	void ensure_alloc(UINT16 track, UINT8 side);
 };
 
 #endif /* FLOPIMG_H */

@@ -83,6 +83,7 @@ kf2k2plb		// 0265 (c) 2002 bootleg
 kf2k2plc		// 0265 (c) 2002 bootleg
 kf2k4pls		// bootleg of kof2002
 mslug5b			// 0268 (c) 2003 bootleg
+sthoopcd		// xxxx (c) bootleg
 
 // Neo Geo prototype
 bangbedp		// 0259 prototype
@@ -93,6 +94,7 @@ fr2ch			// 0098 hack - CD to MVS Conversion
 
 // Wii Virtual Console to MVS Conversion
 ironclad		// 0220 (c) 1996 Saurus - Wii Virtual Console to MVS Conversion
+ironclado		// 0220 (c) 1996 Saurus - Wii Virtual Console to MVS Conversion
 
 #ifndef NCP
 // Konami "Nemesis hardware" games

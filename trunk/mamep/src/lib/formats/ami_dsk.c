@@ -8,17 +8,36 @@
 
 #include "formats/ami_dsk.h"
 
-adf_format::adf_format(const char *name,const char *extensions,const char *description,const char *param_guidelines) :
-	floppy_image_format_t(name,extensions,description,param_guidelines)
+adf_format::adf_format() : floppy_image_format_t()
 {
+}
+
+const char *adf_format::name() const
+{
+	return "adf";
+}
+
+const char *adf_format::description() const
+{
+	return "Amiga ADF floppy disk image";
+}
+
+const char *adf_format::extensions() const
+{
+	return "adf";
+}
+
+bool adf_format::supports_save() const
+{
+	return false;
 }
 
 int adf_format::identify(floppy_image *image)
 {
 	UINT64 size = image->image_size();
-	if ((size == 901120) || (size == 1802240)) 
+	if ((size == 901120) || (size == 1802240))
 	{
-		return 100;
+		return 50;
 	}
 	return 0;
 }
@@ -58,14 +77,12 @@ bool adf_format::load(floppy_image *image)
 		sectors[i].size = 512;
 	}
 
-	UINT8 *mfm = NULL;
-	image->set_meta_data(80,2,300,(UINT16)253360);
+//	UINT8 *mfm = NULL;
+	image->set_meta_data(80, 2);
 	for(int track=0; track < 80; track++) {
 		for(int side=0; side < 2; side++) {
-			mfm = image->get_buffer(track,side);
-			image->set_track_size(track, side, 16384);
 			image->image_read(sectdata, (track*2 + side)*512*11, 512*11);
-			generate_track(desc, track, side, sectors, 11, 100000, mfm);
+			generate_track(desc, track, side, sectors, 11, 100000, image);
 		}
 	}
 

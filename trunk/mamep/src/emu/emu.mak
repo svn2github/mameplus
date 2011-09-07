@@ -66,6 +66,7 @@ EMUOBJS = \
 	$(EMUOBJ)/dimemory.o \
 	$(EMUOBJ)/dinvram.o \
 	$(EMUOBJ)/dirtc.o \
+	$(EMUOBJ)/diserial.o \
 	$(EMUOBJ)/dislot.o \
 	$(EMUOBJ)/disound.o \
 	$(EMUOBJ)/distate.o \
@@ -157,6 +158,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/6525tpi.o		\
 	$(EMUMACHINE)/6526cia.o		\
 	$(EMUMACHINE)/6532riot.o	\
+	$(EMUMACHINE)/6551acia.o	\
 	$(EMUMACHINE)/6821pia.o		\
 	$(EMUMACHINE)/6840ptm.o		\
 	$(EMUMACHINE)/6850acia.o	\
@@ -195,6 +197,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/i8212.o		\
 	$(EMUMACHINE)/i8214.o		\
 	$(EMUMACHINE)/i8243.o		\
+	$(EMUMACHINE)/i8251.o		\
 	$(EMUMACHINE)/i8255.o		\
 	$(EMUMACHINE)/i8355.o		\
 	$(EMUMACHINE)/idectrl.o		\
@@ -308,6 +311,7 @@ EMUIMAGEDEVOBJS = \
 	$(EMUIMAGEDEV)/harddriv.o	\
 	$(EMUIMAGEDEV)/multcart.o	\
 	$(EMUIMAGEDEV)/printer.o	\
+	$(EMUIMAGEDEV)/serial.o		\
 	$(EMUIMAGEDEV)/snapquik.o	\
 
 

@@ -33,6 +33,14 @@
  Mr Kicker is also known to exist (not dumped) on the F-E1-16-010 PCB
  that Semicom also used for Date Quiz Go Go Episode 2 game.
 
+ Undumped Semicom games on similar hardware:
+   Wivern Wings - Semicom's orginal release with alt spelling of title
+   Red Wyvern - A semi-sequel or update?
+   Toy Land Adventure (c) 2001 - PCB photo shows Hyperstone based hardware
+ Same time era, but unknown hardware:
+   Gaia The last Choice of the Earth (c) 1998 (might be Byron Future Assault type hardware)
+   Diet Family (c) 2001
+   Choice III: Joker's Dream (c) 2001
 
 *********************************************************************/
 
@@ -1346,12 +1354,14 @@ Notes:
       SW2        - PCB Reset
       *          - Empty socket for additional program ROM
 
+Version 2.7 known to exist, just not currently dumped
+
 */
 
 ROM_START( misncrft )
 	ROM_REGION16_BE( 0x100000, "user1", ROMREGION_ERASE00 ) /* Hyperstone CPU Code */
 	/* 0 - 0x80000 empty */
-	ROM_LOAD( "prg-rom2.bin", 0x80000, 0x80000, CRC(059ae8c1) SHA1(2c72fcf560166cb17cd8ad665beae302832d551c) )
+	ROM_LOAD( "prg-rom2.bin", 0x80000, 0x80000, CRC(059ae8c1) SHA1(2c72fcf560166cb17cd8ad665beae302832d551c) ) /* Version 2.4 */
 
 	ROM_REGION( 0x400000, "audiocpu", 0 )	/* i8052 code */
 	ROM_LOAD( "snd-rom2.us1", 0x00000, 0x20000, CRC(8821e5b9) SHA1(4b8df97bc61b48aa16ed411614fcd7ed939cac33) )

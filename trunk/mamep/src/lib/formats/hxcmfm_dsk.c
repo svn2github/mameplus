@@ -1,3 +1,5 @@
+#include "emu.h"
+
 #include "hxcmfm_dsk.h"
 
 #define MFM_FORMAT_HEADER	"HXCMFM"
@@ -23,14 +25,33 @@ struct MFMTRACKIMG
 	UINT16 track_number;
 	UINT8 side_number;
 	UINT32 mfmtracksize;
-	UINT32 mfmtrackoffset; 
+	UINT32 mfmtrackoffset;
 };
 
 #pragma pack()
 
-mfm_format::mfm_format(const char *name,const char *extensions,const char *description,const char *param_guidelines) :
-	floppy_image_format_t(name,extensions,description,param_guidelines)
+mfm_format::mfm_format() : floppy_image_format_t()
 {
+}
+
+const char *mfm_format::name() const
+{
+	return "mfm";
+}
+
+const char *mfm_format::description() const
+{
+	return "HxCFloppyEmulator floppy disk image";
+}
+
+const char *mfm_format::extensions() const
+{
+	return "mfm";
+}
+
+bool mfm_format::supports_save() const
+{
+	return false;
 }
 
 int mfm_format::identify(floppy_image *image)
@@ -48,22 +69,35 @@ bool mfm_format::load(floppy_image *image)
 {
 	MFMIMG header;
 	MFMTRACKIMG trackdesc;
-  
+	UINT8 *trackbuf = 0;
+	int trackbuf_size = 0;
+
 	// read header
-	image->image_read(&header,0, sizeof(header));	
-	
-	image->set_meta_data(header.number_of_track,header.number_of_side,header.floppyRPM,header.floppyBitRate);
-	
+	image->image_read(&header,0, sizeof(header));
+
+	image->set_meta_data(header.number_of_track, header.number_of_side);
+
 	for(int track=0; track < header.number_of_track; track++) {
 		for(int side=0; side < header.number_of_side; side++) {
-			// read location of 
+			// read location of
 			image->image_read(&trackdesc,(header.mfmtracklistoffset)+((( track << 1 ) + side)*sizeof(trackdesc)),sizeof(trackdesc));
-			
-			image->set_track_size(track, side, trackdesc.mfmtracksize);
+
+			if(trackdesc.mfmtracksize > trackbuf_size) {
+				if(trackbuf)
+					global_free(trackbuf);
+				trackbuf_size = trackdesc.mfmtracksize;
+				trackbuf = global_alloc_array(UINT8, trackbuf_size);
+			}
+
 			// actual data read
-			image->image_read(image->get_buffer(track,side), trackdesc.mfmtrackoffset, trackdesc.mfmtracksize);
+			image->image_read(trackbuf, trackdesc.mfmtrackoffset, trackdesc.mfmtracksize);
+
+			generate_track_from_bitstream(track, side, trackbuf, trackdesc.mfmtracksize*8, image);
 		}
 	}
+	if(trackbuf)
+		global_free(trackbuf);
+
 	return FALSE;
 }
 
