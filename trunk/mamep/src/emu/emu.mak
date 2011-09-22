@@ -64,6 +64,7 @@ EMUOBJS = \
 	$(EMUOBJ)/diexec.o \
 	$(EMUOBJ)/diimage.o \
 	$(EMUOBJ)/dimemory.o \
+	$(EMUOBJ)/dinetwork.o \
 	$(EMUOBJ)/dinvram.o \
 	$(EMUOBJ)/dirtc.o \
 	$(EMUOBJ)/diserial.o \
@@ -123,6 +124,7 @@ EMUOBJS = \
 	$(EMUOBJ)/debugint/debugint.o \
 	$(EMUOBJ)/profiler.o \
 	$(OSDOBJ)/osdepend.o \
+	$(OSDOBJ)/osdnet.o \
 	$(EMUOBJ)/uilang.o
 
 ifneq ($(USE_CMD_LIST),)
@@ -277,6 +279,7 @@ EMUVIDEOOBJS = \
 	$(EMUVIDEO)/crt9212.o		\
 	$(EMUVIDEO)/dm9368.o		\
 	$(EMUVIDEO)/generic.o		\
+	$(EMUVIDEO)/h63484.o		\
 	$(EMUVIDEO)/hd44102.o		\
 	$(EMUVIDEO)/hd61830.o		\
 	$(EMUVIDEO)/hd63484.o		\

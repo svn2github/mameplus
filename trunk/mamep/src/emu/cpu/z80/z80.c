@@ -2302,7 +2302,7 @@ OP(dd,d9) { illegal_1(z80); op_d9(z80);												} /* DB   DD          */
 OP(dd,da) { illegal_1(z80); op_da(z80);												} /* DB   DD          */
 OP(dd,db) { illegal_1(z80); op_db(z80);												} /* DB   DD          */
 OP(dd,dc) { illegal_1(z80); op_dc(z80);												} /* DB   DD          */
-OP(dd,dd) { illegal_1(z80); z80->PC--;												} /* DB   DD          */
+OP(dd,dd) { illegal_1(z80); op_dd(z80);												} /* DB   DD          */
 OP(dd,de) { illegal_1(z80); op_de(z80);												} /* DB   DD          */
 OP(dd,df) { illegal_1(z80); op_df(z80);												} /* DB   DD          */
 
@@ -2320,7 +2320,7 @@ OP(dd,e9) { z80->PC = z80->IX;														} /* JP   (IX)        */
 OP(dd,ea) { illegal_1(z80); op_ea(z80);												} /* DB   DD          */
 OP(dd,eb) { illegal_1(z80); op_eb(z80);												} /* DB   DD          */
 OP(dd,ec) { illegal_1(z80); op_ec(z80);												} /* DB   DD          */
-OP(dd,ed) { illegal_1(z80); z80->PC--;												} /* DB   DD          */
+OP(dd,ed) { illegal_1(z80); op_ed(z80);												} /* DB   DD          */
 OP(dd,ee) { illegal_1(z80); op_ee(z80);												} /* DB   DD          */
 OP(dd,ef) { illegal_1(z80); op_ef(z80);												} /* DB   DD          */
 
@@ -2338,7 +2338,7 @@ OP(dd,f9) { z80->SP = z80->IX;														} /* LD   SP,IX       */
 OP(dd,fa) { illegal_1(z80); op_fa(z80);												} /* DB   DD          */
 OP(dd,fb) { illegal_1(z80); op_fb(z80);												} /* DB   DD          */
 OP(dd,fc) { illegal_1(z80); op_fc(z80);												} /* DB   DD          */
-OP(dd,fd) { illegal_1(z80); z80->PC--;												} /* DB   DD          */
+OP(dd,fd) { illegal_1(z80); op_fd(z80);												} /* DB   DD          */
 OP(dd,fe) { illegal_1(z80); op_fe(z80);												} /* DB   DD          */
 OP(dd,ff) { illegal_1(z80); op_ff(z80);												} /* DB   DD          */
 
@@ -2593,7 +2593,7 @@ OP(fd,d9) { illegal_1(z80); op_d9(z80);												} /* DB   FD          */
 OP(fd,da) { illegal_1(z80); op_da(z80);												} /* DB   FD          */
 OP(fd,db) { illegal_1(z80); op_db(z80);												} /* DB   FD          */
 OP(fd,dc) { illegal_1(z80); op_dc(z80);												} /* DB   FD          */
-OP(fd,dd) { illegal_1(z80); z80->PC--;												} /* DB   FD          */
+OP(fd,dd) { illegal_1(z80); op_dd(z80);												} /* DB   FD          */
 OP(fd,de) { illegal_1(z80); op_de(z80);												} /* DB   FD          */
 OP(fd,df) { illegal_1(z80); op_df(z80);												} /* DB   FD          */
 
@@ -2611,7 +2611,7 @@ OP(fd,e9) { z80->PC = z80->IY;														} /* JP   (IY)        */
 OP(fd,ea) { illegal_1(z80); op_ea(z80);												} /* DB   FD          */
 OP(fd,eb) { illegal_1(z80); op_eb(z80);												} /* DB   FD          */
 OP(fd,ec) { illegal_1(z80); op_ec(z80);												} /* DB   FD          */
-OP(fd,ed) { illegal_1(z80); z80->PC--;												} /* DB   FD          */
+OP(fd,ed) { illegal_1(z80); op_ed(z80);												} /* DB   FD          */
 OP(fd,ee) { illegal_1(z80); op_ee(z80);												} /* DB   FD          */
 OP(fd,ef) { illegal_1(z80); op_ef(z80);												} /* DB   FD          */
 
@@ -2629,7 +2629,7 @@ OP(fd,f9) { z80->SP = z80->IY;														} /* LD   SP,IY       */
 OP(fd,fa) { illegal_1(z80); op_fa(z80);												} /* DB   FD          */
 OP(fd,fb) { illegal_1(z80); op_fb(z80);												} /* DB   FD          */
 OP(fd,fc) { illegal_1(z80); op_fc(z80);												} /* DB   FD          */
-OP(fd,fd) { illegal_1(z80); z80->PC--;												} /* DB   FD          */
+OP(fd,fd) { illegal_1(z80); op_fd(z80);												} /* DB   FD          */
 OP(fd,fe) { illegal_1(z80); op_fe(z80);												} /* DB   FD          */
 OP(fd,ff) { illegal_1(z80); op_ff(z80);												} /* DB   FD          */
 
@@ -2908,7 +2908,7 @@ OP(ed,e9) { illegal_2(z80);															} /* DB   ED          */
 OP(ed,ea) { illegal_2(z80);															} /* DB   ED          */
 OP(ed,eb) { illegal_2(z80);															} /* DB   ED          */
 OP(ed,ec) { illegal_2(z80);															} /* DB   ED          */
-OP(ed,ed) { illegal_2(z80);															} /* DB   ED          */
+OP(ed,ed) { illegal_2(z80); 														} /* DB   ED          */
 OP(ed,ee) { illegal_2(z80);															} /* DB   ED          */
 OP(ed,ef) { illegal_2(z80);															} /* DB   ED          */
 
@@ -3712,7 +3712,7 @@ static void set_irq_line(z80_state *z80, int irqline, int state)
 			z80->nmi_pending = TRUE;
 		z80->nmi_state = state;
 		break;
-	
+
 	case INPUT_LINE_IRQ0:
 		/* update the IRQ state via the daisy chain */
 		z80->irq_state = state;
@@ -3721,7 +3721,7 @@ static void set_irq_line(z80_state *z80, int irqline, int state)
 
 		/* the main execute loop will take the interrupt */
 		break;
-		
+
 	case Z80_INPUT_LINE_WAIT:
 		z80->wait_state = state;
 		break;
@@ -3743,19 +3743,19 @@ static void set_irq_line_nsc800(z80_state *z80, int irqline, int state)
 			z80->nmi_pending = TRUE;
 		z80->nmi_state = state;
 		break;
-		
+
 	case NSC800_RSTA:
 		z80->nsc800_irq_state[NSC800_RSTA] = state;
 		break;
-		
+
 	case NSC800_RSTB:
 		z80->nsc800_irq_state[NSC800_RSTB] = state;
 		break;
-		
+
 	case NSC800_RSTC:
 		z80->nsc800_irq_state[NSC800_RSTC] = state;
 		break;
-		
+
 	case INPUT_LINE_IRQ0:
 		/* update the IRQ state via the daisy chain */
 		z80->irq_state = state;
@@ -3764,7 +3764,7 @@ static void set_irq_line_nsc800(z80_state *z80, int irqline, int state)
 
 		/* the main execute loop will take the interrupt */
 		break;
-		
+
 	case Z80_INPUT_LINE_WAIT:
 		z80->wait_state = state;
 		break;
@@ -3841,10 +3841,10 @@ static CPU_SET_INFO( z80 )
 	switch (state)
 	{
 		/* --- the following bits of info are set as 64-bit signed integers --- */
-		case CPUINFO_INT_INPUT_STATE + Z80_INPUT_LINE_BUSRQ:	set_irq_line(z80, Z80_INPUT_LINE_BUSRQ, info->i); 	break;
+		case CPUINFO_INT_INPUT_STATE + Z80_INPUT_LINE_BUSRQ:	set_irq_line(z80, Z80_INPUT_LINE_BUSRQ, info->i);	break;
 		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_NMI:			set_irq_line(z80, INPUT_LINE_NMI, info->i); 		break;
 		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_IRQ0:			set_irq_line(z80, INPUT_LINE_IRQ0, info->i);		break;
-		case CPUINFO_INT_INPUT_STATE + Z80_INPUT_LINE_WAIT:		set_irq_line(z80, Z80_INPUT_LINE_WAIT, info->i); 	break;
+		case CPUINFO_INT_INPUT_STATE + Z80_INPUT_LINE_WAIT:		set_irq_line(z80, Z80_INPUT_LINE_WAIT, info->i);	break;
 	}
 }
 
@@ -3854,13 +3854,13 @@ static CPU_SET_INFO( nsc800 )
 	switch (state)
 	{
 		/* --- the following bits of info are set as 64-bit signed integers --- */
-		case CPUINFO_INT_INPUT_STATE + Z80_INPUT_LINE_BUSRQ:	set_irq_line(z80, Z80_INPUT_LINE_BUSRQ, info->i); 	break;
+		case CPUINFO_INT_INPUT_STATE + Z80_INPUT_LINE_BUSRQ:	set_irq_line(z80, Z80_INPUT_LINE_BUSRQ, info->i);	break;
 		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_NMI:			set_irq_line_nsc800(z80, INPUT_LINE_NMI, info->i);	break;
 		case CPUINFO_INT_INPUT_STATE + NSC800_RSTA:				set_irq_line_nsc800(z80, NSC800_RSTA, info->i); 	break;
 		case CPUINFO_INT_INPUT_STATE + NSC800_RSTB:				set_irq_line_nsc800(z80, NSC800_RSTB, info->i); 	break;
 		case CPUINFO_INT_INPUT_STATE + NSC800_RSTC:				set_irq_line_nsc800(z80, NSC800_RSTC, info->i); 	break;
 		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_IRQ0:			set_irq_line_nsc800(z80, INPUT_LINE_IRQ0, info->i);	break;
-		case CPUINFO_INT_INPUT_STATE + Z80_INPUT_LINE_WAIT:		set_irq_line(z80, Z80_INPUT_LINE_WAIT, info->i); 	break;
+		case CPUINFO_INT_INPUT_STATE + Z80_INPUT_LINE_WAIT:		set_irq_line(z80, Z80_INPUT_LINE_WAIT, info->i);	break;
 	}
 }
 
@@ -3931,7 +3931,7 @@ CPU_GET_INFO( z80 )
 		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);				break;
 		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright Juergen Buchmueller, all rights reserved."); break;
 	}
-} 
+}
 
 CPU_GET_INFO( nsc800 )
 {

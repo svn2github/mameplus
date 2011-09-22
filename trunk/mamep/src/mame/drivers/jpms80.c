@@ -146,7 +146,7 @@ ROM_START( j80fruit )
 
 	ROM_REGION( 0x10000, "altrevs", 0 )
 	// from 'fruit chaser' set, other roms matched.
-	ROM_LOAD( "fruit31.p1", 0x0000, 0x001000, CRC(406ff4c1) SHA1(10ef59e66debb15b22d25b66ed19f45a242e30ac) )	
+	ROM_LOAD( "fruit31.p1", 0x0000, 0x001000, CRC(406ff4c1) SHA1(10ef59e66debb15b22d25b66ed19f45a242e30ac) )
 ROM_END
 
 
@@ -364,7 +364,7 @@ ROM_END
 
 GAME(198?, j_ewnud	,0			,jpms_older_e00,jpms80,jpms80,ROT0,   "Barcrest?","Each Way Nudger (Barcrest?, set 1)",						GAME_NOT_WORKING|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL|GAME_NO_SOUND )
 GAME(198?, j_ewnda	,j_ewnud	,jpms_older_e00,jpms80,jpms80,ROT0,   "Barcrest?","Each Way Nudger (Barcrest?, set 2)",						GAME_NOT_WORKING|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL|GAME_NO_SOUND )
-GAME(198?, j_luckac	,0			,jpms_older_e00,jpms80,jpms80,ROT0,   "Unknown","Lucky Aces (Unk)",						GAME_NOT_WORKING|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL|GAME_NO_SOUND )
+GAME(198?, j_luckac	,0			,jpms_older_e00,jpms80,jpms80,ROT0,   "<unknown>","Lucky Aces (Unk)",						GAME_NOT_WORKING|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL|GAME_NO_SOUND )
 GAME(198?, j_super2	,0			,jpms_older_e00,jpms80,jpms80,ROT0,   "Jpm","Super 2 (Jpm)",						GAME_NOT_WORKING|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL|GAME_NO_SOUND )
 
 // this one is different again?

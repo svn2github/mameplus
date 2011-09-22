@@ -375,8 +375,8 @@ WRITE16_HANDLER( dsp_flags_w )
 			bitmap_fill(state->m_framebuffer[1], &cliprect, 0);
 			/* copy buffer fb into screen fb (at this stage we are ready to draw) */
 			copybitmap_trans(state->m_framebuffer[1], state->m_framebuffer[0], 0, 0, 0, 0, &cliprect, 0);
-		 	/* now clear buffer fb */
-		 	bitmap_fill(state->m_framebuffer[0], &cliprect, 0);
+			/* now clear buffer fb */
+			bitmap_fill(state->m_framebuffer[0], &cliprect, 0);
 		}
 
 		/* if offset 0x3001 OR 0x3002 we put data in the buffer fb */
@@ -460,20 +460,21 @@ void multVecMtx(const INT16* vec4, const float* m, float* result)
 #undef M
 }
 
-void projectEyeCoordToScreen(float* projectionMatrix, 
-							 const int xRes, const int yRes, 
+int projectEyeCoordToScreen(float* projectionMatrix,
+							 const int Res,
 							 INT16* eyePoint3d,
-							 int* result)
+							 int type)
 {
 	/* Return (-1, -1) if the eye point is behind camera */
-	result[0] = -1;
-	result[1] = -1;
-	if (eyePoint3d[2] <= 0.0)
-		return;
+	int res = -10000;
+	if (eyePoint3d[2] <= 0.0 && eyePoint3d[0] <= 0.0)
+		return -10000;
+	if (eyePoint3d[2] <= 0.0 && eyePoint3d[0] >= 0.0)
+		return 10000;
 
 	/* Coordinate system flip */
 	eyePoint3d[0] *= -1;
-    
+
 	/* Nothing fancy about this homogeneous worldspace coordinate */
 	eyePoint3d[3] = 1;
 
@@ -481,12 +482,10 @@ void projectEyeCoordToScreen(float* projectionMatrix,
 	multVecMtx(eyePoint3d, projectionMatrix, deviceCoordinates);
 
 	/* We're only interested if it projects within the device */
-	if ( ( deviceCoordinates[0] >= -1.0) && ( deviceCoordinates[0] <= 1.0) &&
-		 ( deviceCoordinates[1] >= -1.0) && ( deviceCoordinates[1] <= 1.0) )
-	{
-		result[0] = (int)( ((deviceCoordinates[0] + 1.0f) / 2.0) * (xRes-1) );
-		result[1] = (int)( ((deviceCoordinates[1] + 1.0f) / 2.0) * (yRes-1) );
-	}
+	// if ( ( deviceCoordinates[type] >= -1.0) && ( deviceCoordinates[type] <= 1.0))
+	res = (int)( deviceCoordinates[type] * (Res-1) );
+
+	return res;
 }
 
 void airInfernoFrustum(const INT16 leftExtent, const INT16 bottomExtent, float* m)
@@ -494,8 +493,8 @@ void airInfernoFrustum(const INT16 leftExtent, const INT16 bottomExtent, float* 
 	/* Hard-coded near and far clipping planes :( */
 	float nearZ = 1.0f;
 	float farZ = 10000.0f;
-	float left = -1.0f;
-	float right = 1.0f;
+	float left = 1.0f;
+	float right = -1.0f;
 	float bottom = (float)(-bottomExtent) / leftExtent;
 	float top = (float)(bottomExtent) / leftExtent;
 
@@ -516,30 +515,49 @@ void airInfernoFrustum(const INT16 leftExtent, const INT16 bottomExtent, float* 
 
 WRITE16_HANDLER( dsp_rasterize_w )
 {
-	/* Does the pixel projection */
-	/* Presumably called when the eye coordinates are all loaded up in their x,y,z buffer */
+}
+
+READ16_HANDLER( dsp_x_return_r )
+{
+	taitoair_state *state = space->machine().driver_data<taitoair_state>();
+
+	/* Construct a frustum from the system's most recently set left and bottom extents */
+	float m[16];
+	airInfernoFrustum(state->m_frustumLeft, state->m_frustumBottom, m);
+	int res;
+
+	res = projectEyeCoordToScreen(m,
+								  32*16, /* x max screen size */
+								  state->m_eyecoordBuffer,0);
+
+    // Extremely poor man's clipping :-P
+    if (res == -10000) return -32*8;
+    if (res ==  10000) return 32*8-1;
+    if (res > 32*8-1) res = 32*8-1;
+    if (res < -32*8) res = -32*8;
+	return res;
+}
+
+READ16_HANDLER( dsp_y_return_r )
+{
 	taitoair_state *state = space->machine().driver_data<taitoair_state>();
 
 	/* Construct a frustum from the system's most recently set left and bottom extents */
 	float m[16];
 	airInfernoFrustum(state->m_frustumLeft, state->m_frustumBottom, m);
 
-	int result[2];
-	projectEyeCoordToScreen(m, 
-							32*16, 	/* These are defined in the machine ctor */
-							28*16,  /* not sure how to get them here or if they're even correct */
-							state->m_eyecoordBuffer,
-							result);
+	int res;
+	res = projectEyeCoordToScreen(m,
+								  28*16, /* y max screen size */
+								  state->m_eyecoordBuffer, 1);
 
-	/* Do not splat invalid results */
-	if (result[0] == -1 && result[1] == -1)
-		return;
-
-	/* Splat a (any) non-translucent color */
-	*BITMAP_ADDR16(state->m_buffer3d, result[1], result[0]) = 1;
+    // Extremely poor man's clipping :-P
+    if (res == -10000) return 28*7;
+    if (res == 10000) return 28*7;
+    if (res > 28*7) res = 28*7;
+    if (res < -28*7) res = -28*7;
+	return res;
 }
-
-
 
 VIDEO_START( taitoair )
 {
@@ -550,7 +568,7 @@ VIDEO_START( taitoair )
 	height = machine.primary_screen->height();
 	state->m_framebuffer[0] = auto_bitmap_alloc(machine, width, height, BITMAP_FORMAT_INDEXED16);
 	state->m_framebuffer[1] = auto_bitmap_alloc(machine, width, height, BITMAP_FORMAT_INDEXED16);
-	state->m_buffer3d = auto_bitmap_alloc(machine, width, height, BITMAP_FORMAT_INDEXED16);
+	//state->m_buffer3d = auto_bitmap_alloc(machine, width, height, BITMAP_FORMAT_INDEXED16);
 }
 
 SCREEN_UPDATE( taitoair )
@@ -603,8 +621,8 @@ SCREEN_UPDATE( taitoair )
 	tc0080vco_tilemap_draw(state->m_tc0080vco, bitmap, cliprect, 2, 0, 0);
 
 	/* Hacky 3d bitmap */
-	copybitmap_trans(bitmap, state->m_buffer3d, 0, 0, 0, 0, cliprect, 0);
-	bitmap_fill(state->m_buffer3d, cliprect, 0);
+	//copybitmap_trans(bitmap, state->m_buffer3d, 0, 0, 0, 0, cliprect, 0);
+	//bitmap_fill(state->m_buffer3d, cliprect, 0);
 
 	return 0;
 }

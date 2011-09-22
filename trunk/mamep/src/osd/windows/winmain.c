@@ -71,6 +71,9 @@
 #include "winutil.h"
 #include "debugger.h"
 #include "winfile.h"
+#ifdef USE_NETWORK
+#include "netdev.h"
+#endif
 
 #define DEBUG_SLOW_LOCKS	0
 
@@ -665,7 +668,9 @@ void windows_osd_interface::init(running_machine &machine)
 	winsound_init(machine);
 	wininput_init(machine);
 	winoutput_init(machine);
-
+#ifdef USE_NETWORK
+	winnetdev_init(machine);
+#endif
 	// notify listeners of screen configuration
 	astring tempstring;
 	for (win_window_info *info = win_window_list; info != NULL; info = info->next)

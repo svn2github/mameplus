@@ -130,13 +130,14 @@ DEVICE_IMAGE_LOAD (msx_cart)
 				{ "LZ93A13",			true,		SLOT_ASCII8_SRAM },
 				{ "LZ93A13-16",			false,		SLOT_ASCII16 },
 				{ "LZ93A13-16",			true,		SLOT_ASCII16_SRAM },
-				{ "M60002-0125SP-16",	false,		SLOT_ASCII16 },
-				{ "M60002-0125SP-16",	true,		SLOT_ASCII16_SRAM },
+				{ "M60002-0125SP-16",		false,		SLOT_ASCII16 },
+				{ "M60002-0125SP-16",		true,		SLOT_ASCII16_SRAM },
 				{ "IREM TAM-S1",		false,		SLOT_RTYPE },
-				{ "MR6401",				false,		SLOT_ASCII16 },
+				{ "MR6401",			false,		SLOT_ASCII16 },
 				{ "NEOS MR6401",		false,		SLOT_ASCII8 },
-				{ "BS6202",				false,		SLOT_ASCII8 },
-				{ "BS6101",				false,		SLOT_ASCII8 },
+				{ "BS6202",			false,		SLOT_ASCII8 },
+				{ "BS6101",			false,		SLOT_ASCII8 },
+				{ "BS6101-16",			false,		SLOT_ASCII16 },
 			};
 
 			for ( int i = 0; i < ARRAY_LENGTH(mapper_types) && type < 0; i++ )

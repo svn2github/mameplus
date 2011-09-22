@@ -424,6 +424,11 @@ ifdef PROFILER
 DEFS += -DMAME_PROFILER
 endif
 
+# define USE_NETWORK if we are a making network enabled build
+ifdef USE_NETWORK
+DEFS += -DUSE_NETWORK
+endif
+
 ifneq ($(USE_UI_COLOR_DISPLAY),)
 DEFS += -DUI_COLOR_DISPLAY
 endif
