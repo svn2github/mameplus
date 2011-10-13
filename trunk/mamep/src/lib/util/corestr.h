@@ -92,7 +92,8 @@ char *core_strtrim(const char *str);
 #endif /* DRIVER_SWITCH */
 
 /* I64 printf helper */
+char *core_i64_format(UINT64 value, UINT8 mindigits, bool is_octal);
 char *core_i64_hex_format(UINT64 value, UINT8 mindigits);
-
+char *core_i64_oct_format(UINT64 value, UINT8 mindigits);
 
 #endif /* __CORESTR_H__ */

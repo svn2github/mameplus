@@ -122,6 +122,8 @@ legacy_cpu_device::legacy_cpu_device(const machine_config &mconfig, device_type 
 
 	// allocate memory for the token
 	m_token = global_alloc_array_clear(UINT8, tokenbytes);
+	// set hex or octal output
+	m_is_octal = get_legacy_int(CPUINFO_IS_OCTAL);
 }
 
 
@@ -251,7 +253,7 @@ UINT64 legacy_cpu_device::execute_cycles_to_clocks(UINT64 cycles) const
 
 
 //-------------------------------------------------
-//  execute_run - execute for the provided number
+//  execute_run - execute for the provided number 
 //  of cycles
 //-------------------------------------------------
 
@@ -410,7 +412,7 @@ genf *legacy_cpu_device::get_legacy_fct(UINT32 state) const
 
 
 //-------------------------------------------------
-//  get_legacy_string - return a legacy
+//  get_legacy_string - return a legacy 
 //  string value
 //-------------------------------------------------
 
@@ -424,7 +426,7 @@ const char *legacy_cpu_device::get_legacy_string(UINT32 state) const
 
 
 //-------------------------------------------------
-//  set_legacy_int - call the get info function
+//  set_legacy_int - call the get info function 
 //  to set an integer value
 //-------------------------------------------------
 

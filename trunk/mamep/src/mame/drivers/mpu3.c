@@ -994,7 +994,7 @@ ROM_START( m3blkhle )
 	ROM_REGION( 0x10000, "altrevs", ROMREGION_ERASE00  )
 	// missing rom 1, or is it the same?
 	ROM_LOAD( "bh2p2.bin", 0x6000, 0x001000, CRC(30325800) SHA1(4d49e20e53e46e33d1f4f9008d7943e8595aa81c) )
-	ROM_LOAD( "bh2p3.bin", 0x5000, 0x001000, CRC(6a1dcb32) SHA1(23614d366f2c04494d73f4ff36aba4e444a06b3a) )	
+	ROM_LOAD( "bh2p3.bin", 0x5000, 0x001000, CRC(6a1dcb32) SHA1(23614d366f2c04494d73f4ff36aba4e444a06b3a) )
 ROM_END
 
 
@@ -1254,15 +1254,8 @@ ROM_START( m3online )
 ROM_END
 
 
-ROM_START( m3optunl )
-	ROM_REGION( 0x10000, "maincpu", ROMREGION_ERASE00  )
-	ROM_LOAD( "cu1_2.p1", 0x6000, 0x2000, CRC(bbfe4e36) SHA1(8e3d9809d882a7608b9c75f8950e2d7ad30b2584) )
-	ROM_LOAD( "cu1_2.p2", 0x4000, 0x2000, CRC(183a90a3) SHA1(faf00b248677538932da036135354ed38187cac3) )
-	ROM_LOAD( "cu1_2.p3", 0x2000, 0x2000, CRC(a83497d4) SHA1(5092e5c7501e7293e33e5a93177047e3836bcd01) )
-	ROM_COPY( "maincpu", 0x0000, 0x8000, 0x8000 )
-ROM_END
 
-ROM_START( m3optunla )
+ROM_START( m3optunl )
 	ROM_REGION( 0x10000, "maincpu", ROMREGION_ERASE00  )
 	ROM_LOAD( "ou6l.p1", 0x6000, 0x2000, CRC(5f65f88f) SHA1(e6353707cf936a80a191d8d068dae9117f2aae45) )
 	ROM_LOAD( "ou6l.p2", 0x4000, 0x2000, CRC(d8cb1627) SHA1(3c533ee626108c9e962d77ab9b6d651a9a24bdc7) )
@@ -1620,8 +1613,7 @@ GAME( 198?, m3magrp,	0,			mpu3base, mpu3, m3hprvpr, ROT0, "Barcrest","Magic Repl
 GAME( 198?, m3nnice,	0,			mpu3base, mpu3, m3hprvpr, ROT0, "Barcrest","Naughty But Nice (Barcrest) (MPU3)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
 GAME( 198?, m3nudge,	0,			mpu3base, mpu3, m3hprvpr, ROT0, "Barcrest","Nudges Unlimited (Barcrest) (MPU3)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
 GAME( 198?, m3oddson,	0,			mpu3base, mpu3, m3hprvpr, ROT0, "Barcrest","Odds On (Barcrest) (MPU3)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 198?, m3optunl,	0,			mpu3base, mpu3, m3hprvpr, ROT0, "Barcrest","Options Unlimited (Barcrest) (MPU3, set 1)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 198?, m3optunla,	m3optunl,	mpu3base, mpu3, m3hprvpr, ROT0, "Barcrest","Options Unlimited (Barcrest) (MPU3, set 2)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
+GAME( 198?, m3optunl,	0,			mpu3base, mpu3, m3hprvpr, ROT0, "Barcrest","Options Unlimited (Barcrest) (MPU3)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
 GAME( 198?, m3razdaz,	0,			mpu3base, mpu3, m3hprvpr, ROT0, "Barcrest","Razzle Dazzle (Barcrest) (MPU3, set 1)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
 GAME( 198?, m3razdaza,	m3razdaz,	mpu3base, mpu3, m3hprvpr, ROT0, "Barcrest","Razzle Dazzle (Barcrest) (MPU3, set 2)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
 GAME( 198?, m3razdazd,	m3razdaz,	mpu3base, mpu3, m3hprvpr, ROT0, "Barcrest","Razzle Dazzle (Barcrest) [Dutch] (MPU3)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )

@@ -876,6 +876,7 @@ $(MAMEOBJ)/konami.a: \
 	$(DRIVERS)/konamigx.o $(MACHINE)/konamigx.o $(VIDEO)/konamigx.o \
 	$(DRIVERS)/konamim2.o \
 	$(DRIVERS)/kongambl.o \
+	$(DRIVERS)/konendev.o \
 	$(DRIVERS)/ksys573.o $(MACHINE)/zs01.o \
 	$(DRIVERS)/labyrunr.o $(VIDEO)/labyrunr.o \
 	$(DRIVERS)/lethal.o $(VIDEO)/lethal.o \
@@ -1855,7 +1856,13 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/wldarrow.o \
 	$(DRIVERS)/xtom3d.o \
 	$(DRIVERS)/xyonix.o $(VIDEO)/xyonix.o \
-
+	$(DRIVERS)/gamtor.o \
+	$(DRIVERS)/belatra.o \
+	$(DRIVERS)/atronic.o \
+	$(DRIVERS)/astropc.o \
+	$(DRIVERS)/wms.o \
+	$(DRIVERS)/cupidon.o \
+	$(DRIVERS)/extrema.o \
 
 
 
@@ -2108,6 +2115,8 @@ $(DRIVERS)/turbo.o:	$(LAYOUT)/turbo.lh \
 $(DRIVERS)/tx1.o:	$(LAYOUT)/buggybjr.lh \
 			$(LAYOUT)/buggyboy.lh \
 			$(LAYOUT)/tx1.lh
+
+$(DRIVERS)/umipoker.o:	$(LAYOUT)/saiyukip.lh
 
 $(DRIVERS)/undrfire.o:	$(LAYOUT)/cbombers.lh
 

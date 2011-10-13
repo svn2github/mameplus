@@ -246,7 +246,7 @@ const char *running_machine::describe_context()
 	{
 		cpu_device *cpu = downcast<cpu_device *>(&executing->device());
 		if (cpu != NULL)
-			m_context.printf("'%s' (%s)", cpu->tag(), core_i64_hex_format(cpu->pc(), cpu->space(AS_PROGRAM)->logaddrchars()));
+			m_context.printf("'%s' (%s)", cpu->tag(), core_i64_format(cpu->pc(), cpu->space(AS_PROGRAM)->logaddrchars(), cpu->is_octal()));
 	}
 	else
 		m_context.cpy("(no context)");
@@ -896,8 +896,6 @@ void running_machine::logfile_callback(running_machine &machine, const char *buf
 	if (machine.m_logfile != NULL)
 		machine.m_logfile->puts(buffer);
 }
-
-
 
 /***************************************************************************
     MEMORY REGIONS

@@ -3684,14 +3684,14 @@ void k053245_sprites_draw( device_t *device, bitmap_t *bitmap, const rectangle *
 		{
 			int sx, sy, zw, zh;
 
-			sy = oy + ((zoomy * y + (1 << 11)) >> 12);
+			sy = oy + ((zoomy * y + (1 << 11)) >> 12) - 1;
 			zh = (oy + ((zoomy * (y + 1) + (1 << 11)) >> 12)) - sy;
 
 			for (x = 0; x < w; x++)
 			{
 				int c, fx, fy;
 
-				sx = ox + ((zoomx * x + (1 << 11)) >> 12);
+				sx = ox + ((zoomx * x + (1 << 11)) >> 12) - 1;
 				zw = (ox + ((zoomx * (x+1) + (1 << 11)) >> 12)) - sx;
 				c = code;
 				if (mirrorx)
@@ -7154,12 +7154,6 @@ void k056832_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *
 
 	corr -= k056832->layer_offs[layer][0];
 
-	if (scrollmode == 0 && (flags & K056832_DRAW_FLAG_FORCE_XYSCROLL))
-	{
-		scrollmode = 3;
-		flags &= ~K056832_DRAW_FLAG_FORCE_XYSCROLL;
-	}
-
 	switch( scrollmode )
 	{
 		case 0: // linescroll
@@ -7169,7 +7163,6 @@ void k056832_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *
 			sdat_adv = 2;
 		break;
 		case 2: // rowscroll
-
 			p_scroll_data = &k056832->videoram[scrollbank << 12] + (k056832->lsram_page[layer][1] >> 1);
 			line_height = 8;
 			sdat_wrapmask = 0x3ff;
@@ -7185,7 +7178,25 @@ void k056832_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *
 	}
 	if (flipy)
 		sdat_adv = -sdat_adv;
-
+/*
+if (scrollmode==2)
+{
+printf("%08x    %08x    %08x\n",layer,scrollbank<<12,k056832->lsram_page[layer][1]>>1);
+printf("\n000-100:\n");
+for (int zz=0x000; zz<0x100; zz++)
+    printf("%04x    ",k056832->videoram[(scrollbank<<12)+(k056832->lsram_page[layer][1]>>1)+zz]);
+printf("\n100-200:\n");
+for (int zz=0x100; zz<0x200; zz++)
+    printf("%04x    ",k056832->videoram[(scrollbank<<12)+(k056832->lsram_page[layer][1]>>1)+zz]);
+printf("\n200-300:\n");
+for (int zz=0x200; zz<0x300; zz++)
+    printf("%04x    ",k056832->videoram[(scrollbank<<12)+(k056832->lsram_page[layer][1]>>1)+zz]);
+printf("\n300-400:\n");
+for (int zz=0x300; zz<0x400; zz++)
+    printf("%04x    ",k056832->videoram[(scrollbank<<12)+(k056832->lsram_page[layer][1]>>1)+zz]);
+printf("\nend\n");
+}
+*/
 	last_active = k056832->active_layer;
 	new_colorbase = (k056832->k055555 != NULL) ? k055555_get_palette_index(k056832->k055555, layer) : 0;
 
@@ -7310,6 +7321,7 @@ void k056832_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *
 				continue;
 
 			tmap = k056832->tilemap[pageIndex];
+
 			tilemap_set_scrolly(tmap, 0, ay);
 
 			last_dx = 0x100000;
@@ -7328,8 +7340,12 @@ void k056832_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *
 
 				drawrect.min_y = (dminy < cminy ) ? cminy : dminy;
 				drawrect.max_y = (dmaxy > cmaxy ) ? cmaxy : dmaxy;
-
-				dx = ((int)p_scroll_data[sdat_offs]<<16 | (int)p_scroll_data[sdat_offs + 1]) + corr;
+// printf("%04x  %04x\n",layer,flipy);
+				// in xexex: K056832_DRAW_FLAG_MIRROR != flipy
+				if ((scrollmode == 2) && (flags & K056832_DRAW_FLAG_MIRROR) && (flipy))
+					dx = ((int)p_scroll_data[sdat_offs + 0x1e0 + 14]<<16 | (int)p_scroll_data[sdat_offs + 0x1e0 + 15]) + corr;
+				else
+					dx = ((int)p_scroll_data[sdat_offs]<<16 | (int)p_scroll_data[sdat_offs + 1]) + corr;
 
 				if (last_dx == dx) { if (last_visible) goto LINE_SHORTCIRCUIT; continue; }
 				last_dx = dx;
@@ -7455,12 +7471,6 @@ void k056832_tilemap_draw_dj( device_t *device, bitmap_t *bitmap, const rectangl
 		corr = 0;
 
 	corr -= k056832->layer_offs[layer][0];
-
-	if (scrollmode == 0 && (flags & K056832_DRAW_FLAG_FORCE_XYSCROLL))
-	{
-		scrollmode = 3;
-		flags &= ~K056832_DRAW_FLAG_FORCE_XYSCROLL;
-	}
 
 	switch( scrollmode )
 	{
