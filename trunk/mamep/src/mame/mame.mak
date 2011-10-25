@@ -231,7 +231,7 @@ SOUNDS += ASC
 SOUNDS += MAS3507D
 SOUNDS += LMC1992
 SOUNDS += AWACS
-
+SOUNDS += YMZ770
 
 #-------------------------------------------------
 # this is the list of driver libraries that
@@ -741,6 +741,7 @@ $(MAMEOBJ)/ibmpc.a: \
 	$(DRIVERS)/pcxt.o \
 	$(DRIVERS)/quakeat.o \
 	$(DRIVERS)/queen.o \
+	$(DRIVERS)/igspc.o \
 
 $(MAMEOBJ)/igs.a: \
 	$(DRIVERS)/cabaret.o \
@@ -1211,6 +1212,7 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/segag80r.o $(MACHINE)/segag80.o $(AUDIO)/segag80r.o $(VIDEO)/segag80r.o \
 	$(DRIVERS)/segag80v.o $(AUDIO)/segag80v.o $(VIDEO)/segag80v.o \
 	$(DRIVERS)/segahang.o $(VIDEO)/segahang.o \
+	$(DRIVERS)/segajw.o \
 	$(DRIVERS)/segald.o \
 	$(DRIVERS)/segaorun.o $(VIDEO)/segaorun.o \
 	$(DRIVERS)/segas16a.o $(VIDEO)/segas16a.o \
@@ -1338,6 +1340,7 @@ $(MAMEOBJ)/sun.a: \
 	$(DRIVERS)/shanghai.o \
 	$(DRIVERS)/shangha3.o $(VIDEO)/shangha3.o \
 	$(DRIVERS)/strnskil.o $(VIDEO)/strnskil.o \
+	$(DRIVERS)/tonton.o \
 
 $(MAMEOBJ)/suna.a: \
 	$(DRIVERS)/go2000.o \
@@ -1744,6 +1747,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/jokrwild.o \
 	$(DRIVERS)/jongkyo.o \
 	$(DRIVERS)/jubilee.o \
+	$(DRIVERS)/kas89.o \
 	$(DRIVERS)/kingpin.o \
 	$(DRIVERS)/koikoi.o \
 	$(DRIVERS)/kyugo.o $(VIDEO)/kyugo.o \
@@ -1863,7 +1867,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/wms.o \
 	$(DRIVERS)/cupidon.o \
 	$(DRIVERS)/extrema.o \
-
+	$(DRIVERS)/tmspoker.o \
 
 
 #-------------------------------------------------
@@ -1961,6 +1965,7 @@ $(DRIVERS)/firebeat.o:	$(LAYOUT)/firebeat.lh
 
 $(DRIVERS)/funworld.o:	$(LAYOUT)/jollycrd.lh \
 			$(LAYOUT)/bigdeal.lh \
+			$(LAYOUT)/novoplay.lh \
 			$(LAYOUT)/royalcrd.lh
 
 $(DRIVERS)/galaxi.o:	$(LAYOUT)/galaxi.lh
@@ -1979,6 +1984,8 @@ $(DRIVERS)/grchamp.o:	$(LAYOUT)/grchamp.lh
 $(DRIVERS)/highvdeo.o:	$(LAYOUT)/fashion.lh
 
 $(DRIVERS)/igspoker.o:	$(LAYOUT)/igspoker.lh
+
+$(DRIVERS)/kas89.o:	$(LAYOUT)/kas89.lh
 
 $(DRIVERS)/kingdrby.o:	$(LAYOUT)/kingdrby.lh
 
@@ -2145,6 +2152,7 @@ $(DRIVERS)/peyper.o:    $(LAYOUT)/peyper.lh
 # misc dependencies
 #-------------------------------------------------
 
+$(DRIVERS)/cavesh3.o:	$(MAMESRC)/drivers/csh3blit.c
 $(DRIVERS)/galaxian.o:	$(MAMESRC)/drivers/galdrvr.c
 $(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neodrvr.c
 $(DRIVERS)/saturn.o:	$(MAMESRC)/drivers/stv.c
