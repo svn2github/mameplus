@@ -91,10 +91,6 @@ bangbedp		// 0259 prototype
 zintrkcd		// 0211 hack - CD to MVS Conversion by Razoola
 fr2ch			// 0098 hack - CD to MVS Conversion
 
-// Wii Virtual Console to MVS Conversion
-ironclad		// 0220 (c) 1996 Saurus - Wii Virtual Console to MVS Conversion
-ironclado		// 0220 (c) 1996 Saurus - Wii Virtual Console to MVS Conversion
-
 #ifndef NCP
 // Konami "Nemesis hardware" games
 spclone			// GX587 (c) 1986 based
