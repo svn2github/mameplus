@@ -293,8 +293,8 @@ const options_entry winui_options::s_option_entries[] =
 	{ MUIOPTION_SORT_REVERSED,                        "0",                          OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_WINDOW_X,                             "0",                          OPTION_INTEGER,    NULL },
 	{ MUIOPTION_WINDOW_Y,                             "0",                          OPTION_INTEGER,    NULL },
-	{ MUIOPTION_WINDOW_WIDTH,                         "640",                        OPTION_INTEGER,    NULL },
-	{ MUIOPTION_WINDOW_HEIGHT,                        "400",                        OPTION_INTEGER,    NULL },
+	{ MUIOPTION_WINDOW_WIDTH,                         "800",                        OPTION_INTEGER,    NULL },
+	{ MUIOPTION_WINDOW_HEIGHT,                        "600",                        OPTION_INTEGER,    NULL },
 	{ MUIOPTION_WINDOW_STATE,                         "1",                          OPTION_INTEGER,    NULL },
 
 	{ MUIOPTION_TEXT_COLOR,                           "-1",                         OPTION_INTEGER,    NULL },
@@ -425,13 +425,11 @@ const options_entry winui_options::s_option_entries[] =
 static const options_entry perGameOptions[] =
 {
 	// per game options
-	{ "_play_count",                                  "0",                          OPTION_INTEGER,    NULL },
-	{ "_play_time",                                   "0",                          OPTION_INTEGER,    NULL },
-	{ "_rom_audit",                                   "-1",                         OPTION_INTEGER,    NULL },
-	{ "_samples_audit",                               "-1",                         OPTION_INTEGER,    NULL },
-#if 1
-	{ "_extra_software",                              "",                           OPTION_STRING,     MESS_MARK_CONSOLE_ONLY },
-#endif
+//	{ "_play_count",                                  "0",                          OPTION_INTEGER,    NULL },
+//	{ "_play_time",                                   "0",                          OPTION_INTEGER,    NULL },
+	{ "_rom",                                   "-1",                         OPTION_INTEGER,    NULL },
+//	{ "_samples_audit",                               "-1",                         OPTION_INTEGER,    NULL },
+//	{ "_extra_software",                              "",                           OPTION_STRING,     MESS_MARK_CONSOLE_ONLY },
 	{ NULL }
 };
 
@@ -549,16 +547,6 @@ void AddOptions(winui_options *opts, const options_entry *entrylist, BOOL is_glo
 
 */
 
-#ifdef MAMEMESS //mamep: moved from ../mess/osd/winui/optionsms.c
-static void MessSetupGameOptions(windows_options &opts, int driver_index)
-{
-	if (driver_index >= 0)
-	{
-		opts.set_system_name(driver_list::driver(driver_index).name);
-	}
-}
-#endif // MAMEMESS
-
 void CreateGameOptions(windows_options &opts, int driver_index)
 {
 	BOOL is_global = (driver_index == OPTIONS_TYPE_GLOBAL);
@@ -572,10 +560,6 @@ void CreateGameOptions(windows_options &opts, int driver_index)
 	// customize certain options
 	if (is_global)
 		opts.set_default_value(OPTION_INIPATH, "ini");
-
-#ifdef MAMEMESS
-	MessSetupGameOptions(opts, driver_index);
-#endif // MAMEMESS
 }
 
 
@@ -593,9 +577,6 @@ BOOL OptionsInit()
 	// set up the MAME32 settings (these get placed in MAME32ui.ini
 	//settings = options_create(memory_error);
 	//options_add_entries(settings, regSettings);
-#ifdef MESS
-	MessSetupSettings(settings);
-#endif
 
 	// set up per game options
 	{
@@ -1726,14 +1707,14 @@ static void GetDriverOptionName(int driver_index, const char *option_name, char 
 int GetRomAuditResults(int driver_index)
 {
 	char buffer[128];
-	GetDriverOptionName(driver_index, "rom_audit", buffer, ARRAY_LENGTH(buffer));
+	GetDriverOptionName(driver_index, "rom", buffer, ARRAY_LENGTH(buffer));
 	return settings.int_value(buffer);
 }
 
 void SetRomAuditResults(int driver_index, int audit_results)
 {
 	char buffer[128];
-	GetDriverOptionName(driver_index, "rom_audit", buffer, ARRAY_LENGTH(buffer));
+	GetDriverOptionName(driver_index, "rom", buffer, ARRAY_LENGTH(buffer));
 	astring error_string;
 	settings.set_value(buffer, audit_results, OPTION_PRIORITY_CMDLINE, error_string);
 	assert(!error_string);
@@ -1742,14 +1723,14 @@ void SetRomAuditResults(int driver_index, int audit_results)
 int  GetSampleAuditResults(int driver_index)
 {
 	char buffer[128];
-	GetDriverOptionName(driver_index, "samples_audit", buffer, ARRAY_LENGTH(buffer));
+	GetDriverOptionName(driver_index, "samples", buffer, ARRAY_LENGTH(buffer));
 	return settings.int_value(buffer);
 }
 
 void SetSampleAuditResults(int driver_index, int audit_results)
 {
 	char buffer[128];
-	GetDriverOptionName(driver_index, "samples_audit", buffer, ARRAY_LENGTH(buffer));
+	GetDriverOptionName(driver_index, "samples", buffer, ARRAY_LENGTH(buffer));
 	astring error_string;
 	settings.set_value(buffer, audit_results, OPTION_PRIORITY_CMDLINE, error_string);
 	assert(!error_string);
@@ -1769,13 +1750,13 @@ static void IncrementPlayVariable(int driver_index, const char *play_variable, i
 
 void IncrementPlayCount(int driver_index)
 {
-	IncrementPlayVariable(driver_index, "play_count", 1);
+	IncrementPlayVariable(driver_index, "count", 1);
 }
 
 int GetPlayCount(int driver_index)
 {
 	char buffer[128];
-	GetDriverOptionName(driver_index, "play_count", buffer, ARRAY_LENGTH(buffer));
+	GetDriverOptionName(driver_index, "count", buffer, ARRAY_LENGTH(buffer));
 	return settings.int_value(buffer);
 }
 
@@ -1803,24 +1784,24 @@ static void ResetPlayVariable(int driver_index, const char *play_variable)
 
 void ResetPlayCount(int driver_index)
 {
-	ResetPlayVariable(driver_index, "play_count");
+	ResetPlayVariable(driver_index, "count");
 }
 
 void ResetPlayTime(int driver_index)
 {
-	ResetPlayVariable(driver_index, "play_time");
+	ResetPlayVariable(driver_index, "time");
 }
 
 int GetPlayTime(int driver_index)
 {
 	char buffer[128];
-	GetDriverOptionName(driver_index, "play_time", buffer, ARRAY_LENGTH(buffer));
+	GetDriverOptionName(driver_index, "time", buffer, ARRAY_LENGTH(buffer));
 	return settings.int_value(buffer);
 }
 
 void IncrementPlayTime(int driver_index,int playtime)
 {
-	IncrementPlayVariable(driver_index, "play_time", playtime);
+	IncrementPlayVariable(driver_index, "time", playtime);
 }
 
 void GetTextPlayTime(int driver_index, WCHAR *buf)

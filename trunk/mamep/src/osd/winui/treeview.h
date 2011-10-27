@@ -88,15 +88,15 @@ void CreateScreenFolders(int parent_index);
 void CreateCPUFolders(int parent_index);
 void CreateSoundFolders(int parent_index);
 #ifdef USE_MORE_FOLDER_INFO
-void CreateBIOSFolders(int parent_index);
-void CreateFPSFolders(int parent_index);
-void CreateResolutionFolders(int parent_index);
 void CreateControlFolders(int parent_index);
 void CreateSaveStateFolders(int parent_index);
 #endif /* USE_MORE_FOLDER_INFO */
-//void CreateOrientationFolders(int parent_index);
+void CreateOrientationFolders(int parent_index);
 void CreateDeficiencyFolders(int parent_index);
 void CreateDumpingFolders(int parent_index);
+void CreateBIOSFolders(int parent_index);
+void CreateFPSFolders(int parent_index);
+void CreateResolutionFolders(int parent_index);
 
 /***************************************************************************/
 
@@ -122,8 +122,6 @@ enum
 	FOLDER_RASTER,
 	FOLDER_VECTOR,
 #ifdef USE_MORE_FOLDER_INFO
-	FOLDER_RESOLUTION,
-	FOLDER_FPS,
 	FOLDER_CONTROL,
  	FOLDER_DUALMON,
 #else /* USE_MORE_FOLDER_INFO */
@@ -136,17 +134,13 @@ enum
 	FOLDER_DUMPING,
 	FOLDER_SAVESTATE,
 	FOLDER_BIOS,
+	FOLDER_RESOLUTION,
+	FOLDER_FPS,
 	FOLDER_HORIZONTAL,
 	FOLDER_VERTICAL,
 	FOLDER_SCREENS,
 	FOLDER_MECHANICAL,
 	FOLDER_NONMECHANICAL,
-#ifdef MESS
-	FOLDER_CONSOLE,
-	FOLDER_COMPUTER,
-	FOLDER_MODIFIED,
-	FOLDER_MOUSE,
-#endif
 	MAX_FOLDERS,
 };
 
@@ -163,11 +157,6 @@ typedef enum
 	F_HORIZONTAL    = 0x00001000,
 	F_VERTICAL      = 0x00002000,
 	F_MECHANICAL    = 0x00004000,
-#ifdef MESS
-	F_COMPUTER      = 0x00000200,
-	F_CONSOLE       = 0x00000400,
-	F_MODIFIED      = 0x00000800,
-#endif
 	F_MASK          = 0x0000FFFF,
 	F_INIEDIT       = 0x00010000, // There is an .ini that can be edited. MSH 20070811
 	F_CUSTOM        = 0x01000000  // for current .ini custom folders

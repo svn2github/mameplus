@@ -416,7 +416,7 @@ static struct ComboBoxSnapView
 	{ TEXT("Pixel Aspect"),     "pixel"       }, 
 	{ TEXT("Cocktail"),         "cocktail"    },
 };
-#define NUMSNAPVIEW (sizeof(g_ComboBoxSnapView) / sizeof(g_ComboBoxSnapView[0]))
+#define NUMSNAPVIEW ARRAY_LENGTH(g_ComboBoxSnapView)
 
 #ifdef DRIVER_SWITCH
 static const struct
@@ -659,10 +659,10 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 
 	ZeroMemory(&pshead, sizeof(PROPSHEETHEADER));
 
-	// Set the game to audio to this game 
+	// Set the game to audit to this game 
 	InitGameAudit(game_num);
 
-	// Create the propery sheets
+	// Create the property sheets
 	if( OPTIONS_GAME == opt_type )
 	{
 		pspage = CreatePropSheetPages(hInst, FALSE, &driver_list::driver(game_num), &pshead.nPages, TRUE);
@@ -1292,6 +1292,7 @@ INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LP
 		{
 			ShowWindow(GetDlgItem(hDlg, IDC_PROP_CLONEOF_TEXT), SW_HIDE);
 		}
+
 		hWnd = PropSheet_GetTabControl(GetParent(hDlg));
 		UpdateBackgroundBrush(hWnd);
 		ShowWindow(hDlg, SW_SHOW);
@@ -1497,10 +1498,6 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				}
 				break;
 			default:
-#ifdef MESS
-				if (MessPropertiesCommand(hDlg, wNotifyCode, wID, &changed))
-					break;
-#endif // MESS
 
 				// use default behavior; try to get the result out of the datamap if
 				// appropriate
@@ -2912,7 +2909,7 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 	// reset the controllers dropdown
 	(void)ComboBox_ResetContent(control);
 	(void)ComboBox_InsertString(control, index, _UIW(TEXT("None")));
-	(void)ComboBox_SetItemData(control, index, "");
+	(void)ComboBox_SetItemData(control, index, TEXT(""));
 	index++;
 
 	//t_ctrldir = tstring_from_utf8(GetCtrlrDir());
@@ -3283,9 +3280,7 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_BIOS,					DM_STRING,	OPTION_BIOS);
 	datamap_add(properties_datamap, IDC_CHEAT,					DM_BOOL,	OPTION_CHEAT);
 	datamap_add(properties_datamap, IDC_SKIP_GAME_INFO,			DM_BOOL,	OPTION_SKIP_GAMEINFO);
-#ifdef CONFIRM_QUIT
 	datamap_add(properties_datamap, IDC_CONFIRM_QUIT,			DM_BOOL,	OPTION_CONFIRM_QUIT);
-#endif /* CONFIRM_QUIT */
 #ifdef PLAYBACK_END_PAUSE
 	datamap_add(properties_datamap, IDC_PLAYBACK_END_PAUSE,		DM_BOOL,	OPTION_PLAYBACK_END_PAUSE);
 #endif /* PLAYBACK_END_PAUSE */
@@ -3528,10 +3523,7 @@ static void BuildDataMap(void)
 	datamap_set_trackbar_range(properties_datamap, IDC_TRANSPARENCY, 0, 255, 1);
 #endif /* TRANS_UI */
 
-#ifdef MESS
-	// MESS specific stuff
-	MessBuildDataMap(properties_datamap);
-#endif // MESS
+
 }
 
 #if 1 //mamep: for coloring of changed elements

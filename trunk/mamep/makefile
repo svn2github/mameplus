@@ -437,10 +437,6 @@ ifneq ($(USE_TRANS_UI),)
 DEFS += -DTRANS_UI
 endif
 
-ifneq ($(USE_CONFIRM_QUIT),)
-DEFS += -DCONFIRM_QUIT
-endif
-
 ifneq ($(USE_JOYSTICK_ID),)
 DEFS += -DJOYSTICK_ID
 endif
