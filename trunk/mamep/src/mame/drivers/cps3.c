@@ -213,7 +213,7 @@ PCB Layouts
 -----------
 
 CAPCOM
-CP SYSTEM III
+CP SYSTEMIII
 95682A-4 (older rev 95682A-3)
    |----------------------------------------------------------------------|
   |= J1             HM514260     |------------|      |  |  |  |  |        |
@@ -1100,9 +1100,9 @@ static SCREEN_UPDATE(cps3)
 					//int endline;
 					//int height = (value3 & 0x7f000000)>>24;
 					int uu;
-//                  UINT32* tmapregs[4] = { state->m_tilemap20_regs_base, state->m_tilemap30_regs_base, state->m_tilemap40_regs_base, state->m_tilemap50_regs_base };
-//                  UINT32* regs;
-//                  regs = tmapregs[tilemapnum];
+//					UINT32* tmapregs[4] = { state->m_tilemap20_regs_base, state->m_tilemap30_regs_base, state->m_tilemap40_regs_base, state->m_tilemap50_regs_base };
+//					UINT32* regs;
+//					regs = tmapregs[tilemapnum];
 					//endline = value2;
 					//startline = endline - height;
 
@@ -1685,7 +1685,8 @@ static WRITE32_HANDLER( cram_gfxflash_bank_w )
 
 	if (ACCESSING_BITS_0_7)
 	{
-	/*  if(DEBUG_PRINTF)*/ printf("cram_gfxflash_bank_LSB_w LSB32 %08x\n",data);
+		// writes 0 during boot
+		//printf("cram_gfxflash_bank_LSB_w LSB32 %08x\n",data);
 	}
 }
 
@@ -2104,7 +2105,8 @@ static void cps3_process_character_dma(running_machine &machine, UINT32 address)
 		}
 		else
 		{
-			printf("Unknown DMA List Command Type\n"); // warzard uses command 0, uncompressed? but for what?
+			// warzard uses command 0, uncompressed? but for what?
+			//printf("Unknown DMA List Command Type\n");
 		}
 
 	}
@@ -2317,7 +2319,7 @@ INPUT_PORTS_END
 /* Red Earth game inputs */
 static INPUT_PORTS_START ( cps3_re )
 	PORT_INCLUDE ( cps3 )
-
+	
 	PORT_MODIFY("INPUTS")
 	PORT_BIT( 0x10000000, IP_ACTIVE_LOW, IPT_START1 ) PORT_NAME("P1 Start / Change Orb")
 	PORT_BIT( 0x20000000, IP_ACTIVE_LOW, IPT_START2 ) PORT_NAME("P2 Start / Change Orb")
@@ -2347,7 +2349,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START ( cps3_ren )
 	PORT_INCLUDE ( cps3 )
-
+	
 	PORT_MODIFY("INPUTS")
 	PORT_BIT( 0x10000000, IP_ACTIVE_LOW, IPT_START1 ) PORT_NAME("P1 Start / Change Orb")
 	PORT_BIT( 0x20000000, IP_ACTIVE_LOW, IPT_START2 ) PORT_NAME("P2 Start / Change Orb")
@@ -2375,8 +2377,8 @@ static INPUT_PORTS_START ( cps3_ren )
 INPUT_PORTS_END
 
 /* Jojo game inputs */
-static INPUT_PORTS_START( cps3_jojo)
-	PORT_INCLUDE( cps3 )
+static INPUT_PORTS_START( cps3_jojo )
+	PORT_INCLUDE(cps3)
 
 	PORT_MODIFY("INPUTS")
 	PORT_BIT( 0x00000010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("P1 Light") PORT_PLAYER(1)
@@ -2386,7 +2388,7 @@ static INPUT_PORTS_START( cps3_jojo)
 	PORT_BIT( 0x00002000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("P2 Medium") PORT_PLAYER(2)
 	PORT_BIT( 0x00004000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("P2 Strong") PORT_PLAYER(2)
 	PORT_BIT( 0x04000000, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_PLAYER(2)
-
+	
 	PORT_MODIFY("EXTRA")
 	PORT_BIT( 0x00020000, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_PLAYER(1)
 	PORT_BIT( 0x00040000, IP_ACTIVE_LOW, IPT_UNUSED ) PORT_PLAYER(1)
@@ -3138,7 +3140,7 @@ MACHINE_CONFIG_END
 	ROM_REGION( 0x200000, "simm5.1", 0 ) ROM_LOAD( "redearth-simm5.1", 0x00000, 0x200000, CRC(9b8cb56b) SHA1(2ff1081dc99bb7c2f1e036f4c112137c96b83d23) ) \
 
 #define REDEARTH_961023_CDROM \
-	DISK_REGION( "cdrom" ) DISK_IMAGE_READONLY( "cap-wzd-3", 0, SHA1(a6ff67093db6bc80ee5fc46e4300e0177b213a52) ) \
+	DISK_REGION( "cdrom" )	DISK_IMAGE_READONLY( "cap-wzd-3", 0, SHA1(a6ff67093db6bc80ee5fc46e4300e0177b213a52) ) \
 
 #define REDEARTN_FLASH \
 	ROM_REGION( 0x200000, "simm1.0", 0 ) ROM_LOAD( "redeartn-simm1.0", 0x00000, 0x200000, CRC(cad468f8) SHA1(b3aa4f7d3fae84e8821417ccde9528d3eda2b7a6) ) \
@@ -3520,19 +3522,19 @@ GAME( 1998, jojo,     0,        jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "
 GAME( 1998, jojoa,    jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo's Venture (USA 981202)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1998, jojoj,    jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo no Kimyouna Bouken (Japan 990108)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1998, jojoaj,   jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo no Kimyouna Bouken (Japan 981202)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, sfiii3,   0,        sfiii3,   cps3,      sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (USA 990608)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, sfiii3a,  sfiii3,   sfiii3,   cps3,      sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (USA 990512)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, sfiii3,   0,        sfiii3,   cps3, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (USA 990608)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, sfiii3a,  sfiii3,   sfiii3,   cps3, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (USA 990512)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1999, jojoba,   0,        jojoba,   cps3_jojo, jojoba,   ROT0, "Capcom", "JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913)", GAME_IMPERFECT_GRAPHICS )
 
 /* NO CD sets */
 
 // We don't have any actual red earth / warzard NO CD bios sets, but keep this here anyway
-GAME( 1996, redeartn, redearth, redearth, cps3_ren,  nocd,     ROT0, "Capcom", "Red Earth (961121, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, redeartn, redearth, redearth, cps3_ren,  nocd, ROT0, "Capcom", "Red Earth (961121, NO CD)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, sfiiin,   sfiii,    sfiii,    sfiiiws,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1997, sfiii2n,  sfiii2,   sfiii2,   sfiiiws,   sfiii2,   ROT0, "Capcom", "Street Fighter III 2nd Impact: Giant Attack (Asia 970930, NO CD)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1998, jojon,    jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 990108, NO CD)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1998, jojoan,   jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 981202, NO CD)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, sfiii3n,  sfiii3,   sfiii3,   cps3,      sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Japan 990608, NO CD)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, sfiii3an, sfiii3,   sfiii3,   cps3,      sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Japan 990512, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, sfiii3n,  sfiii3,   sfiii3,   cps3, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Japan 990608, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, sfiii3an, sfiii3,   sfiii3,   cps3, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Japan 990512, NO CD)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1999, jojoban,  jojoba,   jojoba,   cps3_jojo, jojoba,   ROT0, "Capcom", "JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913, NO CD)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1999, jojobane, jojoba,   jojoba,   cps3_jojo, jojoba,   ROT0, "Capcom", "JoJo's Bizarre Adventure (Euro 990913, NO CD)", GAME_IMPERFECT_GRAPHICS )
