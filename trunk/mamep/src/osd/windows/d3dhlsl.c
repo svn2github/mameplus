@@ -231,7 +231,7 @@ void hlsl_info::window_save()
 	HRESULT result = (*d3dintf->device.create_texture)(d3d->device, snap_width, snap_height, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &snap_copy_texture);
 	if (result != D3D_OK)
 	{
-		mame_printf_verbose("Direct3D: Unable to init system-memory target for HLSL snapshot (%08x), bailing\n", (UINT32)result);
+		mame_printf_verbose(_WINDOWS("Direct3D: Unable to init system-memory target for HLSL snapshot (%08x), bailing\n"), (UINT32)result);
 		return;
 	}
 	(*d3dintf->texture.get_surface_level)(snap_copy_texture, 0, &snap_copy_target);
@@ -239,7 +239,7 @@ void hlsl_info::window_save()
 	result = (*d3dintf->device.create_texture)(d3d->device, snap_width, snap_height, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &snap_texture);
 	if (result != D3D_OK)
 	{
-		mame_printf_verbose("Direct3D: Unable to init video-memory target for HLSL snapshot (%08x), bailing\n", (UINT32)result);
+		mame_printf_verbose(_WINDOWS("Direct3D: Unable to init video-memory target for HLSL snapshot (%08x), bailing\n"), (UINT32)result);
 		return;
 	}
 	(*d3dintf->texture.get_surface_level)(snap_texture, 0, &snap_target);
@@ -325,7 +325,7 @@ void hlsl_info::avi_update_snap(d3d_surface *surface)
 
 	// unlock
 	result = (*d3dintf->surface.unlock_rect)(avi_copy_surface);
-	if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during texture unlock_rect call\n", (int)result);
+	if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during texture unlock_rect call\n"), (int)result);
 }
 
 
@@ -409,7 +409,7 @@ void hlsl_info::render_snapshot(d3d_surface *surface)
 			// now do the actual work
 			png_error error = png_write_bitmap(file, &pnginfo, avi_snap, 1 << 24, NULL);
 			if (error != PNGERR_NONE)
-				mame_printf_error("Error generating PNG for HLSL snapshot: png_error = %d\n", error);
+				mame_printf_error(_WINDOWS("Error generating PNG for HLSL snapshot: png_error = %d\n"), error);
 
 			// free any data allocated
 			png_free(&pnginfo);
@@ -418,7 +418,7 @@ void hlsl_info::render_snapshot(d3d_surface *surface)
 
 	// unlock
 	result = (*d3dintf->surface.unlock_rect)(snap_copy_target);
-	if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during texture unlock_rect call\n", (int)result);
+	if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during texture unlock_rect call\n"), (int)result);
 
 	if(snap_texture != NULL)
 	{
@@ -586,7 +586,7 @@ void hlsl_info::begin_avi_recording(const char *name)
 		avi_error avierr = avi_create(fullpath, &info, &avi_output_file);
 		if (avierr != AVIERR_NONE)
 		{
-			mame_printf_error("Error creating AVI: %s\n", avi_error_string(avierr));
+			mame_printf_error(_WINDOWS("Error creating AVI: %s\n"), avi_error_string(avierr));
 		}
 	}
 }
@@ -723,7 +723,7 @@ int hlsl_info::create_resources()
 	HRESULT result = (*d3dintf->device.create_texture)(d3d->device, (int)snap_width, (int)snap_height, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &avi_copy_texture);
 	if (result != D3D_OK)
 	{
-		mame_printf_verbose("Direct3D: Unable to init system-memory target for HLSL AVI dumping (%08x)\n", (UINT32)result);
+		mame_printf_verbose(_WINDOWS("Direct3D: Unable to init system-memory target for HLSL AVI dumping (%08x)\n"), (UINT32)result);
 		return 1;
 	}
 	(*d3dintf->texture.get_surface_level)(avi_copy_texture, 0, &avi_copy_surface);
@@ -731,7 +731,7 @@ int hlsl_info::create_resources()
 	result = (*d3dintf->device.create_texture)(d3d->device, (int)snap_width, (int)snap_height, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &avi_final_texture);
 	if (result != D3D_OK)
 	{
-		mame_printf_verbose("Direct3D: Unable to init video-memory target for HLSL AVI dumping (%08x)\n", (UINT32)result);
+		mame_printf_verbose(_WINDOWS("Direct3D: Unable to init video-memory target for HLSL AVI dumping (%08x)\n"), (UINT32)result);
 		return 1;
 	}
 	(*d3dintf->texture.get_surface_level)(avi_final_texture, 0, &avi_final_target);
@@ -1165,7 +1165,7 @@ void hlsl_info::begin()
 	(*d3dintf->effect.set_technique)(yiq_decode_effect, "DecodeTechnique");
 
 	HRESULT result = (*d3dintf->device.get_render_target)(d3d->device, 0, &backbuffer);
-	if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device get_render_target call\n", (int)result);
+	if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device get_render_target call\n"), (int)result);
 
 	for (int index = 0; index < 9; index++)
 		screen_encountered[index] = false;
@@ -1287,9 +1287,9 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 
 			HRESULT result = (*d3dintf->device.set_render_target)(d3d->device, 0, target4[targetidx]);
 
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call\n"), (int)result);
 			result = (*d3dintf->device.clear)(d3d->device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0,0,0,0), 0, 0);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device clear call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device clear call\n"), (int)result);
 
 			(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
@@ -1298,7 +1298,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 				(*d3dintf->effect.begin_pass)(curr_effect, pass);
 				// add the primitives
 				result = (*d3dintf->device.draw_primitive)(d3d->device, D3DPT_TRIANGLELIST, 0, 2);
-				if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+				if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 				(*d3dintf->effect.end_pass)(curr_effect);
 			}
 
@@ -1331,9 +1331,9 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 
 			result = (*d3dintf->device.set_render_target)(d3d->device, 0, target3[targetidx]);
 
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call\n"), (int)result);
 			result = (*d3dintf->device.clear)(d3d->device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0,0,0,0), 0, 0);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device clear call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device clear call\n"), (int)result);
 
 			(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
@@ -1342,7 +1342,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 				(*d3dintf->effect.begin_pass)(curr_effect, pass);
 				// add the primitives
 				result = (*d3dintf->device.draw_primitive)(d3d->device, D3DPT_TRIANGLELIST, 0, 2);
-				if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+				if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 				(*d3dintf->effect.end_pass)(curr_effect);
 			}
 
@@ -1375,9 +1375,9 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 
 		HRESULT result = (*d3dintf->device.set_render_target)(d3d->device, 0, smalltarget0[targetidx]);
 
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call\n"), (int)result);
 		result = (*d3dintf->device.clear)(d3d->device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0,0,0,0), 0, 0);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device clear call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device clear call\n"), (int)result);
 
 		(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
@@ -1386,7 +1386,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 			(*d3dintf->effect.begin_pass)(curr_effect, pass);
 			// add the primitives
 			result = (*d3dintf->device.draw_primitive)(d3d->device, D3DPT_TRIANGLELIST, 0, 2);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 			(*d3dintf->effect.end_pass)(curr_effect);
 		}
 
@@ -1409,16 +1409,16 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 		(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
 		result = (*d3dintf->device.set_render_target)(d3d->device, 0, prescaletarget0[targetidx]);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call\n"), (int)result);
 		result = (*d3dintf->device.clear)(d3d->device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0,0,0,0), 0, 0);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device clear call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device clear call\n"), (int)result);
 
 		for (UINT pass = 0; pass < num_passes; pass++)
 		{
 			(*d3dintf->effect.begin_pass)(curr_effect, pass);
 			// add the primitives
 			result = (*d3dintf->device.draw_primitive)(d3d->device, D3DPT_TRIANGLELIST, 0, 2);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 			(*d3dintf->effect.end_pass)(curr_effect);
 		}
 
@@ -1445,16 +1445,16 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 		(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
 		result = (*d3dintf->device.set_render_target)(d3d->device, 0, target2[targetidx]);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call 6\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call 6\n"), (int)result);
 		result = (*d3dintf->device.clear)(d3d->device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0,0,0,0), 0, 0);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device clear call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device clear call\n"), (int)result);
 
 		for (UINT pass = 0; pass < num_passes; pass++)
 		{
 			(*d3dintf->effect.begin_pass)(curr_effect, pass);
 			// add the primitives
 			result = (*d3dintf->device.draw_primitive)(d3d->device, D3DPT_TRIANGLELIST, 0, 2);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 			(*d3dintf->effect.end_pass)(curr_effect);
 		}
 
@@ -1482,16 +1482,16 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 			(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
 			result = (*d3dintf->device.set_render_target)(d3d->device, 0, target0[targetidx]);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call 6\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call 6\n"), (int)result);
 			result = (*d3dintf->device.clear)(d3d->device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0,0,0,0), 0, 0);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device clear call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device clear call\n"), (int)result);
 
 			for (UINT pass = 0; pass < num_passes; pass++)
 			{
 				(*d3dintf->effect.begin_pass)(curr_effect, pass);
 				// add the primitives
 				result = (*d3dintf->device.draw_primitive)(d3d->device, D3DPT_TRIANGLELIST, 0, 2);
-				if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+				if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 				(*d3dintf->effect.end_pass)(curr_effect);
 			}
 
@@ -1513,14 +1513,14 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 			(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
 			result = (*d3dintf->device.set_render_target)(d3d->device, 0, target1[targetidx]);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call 7\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call 7\n"), (int)result);
 
 			for (UINT pass = 0; pass < num_passes; pass++)
 			{
 				(*d3dintf->effect.begin_pass)(curr_effect, pass);
 				// add the primitives
 				result = (*d3dintf->device.draw_primitive)(d3d->device, D3DPT_TRIANGLELIST, 0, 2);
-				if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+				if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 				(*d3dintf->effect.end_pass)(curr_effect);
 			}
 
@@ -1551,9 +1551,9 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 		(*d3dintf->effect.set_texture)(curr_effect, "LastPass", last_texture[wrappedidx]); // Avoid changing targets due to page flipping
 
 		result = (*d3dintf->device.set_render_target)(d3d->device, 0, target0[targetidx]);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call 4\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call 4\n"), (int)result);
 		result = (*d3dintf->device.clear)(d3d->device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0,0,0,0), 0, 0);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device clear call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device clear call\n"), (int)result);
 
 		(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
@@ -1562,7 +1562,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 			(*d3dintf->effect.begin_pass)(curr_effect, pass);
 			// add the primitives
 			result = (*d3dintf->device.draw_primitive)(d3d->device, D3DPT_TRIANGLELIST, 0, 2);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 			(*d3dintf->effect.end_pass)(curr_effect);
 		}
 
@@ -1576,9 +1576,9 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 		(*d3dintf->effect.set_float)(curr_effect, "Passthrough", 1.0f);
 
 		result = (*d3dintf->device.set_render_target)(d3d->device, 0, last_target[wrappedidx]); // Avoid changing targets due to page flipping
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call 5\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call 5\n"), (int)result);
 		result = (*d3dintf->device.clear)(d3d->device, 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0,0,0,0), 0, 0);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device clear call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device clear call\n"), (int)result);
 
 		(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
@@ -1587,7 +1587,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 			(*d3dintf->effect.begin_pass)(curr_effect, pass);
 			// add the primitives
 			result = (*d3dintf->device.draw_primitive)(d3d->device, D3DPT_TRIANGLELIST, 0, 2);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 			(*d3dintf->effect.end_pass)(curr_effect);
 		}
 
@@ -1601,7 +1601,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 			(*d3dintf->effect.set_texture)(curr_effect, "Diffuse", texture0[targetidx]);
 
 			result = (*d3dintf->device.set_render_target)(d3d->device, 0, avi_final_target);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call\n"), (int)result);
 
 			(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
@@ -1610,7 +1610,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 				(*d3dintf->effect.begin_pass)(curr_effect, pass);
 				// add the primitives
 				result = (*d3dintf->device.draw_primitive)(d3d->device, poly->type, vertnum, poly->count);
-				if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+				if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 				(*d3dintf->effect.end_pass)(curr_effect);
 			}
 
@@ -1624,7 +1624,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 			(*d3dintf->effect.set_texture)(curr_effect, "Diffuse", texture0[targetidx]);
 
 			result = (*d3dintf->device.set_render_target)(d3d->device, 0, snap_target);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call\n"), (int)result);
 
 			(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
@@ -1633,7 +1633,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 				(*d3dintf->effect.begin_pass)(curr_effect, pass);
 				// add the primitives
 				result = (*d3dintf->device.draw_primitive)(d3d->device, poly->type, vertnum, poly->count);
-				if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+				if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 				(*d3dintf->effect.end_pass)(curr_effect);
 			}
 
@@ -1648,7 +1648,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 		(*d3dintf->effect.set_texture)(curr_effect, "Diffuse", texture0[targetidx]);
 
 		result = (*d3dintf->device.set_render_target)(d3d->device, 0, backbuffer);
-		if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device set_render_target call\n", (int)result);
+		if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device set_render_target call\n"), (int)result);
 
 		(*d3dintf->effect.begin)(curr_effect, &num_passes, 0);
 
@@ -1657,7 +1657,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 			(*d3dintf->effect.begin_pass)(curr_effect, pass);
 			// add the primitives
 			result = (*d3dintf->device.draw_primitive)(d3d->device, poly->type, vertnum, poly->count);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 			(*d3dintf->effect.end_pass)(curr_effect);
 		}
 
@@ -1686,7 +1686,7 @@ void hlsl_info::render_quad(d3d_poly_info *poly, int vertnum)
 			(*d3dintf->effect.begin_pass)(curr_effect, pass);
 			// add the primitives
 			HRESULT result = (*d3dintf->device.draw_primitive)(d3d->device, poly->type, vertnum, poly->count);
-			if (result != D3D_OK) mame_printf_verbose("Direct3D: Error %08X during device draw_primitive call\n", (int)result);
+			if (result != D3D_OK) mame_printf_verbose(_WINDOWS("Direct3D: Error %08X during device draw_primitive call\n"), (int)result);
 			(*d3dintf->effect.end_pass)(curr_effect);
 		}
 
@@ -2290,22 +2290,22 @@ static void get_vector(const char *data, int count, float *out, int report_error
 	if (count > 3)
 	{
 		if (sscanf(data, "%f,%f,%f,%f", &out[0], &out[1], &out[2], &out[3]) < 4 && report_error)
-			mame_printf_error("Illegal quad vector value = %s\n", data);
+			mame_printf_error(_WINDOWS("Illegal quad vector value = %s\n"), data);
 	}
 	else if(count > 2)
 	{
 		if (sscanf(data, "%f,%f,%f", &out[0], &out[1], &out[2]) < 3 && report_error)
-			mame_printf_error("Illegal triple vector value = %s\n", data);
+			mame_printf_error(_WINDOWS("Illegal triple vector value = %s\n"), data);
 	}
 	else if(count > 1)
 	{
 		if (sscanf(data, "%f,%f", &out[0], &out[1]) < 2 && report_error)
-			mame_printf_error("Illegal double vector value = %s\n", data);
+			mame_printf_error(_WINDOWS("Illegal double vector value = %s\n"), data);
 	}
 	else if(count > 0)
 	{
 		if (sscanf(data, "%f", &out[0]) < 1 && report_error)
-			mame_printf_error("Illegal single vector value = %s\n", data);
+			mame_printf_error(_WINDOWS("Illegal single vector value = %s\n"), data);
 	}
 }
 
@@ -2689,60 +2689,60 @@ slider_state *hlsl_info::init_slider_list()
 	slider_state **tailptr = &listhead;
 	astring string;
 
-	*tailptr = slider_alloc(window->machine(), "Shadow Mask Darkness", 0, 0, 100, 1, slider_shadow_mask_alpha, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Shadow Mask X Count", 1, 640, 1024, 1, slider_shadow_mask_x_count, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Shadow Mask Y Count", 1, 480, 1024, 1, slider_shadow_mask_y_count, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Shadow Mask Pixel Count X", 1, 3, 32, 1, slider_shadow_mask_usize, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Shadow Mask Pixel Count Y", 1, 3, 32, 1, slider_shadow_mask_vsize, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Screen Curvature", 0, 0, 100, 1, slider_curvature, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Image Pincushion", 0, 0, 100, 1, slider_pincushion, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Scanline Darkness", 0, 0, 100, 1, slider_scanline_alpha, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Scanline Screen Height", 1, 20, 80, 1, slider_scanline_scale, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Scanline Indiv. Height", 1, 10, 80, 1, slider_scanline_height, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Scanline Brightness", 0, 20, 40, 1, slider_scanline_bright_scale, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Scanline Brightness Overdrive", 0, 12, 20, 1, slider_scanline_bright_offset, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Scanline Jitter", 0, 0, 40, 1, slider_scanline_offset, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Defocus X", 0, 0, 64, 1, slider_defocus_x, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Defocus Y", 0, 0, 64, 1, slider_defocus_y, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Phosphor Defocus X", 0, 0, 64, 1, slider_post_defocus_x, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Phosphor Defocus Y", 0, 0, 64, 1, slider_post_defocus_y, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red Position Offset X", -1500, 0, 1500, 1, slider_red_converge_x, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red Position Offset Y", -1500, 0, 1500, 1, slider_red_converge_y, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green Position Offset X", -1500, 0, 1500, 1, slider_green_converge_x, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green Position Offset Y", -1500, 0, 1500, 1, slider_green_converge_y, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue Position Offset X", -1500, 0, 1500, 1, slider_blue_converge_x, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue Position Offset Y", -1500, 0, 1500, 1, slider_blue_converge_y, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red Convergence X", -1500, 0, 1500, 1, slider_red_radial_converge_x, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red Convergence Y", -1500, 0, 1500, 1, slider_red_radial_converge_y, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green Convergence X", -1500, 0, 1500, 1, slider_green_radial_converge_x, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green Convergence Y", -1500, 0, 1500, 1, slider_green_radial_converge_y, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue Convergence X", -1500, 0, 1500, 1, slider_blue_radial_converge_x, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue Convergence Y", -1500, 0, 1500, 1, slider_blue_radial_converge_y, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red Output from Red Input", -400, 0, 400, 5, slider_red_from_r, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red Output from Green Input", -400, 0, 400, 5, slider_red_from_g, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red Output from Blue Input", -400, 0, 400, 5, slider_red_from_b, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green Output from Red Input", -400, 0, 400, 5, slider_green_from_r, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green Output from Green Input", -400, 0, 400, 5, slider_green_from_g, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green Output from Blue Input", -400, 0, 400, 5, slider_green_from_b, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue Output from Red Input", -400, 0, 400, 5, slider_blue_from_r, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue Output from Green Input", -400, 0, 400, 5, slider_blue_from_g, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue Output from Blue Input", -400, 0, 400, 5, slider_blue_from_b, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red DC Offset", -100, 0, 100, 1, slider_red_offset, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green DC Offset", -100, 0, 100, 1, slider_green_offset, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue DC Offset", -100, 0, 100, 1, slider_blue_offset, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red Scale", -200, 100, 200, 1, slider_red_scale, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green Scale", -200, 100, 200, 1, slider_green_scale, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue Scale", -200, 100, 200, 1, slider_blue_scale, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red Power", -80, 20, 80, 1, slider_red_power, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green Power", -80, 20, 80, 1, slider_green_power, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue Power", -80, 20, 80, 1, slider_blue_power, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red Floor", 0, 0, 100, 1, slider_red_floor, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green Floor", 0, 0, 100, 1, slider_green_floor, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue Floor", 0, 0, 100, 1, slider_blue_floor, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Red Phosphor Life", 0, 0, 100, 1, slider_red_phosphor_life, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Green Phosphor Life", 0, 0, 100, 1, slider_green_phosphor_life, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Blue Phosphor Life", 0, 0, 100, 1, slider_blue_phosphor_life, (void*)options); tailptr = &(*tailptr)->next;
-	*tailptr = slider_alloc(window->machine(), "Saturation", 0, 100, 400, 1, slider_saturation, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Shadow Mask Darkness"), 0, 0, 100, 1, slider_shadow_mask_alpha, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Shadow Mask X Count"), 1, 640, 1024, 1, slider_shadow_mask_x_count, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Shadow Mask Y Count"), 1, 480, 1024, 1, slider_shadow_mask_y_count, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Shadow Mask Pixel Count X"), 1, 3, 32, 1, slider_shadow_mask_usize, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Shadow Mask Pixel Count Y"), 1, 3, 32, 1, slider_shadow_mask_vsize, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Screen Curvature"), 0, 0, 100, 1, slider_curvature, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Image Pincushion"), 0, 0, 100, 1, slider_pincushion, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Scanline Darkness"), 0, 0, 100, 1, slider_scanline_alpha, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Scanline Screen Height"), 1, 20, 80, 1, slider_scanline_scale, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Scanline Indiv. Height"), 1, 10, 80, 1, slider_scanline_height, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Scanline Brightness"), 0, 20, 40, 1, slider_scanline_bright_scale, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Scanline Brightness Overdrive"), 0, 12, 20, 1, slider_scanline_bright_offset, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Scanline Jitter"), 0, 0, 40, 1, slider_scanline_offset, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Defocus X"), 0, 0, 64, 1, slider_defocus_x, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Defocus Y"), 0, 0, 64, 1, slider_defocus_y, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Phosphor Defocus X"), 0, 0, 64, 1, slider_post_defocus_x, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Phosphor Defocus Y"), 0, 0, 64, 1, slider_post_defocus_y, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red Position Offset X"), -1500, 0, 1500, 1, slider_red_converge_x, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red Position Offset Y"), -1500, 0, 1500, 1, slider_red_converge_y, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green Position Offset X"), -1500, 0, 1500, 1, slider_green_converge_x, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green Position Offset Y"), -1500, 0, 1500, 1, slider_green_converge_y, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue Position Offset X"), -1500, 0, 1500, 1, slider_blue_converge_x, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue Position Offset Y"), -1500, 0, 1500, 1, slider_blue_converge_y, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red Convergence X"), -1500, 0, 1500, 1, slider_red_radial_converge_x, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red Convergence Y"), -1500, 0, 1500, 1, slider_red_radial_converge_y, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green Convergence X"), -1500, 0, 1500, 1, slider_green_radial_converge_x, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green Convergence Y"), -1500, 0, 1500, 1, slider_green_radial_converge_y, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue Convergence X"), -1500, 0, 1500, 1, slider_blue_radial_converge_x, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue Convergence Y"), -1500, 0, 1500, 1, slider_blue_radial_converge_y, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red Output from Red Input"), -400, 0, 400, 5, slider_red_from_r, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red Output from Green Input"), -400, 0, 400, 5, slider_red_from_g, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red Output from Blue Input"), -400, 0, 400, 5, slider_red_from_b, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green Output from Red Input"), -400, 0, 400, 5, slider_green_from_r, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green Output from Green Input"), -400, 0, 400, 5, slider_green_from_g, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green Output from Blue Input"), -400, 0, 400, 5, slider_green_from_b, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue Output from Red Input"), -400, 0, 400, 5, slider_blue_from_r, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue Output from Green Input"), -400, 0, 400, 5, slider_blue_from_g, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue Output from Blue Input"), -400, 0, 400, 5, slider_blue_from_b, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red DC Offset"), -100, 0, 100, 1, slider_red_offset, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green DC Offset"), -100, 0, 100, 1, slider_green_offset, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue DC Offset"), -100, 0, 100, 1, slider_blue_offset, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red Scale"), -200, 100, 200, 1, slider_red_scale, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green Scale"), -200, 100, 200, 1, slider_green_scale, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue Scale"), -200, 100, 200, 1, slider_blue_scale, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red Power"), -80, 20, 80, 1, slider_red_power, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green Power"), -80, 20, 80, 1, slider_green_power, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue Power"), -80, 20, 80, 1, slider_blue_power, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red Floor"), 0, 0, 100, 1, slider_red_floor, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green Floor"), 0, 0, 100, 1, slider_green_floor, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue Floor"), 0, 0, 100, 1, slider_blue_floor, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Red Phosphor Life"), 0, 0, 100, 1, slider_red_phosphor_life, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Green Phosphor Life"), 0, 0, 100, 1, slider_green_phosphor_life, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Blue Phosphor Life"), 0, 0, 100, 1, slider_blue_phosphor_life, (void*)options); tailptr = &(*tailptr)->next;
+	*tailptr = slider_alloc(window->machine(), _WINDOWS("Saturation"), 0, 100, 400, 1, slider_saturation, (void*)options); tailptr = &(*tailptr)->next;
 
 	return listhead;
 }

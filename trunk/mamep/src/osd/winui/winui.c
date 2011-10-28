@@ -874,19 +874,19 @@ extern const LPCTSTR column_names[COLUMN_MAX] =
 #ifdef MESS
 	TEXT("System"),
 #else
-	TEXT("Description"),
+	TEXT("Game"),
 #endif
 	TEXT("Screen"),
 	TEXT("ROMs"),
 	TEXT("Samples"),
-	TEXT("Name"),
+	TEXT("Directory"),
 	TEXT("Type"),
 	TEXT("Trackball"),
 	TEXT("Played"),
 	TEXT("Manufacturer"),
 	TEXT("Year"),
 	TEXT("Clone Of"),
-	TEXT("Driver"),
+	TEXT("Source"),
 	TEXT("Play Time")
 };
 
