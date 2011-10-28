@@ -878,6 +878,10 @@ Default input layout
 Delete
 
 
+# osd/winui/winui.c: 877
+Description
+
+
 # osd/winui/mameui.rc: 423, 635 osd/winui/winui.c: 773
 Details
 

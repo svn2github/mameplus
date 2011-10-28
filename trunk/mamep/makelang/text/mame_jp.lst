@@ -1789,10 +1789,10 @@ ddonpachj	怒首領蜂 (日本版 master ver 97/02/05)	どどんぱち_1	Cave (Atlus license
 ddp2	怒首領蜂II (ver 102)	どどんぱち_2	IGS
 ddp2100	怒首領蜂II / Bee Storm (ver 100)	どどんぱち_2	IGS
 ddp2101	怒首領蜂II / Bee Storm (ver 101)	どどんぱち_2	IGS
-ddp3	怒首領蜂 大往生 (ver 101)	どどんぱち_3_だいおうじょう	Cave
-ddp3a	怒首領蜂 大往生 (ver 100 second rev)	どどんぱち_3_だいおうじょう	Cave
-ddp3b	怒首領蜂 大往生 (ver 100 first rev)	どどんぱち_3_だいおうじょう	Cave
-ddp3blk	怒首領蜂 大往生 (black label)	どどんぱち_3_だいおうじょう	Cave
+ddpdoj	怒首領蜂 大往生 V101 (2002.04.05.Master Ver)	どどんぱち_3_だいおうじょう	Cave
+ddpdoja	怒首領蜂 大往生 V100 (2002.04.05.Master Ver)	どどんぱち_3_だいおうじょう	Cave
+ddpdojb	怒首領蜂 大往生 (2002.04.05 Master Ver)	どどんぱち_3_だいおうじょう	Cave
+ddpdojblk	怒首領蜂 大往生 (black label)	どどんぱち_3_だいおうじょう	Cave
 ddr2m	ダンスダンスレボリューション 2nd Mix (GN895 ver JAA)	だんすだんすれぼりゅーしょん_2_1_せかんどみっくす_1	Konami
 ddr2mc	ダンスダンスレボリューション 2nd Mix with ビートマニアII DX CLUB VERSiON (GE896 ver JAA)	だんすだんすれぼりゅーしょん_2_1_せかんどみっくす_3_うぃずびーとまにあつーでぃーえっくす_1_くらぶばーじょん	Konami
 ddr2mc2	ダンスダンスレボリューション 2nd Mix with ビートマニアII DX substream CLUB VERSiON 2 (GE984 ver JAA)	だんすだんすれぼりゅーしょん_2_1_せかんどみっくす_3_うぃずびーとまにあつーでぃーえっくす_2_さぶすとりーむくらぶばーじょん2	Konami
@@ -2741,7 +2741,8 @@ funybubl	ファニーバブル	ふぁにーばぶる	In Chang Electronic Co
 funybublc	ファニーバブル (Comad ver)	ふぁにーばぶる	Comad
 funystrp	ファニーストリップ	ふぁにーすとりっぷ	Microhard / MagicGames
 futari10	虫姫さま ふたり Ver 1.0 (2006/10/23 master ver)	むしひめさまふたり_ver1.0	Cave
-futari15	虫姫さま ふたり Ver 1.5 (2006/12/8 master ver 1.54)	むしひめさまふたり_ver1.5	Cave
+futari15	虫姫さま ふたり Ver 1.5 (2006/12/8 MASTER VER 1.54.)	むしひめさまふたり_ver1.5	Cave
+futari15a	虫姫さま ふたり Ver 1.5 (2006/12/8 MASTER VER 1.54)	むしひめさまふたり_ver1.5	Cave
 futflash	フューチャーフラッシュ	ふゅーちゃーふらっしゅ	Hoei
 futspy	フューチャースパイ (315-5061)	ふゅーちゃーすぱい	Sega
 fvipers	ファイティングバイパーズ (rev D)	ふぁいてぃんぐばいぱーず_1	Sega
@@ -5118,7 +5119,7 @@ multiwin	マルチウィン (ver 0167 encrypted)	まるちうぃん	Funworld
 murogem	ムローゲモナコ (set 1)	むろーげもなこ	<unknown>
 murogema	ムローゲモナコ (set 2)	むろーげもなこ	<unknown>
 murogmbl	ムローゲモナコ (海賊版?)	むろーげもなこ	bootleg?
-mushisam	虫姫さま  (2004/10/12 master ver)	むしひめさま	Cave
+mushisam	虫姫さま  (2004/10/12 MASTER VER.)	むしひめさま	Cave
 mushisama	虫姫さま  (2004/10/12 master ver)	むしひめさま	Cave
 mushitam	虫姫たま (2005/09/09 master ver)	むしひめたま	Cave
 musicsrt	ミュージックソート (英語版) (ver 2.02)	みゅーじっくそーと	ABM Games
