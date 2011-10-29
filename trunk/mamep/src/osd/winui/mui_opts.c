@@ -425,11 +425,11 @@ const options_entry winui_options::s_option_entries[] =
 static const options_entry perGameOptions[] =
 {
 	// per game options
-//	{ "_play_count",                                  "0",                          OPTION_INTEGER,    NULL },
-//	{ "_play_time",                                   "0",                          OPTION_INTEGER,    NULL },
-	{ "_rom",                                   "-1",                         OPTION_INTEGER,    NULL },
-//	{ "_samples_audit",                               "-1",                         OPTION_INTEGER,    NULL },
-//	{ "_extra_software",                              "",                           OPTION_STRING,     MESS_MARK_CONSOLE_ONLY },
+	{ "_count",                                       "0",                          OPTION_INTEGER,    NULL },
+	{ "_time",                                        "0",                          OPTION_INTEGER,    NULL },
+	{ "_rom",                                        "-1",                          OPTION_INTEGER,    NULL },
+	{ "_samples",                                    "-1",                          OPTION_INTEGER,    NULL },
+//	{ "_extra",                                        "",                          OPTION_STRING,     MESS_MARK_CONSOLE_ONLY },
 	{ NULL }
 };
 
