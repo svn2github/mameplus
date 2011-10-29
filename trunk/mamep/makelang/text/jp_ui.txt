@@ -2,7 +2,7 @@
 %d colors 
 %d 色 
 
-# osd/winui/layout.c: 208 osd/winui/winui.c: 3656
+# osd/winui/layout.c: 210 osd/winui/winui.c: 3656
 %d games
 %d ゲーム
 
@@ -214,7 +214,7 @@ Mameリリースノート(&M)
 &Play
 プレイ(&P)
 
-# osd/winui/layout.c: 207 osd/winui/winui.c: 3869, 7243
+# osd/winui/layout.c: 209 osd/winui/winui.c: 3869, 7243
 &Play %s
 プレイ(&P) %s
 
@@ -402,7 +402,7 @@ Arrange &Icons
 Arranges icons in a grid
 アイコンを等間隔に整列します
 
-# osd/winui/layout.c: 126
+# osd/winui/layout.c: 128
 Artwork
 アートワーク
 
@@ -490,7 +490,7 @@ BIOS options\nCustom options used by all games in the %s
 Backdrops
 バックドロップ
 
-# osd/winui/layout.c: 138
+# osd/winui/layout.c: 140
 Background Images
 背景画像
 
@@ -618,7 +618,7 @@ CPU
 Cabinet
 筐体
 
-# osd/winui/layout.c: 129
+# osd/winui/layout.c: 131
 Cabinets
 筐体
 
@@ -638,7 +638,7 @@ Categories
 Changing this item is not permitted
 このアイテムの変更は許可されていません
 
-# osd/winui/layout.c: 124
+# osd/winui/layout.c: 126
 Cheats
 チート
 
@@ -686,11 +686,11 @@ Colors aren't 100% accurate
 Colors:
 色数:
 
-# osd/winui/layout.c: 139
+# osd/winui/layout.c: 141
 Comment Files
 コメントファイル
 
-# osd/winui/layout.c: 121
+# osd/winui/layout.c: 123
 Config
 設定ファイル
 
@@ -738,11 +738,11 @@ Control &Panel
 Control Panel
 コンパネ
 
-# osd/winui/layout.c: 132
+# osd/winui/layout.c: 134
 Control Panels
 コントロールパネル
 
-# osd/winui/layout.c: 83
+# osd/winui/layout.c: 85
 Control Type
 コントロールの種類
 
@@ -750,7 +750,7 @@ Control Type
 Control Type:
 コントロール:
 
-# osd/winui/layout.c: 135
+# osd/winui/layout.c: 137
 Controller Files
 コントローラ定義ファイル
 
@@ -782,7 +782,7 @@ Could not open '%s' as a valid savestate file.
 Crop artwork
 ゲーム画面外をカット
 
-# osd/winui/layout.c: 141
+# osd/winui/layout.c: 143
 Crosshair Files
 十\字線ファイル
 
@@ -830,6 +830,10 @@ Customize interface options.
 Customize which columns are used in the game list
 ゲームリストに用いる表\示項目を設定します
 
+# osd/winui/mui_opts.c: 270
+DISPLAY STATE OPTIONS
+ディスプレイ状態オプション
+
 # osd/winui/mameui.rc: 866
 Debug
 デバッグ
@@ -865,10 +869,6 @@ Default input layout
 # osd/winui/mameui.rc: 446
 Delete
 削除
-
-# osd/winui/winui.c: 877
-Description
-記述
 
 # osd/winui/mameui.rc: 423, 635 osd/winui/winui.c: 773
 Details
@@ -1130,11 +1130,15 @@ Error while saving custom file %s
 Exit the application
 アプリケーションを終了します
 
-# osd/winui/layout.c: 142
+# osd/winui/layout.c: 144
 External Folder List
 外部フォルダリスト
 
-# osd/winui/layout.c: 77
+# osd/winui/mui_opts.c: 355
+FILENAME OPTIONS
+ファイル名オプション
+
+# osd/winui/layout.c: 78
 FPS
 FPS
 
@@ -1170,7 +1174,7 @@ Flip screen upside-down
 Flyer
 広告
 
-# osd/winui/layout.c: 128
+# osd/winui/layout.c: 130
 Flyers
 広告
 
@@ -1178,7 +1182,7 @@ Flyers
 Fold&er List\tAlt+D
 フォルダリスト(&E)\tAlt+D
 
-# osd/winui/layout.c: 140
+# osd/winui/layout.c: 142
 Font Files
 フォントファイル
 
@@ -1201,6 +1205,10 @@ Full screen contrast
 # osd/winui/mameui.rc: 824
 Full screen gamma
 フルスクリーンのガンマ値
+
+# osd/winui/mui_opts.c: 418
+GAME STATISTICS
+ゲーム統計
 
 # osd/winui/winui.c: 877
 Game
@@ -1290,7 +1298,7 @@ Microsoft's DirectX Webページを表\示
 Grouped
 グループ化
 
-# osd/winui/layout.c: 136
+# osd/winui/layout.c: 138
 Hard Drive Difference
 ハードディスク差分ファイル
 
@@ -1306,7 +1314,7 @@ Help
 Hide &mouse cursor (requires restart)
 マウスカーソ\ルを隠す(要再起動)(&M)
 
-# osd/winui/layout.c: 147
+# osd/winui/layout.c: 149
 High Scores
 ハイスコア
 
@@ -1318,7 +1326,7 @@ History
 Homebrew
 自家製
 
-# osd/winui/layout.c: 78 osd/winui/winui.c: 5680
+# osd/winui/layout.c: 80 osd/winui/winui.c: 5680
 Horizontal
 横型
 
@@ -1334,11 +1342,11 @@ How cheats work
 INTERFACE OPTIONS
 インターフェースオプション
 
-# osd/winui/layout.c: 144
+# osd/winui/layout.c: 146
 IPS Files
 IPSファイル
 
-# osd/winui/layout.c: 137
+# osd/winui/layout.c: 139
 Icons
 アイコン
 
@@ -1378,11 +1386,11 @@ Individual game options\n
 Inheritable Filters
 フィルタを継承可能\にする
 
-# osd/winui/layout.c: 120
+# osd/winui/layout.c: 122
 Ini Files
 INIファイル
 
-# osd/winui/layout.c: 123
+# osd/winui/layout.c: 125
 Input Files (*.inp)
 再生ファイル (*.inp)
 
@@ -1462,7 +1470,7 @@ Keyboard
 L&arge Icons
 大きなアイコン(&A)
 
-# osd/winui/layout.c: 152
+# osd/winui/layout.c: 154
 Language Files
 言語ファイル
 
@@ -1470,7 +1478,7 @@ Language Files
 Large Icons
 大きなアイコン
 
-# osd/winui/layout.c: 86 osd/winui/properties.c: 402, 920 osd/winui/treeview.c: 1397
+# osd/winui/layout.c: 88 osd/winui/properties.c: 402, 920 osd/winui/treeview.c: 1397
 Lightgun
 光線銃
 
@@ -1546,15 +1554,15 @@ Manufacturer
 Marquee
 マーキー
 
-# osd/winui/layout.c: 130
+# osd/winui/layout.c: 132
 Marquees
 マーキー
 
-# osd/winui/layout.c: 94
+# osd/winui/layout.c: 96
 Mechanical
 機械的
 
-# osd/winui/layout.c: 127
+# osd/winui/layout.c: 129
 Memory Card
 メモリカード
 
@@ -1586,7 +1594,15 @@ Move Item
 Move Up
 上に移動
 
-# osd/winui/layout.c: 134
+# osd/winui/mui_opts.c: 402
+NAVIGATION JOYSTICK CODES
+ナビゲーションジョイスティックコード
+
+# osd/winui/mui_opts.c: 362
+NAVIGATION KEY CODES
+ナビゲーションキーコード
+
+# osd/winui/layout.c: 136
 NVRAM
 NVRAMファイル
 
@@ -1618,7 +1634,7 @@ No Selection
 No offset for clones missing parent in view
 親セットが無いクローンをインデントしない
 
-# osd/winui/layout.c: 95
+# osd/winui/layout.c: 97
 Non Mechanical
 非機械的
 
@@ -1698,11 +1714,11 @@ PCB
 PCB Info
 PCB情報
 
-# osd/winui/layout.c: 150
+# osd/winui/layout.c: 152
 PCB Info Files
 PCB情報ファイル
 
-# osd/winui/layout.c: 133
+# osd/winui/layout.c: 135
 PCBs
 PCB
 
@@ -1854,7 +1870,7 @@ RGB設定:
 ROM check:
 ロムファイル:
 
-# osd/winui/layout.c: 118 osd/winui/mameui.rc: 408 osd/winui/winui.c: 880
+# osd/winui/layout.c: 120 osd/winui/mameui.rc: 408 osd/winui/winui.c: 880
 ROMs
 ROM
 
@@ -1866,7 +1882,7 @@ ROMが見つかりません
 Randomly select a game.
 ゲームをランダムに選択します
 
-# osd/winui/layout.c: 80 osd/winui/winui.c: 5721
+# osd/winui/layout.c: 82 osd/winui/winui.c: 5721
 Raster
 ラスタ
 
@@ -1950,7 +1966,7 @@ Reset time played for selected item
 Resetting the User Interface options\nrequires exiting MAMEUI.\n
 ユーザインターフェースオプションをリセットするには\nMAMEUIの終了が必要です。\n
 
-# osd/winui/layout.c: 76
+# osd/winui/layout.c: 77
 Resolution
 画面解像度
 
@@ -1986,6 +2002,10 @@ S&mall Icons
 S&tretch screenshot larger than natural size
 スクリーンショットを拡大する(&T)
 
+# osd/winui/mui_opts.c: 340
+SEARCH PATH OPTIONS
+検索パスオプション
+
 # osd/winui/mameui.rc: 633
 Sample check:
 サンプルファイル:
@@ -1994,11 +2014,11 @@ Sample check:
 Sample rate
 サンプルレート
 
-# osd/winui/layout.c: 66, 119 osd/winui/mameui.rc: 414 osd/winui/winui.c: 881
+# osd/winui/layout.c: 66, 121 osd/winui/mameui.rc: 414 osd/winui/winui.c: 881
 Samples
 サンプルファイル
 
-# osd/winui/layout.c: 90, 92
+# osd/winui/layout.c: 92, 94
 Save State
 ステートの保存
 
@@ -2302,7 +2322,7 @@ Snapshot/movie resolution
 Snapshot/movie view
 スナップショット/動画 ビュー
 
-# osd/winui/layout.c: 122
+# osd/winui/layout.c: 124
 Snapshots
 スナップショット
 
@@ -2402,7 +2422,7 @@ Standard
 Start out maximized
 ウィンドウ最大化
 
-# osd/winui/layout.c: 125
+# osd/winui/layout.c: 127
 State
 ゲームステート
 
@@ -2410,7 +2430,7 @@ State
 Status:
 状態:
 
-# osd/winui/layout.c: 88
+# osd/winui/layout.c: 90
 Stereo
 ステレオ
 
@@ -2502,7 +2522,7 @@ Throttle
 Title
 タイトル
 
-# osd/winui/layout.c: 131
+# osd/winui/layout.c: 133
 Titles
 タイトル画面
 
@@ -2526,7 +2546,7 @@ Toggle full screen mode
 Total:
 合計:
 
-# osd/winui/layout.c: 85 osd/winui/properties.c: 919 osd/winui/treeview.c: 1396 osd/winui/winui.c: 884
+# osd/winui/layout.c: 87 osd/winui/properties.c: 919 osd/winui/treeview.c: 1396 osd/winui/winui.c: 884
 Trackball
 トラックボール
 
@@ -2666,7 +2686,7 @@ Use various icon for Not Working game
 User interface settings\n\n
 ユーザインターフェース\n\n
 
-# osd/winui/layout.c: 81 osd/winui/mameui.rc: 1017 osd/winui/winui.c: 5719
+# osd/winui/layout.c: 83 osd/winui/mameui.rc: 1017 osd/winui/winui.c: 5719
 Vector
 ベクタ
 
@@ -2698,7 +2718,7 @@ Version 8
 Version 9
 バージョン 9
 
-# osd/winui/layout.c: 79 osd/winui/winui.c: 5680
+# osd/winui/layout.c: 81 osd/winui/winui.c: 5680
 Vertical
 縦型
 

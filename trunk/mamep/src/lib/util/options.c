@@ -482,8 +482,13 @@ const char *core_options::translate_description(const char *description)
 {
 	const char *desc = _(description);
 
+	// osd/windows
 	if (desc == description)
-		return lang_message(UI_MSG_OSD0, desc);
+		desc = lang_message(UI_MSG_OSD0, desc);
+
+	// osd/winui
+	if (desc == description)
+		return lang_message(UI_MSG_OSD1, desc);
 
 	return desc;
 }
