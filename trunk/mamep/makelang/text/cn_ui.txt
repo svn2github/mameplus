@@ -2792,7 +2792,7 @@ gamelists (*.lst)
 
 # osd/winui/winui.c: 6354
 history (*.dat)
-history (*.dat)
+历史文件 (*.dat)
 
 # osd/winui/winui.c: 6357
 mameinfo (*.dat)
@@ -2812,7 +2812,7 @@ sounds (*.wav)
 
 # osd/winui/winui.c: 6361
 stoty (*.dat)
-stoty (*.dat)
+故事 (*.dat)
 
 # osd/winui/winui.c: 6332
 videos (*.avi)
@@ -2824,65 +2824,65 @@ videos (*.mng)
 
 # osd/winui/mameui.rc: 372
 Copyright (C) 1997-2011 The MAME Team
-
+版权所有 (C) 1997-2011 MAME 团队
 
 # osd/winui/winui.c: 882
 Directory
-
+目录
 
 # osd/winui/winui.c: 877
 Game
-
+游戏
 
 # osd/winui/layout.c: 94
 Mechanical
-
+机械
 
 # osd/winui/layout.c: 95
 Non Mechanical
-
+非机械
 
 # osd/winui/properties.c: 3676
 Skip 1 frame
-
+跳 1 帧
 
 # osd/winui/properties.c: 3694
 Skip 10 frames
-
+跳 10 帧
 
 # osd/winui/properties.c: 3678
 Skip 2 frames
-
+跳 2 帧
 
 # osd/winui/properties.c: 3680
 Skip 3 frames
-
+跳 3 帧
 
 # osd/winui/properties.c: 3682
 Skip 4 frames
-
+跳 4 帧
 
 # osd/winui/properties.c: 3684
 Skip 5 frames
-
+跳 5 帧
 
 # osd/winui/properties.c: 3686
 Skip 6 frames
-
+跳 6 帧
 
 # osd/winui/properties.c: 3688
 Skip 7 frames
-
+跳 7 帧
 
 # osd/winui/properties.c: 3690
 Skip 8 frames
-
+跳 8 帧
 
 # osd/winui/properties.c: 3692
 Skip 9 frames
-
+跳 9 帧
 
 # osd/winui/layout.c: 59 osd/winui/winui.c: 889
 Source
-
+来源
 

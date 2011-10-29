@@ -856,47 +856,47 @@ Defocus Y
 
 # osd/windows/d3dhlsl.c: 1292, 1336, 1380, 1414, 1450, 1487, 1556, 1581 osd/windows/drawd3d.c: 584
 Direct3D: Error %08X during device clear call\n
-
+Direct3D: 设备清除时发生错误 %08X\n
 
 # osd/windows/d3dhlsl.c: 1554
 Direct3D: Error %08X during device set_render_target call 4\n
-
+Direct3D: 设备 set_render_target 调用时发生错误 %08X\n
 
 # osd/windows/d3dhlsl.c: 1579
 Direct3D: Error %08X during device set_render_target call 5\n
-
+Direct3D: 设备 set_render_target 调用时发生错误 %08X\n
 
 # osd/windows/d3dhlsl.c: 1448, 1485
 Direct3D: Error %08X during device set_render_target call 6\n
-
+Direct3D: 设备 device set_render_target 调用时发生错误 %08X\n
 
 # osd/windows/d3dhlsl.c: 1516
 Direct3D: Error %08X during device set_render_target call 7\n
-
+Direct3D: 设备 device set_render_target 调用时发生错误 %08X\n
 
 # osd/windows/d3dhlsl.c: 726
 Direct3D: Unable to init system-memory target for HLSL AVI dumping (%08x)\n
-
+Direct3D: 无法为初始化系统内存目标 HLSL AVI 转储 (%08x)\n
 
 # osd/windows/d3dhlsl.c: 234
 Direct3D: Unable to init system-memory target for HLSL snapshot (%08x), bailing\n
-
+Direct3D: 无法为初始化系统内存目标 HLSL 快照 (%08x)\n
 
 # osd/windows/d3dhlsl.c: 734
 Direct3D: Unable to init video-memory target for HLSL AVI dumping (%08x)\n
-
+Direct3D: 无法为初始化视频内存目标 HLSL AVI 转储 (%08x)\n
 
 # osd/windows/d3dhlsl.c: 242
 Direct3D: Unable to init video-memory target for HLSL snapshot (%08x), bailing\n
-
+Direct3D: 无法为初始化视频内存目标 HLSL 快照 (%08x)\n
 
 # osd/windows/d3dhlsl.c: 589
 Error creating AVI: %s\n
-
+创建 AVI 错误: %s\n
 
 # osd/windows/d3dhlsl.c: 412
 Error generating PNG for HLSL snapshot: png_error = %d\n
-
+生成 HLSL 快照错误: png_error = %d\n
 
 # osd/windows/d3dhlsl.c: 2717
 Green Convergence X
@@ -948,19 +948,19 @@ Green Scale
 
 # osd/windows/d3dhlsl.c: 2303
 Illegal double vector value = %s\n
-
+非法的双矢量值 = %s\n
 
 # osd/windows/d3dhlsl.c: 2293
 Illegal quad vector value = %s\n
-
+非法的四矢量值 = %s\n
 
 # osd/windows/d3dhlsl.c: 2308
 Illegal single vector value = %s\n
-
+非法的单矢量值 = %s\n
 
 # osd/windows/d3dhlsl.c: 2298
 Illegal triple vector value = %s\n
-
+非法的三矢量值 = %s\n
 
 # osd/windows/d3dhlsl.c: 2698
 Image Pincushion
@@ -976,7 +976,7 @@ Phosphor Defocus Y
 
 # osd/windows/input.c: 849
 Record Rendered Video
-
+录制渲染视频
 
 # osd/windows/d3dhlsl.c: 2715
 Red Convergence X
@@ -1028,35 +1028,35 @@ Red Scale
 
 # osd/windows/d3dhlsl.c: 1373, 2745 
 Saturation
-
+饱和
 
 # osd/windows/d3dhlsl.c: 2702
 Scanline Brightness
-
+扫描线亮度
 
 # osd/windows/d3dhlsl.c: 2703
 Scanline Brightness Overdrive
-
+扫描线亮度过高
 
 # osd/windows/d3dhlsl.c: 2699
 Scanline Darkness
-
+扫描线暗度
 
 # osd/windows/d3dhlsl.c: 2701
 Scanline Indiv. Height
-
+扫描线逐张高度
 
 # osd/windows/d3dhlsl.c: 2704
 Scanline Jitter
-
+扫描线抖动
 
 # osd/windows/d3dhlsl.c: 2700
 Scanline Screen Height
-
+扫描线屏幕高度
 
 # osd/windows/d3dhlsl.c: 2697 
 Screen Curvature
-
+屏幕曲率
 
 # osd/windows/d3dhlsl.c: 2692
 Shadow Mask Darkness

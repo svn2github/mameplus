@@ -720,7 +720,7 @@ Center
 
 # emu/machine/ctronics.c: 140, 141
 Centronics
-Centronics
+并口
 
 # emu/uimenu.c: 1761
 Cheat
@@ -988,7 +988,7 @@ Default
 
 # emu/ioport.c: 612 
 Delete
-Delete
+删除
 
 # emu/ioport.c: 678 mame/drivers/dreamwld.c: 515
 Demo Sounds
@@ -5356,91 +5356,91 @@ year, manufacturer and full name
 
 # emu/clifront.c: 713
  SYSTEM      MEDIA NAME (brief)   IMAGE FILE EXTENSIONS SUPPORTED     \n
-
+ 系统      媒体名称 (简述)   文件扩展支持                     \n
 
 # emu/clifront.c: 661
  SYSTEM      SLOT NAME    SLOT OPTIONS    SLOT DEVICE NAME     \n
-
+ 系统      插槽名称    插槽选项    插槽设备名称     \n
 
 # emu/ui.c: 2250
  Volume
-
+ 音量
 
 # mame/layout/tceptor2.lay: 11
 %dD Glasses Left
-
+%dD 眼镜左边
 
 # mame/layout/tceptor2.lay: 16
 %dD Glasses Right
-
+%dD 眼镜右边
 
 # mame/layout/tceptor2.lay: 3
 %dD Glasses Side-by-Side
-
+%dD 眼镜两侧
 
 # mame/layout/drwho.lay: 1575
 AWP Simulated Video (Lamp Matrix and Reels)
-
+AWP 模拟视频 (灯矩阵和卷轴)
 
 # mame/layout/awpdmd.lay: 411
 AWP Simulated Video (Reels and Lamp Matrix)
-
+AWP 模拟视频 (卷轴和灯矩阵)
 
 # mame/layout/bfm_sc2.lay: 856
 Adder %d Output Only (%d:%d)
-
+仅加法器 %d 输出 (%d:%d)
 
 # mame/layout/bfm_sc1.lay: 2086
 Adder %d Output Only (%d:%d, No Artwork)
-
+仅加法器 %d 输出 (%d:%d, 无装饰图)
 
 # mame/layout/gldncrwn.lay: 81 mame/layout/paradice.lay: 72 mame/layout/pokio.lay: 72 mame/layout/pyramid.lay: 63 mame/layout/quintoon.lay: 72 mame/layout/slots.lay: 81 mame/layout/sltblgpo.lay: 63 mame/layout/sltblgtk.lay: 81
 Adder and Lamps
-
+加法器和灯
 
 # mame/layout/bfm_sc2.lay: 32
 Adder,VFD and Lamp Matrix
-
+加法器,VFD和灯矩阵
 
 # mame/layout/gldncrwn.lay: 110 mame/layout/paradice.lay: 98 mame/layout/pokio.lay: 107 mame/layout/pyramid.lay: 86 mame/layout/quintoon.lay: 98 mame/layout/slots.lay: 110 mame/layout/sltblgpo.lay: 86 mame/layout/sltblgtk.lay: 110
 Adder,VFD and Lamps
-
+加法器,VFD和灯
 
 # emu/video.c: 990
 Adjusting target speed to %.1f%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n
-
+正在调整目标速度至 %.1f%% (硬件=%.2fHz, 游戏=%.2fHz, 调整=%.2fHz)\n
 
 # mame/drivers/igspoker.c: 1005 mame/drivers/nss.c: 578, 582, 586, 590, 607 mame/drivers/sfcbox.c: 159, 163, 167, 171, 188 mame/drivers/snesb.c: 352, 356, 360, 364, 381 mess/drivers/snes.c: 320, 324, 328, 332, 349 
 All
-
+所有
 
 # emu/ui.c: 2163
 Are you sure you want to quit?\n\n
-
+确定要退出吗?\n\n
 
 # emu/save.c: 151, 172
 Attempt to register callback function after state registration is closed!
-
+在注册状态关闭后尝试回调注册功能!
 
 # emu/save.c: 198
 Attempt to register save state entry after state registration is closed!\nModule %s tag %s name %s\n
-
+在注册状态关闭后尝试保存状态注册功能!\n模块 %s 标签 %s 名称 %s\n
 
 # mame/drivers/ssv.c: 1825 
 Available
-
+可用的
 
 # mame/layout/pe_bjack.lay: 177 mame/layout/pe_keno.lay: 129 mame/layout/pe_poker.lay: 129 mame/layout/pe_slots.lay: 118 mame/layout/peplus.lay: 117
 Bezel Lamps
-
+外框灯
 
 # mame/drivers/berzerk.c: 719 mame/drivers/coinmstr.c: 281 mame/drivers/funworld.c: 2023 mame/drivers/goldnpkr.c: 2558 
 Bookkeeping
-
+收入
 
 # mame/drivers/equites.c: 824 mame/drivers/fitfight.c: 522, 654 mame/drivers/lordgun.c: 552 mame/drivers/m90.c: 448 mame/drivers/megasys1.c: 1320 mame/drivers/taitosj.c: 1655 mame/layout/splus.lay: 92
 Buttons
-
+按钮
 
 # emu/uimenu.c: 3393
 CCW 90
@@ -5456,71 +5456,71 @@ CW 90
 
 # mame/layout/connect4.lay: 186
 Classic graphics and VFD
-
+传统画面和 VFD
 
 # mame/layout/depthch.lay: 12
 Color Overlay (Gremlin)
-
+色彩叠加 (Gremlin)
 
 # mame/layout/sstrangr.lay: 61
 Color Overlay Cocktail
-
+鸡尾酒色彩叠加
 
 # mame/layout/sstrangr.lay: 53
 Color Overlay Upright
-
+直立色彩叠加
 
 # mame/layout/armora.lay: 147 mame/layout/shuttlei.lay: 16
 Color_Overlay
-
+色彩叠加
 
 # mame/layout/stactics.lay: 158
 Control Panel / Laser LEDs
-
+控制面板 / 镭射 LEDs
 
 # mame/layout/elecyoyo.lay: 7
 Cropped Corners
-
+修饰角落
 
 # mame/layout/awpdmd.lay: 1706
 DMD Only
-
+仅 DMD
 
 # emu/inpttype.h: 135 mame/drivers/gei.c: 635 mame/drivers/mpu4drvr.c: 1581 mame/drivers/mpu4vid.c: 1509 mame/drivers/murogem.c: 151 mame/drivers/sms.c: 333 mame/drivers/statriv2.c: 327
 Deal
-
+发放
 
 # mame/layout/pe_bjack.lay: 218 mame/layout/pe_keno.lay: 158 mame/layout/pe_poker.lay: 170 mame/layout/pe_slots.lay: 145 mame/layout/peplus.lay: 143
 Debug Lamps
-
+调试灯
 
 # mame/drivers/cclimber.c: 571 mame/drivers/nmk16.c: 1331 mame/drivers/pacman.c: 2990 
 Display
-
+显示
 
 # emu/uiimage.c: 226
 File Already Exists - Overide?
-
+文件已存在 - 是否覆盖?
 
 # emu/clifront.c: 406
 Found %d matches for '%s' but none were clones\n
-
+找到 %d 个符合 '%s' 且非克隆版的游戏\n
 
 # mame/layout/bfm_sc1.lay: 409
 Full Output
-
+全输出
 
 # mame/layout/gamball.lay: 1813
 Gamball AWP Simulated Video (No Artwork)
-
+Gamball AWP 模拟视频 (无装饰图)
 
 # mame/drivers/mitchell.c: 570 mame/machine/ticket.c: 163
 Generic
-
+通用
 
 # mame/layout/blockade.lay: 16
 Green Overlay
-
+绿色覆盖
 
 # emu/inpttype.h: 134 mame/drivers/ampoker2.c: 967
 Half Gamble
@@ -5528,35 +5528,35 @@ Half Gamble
 
 # emu/inpttype.h: 146 mame/drivers/acefruit.c: 454 mame/drivers/bfm_sc1.c: 859 mame/drivers/bfm_sc2.c: 2758, 2909, 3065, 3376, 3531 mame/drivers/calomega.c: 1381 mame/drivers/funworld.c: 1285, 1347, 1650, 1711, 1772, 1833, 2115 mame/drivers/igspoker.c: 622 mame/drivers/limenko.c: 604 mame/drivers/maygay1b.c: 686 mame/drivers/mpu3.c: 678 mame/drivers/mpu4.c: 1732, 2201 mame/drivers/subsino.c: 1528
 Hold 1
-
+保留 1
 
 # emu/inpttype.h: 147 mame/drivers/acefruit.c: 463 mame/drivers/bfm_sc1.c: 860 mame/drivers/bfm_sc2.c: 3377 mame/drivers/calomega.c: 1382 mame/drivers/limenko.c: 605 mame/drivers/maygay1b.c: 687 mame/drivers/mpu3.c: 679 mame/drivers/mpu4.c: 1733, 2202
 Hold 2
-
+保留 2
 
 # emu/inpttype.h: 148 mame/drivers/acefruit.c: 472 mame/drivers/bfm_sc1.c: 861 mame/drivers/bfm_sc2.c: 3378 mame/drivers/calomega.c: 1383 mame/drivers/funworld.c: 1357, 1660, 1721, 1782, 1843, 2125 mame/drivers/igspoker.c: 624 mame/drivers/limenko.c: 606 mame/drivers/maygay1b.c: 688 mame/drivers/mpu3.c: 680 mame/drivers/mpu4.c: 1734, 2203
 Hold 3
-
+保留 3
 
 # emu/inpttype.h: 149 mame/drivers/acefruit.c: 483 mame/drivers/bfm_sc1.c: 862 mame/drivers/calomega.c: 1384 mame/drivers/limenko.c: 607 mame/drivers/maygay1b.c: 689 mame/drivers/mpu4.c: 1735
 Hold 4
-
+保留 4
 
 # emu/inpttype.h: 150 mame/drivers/calomega.c: 1385
 Hold 5
-
+保留 5
 
 # emu/inpttype.h: 140 mame/drivers/goldstar.c: 3177 mame/drivers/igs017.c: 1658 mame/drivers/jackie.c: 481 mame/drivers/luckgrln.c: 718 mame/drivers/majorpkr.c: 914 mame/drivers/slotcarn.c: 225 mame/drivers/subsino.c: 1216, 1326, 1434, 1704 mame/drivers/subsino2.c: 1754, 1765, 1768 mame/drivers/witch.c: 514
 Key In
-
+键入
 
 # emu/inpttype.h: 141 mame/drivers/igs017.c: 1667 mame/drivers/skylncr.c: 559 mame/drivers/subsino2.c: 1766
 Key Out
-
+键出
 
 # emu/layout/lcd.lay: 3 emu/layout/lcd_rot.lay: 3
 LCD with square pixels
-
+方形像素 LCD
 
 # mame/drivers/grchamp.c: 659 mame/layout/videopin.lay: 7
 LEDs
@@ -5564,51 +5564,51 @@ LEDs
 
 # ldplayer/layout/pr8210.lay: 92 mame/layout/abaseb.lay: 43 mame/layout/atarifb.lay: 43 mame/layout/atarifb4.lay: 53 mame/layout/gorf.lay: 62 mame/layout/kas89.lay: 37 mame/layout/luckyrlt.lay: 22 mame/layout/re800.lay: 22 mame/layout/re900.lay: 116 mame/layout/roul.lay: 22 mame/layout/sidewndr.lay: 30 mame/layout/tenpindx.lay: 109
 Lamps
-
+灯
 
 # mame/layout/maxaflex.lay: 49
 Lamps and Timer
-
+灯和计时器
 
 # mame/layout/darius.lay: 51
 Left Half
-
+左半画面
 
 # mame/drivers/neodrvr.c: 10483
 Mahjong Control Panel
-
+麻将控制面板
 
 # mame/layout/crmaze2p.lay: 45 mame/layout/crmaze4p.lay: 58
 Monitor and Lamps
-
+监视器和灯
 
 # emu/clifront.c: 329, 347, 369, 404, 435, 479, 508, 570, 615, 658, 710, 886, 978, 1015
 No matching games found for '%s'
-
+找不到符合 '%s' 的游戏
 
 # emu/layout/noscreens.lay: 14
 No screens attached
-
+无附属屏幕
 
 # emu/ui.c: 1434
 One or more ROMs/CHDs for this game have not been correctly dumped.\n
-
+这个游戏有一个或更多 ROMs/CHDs 没有正确转储
 
 # emu/clifront.c: 304 emu/machine.c: 463 
 Out of memory!\n
-
+内存不足
 
 # emu/inpttype.h: 142 mame/drivers/ampoker2.c: 785, 870 mame/drivers/astrocorp.c: 353, 382 mame/drivers/big10.c: 170 mame/drivers/cardline.c: 156 mame/drivers/d9final.c: 176 mame/drivers/ddenlovr.c: 5131, 5364, 5912, 6526, 6707, 7311, 7552 mame/drivers/dunhuang.c: 561 mame/drivers/funworld.c: 1037, 1098, 1158, 1219, 1277, 1339, 1400, 1461, 1642, 1703, 1764, 1825, 1886 mame/drivers/gei.c: 624, 896 mame/drivers/ggconnie.c: 74 mame/drivers/goldnpkr.c: 1323, 1392, 1463, 1545, 1608, 1659, 1877, 1951, 2044, 2124, 2480 mame/drivers/igspoker.c: 408, 540, 686, 845, 985, 1183, 1317, 1457, 1633 mame/drivers/magic10.c: 619 mame/drivers/magicfly.c: 629, 692 mame/drivers/majorpkr.c: 870 mame/drivers/roul.c: 234 mame/drivers/royalmah.c: 1374, 2307, 2528 mame/drivers/seibuspi.c: 1405 mame/drivers/seta.c: 6678 mame/drivers/slotcarn.c: 250 mame/drivers/srmp2.c: 795 mame/drivers/ssv.c: 1966 mame/drivers/supdrapo.c: 324 mame/drivers/taito_o.c: 83 mame/drivers/videopkr.c: 1080 mame/drivers/vroulet.c: 152
 Payout
-
+派息
 
 # emu/ui.c: 2165
 Press ''UI Cancel'' (default: Esc) to return to emulation.
-
+按 ''UI 取消键'' (默认按键: Esc) 继续模拟,\n
 
 # emu/ui.c: 2164
 Press ''UI Select'' (default: Enter) to quit,\n
-
+按 ''UI 确定键'' (默认按键: Enter) 退出,\n
 
 # emu/layout/quadhsxs.lay: 81
 Quad %d by %d
@@ -5616,157 +5616,157 @@ Quad %d by %d
 
 # emu/layout/quadhsxs.lay: 96
 Quad %d by %d (Gapless)
-
+Quad %d by %d (无缝)
 
 # emu/layout/quadhsxs.lay: 51
 Quad Side-by-Side
-
+Quad 两侧
 
 # emu/layout/quadhsxs.lay: 66
 Quad Side-by-Side (Gapless)
-
+Quad 两侧 (无缝)
 
 # emu/machine/z80dart.c: 1074 
 Ready
-
+准备
 
 # mame/layout/darius.lay: 61
 Right Half
-
+右半画面
 
 # mame/layout/rocknms.lay: 29
 Rockn Megasession Custom
-
+Rockn Megasession 自定义
 
 # mame/drivers/konamigx.c: 1680 
 Screens
-
+屏幕
 
 # mame/layout/sms1.lay: 45 mess/layout/sms1.lay: 45
 SegaScope %d-D Glasses
-
+SegaScope %d-D 眼镜
 
 # mame/layout/sms1.lay: 54 mess/layout/sms1.lay: 54
 SegaScope %d-D Glasses (Gapless)
-
+SegaScope %d-D 眼镜 (无缝)
 
 # mame/layout/sms1.lay: 27 mess/layout/sms1.lay: 27
 SegaScope Left LCD Aspect (%d:%d)
-
+SegaScope 左 LCD 比例 (%d:%d)
 
 # mame/layout/sms1.lay: 9 mess/layout/sms1.lay: 9
 SegaScope Left LCD Standard (%d:%d)
-
+SegaScope 左 LCD 标准 (%d:%d)
 
 # mame/layout/sms1.lay: 33 mess/layout/sms1.lay: 33
 SegaScope Right LCD Pixel Aspect (%d:%d)
-
+SegaScope 右 LCD 比例 (%d:%d)
 
 # mame/layout/sms1.lay: 15 mess/layout/sms1.lay: 15
 SegaScope Right LCD Standard (%d:%d)
-
+SegaScope 右 LCD 标准 (%d:%d)
 
 # mame/layout/pe_schip.lay: 20
 Set Chip Lamps
-
+设置芯片灯
 
 # mame/drivers/midvunit.c: 845
 Shifter
-
+移位
 
 # mame/layout/buggyboy.lay: 68, 96 mame/layout/tx1.lay: 68, 96
 Shifter-%dL
-
+移位-%dL
 
 # mame/layout/buggyboy.lay: 51, 85 mame/layout/tx1.lay: 51, 85
 Shifter-%dR
-
+移位-%dR
 
 # mame/layout/280zzzap.lay: 60 mame/layout/buggybjr.lay: 62 mame/layout/buggychl.lay: 60 mame/layout/cbombers.lay: 60 mame/layout/changela.lay: 60 mame/layout/chqflag.lay: 60 mame/layout/cischeat.lay: 60 mame/layout/contcirc.lay: 60 mame/layout/dblaxle.lay: 60 mame/layout/destroyr.lay: 60 mame/layout/f1gpstar.lay: 60 mame/layout/finallap.lay: 60 mame/layout/grchamp.lay: 60 mame/layout/lagunar.lay: 60 mame/layout/namcofl.lay: 60 mame/layout/outrun.lay: 60 mame/layout/overdriv.lay: 60 mame/layout/pdrift.lay: 60 mame/layout/polepos.lay: 60 mame/layout/radr.lay: 60 mame/layout/roundup5.lay: 51 mame/layout/stocker.lay: 60 mame/layout/superchs.lay: 60 mame/layout/topracer.lay: 60 mame/layout/topspeed.lay: 60 mame/layout/turbotag.lay: 60 mame/layout/wecleman.lay: 60
 Shifter-L
-
+移位-左
 
 # mame/layout/280zzzap.lay: 51 mame/layout/buggybjr.lay: 51 mame/layout/buggychl.lay: 51 mame/layout/cbombers.lay: 51 mame/layout/changela.lay: 51 mame/layout/chqflag.lay: 51 mame/layout/cischeat.lay: 51 mame/layout/contcirc.lay: 51 mame/layout/dblaxle.lay: 51 mame/layout/destroyr.lay: 51 mame/layout/f1gpstar.lay: 51 mame/layout/finallap.lay: 51 mame/layout/grchamp.lay: 51 mame/layout/lagunar.lay: 51 mame/layout/namcofl.lay: 51 mame/layout/outrun.lay: 51 mame/layout/overdriv.lay: 51 mame/layout/pdrift.lay: 51 mame/layout/polepos.lay: 51 mame/layout/radr.lay: 51 mame/layout/roundup5.lay: 62 mame/layout/stocker.lay: 51 mame/layout/superchs.lay: 51 mame/layout/topracer.lay: 51 mame/layout/topspeed.lay: 51 mame/layout/turbotag.lay: 51 mame/layout/wecleman.lay: 51
 Shifter-R
-
+移位-右
 
 # mame/layout/18w.lay: 9 mame/layout/30test.lay: 18 mame/layout/buckrog.lay: 9 mame/layout/crusnexo.lay: 91 mame/layout/dlair.lay: 9 mame/layout/kingdrby.lay: 9 mame/layout/sspeedr.lay: 70 mame/layout/subroc3d.lay: 9 mame/layout/turbo.lay: 60
 Simple LEDs
-
+单一 LEDs
 
 # emu/imagedev/snapquik.c: 206, 207 
 Snapshot
-
+截图
 
 # emu/inpttype.h: 138 mame/drivers/calomega.c: 1514 mame/drivers/gei.c: 637 mame/drivers/lvcards.c: 374 mame/drivers/magicfly.c: 711 mame/drivers/peplus.c: 899 mame/drivers/sms.c: 349 mame/drivers/statriv2.c: 329, 369 mame/drivers/videopkr.c: 1017
 Stand
-
+支架
 
 # mame/layout/stepstag.lay: 43
 Stepping Stage Custom
-
+步进阶段自定义
 
 # emu/inpttype.h: 157
 Stop All Reels
-
+停止所有卷轴
 
 # emu/inpttype.h: 153 mame/drivers/wldarrow.c: 250
 Stop Reel 1
-
+停止卷轴 1
 
 # emu/inpttype.h: 154 mame/drivers/wldarrow.c: 249
 Stop Reel 2
-
+停止卷轴 2
 
 # emu/inpttype.h: 155 mame/drivers/wldarrow.c: 248
 Stop Reel 3
-
+停止卷轴 3
 
 # emu/inpttype.h: 156
 Stop Reel 4
-
+停止卷轴 4
 
 # mame/layout/nbmj8688.lay: 39
 Triple
-
+三画面
 
 # mame/layout/awpvid14.lay: 1247 mame/layout/awpvid16.lay: 1247 mame/layout/mpu4.lay: 890 mame/layout/mpu4ext.lay: 1277
 VFD Display Output Only
-
+仅 VFD 显示输出
 
 # mame/layout/bfm_sc2.lay: 861
 VFD Only (%d:%d)
-
+仅 VFD (%d:%d)
 
 # mame/layout/gridiron.lay: 10
 With LEDs
-
+带 LEDs
 
 # mame/layout/blockade.lay: 24
 Yellow Overlay
-
+黄色覆盖
 
 # emu/ui.c: 1466
 \nCertain elements of this game cannot be emulated as it requires actual physical interaction or consists of mechanical devices. It is not possible to fully play this game.\n
-
+\n此游戏的部分元素无法模拟，因其需要实际的物理互动或机械设备的配合。所以无法完全执行此游戏。\n
 
 # emu/ui.c: 1463
 \nTHIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
-
+\n此游戏无法运行。游戏的模拟还不完全。除了等待开发人员改进此模拟之外，你无法解决这个问题。\n
 
 # emu/clifront.c: 1501
 \n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -listmedia    for a full list of supported media\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the files config.txt and windows.txt.\n
-
+\n\n        MAME -showusage    列出选项的简短说明\n        MAME -showconfig   显示设定选项的列表\n        MAME -listmedia    显示完整的媒体支持列表\n        MAME -createconfig 创建 mame.ini 文件\n\n使用说明请参阅 config.txt 和 windows.txt。\n
 
 # emu/emuopts.c: 220
 display confirm quit screen on exit
-
+退出时显示确认画面
 
 # emu/clifront.c: 894
 romset \"%s\" has no roms!\n
-
+ROM 集合 \"%s\" 沒有 rom!\n
 
 # emu/clifront.c: 986
 sampleset \"%s\" not required!\n
-
+采样集合 \"%s\" 不需要!\n
 

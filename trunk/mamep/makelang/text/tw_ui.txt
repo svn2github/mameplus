@@ -2,7 +2,7 @@
 %d colors 
 %d 色 
 
-# osd/winui/layout.c: 208 osd/winui/winui.c: 3656
+# osd/winui/layout.c: 210 osd/winui/winui.c: 3656
 %d games
 %d 個遊戲
 
@@ -214,7 +214,7 @@ MAME 版本資訊(&M)
 &Play
 執行(&P)
 
-# osd/winui/layout.c: 207 osd/winui/winui.c: 3869, 7243
+# osd/winui/layout.c: 209 osd/winui/winui.c: 3869, 7243
 &Play %s
 執行 %s(&P)
 
@@ -406,7 +406,7 @@ Arrange &Icons
 Arranges icons in a grid
 在格線上排列圖示
 
-# osd/winui/layout.c: 126
+# osd/winui/layout.c: 128
 Artwork
 裝飾圖 (artwork)
 
@@ -494,7 +494,7 @@ BIOS 選項\n供 %s 全部遊戲使用的自訂選項
 Backdrops
 背景圖
 
-# osd/winui/layout.c: 138
+# osd/winui/layout.c: 140
 Background Images
 背景圖像
 
@@ -622,7 +622,7 @@ CPU
 Cabinet
 筐體圖
 
-# osd/winui/layout.c: 129
+# osd/winui/layout.c: 131
 Cabinets
 筐體圖 (cabinets)
 
@@ -642,7 +642,7 @@ Categories
 Changing this item is not permitted
 不允許\變更這個項目
 
-# osd/winui/layout.c: 124
+# osd/winui/layout.c: 126
 Cheats
 作弊碼檔案 (cheat)
 
@@ -694,11 +694,11 @@ Colors aren't 100% accurate
 Colors:
 色彩:
 
-# osd/winui/layout.c: 139
+# osd/winui/layout.c: 141
 Comment Files
 註解檔
 
-# osd/winui/layout.c: 121
+# osd/winui/layout.c: 123
 Config
 組態檔
 
@@ -746,11 +746,11 @@ Control &Panel
 Control Panel
 控制器
 
-# osd/winui/layout.c: 132
+# osd/winui/layout.c: 134
 Control Panels
 控制器圖 (cpanel)
 
-# osd/winui/layout.c: 83
+# osd/winui/layout.c: 85
 Control Type
 控制類型
 
@@ -758,7 +758,7 @@ Control Type
 Control Type:
 控制類型:
 
-# osd/winui/layout.c: 135
+# osd/winui/layout.c: 137
 Controller Files
 控制器設定檔
 
@@ -794,7 +794,7 @@ Could not open '%s' as a valid savestate file.
 Crop artwork
 裁切裝飾圖
 
-# osd/winui/layout.c: 141
+# osd/winui/layout.c: 143
 Crosshair Files
 十字準星檔案
 
@@ -842,6 +842,10 @@ Customize interface options.
 Customize which columns are used in the game list
 自訂遊戲清單中所顯示的欄位
 
+# osd/winui/mui_opts.c: 270
+DISPLAY STATE OPTIONS
+顯示狀態選項
+
 # osd/winui/mameui.rc: 866
 Debug
 除錯
@@ -877,10 +881,6 @@ Default input layout
 # osd/winui/mameui.rc: 446
 Delete
 刪除
-
-# osd/winui/winui.c: 877
-Description
-描述
 
 # osd/winui/mameui.rc: 423, 635 osd/winui/winui.c: 773
 Details
@@ -1142,11 +1142,15 @@ Error while saving custom file %s
 Exit the application
 結束應用程式
 
-# osd/winui/layout.c: 142
+# osd/winui/layout.c: 144
 External Folder List
 外部資料夾清單
 
-# osd/winui/layout.c: 77
+# osd/winui/mui_opts.c: 355
+FILENAME OPTIONS
+檔案名稱選項
+
+# osd/winui/layout.c: 78
 FPS
 FPS
 
@@ -1182,7 +1186,7 @@ Flip screen upside-down
 Flyer
 廣告圖
 
-# osd/winui/layout.c: 128
+# osd/winui/layout.c: 130
 Flyers
 廣告圖 (flyers)
 
@@ -1190,7 +1194,7 @@ Flyers
 Fold&er List\tAlt+D
 資料夾清單(&E)\tAlt+D
 
-# osd/winui/layout.c: 140
+# osd/winui/layout.c: 142
 Font Files
 字型檔
 
@@ -1213,6 +1217,10 @@ Full screen contrast
 # osd/winui/mameui.rc: 824
 Full screen gamma
 全螢幕 Gamma 值
+
+# osd/winui/mui_opts.c: 418
+GAME STATISTICS
+遊戲統計
 
 # osd/winui/winui.c: 877
 Game
@@ -1302,7 +1310,7 @@ Go to Microsoft's DirectX Web Page
 Grouped
 分組
 
-# osd/winui/layout.c: 136
+# osd/winui/layout.c: 138
 Hard Drive Difference
 硬碟差異檔
 
@@ -1318,7 +1326,7 @@ Help
 Hide &mouse cursor (requires restart)
 隱藏滑鼠指標 (需重新啟動)(&M)
 
-# osd/winui/layout.c: 147
+# osd/winui/layout.c: 149
 High Scores
 高分記錄
 
@@ -1330,7 +1338,7 @@ History
 Homebrew
 自製遊戲
 
-# osd/winui/layout.c: 78 osd/winui/winui.c: 5680
+# osd/winui/layout.c: 80 osd/winui/winui.c: 5680
 Horizontal
 水平
 
@@ -1346,11 +1354,11 @@ How cheats work
 INTERFACE OPTIONS
 介面選項
 
-# osd/winui/layout.c: 144
+# osd/winui/layout.c: 146
 IPS Files
 IPS 檔案
 
-# osd/winui/layout.c: 137
+# osd/winui/layout.c: 139
 Icons
 圖示 (icons)
 
@@ -1390,11 +1398,11 @@ Individual game options\n
 Inheritable Filters
 繼承篩選程式的設定值
 
-# osd/winui/layout.c: 120
+# osd/winui/layout.c: 122
 Ini Files
 INI 檔案
 
-# osd/winui/layout.c: 123
+# osd/winui/layout.c: 125
 Input Files (*.inp)
 輸入檔 (*.inp)
 
@@ -1478,7 +1486,7 @@ Keyboard
 L&arge Icons
 大圖示(&A)
 
-# osd/winui/layout.c: 152
+# osd/winui/layout.c: 154
 Language Files
 語言檔案
 
@@ -1486,7 +1494,7 @@ Language Files
 Large Icons
 大圖示
 
-# osd/winui/layout.c: 86 osd/winui/properties.c: 402, 920 osd/winui/treeview.c: 1397
+# osd/winui/layout.c: 88 osd/winui/properties.c: 402, 920 osd/winui/treeview.c: 1397
 Lightgun
 光線槍
 
@@ -1566,15 +1574,15 @@ Manufacturer
 Marquee
 標籤圖
 
-# osd/winui/layout.c: 130
+# osd/winui/layout.c: 132
 Marquees
 標籤圖 (marquees)
 
-# osd/winui/layout.c: 94
+# osd/winui/layout.c: 96
 Mechanical
 機械式
 
-# osd/winui/layout.c: 127
+# osd/winui/layout.c: 129
 Memory Card
 記憶卡
 
@@ -1606,7 +1614,15 @@ Move Item
 Move Up
 上移
 
-# osd/winui/layout.c: 134
+# osd/winui/mui_opts.c: 402
+NAVIGATION JOYSTICK CODES
+導引搖桿碼
+
+# osd/winui/mui_opts.c: 362
+NAVIGATION KEY CODES
+導引鍵盤碼
+
+# osd/winui/layout.c: 136
 NVRAM
 NVRAM
 
@@ -1638,7 +1654,7 @@ No Selection
 No offset for clones missing parent in view
 分組檢視中未列出原作的仿製版遊戲清單不後移
 
-# osd/winui/layout.c: 95
+# osd/winui/layout.c: 97
 Non Mechanical
 非機械式
 
@@ -1718,11 +1734,11 @@ PCB
 PCB Info
 電路板資訊
 
-# osd/winui/layout.c: 150
+# osd/winui/layout.c: 152
 PCB Info Files
 電路板資訊檔案
 
-# osd/winui/layout.c: 133
+# osd/winui/layout.c: 135
 PCBs
 電路板圖 (pcb)
 
@@ -1874,7 +1890,7 @@ RGB 設定:
 ROM check:
 ROM 檢查:
 
-# osd/winui/layout.c: 118 osd/winui/mameui.rc: 408 osd/winui/winui.c: 880
+# osd/winui/layout.c: 120 osd/winui/mameui.rc: 408 osd/winui/winui.c: 880
 ROMs
 ROM
 
@@ -1886,7 +1902,7 @@ ROM 檔遺失
 Randomly select a game.
 隨機選取一個遊戲。
 
-# osd/winui/layout.c: 80 osd/winui/winui.c: 5721
+# osd/winui/layout.c: 82 osd/winui/winui.c: 5721
 Raster
 點陣
 
@@ -1970,7 +1986,7 @@ Reset time played for selected item
 Resetting the User Interface options\nrequires exiting MAMEUI.\n
 重設使用者介面選項回到預設值\n需要結束 MAMEUI。\n
 
-# osd/winui/layout.c: 76
+# osd/winui/layout.c: 77
 Resolution
 解析度
 
@@ -2006,6 +2022,10 @@ S&mall Icons
 S&tretch screenshot larger than natural size
 延展預覽圖至合適的大小(&T)
 
+# osd/winui/mui_opts.c: 340
+SEARCH PATH OPTIONS
+搜尋路徑選項
+
 # osd/winui/mameui.rc: 633
 Sample check:
 樣本檔檢查:
@@ -2014,11 +2034,11 @@ Sample check:
 Sample rate
 取樣頻率
 
-# osd/winui/layout.c: 66, 119 osd/winui/mameui.rc: 414 osd/winui/winui.c: 881
+# osd/winui/layout.c: 66, 121 osd/winui/mameui.rc: 414 osd/winui/winui.c: 881
 Samples
 樣本檔
 
-# osd/winui/layout.c: 90, 92
+# osd/winui/layout.c: 92, 94
 Save State
 儲存狀態
 
@@ -2322,7 +2342,7 @@ Snapshot/movie resolution
 Snapshot/movie view
 擷圖或錄影的檢視方式
 
-# osd/winui/layout.c: 122
+# osd/winui/layout.c: 124
 Snapshots
 遊戲圖 (snap)
 
@@ -2422,7 +2442,7 @@ Standard
 Start out maximized
 啟動時最大化
 
-# osd/winui/layout.c: 125
+# osd/winui/layout.c: 127
 State
 儲存狀態檔
 
@@ -2430,7 +2450,7 @@ State
 Status:
 狀況:
 
-# osd/winui/layout.c: 88
+# osd/winui/layout.c: 90
 Stereo
 立體聲
 
@@ -2522,7 +2542,7 @@ Throttle
 Title
 標題圖
 
-# osd/winui/layout.c: 131
+# osd/winui/layout.c: 133
 Titles
 標題圖 (titles)
 
@@ -2546,7 +2566,7 @@ Toggle full screen mode
 Total:
 合計:
 
-# osd/winui/layout.c: 85 osd/winui/properties.c: 919 osd/winui/treeview.c: 1396 osd/winui/winui.c: 884
+# osd/winui/layout.c: 87 osd/winui/properties.c: 919 osd/winui/treeview.c: 1396 osd/winui/winui.c: 884
 Trackball
 軌跡球
 
@@ -2686,7 +2706,7 @@ Use various icon for Not Working game
 User interface settings\n\n
 使用者介面設定值\n\n
 
-# osd/winui/layout.c: 81 osd/winui/mameui.rc: 1017 osd/winui/winui.c: 5719
+# osd/winui/layout.c: 83 osd/winui/mameui.rc: 1017 osd/winui/winui.c: 5719
 Vector
 向量
 
@@ -2718,7 +2738,7 @@ Version 8
 Version 9
 版本 9
 
-# osd/winui/layout.c: 79 osd/winui/winui.c: 5680
+# osd/winui/layout.c: 81 osd/winui/winui.c: 5680
 Vertical
 垂直
 
