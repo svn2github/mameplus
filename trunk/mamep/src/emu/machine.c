@@ -341,7 +341,7 @@ void running_machine::start()
 	m_cheat = auto_alloc(*this, cheat_manager(*this));
 
 #ifdef USE_HISCORE
-  //MKCHAMP - INITIALIZING THE HISCORE ENGINE
+	//MKCHAMP - INITIALIZING THE HISCORE ENGINE
  	hiscore_init(*this);
 #endif /* USE_HISCORE */
 

@@ -1406,7 +1406,7 @@ French
 Full
 全部
 
-# mame/drivers/bublbobl.c: 561, 579 mame/drivers/cps1.c: 927, 1121, 1161, 1232, 1373, 1437, 1488, 1596, 1664, 1719, 1770, 1814, 1924, 1984, 2062, 2130, 2180, 2240, 2375, 2589, 2654, 2746, 2874 mame/drivers/fcrash.c: 562, 646 mame/drivers/funworld.c: 2062 mame/drivers/ksys573.c: 3307 mame/drivers/macs.c: 284 mame/drivers/missile.c: 961 mame/drivers/multigam.c: 1021 mame/drivers/pacman.c: 1491 mame/drivers/tapatune.c: 243 mame/drivers/turbo.c: 979 mame/drivers/vegas.c: 2034 
+# mame/drivers/bublbobl.c: 561, 579 mame/drivers/cps1.c: 927, 1121, 1161, 1232, 1373, 1437, 1488, 1596, 1664, 1719, 1770, 1814, 1924, 1984, 2062, 2130, 2180, 2240, 2375, 2589, 2654, 2746, 2874 mame/drivers/fcrash.c: 562, 646 mame/drivers/funworld.c: 2062 mame/drivers/ksys573.c: 3307 mame/drivers/macs.c: 284 mame/drivers/missile.c: 961 mame/drivers/multigam.c: 1021 mame/drivers/pacman.c: 1491 mame/drivers/tapatune.c: 243 mame/drivers/turbo.c: 979 mame/drivers/vegas.c: 2034
 Game
 ゲーム名
 
@@ -5414,6 +5414,14 @@ writes configuration to (driver).ini on exit
 year, manufacturer and full name
 サポートゲーム、製造年、メーカーのリストを表\示
 
+# emu/clifront.c: 713
+ SYSTEM      MEDIA NAME (brief)   IMAGE FILE EXTENSIONS SUPPORTED     \n
+
+
+# emu/clifront.c: 661
+ SYSTEM      SLOT NAME    SLOT OPTIONS    SLOT DEVICE NAME     \n
+
+
 # emu/ui.c: 2250
  Volume
 
@@ -5428,6 +5436,10 @@ AWP Simulated Video (Reels and Lamp Matrix)
 
 # mame/layout/bfm_sc1.lay: 2086
 Adder %d Output Only (%d:%d, No Artwork)
+
+
+# emu/video.c: 990
+Adjusting target speed to %.1f%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n
 
 
 # emu/ui.c: 2163
@@ -5518,6 +5530,14 @@ Door
 Driver Device
 
 
+# emu/uiimage.c: 226
+File Already Exists - Overide?
+
+
+# emu/clifront.c: 406
+Found %d matches for '%s' but none were clones\n
+
+
 # mame/layout/bfm_sc1.lay: 409
 Full Output
 
@@ -5570,8 +5590,20 @@ Music
 Nicola Salmoria and the MAME Team
 
 
+# emu/clifront.c: 329, 347, 369, 404, 435, 479, 508, 570, 615, 658, 710, 886, 978, 1015
+No matching games found for '%s'
+
+
 # emu/layout/noscreens.lay: 14
 No screens attached
+
+
+# emu/ui.c: 1434
+One or more ROMs/CHDs for this game have not been correctly dumped.\n
+
+
+# emu/clifront.c: 304 emu/machine.c: 463 
+Out of memory!\n
 
 
 # emu/ui.c: 2165
@@ -5698,8 +5730,24 @@ Yellow Overlay
 [software list]
 
 
+# emu/ui.c: 1466
+\nCertain elements of this game cannot be emulated as it requires actual physical interaction or consists of mechanical devices. It is not possible to fully play this game.\n
+
+
+# emu/ui.c: 1463
+\nTHIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
+
+
+# emu/clifront.c: 1501
+\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -listmedia    for a full list of supported media\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the files config.txt and windows.txt.\n
+
+
 # emu/emuopts.c: 120
 create burn-in snapshots for each screen
+
+
+# emu/emuopts.c: 220
+display confirm quit screen on exit
 
 
 # emu/clifront.c: 89
@@ -5708,6 +5756,14 @@ list available media for the system
 
 # emu/clifront.c: 90
 list known software for the system
+
+
+# emu/clifront.c: 894
+romset \"%s\" has no roms!\n
+
+
+# emu/clifront.c: 986
+sampleset \"%s\" not required!\n
 
 
 # emu/clifront.c: 80
