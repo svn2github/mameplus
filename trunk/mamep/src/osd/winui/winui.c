@@ -6358,7 +6358,7 @@ BOOL CommonFileDialog(common_file_dialog_proc cfd, WCHAR *filename, int filetype
 		break;
 #ifdef STORY_DATAFILE
 	case FILETYPE_STORY_FILE :
-		of.lpstrFilter   = TEXT("stoty (*.dat)\0*.dat;\0All files (*.*)\0*.*\0");
+		of.lpstrFilter   = TEXT("story (*.dat)\0*.dat;\0All files (*.*)\0*.*\0");
 		break;
 #endif /* STORY_DATAFILE */
 	}

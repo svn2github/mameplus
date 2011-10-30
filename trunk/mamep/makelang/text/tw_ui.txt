@@ -908,7 +908,7 @@ Directories:
 
 # osd/winui/winui.c: 882
 Directory
-目錄
+檔名
 
 # osd/winui/directories.c: 616
 Directory does not exist, continue anyway?
@@ -2412,7 +2412,7 @@ Sort items by type
 
 # osd/winui/mameui.rc: 1644
 Sort items by year
-依年代排列項目
+依年份排列項目
 
 # osd/winui/layout.c: 62 osd/winui/mameui.rc: 771
 Sound
@@ -2788,7 +2788,7 @@ Wrong Colors
 
 # osd/winui/layout.c: 58 osd/winui/winui.c: 887
 Year
-年代
+年份
 
 # osd/winui/mui_audit.c: 118 osd/winui/winui.c: 5693, 5728
 Yes
@@ -2844,7 +2844,7 @@ by &Type
 
 # osd/winui/mameui.rc: 117
 by &Year
-依年代(&Y)
+依年份(&Y)
 
 # osd/winui/mameui.rc: 119
 by Dr&iver
@@ -2895,8 +2895,8 @@ sounds (*.wav)
 聲音檔 (*.wav)
 
 # osd/winui/winui.c: 6361
-stoty (*.dat)
-stoty (*.dat)
+story (*.dat)
+故事檔 (*.dat)
 
 # osd/winui/winui.c: 6332
 videos (*.avi)
@@ -2905,4 +2905,3 @@ videos (*.avi)
 # osd/winui/winui.c: 6329
 videos (*.mng)
 視訊檔 (*.mng)
-
