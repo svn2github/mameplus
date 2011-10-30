@@ -2895,7 +2895,7 @@ sounds (*.wav)
 
 
 # osd/winui/winui.c: 6361
-stoty (*.dat)
+story (*.dat)
 
 
 # osd/winui/winui.c: 6332
