@@ -6063,7 +6063,7 @@ static MACHINE_START( cavesh3 )
 	state->flashwritemap = auto_alloc_array(machine, UINT8, size / FLASH_PAGE_SIZE);
 	memset(state->flashwritemap, 0, size / FLASH_PAGE_SIZE);
 
-	cavesh3_ram16_copy = auto_alloc_array(machine, UINT16, 0x10000000);
+	cavesh3_ram16_copy = auto_alloc_array(machine, UINT16, 0x400000);
 
 	state->cavesh3_blitter_delay_timer = machine.scheduler().timer_alloc(FUNC(cavesh3_blitter_delay_callback));
 	state->cavesh3_blitter_delay_timer->adjust(attotime::never);
