@@ -2,7 +2,7 @@
 %d colors 
 %d 색상
 
-# osd/winui/layout.c: 208 osd/winui/winui.c: 3656
+# osd/winui/layout.c: 210 osd/winui/winui.c: 3656
 %d games
 %d 게임
 
@@ -214,7 +214,7 @@ Mame 배포일지(&M)
 &Play
 실행(&P)
 
-# osd/winui/layout.c: 207 osd/winui/winui.c: 3869, 7243
+# osd/winui/layout.c: 209 osd/winui/winui.c: 3869, 7243
 &Play %s
 실행(&P) %s
 
@@ -406,7 +406,7 @@ Arrange &Icons
 Arranges icons in a grid
 아이콘을 격자에 맞춤
 
-# osd/winui/layout.c: 126
+# osd/winui/layout.c: 128
 Artwork
 아트웍
 
@@ -494,7 +494,7 @@ BIOS options\nCustom options used by all games in the %s
 Backdrops
 배경
 
-# osd/winui/layout.c: 138
+# osd/winui/layout.c: 140
 Background Images
 배경 이미지
 
@@ -622,7 +622,7 @@ CPU
 Cabinet
 캐비넷
 
-# osd/winui/layout.c: 129
+# osd/winui/layout.c: 131
 Cabinets
 캐비넷
 
@@ -642,7 +642,7 @@ Categories
 Changing this item is not permitted
 이 항목에 대한 변경은 허용되지 않음
 
-# osd/winui/layout.c: 124
+# osd/winui/layout.c: 126
 Cheats
 치트
 
@@ -694,11 +694,11 @@ Colors aren't 100% accurate
 Colors:
 색상:
 
-# osd/winui/layout.c: 139
+# osd/winui/layout.c: 141
 Comment Files
 설명 파일
 
-# osd/winui/layout.c: 121
+# osd/winui/layout.c: 123
 Config
 설정
 
@@ -746,11 +746,11 @@ Control &Panel
 Control Panel
 조종장치
 
-# osd/winui/layout.c: 132
+# osd/winui/layout.c: 134
 Control Panels
 조종장치
 
-# osd/winui/layout.c: 83
+# osd/winui/layout.c: 85
 Control Type
 조종장치 종류
 
@@ -758,7 +758,7 @@ Control Type
 Control Type:
 조종장치 종류:
 
-# osd/winui/layout.c: 135
+# osd/winui/layout.c: 137
 Controller Files
 조종장치 파일
 
@@ -790,7 +790,7 @@ Could not open '%s' as a valid savestate file.
 Crop artwork
 아트웍 잘라내기
 
-# osd/winui/layout.c: 141
+# osd/winui/layout.c: 143
 Crosshair Files
 십자표적 파일
 
@@ -874,10 +874,6 @@ Default input layout
 Delete
 삭제
 
-# osd/winui/winui.c: 877
-Description
-설명
-
 # osd/winui/mameui.rc: 423, 635 osd/winui/winui.c: 773
 Details
 자세히
@@ -901,6 +897,10 @@ Directories
 # osd/winui/mameui.rc: 437
 Directories:
 디렉토리:
+
+# osd/winui/winui.c: 882
+Directory
+폴더명
 
 # osd/winui/directories.c: 616
 Directory does not exist, continue anyway?
@@ -1134,11 +1134,15 @@ Error while saving custom file %s
 Exit the application
 응용프로그램 종료
 
-# osd/winui/layout.c: 142
+# osd/winui/layout.c: 144
 External Folder List
 외부 폴더 목록
 
-# osd/winui/layout.c: 77
+# osd/winui/mui_opts.c: 355
+FILENAME OPTIONS
+파일명 설정
+
+# osd/winui/layout.c: 78
 FPS
 FPS
 
@@ -1174,7 +1178,7 @@ Flip screen upside-down
 Flyer
 포스터
 
-# osd/winui/layout.c: 128
+# osd/winui/layout.c: 130
 Flyers
 포스터
 
@@ -1182,7 +1186,7 @@ Flyers
 Fold&er List\tAlt+D
 탐색창(&E)\tAlt+D
 
-# osd/winui/layout.c: 140
+# osd/winui/layout.c: 142
 Font Files
 폰트 파일
 
@@ -1205,6 +1209,10 @@ Full screen contrast
 # osd/winui/mameui.rc: 824
 Full screen gamma
 전체 화면 감마
+
+# osd/winui/winui.c: 877
+Game
+게임명
 
 # osd/winui/mameui.rc: 1072
 Game Filters
@@ -1290,7 +1298,7 @@ Go to Microsoft's DirectX Web Page
 Grouped
 그룹화
 
-# osd/winui/layout.c: 136
+# osd/winui/layout.c: 138
 Hard Drive Difference
 하드 드라이브 
 
@@ -1306,7 +1314,7 @@ Help
 Hide &mouse cursor (requires restart)
 마우스 커서 숨기기 (재시작 필요)
 
-# osd/winui/layout.c: 147
+# osd/winui/layout.c: 149
 High Scores
 하이스코어
 
@@ -1318,7 +1326,7 @@ History
 Homebrew
 홈브류
 
-# osd/winui/layout.c: 78 osd/winui/winui.c: 5680
+# osd/winui/layout.c: 80 osd/winui/winui.c: 5680
 Horizontal
 가로화면
 
@@ -1330,11 +1338,11 @@ How cheats work
 INTERFACE OPTIONS
 인터페이스 설정
 
-# osd/winui/layout.c: 144
+# osd/winui/layout.c: 146
 IPS Files
 IPS 파일
 
-# osd/winui/layout.c: 137
+# osd/winui/layout.c: 139
 Icons
 아이콘
 
@@ -1374,11 +1382,11 @@ Individual game options\n
 Inheritable Filters
 상속 필터
 
-# osd/winui/layout.c: 120
+# osd/winui/layout.c: 122
 Ini Files
 Ini 파일
 
-# osd/winui/layout.c: 123
+# osd/winui/layout.c: 125
 Input Files (*.inp)
 INP 파일 (*.inp)
 
@@ -1462,7 +1470,7 @@ Keyboard
 L&arge Icons
 큰 아이콘(&A)
 
-# osd/winui/layout.c: 152
+# osd/winui/layout.c: 154
 Language Files
 언어파일
 
@@ -1470,7 +1478,7 @@ Language Files
 Large Icons
 큰 아이콘
 
-# osd/winui/layout.c: 86 osd/winui/properties.c: 402, 920 osd/winui/treeview.c: 1397
+# osd/winui/layout.c: 88 osd/winui/properties.c: 402, 920 osd/winui/treeview.c: 1397
 Lightgun
 라이트건
 
@@ -1550,11 +1558,11 @@ Manufacturer
 Marquee
 간판
 
-# osd/winui/layout.c: 130
+# osd/winui/layout.c: 132
 Marquees
 간판
 
-# osd/winui/layout.c: 127
+# osd/winui/layout.c: 129
 Memory Card
 메모리 카드
 
@@ -1586,7 +1594,7 @@ Move Item
 Move Up
 위로
 
-# osd/winui/layout.c: 134
+# osd/winui/layout.c: 136
 NVRAM
 NVRAM
 
@@ -1694,11 +1702,11 @@ PCB
 PCB Info
 기판정보
 
-# osd/winui/layout.c: 150
+# osd/winui/layout.c: 152
 PCB Info Files
 기판정보 파일
 
-# osd/winui/layout.c: 133
+# osd/winui/layout.c: 135
 PCBs
 기판
 
@@ -1850,7 +1858,7 @@ RGB 설정:
 ROM check:
 롬 검사:
 
-# osd/winui/layout.c: 118 osd/winui/mameui.rc: 408 osd/winui/winui.c: 880
+# osd/winui/layout.c: 120 osd/winui/mameui.rc: 408 osd/winui/winui.c: 880
 ROMs
 롬
 
@@ -1862,7 +1870,7 @@ ROMs missing
 Randomly select a game.
 무작위로 게임을 선택함.
 
-# osd/winui/layout.c: 80 osd/winui/winui.c: 5721
+# osd/winui/layout.c: 82 osd/winui/winui.c: 5721
 Raster
 래스터
 
@@ -1946,7 +1954,7 @@ Reset time played for selected item
 Resetting the User Interface options\nrequires exiting MAMEUI.\n
 사용자 인터페이스 초기화 설정\n종료해야 합니다 MAMEUI.\n
 
-# osd/winui/layout.c: 76
+# osd/winui/layout.c: 77
 Resolution
 해상도
 
@@ -1990,11 +1998,11 @@ Sample check:
 Sample rate
 샘플 레이트
 
-# osd/winui/layout.c: 66, 119 osd/winui/mameui.rc: 414 osd/winui/winui.c: 881
+# osd/winui/layout.c: 66, 121 osd/winui/mameui.rc: 414 osd/winui/winui.c: 881
 Samples
 샘플
 
-# osd/winui/layout.c: 90, 92
+# osd/winui/layout.c: 92, 94
 Save State
 상태저장
 
@@ -2254,7 +2262,7 @@ Snapshot/movie resolution
 Snapshot/movie view
 스냅샷/동영상 보기
 
-# osd/winui/layout.c: 122
+# osd/winui/layout.c: 124
 Snapshots
 스냅샷
 
@@ -2338,6 +2346,10 @@ Sound emulation isn't 100% accurate
 Sound:
 사운드:
 
+# osd/winui/layout.c: 59 osd/winui/winui.c: 889
+Source
+드라이버
+
 # osd/winui/mameui.rc: 97, 261, 274
 St&ory
 줄거리(&O)
@@ -2350,7 +2362,7 @@ Standard
 Start out maximized
 창 크기 최대로 실행
 
-# osd/winui/layout.c: 125
+# osd/winui/layout.c: 127
 State
 상태
 
@@ -2358,7 +2370,7 @@ State
 Status:
 상태:
 
-# osd/winui/layout.c: 88
+# osd/winui/layout.c: 90
 Stereo
 스테레오
 
@@ -2450,7 +2462,7 @@ Throttle
 Title
 타이틀
 
-# osd/winui/layout.c: 131
+# osd/winui/layout.c: 133
 Titles
 타이틀
 
@@ -2474,7 +2486,7 @@ Toggle full screen mode
 Total:
 전체:
 
-# osd/winui/layout.c: 85 osd/winui/properties.c: 919 osd/winui/treeview.c: 1396 osd/winui/winui.c: 884
+# osd/winui/layout.c: 87 osd/winui/properties.c: 919 osd/winui/treeview.c: 1396 osd/winui/winui.c: 884
 Trackball
 트랙볼
 
@@ -2614,7 +2626,7 @@ Use various icon for Not Working game
 User interface settings\n\n
 사용자 인터페이스 설정\n\n
 
-# osd/winui/layout.c: 81 osd/winui/mameui.rc: 1017 osd/winui/winui.c: 5719
+# osd/winui/layout.c: 83 osd/winui/mameui.rc: 1017 osd/winui/winui.c: 5719
 Vector
 벡터
 
@@ -2646,7 +2658,7 @@ Version 8
 Version 9
 버전 9
 
-# osd/winui/layout.c: 79 osd/winui/winui.c: 5680
+# osd/winui/layout.c: 81 osd/winui/winui.c: 5680
 Vertical
 세로화면
 
@@ -2814,24 +2826,36 @@ videos (*.mng)
 Copyright (C) 1997-2011 The MAME Team
 
 
-# osd/winui/winui.c: 882
-Directory
+# osd/winui/mui_opts.c: 270
+DISPLAY STATE OPTIONS
 
 
-# osd/winui/winui.c: 877
-Game
+# osd/winui/mui_opts.c: 418
+GAME STATISTICS
 
 
 # osd/winui/properties.c: 1192
 Horizontal options\nCustom options used by all games in the Horizontal
 
 
-# osd/winui/layout.c: 94
+# osd/winui/layout.c: 96
 Mechanical
 
 
-# osd/winui/layout.c: 95
+# osd/winui/mui_opts.c: 402
+NAVIGATION JOYSTICK CODES
+
+
+# osd/winui/mui_opts.c: 362
+NAVIGATION KEY CODES
+
+
+# osd/winui/layout.c: 97
 Non Mechanical
+
+
+# osd/winui/mui_opts.c: 340
+SEARCH PATH OPTIONS
 
 
 # osd/winui/properties.c: 863
@@ -2876,10 +2900,6 @@ Skip 8 frames
 
 # osd/winui/properties.c: 3692
 Skip 9 frames
-
-
-# osd/winui/layout.c: 59 osd/winui/winui.c: 889
-Source
 
 
 # osd/winui/properties.c: 1189

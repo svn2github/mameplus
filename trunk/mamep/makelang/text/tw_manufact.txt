@@ -574,6 +574,10 @@ Competitive Video?
 Compile
 
 
+# Galaxy Game
+Computer Recreations, Inc
+
+
 # Battle of Atlantis (set 1)
 Comsoft
 
@@ -984,6 +988,10 @@ Evona Electronic
 
 # Come On Baby
 ExPotato
+
+
+# Arcana Heart Full
+Examu
 
 
 # Aquarium (Japan)

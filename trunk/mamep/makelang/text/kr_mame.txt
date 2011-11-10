@@ -1326,7 +1326,7 @@ French
 Full
 가득참
 
-# mame/drivers/bublbobl.c: 561, 579 mame/drivers/cps1.c: 927, 1121, 1161, 1232, 1373, 1437, 1488, 1596, 1664, 1719, 1770, 1814, 1924, 1984, 2062, 2130, 2180, 2240, 2375, 2589, 2654, 2746, 2874 mame/drivers/fcrash.c: 562, 646 mame/drivers/funworld.c: 2062 mame/drivers/ksys573.c: 3307 mame/drivers/macs.c: 284 mame/drivers/missile.c: 961 mame/drivers/multigam.c: 1021 mame/drivers/pacman.c: 1491 mame/drivers/tapatune.c: 243 mame/drivers/turbo.c: 979 mame/drivers/vegas.c: 2034
+# mame/drivers/bublbobl.c: 561, 579 mame/drivers/cps1.c: 927, 1121, 1161, 1232, 1373, 1437, 1488, 1596, 1664, 1719, 1770, 1814, 1924, 1984, 2062, 2130, 2180, 2240, 2375, 2589, 2654, 2746, 2874 mame/drivers/fcrash.c: 562, 646 mame/drivers/funworld.c: 2062 mame/drivers/ksys573.c: 3307 mame/drivers/macs.c: 284 mame/drivers/missile.c: 961 mame/drivers/multigam.c: 1021 mame/drivers/pacman.c: 1491 mame/drivers/tapatune.c: 243 mame/drivers/turbo.c: 979 mame/drivers/vegas.c: 2034 
 Game
 게임
 
@@ -1420,7 +1420,7 @@ Horizontally
 
 # emu/ui.c: 1389
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
-만약, 이 에뮬레이터에서 \"%s\" 를 불법으로 구동한다면, ESC 를 누르십시오.\n\n
+만약 이 에뮬레이터에서 \"%s\" 를 불법으로 구동한다면 ESC 키를 누르십시오.\n\n
 
 # emu/audit.c: 339
 INCORRECT CHECKSUM:\n
@@ -2004,7 +2004,7 @@ Other Controls
 
 # emu/ui.c: 1390
 Otherwise, type OK or move the joystick left then right to continue
-아니라면, 키보드자판에서 OK 를 입력하거나 조이스틱을 좌우로 움직여 진행하십시오. 
+구동은 키보드 자판에서 OK 를 입력하거나 조이스틱을 좌우로 움직여 진행하십시오. 
 
 # emu/ioport.c: 4289, 4309, 4329
 Out of space
@@ -4280,7 +4280,7 @@ Uptime: %d:%02d\n\n
 
 # emu/ui.c: 1388
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
-에뮬레이터로 소유하지 않은 롬을 사용하는것은 저작권법에 의해 금지되어 있습니다.\n\n
+에뮬레이터로 소유하지 않은 롬을 사용하는 것은 저작권법에 의해 금지되어 있습니다.\n\n
 
 # emu/uimenu.c: 1807
 User Interface
