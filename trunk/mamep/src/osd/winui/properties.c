@@ -3911,7 +3911,7 @@ static void InitializeBIOSUI(HWND hwnd)
 	TCHAR* t_s;
 	if (hCtrl)
 	{
-		const game_driver *gamedrv = &driver_list::driver(g_nGame);
+		const game_driver *gamedrv = NULL;
 		const rom_entry *rom;
 
 		if (g_nGame == GLOBAL_OPTIONS)
@@ -3920,7 +3920,7 @@ static void InitializeBIOSUI(HWND hwnd)
 			(void)ComboBox_SetItemData( hCtrl, i++, "");
 			return;
 		}
-		if (g_nGame == FOLDER_OPTIONS) //Folder Options
+		else if (g_nGame == FOLDER_OPTIONS) //Folder Options
 		{
 			gamedrv = &driver_list::driver(g_nFolderGame);
 			if (DriverHasOptionalBIOS(g_nFolderGame) == FALSE)
@@ -3952,6 +3952,7 @@ static void InitializeBIOSUI(HWND hwnd)
 			return;
 		}
 
+		gamedrv = &driver_list::driver(g_nGame);
 		if (DriverHasOptionalBIOS(g_nGame) == FALSE)
 		{
 			(void)ComboBox_InsertString(hCtrl, i, _UIW(TEXT("None")));
