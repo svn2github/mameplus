@@ -119,6 +119,7 @@ void neogeo_set_display_counter_lsb(address_space *space, UINT16 data);
 void neogeo_acknowledge_interrupt(running_machine &machine, UINT16 data);
 void neogeo_set_main_cpu_bank_address(address_space *space, UINT32 bank_address);
 READ16_HANDLER( neogeo_unmapped_r );
+DEVICE_IMAGE_LOAD( neo_cartridge );
 
 
 /*----------- defined in machine/neocrypt.c -----------*/
@@ -213,6 +214,7 @@ void kof2002b_gfx_decrypt(running_machine &machine, UINT8 *src, int size);
 void cthd2003_AES_protection(running_machine &machine);
 void kof10thu_decrypt_68K(running_machine &machine);
 
+void mvs_install_protection(device_image_interface& image);
 
 /*----------- defined in video/neogeo.c -----------*/
 
@@ -231,3 +233,5 @@ WRITE16_HANDLER( neogeo_paletteram_w );
 void neogeo_set_fixed_layer_source(running_machine &machine, UINT8 data);
 
 UINT8 neogeo_get_auto_animation_counter(running_machine &machine);
+
+

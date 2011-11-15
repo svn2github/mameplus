@@ -818,14 +818,20 @@ static const struct
 	{ INPUT_STRING_USA, "USA" },
 	{ INPUT_STRING_Europe, "Europe" },
 	{ INPUT_STRING_Asia, "Asia" },
+	{ INPUT_STRING_China, "China" },
+	{ INPUT_STRING_Hong_Kong, "Hong Kong" },
+	{ INPUT_STRING_Korea, "Korea" },
+	{ INPUT_STRING_Southeast_Asia, "Southeast Asia" },
+	{ INPUT_STRING_Taiwan, "Taiwan" },
 	{ INPUT_STRING_World, "World" },
-	{ INPUT_STRING_Hispanic, "Hispanic" },
 	{ INPUT_STRING_Language, "Language" },
 	{ INPUT_STRING_English, "English" },
 	{ INPUT_STRING_Japanese, "Japanese" },
-	{ INPUT_STRING_German, "German" },
+	{ INPUT_STRING_Chinese, "Chinese" },
 	{ INPUT_STRING_French, "French" },
+	{ INPUT_STRING_German, "German" },
 	{ INPUT_STRING_Italian, "Italian" },
+	{ INPUT_STRING_Korean, "Korean" },
 	{ INPUT_STRING_Spanish, "Spanish" },
 	{ INPUT_STRING_Very_Easy, "Very Easy" },
 	{ INPUT_STRING_Easiest, "Easiest" },
@@ -841,8 +847,6 @@ static const struct
 	{ INPUT_STRING_Very_Hard, "Very Hard" },
 	{ INPUT_STRING_Medium_Difficult, "Medium Difficult" },
 	{ INPUT_STRING_Difficult, "Difficult" },
-	{ INPUT_STRING_More_Difficult, "More Difficult" },
-	{ INPUT_STRING_Most_Difficult, "Most Difficult" },
 	{ INPUT_STRING_Very_Difficult, "Very Difficult" },
 	{ INPUT_STRING_Very_Low, "Very Low" },
 	{ INPUT_STRING_Low, "Low" },
@@ -1742,6 +1746,8 @@ input_port_value input_port_active_safe(running_machine &machine, const char *ta
 
 input_port_value input_port_read_direct(const input_port_config *port)
 {
+	assert(port != NULL);
+
 	input_port_private *portdata = port->machine().input_port_data;
 	analog_field_state *analog;
 	device_field_info *device_field;

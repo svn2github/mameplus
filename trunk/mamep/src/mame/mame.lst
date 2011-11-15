@@ -3468,7 +3468,8 @@ sws2001			// 2001.04 Super World Stadium 2001 (SS11/VER.A, Japan)
 // Namco System 10
 mrdrilr2		// 2000.07 Mr Driller 2 (DR21 Ver.A)
 mrdrlr2a		// 2000.?? Mr Driller 2 (DR22 Ver.A)
-ptblank3		// 2000.12 Point Blank 3 / Gunbalina
+ptblank3		// 2000.12 Point Blank 3 (GNN2 Ver.A)
+gunbalina		// 2000.12 Gunbalina (GNN1 Ver.A)
 				// 2001.02 Photo Battole
 				// 2001.02 Taiko no Tatsujin
 				// 2001.03 Gahaha Ippatsudou
@@ -4770,6 +4771,7 @@ naomigd			// 2001.?? Naomi GD-ROM Bios
 hod2bios		// 1998.11 The House of the Dead 2 (BIOS)
 hotd2			// 1998.11 The House of the Dead 2
 hotd2o			// 1998.11 The House of the Dead 2 (original)
+hotd2p			// 1998.11 The House of the Dead 2 (prototype)
 dybbnao			// 1998.12 Dynamite Baseball NAOMI
 crzytaxi		// 1999.02 Crazy Taxi
 pstone			// 1999.02 Power Stone
@@ -4804,6 +4806,7 @@ alpiltdx		// 1999.?? Airline Pilots Deluxe (Rev B)
 				// 1999.?? Pocket Shooting 
 spawn			// 1999.?? Spawn In the Demon's Hand
 18wheelr		// 2000.01 18 Wheeler Deluxe (Rev A)
+18wheels		// 2000.01 18 Wheeler (Rev A)
 doa2m			// 2000.01 Dead or Alive 2 Millennium
 totd			// 2000.01 The Typing of the Dead (Rev A)
 				// 2000.02 Touch de UNO! 2
@@ -4857,7 +4860,8 @@ gunsur2			// 2001.07 Gun Survivor 2 Biohazard Code: Veronica
 spkrbtl			// 2001.07 Spikers Battle
 cvs2gd			// 2001.08 Capcom Vs. SNK 2 Millionaire Fighting 2001 (Rev A)
 wrungp			// 2001.08 Wave Runner GP
-alienfnt		// 2001.09 Alien Front
+alienfnt		// 2001.09 Alien Front (Rev T)
+alienfnta		// 2001.09 Alien Front (Rev A)
 hmgeo			// 2001.09 Heavy Metal Geomatrix (Rev A)
 gundmxgd		// 2001.09 Mobile Suit Gundam: Federation Vs. Zeon DX
 derbyoc2		// 2001.10 Derby Owners Club II (Rev B)
@@ -4937,7 +4941,7 @@ asndynmt		// 2007.07 Dynamite Deka EX - Asian dynamite
 ausfache		// 2008.02 Akatsuki Denkou Senki Ausf.Achse
 illvelo			// 2008.06 Illvelo (Illmatic Envelope)
 				// 2008.07 Mamoru-kun wa Norowarete Shimatta!
-				// 2008.09 Melty Blood Actress Again
+mbaa			// 2008.09 Melty Blood Actress Again
 				// 2008.12 Melty Blood Actress Again ver.A
 				// 2009.06 Radirgy Noah
 				// 2009.?? Project Cerberus (planned to be released in 2009)
@@ -5185,7 +5189,8 @@ clapapa2		// 29 // this one doesn't display lapapa anywhere
 cprobowl		// 31 1983.03 Pro Bowling
 cnightst		// 32 1983.04 Night Star
 cnightst2		// 32
-cprosocc		// 33 1982.08 Pro Soccer
+cpsoccer		// 33 1982.08 Pro Soccer
+cpsoccerj		// 33 1982.08 Pro Soccer (Japan)
 				// 34 1983.09 Super Doubles Tennis
 cflyball		// 35 1983.?? Bampoline/Flying Ball
 				// 36 1984.04 Genesis/Boomer Rang'r
@@ -6050,7 +6055,6 @@ popn7			// not sure, doesn't boot yet (c) 2001
 
 // PowerPC based Konami games
 bujutsu			// G?645 (c)1997
-racjamdx		// G?676 (c)1997
 fiveside		// GX479 (c)1995
 thunderh		// GX680 (c)1996 Euro EAA
 thunderhu		// GX680 (c)1996 USA UAA
@@ -6071,6 +6075,7 @@ sscope2			// GX931 (c)2000
 racingj			// GX676 (c)1998
 racingj2		// GX888 (c)1999 (EAE)
 racingj2j		// GX888 (c)1999 (JAE)
+racjamdx        	// G?676 (c)1997 Japan JAA
 thrilld			// GX713 (c)1998 Japan JAE
 thrilldb		// GX713 (c)1998 Japan JAB
 thrilldae		// GX713 (c)1998 Europe EAA
@@ -6788,6 +6793,7 @@ bakatono		// 0036 (c) 1991 Monolith Corp.
 crsword			// 0037 (c) 1991 Alpha Denshi Co.
 trally			// 0038 (c) 1991 Alpha Denshi Co.
 kotm2			// 0039 (c) 1992 SNK
+kotm2p			// 0039 (c) 1992 SNK (prototype)
 sengoku2		// 0040 (c) 1993 SNK
 bstars2			// 0041 (c) 1992 SNK
 quizdai2		// 0042 (c) 1992 SNK
@@ -7633,10 +7639,11 @@ raidndxu		// (c) 1994 Seibu Kaihatsu + Fabtek license
 raidndxa1		// (c) 1994 Seibu Kaihatsu + Metrotainment license
 raidndxa2		// (c) 1994 Seibu Kaihatsu + Metrotainment license
 raidndxg		// (c) 1994 Seibu Kaihatsu + Tuning license
-zeroteam		// (c) 1993 Seibu Kaihatsu
+zeroteam		// (c) 1993 Seibu Kaihatsu + Fabtek license
 zeroteama		// (c) 1993 Seibu Kaihatsu
 zeroteamb		// (c) 1993 Seibu Kaihatsu
-zeroteamc		// (c) 1993 Seibu Kaihatsu
+zeroteamc		// (c) 1993 Seibu Kaihatsu + Liang Hwa license
+zeroteamd		// (c) 1993 Seibu Kaihatsu + Dreamsoft license
 zeroteams		// (c) 1993 Seibu Kaihatsu
 zeroteamsr		// (c) 1993 Seibu Kaihatsu
 xsedae			// (c) 1995 Dream Island
@@ -9281,7 +9288,7 @@ j2spcrsv	// Special Reserve (Jpm)
 j2stahed	// Streets Ahead (Jpm)
 j2supfrt	// Supa Fruit (Jpm)
 j2supfrc	// Supa Fruit Club (Jpm)
-j2supsft	// Supa Shifta (Jpm)
+j2supsft	// Supashifta (Jpm)
 j2supstp	// Supa Steppa (Jpm)
 j2suptrk	// Supa Track (Jpm)
 j2suprft	// Super Fruit (Jpm)
@@ -9298,7 +9305,7 @@ j2westrn	// Western (Jpm)
 j2blustr	// Blue Streak (Pcp)
 j2cshalm	// Cash Alarm (Pcp)
 j2cshcrd	// Cash Cards (Pcp)
-j2cshfil	// Cash Filla (Pcp)
+j2cshfil	// Cash-Filla (Pcp)
 j2cshsmh	// Cash Smash (Pcp)
 j2criscr	// Criss Cross Jackpot (Pcp)
 j2frucnx	// Fruit Connexion (Pcp)
@@ -9543,7 +9550,7 @@ j5street	// Streetwise (Jpm)
 j5sup4		// Super 4 (Jpm)
 j5supbar	// Super Bars (Jpm)
 j5supbara	//
-j5suphi		// Super Hi Lo (Jpm)
+j5suphi		// Super Hi-Lo (Jpm)
 j5swop		// Swop A Fruit Club (Jpm)
 j5term		// Terminator (Jpm)
 j5topshp	// Top Of The Shop Club (Jpm)
@@ -9604,7 +9611,7 @@ j6cshcnt	// Cash Countdown (Jpm)
 j6cshrd		// Cash Raider (Ace)
 j6cshtwr	// Cash Towers (Jpm)
 j6cshvgs	// Cash Vegas Strip (Jpm)
-j6cas5		// Casino 5 Liner (Jpm)
+j6cas5		// Casino 5ive Liner (Jpm) (IMPACT)
 j6cascz		// Casino Crazy (Jpm)
 j6cccla		// Casino Crazy Classic (Jpm)
 j6cascla	// Casino Crazy Classic Club (Jpm)
@@ -10123,6 +10130,10 @@ sothello		// (c) 1986 Success / Fujiwara
 quake			// (c) 19?? Lazer-Tron / iD Software 
 majorpkr		// (c) 1994 PAL System.
 
+// Nexus 3D
+
+acheartf		// (c) 2006 Examu
+
 // Multi Amenity Cassette System
 macsbios
 mac2bios
@@ -10326,6 +10337,7 @@ sigma2k			// (c) 2000 Sigma
 
 attckufo		// (c) 1980 Ryoto Electric Co.
 fortecar
+fortecrd
 jackpool		// (c) 1997 Electronic Projects
 murogem			// ???
 murogema		// ???
@@ -10627,6 +10639,7 @@ bingor2			// (c) 2002 Unknown
 bingor3			// (c) 2002 Unknown
 bingor4			// (c) 2002 Unknown
 bingor5			// (c) 2002 Unknown
+galgame			// (c) 1971 Computer Recreations, Inc
 
 // InterFlip / Recreativos Franco
 videopkr		// (c) 1984 InterFlip
@@ -11867,7 +11880,6 @@ sc1clinsd	//
 sc1clinse	//
 sc1clb3		// Club 3000 (Bellfruit) 
 sc1czbrk	// Crazy Break (Bellfruit)
-sc1dyncl	// Dynamite Club (Bellfruit) 
 sc1energ	// Energy (Bellfruit)
 sc1hipt		// High Point (Bellfruit)
 sc1hipta	//
@@ -12188,7 +12200,6 @@ sc4bugs		// Bugs Money (Bellfruit)
 sc4bugsa	//
 sc4bugsb	//
 sc4bugsc	//
-sc4bugsd	//
 sc4bulcl	// Bullseye Club (Bellfruit)
 sc4bulcla	//
 sc4bulclb	//
@@ -12325,6 +12336,14 @@ sc4cckey	// Casino Crazy Keys (Bellfruit)
 sc4cckeya	//
 sc4cckeyb	//
 sc4cckeyc	//
+sc4cckeyd	//
+sc4cckeye	//
+sc4cckeyf	//
+sc4cckeyg	//
+sc4cckeyh	//
+sc4cckeyi	//
+sc4cckeyj	//
+sc4cckeyk	//
 sc4ckx		// Casino King X (Mazooma)
 sc4ckxa		//
 sc4ckxb		//
@@ -12491,18 +12510,6 @@ sc4cfdu		// Crazy Fruits Down Under (Bellfruit)
 sc4cfdua	//
 sc4cfdub	//
 sc4cfduc	//
-sc4cfg		// Crazy Fruits Gold (Bellfruit)
-sc4cfga		//
-sc4cfgb		//
-sc4cfgc		//
-sc4cfgd		// 
-sc4cfge		//
-sc4cfgf		//
-sc4cfgg		//
-sc4cfgh		//
-sc4cfgi		//
-sc4cfgj		//
-sc4cfgk		//
 sc4cfgcl	// Crazy Fruits Gold Club (Bellfruit)
 sc4cfgcla	//
 sc4cfgclb	//
@@ -12688,7 +12695,6 @@ sc4fcc		// Firecracker Club (Bellfruit)
 sc4fcca		//
 sc4fccb		//
 sc4fccc		//
-sc4fccd		//
 sc4fire		// Firepower (Mazooma)
 sc4firea	//
 sc4fwp		// Five Ways Pays (Mazooma)
@@ -13193,7 +13199,6 @@ sc4maxcca	//
 sc4maxccb	//
 sc4maxccc	//
 sc4miljo	// Miljonairs (Bellfruit)
-sc4miljoa	//
 sc4milja	// Miljonairs Arcade (Bellfruit)
 sc4mbags	// Money Bags (Bellfruit)
 sc4mbagsa	//
@@ -13274,7 +13279,6 @@ sc4monobj	//
 sc4monobk	//
 sc4monobl	//
 sc4monobm	//
-sc4monobn	//
 sc4monod	// Monopoly (Mazooma) [German]
 sc4monoda	//
 sc4monodb	//
@@ -13285,7 +13289,6 @@ sc4mclbc	//
 sc4mclbd	//
 sc4mclbe	//
 sc4mdlx		// Monopoly Deluxe (Mazooma)
-sc4mwwcl	// Monopoly Wonders Of The World Club (Mazooma)
 sc4mondxg   //
 sc4mowowd   //
 sc4mont		// Montego Pay (Qps)
@@ -15985,8 +15988,6 @@ sc5dndtpr	//
 sc5dndtps	//
 sc5dndtpt	//
 sc5dndtpu	//
-sc5dndtpv	//
-sc5dndtpw	//
 sc5dndww	// Deal Or No Deal The Walk Of Wealth (Bellfruit)
 sc5dndwwa	//
 sc5dndwwb	//
@@ -16536,8 +16537,6 @@ sc5dndbek	//
 sc5dndbel	//
 sc5dndbem	//
 sc5dndben	//
-sc5dndbeo	//
-sc5dndbep	//
 sc5ddbbcd	//
 sc5ddbbce	//
 sc5ddbbcf	//
@@ -17082,7 +17081,7 @@ ep_heybc	// Hey Big Spender Club (Global)
 ep_hispr	// Hi Spirits (Global)
 ep_hiscl	// Hi Spirits Club (Global)
 ep_spirt	// High Spirits (Global)
-ep_smoke	// Holy Smoke (Impulse)
+ep_smoke	// Holy Smoke! (Impulse)
 ep_hur		// Hurricane (Global)
 ep_ifern	// Inferno (Impulse)
 ep_kopcl	// Knockout Punch Club (Global)
@@ -17300,7 +17299,7 @@ m4centpta	// Centrepoint (Barcrest)
 m4ceptr		// Ceptor (Barcrest) 
 m4chasei	// Chase Invaders (Barcrest) 
 m4cheryo	// Cherryo (Barcrest) 
-m4click		// Clickety Click (Barcrest) 
+m4click		// Clickity Click (Barcrest)
 m4c999		// Cloud 999 (Barcrest) 
 m4c9		// Cloud Nine (Barcrest) 
 m4c9c		// Cloud Nine Club (Barcrest) 
@@ -17538,7 +17537,7 @@ m4twilgt	// Twilight (Barcrest)
 m4twintm	// Twin Timer (Barcrest) 
 m4twist		// Twist Again (Barcrest) 
 m4univ		// Universe (Barcrest) 
-m4uuaw		// Up Up & Away (Barcrest) 
+m4uuaw		// Up Up and Away (Barcrest)
 m4vegast	// Vegas Strip (Barcrest) 
 m4vegastg	//
 m4vivaes	// Viva Espana (Barcrest) 
@@ -17719,7 +17718,7 @@ m4jne		// The Jackpot's Not Enough (Empire?)
 /* MDM */
 
 m42punlm	// 2p Unlimited (Mdm)
-m4bigapl	// Big Apple (Mdm)
+m4bigapl	// The Big Apple (Mdm)
 m4bigapla	// 
 m4bigaplb	// 
 m4bigaplc	// 
@@ -18107,7 +18106,7 @@ m5bbrocl	// Big Brother Club (Barcrest)
 m5bigchs	// The Big Cheese (Barcrest) 
 m5biggam	// The Big Game (Barcrest) 
 m5blkwht	// Black & White (Barcrest) 
-m5bwaves	// Brainwaves (Barcrest) 
+m5bwaves	// Brain Waves (Barcrest)
 m5blind		// Bling King Crazy (Barcrest) 
 m5cbw		// Ca$h Bang Wallop (Barcrest) 
 m5cpcash	// Captain Cash (Barcrest) 

@@ -94,11 +94,11 @@ bool ipf_format::parse_info(const UINT8 *info)
 	type = r32(info+12);
 	if(type != 1)
 		return false;
-	f4 = r32(info+16); // Usually 2
-	f8 = r32(info+20); // Usually 1
+	encoder_type = r32(info+16); // 1 for CAPS, 2 for SPS
+	encoder_revision = r32(info+20); // 1 always
 	release = r32(info+24);
 	revision = r32(info+28);
-	f14 = r32(info+32); // Perhaps some kind of (unchecked) checksum
+	origin = r32(info+32); // Original source reference
 	min_cylinder = r32(info+36);
 	max_cylinder = r32(info+40);
 	min_head = r32(info+44);
@@ -144,7 +144,7 @@ bool ipf_format::parse_imge(const UINT8 *imge)
 		return false;
 
 	t->type = r32(imge+20);
-	t->t12 = r32(imge+24); // Usually 1
+	t->sigtype = r32(imge+24); // 1 for 2us cells, no other value valid
 	t->size_bytes = r32(imge+28);
 	t->index_bytes = r32(imge+32);
 	t->index_cells = r32(imge+36);
@@ -152,11 +152,11 @@ bool ipf_format::parse_imge(const UINT8 *imge)
 	t->gapsize_cells = r32(imge+44);
 	t->size_cells = r32(imge+48);
 	t->block_count = r32(imge+52);
-	t->t44 = r32(imge+56); // Usually 0
+	t->process = r32(imge+56); // encoder process, always 0
 	t->weak_bits = r32(imge+60);
-	t->t56 = r32(imge+68);
-	t->t60 = r32(imge+72);
-	t->t64 = r32(imge+76);
+	t->reserved[0] = r32(imge+68);
+	t->reserved[1] = r32(imge+72);
+	t->reserved[2] = r32(imge+76);
 
 	return true;
 }
@@ -167,7 +167,7 @@ bool ipf_format::parse_data(const UINT8 *data, UINT32 &pos, UINT32 max_extra_siz
 	if(!t)
 		return false;
 
-	t->d4 = r32(data+16); // Somehow related to the number of data cells
+	t->data_size_bits = r32(data+16);
 	t->data = data+28;
 	t->data_size = r32(data+12);
 	if(t->data_size > max_extra_size)
@@ -200,7 +200,7 @@ bool ipf_format::scan_all_tags(UINT8 *data, UINT32 size)
 	while(pos != size) {
 		UINT8 *tag;
 		UINT32 tsize;
-			
+
 		if(!scan_one_tag(data, size, pos, tag, tsize))
 			return false;
 
@@ -427,7 +427,7 @@ void ipf_format::track_write_raw(UINT32 *&track, const UINT8 *data, UINT32 cells
 	for(UINT32 i=0; i != cells; i++)
 		*track++ = data[i>>3] & (0x80 >> (i & 7)) ? MG_1 : MG_0;
 	if(cells)
-		context = track[-1] == MG_1; 
+		context = track[-1] == MG_1;
 }
 
 void ipf_format::track_write_mfm(UINT32 *&track, const UINT8 *data, UINT32 start_offset, UINT32 patlen, UINT32 cells, bool &context)
@@ -447,7 +447,7 @@ void ipf_format::track_write_mfm(UINT32 *&track, const UINT8 *data, UINT32 start
 void ipf_format::track_write_weak(UINT32 *&track, UINT32 cells)
 {
 	for(UINT32 i=0; i != cells; i++)
-		*track++ = MG_W;
+		*track++ = floppy_image::MG_N;
 }
 
 bool ipf_format::generate_block_data(const UINT8 *data, const UINT8 *dlimit, UINT32 *track, UINT32 *tlimit, bool &context)
@@ -472,7 +472,7 @@ bool ipf_format::generate_block_data(const UINT8 *data, const UINT8 *dlimit, UIN
 			break;
 
 		case 2: // MFM-decoded data bytes
-		case 3: // MFM-decoded gap bytes			
+		case 3: // MFM-decoded gap bytes
 			if(16*param > tleft)
 				return false;
 			track_write_mfm(track, data, 0, 8*param, 16*param, context);
@@ -579,7 +579,7 @@ bool ipf_format::generate_gap_from_description(const UINT8 *&data, const UINT8 *
 					block_size = size - pos;
 				if(pos + block_size > size)
 					return false;
-				//				printf("pat=%02x size=%d pre\n", pattern[0], block_size);
+				//              printf("pat=%02x size=%d pre\n", pattern[0], block_size);
 				track_write_mfm(track, pattern, 0, pattern_size, block_size, context);
 				pos += block_size;
 			} else {
@@ -589,7 +589,7 @@ bool ipf_format::generate_gap_from_description(const UINT8 *&data, const UINT8 *
 					block_size = size - res_size;
 				if(pos + block_size > size)
 					return false;
-				//				printf("pat=%02x block_size=%d size=%d res_size=%d post\n", pattern[0], block_size, size, res_size);
+				//              printf("pat=%02x block_size=%d size=%d res_size=%d post\n", pattern[0], block_size, size, res_size);
 				track_write_mfm(track, pattern, -block_size, pattern_size, block_size, context);
 				pos += block_size;
 			}

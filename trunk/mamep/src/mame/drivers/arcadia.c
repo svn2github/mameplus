@@ -52,6 +52,7 @@
 #include "includes/amiga.h"
 #include "machine/6526cia.h"
 #include "machine/nvram.h"
+#include "machine/amigafdc.h"
 
 
 
@@ -333,6 +334,9 @@ static MACHINE_CONFIG_START( arcadia, arcadia_state )
 	/* cia */
 	MCFG_MOS8520_ADD("cia_0", AMIGA_68000_NTSC_CLOCK / 10, cia_0_intf)
 	MCFG_MOS8520_ADD("cia_1", AMIGA_68000_NTSC_CLOCK / 10, cia_1_intf)
+
+	/* fdc */
+	MCFG_AMIGA_FDC_ADD("fdc", AMIGA_68000_NTSC_CLOCK)
 MACHINE_CONFIG_END
 
 
@@ -793,7 +797,7 @@ static void arcadia_init(running_machine &machine)
 	{
 		ANGUS_CHIP_RAM_MASK,
 		NULL, NULL, NULL,
-		NULL, NULL, NULL,
+		NULL,
 		NULL,  arcadia_reset_coins,
 		NULL,
 		0

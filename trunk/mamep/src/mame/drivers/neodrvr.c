@@ -2271,6 +2271,41 @@ ROM_START( kotm2 ) /* MVS AND AES VERSION */
 	ROM_LOAD16_BYTE( "039-c4.c4", 0x200001, 0x080000, CRC(81c9c250) SHA1(e3a34ff69081a8681b5ca895915892dcdccfa7aa) ) /* Plane 2,3 */ /* TC534200 */
 ROM_END
 
+// fairly late prototype release, only the code differs from the main set
+ROM_START( kotm2p )
+	ROM_REGION( 0x100000, "maincpu", 0 )
+	ROM_LOAD16_BYTE( "p1.bin", 0x000001, 0x080000, CRC(3c1d17e7) SHA1(aeaff465fafa46ded903ed4e8cb8cd05de8dc096) )
+	ROM_LOAD16_BYTE( "p2.bin", 0x000000, 0x080000, CRC(bc9691f0) SHA1(3854659b952d4f8c2edd5d59858a61ce6d518604) )
+
+	NEO_SFIX_128K( "s1.bin", CRC(63ee053a) SHA1(7d4b92bd022708975b1470e8f24d1f5a712e1b94) )
+
+	NEO_BIOS_AUDIO_128K( "m1.bin", CRC(0c5b2ad5) SHA1(15eb5ea10fecdbdbcfd06225ae6d88bb239592e7) )
+
+	// same data as main set, but prototype board layout
+	ROM_REGION( 0x300000, "ymsnd", 0 )
+	ROM_LOAD( "v1.bin", 0x000000, 0x080000, CRC(dd3566f1) SHA1(f7c2a3747aaab2bc57cdfa33d8bb9fab057b5214) )
+	ROM_LOAD( "v2.bin", 0x080000, 0x080000, CRC(57f60274) SHA1(7e17740aa05cf7ad4f9084e147600a8eb82c7284) )
+	ROM_LOAD( "v3.bin", 0x100000, 0x080000, CRC(0f008a07) SHA1(ed243a0449232bbea409308c3fec7e057fcd8501) )
+	ROM_LOAD( "v4.bin", 0x180000, 0x080000, CRC(1943d0fe) SHA1(47fb716c76ea6b5fe64204ff6d72b7feea10bda9) )
+	ROM_LOAD( "v5.bin", 0x200000, 0x080000, CRC(13be045b) SHA1(0e3713ae6b164ebae434c0f18c466365b26b9a77) )
+	ROM_LOAD( "v6.bin", 0x280000, 0x080000, CRC(d1dd3fd6) SHA1(052b92168a76cf3a97c8cacebcc3ebab228726df) )
+
+	NO_DELTAT_REGION
+
+	// same data as main set, but prototype board layout
+	ROM_REGION( 0x600000, "sprites", 0 ) // note, ROM_LOAD32_BYTE
+	ROM_LOAD32_BYTE( "c1.bin", 0x000000, 0x100000, CRC(7192a787) SHA1(7bef6ce79c618103485480aee3c6f856968eb51f) )
+	ROM_LOAD32_BYTE( "c2.bin", 0x000002, 0x100000, CRC(7157eca1) SHA1(65f36c6a3834775b04076d2c38a6047bffe9a8cf) )
+	ROM_LOAD32_BYTE( "c3.bin", 0x000001, 0x100000, CRC(11d75727) SHA1(5a4c7b5ca3f1195e7853b45c5e71c13fe74d16e9) )
+	ROM_LOAD32_BYTE( "c4.bin", 0x000003, 0x100000, CRC(7ad48b28) SHA1(27e65d948f08c231107cb1a810e2b06731091fc3) )
+	ROM_LOAD32_BYTE( "c5.bin", 0x400000, 0x080000, CRC(5bdaf9ca) SHA1(60620d42ac6cd0e5da019fede2814a2f4171ff3f) )
+	ROM_LOAD32_BYTE( "c6.bin", 0x400002, 0x080000, CRC(21d4be8c) SHA1(f1b19d37d52d21584f304b7d37d5c096b58219d6) )
+	ROM_LOAD32_BYTE( "c7.bin", 0x400001, 0x080000, CRC(da55fd00) SHA1(52804f955597591fdd1d7478dc340b36d3c08c4a) )
+	ROM_LOAD32_BYTE( "c8.bin", 0x400003, 0x080000, CRC(592e9267) SHA1(0d27de59970ccbcaa1d47909ea3d741ffb0d9e07) )
+ROM_END
+
+
+
 /****************************************
  ID-0040
  . NGM-040
@@ -4890,9 +4925,9 @@ ROM_END
  Choutetsu Brikin'ger - Iron clad (prototype) 1996 Saurus
 ****************************************/
 
-ROM_START( ironclad ) /* Prototype - Second (bugfix) release. */
+ROM_START( ironclad ) /* Prototype - crcs should match the ones of the unreleased dump. */
 	ROM_REGION( 0x200000, "maincpu", 0 )
-	ROM_LOAD16_WORD_SWAP( "220-p1p.p1", 0x100000, 0x100000, CRC(ce37e3a0) SHA1(488f95fa15f56eea6666dda13d96ec29dba18e19) )
+	ROM_LOAD16_WORD_SWAP( "220-p1p.p1", 0x100000, 0x100000, CRC(62a942c6) SHA1(12aaa7d9bd84328d1bf4610e056b5c57d0252537) )
 	ROM_CONTINUE( 0x000000, 0x100000 )
 
 	NEO_SFIX_128K( "220-s1p.s1", CRC(372fe217) SHA1(493433e682f519bf647e1481c8bdd3a980830ffb) )
@@ -4911,9 +4946,9 @@ ROM_START( ironclad ) /* Prototype - Second (bugfix) release. */
 	ROM_LOAD16_BYTE( "220-c4p.c4", 0x800001, 0x400000, CRC(e73ea38b) SHA1(27138d588e61e86c292f12d16e36c3681075c607) ) /* Plane 2,3 */
 ROM_END
 
-ROM_START( ironclado ) /* Prototype, older - First release. Original prototype from '96? */
+ROM_START( ironclado ) /* Prototype - bootleg/hack based on later release. */
 	ROM_REGION( 0x200000, "maincpu", 0 )
-	ROM_LOAD16_WORD_SWAP( "220-p1po.p1", 0x100000, 0x100000, CRC(62a942c6) SHA1(12aaa7d9bd84328d1bf4610e056b5c57d0252537) )
+	ROM_LOAD16_WORD_SWAP( "220-p1po.p1", 0x100000, 0x100000, CRC(ce37e3a0) SHA1(488f95fa15f56eea6666dda13d96ec29dba18e19) )
 	ROM_CONTINUE( 0x000000, 0x100000 )
 
 	NEO_SFIX_128K( "220-s1p.s1", CRC(372fe217) SHA1(493433e682f519bf647e1481c8bdd3a980830ffb) )
@@ -11664,11 +11699,129 @@ static DRIVER_INIT( jckeygpd )
 }
 
 
+driver_init_func neo_gameinit;
+
+static DRIVER_INIT( mvs )
+{
+	DRIVER_INIT_CALL(neogeo);
+}
+
+
+// handle protected carts
+void mvs_install_protection(device_image_interface& image)
+{
+//	neogeo_state *state = image.device().machine().driver_data<neogeo_state>();
+	const char *crypt_feature = image.get_feature( "crypt" );
+
+	if(crypt_feature == NULL)
+	{
+		neo_gameinit = driver_init_neogeo; 
+	}
+	else
+	{
+		/* work out which Driver Init decryption function to call based on flag in softlist
+		 - note this is called AFTER the regular DRIVER_INIT */
+
+		if(strcmp(crypt_feature,"mslugx_prot") == 0)		{ neo_gameinit = driver_init_mslugx; }
+		else if(strcmp(crypt_feature,"fatfury2_prot") == 0)	{ neo_gameinit = driver_init_fatfury2; }
+		else if(strcmp(crypt_feature,"kog_prot") == 0)		{ neo_gameinit = driver_init_kog; }
+		else if(strcmp(crypt_feature,"kof98_prot") == 0)	{ neo_gameinit = driver_init_kof98; }
+		else if(strcmp(crypt_feature,"kof99_prot") == 0)	{ neo_gameinit = driver_init_kof99; }
+		else if(strcmp(crypt_feature,"kof99k_prot") == 0)	{ neo_gameinit = driver_init_kof99k; }
+		else if(strcmp(crypt_feature,"garou_prot") == 0)	{ neo_gameinit = driver_init_garou; }
+		else if(strcmp(crypt_feature,"garouo_prot") == 0)	{ neo_gameinit = driver_init_garouo; }
+		else if(strcmp(crypt_feature,"garoubl_prot") == 0)	{ neo_gameinit = driver_init_garoubl; }
+		else if(strcmp(crypt_feature,"mslug3_prot") == 0)	{ neo_gameinit = driver_init_mslug3; }
+		else if(strcmp(crypt_feature,"mslug3h_prot") == 0)	{ neo_gameinit = driver_init_mslug3h; }
+		else if(strcmp(crypt_feature,"mslug3b6_prot") == 0)	{ neo_gameinit = driver_init_mslug3b6; }
+		else if(strcmp(crypt_feature,"kof2000_prot") == 0)	{ neo_gameinit = driver_init_kof2000; }
+		else if(strcmp(crypt_feature,"kof2000n_prot") == 0)	{ neo_gameinit = driver_init_kof2000n; }
+		else if(strcmp(crypt_feature,"sengoku3_prot") == 0)	{ neo_gameinit = driver_init_sengoku3; }
+		else if(strcmp(crypt_feature,"zupapa_prot") == 0)	{ neo_gameinit = driver_init_zupapa; }
+		else if(strcmp(crypt_feature,"kof2001_prot") == 0)	{ neo_gameinit = driver_init_kof2001; }
+		else if(strcmp(crypt_feature,"cthd2003_prot") == 0)	{ neo_gameinit = driver_init_cthd2003; }
+		else if(strcmp(crypt_feature,"ct2k3sp_prot") == 0)	{ neo_gameinit = driver_init_ct2k3sp; }
+		else if(strcmp(crypt_feature,"ct2k3sa_prot") == 0)	{ neo_gameinit = driver_init_ct2k3sa; }
+		else if(strcmp(crypt_feature,"kof2002_prot") == 0)	{ neo_gameinit = driver_init_kof2002; }
+		else if(strcmp(crypt_feature,"kof2002b_prot") == 0)	{ neo_gameinit = driver_init_kof2002b; }
+		else if(strcmp(crypt_feature,"kf2k2pls_prot") == 0)	{ neo_gameinit = driver_init_kf2k2pls; }
+		else if(strcmp(crypt_feature,"kf2k2mp_prot") == 0)	{ neo_gameinit = driver_init_kf2k2mp; }
+		else if(strcmp(crypt_feature,"kf2k2mp2_prot") == 0)	{ neo_gameinit = driver_init_kf2k2mp2; }
+		else if(strcmp(crypt_feature,"kof10th_prot") == 0)	{ neo_gameinit = driver_init_kof10th; }
+		else if(strcmp(crypt_feature,"kf10thep_prot") == 0)	{ neo_gameinit = driver_init_kf10thep; }
+		else if(strcmp(crypt_feature,"kf2k5uni_prot") == 0)	{ neo_gameinit = driver_init_kf2k5uni; }
+		else if(strcmp(crypt_feature,"kof2k4se_prot") == 0)	{ neo_gameinit = driver_init_kof2k4se; }
+		else if(strcmp(crypt_feature,"mslug5_prot") == 0)	{ neo_gameinit = driver_init_mslug5; }
+		else if(strcmp(crypt_feature,"ms5plus_prot") == 0)	{ neo_gameinit = driver_init_ms5plus; }
+		else if(strcmp(crypt_feature,"svc_prot") == 0)		{ neo_gameinit = driver_init_svc; }
+		else if(strcmp(crypt_feature,"svcboot_prot") == 0)	{ neo_gameinit = driver_init_svcboot; }
+		else if(strcmp(crypt_feature,"svcplus_prot") == 0)	{ neo_gameinit = driver_init_svcplus; }
+		else if(strcmp(crypt_feature,"svcplusa_prot") == 0)	{ neo_gameinit = driver_init_svcplusa; }
+		else if(strcmp(crypt_feature,"svcsplus_prot") == 0)	{ neo_gameinit = driver_init_svcsplus; }
+		else if(strcmp(crypt_feature,"samsho5_prot") == 0)	{ neo_gameinit = driver_init_samsho5; }
+		else if(strcmp(crypt_feature,"samsho5b_prot") == 0)	{ neo_gameinit = driver_init_samsho5b; }
+		else if(strcmp(crypt_feature,"kof2003_prot") == 0)	{ neo_gameinit = driver_init_kof2003; }
+		else if(strcmp(crypt_feature,"kof2003h_prot") == 0)	{ neo_gameinit = driver_init_kof2003h; }
+		else if(strcmp(crypt_feature,"kf2k3bl_prot") == 0)	{ neo_gameinit = driver_init_kf2k3bl; }
+		else if(strcmp(crypt_feature,"kf2k3pl_prot") == 0)	{ neo_gameinit = driver_init_kf2k3pl; }
+		else if(strcmp(crypt_feature,"kf2k3upl_prot") == 0)	{ neo_gameinit = driver_init_kf2k3upl; }
+		else if(strcmp(crypt_feature,"samsh5sp_prot") == 0)	{ neo_gameinit = driver_init_samsh5sp; }
+		else if(strcmp(crypt_feature,"preisle2_prot") == 0)	{ neo_gameinit = driver_init_preisle2; }
+		else if(strcmp(crypt_feature,"nitd_prot") == 0)		{ neo_gameinit = driver_init_nitd; }
+		else if(strcmp(crypt_feature,"s1945p_prot") == 0)	{ neo_gameinit = driver_init_s1945p; }
+		else if(strcmp(crypt_feature,"lans2004_prot") == 0)	{ neo_gameinit = driver_init_lans2004; }
+		else if(strcmp(crypt_feature,"pnyaa_prot") == 0)	{ neo_gameinit = driver_init_pnyaa; }
+		else if(strcmp(crypt_feature,"ganryu_prot") == 0)	{ neo_gameinit = driver_init_ganryu; }
+		else if(strcmp(crypt_feature,"bangbead_prot") == 0)	{ neo_gameinit = driver_init_bangbead; }
+		else if(strcmp(crypt_feature,"mslug4_prot") == 0)	{ neo_gameinit = driver_init_mslug4; }
+		else if(strcmp(crypt_feature,"ms4plus_prot") == 0)	{ neo_gameinit = driver_init_ms4plus; }
+		else if(strcmp(crypt_feature,"rotd_prot") == 0)		{ neo_gameinit = driver_init_rotd; }
+		else if(strcmp(crypt_feature,"matrim_prot") == 0)	{ neo_gameinit = driver_init_matrim; }
+		else if(strcmp(crypt_feature,"matrimbl_prot") == 0)	{ neo_gameinit = driver_init_matrimbl; }
+// plus
+		else if(strcmp(crypt_feature,"gfxdec42_prot") == 0)	{ neo_gameinit = driver_init_gfxdec42; }
+		else if(strcmp(crypt_feature,"gfxdec50_prot") == 0)	{ neo_gameinit = driver_init_gfxdec50; }
+		else if(strcmp(crypt_feature,"kof96ep_prot") == 0)	{ neo_gameinit = driver_init_kof96ep; }
+		else if(strcmp(crypt_feature,"garoud_prot") == 0)	{ neo_gameinit = driver_init_garoud; }
+		else if(strcmp(crypt_feature,"kof2000d_prot") == 0)	{ neo_gameinit = driver_init_kof2000d; }
+		else if(strcmp(crypt_feature,"kof2001d_prot") == 0)	{ neo_gameinit = driver_init_kof2001d; }
+		else if(strcmp(crypt_feature,"kf2k1pls_prot") == 0)	{ neo_gameinit = driver_init_kf2k1pls; }
+		else if(strcmp(crypt_feature,"kf2k1pa_prot") == 0)	{ neo_gameinit = driver_init_kf2k1pa; }
+		else if(strcmp(crypt_feature,"cthd2k3a_prot") == 0)	{ neo_gameinit = driver_init_cthd2k3a; }
+		else if(strcmp(crypt_feature,"cthd2k3d_prot") == 0)	{ neo_gameinit = driver_init_cthd2k3d; }
+		else if(strcmp(crypt_feature,"mslug4d_prot") == 0)	{ neo_gameinit = driver_init_mslug4d; }
+		else if(strcmp(crypt_feature,"popbounc_prot") == 0)	{ neo_gameinit = driver_init_popbounc; }
+		else if(strcmp(crypt_feature,"rotdd_prot") == 0)	{ neo_gameinit = driver_init_rotdd; }
+		else if(strcmp(crypt_feature,"kf2k2plc_prot") == 0)	{ neo_gameinit = driver_init_kf2k2plc; }
+		else if(strcmp(crypt_feature,"kf2k2ps2_prot") == 0)	{ neo_gameinit = driver_init_kf2k2ps2; }
+		else if(strcmp(crypt_feature,"kof2002d_prot") == 0)	{ neo_gameinit = driver_init_kof2002d; }
+		else if(strcmp(crypt_feature,"kof10thd_prot") == 0)	{ neo_gameinit = driver_init_kof10thd; }
+		else if(strcmp(crypt_feature,"kf2k4pls_prot") == 0)	{ neo_gameinit = driver_init_kf2k4pls; }
+		else if(strcmp(crypt_feature,"matrimd_prot") == 0)	{ neo_gameinit = driver_init_matrimd; }
+		else if(strcmp(crypt_feature,"pnyaad_prot") == 0)	{ neo_gameinit = driver_init_pnyaad; }
+		else if(strcmp(crypt_feature,"mslug5b_prot") == 0)	{ neo_gameinit = driver_init_mslug5b; }
+		else if(strcmp(crypt_feature,"mslug5d_prot") == 0)	{ neo_gameinit = driver_init_mslug5d; }
+		else if(strcmp(crypt_feature,"svcd_prot") == 0)	        { neo_gameinit = driver_init_svcd; }
+		else if(strcmp(crypt_feature,"samsho5d_prot") == 0)	{ neo_gameinit = driver_init_samsho5d; }
+		else if(strcmp(crypt_feature,"kof2003d_prot") == 0)	{ neo_gameinit = driver_init_kof2003d; }
+		else if(strcmp(crypt_feature,"kf2k3pcd_prot") == 0)	{ neo_gameinit = driver_init_kf2k3pcd; }
+		else if(strcmp(crypt_feature,"samsh5sd_prot") == 0)	{ neo_gameinit = driver_init_samsh5sd; }
+		else if(strcmp(crypt_feature,"kof97pla_prot") == 0)	{ neo_gameinit = driver_init_kof97pla; }
+		else if(strcmp(crypt_feature,"fr2ch_prot") == 0)	{ neo_gameinit = driver_init_fr2ch; }
+		else if(strcmp(crypt_feature,"jckeygpd_prot") == 0)	{ neo_gameinit = driver_init_jckeygpd; }
+// plus end
+		else { fatalerror("unknown crypt type\n"); }
+	}
+
+	if (neo_gameinit) neo_gameinit(image.device().machine());
+}
+
 /****************************************************************************/
 
-/*    YEAR  NAME      PARENT    MACHINE   INPUT     INIT      MONITOR  */
-GAME( 1990, neogeo,    0,        neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Neo-Geo", GAME_IS_BIOS_ROOT | GAME_SUPPORTS_SAVE )
+/*    YEAR  NAME       PARENT    COMPAT    MACHINE   INPUT     INIT     */
+CONS( 1990, neogeo,    0,        0,        mvs,	     neogeo,   mvs,  "SNK", "Neo-Geo", GAME_IS_BIOS_ROOT | GAME_SUPPORTS_SAVE )
 
+/*    YEAR  NAME      PARENT    MACHINE   INPUT     INIT      MONITOR  */
 /* SNK */
 GAME( 1990, nam1975,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "NAM-1975 (NGM-001)(NGH-001)", GAME_SUPPORTS_SAVE )
 GAME( 1990, bstars,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Baseball Stars Professional (NGM-002)", GAME_SUPPORTS_SAVE )
@@ -11708,6 +11861,7 @@ GAME( 1991, roboarmy,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Rob
 //GAME( 1991, roboarma,  roboarmy, neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Robo Army (set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1992, fbfrenzy,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Football Frenzy (NGM-034)(NGH-034)", GAME_SUPPORTS_SAVE )
 GAME( 1992, kotm2,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "King of the Monsters 2 - The Next Thing (NGM-039)(NGH-039)", GAME_SUPPORTS_SAVE )
+GAME( 1992, kotm2p,    kotm2,    neogeo,   neogeo,   neogeo,   ROT0, "SNK", "King of the Monsters 2 - The Next Thing (prototype)", GAME_SUPPORTS_SAVE )
 GAME( 1993, sengoku2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Sengoku 2 / Sengoku Denshou 2", GAME_SUPPORTS_SAVE )
 GAME( 1992, bstars2,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Baseball Stars 2", GAME_SUPPORTS_SAVE )
 GAME( 1992, quizdai2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Quiz Meitantei Neo & Geo - Quiz Daisousa Sen part 2 (NGM-042)(NGH-042)", GAME_SUPPORTS_SAVE )
@@ -11897,7 +12051,7 @@ GAME( 1995, stakwin,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "
 GAME( 1996, ragnagrd,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Ragnagard / Shin-Oh-Ken", GAME_SUPPORTS_SAVE )
 GAME( 1996, pgoal,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Pleasure Goal / Futsal - 5 on 5 Mini Soccer (NGM-219)", GAME_SUPPORTS_SAVE )
 GAME( 1996, ironclad,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Choutetsu Brikin'ger - Iron clad (Prototype)", GAME_SUPPORTS_SAVE )
-GAME( 1996, ironclado, ironclad, neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Choutetsu Brikin'ger - Iron clad (Prototype, older)", GAME_SUPPORTS_SAVE )
+GAME( 1996, ironclado, ironclad, neogeo,   neogeo,   neogeo,   ROT0, "bootleg", "Choutetsu Brikin'ger - Iron clad (Prototype, bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1996, stakwin2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Stakes Winner 2", GAME_SUPPORTS_SAVE )
 GAME( 1997, shocktro,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Shock Troopers (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1997, shocktroa, shocktro, neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Shock Troopers (set 2)", GAME_SUPPORTS_SAVE )

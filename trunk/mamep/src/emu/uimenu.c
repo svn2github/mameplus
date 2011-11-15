@@ -2295,7 +2295,7 @@ static void menu_settings_populate(running_machine &machine, ui_menu *menu, sett
 							dip->mask = dip->state = 0;
 							*diplist_tailptr = dip;
 							diplist_tailptr = &dip->next;
-							if (mame_stricmp(dip->name, "INVISIBLE") != 0)
+							if (mame_stricmp(dip->name, "FAKE") != 0)
 								dipcount++;
 						}
 
@@ -2338,7 +2338,7 @@ static void menu_settings_custom_render(running_machine &machine, ui_menu *menu,
 	/* iterate over DIP switches */
 	for (dip = menustate->diplist; dip != NULL; dip = dip->next)
 	{
-		if (mame_stricmp(dip->name, "INVISIBLE") != 0)
+		if (mame_stricmp(dip->name, "FAKE") != 0)
 		{
 			const input_field_diplocation *diploc;
 			UINT32 selectedmask = 0;

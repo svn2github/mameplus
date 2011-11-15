@@ -10,6 +10,8 @@
 /* Missing:
    - linescroll in special modes (qgh title, mahmajn2/qrouka attract mode)
    - screen flipping (mix register 13 & 2)
+   - FRC timer IRQ is currently in a slight off-beat (timer should be resetted every time
+     that the mode changes, but current MAME framework doesn't seem to like it)
 */
 
 /*
@@ -347,8 +349,19 @@ Notes:
 #define VIDEO_CLOCK			XTAL_32MHz
 #define TIMER_CLOCK         (VIDEO_CLOCK/4)
 #define HSYNC_CLOCK         (VIDEO_CLOCK/2/656.0)
+/* TODO: understand why divisors doesn't match at all with the reference */
+#define FRC_CLOCK_MODE0		(MASTER_CLOCK/2)/24 // /16 according to Charles
+#define FRC_CLOCK_MODE1		(MASTER_CLOCK/2)/1536 // /1024 according to Charles, but /1536 sounds better
 
-// Floppy Fisk Controller
+enum {
+	IRQ_YM2151 = 1,
+	IRQ_TIMER  = 2,
+	IRQ_VBLANK = 3,
+	IRQ_SPRITE = 4,
+	IRQ_FRC = 5
+};
+
+// Floppy Disk Controller
 
 void segas24_state::fdc_init()
 {
@@ -721,6 +734,33 @@ WRITE16_MEMBER( segas24_state::curbank_w )
 	}
 }
 
+READ8_MEMBER( segas24_state::frc_mode_r )
+{
+	return frc_mode & 1;
+}
+
+WRITE8_MEMBER( segas24_state::frc_mode_w )
+{
+	/* reset frc if a write happens here */
+	frc_cnt_timer->reset();
+	frc_mode = data & 1;
+}
+
+READ8_MEMBER( segas24_state::frc_r )
+{
+	INT32 result = (frc_cnt_timer->time_elapsed() * (frc_mode ? FRC_CLOCK_MODE1 : FRC_CLOCK_MODE0)).as_double();
+
+	result %= ((frc_mode) ? 0x67 : 0x100);
+
+	return result;
+}
+
+WRITE8_MEMBER( segas24_state::frc_w )
+{
+	/* Undocumented behaviour, Bonanza Bros. seems to use this for irq ack'ing ... */
+	cputag_set_input_line(machine(), "maincpu", IRQ_FRC+1, CLEAR_LINE);
+	cputag_set_input_line(machine(), "sub", IRQ_FRC+1, CLEAR_LINE);
+}
 
 
 // Protection magic latch
@@ -766,13 +806,6 @@ WRITE16_MEMBER( segas24_state::mlatch_w )
 
 
 // Timers and IRQs
-
-enum {
-	IRQ_YM2151 = 1,
-	IRQ_TIMER  = 2,
-	IRQ_VBLANK = 3,
-	IRQ_SPRITE = 4
-};
 
 void segas24_state::irq_timer_sync()
 {
@@ -861,6 +894,17 @@ static TIMER_DEVICE_CALLBACK( irq_timer_clear_cb )
 	cputag_set_input_line(timer.machine(), "sub", IRQ_SPRITE+1, CLEAR_LINE);
 }
 
+static TIMER_DEVICE_CALLBACK( irq_frc_cb )
+{
+	segas24_state *state = timer.machine().driver_data<segas24_state>();
+
+	if(state->irq_allow0 & (1 << IRQ_FRC) && state->frc_mode == 1)
+		cputag_set_input_line(timer.machine(), "maincpu", IRQ_FRC+1, ASSERT_LINE);
+
+	if(state->irq_allow1 & (1 << IRQ_FRC) && state->frc_mode == 1)
+		cputag_set_input_line(timer.machine(), "sub", IRQ_FRC+1, ASSERT_LINE);
+}
+
 void segas24_state::irq_init()
 {
 	irq_tdata = 0;
@@ -897,20 +941,22 @@ WRITE16_MEMBER(segas24_state::irq_w)
 		}
 		break;
 	case 2:
-		irq_allow0 = data & 0x1f;
+		irq_allow0 = data & 0x3f;
 		irq_timer_pend0 = 0;
 		cputag_set_input_line(machine(), "maincpu", IRQ_TIMER+1, CLEAR_LINE);
 		cputag_set_input_line(machine(), "maincpu", IRQ_YM2151+1, irq_yms && (irq_allow0 & (1 << IRQ_YM2151)) ? ASSERT_LINE : CLEAR_LINE);
 		cputag_set_input_line(machine(), "maincpu", IRQ_VBLANK+1, irq_vblank && (irq_allow0 & (1 << IRQ_VBLANK)) ? ASSERT_LINE : CLEAR_LINE);
 		cputag_set_input_line(machine(), "maincpu", IRQ_SPRITE+1, irq_sprite && (irq_allow0 & (1 << IRQ_SPRITE)) ? ASSERT_LINE : CLEAR_LINE);
+		//cputag_set_input_line(machine(), "maincpu", IRQ_FRC+1, irq_frc && (irq_allow0 & (1 << IRQ_FRC)) ? ASSERT_LINE : CLEAR_LINE);
 		break;
 	case 3:
-		irq_allow1 = data & 0x1f;
+		irq_allow1 = data & 0x3f;
 		irq_timer_pend1 = 0;
 		cputag_set_input_line(machine(), "sub", IRQ_TIMER+1, CLEAR_LINE);
 		cputag_set_input_line(machine(), "sub", IRQ_YM2151+1, irq_yms && (irq_allow1 & (1 << IRQ_YM2151)) ? ASSERT_LINE : CLEAR_LINE);
 		cputag_set_input_line(machine(), "sub", IRQ_VBLANK+1, irq_vblank && (irq_allow1 & (1 << IRQ_VBLANK)) ? ASSERT_LINE : CLEAR_LINE);
 		cputag_set_input_line(machine(), "sub", IRQ_SPRITE+1, irq_sprite && (irq_allow1 & (1 << IRQ_SPRITE)) ? ASSERT_LINE : CLEAR_LINE);
+		//cputag_set_input_line(machine(), "sub", IRQ_FRC+1, irq_frc && (irq_allow1 & (1 << IRQ_FRC)) ? ASSERT_LINE : CLEAR_LINE);
 		break;
 	}
 }
@@ -1153,10 +1199,14 @@ static ADDRESS_MAP_START( system24_cpu1_map, AS_PROGRAM, 16, segas24_state )
 	AM_RANGE(0xb00008, 0xb0000f) AM_MIRROR(0x07fff0) AM_READWRITE(fdc_status_r, fdc_ctrl_w)
 	AM_RANGE(0xb80000, 0xbbffff) AM_ROMBANK("bank1")
 	AM_RANGE(0xbc0000, 0xbc0001) AM_MIRROR(0x03fff8) AM_READWRITE(curbank_r, curbank_w)
+	AM_RANGE(0xbc0002, 0xbc0003) AM_MIRROR(0x03fff8) AM_READWRITE8(frc_mode_r, frc_mode_w,0x00ff)
+	AM_RANGE(0xbc0004, 0xbc0005) AM_MIRROR(0x03fff8) AM_READWRITE8(frc_r, frc_w,0x00ff)
 	AM_RANGE(0xbc0006, 0xbc0007) AM_MIRROR(0x03fff8) AM_READWRITE(mlatch_r, mlatch_w)
 	AM_RANGE(0xc00000, 0xc00011) AM_MIRROR(0x07ffe0) AM_READWRITE(hotrod3_ctrl_r, hotrod3_ctrl_w)
 	AM_RANGE(0xc80000, 0xcbffff) AM_ROMBANK("bank2")
 	AM_RANGE(0xcc0000, 0xcc0001) AM_MIRROR(0x03fff8) AM_READWRITE(curbank_r, curbank_w)
+	AM_RANGE(0xcc0002, 0xcc0003) AM_MIRROR(0x03fff8) AM_READWRITE8(frc_mode_r, frc_mode_w,0x00ff)
+	AM_RANGE(0xcc0004, 0xcc0005) AM_MIRROR(0x03fff8) AM_READWRITE8(frc_r, frc_w,0x00ff)
 	AM_RANGE(0xcc0006, 0xcc0007) AM_MIRROR(0x03fff8) AM_READWRITE(mlatch_r, mlatch_w)
 	AM_RANGE(0xf00000, 0xf3ffff) AM_MIRROR(0x040000) AM_RAM AM_SHARE("share2")
 	AM_RANGE(0xf80000, 0xfbffff) AM_MIRROR(0x040000) AM_RAM AM_SHARE("share1")
@@ -1190,10 +1240,14 @@ static ADDRESS_MAP_START( system24_cpu2_map, AS_PROGRAM, 16, segas24_state )
 	AM_RANGE(0xb00008, 0xb0000f) AM_MIRROR(0x07fff0) AM_READWRITE(fdc_status_r, fdc_ctrl_w)
 	AM_RANGE(0xb80000, 0xbbffff) AM_ROMBANK("bank1")
 	AM_RANGE(0xbc0000, 0xbc0001) AM_MIRROR(0x03fff8) AM_READWRITE(curbank_r, curbank_w)
+	AM_RANGE(0xbc0002, 0xbc0003) AM_MIRROR(0x03fff8) AM_READWRITE8(frc_mode_r, frc_mode_w,0x00ff)
+	AM_RANGE(0xbc0004, 0xbc0005) AM_MIRROR(0x03fff8) AM_READWRITE8(frc_r, frc_w,0x00ff)
 	AM_RANGE(0xbc0006, 0xbc0007) AM_MIRROR(0x03fff8) AM_READWRITE(mlatch_r, mlatch_w)
 	AM_RANGE(0xc00000, 0xc00011) AM_MIRROR(0x07ffe0) AM_READWRITE(hotrod3_ctrl_r, hotrod3_ctrl_w)
 	AM_RANGE(0xc80000, 0xcbffff) AM_ROMBANK("bank2")
 	AM_RANGE(0xcc0000, 0xcc0001) AM_MIRROR(0x03fff8) AM_READWRITE(curbank_r, curbank_w)
+	AM_RANGE(0xcc0002, 0xcc0003) AM_MIRROR(0x03fff8) AM_READWRITE8(frc_mode_r, frc_mode_w,0x00ff)
+	AM_RANGE(0xcc0004, 0xcc0005) AM_MIRROR(0x03fff8) AM_READWRITE8(frc_r, frc_w,0x00ff)
 	AM_RANGE(0xcc0006, 0xcc0007) AM_MIRROR(0x03fff8) AM_READWRITE(mlatch_r, mlatch_w)
 	AM_RANGE(0xf00000, 0xf3ffff) AM_MIRROR(0x040000) AM_RAM AM_SHARE("share2")
 	AM_RANGE(0xf80000, 0xfbffff) AM_MIRROR(0x040000) AM_RAM AM_SHARE("share1")
@@ -1235,6 +1289,9 @@ static MACHINE_RESET( system24 )
 	state->reset_bank();
 	state->irq_init();
 	state->mlatch = 0x00;
+	state->frc_mode = 0;
+	state->frc_cnt_timer = machine.device<timer_device>("frc_timer");
+	state->frc_cnt_timer->reset();
 }
 
 /*************************************
@@ -1906,6 +1963,8 @@ static MACHINE_CONFIG_START( system24, segas24_state )
 
 	MCFG_TIMER_ADD("irq_timer", irq_timer_cb)
 	MCFG_TIMER_ADD("irq_timer_clear", irq_timer_clear_cb)
+	MCFG_TIMER_ADD("frc_timer", NULL)
+	MCFG_TIMER_ADD_PERIODIC("irq_frc", irq_frc_cb, attotime::from_hz(FRC_CLOCK_MODE1))
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
 

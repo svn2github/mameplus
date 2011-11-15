@@ -347,6 +347,7 @@ bool core_options::parse_command_line(int argc, char **argv, int priority, astri
 
 	// iterate through arguments
 	int unadorned_index = 0;
+	bool retVal = true;
 	for (int arg = 1; arg < argc; arg++)
 	{
 		// determine the entry name to search for
@@ -359,7 +360,9 @@ bool core_options::parse_command_line(int argc, char **argv, int priority, astri
 		if (curentry == NULL)
 		{
 			error_string.catprintf("Error: unknown option: %s\n", curarg);
-			return false;
+			retVal = false;
+			if (!is_unadorned) arg++;
+			continue;
 		}
 
 		// process commands first
@@ -392,7 +395,7 @@ bool core_options::parse_command_line(int argc, char **argv, int priority, astri
 		// set the new data
 		validate_and_set_data(*curentry, newdata, priority, error_string);
 	}
-	return true;
+	return retVal;
 }
 
 
