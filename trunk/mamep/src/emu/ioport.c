@@ -4148,7 +4148,7 @@ static time_t playback_init(running_machine &machine)
 
 	/* verify the header against the current game */
 	if (memcmp(machine.system().name, header + 0x14, strlen(machine.system().name) + 1) != 0)
-		mame_printf_info(_("Input file is for " GAMENOUN " '%s', not for current " GAMENOUN " '%s'\n"), header + 0x14, machine.system().name);
+		mame_printf_info(_("Input file is for %s '%s', not for current %s '%s'\n"), emulator_info::get_gamenoun(), header + 0x14, emulator_info::get_gamenoun(), machine.system().name);
 
 #ifdef INP_CAPTION
 	if (strlen(filename) > 4)
@@ -4373,7 +4373,7 @@ static void record_init(running_machine &machine)
 	header[0x10] = INP_HEADER_MAJVERSION;
 	header[0x11] = INP_HEADER_MINVERSION;
 	strcpy((char *)header + 0x14, machine.system().name);
-	sprintf((char *)header + 0x20, APPNAME " %s", build_version);
+	sprintf((char *)header + 0x20, "%s %s", emulator_info::get_appname(), build_version);
 
 	/* write it */
 	portdata->record_file->write(header, sizeof(header));

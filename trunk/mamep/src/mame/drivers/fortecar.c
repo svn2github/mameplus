@@ -13,7 +13,8 @@
   - RTC
   - Inputs
 
-  bp 529 do pc=53e
+  Enmglish set: bp 529 do pc=53e
+  Spanish set: bp 529 do pc=562
 
 -------------------------------------------------------------------------------------------------
 
@@ -48,8 +49,6 @@
 
   Xtal: 12 MHz.
 
-  (bp 529 do pc=562)
-
 
   NOTE:
 
@@ -70,13 +69,19 @@
 
 -------------------------------------------------------------------------------------------------
 
-  Initialization (from a card):
+  From the manual (sic)...
+
+  Initialization of the Forte Card circuit board
+  (Init machine)
 
   1) Open the door of the machine, switch on the game and wait until the message
-     "Permanent RAM test faliled" appears.
-  2) Turn the Main Control and hold in this position
-  3) Enter the serial number of the circuit board with the eight keys
-  4) Press STAR key (sic) and wait until the message "Machine initialization completed" appears.
+     'Permanent RAM test failed' appears.
+  2) Turn the Main Control and hold it in this position.
+  3) Enter the serial number of the circuit board with the eight keys.
+  4) Press STAR key and wait until the message 'Machine initialization completed' appears.
+  5) Release the Main Control, switch off the game and close the door.
+  6) Switch on the game and wait until the demonstration displays appear.
+  7) Turn the Main Control, adjust the time. This is the last step of the initialization procedure.
 
 
 **************************************************************************************************/
@@ -125,7 +130,7 @@ static SCREEN_UPDATE(fortecar)
 			int tile,color;
 
 			tile = (state->m_ram[(count*4)+1] | (state->m_ram[(count*4)+2]<<8)) & 0xfff;
-			color = state->m_ram[(count*4)+3] & 3;
+			color = state->m_ram[(count*4)+3] & 7;
 
 			drawgfx_opaque(bitmap,cliprect,screen->machine().gfx[0],tile,color,0,0,x*8,y*8);
 			count++;
@@ -208,7 +213,7 @@ static READ8_DEVICE_HANDLER( ppi0_portc_r )
 {
 //  popmessage("%s",device->machine().describe_context());
 	eeprom_device *eeprom = downcast<eeprom_device *>(device);
-	return (~(eeprom->read_bit()<<1) & 2);
+	return ((eeprom->read_bit()<<4) & 0x10);
 }
 
 static const ppi8255_interface ppi0intf =
@@ -263,7 +268,7 @@ Seems to work properly, but must be checked closely...
 		watchdog_reset(device->machine());
 	}
 
-	logerror("AY port B write %02x\n",data);
+//	logerror("AY port B write %02x\n",data);
 }
 
 
@@ -296,15 +301,15 @@ static const mc6845_interface mc6845_intf =
 static const eeprom_interface forte_eeprom_intf =
 {/*
     Preliminary interface for NM93CS56N Serial EEPROM.
-	Correct address & data. Using 93C46 protocol.
+	Correct address & data. Using 93C46 similar protocol.
 */
 	7,                /* address bits */
-	16,                /* data bits */
+	16,               /* data bits */
 	"*110",           /* read command */
 	"*101",           /* write command */
 	"*111",           /* erase command */
-	"*10000xxxxx",    /* lock command */
-	"*10011xxxxx",    /* unlock command */
+	"*10000xxxxxx",   /* lock command */
+	"*10011xxxxxx",   /* unlock command */
 };
 
 
@@ -333,8 +338,8 @@ CRTC DATA    : 5f 4b 50 08 21 05 1e 1f 00 07 20 00 06 00 00 00
 
 Error messages:
 
-"FALLO EN NVR"                  (NVRAM ok, no serial EEPROM connected)
 "FALSA PRUEBA NVR"              (NVRAM new, no serial EEPROM connected)
+"FALLO EN NVR"                  (NVRAM ok, no serial EEPROM connected)
 "FALSA PRUEBA NVRAM PERMANENTE" (NVRAM new, serial EEPROM connected)
 
 */
@@ -438,14 +443,14 @@ static const gfx_layout tiles8x8_layout =
 	8,8,
 	RGN_FRAC(1,3),
 	6,
-	{ 0,4, RGN_FRAC(1,3)+0, RGN_FRAC(1,3)+4, RGN_FRAC(2,3)+0, RGN_FRAC(2,3)+4 },
+	{ RGN_FRAC(2,3)+0, RGN_FRAC(2,3)+4, RGN_FRAC(1,3)+0, RGN_FRAC(1,3)+4, 0, 4 },
 	{ 8,9,10,11,0, 1, 2, 3 },
 	{ 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16 },
 	16*8
 };
 
 static GFXDECODE_START( fortecar )
-	GFXDECODE_ENTRY( "gfx1", 0, tiles8x8_layout, 0, 4 )
+	GFXDECODE_ENTRY( "gfx1", 0, tiles8x8_layout, 0, 8 )
 GFXDECODE_END
 
 
@@ -503,7 +508,7 @@ ROM_START( fortecar )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "fortecar.u7", 0x00000, 0x010000, CRC(2a4b3429) SHA1(8fa630dac949e758678a1a36b05b3412abe8ae16)  )
 
-	ROM_REGION( 0x30000, "gfx1", 0 )
+	ROM_REGION( 0x30000, "gfx1", ROMREGION_INVERT )
 	ROM_LOAD( "fortecar.u38", 0x00000, 0x10000, CRC(c2090690) SHA1(f0aa8935b90a2ab6043555ece69f926372246648) )
 	ROM_LOAD( "fortecar.u39", 0x10000, 0x10000, CRC(fc3ddf4f) SHA1(4a95b24c4edb67f6d59f795f86dfbd12899e01b0) )
 	ROM_LOAD( "fortecar.u40", 0x20000, 0x10000, CRC(9693bb83) SHA1(e3e3bc750c89a1edd1072ce3890b2ce498dec633) )
@@ -516,7 +521,7 @@ ROM_START( fortecrd )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "forte_card.u7", 0x00000, 0x010000, CRC(79fc6dd3) SHA1(5454f2ee12b62d573b61c54e48398f43332b000e) )
 
-	ROM_REGION( 0x30000, "gfx1", 0 )
+	ROM_REGION( 0x30000, "gfx1", ROMREGION_INVERT )
 	ROM_LOAD( "forte_card.u38", 0x00000, 0x10000, CRC(258fb7bf) SHA1(cd75001fe40836b2dc229caddfc38f6076df7a79) )
 	ROM_LOAD( "forte_card.u39", 0x10000, 0x10000, CRC(3d9c478e) SHA1(eb86115d1c36038f2c80cd116f5aeddd94036424) )
 	ROM_LOAD( "forte_card.u40", 0x20000, 0x10000, CRC(9693bb83) SHA1(e3e3bc750c89a1edd1072ce3890b2ce498dec633) )

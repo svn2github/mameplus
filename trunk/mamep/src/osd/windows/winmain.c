@@ -574,7 +574,7 @@ static void winui_output_error(void *param, const char *format, va_list argptr)
 		winwindow_toggle_full_screen();
 
 	vsnprintf(buffer, ARRAY_LENGTH(buffer), format, argptr);
-	win_message_box_utf8(win_window_list ? win_window_list->hwnd : NULL, buffer, APPNAME, MB_OK);
+	win_message_box_utf8(win_window_list ? win_window_list->hwnd : NULL, buffer, emulator_info::get_appname(), MB_OK);
 }
 
 
@@ -909,7 +909,7 @@ bitmap_t *windows_osd_interface::font_get_bitmap(osd_font font, unicode_char chn
 	info.bmiHeader.biClrUsed = 0;
 	info.bmiHeader.biClrImportant = 0;
 	RGBQUAD col1 = info.bmiColors[0];
-	RGBQUAD col2 = info.bmiColors[1];
+	RGBQUAD col2 = info.bmiColors[1];	
 	col1.rgbBlue = col1.rgbGreen = col1.rgbRed = 0x00;
 	col2.rgbBlue = col2.rgbGreen = col2.rgbRed = 0xff;
 

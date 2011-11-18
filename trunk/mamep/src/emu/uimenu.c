@@ -257,7 +257,6 @@ static render_texture *hilight_texture;
 static render_texture *arrow_texture;
 
 static const char priortext[] = "Return to Prior Menu";
-static const char backtext[] = "Return to " CAPSTARTGAMENOUN;
 static const char exittext[] = "Exit";
 
 // temporary hack until this is C++-ified
@@ -544,10 +543,12 @@ void ui_menu_reset(ui_menu *menu, ui_menu_reset_options options)
 	menu->numitems = 0;
 	menu->visitems = 0;
 	menu->selected = 0;
+	astring backtext;
+	backtext.printf("Return to %s",emulator_info::get_capstartgamenoun());
 
 	/* add an item to return */
 	if (menu->parent == NULL)
-		ui_menu_item_append(menu, _(backtext), NULL, 0, NULL);
+		ui_menu_item_append(menu, _(backtext.cstr()), NULL, 0, NULL);
 	else if (menu->parent->handler == menu_quit_game)
 		ui_menu_item_append(menu, _(exittext), NULL, 0, NULL);
 	else
@@ -1675,7 +1676,7 @@ static void menu_main_populate(running_machine &machine, ui_menu *menu, void *st
 	int has_configs = FALSE;
 	int has_analog = FALSE;
 	int has_dips = FALSE;
-
+	astring menu_text;
 	/* scan the input port array to see what options we need to enable */
 	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
 		for (field = port->fieldlist().first(); field != NULL; field = field->next())
@@ -1690,7 +1691,9 @@ static void menu_main_populate(running_machine &machine, ui_menu *menu, void *st
 
 	/* add input menu items */
 	ui_menu_item_append(menu, _("Input (general)"), NULL, 0, (void *)menu_input_groups);
-	ui_menu_item_append(menu, _("Input (this " CAPSTARTGAMENOUN ")"), NULL, 0, (void *)menu_input_specific);
+
+	menu_text.printf(_("Input (this %s)"),emulator_info::get_capstartgamenoun());
+	ui_menu_item_append(menu, menu_text.cstr(), NULL, 0, (void *)menu_input_specific);
 #ifdef USE_AUTOFIRE
 	ui_menu_item_append(menu, _("Autofire Setting"), NULL, 0, (void *)menu_autofire);
 #endif /* USE_AUTOFIRE */
@@ -1710,7 +1713,8 @@ static void menu_main_populate(running_machine &machine, ui_menu *menu, void *st
 	ui_menu_item_append(menu, _("Bookkeeping Info"), NULL, 0, (void *)menu_bookkeeping);
 
 	/* add game info menu */
-	ui_menu_item_append(menu, _(CAPSTARTGAMENOUN " Information"), NULL, 0, (void *)menu_game_info);
+	menu_text.printf(_("%s Information"),emulator_info::get_capstartgamenoun());
+	ui_menu_item_append(menu, menu_text.cstr(), NULL, 0, (void *)menu_game_info);
 
 	device_image_interface *image = NULL;
 	if (machine.devicelist().first(image))
@@ -1770,7 +1774,8 @@ static void menu_main_populate(running_machine &machine, ui_menu *menu, void *st
 #endif /* CMD_LIST */
 
 	/* add reset and exit menus */
-	ui_menu_item_append(menu, _("Select New " CAPSTARTGAMENOUN), NULL, 0, (void *)menu_select_game);
+	menu_text.printf(_("Select New %s"),emulator_info::get_capstartgamenoun());
+	ui_menu_item_append(menu, menu_text.cstr(), NULL, 0, (void *)menu_select_game);
 }
 
 
@@ -4143,9 +4148,14 @@ static void menu_select_game_populate(running_machine &machine, ui_menu *menu, s
 	/* if nothing there, add a single multiline item and return */
 	if (matchcount == 0)
 	{
-		ui_menu_item_append(menu, _("No "GAMESNOUN" found. Please check the rompath specified in the "CONFIGNAME".ini file.\n\n"
-								  "If this is your first time using "APPNAME", please see the config.txt file in "
-								  "the docs directory for information on configuring "APPNAME"."), NULL, MENU_FLAG_MULTILINE | MENU_FLAG_REDTEXT, NULL);
+		astring txt;
+		txt.printf(_("No %s found. Please check the rompath specified in the %s.ini file.\n\n"
+					"If this is your first time using %s, please see the config.txt file in "
+					"the docs directory for information on configuring %s."),
+					emulator_info::get_gamesnoun(),
+					emulator_info::get_configname(),
+					emulator_info::get_appname(),emulator_info::get_appname() );
+		ui_menu_item_append(menu, txt.cstr(), NULL, MENU_FLAG_MULTILINE | MENU_FLAG_REDTEXT, NULL);
 		return;
 	}
 
@@ -4306,12 +4316,12 @@ static void menu_select_game_custom_render(running_machine &machine, ui_menu *me
 	}
 	else
 	{
-		const char *s = _(COPYRIGHT);
+		const char *s = emulator_info::get_copyright();
 		line = 0;
 		int col = 0;
 
 		/* first line is version string */
-		sprintf(&tempbuf[line++][0], "%s %s", APPLONGNAME, build_version);
+		sprintf(&tempbuf[line++][0], "%s %s", emulator_info::get_applongname(), build_version);
 
 		/* output message */
 		while (line < ARRAY_LENGTH(tempbuf))

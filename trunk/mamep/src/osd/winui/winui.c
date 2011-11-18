@@ -2069,12 +2069,12 @@ static void winui_output_error(void *param, const char *format, va_list argptr)
 		winwindow_toggle_full_screen();
 
 	vsnprintf(buffer, ARRAY_LENGTH(buffer), format, argptr);
-	win_message_box_utf8(win_window_list ? win_window_list->hwnd : NULL, buffer, APPNAME, MB_OK);
+	win_message_box_utf8(win_window_list ? win_window_list->hwnd : NULL, buffer, emulator_info::get_appname(), MB_OK);
 }
 
 static void memory_error(const char *message)
 {
-	win_message_box_utf8(hMain, message, APPNAME, MB_OK);
+	win_message_box_utf8(hMain, message, emulator_info::get_appname(), MB_OK);
 	exit(-1);
 }
 
@@ -2117,7 +2117,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 		file_error filerr;
 
 		emu_file file = emu_file(OPEN_FLAG_READ);
-		filerr = file.open(CONFIGNAME ".ini");
+		filerr = file.open(emulator_info::get_configname(), ".ini");
 		if (filerr == FILERR_NONE)
 		{
 			astring error;

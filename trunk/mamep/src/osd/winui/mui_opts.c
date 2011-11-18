@@ -104,7 +104,7 @@ static void remove_all_source_options(void);
  ***************************************************************************/
 
 #define UI_INI_FILENAME MAMEUINAME ".ini"
-#define DEFAULT_OPTIONS_INI_FILENAME CONFIGNAME ".ini"
+#define DEFAULT_OPTIONS_INI_FILENAME (emulator_info::get_configname(), ".ini")
 
 #define MUIOPTION_LIST_MODE						"list_mode"
 #define MUIOPTION_CHECK_GAME					"check_game"
@@ -531,11 +531,11 @@ void AddOptions(winui_options *opts, const options_entry *entrylist, BOOL is_glo
 				}
 			}
 		}
-#ifndef MESS
+
 		// if is_global is FALSE, blacklist global options
 		if (entrylist->name && !is_global && IsGlobalOption(entrylist->name))
 			good_option = FALSE;
-#endif
+
 		if (good_option)
 		{
 			memcpy(entries, entrylist, sizeof(options_entry));
@@ -3121,7 +3121,7 @@ static void ui_parse_global_ini_file(windows_options &opts)
 	astring *fname;
 
 	/* open the file; if we fail, that's ok */
-	fname = astring_assemble_2(astring_alloc(), CONFIGNAME, ".ini");
+	fname = astring_assemble_2(astring_alloc(), emulator_info::get_configname(), ".ini");
 	LoadSettingsFile(opts, astring_c(fname));
 	astring_free(fname);
 }
@@ -3276,7 +3276,7 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 		//if (NULL == opts)
 			//return;
 		global = opts;
-		filename = astring_cpyc(astring_alloc(), CONFIGNAME);
+		filename = astring_cpyc(astring_alloc(), emulator_info::get_configname());
 	} else if (opt_type == OPTIONS_VECTOR)
 	{
 		filename = astring_cpyc(astring_alloc(), "vector");

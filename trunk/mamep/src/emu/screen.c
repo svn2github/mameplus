@@ -1352,7 +1352,7 @@ void screen_device::finalize_burnin()
 		char text[256];
 
 		// add two text entries describing the image
-		sprintf(text, APPNAME " %s", build_version);
+		sprintf(text, "%s %s", emulator_info::get_appname(), build_version);
 		png_add_text(&pnginfo, "Software", text);
 		sprintf(text, "%s %s", machine().system().manufacturer, machine().system().description);
 		png_add_text(&pnginfo, "System", text);
@@ -1398,9 +1398,8 @@ bool screen_device::screen_update(bitmap_t &bitmap, const rectangle &cliprect)
 	if (m_screen_update != NULL) {
 		return (*m_screen_update)(this, &bitmap, &cliprect);
 	} else {
-		machine().driver_data<driver_device>()->screen_update(*this, bitmap, cliprect);
+		return machine().driver_data<driver_device>()->screen_update(*this, bitmap, cliprect);
 	}
-	return 0;
 }
 
 //-------------------------------------------------

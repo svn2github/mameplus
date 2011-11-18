@@ -117,14 +117,14 @@ static const floppy_error_map errmap[] =
 /***************************************************************************
     IMPLEMENTATION
 ***************************************************************************/
-DECLARE_LEGACY_IMAGE_DEVICE(FLOPPY_APPLE, apple525);
-DECLARE_LEGACY_IMAGE_DEVICE(FLOPPY_SONY, sonydriv);
+//DECLARE_LEGACY_IMAGE_DEVICE(FLOPPY_APPLE, apple525);
+//DECLARE_LEGACY_IMAGE_DEVICE(FLOPPY_SONY, sonydriv);
 
 INLINE floppy_drive *get_safe_token(device_t *device)
 {
 	assert( device != NULL );
 #if 0 //mamep:link error by debug build
-	assert( device->type() == LEGACY_FLOPPY || device->type() == FLOPPY_APPLE || device->type() == FLOPPY_SONY);
+	//assert( device->type() == LEGACY_FLOPPY || device->type() == FLOPPY_APPLE || device->type() == FLOPPY_SONY);
 #endif
 	return (floppy_drive *) downcast<legacy_device_base *>(device)->token();
 }
@@ -1005,9 +1005,10 @@ DEVICE_GET_INFO(floppy)
 		case DEVINFO_FCT_IMAGE_SOFTLIST_LOAD:		info->f = (genf *) DEVICE_IMAGE_SOFTLIST_LOAD_NAME(floppy);	break;
 		case DEVINFO_FCT_IMAGE_DISPLAY_INFO:			
 			//mamep:link error
-			if (false /*device->type() == FLOPPY_APPLE*/) {
-				info->f = NULL;
-			} else {
+//			if (false /*device->type() == FLOPPY_APPLE*/) {
+//				info->f = NULL;
+//			} else {
+			if (device->type() == LEGACY_FLOPPY) {
 				if ( device && downcast<const legacy_image_device_base *>(device)->static_config() && ((floppy_interface*)(device)->static_config())->device_displayinfo) {
 					info->f = (genf *) ((floppy_interface*)(device)->static_config())->device_displayinfo;
 				} else {

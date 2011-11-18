@@ -31,7 +31,6 @@
 #include "png.h"
 #include "osdepend.h"
 #include "unzip.h"
-
 #include "mui_opts.h"
 #include "mui_util.h"
 #include "winui.h"
@@ -341,38 +340,44 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 	fname = astring_assemble_2(astring_alloc(), utf8filename, ".png");
 	filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
 	astring_free(fname);
-	if (filerr != FILERR_NONE) {
+	if (filerr != FILERR_NONE)
+	{
 		//%g/%i
 		fname = astring_assemble_3(astring_alloc(), utf8filename, PATH_SEPARATOR, "0000.png");
 		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
 		astring_free(fname);
 	}
-	if (filerr != FILERR_NONE) {
+	if (filerr != FILERR_NONE)
+	{
 		//%g%i
 		fname = astring_assemble_2(astring_alloc(), utf8filename, "0000.png");
 		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
 		astring_free(fname);
 	}
-	if (filerr != FILERR_NONE) {
+	if (filerr != FILERR_NONE)
+	{
 		//%g/%g
 		fname = astring_assemble_4(astring_alloc(), utf8filename, PATH_SEPARATOR, utf8filename, ".png");
 		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
 		astring_free(fname);
 	}
-	if (filerr != FILERR_NONE) {
+	if (filerr != FILERR_NONE)
+	{
 		//%g/%g%i
 		fname = astring_assemble_4(astring_alloc(), utf8filename, PATH_SEPARATOR, utf8filename, ".png");
 		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
 		astring_free(fname);
 	}
 
-	if (filerr == FILERR_NONE) {
+	if (filerr == FILERR_NONE)
+	{
 		success = png_read_bitmap_gui(file, phDIB, pPal);
 		core_fclose(file);
 	}
 
 	// free the buffer if we have to
-	if (buffer != NULL) {
+	if (buffer != NULL)
+	{
 		free(buffer);
 	}
 
