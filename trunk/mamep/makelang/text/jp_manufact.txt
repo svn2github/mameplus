@@ -1106,6 +1106,10 @@ Commodore Business Machines
 Competitive Video?
 
 
+# Galaxy Game
+Computer Recreations, Inc
+
+
 # Battle of Atlantis (set 1)
 Comsoft
 
@@ -1338,6 +1342,10 @@ Eastern Corp.
 Eastern Micro Electronics, Inc.
 
 
+# Melty Blood Actress Again
+Ecole
+
+
 # Musapey's Choco Marker (Rev A) (GDL-0014A)
 Ecole Software
 
@@ -1446,6 +1454,10 @@ Evona Electronic
 ExPotato
 
 
+# Arcana Heart Full
+Examu
+
+
 # Last Bank
 Excellent Systems
 
@@ -1486,7 +1498,7 @@ Fascination Int.
 First Amusement
 
 
-# Forte Card
+# Forte Card (English)
 Fortex Ltd
 
 

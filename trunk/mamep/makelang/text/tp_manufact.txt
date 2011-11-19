@@ -842,6 +842,10 @@ Eastern Corp.
 Eastern Micro Electronics, Inc.
 
 
+# Melty Blood Actress Again
+Ecole
+
+
 # Musapey's Choco Marker (Rev A) (GDL-0014A)
 Ecole Software
 
@@ -1034,7 +1038,7 @@ Fascination Int.
 First Amusement
 
 
-# Forte Card
+# Forte Card (English)
 Fortex Ltd
 
 

@@ -782,6 +782,10 @@ Copyright (C) 1997-2011 The MAME Team
 Correct:
 
 
+# osd/winui/winui.c: 4793
+Could not create '%s'
+
+
 # osd/winui/winui.c: 6566
 Could not open '%s' as a valid input file.
 
@@ -858,7 +862,7 @@ Debugscript
 Decrypted
 
 
-# osd/winui/properties.c: 3706, 3932, 3961
+# osd/winui/properties.c: 3706, 3932, 3962
 Default
 
 
@@ -1406,6 +1410,14 @@ Ini Files
 Input Files (*.inp)
 
 
+# osd/winui/winui.c: 6590
+Input file format version mismatch
+
+
+# osd/winui/winui.c: 6579
+Input file is corrupt or invalid (missing header)
+
+
 # osd/winui/mameui.rc: 445
 Insert
 
@@ -1416,6 +1428,10 @@ Interface Options
 
 # osd/winui/properties.c: 413
 Internal
+
+
+# osd/winui/winui.c: 3509, 3533
+Invalid Button Index
 
 
 # osd/winui/mameui.rc: 382
@@ -1594,6 +1610,10 @@ Miscellaneous
 Missing Sound
 
 
+# osd/winui/winui.c: 3514
+Modify 'The'
+
+
 # osd/winui/properties.c: 400
 Mouse
 
@@ -1662,7 +1682,7 @@ Non Mechanical
 Non-Wor&king
 
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 344, 398, 2911, 3709, 3790, 3919, 3928, 3957
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 344, 398, 2911, 3709, 3790, 3919, 3928, 3958
 None
 
 

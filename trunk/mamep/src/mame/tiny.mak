@@ -46,7 +46,6 @@ CPUS += M680X0
 CPUS += TMS9900
 CPUS += COP400
 CPUS += SH2
-CPUS += SH4
 
 
 
@@ -74,7 +73,6 @@ SOUNDS += OKIM6295
 SOUNDS += HC55516
 SOUNDS += YM3812
 SOUNDS += CEM3394
-SOUNDS += YMZ770
 
 
 
@@ -141,7 +139,6 @@ $(MAMEOBJ)/psikyo.a: \
 
 $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/cave.o $(VIDEO)/cave.o \
-	$(DRIVERS)/cavesh3.o \
 
 
 

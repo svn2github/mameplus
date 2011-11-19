@@ -770,6 +770,10 @@ Controllers
 Correct:
 正常:
 
+# osd/winui/winui.c: 4793
+Could not create '%s'
+'%s' が作成できません
+
 # osd/winui/winui.c: 6566
 Could not open '%s' as a valid input file.
 「%s」を有効な再生ファイルとしてオープンできません
@@ -846,7 +850,7 @@ Debugscript
 Decrypted
 暗号解除
 
-# osd/winui/properties.c: 3706, 3932, 3961
+# osd/winui/properties.c: 3706, 3932, 3962
 Default
 デフォルト
 
@@ -1394,6 +1398,14 @@ INIファイル
 Input Files (*.inp)
 再生ファイル (*.inp)
 
+# osd/winui/winui.c: 6590
+Input file format version mismatch
+入力ファイルの形式が間違っています
+
+# osd/winui/winui.c: 6579
+Input file is corrupt or invalid (missing header)
+入力ファイルが壊れているか無効です(ヘッダが見つかりません)
+
 # osd/winui/mameui.rc: 445
 Insert
 追加
@@ -1642,7 +1654,7 @@ Non Mechanical
 Non-Wor&king
 動作不可(&K)
 
-# osd/winui/dialogs.c: 255 osd/winui/properties.c: 344, 398, 2911, 3709, 3790, 3919, 3928, 3957
+# osd/winui/dialogs.c: 255 osd/winui/properties.c: 344, 398, 2911, 3709, 3790, 3919, 3928, 3958
 None
 なし
 
@@ -2875,7 +2887,7 @@ sounds (*.wav)
 サウンドファイル (*.wav)
 
 # osd/winui/winui.c: 6361
-stoty (*.dat)
+story (*.dat)
 ストーリーファイル (*.dat)
 
 # osd/winui/winui.c: 6332
@@ -2898,11 +2910,19 @@ Christopher Kirmse and the MAMEUI team
 Copyright (C) 1997-2011 The MAME Team
 
 
+# osd/winui/winui.c: 3509, 3533
+Invalid Button Index
+
+
 # osd/winui/mameui.rc: 382
 John Hardy IV and Michael Soderstrom
 
 
 # osd/winui/mameui.rc: 374
 MAMEUI version by
+
+
+# osd/winui/winui.c: 3514
+Modify 'The'
 
 
