@@ -32,12 +32,12 @@
 #include <sys/stat.h>
 #include <math.h>
 #include <direct.h>
-#include <emu.h>
-#include <emuopts.h>
 #include <stddef.h>
 #include <tchar.h>
 
 // MAME/MAMEUI headers
+#include "emu.h"
+#include "emuopts.h"
 #include "bitmask.h"
 #include "winui.h"
 #include "mui_util.h"
@@ -104,7 +104,7 @@ static void remove_all_source_options(void);
  ***************************************************************************/
 
 #define UI_INI_FILENAME MAMEUINAME ".ini"
-#define DEFAULT_OPTIONS_INI_FILENAME (emulator_info::get_configname(), ".ini")
+#define DEFAULT_OPTIONS_INI_FILENAME emulator_info::get_configname()
 
 #define MUIOPTION_LIST_MODE						"list_mode"
 #define MUIOPTION_CHECK_GAME					"check_game"
@@ -2875,7 +2875,7 @@ static file_error SaveSettingsFile(windows_options &opts, windows_options *baseo
 static void GetGlobalOptionsFileName(char *filename, size_t filename_size)
 {
 	// always in the current directory.
-	snprintf(filename, filename_size, "%s", DEFAULT_OPTIONS_INI_FILENAME);
+	snprintf(filename, filename_size, "%s%s", DEFAULT_OPTIONS_INI_FILENAME, ".ini");
 }
 
 static void GetSettingsFileName(char *filename, size_t filename_size)
