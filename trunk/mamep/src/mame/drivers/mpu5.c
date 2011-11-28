@@ -33,6 +33,8 @@
     15/07/11 - rom loading for most games added, still some missing tho and clones still need sorting out properly.
 */
 
+#define ADDRESS_MAP_MODERN
+
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
 
@@ -41,12 +43,18 @@ class mpu5_state : public driver_device
 {
 public:
 	mpu5_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_maincpu(*this, "maincpu")
+	{ }
 
+protected:
+
+	// devices
+	required_device<cpu_device> m_maincpu;
 };
 
 
-static ADDRESS_MAP_START( mpu5_map, AS_PROGRAM, 32 )
+static ADDRESS_MAP_START( mpu5_map, AS_PROGRAM, 32, mpu5_state )
 	AM_RANGE(0x000000, 0x2fffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -3286,7 +3294,7 @@ ROM_START( m5redrck )
 	ROM_LOAD16_BYTE( "rttr10y.p1", 0x000000, 0x080000, CRC(ce187484) SHA1(bce0c86418efd7f15ef75c5d73e95ed1b10ac458) )
 
 	ROM_LOAD16_BYTE( "r_trock.p1", 0x0000, 0x080000, CRC(ba0b2f5d) SHA1(e4ac11da00f5c0b2b2a3bc68d429870039583036) )
-	
+
 ROM_END
 
 
@@ -6007,6 +6015,3 @@ GAME( 199?, m5scfinl	,0,			mpu5, mpu5, 0, ROT0, "Lowen","Super Cup Final (Lowen)
 /* Others / Uncertain */
 
 GAME( 199?, m5ppussy	,0,			mpu5, mpu5, 0, ROT0, "Mdm","Pink Pussy (Mdm) (MPU5)", GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-
-
-

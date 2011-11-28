@@ -183,7 +183,7 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 	  m_new_driver_pending(NULL),
 	  m_soft_reset_timer(NULL),
 	  m_rand_seed(0x9d14abd7),
-      m_ui_active(false),
+	  m_ui_active(false),
 	  m_basename(_config.gamedrv().name),
 	  m_sample_rate(_config.options().sample_rate()),
 	  m_logfile(NULL),
@@ -341,7 +341,7 @@ void running_machine::start()
 	m_cheat = auto_alloc(*this, cheat_manager(*this));
 
 #ifdef USE_HISCORE
-	//MKCHAMP - INITIALIZING THE HISCORE ENGINE
+  //MKCHAMP - INITIALIZING THE HISCORE ENGINE
  	hiscore_init(*this);
 #endif /* USE_HISCORE */
 
@@ -967,7 +967,10 @@ running_machine::logerror_callback_item::logerror_callback_item(logerror_callbac
 driver_device::driver_device(const machine_config &mconfig, device_type type, const char *tag)
 	: device_t(mconfig, type, "Driver Device", tag, NULL, 0),
 	  m_system(NULL),
-	  m_palette_init(NULL)
+	  m_palette_init(NULL),
+	  m_generic_paletteram(*this, "paletteram"),
+	  m_generic_paletteram16(*this, "paletteram"),
+	  m_generic_paletteram2(*this, "paletteram2")
 {
 	memset(m_callbacks, 0, sizeof(m_callbacks));
 }

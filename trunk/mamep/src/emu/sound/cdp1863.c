@@ -64,7 +64,7 @@ cdp1863_device::cdp1863_device(const machine_config &mconfig, const char *tag, d
 void cdp1863_device::static_set_config(device_t &device, int clock2)
 {
 	cdp1863_device &cdp1863 = downcast<cdp1863_device &>(device);
-	
+
 	cdp1863.m_clock2 = clock2;
 }
 

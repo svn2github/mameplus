@@ -125,7 +125,7 @@ private:
     UINT32 time_to_cycles(attotime t);
     UINT16 get_counter1_value();
 
-	inline void set_irq_line(int state);
+    inline void set_irq_line(int state);
     void set_int(int data);
     void clear_int(int data);
     void shift();

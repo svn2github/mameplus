@@ -2,7 +2,7 @@
 //
 //  sdlmain.c - main file for SDLMAME.
 //
-//  Copyright (c) 1996-2011, Nicola Salmoria and the MAME Team.
+//  Copyright (c) 1996-2012, Nicola Salmoria and the MAME Team.
 //  Visit http://mamedev.org for licensing and usage restrictions.
 //
 //  SDLMAME by Olivier Galibert and R. Belmont
@@ -24,6 +24,9 @@
 #endif
 
 // standard includes
+#if !defined(SDLMAME_WIN32) && !defined(SDLMAME_OS2)
+#include <unistd.h>
+#endif
 
 #ifdef SDLMAME_OS2
 #define INCL_DOS
@@ -408,6 +411,9 @@ sdl_osd_interface::~sdl_osd_interface()
 
 void sdl_osd_interface::osd_exit(running_machine &machine)
 {
+	#ifdef SDLMAME_NETWORK
+		sdlnetdev_deinit(machine);
+	#endif
 
 	if (!SDLMAME_INIT_IN_WORKER_THREAD)
 		SDL_Quit();
@@ -579,7 +585,7 @@ void sdl_osd_interface::init(running_machine &machine)
 	/* Set the SDL environment variable for drivers wanting to load the
      * lib at startup.
      */
-#if USE_OPENGL     
+#if USE_OPENGL
 	/* FIXME: move lib loading code from drawogl.c here */
 
 	stemp = options.gl_lib();

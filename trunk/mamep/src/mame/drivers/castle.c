@@ -1,13 +1,13 @@
 /* Castle Mach2000 Hardware
- 
+
   Mechanical Fruit Machines with DMD display
-  
+
   motherboard pic:
   http://mamedev.emulab.it/haze/source_refs/mach2000.jpg
 
   videos:
- http://www.youtube.com/watch?v=jNx1OwwS58I
- http://www.youtube.com/watch?v=m1QKaYh64-o
+  http://www.youtube.com/watch?v=jNx1OwwS58I
+  http://www.youtube.com/watch?v=m1QKaYh64-o
 
 */
 
@@ -23,8 +23,8 @@
   whereas the V2 REV A board only has a single 6303
 
               CPUs     PIA?                  SOUND           CMOSRAM    RTC       REEL CONTROLLER
-	V1 rv E - 2x6303 + HD6321 +              2xAY-3-8912A +  2xTC5516 + ICM7170 + 68705   
-	V2 rv A - 1x6303 + HD468821P/HD68821P +  2xAY-3-8912A +   TC5??4  + none?   + 68705
+    V1 rv E - 2x6303 + HD6321 +              2xAY-3-8912A +  2xTC5516 + ICM7170 + 68705
+    V2 rv A - 1x6303 + HD468821P/HD68821P +  2xAY-3-8912A +   TC5??4  + none?   + 68705
 
   In both cases the 68705 is marked the same way
   'REEL CONTROLLER V1 (C) CASTLE (1987) MACH 2000 SYSTEM'
@@ -41,6 +41,8 @@
 
 */
 
+#define ADDRESS_MAP_MODERN
+
 #include "emu.h"
 #include "cpu/m6800/m6800.h"
 
@@ -48,14 +50,22 @@ class castle_state : public driver_device
 {
 public:
 	castle_state(const machine_config &mconfig, device_type type, const char *tag)
-	: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_maincpu(*this, "maincpu")
+	{ }
+
+protected:
+
+	// devices
+	required_device<cpu_device> m_maincpu;
 };
 
-static ADDRESS_MAP_START( V1rvE_mastermap, AS_PROGRAM, 8 )
+
+static ADDRESS_MAP_START( V1rvE_mastermap, AS_PROGRAM, 8, castle_state )
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( V1rvE_slavemap, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( V1rvE_slavemap, AS_PROGRAM, 8, castle_state )
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -75,7 +85,7 @@ MACHINE_CONFIG_END
 
 
 
-static ADDRESS_MAP_START( V2rvA_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( V2rvA_map, AS_PROGRAM, 8, castle_state )
 	AM_RANGE(0x2000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 

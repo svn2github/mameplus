@@ -34,7 +34,7 @@ const device_type MM74C923 = &device_creator<mm74c922_device>;
 //**************************************************************************
 
 //-------------------------------------------------
-//  change_output_lines - 
+//  change_output_lines -
 //-------------------------------------------------
 
 inline void mm74c922_device::change_output_lines()
@@ -51,7 +51,7 @@ inline void mm74c922_device::change_output_lines()
 
 
 //-------------------------------------------------
-//  clock_scan_counters - 
+//  clock_scan_counters -
 //-------------------------------------------------
 
 inline void mm74c922_device::clock_scan_counters()
@@ -206,7 +206,7 @@ void mm74c922_device::device_timer(emu_timer &timer, device_timer_id id, int par
 
 
 //-------------------------------------------------
-//  data_out_r - 
+//  data_out_r -
 //-------------------------------------------------
 
 UINT8 mm74c922_device::data_out_r()

@@ -2153,7 +2153,6 @@ $(DRIVERS)/peyper.o:    $(LAYOUT)/peyper.lh
 # misc dependencies
 #-------------------------------------------------
 
-$(DRIVERS)/cavesh3.o:	$(MAMESRC)/drivers/csh3blit.c
 $(DRIVERS)/galaxian.o:	$(MAMESRC)/drivers/galdrvr.c
 $(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neodrvr.c
 $(DRIVERS)/saturn.o:	$(MAMESRC)/drivers/stv.c

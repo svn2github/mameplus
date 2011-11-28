@@ -544,11 +544,11 @@ void ui_menu_reset(ui_menu *menu, ui_menu_reset_options options)
 	menu->visitems = 0;
 	menu->selected = 0;
 	astring backtext;
-	backtext.printf("Return to %s",emulator_info::get_capstartgamenoun());
+	backtext.printf(_("Return to %s"),emulator_info::get_capstartgamenoun());
 
 	/* add an item to return */
 	if (menu->parent == NULL)
-		ui_menu_item_append(menu, _(backtext.cstr()), NULL, 0, NULL);
+		ui_menu_item_append(menu, backtext.cstr(), NULL, 0, NULL);
 	else if (menu->parent->handler == menu_quit_game)
 		ui_menu_item_append(menu, _(exittext), NULL, 0, NULL);
 	else

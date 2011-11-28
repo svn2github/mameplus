@@ -55,9 +55,9 @@ public:
 
 	DECLARE_WRITE8_MEMBER( str_w );
 	void str_w(UINT8 data);
-	
+
 	DECLARE_WRITE_LINE_MEMBER( oe_w );
-	
+
 	void set_clk1(int clock);
 	void set_clk2(int clock);
 

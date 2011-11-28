@@ -19,7 +19,7 @@ class netdev_pcap : public netdev
 public:
 	netdev_pcap(const char *name, class device_network_interface *ifdev, int rate);
 	~netdev_pcap();
-	
+
 	int send(UINT8 *buf, int len);
 	void set_mac(const char *mac);
 protected:
@@ -78,16 +78,18 @@ netdev_pcap::~netdev_pcap()
 
 static CREATE_NETDEV(create_pcap)
 {
-	class netdev_pcap *dev = new netdev_pcap(ifname, ifdev, rate);
+	class netdev_pcap *dev = global_alloc(netdev_pcap(ifname, ifdev, rate));
 	return dynamic_cast<netdev *>(dev);
 }
+
+static HMODULE handle = NULL;
 
 void init_pcap()
 {
 	pcap_if_t *devs;
 	char errbuf[PCAP_ERRBUF_SIZE];
-	HMODULE handle;
-	
+	handle = NULL;
+
 	try
 	{
 		if(!(handle = LoadLibrary(L"wpcap.dll"))) throw GetLastError();
@@ -120,9 +122,20 @@ void init_pcap()
 		mame_printf_verbose("Unable to get network devices: %s\n", errbuf);
 		return;
 	}
-	while(devs->next)
+
+	if (devs)
 	{
-		add_netdev(devs->name, create_pcap);
-		devs = devs->next;
+		while(devs->next)
+		{
+			add_netdev(devs->name, create_pcap);
+			devs = devs->next;
+		}
 	}
 }
+
+void deinit_pcap()
+{
+	clear_netdev();
+	FreeLibrary(handle);
+}
+

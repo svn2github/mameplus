@@ -735,6 +735,10 @@ void windows_osd_interface::osd_exit(running_machine &machine)
 	// cleanup sockets
 	win_cleanup_sockets();
 	
+	#ifdef USE_NETWORK
+	winnetdev_deinit(machine);
+	#endif
+
 	// take down the watchdog thread if it exists
 	if (watchdog_thread != NULL)
 	{
@@ -1070,6 +1074,7 @@ static DWORD WINAPI watchdog_thread_entry(LPVOID lpParameter)
 		if (wait_result == WAIT_TIMEOUT)
 		{
 			fprintf(stderr, "Terminating due to watchdog timeout\n");
+			fflush(stderr);
 			TerminateProcess(GetCurrentProcess(), -1);
 		}
 	}

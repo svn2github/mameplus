@@ -355,7 +355,7 @@ Notes:
 
 enum {
 	IRQ_YM2151 = 1,
-	IRQ_TIMER  = 2,
+	IRQ_TIMER = 2,
 	IRQ_VBLANK = 3,
 	IRQ_SPRITE = 4,
 	IRQ_FRC = 5
@@ -902,7 +902,7 @@ static TIMER_DEVICE_CALLBACK( irq_frc_cb )
 		cputag_set_input_line(timer.machine(), "maincpu", IRQ_FRC+1, ASSERT_LINE);
 
 	if(state->irq_allow1 & (1 << IRQ_FRC) && state->frc_mode == 1)
-		cputag_set_input_line(timer.machine(), "sub", IRQ_FRC+1, ASSERT_LINE);
+			cputag_set_input_line(timer.machine(), "sub", IRQ_FRC+1, ASSERT_LINE);
 }
 
 void segas24_state::irq_init()

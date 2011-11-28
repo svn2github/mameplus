@@ -72,7 +72,7 @@ void ram_device::device_start()
 
 //-------------------------------------------------
 //  device_validity_check - device-specific validity
-//	checks
+//  checks
 //-------------------------------------------------
 
 bool ram_device::device_validity_check(emu_options &options, const game_driver &driver) const

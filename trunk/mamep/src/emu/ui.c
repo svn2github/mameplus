@@ -1476,7 +1476,7 @@ static astring &warnings_string(running_machine &machine, astring &string)
 				string.cat(emulator_info::get_gamenoun());
 				string.cat(_(" cannot be emulated as it requires actual physical interaction or consists of mechanical devices. "
 					 "It is not possible to fully play this "));
-				string.cat(emulator_info::get_gamenoun());					 
+				string.cat(emulator_info::get_gamenoun());
 				string.cat(".\n");
 			}
 

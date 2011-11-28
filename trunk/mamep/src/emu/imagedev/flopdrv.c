@@ -384,7 +384,7 @@ void floppy_drive_seek(device_t *img, signed int signed_tracks)
 	//flopimg->out_dskchg_func(flopimg->dskchg);
 
 	/* inform disk image of step operation so it can cache information */
-	if (image->exists()) 
+	if (image->exists())
 		pDrive->track = pDrive->current_track;
 
 	pDrive->id_index = 0;
@@ -636,7 +636,7 @@ static int internal_floppy_device_load(device_image_interface *image, int create
 	}
 	/* disk changed */
 	flopimg->dskchg = CLEAR_LINE;
-	
+
 	return IMAGE_INIT_PASS;
 
 error:
@@ -1003,7 +1003,7 @@ DEVICE_GET_INFO(floppy)
 		case DEVINFO_FCT_IMAGE_LOAD:				info->f = (genf *) DEVICE_IMAGE_LOAD_NAME(floppy); break;
 		case DEVINFO_FCT_IMAGE_UNLOAD:				info->f = (genf *) DEVICE_IMAGE_UNLOAD_NAME(floppy); break;
 		case DEVINFO_FCT_IMAGE_SOFTLIST_LOAD:		info->f = (genf *) DEVICE_IMAGE_SOFTLIST_LOAD_NAME(floppy);	break;
-		case DEVINFO_FCT_IMAGE_DISPLAY_INFO:			
+		case DEVINFO_FCT_IMAGE_DISPLAY_INFO:
 			//mamep:link error
 //			if (false /*device->type() == FLOPPY_APPLE*/) {
 //				info->f = NULL;
@@ -1016,7 +1016,7 @@ DEVICE_GET_INFO(floppy)
 				}
 			}
 			break;
-		
+
 		case DEVINFO_PTR_IMAGE_CREATE_OPTGUIDE:		info->p = (void *)floppy_option_guide; break;
 		case DEVINFO_INT_IMAGE_CREATE_OPTCOUNT:
 		{

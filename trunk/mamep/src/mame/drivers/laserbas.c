@@ -419,4 +419,4 @@ ROM_END
 
 GAME( 1981, laserbas, 0,        laserbas, laserbas, 0, ROT270, "Hoei (Amstar license)", "Laser Base (set 1)", GAME_NO_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1981, laserbasa,laserbas, laserbas, laserbas, 0, ROT270, "Hoei (Amstar license)", "Laser Base (set 2)", GAME_NO_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1981, futflash, laserbas, laserbas, laserbas, 0, ROT270, "Hoei", "Future Flash", GAME_NO_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1981, futflash, laserbas, laserbas, laserbas, 0, ROT270, "Hoei",					"Future Flash",  	  GAME_NO_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )

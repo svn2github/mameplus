@@ -4,6 +4,8 @@
 /* I don't think this is Pluto, or other known platforms */
 
 
+#define ADDRESS_MAP_MODERN
+
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
 
@@ -11,12 +13,18 @@ class jpmsys7_state : public driver_device
 {
 public:
 	jpmsys7_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_maincpu(*this, "maincpu")
+	{ }
 
+protected:
+
+	// devices
+	required_device<cpu_device> m_maincpu;
 };
 
 
-static ADDRESS_MAP_START( jpmsys7_map, AS_PROGRAM, 32 )
+static ADDRESS_MAP_START( jpmsys7_map, AS_PROGRAM, 32, jpmsys7_state )
 	AM_RANGE(0x000000, 0x2fffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -95,9 +103,9 @@ ROM_END
 ROM_START( j7kerchn )
 	ROM_REGION( 0x400000, "maincpu", ROMREGION_ERASE00 )
 	ROM_LOAD16_BYTE( "kerching-u1.bin", 0x000001, 0x100000, CRC(25347eff) SHA1(3e5c950993c3cb393fdfd7691637a35f9e41ca3f) )
-//	ROM_LOAD16_BYTE( "9236", 0x00001, 0x100000, CRC(25347eff) SHA1(3e5c950993c3cb393fdfd7691637a35f9e41ca3f) )
+//  ROM_LOAD16_BYTE( "9236", 0x00001, 0x100000, CRC(25347eff) SHA1(3e5c950993c3cb393fdfd7691637a35f9e41ca3f) )
 	ROM_LOAD16_BYTE( "kerching-u2.bin", 0x000000, 0x100000, CRC(64bcf49e) SHA1(1f2755e005b7f47ce0c75b74a50ac41ed9220028) )
-//	ROM_LOAD16_BYTE( "67f6", 0x00000, 0x100000, CRC(64bcf49e) SHA1(1f2755e005b7f47ce0c75b74a50ac41ed9220028) )
+//  ROM_LOAD16_BYTE( "67f6", 0x00000, 0x100000, CRC(64bcf49e) SHA1(1f2755e005b7f47ce0c75b74a50ac41ed9220028) )
 	ROM_LOAD16_BYTE( "kerching-u3.bin", 0x200001, 0x100000, CRC(9b068f6a) SHA1(99e1b52c98485bf972bf32f0d373182b39e33e07) ) // sound
 	ROM_LOAD16_BYTE( "kerching-u4.bin", 0x200000, 0x100000, CRC(7ead4175) SHA1(abbf01da479027cad6f01d5089c68599973704c5) ) // sound
 
@@ -193,7 +201,6 @@ ROM_START( j7bullio )
 	ROM_LOAD16_BYTE( "04c1", 0x0000, 0x100000, CRC(0e724535) SHA1(c77e0ab67ce25421e7c94bf38733af6fd4148ba3) )
 	ROM_LOAD16_BYTE( "04c2", 0x0000, 0x100000, CRC(74d43f1d) SHA1(a75c41928727c2752bfa6f04460fa003441ca0a6) )
 ROM_END
-
 
 
 GAME( 200?, j7bmagic		,0,			jpmsys7, jpmsys7, 0, ROT0, "Jpm","Black Magic (Jpm)", GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )

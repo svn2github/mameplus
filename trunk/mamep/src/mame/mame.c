@@ -14,22 +14,22 @@
 #define APPNAME_LOWER			"mame"
 #define CONFIGNAME				"mame"
 #define APPLONGNAME				"M.A.M.E."
-#define FULLLONGNAME			"Multiple Arcade Machine Emulator"
-#define CAPGAMENOUN				"GAME"
-#define CAPSTARTGAMENOUN		"Game"
-#define GAMENOUN				"game"
-#define GAMESNOUN				"games"
-#define COPYRIGHT				"Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org"
-#define COPYRIGHT_INFO			"Copyright Nicola Salmoria and the MAME team"
-#define DISCLAIMER				"MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\n" \
+#define FULLLONGNAME			_("Multiple Arcade Machine Emulator")
+#define CAPGAMENOUN				_("GAME")
+#define CAPSTARTGAMENOUN		_("Game")
+#define GAMENOUN				_("game")
+#define GAMESNOUN				_("games")
+#define COPYRIGHT				_("Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org")
+#define COPYRIGHT_INFO			_("Copyright Nicola Salmoria and the MAME team")
+#define DISCLAIMER				_("MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\n" \
 								"several arcade machines. But hardware is useless without software, so an image\n" \
 								"of the ROMs which run on that hardware is required. Such ROMs, like any other\n" \
 								"commercial software, are copyrighted material and it is therefore illegal to\n" \
 								"use them if you don't own the original arcade machine. Needless to say, ROMs\n" \
 								"are not distributed together with MAME. Distribution of MAME together with ROM\n" \
 								"images is a violation of copyright law and should be promptly reported to the\n" \
-								"authors so that appropriate legal action can be taken.\n"
-#define USAGE					"Usage:  %s [%s] [options]"
+								"authors so that appropriate legal action can be taken.\n")
+#define USAGE					_("Usage:  %s [%s] [options]")
 #define XML_ROOT			    "mame"
 #define XML_TOP 				"game"
 #define STATE_MAGIC_NUM			"MAMESAVE"

@@ -313,7 +313,7 @@ void coin_lockout_global_w(running_machine &machine, int on)
 
 /*-------------------------------------------------
     nvram_filename - returns filename of system's
-	NVRAM depending of selected BIOS
+    NVRAM depending of selected BIOS
 -------------------------------------------------*/
 
 static astring nvram_filename(running_machine &machine, astring &result)
@@ -351,10 +351,10 @@ void nvram_load(running_machine &machine)
 {
 	if (machine.config().m_nvram_handler != NULL)
 	{
-		astring filename;
-		emu_file file(machine.options().nvram_directory(), OPEN_FLAG_READ);
-		if (file.open(nvram_filename(machine,filename),".nv") == FILERR_NONE)
-		{
+	astring filename;
+	emu_file file(machine.options().nvram_directory(), OPEN_FLAG_READ);
+	if (file.open(nvram_filename(machine,filename), ".nv") == FILERR_NONE)
+	{
 			(*machine.config().m_nvram_handler)(machine, &file, FALSE);
 			file.close();
 		}
@@ -415,7 +415,7 @@ void nvram_save(running_machine &machine)
 			emu_file file(machine.options().nvram_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 			if (file.open(nvram_filename(nvram->device(),filename)) == FILERR_NONE)
 			{
-				nvram->nvram_save(file);
+			nvram->nvram_save(file);
 				file.close();
 			}
 		}
@@ -764,6 +764,9 @@ INTERRUPT_GEN( irq7_line_assert )	{ if (interrupt_enabled(device)) device_set_in
 WRITE8_HANDLER( watchdog_reset_w ) { watchdog_reset(space->machine()); }
 READ8_HANDLER( watchdog_reset_r ) { watchdog_reset(space->machine()); return space->unmap(); }
 
+WRITE8_MEMBER( driver_device::watchdog_reset_w ) { watchdog_reset(machine()); }
+READ8_MEMBER( driver_device::watchdog_reset_r ) { watchdog_reset(machine()); return space.unmap(); }
+
 
 /*-------------------------------------------------
     16-bit reset read/write handlers
@@ -772,6 +775,9 @@ READ8_HANDLER( watchdog_reset_r ) { watchdog_reset(space->machine()); return spa
 WRITE16_HANDLER( watchdog_reset16_w ) {	watchdog_reset(space->machine()); }
 READ16_HANDLER( watchdog_reset16_r ) { watchdog_reset(space->machine()); return space->unmap(); }
 
+WRITE16_MEMBER( driver_device::watchdog_reset16_w ) { watchdog_reset(machine()); }
+READ16_MEMBER( driver_device::watchdog_reset16_r ) { watchdog_reset(machine()); return space.unmap(); }
+
 
 /*-------------------------------------------------
     32-bit reset read/write handlers
@@ -779,6 +785,9 @@ READ16_HANDLER( watchdog_reset16_r ) { watchdog_reset(space->machine()); return 
 
 WRITE32_HANDLER( watchdog_reset32_w ) {	watchdog_reset(space->machine()); }
 READ32_HANDLER( watchdog_reset32_r ) { watchdog_reset(space->machine()); return space->unmap(); }
+
+WRITE32_MEMBER( driver_device::watchdog_reset32_w ) { watchdog_reset(machine()); }
+READ32_MEMBER( driver_device::watchdog_reset32_r ) { watchdog_reset(machine()); return space.unmap(); }
 
 
 

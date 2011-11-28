@@ -369,20 +369,20 @@ IC17S-IC38S - MaskROM (SOP44), either 32Mb or 64Mb. Not all positions are popula
    CN1/2/3  - connectors joining to main board
 
 Games known to use this PCB include....
-                                               Sticker    EPROM   MASKROMs   25LC040   A54SX32
-Game                                           on cart    IC11#   # of SOP44 IC13S#    IC1#          Notes
+                                               Sticker    EPROM   MASKROMs   25LC040  A54SX32
+Game                                           on cart    IC11#   # of SOP44 IC13S#   IC1#          Notes
 ----------------------------------------------------------------------------------------------------------------------------
-Giant Gram 2000                                840-0039C  23377   20 (64Mb)  present   317-0296-COM
-Kick '4' Cash                                  840-0140C  24212   16 (64Mb)  present   317-0397-COM
-Marvel Vs. Capcom 2 New Age of Heroes (Rev A)  841-0007C  23085A  14 (64Mb)  present   317-5058-COM  +2x 32Mb (full cart #:841-0007C-03)
+Giant Gram 2000                                840-0039C  23377   20 (64Mb)  present  317-0296-COM
+Kick '4' Cash                                  840-0140C  24212   16 (64Mb)  present  317-0397-COM
+Marvel Vs. Capcom 2 New Age of Heroes (Rev A)  841-0007C  23085A  14 (64Mb)  present  317-5058-COM  +2x 32Mb (full cart #:841-0007C-03)
 MushiKing The King of Beetles 2K3 2ND          840-0150C  24217    6 (64Mb)  present  317-0394-COM
-Quiz Ah Megamisama                             840-0030C  23227   16 (64Mb)  present   317-0280-JPN
-Shootout Pool                                  840-0098C  23844    4 (64mb)  present   317-0336-COM
-Shootout Pool - Shootout Pool Prize            840-0128C  24065    4 (64mb)  present   317-0367-COM
-Shootout Pool Medal                            ?          24148    4 (64Mb)  ?         ?
+Quiz Ah Megamisama                             840-0030C  23227   16 (64Mb)  present  317-0280-JPN
+Shootout Pool                                  840-0098C  23844    4 (64mb)  present  317-0336-COM
+Shootout Pool - Shootout Pool Prize            840-0128C  24065    4 (64mb)  present  317-0367-COM
+Shootout Pool Medal                            ?          24148    4 (64Mb)  ?        ?
 Touch de UNO! 2                                840-0022C  23071    6 (64Mb)  present  317-0276-JPN
-Virtua Fighter 4 Evolution                     840-0106B  23934   20 (64Mb)  present   317-0339-COM
-Virtua Tennis 2 / Power Smash 2 (Rev A)        840-0084C  22327A  18 (64Mb)  present   317-0320-COM
+Virtua Fighter 4 Evolution                     840-0106B  23934   20 (64Mb)  present  317-0339-COM
+Virtua Tennis 2 / Power Smash 2 (Rev A)        840-0084C  22327A  18 (64Mb)  present  317-0320-COM
 
 
 
@@ -473,20 +473,20 @@ Notes:
       CN4   - 6 legs connector for ISP programming
 
    Games known to use this PCB include....
-                                     Sticker    EPROM        FLASHROMs   XC3S50   PIC16C621A    XCF01S
-Game                                 on cart    IC7#         # of SOP56  IC2#     IC3#          IC4#     Notes
+                                       Sticker    EPROM        FLASHROMs   XC3S50   PIC16C621A    XCF01S
+Game                                   on cart    IC7#         # of SOP56  IC2#     IC3#          IC4#     Notes
 ------------------------------------------------------------------------------------------------------------------------------
 /Akatsuki Denkou Senki Blitz Kampf
-\Ausf. Achse                         841-0058C  not present  4 (512Mb)   present  317-5130-JPN  present  IC2# is labeled "VER.2" - IC4# is marked "5A" - IC#10 & IC#11 are empty
-Dynamite Deka EX / Asian Dynamite    840-0175C  not present  4 (512Mb)   present  317-0495-COM  present  IC2# is labeled "VER.2"
-Illmatic Envelope                    841-0059C  not present  4 (512Mb)   present  317-5131-JPN  present  IC2# is labeled "VER.2" - IC#11 is empty
+\Ausf. Achse                           841-0058C  not present  4 (512Mb)   present  317-5130-JPN  present  IC2# is labeled "VER.2" - IC4# is marked "5A" - IC#10 & IC#11 are empty
+Dynamite Deka EX / Asian Dynamite      840-0175C  not present  4 (512Mb)   present  317-0495-COM  present  IC2# is labeled "VER.2"
+Illmatic Envelope                      841-0059C  not present  4 (512Mb)   present  317-5131-JPN  present  IC2# is labeled "VER.2" - IC#11 is empty
 Mamoru-kun wa Norowarete Shimatta      841-0060C  not present  4 (512Mb)   present  317-5132-JPN  present  IC2# is labeled "VER.2"
-Melty Blood Actress Again            841-0061C  not present  6 (512Mb)   present  317-5133-JPN  present  IC2# is labeled "REV.A" - IC4# is marked "5A"
-Melty Blood Actress Again (Rev A)    841-0061C  24455        6 (512Mb)   present  317-5133-JPN  present  IC2# is labeled "REV.A" - IC4# is marked "5A"
+Melty Blood Actress Again              841-0061C  not present  6 (512Mb)   present  317-5133-JPN  present  IC2# is labeled "REV.A" - IC4# is marked "5A"
+Melty Blood Actress Again (Rev A)      841-0061C  24455        6 (512Mb)   present  317-5133-JPN  present  IC2# is labeled "REV.A" - IC4# is marked "5A"
 Mushiking - The King Of Beetles II ENG 840-0164C  24357        2 (512Mb)   present  317-0437-COM  present  IC4# is marked "18"
-Poka Suka Ghost / Manic Panic Ghost  840-0170C  not present  5 (512Mb)   present  317-0461-COM  present
-Shooting Love 2007                   841-0057C  not present  4 (512Mb)   present  317-5129-JPN  present  IC2# is labeled "VER.2"
-Touch De Zunou (Rev A)               840-0166C  not present  2 (512Mb)   present  317-0435-JPN  present  IC4# is marked "18"
+Poka Suka Ghost / Manic Panic Ghost    840-0170C  not present  5 (512Mb)   present  317-0461-COM  present
+Shooting Love 2007                     841-0057C  not present  4 (512Mb)   present  317-5129-JPN  present  IC2# is labeled "VER.2"
+Touch De Zunou (Rev A)                 840-0166C  not present  2 (512Mb)   present  317-0435-JPN  present  IC4# is marked "18"
 
 
 

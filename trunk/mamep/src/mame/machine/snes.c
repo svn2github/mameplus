@@ -575,9 +575,14 @@ READ8_HANDLER( snes_r_io )
 		case JOY4H:			/* Joypad 4 status register (high) */
 			return state->m_joy4h;
 
-#ifndef MESS
 		case 0x4100:		/* NSS Dip-Switches */
-			return input_port_read(space->machine(), "DSW");
+			{
+				const input_port_config *port = space->machine().port("DSW");
+				if (port != NULL)
+					return input_port_read(space->machine(), "DSW");
+				else
+					return snes_open_bus_r(space, 0);
+			}
 //      case 0x4101: //PC: a104 - a10e - a12a   //only nss_actr
 //      case 0x420c: //PC: 9c7d - 8fab          //only nss_ssoc
 
@@ -585,9 +590,6 @@ READ8_HANDLER( snes_r_io )
 //          mame_printf_debug("snes_r: offset = %x pc = %x\n",offset,cpu_get_pc(&space->device()));
 // Added break; after commenting above line.  If uncommenting, drop the break;
                         break;
-
-#endif	/* MESS */
-
 	}
 
 	//printf("unsupported read: offset == %08x\n", offset);
@@ -1050,8 +1052,9 @@ READ8_HANDLER( snes_r_bank2 )
 		}
 		else if ((state->m_cart[0].mode == SNES_MODE_21) && (state->m_cart[0].sram > 0))
 		{
-			/* Donkey Kong Country checks this */
-			int mask = state->m_cart[0].sram - 1; /* Limit SRAM size to what's actually present */
+			/* Donkey Kong Country checks this and detects a copier if 0x800 is not masked out due to sram size */
+			/* OTOH Secret of Mana does not work properly if sram is not mirrored on later banks */
+			int mask = (state->m_cart[0].sram - 1) | 0xffe000; /* Limit SRAM size to what's actually present */
 			value = snes_ram[0x300000 + (offset & mask)];
 		}
 		else
@@ -1411,8 +1414,9 @@ WRITE8_HANDLER( snes_w_bank2 )
 		}
 		else if ((state->m_cart[0].mode == SNES_MODE_21) && (state->m_cart[0].sram > 0))
 		{
-			/* Donkey Kong Country checks this */
-			int mask = state->m_cart[0].sram - 1; /* Limit SRAM size to what's actually present */
+			/* Donkey Kong Country checks this and detects a copier if 0x800 is not masked out due to sram size */
+			/* OTOH Secret of Mana does not work properly if sram is not mirrored on later banks */
+			int mask = (state->m_cart[0].sram - 1) | 0xffe000; /* Limit SRAM size to what's actually present */
 			snes_ram[0x300000 + (offset & mask)] = data;
 		}
 		else
@@ -2144,7 +2148,8 @@ INLINE void snes_dma_transfer( address_space *space, UINT8 dma, UINT32 abus, UIN
 
 	#if USE_CYCLE_STEAL
 	/* every byte transfer takes 8 master cycles */
-	device_adjust_icount(&space->device(),-8);
+//  FIXME: this cycle steal makes Final Fantasy VI (III in US) very glitchy!
+//  device_adjust_icount(&space->device(),-8);
 	#endif
 
 	if (state->m_dma_channel[dma].dmap & 0x80)	/* PPU->CPU */
