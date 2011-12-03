@@ -1,183 +1,3 @@
-# 3 Super 8 (Italy)
-<unknown>
-<不明>
-
-# Blue's Journey / Raguy (ALM-001)(ALH-001)
-Alpha Denshi Co.
-Alpha 电子工业
-
-# Otona no Mahjong (Japan 880628)
-Apple
-苹果
-
-# WonderSwan Color
-Bandai
-万代
-
-# Apparel Night (Japan 860929)
-Central Denshi
-Central 电子
-
-# Progress
-Chuo Co. Ltd
-中央 Rease 贩卖
-
-# Fantasia
-Comad & New Japan System
-Comad & 新日本系统
-
-# Orange Club - Maruhi Kagai Jugyou (Japan 880213)
-Daiichi Denshi
-第一电子
-
-# Bad Dudes vs. Dragonninja (US)
-Data East USA
-Data East 美国
-
-# Heiankyo Alien
-Denki Onkyo
-电气音响
-
-# Mahjong Banana Dream [BET] (Japan 891124)
-Digital Soft
-Digital 电子
-
-# Don Den Mahjong [BET] (Japan)
-Dyna Electronics
-Dyna 电子
-
-# Asura Blade - Sword of Dynasty (Japan)
-Fuuki
-富贵商会
-
-# Super Cross II (Japan, set 1)
-GM Shoji
-GM 商事
-
-# Super Triv
-Hara Industries
-野间贸易
-
-# Five Clown (English, set 1)
-IGS
-鈊像电子
-
-# Atomic Punk (US)
-Irem America
-Irem 美国
-
-# Kaitei Takara Sagashi
-K.K. Tokki
-K.K. 特机
-
-# Airwolf
-Kyugo
-九娱贸易
-
-# Crowns Golf (834-5419-04)
-Nasco Japan
-大平技研
-
-# Three Ds - Three Dealers Casino House
-Nichibutsu
-日本物产
-
-# Moon Cresta (Nichibutsu USA, unencrypted)
-Nichibutsu USA
-日本物产 美国
-
-# Mahjong Reach Ippatsu (Japan)
-Nihon System
-日本系统
-
-# Aleck64 PIF BIOS
-Nintendo
-任天堂
-
-# Donkey Kong (US set 1)
-Nintendo of America
-任天堂 美国
-
-# Battle Cross
-Omori Electric Co., Ltd.
-大森电气
-
-# Battle K-Road
-Psikyo
-彩京
-
-# Animal Catch
-Sammy
-Sammy 工业
-
-# Kero Kero Keroppi no Issyoni Asobou (Japan)
-Sammy Industries
-Sammy 工业
-
-# Extreme Downhill (v1.5)
-Sammy Industries Japan
-Sammy 工业
-
-# Scion
-Seibu Denshi
-西武电子
-
-# Air Raid (encrypted)
-Seibu Kaihatsu
-西武开发
-
-# Vastar (set 1)
-Sesame Japan
-Sesame 日本
-
-# Arabian
-Sun Electronics
-Sun 电子
-
-# Black Hole
-TDS
-东京电子设计
-
-# Air Inferno (US)
-Taito America Corporation
-Taito 美国
-
-# Rambo III (Europe)
-Taito Europe Corporation
-Taito 欧洲
-
-# Galactica - Batalha Espacial
-Taito do Brasil
-Taito 巴西
-
-# The Big Pro Wrestling!
-Technos Japan
-Technos 日本
-
-# Beam Invader (set 1)
-Tekunon Kougyou
-Tekunon 工业
-
-# Alcon (US)
-Toaplan
-东亚企划
-
-# Mole Attack
-Yachiyo Electronics, Ltd.
-八千代电气
-
-# Blazing Star
-Yumekobo
-梦工房
-
-# 1942 (Revision A, bootleg)
-bootleg
-盗版
-
-# Astro Battle (set 1)
-bootleg?
-盗版?
-
 # 3DO (NTSC)
 3DO
 
@@ -185,6 +5,10 @@ bootleg?
 # Grand Prix
 4fun
 
+
+# 3 Super 8 (Italy)
+<unknown>
+<不明>
 
 # Wizard (Ver 1.0)
 A.A.
@@ -334,6 +158,10 @@ Allumer
 Alpha Co.
 
 
+# Blue's Journey / Raguy (ALM-001)(ALH-001)
+Alpha Denshi Co.
+
+
 # Pinkiri 8
 Alta
 
@@ -400,6 +228,10 @@ Andamiro
 
 # Omotesandou (Japan 890215)
 Anime Tec
+
+
+# Otona no Mahjong (Japan 880628)
+Apple
 
 
 # Guilty Gear X (JPN)
@@ -508,6 +340,10 @@ Bally
 
 # Arch Rivals (rev 4.0 6/29/89)
 Bally Midway
+
+
+# WonderSwan Color
+Bandai
 
 
 # Air Gallet (Europe)
@@ -634,6 +470,10 @@ Catalina
 Cave
 
 
+# Apparel Night (Japan 860929)
+Central Denshi
+
+
 # Aztarac
 Centuri
 
@@ -660,6 +500,10 @@ Cheil Computer System
 
 # L'Hexagone
 Christian Tabart
+
+
+# Progress
+Chuo Co. Ltd
 
 
 # Altair
@@ -702,6 +546,10 @@ Coinworld
 Comad
 
 
+# Fantasia
+Comad & New Japan System
+
+
 # Amiga CD32 (PAL)
 Commodore Business Machines
 
@@ -712,6 +560,10 @@ Competitive Video?
 
 # Puyo Puyo Da!
 Compile
+
+
+# Galaxy Game
+Computer Recreations, Inc
 
 
 # Battle of Atlantis (set 1)
@@ -798,6 +650,10 @@ DJE
 Daehyun Electronics
 
 
+# Orange Club - Maruhi Kagai Jugyou (Japan 880213)
+Daiichi Denshi
+
+
 # Find Love (J 971212 V1.000)
 Daiki
 
@@ -822,6 +678,10 @@ Data East Corporation
 Data East Pinball
 
 
+# Bad Dudes vs. Dragonninja (US)
+Data East USA
+
+
 # Acrobatic Dog-Fight (USA)
 Data East USA, Inc.
 
@@ -842,6 +702,10 @@ Deltasoft
 Deniam
 
 
+# Heiankyo Alien
+Denki Onkyo
+
+
 # Triple Draw Poker
 Design Labs
 
@@ -856,6 +720,10 @@ Digital Controls Inc.
 
 # Royal Card v2.0 Professional
 Digital Dreams
+
+
+# Mahjong Banana Dream [BET] (Japan 891124)
+Digital Soft
 
 
 # Connect 4
@@ -908,6 +776,10 @@ Dutech Inc.
 
 # Cherry Bonus 2001
 Dyna
+
+
+# Don Den Mahjong [BET] (Japan)
+Dyna Electronics
 
 
 # Skeet Shot
@@ -968,6 +840,10 @@ Eastern Corp.
 
 # Hoccer (set 1)
 Eastern Micro Electronics, Inc.
+
+
+# Melty Blood Actress Again
+Ecole
 
 
 # Musapey's Choco Marker (Rev A) (GDL-0014A)
@@ -1106,6 +982,10 @@ Evona Electronic
 ExPotato
 
 
+# Arcana Heart Full
+Examu
+
+
 # Aquarium (Japan)
 Excellent System
 
@@ -1158,7 +1038,7 @@ Fascination Int.
 First Amusement
 
 
-# Forte Card
+# Forte Card (English)
 Fortex Ltd
 
 
@@ -1172,6 +1052,10 @@ Funtech Entertainment
 
 # Big Deal (Hungarian, set 1)
 Funworld
+
+
+# Asura Blade - Sword of Dynasty (Japan)
+Fuuki
 
 
 # Border Down (Rev A) (GDL-0023A)
@@ -1188,6 +1072,10 @@ GAV Company
 
 # Abscam
 GL
+
+
+# Super Cross II (Japan, set 1)
+GM Shoji
 
 
 # Real Battle Mahjong King
@@ -1306,6 +1194,10 @@ Hanaho Games
 Hankin
 
 
+# Super Triv
+Hara Industries
+
+
 # Fruit Deuce (Hazel Grove)
 Hazel Grove
 
@@ -1386,6 +1278,10 @@ ICE
 IDSA
 
 
+# Five Clown (English, set 1)
+IGS
+
+
 # Dou Di Zhu
 IGS?
 
@@ -1462,6 +1358,10 @@ Invi Image
 Irem
 
 
+# Atomic Punk (US)
+Irem America
+
+
 # Tut's Tomb
 Island Design
 
@@ -1524,6 +1424,10 @@ Juegos Populares
 
 # Mahjong Mania - Kairakukan e Youkoso (Japan)
 Just&Just
+
+
+# Kaitei Takara Sagashi
+K.K. Tokki
 
 
 # Puzzle King (includes bootleg of Snow Bros.)
@@ -1600,6 +1504,10 @@ Kural TWT
 
 # Digger Man (prototype)
 Kyle Hodgetts
+
+
+# Airwolf
+Kyugo
 
 
 # Crazzy Clownz (Version 1.0)
@@ -1890,6 +1798,10 @@ Namco
 Nasco
 
 
+# Crowns Golf (834-5419-04)
+Nasco Japan
+
+
 # Paranoia
 Naxat Soft
 
@@ -1918,12 +1830,20 @@ New Impeuropex Corp.
 Newby
 
 
+# Three Ds - Three Dealers Casino House
+Nichibutsu
+
+
 # Terra Force (Japan)
 Nichibutsu Japan
 
 
 # Moon Cresta (Nichibutsu UK)
 Nichibutsu UK
+
+
+# Moon Cresta (Nichibutsu USA, unencrypted)
+Nichibutsu USA
 
 
 # Mahjong Housoukyoku Honbanchuu (Japan)
@@ -1938,8 +1858,20 @@ Nics
 Nihon Game
 
 
+# Mahjong Reach Ippatsu (Japan)
+Nihon System
+
+
 # Gals Ds - Three Dealers Casino House (bootleg?)
 Nihon System Corp.
+
+
+# Aleck64 PIF BIOS
+Nintendo
+
+
+# Donkey Kong (US set 1)
+Nintendo of America
 
 
 # PC Engine
@@ -2024,6 +1956,10 @@ Olympic Video Gaming
 
 # Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 3.0 / 990128)
 Omega System
+
+
+# Battle Cross
+Omori Electric Co., Ltd.
 
 
 # The Bounty
@@ -2162,6 +2098,10 @@ Proma
 Promat
 
 
+# Battle K-Road
+Psikyo
+
+
 # Shadow of the Beast (Homebrew, No sound edition)
 Psygnosis
 
@@ -2298,6 +2238,18 @@ Saero Entertainment
 Sai-Mate
 
 
+# Animal Catch
+Sammy
+
+
+# Kero Kero Keroppi no Issyoni Asobou (Japan)
+Sammy Industries
+
+
+# Extreme Downhill (v1.5)
+Sammy Industries Japan
+
+
 # Sports Shooting USA
 Sammy USA
 
@@ -2358,6 +2310,14 @@ Sega                                 "Golden Poker Series
 Sego
 
 
+# Scion
+Seibu Denshi
+
+
+# Air Raid (encrypted)
+Seibu Kaihatsu
+
+
 # XESS - The New Revolution (SemiCom 3-in-1)
 SemiCom
 
@@ -2380,6 +2340,10 @@ Seojin
 
 # Quiz Olympic (set 1)
 Seoul Coin Corp.
+
+
+# Vastar (set 1)
+Sesame Japan
 
 
 # Arbalester
@@ -2578,6 +2542,10 @@ Sun
 Sun Amusement
 
 
+# Arabian
+Sun Electronics
+
+
 # Top Shooter
 Sun Mixing
 
@@ -2642,6 +2610,10 @@ TAD Corporation
 TCH
 
 
+# Black Hole
+TDS
+
+
 # Cosmo
 TDS & Mints
 
@@ -2662,12 +2634,24 @@ Taito
 Taito America Corp
 
 
+# Air Inferno (US)
+Taito America Corporation
+
+
 # Forty-Love
 Taito Corporation
 
 
 # Aqua Jack (World)
 Taito Corporation Japan
+
+
+# Rambo III (Europe)
+Taito Europe Corporation
+
+
+# Galactica - Batalha Espacial
+Taito do Brasil
 
 
 # Chinese Hero
@@ -2706,6 +2690,10 @@ Tecfri
 Techno-Top
 
 
+# The Big Pro Wrestling!
+Technos Japan
+
+
 # Hyper Duel (Japan set 1)
 Technosoft
 
@@ -2730,6 +2718,10 @@ Tecnoplay
 Tehkan
 
 
+# Beam Invader (set 1)
+Tekunon Kougyou
+
+
 # Eggor
 Telko
 
@@ -2752,6 +2744,10 @@ Thunderhead Inc.
 
 # Fishin' Frenzy (prototype)
 Time Warner Interactive
+
+
+# Alcon (US)
+Toaplan
 
 
 # Shin Nihon Pro Wrestling Toukon Retsuden 3 Arcade Edition (Japan, TR1/VER.A)
@@ -3022,6 +3018,10 @@ Xex
 Yachiyo Denki
 
 
+# Mole Attack
+Yachiyo Electronics, Ltd.
+
+
 # War of Aero - Project MEIOU
 Yang Cheng
 
@@ -3052,6 +3052,10 @@ Yuga
 
 # Samurai Shodown V Special / Samurai Spirits Zero Special (decrypted C)
 Yuki Enterprise
+
+
+# Blazing Star
+Yumekobo
 
 
 # 7 Ordi (Korea)
@@ -3090,6 +3094,14 @@ Zilec Electronics
 Zilec-Zenitone
 
 
+# 1942 (Revision A, bootleg)
+bootleg
+盜版
+
+# Astro Battle (set 1)
+bootleg?
+盜版?
+
 # Funky Ball
 dgPIX Entertainment Inc.
 
@@ -3100,5 +3112,5 @@ eic
 
 # Buccaneer
 hack
-
+修改
 

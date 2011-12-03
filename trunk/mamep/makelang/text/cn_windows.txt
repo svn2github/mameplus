@@ -6,6 +6,54 @@
 Assign joystick %s to player %d\n
 分配游戏杆 %s 到玩家 %d\n
 
+# osd/windows/d3dhlsl.c: 2729
+Blue Convergence X
+X 轴蓝色收敛度
+
+# osd/windows/d3dhlsl.c: 2730
+Blue Convergence Y
+Y 轴蓝色收敛度
+
+# osd/windows/d3dhlsl.c: 2742
+Blue DC Offset
+蓝色 DC 偏移量
+
+# osd/windows/d3dhlsl.c: 2751
+Blue Floor
+蓝色层
+
+# osd/windows/d3dhlsl.c: 2739
+Blue Output from Blue Input
+来自蓝色输入的蓝色输出
+
+# osd/windows/d3dhlsl.c: 2738
+Blue Output from Green Input
+来自绿色输入的蓝色输出
+
+# osd/windows/d3dhlsl.c: 2737
+Blue Output from Red Input
+来自红色输入的蓝色输出
+
+# osd/windows/d3dhlsl.c: 2754
+Blue Phosphor Life
+蓝色荧光度
+
+# osd/windows/d3dhlsl.c: 2723
+Blue Position Offset X
+蓝色荧光 X 轴偏移量
+
+# osd/windows/d3dhlsl.c: 2724
+Blue Position Offset Y
+蓝色荧光 Y 轴偏移量
+
+# osd/windows/d3dhlsl.c: 2748
+Blue Power
+蓝色强度
+
+# osd/windows/d3dhlsl.c: 2745
+Blue Scale
+蓝色比例
+
 # osd/windows/winmain.c: 330
 DIRECT3D-SPECIFIC OPTIONS
 DIRECT3D 特定选项
@@ -14,7 +62,15 @@ DIRECT3D 特定选项
 DIRECTDRAW-SPECIFIC OPTIONS
 DIRECTDRAW 特定选项
 
-# osd/windows/drawd3d.c: 1199
+# osd/windows/d3dhlsl.c: 2715
+Defocus X
+X 轴散焦度
+
+# osd/windows/d3dhlsl.c: 2716
+Defocus Y
+Y 轴散焦度
+
+# osd/windows/drawd3d.c: 1208
 Device %s currently in an unsupported mode\n
 设备 %s 当前处于未支持的模式\n
 
@@ -26,21 +82,41 @@ Direct3D: 正在设置界面卡 #%d = %s\n
 Direct3D: Device created at %dx%d\n
 Direct3D: 设备创建在 %dx%d\n
 
-# osd/windows/drawd3d.c: 597, 2495
+# osd/windows/drawd3d.c: 597, 2504
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: 设备 begin_scene 调用时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 1301, 1345, 1389, 1421, 1457, 1494, 1523, 1565, 1590, 1613, 1636, 1660, 1689 osd/windows/drawd3d.c: 1702, 2544
+# osd/windows/d3dhlsl.c: 1299, 1343, 1387, 1421, 1457, 1494, 1563, 1588 osd/windows/drawd3d.c: 584
+Direct3D: Error %08X during device clear call\n
+Direct3D: 设备清除时发生错误 %08X\n
+
+# osd/windows/d3dhlsl.c: 1308, 1352, 1396, 1428, 1464, 1501, 1530, 1572, 1597, 1620, 1643, 1667, 1696 osd/windows/drawd3d.c: 1711, 2553
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: 设备 draw_primitive 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 635, 2548
+# osd/windows/drawd3d.c: 635, 2557
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: 设备 end_scene 调用时发生错误 %08X\n
 
 # osd/windows/d3dhlsl.c: 1168 osd/windows/drawd3d.c: 2488
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: 设备 get_render_target 调用时发生错误 %08X\n
+
+# osd/windows/d3dhlsl.c: 1561
+Direct3D: Error %08X during device set_render_target call 4\n
+Direct3D: 设备 set_render_target 调用 4 时发生错误 %08X\n
+
+# osd/windows/d3dhlsl.c: 1586
+Direct3D: Error %08X during device set_render_target call 5\n
+Direct3D: 设备 set_render_target 调用 5 时发生错误 %08X\n
+
+# osd/windows/d3dhlsl.c: 1455, 1492
+Direct3D: Error %08X during device set_render_target call 6\n
+Direct3D: 设备 set_render_target 调用 6 时发生错误 %08X\n
+
+# osd/windows/d3dhlsl.c: 1523
+Direct3D: Error %08X during device set_render_target call 7\n
+Direct3D: 设备 set_render_target 调用 7 时发生错误 %08X\n
 
 # osd/windows/drawd3d.c: 641
 Direct3D: Error %08X during device present call\n
@@ -50,11 +126,27 @@ Direct3D: 设备提交调用时发生错误 %08X\n
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: 设备 set_render_state 调用时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 1290, 1334, 1378, 1412, 1604, 1627, 1651
+# osd/windows/d3dhlsl.c: 1561
+Direct3D: Error %08X during device set_render_target call 4\n
+Direct3D: 设备 set_render_target 调用 4 时发生错误 %08X\n
+
+# osd/windows/d3dhlsl.c: 1586
+Direct3D: Error %08X during device set_render_target call 5\n
+Direct3D: 设备 set_render_target 调用 5 时发生错误 %08X\n
+
+# osd/windows/d3dhlsl.c: 1455, 1492
+Direct3D: Error %08X during device set_render_target call 6\n
+Direct3D: 设备 set_render_target 调用 6 时发生错误 %08X\n
+
+# osd/windows/d3dhlsl.c: 1523
+Direct3D: Error %08X during device set_render_target call 7\n
+Direct3D: 设备 set_render_target 调用 7 时发生错误 %08X\n
+
+# osd/windows/d3dhlsl.c: 1297, 1341, 1385, 1419, 1611, 1634, 1658
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: 设备 set_render_target 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 1651, 2542
+# osd/windows/drawd3d.c: 1660, 2551
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: 设备 set_stream_source 调用时发生错误 %08X\n
 
@@ -66,59 +158,59 @@ Direct3D: 设备 set_texture 调用时发生错误 %08X\n
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: 设备 set_texture_stage_state 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2476
+# osd/windows/drawd3d.c: 2485
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: 设备 stretct_rect 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 954, 956, 958, 960, 975, 989, 1003, 1017, 1043, 1067, 1081, 1094, 1101
+# osd/windows/drawd3d.c: 963, 965, 967, 969, 984, 998, 1012, 1026, 1052, 1076, 1090, 1103, 1110
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: get_caps_dword 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2455
+# osd/windows/drawd3d.c: 2464
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: 材质 get_surface_level 调用时发生错误 %08X\n
 
-# osd/windows/d3dhlsl.c: 328, 421 osd/windows/drawd3d.c: 2431
+# osd/windows/d3dhlsl.c: 335, 428 osd/windows/drawd3d.c: 2440
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: 材质 unlock_rect 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 2505
+# osd/windows/drawd3d.c: 2514
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: 顶点缓冲 lock 调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 1646, 2537
+# osd/windows/drawd3d.c: 1655, 2546
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: 顶点缓冲解锁调用时发生错误 %08X\n
 
-# osd/windows/drawd3d.c: 1030
+# osd/windows/drawd3d.c: 1039
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 Direct3D: 错误 - 设备不支持 alpha blending 搭配 inverted source alpha\n
 
-# osd/windows/drawd3d.c: 1025
+# osd/windows/drawd3d.c: 1034
 Direct3D: Error - Device does not support dest alpha blending with one\n
 Direct3D: 错误 - 设备不支持 alpha blending 搭配系数 1\n
 
-# osd/windows/drawd3d.c: 1020
+# osd/windows/drawd3d.c: 1029
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 Direct3D: 错误 - 设备不支持 alpha blending 搭配系数 0\n
 
-# osd/windows/drawd3d.c: 978
+# osd/windows/drawd3d.c: 987
 Direct3D: Error - Device does not support immediate presentations\n
 Direct3D: 错误 - 设备不支持立即演示\n
 
-# osd/windows/drawd3d.c: 983
+# osd/windows/drawd3d.c: 992
 Direct3D: Error - Device does not support per-refresh presentations\n
 Direct3D: 错误 - 设备不支持每个刷新率演示\n
 
-# osd/windows/drawd3d.c: 1011
+# osd/windows/drawd3d.c: 1020
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 Direct3D: 错误 - 设备不支持 source alpha blending 搭配目标颜色\n
 
-# osd/windows/drawd3d.c: 1006
+# osd/windows/drawd3d.c: 1015
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 Direct3D: 错误 - 设备不支持 source alpha blending 搭配 source alpha\n
 
-# osd/windows/drawd3d.c: 1037
+# osd/windows/drawd3d.c: 1046
 Direct3D: Error - Device does not support texture alpha\n
 Direct3D: 错误 - 设备不支持材质 alpha\n
 
@@ -134,11 +226,11 @@ Direct3D: 试图初始化 Direct3D9 时发生错误\n
 Direct3D: Max texture size = %dx%d\n
 Direct3D: 最大材质大小 = %dx%d\n
 
-# osd/windows/drawd3d.c: 1354
+# osd/windows/drawd3d.c: 1363
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 模式选定 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawd3d.c: 1298
+# osd/windows/drawd3d.c: 1307
 Direct3D: Selecting video mode...\n
 Direct3D: 正在选定视频模式...\n
 
@@ -158,6 +250,22 @@ Direct3D: 无法找到 Direct3DCreate8\n
 Direct3D: Unable to find Direct3DCreate9\n
 Direct3D: 无法找到 Direct3DCreate9\n
 
+# osd/windows/d3dhlsl.c: 733
+Direct3D: Unable to init system-memory target for HLSL AVI dumping (%08x)\n
+Direct3D: 无法为初始化系统内存目标 HLSL AVI 转储 (%08x)\n
+
+# osd/windows/d3dhlsl.c: 241
+Direct3D: Unable to init system-memory target for HLSL snapshot (%08x), bailing\n
+Direct3D: 无法为初始化系统内存目标 HLSL 快照 (%08x)\n
+
+# osd/windows/d3dhlsl.c: 741
+Direct3D: Unable to init video-memory target for HLSL AVI dumping (%08x)\n
+Direct3D: 无法为初始化视频内存目标 HLSL AVI 转储 (%08x)\n
+
+# osd/windows/d3dhlsl.c: 249
+Direct3D: Unable to init video-memory target for HLSL snapshot (%08x), bailing\n
+Direct3D: 无法为初始化视频内存目标 HLSL 快照 (%08x)\n
+
 # osd/windows/d3d8intf.c: 148
 Direct3D: Using Direct3D 8\n
 Direct3D: 正在使用 Direct3D 8\n
@@ -166,47 +274,47 @@ Direct3D: 正在使用 Direct3D 8\n
 Direct3D: Using Direct3D 9\n
 Direct3D: 正在使用 Direct3D 9\n
 
-# osd/windows/drawd3d.c: 1103
+# osd/windows/drawd3d.c: 1112
 Direct3D: Using StretchRect for prescaling\n
 Direct3D: 正在使用 StretchRect 于预缩放\n
 
-# osd/windows/drawd3d.c: 1097
+# osd/windows/drawd3d.c: 1106
 Direct3D: Using dynamic textures\n
 Direct3D: 正在使用动态材质\n
 
-# osd/windows/drawd3d.c: 1051
+# osd/windows/drawd3d.c: 1060
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 Direct3D: 警告 - 设备不支持放大双线材质过滤\n
 
-# osd/windows/drawd3d.c: 1061
+# osd/windows/drawd3d.c: 1070
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 Direct3D: 警告 - 设备不支持缩小双线性材质过滤\n
 
-# osd/windows/drawd3d.c: 997
+# osd/windows/drawd3d.c: 1006
 Direct3D: Warning - Device does not support hardware rasterization\n
 Direct3D: 警告 - 设备不支持硬件位图化\n
 
-# osd/windows/drawd3d.c: 1046
+# osd/windows/drawd3d.c: 1055
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 Direct3D: 警告 - 设备不支持放大抽样材质过滤\n
 
-# osd/windows/drawd3d.c: 1056
+# osd/windows/drawd3d.c: 1065
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 Direct3D: 警告 - 设备不支持缩小抽样材质过滤\n
 
-# osd/windows/drawd3d.c: 992
+# osd/windows/drawd3d.c: 1001
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 Direct3D: 警告 - 设备不支持在伫列描绘后页面翻转\n
 
-# osd/windows/drawd3d.c: 1070
+# osd/windows/drawd3d.c: 1079
 Direct3D: Warning - Device does not support texture clamping\n
 Direct3D: 警告 - 设备不支持材质嵌位\n
 
-# osd/windows/drawd3d.c: 1084
+# osd/windows/drawd3d.c: 1093
 Direct3D: Warning - Device does not support texture modulation\n
 Direct3D: 警告 - 设备不支持材质调节\n
 
-# osd/windows/drawd3d.c: 1075
+# osd/windows/drawd3d.c: 1084
 Direct3D: Warning - Device does not support texture wrapping\n
 Direct3D: 警告 - 设备不支持材质包装\n
 
@@ -218,15 +326,15 @@ Direct3D: 警告 - 设备不支持全屏幕灰度修正。\n
 Direct3D: YUV format = %s\n
 Direct3D: YUV 格式 = %s\n
 
-# osd/windows/drawd3d.c: 1776
+# osd/windows/drawd3d.c: 1785
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: 调整预缩放由 %dx%d 到 %dx%d\n
 
-# osd/windows/drawd3d.c: 1139
+# osd/windows/drawd3d.c: 1148
 Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: 无法重新创建设备资源; 永久失败\n
 
-# osd/windows/drawd3d.c: 1126
+# osd/windows/drawd3d.c: 1135
 Direct3D: resetting device\n
 Direct3D: 正在重设设备\n
 
@@ -390,6 +498,10 @@ DirectInput: 正在使用 DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 主要缓冲: %d Hz, %d 位, %d 声道\n
 
+# osd/windows/d3dhlsl.c: 596
+Error creating AVI: %s\n
+创建 AVI 错误: %s\n
+
 # osd/windows/sound.c: 419
 Error creating DirectSound stream buffer: %08x\n
 创建 DirectSound 流式缓冲时发生错误: %08x\n
@@ -406,11 +518,15 @@ Error creating primary DirectSound buffer: %08x\n
 Error creating vertex buffer (%08X)
 创建顶点缓冲时发生错误 (%08X)
 
+# osd/windows/d3dhlsl.c: 419
+Error generating PNG for HLSL snapshot: png_error = %d\n
+生成 HLSL 快照错误: png_error = %d\n
+
 # osd/windows/sound.c: 303
 Error getting DirectSound capabilities: %08x\n
 获取 DirectSound 能力时发生错误: %08x\n
 
-# osd/windows/drawd3d.c: 1166
+# osd/windows/drawd3d.c: 1175
 Error getting identifier for adapter #%d\n
 为界面卡取得标识信息时发生错误 #%d\n
 
@@ -418,7 +534,7 @@ Error getting identifier for adapter #%d\n
 Error getting identifier for device\n
 为设备取得标识信息时发生错误 \n
 
-# osd/windows/drawd3d.c: 1175
+# osd/windows/drawd3d.c: 1184
 Error getting mode for adapter #%d\n
 为界面卡取得模式时发生错误 #%d\n
 
@@ -474,29 +590,205 @@ Failed to create window thread
 Failed to create window thread ready event
 无法创建窗口线程预备事件
 
+# osd/windows/d3dhlsl.c: 2727
+Green Convergence X
+X 轴蓝色收敛度
+
+# osd/windows/d3dhlsl.c: 2728
+Green Convergence Y
+Y 轴蓝色收敛度
+
+# osd/windows/d3dhlsl.c: 2741
+Green DC Offset
+绿色 DC 偏移量
+
+# osd/windows/d3dhlsl.c: 2750
+Green Floor
+绿色层
+
+# osd/windows/d3dhlsl.c: 2736
+Green Output from Blue Input
+来自蓝色输入的绿色输出
+
+# osd/windows/d3dhlsl.c: 2735
+Green Output from Green Input
+来自绿色输入的绿色输出
+
+# osd/windows/d3dhlsl.c: 2734
+Green Output from Red Input
+来自红色输入的绿色输出
+
+# osd/windows/d3dhlsl.c: 2753
+Green Phosphor Life
+绿色荧光度
+
+# osd/windows/d3dhlsl.c: 2721
+Green Position Offset X
+绿色荧光 X 轴偏移量
+
+# osd/windows/d3dhlsl.c: 2722
+Green Position Offset Y
+绿色荧光 Y 轴偏移量
+
+# osd/windows/d3dhlsl.c: 2747
+Green Power
+绿色强度
+
+# osd/windows/d3dhlsl.c: 2744
+Green Scale
+绿色比例
+
 # osd/windows/winmain.c: 434
 INPUT DEVICE OPTIONS
 输入设备选项
+
+# osd/windows/d3dhlsl.c: 2313
+Illegal double vector value = %s\n
+非法的双重矢量值 = %s\n
+
+# osd/windows/d3dhlsl.c: 2303
+Illegal quad vector value = %s\n
+非法的四重矢量值 = %s\n
+
+# osd/windows/d3dhlsl.c: 2318
+Illegal single vector value = %s\n
+非法的单一矢量值 = %s\n
+
+# osd/windows/d3dhlsl.c: 2308
+Illegal triple vector value = %s\n
+非法的三重矢量值 = %s\n
+
+# osd/windows/d3dhlsl.c: 2708
+Image Pincushion
+图像桶型调整
 
 # osd/windows/video.c: 456
 Invalid video value %s; reverting to gdi\n
 无效的 video 值 %s; 还原成 gdi\n
 
-# osd/windows/window.c: 703
-MAME: %s [%s] - Screen %d
-MAME: %s [%s] - 画面 %d
-
 # osd/windows/winmain.c: 392
 PER-WINDOW VIDEO OPTIONS
 各个画面的视频选项
 
-# osd/windows/drawd3d.c: 1227
+# osd/windows/d3dhlsl.c: 2717
+Phosphor Defocus X
+荧光 X 轴散焦度
+
+# osd/windows/d3dhlsl.c: 2718
+Phosphor Defocus Y
+荧光 Y 轴散焦度
+
+# osd/windows/drawd3d.c: 1236
 Proposed video mode not supported on device %s\n
 建议的视频模式无法支持设备 %s\n
 
 # osd/windows/input.c: 1781
 RawInput: APIs detected\n
 RawInput: 检测出 API\n
+
+# osd/windows/input.c: 849
+Record Rendered Video
+录制渲染视频
+
+# osd/windows/d3dhlsl.c: 2725
+Red Convergence X
+X 轴红色收敛度
+
+# osd/windows/d3dhlsl.c: 2726
+Red Convergence Y
+Y 轴红色收敛度
+
+# osd/windows/d3dhlsl.c: 2740
+Red DC Offset
+红色 DC 偏移量
+
+# osd/windows/d3dhlsl.c: 2749
+Red Floor
+红色层
+
+# osd/windows/d3dhlsl.c: 2733
+Red Output from Blue Input
+来自蓝色输入的红色输出
+
+# osd/windows/d3dhlsl.c: 2732
+Red Output from Green Input
+来自绿色输入的红色输出
+
+# osd/windows/d3dhlsl.c: 2731
+Red Output from Red Input
+来自红色输入的红色输出
+
+# osd/windows/d3dhlsl.c: 2752
+Red Phosphor Life
+红色荧光度
+
+# osd/windows/d3dhlsl.c: 2719
+Red Position Offset X
+红色荧光 X 轴偏移量
+
+# osd/windows/d3dhlsl.c: 2720
+Red Position Offset Y
+红色荧光 Y 轴偏移量
+
+# osd/windows/d3dhlsl.c: 2746
+Red Power
+红色强度
+
+# osd/windows/d3dhlsl.c: 2743
+Red Scale
+红色比例
+
+# osd/windows/d3dhlsl.c: 1380, 2755 
+Saturation
+饱和
+
+# osd/windows/d3dhlsl.c: 2712
+Scanline Brightness
+扫描线亮度
+
+# osd/windows/d3dhlsl.c: 2713
+Scanline Brightness Overdrive
+扫描线亮度过高
+
+# osd/windows/d3dhlsl.c: 2709
+Scanline Darkness
+扫描线暗度
+
+# osd/windows/d3dhlsl.c: 2711
+Scanline Indiv. Height
+扫描线个别高度
+
+# osd/windows/d3dhlsl.c: 2714
+Scanline Jitter
+扫描线抖动度
+
+# osd/windows/d3dhlsl.c: 2710
+Scanline Screen Height
+扫描线画面高度
+
+# osd/windows/d3dhlsl.c: 2707 
+Screen Curvature
+屏幕曲率
+
+# osd/windows/d3dhlsl.c: 2702
+Shadow Mask Darkness
+阴影遮罩暗度
+
+# osd/windows/d3dhlsl.c: 2705
+Shadow Mask Pixel Count X
+阴影遮罩 X 轴像素度
+
+# osd/windows/d3dhlsl.c: 2706
+Shadow Mask Pixel Count Y
+阴影遮罩 Y 轴像素度
+
+# osd/windows/d3dhlsl.c: 2703
+Shadow Mask X Count
+阴影遮罩 X 轴计数
+
+# osd/windows/d3dhlsl.c: 2704
+Shadow Mask Y Count
+阴影遮罩 Y 轴计数
 
 # osd/windows/sound.c: 152
 Sound buffer: overflows=%d underflows=%d\n
@@ -506,7 +798,11 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 声音: 缓冲 overflows=%d underflows=%d\n
 
-# osd/windows/drawd3d.c: 1948
+# osd/windows/input.c: 842
+Take Rendered Snapshot
+捕捉渲染快照
+
+# osd/windows/drawd3d.c: 1957
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 材质太大! (要求: %dx%d, 最大 %dx%d)\n
 
@@ -538,7 +834,7 @@ Unable to initialize DirectDraw.\n
 Unable to open the keyboard device. (error %d)\n
 无法打开键盘设备 (错误 %d)\n
 
-# osd/windows/drawd3d.c: 2418
+# osd/windows/drawd3d.c: 2427
 Unknown texture blendmode=%d format=%d\n
 未知的材质混和模式=%d 格式=%d\\
 
@@ -797,288 +1093,4 @@ thread priority for the main game thread; range from -15 to 1
 # osd/windows/winmain.c: 315
 video output method: none, gdi, ddraw, or d3d
 视频输出方式: none, gdi, ddraw 或 d3d
-
-# osd/windows/d3dhlsl.c: 2719
-Blue Convergence X
-
-
-# osd/windows/d3dhlsl.c: 2720
-Blue Convergence Y
-
-
-# osd/windows/d3dhlsl.c: 2732
-Blue DC Offset
-
-
-# osd/windows/d3dhlsl.c: 2741
-Blue Floor
-
-
-# osd/windows/d3dhlsl.c: 2729
-Blue Output from Blue Input
-
-
-# osd/windows/d3dhlsl.c: 2728
-Blue Output from Green Input
-
-
-# osd/windows/d3dhlsl.c: 2727
-Blue Output from Red Input
-
-
-# osd/windows/d3dhlsl.c: 2744
-Blue Phosphor Life
-
-
-# osd/windows/d3dhlsl.c: 2713
-Blue Position Offset X
-
-
-# osd/windows/d3dhlsl.c: 2714
-Blue Position Offset Y
-
-
-# osd/windows/d3dhlsl.c: 2738
-Blue Power
-
-
-# osd/windows/d3dhlsl.c: 2735
-Blue Scale
-
-
-# osd/windows/d3dhlsl.c: 2705
-Defocus X
-
-
-# osd/windows/d3dhlsl.c: 2706
-Defocus Y
-
-
-# osd/windows/d3dhlsl.c: 1292, 1336, 1380, 1414, 1450, 1487, 1556, 1581 osd/windows/drawd3d.c: 584
-Direct3D: Error %08X during device clear call\n
-Direct3D: 设备清除时发生错误 %08X\n
-
-# osd/windows/d3dhlsl.c: 1554
-Direct3D: Error %08X during device set_render_target call 4\n
-Direct3D: 设备 set_render_target 调用时发生错误 %08X\n
-
-# osd/windows/d3dhlsl.c: 1579
-Direct3D: Error %08X during device set_render_target call 5\n
-Direct3D: 设备 set_render_target 调用时发生错误 %08X\n
-
-# osd/windows/d3dhlsl.c: 1448, 1485
-Direct3D: Error %08X during device set_render_target call 6\n
-Direct3D: 设备 device set_render_target 调用时发生错误 %08X\n
-
-# osd/windows/d3dhlsl.c: 1516
-Direct3D: Error %08X during device set_render_target call 7\n
-Direct3D: 设备 device set_render_target 调用时发生错误 %08X\n
-
-# osd/windows/d3dhlsl.c: 726
-Direct3D: Unable to init system-memory target for HLSL AVI dumping (%08x)\n
-Direct3D: 无法为初始化系统内存目标 HLSL AVI 转储 (%08x)\n
-
-# osd/windows/d3dhlsl.c: 234
-Direct3D: Unable to init system-memory target for HLSL snapshot (%08x), bailing\n
-Direct3D: 无法为初始化系统内存目标 HLSL 快照 (%08x)\n
-
-# osd/windows/d3dhlsl.c: 734
-Direct3D: Unable to init video-memory target for HLSL AVI dumping (%08x)\n
-Direct3D: 无法为初始化视频内存目标 HLSL AVI 转储 (%08x)\n
-
-# osd/windows/d3dhlsl.c: 242
-Direct3D: Unable to init video-memory target for HLSL snapshot (%08x), bailing\n
-Direct3D: 无法为初始化视频内存目标 HLSL 快照 (%08x)\n
-
-# osd/windows/d3dhlsl.c: 589
-Error creating AVI: %s\n
-创建 AVI 错误: %s\n
-
-# osd/windows/d3dhlsl.c: 412
-Error generating PNG for HLSL snapshot: png_error = %d\n
-生成 HLSL 快照错误: png_error = %d\n
-
-# osd/windows/d3dhlsl.c: 2717
-Green Convergence X
-
-
-# osd/windows/d3dhlsl.c: 2718
-Green Convergence Y
-
-
-# osd/windows/d3dhlsl.c: 2731
-Green DC Offset
-
-
-# osd/windows/d3dhlsl.c: 2740
-Green Floor
-
-
-# osd/windows/d3dhlsl.c: 2726
-Green Output from Blue Input
-
-
-# osd/windows/d3dhlsl.c: 2725
-Green Output from Green Input
-
-
-# osd/windows/d3dhlsl.c: 2724
-Green Output from Red Input
-
-
-# osd/windows/d3dhlsl.c: 2743
-Green Phosphor Life
-
-
-# osd/windows/d3dhlsl.c: 2711
-Green Position Offset X
-
-
-# osd/windows/d3dhlsl.c: 2712
-Green Position Offset Y
-
-
-# osd/windows/d3dhlsl.c: 2737
-Green Power
-
-
-# osd/windows/d3dhlsl.c: 2734
-Green Scale
-
-
-# osd/windows/d3dhlsl.c: 2303
-Illegal double vector value = %s\n
-非法的双矢量值 = %s\n
-
-# osd/windows/d3dhlsl.c: 2293
-Illegal quad vector value = %s\n
-非法的四矢量值 = %s\n
-
-# osd/windows/d3dhlsl.c: 2308
-Illegal single vector value = %s\n
-非法的单矢量值 = %s\n
-
-# osd/windows/d3dhlsl.c: 2298
-Illegal triple vector value = %s\n
-非法的三矢量值 = %s\n
-
-# osd/windows/d3dhlsl.c: 2698
-Image Pincushion
-
-
-# osd/windows/d3dhlsl.c: 2707
-Phosphor Defocus X
-
-
-# osd/windows/d3dhlsl.c: 2708
-Phosphor Defocus Y
-
-
-# osd/windows/input.c: 849
-Record Rendered Video
-录制渲染视频
-
-# osd/windows/d3dhlsl.c: 2715
-Red Convergence X
-
-
-# osd/windows/d3dhlsl.c: 2716
-Red Convergence Y
-
-
-# osd/windows/d3dhlsl.c: 2730
-Red DC Offset
-
-
-# osd/windows/d3dhlsl.c: 2739
-Red Floor
-
-
-# osd/windows/d3dhlsl.c: 2723
-Red Output from Blue Input
-
-
-# osd/windows/d3dhlsl.c: 2722
-Red Output from Green Input
-
-
-# osd/windows/d3dhlsl.c: 2721
-Red Output from Red Input
-
-
-# osd/windows/d3dhlsl.c: 2742
-Red Phosphor Life
-
-
-# osd/windows/d3dhlsl.c: 2709
-Red Position Offset X
-
-
-# osd/windows/d3dhlsl.c: 2710
-Red Position Offset Y
-
-
-# osd/windows/d3dhlsl.c: 2736
-Red Power
-
-
-# osd/windows/d3dhlsl.c: 2733
-Red Scale
-
-
-# osd/windows/d3dhlsl.c: 1373, 2745 
-Saturation
-饱和
-
-# osd/windows/d3dhlsl.c: 2702
-Scanline Brightness
-扫描线亮度
-
-# osd/windows/d3dhlsl.c: 2703
-Scanline Brightness Overdrive
-扫描线亮度过高
-
-# osd/windows/d3dhlsl.c: 2699
-Scanline Darkness
-扫描线暗度
-
-# osd/windows/d3dhlsl.c: 2701
-Scanline Indiv. Height
-扫描线逐张高度
-
-# osd/windows/d3dhlsl.c: 2704
-Scanline Jitter
-扫描线抖动
-
-# osd/windows/d3dhlsl.c: 2700
-Scanline Screen Height
-扫描线屏幕高度
-
-# osd/windows/d3dhlsl.c: 2697 
-Screen Curvature
-屏幕曲率
-
-# osd/windows/d3dhlsl.c: 2692
-Shadow Mask Darkness
-
-
-# osd/windows/d3dhlsl.c: 2695
-Shadow Mask Pixel Count X
-
-
-# osd/windows/d3dhlsl.c: 2696
-Shadow Mask Pixel Count Y
-
-
-# osd/windows/d3dhlsl.c: 2693
-Shadow Mask X Count
-
-
-# osd/windows/d3dhlsl.c: 2694
-Shadow Mask Y Count
-
-
-# osd/windows/input.c: 842
-Take Rendered Snapshot
-
 
