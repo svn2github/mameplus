@@ -68,12 +68,13 @@ INLINE void ATTR_PRINTF(2,3) parse_error(parse_state *state, const char *fmt, ..
     unknown_tag
 -------------------------------------------------*/
 
-INLINE void unknown_tag(parse_state *state, const char *tagname)
+INLINE void unknown_tag(software_list *swlist, const char *tagname)
 {
-	parse_error(state, "[%lu:%lu]: Unknown tag: %s\n",
-		XML_GetCurrentLineNumber(state->parser),
-		XML_GetCurrentColumnNumber(state->parser),
-		tagname);
+	parse_error(&swlist->state, "%s: Unknown tag: %s (line %lu column %lu)\n",
+		swlist->file->filename(),
+		tagname,
+		XML_GetCurrentLineNumber(swlist->state.parser),
+		XML_GetCurrentColumnNumber(swlist->state.parser));
 }
 
 
@@ -82,12 +83,13 @@ INLINE void unknown_tag(parse_state *state, const char *tagname)
     unknown_attribute
 -------------------------------------------------*/
 
-INLINE void unknown_attribute(parse_state *state, const char *attrname)
+INLINE void unknown_attribute(software_list *swlist, const char *attrname)
 {
-	parse_error(state, "[%lu:%lu]: Unknown attribute: %s\n",
-		XML_GetCurrentLineNumber(state->parser),
-		XML_GetCurrentColumnNumber(state->parser),
-		attrname);
+	parse_error(&swlist->state, "%s: Unknown attribute: %s (line %lu column %lu)\n",
+		swlist->file->filename(),
+		attrname,
+		XML_GetCurrentLineNumber(swlist->state.parser),
+		XML_GetCurrentColumnNumber(swlist->state.parser));
 }
 
 
@@ -96,13 +98,14 @@ INLINE void unknown_attribute(parse_state *state, const char *attrname)
     unknown_attribute_value
 -------------------------------------------------*/
 
-INLINE void unknown_attribute_value(parse_state *state,
+INLINE void unknown_attribute_value(software_list *swlist,
 	const char *attrname, const char *attrvalue)
 {
-	parse_error(state, "[%lu:%lu]: Unknown attribute value: %s\n",
-		XML_GetCurrentLineNumber(state->parser),
-		XML_GetCurrentColumnNumber(state->parser),
-		attrvalue);
+	parse_error(&swlist->state, "%s: Unknown attribute value: %s (line %lu column %lu)\n",
+		swlist->file->filename(),
+		attrvalue,
+		XML_GetCurrentLineNumber(swlist->state.parser),
+		XML_GetCurrentColumnNumber(swlist->state.parser));
 }
 
 
@@ -173,6 +176,16 @@ static void software_name_split(const char *swlist_swname, char **swlist_name, c
 static void add_rom_entry(software_list *swlist, const char *name, const char *hashdata, UINT32 offset, UINT32 length, UINT32 flags)
 {
 	software_part *part = &swlist->softinfo->partdata[swlist->current_part_entry-1];
+	if ((flags & ROMENTRY_TYPEMASK) == ROMENTRYTYPE_REGION && name!=NULL && part!=NULL) {
+		if (swlist->current_rom_entry>0) {
+			for (int i=0;i<swlist->current_rom_entry;i++) {
+				if ((part->romdata[i]._name != NULL) && (strcmp(part->romdata[i]._name,name)==0)) {
+					parse_error(&swlist->state, "%s: Duplicated dataarea %s in %s\n",swlist->file->filename(),name,swlist->current_software_info->shortname);
+				}
+			}
+		}
+	}
+
 	struct rom_entry *entry = &part->romdata[swlist->current_rom_entry];
 
 	entry->_name = name;
@@ -335,19 +348,20 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					if ( ! strcmp(attributes[0], "name" ) )
 					{
 					}
-					if ( ! strcmp(attributes[0], "description" ) )
+					else if ( ! strcmp(attributes[0], "description" ) )
 					{
 						swlist->description =  (const char *)pool_malloc_lib(swlist->pool, (strlen(attributes[1])  + 1) * sizeof(char));
 						if (!swlist->description)
 							return;
 
 						strcpy((char *)swlist->description, attributes[1]);
-					}
+					} else
+						unknown_attribute(swlist, attributes[0]);
 				}
 			}
 			else
 			{
-				unknown_tag(&swlist->state, tagname);
+				unknown_tag(swlist, tagname);
 			}
 			break;
 
@@ -364,14 +378,16 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					{
 						name = attributes[1];
 					}
-					if ( !strcmp( attributes[0], "cloneof" ) )
+					else if ( !strcmp( attributes[0], "cloneof" ) )
 					{
 						parent = attributes[1];
 					}
-					if ( !strcmp( attributes[0], "supported" ) )
+					else if ( !strcmp( attributes[0], "supported" ) )
 					{
 						supported = attributes[1];
 					}
+					else
+						unknown_attribute(swlist, attributes[0]);
 				}
 
 				if ( name )
@@ -440,12 +456,15 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 				}
 				else
 				{
+					parse_error(&swlist->state, "%s: No name defined for item (line %lu)\n",
+						swlist->file->filename(),XML_GetCurrentLineNumber(swlist->state.parser));
+
 					swlist->softinfo = NULL;
 				}
 			}
 			else
 			{
-				unknown_tag(&swlist->state, tagname);
+				unknown_tag(swlist, tagname);
 			}
 			break;
 
@@ -473,8 +492,11 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					if ( !strcmp( attributes[0], "name" ) )
 						str_feature_name = attributes[1];
 
-					if ( !strcmp( attributes[0], "value" ) )
+					else if ( !strcmp( attributes[0], "value" ) )
 						str_feature_value = attributes[1];
+
+					else
+						unknown_attribute(swlist, attributes[0]);
 				}
 
 				/* Prepare for adding feature to feature list */
@@ -499,6 +521,9 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					}
 
 					add_info( swlist, name, value );
+				} else {
+					parse_error(&swlist->state, "%s: Incomplete sharedfeat definition (line %lu)\n",
+						swlist->file->filename(),XML_GetCurrentLineNumber(swlist->state.parser));
 				}
 			}
 			else if ( !strcmp(tagname, "part" ) )
@@ -511,8 +536,11 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					if ( !strcmp( attributes[0], "name" ) )
 						str_name = attributes[1];
 
-					if ( !strcmp( attributes[0], "interface" ) )
+					else if ( !strcmp( attributes[0], "interface" ) )
 						str_interface = attributes[1];
+						
+					else 
+						unknown_attribute(swlist, attributes[0]);					
 				}
 
 				if ( str_name && str_interface )
@@ -541,10 +569,12 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 				else
 				{
 					/* Incomplete/incorrect part definition */
+					parse_error(&swlist->state, "%s: Incomplete part definition (line %lu)\n",
+						swlist->file->filename(),XML_GetCurrentLineNumber(swlist->state.parser));
 				}
 			}
 			else
-				unknown_tag(&swlist->state, tagname);
+				unknown_tag(swlist, tagname);
 
 			if (text_dest && swlist->softinfo)
 				swlist->state.text_dest = text_dest;
@@ -561,8 +591,11 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					if ( !strcmp( attributes[0], "name" ) )
 						str_name = attributes[1];
 
-					if ( !strcmp( attributes[0], "size") )
+					else if ( !strcmp( attributes[0], "size") )
 						str_size = attributes[1];
+					
+					else 
+						unknown_attribute(swlist, attributes[0]);					
 				}
 				if ( str_name && str_size )
 				{
@@ -583,6 +616,8 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 				else
 				{
 					/* Missing dataarea name or size */
+					parse_error(&swlist->state, "%s: Incomplete dataarea definition (line %lu)\n",
+						swlist->file->filename(),XML_GetCurrentLineNumber(swlist->state.parser));
 				}
 			}
 			else if (!strcmp(tagname, "diskarea"))
@@ -593,6 +628,8 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 				{
 					if ( !strcmp( attributes[0], "name" ) )
 						str_name = attributes[1];
+					else
+						unknown_attribute(swlist, attributes[0]);				
 				}
 				if ( str_name )
 				{
@@ -612,6 +649,8 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 				else
 				{
 					/* Missing dataarea name or size */
+					parse_error(&swlist->state, "%s: Incomplete diskarea definition (line %lu)\n",
+						swlist->file->filename(),XML_GetCurrentLineNumber(swlist->state.parser));
 				}
 			}
 			else if ( !strcmp(tagname, "feature") )
@@ -624,8 +663,11 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					if ( !strcmp( attributes[0], "name" ) )
 						str_feature_name = attributes[1];
 
-					if ( !strcmp( attributes[0], "value" ) )
+					else if ( !strcmp( attributes[0], "value" ) )
 						str_feature_value = attributes[1];
+					
+					else
+						unknown_attribute(swlist, attributes[0]);									
 				}
 
 				/* Prepare for adding feature to feature list */
@@ -650,10 +692,16 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 					}
 
 					add_feature( swlist, name, value );
+				} else {
+					parse_error(&swlist->state, "%s: Incomplete feature definition (line %lu)\n",
+						swlist->file->filename(),XML_GetCurrentLineNumber(swlist->state.parser));
 				}
 			}
+			else if (!strcmp(tagname, "dipswitch"))
+			{
+			}
 			else
-				unknown_tag( &swlist->state, tagname );
+				unknown_tag(swlist, tagname );
 			break;
 
 		case POS_DATA:
@@ -672,20 +720,22 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 				{
 					if ( !strcmp( attributes[0], "name" ) )
 						str_name = attributes[1];
-					if ( !strcmp( attributes[0], "size" ) )
+					else if ( !strcmp( attributes[0], "size" ) )
 						str_size = attributes[1];
-					if ( !strcmp( attributes[0], "crc" ) )
+					else if ( !strcmp( attributes[0], "crc" ) )
 						str_crc = attributes[1];
-					if ( !strcmp( attributes[0], "sha1" ) )
+					else if ( !strcmp( attributes[0], "sha1" ) )
 						str_sha1 = attributes[1];
-					if ( !strcmp( attributes[0], "offset" ) )
+					else if ( !strcmp( attributes[0], "offset" ) )
 						str_offset = attributes[1];
-					if ( !strcmp( attributes[0], "value" ) )
+					else if ( !strcmp( attributes[0], "value" ) )
 						str_value = attributes[1];
-					if ( !strcmp( attributes[0], "status" ) )
+					else if ( !strcmp( attributes[0], "status" ) )
 						str_status = attributes[1];
-					if ( !strcmp( attributes[0], "loadflag" ) )
-						str_loadflag = attributes[1];
+					else if ( !strcmp( attributes[0], "loadflag" ) )
+						str_loadflag = attributes[1];						
+					else
+						unknown_attribute(swlist, attributes[0]);									
 				}
 				if ( swlist->softinfo )
 				{
@@ -716,10 +766,13 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 						}
 						else
 						{
-							if ( str_name && str_crc && str_sha1 )
+							if ( str_name )
 							{
 								char *s_name = (char *)pool_malloc_lib(swlist->pool, ( strlen( str_name ) + 1 ) * sizeof(char) );
-								char *hashdata = (char *)pool_malloc_lib( swlist->pool, sizeof(char) * ( strlen(str_crc) + strlen(str_sha1) + 7 + 4 ) );
+								int hashsize = 7 + 4;
+								if (str_crc) hashsize+= strlen(str_crc);
+								if (str_sha1) hashsize+= strlen(str_sha1);
+								char *hashdata = (char *)pool_malloc_lib( swlist->pool, sizeof(char) * (hashsize) );
 								int baddump = ( str_status && !strcmp(str_status, "baddump") ) ? 1 : 0;
 								int nodump = ( str_status && !strcmp(str_status, "nodump" ) ) ? 1 : 0;
 								int romflags = 0;
@@ -728,7 +781,20 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 									return;
 
 								strcpy( s_name, str_name );
-								sprintf( hashdata, "%c%s%c%s%s", hash_collection::HASH_CRC, str_crc, hash_collection::HASH_SHA1, str_sha1, ( nodump ? NO_DUMP : ( baddump ? BAD_DUMP : "" ) ) );
+								if (nodump) {
+									sprintf( hashdata, "%s", NO_DUMP);
+									if (str_crc && str_sha1) {
+										parse_error(&swlist->state, "%s: No need for hash definition (line %lu)\n",
+										swlist->file->filename(),XML_GetCurrentLineNumber(swlist->state.parser));
+									}
+								} else {
+									if (str_crc && str_sha1) {
+										sprintf( hashdata, "%c%s%c%s%s", hash_collection::HASH_CRC, str_crc, hash_collection::HASH_SHA1, str_sha1, (baddump ? BAD_DUMP : ""));
+									} else {
+										parse_error(&swlist->state, "%s: Incomplete rom hash definition (line %lu)\n",
+										swlist->file->filename(),XML_GetCurrentLineNumber(swlist->state.parser));
+									}
+								}
 
 								/* Handle loadflag attribute */
 								if ( str_loadflag && !strcmp(str_loadflag, "load16_word_swap") )
@@ -744,13 +810,18 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 
 								/* ROM_LOAD( name, offset, length, hash ) */
 								add_rom_entry( swlist, s_name, hashdata, offset, length, ROMENTRYTYPE_ROM | romflags );
+							} else {
+								parse_error(&swlist->state, "%s: Rom name missing (line %lu)\n",
+								swlist->file->filename(),XML_GetCurrentLineNumber(swlist->state.parser));
 							}
 						}
 					}
-				}
-				else
-				{
-					/* Missing name, size, crc, sha1, or offset */
+					else
+					{
+						/* Missing name, size, crc, sha1, or offset */
+						parse_error(&swlist->state, "%s: Incomplete rom definition (line %lu)\n",
+							swlist->file->filename(),XML_GetCurrentLineNumber(swlist->state.parser));
+					}
 				}
 			}
 			else
@@ -765,12 +836,14 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 				{
 					if ( !strcmp( attributes[0], "name" ) )
 						str_name = attributes[1];
-					if ( !strcmp( attributes[0], "sha1" ) )
+					else if ( !strcmp( attributes[0], "sha1" ) )
 						str_sha1 = attributes[1];
-					if ( !strcmp( attributes[0], "status" ) )
+					else if ( !strcmp( attributes[0], "status" ) )
 						str_status = attributes[1];
-					if ( !strcmp( attributes[0], "writeable" ) )
+					else if ( !strcmp( attributes[0], "writeable" ) )
 						str_writeable = attributes[1];
+					else
+						unknown_attribute(swlist, attributes[0]);									
 				}
 				if ( swlist->softinfo )
 				{
@@ -789,11 +862,17 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 						sprintf( hashdata, "%c%s%s", hash_collection::HASH_SHA1, str_sha1, ( nodump ? NO_DUMP : ( baddump ? BAD_DUMP : "" ) ) );
 
 						add_rom_entry( swlist, s_name, hashdata, 0, 0, ROMENTRYTYPE_ROM | (writeable ? DISK_READWRITE : DISK_READONLY ) );
+					} else {
+						parse_error(&swlist->state, "%s: Incomplete disk definition (line %lu)\n",
+							swlist->file->filename(),XML_GetCurrentLineNumber(swlist->state.parser));
 					}
 				}
 			}
+			else if (!strcmp(tagname, "dipvalue"))
+			{
+			}			
 			else
-				unknown_tag(&swlist->state, tagname);
+				unknown_tag(swlist, tagname);
 			break;
 	}
 	swlist->state.pos = (softlist_parse_position) (swlist->state.pos + 1);
@@ -814,14 +893,6 @@ static void end_handler(void *data, const char *name)
 		case POS_ROOT:
 			break;
 
-		case POS_SOFT:
-			if ( ! strcmp( name, "part" ) && swlist->softinfo )
-			{
-				/* ROM_END */
-				add_rom_entry( swlist, NULL, NULL, 0, 0, ROMENTRYTYPE_END );
-			}
-			break;
-
 		case POS_MAIN:
 			if ( swlist->softinfo )
 			{
@@ -829,20 +900,27 @@ static void end_handler(void *data, const char *name)
 			}
 			break;
 
-		case POS_PART:
-			/* Add shared_info inherited from the software_info level, if any */
-			if ( swlist->softinfo && swlist->softinfo->shared_info )
+		case POS_SOFT:
+			if ( ! strcmp( name, "part" ) && swlist->softinfo )
 			{
-				feature_list *list = swlist->softinfo->shared_info;
-
-				while( list->next )
+				/* ROM_END */
+				add_rom_entry( swlist, NULL, NULL, 0, 0, ROMENTRYTYPE_END );
+				/* Add shared_info inherited from the software_info level, if any */
+				if ( swlist->softinfo && swlist->softinfo->shared_info )
 				{
-					add_feature( swlist, list->next->name, list->next->value );
-					list = list->next;
+					feature_list *list = swlist->softinfo->shared_info;
+
+					while( list->next )
+					{
+						add_feature( swlist, list->next->name, list->next->value );
+						list = list->next;
+					}
 				}
 			}
 			break;
 
+		case POS_PART:
+			break;
 		case POS_DATA:
 			break;
 	}
@@ -871,6 +949,19 @@ static void data_handler(void *data, const XML_Char *s, int len)
 		memcpy(&text[text_len], s, len);
 		text[text_len + len] = '\0';
 		*swlist->state.text_dest = text;
+	} else {
+		if (swlist->state.error_proc)
+		{
+			int errcnt = 0;
+			for (int i=0;i<len;i++) {
+				if (!(s[i]=='\t' || s[i]=='\n' || s[i]=='\r' || s[i]==' ')) errcnt++;
+			}
+			if (errcnt>0) {
+				parse_error(&swlist->state, "%s: Unknown content (line %lu)\n",
+					swlist->file->filename(),
+					XML_GetCurrentLineNumber(swlist->state.parser));
+			}
+		}
 	}
 }
 
@@ -967,10 +1058,11 @@ void software_list_parse(software_list *swlist,
 		swlist->state.done = swlist->file->eof();
 		if (XML_Parse(swlist->state.parser, buf, len, swlist->state.done) == XML_STATUS_ERROR)
 		{
-			parse_error(&swlist->state, "[%lu:%lu]: %s\n",
+			parse_error(&swlist->state, "%s: %s (line %lu column %lu)\n",
+				swlist->file->filename(),
+				XML_ErrorString(XML_GetErrorCode(swlist->state.parser)),
 				XML_GetCurrentLineNumber(swlist->state.parser),
-				XML_GetCurrentColumnNumber(swlist->state.parser),
-				XML_ErrorString(XML_GetErrorCode(swlist->state.parser)));
+				XML_GetCurrentColumnNumber(swlist->state.parser));
 			goto done;
 		}
 	}
@@ -1387,7 +1479,7 @@ static void find_software_item(const device_list &devlist, emu_options &options,
 
 	/* Split full software name into software list name and short software name */
 	software_name_split(path, &swlist_name, &swname, &swpart );
-//	swname_bckp = swname;
+//  swname_bckp = swname;
 
 	const char *interface = image->image_interface();
 
@@ -1501,7 +1593,7 @@ static void find_software_item(const device_list &devlist, emu_options &options,
 		}
 	}
 	*sw_list_name = global_strdup(swlist_name);
-	
+
 	global_free( swlist_name );
 	global_free( swname );
 	global_free( swpart );
@@ -1526,7 +1618,7 @@ bool load_software_part(emu_options &options, device_image_interface *image, con
 	software_info *software_info_ptr = NULL;
 	software_part *software_part_ptr = NULL;
 	const char *swlist_name = NULL;
-	
+
 	bool result = false;
 	*sw_info = NULL;
 	*sw_part = NULL;
@@ -1633,7 +1725,7 @@ const char *software_part_get_feature(software_part *part, const char *feature_n
     software_get_default_slot
  -------------------------------------------------*/
 
-const char *software_get_default_slot(const device_list &devlist, emu_options &options, const device_image_interface *image, const char* default_card_slot)
+ const char *software_get_default_slot(const device_list &devlist, emu_options &options, const device_image_interface *image, const char* default_card_slot)
 {
 	const char* retVal = NULL;
 	const char* path = options.value(image->instance_name());
@@ -1641,7 +1733,7 @@ const char *software_get_default_slot(const device_list &devlist, emu_options &o
 	software_info *software_info_ptr = NULL;
 	software_part *software_part_ptr = NULL;
 	const char *swlist_name = NULL;
-	
+
 	if (strlen(path)>0) {
 		retVal = default_card_slot;
 		find_software_item(devlist, options, image, path, &software_list_ptr, &software_info_ptr, &software_part_ptr, &swlist_name);
@@ -1654,7 +1746,7 @@ const char *software_get_default_slot(const device_list &devlist, emu_options &o
 		software_list_close(software_list_ptr);
 		global_free(swlist_name);
 	}
-	return retVal;	
+	return retVal;
 }
 
 /***************************************************************************
@@ -1666,164 +1758,203 @@ static DEVICE_START( software_list )
 {
 }
 
-static DEVICE_VALIDITY_CHECK( software_list )
+void validate_error_proc(const char *message)
 {
-	software_list_config *swlist = (software_list_config *)downcast<const legacy_device_base *>(device)->inline_config();
-	int error = FALSE;
-	softlist_map names;
-	softlist_map descriptions;
+	mame_printf_error("%s",message);
+}
 
-	enum { NAME_LEN_PARENT = 8, NAME_LEN_CLONE = 16 };
-
-	for (int i = 0; i < DEVINFO_STR_SWLIST_MAX - DEVINFO_STR_SWLIST_0; i++)
-	{
-		if (swlist->list_name[i])
+void validate_softlists(emu_options &options)
+{
+	driver_enumerator drivlist(options);
+	// first determine the maximum number of lists we might encounter
+	int list_count = 0;
+	while (drivlist.next())
+		for (const device_t *dev = drivlist.config().devicelist().first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
 		{
-			software_list *list = software_list_open(options, swlist->list_name[i], FALSE, NULL);
+			software_list_config *swlist = (software_list_config *)downcast<const legacy_device_base *>(dev)->inline_config();
 
-			/* if no .xml list is found, then return (this happens e.g. if you moved/renamed the xml list) */
-			if (list == NULL)
-				return FALSE;
+			for (int listnum = 0; listnum < DEVINFO_STR_SWLIST_MAX - DEVINFO_STR_SWLIST_0; listnum++)
+				if (swlist->list_name[listnum] && *swlist->list_name[listnum] && swlist->list_type == SOFTWARE_LIST_ORIGINAL_SYSTEM)
+					list_count++;
+		}
 
-			for (software_info *swinfo = software_list_find(list, "*", NULL); swinfo != NULL; swinfo = software_list_find(list, "*", swinfo))
+	// allocate a list
+	astring *lists = global_alloc_array(astring, list_count);
+	bool error = FALSE;
+	if (list_count)
+	{
+		drivlist.reset();
+		list_count = 0;
+		while (drivlist.next())
+		for (const device_t *dev = drivlist.config().devicelist().first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
+		{
+			software_list_config *swlist = (software_list_config *)downcast<const legacy_device_base *>(dev)->inline_config();
+			softlist_map names;
+			softlist_map descriptions;
+
+			enum { NAME_LEN_PARENT = 8, NAME_LEN_CLONE = 16 };
+
+			for (int i = 0; i < DEVINFO_STR_SWLIST_MAX - DEVINFO_STR_SWLIST_0; i++)
 			{
-				const char *s;
-				int is_clone = 0;
-
-				/* First, check if the xml got corrupted: */
-
-				/* Did we lost any description? */
-				if (swinfo->longname == NULL)
+				if (swlist->list_name[i])
 				{
-					mame_printf_error("%s: %s has no description\n", swlist->list_name[i], swinfo->shortname);
-					return TRUE;
-				}
-
-				/* Did we lost any year? */
-				if (swinfo->year == NULL)
-				{
-					mame_printf_error("%s: %s has no year\n", swlist->list_name[i], swinfo->shortname);
-					return TRUE;
-				}
-
-				/* Did we lost any publisher? */
-				if (swinfo->publisher == NULL)
-				{
-					mame_printf_error("%s: %s has no publisher\n", swlist->list_name[i], swinfo->shortname);
-					return TRUE;
-				}
-
-				/* Second, since the xml is fine, run additional checks: */
-
-				/* check for duplicate names */
-				if (names.add(swinfo->shortname, swinfo, FALSE) == TMERR_DUPLICATE)
-				{
-					software_info *match = names.find(swinfo->shortname);
-					mame_printf_error("%s: %s is a duplicate name (%s)\n", swlist->list_name[i], swinfo->shortname, match->shortname);
-					error = TRUE;
-				}
-
-				/* check for duplicate descriptions */
-				if (descriptions.add(swinfo->longname, swinfo, FALSE) == TMERR_DUPLICATE)
-				{
-					software_info *match = names.find(swinfo->shortname);
-					mame_printf_error("%s: %s is a duplicate description (%s)\n", swlist->list_name[i], swinfo->longname, match->longname);
-					error = TRUE;
-				}
-
-				if (swinfo->parentname != NULL)
-				{
-					is_clone = 1;
-
-					if (strcmp(swinfo->parentname, swinfo->shortname) == 0)
+					software_list *list = software_list_open(options, swlist->list_name[i], FALSE, NULL);
+					if ( list )
 					{
-						mame_printf_error("%s: %s is set as a clone of itself\n", swlist->list_name[i], swinfo->shortname);
-						error = TRUE;
-						break;
-					}
+						/* Verify if we have encountered this list before */
+						bool seen_before = false;
+						for (int seen_index = 0; seen_index < list_count && !seen_before; seen_index++)
+							if (lists[seen_index] == swlist->list_name[i])
+								seen_before = true;
 
-					/* make sure the parent exists */
-					software_info *swinfo2 = software_list_find(list, swinfo->parentname, NULL );
-
-					if (!swinfo2)
-					{
-						mame_printf_error("%s: parent '%s' software for '%s' not found\n", swlist->list_name[i], swinfo->parentname, swinfo->shortname);
-						error = TRUE;
-					}
-					else
-					{
-						if (swinfo2->parentname != NULL)
+						if (!seen_before)
 						{
-							mame_printf_error("%s: %s is a clone of a clone\n", swlist->list_name[i], swinfo->shortname);
-							error = TRUE;
-						}
-					}
-				}
+							lists[list_count++] = swlist->list_name[i];
+							software_list_parse( list, &validate_error_proc, NULL );
+							
+							for (software_info *swinfo = software_list_find(list, "*", NULL); swinfo != NULL; swinfo = software_list_find(list, "*", swinfo))
+							{
+								const char *s;
+								int is_clone = 0;
 
-				/* make sure the driver name is 8 chars or less */
-				if ((is_clone && strlen(swinfo->shortname) > NAME_LEN_CLONE) || ((!is_clone) && strlen(swinfo->shortname) > NAME_LEN_PARENT))
-				{
-					mame_printf_error("%s: %s %s driver name must be %d characters or less\n", swlist->list_name[i], swinfo->shortname,
-									  is_clone ? "clone" : "parent", is_clone ? NAME_LEN_CLONE : NAME_LEN_PARENT);
-					error = TRUE;
-				}
+								/* First, check if the xml got corrupted: */
 
-				/* make sure the year is only digits, '?' or '+' */
-				for (s = swinfo->year; *s; s++)
-					if (!isdigit((UINT8)*s) && *s != '?' && *s != '+')
-					{
-						mame_printf_error("%s: %s has an invalid year '%s'\n", swlist->list_name[i], swinfo->shortname, swinfo->year);
-						error = TRUE;
-						break;
-					}
-
-				for (software_part *swpart = software_find_part(swinfo, NULL, NULL); swpart != NULL; swpart = software_part_next(swpart))
-				{
-					if (swpart->interface_ == NULL)
-					{
-						mame_printf_error("%s: %s has a part (%s) without interface\n", swlist->list_name[i], swinfo->shortname, swpart->name);
-						error = TRUE;
-					}
-
-					if (software_find_romdata(swpart, NULL) == NULL)
-					{
-						mame_printf_error("%s: %s has a part (%s) with no data\n", swlist->list_name[i], swinfo->shortname, swpart->name);
-						error = TRUE;
-					}
-
-					for (struct rom_entry *swdata = software_find_romdata(swpart, NULL); swdata != NULL;  swdata = software_romdata_next(swdata))
-					{
-						struct rom_entry *data = swdata;
-
-						if (data->_name && data->_hashdata)
-						{
-							const char *str;
-
-							/* make sure it's all lowercase */
-							for (str = data->_name; *str; str++)
-								if (tolower((UINT8)*str) != *str)
+								/* Did we lost any description? */
+								if (swinfo->longname == NULL)
 								{
-									mame_printf_error("%s: %s has upper case ROM name %s\n", swlist->list_name[i], swinfo->shortname, data->_name);
-									error = TRUE;
-									break;
+									mame_printf_error("%s: %s has no description\n", list->file->filename(), swinfo->shortname);
+									error = TRUE; break;
 								}
 
-							/* make sure the hash is valid */
-							hash_collection hashes;
-							if (!hashes.from_internal_string(data->_hashdata))
-							{
-								mame_printf_error("%s: %s has rom '%s' with an invalid hash string '%s'\n", swlist->list_name[i], swinfo->shortname, data->_name, data->_hashdata);
-								error = TRUE;
+								/* Did we lost any year? */
+								if (swinfo->year == NULL)
+								{
+									mame_printf_error("%s: %s has no year\n", list->file->filename(), swinfo->shortname);
+									error = TRUE; break;
+								}
+
+								/* Did we lost any publisher? */
+								if (swinfo->publisher == NULL)
+								{
+									mame_printf_error("%s: %s has no publisher\n", list->file->filename(), swinfo->shortname);
+									error = TRUE; break;
+								}
+
+								/* Second, since the xml is fine, run additional checks: */
+
+								/* check for duplicate names */
+								if (names.add(swinfo->shortname, swinfo, FALSE) == TMERR_DUPLICATE)
+								{
+									software_info *match = names.find(swinfo->shortname);
+									mame_printf_error("%s: %s is a duplicate name (%s)\n", list->file->filename(), swinfo->shortname, match->shortname);
+									error = TRUE;
+								}
+
+								/* check for duplicate descriptions */
+								if (descriptions.add(swinfo->longname, swinfo, FALSE) == TMERR_DUPLICATE)
+								{
+									software_info *match = names.find(swinfo->shortname);
+									mame_printf_error("%s: %s is a duplicate description (%s)\n", list->file->filename(), swinfo->longname, match->longname);
+									error = TRUE;
+								}
+
+								if (swinfo->parentname != NULL)
+								{
+									is_clone = 1;
+
+									if (strcmp(swinfo->parentname, swinfo->shortname) == 0)
+									{
+										mame_printf_error("%s: %s is set as a clone of itself\n", list->file->filename(), swinfo->shortname);
+										error = TRUE;
+										break;
+									}
+
+									/* make sure the parent exists */
+									software_info *swinfo2 = software_list_find(list, swinfo->parentname, NULL );
+
+									if (!swinfo2)
+									{
+										mame_printf_error("%s: parent '%s' software for '%s' not found\n", list->file->filename(), swinfo->parentname, swinfo->shortname);
+										error = TRUE;
+									}
+									else
+									{
+										if (swinfo2->parentname != NULL)
+										{
+											mame_printf_error("%s: %s is a clone of a clone\n", list->file->filename(), swinfo->shortname);
+											error = TRUE;
+										}
+									}
+								}
+
+								/* make sure the driver name is 8 chars or less */
+								if ((is_clone && strlen(swinfo->shortname) > NAME_LEN_CLONE) || ((!is_clone) && strlen(swinfo->shortname) > NAME_LEN_PARENT))
+								{
+									mame_printf_error("%s: %s %s driver name must be %d characters or less\n", list->file->filename(), swinfo->shortname,
+													  is_clone ? "clone" : "parent", is_clone ? NAME_LEN_CLONE : NAME_LEN_PARENT);
+									error = TRUE;
+								}
+
+								/* make sure the year is only digits, '?' or '+' */
+								for (s = swinfo->year; *s; s++)
+									if (!isdigit((UINT8)*s) && *s != '?' && *s != '+')
+									{
+										mame_printf_error("%s: %s has an invalid year '%s'\n", list->file->filename(), swinfo->shortname, swinfo->year);
+										error = TRUE;
+										break;
+									}
+
+								for (software_part *swpart = software_find_part(swinfo, NULL, NULL); swpart != NULL; swpart = software_part_next(swpart))
+								{
+									if (swpart->interface_ == NULL)
+									{
+										mame_printf_error("%s: %s has a part (%s) without interface\n", list->file->filename(), swinfo->shortname, swpart->name);
+										error = TRUE;
+									}
+
+									if (software_find_romdata(swpart, NULL) == NULL)
+									{
+										mame_printf_error("%s: %s has a part (%s) with no data\n", list->file->filename(), swinfo->shortname, swpart->name);
+										error = TRUE;
+									}
+
+									for (struct rom_entry *swdata = software_find_romdata(swpart, NULL); swdata != NULL;  swdata = software_romdata_next(swdata))
+									{
+										struct rom_entry *data = swdata;
+
+										if (data->_name && data->_hashdata)
+										{
+											const char *str;
+
+											/* make sure it's all lowercase */
+											for (str = data->_name; *str; str++)
+												if (tolower((UINT8)*str) != *str)
+												{
+													mame_printf_error("%s: %s has upper case ROM name %s\n", list->file->filename(), swinfo->shortname, data->_name);
+													error = TRUE;
+													break;
+												}
+
+											/* make sure the hash is valid */
+											hash_collection hashes;
+											if (!hashes.from_internal_string(data->_hashdata))
+											{
+												mame_printf_error("%s: %s has rom '%s' with an invalid hash string '%s'\n", list->file->filename(), swinfo->shortname, data->_name, data->_hashdata);
+												error = TRUE;
+											}
+										}
+									}
+								}
 							}
 						}
-					}
+						software_list_close(list);
+					}					
 				}
 			}
-
-			software_list_close(list);
 		}
 	}
-	return error;
+	if (error)
+		throw emu_fatalerror(MAMERR_FAILED_VALIDITY, "Validity checks failed");
 }
 
 DEVICE_GET_INFO( software_list )
@@ -1837,7 +1968,6 @@ DEVICE_GET_INFO( software_list )
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( software_list );	break;
 		case DEVINFO_FCT_STOP:							/* Nothing */										break;
-		case DEVINFO_FCT_VALIDITY_CHECK:				info->p = (void*)DEVICE_VALIDITY_CHECK_NAME( software_list ); break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case DEVINFO_STR_NAME:							strcpy(info->s, "Software lists");					break;

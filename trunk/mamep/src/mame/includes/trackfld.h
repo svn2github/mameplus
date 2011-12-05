@@ -27,6 +27,9 @@ public:
 	int      m_sprite_bank2;
 	int      m_old_gfx_bank;					// needed by atlantol
 	int		 m_sprites_gfx_banked;
+
+	UINT8    m_irq_mask;
+	UINT8    m_yieartf_nmi_mask;
 };
 
 

@@ -1238,7 +1238,6 @@ static void dinput_init(running_machine &machine)
 		}
 	}
 #endif /* JOYSTICK_ID */
-
 }
 
 

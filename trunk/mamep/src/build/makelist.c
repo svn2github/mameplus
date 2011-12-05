@@ -44,9 +44,12 @@
 
 
 #define MAX_DRIVERS 65536
+#define MAX_IGNORE  512
 
 static const char *drivlist[MAX_DRIVERS];
 static int drivcount;
+static const char *ignorelst[MAX_IGNORE];
+static int ignorecount;
 
 #ifdef DRIVER_SWITCH
 static char filename[_MAX_FNAME];
@@ -67,6 +70,20 @@ int sort_callback(const void *elem1, const void *elem2)
 	return strcmp(*item1, *item2);
 }
 
+//-------------------------------------------------
+//  isignored - return info if item is in ignore
+//  list or not
+//-------------------------------------------------
+
+bool isignored(const char *drivname)
+{
+	if (ignorecount>0) {
+		for(int i=0;i<ignorecount;i++) {
+			if (strcmp(ignorelst[i],drivname)==0) return true;
+		}
+	}
+	return false;
+}
 
 //-------------------------------------------------
 //  parse_file - parse a single file, may be 
@@ -157,6 +174,21 @@ int parse_file(const char *srcfile)
 			parse_file(filename);
 			continue;
 		}
+		if (c == '!')
+		{
+			char drivname[256];
+			drivname[0] = 0;
+			for (int pos = 0; srcptr < endptr && pos < ARRAY_LENGTH(drivname) - 1 && !isspace(*srcptr); pos++)
+			{
+				drivname[pos] = *srcptr++;
+				drivname[pos+1] = 0;
+			}
+			fprintf(stderr, "Place driver '%s' to ignore list\n", drivname);
+			char *name = (char *)malloc(strlen(drivname) + 1);
+			strcpy(name, drivname);
+			ignorelst[ignorecount++] = name;
+			continue;
+		}
 		
 		// otherwise treat as a driver name
 		char drivname[32];
@@ -178,12 +210,15 @@ int parse_file(const char *srcfile)
 		}
 
 		// add it to the list
-		char *name = (char *)malloc(strlen(drivname) + 1);
-		strcpy(name, drivname);
-		drivlist[drivcount++] = name;
+		if(!isignored(drivname))
+		{
+			char *name = (char *)malloc(strlen(drivname) + 1);
+			strcpy(name, drivname);
+			drivlist[drivcount++] = name;
 #ifdef DRIVER_SWITCH
-		extra_drivlist[extra_drivcount++] = name;
+			extra_drivlist[extra_drivcount++] = name;
 #endif /* DRIVER_SWITCH */
+		}
 	}
 	
 	osd_free(buffer);
@@ -210,6 +245,7 @@ int main(int argc, char *argv[])
 
 	bool header_outputed = false;
 	drivcount = 0;
+	ignorecount = 0;
 
 	// extract arguments
 	for (int src_idx = 1; src_idx < argc; src_idx++)

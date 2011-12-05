@@ -10,8 +10,8 @@
 
 #pragma once
 
-#ifndef __rtc9701DEV_H__
-#define __rtc9701DEV_H__
+#ifndef __v3021DEV_H__
+#define __v3021DEV_H__
 
 
 

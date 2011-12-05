@@ -1,10 +1,10 @@
 #include "emu.h"
 #include "crsshair.h"
 #include "image.h"
-#include "includes/sms.h"
 #include "video/smsvdp.h"
 #include "sound/2413intf.h"
 #include "imagedev/cartslot.h"
+#include "includes/sms.h"
 
 #define VERBOSE 0
 #define LOG(x) do { if (VERBOSE) logerror x; } while (0)
@@ -94,7 +94,7 @@ static void sms_vdp_hcount_lphaser( running_machine &machine, int hpos )
 	UINT8 tmp = ((hpos_tmp - 46) >> 1) & 0xff;
 
 	//printf ("sms_vdp_hcount_lphaser: hpos %3d hpos_tmp %3d => hcount %2X\n", hpos, hpos_tmp, tmp);
-	sms_vdp_hcount_latch_w(state->m_vdp, 0, tmp);
+	state->m_vdp->hcount_latch_write(*state->m_space, 0, tmp);
 }
 
 
@@ -167,7 +167,7 @@ static int lgun_bright_aim_area( running_machine &machine, emu_timer *timer, int
 
 		if (!pos_changed)
 		{
-			result = sms_vdp_check_brightness(state->m_vdp, beam_x, beam_y);
+			result = state->m_vdp->check_brightness(beam_x, beam_y);
 			/* next check at same line */
 			beam_x += LGUN_X_INTERVAL;
 			pos_changed = 1;
@@ -210,12 +210,12 @@ static UINT8 sms_vdp_hcount( running_machine &machine )
 }
 
 
-static void sms_vdp_hcount_latch( running_machine &machine )
+static void sms_vdp_hcount_latch( address_space *space )
 {
-	sms_state *state = machine.driver_data<sms_state>();
-	UINT8 value = sms_vdp_hcount(machine);
+	sms_state *state = space->machine().driver_data<sms_state>();
+	UINT8 value = sms_vdp_hcount(space->machine());
 
-	sms_vdp_hcount_latch_w(state->m_vdp, 0, value);
+	state->m_vdp->hcount_latch_write(*space, 0, value);
 }
 
 
@@ -522,7 +522,7 @@ WRITE8_HANDLER( sms_io_control_w )
 		/* check if TH pin level is high (1) and was low last time */
 		if (data & 0x80 && !(state->m_ctrl_reg & 0x80))
 		{
-			sms_vdp_hcount_latch(space->machine());
+			sms_vdp_hcount_latch(space);
 		}
 		sms_input_write(space, 0, (data & 0x20) >> 5);
 	}
@@ -531,7 +531,7 @@ WRITE8_HANDLER( sms_io_control_w )
 	{
 		if (data & 0x20 && !(state->m_ctrl_reg & 0x20))
 		{
-			sms_vdp_hcount_latch(space->machine());
+			sms_vdp_hcount_latch(space);
 		}
 		sms_input_write(space, 1, (data & 0x80) >> 7);
 	}
@@ -545,9 +545,9 @@ READ8_HANDLER( sms_count_r )
 	sms_state *state = space->machine().driver_data<sms_state>();
 
 	if (offset & 0x01)
-		return sms_vdp_hcount_latch_r(state->m_vdp, offset);
+		return state->m_vdp->hcount_latch_read(*state->m_space, offset);
 	else
-		return sms_vdp_vcount_r(state->m_vdp, offset);
+		return state->m_vdp->vcount_read(*state->m_space, offset);
 }
 
 
@@ -862,7 +862,6 @@ WRITE8_HANDLER( sms_mapper_w )
 	}
 }
 
-#ifdef MESS
 static WRITE8_HANDLER( sms_korean_zemina_banksw_w )
 {
 	sms_state *state = space->machine().driver_data<sms_state>();
@@ -935,7 +934,6 @@ static WRITE8_HANDLER( sms_codemasters_page1_w )
 		}
 	}
 }
-#endif
 
 static READ8_HANDLER( sms_kor_nobank_r )
 {
@@ -1664,7 +1662,6 @@ static void setup_cart_banks( running_machine &machine )
 	}
 }
 
-#ifdef MESS
 static void setup_banks( running_machine &machine )
 {
 	sms_state *state = machine.driver_data<sms_state>();
@@ -1696,7 +1693,6 @@ static void setup_banks( running_machine &machine )
 		state->m_banking_bios[5] = state->m_BIOS + ((2 < state->m_bios_page_count) ? 0x8000 : 0);
 	}
 }
-#endif
 
 MACHINE_START( sms )
 {
@@ -1711,17 +1707,17 @@ MACHINE_START( sms )
 
 	state->m_main_cpu = machine.device("maincpu");
 	state->m_control_cpu = machine.device("control");
-	state->m_vdp = machine.device("sms_vdp");
+	state->m_vdp = machine.device<sega315_5124_device>("sms_vdp");
 	state->m_ym = machine.device("ym2413");
 	state->m_main_scr = machine.device("screen");
 	state->m_left_lcd = machine.device("left_lcd");
 	state->m_right_lcd = machine.device("right_lcd");
+	state->m_space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* Check if lightgun has been chosen as input: if so, enable crosshair */
 	machine.scheduler().timer_set(attotime::zero, FUNC(lightgun_tick));
 }
 
-#ifdef MESS
 MACHINE_RESET( sms_mess )
 {
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
@@ -1746,7 +1742,9 @@ MACHINE_RESET( sms_mess )
 		space->install_legacy_write_handler(0x0000, 0x0003, FUNC(sms_korean_zemina_banksw_w));
 
 	if (state->m_cartridge[state->m_current_cartridge].features & CF_GG_SMS_MODE)
-		sms_vdp_set_ggsmsmode(state->m_vdp, 1);
+	{
+		state->m_vdp->set_gg_sms_mode(1);
+	}
 
 	/* Initialize SIO stuff for GG */
 	state->m_gg_sio[0] = 0x7f;
@@ -1785,7 +1783,6 @@ MACHINE_RESET( sms_mess )
 
 	state->m_tvdraw_data = 0;
 }
-#endif
 
 READ8_HANDLER( sms_store_cart_select_r )
 {
@@ -1971,7 +1968,7 @@ SCREEN_UPDATE( sms1 )
 
 	if (!occluded_view)
 	{
-		sms_vdp_update(state->m_vdp, bitmap, cliprect);
+		state->m_vdp->update_video(bitmap, cliprect);
 
 		// HACK: fake 3D->2D handling (if enabled, it repeats each frame twice on the selected lens)
 		// save a copy of current bitmap for the binocular hack
@@ -1998,7 +1995,7 @@ SCREEN_UPDATE( sms1 )
 SCREEN_UPDATE( sms )
 {
 	sms_state *state = screen->machine().driver_data<sms_state>();
-	sms_vdp_update(state->m_vdp, bitmap, cliprect);
+	state->m_vdp->update_video(bitmap, cliprect);
 	return 0;
 }
 
@@ -2021,7 +2018,7 @@ SCREEN_UPDATE( gamegear )
 	int height = screen->height();
 	int x, y;
 
-	sms_vdp_update(state->m_vdp, state->m_tmp_bitmap, cliprect);
+	state->m_vdp->update_video(state->m_tmp_bitmap, cliprect);
 
 	// HACK: fake LCD persistence effect
 	// (it would be better to generalize this in the core, to be used for all LCD systems)

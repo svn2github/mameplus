@@ -80,6 +80,7 @@ ctrpllrp		// hack
 eyes			// (c) 1982 Digitrex Techstar + "Rockola presents"
 eyes2			// (c) 1982 Techstar + "Rockola presents"
 eyeszac			// (c) 1982 Zaccaria / bootleg
+birdiy			// (c) 1983 Mama Top
 mrtnt			// (c) 1983 Telko
 gorkans			// (c) 1984 Techstar
 eggor			// (c) 1983 Telko
@@ -2145,6 +2146,8 @@ aquajack		// B77 (c) 1990 Taito Corporation Japan (World)
 aquajacku		// B77 (c) 1990 Taito America Corporation (US)
 aquajackj		// B77 (c) 1990 Taito Corporation (Japan)
 spacegun		// C57 (c) 1990 Taito Corporation Japan (World)
+spacegunu		// C57 (c) 1990 Taito America Corporation (US)
+spacegunj		// C57 (c) 1990 Taito Corporation (Japan)
 dblaxle			// C78 (c) 1991 Taito America Corporation (US)
 pwheelsj		// C78 (c) 1991 Taito Corporation (Japan)
 racingb			// C84 (c) 1991 Taito Coropration ..
@@ -2782,7 +2785,7 @@ area88			//  8/1989 (c) 1989 (Japan)
 area88r			//  8/1989 (c) 1989 (Japan)
 ffight			// 12/1989 (c) 1989 (World)
 ffightu			// 12/1989 (c) 1989 (USA)
-ffightu1		// 12/1989 (c) 1989 (USA) (4 eprom instead of mask rom)
+ffightu1		// 12/1989 (c) 1989 (USA)
 ffightua		// 12/01/1990 (c) 1989 (USA)
 ffightub		// 13/06/1990 (c) 1989 (USA)
 ffightj			// 12/1989 (c) 1989 (Japan)
@@ -2851,7 +2854,6 @@ sf2ceea			// 13/03/1992 (c) 1992 (World)
 sf2ceua			// 13/03/1992 (c) 1992 (USA)
 sf2ceub			// 13/05/1992 (c) 1992 (USA)
 sf2ceuc			// 03/08/1992 (c) 1992 (USA)
-sf2ceud			// 03/08/1992 (c) 1992 (USA)
 sf2cej			// 13/05/1992 (c) 1992 (Japan)
 sf2rb			// hack
 sf2rb2			// hack
@@ -2909,8 +2911,8 @@ pnickj			// 08/06/1994 (c) 1994 Compile + Capcom license (Japan) not listed on C
 qtono2j			// 23/01/1995 (c) 1995 (Japan)
 pang3			// 01/06/1995 (c) 1995 Mitchell (Euro) not listed on Capcom's site
 pang3r1			// 11/05/1995 (c) 1995 Mitchell (Euro) not listed on Capcom's site
-pang3n			// 11/05/1995 (c) 1995 Mitchell (Euro) not listed on Capcom's site
 pang3j			// 11/05/1995 (c) 1995 Mitchell (Japan) not listed on Capcom's site
+pang3b			// bootleg
 megaman			// 06/10/1995 (c) 1995 (USA)
 megamana		// 06/10/1995 (c) 1995 (Asia)
 rockmanj		// 22/09/1995 (c) 1995 (Japan)

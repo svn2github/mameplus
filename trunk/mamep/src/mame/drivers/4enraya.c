@@ -222,7 +222,7 @@ static INPUT_PORTS_START( 4enraya )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN2 )
 INPUT_PORTS_END
 
-static INPUT_PORTS_START( unkpacg )  // guess
+static INPUT_PORTS_START( unkpacg )
 	PORT_START("DSW1")
 	PORT_DIPNAME( 0x01, 0x00, "0-0")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )

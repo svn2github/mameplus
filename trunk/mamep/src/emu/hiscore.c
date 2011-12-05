@@ -185,13 +185,11 @@ static int safe_to_load (running_machine &machine)
 	}
 	while (mem_range)
 	{
-		if (srcspace->read_byte(mem_range->addr) !=
-			mem_range->start_value)
+		if (srcspace->read_byte(mem_range->addr) != mem_range->start_value)
 		{
 			return 0;
 		}
-		if (srcspace->read_byte(mem_range->addr + mem_range->num_bytes - 1) !=
-			mem_range->end_value)
+		if (srcspace->read_byte(mem_range->addr + mem_range->num_bytes - 1) != mem_range->end_value)
 		{
 			return 0;
 		}
@@ -234,8 +232,7 @@ static void hiscore_load (running_machine &machine)
 				{
 					/*  this buffer will almost certainly be small
                         enough to be dynamically allocated, but let's
-                        avoid memory trashing just in case
-                    */
+                        avoid memory trashing just in case */
 					f.read(data, mem_range->num_bytes);
 					copy_to_memory (machine,mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
 					global_free (data);
@@ -267,8 +264,7 @@ static void hiscore_save (running_machine &machine)
 				{
 					/*  this buffer will almost certainly be small
                         enough to be dynamically allocated, but let's
-                        avoid memory trashing just in case
-                    */
+                        avoid memory trashing just in case */
 					copy_from_memory (machine, mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
 					f.write(data, mem_range->num_bytes);
 					global_free (data);
@@ -301,7 +297,8 @@ static TIMER_CALLBACK( hiscore_periodic )
 /* call hiscore_close when done playing game */
 void hiscore_close (running_machine &machine)
 {
-	if (state.hiscores_have_been_loaded) hiscore_save(machine);
+	if (state.hiscores_have_been_loaded)
+		hiscore_save(machine);
 	hiscore_free();
 }
 
@@ -323,22 +320,14 @@ void hiscore_init (running_machine &machine)
 
 		if (strstr(machine.system().source_file,"cinemat.c") > 0)
 		{
-			machine.cpu[mem_range->cpu]->memory().space(AS_DATA)->write_byte(mem_range->addr,
-				~mem_range->start_value
-			);
-			machine.cpu[mem_range->cpu]->memory().space(AS_DATA)->write_byte(mem_range->addr + mem_range->num_bytes-1,
-				~mem_range->end_value
-			);
+			machine.cpu[mem_range->cpu]->memory().space(AS_DATA)->write_byte(mem_range->addr, ~mem_range->start_value);
+			machine.cpu[mem_range->cpu]->memory().space(AS_DATA)->write_byte(mem_range->addr + mem_range->num_bytes-1, ~mem_range->end_value);
 			mem_range = mem_range->next;
 		}
 		else
 		{
-			machine.cpu[mem_range->cpu]->memory().space(AS_PROGRAM)->write_byte(mem_range->addr,
-				~mem_range->start_value
-			);
-			machine.cpu[mem_range->cpu]->memory().space(AS_PROGRAM)->write_byte(mem_range->addr + mem_range->num_bytes-1,
-				~mem_range->end_value
-			);
+			machine.cpu[mem_range->cpu]->memory().space(AS_PROGRAM)->write_byte(mem_range->addr, ~mem_range->start_value);
+			machine.cpu[mem_range->cpu]->memory().space(AS_PROGRAM)->write_byte(mem_range->addr + mem_range->num_bytes-1,~mem_range->end_value);
 			mem_range = mem_range->next;
 		}
 	}

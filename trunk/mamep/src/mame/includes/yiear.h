@@ -13,7 +13,8 @@ public:
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
 
-	int      m_yiear_nmi_enable;
+	UINT8      m_yiear_nmi_enable;
+	UINT8      m_yiear_irq_enable;
 };
 
 
@@ -25,3 +26,6 @@ WRITE8_HANDLER( yiear_control_w );
 PALETTE_INIT( yiear );
 VIDEO_START( yiear );
 SCREEN_UPDATE( yiear );
+
+READ8_DEVICE_HANDLER( yiear_speech_r );
+WRITE8_DEVICE_HANDLER( yiear_VLM5030_control_w );

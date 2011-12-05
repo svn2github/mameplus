@@ -551,83 +551,6 @@ static void sound_irq( device_t *device, int level )
 };*/
 
 
-/* Calendar Emulation */
-
-static UINT8 bcd( UINT8 data )
-{
-	return ((data / 10) << 4) | (data % 10);
-}
-
-static READ16_HANDLER( pgm_calendar_r )
-{
-	pgm_state *state = space->machine().driver_data<pgm_state>();
-	UINT8 calr = (state->m_cal_val & state->m_cal_mask) ? 1 : 0;
-
-	state->m_cal_mask <<= 1;
-	return calr;
-}
-
-static WRITE16_HANDLER( pgm_calendar_w )
-{
-	pgm_state *state = space->machine().driver_data<pgm_state>();
-
-	space->machine().base_datetime(state->m_systime);
-
-	state->m_cal_com <<= 1;
-	state->m_cal_com |= data & 1;
-	++state->m_cal_cnt;
-
-	if (state->m_cal_cnt == 4)
-	{
-		state->m_cal_mask = 1;
-		state->m_cal_val = 1;
-		state->m_cal_cnt = 0;
-
-		switch (state->m_cal_com & 0xf)
-		{
-			case 1: case 3: case 5: case 7: case 9: case 0xb: case 0xd:
-				state->m_cal_val++;
-				break;
-
-			case 0:
-				state->m_cal_val = bcd(state->m_systime.local_time.weekday); //??
-				break;
-
-			case 2:  //Hours
-				state->m_cal_val = bcd(state->m_systime.local_time.hour);
-				break;
-
-			case 4:  //Seconds
-				state->m_cal_val = bcd(state->m_systime.local_time.second);
-				break;
-
-			case 6:  //Month
-				state->m_cal_val = bcd(state->m_systime.local_time.month + 1); //?? not bcd in MVS
-				break;
-
-			case 8:
-				state->m_cal_val = 0; //Controls blinking speed, maybe milliseconds
-				break;
-
-			case 0xa: //Day
-				state->m_cal_val = bcd(state->m_systime.local_time.mday);
-				break;
-
-			case 0xc: //Minute
-				state->m_cal_val = bcd(state->m_systime.local_time.minute);
-				break;
-
-			case 0xe:  //Year
-				state->m_cal_val = bcd(state->m_systime.local_time.year % 100);
-				break;
-
-			case 0xf:  //Load Date
-				space->machine().base_datetime(state->m_systime);
-				break;
-		}
-	}
-}
-
 /*** Memory Maps *************************************************************/
 
 static ADDRESS_MAP_START( pgm_mem, AS_PROGRAM, 16)
@@ -1230,7 +1153,7 @@ static INPUT_PORTS_START( orlegend )
 	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( China ) )
-	PORT_CONFSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_CONFSETTING(      0x0002, "Japan (Alta license)" )
 	PORT_CONFSETTING(      0x0003, DEF_STR( Korea ) )
 	PORT_CONFSETTING(      0x0004, DEF_STR( Hong_Kong ) )
 	PORT_CONFSETTING(      0x0005, DEF_STR( World ) )
@@ -1251,7 +1174,7 @@ static INPUT_PORTS_START( orlegndc )
 	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( China ) )
-	PORT_CONFSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_CONFSETTING(      0x0002, "Japan (Alta license)" )
 	PORT_CONFSETTING(      0x0003, DEF_STR( Korea ) )
 	PORT_CONFSETTING(      0x0004, DEF_STR( Hong_Kong ) )
 	PORT_CONFSETTING(      0x0005, DEF_STR( World ) )
@@ -1286,7 +1209,7 @@ static INPUT_PORTS_START( orld105k )
 	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( China ) )
-	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_DIPSETTING(      0x0002, "Japan (Alta license)" )
 	PORT_DIPSETTING(      0x0003, DEF_STR( Korea ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Hong_Kong ) )
 	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
@@ -6014,7 +5937,7 @@ static DRIVER_INIT( olds )
 static void pgm_decode_kovlsqh2_tiles( running_machine &machine )
 {
 	int i, j;
-	UINT16 *src = (UINT16 *)(machine.region("tiles")->base() + 0x180000);
+	UINT16 *src = (UINT16 *)(machine.region("tiles")->base() + 0x400000);
 	UINT16 *dst = auto_alloc_array(machine, UINT16, 0x800000);
 
 	for (i = 0; i < 0x800000 / 2; i++)

@@ -1413,6 +1413,7 @@ void cli_frontend::execute_commands(const char *exename)
 		driver_switch::assign_drivers(m_options);
 #endif /* DRIVER_SWITCH */
 		validate_drivers(m_options);
+		validate_softlists(m_options);
 		return;
 	}
 
