@@ -3482,22 +3482,18 @@ static void BuildDataMap(void)
 	datamap_set_trackbar_range(properties_datamap, IDC_JSAT,        0.00,  1.00, (float)0.05);
 	datamap_set_trackbar_range(properties_datamap, IDC_SPEED,       0.00,  3.00, (float)0.01);
 	datamap_set_trackbar_range(properties_datamap, IDC_BEAM,        (float)0.10, 10.00, (float)0.10);
-#if 0
 	datamap_set_trackbar_range(properties_datamap, IDC_AUDIO_LATENCY, 1,  5, 1);
-#endif
 	datamap_set_trackbar_range(properties_datamap, IDC_VOLUME,      -32,  0, 1);
 	datamap_set_trackbar_range(properties_datamap, IDC_SECONDSTORUN, 0,  60, 1);
-#if 0
 	datamap_set_trackbar_range(properties_datamap, IDC_NUMSCREENS,  1,     4,    1);
 	datamap_set_trackbar_range(properties_datamap, IDC_PRESCALE,    1,     10,   1);
-	datamap_set_trackbar_range(properties_datamap, IDC_FSGAMMA,     0.0,   3.0,  0.1);
+	datamap_set_trackbar_range(properties_datamap, IDC_FSGAMMA,     0.0,   3.0,  (float)0.1);
 	datamap_set_trackbar_range(properties_datamap, IDC_FSBRIGHTNESS,0.00,  2.0,  (float)0.1);
 	datamap_set_trackbar_range(properties_datamap, IDC_FSCONTRAST,  0.0,   2.0,  (float)0.1);
-	datamap_set_trackbar_range(properties_datamap, IDC_GAMMA,       0.0,   3.0,  0.1);
+	datamap_set_trackbar_range(properties_datamap, IDC_GAMMA,       0.0,   3.0,  (float)0.1);
 	datamap_set_trackbar_range(properties_datamap, IDC_BRIGHTCORRECT,0.00, 2.0,  (float)0.1);
 	datamap_set_trackbar_range(properties_datamap, IDC_CONTRAST,    0.0,   2.0,  (float)0.1);
 	datamap_set_trackbar_range(properties_datamap, IDC_PAUSEBRIGHT, 0.00,  1.00, (float)0.05);
-#endif
 	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_ALPHA,  0.00,  1.00, (float)0.05);
 	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_CURV,   0.00,  1.00, (float)0.01);
 	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_SAT,    0.00,  4.00, (float)0.05);

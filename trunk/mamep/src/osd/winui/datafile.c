@@ -894,7 +894,8 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 
 	base = filename + strlen(filename);
 
-	for (gdrv = drv; gdrv && gdrv->name[0] && ((cl = driver_list::clone(*gdrv)) != -1); gdrv = &driver_list::driver(cl))
+	gdrv = drv;
+	while (gdrv && gdrv->name[0])
 	{
 		int i;
 
@@ -957,8 +958,8 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 					if (pdrv == gdrv)
 						break;
 
-					int cl = driver_list::clone(*pdrv);
-					if (cl !=-1) pdrv = &driver_list::driver(cl); else pdrv = NULL;
+					int g = driver_list::clone(*pdrv);
+					if (g !=-1) pdrv = &driver_list::driver(g); else pdrv = NULL;
 				} while (err && pdrv);
 
 				if (err) status = 0;
@@ -969,6 +970,9 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 			if (status)
 				return 0;
 		}
+
+		cl = driver_list::clone(*gdrv);
+		if (cl != -1) gdrv = &driver_list::driver(cl); else gdrv = NULL;
 	}
 
 	return 1;
