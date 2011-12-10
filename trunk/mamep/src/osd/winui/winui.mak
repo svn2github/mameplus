@@ -187,10 +187,6 @@ ifneq ($(USE_TRANS_UI),)
 RCDEFS += -DTRANS_UI
 endif
 
-ifneq ($(USE_CONFIRM_QUIT),)
-RCDEFS += -DCONFIRM_QUIT
-endif
-
 ifneq ($(USE_JOYSTICK_ID),)
 RCDEFS += -DJOYSTICK_ID
 endif

@@ -250,7 +250,6 @@ static void menu_select_game_build_driver_list(ui_menu *menu, select_game_state 
 static void menu_select_game_custom_render(running_machine &machine, ui_menu *menu, void *state, void *selectedref, float top, float bottom, float x, float y, float x2, float y2);
 
 /* menu helpers */
-static void menu_render_triangle(bitmap_t &dest, const bitmap_t &source, const rectangle &sbounds, void *param);
 static void menu_settings_custom_render_one(render_container *container, float x1, float y1, float x2, float y2, const dip_descriptor *dip, UINT32 selectedmask);
 static void menu_settings_custom_render(running_machine &machine, ui_menu *menu, void *state, void *selectedref, float top, float bottom, float x, float y, float x2, float y2);
 
