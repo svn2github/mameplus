@@ -10441,6 +10441,28 @@ ROM_START( kf2k2ps2 )
 	ROM_LOAD16_BYTE( "265ps2-c10d.bin",0x4000001, 0x800000, CRC(9832713d) SHA1(899c00ea88ef536441b9358b4620402ca9851cf5) ) /* Plane 2,3 */
 ROM_END
 
+ROM_START( lhcdb )
+	ROM_REGION( 0x100000, "maincpu", 0 )
+	ROM_LOAD16_WORD_SWAP( "lhcdb-p1.bin", 0x000000, 0x100000, CRC(83e7b181) SHA1(eb13909c0b062d56d20cbdfe75abf6139eae9ee0) )
+
+	NEO_SFIX_128K( "lhcdb-s1.bin", CRC(298495d6) SHA1(c217aba6c1916d2e5337bb5c17d979b11a53582e) )
+
+	NEO_BIOS_AUDIO_128K( "lhcdb-m1.bin", CRC(d9f6c153) SHA1(c08f7ca288be1c34f4b33ed13abd805b5cd66d4e) )
+
+	ROM_REGION( 0xbc3500, "ymsnd", 0 )
+	ROM_LOAD( "lhcdb-v1.bin", 0x000000, 0x400000, CRC(de563ec3) SHA1(cd0f1a436cdac679792fc78906e718c78369b15a) )
+	ROM_LOAD( "lhcdb-v2.bin", 0x400000, 0x400000, CRC(93478033) SHA1(a03e0fcb7f51c66ec0bc5d164744db00b96973c2) )
+	ROM_LOAD( "lhcdb-v3.bin", 0x800000, 0x3c3500, CRC(f0ad87b8) SHA1(f992e84c6cbbc3cab79747a2ca4d646d18bebcbd) )
+
+	NO_DELTAT_REGION
+
+	ROM_REGION( 0x1000000, "sprites", 0 )
+	ROM_LOAD16_BYTE( "lhcdb-c1.bin", 0x000000, 0x400000, CRC(554e6b73) SHA1(3637a8a4474e33eb75ac4a4ce0815f6a514fe337) )
+	ROM_LOAD16_BYTE( "lhcdb-c2.bin", 0x000001, 0x400000, CRC(7c84b0fc) SHA1(cbd7a7865113e4f21f2b1f990a077fa5c2eae894) )
+	ROM_LOAD16_BYTE( "lhcdb-c3.bin", 0x800000, 0x400000, CRC(28ec7555) SHA1(f094739272e6017a7193fa96cde3c1ed573a66b6) )
+	ROM_LOAD16_BYTE( "lhcdb-c4.bin", 0x800001, 0x400000, CRC(8b7c236b) SHA1(1cb3fe81f433a2180c85be935e340da3c55aafdb) )
+ROM_END
+
 
 
 /****************************************************************************/
@@ -12087,7 +12109,7 @@ GAME( 1994, fightfeva, fightfev, neogeo,   neogeo,   neogeo,   ROT0, "Viccom", "
 GAME( 1994, pspikes2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Video System Co.", "Power Spikes II (NGM-068)", GAME_SUPPORTS_SAVE )
 GAME( 1994, sonicwi2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Video System Co.", "Aero Fighters 2 / Sonic Wings 2", GAME_SUPPORTS_SAVE )
 GAME( 1995, sonicwi3,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Video System Co.", "Aero Fighters 3 / Sonic Wings 3", GAME_SUPPORTS_SAVE )
-GAME( 1997, popbounc, neogeo,   neogeo,   popbounc, popbounc, ROT0, "Video System Co.", "Pop 'n Bounce / Gapporin", GAME_SUPPORTS_SAVE )
+GAME( 1997, popbounc,  neogeo,   neogeo,   popbounc, popbounc, ROT0, "Video System Co.", "Pop 'n Bounce / Gapporin", GAME_SUPPORTS_SAVE )
 
 /* Visco */
 GAME( 1992, androdun,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Andro Dunos (NGM-049)(NGH-049)", GAME_SUPPORTS_SAVE )
@@ -12142,10 +12164,13 @@ GAME( 2000, bangbedp, bangbead, neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Ba
 /* CD to MVS Conversion */
 GAME( 1996, zintrkcd, zintrckb, neogeo,   neogeo,   neogeo,   ROT0, "hack", "Zintrick / Oshidashi Zentrix (CD to MVS Conversion, Hack)", GAME_SUPPORTS_SAVE )
 GAME( 1995, fr2ch,    neogeo,   neogeo,   neogeo,   fr2ch,    ROT0, "hack", "Idol Mahjong - final romance 2 (CD to MVS Conversion, Hack)", GAME_SUPPORTS_SAVE )
-GAME( 1994, sthoopcd, strhoop,  neogeo,    neogeo,   neogeo,   ROT0, "hack / bootleg", "Street Hoop / Street Slam / Dunk Dream (CD to MVS Conversion, Hack)", GAME_SUPPORTS_SAVE )
+GAME( 1994, sthoopcd, strhoop,  neogeo,   neogeo,   neogeo,   ROT0, "hack / bootleg", "Street Hoop / Street Slam / Dunk Dream (CD to MVS Conversion, Hack)", GAME_SUPPORTS_SAVE )
 
 /* Wii Virtual Console to MVS Conversion */
 //GAME( 1996, ironclad, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Ironclad / Choutetsu Brikin'ger (Wii Virtual Console to MVS Conversion)", GAME_SUPPORTS_SAVE )
+
+/* AES Conversion */
+GAME( 2007, lhcdb,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "NG:Dev.Team", "Last Hope (AES Beta Conversion)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 
 /* Neo Geo decrypted */
 GAME( 1999, kof99d,   kof99,    neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (not encrypted P, decrypted C)", GAME_SUPPORTS_SAVE )

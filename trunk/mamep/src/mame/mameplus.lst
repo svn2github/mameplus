@@ -91,6 +91,9 @@ bangbedp		// 0259 prototype
 zintrkcd		// 0211 hack - CD to MVS Conversion by Razoola
 fr2ch			// 0098 hack - CD to MVS Conversion
 
+// AES Conversion
+lhcdb
+
 #ifndef NCP
 // Konami "Nemesis hardware" games
 spclone			// GX587 (c) 1986 based
