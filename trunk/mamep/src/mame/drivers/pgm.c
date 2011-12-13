@@ -299,7 +299,6 @@ Notes:
 #include "cpu/z80/z80.h"
 #include "cpu/m68000/m68000.h"
 #include "cpu/arm7/arm7.h"
-#include "deprecat.h"
 #include "sound/ics2115.h"
 #include "cpu/arm7/arm7core.h"
 #include "machine/nvram.h"
@@ -1150,7 +1149,7 @@ static INPUT_PORTS_START( orlegend )
 
 	PORT_MODIFY("Region")
 #if PGMREGIONHACK
-	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0000, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0002, "Japan (Alta license)" )
@@ -1171,7 +1170,7 @@ static INPUT_PORTS_START( orlegndc )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")
-	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0000, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0002, "Japan (Alta license)" )
@@ -1206,7 +1205,7 @@ static INPUT_PORTS_START( orld105k )
 
 	PORT_MODIFY("Region")
 #if PGMREGIONHACK
-	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0000, DEF_STR( Region ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( China ) )
 	PORT_DIPSETTING(      0x0002, "Japan (Alta license)" )
@@ -1224,7 +1223,7 @@ static INPUT_PORTS_START( sango )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_CONFNAME( 0x000f, 0x0005, DEF_STR( Region ) )
+	PORT_CONFNAME( 0x000f, 0x0001, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0002, "Japan (Alta license)" )
@@ -1254,7 +1253,7 @@ static INPUT_PORTS_START( olds )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_CONFNAME( 0x000f, 0x0006, DEF_STR( Region ) )
+	PORT_CONFNAME( 0x000f, 0x0001, DEF_STR( Region ) )
 	/* includes the following regions:
     1 = taiwan, 2 = china, 3 = japan (title = orlegend special),
     4 = korea, 5 = hong kong, 6 = world */
@@ -1270,7 +1269,7 @@ static INPUT_PORTS_START( killbld )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x00ff, 0x0021, "Region (not currently working)" ) // different regions supply different protection code sequences, we only have the China one ATM
+	PORT_DIPNAME( 0x00ff, 0x0016, "Region (not currently working)" ) // different regions supply different protection code sequences, we only have the China one ATM
 	PORT_DIPSETTING(      0x0016, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0017, DEF_STR( China ) )
 	PORT_DIPSETTING(      0x0018, DEF_STR( Hong_Kong ) )
@@ -1289,7 +1288,7 @@ static INPUT_PORTS_START( photoy2k )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_CONFNAME( 0x000f, 0x0003, DEF_STR( Region ) )
+	PORT_CONFNAME( 0x000f, 0x0000, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0002, "Japan (Alta license)" )
@@ -1303,7 +1302,7 @@ static INPUT_PORTS_START( kov2 )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0001, DEF_STR( Region ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( China ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0002, "Japan (Alta license)" )
@@ -1316,7 +1315,7 @@ static INPUT_PORTS_START( martmast )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0001, DEF_STR( Region ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( China ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0002, "Japan (Alta license)" )
@@ -1330,12 +1329,12 @@ static INPUT_PORTS_START( martmastc )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0001, DEF_STR( Region ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( China ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0002, "Japan (Alta license)" )
 	PORT_DIPSETTING(      0x0003, DEF_STR( Korea ) )
-	PORT_DIPSETTING(      0x0004, DEF_STR( Hong_Kong ) )
+	PORT_DIPSETTING(      0x0004, DEF_STR( Hong_Kong) )
 	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
 	PORT_DIPSETTING(      0x0006, DEF_STR( USA ) )
 INPUT_PORTS_END
@@ -1446,7 +1445,7 @@ static INPUT_PORTS_START( ddp2 )
     PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 */
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_CONFNAME( 0x000f, 0x0005, DEF_STR( Region ) )
+	PORT_CONFNAME( 0x000f, 0x0001, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0002, "Japan (Cave license)" )
@@ -1459,7 +1458,7 @@ static INPUT_PORTS_START( oldsplus )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_CONFNAME( 0x000f, 0x0005, DEF_STR( Region ) )
+	PORT_CONFNAME( 0x000f, 0x0006, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0002, DEF_STR( Japan ) )
 	PORT_CONFSETTING(      0x0003, DEF_STR( Korea ) )
@@ -1512,43 +1511,45 @@ GFXDECODE_END
 
 /* only dragon world 2 NEEDs irq4, Puzzli 2 explicitly doesn't want it, what
    is the source? maybe the protection device? */
-static INTERRUPT_GEN( drgw_interrupt )
+static TIMER_DEVICE_CALLBACK( drgw_interrupt )
 {
-	if (cpu_getiloops(device) == 0)
-	{
-		//printf("vbl\n");
-		device_set_input_line(device, 6, HOLD_LINE);
-	}
-	else
-		device_set_input_line(device, 4, HOLD_LINE);
+	pgm_state *state = timer.machine().driver_data<pgm_state>();
+	int scanline = param;
+
+	if(scanline == 224)
+		device_set_input_line(state->m_maincpu, 6, HOLD_LINE);
+
+	if(scanline == 0)
+		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
 }
 
 static MACHINE_START( pgm )
 {
 	pgm_state *state = machine.driver_data<pgm_state>();
 
-	machine.base_datetime(state->m_systime);
+//	machine.base_datetime(state->m_systime);
 
+	state->m_maincpu = machine.device<cpu_device>("maincpu");
 	state->m_soundcpu = machine.device<cpu_device>("soundcpu");
 	state->m_prot = machine.device<cpu_device>("prot");
 	state->m_ics = machine.device("ics");
 
-	state->save_item(NAME(state->m_cal_val));
-	state->save_item(NAME(state->m_cal_mask));
-	state->save_item(NAME(state->m_cal_com));
-	state->save_item(NAME(state->m_cal_cnt));
+//	state->save_item(NAME(state->m_cal_val));
+//	state->save_item(NAME(state->m_cal_mask));
+//	state->save_item(NAME(state->m_cal_com));
+//	state->save_item(NAME(state->m_cal_cnt));
 }
 
 static MACHINE_RESET( pgm )
 {
-	pgm_state *state = machine.driver_data<pgm_state>();
+//	pgm_state *state = machine.driver_data<pgm_state>();
 
 	cputag_set_input_line(machine, "soundcpu", INPUT_LINE_HALT, ASSERT_LINE);
 
-	state->m_cal_val = 0;
-	state->m_cal_mask = 0;
-	state->m_cal_com = 0;
-	state->m_cal_cnt = 0;
+//	state->m_cal_val = 0;
+//	state->m_cal_mask = 0;
+//	state->m_cal_com = 0;
+//	state->m_cal_cnt = 0;
 }
 
 
@@ -1627,10 +1628,13 @@ static MACHINE_CONFIG_DERIVED( orld105k, pgm )
 MACHINE_CONFIG_END
 #endif
 
-static MACHINE_CONFIG_DERIVED( drgw2, pgm )
+// needs an extra IRQ, puzzli2 doesn't want this irq!
 
-	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT_HACK(drgw_interrupt,2) // needs an extra IRQ, puzzli2 doesn't want this irq!
+static MACHINE_CONFIG_DERIVED( drgw2, pgm )
+	MCFG_DEVICE_REMOVE("maincpu")
+	MCFG_CPU_ADD("maincpu", M68000, 20000000)
+	MCFG_CPU_PROGRAM_MAP(pgm_mem)
+	MCFG_TIMER_ADD_SCANLINE("scantimer", drgw_interrupt, "screen", 0, 1)
 MACHINE_CONFIG_END
 
 static MACHINE_RESET( killbld );
@@ -1648,9 +1652,11 @@ static MACHINE_RESET( dw3 );
 
 static MACHINE_CONFIG_DERIVED( dw3, pgm )
 
-	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_PROGRAM_MAP(killbld_mem)
-	MCFG_CPU_VBLANK_INT_HACK(drgw_interrupt,2) // needs an extra IRQ, puzzli2 doesn't want this irq!
+		MCFG_DEVICE_REMOVE("maincpu")
+		MCFG_CPU_ADD("maincpu", M68000, 20000000)
+		MCFG_CPU_PROGRAM_MAP(pgm_mem)
+		MCFG_TIMER_ADD_SCANLINE("scantimer", drgw_interrupt, "screen", 0, 1)
+
 
 	MCFG_MACHINE_RESET(dw3)
 
@@ -1679,9 +1685,11 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( kov_disabled_arm, pgm )
 
-	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_PROGRAM_MAP(kovsh_mem)
-	MCFG_CPU_VBLANK_INT_HACK(drgw_interrupt,2) // needs an extra IRQ, puzzli2 doesn't want this irq!
+	MCFG_DEVICE_REMOVE("maincpu")
+	MCFG_CPU_ADD("maincpu", M68000, 20000000)
+	MCFG_CPU_PROGRAM_MAP(pgm_mem)
+	MCFG_TIMER_ADD_SCANLINE("scantimer", drgw_interrupt, "screen", 0, 1)
+
 
 	/* protection CPU */
 	MCFG_CPU_ADD("prot", ARM7, 20000000)	// 55857E/F/G
@@ -1713,9 +1721,10 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( svg, pgm )
 
-	MCFG_CPU_MODIFY("maincpu")
+	MCFG_DEVICE_REMOVE("maincpu")
+	MCFG_CPU_ADD("maincpu", M68000, 20000000)
 	MCFG_CPU_PROGRAM_MAP(svg_68k_mem)
-	MCFG_CPU_VBLANK_INT_HACK(drgw_interrupt,2) // needs an extra IRQ, puzzli2 doesn't want this irq!
+	MCFG_TIMER_ADD_SCANLINE("scantimer", drgw_interrupt, "screen", 0, 1)
 
 	/* protection CPU */
 	MCFG_CPU_ADD("prot", ARM7, 20000000)	// 55857G
@@ -1723,11 +1732,15 @@ static MACHINE_CONFIG_DERIVED( svg, pgm )
 MACHINE_CONFIG_END
 
 
-static MACHINE_CONFIG_START( oldsplus, oldsplus_state )
+static MACHINE_CONFIG_START( oldsplus, pgm_state )
+
 	MCFG_FRAGMENT_ADD(pgmbase)
 	
-	MCFG_CPU_MODIFY("maincpu")
-	MCFG_CPU_VBLANK_INT_HACK(drgw_interrupt,2) // needs an extra IRQ, puzzli2 doesn't want this irq!
+	MCFG_DEVICE_REMOVE("maincpu")
+	MCFG_CPU_ADD("maincpu", M68000, 20000000)
+	MCFG_CPU_PROGRAM_MAP(pgm_mem)
+	MCFG_TIMER_ADD_SCANLINE("scantimer", drgw_interrupt, "screen", 0, 1)
+
 
 //  Simulated for now
 //	MCFG_CPU_ADD("prot", ARM7, 20000000)
@@ -1771,9 +1784,8 @@ static MACHINE_CONFIG_START( cavepgm, cavepgm_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000, 20000000)
-
 	MCFG_CPU_PROGRAM_MAP(cavepgm_mem)
-	MCFG_CPU_VBLANK_INT_HACK(drgw_interrupt,2)
+	MCFG_TIMER_ADD_SCANLINE("scantimer", drgw_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("soundcpu", Z80, 33868800/4)
 	MCFG_CPU_PROGRAM_MAP(z80_mem)

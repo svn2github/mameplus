@@ -92,7 +92,7 @@ Philips VG-8010 - MSX1 - vg8010
 Philips VG-8010F - MSX1 - vg8010f
 Philips VG-8020-00 - MSX1 - vg802000
 Philips VG-8020-20 - MSX1 - vg802020
-Philips VG-8020-40 - MSX1 -
+Philips VG-8020-40 - MSX1 - 
 Philips VG-8020F - MSX1 - vg8020f
 Philips VG-8230 - MSX2 - vg8230
 Philips VG-8230J - MSX2 - vg8230j
@@ -324,7 +324,6 @@ PCB Layouts missing
 
 #include "emu.h"
 #include "cpu/z80/z80.h"
-#include "deprecat.h"
 #include "machine/i8255.h"
 #include "machine/rp5c01.h"
 #include "machine/wd17xx.h"
@@ -1191,7 +1190,7 @@ static MACHINE_CONFIG_START( msx2, msx_state )
 	MCFG_CPU_ADD("maincpu", Z80, 3579545)		  /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(msx_memory_map)
 	MCFG_CPU_IO_MAP(msx2_io_map)
-	MCFG_CPU_VBLANK_INT_HACK(msx2_interrupt, 262)
+	MCFG_TIMER_ADD_SCANLINE("scantimer", msx2_interrupt, "screen", 0, 1)
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
 	MCFG_MACHINE_START( msx2 )
@@ -1771,7 +1770,7 @@ MSX_LAYOUT_INIT (spc800)
 	MSX_LAYOUT_SLOT (3, 0, 0, 4, CARTRIDGE2, 0x0000, 0x0000)
 MSX_LAYOUT_END
 
-/* MSX - Sanyo MPC-64 */
+/*MSX - Sanyo MPC-64*/
 
 ROM_START (mpc64)
 	ROM_REGION (0x8000, "maincpu", 0)
@@ -4253,7 +4252,7 @@ MSX_LAYOUT_END
 MSX_DRIVER_LIST
   /* MSX 1 */
 	MSX_DRIVER (msx)
-	MSX_DRIVER (ax170)
+  MSX_DRIVER (ax170)
 	MSX_DRIVER (canonv10)
 	MSX_DRIVER (canonv20)
 	MSX_DRIVER (dpc100)
@@ -4442,11 +4441,11 @@ COMP(1983, nms801,	  msx,	0,	msx_pal,  msx,      msx,     "Philips", "NMS-801" ,
 COMP(1984, vg8000,  msx,	0,	msx_ntsc, msx,      msx,     "Philips",	 "VG-8000" , GAME_NOT_WORKING)
 COMP(1984, vg8010,  msx,	0,	msx_ntsc, msx,      msx,     "Philips",	 "VG-8010" , GAME_NOT_WORKING)
 COMP(1984, vg8010f,  msx,	0,	msx_ntsc, msx,      msx,     "Philips",	 "VG-8010F" , GAME_NOT_WORKING)
-COMP(1985, vg802000,  msx,	0,	msx_ntsc, msx,      msx,     "Philips",	 "VG-8020-00" , 0)
+COMP(1985, vg802000, msx,	0,	msx_ntsc, msx,      msx,     "Philips",	 "VG-8020-00" , 0)
 COMP(1985, vg802020, msx,	0,	msx_ntsc, msx,      msx,     "Philips",	 "VG-8020-20" , 0)
 COMP(19??, vg8020f,  msx,   0,  msx_pal,  msx,      msx,     "Philips",  "VG-8020F", GAME_NOT_WORKING)
 COMP(1985, piopx7,	  msx,	0,	msx_pal,  msx,      msx,     "Pioneer",	 "PX-07" , 0)
-COMP(19??, spc800,    msx,  0,  msx_ntsc, msx,      msx,     "Samsung",  "SPC-800", GAME_NOT_WORKING)
+COMP(19??, spc800,   msx,  0,  msx_ntsc, msx,      msx,     "Samsung",  "SPC-800", GAME_NOT_WORKING)
 COMP(1985, mpc64,    msx,	0,  msx_ntsc, msxjp,    msx,     "Sanyo", "MPC-64" , 0)
 COMP(1985, mpc100,	  msx,	0,	msx_pal,  msx,      msx,     "Sanyo",	 "MPC-100" , 0)
 COMP(1983, phc28l,   msx,   0,  msx_pal,  msx,      msx,     "Sanyo", "PHC-28L", GAME_NOT_WORKING)

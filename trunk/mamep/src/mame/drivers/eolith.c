@@ -49,44 +49,41 @@
 
 -----------------------------------------------------------------------------
  Original (Not emulation) Bugs:
- 
+
  - hidctch3 (Hidden Catch 3)
 
-	 the text shown when you start a game is flipped or
-	 clipped wrongly
+     the text shown when you start a game is flipped or
+     clipped wrongly
 
  - candy (Candy Candy)
 
-	 'Ready, Go' is displayed before cutting to the How To Play screen,
-	 this flow seems illogical, but is correct.
-	 The How To Play screen can't be skipped with the start button
-	 unless there is an additional credit inserted.
-	 There are some bad pixels at the top right of the How To Play text
+     'Ready, Go' is displayed before cutting to the How To Play screen,
+     this flow seems illogical, but is correct.
+     The How To Play screen can't be skipped with the start button
+     unless there is an additional credit inserted.
+     There are some bad pixels at the top right of the How To Play text
 
 -----------------------------------------------------------------------------
  Driver (Emulation) Bugs:
 
   - candy (Candy Candy)
 
-	  VRAM erasing doesn't work properly in this game with the logic we're
-	  using in eolith_vram_w.  There are various screens, such as the how
-	  to play screen and high score screen where you can see graphics which
-	  should have been erased.  It has been verified that these get erased
-	  correctly on the real hardware.
+      VRAM erasing doesn't work properly in this game with the logic we're
+      using in eolith_vram_w.  There are various screens, such as the how
+      to play screen and high score screen where you can see graphics which
+      should have been erased.  It has been verified that these get erased
+      correctly on the real hardware.
 
   - racooon (Raccoon World)
 
-	  Game animation seems too fast?
+      Game animation seems too fast?
 
  *********************************************************************/
 
 #include "emu.h"
 #include "cpu/e132xs/e132xs.h"
-#include "deprecat.h"
 #include "machine/eeprom.h"
 #include "includes/eolith.h"
-
-
 #include "includes/eolithsp.h"
 
 // It's configured for 512 bytes
@@ -397,7 +394,7 @@ INPUT_PORTS_END
 static MACHINE_CONFIG_START( eolith45, eolith_state )
 	MCFG_CPU_ADD("maincpu", E132N, 45000000)		 /* 45 MHz */
 	MCFG_CPU_PROGRAM_MAP(eolith_map)
-	MCFG_CPU_VBLANK_INT_HACK(eolith_speedup,262)
+	MCFG_TIMER_ADD_SCANLINE("scantimer", eolith_speedup, "screen", 0, 1)
 
 	/* sound cpu */
 
@@ -406,9 +403,9 @@ static MACHINE_CONFIG_START( eolith45, eolith_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
+	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MCFG_SCREEN_SIZE(512, 512)
+	MCFG_SCREEN_SIZE(512, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
 	MCFG_SCREEN_UPDATE(eolith)
 

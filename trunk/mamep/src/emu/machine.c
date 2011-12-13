@@ -316,6 +316,7 @@ void running_machine::start()
 	image_init(*this);
 	tilemap_init(*this);
 	crosshair_init(*this);
+	network_init(*this);
 
 	// initialize the debugger
 	if ((debug_flags & DEBUG_FLAG_ENABLED) != 0)

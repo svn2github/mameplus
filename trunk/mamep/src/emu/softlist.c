@@ -762,7 +762,7 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 						else if ( str_loadflag && !strcmp(str_loadflag, "fill") )
 						{
 							/* Handle 'fill' loadflag */
-							add_rom_entry( swlist, NULL, (const char*)(FPTR)atoi(str_value), offset, length, ROMENTRYTYPE_FILL );
+							add_rom_entry( swlist, NULL, (const char*)(FPTR)(strtol( str_value, NULL, 0 ) & 0xff), offset, length, ROMENTRYTYPE_FILL );
 						}
 						else
 						{
@@ -1851,10 +1851,9 @@ void validate_softlists(emu_options &options)
 								}
 
 								/* check for duplicate descriptions */
-								if (descriptions.add(swinfo->longname, swinfo, FALSE) == TMERR_DUPLICATE)
+								if (descriptions.add(astring(swinfo->longname).tolower().cstr(), swinfo, FALSE) == TMERR_DUPLICATE)
 								{
-									software_info *match = names.find(swinfo->shortname);
-									mame_printf_error("%s: %s is a duplicate description (%s)\n", list->file->filename(), swinfo->longname, match->longname);
+									mame_printf_error("%s: %s is a duplicate description (%s)\n", list->file->filename(), swinfo->longname, swinfo->shortname);
 									error = TRUE;
 								}
 

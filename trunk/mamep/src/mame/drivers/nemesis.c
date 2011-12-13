@@ -40,7 +40,6 @@ So this is the correct behavior of real hardware, not an emulation bug.
 
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
-#include "deprecat.h"
 #include "cpu/z80/z80.h"
 #include "sound/ay8910.h"
 #include "sound/2151intf.h"
@@ -61,42 +60,44 @@ static INTERRUPT_GEN( nemesis_interrupt )
 		device_set_input_line(device, 1, HOLD_LINE);
 }
 
-static INTERRUPT_GEN( konamigt_interrupt )
+static TIMER_DEVICE_CALLBACK( konamigt_interrupt )
 {
-	nemesis_state *state = device->machine().driver_data<nemesis_state>();
+	nemesis_state *state = timer.machine().driver_data<nemesis_state>();
+	int scanline = param;
 
-	if (cpu_getiloops(device) == 0)
+	if(scanline == 240)
 	{
-		if ((state->m_irq_on) && (state->m_gx400_irq1_cnt++ & 1))
-			device_set_input_line(device, 1, HOLD_LINE);
+		if ((state->m_irq_on) && ((timer.machine().primary_screen->frame_number() & 1) == 0))
+			device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
 	}
-	else
+	else if(scanline == 0)
 	{
 		if (state->m_irq2_on)
-			device_set_input_line(device, 2, HOLD_LINE);
+			device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
 	}
 }
 
-static INTERRUPT_GEN( gx400_interrupt )
+static TIMER_DEVICE_CALLBACK( gx400_interrupt )
 {
-	nemesis_state *state = device->machine().driver_data<nemesis_state>();
+	nemesis_state *state = timer.machine().driver_data<nemesis_state>();
+	int scanline = param;
 
-	switch (cpu_getiloops(device))
+	if(scanline == 240)
 	{
-		case 0:
+		if ((state->m_irq_on) && ((timer.machine().primary_screen->frame_number() & 1) == 0))
+			device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+	}
+
+	if(scanline == 0)
+	{
 			if (state->m_irq2_on)
-				device_set_input_line(device, 2, HOLD_LINE);
-			break;
+			device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+	}
 
-		case 1:
-			if ((state->m_irq1_on) && (state->m_gx400_irq1_cnt++ & 1))
-				device_set_input_line(device, 1, HOLD_LINE);
-			break;
-
-		case 2:
+	if(scanline == 120)
+	{
 			if (state->m_irq4_on)
-				device_set_input_line(device, 4, HOLD_LINE);
-			break;
+			device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
 	}
 }
 
@@ -1827,7 +1828,7 @@ static MACHINE_CONFIG_START( gx400, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)     /* 9.216MHz */
 	MCFG_CPU_PROGRAM_MAP(gx400_map)
-	MCFG_CPU_VBLANK_INT_HACK(gx400_interrupt,3)
+	MCFG_TIMER_ADD_SCANLINE("scantimer", gx400_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80,14318180/4)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(gx400_sound_map)
@@ -1874,7 +1875,7 @@ static MACHINE_CONFIG_START( konamigt, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
 	MCFG_CPU_PROGRAM_MAP(konamigt_map)
-	MCFG_CPU_VBLANK_INT_HACK(konamigt_interrupt,2)
+	MCFG_TIMER_ADD_SCANLINE("scantimer", konamigt_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80,14318180/4)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
@@ -1917,7 +1918,7 @@ static MACHINE_CONFIG_START( rf2_gx400, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)     /* 9.216MHz */
 	MCFG_CPU_PROGRAM_MAP(rf2_gx400_map)
-	MCFG_CPU_VBLANK_INT_HACK(gx400_interrupt,3)
+	MCFG_TIMER_ADD_SCANLINE("scantimer", gx400_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80,14318180/4)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(gx400_sound_map)
@@ -2160,7 +2161,7 @@ static MACHINE_CONFIG_START( hcrash, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/3)         /* 6.144MHz */
 	MCFG_CPU_PROGRAM_MAP(hcrash_map)
-	MCFG_CPU_VBLANK_INT_HACK(konamigt_interrupt,2)
+	MCFG_TIMER_ADD_SCANLINE("scantimer", konamigt_interrupt, "screen", 0, 1)
 
 	MCFG_CPU_ADD("audiocpu", Z80,14318180/4)       /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(sal_sound_map)
@@ -2927,7 +2928,7 @@ static MACHINE_CONFIG_START( bubsys, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)     /* 9.216MHz */
 	MCFG_CPU_PROGRAM_MAP(gx400_map)
-	MCFG_CPU_VBLANK_INT_HACK(gx400_interrupt,3)
+//	MCFG_TIMER_ADD_SCANLINE("scantimer", gx400_interrupt, "screen", 0, 1)
 	MCFG_DEVICE_DISABLE()
 
 	MCFG_CPU_ADD("audiocpu", Z80,14318180/4)        /* 3.579545 MHz */

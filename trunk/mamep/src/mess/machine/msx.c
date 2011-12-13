@@ -130,13 +130,13 @@ DEVICE_IMAGE_LOAD (msx_cart)
 				{ "LZ93A13",			true,		SLOT_ASCII8_SRAM },
 				{ "LZ93A13-16",			false,		SLOT_ASCII16 },
 				{ "LZ93A13-16",			true,		SLOT_ASCII16_SRAM },
-				{ "M60002-0125SP-16",	false,		SLOT_ASCII16 },
-				{ "M60002-0125SP-16",	true,		SLOT_ASCII16_SRAM },
+				{ "M60002-0125SP-16",		false,		SLOT_ASCII16 },
+				{ "M60002-0125SP-16",		true,		SLOT_ASCII16_SRAM },
 				{ "IREM TAM-S1",		false,		SLOT_RTYPE },
-				{ "MR6401",				false,		SLOT_ASCII16 },
+				{ "MR6401",			false,		SLOT_ASCII16 },
 				{ "NEOS MR6401",		false,		SLOT_ASCII8 },
-				{ "BS6202",				false,		SLOT_ASCII8 },
-				{ "BS6101",				false,		SLOT_ASCII8 },
+				{ "BS6202",			false,		SLOT_ASCII8 },
+				{ "BS6101",			false,		SLOT_ASCII8 },
 				{ "BS6101-16",			false,		SLOT_ASCII16 },
 			};
 
@@ -549,11 +549,11 @@ DRIVER_INIT( msx )
 	z80_set_cycle_tables( machine.device("maincpu"), cc_op, cc_cb, cc_ed, cc_xy, cc_xycb, cc_ex );
 }
 
-INTERRUPT_GEN( msx2_interrupt )
+TIMER_DEVICE_CALLBACK( msx2_interrupt )
 {
-	v9938_set_sprite_limit(0, input_port_read(device->machine(), "DSW") & 0x20);
-	v9938_set_resolution(0, input_port_read(device->machine(), "DSW") & 0x03);
-	v9938_interrupt(device->machine(), 0);
+	v9938_set_sprite_limit(0, input_port_read(timer.machine(), "DSW") & 0x20);
+	v9938_set_resolution(0, input_port_read(timer.machine(), "DSW") & 0x03);
+	v9938_interrupt(timer.machine(), 0);
 }
 
 INTERRUPT_GEN( msx_interrupt )
@@ -585,43 +585,43 @@ READ8_HANDLER ( msx_psg_port_a_r )
 	data = (cassette_device_image(space->machine())->input() > 0.0038 ? 0x80 : 0);
 
 	if ( (state->m_psg_b ^ input_port_read(space->machine(), "DSW") ) & 0x40)
-	{
+		{
 		/* game port 2 */
 		UINT8 inp = input_port_read(space->machine(), "JOY1");
 		if ( !(inp & 0x80) )
-		{
+			{
 			/* joystick */
 			data |= ( inp & 0x7f );
-		}
+			}
 		else
-		{
+			{
 			/* mouse */
 			data |= ( inp & 0x70 );
 			if (state->m_mouse_stat[1] < 0)
 				data |= 0xf;
 			else
 				data |= ~(state->m_mouse[1] >> (4*state->m_mouse_stat[1]) ) & 15;
+			}
 		}
-	}
 	else
-	{
+		{
 		/* game port 1 */
 		UINT8 inp = input_port_read(space->machine(), "JOY0");
 		if ( !(inp & 0x80) )
-		{
+			{
 			/* joystick */
 			data |= ( inp & 0x7f );
-		}
+			}
 		else
-		{
+			{
 			/* mouse */
 			data |= ( inp & 0x70 );
 			if (state->m_mouse_stat[0] < 0)
 				data |= 0xf;
 			else
 				data |= ~(state->m_mouse[0] >> (4*state->m_mouse_stat[0]) ) & 15;
+			}
 		}
-	}
 
 	return data;
 }

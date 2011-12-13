@@ -1004,10 +1004,6 @@ DEVICE_GET_INFO(floppy)
 		case DEVINFO_FCT_IMAGE_UNLOAD:				info->f = (genf *) DEVICE_IMAGE_UNLOAD_NAME(floppy); break;
 		case DEVINFO_FCT_IMAGE_SOFTLIST_LOAD:		info->f = (genf *) DEVICE_IMAGE_SOFTLIST_LOAD_NAME(floppy);	break;
 		case DEVINFO_FCT_IMAGE_DISPLAY_INFO:
-			//mamep:link error
-//			if (false /*device->type() == FLOPPY_APPLE*/) {
-//				info->f = NULL;
-//			} else {
 			if (device->type() == LEGACY_FLOPPY) {
 				if ( device && downcast<const legacy_image_device_base *>(device)->static_config() && ((floppy_interface*)(device)->static_config())->device_displayinfo) {
 					info->f = (genf *) ((floppy_interface*)(device)->static_config())->device_displayinfo;
