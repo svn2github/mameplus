@@ -136,8 +136,8 @@ void ui_menu_main::populate()
 		}
 
 	/* add input menu items */
-	item_append(_("Input (general))", NULL, 0, (void *)INPUT_GROUPS);	
-	
+	item_append(_("Input (general))", NULL, 0, (void *)INPUT_GROUPS);
+
 	menu_text.printf(_("Input (this %s))",emulator_info::get_capstartgamenoun());
 	item_append(menu_text.cstr(), NULL, 0, (void *)INPUT_SPECIFIC);
 #ifdef USE_AUTOFIRE
@@ -203,6 +203,7 @@ void ui_menu_main::populate()
 
 	/* add video options menu */
 	item_append(_("Video Options"), NULL, 0, (machine().render().target_by_index(1) != NULL) ? (void *)VIDEO_TARGETS : (void *)VIDEO_OPTIONS);
+
 #ifdef USE_SCALE_EFFECTS
 	/* add image enhancement menu */
 	item_append(_("Image Enhancement"), NULL, 0, (void *)SCALE_EFFECT);
@@ -538,11 +539,11 @@ void ui_menu_network_devices::populate()
 			if(entry->id==curr) {
 				title = entry->description;
 				break;
-			}			
+			}
 			entry = entry->m_next;
 		}
-		
-		item_append(network->device().tag(),  (title) ? title : "------", MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)network);		
+
+		item_append(network->device().tag(),  (title) ? title : "------", MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)network);
 	}
 }
 

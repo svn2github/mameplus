@@ -1149,7 +1149,7 @@ static INPUT_PORTS_START( orlegend )
 
 	PORT_MODIFY("Region")
 #if PGMREGIONHACK
-	PORT_DIPNAME( 0x000f, 0x0000, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0002, "Japan (Alta license)" )
@@ -1170,7 +1170,7 @@ static INPUT_PORTS_START( orlegndc )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")
-	PORT_DIPNAME( 0x000f, 0x0000, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0002, "Japan (Alta license)" )
@@ -1205,7 +1205,7 @@ static INPUT_PORTS_START( orld105k )
 
 	PORT_MODIFY("Region")
 #if PGMREGIONHACK
-	PORT_DIPNAME( 0x000f, 0x0000, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( China ) )
 	PORT_DIPSETTING(      0x0002, "Japan (Alta license)" )
@@ -1223,7 +1223,7 @@ static INPUT_PORTS_START( sango )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_CONFNAME( 0x000f, 0x0001, DEF_STR( Region ) )
+	PORT_CONFNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0002, "Japan (Alta license)" )
@@ -1253,7 +1253,7 @@ static INPUT_PORTS_START( olds )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_CONFNAME( 0x000f, 0x0001, DEF_STR( Region ) )
+	PORT_CONFNAME( 0x000f, 0x0006, DEF_STR( Region ) )
 	/* includes the following regions:
     1 = taiwan, 2 = china, 3 = japan (title = orlegend special),
     4 = korea, 5 = hong kong, 6 = world */
@@ -1269,7 +1269,7 @@ static INPUT_PORTS_START( killbld )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x00ff, 0x0016, "Region (not currently working)" ) // different regions supply different protection code sequences, we only have the China one ATM
+	PORT_DIPNAME( 0x00ff, 0x0021, "Region (not currently working)" ) // different regions supply different protection code sequences, we only have the China one ATM
 	PORT_DIPSETTING(      0x0016, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0017, DEF_STR( China ) )
 	PORT_DIPSETTING(      0x0018, DEF_STR( Hong_Kong ) )
@@ -1288,7 +1288,7 @@ static INPUT_PORTS_START( photoy2k )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_CONFNAME( 0x000f, 0x0000, DEF_STR( Region ) )
+	PORT_CONFNAME( 0x000f, 0x0003, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0002, "Japan (Alta license)" )
@@ -1302,7 +1302,7 @@ static INPUT_PORTS_START( kov2 )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x000f, 0x0001, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( China ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0002, "Japan (Alta license)" )
@@ -1315,7 +1315,7 @@ static INPUT_PORTS_START( martmast )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x000f, 0x0001, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( China ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0002, "Japan (Alta license)" )
@@ -1329,7 +1329,7 @@ static INPUT_PORTS_START( martmastc )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x000f, 0x0001, DEF_STR( Region ) )
+	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( China ) )
 	PORT_DIPSETTING(      0x0001, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0002, "Japan (Alta license)" )
@@ -1445,7 +1445,7 @@ static INPUT_PORTS_START( ddp2 )
     PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 */
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_CONFNAME( 0x000f, 0x0001, DEF_STR( Region ) )
+	PORT_CONFNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0000, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( Taiwan ) )
 	PORT_CONFSETTING(      0x0002, "Japan (Cave license)" )
@@ -1458,7 +1458,7 @@ static INPUT_PORTS_START( oldsplus )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_CONFNAME( 0x000f, 0x0006, DEF_STR( Region ) )
+	PORT_CONFNAME( 0x000f, 0x0005, DEF_STR( Region ) )
 	PORT_CONFSETTING(      0x0001, DEF_STR( China ) )
 	PORT_CONFSETTING(      0x0002, DEF_STR( Japan ) )
 	PORT_CONFSETTING(      0x0003, DEF_STR( Korea ) )
@@ -1527,29 +1527,29 @@ static MACHINE_START( pgm )
 {
 	pgm_state *state = machine.driver_data<pgm_state>();
 
-//	machine.base_datetime(state->m_systime);
+//  machine.base_datetime(state->m_systime);
 
 	state->m_maincpu = machine.device<cpu_device>("maincpu");
 	state->m_soundcpu = machine.device<cpu_device>("soundcpu");
 	state->m_prot = machine.device<cpu_device>("prot");
 	state->m_ics = machine.device("ics");
 
-//	state->save_item(NAME(state->m_cal_val));
-//	state->save_item(NAME(state->m_cal_mask));
-//	state->save_item(NAME(state->m_cal_com));
-//	state->save_item(NAME(state->m_cal_cnt));
+//  state->save_item(NAME(state->m_cal_val));
+//  state->save_item(NAME(state->m_cal_mask));
+//  state->save_item(NAME(state->m_cal_com));
+//  state->save_item(NAME(state->m_cal_cnt));
 }
 
 static MACHINE_RESET( pgm )
 {
-//	pgm_state *state = machine.driver_data<pgm_state>();
+//  pgm_state *state = machine.driver_data<pgm_state>();
 
 	cputag_set_input_line(machine, "soundcpu", INPUT_LINE_HALT, ASSERT_LINE);
 
-//	state->m_cal_val = 0;
-//	state->m_cal_mask = 0;
-//	state->m_cal_com = 0;
-//	state->m_cal_cnt = 0;
+//  state->m_cal_val = 0;
+//  state->m_cal_mask = 0;
+//  state->m_cal_com = 0;
+//  state->m_cal_cnt = 0;
 }
 
 
@@ -1733,7 +1733,6 @@ MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_START( oldsplus, pgm_state )
-
 	MCFG_FRAGMENT_ADD(pgmbase)
 	
 	MCFG_DEVICE_REMOVE("maincpu")

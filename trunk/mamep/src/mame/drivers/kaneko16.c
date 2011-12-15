@@ -1753,10 +1753,10 @@ GFXDECODE_END
 ***************************************************************************/
 
 /*
-	TODO:
-	Fix this arrangement (specific for Bonk's Adventure)!
+    TODO:
+    Fix this arrangement (specific for Bonk's Adventure)!
 
-	pre-deprecat lib note says:
+    pre-deprecat lib note says:
     Even though 3 interrupts are triggered, I set an int_num of 4. (notice '+1')
     I agree that it is kind of a misuse of the function, but I haven't found
     clues in code on how interrupts are scheduled...
@@ -3743,10 +3743,10 @@ ROM_START( brapboys ) /* World 'normal version', no rom sub board, serial RB92E0
 
 	ROM_REGION( 0x800000, "gfx1", 0 )	/* Sprites */
 	ROM_LOAD( "rb-020.u100", 0x000000, 0x100000, CRC(ce220d38) SHA1(b88d7c89a3e1a826bf19a1fa692ec77c944596d9) )
-	ROM_LOAD( "rb-021.u76", 0x100000, 0x100000, CRC(74001407) SHA1(90002056ceb4e0401246950b8c3f996af0a2463c) )
-	ROM_LOAD( "rb-022.u77", 0x200000, 0x100000, CRC(cb3f42dc) SHA1(5415f15621924dd263b8fe7daaf3dc25d470b814) )
-	ROM_LOAD( "rb-023.u78", 0x300000, 0x100000, CRC(0e6530c5) SHA1(72bff46f0672927e540f4f3546ae533dd0a231e0) )
-	ROM_LOAD( "rb-024.u79", 0x400000, 0x080000, CRC(65fa6447) SHA1(551e540d7bf412753b4a7098e25e6f9d8774bcf4) ) // correct, both halves identical when dumped as larger
+	ROM_LOAD( "rb-021.u76",  0x100000, 0x100000, CRC(74001407) SHA1(90002056ceb4e0401246950b8c3f996af0a2463c) )
+	ROM_LOAD( "rb-022.u77",  0x200000, 0x100000, CRC(cb3f42dc) SHA1(5415f15621924dd263b8fe7daaf3dc25d470b814) )
+	ROM_LOAD( "rb-023.u78",  0x300000, 0x100000, CRC(0e6530c5) SHA1(72bff46f0672927e540f4f3546ae533dd0a231e0) )
+	ROM_LOAD( "rb-024.u79",  0x400000, 0x080000, CRC(65fa6447) SHA1(551e540d7bf412753b4a7098e25e6f9d8774bcf4) ) // correct, both halves identical when dumped as larger
 	ROM_LOAD( "rb-024.u79",  0x480000, 0x080000, CRC(65fa6447) SHA1(551e540d7bf412753b4a7098e25e6f9d8774bcf4) ) // is it correct to mirror like this?
 	ROM_LOAD( "rb-025.01.u80",  0x500000, 0x040000, CRC(36cd6b90) SHA1(45c50f2652726ded67c9c24185a71a6367e09270) ) // eprom labeled RB-025/U80-01 (green label), contains title logo for this version
 
@@ -3777,10 +3777,10 @@ ROM_START( brapboysj ) /* Japanese 'special version' with EXROM sub board; seria
 
 	ROM_REGION( 0x1000000, "gfx1", 0 )	/* Sprites */
 	ROM_LOAD( "rb-020.u100", 0x000000, 0x100000, CRC(ce220d38) SHA1(b88d7c89a3e1a826bf19a1fa692ec77c944596d9) ) // really at location next to capacitor C2 on Z01DK-EXROM daughterboard
-	ROM_LOAD( "rb-021.u76", 0x100000, 0x100000, CRC(74001407) SHA1(90002056ceb4e0401246950b8c3f996af0a2463c) )
-	ROM_LOAD( "rb-022.u77", 0x200000, 0x100000, CRC(cb3f42dc) SHA1(5415f15621924dd263b8fe7daaf3dc25d470b814) )
-	ROM_LOAD( "rb-023.u78", 0x300000, 0x100000, CRC(0e6530c5) SHA1(72bff46f0672927e540f4f3546ae533dd0a231e0) )
-	ROM_LOAD( "rb-024.u79", 0x400000, 0x080000, CRC(65fa6447) SHA1(551e540d7bf412753b4a7098e25e6f9d8774bcf4) ) // correct, both halves identical when dumped as larger
+	ROM_LOAD( "rb-021.u76",  0x100000, 0x100000, CRC(74001407) SHA1(90002056ceb4e0401246950b8c3f996af0a2463c) )
+	ROM_LOAD( "rb-022.u77",  0x200000, 0x100000, CRC(cb3f42dc) SHA1(5415f15621924dd263b8fe7daaf3dc25d470b814) )
+	ROM_LOAD( "rb-023.u78",  0x300000, 0x100000, CRC(0e6530c5) SHA1(72bff46f0672927e540f4f3546ae533dd0a231e0) )
+	ROM_LOAD( "rb-024.u79",  0x400000, 0x080000, CRC(65fa6447) SHA1(551e540d7bf412753b4a7098e25e6f9d8774bcf4) ) // correct, both halves identical when dumped as larger
 	ROM_LOAD( "rb-024.u79",  0x480000, 0x080000, CRC(65fa6447) SHA1(551e540d7bf412753b4a7098e25e6f9d8774bcf4) ) // is it correct to mirror like this?
 	ROM_LOAD( "rb-025.u80a",   0x500000, 0x080000, CRC(aa795ba5) SHA1(c5256dcceded2e76f548b60c18e51d0dd0209d81) ) // eprom, special title screen, really at location next to capacitor C4 on Z01DK-EXROM daughterboard; // fill in suffix!
 	ROM_LOAD( "rb-026.u80b",   0x580000, 0x080000, CRC(bb7604d4) SHA1(57d51ce4ea2000f9a50bae326cfcb66ec494249f) ) // eprom, logs that bounce past, really at location next to capacitor C5 on Z01DK-EXROM daughterboard; // fill in suffix!

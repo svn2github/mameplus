@@ -28,7 +28,7 @@ static READ8_HANDLER( strnskil_d800_r )
 {
 	strnskil_state *state = space->machine().driver_data<strnskil_state>();
 
-    /* bit0: interrupt type?, bit1: CPU2 busack? */
+/* bit0: interrupt type?, bit1: CPU2 busack? */
 
 	return (state->m_irq_source);
 }
@@ -343,7 +343,7 @@ static MACHINE_CONFIG_START( strnskil, strnskil_state )
 	MCFG_CPU_PROGRAM_MAP(strnskil_map2)
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
 
-//	MCFG_QUANTUM_PERFECT_CPU("maincpu")
+//  MCFG_QUANTUM_PERFECT_CPU("maincpu")
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
