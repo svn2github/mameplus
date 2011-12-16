@@ -1551,11 +1551,12 @@ void ui_menu_command::handle()
 	/* process the menu */
 	const ui_menu_event *menu_event = process(0);
 	if (menu_event != NULL && menu_event->iptkey == IPT_UI_SELECT)
-		ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_command_content(machine(), container)));
+		ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_command_content(machine(), container, int((long long)(menu_event->itemref)))));
 }
 
-ui_menu_command_content::ui_menu_command_content(running_machine &machine, render_container *container) : ui_menu(machine, container)
+ui_menu_command_content::ui_menu_command_content(running_machine &machine, render_container *container, int _param) : ui_menu_command(machine, container)
 {
+	param = _param;
 }
 
 ui_menu_command_content::~ui_menu_command_content()
@@ -1565,7 +1566,7 @@ ui_menu_command_content::~ui_menu_command_content()
 void ui_menu_command_content::handle()
 {
 	/* process the menu */
-	process(0);
+	process(UI_MENU_PROCESS_CUSTOM_ONLY);
 }
 
 void ui_menu_command_content::populate()
@@ -1578,7 +1579,7 @@ void ui_menu_command_content::populate()
 	if (!game_paused)
 		machine().pause();
 
-	if (load_driver_command_ex(&machine().system(), commandbuf, ARRAY_LENGTH(commandbuf), (FPTR)menu_event->itemref) == 0)
+	if (load_driver_command_ex(&machine().system(), commandbuf, ARRAY_LENGTH(commandbuf), (FPTR)param) == 0)
 	{
 		const game_driver *last_drv;
 		last_drv = &machine().system();
@@ -1591,8 +1592,12 @@ void ui_menu_command_content::populate()
 	if (!game_paused)
 		machine().resume();
 
-	if (ui_window_scroll_keys(machine) > 0)
-		ui_menu::stack_pop(machine);
+	if (ui_window_scroll_keys(machine()) > 0)
+		ui_menu::stack_pop(machine());
+}
+
+void ui_menu_command_content::custom_render(void *selectedref, float top, float bottom, float x, float y, float x2, float y2)
+{
 }
 
 #endif /* CMD_LIST */

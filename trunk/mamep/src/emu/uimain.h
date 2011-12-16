@@ -413,12 +413,16 @@ public:
 	virtual void handle();
 };
 
-class ui_menu_command_content : public ui_menu {
+class ui_menu_command_content : public ui_menu_command {
 public:
-	ui_menu_command_content(running_machine &machine, render_container *container);
+	ui_menu_command_content(running_machine &machine, render_container *container, int param);
 	virtual ~ui_menu_command_content();
 	virtual void populate();
 	virtual void handle();
+	virtual void custom_render(void *selectedref, float top, float bottom, float x, float y, float x2, float y2);
+
+protected:
+	int param;
 };
 #endif /* CMD_LIST */
 

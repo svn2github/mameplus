@@ -64,8 +64,8 @@ static const char *DATAFILE_TAG_END = "$end";
 #define FILE_ROOT	2
 #define FILE_TYPEMAX	((FILE_MERGED | FILE_ROOT) + 1)
 
-static running_machine *m_machine;
-static emu_options *datafile_options;
+static running_machine *m_machine = NULL;
+static emu_options *datafile_options = NULL;
 
 struct tDatafileIndex
 {
@@ -81,8 +81,8 @@ struct tMenuIndex
 };
 
 static struct tDatafileIndex *cmnd_idx[FILE_TYPEMAX];
-static struct tMenuIndex *menu_idx;
-static char *menu_filename;
+static struct tMenuIndex *menu_idx = NULL;
+static char *menu_filename = NULL;
 
 static int mame32jp_wrap;
 #endif /* CMD_LIST */
@@ -688,11 +688,11 @@ static int index_datafile (struct tDatafileIndex **_index)
 	if (ParseSeek (0L, SEEK_SET)) return 0;
 
 	/* allocate index */
-        idx = *_index = auto_alloc_array(*m_machine, tDatafileIndex, (num_games + 1) * sizeof (struct tDatafileIndex));
+	idx = *_index = auto_alloc_array(*m_machine, tDatafileIndex, (num_games + 1) * sizeof (struct tDatafileIndex));
 	if (NULL == idx) return 0;
 
 	/* loop through datafile */
-        while (count < num_games && TOKEN_INVALID != token)
+	while (count < num_games && TOKEN_INVALID != token)
 	{
 		UINT64 tell;
 		UINT8 *s;
@@ -836,7 +836,7 @@ static int index_menuidx (const game_driver *drv, struct tDatafileIndex *d_idx, 
 					token = GetNextToken_ex (&s, &tell);
 			}
 
-			m_idx->menuitem = global_alloc_array(char, strlen((char *)s)+1);
+			m_idx->menuitem = auto_alloc_array(*m_machine, char, strlen((char *)s)+1);
 			strcpy(m_idx->menuitem, (char *)s);
 
 			m_idx->offset = cmdtag_offset;
@@ -862,7 +862,7 @@ static void free_menuidx(struct tMenuIndex **_index)
 
 		while(m_idx->menuitem != NULL)
 		{
-			global_free(m_idx->menuitem);
+			auto_free(*m_machine, m_idx->menuitem);
 			m_idx++;
 		}
 
