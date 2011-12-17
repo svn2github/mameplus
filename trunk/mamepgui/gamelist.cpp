@@ -80,6 +80,7 @@ enum
 	F_AVAILABLE 	= 0x0080,
 	F_HORIZONTAL	= 0x1000,
 	F_VERTICAL		= 0x2000,
+	F_MECHANICAL    = 0x4000,
 	F_COMPUTER		= 0x0200,
 	F_CONSOLE		= 0x0400,
 	F_MODIFIED		= 0x0800,
@@ -1450,6 +1451,8 @@ void Gamelist::init(bool toggleState, int initMethod)
 			<< QT_TR_NOOP("Control Type")
 			<< QT_TR_NOOP("Channels")
 			<< QT_TR_NOOP("Save State")
+			<< QT_TR_NOOP("Mechanical")
+			<< QT_TR_NOOP("Non Mechanical")
 			/*
 			<< QT_TR_NOOP("Emulation Status")
 			<< QT_TR_NOOP("Artwork")
@@ -1553,6 +1556,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 	win->actionFilterClones->setChecked((F_CLONES & filterFlags) != 0);
 	win->actionFilterNonWorking->setChecked((F_NONWORKING & filterFlags) != 0);
 	win->actionFilterUnavailable->setChecked((F_UNAVAILABLE & filterFlags) != 0);
+	win->actionFilterMechanical->setChecked((F_MECHANICAL & filterFlags) != 0);
 
 	// connect gameListModel/gameListPModel signals after the view init completed
 	// connect gameListModel/gameListPModel signals after mameOpts init
@@ -2373,6 +2377,8 @@ void Gamelist::filterFlagsChanged(bool isChecked)
 		currentFlag = F_NONWORKING;
 	else if (actionFilter->objectName() == "actionFilterUnavailable")
 		currentFlag = F_UNAVAILABLE;
+	else if (actionFilter->objectName() == "actionFilterMechanical")
+		currentFlag = F_MECHANICAL;
 
 	if (isChecked)
 		filterFlags |= currentFlag;
@@ -2485,6 +2491,10 @@ void Gamelist::filterFolderChanged(QTreeWidgetItem *_current, QTreeWidgetItem */
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_CLONES);
 		else if (folderName == intFolderNames[FOLDER_SAVESTATE])
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_SAVESTATE);
+		else if (folderName == intFolderNames[FOLDER_MECHANICAL])
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_MECHANICAL);
+		else if (folderName == intFolderNames[FOLDER_NONMECHANICAL])
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_NONMECHANICAL);
 		else if (extFolderNames.contains(folderName))
 		{
 			initExtFolders(folderName, EXTFOLDER_MAGIC ROOT_FOLDER);
@@ -3481,14 +3491,17 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	const bool isBIOS = gameInfo->isBios;
 	const bool isExtRom = gameInfo->isExtRom;
 	const bool isClone = !gameInfo->cloneof.isEmpty();
+	const bool isMechanical = gameInfo->isMechanical;
 
 	// apply filter flags
 	if (F_CLONES & gameList->filterFlags && !isExtRom)
 		result = result && !isClone;
-	if (F_NONWORKING & gameList->filterFlags&& !isExtRom)
+	if (F_NONWORKING & gameList->filterFlags && !isExtRom)
 		result = result && gameInfo->status;
-	if (F_UNAVAILABLE & gameList->filterFlags&& !isExtRom)
+	if (F_UNAVAILABLE & gameList->filterFlags && !isExtRom)
 		result = result && gameInfo->available == GAME_COMPLETE;
+	if (F_MECHANICAL & gameList->filterFlags && !isExtRom)
+		result = result && !isMechanical;
 
 	// apply search filter
 	if (!searchText.isEmpty())
@@ -3583,6 +3596,14 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 
 	case Qt::UserRole + FOLDER_SAVESTATE:
 		result = result && !isExtRom && gameInfo->savestate;
+		break;
+
+	case Qt::UserRole + FOLDER_MECHANICAL:
+		result = result && !isBIOS && !isExtRom && isMechanical;
+		break;
+
+	case Qt::UserRole + FOLDER_NONMECHANICAL:
+		result = result && !isBIOS && !isExtRom && !isMechanical;
 		break;
 
 	case Qt::UserRole + FOLDER_CPU:

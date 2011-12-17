@@ -226,6 +226,16 @@
         <translation>ステートの保存</translation>
     </message>
     <message>
+        <location filename="../gamelist.cpp" line=""/>
+        <source>Mechanical</source>
+        <translation>機械的</translation>
+    </message>
+    <message>
+        <location filename="../gamelist.cpp" line=""/>
+        <source>Non Mechanical</source>
+        <translation>非機械的</translation>
+    </message>
+    <message>
         <location filename="../gamelist.cpp" line="1936"/>
         <source>Play %1</source>
         <translation>%1を実行</translation>
@@ -715,6 +725,11 @@ p, li { white-space: pre-wrap; }
         <location filename="../mamepgui_main.ui" line="701"/>
         <source>Hide &amp;Unavailable</source>
         <translation>未所有のゲームを隠す(&amp;U)</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line=""/>
+        <source>Hide &amp;Mechanical</source>
+        <translation>機械的ゲームを隠す(&amp;U)</translation>
     </message>
     <message>
         <location filename="../mamepgui_main.ui" line="706"/>

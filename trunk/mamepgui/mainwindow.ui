@@ -126,6 +126,7 @@
      <addaction name="actionFilterClones"/>
      <addaction name="actionFilterNonWorking"/>
      <addaction name="actionFilterUnavailable"/>
+     <addaction name="actionFilterMechanical"/>
     </widget>
     <widget class="QMenu" name="menuArrangeIcons">
      <property name="title">
@@ -544,7 +545,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">Português (Brasil)</string>
+    <string notr="true">Portugues (Brasil)</string>
    </property>
   </action>
   <action name="actionEnforceAspect">
@@ -651,7 +652,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">한국어</string>
+    <string notr="true">???</string>
    </property>
   </action>
   <action name="actionFixDatMissing">
@@ -703,6 +704,14 @@
     <string>Hide &amp;Unavailable</string>
    </property>
   </action>
+  <action name="actionFilterMechanical">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide &amp;Mechanical</string>
+   </property>
+  </action>
   <action name="actionCommandLine">
    <property name="text">
     <string>Command Line...</string>
@@ -734,7 +743,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">Français</string>
+    <string notr="true">Francais</string>
    </property>
   </action>
   <action name="actionSpanish">
@@ -742,7 +751,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">Español</string>
+    <string notr="true">Espanol</string>
    </property>
   </action>
   <action name="actionItalian">

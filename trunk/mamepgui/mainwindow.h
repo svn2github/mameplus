@@ -145,7 +145,7 @@ private:
 };
 
 #define MAMEPLUS_SIG 0x704c7553
-#define S11N_VER 11
+#define S11N_VER 12
 
 // global vars
 #define ZIP_EXT ".zip"

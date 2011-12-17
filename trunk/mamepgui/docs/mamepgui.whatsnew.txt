@@ -1,0 +1,170 @@
+﻿http://mameicons.free.fr/mame32p/
+http://mame.tsubasa.com.cn
+http://sourceforge.net/projects/mameplus/
+
+[Release Note]
+how to run console games?
+take Genesis for example:
+1. set rom path in "Options - Directories - MESS Paths - Genesis extra software"
+2. go to "Consoles - genesis" folder and press F5
+
+如何运行家用机游戏?
+以世嘉5代为例:
+1. 设置rom路径: "选项 - 目录 - MESS 路径 - Genesis extra software"
+2. 在 "家用机 - genesis" 目录按F5
+
+1.5.3
+added mechanical & non mechanical folder
+added non mechanical filter
+
+1.5.2
+added it translation
+added it lang [Vecna]
+updated jp lang
+
+1.5.1
+sanity check for valid mame binary
+build lzma and quazip as library
+added some new fields to cache file for updater module
+added support to iterate and extract updater files
+some structure changes
+removed deprecated Qt 3 calls
+renamed mamepgui_main.* to mainwindow.*, mamepgui_types.* to prototype.*
+fixed Korean translation
+options rewrite
+
+1.5.0
+added support to select games with joystick
+auto center game selection cursor
+added Spanish translation [MiNoviaMuerta]
+fixed MESS bios selection [Xander]
+fixed min/max values of beam and flicker options
+load 7z/zip archives with less strict matching criteria, so that .png files in a subfolder should work
+optimized command.dat parsing
+show rom info in MAMEInfo widget
+Linux: link against static libpng12
+Mac: start game with Return/Enter
+
+1.4.9x
+added source code license to the About dialog
+schedule log() to GUI thread
+fixed a crash when restoring Custom Filters
+added error message box when MAME core behaves abnormally
+
+1.4.9
+fixed sorting in Details View
+added View - Arrange Icons menu
+fixed sequence of IPS values
+added File - Audit - Audit Samples menu
+added Russian translation [MetalliC]
+fixed Chinese/Japanese font size on Mac OS X
+show All Games, Console folders only when necessary
+
+1.4.8
+added Play with Options - Command Line dialog
+added View - Custom Filters menu
+reorganized code
+refresh xml cache when mame binary changes
+updated Hungarian translation [Delirious]
+
+1.4.7
+fixed game counters
+no indent for clones missing parent
+new icon zooming effect
+optimized game list speed
+disabled large icons view, will be reimplemented later
+unified uncompressed, zip and 7z archives handling
+added loading prompt for snapshots
+load M1 module only when needed, no longer hit startup performance
+
+1.4.5
+added all MAMEUI built-in folders
+added menu: "View - Show Folders" to toggle built-in folders
+fixed crash on Mac OS X
+
+1.4.4
+added a startup parameter -configpath to assign temporary directory for cache and ini. e.g. "mamepgui -configpath ~/.mamepgui"
+
+1.4.3
+localized .dat support
+added menu to remove cfg, ini, diff, nv files of a game [Xander Xander]
+
+1.4.2
+added menu: "File - Audit All Games"
+
+1.4.1
+- improved CHD verification
+- added Driver Info widget [Xander Xander]
+
+1.4
+- updated Hungarian translation [Delirious]
+- added CHD folder
+- supported F12 snapshots
+- disabled the buggy aqua theme on MacOSX
+
+1.4 rc 3
+- fixed a crash when loading a corrupted cache
+- added support for Favorites folder
+- better screening for fix-dat
+
+1.4 rc 2
+- added driver config editor for MAMEPlus
+- better fuzzy search for localized game list
+- reenabled automatic refresh at startup
+- fixed icons of MESS games
+- fixed sorting of MESS games
+
+1.4 rc 1
+- fixed maws link
+- added "Save Fix-dat File" to export ClrMAMEPro fix-dat
+
+1.3 beta 15
+- users can drag the tabs to rearrange widget
+- added Korean translation [zzoro]
+- fixed a bug in restoring width of Folder List widget
+
+1.3 beta 14
+- provided 3 different icons to show emulation status in the game list
+- added support for MAMEUI compatible zip filenames (snap.zip, flyers.zip, etc.)
+- fixed dupcated folders on init
+- fixed a crash when refreshing MESS softwares
+- fixed a crash in Directory Options
+
+1.3 beta 13
+- added shell script to configure multiple instances for Linux/Mac
+- fixed Windows 2000 compatibility
+- fixed snapshot loading for Linux/Mac
+- added Hungarian translation [Delirious]
+
+1.3 beta 12
+- added MESS device menus
+- built-in 7z/lzma support for MESS softwares
+- show warning when mandatory MESS devices are not mounted
+- added "View - Highlight Selected Row"
+
+1.3 beta 11
+-finished GUI options tab
+-improved rom auditing
+-improved support for SDLMAME
+-another attempt to prevent program from being called by itself
+
+1.3 beta 10
+-added play with inp/rec/sta/mng/wav menu
+-record/playback from a saved state of a game
+-prevent nvram writing during playback
+-save changes when option dialog is closed
+-improved verification for chd and nodump games
+-added "Audit" shortcut menu
+-auto audit when necessary
+-fixed status icons for console games
+-fixed searching function for console games
+-show console system only if its software directory has been configured
+
+1.3b9
+-supported Mac OS X
+-fixed ips v4 bug
+-fixed large icon view
+-added "View - Game Pictures - Strech Screenshot Larger"
+-fixed root folder of external ini
+-added link to MameUI in the About page
+-fixed mame 0.129 regression

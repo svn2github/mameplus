@@ -47,7 +47,7 @@ bool isMESS = false;
 
 QStringList validGuiSettings;
 
-#define MPGUI_VER "1.5.2"
+#define MPGUI_VER "1.5.3"
 
 void MainWindow::log(QString message)
 {
@@ -568,6 +568,7 @@ void MainWindow::init()
 	connect(actionFilterClones, SIGNAL(toggled(bool)), gameList, SLOT(filterFlagsChanged(bool)));
 	connect(actionFilterNonWorking, SIGNAL(toggled(bool)), gameList, SLOT(filterFlagsChanged(bool)));
 	connect(actionFilterUnavailable, SIGNAL(toggled(bool)), gameList, SLOT(filterFlagsChanged(bool)));
+	connect(actionFilterMechanical, SIGNAL(toggled(bool)), gameList, SLOT(filterFlagsChanged(bool)));
 
 	// Auditor
 	connect(romAuditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));

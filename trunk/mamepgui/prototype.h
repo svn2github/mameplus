@@ -191,6 +191,8 @@ public:
 
 	bool isExtRom;
 	bool isHorz;
+	bool isMechanical;
+	bool isGamble;
 
 	qint8 available;
 	QByteArray icondata;

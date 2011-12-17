@@ -58,6 +58,8 @@ GameInfo::GameInfo(QObject *parent) :
 	protection(64),
 	isExtRom(false),
 	isHorz(true),
+	isMechanical(false),
+	isGamble(false),
 	available(GAME_MISSING)
 {
 	//	win->log("# GameInfo()");
@@ -184,6 +186,7 @@ public:
 			gameInfo->cloneof = attributes.value("cloneof");
 			gameInfo->romof = attributes.value("romof");
 			gameInfo->sampleof = attributes.value("sampleof");
+			gameInfo->isMechanical = attributes.value("ismechanical") == "yes";
 
 			gameInfo->size = attributes.value("size").toULongLong();
 			gameInfo->crc = attributes.value("crc").toUInt(&ok, 16);
@@ -419,6 +422,8 @@ void MameDat::save()
 			out << gameInfo->sourcefile;
 			out << gameInfo->isBios;
 			out << gameInfo->sampleof;
+			out << gameInfo->isMechanical;
+			out << gameInfo->isGamble;
 		}
 
 		/* biosset */
@@ -648,6 +653,8 @@ int MameDat::load()
 			in >> gameInfo->sourcefile;
 			in >> gameInfo->isBios;
 			in >> gameInfo->sampleof;
+			in >> gameInfo->isMechanical;
+			in >> gameInfo->isGamble;
 		}
 
 		/* biosset */
