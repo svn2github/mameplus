@@ -6,51 +6,51 @@
 Assign joystick %s to player %d\n
 
 
-# osd/windows/d3dhlsl.c: 2729
+# osd/windows/d3dhlsl.c: 2723
 Blue Convergence X
 
 
-# osd/windows/d3dhlsl.c: 2730
+# osd/windows/d3dhlsl.c: 2724
 Blue Convergence Y
 
 
-# osd/windows/d3dhlsl.c: 2742
+# osd/windows/d3dhlsl.c: 2736
 Blue DC Offset
 
 
-# osd/windows/d3dhlsl.c: 2751
+# osd/windows/d3dhlsl.c: 2745
 Blue Floor
 
 
-# osd/windows/d3dhlsl.c: 2739
+# osd/windows/d3dhlsl.c: 2733
 Blue Output from Blue Input
 
 
-# osd/windows/d3dhlsl.c: 2738
+# osd/windows/d3dhlsl.c: 2732
 Blue Output from Green Input
 
 
-# osd/windows/d3dhlsl.c: 2737
+# osd/windows/d3dhlsl.c: 2731
 Blue Output from Red Input
 
 
-# osd/windows/d3dhlsl.c: 2754
+# osd/windows/d3dhlsl.c: 2748
 Blue Phosphor Life
 
 
-# osd/windows/d3dhlsl.c: 2723
+# osd/windows/d3dhlsl.c: 2717
 Blue Position Offset X
 
 
-# osd/windows/d3dhlsl.c: 2724
+# osd/windows/d3dhlsl.c: 2718
 Blue Position Offset Y
 
 
-# osd/windows/d3dhlsl.c: 2748
+# osd/windows/d3dhlsl.c: 2742
 Blue Power
 
 
-# osd/windows/d3dhlsl.c: 2745
+# osd/windows/d3dhlsl.c: 2739
 Blue Scale
 
 
@@ -62,19 +62,19 @@ DIRECT3D-SPECIFIC OPTIONS
 DIRECTDRAW-SPECIFIC OPTIONS
 
 
-# osd/windows/d3dhlsl.c: 2715
+# osd/windows/d3dhlsl.c: 2709
 Defocus X
 
 
-# osd/windows/d3dhlsl.c: 2716
+# osd/windows/d3dhlsl.c: 2710
 Defocus Y
 
 
-# osd/windows/drawd3d.c: 1208
+# osd/windows/drawd3d.c: 1209
 Device %s currently in an unsupported mode\n
 
 
-# osd/windows/drawd3d.c: 1178
+# osd/windows/drawd3d.c: 1179
 Direct3D: Configuring adapter #%d = %s\n
 
 
@@ -82,7 +82,7 @@ Direct3D: Configuring adapter #%d = %s\n
 Direct3D: Device created at %dx%d\n
 
 
-# osd/windows/drawd3d.c: 597, 2504
+# osd/windows/drawd3d.c: 597, 2505
 Direct3D: Error %08X during device begin_scene call\n
 
 
@@ -90,15 +90,15 @@ Direct3D: Error %08X during device begin_scene call\n
 Direct3D: Error %08X during device clear call\n
 
 
-# osd/windows/d3dhlsl.c: 1308, 1352, 1396, 1428, 1464, 1501, 1530, 1572, 1597, 1620, 1643, 1667, 1696 osd/windows/drawd3d.c: 1711, 2553
+# osd/windows/d3dhlsl.c: 1308, 1352, 1396, 1428, 1464, 1501, 1530, 1572, 1597, 1620, 1643, 1667, 1696 osd/windows/drawd3d.c: 1712, 2554
 Direct3D: Error %08X during device draw_primitive call\n
 
 
-# osd/windows/drawd3d.c: 635, 2557
+# osd/windows/drawd3d.c: 635, 2558
 Direct3D: Error %08X during device end_scene call\n
 
 
-# osd/windows/d3dhlsl.c: 1175 osd/windows/drawd3d.c: 2497
+# osd/windows/d3dhlsl.c: 1175 osd/windows/drawd3d.c: 2498
 Direct3D: Error %08X during device get_render_target call\n
 
 
@@ -130,11 +130,11 @@ Direct3D: Error %08X during device set_render_target call 7\n
 Direct3D: Error %08X during device set_render_target call\n
 
 
-# osd/windows/drawd3d.c: 1660, 2551
+# osd/windows/drawd3d.c: 1661, 2552
 Direct3D: Error %08X during device set_stream_source call\n
 
 
-# osd/windows/drawd3d.c: 222, 2510
+# osd/windows/drawd3d.c: 222, 2511
 Direct3D: Error %08X during device set_texture call\n
 
 
@@ -142,59 +142,59 @@ Direct3D: Error %08X during device set_texture call\n
 Direct3D: Error %08X during device set_texture_stage_state call\n
 
 
-# osd/windows/drawd3d.c: 2485
+# osd/windows/drawd3d.c: 2486
 Direct3D: Error %08X during device stretct_rect call\n
 
 
-# osd/windows/drawd3d.c: 963, 965, 967, 969, 984, 998, 1012, 1026, 1052, 1076, 1090, 1103, 1110
+# osd/windows/drawd3d.c: 964, 966, 968, 970, 985, 999, 1013, 1027, 1053, 1077, 1091, 1104, 1111
 Direct3D: Error %08X during get_caps_dword call\n
 
 
-# osd/windows/drawd3d.c: 2464
+# osd/windows/drawd3d.c: 2465
 Direct3D: Error %08X during texture get_surface_level call\n
 
 
-# osd/windows/d3dhlsl.c: 335, 428 osd/windows/drawd3d.c: 2440
+# osd/windows/d3dhlsl.c: 335, 428 osd/windows/drawd3d.c: 2441
 Direct3D: Error %08X during texture unlock_rect call\n
 
 
-# osd/windows/drawd3d.c: 2514
+# osd/windows/drawd3d.c: 2515
 Direct3D: Error %08X during vertex buffer lock call\n
 
 
-# osd/windows/drawd3d.c: 1655, 2546
+# osd/windows/drawd3d.c: 1656, 2547
 Direct3D: Error %08X during vertex buffer unlock call\n
 
 
-# osd/windows/drawd3d.c: 1039
+# osd/windows/drawd3d.c: 1040
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 
 
-# osd/windows/drawd3d.c: 1034
+# osd/windows/drawd3d.c: 1035
 Direct3D: Error - Device does not support dest alpha blending with one\n
 
 
-# osd/windows/drawd3d.c: 1029
+# osd/windows/drawd3d.c: 1030
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 
 
-# osd/windows/drawd3d.c: 987
+# osd/windows/drawd3d.c: 988
 Direct3D: Error - Device does not support immediate presentations\n
 
 
-# osd/windows/drawd3d.c: 992
+# osd/windows/drawd3d.c: 993
 Direct3D: Error - Device does not support per-refresh presentations\n
 
 
-# osd/windows/drawd3d.c: 1020
+# osd/windows/drawd3d.c: 1021
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 
 
-# osd/windows/drawd3d.c: 1015
+# osd/windows/drawd3d.c: 1016
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 
 
-# osd/windows/drawd3d.c: 1046
+# osd/windows/drawd3d.c: 1047
 Direct3D: Error - Device does not support texture alpha\n
 
 
@@ -210,11 +210,11 @@ Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: Max texture size = %dx%d\n
 
 
-# osd/windows/drawd3d.c: 1363
+# osd/windows/drawd3d.c: 1364
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 
 
-# osd/windows/drawd3d.c: 1307
+# osd/windows/drawd3d.c: 1308
 Direct3D: Selecting video mode...\n
 
 
@@ -258,47 +258,47 @@ Direct3D: Using Direct3D 8\n
 Direct3D: Using Direct3D 9\n
 
 
-# osd/windows/drawd3d.c: 1112
+# osd/windows/drawd3d.c: 1113
 Direct3D: Using StretchRect for prescaling\n
 
 
-# osd/windows/drawd3d.c: 1106
+# osd/windows/drawd3d.c: 1107
 Direct3D: Using dynamic textures\n
 
 
-# osd/windows/drawd3d.c: 1060
+# osd/windows/drawd3d.c: 1061
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 
 
-# osd/windows/drawd3d.c: 1070
+# osd/windows/drawd3d.c: 1071
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 
 
-# osd/windows/drawd3d.c: 1006
+# osd/windows/drawd3d.c: 1007
 Direct3D: Warning - Device does not support hardware rasterization\n
 
 
-# osd/windows/drawd3d.c: 1055
+# osd/windows/drawd3d.c: 1056
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 
 
-# osd/windows/drawd3d.c: 1065
+# osd/windows/drawd3d.c: 1066
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 
 
-# osd/windows/drawd3d.c: 1001
+# osd/windows/drawd3d.c: 1002
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 
 
-# osd/windows/drawd3d.c: 1079
+# osd/windows/drawd3d.c: 1080
 Direct3D: Warning - Device does not support texture clamping\n
 
 
-# osd/windows/drawd3d.c: 1093
+# osd/windows/drawd3d.c: 1094
 Direct3D: Warning - Device does not support texture modulation\n
 
 
-# osd/windows/drawd3d.c: 1084
+# osd/windows/drawd3d.c: 1085
 Direct3D: Warning - Device does not support texture wrapping\n
 
 
@@ -310,15 +310,15 @@ Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: YUV format = %s\n
 
 
-# osd/windows/drawd3d.c: 1785
+# osd/windows/drawd3d.c: 1786
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 
 
-# osd/windows/drawd3d.c: 1148
+# osd/windows/drawd3d.c: 1149
 Direct3D: failed to recreate resources for device; failing permanently\n
 
 
-# osd/windows/drawd3d.c: 1135
+# osd/windows/drawd3d.c: 1136
 Direct3D: resetting device\n
 
 
@@ -510,7 +510,7 @@ Error generating PNG for HLSL snapshot: png_error = %d\n
 Error getting DirectSound capabilities: %08x\n
 
 
-# osd/windows/drawd3d.c: 1175
+# osd/windows/drawd3d.c: 1176
 Error getting identifier for adapter #%d\n
 
 
@@ -518,7 +518,7 @@ Error getting identifier for adapter #%d\n
 Error getting identifier for device\n
 
 
-# osd/windows/drawd3d.c: 1184
+# osd/windows/drawd3d.c: 1185
 Error getting mode for adapter #%d\n
 
 
@@ -574,51 +574,51 @@ Failed to create window thread
 Failed to create window thread ready event
 
 
-# osd/windows/d3dhlsl.c: 2727
+# osd/windows/d3dhlsl.c: 2721
 Green Convergence X
 
 
-# osd/windows/d3dhlsl.c: 2728
+# osd/windows/d3dhlsl.c: 2722
 Green Convergence Y
 
 
-# osd/windows/d3dhlsl.c: 2741
+# osd/windows/d3dhlsl.c: 2735
 Green DC Offset
 
 
-# osd/windows/d3dhlsl.c: 2750
+# osd/windows/d3dhlsl.c: 2744
 Green Floor
 
 
-# osd/windows/d3dhlsl.c: 2736
+# osd/windows/d3dhlsl.c: 2730
 Green Output from Blue Input
 
 
-# osd/windows/d3dhlsl.c: 2735
+# osd/windows/d3dhlsl.c: 2729
 Green Output from Green Input
 
 
-# osd/windows/d3dhlsl.c: 2734
+# osd/windows/d3dhlsl.c: 2728
 Green Output from Red Input
 
 
-# osd/windows/d3dhlsl.c: 2753
+# osd/windows/d3dhlsl.c: 2747
 Green Phosphor Life
 
 
-# osd/windows/d3dhlsl.c: 2721
+# osd/windows/d3dhlsl.c: 2715
 Green Position Offset X
 
 
-# osd/windows/d3dhlsl.c: 2722
+# osd/windows/d3dhlsl.c: 2716
 Green Position Offset Y
 
 
-# osd/windows/d3dhlsl.c: 2747
+# osd/windows/d3dhlsl.c: 2741
 Green Power
 
 
-# osd/windows/d3dhlsl.c: 2744
+# osd/windows/d3dhlsl.c: 2738
 Green Scale
 
 
@@ -626,23 +626,23 @@ Green Scale
 INPUT DEVICE OPTIONS
 
 
-# osd/windows/d3dhlsl.c: 2313
+# osd/windows/d3dhlsl.c: 2307
 Illegal double vector value = %s\n
 
 
-# osd/windows/d3dhlsl.c: 2303
+# osd/windows/d3dhlsl.c: 2297
 Illegal quad vector value = %s\n
 
 
-# osd/windows/d3dhlsl.c: 2318
+# osd/windows/d3dhlsl.c: 2312
 Illegal single vector value = %s\n
 
 
-# osd/windows/d3dhlsl.c: 2308
+# osd/windows/d3dhlsl.c: 2302
 Illegal triple vector value = %s\n
 
 
-# osd/windows/d3dhlsl.c: 2708
+# osd/windows/d3dhlsl.c: 2702
 Image Pincushion
 
 
@@ -654,19 +654,19 @@ Invalid video value %s; reverting to gdi\n
 PER-WINDOW VIDEO OPTIONS
 
 
-# osd/windows/d3dhlsl.c: 2717
+# osd/windows/d3dhlsl.c: 2711
 Phosphor Defocus X
 
 
-# osd/windows/d3dhlsl.c: 2718
+# osd/windows/d3dhlsl.c: 2712
 Phosphor Defocus Y
 
 
-# osd/windows/drawd3d.c: 1236
+# osd/windows/drawd3d.c: 1237
 Proposed video mode not supported on device %s\n
 
 
-# osd/windows/input.c: 1781
+# osd/windows/input.c: 1780
 RawInput: APIs detected\n
 
 
@@ -674,103 +674,103 @@ RawInput: APIs detected\n
 Record Rendered Video
 
 
-# osd/windows/d3dhlsl.c: 2725
+# osd/windows/d3dhlsl.c: 2719
 Red Convergence X
 
 
-# osd/windows/d3dhlsl.c: 2726
+# osd/windows/d3dhlsl.c: 2720
 Red Convergence Y
 
 
-# osd/windows/d3dhlsl.c: 2740
+# osd/windows/d3dhlsl.c: 2734
 Red DC Offset
 
 
-# osd/windows/d3dhlsl.c: 2749
+# osd/windows/d3dhlsl.c: 2743
 Red Floor
 
 
-# osd/windows/d3dhlsl.c: 2733
+# osd/windows/d3dhlsl.c: 2727
 Red Output from Blue Input
 
 
-# osd/windows/d3dhlsl.c: 2732
+# osd/windows/d3dhlsl.c: 2726
 Red Output from Green Input
 
 
-# osd/windows/d3dhlsl.c: 2731
+# osd/windows/d3dhlsl.c: 2725
 Red Output from Red Input
 
 
-# osd/windows/d3dhlsl.c: 2752
+# osd/windows/d3dhlsl.c: 2746
 Red Phosphor Life
 
 
-# osd/windows/d3dhlsl.c: 2719
+# osd/windows/d3dhlsl.c: 2713
 Red Position Offset X
 
 
-# osd/windows/d3dhlsl.c: 2720
+# osd/windows/d3dhlsl.c: 2714
 Red Position Offset Y
 
 
-# osd/windows/d3dhlsl.c: 2746
+# osd/windows/d3dhlsl.c: 2740
 Red Power
 
 
-# osd/windows/d3dhlsl.c: 2743
+# osd/windows/d3dhlsl.c: 2737
 Red Scale
 
 
-# osd/windows/d3dhlsl.c: 1380, 2755 
+# osd/windows/d3dhlsl.c: 1380, 2749 
 Saturation
 
 
-# osd/windows/d3dhlsl.c: 2712
+# osd/windows/d3dhlsl.c: 2706
 Scanline Brightness
 
 
-# osd/windows/d3dhlsl.c: 2713
+# osd/windows/d3dhlsl.c: 2707
 Scanline Brightness Overdrive
 
 
-# osd/windows/d3dhlsl.c: 2709
+# osd/windows/d3dhlsl.c: 2703
 Scanline Darkness
 
 
-# osd/windows/d3dhlsl.c: 2711
+# osd/windows/d3dhlsl.c: 2705
 Scanline Indiv. Height
 
 
-# osd/windows/d3dhlsl.c: 2714
+# osd/windows/d3dhlsl.c: 2708
 Scanline Jitter
 
 
-# osd/windows/d3dhlsl.c: 2710
+# osd/windows/d3dhlsl.c: 2704
 Scanline Screen Height
 
 
-# osd/windows/d3dhlsl.c: 2707 
+# osd/windows/d3dhlsl.c: 2701 
 Screen Curvature
 
 
-# osd/windows/d3dhlsl.c: 2702
+# osd/windows/d3dhlsl.c: 2696
 Shadow Mask Darkness
 
 
-# osd/windows/d3dhlsl.c: 2705
+# osd/windows/d3dhlsl.c: 2699
 Shadow Mask Pixel Count X
 
 
-# osd/windows/d3dhlsl.c: 2706
+# osd/windows/d3dhlsl.c: 2700
 Shadow Mask Pixel Count Y
 
 
-# osd/windows/d3dhlsl.c: 2703
+# osd/windows/d3dhlsl.c: 2697
 Shadow Mask X Count
 
 
-# osd/windows/d3dhlsl.c: 2704
+# osd/windows/d3dhlsl.c: 2698
 Shadow Mask Y Count
 
 
@@ -786,7 +786,7 @@ Sound: buffer overflows=%d underflows=%d\n
 Take Rendered Snapshot
 
 
-# osd/windows/drawd3d.c: 1957
+# osd/windows/drawd3d.c: 1958
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 
@@ -818,7 +818,7 @@ Unable to initialize DirectDraw.\n
 Unable to open the keyboard device. (error %d)\n
 
 
-# osd/windows/drawd3d.c: 2427
+# osd/windows/drawd3d.c: 2428
 Unknown texture blendmode=%d format=%d\n
 
 

@@ -1,6 +1,6 @@
 /******************************************************************************
 
-    tiny.lst
+    mess.lst
 
     List of all enabled drivers in the system. This file is parsed by
     makelist.exe, sorted, and output as C code describing the drivers.

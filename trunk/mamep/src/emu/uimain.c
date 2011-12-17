@@ -257,13 +257,14 @@ void ui_menu_main::handle()
 		case AUTOFIRE:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_autofire(machine(), container)));
 			break;
+
 #endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 		case CUSTOM_BUTTON:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_custom_button(machine(), container)));
 			break;
-#endif /* USE_CUSTOM_BUTTON */
 
+#endif /* USE_CUSTOM_BUTTON */
 		case SETTINGS_DIP_SWITCHES:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_settings_dip_switches(machine(), container)));
 			break;
@@ -2596,7 +2597,7 @@ ui_menu_autofire::~ui_menu_autofire()
 
 void ui_menu_autofire::handle()
 {
-	int changed = FALSE;
+	int changed = false;
 
 	/* process the menu */
 	const ui_menu_event *menu_event = process(0);
@@ -2739,7 +2740,7 @@ ui_menu_custom_button::~ui_menu_custom_button()
 void ui_menu_custom_button::handle()
 {
 	const ui_menu_event *menu_event = process(0);
-	int changed = FALSE;
+	int changed = false;
 	int custom_buttons_count = 0;
 	const input_field_config *field;
 	const input_port_config *port;
@@ -2801,8 +2802,8 @@ void ui_menu_custom_button::populate()
 	int is_neogeo = !mame_stricmp(machine().system().source_file+17, "neodrvr.c");
 	int i;
 
-//	ui_menu_item_append(menu, _("Press 1-9 to Config"), NULL, 0, NULL);
-//	ui_menu_item_append(menu, MENU_SEPARATOR_ITEM, NULL, 0, NULL);
+//	item_append(_("Press 1-9 to Config"), NULL, 0, NULL);
+//	item_append(MENU_SEPARATOR_ITEM, NULL, 0, NULL);
 
 	/* loop over the input ports and add autofire toggle items */
 	for (port = machine().m_portlist.first(); port != NULL; port = port->next())

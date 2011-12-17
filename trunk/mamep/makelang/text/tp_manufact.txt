@@ -610,7 +610,7 @@ Craul Denshi
 Creative Electronics & Software
 
 
-# Country Club Classic
+# Country Club Classic (v1.10 03-apr-1997)
 Creative Electronics And Software
 
 
@@ -1242,7 +1242,7 @@ Hot-B
 Hudson
 
 
-# Blazing Lazers
+# Alien Crush
 Hudson Soft
 
 
@@ -1358,7 +1358,7 @@ Invi Image
 Irem
 
 
-# Atomic Punk (US)
+# Gunforce - Battle Fire Engulfed Terror Island (US)
 Irem America
 
 
@@ -1598,6 +1598,10 @@ Make Software
 MakeSoft
 
 
+# Birdiy
+Mama Top
+
+
 # Hotdog Storm (International)
 Marble
 
@@ -1760,6 +1764,10 @@ Mr Game
 
 # The Three Stooges In Brides Is Brides
 Mylstar
+
+
+# Last Hope (AES Beta Conversion)
+NG:Dev.Team
 
 
 # Genix Family
@@ -2640,6 +2648,10 @@ Taito America Corporation
 
 # Forty-Love
 Taito Corporation
+
+
+# The Ninja Warriors (US)
+Taito Corporation America
 
 
 # Aqua Jack (World)
