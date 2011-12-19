@@ -257,14 +257,14 @@ void ui_menu_main::handle()
 		case AUTOFIRE:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_autofire(machine(), container)));
 			break;
-
 #endif /* USE_AUTOFIRE */
+
 #ifdef USE_CUSTOM_BUTTON
 		case CUSTOM_BUTTON:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_custom_button(machine(), container)));
 			break;
-
 #endif /* USE_CUSTOM_BUTTON */
+
 		case SETTINGS_DIP_SWITCHES:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_settings_dip_switches(machine(), container)));
 			break;
@@ -2534,7 +2534,7 @@ ui_menu_scale_effect::~ui_menu_scale_effect()
 void ui_menu_scale_effect::handle()
 {
 	const ui_menu_event *menu_event = process(0);
-	int changed = false;
+	bool changed = false;
 
 	/* process the menu */
 	if (menu_event != NULL && menu_event->iptkey == IPT_UI_SELECT && 
@@ -2544,7 +2544,7 @@ void ui_menu_scale_effect::handle()
 		screen->video_exit_scale_effect();
 		scale_decode(scale_name((FPTR)menu_event->itemref - SCALE_ITEM_NONE));
 		screen->video_init_scale_effect();
-		changed = TRUE;
+		changed = true;
 		mame_printf_verbose(_("scale effect: %s\n"), scale_name((FPTR)menu_event->itemref - SCALE_ITEM_NONE));
 	}
 
@@ -2597,7 +2597,7 @@ ui_menu_autofire::~ui_menu_autofire()
 
 void ui_menu_autofire::handle()
 {
-	int changed = false;
+	bool changed = false;
 
 	/* process the menu */
 	const ui_menu_event *menu_event = process(0);
@@ -2628,7 +2628,7 @@ void ui_menu_autofire::handle()
 
 				set_autofiredelay(player, autofire_delay);
 
-				changed = TRUE;
+				changed = true;
 			}
 			//anything else is a toggle item
 			else
@@ -2653,7 +2653,7 @@ void ui_menu_autofire::handle()
 				settings.autofire = selected_value;
 				input_field_set_user_settings(field, &settings);
 
-				changed = TRUE;
+				changed = true;
 			}
 		}
 	}
@@ -2740,7 +2740,7 @@ ui_menu_custom_button::~ui_menu_custom_button()
 void ui_menu_custom_button::handle()
 {
 	const ui_menu_event *menu_event = process(0);
-	int changed = false;
+	bool changed = false;
 	int custom_buttons_count = 0;
 	const input_field_config *field;
 	const input_port_config *port;
@@ -2775,7 +2775,7 @@ void ui_menu_custom_button::handle()
 			if (machine().input().code_pressed_once(input_code(DEVICE_CLASS_KEYBOARD, 0, ITEM_CLASS_SWITCH, ITEM_MODIFIER_NONE, id)))
 			{
 				*selected_custom_button ^= 1 << i;
-				changed = TRUE;
+				changed = true;
 				break;
 			}
 		}

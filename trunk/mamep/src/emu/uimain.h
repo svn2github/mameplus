@@ -27,12 +27,12 @@ private:
 	enum {
 		INPUT_GROUPS,
 		INPUT_SPECIFIC,
-#ifdef USE_AUTOFIRE
+//#ifdef USE_AUTOFIRE
 		AUTOFIRE,
-#endif /* USE_AUTOFIRE */
-#ifdef USE_CUSTOM_BUTTON
+//#endif /* USE_AUTOFIRE */
+//#ifdef USE_CUSTOM_BUTTON
 		CUSTOM_BUTTON,
-#endif /* USE_CUSTOM_BUTTON */
+//#endif /* USE_CUSTOM_BUTTON */
 		SETTINGS_DIP_SWITCHES,
 		SETTINGS_DRIVER_CONFIG,
 		ANALOG,
@@ -48,15 +48,15 @@ private:
 		SLIDERS,
 		VIDEO_TARGETS,
 		VIDEO_OPTIONS,
-#ifdef USE_SCALE_EFFECTS
+//#ifdef USE_SCALE_EFFECTS
 		SCALE_EFFECT,
-#endif /* USE_SCALE_EFFECTS */
+//#endif /* USE_SCALE_EFFECTS */
 		CROSSHAIR,
 		CHEAT,
 		MEMORY_CARD,
-#ifdef CMD_LIST
+//#ifdef CMD_LIST
 		COMMAND,
-#endif /* CMD_LIST */
+//#endif /* CMD_LIST */
 		SELECT_GAME,
 	};
 };
