@@ -20,7 +20,6 @@
 #define __CMDDATA_H__
 
 extern void datafile_init(running_machine &machine, emu_options *options);
-extern void datafile_exit(void);
 
 #ifdef CMD_LIST
 extern int load_driver_command_ex(const game_driver *drv, char *buffer, int bufsize, const int menu_sel);

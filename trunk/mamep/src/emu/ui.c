@@ -457,10 +457,6 @@ int ui_init(running_machine &machine)
 
 static void ui_exit(running_machine &machine)
 {
-#ifdef CMD_LIST
-	datafile_exit();
-#endif /* CMD_LIST */
-
 	/* free the font */
 	machine.render().font_free(ui_font);
 	ui_font = NULL;

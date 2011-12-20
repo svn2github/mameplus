@@ -112,15 +112,7 @@ static void ParseClose(void);
  *      startup and shutdown functions
  ****************************************************************************/
 
-void datafile_init(running_machine &machine, emu_options *options)
-{
-	m_machine = &machine;
-	datafile_options = options;
-
-	num_games = driver_list::total();
-}
-
-void datafile_exit(void)
+static void datafile_exit(running_machine &machine)
 {
 	ParseClose();
 
@@ -131,6 +123,16 @@ void datafile_exit(void)
 		auto_free(*m_machine, sorted_drivers);
 		sorted_drivers = NULL;
 	}
+}
+
+void datafile_init(running_machine &machine, emu_options *options)
+{
+	m_machine = &machine;
+	datafile_options = options;
+
+	num_games = driver_list::total();
+
+	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(datafile_exit), &machine));
 }
 
 
