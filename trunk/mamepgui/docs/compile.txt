@@ -26,3 +26,8 @@ make install
 lrelease mamepgui.pro
 qmake
 make
+
+[translation]
+lupdate mamepgui.pro
+linguist lang\mamepgui_??_??.ts
+
