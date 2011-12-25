@@ -1140,6 +1140,7 @@ $(MAMEOBJ)/pacman.a: \
 $(MAMEOBJ)/pce.a: \
 	$(DRIVERS)/ggconnie.o \
 	$(DRIVERS)/paranoia.o \
+	$(DRIVERS)/tourvis.o \
 	$(DRIVERS)/uapce.o \
 	$(MACHINE)/pcecommn.o $(VIDEO)/vdc.o \
 
@@ -1835,7 +1836,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/superwng.o \
 	$(DRIVERS)/tapatune.o \
 	$(DRIVERS)/tattack.o \
-	$(DRIVERS)/taxidrvr.o $(VIDEO)/taxidrvr.o \
+	$(DRIVERS)/taxidriv.o $(VIDEO)/taxidriv.o \
 	$(DRIVERS)/tcl.o \
 	$(DRIVERS)/thayers.o \
 	$(DRIVERS)/thedeep.o $(VIDEO)/thedeep.o \

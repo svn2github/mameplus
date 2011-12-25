@@ -138,7 +138,7 @@ void ui_menu_main::populate()
 	/* add input menu items */
 	item_append(_("Input (general)"), NULL, 0, (void *)INPUT_GROUPS);
 
-	menu_text.printf(_("Input (this %s)"), emulator_info::get_capstartgamenoun());
+	menu_text.printf(_("Input (this %s)"),emulator_info::get_capstartgamenoun());
 	item_append(menu_text.cstr(), NULL, 0, (void *)INPUT_SPECIFIC);
 #ifdef USE_AUTOFIRE
 	item_append(_("Autofire Setting"), NULL, 0, (void *)AUTOFIRE);
@@ -257,14 +257,14 @@ void ui_menu_main::handle()
 		case AUTOFIRE:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_autofire(machine(), container)));
 			break;
-#endif /* USE_AUTOFIRE */
 
+#endif /* USE_AUTOFIRE */
 #ifdef USE_CUSTOM_BUTTON
 		case CUSTOM_BUTTON:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_custom_button(machine(), container)));
 			break;
-#endif /* USE_CUSTOM_BUTTON */
 
+#endif /* USE_CUSTOM_BUTTON */
 		case SETTINGS_DIP_SWITCHES:
 			ui_menu::stack_push(auto_alloc_clear(machine(), ui_menu_settings_dip_switches(machine(), container)));
 			break;
@@ -651,7 +651,7 @@ void ui_menu_input_general::populate()
 				input_item_data *item = (input_item_data *)m_pool_alloc(sizeof(*item));
 				memset(item, 0, sizeof(*item));
 				item->ref = entry;
-				if(pollingitem && pollingref == entry)
+				if(pollingitem && pollingref == entry && pollingseq == seqtype)
 					pollingitem = item;
 				item->seqtype = seqtype;
 				item->seq = input_type_seq(machine(), entry->type, entry->player, seqtype);
@@ -725,7 +725,7 @@ void ui_menu_input_specific::populate()
 					memset(item, 0, sizeof(*item));
 					item->ref = field;
 					item->seqtype = seqtype;
-					if(pollingitem && pollingref == field)
+					if(pollingitem && pollingref == field && pollingseq == seqtype)
 						pollingitem = item;
 					item->seq = input_field_seq(field, seqtype);
 					item->defseq = &get_field_default_seq(field, seqtype);
@@ -755,6 +755,9 @@ ui_menu_input_specific::~ui_menu_input_specific()
 -------------------------------------------------*/
 ui_menu_input::ui_menu_input(running_machine &machine, render_container *container) : ui_menu(machine, container)
 {
+	pollingitem = 0;
+	pollingref = 0;
+	pollingseq = SEQ_TYPE_STANDARD;
 }
 
 ui_menu_input::~ui_menu_input()
@@ -867,7 +870,10 @@ void ui_menu_input::handle()
 	{
 		pollingref = NULL;
 		if (pollingitem != NULL)
+		{
 			pollingref = pollingitem->ref;
+			pollingseq = pollingitem->seqtype;
+		}
 		reset(UI_MENU_RESET_REMEMBER_POSITION);
 	}
 }
@@ -974,7 +980,6 @@ void ui_menu_input::populate_and_sort(input_item_data *itemlist)
 
 ui_menu_settings_dip_switches::ui_menu_settings_dip_switches(running_machine &machine, render_container *container) : ui_menu_settings(machine, container, IPT_DIPSWITCH)
 {
-	custombottom = dipcount * (DIP_SWITCH_HEIGHT + DIP_SWITCH_SPACING) + DIP_SWITCH_SPACING;
 }
 
 ui_menu_settings_dip_switches::~ui_menu_settings_dip_switches()
@@ -1122,6 +1127,8 @@ void ui_menu_settings::populate()
 					}
 				}
 			}
+	if (type == IPT_DIPSWITCH)
+		custombottom = dipcount * (DIP_SWITCH_HEIGHT + DIP_SWITCH_SPACING) + DIP_SWITCH_SPACING;
 }
 
 ui_menu_settings::~ui_menu_settings()

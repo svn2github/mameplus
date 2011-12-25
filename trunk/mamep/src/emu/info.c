@@ -185,6 +185,7 @@ const char info_xml_creator::s_dtd_string[] =
 "\t\t<!ELEMENT softwarelist EMPTY>\n"
 "\t\t\t<!ATTLIST softwarelist name CDATA #REQUIRED>\n"
 "\t\t\t<!ATTLIST softwarelist status (original|compatible) #REQUIRED>\n"
+"\t\t\t<!ATTLIST softwarelist filter CDATA #IMPLIED>\n"
 "\t\t<!ELEMENT ramoption (#PCDATA)>\n"
 "\t\t\t<!ATTLIST ramoption default CDATA #IMPLIED>\n"
 "]>";
@@ -1089,7 +1090,7 @@ void info_xml_creator::output_driver()
 	/* some minor issues, games marked as status=preliminary */
 	/* don't work or have major emulation problems. */
 
-	if (m_drivlist.driver().flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_WRONG_COLORS))
+	if (m_drivlist.driver().flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_WRONG_COLORS | GAME_MECHANICAL))
 		fprintf(m_output, " status=\"preliminary\"");
 	else if (m_drivlist.driver().flags & (GAME_IMPERFECT_COLORS | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS))
 		fprintf(m_output, " status=\"imperfect\"");
@@ -1233,13 +1234,12 @@ void info_xml_creator::output_software_list()
 	for (const device_t *dev = m_drivlist.config().devicelist().first(SOFTWARE_LIST); dev != NULL; dev = dev->typenext())
 	{
 		software_list_config *swlist = (software_list_config *)downcast<const legacy_device_base *>(dev)->inline_config();
-
-		for (int i = 0; i < DEVINFO_STR_SWLIST_MAX - DEVINFO_STR_SWLIST_0; i++)
-			if (swlist->list_name[i])
-			{
-				fprintf(m_output, "\t\t<softwarelist name=\"%s\" ", swlist->list_name[i]);
-				fprintf(m_output, "status=\"%s\" />\n", (swlist->list_type == SOFTWARE_LIST_ORIGINAL_SYSTEM) ? "original" : "compatible");
-			}
+		fprintf(m_output, "\t\t<softwarelist name=\"%s\" ", swlist->list_name);
+		fprintf(m_output, "status=\"%s\" ", (swlist->list_type == SOFTWARE_LIST_ORIGINAL_SYSTEM) ? "original" : "compatible");
+		if (swlist->filter) {
+			fprintf(m_output, "filter=\"%s\" ", swlist->filter);
+		}
+		fprintf(m_output, "/>\n");
 	}
 }
 

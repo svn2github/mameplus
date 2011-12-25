@@ -69,10 +69,10 @@ struct _parse_state
 {
 	XML_Parser	parser;
 	int			done;
-
+	
 	void (*error_proc)(const char *message);
 	void *param;
-
+	
 	enum softlist_parse_position pos;
 	char **text_dest;
 };
@@ -97,6 +97,14 @@ struct _software_list
 	int list_entries;
 };
 
+typedef struct _software_list_config software_list_config;
+struct _software_list_config
+{
+	char *list_name;
+	UINT32 list_type;
+	const char *filter;
+};
+
 /* Handling a software list */
 software_list *software_list_open(emu_options &options, const char *listname, int is_preload, void (*error_proc)(const char *message));
 void software_list_close(software_list *swlist);
@@ -119,6 +127,8 @@ void software_display_matches(const device_list &devlist, emu_options &options,c
 const char *software_get_default_slot(const device_list &devlist, emu_options &options, const device_image_interface *image, const char* default_card_slot);
 
 void validate_softlists(emu_options &options);
+
+bool is_software_compatible(software_part *swpart, software_list_config *swlist);
 /*********************************************************************
 
     Driver software list configuration
@@ -130,44 +140,33 @@ DECLARE_LEGACY_DEVICE(SOFTWARE_LIST, software_list);
 #define SOFTWARE_SUPPORTED_PARTIAL	1
 #define SOFTWARE_SUPPORTED_NO		2
 
-
-#define SOFTWARE_LIST_CONFIG_SIZE	10
-
-
-typedef struct _software_list_config software_list_config;
-struct _software_list_config
-{
-	char *list_name[SOFTWARE_LIST_CONFIG_SIZE];
-	UINT32 list_type;
-};
-
-
-#define DEVINFO_STR_SWLIST_0	(DEVINFO_STR_DEVICE_SPECIFIC+0)
-#define DEVINFO_STR_SWLIST_MAX	(DEVINFO_STR_SWLIST_0 + SOFTWARE_LIST_CONFIG_SIZE - 1)
-
 #define SOFTWARE_LIST_ORIGINAL_SYSTEM		0
 #define SOFTWARE_LIST_COMPATIBLE_SYSTEM		1
 
-#define MCFG_SOFTWARE_LIST_CONFIG(_idx,_list,_list_type)								\
-	MCFG_DEVICE_CONFIG_DATAPTR_ARRAY(software_list_config, list_name, _idx, _list)	\
+#define MCFG_SOFTWARE_LIST_CONFIG(_list,_list_type)								\
+	MCFG_DEVICE_CONFIG_DATAPTR(software_list_config, list_name, _list)	\
 	MCFG_DEVICE_CONFIG_DATA32(software_list_config, list_type, _list_type)
 
 #define MCFG_SOFTWARE_LIST_ADD( _tag, _list )										\
 	MCFG_DEVICE_ADD( _tag, SOFTWARE_LIST, 0 )				\
-	MCFG_SOFTWARE_LIST_CONFIG(0,_list, SOFTWARE_LIST_ORIGINAL_SYSTEM)
+	MCFG_SOFTWARE_LIST_CONFIG(_list, SOFTWARE_LIST_ORIGINAL_SYSTEM)
 
 
 #define MCFG_SOFTWARE_LIST_COMPATIBLE_ADD( _tag, _list )										\
 	MCFG_DEVICE_ADD( _tag, SOFTWARE_LIST, 0 )				\
-	MCFG_SOFTWARE_LIST_CONFIG(0,_list, SOFTWARE_LIST_COMPATIBLE_SYSTEM)
+	MCFG_SOFTWARE_LIST_CONFIG(_list, SOFTWARE_LIST_COMPATIBLE_SYSTEM)
 
 
 #define MCFG_SOFTWARE_LIST_MODIFY( _tag, _list )									\
 	MCFG_DEVICE_MODIFY( _tag )								\
-	MCFG_SOFTWARE_LIST_CONFIG(0,_list, SOFTWARE_LIST_ORIGINAL_SYSTEM)
+	MCFG_SOFTWARE_LIST_CONFIG(_list, SOFTWARE_LIST_ORIGINAL_SYSTEM)
 
 #define MCFG_SOFTWARE_LIST_COMPATIBLE_MODIFY( _tag, _list )									\
 	MCFG_DEVICE_MODIFY( _tag )								\
-	MCFG_SOFTWARE_LIST_CONFIG(0,_list, SOFTWARE_LIST_COMPATIBLE_SYSTEM)
+	MCFG_SOFTWARE_LIST_CONFIG(_list, SOFTWARE_LIST_COMPATIBLE_SYSTEM)
+
+#define MCFG_SOFTWARE_LIST_FILTER( _tag, _filter )									\
+	MCFG_DEVICE_MODIFY( _tag )								\
+	MCFG_DEVICE_CONFIG_DATAPTR(software_list_config, filter, _filter)
 
 #endif

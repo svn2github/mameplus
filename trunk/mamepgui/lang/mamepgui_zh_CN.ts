@@ -200,12 +200,12 @@
     <message>
         <location filename="../gamelist.cpp" line="1454"/>
         <source>Mechanical</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">機械的</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="1455"/>
         <source>Non Mechanical</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">非機械的</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="1828"/>
@@ -764,7 +764,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mainwindow.ui" line="712"/>
         <source>Hide &amp;Mechanical</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">隱藏機械的遊戲(&amp;M)</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="725"/>

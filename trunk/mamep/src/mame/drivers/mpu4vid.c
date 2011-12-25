@@ -2976,7 +2976,7 @@ ROM_END
 ROM_START( v4psib )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "psi20int", 0x0000, 0x004000, CRC(20ee94b4) SHA1(4c77be34e20a843add2bba23c092fd5bba90bc45) )
-	
+
 	ROM_REGION( 0x800000, "video", 0 )
 	ROM_LOAD16_BYTE( "psi20p1", 0x000000, 0x010000, CRC(1795fe9c) SHA1(c93e0815d76ab4e55e7659d5c332db9d847a00b0) )
 	ROM_LOAD16_BYTE( "psi20p2", 0x000001, 0x010000, CRC(c1497581) SHA1(f6b64df97d90aa13ed7b5d42608b9014326a880b) )
@@ -3014,11 +3014,11 @@ ROM_END
 ROM_START( v4tetrs )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD("tetris22.p0",  0x00000, 0x04000, CRC(b711c7ae) SHA1(767b17ddf9021fdf79ff6c52f04a5d8ea60cf30e) )
-	
+
 	ROM_REGION( 0x10000, "altrevs", 0 )
 	ROM_LOAD( "tetv1int", 0x0000, 0x004000, CRC(98de975d) SHA1(5b4fc06aa8008d3967c68f364c47f8377a1ba9df) )
-	
-	
+
+
 	ROM_REGION( 0x800000, "video", 0 )
 	ROM_LOAD16_BYTE( "tetris22.p1",  0x000000, 0x10000, CRC(e81dd182) SHA1(28b460224abf6fe24b637542ccd1c84040674555) )
 	ROM_LOAD16_BYTE( "tetris22.p2",  0x000001, 0x10000, CRC(68aa4f15) SHA1(4e4511a64391fc64e5f5b7ccb46a78fd2e1d94d6) )
@@ -3486,7 +3486,7 @@ ROM_START( v4skltrk )
 	ROM_LOAD16_BYTE( "st.q7",  0x0a0000, 0x010000,  CRC(f3b8fe7f) SHA1(52d5be3f8cab419103f4727d0fb9d30f34c8f651) )
 	ROM_LOAD16_BYTE( "st.q8",  0x0a0001, 0x010000,  CRC(b85e75a2) SHA1(b7b03b090c0ec6d92e9a25abb7fec0507356bdfc) )
 	ROM_LOAD16_BYTE( "st.q9",  0x0c0000, 0x010000,  CRC(835f6001) SHA1(2cd9084c102d74bcb578c8ea22bbc9ea58f0ceab) )
-	ROM_LOAD16_BYTE( "st.qa",  0x0c0001, 0x010000,  CRC(3fc62a0e) SHA1(0628de4b962d3fcca3757cd4e89b3005c9bfd218) )	
+	ROM_LOAD16_BYTE( "st.qa",  0x0c0001, 0x010000,  CRC(3fc62a0e) SHA1(0628de4b962d3fcca3757cd4e89b3005c9bfd218) )
 ROM_END
 
 ROM_START( v4skltrka )
@@ -3519,9 +3519,9 @@ ROM_START( v4sklcsh )
 	ROM_LOAD16_BYTE( "scs.p1", 0x000000, 0x010000, CRC(3181524e) SHA1(e801a036b9d509d8e2e5f7c9c6ccd9d9ddf76b2f) )
 	ROM_LOAD16_BYTE( "scs.p2", 0x000001, 0x010000, CRC(a7596804) SHA1(f27fc3ee7a17904ea08baa421e14d02226428c42) )
 	ROM_LOAD16_BYTE( "scs.p3", 0x020000, 0x010000, CRC(b3ded2bc) SHA1(39cb15fde4aea1187668120d548bfe022835b600) )
-	ROM_LOAD16_BYTE( "scs.p4", 0x020001, 0x010000, CRC(2ce2e9d1) SHA1(c492fea2e179796a360131c19a9cba5bbfe3c7fd) )	
+	ROM_LOAD16_BYTE( "scs.p4", 0x020001, 0x010000, CRC(2ce2e9d1) SHA1(c492fea2e179796a360131c19a9cba5bbfe3c7fd) )
 
-	/* missing questions */	
+	/* missing questions */
 ROM_END
 
 
@@ -3548,7 +3548,7 @@ ROM_START( v4time )
 	ROM_LOAD16_BYTE( "q19.p14",  0x0c0001, 0x010000,  CRC(73747644) SHA1(ae252fc95c069a3c82e155220fbfcb74dd43bf89) )
 
 	ROM_REGION( 0x800000, "altvideo", 0 )
-	ROM_LOAD( "tmd.p1", 0x0000, 0x010000, CRC(e21045e0) SHA1(c4d0e80970ec8558db777a882edc5a0c80767375) )	
+	ROM_LOAD( "tmd.p1", 0x0000, 0x010000, CRC(e21045e0) SHA1(c4d0e80970ec8558db777a882edc5a0c80767375) )
 
 	ROM_REGION( 0x800000, "altquestion", 0 )
 	ROM_LOAD( "tm.q1", 0x0000, 0x010000, CRC(6af4d58b) SHA1(ee547dad30cd9940f0b017caac97aeb046604f22) )
@@ -3616,7 +3616,7 @@ ROM_START( v4addlad )
 	VID_BIOS
 
 	ROM_REGION( 0x800000, "video", 0 )
-	ROM_LOAD16_BYTE( "als_21.p1", 0x000000, 0x010000, CRC(c2c4ceea) SHA1(0c5ea4d02ba053191855547b714da9a7f61f3713) )	
+	ROM_LOAD16_BYTE( "als_21.p1", 0x000000, 0x010000, CRC(c2c4ceea) SHA1(0c5ea4d02ba053191855547b714da9a7f61f3713) )
 	ROM_LOAD16_BYTE( "al_21.p2",  0x000001, 0x010000, CRC(d5909619) SHA1(eb8d978ed28cd3afab6b3c1274d79bc6b188d240) )
 	ROM_LOAD16_BYTE( "al_21.p3",  0x020000, 0x010000, CRC(5dc65d9f) SHA1(52dffb162a0e5649e056817e9db567cc7653538c) )
 	ROM_LOAD16_BYTE( "al_21.p4",  0x020001, 0x010000, CRC(17c77264) SHA1(321372c1c0d25cfc5a1302ccfd5680d9bf62d31b) )
@@ -4753,106 +4753,108 @@ The AMLD versions appear to be a mixture of the original game modules and Team C
 
 GAME(  199?,v4bios,		0,			mod2,	mpu4,		0,			ROT0, "Barcrest","MPU4 Video Firmware",GAME_IS_BIOS_ROOT )
 
-GAMEL( 1993,v4cmaze,	v4bios,		crmaze,		crmaze,		crmaze,		ROT0, "Barcrest","The Crystal Maze (v1.3) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze2p )//SWP 0.9
-GAMEL( 1993,v4cmazedat,	v4cmaze,	crmaze,		crmaze,		crmaze,		ROT0, "Barcrest","The Crystal Maze (v1.3, Datapak) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze2p )//SWP 0.9D
-GAMEL( 1993,v4cmazea,	v4cmaze,	crmaze,		crmaze,		crmazea,	ROT0, "Barcrest","The Crystal Maze (v0.1, AMLD) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze2p )//SWP 0.9 (actually newer than the 1.1 set then??)
-GAMEL( 1993,v4cmazeb,	v4cmaze,	crmaze,		crmaze,		v4cmazeb,	ROT0, "Barcrest","The Crystal Maze (v1.2) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze2p )//SWP 0.9
-GAMEL( 1993,v4cmazec,	v4cmaze,	crmaze,		crmaze,		v4cmazeb,	ROT0, "Barcrest","The Crystal Maze (v1.3 alt) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze2p )//SWP 0.9
-GAMEL( 1993,v4cmazed,	v4cmaze,	crmaze,		crmaze,		v4cmazeb,	ROT0, "Barcrest","The Crystal Maze (v1.1) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze2p )//SWP 0.6
+#define GAME_FLAGS GAME_NOT_WORKING
 
-GAMEL( 1993,v4cmaze2,	v4bios,		crmaze,		crmaze,		crmaze2,	ROT0, "Barcrest","The New Crystal Maze Featuring Ocean Zone (v2.2) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze4p )//SWP 1.0
-GAMEL( 1993,v4cmaze2d,	v4cmaze2,	crmaze,		crmaze,		crmaze2,	ROT0, "Barcrest","The New Crystal Maze Featuring Ocean Zone (v2.2, Datapak) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze4p )//SWP 1.0D
-GAMEL( 1993,v4cmaze2a,	v4cmaze2,	crmaze,		crmaze,		crmaze2a,	ROT0, "Barcrest","The New Crystal Maze Featuring Ocean Zone (v0.1, AMLD) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze4p )//SWP 1.0 /* unprotected? proto? */
-GAMEL( 1993,v4cmaze2b,	v4cmaze2,	crmaze,		crmaze,		crmaze2,	ROT0, "Barcrest","The New Crystal Maze Featuring Ocean Zone (v2.0) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze4p )//SWP 1.0
-GAMEL( 1993,v4cmaze2c,	v4cmaze2,	crmaze,		crmaze,		crmaze2,	ROT0, "Barcrest","The New Crystal Maze Featuring Ocean Zone (v?.?) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze4p )// bad rom?
+GAMEL( 1993,v4cmaze,	v4bios,		crmaze,		crmaze,		crmaze,		ROT0, "Barcrest","The Crystal Maze (v1.3) (MPU4 Video)",GAME_FLAGS,layout_crmaze2p )//SWP 0.9
+GAMEL( 1993,v4cmazedat,	v4cmaze,	crmaze,		crmaze,		crmaze,		ROT0, "Barcrest","The Crystal Maze (v1.3, Datapak) (MPU4 Video)",GAME_FLAGS,layout_crmaze2p )//SWP 0.9D
+GAMEL( 1993,v4cmazea,	v4cmaze,	crmaze,		crmaze,		crmazea,	ROT0, "Barcrest","The Crystal Maze (v0.1, AMLD) (MPU4 Video)",GAME_FLAGS,layout_crmaze2p )//SWP 0.9 (actually newer than the 1.1 set then??)
+GAMEL( 1993,v4cmazeb,	v4cmaze,	crmaze,		crmaze,		v4cmazeb,	ROT0, "Barcrest","The Crystal Maze (v1.2) (MPU4 Video)",GAME_FLAGS,layout_crmaze2p )//SWP 0.9
+GAMEL( 1993,v4cmazec,	v4cmaze,	crmaze,		crmaze,		v4cmazeb,	ROT0, "Barcrest","The Crystal Maze (v1.3 alt) (MPU4 Video)",GAME_FLAGS,layout_crmaze2p )//SWP 0.9
+GAMEL( 1993,v4cmazed,	v4cmaze,	crmaze,		crmaze,		v4cmazeb,	ROT0, "Barcrest","The Crystal Maze (v1.1) (MPU4 Video)",GAME_FLAGS,layout_crmaze2p )//SWP 0.6
 
-GAMEL( 1994,v4cmaze3,	v4bios,		crmaze,		crmaze,		crmaze3,	ROT0, "Barcrest","The Crystal Maze Team Challenge (v0.9) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze4p )//SWP 0.7
-GAMEL( 1994,v4cmaze3d,	v4cmaze3,	crmaze,		crmaze,		crmaze3,	ROT0, "Barcrest","The Crystal Maze Team Challenge (v0.9, Datapak) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze4p )//SWP 0.7D
-GAMEL( 1994,v4cmaze3a,	v4cmaze3,	crmaze,		crmaze,		crmaze3a,	ROT0, "Barcrest","The Crystal Maze Team Challenge (v1.2, AMLD) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze4p )//SWP 0.7
-GAMEL( 1994,v4cmaze3b,	v4cmaze3,	crmaze,		crmaze,		v4cmazeb,	ROT0, "Barcrest","The Crystal Maze Team Challenge (v0.8) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze4p )//SWP 0.7
-GAMEL( 1994,v4cmaze3c,	v4cmaze3,	crmaze,		crmaze,		v4cmazeb,	ROT0, "Barcrest","The Crystal Maze Team Challenge (v?.?) (MPU4 Video)",GAME_NOT_WORKING,layout_crmaze4p )// missing one program rom
+GAMEL( 1993,v4cmaze2,	v4bios,		crmaze,		crmaze,		crmaze2,	ROT0, "Barcrest","The New Crystal Maze Featuring Ocean Zone (v2.2) (MPU4 Video)",GAME_FLAGS,layout_crmaze4p )//SWP 1.0
+GAMEL( 1993,v4cmaze2d,	v4cmaze2,	crmaze,		crmaze,		crmaze2,	ROT0, "Barcrest","The New Crystal Maze Featuring Ocean Zone (v2.2, Datapak) (MPU4 Video)",GAME_FLAGS,layout_crmaze4p )//SWP 1.0D
+GAMEL( 1993,v4cmaze2a,	v4cmaze2,	crmaze,		crmaze,		crmaze2a,	ROT0, "Barcrest","The New Crystal Maze Featuring Ocean Zone (v0.1, AMLD) (MPU4 Video)",GAME_FLAGS,layout_crmaze4p )//SWP 1.0 /* unprotected? proto? */
+GAMEL( 1993,v4cmaze2b,	v4cmaze2,	crmaze,		crmaze,		crmaze2,	ROT0, "Barcrest","The New Crystal Maze Featuring Ocean Zone (v2.0) (MPU4 Video)",GAME_FLAGS,layout_crmaze4p )//SWP 1.0
+GAMEL( 1993,v4cmaze2c,	v4cmaze2,	crmaze,		crmaze,		crmaze2,	ROT0, "Barcrest","The New Crystal Maze Featuring Ocean Zone (v?.?) (MPU4 Video)",GAME_FLAGS,layout_crmaze4p )// bad rom?
 
-GAME(  199?,v4turnov,	v4bios,		mpu4_vid,	turnover,	turnover,	ROT0, "Barcrest","Turnover (v2.3) (MPU4 Video)",GAME_NOT_WORKING )
+GAMEL( 1994,v4cmaze3,	v4bios,		crmaze,		crmaze,		crmaze3,	ROT0, "Barcrest","The Crystal Maze Team Challenge (v0.9) (MPU4 Video)",GAME_FLAGS,layout_crmaze4p )//SWP 0.7
+GAMEL( 1994,v4cmaze3d,	v4cmaze3,	crmaze,		crmaze,		crmaze3,	ROT0, "Barcrest","The Crystal Maze Team Challenge (v0.9, Datapak) (MPU4 Video)",GAME_FLAGS,layout_crmaze4p )//SWP 0.7D
+GAMEL( 1994,v4cmaze3a,	v4cmaze3,	crmaze,		crmaze,		crmaze3a,	ROT0, "Barcrest","The Crystal Maze Team Challenge (v1.2, AMLD) (MPU4 Video)",GAME_FLAGS,layout_crmaze4p )//SWP 0.7
+GAMEL( 1994,v4cmaze3b,	v4cmaze3,	crmaze,		crmaze,		v4cmazeb,	ROT0, "Barcrest","The Crystal Maze Team Challenge (v0.8) (MPU4 Video)",GAME_FLAGS,layout_crmaze4p )//SWP 0.7
+GAMEL( 1994,v4cmaze3c,	v4cmaze3,	crmaze,		crmaze,		v4cmazeb,	ROT0, "Barcrest","The Crystal Maze Team Challenge (v?.?) (MPU4 Video)",GAME_FLAGS,layout_crmaze4p )// missing one program rom
 
-GAME(  1990,v4skltrk,	v4bios,		mpu4_vid,	skiltrek,	skiltrek,	ROT0, "Barcrest","Skill Trek (v1.1) (MPU4 Video, set 1)",GAME_NOT_WORKING ) // 10 pound max
-GAME(  1990,v4skltrka,	v4skltrk,	mpu4_vid,	skiltrek,	skiltrek,	ROT0, "Barcrest","Skill Trek (v1.1) (MPU4 Video, set 2)",GAME_NOT_WORKING ) // 12 pound max
-GAME(  1990,v4sklcsh,	v4bios,		mpu4_vid,	skiltrek,	v4barqst,	ROT0, "Barcrest","Skill Cash (v1.1) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  199?,v4turnov,	v4bios,		mpu4_vid,	turnover,	turnover,	ROT0, "Barcrest","Turnover (v2.3) (MPU4 Video)",GAME_FLAGS )
 
-GAME(  1989,v4addlad,	v4bios,		mpu4_vid,	adders,		adders,		ROT0, "Barcrest","Adders and Ladders (v2.1) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  1989,v4addlad20,	v4addlad,	mpu4_vid,	adders,		adders,		ROT0, "Barcrest","Adders and Ladders (v2.0) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  1990,v4skltrk,	v4bios,		mpu4_vid,	skiltrek,	skiltrek,	ROT0, "Barcrest","Skill Trek (v1.1) (MPU4 Video, set 1)",GAME_FLAGS ) // 10 pound max
+GAME(  1990,v4skltrka,	v4skltrk,	mpu4_vid,	skiltrek,	skiltrek,	ROT0, "Barcrest","Skill Trek (v1.1) (MPU4 Video, set 2)",GAME_FLAGS ) // 12 pound max
+GAME(  1990,v4sklcsh,	v4bios,		mpu4_vid,	skiltrek,	v4barqst,	ROT0, "Barcrest","Skill Cash (v1.1) (MPU4 Video)",GAME_FLAGS )
 
-GAME(  1989,v4time,		v4bios,		mpu4_vid,	skiltrek,	timemchn,	ROT0, "Barcrest","Time Machine (v2.0) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  1989,v4addlad,	v4bios,		mpu4_vid,	adders,		adders,		ROT0, "Barcrest","Adders and Ladders (v2.1) (MPU4 Video)",GAME_FLAGS )
+GAME(  1989,v4addlad20,	v4addlad,	mpu4_vid,	adders,		adders,		ROT0, "Barcrest","Adders and Ladders (v2.0) (MPU4 Video)",GAME_FLAGS )
+
+GAME(  1989,v4time,		v4bios,		mpu4_vid,	skiltrek,	timemchn,	ROT0, "Barcrest","Time Machine (v2.0) (MPU4 Video)",GAME_FLAGS )
 
 //Year is a guess, based on the use of the 'Coin Man' logo
-GAME(  1996?,v4mate,	v4bios,		mating,		mating,		mating,		ROT0, "Barcrest","The Mating Game (v0.4) (MPU4 Video)",GAME_NOT_WORKING )//SWP 0.2 /* Using crmaze controls for now, cabinet has trackball */
-GAME(  1996?,v4mated,	v4mate,		mating,		mating,		mating,		ROT0, "Barcrest","The Mating Game (v0.4, Datapak) (MPU4 Video)",GAME_NOT_WORKING )//SWP 0.2D
+GAME(  1996?,v4mate,	v4bios,		mating,		mating,		mating,		ROT0, "Barcrest","The Mating Game (v0.4) (MPU4 Video)",GAME_FLAGS )//SWP 0.2 /* Using crmaze controls for now, cabinet has trackball */
+GAME(  1996?,v4mated,	v4mate,		mating,		mating,		mating,		ROT0, "Barcrest","The Mating Game (v0.4, Datapak) (MPU4 Video)",GAME_FLAGS )//SWP 0.2D
 
 /* Games below are missing question ROMs */
 
-GAME(  199?,v4strike,	v4bios,		mpu4_vid,	mpu4,		strikeit,	ROT0, "Barcrest","Strike it Lucky (v0.5) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4striked,	v4strike,	mpu4_vid,	mpu4,		strikeit,	ROT0, "Barcrest","Strike it Lucky (v0.5, Datapak) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4strike2,	v4strike,	mpu4_vid,	mpu4,		strikeit,	ROT0, "Barcrest","Strike it Lucky (v0.53) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4strike2d,	v4strike,	mpu4_vid,	mpu4,		strikeit,	ROT0, "Barcrest","Strike it Lucky (v0.53, Datapak) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  199?,v4strike,	v4bios,		mpu4_vid,	mpu4,		strikeit,	ROT0, "Barcrest","Strike it Lucky (v0.5) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4striked,	v4strike,	mpu4_vid,	mpu4,		strikeit,	ROT0, "Barcrest","Strike it Lucky (v0.5, Datapak) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4strike2,	v4strike,	mpu4_vid,	mpu4,		strikeit,	ROT0, "Barcrest","Strike it Lucky (v0.53) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4strike2d,	v4strike,	mpu4_vid,	mpu4,		strikeit,	ROT0, "Barcrest","Strike it Lucky (v0.53, Datapak) (MPU4 Video)",GAME_FLAGS )
 
-GAME(  199?,v4eyedwn,	v4bios,		mpu4_vid,	mpu4,		eyesdown,	ROT0, "Barcrest","Eyes Down (v1.3) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4eyedwnd,	v4eyedwn,	mpu4_vid,	mpu4,		eyesdown,	ROT0, "Barcrest","Eyes Down (v1.3, Datapak) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  199?,v4eyedwn,	v4bios,		mpu4_vid,	mpu4,		eyesdown,	ROT0, "Barcrest","Eyes Down (v1.3) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4eyedwnd,	v4eyedwn,	mpu4_vid,	mpu4,		eyesdown,	ROT0, "Barcrest","Eyes Down (v1.3, Datapak) (MPU4 Video)",GAME_FLAGS )
 
-GAME(  199?,v4quidgr,	v4bios,		mpu4_vid,	mpu4,		quidgrid,	ROT0, "Barcrest","Ten Quid Grid (v1.2) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4quidgrd,	v4quidgr,	mpu4_vid,	mpu4,		quidgrid,	ROT0, "Barcrest","Ten Quid Grid (v1.2, Datapak) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4quidgr2,	v4quidgr,	mpu4_vid,	mpu4,		quidgrid,	ROT0, "Barcrest","Ten Quid Grid (v2.4) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4quidgr2d,	v4quidgr,	mpu4_vid,	mpu4,		quidgrid,	ROT0, "Barcrest","Ten Quid Grid (v2.4, Datapak) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  199?,v4quidgr,	v4bios,		mpu4_vid,	mpu4,		quidgrid,	ROT0, "Barcrest","Ten Quid Grid (v1.2) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4quidgrd,	v4quidgr,	mpu4_vid,	mpu4,		quidgrid,	ROT0, "Barcrest","Ten Quid Grid (v1.2, Datapak) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4quidgr2,	v4quidgr,	mpu4_vid,	mpu4,		quidgrid,	ROT0, "Barcrest","Ten Quid Grid (v2.4) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4quidgr2d,	v4quidgr,	mpu4_vid,	mpu4,		quidgrid,	ROT0, "Barcrest","Ten Quid Grid (v2.4, Datapak) (MPU4 Video)",GAME_FLAGS )
 
-GAME(  199?,v4barqst,	v4bios, 	mpu4_vid,	mpu4,		v4barqst,	ROT0, "Barcrest","Barquest (v2.6d) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4barqs2,	v4bios, 	mpu4_vid,	mpu4,		v4barqst2,	ROT0, "Barcrest","Barquest 2 (v0.3) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  199?,v4barqst,	v4bios, 	mpu4_vid,	mpu4,		v4barqst,	ROT0, "Barcrest","Barquest (v2.6d) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4barqs2,	v4bios, 	mpu4_vid,	mpu4,		v4barqst2,	ROT0, "Barcrest","Barquest 2 (v0.3) (MPU4 Video)",GAME_FLAGS )
 
-GAME(  199?,v4wize,		v4bios, 	mpu4_vid,	mpu4,		v4wize,		ROT0, "Barcrest","Wize Move (v1.3d) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4wizea,	v4bios, 	mpu4_vid,	mpu4,		v4wize,		ROT0, "Barcrest","Wize Move (v1.2) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  199?,v4wize,		v4bios, 	mpu4_vid,	mpu4,		v4wize,		ROT0, "Barcrest","Wize Move (v1.3d) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4wizea,	v4bios, 	mpu4_vid,	mpu4,		v4wize,		ROT0, "Barcrest","Wize Move (v1.2) (MPU4 Video)",GAME_FLAGS )
 
-GAME(  1991,v4opt3,		v4bios, 	mpu4_vid,	mpu4,		v4opt3,		ROT0, "Barcrest","Option 3 (v1.0) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  1991,v4opt3d,	v4opt3, 	mpu4_vid,	mpu4,		v4opt3,		ROT0, "Barcrest","Option 3 (v1.0) (Datapak) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  1991,v4opt3,		v4bios, 	mpu4_vid,	mpu4,		v4opt3,		ROT0, "Barcrest","Option 3 (v1.0) (MPU4 Video)",GAME_FLAGS )
+GAME(  1991,v4opt3d,	v4opt3, 	mpu4_vid,	mpu4,		v4opt3,		ROT0, "Barcrest","Option 3 (v1.0) (Datapak) (MPU4 Video)",GAME_FLAGS )
 
 
 
 
 /* Games below are newer BwB games and use their own BIOS ROMs and hardware setups*/
 
-GAME(  199?,v4vgpok,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Vegas Poker (prototype, release 2) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4psi,		0,			bwbvid,		mpu4,		prizeinv,	ROT0, "BwB","Prize Space Invaders (v1.1) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4psia,		0,			bwbvid,		mpu4,		prizeinv,	ROT0, "BwB","Prize Space Invaders (v1.2) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4psib,		0,			bwbvid,		mpu4,		prizeinv,	ROT0, "BwB","Prize Space Invaders (v2.0?) (MPU4 Video)",GAME_NOT_WORKING ) // bad dump
-GAME(  199?,v4blox,		0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Blox (v2.0) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4bloxd,	v4blox,		bwbvid,		mpu4,		0,			ROT0, "BwB","Blox (v2.0, Datapak) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  1996,v4reno,		0,			bwbvid5,	mpu4,		prizeinv,	ROT0, "BwB","Reno Reels (20p/10GBP Cash, release A) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  199?,v4vgpok,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Vegas Poker (prototype, release 2) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4psi,		0,			bwbvid,		mpu4,		prizeinv,	ROT0, "BwB","Prize Space Invaders (v1.1) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4psia,		0,			bwbvid,		mpu4,		prizeinv,	ROT0, "BwB","Prize Space Invaders (v1.2) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4psib,		0,			bwbvid,		mpu4,		prizeinv,	ROT0, "BwB","Prize Space Invaders (v2.0?) (MPU4 Video)",GAME_FLAGS ) // bad dump
+GAME(  199?,v4blox,		0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Blox (v2.0) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4bloxd,	v4blox,		bwbvid,		mpu4,		0,			ROT0, "BwB","Blox (v2.0, Datapak) (MPU4 Video)",GAME_FLAGS )
+GAME(  1996,v4reno,		0,			bwbvid5,	mpu4,		prizeinv,	ROT0, "BwB","Reno Reels (20p/10GBP Cash, release A) (MPU4 Video)",GAME_FLAGS )
 
-GAME(  199?,v4bigfrt,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Big Fruits (v2.0?) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4bubbnk,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Bubbly Bonk (v4.0?) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4mazbel,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Mazooma Belle (v2.5) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4mazbla,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Mazooma Belle (v1.5) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4shpwnd,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Shop Window (v2.0) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  199?,v4bigfrt,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Big Fruits (v2.0?) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4bubbnk,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Bubbly Bonk (v4.0?) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4mazbel,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Mazooma Belle (v2.5) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4mazbla,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Mazooma Belle (v1.5) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4shpwnd,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Shop Window (v2.0) (MPU4 Video)",GAME_FLAGS )
 
-GAME(  199?,v4redhtp,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Red Hot Poker (20p/10GBP Cash, release 3) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4tetrs,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","BwB Tetris v 2.2 (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  199?,v4redhtp,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Red Hot Poker (20p/10GBP Cash, release 3) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4tetrs,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","BwB Tetris v 2.2 (MPU4 Video)",GAME_FLAGS )
 
-GAME(  199?,v4big40,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Big 40 Poker (Bwb) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4bulblx,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Bullion Blox (Bwb) (MPU4 Video)",GAME_NOT_WORKING ) // is this the same game as v4blox?
-GAME(  199?,v4cshinf,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Cash Inferno (Bwb) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4dbltak,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Double Take (Bwb) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4gldrsh,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Gold Rush (Bwb) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4mdice,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Miami Dice (Bwb) (MPU4 Video)",GAME_NOT_WORKING ) // is this the same as the Nova game below?
-GAME(  199?,v4monte,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Monte Carlo Or Bust (Bwb) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4ovrmn3,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Over Moon Pt3 (Bwb) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4pztet,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Prize Tetris (Bwb) (MPU4 Video, set 1)",GAME_NOT_WORKING ) // is this the same as v4tetrs?
-GAME(  199?,v4pzteta,	v4pztet,	bwbvid,		mpu4,		0,			ROT0, "BwB","Prize Tetris (Bwb) (MPU4 Video, set 2)",GAME_NOT_WORKING )
-GAME(  199?,v4rhmaz,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Red Hot Mazooma Belle (Bwb) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4sunbst,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Sunburst (Bwb) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4timebn,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Time Bandit (Bwb) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4sixx,		0,			bwbvid,		mpu4,		0,			ROT0, "BwB","6-X (Bwb) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4megbuk,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Megabucks Poker (Bwb) (MPU4 Video)",GAME_NOT_WORKING ) // no video roms!
-GAME(  199?,v4rencas,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Reno Casino (Bwb) (MPU4 Video)",GAME_NOT_WORKING ) // no video roms!
+GAME(  199?,v4big40,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Big 40 Poker (Bwb) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4bulblx,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Bullion Blox (Bwb) (MPU4 Video)",GAME_FLAGS ) // is this the same game as v4blox?
+GAME(  199?,v4cshinf,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Cash Inferno (Bwb) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4dbltak,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Double Take (Bwb) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4gldrsh,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Gold Rush (Bwb) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4mdice,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Miami Dice (Bwb) (MPU4 Video)",GAME_FLAGS ) // is this the same as the Nova game below?
+GAME(  199?,v4monte,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Monte Carlo Or Bust (Bwb) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4ovrmn3,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Over Moon Pt3 (Bwb) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4pztet,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Prize Tetris (Bwb) (MPU4 Video, set 1)",GAME_FLAGS ) // is this the same as v4tetrs?
+GAME(  199?,v4pzteta,	v4pztet,	bwbvid,		mpu4,		0,			ROT0, "BwB","Prize Tetris (Bwb) (MPU4 Video, set 2)",GAME_FLAGS )
+GAME(  199?,v4rhmaz,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Red Hot Mazooma Belle (Bwb) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4sunbst,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Sunburst (Bwb) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4timebn,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Time Bandit (Bwb) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4sixx,		0,			bwbvid,		mpu4,		0,			ROT0, "BwB","6-X (Bwb) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4megbuk,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Megabucks Poker (Bwb) (MPU4 Video)",GAME_FLAGS ) // no video roms!
+GAME(  199?,v4rencas,	0,			bwbvid,		mpu4,		0,			ROT0, "BwB","Reno Casino (Bwb) (MPU4 Video)",GAME_FLAGS ) // no video roms!
 
 
 /* Uncertain BIOS */
-GAME(  199?,v4frfact,	v4bios,		crmaze,		crmaze,		crmaze,		ROT0, "Bwb","Fruit Factory (Bwb) (MPU4 Video)", GAME_NOT_WORKING )
+GAME(  199?,v4frfact,	v4bios,		crmaze,		crmaze,		crmaze,		ROT0, "Bwb","Fruit Factory (Bwb) (MPU4 Video)", GAME_FLAGS )
 
 /*Deal 'Em was a conversion kit designed to make early MPU4 machines into video games by replacing the top glass
 and reel assembly with this kit and a supplied monitor. This explains why the cabinet switch alters lamp data and buttons.
@@ -4863,9 +4865,9 @@ GAME(  1987,v4dealem,	0,			dealem,		dealem,		0,			ROT0, "Zenitone","Deal 'Em (MP
 
 /* Nova - is this the same video board? One of the games displays 'Resetting' but the others do nothing interesting and access strange addresses */
 /* All contain BwB video in the BIOS rom tho */
-GAME(  199?,v4cybcas,	0,			bwbvid5,	mpu4,		0,			ROT0, "Nova","Cyber Casino (Nova) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4miami,	0,			bwbvid5,	mpu4,		0,			ROT0, "Nova","Miami Dice (Nova) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4missis,	0,			bwbvid5,	mpu4,		0,			ROT0, "Nova","Mississippi Lady (Nova) (MPU4 Video)",GAME_NOT_WORKING )
-GAME(  199?,v4picdil,	0,			bwbvid5,	mpu4,		0,			ROT0, "Nova","Piccadilly Nights (Nova) (MPU4 Video)",GAME_NOT_WORKING )
+GAME(  199?,v4cybcas,	0,			bwbvid5,	mpu4,		0,			ROT0, "Nova","Cyber Casino (Nova) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4miami,	0,			bwbvid5,	mpu4,		0,			ROT0, "Nova","Miami Dice (Nova) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4missis,	0,			bwbvid5,	mpu4,		0,			ROT0, "Nova","Mississippi Lady (Nova) (MPU4 Video)",GAME_FLAGS )
+GAME(  199?,v4picdil,	0,			bwbvid5,	mpu4,		0,			ROT0, "Nova","Piccadilly Nights (Nova) (MPU4 Video)",GAME_FLAGS )
 
 

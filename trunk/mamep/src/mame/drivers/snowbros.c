@@ -121,13 +121,13 @@ static TIMER_DEVICE_CALLBACK( snowbros_irq )
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		device_set_input_line(state->m_maincpu, 2, ASSERT_LINE);
 
 	if(scanline == 128)
-		device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+		device_set_input_line(state->m_maincpu, 3, ASSERT_LINE);
 
 	if(scanline == 32)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		device_set_input_line(state->m_maincpu, 4, ASSERT_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK( snowbros3_irq )
@@ -138,13 +138,13 @@ static TIMER_DEVICE_CALLBACK( snowbros3_irq )
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		device_set_input_line(state->m_maincpu, 2, ASSERT_LINE);
 
 	if(scanline == 128)
-		device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+		device_set_input_line(state->m_maincpu, 3, ASSERT_LINE);
 
 	if(scanline == 32)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		device_set_input_line(state->m_maincpu, 4, ASSERT_LINE);
 
 	if (state->m_sb3_music_is_playing)
 	{
@@ -1447,7 +1447,7 @@ static MACHINE_RESET (semiprot)
 	int i;
 
 	for (i = 0;i < 0x200/2;i++)
-	state->m_hyperpac_ram[0xf000/2 + i] = PROTDATA[i];
+		state->m_hyperpac_ram[0xf000/2 + i] = PROTDATA[i];
 }
 
 static MACHINE_RESET (finalttr)
@@ -1457,7 +1457,7 @@ static MACHINE_RESET (finalttr)
 	int i;
 
 	for (i = 0;i < 0x200/2;i++)
-	state->m_hyperpac_ram[0x2000/2 + i] = PROTDATA[i];
+		state->m_hyperpac_ram[0x2000/2 + i] = PROTDATA[i];
 }
 
 static const kaneko_pandora_interface snowbros_pandora_config =

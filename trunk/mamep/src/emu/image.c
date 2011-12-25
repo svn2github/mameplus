@@ -156,8 +156,8 @@ static int write_config(emu_options &options, const char *filename, const game_d
 
 static void image_options_extract(running_machine &machine)
 {
-	/* only extract the device options if we've added them
-       no need to assert in case they are missing */
+	/* only extract the device options if we've added them 
+	   no need to assert in case they are missing */
 	{
 		int index = 0;
 		device_image_interface *image = NULL;
@@ -208,7 +208,7 @@ void image_device_init(running_machine &machine)
 	device_image_interface *image = NULL;
 
 	/* make sure that any required devices have been allocated */
-    for (bool gotone = machine.devicelist().first(image); gotone; gotone = image->next(image))
+	for (bool gotone = machine.devicelist().first(image); gotone; gotone = image->next(image))
 	{
 		/* is an image specified for this image */
 		image_name = machine.options().device_option(*image);
@@ -237,7 +237,14 @@ void image_device_init(running_machine &machine)
 					image_err.cstr());
 			}
 		}
-		else
+	}
+
+	for (bool gotone = machine.devicelist().first(image); gotone; gotone = image->next(image))
+	{
+		/* is an image specified for this image */
+		image_name = image->filename();
+
+		if (!((image_name != NULL) && (image_name[0] != '\0')))
 		{
 			/* no image... must this device be loaded? */
 			if (image->must_be_loaded())

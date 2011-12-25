@@ -19,9 +19,9 @@ public:
 		: driver_device(mconfig, type, tag),
 		  m_maincpu(*this, "maincpu")
 	{ }
-	
+
 protected:
-	
+
 	// devices
 	required_device<cpu_device> m_maincpu;
 };
@@ -242,7 +242,7 @@ ROM_START( sp_gnat )
 	ROM_LOAD( "grand_national", 0x0000, 0x01681e, CRC(3390b136) SHA1(a7ebbd260ac2e36cb5ad52efc43ac88058e4cd55) )
 
 	// from a bwb set, paired with gn597p6a
-	ROM_LOAD( "597 gnsk all cash p6.2.bin", 0x0000, 0x008000, CRC(2bd1c9c6) SHA1(4b1249fc7aca548e8acd4ee75bf2260dd512ac72) )	
+	ROM_LOAD( "597 gnsk all cash p6.2.bin", 0x0000, 0x008000, CRC(2bd1c9c6) SHA1(4b1249fc7aca548e8acd4ee75bf2260dd512ac72) )
 ROM_END
 
 
@@ -393,7 +393,7 @@ ROM_START( sp_playa )
 ROM_END
 
 
-ROM_START( sp_playaa ) 	// these seem overdumped (all have identical halves) but there are more revisions here than above
+ROM_START( sp_playaa )	// these seem overdumped (all have identical halves) but there are more revisions here than above
 	ROM_REGION( 0x80000, "maincpu", 0 )
 	ROM_LOAD( "pia05a_a.3_2", 0x0000, 0x008000, CRC(44c7116b) SHA1(09aaa635c1985f5d5d83a969760b12502b751daa) )
 	ROM_IGNORE(0x8000)
@@ -1211,7 +1211,7 @@ ROM_END
 ROM_START( sp_five )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "fn19.bin", 0x0000, 0x010000, CRC(4721ccf8) SHA1(a6b7b238df7e7cf45c049b4fb16bf0c05fb95b41) )
-	
+
 	ROM_REGION( 0x80000, "altrevs", 0 )
 	ROM_LOAD( "fn19p.bin", 0x0000, 0x010000, CRC(ac2de72f) SHA1(61263944fe29b5f5c79c987989a784b32700c902) )
 ROM_END
@@ -1220,7 +1220,7 @@ ROM_START( sp_carry )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "carry on 10p payout p2.bin", 0x0000, 0x8000, CRC(1db4062c) SHA1(92098a145c9cdf04758b92998dd4fca7945cf991) )
 	ROM_LOAD( "carry on p1.bin", 0x8000, 0x8000, CRC(9a989d88) SHA1(e4cb4107c30b22fe9d952888285eb23de3005d2c) )
-//	ROM_LOAD( "carry on v6 p1.bin", 0x0000, 0x008000, CRC(9a989d88) SHA1(e4cb4107c30b22fe9d952888285eb23de3005d2c) )
+//  ROM_LOAD( "carry on v6 p1.bin", 0x0000, 0x008000, CRC(9a989d88) SHA1(e4cb4107c30b22fe9d952888285eb23de3005d2c) )
 
 	ROM_REGION( 0x80000, "altrevs", 0 )
 	ROM_LOAD( "carry on 20p payout p2.bin", 0x0000, 0x008000, CRC(ae1b2c66) SHA1(47a17c5178520d7ed6bc3aaaef111e8188d9a6b0) )
@@ -1246,70 +1246,70 @@ DRIVER_INIT( ace_sp )
 
 }
 
-GAME( 199?, sp_cbowl		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Cash Bowl (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_crime		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Crime Watch (Ace) (sp.ACE, set 1)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_cw			,sp_crime	,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Crime Watch (Ace) (sp.ACE, set 2)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL ) // roms all contain Emmerdale strings??
-GAME( 199?, sp_emmrd		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Emmerdale (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_goldm		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Golden Mile (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_gnat			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Grand National (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_gprix		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Grand Prix (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_hideh		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Hi De Hi (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_hifly		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Hi Flyer (Ace) [Mps] (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_juras		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Jurassic Trial (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_openb		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Open The Box (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_payrs		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Payrise (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_playa		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Play It Again (Ace) (sp.ACE, set 1)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_playaa		,sp_playa	,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Play It Again (Ace) (sp.ACE, set 2)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL ) // set was marked as a BWB set
-GAME( 199?, sp_playab		,sp_playa	,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Play It Again (Ace) (sp.ACE, set 3)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_spell		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Spellbound (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_swop			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Swop Shop (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_timem		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Time Machine (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_tz			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Twilight Zone (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_tzbwb		,sp_tz		,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Twilight Zone (Ace/Bwb?) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL ) // set marked as Bwb
-GAME( 199?, sp_tzfe			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Twilight Zone - Further Encounters (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
+GAME( 199?, sp_cbowl		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Cash Bowl (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_crime		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Crime Watch (Ace) (sp.ACE, set 1)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_cw			,sp_crime	,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Crime Watch (Ace) (sp.ACE, set 2)",GAME_IS_SKELETON_MECHANICAL ) // roms all contain Emmerdale strings??
+GAME( 199?, sp_emmrd		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Emmerdale (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_goldm		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Golden Mile (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_gnat			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Grand National (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_gprix		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Grand Prix (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_hideh		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Hi De Hi (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_hifly		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Hi Flyer (Ace) [Mps] (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_juras		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Jurassic Trial (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_openb		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Open The Box (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_payrs		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Payrise (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_playa		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Play It Again (Ace) (sp.ACE, set 1)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_playaa		,sp_playa	,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Play It Again (Ace) (sp.ACE, set 2)",GAME_IS_SKELETON_MECHANICAL ) // set was marked as a BWB set
+GAME( 199?, sp_playab		,sp_playa	,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Play It Again (Ace) (sp.ACE, set 3)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_spell		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Spellbound (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_swop			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Swop Shop (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_timem		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Time Machine (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_tz			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Twilight Zone (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_tzbwb		,sp_tz		,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Twilight Zone (Ace/Bwb?) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL ) // set marked as Bwb
+GAME( 199?, sp_tzfe			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Twilight Zone - Further Encounters (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
 // these look like sp.ACE roms too
-GAME( 199?, sp_beau			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Beau Peep (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_bigbd		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Big Break Deluxe Club (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_brkbk		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Break The Bank (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_camel		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Camelot (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_clbna		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Club National (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_coder		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Code Red (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_criss		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Criss Cross Cash (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_daytr		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Daytripper (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_donky		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Donkey Derby (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_dyour		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Double Your Money (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_festi		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Festival (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_beau2		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Further Adventures Of Beau Peep (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_ghost		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Ghost Trapper (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_globe		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Globe Trotter (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_gol			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Gol (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_golda		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Golden Arrow Club (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_golds		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Golden Streak (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_goldt		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Golden Touch (Golden Streak?) (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_here			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Here We Go (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_holid		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Holiday Club (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_lotto		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Lotto (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_magmo		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Magic Money (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_megmo		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Mega Money (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_monma		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Money Magic (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_monmo		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Money Mountain (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_nudex		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Nudge Explosion (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_onbox		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "On The Box (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_piste		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "On The Piste (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_pound		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Pound For Pound (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_przna		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Prize National (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_road			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Road To Hell (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_skylm		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Sky's The Limit Club, The (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_tkpik		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Take Your Pick (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME( 199?, sp_woolp		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Woolpack (Emmerdale?) (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL ) // roms all contain Emmerdale strings??
-GAME( 199?, sp_zigzg		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Zig Zag (Emmerdale?) (Ace) (sp.ACE)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL ) // roms all contain Emmerdale strings??
+GAME( 199?, sp_beau			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Beau Peep (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_bigbd		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Big Break Deluxe Club (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_brkbk		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Break The Bank (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_camel		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Camelot (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_clbna		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Club National (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_coder		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Code Red (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_criss		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Criss Cross Cash (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_daytr		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Daytripper (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_donky		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Donkey Derby (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_dyour		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Double Your Money (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_festi		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Festival (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_beau2		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Further Adventures Of Beau Peep (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_ghost		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Ghost Trapper (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_globe		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Globe Trotter (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_gol			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Gol (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_golda		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Golden Arrow Club (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_golds		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Golden Streak (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_goldt		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Golden Touch (Golden Streak?) (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_here			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Here We Go (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_holid		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Holiday Club (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_lotto		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Lotto (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_magmo		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Magic Money (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_megmo		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Mega Money (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_monma		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Money Magic (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_monmo		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Money Mountain (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_nudex		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Nudge Explosion (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_onbox		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "On The Box (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_piste		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "On The Piste (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_pound		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Pound For Pound (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_przna		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Prize National (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_road			,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Road To Hell (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_skylm		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Sky's The Limit Club, The (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_tkpik		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Take Your Pick (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL )
+GAME( 199?, sp_woolp		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Woolpack (Emmerdale?) (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL ) // roms all contain Emmerdale strings??
+GAME( 199?, sp_zigzg		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Ace", "Zig Zag (Emmerdale?) (Ace) (sp.ACE)",GAME_IS_SKELETON_MECHANICAL ) // roms all contain Emmerdale strings??
 
-GAME( 199?, sp_carry		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Pcp", "Carry On (Pcp) (sp.ACE?)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL ) // not sure.. looks like 6303 code to me
-GAME( 199?, sp_front		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Bwb", "Final Frontier (Bwb) (sp.ACE?)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL ) // not sure.. looks like 6303 code to me
+GAME( 199?, sp_carry		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Pcp", "Carry On (Pcp) (sp.ACE?)",GAME_IS_SKELETON_MECHANICAL ) // not sure.. looks like 6303 code to me
+GAME( 199?, sp_front		,0			,ace_sp	,ace_sp	,ace_sp	,ROT0	,"Bwb", "Final Frontier (Bwb) (sp.ACE?)",GAME_IS_SKELETON_MECHANICAL ) // not sure.. looks like 6303 code to me
 
 
 
 // I'm not 100% sure if these are Space hardware.. but they seem to be 6303 code at least
-GAME(199?, sp_atw	,0			,ace_sp	,ace_sp		,ace_sp,	ROT0,   "Crystal","Around The World In Eighty Days (Crystal) (sp.ACE?)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME(199?, sp_crun	,0			,ace_sp	,ace_sp		,ace_cr,	ROT0,   "Crystal","Cash Run (Crystal) (sp.ACE?)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
-GAME(199?, sp_five	,0			,ace_sp	,ace_sp		,ace_cr,	ROT0,   "Crystal","Fiver Fever (Crystal) (sp.ACE?)",GAME_NOT_WORKING|GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_MECHANICAL )
+GAME(199?, sp_atw	,0			,ace_sp	,ace_sp		,ace_sp,	ROT0,   "Crystal","Around The World In Eighty Days (Crystal) (sp.ACE?)",GAME_IS_SKELETON_MECHANICAL )
+GAME(199?, sp_crun	,0			,ace_sp	,ace_sp		,ace_cr,	ROT0,   "Crystal","Cash Run (Crystal) (sp.ACE?)",GAME_IS_SKELETON_MECHANICAL )
+GAME(199?, sp_five	,0			,ace_sp	,ace_sp		,ace_cr,	ROT0,   "Crystal","Fiver Fever (Crystal) (sp.ACE?)",GAME_IS_SKELETON_MECHANICAL )
