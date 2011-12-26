@@ -2,13 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="hu_HU">
 <context>
-    <name>About</name>
-    <message>
-        <source>About MAME Plus! GUI</source>
-        <translation type="obsolete">A MAME Plus! GUI névjegye</translation>
-    </message>
-</context>
-<context>
     <name>AboutUI</name>
     <message>
         <location filename="../about.ui" line="14"/>
@@ -22,29 +15,6 @@
         <location filename="../cmd.ui" line="14"/>
         <source>Command Line Options</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Dirs</name>
-    <message>
-        <source>Directory name:</source>
-        <translation type="obsolete">Könyvtár név:</translation>
-    </message>
-    <message>
-        <source>Directories</source>
-        <translation type="obsolete">Könyvtárak</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">Tallózás...</translation>
-    </message>
-    <message>
-        <source>Insert</source>
-        <translation type="obsolete">Beszúrás</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="obsolete">Törlés</translation>
     </message>
 </context>
 <context>
@@ -350,33 +320,6 @@ csatlakoztatva legyenek:
     </message>
 </context>
 <context>
-    <name>IPS</name>
-    <message>
-        <source>Description</source>
-        <translation type="obsolete">Név</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation type="obsolete">ROM név</translation>
-    </message>
-    <message>
-        <source>1</source>
-        <translation type="obsolete">1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="obsolete">2</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="obsolete">Törlés</translation>
-    </message>
-    <message>
-        <source>Enforce relationship</source>
-        <translation type="obsolete">Kényszerített kapcsolat</translation>
-    </message>
-</context>
-<context>
     <name>IpsUI</name>
     <message>
         <location filename="../ips.ui" line="27"/>
@@ -410,18 +353,11 @@ csatlakoztatva legyenek:
     </message>
 </context>
 <context>
-    <name>M1</name>
-    <message>
-        <source>Loading M1, please wait...</source>
-        <translation type="obsolete">M1 betöltése, egy kis türelmet...</translation>
-    </message>
-</context>
-<context>
     <name>M1Core</name>
     <message>
         <location filename="../m1.cpp" line="80"/>
         <source>Loading M1, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">M1 betöltése, egy kis türelem...</translation>
     </message>
 </context>
 <context>
@@ -2078,14 +2014,6 @@ Folytatja?</translation>
         <translation>Windows hibakeresés</translation>
     </message>
     <message>
-        <source>MESS software directory</source>
-        <translation type="obsolete">MESS szoftver könyvtára</translation>
-    </message>
-    <message>
-        <source>GUI paths</source>
-        <translation type="obsolete">Megjelenés könyvtárak</translation>
-    </message>
-    <message>
         <location filename="../mameopt.cpp" line="2201"/>
         <source>Options</source>
         <translation>Beállítások</translation>
@@ -2328,37 +2256,6 @@ Folytatja?</translation>
     </message>
 </context>
 <context>
-    <name>Options</name>
-    <message>
-        <source>Options</source>
-        <translation type="obsolete">Beállítások</translation>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation type="obsolete">GUI</translation>
-    </message>
-    <message>
-        <source>Global</source>
-        <translation type="obsolete">Általános</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="obsolete">Forrás</translation>
-    </message>
-    <message>
-        <source>BIOS</source>
-        <translation type="obsolete">BIOS</translation>
-    </message>
-    <message>
-        <source>Clone Of</source>
-        <translation type="obsolete">Klón</translation>
-    </message>
-    <message>
-        <source>Game</source>
-        <translation type="obsolete">Játék</translation>
-    </message>
-</context>
-<context>
     <name>OptionsUI</name>
     <message>
         <location filename="../options.ui" line="14"/>
@@ -2397,66 +2294,11 @@ Folytatja?</translation>
     </message>
 </context>
 <context>
-    <name>PlayOptions</name>
-    <message>
-        <source>File name:</source>
-        <translation type="obsolete">Fájl név:</translation>
-    </message>
-    <message>
-        <source>Savestate files</source>
-        <translation type="obsolete">Játékmentés fájl</translation>
-    </message>
-    <message>
-        <source>Input files</source>
-        <translation type="obsolete">Irányító fájlok</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation type="obsolete">Videók</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation type="obsolete">Hangok</translation>
-    </message>
-    <message>
-        <source>Play</source>
-        <translation type="obsolete">Indítás</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">Tallózás...</translation>
-    </message>
-    <message>
-        <source>Load Savestate</source>
-        <translation type="obsolete">Játékmentés betöltése</translation>
-    </message>
-    <message>
-        <source>Playback Input</source>
-        <translation type="obsolete">Bemenet visszajátszása</translation>
-    </message>
-    <message>
-        <source>Record Input</source>
-        <translation type="obsolete">Bemenet rögzítése</translation>
-    </message>
-    <message>
-        <source>Record MNG Output</source>
-        <translation type="obsolete">MNG videó rögzítése</translation>
-    </message>
-    <message>
-        <source>Record AVI Output</source>
-        <translation type="obsolete">AVI videó rögzítése</translation>
-    </message>
-    <message>
-        <source>Record Wave Output</source>
-        <translation type="obsolete">WAV hang rögzítése</translation>
-    </message>
-</context>
-<context>
     <name>PlayOptionsUI</name>
     <message>
         <location filename="../playoptions.ui" line="14"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lejátszás</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="23"/>
@@ -2525,13 +2367,6 @@ Folytatja?</translation>
         <location filename="../dialogs.cpp" line="278"/>
         <source>Sounds</source>
         <translation type="unfinished">Hangok</translation>
-    </message>
-</context>
-<context>
-    <name>QuaZipFile</name>
-    <message>
-        <source>ZIP/UNZIP API error %1</source>
-        <translation type="obsolete">ZIP/UNZIP API hiba %1</translation>
     </message>
 </context>
 <context>

@@ -2,13 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR">
 <context>
-    <name>About</name>
-    <message>
-        <source>About MAME Plus! GUI</source>
-        <translation type="obsolete">À propos de MAME Plus! GUI</translation>
-    </message>
-</context>
-<context>
     <name>AboutUI</name>
     <message>
         <location filename="../about.ui" line="14"/>
@@ -17,41 +10,11 @@
     </message>
 </context>
 <context>
-    <name>Cmd</name>
-    <message>
-        <source>Command Line Options</source>
-        <translation type="obsolete">Options - Ligne de commande</translation>
-    </message>
-</context>
-<context>
     <name>CmdUI</name>
     <message>
         <location filename="../cmd.ui" line="14"/>
         <source>Command Line Options</source>
         <translation type="unfinished">Options - Ligne de commande</translation>
-    </message>
-</context>
-<context>
-    <name>Dirs</name>
-    <message>
-        <source>Directory name:</source>
-        <translation type="obsolete">Nom du répertoire:</translation>
-    </message>
-    <message>
-        <source>Directories</source>
-        <translation type="obsolete">Répertoires</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">Parcourir...</translation>
-    </message>
-    <message>
-        <source>Insert</source>
-        <translation type="obsolete">Insérer</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="obsolete">Supprimer</translation>
     </message>
 </context>
 <context>
@@ -357,33 +320,6 @@ soit monté:
     </message>
 </context>
 <context>
-    <name>IPS</name>
-    <message>
-        <source>Description</source>
-        <translation type="obsolete">Description</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation type="obsolete">Nom</translation>
-    </message>
-    <message>
-        <source>1</source>
-        <translation type="obsolete">1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="obsolete">2</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="obsolete">Effacer</translation>
-    </message>
-    <message>
-        <source>Enforce relationship</source>
-        <translation type="obsolete">Respecter le lien</translation>
-    </message>
-</context>
-<context>
     <name>IpsUI</name>
     <message>
         <location filename="../ips.ui" line="27"/>
@@ -414,13 +350,6 @@ soit monté:
         <location filename="../ips.cpp" line="19"/>
         <source>Name</source>
         <translation type="unfinished">Nom</translation>
-    </message>
-</context>
-<context>
-    <name>M1</name>
-    <message>
-        <source>Loading M1, please wait...</source>
-        <translation type="obsolete">Chargement de M1, veuillez patienter...</translation>
     </message>
 </context>
 <context>
@@ -2084,14 +2013,6 @@ pour prendre effet. Voulez-vous continuer?</translation>
         <translation>DÉBUGUAGE WINDOWS</translation>
     </message>
     <message>
-        <source>MESS software directory</source>
-        <translation type="obsolete">RÉPERTOIRE LOGICIEL</translation>
-    </message>
-    <message>
-        <source>GUI paths</source>
-        <translation type="obsolete">Interface</translation>
-    </message>
-    <message>
         <location filename="../mameopt.cpp" line="2201"/>
         <source>Options</source>
         <translation>Options</translation>
@@ -2334,37 +2255,6 @@ pour prendre effet. Voulez-vous continuer?</translation>
     </message>
 </context>
 <context>
-    <name>Options</name>
-    <message>
-        <source>Options</source>
-        <translation type="obsolete">Options</translation>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation type="obsolete">Interface</translation>
-    </message>
-    <message>
-        <source>Global</source>
-        <translation type="obsolete">Général</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="obsolete">Source</translation>
-    </message>
-    <message>
-        <source>BIOS</source>
-        <translation type="obsolete">BIOS</translation>
-    </message>
-    <message>
-        <source>Clone Of</source>
-        <translation type="obsolete">Clone de</translation>
-    </message>
-    <message>
-        <source>Game</source>
-        <translation type="obsolete">Jeu</translation>
-    </message>
-</context>
-<context>
     <name>OptionsUI</name>
     <message>
         <location filename="../options.ui" line="14"/>
@@ -2403,66 +2293,11 @@ pour prendre effet. Voulez-vous continuer?</translation>
     </message>
 </context>
 <context>
-    <name>PlayOptions</name>
-    <message>
-        <source>File name:</source>
-        <translation type="obsolete">Nom du fichier:</translation>
-    </message>
-    <message>
-        <source>Savestate files</source>
-        <translation type="obsolete">Fichier de sauvegarde</translation>
-    </message>
-    <message>
-        <source>Input files</source>
-        <translation type="obsolete">Fichier d&apos;entrée</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation type="obsolete">Vidéos</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation type="obsolete">Sons</translation>
-    </message>
-    <message>
-        <source>Play</source>
-        <translation type="obsolete">Jouer</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">Parcourir...</translation>
-    </message>
-    <message>
-        <source>Load Savestate</source>
-        <translation type="obsolete">Charger une sauvegarde</translation>
-    </message>
-    <message>
-        <source>Playback Input</source>
-        <translation type="obsolete">Lecture</translation>
-    </message>
-    <message>
-        <source>Record Input</source>
-        <translation type="obsolete">Enregistrer l&apos;entrée</translation>
-    </message>
-    <message>
-        <source>Record MNG Output</source>
-        <translation type="obsolete">Enregistrer en MNG</translation>
-    </message>
-    <message>
-        <source>Record AVI Output</source>
-        <translation type="obsolete">Enregistrer en AVI</translation>
-    </message>
-    <message>
-        <source>Record Wave Output</source>
-        <translation type="obsolete">Enregistrer en Wave</translation>
-    </message>
-</context>
-<context>
     <name>PlayOptionsUI</name>
     <message>
         <location filename="../playoptions.ui" line="14"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lire</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="23"/>
@@ -2531,13 +2366,6 @@ pour prendre effet. Voulez-vous continuer?</translation>
         <location filename="../dialogs.cpp" line="278"/>
         <source>Sounds</source>
         <translation type="unfinished">Sons</translation>
-    </message>
-</context>
-<context>
-    <name>QuaZipFile</name>
-    <message>
-        <source>ZIP/UNZIP API error %1</source>
-        <translation type="obsolete">Erreur d&apos;API ZIP/UNZIP pour %1</translation>
     </message>
 </context>
 <context>

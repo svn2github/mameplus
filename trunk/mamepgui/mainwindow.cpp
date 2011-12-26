@@ -677,7 +677,7 @@ void MainWindow::setVersion()
 		"</style>"
 		"</head>"
 		"<body>"
-		"<strong>M+GUI</strong> %1 &copy; 2008-2010 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
+		"<strong>M+GUI</strong> %1 &copy; 2008-2011 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
 		"A Qt implementation of <a href=\"http://mameui.classicgaming.gamespy.com\">MameUI</a><br>"
 		"Source code released under <a href=\"http://sam.zoy.org/wtfpl/COPYING\">WTFPL</a>"
 		"<hr>"

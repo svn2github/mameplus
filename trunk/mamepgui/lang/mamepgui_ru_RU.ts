@@ -2,13 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ru_RU">
 <context>
-    <name>About</name>
-    <message>
-        <source>About MAME Plus! GUI</source>
-        <translation type="obsolete">О MAME Plus! GUI</translation>
-    </message>
-</context>
-<context>
     <name>AboutUI</name>
     <message>
         <location filename="../about.ui" line="14"/>
@@ -22,29 +15,6 @@
         <location filename="../cmd.ui" line="14"/>
         <source>Command Line Options</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Dirs</name>
-    <message>
-        <source>Directory name:</source>
-        <translation type="obsolete">Имя папки:</translation>
-    </message>
-    <message>
-        <source>Directories</source>
-        <translation type="obsolete">Папки</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">Обзор...</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="obsolete">Удалить</translation>
-    </message>
-    <message>
-        <source>Insert</source>
-        <translation type="obsolete">Вставить</translation>
     </message>
 </context>
 <context>
@@ -347,33 +317,6 @@ must be mounted:
     </message>
 </context>
 <context>
-    <name>IPS</name>
-    <message>
-        <source>Description</source>
-        <translation type="obsolete">Описание</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation type="obsolete">Имя</translation>
-    </message>
-    <message>
-        <source>1</source>
-        <translation type="obsolete">1</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="obsolete">2</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="obsolete">Очистить</translation>
-    </message>
-    <message>
-        <source>Enforce relationship</source>
-        <translation type="obsolete">Принудительная связь</translation>
-    </message>
-</context>
-<context>
     <name>IpsUI</name>
     <message>
         <location filename="../ips.ui" line="27"/>
@@ -404,13 +347,6 @@ must be mounted:
         <location filename="../ips.cpp" line="19"/>
         <source>Name</source>
         <translation type="unfinished">Имя</translation>
-    </message>
-</context>
-<context>
-    <name>M1</name>
-    <message>
-        <source>Loading M1, please wait...</source>
-        <translation type="obsolete">Загружается M1, ждите...</translation>
     </message>
 </context>
 <context>
@@ -2278,14 +2214,6 @@ Do you wish to continue?</source>
         <translation>отладка Windows</translation>
     </message>
     <message>
-        <source>MESS software directory</source>
-        <translation type="obsolete">Пути к ромам для MESS</translation>
-    </message>
-    <message>
-        <source>GUI paths</source>
-        <translation type="obsolete">Пути интерфейса</translation>
-    </message>
-    <message>
         <location filename="../mameopt.cpp" line="2201"/>
         <source>Options</source>
         <translation>Свойства</translation>
@@ -2320,33 +2248,6 @@ Do you wish to continue?</source>
         <location filename="../mameopt.cpp" line="2487"/>
         <source>Auto</source>
         <translation>Авто</translation>
-    </message>
-</context>
-<context>
-    <name>Options</name>
-    <message>
-        <source>Options</source>
-        <translation type="obsolete">Свойства</translation>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation type="obsolete">Интерфейс</translation>
-    </message>
-    <message>
-        <source>Global</source>
-        <translation type="obsolete">Общие</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="obsolete">Драйвер</translation>
-    </message>
-    <message>
-        <source>Clone Of</source>
-        <translation type="obsolete">Клон</translation>
-    </message>
-    <message>
-        <source>Game</source>
-        <translation type="obsolete">Игра</translation>
     </message>
 </context>
 <context>
@@ -2385,61 +2286,6 @@ Do you wish to continue?</source>
         <location filename="../options.ui" line="127"/>
         <source>Game</source>
         <translation type="unfinished">Игра</translation>
-    </message>
-</context>
-<context>
-    <name>PlayOptions</name>
-    <message>
-        <source>File name:</source>
-        <translation type="obsolete">Имя файла:</translation>
-    </message>
-    <message>
-        <source>Savestate files</source>
-        <translation type="obsolete">Файлы сохранения</translation>
-    </message>
-    <message>
-        <source>Input files</source>
-        <translation type="obsolete">Файлы ввода</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation type="obsolete">Видео</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation type="obsolete">Звуки</translation>
-    </message>
-    <message>
-        <source>Play</source>
-        <translation type="obsolete">Играть</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">Обзор</translation>
-    </message>
-    <message>
-        <source>Load Savestate</source>
-        <translation type="obsolete">Загрузить сохранение</translation>
-    </message>
-    <message>
-        <source>Playback Input</source>
-        <translation type="obsolete">Воспроизвести запись</translation>
-    </message>
-    <message>
-        <source>Record Input</source>
-        <translation type="obsolete">Запись ввода</translation>
-    </message>
-    <message>
-        <source>Record MNG Output</source>
-        <translation type="obsolete">Запись MNG-видео</translation>
-    </message>
-    <message>
-        <source>Record AVI Output</source>
-        <translation type="obsolete">Запись AVI-видео</translation>
-    </message>
-    <message>
-        <source>Record Wave Output</source>
-        <translation type="obsolete">Запись звука</translation>
     </message>
 </context>
 <context>
@@ -2516,13 +2362,6 @@ Do you wish to continue?</source>
         <location filename="../dialogs.cpp" line="278"/>
         <source>Sounds</source>
         <translation type="unfinished">Звуки</translation>
-    </message>
-</context>
-<context>
-    <name>QuaZipFile</name>
-    <message>
-        <source>ZIP/UNZIP API error %1</source>
-        <translation type="obsolete">Ошибка ZIP/UNZIP API %1</translation>
     </message>
 </context>
 <context>

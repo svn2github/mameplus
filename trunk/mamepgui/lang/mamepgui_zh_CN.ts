@@ -2,13 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="zh_CN">
 <context>
-    <name>About</name>
-    <message>
-        <source>About MAME Plus! GUI</source>
-        <translation type="obsolete">关于 MAME Plus! GUI</translation>
-    </message>
-</context>
-<context>
     <name>AboutUI</name>
     <message>
         <location filename="../about.ui" line="14"/>
@@ -17,41 +10,11 @@
     </message>
 </context>
 <context>
-    <name>Cmd</name>
-    <message>
-        <source>Command Line Options</source>
-        <translation type="obsolete">命令行选项</translation>
-    </message>
-</context>
-<context>
     <name>CmdUI</name>
     <message>
         <location filename="../cmd.ui" line="14"/>
         <source>Command Line Options</source>
         <translation type="unfinished">命令行选项</translation>
-    </message>
-</context>
-<context>
-    <name>Dirs</name>
-    <message>
-        <source>Directory name:</source>
-        <translation type="obsolete">目录名:</translation>
-    </message>
-    <message>
-        <source>Directories</source>
-        <translation type="obsolete">目录</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">浏览...</translation>
-    </message>
-    <message>
-        <source>Insert</source>
-        <translation type="obsolete">插入</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="obsolete">删除</translation>
     </message>
 </context>
 <context>
@@ -358,25 +321,6 @@ must be mounted:
     </message>
 </context>
 <context>
-    <name>IPS</name>
-    <message>
-        <source>Description</source>
-        <translation type="obsolete">描述</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation type="obsolete">名称</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="obsolete">清除</translation>
-    </message>
-    <message>
-        <source>Enforce relationship</source>
-        <translation type="obsolete">强制关联</translation>
-    </message>
-</context>
-<context>
     <name>IpsUI</name>
     <message>
         <location filename="../ips.ui" line="27"/>
@@ -407,13 +351,6 @@ must be mounted:
         <location filename="../ips.cpp" line="19"/>
         <source>Name</source>
         <translation type="unfinished">名称</translation>
-    </message>
-</context>
-<context>
-    <name>M1</name>
-    <message>
-        <source>Loading M1, please wait...</source>
-        <translation type="obsolete">M1 载入中，请稍候...</translation>
     </message>
 </context>
 <context>
@@ -2062,14 +1999,6 @@ Do you wish to continue?</source>
         <translation>SDL 渲染驱动</translation>
     </message>
     <message>
-        <source>MESS software directory</source>
-        <translation type="obsolete">MESS 软件目录</translation>
-    </message>
-    <message>
-        <source>GUI paths</source>
-        <translation type="obsolete">图形界面路径</translation>
-    </message>
-    <message>
         <location filename="../mameopt.cpp" line="2210"/>
         <source>GUI</source>
         <translation>图形界面</translation>
@@ -2327,33 +2256,6 @@ Do you wish to continue?</source>
     </message>
 </context>
 <context>
-    <name>Options</name>
-    <message>
-        <source>Options</source>
-        <translation type="obsolete">选项</translation>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation type="obsolete">图形界面</translation>
-    </message>
-    <message>
-        <source>Global</source>
-        <translation type="obsolete">全局</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="obsolete">驱动</translation>
-    </message>
-    <message>
-        <source>Clone Of</source>
-        <translation type="obsolete">原作</translation>
-    </message>
-    <message>
-        <source>Game</source>
-        <translation type="obsolete">游戏</translation>
-    </message>
-</context>
-<context>
     <name>OptionsUI</name>
     <message>
         <location filename="../options.ui" line="14"/>
@@ -2392,66 +2294,11 @@ Do you wish to continue?</source>
     </message>
 </context>
 <context>
-    <name>PlayOptions</name>
-    <message>
-        <source>File name:</source>
-        <translation type="obsolete">文件名:</translation>
-    </message>
-    <message>
-        <source>Savestate files</source>
-        <translation type="obsolete">游戏进度文件</translation>
-    </message>
-    <message>
-        <source>Input files</source>
-        <translation type="obsolete">录像文件</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation type="obsolete">视频文件</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation type="obsolete">声音文件</translation>
-    </message>
-    <message>
-        <source>Play</source>
-        <translation type="obsolete">运行</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">浏览...</translation>
-    </message>
-    <message>
-        <source>Load Savestate</source>
-        <translation type="obsolete">载入游戏进度</translation>
-    </message>
-    <message>
-        <source>Playback Input</source>
-        <translation type="obsolete">播放录像</translation>
-    </message>
-    <message>
-        <source>Record Input</source>
-        <translation type="obsolete">录制录像</translation>
-    </message>
-    <message>
-        <source>Record MNG Output</source>
-        <translation type="obsolete">录制 MNG 视频输出</translation>
-    </message>
-    <message>
-        <source>Record AVI Output</source>
-        <translation type="obsolete">录制 AVI 视频输出</translation>
-    </message>
-    <message>
-        <source>Record Wave Output</source>
-        <translation type="obsolete">录制波形音频输出</translation>
-    </message>
-</context>
-<context>
     <name>PlayOptionsUI</name>
     <message>
         <location filename="../playoptions.ui" line="14"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">播放</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="23"/>

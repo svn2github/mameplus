@@ -2,13 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="zh_TW">
 <context>
-    <name>About</name>
-    <message>
-        <source>About MAME Plus! GUI</source>
-        <translation type="obsolete">關於 MAME Plus! GUI</translation>
-    </message>
-</context>
-<context>
     <name>AboutUI</name>
     <message>
         <location filename="../about.ui" line="14"/>
@@ -17,41 +10,11 @@
     </message>
 </context>
 <context>
-    <name>Cmd</name>
-    <message>
-        <source>Command Line Options</source>
-        <translation type="obsolete">命令行選項</translation>
-    </message>
-</context>
-<context>
     <name>CmdUI</name>
     <message>
         <location filename="../cmd.ui" line="14"/>
         <source>Command Line Options</source>
         <translation>命令行選項</translation>
-    </message>
-</context>
-<context>
-    <name>Dirs</name>
-    <message>
-        <source>Directory name:</source>
-        <translation type="obsolete">目錄名稱:</translation>
-    </message>
-    <message>
-        <source>Directories</source>
-        <translation type="obsolete">目錄</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">瀏覽...</translation>
-    </message>
-    <message>
-        <source>Insert</source>
-        <translation type="obsolete">插入</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="obsolete">刪除</translation>
     </message>
 </context>
 <context>
@@ -358,25 +321,6 @@ must be mounted:
     </message>
 </context>
 <context>
-    <name>IPS</name>
-    <message>
-        <source>Description</source>
-        <translation type="obsolete">描述</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation type="obsolete">名稱</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="obsolete">清除</translation>
-    </message>
-    <message>
-        <source>Enforce relationship</source>
-        <translation type="obsolete">強制關聯</translation>
-    </message>
-</context>
-<context>
     <name>IpsUI</name>
     <message>
         <location filename="../ips.ui" line="27"/>
@@ -407,13 +351,6 @@ must be mounted:
         <location filename="../ips.cpp" line="19"/>
         <source>Name</source>
         <translation>名稱</translation>
-    </message>
-</context>
-<context>
-    <name>M1</name>
-    <message>
-        <source>Loading M1, please wait...</source>
-        <translation type="obsolete">正在載入 M1，請稍侯...</translation>
     </message>
 </context>
 <context>
@@ -2067,14 +2004,6 @@ Do you wish to continue?</source>
         <translation>Windows 除錯選項</translation>
     </message>
     <message>
-        <source>MESS software directory</source>
-        <translation type="obsolete">MESS 軟體目錄</translation>
-    </message>
-    <message>
-        <source>GUI paths</source>
-        <translation type="obsolete">圖形介面路徑</translation>
-    </message>
-    <message>
         <location filename="../mameopt.cpp" line="2201"/>
         <source>Options</source>
         <translation>選項</translation>
@@ -2327,33 +2256,6 @@ Do you wish to continue?</source>
     </message>
 </context>
 <context>
-    <name>Options</name>
-    <message>
-        <source>Options</source>
-        <translation type="obsolete">選項</translation>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation type="obsolete">圖形介面</translation>
-    </message>
-    <message>
-        <source>Global</source>
-        <translation type="obsolete">通用</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="obsolete">驅動</translation>
-    </message>
-    <message>
-        <source>Clone Of</source>
-        <translation type="obsolete">原作</translation>
-    </message>
-    <message>
-        <source>Game</source>
-        <translation type="obsolete">遊戲</translation>
-    </message>
-</context>
-<context>
     <name>OptionsUI</name>
     <message>
         <location filename="../options.ui" line="14"/>
@@ -2389,61 +2291,6 @@ Do you wish to continue?</source>
         <location filename="../options.ui" line="127"/>
         <source>Game</source>
         <translation>遊戲</translation>
-    </message>
-</context>
-<context>
-    <name>PlayOptions</name>
-    <message>
-        <source>File name:</source>
-        <translation type="obsolete">檔案名稱:</translation>
-    </message>
-    <message>
-        <source>Savestate files</source>
-        <translation type="obsolete">狀態檔</translation>
-    </message>
-    <message>
-        <source>Input files</source>
-        <translation type="obsolete">輸入檔</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation type="obsolete">視訊檔</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation type="obsolete">聲音檔</translation>
-    </message>
-    <message>
-        <source>Play</source>
-        <translation type="obsolete">執行</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">瀏覽...</translation>
-    </message>
-    <message>
-        <source>Load Savestate</source>
-        <translation type="obsolete">載入儲存狀態</translation>
-    </message>
-    <message>
-        <source>Playback Input</source>
-        <translation type="obsolete">播放輸入檔</translation>
-    </message>
-    <message>
-        <source>Record Input</source>
-        <translation type="obsolete">記錄輸入檔</translation>
-    </message>
-    <message>
-        <source>Record MNG Output</source>
-        <translation type="obsolete">錄製 MNG 視訊輸出</translation>
-    </message>
-    <message>
-        <source>Record AVI Output</source>
-        <translation type="obsolete">錄製 AVI 影片輸出</translation>
-    </message>
-    <message>
-        <source>Record Wave Output</source>
-        <translation type="obsolete">錄製 WAV 音訊輸出</translation>
     </message>
 </context>
 <context>
@@ -2520,13 +2367,6 @@ Do you wish to continue?</source>
         <location filename="../dialogs.cpp" line="278"/>
         <source>Sounds</source>
         <translation>聲音檔</translation>
-    </message>
-</context>
-<context>
-    <name>QuaZipFile</name>
-    <message>
-        <source>ZIP/UNZIP API error %1</source>
-        <translation type="obsolete">ZIP/UNZIP API 錯誤 %1</translation>
     </message>
 </context>
 <context>

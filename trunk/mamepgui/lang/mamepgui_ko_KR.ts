@@ -2,14 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ko_KR">
 <context>
-    <name>About</name>
-    <message>
-        <source>About MAME Plus! GUI</source>
-        <translatorcomment>MAME Plus! GUI</translatorcomment>
-        <translation type="obsolete">MAME Plus! GUI 정보</translation>
-    </message>
-</context>
-<context>
     <name>AboutUI</name>
     <message>
         <location filename="../about.ui" line="14"/>
@@ -18,43 +10,11 @@
     </message>
 </context>
 <context>
-    <name>Cmd</name>
-    <message>
-        <source>Command Line Options</source>
-        <translation type="obsolete">커맨드라인 설정</translation>
-    </message>
-</context>
-<context>
     <name>CmdUI</name>
     <message>
         <location filename="../cmd.ui" line="14"/>
         <source>Command Line Options</source>
         <translation type="unfinished">커맨드라인 설정</translation>
-    </message>
-</context>
-<context>
-    <name>Dirs</name>
-    <message>
-        <source>Directory name:</source>
-        <translatorcomment>디렉토리 명:</translatorcomment>
-        <translation type="obsolete">디렉토리 명:</translation>
-    </message>
-    <message>
-        <source>Directories</source>
-        <translatorcomment>디렉토리</translatorcomment>
-        <translation type="obsolete">디렉토리</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">찾기...</translation>
-    </message>
-    <message>
-        <source>Insert</source>
-        <translation type="obsolete">추가</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="obsolete">삭제</translation>
     </message>
 </context>
 <context>
@@ -82,7 +42,7 @@
     <message>
         <location filename="../dialogs.cpp" line="336"/>
         <source>Directory name:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">폴더명:</translation>
     </message>
 </context>
 <context>
@@ -306,17 +266,9 @@ must be mounted:
         <translation type="unfinished">M1파일 읽는중, 기다리세요...</translation>
     </message>
     <message>
-        <source>Could not load:</source>
-        <translation type="obsolete">불러올 수 없습니다:</translation>
-    </message>
-    <message>
         <location filename="../gamelist.cpp" line="3342"/>
         <source>Please refresh the game list.</source>
         <translation type="unfinished">게임목록을 갱신하세요.</translation>
-    </message>
-    <message>
-        <source>%1 requires that these device(s) must be mounted:</source>
-        <translation type="obsolete">%1 이러한 장치를 장착해야합니다:</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="1430"/>
@@ -365,25 +317,6 @@ must be mounted:
     </message>
 </context>
 <context>
-    <name>IPS</name>
-    <message>
-        <source>Description</source>
-        <translation type="obsolete">설명</translation>
-    </message>
-    <message>
-        <source>Name</source>
-        <translation type="obsolete">이름</translation>
-    </message>
-    <message>
-        <source>Clear</source>
-        <translation type="obsolete">해제</translation>
-    </message>
-    <message>
-        <source>Enforce relationship</source>
-        <translation type="obsolete">적용 관계</translation>
-    </message>
-</context>
-<context>
     <name>IpsUI</name>
     <message>
         <location filename="../ips.ui" line="27"/>
@@ -398,7 +331,7 @@ must be mounted:
     <message>
         <location filename="../ips.ui" line="53"/>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">지우기</translation>
     </message>
     <message>
         <location filename="../ips.ui" line="73"/>
@@ -414,13 +347,6 @@ must be mounted:
         <location filename="../ips.cpp" line="19"/>
         <source>Name</source>
         <translation type="unfinished">이름</translation>
-    </message>
-</context>
-<context>
-    <name>M1</name>
-    <message>
-        <source>Loading M1, please wait...</source>
-        <translation type="obsolete">M1파일 읽는중, 기다리세요...</translation>
     </message>
 </context>
 <context>
@@ -1343,10 +1269,6 @@ Do you wish to continue?</source>
         <translation type="unfinished">게임실행 속도</translation>
     </message>
     <message>
-        <source>절</source>
-        <translation type="obsolete">재생속도 자동 조절</translation>
-    </message>
-    <message>
         <location filename="../mameopt.cpp" line="1477"/>
         <source>crop artwork</source>
         <translation type="unfinished">아트웍 잘라내기</translation>
@@ -2072,14 +1994,6 @@ Do you wish to continue?</source>
         <translation type="unfinished">SDL 렌더 드라이버</translation>
     </message>
     <message>
-        <source>MESS software directory</source>
-        <translation type="obsolete">MESS 소프트웨어 폴더</translation>
-    </message>
-    <message>
-        <source>GUI paths</source>
-        <translation type="obsolete">GUI 경로</translation>
-    </message>
-    <message>
         <location filename="../mameopt.cpp" line="2210"/>
         <source>GUI</source>
         <translation type="unfinished">GUI</translation>
@@ -2337,37 +2251,6 @@ Do you wish to continue?</source>
     </message>
 </context>
 <context>
-    <name>Options</name>
-    <message>
-        <source>Options</source>
-        <translation type="obsolete">설정</translation>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation type="obsolete">GUI 인터페이스</translation>
-    </message>
-    <message>
-        <source>Global</source>
-        <translation type="obsolete">전체</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="obsolete">소스</translation>
-    </message>
-    <message>
-        <source>BIOS</source>
-        <translation type="obsolete">바이오스</translation>
-    </message>
-    <message>
-        <source>Clone Of</source>
-        <translation type="obsolete">부모롬</translation>
-    </message>
-    <message>
-        <source>Game</source>
-        <translation type="obsolete">게임</translation>
-    </message>
-</context>
-<context>
     <name>OptionsUI</name>
     <message>
         <location filename="../options.ui" line="14"/>
@@ -2377,7 +2260,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../options.ui" line="27"/>
         <source>GUI</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">GUI</translation>
     </message>
     <message>
         <location filename="../options.ui" line="47"/>
@@ -2406,66 +2289,11 @@ Do you wish to continue?</source>
     </message>
 </context>
 <context>
-    <name>PlayOptions</name>
-    <message>
-        <source>File name:</source>
-        <translation type="obsolete">파일명:</translation>
-    </message>
-    <message>
-        <source>Savestate files</source>
-        <translation type="obsolete">상태저장(세이브) 파일</translation>
-    </message>
-    <message>
-        <source>Input files</source>
-        <translation type="obsolete">INP 리플레이 파일</translation>
-    </message>
-    <message>
-        <source>Videos</source>
-        <translation type="obsolete">비디오</translation>
-    </message>
-    <message>
-        <source>Sounds</source>
-        <translation type="obsolete">사운드</translation>
-    </message>
-    <message>
-        <source>Play</source>
-        <translation type="obsolete">실행</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="obsolete">찾기...</translation>
-    </message>
-    <message>
-        <source>Load Savestate</source>
-        <translation type="obsolete">상태저장(세이브)파일 불러오기</translation>
-    </message>
-    <message>
-        <source>Playback Input</source>
-        <translation type="obsolete">INP 리플레이파일 재생</translation>
-    </message>
-    <message>
-        <source>Record Input</source>
-        <translation type="obsolete">INP 리플레이파일 기록</translation>
-    </message>
-    <message>
-        <source>Record MNG Output</source>
-        <translation type="obsolete">MNG 비디오 기록</translation>
-    </message>
-    <message>
-        <source>Record AVI Output</source>
-        <translation type="obsolete">AVI 비디오 기록</translation>
-    </message>
-    <message>
-        <source>Record Wave Output</source>
-        <translation type="obsolete">WAV 사운드 기록</translation>
-    </message>
-</context>
-<context>
     <name>PlayOptionsUI</name>
     <message>
         <location filename="../playoptions.ui" line="14"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">재생</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="23"/>
@@ -2534,13 +2362,6 @@ Do you wish to continue?</source>
         <location filename="../dialogs.cpp" line="278"/>
         <source>Sounds</source>
         <translation type="unfinished">사운드</translation>
-    </message>
-</context>
-<context>
-    <name>QuaZipFile</name>
-    <message>
-        <source>ZIP/UNZIP API error %1</source>
-        <translation type="obsolete">ZIP/UNZIP API 에러 %1</translation>
     </message>
 </context>
 <context>
