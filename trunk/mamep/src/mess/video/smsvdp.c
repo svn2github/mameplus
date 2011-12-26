@@ -47,6 +47,7 @@ PAL frame timing
 #include "emu.h"
 #include "video/smsvdp.h"
 #include "machine/devhelpr.h"
+#include "debugger.h"
 
 
 #define STATUS_VINT           0x80	/* Pending vertical interrupt flag */
@@ -61,6 +62,9 @@ PAL frame timing
 #define SPROVR_HPOS           6
 #define SPRCOL_BASEHPOS       42
 #define DISPLAY_CB_HPOS       5  /* fix X-Scroll latchtime (Flubba's VDPTest) */
+
+#define DRAW_TIME_GG		86		/* 1 + 2 + 14 +8 + 96/2 */
+#define DRAW_TIME_SMS		0
 
 #define SEGA315_5378_CRAM_SIZE    0x40	/* 32 colors x 2 bytes per color = 64 bytes */
 #define SEGA315_5124_CRAM_SIZE    0x20	/* 32 colors x 1 bytes per color = 32 bytes */
@@ -401,10 +405,11 @@ WRITE8_MEMBER( sega315_5124_device::hcount_latch_write )
 }
 
 
-void sega315_5378_device::set_gg_sms_mode( int mode )
+void sega315_5378_device::set_sega315_5124_compatibility_mode( bool sega315_5124_compatibility_mode )
 {
-	m_gg_sms_mode = mode;
-	m_cram_mask = (!m_gg_sms_mode) ? (SEGA315_5378_CRAM_SIZE - 1) : (SEGA315_5124_CRAM_SIZE - 1);
+	m_sega315_5124_compatibility_mode = sega315_5124_compatibility_mode;
+	m_cram_mask = (!m_sega315_5124_compatibility_mode) ? (SEGA315_5378_CRAM_SIZE - 1) : (SEGA315_5124_CRAM_SIZE - 1);
+	m_draw_time = m_sega315_5124_compatibility_mode ? DRAW_TIME_SMS : DRAW_TIME_GG;
 }
 
 
@@ -414,6 +419,10 @@ void sega315_5124_device::device_timer(emu_timer &timer, device_timer_id id, int
 	{
 	case TIMER_LINE:
 		process_line_timer();
+		break;
+
+	case TIMER_DRAW:
+		draw_scanline( SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH, param, m_screen->vpos() - param );
 		break;
 
 	case TIMER_SET_STATUS_VINT:
@@ -513,21 +522,21 @@ void sega315_5124_device::process_line_timer()
 		update_palette();
 
 		/* Draw left border */
-		rec.min_x = SMS_LBORDER_START;
-		rec.max_x = SMS_LBORDER_START + SMS_LBORDER_X_PIXELS - 1;
+		rec.min_x = SEGA315_5124_LBORDER_START;
+		rec.max_x = SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH - 1;
 		bitmap_fill(m_tmpbitmap, &rec, machine().pens[m_current_palette[BACKDROP_COLOR]]);
 		bitmap_fill(m_y1_bitmap, &rec, 1);
 
 		/* Draw right border */
-		rec.min_x = SMS_LBORDER_START + SMS_LBORDER_X_PIXELS + 256;
-		rec.max_x = rec.min_x + SMS_RBORDER_X_PIXELS - 1;
+		rec.min_x = SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH + 256;
+		rec.max_x = rec.min_x + SEGA315_5124_RBORDER_WIDTH - 1;
 		bitmap_fill(m_tmpbitmap, &rec, machine().pens[m_current_palette[BACKDROP_COLOR]]);
 		bitmap_fill(m_y1_bitmap, &rec, 1);
 
 		/* Draw middle of the border */
 		/* We need to do this through the regular drawing function so it will */
 		/* be included in the gamegear scaling functions */
-		draw_scanline( SMS_LBORDER_START + SMS_LBORDER_X_PIXELS, vpos_limit - m_frame_timing[ACTIVE_DISPLAY_V], vpos - (vpos_limit - m_frame_timing[ACTIVE_DISPLAY_V]) );
+		draw_scanline( SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH, vpos_limit - m_frame_timing[ACTIVE_DISPLAY_V], vpos - (vpos_limit - m_frame_timing[ACTIVE_DISPLAY_V]) );
 		return;
 	}
 
@@ -546,19 +555,25 @@ void sega315_5124_device::process_line_timer()
 		update_palette();
 
 		/* Draw left border */
-		rec.min_x = SMS_LBORDER_START;
-		rec.max_x = SMS_LBORDER_START + SMS_LBORDER_X_PIXELS - 1;
+		rec.min_x = SEGA315_5124_LBORDER_START;
+		rec.max_x = SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH - 1;
 		bitmap_fill(m_tmpbitmap, &rec, machine().pens[m_current_palette[BACKDROP_COLOR]]);
 		bitmap_fill(m_y1_bitmap, &rec, 1);
 
 		/* Draw right border */
-		rec.min_x = SMS_LBORDER_START + SMS_LBORDER_X_PIXELS + 256;
-		rec.max_x = rec.min_x + SMS_RBORDER_X_PIXELS - 1;
+		rec.min_x = SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH + 256;
+		rec.max_x = rec.min_x + SEGA315_5124_RBORDER_WIDTH - 1;
 		bitmap_fill(m_tmpbitmap, &rec, machine().pens[m_current_palette[BACKDROP_COLOR]]);
 		bitmap_fill(m_y1_bitmap, &rec, 1);
 
-		draw_scanline( SMS_LBORDER_START + SMS_LBORDER_X_PIXELS, vpos_limit, vpos - vpos_limit );
-
+		if ( m_draw_time > 0 )
+		{
+			m_draw_timer->adjust( m_screen->time_until_pos( vpos, m_draw_time ), vpos_limit );
+		}
+		else
+		{
+			draw_scanline( SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH, vpos_limit, vpos - vpos_limit );
+		}
 		return;
 	}
 
@@ -571,21 +586,21 @@ void sega315_5124_device::process_line_timer()
 		update_palette();
 
 		/* Draw left border */
-		rec.min_x = SMS_LBORDER_START;
-		rec.max_x = SMS_LBORDER_START + SMS_LBORDER_X_PIXELS - 1;
+		rec.min_x = SEGA315_5124_LBORDER_START;
+		rec.max_x = SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH - 1;
 		bitmap_fill(m_tmpbitmap, &rec, machine().pens[m_current_palette[BACKDROP_COLOR]]);
 		bitmap_fill(m_y1_bitmap, &rec, 1);
 
 		/* Draw right border */
-		rec.min_x = SMS_LBORDER_START + SMS_LBORDER_X_PIXELS + 256;
-		rec.max_x = rec.min_x + SMS_RBORDER_X_PIXELS - 1;
+		rec.min_x = SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH + 256;
+		rec.max_x = rec.min_x + SEGA315_5124_RBORDER_WIDTH - 1;
 		bitmap_fill(m_tmpbitmap, &rec, machine().pens[m_current_palette[BACKDROP_COLOR]]);
 		bitmap_fill(m_y1_bitmap, &rec, 1);
 
 		/* Draw middle of the border */
 		/* We need to do this through the regular drawing function so it will */
 		/* be included in the gamegear scaling functions */
-		draw_scanline( SMS_LBORDER_START + SMS_LBORDER_X_PIXELS, vpos_limit + m_frame_timing[TOP_BORDER], vpos - (vpos_limit + m_frame_timing[TOP_BORDER]) );
+		draw_scanline( SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH, vpos_limit + m_frame_timing[TOP_BORDER], vpos - (vpos_limit + m_frame_timing[TOP_BORDER]) );
 		return;
 	}
 
@@ -700,6 +715,7 @@ WRITE8_MEMBER( sega315_5124_device::register_write )
 		case 2:		/* VDP register write */
 			reg_num = data & 0x0f;
 			m_reg[reg_num] = m_addr & 0xff;
+			logerror("%s: %s: setting register %x to %02x\n", machine().describe_context(), tag(), reg_num, m_addr & 0xf );
 			if ( reg_num == 0 && ( m_addr & 0x02 ) )
 				logerror("overscan enabled.\n");
 
@@ -897,7 +913,7 @@ void sega315_5124_device::draw_sprites_mode4( int *line_buffer, int *priority_se
 	if (sprite_buffer_count > 8)
 		sprite_buffer_count = 8;
 
-	memset(m_collision_buffer, 0, SMS_X_PIXELS);
+	memset(m_collision_buffer, 0, SEGA315_5124_WIDTH);
 	sprite_buffer_count--;
 
 	for (sprite_buffer_index = sprite_buffer_count; sprite_buffer_index >= 0; sprite_buffer_index--)
@@ -1095,7 +1111,7 @@ void sega315_5124_device::draw_sprites_tms9918_mode( int *line_buffer, int pixel
 	if (sprite_buffer_count > 4)
 		sprite_buffer_count = 4;
 
-	memset(m_collision_buffer, 0, SMS_X_PIXELS);
+	memset(m_collision_buffer, 0, SEGA315_5124_WIDTH);
 	sprite_buffer_count--;
 
 	for (sprite_buffer_index = sprite_buffer_count; sprite_buffer_index >= 0; sprite_buffer_index--)
@@ -1495,7 +1511,7 @@ void sega315_5378_device::draw_scanline( int pixel_offset_x, int pixel_plot_y, i
 		}
 	}
 
-	if (m_gg_sms_mode)
+	if (m_sega315_5124_compatibility_mode)
 	{
 		int *combineline_buffer = m_line_buffer + ((line & 0x03) + 1) * 256;
 		int plot_x = 48;
@@ -1530,7 +1546,7 @@ void sega315_5378_device::draw_scanline( int pixel_offset_x, int pixel_plot_y, i
         */
 		{
 			int gg_line;
-			int my_line = pixel_plot_y + line - (SMS_TBORDER_START + SMS_NTSC_224_TBORDER_Y_PIXELS);
+			int my_line = pixel_plot_y + line - (SEGA315_5124_TBORDER_START + SEGA315_5124_NTSC_224_TBORDER_HEIGHT);
 			int *line1, *line2, *line3, *line4;
 
 			/* First make sure there's enough data to draw anything */
@@ -1549,7 +1565,7 @@ void sega315_5378_device::draw_scanline( int pixel_offset_x, int pixel_plot_y, i
 			}
 
 			/* Calculate the line we will be drawing on */
-			pixel_plot_y = SMS_TBORDER_START + SMS_NTSC_192_TBORDER_Y_PIXELS + 24 + gg_line;
+			pixel_plot_y = SEGA315_5124_TBORDER_START + SEGA315_5124_NTSC_192_TBORDER_HEIGHT + 24 + gg_line;
 
 			/* Setup our source lines */
 			line1 = m_line_buffer + (((my_line - 3) & 0x03) + 1) * 256;
@@ -1587,7 +1603,7 @@ int sega315_5124_device::check_brightness(int x, int y)
 
 	/* TODO: Check how Light Phaser behaves for border areas. For Gangster Town, should */
 	/* a shot at right border (HC~=0x90) really appear at active scr, near to left border? */
-	if (x < SMS_LBORDER_START + SMS_LBORDER_X_PIXELS || x >= SMS_LBORDER_START + SMS_LBORDER_X_PIXELS + 256)
+	if (x < SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH || x >= SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH + 256)
 		return 0;
 
 	rgb_t color = *BITMAP_ADDR32(m_tmpbitmap, y, x);
@@ -1638,7 +1654,7 @@ void sega315_5378_device::update_palette()
 	}
 	m_cram_dirty = 0;
 
-	if (m_gg_sms_mode)
+	if (m_sega315_5124_compatibility_mode)
 	{
 		for (i = 0; i < 32; i++)
 		{
@@ -1667,15 +1683,15 @@ void sega315_5124_device::update_video( bitmap_t *bitmap, const rectangle *clipr
 
 void sega315_5124_device::device_config_complete()
 {
-	const smsvdp_interface *intf = reinterpret_cast<const smsvdp_interface *>(static_config());
+	const sega315_5124_interface *intf = reinterpret_cast<const sega315_5124_interface *>(static_config());
 
 	if ( intf != NULL )
 	{
-		*static_cast<smsvdp_interface *>(this) = *intf;
+		*static_cast<sega315_5124_interface *>(this) = *intf;
 	}
 	else
 	{
-		fatalerror("No smsvdp_interface supplied\n");
+		fatalerror("No sega315_5124_interface supplied\n");
 	}
 }
 
@@ -1701,8 +1717,9 @@ void sega315_5124_device::device_start()
 	m_tmpbitmap = auto_bitmap_alloc(machine(), width, height, BITMAP_FORMAT_INDEXED32);
 	m_y1_bitmap = auto_bitmap_alloc(machine(), width, height, BITMAP_FORMAT_INDEXED8);
 
-	m_smsvdp_display_timer = timer_alloc(TIMER_LINE);
-	m_smsvdp_display_timer->adjust(m_screen->time_until_pos(0, DISPLAY_CB_HPOS), 0, m_screen->scan_period());
+	m_display_timer = timer_alloc(TIMER_LINE);
+	m_display_timer->adjust(m_screen->time_until_pos(0, DISPLAY_CB_HPOS), 0, m_screen->scan_period());
+	m_draw_timer = timer_alloc(TIMER_DRAW);
 	m_set_status_vint_timer = timer_alloc( TIMER_SET_STATUS_VINT );
 	m_set_status_sprovr_timer = timer_alloc( TIMER_SET_STATUS_SPROVR );
 	m_set_status_sprcol_timer = timer_alloc( TIMER_SET_STATUS_SPRCOL );
@@ -1717,7 +1734,7 @@ void sega315_5124_device::device_start()
 	save_item(NAME(m_cram_dirty));
 	save_item(NAME(m_pending));
 	save_item(NAME(m_buffer));
-	save_item(NAME(m_gg_sms_mode));
+	save_item(NAME(m_sega315_5124_compatibility_mode));
 	save_item(NAME(m_irq_state));
 	save_item(NAME(m_vdp_mode));
 	save_item(NAME(m_y_pixels));
@@ -1729,6 +1746,7 @@ void sega315_5124_device::device_start()
 	save_item(NAME(m_collision_buffer));
 	save_item(NAME(*m_tmpbitmap));
 	save_item(NAME(*m_y1_bitmap));
+	save_item(NAME(m_draw_time));
 }
 
 
@@ -1747,7 +1765,7 @@ void sega315_5124_device::device_reset()
 	m_reg9copy = 0;
 	m_addrmode = 0;
 	m_addr = 0;
-	m_gg_sms_mode = 0;
+	m_sega315_5124_compatibility_mode = false;
 	m_cram_mask = m_cram_size - 1;
 	m_cram_dirty = 1;
 	m_pending = 0;
@@ -1755,6 +1773,7 @@ void sega315_5124_device::device_reset()
 	m_irq_state = 0;
 	m_line_counter = 0;
 	m_hcounter = 0;
+	m_draw_time = DRAW_TIME_SMS;
 
 	for (i = 0; i < 0x20; i++)
 		m_current_palette[i] = 0;
@@ -1765,4 +1784,12 @@ void sega315_5124_device::device_reset()
 	memset(m_CRAM->base(), 0, SEGA315_5378_CRAM_SIZE);
 	memset(m_line_buffer, 0, 256 * 5 * sizeof(int));
 }
+
+
+void sega315_5378_device::device_reset()
+{
+	sega315_5124_device::device_reset();
+	m_draw_time = DRAW_TIME_GG;
+}
+
 
