@@ -111,7 +111,7 @@ VIDEO_START( bagman )
 }
 
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	bagman_state *state = machine.driver_data<bagman_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -127,12 +127,12 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 		flipy = spriteram[offs] & 0x80;
 		if (flip_screen_x_get(machine))
 		{
-			sx = bitmap->width - sx - 15;
+			sx = bitmap.width() - sx - 15;
 			flipx = !flipx;
 		}
 		if (flip_screen_y_get(machine))
 		{
-			sy = bitmap->height - sy - 15;
+			sy = bitmap.height() - sy - 15;
 			flipy = !flipy;
 		}
 
@@ -148,12 +148,12 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( bagman )
 {
-	bagman_state *state = screen->machine().driver_data<bagman_state>();
-	bitmap_fill(bitmap,cliprect,0);
+	bagman_state *state = screen.machine().driver_data<bagman_state>();
+	bitmap.fill(0, cliprect);
 	if (*state->m_video_enable == 0)
 		return 0;
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

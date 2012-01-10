@@ -505,43 +505,40 @@ static VIDEO_START( laserbat )
 
 static SCREEN_UPDATE( laserbat )
 {
-	laserbat_state *state = screen->machine().driver_data<laserbat_state>();
+	laserbat_state *state = screen.machine().driver_data<laserbat_state>();
 	int y;
-	bitmap_t *s2636_1_bitmap;
-	bitmap_t *s2636_2_bitmap;
-	bitmap_t *s2636_3_bitmap;
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
 	/* update the S2636 chips */
-	s2636_1_bitmap = s2636_update(state->m_s2636_1, cliprect);
-	s2636_2_bitmap = s2636_update(state->m_s2636_2, cliprect);
-	s2636_3_bitmap = s2636_update(state->m_s2636_3, cliprect);
+	bitmap_t &s2636_1_bitmap = s2636_update(state->m_s2636_1, cliprect);
+	bitmap_t &s2636_2_bitmap = s2636_update(state->m_s2636_2, cliprect);
+	bitmap_t &s2636_3_bitmap = s2636_update(state->m_s2636_3, cliprect);
 
 	/* copy the S2636 images into the main bitmap */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
 		int x;
 
-		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+		for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 		{
-			int pixel1 = *BITMAP_ADDR16(s2636_1_bitmap, y, x);
-			int pixel2 = *BITMAP_ADDR16(s2636_2_bitmap, y, x);
-			int pixel3 = *BITMAP_ADDR16(s2636_3_bitmap, y, x);
+			int pixel1 = s2636_1_bitmap.pix16(y, x);
+			int pixel2 = s2636_2_bitmap.pix16(y, x);
+			int pixel3 = s2636_3_bitmap.pix16(y, x);
 
 			if (S2636_IS_PIXEL_DRAWN(pixel1))
-				*BITMAP_ADDR16(bitmap, y, x) = S2636_PIXEL_COLOR(pixel1);
+				bitmap.pix16(y, x) = S2636_PIXEL_COLOR(pixel1);
 
 			if (S2636_IS_PIXEL_DRAWN(pixel2))
-				*BITMAP_ADDR16(bitmap, y, x) = S2636_PIXEL_COLOR(pixel2);
+				bitmap.pix16(y, x) = S2636_PIXEL_COLOR(pixel2);
 
 			if (S2636_IS_PIXEL_DRAWN(pixel3))
-				*BITMAP_ADDR16(bitmap, y, x) = S2636_PIXEL_COLOR(pixel3);
+				bitmap.pix16(y, x) = S2636_PIXEL_COLOR(pixel3);
 		}
 	}
 
 	if (state->m_sprite_enable)
-		drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[1],
+		drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],
 		        state->m_sprite_code,
 				state->m_sprite_color,
 				0,0,

@@ -212,8 +212,8 @@ void gaelco3d_renderer::render_noz_noperspective(INT32 scanline, const extent_t 
 	offs_t endmask = m_texture_size - 1;
 	const rgb_t *palsource = m_state.m_palette + object.color;
 	UINT32 tex = object.tex;
-	UINT16 *dest = BITMAP_ADDR16(m_screenbits, scanline, 0);
-	UINT16 *zbuf = BITMAP_ADDR16(m_zbuffer, scanline, 0);
+	UINT16 *dest = &m_screenbits->pix16(scanline);
+	UINT16 *zbuf = &m_zbuffer->pix16(scanline);
 	int startx = extent.startx;
 	float uoz = (object.uoz_base + scanline * object.uoz_dy + startx * object.uoz_dx) * zbase;
 	float voz = (object.voz_base + scanline * object.voz_dy + startx * object.voz_dx) * zbase;
@@ -251,8 +251,8 @@ void gaelco3d_renderer::render_normal(INT32 scanline, const extent_t &extent, co
 	const rgb_t *palsource = m_state.m_palette + object.color;
 	UINT32 tex = object.tex;
 	float z0 = object.z0;
-	UINT16 *dest = BITMAP_ADDR16(m_screenbits, scanline, 0);
-	UINT16 *zbuf = BITMAP_ADDR16(m_zbuffer, scanline, 0);
+	UINT16 *dest = &m_screenbits->pix16(scanline);
+	UINT16 *zbuf = &m_zbuffer->pix16(scanline);
 	int startx = extent.startx;
 	float ooz = object.ooz_base + scanline * object.ooz_dy + startx * ooz_dx;
 	float uoz = object.uoz_base + scanline * object.uoz_dy + startx * uoz_dx;
@@ -301,8 +301,8 @@ void gaelco3d_renderer::render_alphablend(INT32 scanline, const extent_t &extent
 	const rgb_t *palsource = m_state.m_palette + object.color;
 	UINT32 tex = object.tex;
 	float z0 = object.z0;
-	UINT16 *dest = BITMAP_ADDR16(m_screenbits, scanline, 0);
-	UINT16 *zbuf = BITMAP_ADDR16(m_zbuffer, scanline, 0);
+	UINT16 *dest = &m_screenbits->pix16(scanline);
+	UINT16 *zbuf = &m_zbuffer->pix16(scanline);
 	int startx = extent.startx;
 	float ooz = object.ooz_base + object.ooz_dy * scanline + startx * ooz_dx;
 	float uoz = object.uoz_base + object.uoz_dy * scanline + startx * uoz_dx;
@@ -433,38 +433,38 @@ WRITE32_HANDLER( gaelco3d_paletteram_020_w )
 
 SCREEN_UPDATE( gaelco3d )
 {
-	gaelco3d_state *state = screen->machine().driver_data<gaelco3d_state>();
+	gaelco3d_state *state = screen.machine().driver_data<gaelco3d_state>();
 	int ret;
 
 /*
-    if (DISPLAY_TEXTURE && (screen->machine().input().code_pressed(KEYCODE_Z) || screen->machine().input().code_pressed(KEYCODE_X)))
+    if (DISPLAY_TEXTURE && (screen.machine().input().code_pressed(KEYCODE_Z) || screen.machine().input().code_pressed(KEYCODE_X)))
     {
         static int xv = 0, yv = 0x1000;
         UINT8 *base = state->m_texture;
         int length = state->m_texture_size;
 
-        if (screen->machine().input().code_pressed(KEYCODE_X))
+        if (screen.machine().input().code_pressed(KEYCODE_X))
         {
             base = state->m_texmask;
             length = state->m_texmask_size;
         }
 
-        if (screen->machine().input().code_pressed(KEYCODE_LEFT) && xv >= 4)
+        if (screen.machine().input().code_pressed(KEYCODE_LEFT) && xv >= 4)
             xv -= 4;
-        if (screen->machine().input().code_pressed(KEYCODE_RIGHT) && xv < 4096 - 4)
+        if (screen.machine().input().code_pressed(KEYCODE_RIGHT) && xv < 4096 - 4)
             xv += 4;
 
-        if (screen->machine().input().code_pressed(KEYCODE_UP) && yv >= 4)
+        if (screen.machine().input().code_pressed(KEYCODE_UP) && yv >= 4)
             yv -= 4;
-        if (screen->machine().input().code_pressed(KEYCODE_DOWN) && yv < 0x40000)
+        if (screen.machine().input().code_pressed(KEYCODE_DOWN) && yv < 0x40000)
             yv += 4;
 
-        for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+        for (y = cliprect.min_y; y <= cliprect.max_y; y++)
         {
-            UINT16 *dest = BITMAP_ADDR16(bitmap, y, 0);
-            for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+            UINT16 *dest = &bitmap.pix16(y);
+            for (x = cliprect.min_x; x <= cliprect.max_x; x++)
             {
-                int offs = (yv + y - cliprect->min_y) * 4096 + xv + x - cliprect->min_x;
+                int offs = (yv + y - cliprect.min_y) * 4096 + xv + x - cliprect.min_x;
                 if (offs < length)
                     dest[x] = base[offs];
                 else
@@ -476,7 +476,7 @@ SCREEN_UPDATE( gaelco3d )
     else*/
 	{
 		if (state->m_video_changed)
-			copybitmap(bitmap, state->m_poly->screenbits(), 0,1, 0,0, cliprect);
+			copybitmap(bitmap, *state->m_poly->screenbits(), 0,1, 0,0, cliprect);
 		ret = state->m_video_changed;
 		state->m_video_changed = FALSE;
 	}

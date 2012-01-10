@@ -138,7 +138,7 @@ static void blitter_execute( running_machine &machine )
 
 SCREEN_UPDATE( kangaroo )
 {
-	kangaroo_state *state = screen->machine().driver_data<kangaroo_state>();
+	kangaroo_state *state = screen.machine().driver_data<kangaroo_state>();
 	UINT8 scrolly = state->m_video_control[6];
 	UINT8 scrollx = state->m_video_control[7];
 	UINT8 maska = (state->m_video_control[10] & 0x28) >> 3;
@@ -157,11 +157,11 @@ SCREEN_UPDATE( kangaroo )
 		pens[x] = MAKE_RGB(pal1bit(x >> 2), pal1bit(x >> 1), pal1bit(x >> 0));
 
 	/* iterate over pixels */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
-		UINT32 *dest = BITMAP_ADDR32(bitmap, y, 0);
+		UINT32 *dest = &bitmap.pix32(y);
 
-		for (x = cliprect->min_x; x <= cliprect->max_x; x += 2)
+		for (x = cliprect.min_x; x <= cliprect.max_x; x += 2)
 		{
 			UINT8 effxa = scrollx + ((x / 2) ^ xora);
 			UINT8 effya = scrolly + (y ^ xora);

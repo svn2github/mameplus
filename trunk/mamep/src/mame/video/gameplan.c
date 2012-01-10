@@ -71,7 +71,7 @@ static void leprechn_get_pens( pen_t *pens )
 
 static SCREEN_UPDATE( gameplan )
 {
-	gameplan_state *state = screen->machine().driver_data<gameplan_state>();
+	gameplan_state *state = screen.machine().driver_data<gameplan_state>();
 	pen_t pens[GAMEPLAN_NUM_PENS];
 	offs_t offs;
 
@@ -82,7 +82,7 @@ static SCREEN_UPDATE( gameplan )
 		UINT8 y = offs >> 8;
 		UINT8 x = offs & 0xff;
 
-		*BITMAP_ADDR32(bitmap, y, x) = pens[state->m_videoram[offs] & 0x07];
+		bitmap.pix32(y, x) = pens[state->m_videoram[offs] & 0x07];
 	}
 
 	return 0;
@@ -91,7 +91,7 @@ static SCREEN_UPDATE( gameplan )
 
 static SCREEN_UPDATE( leprechn )
 {
-	gameplan_state *state = screen->machine().driver_data<gameplan_state>();
+	gameplan_state *state = screen.machine().driver_data<gameplan_state>();
 	pen_t pens[LEPRECHN_NUM_PENS];
 	offs_t offs;
 
@@ -102,7 +102,7 @@ static SCREEN_UPDATE( leprechn )
 		UINT8 y = offs >> 8;
 		UINT8 x = offs & 0xff;
 
-		*BITMAP_ADDR32(bitmap, y, x) = pens[state->m_videoram[offs]];
+		bitmap.pix32(y, x) = pens[state->m_videoram[offs]];
 	}
 
 	return 0;

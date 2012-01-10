@@ -348,13 +348,13 @@ void irobot_run_video(running_machine &machine)
 
 SCREEN_UPDATE( irobot )
 {
-	irobot_state *state = screen->machine().driver_data<irobot_state>();
+	irobot_state *state = screen.machine().driver_data<irobot_state>();
 	UINT8 *videoram = state->m_videoram;
 	UINT8 *bitmap_base = state->m_bufsel ? state->m_polybitmap1 : state->m_polybitmap2;
 	int x, y, offs;
 
 	/* copy the polygon bitmap */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 		draw_scanline8(bitmap, 0, y, BITMAP_WIDTH, &bitmap_base[y * BITMAP_WIDTH], NULL);
 
 	/* redraw the non-zero characters in the alpha layer */
@@ -364,7 +364,7 @@ SCREEN_UPDATE( irobot )
 			int code = videoram[offs] & 0x3f;
 			int color = ((videoram[offs] & 0xc0) >> 6) | (state->m_alphamap >> 3);
 
-			drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[0],
+			drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[0],
 					code, color,
 					0,0,
 					8*x,8*y,0);

@@ -126,7 +126,7 @@ WRITE8_HANDLER( shrike_sprite_select_w )
  *
  *************************************/
 
-static void draw_one_sprite(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, UINT8 *sprite)
+static void draw_one_sprite(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, UINT8 *sprite)
 {
 	balsente_state *state = machine.driver_data<balsente_state>();
 	int flags = sprite[0];
@@ -143,7 +143,7 @@ static void draw_one_sprite(running_machine &machine, bitmap_t *bitmap, const re
 	/* loop over y */
 	for (y = 0; y < 16; y++, ypos = (ypos + 1) & 255)
 	{
-		if (ypos >= (16 + BALSENTE_VBEND) && ypos >= cliprect->min_y && ypos <= cliprect->max_y)
+		if (ypos >= (16 + BALSENTE_VBEND) && ypos >= cliprect.min_y && ypos <= cliprect.max_y)
 		{
 			const pen_t *pens = &machine.pens[state->m_palettebank_vis * 256];
 			UINT8 *old = &state->m_expanded_videoram[(ypos - BALSENTE_VBEND) * 256 + xpos];
@@ -161,12 +161,12 @@ static void draw_one_sprite(running_machine &machine, bitmap_t *bitmap, const re
 
 					/* left pixel, combine with the background */
 					if (left && currx >= 0 && currx < 256)
-						*BITMAP_ADDR16(bitmap, ypos, currx) = pens[left | old[0]];
+						bitmap.pix16(ypos, currx) = pens[left | old[0]];
 					currx++;
 
 					/* right pixel, combine with the background */
 					if (right && currx >= 0 && currx < 256)
-						*BITMAP_ADDR16(bitmap, ypos, currx) = pens[right | old[1]];
+						bitmap.pix16(ypos, currx) = pens[right | old[1]];
 					currx++;
 				}
 			}
@@ -185,12 +185,12 @@ static void draw_one_sprite(running_machine &machine, bitmap_t *bitmap, const re
 
 					/* left pixel, combine with the background */
 					if (left && currx >= 0 && currx < 256)
-						*BITMAP_ADDR16(bitmap, ypos, currx) = pens[left | old[0]];
+						bitmap.pix16(ypos, currx) = pens[left | old[0]];
 					currx++;
 
 					/* right pixel, combine with the background */
 					if (right && currx >= 0 && currx < 256)
-						*BITMAP_ADDR16(bitmap, ypos, currx) = pens[right | old[1]];
+						bitmap.pix16(ypos, currx) = pens[right | old[1]];
 					currx++;
 				}
 				src += 4;
@@ -212,17 +212,17 @@ static void draw_one_sprite(running_machine &machine, bitmap_t *bitmap, const re
 
 SCREEN_UPDATE( balsente )
 {
-	balsente_state *state = screen->machine().driver_data<balsente_state>();
-	const pen_t *pens = &screen->machine().pens[state->m_palettebank_vis * 256];
+	balsente_state *state = screen.machine().driver_data<balsente_state>();
+	const pen_t *pens = &screen.machine().pens[state->m_palettebank_vis * 256];
 	int y, i;
 
 	/* draw scanlines from the VRAM directly */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 		draw_scanline8(bitmap, 0, y, 256, &state->m_expanded_videoram[(y - BALSENTE_VBEND) * 256], pens);
 
 	/* draw the sprite images */
 	for (i = 0; i < 40; i++)
-		draw_one_sprite(screen->machine(), bitmap, cliprect, &state->m_spriteram[(0xe0 + i * 4) & 0xff]);
+		draw_one_sprite(screen.machine(), bitmap, cliprect, &state->m_spriteram[(0xe0 + i * 4) & 0xff]);
 
 	return 0;
 }

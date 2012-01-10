@@ -72,7 +72,7 @@ void karnov_flipscreen_w( running_machine &machine, int data )
 	tilemap_set_flip_all(machine, state->m_flipscreen ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 }
 
-static void draw_background( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_background( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	karnov_state *state = machine.driver_data<karnov_state>();
 	int my, mx, offs, color, tile, fx, fy;
@@ -100,10 +100,10 @@ static void draw_background( running_machine &machine, bitmap_t *bitmap, const r
 		color = tile >> 12;
 		tile = tile & 0x7ff;
 		if (state->m_flipscreen)
-			drawgfx_opaque(state->m_bitmap_f, 0, machine.gfx[1],tile,
+			drawgfx_opaque(*state->m_bitmap_f, state->m_bitmap_f->cliprect(), machine.gfx[1],tile,
 				color, fx, fy, 496-16*mx,496-16*my);
 		else
-			drawgfx_opaque(state->m_bitmap_f, 0, machine.gfx[1],tile,
+			drawgfx_opaque(*state->m_bitmap_f, state->m_bitmap_f->cliprect(), machine.gfx[1],tile,
 				color, fx, fy, 16*mx,16*my);
 	}
 
@@ -118,16 +118,16 @@ static void draw_background( running_machine &machine, bitmap_t *bitmap, const r
 		scrollx = scrollx + 256;
 	}
 
-	copyscrollbitmap(bitmap, state->m_bitmap_f, 1, &scrollx, 1, &scrolly, cliprect);
+	copyscrollbitmap(bitmap, *state->m_bitmap_f, 1, &scrollx, 1, &scrolly, cliprect);
 }
 
 /******************************************************************************/
 
 SCREEN_UPDATE( karnov )
 {
-	karnov_state *state = screen->machine().driver_data<karnov_state>();
-	draw_background(screen->machine(), bitmap, cliprect);
-	screen->machine().device<deco_karnovsprites_device>("spritegen")->draw_sprites(screen->machine(), bitmap, cliprect,  screen->machine().generic.buffered_spriteram.u16, 0x800, 0);
+	karnov_state *state = screen.machine().driver_data<karnov_state>();
+	draw_background(screen.machine(), bitmap, cliprect);
+	screen.machine().device<deco_karnovsprites_device>("spritegen")->draw_sprites(screen.machine(), bitmap, cliprect,  screen.machine().generic.buffered_spriteram.u16, 0x800, 0);
 	tilemap_draw(bitmap, cliprect, state->m_fix_tilemap, 0, 0);
 	return 0;
 }

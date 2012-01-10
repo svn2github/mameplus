@@ -182,11 +182,11 @@ void atarig42_scanline_update(screen_device &screen, int scanline)
 
 SCREEN_UPDATE( atarig42 )
 {
-	atarig42_state *state = screen->machine().driver_data<atarig42_state>();
-	bitmap_t *priority_bitmap = screen->machine().priority_bitmap;
+	atarig42_state *state = screen.machine().driver_data<atarig42_state>();
+	bitmap_t &priority_bitmap = screen.machine().priority_bitmap;
 
 	/* draw the playfield */
-	bitmap_fill(priority_bitmap, cliprect, 0);
+	priority_bitmap.fill(0, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_playfield_tilemap, 0, 0);
 	tilemap_draw(bitmap, cliprect, state->m_playfield_tilemap, 1, 1);
 	tilemap_draw(bitmap, cliprect, state->m_playfield_tilemap, 2, 2);
@@ -199,18 +199,18 @@ SCREEN_UPDATE( atarig42 )
 	/* copy the motion objects on top */
 	{
 		bitmap_t *mo_bitmap = atarirle_get_vram(state->m_rle, 0);
-		int left	= cliprect->min_x;
-		int top		= cliprect->min_y;
-		int right	= cliprect->max_x + 1;
-		int bottom	= cliprect->max_y + 1;
+		int left	= cliprect.min_x;
+		int top		= cliprect.min_y;
+		int right	= cliprect.max_x + 1;
+		int bottom	= cliprect.max_y + 1;
 		int x, y;
 
 		/* now blend with the playfield */
 		for (y = top; y < bottom; y++)
 		{
-			UINT16 *pf = (UINT16 *)bitmap->base + y * bitmap->rowpixels;
-			UINT16 *mo = (UINT16 *)mo_bitmap->base + y * mo_bitmap->rowpixels;
-			UINT8 *pri = (UINT8 *)priority_bitmap->base + priority_bitmap->rowpixels * y;
+			UINT16 *pf = &bitmap.pix16(y);
+			UINT16 *mo = &mo_bitmap->pix16(y);
+			UINT8 *pri = &priority_bitmap.pix8(y);
 			for (x = left; x < right; x++)
 				if (mo[x])
 				{
@@ -229,7 +229,7 @@ SCREEN_UPDATE( atarig42 )
 
 SCREEN_EOF( atarig42 )
 {
-	atarig42_state *state = machine.driver_data<atarig42_state>();
+	atarig42_state *state = screen.machine().driver_data<atarig42_state>();
 
 	atarirle_eof(state->m_rle);
 }

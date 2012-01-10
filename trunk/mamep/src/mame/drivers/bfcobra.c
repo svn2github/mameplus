@@ -341,7 +341,7 @@ static VIDEO_START( bfcobra )
 
 static SCREEN_UPDATE( bfcobra )
 {
-	bfcobra_state *state = screen->machine().driver_data<bfcobra_state>();
+	bfcobra_state *state = screen.machine().driver_data<bfcobra_state>();
 	int x, y;
 	UINT8  *src;
 	UINT32 *dest;
@@ -372,26 +372,26 @@ static SCREEN_UPDATE( bfcobra )
 		lorescol = state->m_col8bit;
 	}
 
-	for (y = cliprect->min_y; y <= cliprect->max_y; ++y)
+	for (y = cliprect.min_y; y <= cliprect.max_y; ++y)
 	{
 		UINT16 y_offset = (y + state->m_v_scroll) * 256;
 		src = &state->m_video_ram[offset + y_offset];
-		dest = BITMAP_ADDR32(bitmap, y, 0);
+		dest = &bitmap.pix32(y);
 
-		for (x = cliprect->min_x; x <= cliprect->max_x / 2; ++x)
+		for (x = cliprect.min_x; x <= cliprect.max_x / 2; ++x)
 		{
 			UINT8 x_offset = x + state->m_h_scroll;
 			UINT8 pen = *(src + x_offset);
 
 			if ( ( state->m_videomode & 0x81 ) == 1 || (state->m_videomode & 0x80 && pen & 0x80) )
 			{
-				*dest++ = screen->machine().pens[hirescol[pen & 0x0f]];
-				*dest++ = screen->machine().pens[hirescol[(pen >> 4) & 0x0f]];
+				*dest++ = screen.machine().pens[hirescol[pen & 0x0f]];
+				*dest++ = screen.machine().pens[hirescol[(pen >> 4) & 0x0f]];
 			}
 			else
 			{
-				*dest++ = screen->machine().pens[lorescol[pen]];
-				*dest++ = screen->machine().pens[lorescol[pen]];
+				*dest++ = screen.machine().pens[lorescol[pen]];
+				*dest++ = screen.machine().pens[lorescol[pen]];
 			}
 		}
 	}

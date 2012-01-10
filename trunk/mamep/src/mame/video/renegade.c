@@ -79,7 +79,7 @@ VIDEO_START( renegade )
 	state_save_register_global(machine, state->m_scrollx);
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	renegade_state *state = machine.driver_data<renegade_state>();
 	UINT8 *source = state->m_spriteram;
@@ -133,10 +133,10 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( renegade )
 {
-	renegade_state *state = screen->machine().driver_data<renegade_state>();
+	renegade_state *state = screen.machine().driver_data<renegade_state>();
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_scrollx);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0 , 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0 , 0);
 	return 0;
 }

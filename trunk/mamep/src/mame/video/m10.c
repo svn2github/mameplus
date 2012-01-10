@@ -92,14 +92,14 @@ WRITE8_HANDLER( m15_chargen_w )
 }
 
 
-INLINE void plot_pixel_m10( running_machine &machine, bitmap_t *bm, int x, int y, int col )
+INLINE void plot_pixel_m10( running_machine &machine, bitmap_t &bm, int x, int y, int col )
 {
 	m10_state *state = machine.driver_data<m10_state>();
 
 	if (!state->m_flip)
-		*BITMAP_ADDR16(bm, y, x) = col;
+		bm.pix16(y, x) = col;
 	else
-		*BITMAP_ADDR16(bm, (IREMM10_VBSTART - 1) - (y - IREMM10_VBEND) + 6,
+		bm.pix16((IREMM10_VBSTART - 1) - (y - IREMM10_VBEND) + 6,
 				(IREMM10_HBSTART - 1) - (x - IREMM10_HBEND)) = col; // only when flip_screen(?)
 }
 
@@ -139,13 +139,13 @@ VIDEO_START( m15 )
 
 SCREEN_UPDATE( m10 )
 {
-	m10_state *state = screen->machine().driver_data<m10_state>();
+	m10_state *state = screen.machine().driver_data<m10_state>();
 	int offs;
 	static const int color[4]= { 3, 3, 5, 5 };
 	static const int xpos[4] = { 4*8, 26*8, 7*8, 6*8};
 	int i;
 
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
 	for (i = 0; i < 4; i++)
 		if (state->m_flip)
@@ -158,7 +158,7 @@ SCREEN_UPDATE( m10 )
 		int y;
 
 		for (y = IREMM10_VBEND; y < IREMM10_VBSTART; y++)
-			plot_pixel_m10(screen->machine(), bitmap, 16, y, 1);
+			plot_pixel_m10(screen.machine(), bitmap, 16, y, 1);
 	}
 
 	for (offs = state->m_videoram_size - 1; offs >= 0; offs--)
@@ -179,7 +179,7 @@ SCREEN_UPDATE( m10 )
 
 SCREEN_UPDATE( m15 )
 {
-	m10_state *state = screen->machine().driver_data<m10_state>();
+	m10_state *state = screen.machine().driver_data<m10_state>();
 	int offs;
 
 	for (offs = state->m_videoram_size - 1; offs >= 0; offs--)

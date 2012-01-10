@@ -476,7 +476,7 @@ WRITE8_HANDLER ( gatsbee_bank_w )
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	galaga_state *state =  machine.driver_data<galaga_state>();
 
@@ -530,7 +530,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 }
 
 
-static void draw_stars(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_stars(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	galaga_state *state =  machine.driver_data<galaga_state>();
 	/* draw the stars */
@@ -557,8 +557,8 @@ static void draw_stars(running_machine &machine, bitmap_t *bitmap, const rectang
 				x = (star_seed_tab[star_cntr].x + state->m_stars_scrollx) % 256 + x_align;
 				y = (y_align + star_seed_tab[star_cntr].y + state->m_stars_scrolly) % 256;
 
-				if (x >= cliprect->min_x && x <= cliprect->max_x && y >= cliprect->min_y && y <= cliprect->max_y)
-					*BITMAP_ADDR16(bitmap, y, x) = STARS_COLOR_BASE + star_seed_tab[ star_cntr ].col;
+				if (x >= cliprect.min_x && x <= cliprect.max_x && y >= cliprect.min_y && y <= cliprect.max_y)
+					bitmap.pix16(y, x) = STARS_COLOR_BASE + star_seed_tab[ star_cntr ].col;
 			}
 
 		}
@@ -567,11 +567,11 @@ static void draw_stars(running_machine &machine, bitmap_t *bitmap, const rectang
 
 SCREEN_UPDATE( galaga )
 {
-	galaga_state *state =  screen->machine().driver_data<galaga_state>();
+	galaga_state *state =  screen.machine().driver_data<galaga_state>();
 
-	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
-	draw_stars(screen->machine(),bitmap,cliprect);
-	draw_sprites(screen->machine(),bitmap,cliprect);
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	draw_stars(screen.machine(),bitmap,cliprect);
+	draw_sprites(screen.machine(),bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,state->m_fg_tilemap,0,0);
 	return 0;
 }
@@ -580,7 +580,7 @@ SCREEN_UPDATE( galaga )
 
 SCREEN_EOF( galaga )
 {
-	galaga_state *state =  machine.driver_data<galaga_state>();
+	galaga_state *state =  screen.machine().driver_data<galaga_state>();
 	/* this function is called by galaga_interrupt_1() */
 	int s0,s1,s2;
 	static const int speeds[8] = { -1, -2, -3, 0, 3, 2, 1, 0 };

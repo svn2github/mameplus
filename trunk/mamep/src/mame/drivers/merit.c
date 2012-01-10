@@ -246,7 +246,7 @@ static MC6845_UPDATE_ROW( update_row )
 				col |= 0x03;
 
 			col = state->m_ram_palette[col & 0x3ff];
-			*BITMAP_ADDR32(bitmap, y, x) = pens[col ? col : (state->m_lscnblk ? 8 : 0)];
+			bitmap.pix32(y, x) = pens[col ? col : (state->m_lscnblk ? 8 : 0)];
 
 			x++;
 		}
@@ -1155,7 +1155,7 @@ INPUT_PORTS_END
 
 static SCREEN_UPDATE( merit )
 {
-	mc6845_device *mc6845 = screen->machine().device<mc6845_device>("crtc");
+	mc6845_device *mc6845 = screen.machine().device<mc6845_device>("crtc");
 	mc6845->update(bitmap, cliprect);
 
 	return 0;

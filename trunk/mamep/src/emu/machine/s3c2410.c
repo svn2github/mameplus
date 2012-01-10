@@ -39,7 +39,7 @@ VIDEO_START( s3c2410 )
 
 SCREEN_UPDATE( s3c2410 )
 {
-	device_t *device = screen->machine().device( S3C2410_TAG);
+	device_t *device = screen.machine().device( S3C2410_TAG);
 	return s3c24xx_video_update( device, screen, bitmap, cliprect);
 }
 
@@ -104,7 +104,7 @@ WRITE_LINE_DEVICE_HANDLER( s3c2410_pin_frnb_w )
 
 void s3c2410_nand_calculate_mecc( UINT8 *data, UINT32 size, UINT8 *mecc)
 {
-	mecc[0] = mecc[1] = mecc[2] = mecc[3] = 0;
+	mecc[0] = mecc[1] = mecc[2] = mecc[3] = 0xFF;
 	for (int i = 0; i < size; i++) nand_update_mecc( mecc, i, data[i]);
 }
 

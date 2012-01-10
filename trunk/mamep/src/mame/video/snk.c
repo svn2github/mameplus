@@ -744,7 +744,7 @@ WRITE8_HANDLER( tdfever_spriteram_w )
 
 /**************************************************************************************/
 
-static void marvins_draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect,
+static void marvins_draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect,
 		const int scrollx, const int scrolly, const int from, const int to)
 {
 	snk_state *state = machine.driver_data<snk_state>();
@@ -789,7 +789,7 @@ static void marvins_draw_sprites(running_machine &machine, bitmap_t *bitmap, con
 }
 
 
-static void tnk3_draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, const int xscroll, const int yscroll)
+static void tnk3_draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, const int xscroll, const int yscroll)
 {
 	snk_state *state = machine.driver_data<snk_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -854,7 +854,7 @@ static void tnk3_draw_sprites(running_machine &machine, bitmap_t *bitmap, const 
 }
 
 
-static void ikari_draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect,
+static void ikari_draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect,
 		const int start, const int xscroll, const int yscroll, const UINT8 *source, const int gfxnum )
 {
 	snk_state *state = machine.driver_data<snk_state>();
@@ -926,7 +926,7 @@ byte3: attributes
     -xx-x--- (bank number)
     x------- (x offset bit8)
 */
-static void tdfever_draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect,
+static void tdfever_draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect,
 		const int xscroll, const int yscroll, const UINT8 *source, const int gfxnum, const int hw_xflip, const int from, const int to )
 {
 	snk_state *state = machine.driver_data<snk_state>();
@@ -992,7 +992,7 @@ static void tdfever_draw_sprites(running_machine &machine, bitmap_t *bitmap, con
 
 SCREEN_UPDATE( marvins )
 {
-	snk_state *state = screen->machine().driver_data<snk_state>();
+	snk_state *state = screen.machine().driver_data<snk_state>();
 
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_bg_scrollx);
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_bg_scrolly);
@@ -1000,9 +1000,9 @@ SCREEN_UPDATE( marvins )
 	tilemap_set_scrolly(state->m_fg_tilemap, 0, state->m_fg_scrolly);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	marvins_draw_sprites(screen->machine(), bitmap, cliprect, state->m_sp16_scrollx, state->m_sp16_scrolly, 0, state->m_sprite_split_point>>2);
+	marvins_draw_sprites(screen.machine(), bitmap, cliprect, state->m_sp16_scrollx, state->m_sp16_scrolly, 0, state->m_sprite_split_point>>2);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
-	marvins_draw_sprites(screen->machine(), bitmap, cliprect, state->m_sp16_scrollx, state->m_sp16_scrolly, state->m_sprite_split_point>>2, 25);
+	marvins_draw_sprites(screen.machine(), bitmap, cliprect, state->m_sp16_scrollx, state->m_sp16_scrolly, state->m_sprite_split_point>>2, 25);
 	tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 0, 0);
 
 	return 0;
@@ -1011,13 +1011,13 @@ SCREEN_UPDATE( marvins )
 
 SCREEN_UPDATE( tnk3 )
 {
-	snk_state *state = screen->machine().driver_data<snk_state>();
+	snk_state *state = screen.machine().driver_data<snk_state>();
 
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_bg_scrollx);
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_bg_scrolly);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	tnk3_draw_sprites(screen->machine(), bitmap, cliprect, state->m_sp16_scrollx, state->m_sp16_scrolly);
+	tnk3_draw_sprites(screen.machine(), bitmap, cliprect, state->m_sp16_scrollx, state->m_sp16_scrolly);
 	tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 0, 0);
 
 	return 0;
@@ -1026,16 +1026,16 @@ SCREEN_UPDATE( tnk3 )
 
 SCREEN_UPDATE( ikari )
 {
-	snk_state *state = screen->machine().driver_data<snk_state>();
+	snk_state *state = screen.machine().driver_data<snk_state>();
 
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_bg_scrollx);
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_bg_scrolly);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
-	ikari_draw_sprites(screen->machine(), bitmap, cliprect,  0, state->m_sp16_scrollx, state->m_sp16_scrolly, state->m_spriteram + 0x800, 2 );
-	ikari_draw_sprites(screen->machine(), bitmap, cliprect,  0, state->m_sp32_scrollx, state->m_sp32_scrolly, state->m_spriteram,         3 );
-	ikari_draw_sprites(screen->machine(), bitmap, cliprect, 25, state->m_sp16_scrollx, state->m_sp16_scrolly, state->m_spriteram + 0x800, 2 );
+	ikari_draw_sprites(screen.machine(), bitmap, cliprect,  0, state->m_sp16_scrollx, state->m_sp16_scrolly, state->m_spriteram + 0x800, 2 );
+	ikari_draw_sprites(screen.machine(), bitmap, cliprect,  0, state->m_sp32_scrollx, state->m_sp32_scrolly, state->m_spriteram,         3 );
+	ikari_draw_sprites(screen.machine(), bitmap, cliprect, 25, state->m_sp16_scrollx, state->m_sp16_scrolly, state->m_spriteram + 0x800, 2 );
 
 	tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 0, 0);
 	return 0;
@@ -1044,16 +1044,16 @@ SCREEN_UPDATE( ikari )
 
 SCREEN_UPDATE( gwar )
 {
-	snk_state *state = screen->machine().driver_data<snk_state>();
+	snk_state *state = screen.machine().driver_data<snk_state>();
 
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_bg_scrollx);
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_bg_scrolly);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
-	tdfever_draw_sprites(screen->machine(), bitmap, cliprect, state->m_sp16_scrollx, state->m_sp16_scrolly, state->m_spriteram + 0x800, 2, 0, 0, state->m_sprite_split_point );
-	tdfever_draw_sprites(screen->machine(), bitmap, cliprect, state->m_sp32_scrollx, state->m_sp32_scrolly, state->m_spriteram,         3, 0, 0, 32 );
-	tdfever_draw_sprites(screen->machine(), bitmap, cliprect, state->m_sp16_scrollx, state->m_sp16_scrolly, state->m_spriteram + 0x800, 2, 0, state->m_sprite_split_point, 64 );
+	tdfever_draw_sprites(screen.machine(), bitmap, cliprect, state->m_sp16_scrollx, state->m_sp16_scrolly, state->m_spriteram + 0x800, 2, 0, 0, state->m_sprite_split_point );
+	tdfever_draw_sprites(screen.machine(), bitmap, cliprect, state->m_sp32_scrollx, state->m_sp32_scrolly, state->m_spriteram,         3, 0, 0, 32 );
+	tdfever_draw_sprites(screen.machine(), bitmap, cliprect, state->m_sp16_scrollx, state->m_sp16_scrolly, state->m_spriteram + 0x800, 2, 0, state->m_sprite_split_point, 64 );
 
 	tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 0, 0);
 
@@ -1063,14 +1063,14 @@ SCREEN_UPDATE( gwar )
 
 SCREEN_UPDATE( tdfever )
 {
-	snk_state *state = screen->machine().driver_data<snk_state>();
+	snk_state *state = screen.machine().driver_data<snk_state>();
 
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_bg_scrollx);
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_bg_scrolly);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
-	tdfever_draw_sprites(screen->machine(), bitmap, cliprect, state->m_sp32_scrollx, state->m_sp32_scrolly, state->m_spriteram, 2, 1, 0, 32 );
+	tdfever_draw_sprites(screen.machine(), bitmap, cliprect, state->m_sp32_scrollx, state->m_sp32_scrolly, state->m_spriteram, 2, 1, 0, 32 );
 
 	tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 0, 0);
 

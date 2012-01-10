@@ -490,7 +490,7 @@ static MC6845_UPDATE_ROW( update_row )
 				data3 = data3 >> 1;
 			}
 
-			*BITMAP_ADDR32(bitmap, y, x) = pens[color];
+			bitmap.pix32(y, x) = pens[color];
 
 			x = x + 1;
 		}
@@ -523,7 +523,7 @@ static const mc6845_interface mc6845_intf =
 
 static SCREEN_UPDATE( spiders )
 {
-	mc6845_device *mc6845 = screen->machine().device<mc6845_device>("crtc");
+	mc6845_device *mc6845 = screen.machine().device<mc6845_device>("crtc");
 	mc6845->update(bitmap, cliprect);
 
 	return 0;

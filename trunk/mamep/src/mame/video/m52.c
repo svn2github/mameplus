@@ -303,7 +303,7 @@ WRITE8_HANDLER( alpha1v_flipscreen_w )
  *
  *************************************/
 
-static void draw_background(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int xpos, int ypos, int image)
+static void draw_background(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int xpos, int ypos, int image)
 {
 	rectangle rect;
 	const rectangle &visarea = machine.primary_screen->visible_area();
@@ -349,7 +349,7 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 		rect.max_y = ypos + 2 * BGHEIGHT - 1;
 	}
 
-	bitmap_fill(bitmap, &rect, machine.gfx[image]->color_base + 3);
+	bitmap.fill(machine.gfx[image]->color_base + 3, rect);
 }
 
 
@@ -362,24 +362,24 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 
 SCREEN_UPDATE( m52 )
 {
-	m52_state *state = screen->machine().driver_data<m52_state>();
+	m52_state *state = screen.machine().driver_data<m52_state>();
 	int offs;
 
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
 	if (!(state->m_bgcontrol & 0x20))
 	{
 		if (!(state->m_bgcontrol & 0x10))
-			draw_background(screen->machine(), bitmap, cliprect, state->m_bg2xpos, state->m_bg2ypos, 2); /* distant mountains */
+			draw_background(screen.machine(), bitmap, cliprect, state->m_bg2xpos, state->m_bg2ypos, 2); /* distant mountains */
 
 		if (!(state->m_bgcontrol & 0x02))
-			draw_background(screen->machine(), bitmap, cliprect, state->m_bg1xpos, state->m_bg1ypos, 3); /* hills */
+			draw_background(screen.machine(), bitmap, cliprect, state->m_bg1xpos, state->m_bg1ypos, 3); /* hills */
 
 		if (!(state->m_bgcontrol & 0x04))
-			draw_background(screen->machine(), bitmap, cliprect, state->m_bg1xpos, state->m_bg1ypos, 4); /* cityscape */
+			draw_background(screen.machine(), bitmap, cliprect, state->m_bg1xpos, state->m_bg1ypos, 4); /* cityscape */
 	}
 
-	tilemap_set_flip(state->m_bg_tilemap, flip_screen_get(screen->machine()) ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
+	tilemap_set_flip(state->m_bg_tilemap, flip_screen_get(screen.machine()) ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
@@ -396,14 +396,14 @@ SCREEN_UPDATE( m52 )
 
 		/* sprites from offsets $00-$7F are processed in the upper half of the frame */
 		/* sprites from offsets $80-$FF are processed in the lower half of the frame */
-		clip = *cliprect;
+		clip = cliprect;
 		if (!(offs & 0x80))
 			clip.min_y = 0, clip.max_y = 127;
 		else
 			clip.min_y = 128, clip.max_y = 255;
 
 		/* adjust for flipping */
-		if (flip_screen_get(screen->machine()))
+		if (flip_screen_get(screen.machine()))
 		{
 			int temp = clip.min_y;
 			clip.min_y = 255 - clip.max_y;
@@ -420,12 +420,12 @@ SCREEN_UPDATE( m52 )
 #ifdef SPLIT_SPRITES
 		sect_rect(&clip, cliprect);
 #else
-		clip = *cliprect;
+		clip = cliprect;
 #endif
 
-		drawgfx_transmask(bitmap, &clip, screen->machine().gfx[1],
+		drawgfx_transmask(bitmap, clip, screen.machine().gfx[1],
 			code, color, flipx, flipy, sx, sy,
-			colortable_get_transpen_mask(screen->machine().colortable, screen->machine().gfx[1], color, 512 + 32));
+			colortable_get_transpen_mask(screen.machine().colortable, screen.machine().gfx[1], color, 512 + 32));
 	}
 	return 0;
 }

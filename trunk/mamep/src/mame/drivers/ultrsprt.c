@@ -32,14 +32,14 @@ public:
 
 static SCREEN_UPDATE( ultrsprt )
 {
-	ultrsprt_state *state = screen->machine().driver_data<ultrsprt_state>();
+	ultrsprt_state *state = screen.machine().driver_data<ultrsprt_state>();
 	int i, j;
 
 	UINT8 *ram = (UINT8 *)state->m_vram;
 
 	for (j=0; j < 400; j++)
 	{
-		UINT16 *dest = BITMAP_ADDR16(bitmap, j, 0);
+		UINT16 *dest = &bitmap.pix16(j);
 		int fb_index = j * 1024;
 
 		for (i=0; i < 512; i++)

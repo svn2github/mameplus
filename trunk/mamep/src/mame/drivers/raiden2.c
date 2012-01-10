@@ -629,7 +629,7 @@ static void combine32(UINT32 *val, int offset, UINT16 data, UINT16 mem_mask)
 
 /* SPRITE DRAWING (move to video file) */
 
-void raiden2_state::draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect ,int pri_mask )
+void raiden2_state::draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect ,int pri_mask )
 {
 	UINT16 *source = sprites + sprites_cur_start/2 - 4;
 
@@ -888,34 +888,34 @@ static VIDEO_START( raiden2 )
 
 static SCREEN_UPDATE( raiden2 )
 {
-	raiden2_state *state = screen->machine().driver_data<raiden2_state>();
-	bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+	raiden2_state *state = screen.machine().driver_data<raiden2_state>();
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
 
-	//if (!screen->machine().input().code_pressed(KEYCODE_Q))
+	//if (!screen.machine().input().code_pressed(KEYCODE_Q))
 	{
 		if (!(state->raiden2_tilemap_enable & 1))
 			tilemap_draw(bitmap, cliprect, state->background_layer, 0, 0);
 	}
 
-	//if (!screen->machine().input().code_pressed(KEYCODE_W))
+	//if (!screen.machine().input().code_pressed(KEYCODE_W))
 	{
 		if (!(state->raiden2_tilemap_enable & 2))
 			tilemap_draw(bitmap, cliprect, state->midground_layer, 0, 0);
 	}
 
-	//if (!screen->machine().input().code_pressed(KEYCODE_E))
+	//if (!screen.machine().input().code_pressed(KEYCODE_E))
 	{
 		if (!(state->raiden2_tilemap_enable & 4))
 			tilemap_draw(bitmap, cliprect, state->foreground_layer, 0, 0);
 	}
 
-	//if (!screen->machine().input().code_pressed(KEYCODE_S))
+	//if (!screen.machine().input().code_pressed(KEYCODE_S))
 	{
 		//if (!(raiden2_tilemap_enable & 0x10))
-			state->draw_sprites(screen->machine(), bitmap, cliprect, 0);
+			state->draw_sprites(screen.machine(), bitmap, cliprect, 0);
 	}
 
-	//if (!screen->machine().input().code_pressed(KEYCODE_A))
+	//if (!screen.machine().input().code_pressed(KEYCODE_A))
 	{
 		if (!(state->raiden2_tilemap_enable & 8))
 			tilemap_draw(bitmap, cliprect, state->text_layer, 0, 0);

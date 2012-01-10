@@ -156,7 +156,7 @@ INLINE const UINT8 *get_source_ptr(gfx_element *gfx, UINT32 sprite, int dx, int 
 	return gfx_element_get_data(gfx, (sprite+code) % gfx->total_elements) + ((dy%16) * gfx->line_modulo);
 }
 
-static void bbusters_draw_block(running_machine &machine, bitmap_t *dest,int x,int y,int size,int flipx,int flipy,UINT32 sprite,int color,int bank,int block)
+static void bbusters_draw_block(running_machine &machine, bitmap_t &dest,int x,int y,int size,int flipx,int flipy,UINT32 sprite,int color,int bank,int block)
 {
 	bbusters_state *state = machine.driver_data<bbusters_state>();
 	gfx_element *gfx = machine.gfx[bank];
@@ -170,7 +170,7 @@ static void bbusters_draw_block(running_machine &machine, bitmap_t *dest,int x,i
 	while (state->m_scale_line_count) {
 
 		if (dy>=16 && dy<240) {
-			UINT16 *destline = BITMAP_ADDR16(dest, dy, 0);
+			UINT16 *destline = &dest.pix16(dy);
 			UINT8 srcline=*state->m_scale_table_ptr;
 			const UINT8 *srcptr=0;
 
@@ -203,7 +203,7 @@ static void bbusters_draw_block(running_machine &machine, bitmap_t *dest,int x,i
 	}
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const UINT16 *source, int bank, int colval, int colmask)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const UINT16 *source, int bank, int colval, int colmask)
 {
 	bbusters_state *state = machine.driver_data<bbusters_state>();
 	const UINT8 *scale_table=machine.region("user1")->base();
@@ -281,7 +281,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const UINT1
 
 SCREEN_UPDATE( bbuster )
 {
-	bbusters_state *state = screen->machine().driver_data<bbusters_state>();
+	bbusters_state *state = screen.machine().driver_data<bbusters_state>();
 
 	tilemap_set_scrollx(state->m_pf1_tilemap, 0, state->m_pf1_scroll_data[0]);
 	tilemap_set_scrolly(state->m_pf1_tilemap, 0, state->m_pf1_scroll_data[1]);
@@ -289,17 +289,17 @@ SCREEN_UPDATE( bbuster )
 	tilemap_set_scrolly(state->m_pf2_tilemap, 0, state->m_pf2_scroll_data[1]);
 
 	tilemap_draw(bitmap, cliprect, state->m_pf2_tilemap, 0, 0);
-	//draw_sprites(screen->machine(), bitmap, screen->machine().generic.buffered_spriteram2.u16, 2, 0x8, 0x8);
+	//draw_sprites(screen.machine(), bitmap, screen.machine().generic.buffered_spriteram2.u16, 2, 0x8, 0x8);
 	tilemap_draw(bitmap, cliprect, state->m_pf1_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, screen->machine().generic.buffered_spriteram2.u16, 2, 0, 0);
-	draw_sprites(screen->machine(), bitmap, screen->machine().generic.buffered_spriteram.u16, 1, 0, 0);
+	draw_sprites(screen.machine(), bitmap, screen.machine().generic.buffered_spriteram2.u16, 2, 0, 0);
+	draw_sprites(screen.machine(), bitmap, screen.machine().generic.buffered_spriteram.u16, 1, 0, 0);
 	tilemap_draw(bitmap, cliprect, state->m_fix_tilemap, 0, 0);
 	return 0;
 }
 
 SCREEN_UPDATE( mechatt )
 {
-	bbusters_state *state = screen->machine().driver_data<bbusters_state>();
+	bbusters_state *state = screen.machine().driver_data<bbusters_state>();
 
 	tilemap_set_scrollx(state->m_pf1_tilemap, 0, state->m_pf1_scroll_data[0]);
 	tilemap_set_scrolly(state->m_pf1_tilemap, 0, state->m_pf1_scroll_data[1]);
@@ -308,7 +308,7 @@ SCREEN_UPDATE( mechatt )
 
 	tilemap_draw(bitmap, cliprect, state->m_pf2_tilemap, 0, 0);
 	tilemap_draw(bitmap, cliprect, state->m_pf1_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, screen->machine().generic.buffered_spriteram.u16, 1, 0, 0);
+	draw_sprites(screen.machine(), bitmap, screen.machine().generic.buffered_spriteram.u16, 1, 0, 0);
 	tilemap_draw(bitmap, cliprect, state->m_fix_tilemap, 0, 0);
 	return 0;
 }

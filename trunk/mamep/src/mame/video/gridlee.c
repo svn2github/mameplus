@@ -134,13 +134,13 @@ WRITE8_HANDLER( gridlee_palette_select_w )
 
 SCREEN_UPDATE( gridlee )
 {
-	gridlee_state *state = screen->machine().driver_data<gridlee_state>();
-	const pen_t *pens = &screen->machine().pens[state->m_palettebank_vis * 32];
+	gridlee_state *state = screen.machine().driver_data<gridlee_state>();
+	const pen_t *pens = &screen.machine().pens[state->m_palettebank_vis * 32];
 	UINT8 *gfx;
 	int x, y, i;
 
 	/* draw scanlines from the VRAM directly */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
 		/* non-flipped: draw directly from the bitmap */
 		if (!state->m_cocktail_flip)
@@ -160,7 +160,7 @@ SCREEN_UPDATE( gridlee )
 	}
 
 	/* draw the sprite images */
-	gfx = screen->machine().region("gfx1")->base();
+	gfx = screen.machine().region("gfx1")->base();
 	for (i = 0; i < 32; i++)
 	{
 		UINT8 *sprite = state->m_spriteram + i * 4;
@@ -184,7 +184,7 @@ SCREEN_UPDATE( gridlee )
 				currxor = 0xff;
 			}
 
-			if (ypos >= (16 + GRIDLEE_VBEND) && ypos >= cliprect->min_y && ypos <= cliprect->max_y)
+			if (ypos >= (16 + GRIDLEE_VBEND) && ypos >= cliprect.min_y && ypos <= cliprect.max_y)
 			{
 				int currx = xpos;
 
@@ -197,12 +197,12 @@ SCREEN_UPDATE( gridlee )
 
 					/* left pixel */
 					if (left && currx >= 0 && currx < 256)
-						*BITMAP_ADDR16(bitmap, ypos, currx ^ currxor) = pens[left];
+						bitmap.pix16(ypos, currx ^ currxor) = pens[left];
 					currx++;
 
 					/* right pixel */
 					if (right && currx >= 0 && currx < 256)
-						*BITMAP_ADDR16(bitmap, ypos, currx ^ currxor) = pens[right];
+						bitmap.pix16(ypos, currx ^ currxor) = pens[right];
 					currx++;
 				}
 			}

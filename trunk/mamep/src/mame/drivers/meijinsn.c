@@ -285,7 +285,7 @@ static PALETTE_INIT( meijinsn )
 
 static SCREEN_UPDATE(meijinsn)
 {
-	meijinsn_state *state = screen->machine().driver_data<meijinsn_state>();
+	meijinsn_state *state = screen.machine().driver_data<meijinsn_state>();
 	int offs;
 
 	for (offs = 0; offs < 0x4000; offs++)
@@ -302,7 +302,7 @@ static SCREEN_UPDATE(meijinsn)
 		{
 			color= BIT(data1, x) | (BIT(data1, x + 4) << 1);
 			data = BIT(data2, x) | (BIT(data2, x + 4) << 1);
-			*BITMAP_ADDR16(bitmap, sy, (sx * 4 + (3 - x))) = color * 4 + data;
+			bitmap.pix16(sy, (sx * 4 + (3 - x))) = color * 4 + data;
 		}
 	}
 	return 0;

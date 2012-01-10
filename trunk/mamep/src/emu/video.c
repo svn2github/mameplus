@@ -124,7 +124,6 @@ video_manager::video_manager(running_machine &machine)
 	  m_skipping_this_frame(false),
 	  m_average_oversleep(0),
 	  m_snap_target(NULL),
-	  m_snap_bitmap(NULL),
 	  m_snap_native(true),
 	  m_snap_width(0),
 	  m_snap_height(0),
@@ -415,8 +414,8 @@ void video_manager::begin_recording(const char *name, movie_format format)
 		info.video_timescale = 1000 * ((machine().primary_screen != NULL) ? ATTOSECONDS_TO_HZ(machine().primary_screen->frame_period().attoseconds) : screen_device::DEFAULT_FRAME_RATE);
 		info.video_sampletime = 1000;
 		info.video_numsamples = 0;
-		info.video_width = m_snap_bitmap->width;
-		info.video_height = m_snap_bitmap->height;
+		info.video_width = m_snap_bitmap.width();
+		info.video_height = m_snap_bitmap.height();
 		info.video_depth = 24;
 
 		info.audio_format = 0;
@@ -557,8 +556,7 @@ void video_manager::exit()
 
 	// free the snapshot target
 	machine().render().target_free(m_snap_target);
-	if (m_snap_bitmap != NULL)
-		global_free(m_snap_bitmap);
+	m_snap_bitmap.deallocate();
 
 	// print a final result if we have at least 5 seconds' worth of data
 	if (m_overall_emutime.seconds >= 5)
@@ -1085,17 +1083,13 @@ void video_manager::create_snapshot_bitmap(device_t *screen)
 	m_snap_target->set_bounds(width, height);
 
 	// if we don't have a bitmap, or if it's not the right size, allocate a new one
-	if (m_snap_bitmap == NULL || width != m_snap_bitmap->width || height != m_snap_bitmap->height)
-	{
-		if (m_snap_bitmap != NULL)
-			auto_free(machine(), m_snap_bitmap);
-		m_snap_bitmap = auto_alloc(machine(), bitmap_t(width, height, BITMAP_FORMAT_RGB32));
-	}
+	if (!m_snap_bitmap.valid() || width != m_snap_bitmap.width() || height != m_snap_bitmap.height())
+		m_snap_bitmap.allocate(width, height, BITMAP_FORMAT_RGB32);
 
 	// render the screen there
 	render_primitive_list &primlist = m_snap_target->get_primitives();
 	primlist.acquire_lock();
-	rgb888_draw_primitives(primlist, m_snap_bitmap->base, width, height, m_snap_bitmap->rowpixels);
+	rgb888_draw_primitives(primlist, &m_snap_bitmap.pix32(0), width, height, m_snap_bitmap.rowpixels());
 	primlist.release_lock();
 }
 
@@ -1300,21 +1294,21 @@ void video_manager::record_frame()
     invalid palette index
 -------------------------------------------------*/
 
-void video_assert_out_of_range_pixels(running_machine &machine, bitmap_t *bitmap)
+void video_assert_out_of_range_pixels(running_machine &machine, bitmap_t &bitmap)
 {
 #ifdef MAME_DEBUG
 	int maxindex = palette_get_max_index(machine.palette);
 	int x, y;
 
 	// this only applies to indexed16 bitmaps
-	if (bitmap->format != BITMAP_FORMAT_INDEXED16)
+	if (bitmap.format() != BITMAP_FORMAT_INDEXED16)
 		return;
 
 	// iterate over rows
-	for (y = 0; y < bitmap->height; y++)
+	for (y = 0; y < bitmap.height(); y++)
 	{
-		UINT16 *rowbase = BITMAP_ADDR16(bitmap, y, 0);
-		for (x = 0; x < bitmap->width; x++)
+		UINT16 *rowbase = &bitmap.pix16(y);
+		for (x = 0; x < bitmap.width(); x++)
 			assert(rowbase[x] < maxindex);
 	}
 #endif

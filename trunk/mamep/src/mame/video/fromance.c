@@ -303,7 +303,7 @@ WRITE8_HANDLER( fromance_crtc_register_w )
  *
  *************************************/
 
-static void draw_sprites( screen_device &screen, bitmap_t *bitmap, const rectangle *cliprect, int draw_priority )
+static void draw_sprites( screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect, int draw_priority )
 {
 	fromance_state *state = screen.machine().driver_data<fromance_state>();
 	static const UINT8 zoomtable[16] = { 0,7,14,20,25,30,34,38,42,46,49,52,54,57,59,61 };
@@ -424,7 +424,7 @@ static void draw_sprites( screen_device &screen, bitmap_t *bitmap, const rectang
 
 SCREEN_UPDATE( fromance )
 {
-	fromance_state *state = screen->machine().driver_data<fromance_state>();
+	fromance_state *state = screen.machine().driver_data<fromance_state>();
 
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_scrollx[0]);
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_scrolly[0]);
@@ -439,7 +439,7 @@ SCREEN_UPDATE( fromance )
 
 SCREEN_UPDATE( pipedrm )
 {
-	fromance_state *state = screen->machine().driver_data<fromance_state>();
+	fromance_state *state = screen.machine().driver_data<fromance_state>();
 
 	/* there seems to be no logical mapping for the X scroll register -- maybe it's gone */
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_scrolly[1]);
@@ -448,7 +448,7 @@ SCREEN_UPDATE( pipedrm )
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 
-	draw_sprites(*screen, bitmap, cliprect, 0);
-	draw_sprites(*screen, bitmap, cliprect, 1);
+	draw_sprites(screen, bitmap, cliprect, 0);
+	draw_sprites(screen, bitmap, cliprect, 1);
 	return 0;
 }

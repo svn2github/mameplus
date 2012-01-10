@@ -174,8 +174,8 @@ static int collision_check_s1s2(running_machine &machine)
 	clip.min_y=0;
 	clip.max_y=15;
 
-	bitmap_fill(state->m_ship1_vid, &clip, 0);
-	bitmap_fill(state->m_ship2_vid, &clip, 0);
+	state->m_ship1_vid->fill(0, clip);
+	state->m_ship2_vid->fill(0, clip);
 
 	/* origin is with respect to ship1 */
 
@@ -183,8 +183,8 @@ static int collision_check_s1s2(running_machine &machine)
 	org_y = state->m_s1_y;
 
 	/* Draw ship 1 */
-	drawgfx_opaque(state->m_ship1_vid,
-			&clip,
+	drawgfx_opaque(*state->m_ship1_vid,
+			clip,
 			machine.gfx[8+((state->m_s1_sprite&0x04)>>2)],
 			(state->m_s1_sprite&0x03)^0x03,
 			0,
@@ -192,8 +192,8 @@ static int collision_check_s1s2(running_machine &machine)
 			state->m_s1_x-org_x, state->m_s1_y-org_y);
 
 	/* Draw ship 2 */
-	drawgfx_opaque(state->m_ship2_vid,
-			&clip,
+	drawgfx_opaque(*state->m_ship2_vid,
+			clip,
 			machine.gfx[10+((state->m_s2_sprite&0x04)>>2)],
 			(state->m_s2_sprite&0x03)^0x03,
 			0,
@@ -204,7 +204,7 @@ static int collision_check_s1s2(running_machine &machine)
 	for (sy=0;sy<16;sy++)
 		for (sx=0;sx<16;sx++)
 		/* Condition 1 - ship 1 = ship 2 */
-		if ((*BITMAP_ADDR16(state->m_ship1_vid, sy, sx) == 1) && (*BITMAP_ADDR16(state->m_ship2_vid, sy, sx) == 1))
+		if ((state->m_ship1_vid->pix16(sy, sx) == 1) && (state->m_ship2_vid->pix16(sy, sx) == 1))
 			return 1;
 
 	return 0;
@@ -229,8 +229,8 @@ static int collision_check_p1p2(running_machine &machine)
 	clip.min_y=0;
 	clip.max_y=15;
 
-	bitmap_fill(state->m_proj1_vid, &clip, 0);
-	bitmap_fill(state->m_proj2_vid, &clip, 0);
+	state->m_proj1_vid->fill(0, clip);
+	state->m_proj2_vid->fill(0, clip);
 
 	/* origin is with respect to proj1 */
 
@@ -240,8 +240,8 @@ static int collision_check_p1p2(running_machine &machine)
 	if (state->m_p1_sprite & 0x08)	/* if p1 is a projectile */
 	{
 		/* Draw score/projectile 1 */
-		drawgfx_opaque(state->m_proj1_vid,
-				&clip,
+		drawgfx_opaque(*state->m_proj1_vid,
+				clip,
 				machine.gfx[(state->m_p1_sprite&0x0c)>>2],
 				(state->m_p1_sprite&0x03)^0x03,
 				0,
@@ -252,8 +252,8 @@ static int collision_check_p1p2(running_machine &machine)
 	if (state->m_p2_sprite & 0x08)	/* if p2 is a projectile */
 	{
 		/* Draw score/projectile 2 */
-		drawgfx_opaque(state->m_proj2_vid,
-				&clip,
+		drawgfx_opaque(*state->m_proj2_vid,
+				clip,
 				machine.gfx[4+((state->m_p2_sprite&0x0c)>>2)],
 				(state->m_p2_sprite&0x03)^0x03,
 				0,
@@ -265,7 +265,7 @@ static int collision_check_p1p2(running_machine &machine)
 	for (sy=0;sy<16;sy++)
 		for (sx=0;sx<16;sx++)
 			/* Condition 1 - proj 1 = proj 2 */
-			if ((*BITMAP_ADDR16(state->m_proj1_vid, sy, sx) == 1) && (*BITMAP_ADDR16(state->m_proj2_vid, sy, sx) == 1))
+			if ((state->m_proj1_vid->pix16(sy, sx) == 1) && (state->m_proj2_vid->pix16(sy, sx) == 1))
 				return 1;
 
 	return 0;
@@ -290,9 +290,9 @@ static int collision_check_s1p1p2(running_machine &machine)
 	clip.min_y=0;
 	clip.max_y=15;
 
-	bitmap_fill(state->m_ship1_vid, &clip, 0);
-	bitmap_fill(state->m_proj1_vid, &clip, 0);
-	bitmap_fill(state->m_proj2_vid, &clip, 0);
+	state->m_ship1_vid->fill(0, clip);
+	state->m_proj1_vid->fill(0, clip);
+	state->m_proj2_vid->fill(0, clip);
 
 	/* origin is with respect to ship1 */
 
@@ -300,8 +300,8 @@ static int collision_check_s1p1p2(running_machine &machine)
 	org_y = state->m_s1_y;
 
 	/* Draw ship 1 */
-	drawgfx_opaque(state->m_ship1_vid,
-			&clip,
+	drawgfx_opaque(*state->m_ship1_vid,
+			clip,
 			machine.gfx[8+((state->m_s1_sprite&0x04)>>2)],
 			(state->m_s1_sprite&0x03)^0x03,
 			0,
@@ -311,8 +311,8 @@ static int collision_check_s1p1p2(running_machine &machine)
 	if (state->m_p1_sprite & 0x08)	/* if p1 is a projectile */
 	{
 		/* Draw projectile 1 */
-		drawgfx_opaque(state->m_proj1_vid,
-				&clip,
+		drawgfx_opaque(*state->m_proj1_vid,
+				clip,
 				machine.gfx[(state->m_p1_sprite&0x0c)>>2],
 				(state->m_p1_sprite&0x03)^0x03,
 				0,
@@ -323,8 +323,8 @@ static int collision_check_s1p1p2(running_machine &machine)
 	if (state->m_p2_sprite & 0x08)	/* if p2 is a projectile */
 	{
 		/* Draw projectile 2 */
-		drawgfx_opaque(state->m_proj2_vid,
-				&clip,
+		drawgfx_opaque(*state->m_proj2_vid,
+				clip,
 				machine.gfx[4+((state->m_p2_sprite&0x0c)>>2)],
 				(state->m_p2_sprite&0x03)^0x03,
 				0,
@@ -335,13 +335,13 @@ static int collision_check_s1p1p2(running_machine &machine)
 	/* Now check for collisions */
 	for (sy=0;sy<16;sy++)
 		for (sx=0;sx<16;sx++)
-			if (*BITMAP_ADDR16(state->m_ship1_vid, sy, sx) == 1)
+			if (state->m_ship1_vid->pix16(sy, sx) == 1)
 			{
 				/* Condition 1 - ship 1 = proj 1 */
-				if (*BITMAP_ADDR16(state->m_proj1_vid, sy, sx) == 1)
+				if (state->m_proj1_vid->pix16(sy, sx) == 1)
 					return 1;
 				/* Condition 2 - ship 1 = proj 2 */
-				if (*BITMAP_ADDR16(state->m_proj2_vid, sy, sx) == 1)
+				if (state->m_proj2_vid->pix16(sy, sx) == 1)
 					return 1;
 			}
 
@@ -367,9 +367,9 @@ static int collision_check_s2p1p2(running_machine &machine)
 	clip.min_y=0;
 	clip.max_y=15;
 
-	bitmap_fill(state->m_ship2_vid, &clip, 0);
-	bitmap_fill(state->m_proj1_vid, &clip, 0);
-	bitmap_fill(state->m_proj2_vid, &clip, 0);
+	state->m_ship2_vid->fill(0, clip);
+	state->m_proj1_vid->fill(0, clip);
+	state->m_proj2_vid->fill(0, clip);
 
 	/* origin is with respect to ship2 */
 
@@ -377,8 +377,8 @@ static int collision_check_s2p1p2(running_machine &machine)
 	org_y = state->m_s2_y;
 
 	/* Draw ship 2 */
-	drawgfx_opaque(state->m_ship2_vid,
-			&clip,
+	drawgfx_opaque(*state->m_ship2_vid,
+			clip,
 			machine.gfx[10+((state->m_s2_sprite&0x04)>>2)],
 			(state->m_s2_sprite&0x03)^0x03,
 			0,
@@ -388,8 +388,8 @@ static int collision_check_s2p1p2(running_machine &machine)
 	if (state->m_p1_sprite & 0x08)	/* if p1 is a projectile */
 	{
 		/* Draw projectile 1 */
-		drawgfx_opaque(state->m_proj1_vid,
-				&clip,
+		drawgfx_opaque(*state->m_proj1_vid,
+				clip,
 				machine.gfx[(state->m_p1_sprite&0x0c)>>2],
 				(state->m_p1_sprite&0x03)^0x03,
 				0,
@@ -400,8 +400,8 @@ static int collision_check_s2p1p2(running_machine &machine)
 	if (state->m_p2_sprite & 0x08)	/* if p2 is a projectile */
 	{
 		/* Draw projectile 2 */
-		drawgfx_opaque(state->m_proj2_vid,
-				&clip,
+		drawgfx_opaque(*state->m_proj2_vid,
+				clip,
 				machine.gfx[4+((state->m_p2_sprite&0x0c)>>2)],
 				(state->m_p2_sprite&0x03)^0x03,
 				0,
@@ -412,13 +412,13 @@ static int collision_check_s2p1p2(running_machine &machine)
 	/* Now check for collisions */
 	for (sy=0;sy<16;sy++)
 		for (sx=0;sx<16;sx++)
-			if (*BITMAP_ADDR16(state->m_ship2_vid, sy, sx) == 1)
+			if (state->m_ship2_vid->pix16(sy, sx) == 1)
 			{
 				/* Condition 1 - ship 2 = proj 1 */
-				if (*BITMAP_ADDR16(state->m_proj1_vid, sy, sx) == 1)
+				if (state->m_proj1_vid->pix16(sy, sx) == 1)
 					return 1;
 				/* Condition 2 - ship 2 = proj 2 */
-				if (*BITMAP_ADDR16(state->m_proj2_vid, sy, sx) == 1)
+				if (state->m_proj2_vid->pix16(sy, sx) == 1)
 					return 1;
 			}
 
@@ -427,14 +427,14 @@ static int collision_check_s2p1p2(running_machine &machine)
 
 SCREEN_UPDATE( starcrus )
 {
-	starcrus_state *state = screen->machine().driver_data<starcrus_state>();
+	starcrus_state *state = screen.machine().driver_data<starcrus_state>();
 
-	bitmap_fill(bitmap,cliprect,0);
+	bitmap.fill(0, cliprect);
 
 	/* Draw ship 1 */
 	drawgfx_transpen(bitmap,
 			cliprect,
-			screen->machine().gfx[8+((state->m_s1_sprite&0x04)>>2)],
+			screen.machine().gfx[8+((state->m_s1_sprite&0x04)>>2)],
 			(state->m_s1_sprite&0x03)^0x03,
 			0,
 			(state->m_s1_sprite&0x08)>>3, (state->m_s1_sprite&0x10)>>4,
@@ -444,7 +444,7 @@ SCREEN_UPDATE( starcrus )
 	/* Draw ship 2 */
 	drawgfx_transpen(bitmap,
 			cliprect,
-			screen->machine().gfx[10+((state->m_s2_sprite&0x04)>>2)],
+			screen.machine().gfx[10+((state->m_s2_sprite&0x04)>>2)],
 			(state->m_s2_sprite&0x03)^0x03,
 			0,
 			(state->m_s2_sprite&0x08)>>3, (state->m_s2_sprite&0x10)>>4,
@@ -454,7 +454,7 @@ SCREEN_UPDATE( starcrus )
 	/* Draw score/projectile 1 */
 	drawgfx_transpen(bitmap,
 			cliprect,
-			screen->machine().gfx[(state->m_p1_sprite&0x0c)>>2],
+			screen.machine().gfx[(state->m_p1_sprite&0x0c)>>2],
 			(state->m_p1_sprite&0x03)^0x03,
 			0,
 			0,0,
@@ -464,7 +464,7 @@ SCREEN_UPDATE( starcrus )
 	/* Draw score/projectile 2 */
 	drawgfx_transpen(bitmap,
 			cliprect,
-			screen->machine().gfx[4+((state->m_p2_sprite&0x0c)>>2)],
+			screen.machine().gfx[4+((state->m_p2_sprite&0x0c)>>2)],
 			(state->m_p2_sprite&0x03)^0x03,
 			0,
 			0,0,
@@ -472,28 +472,28 @@ SCREEN_UPDATE( starcrus )
 			0);
 
 	/* Collision detection */
-	if (cliprect->max_y == screen->visible_area().max_y)
+	if (cliprect.max_y == screen.visible_area().max_y)
 	{
 		state->m_collision_reg = 0x00;
 
 		/* Check for collisions between ship1 and ship2 */
-		if (collision_check_s1s2(screen->machine()))
+		if (collision_check_s1s2(screen.machine()))
 		{
 			state->m_collision_reg |= 0x08;
 		}
 		/* Check for collisions between ship1 and projectiles */
-		if (collision_check_s1p1p2(screen->machine()))
+		if (collision_check_s1p1p2(screen.machine()))
 		{
 			state->m_collision_reg |= 0x02;
 		}
 		/* Check for collisions between ship1 and projectiles */
-		if (collision_check_s2p1p2(screen->machine()))
+		if (collision_check_s2p1p2(screen.machine()))
 		{
 			state->m_collision_reg |= 0x01;
 		}
 		/* Check for collisions between ship1 and projectiles */
 		/* Note: I don't think this is used by the game */
-		if (collision_check_p1p2(screen->machine()))
+		if (collision_check_p1p2(screen.machine()))
 		{
 			state->m_collision_reg |= 0x04;
 		}

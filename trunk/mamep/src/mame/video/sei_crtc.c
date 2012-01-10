@@ -206,7 +206,7 @@ static TILE_GET_INFO( seibucrtc_sc3_tile_info )
 	SET_TILE_INFO(4, tile, color, 0);
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect,int pri)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect,int pri)
 {
 	UINT16 *spriteram16 = reinterpret_cast<UINT16 *>(memory_get_shared(machine, "spriteram"));
 	int offs,fx,fy,x,y,color,sprite;
@@ -271,7 +271,7 @@ VIDEO_START( seibu_crtc )
 
 SCREEN_UPDATE( seibu_crtc )
 {
-	bitmap_fill(bitmap, cliprect, screen->machine().pens[0x7ff]); //black pen
+	bitmap.fill(screen.machine().pens[0x7ff], cliprect); //black pen
 
 	tilemap_set_scrollx( sc0_tilemap,0, (SEIBU_CRTC_SC0_SX + SEIBU_CRTC_FIX_SX+64) & 0x1ff );
 	tilemap_set_scrolly( sc0_tilemap,0, (SEIBU_CRTC_SC0_SY + SEIBU_CRTC_FIX_SY+1) & 0x1ff );
@@ -283,13 +283,13 @@ SCREEN_UPDATE( seibu_crtc )
 	tilemap_set_scrolly( SEIBU_CRTC_SC3_PAGE_SEL ? sc3_tilemap_0 : sc3_tilemap_1,0, (SEIBU_CRTC_FIX_SY+1) & 0x1ff );
 
 	if(SEIBU_CRTC_ENABLE_SC0) { tilemap_draw(bitmap,cliprect,sc0_tilemap,0,0); }
-	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen->machine(), bitmap,cliprect, 2); }
+	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 2); }
 	if(SEIBU_CRTC_ENABLE_SC2) { tilemap_draw(bitmap,cliprect,sc2_tilemap,0,0); }
-	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen->machine(), bitmap,cliprect, 1); }
+	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 1); }
 	if(SEIBU_CRTC_ENABLE_SC1) { tilemap_draw(bitmap,cliprect,sc1_tilemap,0,0); }
-	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen->machine(), bitmap,cliprect, 0); }
+	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 0); }
 	if(SEIBU_CRTC_ENABLE_SC3) { tilemap_draw(bitmap,cliprect,SEIBU_CRTC_SC3_PAGE_SEL ? sc3_tilemap_0 : sc3_tilemap_1,0,0); }
-	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen->machine(), bitmap,cliprect, 3); }
+	if(SEIBU_CRTC_ENABLE_SPR) { draw_sprites(screen.machine(), bitmap,cliprect, 3); }
 
 	return 0;
 }

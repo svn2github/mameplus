@@ -169,7 +169,7 @@ WRITE16_HANDLER( gcpinbal_ctrl_word_w )
 
 ****************************************************************/
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int y_offs )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int y_offs )
 {
 	gcpinbal_state *state = machine.driver_data<gcpinbal_state>();
 	UINT16 *spriteram = state->m_spriteram;
@@ -250,25 +250,25 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( gcpinbal )
 {
-	gcpinbal_state *state = screen->machine().driver_data<gcpinbal_state>();
+	gcpinbal_state *state = screen.machine().driver_data<gcpinbal_state>();
 	int i;
 	UINT16 tile_sets = 0;
 	UINT8 layer[3];
 
 #ifdef MAME_DEBUG
-	if (screen->machine().input().code_pressed_once(KEYCODE_V))
+	if (screen.machine().input().code_pressed_once(KEYCODE_V))
 	{
 		state->m_dislayer[0] ^= 1;
 		popmessage("bg0: %01x", state->m_dislayer[0]);
 	}
 
-	if (screen->machine().input().code_pressed_once(KEYCODE_B))
+	if (screen.machine().input().code_pressed_once(KEYCODE_B))
 	{
 		state->m_dislayer[1] ^= 1;
 		popmessage("bg1: %01x", state->m_dislayer[1]);
 	}
 
-	if (screen->machine().input().code_pressed_once(KEYCODE_N))
+	if (screen.machine().input().code_pressed_once(KEYCODE_N))
 	{
 		state->m_dislayer[2] ^= 1;
 		popmessage("fg: %01x", state->m_dislayer[2]);
@@ -292,8 +292,8 @@ SCREEN_UPDATE( gcpinbal )
 		tilemap_set_scrolly(state->m_tilemap[i], 0, state->m_scrolly[i]);
 	}
 
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
-	bitmap_fill(bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
+	bitmap.fill(0, cliprect);
 
 	layer[0] = 0;
 	layer[1] = 1;
@@ -316,7 +316,7 @@ SCREEN_UPDATE( gcpinbal )
 	tilemap_draw(bitmap, cliprect, state->m_tilemap[layer[2]], 0, 4);
 
 
-	draw_sprites(screen->machine(), bitmap, cliprect, 16);
+	draw_sprites(screen.machine(), bitmap, cliprect, 16);
 
 #if 0
 	{

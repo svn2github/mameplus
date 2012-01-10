@@ -206,7 +206,7 @@ WRITE8_HANDLER( zaccaria_flip_screen_y_w )
 offsets 1 and 2 are swapped if accessed from spriteram2
 
 */
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect,UINT8 *spriteram,int color,int section)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect,UINT8 *spriteram,int color,int section)
 {
 	int offs,o1 = 1,o2 = 2;
 
@@ -245,14 +245,14 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 
 SCREEN_UPDATE( zaccaria )
 {
-	zaccaria_state *state = screen->machine().driver_data<zaccaria_state>();
+	zaccaria_state *state = screen.machine().driver_data<zaccaria_state>();
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,0,0);
 
 	// 3 layers of sprites, each with their own palette and priorities
 	// Not perfect yet, does spriteram(1) layer have a priority bit somewhere?
-	draw_sprites(screen->machine(),bitmap,cliprect,state->m_spriteram2,2,1);
-	draw_sprites(screen->machine(),bitmap,cliprect,state->m_spriteram,1,0);
-	draw_sprites(screen->machine(),bitmap,cliprect,state->m_spriteram2+0x20,0,1);
+	draw_sprites(screen.machine(),bitmap,cliprect,state->m_spriteram2,2,1);
+	draw_sprites(screen.machine(),bitmap,cliprect,state->m_spriteram,1,0);
+	draw_sprites(screen.machine(),bitmap,cliprect,state->m_spriteram2+0x20,0,1);
 
 	return 0;
 }

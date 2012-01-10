@@ -116,17 +116,17 @@ VIDEO_START( gamtor )
 
 SCREEN_UPDATE(gamtor)
 {
-	gaminator_state *state = screen->machine().driver_data<gaminator_state>();
+	gaminator_state *state = screen.machine().driver_data<gaminator_state>();
 
 	int tile_base = 0x00000;
 
 	// where does the base address come from?
-	if (!strcmp(screen->machine().system().name,"g4u5"))	tile_base = 0x31BE4 - 2;
-	if (!strcmp(screen->machine().system().name,"llcharm"))	tile_base = 0x2f58d - 2;
+	if (!strcmp(screen.machine().system().name,"g4u5"))	tile_base = 0x31BE4 - 2;
+	if (!strcmp(screen.machine().system().name,"llcharm"))	tile_base = 0x2f58d - 2;
 
 
 
-	const gfx_element *gfx = screen->machine().gfx[0];
+	const gfx_element *gfx = screen.machine().gfx[0];
 	int count = 0;
 	for (int y=0;y<32;y++)
 	{
@@ -165,7 +165,7 @@ static ADDRESS_MAP_START( gaminator_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x400003c4, 0x400003c7) AM_READWRITE( gamtor_unk4_r, gamtor_unk4_w )
 	AM_RANGE(0x400003c8, 0x400003cb) AM_DEVWRITE8_MODERN("ramdac", ramdac_device, index_w, 0x000000ff)
 	AM_RANGE(0x400003c8, 0x400003cb) AM_DEVWRITE8_MODERN("ramdac", ramdac_device, pal_w,   0x0000ff00)
-//	AM_RANGE(0x400003c8, 0x400003cb) AM_DEVWRITE8_MODERN("ramdac", ramdac_device, mask_w,  0x00ff0000)
+//  AM_RANGE(0x400003c8, 0x400003cb) AM_DEVWRITE8_MODERN("ramdac", ramdac_device, mask_w,  0x00ff0000)
 	AM_RANGE(0x400003cc, 0x400003cf) AM_WRITE( gamtor_unk6_w )
 	AM_RANGE(0x400003d4, 0x400003d7) AM_READWRITE( gamtor_unk2_r, gamtor_unk2_w )
 	AM_RANGE(0x400003d8, 0x400003fb) AM_READ( gamtor_unk7_r )

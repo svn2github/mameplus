@@ -278,6 +278,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/z8536.o		\
 
 EMUVIDEOOBJS = \
+	$(EMUVIDEO)/315_5124.o		\
 	$(EMUVIDEO)/cdp1861.o		\
 	$(EMUVIDEO)/cdp1862.o		\
 	$(EMUVIDEO)/crt9007.o		\
@@ -293,6 +294,8 @@ EMUVIDEOOBJS = \
 	$(EMUVIDEO)/k053250.o		\
 	$(EMUVIDEO)/mc6845.o		\
 	$(EMUVIDEO)/msm6255.o		\
+	$(EMUVIDEO)/pc_cga.o		\
+	$(EMUVIDEO)/cgapal.o		\
 	$(EMUVIDEO)/pc_vga.o		\
 	$(EMUVIDEO)/poly.o		\
 	$(EMUVIDEO)/psx.o		\

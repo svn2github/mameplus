@@ -12,9 +12,9 @@
 
 /***************************************************************************/
 
-WRITE16_HANDLER( rainbow_spritectrl_w )
+WRITE16_HANDLER( rbisland_spritectrl_w )
 {
-	rainbow_state *state = space->machine().driver_data<rainbow_state>();
+	rbisland_state *state = space->machine().driver_data<rbisland_state>();
 
 	if (offset == 0)
 	{
@@ -28,7 +28,7 @@ WRITE16_HANDLER( rainbow_spritectrl_w )
 
 WRITE16_HANDLER( jumping_spritectrl_w )
 {
-	rainbow_state *state = space->machine().driver_data<rainbow_state>();
+	rbisland_state *state = space->machine().driver_data<rbisland_state>();
 
 	if (offset == 0)
 	{
@@ -42,9 +42,9 @@ WRITE16_HANDLER( jumping_spritectrl_w )
 
 /***************************************************************************/
 
-SCREEN_UPDATE( rainbow )
+SCREEN_UPDATE( rbisland )
 {
-	rainbow_state *state = screen->machine().driver_data<rainbow_state>();
+	rbisland_state *state = screen.machine().driver_data<rbisland_state>();
 	int layer[2];
 
 	pc080sn_tilemap_update(state->m_pc080sn);
@@ -52,7 +52,7 @@ SCREEN_UPDATE( rainbow )
 	layer[0] = 0;
 	layer[1] = 1;
 
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	pc080sn_tilemap_draw(state->m_pc080sn, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 1);
 	pc080sn_tilemap_draw(state->m_pc080sn, bitmap, cliprect, layer[1], 0, 2);
@@ -65,7 +65,7 @@ SCREEN_UPDATE( rainbow )
 /***************************************************************************
 
 Jumping uses different sprite controller
-than rainbow island. - values are remapped
+than rbisland island. - values are remapped
 at address 0x2EA in the code. Apart from
 physical layout, the main change is that
 the Y settings are active low.
@@ -74,7 +74,7 @@ the Y settings are active low.
 
 VIDEO_START( jumping )
 {
-	rainbow_state *state = machine.driver_data<rainbow_state>();
+	rbisland_state *state = machine.driver_data<rbisland_state>();
 
 	pc080sn_set_trans_pen(state->m_pc080sn, 1, 15);
 
@@ -89,7 +89,7 @@ VIDEO_START( jumping )
 
 SCREEN_UPDATE( jumping )
 {
-	rainbow_state *state = screen->machine().driver_data<rainbow_state>();
+	rbisland_state *state = screen.machine().driver_data<rbisland_state>();
 	UINT16 *spriteram = state->m_spriteram;
 	int offs, layer[2];
 	int sprite_colbank = (state->m_sprite_ctrl & 0xe0) >> 1;
@@ -102,7 +102,7 @@ SCREEN_UPDATE( jumping )
 	layer[0] = 0;
 	layer[1] = 1;
 
-	bitmap_fill(screen->machine().priority_bitmap,cliprect,0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	pc080sn_tilemap_draw(state->m_pc080sn, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 0);
 
@@ -110,7 +110,7 @@ SCREEN_UPDATE( jumping )
 	for (offs = state->m_spriteram_size / 2 - 8; offs >= 0; offs -= 8)
 	{
 		int tile = spriteram[offs];
-		if (tile < screen->machine().gfx[1]->total_elements)
+		if (tile < screen.machine().gfx[1]->total_elements)
 		{
 			int sx,sy,color,data1;
 
@@ -122,7 +122,7 @@ SCREEN_UPDATE( jumping )
 			data1 = spriteram[offs + 3];
 			color = (spriteram[offs + 4] & 0x0f) | sprite_colbank;
 
-			drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[0],
+			drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[0],
 					tile,
 					color,
 					data1 & 0x40, data1 & 0x80,

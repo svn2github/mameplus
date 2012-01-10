@@ -202,7 +202,7 @@ WRITE8_HANDLER( popeye_bitmap_w )
 		{
 			for (x = 0; x < 8; x++)
 			{
-				*BITMAP_ADDR16(state->m_tmpbitmap2, sy+y, sx+x) = colour;
+				state->m_tmpbitmap2->pix16(sy+y, sx+x) = colour;
 			}
 		}
 	}
@@ -219,7 +219,7 @@ WRITE8_HANDLER( popeye_bitmap_w )
 		{
 			for (x = 0; x < 8; x++)
 			{
-				*BITMAP_ADDR16(state->m_tmpbitmap2, sy+y, sx+x) = colour;
+				state->m_tmpbitmap2->pix16(sy+y, sx+x) = colour;
 			}
 		}
 	}
@@ -279,7 +279,7 @@ VIDEO_START( popeye )
     state_save_register_global_pointer(machine, state->m_bitmapram, popeye_bitmapram_size);
 }
 
-static void draw_background(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_background(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	popeye_state *state = machine.driver_data<popeye_state>();
 	int offs;
@@ -296,7 +296,7 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 	set_background_palette(machine, (*state->m_palettebank & 0x08) >> 3);
 
 	if (state->m_background_pos[1] == 0)	/* no background */
-		bitmap_fill(bitmap,cliprect,0);
+		bitmap.fill(0, cliprect);
 	else
 	{
 		/* copy the background graphics */
@@ -313,11 +313,11 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 			scrolly = -scrolly;
 		}
 
-		copyscrollbitmap(bitmap,state->m_tmpbitmap2,1,&scrollx,1,&scrolly,cliprect);
+		copyscrollbitmap(bitmap,*state->m_tmpbitmap2,1,&scrollx,1,&scrolly,cliprect);
 	}
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	popeye_state *state = machine.driver_data<popeye_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -373,9 +373,9 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( popeye )
 {
-	popeye_state *state = screen->machine().driver_data<popeye_state>();
-	draw_background(screen->machine(), bitmap, cliprect);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	popeye_state *state = screen.machine().driver_data<popeye_state>();
+	draw_background(screen.machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	return 0;
 }

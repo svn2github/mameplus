@@ -131,7 +131,7 @@ VIDEO_START( wolfpack )
 }
 
 
-static void draw_ship(running_machine &machine, bitmap_t* bitmap, const rectangle* cliprect)
+static void draw_ship(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	wolfpack_state *state = machine.driver_data<wolfpack_state>();
 	static const UINT32 scaler[] =
@@ -167,7 +167,7 @@ static void draw_ship(running_machine &machine, bitmap_t* bitmap, const rectangl
 }
 
 
-static void draw_torpedo(running_machine &machine, bitmap_t* bitmap, const rectangle* cliprect)
+static void draw_torpedo(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	wolfpack_state *state = machine.driver_data<wolfpack_state>();
 	int count = 0;
@@ -196,15 +196,15 @@ static void draw_torpedo(running_machine &machine, bitmap_t* bitmap, const recta
 
 		for (x = 2 * x1; x < 2 * x2; x++)
 			if (state->m_LFSR[(state->m_current_index + 0x300 * y + x) % 0x8000])
-				*BITMAP_ADDR16(bitmap, y, x) = 1;
+				bitmap.pix16(y, x) = 1;
 	}
 }
 
 
-static void draw_pt(running_machine &machine, bitmap_t* bitmap, const rectangle* cliprect)
+static void draw_pt(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	wolfpack_state *state = machine.driver_data<wolfpack_state>();
-	rectangle rect = *cliprect;
+	rectangle rect = cliprect;
 
 	if (!(state->m_pt_pic & 0x20))
 		rect.min_x = 256;
@@ -212,7 +212,7 @@ static void draw_pt(running_machine &machine, bitmap_t* bitmap, const rectangle*
 	if (!(state->m_pt_pic & 0x10))
 		rect.max_x = 255;
 
-	drawgfx_transpen(bitmap, &rect,
+	drawgfx_transpen(bitmap, rect,
 		machine.gfx[2],
 		state->m_pt_pic,
 		0,
@@ -220,7 +220,7 @@ static void draw_pt(running_machine &machine, bitmap_t* bitmap, const rectangle*
 		2 * state->m_pt_horz,
 		state->m_pt_pos_select ? 0x70 : 0xA0, 0);
 
-	drawgfx_transpen(bitmap, &rect,
+	drawgfx_transpen(bitmap, rect,
 		machine.gfx[2],
 		state->m_pt_pic,
 		0,
@@ -230,9 +230,9 @@ static void draw_pt(running_machine &machine, bitmap_t* bitmap, const rectangle*
 }
 
 
-static void draw_water(colortable_t *colortable, bitmap_t* bitmap, const rectangle* cliprect)
+static void draw_water(colortable_t *colortable, bitmap_t &bitmap, const rectangle &cliprect)
 {
-	rectangle rect = *cliprect;
+	rectangle rect = cliprect;
 
 	int x;
 	int y;
@@ -242,7 +242,7 @@ static void draw_water(colortable_t *colortable, bitmap_t* bitmap, const rectang
 
 	for (y = rect.min_y; y <= rect.max_y; y++)
 	{
-		UINT16* p = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16* p = &bitmap.pix16(y);
 
 		for (x = rect.min_x; x <= rect.max_x; x++)
 			p[x] = colortable_entry_get_value(colortable, p[x]) | 0x08;
@@ -252,7 +252,7 @@ static void draw_water(colortable_t *colortable, bitmap_t* bitmap, const rectang
 
 SCREEN_UPDATE( wolfpack )
 {
-	wolfpack_state *state = screen->machine().driver_data<wolfpack_state>();
+	wolfpack_state *state = screen.machine().driver_data<wolfpack_state>();
 	int i;
 	int j;
 
@@ -262,12 +262,12 @@ SCREEN_UPDATE( wolfpack )
 	if (state->m_ship_size & 0x40) color += 0x3a;
 	if (state->m_ship_size & 0x80) color += 0x48;
 
-	colortable_palette_set_color(screen->machine().colortable, 3, MAKE_RGB(color,color,color));
-	colortable_palette_set_color(screen->machine().colortable, 7, MAKE_RGB(color < 0xb8 ? color + 0x48 : 0xff,
+	colortable_palette_set_color(screen.machine().colortable, 3, MAKE_RGB(color,color,color));
+	colortable_palette_set_color(screen.machine().colortable, 7, MAKE_RGB(color < 0xb8 ? color + 0x48 : 0xff,
 																		  color < 0xb8 ? color + 0x48 : 0xff,
 																		  color < 0xb8 ? color + 0x48 : 0xff));
 
-	bitmap_fill(bitmap, cliprect, state->m_video_invert);
+	bitmap.fill(state->m_video_invert, cliprect);
 
 	for (i = 0; i < 8; i++)
 		for (j = 0; j < 32; j++)
@@ -275,7 +275,7 @@ SCREEN_UPDATE( wolfpack )
 			int code = state->m_alpha_num_ram[32 * i + j];
 
 			drawgfx_opaque(bitmap, cliprect,
-				screen->machine().gfx[0],
+				screen.machine().gfx[0],
 				code,
 				state->m_video_invert,
 				0, 0,
@@ -283,30 +283,24 @@ SCREEN_UPDATE( wolfpack )
 				192 + 8 * i);
 		}
 
-	draw_pt(screen->machine(), bitmap, cliprect);
-	draw_ship(screen->machine(), bitmap, cliprect);
-	draw_torpedo(screen->machine(), bitmap, cliprect);
-	draw_water(screen->machine().colortable, bitmap, cliprect);
+	draw_pt(screen.machine(), bitmap, cliprect);
+	draw_ship(screen.machine(), bitmap, cliprect);
+	draw_torpedo(screen.machine(), bitmap, cliprect);
+	draw_water(screen.machine().colortable, bitmap, cliprect);
 	return 0;
 }
 
 
 SCREEN_EOF( wolfpack )
 {
-	wolfpack_state *state = machine.driver_data<wolfpack_state>();
-	rectangle rect;
+	wolfpack_state *state = screen.machine().driver_data<wolfpack_state>();
 
 	int x;
 	int y;
 
-	rect.min_x = 0;
-	rect.min_y = 0;
-	rect.max_x = state->m_helper->width - 1;
-	rect.max_y = state->m_helper->height - 1;
+	state->m_helper->fill(0);
 
-	bitmap_fill(state->m_helper, &rect, 0);
-
-	draw_ship(machine, state->m_helper, &rect);
+	draw_ship(screen.machine(), *state->m_helper, state->m_helper->cliprect());
 
 	for (y = 128; y < 224 - state->m_torpedo_v; y++)
 	{
@@ -315,12 +309,12 @@ SCREEN_EOF( wolfpack )
 
 		for (x = 2 * x1; x < 2 * x2; x++)
 		{
-			if (x < 0 || x >= state->m_helper->width)
+			if (x < 0 || x >= state->m_helper->width())
 				continue;
-			if (y < 0 || y >= state->m_helper->height)
+			if (y < 0 || y >= state->m_helper->height())
 				continue;
 
-			if (*BITMAP_ADDR16(state->m_helper, y, x))
+			if (state->m_helper->pix16(y, x))
 				state->m_collision = 1;
 		}
 	}

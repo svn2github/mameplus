@@ -247,7 +247,7 @@ static VIDEO_START( igs017 )
 
 ***************************************************************************/
 
-static void draw_sprite(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect, int sx, int sy, int dimx, int dimy, int flipx, int flipy, int color, int addr)
+static void draw_sprite(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect, int sx, int sy, int dimx, int dimy, int flipx, int flipy, int color, int addr)
 {
 	igs017_state *state = machine.driver_data<igs017_state>();
 	// prepare GfxElement on the fly
@@ -265,7 +265,7 @@ static void draw_sprite(running_machine &machine, bitmap_t *bitmap,const rectang
 				sx, sy, 0x1f	);
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	igs017_state *state = machine.driver_data<igs017_state>();
 	UINT8 *s	=	state->m_spriteram;
@@ -301,7 +301,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 }
 
 // A simple gfx viewer (toggle with T)
-static int debug_viewer(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static int debug_viewer(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 #ifdef MAME_DEBUG
 	igs017_state *state = machine.driver_data<igs017_state>();
@@ -330,7 +330,7 @@ static int debug_viewer(running_machine &machine, bitmap_t *bitmap,const rectang
 		if (w <= 0)		w = 0;
 		if (w > 1024)	w = 1024;
 
-		bitmap_fill(bitmap,cliprect,0);
+		bitmap.fill(0, cliprect);
 
 		draw_sprite(machine, bitmap, cliprect, 0,0, w,h, 0,0, 0, a);
 
@@ -346,31 +346,31 @@ static int debug_viewer(running_machine &machine, bitmap_t *bitmap,const rectang
 
 static SCREEN_UPDATE( igs017 )
 {
-	igs017_state *state = screen->machine().driver_data<igs017_state>();
+	igs017_state *state = screen.machine().driver_data<igs017_state>();
 	int layers_ctrl = -1;
 
 #ifdef MAME_DEBUG
-	if (screen->machine().input().code_pressed(KEYCODE_Z))
+	if (screen.machine().input().code_pressed(KEYCODE_Z))
 	{
 		int mask = 0;
-		if (screen->machine().input().code_pressed(KEYCODE_Q))	mask |= 1;
-		if (screen->machine().input().code_pressed(KEYCODE_W))	mask |= 2;
-		if (screen->machine().input().code_pressed(KEYCODE_A))	mask |= 4;
+		if (screen.machine().input().code_pressed(KEYCODE_Q))	mask |= 1;
+		if (screen.machine().input().code_pressed(KEYCODE_W))	mask |= 2;
+		if (screen.machine().input().code_pressed(KEYCODE_A))	mask |= 4;
 		if (mask != 0) layers_ctrl &= mask;
 	}
 #endif
 
-	if (debug_viewer(screen->machine(), bitmap,cliprect))
+	if (debug_viewer(screen.machine(), bitmap,cliprect))
 		return 0;
 
-	bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
 
 	if (state->m_video_disable)
 		return 0;
 
 	if (layers_ctrl & 1)	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, TILEMAP_DRAW_OPAQUE, 0);
 
-	if (layers_ctrl & 4)	draw_sprites(screen->machine(), bitmap, cliprect);
+	if (layers_ctrl & 4)	draw_sprites(screen.machine(), bitmap, cliprect);
 
 	if (layers_ctrl & 2)	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 

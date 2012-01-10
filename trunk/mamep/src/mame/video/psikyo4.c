@@ -31,7 +31,7 @@ HgKairak: 86010000 1f201918 a0000000 Large Screen
 
 
 /* --- SPRITES --- */
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, UINT32 scr )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, UINT32 scr )
 {
 	/*- Sprite Format 0x0000 - 0x2bff -**
 
@@ -127,21 +127,17 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 	}
 }
 
-SCREEN_UPDATE( psikyo4 )
+SCREEN_UPDATE( psikyo4_left )
 {
-	device_t *left_screen  = screen->machine().device("lscreen");
-	device_t *right_screen = screen->machine().device("rscreen");
+	bitmap.fill(0x1000, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x0000);
+	return 0;
+}
 
-	if (screen == left_screen)
-	{
-		bitmap_fill(bitmap, cliprect, 0x1000);
-		draw_sprites(screen->machine(), bitmap, cliprect, 0x0000);
-	}
-	if (screen == right_screen)
-	{
-		bitmap_fill(bitmap, cliprect, 0x1001);
-		draw_sprites(screen->machine(), bitmap, cliprect, 0x2000);
-	}
+SCREEN_UPDATE( psikyo4_right )
+{
+	bitmap.fill(0x1001, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x2000);
 	return 0;
 }
 

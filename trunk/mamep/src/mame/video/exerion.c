@@ -234,13 +234,13 @@ READ8_HANDLER( exerion_video_timing_r )
  *
  *************************************/
 
-static void draw_background( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_background( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	exerion_state *state = machine.driver_data<exerion_state>();
 	int x, y;
 
 	/* loop over all visible scanlines */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
 		UINT16 *src0 = &state->m_background_gfx[0][state->m_background_latches[1] * 256];
 		UINT16 *src1 = &state->m_background_gfx[1][state->m_background_latches[3] * 256];
@@ -266,7 +266,7 @@ static void draw_background( running_machine &machine, bitmap_t *bitmap, const r
 		if (!state->m_cocktail_flip)
 		{
 			/* skip processing anything that's not visible */
-			for (x = BACKGROUND_X_START; x < cliprect->min_x; x++)
+			for (x = BACKGROUND_X_START; x < cliprect.min_x; x++)
 			{
 				if (!(++xoffs0 & 0x1f)) start0++, stop0++;
 				if (!(++xoffs1 & 0x1f)) start1++, stop1++;
@@ -275,7 +275,7 @@ static void draw_background( running_machine &machine, bitmap_t *bitmap, const r
 			}
 
 			/* draw the rest of the scanline fully */
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 			{
 				UINT16 combined = 0;
 				UINT8 lookupval;
@@ -303,7 +303,7 @@ static void draw_background( running_machine &machine, bitmap_t *bitmap, const r
 		else
 		{
 			/* skip processing anything that's not visible */
-			for (x = BACKGROUND_X_START; x < cliprect->min_x; x++)
+			for (x = BACKGROUND_X_START; x < cliprect.min_x; x++)
 			{
 				if (!(xoffs0-- & 0x1f)) start0++, stop0++;
 				if (!(xoffs1-- & 0x1f)) start1++, stop1++;
@@ -312,7 +312,7 @@ static void draw_background( running_machine &machine, bitmap_t *bitmap, const r
 			}
 
 			/* draw the rest of the scanline fully */
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 			{
 				UINT16 combined = 0;
 				UINT8 lookupval;
@@ -339,7 +339,7 @@ static void draw_background( running_machine &machine, bitmap_t *bitmap, const r
 		}
 
 		/* draw the scanline */
-		draw_scanline16(bitmap, cliprect->min_x, y, cliprect->max_x - cliprect->min_x + 1, &scanline[cliprect->min_x], NULL);
+		draw_scanline16(bitmap, cliprect.min_x, y, cliprect.max_x - cliprect.min_x + 1, &scanline[cliprect.min_x], NULL);
 	}
 }
 
@@ -352,11 +352,11 @@ static void draw_background( running_machine &machine, bitmap_t *bitmap, const r
 
 SCREEN_UPDATE( exerion )
 {
-	exerion_state *state = screen->machine().driver_data<exerion_state>();
+	exerion_state *state = screen.machine().driver_data<exerion_state>();
 	int sx, sy, offs, i;
 
 	/* draw background */
-	draw_background(screen->machine(), bitmap, cliprect);
+	draw_background(screen.machine(), bitmap, cliprect);
 
 	/* draw sprites */
 	for (i = 0; i < state->m_spriteram_size; i += 4)
@@ -373,7 +373,7 @@ SCREEN_UPDATE( exerion )
 		int code2 = code;
 
 		int color = ((flags >> 1) & 0x03) | ((code >> 5) & 0x04) | (code & 0x08) | (state->m_sprite_palette * 16);
-		const gfx_element *gfx = doubled ? screen->machine().gfx[2] : screen->machine().gfx[1];
+		const gfx_element *gfx = doubled ? screen.machine().gfx[2] : screen.machine().gfx[1];
 
 		if (state->m_cocktail_flip)
 		{
@@ -392,24 +392,24 @@ SCREEN_UPDATE( exerion )
 				code &= ~0x10, code2 |= 0x10;
 
 			drawgfx_transmask(bitmap, cliprect, gfx, code2, color, xflip, yflip, x, y + gfx->height,
-			        colortable_get_transpen_mask(screen->machine().colortable, gfx, color, 0x10));
+			        colortable_get_transpen_mask(screen.machine().colortable, gfx, color, 0x10));
 		}
 
 		drawgfx_transmask(bitmap, cliprect, gfx, code, color, xflip, yflip, x, y,
-			    colortable_get_transpen_mask(screen->machine().colortable, gfx, color, 0x10));
+			    colortable_get_transpen_mask(screen.machine().colortable, gfx, color, 0x10));
 
 		if (doubled) i += 4;
 	}
 
 	/* draw the visible text layer */
-	for (sy = cliprect->min_y/8; sy <= cliprect->max_y/8; sy++)
+	for (sy = cliprect.min_y/8; sy <= cliprect.max_y/8; sy++)
 		for (sx = VISIBLE_X_MIN/8; sx < VISIBLE_X_MAX/8; sx++)
 		{
 			int x = state->m_cocktail_flip ? (63*8 - 8*sx) : 8*sx;
 			int y = state->m_cocktail_flip ? (31*8 - 8*sy) : 8*sy;
 
 			offs = sx + sy * 64;
-			drawgfx_transpen(bitmap, cliprect, screen->machine().gfx[0],
+			drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[0],
 				state->m_videoram[offs] + 256 * state->m_char_bank,
 				((state->m_videoram[offs] & 0xf0) >> 4) + state->m_char_palette * 16,
 				state->m_cocktail_flip, state->m_cocktail_flip, x, y, 0);

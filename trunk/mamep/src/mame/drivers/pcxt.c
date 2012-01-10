@@ -14,11 +14,9 @@ Notes:
 TODO:
 - 02851: tetriskr: Corrupt game graphics after some time of gameplay, caused by a wrong
   reading of the i/o $3c8 bit 1.
-- Filetto: Add a proper FDC device.
-- Filetto: Add sound,"buzzer" PC sound plus the UM5100 sound chip ,might be connected to the
-  prototyping card;
-- Korean Tetris: Add the aforementioned "buzzer" plus identify if there's any kind of sound
-  chip on it;
+- Add a proper FDC device.
+- Filetto: Add UM5100 sound chip ,might be connected to the prototyping card;
+- buzzer sound has issues in both games
 
 ********************************************************************************************
 Filetto HW notes:
@@ -97,14 +95,14 @@ public:
 
 static SCREEN_UPDATE( tetriskr )
 {
-	pcxt_state *state = screen->machine().driver_data<pcxt_state>();
+	pcxt_state *state = screen.machine().driver_data<pcxt_state>();
 	int x,y;
 	int yi;
-	const UINT8 *bg_rom = screen->machine().region("gfx2")->base();
+	const UINT8 *bg_rom = screen.machine().region("gfx2")->base();
 
 	//popmessage("%04x",m_start_offs);
 
-	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
 
 	for(y=0;y<200/8;y++)
 	{
@@ -122,8 +120,8 @@ static SCREEN_UPDATE( tetriskr )
 					for(pen_i = 0;pen_i<4;pen_i++)
 						color |= ((bg_rom[y*320/8+x+(pen_i*0x20000)+yi*0x400+state->m_bg_bank*0x2000+1] >> (7-xi)) & 1) << pen_i;
 
-					if((x+xi)<screen->visible_area().max_x && ((y)+yi)<screen->visible_area().max_y)
-						*BITMAP_ADDR16(bitmap, y*8+yi, x*8+xi) = screen->machine().pens[color];
+					if((x+xi)<screen.visible_area().max_x && ((y)+yi)<screen.visible_area().max_y)
+						bitmap.pix16(y*8+yi, x*8+xi) = screen.machine().pens[color];
 				}
 			}
 		}
@@ -192,7 +190,7 @@ static WRITE8_HANDLER( disk_iobank_w )
 	if (newbank != state->m_bank)
 	{
 		state->m_bank = newbank;
-		memory_set_bankptr(space->machine(),  "bank1",space->machine().region("user1")->base() + 0x10000 * state->m_bank );
+		memory_set_bankptr(space->machine(),  "bank1",space->machine().region("game_prg")->base() + 0x10000 * state->m_bank );
 	}
 
 	state->m_lastvalue = data;
@@ -239,15 +237,15 @@ static const struct pit8253_config pc_pit8253_config =
 {
 	{
 		{
-			4772720/4,				/* heartbeat IRQ */
+			XTAL_14_31818MHz/12,				/* heartbeat IRQ */
 			DEVCB_NULL,
 			DEVCB_DEVICE_LINE("pic8259_1", pic8259_ir0_w)
 		}, {
-			4772720/4,				/* dram refresh */
+			XTAL_14_31818MHz/12,				/* dram refresh */
 			DEVCB_NULL,
 			DEVCB_NULL
 		}, {
-			4772720/4,				/* pio port c pin 4, and speaker polling enough */
+			XTAL_14_31818MHz/12,				/* pio port c pin 4, and speaker polling enough */
 			DEVCB_NULL,
 			DEVCB_LINE(ibm5150_pit8253_out2_changed)
 		}
@@ -393,7 +391,7 @@ static WRITE8_HANDLER( fdc765_data_w )
 
 static WRITE8_HANDLER( drive_selection_w )
 {
-//	pcxt_state *state = space->machine().driver_data<pcxt_state>();
+//  pcxt_state *state = space->machine().driver_data<pcxt_state>();
 
 	/* TODO: properly hook-up upd765 FDC there */
 	pic8259_ir6_w(space->machine().device("pic8259_1"), 1);
@@ -538,8 +536,9 @@ static IRQ_CALLBACK(irq_callback)
 
 static ADDRESS_MAP_START( filetto_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x00000, 0x9ffff) AM_RAM //work RAM 640KB
-	AM_RANGE(0xa0000, 0xbffff) AM_RAM
+	AM_RANGE(0xa0000, 0xbffff) AM_RAM //CGA VRAM
 	AM_RANGE(0xc0000, 0xcffff) AM_ROMBANK("bank1")
+	AM_RANGE(0xd0000, 0xeffff) AM_NOP
 	AM_RANGE(0xf0000, 0xfffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -586,7 +585,7 @@ static ADDRESS_MAP_START( tetriskr_io, AS_IO, 8 )
 	AM_RANGE(0x03c0, 0x03c0) AM_WRITE(tetriskr_bg_bank_w)
 	AM_RANGE(0x03c8, 0x03c8) AM_READ_PORT("IN0")
 	AM_RANGE(0x03c9, 0x03c9) AM_READ_PORT("IN1")
-//  AM_RANGE(0x03ce, 0x03ce) AM_READ_PORT("IN1")
+//  AM_RANGE(0x03ce, 0x03ce) AM_READ_PORT("IN1") //read then discarded?
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( filetto )
@@ -628,7 +627,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( tetriskr )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_IMPULSE(1)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_IMPULSE(2)
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) ) //probably unused
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -638,16 +637,15 @@ static INPUT_PORTS_START( tetriskr )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_4WAY PORT_PLAYER(1)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
-	PORT_START("IN1") //dip-switches?
-	PORT_DIPNAME( 0x01, 0x01, "IN1" )
-	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_START("IN1") //dip-switches
+	PORT_DIPNAME( 0x03, 0x03, "Starting Level" )
+	PORT_DIPSETTING(    0x03, "0" )
+	PORT_DIPSETTING(    0x02, "2" )
+	PORT_DIPSETTING(    0x01, "4" )
+	PORT_DIPSETTING(    0x00, "6" )
+	PORT_DIPNAME( 0x04, 0x04, "Starting Bomb" )
+	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -657,12 +655,11 @@ static INPUT_PORTS_START( tetriskr )
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Coinage ) )
+//  PORT_DIPSETTING(    0x00, DEF_STR( 2C_1C ) ) duplicate
+	PORT_DIPSETTING(    0x40, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0xc0, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( 1C_2C ) )
 
 	PORT_START( "pcvideo_cga_config" )
 	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_UNUSED )
@@ -742,7 +739,7 @@ static MACHINE_CONFIG_START( filetto, pcxt_state )
 
 	MCFG_MC146818_ADD( "rtc", MC146818_STANDARD )
 
-	MCFG_FRAGMENT_ADD( pcvideo_cga_320x200 ) // TODO
+	MCFG_FRAGMENT_ADD( pcvideo_cga )
 	MCFG_GFXDECODE(pcxt)
 
 	/*Sound Hardware*/
@@ -753,7 +750,7 @@ static MACHINE_CONFIG_START( filetto, pcxt_state )
 
 //  PC "buzzer" sound
 	MCFG_SOUND_ADD("speaker", SPEAKER_SOUND, 0)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.20)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( tetriskr, filetto )
@@ -778,7 +775,7 @@ ROM_START( filetto )
 	ROM_RELOAD(         0xf6000, 0x2000 )
 	ROM_RELOAD(         0xf2000, 0x2000 )
 
-	ROM_REGION( 0x40000, "user1", 0 ) // program data
+	ROM_REGION( 0x40000, "game_prg", 0 ) // program data
 	ROM_LOAD( "m0.u1", 0x00000, 0x10000, CRC(2408289d) SHA1(eafc144a557a79b58bcb48545cb9c9778e61fcd3) )
 	ROM_LOAD( "m1.u2", 0x10000, 0x10000, CRC(5b623114) SHA1(0d9a14e6b7f57ce4fa09762343b610a973910f58) )
 	ROM_LOAD( "m2.u3", 0x20000, 0x10000, CRC(abc64869) SHA1(564fc9d90d241a7b7776160b3fd036fb08037355) )
@@ -787,7 +784,7 @@ ROM_START( filetto )
 	ROM_REGION( 0x2000, "gfx1", 0 )
 	ROM_LOAD("u67.bin", 0x0000, 0x2000, CRC(09710122) SHA1(de84bdd9245df287bbd3bb808f0c3531d13a3545) )
 
-	ROM_REGION( 0x40000, "user2", 0 ) // UM5100 sample roms?
+	ROM_REGION( 0x40000, "samples", 0 ) // UM5100 sample roms?
 	ROM_LOAD16_BYTE("v1.u15",  0x00000, 0x20000, CRC(613ddd07) SHA1(ebda3d559315879819cb7034b5696f8e7861fe42) )
 	ROM_LOAD16_BYTE("v2.u14",  0x00001, 0x20000, CRC(427e012e) SHA1(50514a6307e63078fe7444a96e39d834684db7df) )
 ROM_END

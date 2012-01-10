@@ -91,9 +91,9 @@ VIDEO_START( ms32 )
 	state->m_temp_bitmap_sprites  = auto_bitmap_alloc(machine, width, height, BITMAP_FORMAT_INDEXED16);
 	state->m_temp_bitmap_sprites_pri = auto_bitmap_alloc(machine, width, height, BITMAP_FORMAT_INDEXED16); // not actually being used for rendering, we embed pri info in the raw colour bitmap
 
-	bitmap_fill(state->m_temp_bitmap_tilemaps,0,0);
-	bitmap_fill(state->m_temp_bitmap_sprites,0,0);
-	bitmap_fill(state->m_temp_bitmap_sprites_pri,0,0);
+	state->m_temp_bitmap_tilemaps->fill(0);
+	state->m_temp_bitmap_sprites->fill(0);
+	state->m_temp_bitmap_sprites_pri->fill(0);
 
 	tilemap_set_transparent_pen(state->m_tx_tilemap,0);
 	tilemap_set_transparent_pen(state->m_bg_tilemap,0);
@@ -205,7 +205,7 @@ WRITE32_HANDLER( ms32_gfxctrl_w )
 
 
 /* SPRITES based on tetrisp2 for now, readd priority bits later */
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, bitmap_t *bitmap_pri, const rectangle *cliprect, UINT16 *sprram_top, size_t sprram_size, int gfxnum, int reverseorder)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, bitmap_t &bitmap_pri, const rectangle &cliprect, UINT16 *sprram_top, size_t sprram_size, int gfxnum, int reverseorder)
 {
 	int tx, ty, sx, sy, flipx, flipy;
 	int xsize, ysize;
@@ -275,7 +275,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, bitmap_t *b
 }
 
 
-static void draw_roz(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect,int priority)
+static void draw_roz(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect,int priority)
 {
 	ms32_state *state = machine.driver_data<ms32_state>();
 	/* TODO: registers 0x40/4 / 0x44/4 and 0x50/4 / 0x54/4 are used, meaning unknown */
@@ -285,11 +285,11 @@ static void draw_roz(running_machine &machine, bitmap_t *bitmap, const rectangle
 		rectangle my_clip;
 		int y,maxy;
 
-		my_clip.min_x = cliprect->min_x;
-		my_clip.max_x = cliprect->max_x;
+		my_clip.min_x = cliprect.min_x;
+		my_clip.max_x = cliprect.max_x;
 
-		y = cliprect->min_y;
-		maxy = cliprect->max_y;
+		y = cliprect.min_y;
+		maxy = cliprect.max_y;
 
 		while (y <= maxy)
 		{
@@ -317,7 +317,7 @@ static void draw_roz(running_machine &machine, bitmap_t *bitmap, const rectangle
 			if (incxx & 0x10000) incxx |= ~0x1ffff;
 			if (incxy & 0x10000) incxy |= ~0x1ffff;
 
-			tilemap_draw_roz(bitmap, &my_clip, state->m_roz_tilemap,
+			tilemap_draw_roz(bitmap, my_clip, state->m_roz_tilemap,
 					(start2x+startx+offsx)<<16, (start2y+starty+offsy)<<16,
 					incxx<<8, incxy<<8, 0, 0,
 					1, // Wrap
@@ -360,7 +360,7 @@ static void draw_roz(running_machine &machine, bitmap_t *bitmap, const rectangle
 
 SCREEN_UPDATE( ms32 )
 {
-	ms32_state *state = screen->machine().driver_data<ms32_state>();
+	ms32_state *state = screen.machine().driver_data<ms32_state>();
 	int scrollx,scrolly;
 	int asc_pri;
 	int scr_pri;
@@ -377,7 +377,7 @@ SCREEN_UPDATE( ms32 )
 	int i;
 
 	for (i = 0;i < 0x10000;i++)	// colors 0x3000-0x3fff are not used
-		update_color(screen->machine(), i);
+		update_color(screen.machine(), i);
 
 	scrollx = state->m_tx_scroll[0x00/4] + state->m_tx_scroll[0x08/4] + 0x18;
 	scrolly = state->m_tx_scroll[0x0c/4] + state->m_tx_scroll[0x14/4];
@@ -392,19 +392,19 @@ SCREEN_UPDATE( ms32 )
 	tilemap_set_scrolly(state->m_bg_tilemap_alt, 0, scrolly);
 
 
-	bitmap_fill(screen->machine().priority_bitmap,cliprect,0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 
 
 	/* TODO: 0 is correct for gametngk, but break f1superb scrolling grid (text at
        top and bottom of the screen becomes black on black) */
-	bitmap_fill(state->m_temp_bitmap_tilemaps,cliprect,0);	/* bg color */
+	state->m_temp_bitmap_tilemaps->fill(0, cliprect);	/* bg color */
 
 	/* clear our sprite bitmaps */
-	bitmap_fill(state->m_temp_bitmap_sprites,cliprect,0);
-	bitmap_fill(state->m_temp_bitmap_sprites_pri,cliprect,0);
+	state->m_temp_bitmap_sprites->fill(0, cliprect);
+	state->m_temp_bitmap_sprites_pri->fill(0, cliprect);
 
-	draw_sprites(screen->machine(), state->m_temp_bitmap_sprites, state->m_temp_bitmap_sprites_pri, cliprect, state->m_sprram_16, 0x20000, 0, state->m_reverse_sprite_order);
+	draw_sprites(screen.machine(), *state->m_temp_bitmap_sprites, *state->m_temp_bitmap_sprites_pri, cliprect, state->m_sprram_16, 0x20000, 0, state->m_reverse_sprite_order);
 
 
 
@@ -427,46 +427,46 @@ SCREEN_UPDATE( ms32 )
 		rot_pri++;
 
 	if (rot_pri == 0)
-		draw_roz(screen->machine(), state->m_temp_bitmap_tilemaps, cliprect, 1 << 1);
+		draw_roz(screen.machine(), *state->m_temp_bitmap_tilemaps, cliprect, 1 << 1);
 	else if (scr_pri == 0)
 		if (state->m_tilemaplayoutcontrol&1)
 		{
-			tilemap_draw(state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap_alt,  0, 1 << 0);
+			tilemap_draw(*state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap_alt,  0, 1 << 0);
 		}
 		else
 		{
-			tilemap_draw(state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap,  0, 1 << 0);
+			tilemap_draw(*state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap,  0, 1 << 0);
 		}
 	else if (asc_pri == 0)
-		tilemap_draw(state->m_temp_bitmap_tilemaps,cliprect, state->m_tx_tilemap,  0, 1 << 2);
+		tilemap_draw(*state->m_temp_bitmap_tilemaps,cliprect, state->m_tx_tilemap,  0, 1 << 2);
 
 	if (rot_pri == 1)
-		draw_roz(screen->machine(), state->m_temp_bitmap_tilemaps, cliprect, 1 << 1);
+		draw_roz(screen.machine(), *state->m_temp_bitmap_tilemaps, cliprect, 1 << 1);
 	else if (scr_pri == 1)
 		if (state->m_tilemaplayoutcontrol&1)
 		{
-			tilemap_draw(state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap_alt,  0, 1 << 0);
+			tilemap_draw(*state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap_alt,  0, 1 << 0);
 		}
 		else
 		{
-			tilemap_draw(state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap,  0, 1 << 0);
+			tilemap_draw(*state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap,  0, 1 << 0);
 		}
 	else if (asc_pri == 1)
-		tilemap_draw(state->m_temp_bitmap_tilemaps,cliprect, state->m_tx_tilemap,  0, 1 << 2);
+		tilemap_draw(*state->m_temp_bitmap_tilemaps,cliprect, state->m_tx_tilemap,  0, 1 << 2);
 
 	if (rot_pri == 2)
-		draw_roz(screen->machine(), state->m_temp_bitmap_tilemaps, cliprect, 1 << 1);
+		draw_roz(screen.machine(), *state->m_temp_bitmap_tilemaps, cliprect, 1 << 1);
 	else if (scr_pri == 2)
 		if (state->m_tilemaplayoutcontrol&1)
 		{
-			tilemap_draw(state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap_alt,  0, 1 << 0);
+			tilemap_draw(*state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap_alt,  0, 1 << 0);
 		}
 		else
 		{
-			tilemap_draw(state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap,  0, 1 << 0);
+			tilemap_draw(*state->m_temp_bitmap_tilemaps,cliprect, state->m_bg_tilemap,  0, 1 << 0);
 		}
 	else if (asc_pri == 2)
-		tilemap_draw(state->m_temp_bitmap_tilemaps,cliprect, state->m_tx_tilemap,  0, 1 << 2);
+		tilemap_draw(*state->m_temp_bitmap_tilemaps,cliprect, state->m_tx_tilemap,  0, 1 << 2);
 
 	/* MIX it! */
 	/* this mixing isn't 100% accurate, it should be using ALL the data in
@@ -474,9 +474,9 @@ SCREEN_UPDATE( ms32 )
        than are supported here..  I don't know, it will need hw tests I think */
 	{
 		int xx, yy;
-		int width = screen->width();
-		int height = screen->height();
-		const pen_t *paldata = screen->machine().pens;
+		int width = screen.width();
+		int height = screen.height();
+		const pen_t *paldata = screen.machine().pens;
 
 		UINT16* srcptr_tile;
 		UINT8* srcptr_tilepri;
@@ -485,15 +485,15 @@ SCREEN_UPDATE( ms32 )
 
 		UINT32* dstptr_bitmap;
 
-		bitmap_fill(bitmap,cliprect,0);
+		bitmap.fill(0, cliprect);
 
 		for (yy=0;yy<height;yy++)
 		{
-			srcptr_tile =     BITMAP_ADDR16(state->m_temp_bitmap_tilemaps, yy, 0);
-			srcptr_tilepri =  BITMAP_ADDR8(screen->machine().priority_bitmap, yy, 0);
-			srcptr_spri =     BITMAP_ADDR16(state->m_temp_bitmap_sprites, yy, 0);
-			//srcptr_spripri =  BITMAP_ADDR8(state->m_temp_bitmap_sprites_pri, yy, 0);
-			dstptr_bitmap  =  BITMAP_ADDR32(bitmap, yy, 0);
+			srcptr_tile =     &state->m_temp_bitmap_tilemaps->pix16(yy);
+			srcptr_tilepri =  &screen.machine().priority_bitmap.pix8(yy);
+			srcptr_spri =     &state->m_temp_bitmap_sprites->pix16(yy);
+			//srcptr_spripri =  &state->m_temp_bitmap_sprites_pri->pix8(yy);
+			dstptr_bitmap  =  &bitmap.pix32(yy);
 			for (xx=0;xx<width;xx++)
 			{
 				UINT16 src_tile  = srcptr_tile[xx];
@@ -579,7 +579,7 @@ SCREEN_UPDATE( ms32 )
 				}
 				else if (primask == 0xc0)
 				{
-					dstptr_bitmap[xx] = paldata[screen->machine().rand()&0xfff];
+					dstptr_bitmap[xx] = paldata[screen.machine().rand()&0xfff];
 				}
 				else if (primask == 0xf0)
 				{
@@ -663,12 +663,12 @@ SCREEN_UPDATE( ms32 )
 					}
 					else if (src_tilepri==0x06)
 					{
-						//dstptr_bitmap[xx] = paldata[screen->machine().rand()&0xfff];
+						//dstptr_bitmap[xx] = paldata[screen.machine().rand()&0xfff];
 						dstptr_bitmap[xx] = paldata[src_tile]; // assumed
 					}
 					else if (src_tilepri==0x07)
 					{
-						//dstptr_bitmap[xx] = paldata[screen->machine().rand()&0xfff];
+						//dstptr_bitmap[xx] = paldata[screen.machine().rand()&0xfff];
 						dstptr_bitmap[xx] = paldata[src_tile]; // assumed
 					}
 				}

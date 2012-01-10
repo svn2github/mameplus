@@ -33,7 +33,7 @@ PALETTE_INIT( truco )
 
 SCREEN_UPDATE( truco )
 {
-	truco_state *state = screen->machine().driver_data<truco_state>();
+	truco_state *state = screen.machine().driver_data<truco_state>();
 	UINT8 *videoram = state->m_videoram;
 	UINT8		*vid = videoram;
 	int x, y;
@@ -49,7 +49,7 @@ SCREEN_UPDATE( truco )
 			else
 				pixel = ( vid[x>>1] >> 4 ) & 0x0f;
 
-			*BITMAP_ADDR16(bitmap, y, x) = pixel;
+			bitmap.pix16(y, x) = pixel;
 		}
 
 		vid += 0x80;

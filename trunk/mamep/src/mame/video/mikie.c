@@ -145,7 +145,7 @@ VIDEO_START( mikie )
 	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	mikie_state *state = machine.driver_data<mikie_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -177,9 +177,9 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( mikie )
 {
-	mikie_state *state = screen->machine().driver_data<mikie_state>();
+	mikie_state *state = screen.machine().driver_data<mikie_state>();
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, TILEMAP_DRAW_CATEGORY(0), 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, TILEMAP_DRAW_CATEGORY(1), 0);
 	return 0;
 }

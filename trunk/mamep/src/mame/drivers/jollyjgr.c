@@ -445,7 +445,7 @@ static VIDEO_START( jollyjgr )
 	tilemap_set_scroll_cols(state->m_bg_tilemap, 32);
 }
 
-static void draw_bitmap( running_machine &machine, bitmap_t *bitmap )
+static void draw_bitmap( running_machine &machine, bitmap_t &bitmap )
 {
 	jollyjgr_state *state = machine.driver_data<jollyjgr_state>();
 	int x, y, count;
@@ -467,13 +467,13 @@ static void draw_bitmap( running_machine &machine, bitmap_t *bitmap )
 				if(color)
 				{
 					if(state->m_flip_x && state->m_flip_y)
-						*BITMAP_ADDR16(bitmap, y, x * 8 + i) = color + 32;
+						bitmap.pix16(y, x * 8 + i) = color + 32;
 					else if(state->m_flip_x && !state->m_flip_y)
-						*BITMAP_ADDR16(bitmap, 255 - y, x * 8 + i) = color + 32;
+						bitmap.pix16(255 - y, x * 8 + i) = color + 32;
 					else if(!state->m_flip_x && state->m_flip_y)
-						*BITMAP_ADDR16(bitmap, y, 255 - x * 8 - i) = color + 32;
+						bitmap.pix16(y, 255 - x * 8 - i) = color + 32;
 					else
-						*BITMAP_ADDR16(bitmap, 255 - y, 255 - x * 8 - i) = color + 32;
+						bitmap.pix16(255 - y, 255 - x * 8 - i) = color + 32;
 				}
 			}
 
@@ -484,16 +484,16 @@ static void draw_bitmap( running_machine &machine, bitmap_t *bitmap )
 
 static SCREEN_UPDATE( jollyjgr )
 {
-	jollyjgr_state *state = screen->machine().driver_data<jollyjgr_state>();
+	jollyjgr_state *state = screen.machine().driver_data<jollyjgr_state>();
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
 
-	bitmap_fill(bitmap, cliprect, 32);
+	bitmap.fill(32, cliprect);
 
 	if(state->m_pri) //used in Frog & Spiders level 3
 	{
 		if(!(state->m_bitmap_disable))
-			draw_bitmap(screen->machine(), bitmap);
+			draw_bitmap(screen.machine(), bitmap);
 
 		tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 	}
@@ -502,7 +502,7 @@ static SCREEN_UPDATE( jollyjgr )
 		tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
 		if(!(state->m_bitmap_disable))
-			draw_bitmap(screen->machine(), bitmap);
+			draw_bitmap(screen.machine(), bitmap);
 	}
 
 	/* Sprites are the same as in Galaxian */
@@ -529,7 +529,7 @@ static SCREEN_UPDATE( jollyjgr )
 		if (offs < 3 * 4)
 			sy++;
 
-		drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[1],
+		drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],
 				code,color,
 				flipx,flipy,
 				sx,sy,0);
@@ -540,7 +540,7 @@ static SCREEN_UPDATE( jollyjgr )
 
 static SCREEN_UPDATE( fspider )
 {
-	jollyjgr_state *state = screen->machine().driver_data<jollyjgr_state>();
+	jollyjgr_state *state = screen.machine().driver_data<jollyjgr_state>();
 
 	// Draw bg and sprites
 	SCREEN_UPDATE_CALL(jollyjgr);
@@ -559,10 +559,10 @@ static SCREEN_UPDATE( fspider )
 		if (state->m_flip_y) sy^=0xff;
 		if (state->m_flip_x) sx+=8;
 
-		if (sy>=cliprect->min_y && sy<=cliprect->max_y)
+		if (sy>=cliprect.min_y && sy<=cliprect.max_y)
 			for (int x=sx-4;x<sx;x++)
-				if (x>=cliprect->min_x && x<=cliprect->max_x)
-					*BITMAP_ADDR16(bitmap,sy,x)=bc;
+				if (x>=cliprect.min_x && x<=cliprect.max_x)
+					bitmap.pix16(sy, x)=bc;
 	}
 
 	return 0;

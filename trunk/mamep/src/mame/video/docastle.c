@@ -132,12 +132,12 @@ VIDEO_START( dorunrun )
 	video_start_common(machine, 0xff00);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	docastle_state *state = machine.driver_data<docastle_state>();
 	int offs;
 
-	bitmap_fill(machine.priority_bitmap, NULL, 1);
+	machine.priority_bitmap.fill(1);
 
 	for (offs = state->m_spriteram_size - 4; offs >= 0; offs -= 4)
 	{
@@ -226,10 +226,10 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( docastle )
 {
-	docastle_state *state = screen->machine().driver_data<docastle_state>();
+	docastle_state *state = screen.machine().driver_data<docastle_state>();
 
 	tilemap_draw(bitmap, cliprect, state->m_do_tilemap, TILEMAP_DRAW_OPAQUE, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_do_tilemap, TILEMAP_DRAW_LAYER0, 0);
 	return 0;
 }

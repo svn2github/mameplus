@@ -49,14 +49,14 @@ VIDEO_START( dragrace )
 
 SCREEN_UPDATE( dragrace )
 {
-	dragrace_state *state = screen->machine().driver_data<dragrace_state>();
+	dragrace_state *state = screen.machine().driver_data<dragrace_state>();
 	int y;
 
 	tilemap_mark_all_tiles_dirty(state->m_bg_tilemap);
 
 	for (y = 0; y < 256; y += 4)
 	{
-		rectangle rect = *cliprect;
+		rectangle rect = cliprect;
 
 		int xl = state->m_position_ram[y + 0] & 15;
 		int xh = state->m_position_ram[y + 1] & 15;
@@ -69,7 +69,7 @@ SCREEN_UPDATE( dragrace )
 		if (rect.min_y < y + 0) rect.min_y = y + 0;
 		if (rect.max_y > y + 3) rect.max_y = y + 3;
 
-		tilemap_draw(bitmap, &rect, state->m_bg_tilemap, 0, 0);
+		tilemap_draw(bitmap, rect, state->m_bg_tilemap, 0, 0);
 	}
 	return 0;
 }

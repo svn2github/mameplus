@@ -92,7 +92,7 @@ static MC6845_UPDATE_ROW( update_row )
 
 		for(x = 0; x < TILE_WIDTH; ++x)
 		{
-			*BITMAP_ADDR16(bitmap, y, (cx * TILE_WIDTH + x) ^ 1) = tmp & 0x0f;
+			bitmap.pix16(y, (cx * TILE_WIDTH + x) ^ 1) = tmp & 0x0f;
 			tmp >>= 4;
 		}
 	}
@@ -118,7 +118,7 @@ static PALETTE_INIT( othello )
 
 static SCREEN_UPDATE( othello )
 {
-	othello_state *state = screen->machine().driver_data<othello_state>();
+	othello_state *state = screen.machine().driver_data<othello_state>();
 
 	state->m_mc6845->update(bitmap, cliprect);
 	return 0;

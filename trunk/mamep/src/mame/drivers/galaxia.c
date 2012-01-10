@@ -43,16 +43,12 @@ public:
 
 static SCREEN_UPDATE( galaxia )
 {
-	galaxia_state *state = screen->machine().driver_data<galaxia_state>();
+	galaxia_state *state = screen.machine().driver_data<galaxia_state>();
 	int x,y, count;
 
-	bitmap_t *s2636_0_bitmap;
-	bitmap_t *s2636_1_bitmap;
-	bitmap_t *s2636_2_bitmap;
-
-	device_t *s2636_0 = screen->machine().device("s2636_0");
-	device_t *s2636_1 = screen->machine().device("s2636_1");
-	device_t *s2636_2 = screen->machine().device("s2636_2");
+	device_t *s2636_0 = screen.machine().device("s2636_0");
+	device_t *s2636_1 = screen.machine().device("s2636_1");
+	device_t *s2636_2 = screen.machine().device("s2636_2");
 
 	count = 0;
 
@@ -61,37 +57,37 @@ static SCREEN_UPDATE( galaxia )
 		for (x=0;x<256/8;x++)
 		{
 			int tile = state->m_video[count];
-			drawgfx_opaque(bitmap,cliprect,screen->machine().gfx[0],tile,0,0,0,x*8,y*8);
+			drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[0],tile,0,0,0,x*8,y*8);
 			count++;
 		}
 	}
 
-	s2636_0_bitmap = s2636_update(s2636_0, cliprect);
-	s2636_1_bitmap = s2636_update(s2636_1, cliprect);
-	s2636_2_bitmap = s2636_update(s2636_2, cliprect);
+	bitmap_t &s2636_0_bitmap = s2636_update(s2636_0, cliprect);
+	bitmap_t &s2636_1_bitmap = s2636_update(s2636_1, cliprect);
+	bitmap_t &s2636_2_bitmap = s2636_update(s2636_2, cliprect);
 
 	/* copy the S2636 images into the main bitmap */
 	{
 		int y;
 
-		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+		for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 		{
 			int x;
 
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 			{
-				int pixel0 = *BITMAP_ADDR16(s2636_0_bitmap, y, x);
-				int pixel1 = *BITMAP_ADDR16(s2636_1_bitmap, y, x);
-				int pixel2 = *BITMAP_ADDR16(s2636_2_bitmap, y, x);
+				int pixel0 = s2636_0_bitmap.pix16(y, x);
+				int pixel1 = s2636_1_bitmap.pix16(y, x);
+				int pixel2 = s2636_2_bitmap.pix16(y, x);
 
 				if (S2636_IS_PIXEL_DRAWN(pixel0))
-					*BITMAP_ADDR16(bitmap, y, x) = S2636_PIXEL_COLOR(pixel0);
+					bitmap.pix16(y, x) = S2636_PIXEL_COLOR(pixel0);
 
 				if (S2636_IS_PIXEL_DRAWN(pixel1))
-					*BITMAP_ADDR16(bitmap, y, x) = S2636_PIXEL_COLOR(pixel1);
+					bitmap.pix16(y, x) = S2636_PIXEL_COLOR(pixel1);
 
 				if (S2636_IS_PIXEL_DRAWN(pixel2))
-					*BITMAP_ADDR16(bitmap, y, x) = S2636_PIXEL_COLOR(pixel2);
+					bitmap.pix16(y, x) = S2636_PIXEL_COLOR(pixel2);
 			}
 		}
 	}

@@ -178,7 +178,7 @@ WRITE8_HANDLER( flstory_scrlram_w )
 }
 
 
-static void flstory_draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int pri )
+static void flstory_draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int pri )
 {
 	flstory_state *state = machine.driver_data<flstory_state>();
 	int i;
@@ -225,17 +225,17 @@ static void flstory_draw_sprites( running_machine &machine, bitmap_t *bitmap, co
 
 SCREEN_UPDATE( flstory )
 {
-	flstory_state *state = screen->machine().driver_data<flstory_state>();
+	flstory_state *state = screen.machine().driver_data<flstory_state>();
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0 | TILEMAP_DRAW_LAYER1, 0);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 1 | TILEMAP_DRAW_LAYER1, 0);
-	flstory_draw_sprites(screen->machine(), bitmap, cliprect, 0x00);
+	flstory_draw_sprites(screen.machine(), bitmap, cliprect, 0x00);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0 | TILEMAP_DRAW_LAYER0, 0);
-	flstory_draw_sprites(screen->machine(), bitmap, cliprect, 0x80);
+	flstory_draw_sprites(screen.machine(), bitmap, cliprect, 0x80);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 1 | TILEMAP_DRAW_LAYER0, 0);
 	return 0;
 }
 
-static void victnine_draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void victnine_draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	flstory_state *state = machine.driver_data<flstory_state>();
 	int i;
@@ -282,20 +282,20 @@ static void victnine_draw_sprites( running_machine &machine, bitmap_t *bitmap, c
 
 SCREEN_UPDATE( victnine )
 {
-	flstory_state *state = screen->machine().driver_data<flstory_state>();
+	flstory_state *state = screen.machine().driver_data<flstory_state>();
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	victnine_draw_sprites(screen->machine(), bitmap, cliprect);
+	victnine_draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }
 
 SCREEN_UPDATE( rumba )
 {
-	flstory_state *state = screen->machine().driver_data<flstory_state>();
+	flstory_state *state = screen.machine().driver_data<flstory_state>();
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0 | TILEMAP_DRAW_LAYER1, 0);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 1 | TILEMAP_DRAW_LAYER1, 0);
-	victnine_draw_sprites(screen->machine(), bitmap, cliprect);
+	victnine_draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0 | TILEMAP_DRAW_LAYER0, 0);
-	victnine_draw_sprites(screen->machine(), bitmap, cliprect);
+	victnine_draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 1 | TILEMAP_DRAW_LAYER0, 0);
 	return 0;
 }

@@ -456,7 +456,7 @@ static WRITE8_HANDLER(video_w)
 			for ( x = xstart; x < xstart + width; x++ )
 			{
 				if ( y < 256 )
-				*BITMAP_ADDR16(state->m_bitmap, y, x) = color;
+				state->m_bitmap->pix16(y, x) = color;
 			}
 		}
 	}
@@ -473,8 +473,8 @@ static VIDEO_START( sms )
 
 static SCREEN_UPDATE( sms )
 {
-	sms_state *state = screen->machine().driver_data<sms_state>();
-	copybitmap(bitmap, state->m_bitmap, 0, 0, 0, 0, cliprect);
+	sms_state *state = screen.machine().driver_data<sms_state>();
+	copybitmap(bitmap, *state->m_bitmap, 0, 0, 0, 0, cliprect);
 	return 0;
 }
 

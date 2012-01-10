@@ -281,7 +281,7 @@ static VIDEO_START( metalmx )
 static SCREEN_UPDATE( metalmx )
 {
 	/* TODO: TMS34020 should take care of this */
-	metalmx_state *state = screen->machine().driver_data<metalmx_state>();
+	metalmx_state *state = screen.machine().driver_data<metalmx_state>();
 
 //  UINT32 *src_base = &gsp_vram[(vreg_base[0x40/4] & 0x40) ? 0x20000 : 0];
 	UINT16 *src_base = state->m_gsp_vram;
@@ -291,7 +291,7 @@ static SCREEN_UPDATE( metalmx )
 	{
 		int x;
 		UINT16 *src = &src_base[512 * y];
-		UINT16 *dst = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *dst = &bitmap.pix16(y);
 
 		for(x = 0; x < 512; x++)
 			*dst++ = *src++;

@@ -11,13 +11,14 @@
 #include "formats/hxcmfm_dsk.h"
 #include "formats/ipf_dsk.h"
 #include "formats/mfi_dsk.h"
+#include "formats/dfi_dsk.h"
 #include "amigafdc.h"
 #include "machine/6526cia.h"
 
 const device_type AMIGA_FDC = &device_creator<amiga_fdc>;
 
 const floppy_format_type amiga_fdc::floppy_formats[] = {
-	FLOPPY_ADF_FORMAT, FLOPPY_MFM_FORMAT, FLOPPY_IPF_FORMAT, FLOPPY_MFI_FORMAT,
+	FLOPPY_ADF_FORMAT, FLOPPY_MFM_FORMAT, FLOPPY_IPF_FORMAT, FLOPPY_MFI_FORMAT, FLOPPY_DFI_FORMAT,
 	NULL
 };
 
@@ -108,7 +109,7 @@ void amiga_fdc::live_delay(int state)
 {
 	cur_live.next_state = state;
 	if(cur_live.tm != machine().time())
-	t_gen->adjust(cur_live.tm - machine().time());
+		t_gen->adjust(cur_live.tm - machine().time());
 }
 
 void amiga_fdc::live_sync()
@@ -197,7 +198,7 @@ void amiga_fdc::live_run(attotime limit)
 						cur_live.bit_counter = 0;
 
 					} else if(cur_live.bit_counter != 8)
-					cur_live.bit_counter = 0;
+						cur_live.bit_counter = 0;
 				}
 				dskbyt |= 0x1000;
 				address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);

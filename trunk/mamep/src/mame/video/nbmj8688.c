@@ -259,7 +259,7 @@ void mjsikaku_vramflip(nbmj8688_state *state)
 static void update_pixel(nbmj8688_state *state, int x, int y)
 {
 	int color = state->m_mjsikaku_videoram[(y * 512) + x];
-	*BITMAP_ADDR16(state->m_mjsikaku_tmpbitmap, y, x) = color;
+	state->m_mjsikaku_tmpbitmap->pix16(y, x) = color;
 }
 
 static void writeram_low(nbmj8688_state *state, int x, int y, int color)
@@ -678,7 +678,7 @@ WRITE8_HANDLER( nbmj8688_HD61830B_both_data_w )
 
 SCREEN_UPDATE( mbmj8688 )
 {
-	nbmj8688_state *state = screen->machine().driver_data<nbmj8688_state>();
+	nbmj8688_state *state = screen.machine().driver_data<nbmj8688_state>();
 	int x, y;
 
 	if (state->m_mjsikaku_screen_refresh)
@@ -699,11 +699,11 @@ SCREEN_UPDATE( mbmj8688 )
 		if (state->m_mjsikaku_flipscreen) scrolly =   state->m_mjsikaku_scrolly;
 		else                     scrolly = (-state->m_mjsikaku_scrolly) & 0xff;
 
-		copybitmap(bitmap, state->m_mjsikaku_tmpbitmap, 0, 0, 0, scrolly,       cliprect);
-		copybitmap(bitmap, state->m_mjsikaku_tmpbitmap, 0, 0, 0, scrolly - 256, cliprect);
+		copybitmap(bitmap, *state->m_mjsikaku_tmpbitmap, 0, 0, 0, scrolly,       cliprect);
+		copybitmap(bitmap, *state->m_mjsikaku_tmpbitmap, 0, 0, 0, scrolly - 256, cliprect);
 	}
 	else
-		bitmap_fill(bitmap, 0, 0);
+		bitmap.fill(0);
 
 	return 0;
 }
@@ -712,7 +712,7 @@ SCREEN_UPDATE( mbmj8688 )
 
 SCREEN_UPDATE( mbmj8688_lcd0 )
 {
-	nbmj8688_state *state = screen->machine().driver_data<nbmj8688_state>();
+	nbmj8688_state *state = screen.machine().driver_data<nbmj8688_state>();
 	int x, y, b;
 
 	for (y = 0;y < 64;y++)
@@ -721,14 +721,14 @@ SCREEN_UPDATE( mbmj8688_lcd0 )
 			int data = state->m_HD61830B_ram[0][y * 60 + x];
 
 			for (b = 0;b < 8;b++)
-				*BITMAP_ADDR16(bitmap, y, (8*x+b)) = (data & (1<<b)) ? 0x0000 : 0x18ff;
+				bitmap.pix16(y, (8*x+b)) = (data & (1<<b)) ? 0x0000 : 0x18ff;
 		}
 	return 0;
 }
 
 SCREEN_UPDATE( mbmj8688_lcd1 )
 {
-	nbmj8688_state *state = screen->machine().driver_data<nbmj8688_state>();
+	nbmj8688_state *state = screen.machine().driver_data<nbmj8688_state>();
 	int x, y, b;
 
 	for (y = 0;y < 64;y++)
@@ -737,7 +737,7 @@ SCREEN_UPDATE( mbmj8688_lcd1 )
 			int data = state->m_HD61830B_ram[1][y * 60 + x];
 
 			for (b = 0;b < 8;b++)
-				*BITMAP_ADDR16(bitmap, y, (8*x+b)) = (data & (1<<b)) ? 0x0000 : 0x18ff;
+				bitmap.pix16(y, (8*x+b)) = (data & (1<<b)) ? 0x0000 : 0x18ff;
 		}
 	return 0;
 }

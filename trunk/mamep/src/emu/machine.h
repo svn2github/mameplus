@@ -268,7 +268,6 @@ struct generic_pointers
 	generic_ptr				buffered_spriteram2;// secondary buffered spriteram
 	generic_ptr				paletteram;			// palette RAM
 	generic_ptr				paletteram2;		// secondary palette RAM
-	bitmap_t *				tmpbitmap;			// temporary bitmap
 };
 
 
@@ -418,7 +417,7 @@ public:
 	const pen_t *			pens;				// remapped palette pen numbers
 	colortable_t *			colortable;			// global colortable for remapping
 	pen_t *					shadow_table;		// table for looking up a shadowed pen
-	bitmap_t *				priority_bitmap;	// priority bitmap
+	bitmap_t				priority_bitmap;	// priority bitmap
 
 	// debugger-related information
 	UINT32					debug_flags;		// the current debug flags
@@ -564,7 +563,6 @@ public:
 
 	// additional video helpers
 	virtual bool screen_update(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect);
-	virtual void screen_eof();
 
 	// generic helpers
 

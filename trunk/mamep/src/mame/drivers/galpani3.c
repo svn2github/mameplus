@@ -203,14 +203,14 @@ static int gp3_is_alpha_pen(running_machine &machine, int pen)
 
 static SCREEN_UPDATE(galpani3)
 {
-	galpani3_state *state = screen->machine().driver_data<galpani3_state>();
+	galpani3_state *state = screen.machine().driver_data<galpani3_state>();
 	int x,y;
 	UINT16* src1;
 	UINT32* dst;
 	UINT16 pixdata1;
-	const pen_t *paldata = screen->machine().pens;
+	const pen_t *paldata = screen.machine().pens;
 
-	bitmap_fill(bitmap, cliprect, 0x0000);
+	bitmap.fill(0x0000, cliprect);
 
 	{
 		int drawy, drawx;
@@ -236,7 +236,7 @@ static SCREEN_UPDATE(galpani3)
 
 				UINT8 pridat = state->m_priority_buffer[(priline*0x200)+prioffs];
 
-				UINT32* dst = BITMAP_ADDR32(bitmap, drawy, drawx);
+				UINT32* dst = &bitmap.pix32(drawy, drawx);
 
 
 
@@ -268,7 +268,7 @@ static SCREEN_UPDATE(galpani3)
 						UINT16 pen = dat1+0x4000;
 						UINT32 pal = paldata[pen];
 
-						if (gp3_is_alpha_pen(screen->machine(), pen))
+						if (gp3_is_alpha_pen(screen.machine(), pen))
 						{
 							int r,g,b;
 							r = (pal & 0x00ff0000)>>16;
@@ -296,7 +296,7 @@ static SCREEN_UPDATE(galpani3)
 						UINT16 pen = dat2+0x4100;
 						UINT32 pal = paldata[pen];
 
-						if (gp3_is_alpha_pen(screen->machine(), pen))
+						if (gp3_is_alpha_pen(screen.machine(), pen))
 						{
 							int r,g,b;
 							r = (pal & 0x00ff0000)>>16;
@@ -328,20 +328,20 @@ static SCREEN_UPDATE(galpani3)
 				/*
                 else if (pridat==0x2f) // area outside of the girl
                 {
-                    //dst[0] = screen->machine().rand()&0x3fff;
+                    //dst[0] = screen.machine().rand()&0x3fff;
                 }
 
                 else if (pridat==0x00) // the initial line / box that gets drawn
                 {
-                    //dst[0] = screen->machine().rand()&0x3fff;
+                    //dst[0] = screen.machine().rand()&0x3fff;
                 }
                 else if (pridat==0x30) // during the 'gals boxes' on the intro
                 {
-                    //dst[0] = screen->machine().rand()&0x3fff;
+                    //dst[0] = screen.machine().rand()&0x3fff;
                 }
                 else if (pridat==0x0c) // 'nice' at end of level
                 {
-                    //dst[0] = screen->machine().rand()&0x3fff;
+                    //dst[0] = screen.machine().rand()&0x3fff;
                 }
                 else
                 {
@@ -352,15 +352,15 @@ static SCREEN_UPDATE(galpani3)
 		}
 	}
 
-	bitmap_fill(state->m_sprite_bitmap_1, cliprect, 0x0000);
+	state->m_sprite_bitmap_1->fill(0x0000, cliprect);
 
-	state->m_spritegen->skns_draw_sprites(screen->machine(), state->m_sprite_bitmap_1, cliprect, state->m_spriteram32, screen->machine().generic.spriteram_size, screen->machine().region("gfx1")->base(), screen->machine().region ("gfx1")->bytes(), state->m_spc_regs );
+	state->m_spritegen->skns_draw_sprites(screen.machine(), *state->m_sprite_bitmap_1, cliprect, state->m_spriteram32, screen.machine().generic.spriteram_size, screen.machine().region("gfx1")->base(), screen.machine().region ("gfx1")->bytes(), state->m_spc_regs );
 
 	// ignoring priority bits for now..
 	for (y=0;y<240;y++)
 	{
-		src1 = BITMAP_ADDR16(state->m_sprite_bitmap_1, y, 0);
-		dst =  BITMAP_ADDR32(bitmap, y, 0);
+		src1 = &state->m_sprite_bitmap_1->pix16(y);
+		dst =  &bitmap.pix32(y);
 
 		for (x=0;x<320;x++)
 		{

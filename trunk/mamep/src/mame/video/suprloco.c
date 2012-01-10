@@ -161,25 +161,25 @@ READ8_HANDLER( suprloco_control_r )
 
 
 
-INLINE void draw_pixel(bitmap_t *bitmap,const rectangle *cliprect,int x,int y,int color,int flip)
+INLINE void draw_pixel(bitmap_t &bitmap,const rectangle &cliprect,int x,int y,int color,int flip)
 {
 	if (flip)
 	{
-		x = bitmap->width - x - 1;
-		y = bitmap->height - y - 1;
+		x = bitmap.width() - x - 1;
+		y = bitmap.height() - y - 1;
 	}
 
-	if (x < cliprect->min_x ||
-		x > cliprect->max_x ||
-		y < cliprect->min_y ||
-		y > cliprect->max_y)
+	if (x < cliprect.min_x ||
+		x > cliprect.max_x ||
+		y < cliprect.min_y ||
+		y > cliprect.max_y)
 		return;
 
-	*BITMAP_ADDR16(bitmap, y, x) = color;
+	bitmap.pix16(y, x) = color;
 }
 
 
-static void draw_sprite(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect,int spr_number)
+static void draw_sprite(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect,int spr_number)
 {
 	suprloco_state *state = machine.driver_data<suprloco_state>();
 	int flip = flip_screen_get(machine);
@@ -254,7 +254,7 @@ static void draw_sprite(running_machine &machine, bitmap_t *bitmap,const rectang
 	}
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	suprloco_state *state = machine.driver_data<suprloco_state>();
 	int spr_number;
@@ -271,9 +271,9 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( suprloco )
 {
-	suprloco_state *state = screen->machine().driver_data<suprloco_state>();
+	suprloco_state *state = screen.machine().driver_data<suprloco_state>();
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,0,0);
-	draw_sprites(screen->machine(),bitmap,cliprect);
+	draw_sprites(screen.machine(),bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,1,0);
 	return 0;
 }

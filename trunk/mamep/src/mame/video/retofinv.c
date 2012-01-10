@@ -169,18 +169,14 @@ WRITE8_HANDLER( retofinv_gfx_ctrl_w )
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap)
 {
 	retofinv_state *state = machine.driver_data<retofinv_state>();
 	UINT8 *spriteram = state->m_sharedram + 0x0780;
 	UINT8 *spriteram_2 = state->m_sharedram + 0x0f80;
 	UINT8 *spriteram_3 = state->m_sharedram + 0x1780;
 	int offs;
-	static const rectangle spritevisiblearea =
-	{
-		2*8, 34*8-1,
-		0*8, 28*8-1
-	};
+	const rectangle spritevisiblearea(2*8, 34*8-1, 0*8, 28*8-1);
 
 	for (offs = 0;offs < 0x80;offs += 2)
 	{
@@ -216,7 +212,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap)
 		{
 			for (x = 0;x <= sizex;x++)
 			{
-				drawgfx_transmask(bitmap,&spritevisiblearea,machine.gfx[1],
+				drawgfx_transmask(bitmap,spritevisiblearea,machine.gfx[1],
 					sprite + gfx_offs[y ^ (sizey * flipy)][x ^ (sizex * flipx)],
 					color,
 					flipx,flipy,
@@ -231,9 +227,9 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap)
 
 SCREEN_UPDATE( retofinv )
 {
-	retofinv_state *state = screen->machine().driver_data<retofinv_state>();
+	retofinv_state *state = screen.machine().driver_data<retofinv_state>();
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,0,0);
-	draw_sprites(screen->machine(), bitmap);
+	draw_sprites(screen.machine(), bitmap);
 	tilemap_draw(bitmap,cliprect,state->m_fg_tilemap,0,0);
 	return 0;
 }

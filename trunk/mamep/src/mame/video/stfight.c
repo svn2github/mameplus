@@ -244,7 +244,7 @@ WRITE8_HANDLER( stfight_vh_latch_w )
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	stfight_state *state = machine.driver_data<stfight_state>();
 	int offs,sx,sy;
@@ -294,18 +294,18 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( stfight )
 {
-	stfight_state *state = screen->machine().driver_data<stfight_state>();
-	set_pens(screen->machine());
+	stfight_state *state = screen.machine().driver_data<stfight_state>();
+	set_pens(screen.machine());
 
-	bitmap_fill(screen->machine().priority_bitmap,cliprect,0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
-	bitmap_fill(bitmap,cliprect,0);	/* in case state->m_bg_tilemap is disabled */
+	bitmap.fill(0, cliprect);	/* in case state->m_bg_tilemap is disabled */
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,0,0);
 	tilemap_draw(bitmap,cliprect,state->m_fg_tilemap,0,1);
 
 	/* Draw sprites (may be obscured by foreground layer) */
 	if (state->m_vh_latch_ram[0x07] & 0x40)
-		draw_sprites(screen->machine(), bitmap,cliprect);
+		draw_sprites(screen.machine(), bitmap,cliprect);
 
 	tilemap_draw(bitmap,cliprect,state->m_tx_tilemap,0,0);
 	return 0;

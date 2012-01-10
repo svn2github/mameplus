@@ -113,7 +113,7 @@ WRITE16_HANDLER ( shadfrce_bg1scrolly_w )
 
 
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 
 	/* | ---- ---- hhhf Fe-Y | ---- ---- yyyy yyyy | ---- ---- TTTT TTTT | ---- ---- tttt tttt |
@@ -164,19 +164,19 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( shadfrce )
 {
-	shadfrce_state *state = screen->machine().driver_data<shadfrce_state>();
-	bitmap_fill(screen->machine().priority_bitmap,cliprect,0);
+	shadfrce_state *state = screen.machine().driver_data<shadfrce_state>();
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	if (state->m_video_enable)
 	{
 		tilemap_draw(bitmap,cliprect,state->m_bg1tilemap,0,0);
 		tilemap_draw(bitmap,cliprect,state->m_bg0tilemap,0,1);
-		draw_sprites(screen->machine(), bitmap,cliprect);
+		draw_sprites(screen.machine(), bitmap,cliprect);
 		tilemap_draw(bitmap,cliprect,state->m_fgtilemap, 0,0);
 	}
 	else
 	{
-		bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 	}
 
 	return 0;
@@ -184,7 +184,7 @@ SCREEN_UPDATE( shadfrce )
 
 SCREEN_EOF( shadfrce )
 {
-	shadfrce_state *state = machine.driver_data<shadfrce_state>();
+	shadfrce_state *state = screen.machine().driver_data<shadfrce_state>();
 
 	/* looks like sprites are *two* frames ahead */
 	memcpy(state->m_spvideoram_old, state->m_spvideoram, state->m_spvideoram_size);

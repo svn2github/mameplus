@@ -166,7 +166,7 @@ WRITE8_HANDLER( cop01_vreg_w )
 
 ***************************************************************************/
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	cop01_state *state = machine.driver_data<cop01_state>();
 	int offs, code, attr, sx, sy, flipx, flipy, color;
@@ -208,12 +208,12 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( cop01 )
 {
-	cop01_state *state = screen->machine().driver_data<cop01_state>();
+	cop01_state *state = screen.machine().driver_data<cop01_state>();
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_vreg[1] + 256 * (state->m_vreg[2] & 1));
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_vreg[3]);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, TILEMAP_DRAW_LAYER1, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, TILEMAP_DRAW_LAYER0, 0);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0 );
 	return 0;

@@ -76,7 +76,7 @@ VIDEO_START( tunhunt )
     */
 	tunhunt_state *state = machine.driver_data<tunhunt_state>();
 
-	machine.generic.tmpbitmap = auto_bitmap_alloc(machine, 256, 64, machine.primary_screen->format());
+	state->m_tmpbitmap.allocate(256, 64, machine.primary_screen->format());
 
 	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_cols, 8, 8, 32, 32);
 
@@ -200,7 +200,7 @@ static void set_pens(running_machine &machine)
 	}
 }
 
-static void draw_motion_object(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_motion_object(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 /*
  *      VSTRLO  0x1202
@@ -214,7 +214,7 @@ static void draw_motion_object(running_machine &machine, bitmap_t *bitmap, const
  */
 
 	tunhunt_state *state = machine.driver_data<tunhunt_state>();
-	bitmap_t *tmpbitmap = machine.generic.tmpbitmap;
+	bitmap_t &tmpbitmap = state->m_tmpbitmap;
 	UINT8 *spriteram = state->m_spriteram;
 	UINT8 *tunhunt_ram = state->m_workram;
 	//int skip = tunhunt_ram[MOBST];
@@ -238,10 +238,10 @@ static void draw_motion_object(running_machine &machine, bitmap_t *bitmap, const
 			color = ((span_data>>6)&0x3)^0x3;
 			count = (span_data&0x1f)+1;
 			while( count-- && x < 256 )
-				*BITMAP_ADDR16(tmpbitmap, line, x++) = color;
+				tmpbitmap.pix16(line, x++) = color;
 		}
 		while( x<256 )
-			*BITMAP_ADDR16(tmpbitmap, line, x++) = 0;
+			tmpbitmap.pix16(line, x++) = 0;
 	} /* next line */
 
 	switch( tunhunt_ram[VSTRLO] )
@@ -272,7 +272,7 @@ static void draw_motion_object(running_machine &machine, bitmap_t *bitmap, const
 	);
 }
 
-static void draw_box(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_box(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 /*
     This is unnecessarily slow, but the box priorities aren't completely understood,
@@ -302,7 +302,7 @@ static void draw_box(running_machine &machine, bitmap_t *bitmap, const rectangle
 
 	for( y=0; y<256; y++ )
 	{
-		if (0xff-y >= cliprect->min_y && 0xff-y <= cliprect->max_y)
+		if (0xff-y >= cliprect.min_y && 0xff-y <= cliprect.max_y)
 			for( x=0; x<256; x++ )
 			{
 				color = 0;
@@ -319,16 +319,16 @@ static void draw_box(running_machine &machine, bitmap_t *bitmap, const rectangle
 						z = x0; /* give priority to rightmost spans */
 					}
 				}
-				if (x >= cliprect->min_x && x <= cliprect->max_x)
-					*BITMAP_ADDR16(bitmap, 0xff-y, x) = color;
+				if (x >= cliprect.min_x && x <= cliprect.max_x)
+					bitmap.pix16(0xff-y, x) = color;
 			}
 	}
 }
 
 /* "shell" graphics are 16x16 pixel tiles used for player shots and targeting cursor */
 static void draw_shell(running_machine &machine,
-		bitmap_t *bitmap,
-		const rectangle *cliprect,
+		bitmap_t &bitmap,
+		const rectangle &cliprect,
 		int picture_code,
 		int hposition,
 		int vstart,
@@ -378,14 +378,14 @@ static void draw_shell(running_machine &machine,
 
 SCREEN_UPDATE( tunhunt )
 {
-	tunhunt_state *state = screen->machine().driver_data<tunhunt_state>();
-	set_pens(screen->machine());
+	tunhunt_state *state = screen.machine().driver_data<tunhunt_state>();
+	set_pens(screen.machine());
 
-	draw_box(screen->machine(), bitmap, cliprect);
+	draw_box(screen.machine(), bitmap, cliprect);
 
-	draw_motion_object(screen->machine(), bitmap, cliprect);
+	draw_motion_object(screen.machine(), bitmap, cliprect);
 
-	draw_shell(screen->machine(), bitmap, cliprect,
+	draw_shell(screen.machine(), bitmap, cliprect,
 		state->m_workram[SHL0PC],	/* picture code */
 		state->m_workram[SHEL0H],	/* hposition */
 		state->m_workram[SHL0V],	/* vstart */
@@ -393,7 +393,7 @@ SCREEN_UPDATE( tunhunt )
 		state->m_workram[SHL0ST],	/* vstretch */
 		state->m_control&0x08 ); /* hstretch */
 
-	draw_shell(screen->machine(), bitmap, cliprect,
+	draw_shell(screen.machine(), bitmap, cliprect,
 		state->m_workram[SHL1PC],	/* picture code */
 		state->m_workram[SHEL1H],	/* hposition */
 		state->m_workram[SHL1V],	/* vstart */

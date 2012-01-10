@@ -40,14 +40,14 @@ VIDEO_START( eolith )
 
 SCREEN_UPDATE( eolith )
 {
-	eolith_state *state = screen->machine().driver_data<eolith_state>();
+	eolith_state *state = screen.machine().driver_data<eolith_state>();
 	int y;
 
 	for (y = 0; y < 240; y++)
 	{
 		int x;
 		UINT32 *src = &state->m_vram[(state->m_buffer ? 0 : 0x10000) | (y * (336 / 2))];
-		UINT16 *dest = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *dest = &bitmap.pix16(y);
 
 		for (x = 0; x < 320; x += 2)
 		{

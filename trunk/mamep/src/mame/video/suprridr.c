@@ -168,30 +168,30 @@ WRITE8_HANDLER( suprridr_fgram_w )
 
 SCREEN_UPDATE( suprridr )
 {
-	suprridr_state *state = screen->machine().driver_data<suprridr_state>();
+	suprridr_state *state = screen.machine().driver_data<suprridr_state>();
 	UINT8 *spriteram = state->m_spriteram;
 	rectangle subclip;
 	int i;
-	const rectangle &visarea = screen->visible_area();
+	const rectangle &visarea = screen.visible_area();
 
 	/* render left 4 columns with no scroll */
 	subclip = visarea;;
 	subclip.max_x = subclip.min_x + (state->m_flipx ? 1*8 : 4*8) - 1;
-	sect_rect(&subclip, cliprect);
-	tilemap_draw(bitmap, &subclip, state->m_bg_tilemap_noscroll, 0, 0);
+	subclip &= cliprect;
+	tilemap_draw(bitmap, subclip, state->m_bg_tilemap_noscroll, 0, 0);
 
 	/* render right 1 column with no scroll */
 	subclip = visarea;;
 	subclip.min_x = subclip.max_x - (state->m_flipx ? 4*8 : 1*8) + 1;
-	sect_rect(&subclip, cliprect);
-	tilemap_draw(bitmap, &subclip, state->m_bg_tilemap_noscroll, 0, 0);
+	subclip &= cliprect;
+	tilemap_draw(bitmap, subclip, state->m_bg_tilemap_noscroll, 0, 0);
 
 	/* render the middle columns normally */
 	subclip = visarea;;
 	subclip.min_x += state->m_flipx ? 1*8 : 4*8;
 	subclip.max_x -= state->m_flipx ? 4*8 : 1*8;
-	sect_rect(&subclip, cliprect);
-	tilemap_draw(bitmap, &subclip, state->m_bg_tilemap, 0, 0);
+	subclip &= cliprect;
+	tilemap_draw(bitmap, subclip, state->m_bg_tilemap, 0, 0);
 
 	/* render the top layer */
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
@@ -216,7 +216,7 @@ SCREEN_UPDATE( suprridr )
 			fy = !fy;
 			y = 240 - y;
 		}
-		drawgfx_transpen(bitmap, cliprect, screen->machine().gfx[2], code, color, fx, fy, x, y, 0);
+		drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[2], code, color, fx, fy, x, y, 0);
 	}
 	return 0;
 }

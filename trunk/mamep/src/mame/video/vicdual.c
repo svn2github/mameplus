@@ -31,9 +31,9 @@ WRITE8_HANDLER( vicdual_palette_bank_w )
 
 SCREEN_UPDATE( vicdual_bw )
 {
-	vicdual_state *state = screen->machine().driver_data<vicdual_state>();
+	vicdual_state *state = screen.machine().driver_data<vicdual_state>();
 	UINT8 x = 0;
-	UINT8 y = cliprect->min_y;
+	UINT8 y = cliprect.min_y;
 	UINT8 video_data = 0;
 
 	while (1)
@@ -56,7 +56,7 @@ SCREEN_UPDATE( vicdual_bw )
 
 		/* plot the current pixel */
 		pen = (video_data & 0x80) ? RGB_WHITE : RGB_BLACK;
-		*BITMAP_ADDR32(bitmap, y, x) = pen;
+		bitmap.pix32(y, x) = pen;
 
 		/* next pixel */
 		video_data = video_data << 1;
@@ -66,7 +66,7 @@ SCREEN_UPDATE( vicdual_bw )
 		if (x == 0)
 		{
 			/* end of region to update? */
-			if (y == cliprect->max_y)
+			if (y == cliprect.max_y)
 			{
 				break;
 			}
@@ -82,10 +82,10 @@ SCREEN_UPDATE( vicdual_bw )
 
 SCREEN_UPDATE( vicdual_color )
 {
-	vicdual_state *state = screen->machine().driver_data<vicdual_state>();
-	UINT8 *color_prom = (UINT8 *)screen->machine().region("proms")->base();
+	vicdual_state *state = screen.machine().driver_data<vicdual_state>();
+	UINT8 *color_prom = (UINT8 *)screen.machine().region("proms")->base();
 	UINT8 x = 0;
-	UINT8 y = cliprect->min_y;
+	UINT8 y = cliprect.min_y;
 	UINT8 video_data = 0;
 	pen_t back_pen = 0;
 	pen_t fore_pen = 0;
@@ -115,7 +115,7 @@ SCREEN_UPDATE( vicdual_color )
 
 		/* plot the current pixel */
 		pen = (video_data & 0x80) ? fore_pen : back_pen;
-		*BITMAP_ADDR32(bitmap, y, x) = pen;
+		bitmap.pix32(y, x) = pen;
 
 		/* next pixel */
 		video_data = video_data << 1;
@@ -125,7 +125,7 @@ SCREEN_UPDATE( vicdual_color )
 		if (x == 0)
 		{
 			/* end of region to update? */
-			if (y == cliprect->max_y)
+			if (y == cliprect.max_y)
 			{
 				break;
 			}
@@ -141,7 +141,7 @@ SCREEN_UPDATE( vicdual_color )
 
 SCREEN_UPDATE( vicdual_bw_or_color )
 {
-	if (vicdual_is_cabinet_color(screen->machine()))
+	if (vicdual_is_cabinet_color(screen.machine()))
 		SCREEN_UPDATE_CALL(vicdual_color);
 	else
 		SCREEN_UPDATE_CALL(vicdual_bw);

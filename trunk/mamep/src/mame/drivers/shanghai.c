@@ -73,7 +73,7 @@ static VIDEO_START( shanghai )
 
 static SCREEN_UPDATE( shanghai )
 {
-	device_t *hd63484 = screen->machine().device("hd63484");
+	device_t *hd63484 = screen.machine().device("hd63484");
 	int x, y, b, src;
 
 	b = ((hd63484_regs_r(hd63484, 0xcc/2, 0xffff) & 0x000f) << 16) + hd63484_regs_r(hd63484, 0xce/2, 0xffff);
@@ -83,8 +83,8 @@ static SCREEN_UPDATE( shanghai )
 		{
 			b &= (HD63484_RAM_SIZE - 1);
 			src = hd63484_ram_r(hd63484, b, 0xffff);
-			*BITMAP_ADDR16(bitmap, y, x)     = src & 0x00ff;
-			*BITMAP_ADDR16(bitmap, y, x + 1) = (src & 0xff00) >> 8;
+			bitmap.pix16(y, x)     = src & 0x00ff;
+			bitmap.pix16(y, x + 1) = (src & 0xff00) >> 8;
 			b++;
 		}
 	}
@@ -107,8 +107,8 @@ static SCREEN_UPDATE( shanghai )
 				src = hd63484_ram_r(hd63484, b, 0xffff);
 				if (x <= w && x + sx >= 0 && x + sx < (hd63484_regs_r(hd63484, 0xca/2, 0xffff) & 0x0fff) * 2)
 				{
-					*BITMAP_ADDR16(bitmap, y, x + sx)     = src & 0x00ff;
-					*BITMAP_ADDR16(bitmap, y, x + sx + 1) = (src & 0xff00) >> 8;
+					bitmap.pix16(y, x + sx)     = src & 0x00ff;
+					bitmap.pix16(y, x + sx + 1) = (src & 0xff00) >> 8;
 				}
 				b++;
 			}

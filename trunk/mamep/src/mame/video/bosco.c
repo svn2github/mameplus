@@ -189,7 +189,7 @@ WRITE8_HANDLER( bosco_starclr_w )
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	UINT8 *spriteram = machine.generic.spriteram.u8;
 	UINT8 *spriteram_2 = machine.generic.spriteram2.u8;
@@ -219,7 +219,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 }
 
 
-static void draw_bullets(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_bullets(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	bosco_state *state =  machine.driver_data<bosco_state>();
 	int offs;
@@ -244,7 +244,7 @@ static void draw_bullets(running_machine &machine, bitmap_t *bitmap, const recta
 }
 
 
-static void draw_stars(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int flip)
+static void draw_stars(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int flip)
 {
 	bosco_state *state =  machine.driver_data<bosco_state>();
 
@@ -271,8 +271,8 @@ static void draw_stars(running_machine &machine, bitmap_t *bitmap, const rectang
 				{
 					if (flip) x += 20*8;
 
-					if (x >= cliprect->min_x && x <= cliprect->max_x && y >= cliprect->min_y && y <= cliprect->max_y)
-						*BITMAP_ADDR16(bitmap, y, x) = STARS_COLOR_BASE + star_seed_tab[star_cntr].col;
+					if (x >= cliprect.min_x && x <= cliprect.max_x && y >= cliprect.min_y && y <= cliprect.max_y)
+						bitmap.pix16(y, x) = STARS_COLOR_BASE + star_seed_tab[star_cntr].col;
 				}
 			}
 		}
@@ -282,13 +282,13 @@ static void draw_stars(running_machine &machine, bitmap_t *bitmap, const rectang
 
 SCREEN_UPDATE( bosco )
 {
-	bosco_state *state =  screen->machine().driver_data<bosco_state>();
+	bosco_state *state =  screen.machine().driver_data<bosco_state>();
 
 	/* the radar tilemap is just 8x32. We rely on the tilemap code to repeat it across
        the screen, and clip it to only the position where it is supposed to be shown */
-	rectangle fg_clip = *cliprect;
-	rectangle bg_clip = *cliprect;
-	if (flip_screen_get(screen->machine()))
+	rectangle fg_clip = cliprect;
+	rectangle bg_clip = cliprect;
+	if (flip_screen_get(screen.machine()))
 	{
 		bg_clip.min_x = 20*8;
 		fg_clip.max_x = 20*8-1;
@@ -299,19 +299,19 @@ SCREEN_UPDATE( bosco )
 		fg_clip.min_x = 28*8;
 	}
 
-	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
-	draw_stars(screen->machine(),bitmap,cliprect,flip_screen_get(screen->machine()));
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	draw_stars(screen.machine(),bitmap,cliprect,flip_screen_get(screen.machine()));
 
-	tilemap_draw(bitmap,&bg_clip,state->m_bg_tilemap,0,0);
-	tilemap_draw(bitmap,&fg_clip,state->m_fg_tilemap,0,0);
+	tilemap_draw(bitmap,bg_clip,state->m_bg_tilemap,0,0);
+	tilemap_draw(bitmap,fg_clip,state->m_fg_tilemap,0,0);
 
-	draw_sprites(screen->machine(), bitmap,cliprect);
+	draw_sprites(screen.machine(), bitmap,cliprect);
 
 	/* draw the high priority characters */
-	tilemap_draw(bitmap,&bg_clip,state->m_bg_tilemap,1,0);
-	tilemap_draw(bitmap,&fg_clip,state->m_fg_tilemap,1,0);
+	tilemap_draw(bitmap,bg_clip,state->m_bg_tilemap,1,0);
+	tilemap_draw(bitmap,fg_clip,state->m_fg_tilemap,1,0);
 
-	draw_bullets(screen->machine(), bitmap,cliprect);
+	draw_bullets(screen.machine(), bitmap,cliprect);
 
 	return 0;
 }
@@ -319,7 +319,7 @@ SCREEN_UPDATE( bosco )
 
 SCREEN_EOF( bosco )
 {
-	bosco_state *state =  machine.driver_data<bosco_state>();
+	bosco_state *state =  screen.machine().driver_data<bosco_state>();
 	static const int speedsx[8] = { -1, -2, -3, 0, 3, 2, 1, 0 };
 	static const int speedsy[8] = { 0, -1, -2, -3, 0, 3, 2, 1 };
 

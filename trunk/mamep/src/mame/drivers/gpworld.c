@@ -70,7 +70,7 @@ public:
 
 
 /* VIDEO GOODS */
-static void gpworld_draw_tiles(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void gpworld_draw_tiles(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	gpworld_state *state = machine.driver_data<gpworld_state>();
 	UINT8 characterX, characterY;
@@ -88,24 +88,24 @@ static void gpworld_draw_tiles(running_machine &machine, bitmap_t *bitmap,const 
 	}
 }
 
-INLINE void draw_pixel(bitmap_t *bitmap,const rectangle *cliprect,int x,int y,int color,int flip)
+INLINE void draw_pixel(bitmap_t &bitmap,const rectangle &cliprect,int x,int y,int color,int flip)
 {
 	if (flip)
 	{
-		x = bitmap->width - x - 1;
-		y = bitmap->height - y - 1;
+		x = bitmap.width() - x - 1;
+		y = bitmap.height() - y - 1;
 	}
 
-	if (x < cliprect->min_x ||
-		x > cliprect->max_x ||
-		y < cliprect->min_y ||
-		y > cliprect->max_y)
+	if (x < cliprect.min_x ||
+		x > cliprect.max_x ||
+		y < cliprect.min_y ||
+		y > cliprect.max_y)
 		return;
 
-	*BITMAP_ADDR32(bitmap, y, x) = color;
+	bitmap.pix32(y, x) = color;
 }
 
-static void gpworld_draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void gpworld_draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	gpworld_state *state = machine.driver_data<gpworld_state>();
 	const int SPR_Y_TOP     = 0;
@@ -218,10 +218,10 @@ static void gpworld_draw_sprites(running_machine &machine, bitmap_t *bitmap, con
 
 static SCREEN_UPDATE( gpworld )
 {
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
-	gpworld_draw_tiles(screen->machine(), bitmap, cliprect);
-	gpworld_draw_sprites(screen->machine(), bitmap, cliprect);
+	gpworld_draw_tiles(screen.machine(), bitmap, cliprect);
+	gpworld_draw_sprites(screen.machine(), bitmap, cliprect);
 
 	return 0;
 }

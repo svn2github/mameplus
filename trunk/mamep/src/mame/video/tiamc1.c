@@ -165,7 +165,7 @@ VIDEO_START( tiamc1 )
 	gfx_element_set_source(machine.gfx[0], state->m_charram);
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	tiamc1_state *state = machine.driver_data<tiamc1_state>();
 	int offs;
@@ -191,7 +191,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( tiamc1 )
 {
-	tiamc1_state *state = screen->machine().driver_data<tiamc1_state>();
+	tiamc1_state *state = screen.machine().driver_data<tiamc1_state>();
 #if 0
 	int i;
 
@@ -214,7 +214,7 @@ SCREEN_UPDATE( tiamc1 )
 		tilemap_draw(bitmap, cliprect, state->m_bg_tilemap1, 0, 0);
 
 
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 
 	return 0;
 }

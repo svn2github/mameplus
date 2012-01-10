@@ -363,7 +363,7 @@ WRITE8_HANDLER( polepos_alpha_w )
 
 ***************************************************************************/
 
-static void draw_road(running_machine &machine, bitmap_t *bitmap)
+static void draw_road(running_machine &machine, bitmap_t &bitmap)
 {
 	polepos_state *state = machine.driver_data<polepos_state>();
 	const UINT8 *road_control = machine.region("gfx5")->base();
@@ -439,7 +439,7 @@ static void draw_road(running_machine &machine, bitmap_t *bitmap)
 	}
 }
 
-static void zoom_sprite(running_machine &machine, bitmap_t *bitmap,int big,
+static void zoom_sprite(running_machine &machine, bitmap_t &bitmap,int big,
 		UINT32 code,UINT32 color,int flipx,int sx,int sy,
 		int sizex,int sizey)
 {
@@ -475,7 +475,7 @@ static void zoom_sprite(running_machine &machine, bitmap_t *bitmap,int big,
 					int pen = src[offs/2 ^ flipx];
 
 					if (!((transmask >> pen) & 1))
-						*BITMAP_ADDR16(bitmap, yy, xx) = pen + coloroffs;
+						bitmap.pix16(yy, xx) = pen + coloroffs;
 				}
 				offs++;
 
@@ -490,7 +490,7 @@ static void zoom_sprite(running_machine &machine, bitmap_t *bitmap,int big,
 	}
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	polepos_state *state = machine.driver_data<polepos_state>();
 	UINT16 *posmem = &state->m_sprite16_memory[0x380];
@@ -522,12 +522,12 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( polepos )
 {
-	polepos_state *state = screen->machine().driver_data<polepos_state>();
-	rectangle clip = *cliprect;
+	polepos_state *state = screen.machine().driver_data<polepos_state>();
+	rectangle clip = cliprect;
 	clip.max_y = 127;
-	tilemap_draw(bitmap,&clip,state->m_bg_tilemap,0,0);
-	draw_road(screen->machine(), bitmap);
-	draw_sprites(screen->machine(), bitmap,cliprect);
+	tilemap_draw(bitmap,clip,state->m_bg_tilemap,0,0);
+	draw_road(screen.machine(), bitmap);
+	draw_sprites(screen.machine(), bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,state->m_tx_tilemap,0,0);
 	return 0;
 }

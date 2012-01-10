@@ -311,8 +311,8 @@ VIDEO_START( namcona1 )
 /*************************************************************************/
 
 static void pdraw_tile(running_machine &machine,
-		bitmap_t *dest_bmp,
-		const rectangle *clip,
+		bitmap_t &dest_bmp,
+		const rectangle &clip,
 		UINT32 code,
 		int color,
 		int sx, int sy,
@@ -364,31 +364,28 @@ static void pdraw_tile(running_machine &machine,
 			y_index = 0;
 		}
 
-		if( clip )
-		{
-			if( sx < clip->min_x)
-			{ /* clip left */
-				int pixels = clip->min_x-sx;
-				sx += pixels;
-				x_index_base += pixels*dx;
-			}
-			if( sy < clip->min_y )
-			{ /* clip top */
-				int pixels = clip->min_y-sy;
-				sy += pixels;
-				y_index += pixels*dy;
-			}
-			/* NS 980211 - fixed incorrect clipping */
-			if( ex > clip->max_x+1 )
-			{ /* clip right */
-				int pixels = ex-clip->max_x-1;
-				ex -= pixels;
-			}
-			if( ey > clip->max_y+1 )
-			{ /* clip bottom */
-				int pixels = ey-clip->max_y-1;
-				ey -= pixels;
-			}
+		if( sx < clip.min_x)
+		{ /* clip left */
+			int pixels = clip.min_x-sx;
+			sx += pixels;
+			x_index_base += pixels*dx;
+		}
+		if( sy < clip.min_y )
+		{ /* clip top */
+			int pixels = clip.min_y-sy;
+			sy += pixels;
+			y_index += pixels*dy;
+		}
+		/* NS 980211 - fixed incorrect clipping */
+		if( ex > clip.max_x+1 )
+		{ /* clip right */
+			int pixels = ex-clip.max_x-1;
+			ex -= pixels;
+		}
+		if( ey > clip.max_y+1 )
+		{ /* clip bottom */
+			int pixels = ey-clip.max_y-1;
+			ey -= pixels;
 		}
 
 		if( ex>sx )
@@ -399,8 +396,8 @@ static void pdraw_tile(running_machine &machine,
 			{
 				const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
 				const UINT8 *mask_addr = mask_base + (y_index>>16) * mask->line_modulo;
-				UINT16 *dest = BITMAP_ADDR16(dest_bmp, y, 0);
-				UINT8 *pri = BITMAP_ADDR8(machine.priority_bitmap, y, 0);
+				UINT16 *dest = &dest_bmp.pix16(y);
+				UINT8 *pri = &machine.priority_bitmap.pix8(y);
 
 				int x, x_index = x_index_base;
 				for( x=sx; x<ex; x++ )
@@ -456,7 +453,7 @@ static void pdraw_tile(running_machine &machine,
 	}
 } /* pdraw_tile */
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	namcona1_state *state = machine.driver_data<namcona1_state>();
 	int which;
@@ -553,7 +550,7 @@ static void draw_pixel_line( UINT16 *pDest, UINT8 *pPri, UINT16 *pSource, const 
 	} /* next x */
 } /* draw_pixel_line */
 
-static void draw_background(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int which, int primask )
+static void draw_background(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int which, int primask )
 {
 	namcona1_state *state = machine.driver_data<namcona1_state>();
 	UINT16 *videoram = state->m_videoram;
@@ -576,8 +573,8 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 	paldata = &machine.pens[pGfx->color_base + pGfx->color_granularity * state->m_tilemap_palette_bank[which]];
 
 	/* draw one scanline at a time */
-	clip.min_x = cliprect->min_x;
-	clip.max_x = cliprect->max_x;
+	clip.min_x = cliprect.min_x;
+	clip.max_x = cliprect.max_x;
 	scrollx = 0;
 	scrolly = 0;
 	for( line=0; line<256; line++ )
@@ -597,7 +594,7 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 			scrolly = (ydata - line)&0x1ff;
 		}
 
-		if (line >= cliprect->min_y && line <= cliprect->max_y)
+		if (line >= cliprect.min_y && line <= cliprect.max_y)
 		{
 			if( xdata == 0xc001 )
 			{
@@ -605,8 +602,8 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
                  * feature, Numan Athletics.
                  */
 				draw_pixel_line(
-					BITMAP_ADDR16(bitmap, line, 0),
-					BITMAP_ADDR8(machine.priority_bitmap, line, 0),
+					&bitmap.pix16(line),
+					&machine.priority_bitmap.pix8(line),
 					videoram + ydata + 25,
 					paldata );
 			}
@@ -624,14 +621,14 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 					int dy = -8; /* vertical adjust */
 					UINT32 startx = (xoffset<<12)+incxx*dx+incyx*dy;
 					UINT32 starty = (yoffset<<12)+incxy*dx+incyy*dy;
-					tilemap_draw_roz_primask(bitmap, &clip, state->m_roz_tilemap,
+					tilemap_draw_roz_primask(bitmap, clip, state->m_roz_tilemap,
 						startx, starty, incxx, incxy, incyx, incyy, 0, 0, primask, 0);
 				}
 				else
 				{
 					tilemap_set_scrollx( state->m_bg_tilemap[which], 0, scrollx );
 					tilemap_set_scrolly( state->m_bg_tilemap[which], 0, scrolly );
-					tilemap_draw_primask( bitmap, &clip, state->m_bg_tilemap[which], 0, primask, 0 );
+					tilemap_draw_primask( bitmap, clip, state->m_bg_tilemap[which], 0, primask, 0 );
 				}
 			}
 		}
@@ -640,7 +637,7 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 
 SCREEN_UPDATE( namcona1 )
 {
-	namcona1_state *state = screen->machine().driver_data<namcona1_state>();
+	namcona1_state *state = screen.machine().driver_data<namcona1_state>();
 	int which;
 	int priority;
 
@@ -653,11 +650,11 @@ SCREEN_UPDATE( namcona1 )
 			/* palette updates are delayed when graphics are disabled */
 			for( which=0; which<0x1000; which++ )
 			{
-				UpdatePalette(screen->machine(), which );
+				UpdatePalette(screen.machine(), which );
 			}
 			state->m_palette_is_dirty = 0;
 		}
-		UpdateGfx(screen->machine());
+		UpdateGfx(screen.machine());
 		for( which=0; which<NAMCONA1_NUM_TILEMAPS; which++ )
 		{
 			int tilemap_color = state->m_vreg[0xb0/2+(which&3)]&0xf;
@@ -677,9 +674,9 @@ SCREEN_UPDATE( namcona1 )
 			}
 		}
 
-		bitmap_fill( screen->machine().priority_bitmap,cliprect ,0);
+		screen.machine().priority_bitmap.fill(0, cliprect );
 
-		bitmap_fill( bitmap, cliprect , 0xff); /* background color? */
+		bitmap.fill(0xff, cliprect ); /* background color? */
 
 		for( priority = 0; priority<8; priority++ )
 		{
@@ -696,12 +693,12 @@ SCREEN_UPDATE( namcona1 )
 				}
 				if( pri == priority )
 				{
-					draw_background(screen->machine(),bitmap,cliprect,which,priority);
+					draw_background(screen.machine(),bitmap,cliprect,which,priority);
 				}
 			} /* next tilemap */
 		} /* next priority level */
 
-		draw_sprites(screen->machine(),bitmap,cliprect);
+		draw_sprites(screen.machine(),bitmap,cliprect);
 	} /* gfx enabled */
 	return 0;
 }

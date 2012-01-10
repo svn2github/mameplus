@@ -123,7 +123,7 @@ static VIDEO_START( eolith16 )
 
 static SCREEN_UPDATE( eolith16 )
 {
-	eolith16_state *state = screen->machine().driver_data<eolith16_state>();
+	eolith16_state *state = screen.machine().driver_data<eolith16_state>();
 	int x,y,count;
 	int color;
 
@@ -133,10 +133,10 @@ static SCREEN_UPDATE( eolith16 )
 		for (x=0;x < 320/2;x++)
 		{
 			color = state->m_vram[count + (0x10000/2) * (state->m_vbuffer ^ 1)] & 0xff;
-			*BITMAP_ADDR16(bitmap, y, x*2 + 0) = color;
+			bitmap.pix16(y, x*2 + 0) = color;
 
 			color = (state->m_vram[count + (0x10000/2) * (state->m_vbuffer ^ 1)] & 0xff00) >> 8;
-			*BITMAP_ADDR16(bitmap, y, x*2 + 1) = color;
+			bitmap.pix16(y, x*2 + 1) = color;
 
 			count++;
 		}

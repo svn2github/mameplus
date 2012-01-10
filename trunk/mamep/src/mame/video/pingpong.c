@@ -11,17 +11,6 @@
 
 
 
-/* This is strange; it's unlikely that the sprites actually have a hardware */
-/* clipping region, but I haven't found another way to have them masked by */
-/* the characters at the top and bottom of the screen. */
-static const rectangle spritevisiblearea =
-{
-	0*8, 32*8-1,
-	4*8, 29*8-1
-};
-
-
-
 /***************************************************************************
 
   Convert the color PROMs into a more useable format.
@@ -124,8 +113,13 @@ VIDEO_START( pingpong )
 	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
+	/* This is strange; it's unlikely that the sprites actually have a hardware */
+	/* clipping region, but I haven't found another way to have them masked by */
+	/* the characters at the top and bottom of the screen. */
+	const rectangle spritevisiblearea(0*8, 32*8-1, 4*8, 29*8-1);
+
 	pingpong_state *state = machine.driver_data<pingpong_state>();
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
@@ -143,7 +137,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 		color = spriteram[offs] & 0x1f;
 		schar = spriteram[offs + 2] & 0x7f;
 
-		drawgfx_transmask(bitmap,&spritevisiblearea,machine.gfx[1],
+		drawgfx_transmask(bitmap,spritevisiblearea,machine.gfx[1],
 				schar,
 				color,
 				flipx,flipy,
@@ -154,8 +148,8 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( pingpong )
 {
-	pingpong_state *state = screen->machine().driver_data<pingpong_state>();
+	pingpong_state *state = screen.machine().driver_data<pingpong_state>();
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

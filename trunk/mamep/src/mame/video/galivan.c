@@ -306,7 +306,7 @@ WRITE8_HANDLER( galivan_scrolly_w )
 
 ***************************************************************************/
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	galivan_state *state = machine.driver_data<galivan_state>();
 	const UINT8 *spritepalettebank = machine.region("user1")->base();
@@ -347,12 +347,12 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( galivan )
 {
-	galivan_state *state = screen->machine().driver_data<galivan_state>();
+	galivan_state *state = screen.machine().driver_data<galivan_state>();
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_galivan_scrollx[0] + 256 * (state->m_galivan_scrollx[1] & 0x07));
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_galivan_scrolly[0] + 256 * (state->m_galivan_scrolly[1] & 0x07));
 
 	if (state->m_layers & 0x40)
-		bitmap_fill(bitmap, cliprect, 0);
+		bitmap.fill(0, cliprect);
 	else
 		tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
@@ -360,11 +360,11 @@ SCREEN_UPDATE( galivan )
 	{
 		tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 0, 0);
 		tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 1, 0);
-		draw_sprites(screen->machine(), bitmap, cliprect);
+		draw_sprites(screen.machine(), bitmap, cliprect);
 	}
 	else
 	{
-		draw_sprites(screen->machine(), bitmap, cliprect);
+		draw_sprites(screen.machine(), bitmap, cliprect);
 		tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 0, 0);
 		tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 1, 0);
 	}
@@ -374,18 +374,18 @@ SCREEN_UPDATE( galivan )
 
 SCREEN_UPDATE( ninjemak )
 {
-	galivan_state *state = screen->machine().driver_data<galivan_state>();
+	galivan_state *state = screen.machine().driver_data<galivan_state>();
 
 	/* (scrollx[1] & 0x40) does something */
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_scrollx);
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_scrolly);
 
 	if (state->m_ninjemak_dispdisable)
-		bitmap_fill(bitmap, cliprect, 0);
+		bitmap.fill(0, cliprect);
 	else
 		tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 0, 0);
 	return 0;
 }

@@ -136,8 +136,8 @@ Varth: Operation Thunderstorm* (Japan 920714)                  88622B-3   VA22B 
 Quiz & Dragons: Capcom Quiz Game* (USA 920701)           1992  89625B-1   QD22B            IOB1  92641C-1     CPS-B-21  DL-0921-10014          IOC1
 Quiz & Dragons: Capcom Quiz Game* (Japan 940921)         1994  91634B-2   QD63B    BPRG1   IOB1  90631C-5     CPS-B-21  DL-0921-10014  C632    IOC1
 
-Warriors of Fate* (World 921031)                         1992  91635B-2   TK263B   BPRG1   IOB1  92641C-1     CPS-B-21  DL-0921-10014          IOC1
-Warriors of Fate* (World 921002)                               91635B-2   TK263B   BPRG1   IOB1  92641C-1     CPS-B-21  DL-0921-10014          IOC1
+Warriors of Fate* (World 921002)                         1992  91635B-2   TK263B   BPRG1   IOB1  92641C-1     CPS-B-21  DL-0921-10014          IOC1
+Warriors of Fate* (World 921031)                               91635B-2   TK263B   BPRG1   IOB1  92641C-1     CPS-B-21  DL-0921-10014          IOC1
 Warriors of Fate* (USA 921031)                                 91635B-2   TK263B   BPRG1   IOB1  92641C-1     CPS-B-21  DL-0921-10014          IOC1
 Sangokushi II* (Asia 921005)                                   91634B-2   TK263B   BPRG1   IOB1  92641C-1     CPS-B-21  DL-0921-10014          IOC1
 Tenchi wo Kurau II: Sekiheki no Tatakai* (Japan 921031)        91634B-2   TK263B   BPRG1   IOB1  92641C-1     CPS-B-21  DL-0921-10014          IOC1
@@ -158,8 +158,8 @@ Saturday Night Slam Masters* (World 930713)              1993  91635B-2   MB63B 
 Saturday Night Slam Masters* (USA 930713)                      91635B-2   MB63B    BPRG1   IOB1  92641C-1     CPS-B-21  DL-0921-10014          IOC1
 Muscle Bomber: The Body Explosion* (Japan 930713)              91634B-?   MB63B    BPRG1   IOB1  ?            CPS-B-21  DL-0921-10014          IOC1
 
-Muscle Bomber Duo: Ultimate Team Battle* (World 931206)  1993  91635B-?   ?        BPRG1   IOB1  ?            CPS-B-21  DL-0921-10014          IOC1
-Muscle Bomber Duo: Heat Up Warriors* (Japan 931206)            91634B-?   ?        BPRG1   IOB1  ?            CPS-B-21  DL-0921-10014          IOC1
+Muscle Bomber Duo: Ultimate Team Battle* (World 931206)  1993  91635B-?   MB63B?   BPRG1   IOB1  ?            CPS-B-21  DL-0921-10014          IOC1
+Muscle Bomber Duo: Heat Up Warriors* (Japan 931206)            91634B-?   MB63B?   BPRG1   IOB1  ?            CPS-B-21  DL-0921-10014          IOC1
 
 Ken Sei Mogura (Japan ??????)                            1994  ?          ?                ?     ?            ?         ?
 
@@ -2367,7 +2367,7 @@ static void cps1_find_last_sprite( running_machine &machine )    /* Find the off
 }
 
 
-static void cps1_render_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void cps1_render_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	cps_state *state = machine.driver_data<cps_state>();
 
@@ -2610,7 +2610,7 @@ static void cps2_find_last_sprite( running_machine &machine )    /* Find the off
 	state->m_cps2_last_sprite_offset = state->m_cps2_obj_size / 2 - 4;
 }
 
-static void cps2_render_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int *primasks )
+static void cps2_render_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int *primasks )
 {
 	cps_state *state = machine.driver_data<cps_state>();
 
@@ -2759,11 +2759,11 @@ static void cps2_render_sprites( running_machine &machine, bitmap_t *bitmap, con
 
 
 
-static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const rectangle *cliprect )
+static void cps1_render_stars( screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect )
 {
-	cps_state *state = screen->machine().driver_data<cps_state>();
+	cps_state *state = screen.machine().driver_data<cps_state>();
 	int offs;
-	UINT8 *stars_rom = screen->machine().region("stars")->base();
+	UINT8 *stars_rom = screen.machine().region("stars")->base();
 
 	if (!stars_rom && (state->m_stars_enabled[0] || state->m_stars_enabled[1]))
 	{
@@ -2784,17 +2784,17 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 				int sy = (offs % 256);
 				sx = (sx - state->m_stars2x + (col & 0x1f)) & 0x1ff;
 				sy = (sy - state->m_stars2y) & 0xff;
-				if (flip_screen_get(screen->machine()))
+				if (flip_screen_get(screen.machine()))
 				{
 					sx = 511 - sx;
 					sy = 255 - sy;
 				}
 
-				col = ((col & 0xe0) >> 1) + (screen->frame_number() / 16 & 0x0f);
+				col = ((col & 0xe0) >> 1) + (screen.frame_number() / 16 & 0x0f);
 
-				if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
-					sy >= cliprect->min_y && sy <= cliprect->max_y)
-					*BITMAP_ADDR16(bitmap, sy, sx) = 0xa00 + col;
+				if (sx >= cliprect.min_x && sx <= cliprect.max_x &&
+					sy >= cliprect.min_y && sy <= cliprect.max_y)
+					bitmap.pix16(sy, sx) = 0xa00 + col;
 			}
 		}
 	}
@@ -2810,24 +2810,24 @@ static void cps1_render_stars( screen_device *screen, bitmap_t *bitmap, const re
 				int sy = (offs % 256);
 				sx = (sx - state->m_stars1x + (col & 0x1f)) & 0x1ff;
 				sy = (sy - state->m_stars1y) & 0xff;
-				if (flip_screen_get(screen->machine()))
+				if (flip_screen_get(screen.machine()))
 				{
 					sx = 511 - sx;
 					sy = 255 - sy;
 				}
 
-				col = ((col & 0xe0) >> 1) + (screen->frame_number() / 16 & 0x0f);
+				col = ((col & 0xe0) >> 1) + (screen.frame_number() / 16 & 0x0f);
 
-				if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
-					sy >= cliprect->min_y && sy <= cliprect->max_y)
-					*BITMAP_ADDR16(bitmap, sy, sx) = 0x800 + col;
+				if (sx >= cliprect.min_x && sx <= cliprect.max_x &&
+					sy >= cliprect.min_y && sy <= cliprect.max_y)
+					bitmap.pix16(sy, sx) = 0x800 + col;
 			}
 		}
 	}
 }
 
 
-static void cps1_render_layer( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int layer, int primask )
+static void cps1_render_layer( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int layer, int primask )
 {
 	cps_state *state = machine.driver_data<cps_state>();
 	switch (layer)
@@ -2843,9 +2843,10 @@ static void cps1_render_layer( running_machine &machine, bitmap_t *bitmap, const
 	}
 }
 
-static void cps1_render_high_layer( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int layer )
+static void cps1_render_high_layer( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int layer )
 {
 	cps_state *state = machine.driver_data<cps_state>();
+	bitmap_t dummy_bitmap;
 	switch (layer)
 	{
 		case 0:
@@ -2854,7 +2855,7 @@ static void cps1_render_high_layer( running_machine &machine, bitmap_t *bitmap, 
 		case 1:
 		case 2:
 		case 3:
-			tilemap_draw(NULL, cliprect, state->m_bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER0, 1);
+			tilemap_draw(dummy_bitmap, cliprect, state->m_bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER0, 1);
 			break;
 	}
 }
@@ -2868,26 +2869,26 @@ static void cps1_render_high_layer( running_machine &machine, bitmap_t *bitmap, 
 
 SCREEN_UPDATE( cps1 )
 {
-	cps_state *state = screen->machine().driver_data<cps_state>();
+	cps_state *state = screen.machine().driver_data<cps_state>();
 	int layercontrol, l0, l1, l2, l3;
 	int videocontrol = state->m_cps_a_regs[CPS1_VIDEOCONTROL];
 
-	flip_screen_set(screen->machine(), videocontrol & 0x8000);
+	flip_screen_set(screen.machine(), videocontrol & 0x8000);
 
 	layercontrol = state->m_cps_b_regs[state->m_game_config->layer_control / 2];
 
 	/* Get video memory base registers */
-	cps1_get_video_base(screen->machine());
+	cps1_get_video_base(screen.machine());
 
 	/* Find the offset of the last sprite in the sprite table */
-	cps1_find_last_sprite(screen->machine());
+	cps1_find_last_sprite(screen.machine());
 
 	if (state->m_cps_version == 2)
 	{
-		cps2_find_last_sprite(screen->machine());
+		cps2_find_last_sprite(screen.machine());
 	}
 
-	cps1_update_transmasks(screen->machine());
+	cps1_update_transmasks(screen.machine());
 
 	tilemap_set_scrollx(state->m_bg_tilemap[0], 0, state->m_scroll1x);
 	tilemap_set_scrolly(state->m_bg_tilemap[0], 0, state->m_scroll1y);
@@ -2920,7 +2921,7 @@ SCREEN_UPDATE( cps1 )
 	{
 		// CPS1 games use pen 0xbff as background color; this is used in 3wonders,
 		// mtwins (explosion during attract), mercs (intermission).
-		bitmap_fill(bitmap, cliprect, 0xbff);
+		bitmap.fill(0xbff, cliprect);
 	}
 	else
 	{
@@ -2929,7 +2930,7 @@ SCREEN_UPDATE( cps1 )
 		// Maybe Capcom changed the background handling due to the problems that
 		// it caused on several monitors (because the background extended into the
 		// blanking area instead of going black, causing the monitor to clip).
-		bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 	}
 
 	cps1_render_stars(screen, bitmap, cliprect);
@@ -2939,26 +2940,26 @@ SCREEN_UPDATE( cps1 )
 	l1 = (layercontrol >> 0x08) & 03;
 	l2 = (layercontrol >> 0x0a) & 03;
 	l3 = (layercontrol >> 0x0c) & 03;
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	if (state->m_cps_version == 1)
 	{
-		cps1_render_layer(screen->machine(), bitmap, cliprect, l0, 0);
+		cps1_render_layer(screen.machine(), bitmap, cliprect, l0, 0);
 
 		if (l1 == 0)
-			cps1_render_high_layer(screen->machine(), bitmap, cliprect, l0); /* prepare mask for sprites */
+			cps1_render_high_layer(screen.machine(), bitmap, cliprect, l0); /* prepare mask for sprites */
 
-		cps1_render_layer(screen->machine(), bitmap, cliprect, l1, 0);
+		cps1_render_layer(screen.machine(), bitmap, cliprect, l1, 0);
 
 		if (l2 == 0)
-			cps1_render_high_layer(screen->machine(), bitmap, cliprect, l1); /* prepare mask for sprites */
+			cps1_render_high_layer(screen.machine(), bitmap, cliprect, l1); /* prepare mask for sprites */
 
-		cps1_render_layer(screen->machine(), bitmap, cliprect, l2, 0);
+		cps1_render_layer(screen.machine(), bitmap, cliprect, l2, 0);
 
 		if (l3 == 0)
-			cps1_render_high_layer(screen->machine(), bitmap, cliprect, l2); /* prepare mask for sprites */
+			cps1_render_high_layer(screen.machine(), bitmap, cliprect, l2); /* prepare mask for sprites */
 
-		cps1_render_layer(screen->machine(), bitmap, cliprect, l3, 0);
+		cps1_render_layer(screen.machine(), bitmap, cliprect, l3, 0);
 	}
 	else
 	{
@@ -2970,15 +2971,15 @@ SCREEN_UPDATE( cps1 )
 		l3pri = (state->m_pri_ctrl >> 4 * l3) & 0x0f;
 
 #if 0
-if (	(cps2_port(screen->machine(), CPS2_OBJ_BASE) != 0x7080 && cps2_port(screen->machine(), CPS2_OBJ_BASE) != 0x7000) ||
-		cps2_port(screen->machine(), CPS2_OBJ_UK1) != 0x807d ||
-		(cps2_port(screen->machine(), CPS2_OBJ_UK2) != 0x0000 && cps2_port(screen->machine(), CPS2_OBJ_UK2) != 0x1101 && cps2_port(screen->machine(), CPS2_OBJ_UK2) != 0x0001))
+if (	(cps2_port(screen.machine(), CPS2_OBJ_BASE) != 0x7080 && cps2_port(screen.machine(), CPS2_OBJ_BASE) != 0x7000) ||
+		cps2_port(screen.machine(), CPS2_OBJ_UK1) != 0x807d ||
+		(cps2_port(screen.machine(), CPS2_OBJ_UK2) != 0x0000 && cps2_port(screen.machine(), CPS2_OBJ_UK2) != 0x1101 && cps2_port(screen.machine(), CPS2_OBJ_UK2) != 0x0001))
 	popmessage("base %04x uk1 %04x uk2 %04x",
-			cps2_port(screen->machine(), CPS2_OBJ_BASE),
-			cps2_port(screen->machine(), CPS2_OBJ_UK1),
-			cps2_port(screen->machine(), CPS2_OBJ_UK2));
+			cps2_port(screen.machine(), CPS2_OBJ_BASE),
+			cps2_port(screen.machine(), CPS2_OBJ_UK1),
+			cps2_port(screen.machine(), CPS2_OBJ_UK2));
 
-if (0 && screen->machine().input().code_pressed(KEYCODE_Z))
+if (0 && screen.machine().input().code_pressed(KEYCODE_Z))
 	popmessage("order: %d (%d) %d (%d) %d (%d) %d (%d)",l0,l0pri,l1,l1pri,l2,l2pri,l3,l3pri);
 #endif
 
@@ -3009,10 +3010,10 @@ if (0 && screen->machine().input().code_pressed(KEYCODE_Z))
 			}
 		}
 
-		cps1_render_layer(screen->machine(), bitmap, cliprect, l0, 1);
-		cps1_render_layer(screen->machine(), bitmap, cliprect, l1, 2);
-		cps1_render_layer(screen->machine(), bitmap, cliprect, l2, 4);
-		cps2_render_sprites(screen->machine(), bitmap, cliprect, primasks);
+		cps1_render_layer(screen.machine(), bitmap, cliprect, l0, 1);
+		cps1_render_layer(screen.machine(), bitmap, cliprect, l1, 2);
+		cps1_render_layer(screen.machine(), bitmap, cliprect, l2, 4);
+		cps2_render_sprites(screen.machine(), bitmap, cliprect, primasks);
 	}
 
 	return 0;
@@ -3020,10 +3021,10 @@ if (0 && screen->machine().input().code_pressed(KEYCODE_Z))
 
 SCREEN_EOF( cps1 )
 {
-	cps_state *state = machine.driver_data<cps_state>();
+	cps_state *state = screen.machine().driver_data<cps_state>();
 
 	/* Get video memory base registers */
-	cps1_get_video_base(machine);
+	cps1_get_video_base(screen.machine());
 
 	if (state->m_cps_version == 1)
 	{

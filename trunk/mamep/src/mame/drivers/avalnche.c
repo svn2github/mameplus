@@ -46,7 +46,7 @@
 
 static SCREEN_UPDATE( avalnche )
 {
-	avalnche_state *state = screen->machine().driver_data<avalnche_state>();
+	avalnche_state *state = screen.machine().driver_data<avalnche_state>();
 	offs_t offs;
 
 	for (offs = 0; offs < state->m_videoram_size; offs++)
@@ -66,7 +66,7 @@ static SCREEN_UPDATE( avalnche )
 			else
 				pen = (data & 0x80) ? RGB_BLACK : RGB_WHITE;
 
-			*BITMAP_ADDR32(bitmap, y, x) = pen;
+			bitmap.pix32(y, x) = pen;
 
 			data = data << 1;
 			x = x + 1;

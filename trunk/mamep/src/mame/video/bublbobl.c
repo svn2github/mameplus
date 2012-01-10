@@ -12,7 +12,7 @@
 
 SCREEN_UPDATE( bublbobl )
 {
-	bublbobl_state *state = screen->machine().driver_data<bublbobl_state>();
+	bublbobl_state *state = screen.machine().driver_data<bublbobl_state>();
 	int offs;
 	int sx, sy, xc, yc;
 	int gfx_num, gfx_attr, gfx_offs;
@@ -25,14 +25,14 @@ SCREEN_UPDATE( bublbobl )
 	/* the background character columns is stored in the area dd00-dd3f */
 
 	/* This clears & redraws the entire screen each pass */
-	bitmap_fill(bitmap, cliprect, 255);
+	bitmap.fill(255, cliprect);
 
 	if (!state->m_video_enable)
 		return 0;
 
 	sx = 0;
 
-	prom = screen->machine().region("proms")->base();
+	prom = screen.machine().region("proms")->base();
 	for (offs = 0; offs < state->m_objectram_size; offs += 4)
 	{
 		/* skip empty sprites */
@@ -73,7 +73,7 @@ SCREEN_UPDATE( bublbobl )
 				x = sx + xc * 8;
 				y = (sy + yc * 8) & 0xff;
 
-				if (flip_screen_get(screen->machine()))
+				if (flip_screen_get(screen.machine()))
 				{
 					x = 248 - x;
 					y = 248 - y;
@@ -81,7 +81,7 @@ SCREEN_UPDATE( bublbobl )
 					flipy = !flipy;
 				}
 
-				drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[0],
+				drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[0],
 						code,
 						color,
 						flipx,flipy,

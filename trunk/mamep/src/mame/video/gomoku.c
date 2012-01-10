@@ -124,7 +124,7 @@ VIDEO_START( gomoku )
 	tilemap_set_transparent_pen(state->m_fg_tilemap,0);
 
 	/* make background bitmap */
-	bitmap_fill(state->m_bg_bitmap, 0, 0x20);
+	state->m_bg_bitmap->fill(0x20);
 
 	// board
 	for (y = 0; y < 256; y++)
@@ -138,7 +138,7 @@ VIDEO_START( gomoku )
 			if (bgdata & 0x01) color = 0x21;	// board (brown)
 			if (bgdata & 0x02) color = 0x20;	// frame line (while)
 
-			*BITMAP_ADDR16(state->m_bg_bitmap, (255 - y - 1) & 0xff, (255 - x + 7) & 0xff) = color;
+			state->m_bg_bitmap->pix16((255 - y - 1) & 0xff, (255 - x + 7) & 0xff) = color;
 		}
 	}
 }
@@ -152,10 +152,10 @@ VIDEO_START( gomoku )
 
 SCREEN_UPDATE( gomoku )
 {
-	gomoku_state *state = screen->machine().driver_data<gomoku_state>();
-	UINT8 *GOMOKU_BG_X = screen->machine().region( "user1" )->base();
-	UINT8 *GOMOKU_BG_Y = screen->machine().region( "user2" )->base();
-	UINT8 *GOMOKU_BG_D = screen->machine().region( "user3" )->base();
+	gomoku_state *state = screen.machine().driver_data<gomoku_state>();
+	UINT8 *GOMOKU_BG_X = screen.machine().region( "user1" )->base();
+	UINT8 *GOMOKU_BG_Y = screen.machine().region( "user2" )->base();
+	UINT8 *GOMOKU_BG_D = screen.machine().region( "user3" )->base();
 	int x, y;
 	int bgram;
 	int bgoffs;
@@ -166,7 +166,7 @@ SCREEN_UPDATE( gomoku )
 	if (state->m_bg_dispsw)
 	{
 		/* copy bg bitmap */
-		copybitmap(bitmap, state->m_bg_bitmap, 0, 0, 0, 0, cliprect);
+		copybitmap(bitmap, *state->m_bg_bitmap, 0, 0, 0, 0, cliprect);
 
 		// stone
 		for (y = 0; y < 256; y++)
@@ -192,7 +192,7 @@ SCREEN_UPDATE( gomoku )
 				}
 				else continue;
 
-				*BITMAP_ADDR16(bitmap, (255 - y - 1) & 0xff, (255 - x + 7) & 0xff) = color;
+				bitmap.pix16((255 - y - 1) & 0xff, (255 - x + 7) & 0xff) = color;
 			}
 		}
 
@@ -220,13 +220,13 @@ SCREEN_UPDATE( gomoku )
 				}
 				else continue;
 
-				*BITMAP_ADDR16(bitmap, (255 - y - 1) & 0xff, (255 - x + 7) & 0xff) = color;
+				bitmap.pix16((255 - y - 1) & 0xff, (255 - x + 7) & 0xff) = color;
 			}
 		}
 	}
 	else
 	{
-		bitmap_fill(bitmap, 0, 0x20);
+		bitmap.fill(0x20);
 	}
 
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);

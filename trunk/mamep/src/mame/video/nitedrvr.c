@@ -41,7 +41,7 @@ VIDEO_START( nitedrvr )
 	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
 }
 
-static void draw_box( bitmap_t *bitmap, int bx, int by, int ex, int ey )
+static void draw_box( bitmap_t &bitmap, int bx, int by, int ex, int ey )
 {
 	int x, y;
 
@@ -49,13 +49,13 @@ static void draw_box( bitmap_t *bitmap, int bx, int by, int ex, int ey )
 	{
 		for (x = bx; x < ex; x++)
 			if ((y < 256) && (x < 256))
-				*BITMAP_ADDR16(bitmap, y, x) = 1;
+				bitmap.pix16(y, x) = 1;
 	}
 
 	return;
 }
 
-static void draw_roadway( running_machine &machine, bitmap_t *bitmap )
+static void draw_roadway( running_machine &machine, bitmap_t &bitmap )
 {
 	nitedrvr_state *state = machine.driver_data<nitedrvr_state>();
 	int roadway;
@@ -75,9 +75,9 @@ static void draw_roadway( running_machine &machine, bitmap_t *bitmap )
 
 SCREEN_UPDATE( nitedrvr )
 {
-	nitedrvr_state *state = screen->machine().driver_data<nitedrvr_state>();
+	nitedrvr_state *state = screen.machine().driver_data<nitedrvr_state>();
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	draw_roadway(screen->machine(), bitmap);
+	draw_roadway(screen.machine(), bitmap);
 	return 0;
 }

@@ -45,7 +45,7 @@ WRITE8_HANDLER( bigevglf_vidram_w )
 	state->m_vidram[o + 0x10000 * state->m_plane_selected] = data;
 	y = o >>8;
 	x = (o & 255);
-	*BITMAP_ADDR16(state->m_tmp_bitmap[state->m_plane_selected], y, x) = data;
+	state->m_tmp_bitmap[state->m_plane_selected]->pix16(y, x) = data;
 }
 
 READ8_HANDLER( bigevglf_vidram_r )
@@ -72,7 +72,7 @@ VIDEO_START( bigevglf )
 	state->save_pointer(NAME(state->m_vidram), 0x100 * 0x100 * 4);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	bigevglf_state *state = machine.driver_data<bigevglf_state>();
 	int i, j;
@@ -93,9 +93,9 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( bigevglf )
 {
-	bigevglf_state *state = screen->machine().driver_data<bigevglf_state>();
+	bigevglf_state *state = screen.machine().driver_data<bigevglf_state>();
 
-	copybitmap(bitmap, state->m_tmp_bitmap[state->m_plane_visible], 0, 0, 0, 0, cliprect);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	copybitmap(bitmap, *state->m_tmp_bitmap[state->m_plane_visible], 0, 0, 0, 0, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

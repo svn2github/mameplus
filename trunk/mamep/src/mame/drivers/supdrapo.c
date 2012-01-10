@@ -89,7 +89,7 @@ static VIDEO_START( supdrapo )
 
 static SCREEN_UPDATE( supdrapo )
 {
-	supdrapo_state *state = screen->machine().driver_data<supdrapo_state>();
+	supdrapo_state *state = screen.machine().driver_data<supdrapo_state>();
 	int x, y;
 	int count;
 	int color;
@@ -104,7 +104,7 @@ static SCREEN_UPDATE( supdrapo )
 			/* Global Column Coloring, GUESS! */
 			color = state->m_col_line[(x*2) + 1] ? (state->m_col_line[(x*2) + 1] - 1) & 7 : 0;
 
-			drawgfx_opaque(bitmap, cliprect, screen->machine().gfx[0], tile,color, 0, 0, x*8, y*8);
+			drawgfx_opaque(bitmap, cliprect, screen.machine().gfx[0], tile,color, 0, 0, x*8, y*8);
 
 			count++;
 		}
@@ -337,19 +337,19 @@ static INPUT_PORTS_START( supdrapo )
 	PORT_DIPSETTING(    0x0d, "90%" )
 	PORT_DIPSETTING(    0x0e, "95%" )
 	PORT_DIPSETTING(    0x0f, "100%" )
-	PORT_DIPNAME( 0x30, 0x10, "Maximum Payout" )		PORT_DIPLOCATION("SW1:5,6")
+	PORT_DIPNAME( 0x30, 0x10, "Maximum Payout Points" )	PORT_DIPLOCATION("SW1:5,6")
 	PORT_DIPSETTING(    0x00, "0" )
 	PORT_DIPSETTING(    0x10, "200" )
 	PORT_DIPSETTING(    0x20, "500" )
 	PORT_DIPSETTING(    0x30, "1000" )
-	PORT_DIPNAME( 0xc0, 0xc0, "Maximum Bet" )			PORT_DIPLOCATION("SW1:7,8")
+	PORT_DIPNAME( 0xc0, 0xc0, "Maximum Bet Points" )	PORT_DIPLOCATION("SW1:7,8")
 	PORT_DIPSETTING(    0x00, "5" )
 	PORT_DIPSETTING(    0x40, "10" )
 	PORT_DIPSETTING(    0x80, "15" )
 	PORT_DIPSETTING(    0xc0, "30" )
 
 	PORT_START("SW2") // Bank 2 @ 9A
-	PORT_DIPNAME( 0x01, 0x01, "Auto Bet" )				PORT_DIPLOCATION("SW2:1")
+	PORT_DIPNAME( 0x01, 0x01, "Deal Play Last Amount" )	PORT_DIPLOCATION("SW2:1")
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( Yes ) )
 	PORT_DIPNAME( 0x02, 0x02, "Allow Raise" )			PORT_DIPLOCATION("SW2:2")

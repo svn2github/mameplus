@@ -567,7 +567,7 @@ WRITE16_HANDLER( megasys1_vregs_D_w )
     0C      Y position
     0E      Code                                            */
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	megasys1_state *state = machine.driver_data<megasys1_state>();
 	int color,code,sx,sy,flipx,flipy,attr,sprite,offs,color_mask;
@@ -926,7 +926,7 @@ PALETTE_INIT( megasys1 )
 
 SCREEN_UPDATE( megasys1 )
 {
-	megasys1_state *state = screen->machine().driver_data<megasys1_state>();
+	megasys1_state *state = screen.machine().driver_data<megasys1_state>();
 	int i,flag,pri,primask;
 	int active_layers;
 
@@ -960,7 +960,7 @@ SCREEN_UPDATE( megasys1 )
 		active_layers |= 1 << ((pri & 0xf0000) >> 16);	// bottom layer can't be disabled
 	}
 
-	tilemap_set_flip_all( screen->machine(), (state->m_screen_flag & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0 );
+	tilemap_set_flip_all( screen.machine(), (state->m_screen_flag & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0 );
 
 	for (i = 0;i < 3;i++)
 	{
@@ -973,7 +973,7 @@ SCREEN_UPDATE( megasys1 )
 		}
 	}
 
-	bitmap_fill(screen->machine().priority_bitmap,cliprect,0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	flag = TILEMAP_DRAW_OPAQUE;
 	primask = 0;
@@ -999,7 +999,7 @@ SCREEN_UPDATE( megasys1 )
 				if (flag != 0)
 				{
 					flag = 0;
-					bitmap_fill(bitmap,cliprect,0);
+					bitmap.fill(0, cliprect);
 				}
 
 				if (state->m_sprite_flag & 0x100)	/* sprites are split */
@@ -1016,13 +1016,13 @@ SCREEN_UPDATE( megasys1 )
 	}
 
 	if (active_layers & 0x08)
-		draw_sprites(screen->machine(),bitmap,cliprect);
+		draw_sprites(screen.machine(),bitmap,cliprect);
 	return 0;
 }
 
 SCREEN_EOF( megasys1 )
 {
-	megasys1_state *state = machine.driver_data<megasys1_state>();
+	megasys1_state *state = screen.machine().driver_data<megasys1_state>();
 	/* Sprite are TWO frames ahead, like NMK16 HW. */
 //state->m_objectram
 	memcpy(state->m_buffer2_objectram,state->m_buffer_objectram, 0x2000);

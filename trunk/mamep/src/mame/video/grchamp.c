@@ -117,11 +117,11 @@ VIDEO_START( grchamp )
 }
 
 #if 0
-static int collision_check(running_machine &machine, grchamp_state *state, bitmap_t *bitmap, int which )
+static int collision_check(running_machine &machine, grchamp_state *state, bitmap_t &bitmap, int which )
 {
 	int bgcolor = machine.pens[0];
 	int sprite_transp = machine.pens[0x24];
-	const rectangle *visarea = machine.primary_screen->visible_area();
+	const rectangle &visarea = machine.primary_screen->visible_area();
 	int y0 = 240 - state->m_cpu0_out[3];
 	int x0 = 256 - state->m_cpu0_out[2];
 	int x,y,sx,sy;
@@ -132,7 +132,7 @@ static int collision_check(running_machine &machine, grchamp_state *state, bitma
 	{
 		/* draw the current player sprite into a work bitmap */
 		drawgfx_opaque( state->m_work_bitmap,
-			0,
+			state->m_work_bitmap->cliprect(),
 			machine.gfx[4],
 			state->m_cpu0_out[4]&0xf,
 			1, /* color */
@@ -144,7 +144,7 @@ static int collision_check(running_machine &machine, grchamp_state *state, bitma
 	{
 		for( x = 0; x<32; x++ )
 		{
-			pixel = *BITMAP_ADDR16(state->m_work_bitmap, y, x);
+			pixel = state->m_work_bitmap->pix16(y, x);
 			if( pixel != sprite_transp ){
 				sx = x+x0;
 				sy = y+y0;
@@ -152,13 +152,13 @@ static int collision_check(running_machine &machine, grchamp_state *state, bitma
 					(sy >= visarea->min_y) && (sy <= visarea->max_y) )
 				{
 					// Collision check uses only 16 pens!
-					pixel = *BITMAP_ADDR16(bitmap, sy, sx) % 16;
+					pixel = bitmap.pix16(sy, sx) % 16;
 					if( pixel != bgcolor )
 					{
 						result = 1; /* flag collision */
 						/*  wipe this pixel, so collision checks with the
                         **  next layer work */
-						*BITMAP_ADDR16(bitmap, sy, sx) = bgcolor;
+						bitmap.pix16(sy, sx) = bgcolor;
 					}
 				}
 			}
@@ -168,7 +168,7 @@ static int collision_check(running_machine &machine, grchamp_state *state, bitma
 	return result?(1<<which):0;
 }
 
-static void draw_fog(grchamp_state *state, bitmap_t *bitmap, const rectangle *cliprect, int fog)
+static void draw_fog(grchamp_state *state, bitmap_t &bitmap, const rectangle &cliprect, int fog)
 {
 	int x,y,offs;
 
@@ -180,12 +180,12 @@ static void draw_fog(grchamp_state *state, bitmap_t *bitmap, const rectangle *cl
 			offs = 0x40*(x-(100-FOG_SIZE-1));
 		for(y=16;y<240;y++)
 		{
-			*BITMAP_ADDR16(bitmap, y, x) = *BITMAP_ADDR16(bitmap, y, x) + offs;
+			bitmap.pix16(y, x) = bitmap.pix16(y, x) + offs;
 		}
 	}
 }
 
-static void draw_sprites(running_machine &machine, grchamp_state *state, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, grchamp_state *state, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	const gfx_element *gfx = machine.gfx[5];
 	int bank = (state->m_cpu0_out[0] & 0x20) ? 0x40 : 0x00;
@@ -366,13 +366,13 @@ SCREEN_UPDATE( grchamp )
 		MAKE_RGB(RGB_MAX,RGB_MAX,RGB_MAX)
 	};
 
-	grchamp_state *state = screen->machine().driver_data<grchamp_state>();
-	const UINT8 *amedata = screen->machine().region("gfx5")->base();
-	const UINT8 *headdata = screen->machine().region("gfx6")->base();
-	const UINT8 *pldata = screen->machine().region("gfx7")->base();
-	bitmap_t *lpixmap = tilemap_get_pixmap(state->m_left_tilemap);
-	bitmap_t *rpixmap = tilemap_get_pixmap(state->m_right_tilemap);
-	bitmap_t *cpixmap = tilemap_get_pixmap(state->m_center_tilemap);
+	grchamp_state *state = screen.machine().driver_data<grchamp_state>();
+	const UINT8 *amedata = screen.machine().region("gfx5")->base();
+	const UINT8 *headdata = screen.machine().region("gfx6")->base();
+	const UINT8 *pldata = screen.machine().region("gfx7")->base();
+	bitmap_t &lpixmap = tilemap_get_pixmap(state->m_left_tilemap);
+	bitmap_t &rpixmap = tilemap_get_pixmap(state->m_right_tilemap);
+	bitmap_t &cpixmap = tilemap_get_pixmap(state->m_center_tilemap);
 	int lrxscroll, cxscroll, lyscroll, ryscroll, cyscroll;
 	int bgcolor = state->m_cpu1_out[3] & 0x10;
 	int amebase = state->m_cpu0_out[4] >> 4;
@@ -381,8 +381,8 @@ SCREEN_UPDATE( grchamp )
 	int x, y;
 
 	/* ensure that the tilemaps are the same size */
-	assert(lpixmap->width == rpixmap->width && lpixmap->width == cpixmap->width);
-	assert(lpixmap->height == rpixmap->height && lpixmap->height == cpixmap->height);
+	assert(lpixmap.width() == rpixmap.width() && lpixmap.width() == cpixmap.width());
+	assert(lpixmap.height() == rpixmap.height() && lpixmap.height() == cpixmap.height());
 
 	/* extract background scroll values; left and right share the same X scroll */
 	lrxscroll = state->m_cpu1_out[0] + (state->m_cpu1_out[1] & 1) * 256;
@@ -395,24 +395,24 @@ SCREEN_UPDATE( grchamp )
 	cxmask = (state->m_cpu1_out[3] & 0x20) ? 0xff : 0x1ff;
 
 	/* iterate over scanlines */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
 		/* select either left or right tilemaps based on Y */
-		bitmap_t *lrpixmap = (y < 128) ? lpixmap : rpixmap;
+		bitmap_t &lrpixmap = (y < 128) ? lpixmap : rpixmap;
 		int lryscroll = (y < 128) ? lyscroll : ryscroll;
 
 		/* get source/dest pointers */
 		/* the Y counter starts counting when VBLANK goes to 0, which is at Y=16 */
-		UINT16 *lrsrc = (UINT16 *)lrpixmap->base + ((lryscroll + y - 16) & 0xff) * lrpixmap->rowpixels;
-		UINT16 *csrc = (UINT16 *)cpixmap->base + ((cyscroll + y - 16) & 0xff) * cpixmap->rowpixels;
-		UINT32 *dest = (UINT32 *)bitmap->base + y * bitmap->rowpixels;
+		UINT16 *lrsrc = &lrpixmap.pix16((lryscroll + y - 16) & 0xff);
+		UINT16 *csrc = &cpixmap.pix16((cyscroll + y - 16) & 0xff);
+		UINT32 *dest = &bitmap.pix32(y);
 		UINT8 objdata[256];
 
 		/* draw the objects for this scanline */
-		draw_objects(screen->machine(), state, y, objdata);
+		draw_objects(screen.machine(), state, y, objdata);
 
 		/* iterate over columns */
-		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+		for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 		{
 			rgb_t finalpix;
 			int headbit = 0;

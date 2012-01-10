@@ -267,14 +267,14 @@ WRITE8_HANDLER( ccastles_bitmode_addr_w )
 
 SCREEN_UPDATE( ccastles )
 {
-	ccastles_state *state = screen->machine().driver_data<ccastles_state>();
+	ccastles_state *state = screen.machine().driver_data<ccastles_state>();
 	UINT8 *spriteaddr = &state->m_spriteram[state->m_video_control[7] * 0x100];	/* BUF1/BUF2 */
 	int flip = state->m_video_control[4] ? 0xff : 0x00;	/* PLAYER2 */
-	pen_t black = get_black_pen(screen->machine());
+	pen_t black = get_black_pen(screen.machine());
 	int x, y, offs;
 
 	/* draw the sprites */
-	bitmap_fill(state->m_spritebitmap, cliprect, 0x0f);
+	state->m_spritebitmap->fill(0x0f, cliprect);
 	for (offs = 0; offs < 320/2; offs += 4)
 	{
 		int x = spriteaddr[offs + 3];
@@ -282,25 +282,25 @@ SCREEN_UPDATE( ccastles )
 		int which = spriteaddr[offs];
 		int color = spriteaddr[offs + 2] >> 7;
 
-		drawgfx_transpen(state->m_spritebitmap, cliprect, screen->machine().gfx[0], which, color, flip, flip, x, y, 7);
+		drawgfx_transpen(*state->m_spritebitmap, cliprect, screen.machine().gfx[0], which, color, flip, flip, x, y, 7);
 	}
 
 	/* draw the bitmap to the screen, looping over Y */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
-		UINT16 *dst = (UINT16 *)bitmap->base + y * bitmap->rowpixels;
+		UINT16 *dst = &bitmap.pix16(y);
 
 		/* if we're in the VBLANK region, just fill with black */
 		if (state->m_syncprom[y] & 1)
 		{
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 				dst[x] = black;
 		}
 
 		/* non-VBLANK region: merge the sprites and the bitmap */
 		else
 		{
-			UINT16 *mosrc = (UINT16 *)state->m_spritebitmap->base + y * state->m_spritebitmap->rowpixels;
+			UINT16 *mosrc = &state->m_spritebitmap->pix16(y);
 			int effy = (((y - state->m_vblank_end) + (flip ? 0 : state->m_vscroll)) ^ flip) & 0xff;
 			UINT8 *src;
 
@@ -310,7 +310,7 @@ SCREEN_UPDATE( ccastles )
 			src = &state->m_videoram[effy * 128];
 
 			/* loop over X */
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 			{
 				/* if we're in the HBLANK region, just store black */
 				if (x >= 256)

@@ -84,7 +84,7 @@ static void palette_handler(running_machine &machine, render_container *containe
 
 /* graphics set handling */
 static void gfxset_handle_keys(running_machine &machine, ui_gfx_state *state, int xcells, int ycells);
-static void gfxset_draw_item(running_machine &machine, const gfx_element *gfx, int index, bitmap_t *bitmap, int dstx, int dsty, int color, int rotate);
+static void gfxset_draw_item(running_machine &machine, const gfx_element *gfx, int index, bitmap_t &bitmap, int dstx, int dsty, int color, int rotate);
 static void gfxset_update_bitmap(running_machine &machine, ui_gfx_state *state, int xcells, int ycells, gfx_element *gfx);
 static void gfxset_handler(running_machine &machine, render_container *container, ui_gfx_state *state);
 
@@ -693,7 +693,7 @@ static void gfxset_update_bitmap(running_machine &machine, ui_gfx_state *state, 
 	cellypix = 1 + ((state->gfxset.rotate[set] & ORIENTATION_SWAP_XY) ? gfx->width : gfx->height);
 
 	/* realloc the bitmap if it is too small */
-	if (state->bitmap == NULL || state->texture == NULL || state->bitmap->bpp != 32 || state->bitmap->width != cellxpix * xcells || state->bitmap->height != cellypix * ycells)
+	if (state->bitmap == NULL || state->texture == NULL || state->bitmap->bpp() != 32 || state->bitmap->width() != cellxpix * xcells || state->bitmap->height() != cellypix * ycells)
 	{
 		/* free the old stuff */
 		machine.render().texture_free(state->texture);
@@ -718,7 +718,7 @@ static void gfxset_update_bitmap(running_machine &machine, ui_gfx_state *state, 
 
 			/* make a rect that covers this row */
 			cellbounds.min_x = 0;
-			cellbounds.max_x = state->bitmap->width - 1;
+			cellbounds.max_x = state->bitmap->width() - 1;
 			cellbounds.min_y = y * cellypix;
 			cellbounds.max_y = (y + 1) * cellypix - 1;
 
@@ -736,17 +736,17 @@ static void gfxset_update_bitmap(running_machine &machine, ui_gfx_state *state, 
 
 					/* only render if there is data */
 					if (index < gfx->total_elements)
-						gfxset_draw_item(machine, gfx, index, state->bitmap, cellbounds.min_x, cellbounds.min_y, state->gfxset.color[set], state->gfxset.rotate[set]);
+						gfxset_draw_item(machine, gfx, index, *state->bitmap, cellbounds.min_x, cellbounds.min_y, state->gfxset.color[set], state->gfxset.rotate[set]);
 
 					/* otherwise, fill with transparency */
 					else
-						bitmap_fill(state->bitmap, &cellbounds, 0);
+						state->bitmap->fill(0, cellbounds);
 				}
 			}
 
 			/* otherwise, fill with transparency */
 			else
-				bitmap_fill(state->bitmap, &cellbounds, 0);
+				state->bitmap->fill(0, cellbounds);
 		}
 
 		/* reset the texture to force an update */
@@ -761,7 +761,7 @@ static void gfxset_update_bitmap(running_machine &machine, ui_gfx_state *state, 
     the view
 -------------------------------------------------*/
 
-static void gfxset_draw_item(running_machine &machine, const gfx_element *gfx, int index, bitmap_t *bitmap, int dstx, int dsty, int color, int rotate)
+static void gfxset_draw_item(running_machine &machine, const gfx_element *gfx, int index, bitmap_t &bitmap, int dstx, int dsty, int color, int rotate)
 {
 	static const pen_t default_palette[] =
 	{
@@ -771,7 +771,6 @@ static void gfxset_draw_item(running_machine &machine, const gfx_element *gfx, i
 	int width = (rotate & ORIENTATION_SWAP_XY) ? gfx->height : gfx->width;
 	int height = (rotate & ORIENTATION_SWAP_XY) ? gfx->width : gfx->height;
 	const rgb_t *palette = (machine.total_colors() != 0) ? palette_entry_list_raw(machine.palette) : NULL;
-	UINT32 rowpixels = bitmap->rowpixels;
 	UINT32 palette_mask = ~0;
 	int x, y;
 
@@ -786,7 +785,7 @@ static void gfxset_draw_item(running_machine &machine, const gfx_element *gfx, i
 	/* loop over rows in the cell */
 	for (y = 0; y < height; y++)
 	{
-		UINT32 *dest = (UINT32 *)bitmap->base + (dsty + y) * rowpixels + dstx;
+		UINT32 *dest = &bitmap.pix32(dsty + y, dstx);
 		const UINT8 *src = gfx_element_get_data(gfx, index);
 
 		/* loop over columns in the cell */
@@ -1049,7 +1048,7 @@ static void tilemap_update_bitmap(running_machine &machine, ui_gfx_state *state,
 		{ UINT32 temp = width; width = height; height = temp; }
 
 	/* realloc the bitmap if it is too small */
-	if (state->bitmap == NULL || state->texture == NULL || state->bitmap->format != screen_format || state->bitmap->width != width || state->bitmap->height != height)
+	if (state->bitmap == NULL || state->texture == NULL || state->bitmap->format() != screen_format || state->bitmap->width() != width || state->bitmap->height() != height)
 	{
 		/* free the old stuff */
 		machine.render().texture_free(state->texture);
@@ -1067,7 +1066,7 @@ static void tilemap_update_bitmap(running_machine &machine, ui_gfx_state *state,
 	/* handle the redraw */
 	if (state->bitmap_dirty)
 	{
-		tilemap_draw_by_index(machine, state->bitmap, state->tilemap.which, state->tilemap.xoffs, state->tilemap.yoffs);
+		tilemap_draw_by_index(machine, *state->bitmap, state->tilemap.which, state->tilemap.xoffs, state->tilemap.yoffs);
 
 		/* reset the texture to force an update */
 		state->texture->set_bitmap(state->bitmap, NULL, screen_texformat, palette);

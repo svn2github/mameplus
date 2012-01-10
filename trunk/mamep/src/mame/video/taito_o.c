@@ -25,7 +25,7 @@ static const int zoomy_conv_table[] =
 };
 
 
-static void parentj_draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int priority )
+static void parentj_draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int priority )
 {
 	/* Y chain size is 16/32?/64/64? pixels. X chain size
        is always 64 pixels. */
@@ -140,16 +140,16 @@ static void parentj_draw_sprites( running_machine &machine, bitmap_t *bitmap, co
 
 SCREEN_UPDATE( parentj )
 {
-	taitoo_state *state = screen->machine().driver_data<taitoo_state>();
+	taitoo_state *state = screen.machine().driver_data<taitoo_state>();
 
 	tc0080vco_tilemap_update(state->m_tc0080vco);
 
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
 	tc0080vco_tilemap_draw(state->m_tc0080vco, bitmap, cliprect, 0, TILEMAP_DRAW_OPAQUE, 0);
 
-	parentj_draw_sprites(screen->machine(), bitmap, cliprect, 0);
-	parentj_draw_sprites(screen->machine(), bitmap, cliprect, 1);
+	parentj_draw_sprites(screen.machine(), bitmap, cliprect, 0);
+	parentj_draw_sprites(screen.machine(), bitmap, cliprect, 1);
 
 	tc0080vco_tilemap_draw(state->m_tc0080vco, bitmap, cliprect, 1, 0, 0);
 	tc0080vco_tilemap_draw(state->m_tc0080vco, bitmap, cliprect, 2, 0, 0);

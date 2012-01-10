@@ -165,7 +165,7 @@ VIDEO_START( blmbycar )
 
 ***************************************************************************/
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	blmbycar_state *state = machine.driver_data<blmbycar_state>();
 	UINT16 *source, *finish;
@@ -221,7 +221,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( blmbycar )
 {
-	blmbycar_state *state = screen->machine().driver_data<blmbycar_state>();
+	blmbycar_state *state = screen.machine().driver_data<blmbycar_state>();
 	int i, layers_ctrl = -1;
 
 	tilemap_set_scrolly(state->m_tilemap_0, 0, state->m_scroll_0[0]);
@@ -231,32 +231,32 @@ SCREEN_UPDATE( blmbycar )
 	tilemap_set_scrollx(state->m_tilemap_1, 0, state->m_scroll_1[1] + 5);
 
 #ifdef MAME_DEBUG
-if (screen->machine().input().code_pressed(KEYCODE_Z))
+if (screen.machine().input().code_pressed(KEYCODE_Z))
 {
 	int msk = 0;
 
-	if (screen->machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-	if (screen->machine().input().code_pressed(KEYCODE_W))	msk |= 2;
-//  if (screen->machine().input().code_pressed(KEYCODE_E))    msk |= 4;
-	if (screen->machine().input().code_pressed(KEYCODE_A))	msk |= 8;
+	if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+	if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+//  if (screen.machine().input().code_pressed(KEYCODE_E))    msk |= 4;
+	if (screen.machine().input().code_pressed(KEYCODE_A))	msk |= 8;
 	if (msk != 0) layers_ctrl &= msk;
 }
 #endif
 
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	if (layers_ctrl & 1)
 		for (i = 0; i <= 1; i++)
 			tilemap_draw(bitmap, cliprect, state->m_tilemap_0, i, i);
 	else
-		bitmap_fill(bitmap, cliprect, 0);
+		bitmap.fill(0, cliprect);
 
 	if (layers_ctrl & 2)
 		for (i = 0; i <= 1; i++)
 			tilemap_draw(bitmap, cliprect, state->m_tilemap_1, i, i);
 
 	if (layers_ctrl & 8)
-		draw_sprites(screen->machine(), bitmap, cliprect);
+		draw_sprites(screen.machine(), bitmap, cliprect);
 
 	return 0;
 }

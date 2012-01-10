@@ -781,13 +781,13 @@ static VIDEO_START(sfbonus)
 
 }
 
-static void sfbonus_draw_reel_layer(screen_device *screen, bitmap_t *bitmap, const rectangle *cliprect, int catagory)
+static void sfbonus_draw_reel_layer(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect, int catagory)
 {
-	sfbonus_state *state = screen->machine().driver_data<sfbonus_state>();
+	sfbonus_state *state = screen.machine().driver_data<sfbonus_state>();
 	int zz;
 	int i;
 	int startclipmin;
-	const rectangle &visarea = screen->visible_area();
+	const rectangle &visarea = screen.visible_area();
 	UINT8* selectbase = &state->m_videoram[0x600];
 	UINT8* bg_scroll = &state->m_videoram[0x000];
 	UINT8* reels_rowscroll = &state->m_videoram[0x400];
@@ -877,38 +877,38 @@ static void sfbonus_draw_reel_layer(screen_device *screen, bitmap_t *bitmap, con
 
 		if (rowenable2==0)
 		{
-			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel_tilemap,TILEMAP_DRAW_CATEGORY(catagory),3);
+			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel_tilemap,TILEMAP_DRAW_CATEGORY(catagory),3);
 		}
 		if (rowenable==0)
 		{
-			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel_tilemap,TILEMAP_DRAW_CATEGORY(catagory),3);
+			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel_tilemap,TILEMAP_DRAW_CATEGORY(catagory),3);
 		}
 
 		if (rowenable2==0x1)
 		{
-			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel2_tilemap,TILEMAP_DRAW_CATEGORY(catagory),2);
+			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel2_tilemap,TILEMAP_DRAW_CATEGORY(catagory),2);
 		}
 		if (rowenable==0x1)
 		{
-			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel2_tilemap,TILEMAP_DRAW_CATEGORY(catagory),2);
+			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel2_tilemap,TILEMAP_DRAW_CATEGORY(catagory),2);
 		}
 
 		if (rowenable2==0x2)
 		{
-			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel3_tilemap,TILEMAP_DRAW_CATEGORY(catagory),1);
+			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel3_tilemap,TILEMAP_DRAW_CATEGORY(catagory),1);
 		}
 		if (rowenable==0x2)
 		{
-			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel3_tilemap,TILEMAP_DRAW_CATEGORY(catagory),1);
+			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel3_tilemap,TILEMAP_DRAW_CATEGORY(catagory),1);
 		}
 
 		if (rowenable2==0x3)
 		{
-			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel4_tilemap,TILEMAP_DRAW_CATEGORY(catagory),4);
+			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel4_tilemap,TILEMAP_DRAW_CATEGORY(catagory),4);
 		}
 		if (rowenable==0x3)
 		{
-			tilemap_draw(state->m_temp_reel_bitmap,&clip,state->m_reel4_tilemap,TILEMAP_DRAW_CATEGORY(catagory),4);
+			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel4_tilemap,TILEMAP_DRAW_CATEGORY(catagory),4);
 		}
 
 
@@ -922,7 +922,7 @@ static void sfbonus_draw_reel_layer(screen_device *screen, bitmap_t *bitmap, con
 
 static SCREEN_UPDATE(sfbonus)
 {
-	sfbonus_state *state = screen->machine().driver_data<sfbonus_state>();
+	sfbonus_state *state = screen.machine().driver_data<sfbonus_state>();
 
 	int globalyscroll = (state->m_vregs[2] | state->m_vregs[3]<<8);
 	int globalxscroll = (state->m_vregs[0] | state->m_vregs[1]<<8);
@@ -934,11 +934,11 @@ static SCREEN_UPDATE(sfbonus)
 	globalyscroll += 8;
 	globalxscroll += 8;
 
-	bitmap_fill(bitmap,cliprect,screen->machine().pens[0]);
-	bitmap_fill(state->m_temp_reel_bitmap,cliprect,screen->machine().pens[0]);
+	bitmap.fill(screen.machine().pens[0], cliprect);
+	state->m_temp_reel_bitmap->fill(screen.machine().pens[0], cliprect);
 
 	/* render reels to bitmap */
-	sfbonus_draw_reel_layer(screen,state->m_temp_reel_bitmap,cliprect,0);
+	sfbonus_draw_reel_layer(screen,*state->m_temp_reel_bitmap,cliprect,0);
 
 	{
 		int y,x;
@@ -947,8 +947,8 @@ static SCREEN_UPDATE(sfbonus)
 		{
 			for (x=0;x<512;x++)
 			{
-				UINT16* src = BITMAP_ADDR16(state->m_temp_reel_bitmap, y, x);
-				UINT16* dst = BITMAP_ADDR16(bitmap, y, x);
+				UINT16* src = &state->m_temp_reel_bitmap->pix16(y, x);
+				UINT16* dst = &bitmap.pix16(y, x);
 
 				if ((src[0]&0x100)==0x000)
 					dst[0] = src[0];
@@ -973,8 +973,8 @@ static SCREEN_UPDATE(sfbonus)
 		{
 			for (x=0;x<512;x++)
 			{
-				UINT16* src = BITMAP_ADDR16(state->m_temp_reel_bitmap, y, x);
-				UINT16* dst = BITMAP_ADDR16(bitmap, y, x);
+				UINT16* src = &state->m_temp_reel_bitmap->pix16(y, x);
+				UINT16* dst = &bitmap.pix16(y, x);
 
 				if ((src[0]&0x100)==0x100)
 					dst[0] = src[0]-0x100;
@@ -1031,7 +1031,7 @@ static SCREEN_UPDATE(sfbonus)
     state->m_1800_regs[7]);
 #endif
 
-	ipt = screen->machine().system().ipt;
+	ipt = screen.machine().system().ipt;
 	if ((ipt == INPUT_PORTS_NAME(amcoe2_reels3)) || (ipt == INPUT_PORTS_NAME(amcoe2_reels4))
 		|| (ipt == INPUT_PORTS_NAME(amcoe2_poker)))
 	{

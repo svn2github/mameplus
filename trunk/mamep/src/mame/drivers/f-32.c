@@ -32,7 +32,7 @@ public:
 
 static SCREEN_UPDATE( mosaicf2 )
 {
-	mosaicf2_state *state = screen->machine().driver_data<mosaicf2_state>();
+	mosaicf2_state *state = screen.machine().driver_data<mosaicf2_state>();
 	offs_t offs;
 
 	for (offs = 0; offs < 0x10000; offs++)
@@ -42,8 +42,8 @@ static SCREEN_UPDATE( mosaicf2 )
 
 		if ((x < 0xa0) && (y < 0xe0))
 		{
-			*BITMAP_ADDR16(bitmap, y, (x * 2) + 0) = (state->m_videoram[offs] >> 16) & 0x7fff;
-			*BITMAP_ADDR16(bitmap, y, (x * 2) + 1) = (state->m_videoram[offs] >>  0) & 0x7fff;
+			bitmap.pix16(y, (x * 2) + 0) = (state->m_videoram[offs] >> 16) & 0x7fff;
+			bitmap.pix16(y, (x * 2) + 1) = (state->m_videoram[offs] >>  0) & 0x7fff;
 		}
 	}
 

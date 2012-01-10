@@ -206,14 +206,14 @@ static void update_pixel0(running_machine &machine, int x, int y)
 {
 	nbmj8900_state *state = machine.driver_data<nbmj8900_state>();
 	UINT8 color = state->m_videoram0[(y * state->m_screen_width) + x];
-	*BITMAP_ADDR16(state->m_tmpbitmap0, y, x) = machine.pens[color];
+	state->m_tmpbitmap0->pix16(y, x) = machine.pens[color];
 }
 
 static void update_pixel1(running_machine &machine, int x, int y)
 {
 	nbmj8900_state *state = machine.driver_data<nbmj8900_state>();
 	UINT8 color = state->m_videoram1[(y * state->m_screen_width) + x];
-	*BITMAP_ADDR16(state->m_tmpbitmap1, y, x) = machine.pens[color];
+	state->m_tmpbitmap1->pix16(y, x) = machine.pens[color];
 }
 
 static TIMER_CALLBACK( blitter_timer_callback )
@@ -401,7 +401,7 @@ VIDEO_START( nbmj8900_2layer )
 ******************************************************************************/
 SCREEN_UPDATE( nbmj8900 )
 {
-	nbmj8900_state *state = screen->machine().driver_data<nbmj8900_state>();
+	nbmj8900_state *state = screen.machine().driver_data<nbmj8900_state>();
 	int x, y;
 
 	if (state->m_screen_refresh)
@@ -411,7 +411,7 @@ SCREEN_UPDATE( nbmj8900 )
 		{
 			for (x = 0; x < state->m_screen_width; x++)
 			{
-				update_pixel0(screen->machine(), x, y);
+				update_pixel0(screen.machine(), x, y);
 			}
 		}
 		if (state->m_gfxdraw_mode)
@@ -420,7 +420,7 @@ SCREEN_UPDATE( nbmj8900 )
 			{
 				for (x = 0; x < state->m_screen_width; x++)
 				{
-					update_pixel1(screen->machine(), x, y);
+					update_pixel1(screen.machine(), x, y);
 				}
 			}
 		}
@@ -434,17 +434,17 @@ SCREEN_UPDATE( nbmj8900 )
 
 		if (state->m_gfxdraw_mode)
 		{
-			copyscrollbitmap(bitmap, state->m_tmpbitmap0, 0, 0, 0, 0, cliprect);
-			copyscrollbitmap_trans(bitmap, state->m_tmpbitmap1, 0, 0, 1, &scrolly, cliprect, 0xff);
+			copyscrollbitmap(bitmap, *state->m_tmpbitmap0, 0, 0, 0, 0, cliprect);
+			copyscrollbitmap_trans(bitmap, *state->m_tmpbitmap1, 0, 0, 1, &scrolly, cliprect, 0xff);
 		}
 		else
 		{
-			copyscrollbitmap(bitmap, state->m_tmpbitmap0, 0, 0, 1, &scrolly, cliprect);
+			copyscrollbitmap(bitmap, *state->m_tmpbitmap0, 0, 0, 1, &scrolly, cliprect);
 		}
 	}
 	else
 	{
-		bitmap_fill(bitmap, 0, 0);
+		bitmap.fill(0);
 	}
 	return 0;
 }

@@ -22,7 +22,7 @@ WRITE16_HANDLER( sslam_paletteram_w )
 	palette_set_color_rgb(space->machine(), offset, pal5bit(r), pal5bit(g), pal5bit(b));
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	sslam_state *state = machine.driver_data<sslam_state>();
 	const gfx_element *gfx = machine.gfx[0];
@@ -193,11 +193,11 @@ VIDEO_START(powerbls)
 
 SCREEN_UPDATE(sslam)
 {
-	sslam_state *state = screen->machine().driver_data<sslam_state>();
+	sslam_state *state = screen.machine().driver_data<sslam_state>();
 
 	if (!(state->m_regs[6] & 1))
 	{
-		bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		return 0;
 	}
 
@@ -214,30 +214,30 @@ SCREEN_UPDATE(sslam)
 	if (state->m_regs[2]+2 > 0x8c8)
 	{
 		rectangle md_clip;
-		md_clip.min_x = cliprect->min_x;
-		md_clip.max_x = cliprect->max_x - (state->m_regs[2]+2 - 0x8c8);
-		md_clip.min_y = cliprect->min_y;
-		md_clip.max_y = cliprect->max_y;
+		md_clip.min_x = cliprect.min_x;
+		md_clip.max_x = cliprect.max_x - (state->m_regs[2]+2 - 0x8c8);
+		md_clip.min_y = cliprect.min_y;
+		md_clip.max_y = cliprect.max_y;
 
-		tilemap_draw(bitmap,&md_clip,state->m_md_tilemap,0,0);
+		tilemap_draw(bitmap,md_clip,state->m_md_tilemap,0,0);
 	}
 	else
 	{
 		tilemap_draw(bitmap,cliprect,state->m_md_tilemap,0,0);
 	}
 
-	draw_sprites(screen->machine(), bitmap,cliprect);
+	draw_sprites(screen.machine(), bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,state->m_tx_tilemap,0,0);
 	return 0;
 }
 
 SCREEN_UPDATE(powerbls)
 {
-	sslam_state *state = screen->machine().driver_data<sslam_state>();
+	sslam_state *state = screen.machine().driver_data<sslam_state>();
 
 	if (!(state->m_regs[6] & 1))
 	{
-		bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		return 0;
 	}
 
@@ -245,6 +245,6 @@ SCREEN_UPDATE(powerbls)
 	tilemap_set_scrolly(state->m_bg_tilemap,0, state->m_regs[1]-240);
 
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,0,0);
-	draw_sprites(screen->machine(), bitmap,cliprect);
+	draw_sprites(screen.machine(), bitmap,cliprect);
 	return 0;
 }

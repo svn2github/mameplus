@@ -5380,11 +5380,11 @@ static READ16_HANDLER( segacd_main_dataram_part1_r )
 			// converts data stored in bitmap format (in dataram) to be read out as tiles (for dma->vram purposes)
 			// used by Heart of the Alien
 
-			if(offset<0x30000/2)		/* 0x20000 - 0x2ffff */ // 512x256 bitmap -> tiles
+			if(offset<0x30000/2)		/* 0x20000 - 0x2ffff */ // 512x256 bitmap. tiles
 				offset = BITSWAP24(offset,23,22,21,20,19,18,17,16,15,8,7,6,5,4,3,2,1,14,13,12,11,10,9,0);
-			else if(offset<0x38000/2)	/* 0x30000 - 0x37fff */  // 512x128 bitmap -> tiles
+			else if(offset<0x38000/2)	/* 0x30000 - 0x37fff */  // 512x128 bitmap. tiles
 				offset = BITSWAP24(offset,23,22,21,20,19,18,17,16,15,14,7,6,5,4,3,2,1,13,12,11,10,9,8,0);
-			else if(offset<0x3c000/2)	/* 0x38000 - 0x3bfff */  // 512x64 bitmap -> tiles
+			else if(offset<0x3c000/2)	/* 0x38000 - 0x3bfff */  // 512x64 bitmap. tiles
 				offset = BITSWAP24(offset,23,22,21,20,19,18,17,16,15,14,13,6,5,4,3,2,1,12,11,10,9,8,7,0);
 			else  /* 0x3c000 - 0x3dfff and 0x3e000 - 0x3ffff */  // 512x32 bitmap (x2) -> tiles
 				offset = BITSWAP24(offset,23,22,21,20,19,18,17,16,15,14,13,12,5,4,3,2,1,11,10,9,8,7,6,0);
@@ -6468,7 +6468,7 @@ INLINE UINT8 read_pixel_from_stampmap( running_machine& machine, bitmap_t* srcbi
     if (x >= srcbitmap->width) return 0;
     if (y >= srcbitmap->height) return 0;
 
-    UINT16* cacheptr = BITMAP_ADDR16( srcbitmap, y, x);
+    UINT16* cacheptr = &srcbitmap->pix16(y, x);
 
     return cacheptr[0] & 0xf;
 */
@@ -7275,7 +7275,7 @@ VIDEO_START(megadriv)
 SCREEN_UPDATE(megadriv)
 {
 	/* Copy our screen buffer here */
-	copybitmap(bitmap, render_bitmap, 0, 0, 0, 0, cliprect);
+	copybitmap(bitmap, *render_bitmap, 0, 0, 0, 0, cliprect);
 
 //  int xxx;
 	/* reference */
@@ -8553,7 +8553,7 @@ static void genesis_render_videobuffer_to_screenbuffer(running_machine &machine,
 {
 	UINT16*lineptr;
 	int x;
-	lineptr = BITMAP_ADDR16(render_bitmap, scanline, 0);
+	lineptr = &render_bitmap->pix16(scanline);
 
 	/* render 32x output to a buffer */
 	if (_32x_is_connected && (_32x_displaymode != 0))
@@ -9406,8 +9406,8 @@ SCREEN_EOF(megadriv)
 	megadrive_imode_odd_frame^=1;
 //  cputag_set_input_line(machine, "genesis_snd_z80", 0, CLEAR_LINE); // if the z80 interrupt hasn't happened by now, clear it..
 
-	if (input_port_read_safe(machine, "RESET", 0x00) & 0x01)
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_RESET, PULSE_LINE);
+	if (input_port_read_safe(screen.machine(), "RESET", 0x00) & 0x01)
+		cputag_set_input_line(screen.machine(), "maincpu", INPUT_LINE_RESET, PULSE_LINE);
 
 /*
 int megadrive_total_scanlines = 262;
@@ -9480,7 +9480,7 @@ int megadrive_z80irq_hpos = 320;
 	visarea.min_y = 0;
 	visarea.max_y = megadrive_visible_scanlines-1;
 
-	machine.primary_screen->configure(scr_width, megadrive_visible_scanlines, visarea, HZ_TO_ATTOSECONDS(megadriv_framerate));
+	screen.machine().primary_screen->configure(scr_width, megadrive_visible_scanlines, visarea, HZ_TO_ATTOSECONDS(megadriv_framerate));
 
 	if (0)
 	{
@@ -9491,7 +9491,7 @@ int megadrive_z80irq_hpos = 320;
 //      frametime = ATTOSECONDS_PER_SECOND/megadriv_framerate;
 
 		//time_elapsed_since_crap = frame_timer->time_elapsed();
-		//xxx = machine.device<cpudevice>("maincpu")->attotime_to_cycles(time_elapsed_since_crap);
+		//xxx = screen.machine().device<cpudevice>("maincpu")->attotime_to_cycles(time_elapsed_since_crap);
 		//mame_printf_debug("---------- cycles %d, %08x %08x\n",xxx, (UINT32)(time_elapsed_since_crap.attoseconds>>32),(UINT32)(time_elapsed_since_crap.attoseconds&0xffffffff));
 		//mame_printf_debug("---------- framet %d, %08x %08x\n",xxx, (UINT32)(frametime>>32),(UINT32)(frametime&0xffffffff));
 		frame_timer->adjust(attotime::zero);

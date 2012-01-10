@@ -213,7 +213,7 @@ VIDEO_START(realbrk)
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	realbrk_state *state = machine.driver_data<realbrk_state>();
 	UINT16 *spriteram16 = state->m_spriteram;
@@ -300,9 +300,9 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 				// buffer the tile and rotate it into bitmap
 				if( rot )
 				{
-					bitmap_fill( state->m_tmpbitmap0, &spritetile_clip , 0);
-					bitmap_fill( state->m_tmpbitmap1, &spritetile_clip , 0);
-					drawgfxzoom_transpen(	state->m_tmpbitmap0,&spritetile_clip,machine.gfx[gfx],
+					state->m_tmpbitmap0->fill(0, spritetile_clip );
+					state->m_tmpbitmap1->fill(0, spritetile_clip );
+					drawgfxzoom_transpen(	*state->m_tmpbitmap0,spritetile_clip,machine.gfx[gfx],
 									code++,
 									color,
 									flipx, flipy,
@@ -310,13 +310,13 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 									(rot & 1 ? scaley : scalex) << 12, (rot & 1 ? scalex : scaley) << 12,0);
 
 					// peek at the unrotated sprite
-					// copybitmap_trans( bitmap,state->m_tmpbitmap0, 0,0, 50+(x * xdim/0x10000),50+(y * ydim/0x10000), cliprect, 0 );
+					// copybitmap_trans( bitmap,*state->m_tmpbitmap0, 0,0, 50+(x * xdim/0x10000),50+(y * ydim/0x10000), cliprect, 0 );
 				}
 
 				switch( rot )
 				{
 					case 0x10: // rot 90
-						copyrozbitmap_trans( state->m_tmpbitmap1, NULL, state->m_tmpbitmap0,
+						copyrozbitmap_trans( *state->m_tmpbitmap1, state->m_tmpbitmap1->cliprect(), *state->m_tmpbitmap0,
 							(UINT32)0<<16,
 							(UINT32)16<<16,
 							0 << 16,
@@ -328,11 +328,11 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 							currx = (sx - (y+1) * ydim) / 0x10000;
 							curry = (sy + x * xdim) / 0x10000;
 
-							copybitmap_trans( bitmap,state->m_tmpbitmap1, 0,0, currx,curry, cliprect, 0 );
+							copybitmap_trans( bitmap,*state->m_tmpbitmap1, 0,0, currx,curry, cliprect, 0 );
 						break;
 
 					case 0x20: // rot 180
-						copyrozbitmap_trans( state->m_tmpbitmap1, NULL, state->m_tmpbitmap0,
+						copyrozbitmap_trans( *state->m_tmpbitmap1, state->m_tmpbitmap1->cliprect(), *state->m_tmpbitmap0,
 							(UINT32)16<<16,
 							(UINT32)16<<16,
 							-1 << 16,
@@ -344,11 +344,11 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 							currx = (sx - (x+1) * xdim) / 0x10000;
 							curry = (sy - (y+1) * ydim) / 0x10000;
 
-							copybitmap_trans( bitmap,state->m_tmpbitmap1, 0,0, currx,curry, cliprect, 0 );
+							copybitmap_trans( bitmap,*state->m_tmpbitmap1, 0,0, currx,curry, cliprect, 0 );
 						break;
 
 					case 0x30: // rot 270
-						copyrozbitmap_trans( state->m_tmpbitmap1, NULL, state->m_tmpbitmap0,
+						copyrozbitmap_trans( *state->m_tmpbitmap1, state->m_tmpbitmap1->cliprect(), *state->m_tmpbitmap0,
 							(UINT32)16<<16,
 							(UINT32)0<<16,
 							0 << 16,
@@ -360,7 +360,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 							currx = (sx + y * ydim) / 0x10000;
 							curry = (sy - (x+1) * xdim) / 0x10000;
 
-							copybitmap_trans( bitmap,state->m_tmpbitmap1, 0,0, currx,curry, cliprect, 0 );
+							copybitmap_trans( bitmap,*state->m_tmpbitmap1, 0,0, currx,curry, cliprect, 0 );
 						break;
 
 					default:
@@ -380,7 +380,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 
 /* DaiDaiKakumei */
 /* layer : 0== bghigh<spr    1== bglow<spr<bghigh     2==spr<bglow    3==boarder */
-static void dai2kaku_draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect, int layer)
+static void dai2kaku_draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect, int layer)
 {
 	realbrk_state *state = machine.driver_data<realbrk_state>();
 	UINT16 *spriteram16 = state->m_spriteram;
@@ -499,7 +499,7 @@ WRITE16_HANDLER( realbrk_vregs_w )
 
 SCREEN_UPDATE(realbrk)
 {
-	realbrk_state *state = screen->machine().driver_data<realbrk_state>();
+	realbrk_state *state = screen.machine().driver_data<realbrk_state>();
 	int layers_ctrl = -1;
 
 	tilemap_set_scrolly(state->m_tilemap_0, 0, state->m_vregs[0x0/2]);
@@ -509,29 +509,29 @@ SCREEN_UPDATE(realbrk)
 	tilemap_set_scrollx(state->m_tilemap_1, 0, state->m_vregs[0x6/2]);
 
 #ifdef MAME_DEBUG
-if ( screen->machine().input().code_pressed(KEYCODE_Z) )
+if ( screen.machine().input().code_pressed(KEYCODE_Z) )
 {
 	int msk = 0;
-	if (screen->machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-	if (screen->machine().input().code_pressed(KEYCODE_W))	msk |= 2;
-	if (screen->machine().input().code_pressed(KEYCODE_E))	msk |= 4;
-	if (screen->machine().input().code_pressed(KEYCODE_A))	msk |= 8;
+	if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+	if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+	if (screen.machine().input().code_pressed(KEYCODE_E))	msk |= 4;
+	if (screen.machine().input().code_pressed(KEYCODE_A))	msk |= 8;
 	if (msk != 0) layers_ctrl &= msk;
 }
 #endif
 
 	if (state->m_disable_video)
 	{
-		bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		return 0;
 	}
 	else
-		bitmap_fill(bitmap,cliprect,state->m_vregs[0xc/2] & 0x7fff);
+		bitmap.fill(state->m_vregs[0xc/2] & 0x7fff, cliprect);
 
 	if (layers_ctrl & 2)	tilemap_draw(bitmap,cliprect,state->m_tilemap_1,0,0);
 	if (layers_ctrl & 1)	tilemap_draw(bitmap,cliprect,state->m_tilemap_0,0,0);
 
-	if (layers_ctrl & 8)	draw_sprites(screen->machine(),bitmap,cliprect);
+	if (layers_ctrl & 8)	draw_sprites(screen.machine(),bitmap,cliprect);
 
 	if (layers_ctrl & 4)	tilemap_draw(bitmap,cliprect,state->m_tilemap_2,0,0);
 
@@ -542,7 +542,7 @@ if ( screen->machine().input().code_pressed(KEYCODE_Z) )
 /* DaiDaiKakumei */
 SCREEN_UPDATE(dai2kaku)
 {
-	realbrk_state *state = screen->machine().driver_data<realbrk_state>();
+	realbrk_state *state = screen.machine().driver_data<realbrk_state>();
 	int layers_ctrl = -1;
 	int offs, bgx0, bgy0, bgx1, bgy1;
 
@@ -580,29 +580,29 @@ SCREEN_UPDATE(dai2kaku)
 	tilemap_set_scrolly( state->m_tilemap_1, 0, bgy1 );
 
 #ifdef MAME_DEBUG
-if ( screen->machine().input().code_pressed(KEYCODE_Z) )
+if ( screen.machine().input().code_pressed(KEYCODE_Z) )
 {
 	int msk = 0;
-	if (screen->machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-	if (screen->machine().input().code_pressed(KEYCODE_W))	msk |= 2;
-	if (screen->machine().input().code_pressed(KEYCODE_E))	msk |= 4;
-	if (screen->machine().input().code_pressed(KEYCODE_A))	msk |= 8;
+	if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+	if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+	if (screen.machine().input().code_pressed(KEYCODE_E))	msk |= 4;
+	if (screen.machine().input().code_pressed(KEYCODE_A))	msk |= 8;
 	if (msk != 0) layers_ctrl &= msk;
 }
 #endif
 
 	if (state->m_disable_video)
 	{
-		bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		return 0;
 	}
 	else
-		bitmap_fill(bitmap,cliprect,state->m_vregs[0xc/2] & 0x7fff);
+		bitmap.fill(state->m_vregs[0xc/2] & 0x7fff, cliprect);
 
 
 
 	// spr 0
-	if (layers_ctrl & 8)	dai2kaku_draw_sprites(screen->machine(),bitmap,cliprect,2);
+	if (layers_ctrl & 8)	dai2kaku_draw_sprites(screen.machine(),bitmap,cliprect,2);
 
 	// bglow
 	if( state->m_vregs[8/2] & (0x8000)){
@@ -612,7 +612,7 @@ if ( screen->machine().input().code_pressed(KEYCODE_Z) )
 	}
 
 	// spr 1
-	if (layers_ctrl & 8)	dai2kaku_draw_sprites(screen->machine(),bitmap,cliprect,1);
+	if (layers_ctrl & 8)	dai2kaku_draw_sprites(screen.machine(),bitmap,cliprect,1);
 
 	// bghigh
 	if( state->m_vregs[8/2] & (0x8000)){
@@ -622,7 +622,7 @@ if ( screen->machine().input().code_pressed(KEYCODE_Z) )
 	}
 
 	// spr 2
-	if (layers_ctrl & 8)	dai2kaku_draw_sprites(screen->machine(),bitmap,cliprect,0);
+	if (layers_ctrl & 8)	dai2kaku_draw_sprites(screen.machine(),bitmap,cliprect,0);
 
 	// fix
 	if (layers_ctrl & 4)	tilemap_draw(bitmap,cliprect,state->m_tilemap_2,0,0);

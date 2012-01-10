@@ -102,7 +102,7 @@ INLINE unsigned char get_display_color (unsigned char color, int invert)
    independent of frame skip etc. */
 static SCREEN_EOF( spectrum )
 {
-	photon2_state *state = machine.driver_data<photon2_state>();
+	photon2_state *state = screen.machine().driver_data<photon2_state>();
     state->m_spectrum_frame_number++;
     if (state->m_spectrum_frame_number >= 25)
     {
@@ -111,14 +111,14 @@ static SCREEN_EOF( spectrum )
     }
 }
 
-INLINE void spectrum_plot_pixel(bitmap_t *bitmap, int x, int y, UINT32 color)
+INLINE void spectrum_plot_pixel(bitmap_t &bitmap, int x, int y, UINT32 color)
 {
-	*BITMAP_ADDR16(bitmap, y, x) = (UINT16)color;
+	bitmap.pix16(y, x) = (UINT16)color;
 }
 
 static SCREEN_UPDATE( spectrum )
 {
-	photon2_state *state = screen->machine().driver_data<photon2_state>();
+	photon2_state *state = screen.machine().driver_data<photon2_state>();
     /* for now do a full-refresh */
     int x, y, b, scrx, scry;
     unsigned short ink, pap;
@@ -127,7 +127,7 @@ static SCREEN_UPDATE( spectrum )
 
     scr=state->m_spectrum_video_ram;
 
-	bitmap_fill(bitmap, cliprect, state->m_spectrum_port_fe & 0x07);
+	bitmap.fill(state->m_spectrum_port_fe & 0x07, cliprect);
 
     for (y=0; y<192; y++)
     {

@@ -97,12 +97,12 @@ WRITE16_HANDLER( glass_blitter_w )
 					{
 						int color = *gfx;
 						gfx++;
-						*BITMAP_ADDR16(state->m_screen_bitmap, j, i) = color & 0xff;
+						state->m_screen_bitmap->pix16(j, i) = color & 0xff;
 					}
 				}
 			}
 			else
-				bitmap_fill(state->m_screen_bitmap, 0, 0);
+				state->m_screen_bitmap->fill(0);
 		}
 	}
 }
@@ -164,7 +164,7 @@ VIDEO_START( glass )
       3  | xxxxxxxx xxxxxxxx | sprite code
 */
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	glass_state *state = machine.driver_data<glass_state>();
 	int i;
@@ -197,7 +197,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( glass )
 {
-	glass_state *state = screen->machine().driver_data<glass_state>();
+	glass_state *state = screen.machine().driver_data<glass_state>();
 	/* set scroll registers */
 	tilemap_set_scrolly(state->m_pant[0], 0, state->m_vregs[0]);
 	tilemap_set_scrollx(state->m_pant[0], 0, state->m_vregs[1] + 0x04);
@@ -205,10 +205,10 @@ SCREEN_UPDATE( glass )
 	tilemap_set_scrollx(state->m_pant[1], 0, state->m_vregs[3]);
 
 	/* draw layers + sprites */
-	bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
-	copybitmap(bitmap, state->m_screen_bitmap, 0, 0, 0x18, 0x24, cliprect);
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	copybitmap(bitmap, *state->m_screen_bitmap, 0, 0, 0x18, 0x24, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_pant[1], 0, 0);
 	tilemap_draw(bitmap, cliprect, state->m_pant[0], 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

@@ -221,7 +221,7 @@ void twin16_spriteram_process( running_machine &machine )
 	state->m_need_process_spriteram = 0;
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap )
 {
 	twin16_state *state = machine.driver_data<twin16_state>();
 	const UINT16 *source = 0x1800+machine.generic.buffered_spriteram.u16 + 0x800 - 4;
@@ -303,8 +303,8 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap )
 				int sy = (flipy)?(ypos+height-1-y):(ypos+y);
 				if( sy>=16 && sy<256-16 )
 				{
-					UINT16 *dest = BITMAP_ADDR16(bitmap, sy, 0);
-					UINT8 *pdest = BITMAP_ADDR8(machine.priority_bitmap, sy, 0);
+					UINT16 *dest = &bitmap.pix16(sy);
+					UINT8 *pdest = &machine.priority_bitmap.pix8(sy);
 
 					for( x=0; x<width; x++ )
 					{
@@ -344,7 +344,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap )
 
 
 
-static void draw_layer( running_machine &machine, bitmap_t *bitmap, int opaque )
+static void draw_layer( running_machine &machine, bitmap_t &bitmap, int opaque )
 {
 	twin16_state *state = machine.driver_data<twin16_state>();
 	UINT16 *videoram = state->m_videoram;
@@ -416,9 +416,9 @@ static void draw_layer( running_machine &machine, bitmap_t *bitmap, int opaque )
 		if( ypos>=256 ) ypos -= 512;
 
 		x1 = MAX(xpos, 0);
-		x2 = MIN(xpos+7, bitmap->width-1);
+		x2 = MIN(xpos+7, bitmap.width()-1);
 		y1 = MAX(ypos, 0);
-		y2 = MIN(ypos+7, bitmap->height-1);
+		y2 = MIN(ypos+7, bitmap.height()-1);
 
 		if (x1 <= x2 && y1 <= y2)
 		{
@@ -438,8 +438,8 @@ static void draw_layer( running_machine &machine, bitmap_t *bitmap, int opaque )
 				for (y = y1; y <= y2; y++)
 				{
 					const UINT16 *gfxptr = gfx_data + ((y - ypos) ^ yxor) * 2;
-					UINT16 *dest = BITMAP_ADDR16(bitmap, y, 0);
-					UINT8 *pdest = BITMAP_ADDR8(machine.priority_bitmap, y, 0);
+					UINT16 *dest = &bitmap.pix16(y);
+					UINT8 *pdest = &machine.priority_bitmap.pix8(y);
 
 					for (x = x1; x <= x2; x++)
 					{
@@ -455,8 +455,8 @@ static void draw_layer( running_machine &machine, bitmap_t *bitmap, int opaque )
 				for (y = y1; y <= y2; y++)
 				{
 					const UINT16 *gfxptr = gfx_data + ((y - ypos) ^ yxor) * 2;
-					UINT16 *dest = BITMAP_ADDR16(bitmap, y, 0);
-					UINT8 *pdest = BITMAP_ADDR8(machine.priority_bitmap, y, 0);
+					UINT16 *dest = &bitmap.pix16(y);
+					UINT8 *pdest = &machine.priority_bitmap.pix8(y);
 
 					for (x = x1; x <= x2; x++)
 					{
@@ -522,15 +522,15 @@ VIDEO_START( twin16 )
 
 SCREEN_UPDATE( twin16 )
 {
-	twin16_state *state = screen->machine().driver_data<twin16_state>();
+	twin16_state *state = screen.machine().driver_data<twin16_state>();
 	int text_flip=0;
 	if (state->m_video_register&TWIN16_SCREEN_FLIPX) text_flip|=TILEMAP_FLIPX;
 	if (state->m_video_register&TWIN16_SCREEN_FLIPY) text_flip|=TILEMAP_FLIPY;
 
-	bitmap_fill(screen->machine().priority_bitmap,cliprect,0);
-	draw_layer( screen->machine(), bitmap, 1 );
-	draw_layer( screen->machine(), bitmap, 0 );
-	draw_sprites( screen->machine(), bitmap );
+	screen.machine().priority_bitmap.fill(0, cliprect);
+	draw_layer( screen.machine(), bitmap, 1 );
+	draw_layer( screen.machine(), bitmap, 0 );
+	draw_sprites( screen.machine(), bitmap );
 
 	if (text_flip) tilemap_set_flip(state->m_text_tilemap, text_flip);
 	tilemap_draw(bitmap, cliprect, state->m_text_tilemap, 0, 0);
@@ -539,21 +539,21 @@ SCREEN_UPDATE( twin16 )
 
 SCREEN_EOF( twin16 )
 {
-	twin16_state *state = machine.driver_data<twin16_state>();
-	twin16_set_sprite_timer(machine);
+	twin16_state *state = screen.machine().driver_data<twin16_state>();
+	twin16_set_sprite_timer(screen.machine());
 
-	if (twin16_spriteram_process_enable(machine)) {
-		if (state->m_need_process_spriteram) twin16_spriteram_process(machine);
+	if (twin16_spriteram_process_enable(screen.machine())) {
+		if (state->m_need_process_spriteram) twin16_spriteram_process(screen.machine());
 		state->m_need_process_spriteram = 1;
 
 		/* if the sprite preprocessor is used, sprite ram is copied to an external buffer first,
         as evidenced by 1-frame sprite lag in gradius2 and devilw otherwise, though there's probably
         more to it than that */
-		memcpy(&machine.generic.buffered_spriteram.u16[0x1800],state->m_sprite_buffer,0x800*sizeof(UINT16));
-		memcpy(state->m_sprite_buffer,&machine.generic.spriteram.u16[0x1800],0x800*sizeof(UINT16));
+		memcpy(&screen.machine().generic.buffered_spriteram.u16[0x1800],state->m_sprite_buffer,0x800*sizeof(UINT16));
+		memcpy(state->m_sprite_buffer,&screen.machine().generic.spriteram.u16[0x1800],0x800*sizeof(UINT16));
 	}
 	else {
-		address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
 		buffer_spriteram16_w(space,0,0,0xffff);
 	}
 }

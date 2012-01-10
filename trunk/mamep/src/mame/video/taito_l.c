@@ -243,7 +243,7 @@ void taitol_obj1b_m( running_machine &machine, int offset )
                  plgirs2 bullets and raimais big bosses.
 */
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	taitol_state *state = machine.driver_data<taitol_state>();
 	int offs;
@@ -286,7 +286,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( taitol )
 {
-	taitol_state *state = screen->machine().driver_data<taitol_state>();
+	taitol_state *state = screen.machine().driver_data<taitol_state>();
 	int dx, dy;
 
 	dx = state->m_rambanks[0xb3f4] | (state->m_rambanks[0xb3f5] << 8);
@@ -307,7 +307,7 @@ SCREEN_UPDATE( taitol )
 
 	if (state->m_cur_ctrl & 0x20)	/* display enable */
 	{
-		bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
+		screen.machine().priority_bitmap.fill(0, cliprect);
 
 		tilemap_draw(bitmap, cliprect, state->m_bg19_tilemap, 0, 0);
 
@@ -316,12 +316,12 @@ SCREEN_UPDATE( taitol )
 		else					/* split priority */
 			tilemap_draw(bitmap, cliprect, state->m_bg18_tilemap,0,1);
 
-		draw_sprites(screen->machine(), bitmap, cliprect);
+		draw_sprites(screen.machine(), bitmap, cliprect);
 
 		tilemap_draw(bitmap, cliprect, state->m_ch1a_tilemap, 0, 0);
 	}
 	else
-		bitmap_fill(bitmap, cliprect, screen->machine().pens[0]);
+		bitmap.fill(screen.machine().pens[0], cliprect);
 	return 0;
 }
 
@@ -329,7 +329,7 @@ SCREEN_UPDATE( taitol )
 
 SCREEN_EOF( taitol )
 {
-	taitol_state *state = machine.driver_data<taitol_state>();
+	taitol_state *state = screen.machine().driver_data<taitol_state>();
 	UINT8 *spriteram = state->m_rambanks + 0xb000;
 
 	memcpy(state->m_buff_spriteram, spriteram, TAITOL_SPRITERAM_SIZE);

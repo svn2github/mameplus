@@ -959,13 +959,13 @@ static void toaplan1_log_vram(running_machine &machine)
 ***************************************************************************/
 
 // custom function to draw a single sprite. needed to keep correct sprites - sprites and sprites - tilemaps priorities
-static void toaplan1_draw_sprite_custom(bitmap_t *dest_bmp,const rectangle *clip,const gfx_element *gfx,
+static void toaplan1_draw_sprite_custom(bitmap_t &dest_bmp,const rectangle &clip,const gfx_element *gfx,
 		UINT32 code,UINT32 color,int flipx,int flipy,int sx,int sy,
 		int priority)
 {
 	int pal_base = gfx->color_base + gfx->color_granularity * (color % gfx->total_colors);
 	const UINT8 *source_base = gfx_element_get_data(gfx, code % gfx->total_elements);
-	bitmap_t *priority_bitmap = gfx->machine().priority_bitmap;
+	bitmap_t &priority_bitmap = gfx->machine().priority_bitmap;
 	int sprite_screen_height = ((1<<16)*gfx->height+0x8000)>>16;
 	int sprite_screen_width = ((1<<16)*gfx->width+0x8000)>>16;
 
@@ -1001,31 +1001,28 @@ static void toaplan1_draw_sprite_custom(bitmap_t *dest_bmp,const rectangle *clip
 			y_index = 0;
 		}
 
-		if( clip )
-		{
-			if( sx < clip->min_x)
-			{ /* clip left */
-				int pixels = clip->min_x-sx;
-				sx += pixels;
-				x_index_base += pixels*dx;
-			}
-			if( sy < clip->min_y )
-			{ /* clip top */
-				int pixels = clip->min_y-sy;
-				sy += pixels;
-				y_index += pixels*dy;
-			}
-			/* NS 980211 - fixed incorrect clipping */
-			if( ex > clip->max_x+1 )
-			{ /* clip right */
-				int pixels = ex-clip->max_x-1;
-				ex -= pixels;
-			}
-			if( ey > clip->max_y+1 )
-			{ /* clip bottom */
-				int pixels = ey-clip->max_y-1;
-				ey -= pixels;
-			}
+		if( sx < clip.min_x)
+		{ /* clip left */
+			int pixels = clip.min_x-sx;
+			sx += pixels;
+			x_index_base += pixels*dx;
+		}
+		if( sy < clip.min_y )
+		{ /* clip top */
+			int pixels = clip.min_y-sy;
+			sy += pixels;
+			y_index += pixels*dy;
+		}
+		/* NS 980211 - fixed incorrect clipping */
+		if( ex > clip.max_x+1 )
+		{ /* clip right */
+			int pixels = ex-clip.max_x-1;
+			ex -= pixels;
+		}
+		if( ey > clip.max_y+1 )
+		{ /* clip bottom */
+			int pixels = ey-clip.max_y-1;
+			ey -= pixels;
 		}
 
 		if( ex>sx )
@@ -1035,8 +1032,8 @@ static void toaplan1_draw_sprite_custom(bitmap_t *dest_bmp,const rectangle *clip
 			for( y=sy; y<ey; y++ )
 			{
 				const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
-				UINT16 *dest = BITMAP_ADDR16(dest_bmp, y, 0);
-				UINT8 *pri = BITMAP_ADDR8(priority_bitmap, y, 0);
+				UINT16 *dest = &dest_bmp.pix16(y);
+				UINT8 *pri = &priority_bitmap.pix8(y);
 
 				int x, x_index = x_index_base;
 				for( x=sx; x<ex; x++ )
@@ -1058,7 +1055,7 @@ static void toaplan1_draw_sprite_custom(bitmap_t *dest_bmp,const rectangle *clip
 }
 
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	toaplan1_state *state = machine.driver_data<toaplan1_state>();
 	UINT16 *source = (UINT16 *)state->m_buffered_spriteram;
@@ -1126,7 +1123,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 }
 
 
-static void rallybik_draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int priority )
+static void rallybik_draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int priority )
 {
 	toaplan1_state *state = machine.driver_data<toaplan1_state>();
 	UINT16 *buffered_spriteram16 = state->m_buffered_spriteram;
@@ -1166,12 +1163,12 @@ static void rallybik_draw_sprites(running_machine &machine, bitmap_t *bitmap, co
 
 SCREEN_UPDATE( rallybik )
 {
-	toaplan1_state *state = screen->machine().driver_data<toaplan1_state>();
+	toaplan1_state *state = screen.machine().driver_data<toaplan1_state>();
 	int priority;
 
-	toaplan1_log_vram(screen->machine());
+	toaplan1_log_vram(screen.machine());
 
-	bitmap_fill(bitmap,cliprect,0x120);
+	bitmap.fill(0x120, cliprect);
 
 	tilemap_draw(bitmap, cliprect, state->m_pf1_tilemap, TILEMAP_DRAW_OPAQUE | 0, 0);
 	tilemap_draw(bitmap, cliprect, state->m_pf1_tilemap, TILEMAP_DRAW_OPAQUE | 1, 0);
@@ -1182,7 +1179,7 @@ SCREEN_UPDATE( rallybik )
 		tilemap_draw(bitmap, cliprect, state->m_pf3_tilemap, priority, 0);
 		tilemap_draw(bitmap, cliprect, state->m_pf2_tilemap, priority, 0);
 		tilemap_draw(bitmap, cliprect, state->m_pf1_tilemap, priority, 0);
-		rallybik_draw_sprites(screen->machine(), bitmap,cliprect,priority << 8);
+		rallybik_draw_sprites(screen.machine(), bitmap,cliprect,priority << 8);
 	}
 
 	return 0;
@@ -1190,13 +1187,13 @@ SCREEN_UPDATE( rallybik )
 
 SCREEN_UPDATE( toaplan1 )
 {
-	toaplan1_state *state = screen->machine().driver_data<toaplan1_state>();
+	toaplan1_state *state = screen.machine().driver_data<toaplan1_state>();
 	int priority;
 
-	toaplan1_log_vram(screen->machine());
+	toaplan1_log_vram(screen.machine());
 
-	bitmap_fill(screen->machine().priority_bitmap,cliprect,0);
-	bitmap_fill(bitmap,cliprect,0x120);
+	screen.machine().priority_bitmap.fill(0, cliprect);
+	bitmap.fill(0x120, cliprect);
 
 // it's really correct?
 	tilemap_draw(bitmap, cliprect, state->m_pf1_tilemap, TILEMAP_DRAW_OPAQUE | 0, 0);
@@ -1210,7 +1207,7 @@ SCREEN_UPDATE( toaplan1 )
 		tilemap_draw_primask(bitmap, cliprect, state->m_pf1_tilemap, priority, priority, 0);
 	}
 
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }
 
@@ -1222,14 +1219,14 @@ SCREEN_UPDATE( toaplan1 )
 
 SCREEN_EOF( rallybik )
 {
-	toaplan1_state *state = machine.driver_data<toaplan1_state>();
+	toaplan1_state *state = screen.machine().driver_data<toaplan1_state>();
 
 	memcpy(state->m_buffered_spriteram, state->m_spriteram, state->m_spriteram_size);
 }
 
 SCREEN_EOF( toaplan1 )
 {
-	toaplan1_state *state = machine.driver_data<toaplan1_state>();
+	toaplan1_state *state = screen.machine().driver_data<toaplan1_state>();
 
 	memcpy(state->m_buffered_spriteram, state->m_spriteram, state->m_spriteram_size);
 	memcpy(state->m_buffered_spritesizeram16, state->m_spritesizeram16, TOAPLAN1_SPRITESIZERAM_SIZE);
@@ -1237,9 +1234,9 @@ SCREEN_EOF( toaplan1 )
 
 SCREEN_EOF( samesame )
 {
-	toaplan1_state *state = machine.driver_data<toaplan1_state>();
+	toaplan1_state *state = screen.machine().driver_data<toaplan1_state>();
 
 	memcpy(state->m_buffered_spriteram, state->m_spriteram, state->m_spriteram_size);
 	memcpy(state->m_buffered_spritesizeram16, state->m_spritesizeram16, TOAPLAN1_SPRITESIZERAM_SIZE);
-	cputag_set_input_line(machine, "maincpu", M68K_IRQ_2, HOLD_LINE);	/* Frame done */
+	cputag_set_input_line(screen.machine(), "maincpu", M68K_IRQ_2, HOLD_LINE);	/* Frame done */
 }

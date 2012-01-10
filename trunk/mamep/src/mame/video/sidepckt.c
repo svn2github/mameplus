@@ -107,7 +107,7 @@ WRITE8_HANDLER( sidepckt_flipscreen_w )
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	sidepckt_state *state = machine.driver_data<sidepckt_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -143,9 +143,9 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 
 SCREEN_UPDATE( sidepckt )
 {
-	sidepckt_state *state = screen->machine().driver_data<sidepckt_state>();
+	sidepckt_state *state = screen.machine().driver_data<sidepckt_state>();
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,TILEMAP_DRAW_LAYER1,0);
-	draw_sprites(screen->machine(), bitmap,cliprect);
+	draw_sprites(screen.machine(), bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,TILEMAP_DRAW_LAYER0,0);
 	return 0;
 }

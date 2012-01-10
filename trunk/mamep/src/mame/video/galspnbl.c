@@ -29,7 +29,7 @@ PALETTE_INIT( galspnbl )
  *    4    | xxxxxxxxxxxxxxxx | x position
  *    5,6,7|                  | unused
  */
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int priority )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int priority )
 {
 	galspnbl_state *state = machine.driver_data<galspnbl_state>();
 	UINT16 *spriteram = state->m_spriteram;
@@ -84,7 +84,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 }
 
 
-static void draw_background( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_background( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	galspnbl_state *state = machine.driver_data<galspnbl_state>();
 	offs_t offs;
@@ -96,19 +96,19 @@ static void draw_background( running_machine &machine, bitmap_t *bitmap, const r
 		int y = offs >> 9;
 		int x = offs & 0x1ff;
 
-		*BITMAP_ADDR16(bitmap, y, x) = 1024 + (state->m_bgvideoram[offs] >> 1);
+		bitmap.pix16(y, x) = 1024 + (state->m_bgvideoram[offs] >> 1);
 	}
 }
 
 
 SCREEN_UPDATE( galspnbl )
 {
-	galspnbl_state *state = screen->machine().driver_data<galspnbl_state>();
+	galspnbl_state *state = screen.machine().driver_data<galspnbl_state>();
 	int offs;
 
-	draw_background(screen->machine(), bitmap, cliprect);
+	draw_background(screen.machine(), bitmap, cliprect);
 
-	draw_sprites(screen->machine(), bitmap, cliprect, 0);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0);
 
 	for (offs = 0; offs < 0x1000 / 2; offs++)
 	{
@@ -123,7 +123,7 @@ SCREEN_UPDATE( galspnbl )
 		/* What is this? A priority/half transparency marker? */
 		if (!(attr & 0x0008))
 		{
-			drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[0],
+			drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[0],
 					code,
 					color,
 					0,0,
@@ -132,6 +132,6 @@ SCREEN_UPDATE( galspnbl )
 		}
 	}
 
-	draw_sprites(screen->machine(), bitmap, cliprect, 1);
+	draw_sprites(screen.machine(), bitmap, cliprect, 1);
 	return 0;
 }

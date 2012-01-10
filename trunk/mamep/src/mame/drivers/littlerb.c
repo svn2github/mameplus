@@ -403,7 +403,7 @@ static INPUT_PORTS_START( littlerb )
 INPUT_PORTS_END
 
 
-static void draw_sprite(running_machine &machine, bitmap_t *bitmap, int xsize,int ysize, int offset, int xpos, int ypos, int pal )
+static void draw_sprite(running_machine &machine, bitmap_t &bitmap, int xsize,int ysize, int offset, int xpos, int ypos, int pal )
 {
 	littlerb_state *state = machine.driver_data<littlerb_state>();
 	UINT16* spritegfx = state->m_region4;
@@ -426,12 +426,12 @@ static void draw_sprite(running_machine &machine, bitmap_t *bitmap, int xsize,in
 
 			if ((drawxpos < 320) && (drawypos < 256) && (drawxpos >= 0) && (drawypos >=0))
 			{
-				if(pix1&0xf) *BITMAP_ADDR16(bitmap, drawypos, drawxpos) = pix1;
+				if(pix1&0xf) bitmap.pix16(drawypos, drawxpos) = pix1;
 			}
 			drawxpos++;
 			if ((drawxpos < 320) && (drawypos < 256) && (drawxpos >= 0) && (drawypos >=0))
 			{
-				if(pix2&0xf) *BITMAP_ADDR16(bitmap, drawypos, drawxpos) = pix2;
+				if(pix2&0xf) bitmap.pix16(drawypos, drawxpos) = pix2;
 			}
 
 			offset++;
@@ -444,12 +444,12 @@ static void draw_sprite(running_machine &machine, bitmap_t *bitmap, int xsize,in
 /* sprite format / offset could be completely wrong, this is just based on our (currently incorrect) vram access */
 static SCREEN_UPDATE(littlerb)
 {
-	littlerb_state *state = screen->machine().driver_data<littlerb_state>();
+	littlerb_state *state = screen.machine().driver_data<littlerb_state>();
 	int x,y,offs, code;
 	int xsize,ysize;
 	int pal;
 	UINT16* spriteregion = &state->m_region4[0x400];
-	bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
 	//printf("frame\n");
 	/* the spriteram format is something like this .. */
 	for (offs=0x26/2;offs<0xc00;offs+=6) // start at 00x26?
@@ -468,7 +468,7 @@ static SCREEN_UPDATE(littlerb)
 
 		//if (code!=0) printf("%04x %04x %04x %04x %04x %04x\n", spriteregion[offs+0], spriteregion[offs+1], spriteregion[offs+2], spriteregion[offs+3], spriteregion[offs+4], spriteregion[offs+5]);
 
-		draw_sprite(screen->machine(),bitmap,xsize,ysize,code,x-8,y-16, pal);
+		draw_sprite(screen.machine(),bitmap,xsize,ysize,code,x-8,y-16, pal);
 	}
 
 	return 0;

@@ -287,11 +287,11 @@ static VIDEO_START( trvmadns )
 
 static SCREEN_UPDATE( trvmadns )
 {
-	trvmadns_state *state = screen->machine().driver_data<trvmadns_state>();
+	trvmadns_state *state = screen.machine().driver_data<trvmadns_state>();
 	int x,y,count;
-	const gfx_element *gfx = screen->machine().gfx[0];
+	const gfx_element *gfx = screen.machine().gfx[0];
 
-	bitmap_fill(bitmap,cliprect,0xd);
+	bitmap.fill(0xd, cliprect);
 
 	count = 0;
 

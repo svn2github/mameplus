@@ -58,9 +58,9 @@ void k053250_t::device_reset()
 }
 
 // utility function to render a clipped scanline vertically or horizontally
-inline void k053250_t::pdraw_scanline32(bitmap_t *bitmap, const pen_t *palette, UINT8 *source,
-									  const rectangle *cliprect, int linepos, int scroll, int zoom,
-									  UINT32 clipmask, UINT32 wrapmask, UINT32 orientation, bitmap_t *priority, UINT8 pri)
+inline void k053250_t::pdraw_scanline32(bitmap_t &bitmap, const pen_t *palette, UINT8 *source,
+									  const rectangle &cliprect, int linepos, int scroll, int zoom,
+									  UINT32 clipmask, UINT32 wrapmask, UINT32 orientation, bitmap_t &priority, UINT8 pri)
 {
 // a sixteen-bit fixed point resolution should be adequate to our application
 #define FIXPOINT_PRECISION		16
@@ -81,14 +81,14 @@ inline void k053250_t::pdraw_scanline32(bitmap_t *bitmap, const pen_t *palette, 
 	if (!(orientation & ORIENTATION_SWAP_XY))
 	{
 		flip = orientation & ORIENTATION_FLIP_X;
-		dst_min = cliprect->min_x;
-		dst_max = cliprect->max_x;
+		dst_min = cliprect.min_x;
+		dst_max = cliprect.max_x;
 	}
 	else
 	{
 		flip = orientation & ORIENTATION_FLIP_Y;
-		dst_min = cliprect->min_y;
-		dst_max = cliprect->max_y;
+		dst_min = cliprect.min_y;
+		dst_max = cliprect.max_y;
 	}
 
 	if (clipmask)
@@ -162,16 +162,16 @@ inline void k053250_t::pdraw_scanline32(bitmap_t *bitmap, const pen_t *palette, 
 		// calculate target increment for horizontal scanlines which is exactly one
 		dst_adv = 1;
 		dst_offset = dst_length;
-		pri_base = BITMAP_ADDR8(priority, linepos, dst_start + dst_offset);
-		dst_base = BITMAP_ADDR32(bitmap, linepos, dst_start + dst_length);
+		pri_base = &priority.pix8(linepos, dst_start + dst_offset);
+		dst_base = &bitmap.pix32(linepos, dst_start + dst_length);
 	}
 	else
 	{
 		// calculate target increment for vertical scanlines which is the bitmap's pitch value
-		dst_adv = bitmap->rowpixels;
+		dst_adv = bitmap.rowpixels();
 		dst_offset= dst_length * dst_adv;
-		pri_base = BITMAP_ADDR8(priority, dst_start, linepos + dst_offset);
-		dst_base = BITMAP_ADDR32(bitmap, dst_start, linepos + dst_offset);
+		pri_base = &priority.pix8(dst_start, linepos + dst_offset);
+		dst_base = &bitmap.pix32(dst_start, linepos + dst_offset);
 	}
 
 	// generalized
@@ -221,7 +221,7 @@ inline void k053250_t::pdraw_scanline32(bitmap_t *bitmap, const pen_t *palette, 
 #undef FIXPOINT_PRECISION_HALF
 }
 
-void k053250_t::draw( bitmap_t *bitmap, const rectangle *cliprect, int colorbase, int flags, int priority )
+void k053250_t::draw( bitmap_t &bitmap, const rectangle &cliprect, int colorbase, int flags, int priority )
 {
 	UINT8 *pix_ptr;
 	const pen_t *pal_base, *pal_ptr;
@@ -236,10 +236,10 @@ void k053250_t::draw( bitmap_t *bitmap, const rectangle *cliprect, int colorbase
 	UINT8 ctrl = regs[4];									// register four is the main control register
 
 	// copy visible boundary values to more accessible locations
-	int dst_minx  = cliprect->min_x;
-	int dst_maxx  = cliprect->max_x;
-	int dst_miny  = cliprect->min_y;
-	int dst_maxy  = cliprect->max_y;
+	int dst_minx  = cliprect.min_x;
+	int dst_maxx  = cliprect.max_x;
+	int dst_miny  = cliprect.min_y;
+	int dst_maxy  = cliprect.max_y;
 
 	int orientation  = 0;	// orientation defaults to no swapping and no flipping
 	int dst_height   = 512;	// virtual bitmap height defaults to five hundred and twelve pixels
@@ -307,7 +307,7 @@ void k053250_t::draw( bitmap_t *bitmap, const rectangle *cliprect, int colorbase
 		if (orientation & ORIENTATION_FLIP_Y)
 		{
 			linedata_adv = -linedata_adv;			// traverse line RAM backward in Y flipped scenarioes
-			linedata_offs += bitmap->height - 1;	// and get info for the first line from the bottom
+			linedata_offs += bitmap.height() - 1;	// and get info for the first line from the bottom
 		}
 
 		dst_wrapmask = ~0;	// scanlines don't seem to wrap horizontally in normal orientation
@@ -334,7 +334,7 @@ void k053250_t::draw( bitmap_t *bitmap, const rectangle *cliprect, int colorbase
 		if (orientation & ORIENTATION_FLIP_X)
 		{
 			linedata_adv = -linedata_adv;		// traverse line RAM backward in X flipped scenarioes
-			linedata_offs += bitmap->width - 1;	// and get info for the first line from the bottom
+			linedata_offs += bitmap.width() - 1;	// and get info for the first line from the bottom
 		}
 
 		if (src_clipmask)

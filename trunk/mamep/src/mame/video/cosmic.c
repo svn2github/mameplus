@@ -251,7 +251,7 @@ WRITE8_HANDLER( cosmic_background_enable_w )
 }
 
 
-static void draw_bitmap( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_bitmap( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	cosmic_state *state = machine.driver_data<cosmic_state>();
 	offs_t offs;
@@ -271,9 +271,9 @@ static void draw_bitmap( running_machine &machine, bitmap_t *bitmap, const recta
 			if (data & 0x80)
 			{
 				if (flip_screen_get(machine))
-					*BITMAP_ADDR16(bitmap, 255-y, 255-x) = pen;
+					bitmap.pix16(255-y, 255-x) = pen;
 				else
-					*BITMAP_ADDR16(bitmap, y, x) = pen;
+					bitmap.pix16(y, x) = pen;
 			}
 
 			x++;
@@ -283,7 +283,7 @@ static void draw_bitmap( running_machine &machine, bitmap_t *bitmap, const recta
 }
 
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int color_mask, int extra_sprites )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int color_mask, int extra_sprites )
 {
 	cosmic_state *state = machine.driver_data<cosmic_state>();
 	int offs;
@@ -317,11 +317,11 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 }
 
 
-static void cosmica_draw_starfield( screen_device *screen, bitmap_t *bitmap, const rectangle *cliprect )
+static void cosmica_draw_starfield( screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	UINT8 y = 0;
 	UINT8 map = 0;
-	UINT8 *PROM = screen->machine().region("user2")->base();
+	UINT8 *PROM = screen.machine().region("user2")->base();
 
 	while (1)
 	{
@@ -335,10 +335,10 @@ static void cosmica_draw_starfield( screen_device *screen, bitmap_t *bitmap, con
 			UINT8 x1;
 			int hc, hb_;
 
-			if (flip_screen_get(screen->machine()))
-				x1 = x - screen->frame_number();
+			if (flip_screen_get(screen.machine()))
+				x1 = x - screen.frame_number();
 			else
-				x1 = x + screen->frame_number();
+				x1 = x + screen.frame_number();
 
 			hc  = (x1 >> 2) & 0x01;
 			hb_ = (x  >> 5) & 0x01;  /* not a bug, this one is the real x */
@@ -353,7 +353,7 @@ static void cosmica_draw_starfield( screen_device *screen, bitmap_t *bitmap, con
 				/* RGB order is reversed -- bit 7=R, 6=G, 5=B */
 				int col = (map >> 7) | ((map >> 5) & 0x02) | ((map >> 3) & 0x04);
 
-				*BITMAP_ADDR16(bitmap, y, x) = col;
+				bitmap.pix16(y, x) = col;
 			}
 
 			x++;
@@ -366,7 +366,7 @@ static void cosmica_draw_starfield( screen_device *screen, bitmap_t *bitmap, con
 }
 
 
-static void devzone_draw_grid( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void devzone_draw_grid( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	UINT8 y;
 	UINT8 *horz_PROM = machine.region("user2")->base();
@@ -407,9 +407,9 @@ static void devzone_draw_grid( running_machine &machine, bitmap_t *bitmap, const
 				{
 					/* blue */
 					if (flip_screen_get(machine))
-						*BITMAP_ADDR16(bitmap, 255-y, 255-x) = 4;
+						bitmap.pix16(255-y, 255-x) = 4;
 					else
-						*BITMAP_ADDR16(bitmap, y, x) = 4;
+						bitmap.pix16(y, x) = 4;
 				}
 
 				horz_data = (horz_data << 1) | 0x01;
@@ -424,11 +424,11 @@ static void devzone_draw_grid( running_machine &machine, bitmap_t *bitmap, const
 }
 
 
-static void nomnlnd_draw_background( screen_device *screen, bitmap_t *bitmap, const rectangle *cliprect )
+static void nomnlnd_draw_background( screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	UINT8 y = 0;
-	UINT8 water = screen->frame_number();
-	UINT8 *PROM = screen->machine().region("user2")->base();
+	UINT8 water = screen.frame_number();
+	UINT8 *PROM = screen.machine().region("user2")->base();
 
 	/* all positioning is via logic gates:
 
@@ -491,7 +491,7 @@ static void nomnlnd_draw_background( screen_device *screen, bitmap_t *bitmap, co
 				if ((!hd_) & hc_ & (!hb_))
 				{
 					offs_t offs = ((x >> 3) & 0x03) | ((y & 0x1f) << 2) |
-					              (flip_screen_get(screen->machine()) ? 0x80 : 0);
+					              (flip_screen_get(screen.machine()) ? 0x80 : 0);
 
 					UINT8 plane1 = PROM[offs         ] << (x & 0x07);
 					UINT8 plane2 = PROM[offs | 0x0400] << (x & 0x07);
@@ -525,10 +525,10 @@ static void nomnlnd_draw_background( screen_device *screen, bitmap_t *bitmap, co
 
 			if (color != 0)
 			{
-				if (flip_screen_get(screen->machine()))
-					*BITMAP_ADDR16(bitmap, 255-y, 255-x) = color;
+				if (flip_screen_get(screen.machine()))
+					bitmap.pix16(255-y, 255-x) = color;
 				else
-					*BITMAP_ADDR16(bitmap, y, x) = color;
+					bitmap.pix16(y, x) = color;
 			}
 
 			x++;
@@ -548,65 +548,65 @@ static void nomnlnd_draw_background( screen_device *screen, bitmap_t *bitmap, co
 
 SCREEN_UPDATE( cosmicg )
 {
-	bitmap_fill(bitmap, cliprect, 0);
-	draw_bitmap(screen->machine(), bitmap, cliprect);
+	bitmap.fill(0, cliprect);
+	draw_bitmap(screen.machine(), bitmap, cliprect);
 	return 0;
 }
 
 
 SCREEN_UPDATE( panic )
 {
-	bitmap_fill(bitmap, cliprect, 0);
-	draw_bitmap(screen->machine(), bitmap, cliprect);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0x07, 1);
+	bitmap.fill(0, cliprect);
+	draw_bitmap(screen.machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x07, 1);
 	return 0;
 }
 
 
 SCREEN_UPDATE( cosmica )
 {
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 	cosmica_draw_starfield(screen, bitmap, cliprect);
-	draw_bitmap(screen->machine(), bitmap, cliprect);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0x0f, 0);
+	draw_bitmap(screen.machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x0f, 0);
 	return 0;
 }
 
 
 SCREEN_UPDATE( magspot )
 {
-	bitmap_fill(bitmap, cliprect, 0);
-	draw_bitmap(screen->machine(), bitmap, cliprect);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0x07, 0);
+	bitmap.fill(0, cliprect);
+	draw_bitmap(screen.machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x07, 0);
 	return 0;
 }
 
 
 SCREEN_UPDATE( devzone )
 {
-	cosmic_state *state = screen->machine().driver_data<cosmic_state>();
+	cosmic_state *state = screen.machine().driver_data<cosmic_state>();
 
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
 	if (state->m_background_enable)
-		devzone_draw_grid(screen->machine(), bitmap, cliprect);
+		devzone_draw_grid(screen.machine(), bitmap, cliprect);
 
-	draw_bitmap(screen->machine(), bitmap, cliprect);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0x07, 0);
+	draw_bitmap(screen.machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x07, 0);
 	return 0;
 }
 
 
 SCREEN_UPDATE( nomnlnd )
 {
-	cosmic_state *state = screen->machine().driver_data<cosmic_state>();
+	cosmic_state *state = screen.machine().driver_data<cosmic_state>();
 
 	/* according to the video summation logic on pg4, the trees and river
        have the highest priority */
 
-	bitmap_fill(bitmap, cliprect, 0);
-	draw_bitmap(screen->machine(), bitmap, cliprect);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0x07, 0);
+	bitmap.fill(0, cliprect);
+	draw_bitmap(screen.machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x07, 0);
 
 	if (state->m_background_enable)
 		nomnlnd_draw_background(screen, bitmap, cliprect);

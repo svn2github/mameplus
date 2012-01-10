@@ -346,7 +346,7 @@ static VIDEO_START(fortecar)
 
 static SCREEN_UPDATE(fortecar)
 {
-	fortecar_state *state = screen->machine().driver_data<fortecar_state>();
+	fortecar_state *state = screen.machine().driver_data<fortecar_state>();
 	int x,y,count;
 	count = 0;
 
@@ -363,7 +363,7 @@ static SCREEN_UPDATE(fortecar)
 			if(bpp)
 				color&=0x3;
 
-			drawgfx_opaque(bitmap,cliprect,screen->machine().gfx[bpp],tile,color,0,0,x*8,y*8);
+			drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[bpp],tile,color,0,0,x*8,y*8);
 			count++;
 
 		}
@@ -617,8 +617,8 @@ static INPUT_PORTS_START( fortecar )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START("INPUT")	/* 8bit */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_GAMBLE_HIGH ) PORT_NAME("Red / Bet")
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_GAMBLE_LOW ) PORT_NAME("Black")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_GAMBLE_HIGH )  PORT_NAME("Red / Bet")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_GAMBLE_LOW )   PORT_NAME("Black")
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_POKER_HOLD1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_POKER_HOLD2 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_POKER_HOLD3 )
@@ -768,6 +768,6 @@ static DRIVER_INIT( fortecar )
 }
 
 
-/*     YEAR  NAME      PARENT    MACHINE   INPUT     INIT      ROT    COMPANY       FULLNAME               FLAGS             LAYOUT */
+/*     YEAR  NAME      PARENT    MACHINE   INPUT     INIT      ROT    COMPANY       FULLNAME                        FLAGS             LAYOUT */
 GAMEL( 1994, fortecar, 0,        fortecar, fortecar, fortecar, ROT0, "Fortex Ltd", "Forte Card (Ver 103, English)", GAME_NOT_WORKING, layout_fortecrd )
 GAMEL( 1994, fortecrd, fortecar, fortecar, fortecar, fortecar, ROT0, "Fortex Ltd", "Forte Card (Ver 110, Spanish)", 0,                layout_fortecrd )

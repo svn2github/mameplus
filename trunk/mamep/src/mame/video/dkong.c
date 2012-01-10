@@ -559,7 +559,7 @@ WRITE8_HANDLER( dkong_spritebank_w )
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, UINT32 mask_bank, UINT32 shift_bits)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, UINT32 mask_bank, UINT32 shift_bits)
 {
 	dkong_state *state = machine.driver_data<dkong_state>();
 	int offs;
@@ -607,9 +607,9 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
      *
      */
 
-	scanline_vf = (cliprect->max_y - 1) & 0xFF;
-	scanline_vfc = (cliprect->max_y - 1) & 0xFF;
-	scanline = cliprect->max_y & 0xFF;
+	scanline_vf = (cliprect.max_y - 1) & 0xFF;
+	scanline_vfc = (cliprect.max_y - 1) & 0xFF;
+	scanline = cliprect.max_y & 0xFF;
 
 	if (state->m_flip)
 	{
@@ -805,7 +805,7 @@ static void radarscp_step(running_machine &machine, int line_cnt)
 
 }
 
-static void radarscp_draw_background(running_machine &machine, dkong_state *state, bitmap_t *bitmap, const rectangle *cliprect)
+static void radarscp_draw_background(running_machine &machine, dkong_state *state, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	const UINT8 	*htable = NULL;
 	int 			x,y;
@@ -815,18 +815,18 @@ static void radarscp_draw_background(running_machine &machine, dkong_state *stat
 	if (state->m_hardware_type == HARDWARE_TRS01)
 		htable = state->m_gfx4;
 
-	y = cliprect->min_y;
-	while (y <= cliprect->max_y)
+	y = cliprect.min_y;
+	while (y <= cliprect.max_y)
 	{
-		x = cliprect->min_x;
-		while (x <= cliprect->max_x)
+		x = cliprect.min_x;
+		while (x <= cliprect.max_x)
 		{
-			pixel = BITMAP_ADDR16(bitmap, y, x);
+			pixel = &bitmap.pix16(y, x);
 			draw_ok = !(*pixel & 0x01) && !(*pixel & 0x02);
 			if (state->m_hardware_type == HARDWARE_TRS01) /*  Check again from schematics */
 				draw_ok = draw_ok  && !((htable[ (!state->m_rflip_sig<<7) | (x>>2)] >>2) & 0x01);
 			if (draw_ok)
-				*pixel = *(BITMAP_ADDR16(state->m_bg_bits, y, x));
+				*pixel = *(&state->m_bg_bits->pix16(y, x));
 			x++;
 		}
 		y++;
@@ -850,7 +850,7 @@ static void radarscp_scanline(running_machine &machine, int scanline)
 	x = 0;
 	while (x < machine.primary_screen->width())
 	{
-		pixel = BITMAP_ADDR16(state->m_bg_bits, y, x);
+		pixel = &state->m_bg_bits->pix16(y, x);
 		if ((state->m_counter < table_len) && (x == 4 * (table[state->m_counter|offset] & 0x7f)))
 		{
 			if ( state->m_star_ff && (table[state->m_counter|offset] & 0x80) )	/* star */
@@ -973,9 +973,9 @@ VIDEO_START( dkong )
 
 SCREEN_UPDATE( dkong )
 {
-	dkong_state *state = screen->machine().driver_data<dkong_state>();
+	dkong_state *state = screen.machine().driver_data<dkong_state>();
 
-	tilemap_set_flip_all(screen->machine(), state->m_flip ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
+	tilemap_set_flip_all(screen.machine(), state->m_flip ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_flip ?  0 : 0);
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_flip ? -8 : 0);
 
@@ -983,15 +983,15 @@ SCREEN_UPDATE( dkong )
 	{
 		case HARDWARE_TKG02:
 		case HARDWARE_TKG04:
-			check_palette(screen->machine());
+			check_palette(screen.machine());
 			tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-			draw_sprites(screen->machine(), bitmap, cliprect, 0x40, 1);
+			draw_sprites(screen.machine(), bitmap, cliprect, 0x40, 1);
 			break;
 		case HARDWARE_TRS01:
 		case HARDWARE_TRS02:
 			tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-			draw_sprites(screen->machine(), bitmap, cliprect, 0x40, 1);
-			radarscp_draw_background(screen->machine(), state, bitmap, cliprect);
+			draw_sprites(screen.machine(), bitmap, cliprect, 0x40, 1);
+			radarscp_draw_background(screen.machine(), state, bitmap, cliprect);
 			break;
 		default:
 			fatalerror("Invalid hardware type in dkong_video_update");
@@ -1001,7 +1001,7 @@ SCREEN_UPDATE( dkong )
 
 SCREEN_UPDATE( pestplce )
 {
-	dkong_state *state = screen->machine().driver_data<dkong_state>();
+	dkong_state *state = screen.machine().driver_data<dkong_state>();
 	int offs;
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
@@ -1011,7 +1011,7 @@ SCREEN_UPDATE( pestplce )
 	{
 		if (state->m_sprite_ram[offs])
 		{
-			drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[1],
+			drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],
 					state->m_sprite_ram[offs + 2],
 					(state->m_sprite_ram[offs + 1] & 0x0f) + 16 * state->m_palette_bank,
 					state->m_sprite_ram[offs + 1] & 0x80,state->m_sprite_ram[offs + 1] & 0x40,
@@ -1023,11 +1023,11 @@ SCREEN_UPDATE( pestplce )
 
 SCREEN_UPDATE( spclforc )
 {
-	dkong_state *state = screen->machine().driver_data<dkong_state>();
+	dkong_state *state = screen.machine().driver_data<dkong_state>();
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
 	/* it uses sprite_ram[offs + 2] & 0x10 for sprite bank */
-	draw_sprites(screen->machine(), bitmap, cliprect, 0x10, 3);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x10, 3);
 	return 0;
 }

@@ -218,7 +218,7 @@ WRITE32_HANDLER( video_dma_address_w )
 	COMBINE_DATA( &state->m_video_dma_address );
 }
 
-static void drawgfx_blend(bitmap_t *bitmap, const rectangle *cliprect, const gfx_element *gfx, UINT32 code, UINT32 color, int flipx, int flipy, int sx, int sy)
+static void drawgfx_blend(bitmap_t &bitmap, const rectangle &cliprect, const gfx_element *gfx, UINT32 code, UINT32 color, int flipx, int flipy, int sx, int sy)
 {
 	seibuspi_state *state = gfx->machine().driver_data<seibuspi_state>();
 	const pen_t *pens = &gfx->machine().pens[gfx->color_base];
@@ -237,11 +237,11 @@ static void drawgfx_blend(bitmap_t *bitmap, const rectangle *cliprect, const gfx
 	y1 = sy;
 	y2 = sy + height - 1;
 
-	if (x1 > cliprect->max_x || x2 < cliprect->min_x)
+	if (x1 > cliprect.max_x || x2 < cliprect.min_x)
 	{
 		return;
 	}
-	if (y1 > cliprect->max_y || y2 < cliprect->min_y)
+	if (y1 > cliprect.max_y || y2 < cliprect.min_y)
 	{
 		return;
 	}
@@ -261,39 +261,39 @@ static void drawgfx_blend(bitmap_t *bitmap, const rectangle *cliprect, const gfx
 	}
 
 	// clip x
-	if (x1 < cliprect->min_x)
+	if (x1 < cliprect.min_x)
 	{
 		if (flipx)
 		{
-			px = width - (cliprect->min_x - x1) - 1;
+			px = width - (cliprect.min_x - x1) - 1;
 		}
 		else
 		{
-			px = (cliprect->min_x - x1);
+			px = (cliprect.min_x - x1);
 		}
-		x1 = cliprect->min_x;
+		x1 = cliprect.min_x;
 	}
-	if (x2 > cliprect->max_x)
+	if (x2 > cliprect.max_x)
 	{
-		x2 = cliprect->max_x;
+		x2 = cliprect.max_x;
 	}
 
 	// clip y
-	if (y1 < cliprect->min_y)
+	if (y1 < cliprect.min_y)
 	{
 		if (flipy)
 		{
-			py = height - (cliprect->min_y - y1) - 1;
+			py = height - (cliprect.min_y - y1) - 1;
 		}
 		else
 		{
-			py = (cliprect->min_y - y1);
+			py = (cliprect.min_y - y1);
 		}
-		y1 = cliprect->min_y;
+		y1 = cliprect.min_y;
 	}
-	if (y2 > cliprect->max_y)
+	if (y2 > cliprect.max_y)
 	{
-		y2 = cliprect->max_y;
+		y2 = cliprect.max_y;
 	}
 
 	if (gfx->total_elements <= 0x10000)
@@ -306,7 +306,7 @@ static void drawgfx_blend(bitmap_t *bitmap, const rectangle *cliprect, const gfx
 	// draw
 	for (j=y1; j <= y2; j++)
 	{
-		UINT32 *p = BITMAP_ADDR32(bitmap, j, 0);
+		UINT32 *p = &bitmap.pix32(j);
 		UINT8 trans_pen = (1 << state->m_sprite_bpp) - 1;
 		int dp_i = (py * width) + px;
 		py += yd;
@@ -343,7 +343,7 @@ static const int sprite_ytable[2][8] =
 	{ 7*16, 6*16, 5*16, 4*16, 3*16, 2*16, 1*16, 0*16 }
 };
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int pri_mask)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int pri_mask)
 {
 	seibuspi_state *state = machine.driver_data<seibuspi_state>();
 	INT16 xpos, ypos;
@@ -558,7 +558,7 @@ static void set_scroll(tilemap_t *layer, int scroll)
 #endif
 
 
-static void combine_tilemap(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, tilemap_t *tile, int x, int y, int opaque, INT16 *rowscroll)
+static void combine_tilemap(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, tilemap_t *tile, int x, int y, int opaque, INT16 *rowscroll)
 {
 	seibuspi_state *state = machine.driver_data<seibuspi_state>();
 	int i,j;
@@ -566,15 +566,13 @@ static void combine_tilemap(running_machine &machine, bitmap_t *bitmap, const re
 	UINT32 *d;
 	UINT8 *t;
 	UINT32 xscroll_mask, yscroll_mask;
-	bitmap_t *pen_bitmap;
-	bitmap_t *flags_bitmap;
 
-	pen_bitmap = tilemap_get_pixmap(tile);
-	flags_bitmap = tilemap_get_flagsmap(tile);
-	xscroll_mask = pen_bitmap->width - 1;
-	yscroll_mask = pen_bitmap->height - 1;
+	bitmap_t &pen_bitmap = tilemap_get_pixmap(tile);
+	bitmap_t &flags_bitmap = tilemap_get_flagsmap(tile);
+	xscroll_mask = pen_bitmap.width() - 1;
+	yscroll_mask = pen_bitmap.height() - 1;
 
-	for (j=cliprect->min_y; j <= cliprect->max_y; j++)
+	for (j=cliprect.min_y; j <= cliprect.max_y; j++)
 	{
 		int rx = x;
 		if (rowscroll)
@@ -582,10 +580,10 @@ static void combine_tilemap(running_machine &machine, bitmap_t *bitmap, const re
 			rx += rowscroll[(j+y) & yscroll_mask];
 		}
 
-		d = BITMAP_ADDR32(bitmap, j, 0);
-		s = BITMAP_ADDR16(pen_bitmap, (j+y) & yscroll_mask, 0);
-		t = BITMAP_ADDR8(flags_bitmap, (j+y) & yscroll_mask, 0);
-		for (i=cliprect->min_x+rx; i <= cliprect->max_x+rx; i++)
+		d = &bitmap.pix32(j);
+		s = &pen_bitmap.pix16((j+y) & yscroll_mask);
+		t = &flags_bitmap.pix8((j+y) & yscroll_mask);
+		for (i=cliprect.min_x+rx; i <= cliprect.max_x+rx; i++)
 		{
 			if (opaque || (t[i & xscroll_mask] & (TILEMAP_PIXEL_LAYER0 | TILEMAP_PIXEL_LAYER1)))
 			{
@@ -609,7 +607,7 @@ static void combine_tilemap(running_machine &machine, bitmap_t *bitmap, const re
 
 SCREEN_UPDATE( spi )
 {
-	seibuspi_state *state = screen->machine().driver_data<seibuspi_state>();
+	seibuspi_state *state = screen.machine().driver_data<seibuspi_state>();
 	INT16 *back_rowscroll, *mid_rowscroll, *fore_rowscroll;
 	if( state->m_layer_bank & 0x80000000 ) {
 		back_rowscroll	= (INT16*)&state->m_tilemap_ram[0x200];
@@ -622,32 +620,32 @@ SCREEN_UPDATE( spi )
 	}
 
 	if( state->m_layer_enable & 0x1 )
-		bitmap_fill(bitmap, cliprect, 0);
+		bitmap.fill(0, cliprect);
 
 	if (!(state->m_layer_enable & 0x1))
-		combine_tilemap(screen->machine(), bitmap, cliprect, state->m_back_layer, state->m_spi_scrollram[0] & 0xffff, (state->m_spi_scrollram[0] >> 16) & 0xffff, 1, back_rowscroll);
+		combine_tilemap(screen.machine(), bitmap, cliprect, state->m_back_layer, state->m_spi_scrollram[0] & 0xffff, (state->m_spi_scrollram[0] >> 16) & 0xffff, 1, back_rowscroll);
 
-	draw_sprites(screen->machine(), bitmap, cliprect, 0);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0);
 
 	// if fore layer is enabled, draw priority 1 sprites behind mid layer
 	if (!(state->m_layer_enable & 0x4))
-		draw_sprites(screen->machine(), bitmap, cliprect, 1);
+		draw_sprites(screen.machine(), bitmap, cliprect, 1);
 
 	if (!(state->m_layer_enable & 0x2))
-		combine_tilemap(screen->machine(), bitmap, cliprect, state->m_mid_layer, state->m_spi_scrollram[1] & 0xffff, (state->m_spi_scrollram[1] >> 16) & 0xffff, 0, mid_rowscroll);
+		combine_tilemap(screen.machine(), bitmap, cliprect, state->m_mid_layer, state->m_spi_scrollram[1] & 0xffff, (state->m_spi_scrollram[1] >> 16) & 0xffff, 0, mid_rowscroll);
 
 	// if fore layer is disabled, draw priority 1 sprites above mid layer
 	if ((state->m_layer_enable & 0x4))
-		draw_sprites(screen->machine(), bitmap, cliprect, 1);
+		draw_sprites(screen.machine(), bitmap, cliprect, 1);
 
-	draw_sprites(screen->machine(), bitmap, cliprect, 2);
+	draw_sprites(screen.machine(), bitmap, cliprect, 2);
 
 	if (!(state->m_layer_enable & 0x4))
-		combine_tilemap(screen->machine(), bitmap, cliprect, state->m_fore_layer, state->m_spi_scrollram[2] & 0xffff, (state->m_spi_scrollram[2] >> 16) & 0xffff, 0, fore_rowscroll);
+		combine_tilemap(screen.machine(), bitmap, cliprect, state->m_fore_layer, state->m_spi_scrollram[2] & 0xffff, (state->m_spi_scrollram[2] >> 16) & 0xffff, 0, fore_rowscroll);
 
-	draw_sprites(screen->machine(), bitmap, cliprect, 3);
+	draw_sprites(screen.machine(), bitmap, cliprect, 3);
 
-	combine_tilemap(screen->machine(), bitmap, cliprect, state->m_text_layer, 0, 0, 0, NULL);
+	combine_tilemap(screen.machine(), bitmap, cliprect, state->m_text_layer, 0, 0, 0, NULL);
 	return 0;
 }
 
@@ -672,10 +670,10 @@ VIDEO_START( sys386f2 )
 
 SCREEN_UPDATE( sys386f2 )
 {
-	bitmap_fill(bitmap, cliprect, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect, 1);
-	draw_sprites(screen->machine(), bitmap, cliprect, 2);
-	draw_sprites(screen->machine(), bitmap, cliprect, 3);
+	bitmap.fill(0, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0);
+	draw_sprites(screen.machine(), bitmap, cliprect, 1);
+	draw_sprites(screen.machine(), bitmap, cliprect, 2);
+	draw_sprites(screen.machine(), bitmap, cliprect, 3);
 	return 0;
 }

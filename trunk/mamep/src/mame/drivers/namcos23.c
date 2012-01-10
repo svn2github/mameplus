@@ -1655,7 +1655,7 @@ static void render_scanline(void *dest, INT32 scanline, const poly_extent *exten
 	float dv = extent->param[2].dpdx;
 	float dl = extent->param[3].dpdx;
 	bitmap_t *bitmap = (bitmap_t *)dest;
-	UINT32 *img = BITMAP_ADDR32(bitmap, scanline, extent->startx);
+	UINT32 *img = &bitmap->pix32(scanline, extent->startx);
 
 	for(int x = extent->startx; x < extent->stopx; x++) {
 		float z = w ? 1/w : 0;
@@ -2064,7 +2064,7 @@ static int render_poly_compare(const void *i1, const void *i2)
 	return p1->zkey < p2->zkey ? 1 : p1->zkey > p2->zkey ? -1 : 0;
 }
 
-static void render_flush(running_machine &machine, bitmap_t *bitmap)
+static void render_flush(running_machine &machine, bitmap_t &bitmap)
 {
 	namcos23_state *state = machine.driver_data<namcos23_state>();
 	render_t &render = state->m_render;
@@ -2077,18 +2077,18 @@ static void render_flush(running_machine &machine, bitmap_t *bitmap)
 
 	qsort(render.poly_order, render.poly_count, sizeof(namcos23_poly_entry *), render_poly_compare);
 
-	const static rectangle scissor = { 0, 639, 0, 479 };
+	const static rectangle scissor(0, 639, 0, 479);
 
 	for(int i=0; i<render.poly_count; i++) {
 		const namcos23_poly_entry *p = render.poly_order[i];
 		namcos23_render_data *rd = (namcos23_render_data *)poly_get_extra_data(render.polymgr);
 		*rd = p->rd;
-		poly_render_triangle_fan(render.polymgr, bitmap, &scissor, render_scanline, 4, p->vertex_count, p->pv);
+		poly_render_triangle_fan(render.polymgr, &bitmap, scissor, render_scanline, 4, p->vertex_count, p->pv);
 	}
 	render.poly_count = 0;
 }
 
-static void render_run(running_machine &machine, bitmap_t *bitmap)
+static void render_run(running_machine &machine, bitmap_t &bitmap)
 {
 	namcos23_state *state = machine.driver_data<namcos23_state>();
 	render_t &render = state->m_render;
@@ -2135,12 +2135,12 @@ static VIDEO_START( ss23 )
 
 static SCREEN_UPDATE( ss23 )
 {
-	namcos23_state *state = screen->machine().driver_data<namcos23_state>();
-	bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+	namcos23_state *state = screen.machine().driver_data<namcos23_state>();
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
 
-	render_run( screen->machine(), bitmap );
+	render_run( screen.machine(), bitmap );
 
-	gfx_element *gfx = screen->machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 	memset(gfx->dirty, 1, gfx->total_elements);
 
 	tilemap_draw( bitmap, cliprect, state->m_bgtilemap, 0/*flags*/, 0/*priority*/ ); /* opaque */

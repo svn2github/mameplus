@@ -71,9 +71,9 @@ static VIDEO_START( barricad )
 
 static SCREEN_UPDATE( hitme )
 {
-	hitme_state *state = screen->machine().driver_data<hitme_state>();
+	hitme_state *state = screen.machine().driver_data<hitme_state>();
 	/* the card width resistor comes from an input port, scaled to the range 0-25 kOhms */
-	double width_resist = input_port_read(screen->machine(), "WIDTH") * 25000 / 100;
+	double width_resist = input_port_read(screen.machine(), "WIDTH") * 25000 / 100;
 	/* this triggers a oneshot for the following length of time */
 	double width_duration = 0.45 * 1000e-12 * width_resist;
 	/* the dot clock runs at the standard horizontal frequency * 320+16 clocks per scanline */
@@ -89,7 +89,7 @@ static SCREEN_UPDATE( hitme )
 	/* now loop over and invert anything */
 	for (y = 0; y < 19; y++)
 	{
-		int dy = bitmap->rowpixels;
+		int dy = bitmap.rowpixels();
 		for (inv = x = 0; x < 40; x++, offs++)
 		{
 			/* if the high bit is set, reset the oneshot */
@@ -99,7 +99,7 @@ static SCREEN_UPDATE( hitme )
 			/* invert pixels until we run out */
 			for (xx = 0; xx < 8 && inv; xx++, inv--)
 			{
-				UINT16 *dest = BITMAP_ADDR16(bitmap, y * 10, x * 8 + xx);
+				UINT16 *dest = &bitmap.pix16(y * 10, x * 8 + xx);
 				dest[0 * dy] ^= 1;
 				dest[1 * dy] ^= 1;
 				dest[2 * dy] ^= 1;
@@ -119,7 +119,7 @@ static SCREEN_UPDATE( hitme )
 
 static SCREEN_UPDATE( barricad )
 {
-	hitme_state *state = screen->machine().driver_data<hitme_state>();
+	hitme_state *state = screen.machine().driver_data<hitme_state>();
 	tilemap_draw(bitmap, cliprect, state->m_tilemap, 0, 0);
 	return 0;
 }

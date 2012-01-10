@@ -68,14 +68,14 @@ VIDEO_START( scontra )
 
 SCREEN_UPDATE( scontra )
 {
-	thunderx_state *state = screen->machine().driver_data<thunderx_state>();
+	thunderx_state *state = screen.machine().driver_data<thunderx_state>();
 
 	k052109_tilemap_update(state->m_k052109);
 
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	/* The background color is always from layer 1 - but it's always black anyway */
-//  bitmap_fill(bitmap,cliprect,16 * state->m_layer_colorbase[1]);
+//  bitmap.fill(16 * state->m_layer_colorbase[1], cliprect);
 	if (state->m_priority)
 	{
 		k052109_tilemap_draw(state->m_k052109, bitmap, cliprect, 2, TILEMAP_DRAW_OPAQUE, 1);

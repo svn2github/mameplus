@@ -63,7 +63,7 @@ spriteram is being tested, take no notice of that.]
 ********************************************************/
 
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, const int *primasks, int y_offs )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, const int *primasks, int y_offs )
 {
 	othunder_state *state = machine.driver_data<othunder_state>();
 	UINT16 *spritemap = (UINT16 *)machine.region("user1")->base();
@@ -202,7 +202,7 @@ logerror("Sprite number %04x had %02x invalid chunks\n",tilenum,bad_chunks);
 
 SCREEN_UPDATE( othunder )
 {
-	othunder_state *state = screen->machine().driver_data<othunder_state>();
+	othunder_state *state = screen.machine().driver_data<othunder_state>();
 	int layer[3];
 
 	tc0100scn_tilemap_update(state->m_tc0100scn);
@@ -211,10 +211,10 @@ SCREEN_UPDATE( othunder )
 	layer[1] = layer[0] ^ 1;
 	layer[2] = 2;
 
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	/* Ensure screen blanked even when bottom layer not drawn due to disable bit */
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
 	tc0100scn_tilemap_draw(state->m_tc0100scn, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 1);
 	tc0100scn_tilemap_draw(state->m_tc0100scn, bitmap, cliprect, layer[1], 0, 2);
@@ -223,7 +223,7 @@ SCREEN_UPDATE( othunder )
 	/* Sprites can be under/over the layer below text layer */
 	{
 		static const int primasks[2] = {0xf0, 0xfc};
-		draw_sprites(screen->machine(), bitmap, cliprect, primasks, 3);
+		draw_sprites(screen.machine(), bitmap, cliprect, primasks, 3);
 	}
 
 	return 0;

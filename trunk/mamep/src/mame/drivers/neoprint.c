@@ -53,7 +53,7 @@ xxxx xxxx xxxx xxxx [2] scroll Y, signed
 ---- ---- --?? ??xx [6] map register
 */
 
-static void draw_layer(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect,int layer,int data_shift)
+static void draw_layer(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect,int layer,int data_shift)
 {
 	neoprint_state *state = machine.driver_data<neoprint_state>();
 	int i, y, x;
@@ -93,21 +93,21 @@ static void draw_layer(running_machine &machine, bitmap_t *bitmap,const rectangl
 
 SCREEN_UPDATE(neoprint)
 {
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
-	draw_layer(screen->machine(),bitmap,cliprect,1,2);
-	draw_layer(screen->machine(),bitmap,cliprect,0,2);
+	draw_layer(screen.machine(),bitmap,cliprect,1,2);
+	draw_layer(screen.machine(),bitmap,cliprect,0,2);
 
 	return 0;
 }
 
 SCREEN_UPDATE(nprsp)
 {
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
-	draw_layer(screen->machine(),bitmap,cliprect,1,0);
-	draw_layer(screen->machine(),bitmap,cliprect,2,0);
-	draw_layer(screen->machine(),bitmap,cliprect,0,0);
+	draw_layer(screen.machine(),bitmap,cliprect,1,0);
+	draw_layer(screen.machine(),bitmap,cliprect,2,0);
+	draw_layer(screen.machine(),bitmap,cliprect,0,0);
 
 	return 0;
 }

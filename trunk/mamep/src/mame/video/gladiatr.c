@@ -200,7 +200,7 @@ WRITE8_HANDLER( gladiatr_video_registers_w )
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	gladiatr_state *state = machine.driver_data<gladiatr_state>();
 	int offs;
@@ -253,28 +253,27 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( ppking )
 {
-	gladiatr_state *state = screen->machine().driver_data<gladiatr_state>();
+	gladiatr_state *state = screen.machine().driver_data<gladiatr_state>();
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,0,0);
-	draw_sprites(screen->machine(), bitmap,cliprect);
+	draw_sprites(screen.machine(), bitmap,cliprect);
 
 	/* the fg layer just selects the upper palette bank on underlying pixels */
 	{
-		bitmap_t *flagsbitmap;
-		int sx = cliprect->min_x;
-		int sy = cliprect->min_y;
+		int sx = cliprect.min_x;
+		int sy = cliprect.min_y;
 
 		tilemap_get_pixmap( state->m_fg_tilemap );
-		flagsbitmap = tilemap_get_flagsmap( state->m_fg_tilemap );
+		bitmap_t &flagsbitmap = tilemap_get_flagsmap( state->m_fg_tilemap );
 
-		while( sy <= cliprect->max_y )
+		while( sy <= cliprect.max_y )
 		{
 			int x = sx;
 			int y = (sy + state->m_fg_scrolly) & 0x1ff;
 
-			UINT16 *dest = BITMAP_ADDR16(bitmap, sy, sx);
-			while( x <= cliprect->max_x )
+			UINT16 *dest = &bitmap.pix16(sy, sx);
+			while( x <= cliprect.max_x )
 			{
-				if( *BITMAP_ADDR8(flagsbitmap, y, x)&TILEMAP_PIXEL_LAYER0 )
+				if( flagsbitmap.pix8(y, x)&TILEMAP_PIXEL_LAYER0 )
 				{
 					*dest += 512;
 				}
@@ -289,25 +288,25 @@ SCREEN_UPDATE( ppking )
 
 SCREEN_UPDATE( gladiatr )
 {
-	gladiatr_state *state = screen->machine().driver_data<gladiatr_state>();
+	gladiatr_state *state = screen.machine().driver_data<gladiatr_state>();
 	if (state->m_video_attributes & 0x20)
 	{
 		int scroll;
 
 		scroll = state->m_bg_scrollx + ((state->m_video_attributes & 0x04) << 6);
-		tilemap_set_scrollx(state->m_bg_tilemap, 0, scroll ^ (flip_screen_get(screen->machine()) ? 0x0f : 0));
+		tilemap_set_scrollx(state->m_bg_tilemap, 0, scroll ^ (flip_screen_get(screen.machine()) ? 0x0f : 0));
 		scroll = state->m_fg_scrollx + ((state->m_video_attributes & 0x08) << 5);
-		tilemap_set_scrollx(state->m_fg_tilemap, 0, scroll ^ (flip_screen_get(screen->machine()) ? 0x0f : 0));
+		tilemap_set_scrollx(state->m_fg_tilemap, 0, scroll ^ (flip_screen_get(screen.machine()) ? 0x0f : 0));
 
 		// always 0 anyway
 		tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_bg_scrolly);
 		tilemap_set_scrolly(state->m_fg_tilemap, 0, state->m_fg_scrolly);
 
 		tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,0,0);
-		draw_sprites(screen->machine(), bitmap,cliprect);
+		draw_sprites(screen.machine(), bitmap,cliprect);
 		tilemap_draw(bitmap,cliprect,state->m_fg_tilemap,0,0);
 	}
 	else
-		bitmap_fill( bitmap, cliprect , get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect );
 	return 0;
 }

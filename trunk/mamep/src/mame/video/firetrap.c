@@ -200,7 +200,7 @@ WRITE8_HANDLER( firetrap_bg2_scrolly_w )
 
 ***************************************************************************/
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	firetrap_state *state = machine.driver_data<firetrap_state>();
 	int offs;
@@ -273,10 +273,10 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( firetrap )
 {
-	firetrap_state *state = screen->machine().driver_data<firetrap_state>();
+	firetrap_state *state = screen.machine().driver_data<firetrap_state>();
 	tilemap_draw(bitmap, cliprect, state->m_bg2_tilemap, 0, 0);
 	tilemap_draw(bitmap, cliprect, state->m_bg1_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	return 0;
 }

@@ -128,7 +128,7 @@ o fedcba9876543210
 
 3 xxxx............ color+priority, other bits unknown
 */
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int foreground )
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int foreground )
 {
 	prehisle_state *state = machine.driver_data<prehisle_state>();
 	UINT16 *spriteram16 = state->m_spriteram;
@@ -166,12 +166,12 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( prehisle )
 {
-	prehisle_state *state = screen->machine().driver_data<prehisle_state>();
+	prehisle_state *state = screen.machine().driver_data<prehisle_state>();
 
 	tilemap_draw(bitmap, cliprect, state->m_bg2_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect, 1);
+	draw_sprites(screen.machine(), bitmap, cliprect, 1);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	return 0;
 }

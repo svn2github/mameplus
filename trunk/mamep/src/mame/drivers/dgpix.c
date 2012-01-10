@@ -287,14 +287,14 @@ static VIDEO_START( dgpix )
 
 static SCREEN_UPDATE( dgpix )
 {
-	dgpix_state *state = screen->machine().driver_data<dgpix_state>();
+	dgpix_state *state = screen.machine().driver_data<dgpix_state>();
 	int y;
 
 	for (y = 0; y < 240; y++)
 	{
 		int x;
 		UINT32 *src = &state->m_vram[(state->m_vbuffer ? 0 : 0x10000) | (y << 8)];
-		UINT16 *dest = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *dest = &bitmap.pix16(y);
 
 		for (x = 0; x < 320; x += 2)
 		{

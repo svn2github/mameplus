@@ -105,7 +105,7 @@ WRITE16_HANDLER( cabal_text_videoram16_w )
 
 ********************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	cabal_state *state = machine.driver_data<cabal_state>();
 	int offs,data0,data1,data2;
@@ -148,9 +148,9 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( cabal )
 {
-	cabal_state *state = screen->machine().driver_data<cabal_state>();
+	cabal_state *state = screen.machine().driver_data<cabal_state>();
 	tilemap_draw(bitmap,cliprect,state->m_background_layer,TILEMAP_DRAW_OPAQUE,0);
-	draw_sprites(screen->machine(),bitmap,cliprect);
+	draw_sprites(screen.machine(),bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,state->m_text_layer,0,0);
 	return 0;
 }

@@ -212,11 +212,11 @@ static VIDEO_START(roul)
 
 static SCREEN_UPDATE(roul)
 {
-	roul_state *state = screen->machine().driver_data<roul_state>();
+	roul_state *state = screen.machine().driver_data<roul_state>();
 	int i,j;
 	for (i = 0; i < 256; i++)
 		for (j = 0; j < 256; j++)
-			*BITMAP_ADDR16(bitmap, j, i) = state->m_videobuf[j * 256 + 255 - i];
+			bitmap.pix16(j, i) = state->m_videobuf[j * 256 + 255 - i];
 	return 0;
 }
 

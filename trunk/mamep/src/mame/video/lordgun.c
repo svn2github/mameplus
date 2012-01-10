@@ -243,7 +243,7 @@ void lordgun_update_gun(running_machine &machine, int i)
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	lordgun_state *state = machine.driver_data<lordgun_state>();
 	UINT16 *s		=	state->m_spriteram;
@@ -327,26 +327,26 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( lordgun )
 {
-	lordgun_state *state = screen->machine().driver_data<lordgun_state>();
+	lordgun_state *state = screen.machine().driver_data<lordgun_state>();
 	int layers_ctrl = -1;
 
 #ifdef MAME_DEBUG
-	if (screen->machine().input().code_pressed(KEYCODE_Z))
+	if (screen.machine().input().code_pressed(KEYCODE_Z))
 	{
 		int msk = 0;
 
-		if (screen->machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-		if (screen->machine().input().code_pressed(KEYCODE_W))	msk |= 2;
-		if (screen->machine().input().code_pressed(KEYCODE_E))	msk |= 4;
-		if (screen->machine().input().code_pressed(KEYCODE_R))	msk |= 8;
-		if (screen->machine().input().code_pressed(KEYCODE_A))	msk |= 16;
+		if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+		if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+		if (screen.machine().input().code_pressed(KEYCODE_E))	msk |= 4;
+		if (screen.machine().input().code_pressed(KEYCODE_R))	msk |= 8;
+		if (screen.machine().input().code_pressed(KEYCODE_A))	msk |= 16;
 		if (msk != 0) layers_ctrl &= msk;
 	}
 #endif
 
 	if (state->m_whitescreen)
 	{
-		bitmap_fill(bitmap, cliprect, get_white_pen(screen->machine()));
+		bitmap.fill(get_white_pen(screen.machine()), cliprect);
 		return 0;
 	}
 
@@ -376,13 +376,13 @@ SCREEN_UPDATE( lordgun )
 
 	int l;
 	for (l = 0; l < 5; l++)
-		bitmap_fill(state->m_bitmaps[l], cliprect, trans_pen);
+		state->m_bitmaps[l]->fill(trans_pen, cliprect);
 
-	if (layers_ctrl & 1)	tilemap_draw(state->m_bitmaps[0], cliprect, state->m_tilemap[0], 0, 0);
-	if (layers_ctrl & 2)	tilemap_draw(state->m_bitmaps[1], cliprect, state->m_tilemap[1], 0, 0);
-	if (layers_ctrl & 4)	tilemap_draw(state->m_bitmaps[2], cliprect, state->m_tilemap[2], 0, 0);
-	if (layers_ctrl & 8)	tilemap_draw(state->m_bitmaps[3], cliprect, state->m_tilemap[3], 0, 0);
-	if (layers_ctrl & 16)	draw_sprites(screen->machine(), state->m_bitmaps[4], cliprect);
+	if (layers_ctrl & 1)	tilemap_draw(*state->m_bitmaps[0], cliprect, state->m_tilemap[0], 0, 0);
+	if (layers_ctrl & 2)	tilemap_draw(*state->m_bitmaps[1], cliprect, state->m_tilemap[1], 0, 0);
+	if (layers_ctrl & 4)	tilemap_draw(*state->m_bitmaps[2], cliprect, state->m_tilemap[2], 0, 0);
+	if (layers_ctrl & 8)	tilemap_draw(*state->m_bitmaps[3], cliprect, state->m_tilemap[3], 0, 0);
+	if (layers_ctrl & 16)	draw_sprites(screen.machine(), *state->m_bitmaps[4], cliprect);
 
 	// copy to screen bitmap
 
@@ -391,9 +391,9 @@ SCREEN_UPDATE( lordgun )
 	// layer index (0-3, 4 for sprites) -> priority address bit
 	const int layer2bit[5] = {0,1,2,4,3};
 
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
-		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+		for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 		{
 			UINT16 pens[5];
 
@@ -402,7 +402,7 @@ SCREEN_UPDATE( lordgun )
 			// bits 0-4: layer transparency
 			for (l = 0; l < 5; l++)
 			{
-				pens[l] = *BITMAP_ADDR16(state->m_bitmaps[l], y, x);
+				pens[l] = state->m_bitmaps[l]->pix16(y, x);
 				if (pens[l] == trans_pen)
 					pri_addr |= 1 << layer2bit[l];
 			}
@@ -420,7 +420,7 @@ SCREEN_UPDATE( lordgun )
 
 			l	=	pri2layer[state->m_priority_ram[pri_addr] & 7];
 
-			*BITMAP_ADDR16(bitmap, y, x) = pens[l];
+			bitmap.pix16(y, x) = pens[l];
 		}
 	}
 

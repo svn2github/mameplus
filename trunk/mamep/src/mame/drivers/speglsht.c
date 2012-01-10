@@ -340,12 +340,12 @@ static VIDEO_START(speglsht)
 
 #define PLOT_PIXEL_RGB(x,y,r,g,b)	if(y>=0 && x>=0 && x<512 && y<512) \
 { \
-		*BITMAP_ADDR32(bitmap, y, x) = (b) | ((g)<<8) | ((r)<<16); \
+		bitmap.pix32(y, x) = (b) | ((g)<<8) | ((r)<<16); \
 }
 
 static SCREEN_UPDATE(speglsht)
 {
-	speglsht_state *state = screen->machine().driver_data<speglsht_state>();
+	speglsht_state *state = screen.machine().driver_data<speglsht_state>();
 	int x,y,dy;
 
 	dy=(state->m_videoreg&0x20)?(256*512):0; //visible frame
@@ -360,18 +360,18 @@ static SCREEN_UPDATE(speglsht)
 	}
 
 	//draw st0016 gfx to temporary bitmap (indexed 16)
-	bitmap_fill(state->m_bitmap,NULL,0);
-	st0016_draw_screen(screen, state->m_bitmap, cliprect);
+	state->m_bitmap->fill(0);
+	st0016_draw_screen(screen, *state->m_bitmap, cliprect);
 
 	//copy temporary bitmap to rgb 32 bit bitmap
-	for(y=cliprect->min_y; y<cliprect->max_y;y++)
+	for(y=cliprect.min_y; y<cliprect.max_y;y++)
 	{
-		UINT16 *srcline = BITMAP_ADDR16(state->m_bitmap, y, 0);
-		for(x=cliprect->min_x; x<cliprect->max_x;x++)
+		UINT16 *srcline = &state->m_bitmap->pix16(y);
+		for(x=cliprect.min_x; x<cliprect.max_x;x++)
 		{
 			if(srcline[x])
 			{
-				rgb_t color=palette_get_color(screen->machine(), srcline[x]);
+				rgb_t color=palette_get_color(screen.machine(), srcline[x]);
 				PLOT_PIXEL_RGB(x,y,RGB_RED(color),RGB_GREEN(color),RGB_BLUE(color));
 			}
 		}

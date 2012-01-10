@@ -322,17 +322,17 @@ WRITE8_HANDLER( congo_sprite_custom_w )
  *
  *************************************/
 
-static void draw_background(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int skew)
+static void draw_background(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int skew)
 {
 	zaxxon_state *state = machine.driver_data<zaxxon_state>();
 
 	/* only draw if enabled */
 	if (state->m_bg_enable)
 	{
-		bitmap_t *pixmap = tilemap_get_pixmap(state->m_bg_tilemap);
+		bitmap_t &pixmap = tilemap_get_pixmap(state->m_bg_tilemap);
 		int colorbase = state->m_bg_color + (state->m_congo_color_bank << 8);
-		int xmask = pixmap->width - 1;
-		int ymask = pixmap->height - 1;
+		int xmask = pixmap.width() - 1;
+		int ymask = pixmap.height() - 1;
 		int flipmask = flip_screen_get(machine) ? 0xff : 0x00;
 		int flipoffs = flip_screen_get(machine) ? 0x38 : 0x40;
 		int x, y;
@@ -345,9 +345,9 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 			flipoffs += 7;
 
 		/* loop over visible rows */
-		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+		for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 		{
-			UINT16 *dst = (UINT16 *)bitmap->base + y * bitmap->rowpixels;
+			UINT16 *dst = &bitmap.pix16(y);
 			int srcx, srcy, vf;
 			UINT16 *src;
 
@@ -357,10 +357,10 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 			/* base of the source row comes from VF plus the scroll value */
 			/* this is done by the 3 4-bit adders at U56, U74, U75 */
 			srcy = vf + ((state->m_bg_position << 1) ^ 0xfff) + 1;
-			src = (UINT16 *)pixmap->base + (srcy & ymask) * pixmap->rowpixels;
+			src = &pixmap.pix16(srcy & ymask);
 
 			/* loop over visible colums */
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 			{
 				/* start with HF = flipped H signals */
 				srcx = x ^ flipmask;
@@ -384,7 +384,7 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 
 	/* if not enabled, fill the background with black */
 	else
-		bitmap_fill(bitmap, cliprect, get_black_pen(machine));
+		bitmap.fill(get_black_pen(machine), cliprect);
 }
 
 
@@ -440,7 +440,7 @@ INLINE int find_minimum_x(UINT8 value, int flip)
 }
 
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, UINT16 flipxmask, UINT16 flipymask)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, UINT16 flipxmask, UINT16 flipymask)
 {
 	zaxxon_state *state = machine.driver_data<zaxxon_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -477,10 +477,10 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( zaxxon )
 {
-	zaxxon_state *state = screen->machine().driver_data<zaxxon_state>();
+	zaxxon_state *state = screen.machine().driver_data<zaxxon_state>();
 
-	draw_background(screen->machine(), bitmap, cliprect, TRUE);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0x140, 0x180);
+	draw_background(screen.machine(), bitmap, cliprect, TRUE);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x140, 0x180);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	return 0;
 }
@@ -488,10 +488,10 @@ SCREEN_UPDATE( zaxxon )
 
 SCREEN_UPDATE( futspy )
 {
-	zaxxon_state *state = screen->machine().driver_data<zaxxon_state>();
+	zaxxon_state *state = screen.machine().driver_data<zaxxon_state>();
 
-	draw_background(screen->machine(), bitmap, cliprect, TRUE);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0x180, 0x180);
+	draw_background(screen.machine(), bitmap, cliprect, TRUE);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x180, 0x180);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	return 0;
 }
@@ -499,10 +499,10 @@ SCREEN_UPDATE( futspy )
 
 SCREEN_UPDATE( razmataz )
 {
-	zaxxon_state *state = screen->machine().driver_data<zaxxon_state>();
+	zaxxon_state *state = screen.machine().driver_data<zaxxon_state>();
 
-	draw_background(screen->machine(), bitmap, cliprect, FALSE);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0x140, 0x180);
+	draw_background(screen.machine(), bitmap, cliprect, FALSE);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x140, 0x180);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	return 0;
 }
@@ -510,10 +510,10 @@ SCREEN_UPDATE( razmataz )
 
 SCREEN_UPDATE( congo )
 {
-	zaxxon_state *state = screen->machine().driver_data<zaxxon_state>();
+	zaxxon_state *state = screen.machine().driver_data<zaxxon_state>();
 
-	draw_background(screen->machine(), bitmap, cliprect, TRUE);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0x280, 0x180);
+	draw_background(screen.machine(), bitmap, cliprect, TRUE);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0x280, 0x180);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	return 0;
 }

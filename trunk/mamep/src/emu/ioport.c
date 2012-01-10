@@ -2144,28 +2144,27 @@ static const char *inputx_key_name(unicode_char ch)
     a key based on natural keyboard characters
 -------------------------------------------------*/
 
-static astring *get_keyboard_key_name(const input_field_config *field)
+static astring &get_keyboard_key_name(astring &name, const input_field_config *field)
 {
-	astring *result = astring_alloc();
 	int i;
 	unicode_char ch;
 
-
+	name.reset();
 	/* loop through each character on the field*/
 	for (i = 0; i < ARRAY_LENGTH(field->chars) && (field->chars[i] != '\0'); i++)
 	{
 		ch = get_keyboard_code(field, i);
-		astring_printf(result, "%s%-*s ", astring_c(result), MAX(SPACE_COUNT - 1, 0), inputx_key_name(ch));
+		name.catprintf("%-*s ", MAX(SPACE_COUNT - 1, 0), inputx_key_name(ch));
 	}
 
 	/* trim extra spaces */
-	astring_trimspace(result);
+	name.trimspace();
 
 	/* special case */
-	if (astring_len(result) == 0)
-		astring_cpyc(result, "Unnamed Key");
+	if (name.len() == 0)
+		name.cpy("Unnamed Key");
 
-	return result;
+	return name;
 }
 
 /*-------------------------------------------------
@@ -2274,12 +2273,8 @@ static void init_port_state(running_machine &machine)
 			/* Name keyboard key names */
 			if ((field->type == IPT_KEYBOARD || field->type == IPT_KEYPAD) && (field->name == NULL))
 			{
-				astring *name = get_keyboard_key_name(field);
-				if (name != NULL)
-				{
-					field->state->name = auto_strdup(machine, astring_c(name));
-					astring_free(name);
-				}
+				astring name;
+				field->state->name = auto_strdup(machine, get_keyboard_key_name(name, field));
 			}
 		}
 	}

@@ -201,7 +201,7 @@ static void update_pixel(running_machine &machine, int vram, int x, int y)
 {
 	nbmj9195_state *state = machine.driver_data<nbmj9195_state>();
 	UINT16 color = state->m_videoram[vram][(y * machine.primary_screen->width()) + x];
-	*BITMAP_ADDR16(state->m_tmpbitmap[vram], y, x) = color;
+	state->m_tmpbitmap[vram]->pix16(y, x) = color;
 }
 
 static TIMER_CALLBACK( blitter_timer_callback )
@@ -447,25 +447,25 @@ VIDEO_START( nbmj9195_nb22090 )
 ******************************************************************************/
 SCREEN_UPDATE( nbmj9195 )
 {
-	nbmj9195_state *state = screen->machine().driver_data<nbmj9195_state>();
+	nbmj9195_state *state = screen.machine().driver_data<nbmj9195_state>();
 	int i;
 	int x, y;
 	int scrolly[2];
 
 	if (state->m_screen_refresh)
 	{
-		int width = screen->width();
-		int height = screen->height();
+		int width = screen.width();
+		int height = screen.height();
 
 		state->m_screen_refresh = 0;
 
 		for (y = 0; y < height; y++)
 			for (x = 0; x < width; x++)
 			{
-				update_pixel(screen->machine(), 0, x, y);
+				update_pixel(screen.machine(), 0, x, y);
 
 				if (state->m_gfxdraw_mode)
-					update_pixel(screen->machine(), 1, x, y);
+					update_pixel(screen.machine(), 1, x, y);
 			}
 	}
 
@@ -492,19 +492,19 @@ SCREEN_UPDATE( nbmj9195 )
 
 	if (state->m_dispflag[0])
 		// nbmj9195 1layer
-		copyscrollbitmap(bitmap, state->m_tmpbitmap[0], SCANLINE_MAX, state->m_scrollx_raster[0], 1, &scrolly[0], cliprect);
+		copyscrollbitmap(bitmap, *state->m_tmpbitmap[0], SCANLINE_MAX, state->m_scrollx_raster[0], 1, &scrolly[0], cliprect);
 	else
-		bitmap_fill(bitmap, 0, 0x0ff);
+		bitmap.fill(0x0ff);
 
 	if (state->m_dispflag[1])
 	{
 		if (state->m_gfxdraw_mode == 1)
 			// nbmj9195 2layer
-			copyscrollbitmap_trans(bitmap, state->m_tmpbitmap[1], SCANLINE_MAX, state->m_scrollx_raster[1], 1, &scrolly[1], cliprect, 0x0ff);
+			copyscrollbitmap_trans(bitmap, *state->m_tmpbitmap[1], SCANLINE_MAX, state->m_scrollx_raster[1], 1, &scrolly[1], cliprect, 0x0ff);
 
 		if (state->m_gfxdraw_mode == 2)
 			// nbmj9195 nb22090 2layer
-			copyscrollbitmap_trans(bitmap, state->m_tmpbitmap[1], SCANLINE_MAX, state->m_scrollx_raster[1], 1, &scrolly[1], cliprect, 0x1ff);
+			copyscrollbitmap_trans(bitmap, *state->m_tmpbitmap[1], SCANLINE_MAX, state->m_scrollx_raster[1], 1, &scrolly[1], cliprect, 0x1ff);
 	}
 	return 0;
 }

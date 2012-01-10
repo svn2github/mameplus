@@ -92,7 +92,7 @@ WRITE8_HANDLER( sspeedr_track_ice_w )
 }
 
 
-static void draw_track(running_machine &machine, bitmap_t* bitmap)
+static void draw_track(running_machine &machine, bitmap_t &bitmap)
 {
 	sspeedr_state *state = machine.driver_data<sspeedr_state>();
 	const UINT8* p = machine.region("gfx3")->base();
@@ -142,11 +142,11 @@ static void draw_track(running_machine &machine, bitmap_t* bitmap)
 
 			if (counter_x & 2)
 			{
-				*BITMAP_ADDR16(bitmap, y, x) = p[offset] / 16;
+				bitmap.pix16(y, x) = p[offset] / 16;
 			}
 			else
 			{
-				*BITMAP_ADDR16(bitmap, y, x) = p[offset] % 16;
+				bitmap.pix16(y, x) = p[offset] % 16;
 			}
 		}
 
@@ -154,7 +154,7 @@ static void draw_track(running_machine &machine, bitmap_t* bitmap)
 
 		for (; y < 128 + state->m_track_vert[1]; y++)
 		{
-			*BITMAP_ADDR16(bitmap, y, x) = flag ? 15 : 0;
+			bitmap.pix16(y, x) = flag ? 15 : 0;
 		}
 
 		/* lower landscape */
@@ -170,18 +170,18 @@ static void draw_track(running_machine &machine, bitmap_t* bitmap)
 
 			if (counter_x & 2)
 			{
-				*BITMAP_ADDR16(bitmap, y, x) = p[offset] / 16;
+				bitmap.pix16(y, x) = p[offset] / 16;
 			}
 			else
 			{
-				*BITMAP_ADDR16(bitmap, y, x) = p[offset] % 16;
+				bitmap.pix16(y, x) = p[offset] % 16;
 			}
 		}
 	}
 }
 
 
-static void draw_drones(running_machine &machine, bitmap_t* bitmap, const rectangle* cliprect)
+static void draw_drones(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	sspeedr_state *state = machine.driver_data<sspeedr_state>();
 	static const UINT8 code[6] =
@@ -221,7 +221,7 @@ static void draw_drones(running_machine &machine, bitmap_t* bitmap, const rectan
 }
 
 
-static void draw_driver(running_machine &machine, bitmap_t* bitmap, const rectangle* cliprect)
+static void draw_driver(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	sspeedr_state *state = machine.driver_data<sspeedr_state>();
 	int x;
@@ -260,15 +260,15 @@ VIDEO_START( sspeedr )
 
 SCREEN_UPDATE( sspeedr )
 {
-	draw_track(screen->machine(), bitmap);
-	draw_drones(screen->machine(), bitmap, cliprect);
-	draw_driver(screen->machine(), bitmap, cliprect);
+	draw_track(screen.machine(), bitmap);
+	draw_drones(screen.machine(), bitmap, cliprect);
+	draw_driver(screen.machine(), bitmap, cliprect);
 	return 0;
 }
 
 
 SCREEN_EOF( sspeedr )
 {
-	sspeedr_state *state = machine.driver_data<sspeedr_state>();
+	sspeedr_state *state = screen.machine().driver_data<sspeedr_state>();
 	state->m_toggle ^= 1;
 }

@@ -32,7 +32,7 @@ static TIMER_CALLBACK( triplhnt_hit_callback )
 }
 
 
-static void draw_sprites(running_machine &machine, bitmap_t* bitmap, const rectangle* cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	triplhnt_state *state = machine.driver_data<triplhnt_state>();
 	int i;
@@ -74,18 +74,18 @@ static void draw_sprites(running_machine &machine, bitmap_t* bitmap, const recta
 
 		/* render sprite to auxiliary bitmap */
 
-		drawgfx_opaque(state->m_helper, cliprect, machine.gfx[state->m_sprite_zoom],
+		drawgfx_opaque(*state->m_helper, cliprect, machine.gfx[state->m_sprite_zoom],
 			2 * code + state->m_sprite_bank, 0, code & 8, 0,
 			rect.min_x, rect.min_y);
 
-		if (rect.min_x < cliprect->min_x)
-			rect.min_x = cliprect->min_x;
-		if (rect.min_y < cliprect->min_y)
-			rect.min_y = cliprect->min_y;
-		if (rect.max_x > cliprect->max_x)
-			rect.max_x = cliprect->max_x;
-		if (rect.max_y > cliprect->max_y)
-			rect.max_y = cliprect->max_y;
+		if (rect.min_x < cliprect.min_x)
+			rect.min_x = cliprect.min_x;
+		if (rect.min_y < cliprect.min_y)
+			rect.min_y = cliprect.min_y;
+		if (rect.max_x > cliprect.max_x)
+			rect.max_x = cliprect.max_x;
+		if (rect.max_y > cliprect.max_y)
+			rect.max_y = cliprect.max_y;
 
 		/* check for collisions and copy sprite */
 
@@ -97,8 +97,8 @@ static void draw_sprites(running_machine &machine, bitmap_t* bitmap, const recta
 			{
 				for (y = rect.min_y; y <= rect.max_y; y++)
 				{
-					pen_t a = *BITMAP_ADDR16(state->m_helper, y, x);
-					pen_t b = *BITMAP_ADDR16(bitmap, y, x);
+					pen_t a = state->m_helper->pix16(y, x);
+					pen_t b = bitmap.pix16(y, x);
 
 					if (a == 2 && b == 7)
 					{
@@ -107,7 +107,7 @@ static void draw_sprites(running_machine &machine, bitmap_t* bitmap, const recta
 					}
 
 					if (a != 1)
-						*BITMAP_ADDR16(bitmap, y, x) = a;
+						bitmap.pix16(y, x) = a;
 				}
 			}
 		}
@@ -120,14 +120,14 @@ static void draw_sprites(running_machine &machine, bitmap_t* bitmap, const recta
 
 SCREEN_UPDATE( triplhnt )
 {
-	triplhnt_state *state = screen->machine().driver_data<triplhnt_state>();
-	device_t *discrete = screen->machine().device("discrete");
+	triplhnt_state *state = screen.machine().driver_data<triplhnt_state>();
+	device_t *discrete = screen.machine().device("discrete");
 
 	tilemap_mark_all_tiles_dirty(state->m_bg_tilemap);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 
 	discrete_sound_w(discrete, TRIPLHNT_BEAR_ROAR_DATA, state->m_playfield_ram[0xfa] & 15);
 	discrete_sound_w(discrete, TRIPLHNT_SHOT_DATA, state->m_playfield_ram[0xfc] & 15);

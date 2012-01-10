@@ -85,7 +85,7 @@ public:
 	UINT8 m_ss9601_byte_lo;
 	UINT8 m_ss9601_byte_lo2;
 	UINT8 *m_ss9601_reelrams[2];
-	const rectangle *m_ss9601_reelrects;
+	rectangle m_ss9601_reelrects[3];
 	UINT8 m_ss9601_scrollctrl;
 	UINT8 m_ss9601_tilesize;
 	UINT8 m_ss9601_disable;
@@ -528,14 +528,6 @@ static WRITE8_HANDLER( ss9601_disable_w )
                                 Video Update
 ***************************************************************************/
 
-static const rectangle mtrain_reelrects[3] = {	{ 0, 0, 0x00*8, 0x09*8-1 },
-												{ 0, 0, 0x09*8, 0x10*8-1 },
-												{ 0, 0, 0x10*8, 256-16-1 }	};
-
-static const rectangle xtrain_reelrects[3] = {	{ 0, 0, 0x00*8, 0x08*8-1 },
-												{ 0, 0, 0x08*8, 0x18*8-1 },
-												{ 0, 0, 0x18*8, 256-16-1 }	};
-
 static VIDEO_START( subsino2 )
 {
 	subsino2_state *state = machine.driver_data<subsino2_state>();
@@ -575,7 +567,9 @@ static VIDEO_START( subsino2 )
 	state->m_ss9601_reelrams[VRAM_LO] = auto_alloc_array(machine, UINT8, 0x2000);
 	memset(state->m_ss9601_reelrams[VRAM_HI], 0, 0x2000);
 	memset(state->m_ss9601_reelrams[VRAM_LO], 0, 0x2000);
-	state->m_ss9601_reelrects = mtrain_reelrects;
+	state->m_ss9601_reelrects[0].set(0, 0, 0x00*8, 0x09*8-1);
+	state->m_ss9601_reelrects[1].set(0, 0, 0x09*8, 0x10*8-1);
+	state->m_ss9601_reelrects[2].set(0, 0, 0x10*8, 256-16-1);
 
 /*
     state_save_register_global_pointer(machine, state->m_ss9601_reelrams[VRAM_HI], 0x2000);
@@ -591,30 +585,30 @@ static VIDEO_START( subsino2 )
 
 static VIDEO_START( mtrain )
 {
-	subsino2_state *state = machine.driver_data<subsino2_state>();
 	VIDEO_START_CALL( subsino2 );
-	state->m_ss9601_reelrects = mtrain_reelrects;
 }
 
 static VIDEO_START( xtrain )
 {
 	subsino2_state *state = machine.driver_data<subsino2_state>();
 	VIDEO_START_CALL( subsino2 );
-	state->m_ss9601_reelrects = xtrain_reelrects;
+	state->m_ss9601_reelrects[0].set(0, 0, 0x00*8, 0x08*8-1);
+	state->m_ss9601_reelrects[1].set(0, 0, 0x08*8, 0x18*8-1);
+	state->m_ss9601_reelrects[2].set(0, 0, 0x18*8, 256-16-1);
 }
 
 static SCREEN_UPDATE( subsino2 )
 {
-	subsino2_state *state = screen->machine().driver_data<subsino2_state>();
+	subsino2_state *state = screen.machine().driver_data<subsino2_state>();
 	int layers_ctrl = ~state->m_ss9601_disable;
 	int y;
 
 #ifdef MAME_DEBUG
-	if (screen->machine().input().code_pressed(KEYCODE_Z))
+	if (screen.machine().input().code_pressed(KEYCODE_Z))
 	{
 		int msk = 0;
-		if (screen->machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-		if (screen->machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+		if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+		if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
 		if (msk != 0) layers_ctrl &= msk;
 	}
 #endif
@@ -659,7 +653,7 @@ static SCREEN_UPDATE( subsino2 )
 		}
 	}
 
-	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
 
 	if (layers_ctrl & 1)
 	{
@@ -696,7 +690,7 @@ static SCREEN_UPDATE( subsino2 )
 						if ( reelwrap_y-1 <= visible.max_y )
 							tmp.max_y = reelwrap_y-1;
 						tilemap_set_scrolly(l->tmap, 0, reelscroll_y);
-						tilemap_draw(bitmap, &tmp, l->tmap, 0, 0);
+						tilemap_draw(bitmap, tmp, l->tmap, 0, 0);
 						tmp.max_y = visible.max_y;
 					}
 
@@ -706,7 +700,7 @@ static SCREEN_UPDATE( subsino2 )
 						if ( reelwrap_y >= visible.min_y )
 							tmp.min_y = reelwrap_y;
 						tilemap_set_scrolly(l->tmap, 0, -((reelwrap_y &0xff) | (reelscroll_y & 0x100)));
-						tilemap_draw(bitmap, &tmp, l->tmap, 0, 0);
+						tilemap_draw(bitmap, tmp, l->tmap, 0, 0);
 						tmp.min_y = visible.min_y;
 					}
 				}

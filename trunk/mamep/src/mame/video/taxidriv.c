@@ -12,14 +12,14 @@ WRITE8_DEVICE_HANDLER( taxidriv_spritectrl_w )
 
 SCREEN_UPDATE( taxidriv )
 {
-	taxidriv_state *state = screen->machine().driver_data<taxidriv_state>();
+	taxidriv_state *state = screen.machine().driver_data<taxidriv_state>();
 	int offs;
 	int sx,sy;
 
 
 	if (state->m_bghide)
 	{
-		bitmap_fill(bitmap,cliprect,0);
+		bitmap.fill(0, cliprect);
 
 
 		/* kludge to fix scroll after death */
@@ -33,7 +33,7 @@ SCREEN_UPDATE( taxidriv )
 			sx = offs % 32;
 			sy = offs / 32;
 
-			drawgfx_opaque(bitmap,cliprect,screen->machine().gfx[3],
+			drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[3],
 					state->m_vram3[offs],
 					0,
 					0,0,
@@ -45,7 +45,7 @@ SCREEN_UPDATE( taxidriv )
 			sx = offs % 32;
 			sy = offs / 32;
 
-			drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[2],
+			drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[2],
 					state->m_vram2[offs]+256*state->m_vram2[offs+0x400],
 					0,
 					0,0,
@@ -65,7 +65,7 @@ SCREEN_UPDATE( taxidriv )
 				if (color)
 				{
 					if (sx > 0 && sx < 256 && sy > 0 && sy < 256)
-						*BITMAP_ADDR16(bitmap, sy, sx) = color;
+						bitmap.pix16(sy, sx) = color;
 				}
 			}
 		}
@@ -83,7 +83,7 @@ SCREEN_UPDATE( taxidriv )
 				if (color)
 				{
 					if (sx > 0 && sx < 256 && sy > 0 && sy < 256)
-						*BITMAP_ADDR16(bitmap, sy, sx) = color;
+						bitmap.pix16(sy, sx) = color;
 				}
 			}
 		}
@@ -101,7 +101,7 @@ SCREEN_UPDATE( taxidriv )
 				if (color)
 				{
 					if (sx > 0 && sx < 256 && sy > 0 && sy < 256)
-						*BITMAP_ADDR16(bitmap, sy, sx) = color;
+						bitmap.pix16(sy, sx) = color;
 				}
 			}
 		}
@@ -111,7 +111,7 @@ SCREEN_UPDATE( taxidriv )
 			sx = offs % 32;
 			sy = offs / 32;
 
-			drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[1],
+			drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[1],
 					state->m_vram1[offs],
 					0,
 					0,0,
@@ -128,7 +128,7 @@ SCREEN_UPDATE( taxidriv )
 			color = (state->m_vram4[offs/4]>>(2*(offs&3)))&0x03;
 			if (color)
 			{
-				*BITMAP_ADDR16(bitmap, sy, sx) = 2 * color;
+				bitmap.pix16(sy, sx) = 2 * color;
 			}
 		}
 	}
@@ -138,7 +138,7 @@ SCREEN_UPDATE( taxidriv )
 		sx = offs % 32;
 		sy = offs / 32;
 
-		drawgfx_transpen(bitmap,cliprect,screen->machine().gfx[0],
+		drawgfx_transpen(bitmap,cliprect,screen.machine().gfx[0],
 				state->m_vram0[offs],
 				0,
 				0,0,

@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <new>
 #include "aviio.h"
 #include "bitmap.h"
 #include "chd.h"
@@ -158,7 +159,7 @@ static void *open_avi(const char *filename, movie_info *info)
     read_avi - read a frame from an AVI file
 -------------------------------------------------*/
 
-static int read_avi(void *file, int frame, bitmap_t *bitmap, INT16 *lsound, INT16 *rsound, int *samples)
+static int read_avi(void *file, int frame, bitmap_t &bitmap, INT16 *lsound, INT16 *rsound, int *samples)
 {
 	const avi_movie_info *aviinfo = avi_get_movie_info((avi_file *)file);
 	UINT32 firstsample = ((UINT64)aviinfo->audio_samplerate * (UINT64)frame * (UINT64)aviinfo->video_sampletime + aviinfo->video_timescale - 1) / (UINT64)aviinfo->video_timescale;
@@ -257,7 +258,7 @@ static void *open_chd(const char *filename, movie_info *info)
     read_chd - read a frame from a CHD file
 -------------------------------------------------*/
 
-static int read_chd(void *file, int frame, bitmap_t *bitmap, INT16 *lsound, INT16 *rsound, int *samples)
+static int read_chd(void *file, int frame, bitmap_t &bitmap, INT16 *lsound, INT16 *rsound, int *samples)
 {
 	av_codec_decompress_config avconfig = { 0 };
 	int interlace_factor = chdinterlaced ? 2 : 1;
@@ -271,13 +272,9 @@ static int read_chd(void *file, int frame, bitmap_t *bitmap, INT16 *lsound, INT1
 	for (fieldnum = 0; fieldnum < interlace_factor; fieldnum++)
 	{
 		/* make a fake bitmap for this field */
-		bitmap_clone_existing(&fakebitmap, bitmap);
-		fakebitmap.base = BITMAP_ADDR16(&fakebitmap, fieldnum, 0);
-		fakebitmap.rowpixels *= interlace_factor;
-		fakebitmap.height /= interlace_factor;
+		avconfig.video = new(&fakebitmap) bitmap_t(&bitmap.pix16(fieldnum), bitmap.width(), bitmap.height() / interlace_factor, bitmap.rowpixels() * interlace_factor, bitmap.format());
 
 		/* configure the codec */
-		avconfig.video = &fakebitmap;
 		avconfig.maxsamples = 48000;
 		avconfig.actsamples = &numsamples;
 		avconfig.audio[0] = &lsound[*samples];
@@ -345,7 +342,7 @@ static void init_video(video_info *video)
     verify_video - verify video frame
 -------------------------------------------------*/
 
-static void verify_video(video_info *video, int frame, bitmap_t *bitmap)
+static void verify_video(video_info *video, int frame, bitmap_t &bitmap)
 {
 	const int fields_per_frame = 2;
 	int fieldnum;
@@ -366,7 +363,7 @@ static void verify_video(video_info *video, int frame, bitmap_t *bitmap)
 			fprintf(stderr, "%6d.%d...\r", frame, fieldnum);
 
 		/* parse the VBI data */
-		vbi_parse_all(BITMAP_ADDR16(bitmap, fieldnum, 0), bitmap->rowpixels * 2, bitmap->width, 8, &metadata);
+		vbi_parse_all(&bitmap.pix16(fieldnum), bitmap.rowpixels() * 2, bitmap.width(), 8, &metadata);
 
 		/* if we have data in both 17 and 18, it should match */
 		if (metadata.line17 != 0 && metadata.line18 != 0 && metadata.line17 != metadata.line18)
@@ -522,15 +519,15 @@ static void verify_video(video_info *video, int frame, bitmap_t *bitmap)
 
 		/* now examine the active video signal */
 		pixels = 0;
-		for (y = 22*2 + fieldnum; y < bitmap->height; y += 2)
+		for (y = 22*2 + fieldnum; y < bitmap.height(); y += 2)
 		{
 			for (x = 16; x < 720 - 16; x++)
 			{
-				yhisto[*BITMAP_ADDR16(bitmap, y, x) >> 8]++;
+				yhisto[bitmap.pix16(y, x) >> 8]++;
 				if (x % 2 == 0)
-					cbhisto[*BITMAP_ADDR16(bitmap, y, x) & 0xff]++;
+					cbhisto[bitmap.pix16(y, x) & 0xff]++;
 				else
-					crhisto[*BITMAP_ADDR16(bitmap, y, x) & 0xff]++;
+					crhisto[bitmap.pix16(y, x) & 0xff]++;
 			}
 			pixels += 720 - 16 - 16;
 		}
@@ -616,9 +613,9 @@ static void verify_video(video_info *video, int frame, bitmap_t *bitmap)
     verify_video_final - final verification
 -------------------------------------------------*/
 
-static void verify_video_final(video_info *video, int frame, bitmap_t *bitmap)
+static void verify_video_final(video_info *video, int frame, bitmap_t &bitmap)
 {
-	int fields_per_frame = (bitmap->height >= 288) ? 2 : 1;
+	int fields_per_frame = (bitmap.height() >= 288) ? 2 : 1;
 	int field = frame * fields_per_frame;
 
 	/* did we ever see any white flags? */
@@ -803,7 +800,7 @@ int main(int argc, char *argv[])
 		printf("WARNING: Unexpected sampele rate (should be 48000Hz)\n");
 
 	/* allocate a bitmap */
-	bitmap = bitmap_alloc(info.width, info.height, BITMAP_FORMAT_YUY16);
+	bitmap = new(std::nothrow) bitmap_t(info.width, info.height, BITMAP_FORMAT_YUY16);
 	if (bitmap == NULL)
 	{
 		isavi ? close_avi(file) : close_chd(file);
@@ -817,7 +814,7 @@ int main(int argc, char *argv[])
 	if (lsound == NULL || rsound == NULL)
 	{
 		isavi ? close_avi(file) : close_chd(file);
-		bitmap_free(bitmap);
+		delete bitmap;
 		if (rsound != NULL)
 			free(rsound);
 		if (lsound != NULL)
@@ -828,9 +825,9 @@ int main(int argc, char *argv[])
 
 	/* loop over frames */
 	frame = 0;
-	while (isavi ? read_avi(file, frame, bitmap, lsound, rsound, &samples) : read_chd(file, frame, bitmap, lsound, rsound, &samples))
+	while (isavi ? read_avi(file, frame, *bitmap, lsound, rsound, &samples) : read_chd(file, frame, *bitmap, lsound, rsound, &samples))
 	{
-		verify_video(&video, frame, bitmap);
+		verify_video(&video, frame, *bitmap);
 		verify_audio(&audio, lsound, rsound, samples);
 		frame++;
 	}
@@ -839,11 +836,11 @@ int main(int argc, char *argv[])
 	isavi ? close_avi(file) : close_chd(file);
 
 	/* final output */
-	verify_video_final(&video, frame, bitmap);
+	verify_video_final(&video, frame, *bitmap);
 	verify_audio_final(&audio);
 
 	/* free memory */
-	bitmap_free(bitmap);
+	delete bitmap;
 	free(lsound);
 	free(rsound);
 

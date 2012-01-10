@@ -400,17 +400,17 @@ or
 Offset+3
 -------x xxxxxxxx X offs
 */
-static void draw_sprites(screen_device *screen, bitmap_t *bitmap)
+static void draw_sprites(screen_device &screen, bitmap_t &bitmap)
 {
-	vamphalf_state *state = screen->machine().driver_data<vamphalf_state>();
-	const gfx_element *gfx = screen->machine().gfx[0];
+	vamphalf_state *state = screen.machine().driver_data<vamphalf_state>();
+	const gfx_element *gfx = screen.machine().gfx[0];
 	UINT32 cnt;
 	int block, offs;
 	int code,color,x,y,fx,fy;
 	rectangle clip;
 
-	clip.min_x = screen->visible_area().min_x;
-	clip.max_x = screen->visible_area().max_x;
+	clip.min_x = screen.visible_area().min_x;
+	clip.max_x = screen.visible_area().max_x;
 
 	for (block=0; block<0x8000; block+=0x800)
 	{
@@ -469,22 +469,22 @@ static void draw_sprites(screen_device *screen, bitmap_t *bitmap)
 				y = 256 - y;
 			}
 
-			drawgfx_transpen(bitmap,&clip,gfx,code,color,fx,fy,x,y,0);
+			drawgfx_transpen(bitmap,clip,gfx,code,color,fx,fy,x,y,0);
 		}
 	}
 }
 
-static void draw_sprites_aoh(screen_device *screen, bitmap_t *bitmap)
+static void draw_sprites_aoh(screen_device &screen, bitmap_t &bitmap)
 {
-	vamphalf_state *state = screen->machine().driver_data<vamphalf_state>();
-	const gfx_element *gfx = screen->machine().gfx[0];
+	vamphalf_state *state = screen.machine().driver_data<vamphalf_state>();
+	const gfx_element *gfx = screen.machine().gfx[0];
 	UINT32 cnt;
 	int block, offs;
 	int code,color,x,y,fx,fy;
 	rectangle clip;
 
-	clip.min_x = screen->visible_area().min_x;
-	clip.max_x = screen->visible_area().max_x;
+	clip.min_x = screen.visible_area().min_x;
+	clip.max_x = screen.visible_area().max_x;
 
 	for (block=0; block<0x8000; block+=0x800)
 	{
@@ -523,7 +523,7 @@ static void draw_sprites_aoh(screen_device *screen, bitmap_t *bitmap)
 				y = 256 - y;
 			}
 
-			drawgfx_transpen(bitmap,&clip,gfx,code,color,fx,fy,x,y,0);
+			drawgfx_transpen(bitmap,clip,gfx,code,color,fx,fy,x,y,0);
 		}
 	}
 }
@@ -531,14 +531,14 @@ static void draw_sprites_aoh(screen_device *screen, bitmap_t *bitmap)
 
 static SCREEN_UPDATE( common )
 {
-	bitmap_fill(bitmap,cliprect,0);
+	bitmap.fill(0, cliprect);
 	draw_sprites(screen, bitmap);
 	return 0;
 }
 
 static SCREEN_UPDATE( aoh )
 {
-	bitmap_fill(bitmap,cliprect,0);
+	bitmap.fill(0, cliprect);
 	draw_sprites_aoh(screen, bitmap);
 	return 0;
 }

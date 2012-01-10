@@ -74,8 +74,8 @@ class screen_device;
 // callback that is called to notify of a change in the VBLANK state
 typedef delegate<void (screen_device &, bool)> vblank_state_delegate;
 
-typedef UINT32 (*screen_update_func)(screen_device *screen, bitmap_t *bitmap, const rectangle *cliprect);
-typedef void (*screen_eof_func)(screen_device *screen, running_machine &machine);
+typedef UINT32 (*screen_update_func)(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect);
+typedef void (*screen_eof_func)(screen_device &screen);
 
 
 // ======================> screen_device
@@ -150,6 +150,7 @@ public:
 	// additional helpers
 	void register_vblank_callback(vblank_state_delegate vblank_callback);
 	bitmap_t *alloc_compatible_bitmap(int width = 0, int height = 0) { return auto_bitmap_alloc(machine(), (width == 0) ? m_width : width, (height == 0) ? m_height : height, format()); }
+	bitmap_t &default_bitmap() { return m_default; }
 
 	// internal to the video system
 	bool update_quads();
@@ -199,37 +200,38 @@ private:
 	screen_eof_func		m_screen_eof;				// screen eof callback
 
 	// internal state
-	render_container *		m_container;			// pointer to our container
+	render_container *	m_container;				// pointer to our container
 
 	// dimensions
-	int						m_width;				// current width (HTOTAL)
-	int						m_height;				// current height (VTOTAL)
-	rectangle				m_visarea;				// current visible area (HBLANK end/start, VBLANK end/start)
+	int					m_width;					// current width (HTOTAL)
+	int					m_height;					// current height (VTOTAL)
+	rectangle			m_visarea;					// current visible area (HBLANK end/start, VBLANK end/start)
 
 	// textures and bitmaps
-	render_texture *		m_texture[2];			// 2x textures for the screen bitmap
-	bitmap_t *				m_bitmap[2];			// 2x bitmaps for rendering
-	bitmap_t *				m_burnin;				// burn-in bitmap
-	UINT8					m_curbitmap;			// current bitmap index
-	UINT8					m_curtexture;			// current texture index
-	INT32					m_texture_format;		// texture format of bitmap for this screen
-	bool					m_changed;				// has this bitmap changed?
-	INT32					m_last_partial_scan;	// scanline of last partial update
-	bitmap_t *				m_screen_overlay_bitmap;// screen overlay bitmap
+	render_texture *	m_texture[2];				// 2x textures for the screen bitmap
+	bitmap_t			m_bitmap[2];				// 2x bitmaps for rendering
+	bitmap_t			m_default;					// default backing bitmap (copied by default)
+	bitmap_t			m_burnin;					// burn-in bitmap
+	UINT8				m_curbitmap;				// current bitmap index
+	UINT8				m_curtexture;				// current texture index
+	INT32				m_texture_format;			// texture format of bitmap for this screen
+	bool				m_changed;					// has this bitmap changed?
+	INT32				m_last_partial_scan;		// scanline of last partial update
+	bitmap_t			m_screen_overlay_bitmap;	// screen overlay bitmap
 
 	// screen timing
-	attoseconds_t			m_frame_period;			// attoseconds per frame
-	attoseconds_t			m_scantime;				// attoseconds per scanline
-	attoseconds_t			m_pixeltime;			// attoseconds per pixel
-	attoseconds_t			m_vblank_period;		// attoseconds per VBLANK period
-	attotime				m_vblank_start_time;	// time of last VBLANK start
-	attotime				m_vblank_end_time;		// time of last VBLANK end
-	emu_timer *				m_vblank_begin_timer;	// timer to signal VBLANK start
-	emu_timer *				m_vblank_end_timer;		// timer to signal VBLANK end
-	emu_timer *				m_scanline0_timer;		// scanline 0 timer
-	emu_timer *				m_scanline_timer;		// scanline timer
-	UINT64					m_frame_number;			// the current frame number
-	UINT32					m_partial_updates_this_frame;// partial update counter this frame
+	attoseconds_t		m_frame_period;				// attoseconds per frame
+	attoseconds_t		m_scantime;					// attoseconds per scanline
+	attoseconds_t		m_pixeltime;				// attoseconds per pixel
+	attoseconds_t		m_vblank_period;			// attoseconds per VBLANK period
+	attotime			m_vblank_start_time;		// time of last VBLANK start
+	attotime			m_vblank_end_time;			// time of last VBLANK end
+	emu_timer *			m_vblank_begin_timer;		// timer to signal VBLANK start
+	emu_timer *			m_vblank_end_timer;			// timer to signal VBLANK end
+	emu_timer *			m_scanline0_timer;			// scanline 0 timer
+	emu_timer *			m_scanline_timer;			// scanline timer
+	UINT64				m_frame_number;				// the current frame number
+	UINT32				m_partial_updates_this_frame;// partial update counter this frame
 
 	class callback_item
 	{
@@ -238,7 +240,7 @@ private:
 			: m_next(NULL),
 			  m_callback(callback) { }
 		callback_item *next() const { return m_next; }
-		
+
 		callback_item *				m_next;
 		vblank_state_delegate		m_callback;
 	};
@@ -273,12 +275,12 @@ extern const device_type SCREEN;
 //**************************************************************************
 
 #define SCREEN_UPDATE_NAME(name)		screen_update_##name
-#define SCREEN_UPDATE(name)				UINT32 SCREEN_UPDATE_NAME(name)(screen_device *screen, bitmap_t *bitmap, const rectangle *cliprect)
+#define SCREEN_UPDATE(name)				UINT32 SCREEN_UPDATE_NAME(name)(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect)
 #define SCREEN_UPDATE_CALL(name)		SCREEN_UPDATE_NAME(name)(screen, bitmap, cliprect)
 
 #define SCREEN_EOF_NAME(name)			screen_eof_##name
-#define SCREEN_EOF(name)				void SCREEN_EOF_NAME(name)(screen_device *screen, running_machine &machine)
-#define SCREEN_EOF_CALL(name)			SCREEN_EOF_NAME(name)(screen, machine)
+#define SCREEN_EOF(name)				void SCREEN_EOF_NAME(name)(screen_device &screen)
+#define SCREEN_EOF_CALL(name)			SCREEN_EOF_NAME(name)(screen)
 
 #define screen_eof_0					NULL
 

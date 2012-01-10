@@ -200,7 +200,7 @@ static WRITE32_HANDLER( ms32_bg1_ram_w )
 
 /* ROZ Layers */
 
-static void draw_roz(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int priority, int chip)
+static void draw_roz(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int priority, int chip)
 {
 	bnstars_state *state = machine.driver_data<bnstars_state>();
 	/* TODO: registers 0x40/4 / 0x44/4 and 0x50/4 / 0x54/4 are used, meaning unknown */
@@ -213,11 +213,11 @@ static void draw_roz(running_machine &machine, bitmap_t *bitmap, const rectangle
         rectangle my_clip;
         int y,maxy;
 
-        my_clip.min_x = cliprect->min_x;
-        my_clip.max_x = cliprect->max_x;
+        my_clip.min_x = cliprect.min_x;
+        my_clip.max_x = cliprect.max_x;
 
-        y = cliprect->min_y;
-        maxy = cliprect->max_y;
+        y = cliprect.min_y;
+        maxy = cliprect.max_y;
 
         while (y <= maxy)
         {
@@ -351,7 +351,7 @@ static WRITE32_HANDLER( ms32_pal1_ram_w )
 
 
 /* SPRITES based on tetrisp2 for now, readd priority bits later */
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, UINT32 *sprram_top, size_t sprram_size, int region)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, UINT32 *sprram_top, size_t sprram_size, int region)
 {
 	bnstars_state *state = machine.driver_data<bnstars_state>();
 /***************************************************************************
@@ -511,49 +511,51 @@ static VIDEO_START(bnstars)
 
 
 
-static SCREEN_UPDATE(bnstars)
+static SCREEN_UPDATE(bnstars_left)
 {
-	bnstars_state *state = screen->machine().driver_data<bnstars_state>();
-	device_t *left_screen  = screen->machine().device("lscreen");
-	device_t *right_screen = screen->machine().device("rscreen");
+	bnstars_state *state = screen.machine().driver_data<bnstars_state>();
 
-	bitmap_fill(screen->machine().priority_bitmap,cliprect,0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
-	if (screen==left_screen)
-	{
-		bitmap_fill(bitmap,cliprect,0);	/* bg color */
+	bitmap.fill(0, cliprect);	/* bg color */
 
 
-		tilemap_set_scrollx(state->m_ms32_bg_tilemap[0], 0, state->m_ms32_bg0_scroll[0x00/4] + state->m_ms32_bg0_scroll[0x08/4] + 0x10 );
-		tilemap_set_scrolly(state->m_ms32_bg_tilemap[0], 0, state->m_ms32_bg0_scroll[0x0c/4] + state->m_ms32_bg0_scroll[0x14/4] );
-		tilemap_draw(bitmap,cliprect,state->m_ms32_bg_tilemap[0],0,1);
+	tilemap_set_scrollx(state->m_ms32_bg_tilemap[0], 0, state->m_ms32_bg0_scroll[0x00/4] + state->m_ms32_bg0_scroll[0x08/4] + 0x10 );
+	tilemap_set_scrolly(state->m_ms32_bg_tilemap[0], 0, state->m_ms32_bg0_scroll[0x0c/4] + state->m_ms32_bg0_scroll[0x14/4] );
+	tilemap_draw(bitmap,cliprect,state->m_ms32_bg_tilemap[0],0,1);
 
-		draw_roz(screen->machine(),bitmap,cliprect,2,0);
+	draw_roz(screen.machine(),bitmap,cliprect,2,0);
 
-		tilemap_set_scrollx(state->m_ms32_tx_tilemap[0], 0, state->m_ms32_tx0_scroll[0x00/4] + state->m_ms32_tx0_scroll[0x08/4] + 0x18);
-		tilemap_set_scrolly(state->m_ms32_tx_tilemap[0], 0, state->m_ms32_tx0_scroll[0x0c/4] + state->m_ms32_tx0_scroll[0x14/4]);
-		tilemap_draw(bitmap,cliprect,state->m_ms32_tx_tilemap[0],0,4);
-
-
-		draw_sprites(screen->machine(),bitmap,cliprect, state->m_ms32_spram, 0x20000, 0);
-	}
-	else if (screen == right_screen)
-	{
-		bitmap_fill(bitmap,cliprect,0x8000+0);	/* bg color */
+	tilemap_set_scrollx(state->m_ms32_tx_tilemap[0], 0, state->m_ms32_tx0_scroll[0x00/4] + state->m_ms32_tx0_scroll[0x08/4] + 0x18);
+	tilemap_set_scrolly(state->m_ms32_tx_tilemap[0], 0, state->m_ms32_tx0_scroll[0x0c/4] + state->m_ms32_tx0_scroll[0x14/4]);
+	tilemap_draw(bitmap,cliprect,state->m_ms32_tx_tilemap[0],0,4);
 
 
-		tilemap_set_scrollx(state->m_ms32_bg_tilemap[1], 0, state->m_ms32_bg1_scroll[0x00/4] + state->m_ms32_bg1_scroll[0x08/4] + 0x10 );
-		tilemap_set_scrolly(state->m_ms32_bg_tilemap[1], 0, state->m_ms32_bg1_scroll[0x0c/4] + state->m_ms32_bg1_scroll[0x14/4] );
-		tilemap_draw(bitmap,cliprect,state->m_ms32_bg_tilemap[1],0,1);
+	draw_sprites(screen.machine(),bitmap,cliprect, state->m_ms32_spram, 0x20000, 0);
 
-		draw_roz(screen->machine(),bitmap,cliprect,2,1);
+	return 0;
+}
 
-		tilemap_set_scrollx(state->m_ms32_tx_tilemap[1], 0, state->m_ms32_tx1_scroll[0x00/4] + state->m_ms32_tx1_scroll[0x08/4] + 0x18);
-		tilemap_set_scrolly(state->m_ms32_tx_tilemap[1], 0, state->m_ms32_tx1_scroll[0x0c/4] + state->m_ms32_tx1_scroll[0x14/4]);
-		tilemap_draw(bitmap,cliprect,state->m_ms32_tx_tilemap[1],0,4);
+static SCREEN_UPDATE(bnstars_right)
+{
+	bnstars_state *state = screen.machine().driver_data<bnstars_state>();
 
-		draw_sprites(screen->machine(),bitmap,cliprect, state->m_ms32_spram+(0x20000/4), 0x20000, 4);
-	}
+	screen.machine().priority_bitmap.fill(0, cliprect);
+
+	bitmap.fill(0x8000+0, cliprect);	/* bg color */
+
+
+	tilemap_set_scrollx(state->m_ms32_bg_tilemap[1], 0, state->m_ms32_bg1_scroll[0x00/4] + state->m_ms32_bg1_scroll[0x08/4] + 0x10 );
+	tilemap_set_scrolly(state->m_ms32_bg_tilemap[1], 0, state->m_ms32_bg1_scroll[0x0c/4] + state->m_ms32_bg1_scroll[0x14/4] );
+	tilemap_draw(bitmap,cliprect,state->m_ms32_bg_tilemap[1],0,1);
+
+	draw_roz(screen.machine(),bitmap,cliprect,2,1);
+
+	tilemap_set_scrollx(state->m_ms32_tx_tilemap[1], 0, state->m_ms32_tx1_scroll[0x00/4] + state->m_ms32_tx1_scroll[0x08/4] + 0x18);
+	tilemap_set_scrolly(state->m_ms32_tx_tilemap[1], 0, state->m_ms32_tx1_scroll[0x0c/4] + state->m_ms32_tx1_scroll[0x14/4]);
+	tilemap_draw(bitmap,cliprect,state->m_ms32_tx_tilemap[1],0,4);
+
+	draw_sprites(screen.machine(),bitmap,cliprect, state->m_ms32_spram+(0x20000/4), 0x20000, 4);
 
 	return 0;
 }
@@ -1379,7 +1381,7 @@ static MACHINE_CONFIG_START( bnstars, bnstars_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE(bnstars)
+	MCFG_SCREEN_UPDATE(bnstars_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
@@ -1387,7 +1389,7 @@ static MACHINE_CONFIG_START( bnstars, bnstars_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(40*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE(bnstars)
+	MCFG_SCREEN_UPDATE(bnstars_right)
 
 	MCFG_VIDEO_START(bnstars)
 

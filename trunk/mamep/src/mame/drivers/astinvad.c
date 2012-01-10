@@ -134,37 +134,37 @@ static WRITE8_HANDLER( spaceint_videoram_w )
  *
  *************************************/
 
-static void plot_byte( running_machine &machine, bitmap_t *bitmap, UINT8 y, UINT8 x, UINT8 data, UINT8 color )
+static void plot_byte( running_machine &machine, bitmap_t &bitmap, UINT8 y, UINT8 x, UINT8 data, UINT8 color )
 {
 	astinvad_state *state = machine.driver_data<astinvad_state>();
 	pen_t fore_pen = MAKE_RGB(pal1bit(color >> 0), pal1bit(color >> 2), pal1bit(color >> 1));
 	UINT8 flip_xor = state->m_screen_flip & 7;
 
-	*BITMAP_ADDR32(bitmap, y, x + (0 ^ flip_xor)) = (data & 0x01) ? fore_pen : RGB_BLACK;
-	*BITMAP_ADDR32(bitmap, y, x + (1 ^ flip_xor)) = (data & 0x02) ? fore_pen : RGB_BLACK;
-	*BITMAP_ADDR32(bitmap, y, x + (2 ^ flip_xor)) = (data & 0x04) ? fore_pen : RGB_BLACK;
-	*BITMAP_ADDR32(bitmap, y, x + (3 ^ flip_xor)) = (data & 0x08) ? fore_pen : RGB_BLACK;
-	*BITMAP_ADDR32(bitmap, y, x + (4 ^ flip_xor)) = (data & 0x10) ? fore_pen : RGB_BLACK;
-	*BITMAP_ADDR32(bitmap, y, x + (5 ^ flip_xor)) = (data & 0x20) ? fore_pen : RGB_BLACK;
-	*BITMAP_ADDR32(bitmap, y, x + (6 ^ flip_xor)) = (data & 0x40) ? fore_pen : RGB_BLACK;
-	*BITMAP_ADDR32(bitmap, y, x + (7 ^ flip_xor)) = (data & 0x80) ? fore_pen : RGB_BLACK;
+	bitmap.pix32(y, x + (0 ^ flip_xor)) = (data & 0x01) ? fore_pen : RGB_BLACK;
+	bitmap.pix32(y, x + (1 ^ flip_xor)) = (data & 0x02) ? fore_pen : RGB_BLACK;
+	bitmap.pix32(y, x + (2 ^ flip_xor)) = (data & 0x04) ? fore_pen : RGB_BLACK;
+	bitmap.pix32(y, x + (3 ^ flip_xor)) = (data & 0x08) ? fore_pen : RGB_BLACK;
+	bitmap.pix32(y, x + (4 ^ flip_xor)) = (data & 0x10) ? fore_pen : RGB_BLACK;
+	bitmap.pix32(y, x + (5 ^ flip_xor)) = (data & 0x20) ? fore_pen : RGB_BLACK;
+	bitmap.pix32(y, x + (6 ^ flip_xor)) = (data & 0x40) ? fore_pen : RGB_BLACK;
+	bitmap.pix32(y, x + (7 ^ flip_xor)) = (data & 0x80) ? fore_pen : RGB_BLACK;
 }
 
 
 static SCREEN_UPDATE( astinvad )
 {
-	astinvad_state *state = screen->machine().driver_data<astinvad_state>();
-	const UINT8 *color_prom = screen->machine().region("proms")->base();
+	astinvad_state *state = screen.machine().driver_data<astinvad_state>();
+	const UINT8 *color_prom = screen.machine().region("proms")->base();
 	UINT8 yoffs = state->m_flip_yoffs & state->m_screen_flip;
 	int x, y;
 
 	/* render the visible pixels */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
-		for (x = cliprect->min_x & ~7; x <= cliprect->max_x; x += 8)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
+		for (x = cliprect.min_x & ~7; x <= cliprect.max_x; x += 8)
 		{
 			UINT8 color = color_prom[((y & 0xf8) << 2) | (x >> 3)] >> (state->m_screen_flip ? 0 : 4);
 			UINT8 data = state->m_videoram[(((y ^ state->m_screen_flip) + yoffs) << 5) | ((x ^ state->m_screen_flip) >> 3)];
-			plot_byte(screen->machine(), bitmap, y, x, data, state->m_screen_red ? 1 : color);
+			plot_byte(screen.machine(), bitmap, y, x, data, state->m_screen_red ? 1 : color);
 		}
 
 	return 0;
@@ -173,8 +173,8 @@ static SCREEN_UPDATE( astinvad )
 
 static SCREEN_UPDATE( spaceint )
 {
-	astinvad_state *state = screen->machine().driver_data<astinvad_state>();
-	const UINT8 *color_prom = screen->machine().region("proms")->base();
+	astinvad_state *state = screen.machine().driver_data<astinvad_state>();
+	const UINT8 *color_prom = screen.machine().region("proms")->base();
 	int offs;
 
 	for (offs = 0; offs < state->m_videoram_size; offs++)
@@ -189,7 +189,7 @@ static SCREEN_UPDATE( spaceint )
 		offs_t n = ((offs >> 5) & 0xf0) | color;
 		color = color_prom[n] & 0x07;
 
-		plot_byte(screen->machine(), bitmap, y, x, data, color);
+		plot_byte(screen.machine(), bitmap, y, x, data, color);
 	}
 
 	return 0;

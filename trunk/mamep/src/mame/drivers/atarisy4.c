@@ -136,7 +136,7 @@ static VIDEO_RESET( atarisy4 )
 
 static SCREEN_UPDATE( atarisy4 )
 {
-	atarisy4_state *state = screen->machine().driver_data<atarisy4_state>();
+	atarisy4_state *state = screen.machine().driver_data<atarisy4_state>();
 	int y;
 	UINT32 offset = 0;
 
@@ -151,18 +151,18 @@ static SCREEN_UPDATE( atarisy4 )
 
 	//UINT32 offset = gpu.dpr << 5;
 
-	for (y = cliprect->min_y; y <= cliprect->max_y; ++y)
+	for (y = cliprect.min_y; y <= cliprect.max_y; ++y)
 	{
 		UINT16 *src = &state->m_screen_ram[(offset + (4096 * y)) / 2];
-		UINT32 *dest = BITMAP_ADDR32(bitmap, y, cliprect->min_x);
+		UINT32 *dest = &bitmap.pix32(y, cliprect.min_x);
 		int x;
 
-		for (x = cliprect->min_x; x < cliprect->max_x; x += 2)
+		for (x = cliprect.min_x; x < cliprect.max_x; x += 2)
 		{
 			UINT16 data = *src++;
 
-			*dest++ = screen->machine().pens[data & 0xff];
-			*dest++ = screen->machine().pens[data >> 8];
+			*dest++ = screen.machine().pens[data & 0xff];
+			*dest++ = screen.machine().pens[data >> 8];
 		}
 	}
 	return 0;
@@ -271,7 +271,7 @@ static void draw_polygon(atarisy4_state *state, UINT16 color)
 		v3.x = gpu.points[i].x;
 		v3.y = gpu.points[i].y;
 
-		poly_render_triangle(state->m_poly, 0, &clip, draw_scanline, 1, &v1, &v2, &v3);
+		poly_render_triangle(state->m_poly, 0, clip, draw_scanline, 1, &v1, &v2, &v3);
 		v2 = v3;
 	}
 }

@@ -175,14 +175,14 @@ WRITE8_HANDLER( senjyo_bgstripes_w )
 
 ***************************************************************************/
 
-static void draw_bgbitmap(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void draw_bgbitmap(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	senjyo_state *state = machine.driver_data<senjyo_state>();
 	int x,y,pen,strwid,count;
 
 
 	if (state->m_bgstripes == 0xff)	/* off */
-		bitmap_fill(bitmap,cliprect,0);
+		bitmap.fill(0, cliprect);
 	else
 	{
 		int flip = flip_screen_get(machine);
@@ -197,10 +197,10 @@ static void draw_bgbitmap(running_machine &machine, bitmap_t *bitmap,const recta
 		{
 			if (flip)
 				for (y = 0;y < 256;y++)
-					*BITMAP_ADDR16(bitmap, y, 255 - x) = 384 + pen;
+					bitmap.pix16(y, 255 - x) = 384 + pen;
 			else
 				for (y = 0;y < 256;y++)
-					*BITMAP_ADDR16(bitmap, y, x) = 384 + pen;
+					bitmap.pix16(y, x) = 384 + pen;
 
 			count += 0x10;
 			if (count >= strwid)
@@ -212,7 +212,7 @@ static void draw_bgbitmap(running_machine &machine, bitmap_t *bitmap,const recta
 	}
 }
 
-static void draw_radar(running_machine &machine,bitmap_t *bitmap,const rectangle *cliprect)
+static void draw_radar(running_machine &machine,bitmap_t &bitmap,const rectangle &cliprect)
 {
 	senjyo_state *state = machine.driver_data<senjyo_state>();
 	int offs,x;
@@ -232,13 +232,13 @@ static void draw_radar(running_machine &machine,bitmap_t *bitmap,const rectangle
 					sy = 255 - sy;
 				}
 
-				if (sy >= cliprect->min_y && sy <= cliprect->max_y &&
-					sx >= cliprect->min_x && sx <= cliprect->max_x)
-					*BITMAP_ADDR16(bitmap, sy, sx) = offs < 0x200 ? 512 : 513;
+				if (sy >= cliprect.min_y && sy <= cliprect.max_y &&
+					sx >= cliprect.min_x && sx <= cliprect.max_x)
+					bitmap.pix16(sy, sx) = offs < 0x200 ? 512 : 513;
 			}
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect,int priority)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect,int priority)
 {
 	senjyo_state *state = machine.driver_data<senjyo_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -291,16 +291,16 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 
 SCREEN_UPDATE( senjyo )
 {
-	senjyo_state *state = screen->machine().driver_data<senjyo_state>();
+	senjyo_state *state = screen.machine().driver_data<senjyo_state>();
 	int i;
 
 
 	/* two colors for the radar dots (verified on the real board) */
-	palette_set_color(screen->machine(),512,MAKE_RGB(0xff,0x00,0x00));	/* red for enemies */
-	palette_set_color(screen->machine(),513,MAKE_RGB(0xff,0xff,0x00));	/* yellow for player */
+	palette_set_color(screen.machine(),512,MAKE_RGB(0xff,0x00,0x00));	/* red for enemies */
+	palette_set_color(screen.machine(),513,MAKE_RGB(0xff,0xff,0x00));	/* yellow for player */
 
 	{
-		int flip = flip_screen_get(screen->machine());
+		int flip = flip_screen_get(screen.machine());
 		int scrollx,scrolly;
 
 		for (i = 0;i < 32;i++)
@@ -333,16 +333,16 @@ SCREEN_UPDATE( senjyo )
 		tilemap_set_scrolly(state->m_bg3_tilemap, 0, scrolly);
 	}
 
-	draw_bgbitmap(screen->machine(), bitmap, cliprect);
-	draw_sprites(screen->machine(), bitmap, cliprect, 0);
+	draw_bgbitmap(screen.machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0);
 	tilemap_draw(bitmap, cliprect, state->m_bg3_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect, 1);
+	draw_sprites(screen.machine(), bitmap, cliprect, 1);
 	tilemap_draw(bitmap, cliprect, state->m_bg2_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect, 2);
+	draw_sprites(screen.machine(), bitmap, cliprect, 2);
 	tilemap_draw(bitmap, cliprect, state->m_bg1_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect, 3);
+	draw_sprites(screen.machine(), bitmap, cliprect, 3);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
-	draw_radar(screen->machine(), bitmap, cliprect);
+	draw_radar(screen.machine(), bitmap, cliprect);
 
 #if 0
 {

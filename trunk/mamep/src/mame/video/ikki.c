@@ -62,14 +62,14 @@ WRITE8_HANDLER( ikki_scrn_ctrl_w )
 }
 
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	ikki_state *state = machine.driver_data<ikki_state>();
 	UINT8 *spriteram = state->m_spriteram;
 	int y;
 	offs_t offs;
 
-	bitmap_fill(state->m_sprite_bitmap, cliprect, state->m_punch_through_pen);
+	state->m_sprite_bitmap->fill(state->m_punch_through_pen, cliprect);
 
 	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
 	{
@@ -93,7 +93,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 		if (y > 240)
 			y = y - 256;
 
-		drawgfx_transmask(state->m_sprite_bitmap,cliprect, machine.gfx[1],
+		drawgfx_transmask(*state->m_sprite_bitmap,cliprect, machine.gfx[1],
 				code, color,
 				state->m_flipscreen,state->m_flipscreen,
 				x,y,
@@ -101,16 +101,16 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 	}
 
 	/* copy the sprite bitmap into the main bitmap, skipping the transparent pixels */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
 		int x;
 
-		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+		for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 		{
-			UINT16 pen = *BITMAP_ADDR16(state->m_sprite_bitmap, y, x);
+			UINT16 pen = state->m_sprite_bitmap->pix16(y, x);
 
 			if (colortable_entry_get_value(machine.colortable, pen) != 0x100)
-				*BITMAP_ADDR16(bitmap, y, x) = pen;
+				bitmap.pix16(y, x) = pen;
 		}
 	}
 }
@@ -126,9 +126,9 @@ VIDEO_START( ikki )
 
 SCREEN_UPDATE( ikki )
 {
-	ikki_state *state = screen->machine().driver_data<ikki_state>();
+	ikki_state *state = screen.machine().driver_data<ikki_state>();
 	offs_t offs;
-	UINT8 *VIDEOATTR = screen->machine().region("user1")->base();
+	UINT8 *VIDEOATTR = screen.machine().region("user1")->base();
 
 	/* draw bg layer */
 
@@ -178,14 +178,14 @@ SCREEN_UPDATE( ikki )
 		bank = (color & 0xe0) << 3;
 		color = ((color & 0x1f)<<0) | ((color & 0x80) >> 2);
 
-		drawgfx_opaque(bitmap,cliprect,screen->machine().gfx[0],
+		drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[0],
 			state->m_videoram[offs * 2 + 1] + bank,
 			color,
 			state->m_flipscreen,state->m_flipscreen,
 			x,y);
 	}
 
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 
 	/* mask sprites */
 
@@ -213,7 +213,7 @@ SCREEN_UPDATE( ikki )
 			bank = (color & 0xe0) << 3;
 			color = ((color & 0x1f)<<0) | ((color & 0x80) >> 2);
 
-			drawgfx_opaque(bitmap,cliprect,screen->machine().gfx[0],
+			drawgfx_opaque(bitmap,cliprect,screen.machine().gfx[0],
 				state->m_videoram[offs * 2 + 1] + bank,
 				color,
 				state->m_flipscreen,state->m_flipscreen,

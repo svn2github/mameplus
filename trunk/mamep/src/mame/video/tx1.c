@@ -1126,12 +1126,12 @@ VIDEO_START( tx1 )
 
 SCREEN_EOF( tx1 )
 {
-	tx1_state *state = machine.driver_data<tx1_state>();
+	tx1_state *state = screen.machine().driver_data<tx1_state>();
 	/* /VSYNC: Update TZ113 */
 	state->m_vregs.slin_val += state->m_vregs.slin_inc;
 }
 
-static void tx1_combine_layers(running_machine &machine, bitmap_t *bitmap, int screen)
+static void tx1_combine_layers(running_machine &machine, bitmap_t &bitmap, int screen)
 {
 	tx1_state *state = machine.driver_data<tx1_state>();
 	int x, y;
@@ -1141,7 +1141,7 @@ static void tx1_combine_layers(running_machine &machine, bitmap_t *bitmap, int s
 
 	for (y = 0; y < 240; ++y)
 	{
-		UINT16 *bmp_addr = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *bmp_addr = &bitmap.pix16(y);
 
 		UINT32 bmp_offset = y * 768 + x_offset;
 
@@ -1182,32 +1182,29 @@ static void tx1_combine_layers(running_machine &machine, bitmap_t *bitmap, int s
 	}
 }
 
-SCREEN_UPDATE( tx1 )
+SCREEN_UPDATE( tx1_left )
 {
-	tx1_state *state = screen->machine().driver_data<tx1_state>();
-	device_t *left_screen   = screen->machine().device("lscreen");
-	device_t *centre_screen = screen->machine().device("cscreen");
-	device_t *right_screen  = screen->machine().device("rscreen");
+	tx1_state *state = screen.machine().driver_data<tx1_state>();
 
-	if (screen == left_screen)
-	{
-		memset(state->m_obj_bmp, 0, 768*240);
+	memset(state->m_obj_bmp, 0, 768*240);
 
-		tx1_draw_char(screen->machine(), state->m_chr_bmp);
-		tx1_draw_road(screen->machine(), state->m_rod_bmp);
-		tx1_draw_objects(screen->machine(), state->m_obj_bmp);
+	tx1_draw_char(screen.machine(), state->m_chr_bmp);
+	tx1_draw_road(screen.machine(), state->m_rod_bmp);
+	tx1_draw_objects(screen.machine(), state->m_obj_bmp);
 
-		tx1_combine_layers(screen->machine(), bitmap, 0);
-	}
-	else if (screen == centre_screen)
-	{
-		tx1_combine_layers(screen->machine(), bitmap, 1);
-	}
-	else if (screen == right_screen)
-	{
-		tx1_combine_layers(screen->machine(), bitmap, 2);
-	}
+	tx1_combine_layers(screen.machine(), bitmap, 0);
+	return 0;
+}
 
+SCREEN_UPDATE( tx1_middle )
+{
+	tx1_combine_layers(screen.machine(), bitmap, 1);
+	return 0;
+}
+
+SCREEN_UPDATE( tx1_right )
+{
+	tx1_combine_layers(screen.machine(), bitmap, 2);
 	return 0;
 }
 
@@ -2932,7 +2929,7 @@ WRITE16_HANDLER( buggyboy_scolst_w )
  *
  *************************************/
 
-static void bb_combine_layers(running_machine &machine, bitmap_t *bitmap, int screen)
+static void bb_combine_layers(running_machine &machine, bitmap_t &bitmap, int screen)
 {
 	tx1_state *state = machine.driver_data<tx1_state>();
 	UINT8 *chr_pal = machine.region("proms")->base() + 0x400;
@@ -2964,7 +2961,7 @@ static void bb_combine_layers(running_machine &machine, bitmap_t *bitmap, int sc
 		UINT32 sky_en = BIT(state->m_vregs.sky, 7);
 		UINT32 sky_val = (((state->m_vregs.sky & 0x7f) + y) >> 2) & 0x3f;
 
-		UINT16 *bmp_addr = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *bmp_addr = &bitmap.pix16(y);
 
 		for (x = 0; x < 256; ++x)
 		{
@@ -3032,7 +3029,7 @@ VIDEO_START( buggybjr )
 
 SCREEN_EOF( buggyboy )
 {
-	tx1_state *state = machine.driver_data<tx1_state>();
+	tx1_state *state = screen.machine().driver_data<tx1_state>();
 
 	/* /VSYNC: Update TZ113 @ 219 */
 	state->m_vregs.slin_val += state->m_vregs.slin_inc;
@@ -3042,46 +3039,42 @@ SCREEN_EOF( buggyboy )
 }
 
 
-SCREEN_UPDATE( buggyboy )
+SCREEN_UPDATE( buggyboy_left )
 {
-	tx1_state *state = screen->machine().driver_data<tx1_state>();
-	device_t *left_screen = screen->machine().device("lscreen");
-	device_t *center_screen = screen->machine().device("cscreen");
-	device_t *right_screen = screen->machine().device("rscreen");
+	tx1_state *state = screen.machine().driver_data<tx1_state>();
 
-	if (screen == left_screen)
-	{
-		memset(state->m_obj_bmp, 0, 768*240);
-		memset(state->m_rod_bmp, 0, 768*240);
+	memset(state->m_obj_bmp, 0, 768*240);
+	memset(state->m_rod_bmp, 0, 768*240);
 
-		buggyboy_draw_char(screen->machine(), state->m_chr_bmp, 1);
-		buggyboy_draw_road(screen->machine(), state->m_rod_bmp);
-		buggyboy_draw_objs(screen->machine(), state->m_obj_bmp, 1);
+	buggyboy_draw_char(screen.machine(), state->m_chr_bmp, 1);
+	buggyboy_draw_road(screen.machine(), state->m_rod_bmp);
+	buggyboy_draw_objs(screen.machine(), state->m_obj_bmp, 1);
 
-		bb_combine_layers(screen->machine(), bitmap, 0);
-	}
-	else if (screen == center_screen)
-	{
-		bb_combine_layers(screen->machine(), bitmap, 1);
-	}
-	else if (screen == right_screen)
-	{
-		bb_combine_layers(screen->machine(), bitmap, 2);
-	}
-
+	bb_combine_layers(screen.machine(), bitmap, 0);
 	return 0;
+}
 
+SCREEN_UPDATE( buggyboy_middle )
+{
+	bb_combine_layers(screen.machine(), bitmap, 1);
+	return 0;
+}
+
+SCREEN_UPDATE( buggyboy_right )
+{
+	bb_combine_layers(screen.machine(), bitmap, 2);
+	return 0;
 }
 
 SCREEN_UPDATE( buggybjr )
 {
-	tx1_state *state = screen->machine().driver_data<tx1_state>();
+	tx1_state *state = screen.machine().driver_data<tx1_state>();
 	memset(state->m_obj_bmp, 0, 256*240);
 
-	buggyboy_draw_char(screen->machine(), state->m_chr_bmp, 0);
-	buggybjr_draw_road(screen->machine(), state->m_rod_bmp, 0);
-	buggyboy_draw_objs(screen->machine(), state->m_obj_bmp, 0);
+	buggyboy_draw_char(screen.machine(), state->m_chr_bmp, 0);
+	buggybjr_draw_road(screen.machine(), state->m_rod_bmp, 0);
+	buggyboy_draw_objs(screen.machine(), state->m_obj_bmp, 0);
 
-	bb_combine_layers(screen->machine(), bitmap, -1);
+	bb_combine_layers(screen.machine(), bitmap, -1);
 	return 0;
 }

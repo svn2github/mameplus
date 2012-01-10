@@ -293,25 +293,17 @@ WRITE8_HANDLER( travrusa_flipscreen_w )
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	travrusa_state *state = machine.driver_data<travrusa_state>();
 	int offs;
-	static const rectangle spritevisiblearea =
-	{
-		1*8, 31*8-1,
-		0*8, 24*8-1
-	};
-	static const rectangle spritevisibleareaflip =
-	{
-		1*8, 31*8-1,
-		8*8, 32*8-1
-	};
-	rectangle clip = *cliprect;
+	const rectangle spritevisiblearea(1*8, 31*8-1, 0*8, 24*8-1);
+	const rectangle spritevisibleareaflip(1*8, 31*8-1, 8*8, 32*8-1);
+	rectangle clip = cliprect;
 	if (flip_screen_get(machine))
-		sect_rect(&clip, &spritevisibleareaflip);
+		clip &= spritevisibleareaflip;
 	else
-		sect_rect(&clip, &spritevisiblearea);
+		clip &= spritevisiblearea;
 
 
 	for (offs = state->m_spriteram_size - 4; offs >= 0; offs -= 4)
@@ -331,7 +323,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 			flipy = !flipy;
 		}
 
-		drawgfx_transpen(bitmap, &clip, machine.gfx[1],
+		drawgfx_transpen(bitmap, clip, machine.gfx[1],
 				code,
 				attr & 0x0f,
 				flipx, flipy,
@@ -342,9 +334,9 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 
 SCREEN_UPDATE( travrusa )
 {
-	travrusa_state *state = screen->machine().driver_data<travrusa_state>();
+	travrusa_state *state = screen.machine().driver_data<travrusa_state>();
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, TILEMAP_DRAW_LAYER1, 0);
-	draw_sprites(screen->machine(), bitmap,cliprect);
+	draw_sprites(screen.machine(), bitmap,cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, TILEMAP_DRAW_LAYER0, 0);
 	return 0;
 }

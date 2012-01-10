@@ -208,7 +208,7 @@ VIDEO_START( kingofb )
 	tilemap_set_transparent_pen(state->m_fg_tilemap, 0);
 }
 
-static void kingofb_draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void kingofb_draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	kingofb_state *state = machine.driver_data<kingofb_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -248,11 +248,11 @@ static void kingofb_draw_sprites(running_machine &machine, bitmap_t *bitmap, con
 
 SCREEN_UPDATE( kingofb )
 {
-	kingofb_state *state = screen->machine().driver_data<kingofb_state>();
+	kingofb_state *state = screen.machine().driver_data<kingofb_state>();
 
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, -(*state->m_scroll_y));
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	kingofb_draw_sprites(screen->machine(), bitmap, cliprect);
+	kingofb_draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	return 0;
 }
@@ -277,7 +277,7 @@ VIDEO_START( ringking )
 	tilemap_set_transparent_pen(state->m_fg_tilemap, 0);
 }
 
-static void ringking_draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void ringking_draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	kingofb_state *state = machine.driver_data<kingofb_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -310,11 +310,11 @@ static void ringking_draw_sprites( running_machine &machine, bitmap_t *bitmap, c
 
 SCREEN_UPDATE( ringking )
 {
-	kingofb_state *state = screen->machine().driver_data<kingofb_state>();
+	kingofb_state *state = screen.machine().driver_data<kingofb_state>();
 
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, -(*state->m_scroll_y));
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	ringking_draw_sprites(screen->machine(), bitmap, cliprect);
+	ringking_draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	return 0;
 }

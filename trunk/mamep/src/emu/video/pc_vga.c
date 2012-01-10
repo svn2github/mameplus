@@ -16,6 +16,14 @@
     ega/vga
     64k (early ega 16k) words of 32 bit memory
 
+    TODO:
+    - modernize
+    - convert to a device.
+    - fix pixel clock
+    - add emulated mc6845 hook-up
+    - fix resolution change
+    - fix video update.
+    - (and many more ...)
 
     ROM declarations:
 
@@ -75,14 +83,14 @@ SCREEN_UPDATE( pc_video )
 {
 	UINT32 rc = 0;
 	int w = 0, h = 0;
-	pc_video_update_proc video_update = pc_choosevideomode(screen->machine(), &w, &h);
+	pc_video_update_proc video_update = pc_choosevideomode(screen.machine(), &w, &h);
 
 	if (video_update)
 	{
 		if ((pc_current_width != w) || (pc_current_height != h))
 		{
-			int width = screen->width();
-			int height = screen->height();
+			int width = screen.width();
+			int height = screen.height();
 
 			pc_current_width = w;
 			pc_current_height = h;
@@ -93,9 +101,9 @@ SCREEN_UPDATE( pc_video )
 				pc_current_height = height;
 
 			if ((pc_current_width > 100) && (pc_current_height > 100))
-				screen->set_visible_area(0, pc_current_width-1, 0, pc_current_height-1);
+				screen.set_visible_area(0, pc_current_width-1, 0, pc_current_height-1);
 
-			bitmap_fill(bitmap, cliprect, 0);
+			bitmap.fill(0, cliprect);
 		}
 
 		video_update(bitmap);
@@ -525,38 +533,8 @@ static READ8_HANDLER(vga_crtc_r)
 	case 0xa:
 		vga.attribute.state = 0;
 		data = 0;/*4; */
-#if 0 /* slow */
-		{
-			int clock=vga.monitor.get_clock();
-			int lines=vga.monitor.get_lines();
-			int columns=vga.monitor.get_columns();
-			int diff = (((space->machine().time() - vga.monitor.start_time) * clock).seconds)
-				%(lines*columns);
-			if (diff<columns*vga.monitor.get_sync_lines()) data|=8;
-			diff=diff/lines;
-			if (diff%columns<vga.monitor.get_sync_columns()) data|=1;
-		}
-#elif 1
-		if (vga.monitor.retrace)
-		{
-			data |= 1;
-			if ((space->machine().time() - vga.monitor.start_time) > attotime::from_usec(300))
-			{
-				data |= 8;
-				vga.monitor.retrace=0;
-			}
-		}
-		else
-		{
-			if ((space->machine().time() - vga.monitor.start_time)  > attotime::from_msec(15))
-				vga.monitor.retrace=1;
-			vga.monitor.start_time=space->machine().time();
-		}
-#else
-		// not working with ps2m30
-		if (vga.monitor.retrace) data|=9;
-		vga.monitor.retrace=0;
-#endif
+		data |= (space->machine().primary_screen->hblank() & 1) << 0;
+		data |= (space->machine().primary_screen->vblank() & 1) << 3;
 		/* ega diagnostic readback enough for oak bios */
 		switch (vga.attribute.data[0x12]&0x30) {
 		case 0:
@@ -629,16 +607,14 @@ READ8_HANDLER( vga_port_03c0_r )
 
 	switch (offset)
 	{
+		case 0:
+			data = vga.attribute.index;
+			break;
 		case 1:
-			if (vga.attribute.state==0)
-			{
-				data = vga.attribute.index;
-			}
-			else
-			{
-				if ((vga.attribute.index&0x1f)<sizeof(vga.attribute.data))
-					data=vga.attribute.data[vga.attribute.index&0x1f];
-			}
+			if( vga.attribute.index & 0x20) // protection bit
+				data = 0xff; // TODO: actually undefined
+			else if ((vga.attribute.index&0x1f)<sizeof(vga.attribute.data))
+				data=vga.attribute.data[vga.attribute.index&0x1f];
 			break;
 
 		case 2:
@@ -741,6 +717,12 @@ READ8_HANDLER(vga_port_03d0_r)
 	UINT8 data = 0xff;
 	if (CRTC_PORT_ADDR == 0x3d0)
 		data = vga_crtc_r(space, offset);
+	if(offset == 8)
+	{
+		logerror("VGA: 0x3d8 read at %08x\n",cpu_get_pc(&space->device()));
+		data = 0; // TODO: PC-200 reads back CGA register here, everything else returns open bus OR CGA emulation of register 0x3d8
+	}
+
 	return data;
 }
 
@@ -766,8 +748,9 @@ WRITE8_HANDLER(vga_port_03c0_w)
 		}
 		else
 		{
-			if ((vga.attribute.index&0x1f)<sizeof(vga.attribute.data))
-				vga.attribute.data[vga.attribute.index&0x1f]=data;
+			if(!(vga.attribute.index & 0x20)) // protection bit
+				if ((vga.attribute.index&0x1f)<sizeof(vga.attribute.data))
+					vga.attribute.data[vga.attribute.index&0x1f]=data;
 		}
 		vga.attribute.state=!vga.attribute.state;
 		break;
@@ -993,11 +976,6 @@ void pc_vga_init(running_machine &machine, const struct pc_vga_interface *vga_in
 	pc_vga_reset(machine);
 }
 
-static TIMER_CALLBACK(vga_timer)
-{
-	vga.monitor.retrace=1;
-}
-
 static VIDEO_START( vga )
 {
 	vga.monitor.get_clock=vga_get_clock;
@@ -1005,7 +983,6 @@ static VIDEO_START( vga )
 	vga.monitor.get_columns=vga_get_crtc_columns;
 	vga.monitor.get_sync_lines=vga_get_crtc_sync_lines;
 	vga.monitor.get_sync_columns=vga_get_crtc_sync_columns;
-	machine.scheduler().timer_pulse(attotime::from_hz(60), FUNC(vga_timer));
 	pc_video_start(machine, pc_vga_choosevideomode);
 }
 
@@ -1014,7 +991,7 @@ static VIDEO_RESET( vga )
 	pc_vga_reset(machine);
 }
 
-static void vga_vh_text(bitmap_t *bitmap)
+static void vga_vh_text(bitmap_t &bitmap)
 {
 	UINT8 ch, attr;
 	UINT8 bits;
@@ -1042,9 +1019,9 @@ static void vga_vh_text(bitmap_t *bitmap)
 			attr = vga.memory[(pos<<2) + 1];
 			font = vga.memory+2+(ch<<(5+2))+FONT1;
 
-			for (h = MAX(-line, 0); (h < height) && (line+h < MIN(TEXT_LINES, bitmap->height)); h++)
+			for (h = MAX(-line, 0); (h < height) && (line+h < MIN(TEXT_LINES, bitmap.height())); h++)
 			{
-				bitmapline = BITMAP_ADDR16(bitmap, line+h, 0);
+				bitmapline = &bitmap.pix16(line+h);
 				bits = font[h<<2];
 
 				assert(bitmapline);
@@ -1074,14 +1051,14 @@ static void vga_vh_text(bitmap_t *bitmap)
 					 (h<=CRTC_CURSOR_BOTTOM)&&(h<height)&&(line+h<TEXT_LINES);
 					 h++)
 				{
-					plot_box(bitmap, column*width, line+h, width, 1, vga.pens[attr&0xf]);
+					bitmap.plot_box(column*width, line+h, width, 1, vga.pens[attr&0xf]);
 				}
 			}
 		}
 	}
 }
 
-static void vga_vh_ega(bitmap_t *bitmap)
+static void vga_vh_ega(bitmap_t &bitmap)
 {
 	int pos, line, column, c, addr, i;
 	int height = CRTC_CHAR_HEIGHT;
@@ -1092,7 +1069,7 @@ static void vga_vh_ega(bitmap_t *bitmap)
 	for (addr=EGA_START_ADDRESS, pos=0, line=0; line<LINES;
 		 line += height, addr=(addr+EGA_LINE_LENGTH)&0x3ffff)
 	{
-		bitmapline = BITMAP_ADDR16(bitmap, line, 0);
+		bitmapline = &bitmap.pix16(line);
 
 		for (pos=addr, c=0, column=0; column<EGA_COLUMNS; column++, c+=8, pos=(pos+4)&0x3ffff)
 		{
@@ -1120,13 +1097,13 @@ static void vga_vh_ega(bitmap_t *bitmap)
 			if (line + i >= LINES)
 				break;
 
-			newbitmapline = BITMAP_ADDR16(bitmap, line+i, 0);
+			newbitmapline = &bitmap.pix16(line+i);
 			memcpy(newbitmapline, bitmapline, EGA_COLUMNS * 8 * sizeof(UINT16));
 		}
 	}
 }
 
-static void vga_vh_vga(bitmap_t *bitmap)
+static void vga_vh_vga(bitmap_t &bitmap)
 {
 	int pos, line, column, c, addr, curr_addr;
 	UINT16 *bitmapline;
@@ -1140,7 +1117,7 @@ static void vga_vh_vga(bitmap_t *bitmap)
 				curr_addr = addr;
 			if(line == (vga.line_compare & 0x3ff))
 				curr_addr = 0;
-			bitmapline = BITMAP_ADDR16(bitmap, line, 0);
+			bitmapline = &bitmap.pix16(line);
 			addr %= vga.svga_intf.vram_size;
 			for (pos=curr_addr, c=0, column=0; column<VGA_COLUMNS; column++, c+=8, pos+=0x20)
 			{
@@ -1165,7 +1142,7 @@ static void vga_vh_vga(bitmap_t *bitmap)
 				curr_addr = addr;
 			if(line == (vga.line_compare & 0x3ff))
 				curr_addr = 0;
-			bitmapline = BITMAP_ADDR16(bitmap, line, 0);
+			bitmapline = &bitmap.pix16(line);
 			addr %= vga.svga_intf.vram_size;
 			for (pos=curr_addr, c=0, column=0; column<VGA_COLUMNS; column++, c+=8, pos+=0x08)
 			{
@@ -1264,11 +1241,8 @@ size_t pc_vga_memory_size(void)
 MACHINE_CONFIG_FRAGMENT( pcvideo_vga )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MCFG_SCREEN_SIZE(720, 480)
-	MCFG_SCREEN_VISIBLE_AREA(0,720-1, 0,480-1)
+	MCFG_SCREEN_RAW_PARAMS(XTAL_25_1748MHz,800,0,640,525,0,480)
 	MCFG_SCREEN_UPDATE(pc_video)
-	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
 
 	MCFG_PALETTE_LENGTH(0x100)
 	MCFG_PALETTE_INIT(vga)

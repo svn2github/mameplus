@@ -323,7 +323,7 @@ static MC6845_BEGIN_UPDATE( begin_update )
 static MC6845_UPDATE_ROW( update_row )
 {
 	qix_state *state = device->machine().driver_data<qix_state>();
-	UINT32 *dest = BITMAP_ADDR32(bitmap, y, 0);
+	UINT32 *dest = &bitmap.pix32(y);
 	UINT16 x;
 
 	pen_t *pens = (pen_t *)param;
@@ -346,7 +346,7 @@ static MC6845_UPDATE_ROW( update_row )
 
 static SCREEN_UPDATE( qix )
 {
-	mc6845_device *mc6845 = screen->machine().device<mc6845_device>(MC6845_TAG);
+	mc6845_device *mc6845 = screen.machine().device<mc6845_device>(MC6845_TAG);
 	mc6845->update(bitmap, cliprect);
 
 	return 0;

@@ -108,7 +108,7 @@ VIDEO_START( cheekyms )
 }
 
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, const gfx_element *gfx, int flip )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, const gfx_element *gfx, int flip )
 {
 	cheekyms_state *state = machine.driver_data<cheekyms_state>();
 	offs_t offs;
@@ -150,27 +150,27 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( cheekyms )
 {
-	cheekyms_state *state = screen->machine().driver_data<cheekyms_state>();
+	cheekyms_state *state = screen.machine().driver_data<cheekyms_state>();
 	int y, x;
 	int scrolly = ((*state->m_port_80 >> 3) & 0x07);
 	int flip = *state->m_port_80 & 0x80;
 
-	tilemap_mark_all_tiles_dirty_all(screen->machine());
-	tilemap_set_flip_all(screen->machine(), flip ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
+	tilemap_mark_all_tiles_dirty_all(screen.machine());
+	tilemap_set_flip_all(screen.machine(), flip ? TILEMAP_FLIPX | TILEMAP_FLIPY : 0);
 
-	bitmap_fill(bitmap, cliprect, 0);
-	bitmap_fill(state->m_bitmap_buffer, cliprect, 0);
+	bitmap.fill(0, cliprect);
+	state->m_bitmap_buffer->fill(0, cliprect);
 
 	/* sprites go under the playfield */
-	draw_sprites(screen->machine(), bitmap, cliprect, screen->machine().gfx[1], flip);
+	draw_sprites(screen.machine(), bitmap, cliprect, screen.machine().gfx[1], flip);
 
 	/* draw the tilemap to a temp bitmap */
-	tilemap_draw(state->m_bitmap_buffer, cliprect, state->m_cm_tilemap, 0, 0);
+	tilemap_draw(*state->m_bitmap_buffer, cliprect, state->m_cm_tilemap, 0, 0);
 
 	/* draw the tilemap to the final bitmap applying the scroll to the man character */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
-		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+		for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 		{
 			int in_man_area;
 
@@ -185,13 +185,13 @@ SCREEN_UPDATE( cheekyms )
 
 			if (in_man_area)
 			{
-				if ((y + scrolly) < 27 * 8 && *BITMAP_ADDR16(state->m_bitmap_buffer, y + scrolly, x) != 0)
-					*BITMAP_ADDR16(bitmap, y, x) = *BITMAP_ADDR16(state->m_bitmap_buffer, y + scrolly, x);
+				if ((y + scrolly) < 27 * 8 && state->m_bitmap_buffer->pix16(y + scrolly, x) != 0)
+					bitmap.pix16(y, x) = state->m_bitmap_buffer->pix16(y + scrolly, x);
 			}
 			else
 			{
-				if(*BITMAP_ADDR16(state->m_bitmap_buffer, y, x) != 0)
-					*BITMAP_ADDR16(bitmap, y, x) = *BITMAP_ADDR16(state->m_bitmap_buffer, y, x);
+				if(state->m_bitmap_buffer->pix16(y, x) != 0)
+					bitmap.pix16(y, x) = state->m_bitmap_buffer->pix16(y, x);
 			}
 		}
 	}

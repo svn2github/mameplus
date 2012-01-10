@@ -210,7 +210,7 @@ WRITE8_HANDLER( hcastle_pf2_control_w )
 
 /*****************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, UINT8 *sbank, int bank )
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, UINT8 *sbank, int bank )
 {
 	hcastle_state *state = machine.driver_data<hcastle_state>();
 	device_t *k007121 = bank ? state->m_k007121_2 : state->m_k007121_1;
@@ -224,7 +224,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( hcastle )
 {
-	hcastle_state *state = screen->machine().driver_data<hcastle_state>();
+	hcastle_state *state = screen.machine().driver_data<hcastle_state>();
 
 	UINT8 ctrl_1_0 = k007121_ctrlram_r(state->m_k007121_1, 0);
 	UINT8 ctrl_1_1 = k007121_ctrlram_r(state->m_k007121_1, 1);
@@ -235,7 +235,7 @@ SCREEN_UPDATE( hcastle )
 	UINT8 ctrl_2_2 = k007121_ctrlram_r(state->m_k007121_2, 2);
 	UINT8 ctrl_2_3 = k007121_ctrlram_r(state->m_k007121_2, 3);
 
-	set_pens(screen->machine());
+	set_pens(screen.machine());
 
 	state->m_pf1_bankbase = 0x0000;
 	state->m_pf2_bankbase = 0x4000 * ((state->m_gfx_bank & 2) >> 1);
@@ -264,16 +264,16 @@ SCREEN_UPDATE( hcastle )
 	if ((state->m_gfx_bank & 0x04) == 0)
 	{
 		tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-		draw_sprites(screen->machine(), bitmap, cliprect, screen->machine().generic.buffered_spriteram.u8, 0);
-		draw_sprites(screen->machine(), bitmap, cliprect, screen->machine().generic.buffered_spriteram2.u8, 1);
+		draw_sprites(screen.machine(), bitmap, cliprect, screen.machine().generic.buffered_spriteram.u8, 0);
+		draw_sprites(screen.machine(), bitmap, cliprect, screen.machine().generic.buffered_spriteram2.u8, 1);
 		tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	}
 	else
 	{
 		tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 		tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
-		draw_sprites(screen->machine(), bitmap, cliprect, screen->machine().generic.buffered_spriteram.u8, 0);
-		draw_sprites(screen->machine(), bitmap, cliprect, screen->machine().generic.buffered_spriteram2.u8, 1);
+		draw_sprites(screen.machine(), bitmap, cliprect, screen.machine().generic.buffered_spriteram.u8, 0);
+		draw_sprites(screen.machine(), bitmap, cliprect, screen.machine().generic.buffered_spriteram2.u8, 1);
 	}
 	return 0;
 }

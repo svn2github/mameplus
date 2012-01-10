@@ -21,7 +21,7 @@ WRITE16_HANDLER( asuka_spritectrl_w )
 
 SCREEN_UPDATE( asuka )
 {
-	asuka_state *state = screen->machine().driver_data<asuka_state>();
+	asuka_state *state = screen.machine().driver_data<asuka_state>();
 	UINT8 layer[3];
 
 	tc0100scn_tilemap_update(state->m_tc0100scn);
@@ -30,10 +30,10 @@ SCREEN_UPDATE( asuka )
 	layer[1] = layer[0] ^ 1;
 	layer[2] = 2;
 
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	/* Ensure screen blanked even when bottom layer not drawn due to disable bit */
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
 	tc0100scn_tilemap_draw(state->m_tc0100scn, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 1);
 	tc0100scn_tilemap_draw(state->m_tc0100scn, bitmap, cliprect, layer[1], 0, 2);
@@ -47,7 +47,7 @@ SCREEN_UPDATE( asuka )
 
 SCREEN_UPDATE( bonzeadv )
 {
-	asuka_state *state = screen->machine().driver_data<asuka_state>();
+	asuka_state *state = screen.machine().driver_data<asuka_state>();
 	UINT8 layer[3];
 
 	tc0100scn_tilemap_update(state->m_tc0100scn);
@@ -56,10 +56,10 @@ SCREEN_UPDATE( bonzeadv )
 	layer[1] = layer[0] ^ 1;
 	layer[2] = 2;
 
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	/* Ensure screen blanked even when bottom layer not drawn due to disable bit */
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
 	tc0100scn_tilemap_draw(state->m_tc0100scn, bitmap, cliprect, layer[0], TILEMAP_DRAW_OPAQUE, 1);
 	tc0100scn_tilemap_draw(state->m_tc0100scn, bitmap, cliprect, layer[1], 0, 2);

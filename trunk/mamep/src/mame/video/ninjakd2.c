@@ -360,7 +360,7 @@ WRITE8_HANDLER( ninjakd2_sprite_overdraw_w )
  *
  *************************************/
 
-static void draw_sprites(running_machine& machine, bitmap_t* bitmap)
+static void draw_sprites(running_machine& machine, bitmap_t &bitmap)
 {
 	ninjakd2_state *state = machine.driver_data<ninjakd2_state>();
 	const gfx_element* const gfx = machine.gfx[1];
@@ -413,7 +413,7 @@ static void draw_sprites(running_machine& machine, bitmap_t* bitmap)
 				{
 					int const tile = code ^ (x << big_xshift) ^ (y << big_yshift);
 
-					drawgfx_transpen(bitmap, 0, gfx,
+					drawgfx_transpen(bitmap, bitmap.cliprect(), gfx,
 							tile,
 							color,
 							flipx,flipy,
@@ -452,18 +452,18 @@ static int stencil_omegaf(   UINT16 pal ) { return( TRUE ); }
 // This is very hackish.
 // (Is there a possibility that software can't select it but hardware can?)
 
-static void erase_sprites(running_machine& machine, bitmap_t* bitmap, const rectangle* cliprect)
+static void erase_sprites(running_machine& machine, bitmap_t &bitmap)
 {
 	ninjakd2_state *state = machine.driver_data<ninjakd2_state>();
 	// if sprite overdraw is disabled, clear the sprite framebuffer
 	if (!state->m_next_sprite_overdraw_enabled)
-		bitmap_fill(state->m_sp_bitmap, cliprect, TRANSPARENTCODE);
+		state->m_sp_bitmap->fill(TRANSPARENTCODE);
 	else
-		for (int y = 0; y < state->m_sp_bitmap->height; ++y)
+		for (int y = 0; y < state->m_sp_bitmap->height(); ++y)
 		{
-			for (int x = 0; x < state->m_sp_bitmap->width; ++x)
+			for (int x = 0; x < state->m_sp_bitmap->width(); ++x)
 			{
-				UINT16* const ptr = BITMAP_ADDR16(state->m_sp_bitmap, y, x);
+				UINT16* const ptr = &state->m_sp_bitmap->pix16(y, x);
 
 				if ( (*state->m_stencil_compare_function)(*ptr) ) *ptr = TRANSPARENTCODE ;
 			}
@@ -474,8 +474,8 @@ static void erase_sprites(running_machine& machine, bitmap_t* bitmap, const rect
 static void update_sprites(running_machine& machine)
 {
 	ninjakd2_state *state = machine.driver_data<ninjakd2_state>();
-	erase_sprites(machine, state->m_sp_bitmap, 0);
-	draw_sprites(machine, state->m_sp_bitmap);
+	erase_sprites(machine, *state->m_sp_bitmap);
+	draw_sprites(machine, *state->m_sp_bitmap);
 }
 	////// Before modified, this was written.
 		// we want to erase the sprites with the old setting and draw them with the
@@ -486,17 +486,17 @@ static void update_sprites(running_machine& machine)
 
 SCREEN_UPDATE( ninjakd2 )
 {
-	ninjakd2_state *state = screen->machine().driver_data<ninjakd2_state>();
+	ninjakd2_state *state = screen.machine().driver_data<ninjakd2_state>();
 	// updating sprites here instead than in screen_eof avoids a palette glitch
 	// at the end of the "rainbow sky" screens.
-	update_sprites(screen->machine());
+	update_sprites(screen.machine());
 	state->m_sprites_updated = 1;
 
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
-	copybitmap_trans(bitmap, state->m_sp_bitmap, 0, 0, 0, 0, cliprect, TRANSPARENTCODE);
+	copybitmap_trans(bitmap, *state->m_sp_bitmap, 0, 0, 0, 0, cliprect, TRANSPARENTCODE);
 
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 
@@ -505,17 +505,17 @@ SCREEN_UPDATE( ninjakd2 )
 
 SCREEN_UPDATE( robokid )
 {
-	ninjakd2_state *state = screen->machine().driver_data<ninjakd2_state>();
-	update_sprites(screen->machine());
+	ninjakd2_state *state = screen.machine().driver_data<ninjakd2_state>();
+	update_sprites(screen.machine());
 	state->m_sprites_updated = 1;
 
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg0_tilemap, 0, 0);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg1_tilemap, 0, 0);
 
-	copybitmap_trans(bitmap, state->m_sp_bitmap, 0, 0, 0, 0, cliprect, TRANSPARENTCODE);
+	copybitmap_trans(bitmap, *state->m_sp_bitmap, 0, 0, 0, 0, cliprect, TRANSPARENTCODE);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg2_tilemap, 0, 0);
 
@@ -526,11 +526,11 @@ SCREEN_UPDATE( robokid )
 
 SCREEN_UPDATE( omegaf )
 {
-	ninjakd2_state *state = screen->machine().driver_data<ninjakd2_state>();
-	update_sprites(screen->machine());
+	ninjakd2_state *state = screen.machine().driver_data<ninjakd2_state>();
+	update_sprites(screen.machine());
 	state->m_sprites_updated = 1;
 
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg0_tilemap, 0, 0);
 
@@ -538,7 +538,7 @@ SCREEN_UPDATE( omegaf )
 
 	tilemap_draw(bitmap, cliprect, state->m_bg2_tilemap, 0, 0);
 
-	copybitmap_trans(bitmap, state->m_sp_bitmap, 0, 0, 0, 0, cliprect, TRANSPARENTCODE);
+	copybitmap_trans(bitmap, *state->m_sp_bitmap, 0, 0, 0, 0, cliprect, TRANSPARENTCODE);
 
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 
@@ -548,9 +548,9 @@ SCREEN_UPDATE( omegaf )
 
 SCREEN_EOF( ninjakd2 )
 {
-	ninjakd2_state *state = machine.driver_data<ninjakd2_state>();
+	ninjakd2_state *state = screen.machine().driver_data<ninjakd2_state>();
 	if (!state->m_sprites_updated)
-		update_sprites(machine);
+		update_sprites(screen.machine());
 
 	state->m_sprites_updated = 0;
 }

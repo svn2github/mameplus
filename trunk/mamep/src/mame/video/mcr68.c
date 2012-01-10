@@ -212,7 +212,7 @@ WRITE16_HANDLER( zwackery_spriteram_w )
  *
  *************************************/
 
-static void mcr68_update_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int priority)
+static void mcr68_update_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int priority)
 {
 	mcr68_state *state = machine.driver_data<mcr68_state>();
 	rectangle sprite_clip = machine.primary_screen->visible_area();
@@ -222,9 +222,9 @@ static void mcr68_update_sprites(running_machine &machine, bitmap_t *bitmap, con
 	/* adjust for clipping */
 	sprite_clip.min_x += state->m_sprite_clip;
 	sprite_clip.max_x -= state->m_sprite_clip;
-	sect_rect(&sprite_clip, cliprect);
+	sprite_clip &= cliprect;
 
-	bitmap_fill(machine.priority_bitmap,&sprite_clip,1);
+	machine.priority_bitmap.fill(1, sprite_clip);
 
 	/* loop over sprite RAM */
 	for (offs = state->m_spriteram_size / 2 - 4;offs >= 0;offs -= 4)
@@ -256,23 +256,23 @@ static void mcr68_update_sprites(running_machine &machine, bitmap_t *bitmap, con
             The color 8 is used to cover over other sprites. */
 
 		/* first draw the sprite, visible */
-		pdrawgfx_transmask(bitmap, &sprite_clip, machine.gfx[1], code, color, flipx, flipy, x, y,
+		pdrawgfx_transmask(bitmap, sprite_clip, machine.gfx[1], code, color, flipx, flipy, x, y,
 				machine.priority_bitmap, 0x00, 0x0101);
 
 		/* then draw the mask, behind the background but obscuring following sprites */
-		pdrawgfx_transmask(bitmap, &sprite_clip, machine.gfx[1], code, color, flipx, flipy, x, y,
+		pdrawgfx_transmask(bitmap, sprite_clip, machine.gfx[1], code, color, flipx, flipy, x, y,
 				machine.priority_bitmap, 0x02, 0xfeff);
 	}
 }
 
 
-static void zwackery_update_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int priority)
+static void zwackery_update_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int priority)
 {
 	mcr68_state *state = machine.driver_data<mcr68_state>();
 	UINT16 *spriteram16 = state->m_spriteram;
 	int offs;
 
-	bitmap_fill(machine.priority_bitmap,cliprect,1);
+	machine.priority_bitmap.fill(1, cliprect);
 
 	/* loop over sprite RAM */
 	for (offs = state->m_spriteram_size / 2 - 4;offs >= 0;offs -= 4)
@@ -333,35 +333,35 @@ static void zwackery_update_sprites(running_machine &machine, bitmap_t *bitmap, 
 
 SCREEN_UPDATE( mcr68 )
 {
-	mcr68_state *state = screen->machine().driver_data<mcr68_state>();
+	mcr68_state *state = screen.machine().driver_data<mcr68_state>();
 	/* draw the background */
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, TILEMAP_DRAW_OPAQUE | TILEMAP_DRAW_ALL_CATEGORIES, 0);
 
 	/* draw the low-priority sprites */
-	mcr68_update_sprites(screen->machine(), bitmap, cliprect, 0);
+	mcr68_update_sprites(screen.machine(), bitmap, cliprect, 0);
 
     /* redraw tiles with priority over sprites */
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 1, 0);
 
 	/* draw the high-priority sprites */
-	mcr68_update_sprites(screen->machine(), bitmap, cliprect, 1);
+	mcr68_update_sprites(screen.machine(), bitmap, cliprect, 1);
 	return 0;
 }
 
 
 SCREEN_UPDATE( zwackery )
 {
-	mcr68_state *state = screen->machine().driver_data<mcr68_state>();
+	mcr68_state *state = screen.machine().driver_data<mcr68_state>();
 	/* draw the background */
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
 	/* draw the low-priority sprites */
-	zwackery_update_sprites(screen->machine(), bitmap, cliprect, 0);
+	zwackery_update_sprites(screen.machine(), bitmap, cliprect, 0);
 
     /* redraw tiles with priority over sprites */
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 1, 0);
 
 	/* draw the high-priority sprites */
-	zwackery_update_sprites(screen->machine(), bitmap, cliprect, 1);
+	zwackery_update_sprites(screen.machine(), bitmap, cliprect, 1);
 	return 0;
 }

@@ -183,7 +183,7 @@ VIDEO_START( chaknpop )
   Screen refresh
 ***************************************************************************/
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	chaknpop_state *state = machine.driver_data<chaknpop_state>();
 	int offs;
@@ -218,7 +218,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 	}
 }
 
-static void draw_bitmap( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_bitmap( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	chaknpop_state *state = machine.driver_data<chaknpop_state>();
 	int dx = state->m_flip_x ? -1 : 1;
@@ -250,9 +250,9 @@ static void draw_bitmap( running_machine &machine, bitmap_t *bitmap, const recta
 
 			if (color)
 			{
-				pen_t pen = *BITMAP_ADDR16(bitmap, y, x);
+				pen_t pen = bitmap.pix16(y, x);
 				pen |= color;
-				*BITMAP_ADDR16(bitmap, y, x) = pen;
+				bitmap.pix16(y, x) = pen;
 			}
 		}
 	}
@@ -260,10 +260,10 @@ static void draw_bitmap( running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( chaknpop )
 {
-	chaknpop_state *state = screen->machine().driver_data<chaknpop_state>();
+	chaknpop_state *state = screen.machine().driver_data<chaknpop_state>();
 
 	tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
-	draw_bitmap(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
+	draw_bitmap(screen.machine(), bitmap, cliprect);
 	return 0;
 }

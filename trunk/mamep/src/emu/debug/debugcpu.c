@@ -51,9 +51,6 @@
 #include "xmlfile.h"
 #include <ctype.h>
 #include <zlib.h>
-#if defined(SDLMAME_FREEBSD) || defined(SDLMAME_NETBSD) || defined(SDLMAME_OS2)
-# undef tolower
-#endif
 
 
 /***************************************************************************
@@ -1691,9 +1688,12 @@ device_debug::device_debug(device_t &device)
 	// set up state-related stuff
 	if (m_state != NULL)
 	{
-		// add a global symbol for the current instruction pointer
+		// add global symbol for cycles and totalcycles
 		if (m_exec != NULL)
+		{
 			m_symtable.add("cycles", NULL, get_cycles);
+			m_symtable.add("totalcycles", NULL, get_totalcycles);
+		}
 
 		// add entries to enable/disable unmap reporting for each space
 		if (m_memory != NULL)
@@ -1709,7 +1709,7 @@ device_debug::device_debug(device_t &device)
 		// add all registers into it
 		astring tempstr;
 		for (const device_state_entry *entry = m_state->state_first(); entry != NULL; entry = entry->next())
-			m_symtable.add(tempstr.cpy(entry->symbol()).tolower(), (void *)(FPTR)entry->index(), get_state, set_state);
+			m_symtable.add(tempstr.cpy(entry->symbol()).makelower(), (void *)(FPTR)entry->index(), get_state, set_state);
 	}
 
 	// set up execution-related stuff
@@ -3053,8 +3053,7 @@ UINT32 device_debug::dasm_wrapped(astring &buffer, offs_t pc)
 	}
 
 	// disassemble to our buffer
-	buffer.expand(200);
-	return disassemble(buffer.text, pc, opbuf, argbuf);
+	return disassemble(buffer.stringbuffer(200), pc, opbuf, argbuf);
 }
 
 
@@ -3079,6 +3078,18 @@ UINT64 device_debug::get_cycles(symbol_table &table, void *ref)
 {
 	device_t *device = reinterpret_cast<device_t *>(table.globalref());
 	return device->debug()->m_exec->cycles_remaining();
+}
+
+
+//-------------------------------------------------
+//  get_totalcycles - getter callback for the
+//  'totalcycles' symbol
+//-------------------------------------------------
+
+UINT64 device_debug::get_totalcycles(symbol_table &table, void *ref)
+{
+	device_t *device = reinterpret_cast<device_t *>(table.globalref());
+	return device->debug()->m_exec->total_cycles();
 }
 
 

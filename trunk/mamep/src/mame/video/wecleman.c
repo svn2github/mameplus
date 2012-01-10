@@ -169,7 +169,7 @@ static void sortsprite(int *idx_array, int *key_array, int size)
 }
 
 // draws a 8bpp palette sprites on a 16bpp direct RGB target (sub-par implementation)
-static void do_blit_zoom32(wecleman_state *state, bitmap_t *bitmap, const rectangle *cliprect, struct sprite *sprite)
+static void do_blit_zoom32(wecleman_state *state, bitmap_t &bitmap, const rectangle &cliprect, struct sprite *sprite)
 {
 #define PRECISION_X 20
 #define PRECISION_Y 20
@@ -185,11 +185,11 @@ static void do_blit_zoom32(wecleman_state *state, bitmap_t *bitmap, const rectan
 		x2 = sprite->x;
 		x1 = x2 + sprite->total_width;
 		dx = -1;
-		if (x2 < cliprect->min_x) x2 = cliprect->min_x;
-		if (x1 > cliprect->max_x )
+		if (x2 < cliprect.min_x) x2 = cliprect.min_x;
+		if (x1 > cliprect.max_x )
 		{
-			xcount0 = x1 - cliprect->max_x;
-			x1 = cliprect->max_x;
+			xcount0 = x1 - cliprect.max_x;
+			x1 = cliprect.max_x;
 		}
 		if (x2 >= x1) return;
 		x1--; x2--;
@@ -199,12 +199,12 @@ static void do_blit_zoom32(wecleman_state *state, bitmap_t *bitmap, const rectan
 		x1 = sprite->x;
 		x2 = x1 + sprite->total_width;
 		dx = 1;
-		if (x1 < cliprect->min_x )
+		if (x1 < cliprect.min_x )
 		{
-			xcount0 = cliprect->min_x - x1;
-			x1 = cliprect->min_x;
+			xcount0 = cliprect.min_x - x1;
+			x1 = cliprect.min_x;
 		}
-		if (x2 > cliprect->max_x ) x2 = cliprect->max_x;
+		if (x2 > cliprect.max_x ) x2 = cliprect.max_x;
 		if (x1 >= x2) return;
 	}
 
@@ -213,11 +213,11 @@ static void do_blit_zoom32(wecleman_state *state, bitmap_t *bitmap, const rectan
 		y2 = sprite->y;
 		y1 = y2 + sprite->total_height;
 		dy = -1;
-		if (y2 < cliprect->min_y ) y2 = cliprect->min_y;
-		if (y1 > cliprect->max_y )
+		if (y2 < cliprect.min_y ) y2 = cliprect.min_y;
+		if (y1 > cliprect.max_y )
 		{
-			ycount0 = cliprect->max_y;
-			y1 = cliprect->max_y;
+			ycount0 = cliprect.max_y;
+			y1 = cliprect.max_y;
 		}
 		if (y2 >= y1) return;
 		y1--; y2--;
@@ -227,12 +227,12 @@ static void do_blit_zoom32(wecleman_state *state, bitmap_t *bitmap, const rectan
 		y1 = sprite->y;
 		y2 = y1 + sprite->total_height;
 		dy = 1;
-		if (y1 < cliprect->min_y )
+		if (y1 < cliprect.min_y )
 		{
-			ycount0 = cliprect->min_y - y1;
-			y1 = cliprect->min_y;
+			ycount0 = cliprect.min_y - y1;
+			y1 = cliprect.min_y;
 		}
-		if (y2 > cliprect->max_y) y2 = cliprect->max_y;
+		if (y2 > cliprect.max_y) y2 = cliprect.max_y;
 		if (y1 >= y2) return;
 	}
 
@@ -246,7 +246,7 @@ static void do_blit_zoom32(wecleman_state *state, bitmap_t *bitmap, const rectan
 	// pre-loop assignments and adjustments
 	pal_base = sprite->pal_data;
 
-	if (x1 > cliprect->min_x)
+	if (x1 > cliprect.min_x)
 	{
 		x1 -= dx;
 		x2 -= dx;
@@ -257,9 +257,9 @@ static void do_blit_zoom32(wecleman_state *state, bitmap_t *bitmap, const rectan
 		UINT8 *row_base = sprite->pen_data + (src_f0y>>PRECISION_Y) * sprite->line_offset;
 		src_fpx = src_f0x;
 
-		if (bitmap->format == BITMAP_FORMAT_RGB32)	// Wec Le Mans
+		if (bitmap.format() == BITMAP_FORMAT_RGB32)	// Wec Le Mans
 		{
-			UINT32 *dst_ptr = BITMAP_ADDR32(bitmap, sy, 0);
+			UINT32 *dst_ptr = &bitmap.pix32(sy);
 
 			if (!sprite->shadow_mode)
 			{
@@ -291,7 +291,7 @@ static void do_blit_zoom32(wecleman_state *state, bitmap_t *bitmap, const rectan
 		}
 		else	// Hot Chase
 		{
-			UINT16 *dst_ptr = BITMAP_ADDR16(bitmap, sy, 0);
+			UINT16 *dst_ptr = &bitmap.pix16(sy);
 			pen_t base = sprite->pal_base;
 
 			if (!sprite->shadow_mode)
@@ -330,7 +330,7 @@ static void do_blit_zoom32(wecleman_state *state, bitmap_t *bitmap, const rectan
 	}
 }
 
-static void sprite_draw(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void sprite_draw(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	wecleman_state *state = machine.driver_data<wecleman_state>();
 	int i;
@@ -539,7 +539,7 @@ WRITE16_HANDLER( wecleman_pageram_w )
 
 ------------------------------------------------------------------------*/
 
-static void wecleman_draw_road(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int priority)
+static void wecleman_draw_road(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int priority)
 {
 	wecleman_state *state = machine.driver_data<wecleman_state>();
 // must be powers of 2
@@ -576,9 +576,9 @@ static void wecleman_draw_road(running_machine &machine, bitmap_t *bitmap, const
 	if (priority == 0x02)
 	{
 		// draw sky; each scanline is assumed to be dword aligned
-		for (sy=cliprect->min_y-BMP_PAD; sy<DST_HEIGHT; sy++)
+		for (sy=cliprect.min_y-BMP_PAD; sy<DST_HEIGHT; sy++)
 		{
-			UINT32 *dst = BITMAP_ADDR32(bitmap, sy+BMP_PAD, BMP_PAD);
+			UINT32 *dst = &bitmap.pix32(sy+BMP_PAD, BMP_PAD);
 			UINT32 pix;
 			UINT16 road;
 
@@ -602,9 +602,9 @@ static void wecleman_draw_road(running_machine &machine, bitmap_t *bitmap, const
 			road_rgb[i] = color ? rgb_ptr[color] : 0xffffffff;
 		}
 
-		for (sy=cliprect->min_y-BMP_PAD; sy<DST_HEIGHT; sy++)
+		for (sy=cliprect.min_y-BMP_PAD; sy<DST_HEIGHT; sy++)
 		{
-			UINT32 *dst = BITMAP_ADDR32(bitmap, sy+BMP_PAD, BMP_PAD);
+			UINT32 *dst = &bitmap.pix32(sy+BMP_PAD, BMP_PAD);
 			UINT32 pix;
 			UINT16 road;
 
@@ -620,8 +620,8 @@ static void wecleman_draw_road(running_machine &machine, bitmap_t *bitmap, const
 			gfx_element_get_data(machine.gfx[1], (road << 3) + 5);
 			gfx_element_get_data(machine.gfx[1], (road << 3) + 6);
 			gfx_element_get_data(machine.gfx[1], (road << 3) + 7);
-			mdy = ((road * MIDCURB_DY) >> 8) * bitmap->rowpixels;
-			tdy = ((road * TOPCURB_DY) >> 8) * bitmap->rowpixels;
+			mdy = ((road * MIDCURB_DY) >> 8) * bitmap.rowpixels();
+			tdy = ((road * TOPCURB_DY) >> 8) * bitmap.rowpixels();
 
 			scrollx = state->m_roadram[sy+YSIZE] + (0x18 - 0xe00);
 
@@ -657,7 +657,7 @@ static void wecleman_draw_road(running_machine &machine, bitmap_t *bitmap, const
 ------------------------------------------------------------------------*/
 
 // blends two 8x8x16bpp direct RGB tilemaps
-static void draw_cloud(bitmap_t *bitmap,
+static void draw_cloud(bitmap_t &bitmap,
 				 const gfx_element *gfx,
 				 UINT16 *tm_base,
 				 int x0, int y0,				// target coordinate
@@ -693,7 +693,7 @@ static void draw_cloud(bitmap_t *bitmap,
 	tmskipy = scrolly / tileh;
 	dy = -(scrolly & (tileh-1));
 
-	dst_base = BITMAP_ADDR32(bitmap, y0+dy, x0+dx);
+	dst_base = &bitmap.pix32(y0+dy, x0+dx);
 
 	pal_base = gfx->machine().pens + pal_offset * gfx->color_granularity;
 
@@ -745,7 +745,7 @@ static void draw_cloud(bitmap_t *bitmap,
 
 						dst_ptr[tx] = MAKE_RGB(pal5bit(db), pal5bit(dg), pal5bit(dr));
 					}
-					dst_ptr += bitmap->rowpixels;
+					dst_ptr += bitmap.rowpixels();
 				}
 			}
 
@@ -756,12 +756,12 @@ static void draw_cloud(bitmap_t *bitmap,
 				{
 					for (tx = 0; tx < tilew; tx++)
 						dst_ptr[tx] = pal_ptr[*src_ptr++];
-					dst_ptr += bitmap->rowpixels;
+					dst_ptr += bitmap.rowpixels();
 				}
 			}
 		}
 
-		dst_base += bitmap->rowpixels * tileh;
+		dst_base += bitmap.rowpixels() * tileh;
 	}
 }
 
@@ -792,7 +792,7 @@ static void draw_cloud(bitmap_t *bitmap,
 
 ------------------------------------------------------------------------*/
 
-static void hotchase_draw_road(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void hotchase_draw_road(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	wecleman_state *state = machine.driver_data<wecleman_state>();
 /* Referred to what's in the ROMs */
@@ -1024,18 +1024,18 @@ VIDEO_START( hotchase )
 
 SCREEN_UPDATE( wecleman )
 {
-	wecleman_state *state = screen->machine().driver_data<wecleman_state>();
+	wecleman_state *state = screen.machine().driver_data<wecleman_state>();
 	const pen_t *mrct;
 	int video_on;
 	int fg_x, bg_x, fg_y, bg_y;
 	int cloud_sx, cloud_sy;
 	int i, j, k;
 
-	mrct = screen->machine().pens;
+	mrct = screen.machine().pens;
 
 	video_on = state->m_irqctrl & 0x40;
 
-	set_led_status(screen->machine(), 0, state->m_selected_ip & 0x04);	// Start lamp
+	set_led_status(screen.machine(), 0, state->m_selected_ip & 0x04);	// Start lamp
 
 	fg_y = (state->m_txtram[0x0f24>>1] & (TILEMAP_DIMY - 1));
 	bg_y = (state->m_txtram[0x0f26>>1] & (TILEMAP_DIMY - 1));
@@ -1063,12 +1063,12 @@ SCREEN_UPDATE( wecleman )
 	/* palette hacks! */
 	((pen_t *)mrct)[0x27] = mrct[0x24];
 
-	get_sprite_info(screen->machine());
+	get_sprite_info(screen.machine());
 
-	bitmap_fill(bitmap, cliprect, state->m_black_pen);
+	bitmap.fill(state->m_black_pen, cliprect);
 
 	/* Draw the road (lines which have priority 0x02) */
-	if (video_on) wecleman_draw_road(screen->machine(), bitmap, cliprect, 0x02);
+	if (video_on) wecleman_draw_road(screen.machine(), bitmap, cliprect, 0x02);
 
 	/* Draw the background */
 	if (video_on) tilemap_draw(bitmap,cliprect, state->m_bg_tilemap, 0, 0);
@@ -1082,7 +1082,7 @@ SCREEN_UPDATE( wecleman )
 		if (video_on)
 			draw_cloud(
 			bitmap,
-			screen->machine().gfx[0],
+			screen.machine().gfx[0],
 			state->m_pageram+0x1800,
 			BMP_PAD, BMP_PAD,
 			41, 20,
@@ -1102,10 +1102,10 @@ SCREEN_UPDATE( wecleman )
 	if (video_on) tilemap_draw(bitmap,cliprect, state->m_fg_tilemap, 0, 0);
 
 	/* Draw the road (lines which have priority 0x04) */
-	if (video_on) wecleman_draw_road(screen->machine(), bitmap,cliprect, 0x04);
+	if (video_on) wecleman_draw_road(screen.machine(), bitmap,cliprect, 0x04);
 
 	/* Draw the sprites */
-	if (video_on) sprite_draw(screen->machine(), bitmap,cliprect);
+	if (video_on) sprite_draw(screen.machine(), bitmap,cliprect);
 
 	/* Draw the text layer */
 	if (video_on) tilemap_draw(bitmap,cliprect, state->m_txt_tilemap, 0, 0);
@@ -1118,18 +1118,18 @@ SCREEN_UPDATE( wecleman )
 
 SCREEN_UPDATE( hotchase )
 {
-	wecleman_state *state = screen->machine().driver_data<wecleman_state>();
-	device_t *k051316_1 = screen->machine().device("k051316_1");
-	device_t *k051316_2 = screen->machine().device("k051316_2");
+	wecleman_state *state = screen.machine().driver_data<wecleman_state>();
+	device_t *k051316_1 = screen.machine().device("k051316_1");
+	device_t *k051316_2 = screen.machine().device("k051316_2");
 	int video_on;
 
 	video_on = state->m_irqctrl & 0x40;
 
-	set_led_status(screen->machine(), 0, state->m_selected_ip & 0x04);	// Start lamp
+	set_led_status(screen.machine(), 0, state->m_selected_ip & 0x04);	// Start lamp
 
-	get_sprite_info(screen->machine());
+	get_sprite_info(screen.machine());
 
-	bitmap_fill(bitmap, cliprect, state->m_black_pen);
+	bitmap.fill(state->m_black_pen, cliprect);
 
 	/* Draw the background */
 	if (video_on)
@@ -1137,11 +1137,11 @@ SCREEN_UPDATE( hotchase )
 
 	/* Draw the road */
 	if (video_on)
-		hotchase_draw_road(screen->machine(), bitmap, cliprect);
+		hotchase_draw_road(screen.machine(), bitmap, cliprect);
 
 	/* Draw the sprites */
 	if (video_on)
-		sprite_draw(screen->machine(), bitmap,cliprect);
+		sprite_draw(screen.machine(), bitmap,cliprect);
 
 	/* Draw the foreground (text) */
 	if (video_on)

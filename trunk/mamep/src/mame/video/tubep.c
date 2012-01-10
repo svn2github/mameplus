@@ -587,18 +587,18 @@ void tubep_vblank_end(running_machine &machine)
 
 SCREEN_UPDATE( tubep )
 {
-	tubep_state *state = screen->machine().driver_data<tubep_state>();
+	tubep_state *state = screen.machine().driver_data<tubep_state>();
 	int DISP_ = state->m_DISP^1;
 
 	pen_t pen_base = 32; //change it later
 
 	UINT32 v;
-	UINT8 *text_gfx_base = screen->machine().region("gfx1")->base();
-	UINT8 *romBxx = screen->machine().region("user1")->base() + 0x2000*state->m_background_romsel;
+	UINT8 *text_gfx_base = screen.machine().region("gfx1")->base();
+	UINT8 *romBxx = screen.machine().region("user1")->base() + 0x2000*state->m_background_romsel;
 
-	/* logerror(" update: from DISP=%i y_min=%3i y_max=%3i\n", DISP_, cliprect->min_y, cliprect->max_y+1); */
+	/* logerror(" update: from DISP=%i y_min=%3i y_max=%3i\n", DISP_, cliprect.min_y, cliprect.max_y+1); */
 
-	for (v = cliprect->min_y; v <= cliprect->max_y; v++)	/* only for current scanline */
+	for (v = cliprect.min_y; v <= cliprect.max_y; v++)	/* only for current scanline */
 	{
 		UINT32 h;
 		UINT32 sp_data0=0,sp_data1=0,sp_data2=0;
@@ -617,7 +617,7 @@ SCREEN_UPDATE( tubep )
 			text_gfx_data = text_gfx_base[(text_code << 3) | (v & 0x07)];
 
 			if (text_gfx_data & (0x80 >> (h & 0x07)))
-				*BITMAP_ADDR16(bitmap, v, h) = (state->m_textram[text_offs + 1] & 0x0f) | state->m_color_A4;
+				bitmap.pix16(v, h) = (state->m_textram[text_offs + 1] & 0x0f) | state->m_color_A4;
 			else
 			{
 				UINT32 bg_data;
@@ -658,7 +658,7 @@ SCREEN_UPDATE( tubep )
 				if (sp_data != 0x0f)
 					bg_data = state->m_prom2[sp_data | state->m_color_A4];
 
-				*BITMAP_ADDR16(bitmap, v, h) = pen_base + bg_data*64 + romB_data_h;
+				bitmap.pix16(v, h) = pen_base + bg_data*64 + romB_data_h;
 			}
 		}
 	}
@@ -745,12 +745,12 @@ WRITE8_HANDLER( rjammer_background_page_w )
 
 SCREEN_UPDATE( rjammer )
 {
-	tubep_state *state = screen->machine().driver_data<tubep_state>();
+	tubep_state *state = screen.machine().driver_data<tubep_state>();
 	int DISP_ = state->m_DISP^1;
 
 	UINT32 v;
-	UINT8 *text_gfx_base = screen->machine().region("gfx1")->base();
-	UINT8 *rom13D  = screen->machine().region("user1")->base();
+	UINT8 *text_gfx_base = screen.machine().region("gfx1")->base();
+	UINT8 *rom13D  = screen.machine().region("user1")->base();
 	UINT8 *rom11BD = rom13D+0x1000;
 	UINT8 *rom19C  = rom13D+0x5000;
 
@@ -758,7 +758,7 @@ SCREEN_UPDATE( rjammer )
 	/* especially read from ROM19C can be done once per 8 pixels*/
 	/* and the data could be bitswapped beforehand */
 
-	for (v = cliprect->min_y; v <= cliprect->max_y; v++)	/* only for current scanline */
+	for (v = cliprect.min_y; v <= cliprect.max_y; v++)	/* only for current scanline */
 	{
 		UINT32 h;
 		UINT32 sp_data0=0,sp_data1=0,sp_data2=0;
@@ -788,7 +788,7 @@ SCREEN_UPDATE( rjammer )
 			text_gfx_data = text_gfx_base[(text_code << 3) | (v & 0x07)];
 
 			if (text_gfx_data & (0x80 >> (h & 0x07)))
-				*BITMAP_ADDR16(bitmap, v, h) = 0x10 | (state->m_textram[text_offs + 1] & 0x0f);
+				bitmap.pix16(v, h) = 0x10 | (state->m_textram[text_offs + 1] & 0x0f);
 			else
 			{
 				UINT32 sp_data;
@@ -799,7 +799,7 @@ SCREEN_UPDATE( rjammer )
 					sp_data = sp_data1;
 
 				if (sp_data != 0x0f)
-					*BITMAP_ADDR16(bitmap, v, h) = 0x00 + sp_data;
+					bitmap.pix16(v, h) = 0x00 + sp_data;
 				else
 				{
 					UINT32 bg_data;
@@ -852,7 +852,7 @@ SCREEN_UPDATE( rjammer )
 					color_bank =  (pal14h4_pin13 & ((bg_data&0x08)>>3) & ((bg_data&0x04)>>2) & (((bg_data&0x02)>>1)^1) &  (bg_data&0x01)    )
 								| (pal14h4_pin18 & ((bg_data&0x08)>>3) & ((bg_data&0x04)>>2) &  ((bg_data&0x02)>>1)    & ((bg_data&0x01)^1) )
 								| (pal14h4_pin19);
-					*BITMAP_ADDR16(bitmap, v, h) = 0x20 + color_bank*0x10 + bg_data;
+					bitmap.pix16(v, h) = 0x20 + color_bank*0x10 + bg_data;
 				}
 			}
 		}

@@ -192,7 +192,7 @@ static VIDEO_START(firebeat)
 }
 
 
-static void gcu_draw_object(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int chip, UINT32 *cmd)
+static void gcu_draw_object(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int chip, UINT32 *cmd)
 {
 	firebeat_state *state = machine.driver_data<firebeat_state>();
 	// 0x00: xxx----- -------- -------- --------   command type
@@ -239,14 +239,14 @@ static void gcu_draw_object(running_machine &machine, bitmap_t *bitmap, const re
 	width	= (((width * 65536) / xscale) * 64) / 65536;
 	height	= (((height * 65536) / yscale) * 64) / 65536;
 
-	if (y > cliprect->max_y || x > cliprect->max_x) {
+	if (y > cliprect.max_y || x > cliprect.max_x) {
 		return;
 	}
-	if ((y+height) > cliprect->max_y) {
-		height = cliprect->max_y - y;
+	if ((y+height) > cliprect.max_y) {
+		height = cliprect.max_y - y;
 	}
-	if ((x+width) > cliprect->max_x) {
-		width = cliprect->max_x - x;
+	if ((x+width) > cliprect.max_x) {
+		width = cliprect.max_x - x;
 	}
 
 	v = 0;
@@ -254,7 +254,7 @@ static void gcu_draw_object(running_machine &machine, bitmap_t *bitmap, const re
 	{
 		int xi;
 		int index;
-		UINT16 *d = BITMAP_ADDR16(bitmap, j+y, x);
+		UINT16 *d = &bitmap.pix16(j+y, x);
 		//int index = address + ((v >> 6) * 1024);
 
 		if (yflip)
@@ -346,7 +346,7 @@ static void gcu_draw_object(running_machine &machine, bitmap_t *bitmap, const re
 	}
 }
 
-static void gcu_fill_rect(bitmap_t *bitmap, const rectangle *cliprect, UINT32 *cmd)
+static void gcu_fill_rect(bitmap_t &bitmap, const rectangle &cliprect, UINT32 *cmd)
 {
 	int i, j;
 	int x1, y1, x2, y2;
@@ -375,14 +375,14 @@ static void gcu_fill_rect(bitmap_t *bitmap, const rectangle *cliprect, UINT32 *c
 	}
 
 	// clip
-	if (x1 < cliprect->min_x)	x1 = cliprect->min_x;
-	if (y1 < cliprect->min_y)	y1 = cliprect->min_y;
-	if (x2 > cliprect->max_x)	x2 = cliprect->max_x;
-	if (y2 > cliprect->max_y)	y2 = cliprect->max_y;
+	if (x1 < cliprect.min_x)	x1 = cliprect.min_x;
+	if (y1 < cliprect.min_y)	y1 = cliprect.min_y;
+	if (x2 > cliprect.max_x)	x2 = cliprect.max_x;
+	if (y2 > cliprect.max_y)	y2 = cliprect.max_y;
 
 	for (j=y1; j < y2; j++)
 	{
-		UINT16 *d = BITMAP_ADDR16(bitmap, j, 0);
+		UINT16 *d = &bitmap.pix16(j);
 		for (i=x1; i < x2; i++)
 		{
 			if (color[i&3] & 0x8000)
@@ -393,7 +393,7 @@ static void gcu_fill_rect(bitmap_t *bitmap, const rectangle *cliprect, UINT32 *c
 	}
 }
 
-static void gcu_draw_character(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int chip, UINT32 *cmd)
+static void gcu_draw_character(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int chip, UINT32 *cmd)
 {
 	firebeat_state *state = machine.driver_data<firebeat_state>();
 	// 0x00: xxx----- -------- -------- --------   command type
@@ -422,14 +422,14 @@ static void gcu_draw_character(running_machine &machine, bitmap_t *bitmap, const
 	color[3] = (cmd[3] >>  0) & 0xffff;
 
 
-	if (y > cliprect->max_y || x > cliprect->max_x) {
+	if (y > cliprect.max_y || x > cliprect.max_x) {
 		return;
 	}
 
 
 	for (j=0; j < 8; j++)
 	{
-		UINT16 *d = BITMAP_ADDR16(bitmap, y+j, x);
+		UINT16 *d = &bitmap.pix16(y+j, x);
 		UINT16 line = vr[address^1];
 
 		address += 4;
@@ -442,7 +442,7 @@ static void gcu_draw_character(running_machine &machine, bitmap_t *bitmap, const
 	}
 }
 
-static void gcu_exec_display_list(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int chip, UINT32 address)
+static void gcu_exec_display_list(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int chip, UINT32 address)
 {
 	firebeat_state *state = machine.driver_data<firebeat_state>();
 	int counter = 0;
@@ -513,41 +513,35 @@ static void gcu_exec_display_list(running_machine &machine, bitmap_t *bitmap, co
 	};
 }
 
-static SCREEN_UPDATE(firebeat)
+static UINT32 update_screen(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect, int chip)
 {
-	firebeat_state *state = screen->machine().driver_data<firebeat_state>();
-	int chip;
+	firebeat_state *state = screen.machine().driver_data<firebeat_state>();
 
-	if (screen == screen->machine().devicelist().find(SCREEN, 0))
-		chip = 0;
-	else
-		chip = 1;
+	bitmap.fill(0, cliprect);
 
-	bitmap_fill(bitmap, cliprect, 0);
-
-	if (mame_stricmp(screen->machine().system().name, "popn7") == 0)
+	if (mame_stricmp(screen.machine().system().name, "popn7") == 0)
 	{
-		gcu_exec_display_list(screen->machine(), bitmap, cliprect, chip, 0x1f80000);
+		gcu_exec_display_list(screen.machine(), bitmap, cliprect, chip, 0x1f80000);
 	}
 	else
 	{
 		if (state->m_layer >= 2)
 		{
-			gcu_exec_display_list(screen->machine(), bitmap, cliprect, chip, 0x8000);
-			gcu_exec_display_list(screen->machine(), bitmap, cliprect, chip, 0x0000);
-			gcu_exec_display_list(screen->machine(), bitmap, cliprect, chip, 0x10000);
+			gcu_exec_display_list(screen.machine(), bitmap, cliprect, chip, 0x8000);
+			gcu_exec_display_list(screen.machine(), bitmap, cliprect, chip, 0x0000);
+			gcu_exec_display_list(screen.machine(), bitmap, cliprect, chip, 0x10000);
 		}
 		else if (state->m_layer == 0)
 		{
-			gcu_exec_display_list(screen->machine(), bitmap, cliprect, chip, 0x200000);
+			gcu_exec_display_list(screen.machine(), bitmap, cliprect, chip, 0x200000);
 
-			//gcu_exec_display_list(screen->machine(), bitmap, cliprect, chip, 0x186040);
+			//gcu_exec_display_list(screen.machine(), bitmap, cliprect, chip, 0x186040);
 		}
 		else if (state->m_layer == 1)
 		{
-			gcu_exec_display_list(screen->machine(), bitmap, cliprect, chip, 0x1d0800);
+			gcu_exec_display_list(screen.machine(), bitmap, cliprect, chip, 0x1d0800);
 
-			gcu_exec_display_list(screen->machine(), bitmap, cliprect, chip, 0x1a9440);
+			gcu_exec_display_list(screen.machine(), bitmap, cliprect, chip, 0x1a9440);
 		}
 	}
 
@@ -555,7 +549,7 @@ static SCREEN_UPDATE(firebeat)
 	if (state->m_tick >= 5)
 	{
 		state->m_tick = 0;
-		if (screen->machine().input().code_pressed(KEYCODE_0))
+		if (screen.machine().input().code_pressed(KEYCODE_0))
 		{
 			state->m_layer++;
 			if (state->m_layer > 2)
@@ -565,7 +559,7 @@ static SCREEN_UPDATE(firebeat)
 		}
 
 		/*
-        if (screen->machine().input().code_pressed_once(KEYCODE_9))
+        if (screen.machine().input().code_pressed_once(KEYCODE_9))
         {
             FILE *file = fopen("vram0.bin", "wb");
             int i;
@@ -596,6 +590,9 @@ static SCREEN_UPDATE(firebeat)
 
 	return 0;
 }
+
+static SCREEN_UPDATE( firebeat_0 ) { return update_screen(screen, bitmap, cliprect, 0); }
+static SCREEN_UPDATE( firebeat_1 ) { return update_screen(screen, bitmap, cliprect, 1); }
 
 static UINT32 GCU_r(running_machine &machine, int chip, UINT32 offset, UINT32 mem_mask)
 {
@@ -1992,7 +1989,7 @@ static MACHINE_CONFIG_START( firebeat, firebeat_state )
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 479)
-	MCFG_SCREEN_UPDATE(firebeat)
+	MCFG_SCREEN_UPDATE(firebeat_0)
 
 	MCFG_PALETTE_LENGTH(32768)
 
@@ -2039,7 +2036,7 @@ static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 479)
-	MCFG_SCREEN_UPDATE(firebeat)
+	MCFG_SCREEN_UPDATE(firebeat_0)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
@@ -2047,7 +2044,7 @@ static MACHINE_CONFIG_START( firebeat2, firebeat_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(640, 480)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 479)
-	MCFG_SCREEN_UPDATE(firebeat)
+	MCFG_SCREEN_UPDATE(firebeat_1)
 
 	MCFG_VIDEO_START(firebeat)
 

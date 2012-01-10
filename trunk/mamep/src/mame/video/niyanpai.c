@@ -170,7 +170,7 @@ static void update_pixel(running_machine &machine, int vram, int x, int y)
 {
 	niyanpai_state *state = machine.driver_data<niyanpai_state>();
 	UINT16 color = state->m_videoram[vram][(y * machine.primary_screen->width()) + x];
-	*BITMAP_ADDR16(state->m_tmpbitmap[vram], y, x) = color;
+	state->m_tmpbitmap[vram]->pix16(y, x) = color;
 }
 
 static TIMER_CALLBACK( blitter_timer_callback )
@@ -387,24 +387,24 @@ VIDEO_START( niyanpai )
 ******************************************************************************/
 SCREEN_UPDATE( niyanpai )
 {
-	niyanpai_state *state = screen->machine().driver_data<niyanpai_state>();
+	niyanpai_state *state = screen.machine().driver_data<niyanpai_state>();
 	int i;
 	int x, y;
 	int scrollx[3], scrolly[3];
 
 	if (state->m_screen_refresh)
 	{
-		int width = screen->width();
-		int height = screen->height();
+		int width = screen.width();
+		int height = screen.height();
 
 		state->m_screen_refresh = 0;
 
 		for (y = 0; y < height; y++)
 			for (x = 0; x < width; x++)
 			{
-				update_pixel(screen->machine(), 0, x, y);
-				update_pixel(screen->machine(), 1, x, y);
-				update_pixel(screen->machine(), 2, x, y);
+				update_pixel(screen.machine(), 0, x, y);
+				update_pixel(screen.machine(), 1, x, y);
+				update_pixel(screen.machine(), 2, x, y);
 			}
 	}
 
@@ -423,15 +423,15 @@ SCREEN_UPDATE( niyanpai )
 	}
 
 	if (state->m_dispflag[0])
-		copyscrollbitmap(bitmap, state->m_tmpbitmap[0], 1, &scrollx[0], 1, &scrolly[0], cliprect);
+		copyscrollbitmap(bitmap, *state->m_tmpbitmap[0], 1, &scrollx[0], 1, &scrolly[0], cliprect);
 	else
-		bitmap_fill(bitmap, 0, 0x00ff);
+		bitmap.fill(0x00ff);
 
 	if (state->m_dispflag[1])
-		copyscrollbitmap_trans(bitmap, state->m_tmpbitmap[1], 1, &scrollx[1], 1, &scrolly[1], cliprect, 0x01ff);
+		copyscrollbitmap_trans(bitmap, *state->m_tmpbitmap[1], 1, &scrollx[1], 1, &scrolly[1], cliprect, 0x01ff);
 
 	if (state->m_dispflag[2])
-		copyscrollbitmap_trans(bitmap, state->m_tmpbitmap[2], 1, &scrollx[2], 1, &scrolly[2], cliprect, 0x02ff);
+		copyscrollbitmap_trans(bitmap, *state->m_tmpbitmap[2], 1, &scrollx[2], 1, &scrolly[2], cliprect, 0x02ff);
 
 	return 0;
 }

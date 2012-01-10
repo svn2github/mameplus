@@ -80,7 +80,7 @@ WRITE16_HANDLER( splash_vram_w )
 	tilemap_mark_tile_dirty(state->m_bg_tilemap[offset >> 11],((offset << 1) & 0x0fff) >> 1);
 }
 
-static void draw_bitmap(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_bitmap(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	splash_state *state = machine.driver_data<splash_state>();
 	int sx,sy,color,count,colxor,bitswap;
@@ -156,8 +156,8 @@ static void draw_bitmap(running_machine &machine, bitmap_t *bitmap, const rectan
 				break;
 			}
 
-			if (sy >= cliprect->min_y && sy <= cliprect->max_y && sx-9 >= cliprect->min_x && sx-9 <= cliprect->max_x)
-				*BITMAP_ADDR16(bitmap, sy, sx-9) = 0x300+(color^colxor);
+			if (sy >= cliprect.min_y && sy <= cliprect.max_y && sx-9 >= cliprect.min_x && sx-9 <= cliprect.max_x)
+				bitmap.pix16(sy, sx-9) = 0x300+(color^colxor);
 		}
 	}
 
@@ -210,7 +210,7 @@ VIDEO_START( splash )
       400| xxxxxxxx -------- | unused
 */
 
-static void splash_draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void splash_draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	splash_state *state = machine.driver_data<splash_state>();
 	int i;
@@ -231,7 +231,7 @@ static void splash_draw_sprites(running_machine &machine, bitmap_t *bitmap,const
 	}
 }
 
-static void funystrp_draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void funystrp_draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	splash_state *state = machine.driver_data<splash_state>();
 	int i;
@@ -260,33 +260,33 @@ static void funystrp_draw_sprites(running_machine &machine, bitmap_t *bitmap,con
 
 SCREEN_UPDATE( splash )
 {
-	splash_state *state = screen->machine().driver_data<splash_state>();
+	splash_state *state = screen.machine().driver_data<splash_state>();
 
 	/* set scroll registers */
 	tilemap_set_scrolly(state->m_bg_tilemap[0], 0, state->m_vregs[0]);
 	tilemap_set_scrolly(state->m_bg_tilemap[1], 0, state->m_vregs[1]);
 
-	draw_bitmap(screen->machine(), bitmap, cliprect);
+	draw_bitmap(screen.machine(), bitmap, cliprect);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap[1], 0, 0);
-	splash_draw_sprites(screen->machine(), bitmap, cliprect);
+	splash_draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap[0], 0, 0);
 	return 0;
 }
 
 SCREEN_UPDATE( funystrp )
 {
-	splash_state *state = screen->machine().driver_data<splash_state>();
+	splash_state *state = screen.machine().driver_data<splash_state>();
 
 	/* set scroll registers */
 	tilemap_set_scrolly(state->m_bg_tilemap[0], 0, state->m_vregs[0]);
 	tilemap_set_scrolly(state->m_bg_tilemap[1], 0, state->m_vregs[1]);
 
-	draw_bitmap(screen->machine(), bitmap, cliprect);
+	draw_bitmap(screen.machine(), bitmap, cliprect);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap[1], 0, 0);
 	/*Sprite chip is similar but not the same*/
-	funystrp_draw_sprites(screen->machine(), bitmap, cliprect);
+	funystrp_draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap[0], 0, 0);
 	return 0;
 }

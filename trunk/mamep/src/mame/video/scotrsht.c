@@ -99,7 +99,7 @@ static TILE_GET_INFO( scotrsht_get_bg_tile_info )
 }
 
 /* Same as Jailbreak + palette bank */
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	scotrsht_state *state = machine.driver_data<scotrsht_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -140,13 +140,13 @@ VIDEO_START( scotrsht )
 
 SCREEN_UPDATE( scotrsht )
 {
-	scotrsht_state *state = screen->machine().driver_data<scotrsht_state>();
+	scotrsht_state *state = screen.machine().driver_data<scotrsht_state>();
 	int col;
 
 	for (col = 0; col < 32; col++)
 		tilemap_set_scrolly(state->m_bg_tilemap, col, state->m_scroll[col]);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

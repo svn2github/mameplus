@@ -109,7 +109,7 @@ WRITE16_HANDLER( shangha3_blitter_go_w )
 {
 	shangha3_state *state = space->machine().driver_data<shangha3_state>();
 	UINT16 *shangha3_ram = state->m_ram;
-	bitmap_t *rawbitmap = state->m_rawbitmap;
+	bitmap_t &rawbitmap = *state->m_rawbitmap;
 	UINT8 *drawmode_table = state->m_drawmode_table;
 	int offs;
 
@@ -155,7 +155,7 @@ WRITE16_HANDLER( shangha3_blitter_go_w )
 			myclip.max_x = sx + sizex;
 			myclip.min_y = sy;
 			myclip.max_y = sy + sizey;
-			sect_rect(&myclip, &rawbitmap->cliprect);
+			myclip &= rawbitmap.cliprect();
 
 			if (shangha3_ram[offs+4] & 0x08)	/* tilemap */
 			{
@@ -213,7 +213,7 @@ WRITE16_HANDLER( shangha3_blitter_go_w )
 						if (flipy) dy = sy + sizey-15 - dy;
 						else dy = sy + dy;
 
-						drawgfx_transpen(rawbitmap,&myclip,space->machine().gfx[0],
+						drawgfx_transpen(rawbitmap,myclip,space->machine().gfx[0],
 								(tile & 0x0fff) | (code & 0xf000),
 								(tile >> 12) | (color & 0x70),
 								flipx,flipy,
@@ -226,7 +226,7 @@ WRITE16_HANDLER( shangha3_blitter_go_w )
 				int w;
 
 if (zoomx <= 1 && zoomy <= 1)
-	drawgfxzoom_transtable(rawbitmap,&myclip,space->machine().gfx[0],
+	drawgfxzoom_transtable(rawbitmap,myclip,space->machine().gfx[0],
 			code,
 			color,
 			flipx,flipy,
@@ -239,7 +239,7 @@ else
 
 				for (x = 0;x < w;x++)
 				{
-					drawgfxzoom_transtable(rawbitmap,&myclip,space->machine().gfx[0],
+					drawgfxzoom_transtable(rawbitmap,myclip,space->machine().gfx[0],
 							code,
 							color,
 							flipx,flipy,
@@ -263,8 +263,8 @@ else
 
 SCREEN_UPDATE( shangha3 )
 {
-	shangha3_state *state = screen->machine().driver_data<shangha3_state>();
+	shangha3_state *state = screen.machine().driver_data<shangha3_state>();
 
-	copybitmap(bitmap, state->m_rawbitmap, 0, 0, 0, 0, cliprect);
+	copybitmap(bitmap, *state->m_rawbitmap, 0, 0, 0, 0, cliprect);
 	return 0;
 }

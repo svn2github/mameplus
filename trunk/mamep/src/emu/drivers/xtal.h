@@ -55,7 +55,7 @@ enum
 	XTAL_3MHz   		= 3000000,		/* Probably only used to drive 68705 or similar MCUs on 80's Taito PCBs */
 	XTAL_3_12MHz		= 3120000,		/* SP0250 clock on Gottlieb games */
 	XTAL_3_52128MHz		= 3521280,		/* RCA COSMAC VIP */
-	XTAL_3_579545MHz	= 3579545,		/* NTSC color subcarrier, extremely common, used on 100's of PCBs */
+	XTAL_3_579545MHz	= 3579545,		/* NTSC color subcarrier, extremely common, used on 100's of PCBs (48-300-010) */
 	XTAL_3_6864MHz  	= 3686400,		/* CPS3 */
 	XTAL_4MHz   		= 4000000,
 	XTAL_4_028MHz		= 4028000,		/* Sony SMC-777 */
@@ -64,14 +64,14 @@ enum
 	XTAL_4_41MHz		= 4410000,		/* Pioneer PR-8210 ldplayer */
 	XTAL_4_43361MHz		= 4433610,		/* Cidelsa Draco */
 	XTAL_4_433619MHz	= 4433619,		/* PAL color subcarrier */
-	XTAL_4_608MHz		= 4608000,		/* Luxor ABC-77 keyboard */
+	XTAL_4_608MHz		= 4608000,		/* Luxor ABC-77 keyboard (48-300-107) */
 	XTAL_4_9152MHz  	= 4915200,
 	XTAL_5MHz   		= 5000000,		/* Mutant Night */
 	XTAL_5_0688MHz		= 5068800,		/* Xerox 820, DEC VK100 */
 	XTAL_5_626MHz		= 5626000,		/* RCA CDP1869 PAL dot clock */
 	XTAL_5_67MHz		= 5670000,		/* RCA CDP1869 NTSC dot clock */
 	XTAL_5_7143MHz		= 5714300,		/* Cidelsa Destroyer */
-	XTAL_5_9904MHz		= 5990400,		/* Luxor ABC 800 keyboard */
+	XTAL_5_9904MHz		= 5990400,		/* Luxor ABC 800 keyboard (48-300-008) */
 	XTAL_6MHz   		= 6000000,		/* American Poker II */
 	XTAL_6_5MHz 		= 6500000,		/* Jupiter Ace */
 	XTAL_6_144MHz		= 6144000,		/* Used on Alpha Denshi early 80's games sound board */
@@ -80,10 +80,10 @@ enum
 	XTAL_7_3728MHz  	= 7372800,
 	XTAL_7_8643MHz		= 7864300,		/* Used on InterFlip games as video clock */
 	XTAL_8MHz   		= 8000000,		/* Extremely common, used on 100's of PCBs */
-	XTAL_8_2MHz		= 8200000,		/* Universal Mr. Do - Model 8021 PCB */
+	XTAL_8_2MHz			= 8200000,		/* Universal Mr. Do - Model 8021 PCB */
 	XTAL_8_4672MHz		= 8467200,		/* Subsino's Ying Hua Lian */
 	XTAL_8_664MHz		= 8664000,		/* Touchmaster */
-	XTAL_8_7MHz		= 8700000,		/* Tandberg TDV 2324 */
+	XTAL_8_7MHz			= 8700000,		/* Tandberg TDV 2324 */
 	XTAL_8_867236MHz	= 8867236,		/* RCA CDP1869 PAL color clock */
 	XTAL_8_867238MHz	= 8867238,		/* ETI-660 */
 	XTAL_9_216MHz		= 9216000,		/* Conitec PROF-180X */
@@ -100,7 +100,7 @@ enum
 	XTAL_10_733MHz  	= 10733000,		/* The Fairyland Story */
 	XTAL_10_738635MHz	= 10738635,		/* TMS9918 family */
 	XTAL_10_816MHz  	= 10816000,		/* Universal 1979-1980 (Cosmic Alien, etc) */
-	XTAL_11MHz		= 11000000,		/* Mario I8039 sound */
+	XTAL_11MHz			= 11000000,		/* Mario I8039 sound */
 	XTAL_11_0592MHz 	= 11059200,		/* Lethal Justice, Ruleta RE-900 */
 	XTAL_11_2MHz		= 11200000,		/* New York, New York */
 	XTAL_11_289MHz  	= 11289000,		/* Vanguard */
@@ -121,7 +121,7 @@ enum
 	XTAL_14_31818MHz	= 14318181,		/* Extremely common, used on 100's of PCBs */
 	XTAL_14_705882MHz	= 14705882,		/* Aleck64 */
 	XTAL_14_7456MHz 	= 14745600,		/* Namco System 12 & System Super 22/23 for H8/3002 CPU */
-	XTAL_15MHz		= 15000000,		/* Sinclair QL */
+	XTAL_15MHz			= 15000000,		/* Sinclair QL */
 	XTAL_15_36MHz		= 15360000,		/* Visual 1050 */
 	XTAL_15_468MHz  	= 15468000,		/* Bank Panic h/w, Sega G80 */
 	XTAL_16MHz  		= 16000000,		/* Extremely common, used on 100's of PCBs */
@@ -145,6 +145,7 @@ enum
 	XTAL_22_1184MHz		= 22118400,
 	XTAL_23_9616MHz		= 23961600,		/* Osborne 4 (Vixen) */
 	XTAL_24MHz  		= 24000000,		/* Mario, 80's Data East games, 80's Konami games */
+	XTAL_24_0734MHz 	= 24073400,		/* DEC Rainbow 100 */
 	XTAL_24_576MHz  	= 24576000,		/* Pole Position h/w, Model 3 CPU board */
 	XTAL_24_8832MHz 	= 24883200,		/* DEC VT100 */
 	XTAL_25MHz  		= 25000000,		/* Namco System 22, Taito GNET, Dogyuun h/w */
@@ -170,6 +171,7 @@ enum
 	XTAL_32_5304MHz 	= 32530400,		/* Seta 2 */
 	XTAL_33MHz  		= 33000000,		/* Sega Model 3 video board */
 	XTAL_33_333MHz  	= 33333000,		/* Sega Model 3 CPU board, Vegas */
+	XTAL_33_833MHz		= 33833000,
 	XTAL_33_8688MHz 	= 33868800,		/* Usually used to drive 90's Yamaha OPL/FM chips with /2 divider */
 	XTAL_36MHz  		= 36000000,		/* Sega Model 1 video board */
 	XTAL_38_76922MHz	= 38769220,		/* Namco System 21 video board */
@@ -196,7 +198,7 @@ enum
 	XTAL_73_728MHz  	= 73728000,		/* Ms. Pac-Man/Galaga 20th Anniversary */
 	XTAL_100MHz 		= 100000000,		/* PSX-based Namco System 12, Vegas, Sony ZN1-2-based */
 	XTAL_101_4912MHz	= 101491200,		/* PSX-based Namco System 10 */
-	XTAL_200MHz		= 200000000,		/* Base SH4 CPU (Naomi, Hikaru etc.) */
+	XTAL_200MHz			= 200000000,		/* Base SH4 CPU (Naomi, Hikaru etc.) */
 
 /* Resonators (There are probably more. Almost always used for driving OKI sound chips) */
 

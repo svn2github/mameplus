@@ -51,7 +51,7 @@ static VIDEO_START( hanaroku )
 {
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	albazc_state *state = machine.driver_data<albazc_state>();
 	int i;
@@ -79,8 +79,8 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 static SCREEN_UPDATE(hanaroku)
 {
-	bitmap_fill(bitmap, cliprect, 0x1f0);	// ???
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	bitmap.fill(0x1f0, cliprect);	// ???
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }
 

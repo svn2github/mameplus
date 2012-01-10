@@ -103,7 +103,7 @@ WRITE16_HANDLER( klax_latch_w )
 
 SCREEN_UPDATE( klax )
 {
-	klax_state *state = screen->machine().driver_data<klax_state>();
+	klax_state *state = screen.machine().driver_data<klax_state>();
 	atarimo_rect_list rectlist;
 	bitmap_t *mobitmap;
 	int x, y, r;
@@ -116,8 +116,8 @@ SCREEN_UPDATE( klax )
 	for (r = 0; r < rectlist.numrects; r++, rectlist.rect++)
 		for (y = rectlist.rect->min_y; y <= rectlist.rect->max_y; y++)
 		{
-			UINT16 *mo = (UINT16 *)mobitmap->base + mobitmap->rowpixels * y;
-			UINT16 *pf = (UINT16 *)bitmap->base + bitmap->rowpixels * y;
+			UINT16 *mo = &mobitmap->pix16(y);
+			UINT16 *pf = &bitmap.pix16(y);
 			for (x = rectlist.rect->min_x; x <= rectlist.rect->max_x; x++)
 				if (mo[x])
 				{

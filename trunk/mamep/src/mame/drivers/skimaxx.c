@@ -139,7 +139,7 @@ static VIDEO_START( skimaxx )
 
 static SCREEN_UPDATE( skimaxx )
 {
-//  popmessage("%02x %02x", input_port_read(screen->machine(), "X"), input_port_read(screen->machine(), "Y") );
+//  popmessage("%02x %02x", input_port_read(screen.machine(), "X"), input_port_read(screen.machine(), "Y") );
 
 	SCREEN_UPDATE_CALL(tms340x0);
 
@@ -172,7 +172,7 @@ static void skimaxx_from_shiftreg(address_space *space, UINT32 address, UINT16 *
  *
  *************************************/
 
-static void skimaxx_scanline_update(screen_device &screen, bitmap_t *bitmap, int scanline, const tms34010_display_params *params)
+static void skimaxx_scanline_update(screen_device &screen, bitmap_t &bitmap, int scanline, const tms34010_display_params *params)
 {
 	skimaxx_state *state = screen.machine().driver_data<skimaxx_state>();
 	// TODO: This isn't correct. I just hacked it together quickly so I could see something!
@@ -182,7 +182,7 @@ static void skimaxx_scanline_update(screen_device &screen, bitmap_t *bitmap, int
 		UINT32 rowaddr = (params->rowaddr - 0x220);
 		UINT16 *fg = &state->m_fg_buffer[rowaddr << 8];
 		UINT32 *bg = &state->m_bg_buffer_front[rowaddr/2 * 1024/2];
-		UINT16 *dest = BITMAP_ADDR16(bitmap, scanline, 0);
+		UINT16 *dest = &bitmap.pix16(scanline);
 		//int coladdr = params->coladdr;
 		int x;
 		//coladdr = 0;

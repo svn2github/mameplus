@@ -61,7 +61,7 @@ static VIDEO_START( jongkyo )
 
 static SCREEN_UPDATE( jongkyo )
 {
-	jongkyo_state *state = screen->machine().driver_data<jongkyo_state>();
+	jongkyo_state *state = screen.machine().driver_data<jongkyo_state>();
 	int y;
 
 	for (y = 0; y < 256; ++y)
@@ -89,7 +89,7 @@ static SCREEN_UPDATE( jongkyo )
 
 			for (b = 0; b < 4; ++b)
 			{
-				*BITMAP_ADDR16(bitmap, 255 - y, 255 - (x + b)) = ((data2 & 0x01)) + ((data2 & 0x10) >> 3) +
+				bitmap.pix16(255 - y, 255 - (x + b)) = ((data2 & 0x01)) + ((data2 & 0x10) >> 3) +
                                                            ((data1 & 0x01) << 2) + ((data1 & 0x10) >> 1) +
                                                            ((data3 & 0x01) << 4) + ((data3 & 0x10) << 1);
 				data1 >>= 1;

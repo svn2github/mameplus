@@ -213,7 +213,7 @@ static void scene_draw( running_machine &machine )
 			d2 = *(gfx3 + tileidx);
 		}
 
-		bmpaddr = BITMAP_ADDR16(state->m_back_buffer, y, 0);
+		bmpaddr = &state->m_back_buffer->pix16(y);
 
 		for (x = 0; x < FRAMEBUFFER_MAX_X; ++x)
 		{
@@ -324,7 +324,7 @@ static void ground_draw( running_machine &machine )
 	/* TODO: Clean up and emulate CS of GFX ROMs? */
 	for (y = 0; y < FRAMEBUFFER_MAX_Y; ++y)
 	{
-		UINT16 *bmpaddr = BITMAP_ADDR16(state->m_back_buffer, y, 0);
+		UINT16 *bmpaddr = &state->m_back_buffer->pix16(y);
 		UINT8 ls163;
 		UINT32 clut_addr;
 		UINT32 gfx_addr;
@@ -491,7 +491,7 @@ static void objects_draw( running_machine &machine )
 			UINT32 tile;
 			UINT8	cnt;
 			UINT32 yidx;
-			UINT16 *line = BITMAP_ADDR16(state->m_back_buffer, y, 0);
+			UINT16 *line = &state->m_back_buffer->pix16(y);
 			UINT32 px = xpos;
 
 			/* Outside the limits? */
@@ -698,7 +698,7 @@ do {                                     \
 	if (carry) --CNT;                    \
 } while(0)
 
-static void rotate_draw( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void rotate_draw( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	lockon_state *state = machine.driver_data<lockon_state>();
 	UINT32 y;
@@ -722,10 +722,10 @@ static void rotate_draw( running_machine &machine, bitmap_t *bitmap, const recta
 	UINT32 axy_en  = !BIT(state->m_dx0ll, 8);
 	UINT32 ayy_en  = !BIT(state->m_dy0ll, 8);
 
-	for (y = 0; y <= cliprect->max_y; ++y)
+	for (y = 0; y <= cliprect.max_y; ++y)
 	{
 		UINT32 carry;
-		UINT16 *dst = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *dst = &bitmap.pix16(y);
 		UINT32 x;
 
 		UINT32 cx = cxy;
@@ -734,12 +734,12 @@ static void rotate_draw( running_machine &machine, bitmap_t *bitmap, const recta
 		UINT8 axx = axy;
 		UINT8 ayx = ayy;
 
-		for (x = 0; x <= cliprect->max_x; ++x)
+		for (x = 0; x <= cliprect.max_x; ++x)
 		{
 			cx &= 0x1ff;
 			cy &= 0x1ff;
 
-			*dst++ = *BITMAP_ADDR16(state->m_front_buffer, cy, cx);
+			*dst++ = state->m_front_buffer->pix16(cy, cx);
 
 			if (axx_en)
 				INCREMENT(axx, cx);
@@ -803,7 +803,7 @@ static void rotate_draw( running_machine &machine, bitmap_t *bitmap, const recta
 
 *******************************************************************************************/
 
-static void hud_draw( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void hud_draw( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	lockon_state *state = machine.driver_data<lockon_state>();
 	UINT8	*tile_rom = machine.region("gfx3")->base();
@@ -844,7 +844,7 @@ static void hud_draw( running_machine &machine, bitmap_t *bitmap, const rectangl
 		else
 			y_size = 8;
 
-		for (y = cliprect->min_y; y <= cliprect->max_y; ++y)
+		for (y = cliprect.min_y; y <= cliprect.max_y; ++y)
 		{
 			UINT32 xt;
 			UINT32 cy;
@@ -883,9 +883,9 @@ static void hud_draw( running_machine &machine, bitmap_t *bitmap, const rectangl
 				{
 					UINT32 x = x_pos + (xt << 3) + px;
 
-					if (x <= cliprect->max_x)
+					if (x <= cliprect.max_x)
 					{
-						UINT16 *dst = BITMAP_ADDR16(bitmap, y, x);
+						UINT16 *dst = &bitmap.pix16(y, x);
 
 						if (BIT(gfx_strip, px ^ 7) && *dst > 255)
 							*dst = colour;
@@ -931,30 +931,30 @@ VIDEO_START( lockon )
 
 SCREEN_UPDATE( lockon )
 {
-	lockon_state *state = screen->machine().driver_data<lockon_state>();
+	lockon_state *state = screen.machine().driver_data<lockon_state>();
 
 	/* If screen output is disabled, fill with black */
 	if (!BIT(state->m_ctrl_reg, 7))
 	{
-		bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		return 0;
 	}
 
 	/* Scan out the frame buffer in rotated order */
-	rotate_draw(screen->machine(), bitmap, cliprect);
+	rotate_draw(screen.machine(), bitmap, cliprect);
 
 	/* Draw the character tilemap */
 	tilemap_draw(bitmap, cliprect, state->m_tilemap, 0, 0);
 
 	/* Draw the HUD */
-	hud_draw(screen->machine(), bitmap, cliprect);
+	hud_draw(screen.machine(), bitmap, cliprect);
 
 	return 0;
 }
 
 SCREEN_EOF( lockon )
 {
-	lockon_state *state = machine.driver_data<lockon_state>();
+	lockon_state *state = screen.machine().driver_data<lockon_state>();
 
 	/* Swap the frame buffers */
 	bitmap_t *tmp = state->m_front_buffer;
@@ -962,7 +962,7 @@ SCREEN_EOF( lockon )
 	state->m_back_buffer = tmp;
 
 	/* Draw the frame buffer layers */
-	scene_draw(machine);
-	ground_draw(machine);
-	objects_draw(machine);
+	scene_draw(screen.machine());
+	ground_draw(screen.machine());
+	objects_draw(screen.machine());
 }

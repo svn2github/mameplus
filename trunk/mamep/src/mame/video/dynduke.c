@@ -137,7 +137,7 @@ WRITE16_HANDLER( dynduke_control_w )
 	}
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect,int pri)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect,int pri)
 {
 	dynduke_state *state = machine.driver_data<dynduke_state>();
 	UINT16 *buffered_spriteram16 = machine.generic.buffered_spriteram.u16;
@@ -175,18 +175,18 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectan
 	}
 }
 
-static void draw_background(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int pri )
+static void draw_background(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int pri )
 {
 	dynduke_state *state = machine.driver_data<dynduke_state>();
 	/* The transparency / palette handling on the background layer is very strange */
-	bitmap_t *bm = tilemap_get_pixmap(state->m_bg_layer);
+	bitmap_t &bm = tilemap_get_pixmap(state->m_bg_layer);
 	int scrolly, scrollx;
 	int x,y;
 
 	/* if we're disabled, don't draw */
 	if (!state->m_back_enable)
 	{
-		bitmap_fill(bitmap,cliprect,get_black_pen(machine));
+		bitmap.fill(get_black_pen(machine), cliprect);
 		return;
 	}
 
@@ -196,8 +196,8 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 	for (y=0;y<256;y++)
 	{
 		int realy = (y + scrolly) & 0x1ff;
-		UINT16 *src = BITMAP_ADDR16(bm,     realy, 0);
-		UINT16 *dst = BITMAP_ADDR16(bitmap, y,     0);
+		UINT16 *src = &bm.pix16(realy);
+		UINT16 *dst = &bitmap.pix16(y);
 
 
 		for (x=0;x<256;x++)
@@ -230,7 +230,7 @@ static void draw_background(running_machine &machine, bitmap_t *bitmap, const re
 
 SCREEN_UPDATE( dynduke )
 {
-	dynduke_state *state = screen->machine().driver_data<dynduke_state>();
+	dynduke_state *state = screen.machine().driver_data<dynduke_state>();
 	/* Setup the tilemaps */
 	tilemap_set_scrolly( state->m_fg_layer,0, ((state->m_scroll_ram[0x11]&0x30)<<4)+((state->m_scroll_ram[0x12]&0x7f)<<1)+((state->m_scroll_ram[0x12]&0x80)>>7) );
 	tilemap_set_scrollx( state->m_fg_layer,0, ((state->m_scroll_ram[0x19]&0x30)<<4)+((state->m_scroll_ram[0x1a]&0x7f)<<1)+((state->m_scroll_ram[0x1a]&0x80)>>7) );
@@ -238,14 +238,14 @@ SCREEN_UPDATE( dynduke )
 	tilemap_set_enable( state->m_tx_layer,state->m_txt_enable);
 
 
-	draw_background(screen->machine(), bitmap, cliprect,0x00);
-	draw_sprites(screen->machine(),bitmap,cliprect,0); // Untested: does anything use it? Could be behind background
-	draw_sprites(screen->machine(),bitmap,cliprect,1);
-	draw_background(screen->machine(), bitmap, cliprect,0x20);
+	draw_background(screen.machine(), bitmap, cliprect,0x00);
+	draw_sprites(screen.machine(),bitmap,cliprect,0); // Untested: does anything use it? Could be behind background
+	draw_sprites(screen.machine(),bitmap,cliprect,1);
+	draw_background(screen.machine(), bitmap, cliprect,0x20);
 
-	draw_sprites(screen->machine(),bitmap,cliprect,2);
+	draw_sprites(screen.machine(),bitmap,cliprect,2);
 	tilemap_draw(bitmap,cliprect,state->m_fg_layer,0,0);
-	draw_sprites(screen->machine(),bitmap,cliprect,3);
+	draw_sprites(screen.machine(),bitmap,cliprect,3);
 	tilemap_draw(bitmap,cliprect,state->m_tx_layer,0,0);
 
 	return 0;
@@ -253,7 +253,7 @@ SCREEN_UPDATE( dynduke )
 
 SCREEN_EOF( dynduke )
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	buffer_spriteram16_w(space, 0, 0, 0xffff); // Could be a memory location instead
 }

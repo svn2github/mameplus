@@ -185,7 +185,7 @@ static MACHINE_START( clayshoo )
 
 static SCREEN_UPDATE( clayshoo )
 {
-	clayshoo_state *state = screen->machine().driver_data<clayshoo_state>();
+	clayshoo_state *state = screen.machine().driver_data<clayshoo_state>();
 	offs_t offs;
 
 	for (offs = 0; offs < state->m_videoram_size; offs++)
@@ -198,7 +198,7 @@ static SCREEN_UPDATE( clayshoo )
 		for (i = 0; i < 8; i++)
 		{
 			pen_t pen = (data & 0x80) ? RGB_WHITE : RGB_BLACK;
-			*BITMAP_ADDR32(bitmap, y, x) = pen;
+			bitmap.pix32(y, x) = pen;
 
 			data = data << 1;
 			x = x + 1;

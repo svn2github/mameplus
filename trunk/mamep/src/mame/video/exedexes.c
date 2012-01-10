@@ -184,7 +184,7 @@ VIDEO_START( exedexes )
 	colortable_configure_tilemap_groups(machine.colortable, state->m_tx_tilemap, machine.gfx[0], 0xcf);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int priority )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int priority )
 {
 	exedexes_state *state = machine.driver_data<exedexes_state>();
 	UINT8 *buffered_spriteram = machine.generic.buffered_spriteram.u8;
@@ -219,16 +219,16 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( exedexes )
 {
-	exedexes_state *state = screen->machine().driver_data<exedexes_state>();
+	exedexes_state *state = screen.machine().driver_data<exedexes_state>();
 	if (state->m_sc2on)
 	{
 		tilemap_set_scrollx(state->m_bg_tilemap, 0, ((state->m_bg_scroll[1]) << 8) + state->m_bg_scroll[0]);
 		tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 	}
 	else
-		bitmap_fill(bitmap, cliprect, 0);
+		bitmap.fill(0, cliprect);
 
-	draw_sprites(screen->machine(), bitmap, cliprect, 1);
+	draw_sprites(screen.machine(), bitmap, cliprect, 1);
 
 	if (state->m_sc1on)
 	{
@@ -237,7 +237,7 @@ SCREEN_UPDATE( exedexes )
 		tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	}
 
-	draw_sprites(screen->machine(), bitmap, cliprect, 0);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0);
 
 	if (state->m_chon)
 		tilemap_draw(bitmap, cliprect, state->m_tx_tilemap, 0, 0);
@@ -247,7 +247,7 @@ SCREEN_UPDATE( exedexes )
 
 SCREEN_EOF( exedexes )
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	buffer_spriteram_w(space, 0, 0);
 }

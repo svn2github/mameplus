@@ -92,14 +92,14 @@ do																					\
 while (0)																			\
 
 
-static void pdrawgfx_transpen_additive(bitmap_t *dest, const rectangle *cliprect, const gfx_element *gfx,
+static void pdrawgfx_transpen_additive(bitmap_t &dest, const rectangle &cliprect, const gfx_element *gfx,
 		UINT32 code, UINT32 color, int flipx, int flipy, INT32 destx, INT32 desty,
-		bitmap_t *priority, UINT32 pmask, UINT32 transpen)
+		bitmap_t &priority, UINT32 pmask, UINT32 transpen)
 {
 	const pen_t *paldata;
 
-	assert(dest != NULL);
-	assert(dest->bpp == 32);
+	assert(dest.valid());
+	assert(dest.bpp() == 32);
 	assert(gfx != NULL);
 
 	/* get final code and color, and grab lookup tables */
@@ -125,9 +125,9 @@ static void pdrawgfx_transpen_additive(bitmap_t *dest, const rectangle *cliprect
 }
 
 
-static void pdrawgfxzoom_transpen_additive(bitmap_t *dest, const rectangle *cliprect, const gfx_element *gfx,
+static void pdrawgfxzoom_transpen_additive(bitmap_t &dest, const rectangle &cliprect, const gfx_element *gfx,
 		UINT32 code, UINT32 color, int flipx, int flipy, INT32 destx, INT32 desty,
-		UINT32 scalex, UINT32 scaley, bitmap_t *priority, UINT32 pmask,
+		UINT32 scalex, UINT32 scaley, bitmap_t &priority, UINT32 pmask,
 		UINT32 transpen)
 {
 	const pen_t *paldata;
@@ -140,8 +140,8 @@ static void pdrawgfxzoom_transpen_additive(bitmap_t *dest, const rectangle *clip
 		return;
 	}
 
-	assert(dest != NULL);
-	assert(dest->bpp == 32);
+	assert(dest.valid());
+	assert(dest.bpp() == 32);
 	assert(gfx != NULL);
 
 	/* get final code and color, and grab lookup tables */
@@ -207,7 +207,7 @@ static void pdrawgfxzoom_transpen_additive(bitmap_t *dest, const rectangle *clip
  * 0x0e0 in Samurai Shodown/Xrally games, 0x1c0 in all the others, zooming factor?
  */
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	hng64_state *state = machine.driver_data<hng64_state>();
 	const gfx_element *gfx;
@@ -431,7 +431,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
  */
 
 /* this is broken for the 'How to Play' screen in Buriki after attract, disabled for now */
-static void transition_control(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void transition_control(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	hng64_state *state = machine.driver_data<hng64_state>();
 	UINT32 *hng64_tcram = state->m_tcram;
@@ -455,11 +455,11 @@ static void transition_control(running_machine &machine, bitmap_t *bitmap, const
 		brigG = (INT32)((hng64_tcram[0x0000000a] >> 8)  & 0xff);
 		brigB = (INT32)((hng64_tcram[0x0000000a] >> 16) & 0xff);
 
-		for (i = cliprect->min_x; i < cliprect->max_x; i++)
+		for (i = cliprect.min_x; i < cliprect.max_x; i++)
 		{
-			for (j = cliprect->min_y; j < cliprect->max_y; j++)
+			for (j = cliprect.min_y; j < cliprect.max_y; j++)
 			{
-				UINT32* thePixel = BITMAP_ADDR32(bitmap, j, i);
+				UINT32* thePixel = &bitmap.pix32(j, i);
 
 				finR = (INT32)RGB_RED(*thePixel);
 				finG = (INT32)RGB_GREEN(*thePixel);
@@ -705,25 +705,16 @@ struct _blit_parameters
 
 
 
-static void hng64_configure_blit_parameters(blit_parameters *blit, tilemap_t *tmap, bitmap_t *dest, const rectangle *cliprect, UINT32 flags, UINT8 priority, UINT8 priority_mask, hng64trans_t drawformat)
+static void hng64_configure_blit_parameters(blit_parameters *blit, tilemap_t *tmap, bitmap_t &dest, const rectangle &cliprect, UINT32 flags, UINT8 priority, UINT8 priority_mask, hng64trans_t drawformat)
 {
 	/* start with nothing */
 	memset(blit, 0, sizeof(*blit));
 
 	/* set the target bitmap */
-	blit->bitmap = dest;
+	blit->bitmap = &dest;
 
 	/* if we have a cliprect, copy */
-	if (cliprect != NULL)
-		blit->cliprect = *cliprect;
-
-	/* otherwise, make one up */
-	else
-	{
-		blit->cliprect.min_x = blit->cliprect.min_y = 0;
-		blit->cliprect.max_x = dest->width - 1;
-		blit->cliprect.max_y = dest->height - 1;
-	}
+	blit->cliprect = cliprect;
 
 	/* set the priority code and alpha */
 	//blit->tilemap_priority_code = priority | (priority_mask << 8) | (tmap->palette_offset << 16); // fixit
@@ -794,14 +785,14 @@ static void hng64_tilemap_draw_roz_core(running_machine& machine, tilemap_t *tma
 		UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy, int wraparound)
 {
 	const pen_t *clut = &machine.pens[blit->tilemap_priority_code >> 16];
-	bitmap_t *priority_bitmap = machine.priority_bitmap;
-	bitmap_t *destbitmap = blit->bitmap;
-	bitmap_t *srcbitmap = tilemap_get_pixmap(tmap);
-	bitmap_t *flagsmap = tilemap_get_flagsmap(tmap);
-	const int xmask = srcbitmap->width-1;
-	const int ymask = srcbitmap->height-1;
-	const int widthshifted = srcbitmap->width << 16;
-	const int heightshifted = srcbitmap->height << 16;
+	bitmap_t &priority_bitmap = machine.priority_bitmap;
+	bitmap_t &destbitmap = *blit->bitmap;
+	bitmap_t &srcbitmap = tilemap_get_pixmap(tmap);
+	bitmap_t &flagsmap = tilemap_get_flagsmap(tmap);
+	const int xmask = srcbitmap.width()-1;
+	const int ymask = srcbitmap.height()-1;
+	const int widthshifted = srcbitmap.width() << 16;
+	const int heightshifted = srcbitmap.height() << 16;
 	UINT32 priority = blit->tilemap_priority_code;
 	UINT8 mask = blit->mask;
 	UINT8 value = blit->value;
@@ -817,7 +808,7 @@ static void hng64_tilemap_draw_roz_core(running_machine& machine, tilemap_t *tma
 	UINT8 *pri;
 	const UINT16 *src;
 	const UINT8 *maskptr;
-	int destadvance = destbitmap->bpp / 8;
+	int destadvance = destbitmap.bpp() / 8;
 
 	/* pre-advance based on the cliprect */
 	startx += blit->cliprect.min_x * incxx + blit->cliprect.min_y * incyx;
@@ -855,10 +846,10 @@ static void hng64_tilemap_draw_roz_core(running_machine& machine, tilemap_t *tma
 				cy = starty >> 16;
 
 				/* get source and priority pointers */
-				pri = BITMAP_ADDR8(priority_bitmap, sy, sx);
-				src = BITMAP_ADDR16(srcbitmap, cy, 0);
-				maskptr = BITMAP_ADDR8(flagsmap, cy, 0);
-				dest = (UINT8 *)destbitmap->base + (destbitmap->rowpixels * sy + sx) * destadvance;
+				pri = &priority_bitmap.pix8(sy, sx);
+				src = &srcbitmap.pix16(cy);
+				maskptr = &flagsmap.pix8(cy);
+				dest = &destbitmap.pix8(sy * destadvance, sx * destadvance);
 
 				/* loop over columns */
 				while (x <= ex && cx < widthshifted)
@@ -896,16 +887,16 @@ static void hng64_tilemap_draw_roz_core(running_machine& machine, tilemap_t *tma
 			cy = starty;
 
 			/* get dest and priority pointers */
-			dest = (UINT8 *)destbitmap->base + (destbitmap->rowpixels * sy + sx) * destadvance;
-			pri = BITMAP_ADDR8(priority_bitmap, sy, sx);
+			dest = &destbitmap.pix8(sy * destadvance, sx * destadvance);
+			pri = &priority_bitmap.pix8(sy, sx);
 
 			/* loop over columns */
 			while (x <= ex)
 			{
 				/* plot if we match the mask */
-				if ((*BITMAP_ADDR8(flagsmap, (cy >> 16) & ymask, (cx >> 16) & xmask) & mask) == value)
+				if ((flagsmap.pix8((cy >> 16) & ymask, (cx >> 16) & xmask) & mask) == value)
 				{
-					HNG64_ROZ_PLOT_PIXEL(*BITMAP_ADDR16(srcbitmap, (cy >> 16) & ymask, (cx >> 16) & xmask));
+					HNG64_ROZ_PLOT_PIXEL(srcbitmap.pix16((cy >> 16) & ymask, (cx >> 16) & xmask));
 					*pri = (*pri & (priority >> 8)) | priority;
 				}
 
@@ -936,17 +927,17 @@ static void hng64_tilemap_draw_roz_core(running_machine& machine, tilemap_t *tma
 			cy = starty;
 
 			/* get dest and priority pointers */
-			dest = (UINT8 *)destbitmap->base + (destbitmap->rowpixels * sy + sx) * destadvance;
-			pri = BITMAP_ADDR8(priority_bitmap, sy, sx);
+			dest = &destbitmap.pix8(sy * destadvance, sx * destadvance);
+			pri = &priority_bitmap.pix8(sy, sx);
 
 			/* loop over columns */
 			while (x <= ex)
 			{
 				/* plot if we're within the bitmap and we match the mask */
 				if (cx < widthshifted && cy < heightshifted)
-					if ((*BITMAP_ADDR8(flagsmap, cy >> 16, cx >> 16) & mask) == value)
+					if ((flagsmap.pix8(cy >> 16, cx >> 16) & mask) == value)
 					{
-						HNG64_ROZ_PLOT_PIXEL(*BITMAP_ADDR16(srcbitmap, cy >> 16, cx >> 16));
+						HNG64_ROZ_PLOT_PIXEL(srcbitmap.pix16(cy >> 16, cx >> 16));
 						*pri = (*pri & (priority >> 8)) | priority;
 					}
 
@@ -968,7 +959,7 @@ static void hng64_tilemap_draw_roz_core(running_machine& machine, tilemap_t *tma
 
 
 
-static void hng64_tilemap_draw_roz_primask(running_machine& machine, bitmap_t *dest, const rectangle *cliprect, tilemap_t *tmap,
+static void hng64_tilemap_draw_roz_primask(running_machine& machine, bitmap_t &dest, const rectangle &cliprect, tilemap_t *tmap,
 		UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy,
 		int wraparound, UINT32 flags, UINT8 priority, UINT8 priority_mask, hng64trans_t drawformat)
 {
@@ -996,7 +987,7 @@ g_profiler.stop();
 }
 
 
-INLINE void hng64_tilemap_draw_roz(running_machine& machine, bitmap_t *dest, const rectangle *cliprect, tilemap_t *tmap,
+INLINE void hng64_tilemap_draw_roz(running_machine& machine, bitmap_t &dest, const rectangle &cliprect, tilemap_t *tmap,
 		UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy,
 		int wraparound, UINT32 flags, UINT8 priority, hng64trans_t drawformat)
 {
@@ -1005,7 +996,7 @@ INLINE void hng64_tilemap_draw_roz(running_machine& machine, bitmap_t *dest, con
 
 
 
-static void hng64_drawtilemap(running_machine& machine, bitmap_t *bitmap, const rectangle *cliprect, int tm )
+static void hng64_drawtilemap(running_machine& machine, bitmap_t &bitmap, const rectangle &cliprect, int tm )
 {
 	hng64_state *state = machine.driver_data<hng64_state>();
 	UINT32 *hng64_videoregs = state->m_videoregs;
@@ -1173,7 +1164,7 @@ static void hng64_drawtilemap(running_machine& machine, bitmap_t *bitmap, const 
 				xinc = (xmiddle - xtopleft) / 512;
 				yinc = (ymiddle - ytopleft) / 512;
 
-				hng64_tilemap_draw_roz(machine, bitmap,&clip,tilemap,xtopleft,ytopleft,
+				hng64_tilemap_draw_roz(machine, bitmap,clip,tilemap,xtopleft,ytopleft,
 						xinc<<1,0,0,yinc<<1,
 						1,
 						0,0, debug_blend_enabled?HNG64_TILEMAP_ADDITIVE:HNG64_TILEMAP_NORMAL);
@@ -1240,9 +1231,9 @@ static void hng64_drawtilemap(running_machine& machine, bitmap_t *bitmap, const 
 			/* manual copy = slooow */
 			if (MAKE_MAME_REEEEAAALLLL_SLOW)
 			{
-				bitmap_t *bm = tilemap_get_pixmap(tilemap);
-				int bmheight = bm->height;
-				int bmwidth = bm->width;
+				bitmap_t &bm = tilemap_get_pixmap(tilemap);
+				int bmheight = bm.height();
+				int bmwidth = bm.width();
 				const pen_t *paldata = machine.pens;
 				UINT32* dstptr;
 				UINT16* srcptr;
@@ -1256,7 +1247,7 @@ static void hng64_drawtilemap(running_machine& machine, bitmap_t *bitmap, const 
 				for (yy=0;yy<448;yy++)
 				{
 
-					dstptr = BITMAP_ADDR32(bitmap,yy,0);
+					dstptr = &bitmap.pix32(yy);
 
 					tmp = xtopleft;
 					tmp2 = ytopleft;
@@ -1267,7 +1258,7 @@ static void hng64_drawtilemap(running_machine& machine, bitmap_t *bitmap, const 
 						int realsrcy = (ytopleft>>16)&(bmheight-1);
 						UINT16 pen;
 
-						srcptr = BITMAP_ADDR16(bm, realsrcy, 0);
+						srcptr = &bm.pix16(realsrcy);
 
 						pen = srcptr[realsrcx];
 
@@ -1338,9 +1329,9 @@ static void hng64_drawtilemap(running_machine& machine, bitmap_t *bitmap, const 
 			/* manual copy = slooow */
 			if (MAKE_MAME_REEEEAAALLLL_SLOW)
 			{
-				bitmap_t *bm = tilemap_get_pixmap(tilemap);
-				int bmheight = bm->height;
-				int bmwidth = bm->width;
+				bitmap_t &bm = tilemap_get_pixmap(tilemap);
+				int bmheight = bm.height();
+				int bmwidth = bm.width();
 				const pen_t *paldata = machine.pens;
 				UINT32* dstptr;
 				UINT16* srcptr;
@@ -1354,8 +1345,8 @@ static void hng64_drawtilemap(running_machine& machine, bitmap_t *bitmap, const 
 				{
 					int realsrcy = (ytopleft>>16)&(bmheight-1);
 
-					dstptr = BITMAP_ADDR32(bitmap,yy,0);
-					srcptr = BITMAP_ADDR16(bm, realsrcy, 0);
+					dstptr = &bitmap.pix32(yy);
+					srcptr = &bm.pix16(realsrcy);
 
 					xtopleft = tmp;
 
@@ -1448,7 +1439,7 @@ static void hng64_drawtilemap(running_machine& machine, bitmap_t *bitmap, const 
 
 SCREEN_UPDATE( hng64 )
 {
-	hng64_state *state = screen->machine().driver_data<hng64_state>();
+	hng64_state *state = screen.machine().driver_data<hng64_state>();
 	UINT32 *hng64_videoregs = state->m_videoregs;
 	UINT32 *hng64_videoram = state->m_videoram;
 	UINT32 *hng64_tcram = state->m_tcram;
@@ -1461,15 +1452,15 @@ SCREEN_UPDATE( hng64 )
 	// press in sams64_2 attract mode for a nice debug screen from the game
 	// not sure how functional it is, and it doesn't appear to test everything (rowscroll modes etc.)
 	// but it could be useful
-	if ( screen->machine().input().code_pressed_once(KEYCODE_L) )
+	if ( screen.machine().input().code_pressed_once(KEYCODE_L) )
 	{
-		address_space *space = screen->machine().device("maincpu")->memory().space(AS_PROGRAM);
+		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
 		space->write_byte(0x2f27c8, 0x2);
 	}
 #endif
 
-	bitmap_fill(bitmap, 0, hng64_tcram[0x50/4] & 0x10000 ? get_black_pen(screen->machine()) : screen->machine().pens[0]); //FIXME: Is the register correct? check with HW tests
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0x00);
+	bitmap.fill(hng64_tcram[0x50/4] & 0x10000 ? get_black_pen(screen.machine()) : screen.machine().pens[0], cliprect); //FIXME: Is the register correct? check with HW tests
+	screen.machine().priority_bitmap.fill(0x00, cliprect);
 
 	if (state->m_screen_dis)
 		return 0;
@@ -1539,22 +1530,22 @@ SCREEN_UPDATE( hng64 )
 	//hng64_mark_all_tiles_dirty(state, 2);
 	//hng64_mark_all_tiles_dirty(state, 3);
 
-	hng64_drawtilemap(screen->machine(),bitmap,cliprect, 3);
-	hng64_drawtilemap(screen->machine(),bitmap,cliprect, 2);
-	hng64_drawtilemap(screen->machine(),bitmap,cliprect, 1);
-	hng64_drawtilemap(screen->machine(),bitmap,cliprect, 0);
+	hng64_drawtilemap(screen.machine(),bitmap,cliprect, 3);
+	hng64_drawtilemap(screen.machine(),bitmap,cliprect, 2);
+	hng64_drawtilemap(screen.machine(),bitmap,cliprect, 1);
+	hng64_drawtilemap(screen.machine(),bitmap,cliprect, 0);
 
 	// 3d really shouldn't be last, but you don't see some cool stuff right now if it's put before sprites.
 	{
 		int x, y;
 
 		// Blit the color buffer into the primary bitmap
-		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+		for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 		{
-			UINT32 *src = &state->m_colorBuffer3d[y * (cliprect->max_x-cliprect->min_x)];
-			UINT32 *dst = BITMAP_ADDR32(bitmap, y, cliprect->min_x);
+			UINT32 *src = &state->m_colorBuffer3d[y * (cliprect.max_x-cliprect.min_x)];
+			UINT32 *dst = &bitmap.pix32(y, cliprect.min_x);
 
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 			{
 				if(*src & 0xff000000)
 					*dst = *src;
@@ -1566,10 +1557,10 @@ SCREEN_UPDATE( hng64 )
 		//printf("NEW FRAME!\n");   /* Debug - ajg */
 	}
 
-	draw_sprites(screen->machine(), bitmap,cliprect);
+	draw_sprites(screen.machine(), bitmap,cliprect);
 
 	if(0)
-		transition_control(screen->machine(), bitmap, cliprect);
+		transition_control(screen.machine(), bitmap, cliprect);
 
 	if (0)
 		popmessage("%08x %08x %08x %08x %08x", state->m_spriteregs[0], state->m_spriteregs[1], state->m_spriteregs[2], state->m_spriteregs[3], state->m_spriteregs[4]);
@@ -1629,22 +1620,22 @@ SCREEN_UPDATE( hng64 )
 		hng64_tcram[0x58/4],
 		hng64_tcram[0x5c/4]);
 
-	if ( screen->machine().input().code_pressed_once(KEYCODE_T) )
+	if ( screen.machine().input().code_pressed_once(KEYCODE_T) )
 	{
 		state->m_additive_tilemap_debug ^= 1;
 		popmessage("blend changed %02x", state->m_additive_tilemap_debug);
 	}
-	if ( screen->machine().input().code_pressed_once(KEYCODE_Y) )
+	if ( screen.machine().input().code_pressed_once(KEYCODE_Y) )
 	{
 		state->m_additive_tilemap_debug ^= 2;
 		popmessage("blend changed %02x", state->m_additive_tilemap_debug);
 	}
-	if ( screen->machine().input().code_pressed_once(KEYCODE_U) )
+	if ( screen.machine().input().code_pressed_once(KEYCODE_U) )
 	{
 		state->m_additive_tilemap_debug ^= 4;
 		popmessage("blend changed %02x", state->m_additive_tilemap_debug);
 	}
-	if ( screen->machine().input().code_pressed_once(KEYCODE_I) )
+	if ( screen.machine().input().code_pressed_once(KEYCODE_I) )
 	{
 		state->m_additive_tilemap_debug ^= 8;
 		popmessage("blend changed %02x", state->m_additive_tilemap_debug);
@@ -1655,7 +1646,7 @@ SCREEN_UPDATE( hng64 )
 
 SCREEN_EOF( hng64 )
 {
-	clear3d(screen->machine());
+	clear3d(screen.machine());
 }
 
 VIDEO_START( hng64 )

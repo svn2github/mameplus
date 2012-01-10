@@ -74,11 +74,11 @@ WRITE8_HANDLER( epos_port_1_w )
 
 SCREEN_UPDATE( epos )
 {
-	epos_state *state = screen->machine().driver_data<epos_state>();
+	epos_state *state = screen.machine().driver_data<epos_state>();
 	pen_t pens[0x20];
 	offs_t offs;
 
-	get_pens(screen->machine(), pens);
+	get_pens(screen.machine(), pens);
 
 	for (offs = 0; offs < state->m_videoram_size; offs++)
 	{
@@ -87,8 +87,8 @@ SCREEN_UPDATE( epos )
 		int x = (offs % 136) * 2;
 		int y = (offs / 136);
 
-		*BITMAP_ADDR32(bitmap, y, x + 0) = pens[(state->m_palette << 4) | (data & 0x0f)];
-		*BITMAP_ADDR32(bitmap, y, x + 1) = pens[(state->m_palette << 4) | (data >> 4)];
+		bitmap.pix32(y, x + 0) = pens[(state->m_palette << 4) | (data & 0x0f)];
+		bitmap.pix32(y, x + 1) = pens[(state->m_palette << 4) | (data >> 4)];
 	}
 
 	return 0;

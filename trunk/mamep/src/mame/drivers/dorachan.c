@@ -79,14 +79,14 @@ static void get_pens(pen_t *pens)
 
 static SCREEN_UPDATE( dorachan )
 {
-	dorachan_state *state = screen->machine().driver_data<dorachan_state>();
+	dorachan_state *state = screen.machine().driver_data<dorachan_state>();
 	pen_t pens[NUM_PENS];
 	offs_t offs;
 	const UINT8 *color_map_base;
 
 	get_pens(pens);
 
-	color_map_base = screen->machine().region("proms")->base();
+	color_map_base = screen.machine().region("proms")->base();
 
 	for (offs = 0; offs < state->m_videoram_size; offs++)
 	{
@@ -109,7 +109,7 @@ static SCREEN_UPDATE( dorachan )
 		for (i = 0; i < 8; i++)
 		{
 			UINT8 color = (data & 0x01) ? fore_color : RGB_BLACK;
-			*BITMAP_ADDR32(bitmap, y, x) = pens[color];
+			bitmap.pix32(y, x) = pens[color];
 
 			data = data >> 1;
 			x = x + 1;

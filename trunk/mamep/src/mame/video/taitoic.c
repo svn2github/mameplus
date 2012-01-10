@@ -501,16 +501,16 @@ The data bus is 16 bits wide.
 
 /* These scanline drawing routines lifted from Taito F3: optimise / merge ? */
 
-INLINE void taitoic_drawscanline( bitmap_t *bitmap, const rectangle *cliprect, int x, int y,
-		const UINT16 *src, int transparent, UINT32 orient, bitmap_t *priority, int pri)
+INLINE void taitoic_drawscanline( bitmap_t &bitmap, const rectangle &cliprect, int x, int y,
+		const UINT16 *src, int transparent, UINT32 orient, bitmap_t &priority, int pri)
 {
-	UINT16 *dsti = BITMAP_ADDR16(bitmap, y, x);
-	UINT8 *dstp = BITMAP_ADDR8(priority, y, x);
-	int length = cliprect->max_x - cliprect->min_x + 1;
+	UINT16 *dsti = &bitmap.pix16(y, x);
+	UINT8 *dstp = &priority.pix8(y, x);
+	int length = cliprect.max_x - cliprect.min_x + 1;
 
-	src += cliprect->min_x;
-	dsti += cliprect->min_x;
-	dstp += cliprect->min_x;
+	src += cliprect.min_x;
+	dsti += cliprect.min_x;
+	dstp += cliprect.min_x;
 	if (transparent)
 	{
 		while (length--)
@@ -834,7 +834,7 @@ static UINT16 topspeed_get_road_pixel_color( UINT16 pixel, UINT16 color )
 }
 
 
-static void topspeed_custom_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int layer, int flags,
+static void topspeed_custom_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int layer, int flags,
 							UINT32 priority, UINT16 *color_ctrl_ram )
 {
 	pc080sn_state *pc080sn = pc080sn_get_safe_token(device);
@@ -842,8 +842,8 @@ static void topspeed_custom_draw( device_t *device, bitmap_t *bitmap, const rect
 	UINT8 *tsrc;
 	UINT16 scanline[1024];	/* won't be called by a wide-screen game, but just in case... */
 
-	bitmap_t *srcbitmap = tilemap_get_pixmap(pc080sn->tilemap[layer]);
-	bitmap_t *flagsbitmap = tilemap_get_flagsmap(pc080sn->tilemap[layer]);
+	bitmap_t &srcbitmap = tilemap_get_pixmap(pc080sn->tilemap[layer]);
+	bitmap_t &flagsbitmap = tilemap_get_flagsmap(pc080sn->tilemap[layer]);
 
 	UINT16 a, color;
 	int sx, x_index;
@@ -852,10 +852,10 @@ static void topspeed_custom_draw( device_t *device, bitmap_t *bitmap, const rect
 	int flip = 0;
 	int machine_flip = 0;	/* for  ROT 180 ? */
 
-	int min_x = cliprect->min_x;
-	int max_x = cliprect->max_x;
-	int min_y = cliprect->min_y;
-	int max_y = cliprect->max_y;
+	int min_x = cliprect.min_x;
+	int max_x = cliprect.max_x;
+	int min_y = cliprect.min_y;
+	int max_y = cliprect.max_y;
 	int screen_width = max_x - min_x + 1;
 	int width_mask = 0x1ff;	/* underlying tilemap */
 
@@ -883,8 +883,8 @@ static void topspeed_custom_draw( device_t *device, bitmap_t *bitmap, const rect
 
 		x_index = sx - (pc080sn->bgscroll_ram[layer][row_index]);
 
-		src16 = BITMAP_ADDR16(srcbitmap, src_y_index, 0);
-		tsrc  = BITMAP_ADDR8(flagsbitmap, src_y_index, 0);
+		src16 = &srcbitmap.pix16(src_y_index);
+		tsrc  = &flagsbitmap.pix8(src_y_index);
 		dst16 = scanline;
 
 		if (flags & TILEMAP_DRAW_OPAQUE)
@@ -928,13 +928,13 @@ static void topspeed_custom_draw( device_t *device, bitmap_t *bitmap, const rect
 	while ((!machine_flip && y <= max_y) || (machine_flip && y >= min_y));
 }
 
-void pc080sn_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int layer, int flags, UINT32 priority )
+void pc080sn_tilemap_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
 {
 	pc080sn_state *pc080sn = pc080sn_get_safe_token(device);
 	tilemap_draw(bitmap, cliprect, pc080sn->tilemap[layer], flags, priority);
 }
 
-void pc080sn_tilemap_draw_offset( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int layer, int flags, UINT32 priority, int xoffs, int yoffs )
+void pc080sn_tilemap_draw_offset( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority, int xoffs, int yoffs )
 {
 	pc080sn_state *pc080sn = pc080sn_get_safe_token(device);
 	int basedx = -16 - pc080sn->xoffs;
@@ -949,7 +949,7 @@ void pc080sn_tilemap_draw_offset( device_t *device, bitmap_t *bitmap, const rect
 	tilemap_set_scrolldy(pc080sn->tilemap[layer], basedy, basedyflip);
 }
 
-void pc080sn_tilemap_draw_special( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int layer, int flags, UINT32 priority, UINT16 *ram )
+void pc080sn_tilemap_draw_special( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority, UINT16 *ram )
 {
 	topspeed_custom_draw(device, bitmap, cliprect, layer, flags, priority, ram);
 }
@@ -1122,7 +1122,7 @@ void pc090oj_eof_callback( device_t *device )
 }
 
 
-void pc090oj_draw_sprites( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int pri_type )
+void pc090oj_draw_sprites( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int pri_type )
 {
 	pc090oj_state *pc090oj = pc090oj_get_safe_token(device);
 	int offs, priority = 0;
@@ -1528,7 +1528,7 @@ void tc0080vco_tilemap_update( device_t *device )
 
 /* NB: orientation_flipx code in following routine has not been tested */
 
-static void tc0080vco_bg0_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int flags, UINT32 priority )
+static void tc0080vco_bg0_tilemap_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int flags, UINT32 priority )
 {
 	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
 	UINT16 zoom = tc0080vco->scroll_ram[6];
@@ -1546,8 +1546,8 @@ static void tc0080vco_bg0_tilemap_draw( device_t *device, bitmap_t *bitmap, cons
 		UINT16 *dst16, *src16;
 		UINT8 *tsrc;
 		UINT16 scanline[512];
-		bitmap_t *srcbitmap = tilemap_get_pixmap(tc0080vco->tilemap[0]);
-		bitmap_t *flagsbitmap = tilemap_get_flagsmap(tc0080vco->tilemap[0]);
+		bitmap_t &srcbitmap = tilemap_get_pixmap(tc0080vco->tilemap[0]);
+		bitmap_t &flagsbitmap = tilemap_get_flagsmap(tc0080vco->tilemap[0]);
 
 		int sx, zoomx, zoomy;
 		int dx, ex, dy, ey;
@@ -1557,10 +1557,10 @@ static void tc0080vco_bg0_tilemap_draw( device_t *device, bitmap_t *bitmap, cons
 		int flip = tc0080vco->flipscreen;
 		int machine_flip = 0;	/* for  ROT 180 ? */
 
-		int min_x = cliprect->min_x;
-		int max_x = cliprect->max_x;
-		int min_y = cliprect->min_y;
-		int max_y = cliprect->max_y;
+		int min_x = cliprect.min_x;
+		int max_x = cliprect.max_x;
+		int min_y = cliprect.min_y;
+		int max_y = cliprect.max_y;
 		int screen_width = max_x + 1;
 		int width_mask = 0x3ff;	/* underlying tilemap */
 
@@ -1629,8 +1629,8 @@ static void tc0080vco_bg0_tilemap_draw( device_t *device, bitmap_t *bitmap, cons
 
 			x_index = sx - ((tc0080vco->bgscroll_ram[row_index] << 16));
 
-			src16 = BITMAP_ADDR16(srcbitmap, src_y_index, 0);
-			tsrc  = BITMAP_ADDR8(flagsbitmap, src_y_index, 0);
+			src16 = &srcbitmap.pix16(src_y_index);
+			tsrc  = &flagsbitmap.pix8(src_y_index);
 			dst16 = scanline;
 
 			x_step = zoomx;
@@ -1681,15 +1681,15 @@ do																					\
 }																					\
 while (0)																			\
 
-static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int flags, UINT32 priority )
+static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int flags, UINT32 priority )
 {
 	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
 	UINT8 layer = 1;
 	UINT16 zoom = tc0080vco->scroll_ram[6 + layer];
-	int min_x = cliprect->min_x;
-	int max_x = cliprect->max_x;
-	int min_y = cliprect->min_y;
-	int max_y = cliprect->max_y;
+	int min_x = cliprect.min_x;
+	int max_x = cliprect.max_x;
+	int min_y = cliprect.min_y;
+	int max_y = cliprect.max_y;
 	int zoomx, zoomy;
 
 	zoomx = (zoom & 0xff00) >> 8;
@@ -1705,7 +1705,7 @@ static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_t *bitmap, cons
 		int sx,sy;
 
 		/* shouldn't we set no_clip before doing this (see TC0480SCP) ? */
-		bitmap_t *srcbitmap = tilemap_get_pixmap(tc0080vco->tilemap[layer]);
+		bitmap_t &srcbitmap = tilemap_get_pixmap(tc0080vco->tilemap[layer]);
 
 		if (zoomx < 63)
 		{
@@ -1746,8 +1746,8 @@ static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_t *bitmap, cons
 		}
 
 		{
-			bitmap_t *dest = bitmap;
-			bitmap_t *src = srcbitmap;
+			bitmap_t &dest = bitmap;
+			bitmap_t &src = srcbitmap;
 			INT32 startx = sx;
 			INT32 starty = sy;
 			INT32 incxx = zx;
@@ -1756,9 +1756,9 @@ static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_t *bitmap, cons
 			INT32 incyy = zy;
 			int wraparound = 0;
 			UINT32 privalue = priority;
-			bitmap_t *priority = device->machine().priority_bitmap;
+			bitmap_t &priority = device->machine().priority_bitmap;
 
-			if (dest->bpp == 16)
+			if (dest.bpp() == 16)
 				COPYROZBITMAP_CORE(UINT16, PIXEL_OP_COPY_TRANS0_SET_PRIORITY, UINT8);
 			else
 				COPYROZBITMAP_CORE(UINT32, PIXEL_OP_COPY_TRANS0_SET_PRIORITY, UINT8);
@@ -1767,7 +1767,7 @@ static void tc0080vco_bg1_tilemap_draw( device_t *device, bitmap_t *bitmap, cons
 }
 
 
-void tc0080vco_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int layer, int flags, UINT32 priority )
+void tc0080vco_tilemap_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
 {
 	tc0080vco_state *tc0080vco = tc0080vco_get_safe_token(device);
 	int disable = 0x00;	/* possibly layer disable bits do exist ?? */
@@ -2326,44 +2326,44 @@ void tc0100scn_tilemap_update( device_t *device )
 		tilemap_set_scrollx(tc0100scn->tilemap[1][tc0100scn->dblwidth], (j + tc0100scn->fgscrolly) & 0x1ff, tc0100scn->fgscrollx - tc0100scn->fgscroll_ram[j]);
 }
 
-static void tc0100scn_tilemap_draw_fg( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, tilemap_t* tmap, int flags, UINT32 priority )
+static void tc0100scn_tilemap_draw_fg( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, tilemap_t* tmap, int flags, UINT32 priority )
 {
 	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
-	const bitmap_t *src_bitmap = tilemap_get_pixmap(tmap);
+	const bitmap_t &src_bitmap = tilemap_get_pixmap(tmap);
 	int width_mask, height_mask, x, y, p;
 	int column_offset, src_x = 0, src_y = 0;
 	int scrollx_delta = - tilemap_get_scrolldx(tmap);
 	int scrolly_delta = - tilemap_get_scrolldy(tmap);
 
-	width_mask = src_bitmap->width - 1;
-	height_mask = src_bitmap->height - 1;
+	width_mask = src_bitmap.width() - 1;
+	height_mask = src_bitmap.height() - 1;
 
 	src_y = (tc0100scn->fgscrolly + scrolly_delta) & height_mask;
 	if (tc0100scn->ctrl[0x7] & 1) // Flipscreen
 		src_y = (256 - src_y) & height_mask;
 
-	//We use cliprect->max_y and cliprect->max_x to support games which use more than 1 screen
+	//We use cliprect.max_y and cliprect.max_x to support games which use more than 1 screen
 
 	// Row offsets are 'screen space' 0-255 regardless of Y scroll
-	for (y = 0; y <= cliprect->max_y; y++)
+	for (y = 0; y <= cliprect.max_y; y++)
 	{
-		src_x = (tc0100scn->fgscrollx - tc0100scn->fgscroll_ram[(y + scrolly_delta) & 0x1ff] + scrollx_delta + cliprect->min_x) & width_mask;
+		src_x = (tc0100scn->fgscrollx - tc0100scn->fgscroll_ram[(y + scrolly_delta) & 0x1ff] + scrollx_delta + cliprect.min_x) & width_mask;
 		if (tc0100scn->ctrl[0x7] & 1) // Flipscreen
 			src_x = (256 - 64 - src_x) & width_mask;
 
 		// Col offsets are 'tilemap' space 0-511, and apply to blocks of 8 pixels at once
-		for (x = 0; x <= (cliprect->max_x - cliprect->min_x); x++)
+		for (x = 0; x <= (cliprect.max_x - cliprect.min_x); x++)
 		{
 			column_offset = tc0100scn->colscroll_ram[(src_x & 0x3ff) / 8];
-			p = *BITMAP_ADDR16(src_bitmap, (src_y - column_offset) & height_mask, src_x);
+			p = src_bitmap.pix16((src_y - column_offset) & height_mask, src_x);
 
 			if ((p & 0xf)!= 0 || (flags & TILEMAP_DRAW_OPAQUE))
 			{
-				*BITMAP_ADDR16(bitmap, y, x + cliprect->min_x) = p;
-				if (device->machine().priority_bitmap)
+				bitmap.pix16(y, x + cliprect.min_x) = p;
+				if (device->machine().priority_bitmap.valid())
 				{
-					UINT8 *pri = BITMAP_ADDR8(device->machine().priority_bitmap, y, 0);
-					pri[x + cliprect->min_x] |= priority;
+					UINT8 *pri = &device->machine().priority_bitmap.pix8(y);
+					pri[x + cliprect.min_x] |= priority;
 				}
 			}
 			src_x = (src_x + 1) & width_mask;
@@ -2372,12 +2372,12 @@ static void tc0100scn_tilemap_draw_fg( device_t *device, bitmap_t *bitmap, const
 	}
 }
 
-int tc0100scn_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int layer, int flags, UINT32 priority )
+int tc0100scn_tilemap_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
 {
 	tc0100scn_state *tc0100scn = tc0100scn_get_safe_token(device);
 	int disable = tc0100scn->ctrl[6] & 0xf7;
-	rectangle clip = *cliprect;
-	sect_rect(&clip, &tc0100scn->cliprect);
+	rectangle clip = cliprect;
+	clip &= tc0100scn->cliprect;
 
 #if 0
 if (disable != 0 && disable != 3 && disable != 7)
@@ -2389,17 +2389,17 @@ if (disable != 0 && disable != 3 && disable != 7)
 		case 0:
 			if (disable & 0x01)
 				return 1;
-			tilemap_draw(bitmap, &clip, tc0100scn->tilemap[0][tc0100scn->dblwidth], flags, priority);
+			tilemap_draw(bitmap, clip, tc0100scn->tilemap[0][tc0100scn->dblwidth], flags, priority);
 			break;
 		case 1:
 			if (disable & 0x02)
 				return 1;
-			tc0100scn_tilemap_draw_fg(device, bitmap, &clip, tc0100scn->tilemap[1][tc0100scn->dblwidth], flags, priority);
+			tc0100scn_tilemap_draw_fg(device, bitmap, clip, tc0100scn->tilemap[1][tc0100scn->dblwidth], flags, priority);
 			break;
 		case 2:
 			if (disable & 0x04)
 				return 1;
-			tilemap_draw(bitmap, &clip, tc0100scn->tilemap[2][tc0100scn->dblwidth], flags, priority);
+			tilemap_draw(bitmap, clip, tc0100scn->tilemap[2][tc0100scn->dblwidth], flags, priority);
 			break;
 	}
 	return 0;
@@ -2633,7 +2633,7 @@ void tc0430grw_tilemap_update( device_t *device, int base_color )
 	tc0280grd_tilemap_update(device, base_color);
 }
 
-static void zoom_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int xoffset, int yoffset, UINT32 priority, int xmultiply )
+static void zoom_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority, int xmultiply )
 {
 	tc0280grd_state *tc0280grd = tc0280grd_get_safe_token(device);
 	UINT32 startx, starty;
@@ -2668,12 +2668,12 @@ static void zoom_draw( device_t *device, bitmap_t *bitmap, const rectangle *clip
 			0, priority);
 }
 
-void tc0280grd_zoom_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int xoffset, int yoffset, UINT32 priority )
+void tc0280grd_zoom_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority )
 {
 	zoom_draw(device, bitmap, cliprect, xoffset, yoffset, priority, 2);
 }
 
-void tc0430grw_zoom_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int xoffset, int yoffset, UINT32 priority )
+void tc0430grw_zoom_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int xoffset, int yoffset, UINT32 priority )
 {
 	zoom_draw(device, bitmap, cliprect, xoffset, yoffset, priority, 1);
 }
@@ -3236,7 +3236,7 @@ Historical Issues
 
 **********************************************************************/
 
-static void tc0480scp_bg01_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int layer, int flags, UINT32 priority )
+static void tc0480scp_bg01_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
 {
 	/* X-axis zoom offers expansion only: 0 = no zoom, 0xff = max
        Y-axis zoom offers expansion/compression: 0x7f = no zoom, 0xff = max
@@ -3257,16 +3257,16 @@ static void tc0480scp_bg01_draw( device_t *device, bitmap_t *bitmap, const recta
 		UINT8 *tsrc;
 		UINT16 scanline[512];
 		UINT32 sx;
-		bitmap_t *srcbitmap = tilemap_get_pixmap(tc0480scp->tilemap[layer][tc0480scp->dblwidth]);
-		bitmap_t *flagsbitmap = tilemap_get_flagsmap(tc0480scp->tilemap[layer][tc0480scp->dblwidth]);
+		bitmap_t &srcbitmap = tilemap_get_pixmap(tc0480scp->tilemap[layer][tc0480scp->dblwidth]);
+		bitmap_t &flagsbitmap = tilemap_get_flagsmap(tc0480scp->tilemap[layer][tc0480scp->dblwidth]);
 		int flip = tc0480scp->pri_reg & 0x40;
 		int i, y, y_index, src_y_index, row_index;
 		int x_index, x_step;
 		int machine_flip = 0;	/* for  ROT 180 ? */
 
-		UINT16 screen_width = 512; //cliprect->max_x - cliprect->min_x + 1;
-		UINT16 min_y = cliprect->min_y;
-		UINT16 max_y = cliprect->max_y;
+		UINT16 screen_width = 512; //cliprect.max_x - cliprect.min_x + 1;
+		UINT16 min_y = cliprect.min_y;
+		UINT16 max_y = cliprect.max_y;
 
 		int width_mask = 0x1ff;
 		if (tc0480scp->dblwidth)
@@ -3305,8 +3305,8 @@ static void tc0480scp_bg01_draw( device_t *device, bitmap_t *bitmap, const recta
 
 			x_index = sx - ((tc0480scp->bgscroll_ram[layer][row_index] << 16)) - ((tc0480scp->bgscroll_ram[layer][row_index + 0x800] << 8) & 0xffff);
 
-			src16 = BITMAP_ADDR16(srcbitmap, src_y_index, 0);
-			tsrc = BITMAP_ADDR8(flagsbitmap, src_y_index, 0);
+			src16 = &srcbitmap.pix16(src_y_index);
+			tsrc = &flagsbitmap.pix8(src_y_index);
 			dst16 = scanline;
 
 			x_step = zoomx;
@@ -3385,11 +3385,11 @@ flipscreen.
 
 ****************************************************************/
 
-static void tc0480scp_bg23_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int layer, int flags, UINT32 priority )
+static void tc0480scp_bg23_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
 {
 	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
-	bitmap_t *srcbitmap = tilemap_get_pixmap(tc0480scp->tilemap[layer][tc0480scp->dblwidth]);
-	bitmap_t *flagsbitmap = tilemap_get_flagsmap(tc0480scp->tilemap[layer][tc0480scp->dblwidth]);
+	bitmap_t &srcbitmap = tilemap_get_pixmap(tc0480scp->tilemap[layer][tc0480scp->dblwidth]);
+	bitmap_t &flagsbitmap = tilemap_get_flagsmap(tc0480scp->tilemap[layer][tc0480scp->dblwidth]);
 
 	UINT16 *dst16, *src16;
 	UINT8 *tsrc;
@@ -3400,9 +3400,9 @@ static void tc0480scp_bg23_draw( device_t *device, bitmap_t *bitmap, const recta
 	int flipscreen = tc0480scp->pri_reg & 0x40;
 	int machine_flip = 0;	/* for  ROT 180 ? */
 
-	UINT16 screen_width = 512; //cliprect->max_x - cliprect->min_x + 1;
-	UINT16 min_y = cliprect->min_y;
-	UINT16 max_y = cliprect->max_y;
+	UINT16 screen_width = 512; //cliprect.max_x - cliprect.min_x + 1;
+	UINT16 min_y = cliprect.min_y;
+	UINT16 max_y = cliprect.max_y;
 
 	int width_mask = 0x1ff;
 	if (tc0480scp->dblwidth)
@@ -3471,8 +3471,8 @@ static void tc0480scp_bg23_draw( device_t *device, bitmap_t *bitmap, const recta
 				x_step -= (((row_zoom & 0xff) * 256) & 0xffff);
 		}
 
-		src16 = BITMAP_ADDR16(srcbitmap, src_y_index, 0);
-		tsrc = BITMAP_ADDR8(flagsbitmap, src_y_index, 0);
+		src16 = &srcbitmap.pix16(src_y_index);
+		tsrc = &flagsbitmap.pix8(src_y_index);
 		dst16 = scanline;
 
 		if (flags & TILEMAP_DRAW_OPAQUE)
@@ -3507,7 +3507,7 @@ static void tc0480scp_bg23_draw( device_t *device, bitmap_t *bitmap, const recta
 }
 
 
-void tc0480scp_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int layer, int flags, UINT32 priority )
+void tc0480scp_tilemap_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int layer, int flags, UINT32 priority )
 {
 	tc0480scp_state *tc0480scp = tc0480scp_get_safe_token(device);
 
@@ -3951,7 +3951,7 @@ lookup table from rom for the TaitoZ sprites.
 
 ******************************************************************************/
 
-void tc0150rod_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int y_offs, int palette_offs, int type, int road_trans, UINT32 low_priority, UINT32 high_priority )
+void tc0150rod_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int y_offs, int palette_offs, int type, int road_trans, UINT32 low_priority, UINT32 high_priority )
 {
 	tc0150rod_state *tc0150rod = tc0150rod_get_safe_token(device);
 
@@ -3978,10 +3978,10 @@ void tc0150rod_draw( device_t *device, bitmap_t *bitmap, const rectangle *clipre
 	int left_edge, right_edge, begin, end, right_over, left_over;
 	int line_needs_drawing, draw_top_road_line, background_only;
 
-	int min_x = cliprect->min_x;
-	int max_x = cliprect->max_x;
-	int min_y = cliprect->min_y;
-	int max_y = cliprect->max_y;
+	int min_x = cliprect.min_x;
+	int max_x = cliprect.max_x;
+	int min_y = cliprect.min_y;
+	int max_y = cliprect.max_y;
 	int screen_width = max_x - min_x + 1;
 
 	int y = min_y;
@@ -5014,7 +5014,7 @@ WRITE16_DEVICE_HANDLER( tc0180vcu_word_w )
 		tilemap_mark_tile_dirty(tc0180vcu->tilemap[2], offset & 0x7ff);
 }
 
-void tc0180vcu_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle *cliprect, int tmap_num, int plane )
+void tc0180vcu_tilemap_draw( device_t *device, bitmap_t &bitmap, const rectangle &cliprect, int tmap_num, int plane )
 {
 	tc0180vcu_state *tc0180vcu = tc0180vcu_get_safe_token(device);
 
@@ -5035,8 +5035,8 @@ void tc0180vcu_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle
 		lines_per_block = 256 - (tc0180vcu->ctrl[2 + plane] >> 8);
 		number_of_blocks = 256 / lines_per_block;
 
-		my_clip.min_x = cliprect->min_x;
-		my_clip.max_x = cliprect->max_x;
+		my_clip.min_x = cliprect.min_x;
+		my_clip.max_x = cliprect.max_x;
 
 		for (i = 0; i < number_of_blocks; i++)
 		{
@@ -5048,17 +5048,17 @@ void tc0180vcu_tilemap_draw( device_t *device, bitmap_t *bitmap, const rectangle
 
 			if (tc0180vcu->video_control & 0x10)   /*flip screen*/
 			{
-				my_clip.min_y = bitmap->height - 1 - (i + 1) * lines_per_block - 1;
-				my_clip.max_y = bitmap->height - 1 - i * lines_per_block;
+				my_clip.min_y = bitmap.height() - 1 - (i + 1) * lines_per_block - 1;
+				my_clip.max_y = bitmap.height() - 1 - i * lines_per_block;
 			}
 
-			sect_rect(&my_clip, cliprect);
+			my_clip &= cliprect;
 
 			if (my_clip.min_y <= my_clip.max_y)
 			{
 				tilemap_set_scrollx(tc0180vcu->tilemap[tmap_num], 0, -scrollx);
 				tilemap_set_scrolly(tc0180vcu->tilemap[tmap_num], 0, -scrolly);
-				tilemap_draw(bitmap, &my_clip, tc0180vcu->tilemap[tmap_num], 0, 0);
+				tilemap_draw(bitmap, my_clip, tc0180vcu->tilemap[tmap_num], 0, 0);
 			}
 		}
 	}

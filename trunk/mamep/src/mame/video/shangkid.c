@@ -60,7 +60,7 @@ WRITE8_HANDLER( shangkid_videoram_w )
 	tilemap_mark_tile_dirty( state->m_background, offset&0x7ff );
 }
 
-static void draw_sprite(running_machine &machine, const UINT8 *source, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprite(running_machine &machine, const UINT8 *source, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	shangkid_state *state = machine.driver_data<shangkid_state>();
 	const gfx_element *gfx;
@@ -172,7 +172,7 @@ static void draw_sprite(running_machine &machine, const UINT8 *source, bitmap_t 
 	}
 }
 
-static void shangkid_draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void shangkid_draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	shangkid_state *state = machine.driver_data<shangkid_state>();
 	const UINT8 *source, *finish;
@@ -187,14 +187,14 @@ static void shangkid_draw_sprites(running_machine &machine, bitmap_t *bitmap, co
 
 SCREEN_UPDATE( shangkid )
 {
-	shangkid_state *state = screen->machine().driver_data<shangkid_state>();
+	shangkid_state *state = screen.machine().driver_data<shangkid_state>();
 	int flipscreen = state->m_videoreg[1]&0x80;
 	tilemap_set_flip( state->m_background, flipscreen?(TILEMAP_FLIPX|TILEMAP_FLIPY):0 );
 	tilemap_set_scrollx( state->m_background,0,state->m_videoreg[0]-40 );
 	tilemap_set_scrolly( state->m_background,0,state->m_videoreg[2]+0x10 );
 
 	tilemap_draw( bitmap,cliprect,state->m_background,0,0 );
-	shangkid_draw_sprites(screen->machine(), bitmap,cliprect );
+	shangkid_draw_sprites(screen.machine(), bitmap,cliprect );
 	tilemap_draw( bitmap,cliprect,state->m_background,1,0 ); /* high priority tiles */
 	return 0;
 }
@@ -235,7 +235,7 @@ PALETTE_INIT( dynamski )
 }
 
 
-static void dynamski_draw_background(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int pri )
+static void dynamski_draw_background(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int pri )
 {
 	shangkid_state *state = machine.driver_data<shangkid_state>();
 	UINT8 *videoram = state->m_videoram;
@@ -289,7 +289,7 @@ static void dynamski_draw_background(running_machine &machine, bitmap_t *bitmap,
 	}
 }
 
-static void dynamski_draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void dynamski_draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	shangkid_state *state = machine.driver_data<shangkid_state>();
 	UINT8 *videoram = state->m_videoram;
@@ -323,8 +323,8 @@ static void dynamski_draw_sprites(running_machine &machine, bitmap_t *bitmap, co
 
 SCREEN_UPDATE( dynamski )
 {
-	dynamski_draw_background(screen->machine(), bitmap,cliprect, 0 );
-	dynamski_draw_sprites(screen->machine(), bitmap,cliprect );
-	dynamski_draw_background(screen->machine(), bitmap,cliprect, 1 );
+	dynamski_draw_background(screen.machine(), bitmap,cliprect, 0 );
+	dynamski_draw_sprites(screen.machine(), bitmap,cliprect );
+	dynamski_draw_background(screen.machine(), bitmap,cliprect, 1 );
 	return 0;
 }

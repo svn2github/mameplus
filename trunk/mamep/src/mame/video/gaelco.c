@@ -121,7 +121,7 @@ VIDEO_START( maniacsq )
       3  | xxxxxxxx xxxxxx-- | sprite code
 */
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	gaelco_state *state = machine.driver_data<gaelco_state>();
 	int i, x, y, ex, ey;
@@ -189,7 +189,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( maniacsq )
 {
-	gaelco_state *state = screen->machine().driver_data<gaelco_state>();
+	gaelco_state *state = screen.machine().driver_data<gaelco_state>();
 
 	/* set scroll registers */
 	tilemap_set_scrolly(state->m_tilemap[0], 0, state->m_vregs[0]);
@@ -197,8 +197,8 @@ SCREEN_UPDATE( maniacsq )
 	tilemap_set_scrolly(state->m_tilemap[1], 0, state->m_vregs[2]);
 	tilemap_set_scrollx(state->m_tilemap[1], 0, state->m_vregs[3]);
 
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
-	bitmap_fill(bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
+	bitmap.fill(0, cliprect);
 
 	tilemap_draw(bitmap, cliprect, state->m_tilemap[1], 3, 0);
 	tilemap_draw(bitmap, cliprect, state->m_tilemap[0], 3, 0);
@@ -212,13 +212,13 @@ SCREEN_UPDATE( maniacsq )
 	tilemap_draw(bitmap, cliprect, state->m_tilemap[1], 0, 4);
 	tilemap_draw(bitmap, cliprect, state->m_tilemap[0], 0, 4);
 
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }
 
 SCREEN_UPDATE( bigkarnk )
 {
-	gaelco_state *state = screen->machine().driver_data<gaelco_state>();
+	gaelco_state *state = screen.machine().driver_data<gaelco_state>();
 
 	/* set scroll registers */
 	tilemap_set_scrolly(state->m_tilemap[0], 0, state->m_vregs[0]);
@@ -226,8 +226,8 @@ SCREEN_UPDATE( bigkarnk )
 	tilemap_set_scrolly(state->m_tilemap[1], 0, state->m_vregs[2]);
 	tilemap_set_scrollx(state->m_tilemap[1], 0, state->m_vregs[3]);
 
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
-	bitmap_fill(bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
+	bitmap.fill(0, cliprect);
 
 	tilemap_draw(bitmap, cliprect, state->m_tilemap[1], TILEMAP_DRAW_LAYER1 | 3, 0);
 	tilemap_draw(bitmap, cliprect, state->m_tilemap[0], TILEMAP_DRAW_LAYER1 | 3, 0);
@@ -253,6 +253,6 @@ SCREEN_UPDATE( bigkarnk )
 	tilemap_draw(bitmap, cliprect, state->m_tilemap[1], TILEMAP_DRAW_LAYER0 | 0, 8);
 	tilemap_draw(bitmap, cliprect, state->m_tilemap[0], TILEMAP_DRAW_LAYER0 | 0, 8);
 
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

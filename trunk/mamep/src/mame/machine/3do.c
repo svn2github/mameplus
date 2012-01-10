@@ -987,13 +987,13 @@ VIDEO_START( _3do )
 /* This is incorrect! Just testing stuff */
 SCREEN_UPDATE( _3do )
 {
-	_3do_state *state = screen->machine().driver_data<_3do_state>();
+	_3do_state *state = screen.machine().driver_data<_3do_state>();
 	UINT32 *source_p = state->m_vram + 0x1c0000 / 4;
 
 	for ( int i = 0; i < 120; i++ )
 	{
-		UINT32	*dest_p0 = BITMAP_ADDR32( bitmap, 22 + i * 2, 254 );
-		UINT32	*dest_p1 = BITMAP_ADDR32( bitmap, 22 + i * 2 + 1, 254 );
+		UINT32	*dest_p0 = &bitmap.pix32(22 + i * 2, 254 );
+		UINT32	*dest_p1 = &bitmap.pix32(22 + i * 2 + 1, 254 );
 
 		for ( int j = 0; j < 320; j++ )
 		{

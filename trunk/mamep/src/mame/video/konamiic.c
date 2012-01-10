@@ -1518,7 +1518,7 @@ static int K053936_wraparound[K053936_MAX_CHIPS];
 // there is another implementation of this in  machine/konamigx.c (!)
 //  why?
 
-static void K053936_zoom_draw(int chip,UINT16 *ctrl,UINT16 *linectrl, bitmap_t *bitmap,const rectangle *cliprect,tilemap_t *tmap,int flags,UINT32 priority, int glfgreat_hack)
+static void K053936_zoom_draw(int chip,UINT16 *ctrl,UINT16 *linectrl, bitmap_t &bitmap,const rectangle &cliprect,tilemap_t *tmap,int flags,UINT32 priority, int glfgreat_hack)
 {
 	if (!tmap)
 		return;
@@ -1542,25 +1542,25 @@ static void K053936_zoom_draw(int chip,UINT16 *ctrl,UINT16 *linectrl, bitmap_t *
 		{
 			my_clip.min_x = ctrl[0x08] + K053936_offset[chip][0]+2;
 			my_clip.max_x = ctrl[0x09] + K053936_offset[chip][0]+2 - 1;
-			if (my_clip.min_x < cliprect->min_x)
-				my_clip.min_x = cliprect->min_x;
-			if (my_clip.max_x > cliprect->max_x)
-				my_clip.max_x = cliprect->max_x;
+			if (my_clip.min_x < cliprect.min_x)
+				my_clip.min_x = cliprect.min_x;
+			if (my_clip.max_x > cliprect.max_x)
+				my_clip.max_x = cliprect.max_x;
 
 			y = ctrl[0x0a] + K053936_offset[chip][1]-2;
-			if (y < cliprect->min_y)
-				y = cliprect->min_y;
+			if (y < cliprect.min_y)
+				y = cliprect.min_y;
 			maxy = ctrl[0x0b] + K053936_offset[chip][1]-2 - 1;
-			if (maxy > cliprect->max_y)
-				maxy = cliprect->max_y;
+			if (maxy > cliprect.max_y)
+				maxy = cliprect.max_y;
 		}
 		else
 		{
-			my_clip.min_x = cliprect->min_x;
-			my_clip.max_x = cliprect->max_x;
+			my_clip.min_x = cliprect.min_x;
+			my_clip.max_x = cliprect.max_x;
 
-			y = cliprect->min_y;
-			maxy = cliprect->max_y;
+			y = cliprect.min_y;
+			maxy = cliprect.max_y;
 		}
 
 		while (y <= maxy)
@@ -1581,7 +1581,7 @@ static void K053936_zoom_draw(int chip,UINT16 *ctrl,UINT16 *linectrl, bitmap_t *
 			startx -= K053936_offset[chip][0] * incxx;
 			starty -= K053936_offset[chip][0] * incxy;
 
-			tilemap_draw_roz(bitmap,&my_clip,tmap,startx << 5,starty << 5,
+			tilemap_draw_roz(bitmap,my_clip,tmap,startx << 5,starty << 5,
 					incxx << 5,incxy << 5,0,0,
 					K053936_wraparound[chip],
 					flags,priority);
@@ -1639,7 +1639,7 @@ if (machine.input().code_pressed(KEYCODE_D))
 }
 
 
-void K053936_0_zoom_draw(bitmap_t *bitmap,const rectangle *cliprect,tilemap_t *tmap,int flags,UINT32 priority, int glfgreat_hack)
+void K053936_0_zoom_draw(bitmap_t &bitmap,const rectangle &cliprect,tilemap_t *tmap,int flags,UINT32 priority, int glfgreat_hack)
 {
 	K053936_zoom_draw(0,K053936_0_ctrl,K053936_0_linectrl,bitmap,cliprect,tmap,flags,priority, glfgreat_hack);
 }
@@ -2179,7 +2179,7 @@ void K056832_vh_start(running_machine &machine, const char *gfx_memory_region, i
 	{
 		tmap = K056832_tilemap[i];
 
-		K056832_pixmap[i] = tilemap_get_pixmap(tmap);
+		K056832_pixmap[i] = &tilemap_get_pixmap(tmap);
 
 		tilemap_set_transparent_pen(tmap, 0);
 	}
@@ -2563,7 +2563,7 @@ WRITE16_HANDLER( K056832_b_word_w )
 }
 
 
-static int K056832_update_linemap(running_machine &machine, bitmap_t *bitmap, int page, int flags)
+static int K056832_update_linemap(running_machine &machine, bitmap_t &bitmap, int page, int flags)
 {
 
 	if (K056832_PageTileMode[page]) return(0);
@@ -2576,11 +2576,10 @@ static int K056832_update_linemap(running_machine &machine, bitmap_t *bitmap, in
 		tilemap_t *tmap;
 		UINT32 *dirty;
 		int all_dirty;
-		bitmap_t* xprmap;
 		UINT8 *xprdata;
 
 		tmap = K056832_tilemap[page];
-		xprmap  = tilemap_get_flagsmap(tmap);
+		bitmap_t &xprmap  = tilemap_get_flagsmap(tmap);
 		xprdata = tilemap_get_tile_flags(tmap);
 
 		dirty = K056832_LineDirty[page];
@@ -2594,8 +2593,8 @@ static int K056832_update_linemap(running_machine &machine, bitmap_t *bitmap, in
 			// force tilemap into a clean, static state
 			// *really ugly but it minimizes alteration to tilemap.c
 			memset (&zerorect, 0, sizeof(rectangle));	// zero dimension
-			tilemap_draw(bitmap, &zerorect, tmap, 0, 0);	// dummy call to reset tile_dirty_map
-			bitmap_fill(xprmap, 0, 0);						// reset pixel transparency_bitmap;
+			tilemap_draw(bitmap, zerorect, tmap, 0, 0);	// dummy call to reset tile_dirty_map
+			xprmap.fill(0);						// reset pixel transparency_bitmap;
 			memset(xprdata, TILEMAP_PIXEL_LAYER0, 0x800);	// reset tile transparency_data;
 		}
 		else
@@ -2646,8 +2645,8 @@ static int K056832_update_linemap(running_machine &machine, bitmap_t *bitmap, in
 
 				tile_data tileinfo = {0};
 
-				dst_ptr = BITMAP_ADDR16(pixmap, line, 0);
-				xpr_ptr = BITMAP_ADDR8(xprmap, line, 0);
+				dst_ptr = &pixmap->pix16(line);
+				xpr_ptr = &xprmap.pix8(line);
 
 				if (!all_dirty)
 				{
@@ -2687,7 +2686,7 @@ static int K056832_update_linemap(running_machine &machine, bitmap_t *bitmap, in
 	return(0);
 }
 
-void K056832_tilemap_draw(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int layer, UINT32 flags, UINT32 priority)
+void K056832_tilemap_draw(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int layer, UINT32 flags, UINT32 priority)
 {
 	static int last_colorbase[K056832_PAGE_COUNT];
 
@@ -2721,10 +2720,10 @@ void K056832_tilemap_draw(running_machine &machine, bitmap_t *bitmap, const rect
 	height = rowspan * K056832_PAGE_HEIGHT;
 	width  = colspan * K056832_PAGE_WIDTH;
 
-	cminx = cliprect->min_x;
-	cmaxx = cliprect->max_x;
-	cminy = cliprect->min_y;
-	cmaxy = cliprect->max_y;
+	cminx = cliprect.min_x;
+	cmaxx = cliprect.max_x;
+	cminy = cliprect.min_y;
+	cmaxy = cliprect.max_y;
 
 	// flip correction registers
 	flipy = K056832_regs[0] & 0x20;
@@ -2961,12 +2960,12 @@ void K056832_tilemap_draw(running_machine &machine, bitmap_t *bitmap, const rect
 			// the tilemaps are 512 pixels across.  Assume that if the limits were set as below that we
 			// want the tilemap to be drawn on the right hand side..  this is probably not the correct
 			// logic, but it works.
-			if ((drawrect.min_x>0) && (drawrect.max_x==511)) drawrect.max_x=cliprect->max_x;
+			if ((drawrect.min_x>0) && (drawrect.max_x==511)) drawrect.max_x=cliprect.max_x;
 
 			tilemap_set_scrollx(tmap, 0, dx);
 
 			LINE_SHORTCIRCUIT:
-			tilemap_draw(bitmap, &drawrect, tmap, flags, priority);
+			tilemap_draw(bitmap, drawrect, tmap, flags, priority);
 
 		} // end of line loop
 	} // end of column loop
@@ -3154,7 +3153,7 @@ void K054338_update_all_shadows(running_machine &machine, int rushingheroes_hack
 
 #ifdef UNUSED_FUNCTION
 // K054338 BG color fill
-void K054338_fill_solid_bg(bitmap_t *bitmap)
+void K054338_fill_solid_bg(bitmap_t &bitmap)
 {
 	UINT32 bgcolor;
 	UINT32 *pLine;
@@ -3164,18 +3163,18 @@ void K054338_fill_solid_bg(bitmap_t *bitmap)
 	bgcolor |= K054338_read_register(K338_REG_BGC_GB);
 
 	/* and fill the screen with it */
-	for (y = 0; y < bitmap->height; y++)
+	for (y = 0; y < bitmap.height; y++)
 	{
-		pLine = (UINT32 *)bitmap->base;
-		pLine += (bitmap->rowpixels*y);
-		for (x = 0; x < bitmap->width; x++)
+		pLine = (UINT32 *)bitmap.base;
+		pLine += (bitmap.rowpixels*y);
+		for (x = 0; x < bitmap.width; x++)
 			*pLine++ = bgcolor;
 	}
 }
 #endif
 
 // Unified K054338/K055555 BG color fill
-void K054338_fill_backcolor(running_machine &machine, bitmap_t *bitmap, int mode) // (see p.67)
+void K054338_fill_backcolor(running_machine &machine, bitmap_t &bitmap, int mode) // (see p.67)
 {
 	int clipx, clipy, clipw, cliph, i, dst_pitch;
 	int BGC_CBLK, BGC_SET;
@@ -3188,8 +3187,8 @@ void K054338_fill_backcolor(running_machine &machine, bitmap_t *bitmap, int mode
 	clipw = (visarea.max_x - clipx + 4) & ~3;
 	cliph = visarea.max_y - clipy + 1;
 
-	dst_ptr = BITMAP_ADDR32(bitmap, clipy, 0);
-	dst_pitch = bitmap->rowpixels;
+	dst_ptr = &bitmap.pix32(clipy);
+	dst_pitch = bitmap.rowpixels();
 	dst_ptr += clipx;
 
 	BGC_SET = 0;

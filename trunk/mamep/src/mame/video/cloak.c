@@ -188,22 +188,22 @@ VIDEO_START( cloak )
 	machine.save().register_postload(save_prepost_delegate(FUNC(set_current_bitmap_videoram_pointer), state));
 }
 
-static void draw_bitmap(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_bitmap(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	cloak_state *state = machine.driver_data<cloak_state>();
 	int x, y;
 
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
-		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
+		for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 		{
 			pen_t pen = state->m_current_bitmap_videoram_displayed[(y << 8) | x] & 0x07;
 
 			if (pen)
-				*BITMAP_ADDR16(bitmap, y, (x - 6) & 0xff) = 0x10 | ((x & 0x80) >> 4) | pen;
+				bitmap.pix16(y, (x - 6) & 0xff) = 0x10 | ((x & 0x80) >> 4) | pen;
 		}
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	cloak_state *state = machine.driver_data<cloak_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -231,10 +231,10 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( cloak )
 {
-	cloak_state *state = screen->machine().driver_data<cloak_state>();
-	set_pens(screen->machine());
+	cloak_state *state = screen.machine().driver_data<cloak_state>();
+	set_pens(screen.machine());
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	draw_bitmap(screen->machine(), bitmap, cliprect);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_bitmap(screen.machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

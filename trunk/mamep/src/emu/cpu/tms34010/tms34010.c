@@ -1080,26 +1080,26 @@ void tms34010_get_display_params(device_t *cpu, tms34010_display_params *params)
 
 SCREEN_UPDATE( tms340x0 )
 {
-	pen_t blackpen = get_black_pen(screen->machine());
+	pen_t blackpen = get_black_pen(screen.machine());
 	tms34010_display_params params;
 	tms34010_state *tms = NULL;
 	device_t *cpu;
 	int x;
 
 	/* find the owning CPU */
-	for (cpu = screen->machine().devicelist().first(); cpu != NULL; cpu = cpu->next())
+	for (cpu = screen.machine().devicelist().first(); cpu != NULL; cpu = cpu->next())
 	{
 		device_type type = cpu->type();
 		if (type == TMS34010 || type == TMS34020)
 		{
 			tms = get_safe_token(cpu);
-			if (tms->config != NULL && tms->config->scanline_callback != NULL && tms->screen == screen)
+			if (tms->config != NULL && tms->config->scanline_callback != NULL && tms->screen == &screen)
 				break;
 			tms = NULL;
 		}
 	}
 	if (tms == NULL)
-		fatalerror("Unable to locate matching CPU for screen '%s'\n", screen->tag());
+		fatalerror("Unable to locate matching CPU for screen '%s'\n", screen.tag());
 
 	/* get the display parameters for the screen */
 	tms34010_get_display_params(tms->device, &params);
@@ -1108,29 +1108,29 @@ SCREEN_UPDATE( tms340x0 )
 	if (params.enabled)
 	{
 		/* call through to the callback */
-		LOG(("  Update: scan=%3d ROW=%04X COL=%04X\n", cliprect->min_y, params.rowaddr, params.coladdr));
-		(*tms->config->scanline_callback)(*screen, bitmap, cliprect->min_y, &params);
+		LOG(("  Update: scan=%3d ROW=%04X COL=%04X\n", cliprect.min_y, params.rowaddr, params.coladdr));
+		(*tms->config->scanline_callback)(screen, bitmap, cliprect.min_y, &params);
 	}
 
 	/* otherwise, just blank the current scanline */
 	else
-		params.heblnk = params.hsblnk = cliprect->max_x + 1;
+		params.heblnk = params.hsblnk = cliprect.max_x + 1;
 
 	/* blank out the blank regions */
-	if (bitmap->bpp == 16)
+	if (bitmap.bpp() == 16)
 	{
-		UINT16 *dest = BITMAP_ADDR16(bitmap, cliprect->min_y, 0);
-		for (x = cliprect->min_x; x < params.heblnk; x++)
+		UINT16 *dest = &bitmap.pix16(cliprect.min_y);
+		for (x = cliprect.min_x; x < params.heblnk; x++)
 			dest[x] = blackpen;
-		for (x = params.hsblnk; x <= cliprect->max_y; x++)
+		for (x = params.hsblnk; x <= cliprect.max_y; x++)
 			dest[x] = blackpen;
 	}
-	else if (bitmap->bpp == 32)
+	else if (bitmap.bpp() == 32)
 	{
-		UINT32 *dest = BITMAP_ADDR32(bitmap, cliprect->min_y, 0);
-		for (x = cliprect->min_x; x < params.heblnk; x++)
+		UINT32 *dest = &bitmap.pix32(cliprect.min_y);
+		for (x = cliprect.min_x; x < params.heblnk; x++)
 			dest[x] = blackpen;
-		for (x = params.hsblnk; x <= cliprect->max_y; x++)
+		for (x = params.hsblnk; x <= cliprect.max_y; x++)
 			dest[x] = blackpen;
 	}
 	return 0;
@@ -1270,7 +1270,7 @@ WRITE16_HANDLER( tms34010_io_register_w )
 	}
 
 //  if (LOG_CONTROL_REGS)
-//      logerror("%s: %s = %04X (%d)\n", tms->device->machine().describe_context(), ioreg_name[offset], IOREG(tms, offset), tms->screen->vpos());
+//      logerror("%s: %s = %04X (%d)\n", tms->device->machine().describe_context(), ioreg_name[offset], IOREG(tms, offset), tms->screen.vpos());
 }
 
 
@@ -1307,7 +1307,7 @@ WRITE16_HANDLER( tms34020_io_register_w )
 	IOREG(tms, offset) = data;
 
 //  if (LOG_CONTROL_REGS)
-//      logerror("%s: %s = %04X (%d)\n", device->machine().describe_context(), ioreg020_name[offset], IOREG(tms, offset), tms->screen->vpos());
+//      logerror("%s: %s = %04X (%d)\n", device->machine().describe_context(), ioreg020_name[offset], IOREG(tms, offset), tms->screen.vpos());
 
 	switch (offset)
 	{

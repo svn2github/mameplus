@@ -68,7 +68,7 @@ static VIDEO_START( blackt96 )
 {
 }
 
-static void draw_strip(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int stripnum, int xbase, int ybase, int bg)
+static void draw_strip(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int stripnum, int xbase, int ybase, int bg)
 {
 	blackt96_state *state = machine.driver_data<blackt96_state>();
 	const gfx_element *gfxspr = machine.gfx[1];
@@ -98,7 +98,7 @@ static void draw_strip(running_machine &machine, bitmap_t *bitmap, const rectang
 
 }
 
-static void draw_main(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int bg)
+static void draw_main(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int bg)
 {
 	blackt96_state *state = machine.driver_data<blackt96_state>();
 
@@ -130,15 +130,15 @@ static void draw_main(running_machine &machine, bitmap_t *bitmap, const rectangl
 
 static SCREEN_UPDATE( blackt96 )
 {
-	blackt96_state *state = screen->machine().driver_data<blackt96_state>();
+	blackt96_state *state = screen.machine().driver_data<blackt96_state>();
 	int count;
 	int x,y;
-	const gfx_element *gfx = screen->machine().gfx[2];
+	const gfx_element *gfx = screen.machine().gfx[2];
 
-	bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
 
-	draw_main(screen->machine(),bitmap,cliprect,1);
-	draw_main(screen->machine(),bitmap,cliprect,0);
+	draw_main(screen.machine(),bitmap,cliprect,1);
+	draw_main(screen.machine(),bitmap,cliprect,0);
 
 	/* Text Layer */
 	count = 0;

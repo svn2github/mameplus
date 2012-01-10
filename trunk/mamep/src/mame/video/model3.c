@@ -158,7 +158,7 @@ VIDEO_START( model3 )
 	init_matrix_stack(machine);
 }
 
-static void draw_tile_4bit(running_machine &machine, bitmap_t *bitmap, int tx, int ty, int tilenum)
+static void draw_tile_4bit(running_machine &machine, bitmap_t &bitmap, int tx, int ty, int tilenum)
 {
 	model3_state *state = machine.driver_data<model3_state>();
 	int x, y;
@@ -173,7 +173,7 @@ static void draw_tile_4bit(running_machine &machine, bitmap_t *bitmap, int tx, i
 	tile = &tile_base[tile_index];
 
 	for(y = ty; y < ty+8; y++) {
-		UINT16 *d = BITMAP_ADDR16(bitmap, y^1, 0);
+		UINT16 *d = &bitmap.pix16(y^1);
 		for(x = tx; x < tx+8; x+=2) {
 			UINT8 tile0, tile1;
 			UINT16 pix0, pix1;
@@ -194,7 +194,7 @@ static void draw_tile_4bit(running_machine &machine, bitmap_t *bitmap, int tx, i
 	}
 }
 
-static void draw_tile_8bit(running_machine &machine, bitmap_t *bitmap, int tx, int ty, int tilenum)
+static void draw_tile_8bit(running_machine &machine, bitmap_t &bitmap, int tx, int ty, int tilenum)
 {
 	model3_state *state = machine.driver_data<model3_state>();
 	int x, y;
@@ -209,7 +209,7 @@ static void draw_tile_8bit(running_machine &machine, bitmap_t *bitmap, int tx, i
 	tile = &tile_base[tile_index];
 
 	for(y = ty; y < ty+8; y++) {
-		UINT16 *d = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *d = &bitmap.pix16(y);
 		int xx = 0;
 		for(x = tx; x < tx+8; x++) {
 			UINT8 tile0;
@@ -226,15 +226,15 @@ static void draw_tile_8bit(running_machine &machine, bitmap_t *bitmap, int tx, i
 	}
 }
 #ifdef UNUSED_FUNCTION
-static void draw_texture_sheet(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_texture_sheet(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	model3_state *state = machine.driver_data<model3_state>();
 	int x,y;
-	for(y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for(y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
-		UINT16 *d = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *d = &bitmap.pix16(y);
 		int index = (y*2)*2048;
-		for(x = cliprect->min_x; x <= cliprect->max_x; x++) {
+		for(x = cliprect.min_x; x <= cliprect.max_x; x++) {
 			UINT16 pix = state->m_texture_ram[0][index];
 			index+=4;
 			if(pix != 0) {
@@ -245,7 +245,7 @@ static void draw_texture_sheet(running_machine &machine, bitmap_t *bitmap, const
 }
 #endif
 
-static void draw_layer(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int layer, int bitdepth)
+static void draw_layer(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int layer, int bitdepth)
 {
 	model3_state *state = machine.driver_data<model3_state>();
 	int x, y;
@@ -296,10 +296,10 @@ static void draw_layer(running_machine &machine, bitmap_t *bitmap, const rectang
 
 	if(bitdepth)		/* 4-bit */
 	{
-		for(y = cliprect->min_y; y <= cliprect->max_y; y+=8)
+		for(y = cliprect.min_y; y <= cliprect.max_y; y+=8)
 		{
 			tile_index = ((y/8) * 64);
-			for (x = cliprect->min_x; x <= cliprect->max_x; x+=8) {
+			for (x = cliprect.min_x; x <= cliprect.max_x; x+=8) {
 				UINT16 tile = tiles[tile_index ^ 0x2];
 				draw_tile_4bit(machine, bitmap, x, y, tile);
 				++tile_index;
@@ -308,10 +308,10 @@ static void draw_layer(running_machine &machine, bitmap_t *bitmap, const rectang
 	}
 	else				/* 8-bit */
 	{
-		for(y = cliprect->min_y; y <= cliprect->max_y; y+=8)
+		for(y = cliprect.min_y; y <= cliprect.max_y; y+=8)
 		{
 			tile_index = ((y/8) * 64);
-			for (x = cliprect->min_x; x <= cliprect->max_x; x+=8) {
+			for (x = cliprect.min_x; x <= cliprect.max_x; x+=8) {
 				UINT16 tile = tiles[tile_index ^ 0x2];
 				draw_tile_8bit(machine, bitmap, x, y, tile);
 				++tile_index;
@@ -321,14 +321,14 @@ static void draw_layer(running_machine &machine, bitmap_t *bitmap, const rectang
 }
 
 #ifdef UNUSED_FUNCTION
-static void copy_screen(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void copy_screen(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	model3_state *state = machine.driver_data<model3_state>();
 	int x,y;
-	for(y=cliprect->min_y; y <= cliprect->max_y; y++) {
-		UINT16 *d = BITMAP_ADDR16(bitmap, y, 0);
-		UINT16 *s = BITMAP_ADDR16(state->m_bitmap3d, y, 0);
-		for(x=cliprect->min_x; x <= cliprect->max_x; x++) {
+	for(y=cliprect.min_y; y <= cliprect.max_y; y++) {
+		UINT16 *d = &bitmap.pix16(y);
+		UINT16 *s = &state->m_bitmap3d->pix16(y);
+		for(x=cliprect.min_x; x <= cliprect.max_x; x++) {
 			UINT16 pix = s[x];
 			if(!(pix & 0x8000)) {
 				d[x] = pix;
@@ -340,7 +340,7 @@ static void copy_screen(running_machine &machine, bitmap_t *bitmap, const rectan
 
 SCREEN_UPDATE( model3 )
 {
-	model3_state *state = screen->machine().driver_data<model3_state>();
+	model3_state *state = screen.machine().driver_data<model3_state>();
 #if 0
 	int layer_scroll_x[4], layer_scroll_y[4];
 	UINT32 layer_data[4];
@@ -358,55 +358,55 @@ SCREEN_UPDATE( model3 )
 	layer_scroll_x[3] = (layer_data[3] & 0x8000) ? (layer_data[3] & 0x1ff) : -(layer_data[3] & 0x1ff);
 	layer_scroll_y[3] = (layer_data[3] & 0x8000) ? (layer_data[3] & 0x1ff) : -(layer_data[3] & 0x1ff);
 #endif
-	state->m_screen_clip = (rectangle*)cliprect;
+	state->m_screen_clip = (rectangle*)&cliprect;
 
-	state->m_clip3d.min_x = cliprect->min_x;
-	state->m_clip3d.max_x = cliprect->max_x;
-	state->m_clip3d.min_y = cliprect->min_y;
-	state->m_clip3d.max_y = cliprect->max_y;
+	state->m_clip3d.min_x = cliprect.min_x;
+	state->m_clip3d.max_x = cliprect.max_x;
+	state->m_clip3d.min_y = cliprect.min_y;
+	state->m_clip3d.max_y = cliprect.max_y;
 
 	/* layer disable debug keys */
 	state->m_tick++;
 	if( state->m_tick >= 5 ) {
 		state->m_tick = 0;
 
-		if( screen->machine().input().code_pressed(KEYCODE_Y) )
+		if( screen.machine().input().code_pressed(KEYCODE_Y) )
 			state->m_debug_layer_disable ^= 0x1;
-		if( screen->machine().input().code_pressed(KEYCODE_U) )
+		if( screen.machine().input().code_pressed(KEYCODE_U) )
 			state->m_debug_layer_disable ^= 0x2;
-		if( screen->machine().input().code_pressed(KEYCODE_I) )
+		if( screen.machine().input().code_pressed(KEYCODE_I) )
 			state->m_debug_layer_disable ^= 0x4;
-		if( screen->machine().input().code_pressed(KEYCODE_O) )
+		if( screen.machine().input().code_pressed(KEYCODE_O) )
 			state->m_debug_layer_disable ^= 0x8;
-		if( screen->machine().input().code_pressed(KEYCODE_T) )
+		if( screen.machine().input().code_pressed(KEYCODE_T) )
 			state->m_debug_layer_disable ^= 0x10;
 	}
 
-	bitmap_fill(bitmap, cliprect, 0);
+	bitmap.fill(0, cliprect);
 
 	if (!(state->m_debug_layer_disable & 0x8))
-		draw_layer(screen->machine(), bitmap, cliprect, 3, (state->m_layer_enable >> 3) & 0x1);
+		draw_layer(screen.machine(), bitmap, cliprect, 3, (state->m_layer_enable >> 3) & 0x1);
 
 	if (!(state->m_debug_layer_disable & 0x4))
-		draw_layer(screen->machine(), bitmap, cliprect, 2, (state->m_layer_enable >> 2) & 0x1);
+		draw_layer(screen.machine(), bitmap, cliprect, 2, (state->m_layer_enable >> 2) & 0x1);
 
 	if( !(state->m_debug_layer_disable & 0x10) )
 	{
 #if 0
 		if(state->m_real3d_display_list) {
-			bitmap_fill(state->m_zbuffer, cliprect, 0);
-			bitmap_fill(state->m_bitmap3d, cliprect, 0x8000);
-			real3d_traverse_display_list(screen->machine());
+			state->m_zbuffer->fill(0, cliprect);
+			state->m_bitmap3d->fill(0x8000, cliprect);
+			real3d_traverse_display_list(screen.machine());
 		}
 #endif
-		copybitmap_trans(bitmap, state->m_bitmap3d, 0, 0, 0, 0, cliprect, 0x8000);
+		copybitmap_trans(bitmap, *state->m_bitmap3d, 0, 0, 0, 0, cliprect, 0x8000);
 	}
 
 	if (!(state->m_debug_layer_disable & 0x2))
-		draw_layer(screen->machine(), bitmap, cliprect, 1, (state->m_layer_enable >> 1) & 0x1);
+		draw_layer(screen.machine(), bitmap, cliprect, 1, (state->m_layer_enable >> 1) & 0x1);
 
 	if (!(state->m_debug_layer_disable & 0x1))
-		draw_layer(screen->machine(), bitmap, cliprect, 0, (state->m_layer_enable >> 0) & 0x1);
+		draw_layer(screen.machine(), bitmap, cliprect, 0, (state->m_layer_enable >> 0) & 0x1);
 
 	//copy_screen(bitmap, cliprect);
 
@@ -784,8 +784,8 @@ void real3d_display_list_end(running_machine &machine)
 		};
 	}
 	state->m_texture_fifo_pos = 0;
-	bitmap_fill(state->m_zbuffer, NULL, 0);
-	bitmap_fill(state->m_bitmap3d, NULL, 0x8000);
+	state->m_zbuffer->fill(0);
+	state->m_bitmap3d->fill(0x8000);
 	real3d_traverse_display_list(machine);
 	//state->m_real3d_display_list = 1;
 }
@@ -1091,7 +1091,7 @@ static void render_one(running_machine &machine, TRIANGLE *tri)
 			callback = (tri->transparency >= 32) ? draw_scanline_normal : draw_scanline_trans;
 		else
 			callback = draw_scanline_alpha;
-		poly_render_triangle(state->m_poly, state->m_bitmap3d, &state->m_clip3d, callback, 3, &tri->v[0], &tri->v[1], &tri->v[2]);
+		poly_render_triangle(state->m_poly, state->m_bitmap3d, state->m_clip3d, callback, 3, &tri->v[0], &tri->v[1], &tri->v[2]);
 	}
 	else
 	{
@@ -1099,7 +1099,7 @@ static void render_one(running_machine &machine, TRIANGLE *tri)
 		extra->polygon_intensity	= tri->intensity;
 		extra->color                = tri->color;
 
-		poly_render_triangle(state->m_poly, state->m_bitmap3d, &state->m_clip3d, draw_scanline_color, 1, &tri->v[0], &tri->v[1], &tri->v[2]);
+		poly_render_triangle(state->m_poly, state->m_bitmap3d, state->m_clip3d, draw_scanline_color, 1, &tri->v[0], &tri->v[1], &tri->v[2]);
 	}
 }
 

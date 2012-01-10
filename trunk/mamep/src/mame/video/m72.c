@@ -430,7 +430,7 @@ WRITE16_HANDLER( majtitle_gfx_ctrl_w )
 
 ***************************************************************************/
 
-static void m72_draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void m72_draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	m72_state *state = machine.driver_data<m72_state>();
 	UINT16 *spriteram = state->m_buffered_spriteram;
@@ -484,7 +484,7 @@ static void m72_draw_sprites(running_machine &machine, bitmap_t *bitmap,const re
 	}
 }
 
-static void majtitle_draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void majtitle_draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	m72_state *state = machine.driver_data<m72_state>();
 	UINT16 *spriteram16_2 = state->m_spriteram2;
@@ -537,10 +537,10 @@ static void majtitle_draw_sprites(running_machine &machine, bitmap_t *bitmap,con
 
 SCREEN_UPDATE( m72 )
 {
-	m72_state *state = screen->machine().driver_data<m72_state>();
+	m72_state *state = screen.machine().driver_data<m72_state>();
 	if (state->m_video_off)
 	{
-		bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		return 0;
 	}
 
@@ -552,7 +552,7 @@ SCREEN_UPDATE( m72 )
 
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,TILEMAP_DRAW_LAYER1,0);
 	tilemap_draw(bitmap,cliprect,state->m_fg_tilemap,TILEMAP_DRAW_LAYER1,0);
-	m72_draw_sprites(screen->machine(), bitmap,cliprect);
+	m72_draw_sprites(screen.machine(), bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,TILEMAP_DRAW_LAYER0,0);
 	tilemap_draw(bitmap,cliprect,state->m_fg_tilemap,TILEMAP_DRAW_LAYER0,0);
 	return 0;
@@ -560,13 +560,13 @@ SCREEN_UPDATE( m72 )
 
 SCREEN_UPDATE( majtitle )
 {
-	m72_state *state = screen->machine().driver_data<m72_state>();
+	m72_state *state = screen.machine().driver_data<m72_state>();
 	int i;
 
 
 	if (state->m_video_off)
 	{
-		bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		return 0;
 	}
 
@@ -589,8 +589,8 @@ SCREEN_UPDATE( majtitle )
 
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,TILEMAP_DRAW_LAYER1,0);
 	tilemap_draw(bitmap,cliprect,state->m_fg_tilemap,TILEMAP_DRAW_LAYER1,0);
-	majtitle_draw_sprites(screen->machine(), bitmap,cliprect);
-	m72_draw_sprites(screen->machine(), bitmap,cliprect);
+	majtitle_draw_sprites(screen.machine(), bitmap,cliprect);
+	m72_draw_sprites(screen.machine(), bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,TILEMAP_DRAW_LAYER0,0);
 	tilemap_draw(bitmap,cliprect,state->m_fg_tilemap,TILEMAP_DRAW_LAYER0,0);
 	return 0;

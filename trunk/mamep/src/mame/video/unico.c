@@ -221,7 +221,7 @@ VIDEO_START( zeropnt2 )
 
 ***************************************************************************/
 
-static void unico_draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void unico_draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	unico_state *state = machine.driver_data<unico_state>();
 	UINT16 *spriteram16 = state->m_spriteram;
@@ -276,7 +276,7 @@ static void unico_draw_sprites(running_machine &machine, bitmap_t *bitmap,const 
 	}
 }
 
-static void zeropnt2_draw_sprites(running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect)
+static void zeropnt2_draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
 {
 	unico_state *state = machine.driver_data<unico_state>();
 	UINT32 *spriteram32 = (UINT32 *)state->m_spriteram;
@@ -343,7 +343,7 @@ static void zeropnt2_draw_sprites(running_machine &machine, bitmap_t *bitmap,con
 
 SCREEN_UPDATE( unico )
 {
-	unico_state *state = screen->machine().driver_data<unico_state>();
+	unico_state *state = screen.machine().driver_data<unico_state>();
 	int layers_ctrl = -1;
 
 	tilemap_set_scrollx(state->m_tilemap[0], 0, state->m_scroll[0x00]);
@@ -356,34 +356,34 @@ SCREEN_UPDATE( unico )
 	tilemap_set_scrolly(state->m_tilemap[2], 0, state->m_scroll[0x02]);
 
 #ifdef MAME_DEBUG
-if ( screen->machine().input().code_pressed(KEYCODE_Z) || screen->machine().input().code_pressed(KEYCODE_X) )
+if ( screen.machine().input().code_pressed(KEYCODE_Z) || screen.machine().input().code_pressed(KEYCODE_X) )
 {
 	int msk = 0;
-	if (screen->machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-	if (screen->machine().input().code_pressed(KEYCODE_W))	msk |= 2;
-	if (screen->machine().input().code_pressed(KEYCODE_E))	msk |= 4;
-	if (screen->machine().input().code_pressed(KEYCODE_A))	msk |= 8;
+	if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+	if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+	if (screen.machine().input().code_pressed(KEYCODE_E))	msk |= 4;
+	if (screen.machine().input().code_pressed(KEYCODE_A))	msk |= 8;
 	if (msk != 0) layers_ctrl &= msk;
 }
 #endif
 
 	/* The background color is the first of the last palette */
-	bitmap_fill(bitmap,cliprect,0x1f00);
-	bitmap_fill(screen->machine().priority_bitmap,cliprect,0);
+	bitmap.fill(0x1f00, cliprect);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	if (layers_ctrl & 1)	tilemap_draw(bitmap,cliprect,state->m_tilemap[0],0,1);
 	if (layers_ctrl & 2)	tilemap_draw(bitmap,cliprect,state->m_tilemap[1],0,2);
 	if (layers_ctrl & 4)	tilemap_draw(bitmap,cliprect,state->m_tilemap[2],0,4);
 
 	/* Sprites are drawn last, using pdrawgfx */
-	if (layers_ctrl & 8)	unico_draw_sprites(screen->machine(), bitmap,cliprect);
+	if (layers_ctrl & 8)	unico_draw_sprites(screen.machine(), bitmap,cliprect);
 
 	return 0;
 }
 
 SCREEN_UPDATE( zeropnt2 )
 {
-	unico_state *state = screen->machine().driver_data<unico_state>();
+	unico_state *state = screen.machine().driver_data<unico_state>();
 	int layers_ctrl = -1;
 
 	tilemap_set_scrollx(state->m_tilemap[0], 0, state->m_scroll32[0] >> 16);
@@ -396,27 +396,27 @@ SCREEN_UPDATE( zeropnt2 )
 	tilemap_set_scrolly(state->m_tilemap[2], 0, state->m_scroll32[1] >> 16);
 
 #ifdef MAME_DEBUG
-if ( screen->machine().input().code_pressed(KEYCODE_Z) || screen->machine().input().code_pressed(KEYCODE_X) )
+if ( screen.machine().input().code_pressed(KEYCODE_Z) || screen.machine().input().code_pressed(KEYCODE_X) )
 {
 	int msk = 0;
-	if (screen->machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-	if (screen->machine().input().code_pressed(KEYCODE_W))	msk |= 2;
-	if (screen->machine().input().code_pressed(KEYCODE_E))	msk |= 4;
-	if (screen->machine().input().code_pressed(KEYCODE_A))	msk |= 8;
+	if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+	if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+	if (screen.machine().input().code_pressed(KEYCODE_E))	msk |= 4;
+	if (screen.machine().input().code_pressed(KEYCODE_A))	msk |= 8;
 	if (msk != 0) layers_ctrl &= msk;
 }
 #endif
 
 	/* The background color is the first of the last palette */
-	bitmap_fill(bitmap,cliprect,0x1f00);
-	bitmap_fill(screen->machine().priority_bitmap,cliprect,0);
+	bitmap.fill(0x1f00, cliprect);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	if (layers_ctrl & 1)	tilemap_draw(bitmap,cliprect,state->m_tilemap[0],0,1);
 	if (layers_ctrl & 2)	tilemap_draw(bitmap,cliprect,state->m_tilemap[1],0,2);
 	if (layers_ctrl & 4)	tilemap_draw(bitmap,cliprect,state->m_tilemap[2],0,4);
 
 	/* Sprites are drawn last, using pdrawgfx */
-	if (layers_ctrl & 8)	zeropnt2_draw_sprites(screen->machine(), bitmap,cliprect);
+	if (layers_ctrl & 8)	zeropnt2_draw_sprites(screen.machine(), bitmap,cliprect);
 
 	return 0;
 }

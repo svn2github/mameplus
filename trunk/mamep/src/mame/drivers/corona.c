@@ -449,24 +449,24 @@ static VIDEO_START(winner)
 
 static SCREEN_UPDATE(winner)
 {
-	corona_state *state = screen->machine().driver_data<corona_state>();
+	corona_state *state = screen.machine().driver_data<corona_state>();
 	int x, y;
 
 	for (y = 0; y < 256; y++)
 		for (x = 0; x < 256; x++)
-			*BITMAP_ADDR16(bitmap, y, x) = state->m_videobuf[y * 512 + x];
+			bitmap.pix16(y, x) = state->m_videobuf[y * 512 + x];
 
 	return 0;
 }
 
 static SCREEN_UPDATE(luckyrlt)
 {
-	corona_state *state = screen->machine().driver_data<corona_state>();
+	corona_state *state = screen.machine().driver_data<corona_state>();
 	int x, y;
 
 	for (y = 0; y < 256; y++)
 		for (x = 0; x < 256; x++)
-			*BITMAP_ADDR16(bitmap, 255 - y, x) = state->m_videobuf[y * 512 + x];
+			bitmap.pix16(255 - y, x) = state->m_videobuf[y * 512 + x];
 
 	return 0;
 }

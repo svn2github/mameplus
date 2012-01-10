@@ -68,7 +68,7 @@ VIDEO_START( kchamp )
              3        XXXXXXXX
 */
 
-static void kchamp_draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void kchamp_draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	kchamp_state *state = machine.driver_data<kchamp_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -97,7 +97,7 @@ static void kchamp_draw_sprites( running_machine &machine, bitmap_t *bitmap, con
 	}
 }
 
-static void kchampvs_draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void kchampvs_draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	kchamp_state *state = machine.driver_data<kchamp_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -129,18 +129,18 @@ static void kchampvs_draw_sprites( running_machine &machine, bitmap_t *bitmap, c
 
 SCREEN_UPDATE( kchamp )
 {
-	kchamp_state *state = screen->machine().driver_data<kchamp_state>();
+	kchamp_state *state = screen.machine().driver_data<kchamp_state>();
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	kchamp_draw_sprites(screen->machine(), bitmap, cliprect);
+	kchamp_draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }
 
 SCREEN_UPDATE( kchampvs )
 {
-	kchamp_state *state = screen->machine().driver_data<kchamp_state>();
+	kchamp_state *state = screen.machine().driver_data<kchamp_state>();
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	kchampvs_draw_sprites(screen->machine(), bitmap, cliprect);
+	kchampvs_draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

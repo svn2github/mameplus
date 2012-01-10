@@ -388,7 +388,7 @@ static TILE_GET_INFO( powerbal_get_bg_tile_info )
 	SET_TILE_INFO(1, code, colr >> 12, 0);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	playmark_state *state = machine.driver_data<playmark_state>();
 	UINT16 *spriteram = state->m_spriteram;
@@ -430,10 +430,10 @@ static VIDEO_START( powerbal )
 
 static SCREEN_UPDATE( powerbal )
 {
-	playmark_state *state = screen->machine().driver_data<playmark_state>();
+	playmark_state *state = screen.machine().driver_data<playmark_state>();
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }
 

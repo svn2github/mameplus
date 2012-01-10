@@ -116,19 +116,19 @@ void system18_set_vdp_mixing(running_machine &machine, int mixing)
  *
  *************************************/
 
-static void draw_vdp(device_t *screen, bitmap_t *bitmap, const rectangle *cliprect, int priority)
+static void draw_vdp(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect, int priority)
 {
-	segas1x_state *state = screen->machine().driver_data<segas1x_state>();
+	segas1x_state *state = screen.machine().driver_data<segas1x_state>();
 	int x, y;
-	bitmap_t *priority_bitmap = screen->machine().priority_bitmap;
+	bitmap_t &priority_bitmap = screen.machine().priority_bitmap;
 
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
-		UINT16 *src = BITMAP_ADDR16(state->m_tmp_bitmap, y, 0);
-		UINT16 *dst = BITMAP_ADDR16(bitmap, y, 0);
-		UINT8 *pri = BITMAP_ADDR8(priority_bitmap, y, 0);
+		UINT16 *src = &state->m_tmp_bitmap->pix16(y);
+		UINT16 *dst = &bitmap.pix16(y);
+		UINT8 *pri = &priority_bitmap.pix8(y);
 
-		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+		for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 		{
 			UINT16 pix = src[x];
 			if (pix != 0xffff)
@@ -150,7 +150,7 @@ static void draw_vdp(device_t *screen, bitmap_t *bitmap, const rectangle *clipre
 
 SCREEN_UPDATE( system18 )
 {
-	segas1x_state *state = screen->machine().driver_data<segas1x_state>();
+	segas1x_state *state = screen.machine().driver_data<segas1x_state>();
 	int vdppri, vdplayer;
 
 /*
@@ -188,30 +188,30 @@ SCREEN_UPDATE( system18 )
 	vdppri = (state->m_vdp_mixing & 1) ? (1 << vdplayer) : 0;
 
 #if DEBUG_VDP
-	if (screen->machine().input().code_pressed(KEYCODE_Q)) vdplayer = 0;
-	if (screen->machine().input().code_pressed(KEYCODE_W)) vdplayer = 1;
-	if (screen->machine().input().code_pressed(KEYCODE_E)) vdplayer = 2;
-	if (screen->machine().input().code_pressed(KEYCODE_R)) vdplayer = 3;
-	if (screen->machine().input().code_pressed(KEYCODE_A)) vdppri = 0x00;
-	if (screen->machine().input().code_pressed(KEYCODE_S)) vdppri = 0x01;
-	if (screen->machine().input().code_pressed(KEYCODE_D)) vdppri = 0x02;
-	if (screen->machine().input().code_pressed(KEYCODE_F)) vdppri = 0x04;
-	if (screen->machine().input().code_pressed(KEYCODE_G)) vdppri = 0x08;
+	if (screen.machine().input().code_pressed(KEYCODE_Q)) vdplayer = 0;
+	if (screen.machine().input().code_pressed(KEYCODE_W)) vdplayer = 1;
+	if (screen.machine().input().code_pressed(KEYCODE_E)) vdplayer = 2;
+	if (screen.machine().input().code_pressed(KEYCODE_R)) vdplayer = 3;
+	if (screen.machine().input().code_pressed(KEYCODE_A)) vdppri = 0x00;
+	if (screen.machine().input().code_pressed(KEYCODE_S)) vdppri = 0x01;
+	if (screen.machine().input().code_pressed(KEYCODE_D)) vdppri = 0x02;
+	if (screen.machine().input().code_pressed(KEYCODE_F)) vdppri = 0x04;
+	if (screen.machine().input().code_pressed(KEYCODE_G)) vdppri = 0x08;
 #endif
 
 	/* if no drawing is happening, fill with black and get out */
 	if (!segaic16_display_enable)
 	{
-		bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		return 0;
 	}
 
 	/* if the VDP is enabled, update our tmp_bitmap */
 	if (state->m_vdp_enable)
-		system18_vdp_update(state->m_tmp_bitmap, cliprect);
+		system18_vdp_update(*state->m_tmp_bitmap, cliprect);
 
 	/* reset priorities */
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	/* draw background opaquely first, not setting any priorities */
 	segaic16_tilemap_draw(screen, bitmap, cliprect, 0, SEGAIC16_TILEMAP_BACKGROUND, 0 | TILEMAP_DRAW_OPAQUE, 0x00);
@@ -237,12 +237,12 @@ SCREEN_UPDATE( system18 )
 	segaic16_sprites_draw(screen, bitmap, cliprect, 0);
 
 #if DEBUG_VDP
-	if (state->m_vdp_enable && screen->machine().input().code_pressed(KEYCODE_V))
+	if (state->m_vdp_enable && screen.machine().input().code_pressed(KEYCODE_V))
 	{
-		bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		update_system18_vdp(bitmap, cliprect);
 	}
-	if (vdp_enable && screen->machine().input().code_pressed(KEYCODE_B))
+	if (vdp_enable && screen.machine().input().code_pressed(KEYCODE_B))
 	{
 		FILE *f = fopen("vdp.bin", "w");
 		fwrite(state->m_tmp_bitmap->base, 1, state->m_tmp_bitmap->rowpixels * (state->m_tmp_bitmap->bpp / 8) * state->m_tmp_bitmap->height, f);

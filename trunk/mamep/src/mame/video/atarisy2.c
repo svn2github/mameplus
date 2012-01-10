@@ -320,14 +320,14 @@ WRITE16_HANDLER( atarisy2_videoram_w )
 
 SCREEN_UPDATE( atarisy2 )
 {
-	atarisy2_state *state = screen->machine().driver_data<atarisy2_state>();
-	bitmap_t *priority_bitmap = screen->machine().priority_bitmap;
+	atarisy2_state *state = screen.machine().driver_data<atarisy2_state>();
+	bitmap_t &priority_bitmap = screen.machine().priority_bitmap;
 	atarimo_rect_list rectlist;
 	bitmap_t *mobitmap;
 	int x, y, r;
 
 	/* draw the playfield */
-	bitmap_fill(priority_bitmap, cliprect, 0);
+	priority_bitmap.fill(0, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_playfield_tilemap, 0, 0);
 	tilemap_draw(bitmap, cliprect, state->m_playfield_tilemap, 1, 1);
 	tilemap_draw(bitmap, cliprect, state->m_playfield_tilemap, 2, 2);
@@ -338,9 +338,9 @@ SCREEN_UPDATE( atarisy2 )
 	for (r = 0; r < rectlist.numrects; r++, rectlist.rect++)
 		for (y = rectlist.rect->min_y; y <= rectlist.rect->max_y; y++)
 		{
-			UINT16 *mo = (UINT16 *)mobitmap->base + mobitmap->rowpixels * y;
-			UINT16 *pf = (UINT16 *)bitmap->base + bitmap->rowpixels * y;
-			UINT8 *pri = (UINT8 *)priority_bitmap->base + priority_bitmap->rowpixels * y;
+			UINT16 *mo = &mobitmap->pix16(y);
+			UINT16 *pf = &bitmap.pix16(y);
+			UINT8 *pri = &priority_bitmap.pix8(y);
 			for (x = rectlist.rect->min_x; x <= rectlist.rect->max_x; x++)
 				if (mo[x] != 0x0f)
 				{

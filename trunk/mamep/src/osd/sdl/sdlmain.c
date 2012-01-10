@@ -706,7 +706,7 @@ osd_font sdl_osd_interface::font_open(const char *_name, int &height)
 
 	/* handle bdf fonts in the core */
 	if (name.len() > 4)
-		if (name.toupper().substr(name.len()-4,4) == ".BDF" )
+		if (name.makeupper().substr(name.len()-4,4) == ".BDF" )
 			return NULL;
 
 	font_name = CFStringCreateWithCString( NULL, _name, kCFStringEncodingUTF8 );
@@ -816,7 +816,7 @@ bitmap_t *sdl_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, 
 
       bitmap = auto_alloc(machine(), bitmap_t(bitmap_width, bitmap_height, BITMAP_FORMAT_ARGB32));
 
-      context_ref = CGBitmapContextCreate( bitmap->base, bitmap_width, bitmap_height, bits_per_component, bitmap->rowpixels*4, color_space, bitmap_info );
+      context_ref = CGBitmapContextCreate( bitmap->raw_pixptr(0), bitmap_width, bitmap_height, bits_per_component, bitmap->rowpixels()*4, color_space, bitmap_info );
 
       if( context_ref != NULL )
       {
@@ -1078,9 +1078,9 @@ bitmap_t *sdl_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, 
 		bitmap = auto_alloc(machine(), bitmap_t(drawsurf->w, drawsurf->h, BITMAP_FORMAT_ARGB32));
 
 		// copy the rendered character image into it
-		for (int y = 0; y < bitmap->height; y++)
+		for (int y = 0; y < bitmap->height(); y++)
 		{
-			UINT32 *dstrow = BITMAP_ADDR32(bitmap, y, 0);
+			UINT32 *dstrow = &bitmap->pix32(y);
 			UINT8 *srcrow = (UINT8 *)drawsurf->pixels;
 
 			srcrow += (y * drawsurf->pitch);

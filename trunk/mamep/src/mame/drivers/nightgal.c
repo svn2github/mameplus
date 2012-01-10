@@ -70,19 +70,19 @@ static VIDEO_START( nightgal )
 
 static SCREEN_UPDATE( nightgal )
 {
-	nightgal_state *state = screen->machine().driver_data<nightgal_state>();
+	nightgal_state *state = screen.machine().driver_data<nightgal_state>();
 	int x, y;
 
-	for (y = cliprect->min_y; y <= cliprect->max_y; ++y)
+	for (y = cliprect.min_y; y <= cliprect.max_y; ++y)
 	{
-		UINT8 *src = &state->m_blit_buffer[y * 512 / 2 + cliprect->min_x];
-		UINT16 *dst = BITMAP_ADDR16(bitmap, y, cliprect->min_x);
+		UINT8 *src = &state->m_blit_buffer[y * 512 / 2 + cliprect.min_x];
+		UINT16 *dst = &bitmap.pix16(y, cliprect.min_x);
 
-		for (x = cliprect->min_x; x <= cliprect->max_x; x += 2)
+		for (x = cliprect.min_x; x <= cliprect.max_x; x += 2)
 		{
 			UINT32 srcpix = *src++;
-			*dst++ = screen->machine().pens[srcpix & 0xf];
-			*dst++ = screen->machine().pens[(srcpix >> 4) & 0xf];
+			*dst++ = screen.machine().pens[srcpix & 0xf];
+			*dst++ = screen.machine().pens[(srcpix >> 4) & 0xf];
 		}
 	}
 

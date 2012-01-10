@@ -213,11 +213,11 @@ VIDEO_START( screwloo )
  *
  *************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	gottlieb_state *state = machine.driver_data<gottlieb_state>();
 	UINT8 *spriteram = state->m_spriteram;
-	rectangle clip = *cliprect;
+	rectangle clip = cliprect;
     int offs;
 
     /* this is a temporary guess until the sprite hardware is better understood */
@@ -235,7 +235,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 		if (flip_screen_x_get(machine)) sx = 233 - sx;
 		if (flip_screen_y_get(machine)) sy = 244 - sy;
 
-		drawgfx_transpen(bitmap, &clip,
+		drawgfx_transpen(bitmap, clip,
 			machine.gfx[2],
 			code, 0,
 			flip_screen_x_get(machine), flip_screen_y_get(machine),
@@ -253,15 +253,15 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( gottlieb )
 {
-	gottlieb_state *state = screen->machine().driver_data<gottlieb_state>();
+	gottlieb_state *state = screen.machine().driver_data<gottlieb_state>();
 	/* if the background has lower priority, render it first, else clear the screen */
 	if (!state->m_background_priority)
 		tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, TILEMAP_DRAW_OPAQUE, 0);
 	else
-		bitmap_fill(bitmap, cliprect, 0);
+		bitmap.fill(0, cliprect);
 
 	/* draw the sprites */
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 
 	/* if the background has higher priority, render it now */
 	if (state->m_background_priority)

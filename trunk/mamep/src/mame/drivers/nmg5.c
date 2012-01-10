@@ -845,7 +845,7 @@ static VIDEO_START( nmg5 )
 	tilemap_set_transparent_pen(state->m_fg_tilemap, 0);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	nmg5_state *state = machine.driver_data<nmg5_state>();
 	UINT16 *spriteram = state->m_spriteram;
@@ -881,7 +881,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 	}
 }
 
-static void draw_bitmap( running_machine &machine, bitmap_t *bitmap )
+static void draw_bitmap( running_machine &machine, bitmap_t &bitmap )
 {
 	nmg5_state *state = machine.driver_data<nmg5_state>();
 	int yyy = 256;
@@ -897,13 +897,13 @@ static void draw_bitmap( running_machine &machine, bitmap_t *bitmap )
 		for (x = 0; x < xxx; x++)
 		{
 			pix = (state->m_bitmap[count] & 0xf000) >> 12;
-			if (pix) *BITMAP_ADDR16(bitmap, y + yoff, x * 4 + 0 + xoff) = pix + 0x300;
+			if (pix) bitmap.pix16(y + yoff, x * 4 + 0 + xoff) = pix + 0x300;
 			pix = (state->m_bitmap[count] & 0x0f00) >> 8;
-			if (pix) *BITMAP_ADDR16(bitmap, y + yoff, x * 4 + 1 + xoff) = pix + 0x300;
+			if (pix) bitmap.pix16(y + yoff, x * 4 + 1 + xoff) = pix + 0x300;
 			pix = (state->m_bitmap[count] & 0x00f0) >> 4;
-			if (pix) *BITMAP_ADDR16(bitmap, y + yoff, x * 4 + 2 + xoff) = pix + 0x300;
+			if (pix) bitmap.pix16(y + yoff, x * 4 + 2 + xoff) = pix + 0x300;
 			pix = (state->m_bitmap[count] & 0x000f) >> 0;
-			if (pix) *BITMAP_ADDR16(bitmap, y + yoff, x * 4 + 3 + xoff) = pix + 0x300;
+			if (pix) bitmap.pix16(y + yoff, x * 4 + 3 + xoff) = pix + 0x300;
 
 			count++;
 		}
@@ -913,7 +913,7 @@ static void draw_bitmap( running_machine &machine, bitmap_t *bitmap )
 
 static SCREEN_UPDATE( nmg5 )
 {
-	nmg5_state *state = screen->machine().driver_data<nmg5_state>();
+	nmg5_state *state = screen.machine().driver_data<nmg5_state>();
 
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, state->m_scroll_ram[3] + 9);
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_scroll_ram[2] + 3);
@@ -924,33 +924,33 @@ static SCREEN_UPDATE( nmg5 )
 
 	if (state->m_priority_reg == 0)
 	{
-		draw_sprites(screen->machine(), bitmap, cliprect);
+		draw_sprites(screen.machine(), bitmap, cliprect);
 		tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
-		draw_bitmap(screen->machine(), bitmap);
+		draw_bitmap(screen.machine(), bitmap);
 	}
 	else if (state->m_priority_reg == 1)
 	{
-		draw_bitmap(screen->machine(), bitmap);
-		draw_sprites(screen->machine(), bitmap, cliprect);
+		draw_bitmap(screen.machine(), bitmap);
+		draw_sprites(screen.machine(), bitmap, cliprect);
 		tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	}
 	else if (state->m_priority_reg == 2)
 	{
-		draw_sprites(screen->machine(), bitmap, cliprect);
-		draw_bitmap(screen->machine(), bitmap);
+		draw_sprites(screen.machine(), bitmap, cliprect);
+		draw_bitmap(screen.machine(), bitmap);
 		tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	}
 	else if (state->m_priority_reg == 3)
 	{
 		tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
-		draw_sprites(screen->machine(), bitmap, cliprect);
-		draw_bitmap(screen->machine(), bitmap);
+		draw_sprites(screen.machine(), bitmap, cliprect);
+		draw_bitmap(screen.machine(), bitmap);
 	}
 	else if (state->m_priority_reg == 7)
 	{
 		tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
-		draw_bitmap(screen->machine(), bitmap);
-		draw_sprites(screen->machine(), bitmap, cliprect);
+		draw_bitmap(screen.machine(), bitmap);
+		draw_sprites(screen.machine(), bitmap, cliprect);
 	}
 	return 0;
 }

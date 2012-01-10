@@ -92,7 +92,7 @@ static TILE_GET_INFO( get_fore_tile_info )
 	SET_TILE_INFO(region, tile, color, 0);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int pri )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int pri )
 {
 	goal92_state *state = machine.driver_data<goal92_state>();
 	UINT16 *buffered_spriteram16 = state->m_buffered_spriteram;
@@ -154,7 +154,7 @@ VIDEO_START( goal92 )
 
 SCREEN_UPDATE( goal92 )
 {
-	goal92_state *state = screen->machine().driver_data<goal92_state>();
+	goal92_state *state = screen.machine().driver_data<goal92_state>();
 	tilemap_set_scrollx(state->m_bg_layer, 0, state->m_scrollram[0] + 60);
 	tilemap_set_scrolly(state->m_bg_layer, 0, state->m_scrollram[1] + 8);
 
@@ -169,27 +169,27 @@ SCREEN_UPDATE( goal92 )
 		tilemap_set_scrolly(state->m_fg_layer, 0, state->m_scrollram[3] + 8);
 	}
 
-	bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_layer, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect, 2);
+	draw_sprites(screen.machine(), bitmap, cliprect, 2);
 
 	if (!(state->m_fg_bank & 0xff))
-		draw_sprites(screen->machine(), bitmap, cliprect, 1);
+		draw_sprites(screen.machine(), bitmap, cliprect, 1);
 
 	tilemap_draw(bitmap, cliprect, state->m_fg_layer, 0, 0);
 
 	if(state->m_fg_bank & 0xff)
-		draw_sprites(screen->machine(), bitmap, cliprect, 1);
+		draw_sprites(screen.machine(), bitmap, cliprect, 1);
 
-	draw_sprites(screen->machine(), bitmap, cliprect, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect, 3);
+	draw_sprites(screen.machine(), bitmap, cliprect, 0);
+	draw_sprites(screen.machine(), bitmap, cliprect, 3);
 	tilemap_draw(bitmap, cliprect, state->m_tx_layer, 0, 0);
 	return 0;
 }
 
 SCREEN_EOF( goal92 )
 {
-	goal92_state *state = machine.driver_data<goal92_state>();
+	goal92_state *state = screen.machine().driver_data<goal92_state>();
 	memcpy(state->m_buffered_spriteram, state->m_spriteram, 0x400 * 2);
 }

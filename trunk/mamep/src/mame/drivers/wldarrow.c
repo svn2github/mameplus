@@ -60,7 +60,7 @@ static void get_pens(pen_t *pens)
 
 static SCREEN_UPDATE( wldarrow )
 {
-	wldarrow_state *state = screen->machine().driver_data<wldarrow_state>();
+	wldarrow_state *state = screen.machine().driver_data<wldarrow_state>();
 	pen_t pens[NUM_PENS];
 	offs_t offs;
 
@@ -89,7 +89,7 @@ static SCREEN_UPDATE( wldarrow )
 						  ((data_g >> 6) & 0x02) |
 						  ((data_b >> 7) & 0x01);
 
-			*BITMAP_ADDR32(bitmap, y, x) = pens[color];
+			bitmap.pix32(y, x) = pens[color];
 
 			data_r = data_r << 1;
 			data_g = data_g << 1;

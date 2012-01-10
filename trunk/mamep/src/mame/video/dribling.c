@@ -60,18 +60,18 @@ WRITE8_HANDLER( dribling_colorram_w )
 
 SCREEN_UPDATE( dribling )
 {
-	dribling_state *state = screen->machine().driver_data<dribling_state>();
-	UINT8 *prombase = screen->machine().region("proms")->base();
-	UINT8 *gfxbase = screen->machine().region("gfx1")->base();
+	dribling_state *state = screen.machine().driver_data<dribling_state>();
+	UINT8 *prombase = screen.machine().region("proms")->base();
+	UINT8 *gfxbase = screen.machine().region("gfx1")->base();
 	int x, y;
 
 	/* loop over rows */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
-		UINT16 *dst = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *dst = &bitmap.pix16(y);
 
 		/* loop over columns */
-		for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+		for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 		{
 			int b7 = prombase[(x >> 3) | ((y >> 3) << 5)] & 1;
 			int b6 = state->m_abca;

@@ -201,9 +201,9 @@ static void fortyl_plot_pix( running_machine &machine, int offset )
 	{
 		c = ((d2 >> i) & 1) + ((d1 >> i) & 1) * 2;
 		if (state->m_pixram_sel)
-			*BITMAP_ADDR16(state->m_tmp_bitmap2, y, x + i) = state->m_pix_color[c];
+			state->m_tmp_bitmap2->pix16(y, x + i) = state->m_pix_color[c];
 		else
-			*BITMAP_ADDR16(state->m_tmp_bitmap1, y, x + i) = state->m_pix_color[c];
+			state->m_tmp_bitmap1->pix16(y, x + i) = state->m_pix_color[c];
 	}
 }
 
@@ -274,7 +274,7 @@ spriteram format (4 bytes per sprite):
     offset  3   xxxxxxxx    x position
 */
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	fortyl_state *state = machine.driver_data<fortyl_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -338,7 +338,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 	}
 }
 
-static void draw_pixram( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_pixram( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	fortyl_state *state = machine.driver_data<fortyl_state>();
 	int offs;
@@ -353,19 +353,19 @@ static void draw_pixram( running_machine &machine, bitmap_t *bitmap, const recta
 	}
 
 	if (state->m_pixram_sel)
-		copybitmap(bitmap, state->m_tmp_bitmap1, f, f, state->m_xoffset, 0, cliprect);
+		copybitmap(bitmap, *state->m_tmp_bitmap1, f, f, state->m_xoffset, 0, cliprect);
 	else
-		copybitmap(bitmap, state->m_tmp_bitmap2, f, f, state->m_xoffset, 0, cliprect);
+		copybitmap(bitmap, *state->m_tmp_bitmap2, f, f, state->m_xoffset, 0, cliprect);
 }
 
 SCREEN_UPDATE( fortyl )
 {
-	fortyl_state *state = screen->machine().driver_data<fortyl_state>();
-	draw_pixram(screen->machine(), bitmap, cliprect);
+	fortyl_state *state = screen.machine().driver_data<fortyl_state>();
+	draw_pixram(screen.machine(), bitmap, cliprect);
 
 	tilemap_set_scrolldy(state->m_bg_tilemap, - state->m_video_ctrl[1] + 1, - state->m_video_ctrl[1] - 1 );
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

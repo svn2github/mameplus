@@ -302,7 +302,7 @@ static TIMER_CALLBACK( collide_firq_callback )
  *
  *************************************/
 
-static void draw_sprites(screen_device &screen, bitmap_t *bitmap, const rectangle *cliprect,
+static void draw_sprites(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect,
 						 int scroll_offset, int check_collision)
 {
 	exidy440_state *state = screen.machine().driver_data<exidy440_state>();
@@ -324,7 +324,7 @@ static void draw_sprites(screen_device &screen, bitmap_t *bitmap, const rectangl
 		UINT8 *src;
 
 		/* skip if out of range */
-		if (yoffs < cliprect->min_y || yoffs >= cliprect->max_y + 16)
+		if (yoffs < cliprect.min_y || yoffs >= cliprect.max_y + 16)
 			continue;
 
 		/* get a pointer to the source image */
@@ -345,11 +345,11 @@ static void draw_sprites(screen_device &screen, bitmap_t *bitmap, const rectangl
 				sy += (VBSTART - VBEND);
 
 			/* stop if we get before the current scanline */
-			if (yoffs < cliprect->min_y)
+			if (yoffs < cliprect.min_y)
 				break;
 
 			/* only draw scanlines that are in this cliprect */
-			if (yoffs <= cliprect->max_y)
+			if (yoffs <= cliprect.max_y)
 			{
 				UINT8 *old = &state->m_local_videoram[sy * 512 + xoffs];
 				int currx = xoffs;
@@ -367,7 +367,7 @@ static void draw_sprites(screen_device &screen, bitmap_t *bitmap, const rectangl
 					{
 						/* combine with the background */
 						pen = left | old[0];
-						*BITMAP_ADDR16(bitmap, yoffs, currx) = pen;
+						bitmap.pix16(yoffs, currx) = pen;
 
 						/* check the collisions bit */
 						if (check_collision && (palette[2 * pen] & 0x80) && (count++ < 128))
@@ -380,7 +380,7 @@ static void draw_sprites(screen_device &screen, bitmap_t *bitmap, const rectangl
 					{
 						/* combine with the background */
 						pen = right | old[1];
-						*BITMAP_ADDR16(bitmap, yoffs, currx) = pen;
+						bitmap.pix16(yoffs, currx) = pen;
 
 						/* check the collisions bit */
 						if (check_collision && (palette[2 * pen] & 0x80) && (count++ < 128))
@@ -403,15 +403,15 @@ static void draw_sprites(screen_device &screen, bitmap_t *bitmap, const rectangl
  *
  *************************************/
 
-static void update_screen(screen_device &screen, bitmap_t *bitmap, const rectangle *cliprect,
+static void update_screen(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect,
 						  int scroll_offset, int check_collision)
 {
 	exidy440_state *state = screen.machine().driver_data<exidy440_state>();
 	int y, sy;
 
 	/* draw any dirty scanlines from the VRAM directly */
-	sy = scroll_offset + cliprect->min_y;
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++, sy++)
+	sy = scroll_offset + cliprect.min_y;
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++, sy++)
 	{
 		/* wrap at the bottom of the screen */
 		if (sy >= VBSTART)
@@ -436,15 +436,15 @@ static void update_screen(screen_device &screen, bitmap_t *bitmap, const rectang
 static SCREEN_UPDATE( exidy440 )
 {
 	/* redraw the screen */
-	update_screen(*screen, bitmap, cliprect, 0, TRUE);
+	update_screen(screen, bitmap, cliprect, 0, TRUE);
 
 	/* generate an interrupt once/frame for the beam */
-	if (cliprect->max_y == screen->visible_area().max_y)
+	if (cliprect.max_y == screen.visible_area().max_y)
 	{
 		int i;
 
-		int beamx = ((input_port_read(screen->machine(), "AN0") & 0xff) * (HBSTART - HBEND)) >> 8;
-		int beamy = ((input_port_read(screen->machine(), "AN1") & 0xff) * (VBSTART - VBEND)) >> 8;
+		int beamx = ((input_port_read(screen.machine(), "AN0") & 0xff) * (HBSTART - HBEND)) >> 8;
+		int beamy = ((input_port_read(screen.machine(), "AN1") & 0xff) * (VBSTART - VBEND)) >> 8;
 
 		/* The timing of this FIRQ is very important. The games look for an FIRQ
             and then wait about 650 cycles, clear the old FIRQ, and wait a
@@ -452,11 +452,11 @@ static SCREEN_UPDATE( exidy440 )
             From this, it appears that they are expecting to get beams over
             a 12 scanline period, and trying to pick roughly the middle one.
             This is how it is implemented. */
-		attotime increment = screen->scan_period();
-		attotime time = screen->time_until_pos(beamy, beamx) - increment * 6;
+		attotime increment = screen.scan_period();
+		attotime time = screen.time_until_pos(beamy, beamx) - increment * 6;
 		for (i = 0; i <= 12; i++)
 		{
-			screen->machine().scheduler().timer_set(time, FUNC(beam_firq_callback), beamx);
+			screen.machine().scheduler().timer_set(time, FUNC(beam_firq_callback), beamx);
 			time += increment;
 		}
 	}
@@ -467,9 +467,9 @@ static SCREEN_UPDATE( exidy440 )
 
 static SCREEN_UPDATE( topsecex )
 {
-	exidy440_state *state = screen->machine().driver_data<exidy440_state>();
+	exidy440_state *state = screen.machine().driver_data<exidy440_state>();
 	/* redraw the screen */
-	update_screen(*screen, bitmap, cliprect, *state->m_topsecex_yscroll, FALSE);
+	update_screen(screen, bitmap, cliprect, *state->m_topsecex_yscroll, FALSE);
 
 	return 0;
 }

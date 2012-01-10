@@ -116,17 +116,17 @@ WRITE16_HANDLER( foodf_paletteram_w )
 
 SCREEN_UPDATE( foodf )
 {
-	foodf_state *state = screen->machine().driver_data<foodf_state>();
+	foodf_state *state = screen.machine().driver_data<foodf_state>();
 	int offs;
-	const gfx_element *gfx = screen->machine().gfx[1];
-	bitmap_t *priority_bitmap = screen->machine().priority_bitmap;
+	const gfx_element *gfx = screen.machine().gfx[1];
+	bitmap_t &priority_bitmap = screen.machine().priority_bitmap;
 	UINT16 *spriteram16 = state->m_spriteram;
 
 	/* first draw the playfield opaquely */
 	tilemap_draw(bitmap, cliprect, state->m_playfield_tilemap, TILEMAP_DRAW_OPAQUE, 0);
 
 	/* then draw the non-transparent parts with a priority of 1 */
-	bitmap_fill(priority_bitmap, 0, 0);
+	priority_bitmap.fill(0);
 	tilemap_draw(bitmap, cliprect, state->m_playfield_tilemap, 0, 1);
 
 	/* draw the motion objects front-to-back */

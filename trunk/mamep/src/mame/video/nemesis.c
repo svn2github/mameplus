@@ -334,7 +334,7 @@ VIDEO_START( nemesis )
 }
 
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	/*
      *  16 bytes per sprite, in memory from 56000-56fff
@@ -427,12 +427,12 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( nemesis )
 {
-	nemesis_state *state = screen->machine().driver_data<nemesis_state>();
+	nemesis_state *state = screen.machine().driver_data<nemesis_state>();
 	int offs;
 	rectangle clip;
 
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
-	bitmap_fill(bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
+	bitmap.fill(0, cliprect);
 
 	clip.min_x = 0;
 	clip.max_x = 255;
@@ -453,7 +453,7 @@ SCREEN_UPDATE( nemesis )
 		tilemap_set_scrolly(state->m_foreground, offs, state->m_yscroll1[offset_x]);
 	}
 
-	for (offs = cliprect->min_y; offs <= cliprect->max_y; offs++)
+	for (offs = cliprect.min_y; offs <= cliprect.max_y; offs++)
 	{
 		int i;
 		int offset_y = offs;
@@ -469,14 +469,14 @@ SCREEN_UPDATE( nemesis )
 
 		for (i = 0; i < 4; i += 2)
 		{
-			tilemap_draw(bitmap, &clip, state->m_background, TILEMAP_DRAW_CATEGORY(i + 0), 1);
-			tilemap_draw(bitmap, &clip, state->m_background, TILEMAP_DRAW_CATEGORY(i + 1), 2);
-			tilemap_draw(bitmap, &clip, state->m_foreground, TILEMAP_DRAW_CATEGORY(i + 0), 1);
-			tilemap_draw(bitmap, &clip, state->m_foreground, TILEMAP_DRAW_CATEGORY(i + 1), 2);
+			tilemap_draw(bitmap, clip, state->m_background, TILEMAP_DRAW_CATEGORY(i + 0), 1);
+			tilemap_draw(bitmap, clip, state->m_background, TILEMAP_DRAW_CATEGORY(i + 1), 2);
+			tilemap_draw(bitmap, clip, state->m_foreground, TILEMAP_DRAW_CATEGORY(i + 0), 1);
+			tilemap_draw(bitmap, clip, state->m_foreground, TILEMAP_DRAW_CATEGORY(i + 1), 2);
 		}
 	}
 
-	draw_sprites(screen->machine(),bitmap,cliprect);
+	draw_sprites(screen.machine(),bitmap,cliprect);
 
 	return 0;
 }

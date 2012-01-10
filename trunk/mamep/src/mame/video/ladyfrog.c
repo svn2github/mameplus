@@ -103,7 +103,7 @@ WRITE8_HANDLER( ladyfrog_scrlram_w )
 	tilemap_set_scrolly(state->m_bg_tilemap, offset, data);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	ladyfrog_state *state = machine.driver_data<ladyfrog_state>();
 	int i;
@@ -175,9 +175,9 @@ VIDEO_START( toucheme )
 
 SCREEN_UPDATE( ladyfrog )
 {
-	ladyfrog_state *state = screen->machine().driver_data<ladyfrog_state>();
+	ladyfrog_state *state = screen.machine().driver_data<ladyfrog_state>();
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

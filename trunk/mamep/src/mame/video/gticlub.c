@@ -457,8 +457,8 @@ static void draw_scanline(void *dest, INT32 scanline, const poly_extent *extent,
 	bitmap_t *destmap = (bitmap_t *)dest;
 	float z = extent->param[0].start;
 	float dz = extent->param[0].dpdx;
-	UINT32 *fb = BITMAP_ADDR32(destmap, scanline, 0);
-	UINT32 *zb = BITMAP_ADDR32(K001005_zbuffer, scanline, 0);
+	UINT32 *fb = &destmap->pix32(scanline);
+	UINT32 *zb = &K001005_zbuffer->pix32(scanline);
 	UINT32 color = extra->color;
 	int x;
 
@@ -500,8 +500,8 @@ static void draw_scanline_tex(void *dest, INT32 scanline, const poly_extent *ext
 	int texture_y = extra->texture_y;
 	int x;
 
-	UINT32 *fb = BITMAP_ADDR32(destmap, scanline, 0);
-	UINT32 *zb = BITMAP_ADDR32(K001005_zbuffer, scanline, 0);
+	UINT32 *fb = &destmap->pix32(scanline);
+	UINT32 *zb = &K001005_zbuffer->pix32(scanline);
 
 	for (x = extent->startx; x < extent->stopx; x++)
 	{
@@ -541,7 +541,7 @@ static void draw_scanline_tex(void *dest, INT32 scanline, const poly_extent *ext
 static void render_polygons(running_machine &machine)
 {
 	int i, j;
-	const rectangle &visarea = machine.primary_screen->visible_area();
+	const rectangle visarea = machine.primary_screen->visible_area();
 
 //  mame_printf_debug("K001005_fifo_ptr = %08X\n", K001005_3d_fifo_ptr);
 
@@ -582,9 +582,9 @@ static void render_polygons(running_machine &machine)
 			++index;
 
 			extra->color = color;
-			poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline, 1, &v[0], &v[1], &v[2]);
-			poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline, 1, &v[0], &v[2], &v[3]);
-//          poly_render_polygon(poly, K001005_bitmap[K001005_bitmap_page],  &visarea, draw_scanline, 1, 4, v);
+			poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline, 1, &v[0], &v[1], &v[2]);
+			poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline, 1, &v[0], &v[2], &v[3]);
+//          poly_render_polygon(poly, K001005_bitmap[K001005_bitmap_page],  visarea, draw_scanline, 1, 4, v);
 
 			i = index - 1;
 		}
@@ -689,13 +689,13 @@ static void render_polygons(running_machine &machine)
 
 			if (num_verts < 3)
 			{
-				poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline_tex, 4, &prev_v[2], &v[0], &v[1]);
+				poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_tex, 4, &prev_v[2], &v[0], &v[1]);
 				if (prev_poly_type)
-					poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline_tex, 4, &prev_v[2], &prev_v[3], &v[0]);
+					poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_tex, 4, &prev_v[2], &prev_v[3], &v[0]);
 //              if (prev_poly_type)
-//                  poly_render_quad(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline_tex, 4, &prev_v[2], &prev_v[3], &v[0], &v[1]);
+//                  poly_render_quad(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_tex, 4, &prev_v[2], &prev_v[3], &v[0], &v[1]);
 //              else
-//                  poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline_tex, 4, &prev_v[2], &v[0], &v[1]);
+//                  poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_tex, 4, &prev_v[2], &v[0], &v[1]);
 
 				memcpy(&prev_v[0], &prev_v[2], sizeof(poly_vertex));
 				memcpy(&prev_v[1], &prev_v[3], sizeof(poly_vertex));
@@ -704,10 +704,10 @@ static void render_polygons(running_machine &machine)
 			}
 			else
 			{
-				poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline_tex, 4, &v[0], &v[1], &v[2]);
+				poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_tex, 4, &v[0], &v[1], &v[2]);
 				if (num_verts > 3)
-					poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline_tex, 4, &v[2], &v[3], &v[0]);
-//              poly_render_polygon(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline_tex, 4, num_verts, v);
+					poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_tex, 4, &v[2], &v[3], &v[0]);
+//              poly_render_polygon(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_tex, 4, num_verts, v);
 
 				memcpy(prev_v, v, sizeof(poly_vertex) * 4);
 			}
@@ -788,10 +788,10 @@ static void render_polygons(running_machine &machine)
 
 				extra->color = color;
 
-				poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline_tex, 4, &v[0], &v[1], &v[2]);
+				poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_tex, 4, &v[0], &v[1], &v[2]);
 				if (new_verts > 1)
-					poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline_tex, 4, &v[2], &v[3], &v[0]);
-//              poly_render_polygon(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline_tex, 4, new_verts + 2, v);
+					poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_tex, 4, &v[2], &v[3], &v[0]);
+//              poly_render_polygon(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_tex, 4, new_verts + 2, v);
 
 				memcpy(prev_v, v, sizeof(poly_vertex) * 4);
 			};
@@ -847,10 +847,10 @@ static void render_polygons(running_machine &machine)
 
 			extra->color = color;
 
-			poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline, 1, &v[0], &v[1], &v[2]);
+			poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline, 1, &v[0], &v[1], &v[2]);
 			if (num_verts > 3)
-				poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline, 1, &v[2], &v[3], &v[0]);
-//          poly_render_polygon(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline, 1, num_verts, v);
+				poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline, 1, &v[2], &v[3], &v[0]);
+//          poly_render_polygon(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline, 1, num_verts, v);
 
 			memcpy(prev_v, v, sizeof(poly_vertex) * 4);
 
@@ -906,10 +906,10 @@ static void render_polygons(running_machine &machine)
 
 				extra->color = color;
 
-				poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline, 1, &v[0], &v[1], &v[2]);
+				poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline, 1, &v[0], &v[1], &v[2]);
 				if (new_verts > 1)
-					poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline, 1, &v[0], &v[2], &v[3]);
-//              poly_render_polygon(poly, K001005_bitmap[K001005_bitmap_page], &visarea, draw_scanline, 1, new_verts + 2, v);
+					poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline, 1, &v[0], &v[2], &v[3]);
+//              poly_render_polygon(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline, 1, new_verts + 2, v);
 
 				memcpy(prev_v, v, sizeof(poly_vertex) * 4);
 			};
@@ -934,18 +934,18 @@ static void render_polygons(running_machine &machine)
 	}
 }
 
-void K001005_draw(bitmap_t *bitmap, const rectangle *cliprect)
+void K001005_draw(bitmap_t &bitmap, const rectangle &cliprect)
 {
 	int i, j;
 
-	memcpy(&K001005_cliprect, cliprect, sizeof(rectangle));
+	memcpy(&K001005_cliprect, &cliprect, sizeof(rectangle));
 
-	for (j=cliprect->min_y; j <= cliprect->max_y; j++)
+	for (j=cliprect.min_y; j <= cliprect.max_y; j++)
 	{
-		UINT32 *bmp = BITMAP_ADDR32(bitmap, j, 0);
-		UINT32 *src = BITMAP_ADDR32(K001005_bitmap[K001005_bitmap_page^1], j, 0);
+		UINT32 *bmp = &bitmap.pix32(j);
+		UINT32 *src = &K001005_bitmap[K001005_bitmap_page^1]->pix32(j);
 
-		for (i=cliprect->min_x; i <= cliprect->max_x; i++)
+		for (i=cliprect.min_x; i <= cliprect.max_x; i++)
 		{
 			if (src[i] & 0xff000000)
 			{
@@ -961,8 +961,8 @@ void K001005_swap_buffers(running_machine &machine)
 
 	//if (K001005_status == 2)
 	{
-		bitmap_fill(K001005_bitmap[K001005_bitmap_page], &K001005_cliprect, machine.pens[0]&0x00ffffff);
-		bitmap_fill(K001005_zbuffer, &K001005_cliprect, 0xffffffff);
+		K001005_bitmap[K001005_bitmap_page]->fill(machine.pens[0]&0x00ffffff, K001005_cliprect);
+		K001005_zbuffer->fill(0xffffffff, K001005_cliprect);
 	}
 }
 
@@ -983,7 +983,7 @@ VIDEO_START( gticlub )
 
 SCREEN_UPDATE( gticlub )
 {
-	device_t *k001604 = screen->machine().device("k001604_1");
+	device_t *k001604 = screen.machine().device("k001604_1");
 
 	k001604_draw_back_layer(k001604, bitmap, cliprect);
 
@@ -995,15 +995,15 @@ SCREEN_UPDATE( gticlub )
 	if( tick >= 5 ) {
 		tick = 0;
 
-		if( screen->machine().input().code_pressed(KEYCODE_O) )
+		if( screen.machine().input().code_pressed(KEYCODE_O) )
 			debug_tex_page++;
 
-		if( screen->machine().input().code_pressed(KEYCODE_I) )
+		if( screen.machine().input().code_pressed(KEYCODE_I) )
 			debug_tex_page--;
 
-		if (screen->machine().input().code_pressed(KEYCODE_U))
+		if (screen.machine().input().code_pressed(KEYCODE_U))
 			debug_tex_palette++;
-		if (screen->machine().input().code_pressed(KEYCODE_Y))
+		if (screen.machine().input().code_pressed(KEYCODE_Y))
 			debug_tex_palette--;
 
 		if (debug_tex_page < 0)
@@ -1032,7 +1032,7 @@ SCREEN_UPDATE( gticlub )
             for (x=0; x < 512; x++)
             {
                 UINT8 pixel = rom[index + (y*512) + x];
-                *BITMAP_ADDR32(bitmap, y, x) = K001006_palette[tp][(pal * 256) + pixel];
+                bitmap.pix32(y, x) = K001006_palette[tp][(pal * 256) + pixel];
             }
         }
 
@@ -1044,19 +1044,19 @@ SCREEN_UPDATE( gticlub )
 	draw_7segment_led(bitmap, 3, 3, gticlub_led_reg[0]);
 	draw_7segment_led(bitmap, 9, 3, gticlub_led_reg[1]);
 
-	//cputag_set_input_line(screen->machine(), "dsp", SHARC_INPUT_FLAG1, ASSERT_LINE);
-	sharc_set_flag_input(screen->machine().device("dsp"), 1, ASSERT_LINE);
+	//cputag_set_input_line(screen.machine(), "dsp", SHARC_INPUT_FLAG1, ASSERT_LINE);
+	sharc_set_flag_input(screen.machine().device("dsp"), 1, ASSERT_LINE);
 	return 0;
 }
 
 SCREEN_UPDATE( hangplt )
 {
-	bitmap_fill(bitmap, cliprect, screen->machine().pens[0]);
+	bitmap.fill(screen.machine().pens[0], cliprect);
 
-	if (strcmp(screen->tag(), "lscreen") == 0)
+	if (strcmp(screen.tag(), "lscreen") == 0)
 	{
-		device_t *k001604 = screen->machine().device("k001604_1");
-		device_t *voodoo = screen->machine().device("voodoo0");
+		device_t *k001604 = screen.machine().device("k001604_1");
+		device_t *voodoo = screen.machine().device("voodoo0");
 
 	//  k001604_draw_back_layer(k001604, bitmap, cliprect);
 
@@ -1064,10 +1064,10 @@ SCREEN_UPDATE( hangplt )
 
 		k001604_draw_front_layer(k001604, bitmap, cliprect);
 	}
-	else if (strcmp(screen->tag(), "rscreen") == 0)
+	else if (strcmp(screen.tag(), "rscreen") == 0)
 	{
-		device_t *k001604 = screen->machine().device("k001604_2");
-		device_t *voodoo = screen->machine().device("voodoo1");
+		device_t *k001604 = screen.machine().device("k001604_2");
+		device_t *voodoo = screen.machine().device("voodoo1");
 
 	//  k001604_draw_back_layer(k001604, bitmap, cliprect);
 

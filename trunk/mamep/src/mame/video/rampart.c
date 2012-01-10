@@ -10,7 +10,7 @@
 #include "includes/rampart.h"
 
 
-static void rampart_bitmap_render(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect);
+static void rampart_bitmap_render(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect);
 
 /*************************************
  *
@@ -79,15 +79,15 @@ SCREEN_UPDATE( rampart )
 	int x, y, r;
 
 	/* draw the playfield */
-	rampart_bitmap_render(screen->machine(), bitmap, cliprect);
+	rampart_bitmap_render(screen.machine(), bitmap, cliprect);
 
 	/* draw and merge the MO */
 	mobitmap = atarimo_render(0, cliprect, &rectlist);
 	for (r = 0; r < rectlist.numrects; r++, rectlist.rect++)
 		for (y = rectlist.rect->min_y; y <= rectlist.rect->max_y; y++)
 		{
-			UINT16 *mo = (UINT16 *)mobitmap->base + mobitmap->rowpixels * y;
-			UINT16 *pf = (UINT16 *)bitmap->base + bitmap->rowpixels * y;
+			UINT16 *mo = &mobitmap->pix16(y);
+			UINT16 *pf = &bitmap.pix16(y);
 			for (x = rectlist.rect->min_x; x <= rectlist.rect->max_x; x++)
 				if (mo[x])
 				{
@@ -109,19 +109,19 @@ SCREEN_UPDATE( rampart )
  *
  *************************************/
 
-static void rampart_bitmap_render(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void rampart_bitmap_render(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	rampart_state *state = machine.driver_data<rampart_state>();
 	int x, y;
 
 	/* update any dirty scanlines */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
 		const UINT16 *src = &state->m_bitmap[256 * y];
-		UINT16 *dst = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *dst = &bitmap.pix16(y);
 
 		/* regenerate the line */
-		for (x = cliprect->min_x & ~1; x <= cliprect->max_x; x += 2)
+		for (x = cliprect.min_x & ~1; x <= cliprect.max_x; x += 2)
 		{
 			int bits = src[(x - 8) / 2];
 			dst[x + 0] = bits >> 8;

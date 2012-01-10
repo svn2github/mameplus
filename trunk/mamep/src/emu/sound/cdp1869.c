@@ -539,7 +539,7 @@ void cdp1869_device::sound_stream_update(sound_stream &stream, stream_sample_t *
 //  draw_line - draw character line
 //-------------------------------------------------
 
-void cdp1869_device::draw_line(bitmap_t *bitmap, const rectangle *rect, int x, int y, UINT8 data, int color)
+void cdp1869_device::draw_line(bitmap_t &bitmap, const rectangle &rect, int x, int y, UINT8 data, int color)
 {
 	int i;
 
@@ -549,20 +549,20 @@ void cdp1869_device::draw_line(bitmap_t *bitmap, const rectangle *rect, int x, i
 	{
 		if (data & 0x80)
 		{
-			*BITMAP_ADDR16(bitmap, y, x) = color;
+			bitmap.pix16(y, x) = color;
 
 			if (!m_fresvert)
 			{
-				*BITMAP_ADDR16(bitmap, y + 1, x) = color;
+				bitmap.pix16(y + 1, x) = color;
 			}
 
 			if (!m_freshorz)
 			{
-				*BITMAP_ADDR16(bitmap, y, x + 1) = color;
+				bitmap.pix16(y, x + 1) = color;
 
 				if (!m_fresvert)
 				{
-					*BITMAP_ADDR16(bitmap, y + 1, x + 1) = color;
+					bitmap.pix16(y + 1, x + 1) = color;
 				}
 			}
 		}
@@ -583,7 +583,7 @@ void cdp1869_device::draw_line(bitmap_t *bitmap, const rectangle *rect, int x, i
 //  draw_char - draw character
 //-------------------------------------------------
 
-void cdp1869_device::draw_char(bitmap_t *bitmap, const rectangle *rect, int x, int y, UINT16 pma)
+void cdp1869_device::draw_char(bitmap_t &bitmap, const rectangle &rect, int x, int y, UINT16 pma)
 {
 	UINT8 pmd = read_page_ram_byte(pma);
 
@@ -597,7 +597,7 @@ void cdp1869_device::draw_char(bitmap_t *bitmap, const rectangle *rect, int x, i
 
 		int color = get_pen(ccb0, ccb1, pcb);
 
-		draw_line(bitmap, rect, rect->min_x + x, rect->min_y + y, data, color);
+		draw_line(bitmap, rect, rect.min_x + x, rect.min_y + y, data, color);
 
 		y++;
 
@@ -907,7 +907,7 @@ READ_LINE_MEMBER( cdp1869_device::pal_ntsc_r )
 //  update_screen - update screen
 //-------------------------------------------------
 
-void cdp1869_device::update_screen(bitmap_t *bitmap, const rectangle *cliprect)
+void cdp1869_device::update_screen(bitmap_t &bitmap, const rectangle &cliprect)
 {
 	rectangle screen_rect, outer;
 
@@ -934,8 +934,8 @@ void cdp1869_device::update_screen(bitmap_t *bitmap, const rectangle *cliprect)
 		screen_rect.max_y = CDP1869_SCANLINE_DISPLAY_END_PAL - 1;
 	}
 
-	sect_rect(&outer, cliprect);
-	bitmap_fill(bitmap, &outer, m_bkg);
+	outer &= cliprect;
+	bitmap.fill(m_bkg, outer);
 
 	if (!m_dispoff)
 	{
@@ -965,7 +965,7 @@ void cdp1869_device::update_screen(bitmap_t *bitmap, const rectangle *cliprect)
 				int x = sx * width;
 				int y = sy * height;
 
-				draw_char(bitmap, &screen_rect, x, y, addr);
+				draw_char(bitmap, screen_rect, x, y, addr);
 
 				addr++;
 

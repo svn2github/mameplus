@@ -200,7 +200,7 @@ static VIDEO_START( imolagp )
 
 static SCREEN_UPDATE( imolagp )
 {
-	imolagp_state *state = screen->machine().driver_data<imolagp_state>();
+	imolagp_state *state = screen.machine().driver_data<imolagp_state>();
 	int scroll2 = state->m_scroll ^ 0x03;
 	int pass;
 	for (pass = 0; pass < 2; pass++)
@@ -213,7 +213,7 @@ static SCREEN_UPDATE( imolagp )
 			int pen;
 			int y = (i / 0x40);
 			int x = (i & 0x3f) * 4 - scroll2;
-			UINT16 *dest = BITMAP_ADDR16(bitmap, y & 0xff, 0);
+			UINT16 *dest = &bitmap.pix16(y & 0xff);
 			int data = source[i];
 			if (data || pass == 0)
 			{

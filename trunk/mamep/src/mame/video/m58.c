@@ -133,7 +133,7 @@ WRITE8_HANDLER( yard_scroll_panel_w )
 		col = (data >> i) & 0x11;
 		col = ((col >> 3) | col) & 3;
 
-		*BITMAP_ADDR16(state->m_scroll_panel_bitmap, sy, sx + i) = RADAR_PALETTE_BASE + (sy & 0xfc) + col;
+		state->m_scroll_panel_bitmap->pix16(sy, sx + i) = RADAR_PALETTE_BASE + (sy & 0xfc) + col;
 	}
 }
 
@@ -219,7 +219,7 @@ WRITE8_HANDLER( yard_flipscreen_w )
 
 #define DRAW_SPRITE(code, sy) drawgfx_transmask(bitmap, cliprect, machine.gfx[1], code, color, flipx, flipy, sx, sy, colortable_get_transpen_mask(machine.colortable, machine.gfx[1], color, 512));
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	m58_state *state = machine.driver_data<m58_state>();
 	int offs;
@@ -274,33 +274,25 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
  *
  *************************************/
 
-static void draw_panel( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_panel( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	m58_state *state = machine.driver_data<m58_state>();
 
 	if (!*state->m_yard_score_panel_disabled)
 	{
-		static const rectangle clippanel =
-		{
-			26*8, 32*8-1,
-			1*8, 31*8-1
-		};
-		static const rectangle clippanelflip =
-		{
-			0*8, 6*8-1,
-			1*8, 31*8-1
-		};
+		const rectangle clippanel(26*8, 32*8-1,	1*8, 31*8-1);
+		const rectangle clippanelflip(0*8, 6*8-1, 1*8, 31*8-1);
 		rectangle clip = flip_screen_get(machine) ? clippanelflip : clippanel;
 		const rectangle &visarea = machine.primary_screen->visible_area();
-		int sx = flip_screen_get(machine) ? cliprect->min_x - 8 : cliprect->max_x + 1 - SCROLL_PANEL_WIDTH;
+		int sx = flip_screen_get(machine) ? cliprect.min_x - 8 : cliprect.max_x + 1 - SCROLL_PANEL_WIDTH;
 		int yoffs = flip_screen_get(machine) ? -40 : -16;
 
 		clip.min_y += visarea.min_y + yoffs;
 		clip.max_y += visarea.max_y + yoffs;
-		sect_rect(&clip, cliprect);
+		clip &= cliprect;
 
-		copybitmap(bitmap, state->m_scroll_panel_bitmap, flip_screen_get(machine), flip_screen_get(machine),
-				   sx, visarea.min_y + yoffs, &clip);
+		copybitmap(bitmap, *state->m_scroll_panel_bitmap, flip_screen_get(machine), flip_screen_get(machine),
+				   sx, visarea.min_y + yoffs, clip);
 	}
 }
 
@@ -314,13 +306,13 @@ static void draw_panel( running_machine &machine, bitmap_t *bitmap, const rectan
 
 SCREEN_UPDATE( yard )
 {
-	m58_state *state = screen->machine().driver_data<m58_state>();
+	m58_state *state = screen.machine().driver_data<m58_state>();
 
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, (*state->m_yard_scroll_x_high * 0x100) + *state->m_yard_scroll_x_low);
 	tilemap_set_scrolly(state->m_bg_tilemap, 0, *state->m_yard_scroll_y_low);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
-	draw_panel(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
+	draw_panel(screen.machine(), bitmap, cliprect);
 	return 0;
 }

@@ -249,14 +249,14 @@ WRITE8_HANDLER( cloud9_bitmode_addr_w )
 
 SCREEN_UPDATE( cloud9 )
 {
-	cloud9_state *state = screen->machine().driver_data<cloud9_state>();
+	cloud9_state *state = screen.machine().driver_data<cloud9_state>();
 	UINT8 *spriteaddr = state->m_spriteram;
 	int flip = state->m_video_control[5] ? 0xff : 0x00;	/* PLAYER2 */
-	pen_t black = get_black_pen(screen->machine());
+	pen_t black = get_black_pen(screen.machine());
 	int x, y, offs;
 
 	/* draw the sprites */
-	bitmap_fill(state->m_spritebitmap, cliprect, 0x00);
+	state->m_spritebitmap->fill(0x00, cliprect);
 	for (offs = 0; offs < 0x20; offs++)
 		if (spriteaddr[offs + 0x00] != 0)
 		{
@@ -267,27 +267,27 @@ SCREEN_UPDATE( cloud9 )
 			int which = spriteaddr[offs + 0x20];
 			int color = 0;
 
-			drawgfx_transpen(state->m_spritebitmap, cliprect, screen->machine().gfx[0], which, color, xflip, yflip, x, y, 0);
+			drawgfx_transpen(*state->m_spritebitmap, cliprect, screen.machine().gfx[0], which, color, xflip, yflip, x, y, 0);
 			if (x >= 256 - 16)
-				drawgfx_transpen(state->m_spritebitmap, cliprect, screen->machine().gfx[0], which, color, xflip, yflip, x - 256, y, 0);
+				drawgfx_transpen(*state->m_spritebitmap, cliprect, screen.machine().gfx[0], which, color, xflip, yflip, x - 256, y, 0);
 		}
 
 	/* draw the bitmap to the screen, looping over Y */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
-		UINT16 *dst = (UINT16 *)bitmap->base + y * bitmap->rowpixels;
+		UINT16 *dst = &bitmap.pix16(y);
 
 		/* if we're in the VBLANK region, just fill with black */
 		if (~state->m_syncprom[y] & 2)
 		{
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 				dst[x] = black;
 		}
 
 		/* non-VBLANK region: merge the sprites and the bitmap */
 		else
 		{
-			UINT16 *mosrc = (UINT16 *)state->m_spritebitmap->base + y * state->m_spritebitmap->rowpixels;
+			UINT16 *mosrc = &state->m_spritebitmap->pix16(y);
 			int effy = y ^ flip;
 			UINT8 *src[2];
 
@@ -296,7 +296,7 @@ SCREEN_UPDATE( cloud9 )
 			src[1] = &state->m_videoram[0x0000 | (effy * 64)];
 
 			/* loop over X */
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 			{
 				/* if we're in the HBLANK region, just store black */
 				if (x >= 256)

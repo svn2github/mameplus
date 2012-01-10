@@ -294,7 +294,7 @@ static READ8_HANDLER(spaceg_colorram_r)
 
 static SCREEN_UPDATE( spaceg )
 {
-	spaceg_state *state = screen->machine().driver_data<spaceg_state>();
+	spaceg_state *state = screen.machine().driver_data<spaceg_state>();
 	offs_t offs;
 
 	for (offs = 0; offs < 0x2000; offs++)
@@ -306,7 +306,7 @@ static SCREEN_UPDATE( spaceg )
 
 		for (i = 0; i < 8; i++)
 		{
-			*BITMAP_ADDR16(bitmap, y, x) = (data & 0x80) ? state->m_colorram[offs] : 0;
+			bitmap.pix16(y, x) = (data & 0x80) ? state->m_colorram[offs] : 0;
 
 			x++;
 			data <<= 1;

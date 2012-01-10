@@ -162,7 +162,7 @@ static PALETTE_INIT( shougi )
 
 static SCREEN_UPDATE( shougi )
 {
-	shougi_state *state = screen->machine().driver_data<shougi_state>();
+	shougi_state *state = screen.machine().driver_data<shougi_state>();
 	int offs;
 
 	for (offs = 0;offs <0x4000; offs++)
@@ -182,7 +182,7 @@ static SCREEN_UPDATE( shougi )
 			color= ((data1>>x) & 1) | (((data1>>(4+x)) & 1)<<1);
 			data = ((data2>>x) & 1) | (((data2>>(4+x)) & 1)<<1);
 
-			*BITMAP_ADDR16(bitmap, 255-sy, 255-(sx*4 + x)) = color*4 + data;
+			bitmap.pix16(255-sy, 255-(sx*4 + x)) = color*4 + data;
 		}
 	}
 

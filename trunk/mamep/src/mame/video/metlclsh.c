@@ -174,7 +174,7 @@ VIDEO_START( metlclsh )
 
 ***************************************************************************/
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	metlclsh_state *state = machine.driver_data<metlclsh_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -244,20 +244,20 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( metlclsh )
 {
-	metlclsh_state *state = screen->machine().driver_data<metlclsh_state>();
+	metlclsh_state *state = screen.machine().driver_data<metlclsh_state>();
 
-	bitmap_fill(bitmap, cliprect, 0x10);
+	bitmap.fill(0x10, cliprect);
 
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 1, 0);	// low priority tiles of foreground
 
 	if (state->m_scrollx[0] & 0x08)					// background (if enabled)
 	{
 		/* The background seems to be always flipped along x */
-		tilemap_set_flip(state->m_bg_tilemap, (flip_screen_get(screen->machine()) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0) ^ TILEMAP_FLIPX);
+		tilemap_set_flip(state->m_bg_tilemap, (flip_screen_get(screen.machine()) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0) ^ TILEMAP_FLIPX);
 		tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_scrollx[1] + ((state->m_scrollx[0] & 0x02) << 7) );
 		tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
 	}
-	draw_sprites(screen->machine(), bitmap, cliprect);			// sprites
+	draw_sprites(screen.machine(), bitmap, cliprect);			// sprites
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 2, 0);	// high priority tiles of foreground
 
 //  popmessage("%02X", state->m_scrollx[0]);

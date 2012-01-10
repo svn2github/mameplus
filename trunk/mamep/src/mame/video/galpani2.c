@@ -66,7 +66,7 @@ INLINE void galpani2_bg8_w(address_space *space, offs_t offset, UINT16 data, UIN
 	pen	=	newword & 0xff;
 	x	=	(offset % 512);	/* 512 x 256 */
 	y	=	(offset / 512);
-	*BITMAP_ADDR16(state->m_bg8_bitmap[_n_], y, x) = 0x4000 + pen;
+	state->m_bg8_bitmap[_n_]->pix16(y, x) = 0x4000 + pen;
 }
 
 WRITE16_HANDLER( galpani2_bg8_0_w ) { galpani2_bg8_w(space, offset, data, mem_mask, 0); }
@@ -100,7 +100,7 @@ WRITE16_HANDLER( galpani2_bg15_w )
 	int x = (offset % 256) + (offset / (256*256)) * 256 ;
 	int y = (offset / 256) % 256;
 
-	*BITMAP_ADDR16(state->m_bg15_bitmap, y, x) = 0x4200 + (newword & 0x7fff);
+	state->m_bg15_bitmap->pix16(y, x) = 0x4200 + (newword & 0x7fff);
 }
 
 
@@ -143,29 +143,29 @@ VIDEO_START( galpani2 )
 
 SCREEN_UPDATE( galpani2 )
 {
-	galpani2_state *state = screen->machine().driver_data<galpani2_state>();
+	galpani2_state *state = screen.machine().driver_data<galpani2_state>();
 	int layers_ctrl = -1;
 
 #ifdef MAME_DEBUG
-if (screen->machine().input().code_pressed(KEYCODE_Z))
+if (screen.machine().input().code_pressed(KEYCODE_Z))
 {
 	int msk = 0;
-	if (screen->machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
-	if (screen->machine().input().code_pressed(KEYCODE_W))	msk |= 2;
-	if (screen->machine().input().code_pressed(KEYCODE_E))	msk |= 4;
-	if (screen->machine().input().code_pressed(KEYCODE_A))	msk |= 8;
+	if (screen.machine().input().code_pressed(KEYCODE_Q))	msk |= 1;
+	if (screen.machine().input().code_pressed(KEYCODE_W))	msk |= 2;
+	if (screen.machine().input().code_pressed(KEYCODE_E))	msk |= 4;
+	if (screen.machine().input().code_pressed(KEYCODE_A))	msk |= 8;
 	if (msk != 0) layers_ctrl &= msk;
 }
 #endif
 
-	bitmap_fill(bitmap,cliprect,0);
-	bitmap_fill(screen->machine().priority_bitmap,cliprect,0);
+	bitmap.fill(0, cliprect);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 
 	if (layers_ctrl & 0x1)
 	{
 		int x = 0;
 		int y = 0;
-		copyscrollbitmap_trans(bitmap, state->m_bg15_bitmap,
+		copyscrollbitmap_trans(bitmap, *state->m_bg15_bitmap,
 							   1, &x, 1, &y,
 							   cliprect,0x4200 + 0);
 	}
@@ -180,7 +180,7 @@ if (screen->machine().input().code_pressed(KEYCODE_Z))
 	{
 		int x = - ( *state->m_bg8_scrollx[0] + 0x200 - 0x0f5 );
 		int y = - ( *state->m_bg8_scrolly[0] + 0x200 - 0x1be );
-		copyscrollbitmap_trans(bitmap, state->m_bg8_bitmap[0],
+		copyscrollbitmap_trans(bitmap, *state->m_bg8_bitmap[0],
 							   1, &x, 1, &y,
 							   cliprect,0x4000 + 0);
 	}
@@ -189,11 +189,11 @@ if (screen->machine().input().code_pressed(KEYCODE_Z))
 	{
 		int x = - ( *state->m_bg8_scrollx[1] + 0x200 - 0x0f5 );
 		int y = - ( *state->m_bg8_scrolly[1] + 0x200 - 0x1be );
-		copyscrollbitmap_trans(bitmap, state->m_bg8_bitmap[1],
+		copyscrollbitmap_trans(bitmap, *state->m_bg8_bitmap[1],
 							   1, &x, 1, &y,
 							   cliprect,0x4000 + 0);
 	}
 
-	if (layers_ctrl & 0x8)	kaneko16_draw_sprites(screen->machine(), bitmap, cliprect);
+	if (layers_ctrl & 0x8)	kaneko16_draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

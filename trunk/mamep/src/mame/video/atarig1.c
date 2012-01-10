@@ -153,13 +153,13 @@ void atarig1_scanline_update(screen_device &screen, int scanline)
 
 SCREEN_UPDATE( atarig1 )
 {
-	atarig1_state *state = screen->machine().driver_data<atarig1_state>();
+	atarig1_state *state = screen.machine().driver_data<atarig1_state>();
 
 	/* draw the playfield */
 	tilemap_draw(bitmap, cliprect, state->m_playfield_tilemap, 0, 0);
 
 	/* copy the motion objects on top */
-	copybitmap_trans(bitmap, atarirle_get_vram(state->m_rle, 0), 0, 0, 0, 0, cliprect, 0);
+	copybitmap_trans(bitmap, *atarirle_get_vram(state->m_rle, 0), 0, 0, 0, 0, cliprect, 0);
 
 	/* add the alpha on top */
 	tilemap_draw(bitmap, cliprect, state->m_alpha_tilemap, 0, 0);
@@ -168,7 +168,7 @@ SCREEN_UPDATE( atarig1 )
 
 SCREEN_EOF( atarig1 )
 {
-	atarig1_state *state = machine.driver_data<atarig1_state>();
+	atarig1_state *state = screen.machine().driver_data<atarig1_state>();
 
 	atarirle_eof(state->m_rle);
 }

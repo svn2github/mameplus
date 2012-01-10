@@ -508,7 +508,7 @@ PrimRage GALs:
 
 SCREEN_UPDATE( atarigt )
 {
-	atarigt_state *state = screen->machine().driver_data<atarigt_state>();
+	atarigt_state *state = screen.machine().driver_data<atarigt_state>();
 	bitmap_t *mo_bitmap = atarirle_get_vram(state->m_rle, 0);
 	bitmap_t *tm_bitmap = atarirle_get_vram(state->m_rle, 1);
 	UINT16 *cram, *tram;
@@ -517,10 +517,10 @@ SCREEN_UPDATE( atarigt )
 	int x, y;
 
 	/* draw the playfield */
-	tilemap_draw(state->m_pf_bitmap, cliprect, state->m_playfield_tilemap, 0, 0);
+	tilemap_draw(*state->m_pf_bitmap, cliprect, state->m_playfield_tilemap, 0, 0);
 
 	/* draw the alpha layer */
-	tilemap_draw(state->m_an_bitmap, cliprect, state->m_alpha_tilemap, 0, 0);
+	tilemap_draw(*state->m_an_bitmap, cliprect, state->m_alpha_tilemap, 0, 0);
 
 	/* cache pointers */
 	color_latch = state->m_colorram[0x30000/2];
@@ -529,18 +529,18 @@ SCREEN_UPDATE( atarigt )
 	mram = state->m_expanded_mram + 0x2000 * ((color_latch >> 6) & 3);
 
 	/* now do the nasty blend */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
-		UINT16 *an = (UINT16 *)state->m_an_bitmap->base + y * state->m_an_bitmap->rowpixels;
-		UINT16 *pf = (UINT16 *)state->m_pf_bitmap->base + y * state->m_pf_bitmap->rowpixels;
-		UINT16 *mo = (UINT16 *)mo_bitmap->base + y * mo_bitmap->rowpixels;
-		UINT16 *tm = (UINT16 *)tm_bitmap->base + y * tm_bitmap->rowpixels;
-		UINT32 *dst = (UINT32 *)bitmap->base + y * bitmap->rowpixels;
+		UINT16 *an = &state->m_an_bitmap->pix16(y);
+		UINT16 *pf = &state->m_pf_bitmap->pix16(y);
+		UINT16 *mo = &mo_bitmap->pix16(y);
+		UINT16 *tm = &tm_bitmap->pix16(y);
+		UINT32 *dst = &bitmap.pix32(y);
 
 		/* Primal Rage: no TRAM, slightly different priorities */
 		if (state->m_is_primrage)
 		{
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 			{
 				UINT8 pfpri = (pf[x] >> 10) & 7;
 				UINT8 mopri = mo[x] >> ATARIRLE_PRIORITY_SHIFT;
@@ -574,7 +574,7 @@ SCREEN_UPDATE( atarigt )
 		/* T-Mek: full TRAM and all effects */
 		else
 		{
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 			{
 				UINT8 pfpri = (pf[x] >> 10) & 7;
 				UINT8 mopri = mo[x] >> ATARIRLE_PRIORITY_SHIFT;
@@ -634,7 +634,7 @@ SCREEN_UPDATE( atarigt )
 
 SCREEN_EOF( atarigt )
 {
-	atarigt_state *state = machine.driver_data<atarigt_state>();
+	atarigt_state *state = screen.machine().driver_data<atarigt_state>();
 
 	atarirle_eof(state->m_rle);
 }

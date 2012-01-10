@@ -22,7 +22,7 @@ VIDEO_START( hotstuff )
 
 SCREEN_UPDATE( hotstuff )
 {
-	hotstuff_state *state = screen->machine().driver_data<hotstuff_state>();
+	hotstuff_state *state = screen.machine().driver_data<hotstuff_state>();
 	int count, y,yyy,x,xxx;
 	UINT16 row_palette_data[0x10];
 	rgb_t row_palette_data_as_rgb32_pen_data[0x10];
@@ -46,13 +46,13 @@ SCREEN_UPDATE( hotstuff )
 		for(x = 0; x < xxx; x++)
 		{
 			{
-				*BITMAP_ADDR32(bitmap, y, x) = row_palette_data_as_rgb32_pen_data[(state->m_bitmapram[count] &0xf000)>>12];
+				bitmap.pix32(y, x) = row_palette_data_as_rgb32_pen_data[(state->m_bitmapram[count] &0xf000)>>12];
 				x++;
-				*BITMAP_ADDR32(bitmap, y, x) = row_palette_data_as_rgb32_pen_data[(state->m_bitmapram[count] &0x0f00)>>8];
+				bitmap.pix32(y, x) = row_palette_data_as_rgb32_pen_data[(state->m_bitmapram[count] &0x0f00)>>8];
 				x++;
-				*BITMAP_ADDR32(bitmap, y, x) = row_palette_data_as_rgb32_pen_data[(state->m_bitmapram[count] &0x00f0)>>4];
+				bitmap.pix32(y, x) = row_palette_data_as_rgb32_pen_data[(state->m_bitmapram[count] &0x00f0)>>4];
 				x++;
-				*BITMAP_ADDR32(bitmap, y, x) = row_palette_data_as_rgb32_pen_data[(state->m_bitmapram[count] &0x000f)>>0];
+				bitmap.pix32(y, x) = row_palette_data_as_rgb32_pen_data[(state->m_bitmapram[count] &0x000f)>>0];
 			}
 
 			count++;

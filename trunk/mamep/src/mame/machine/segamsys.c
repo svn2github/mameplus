@@ -937,7 +937,7 @@ static void sms_render_tileline(int scanline, struct sms_vdp* chip)
 static void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
 {
 	int x;
-	UINT16* lineptr = BITMAP_ADDR16(chip->r_bitmap, scanline, 0);
+	UINT16* lineptr = &chip->r_bitmap->pix16(scanline);
 
 	for (x=0;x<256;x++)
 	{
@@ -1080,7 +1080,7 @@ static void show_tiles(struct sms_vdp* chip)
 			for (yy=0;yy<8;yy++)
 			{
 				int drawypos = y*8+yy;
-				UINT16* lineptr = BITMAP_ADDR16(chip->r_bitmap, drawypos, 0);
+				UINT16* lineptr = &chip->r_bitmap->pix16(drawypos);
 
 				UINT32 gfxdata = (SMS_VDP_VRAM(count)<<24)|(SMS_VDP_VRAM(count+1)<<16)|(SMS_VDP_VRAM(count+2)<<8)|(SMS_VDP_VRAM(count+3)<<0);
 
@@ -1181,11 +1181,11 @@ static void end_of_frame(running_machine &machine, struct sms_vdp *chip)
 
 SCREEN_EOF(sms)
 {
-	end_of_frame(machine, md_sms_vdp);
+	end_of_frame(screen.machine(), md_sms_vdp);
 
 	// the SMS has a 'RESET' button on the machine, it generates an NMI
-	if (input_port_read_safe(machine,"PAUSE",0x00))
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+	if (input_port_read_safe(screen.machine(),"PAUSE",0x00))
+		cputag_set_input_line(screen.machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
 
 }
 
@@ -1250,19 +1250,19 @@ MACHINE_RESET(megatech_bios)
 
 SCREEN_EOF(systeme)
 {
-	end_of_frame(machine, vdp1);
-	end_of_frame(machine, vdp2);
+	end_of_frame(screen.machine(), vdp1);
+	end_of_frame(screen.machine(), vdp2);
 }
 
 
 SCREEN_EOF(megatech_md_sms)
 {
-	end_of_frame(machine, md_sms_vdp);
+	end_of_frame(screen.machine(), md_sms_vdp);
 }
 
 SCREEN_EOF(megatech_bios)
 {
-	end_of_frame(machine, vdp1);
+	end_of_frame(screen.machine(), vdp1);
 }
 
 SCREEN_UPDATE(megatech_md_sms)
@@ -1271,8 +1271,8 @@ SCREEN_UPDATE(megatech_md_sms)
 
 	for (y=0;y<224;y++)
 	{
-		UINT16* lineptr = BITMAP_ADDR16(bitmap, y, 0);
-		UINT16* srcptr =  BITMAP_ADDR16(md_sms_vdp->r_bitmap, y, 0);
+		UINT16* lineptr = &bitmap.pix16(y);
+		UINT16* srcptr =  &md_sms_vdp->r_bitmap->pix16(y);
 
 		for (x=0;x<256;x++)
 		{
@@ -1290,8 +1290,8 @@ SCREEN_UPDATE(megatech_bios)
 
 	for (y=0;y<224;y++)
 	{
-		UINT16* lineptr = BITMAP_ADDR16(bitmap, y, 0);
-		UINT16* srcptr =  BITMAP_ADDR16(vdp1->r_bitmap, y, 0);
+		UINT16* lineptr = &bitmap.pix16(y);
+		UINT16* srcptr =  &vdp1->r_bitmap->pix16(y);
 
 		for (x=0;x<256;x++)
 		{
@@ -1308,8 +1308,8 @@ SCREEN_UPDATE(megaplay_bios)
 
 	for (y=0;y<224;y++)
 	{
-		UINT16* lineptr = BITMAP_ADDR16(bitmap, y+16, 32);
-		UINT16* srcptr =  BITMAP_ADDR16(vdp1->r_bitmap, y, 0);
+		UINT16* lineptr = &bitmap.pix16(y+16, 32);
+		UINT16* srcptr =  &vdp1->r_bitmap->pix16(y);
 
 		for (x=0;x<256;x++)
 		{
@@ -1330,8 +1330,8 @@ SCREEN_UPDATE(systeme)
 
 	for (y=0;y<192;y++)
 	{
-		UINT16* lineptr = BITMAP_ADDR16(bitmap, y, 0);
-		UINT16* srcptr =  BITMAP_ADDR16(vdp1->r_bitmap, y, 0);
+		UINT16* lineptr = &bitmap.pix16(y);
+		UINT16* srcptr =  &vdp1->r_bitmap->pix16(y);
 
 		for (x=0;x<256;x++)
 		{
@@ -1342,8 +1342,8 @@ SCREEN_UPDATE(systeme)
 
 	for (y=0;y<192;y++)
 	{
-		UINT16* lineptr = BITMAP_ADDR16(bitmap, y, 0);
-		UINT16* srcptr =  BITMAP_ADDR16(vdp2->r_bitmap, y, 0);
+		UINT16* lineptr = &bitmap.pix16(y);
+		UINT16* srcptr =  &vdp2->r_bitmap->pix16(y);
 
 		for (x=0;x<256;x++)
 		{

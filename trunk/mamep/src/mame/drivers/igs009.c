@@ -260,16 +260,16 @@ static VIDEO_START(gp98)
 
 static SCREEN_UPDATE(jingbell)
 {
-	igs009_state *state = screen->machine().driver_data<igs009_state>();
+	igs009_state *state = screen.machine().driver_data<igs009_state>();
 	int layers_ctrl = state->m_video_enable ? -1 : 0;
 
 #ifdef MAME_DEBUG
-	if (screen->machine().input().code_pressed(KEYCODE_Z))
+	if (screen.machine().input().code_pressed(KEYCODE_Z))
 	{
 		int mask = 0;
-		if (screen->machine().input().code_pressed(KEYCODE_Q))	mask |= 1;
-		if (screen->machine().input().code_pressed(KEYCODE_W))	mask |= 2;
-		if (screen->machine().input().code_pressed(KEYCODE_A))	mask |= 4;
+		if (screen.machine().input().code_pressed(KEYCODE_Q))	mask |= 1;
+		if (screen.machine().input().code_pressed(KEYCODE_W))	mask |= 2;
+		if (screen.machine().input().code_pressed(KEYCODE_A))	mask |= 4;
 		if (mask != 0) layers_ctrl &= mask;
 	}
 #endif
@@ -278,7 +278,7 @@ static SCREEN_UPDATE(jingbell)
 	{
 		int zz,i;
 		int startclipmin = 0;
-		const rectangle &visarea = screen->visible_area();
+		const rectangle &visarea = screen.visible_area();
 
 
 		for (i= 0;i < 0x80;i++)
@@ -303,23 +303,23 @@ static SCREEN_UPDATE(jingbell)
 			clip.min_y = startclipmin;
 			clip.max_y = startclipmin+2;
 
-			bitmap_fill(bitmap,&clip,screen->machine().pens[rowenable]);
+			bitmap.fill(screen.machine().pens[rowenable], clip);
 
 			if (rowenable==0)
 			{ // 0 and 1 are the same? or is there a global switchoff?
-				tilemap_draw(bitmap,&clip,state->m_gp98_reel1_tilemap,0,0);
+				tilemap_draw(bitmap,clip,state->m_gp98_reel1_tilemap,0,0);
 			}
 			else if (rowenable==1)
 			{
-				tilemap_draw(bitmap,&clip,state->m_gp98_reel2_tilemap,0,0);
+				tilemap_draw(bitmap,clip,state->m_gp98_reel2_tilemap,0,0);
 			}
 			else if (rowenable==2)
 			{
-				tilemap_draw(bitmap,&clip,state->m_gp98_reel3_tilemap,0,0);
+				tilemap_draw(bitmap,clip,state->m_gp98_reel3_tilemap,0,0);
 			}
 			else if (rowenable==3)
 			{
-				tilemap_draw(bitmap,&clip,state->m_gp98_reel4_tilemap,0,0);
+				tilemap_draw(bitmap,clip,state->m_gp98_reel4_tilemap,0,0);
 			}
 
 
@@ -327,7 +327,7 @@ static SCREEN_UPDATE(jingbell)
 		}
 
 	}
-	else					bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+	else					bitmap.fill(get_black_pen(screen.machine()), cliprect);
 
 
 	if (layers_ctrl & 2)	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);

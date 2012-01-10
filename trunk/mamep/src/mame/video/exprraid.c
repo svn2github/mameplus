@@ -96,7 +96,7 @@ VIDEO_START( exprraid )
 	tilemap_set_transparent_pen(state->m_fg_tilemap, 0);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	exprraid_state *state = machine.driver_data<exprraid_state>();
 	int offs;
@@ -119,7 +119,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 			flipy = !flipy;
 		}
 
-		drawgfx_transpen(bitmap, 0, machine.gfx[1],
+		drawgfx_transpen(bitmap, cliprect, machine.gfx[1],
 			code, color,
 			flipx, flipy,
 			sx, sy, 0);
@@ -138,9 +138,9 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_UPDATE( exprraid )
 {
-	exprraid_state *state = screen->machine().driver_data<exprraid_state>();
+	exprraid_state *state = screen.machine().driver_data<exprraid_state>();
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 1, 0);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	return 0;

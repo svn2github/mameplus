@@ -183,7 +183,7 @@ VIDEO_START( redclash )
 	tilemap_set_transparent_pen(state->m_fg_tilemap, 0);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	ladybug_state *state = machine.driver_data<ladybug_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -267,7 +267,7 @@ static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rect
 	}
 }
 
-static void draw_bullets( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_bullets( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	ladybug_state *state = machine.driver_data<ladybug_state>();
 	int offs;
@@ -283,9 +283,9 @@ static void draw_bullets( running_machine &machine, bitmap_t *bitmap, const rect
 			sx = 240 - sx;
 		}
 
-		if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
-			sy >= cliprect->min_y && sy <= cliprect->max_y)
-			*BITMAP_ADDR16(bitmap, sy, sx) = 0x19;
+		if (sx >= cliprect.min_x && sx <= cliprect.max_x &&
+			sy >= cliprect.min_y && sy <= cliprect.max_y)
+			bitmap.pix16(sy, sx) = 0x19;
 	}
 }
 
@@ -360,7 +360,7 @@ void redclash_set_stars_speed( running_machine &machine, UINT8 speed )
 /* Space Raider doesn't use the Va bit, and it is also set up to */
 /* window the stars to a certain x range */
 
-void redclash_draw_stars( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, UINT8 palette_offset, UINT8 sraider, UINT8 firstx, UINT8 lastx )
+void redclash_draw_stars( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, UINT8 palette_offset, UINT8 sraider, UINT8 firstx, UINT8 lastx )
 {
 	ladybug_state *redclash = machine.driver_data<ladybug_state>();
 	int i;
@@ -396,7 +396,7 @@ void redclash_draw_stars( running_machine &machine, bitmap_t *bitmap, const rect
 		else
 			vcond = yloc & 0x01;
 
-		if (xloc >= cliprect->min_x && xloc <= cliprect->max_x && yloc >= cliprect->min_y && yloc <= cliprect->max_y)
+		if (xloc >= cliprect.min_x && xloc <= cliprect.max_x && yloc >= cliprect.min_y && yloc <= cliprect.max_y)
 		{
 			if ((hcond ^ vcond) == 0)
 			{
@@ -407,7 +407,7 @@ void redclash_draw_stars( running_machine &machine, bitmap_t *bitmap, const rect
 					if ((xloc >= firstx) && (xloc <= lastx))
 					{
 						star_color = (state >> 9) & 0x1f;
-						*BITMAP_ADDR16(bitmap, yloc, xloc) = palette_offset + star_color;
+						bitmap.pix16(yloc, xloc) = palette_offset + star_color;
 					}
 				}
 			}
@@ -420,17 +420,17 @@ void redclash_draw_stars( running_machine &machine, bitmap_t *bitmap, const rect
 
 SCREEN_EOF( redclash )
 {
-	redclash_update_stars_state(machine);
+	redclash_update_stars_state(screen.machine());
 }
 
 SCREEN_UPDATE( redclash )
 {
-	ladybug_state *state = screen->machine().driver_data<ladybug_state>();
+	ladybug_state *state = screen.machine().driver_data<ladybug_state>();
 
-	bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
-	redclash_draw_stars(screen->machine(), bitmap, cliprect, 0x60, 0, 0x00, 0xff);
-	draw_sprites(screen->machine(), bitmap, cliprect);
-	draw_bullets(screen->machine(), bitmap, cliprect);
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
+	redclash_draw_stars(screen.machine(), bitmap, cliprect, 0x60, 0, 0x00, 0xff);
+	draw_sprites(screen.machine(), bitmap, cliprect);
+	draw_bullets(screen.machine(), bitmap, cliprect);
 	tilemap_draw(bitmap, cliprect, state->m_fg_tilemap, 0, 0);
 	return 0;
 }

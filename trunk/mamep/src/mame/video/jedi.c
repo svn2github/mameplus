@@ -88,16 +88,16 @@ static void get_pens(jedi_state *state, pen_t *pens)
 }
 
 
-static void do_pen_lookup(jedi_state *state, bitmap_t *bitmap, const rectangle *cliprect)
+static void do_pen_lookup(jedi_state *state, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	int y, x;
 	pen_t pens[NUM_PENS];
 
 	get_pens(state, pens);
 
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
-		for(x = cliprect->min_x; x <= cliprect->max_x; x++)
-			*BITMAP_ADDR32(bitmap, y, x) = pens[*BITMAP_ADDR32(bitmap, y, x)];
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
+		for(x = cliprect.min_x; x <= cliprect.max_x; x++)
+			bitmap.pix32(y, x) = pens[bitmap.pix32(y, x)];
 }
 
 
@@ -132,7 +132,7 @@ WRITE8_HANDLER( jedi_hscroll_w )
  *
  *************************************/
 
-static void draw_background_and_text(running_machine &machine, jedi_state *state, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_background_and_text(running_machine &machine, jedi_state *state, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	int y;
 	int background_line_buffer[0x200];	/* RAM chip at 2A */
@@ -149,12 +149,12 @@ static void draw_background_and_text(running_machine &machine, jedi_state *state
 
 	memset(background_line_buffer, 0, 0x200 * sizeof(int));
 
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
 		int x;
 		int bg_last_col = 0;
 
-		for (x = cliprect->min_x; x <= cliprect->max_x; x += 2)
+		for (x = cliprect.min_x; x <= cliprect.max_x; x += 2)
 		{
 			int tx_col1, tx_col2, bg_col;
 			int bg_tempcol;
@@ -214,8 +214,8 @@ static void draw_background_and_text(running_machine &machine, jedi_state *state
                the next pixel just uses the current value directly. After we done with a pixel
                save it for later in the line buffer RAM */
 			bg_tempcol = prom1[(bg_last_col << 4) | bg_col];
-			*BITMAP_ADDR32(bitmap, y, x + 0) = tx_col1 | prom2[(background_line_buffer[x + 0] << 4) | bg_tempcol];
-			*BITMAP_ADDR32(bitmap, y, x + 1) = tx_col2 | prom2[(background_line_buffer[x + 1] << 4) | bg_col];
+			bitmap.pix32(y, x + 0) = tx_col1 | prom2[(background_line_buffer[x + 0] << 4) | bg_tempcol];
+			bitmap.pix32(y, x + 1) = tx_col2 | prom2[(background_line_buffer[x + 1] << 4) | bg_col];
 			background_line_buffer[x + 0] = bg_tempcol;
 			background_line_buffer[x + 1] = bg_col;
 
@@ -232,7 +232,7 @@ static void draw_background_and_text(running_machine &machine, jedi_state *state
  *
  *************************************/
 
-static void draw_sprites(running_machine &machine, jedi_state *state, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, jedi_state *state, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	offs_t offs;
 	UINT8 *spriteram = state->m_spriteram;
@@ -276,7 +276,7 @@ static void draw_sprites(running_machine &machine, jedi_state *state, bitmap_t *
 			int i;
 			UINT16 x = spriteram[offs + 0x100] + ((spriteram[offs + 0x40] & 0x01) << 8) - 2;
 
-			if ((y < cliprect->min_y) || (y > cliprect->max_y))
+			if ((y < cliprect.min_y) || (y > cliprect.max_y))
 				continue;
 
 			if (flip_x)
@@ -296,7 +296,7 @@ static void draw_sprites(running_machine &machine, jedi_state *state, bitmap_t *
 					x = x & 0x1ff;
 
 					if (col)
-						*BITMAP_ADDR32(bitmap, y, x) = (*BITMAP_ADDR32(bitmap, y, x) & 0x30f) | col;
+						bitmap.pix32(y, x) = (bitmap.pix32(y, x) & 0x30f) | col;
 
 					/* next pixel */
 					if (flip_x)
@@ -329,17 +329,17 @@ static void draw_sprites(running_machine &machine, jedi_state *state, bitmap_t *
 
 static SCREEN_UPDATE( jedi )
 {
-	jedi_state *state = screen->machine().driver_data<jedi_state>();
+	jedi_state *state = screen.machine().driver_data<jedi_state>();
 
 	/* if no video, clear it all to black */
 	if (*state->m_video_off & 0x01)
-		bitmap_fill(bitmap, cliprect, RGB_BLACK);
+		bitmap.fill(RGB_BLACK, cliprect);
 	else
 	{
 		/* draw the background/text layers, followed by the sprites
            - it needs to be done in this order*/
-		draw_background_and_text(screen->machine(), state, bitmap, cliprect);
-		draw_sprites(screen->machine(), state, bitmap, cliprect);
+		draw_background_and_text(screen.machine(), state, bitmap, cliprect);
+		draw_sprites(screen.machine(), state, bitmap, cliprect);
 		do_pen_lookup(state, bitmap, cliprect);
 	}
 

@@ -97,7 +97,7 @@ VIDEO_START( seicross )
 	tilemap_set_scroll_cols(state->m_bg_tilemap, 32);
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect )
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
 {
 	seicross_state *state = machine.driver_data<seicross_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -139,13 +139,13 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( seicross )
 {
-	seicross_state *state = screen->machine().driver_data<seicross_state>();
+	seicross_state *state = screen.machine().driver_data<seicross_state>();
 	int col;
 
 	for (col = 0; col < 32; col++)
 		tilemap_set_scrolly(state->m_bg_tilemap, col, state->m_row_scroll[col]);
 
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
-	draw_sprites(screen->machine(), bitmap, cliprect);
+	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

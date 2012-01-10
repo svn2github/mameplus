@@ -364,18 +364,18 @@ SCREEN_UPDATE( midzeus2 )
 
 	poly_wait(poly, "VIDEO_UPDATE");
 
-if (screen->machine().input().code_pressed(KEYCODE_UP)) { zbase += 1.0f; popmessage("Zbase = %f", zbase); }
-if (screen->machine().input().code_pressed(KEYCODE_DOWN)) { zbase -= 1.0f; popmessage("Zbase = %f", zbase); }
+if (screen.machine().input().code_pressed(KEYCODE_UP)) { zbase += 1.0f; popmessage("Zbase = %f", zbase); }
+if (screen.machine().input().code_pressed(KEYCODE_DOWN)) { zbase -= 1.0f; popmessage("Zbase = %f", zbase); }
 
 	/* normal update case */
-	if (!screen->machine().input().code_pressed(KEYCODE_W))
+	if (!screen.machine().input().code_pressed(KEYCODE_W))
 	{
 		const void *base = waveram1_ptr_from_expanded_addr(zeusbase[0x38]);
-		int xoffs = screen->visible_area().min_x;
-		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+		int xoffs = screen.visible_area().min_x;
+		for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 		{
-			UINT32 *dest = (UINT32 *)bitmap->base + y * bitmap->rowpixels;
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			UINT32 *dest = &bitmap.pix32(y);
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 				dest[x] = WAVERAM_READPIX(base, y, x - xoffs);
 		}
 	}
@@ -385,18 +385,18 @@ if (screen->machine().input().code_pressed(KEYCODE_DOWN)) { zbase -= 1.0f; popme
 	{
 		const UINT64 *base;
 
-		if (screen->machine().input().code_pressed(KEYCODE_DOWN)) yoffs += screen->machine().input().code_pressed(KEYCODE_LSHIFT) ? 0x40 : 1;
-		if (screen->machine().input().code_pressed(KEYCODE_UP)) yoffs -= screen->machine().input().code_pressed(KEYCODE_LSHIFT) ? 0x40 : 1;
-		if (screen->machine().input().code_pressed(KEYCODE_LEFT) && texel_width > 4) { texel_width >>= 1; while (screen->machine().input().code_pressed(KEYCODE_LEFT)) ; }
-		if (screen->machine().input().code_pressed(KEYCODE_RIGHT) && texel_width < 512) { texel_width <<= 1; while (screen->machine().input().code_pressed(KEYCODE_RIGHT)) ; }
+		if (screen.machine().input().code_pressed(KEYCODE_DOWN)) yoffs += screen.machine().input().code_pressed(KEYCODE_LSHIFT) ? 0x40 : 1;
+		if (screen.machine().input().code_pressed(KEYCODE_UP)) yoffs -= screen.machine().input().code_pressed(KEYCODE_LSHIFT) ? 0x40 : 1;
+		if (screen.machine().input().code_pressed(KEYCODE_LEFT) && texel_width > 4) { texel_width >>= 1; while (screen.machine().input().code_pressed(KEYCODE_LEFT)) ; }
+		if (screen.machine().input().code_pressed(KEYCODE_RIGHT) && texel_width < 512) { texel_width <<= 1; while (screen.machine().input().code_pressed(KEYCODE_RIGHT)) ; }
 
 		if (yoffs < 0) yoffs = 0;
 		base = (const UINT64 *)waveram0_ptr_from_expanded_addr(yoffs << 16);
 
-		for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+		for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 		{
-			UINT32 *dest = (UINT32 *)bitmap->base + y * bitmap->rowpixels;
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+			UINT32 *dest = &bitmap.pix32(y);
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 			{
 				UINT8 tex = get_texel_8bit(base, y, x, texel_width);
 				dest[x] = (tex << 16) | (tex << 8) | tex;
@@ -1260,7 +1260,7 @@ In memory:
 	extra->texbase = WAVERAM_BLOCK0(zeus_texbase);
 	extra->palbase = waveram0_ptr_from_expanded_addr(zeusbase[0x41]);
 
-	poly_render_quad_fan(poly, NULL, &zeus_cliprect, callback, 4, numverts, &clipvert[0]);
+	poly_render_quad_fan(poly, NULL, zeus_cliprect, callback, 4, numverts, &clipvert[0]);
 }
 
 

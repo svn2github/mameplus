@@ -60,7 +60,7 @@ WRITE16_HANDLER( drgnmst_md_videoram_w )
 	tilemap_mark_tile_dirty(state->m_md_tilemap, offset / 2);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap,const rectangle *cliprect )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect )
 {
 	drgnmst_state *state = machine.driver_data<drgnmst_state>();
 	const gfx_element *gfx = machine.gfx[0];
@@ -141,7 +141,7 @@ VIDEO_START(drgnmst)
 
 SCREEN_UPDATE(drgnmst)
 {
-	drgnmst_state *state = screen->machine().driver_data<drgnmst_state>();
+	drgnmst_state *state = screen.machine().driver_data<drgnmst_state>();
 	int y, rowscroll_bank;
 
 	tilemap_set_scrollx(state->m_bg_tilemap, 0, state->m_vidregs[10] - 18); // verify
@@ -194,7 +194,7 @@ SCREEN_UPDATE(drgnmst)
 
 	}
 
-	draw_sprites(screen->machine(),bitmap,cliprect);
+	draw_sprites(screen.machine(),bitmap,cliprect);
 
 //  popmessage ("x %04x x %04x x %04x x %04x x %04x", state->m_vidregs2[0], state->m_vidregs[12], state->m_vidregs[13], state->m_vidregs[14], state->m_vidregs[15]);
 //  popmessage ("x %04x x %04x y %04x y %04x z %04x z %04x",state->m_vidregs[0],state->m_vidregs[1],state->m_vidregs[2],state->m_vidregs[3],state->m_vidregs[4],state->m_vidregs[5]);

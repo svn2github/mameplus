@@ -4,7 +4,7 @@
 #include "includes/aquarium.h"
 
 /* gcpinbal.c modified */
-static void draw_sprites( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int y_offs )
+static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int y_offs )
 {
 	aquarium_state *state = machine.driver_data<aquarium_state>();
 	int offs, chain_pos;
@@ -160,7 +160,7 @@ VIDEO_START(aquarium)
 
 SCREEN_UPDATE(aquarium)
 {
-	aquarium_state *state = screen->machine().driver_data<aquarium_state>();
+	aquarium_state *state = screen.machine().driver_data<aquarium_state>();
 	tilemap_set_scrollx(state->m_mid_tilemap, 0, state->m_scroll[0]);
 	tilemap_set_scrolly(state->m_mid_tilemap, 0, state->m_scroll[1]);
 	tilemap_set_scrollx(state->m_bak_tilemap, 0, state->m_scroll[2]);
@@ -171,7 +171,7 @@ SCREEN_UPDATE(aquarium)
 	tilemap_draw(bitmap, cliprect, state->m_bak_tilemap, 0, 0);
 	tilemap_draw(bitmap, cliprect, state->m_mid_tilemap, 0, 0);
 
-	draw_sprites(screen->machine(), bitmap, cliprect, 16);
+	draw_sprites(screen.machine(), bitmap, cliprect, 16);
 
 	tilemap_draw(bitmap, cliprect, state->m_bak_tilemap, 1, 0);
 	tilemap_draw(bitmap, cliprect, state->m_mid_tilemap, 1, 0);

@@ -147,7 +147,7 @@ Offset:     Bits:       Value:
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	thedeep_state *state = machine.driver_data<thedeep_state>();
 	UINT8 *s = state->m_spriteram, *end = s + state->m_spriteram_size;
@@ -211,7 +211,7 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE( thedeep )
 {
-	thedeep_state *state = screen->machine().driver_data<thedeep_state>();
+	thedeep_state *state = screen.machine().driver_data<thedeep_state>();
 	int scrollx = state->m_scroll[0] + (state->m_scroll[1]<<8);
 	int scrolly = state->m_scroll[2] + (state->m_scroll[3]<<8);
 	int x;
@@ -224,10 +224,10 @@ SCREEN_UPDATE( thedeep )
 		tilemap_set_scrolly(state->m_tilemap_0, x, y + scrolly);
 	}
 
-	bitmap_fill(bitmap,cliprect,get_black_pen(screen->machine()));
+	bitmap.fill(get_black_pen(screen.machine()), cliprect);
 
 	tilemap_draw(bitmap,cliprect,state->m_tilemap_0,0,0);
-	draw_sprites(screen->machine(), bitmap,cliprect);
+	draw_sprites(screen.machine(), bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,state->m_tilemap_1,0,0);
 	return 0;
 }

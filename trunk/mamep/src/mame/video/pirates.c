@@ -74,7 +74,7 @@ WRITE16_HANDLER( pirates_bg_tileram_w )
 
 
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	pirates_state *state = machine.driver_data<pirates_state>();
 	const gfx_element *gfx = machine.gfx[1];
@@ -109,12 +109,12 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 
 SCREEN_UPDATE(pirates)
 {
-	pirates_state *state = screen->machine().driver_data<pirates_state>();
+	pirates_state *state = screen.machine().driver_data<pirates_state>();
 	tilemap_set_scrollx(state->m_bg_tilemap,0,state->m_scroll[0]);
 	tilemap_set_scrollx(state->m_fg_tilemap,0,state->m_scroll[0]);
 	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,0,0);
 	tilemap_draw(bitmap,cliprect,state->m_fg_tilemap,0,0);
-	draw_sprites(screen->machine(),bitmap,cliprect);
+	draw_sprites(screen.machine(),bitmap,cliprect);
 	tilemap_draw(bitmap,cliprect,state->m_tx_tilemap,0,0);
 	return 0;
 }

@@ -431,9 +431,9 @@ WRITE8_HANDLER( mazeinv_paletteram_w )
 
 SCREEN_UPDATE( centiped )
 {
-	centiped_state *state = screen->machine().driver_data<centiped_state>();
+	centiped_state *state = screen.machine().driver_data<centiped_state>();
 	UINT8 *spriteram = state->m_spriteram;
-	rectangle spriteclip = *cliprect;
+	rectangle spriteclip = cliprect;
 	int offs;
 
 	/* draw the background */
@@ -455,7 +455,7 @@ SCREEN_UPDATE( centiped )
 		int x = spriteram[offs + 0x20];
 		int y = 240 - spriteram[offs + 0x10];
 
-		drawgfx_transmask(bitmap, &spriteclip, screen->machine().gfx[1], code, color, flipx, flipy, x, y, state->m_penmask[color & 0x3f]);
+		drawgfx_transmask(bitmap, spriteclip, screen.machine().gfx[1], code, color, flipx, flipy, x, y, state->m_penmask[color & 0x3f]);
 	}
 	return 0;
 }
@@ -463,9 +463,9 @@ SCREEN_UPDATE( centiped )
 
 SCREEN_UPDATE( warlords )
 {
-	centiped_state *state = screen->machine().driver_data<centiped_state>();
+	centiped_state *state = screen.machine().driver_data<centiped_state>();
 	UINT8 *spriteram = state->m_spriteram;
-	int upright_mode = input_port_read(screen->machine(), "IN0") & 0x80;
+	int upright_mode = input_port_read(screen.machine(), "IN0") & 0x80;
 	int offs;
 
 	/* if the cocktail/upright switch flipped, force refresh */
@@ -501,7 +501,7 @@ SCREEN_UPDATE( warlords )
 			flipx = !flipx;
 		}
 
-		drawgfx_transpen(bitmap, cliprect, screen->machine().gfx[1], code, color, flipx, flipy, x, y, 0);
+		drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[1], code, color, flipx, flipy, x, y, 0);
 	}
 	return 0;
 }
@@ -509,9 +509,9 @@ SCREEN_UPDATE( warlords )
 
 SCREEN_UPDATE( bullsdrt )
 {
-	centiped_state *state = screen->machine().driver_data<centiped_state>();
+	centiped_state *state = screen.machine().driver_data<centiped_state>();
 	UINT8 *spriteram = state->m_spriteram;
-	rectangle spriteclip = *cliprect;
+	rectangle spriteclip = cliprect;
 
 	int offs;
 
@@ -533,7 +533,7 @@ SCREEN_UPDATE( bullsdrt )
 		int x = spriteram[offs + 0x20];
 		int y = 240 - spriteram[offs + 0x10];
 
-		drawgfx_transpen(bitmap, &spriteclip, screen->machine().gfx[1], code, color & 0x3f, 1, flipy, x, y, 0);
+		drawgfx_transpen(bitmap, spriteclip, screen.machine().gfx[1], code, color & 0x3f, 1, flipy, x, y, 0);
 	}
 	return 0;
 }
@@ -544,9 +544,9 @@ SCREEN_UPDATE( bullsdrt )
  */
 SCREEN_UPDATE( milliped )
 {
-	centiped_state *state = screen->machine().driver_data<centiped_state>();
+	centiped_state *state = screen.machine().driver_data<centiped_state>();
 	UINT8 *spriteram = state->m_spriteram;
-	rectangle spriteclip = *cliprect;
+	rectangle spriteclip = cliprect;
 	int offs;
 
 	/* draw the background */
@@ -571,7 +571,7 @@ SCREEN_UPDATE( milliped )
 			flipy = !flipy;
 		}
 
-		drawgfx_transmask(bitmap, &spriteclip, screen->machine().gfx[1], code, color, flipx, flipy, x, y, state->m_penmask[color & 0x3f]);
+		drawgfx_transmask(bitmap, spriteclip, screen.machine().gfx[1], code, color, flipx, flipy, x, y, state->m_penmask[color & 0x3f]);
 	}
 	return 0;
 }

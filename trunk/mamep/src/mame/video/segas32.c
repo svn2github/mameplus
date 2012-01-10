@@ -777,7 +777,7 @@ static TILE_GET_INFO( get_tile_info )
  *
  *************************************/
 
-static int compute_clipping_extents(screen_device &screen, int enable, int clipout, int clipmask, const rectangle *cliprect, struct extents_list *list)
+static int compute_clipping_extents(screen_device &screen, int enable, int clipout, int clipmask, const rectangle &cliprect, struct extents_list *list)
 {
 	segas32_state *state = screen.machine().driver_data<segas32_state>();
 	int flip = (state->m_system32_videoram[0x1ff00/2] >> 9) & 1;
@@ -787,7 +787,7 @@ static int compute_clipping_extents(screen_device &screen, int enable, int clipo
 	int i, j, y;
 
 	/* expand our cliprect to exclude the bottom-right */
-	tempclip = *cliprect;
+	tempclip = cliprect;
 	tempclip.max_x++;
 	tempclip.max_y++;
 
@@ -821,7 +821,7 @@ static int compute_clipping_extents(screen_device &screen, int enable, int clipo
 			clips[i].min_x = (visarea.max_x + 1) - ((state->m_system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
 			clips[i].min_y = (visarea.max_y + 1) - ((state->m_system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
 		}
-		sect_rect(&clips[i], &tempclip);
+		clips[i] &= tempclip;
 		sorted[i] = i;
 	}
 
@@ -843,20 +843,20 @@ static int compute_clipping_extents(screen_device &screen, int enable, int clipo
 			for (j = 0; j < 5; j++)
 				if (i & (1 << sorted[j]))
 				{
-					const rectangle *cur = &clips[sorted[j]];
+					const rectangle &cur = clips[sorted[j]];
 
 					/* see if this intersects our last extent */
-					if (extent != &list->extent[i][1] && cur->min_x <= extent[-1])
+					if (extent != &list->extent[i][1] && cur.min_x <= extent[-1])
 					{
-						if (cur->max_x > extent[-1])
-							extent[-1] = cur->max_x;
+						if (cur.max_x > extent[-1])
+							extent[-1] = cur.max_x;
 					}
 
 					/* otherwise, just append to the list */
 					else
 					{
-						*extent++ = cur->min_x;
-						*extent++ = cur->max_x;
+						*extent++ = cur.min_x;
+						*extent++ = cur.max_x;
 					}
 				}
 
@@ -909,11 +909,11 @@ INLINE void get_tilemaps(segas32_state *state, int bgnum, tilemap_t **tilemaps)
 }
 
 
-static void update_tilemap_zoom(screen_device &screen, struct layer_info *layer, const rectangle *cliprect, int bgnum)
+static void update_tilemap_zoom(screen_device &screen, struct layer_info *layer, const rectangle &cliprect, int bgnum)
 {
 	segas32_state *state = screen.machine().driver_data<segas32_state>();
 	int clipenable, clipout, clips, clipdraw_start;
-	bitmap_t *bitmap = layer->bitmap;
+	bitmap_t &bitmap = *layer->bitmap;
 	struct extents_list clip_extents;
 	tilemap_t *tilemaps[4];
 	UINT32 srcx, srcx_start, srcy;
@@ -968,39 +968,38 @@ static void update_tilemap_zoom(screen_device &screen, struct layer_info *layer,
 	srcy -= ((INT16)(state->m_system32_videoram[0x1ff32/2 + 2 * bgnum] << 7) >> 7) * srcystep;
 
 	/* finally, account for destination top,left coordinates */
-	srcx_start += cliprect->min_x * srcxstep;
-	srcy += cliprect->min_y * srcystep;
+	srcx_start += cliprect.min_x * srcxstep;
+	srcy += cliprect.min_y * srcystep;
 
 	/* if we're flipped, simply adjust the start/step parameters */
 	if (flip)
 	{
 		const rectangle &visarea = screen.visible_area();
 
-		srcx_start += (visarea.max_x - 2 * cliprect->min_x) * srcxstep;
-		srcy += (visarea.max_y - 2 * cliprect->min_y) * srcystep;
+		srcx_start += (visarea.max_x - 2 * cliprect.min_x) * srcxstep;
+		srcy += (visarea.max_y - 2 * cliprect.min_y) * srcystep;
 		srcxstep = -srcxstep;
 		srcystep = -srcystep;
 	}
 
 	/* loop over the target rows */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
 		UINT16 *extents = &clip_extents.extent[clip_extents.scan_extent[y]][0];
-		UINT16 *dst = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *dst = &bitmap.pix16(y);
 		int clipdraw = clipdraw_start;
 
 		/* optimize for the case where we are clipped out */
-		if (clipdraw || extents[1] <= cliprect->max_x)
+		if (clipdraw || extents[1] <= cliprect.max_x)
 		{
-			bitmap_t *tm0, *tm1;
 			int transparent = 0;
 			UINT16 *src[2];
 
 			/* look up the pages and get their source pixmaps */
-			tm0 = tilemap_get_pixmap(tilemaps[((srcy >> 27) & 2) + 0]);
-			tm1 = tilemap_get_pixmap(tilemaps[((srcy >> 27) & 2) + 1]);
-			src[0] = BITMAP_ADDR16(tm0, (srcy >> 20) & 0xff, 0);
-			src[1] = BITMAP_ADDR16(tm1, (srcy >> 20) & 0xff, 0);
+			bitmap_t &tm0 = tilemap_get_pixmap(tilemaps[((srcy >> 27) & 2) + 0]);
+			bitmap_t &tm1 = tilemap_get_pixmap(tilemaps[((srcy >> 27) & 2) + 1]);
+			src[0] = &tm0.pix16((srcy >> 20) & 0xff);
+			src[1] = &tm1.pix16((srcy >> 20) & 0xff);
 
 			/* loop over extents */
 			srcx = srcx_start;
@@ -1029,7 +1028,7 @@ static void update_tilemap_zoom(screen_device &screen, struct layer_info *layer,
 				}
 
 				/* stop at the end */
-				if (extents[1] > cliprect->max_x)
+				if (extents[1] > cliprect.max_x)
 					break;
 
 				/* swap states and advance to the next extent */
@@ -1037,7 +1036,7 @@ static void update_tilemap_zoom(screen_device &screen, struct layer_info *layer,
 				extents++;
 			}
 
-			layer->transparent[y] = (transparent == cliprect->max_x - cliprect->min_x + 1);
+			layer->transparent[y] = (transparent == cliprect.max_x - cliprect.min_x + 1);
 		}
 		else
 			layer->transparent[y] = 1;
@@ -1063,11 +1062,11 @@ static void update_tilemap_zoom(screen_device &screen, struct layer_info *layer,
  *
  *************************************/
 
-static void update_tilemap_rowscroll(screen_device &screen, struct layer_info *layer, const rectangle *cliprect, int bgnum)
+static void update_tilemap_rowscroll(screen_device &screen, struct layer_info *layer, const rectangle &cliprect, int bgnum)
 {
 	segas32_state *state = screen.machine().driver_data<segas32_state>();
 	int clipenable, clipout, clips, clipdraw_start;
-	bitmap_t *bitmap = layer->bitmap;
+	bitmap_t &bitmap = *layer->bitmap;
 	struct extents_list clip_extents;
 	tilemap_t *tilemaps[4];
 	int rowscroll, rowselect;
@@ -1109,16 +1108,15 @@ static void update_tilemap_rowscroll(screen_device &screen, struct layer_info *l
 	yscroll = (state->m_system32_videoram[0x1ff16/2 + 4 * bgnum] & 0x1ff);
 
 	/* render the tilemap into its bitmap */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
 		UINT16 *extents = &clip_extents.extent[clip_extents.scan_extent[y]][0];
-		UINT16 *dst = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *dst = &bitmap.pix16(y);
 		int clipdraw = clipdraw_start;
 
 		/* optimize for the case where we are clipped out */
-		if (clipdraw || extents[1] <= cliprect->max_x)
+		if (clipdraw || extents[1] <= cliprect.max_x)
 		{
-			bitmap_t *tm0, *tm1;
 			int transparent = 0;
 			UINT16 *src[2];
 			int srcxstep;
@@ -1127,7 +1125,7 @@ static void update_tilemap_rowscroll(screen_device &screen, struct layer_info *l
 			if (!flip)
 			{
 				/* get starting scroll values */
-				srcx = cliprect->min_x + xscroll;
+				srcx = cliprect.min_x + xscroll;
 				srcxstep = 1;
 				srcy = yscroll + y;
 
@@ -1144,7 +1142,7 @@ static void update_tilemap_rowscroll(screen_device &screen, struct layer_info *l
 				const rectangle &visarea = screen.visible_area();
 
 				/* get starting scroll values */
-				srcx = cliprect->max_x + xscroll;
+				srcx = cliprect.max_x + xscroll;
 				srcxstep = -1;
 				srcy = yscroll + visarea.max_y - y;
 
@@ -1156,10 +1154,10 @@ static void update_tilemap_rowscroll(screen_device &screen, struct layer_info *l
 			}
 
 			/* look up the pages and get their source pixmaps */
-			tm0 = tilemap_get_pixmap(tilemaps[((srcy >> 7) & 2) + 0]);
-			tm1 = tilemap_get_pixmap(tilemaps[((srcy >> 7) & 2) + 1]);
-			src[0] = BITMAP_ADDR16(tm0, srcy & 0xff, 0);
-			src[1] = BITMAP_ADDR16(tm1, srcy & 0xff, 0);
+			bitmap_t &tm0 = tilemap_get_pixmap(tilemaps[((srcy >> 7) & 2) + 0]);
+			bitmap_t &tm1 = tilemap_get_pixmap(tilemaps[((srcy >> 7) & 2) + 1]);
+			src[0] = &tm0.pix16(srcy & 0xff);
+			src[1] = &tm1.pix16(srcy & 0xff);
 
 			/* loop over extents */
 			while (1)
@@ -1186,7 +1184,7 @@ static void update_tilemap_rowscroll(screen_device &screen, struct layer_info *l
 				}
 
 				/* stop at the end */
-				if (extents[1] > cliprect->max_x)
+				if (extents[1] > cliprect.max_x)
 					break;
 
 				/* swap states and advance to the next extent */
@@ -1194,7 +1192,7 @@ static void update_tilemap_rowscroll(screen_device &screen, struct layer_info *l
 				extents++;
 			}
 
-			layer->transparent[y] = (transparent == cliprect->max_x - cliprect->min_x + 1);
+			layer->transparent[y] = (transparent == cliprect.max_x - cliprect.min_x + 1);
 		}
 		else
 			layer->transparent[y] = 1;
@@ -1216,10 +1214,10 @@ static void update_tilemap_rowscroll(screen_device &screen, struct layer_info *l
  *
  *************************************/
 
-static void update_tilemap_text(screen_device &screen, struct layer_info *layer, const rectangle *cliprect)
+static void update_tilemap_text(screen_device &screen, struct layer_info *layer, const rectangle &cliprect)
 {
 	segas32_state *state = screen.machine().driver_data<segas32_state>();
-	bitmap_t *bitmap = layer->bitmap;
+	bitmap_t &bitmap = *layer->bitmap;
 	UINT16 *tilebase;
 	UINT16 *gfxbase;
 	int startx, starty;
@@ -1235,10 +1233,10 @@ static void update_tilemap_text(screen_device &screen, struct layer_info *layer,
 	gfxbase = &state->m_system32_videoram[(state->m_system32_videoram[0x1ff5c/2] & 7) * 0x2000];
 
 	/* compute start/end tile numbers */
-	startx = cliprect->min_x / 8;
-	starty = cliprect->min_y / 8;
-	endx = cliprect->max_x / 8;
-	endy = cliprect->max_y / 8;
+	startx = cliprect.min_x / 8;
+	starty = cliprect.min_y / 8;
+	endx = cliprect.max_x / 8;
+	endy = cliprect.max_y / 8;
 
 	/* loop over tiles */
 	for (y = starty; y <= endy; y++)
@@ -1251,7 +1249,7 @@ static void update_tilemap_text(screen_device &screen, struct layer_info *layer,
 			/* non-flipped case */
 			if (!flip)
 			{
-				UINT16 *dst = BITMAP_ADDR16(bitmap, y * 8, x * 8);
+				UINT16 *dst = &bitmap.pix16(y * 8, x * 8);
 
 				/* loop over rows */
 				for (iy = 0; iy < 8; iy++)
@@ -1301,7 +1299,7 @@ static void update_tilemap_text(screen_device &screen, struct layer_info *layer,
 						pix += color;
 					dst[7] = pix;
 
-					dst += bitmap->rowpixels;
+					dst += bitmap.rowpixels();
 				}
 			}
 
@@ -1312,7 +1310,7 @@ static void update_tilemap_text(screen_device &screen, struct layer_info *layer,
 
 				int effdstx = visarea.max_x - x * 8;
 				int effdsty = visarea.max_y - y * 8;
-				UINT16 *dst = BITMAP_ADDR16(bitmap, effdsty, effdstx);
+				UINT16 *dst = &bitmap.pix16(effdsty, effdstx);
 
 				/* loop over rows */
 				for (iy = 0; iy < 8; iy++)
@@ -1362,7 +1360,7 @@ static void update_tilemap_text(screen_device &screen, struct layer_info *layer,
 						pix += color;
 					dst[-7] = pix;
 
-					dst -= bitmap->rowpixels;
+					dst -= bitmap.rowpixels();
 				}
 			}
 		}
@@ -1376,11 +1374,11 @@ static void update_tilemap_text(screen_device &screen, struct layer_info *layer,
  *
  *************************************/
 
-static void update_bitmap(screen_device &screen, struct layer_info *layer, const rectangle *cliprect)
+static void update_bitmap(screen_device &screen, struct layer_info *layer, const rectangle &cliprect)
 {
 	segas32_state *state = screen.machine().driver_data<segas32_state>();
 	int clipenable, clipout, clips, clipdraw_start;
-	bitmap_t *bitmap = layer->bitmap;
+	bitmap_t &bitmap = *layer->bitmap;
 	struct extents_list clip_extents;
 	int xscroll, yscroll;
 	int color;
@@ -1402,14 +1400,14 @@ static void update_bitmap(screen_device &screen, struct layer_info *layer, const
 	color = (state->m_system32_videoram[0x1ff8c/2] << 4) & 0x1fff0 & ~((1 << bpp) - 1);
 
 	/* loop over target rows */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
 		UINT16 *extents = &clip_extents.extent[clip_extents.scan_extent[y]][0];
-		UINT16 *dst = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *dst = &bitmap.pix16(y);
 		int clipdraw = clipdraw_start;
 
 		/* optimize for the case where we are clipped out */
-		if (clipdraw || extents[1] <= cliprect->max_x)
+		if (clipdraw || extents[1] <= cliprect.max_x)
 		{
 			int transparent = 0;
 
@@ -1457,7 +1455,7 @@ static void update_bitmap(screen_device &screen, struct layer_info *layer, const
 				}
 
 				/* stop at the end */
-				if (extents[1] > cliprect->max_x)
+				if (extents[1] > cliprect.max_x)
 					break;
 
 				/* swap states and advance to the next extent */
@@ -1465,7 +1463,7 @@ static void update_bitmap(screen_device &screen, struct layer_info *layer, const
 				extents++;
 			}
 
-			layer->transparent[y] = (transparent == cliprect->max_x - cliprect->min_x + 1);
+			layer->transparent[y] = (transparent == cliprect.max_x - cliprect.min_x + 1);
 		}
 		else
 			layer->transparent[y] = 1;
@@ -1480,14 +1478,14 @@ static void update_bitmap(screen_device &screen, struct layer_info *layer, const
  *
  *************************************/
 
-static void update_background(segas32_state *state, struct layer_info *layer, const rectangle *cliprect)
+static void update_background(segas32_state *state, struct layer_info *layer, const rectangle &cliprect)
 {
-	bitmap_t *bitmap = layer->bitmap;
+	bitmap_t &bitmap = *layer->bitmap;
 	int x, y;
 
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++)
 	{
-		UINT16 *dst = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *dst = &bitmap.pix16(y);
 		int color;
 
 		/* determine the color */
@@ -1497,14 +1495,14 @@ static void update_background(segas32_state *state, struct layer_info *layer, co
 			color = state->m_system32_videoram[0x1ff5e/2] & 0x1e00;
 
 		/* if the color doesn't match, fill */
-		if (dst[cliprect->min_x] != color)
-			for (x = cliprect->min_x; x <= cliprect->max_x; x++)
+		if (dst[cliprect.min_x] != color)
+			for (x = cliprect.min_x; x <= cliprect.max_x; x++)
 				dst[x] = color;
 	}
 }
 
 
-static UINT8 update_tilemaps(screen_device &screen, const rectangle *cliprect)
+static UINT8 update_tilemaps(screen_device &screen, const rectangle &cliprect)
 {
 	segas32_state *state = screen.machine().driver_data<segas32_state>();
 	int enable0 = !(state->m_system32_videoram[0x1ff02/2] & 0x0001) && !(state->m_system32_videoram[0x1ff8e/2] & 0x0002);
@@ -1543,11 +1541,11 @@ static UINT8 update_tilemaps(screen_device &screen, const rectangle *cliprect)
 static void sprite_erase_buffer(segas32_state *state)
 {
 	/* erase the visible sprite buffer and clear the checksums */
-	bitmap_fill(state->m_layer_data[MIXER_LAYER_SPRITES].bitmap, NULL, 0xffff);
+	state->m_layer_data[MIXER_LAYER_SPRITES].bitmap->fill(0xffff);
 
 	/* for multi32, erase the other buffer as well */
 	if (state->m_is_multi32)
-		bitmap_fill(state->m_layer_data[MIXER_LAYER_MULTISPR].bitmap, NULL, 0xffff);
+		state->m_layer_data[MIXER_LAYER_MULTISPR].bitmap->fill(0xffff);
 }
 
 
@@ -1613,8 +1611,8 @@ static void sprite_swap_buffers(segas32_state *state)
 
 #define sprite_draw_pixel_16(trans)											\
 	/* only draw if onscreen, not 0 or 15 */								\
-	if (x >= clipin->min_x && x <= clipin->max_x && 						\
-		(!do_clipout || x < clipout->min_x || x > clipout->max_x) &&		\
+	if (x >= clipin.min_x && x <= clipin.max_x &&							\
+		(!do_clipout || x < clipout.min_x || x > clipout.max_x) &&			\
 		pix != trans)														\
 	{																		\
 		if (!indirect)														\
@@ -1642,8 +1640,8 @@ static void sprite_swap_buffers(segas32_state *state)
 
 #define sprite_draw_pixel_256(trans)										\
 	/* only draw if onscreen, not 0 or 15 */								\
-	if (x >= clipin->min_x && x <= clipin->max_x && 						\
-		(!do_clipout || x < clipout->min_x || x > clipout->max_x) &&		\
+	if (x >= clipin.min_x && x <= clipin.max_x &&							\
+		(!do_clipout || x < clipout.min_x || x > clipout.max_x) &&			\
 		pix != trans)														\
 	{																		\
 		if (!indirect)														\
@@ -1669,7 +1667,7 @@ static void sprite_swap_buffers(segas32_state *state)
 		}																	\
 	}
 
-static int draw_one_sprite(running_machine &machine, UINT16 *data, int xoffs, int yoffs, const rectangle *clipin, const rectangle *clipout)
+static int draw_one_sprite(running_machine &machine, UINT16 *data, int xoffs, int yoffs, const rectangle &clipin, const rectangle &clipout)
 {
 	segas32_state *state = machine.driver_data<segas32_state>();
 	static const int transparency_masks[4][4] =
@@ -1680,7 +1678,7 @@ static int draw_one_sprite(running_machine &machine, UINT16 *data, int xoffs, in
 		{ 0x1fff, 0x0fff, 0x07ff, 0x03ff }
 	};
 
-	bitmap_t *bitmap = state->m_layer_data[(!state->m_is_multi32 || !(data[3] & 0x0800)) ? MIXER_LAYER_SPRITES_2 : MIXER_LAYER_MULTISPR_2].bitmap;
+	bitmap_t &bitmap = *state->m_layer_data[(!state->m_is_multi32 || !(data[3] & 0x0800)) ? MIXER_LAYER_SPRITES_2 : MIXER_LAYER_MULTISPR_2].bitmap;
 	UINT8 numbanks = machine.region("gfx2")->bytes() / 0x400000;
 	const UINT32 *spritebase = (const UINT32 *)machine.region("gfx2")->base();
 
@@ -1788,15 +1786,15 @@ static int draw_one_sprite(running_machine &machine, UINT16 *data, int xoffs, in
 	ytarget = ypos + ydelta * dsth;
 
 	/* adjust target x for clipping */
-	if (xdelta > 0 && xtarget > clipin->max_x)
+	if (xdelta > 0 && xtarget > clipin.max_x)
 	{
-		xtarget = clipin->max_x + 1;
+		xtarget = clipin.max_x + 1;
 		if (xpos >= xtarget)
 			goto bail;
 	}
-	if (xdelta < 0 && xtarget < clipin->min_x)
+	if (xdelta < 0 && xtarget < clipin.min_x)
 	{
-		xtarget = clipin->min_x - 1;
+		xtarget = clipin.min_x - 1;
 		if (xpos <= xtarget)
 			goto bail;
 	}
@@ -1805,10 +1803,10 @@ static int draw_one_sprite(running_machine &machine, UINT16 *data, int xoffs, in
 	for (y = ypos; y != ytarget; y += ydelta)
 	{
 		/* skip drawing if not within the inclusive cliprect */
-		if (y >= clipin->min_y && y <= clipin->max_y)
+		if (y >= clipin.min_y && y <= clipin.max_y)
 		{
-			int do_clipout = (y >= clipout->min_y && y <= clipout->max_y);
-			UINT16 *dest = BITMAP_ADDR16(bitmap, y, 0);
+			int do_clipout = (y >= clipout.min_y && y <= clipout.max_y);
+			UINT16 *dest = &bitmap.pix16(y);
 			int xacc = 0;
 
 			/* 4bpp case */
@@ -1903,7 +1901,7 @@ static void sprite_render_list(running_machine &machine)
 		{
 			/* command 0 = draw sprite */
 			case 0:
-				spritenum += 1 + draw_one_sprite(machine, sprite, xoffs, yoffs, &clipin, &clipout);
+				spritenum += 1 + draw_one_sprite(machine, sprite, xoffs, yoffs, clipin, clipout);
 				break;
 
 			/* command 1 = set clipping */
@@ -1916,7 +1914,7 @@ static void sprite_render_list(running_machine &machine)
 					clipin.max_y = (INT16)(sprite[1] << 4) >> 4;
 					clipin.min_x = (INT16)(sprite[2] << 4) >> 4;
 					clipin.max_x = (INT16)(sprite[3] << 4) >> 4;
-					sect_rect(&clipin, &outerclip);
+					clipin &= outerclip;
 				}
 
 				/* set the exclusive cliprect */
@@ -2007,10 +2005,10 @@ INLINE UINT16 *get_layer_scanline(segas32_state *state, int layer, int scanline)
 {
 	if (state->m_layer_data[layer].transparent[scanline])
 		return (layer == MIXER_LAYER_SPRITES) ? state->m_solid_ffff : state->m_solid_0000;
-	return BITMAP_ADDR16(state->m_layer_data[layer].bitmap, scanline, 0);
+	return &state->m_layer_data[layer].bitmap->pix16(scanline);
 }
 
-static void mix_all_layers(segas32_state *state, int which, int xoffs, bitmap_t *bitmap, const rectangle *cliprect, UINT8 enablemask)
+static void mix_all_layers(segas32_state *state, int which, int xoffs, bitmap_t &bitmap, const rectangle &cliprect, UINT8 enablemask)
 {
 	int blendenable = state->m_mixer_control[which][0x4e/2] & 0x0800;
 	int blendfactor = (state->m_mixer_control[which][0x4e/2] >> 8) & 7;
@@ -2163,30 +2161,30 @@ static void mix_all_layers(segas32_state *state, int which, int xoffs, bitmap_t 
 	/* directions; account for this */
 	if (state->m_sprite_control_latched[0x04/2] & 1)
 	{
-		sprx_start = cliprect->max_x;
+		sprx_start = cliprect.max_x;
 		sprdx = -1;
 	}
 	else
 	{
-		sprx_start = cliprect->min_x;
+		sprx_start = cliprect.min_x;
 		sprdx = 1;
 	}
 
 	if (state->m_sprite_control_latched[0x04/2] & 2)
 	{
-		spry = cliprect->max_y;
+		spry = cliprect.max_y;
 		sprdy = -1;
 	}
 	else
 	{
-		spry = cliprect->min_y;
+		spry = cliprect.min_y;
 		sprdy = 1;
 	}
 
 	/* loop over rows */
-	for (y = cliprect->min_y; y <= cliprect->max_y; y++, spry += sprdy)
+	for (y = cliprect.min_y; y <= cliprect.max_y; y++, spry += sprdy)
 	{
-		UINT32 *dest = BITMAP_ADDR32(bitmap, y, xoffs);
+		UINT32 *dest = &bitmap.pix32(y, xoffs);
 		UINT16 *layerbase[8];
 
 		/* get the starting address for each layer */
@@ -2200,7 +2198,7 @@ static void mix_all_layers(segas32_state *state, int which, int xoffs, bitmap_t 
 		layerbase[MIXER_LAYER_BACKGROUND] = get_layer_scanline(state, MIXER_LAYER_BACKGROUND, y);
 
 		/* loop over columns */
-		for (x = cliprect->min_x, sprx = sprx_start; x <= cliprect->max_x; x++, sprx += sprdx)
+		for (x = cliprect.min_x, sprx = sprx_start; x <= cliprect.max_x; x++, sprx += sprdx)
 		{
 			struct mixer_layer_info *first;
 			int *rgbdelta;
@@ -2423,35 +2421,35 @@ static void print_mixer_data(segas32_state *state, int which)
 
 SCREEN_UPDATE( system32 )
 {
-	segas32_state *state = screen->machine().driver_data<segas32_state>();
+	segas32_state *state = screen.machine().driver_data<segas32_state>();
 	UINT8 enablemask;
 
 	/* update the visible area */
 	if (state->m_system32_videoram[0x1ff00/2] & 0x8000)
-		screen->set_visible_area(0, 52*8-1, 0, 28*8-1);
+		screen.set_visible_area(0, 52*8-1, 0, 28*8-1);
 	else
-		screen->set_visible_area(0, 40*8-1, 0, 28*8-1);
+		screen.set_visible_area(0, 40*8-1, 0, 28*8-1);
 
 	/* if the display is off, punt */
 	if (!state->m_system32_displayenable[0])
 	{
-		bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		return 0;
 	}
 
 	/* update the tilemaps */
 	g_profiler.start(PROFILER_USER1);
-	enablemask = update_tilemaps(*screen, cliprect);
+	enablemask = update_tilemaps(screen, cliprect);
 	g_profiler.stop();
 
 	/* debugging */
 #if QWERTY_LAYER_ENABLE
-	if (screen->machine().input().code_pressed(KEYCODE_Q)) enablemask = 0x01;
-	if (screen->machine().input().code_pressed(KEYCODE_W)) enablemask = 0x02;
-	if (screen->machine().input().code_pressed(KEYCODE_E)) enablemask = 0x04;
-	if (screen->machine().input().code_pressed(KEYCODE_R)) enablemask = 0x08;
-	if (screen->machine().input().code_pressed(KEYCODE_T)) enablemask = 0x10;
-	if (screen->machine().input().code_pressed(KEYCODE_Y)) enablemask = 0x20;
+	if (screen.machine().input().code_pressed(KEYCODE_Q)) enablemask = 0x01;
+	if (screen.machine().input().code_pressed(KEYCODE_W)) enablemask = 0x02;
+	if (screen.machine().input().code_pressed(KEYCODE_E)) enablemask = 0x04;
+	if (screen.machine().input().code_pressed(KEYCODE_R)) enablemask = 0x08;
+	if (screen.machine().input().code_pressed(KEYCODE_T)) enablemask = 0x10;
+	if (screen.machine().input().code_pressed(KEYCODE_Y)) enablemask = 0x20;
 #endif
 
 	/* do the mixing */
@@ -2459,9 +2457,9 @@ SCREEN_UPDATE( system32 )
 	mix_all_layers(state, 0, 0, bitmap, cliprect, enablemask);
 	g_profiler.stop();
 
-	if (LOG_SPRITES && screen->machine().input().code_pressed(KEYCODE_L))
+	if (LOG_SPRITES && screen.machine().input().code_pressed(KEYCODE_L))
 	{
-		const rectangle &visarea = screen->visible_area();
+		const rectangle &visarea = screen.visible_area();
 		FILE *f = fopen("sprite.txt", "w");
 		int x, y;
 
@@ -2537,13 +2535,13 @@ SCREEN_UPDATE( system32 )
 {
 	int showclip = -1;
 
-//  if (screen->machine().input().code_pressed(KEYCODE_V))
+//  if (screen.machine().input().code_pressed(KEYCODE_V))
 //      showclip = 0;
-//  if (screen->machine().input().code_pressed(KEYCODE_B))
+//  if (screen.machine().input().code_pressed(KEYCODE_B))
 //      showclip = 1;
-//  if (screen->machine().input().code_pressed(KEYCODE_N))
+//  if (screen.machine().input().code_pressed(KEYCODE_N))
 //      showclip = 2;
-//  if (screen->machine().input().code_pressed(KEYCODE_M))
+//  if (screen.machine().input().code_pressed(KEYCODE_M))
 //      showclip = 3;
 //  if (showclip != -1)
 for (showclip = 0; showclip < 4; showclip++)
@@ -2556,10 +2554,10 @@ for (showclip = 0; showclip < 4; showclip++)
 			for (i = 0; i < 4; i++)
 				if (clips & (1 << i))
 				{
-					const rectangle &visarea = screen->visible_area();
+					const rectangle &visarea = screen.visible_area();
 
 					rectangle rect;
-					pen_t white = get_white_pen(screen->machine());
+					pen_t white = get_white_pen(screen.machine());
 					if (!flip)
 					{
 						rect.min_x = state->m_system32_videoram[0x1ff60/2 + i * 4] & 0x1ff;
@@ -2574,19 +2572,19 @@ for (showclip = 0; showclip < 4; showclip++)
 						rect.min_x = (visarea.max_x + 1) - ((state->m_system32_videoram[0x1ff64/2 + i * 4] & 0x1ff) + 1);
 						rect.min_y = (visarea.max_y + 1) - ((state->m_system32_videoram[0x1ff66/2 + i * 4] & 0x0ff) + 1);
 					}
-					sect_rect(&rect, &screen->visible_area());
+					sect_rect(&rect, &screen.visible_area());
 
 					if (rect.min_y <= rect.max_y && rect.min_x <= rect.max_x)
 					{
 						for (y = rect.min_y; y <= rect.max_y; y++)
 						{
-							bitmap->plot(bitmap, rect.min_x, y, white);
-							bitmap->plot(bitmap, rect.max_x, y, white);
+							bitmap.plot(bitmap, rect.min_x, y, white);
+							bitmap.plot(bitmap, rect.max_x, y, white);
 						}
 						for (x = rect.min_x; x <= rect.max_x; x++)
 						{
-							bitmap->plot(bitmap, x, rect.min_y, white);
-							bitmap->plot(bitmap, x, rect.max_y, white);
+							bitmap.plot(bitmap, x, rect.min_y, white);
+							bitmap.plot(bitmap, x, rect.max_y, white);
 						}
 					}
 				}
@@ -2600,54 +2598,52 @@ for (showclip = 0; showclip < 4; showclip++)
 }
 
 
-SCREEN_UPDATE( multi32 )
+static UINT32 multi32_update(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect, int index)
 {
-	segas32_state *state = screen->machine().driver_data<segas32_state>();
+	segas32_state *state = screen.machine().driver_data<segas32_state>();
 	UINT8 enablemask;
-
-	device_t *left_screen  = screen->machine().device("lscreen");
 
 	/* update the visible area */
 	if (state->m_system32_videoram[0x1ff00/2] & 0x8000)
-		screen->set_visible_area(0, 52*8-1, 0, 28*8-1);
+		screen.set_visible_area(0, 52*8-1, 0, 28*8-1);
 	else
-		screen->set_visible_area(0, 40*8-1, 0, 28*8-1);
+		screen.set_visible_area(0, 40*8-1, 0, 28*8-1);
 
 	/* if the display is off, punt */
-	if (!state->m_system32_displayenable[(screen == left_screen) ? 0 : 1])
+	if (!state->m_system32_displayenable[index])
 	{
-		bitmap_fill(bitmap, cliprect, get_black_pen(screen->machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		return 0;
 	}
 
 	/* update the tilemaps */
 	g_profiler.start(PROFILER_USER1);
-	enablemask = update_tilemaps(*screen, cliprect);
+	enablemask = update_tilemaps(screen, cliprect);
 	g_profiler.stop();
 
 	/* debugging */
 #if QWERTY_LAYER_ENABLE
-	if (screen->machine().input().code_pressed(KEYCODE_Q)) enablemask = 0x01;
-	if (screen->machine().input().code_pressed(KEYCODE_W)) enablemask = 0x02;
-	if (screen->machine().input().code_pressed(KEYCODE_E)) enablemask = 0x04;
-	if (screen->machine().input().code_pressed(KEYCODE_R)) enablemask = 0x08;
-	if (screen->machine().input().code_pressed(KEYCODE_T)) enablemask = 0x10;
-	if (screen->machine().input().code_pressed(KEYCODE_Y)) enablemask = 0x20;
+	if (screen.machine().input().code_pressed(KEYCODE_Q)) enablemask = 0x01;
+	if (screen.machine().input().code_pressed(KEYCODE_W)) enablemask = 0x02;
+	if (screen.machine().input().code_pressed(KEYCODE_E)) enablemask = 0x04;
+	if (screen.machine().input().code_pressed(KEYCODE_R)) enablemask = 0x08;
+	if (screen.machine().input().code_pressed(KEYCODE_T)) enablemask = 0x10;
+	if (screen.machine().input().code_pressed(KEYCODE_Y)) enablemask = 0x20;
 #endif
 
 	/* do the mixing */
 	g_profiler.start(PROFILER_USER3);
-	mix_all_layers(state, ((screen == left_screen) ? 0 : 1), 0, bitmap, cliprect, enablemask);
+	mix_all_layers(state, index, 0, bitmap, cliprect, enablemask);
 	g_profiler.stop();
 
 if (PRINTF_MIXER_DATA)
 {
-	if (!screen->machine().input().code_pressed(KEYCODE_M)) print_mixer_data(state, 0);
+	if (!screen.machine().input().code_pressed(KEYCODE_M)) print_mixer_data(state, 0);
 	else print_mixer_data(state, 1);
 }
-	if (LOG_SPRITES && screen->machine().input().code_pressed(KEYCODE_L))
+	if (LOG_SPRITES && screen.machine().input().code_pressed(KEYCODE_L))
 	{
-		const rectangle &visarea = screen->visible_area();
+		const rectangle &visarea = screen.visible_area();
 		FILE *f = fopen("sprite.txt", "w");
 		int x, y;
 
@@ -2664,6 +2660,8 @@ if (PRINTF_MIXER_DATA)
 	return 0;
 }
 
+SCREEN_UPDATE( multi32_left ) { return multi32_update(screen, bitmap, cliprect, 0); }
+SCREEN_UPDATE( multi32_right ) { return multi32_update(screen, bitmap, cliprect, 1); }
 
 /*
 

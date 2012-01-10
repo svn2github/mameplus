@@ -62,12 +62,12 @@ static VIDEO_START(ttchamp)
 
 static SCREEN_UPDATE(ttchamp)
 {
-	ttchamp_state *state = screen->machine().driver_data<ttchamp_state>();
+	ttchamp_state *state = screen.machine().driver_data<ttchamp_state>();
 	int y,x,count;
 //  int i;
 	static const int xxx=320,yyy=204;
 
-	bitmap_fill(bitmap, 0, get_black_pen(screen->machine()));
+	bitmap.fill(get_black_pen(screen.machine()));
 
 //  for (i=0;i<256;i++)
 //  {
@@ -85,7 +85,7 @@ static SCREEN_UPDATE(ttchamp)
 	{
 		for(x=0;x<xxx;x++)
 		{
-			/*if(hotblock_port0&0x40)*/*BITMAP_ADDR16(bitmap, y, x) = ((UINT8 *)state->m_peno_vram)[BYTE_XOR_LE(count)]+0x300;
+			/*if(hotblock_port0&0x40)*/bitmap.pix16(y, x) = ((UINT8 *)state->m_peno_vram)[BYTE_XOR_LE(count)]+0x300;
             count++;
         }
     }

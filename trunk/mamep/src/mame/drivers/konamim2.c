@@ -235,7 +235,7 @@ static VIDEO_START( m2 )
 
 static SCREEN_UPDATE( m2 )
 {
-	konamim2_state *state = screen->machine().driver_data<konamim2_state>();
+	konamim2_state *state = screen.machine().driver_data<konamim2_state>();
 	int i, j;
 
 	UINT32 fb_start = 0xffffffff;
@@ -250,7 +250,7 @@ static SCREEN_UPDATE( m2 )
 		for (j=0; j < 384; j++)
 		{
 			UINT16 *fb = &frame[(j*512)];
-			UINT16 *d = BITMAP_ADDR16(bitmap, j, 0);
+			UINT16 *d = &bitmap.pix16(j);
 			for (i=0; i < 512; i++)
 			{
 				d[i^3] = *fb++ & 0x7fff;
@@ -259,7 +259,7 @@ static SCREEN_UPDATE( m2 )
 	}
 	else
 	{
-		bitmap_fill(bitmap, cliprect, 0);
+		bitmap.fill(0, cliprect);
 	}
 	return 0;
 }

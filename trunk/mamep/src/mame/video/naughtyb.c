@@ -12,24 +12,6 @@
 #include "includes/naughtyb.h"
 
 
-static const rectangle scrollvisiblearea =
-{
-	2*8, 34*8-1,
-	0*8, 28*8-1
-};
-
-static const rectangle leftvisiblearea =
-{
-	0*8, 2*8-1,
-	0*8, 28*8-1
-};
-
-static const rectangle rightvisiblearea =
-{
-	34*8, 36*8-1,
-	0*8, 28*8-1
-};
-
 static const res_net_decode_info naughtyb_decode_info =
 {
 	2,		/*  two proms          */
@@ -122,7 +104,7 @@ VIDEO_START( naughtyb )
 	state->m_palreg = state->m_bankreg = 0;
 
 	/* Naughty Boy has a virtual screen twice as large as the visible screen */
-	machine.generic.tmpbitmap = auto_bitmap_alloc(machine,68*8,28*8,machine.primary_screen->format());
+	state->m_tmpbitmap.allocate(68*8,28*8,machine.primary_screen->format());
 }
 
 
@@ -202,8 +184,13 @@ WRITE8_HANDLER( popflame_videoreg_w )
 ***************************************************************************/
 SCREEN_UPDATE( naughtyb )
 {
-	naughtyb_state *state = screen->machine().driver_data<naughtyb_state>();
+	const rectangle scrollvisiblearea(2*8, 34*8-1, 0*8, 28*8-1);
+	const rectangle leftvisiblearea(0*8, 2*8-1, 0*8, 28*8-1);
+	const rectangle rightvisiblearea(34*8, 36*8-1, 0*8, 28*8-1);
+
+	naughtyb_state *state = screen.machine().driver_data<naughtyb_state>();
 	UINT8 *videoram = state->m_videoram;
+	bitmap_t &tmpbitmap = state->m_tmpbitmap;
 	int offs;
 
 	// for every character in the Video RAM
@@ -239,13 +226,13 @@ SCREEN_UPDATE( naughtyb )
 			}
 		}
 
-		drawgfx_opaque(screen->machine().generic.tmpbitmap,0,screen->machine().gfx[0],
+		drawgfx_opaque(tmpbitmap,tmpbitmap.cliprect(),screen.machine().gfx[0],
 				state->m_videoram2[offs] + 256 * state->m_bankreg,
 				(state->m_videoram2[offs] >> 5) + 8 * state->m_palreg,
 				state->m_cocktail,state->m_cocktail,
 				8*sx,8*sy);
 
-		drawgfx_transpen(screen->machine().generic.tmpbitmap,0,screen->machine().gfx[1],
+		drawgfx_transpen(tmpbitmap,tmpbitmap.cliprect(),screen.machine().gfx[1],
 				videoram[offs] + 256*state->m_bankreg,
 				(videoram[offs] >> 5) + 8 * state->m_palreg,
 				state->m_cocktail,state->m_cocktail,
@@ -256,11 +243,11 @@ SCREEN_UPDATE( naughtyb )
 	{
 		int scrollx;
 
-		copybitmap(bitmap,screen->machine().generic.tmpbitmap,0,0,-66*8,0,&leftvisiblearea);
-		copybitmap(bitmap,screen->machine().generic.tmpbitmap,0,0,-30*8,0,&rightvisiblearea);
+		copybitmap(bitmap,tmpbitmap,0,0,-66*8,0,leftvisiblearea);
+		copybitmap(bitmap,tmpbitmap,0,0,-30*8,0,rightvisiblearea);
 
 		scrollx = ( state->m_cocktail ) ? *state->m_scrollreg - 239 : -*state->m_scrollreg + 16;
-		copyscrollbitmap(bitmap,screen->machine().generic.tmpbitmap,1,&scrollx,0,0,&scrollvisiblearea);
+		copyscrollbitmap(bitmap,tmpbitmap,1,&scrollx,0,0,scrollvisiblearea);
 	}
 	return 0;
 }

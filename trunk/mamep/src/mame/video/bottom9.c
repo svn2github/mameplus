@@ -75,12 +75,12 @@ VIDEO_START( bottom9 )
 
 SCREEN_UPDATE( bottom9 )
 {
-	bottom9_state *state = screen->machine().driver_data<bottom9_state>();
+	bottom9_state *state = screen.machine().driver_data<bottom9_state>();
 
 	k052109_tilemap_update(state->m_k052109);
 
 	/* note: FIX layer is not used */
-	bitmap_fill(bitmap, cliprect, state->m_layer_colorbase[1]);
+	bitmap.fill(state->m_layer_colorbase[1], cliprect);
 //  if (state->m_video_enable)
 	{
 		k051960_sprites_draw(state->m_k051960, bitmap, cliprect, 1, 1);

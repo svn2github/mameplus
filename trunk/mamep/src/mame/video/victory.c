@@ -1092,22 +1092,22 @@ static TIMER_CALLBACK( bgcoll_irq_callback )
 
 SCREEN_UPDATE( victory )
 {
-	victory_state *state = screen->machine().driver_data<victory_state>();
+	victory_state *state = screen.machine().driver_data<victory_state>();
 	int bgcollmask = (state->m_video_control & 4) ? 4 : 7;
 	int count = 0;
 	int x, y;
 
 	/* copy the palette from palette RAM */
-	set_palette(screen->machine());
+	set_palette(screen.machine());
 
 	/* update the foreground & background */
-	update_foreground(screen->machine());
-	update_background(screen->machine());
+	update_foreground(screen.machine());
+	update_background(screen.machine());
 
 	/* blend the bitmaps and do collision detection */
 	for (y = 0; y < 256; y++)
 	{
-		UINT16 *scanline = BITMAP_ADDR16(bitmap, y, 0);
+		UINT16 *scanline = &bitmap.pix16(y);
 		UINT8 sy = state->m_scrolly + y;
 		UINT8 *fg = &state->m_fgbitmap[y * 256];
 		UINT8 *bg = &state->m_bgbitmap[sy * 256];
@@ -1119,7 +1119,7 @@ SCREEN_UPDATE( victory )
 			int bpix = bg[(x + state->m_scrollx) & 255];
 			scanline[x] = bpix | (fpix << 3);
 			if (fpix && (bpix & bgcollmask) && count++ < 128)
-				screen->machine().scheduler().timer_set(screen->time_until_pos(y, x), FUNC(bgcoll_irq_callback), x | (y << 8));
+				screen.machine().scheduler().timer_set(screen.time_until_pos(y, x), FUNC(bgcoll_irq_callback), x | (y << 8));
 		}
 	}
 

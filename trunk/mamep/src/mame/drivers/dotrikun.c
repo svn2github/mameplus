@@ -61,13 +61,13 @@ static WRITE8_HANDLER( dotrikun_color_w )
 
 static SCREEN_UPDATE( dotrikun )
 {
-	dotrikun_state *state = screen->machine().driver_data<dotrikun_state>();
+	dotrikun_state *state = screen.machine().driver_data<dotrikun_state>();
 	int x,y,i;
 
 	pen_t back_pen = MAKE_RGB(pal1bit(state->m_color >> 3), pal1bit(state->m_color >> 4), pal1bit(state->m_color >> 5));
 	pen_t fore_pen = MAKE_RGB(pal1bit(state->m_color >> 0), pal1bit(state->m_color >> 1), pal1bit(state->m_color >> 2));
 
-	for(y = (cliprect->min_y & ~1); y < cliprect->max_y; y+=2)
+	for(y = (cliprect.min_y & ~1); y < cliprect.max_y; y+=2)
 	{
 		for (x = 0; x < 256; x+=16)
 		{
@@ -78,10 +78,10 @@ static SCREEN_UPDATE( dotrikun )
 				pen_t pen = ((data >> (7 - i)) & 1) ? fore_pen : back_pen;
 
 				/* I think the video hardware doubles pixels, screen would be too small otherwise */
-				*BITMAP_ADDR32(bitmap, y + 0, (x + 0) + i*2) = pen;
-				*BITMAP_ADDR32(bitmap, y + 0, (x + 1) + i*2) = pen;
-				*BITMAP_ADDR32(bitmap, y + 1, (x + 0) + i*2) = pen;
-				*BITMAP_ADDR32(bitmap, y + 1, (x + 1) + i*2) = pen;
+				bitmap.pix32(y + 0, (x + 0) + i*2) = pen;
+				bitmap.pix32(y + 0, (x + 1) + i*2) = pen;
+				bitmap.pix32(y + 1, (x + 0) + i*2) = pen;
+				bitmap.pix32(y + 1, (x + 1) + i*2) = pen;
 			}
 		}
 	}

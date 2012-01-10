@@ -149,7 +149,6 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 	  pens(NULL),
 	  colortable(NULL),
 	  shadow_table(NULL),
-	  priority_bitmap(NULL),
 	  debug_flags(0),
 	  memory_data(NULL),
 	  palette_data(NULL),
@@ -1132,17 +1131,9 @@ void driver_device::video_reset()
 
 bool driver_device::screen_update(screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect)
 {
+	// if nothing provided, just copy the screen's generic bitmap
+	copybitmap(bitmap, screen.default_bitmap(), 0, 0, 0, 0, cliprect);
 	return 0;
-}
-
-
-//-------------------------------------------------
-//  video_eof - default implementation which
-//  calls to the legacy video_eof function
-//-------------------------------------------------
-
-void driver_device::screen_eof()
-{
 }
 
 

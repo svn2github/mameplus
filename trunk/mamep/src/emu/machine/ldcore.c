@@ -94,7 +94,7 @@ struct _ldcore_data
 	/* video data */
 	frame_data			frame[3];				/* circular list of frames */
 	UINT8				videoindex;				/* index of the current video buffer */
-	bitmap_t			videotarget;			/* fake target bitmap for decompression */
+	bitmap_t *			videotarget;			/* fake target bitmap for decompression */
 	bitmap_t *			emptyframe;				/* blank frame */
 
 	/* audio data */
@@ -210,17 +210,17 @@ INLINE void add_and_clamp_track(ldcore_data *ldcore, INT32 delta)
     given color pattern
 -------------------------------------------------*/
 
-INLINE void fillbitmap_yuy16(bitmap_t *bitmap, UINT8 yval, UINT8 cr, UINT8 cb)
+INLINE void fillbitmap_yuy16(bitmap_t &bitmap, UINT8 yval, UINT8 cr, UINT8 cb)
 {
 	UINT16 color0 = (yval << 8) | cb;
 	UINT16 color1 = (yval << 8) | cr;
 	int x, y;
 
 	/* write 32 bits of color (2 pixels at a time) */
-	for (y = 0; y < bitmap->height; y++)
+	for (y = 0; y < bitmap.height(); y++)
 	{
-		UINT16 *dest = (UINT16 *)bitmap->base + y * bitmap->rowpixels;
-		for (x = 0; x < bitmap->width / 2; x++)
+		UINT16 *dest = &bitmap.pix16(y);
+		for (x = 0; x < bitmap.width() / 2; x++)
 		{
 			*dest++ = color0;
 			*dest++ = color1;
@@ -835,16 +835,8 @@ static void read_track_data(laserdisc_state *ld)
 	frame->lastfield = tracknum * 2 + fieldnum;
 
 	/* set the video target information */
-	ldcore->videotarget.alloc = NULL;
-	ldcore->videotarget.base = BITMAP_ADDR16(frame->bitmap, fieldnum, 0);
-	ldcore->videotarget.rowpixels = frame->bitmap->rowpixels * 2;
-	ldcore->videotarget.width = frame->bitmap->width;
-	ldcore->videotarget.height = frame->bitmap->height / 2;
-	ldcore->videotarget.format = frame->bitmap->format;
-	ldcore->videotarget.bpp = frame->bitmap->bpp;
-	ldcore->videotarget.palette = frame->bitmap->palette;
-	ldcore->videotarget.cliprect = frame->bitmap->cliprect;
-	ldcore->avconfig.video = &ldcore->videotarget;
+	ldcore->videotarget = auto_alloc(ld->device->machine(), bitmap_t(&frame->bitmap->pix16(fieldnum), frame->bitmap->width(), frame->bitmap->height() / 2, frame->bitmap->rowpixels() * 2, frame->bitmap->format()));
+	ldcore->avconfig.video = ldcore->videotarget;
 
 	/* set the audio target information */
 	if (ldcore->audiobufin + ldcore->audiomaxsamples <= ldcore->audiobufsize)
@@ -911,7 +903,7 @@ static void process_track_data(device_t *device)
 
 	/* render the display if present */
 	if (ldcore->avconfig.video != NULL && ldcore->intf.overlay != NULL)
-		(*ldcore->intf.overlay)(ld, ldcore->avconfig.video);
+		(*ldcore->intf.overlay)(ld, *ldcore->avconfig.video);
 
 	/* pass the audio to the callback */
 	if (ldcore->config.audio != NULL)
@@ -1192,10 +1184,10 @@ void laserdisc_overlay_enable(device_t *device, int enable)
 
 SCREEN_UPDATE( laserdisc )
 {
-	device_t *laserdisc = screen->machine().device("laserdisc"); // TODO: allow more than one laserdisc
+	device_t *laserdisc = screen.machine().device("laserdisc"); // TODO: allow more than one laserdisc
 	if (laserdisc != NULL)
 	{
-		const rectangle &visarea = screen->visible_area();
+		const rectangle &visarea = screen.visible_area();
 		laserdisc_state *ld = (laserdisc_state *)downcast<legacy_device_base *>(laserdisc)->token();
 		ldcore_data *ldcore = ld->core;
 		bitmap_t *overbitmap = ldcore->overbitmap[ldcore->overindex];
@@ -1204,28 +1196,29 @@ SCREEN_UPDATE( laserdisc )
 		/* handle the overlay if present */
 		if (overbitmap != NULL && ldcore->config.overupdate != NULL)
 		{
-			rectangle clip = *cliprect;
+			rectangle clip = cliprect;
 
 			/* scale the cliprect to the overlay size and then call the update callback */
-			clip.min_x = ldcore->config.overclip.min_x;
-			clip.max_x = ldcore->config.overclip.max_x;
-			clip.min_y = cliprect->min_y * overbitmap->height / bitmap->height;
-			if (cliprect->min_y == visarea.min_y)
-				clip.min_y = MIN(clip.min_y, ldcore->config.overclip.min_y);
-			clip.max_y = (cliprect->max_y + 1) * overbitmap->height / bitmap->height - 1;
-			(*ldcore->config.overupdate)(screen, overbitmap, &clip);
+			clip.min_x = ldcore->config.overclip_min_x;
+			clip.max_x = ldcore->config.overclip_max_x;
+			clip.min_y = cliprect.min_y * overbitmap->height() / bitmap.height();
+			if (cliprect.min_y == visarea.min_y)
+				clip.min_y = MIN(clip.min_y, ldcore->config.overclip_min_y);
+			clip.max_y = (cliprect.max_y + 1) * overbitmap->height() / bitmap.height() - 1;
+			(*ldcore->config.overupdate)(screen, *overbitmap, clip);
 		}
 
 		/* if this is the last update, do the rendering */
-		if (cliprect->max_y == visarea.max_y)
+		if (cliprect.max_y == visarea.max_y)
 		{
 			/* update the texture with the overlay contents */
 			if (overbitmap != NULL)
 			{
-				if (overbitmap->format == BITMAP_FORMAT_INDEXED16)
-					ldcore->overtex->set_bitmap(overbitmap, &ldcore->config.overclip, TEXFORMAT_PALETTEA16, laserdisc->machine().palette);
-				else if (overbitmap->format == BITMAP_FORMAT_RGB32)
-					ldcore->overtex->set_bitmap(overbitmap, &ldcore->config.overclip, TEXFORMAT_ARGB32);
+				rectangle overclip(ldcore->config.overclip_min_x, ldcore->config.overclip_max_x, ldcore->config.overclip_min_y, ldcore->config.overclip_max_y);
+				if (overbitmap->format() == BITMAP_FORMAT_INDEXED16)
+					ldcore->overtex->set_bitmap(overbitmap, &overclip, TEXFORMAT_PALETTEA16, laserdisc->machine().palette);
+				else if (overbitmap->format() == BITMAP_FORMAT_RGB32)
+					ldcore->overtex->set_bitmap(overbitmap, &overclip, TEXFORMAT_ARGB32);
 			}
 
 			/* get the laserdisc video */
@@ -1234,11 +1227,11 @@ SCREEN_UPDATE( laserdisc )
 				ldcore->videotex->set_bitmap(vidbitmap, NULL, TEXFORMAT_YUY16, ldcore->videopalette);
 
 			/* reset the screen contents */
-			screen->container().empty();
+			screen.container().empty();
 
 			/* add the video texture */
 			if (ldcore->videoenable)
-				screen->container().add_quad(0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(0xff,0xff,0xff,0xff), ldcore->videotex, PRIMFLAG_BLENDMODE(BLENDMODE_NONE) | PRIMFLAG_SCREENTEX(1));
+				screen.container().add_quad(0.0f, 0.0f, 1.0f, 1.0f, MAKE_ARGB(0xff,0xff,0xff,0xff), ldcore->videotex, PRIMFLAG_BLENDMODE(BLENDMODE_NONE) | PRIMFLAG_SCREENTEX(1));
 
 			/* add the overlay */
 			if (ldcore->overenable && overbitmap != NULL)
@@ -1247,7 +1240,7 @@ SCREEN_UPDATE( laserdisc )
 				float y0 = 0.5f - 0.5f * ldcore->config.overscaley + ldcore->config.overposy;
 				float x1 = x0 + ldcore->config.overscalex;
 				float y1 = y0 + ldcore->config.overscaley;
-				screen->container().add_quad(x0, y0, x1, y1, MAKE_ARGB(0xff,0xff,0xff,0xff), ldcore->overtex, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA) | PRIMFLAG_SCREENTEX(1));
+				screen.container().add_quad(x0, y0, x1, y1, MAKE_ARGB(0xff,0xff,0xff,0xff), ldcore->overtex, PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA) | PRIMFLAG_SCREENTEX(1));
 			}
 
 			/* swap to the next bitmap */
@@ -1380,18 +1373,18 @@ static void init_video(device_t *device)
 
 		/* first allocate a YUY16 bitmap at 2x the height */
 		frame->bitmap = auto_alloc(device->machine(), bitmap_t(ldcore->width, ldcore->height * 2, BITMAP_FORMAT_YUY16));
-		fillbitmap_yuy16(frame->bitmap, 40, 109, 240);
+		fillbitmap_yuy16(*frame->bitmap, 40, 109, 240);
 
 		/* make a copy of the bitmap that clips out the VBI and horizontal blanking areas */
-		frame->visbitmap = auto_alloc(device->machine(), bitmap_t(BITMAP_ADDR16(frame->bitmap, 44, frame->bitmap->width * 8 / 720),
-																frame->bitmap->width - 2 * frame->bitmap->width * 8 / 720,
-																frame->bitmap->height - 44,
-																frame->bitmap->rowpixels, frame->bitmap->format));
+		frame->visbitmap = auto_alloc(device->machine(), bitmap_t(&frame->bitmap->pix16(44, frame->bitmap->width() * 8 / 720),
+																frame->bitmap->width() - 2 * frame->bitmap->width() * 8 / 720,
+																frame->bitmap->height() - 44,
+																frame->bitmap->rowpixels(), frame->bitmap->format()));
 	}
 
 	/* allocate an empty frame of the same size */
 	ldcore->emptyframe = auto_bitmap_alloc(device->machine(), ldcore->width, ldcore->height * 2, BITMAP_FORMAT_YUY16);
-	fillbitmap_yuy16(ldcore->emptyframe, 0, 128, 128);
+	fillbitmap_yuy16(*ldcore->emptyframe, 0, 128, 128);
 
 	/* allocate texture for rendering */
 	ldcore->videoenable = TRUE;
@@ -1481,11 +1474,11 @@ static DEVICE_START( laserdisc )
 
 	/* copy config data to the live state */
 	ldcore->config = *config;
-	if (ldcore->config.overclip.max_x == ldcore->config.overclip.min_x || ldcore->config.overclip.max_y == ldcore->config.overclip.min_y)
+	if (ldcore->config.overclip_max_x == ldcore->config.overclip_min_x || ldcore->config.overclip_max_y == ldcore->config.overclip_min_y)
 	{
-		ldcore->config.overclip.min_x = ldcore->config.overclip.min_y = 0;
-		ldcore->config.overclip.max_x = ldcore->config.overwidth - 1;
-		ldcore->config.overclip.max_y = ldcore->config.overheight - 1;
+		ldcore->config.overclip_min_x = ldcore->config.overclip_min_y = 0;
+		ldcore->config.overclip_max_x = ldcore->config.overwidth - 1;
+		ldcore->config.overclip_max_y = ldcore->config.overheight - 1;
 	}
 	if (ldcore->config.overscalex == 0)
 		ldcore->config.overscalex = 1.0f;

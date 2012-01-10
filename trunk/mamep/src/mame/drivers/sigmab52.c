@@ -158,7 +158,7 @@ static VIDEO_START( jwildb52 )
 
 static SCREEN_UPDATE( jwildb52 )
 {
-	device_t *hd63484 = screen->machine().device("hd63484");
+	device_t *hd63484 = screen.machine().device("hd63484");
 
 	int x, y, b, src;
 
@@ -166,7 +166,7 @@ static SCREEN_UPDATE( jwildb52 )
 
 //save vram to file
 #if 0
-	if (screen->machine().input().code_pressed_once(KEYCODE_Q))
+	if (screen.machine().input().code_pressed_once(KEYCODE_Q))
 	{
 		FILE *p = fopen("vram.bin", "wb");
 		fwrite(&HD63484_ram[0], 1, 0x40000 * 4, p);
@@ -182,15 +182,15 @@ static SCREEN_UPDATE( jwildb52 )
 
 			src = hd63484_ram_r(hd63484, b & (HD63484_RAM_SIZE - 1), 0xffff);
 
-			*BITMAP_ADDR16(bitmap, y, x    ) = ((src & 0x000f) >>  0) << 0;
-			*BITMAP_ADDR16(bitmap, y, x + 1) = ((src & 0x00f0) >>  4) << 0;
-			*BITMAP_ADDR16(bitmap, y, x + 2) = ((src & 0x0f00) >>  8) << 0;
-			*BITMAP_ADDR16(bitmap, y, x + 3) = ((src & 0xf000) >> 12) << 0;
+			bitmap.pix16(y, x    ) = ((src & 0x000f) >>  0) << 0;
+			bitmap.pix16(y, x + 1) = ((src & 0x00f0) >>  4) << 0;
+			bitmap.pix16(y, x + 2) = ((src & 0x0f00) >>  8) << 0;
+			bitmap.pix16(y, x + 3) = ((src & 0xf000) >> 12) << 0;
 			b++;
 		}
 	}
 
-if (!screen->machine().input().code_pressed(KEYCODE_O))
+if (!screen.machine().input().code_pressed(KEYCODE_O))
 	if ((hd63484_regs_r(hd63484, 0x06/2, 0xffff) & 0x0300) == 0x0300)
 	{
 		int sy = (hd63484_regs_r(hd63484, 0x94/2, 0xffff) & 0x0fff) - (hd63484_regs_r(hd63484, 0x88/2, 0xffff) >> 8);
@@ -210,10 +210,10 @@ if (!screen->machine().input().code_pressed(KEYCODE_O))
 
 				if (x <= w && x + sx >= 0 && x + sx < (hd63484_regs_r(hd63484, 0xca/2, 0xffff) & 0x0fff) * 4)
 					{
-						*BITMAP_ADDR16(bitmap, y, x + sx    ) = ((src & 0x000f) >>  0) << 0;
-						*BITMAP_ADDR16(bitmap, y, x + sx + 1) = ((src & 0x00f0) >>  4) << 0;
-						*BITMAP_ADDR16(bitmap, y, x + sx + 2) = ((src & 0x0f00) >>  8) << 0;
-						*BITMAP_ADDR16(bitmap, y, x + sx + 3) = ((src & 0xf000) >> 12) << 0;
+						bitmap.pix16(y, x + sx    ) = ((src & 0x000f) >>  0) << 0;
+						bitmap.pix16(y, x + sx + 1) = ((src & 0x00f0) >>  4) << 0;
+						bitmap.pix16(y, x + sx + 2) = ((src & 0x0f00) >>  8) << 0;
+						bitmap.pix16(y, x + sx + 3) = ((src & 0xf000) >> 12) << 0;
 					}
 				b++;
 			}

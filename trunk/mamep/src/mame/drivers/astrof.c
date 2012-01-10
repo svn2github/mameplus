@@ -376,7 +376,7 @@ static WRITE8_HANDLER( tomahawk_video_control_2_w )
 }
 
 
-static void video_update_common( running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, pen_t *pens )
+static void video_update_common( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, pen_t *pens )
 {
 	astrof_state *state = machine.driver_data<astrof_state>();
 	offs_t offs;
@@ -397,7 +397,7 @@ static void video_update_common( running_machine &machine, bitmap_t *bitmap, con
 		if (!state->m_flipscreen)
 			y = ~y;
 
-		if ((y <= cliprect->min_y) || (y >= cliprect->max_y))
+		if ((y <= cliprect.min_y) || (y >= cliprect.max_y))
 			continue;
 
 		if (state->m_screen_off)
@@ -410,9 +410,9 @@ static void video_update_common( running_machine &machine, bitmap_t *bitmap, con
 			pen_t pen = (data & 0x01) ? fore_pen : back_pen;
 
 			if (state->m_flipscreen)
-				*BITMAP_ADDR32(bitmap, y, 255 - x) = pen;
+				bitmap.pix32(y, 255 - x) = pen;
 			else
-				*BITMAP_ADDR32(bitmap, y, x) = pen;
+				bitmap.pix32(y, x) = pen;
 
 			x = x + 1;
 			data = data >> 1;
@@ -425,9 +425,9 @@ static SCREEN_UPDATE( astrof )
 {
 	pen_t pens[ASTROF_NUM_PENS];
 
-	astrof_get_pens(screen->machine(), pens);
+	astrof_get_pens(screen.machine(), pens);
 
-	video_update_common(screen->machine(), bitmap, cliprect, pens);
+	video_update_common(screen.machine(), bitmap, cliprect, pens);
 
 	return 0;
 }
@@ -437,9 +437,9 @@ static SCREEN_UPDATE( tomahawk )
 {
 	pen_t pens[TOMAHAWK_NUM_PENS];
 
-	tomahawk_get_pens(screen->machine(), pens);
+	tomahawk_get_pens(screen.machine(), pens);
 
-	video_update_common(screen->machine(), bitmap, cliprect, pens);
+	video_update_common(screen.machine(), bitmap, cliprect, pens);
 
 	return 0;
 }

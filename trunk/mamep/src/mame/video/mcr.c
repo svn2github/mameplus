@@ -255,7 +255,7 @@ WRITE8_HANDLER( mcr_91490_videoram_w )
  *
  *************************************/
 
-static void render_sprites_91399(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void render_sprites_91399(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	UINT8 *spriteram = machine.generic.spriteram.u8;
 	const gfx_element *gfx = machine.gfx[1];
@@ -290,11 +290,11 @@ static void render_sprites_91399(running_machine &machine, bitmap_t *bitmap, con
 
 		/* loop over lines in the sprite */
 		for (y = 0; y < 32; y++, sy = (sy + 1) & 0x1ff)
-			if (sy >= cliprect->min_y && sy <= cliprect->max_y)
+			if (sy >= cliprect.min_y && sy <= cliprect.max_y)
 			{
 				const UINT8 *src = gfx_element_get_data(gfx, code) + gfx->line_modulo * (y ^ vflip);
-				UINT16 *dst = BITMAP_ADDR16(bitmap, sy, 0);
-				UINT8 *pri = BITMAP_ADDR8(machine.priority_bitmap, sy, 0);
+				UINT16 *dst = &bitmap.pix16(sy);
+				UINT8 *pri = &machine.priority_bitmap.pix8(sy);
 
 				/* loop over columns */
 				for (x = 0; x < 32; x++)
@@ -327,7 +327,7 @@ static void render_sprites_91399(running_machine &machine, bitmap_t *bitmap, con
  *
  *************************************/
 
-static void render_sprites_91464(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect, int primask, int sprmask, int colormask)
+static void render_sprites_91464(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int primask, int sprmask, int colormask)
 {
 	UINT8 *spriteram = machine.generic.spriteram.u8;
 	const gfx_element *gfx = machine.gfx[1];
@@ -361,11 +361,11 @@ static void render_sprites_91464(running_machine &machine, bitmap_t *bitmap, con
 
 		/* loop over lines in the sprite */
 		for (y = 0; y < 32; y++, sy = (sy + 1) & 0x1ff)
-			if (sy >= 2 && sy >= cliprect->min_y && sy <= cliprect->max_y)
+			if (sy >= 2 && sy >= cliprect.min_y && sy <= cliprect.max_y)
 			{
 				const UINT8 *src = gfx_element_get_data(gfx, code) + gfx->line_modulo * (y ^ vflip);
-				UINT16 *dst = BITMAP_ADDR16(bitmap, sy, 0);
-				UINT8 *pri = BITMAP_ADDR8(machine.priority_bitmap, sy, 0);
+				UINT16 *dst = &bitmap.pix16(sy);
+				UINT8 *pri = &machine.priority_bitmap.pix8(sy);
 
 				/* loop over columns */
 				for (x = 0; x < 32; x++)
@@ -407,7 +407,7 @@ SCREEN_UPDATE( mcr )
 	tilemap_set_flip(bg_tilemap, mcr_cocktail_flip ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0);
 
 	/* draw the background */
-	bitmap_fill(screen->machine().priority_bitmap, cliprect, 0);
+	screen.machine().priority_bitmap.fill(0, cliprect);
 	tilemap_draw(bitmap, cliprect, bg_tilemap, 0, 0x00);
 	tilemap_draw(bitmap, cliprect, bg_tilemap, 1, 0x10);
 	tilemap_draw(bitmap, cliprect, bg_tilemap, 2, 0x20);
@@ -417,18 +417,18 @@ SCREEN_UPDATE( mcr )
 	switch (mcr_sprite_board)
 	{
 		case 91399:
-			render_sprites_91399(screen->machine(), bitmap, cliprect);
+			render_sprites_91399(screen.machine(), bitmap, cliprect);
 			break;
 
 		case 91464:
 			if (mcr_cpu_board == 91442)
-				render_sprites_91464(screen->machine(), bitmap, cliprect, 0x00, 0x30, 0x00);
+				render_sprites_91464(screen.machine(), bitmap, cliprect, 0x00, 0x30, 0x00);
 			else if (mcr_cpu_board == 91475)
-				render_sprites_91464(screen->machine(), bitmap, cliprect, 0x00, 0x30, 0x40);
+				render_sprites_91464(screen.machine(), bitmap, cliprect, 0x00, 0x30, 0x40);
 			else if (mcr_cpu_board == 91490)
-				render_sprites_91464(screen->machine(), bitmap, cliprect, 0x00, 0x30, 0x00);
+				render_sprites_91464(screen.machine(), bitmap, cliprect, 0x00, 0x30, 0x00);
 			else if (mcr_cpu_board == 91721)
-				render_sprites_91464(screen->machine(), bitmap, cliprect, 0x00, 0x30, 0x00);
+				render_sprites_91464(screen.machine(), bitmap, cliprect, 0x00, 0x30, 0x00);
 			break;
 	}
 	return 0;
