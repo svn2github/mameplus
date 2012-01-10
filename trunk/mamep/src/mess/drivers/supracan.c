@@ -192,7 +192,7 @@ public:
 	bool m_hack_68k_to_6502_access;
 
 	tilemap_t *m_tilemap_sizes[4][4];
-	bitmap_t *m_sprite_final_bitmap;
+	bitmap_t m_sprite_final_bitmap;
 	void write_swapped_byte(int offset, UINT8 byte);
 };
 
@@ -398,7 +398,7 @@ static TILE_GET_INFO( get_supracan_roz_tile_info )
 static VIDEO_START( supracan )
 {
 	supracan_state *state = machine.driver_data<supracan_state>();
-	state->m_sprite_final_bitmap = auto_bitmap_alloc(machine, 1024, 1024, BITMAP_FORMAT_INDEXED16);
+	state->m_sprite_final_bitmap.allocate(1024, 1024, BITMAP_FORMAT_INDEXED16);
 
 	state->m_vram = (UINT16*)machine.region("ram_gfx")->base();
 	state->m_vram_swapped = (UINT16*)machine.region("ram_gfx2")->base();
@@ -462,7 +462,7 @@ static int get_tilemap_dimensions(running_machine &machine, int &xsize, int &ysi
 
 
 
-static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const rectangle *cliprect)
+static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
 {
 	supracan_state *state = machine.driver_data<supracan_state>();
 	UINT16 *supracan_vram = state->m_vram;
@@ -600,8 +600,8 @@ static void draw_sprites(running_machine &machine, bitmap_t *bitmap, const recta
 			UINT32 delta = (1 << 17) / xscale;
 			for(int sy = 0; sy < ysize*8; sy++)
 			{
-				UINT16 *src = BITMAP_ADDR16(sprite_bitmap, sy, 0);
-				UINT16 *dst = BITMAP_ADDR16(bitmap, y + sy, 0);
+				UINT16 *src = &sprite_bitmap->pix16(sy);
+				UINT16 *dst = &bitmap.pix16(y + sy);
 				UINT32 dx = x << 16;
 				for(int sx = 0; sx < xsize*8; sx++)
 				{
@@ -634,15 +634,15 @@ static void mark_active_tilemap_all_dirty(running_machine &machine, int layer)
 
 
 /* draws ROZ with linescroll OR columnscroll to 16-bit indexed bitmap */
-static void supracan_suprnova_draw_roz(running_machine &machine, bitmap_t* bitmap, const rectangle *cliprect, tilemap_t *tmap, UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy, int wraparound/*, int columnscroll, UINT32* scrollram*/, int transmask)
+static void supracan_suprnova_draw_roz(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, tilemap_t *tmap, UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy, int wraparound/*, int columnscroll, UINT32* scrollram*/, int transmask)
 {
 	//bitmap_t *destbitmap = bitmap;
-	bitmap_t *srcbitmap = tilemap_get_pixmap(tmap);
-	//bitmap_t *srcbitmapflags = tilemap_get_flagsmap(tmap);
-	const int xmask = srcbitmap->width-1;
-	const int ymask = srcbitmap->height-1;
-	const int widthshifted = srcbitmap->width << 16;
-	const int heightshifted = srcbitmap->height << 16;
+	bitmap_t &srcbitmap = tilemap_get_pixmap(tmap);
+	//bitmap_t &srcbitmapflags = tilemap_get_flagsmap(tmap);
+	const int xmask = srcbitmap.width()-1;
+	const int ymask = srcbitmap.height()-1;
+	const int widthshifted = srcbitmap.width() << 16;
+	const int heightshifted = srcbitmap.height() << 16;
 	UINT32 cx;
 	UINT32 cy;
 	int x;
@@ -658,14 +658,14 @@ static void supracan_suprnova_draw_roz(running_machine &machine, bitmap_t* bitma
 	//int destadvance = destbitmap->bpp / 8;
 
 	/* pre-advance based on the cliprect */
-	startx += cliprect->min_x * incxx + cliprect->min_y * incyx;
-	starty += cliprect->min_x * incxy + cliprect->min_y * incyy;
+	startx += cliprect.min_x * incxx + cliprect.min_y * incyx;
+	starty += cliprect.min_x * incxy + cliprect.min_y * incyy;
 
 	/* extract start/end points */
-	sx = cliprect->min_x;
-	sy = cliprect->min_y;
-	ex = cliprect->max_x;
-	ey = cliprect->max_y;
+	sx = cliprect.min_x;
+	sy = cliprect.min_y;
+	ex = cliprect.max_x;
+	ey = cliprect.max_y;
 
 	{
 		/* loop over rows */
@@ -678,8 +678,8 @@ static void supracan_suprnova_draw_roz(running_machine &machine, bitmap_t* bitma
 			cy = starty;
 
 			/* get dest and priority pointers */
-			dest = BITMAP_ADDR16( bitmap, sy, sx);
-			//destflags = BITMAP_ADDR8( bitmapflags, sy, sx);
+			dest = &bitmap.pix16(sy, sx);
+			//destflags = &bitmapflags->pix8(sy, sx);
 
 			/* loop over columns */
 			while (x <= ex)
@@ -692,28 +692,28 @@ static void supracan_suprnova_draw_roz(running_machine &machine, bitmap_t* bitma
 						int scroll = 0;//scrollram[(cx>>16)&0x3ff]);
 
 
-						UINT16 data = BITMAP_ADDR16(srcbitmap,
-												((cy >> 16) - scroll) & ymask,
+						UINT16 data = &srcbitmap.pix16(
+												((cy >> 16) - scroll) & ymask, 
 												(cx >> 16) & xmask)[0];
 
 						if ((data & transmask)!=0)
 							dest[0] = data;
 
-						//destflags[0] = BITMAP_ADDR8(srcbitmapflags, ((cy >> 16) - scrollram[(cx>>16)&0x3ff]) & ymask, (cx >> 16) & xmask)[0];
+						//destflags[0] = &srcbitmapflags.pix8(((cy >> 16) - scrollram[(cx>>16)&0x3ff]) & ymask, (cx >> 16) & xmask)[0];
 					}
 					else
 					#endif
 					{
 						int scroll = 0;//scrollram[(cy>>16)&0x3ff]);
-						UINT16 data =  BITMAP_ADDR16(srcbitmap,
-											   (cy >> 16) & ymask,
-											   ((cx >> 16) - scroll) & xmask)[0];
+						UINT16 data =  srcbitmap.pix16(
+											   (cy >> 16) & ymask, 
+											   ((cx >> 16) - scroll) & xmask);
 
 
 						if ((data & transmask)!=0)
 							dest[0] = data;
 
-						//destflags[0] = BITMAP_ADDR8(srcbitmapflags, (cy >> 16) & ymask, ((cx >> 16) - scrollram[(cy>>16)&0x3ff]) & xmask)[0];
+						//destflags[0] = &srcbitmapflags.pix8((cy >> 16) & ymask, ((cx >> 16) - scrollram[(cy>>16)&0x3ff]) & xmask)[0];
 					}
 				}
 
@@ -760,7 +760,7 @@ static void supracan_suprnova_draw_roz(running_machine &machine, bitmap_t* bitma
 
 static SCREEN_UPDATE( supracan )
 {
-	supracan_state *state = (supracan_state *)screen->machine().driver_data<supracan_state>();
+	supracan_state *state = (supracan_state *)screen.machine().driver_data<supracan_state>();
 
 
 
@@ -768,30 +768,29 @@ static SCREEN_UPDATE( supracan )
 
 	if (0)
 	{
-		if (cliprect->min_y == 0x00)
+		if (cliprect.min_y == 0x00)
 		{
-			const rectangle &visarea = screen->visible_area();
+			const rectangle &visarea = screen.visible_area();
 
-			bitmap_fill(state->m_sprite_final_bitmap, &visarea, 0x00);
-			bitmap_fill(bitmap, &visarea, 0x80);
+			state->m_sprite_final_bitmap.fill(0x00, visarea);
+			bitmap.fill(0x80, visarea);
 
-			draw_sprites(screen->machine(), state->m_sprite_final_bitmap, &visarea);
+			draw_sprites(screen.machine(), state->m_sprite_final_bitmap, visarea);
 		}
 	}
 	else
 	{
 
-		bitmap_fill(state->m_sprite_final_bitmap, cliprect, 0x00);
-		bitmap_fill(bitmap, cliprect, 0x80);
+		state->m_sprite_final_bitmap.fill(0x00, cliprect);
+		bitmap.fill(0x80, cliprect);
 
-		draw_sprites(screen->machine(), state->m_sprite_final_bitmap, cliprect);
+		draw_sprites(screen.machine(), state->m_sprite_final_bitmap, cliprect);
 	}
 
 
 
 	// mix screen
 	int xsize = 0, ysize = 0;
-	bitmap_t *src_bitmap = 0;
 //  int tilemap_num;
 	int which_tilemap_size;
 	int priority = 0;
@@ -825,9 +824,9 @@ static SCREEN_UPDATE( supracan )
 			if (priority==pri)
 			{
 //            tilemap_num = layer;
-				which_tilemap_size = get_tilemap_dimensions(screen->machine(), xsize, ysize, layer);
-				src_bitmap = tilemap_get_pixmap(state->m_tilemap_sizes[layer][which_tilemap_size]);
-				int gfx_region = supracan_tilemap_get_region(screen->machine(), layer);
+				which_tilemap_size = get_tilemap_dimensions(screen.machine(), xsize, ysize, layer);
+				bitmap_t &src_bitmap = tilemap_get_pixmap(state->m_tilemap_sizes[layer][which_tilemap_size]);
+				int gfx_region = supracan_tilemap_get_region(screen.machine(), layer);
 				int transmask = 0xff;
 
 				switch (gfx_region)
@@ -858,10 +857,10 @@ static SCREEN_UPDATE( supracan )
 						int y,x;
 						// yes, it will draw a single line if you specify a cliprect as such (partial updates...)
 
-						for (y=cliprect->min_y;y<=cliprect->max_y;y++)
+						for (y=cliprect.min_y;y<=cliprect.max_y;y++)
 						{
 							// these will have to change to ADDR32 etc. once alpha blending is supported
-							UINT16* screen = BITMAP_ADDR16(bitmap, y, 0);
+							UINT16* screen = &bitmap.pix16(y);
 
 							int actualy = y&mosaic_mask;
 
@@ -872,9 +871,9 @@ static SCREEN_UPDATE( supracan )
 									continue;
 
 
-							UINT16* src = BITMAP_ADDR16(src_bitmap, (realy)&((ysize*8)-1), 0);
+							UINT16* src = &src_bitmap.pix16((realy)&((ysize*8)-1));
 
-							for (x=cliprect->min_x;x<=cliprect->max_x;x++)
+							for (x=cliprect.min_x;x<=cliprect.max_x;x++)
 							{
 								int actualx = x & mosaic_mask;
 								int realx = actualx+scrollx;
@@ -929,11 +928,11 @@ static SCREEN_UPDATE( supracan )
 						if (!(state->m_roz_mode & 0x0200) && (state->m_roz_mode&0xf000) ) // HACK - Not Trusted, Acan Logo, Speedy Dragon Intro ,Speed Dragon Bonus stage need it.  Monopoly and JTT *don't* causes graphical issues
 						{
 							// NOT accurate, causes issues when the attract mode loops and the logo is shown the 2nd time in some games - investigate
-							for (int y=cliprect->min_y;y<=cliprect->max_y;y++)
+							for (int y=cliprect.min_y;y<=cliprect.max_y;y++)
 							{
 								rectangle clip;
-								clip.min_x = cliprect->min_x;
-								clip.max_x = cliprect->max_x;
+								clip.min_x = cliprect.min_x;
+								clip.max_x = cliprect.max_x;
 
 								clip.min_y = clip.max_y = y;
 
@@ -953,12 +952,12 @@ static SCREEN_UPDATE( supracan )
 
 
 								if (state->m_vram[state->m_roz_unk_base0/2 + y]) // incxx = 0, no draw?
-									supracan_suprnova_draw_roz(screen->machine(), bitmap, &clip, state->m_tilemap_sizes[layer][which_tilemap_size], scrollx<<8, scrolly<<8, incxx<<8, incxy<<8, incyx<<8, incyy<<8, wrap, transmask);
+									supracan_suprnova_draw_roz(screen.machine(), bitmap, clip, state->m_tilemap_sizes[layer][which_tilemap_size], scrollx<<8, scrolly<<8, incxx<<8, incxy<<8, incyx<<8, incyy<<8, wrap, transmask);
 							}
 						}
 						else
 						{
-							supracan_suprnova_draw_roz(screen->machine(), bitmap, cliprect, state->m_tilemap_sizes[layer][which_tilemap_size], scrollx<<8, scrolly<<8, incxx<<8, incxy<<8, incyx<<8, incyy<<8, wrap, transmask);
+							supracan_suprnova_draw_roz(screen.machine(), bitmap, cliprect, state->m_tilemap_sizes[layer][which_tilemap_size], scrollx<<8, scrolly<<8, incxx<<8, incxy<<8, incyx<<8, incyy<<8, wrap, transmask);
 						}
 					}
 				}
@@ -970,12 +969,12 @@ static SCREEN_UPDATE( supracan )
 	// just draw the sprites on top for now
 	if(state->m_video_flags & 0x08)
 	{
-		for (int y=cliprect->min_y;y<=cliprect->max_y;y++)
+		for (int y=cliprect.min_y;y<=cliprect.max_y;y++)
 		{
-			UINT16* src = BITMAP_ADDR16( state->m_sprite_final_bitmap, y, 0);
-			UINT16* dst = BITMAP_ADDR16( bitmap, y, 0);
+			UINT16* src = &state->m_sprite_final_bitmap.pix16(y);
+			UINT16* dst = &bitmap.pix16(y);
 
-			for (int x=cliprect->min_x;x<=cliprect->max_x;x++)
+			for (int x=cliprect.min_x;x<=cliprect.max_x;x++)
 			{
 				UINT16 dat = src[x];
 				if (dat) dst[x] = dat;

@@ -104,7 +104,6 @@ $(MESSOBJ)/nintendo.a:			\
 $(MESSOBJ)/sega.a:				\
 	$(MAME_MACHINE)/md_cart.o	\
 	$(MESS_DRIVERS)/megadriv.o  \
-	$(MESS_VIDEO)/smsvdp.o		\
 	$(MESS_MACHINE)/sms.o	\
 	$(MESS_DRIVERS)/sms.o	\
 

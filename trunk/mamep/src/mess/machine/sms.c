@@ -1,7 +1,7 @@
 #include "emu.h"
 #include "crsshair.h"
 #include "image.h"
-#include "video/smsvdp.h"
+#include "video/315_5124.h"
 #include "sound/2413intf.h"
 #include "imagedev/cartslot.h"
 #include "machine/eeprom.h"
@@ -369,7 +369,24 @@ static int lgun_bright_aim_area( running_machine &machine, emu_timer *timer, int
 
 		if (!pos_changed)
 		{
-			result = state->m_vdp->check_brightness(beam_x, beam_y);
+			bitmap_t &bitmap = *state->m_vdp->get_bitmap();
+
+			/* brightness of the lightgray color in the frame drawn by Light Phaser games */
+			const UINT8 sensor_min_brightness = 0x7f;
+
+			/* TODO: Check how Light Phaser behaves for border areas. For Gangster Town, should */
+			/* a shot at right border (HC~=0x90) really appear at active scr, near to left border? */
+			if (beam_x < SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH || beam_x >= SEGA315_5124_LBORDER_START + SEGA315_5124_LBORDER_WIDTH + 256)
+				return 0;
+
+			rgb_t color = bitmap.pix32(beam_y, beam_x);
+
+			/* reference: http://www.w3.org/TR/AERT#color-contrast */
+			UINT8 brightness = (RGB_RED(color) * 0.299) + (RGB_GREEN(color) * 0.587) + (RGB_BLUE(color) * 0.114);
+			//printf ("color brightness: %2X for x %d y %d\n", brightness, beam_x, beam_y);
+
+			result = (brightness >= sensor_min_brightness) ? 1 : 0;
+
 			/* next check at same line */
 			beam_x += LGUN_X_INTERVAL;
 			pos_changed = 1;
@@ -421,17 +438,17 @@ static void sms_vdp_hcount_latch( address_space *space )
 }
 
 
-static UINT16 screen_hpos_nonscaled( screen_device *screen, int scaled_hpos )
+static UINT16 screen_hpos_nonscaled( screen_device &screen, int scaled_hpos )
 {
-	const rectangle &visarea = screen->visible_area();
+	const rectangle &visarea = screen.visible_area();
 	int offset_x = (scaled_hpos * (visarea.max_x - visarea.min_x)) / 255;
 	return visarea.min_x + offset_x;
 }
 
 
-static UINT16 screen_vpos_nonscaled( screen_device *screen, int scaled_vpos )
+static UINT16 screen_vpos_nonscaled( screen_device &screen, int scaled_vpos )
 {
-	const rectangle &visarea = screen->visible_area();
+	const rectangle &visarea = screen.visible_area();
 	int offset_y = (scaled_vpos * (visarea.max_y - visarea.min_y)) / 255;
 	return visarea.min_y + offset_y;
 }
@@ -440,8 +457,8 @@ static UINT16 screen_vpos_nonscaled( screen_device *screen, int scaled_vpos )
 static void lphaser1_sensor_check( running_machine &machine )
 {
 	sms_state *state = machine.driver_data<sms_state>();
-	const int x = screen_hpos_nonscaled(machine.first_screen(), input_port_read(machine, "LPHASER0"));
-	const int y = screen_vpos_nonscaled(machine.first_screen(), input_port_read(machine, "LPHASER1"));
+	const int x = screen_hpos_nonscaled(*machine.first_screen(), input_port_read(machine, "LPHASER0"));
+	const int y = screen_vpos_nonscaled(*machine.first_screen(), input_port_read(machine, "LPHASER1"));
 
 	if (lgun_bright_aim_area(machine, state->m_lphaser_1_timer, x, y))
 	{
@@ -456,8 +473,8 @@ static void lphaser1_sensor_check( running_machine &machine )
 static void lphaser2_sensor_check( running_machine &machine )
 {
 	sms_state *state = machine.driver_data<sms_state>();
-	const int x = screen_hpos_nonscaled(machine.first_screen(), input_port_read(machine, "LPHASER2"));
-	const int y = screen_vpos_nonscaled(machine.first_screen(), input_port_read(machine, "LPHASER3"));
+	const int x = screen_hpos_nonscaled(*machine.first_screen(), input_port_read(machine, "LPHASER2"));
+	const int y = screen_vpos_nonscaled(*machine.first_screen(), input_port_read(machine, "LPHASER3"));
 
 	if (lgun_bright_aim_area(machine, state->m_lphaser_2_timer, x, y))
 	{
@@ -1023,7 +1040,7 @@ WRITE8_HANDLER( sms_mapper_w )
 		{
 			if (state->m_bios_port & IO_BIOS_ROM || ! state->m_has_bios)
 			{
-				if ( ! ( state->m_cartridge[state->m_current_cartridge].features & CF_KOREAN_NOBANK_MAPPER ) )
+				if ( ! ( state->m_cartridge[state->m_current_cartridge].features & ( CF_KOREAN_NOBANK_MAPPER | CF_KOREAN_ZEMINA_MAPPER ) ) )
 				{
 					if ( state->m_cartridge[state->m_current_cartridge].features & CF_93C46_EEPROM )
 					{
@@ -1052,7 +1069,7 @@ WRITE8_HANDLER( sms_mapper_w )
 	case 1: /* Select 16k ROM bank for 0400-3FFF */
 		if ( cartridge_selected || state->m_is_gamegear )
 		{
-			if ( ! ( state->m_cartridge[state->m_current_cartridge].features & CF_KOREAN_NOBANK_MAPPER ) )
+			if ( ! ( state->m_cartridge[state->m_current_cartridge].features & ( CF_KOREAN_NOBANK_MAPPER | CF_KOREAN_ZEMINA_MAPPER ) ) )
 			{
 				state->map_cart_16k( 0x400, data );
 			}
@@ -1066,7 +1083,7 @@ WRITE8_HANDLER( sms_mapper_w )
 	case 2: /* Select 16k ROM bank for 4000-7FFF */
 		if ( cartridge_selected || state->m_is_gamegear )
 		{
-			if ( ! ( state->m_cartridge[state->m_current_cartridge].features & CF_KOREAN_NOBANK_MAPPER ) )
+			if ( ! ( state->m_cartridge[state->m_current_cartridge].features & ( CF_KOREAN_NOBANK_MAPPER | CF_KOREAN_ZEMINA_MAPPER ) ) )
 			{
 				state->map_cart_16k( 0x4000, data );
 			}
@@ -1087,7 +1104,7 @@ WRITE8_HANDLER( sms_mapper_w )
 
 			if ( ! ( state->m_mapper[0] & 0x08 ) )		// Is RAM disabled
 			{
-				if ( ! ( state->m_cartridge[state->m_current_cartridge].features & CF_KOREAN_NOBANK_MAPPER ) )
+				if ( ! ( state->m_cartridge[state->m_current_cartridge].features & ( CF_KOREAN_NOBANK_MAPPER | CF_KOREAN_ZEMINA_MAPPER ) ) )
 				{
 					state->map_cart_16k( 0x8000, data );
 				}
@@ -1921,6 +1938,10 @@ static void setup_banks( running_machine &machine )
 	{
 		state->m_BIOS = NULL;
 		state->m_bios_port |= IO_BIOS_ROM;
+		state->m_has_bios_0400 = 0;
+		state->m_has_bios_2000 = 0;
+		state->m_has_bios_full = 0;
+		state->m_has_bios = 0;
 	}
 
 	if (state->m_BIOS)
@@ -2179,6 +2200,7 @@ DRIVER_INIT( gamegear )
 	sms_state *state = machine.driver_data<sms_state>();
 	sms_set_zero_flag(machine);
 	state->m_is_gamegear = 1;
+	state->m_has_bios_0400 = 1;
 }
 
 
@@ -2192,15 +2214,15 @@ DRIVER_INIT( gamegeaj )
 }
 
 
-static void sms_black_bitmap( const screen_device *screen, bitmap_t *bitmap )
+static void sms_black_bitmap( const screen_device &screen, bitmap_t &bitmap )
 {
-	const int width = screen->width();
-	const int height = screen->height();
+	const int width = screen.width();
+	const int height = screen.height();
 	int x, y;
 
 	for (y = 0; y < height; y++)
 		for (x = 0; x < width; x++)
-			*BITMAP_ADDR32(bitmap, y, x) = MAKE_RGB(0,0,0);
+			bitmap.pix32(y, x) = MAKE_RGB(0,0,0);
 }
 
 VIDEO_START( sms1 )
@@ -2210,29 +2232,29 @@ VIDEO_START( sms1 )
 	int width = screen->width();
 	int height = screen->height();
 
-	state->m_prevleft_bitmap = auto_bitmap_alloc(machine, width, height, BITMAP_FORMAT_INDEXED32);
-	state->m_prevright_bitmap = auto_bitmap_alloc(machine, width, height, BITMAP_FORMAT_INDEXED32);
-	state->save_item(NAME(*state->m_prevleft_bitmap));
-	state->save_item(NAME(*state->m_prevright_bitmap));
+	state->m_prevleft_bitmap.allocate(width, height, BITMAP_FORMAT_INDEXED32);
+	state->m_prevright_bitmap.allocate(width, height, BITMAP_FORMAT_INDEXED32);
+	state->save_item(NAME(state->m_prevleft_bitmap));
+	state->save_item(NAME(state->m_prevright_bitmap));
 }
 
 SCREEN_UPDATE( sms1 )
 {
-	sms_state *state = screen->machine().driver_data<sms_state>();
-	UINT8 sscope = input_port_read_safe(screen->machine(), "SEGASCOPE", 0x00);
-	UINT8 sscope_binocular_hack = input_port_read_safe(screen->machine(), "SSCOPE_BINOCULAR", 0x00);
+	sms_state *state = screen.machine().driver_data<sms_state>();
+	UINT8 sscope = input_port_read_safe(screen.machine(), "SEGASCOPE", 0x00);
+	UINT8 sscope_binocular_hack = input_port_read_safe(screen.machine(), "SSCOPE_BINOCULAR", 0x00);
 	UINT8 occluded_view = 0;
 
 	// without SegaScope, both LCDs for glasses go black
-	if ((screen != state->m_main_scr) && !sscope)
+	if ((&screen != state->m_main_scr) && !sscope)
 		occluded_view = 1;
 
 	// with SegaScope, sscope_state 0 = left screen OFF, right screen ON
-	if (!(state->m_sscope_state & 0x01) && (screen == state->m_left_lcd))
+	if (!(state->m_sscope_state & 0x01) && (&screen == state->m_left_lcd))
 		occluded_view = 1;
 
 	// with SegaScope, sscope_state 1 = left screen ON, right screen OFF
-	if ((state->m_sscope_state & 0x01) && (screen == state->m_right_lcd))
+	if ((state->m_sscope_state & 0x01) && (&screen == state->m_right_lcd))
 		occluded_view = 1;
 
 	if (!occluded_view)
@@ -2241,9 +2263,9 @@ SCREEN_UPDATE( sms1 )
 
 		// HACK: fake 3D->2D handling (if enabled, it repeats each frame twice on the selected lens)
 		// save a copy of current bitmap for the binocular hack
-		if (sscope && (screen == state->m_left_lcd) && (sscope_binocular_hack & 0x01))
+		if (sscope && (&screen == state->m_left_lcd) && (sscope_binocular_hack & 0x01))
 			copybitmap(state->m_prevleft_bitmap, bitmap, 0, 0, 0, 0, cliprect);
-		if (sscope && (screen == state->m_right_lcd) && (sscope_binocular_hack & 0x02))
+		if (sscope && (&screen == state->m_right_lcd) && (sscope_binocular_hack & 0x02))
 			copybitmap(state->m_prevright_bitmap, bitmap, 0, 0, 0, 0, cliprect);
 	}
 	else
@@ -2252,9 +2274,9 @@ SCREEN_UPDATE( sms1 )
 
 		// HACK: fake 3D->2D handling (if enabled, it repeats each frame twice on the selected lens)
 		// use the copied bitmap for the binocular hack
-		if (sscope && (screen == state->m_left_lcd) && (sscope_binocular_hack & 0x01))
+		if (sscope && (&screen == state->m_left_lcd) && (sscope_binocular_hack & 0x01))
 			copybitmap(bitmap, state->m_prevleft_bitmap, 0, 0, 0, 0, cliprect);
-		if (sscope && (screen == state->m_right_lcd) && (sscope_binocular_hack & 0x02))
+		if (sscope && (&screen == state->m_right_lcd) && (sscope_binocular_hack & 0x02))
 			copybitmap(bitmap, state->m_prevright_bitmap, 0, 0, 0, 0, cliprect);
 	}
 
@@ -2263,7 +2285,7 @@ SCREEN_UPDATE( sms1 )
 
 SCREEN_UPDATE( sms )
 {
-	sms_state *state = screen->machine().driver_data<sms_state>();
+	sms_state *state = screen.machine().driver_data<sms_state>();
 	state->m_vdp->update_video(bitmap, cliprect);
 	return 0;
 }
@@ -2275,16 +2297,16 @@ VIDEO_START( gamegear )
 	int width = screen->width();
 	int height = screen->height();
 
-	state->m_prev_bitmap = auto_bitmap_alloc(machine, width, height, BITMAP_FORMAT_INDEXED32);
-	state->m_tmp_bitmap = auto_bitmap_alloc(machine, width, height, BITMAP_FORMAT_INDEXED32);
-	state->save_item(NAME(*state->m_prev_bitmap));
+	state->m_prev_bitmap.allocate(width, height, BITMAP_FORMAT_INDEXED32);
+	state->m_tmp_bitmap.allocate(width, height, BITMAP_FORMAT_INDEXED32);
+	state->save_item(NAME(state->m_prev_bitmap));
 }
 
 SCREEN_UPDATE( gamegear )
 {
-	sms_state *state = screen->machine().driver_data<sms_state>();
-	int width = screen->width();
-	int height = screen->height();
+	sms_state *state = screen.machine().driver_data<sms_state>();
+	int width = screen.width();
+	int height = screen.height();
 	int x, y;
 
 	state->m_vdp->update_video(state->m_tmp_bitmap, cliprect);
@@ -2293,8 +2315,8 @@ SCREEN_UPDATE( gamegear )
 	// (it would be better to generalize this in the core, to be used for all LCD systems)
 	for (y = 0; y < height; y++)
 	{
-		UINT32 *line0 = BITMAP_ADDR32(state->m_tmp_bitmap, y, 0);
-		UINT32 *line1 = BITMAP_ADDR32(state->m_prev_bitmap, y, 0);
+		UINT32 *line0 = &state->m_tmp_bitmap.pix32(y);
+		UINT32 *line1 = &state->m_prev_bitmap.pix32(y);
 		for (x = 0; x < width; x++)
 		{
 			UINT32 color0 = line0[x];
@@ -2308,7 +2330,7 @@ SCREEN_UPDATE( gamegear )
 			UINT8 r = (UINT8)((r0 + r1) >> 1);
 			UINT8 g = (UINT8)((g0 + g1) >> 1);
 			UINT8 b = (UINT8)((b0 + b1) >> 1);
-			*BITMAP_ADDR32(bitmap, y, x) = (r << 16) | (g << 8) | b;
+			bitmap.pix32(y, x) = (r << 16) | (g << 8) | b;
 		}
 	}
 	copybitmap(state->m_prev_bitmap, state->m_tmp_bitmap, 0, 0, 0, 0, cliprect);
