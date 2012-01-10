@@ -2543,7 +2543,7 @@ static analog_field_state *init_field_analog_state(const input_field_config *fie
 			/* positional controls reverse from their max range */
 			state->reverse_val = state->maximum + state->minimum;
 
-			/* positional controls reverse from their max range */
+			/* relative controls reverse from 1 past their max range */
 			if (state->wraps)
 				state->reverse_val -= INPUT_RELATIVE_PER_PIXEL;
 		}

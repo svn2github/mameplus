@@ -141,8 +141,8 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 			gl.bitmap = auto_alloc(m_manager.machine(), bitmap_t(gl.bmwidth, gl.bmheight, BITMAP_FORMAT_ARGB32));
 			rectangle clip;
 			clip.min_x = clip.min_y = 0;
-			clip.max_x = glyph_ch.bitmap->width - 1;
-			clip.max_y = glyph_ch.bitmap->height - 1;
+			clip.max_x = glyph_ch.bitmap->width() - 1;
+			clip.max_y = glyph_ch.bitmap->height() - 1;
 			render_texture::hq_scale(*gl.bitmap, *glyph_ch.bitmap, clip, NULL);
 
 			/* wrap a texture around the bitmap */
@@ -344,7 +344,7 @@ void render_font::char_expand(unicode_char chnum, glyph &gl)
 
 		// allocate a new bitmap of the size we need
 		gl.bitmap = auto_alloc(m_manager.machine(), bitmap_t(gl.bmwidth, m_height_cmd, BITMAP_FORMAT_ARGB32));
-		bitmap_fill(gl.bitmap, NULL, 0);
+		gl.bitmap->fill(0);
 
 		// extract the data
 		const char *ptr = gl.rawdata;
@@ -352,7 +352,7 @@ void render_font::char_expand(unicode_char chnum, glyph &gl)
 		for (int y = 0; y < gl.bmheight; y++)
 		{
 			int desty = y + m_height_cmd + m_yoffs_cmd - gl.yoffs - gl.bmheight;
-			UINT32 *dest = (desty >= 0 && desty < m_height_cmd) ? BITMAP_ADDR32(gl.bitmap, desty, 0) : NULL;
+			UINT32 *dest = (desty >= 0 && desty < m_height_cmd) ? &gl.bitmap->pix32(desty, 0) : NULL;
 
 			{
 				for (int x = 0; x < gl.bmwidth; x++)
