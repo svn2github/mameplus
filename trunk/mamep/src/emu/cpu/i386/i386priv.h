@@ -225,6 +225,7 @@ struct _i386_state
 	UINT8 IOP1;
 	UINT8 IOP2;
 	UINT8 NT;
+	UINT8 VM;
 
 	UINT8 CPL;  // current privilege level
 
@@ -240,10 +241,14 @@ struct _i386_state
 	I386_SEG_DESC task;		// Task register
 	I386_SEG_DESC ldtr;		// Local Descriptor Table Register
 
+	UINT8 ext;  // external interrupt
+
 	int halted;
 
 	int operand_size;
 	int address_size;
+	int operand_prefix;
+	int address_prefix;
 
 	int segment_prefix;
 	int segment_override;
@@ -299,8 +304,8 @@ extern int i386_parity_table[256];
 
 #define PROTECTED_MODE		(cpustate->cr[0] & 0x1)
 #define STACK_32BIT			(cpustate->sreg[SS].d)
-#define V8086_MODE			(cpustate->eflags & 0x00020000)
-#define NESTED_TASK			(cpustate->eflags & 0x00004000)
+#define V8086_MODE			(cpustate->VM)
+#define NESTED_TASK			(cpustate->NT)
 
 #define SetOF_Add32(r,s,d)	(cpustate->OF = (((r) ^ (s)) & ((r) ^ (d)) & 0x80000000) ? 1: 0)
 #define SetOF_Add16(r,s,d)	(cpustate->OF = (((r) ^ (s)) & ((r) ^ (d)) & 0x8000) ? 1 : 0)
@@ -379,14 +384,26 @@ INLINE int translate_address(i386_state *cpustate, UINT32 *address)
 
 	// TODO: 4MB pages
 	UINT32 page_dir = cpustate->program->read_dword(pdbr + directory * 4);
-	if (!(cpustate->cr[4] & 0x10)) {
+	if (!(cpustate->cr[4] & 0x10))
+	{
 		page_entry = cpustate->program->read_dword((page_dir & 0xfffff000) + (table * 4));
+		if(!(page_entry & 1))
+			return 0;
 		*address = (page_entry & 0xfffff000) | offset;
-	} else {
+	}
+	else
+	{
 		if (page_dir & 0x80)
+		{
+			if(!(page_dir & 1))
+				return 0;
 			*address = (page_dir & 0xffc00000) | (a & 0x003fffff);
-		else {
+		}
+		else
+		{
 			page_entry = cpustate->program->read_dword((page_dir & 0xfffff000) + (table * 4));
+			if(!(page_entry & 1))
+				return 0;
 			*address = (page_entry & 0xfffff000) | offset;
 		}
 	}

@@ -542,11 +542,6 @@ void video_manager::add_sound_to_recording(const INT16 *sound, int numsamples)
 
 void video_manager::exit()
 {
-#if 0 //mamep: remove this code to avert crash at exit
-	for (screen_device *screen = machine().first_screen(); screen != NULL; screen = screen->next_screen())
-		screen->video_exit_scale_effect();
-#endif /* USE_SCALE_EFFECTS */
-
 	// stop recording any movie
 	end_recording();
 

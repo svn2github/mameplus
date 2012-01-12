@@ -79,6 +79,8 @@ endif
 ifneq ($(filter ARM7,$(CPUS)),)
 OBJDIRS += $(CPUOBJ)/arm7
 CPUOBJS += $(CPUOBJ)/arm7/arm7.o
+CPUOBJS += $(CPUOBJ)/arm7/arm7thmb.o
+CPUOBJS += $(CPUOBJ)/arm7/arm7ops.o
 DASMOBJS += $(CPUOBJ)/arm7/arm7dasm.o
 endif
 
@@ -87,10 +89,20 @@ $(CPUOBJ)/arm/arm.o:	$(CPUSRC)/arm/arm.c \
 
 $(CPUOBJ)/arm7/arm7.o:	$(CPUSRC)/arm7/arm7.c \
 						$(CPUSRC)/arm7/arm7.h \
-						$(CPUSRC)/arm7/arm7exec.c \
+						$(CPUSRC)/arm7/arm7help.h \
+						$(CPUSRC)/arm7/arm7thmb.c \
+						$(CPUSRC)/arm7/arm7ops.c \
 						$(CPUSRC)/arm7/arm7core.c
 
+$(CPUOBJ)/arm7/arm7ops.o:	$(CPUSRC)/arm7/arm7ops.c \
+						$(CPUSRC)/arm7/arm7.h \
+						$(CPUSRC)/arm7/arm7help.h \
+						$(CPUSRC)/arm7/arm7core.h \
 
+$(CPUOBJ)/arm7/arm7thmb.o:	$(CPUSRC)/arm7/arm7thmb.c \
+						$(CPUSRC)/arm7/arm7.h \
+						$(CPUSRC)/arm7/arm7help.h \
+						$(CPUSRC)/arm7/arm7core.h \
 
 #-------------------------------------------------
 # Advanced Digital Chips SE3208

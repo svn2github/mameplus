@@ -910,7 +910,7 @@ static void I386OP(arpl)(i386_state *cpustate)           // Opcode 0x63
 	UINT8 modrm = FETCH(cpustate);
 	UINT8 flag = 0;
 
-	if(PROTECTED_MODE)
+	if(PROTECTED_MODE && !V8086_MODE)
 	{
 		 if( modrm >= 0xc0 ) {
 			src = LOAD_REG16(modrm);
@@ -2207,13 +2207,21 @@ static void I386OP(segment_SS)(i386_state *cpustate)		// Opcode 0x36
 
 static void I386OP(operand_size)(i386_state *cpustate)		// Opcode 0x66
 {
-	cpustate->operand_size ^= 1;
+	if(cpustate->operand_prefix == 0)
+	{
+		cpustate->operand_size ^= 1;
+		cpustate->operand_prefix = 1;
+	}
 	I386OP(decode_opcode)(cpustate);
 }
 
 static void I386OP(address_size)(i386_state *cpustate)		// Opcode 0x67
 {
-	cpustate->address_size ^= 1;
+	if(cpustate->address_prefix == 0)
+	{
+		cpustate->address_size ^= 1;
+		cpustate->address_prefix = 1;
+	}
 	I386OP(decode_opcode)(cpustate);
 }
 
@@ -2225,20 +2233,26 @@ static void I386OP(nop)(i386_state *cpustate)				// Opcode 0x90
 static void I386OP(int3)(i386_state *cpustate)				// Opcode 0xcc
 {
 	CYCLES(cpustate,CYCLES_INT3);
+	cpustate->ext = 0; // not an external interrupt
 	i386_trap(cpustate,3, 1, 0);
+	cpustate->ext = 1;
 }
 
 static void I386OP(int)(i386_state *cpustate)				// Opcode 0xcd
 {
 	int interrupt = FETCH(cpustate);
 	CYCLES(cpustate,CYCLES_INT);
+	cpustate->ext = 0; // not an external interrupt
 	i386_trap(cpustate,interrupt, 1, 0);
+	cpustate->ext = 1;
 }
 
 static void I386OP(into)(i386_state *cpustate)				// Opcode 0xce
 {
 	if( cpustate->OF ) {
+		cpustate->ext = 0;
 		i386_trap(cpustate,4, 1, 0);
+		cpustate->ext = 1;
 		CYCLES(cpustate,CYCLES_INTO_OF1);
 	}
 	else

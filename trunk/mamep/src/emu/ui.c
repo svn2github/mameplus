@@ -2881,7 +2881,7 @@ static void build_bgtexture(running_machine &machine)
 	if (!bgbitmap)
 		fatalerror("build_bgtexture failed");
 
-	for (i = 0; i < bgbitmap->height; i++)
+	for (i = 0; i < bgbitmap->height(); i++)
 	{
 		double gradual = (float)(1024 - i) / 1024.0f + 0.1f;
 
@@ -2890,7 +2890,7 @@ static void build_bgtexture(running_machine &machine)
 		else if (gradual < 0.1f)
 			gradual = 0.1f;
 
-		*BITMAP_ADDR32(bgbitmap, i, 0) = MAKE_ARGB(a, (UINT8)(r * gradual), (UINT8)(g * gradual), (UINT8)(b * gradual));
+		bgbitmap->pix32(i, 0) = MAKE_ARGB(a, (UINT8)(r * gradual), (UINT8)(g * gradual), (UINT8)(b * gradual));
 	}
 
 	bgtexture = machine.render().texture_alloc(render_texture::hq_scale);
