@@ -3106,24 +3106,18 @@ BOOL IsGlobalOption(const char *option_name)
 /* ui_parse_ini_file - parse a single INI file */
 static void ui_parse_ini_file(windows_options &opts, const char *name)
 {
-	astring *fname;
-
 	/* open the file; if we fail, that's ok */
 	char *inidir = utf8_from_wstring(GetIniDir());
-	fname = astring_assemble_4(astring_alloc(), inidir, PATH_SEPARATOR, name, ".ini");
+	astring fname(inidir, PATH_SEPARATOR, name, ".ini");
 	osd_free(inidir);
-	LoadSettingsFile(opts, astring_c(fname));
-	astring_free(fname);
+	LoadSettingsFile(opts, fname);
 }
 
 static void ui_parse_global_ini_file(windows_options &opts)
 {
-	astring *fname;
-
 	/* open the file; if we fail, that's ok */
-	fname = astring_assemble_2(astring_alloc(), emulator_info::get_configname(), ".ini");
-	LoadSettingsFile(opts, astring_c(fname));
-	astring_free(fname);
+	astring fname(emulator_info::get_configname(), ".ini");
+	LoadSettingsFile(opts, fname);
 }
 
 
@@ -3131,6 +3125,7 @@ static void ui_parse_global_ini_file(windows_options &opts)
 void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 {
 	const game_driver *driver = NULL;
+	astring basename;
 
 	CreateGameOptions(opts, game_num);
 	// Copy over the defaults
@@ -3164,8 +3159,6 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 		}
 
 
-		astring *basename;
-		astring *srcname;
 		machine_config config(*driver,opts);
 
 		// parse "vector.ini" for vector games
@@ -3198,11 +3191,9 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 
 
 		// then parse "<sourcefile>.ini"
-		basename = core_filename_extract_base(astring_alloc(), driver->source_file, TRUE);
-		srcname = astring_assemble_3(astring_alloc(), "source", PATH_SEPARATOR, astring_c(basename));
-		ui_parse_ini_file(opts, astring_c(srcname));
-		astring_free(srcname);
-		astring_free(basename);
+		core_filename_extract_base(basename, driver->source_file, TRUE);
+		astring srcname("source", PATH_SEPARATOR, basename);
+		ui_parse_ini_file(opts, srcname);
 
 		if (opt_type == OPTIONS_SOURCE)
 		{
@@ -3249,7 +3240,7 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 {
 	windows_options *baseopts = NULL;
 	const game_driver *driver = NULL;
-	astring *filename = NULL;
+	astring filename, basename;
 
 	//mamep: to remove ini file, load baseopts even if it is equals global
 	if (OPTIONS_GLOBAL != opt_type) // && NULL != opts && !(opts == global))
@@ -3276,57 +3267,49 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 		//if (NULL == opts)
 			//return;
 		global = opts;
-		filename = astring_cpyc(astring_alloc(), emulator_info::get_configname());
+		filename.cpy(emulator_info::get_configname());
 	} else if (opt_type == OPTIONS_VECTOR)
 	{
-		filename = astring_cpyc(astring_alloc(), "vector");
+		filename.cpy("vector");
 	} else if (opt_type == OPTIONS_VERTICAL)
 	{
-		filename = astring_cpyc(astring_alloc(), "vertical");
+		filename.cpy("vertical");
 	} else if (opt_type == OPTIONS_HORIZONTAL)
 	{
-		filename = astring_cpyc(astring_alloc(), "horizont");
+		filename.cpy("horizont");
 	} else if (driver != NULL)
 	{
-		astring *basename, *srcname;
-
-		switch (opt_type)
+		if (opt_type == OPTIONS_SOURCE)
 		{
-		case OPTIONS_SOURCE:
 			// determine the <sourcefile>
-			basename = core_filename_extract_base(astring_alloc(), driver->source_file, TRUE);
-			srcname = astring_assemble_3(astring_alloc(), "source", PATH_SEPARATOR, astring_c(basename));
-			filename = astring_cpyc(astring_alloc(),astring_c(srcname));
-			astring_free(srcname);
-			astring_free(basename);
-			break;
-		case OPTIONS_GAME:
-			filename = astring_cpyc(astring_alloc(), driver->name);
-			break;
-		default:
-			break;
-		}
+			core_filename_extract_base(basename, driver->source_file, TRUE);
+			astring srcname("source", PATH_SEPARATOR, basename);
+			filename.cpy(srcname);
+		} else
+		if (opt_type == OPTIONS_GAME)
+			filename.cpy(driver->name);
 	}
-	if (filename != NULL)
+	if (filename)
 	{
-		astring *filepath = NULL;
+		astring filepath;
 		if (opt_type == OPTIONS_GLOBAL)
 		{
 			char buffer[MAX_PATH];
 
 			GetGlobalOptionsFileName(buffer, ARRAY_LENGTH(buffer));
-			filepath = astring_cpyc(astring_alloc(), buffer);
+			filepath.cpy(buffer);
 		}
 		else
 		{
 			char *inidir = utf8_from_wstring(GetIniDir());
-			filepath = astring_assemble_4(astring_alloc(), inidir, PATH_SEPARATOR, astring_c(filename), ".ini");
+			filepath.cpy(inidir);
+			filepath.cat(PATH_SEPARATOR);
+			filepath.cat(filename);
+			filepath.cat(".ini");
 			osd_free(inidir);
 		}
-		astring_free(filename);
 
-		SaveSettingsFile(opts, baseopts, astring_c(filepath));
-		astring_free(filepath);
+		SaveSettingsFile(opts, baseopts, filepath);
 
 		if (baseopts != NULL)
 			global_free(baseopts);
@@ -3337,7 +3320,6 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 static void remove_all_source_options(void) {
 	WIN32_FIND_DATA findFileData;
 	HANDLE hFindFile;
-	astring *pathname, *match;
 	char* utf8_filename;
 
 	/*
@@ -3345,36 +3327,27 @@ static void remove_all_source_options(void) {
 	 * then remove all the files in it that end in ini.
 	 */
 	char *inidir = utf8_from_wstring(GetIniDir());
-	pathname = astring_assemble_3(astring_alloc(), inidir, PATH_SEPARATOR, "source");
+	astring pathname(inidir, PATH_SEPARATOR, "source");
 	osd_free(inidir);
-	match = astring_assemble_3(astring_alloc(), astring_c(pathname), PATH_SEPARATOR, "*.ini");
-	if ((hFindFile = win_find_first_file_utf8(astring_c(match), &findFileData)) != INVALID_HANDLE_VALUE)
+	astring match(pathname, PATH_SEPARATOR, "*.ini");
+	if ((hFindFile = win_find_first_file_utf8(match, &findFileData)) != INVALID_HANDLE_VALUE)
 	{
-		astring_free(match);
 		utf8_filename = utf8_from_tstring(findFileData.cFileName);
-		match = astring_assemble_3(astring_alloc(), astring_c(pathname), PATH_SEPARATOR, utf8_filename );
+		astring match(pathname, PATH_SEPARATOR, utf8_filename );
 		osd_free(utf8_filename);
-		osd_rmfile(astring_c(match));
-		astring_free(match);
+		osd_rmfile(match);
 
 		while (0 != FindNextFile(hFindFile, &findFileData))
 		{
 			utf8_filename = utf8_from_tstring(findFileData.cFileName);
-			match = astring_assemble_3(astring_alloc(), astring_c(pathname), PATH_SEPARATOR, utf8_filename );
+			astring match(pathname, PATH_SEPARATOR, utf8_filename );
 			osd_free(utf8_filename);
-			osd_rmfile(astring_c(match));
-			astring_free(match);
+			osd_rmfile(match);
 		}
 
 		FindClose(hFindFile);
 
 	}
-	else
-	{
-		astring_free(match);
-	}
-	astring_free(pathname);
-
 }
 
 // Reset the given windows_options to their default settings.

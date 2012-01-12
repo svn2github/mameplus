@@ -259,9 +259,9 @@ private:
 	void texture_set_scale_bitmap(const rectangle *visarea, UINT32 palettebase);
 	void realloc_scale_bitmaps();
 
-	bitmap_t *				scale_bitmap[2];
-	bitmap_t *				work_bitmap[2];
-	int					scale_dirty[2];
+	bitmap_t			m_scale_bitmap[2];
+	bitmap_t			m_work_bitmap[2];
+	int					m_scale_dirty[2];
 #endif /* USE_SCALE_EFFECTS */
 };
 

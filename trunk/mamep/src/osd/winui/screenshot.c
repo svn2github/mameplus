@@ -235,23 +235,20 @@ static file_error OpenDIBFile(const char *dir_name, const char *zip_name, const 
 	zip_error ziperr;
 	zip_file *zip;
 	const zip_file_header *zip_header;
-	astring *fname;
 
 	// clear out result
 	*file = NULL;
 
 	// look for the raw file
-	fname = astring_assemble_3(astring_alloc(), dir_name, PATH_SEPARATOR, filename);
-	filerr = core_fopen(astring_c(fname), OPEN_FLAG_READ, file);
-	astring_free(fname);
+	astring fname(dir_name, PATH_SEPARATOR, filename);
+	filerr = core_fopen(fname, OPEN_FLAG_READ, file);
 
 	// did the raw file not exist?
 	if (filerr != FILERR_NONE)
 	{
 		// look into zip file
-		fname = astring_assemble_4(astring_alloc(), dir_name, PATH_SEPARATOR, zip_name, ".zip");
-		ziperr = zip_file_open(astring_c(fname), &zip);
-		astring_free(fname);
+		astring fname(dir_name, PATH_SEPARATOR, zip_name, ".zip");
+		ziperr = zip_file_open(fname, &zip);
 		if (ziperr == ZIPERR_NONE)
 		{
 			zip_header = zip_file_seek_file(zip, filename);
@@ -277,7 +274,6 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 	BOOL success = FALSE;
 	const WCHAR *zip_name;
 	const WCHAR *dir_name;
-	astring *fname;
 	void *buffer = NULL;
 	char *utf8filename;
 	char *utf8zip_name;
@@ -337,36 +333,31 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 
 	//Add handling for the displaying of all the different supported snapshot patterntypes
 	//%g
-	fname = astring_assemble_2(astring_alloc(), utf8filename, ".png");
-	filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
-	astring_free(fname);
+	astring fname(utf8filename, ".png");
+	filerr = OpenDIBFile(utf8dir_name, utf8zip_name, fname, &file, &buffer);
 	if (filerr != FILERR_NONE)
 	{
 		//%g/%i
-		fname = astring_assemble_3(astring_alloc(), utf8filename, PATH_SEPARATOR, "0000.png");
-		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
-		astring_free(fname);
+		astring fname(utf8filename, PATH_SEPARATOR, "0000.png");
+		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, fname, &file, &buffer);
 	}
 	if (filerr != FILERR_NONE)
 	{
 		//%g%i
-		fname = astring_assemble_2(astring_alloc(), utf8filename, "0000.png");
-		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
-		astring_free(fname);
+		astring fname(utf8filename, "0000.png");
+		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, fname, &file, &buffer);
 	}
 	if (filerr != FILERR_NONE)
 	{
 		//%g/%g
-		fname = astring_assemble_4(astring_alloc(), utf8filename, PATH_SEPARATOR, utf8filename, ".png");
-		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
-		astring_free(fname);
+		astring fname(utf8filename, PATH_SEPARATOR, utf8filename, ".png");
+		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, fname, &file, &buffer);
 	}
 	if (filerr != FILERR_NONE)
 	{
 		//%g/%g%i
-		fname = astring_assemble_4(astring_alloc(), utf8filename, PATH_SEPARATOR, utf8filename, ".png");
-		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
-		astring_free(fname);
+		astring fname(utf8filename, PATH_SEPARATOR, utf8filename, ".png");
+		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, fname, &file, &buffer);
 	}
 
 	if (filerr == FILERR_NONE)

@@ -140,20 +140,14 @@ void screen_device::free_scale_bitmap()
 	for (bank = 0; bank < 2; bank++)
 	{
 		// restore mame screen
-		if ((m_texture[bank]) && (m_bitmap[bank]))
-			m_texture[bank]->set_bitmap(m_bitmap[bank], &m_visarea, m_texture_format, palette);
+		if ((m_texture[bank]) && (m_bitmap[bank].valid()))
+			m_texture[bank]->set_bitmap(&m_bitmap[bank], &m_visarea, m_texture_format, palette);;
 
-		if (scale_bitmap[bank] != NULL)
-		{
-			global_free(scale_bitmap[bank]);
-			scale_bitmap[bank] = NULL;
-		}
+		if (m_scale_bitmap[bank].valid())
+			m_scale_bitmap[bank].deallocate();
 
-		if (work_bitmap[bank] != NULL)
-		{
-			global_free(work_bitmap[bank]);
-			work_bitmap[bank] = NULL;
-		}
+		if (m_work_bitmap[bank].valid())
+			m_work_bitmap[bank].deallocate();
 	}
 
 	scale_xsize = 0;
@@ -168,8 +162,8 @@ void screen_device::convert_palette_to_32(const bitmap_t *src, bitmap_t *dst, co
 
 	for (y = visarea->min_y; y < visarea->max_y; y++)
 	{
-		UINT32 *dst32 = BITMAP_ADDR32(dst, y, visarea->min_x);
-		UINT16 *src16 = BITMAP_ADDR16(src, y, visarea->min_x);
+		UINT32 *dst32 = &dst->pix32(y, visarea->min_x);
+		UINT16 *src16 = &src->pix16(y, visarea->min_x);
 
 		for (x = visarea->min_x; x < visarea->max_x; x++)
 			*dst32++ = palette[*src16++];
@@ -184,8 +178,8 @@ void screen_device::convert_palette_to_15(const bitmap_t *src, bitmap_t *dst, co
 
 	for (y = visarea->min_y; y < visarea->max_y; y++)
 	{
-		UINT16 *dst16 = BITMAP_ADDR16(dst, y, visarea->min_x);
-		UINT16 *src16 = BITMAP_ADDR16(src, y, visarea->min_x);
+		UINT16 *dst16 = &dst->pix16(y, visarea->min_x);
+		UINT16 *src16 = &src->pix16(y, visarea->min_x);
 
 		for (x = visarea->min_x; x < visarea->max_x; x++)
 			*dst16++ = rgb_to_rgb15(palette[*src16++]);
@@ -199,8 +193,8 @@ static void convert_15_to_32(const bitmap_t *src, bitmap_t *dst, const rectangle
 
 	for (y = visarea->min_y; y < visarea->max_y; y++)
 	{
-		UINT32 *dst32 = BITMAP_ADDR32(dst, y, visarea->min_x);
-		UINT16 *src16 = BITMAP_ADDR16(src, y, visarea->min_x);
+		UINT32 *dst32 = &dst->pix32(y, visarea->min_x);
+		UINT16 *src16 = &src->pix16(y, visarea->min_x);
 
 		for (x = visarea->min_x; x < visarea->max_x; x++)
 		{
@@ -218,8 +212,8 @@ static void convert_32_to_15(bitmap_t *src, bitmap_t *dst, const rectangle *visa
 
 	for (y = visarea->min_y; y < visarea->max_y; y++)
 	{
-		UINT16 *dst16 = BITMAP_ADDR16(dst, y, visarea->min_x);
-		UINT32 *src32 = BITMAP_ADDR32(src, y, visarea->min_x);
+		UINT16 *dst16 = &dst->pix16(y, visarea->min_x);
+		UINT32 *src32 = &src->pix32(y, visarea->min_x);
 
 		for (x = visarea->min_x; x < visarea->max_x; x++)
 			*dst16++ = rgb_to_rgb15(*src32++);
@@ -231,7 +225,7 @@ void screen_device::texture_set_scale_bitmap(const rectangle *visarea, UINT32 pa
 {
 	int curbank = m_curbitmap;
 	int scalebank = /* scale_bank_offset + */curbank;
-	bitmap_t *target = m_bitmap[curbank];
+	bitmap_t *target = &m_bitmap[curbank];
 	bitmap_t *dst;
 	rectangle fixedvis;
 	int width, height;
@@ -248,12 +242,12 @@ void screen_device::texture_set_scale_bitmap(const rectangle *visarea, UINT32 pa
 	switch (m_texture_format)
 	{
 	case TEXFORMAT_PALETTE16:
-		target = work_bitmap[curbank];
+		target = &m_work_bitmap[curbank];
 
 		if (scale_depth == 32)
-			convert_palette_to_32(m_bitmap[curbank], target, visarea, palettebase);
+			convert_palette_to_32(&m_bitmap[curbank], target, visarea, palettebase);
 		else
-			convert_palette_to_15(m_bitmap[curbank], target, visarea, palettebase);
+			convert_palette_to_15(&m_bitmap[curbank], target, visarea, palettebase);
 
 		break;
 
@@ -261,16 +255,16 @@ void screen_device::texture_set_scale_bitmap(const rectangle *visarea, UINT32 pa
 		if (scale_depth == 15)
 			break;
 
-		target = work_bitmap[curbank];
-		convert_15_to_32(m_bitmap[curbank], target, visarea);
+		target = &m_work_bitmap[curbank];
+		convert_15_to_32(&m_bitmap[curbank], target, visarea);
 		break;
 
 	case TEXFORMAT_RGB32:
 		if (scale_depth == 32)
 			break;
 
-		target = work_bitmap[curbank];
-		convert_32_to_15(m_bitmap[curbank], target, visarea);
+		target = &m_work_bitmap[curbank];
+		convert_32_to_15(&m_bitmap[curbank], target, visarea);
 		break;
 
 	default:
@@ -278,20 +272,20 @@ void screen_device::texture_set_scale_bitmap(const rectangle *visarea, UINT32 pa
 		return;
 	}
 
-	dst = scale_bitmap[curbank];
+	dst = &m_scale_bitmap[curbank];
 	if (scale_depth == 32)
 	{
-		UINT32 *src32 = BITMAP_ADDR32(target, visarea->min_y, visarea->min_x);
-		UINT32 *dst32 = BITMAP_ADDR32(dst, 0, 0);
-		scale_perform_scale((UINT8 *)src32, (UINT8 *)dst32, target->rowpixels * 4, dst->rowpixels * 4, width, height, 32, scale_dirty[curbank], scalebank);
+		UINT32 *src32 = &target->pix32(visarea->min_y, visarea->min_x);
+		UINT32 *dst32 = &dst->pix32(0, 0);
+		scale_perform_scale((UINT8 *)src32, (UINT8 *)dst32, target->rowpixels() * 4, dst->rowpixels() * 4, width, height, 32, m_scale_dirty[curbank], scalebank);
 	}
 	else
 	{
-		UINT16 *src16 = BITMAP_ADDR16(target, visarea->min_y, visarea->min_x);
-		UINT16 *dst16 = BITMAP_ADDR16(dst, 0, 0);
-		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowpixels * 2, dst->rowpixels * 2, width, height, 15, scale_dirty[curbank], scalebank);
+		UINT16 *src16 = &target->pix16(visarea->min_y, visarea->min_x);
+		UINT16 *dst16 = &dst->pix16( 0, 0);
+		scale_perform_scale((UINT8 *)src16, (UINT8 *)dst16, target->rowpixels() * 2, dst->rowpixels() * 2, width, height, 15, m_scale_dirty[curbank], scalebank);
 	}
-	scale_dirty[curbank] = 0;
+	m_scale_dirty[curbank] = 0;
 
 	m_texture[curbank]->set_bitmap(dst, &fixedvis, (scale_depth == 32) ? TEXFORMAT_RGB32 : TEXFORMAT_RGB15, NULL);
 }
@@ -340,9 +334,9 @@ screen_device::screen_device(const machine_config &mconfig, const char *tag, dev
 	m_visarea.max_y = m_height - 1;
 	memset(m_texture, 0, sizeof(m_texture));
 #ifdef USE_SCALE_EFFECTS
-	memset(scale_bitmap, 0, sizeof(scale_bitmap));
-	memset(work_bitmap, 0, sizeof(work_bitmap));
-	memset(scale_dirty, 0, sizeof(scale_dirty));
+	memset(m_scale_bitmap, 0, sizeof(m_scale_bitmap));
+	memset(m_work_bitmap, 0, sizeof(m_work_bitmap));
+	memset(m_scale_dirty, 0, sizeof(m_scale_dirty));
 #endif /* USE_SCALE_EFFECTS */
 }
 
@@ -617,12 +611,6 @@ void screen_device::device_start()
 
 void screen_device::device_stop()
 {
-#ifdef USE_SCALE_EFFECTS
-	if (scale_bitmap[0] != NULL)
-		global_free(scale_bitmap[0]);
-	if (scale_bitmap[1] != NULL)
-		global_free(scale_bitmap[1]);
-#endif /* USE_SCALE_EFFECTS */
 	machine().render().texture_free(m_texture[0]);
 	machine().render().texture_free(m_texture[1]);
 	if (m_burnin.valid())
@@ -802,14 +790,14 @@ void screen_device::realloc_scale_bitmaps()
 	int cur_scalewidth = 0, cur_scaleheight = 0, cur_xsize = 0, cur_ysize = 0;
 
 	// bitmap has been alloc'd
-	curwidth = m_bitmap[0]->width;
-	curheight = m_bitmap[0]->height;
+	curwidth = m_bitmap[0].width();
+	curheight = m_bitmap[0].height();
 
 	// extract the current width/height from the scale_bitmap
-	if (scale_bitmap[0] != NULL)
+	if (m_scale_bitmap[0].valid())
 	{
-		cur_scalewidth = scale_bitmap[0]->width;
-		cur_scaleheight = scale_bitmap[0]->height;
+		cur_scalewidth = m_scale_bitmap[0].width();
+		cur_scaleheight = m_scale_bitmap[0].height();
 	}
 
 	// assign new x/y size
@@ -827,19 +815,23 @@ void screen_device::realloc_scale_bitmaps()
 		for (bank = 0; bank < 2; bank++)
 		{
 			// free what we have currently
-			if (scale_bitmap[bank] != NULL)
-				global_free(scale_bitmap[bank]);
+			if (m_scale_bitmap[bank].valid())
+				m_scale_bitmap[bank].deallocate();
 
-			scale_dirty[bank] = 1;
+			m_scale_dirty[bank] = 1;
 
 			// compute new width/height
 			cur_xsize = MAX(scale_xsize, cur_xsize);
 			cur_ysize = MAX(scale_ysize, cur_ysize);
 
 			// allocate scale_bitmaps
-			scale_bitmap[bank] = auto_alloc(machine(), bitmap_t(curwidth * scale_xsize, curheight * scale_ysize, screen_format));
+			m_scale_bitmap[bank].allocate(curwidth * scale_xsize, curheight * scale_ysize, screen_format);
+			m_scale_bitmap[bank].set_palette(machine().palette);
 			if (use_work_bitmap)
-				work_bitmap[bank] = auto_alloc(machine(), bitmap_t(curwidth, curheight, screen_format));
+			{
+				m_work_bitmap[bank].allocate(curwidth, curheight, screen_format);
+				m_work_bitmap[bank].set_palette(machine().palette);
+			}
 
 			mame_printf_verbose("realloc_scale_bitmaps: %dx%d@%dbpp, workerbmp: %d \n", 
 								curwidth * scale_xsize, 
