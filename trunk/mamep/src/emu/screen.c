@@ -334,8 +334,6 @@ screen_device::screen_device(const machine_config &mconfig, const char *tag, dev
 	m_visarea.max_y = m_height - 1;
 	memset(m_texture, 0, sizeof(m_texture));
 #ifdef USE_SCALE_EFFECTS
-	memset(m_scale_bitmap, 0, sizeof(m_scale_bitmap));
-	memset(m_work_bitmap, 0, sizeof(m_work_bitmap));
 	memset(m_scale_dirty, 0, sizeof(m_scale_dirty));
 #endif /* USE_SCALE_EFFECTS */
 }

@@ -700,7 +700,7 @@ void FreeDriversInfo(void)
 
 BOOL DriverIsClone(int driver_index)
 {
-	 return GetDriversInfo(driver_index)->isClone;
+	return GetDriversInfo(driver_index)->isClone;
 }
 
 BOOL DriverIsBroken(int driver_index)

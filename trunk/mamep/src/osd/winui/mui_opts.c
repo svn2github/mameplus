@@ -3302,10 +3302,8 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 		else
 		{
 			char *inidir = utf8_from_wstring(GetIniDir());
-			filepath.cpy(inidir);
-			filepath.cat(PATH_SEPARATOR);
-			filepath.cat(filename);
-			filepath.cat(".ini");
+			astring temppath(inidir, PATH_SEPARATOR, filename, ".ini");
+			filepath.cpy(temppath);
 			osd_free(inidir);
 		}
 
