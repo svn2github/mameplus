@@ -597,7 +597,7 @@ static MACHINE_CONFIG_START( tempest, tempest_state )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(400, 300)
 	MCFG_SCREEN_VISIBLE_AREA(0, 580, 0, 570)
-	MCFG_SCREEN_UPDATE(vector)
+	MCFG_SCREEN_UPDATE_STATIC(vector)
 
 	MCFG_VIDEO_START(avg_tempest)
 
@@ -837,6 +837,6 @@ ROM_END
 GAME( 1980, tempest,   0,       tempest, tempest, 0, ROT270, "Atari", "Tempest (rev 3, Revised Hardware)", GAME_SUPPORTS_SAVE )
 GAME( 1980, tempest3,  tempest, tempest, tempest, 0, ROT270, "Atari", "Tempest (rev 3)", GAME_SUPPORTS_SAVE )
 GAME( 1980, tempest2,  tempest, tempest, tempest, 0, ROT270, "Atari", "Tempest (rev 2)", GAME_SUPPORTS_SAVE )
-GAME( 1980, tempest1, tempest, tempest, tempest, 0, ROT270, "Atari", "Tempest (rev 1)", GAME_SUPPORTS_SAVE)
+GAME( 1980, tempest1,  tempest, tempest, tempest, 0, ROT270, "Atari", "Tempest (rev 1)", GAME_SUPPORTS_SAVE )
 GAME( 1980, tempest1r, tempest, tempest, tempest, 0, ROT270, "Atari", "Tempest (rev 1, Revised Hardware)", GAME_SUPPORTS_SAVE )
-GAME( 1980, temptube, tempest, tempest, tempest, 0, ROT270, "hack",  "Tempest Tubes", GAME_SUPPORTS_SAVE )
+GAME( 1980, temptube,  tempest, tempest, tempest, 0, ROT270, "hack",  "Tempest Tubes", GAME_SUPPORTS_SAVE )

@@ -186,7 +186,7 @@ static void expand_sprites(running_machine &machine)
 	int i;
 
 	state->m_sprites_gfx_size	=	size / 2 * 3;
-	state->m_sprites_gfx			=	auto_alloc_array(machine, UINT8, state->m_sprites_gfx_size);
+	state->m_sprites_gfx		=	auto_alloc_array(machine, UINT8, state->m_sprites_gfx_size);
 
 	for (i = 0; i < size / 2 ; i++)
 	{
@@ -247,7 +247,7 @@ static VIDEO_START( igs017 )
 
 ***************************************************************************/
 
-static void draw_sprite(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect, int sx, int sy, int dimx, int dimy, int flipx, int flipy, int color, int addr)
+static void draw_sprite(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect, int sx, int sy, int dimx, int dimy, int flipx, int flipy, int color, int addr)
 {
 	igs017_state *state = machine.driver_data<igs017_state>();
 	// prepare GfxElement on the fly
@@ -265,7 +265,7 @@ static void draw_sprite(running_machine &machine, bitmap_t &bitmap,const rectang
 				sx, sy, 0x1f	);
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
+static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect)
 {
 	igs017_state *state = machine.driver_data<igs017_state>();
 	UINT8 *s	=	state->m_spriteram;
@@ -301,7 +301,7 @@ static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectan
 }
 
 // A simple gfx viewer (toggle with T)
-static int debug_viewer(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
+static int debug_viewer(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect)
 {
 #ifdef MAME_DEBUG
 	igs017_state *state = machine.driver_data<igs017_state>();
@@ -344,7 +344,7 @@ static int debug_viewer(running_machine &machine, bitmap_t &bitmap,const rectang
 	return 0;
 }
 
-static SCREEN_UPDATE( igs017 )
+static SCREEN_UPDATE_IND16( igs017 )
 {
 	igs017_state *state = screen.machine().driver_data<igs017_state>();
 	int layers_ctrl = -1;
@@ -483,15 +483,15 @@ static void tjsb_decrypt_sprites(running_machine &machine)
 	int i, addr;
 
 	// address lines swap (to do: collapse into one bitswap)
-	memcpy(tmp,rom,length);
-	for (i = 0;i < length;i++)
+	memcpy(tmp, rom, length);
+	for (i = 0; i < length; i++)
 	{
 		addr = (i & ~0xff) | BITSWAP8(i,7,6,5,4,1,2,3,0);
 		rom[i] = tmp[addr];
 	}
 
-	memcpy(tmp,rom,length);
-	for (i = 0;i < length;i++)
+	memcpy(tmp, rom, length);
+	for (i = 0; i < length; i++)
 	{
 		addr = (i & ~0xff) | BITSWAP8(i,7,6,5,2,4,3,1,0);
 		rom[i] = tmp[addr];
@@ -1802,13 +1802,13 @@ static INPUT_PORTS_START( mgcs )
 
 	PORT_START("COINS")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_SERVICE2 ) // hopper switch (unimplemented)
-	PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW ) // service mode (keep pressed during boot too)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 ) PORT_NAME("Statistics")	// press with the above for sound test
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN1    ) PORT_IMPULSE(5)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER    ) PORT_NAME("Pay Out") PORT_CODE(KEYCODE_O)
+	PORT_SERVICE_NO_TOGGLE( 0x02,   IP_ACTIVE_LOW ) // service mode (keep pressed during boot too)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 ) PORT_NAME("Statistics")	// press with the above for sound test
+	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_COIN1    ) PORT_IMPULSE(5)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_OTHER    ) PORT_NAME("Pay Out") PORT_CODE(KEYCODE_O)
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SERVICE3 ) // ? must be high to display numbers (shown in service mode)
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN  )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN  )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
 
 	PORT_START("KEY0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_MAHJONG_A )
@@ -2321,10 +2321,9 @@ static MACHINE_CONFIG_START( iqblocka, igs017_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE(igs017)
+	MCFG_SCREEN_UPDATE_STATIC(igs017)
 
 	MCFG_GFXDECODE(igs017)
 	MCFG_PALETTE_LENGTH(0x100*2)
@@ -2391,10 +2390,9 @@ static MACHINE_CONFIG_START( mgcs, igs017_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE(igs017)
+	MCFG_SCREEN_UPDATE_STATIC(igs017)
 
 	MCFG_GFXDECODE(igs017_flipped)
 	MCFG_PALETTE_LENGTH(0x100*2)
@@ -2436,10 +2434,9 @@ static MACHINE_CONFIG_START( sdmg2, igs017_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)	// VSync 60Hz, HSync 15.3kHz
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-16-1)
-	MCFG_SCREEN_UPDATE(igs017)
+	MCFG_SCREEN_UPDATE_STATIC(igs017)
 
 	MCFG_GFXDECODE(igs017)
 	MCFG_PALETTE_LENGTH(0x100*2)
@@ -2492,10 +2489,9 @@ static MACHINE_CONFIG_START( mgdha, igs017_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 256-16-1)
-	MCFG_SCREEN_UPDATE(igs017)
+	MCFG_SCREEN_UPDATE_STATIC(igs017)
 
 	MCFG_GFXDECODE(igs017_swapped)
 	MCFG_PALETTE_LENGTH(0x100*2)
@@ -2526,10 +2522,9 @@ static MACHINE_CONFIG_START( tjsb, igs017_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE(igs017)
+	MCFG_SCREEN_UPDATE_STATIC(igs017)
 
 	MCFG_GFXDECODE(igs017)
 	MCFG_PALETTE_LENGTH(0x100*2)

@@ -147,10 +147,10 @@ WRITE16_HANDLER( toaplan1_tileram_offs_w );
 READ16_HANDLER ( toaplan1_spriteram_offs_r );
 WRITE16_HANDLER( toaplan1_spriteram_offs_w );
 
-SCREEN_EOF( rallybik );
-SCREEN_EOF( toaplan1 );
-SCREEN_EOF( samesame );
+SCREEN_VBLANK( rallybik );
+SCREEN_VBLANK( toaplan1 );
+SCREEN_VBLANK( samesame );
 VIDEO_START( rallybik );
 VIDEO_START( toaplan1 );
-SCREEN_UPDATE( rallybik );
-SCREEN_UPDATE( toaplan1 );
+SCREEN_UPDATE_IND16( rallybik );
+SCREEN_UPDATE_IND16( toaplan1 );

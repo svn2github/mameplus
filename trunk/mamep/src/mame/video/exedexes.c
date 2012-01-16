@@ -184,7 +184,7 @@ VIDEO_START( exedexes )
 	colortable_configure_tilemap_groups(machine.colortable, state->m_tx_tilemap, machine.gfx[0], 0xcf);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int priority )
+static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int priority )
 {
 	exedexes_state *state = machine.driver_data<exedexes_state>();
 	UINT8 *buffered_spriteram = machine.generic.buffered_spriteram.u8;
@@ -217,7 +217,7 @@ static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rect
 	}
 }
 
-SCREEN_UPDATE( exedexes )
+SCREEN_UPDATE_IND16( exedexes )
 {
 	exedexes_state *state = screen.machine().driver_data<exedexes_state>();
 	if (state->m_sc2on)
@@ -245,9 +245,13 @@ SCREEN_UPDATE( exedexes )
 	return 0;
 }
 
-SCREEN_EOF( exedexes )
+SCREEN_VBLANK( exedexes )
 {
-	address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
+	// rising edge
+	if (vblank_on)
+	{
+		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-	buffer_spriteram_w(space, 0, 0);
+		buffer_spriteram_w(space, 0, 0);
+	}
 }

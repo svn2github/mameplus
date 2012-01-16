@@ -168,9 +168,9 @@ static INPUT_PORTS_START( ddayc )
 	PORT_DIPSETTING(    0x0c, "10000" )
 	PORT_DIPNAME( 0x30, 0x10, DEF_STR( Difficulty ) )	PORT_DIPLOCATION("SW3:5,6")
 	PORT_DIPSETTING(    0x30, DEF_STR( Easy ) )		// Easy   - No Bombs, No Troop Carriers
-	PORT_DIPSETTING(    0x20, DEF_STR( Normal ) )	// Normal - No Bombs, Troop Carriers
+	PORT_DIPSETTING(    0x20, DEF_STR( Normal ) )		// Normal - No Bombs, Troop Carriers
 	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )		// Hard   - Bombs, Troop Carriers
-	PORT_DIPSETTING(    0x00, "Hard (duplicate setting)" )     // Same as 0x10
+	PORT_DIPSETTING(    0x00, "Hard (duplicate setting)" )	// Same as 0x10
 	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "SW3:7" )		// Doesn't seem to be used
 /*
 
@@ -267,12 +267,11 @@ static MACHINE_CONFIG_START( dday, dday_state )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE(dday)
+	MCFG_SCREEN_UPDATE_STATIC(dday)
 
 	MCFG_GFXDECODE(dday)
 	MCFG_PALETTE_LENGTH(256)

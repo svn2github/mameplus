@@ -734,10 +734,14 @@ static const ay8910_interface ay8910_interface_2 =
 	DEVCB_NULL
 };
 
-static SCREEN_EOF( perfrman )
+static SCREEN_VBLANK( perfrman )
 {
-	address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
-	buffer_spriteram_w(space, 0, 0);
+	// rising edge
+	if (vblank_on)
+	{
+		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
+		buffer_spriteram_w(space, 0, 0);
+	}
 }
 
 static INTERRUPT_GEN( vblank_irq )
@@ -771,11 +775,10 @@ static MACHINE_CONFIG_START( perfrman, slapfght_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 34*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE(perfrman)
-	MCFG_SCREEN_EOF(perfrman)
+	MCFG_SCREEN_UPDATE_STATIC(perfrman)
+	MCFG_SCREEN_VBLANK_STATIC(perfrman)
 
 	MCFG_GFXDECODE(perfrman)
 	MCFG_PALETTE_LENGTH(256)
@@ -818,11 +821,10 @@ static MACHINE_CONFIG_START( tigerhb, slapfght_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 36*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE(slapfight)
-	MCFG_SCREEN_EOF(perfrman)
+	MCFG_SCREEN_UPDATE_STATIC(slapfight)
+	MCFG_SCREEN_VBLANK_STATIC(perfrman)
 
 	MCFG_GFXDECODE(slapfght)
 	MCFG_PALETTE_LENGTH(256)
@@ -867,11 +869,10 @@ static MACHINE_CONFIG_START( tigerh, slapfght_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 36*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE(slapfight)
-	MCFG_SCREEN_EOF(perfrman)
+	MCFG_SCREEN_UPDATE_STATIC(slapfight)
+	MCFG_SCREEN_VBLANK_STATIC(perfrman)
 
 	MCFG_GFXDECODE(slapfght)
 	MCFG_PALETTE_LENGTH(256)
@@ -917,11 +918,10 @@ static MACHINE_CONFIG_START( slapfigh, slapfght_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(1*8, 36*8-1, 2*8, 32*8-1)
-	MCFG_SCREEN_UPDATE(slapfight)
-	MCFG_SCREEN_EOF(perfrman)
+	MCFG_SCREEN_UPDATE_STATIC(slapfight)
+	MCFG_SCREEN_VBLANK_STATIC(perfrman)
 
 	MCFG_GFXDECODE(slapfght)
 	MCFG_PALETTE_LENGTH(256)

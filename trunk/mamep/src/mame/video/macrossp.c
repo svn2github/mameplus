@@ -173,7 +173,7 @@ VIDEO_START( macrossp )
 
 
 
-static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int priority )
+static void draw_sprites(running_machine &machine, bitmap_rgb32 &bitmap, const rectangle &cliprect, int priority )
 {
 	macrossp_state *state = machine.driver_data<macrossp_state>();
 	const gfx_element *gfx = machine.gfx[0];
@@ -320,7 +320,7 @@ static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const recta
 }
 
 
-static void draw_layer( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int layer )
+static void draw_layer( running_machine &machine, bitmap_rgb32 &bitmap, const rectangle &cliprect, int layer )
 {
 	macrossp_state *state = machine.driver_data<macrossp_state>();
 	tilemap_t *tm;
@@ -387,7 +387,7 @@ static void sortlayers(int *layer,int *pri)
 	SWAP(1,2)
 }
 
-SCREEN_UPDATE( macrossp )
+SCREEN_UPDATE_RGB32( macrossp )
 {
 	macrossp_state *state = screen.machine().driver_data<macrossp_state>();
 	int layers[3],layerpri[3];
@@ -429,11 +429,15 @@ state->m_scrc_videoregs[2]);// 08 - 0b
 	return 0;
 }
 
-SCREEN_EOF( macrossp )
+SCREEN_VBLANK( macrossp )
 {
-	macrossp_state *state = screen.machine().driver_data<macrossp_state>();
+	// rising edge
+	if (vblank_on)
+	{
+		macrossp_state *state = screen.machine().driver_data<macrossp_state>();
 
-	/* looks like sprites are *two* frames ahead, like nmk16 */
-	memcpy(state->m_spriteram_old2, state->m_spriteram_old, state->m_spriteram_size);
-	memcpy(state->m_spriteram_old, state->m_spriteram, state->m_spriteram_size);
+		/* looks like sprites are *two* frames ahead, like nmk16 */
+		memcpy(state->m_spriteram_old2, state->m_spriteram_old, state->m_spriteram_size);
+		memcpy(state->m_spriteram_old, state->m_spriteram, state->m_spriteram_size);
+	}
 }

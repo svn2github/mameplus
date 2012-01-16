@@ -18,8 +18,8 @@ public:
 	UINT8* m_team;
 	tilemap_t* m_tilemap1;
 	tilemap_t* m_tilemap2;
-	bitmap_t* m_helper1;
-	bitmap_t* m_helper2;
+	bitmap_ind16 m_helper1;
+	bitmap_ind16 m_helper2;
 };
 
 
@@ -31,9 +31,9 @@ void sprint8_set_collision(running_machine &machine, int n);
 /*----------- defined in video/sprint8.c -----------*/
 
 PALETTE_INIT( sprint8 );
-SCREEN_EOF( sprint8 );
+SCREEN_VBLANK( sprint8 );
 VIDEO_START( sprint8 );
-SCREEN_UPDATE( sprint8 );
+SCREEN_UPDATE_IND16( sprint8 );
 
 WRITE8_HANDLER( sprint8_video_ram_w );
 

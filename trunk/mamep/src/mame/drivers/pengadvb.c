@@ -44,14 +44,14 @@ public:
 static void mem_map_banks(running_machine &machine)
 {
 	pengadvb_state *state = machine.driver_data<pengadvb_state>();
-	/*	memorymap: (rest is assumed unmapped)
-		slot 0
-			0000-7fff	BIOS ROM
-		slot 1
-			4000-bfff	game ROM
-		slot 3
-			c000-ffff	RAM
-	*/
+	/*  memorymap: (rest is assumed unmapped)
+        slot 0
+            0000-7fff   BIOS ROM
+        slot 1
+            4000-bfff   game ROM
+        slot 3
+            c000-ffff   RAM
+    */
 
 	// page 0 (0000-3fff)
 	switch(state->m_mem_map & 3)
@@ -263,14 +263,6 @@ static MACHINE_RESET( pengadvb )
 	mem_map_banks(machine);
 }
 
-static SCREEN_UPDATE( pengadvb )
-{
-	tms9928a_device *tms9928a = screen.machine().device<tms9928a_device>( "tms9928a" );
-
-	tms9928a->update( bitmap, cliprect );
-	return 0;
-}
-
 
 static MACHINE_CONFIG_START( pengadvb, pengadvb_state )
 
@@ -286,7 +278,7 @@ static MACHINE_CONFIG_START( pengadvb, pengadvb_state )
 	/* video hardware */
 	MCFG_TMS9928A_ADD( "tms9928a", TMS9928A, pengadvb_tms9928a_interface )
 	MCFG_TMS9928A_SCREEN_ADD_NTSC( "screen" )
-	MCFG_SCREEN_UPDATE( pengadvb )
+	MCFG_SCREEN_UPDATE_DEVICE( "tms9928a", tms9928a_device, screen_update )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

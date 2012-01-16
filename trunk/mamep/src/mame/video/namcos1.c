@@ -298,7 +298,7 @@ sprite format:
 15   xxxxxxxx  Y position
 */
 
-static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
+static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	namcos1_state *state = machine.driver_data<namcos1_state>();
 	UINT8 *spriteram = state->m_spriteram + 0x800;
@@ -370,7 +370,7 @@ static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const recta
 
 
 
-SCREEN_UPDATE( namcos1 )
+SCREEN_UPDATE_IND16( namcos1 )
 {
 	namcos1_state *state = screen.machine().driver_data<namcos1_state>();
 	int i, j, scrollx, scrolly, priority;
@@ -440,20 +440,24 @@ SCREEN_UPDATE( namcos1 )
 }
 
 
-SCREEN_EOF( namcos1 )
+SCREEN_VBLANK( namcos1 )
 {
-	namcos1_state *state = screen.machine().driver_data<namcos1_state>();
-	if (state->m_copy_sprites)
+	// rising edge
+	if (vblank_on)
 	{
-		UINT8 *spriteram = state->m_spriteram + 0x800;
-		int i,j;
-
-		for (i = 0;i < 0x800;i += 16)
+		namcos1_state *state = screen.machine().driver_data<namcos1_state>();
+		if (state->m_copy_sprites)
 		{
-			for (j = 10;j < 16;j++)
-				spriteram[i+j] = spriteram[i+j - 6];
-		}
+			UINT8 *spriteram = state->m_spriteram + 0x800;
+			int i,j;
 
-		state->m_copy_sprites = 0;
+			for (i = 0;i < 0x800;i += 16)
+			{
+				for (j = 10;j < 16;j++)
+					spriteram[i+j] = spriteram[i+j - 6];
+			}
+
+			state->m_copy_sprites = 0;
+		}
 	}
 }

@@ -257,8 +257,8 @@ static INPUT_PORTS_START( unkpacg )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
 	PORT_START("IN1")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) // 1 credits / initiate minigame
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) // 5 credits / initiate gambling
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) //  1 credits / initiate minigame
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) //  5 credits / initiate gambling
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN3 ) // 10 credits
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -336,10 +336,9 @@ static MACHINE_CONFIG_START( 4enraya, _4enraya_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(4enraya)
+	MCFG_SCREEN_UPDATE_STATIC(4enraya)
 
 	MCFG_GFXDECODE(4enraya)
 
@@ -409,5 +408,5 @@ static DRIVER_INIT( unkpacg )
 	}
 }
 
-GAME( 1990, 4enraya, 0, 4enraya, 4enraya, 0, ROT0, "IDSA", "4 En Raya", GAME_SUPPORTS_SAVE )
-GAME( 199?, unkpacg, 0, unkpacg, unkpacg, unkpacg, ROT0, "<unknown>", "unknown Pac-Man gambling game", GAME_IMPERFECT_SOUND )
+GAME( 1990, 4enraya,  0,   4enraya,  4enraya,  0,       ROT0, "IDSA",      "4 En Raya", GAME_SUPPORTS_SAVE )
+GAME( 199?, unkpacg,  0,   unkpacg,  unkpacg,  unkpacg, ROT0, "<unknown>", "unknown Pac-Man gambling game", GAME_IMPERFECT_SOUND )

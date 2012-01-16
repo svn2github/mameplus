@@ -112,8 +112,8 @@ void model1_tgp_reset(running_machine &machine, int swa);
 /*----------- defined in video/model1.c -----------*/
 
 VIDEO_START(model1);
-SCREEN_UPDATE(model1);
-SCREEN_EOF(model1);
+SCREEN_UPDATE_RGB32(model1);
+SCREEN_VBLANK(model1);
 
 READ16_HANDLER( model1_listctl_r );
 WRITE16_HANDLER( model1_listctl_w );

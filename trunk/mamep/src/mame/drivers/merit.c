@@ -1153,14 +1153,6 @@ static INPUT_PORTS_START( couplep )
 INPUT_PORTS_END
 
 
-static SCREEN_UPDATE( merit )
-{
-	mc6845_device *mc6845 = screen.machine().device<mc6845_device>("crtc");
-	mc6845->update(bitmap, cliprect);
-
-	return 0;
-}
-
 static const ppi8255_interface ppi8255_intf[2] =
 {
 	{
@@ -1236,9 +1228,8 @@ static MACHINE_CONFIG_START( pitboss, merit_state )
 	/* video hardware */
 
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 512, 0, 512, 256, 0, 256)	/* temporary, CRTC will configure screen */
-	MCFG_SCREEN_UPDATE(merit)
+	MCFG_SCREEN_UPDATE_DEVICE("crtc", mc6845_device, screen_update)
 
 	MCFG_MC6845_ADD("crtc", MC6845, CRTC_CLOCK, mc6845_intf)
 
@@ -1275,7 +1266,7 @@ static MACHINE_CONFIG_DERIVED( dodge, pitboss )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(dodge_map)
 
-	MCFG_NVRAM_REPLACE_CUSTOM("nvram", merit_state, dodge_nvram_init)
+	MCFG_NVRAM_REPLACE_CUSTOM_DRIVER("nvram", merit_state, dodge_nvram_init)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( tictac, pitboss )

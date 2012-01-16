@@ -217,7 +217,7 @@ WRITE8_HANDLER( baraduke_spriteram_w )
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int sprite_priority)
+static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int sprite_priority)
 {
 	baraduke_state *state = machine.driver_data<baraduke_state>();
 	UINT8 *spriteram = state->m_spriteram + 0x1800;
@@ -312,7 +312,7 @@ static void set_scroll(running_machine &machine, int layer)
 }
 
 
-SCREEN_UPDATE( baraduke )
+SCREEN_UPDATE_IND16( baraduke )
 {
 	baraduke_state *state = screen.machine().driver_data<baraduke_state>();
 	UINT8 *spriteram = state->m_spriteram + 0x1800;
@@ -340,20 +340,24 @@ SCREEN_UPDATE( baraduke )
 }
 
 
-SCREEN_EOF( baraduke )
+SCREEN_VBLANK( baraduke )
 {
-	baraduke_state *state = screen.machine().driver_data<baraduke_state>();
-	if (state->m_copy_sprites)
+	// rising edge
+	if (vblank_on)
 	{
-		UINT8 *spriteram = state->m_spriteram + 0x1800;
-		int i,j;
-
-		for (i = 0;i < 0x800;i += 16)
+		baraduke_state *state = screen.machine().driver_data<baraduke_state>();
+		if (state->m_copy_sprites)
 		{
-			for (j = 10;j < 16;j++)
-				spriteram[i+j] = spriteram[i+j - 6];
-		}
+			UINT8 *spriteram = state->m_spriteram + 0x1800;
+			int i,j;
 
-		state->m_copy_sprites = 0;
+			for (i = 0;i < 0x800;i += 16)
+			{
+				for (j = 10;j < 16;j++)
+					spriteram[i+j] = spriteram[i+j - 6];
+			}
+
+			state->m_copy_sprites = 0;
+		}
 	}
 }

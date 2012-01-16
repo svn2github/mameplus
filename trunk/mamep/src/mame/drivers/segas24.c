@@ -354,7 +354,7 @@ Notes:
 
 enum {
 	IRQ_YM2151 = 1,
-	IRQ_TIMER = 2,
+	IRQ_TIMER  = 2,
 	IRQ_VBLANK = 3,
 	IRQ_SPRITE = 4,
 	IRQ_FRC = 5
@@ -901,7 +901,7 @@ static TIMER_DEVICE_CALLBACK( irq_frc_cb )
 		cputag_set_input_line(timer.machine(), "maincpu", IRQ_FRC+1, ASSERT_LINE);
 
 	if(state->irq_allow1 & (1 << IRQ_FRC) && state->frc_mode == 1)
-			cputag_set_input_line(timer.machine(), "sub", IRQ_FRC+1, ASSERT_LINE);
+		cputag_set_input_line(timer.machine(), "sub", IRQ_FRC+1, ASSERT_LINE);
 }
 
 void segas24_state::irq_init()
@@ -1972,8 +1972,7 @@ static MACHINE_CONFIG_START( system24, segas24_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK/2, 656, 0/*+69*/, 496/*+69*/, 424, 0/*+25*/, 384/*+25*/)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MCFG_SCREEN_UPDATE(system24)
+	MCFG_SCREEN_UPDATE_STATIC(system24)
 
 	MCFG_PALETTE_LENGTH(8192*2)
 

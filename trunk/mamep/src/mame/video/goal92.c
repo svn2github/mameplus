@@ -92,7 +92,7 @@ static TILE_GET_INFO( get_fore_tile_info )
 	SET_TILE_INFO(region, tile, color, 0);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int pri )
+static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int pri )
 {
 	goal92_state *state = machine.driver_data<goal92_state>();
 	UINT16 *buffered_spriteram16 = state->m_buffered_spriteram;
@@ -152,7 +152,7 @@ VIDEO_START( goal92 )
 	tilemap_set_transparent_pen(state->m_tx_layer, 15);
 }
 
-SCREEN_UPDATE( goal92 )
+SCREEN_UPDATE_IND16( goal92 )
 {
 	goal92_state *state = screen.machine().driver_data<goal92_state>();
 	tilemap_set_scrollx(state->m_bg_layer, 0, state->m_scrollram[0] + 60);
@@ -188,8 +188,12 @@ SCREEN_UPDATE( goal92 )
 	return 0;
 }
 
-SCREEN_EOF( goal92 )
+SCREEN_VBLANK( goal92 )
 {
-	goal92_state *state = screen.machine().driver_data<goal92_state>();
-	memcpy(state->m_buffered_spriteram, state->m_spriteram, 0x400 * 2);
+	// rising edge
+	if (vblank_on)
+	{
+		goal92_state *state = screen.machine().driver_data<goal92_state>();
+		memcpy(state->m_buffered_spriteram, state->m_spriteram, 0x400 * 2);
+	}
 }

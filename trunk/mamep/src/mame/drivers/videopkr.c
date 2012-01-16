@@ -10,15 +10,15 @@
 
     Games running on this hardware:
 
-    * Draw Poker,    1984, IGT - International Game Technology
+    * Draw Poker,          1984, IGT - International Game Technology
 
-    * Video Poker,   1984, InterFlip.
-    * Black Jack,    1984, InterFlip.
-    * Video Dado,    1987, InterFlip.
-    * Video Cordoba, 1987, InterFlip.
+    * Video Poker,         1984, InterFlip.
+    * Black Jack,          1984, InterFlip.
+    * Video Dado,          1987, InterFlip.
+    * Video Cordoba,       1987, InterFlip.
 
-    * Baby Poker,    1989, Recreativos Franco.
-    * Baby Dado,     1989, Recreativos Franco.
+    * Baby Poker,          1989, Recreativos Franco.
+    * Baby Dado,           1989, Recreativos Franco.
 
     * Video Poker (v1403), 198?, Recreativos Franco?.
 
@@ -493,7 +493,7 @@ static VIDEO_START( vidadcba )
 }
 
 
-static SCREEN_UPDATE( videopkr )
+static SCREEN_UPDATE_IND16( videopkr )
 {
 	videopkr_state *state = screen.machine().driver_data<videopkr_state>();
 	tilemap_mark_all_tiles_dirty(state->m_bg_tilemap);
@@ -1240,14 +1240,13 @@ static MACHINE_CONFIG_START( videopkr, videopkr_state )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(5*8, 31*8-1, 3*8, 29*8-1)
 
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(2080)
-	MCFG_SCREEN_UPDATE(videopkr)
+	MCFG_SCREEN_UPDATE_STATIC(videopkr)
 
 	MCFG_GFXDECODE(videopkr)
 	MCFG_PALETTE_INIT(videopkr)
@@ -1447,7 +1446,7 @@ MAINBOARD:
 1x 6.0 MHz. Xtal.
 
 5x pots:
-- 3 together on the connectors opposit side (maybe RGB). 
+- 3 together on the connectors opposit side (maybe RGB).
 - 1 near the AY-3-8910.
 - 1 opposit to the sound circuitry.
 
@@ -1540,12 +1539,12 @@ ROM_END
 /*************************
 *      Game Drivers      *
 *************************/
-/*     YEAR  NAME      PARENT    MACHINE   INPUT     INIT  ROT    COMPANY                                 FULLNAME                              FLAGS  LAYOUT      */
-GAMEL( 1984, videopkr, 0,        videopkr, videopkr, 0,    ROT0, "InterFlip",                             "Video Poker",                        0,     layout_videopkr )
-GAMEL( 1984, fortune1, videopkr, fortune1, videopkr, 0,    ROT0, "IGT - International Gaming Technology", "Fortune I (PK485-S) Draw Poker",     0,     layout_videopkr )
-GAMEL( 1984, blckjack, videopkr, blckjack, blckjack, 0,    ROT0, "InterFlip",                             "Black Jack",                         0,     layout_blckjack )
-GAMEL( 1987, videodad, videopkr, videodad, videodad, 0,    ROT0, "InterFlip",                             "Video Dado",                         0,     layout_videodad )
-GAMEL( 1987, videocba, videopkr, videodad, videocba, 0,    ROT0, "InterFlip",                             "Video Cordoba",                      0,     layout_videocba )
-GAMEL( 1987, babypkr , videopkr, babypkr , babypkr , 0,    ROT0, "Recreativos Franco",                    "Baby Poker",                         0,     layout_babypkr  )
-GAMEL( 1987, babydad , videopkr, babypkr , babydad , 0,    ROT0, "Recreativos Franco",                    "Baby Dado",                          0,     layout_babydad  )
+/*     YEAR  NAME      PARENT    MACHINE   INPUT     INIT  ROT    COMPANY                                 FULLNAME                              FLAGS             LAYOUT      */
+GAMEL( 1984, videopkr, 0,        videopkr, videopkr, 0,    ROT0, "InterFlip",                             "Video Poker",                        0,                layout_videopkr )
+GAMEL( 1984, fortune1, videopkr, fortune1, videopkr, 0,    ROT0, "IGT - International Gaming Technology", "Fortune I (PK485-S) Draw Poker",     0,                layout_videopkr )
+GAMEL( 1984, blckjack, videopkr, blckjack, blckjack, 0,    ROT0, "InterFlip",                             "Black Jack",                         0,                layout_blckjack )
+GAMEL( 1987, videodad, videopkr, videodad, videodad, 0,    ROT0, "InterFlip",                             "Video Dado",                         0,                layout_videodad )
+GAMEL( 1987, videocba, videopkr, videodad, videocba, 0,    ROT0, "InterFlip",                             "Video Cordoba",                      0,                layout_videocba )
+GAMEL( 1987, babypkr , videopkr, babypkr,  babypkr,  0,    ROT0, "Recreativos Franco",                    "Baby Poker",                         0,                layout_babypkr  )
+GAMEL( 1987, babydad , videopkr, babypkr,  babydad,  0,    ROT0, "Recreativos Franco",                    "Baby Dado",                          0,                layout_babydad  )
 GAMEL( 198?, bpoker ,  videopkr, babypkr,  babypkr,  0,    ROT0, "Recreativos Franco",                    "Video Poker (v1403)",                GAME_NOT_WORKING, layout_babypkr  )

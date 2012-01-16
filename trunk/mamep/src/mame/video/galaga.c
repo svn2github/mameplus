@@ -476,7 +476,7 @@ WRITE8_HANDLER ( gatsbee_bank_w )
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
+static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	galaga_state *state =  machine.driver_data<galaga_state>();
 
@@ -530,7 +530,7 @@ static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const recta
 }
 
 
-static void draw_stars(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
+static void draw_stars(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	galaga_state *state =  machine.driver_data<galaga_state>();
 	/* draw the stars */
@@ -552,7 +552,7 @@ static void draw_stars(running_machine &machine, bitmap_t &bitmap, const rectang
 		{
 			int x,y;
 
-			if   ( (set_a == star_seed_tab[star_cntr].set) ||  ( set_b == star_seed_tab[star_cntr].set) )
+			if ( (set_a == star_seed_tab[star_cntr].set) || ( set_b == star_seed_tab[star_cntr].set) )
 			{
 				x = (star_seed_tab[star_cntr].x + state->m_stars_scrollx) % 256 + x_align;
 				y = (y_align + star_seed_tab[star_cntr].y + state->m_stars_scrolly) % 256;
@@ -565,7 +565,7 @@ static void draw_stars(running_machine &machine, bitmap_t &bitmap, const rectang
 	}
 }
 
-SCREEN_UPDATE( galaga )
+SCREEN_UPDATE_IND16( galaga )
 {
 	galaga_state *state =  screen.machine().driver_data<galaga_state>();
 
@@ -578,18 +578,22 @@ SCREEN_UPDATE( galaga )
 
 
 
-SCREEN_EOF( galaga )
+SCREEN_VBLANK( galaga )
 {
-	galaga_state *state =  screen.machine().driver_data<galaga_state>();
-	/* this function is called by galaga_interrupt_1() */
-	int s0,s1,s2;
-	static const int speeds[8] = { -1, -2, -3, 0, 3, 2, 1, 0 };
+	// rising edge
+	if (vblank_on)
+	{
+		galaga_state *state =  screen.machine().driver_data<galaga_state>();
+		/* this function is called by galaga_interrupt_1() */
+		int s0,s1,s2;
+		static const int speeds[8] = { -1, -2, -3, 0, 3, 2, 1, 0 };
 
-	s0 = (state->m_galaga_starcontrol[0] & 1);
-	s1 = (state->m_galaga_starcontrol[1] & 1);
-	s2 = (state->m_galaga_starcontrol[2] & 1);
+		s0 = (state->m_galaga_starcontrol[0] & 1);
+		s1 = (state->m_galaga_starcontrol[1] & 1);
+		s2 = (state->m_galaga_starcontrol[2] & 1);
 
-	state->m_stars_scrollx += speeds[s0 + s1*2 + s2*4];
+		state->m_stars_scrollx += speeds[s0 + s1*2 + s2*4];
+	}
 }
 
 

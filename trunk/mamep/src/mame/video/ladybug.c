@@ -231,7 +231,7 @@ VIDEO_START( sraider )
 	tilemap_set_transparent_pen(state->m_bg_tilemap, 0);
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
+static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	ladybug_state *state = machine.driver_data<ladybug_state>();
 	UINT8 *spriteram = state->m_spriteram;
@@ -282,7 +282,7 @@ static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rect
 	}
 }
 
-SCREEN_UPDATE( ladybug )
+SCREEN_UPDATE_IND16( ladybug )
 {
 	ladybug_state *state = screen.machine().driver_data<ladybug_state>();
 	int offs;
@@ -306,12 +306,14 @@ SCREEN_UPDATE( ladybug )
 	return 0;
 }
 
-SCREEN_EOF( sraider )	/* update starfield position */
+SCREEN_VBLANK( sraider )	/* update starfield position */
 {
-	redclash_update_stars_state(screen.machine());
+	// rising edge
+	if (vblank_on)
+		redclash_update_stars_state(screen.machine());
 }
 
-SCREEN_UPDATE( sraider )
+SCREEN_UPDATE_IND16( sraider )
 {
 	ladybug_state *state = screen.machine().driver_data<ladybug_state>();
 

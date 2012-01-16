@@ -108,7 +108,7 @@ WRITE8_HANDLER( gng_flipscreen_w )
 
 ***************************************************************************/
 
-static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
+static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	UINT8 *buffered_spriteram = machine.generic.buffered_spriteram.u8;
 	const gfx_element *gfx = machine.gfx[2];
@@ -139,7 +139,7 @@ static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rect
 	}
 }
 
-SCREEN_UPDATE( gng )
+SCREEN_UPDATE_IND16( gng )
 {
 	gng_state *state = screen.machine().driver_data<gng_state>();
 
@@ -150,9 +150,13 @@ SCREEN_UPDATE( gng )
 	return 0;
 }
 
-SCREEN_EOF( gng )
+SCREEN_VBLANK( gng )
 {
-	address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
+	// rising edge
+	if (vblank_on)
+	{
+		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-	buffer_spriteram_w(space, 0, 0);
+		buffer_spriteram_w(space, 0, 0);
+	}
 }

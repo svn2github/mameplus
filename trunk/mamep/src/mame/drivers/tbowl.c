@@ -355,7 +355,7 @@ static INPUT_PORTS_START( tbowl )
 	PORT_DIPNAME( 0x0c, 0x08, "Bonus Frequency" )		PORT_DIPLOCATION("SW3:3,4") // Check code at 0x6e16 (0x6e37 for tbowlj), each step is + 0x12
 	PORT_DIPSETTING (   0x00, "Most" )			/* Value in 0x8126.w = 0x54f3 (0x5414 for tbowlj) */
 	PORT_DIPSETTING (   0x04, "More" )			/* Value in 0x8126.w = 0x54e1 (0x5402 for tbowlj) */
-	PORT_DIPSETTING (   0x08, DEF_STR( Normal ) ) 		/* Value in 0x8126.w = 0x54cf (0x54f0 for tbowlj), manual shows this is Least, but values is > least */
+	PORT_DIPSETTING (   0x08, DEF_STR( Normal ) )		/* Value in 0x8126.w = 0x54cf (0x54f0 for tbowlj), manual shows this is Least, but values is > least */
 	PORT_DIPSETTING (   0x0c, "Least" ) 			/* Value in 0x8126.w = 0x54bd (0x54de for tbowlj), manual shows this is Normal, but value is least */
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
@@ -483,20 +483,18 @@ static MACHINE_CONFIG_START( tbowl, tbowl_state )
 	MCFG_DEFAULT_LAYOUT(layout_dualhsxs)
 
 	MCFG_SCREEN_ADD("lscreen", RASTER)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(tbowl_left)
+	MCFG_SCREEN_UPDATE_STATIC(tbowl_left)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(tbowl_right)
+	MCFG_SCREEN_UPDATE_STATIC(tbowl_right)
 
 	MCFG_VIDEO_START(tbowl)
 

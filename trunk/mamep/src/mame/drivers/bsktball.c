@@ -214,7 +214,7 @@ static MACHINE_START( bsktball )
 	bsktball_state *state = machine.driver_data<bsktball_state>();
 
 	state->save_item(NAME(state->m_nmi_on));
-//	state->save_item(NAME(state->m_i256v));
+//  state->save_item(NAME(state->m_i256v));
 	state->save_item(NAME(state->m_ld1));
 	state->save_item(NAME(state->m_ld2));
 	state->save_item(NAME(state->m_dir0));
@@ -232,7 +232,7 @@ static MACHINE_RESET( bsktball )
 	bsktball_state *state = machine.driver_data<bsktball_state>();
 
 	state->m_nmi_on = 0;
-//	state->m_i256v = 0;
+//  state->m_i256v = 0;
 	state->m_ld1 = 0;
 	state->m_ld2 = 0;
 	state->m_dir0 = 0;
@@ -260,10 +260,9 @@ static MACHINE_CONFIG_START( bsktball, bsktball_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 28*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE(bsktball)
+	MCFG_SCREEN_UPDATE_STATIC(bsktball)
 
 	MCFG_GFXDECODE(bsktball)
 	MCFG_PALETTE_LENGTH(2*4 + 4*4*4*4)

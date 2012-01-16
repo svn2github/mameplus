@@ -380,18 +380,18 @@ READ8_DEVICE_HANDLER(maxaflex_atari_pia_pb_r)
 
 const pia6821_interface maxaflex_atarixl_pia_interface =
 {
-	DEVCB_HANDLER(maxaflex_atari_pia_pa_r), /* port A in */
-	DEVCB_HANDLER(maxaflex_atari_pia_pb_r), /* port B in */
-	DEVCB_NULL, /* line CA1 in */
-	DEVCB_NULL, /* line CB1 in */
-	DEVCB_NULL, /* line CA2 in */
-	DEVCB_NULL, /* line CB2 in */
-	DEVCB_NULL, /* port A out */
-	DEVCB_HANDLER(a600xl_pia_pb_w), /* port B out */
-	DEVCB_NULL, /* line CA2 out */
-	DEVCB_LINE(atari_pia_cb2_w), /* port CB2 out */
-	DEVCB_NULL, /* IRQA */
-	DEVCB_NULL /* IRQB */
+	DEVCB_HANDLER(maxaflex_atari_pia_pa_r),		/* port A in */
+	DEVCB_HANDLER(maxaflex_atari_pia_pb_r),	/* port B in */
+	DEVCB_NULL,		/* line CA1 in */
+	DEVCB_NULL,		/* line CB1 in */
+	DEVCB_NULL,		/* line CA2 in */
+	DEVCB_NULL,		/* line CB2 in */
+	DEVCB_NULL,		/* port A out */
+	DEVCB_HANDLER(a600xl_pia_pb_w),		/* port B out */
+	DEVCB_NULL,		/* line CA2 out */
+	DEVCB_LINE(atari_pia_cb2_w),		/* port CB2 out */
+	DEVCB_NULL,		/* IRQA */
+	DEVCB_NULL		/* IRQB */
 };
 
 
@@ -411,11 +411,10 @@ static MACHINE_CONFIG_START( a600xl, maxaflex_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_VISIBLE_AREA(MIN_X, MAX_X, MIN_Y, MAX_Y)
 	MCFG_SCREEN_REFRESH_RATE(FRAME_RATE_60HZ)
 	MCFG_SCREEN_SIZE(HWIDTH*8, TOTAL_LINES_60HZ)
-	MCFG_SCREEN_UPDATE(atari)
+	MCFG_SCREEN_UPDATE_STATIC(atari)
 
 	MCFG_PALETTE_LENGTH(256)
 	MCFG_PALETTE_INIT(atari)

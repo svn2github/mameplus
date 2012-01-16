@@ -42,7 +42,7 @@ PALETTE_INIT( arknoid2 )
 }
 
 
-SCREEN_UPDATE( tnzs )
+SCREEN_UPDATE_IND16( tnzs )
 {
 	bitmap.fill(0x1f0, cliprect);
 
@@ -53,7 +53,9 @@ SCREEN_UPDATE( tnzs )
 	return 0;
 }
 
-SCREEN_EOF( tnzs )
+SCREEN_VBLANK( tnzs )
 {
-	screen.machine().device<seta001_device>("spritegen")->tnzs_eof();
+	// rising edge
+	if (vblank_on)
+		screen.machine().device<seta001_device>("spritegen")->tnzs_eof();
 }

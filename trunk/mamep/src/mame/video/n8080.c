@@ -139,7 +139,7 @@ VIDEO_START( helifire )
 }
 
 
-SCREEN_UPDATE( spacefev )
+SCREEN_UPDATE_IND16( spacefev )
 {
 	n8080_state *state = screen.machine().driver_data<n8080_state>();
 	UINT8 mask = flip_screen_get(screen.machine()) ? 0xff : 0x00;
@@ -209,7 +209,7 @@ SCREEN_UPDATE( spacefev )
 }
 
 
-SCREEN_UPDATE( sheriff )
+SCREEN_UPDATE_IND16( sheriff )
 {
 	n8080_state *state = screen.machine().driver_data<n8080_state>();
 	UINT8 mask = flip_screen_get(screen.machine()) ? 0xff : 0x00;
@@ -252,7 +252,7 @@ SCREEN_UPDATE( sheriff )
 }
 
 
-SCREEN_UPDATE( helifire )
+SCREEN_UPDATE_IND16( helifire )
 {
 	n8080_state *state = screen.machine().driver_data<n8080_state>();
 	int SUN_BRIGHTNESS = input_port_read(screen.machine(), "POT0");
@@ -352,40 +352,44 @@ SCREEN_UPDATE( helifire )
 }
 
 
-SCREEN_EOF( helifire )
+SCREEN_VBLANK( helifire )
 {
-	n8080_state *state = screen.machine().driver_data<n8080_state>();
-	int n = (screen.machine().primary_screen->frame_number() >> 1) % sizeof state->m_helifire_LSFR;
-
-	int i;
-
-	for (i = 0; i < 8; i++)
+	// rising edge
+	if (vblank_on)
 	{
-		int R = (i & 1);
-		int G = (i & 2);
-		int B = (i & 4);
+		n8080_state *state = screen.machine().driver_data<n8080_state>();
+		int n = (screen.machine().primary_screen->frame_number() >> 1) % sizeof state->m_helifire_LSFR;
 
-		if (state->m_helifire_flash)
+		int i;
+
+		for (i = 0; i < 8; i++)
 		{
-			if (state->m_helifire_LSFR[n] & 0x20)
+			int R = (i & 1);
+			int G = (i & 2);
+			int B = (i & 4);
+
+			if (state->m_helifire_flash)
 			{
-				G |= B;
+				if (state->m_helifire_LSFR[n] & 0x20)
+				{
+					G |= B;
+				}
+
+				if (screen.machine().primary_screen->frame_number() & 0x04)
+				{
+					R |= G;
+				}
 			}
 
-			if (screen.machine().primary_screen->frame_number() & 0x04)
-			{
-				R |= G;
-			}
+			palette_set_color_rgb(screen.machine(),i,
+				R ? 255 : 0,
+				G ? 255 : 0,
+				B ? 255 : 0);
 		}
 
-		palette_set_color_rgb(screen.machine(),i,
-			R ? 255 : 0,
-			G ? 255 : 0,
-			B ? 255 : 0);
-	}
-
-	for (i = 0; i < 256; i++)
-	{
-		helifire_next_line(screen.machine());
+		for (i = 0; i < 256; i++)
+		{
+			helifire_next_line(screen.machine());
+		}
 	}
 }

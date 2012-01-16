@@ -14,7 +14,7 @@ public:
 	UINT8 *		m_videoram;
 	UINT8 *		m_colorram;
 	UINT8 *		m_spriteram;
-//  UINT8 *		m_paletteram;  // currently this uses generic palette handling
+//  UINT8 *     m_paletteram;  // currently this uses generic palette handling
 	size_t		m_spriteram_size;
 
 	/* video-related */
@@ -37,4 +37,4 @@ WRITE8_HANDLER( bombjack_background_w );
 WRITE8_HANDLER( bombjack_flipscreen_w );
 
 VIDEO_START( bombjack );
-SCREEN_UPDATE( bombjack );
+SCREEN_UPDATE_IND16( bombjack );

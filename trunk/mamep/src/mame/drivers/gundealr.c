@@ -421,10 +421,9 @@ static MACHINE_CONFIG_START( gundealr, gundealr_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(gundealr)
+	MCFG_SCREEN_UPDATE_STATIC(gundealr)
 
 	MCFG_GFXDECODE(gundealr)
 	MCFG_PALETTE_LENGTH(512)
@@ -454,12 +453,12 @@ static TIMER_DEVICE_CALLBACK( yamyam_mcu_sim )
 		case 0x03:
 			state->m_rambase[0x001] = 0x03;
 			/*
-       	 		read dip switches
-       	 		3a 00 c0  ld   a,($c000)
-        		47        ld   b,a
-        		3a 01 c0  ld   a,($c001)
-        		c9        ret
-        	*/
+                read dip switches
+                3a 00 c0  ld   a,($c000)
+                47        ld   b,a
+                3a 01 c0  ld   a,($c001)
+                c9        ret
+            */
         	for(i=0;i<8;i++)
         		state->m_rambase[0x010+i] = snipped_cmd03[i];
 
@@ -470,23 +469,23 @@ static TIMER_DEVICE_CALLBACK( yamyam_mcu_sim )
 		case 0x05:
 			state->m_rambase[0x001] = 0x05;
 			/*
-       		 	add a to hl
-        		c5          push    bc
-        		01 00 00    ld      bc,#0000
-        		4f          ld      c,a
-        		09          add     hl,bc
-        		c1          pop     bc
-        		c9          ret
-        	*/
+                add a to hl
+                c5          push    bc
+                01 00 00    ld      bc,#0000
+                4f          ld      c,a
+                09          add     hl,bc
+                c1          pop     bc
+                c9          ret
+            */
         	for(i=0;i<8;i++)
 				state->m_rambase[0x020+i] = snipped_cmd05_2[i];
 
 			/*
-        		lookup data in table
-        		cd 20 e0    call    #e020
-        		7e          ld      a,(hl)
-        		c9          ret
-        	*/
+                lookup data in table
+                cd 20 e0    call    #e020
+                7e          ld      a,(hl)
+                c9          ret
+            */
         	for(i=0;i<5;i++)
 				state->m_rambase[0x010+i] = snipped_cmd05_1[i];
 

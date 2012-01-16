@@ -262,17 +262,16 @@ static MACHINE_CONFIG_START( flower, flower_state )
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 90)	// controls music speed. irqsource and frequency unknown, same as subcpu perhaps?
 
 	// tight sync, slowdowns otherwise
-//	MCFG_QUANTUM_PERFECT_CPU("maincpu")
+//  MCFG_QUANTUM_PERFECT_CPU("maincpu")
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)		// ?
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(34*8, 33*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 34*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE(flower)
+	MCFG_SCREEN_UPDATE_STATIC(flower)
 
 	MCFG_GFXDECODE(flower)
 

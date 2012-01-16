@@ -157,7 +157,7 @@ static VIDEO_START( igs011 )
 	state->m_lhb2_pen_hi = 0;
 }
 
-static SCREEN_UPDATE( igs011 )
+static SCREEN_UPDATE_IND16( igs011 )
 {
 	igs011_state *state = screen.machine().driver_data<igs011_state>();
 #ifdef MAME_DEBUG
@@ -2388,11 +2388,15 @@ static READ16_HANDLER( vbowl_unk_r )
 	return 0xffff;
 }
 
-static SCREEN_EOF( vbowl )
+static SCREEN_VBLANK( vbowl )
 {
-	igs011_state *state = screen.machine().driver_data<igs011_state>();
-	state->m_vbowl_trackball[0] = state->m_vbowl_trackball[1];
-	state->m_vbowl_trackball[1] = (input_port_read(screen.machine(), "AN1") << 8) | input_port_read(screen.machine(), "AN0");
+	// rising edge
+	if (vblank_on)
+	{
+		igs011_state *state = screen.machine().driver_data<igs011_state>();
+		state->m_vbowl_trackball[0] = state->m_vbowl_trackball[1];
+		state->m_vbowl_trackball[1] = (input_port_read(screen.machine(), "AN1") << 8) | input_port_read(screen.machine(), "AN0");
+	}
 }
 
 static WRITE16_HANDLER( vbowl_pen_hi_w )
@@ -3574,10 +3578,9 @@ static MACHINE_CONFIG_START( igs011_base, igs011_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512-1, 0, 240-1)
-	MCFG_SCREEN_UPDATE( igs011 )
+	MCFG_SCREEN_UPDATE_STATIC( igs011 )
 
 	MCFG_PALETTE_LENGTH(0x800)
 //  MCFG_GFXDECODE(igs011)
@@ -3625,7 +3628,7 @@ static INTERRUPT_GEN( lhb_vblank_irq )
 }
 
 static TIMER_DEVICE_CALLBACK ( lhb_timer_irq_cb )
-	{
+{
 	igs011_state *state = timer.machine().driver_data<igs011_state>();
 	if (!state->m_lhb_irq_enable)
 		return;
@@ -3697,7 +3700,7 @@ static MACHINE_CONFIG_DERIVED( vbowl, igs011_base )
 	// irq 4 points to an apparently unneeded routine
 
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_EOF(vbowl)	// trackball
+	MCFG_SCREEN_VBLANK_STATIC(vbowl)	// trackball
 //  MCFG_GFXDECODE(igs011_hi)
 
 	MCFG_DEVICE_REMOVE("oki")

@@ -88,9 +88,6 @@ int					scale_bank_offset;
 #ifdef USE_SCALE_EFFECTS
 void screen_device::video_init_scale_effect()
 {
-	use_work_bitmap = (m_texture_format == TEXFORMAT_PALETTE16);
-	scale_depth = (m_texture_format == TEXFORMAT_RGB15) ? 15 : 32;
-
 	if (scale_init())
 	{
 		logerror("WARNING: scale effect is disabled\n");
@@ -301,19 +298,16 @@ screen_device::screen_device(const machine_config &mconfig, const char *tag, dev
 	  m_oldstyle_vblank_supplied(false),
 	  m_refresh(0),
 	  m_vblank(0),
-	  m_format(BITMAP_FORMAT_INVALID),
 	  m_xoffset(0.0f),
 	  m_yoffset(0.0f),
 	  m_xscale(1.0f),
 	  m_yscale(1.0f),
-	  m_screen_update(NULL),
-	  m_screen_eof(NULL),
 	  m_container(NULL),
 	  m_width(100),
 	  m_height(100),
+	  m_visarea(0, 99, 0, 99),
 	  m_curbitmap(0),
 	  m_curtexture(0),
-	  m_texture_format(0),
 	  m_changed(true),
 	  m_last_partial_scan(0),
 	  m_frame_period(DEFAULT_FRAME_PERIOD.as_attoseconds()),
@@ -329,9 +323,6 @@ screen_device::screen_device(const machine_config &mconfig, const char *tag, dev
 	  m_frame_number(0),
 	  m_partial_updates_this_frame(0)
 {
-	m_visarea.min_x = m_visarea.min_y = 0;
-	m_visarea.max_x = m_width - 1;
-	m_visarea.max_y = m_height - 1;
 	memset(m_texture, 0, sizeof(m_texture));
 #ifdef USE_SCALE_EFFECTS
 	memset(m_scale_dirty, 0, sizeof(m_scale_dirty));
@@ -349,26 +340,13 @@ screen_device::~screen_device()
 
 
 //-------------------------------------------------
-//  static_set_format - configuration helper
-//  to set the bitmap format
-//-------------------------------------------------
-
-void screen_device::static_set_format(device_t &device, bitmap_format format)
-{
-	screen_device &screen = downcast<screen_device &>(device);
-	screen.m_format = format;
-}
-
-
-//-------------------------------------------------
 //  static_set_type - configuration helper
 //  to set the screen type
 //-------------------------------------------------
 
 void screen_device::static_set_type(device_t &device, screen_type_enum type)
 {
-	screen_device &screen = downcast<screen_device &>(device);
-	screen.m_type = type;
+	downcast<screen_device &>(device).m_type = type;
 }
 
 
@@ -398,8 +376,7 @@ void screen_device::static_set_raw(device_t &device, UINT32 pixclock, UINT16 hto
 
 void screen_device::static_set_refresh(device_t &device, attoseconds_t rate)
 {
-	screen_device &screen = downcast<screen_device &>(device);
-	screen.m_refresh = rate;
+	downcast<screen_device &>(device).m_refresh = rate;
 }
 
 
@@ -436,11 +413,7 @@ void screen_device::static_set_size(device_t &device, UINT16 width, UINT16 heigh
 
 void screen_device::static_set_visarea(device_t &device, INT16 minx, INT16 maxx, INT16 miny, INT16 maxy)
 {
-	screen_device &screen = downcast<screen_device &>(device);
-	screen.m_visarea.min_x = minx;
-	screen.m_visarea.max_x = maxx;
-	screen.m_visarea.min_y = miny;
-	screen.m_visarea.max_y = maxy;
+	downcast<screen_device &>(device).m_visarea.set(minx, maxx, miny, maxy);
 }
 
 
@@ -466,21 +439,29 @@ void screen_device::static_set_default_position(device_t &device, double xscale,
 //  configuration
 //-------------------------------------------------
 
-void screen_device::static_set_screen_update(device_t &device, screen_update_func callback)
+void screen_device::static_set_screen_update(device_t &device, screen_update_ind16_delegate callback)
 {
-	downcast<screen_device &>(device).m_screen_update = callback;
+	screen_device &screen = downcast<screen_device &>(device);
+	screen.m_screen_update_ind16 = callback;
+	screen.m_screen_update_rgb32 = screen_update_rgb32_delegate();
+}
+
+void screen_device::static_set_screen_update(device_t &device, screen_update_rgb32_delegate callback)
+{
+	screen_device &screen = downcast<screen_device &>(device);
+	screen.m_screen_update_ind16 = screen_update_ind16_delegate();
+	screen.m_screen_update_rgb32 = callback;
 }
 
 
 //-------------------------------------------------
-//  static_set_screen_eof - set the legacy
-//  screen eof callback in the device
-//  configuration
+//  static_set_screen_vblank - set the screen 
+//  VBLANK callback in the device configuration
 //-------------------------------------------------
 
-void screen_device::static_set_screen_eof(device_t &device, screen_eof_func callback)
+void screen_device::static_set_screen_vblank(device_t &device, screen_vblank_delegate callback)
 {
-	downcast<screen_device &>(device).m_screen_eof = callback;
+	downcast<screen_device &>(device).m_screen_vblank = callback;
 }
 
 
@@ -513,11 +494,9 @@ bool screen_device::device_validity_check(emu_options &options, const game_drive
 		}
 
 		// sanity check screen formats
-		if (m_format != BITMAP_FORMAT_INDEXED16 &&
-			m_format != BITMAP_FORMAT_RGB15 &&
-			m_format != BITMAP_FORMAT_RGB32)
+		if (m_screen_update_ind16.isnull() && m_screen_update_rgb32.isnull())
 		{
-			mame_printf_error(_("%s: %s screen '%s' has unsupported format\n"), driver.source_file, driver.name, tag());
+			mame_printf_error(_("%s: %s screen '%s' has no SCREEN_UPDATE function\n"), driver.source_file, driver.name, tag());
 			error = true;
 		}
 	}
@@ -528,6 +507,7 @@ bool screen_device::device_validity_check(emu_options &options, const game_drive
 		mame_printf_error(_("%s: %s screen '%s' has a zero refresh rate\n"), driver.source_file, driver.name, tag());
 		error = true;
 	}
+	
 	return error;
 }
 
@@ -538,6 +518,23 @@ bool screen_device::device_validity_check(emu_options &options, const game_drive
 
 void screen_device::device_start()
 {
+	// bind our handlers
+	m_screen_update_ind16.bind_relative_to(*owner());
+	m_screen_update_rgb32.bind_relative_to(*owner());
+	m_screen_vblank.bind_relative_to(*owner());
+	
+	// configure bitmap formats and allocate screen bitmaps
+	texture_format texformat = !m_screen_update_ind16.isnull() ? TEXFORMAT_PALETTE16 : TEXFORMAT_RGB32;
+	for (int index = 0; index < ARRAY_LENGTH(m_bitmap); index++)
+	{
+		m_bitmap[index].set_format(format(), texformat);
+		register_screen_bitmap(m_bitmap[index]);
+	}
+
+	// allocate raw textures
+	m_texture[0] = machine().render().texture_alloc();
+	m_texture[1] = machine().render().texture_alloc();
+
 	// configure the default cliparea
 	render_container::user_settings settings;
 	m_container->get_user_settings(settings);
@@ -548,15 +545,15 @@ void screen_device::device_start()
 	m_container->set_user_settings(settings);
 
 	// allocate the VBLANK timers
-	m_vblank_begin_timer = machine().scheduler().timer_alloc(FUNC(static_vblank_begin_callback), (void *)this);
-	m_vblank_end_timer = machine().scheduler().timer_alloc(FUNC(static_vblank_end_callback), (void *)this);
+	m_vblank_begin_timer = timer_alloc(TID_VBLANK_START);
+	m_vblank_end_timer = timer_alloc(TID_VBLANK_END);
 
 	// allocate a timer to reset partial updates
-	m_scanline0_timer = machine().scheduler().timer_alloc(FUNC(static_scanline0_callback), (void *)this);
+	m_scanline0_timer = timer_alloc(TID_SCANLINE0);
 
 	// allocate a timer to generate per-scanline updates
 	if ((machine().config().m_video_attributes & VIDEO_UPDATE_SCANLINE) != 0)
-		m_scanline_timer = machine().scheduler().timer_alloc(FUNC(static_scanline_update_callback), (void *)this);
+		m_scanline_timer = timer_alloc(TID_SCANLINE);
 
 	// configure the screen with the default parameters
 	configure(m_width, m_height, m_visarea, m_refresh);
@@ -575,7 +572,7 @@ void screen_device::device_start()
 		int width, height;
 		if (sscanf(machine().options().snap_size(), "%dx%d", &width, &height) != 2 || width == 0 || height == 0)
 			width = height = 300;
-		m_burnin.allocate(width, height, BITMAP_FORMAT_INDEXED64);
+		m_burnin.allocate(width, height);
 		m_burnin.fill(0);
 	}
 
@@ -627,6 +624,46 @@ void screen_device::device_post_load()
 #ifdef USE_SCALE_EFFECTS
 	video_init_scale_effect();
 #endif /* USE_SCALE_EFFECTS */
+}
+
+
+//-------------------------------------------------
+//  device_timer - called whenever a device timer
+//  fires
+//-------------------------------------------------
+
+void screen_device::device_timer(emu_timer &timer, device_timer_id id, int param, void *ptr)
+{
+	switch (id)
+	{
+		// signal VBLANK start
+		case TID_VBLANK_START:
+			vblank_begin();
+			break;
+		
+		// signal VBLANK end
+		case TID_VBLANK_END:
+			vblank_end();
+			break;
+		
+		// first visible scanline
+		case TID_SCANLINE0:
+			reset_partial_updates();
+			break;
+		
+		// subsequent scanlines when scanline updates are enabled
+		case TID_SCANLINE:
+
+			// force a partial update to the current scanline
+			update_partial(param);
+
+			// compute the next visible scanline
+			param++;
+			if (param > m_visarea.max_y)
+				param = m_visarea.min_y;
+			m_scanline_timer->adjust(time_until_pos(param), param);
+			break;
+	}
 }
 
 
@@ -700,14 +737,14 @@ void screen_device::reset_origin(int beamy, int beamx)
 	// if we are resetting relative to (0,0) == VBLANK end, call the
 	// scanline 0 timer by hand now; otherwise, adjust it for the future
 	if (beamy == 0 && beamx == 0)
-		scanline0_callback();
+		reset_partial_updates();
 	else
 		m_scanline0_timer->adjust(time_until_pos(0));
 
 	// if we are resetting relative to (visarea.max_y + 1, 0) == VBLANK start,
 	// call the VBLANK start timer now; otherwise, adjust it for the future
 	if (beamy == m_visarea.max_y + 1 && beamx == 0)
-		vblank_begin_callback();
+		vblank_begin();
 	else
 		m_vblank_begin_timer->adjust(time_until_vblank_start());
 }
@@ -723,53 +760,14 @@ void screen_device::realloc_screen_bitmaps()
 	if (m_type == SCREEN_TYPE_VECTOR)
 		return;
 
-	// extract the current width/height from the bitmap
-	int curwidth = 0, curheight = 0;
-	if (m_bitmap[0].valid())
-	{
-		curwidth = m_bitmap[0].width();
-		curheight = m_bitmap[0].height();
-	}
+	// reize all registered screen bitmaps
+	for (auto_bitmap_item *item = m_auto_bitmap_list.first(); item != NULL; item = item->next())
+		item->m_bitmap.resize(m_width, m_height);
 
-	// if we're too small to contain this width/height, reallocate our bitmaps and textures
-	if (m_width > curwidth || m_height > curheight)
-	{
-		// free what we have currently
-		machine().render().texture_free(m_texture[0]);
-		machine().render().texture_free(m_texture[1]);
-
-		// compute new width/height
-		curwidth = MAX(m_width, curwidth);
-		curheight = MAX(m_height, curheight);
-
-		// choose the texture format - convert the screen format to a texture format
-		palette_t *palette = NULL;
-		switch (m_format)
-		{
-			case BITMAP_FORMAT_INDEXED16:	m_texture_format = TEXFORMAT_PALETTE16;	palette = machine().palette;	break;
-			case BITMAP_FORMAT_RGB15:		m_texture_format = TEXFORMAT_RGB15;		palette = NULL;				break;
-			case BITMAP_FORMAT_RGB32:		m_texture_format = TEXFORMAT_RGB32;		palette = NULL;				break;
-			default:						fatalerror("Invalid bitmap format!");												break;
-		}
-
-		// allocate bitmaps
-		m_bitmap[0].allocate(curwidth, curheight, m_format);
-		m_bitmap[0].set_palette(machine().palette);
-		m_bitmap[1].allocate(curwidth, curheight, m_format);
-		m_bitmap[1].set_palette(machine().palette);
-
-		// allocate textures
-		m_texture[0] = machine().render().texture_alloc();
-		m_texture[0]->set_bitmap(&m_bitmap[0], &m_visarea, m_texture_format, palette);
-		m_texture[1] = machine().render().texture_alloc();
-		m_texture[1]->set_bitmap(&m_bitmap[1], &m_visarea, m_texture_format, palette);
-
-		// allocate generic backing bitmap
-		m_default.allocate(curwidth, curheight, m_format);
-		m_default.set_palette(machine().palette);
-	}
+	// re-set up textures
+	m_texture[0]->set_bitmap(m_bitmap[0], m_visarea, m_bitmap[0].texformat());
+	m_texture[1]->set_bitmap(m_bitmap[1], m_visarea, m_bitmap[1].texformat());
 }
-
 
 #ifdef USE_SCALE_EFFECTS
 //-------------------------------------------------
@@ -850,18 +848,8 @@ void screen_device::realloc_scale_bitmaps()
 
 void screen_device::set_visible_area(int min_x, int max_x, int min_y, int max_y)
 {
-	// validate arguments
-	assert(min_x >= 0);
-	assert(min_y >= 0);
-	assert(min_x < max_x);
-	assert(min_y < max_y);
-
-	rectangle visarea;
-	visarea.min_x = min_x;
-	visarea.max_x = max_x;
-	visarea.min_y = min_y;
-	visarea.max_y = max_y;
-
+	rectangle visarea(min_x, max_x, min_y, max_y);
+	assert(!visarea.empty());
 	configure(m_width, m_height, visarea, m_frame_period);
 }
 
@@ -920,7 +908,15 @@ bool screen_device::update_partial(int scanline)
 		g_profiler.start(PROFILER_VIDEO);
 		LOG_PARTIAL_UPDATES(("updating %d-%d\n", clip.min_y, clip.max_y));
 
-		flags = screen_update(m_bitmap[m_curbitmap], clip);
+		flags = 0;
+		screen_bitmap &curbitmap = m_bitmap[m_curbitmap];
+		switch (curbitmap.format())
+		{
+			default:
+			case BITMAP_FORMAT_IND16:	flags = m_screen_update_ind16(*this, curbitmap.as_ind16(), clip);	break;
+			case BITMAP_FORMAT_RGB32:	flags = m_screen_update_rgb32(*this, curbitmap.as_rgb32(), clip);	break;
+		}
+
 		m_partial_updates_this_frame++;
 		g_profiler.stop();
 
@@ -957,6 +953,19 @@ void screen_device::update_now()
 		current_vpos = current_vpos - 1;
 
 	update_partial(current_vpos);
+}
+
+
+//-------------------------------------------------
+//  reset_partial_updates - reset the partial
+//  updating state
+//-------------------------------------------------
+
+void screen_device::reset_partial_updates()
+{
+	m_last_partial_scan = 0;
+	m_partial_updates_this_frame = 0;
+	m_scanline0_timer->adjust(time_until_pos(0));
 }
 
 
@@ -1075,11 +1084,27 @@ void screen_device::register_vblank_callback(vblank_state_delegate vblank_callba
 
 
 //-------------------------------------------------
-//  vblank_begin_callback - call any external
-//  callbacks to signal the VBLANK period has begun
+//  register_screen_bitmap - registers a bitmap
+//  that should track the screen size
 //-------------------------------------------------
 
-void screen_device::vblank_begin_callback()
+void screen_device::register_screen_bitmap(bitmap_t &bitmap)
+{
+	// append to the list
+	m_auto_bitmap_list.append(*global_alloc(auto_bitmap_item(bitmap)));
+
+	// if allocating now, just do it
+	bitmap.allocate(width(), height());
+	bitmap.set_palette(machine().palette);
+}
+
+
+//-------------------------------------------------
+//  vblank_begin - call any external callbacks to 
+//  signal the VBLANK period has begun
+//-------------------------------------------------
+
+void screen_device::vblank_begin()
 {
 	// reset the starting VBLANK time
 	m_vblank_start_time = machine().time();
@@ -1088,6 +1113,8 @@ void screen_device::vblank_begin_callback()
 	// call the screen specific callbacks
 	for (callback_item *item = m_callback_list.first(); item != NULL; item = item->next())
 		item->m_callback(*this, true);
+	if (!m_screen_vblank.isnull())
+		m_screen_vblank(*this, true);
 
 	// if this is the primary screen and we need to update now
 	if (this == machine().primary_screen && !(machine().config().m_video_attributes & VIDEO_UPDATE_AFTER_VBLANK))
@@ -1098,22 +1125,24 @@ void screen_device::vblank_begin_callback()
 
 	// if no VBLANK period, call the VBLANK end callback immedietely, otherwise reset the timer
 	if (m_vblank_period == 0)
-		vblank_end_callback();
+		vblank_end();
 	else
 		m_vblank_end_timer->adjust(time_until_vblank_end());
 }
 
 
 //-------------------------------------------------
-//  vblank_end_callback - call any external
-//  callbacks to signal the VBLANK period has ended
+//  vblank_end - call any external callbacks to 
+//  signal the VBLANK period has ended
 //-------------------------------------------------
 
-void screen_device::vblank_end_callback()
+void screen_device::vblank_end()
 {
 	// call the screen specific callbacks
 	for (callback_item *item = m_callback_list.first(); item != NULL; item = item->next())
 		item->m_callback(*this, false);
+	if (!m_screen_vblank.isnull())
+		m_screen_vblank(*this, false);
 
 	// if this is the primary screen and we need to update now
 	if (this == machine().primary_screen && (machine().config().m_video_attributes & VIDEO_UPDATE_AFTER_VBLANK))
@@ -1121,39 +1150,6 @@ void screen_device::vblank_end_callback()
 
 	// increment the frame number counter
 	m_frame_number++;
-}
-
-
-//-------------------------------------------------
-//  scanline0_callback - reset partial updates
-//  for a screen
-//-------------------------------------------------
-
-void screen_device::scanline0_callback()
-{
-	// reset partial updates
-	m_last_partial_scan = 0;
-	m_partial_updates_this_frame = 0;
-
-	m_scanline0_timer->adjust(time_until_pos(0));
-}
-
-
-//-------------------------------------------------
-//  scanline_update_callback - perform partial
-//  updates on each scanline
-//-------------------------------------------------
-
-void screen_device::scanline_update_callback(int scanline)
-{
-	// force a partial update to the current scanline
-	update_partial(scanline);
-
-	// compute the next visible scanline
-	scanline++;
-	if (scanline > m_visarea.max_y)
-		scanline = m_visarea.min_y;
-	m_scanline_timer->adjust(time_until_pos(scanline), scanline);
 }
 
 
@@ -1173,18 +1169,12 @@ bool screen_device::update_quads()
 			// if we're not skipping the frame and if the screen actually changed, then update the texture
 			if (!machine().video().skip_this_frame() && m_changed)
 			{
-				rectangle fixedvis = m_visarea;
-				fixedvis.max_x++;
-				fixedvis.max_y++;
-
-				palette_t *palette = (m_texture_format == TEXFORMAT_PALETTE16) ? machine().palette : NULL;
 #ifdef USE_SCALE_EFFECTS
 				if (scale_effect.effect > 0)
 					texture_set_scale_bitmap(&fixedvis, 0);
 				else
 #endif /* USE_SCALE_EFFECTS */
-				m_texture[m_curbitmap]->set_bitmap(&m_bitmap[m_curbitmap], &fixedvis, m_texture_format, palette);
-
+				m_texture[m_curbitmap]->set_bitmap(m_bitmap[m_curbitmap], m_visarea, m_bitmap[m_curbitmap].texformat());
 				m_curtexture = m_curbitmap;
 				m_curbitmap = 1 - m_curbitmap;
 			}
@@ -1212,12 +1202,12 @@ void screen_device::update_burnin()
 	if (!m_burnin.valid())
 		return;
 
-	bitmap_t &srcbitmap = m_bitmap[m_curtexture];
-	if (!srcbitmap.valid())
+	screen_bitmap &curbitmap = m_bitmap[m_curtexture];
+	if (!curbitmap.valid())
 		return;
 
-	int srcwidth = srcbitmap.width();
-	int srcheight = srcbitmap.height();
+	int srcwidth = curbitmap.width();
+	int srcheight = curbitmap.height();
 	int dstwidth = m_burnin.width();
 	int dstheight = m_burnin.height();
 	int xstep = (srcwidth << 16) / dstwidth;
@@ -1227,43 +1217,42 @@ void screen_device::update_burnin()
 	int srcx, srcy;
 	int x, y;
 
-	// iterate over rows in the destination
-	for (y = 0, srcy = ystart; y < dstheight; y++, srcy += ystep)
+	switch (curbitmap.format())
 	{
-		UINT64 *dst = &m_burnin.pix64(y);
-
-		// handle the 16-bit palettized case
-		if (srcbitmap.format() == BITMAP_FORMAT_INDEXED16)
+		default:
+		case BITMAP_FORMAT_IND16:
 		{
-			const UINT16 *src = &srcbitmap.pix16(srcy >> 16);
-			const rgb_t *palette = palette_entry_list_adjusted(machine().palette);
-			for (x = 0, srcx = xstart; x < dstwidth; x++, srcx += xstep)
+			// iterate over rows in the destination
+			bitmap_ind16 &srcbitmap = curbitmap.as_ind16();
+			for (y = 0, srcy = ystart; y < dstheight; y++, srcy += ystep)
 			{
-				rgb_t pixel = palette[src[srcx >> 16]];
-				dst[x] += RGB_GREEN(pixel) + RGB_RED(pixel) + RGB_BLUE(pixel);
+				UINT64 *dst = &m_burnin.pix64(y);
+				const UINT16 *src = &srcbitmap.pix16(srcy >> 16);
+				const rgb_t *palette = palette_entry_list_adjusted(machine().palette);
+				for (x = 0, srcx = xstart; x < dstwidth; x++, srcx += xstep)
+				{
+					rgb_t pixel = palette[src[srcx >> 16]];
+					dst[x] += RGB_GREEN(pixel) + RGB_RED(pixel) + RGB_BLUE(pixel);
+				}
 			}
+			break;
 		}
-
-		// handle the 15-bit RGB case
-		else if (srcbitmap.format() == BITMAP_FORMAT_RGB15)
+		
+		case BITMAP_FORMAT_RGB32:
 		{
-			const UINT16 *src = &srcbitmap.pix16(srcy >> 16);
-			for (x = 0, srcx = xstart; x < dstwidth; x++, srcx += xstep)
+			// iterate over rows in the destination
+			bitmap_rgb32 &srcbitmap = curbitmap.as_rgb32();
+			for (y = 0, srcy = ystart; y < dstheight; y++, srcy += ystep)
 			{
-				rgb15_t pixel = src[srcx >> 16];
-				dst[x] += ((pixel >> 10) & 0x1f) + ((pixel >> 5) & 0x1f) + ((pixel >> 0) & 0x1f);
+				UINT64 *dst = &m_burnin.pix64(y);
+				const UINT32 *src = &srcbitmap.pix32(srcy >> 16);
+				for (x = 0, srcx = xstart; x < dstwidth; x++, srcx += xstep)
+				{
+					rgb_t pixel = src[srcx >> 16];
+					dst[x] += RGB_GREEN(pixel) + RGB_RED(pixel) + RGB_BLUE(pixel);
+				}
 			}
-		}
-
-		// handle the 32-bit RGB case
-		else if (srcbitmap.format() == BITMAP_FORMAT_RGB32)
-		{
-			const UINT32 *src = &srcbitmap.pix32(srcy >> 16);
-			for (x = 0, srcx = xstart; x < dstwidth; x++, srcx += xstep)
-			{
-				rgb_t pixel = src[srcx >> 16];
-				dst[x] += RGB_GREEN(pixel) + RGB_RED(pixel) + RGB_BLUE(pixel);
-			}
+			break;
 		}
 	}
 }
@@ -1286,7 +1275,7 @@ void screen_device::finalize_burnin()
 	scaledvis.max_y = m_visarea.max_y * m_burnin.height() / m_height;
 
 	// wrap a bitmap around the subregion we care about
-	bitmap_t finalmap(scaledvis.max_x + 1 - scaledvis.min_x, scaledvis.max_y + 1 - scaledvis.min_y, BITMAP_FORMAT_ARGB32);
+	bitmap_argb32 finalmap(scaledvis.max_x + 1 - scaledvis.min_x, scaledvis.max_y + 1 - scaledvis.min_y);
 	int srcwidth = m_burnin.width();
 	int srcheight = m_burnin.height();
 	int dstwidth = finalmap.width();
@@ -1368,30 +1357,4 @@ void screen_device::load_effect_overlay(const char *filename)
 		m_container->set_overlay(&m_screen_overlay_bitmap);
 	else
 		mame_printf_warning(_("Unable to load effect PNG file '%s'\n"), fullname.cstr());
-}
-
-
-//-------------------------------------------------
-//  screen_update - default implementation which
-//  calls to the legacy screen_update function
-//-------------------------------------------------
-
-bool screen_device::screen_update(bitmap_t &bitmap, const rectangle &cliprect)
-{
-	if (m_screen_update != NULL)
-		return (*m_screen_update)(*this, bitmap, cliprect);
-	else
-		return machine().driver_data<driver_device>()->screen_update(*this, bitmap, cliprect);
-}
-
-
-//-------------------------------------------------
-//  screen_eof - default implementation which
-//  calls to the legacy screen_update function
-//-------------------------------------------------
-
-void screen_device::screen_eof()
-{
-	if (m_screen_eof != NULL)
-		return (*m_screen_eof)(*this);
 }

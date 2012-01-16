@@ -28,7 +28,7 @@ TO DO :
   - layer order register?
 
 NOTE: An eBay auction of the PCB shows "1996.9.16 PROMAT" on the JAMMA+ adapter for
- One Shot One Kill. This information was used for the year & manufacturer.
+      One Shot One Kill.  This information was used for the year & manufacturer.
 
 */
 
@@ -390,10 +390,9 @@ static MACHINE_CONFIG_START( oneshot, oneshot_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*16, 20*16-1, 0*16, 15*16-1)
-	MCFG_SCREEN_UPDATE(oneshot)
+	MCFG_SCREEN_UPDATE_STATIC(oneshot)
 
 	MCFG_GFXDECODE(oneshot)
 	MCFG_PALETTE_LENGTH(0x400)
@@ -416,7 +415,7 @@ static MACHINE_CONFIG_DERIVED( maddonna, oneshot )
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE(maddonna) // no crosshair
+	MCFG_SCREEN_UPDATE_STATIC(maddonna) // no crosshair
 MACHINE_CONFIG_END
 
 
@@ -501,4 +500,4 @@ ROM_END
 
 GAME( 1995, maddonna, 0,        maddonna, maddonna, 0, ROT0, "Tuning",  "Mad Donna (set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1995, maddonnb, maddonna, maddonna, maddonna, 0, ROT0, "Tuning",  "Mad Donna (set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1996, oneshot,  0,	oneshot,  oneshot , 0, ROT0, "Promat",	"One Shot One Kill", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1996, oneshot,  0,        oneshot,  oneshot , 0, ROT0, "Promat",  "One Shot One Kill", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )

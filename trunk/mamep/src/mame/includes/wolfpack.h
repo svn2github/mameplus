@@ -20,16 +20,16 @@ public:
 	UINT8 m_torpedo_h;
 	UINT8 m_torpedo_v;
 	UINT8* m_LFSR;
-	bitmap_t* m_helper;
+	bitmap_ind16 m_helper;
 };
 
 
 /*----------- defined in video/wolfpack.c -----------*/
 
 PALETTE_INIT( wolfpack );
-SCREEN_UPDATE( wolfpack );
+SCREEN_UPDATE_IND16( wolfpack );
 VIDEO_START( wolfpack );
-SCREEN_EOF( wolfpack );
+SCREEN_VBLANK( wolfpack );
 
 WRITE8_HANDLER( wolfpack_video_invert_w );
 WRITE8_HANDLER( wolfpack_ship_reflect_w );

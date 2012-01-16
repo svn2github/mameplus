@@ -1401,7 +1401,7 @@ static INTERRUPT_GEN( taitojc_vblank )
 
 static const hc11_config taitojc_config =
 {
-	1, //has extended I/O
+	1,		//has extended I/O
 	1280,	//internal RAM size
 	0x00	//INIT defaults to 0x00
 };
@@ -1431,10 +1431,9 @@ static MACHINE_CONFIG_START( taitojc, taitojc_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(512, 400)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 399)
-	MCFG_SCREEN_UPDATE(taitojc)
+	MCFG_SCREEN_UPDATE_STATIC(taitojc)
 
 	MCFG_PALETTE_LENGTH(32768)
 

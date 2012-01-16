@@ -238,27 +238,27 @@ static WRITE32_HANDLER( fuuki32_vregs_w )
 }
 
 static ADDRESS_MAP_START( fuuki32_map, AS_PROGRAM, 32 )
-	AM_RANGE(0x000000, 0x1fffff) AM_ROM																// ROM
-	AM_RANGE(0x400000, 0x40ffff) AM_RAM																// Work RAM
-	AM_RANGE(0x410000, 0x41ffff) AM_RAM																// Work RAM (used by asurabus)
+	AM_RANGE(0x000000, 0x1fffff) AM_ROM																		// ROM
+	AM_RANGE(0x400000, 0x40ffff) AM_RAM																		// Work RAM
+	AM_RANGE(0x410000, 0x41ffff) AM_RAM																		// Work RAM (used by asurabus)
 
-	AM_RANGE(0x500000, 0x501fff) AM_RAM_WRITE(fuuki32_vram_0_w) AM_BASE_MEMBER(fuuki32_state, m_vram[0])					// Tilemap 1
-	AM_RANGE(0x502000, 0x503fff) AM_RAM_WRITE(fuuki32_vram_1_w) AM_BASE_MEMBER(fuuki32_state, m_vram[1])					// Tilemap 2
-	AM_RANGE(0x504000, 0x505fff) AM_RAM_WRITE(fuuki32_vram_2_w) AM_BASE_MEMBER(fuuki32_state, m_vram[2])					// Tilemap bg
-	AM_RANGE(0x506000, 0x507fff) AM_RAM_WRITE(fuuki32_vram_3_w) AM_BASE_MEMBER(fuuki32_state, m_vram[3])					// Tilemap bg2
-	AM_RANGE(0x508000, 0x517fff) AM_RAM																// More tilemap, or linescroll? Seems to be empty all of the time
-	AM_RANGE(0x600000, 0x601fff) AM_RAM AM_BASE_SIZE_MEMBER(fuuki32_state, m_spriteram, m_spriteram_size)					// Sprites
-	AM_RANGE(0x700000, 0x703fff) AM_RAM_WRITE(paletteram32_xRRRRRGGGGGBBBBB_dword_w) AM_BASE_MEMBER(fuuki32_state, m_paletteram)	// Palette
+	AM_RANGE(0x500000, 0x501fff) AM_RAM_WRITE(fuuki32_vram_0_w) AM_BASE_MEMBER(fuuki32_state, m_vram[0])	// Tilemap 1
+	AM_RANGE(0x502000, 0x503fff) AM_RAM_WRITE(fuuki32_vram_1_w) AM_BASE_MEMBER(fuuki32_state, m_vram[1])	// Tilemap 2
+	AM_RANGE(0x504000, 0x505fff) AM_RAM_WRITE(fuuki32_vram_2_w) AM_BASE_MEMBER(fuuki32_state, m_vram[2])	// Tilemap bg
+	AM_RANGE(0x506000, 0x507fff) AM_RAM_WRITE(fuuki32_vram_3_w) AM_BASE_MEMBER(fuuki32_state, m_vram[3])	// Tilemap bg2
+	AM_RANGE(0x508000, 0x517fff) AM_RAM																		// More tilemap, or linescroll? Seems to be empty all of the time
+	AM_RANGE(0x600000, 0x601fff) AM_RAM AM_BASE_SIZE_MEMBER(fuuki32_state, m_spriteram, m_spriteram_size)	// Sprites
+	AM_RANGE(0x700000, 0x703fff) AM_RAM_WRITE(paletteram32_xRRRRRGGGGGBBBBB_dword_w) AM_BASE_MEMBER(fuuki32_state, m_paletteram) // Palette
 
 	AM_RANGE(0x800000, 0x800003) AM_READ_PORT("800000") AM_WRITENOP											// Coin
 	AM_RANGE(0x810000, 0x810003) AM_READ_PORT("810000") AM_WRITENOP											// Player Inputs
-	AM_RANGE(0x880000, 0x880003) AM_READ_PORT("880000")													// Service + DIPS
-	AM_RANGE(0x890000, 0x890003) AM_READ_PORT("890000")													// More DIPS
+	AM_RANGE(0x880000, 0x880003) AM_READ_PORT("880000")														// Service + DIPS
+	AM_RANGE(0x890000, 0x890003) AM_READ_PORT("890000")														// More DIPS
 
-	AM_RANGE(0x8c0000, 0x8c001f) AM_RAM_WRITE(fuuki32_vregs_w) AM_BASE_MEMBER(fuuki32_state, m_vregs)						// Video Registers
-	AM_RANGE(0x8d0000, 0x8d0003) AM_RAM 															// Flipscreen Related
-	AM_RANGE(0x8e0000, 0x8e0003) AM_RAM AM_BASE_MEMBER(fuuki32_state, m_priority)									// Controls layer order
-	AM_RANGE(0x903fe0, 0x903fff) AM_READWRITE(snd_020_r, snd_020_w) 											// Shared with Z80
+	AM_RANGE(0x8c0000, 0x8c001f) AM_RAM_WRITE(fuuki32_vregs_w) AM_BASE_MEMBER(fuuki32_state, m_vregs)		// Video Registers
+	AM_RANGE(0x8d0000, 0x8d0003) AM_RAM 																	// Flipscreen Related
+	AM_RANGE(0x8e0000, 0x8e0003) AM_RAM AM_BASE_MEMBER(fuuki32_state, m_priority)							// Controls layer order
+	AM_RANGE(0x903fe0, 0x903fff) AM_READWRITE(snd_020_r, snd_020_w) 										// Shared with Z80
 	AM_RANGE(0xa00000, 0xa00003) AM_WRITEONLY AM_BASE_MEMBER(fuuki32_state, m_tilebank)						// Tilebank
 ADDRESS_MAP_END
 
@@ -300,7 +300,7 @@ static ADDRESS_MAP_START( fuuki32_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM								// ROM
 	AM_RANGE(0x6000, 0x6fff) AM_RAM								// RAM
 	AM_RANGE(0x7ff0, 0x7fff) AM_READWRITE(snd_z80_r, snd_z80_w)
-	AM_RANGE(0x8000, 0xffff) AM_ROMBANK("bank1")						// ROM
+	AM_RANGE(0x8000, 0xffff) AM_ROMBANK("bank1")				// ROM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( fuuki32_sound_io_map, AS_IO, 8 )
@@ -414,7 +414,7 @@ static INPUT_PORTS_START( asurabld )
 	PORT_DIPSETTING(      0x0000, "1" )						/* Service Mode Shows 1 */
 	PORT_DIPSETTING(      0x00c0, "3" )						/* Service Mode Shows 3, Service Mode has 2 & 3 reversed compared to game play */
 	PORT_DIPSETTING(      0x0080, "5" )						/* Service Mode Shows 2, Service Mode has 2 & 3 reversed compared to game play */
-//	PORT_DIPSETTING(      0x0040, "Error!!" )				/* Service Mode Shows "Error" */
+//  PORT_DIPSETTING(      0x0040, "Error!!" )               /* Service Mode Shows "Error" */
 	PORT_DIPNAME( 0xf000, 0xf000, DEF_STR( Coin_A ) )		PORT_DIPLOCATION("SW4:1,2,3,4") /* Service Mode Shows Player 2 */
 	PORT_DIPSETTING(      0x8000, DEF_STR( 8C_1C ) )
 	PORT_DIPSETTING(      0x9000, DEF_STR( 7C_1C ) )
@@ -429,8 +429,8 @@ static INPUT_PORTS_START( asurabld )
 	PORT_DIPSETTING(      0x4000, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(      0x3000, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(      0x2000, "2C Start / 1C Continue" )
-//	PORT_DIPSETTING(      0x7000, "Error!!" )				// Causes graphics issues - Service Mode shows "Error"
-//	PORT_DIPSETTING(      0x1000, DEF_STR( 2C_1C ) )		// Duplicate 2C_1C
+//  PORT_DIPSETTING(      0x7000, "Error!!" )               // Causes graphics issues - Service Mode shows "Error"
+//  PORT_DIPSETTING(      0x1000, DEF_STR( 2C_1C ) )        // Duplicate 2C_1C
 	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_1C ) )		PORT_CONDITION("DSW2",0x0f00,PORTCOND_NOTEQUALS,0x0000)
 	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )		PORT_CONDITION("DSW2",0x0f00,PORTCOND_EQUALS,0x0000)	// Set both for Free Play
 	PORT_DIPNAME( 0x0f00, 0x0f00, DEF_STR( Coin_B ) )		PORT_DIPLOCATION("SW4:5,6,7,8") /* Service Mode Shows Player 1 */
@@ -447,8 +447,8 @@ static INPUT_PORTS_START( asurabld )
 	PORT_DIPSETTING(      0x0400, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(      0x0300, DEF_STR( 1C_5C ) )
 	PORT_DIPSETTING(      0x0200, "2C Start / 1C Continue" )
-//	PORT_DIPSETTING(      0x0700, "Error!!" )				// Causes graphics issues - Service Mode shows "Error"
-//	PORT_DIPSETTING(      0x0100, DEF_STR( 2C_1C ) )		// Duplicate 2C_1C
+//  PORT_DIPSETTING(      0x0700, "Error!!" )               // Causes graphics issues - Service Mode shows "Error"
+//  PORT_DIPSETTING(      0x0100, DEF_STR( 2C_1C ) )        // Duplicate 2C_1C
 	PORT_DIPSETTING(      0x0000, DEF_STR( 1C_1C ) )		PORT_CONDITION("DSW2",0xf000,PORTCOND_NOTEQUALS,0x0000)
 	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )		PORT_CONDITION("DSW2",0xf000,PORTCOND_EQUALS,0x0000)	// Set both for Free Play
 INPUT_PORTS_END
@@ -615,11 +615,10 @@ static MACHINE_CONFIG_START( fuuki32, fuuki32_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0, 40*8-1, 0, 30*8-1)
-	MCFG_SCREEN_UPDATE(fuuki32)
-	MCFG_SCREEN_EOF(fuuki32)
+	MCFG_SCREEN_UPDATE_STATIC(fuuki32)
+	MCFG_SCREEN_VBLANK_STATIC(fuuki32)
 
 	MCFG_GFXDECODE(fuuki32)
 	MCFG_PALETTE_LENGTH(0x4000/2)

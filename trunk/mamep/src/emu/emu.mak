@@ -155,6 +155,7 @@ EMUAUDIOOBJS = \
 
 EMUDRIVEROBJS = \
 	$(EMUDRIVERS)/empty.o \
+	$(EMUDRIVERS)/testcpu.o \
 
 EMUMACHINEOBJS = \
 	$(EMUMACHINE)/53c810.o		\
@@ -215,7 +216,8 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/k053252.o 	\
 	$(EMUMACHINE)/k056230.o		\
 	$(EMUMACHINE)/latch8.o		\
-	$(EMUMACHINE)/ldcore.o		\
+	$(EMUMACHINE)/laserdsc.o	\
+	$(EMUMACHINE)/ldstub.o		\
 	$(EMUMACHINE)/ldpr8210.o	\
 	$(EMUMACHINE)/ldv1000.o		\
 	$(EMUMACHINE)/ldvp931.o		\
@@ -362,7 +364,6 @@ $(LIBSOUND): $(SOUNDOBJS)
 $(EMUOBJ)/rendfont.o:	$(EMUOBJ)/uismall11.fh $(EMUOBJ)/uismall14.fh $(EMUOBJ)/uicmd11.fh $(EMUOBJ)/uicmd14.fh
 
 $(EMUOBJ)/video.o:	$(EMUSRC)/rendersw.c
-$(EMUVIDEO)/v9938.o:	$(EMUSRC)/video/v9938mod.c
 
 $(EMUMACHINE)/s3c2400.o:	$(EMUSRC)/machine/s3c24xx.c
 $(EMUMACHINE)/s3c2410.o:	$(EMUSRC)/machine/s3c24xx.c

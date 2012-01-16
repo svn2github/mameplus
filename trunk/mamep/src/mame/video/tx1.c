@@ -1110,7 +1110,7 @@ VIDEO_START( tx1 )
 {
 	tx1_state *state = machine.driver_data<tx1_state>();
 	/* Allocate a large bitmap that covers the three screens */
-	state->m_bitmap = auto_bitmap_alloc(machine, 768, 256, BITMAP_FORMAT_INDEXED16);
+	state->m_bitmap = auto_bitmap_ind16_alloc(machine, 768, 256);
 
 	/* Allocate some bitmaps */
 	state->m_chr_bmp = auto_alloc_array(machine, UINT8, 256 * 3 * 240);
@@ -1124,14 +1124,14 @@ VIDEO_START( tx1 )
 	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(CURSOR_YPOS, CURSOR_XPOS));
 }
 
-SCREEN_EOF( tx1 )
+SCREEN_VBLANK( tx1 )
 {
 	tx1_state *state = screen.machine().driver_data<tx1_state>();
 	/* /VSYNC: Update TZ113 */
 	state->m_vregs.slin_val += state->m_vregs.slin_inc;
 }
 
-static void tx1_combine_layers(running_machine &machine, bitmap_t &bitmap, int screen)
+static void tx1_combine_layers(running_machine &machine, bitmap_ind16 &bitmap, int screen)
 {
 	tx1_state *state = machine.driver_data<tx1_state>();
 	int x, y;
@@ -1182,7 +1182,7 @@ static void tx1_combine_layers(running_machine &machine, bitmap_t &bitmap, int s
 	}
 }
 
-SCREEN_UPDATE( tx1_left )
+SCREEN_UPDATE_IND16( tx1_left )
 {
 	tx1_state *state = screen.machine().driver_data<tx1_state>();
 
@@ -1196,13 +1196,13 @@ SCREEN_UPDATE( tx1_left )
 	return 0;
 }
 
-SCREEN_UPDATE( tx1_middle )
+SCREEN_UPDATE_IND16( tx1_middle )
 {
 	tx1_combine_layers(screen.machine(), bitmap, 1);
 	return 0;
 }
 
-SCREEN_UPDATE( tx1_right )
+SCREEN_UPDATE_IND16( tx1_right )
 {
 	tx1_combine_layers(screen.machine(), bitmap, 2);
 	return 0;
@@ -2929,7 +2929,7 @@ WRITE16_HANDLER( buggyboy_scolst_w )
  *
  *************************************/
 
-static void bb_combine_layers(running_machine &machine, bitmap_t &bitmap, int screen)
+static void bb_combine_layers(running_machine &machine, bitmap_ind16 &bitmap, int screen)
 {
 	tx1_state *state = machine.driver_data<tx1_state>();
 	UINT8 *chr_pal = machine.region("proms")->base() + 0x400;
@@ -3027,19 +3027,23 @@ VIDEO_START( buggybjr )
 	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(CURSOR_YPOS, CURSOR_XPOS));
 }
 
-SCREEN_EOF( buggyboy )
+SCREEN_VBLANK( buggyboy )
 {
-	tx1_state *state = screen.machine().driver_data<tx1_state>();
+	// rising edge
+	if (vblank_on)
+	{
+		tx1_state *state = screen.machine().driver_data<tx1_state>();
 
-	/* /VSYNC: Update TZ113 @ 219 */
-	state->m_vregs.slin_val += state->m_vregs.slin_inc;
+		/* /VSYNC: Update TZ113 @ 219 */
+		state->m_vregs.slin_val += state->m_vregs.slin_inc;
 
-	/* /VSYNC: Clear wave LFSR */
-	state->m_vregs.wave_lfsr = 0;
+		/* /VSYNC: Clear wave LFSR */
+		state->m_vregs.wave_lfsr = 0;
+	}
 }
 
 
-SCREEN_UPDATE( buggyboy_left )
+SCREEN_UPDATE_IND16( buggyboy_left )
 {
 	tx1_state *state = screen.machine().driver_data<tx1_state>();
 
@@ -3054,19 +3058,19 @@ SCREEN_UPDATE( buggyboy_left )
 	return 0;
 }
 
-SCREEN_UPDATE( buggyboy_middle )
+SCREEN_UPDATE_IND16( buggyboy_middle )
 {
 	bb_combine_layers(screen.machine(), bitmap, 1);
 	return 0;
 }
 
-SCREEN_UPDATE( buggyboy_right )
+SCREEN_UPDATE_IND16( buggyboy_right )
 {
 	bb_combine_layers(screen.machine(), bitmap, 2);
 	return 0;
 }
 
-SCREEN_UPDATE( buggybjr )
+SCREEN_UPDATE_IND16( buggybjr )
 {
 	tx1_state *state = screen.machine().driver_data<tx1_state>();
 	memset(state->m_obj_bmp, 0, 256*240);

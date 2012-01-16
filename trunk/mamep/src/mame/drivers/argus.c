@@ -557,10 +557,9 @@ static MACHINE_CONFIG_START( argus, argus_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(54)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)	/* This value is referred to psychic5 driver */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(argus)
+	MCFG_SCREEN_UPDATE_STATIC(argus)
 
 	MCFG_GFXDECODE(argus)
 	MCFG_PALETTE_LENGTH(896)
@@ -602,10 +601,9 @@ static MACHINE_CONFIG_START( valtric, argus_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(54)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)	/* This value is referred to psychic5 driver */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(valtric)
+	MCFG_SCREEN_UPDATE_STATIC(valtric)
 
 	MCFG_GFXDECODE(valtric)
 	MCFG_PALETTE_LENGTH(768)
@@ -647,10 +645,9 @@ static MACHINE_CONFIG_START( butasan, argus_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(54)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)	/* This value is taken from psychic5 driver */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE(butasan)
+	MCFG_SCREEN_UPDATE_STATIC(butasan)
 
 	MCFG_GFXDECODE(butasan)
 	MCFG_PALETTE_LENGTH(768)
@@ -801,7 +798,7 @@ ROM_START( butasanj )
 	ROM_LOAD( "7.a8",    0x00000, 0x10000, CRC(3a48d531) SHA1(0ff6256bb7ea909d95b2bfb994ebc5432ea6d055) ) // buta-07.bin
 
 	ROM_REGION( 0x08000, "gfx4", 0 )	/* Text */
-	ROM_LOAD( "buta-08.bin",  0x00000, 0x08000, CRC(5d45ce9c) SHA1(113c3e7ce20634ee4bb740705485572583298694) )
+	ROM_LOAD( "buta-08.bin",    0x00000, 0x08000, CRC(5d45ce9c) SHA1(113c3e7ce20634ee4bb740705485572583298694) )
 
 	ROM_REGION( 0x00200, "proms", 0 )					/* Data proms ??? */
 	ROM_LOAD( "buta-01.prm",  0x00000, 0x00100, CRC(45baedd0) SHA1(afdafb67d55007e6fb99518657e27ce61d2cb7e6) )
@@ -810,7 +807,7 @@ ROM_END
 
 
 /*  ( YEAR   NAME     PARENT  MACHINE   INPUT     INIT  MONITOR  COMPANY                  FULLNAME ) */
-GAME( 1986, argus,    0,      argus,    argus,    0,    ROT270,  "NMK (Jaleco license)", "Argus"          , GAME_IMPERFECT_GRAPHICS )
-GAME( 1986, valtric,  0,      valtric,  valtric,  0,    ROT270,  "NMK (Jaleco license)", "Valtric"        , GAME_IMPERFECT_GRAPHICS )
+GAME( 1986, argus,    0,      argus,    argus,    0,    ROT270,  "NMK (Jaleco license)", "Argus",                                       GAME_IMPERFECT_GRAPHICS )
+GAME( 1986, valtric,  0,      valtric,  valtric,  0,    ROT270,  "NMK (Jaleco license)", "Valtric",                                     GAME_IMPERFECT_GRAPHICS )
 GAME( 1987, butasan,  0,      butasan,  butasan,  0,    ROT0,    "NMK (Jaleco license)", "Butasan - Pig's & Bomber's (Japan, English)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1987, butasanj, butasan,butasan,  butasan,  0,    ROT0,    "NMK (Jaleco license)", "Butasan (Japan, Japanese)",                   GAME_IMPERFECT_GRAPHICS )

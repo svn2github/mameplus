@@ -753,7 +753,7 @@ static INTERRUPT_GEN( satansat_interrupt )
 
 static INTERRUPT_GEN( snk6502_interrupt )
 {
-		device_set_input_line(device, M6502_IRQ_LINE, HOLD_LINE);	/* one IRQ per frame */
+	device_set_input_line(device, M6502_IRQ_LINE, HOLD_LINE);	/* one IRQ per frame */
 }
 
 
@@ -836,10 +836,9 @@ static MACHINE_CONFIG_START( sasuke, snk6502_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE((MASTER_CLOCK / 16) / (45 * 32 * 8))
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE(snk6502)
+	MCFG_SCREEN_UPDATE_STATIC(snk6502)
 
 	MCFG_GFXDECODE(sasuke)
 	MCFG_PALETTE_LENGTH(32)
@@ -912,10 +911,9 @@ static MACHINE_CONFIG_START( vanguard, snk6502_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE((MASTER_CLOCK / 16) / (45 * 32 * 8))
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE(snk6502)
+	MCFG_SCREEN_UPDATE_STATIC(snk6502)
 
 	MCFG_GFXDECODE(vanguard)
 	MCFG_PALETTE_LENGTH(64)
@@ -1444,38 +1442,6 @@ ROM_START( nibblero ) /* revision 8 */
 	ROM_LOAD( "g-0959-45.ic53", 0x1000, 0x0800, CRC(33189917) SHA1(01a1b1693db0172609780daeb60430fa0c8bcec2) )
 ROM_END
 
-/* Homebrew */
-ROM_START( vantris )
-	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "sk4_ic07.bin", 0x4000, 0x1000, CRC(6a29e354) SHA1(ff953962ebc14a28cfc96f8e269cb1e1c188ed8a) )
-	ROM_LOAD( "sk4_ic08.bin", 0x5000, 0x1000, CRC(302bba54) SHA1(1944f229481328a0635fafda65054106f42a532a) )
-	ROM_LOAD( "sk4_ic09.bin", 0x6000, 0x1000, CRC(424755f6) SHA1(b4762b40c7ed70d4b90319a1a30983a41a096afb) )
-	ROM_LOAD( "sk4_ic10.bin", 0x7000, 0x1000, CRC(54603274) SHA1(31571a560dbe300417b3ed5b114fa1d9ef742da9) )
-	ROM_LOAD( "sk4_ic13_homebrew.bin", 0x8000, 0x1000, CRC(f9f367a5) SHA1(49249a73951ae9a8a965954d8b03627b5fcf4fe3) )
-	ROM_RELOAD(               0xf000, 0x1000 )	/* for the reset and interrupt vectors */
-	ROM_LOAD( "sk4_ic14.bin", 0x9000, 0x1000, CRC(0d5b47d0) SHA1(922621c23f33fe756cb6baa12e5465c4e64f2dda) )
-	ROM_LOAD( "sk4_ic15.bin", 0xa000, 0x1000, CRC(8549b8f8) SHA1(375bc6f7e15564d5cf7e00c44e2651793c56d6ca) )
-	ROM_LOAD( "sk4_ic16.bin", 0xb000, 0x1000, CRC(062e0be2) SHA1(45aaf315a62f37460e32d3ba99caaacf4c994810) )
-
-	ROM_REGION( 0x1000, "gfx1", 0 )
-	ROM_LOAD( "sk5_ic50_homebrew.bin", 0x0000, 0x0800, CRC(a7061526) SHA1(f5f5860a9dc468cb4177348e0b0592e5adda28f1) )
-	ROM_LOAD( "sk5_ic51_homebrew.bin", 0x0800, 0x0800, CRC(67bd31ed) SHA1(24f03cf097e5382500a85483351f21913a98fdd5) )
-
-	ROM_REGION( 0x0040, "proms", 0 )
-	ROM_LOAD( "sk5_ic7_homebrew.bin",  0x0000, 0x0020, CRC(90f17fc1) SHA1(fc92864178cbceccd6f7f2c75249b5c568bdbea8) ) /* foreground colors */
-	ROM_LOAD( "sk5_ic6_homebrew.bin",  0x0020, 0x0020, CRC(90f17fc1) SHA1(fc92864178cbceccd6f7f2c75249b5c568bdbea8) ) /* background colors */
-	
-	ROM_REGION( 0x1000, "snk6502", 0 )	/* sound ROMs */
-	ROM_LOAD( "sk4_ic51_homebrew.bin", 0x0000, 0x0800, CRC(fd4d8bb0) SHA1(d59ec7569147263aed50041b15aed2ca4f395c23) ) /* sound ROM 1 */
-	ROM_LOAD( "sk4_ic52.bin", 0x0800, 0x0800, CRC(cc4a0b6f) SHA1(251b24d60083d516c4ba686d75b41e04d10f7198) ) /* sound ROM 2 */
-	
-	ROM_REGION( 0x5800, "speech", 0 )	/* space for the speech ROMs (not supported) */
-	//ROM_LOAD( "hd38882.bin",  0x0000, 0x4000, NO_DUMP )   /* HD38882 internal ROM */
-	ROM_LOAD( "sk6_ic07.bin", 0x4000, 0x0800, CRC(2b7cbae9) SHA1(3d44a0232d7c94d8170cc06e90cc30bd57c99202) )
-	ROM_LOAD( "sk6_ic08.bin", 0x4800, 0x0800, CRC(3b7e9d7c) SHA1(d9033188068b2aaa1502c89cf09f955eded8fa7a) )
-	ROM_LOAD( "sk6_ic11.bin", 0x5000, 0x0800, CRC(c36df041) SHA1(8b51934229b961180d1edb99be3a4d337d37f66f) )
-ROM_END
-
 
 /*************************************
  *
@@ -1499,6 +1465,3 @@ GAME( 1982, nibbler,  0,        nibbler,  nibbler,  0, ROT90, "Rock-Ola", "Nibbl
 GAME( 1982, nibbler8, nibbler,  nibbler,  nibbler8, 0, ROT90, "Rock-Ola", "Nibbler (rev 8)", 0 )
 GAME( 1982, nibbler6, nibbler,  nibbler,  nibbler6, 0, ROT90, "Rock-Ola", "Nibbler (rev 6)", 0 )
 GAME( 1983, nibblero, nibbler,  nibbler,  nibbler8, 0, ROT90, "Rock-Ola (Olympia license)", "Nibbler (Olympia - rev 8)", 0 )
-
-/* Homebrew */
-GAME( 1998, vantris,  vanguard, vanguard, vanguard, 0, ROT90, "SNK / N. Kehrer", "Vantris (Vanguard hardware, Homebrew)", 0 )

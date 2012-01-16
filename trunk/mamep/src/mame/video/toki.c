@@ -33,14 +33,18 @@ WRITE16_HANDLER( toki_control_w )
 	COMBINE_DATA(&state->m_scrollram16[offset]);
 }
 
-SCREEN_EOF( toki )
+SCREEN_VBLANK( toki )
 {
-	buffer_spriteram16_w(screen.machine().device("maincpu")->memory().space(AS_PROGRAM), 0, 0, 0xffff);
+	// rising edge
+	if (vblank_on)
+		buffer_spriteram16_w(screen.machine().device("maincpu")->memory().space(AS_PROGRAM), 0, 0, 0xffff);
 }
 
-SCREEN_EOF( tokib )
+SCREEN_VBLANK( tokib )
 {
-	buffer_spriteram16_w(screen.machine().device("maincpu")->memory().space(AS_PROGRAM), 0, 0, 0xffff);
+	// rising edge
+	if (vblank_on)
+		buffer_spriteram16_w(screen.machine().device("maincpu")->memory().space(AS_PROGRAM), 0, 0, 0xffff);
 }
 
 static TILE_GET_INFO( get_text_tile_info )
@@ -181,7 +185,7 @@ WRITE16_HANDLER( toki_background2_videoram16_w )
 ***************************************************************************/
 
 
-static void toki_draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
+static void toki_draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect)
 {
 	int x,y,xoffs,yoffs,tile,flipx,flipy,color,offs;
 	UINT16 *sprite_word;
@@ -224,7 +228,7 @@ static void toki_draw_sprites(running_machine &machine, bitmap_t &bitmap,const r
 }
 
 
-static void tokib_draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
+static void tokib_draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect)
 {
 	int x,y,tile,flipx,color,offs;
 	UINT16 *sprite_word;
@@ -267,7 +271,7 @@ static void tokib_draw_sprites(running_machine &machine, bitmap_t &bitmap,const 
  *
  *************************************/
 
-SCREEN_UPDATE( toki )
+SCREEN_UPDATE_IND16( toki )
 {
 	toki_state *state = screen.machine().driver_data<toki_state>();
 	int background_y_scroll,foreground_y_scroll,background_x_scroll,foreground_x_scroll;
@@ -302,7 +306,7 @@ SCREEN_UPDATE( toki )
 	return 0;
 }
 
-SCREEN_UPDATE( tokib )
+SCREEN_UPDATE_IND16( tokib )
 {
 	toki_state *state = screen.machine().driver_data<toki_state>();
 	tilemap_set_scroll_rows(state->m_foreground_layer,1);

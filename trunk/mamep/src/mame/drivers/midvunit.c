@@ -1033,8 +1033,7 @@ static MACHINE_CONFIG_START( midvcommon, midvunit_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MIDVUNIT_VIDEO_CLOCK/2, 666, 0, 512, 432, 0, 400)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MCFG_SCREEN_UPDATE(midvunit)
+	MCFG_SCREEN_UPDATE_STATIC(midvunit)
 
 	MCFG_VIDEO_START(midvunit)
 MACHINE_CONFIG_END
@@ -1122,7 +1121,7 @@ Notes:
                     - not populated for Cruis'n USA
                     - labelled 'Offroad 25" U904' for Offroad Challenge
       PAL1      - GAL20V8 labelled 'A-19668'
-      PAL2      - PALC22V10 
+      PAL2      - PALC22V10
                     - no label for Cruisin USA
                     - labelled 'A-21883 U38' for Offroad Challenge
       PAL3      - TIBPAL20L8
@@ -1131,10 +1130,10 @@ Notes:
       PAL4      - TIBPAL22V10
                     - labelled 'A-19671' for Cruis'n USA
                     - labelled 'A-21171 U54' for Offroad Challenge
-      PAL5      - TIBPAL22V10 
+      PAL5      - TIBPAL22V10
                     - labelled 'A-19672' for Cruis'n USA
                     - labelled 'A-21884 U114' for Offroad Challenge
-      PAL6      - TIBPAL22V10 
+      PAL6      - TIBPAL22V10
                     - labelled 'A-19673' for Cruis'n USA
                     - no label for Offroad Challenge
       P3 - P11  - various connectors for controls

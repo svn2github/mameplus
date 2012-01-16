@@ -381,11 +381,15 @@ static const ym2151_interface ym2151_config =
 	dd3_ymirq_handler
 };
 
-static SCREEN_EOF( wwfwfest )
+static SCREEN_VBLANK( wwfwfest )
 {
-	address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
+	// rising edge
+	if (vblank_on)
+	{
+		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-	buffer_spriteram16_w(space,0,0,0xffff);
+		buffer_spriteram16_w(space,0,0,0xffff);
+	}
 }
 
 /*******************************************************************************
@@ -406,10 +410,9 @@ static MACHINE_CONFIG_START( wwfwfest, wwfwfest_state )
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_BUFFERS_SPRITERAM)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 320, 272, 8, 248)	/* HTOTAL and VTOTAL are guessed */
-	MCFG_SCREEN_UPDATE(wwfwfest)
-	MCFG_SCREEN_EOF(wwfwfest)
+	MCFG_SCREEN_UPDATE_STATIC(wwfwfest)
+	MCFG_SCREEN_VBLANK_STATIC(wwfwfest)
 
 	MCFG_GFXDECODE(wwfwfest)
 	MCFG_PALETTE_LENGTH(8192)

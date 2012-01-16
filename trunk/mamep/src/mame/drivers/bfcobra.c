@@ -339,7 +339,7 @@ static VIDEO_START( bfcobra )
 	}
 }
 
-static SCREEN_UPDATE( bfcobra )
+static SCREEN_UPDATE_RGB32( bfcobra )
 {
 	bfcobra_state *state = screen.machine().driver_data<bfcobra_state>();
 	int x, y;
@@ -1785,10 +1785,9 @@ static MACHINE_CONFIG_START( bfcobra, bfcobra_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(50)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(512, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 512 - 1, 0, 256 - 1)
-	MCFG_SCREEN_UPDATE(bfcobra)
+	MCFG_SCREEN_UPDATE_STATIC(bfcobra)
 
 	MCFG_PALETTE_LENGTH(256)
 
@@ -1951,25 +1950,25 @@ ROM_START( qosb )
 	ROM_LOAD( "snd1_218.ic7", 0x00000, 0x10000, CRC(061f496d) SHA1(653d16454d909c034191813b37d14010da7258c6) )
 	ROM_LOAD( "snd2_219.ic8", 0x10000, 0x10000, CRC(d7874a47) SHA1(5bbd4040c7c0299e8cc135e6c6cd05370b260e9b) )
 
-	/* there is a set close to this with 
-	
-		ROM_LOAD( "qosrom0", 0x0000, 0x080000, CRC(4f150634) SHA1(beb1d3c212b189f3baa08fe454e83f30108be08e) )
-		qosrom1 = rom1_307.bin          qosb       A Question of Sport (39-960-089)
-		ROM_LOAD( "qosrom2", 0x0000, 0x080000, CRC(c39737db) SHA1(ccfdb19dab3af064db44e6022248aef98749bc97) )
-		ROM_LOAD( "qosrom3", 0x0000, 0x080000, CRC(785b8ff9) SHA1(61b31e0e60c31ecb4b179bfe008a96155d939709) )
-		ROM_LOAD( "qossnd1", 0x0000, 0x010000, CRC(888a29f8) SHA1(0e5aa9db54e783708ece1e8c7bffb10d994ab384) )
-	
-	   but it simply looks like a bad dump, rom3 is an alt 'rom 2' and the others are mostly the same as qosb
+	/* there is a set close to this with
+
+        ROM_LOAD( "qosrom0", 0x0000, 0x080000, CRC(4f150634) SHA1(beb1d3c212b189f3baa08fe454e83f30108be08e) )
+        qosrom1 = rom1_307.bin          qosb       A Question of Sport (39-960-089)
+        ROM_LOAD( "qosrom2", 0x0000, 0x080000, CRC(c39737db) SHA1(ccfdb19dab3af064db44e6022248aef98749bc97) )
+        ROM_LOAD( "qosrom3", 0x0000, 0x080000, CRC(785b8ff9) SHA1(61b31e0e60c31ecb4b179bfe008a96155d939709) )
+        ROM_LOAD( "qossnd1", 0x0000, 0x010000, CRC(888a29f8) SHA1(0e5aa9db54e783708ece1e8c7bffb10d994ab384) )
+
+       but it simply looks like a bad dump, rom3 is an alt 'rom 2' and the others are mostly the same as qosb
     */
 
 ROM_END
 
 
-GAME( 1989, inquiztr, 0,   bfcobra, bfcobra, bfcobra, ROT0, "BFM", "Inquizitor",                       GAME_NOT_WORKING )
-GAME( 1990, escounts, 0,   bfcobra, bfcobra, bfcobra, ROT0, "BFM", "Every Second Counts (39-360-053)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1991, trebltop, 0,   bfcobra, bfcobra, bfcobra, ROT0, "BFM", "Treble Top (39-360-070)",          GAME_IMPERFECT_GRAPHICS )
-GAME( 1991, beeline,  0,   bfcobra, bfcobra, bfcobra, ROT0, "BFM", "Beeline (39-360-075)",             GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS )
-GAME( 1991, quizvadr, 0,   bfcobra, bfcobra, bfcobra, ROT0, "BFM", "Quizvaders (39-360-078)",          GAME_IMPERFECT_GRAPHICS )
+GAME( 1989, inquiztr, 0			,   bfcobra, bfcobra, bfcobra, ROT0, "BFM", "Inquizitor",                       GAME_NOT_WORKING )
+GAME( 1990, escounts, 0			,   bfcobra, bfcobra, bfcobra, ROT0, "BFM", "Every Second Counts (39-360-053)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1991, trebltop, 0			,   bfcobra, bfcobra, bfcobra, ROT0, "BFM", "Treble Top (39-360-070)",          GAME_IMPERFECT_GRAPHICS )
+GAME( 1991, beeline,  0			,   bfcobra, bfcobra, bfcobra, ROT0, "BFM", "Beeline (39-360-075)",             GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS )
+GAME( 1991, quizvadr, 0			,   bfcobra, bfcobra, bfcobra, ROT0, "BFM", "Quizvaders (39-360-078)",          GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, qos,      0			,   bfcobra, bfcobra, bfcobra, ROT0, "BFM", "A Question of Sport (set 1, 39-960-107)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, qosa,     qos		,	bfcobra, bfcobra, bfcobra, ROT0, "BFM", "A Question of Sport (set 2, 39-960-099)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, qosb,     qos		,	bfcobra, bfcobra, bfcobra, ROT0, "BFM", "A Question of Sport (set 3, 39-960-089)", GAME_IMPERFECT_GRAPHICS )

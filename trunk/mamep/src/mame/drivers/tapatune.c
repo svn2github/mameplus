@@ -98,7 +98,7 @@ static WRITE16_HANDLER(write_to_z80)
 	{
 		case 0:
 			//if ( (data >> 8) & 0xff )
-			//	logerror("Command to Z80: %04x\n", data);
+			//  logerror("Command to Z80: %04x\n", data);
 			state->m_68k_to_z80_index = data & 0xff;
 			state->m_68k_to_z80_data = (data >> 8) & 0xff;
 			cputag_set_input_line(space->machine(), "maincpu", 3, CLEAR_LINE);
@@ -177,7 +177,7 @@ static READ8_HANDLER(read_data_from_68k)
 {
 	tapatune_state *state = space->machine().driver_data<tapatune_state>();
 	//if ( state->m_68k_to_z80_data != 0 )
-	//	logerror("Load command from 68K: %02x %02x\n", state->m_68k_to_z80_index, state->m_68k_to_z80_data);
+	//  logerror("Load command from 68K: %02x %02x\n", state->m_68k_to_z80_index, state->m_68k_to_z80_data);
 	return state->m_68k_to_z80_data;
 }
 
@@ -349,13 +349,6 @@ static VIDEO_START( tapatune )
 {
 }
 
-static SCREEN_UPDATE( tapatune )
-{
-	mc6845_device *mc6845 = screen.machine().device<mc6845_device>("crtc");
-	mc6845->update(bitmap, cliprect);
-	return 0;
-}
-
 static WRITE_LINE_DEVICE_HANDLER(crtc_vsync)
 {
 	cputag_set_input_line(device->machine(), "maincpu", 2, state ? ASSERT_LINE : CLEAR_LINE);
@@ -390,10 +383,9 @@ static MACHINE_CONFIG_START( tapatune, tapatune_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(tapatune)
+	MCFG_SCREEN_UPDATE_DEVICE("crtc", h46505_device, screen_update)
 
 	MCFG_PALETTE_LENGTH(16)
 

@@ -564,7 +564,7 @@ static VIDEO_START( norautp )
 }
 
 
-static SCREEN_UPDATE( norautp )
+static SCREEN_UPDATE_IND16( norautp )
 {
 	norautp_state *state = screen.machine().driver_data<norautp_state>();
 	int x, y, count;
@@ -1267,10 +1267,9 @@ static MACHINE_CONFIG_START( noraut_base, norautp_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(2*16, 31*16-1, (0*16) + 8, 16*16-1)	/* the hardware clips the top 8 pixels */
-	MCFG_SCREEN_UPDATE(norautp)
+	MCFG_SCREEN_UPDATE_STATIC(norautp)
 
 	MCFG_GFXDECODE(norautp)
 
@@ -1361,7 +1360,7 @@ static MACHINE_CONFIG_DERIVED( newhilop, noraut_base )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(newhilop_map)
-//	MCFG_CPU_IO_MAP(newhilop_portmap)
+//  MCFG_CPU_IO_MAP(newhilop_portmap)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 MACHINE_CONFIG_END
 

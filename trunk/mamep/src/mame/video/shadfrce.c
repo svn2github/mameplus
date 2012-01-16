@@ -113,7 +113,7 @@ WRITE16_HANDLER ( shadfrce_bg1scrolly_w )
 
 
 
-static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
+static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 
 	/* | ---- ---- hhhf Fe-Y | ---- ---- yyyy yyyy | ---- ---- TTTT TTTT | ---- ---- tttt tttt |
@@ -162,7 +162,7 @@ static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const recta
 	}
 }
 
-SCREEN_UPDATE( shadfrce )
+SCREEN_UPDATE_IND16( shadfrce )
 {
 	shadfrce_state *state = screen.machine().driver_data<shadfrce_state>();
 	screen.machine().priority_bitmap.fill(0, cliprect);
@@ -182,10 +182,14 @@ SCREEN_UPDATE( shadfrce )
 	return 0;
 }
 
-SCREEN_EOF( shadfrce )
+SCREEN_VBLANK( shadfrce )
 {
-	shadfrce_state *state = screen.machine().driver_data<shadfrce_state>();
+	// rising edge
+	if (vblank_on)
+	{
+		shadfrce_state *state = screen.machine().driver_data<shadfrce_state>();
 
-	/* looks like sprites are *two* frames ahead */
-	memcpy(state->m_spvideoram_old, state->m_spvideoram, state->m_spvideoram_size);
+		/* looks like sprites are *two* frames ahead */
+		memcpy(state->m_spvideoram_old, state->m_spvideoram, state->m_spvideoram_size);
+	}
 }

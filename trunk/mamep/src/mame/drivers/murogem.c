@@ -199,7 +199,7 @@ GFXDECODE_END
 static PALETTE_INIT(murogem)
 {}
 
-static SCREEN_UPDATE(murogem)
+static SCREEN_UPDATE_IND16(murogem)
 {
 	murogem_state *state = screen.machine().driver_data<murogem_state>();
 	int xx,yy,count;
@@ -242,7 +242,7 @@ static const mc6845_interface mc6845_intf =
 
 static MACHINE_CONFIG_START( murogem, murogem_state )
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M6802,8000000)		 /* ? MHz */
+	MCFG_CPU_ADD("maincpu", M6802, 8000000)		 /* ? MHz */
 	MCFG_CPU_PROGRAM_MAP(murogem_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
@@ -250,10 +250,9 @@ static MACHINE_CONFIG_START( murogem, murogem_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE((39+1)*8, (38+1)*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE(murogem)
+	MCFG_SCREEN_UPDATE_STATIC(murogem)
 
 	MCFG_GFXDECODE(murogem)
 	MCFG_PALETTE_LENGTH(0x100)

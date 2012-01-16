@@ -267,16 +267,7 @@ void video_manager::frame_update(bool debug)
 	{
 		// reset partial updates if we're paused or if the debugger is active
 		if (machine().primary_screen != NULL && (machine().paused() || debug || debugger_within_instruction_hook(machine())))
-			machine().primary_screen->scanline0_callback();
-
-		// otherwise, call the video EOF callback
-		else
-		{
-			g_profiler.start(PROFILER_VIDEO);
-			for (screen_device *screen = machine().first_screen(); screen != NULL; screen = screen->next_screen())
-				screen->screen_eof();
-			g_profiler.stop();
-		}
+			machine().primary_screen->reset_partial_updates();
 	}
 }
 
@@ -551,7 +542,7 @@ void video_manager::exit()
 
 	// free the snapshot target
 	machine().render().target_free(m_snap_target);
-	m_snap_bitmap.deallocate();
+	m_snap_bitmap.reset();
 
 	// print a final result if we have at least 5 seconds' worth of data
 	if (m_overall_emutime.seconds >= 5)
@@ -1079,7 +1070,7 @@ void video_manager::create_snapshot_bitmap(device_t *screen)
 
 	// if we don't have a bitmap, or if it's not the right size, allocate a new one
 	if (!m_snap_bitmap.valid() || width != m_snap_bitmap.width() || height != m_snap_bitmap.height())
-		m_snap_bitmap.allocate(width, height, BITMAP_FORMAT_RGB32);
+		m_snap_bitmap.allocate(width, height);
 
 	// render the screen there
 	render_primitive_list &primlist = m_snap_target->get_primitives();
@@ -1242,7 +1233,7 @@ void video_manager::record_frame()
 		if (m_avifile != NULL)
 		{
 			// write the next frame
-			avi_error avierr = avi_append_video_frame_rgb32(m_avifile, m_snap_bitmap);
+			avi_error avierr = avi_append_video_frame(m_avifile, m_snap_bitmap);
 			if (avierr != AVIERR_NONE)
 			{
 				g_profiler.stop();
@@ -1289,15 +1280,11 @@ void video_manager::record_frame()
     invalid palette index
 -------------------------------------------------*/
 
-void video_assert_out_of_range_pixels(running_machine &machine, bitmap_t &bitmap)
+void video_assert_out_of_range_pixels(running_machine &machine, bitmap_ind16 &bitmap)
 {
 #ifdef MAME_DEBUG
 	int maxindex = palette_get_max_index(machine.palette);
 	int x, y;
-
-	// this only applies to indexed16 bitmaps
-	if (bitmap.format() != BITMAP_FORMAT_INDEXED16)
-		return;
 
 	// iterate over rows
 	for (y = 0; y < bitmap.height(); y++)

@@ -5853,10 +5853,9 @@ static MACHINE_CONFIG_START( goldstar, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(goldstar)
 	MCFG_PALETTE_LENGTH(256)
@@ -5888,10 +5887,9 @@ static MACHINE_CONFIG_START( goldstbl, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(bl)
 	MCFG_PALETTE_LENGTH(256)
@@ -5922,10 +5920,9 @@ static MACHINE_CONFIG_START( moonlght, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(ml)
 	MCFG_PALETTE_LENGTH(256)
@@ -6022,10 +6019,9 @@ static MACHINE_CONFIG_START( chrygld, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(chry10)
 	MCFG_PALETTE_LENGTH(256)
@@ -6064,10 +6060,9 @@ static MACHINE_CONFIG_START( cb3c, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(cb3c)
 	MCFG_PALETTE_LENGTH(256)
@@ -6105,10 +6100,9 @@ static MACHINE_CONFIG_START( ncb3, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(ncb3)
 	MCFG_PALETTE_LENGTH(256)
@@ -6146,10 +6140,9 @@ static MACHINE_CONFIG_START( cm, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(cmbitmap)
 	MCFG_PALETTE_LENGTH(256)
@@ -6187,10 +6180,9 @@ static MACHINE_CONFIG_START( cmnobmp, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(cm)
 	MCFG_PALETTE_LENGTH(256)
@@ -6223,10 +6215,9 @@ static MACHINE_CONFIG_START( cmast91, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE(cmast91)
+	MCFG_SCREEN_UPDATE_STATIC(cmast91)
 
 	MCFG_GFXDECODE(cmast91)
 	MCFG_PALETTE_LENGTH(256)
@@ -6267,11 +6258,10 @@ static MACHINE_CONFIG_START( lucky8, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_PALETTE_INIT(lucky8)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(ncb3)
 	MCFG_PALETTE_LENGTH(256)
@@ -6307,11 +6297,10 @@ static MACHINE_CONFIG_START( bingowng, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_PALETTE_INIT(lucky8)
-	MCFG_SCREEN_UPDATE(bingowng)
+	MCFG_SCREEN_UPDATE_STATIC(bingowng)
 
 	MCFG_GFXDECODE(ncb3)
 	MCFG_PALETTE_LENGTH(256)
@@ -6347,11 +6336,10 @@ static MACHINE_CONFIG_START( bingownga, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
 	MCFG_PALETTE_INIT(lucky8)
-	MCFG_SCREEN_UPDATE(bingowng)
+	MCFG_SCREEN_UPDATE_STATIC(bingowng)
 
 	MCFG_GFXDECODE(bingownga)		/* GFX Decode is the only difference with the parent machine */
 	MCFG_PALETTE_LENGTH(256)
@@ -6404,10 +6392,9 @@ static MACHINE_CONFIG_START( magodds, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(magical)
+	MCFG_SCREEN_UPDATE_STATIC(magical)
 	MCFG_PALETTE_INIT(magodds)
 
 	MCFG_GFXDECODE(magodds)
@@ -6446,10 +6433,9 @@ static MACHINE_CONFIG_START( kkotnoli, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 	MCFG_PALETTE_INIT(lucky8)
 
 	MCFG_GFXDECODE(ncb3)
@@ -6482,10 +6468,9 @@ static MACHINE_CONFIG_START( ladylinr, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 	MCFG_PALETTE_INIT(lucky8)
 
 	MCFG_GFXDECODE(ncb3)
@@ -6523,10 +6508,9 @@ static MACHINE_CONFIG_START( wcat3, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 	MCFG_PALETTE_INIT(lucky8)
 
 	MCFG_GFXDECODE(ncb3)
@@ -6565,10 +6549,9 @@ static MACHINE_CONFIG_START( amcoe1, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(cm)
 	MCFG_PALETTE_LENGTH(256)
@@ -6605,10 +6588,9 @@ static MACHINE_CONFIG_START( amcoe1a, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(amcoe1a)
+	MCFG_SCREEN_UPDATE_STATIC(amcoe1a)
 
 	MCFG_GFXDECODE(cm)
 	MCFG_PALETTE_LENGTH(256)
@@ -6645,10 +6627,9 @@ static MACHINE_CONFIG_START( amcoe2, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(cm)
 	MCFG_PALETTE_LENGTH(256)
@@ -6680,10 +6661,9 @@ static MACHINE_CONFIG_START( nfm, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(nfm)
 	MCFG_PALETTE_LENGTH(256)
@@ -6712,10 +6692,9 @@ static MACHINE_CONFIG_START( unkch, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE(unkch)
+	MCFG_SCREEN_UPDATE_STATIC(unkch)
 
 	MCFG_GFXDECODE(unkch)
 	MCFG_PALETTE_LENGTH(512)
@@ -6761,10 +6740,9 @@ static MACHINE_CONFIG_START( pkrmast, goldstar_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(goldstar)
+	MCFG_SCREEN_UPDATE_STATIC(goldstar)
 
 	MCFG_GFXDECODE(pkrmast)
 	MCFG_PALETTE_LENGTH(256)
@@ -8353,14 +8331,14 @@ ROM_END
 /*
   Bingo, from Wing (1993).
   ------------------------
-   
+
   Seems hardware derivated from Lucky 8 Lines.
 
   1x Z8400AB1  (11c)      Z80A CPU.
   3x D8255AC-2 (7c,8c,9c) Programmable Peripheral Interface.
   1x WF19054   (5c)       Programmable Sound Generator.
   1x oscillator (x1 6j)   12.000MHz Xtal.
-	
+
   ROMs
   4x 2764 (1,2,3,4).
   4x 27256 (5,6,7,9).
@@ -8380,7 +8358,7 @@ ROM_END
   1x trimmer VAL.
   4x 8x2 DIP switches.
   1x battery 3.6V.
-  
+
 */
 
 ROM_START( bingowng )
@@ -9995,13 +9973,13 @@ ROM_END
 
 /*
   Cherry Master '97
-  
-   _____________________________________________________________________________________________ 
+
+   _____________________________________________________________________________________________
   |        F           E                     D                      C            B         A    |
   |   _________    _________      ______________________                      ________          |
   |11| PAL16L8 |  | PAL16L8 |    |         ZILOG        |       _________    |74HC00AN|         |
   |  |_________|  |_________|    |      Z0840006PSC     |      |LH5168N- |   |________|       __|
-  |                              |  Z80 CPU   9349  2E  |      |10L      |                   |  
+  |                              |  Z80 CPU   9349  2E  |      |10L      |                   |
   |   _____________              |______________________|      |_________|                   |
   |  |C97.F10      |                                                                         |__
   |10|   M27C512   |                                                                          --|
@@ -10041,7 +10019,7 @@ ROM_END
   |                  ________                                 |___________|  |________|       --|
   |                 |SW 4    |                                                                __|
   |                 |        |                                                               |
-  |                 1________8                                                               |  
+  |                 1________8                                                               |
   |                  ________                                                                |__
   |                 |SW 5    |                                                                  |
   |                 |        |                                                                  |
@@ -10741,7 +10719,7 @@ GAME(  199?, cb3a,      ncb3,     ncb3,     cb3a,     0,         ROT0, "Dyna",  
 GAME(  199?, cb3,       ncb3,     ncb3,     ncb3,     cb3,       ROT0, "Dyna",              "Cherry Bonus III (ver.1.40, encrypted)",      0 )
 GAME(  199?, cb3b,      ncb3,     cherrys,  ncb3,     cherrys,   ROT0, "Dyna",              "Cherry Bonus III (alt)",           0 )
 GAME(  199?, cb3c,      ncb3,     cb3c,     chrygld,  cb3,       ROT0, "bootleg",           "Cherry Bonus III (alt, set 2)", GAME_NOT_WORKING)
-GAME(  199?, cb3d,      ncb3,     ncb3,     ncb3,     0,         ROT0, "bootleg",           "Cherry Bonus III (set 3)", GAME_NOT_WORKING) // fix prom decode
+GAME(  199?, cb3d,      ncb3,     ncb3,     ncb3,     0,         ROT0, "bootleg",           "Cherry Bonus III (set 3)",  GAME_NOT_WORKING) // fix prom decode
 
 GAME(  1996, cmast97,   ncb3,     cm97,     chrygld,  0,         ROT0, "Dyna",              "Cherry Master '97",         GAME_NOT_WORKING) // fix prom decode
 
@@ -10826,9 +10804,9 @@ GAME( 1996, nc96b,     nc96,     amcoe2,   nfb96,     nfb96_d,   ROT0, "Amcoe", 
 GAME( 1996, nc96c,     nc96,     amcoe2,   nfb96,     nfb96_dk,  ROT0, "Amcoe",   "New Cherry '96 Special Edition (v3.62, DK PCB)",          0 ) /* DK Sub-PCB */
 GAME( 2000, nc96txt,   nc96,     amcoe2,   nfb96tx,   nfb96_c2,  ROT0, "Amcoe",   "New Cherry '96 Special Edition (v1.32 Texas XT, C2 PCB)", 0 ) /* ver. tc1.32axt C2 Sub-PCB */
 
-GAME( 1996, roypok96,  0,        amcoe2,   roypok96,  rp35,      ROT0, "Amcoe",   "Royal Poker '96 (set 1)",                               0 )	/* ver. 97-3.5 */
-GAME( 1996, roypok96a, roypok96, amcoe2,   roypok96a, rp36,      ROT0, "Amcoe",   "Royal Poker '96 (set 2)",                               0 )	/* ver. 98-3.6 */
-GAME( 1996, roypok96b, roypok96, amcoe2,   roypok96a, rp36c3,    ROT0, "Amcoe",   "Royal Poker '96 (set 3)",                               0 )	/* ver. 98-3.6 ??? */
+GAME( 1996, roypok96,  0,        amcoe2,   roypok96,  rp35,      ROT0, "Amcoe",   "Royal Poker '96 (set 1)", 0 ) /* ver. 97-3.5 */
+GAME( 1996, roypok96a, roypok96, amcoe2,   roypok96a, rp36,      ROT0, "Amcoe",   "Royal Poker '96 (set 2)", 0 ) /* ver. 98-3.6 */
+GAME( 1996, roypok96b, roypok96, amcoe2,   roypok96a, rp36c3,    ROT0, "Amcoe",   "Royal Poker '96 (set 3)", 0 ) /* ver. 98-3.6 ??? */
 
 
 /* these all appear to be graphic hacks of 'New Fruit Bonus '96', they can run with the same program rom

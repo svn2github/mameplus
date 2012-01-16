@@ -325,7 +325,7 @@ static MACHINE_RESET( gng )
 		int i;
 
 		/* TODO: PCB reference clearly shows that the POST has random/filled data on the paletteram.
-	             For now let's fill everything with white colors until we have better info about it */
+                 For now let's fill everything with white colors until we have better info about it */
 		for(i=0;i<0x100;i+=4)
 		{
 			machine.generic.paletteram.u8[i] = machine.generic.paletteram2.u8[i] = 0x00;
@@ -360,11 +360,10 @@ static MACHINE_CONFIG_START( gng, gng_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(59.59)    /* verified on pcb */
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(gng)
-	MCFG_SCREEN_EOF(gng)
+	MCFG_SCREEN_UPDATE_STATIC(gng)
+	MCFG_SCREEN_VBLANK_STATIC(gng)
 
 	MCFG_GFXDECODE(gng)
 	MCFG_PALETTE_LENGTH(256)

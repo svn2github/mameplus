@@ -81,7 +81,7 @@ static WRITE16_HANDLER( snowbros_flipscreen_w )
 }
 
 
-static SCREEN_UPDATE( snowbros )
+static SCREEN_UPDATE_IND16( snowbros )
 {
 	device_t *pandora = screen.machine().device("pandora");
 
@@ -92,10 +92,14 @@ static SCREEN_UPDATE( snowbros )
 }
 
 
-static SCREEN_EOF( snowbros )
+static SCREEN_VBLANK( snowbros )
 {
-	device_t *pandora = screen.machine().device("pandora");
-	pandora_eof(pandora);
+	// rising edge
+	if (vblank_on)
+	{
+		device_t *pandora = screen.machine().device("pandora");
+		pandora_eof(pandora);
+	}
 }
 
 
@@ -1482,11 +1486,10 @@ static MACHINE_CONFIG_START( snowbros, snowbros_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(57.5) /* ~57.5 - confirmed */
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(snowbros)
-	MCFG_SCREEN_EOF(snowbros)
+	MCFG_SCREEN_UPDATE_STATIC(snowbros)
+	MCFG_SCREEN_VBLANK_STATIC(snowbros)
 
 	MCFG_GFXDECODE(snowbros)
 	MCFG_PALETTE_LENGTH(256)
@@ -1514,8 +1517,8 @@ static MACHINE_CONFIG_DERIVED( wintbob, snowbros )
 	/* video hardware */
 	MCFG_GFXDECODE(wb)
 	MCFG_SCREEN_MODIFY("screen")
-	MCFG_SCREEN_UPDATE(wintbob)
-	MCFG_SCREEN_EOF(0)
+	MCFG_SCREEN_UPDATE_STATIC(wintbob)
+	MCFG_SCREEN_VBLANK_NONE()
 MACHINE_CONFIG_END
 
 
@@ -1593,10 +1596,9 @@ static MACHINE_CONFIG_START( honeydol, snowbros_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(57.5)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(honeydol)
+	MCFG_SCREEN_UPDATE_STATIC(honeydol)
 
 	MCFG_GFXDECODE(honeydol)
 	MCFG_PALETTE_LENGTH(0x800/2)
@@ -1631,10 +1633,9 @@ static MACHINE_CONFIG_START( twinadv, snowbros_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(57.5)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(twinadv)
+	MCFG_SCREEN_UPDATE_STATIC(twinadv)
 
 	MCFG_GFXDECODE(twinadv)
 	MCFG_PALETTE_LENGTH(0x100)
@@ -1704,10 +1705,9 @@ static MACHINE_CONFIG_START( snowbro3, snowbros_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(snowbro3)
+	MCFG_SCREEN_UPDATE_STATIC(snowbro3)
 
 	MCFG_GFXDECODE(sb3)
 	MCFG_PALETTE_LENGTH(512)

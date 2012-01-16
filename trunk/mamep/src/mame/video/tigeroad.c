@@ -67,7 +67,7 @@ WRITE16_HANDLER( tigeroad_scroll_w )
 	}
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int priority )
+static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int priority )
 {
 	UINT16 *source = &machine.generic.buffered_spriteram.u16[machine.generic.spriteram_size/2] - 4;
 	UINT16 *finish = machine.generic.buffered_spriteram.u16;
@@ -160,7 +160,7 @@ VIDEO_START( tigeroad )
 	tilemap_set_transparent_pen(state->m_fg_tilemap, 3);
 }
 
-SCREEN_UPDATE( tigeroad )
+SCREEN_UPDATE_IND16( tigeroad )
 {
 	tigeroad_state *state = screen.machine().driver_data<tigeroad_state>();
 	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, TILEMAP_DRAW_LAYER1, 0);
@@ -171,9 +171,13 @@ SCREEN_UPDATE( tigeroad )
 	return 0;
 }
 
-SCREEN_EOF( tigeroad )
+SCREEN_VBLANK( tigeroad )
 {
-	address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
+	// rising edge
+	if (vblank_on)
+	{
+		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-	buffer_spriteram16_w(space, 0, 0, 0xffff);
+		buffer_spriteram16_w(space, 0, 0, 0xffff);
+	}
 }

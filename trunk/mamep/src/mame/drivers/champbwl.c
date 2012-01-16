@@ -449,7 +449,7 @@ static MACHINE_RESET( champbwl )
 
 }
 
-SCREEN_UPDATE( champbwl )
+SCREEN_UPDATE_IND16( champbwl )
 {
 	bitmap.fill(0x1f0, cliprect);
 
@@ -460,9 +460,11 @@ SCREEN_UPDATE( champbwl )
 	return 0;
 }
 
-SCREEN_EOF( champbwl )
+SCREEN_VBLANK( champbwl )
 {
-	screen.machine().device<seta001_device>("spritegen")->tnzs_eof();
+	// rising edge
+	if (vblank_on)
+		screen.machine().device<seta001_device>("spritegen")->tnzs_eof();
 }
 
 
@@ -484,11 +486,10 @@ static MACHINE_CONFIG_START( champbwl, champbwl_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(57.5)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 1*8, 31*8-1)
-	MCFG_SCREEN_UPDATE(champbwl)
-	MCFG_SCREEN_EOF(champbwl)
+	MCFG_SCREEN_UPDATE_STATIC(champbwl)
+	MCFG_SCREEN_VBLANK_STATIC(champbwl)
 
 	MCFG_GFXDECODE(champbwl)
 	MCFG_PALETTE_LENGTH(512)
@@ -507,7 +508,7 @@ MACHINE_CONFIG_END
 
 
 
-static SCREEN_UPDATE( doraemon )
+static SCREEN_UPDATE_IND16( doraemon )
 {
 	bitmap.fill(0x1f0, cliprect);
 
@@ -518,9 +519,11 @@ static SCREEN_UPDATE( doraemon )
 	return 0;
 }
 
-static SCREEN_EOF( doraemon )
+static SCREEN_VBLANK( doraemon )
 {
-	screen.machine().device<seta001_device>("spritegen")->setac_eof();
+	// rising edge
+	if (vblank_on)
+		screen.machine().device<seta001_device>("spritegen")->setac_eof();
 }
 
 static MACHINE_START( doraemon )
@@ -546,11 +549,10 @@ static MACHINE_CONFIG_START( doraemon, tnzs_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(320, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 16, 256-16-1)
-	MCFG_SCREEN_UPDATE(doraemon)
-	MCFG_SCREEN_EOF(doraemon)
+	MCFG_SCREEN_UPDATE_STATIC(doraemon)
+	MCFG_SCREEN_VBLANK_STATIC(doraemon)
 
 	MCFG_GFXDECODE(champbwl)
 	MCFG_PALETTE_LENGTH(512)

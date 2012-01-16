@@ -567,7 +567,7 @@ WRITE16_HANDLER( megasys1_vregs_D_w )
     0C      Y position
     0E      Code                                            */
 
-static void draw_sprites(running_machine &machine, bitmap_t &bitmap,const rectangle &cliprect)
+static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect)
 {
 	megasys1_state *state = machine.driver_data<megasys1_state>();
 	int color,code,sx,sy,flipx,flipy,attr,sprite,offs,color_mask;
@@ -920,11 +920,11 @@ PALETTE_INIT( megasys1 )
 
 
 /***************************************************************************
-              Draw the game screen in the given bitmap_t.
+              Draw the game screen in the given bitmap_ind16.
 ***************************************************************************/
 
 
-SCREEN_UPDATE( megasys1 )
+SCREEN_UPDATE_IND16( megasys1 )
 {
 	megasys1_state *state = screen.machine().driver_data<megasys1_state>();
 	int i,flag,pri,primask;
@@ -1020,16 +1020,20 @@ SCREEN_UPDATE( megasys1 )
 	return 0;
 }
 
-SCREEN_EOF( megasys1 )
+SCREEN_VBLANK( megasys1 )
 {
-	megasys1_state *state = screen.machine().driver_data<megasys1_state>();
-	/* Sprite are TWO frames ahead, like NMK16 HW. */
-//state->m_objectram
-	memcpy(state->m_buffer2_objectram,state->m_buffer_objectram, 0x2000);
-	memcpy(state->m_buffer_objectram, state->m_objectram, 0x2000);
-//spriteram16
-	memcpy(state->m_buffer2_spriteram16, state->m_buffer_spriteram16, 0x2000);
-	memcpy(state->m_buffer_spriteram16, state->m_spriteram, 0x2000);
+	// rising edge
+	if (vblank_on)
+	{
+		megasys1_state *state = screen.machine().driver_data<megasys1_state>();
+		/* Sprite are TWO frames ahead, like NMK16 HW. */
+	//state->m_objectram
+		memcpy(state->m_buffer2_objectram,state->m_buffer_objectram, 0x2000);
+		memcpy(state->m_buffer_objectram, state->m_objectram, 0x2000);
+	//spriteram16
+		memcpy(state->m_buffer2_spriteram16, state->m_buffer_spriteram16, 0x2000);
+		memcpy(state->m_buffer_spriteram16, state->m_spriteram, 0x2000);
+	}
 
 }
 

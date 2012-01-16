@@ -57,8 +57,8 @@ public:
 /*----------- defined in video/megasys1.c -----------*/
 
 VIDEO_START( megasys1 );
-SCREEN_UPDATE( megasys1 );
-SCREEN_EOF( megasys1 );
+SCREEN_UPDATE_IND16( megasys1 );
+SCREEN_VBLANK( megasys1 );
 
 PALETTE_INIT( megasys1 );
 

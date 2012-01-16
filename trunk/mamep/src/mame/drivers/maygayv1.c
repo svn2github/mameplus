@@ -280,7 +280,7 @@ static VIDEO_START( maygayv1 )
 }
 
 
-static SCREEN_UPDATE( maygayv1 )
+static SCREEN_UPDATE_IND16( maygayv1 )
 {
 	maygayv1_state *state = screen.machine().driver_data<maygayv1_state>();
 	i82716_t &i82716 = state->m_i82716;
@@ -411,33 +411,37 @@ static SCREEN_UPDATE( maygayv1 )
 	return 0;
 }
 
-static SCREEN_EOF( maygayv1 )
+static SCREEN_VBLANK( maygayv1 )
 {
-	maygayv1_state *state = screen.machine().driver_data<maygayv1_state>();
-	i82716_t &i82716 = state->m_i82716;
-	// UCF
-	if (VREG(VCR0) & VCR0_UCF)
+	// rising edge
+	if (vblank_on)
 	{
-		int i;
-
-		for (i = 0; i < 16; ++i)
-			VREG(i) = i82716.dram[i];
-	}
-	else
-	{
-		VREG(VCR0) = i82716.dram[VCR0];
-		VREG(ATBA) = i82716.dram[ATBA];
-	}
-
-	if (!(VREG(VCR0) & VCR0_DEI))
-	{
-		int i;
-		UINT16 *palbase = &i82716.dram[VREG(CTBA)];
-
-		for (i = 0; i < 16; ++i)
+		maygayv1_state *state = screen.machine().driver_data<maygayv1_state>();
+		i82716_t &i82716 = state->m_i82716;
+		// UCF
+		if (VREG(VCR0) & VCR0_UCF)
 		{
-			UINT16 entry = *palbase++;
-			palette_set_color_rgb(screen.machine(), entry & 0xf, pal4bit(entry >> 12), pal4bit(entry >> 8), pal4bit(entry >> 4));
+			int i;
+
+			for (i = 0; i < 16; ++i)
+				VREG(i) = i82716.dram[i];
+		}
+		else
+		{
+			VREG(VCR0) = i82716.dram[VCR0];
+			VREG(ATBA) = i82716.dram[ATBA];
+		}
+
+		if (!(VREG(VCR0) & VCR0_DEI))
+		{
+			int i;
+			UINT16 *palbase = &i82716.dram[VREG(CTBA)];
+
+			for (i = 0; i < 16; ++i)
+			{
+				UINT16 entry = *palbase++;
+				palette_set_color_rgb(screen.machine(), entry & 0xf, pal4bit(entry >> 12), pal4bit(entry >> 8), pal4bit(entry >> 4));
+			}
 		}
 	}
 }
@@ -1044,11 +1048,10 @@ static MACHINE_CONFIG_START( maygayv1, maygayv1_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(640, 300)
 	MCFG_SCREEN_VISIBLE_AREA(0, 640 - 1, 0, 300 - 1)
-	MCFG_SCREEN_UPDATE(maygayv1)
-	MCFG_SCREEN_EOF(maygayv1)
+	MCFG_SCREEN_UPDATE_STATIC(maygayv1)
+	MCFG_SCREEN_VBLANK_STATIC(maygayv1)
 
 	MCFG_PALETTE_LENGTH(16)
 

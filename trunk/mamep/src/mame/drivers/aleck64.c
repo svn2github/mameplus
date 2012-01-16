@@ -175,11 +175,11 @@ static UINT32 dip_read_offset = 0;
 static WRITE32_HANDLER( aleck_dips_w )
 {
 	/*
-	 	mtetrisc uses offset 0x1c and 0x03 a good bit in conjunction with reading INMJ.
-	 	(See Test menu GAME DATA and MEMORY CHECK/S2D Ram test, also CONFIGURATION/save & exit. eeprom? Serial2DRAM?)
+        mtetrisc uses offset 0x1c and 0x03 a good bit in conjunction with reading INMJ.
+        (See Test menu GAME DATA and MEMORY CHECK/S2D Ram test, also CONFIGURATION/save & exit. eeprom? Serial2DRAM?)
 
-	 	srmvs uses 0x40, communications?
-	 */
+        srmvs uses 0x40, communications?
+     */
 
 	switch( offset )
 	{
@@ -235,66 +235,68 @@ static READ32_HANDLER( aleck_dips_r )
 
 /*
 
-	The TLB entries made by all games show that the programmers put in extra mappings.
-	Some of these are big, every game adds a mapping for 4MB at 0xc0000000 physical.
-	Some add more than one 4MB mapping. As some of the boards are only 4MB RAM,
-	it seems likely that the programmers expected main RAM to be mirrored at 0xc0000000.
-	Some of the games have a further 4MB mapping to a pgysical segment contiguous with
-	the first at 0xc0000000, so if these games are on the E92 8MB boards, this would
-	add a bit of support to the mirror idea.
+    The TLB entries made by all games show that the programmers put in extra mappings.
+    Some of these are big, every game adds a mapping for 4MB at 0xc0000000 physical.
+    Some add more than one 4MB mapping. As some of the boards are only 4MB RAM,
+    it seems likely that the programmers expected main RAM to be mirrored at 0xc0000000.
+    Some of the games have a further 4MB mapping to a pgysical segment contiguous with
+    the first at 0xc0000000, so if these games are on the E92 8MB boards, this would
+    add a bit of support to the mirror idea.
 
-	Adding the mirror makes everything go pretty well,
-	it makes doncdoon, hipai, kurufev, srmvs, twrshaft boot.
+    Adding the mirror makes everything go pretty well,
+    it makes doncdoon, hipai, kurufev, srmvs, twrshaft boot.
 
-	There's still a couple of problems though:
-	- srmvs and vivdolls system test screen actually check "SDRAM" at 0xc0000000.
-	This all goes well until they overwrite the RAM test code which is running from
-	virtual memory backed by the same physical memory as it's testing.
-	(maybe this is related to the fact that the check code is executing from a cacheable kseg0 range,
-	and the TLB entry for 0xc0000000 is in kuseg and flagged as non-cache?)
-	- srmvs reads a jump vector from memory mapped to physical segment at 0xc0000000 that's been overwritten
-	by a boot up memory test of that segment, so it crashes with a bad access during the intro.
+    There's still a couple of problems though:
+    - srmvs and vivdolls system test screen actually check "SDRAM" at 0xc0000000.
+    This all goes well until they overwrite the RAM test code which is running from
+    virtual memory backed by the same physical memory as it's testing.
+    (maybe this is related to the fact that the check code is executing from a cacheable kseg0 range,
+    and the TLB entry for 0xc0000000 is in kuseg and flagged as non-cache?)
+    - srmvs reads a jump vector from memory mapped to physical segment at 0xc0000000 that's been overwritten
+    by a boot up memory test of that segment, so it crashes with a bad access during the intro.
 
-	Both these problems go away by adding new RAM at 0xc0000000 physical, but maybe they are related to
-	caching?
+    Both these problems go away by adding new RAM at 0xc0000000 physical, but maybe they are related to
+    caching?
 
-	Here's a full list of the physical addresses mapped by tlb entries, along with the names of the games
-	that make the mappings and which games actually use them.
+    Here's a full list of the physical addresses mapped by tlb entries, along with the names of the games
+    that make the mappings and which games actually use them.
 
-	4MB @ 0xc0000000 - 0xc03fffff ALL : used by doncdoon, hipai, kurufev, srmvs, twrshaft
-	4MB @ 0xc0400000 - 0xc07fffff mayjin3, vivdolls, 11beat, starsldr, mtetrisc : unused
-	4MB @ 0xc0401000 - 0xc0800fff 11beat, starsldr (odd-page entry, overlaps inputs) : unused
-	4KB @ 0xc0800000 - 0xc0800fff ALL (inputs)
-	4KB @ 0xc0801000 - 0xc0801fff mayjin3, vivdolls, 11beat, starsldr, mtetrisc : unused
-	4KB @ 0xc0810000 - 0xc0810fff 11beat, starsldr, mtetrisc : unused
-	4KB @ 0xc0811000 - 0xc0811fff 11beat, starsldr, mtetrisc : unused
-	4KB @ 0xc0c00000 - 0xc0c00fff doncdoon, hipai, kurufev, twrshaft, srmvs, mayjin3, vivdolls : unused
-	4KB @ 0xc0c01000 - 0xc0c01fff mayjin3, vivdolls : unused
-	1MB @ 0xd0000000 - 0xd00fffff mtetrisc : used but write only
-	1MB @ 0xd0100000 - 0xd01fffff mtetrisc : unused
-	4MB @ 0xd0800000 - 0xd0bfffff doncdoon, hipai, kurufev, twrshaft, srmvs : unused
+    4MB @ 0xc0000000 - 0xc03fffff ALL : used by doncdoon, hipai, kurufev, srmvs, twrshaft
+    4MB @ 0xc0400000 - 0xc07fffff mayjin3, vivdolls, 11beat, starsldr, mtetrisc : unused
+    4MB @ 0xc0401000 - 0xc0800fff 11beat, starsldr (odd-page entry, overlaps inputs) : unused
+    4KB @ 0xc0800000 - 0xc0800fff ALL (inputs)
+    4KB @ 0xc0801000 - 0xc0801fff mayjin3, vivdolls, 11beat, starsldr, mtetrisc : unused
+    4KB @ 0xc0810000 - 0xc0810fff 11beat, starsldr, mtetrisc : unused
+    4KB @ 0xc0811000 - 0xc0811fff 11beat, starsldr, mtetrisc : unused
+    4KB @ 0xc0c00000 - 0xc0c00fff doncdoon, hipai, kurufev, twrshaft, srmvs, mayjin3, vivdolls : unused
+    4KB @ 0xc0c01000 - 0xc0c01fff mayjin3, vivdolls : unused
+    1MB @ 0xd0000000 - 0xd00fffff mtetrisc : used but write only
+    1MB @ 0xd0100000 - 0xd01fffff mtetrisc : unused
+    4MB @ 0xd0800000 - 0xd0bfffff doncdoon, hipai, kurufev, twrshaft, srmvs : unused
  */
 
 static ADDRESS_MAP_START( n64_map, AS_PROGRAM, 32 )
 	AM_RANGE(0x00000000, 0x007fffff) AM_RAM	/*AM_MIRROR(0xc0000000)*/ AM_BASE(&rdram)				// RDRAM
+
+	AM_RANGE(0x03f00000, 0x03f00027) AM_DEVREADWRITE_MODERN("rcp", n64_periphs, rdram_reg_r, rdram_reg_w)
 	AM_RANGE(0x04000000, 0x04000fff) AM_RAM AM_SHARE("dmem")					// RSP DMEM
 	AM_RANGE(0x04001000, 0x04001fff) AM_RAM AM_SHARE("imem")					// RSP IMEM
 	AM_RANGE(0x04040000, 0x040fffff) AM_DEVREADWRITE("rsp", n64_sp_reg_r, n64_sp_reg_w)	// RSP
 	AM_RANGE(0x04100000, 0x041fffff) AM_DEVREADWRITE("rsp", n64_dp_reg_r, n64_dp_reg_w)	// RDP
-	AM_RANGE(0x04300000, 0x043fffff) AM_READWRITE(n64_mi_reg_r, n64_mi_reg_w)	// MIPS Interface
-	AM_RANGE(0x04400000, 0x044fffff) AM_READWRITE(n64_vi_reg_r, n64_vi_reg_w)	// Video Interface
-	AM_RANGE(0x04500000, 0x045fffff) AM_READWRITE(n64_ai_reg_r, n64_ai_reg_w)	// Audio Interface
-	AM_RANGE(0x04600000, 0x046fffff) AM_READWRITE(n64_pi_reg_r, n64_pi_reg_w)	// Peripheral Interface
-	AM_RANGE(0x04700000, 0x047fffff) AM_READWRITE(n64_ri_reg_r, n64_ri_reg_w)	// RDRAM Interface
-	AM_RANGE(0x04800000, 0x048fffff) AM_READWRITE(n64_si_reg_r, n64_si_reg_w)	// Serial Interface
+	AM_RANGE(0x04300000, 0x043fffff) AM_DEVREADWRITE_MODERN("rcp", n64_periphs, mi_reg_r, mi_reg_w)	// MIPS Interface
+	AM_RANGE(0x04400000, 0x044fffff) AM_DEVREADWRITE_MODERN("rcp", n64_periphs, vi_reg_r, vi_reg_w)	// Video Interface
+	AM_RANGE(0x04500000, 0x045fffff) AM_DEVREADWRITE_MODERN("rcp", n64_periphs, ai_reg_r, ai_reg_w)	// Audio Interface
+	AM_RANGE(0x04600000, 0x046fffff) AM_DEVREADWRITE_MODERN("rcp", n64_periphs, pi_reg_r, pi_reg_w)	// Peripheral Interface
+	AM_RANGE(0x04700000, 0x047fffff) AM_DEVREADWRITE_MODERN("rcp", n64_periphs, ri_reg_r, ri_reg_w)	// RDRAM Interface
+	AM_RANGE(0x04800000, 0x048fffff) AM_DEVREADWRITE_MODERN("rcp", n64_periphs, si_reg_r, si_reg_w)	// Serial Interface
 	AM_RANGE(0x10000000, 0x13ffffff) AM_ROM AM_REGION("user2", 0)	// Cartridge
 	AM_RANGE(0x1fc00000, 0x1fc007bf) AM_ROM AM_REGION("user1", 0)	// PIF ROM
-	AM_RANGE(0x1fc007c0, 0x1fc007ff) AM_READWRITE(n64_pif_ram_r, n64_pif_ram_w)
+	AM_RANGE(0x1fc007c0, 0x1fc007ff) AM_DEVREADWRITE_MODERN("rcp", n64_periphs, pif_ram_r, pif_ram_w)
 
 	/*
-		Surely this should mirror main ram? srmvs crashes, and
-		vivdolls overwrites it's memory test code if it does mirror
-	*/
+        Surely this should mirror main ram? srmvs crashes, and
+        vivdolls overwrites it's memory test code if it does mirror
+    */
 	AM_RANGE(0xc0000000, 0xc07fffff) AM_RAM
 
 	AM_RANGE(0xc0800000, 0xc0800fff) AM_READWRITE(aleck_dips_r,aleck_dips_w)
@@ -821,10 +823,9 @@ static MACHINE_CONFIG_START( aleck64, _n64_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(640, 525)
 	MCFG_SCREEN_VISIBLE_AREA(0, 639, 0, 239)
-	MCFG_SCREEN_UPDATE(n64)
+	MCFG_SCREEN_UPDATE_STATIC(n64)
 
 	MCFG_PALETTE_LENGTH(0x1000)
 

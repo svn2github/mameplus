@@ -241,7 +241,7 @@ static VIDEO_START(multfish)
 	tilemap_set_scroll_cols(state->m_reel_tilemap, 64);
 }
 
-static SCREEN_UPDATE(multfish)
+static SCREEN_UPDATE_IND16(multfish)
 {
 	multfish_state *state = screen.machine().driver_data<multfish_state>();
 	int i;
@@ -1034,10 +1034,9 @@ static MACHINE_CONFIG_START( multfish, multfish_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*16, 32*16)
 	MCFG_SCREEN_VISIBLE_AREA(17*16, 1024-16*7-1, 1*16, 32*16-1*16-1)
-	MCFG_SCREEN_UPDATE(multfish)
+	MCFG_SCREEN_UPDATE_STATIC(multfish)
 	MCFG_GFXDECODE(multfish)
 	MCFG_PALETTE_LENGTH(0x1000)
 
@@ -4369,7 +4368,7 @@ GAME( 2008, fcockt2a,    fcockt2_parent,  multfish, multfish,  0,             RO
    0x3c0000 - 0x3fffff NOTHING
 */
 ROM_START( igromult )
-	ROM_REGION( 0x400000, "maincpu", 0 ) 
+	ROM_REGION( 0x400000, "maincpu", 0 )
 	ROM_LOAD( "10games.320.bin", 0x0000, 0x400000, CRC(94e5b2e1) SHA1(62544a5b3de02b5f323478dbae19ef2409af2529) )
 
 	ROM_REGION( 0x4000000, "gfx", 0 ) /* There should be 64MB worth of FLASH ROM for the gfx, the menu GFX are unique at least (not in any Igrosoft set) */
@@ -4395,7 +4394,7 @@ ROM_END
 */
 
 ROM_START( igromula )
-	ROM_REGION( 0x400000, "maincpu", 0 ) 
+	ROM_REGION( 0x400000, "maincpu", 0 )
 	ROM_LOAD( "15games.320.bin", 0x0000, 0x400000, CRC(1cfd520d) SHA1(7316b883a13ff98fc7c3ff05aa085f1fb8e0bdcd) )
 
 	ROM_REGION( 0x4000000, "gfx", 0 ) /* There should be 64MB worth of FLASH ROM for the gfx, the menu GFX are unique at least (not in any Igrosoft set) */

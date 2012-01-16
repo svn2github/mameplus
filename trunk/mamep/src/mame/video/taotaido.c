@@ -25,7 +25,7 @@ WRITE16_HANDLER( taotaido_sprite_character_bank_select_w )
 /* sprites are like the other video system / psikyo games, we can merge this with aerofgt and plenty of other
    things eventually */
 
-static void draw_sprite(running_machine &machine, UINT16 spriteno, bitmap_t &bitmap, const rectangle &cliprect )
+static void draw_sprite(running_machine &machine, UINT16 spriteno, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	taotaido_state *state = machine.driver_data<taotaido_state>();
 	/*- SPR RAM Format -**
@@ -109,7 +109,7 @@ static void draw_sprite(running_machine &machine, UINT16 spriteno, bitmap_t &bit
 	}
 }
 
-static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
+static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	taotaido_state *state = machine.driver_data<taotaido_state>();
 	/* first part of sprite ram is the list of sprites to draw, terminated with 0x4000 */
@@ -197,7 +197,7 @@ VIDEO_START(taotaido)
 }
 
 
-SCREEN_UPDATE(taotaido)
+SCREEN_UPDATE_IND16(taotaido)
 {
 	taotaido_state *state = screen.machine().driver_data<taotaido_state>();
 //  tilemap_set_scrollx(state->m_bg_tilemap,0,(state->m_scrollram[0x380/2]>>4)); // the values put here end up being wrong every other frame
@@ -227,14 +227,18 @@ SCREEN_UPDATE(taotaido)
 	return 0;
 }
 
-SCREEN_EOF( taotaido )
+SCREEN_VBLANK( taotaido )
 {
-	taotaido_state *state = screen.machine().driver_data<taotaido_state>();
-	/* sprites need to be delayed by 2 frames? */
+	// rising edge
+	if (vblank_on)
+	{
+		taotaido_state *state = screen.machine().driver_data<taotaido_state>();
+		/* sprites need to be delayed by 2 frames? */
 
-	memcpy(state->m_spriteram2_older,state->m_spriteram2_old,0x10000);
-	memcpy(state->m_spriteram2_old,state->m_spriteram2,0x10000);
+		memcpy(state->m_spriteram2_older,state->m_spriteram2_old,0x10000);
+		memcpy(state->m_spriteram2_old,state->m_spriteram2,0x10000);
 
-	memcpy(state->m_spriteram_older,state->m_spriteram_old,0x2000);
-	memcpy(state->m_spriteram_old,state->m_spriteram,0x2000);
+		memcpy(state->m_spriteram_older,state->m_spriteram_old,0x2000);
+		memcpy(state->m_spriteram_old,state->m_spriteram,0x2000);
+	}
 }

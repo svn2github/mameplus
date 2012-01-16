@@ -28,7 +28,7 @@ public:
 
 	/* misc */
 	UINT32   m_nmi_on;
-//	int      m_i256v;
+//  int      m_i256v;
 
 	/* input-related */
 	int m_ld1;
@@ -67,6 +67,6 @@ DISCRETE_SOUND_EXTERN( bsktball );
 /*----------- defined in video/bsktball.c -----------*/
 
 VIDEO_START( bsktball );
-SCREEN_UPDATE( bsktball );
+SCREEN_UPDATE_IND16( bsktball );
 WRITE8_HANDLER( bsktball_videoram_w );
 

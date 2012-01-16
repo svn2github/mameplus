@@ -169,7 +169,12 @@ static UINT32 get_flags(i386_state *cpustate)
 	f |= cpustate->IOP1 << 12;
 	f |= cpustate->IOP2 << 13;
 	f |= cpustate->NT << 14;
+	f |= cpustate->RF << 16;
 	f |= cpustate->VM << 17;
+	f |= cpustate->AC << 18;
+	f |= cpustate->VIF << 19;
+	f |= cpustate->VIP << 20;
+	f |= cpustate->ID << 21;
 	return (cpustate->eflags & ~cpustate->eflags_mask) | (f & cpustate->eflags_mask);
 }
 
@@ -187,7 +192,12 @@ static void set_flags(i386_state *cpustate, UINT32 f )
 	cpustate->IOP1 = (f & 0x1000) ? 1 : 0;
 	cpustate->IOP2 = (f & 0x2000) ? 1 : 0;
 	cpustate->NT = (f & 0x4000) ? 1 : 0;
+	cpustate->RF = (f & 0x10000) ? 1 : 0;
 	cpustate->VM = (f & 0x20000) ? 1 : 0;
+	cpustate->AC = (f & 0x40000) ? 1 : 0;
+	cpustate->VIF = (f & 0x80000) ? 1 : 0;
+	cpustate->VIP = (f & 0x100000) ? 1 : 0;
+	cpustate->ID = (f & 0x200000) ? 1 : 0;
 	cpustate->eflags = f & cpustate->eflags_mask;
 }
 
@@ -382,6 +392,27 @@ static void i386_check_sreg_validity(i386_state* cpustate, int reg)
 		i386_load_segment_descriptor(cpustate,reg);
 	}
 }
+
+#if 0
+// this will be more useful once expand-down segments are supported (the FM-Towns uses these for the stack)
+static void i386_stack_check(i386_state *cpustate, INT16 offset)
+{
+	if(PROTECTED_MODE && !V8086_MODE)
+	{
+		// Check that both current and eventual stack pointers are within the segment limits
+		if(REG32(ESP) > cpustate->sreg[SS].limit)
+		{
+			logerror("Stack (%08x): ESP is outside stack segment limit.\n",cpustate->pc);
+			FAULT(FAULT_SS,0);
+		}
+		if(REG32(ESP) + offset > cpustate->sreg[SS].limit)
+		{
+			logerror("Stack (%08x): ESP + offset (%i) is outside stack segment limit.\n",cpustate->pc,offset);
+			FAULT(FAULT_SS,0);
+		}
+	}
+}
+#endif
 
 static void i386_protected_mode_sreg_load(i386_state *cpustate, UINT16 selector, UINT8 reg)
 {
@@ -613,6 +644,7 @@ static void i386_trap(i386_state *cpustate,int irq, int irq_gate, int trap_level
 			tempflags = get_flags(cpustate);
 			cpustate->VM = 0;
 			cpustate->TF = 0;
+			cpustate->NT = 0;
 			if(type == 0x0e || type == 0x06)
 				cpustate->IF = 0;
 			tempSS = cpustate->sreg[SS].selector;
@@ -2193,7 +2225,7 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 	{
 		UINT32 task = READ32(cpustate,cpustate->task.base);
 		/* Task Return */
-		popmessage("IRET: Nested task return.");
+		logerror("IRET (%08x): Nested task return.\n",cpustate->pc);
 		/* Check back-link selector in TSS */
 		if(task & 0x04)
 		{
@@ -3022,6 +3054,7 @@ static CPU_EXECUTE( i386 )
 
 	while( cpustate->cycles > 0 )
 	{
+		i386_check_irq_line(cpustate);
 		cpustate->operand_size = cpustate->sreg[CS].d;
 		cpustate->address_size = cpustate->sreg[CS].d;
 		cpustate->operand_prefix = 0;
@@ -3034,13 +3067,20 @@ static CPU_EXECUTE( i386 )
 
 		debugger_instruction_hook(device, cpustate->pc);
 
-		i386_check_irq_line(cpustate);
 		if(cpustate->delayed_interrupt_enable != 0)
 		{
 			cpustate->IF = 1;
 			cpustate->delayed_interrupt_enable = 0;
 		}
-		I386OP(decode_opcode)(cpustate);
+		try
+		{
+			I386OP(decode_opcode)(cpustate);
+		}
+		catch(UINT64 e)
+		{
+			cpustate->ext = 1;
+			i386_trap_with_error(cpustate,e&0xffffffff,0,0,e>>32);
+		}
 	}
 	cpustate->tsc += (cycles - cpustate->cycles);
 }
@@ -3051,10 +3091,11 @@ static CPU_TRANSLATE( i386 )
 {
 	i386_state *cpustate = get_safe_token(device);
 	int result = 1;
+	UINT32 error;
 	if (space == AS_PROGRAM)
 	{
 		if (cpustate->cr[0] & 0x80000000)
-			result = translate_address(cpustate,address);
+			result = translate_address(cpustate,0,address,&error);
 		*address &= cpustate->a20_mask;
 	}
 	return result;
@@ -3540,8 +3581,8 @@ static CPU_RESET( pentium )
 	cpustate->a20_mask = ~0;
 
 	cpustate->cr[0] = 0x00000010;
-	cpustate->eflags = 0;
-	cpustate->eflags_mask = 0x003b7fd7;
+	cpustate->eflags = 0x00200000;
+	cpustate->eflags_mask = 0x003f7fd7;
 	cpustate->eip = 0xfff0;
 
 	// [11:8] Family
@@ -3672,7 +3713,7 @@ static CPU_RESET( mediagx )
 	cpustate->a20_mask = ~0;
 
 	cpustate->cr[0] = 0x00000010;
-	cpustate->eflags = 0;
+	cpustate->eflags = 0x00200000;
 	cpustate->eflags_mask = 0x00277fd7; /* TODO: is this correct? */
 	cpustate->eip = 0xfff0;
 

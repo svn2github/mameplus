@@ -534,9 +534,9 @@ static INPUT_PORTS_START( silkworm )
 	PORT_DIPSETTING(    0x06, "200000" )
 	PORT_DIPSETTING(    0x07, DEF_STR( None ) )
 	PORT_DIPNAME( 0x70, 0x30, DEF_STR( Difficulty ) )	PORT_DIPLOCATION("SW2:!5,!6,!7")
-//	PORT_DIPSETTING(    0x60, "0" )				/* Not listed in manual */
-//	PORT_DIPSETTING(    0x70, "0" )				/* Not listed in manual */
-//	PORT_DIPSETTING(    0x00, "0" )				/* Not listed in manual */
+//  PORT_DIPSETTING(    0x60, "0" )             /* Not listed in manual */
+//  PORT_DIPSETTING(    0x70, "0" )             /* Not listed in manual */
+//  PORT_DIPSETTING(    0x00, "0" )             /* Not listed in manual */
 	PORT_DIPSETTING(    0x10, "1" )
 	PORT_DIPSETTING(    0x20, "2" )
 	PORT_DIPSETTING(    0x30, "3" )
@@ -632,10 +632,9 @@ static MACHINE_CONFIG_START( rygar, tecmo_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)	/* frames per second, vblank duration */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(tecmo)
+	MCFG_SCREEN_UPDATE_STATIC(tecmo)
 
 	MCFG_GFXDECODE(tecmo)
 	MCFG_PALETTE_LENGTH(1024)
@@ -692,10 +691,9 @@ static MACHINE_CONFIG_START( backfirt, tecmo_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0)	/* frames per second, vblank duration */)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(tecmo)
+	MCFG_SCREEN_UPDATE_STATIC(tecmo)
 
 	MCFG_GFXDECODE(tecmo)
 	MCFG_PALETTE_LENGTH(1024)

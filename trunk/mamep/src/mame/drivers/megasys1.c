@@ -1477,11 +1477,10 @@ static MACHINE_CONFIG_START( system_A, megasys1_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(megasys1)
-	MCFG_SCREEN_EOF(megasys1)
+	MCFG_SCREEN_UPDATE_STATIC(megasys1)
+	MCFG_SCREEN_VBLANK_STATIC(megasys1)
 
 	MCFG_GFXDECODE(ABC)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1538,11 +1537,10 @@ static MACHINE_CONFIG_START( system_Bbl, megasys1_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(megasys1)
-	MCFG_SCREEN_EOF(megasys1)
+	MCFG_SCREEN_UPDATE_STATIC(megasys1)
+	MCFG_SCREEN_VBLANK_STATIC(megasys1)
 
 	MCFG_GFXDECODE(ABC)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1611,11 +1609,10 @@ static MACHINE_CONFIG_START( system_D, megasys1_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(megasys1)
-	MCFG_SCREEN_EOF(megasys1)
+	MCFG_SCREEN_UPDATE_STATIC(megasys1)
+	MCFG_SCREEN_VBLANK_STATIC(megasys1)
 
 	MCFG_GFXDECODE(ABC)
 	MCFG_PALETTE_LENGTH(1024)
@@ -1675,10 +1672,9 @@ static MACHINE_CONFIG_START( system_Z, megasys1_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
-	MCFG_SCREEN_UPDATE(megasys1)
+	MCFG_SCREEN_UPDATE_STATIC(megasys1)
 
 	MCFG_GFXDECODE(Z)
 	MCFG_PALETTE_LENGTH(768)
@@ -3664,10 +3660,10 @@ static void stdragona_gfx_unmangle(running_machine &machine, const char *region)
  *************************************/
 
 /*
-	MCU handshake sequence:
-	the M50747 MCU can overlay 0x20 bytes of data inside the ROM space.
-	The offset where this happens is given by m68k to MCU write [0x8/2] << 6.
-	For example stdragon writes 0x33e -> maps at 0xcf80-0xcfbf while stdragona writes 0x33f -> maps at 0xcfc0-0xcfff.
+    MCU handshake sequence:
+    the M50747 MCU can overlay 0x20 bytes of data inside the ROM space.
+    The offset where this happens is given by m68k to MCU write [0x8/2] << 6.
+    For example stdragon writes 0x33e -> maps at 0xcf80-0xcfbf while stdragona writes 0x33f -> maps at 0xcfc0-0xcfff.
 */
 
 #define MCU_HS_LOG 0
@@ -3883,7 +3879,7 @@ static DRIVER_INIT( iganinju )
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00000, 0x3ffff, FUNC(iganinju_mcu_hs_r));
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x2f000, 0x2f009, FUNC(iganinju_mcu_hs_w));
 
-	//RAM[0x00006e/2] = 0x0420;	// the only game that does
+	//RAM[0x00006e/2] = 0x0420; // the only game that does
 								// not like lev 3 interrupts
 }
 

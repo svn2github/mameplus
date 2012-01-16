@@ -71,7 +71,7 @@ static ADDRESS_MAP_START( stepstag_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x600000, 0x60ffff) AM_RAM_WRITE(tetrisp2_vram_rot_w) AM_BASE_MEMBER(tetrisp2_state, m_vram_rot)	// Rotation
 	AM_RANGE(0x900000, 0x903fff) AM_READWRITE(tetrisp2_nvram_r, tetrisp2_nvram_w) AM_BASE_MEMBER(tetrisp2_state, m_nvram) AM_SHARE("nvram")	// NVRAM
 	AM_RANGE(0x904000, 0x907fff) AM_READWRITE(tetrisp2_nvram_r, tetrisp2_nvram_w)				// NVRAM (mirror)
-//	AM_RANGE(0xa00000, 0xa7ffff) AM_READ( unknown_read_0xc00000 ) // presumably comms with slave CPU
+//  AM_RANGE(0xa00000, 0xa7ffff) AM_READ( unknown_read_0xc00000 ) // presumably comms with slave CPU
 	AM_RANGE(0xb00000, 0xb00001) AM_WRITENOP								// Coin Counter plus other things
 	AM_RANGE(0xb20000, 0xb20001) AM_WRITENOP													// protection related?
 	AM_RANGE(0xb40000, 0xb4000b) AM_WRITEONLY AM_BASE_MEMBER(tetrisp2_state, m_scroll_fg)						// Foreground Scrolling
@@ -229,7 +229,7 @@ static GFXDECODE_START( stepstag )
 	GFXDECODE_ENTRY( "gfx8", 0, layout_8x8x8, 0x6000, 0x10 ) // [3] Foreground
 GFXDECODE_END
 
-static SCREEN_UPDATE( stepstag )
+static SCREEN_UPDATE_IND16( stepstag )
 {
 	return 0;
 }
@@ -250,26 +250,23 @@ static MACHINE_CONFIG_START( stepstag, stepstag_state )
 	MCFG_SCREEN_ADD("lscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE(stepstag)
+	MCFG_SCREEN_UPDATE_STATIC(stepstag)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(0x140, 0xe0)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xe0-1)
-	MCFG_SCREEN_UPDATE(tetrisp2)
+	MCFG_SCREEN_UPDATE_STATIC(tetrisp2)
 
 	MCFG_SCREEN_ADD("rscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE(stepstag)
+	MCFG_SCREEN_UPDATE_STATIC(stepstag)
 
 	MCFG_PALETTE_LENGTH(0x8000)
 

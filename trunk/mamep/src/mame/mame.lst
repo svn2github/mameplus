@@ -1105,6 +1105,7 @@ highspltb		// (c) 1979 Nintendo
 spacelnc		// (c) 1979 Nintendo
 sheriff			// (c) 1979 Nintendo
 bandido			// (c) 1980 Exidy
+westgun2		// (c) 1980 Taito Corporation
 helifire		// (c) 1980 Nintendo
 helifirea		// (c) 1980 Nintendo
 radarscp		// (c) 1980 Nintendo
@@ -8920,6 +8921,9 @@ ddpdojb			// (c) 2002 Cave
 ddpdojblk		// (c) 2002 Cave
 espgal			// (c) 2003 Cave
 orleg2			// (c) 2007
+orleg2o			//
+kov2nl			// (c) 2008
+kov2nlo			//
 
 #ifndef NCP
 // IGS PC based HW
@@ -9887,9 +9891,9 @@ dlaira			// (c) 1983 Cinematronics
 dleuro			// (c) 1983 Atari
 dlital			// (c) 1983 Sidam
 spaceace		// (c) 1983 Cinematronics
-spaceaa2		// (c) 1983 Cinematronics
-spaceaa			// (c) 1983 Cinematronics
-saeuro			// (c) 1983 Atari
+spaceacea2		// (c) 1983 Cinematronics
+spaceacea		// (c) 1983 Cinematronics
+spaceaceeuro		// (c) 1983 Atari
 aztarac			// (c) 1983 Centuri (vector game)
 mole			// (c) 1982 Yachiyo Electronics, Ltd.
 thehand			// (c) 1981 T.I.C.

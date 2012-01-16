@@ -61,7 +61,7 @@ static VIDEO_START( cmmb )
 
 }
 
-static SCREEN_UPDATE( cmmb )
+static SCREEN_UPDATE_IND16( cmmb )
 {
 	cmmb_state *state = screen.machine().driver_data<cmmb_state>();
 	UINT8 *videoram = state->m_videoram;
@@ -310,10 +310,9 @@ static MACHINE_CONFIG_START( cmmb, cmmb_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) // unknown
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE(cmmb)
+	MCFG_SCREEN_UPDATE_STATIC(cmmb)
 
 	MCFG_GFXDECODE(cmmb)
 	MCFG_PALETTE_LENGTH(512)
@@ -337,7 +336,7 @@ MACHINE_CONFIG_END
 ROM_START( cmmb162 )
 	ROM_REGION( 0x50000, "maincpu", 0 )
 	ROM_LOAD( "cmmb162.u2",   0x10000, 0x40000, CRC(71a5a75d) SHA1(0ad7b97580082cda98cb1e8aab8efcf491d0ed25) )
-	ROM_COPY( "maincpu",	   0x18000, 0x08000, 0x08000 )
+	ROM_COPY( "maincpu",	  0x18000, 0x08000, 0x08000 )
 
 	ROM_REGION( 0x1000, "gfx", ROMREGION_ERASE00 )
 ROM_END

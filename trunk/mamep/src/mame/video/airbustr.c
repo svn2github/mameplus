@@ -121,7 +121,7 @@ VIDEO_START( airbustr )
 	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 16, 16, 32, 32);
 	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 16, 16, 32, 32);
 
-	state->m_sprites_bitmap = machine.primary_screen->alloc_compatible_bitmap();
+	machine.primary_screen->register_screen_bitmap(state->m_sprites_bitmap);
 	tilemap_set_transparent_pen(state->m_fg_tilemap, 0);
 
 	tilemap_set_scrolldx(state->m_bg_tilemap, 0x094, 0x06a);
@@ -129,11 +129,11 @@ VIDEO_START( airbustr )
 	tilemap_set_scrolldx(state->m_fg_tilemap, 0x094, 0x06a);
 	tilemap_set_scrolldy(state->m_fg_tilemap, 0x100, 0x1ff);
 
-	state->save_item(NAME(*state->m_sprites_bitmap));
+	state->save_item(NAME(state->m_sprites_bitmap));
 }
 
 
-SCREEN_UPDATE( airbustr )
+SCREEN_UPDATE_IND16( airbustr )
 {
 	airbustr_state *state = screen.machine().driver_data<airbustr_state>();
 
@@ -146,11 +146,15 @@ SCREEN_UPDATE( airbustr )
 	return 0;
 }
 
-SCREEN_EOF( airbustr )
+SCREEN_VBLANK( airbustr )
 {
-	airbustr_state *state = screen.machine().driver_data<airbustr_state>();
+	// rising edge
+	if (vblank_on)
+	{
+		airbustr_state *state = screen.machine().driver_data<airbustr_state>();
 
-	// update the sprite bitmap
-	pandora_eof(state->m_pandora);
+		// update the sprite bitmap
+		pandora_eof(state->m_pandora);
+	}
 }
 

@@ -2367,7 +2367,7 @@ static void cps1_find_last_sprite( running_machine &machine )    /* Find the off
 }
 
 
-static void cps1_render_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
+static void cps1_render_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	cps_state *state = machine.driver_data<cps_state>();
 
@@ -2610,7 +2610,7 @@ static void cps2_find_last_sprite( running_machine &machine )    /* Find the off
 	state->m_cps2_last_sprite_offset = state->m_cps2_obj_size / 2 - 4;
 }
 
-static void cps2_render_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int *primasks )
+static void cps2_render_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int *primasks )
 {
 	cps_state *state = machine.driver_data<cps_state>();
 
@@ -2759,7 +2759,7 @@ static void cps2_render_sprites( running_machine &machine, bitmap_t &bitmap, con
 
 
 
-static void cps1_render_stars( screen_device &screen, bitmap_t &bitmap, const rectangle &cliprect )
+static void cps1_render_stars( screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	cps_state *state = screen.machine().driver_data<cps_state>();
 	int offs;
@@ -2827,7 +2827,7 @@ static void cps1_render_stars( screen_device &screen, bitmap_t &bitmap, const re
 }
 
 
-static void cps1_render_layer( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int layer, int primask )
+static void cps1_render_layer( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int layer, int primask )
 {
 	cps_state *state = machine.driver_data<cps_state>();
 	switch (layer)
@@ -2843,10 +2843,10 @@ static void cps1_render_layer( running_machine &machine, bitmap_t &bitmap, const
 	}
 }
 
-static void cps1_render_high_layer( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int layer )
+static void cps1_render_high_layer( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int layer )
 {
 	cps_state *state = machine.driver_data<cps_state>();
-	bitmap_t dummy_bitmap;
+	bitmap_ind16 dummy_bitmap;
 	switch (layer)
 	{
 		case 0:
@@ -2867,7 +2867,7 @@ static void cps1_render_high_layer( running_machine &machine, bitmap_t &bitmap, 
 
 ***************************************************************************/
 
-SCREEN_UPDATE( cps1 )
+SCREEN_UPDATE_IND16( cps1 )
 {
 	cps_state *state = screen.machine().driver_data<cps_state>();
 	int layercontrol, l0, l1, l2, l3;
@@ -3019,17 +3019,21 @@ if (0 && screen.machine().input().code_pressed(KEYCODE_Z))
 	return 0;
 }
 
-SCREEN_EOF( cps1 )
+SCREEN_VBLANK( cps1 )
 {
-	cps_state *state = screen.machine().driver_data<cps_state>();
-
-	/* Get video memory base registers */
-	cps1_get_video_base(screen.machine());
-
-	if (state->m_cps_version == 1)
+	// rising edge
+	if (vblank_on)
 	{
-		/* CPS1 sprites have to be delayed one frame */
-		memcpy(state->m_buffered_obj, state->m_obj, state->m_obj_size);
+		cps_state *state = screen.machine().driver_data<cps_state>();
+
+		/* Get video memory base registers */
+		cps1_get_video_base(screen.machine());
+
+		if (state->m_cps_version == 1)
+		{
+			/* CPS1 sprites have to be delayed one frame */
+			memcpy(state->m_buffered_obj, state->m_obj, state->m_obj_size);
+		}
 	}
 }
 

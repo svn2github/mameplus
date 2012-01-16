@@ -60,7 +60,7 @@ static VIDEO_START(laserbas)
 	state->save_item(NAME(state->m_vram2));
 }
 
-static SCREEN_UPDATE(laserbas)
+static SCREEN_UPDATE_IND16(laserbas)
 {
 	laserbas_state *state = screen.machine().driver_data<laserbas_state>();
 	int x, y;
@@ -117,7 +117,7 @@ static WRITE8_HANDLER(vrambank_w)
 
 	/* either bit 2 or 3 controls flip screen */
 
-		state->m_vrambank = data & 0x40;
+	state->m_vrambank = data & 0x40;
 }
 
 static READ8_HANDLER( protram_r )
@@ -317,11 +317,10 @@ static MACHINE_CONFIG_START( laserbas, laserbas_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
-	MCFG_SCREEN_UPDATE(laserbas)
+	MCFG_SCREEN_UPDATE_STATIC(laserbas)
 
 	MCFG_MC6845_ADD("crtc", H46505, 3000000/4, mc6845_intf)	/* unknown clock, hand tuned to get ~60 fps */
 
@@ -419,4 +418,4 @@ ROM_END
 
 GAME( 1981, laserbas, 0,        laserbas, laserbas, 0, ROT270, "Hoei (Amstar license)", "Laser Base (set 1)", GAME_NO_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 GAME( 1981, laserbasa,laserbas, laserbas, laserbas, 0, ROT270, "Hoei (Amstar license)", "Laser Base (set 2)", GAME_NO_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1981, futflash, laserbas, laserbas, laserbas, 0, ROT270, "Hoei",					"Future Flash",  	  GAME_NO_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1981, futflash, laserbas, laserbas, laserbas, 0, ROT270, "Hoei",                  "Future Flash",       GAME_NO_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )

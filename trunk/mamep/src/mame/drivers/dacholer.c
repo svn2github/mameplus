@@ -16,18 +16,18 @@
       - just a guess - upper nibble of byte from port 3 _probably_
         contains sound command (sound cpu writes it to port c)
 
-	Itazura Tenshi (Japan Ver.)
-	(c)1984 Nichibutsu / Alice
+    Itazura Tenshi (Japan Ver.)
+    (c)1984 Nichibutsu / Alice
 
 
 
-	--- Team Japump!!! ---
-	Dumped by Chack'n
-	Driver written by Hau
+    --- Team Japump!!! ---
+    Dumped by Chack'n
+    Driver written by Hau
 
-	based on driver from drivers/dacholer.c by Pierpaolo Prazzoli
-	note:
-	Sound test does not work.
+    based on driver from drivers/dacholer.c by Pierpaolo Prazzoli
+    note:
+    Sound test does not work.
 ******************************************************************************/
 
 #include "emu.h"
@@ -104,7 +104,7 @@ static WRITE8_HANDLER( bg_scroll_y_w )
 	state->m_scroll_y = data;
 }
 
-static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
+static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	dacholer_state *state = machine.driver_data<dacholer_state>();
 	int offs, code, attr, sx, sy, flipx, flipy;
@@ -136,7 +136,7 @@ static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rect
 	}
 }
 
-static SCREEN_UPDATE(dacholer)
+static SCREEN_UPDATE_IND16(dacholer)
 {
 	dacholer_state *state = screen.machine().driver_data<dacholer_state>();
 
@@ -662,10 +662,9 @@ static MACHINE_CONFIG_START( dacholer, dacholer_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(256, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 16, 256-1-16)
-	MCFG_SCREEN_UPDATE(dacholer)
+	MCFG_SCREEN_UPDATE_STATIC(dacholer)
 
 	MCFG_PALETTE_LENGTH(32)
 	MCFG_PALETTE_INIT(dacholer)
@@ -841,6 +840,6 @@ ROM_START( itaten )
 ROM_END
 
 
-GAME( 1983, dacholer, 0, dacholer, dacholer, 0, ROT0, "Nichibutsu", "Dacholer", GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )
-GAME( 1983, kickboy,  0, dacholer, kickboy,  0, ROT0, "Nichibutsu", "Kick Boy", GAME_SUPPORTS_SAVE )
+GAME( 1983, dacholer, 0, dacholer, dacholer, 0, ROT0, "Nichibutsu",         "Dacholer",               GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )
+GAME( 1983, kickboy,  0, dacholer, kickboy,  0, ROT0, "Nichibutsu",         "Kick Boy",               GAME_SUPPORTS_SAVE )
 GAME( 1984, itaten,   0, itaten,   itaten,   0, ROT0, "Nichibutsu / Alice", "Itazura Tenshi (Japan)", GAME_SUPPORTS_SAVE )

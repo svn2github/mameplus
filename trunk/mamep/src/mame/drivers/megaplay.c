@@ -617,17 +617,17 @@ static VIDEO_START(megplay)
 //  VIDEO_START_CALL(megaplay_normal);
 }
 
-static SCREEN_UPDATE(megplay)
+static SCREEN_UPDATE_RGB32(megplay)
 {
 	//printf("megplay vu\n");
-	SCREEN_UPDATE_CALL(megadriv);
-//  SCREEN_UPDATE_CALL(megaplay_normal);
-	SCREEN_UPDATE_CALL(megaplay_bios);
+	SCREEN_UPDATE32_CALL(megadriv);
+//  SCREEN_UPDATE32_CALL(megaplay_normal);
+	SCREEN_UPDATE32_CALL(megaplay_bios);
 	return 0;
 }
 
 
-//extern SCREEN_EOF(megadriv);
+//extern SCREEN_VBLANK(megadriv);
 static MACHINE_RESET( megaplay )
 {
 	mplay_state *state = machine.driver_data<mplay_state>();
@@ -638,10 +638,10 @@ static MACHINE_RESET( megaplay )
 	MACHINE_RESET_CALL(megatech_bios);
 }
 
-static SCREEN_EOF( megaplay )
+static SCREEN_VBLANK( megaplay )
 {
-	SCREEN_EOF_CALL(megadriv);
-	SCREEN_EOF_CALL(megatech_bios);
+	SCREEN_VBLANK_CALL(megadriv);
+	SCREEN_VBLANK_CALL(megatech_bios);
 }
 
 static MACHINE_CONFIG_START( megaplay, mplay_state )
@@ -665,8 +665,8 @@ static MACHINE_CONFIG_START( megaplay, mplay_state )
 	/* New update functions to handle the extra layer */
 	MCFG_VIDEO_START(megplay)
 	MCFG_SCREEN_MODIFY("megadriv")
-	MCFG_SCREEN_UPDATE(megplay)
-	MCFG_SCREEN_EOF( megaplay )
+	MCFG_SCREEN_UPDATE_STATIC(megplay)
+	MCFG_SCREEN_VBLANK_STATIC( megaplay )
 MACHINE_CONFIG_END
 
 

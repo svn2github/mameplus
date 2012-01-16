@@ -784,7 +784,7 @@ static ADDRESS_MAP_START( stv_mem, AS_PROGRAM, 32 )
 	AM_RANGE(0x00100000, 0x0010007f) AM_READWRITE8(stv_SMPC_r, stv_SMPC_w,0xffffffff)
 	AM_RANGE(0x00180000, 0x0018ffff) AM_READWRITE8(saturn_backupram_r,saturn_backupram_w,0xffffffff) AM_SHARE("share1")
 	AM_RANGE(0x00200000, 0x002fffff) AM_RAM AM_MIRROR(0x20100000) AM_SHARE("share2") AM_BASE_MEMBER(saturn_state,m_workram_l)
-//	AM_RANGE(0x00400000, 0x0040001f) AM_READWRITE(stv_ioga_r32, stv_io_w32) AM_BASE_MEMBER(saturn_state,m_ioga) AM_SHARE("share4") AM_MIRROR(0x20) /* installed with per-game specific */
+//  AM_RANGE(0x00400000, 0x0040001f) AM_READWRITE(stv_ioga_r32, stv_io_w32) AM_BASE_MEMBER(saturn_state,m_ioga) AM_SHARE("share4") AM_MIRROR(0x20) /* installed with per-game specific */
 	AM_RANGE(0x01000000, 0x017fffff) AM_WRITE(minit_w)
 	AM_RANGE(0x01800000, 0x01ffffff) AM_WRITE(sinit_w)
 	AM_RANGE(0x02000000, 0x04ffffff) AM_ROM AM_SHARE("share7") AM_REGION("abus", 0) // cartridge
@@ -1195,7 +1195,7 @@ static INPUT_PORTS_START( saturn )
 //  PORT_CONFSETTING(0x03,"Lightgun Device")
 	PORT_CONFSETTING(0x04,"Trackball") // TODO: according to the docs this ID is labeled "Pointing Device"
 	PORT_CONFSETTING(0x05,"Keyboard Device")
-  	PORT_CONFSETTING(0x06,"Megadrive 3B Pad")
+	PORT_CONFSETTING(0x06,"Megadrive 3B Pad")
 	PORT_CONFSETTING(0x07,"Megadrive 6B Pad")
 	PORT_CONFSETTING(0x08,"Saturn Mouse")
 //  PORT_CONFSETTING(0x09,"<unconnected>")
@@ -2215,12 +2215,10 @@ static MACHINE_CONFIG_START( saturn, saturn_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK_320/8, 427, 0, 320, 263, 0, 224)
 	#if NEW_VIDEO_CODE
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
-	MCFG_SCREEN_UPDATE(saturn)
+	MCFG_SCREEN_UPDATE_STATIC(saturn)
 	MCFG_PALETTE_LENGTH(2048+(2048*2))//standard palette + extra memory for rgb brightness. (TODO: remove AT LEAST the latter)
 	#else
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB15)
-	MCFG_SCREEN_UPDATE(stv_vdp2)
+	MCFG_SCREEN_UPDATE_STATIC(stv_vdp2)
 	MCFG_PALETTE_LENGTH(2048+(2048*2))//standard palette + extra memory for rgb brightness.
 	#endif
 
@@ -2253,7 +2251,7 @@ MACHINE_CONFIG_DERIVED( saturnus, saturn )
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_DERIVED( saturneu, saturn )
-	MCFG_CDROM_ADD( "cdrom", saturn_cdrom)
+	MCFG_CDROM_ADD( "cdrom",saturn_cdrom )
 	MCFG_SOFTWARE_LIST_ADD("cd_list","saturn")
 	MCFG_SOFTWARE_LIST_FILTER("cd_list","PAL")
 
@@ -2306,12 +2304,10 @@ static MACHINE_CONFIG_START( stv, saturn_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK_320/8, 427, 0, 320, 263, 0, 224)
 	#if NEW_VIDEO_CODE
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
-	MCFG_SCREEN_UPDATE(saturn)
+	MCFG_SCREEN_UPDATE_STATIC(saturn)
 	MCFG_PALETTE_LENGTH(2048+(2048*2))//standard palette + extra memory for rgb brightness. (TODO: remove AT LEAST the latter)
 	#else
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB15)
-	MCFG_SCREEN_UPDATE(stv_vdp2)
+	MCFG_SCREEN_UPDATE_STATIC(stv_vdp2)
 	MCFG_PALETTE_LENGTH(2048+(2048*2))//standard palette + extra memory for rgb brightness.
 	#endif
 
@@ -2465,7 +2461,7 @@ ROM_START(saturnjp)
 	ROMX_LOAD("sega1003.bin", 0x00000000, 0x00080000, CRC(b3c63c25) SHA1(7b23b53d62de0f29a23e423d0fe751dfb469c2fa), ROM_BIOS(2))
 	ROM_SYSTEM_BIOS(2, "100", "Japan v1.00 (940921)")
 	ROMX_LOAD("sega_100.bin", 0x00000000, 0x00080000, CRC(2aba43c2) SHA1(2b8cb4f87580683eb4d760e4ed210813d667f0a2), ROM_BIOS(3))
-//	ROM_CART_LOAD("cart", 0x080000, 0x400000, ROM_NOMIRROR | ROM_OPTIONAL)
+//  ROM_CART_LOAD("cart", 0x080000, 0x400000, ROM_NOMIRROR | ROM_OPTIONAL)
 	ROM_REGION( 0x080000, "slave", 0 ) /* SH2 code */
 	ROM_COPY( "maincpu",0,0,0x080000)
 ROM_END
@@ -2478,7 +2474,7 @@ ROM_START(saturn)
 	ROMX_LOAD("mpr-17933.bin", 0x00000000, 0x00080000, CRC(4afcf0fa) SHA1(faa8ea183a6d7bbe5d4e03bb1332519800d3fbc3), ROM_BIOS(1))
 	ROM_SYSTEM_BIOS(1, "100a", "Overseas v1.00a (941115)")
 	ROMX_LOAD("sega_100a.bin", 0x00000000, 0x00080000, CRC(f90f0089) SHA1(3bb41feb82838ab9a35601ac666de5aacfd17a58), ROM_BIOS(2))
-//	ROM_CART_LOAD("cart", 0x080000, 0x400000, ROM_NOMIRROR | ROM_OPTIONAL)
+//  ROM_CART_LOAD("cart", 0x080000, 0x400000, ROM_NOMIRROR | ROM_OPTIONAL)
 	ROM_REGION( 0x080000, "slave", 0 ) /* SH2 code */
 	ROM_COPY( "maincpu",0,0,0x080000)
 ROM_END
@@ -2490,7 +2486,7 @@ ROM_START(saturneu)
 	ROMX_LOAD("mpr-17933.bin", 0x00000000, 0x00080000, CRC(4afcf0fa) SHA1(faa8ea183a6d7bbe5d4e03bb1332519800d3fbc3), ROM_BIOS(1))
 	ROM_SYSTEM_BIOS(1, "100a", "Overseas v1.00a (941115)")
 	ROMX_LOAD("sega_100a.bin", 0x00000000, 0x00080000, CRC(f90f0089) SHA1(3bb41feb82838ab9a35601ac666de5aacfd17a58), ROM_BIOS(2))
-//	ROM_CART_LOAD("cart", 0x080000, 0x400000, ROM_NOMIRROR | ROM_OPTIONAL)
+//  ROM_CART_LOAD("cart", 0x080000, 0x400000, ROM_NOMIRROR | ROM_OPTIONAL)
 	ROM_REGION( 0x080000, "slave", 0 ) /* SH2 code */
 	ROM_COPY( "maincpu",0,0,0x080000)
 ROM_END
@@ -2498,7 +2494,7 @@ ROM_END
 ROM_START(vsaturn)
 	ROM_REGION( 0x480000, "maincpu", ROMREGION_ERASEFF ) /* SH2 code */
 	ROM_LOAD("vsaturn.bin", 0x00000000, 0x00080000, CRC(e4d61811) SHA1(4154e11959f3d5639b11d7902b3a393a99fb5776))
-//	ROM_CART_LOAD("cart", 0x080000, 0x400000, ROM_NOMIRROR | ROM_OPTIONAL)
+//  ROM_CART_LOAD("cart", 0x080000, 0x400000, ROM_NOMIRROR | ROM_OPTIONAL)
 	ROM_REGION( 0x080000, "slave", 0 ) /* SH2 code */
 	ROM_COPY( "maincpu",0,0,0x080000)
 ROM_END
@@ -2506,7 +2502,7 @@ ROM_END
 ROM_START(hisaturn)
 	ROM_REGION( 0x480000, "maincpu", ROMREGION_ERASEFF ) /* SH2 code */
 	ROM_LOAD("hisaturn.bin", 0x00000000, 0x00080000, CRC(721e1b60) SHA1(49d8493008fa715ca0c94d99817a5439d6f2c796))
-//	ROM_CART_LOAD("cart", 0x080000, 0x400000, ROM_NOMIRROR | ROM_OPTIONAL)
+//  ROM_CART_LOAD("cart", 0x080000, 0x400000, ROM_NOMIRROR | ROM_OPTIONAL)
 	ROM_REGION( 0x080000, "slave", 0 ) /* SH2 code */
 	ROM_COPY( "maincpu",0,0,0x080000)
 ROM_END

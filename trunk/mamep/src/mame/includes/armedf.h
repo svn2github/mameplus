@@ -46,8 +46,8 @@ public:
 
 /*----------- defined in video/armedf.c -----------*/
 
-SCREEN_UPDATE( armedf );
-SCREEN_EOF( armedf );
+SCREEN_UPDATE_IND16( armedf );
+SCREEN_VBLANK( armedf );
 VIDEO_START( armedf );
 VIDEO_START( terraf );
 

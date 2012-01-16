@@ -167,7 +167,7 @@ public:
 
 ***************************************************************************/
 
-static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect, int pri_mask)
+static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int pri_mask)
 {
 	sigmab98_state *state = machine.driver_data<sigmab98_state>();
 	UINT8 *end		=	state->m_spriteram - 0x10;
@@ -249,7 +249,7 @@ static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const recta
 	}
 }
 
-static SCREEN_UPDATE(sigmab98)
+static SCREEN_UPDATE_IND16(sigmab98)
 {
 	int layers_ctrl = -1;
 
@@ -638,10 +638,14 @@ static WRITE8_HANDLER( vblank_w )
 	state->m_vblank = (state->m_vblank & ~0x03) | (data & 0x03);
 }
 
-static SCREEN_EOF( sammymdl )
+static SCREEN_VBLANK( sammymdl )
 {
-	sigmab98_state *state = screen.machine().driver_data<sigmab98_state>();
-	state->m_vblank &= ~0x01;
+	// rising edge
+	if (vblank_on)
+	{
+		sigmab98_state *state = screen.machine().driver_data<sigmab98_state>();
+		state->m_vblank &= ~0x01;
+	}
 }
 
 static void show_3_outputs(sigmab98_state *state)
@@ -1684,10 +1688,9 @@ static MACHINE_CONFIG_START( gegege, sigmab98_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)					// ?
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)	// game reads vblank state
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(0x200, 0x200)
 	MCFG_SCREEN_VISIBLE_AREA(0,0x140-1, 0,0xf0-1)
-	MCFG_SCREEN_UPDATE(sigmab98)
+	MCFG_SCREEN_UPDATE_STATIC(sigmab98)
 
 	MCFG_GFXDECODE(sigmab98)
 	MCFG_PALETTE_LENGTH(0x100)
@@ -1739,11 +1742,10 @@ static MACHINE_CONFIG_START( sammymdl, sigmab98_state )
 	// video hardware
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(0x140, 0x100)
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xf0-1)
-	MCFG_SCREEN_UPDATE(sigmab98)
-	MCFG_SCREEN_EOF(sammymdl)
+	MCFG_SCREEN_UPDATE_STATIC(sigmab98)
+	MCFG_SCREEN_VBLANK_STATIC(sammymdl)
 
 	MCFG_GFXDECODE(sigmab98)
 	MCFG_PALETTE_LENGTH(0x100)
@@ -2284,7 +2286,7 @@ static DRIVER_INIT( haekaka )
 ***************************************************************************/
 
 GAME( 1997, gegege,   0,        gegege,   gegege,   gegege,   ROT0, "Banpresto / Sigma", "GeGeGe no Kitarou Youkai Slot", 0 )
-GAME( 1997, pepsiman, 0,        gegege,   pepsiman, pepsiman, ROT0, "Sigma",             "PEPSI Man", 0 )
+GAME( 1997, pepsiman, 0,        gegege,   pepsiman, pepsiman, ROT0, "Sigma",             "PEPSI Man",                     0 )
 GAME( 1997, ucytokyu, 0,        gegege,   ucytokyu, ucytokyu, ROT0, "Sigma",             "Uchuu Tokkyuu Medalian",        0 )	// Banpresto + others in the ROM
 // Sammy Medal Games:
 GAME( 2000, sammymdl, 0,        sammymdl, sammymdl, 0,        ROT0, "Sammy",             "Sammy Medal Game System Bios",  GAME_IS_BIOS_ROOT )

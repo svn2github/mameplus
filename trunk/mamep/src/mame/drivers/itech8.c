@@ -1701,7 +1701,6 @@ static MACHINE_CONFIG_START( itech8_core_lo, itech8_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MCFG_SCREEN_SIZE(512, 263)
 
 	/* sound hardware */
@@ -1796,7 +1795,7 @@ static MACHINE_CONFIG_DERIVED( wfortune, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE(itech8_2layer)
+	MCFG_SCREEN_UPDATE_STATIC(itech8_2layer)
 MACHINE_CONFIG_END
 
 
@@ -1808,7 +1807,7 @@ static MACHINE_CONFIG_DERIVED( grmatch, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 399, 0, 239)
-	MCFG_SCREEN_UPDATE(itech8_grmatch)
+	MCFG_SCREEN_UPDATE_STATIC(itech8_grmatch)
 
 	/* palette updater */
 	MCFG_TIMER_ADD_SCANLINE("palette", grmatch_palette_update, "screen", 0, 0)
@@ -1823,7 +1822,7 @@ static MACHINE_CONFIG_DERIVED( stratab_hi, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE(itech8_2layer)
+	MCFG_SCREEN_UPDATE_STATIC(itech8_2layer)
 MACHINE_CONFIG_END
 
 
@@ -1835,7 +1834,7 @@ static MACHINE_CONFIG_DERIVED( stratab_lo, itech8_core_lo )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE(itech8_2layer)
+	MCFG_SCREEN_UPDATE_STATIC(itech8_2layer)
 MACHINE_CONFIG_END
 
 
@@ -1851,7 +1850,7 @@ static MACHINE_CONFIG_DERIVED( slikshot_hi, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE(slikshot)
+	MCFG_SCREEN_UPDATE_STATIC(slikshot)
 	MCFG_VIDEO_START(slikshot)
 MACHINE_CONFIG_END
 
@@ -1868,7 +1867,7 @@ static MACHINE_CONFIG_DERIVED( slikshot_lo, itech8_core_lo )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE(slikshot)
+	MCFG_SCREEN_UPDATE_STATIC(slikshot)
 	MCFG_VIDEO_START(slikshot)
 MACHINE_CONFIG_END
 
@@ -1881,7 +1880,7 @@ static MACHINE_CONFIG_DERIVED( slikshot_lo_noz80, itech8_core_lo )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE(itech8_2page)
+	MCFG_SCREEN_UPDATE_STATIC(itech8_2page)
 MACHINE_CONFIG_END
 
 
@@ -1901,7 +1900,7 @@ static MACHINE_CONFIG_DERIVED( hstennis_hi, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 399, 0, 239)
-	MCFG_SCREEN_UPDATE(itech8_2page_large)
+	MCFG_SCREEN_UPDATE_STATIC(itech8_2page_large)
 MACHINE_CONFIG_END
 
 
@@ -1913,7 +1912,7 @@ static MACHINE_CONFIG_DERIVED( hstennis_lo, itech8_core_lo )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 399, 0, 239)
-	MCFG_SCREEN_UPDATE(itech8_2page_large)
+	MCFG_SCREEN_UPDATE_STATIC(itech8_2page_large)
 MACHINE_CONFIG_END
 
 
@@ -1929,7 +1928,7 @@ static MACHINE_CONFIG_DERIVED( rimrockn, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(24, 375, 0, 239)
-	MCFG_SCREEN_UPDATE(itech8_2page_large)
+	MCFG_SCREEN_UPDATE_STATIC(itech8_2page_large)
 MACHINE_CONFIG_END
 
 
@@ -1945,7 +1944,7 @@ static MACHINE_CONFIG_DERIVED( ninclown, itech8_core_hi )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(64, 423, 0, 239)
-	MCFG_SCREEN_UPDATE(itech8_2page_large)
+	MCFG_SCREEN_UPDATE_STATIC(itech8_2page_large)
 MACHINE_CONFIG_END
 
 
@@ -1960,7 +1959,7 @@ static MACHINE_CONFIG_DERIVED( gtg2, itech8_core_lo )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
-	MCFG_SCREEN_UPDATE(itech8_2layer)
+	MCFG_SCREEN_UPDATE_STATIC(itech8_2layer)
 MACHINE_CONFIG_END
 
 
@@ -2073,7 +2072,7 @@ ROM_END
 ROM_START( gtg )
 	ROM_REGION( 0x1c000, "maincpu", 0 )
 	ROM_LOAD( "gtg.bin_3.1.u5", 0x04000, 0x4000, CRC(61984272) SHA1(be735f8576fb2cccc0e9e6ea6f2fd54b6c0b3bb3) ) /* Joystick version */
-	ROM_CONTINUE(       0x10000, 0xc000 )
+	ROM_CONTINUE(        0x10000, 0xc000 )
 	ROM_COPY( "maincpu", 0x14000, 0x8000, 0x8000 )
 
 	ROM_REGION( 0x10000, "soundcpu", 0 )
@@ -2085,7 +2084,7 @@ ROM_START( gtg )
 	ROM_LOAD( "golf-grom2.grom2", 0x40000, 0x20000, CRC(9b8e3a61) SHA1(1b5682b1328d6c97b604fb71512e8f72322a688f) )
 	ROM_LOAD( "golf-grom3.grom3", 0x60000, 0x20000, CRC(b6e9fb15) SHA1(c1b28ea911696cb4ed56bfba212848693530b59f) )
 	ROM_LOAD( "golf-grom4.grom4", 0x80000, 0x20000, CRC(faa16729) SHA1(5d46cddda66b6d23c9ebdf2fb4cebce15586b4ad) )
-	ROM_LOAD( "grom5.bin", 0xa0000, 0x20000, CRC(5b393314) SHA1(9e314a75ea52373369904915ec786f09eee725a9) )
+	ROM_LOAD( "grom5.bin",        0xa0000, 0x20000, CRC(5b393314) SHA1(9e314a75ea52373369904915ec786f09eee725a9) )
 
 	ROM_REGION( 0x40000, "oki", 0 )
 	ROM_LOAD( "srom0.bin", 0x00000, 0x20000, CRC(1cccbfdf) SHA1(546059fea2e7cd5627a666d80b1fc3ed8fcc0762) )
@@ -2094,7 +2093,7 @@ ROM_END
 ROM_START( gtgt )
 	ROM_REGION( 0x1c000, "maincpu", 0 )
 	ROM_LOAD( "gtg.bin_2.0.u5", 0x4000, 0x4000, CRC(4c907166) SHA1(338a599645fa49c9fcbfbe5ba3431dafffddacc7) ) /* Trackball version */
-	ROM_CONTINUE(       0x10000, 0xc000 )
+	ROM_CONTINUE(        0x10000, 0xc000 )
 	ROM_COPY( "maincpu", 0x14000, 0x8000, 0x8000 )
 
 	ROM_REGION( 0x10000, "soundcpu", 0 )
@@ -2115,7 +2114,7 @@ ROM_END
 ROM_START( gtgt1 )
 	ROM_REGION( 0x1c000, "maincpu", 0 )
 	ROM_LOAD( "gtg.bin_1.0.u5", 0x04000, 0x4000, CRC(ec70b510) SHA1(318984d77eb1df6258b855781ae1c9a09aa74f15) ) /* Trackball version */
-	ROM_CONTINUE(       0x10000, 0xc000 )
+	ROM_CONTINUE(        0x10000, 0xc000 )
 	ROM_COPY( "maincpu", 0x14000, 0x8000, 0x8000 )
 
 	ROM_REGION( 0x10000, "soundcpu", 0 )
@@ -2127,7 +2126,7 @@ ROM_START( gtgt1 )
 	ROM_LOAD( "golf-grom2.grom2", 0x40000, 0x20000, CRC(9b8e3a61) SHA1(1b5682b1328d6c97b604fb71512e8f72322a688f) )
 	ROM_LOAD( "golf-grom3.grom3", 0x60000, 0x20000, CRC(b6e9fb15) SHA1(c1b28ea911696cb4ed56bfba212848693530b59f) )
 	ROM_LOAD( "golf-grom4.grom4", 0x80000, 0x20000, CRC(faa16729) SHA1(5d46cddda66b6d23c9ebdf2fb4cebce15586b4ad) )
-	ROM_LOAD( "grom5.512", 0xa0000, 0x10000, CRC(44b47015) SHA1(5dde4c932a697b51fe02eab8d948889b3fe7baff) )
+	ROM_LOAD( "grom5.512",        0xa0000, 0x10000, CRC(44b47015) SHA1(5dde4c932a697b51fe02eab8d948889b3fe7baff) )
 
 	ROM_REGION( 0x40000, "oki", 0 )
 	ROM_LOAD( "srom0.010", 0x00000, 0x20000, CRC(d041e0c9) SHA1(1d90f37071d92c714ff69ab2b0337c7c66147995) )
@@ -2138,7 +2137,7 @@ ROM_START( gtg2t )
 	/* banks are loaded in the opposite order from the others, */
 	ROM_REGION( 0x1c000, "maincpu", 0 )
 	ROM_LOAD( "gtg2.bin_1.1.u5", 0x10000, 0x4000, CRC(c7b3a9f3) SHA1(5edaca6fd6ee58bd1676dc9b2c86da4dd2f51687) ) /* Trackball version */
-	ROM_CONTINUE(       0x04000, 0xc000 )
+	ROM_CONTINUE(        0x04000, 0xc000 )
 	ROM_COPY( "maincpu", 0x8000, 0x14000, 0x8000 )
 
 	ROM_REGION( 0x10000, "soundcpu", 0 )
@@ -2164,7 +2163,7 @@ ROM_END
 ROM_START( gtg2j )
 	ROM_REGION( 0x1c000, "maincpu", 0 )
 	ROM_LOAD( "gtg2.bin_1.0.u5", 0x04000, 0x4000, CRC(9c95ceaa) SHA1(d9fd2b2419c026822a07d2ba51d6ab40b7cd0d49) ) /* Joystick version */
-	ROM_CONTINUE(       0x10000, 0xc000 )
+	ROM_CONTINUE(        0x10000, 0xc000 )
 	ROM_COPY( "maincpu", 0x14000, 0x8000, 0x8000 )
 
 	ROM_REGION( 0x10000, "soundcpu", 0 )
@@ -2456,10 +2455,10 @@ ROM_END
 ROM_START( rimrockn )
 	ROM_REGION( 0x34000, "maincpu", 0 )
 	ROM_LOAD( "rrb.bin_2.2.u5", 0x04000, 0x4000, CRC(97777683) SHA1(0998dde26daaa2d2b78e83647e03ba01b0ef31f2) )
-	ROM_CONTINUE(          0x10000, 0x4000 )
-	ROM_CONTINUE(          0x1c000, 0x4000 )
-	ROM_CONTINUE(          0x28000, 0xc000 )
-	ROM_CONTINUE(          0x2c000, 0x8000 )
+	ROM_CONTINUE(        0x10000, 0x4000 )
+	ROM_CONTINUE(        0x1c000, 0x4000 )
+	ROM_CONTINUE(        0x28000, 0xc000 )
+	ROM_CONTINUE(        0x2c000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x08000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x14000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x20000, 0x8000 )
@@ -2486,10 +2485,10 @@ ROM_END
 ROM_START( rimrockn20 )
 	ROM_REGION( 0x34000, "maincpu", 0 )
 	ROM_LOAD( "rrb.bin_2.0.u5", 0x04000, 0x4000, CRC(7e9d5545) SHA1(2aa028b3f5d05bec4ee289e7d39eaad30b3d4d5f) )
-	ROM_CONTINUE(          0x10000, 0x4000 )
-	ROM_CONTINUE(          0x1c000, 0x4000 )
-	ROM_CONTINUE(          0x28000, 0xc000 )
-	ROM_CONTINUE(          0x2c000, 0x8000 )
+	ROM_CONTINUE(        0x10000, 0x4000 )
+	ROM_CONTINUE(        0x1c000, 0x4000 )
+	ROM_CONTINUE(        0x28000, 0xc000 )
+	ROM_CONTINUE(        0x2c000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x08000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x14000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x20000, 0x8000 )
@@ -2511,10 +2510,10 @@ ROM_END
 ROM_START( rimrockn16 )
 	ROM_REGION( 0x34000, "maincpu", 0 )
 	ROM_LOAD( "rrb.bin_1.6.u5",0x04000, 0x4000, CRC(999cd502) SHA1(8ad0d641a9f853eff27be1d4de04ab86b9275d57) )
-	ROM_CONTINUE(          0x10000, 0x4000 )
-	ROM_CONTINUE(          0x1c000, 0x4000 )
-	ROM_CONTINUE(          0x28000, 0xc000 )
-	ROM_CONTINUE(          0x2c000, 0x8000 )
+	ROM_CONTINUE(        0x10000, 0x4000 )
+	ROM_CONTINUE(        0x1c000, 0x4000 )
+	ROM_CONTINUE(        0x28000, 0xc000 )
+	ROM_CONTINUE(        0x2c000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x08000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x14000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x20000, 0x8000 )
@@ -2536,10 +2535,10 @@ ROM_END
 ROM_START( rimrockn12 )
 	ROM_REGION( 0x34000, "maincpu", 0 )
 	ROM_LOAD( "rrb.bin_1.2.u5",0x04000, 0x4000, CRC(661761a6) SHA1(7224b1eac2fd0969d70657448ab241a433143df4) )
-	ROM_CONTINUE(          0x10000, 0x4000 )
-	ROM_CONTINUE(          0x1c000, 0x4000 )
-	ROM_CONTINUE(          0x28000, 0xc000 )
-	ROM_CONTINUE(          0x2c000, 0x8000 )
+	ROM_CONTINUE(        0x10000, 0x4000 )
+	ROM_CONTINUE(        0x1c000, 0x4000 )
+	ROM_CONTINUE(        0x28000, 0xc000 )
+	ROM_CONTINUE(        0x2c000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x08000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x14000, 0x8000 )
 	ROM_COPY( "maincpu", 0x2c000, 0x20000, 0x8000 )

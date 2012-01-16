@@ -633,7 +633,7 @@ static void SetVidReg( address_space *space, UINT16 reg, UINT16 val )
 }
 
 
-static SCREEN_UPDATE( crystal )
+static SCREEN_UPDATE_IND16( crystal )
 {
 	crystal_state *state = screen.machine().driver_data<crystal_state>();
 	address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
@@ -694,31 +694,35 @@ static SCREEN_UPDATE( crystal )
 	return 0;
 }
 
-static SCREEN_EOF(crystal)
+static SCREEN_VBLANK(crystal)
 {
-	crystal_state *state = screen.machine().driver_data<crystal_state>();
-	address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
-	UINT16 head, tail;
-	int DoFlip = 0;
-
-	head = GetVidReg(space, 0x82);
-	tail = GetVidReg(space, 0x80);
-	while ((head & 0x7ff) != (tail & 0x7ff))
+	// rising edge
+	if (vblank_on)
 	{
-		UINT16 Packet0 = space->read_word(0x03800000 + head * 64);
-		if (Packet0 & 0x81)
-			DoFlip = 1;
-		head++;
-		head &= 0x7ff;
+		crystal_state *state = screen.machine().driver_data<crystal_state>();
+		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
+		UINT16 head, tail;
+		int DoFlip = 0;
+
+		head = GetVidReg(space, 0x82);
+		tail = GetVidReg(space, 0x80);
+		while ((head & 0x7ff) != (tail & 0x7ff))
+		{
+			UINT16 Packet0 = space->read_word(0x03800000 + head * 64);
+			if (Packet0 & 0x81)
+				DoFlip = 1;
+			head++;
+			head &= 0x7ff;
+			if (DoFlip)
+				break;
+		}
+		SetVidReg(space, 0x82, head);
 		if (DoFlip)
-			break;
-	}
-	SetVidReg(space, 0x82, head);
-	if (DoFlip)
-	{
-		if (state->m_FlipCount)
-			state->m_FlipCount--;
+		{
+			if (state->m_FlipCount)
+				state->m_FlipCount--;
 
+		}
 	}
 }
 
@@ -831,11 +835,10 @@ static MACHINE_CONFIG_START( crystal, crystal_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(320, 240)
 	MCFG_SCREEN_VISIBLE_AREA(0, 319, 0, 239)
-	MCFG_SCREEN_UPDATE(crystal)
-	MCFG_SCREEN_EOF(crystal)
+	MCFG_SCREEN_UPDATE_STATIC(crystal)
+	MCFG_SCREEN_VBLANK_STATIC(crystal)
 
 	MCFG_VIDEO_VRENDER0_ADD("vr0", vr0video_config)
 
@@ -935,8 +938,8 @@ ROM_START( donghaer )
 	ROM_LOAD("donghaer_pic16f84a.bin",  0x000000, 0x4280, NO_DUMP )
 
 	ROM_REGION32_LE( 0x2000000, "user1", 0 ) // Flash
-	ROM_LOAD( "u1",           0x0000000, 0x1000000, CRC(61217ad7) SHA1(2593f1356aa850f4f9aa5d00bec822aa59c59224) ) 
-	ROM_LOAD( "u2",           0x1000000, 0x1000000, CRC(6d82f1a5) SHA1(036bd45f0daac1ffeaa5ad9774fc1b56e3c75ff9) ) 
+	ROM_LOAD( "u1",           0x0000000, 0x1000000, CRC(61217ad7) SHA1(2593f1356aa850f4f9aa5d00bec822aa59c59224) )
+	ROM_LOAD( "u2",           0x1000000, 0x1000000, CRC(6d82f1a5) SHA1(036bd45f0daac1ffeaa5ad9774fc1b56e3c75ff9) )
 
 	ROM_REGION( 0x10000, "user2",	ROMREGION_ERASEFF )	//Unmapped flash
 ROM_END

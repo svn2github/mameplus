@@ -207,7 +207,7 @@ WRITE16_HANDLER( bionicc_gfxctrl_w )
 
 ***************************************************************************/
 
-static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect )
+static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	UINT16 *buffered_spriteram = machine.generic.buffered_spriteram.u16;
 //  bionicc_state *state = machine.driver_data<bionicc_state>();
@@ -246,7 +246,7 @@ static void draw_sprites( running_machine &machine, bitmap_t &bitmap, const rect
 	}
 }
 
-SCREEN_UPDATE( bionicc )
+SCREEN_UPDATE_IND16( bionicc )
 {
 	bionicc_state *state = screen.machine().driver_data<bionicc_state>();
 
@@ -260,9 +260,13 @@ SCREEN_UPDATE( bionicc )
 	return 0;
 }
 
-SCREEN_EOF( bionicc )
+SCREEN_VBLANK( bionicc )
 {
-	address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
+	// rising edge
+	if (vblank_on)
+	{
+		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-	buffer_spriteram16_w(space, 0, 0, 0xffff);
+		buffer_spriteram16_w(space, 0, 0, 0xffff);
+	}
 }

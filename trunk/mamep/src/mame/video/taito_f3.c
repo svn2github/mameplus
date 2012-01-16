@@ -326,7 +326,7 @@ static void init_alpha_blend_func(running_machine &machine);
 
 /******************************************************************************/
 
-static void print_debug_info(running_machine &machine, bitmap_t &bitmap)
+static void print_debug_info(running_machine &machine, bitmap_rgb32 &bitmap)
 {
 	taito_f3_state *state = machine.driver_data<taito_f3_state>();
 	UINT16 *f3_line_ram = state->m_f3_line_ram;
@@ -515,22 +515,25 @@ static TILE_GET_INFO( get_tile_info_pixel )
 
 /******************************************************************************/
 
-SCREEN_EOF( f3 )
+SCREEN_VBLANK( f3 )
 {
-	taito_f3_state *state = screen.machine().driver_data<taito_f3_state>();
-	if (state->m_sprite_lag==2)
+	if (vblank_on)
 	{
-		if (screen.machine().video().skip_this_frame() == 0)
+		taito_f3_state *state = screen.machine().driver_data<taito_f3_state>();
+		if (state->m_sprite_lag==2)
 		{
-			get_sprite_info(screen.machine(), state->m_spriteram16_buffered);
+			if (screen.machine().video().skip_this_frame() == 0)
+			{
+				get_sprite_info(screen.machine(), state->m_spriteram16_buffered);
+			}
+			memcpy(state->m_spriteram16_buffered,state->m_spriteram,0x10000);
 		}
-		memcpy(state->m_spriteram16_buffered,state->m_spriteram,0x10000);
-	}
-	else if (state->m_sprite_lag==1)
-	{
-		if (screen.machine().video().skip_this_frame() == 0)
+		else if (state->m_sprite_lag==1)
 		{
-			get_sprite_info(screen.machine(), state->m_spriteram);
+			if (screen.machine().video().skip_this_frame() == 0)
+			{
+				get_sprite_info(screen.machine(), state->m_spriteram);
+			}
 		}
 	}
 }
@@ -539,7 +542,7 @@ VIDEO_START( f3 )
 {
 	taito_f3_state *state = machine.driver_data<taito_f3_state>();
 	const struct F3config *pCFG=&f3_config_table[0];
-	int width, height, i;
+	int i;
 
 	state->m_f3_alpha_level_2as=127;
 	state->m_f3_alpha_level_2ad=127;
@@ -563,7 +566,6 @@ VIDEO_START( f3 )
 	state->m_spritelist=0;
 	state->m_spriteram16_buffered=0;
 	state->m_pf_line_inf=0;
-	state->m_pri_alp_bitmap=0;
 	state->m_tile_opaque_sp=0;
 
 	/* Setup individual game */
@@ -645,9 +647,7 @@ VIDEO_START( f3 )
 	state->m_pixel_layer = tilemap_create(machine, get_tile_info_pixel,tilemap_scan_cols,8,8,64,32);
 	state->m_pf_line_inf = auto_alloc_array(machine, struct f3_playfield_line_inf, 5);
 	state->m_sa_line_inf = auto_alloc_array(machine, struct f3_spritealpha_line_inf, 1);
-	width = machine.primary_screen->width();
-	height = machine.primary_screen->height();
-	state->m_pri_alp_bitmap = auto_bitmap_alloc(machine, width, height, BITMAP_FORMAT_INDEXED8 );
+	machine.primary_screen->register_screen_bitmap(state->m_pri_alp_bitmap);
 	state->m_tile_opaque_sp = auto_alloc_array(machine, UINT8, machine.gfx[2]->total_elements);
 	for (i=0; i<8; i++)
 		state->m_tile_opaque_pf[i] = auto_alloc_array(machine, UINT8, machine.gfx[1]->total_elements);
@@ -1437,7 +1437,7 @@ static void init_alpha_blend_func(running_machine &machine)
 /*============================================================================*/
 
 INLINE void draw_scanlines(running_machine &machine,
-		bitmap_t &bitmap,int xsize,INT16 *draw_line_num,
+		bitmap_rgb32 &bitmap,int xsize,INT16 *draw_line_num,
 		const struct f3_playfield_line_inf **line_t,
 		const int *sprite,
 		UINT32 orient,
@@ -1469,7 +1469,7 @@ INLINE void draw_scanlines(running_machine &machine,
 		yadv = -yadv;
 	}
 
-	dstp0 = &state->m_pri_alp_bitmap->pix8(ty, x);
+	dstp0 = &state->m_pri_alp_bitmap.pix8(ty, x);
 
 	state->m_pdest_2a = state->m_f3_alpha_level_2ad ? 0x10 : 0;
 	state->m_pdest_2b = state->m_f3_alpha_level_2bd ? 0x20 : 0;
@@ -2009,8 +2009,8 @@ static void get_line_ram_info(running_machine &machine, tilemap_t *tmap, int sx,
 		}
 
 		/* set pixmap pointer */
-		bitmap_t &srcbitmap = tilemap_get_pixmap(tmap);
-		bitmap_t &flagsbitmap = tilemap_get_flagsmap(tmap);
+		bitmap_ind16 &srcbitmap = tilemap_get_pixmap(tmap);
+		bitmap_ind8 &flagsbitmap = tilemap_get_flagsmap(tmap);
 
 		if(line_t->alpha_mode[y]!=0)
 		{
@@ -2124,10 +2124,10 @@ static void get_vram_info(running_machine &machine, tilemap_t *vram_tilemap, til
 	sx&=0x1ff;
 
 	/* set pixmap pointer */
-	bitmap_t &srcbitmap_pixel = tilemap_get_pixmap(pixel_tilemap);
-	bitmap_t &flagsbitmap_pixel = tilemap_get_flagsmap(pixel_tilemap);
-	bitmap_t &srcbitmap_vram = tilemap_get_pixmap(vram_tilemap);
-	bitmap_t &flagsbitmap_vram = tilemap_get_flagsmap(vram_tilemap);
+	bitmap_ind16 &srcbitmap_pixel = tilemap_get_pixmap(pixel_tilemap);
+	bitmap_ind8 &flagsbitmap_pixel = tilemap_get_flagsmap(pixel_tilemap);
+	bitmap_ind16 &srcbitmap_vram = tilemap_get_pixmap(vram_tilemap);
+	bitmap_ind8 &flagsbitmap_vram = tilemap_get_flagsmap(vram_tilemap);
 
 	y=y_start;
 	while(y!=y_end)
@@ -2164,7 +2164,7 @@ static void get_vram_info(running_machine &machine, tilemap_t *vram_tilemap, til
 
 /******************************************************************************/
 
-static void scanline_draw(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
+static void scanline_draw(running_machine &machine, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	taito_f3_state *state = machine.driver_data<taito_f3_state>();
 	int i,j,y,ys,ye;
@@ -2593,7 +2593,7 @@ static void scanline_draw(running_machine &machine, bitmap_t &bitmap, const rect
 	pri++;
 
 INLINE void f3_drawgfx(
-		bitmap_t &dest_bmp,const rectangle &clip,const gfx_element *gfx,
+		bitmap_rgb32 &dest_bmp,const rectangle &clip,const gfx_element *gfx,
 		int code,
 		int color,
 		int flipx,int flipy,
@@ -2678,7 +2678,7 @@ INLINE void f3_drawgfx(
 					int x=(ex-sx-1)|(state->m_tile_opaque_sp[code % gfx->total_elements]<<4);
 					const UINT8 *source0 = code_base + y_index * 16 + x_index_base;
 					UINT32 *dest0 = &dest_bmp.pix32(sy, sx);
-					UINT8 *pri0 = &state->m_pri_alp_bitmap->pix8(sy, sx);
+					UINT8 *pri0 = &state->m_pri_alp_bitmap.pix8(sy, sx);
 					int yadv = dest_bmp.rowpixels();
 					dy=dy*16;
 					while(1)
@@ -2742,7 +2742,7 @@ INLINE void f3_drawgfx(
 
 
 INLINE void f3_drawgfxzoom(
-		bitmap_t &dest_bmp,const rectangle &clip,const gfx_element *gfx,
+		bitmap_rgb32 &dest_bmp,const rectangle &clip,const gfx_element *gfx,
 		int code,
 		int color,
 		int flipx,int flipy,
@@ -2829,7 +2829,7 @@ INLINE void f3_drawgfxzoom(
 					{
 						const UINT8 *source = code_base + (y_index>>16) * 16;
 						UINT32 *dest = &dest_bmp.pix32(y);
-						UINT8 *pri = &state->m_pri_alp_bitmap->pix8(y);
+						UINT8 *pri = &state->m_pri_alp_bitmap.pix8(y);
 
 						int x, x_index = x_index_base;
 						for( x=sx; x<ex; x++ )
@@ -3130,7 +3130,7 @@ static void get_sprite_info(running_machine &machine, const UINT16 *spriteram16_
 #undef CALC_ZOOM
 
 
-static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const rectangle &cliprect)
+static void draw_sprites(running_machine &machine, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	taito_f3_state *state = machine.driver_data<taito_f3_state>();
 	const struct tempsprite *sprite_ptr;
@@ -3172,7 +3172,7 @@ static void draw_sprites(running_machine &machine, bitmap_t &bitmap, const recta
 
 /******************************************************************************/
 
-SCREEN_UPDATE( f3 )
+SCREEN_UPDATE_RGB32( f3 )
 {
 	taito_f3_state *state = screen.machine().driver_data<taito_f3_state>();
 	UINT32 sy_fix[5],sx_fix[5];
@@ -3211,7 +3211,7 @@ SCREEN_UPDATE( f3 )
 		sy_fix[4]=-sy_fix[4];
 	}
 
-	state->m_pri_alp_bitmap->fill(0, cliprect);
+	state->m_pri_alp_bitmap.fill(0, cliprect);
 
 	/* sprites */
 	if (state->m_sprite_lag==0)

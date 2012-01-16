@@ -465,10 +465,9 @@ static MACHINE_CONFIG_START( sderby, sderby_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(4*8, 44*8-1, 3*8, 33*8-1)
-	MCFG_SCREEN_UPDATE(sderby)
+	MCFG_SCREEN_UPDATE_STATIC(sderby)
 
 	MCFG_GFXDECODE(sderby)
 	MCFG_PALETTE_LENGTH(0x1000)
@@ -490,10 +489,9 @@ static MACHINE_CONFIG_START( spacewin, sderby_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(4*8, 44*8-1, 3*8, 33*8-1)
-	MCFG_SCREEN_UPDATE(pmroulet)
+	MCFG_SCREEN_UPDATE_STATIC(pmroulet)
 
 	MCFG_GFXDECODE(sderby)
 	MCFG_PALETTE_LENGTH(0x1000)
@@ -515,10 +513,9 @@ static MACHINE_CONFIG_START( pmroulet, sderby_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(4*8, 44*8-1, 3*8, 33*8-1)
-	MCFG_SCREEN_UPDATE(pmroulet)
+	MCFG_SCREEN_UPDATE_STATIC(pmroulet)
 
 	MCFG_GFXDECODE(sderby)
 	MCFG_PALETTE_LENGTH(0x1000)
@@ -726,8 +723,8 @@ ROM_END
 *        Game Drivers         *
 ******************************/
 
-/*     YEAR  NAME      PARENT  MACHINE   INPUT     INIT   ROT    COMPANY     FULLNAME                       FLAGS                                          LAYOUT  */
-GAMEL( 1996, sderby,   0,      sderby,   sderby,   0,     ROT0, "Playmark", "Super Derby",                  0,                                             layout_sderby   )
-GAMEL( 1996, spacewin, 0,      spacewin, spacewin, 0,     ROT0, "Playmark", "Scacco Matto / Space Win",     0,                                             layout_spacewin )
+/*     YEAR  NAME       PARENT    MACHINE   INPUT     INIT   ROT    COMPANY     FULLNAME                               FLAGS                                          LAYOUT  */
+GAMEL( 1996, sderby,    0,        sderby,   sderby,   0,     ROT0, "Playmark", "Super Derby",                          0,                                             layout_sderby   )
+GAMEL( 1996, spacewin,  0,        spacewin, spacewin, 0,     ROT0, "Playmark", "Scacco Matto / Space Win",             0,                                             layout_spacewin )
 GAMEL( 1997, croupier,  0,        pmroulet, pmroulet, 0,     ROT0, "Playmark", "Croupier (Playmark Roulette v.20.05)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING, layout_pmroulet )
 GAMEL( 1997, croupiera, croupier, pmroulet, pmroulet, 0,     ROT0, "Playmark", "Croupier (Playmark Roulette v.09.04)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING, layout_pmroulet )

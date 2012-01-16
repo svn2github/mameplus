@@ -204,7 +204,7 @@ static INPUT_PORTS_START( gogomile )
 	PORT_DIPSETTING(      0x0004, DEF_STR( Very_Hard ) )
 	PORT_DIPNAME( 0x0030, 0x0020, DEF_STR( Language ) )	PORT_DIPLOCATION("SW1:5,6") /* Default Language: English */
 	PORT_DIPSETTING(      0x0010, DEF_STR( Chinese ) )
-	PORT_DIPSETTING(      0x0030, DEF_STR( Japanese ) ) /* Only setting to give a "For use only in...." Copyright Notice */
+	PORT_DIPSETTING(      0x0030, DEF_STR( Japanese ) )	/* Only setting to give a "For use only in...." Copyright Notice */
 	PORT_DIPSETTING(      0x0000, DEF_STR( Korean ) )
 	PORT_DIPSETTING(      0x0020, DEF_STR( English ) )
 	PORT_DIPNAME( 0x00c0, 0x00c0, DEF_STR( Lives ) )	PORT_DIPLOCATION("SW1:7,8")
@@ -230,15 +230,15 @@ static INPUT_PORTS_START( gogomile )
 	PORT_DIPUNUSED_DIPLOC( 0x4000, 0x4000, "SW2:7" )
 	PORT_DIPUNUSED_DIPLOC( 0x8000, 0x8000, "SW2:8" )
 /*
-	PORT_DIPNAME( 0xe000, 0xe000, DEF_STR( Coin_B ) )	PORT_DIPLOCATION("SW2:6,7,8")
-	PORT_DIPSETTING(      0x2000, DEF_STR( 4C_1C ) )
-	PORT_DIPSETTING(      0xa000, DEF_STR( 3C_1C ) )
-	PORT_DIPSETTING(      0x6000, DEF_STR( 2C_1C ) )
-	PORT_DIPSETTING(      0xe000, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(      0xc000, DEF_STR( 1C_2C ) )
-	PORT_DIPSETTING(      0x4000, DEF_STR( 1C_3C ) )
-	PORT_DIPSETTING(      0x8000, DEF_STR( 1C_4C ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
+    PORT_DIPNAME( 0xe000, 0xe000, DEF_STR( Coin_B ) )   PORT_DIPLOCATION("SW2:6,7,8")
+    PORT_DIPSETTING(      0x2000, DEF_STR( 4C_1C ) )
+    PORT_DIPSETTING(      0xa000, DEF_STR( 3C_1C ) )
+    PORT_DIPSETTING(      0x6000, DEF_STR( 2C_1C ) )
+    PORT_DIPSETTING(      0xe000, DEF_STR( 1C_1C ) )
+    PORT_DIPSETTING(      0xc000, DEF_STR( 1C_2C ) )
+    PORT_DIPSETTING(      0x4000, DEF_STR( 1C_3C ) )
+    PORT_DIPSETTING(      0x8000, DEF_STR( 1C_4C ) )
+    PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
 */
 INPUT_PORTS_END
 
@@ -249,7 +249,7 @@ static INPUT_PORTS_START( gogomilej )
 	PORT_MODIFY("DSW")		// $880000.w
 	PORT_DIPNAME( 0x0030, 0x0030, DEF_STR( Language ) ) 	PORT_DIPLOCATION("SW1:5,6") /* Default Language: Japanese */
 	PORT_DIPSETTING(      0x0010, DEF_STR( Chinese ) )
-	PORT_DIPSETTING(      0x0030, DEF_STR( Japanese ) ) /* Only setting to give a "For use only in...." Copyright Notice */
+	PORT_DIPSETTING(      0x0030, DEF_STR( Japanese ) )	/* Only setting to give a "For use only in...." Copyright Notice */
 	PORT_DIPSETTING(      0x0000, DEF_STR( Korean ) )
 	PORT_DIPSETTING(      0x0020, DEF_STR( English ) )
 
@@ -263,15 +263,15 @@ static INPUT_PORTS_START( gogomilej )
 	PORT_DIPSETTING(      0x0c00, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
 /*
-	PORT_DIPNAME( 0xe000, 0xe000, DEF_STR( Coin_B ) )	PORT_DIPLOCATION("SW2:6,7,8")
-	PORT_DIPSETTING(      0xc000, DEF_STR( 4C_1C ) )
-	PORT_DIPSETTING(      0xa000, DEF_STR( 3C_1C ) )
-	PORT_DIPSETTING(      0x8000, DEF_STR( 2C_1C ) )
-	PORT_DIPSETTING(      0xe000, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(      0x2000, DEF_STR( 1C_2C ) )
-	PORT_DIPSETTING(      0x4000, DEF_STR( 1C_3C ) )
-	PORT_DIPSETTING(      0x6000, DEF_STR( 1C_4C ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
+    PORT_DIPNAME( 0xe000, 0xe000, DEF_STR( Coin_B ) )   PORT_DIPLOCATION("SW2:6,7,8")
+    PORT_DIPSETTING(      0xc000, DEF_STR( 4C_1C ) )
+    PORT_DIPSETTING(      0xa000, DEF_STR( 3C_1C ) )
+    PORT_DIPSETTING(      0x8000, DEF_STR( 2C_1C ) )
+    PORT_DIPSETTING(      0xe000, DEF_STR( 1C_1C ) )
+    PORT_DIPSETTING(      0x2000, DEF_STR( 1C_2C ) )
+    PORT_DIPSETTING(      0x4000, DEF_STR( 1C_3C ) )
+    PORT_DIPSETTING(      0x6000, DEF_STR( 1C_4C ) )
+    PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
 */
 INPUT_PORTS_END
 
@@ -481,10 +481,9 @@ static MACHINE_CONFIG_START( fuuki16, fuuki16_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MCFG_SCREEN_SIZE(320, 256)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 256-16-1)
-	MCFG_SCREEN_UPDATE(fuuki16)
+	MCFG_SCREEN_UPDATE_STATIC(fuuki16)
 
 	MCFG_GFXDECODE(fuuki16)
 	MCFG_PALETTE_LENGTH(0x800*4)
