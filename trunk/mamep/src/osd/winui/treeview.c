@@ -1518,9 +1518,9 @@ void CreateAllChildFolders(void)
 			//dprintf("Found built-in-folder id %i %i\n",i,lpFolder->m_nFolderId);
 			if (lpFolderData->m_pfnCreateFolders != NULL)
 			{
-				clock_t oldTime = clock();
+				clock_t start = clock();
 				lpFolderData->m_pfnCreateFolders(i);
-				dwprintf(TEXT("%s(%.3f sec)"), lpFolderData->m_lpTitle, (float)((clock() - oldTime) / 1000.0));
+				dwprintf(TEXT("[%s] : %.3f sec\n"), lpFolderData->m_lpTitle, (float)(clock() - start) / (float)CLOCKS_PER_SEC);
 			}
 		}
 		else

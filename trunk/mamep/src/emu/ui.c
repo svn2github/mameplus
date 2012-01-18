@@ -111,7 +111,7 @@ static rgb_t uifont_colortable[MAX_COLORTABLE];
 #endif /* UI_COLOR_DISPLAY */
 static rgb_t ui_bgcolor;
 static render_texture *bgtexture;
-static bitmap_ind16 *bgbitmap;
+static bitmap_rgb32 *bgbitmap;
 
 static int multiline_text_box_visible_lines;
 static int multiline_text_box_target_lines;
@@ -2859,12 +2859,11 @@ static void build_bgtexture(running_machine &machine)
 	a = ui_transparency;
 #endif /* TRANS_UI */
 
-	bgbitmap.allocate(1, 1024, BITMAP_FORMAT_RGB32);
-	bgbitmap.set_palette(machine.palette);
-	if (!bgbitmap.valid())
+	bgbitmap = auto_bitmap_rgb32_alloc(machine, 1, 1024);
+	if (bgbitmap == NULL)
 		fatalerror("build_bgtexture failed");
 
-	for (i = 0; i < bgbitmap.height(); i++)
+	for (i = 0; i < bgbitmap->height(); i++)
 	{
 		double gradual = (float)(1024 - i) / 1024.0f + 0.1f;
 
@@ -2873,11 +2872,11 @@ static void build_bgtexture(running_machine &machine)
 		else if (gradual < 0.1f)
 			gradual = 0.1f;
 
-		bgbitmap.pix32(i, 0) = MAKE_ARGB(a, (UINT8)(r * gradual), (UINT8)(g * gradual), (UINT8)(b * gradual));
+		bgbitmap->pix32(i, 0) = MAKE_ARGB(a, (UINT8)(r * gradual), (UINT8)(g * gradual), (UINT8)(b * gradual));
 	}
 
 	bgtexture = machine.render().texture_alloc(render_texture::hq_scale);
-	bgtexture->set_bitmap(bgbitmap, NULL, TEXFORMAT_ARGB32, NULL);
+	bgtexture->set_bitmap(*bgbitmap, bgbitmap->cliprect(), TEXFORMAT_ARGB32);
 	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(free_bgtexture), &machine));
 }
 

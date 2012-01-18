@@ -138,7 +138,7 @@ private:
 	bitmap_format		m_format;
 	texture_format		m_texformat;
 	bitmap_t *			m_live;
-	bitmap_ind16	m_ind16;
+	bitmap_ind16		m_ind16;
 	bitmap_rgb32		m_rgb32;
 };
 
@@ -342,8 +342,8 @@ private:
 	void texture_set_scale_bitmap(const rectangle *visarea, UINT32 palettebase);
 	void realloc_scale_bitmaps();
 
-	bitmap_t			m_scale_bitmap[2];
-	bitmap_t			m_work_bitmap[2];
+	bitmap_rgb32 *		m_scale_bitmap[2];
+	bitmap_rgb32 *		m_work_bitmap[2];
 	int					m_scale_dirty[2];
 #endif /* USE_SCALE_EFFECTS */
 };
