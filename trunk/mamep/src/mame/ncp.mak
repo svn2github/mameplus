@@ -62,6 +62,7 @@ SOUNDS += OKIM6295
 SOUNDS += QSOUND
 SOUNDS += CDDA
 SOUNDS += ICS2115
+SOUNDS += YMZ770
 
 #-------------------------------------------------
 # this is the list of driver libraries that
@@ -99,6 +100,7 @@ $(MAMEOBJ)/capcom.a: \
 
 $(MAMEOBJ)/igs.a: \
 	$(DRIVERS)/pgm.o $(VIDEO)/pgm.o \
+	$(DRIVERS)/pgm2.o \
 	$(MACHINE)/pgmcrypt.o \
 	$(MACHINE)/pgmprot.o \
 

@@ -138,7 +138,7 @@ inline render_font::glyph &render_font::get_char(unicode_char chnum)
 			gl.bmwidth = (int)(glyph_ch.bmwidth * scale + 0.5f);
 			gl.bmheight = (int)(glyph_ch.bmheight * scale + 0.5f);
 
-			gl.bitmap.allocate(gl.bmwidth, gl.bmheight, BITMAP_FORMAT_ARGB32);
+			gl.bitmap.allocate(gl.bmwidth, gl.bmheight);
 			rectangle clip;
 			clip.min_x = clip.min_y = 0;
 			clip.max_x = glyph_ch.bitmap.width() - 1;
@@ -341,7 +341,7 @@ void render_font::char_expand(unicode_char chnum, glyph &gl)
 			return;
 
 		// allocate a new bitmap of the size we need
-		gl.bitmap.allocate(gl.bmwidth, m_height_cmd, BITMAP_FORMAT_ARGB32);
+		gl.bitmap.allocate(gl.bmwidth, m_height_cmd);
 		gl.bitmap.fill(0);
 
 		// extract the data

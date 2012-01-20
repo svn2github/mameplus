@@ -111,7 +111,7 @@ static rgb_t uifont_colortable[MAX_COLORTABLE];
 #endif /* UI_COLOR_DISPLAY */
 static rgb_t ui_bgcolor;
 static render_texture *bgtexture;
-static bitmap_rgb32 *bgbitmap;
+static bitmap_argb32 *bgbitmap;
 
 static int multiline_text_box_visible_lines;
 static int multiline_text_box_target_lines;
@@ -2859,7 +2859,7 @@ static void build_bgtexture(running_machine &machine)
 	a = ui_transparency;
 #endif /* TRANS_UI */
 
-	bgbitmap = auto_bitmap_rgb32_alloc(machine, 1, 1024);
+	bgbitmap = auto_alloc(machine, bitmap_argb32(1, 1024));
 	if (bgbitmap == NULL)
 		fatalerror("build_bgtexture failed");
 
@@ -2886,4 +2886,3 @@ static void free_bgtexture(running_machine &machine)
 	machine.render().texture_free(bgtexture);
 	bgtexture = NULL;
 }
-
