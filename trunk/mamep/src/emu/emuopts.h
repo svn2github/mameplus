@@ -76,6 +76,7 @@ enum
 #define OPTION_WRITECONFIG			"writeconfig"
 #ifdef DRIVER_SWITCH
 #define OPTION_DRIVER_CONFIG			"driver_config"
+#define OPTION_DISABLE_MECHANICAL_DRIVER	"disable_mechanical_driver"
 #endif /* DRIVER_SWITCH */
 
 // core search path options

@@ -64,6 +64,7 @@ const options_entry emu_options::s_option_entries[] =
 	{ OPTION_WRITECONFIG ";wc",                          "0",         OPTION_BOOLEAN,    "writes configuration to (driver).ini on exit" },
 #ifdef DRIVER_SWITCH
 	{ OPTION_DRIVER_CONFIG,                              "all",       OPTION_STRING,     "switch drivers"},
+	{ OPTION_DISABLE_MECHANICAL_DRIVER,                  "0",         OPTION_BOOLEAN,    "disable mechanical drivers"},
 #endif /* DRIVER_SWITCH */
 
 	// seach path options

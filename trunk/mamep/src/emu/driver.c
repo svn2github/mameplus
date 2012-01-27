@@ -79,6 +79,7 @@ void driver_switch::assign_drivers(emu_options &opts)
 
 	UINT32 enabled = 0;
 	int i, n;
+	bool mechanical = opts.bool_value(OPTION_DISABLE_MECHANICAL_DRIVER);
 
 #ifndef TINY_BUILD
 	const char *drv_option = opts.value(OPTION_DRIVER_CONFIG);
@@ -126,7 +127,8 @@ void driver_switch::assign_drivers(emu_options &opts)
 		{
 			for (int c = 0; drivers_table[i].driver[c]; c++)
 				if (mame_stricmp(drivers_table[i].driver[c]->name, "___empty"))
-					driver_list::s_drivers_sorted[n++] = drivers_table[i].driver[c];
+					if (!mechanical || !(drivers_table[i].driver[c]->flags & GAME_MECHANICAL))
+						driver_list::s_drivers_sorted[n++] = drivers_table[i].driver[c];
 		}
 
 	// ___empty driver add once
