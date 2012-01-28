@@ -5861,3 +5861,8 @@ Slot Devices
 # emu/uimain.c: 194
 Network Devices
 
+
+#
+Show Current Time
+
+

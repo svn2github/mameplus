@@ -453,6 +453,10 @@ ifneq ($(USE_INP_CAPTION),)
 DEFS += -DINP_CAPTION
 endif
 
+ifneq ($(USE_SHOW_TIME),)
+DEFS += -DUSE_SHOW_TIME
+endif
+
 ifneq ($(USE_SHOW_INPUT_LOG),)
 DEFS += -DUSE_SHOW_INPUT_LOG
 endif

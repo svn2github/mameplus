@@ -5689,7 +5689,7 @@ skip_comment:
 
 	if (caption_timer)
 	{
-		ui_draw_text_box(container, caption_text, JUSTIFY_LEFT, 0.5, 1.0, UI_BACKGROUND_COLOR);
+		ui_draw_text_box(container, caption_text, JUSTIFY_LEFT, 0.5f, 1.0f, UI_BACKGROUND_COLOR);
 		caption_timer--;
 	}
 }
