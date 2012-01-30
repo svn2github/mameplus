@@ -321,8 +321,8 @@ static void handle_lightpen( device_t *device )
     const rectangle &vis_area = device->machine().primary_screen->visible_area();
     int xt, yt;
 
-    xt = x_val * (vis_area.max_x - vis_area.min_x) / 1024 + vis_area.min_x;
-    yt = y_val * (vis_area.max_y - vis_area.min_y) / 1024 + vis_area.min_y;
+    xt = x_val * vis_area.width() / 1024 + vis_area.min_x;
+    yt = y_val * vis_area.height() / 1024 + vis_area.min_y;
 
      device->machine().scheduler().timer_set(device->machine().primary_screen->time_until_pos(yt, xt), FUNC(assert_lp_cb), 0, device);
 }
@@ -341,7 +341,7 @@ static WRITE8_HANDLER( peplus_crtc_display_w )
 	state->m_palette_ram[state->m_vid_address] = state->m_io_port[1];
 	state->m_palette_ram2[state->m_vid_address] = state->m_io_port[3];
 
-	tilemap_mark_tile_dirty(state->m_bg_tilemap, state->m_vid_address);
+	state->m_bg_tilemap->mark_tile_dirty(state->m_vid_address);
 
 	/* An access here triggers a device read !*/
 	space->machine().device<mc6845_device>("crtc")->register_r(*space, 0);
@@ -675,7 +675,7 @@ static VIDEO_START( peplus )
 static SCREEN_UPDATE_IND16( peplus )
 {
 	peplus_state *state = screen.machine().driver_data<peplus_state>();
-	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
+	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	return 0;
 }

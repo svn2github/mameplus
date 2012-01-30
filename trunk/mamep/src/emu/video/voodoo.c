@@ -930,7 +930,7 @@ static void swap_buffers(voodoo_state *v)
 	if (v->stats.display)
 	{
 		const rectangle &visible_area = v->screen->visible_area();
-		int screen_area = (visible_area.max_x - visible_area.min_x + 1) * (visible_area.max_y - visible_area.min_y + 1);
+		int screen_area = visible_area.width() * visible_area.height();
 		char *statsptr = v->stats.buffer;
 		int pixelcount;
 		int i;
@@ -2573,10 +2573,7 @@ static INT32 register_w(voodoo_state *v, offs_t offset, UINT32 data)
 					rectangle visarea;
 
 					/* create a new visarea */
-					visarea.min_x = hbp;
-					visarea.max_x = hbp + hvis - 1;
-					visarea.min_y = vbp;
-					visarea.max_y = vbp + vvis - 1;
+					visarea.set(hbp, hbp + hvis - 1, vbp, vbp + vvis - 1);
 
 					/* keep within bounds */
 					visarea.max_x = MIN(visarea.max_x, htotal - 1);
@@ -4913,7 +4910,15 @@ static DEVICE_START( voodoo )
 	}
 
 	/* set the type, and initialize the chip mask */
-	v->index = device->machine().devicelist().indexof(device->type(), device->tag());
+	device_iterator iter(device->machine().root_device());
+	v->index = 0;
+	for (device_t *scan = iter.first(); scan != NULL; scan = iter.next())
+		if (scan->type() == device->type())
+		{
+			if (scan == device)
+				break;
+			v->index++;
+		}
 	v->screen = downcast<screen_device *>(device->machine().device(config->screen));
 	assert_always(v->screen != NULL, "Unable to find screen attached to voodoo");
 	v->cpu = device->machine().device(config->cputag);

@@ -357,10 +357,7 @@ void screen_device::static_set_raw(device_t &device, UINT32 pixclock, UINT16 hto
 	screen.m_vblank = screen.m_refresh / vtotal * (vtotal - (vbstart - vbend));
 	screen.m_width = htotal;
 	screen.m_height = vtotal;
-	screen.m_visarea.min_x = hbend;
-	screen.m_visarea.max_x = hbstart - 1;
-	screen.m_visarea.min_y = vbend;
-	screen.m_visarea.max_y = vbstart - 1;
+	screen.m_visarea.set(hbend, hbstart - 1, vbend, vbstart - 1);
 }
 
 
@@ -465,45 +462,26 @@ void screen_device::static_set_screen_vblank(device_t &device, screen_vblank_del
 //  configuration
 //-------------------------------------------------
 
-bool screen_device::device_validity_check(emu_options &options, const game_driver &driver) const
+void screen_device::device_validity_check(validity_checker &valid) const
 {
-	bool error = false;
-
 	// sanity check dimensions
 	if (m_width <= 0 || m_height <= 0)
-	{
-		mame_printf_error(_("%s: %s screen '%s' has invalid display dimensions\n"), driver.source_file, driver.name, tag());
-		error = true;
-	}
+		mame_printf_error(_("Invalid display dimensions\n"));
 
 	// sanity check display area
 	if (m_type != SCREEN_TYPE_VECTOR)
 	{
-		if ((m_visarea.max_x < m_visarea.min_x) ||
-			(m_visarea.max_y < m_visarea.min_y) ||
-			(m_visarea.max_x >= m_width) ||
-			(m_visarea.max_y >= m_height))
-		{
-			mame_printf_error(_("%s: %s screen '%s' has an invalid display area\n"), driver.source_file, driver.name, tag());
-			error = true;
-		}
+		if (m_visarea.empty() || m_visarea.max_x >= m_width || m_visarea.max_y >= m_height)
+			mame_printf_error(_("Invalid display area\n"));
 
 		// sanity check screen formats
 		if (m_screen_update_ind16.isnull() && m_screen_update_rgb32.isnull())
-		{
-			mame_printf_error(_("%s: %s screen '%s' has no SCREEN_UPDATE function\n"), driver.source_file, driver.name, tag());
-			error = true;
-		}
+			mame_printf_error(_("Missing SCREEN_UPDATE function\n"));
 	}
 
 	// check for zero frame rate
 	if (m_refresh == 0)
-	{
-		mame_printf_error(_("%s: %s screen '%s' has a zero refresh rate\n"), driver.source_file, driver.name, tag());
-		error = true;
-	}
-	
-	return error;
+		mame_printf_error(_("Invalid (zero) refresh rate\n"));
 }
 
 
@@ -673,6 +651,8 @@ void screen_device::configure(int width, int height, const rectangle &visarea, a
 	assert(height > 0);
 	assert(visarea.min_x >= 0);
 	assert(visarea.min_y >= 0);
+//	assert(visarea.max_x < width);
+//	assert(visarea.max_y < height);
 	assert(m_type == SCREEN_TYPE_VECTOR || visarea.min_x < width);
 	assert(m_type == SCREEN_TYPE_VECTOR || visarea.min_y < height);
 	assert(frame_period > 0);
@@ -698,7 +678,7 @@ void screen_device::configure(int width, int height, const rectangle &visarea, a
 	// if there has been no VBLANK time specified in the MACHINE_DRIVER, compute it now
     // from the visible area, otherwise just used the supplied value
 	if (m_vblank == 0 && !m_oldstyle_vblank_supplied)
-		m_vblank_period = m_scantime * (height - (visarea.max_y + 1 - visarea.min_y));
+		m_vblank_period = m_scantime * (height - visarea.height());
 	else
 		m_vblank_period = m_vblank;
 
@@ -752,12 +732,17 @@ void screen_device::reset_origin(int beamy, int beamx)
 
 void screen_device::realloc_screen_bitmaps()
 {
+	// doesn't apply for vector games
 	if (m_type == SCREEN_TYPE_VECTOR)
 		return;
 
+	// determine effective size to allocate
+	INT32 effwidth = MAX(m_width, m_visarea.max_x + 1);
+	INT32 effheight = MAX(m_height, m_visarea.max_y + 1);
+
 	// reize all registered screen bitmaps
 	for (auto_bitmap_item *item = m_auto_bitmap_list.first(); item != NULL; item = item->next())
-		item->m_bitmap.resize(m_width, m_height);
+		item->m_bitmap.resize(effwidth, effheight);
 
 	// re-set up textures
 	m_texture[0]->set_bitmap(m_bitmap[0], m_visarea, m_bitmap[0].texformat());
@@ -1110,6 +1095,10 @@ void screen_device::vblank_begin()
 	m_vblank_start_time = machine().time();
 	m_vblank_end_time = m_vblank_start_time + attotime(0, m_vblank_period);
 
+	// if this is the primary screen and we need to update now
+	if (this == machine().primary_screen && !(machine().config().m_video_attributes & VIDEO_UPDATE_AFTER_VBLANK))
+		machine().video().frame_update();
+
 	// call the screen specific callbacks
 	for (callback_item *item = m_callback_list.first(); item != NULL; item = item->next())
 		item->m_callback(*this, true);
@@ -1275,7 +1264,7 @@ void screen_device::finalize_burnin()
 	scaledvis.max_y = m_visarea.max_y * m_burnin.height() / m_height;
 
 	// wrap a bitmap around the subregion we care about
-	bitmap_argb32 finalmap(scaledvis.max_x + 1 - scaledvis.min_x, scaledvis.max_y + 1 - scaledvis.min_y);
+	bitmap_argb32 finalmap(scaledvis.width(), scaledvis.height());
 	int srcwidth = m_burnin.width();
 	int srcheight = m_burnin.height();
 	int dstwidth = finalmap.width();

@@ -84,7 +84,7 @@ Graphics: HM86171
    Sound: OKI M6295
    Other: XILINX XC9536XL (used for programable protection, connected to H2)
 
-HM86171-120 - HMC 28 pin DIP Color Pallete RAMDAC
+HM86171-120 - HMC 28 pin DIP Color Palette RAMDAC
  FM1608-120 - RAMTRON 64Kb bytewide Ferroelectric Nonvolatile RAM
    ULN2003A - 16 pin DIP Seven Darlington Arrays
        386D - JRC 386D low voltage AMP
@@ -140,7 +140,7 @@ Graphics: HM86171
    Sound: OKI M6295
    Other: XILINX XC9536XL (socketted)
 
-HM86171-120 - HMC 28 pin DIP Color Pallete RAMDAC
+HM86171-120 - HMC 28 pin DIP Color Palette RAMDAC
    ULN2003A - 16 pin DIP Seven Darlington Arrays
       51864 - V62C51864L-35P 64Kb SRAM
       75176 - SN75176BP Differential BUS Transceiver (Bidirectional data communication on multipoint bus transmission line)
@@ -234,7 +234,7 @@ Graphics: HM86171
    Sound: OKI M6295
    Other: XILINX XC9536XL (used for programable protection, connected to H2)
 
-HM86171-120 - HMC 28 pin DIP Color Pallete RAMDAC
+HM86171-120 - HMC 28 pin DIP Color Palette RAMDAC
  FM1608-120 - RAMTRON 64Kb bytewide Ferroelectric Nonvolatile RAM
    ULN2003A - 16 pin DIP Seven Darlington Arrays
       75176 - SN75176BP Differential BUS Transceiver (Bidirectional data communication on multipoint bus transmission line)
@@ -252,7 +252,7 @@ ROM  2 is a AMIC 290021T
 
 --------------------------------------------------------------------
 
-MH86171 Color Pallete RAMDAC
+MH86171 Color Palette RAMDAC
  Hardware & software compatible with VGA, MCGA & 8514/A graphics
  Compatible with the RS170 video stadard
  Single monolithic, high performance CMOS
@@ -708,35 +708,35 @@ static WRITE8_HANDLER( sfbonus_videoram_w )
 	if (offset<0x4000) /* 0x0000 - 0x3fff */
 	{
 		state->m_tilemap_ram[offset] = data;
-		tilemap_mark_tile_dirty(state->m_tilemap,offset/2);
+		state->m_tilemap->mark_tile_dirty(offset/2);
 	}
 	else if (offset<0x4800) /* 0x4000 - 0x47ff */
 	{
 		offset-=0x4000;
 
 		state->m_reel_ram[offset] = data;
-		tilemap_mark_tile_dirty(state->m_reel_tilemap,offset/2);
+		state->m_reel_tilemap->mark_tile_dirty(offset/2);
 	}
 	else if (offset<0x5000)  /* 0x4800 - 0x4fff */
 	{
 		offset-=0x4800;
 
 		state->m_reel2_ram[offset] = data;
-		tilemap_mark_tile_dirty(state->m_reel2_tilemap,offset/2);
+		state->m_reel2_tilemap->mark_tile_dirty(offset/2);
 	}
 	else if (offset<0x5800) /* 0x5000 - 0x57ff */
 	{
 		offset-=0x5000;
 
 		state->m_reel3_ram[offset] = data;
-		tilemap_mark_tile_dirty(state->m_reel3_tilemap,offset/2);
+		state->m_reel3_tilemap->mark_tile_dirty(offset/2);
 	}
 	else if (offset<0x6000) /* 0x5800 - 0x5fff */
 	{
 		offset-=0x5800;
 
 		state->m_reel4_ram[offset] = data;
-		tilemap_mark_tile_dirty(state->m_reel4_tilemap,offset/2);
+		state->m_reel4_tilemap->mark_tile_dirty(offset/2);
 	}
 	else if (offset<0x8000)
 	{
@@ -765,18 +765,18 @@ static VIDEO_START(sfbonus)
 	state->m_reel3_tilemap = tilemap_create(machine,get_sfbonus_reel3_tile_info,tilemap_scan_rows,8,32, 64, 16);
 	state->m_reel4_tilemap = tilemap_create(machine,get_sfbonus_reel4_tile_info,tilemap_scan_rows,8,32, 64, 16);
 
-	tilemap_set_transparent_pen(state->m_tilemap,0);
-	tilemap_set_transparent_pen(state->m_reel_tilemap,255);
-	tilemap_set_transparent_pen(state->m_reel2_tilemap,255);
-	tilemap_set_transparent_pen(state->m_reel3_tilemap,255);
-	tilemap_set_transparent_pen(state->m_reel4_tilemap,255);
+	state->m_tilemap->set_transparent_pen(0);
+	state->m_reel_tilemap->set_transparent_pen(255);
+	state->m_reel2_tilemap->set_transparent_pen(255);
+	state->m_reel3_tilemap->set_transparent_pen(255);
+	state->m_reel4_tilemap->set_transparent_pen(255);
 
-	tilemap_set_scroll_rows(state->m_tilemap,64);
+	state->m_tilemap->set_scroll_rows(64);
 
-	tilemap_set_scroll_cols(state->m_reel_tilemap, 64);
-	tilemap_set_scroll_cols(state->m_reel2_tilemap, 64);
-	tilemap_set_scroll_cols(state->m_reel3_tilemap, 64);
-	tilemap_set_scroll_cols(state->m_reel4_tilemap, 64);
+	state->m_reel_tilemap->set_scroll_cols(64);
+	state->m_reel2_tilemap->set_scroll_cols(64);
+	state->m_reel3_tilemap->set_scroll_cols(64);
+	state->m_reel4_tilemap->set_scroll_cols(64);
 
 
 }
@@ -802,16 +802,16 @@ static void sfbonus_draw_reel_layer(screen_device &screen, bitmap_ind16 &bitmap,
 	{
 		int scroll;
 		scroll = bg_scroll[(i*2)+0x000] | (bg_scroll[(i*2)+0x001]<<8);
-		tilemap_set_scrolly(state->m_reel_tilemap, i, scroll + globalyscrollreels );
+		state->m_reel_tilemap->set_scrolly(i, scroll + globalyscrollreels );
 
 		scroll = bg_scroll[(i*2)+0x080] | (bg_scroll[(i*2)+0x081]<<8);
-		tilemap_set_scrolly(state->m_reel2_tilemap, i, scroll + globalyscrollreels);
+		state->m_reel2_tilemap->set_scrolly(i, scroll + globalyscrollreels);
 
 		scroll = bg_scroll[(i*2)+0x100] | (bg_scroll[(i*2)+0x101]<<8);
-		tilemap_set_scrolly(state->m_reel3_tilemap, i, scroll + globalyscrollreels);
+		state->m_reel3_tilemap->set_scrolly(i, scroll + globalyscrollreels);
 
 		scroll = bg_scroll[(i*2)+0x180] | (bg_scroll[(i*2)+0x181]<<8);
-		tilemap_set_scrolly(state->m_reel4_tilemap, i, scroll + globalyscrollreels);
+		state->m_reel4_tilemap->set_scrolly(i, scroll + globalyscrollreels);
 	}
 
 //  printf("------------\n");
@@ -830,10 +830,7 @@ static void sfbonus_draw_reel_layer(screen_device &screen, bitmap_ind16 &bitmap,
 		//printf("%04x %04x %d\n",zz, xxxscroll, line/8);
 
 		/* draw top of screen */
-		clip.min_x = visarea.min_x;
-		clip.max_x = 511;
-		clip.min_y = startclipmin;
-		clip.max_y = startclipmin;
+		clip.set(visarea.min_x, 511, startclipmin, startclipmin);
 
 
 
@@ -842,73 +839,73 @@ static void sfbonus_draw_reel_layer(screen_device &screen, bitmap_ind16 &bitmap,
 		{
 			rowscroll = reels_rowscroll[((line/8)*2)+0x000] | (reels_rowscroll[((line/8)*2)+0x001]<<8);
 			xxxscroll = globalxscrollreels + rowscroll;
-			tilemap_set_scrollx(state->m_reel_tilemap, 0, xxxscroll  );
-			tilemap_set_scrollx(state->m_reel2_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->m_reel3_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->m_reel4_tilemap, 0, xxxscroll );
+			state->m_reel_tilemap->set_scrollx(0, xxxscroll  );
+			state->m_reel2_tilemap->set_scrollx(0, xxxscroll );
+			state->m_reel3_tilemap->set_scrollx(0, xxxscroll );
+			state->m_reel4_tilemap->set_scrollx(0, xxxscroll );
 		}
 		else if (rowenable==0x1)
 		{
 			rowscroll = reels_rowscroll[((line/8)*2)+0x080] | (reels_rowscroll[((line/8)*2)+0x081]<<8);
 			xxxscroll = globalxscrollreels + rowscroll;
-			tilemap_set_scrollx(state->m_reel_tilemap, 0, xxxscroll  );
-			tilemap_set_scrollx(state->m_reel2_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->m_reel3_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->m_reel4_tilemap, 0, xxxscroll );
+			state->m_reel_tilemap->set_scrollx(0, xxxscroll  );
+			state->m_reel2_tilemap->set_scrollx(0, xxxscroll );
+			state->m_reel3_tilemap->set_scrollx(0, xxxscroll );
+			state->m_reel4_tilemap->set_scrollx(0, xxxscroll );
 		}
 		else if (rowenable==0x2)
 		{
 			rowscroll = reels_rowscroll[((line/8)*2)+0x100] | (reels_rowscroll[((line/8)*2)+0x101]<<8);
 			xxxscroll = globalxscrollreels + rowscroll;
-			tilemap_set_scrollx(state->m_reel_tilemap, 0, xxxscroll  );
-			tilemap_set_scrollx(state->m_reel2_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->m_reel3_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->m_reel4_tilemap, 0, xxxscroll );
+			state->m_reel_tilemap->set_scrollx(0, xxxscroll  );
+			state->m_reel2_tilemap->set_scrollx(0, xxxscroll );
+			state->m_reel3_tilemap->set_scrollx(0, xxxscroll );
+			state->m_reel4_tilemap->set_scrollx(0, xxxscroll );
 		}
 		else if (rowenable==0x3)
 		{
 			rowscroll = reels_rowscroll[((line/8)*2)+0x180] | (reels_rowscroll[((line/8)*2)+0x181]<<8);
 			xxxscroll = globalxscrollreels + rowscroll;
-			tilemap_set_scrollx(state->m_reel_tilemap, 0, xxxscroll  );
-			tilemap_set_scrollx(state->m_reel2_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->m_reel3_tilemap, 0, xxxscroll );
-			tilemap_set_scrollx(state->m_reel4_tilemap, 0, xxxscroll );
+			state->m_reel_tilemap->set_scrollx(0, xxxscroll  );
+			state->m_reel2_tilemap->set_scrollx(0, xxxscroll );
+			state->m_reel3_tilemap->set_scrollx(0, xxxscroll );
+			state->m_reel4_tilemap->set_scrollx(0, xxxscroll );
 		}
 
 		if (rowenable2==0)
 		{
-			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel_tilemap,TILEMAP_DRAW_CATEGORY(catagory),3);
+			state->m_reel_tilemap->draw(*state->m_temp_reel_bitmap, clip, TILEMAP_DRAW_CATEGORY(catagory),3);
 		}
 		if (rowenable==0)
 		{
-			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel_tilemap,TILEMAP_DRAW_CATEGORY(catagory),3);
+			state->m_reel_tilemap->draw(*state->m_temp_reel_bitmap, clip, TILEMAP_DRAW_CATEGORY(catagory),3);
 		}
 
 		if (rowenable2==0x1)
 		{
-			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel2_tilemap,TILEMAP_DRAW_CATEGORY(catagory),2);
+			state->m_reel2_tilemap->draw(*state->m_temp_reel_bitmap, clip, TILEMAP_DRAW_CATEGORY(catagory),2);
 		}
 		if (rowenable==0x1)
 		{
-			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel2_tilemap,TILEMAP_DRAW_CATEGORY(catagory),2);
+			state->m_reel2_tilemap->draw(*state->m_temp_reel_bitmap, clip, TILEMAP_DRAW_CATEGORY(catagory),2);
 		}
 
 		if (rowenable2==0x2)
 		{
-			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel3_tilemap,TILEMAP_DRAW_CATEGORY(catagory),1);
+			state->m_reel3_tilemap->draw(*state->m_temp_reel_bitmap, clip, TILEMAP_DRAW_CATEGORY(catagory),1);
 		}
 		if (rowenable==0x2)
 		{
-			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel3_tilemap,TILEMAP_DRAW_CATEGORY(catagory),1);
+			state->m_reel3_tilemap->draw(*state->m_temp_reel_bitmap, clip, TILEMAP_DRAW_CATEGORY(catagory),1);
 		}
 
 		if (rowenable2==0x3)
 		{
-			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel4_tilemap,TILEMAP_DRAW_CATEGORY(catagory),4);
+			state->m_reel4_tilemap->draw(*state->m_temp_reel_bitmap, clip, TILEMAP_DRAW_CATEGORY(catagory),4);
 		}
 		if (rowenable==0x3)
 		{
-			tilemap_draw(*state->m_temp_reel_bitmap,clip,state->m_reel4_tilemap,TILEMAP_DRAW_CATEGORY(catagory),4);
+			state->m_reel4_tilemap->draw(*state->m_temp_reel_bitmap, clip, TILEMAP_DRAW_CATEGORY(catagory),4);
 		}
 
 
@@ -957,14 +954,14 @@ static SCREEN_UPDATE_IND16(sfbonus)
 	}
 
 	/* Normal Tilemap */
-	tilemap_set_scrolly(state->m_tilemap, 0, globalyscroll );
+	state->m_tilemap->set_scrolly(0, globalyscroll );
 	for (i=0;i<64;i++)
 	{
 		int scroll;
 		scroll = front_rowscroll[(i*2)+0x000] | (front_rowscroll[(i*2)+0x001]<<8);
-		tilemap_set_scrollx(state->m_tilemap, i, scroll+globalxscroll );
+		state->m_tilemap->set_scrollx(i, scroll+globalxscroll );
 	}
-	tilemap_draw(bitmap,cliprect,state->m_tilemap,0,0);
+	state->m_tilemap->draw(bitmap, cliprect, 0,0);
 
 	{
 		int y,x;

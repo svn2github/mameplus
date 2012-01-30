@@ -12,7 +12,7 @@ WRITE8_HANDLER( canyon_videoram_w )
 {
 	canyon_state *state = space->machine().driver_data<canyon_state>();
 	state->m_videoram[offset] = data;
-	tilemap_mark_tile_dirty(state->m_bg_tilemap, offset);
+	state->m_bg_tilemap->mark_tile_dirty(offset);
 }
 
 
@@ -65,17 +65,8 @@ static void draw_bombs( running_machine &machine, bitmap_ind16 &bitmap, const re
 		int sx = 254 - state->m_videoram[0x3d0 + 2 * i + 0x5];
 		int sy = 246 - state->m_videoram[0x3d0 + 2 * i + 0xc];
 
-		rectangle rect;
-
-		rect.min_x = sx;
-		rect.min_y = sy;
-		rect.max_x = sx + 1;
-		rect.max_y = sy + 1;
-
-		if (rect.min_x < cliprect.min_x) rect.min_x = cliprect.min_x;
-		if (rect.min_y < cliprect.min_y) rect.min_y = cliprect.min_y;
-		if (rect.max_x > cliprect.max_x) rect.max_x = cliprect.max_x;
-		if (rect.max_y > cliprect.max_y) rect.max_y = cliprect.max_y;
+		rectangle rect(sx, sx + 1, sy, sy + 1);
+		rect &= cliprect;
 
 		bitmap.fill(1 + 2 * i, rect);
 	}
@@ -86,7 +77,7 @@ SCREEN_UPDATE_IND16( canyon )
 {
 	canyon_state *state = screen.machine().driver_data<canyon_state>();
 
-	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
+	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 
 	draw_sprites(screen.machine(), bitmap, cliprect);
 

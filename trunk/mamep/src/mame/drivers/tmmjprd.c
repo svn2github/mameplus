@@ -192,7 +192,7 @@ static void ttmjprd_draw_tile(running_machine &machine, bitmap_ind16 &bitmap, co
 
 			if (!depth)
 			{
-				if ((drawx < cliprect.max_x) && (drawx > cliprect.min_x) && (drawy < cliprect.max_y) && (drawy > cliprect.min_y))
+				if (cliprect.contains(drawx, drawy))
 				{
 					dat = (rom[(tileaddr*32)+count] & 0xf0)>>4;
 					if (dat!=15)
@@ -203,7 +203,7 @@ static void ttmjprd_draw_tile(running_machine &machine, bitmap_ind16 &bitmap, co
 					}
 				}
 				drawx++;
-				if ((drawx < cliprect.max_x) && (drawx > cliprect.min_x) && (drawy < cliprect.max_y) && (drawy > cliprect.min_y))
+				if (cliprect.contains(drawx, drawy))
 				{
 					dat = (rom[(tileaddr*32)+count] & 0x0f);
 					if (dat!=15)
@@ -218,7 +218,7 @@ static void ttmjprd_draw_tile(running_machine &machine, bitmap_ind16 &bitmap, co
 			}
 			else
 			{
-				if ((drawx < cliprect.max_x) && (drawx > cliprect.min_x) && (drawy < cliprect.max_y) && (drawy > cliprect.min_y))
+				if (cliprect.contains(drawx, drawy))
 				{
 					dat = (rom[(tileaddr*32)+count] & 0xff);
 					if (dat!=255)
@@ -430,7 +430,7 @@ static void tmmjprd_do_blit(running_machine &machine)
 					blt_source+=2;
 					writeoffs=blt_oddflg+blt_column;
 					state->m_tilemap_ram[blt_tilemp][writeoffs]=(state->m_tilemap_ram[blt_tilemp][writeoffs]&mask)|(blt_value<<shift);
-					tilemap_mark_tile_dirty(tmmjprd_tilemap[blt_tilemp],writeoffs);
+					tmmjprd_tilemap[blt_tilemp]->mark_tile_dirty(writeoffs);
 
 					blt_column++;
 					blt_column&=0x7f;
@@ -447,7 +447,7 @@ static void tmmjprd_do_blit(running_machine &machine)
 				{
 					writeoffs=blt_oddflg+blt_column;
 					state->m_tilemap_ram[blt_tilemp][writeoffs]=(state->m_tilemap_ram[blt_tilemp][writeoffs]&mask)|(blt_value<<shift);
-					tilemap_mark_tile_dirty(tmmjprd_tilemap[blt_tilemp],writeoffs);
+					tmmjprd_tilemap[blt_tilemp]->mark_tile_dirty(writeoffs);
 					blt_column++;
 					blt_column&=0x7f;
 				}

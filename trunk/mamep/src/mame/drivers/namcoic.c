@@ -32,15 +32,15 @@ void namco_tilemap_invalidate( void )
 	int i;
 	for( i=0; i<6; i++ )
 	{
-		tilemap_mark_all_tiles_dirty( mTilemapInfo.tmap[i] );
+		mTilemapInfo.tmap[i]->mark_all_dirty();
 	}
 } /* namco_tilemap_invalidate */
 
-INLINE void get_tile_info(running_machine &machine,tile_data *tileinfo,int tile_index,UINT16 *vram)
+INLINE void get_tile_info(running_machine &machine,tile_data &tileinfo,int tile_index,UINT16 *vram)
 {
 	int tile, mask;
 	mTilemapInfo.cb( machine, vram[tile_index], &tile, &mask );
-	tileinfo->mask_data = mTilemapInfo.maskBaseAddr+mask*8;
+	tileinfo.mask_data = mTilemapInfo.maskBaseAddr+mask*8;
 	SET_TILE_INFO(mTilemapInfo.gfxbank,tile,0,0);
 } /* get_tile_info */
 
@@ -76,15 +76,15 @@ namco_tilemap_init( running_machine &machine, int gfxbank, void *maskBaseAddr,
 		{
 			static const int adj[4] = { 4,2,1,0 };
 			int dx = 44+adj[i];
-			tilemap_set_scrolldx( mTilemapInfo.tmap[i], -dx, -(-384-dx) );
-			tilemap_set_scrolldy( mTilemapInfo.tmap[i], -24, 288 );
+			mTilemapInfo.tmap[i]->set_scrolldx( -dx, -(-384-dx) );
+			mTilemapInfo.tmap[i]->set_scrolldy( -24, 288 );
 		}
 
-		tilemap_set_scrolldx( mTilemapInfo.tmap[4], 0, 96 );
-		tilemap_set_scrolldy( mTilemapInfo.tmap[4], 0, 40 );
+		mTilemapInfo.tmap[4]->set_scrolldx( 0, 96 );
+		mTilemapInfo.tmap[4]->set_scrolldy( 0, 40 );
 
-		tilemap_set_scrolldx( mTilemapInfo.tmap[5], 0, 96 );
-		tilemap_set_scrolldy( mTilemapInfo.tmap[5], 0, 40 );
+		mTilemapInfo.tmap[5]->set_scrolldx( 0, 96 );
+		mTilemapInfo.tmap[5]->set_scrolldy( 0, 40 );
 
 } /* namco_tilemap_init */
 
@@ -98,8 +98,8 @@ namco_tilemap_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int pri )
 		if( (mTilemapInfo.control[0x20/2+i]&0xf) == pri )
 		{
 			int color = mTilemapInfo.control[0x30/2+i] & 0x07;
-			tilemap_set_palette_offset( mTilemapInfo.tmap[i], color*256 );
-			tilemap_draw(bitmap,cliprect,mTilemapInfo.tmap[i],0,0);
+			mTilemapInfo.tmap[i]->set_palette_offset( color*256 );
+			mTilemapInfo.tmap[i]->draw(bitmap,cliprect,0,0);
 		}
 	}
 } /* namco_tilemap_draw */
@@ -110,17 +110,17 @@ SetTilemapVideoram( int offset, UINT16 newword )
 	mTilemapInfo.videoram[offset] = newword;
 	if( offset<0x4000 )
 	{
-		tilemap_mark_tile_dirty(mTilemapInfo.tmap[offset>>12],offset&0xfff);
+		mTilemapInfo.tmap[offset>>12]->mark_tile_dirty(offset&0xfff);
 	}
 	else if( offset>=0x8010/2 && offset<0x87f0/2 )
 	{ /* fixed plane#1 */
 		offset-=0x8010/2;
-		tilemap_mark_tile_dirty( mTilemapInfo.tmap[4], offset );
+		mTilemapInfo.tmap[4]->mark_tile_dirty( offset );
 	}
 	else if( offset>=0x8810/2 && offset<0x8ff0/2 )
 	{ /* fixed plane#2 */
 		offset-=0x8810/2;
-		tilemap_mark_tile_dirty( mTilemapInfo.tmap[5], offset );
+		mTilemapInfo.tmap[5]->mark_tile_dirty( offset );
 	}
 } /* SetTilemapVideoram */
 
@@ -149,7 +149,7 @@ SetTilemapControl( int offset, UINT16 newword )
 			int i;
 			for( i=0; i<=5; i++ )
 			{
-				tilemap_set_flip(mTilemapInfo.tmap[i],attrs);
+				mTilemapInfo.tmap[i]->set_flip(attrs);
 			}
 		}
 	}
@@ -161,28 +161,28 @@ SetTilemapControl( int offset, UINT16 newword )
 	switch( offset )
 	{
 	case 0x02/2:
-		tilemap_set_scrollx( mTilemapInfo.tmap[0], 0, newword );
+		mTilemapInfo.tmap[0]->set_scrollx( 0, newword );
 		break;
 	case 0x06/2:
-		tilemap_set_scrolly( mTilemapInfo.tmap[0], 0, newword );
+		mTilemapInfo.tmap[0]->set_scrolly( 0, newword );
 		break;
 	case 0x0a/2:
-		tilemap_set_scrollx( mTilemapInfo.tmap[1], 0, newword );
+		mTilemapInfo.tmap[1]->set_scrollx( 0, newword );
 		break;
 	case 0x0e/2:
-		tilemap_set_scrolly( mTilemapInfo.tmap[1], 0, newword );
+		mTilemapInfo.tmap[1]->set_scrolly( 0, newword );
 		break;
 	case 0x12/2:
-		tilemap_set_scrollx( mTilemapInfo.tmap[2], 0, newword );
+		mTilemapInfo.tmap[2]->set_scrollx( 0, newword );
 		break;
 	case 0x16/2:
-		tilemap_set_scrolly( mTilemapInfo.tmap[2], 0, newword );
+		mTilemapInfo.tmap[2]->set_scrolly( 0, newword );
 		break;
 	case 0x1a/2:
-		tilemap_set_scrollx( mTilemapInfo.tmap[3], 0, newword );
+		mTilemapInfo.tmap[3]->set_scrollx( 0, newword );
 		break;
 	case 0x1e/2:
-		tilemap_set_scrolly( mTilemapInfo.tmap[3], 0, newword );
+		mTilemapInfo.tmap[3]->set_scrolly( 0, newword );
 		break;
 	}
 } /* SetTilemapControl */
@@ -584,15 +584,8 @@ namcos2_draw_sprites_metalhawk(running_machine &machine, bitmap_ind16 &bitmap, c
 			}
 
 			/* Set the clipping rect to mask off the other portion of the sprite */
-			rect.min_x=sx;
-			rect.max_x=sx+(sizex-1);
-			rect.min_y=sy;
-			rect.max_y=sy+(sizey-1);
-
-			if (cliprect.min_x > rect.min_x) rect.min_x = cliprect.min_x;
-			if (cliprect.max_x < rect.max_x) rect.max_x = cliprect.max_x;
-			if (cliprect.min_y > rect.min_y) rect.min_y = cliprect.min_y;
-			if (cliprect.max_y < rect.max_y) rect.max_y = cliprect.max_y;
+			rect.set(sx, sx+(sizex-1), sy, sy+(sizey-1));
+			rect &= cliprect;
 
 			if( !bBigSprite )
 			{
@@ -604,10 +597,7 @@ namcos2_draw_sprites_metalhawk(running_machine &machine, bitmap_ind16 &bitmap, c
 				sx -= (tile&1)?16:0;
 				sy -= (tile&2)?16:0;
 
-				rect.min_x=sx;
-				rect.max_x=sx+(sizex-1);
-				rect.min_y=sy;
-				rect.max_y=sy+(sizey-1);
+				rect.set(sx, sx+(sizex-1), sy, sy+(sizey-1));
 				rect.min_x += (tile&1)?16:0;
 				rect.max_x += (tile&1)?16:0;
 				rect.min_y += (tile&2)?16:0;
@@ -804,14 +794,8 @@ draw_spriteC355(running_machine &machine, _BitmapClass &bitmap, const rectangle 
 	hpos -= xscroll;
 	vpos -= yscroll;
 	pWinAttr = &spriteram16[0x2400/2+((palette>>8)&0xf)*4];
-	clip.min_x = pWinAttr[0] - xscroll;
-	clip.max_x = pWinAttr[1] - xscroll;
-	clip.min_y = pWinAttr[2] - yscroll;
-	clip.max_y = pWinAttr[3] - yscroll;
-	if( clip.min_x < cliprect.min_x ){ clip.min_x = cliprect.min_x; }
-	if( clip.min_y < cliprect.min_y ){ clip.min_y = cliprect.min_y; }
-	if( clip.max_x > cliprect.max_x ){ clip.max_x = cliprect.max_x; }
-	if( clip.max_y > cliprect.max_y ){ clip.max_y = cliprect.max_y; }
+	clip.set(pWinAttr[0] - xscroll, pWinAttr[1] - xscroll, pWinAttr[2] - yscroll, pWinAttr[3] - yscroll);
+	clip &= cliprect;
 	hpos&=0x7ff; if( hpos&0x400 ) hpos |= ~0x7ff; /* sign extend */
 	vpos&=0x7ff; if( vpos&0x400 ) vpos |= ~0x7ff; /* sign extend */
 
@@ -1055,7 +1039,7 @@ static const char * mRozMaskRegion;
  * Graphics ROM addressing varies across games.
  */
 static void
-roz_get_info( running_machine &machine, tile_data *tileinfo, int tile_index, int which)
+roz_get_info( running_machine &machine, tile_data &tileinfo, int tile_index, int which)
 {
 	UINT16 tile = rozvideoram16[tile_index];
 	int bank, mangle;
@@ -1116,7 +1100,7 @@ roz_get_info( running_machine &machine, tile_data *tileinfo, int tile_index, int
 		break;
 	}
 	SET_TILE_INFO( mRozGfxBank,mangle,0/*color*/,0/*flag*/ );
-	tileinfo->mask_data = 32*tile + (UINT8 *)machine.region( mRozMaskRegion )->base();
+	tileinfo.mask_data = 32*tile + (UINT8 *)machine.region( mRozMaskRegion )->base();
 } /* roz_get_info */
 
 static
@@ -1249,8 +1233,8 @@ DrawRozHelper(
 	    (namcos2_gametype != NAMCOFL_FINAL_LAP_R))
 	{
 		UINT32 size_mask = rozInfo->size-1;
-		bitmap_ind16 &srcbitmap = tilemap_get_pixmap( tmap );
-		bitmap_ind8 &flagsbitmap = tilemap_get_flagsmap( tmap );
+		bitmap_ind16 &srcbitmap = tmap->pixmap();
+		bitmap_ind8 &flagsbitmap = tmap->flagsmap();
 		UINT32 startx = rozInfo->startx + clip.min_x * rozInfo->incxx + clip.min_y * rozInfo->incyx;
 		UINT32 starty = rozInfo->starty + clip.min_x * rozInfo->incxy + clip.min_y * rozInfo->incyy;
 		int sx = clip.min_x;
@@ -1282,12 +1266,11 @@ DrawRozHelper(
 	else
 
 	{
-		tilemap_set_palette_offset( tmap, rozInfo->color );
+		tmap->set_palette_offset( rozInfo->color );
 
-		tilemap_draw_roz(
+		tmap->draw_roz(
 			bitmap,
 			clip,
-			tmap,
 			rozInfo->startx, rozInfo->starty,
 			rozInfo->incxx, rozInfo->incxy,
 			rozInfo->incyx, rozInfo->incyy,
@@ -1310,14 +1293,8 @@ DrawRozScanline( bitmap_ind16 &bitmap, int line, int which, int pri, const recta
 			UnpackRozParam( pSource, &rozInfo );
 			if( pri == rozInfo.priority )
 			{
-				clip.min_x = 0;
-				clip.max_x = bitmap.width()-1;
-				clip.min_y = clip.max_y = line;
-
-				if( clip.min_x < cliprect.min_x ){ clip.min_x = cliprect.min_x; }
-				if( clip.min_y < cliprect.min_y ){ clip.min_y = cliprect.min_y; }
-				if( clip.max_x > cliprect.max_x ){ clip.max_x = cliprect.max_x; }
-				if( clip.max_y > cliprect.max_y ){ clip.max_y = cliprect.max_y; }
+				clip.set(0, bitmap.width()-1, line, line);
+				clip &= cliprect;
 
 				DrawRozHelper( bitmap, mRozTilemap[which], clip, &rozInfo );
 			} /* priority */
@@ -1388,7 +1365,7 @@ WRITE16_HANDLER( namco_rozbank16_w )
 		int i;
 		for( i=0; i<ROZ_TILEMAP_COUNT; i++ )
 		{
-			tilemap_mark_all_tiles_dirty( mRozTilemap[i] );
+			mRozTilemap[i]->mark_all_dirty();
 		}
 	}
 } /* namco_rozbank16_w */
@@ -1401,7 +1378,7 @@ writerozvideo( int offset, UINT16 data )
 	rozvideoram16[offset] = data;
 	for( i=0; i<ROZ_TILEMAP_COUNT; i++ )
 	{
-		tilemap_mark_tile_dirty( mRozTilemap[i], offset );
+		mRozTilemap[i]->mark_tile_dirty( offset );
 	}
 } /* writerozvideo */
 
@@ -1586,7 +1563,7 @@ WRITE16_HANDLER( namco_road16_w )
 	COMBINE_DATA( &mpRoadRAM[offset] );
 	if( offset<0x10000/2 )
 	{
-		tilemap_mark_tile_dirty( mpRoadTilemap, offset );
+		mpRoadTilemap->mark_tile_dirty( offset );
 	}
 	else
 	{
@@ -1630,7 +1607,7 @@ namco_road_draw(running_machine &machine, bitmap_ind16 &bitmap, const rectangle 
 	unsigned yscroll;
 	int i;
 
-	bitmap_ind16 &SourceBitmap = tilemap_get_pixmap(mpRoadTilemap);
+	bitmap_ind16 &SourceBitmap = mpRoadTilemap->pixmap();
 	yscroll = mpRoadRAM[0x1fdfe/2];
 
 	for( i=cliprect.min_y; i<=cliprect.max_y; i++ )

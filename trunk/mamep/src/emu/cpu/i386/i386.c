@@ -49,9 +49,9 @@ static void i386_load_protected_mode_segment(i386_state *cpustate, I386_SREG *se
 		limit = cpustate->gdtr.limit;
 	}
 
-	if (limit == 0 || seg->selector + 7 > limit)
-		return;
 	entry = seg->selector & ~0x7;
+	if (limit == 0 || entry + 7 > limit)
+		return;
 
 	v1 = READ32(cpustate, base + entry );
 	v2 = READ32(cpustate, base + entry + 4 );
@@ -79,10 +79,9 @@ static void i386_load_call_gate(i386_state* cpustate, I386_CALL_GATE *gate)
 		limit = cpustate->gdtr.limit;
 	}
 
-	if (limit == 0 || gate->segment + 7 > limit)
-		return;
-
 	entry = gate->segment & ~0x7;
+	if (limit == 0 || entry + 7 > limit)
+		return;
 
 	v1 = READ32(cpustate, base + entry );
 	v2 = READ32(cpustate, base + entry + 4 );
@@ -337,12 +336,12 @@ static UINT32 GetNonTranslatedEA(i386_state *cpustate,UINT8 modrm)
 	return ea;
 }
 
-static UINT32 GetEA(i386_state *cpustate,UINT8 modrm)
+static UINT32 GetEA(i386_state *cpustate,UINT8 modrm, int rwn)
 {
 	UINT8 segment;
 	UINT32 ea;
 	modrm_to_EA(cpustate, modrm, &ea, &segment );
-	return i386_translate(cpustate, segment, ea );
+	return i386_translate(cpustate, segment, ea, rwn );
 }
 
 /* Check segment register for validity when changing privilege level after an RETF */
@@ -393,26 +392,29 @@ static void i386_check_sreg_validity(i386_state* cpustate, int reg)
 	}
 }
 
-#if 0
-// this will be more useful once expand-down segments are supported (the FM-Towns uses these for the stack)
-static void i386_stack_check(i386_state *cpustate, INT16 offset)
+static int i386_limit_check(i386_state *cpustate, int seg, UINT32 offset)
 {
 	if(PROTECTED_MODE && !V8086_MODE)
 	{
-		// Check that both current and eventual stack pointers are within the segment limits
-		if(REG32(ESP) > cpustate->sreg[SS].limit)
+		if((cpustate->sreg[seg].flags & 0x0018) == 0x0010 && cpustate->sreg[seg].flags & 0x0004) // if expand-down data segment
 		{
-			logerror("Stack (%08x): ESP is outside stack segment limit.\n",cpustate->pc);
-			FAULT(FAULT_SS,0);
+			if(offset <= cpustate->sreg[seg].limit)
+			{
+				logerror("Limit check at 0x%08x failed. Segment %04x, limit %08x, offset %08x (expand-down)\n",cpustate->pc,cpustate->sreg[seg].selector,cpustate->sreg[seg].limit,offset);
+				return 1;
+			}
 		}
-		if(REG32(ESP) + offset > cpustate->sreg[SS].limit)
+		else
 		{
-			logerror("Stack (%08x): ESP + offset (%i) is outside stack segment limit.\n",cpustate->pc,offset);
-			FAULT(FAULT_SS,0);
+			if(offset > cpustate->sreg[seg].limit)
+			{
+				logerror("Limit check at 0x%08x failed. Segment %04x, limit %08x, offset %08x\n",cpustate->pc,cpustate->sreg[seg].selector,cpustate->sreg[seg].limit,offset);
+				return 1;
+			}
 		}
 	}
+	return 0;
 }
-#endif
 
 static void i386_protected_mode_sreg_load(i386_state *cpustate, UINT16 selector, UINT8 reg)
 {
@@ -431,7 +433,7 @@ static void i386_protected_mode_sreg_load(i386_state *cpustate, UINT16 selector,
 		i386_load_protected_mode_segment(cpustate,&stack);
 		DPL = (stack.flags >> 5) & 0x03;
 
-		if((selector & ~0x0007) == 0)
+		if((selector & ~0x0003) == 0)
 		{
 			logerror("SReg Load (%08x): Selector is null.\n",cpustate->pc);
 			FAULT(FAULT_GP,0)
@@ -441,7 +443,7 @@ static void i386_protected_mode_sreg_load(i386_state *cpustate, UINT16 selector,
 			if((selector & ~0x0007) > cpustate->ldtr.limit)
 			{
 				logerror("SReg Load (%08x): Selector is out of LDT bounds.\n",cpustate->pc);
-				FAULT(FAULT_GP,selector)
+				FAULT(FAULT_GP,selector & ~0x03)
 			}
 		}
 		else  // GDT
@@ -449,35 +451,35 @@ static void i386_protected_mode_sreg_load(i386_state *cpustate, UINT16 selector,
 			if((selector & ~0x0007) > cpustate->gdtr.limit)
 			{
 				logerror("SReg Load (%08x): Selector is out of GDT bounds.\n",cpustate->pc);
-				FAULT(FAULT_GP,selector)
+				FAULT(FAULT_GP,selector & ~0x03)
 			}
 		}
 		if (RPL != CPL)
 		{
 			logerror("SReg Load (%08x): Selector RPL does not equal CPL.\n",cpustate->pc);
-			FAULT(FAULT_GP,selector)
+			FAULT(FAULT_GP,selector & ~0x03)
 		}
 		if(((stack.flags & 0x0018) != 0x10) && (stack.flags & 0x0002) != 0)
 		{
 			logerror("SReg Load (%08x): Segment is not a writable data segment.\n",cpustate->pc);
-			FAULT(FAULT_GP,selector)
+			FAULT(FAULT_GP,selector & ~0x03)
 		}
 		if(DPL != CPL)
 		{
 			logerror("SReg Load (%08x): Segment DPL does not equal CPL.\n",cpustate->pc);
-			FAULT(FAULT_GP,selector)
+			FAULT(FAULT_GP,selector & ~0x03)
 		}
 		if(!(stack.flags & 0x0080))
 		{
 			logerror("SReg Load (%08x): Segment is not present.\n",cpustate->pc);
-			FAULT(FAULT_SS,selector)
+			FAULT(FAULT_SS,selector & ~0x03)
 		}
 	}
 	if(reg == DS || reg == ES || reg == FS || reg == GS)
 	{
 		I386_SREG desc;
 
-		if((selector & ~0x0007) == 0)
+		if((selector & ~0x0003) == 0)
 		{
 			cpustate->sreg[reg].selector = selector;
 			i386_load_segment_descriptor(cpustate, reg );
@@ -495,7 +497,7 @@ static void i386_protected_mode_sreg_load(i386_state *cpustate, UINT16 selector,
 			if((selector & ~0x0007) > cpustate->ldtr.limit)
 			{
 				logerror("SReg Load (%08x): Selector is out of LDT bounds.\n",cpustate->pc);
-				FAULT(FAULT_GP,selector)
+				FAULT(FAULT_GP,selector & ~0x03)
 			}
 		}
 		else  // GDT
@@ -503,7 +505,7 @@ static void i386_protected_mode_sreg_load(i386_state *cpustate, UINT16 selector,
 			if((selector & ~0x0007) > cpustate->gdtr.limit)
 			{
 				logerror("SReg Load (%08x): Selector is out of GDT bounds.\n",cpustate->pc);
-				FAULT(FAULT_GP,selector)
+				FAULT(FAULT_GP,selector & ~0x03)
 			}
 		}
 		if((desc.flags & 0x0018) != 0x10)
@@ -511,7 +513,7 @@ static void i386_protected_mode_sreg_load(i386_state *cpustate, UINT16 selector,
 			if(((desc.flags & 0x0002) != 0) && ((desc.flags & 0x0018) != 0x18))
 			{
 				logerror("SReg Load (%08x): Segment is not a data segment or readable code segment.\n",cpustate->pc);
-				FAULT(FAULT_GP,selector)
+				FAULT(FAULT_GP,selector & ~0x03)
 			}
 		}
 		if(((desc.flags & 0x0018) == 0x10) || ((!(desc.flags & 0x0004)) && ((desc.flags & 0x0018) == 0x18)))
@@ -520,13 +522,13 @@ static void i386_protected_mode_sreg_load(i386_state *cpustate, UINT16 selector,
 			if((RPL > DPL) || (CPL > DPL))
 			{
 				logerror("SReg Load (%08x): Selector RPL or CPL is not less or equal to segment DPL.\n",cpustate->pc);
-				FAULT(FAULT_GP,selector)
+				FAULT(FAULT_GP,selector & ~0x03)
 			}
 		}
 		if(!(desc.flags & 0x0080))
 		{
 			logerror("SReg Load (%08x): Segment is not present.\n",cpustate->pc);
-			FAULT(FAULT_NP,selector)
+			FAULT(FAULT_NP,selector & ~0x03)
 		}
 	}
 
@@ -607,7 +609,7 @@ static void i386_trap(i386_state *cpustate,int irq, int irq_gate, int trap_level
 		}
 
 		/* segment privilege checks */
-		if(entry > cpustate->idtr.limit)
+		if(entry >= cpustate->idtr.limit)
 		{
 			logerror("IRQ (%08x): Vector %02xh is past IDT limit.\n",cpustate->pc,entry);
 			FAULT_EXP(FAULT_GP,entry+2)
@@ -615,7 +617,7 @@ static void i386_trap(i386_state *cpustate,int irq, int irq_gate, int trap_level
 		/* segment must be interrupt gate, trap gate, or task gate */
 		if(type != 0x05 && type != 0x06 && type != 0x07 && type != 0x0e && type != 0x0f)
 		{
-			logerror("IRQ (%08x): Vector segment %04x is not an interrupt, trap or task gate.\n",cpustate->pc,segment);
+			logerror("IRQ#%i (%08x): Vector segment %04x is not an interrupt, trap or task gate.\n",irq,cpustate->pc,segment);
 			FAULT_EXP(FAULT_GP,entry+2)
 		}
 
@@ -1060,7 +1062,7 @@ static void i286_task_switch(i386_state *cpustate, UINT16 selector, UINT8 nested
 	CHANGE_PC(cpustate,cpustate->eip);
 
 	cpustate->CPL = cpustate->sreg[CS].selector & 0x03;
-	printf("286 Task Switch from selector %04x to %04x\n",old_task,selector);
+//	printf("286 Task Switch from selector %04x to %04x\n",old_task,selector);
 }
 
 static void i386_task_switch(i386_state *cpustate, UINT16 selector, UINT8 nested)
@@ -1175,7 +1177,7 @@ static void i386_task_switch(i386_state *cpustate, UINT16 selector, UINT8 nested
 	CHANGE_PC(cpustate,cpustate->eip);
 
 	cpustate->CPL = cpustate->sreg[CS].selector & 0x03;
-	printf("386 Task Switch from selector %04x to %04x\n",old_task,selector);
+//	printf("386 Task Switch from selector %04x to %04x\n",old_task,selector);
 }
 
 static void i386_check_irq_line(i386_state *cpustate)
@@ -1198,7 +1200,7 @@ static void i386_protected_mode_jump(i386_state *cpustate, UINT16 seg, UINT32 of
 	UINT32 offset = off;
 
 	/* Check selector is not null */
-	if((segment & ~0x07) == 0)
+	if((segment & ~0x03) == 0)
 	{
 		logerror("JMP: Segment is null.\n");
 		FAULT(FAULT_GP,0)
@@ -1235,7 +1237,6 @@ static void i386_protected_mode_jump(i386_state *cpustate, UINT16 seg, UINT32 of
 		if((desc.flags & 0x0004) == 0)
 		{
 			/* non-conforming */
-			SetRPL = 1;
 			if(RPL > CPL)
 			{
 				logerror("JMP: RPL %i is less than CPL %i\n",RPL,CPL);
@@ -1256,6 +1257,7 @@ static void i386_protected_mode_jump(i386_state *cpustate, UINT16 seg, UINT32 of
 				FAULT(FAULT_GP,segment & 0xfffc)
 			}
 		}
+		SetRPL = 1;
 		if((desc.flags & 0x0080) == 0)
 		{
 			logerror("JMP: Segment is not present\n");
@@ -1474,25 +1476,25 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 	UINT32 offset = off;
 	int x;
 
-	if((selector & ~0x07) == 0)
+	if((selector & ~0x03) == 0)
 	{
 		logerror("CALL (%08x): Selector is null.\n",cpustate->pc);
 		FAULT(FAULT_GP,0)  // #GP(0)
 	}
 	if(selector & 0x04)
 	{
-		if((selector & ~0x07) > cpustate->ldtr.limit)
+		if((selector & ~0x07) >= cpustate->ldtr.limit)
 		{
 			logerror("CALL: Selector is past LDT limit.\n");
-			FAULT(FAULT_GP,selector & ~0x07)  // #GP(selector)
+			FAULT(FAULT_GP,selector & ~0x03)  // #GP(selector)
 		}
 	}
 	else
 	{
-		if((selector & ~0x07) > cpustate->gdtr.limit)
+		if((selector & ~0x07) >= cpustate->gdtr.limit)
 		{
 			logerror("CALL: Selector is past GDT limit.\n");
-			FAULT(FAULT_GP,selector & ~0x07)  // #GP(selector)
+			FAULT(FAULT_GP,selector & ~0x03)  // #GP(selector)
 		}
 	}
 
@@ -1511,7 +1513,7 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 			if(DPL > CPL)
 			{
 				logerror("CALL: Code segment DPL %i is greater than CPL %i\n",DPL,CPL);
-				FAULT(FAULT_GP,selector & ~0x07)  // #GP(selector)
+				FAULT(FAULT_GP,selector & ~0x03)  // #GP(selector)
 			}
 		}
 		else
@@ -1520,19 +1522,19 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 			if(RPL > CPL)
 			{
 				logerror("CALL: RPL %i is greater than CPL %i\n",RPL,CPL);
-				FAULT(FAULT_GP,selector & ~0x07)  // #GP(selector)
+				FAULT(FAULT_GP,selector & ~0x03)  // #GP(selector)
 			}
 			if(DPL != CPL)
 			{
 				logerror("CALL: Code segment DPL %i is not equal to CPL %i\n",DPL,CPL);
-				FAULT(FAULT_GP,selector & ~0x07)  // #GP(selector)
+				FAULT(FAULT_GP,selector & ~0x03)  // #GP(selector)
 			}
-			SetRPL = 1;
 		}
+		SetRPL = 1;
 		if((desc.flags & 0x0080) == 0)
 		{
 			logerror("CALL (%08x): Code segment is not present.\n",cpustate->pc);
-			FAULT(FAULT_NP,selector & ~0x07)  // #NP(selector)
+			FAULT(FAULT_NP,selector & ~0x03)  // #NP(selector)
 		}
 		if (operand32 != 0)  // if 32-bit
 		{
@@ -1562,7 +1564,7 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 		if(desc.flags & 0x0010)
 		{
 			logerror("CALL: Segment is a data segment.\n");
-			FAULT(FAULT_GP,desc.selector & ~0x07)  // #GP(selector)
+			FAULT(FAULT_GP,desc.selector & ~0x03)  // #GP(selector)
 		}
 		else
 		{
@@ -1574,22 +1576,22 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 				if(DPL < CPL)
 				{
 					logerror("CALL: TSS: DPL is less than CPL.\n");
-					FAULT(FAULT_TS,selector & ~0x07) // #TS(selector)
+					FAULT(FAULT_TS,selector & ~0x03) // #TS(selector)
 				}
 				if(DPL < RPL)
 				{
 					logerror("CALL: TSS: DPL is less than RPL.\n");
-					FAULT(FAULT_TS,selector & ~0x07) // #TS(selector)
+					FAULT(FAULT_TS,selector & ~0x03) // #TS(selector)
 				}
 				if(desc.flags & 0x0002)
 				{
 					logerror("CALL: TSS: TSS is busy.\n");
-					FAULT(FAULT_TS,selector & ~0x07) // #TS(selector)
+					FAULT(FAULT_TS,selector & ~0x03) // #TS(selector)
 				}
 				if(desc.flags & 0x0080)
 				{
 					logerror("CALL: TSS: Segment is not present.\n");
-					FAULT(FAULT_NP,selector & ~0x07) // #NP(selector)
+					FAULT(FAULT_NP,selector & ~0x03) // #NP(selector)
 				}
 				if(desc.flags & 0x08)
 					i386_task_switch(cpustate,desc.selector,1);
@@ -1611,17 +1613,17 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 				if(DPL < CPL)
 				{
 					logerror("CALL: Call gate DPL %i is less than CPL %i.\n",DPL,CPL);
-					FAULT(FAULT_GP,desc.selector & ~0x07)  // #GP(selector)
+					FAULT(FAULT_GP,desc.selector & ~0x03)  // #GP(selector)
 				}
 				if(DPL < RPL)
 				{
 					logerror("CALL: Call gate DPL %i is less than RPL %i.\n",DPL,RPL);
-					FAULT(FAULT_GP,desc.selector & ~0x07)  // #GP(selector)
+					FAULT(FAULT_GP,desc.selector & ~0x03)  // #GP(selector)
 				}
 				if(gate.present == 0)
 				{
 					logerror("CALL: Call gate is not present.\n");
-					FAULT(FAULT_NP,desc.selector & ~0x07)  // #GP(selector)
+					FAULT(FAULT_NP,desc.selector & ~0x03)  // #GP(selector)
 				}
 				desc.selector = gate.selector;
 				if((gate.selector & ~0x07) == 0)
@@ -1634,7 +1636,7 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 					if((desc.selector & ~0x07) > cpustate->ldtr.limit)
 					{
 						logerror("CALL: Call gate: Segment is past LDT limit\n");
-						FAULT(FAULT_GP,desc.selector & ~0x07)  // #GP(selector)
+						FAULT(FAULT_GP,desc.selector & ~0x03)  // #GP(selector)
 					}
 				}
 				else
@@ -1642,20 +1644,25 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 					if((desc.selector & ~0x07) > cpustate->gdtr.limit)
 					{
 						logerror("CALL: Call gate: Segment is past GDT limit\n");
-						FAULT(FAULT_GP,desc.selector & ~0x07)  // #GP(selector)
+						FAULT(FAULT_GP,desc.selector & ~0x03)  // #GP(selector)
 					}
 				}
 				i386_load_protected_mode_segment(cpustate,&desc);
 				if((desc.flags & 0x0018) != 0x18)
 				{
 					logerror("CALL: Call gate: Segment is not a code segment.\n");
-					FAULT(FAULT_GP,desc.selector & ~0x07)  // #GP(selector)
+					FAULT(FAULT_GP,desc.selector & ~0x03)  // #GP(selector)
 				}
 				DPL = ((desc.flags >> 5) & 0x03);
 				if(DPL > CPL)
 				{
 					logerror("CALL: Call gate: Segment DPL %i is greater than CPL %i.\n",DPL,CPL);
-					FAULT(FAULT_GP,desc.selector & ~0x07)  // #GP(selector)
+					FAULT(FAULT_GP,desc.selector & ~0x03)  // #GP(selector)
+				}
+				if((desc.flags & 0x0080) == 0)
+				{
+					logerror("CALL (%08x): Code segment is not present.\n",cpustate->pc);
+					FAULT(FAULT_NP,desc.selector & ~0x03)  // #NP(selector)
 				}
 				if(DPL < CPL && (desc.flags & 0x0004) == 0)
 				{
@@ -1708,7 +1715,7 @@ static void i386_protected_mode_call(i386_state *cpustate, UINT16 seg, UINT32 of
 					}
 					if((stack.flags & 0x0080) == 0)
 					{
-						logerror("CALL: Call gate: Stack segment is not a writable data segment\n");
+						logerror("CALL: Call gate: Stack segment is not present\n");
 						FAULT(FAULT_SS,stack.selector)  // #SS(SS selector)
 					}
 					if(operand32 != 0)
@@ -1906,24 +1913,23 @@ static void i386_protected_mode_retf(i386_state* cpustate, UINT8 count, UINT8 op
 	I386_SREG desc;
 	UINT8 CPL, RPL, DPL;
 
-
 	if(operand32 == 0)
 	{
-		newEIP = POP16(cpustate) & 0xffff;
-		newCS = POP16(cpustate) & 0xffff;
-		REG16(SP) += count;
-		newESP = POP16(cpustate) & 0xffff;
-		newSS = POP16(cpustate) & 0xffff;
-		REG16(SP) -= (8+count);  // re-adjust stack pointer
+		UINT32 ea = i386_translate(cpustate, SS, REG16(SP), 0);
+		newEIP = READ16(cpustate, ea) & 0xffff;
+		newCS = READ16(cpustate, ea+2) & 0xffff;
+		ea += count+4;
+		newESP = READ16(cpustate, ea) & 0xffff;
+		newSS = READ16(cpustate, ea+2) & 0xffff;
 	}
 	else
 	{
-		newEIP = POP32(cpustate);
-		newCS = POP32(cpustate) & 0xffff;
-		REG32(ESP) += count;
-		newESP = POP32(cpustate);
-		newSS = POP32(cpustate) & 0xffff;
-		REG32(ESP) -= (16+count);  // re-adjust stack pointer
+		UINT32 ea = i386_translate(cpustate, SS, REG32(ESP), 0);
+		newEIP = READ32(cpustate, ea);
+		newCS = READ32(cpustate, ea+4) & 0xffff;
+		ea += count+8;
+		newESP = READ32(cpustate, ea);
+		newSS = READ32(cpustate, ea+4) & 0xffff;
 	}
 
 	memset(&desc, 0, sizeof(desc));
@@ -1936,44 +1942,44 @@ static void i386_protected_mode_retf(i386_state* cpustate, UINT8 count, UINT8 op
 	if(RPL < CPL)
 	{
 		logerror("RETF (%08x): Return segment RPL is less than CPL.\n",cpustate->pc);
-		FAULT(FAULT_GP,newCS & ~0x07)
+		FAULT(FAULT_GP,newCS & ~0x03)
 	}
 
 	if(RPL == CPL)
 	{
 		/* same privilege level */
-		if((newCS & ~0x07) == 0)
+		if((newCS & ~0x03) == 0)
 		{
 			logerror("RETF: Return segment is null.\n");
 			FAULT(FAULT_GP,0)
 		}
 		if(newCS & 0x04)
 		{
-			if((newCS & ~0x07) > cpustate->ldtr.limit)
+			if((newCS & ~0x07) >= cpustate->ldtr.limit)
 			{
 				logerror("RETF: Return segment is past LDT limit.\n");
-				FAULT(FAULT_GP,newCS & ~0x07)
+				FAULT(FAULT_GP,newCS & ~0x03)
 			}
 		}
 		else
 		{
-			if((newCS & ~0x07) > cpustate->gdtr.limit)
+			if((newCS & ~0x07) >= cpustate->gdtr.limit)
 			{
 				logerror("RETF: Return segment is past GDT limit.\n");
-				FAULT(FAULT_GP,newCS & ~0x07)
+				FAULT(FAULT_GP,newCS & ~0x03)
 			}
 		}
 		if((desc.flags & 0x0018) != 0x0018)
 		{
 			logerror("RETF: Return segment is not a code segment.\n");
-			FAULT(FAULT_GP,newCS & ~0x07)
+			FAULT(FAULT_GP,newCS & ~0x03)
 		}
 		if(desc.flags & 0x0004)
 		{
 			if(DPL > CPL)
 			{
 				logerror("RETF: Conforming code segment DPL is greater than CPL.\n");
-				FAULT(FAULT_GP,newCS & ~0x07)
+				FAULT(FAULT_GP,newCS & ~0x03)
 			}
 		}
 		else
@@ -1981,13 +1987,13 @@ static void i386_protected_mode_retf(i386_state* cpustate, UINT8 count, UINT8 op
 			if(DPL != CPL)
 			{
 				logerror("RETF: Non-conforming code segment DPL does not equal CPL.\n");
-				FAULT(FAULT_GP,newCS & ~0x07)
+				FAULT(FAULT_GP,newCS & ~0x03)
 			}
 		}
 		if((desc.flags & 0x0080) == 0)
 		{
-			logerror("RETF: Code segment is not present.\n");
-			FAULT(FAULT_NP,newCS & ~0x07)
+			logerror("RETF (%08x): Code segment is not present.\n",cpustate->pc);
+			FAULT(FAULT_NP,newCS & ~0x03)
 		}
 		if(newEIP > desc.limit)
 		{
@@ -1996,7 +2002,8 @@ static void i386_protected_mode_retf(i386_state* cpustate, UINT8 count, UINT8 op
 		}
 		if(operand32 == 0)
 		{
-			if(REG16(SP) > (cpustate->sreg[SS].limit & 0xffff))
+			UINT32 offset = (STACK_32BIT ? REG32(ESP) : REG16(SP));
+			if(i386_limit_check(cpustate,SS,offset+count+3) != 0)
 			{
 				logerror("RETF (%08x): SP is past stack segment limit.\n",cpustate->pc);
 				FAULT(FAULT_SS,0)
@@ -2004,7 +2011,8 @@ static void i386_protected_mode_retf(i386_state* cpustate, UINT8 count, UINT8 op
 		}
 		else
 		{
-			if(REG32(ESP) > cpustate->sreg[SS].limit)
+			UINT32 offset = (STACK_32BIT ? REG32(ESP) : REG16(SP));
+			if(i386_limit_check(cpustate,SS,offset+count+7) != 0)
 			{
 				logerror("RETF: ESP is past stack segment limit.\n");
 				FAULT(FAULT_SS,0)
@@ -2020,7 +2028,8 @@ static void i386_protected_mode_retf(i386_state* cpustate, UINT8 count, UINT8 op
 		/* outer privilege level */
 		if(operand32 == 0)
 		{
-			if(REG16(SP)+8+count > cpustate->sreg[SS].limit)
+			UINT32 offset = (STACK_32BIT ? REG32(ESP) : REG16(SP));
+			if(i386_limit_check(cpustate,SS,offset+count+7) != 0)
 			{
 				logerror("RETF (%08x): SP is past stack segment limit.\n",cpustate->pc);
 				FAULT(FAULT_SS,0)
@@ -2028,7 +2037,8 @@ static void i386_protected_mode_retf(i386_state* cpustate, UINT8 count, UINT8 op
 		}
 		else
 		{
-			if(REG32(ESP)+16+count > cpustate->sreg[SS].limit)
+			UINT32 offset = (STACK_32BIT ? REG32(ESP) : REG16(SP));
+			if(i386_limit_check(cpustate,SS,offset+count+15) != 0)
 			{
 				logerror("RETF: ESP is past stack segment limit.\n");
 				FAULT(FAULT_SS,0)
@@ -2036,14 +2046,14 @@ static void i386_protected_mode_retf(i386_state* cpustate, UINT8 count, UINT8 op
 		}
 
 		/* Check CS selector and descriptor */
-		if((newCS & ~0x07) == 0)
+		if((newCS & ~0x03) == 0)
 		{
 			logerror("RETF: CS segment is null.\n");
 			FAULT(FAULT_GP,0)
 		}
 		if(newCS & 0x04)
 		{
-			if((newCS & ~0x07) > cpustate->ldtr.limit)
+			if((newCS & ~0x07) >= cpustate->ldtr.limit)
 			{
 				logerror("RETF: CS segment selector is past LDT limit.\n");
 				FAULT(FAULT_GP,newCS & ~0x07)
@@ -2051,7 +2061,7 @@ static void i386_protected_mode_retf(i386_state* cpustate, UINT8 count, UINT8 op
 		}
 		else
 		{
-			if((newCS & ~0x07) > cpustate->gdtr.limit)
+			if((newCS & ~0x07) >= cpustate->gdtr.limit)
 			{
 				logerror("RETF: CS segment selector is past GDT limit.\n");
 				FAULT(FAULT_GP,newCS & ~0x07)
@@ -2135,16 +2145,11 @@ static void i386_protected_mode_retf(i386_state* cpustate, UINT8 count, UINT8 op
 		}
 		cpustate->CPL = newCS & 0x03;
 
-		if(operand32 == 0)
-			REG16(SP) += (8+count);
-		else
-			REG32(ESP) += (16+count);
-
 		/* Load new SS:(E)SP */
 		if(operand32 == 0)
-			REG16(SP) = newESP & 0xffff;
+			REG16(SP) = (newESP+count) & 0xffff;
 		else
-			REG32(ESP) = newESP;
+			REG32(ESP) = newESP+count;
 		cpustate->sreg[SS].selector = newSS;
 		i386_load_segment_descriptor(cpustate, SS );
 
@@ -2176,21 +2181,21 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 	CPL = cpustate->CPL;
 	if(operand32 == 0)
 	{
-		newEIP = POP16(cpustate) & 0xffff;
-		newCS = POP16(cpustate) & 0xffff;
-		newflags = POP16(cpustate) & 0xffff;
-		newESP = POP16(cpustate) & 0xffff;
-		newSS = POP16(cpustate) & 0xffff;
-		REG16(SP) -= 10;
+		UINT32 ea = i386_translate(cpustate, SS, REG16(SP), 0);
+		newEIP = READ16(cpustate, ea) & 0xffff;
+		newCS = READ16(cpustate, ea+2) & 0xffff;
+		newflags = READ16(cpustate, ea+4) & 0xffff;
+		newESP = READ16(cpustate, ea+6) & 0xffff;
+		newSS = READ16(cpustate, ea+8) & 0xffff;
 	}
 	else
 	{
-		newEIP = POP32(cpustate);
-		newCS = POP32(cpustate) & 0xffff;
-		newflags = POP32(cpustate);
-		newESP = POP32(cpustate);
-		newSS = POP32(cpustate) & 0xffff;
-		REG32(ESP) -= 20;
+		UINT32 ea = i386_translate(cpustate, SS, REG32(ESP), 0);
+		newEIP = READ32(cpustate, ea);
+		newCS = READ32(cpustate, ea+4) & 0xffff;
+		newflags = READ32(cpustate, ea+8);
+		newESP = READ32(cpustate, ea+12);
+		newSS = READ32(cpustate, ea+16) & 0xffff;
 	}
 
 	if(V8086_MODE)
@@ -2232,7 +2237,7 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 			logerror("IRET: Task return: Back-linked TSS is not in GDT.\n");
 			FAULT(FAULT_TS,task & ~0x07)
 		}
-		if((task & ~0x07) > cpustate->gdtr.limit)
+		if((task & ~0x07) >= cpustate->gdtr.limit)
 		{
 			logerror("IRET: Task return: Back-linked TSS is not in GDT.\n");
 			FAULT(FAULT_TS,task & ~0x07)
@@ -2260,7 +2265,7 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 	{
 		if(newflags & 0x00020000) // if returning to virtual 8086 mode
 		{
-//			UINT8 SSRPL,SSDPL;
+//          UINT8 SSRPL,SSDPL;
 			memset(&desc, 0, sizeof(desc));
 			desc.selector = newCS;
 			i386_load_protected_mode_segment(cpustate,&desc);
@@ -2275,118 +2280,123 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 			/* Return to v86 mode */
 			logerror("IRET (%08x): Returning to Virtual 8086 mode.\n",cpustate->pc);
 			// Should these be done at this point?  The 386 programmers' reference is a bit confusing about this
-/*			if(RPL != 3)
-			{
-				logerror("IRET to V86 (%08x): Return CS RPL is not 3\n",cpustate->pc);
-				FAULT(FAULT_GP,newCS);
-			}
-			if(operand32 == 0)
-			{
-				if(REG16(SP)+36 > cpustate->sreg[SS].limit)
-				{
-					logerror("IRET to V86 (%08x): Stack does not have enough room left\n",cpustate->pc);
-					FAULT(FAULT_SS,0);
-				}
-			}
-			else
-			{
-				if(REG32(ESP)+36 > cpustate->sreg[SS].limit)
-				{
-					logerror("IRET to V86 (%08x): Stack does not have enough space left\n",cpustate->pc);
-					FAULT(FAULT_SS,0);
-				}
-			}
-			// code segment checks
-			if((newCS & ~0x07) == 0)
-			{
-				logerror("IRET to V86 (%08x): Return CS selector is null\n",cpustate->pc);
-				FAULT(FAULT_GP,newCS);
-			}
-			if(desc.flags & 0x04)
-			{  // LDT
-				if(newCS > cpustate->ldtr.limit)
-				{
-					logerror("IRET to V86 (%08x): Return CS selector is past LDT limit\n",cpustate->pc);
-					FAULT(FAULT_GP,newCS);
-				}
-			}
-			else
-			{  // GDT
-				if(newCS > cpustate->gdtr.limit)
-				{
-					logerror("IRET to V86 (%08x): Return CS selector is past GDT limit\n",cpustate->pc);
-					FAULT(FAULT_GP,newCS);
-				}
-			}
-			if((desc.flags & 0x18) != 0x18)
-			{
-				logerror("IRET to V86 (%08x): Return CS segment is not a code segment\n",cpustate->pc);
-				FAULT(FAULT_GP,newCS);
-			}
-			if(DPL != 3)
-			{
-				logerror("IRET to V86 (%08x): Return CS segment does not have a DPL of 3\n",cpustate->pc);
-				FAULT(FAULT_GP,newCS);
-			}
-			if(!(desc.flags & 0x0080))
-			{
-				logerror("IRET to V86 (%08x): Return CS segment is not present\n",cpustate->pc);
-				FAULT(FAULT_NP,newCS);
-			}
-			// Stack segment checks
-			if((newSS & ~0x07) == 0)
-			{
-				logerror("IRET to V86 (%08x): Return SS segment is null\n",cpustate->pc);
-				FAULT(FAULT_GP,newSS);
-			}
-			if(desc.flags & 0x04)
-			{  // LDT
-				if(newSS > cpustate->ldtr.limit)
-				{
-					logerror("IRET to V86 (%08x): Return SS selector is past LDT limit\n",cpustate->pc);
-					FAULT(FAULT_GP,newSS);
-				}
-			}
-			else
-			{  // GDT
-				if(newSS > cpustate->gdtr.limit)
-				{
-					logerror("IRET to V86 (%08x): Return SS selector is past GDT limit\n",cpustate->pc);
-					FAULT(FAULT_GP,newSS);
-				}
-			}
-			if(SSRPL != RPL)
-			{
-				logerror("IRET to V86 (%08x): Return SS selector RPL is not equal to CS selector RPL\n",cpustate->pc);
-				FAULT(FAULT_GP,newSS);
-			}
-			if(((stack.flags & 0x0018) != 0x10) && (!(stack.flags & 0x02)))
-			{
-				logerror("IRET to V86 (%08x): Return SS segment is not a writable data segment\n",cpustate->pc);
-				FAULT(FAULT_GP,newSS);
-			}
-			if(SSDPL != RPL)
-			{
-				logerror("IRET to V86 (%08x): Return SS segment DPL is not equal to CS selector RPL\n",cpustate->pc);
-				FAULT(FAULT_GP,newSS);
-			}
-			if(!(stack.flags & 0x0080))
-			{
-				logerror("IRET to V86 (%08x): Return SS segment is not present\n",cpustate->pc);
-				FAULT(FAULT_NP,newSS);
-			}
+/*          if(RPL != 3)
+            {
+                logerror("IRET to V86 (%08x): Return CS RPL is not 3\n",cpustate->pc);
+                FAULT(FAULT_GP,newCS);
+            }
+            if(operand32 == 0)
+            {
+                if(REG16(SP)+36 > cpustate->sreg[SS].limit)
+                {
+                    logerror("IRET to V86 (%08x): Stack does not have enough room left\n",cpustate->pc);
+                    FAULT(FAULT_SS,0);
+                }
+            }
+            else
+            {
+                if(REG32(ESP)+36 > cpustate->sreg[SS].limit)
+                {
+                    logerror("IRET to V86 (%08x): Stack does not have enough space left\n",cpustate->pc);
+                    FAULT(FAULT_SS,0);
+                }
+            }
+            // code segment checks
+            if((newCS & ~0x07) == 0)
+            {
+                logerror("IRET to V86 (%08x): Return CS selector is null\n",cpustate->pc);
+                FAULT(FAULT_GP,newCS);
+            }
+            if(desc.flags & 0x04)
+            {  // LDT
+                if(newCS > cpustate->ldtr.limit)
+                {
+                    logerror("IRET to V86 (%08x): Return CS selector is past LDT limit\n",cpustate->pc);
+                    FAULT(FAULT_GP,newCS);
+                }
+            }
+            else
+            {  // GDT
+                if(newCS > cpustate->gdtr.limit)
+                {
+                    logerror("IRET to V86 (%08x): Return CS selector is past GDT limit\n",cpustate->pc);
+                    FAULT(FAULT_GP,newCS);
+                }
+            }
+            if((desc.flags & 0x18) != 0x18)
+            {
+                logerror("IRET to V86 (%08x): Return CS segment is not a code segment\n",cpustate->pc);
+                FAULT(FAULT_GP,newCS);
+            }
+            if(DPL != 3)
+            {
+                logerror("IRET to V86 (%08x): Return CS segment does not have a DPL of 3\n",cpustate->pc);
+                FAULT(FAULT_GP,newCS);
+            }
+            if(!(desc.flags & 0x0080))
+            {
+                logerror("IRET to V86 (%08x): Return CS segment is not present\n",cpustate->pc);
+                FAULT(FAULT_NP,newCS);
+            }
+            // Stack segment checks
+            if((newSS & ~0x07) == 0)
+            {
+                logerror("IRET to V86 (%08x): Return SS segment is null\n",cpustate->pc);
+                FAULT(FAULT_GP,newSS);
+            }
+            if(desc.flags & 0x04)
+            {  // LDT
+                if(newSS > cpustate->ldtr.limit)
+                {
+                    logerror("IRET to V86 (%08x): Return SS selector is past LDT limit\n",cpustate->pc);
+                    FAULT(FAULT_GP,newSS);
+                }
+            }
+            else
+            {  // GDT
+                if(newSS > cpustate->gdtr.limit)
+                {
+                    logerror("IRET to V86 (%08x): Return SS selector is past GDT limit\n",cpustate->pc);
+                    FAULT(FAULT_GP,newSS);
+                }
+            }
+            if(SSRPL != RPL)
+            {
+                logerror("IRET to V86 (%08x): Return SS selector RPL is not equal to CS selector RPL\n",cpustate->pc);
+                FAULT(FAULT_GP,newSS);
+            }
+            if(((stack.flags & 0x0018) != 0x10) && (!(stack.flags & 0x02)))
+            {
+                logerror("IRET to V86 (%08x): Return SS segment is not a writable data segment\n",cpustate->pc);
+                FAULT(FAULT_GP,newSS);
+            }
+            if(SSDPL != RPL)
+            {
+                logerror("IRET to V86 (%08x): Return SS segment DPL is not equal to CS selector RPL\n",cpustate->pc);
+                FAULT(FAULT_GP,newSS);
+            }
+            if(!(stack.flags & 0x0080))
+            {
+                logerror("IRET to V86 (%08x): Return SS segment is not present\n",cpustate->pc);
+                FAULT(FAULT_NP,newSS);
+            }
 
-			if(newEIP > desc.limit)
+            if(newEIP > desc.limit)
+            {
+                logerror("IRET to V86 (%08x): New EIP is past CS segment limit\n",cpustate->pc);
+                FAULT(FAULT_GP,0);
+            }
+            */
+			if(CPL != 0)
 			{
-				logerror("IRET to V86 (%08x): New EIP is past CS segment limit\n",cpustate->pc);
-				FAULT(FAULT_GP,0);
+				UINT32 oldflags = get_flags(cpustate);
+				newflags = (newflags & ~0x00003000) | (oldflags & 0x00003000);
 			}
-			*/
 			set_flags(cpustate,newflags);
 			cpustate->eip = POP32(cpustate) & 0xffff;  // high 16 bits are ignored
 			cpustate->sreg[CS].selector = POP32(cpustate) & 0xffff;
 			POP32(cpustate);  // already set flags
-//			if(RPL > CPL)
+//          if(RPL > CPL)
 			{
 				newESP = POP32(cpustate);
 				newSS = POP32(cpustate) & 0xffff;
@@ -2408,7 +2418,8 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 		{
 			if(operand32 == 0)
 			{
-				if(REG16(SP)+4 > cpustate->sreg[SS].limit)
+				UINT32 offset = (STACK_32BIT ? REG32(ESP) : REG16(SP));
+				if(i386_limit_check(cpustate,SS,offset+3) != 0)
 				{
 					logerror("IRET: Data on stack is past SS limit.\n");
 					FAULT(FAULT_SS,0)
@@ -2416,7 +2427,8 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 			}
 			else
 			{
-				if(REG32(ESP)+6 > cpustate->sreg[SS].limit)
+				UINT32 offset = (STACK_32BIT ? REG32(ESP) : REG16(SP));
+				if(i386_limit_check(cpustate,SS,offset+7) != 0)
 				{
 					logerror("IRET: Data on stack is past SS limit.\n");
 					FAULT(FAULT_SS,0)
@@ -2433,28 +2445,30 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 				/* return to same privilege level */
 				if(operand32 == 0)
 				{
-					if(REG16(SP)+6 > cpustate->sreg[SS].limit)
+					UINT32 offset = (STACK_32BIT ? REG32(ESP) : REG16(SP));
+					if(i386_limit_check(cpustate,SS,offset+5) != 0)
 					{
-						logerror("IRET: Data on stack is past SS limit.\n");
+						logerror("IRET (%08x): Data on stack is past SS limit.\n",cpustate->pc);
 						FAULT(FAULT_SS,0)
 					}
 				}
 				else
 				{
-					if(REG32(ESP)+12 > cpustate->sreg[SS].limit)
+					UINT32 offset = (STACK_32BIT ? REG32(ESP) : REG16(SP));
+					if(i386_limit_check(cpustate,SS,offset+11) != 0)
 					{
-						logerror("IRET: Data on stack is past SS limit.\n");
+						logerror("IRET (%08x): Data on stack is past SS limit.\n",cpustate->pc);
 						FAULT(FAULT_SS,0)
 					}
 				}
-				if((newCS & ~0x07) == 0)
+				if((newCS & ~0x03) == 0)
 				{
 					logerror("IRET: Return CS selector is null.\n");
 					FAULT(FAULT_GP,0)
 				}
 				if(newCS & 0x04)
 				{
-					if((newCS & ~0x07) > cpustate->ldtr.limit)
+					if((newCS & ~0x07) >= cpustate->ldtr.limit)
 					{
 						logerror("IRET: Return CS selector (%04x) is past LDT limit.\n",newCS);
 						FAULT(FAULT_GP,newCS & ~0x07)
@@ -2462,7 +2476,7 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 				}
 				else
 				{
-					if((newCS & ~0x07) > cpustate->gdtr.limit)
+					if((newCS & ~0x07) >= cpustate->gdtr.limit)
 					{
 						logerror("IRET: Return CS selector is past GDT limit.\n");
 						FAULT(FAULT_GP,newCS & ~0x07)
@@ -2502,7 +2516,14 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 				if(newEIP > desc.limit)
 				{
 					logerror("IRET: Return EIP is past return CS limit.\n");
-					FAULT(FAULT_GP,0)				}
+					FAULT(FAULT_GP,0)
+				}
+
+				if(CPL != 0)
+				{
+					UINT32 oldflags = get_flags(cpustate);
+					newflags = (newflags & ~0x00003000) | (oldflags & 0x00003000);
+				}
 
 				if(operand32 == 0)
 				{
@@ -2533,28 +2554,31 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 				i386_load_protected_mode_segment(cpustate,&stack);
 				if(operand32 == 0)
 				{
-					if(REG16(SP)+10 > cpustate->sreg[SS].limit)
+					UINT32 offset = (STACK_32BIT ? REG32(ESP) : REG16(SP));
+					if(i386_limit_check(cpustate,SS,offset+9) != 0)
 					{
 						logerror("IRET: SP is past SS limit.\n");
-						FAULT(FAULT_SS,0)					}
+						FAULT(FAULT_SS,0)
+					}
 				}
 				else
 				{
-					if(REG32(ESP)+20 > cpustate->sreg[SS].limit)
+					UINT32 offset = (STACK_32BIT ? REG32(ESP) : REG16(SP));
+					if(i386_limit_check(cpustate,SS,offset+19) != 0)
 					{
 						logerror("IRET: ESP is past SS limit.\n");
 						FAULT(FAULT_SS,0)
 					}
 				}
 				/* Check CS selector and descriptor */
-				if((newCS & ~0x07) == 0)
+				if((newCS & ~0x03) == 0)
 				{
 					logerror("IRET: Return CS selector is null.\n");
 					FAULT(FAULT_GP,0)
 				}
 				if(newCS & 0x04)
 				{
-					if((newCS & ~0x07) > cpustate->ldtr.limit)
+					if((newCS & ~0x07) >= cpustate->ldtr.limit)
 					{
 						logerror("IRET: Return CS selector is past LDT limit.\n");
 						FAULT(FAULT_GP,newCS & ~0x07);
@@ -2562,7 +2586,7 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 				}
 				else
 				{
-					if((newCS & ~0x07) > cpustate->gdtr.limit)
+					if((newCS & ~0x07) >= cpustate->gdtr.limit)
 					{
 						logerror("IRET: Return CS selector is past GDT limit.\n");
 						FAULT(FAULT_GP,newCS & ~0x07);
@@ -2597,14 +2621,14 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 
 				/* Check SS selector and descriptor */
 				DPL = (stack.flags >> 5) & 0x03;
-				if((newSS & ~0x07) == 0)
+				if((newSS & ~0x03) == 0)
 				{
 					logerror("IRET: Return SS selector is null.\n");
 					FAULT(FAULT_GP,0)
 				}
 				if(newSS & 0x04)
 				{
-					if((newSS & ~0x07) > cpustate->ldtr.limit)
+					if((newSS & ~0x07) >= cpustate->ldtr.limit)
 					{
 						logerror("IRET: Return SS selector is past LDT limit.\n");
 						FAULT(FAULT_GP,newSS & ~0x07);
@@ -2612,7 +2636,7 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 				}
 				else
 				{
-					if((newSS & ~0x07) > cpustate->gdtr.limit)
+					if((newSS & ~0x07) >= cpustate->gdtr.limit)
 					{
 						logerror("IRET: Return SS selector is past GDT limit.\n");
 						FAULT(FAULT_GP,newSS & ~0x07);
@@ -2649,10 +2673,17 @@ static void i386_protected_mode_iret(i386_state* cpustate, int operand32)
 					FAULT(FAULT_GP,0)
 				}
 
-//				if(operand32 == 0)
-//					REG16(SP) += 10;
-//				else
-//					REG32(ESP) += 20;
+//              if(operand32 == 0)
+//                  REG16(SP) += 10;
+//              else
+//                  REG32(ESP) += 20;
+
+				// IOPL can only change if CPL is zero
+				if(CPL != 0)
+				{
+					UINT32 oldflags = get_flags(cpustate);
+					newflags = (newflags & ~0x00003000) | (oldflags & 0x00003000);
+				}
 
 				if(operand32 == 0)
 				{
@@ -3095,7 +3126,7 @@ static CPU_TRANSLATE( i386 )
 	if (space == AS_PROGRAM)
 	{
 		if (cpustate->cr[0] & 0x80000000)
-			result = translate_address(cpustate,0,address,&error);
+			result = translate_address(cpustate,-1,address,&error);
 		*address &= cpustate->a20_mask;
 	}
 	return result;
@@ -3468,6 +3499,8 @@ static CPU_RESET( i486 )
 	cpustate->eflags_mask = 0x00077fd7;
 	cpustate->eip = 0xfff0;
 
+	x87_reset(cpustate);
+
 	// [11:8] Family
 	// [ 7:4] Model
 	// [ 3:0] Stepping ID
@@ -3476,6 +3509,7 @@ static CPU_RESET( i486 )
 	REG32(EDX) = (4 << 8) | (0 << 4) | (3);
 
 	build_opcode_table(cpustate, OP_I386 | OP_FPU | OP_I486);
+	build_x87_opcode_table(get_safe_token(device));
 	cpustate->cycle_table_rm = cycle_table_rm[CPU_CYCLES_I486];
 	cpustate->cycle_table_pm = cycle_table_pm[CPU_CYCLES_I486];
 
@@ -3491,18 +3525,11 @@ static CPU_SET_INFO( i486 )
 	i386_state *cpustate = get_safe_token(device);
 	switch (state)
 	{
-		case CPUINFO_INT_REGISTER + X87_CTRL:			cpustate->fpu_control_word = info->i;			break;
-		case CPUINFO_INT_REGISTER + X87_STATUS:			cpustate->fpu_status_word = info->i;			break;
-		case CPUINFO_INT_REGISTER + X87_ST0:			ST(0).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST1:			ST(1).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST2:			ST(2).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST3:			ST(3).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST4:			ST(4).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST5:			ST(5).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST6:			ST(6).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST7:			ST(7).f = info->i;						break;
+		case CPUINFO_INT_REGISTER + X87_CTRL:			cpustate->x87_cw = info->i;		break;
+		case CPUINFO_INT_REGISTER + X87_STATUS:			cpustate->x87_sw = info->i;		break;
+		case CPUINFO_INT_REGISTER + X87_TAG:			cpustate->x87_tw = info->i;		break;
 
-		default:										CPU_SET_INFO_CALL(i386);				break;
+		default:										CPU_SET_INFO_CALL(i386);		break;
 	}
 }
 
@@ -3516,29 +3543,23 @@ CPU_GET_INFO( i486 )
 		case CPUINFO_FCT_RESET:		    				info->reset = CPU_RESET_NAME(i486);		break;
 		case CPUINFO_FCT_EXIT:		    				info->exit = CPU_EXIT_NAME(i486);		break;
 
-		case CPUINFO_INT_REGISTER + X87_CTRL:			info->i = cpustate->fpu_control_word;			break;
-		case CPUINFO_INT_REGISTER + X87_STATUS:			info->i = cpustate->fpu_status_word;			break;
-		case CPUINFO_INT_REGISTER + X87_ST0:			info->i = ST(0).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST1:			info->i = ST(1).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST2:			info->i = ST(2).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST3:			info->i = ST(3).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST4:			info->i = ST(4).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST5:			info->i = ST(5).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST6:			info->i = ST(6).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST7:			info->i = ST(7).f;						break;
+		case CPUINFO_INT_REGISTER + X87_CTRL:			info->i = cpustate->x87_cw;				break;
+		case CPUINFO_INT_REGISTER + X87_STATUS:			info->i = cpustate->x87_sw;				break;
+		case CPUINFO_INT_REGISTER + X87_TAG:			info->i = cpustate->x87_tw;				break;
 
 		case DEVINFO_STR_NAME:							strcpy(info->s, "I486");				break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Intel 486");			break;
-		case CPUINFO_STR_REGISTER + X87_CTRL:			sprintf(info->s, "FPU_CW: %04X", cpustate->fpu_control_word); break;
-		case CPUINFO_STR_REGISTER + X87_STATUS:			sprintf(info->s, "FPU_SW: %04X", cpustate->fpu_status_word); break;
-		case CPUINFO_STR_REGISTER + X87_ST0:			sprintf(info->s, "ST0: %f", ST(0).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST1:			sprintf(info->s, "ST1: %f", ST(1).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST2:			sprintf(info->s, "ST2: %f", ST(2).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST3:			sprintf(info->s, "ST3: %f", ST(3).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST4:			sprintf(info->s, "ST4: %f", ST(4).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST5:			sprintf(info->s, "ST5: %f", ST(5).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST6:			sprintf(info->s, "ST6: %f", ST(6).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST7:			sprintf(info->s, "ST7: %f", ST(7).f);	break;
+		case DEVINFO_STR_FAMILY:						strcpy(info->s, "Intel 486");			break;
+		case CPUINFO_STR_REGISTER + X87_CTRL:			sprintf(info->s, "x87_CW: %04X", cpustate->x87_cw); break;
+		case CPUINFO_STR_REGISTER + X87_STATUS:			sprintf(info->s, "x87_SW: %04X", cpustate->x87_sw); break;
+		case CPUINFO_STR_REGISTER + X87_TAG:			sprintf(info->s, "x87_TAG:%04X", cpustate->x87_tw); break;
+		case CPUINFO_STR_REGISTER + X87_ST0:			sprintf(info->s, "ST0: %f", fx80_to_double(ST(0)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST1:			sprintf(info->s, "ST1: %f", fx80_to_double(ST(1)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST2:			sprintf(info->s, "ST2: %f", fx80_to_double(ST(2)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST3:			sprintf(info->s, "ST3: %f", fx80_to_double(ST(3)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST4:			sprintf(info->s, "ST4: %f", fx80_to_double(ST(4)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST5:			sprintf(info->s, "ST5: %f", fx80_to_double(ST(5)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST6:			sprintf(info->s, "ST6: %f", fx80_to_double(ST(6)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST7:			sprintf(info->s, "ST7: %f", fx80_to_double(ST(7)));	break;
 
 		default:										CPU_GET_INFO_CALL(i386);				break;
 	}
@@ -3585,6 +3606,8 @@ static CPU_RESET( pentium )
 	cpustate->eflags_mask = 0x003f7fd7;
 	cpustate->eip = 0xfff0;
 
+	x87_reset(cpustate);
+
 	// [11:8] Family
 	// [ 7:4] Model
 	// [ 3:0] Stepping ID
@@ -3593,6 +3616,7 @@ static CPU_RESET( pentium )
 	REG32(EDX) = (5 << 8) | (2 << 4) | (5);
 
 	build_opcode_table(cpustate, OP_I386 | OP_FPU | OP_I486 | OP_PENTIUM);
+	build_x87_opcode_table(get_safe_token(device));
 	cpustate->cycle_table_rm = cycle_table_rm[CPU_CYCLES_PENTIUM];
 	cpustate->cycle_table_pm = cycle_table_pm[CPU_CYCLES_PENTIUM];
 
@@ -3623,18 +3647,11 @@ static CPU_SET_INFO( pentium )
 	i386_state *cpustate = get_safe_token(device);
 	switch (state)
 	{
-		case CPUINFO_INT_REGISTER + X87_CTRL:			cpustate->fpu_control_word = info->i;			break;
-		case CPUINFO_INT_REGISTER + X87_STATUS:			cpustate->fpu_status_word = info->i;			break;
-		case CPUINFO_INT_REGISTER + X87_ST0:			ST(0).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST1:			ST(1).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST2:			ST(2).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST3:			ST(3).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST4:			ST(4).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST5:			ST(5).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST6:			ST(6).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST7:			ST(7).f = info->i;						break;
+		case CPUINFO_INT_REGISTER + X87_CTRL:			cpustate->x87_cw = info->i;		break;
+		case CPUINFO_INT_REGISTER + X87_STATUS:			cpustate->x87_sw = info->i;		break;
+		case CPUINFO_INT_REGISTER + X87_TAG:			cpustate->x87_tw = info->i;		break;
 
-		default:										CPU_SET_INFO_CALL(i386);				break;
+		default:										CPU_SET_INFO_CALL(i386);		break;
 	}
 }
 
@@ -3648,29 +3665,23 @@ CPU_GET_INFO( pentium )
 		case CPUINFO_FCT_RESET:		    				info->reset = CPU_RESET_NAME(pentium);	break;
 		case CPUINFO_FCT_EXIT:		    				info->exit = CPU_EXIT_NAME(pentium);	break;
 
-		case CPUINFO_INT_REGISTER + X87_CTRL:			info->i = cpustate->fpu_control_word;			break;
-		case CPUINFO_INT_REGISTER + X87_STATUS:			info->i = cpustate->fpu_status_word;			break;
-		case CPUINFO_INT_REGISTER + X87_ST0:			info->i = ST(0).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST1:			info->i = ST(1).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST2:			info->i = ST(2).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST3:			info->i = ST(3).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST4:			info->i = ST(4).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST5:			info->i = ST(5).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST6:			info->i = ST(6).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST7:			info->i = ST(7).f;						break;
+		case CPUINFO_INT_REGISTER + X87_CTRL:			info->i = cpustate->x87_cw;				break;
+		case CPUINFO_INT_REGISTER + X87_STATUS:			info->i = cpustate->x87_sw;				break;
+		case CPUINFO_INT_REGISTER + X87_TAG:			info->i = cpustate->x87_tw;				break;
 
 		case DEVINFO_STR_NAME:							strcpy(info->s, "PENTIUM");				break;
 		case DEVINFO_STR_FAMILY:						strcpy(info->s, "Intel Pentium");		break;
-		case CPUINFO_STR_REGISTER + X87_CTRL:			sprintf(info->s, "FPU_CW: %04X", cpustate->fpu_control_word); break;
-		case CPUINFO_STR_REGISTER + X87_STATUS:			sprintf(info->s, "FPU_SW: %04X", cpustate->fpu_status_word); break;
-		case CPUINFO_STR_REGISTER + X87_ST0:			sprintf(info->s, "ST0: %f", ST(0).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST1:			sprintf(info->s, "ST1: %f", ST(1).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST2:			sprintf(info->s, "ST2: %f", ST(2).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST3:			sprintf(info->s, "ST3: %f", ST(3).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST4:			sprintf(info->s, "ST4: %f", ST(4).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST5:			sprintf(info->s, "ST5: %f", ST(5).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST6:			sprintf(info->s, "ST6: %f", ST(6).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST7:			sprintf(info->s, "ST7: %f", ST(7).f);	break;
+		case CPUINFO_STR_REGISTER + X87_CTRL:			sprintf(info->s, "x87_CW: %04X", cpustate->x87_cw); break;
+		case CPUINFO_STR_REGISTER + X87_STATUS:			sprintf(info->s, "x87_SW: %04X", cpustate->x87_sw); break;
+		case CPUINFO_STR_REGISTER + X87_TAG:			sprintf(info->s, "x87_TAG:%04X", cpustate->x87_tw); break;
+		case CPUINFO_STR_REGISTER + X87_ST0:			sprintf(info->s, "ST0: %f", fx80_to_double(ST(0)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST1:			sprintf(info->s, "ST1: %f", fx80_to_double(ST(1)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST2:			sprintf(info->s, "ST2: %f", fx80_to_double(ST(2)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST3:			sprintf(info->s, "ST3: %f", fx80_to_double(ST(3)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST4:			sprintf(info->s, "ST4: %f", fx80_to_double(ST(4)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST5:			sprintf(info->s, "ST5: %f", fx80_to_double(ST(5)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST6:			sprintf(info->s, "ST6: %f", fx80_to_double(ST(6)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST7:			sprintf(info->s, "ST7: %f", fx80_to_double(ST(7)));	break;
 
 		default:										CPU_GET_INFO_CALL(i386);				break;
 	}
@@ -3717,6 +3728,8 @@ static CPU_RESET( mediagx )
 	cpustate->eflags_mask = 0x00277fd7; /* TODO: is this correct? */
 	cpustate->eip = 0xfff0;
 
+	x87_reset(cpustate);
+
 	// [11:8] Family
 	// [ 7:4] Model
 	// [ 3:0] Stepping ID
@@ -3724,6 +3737,7 @@ static CPU_RESET( mediagx )
 	REG32(EAX) = 0;
 	REG32(EDX) = (4 << 8) | (4 << 4) | (1);	/* TODO: is this correct? */
 
+	build_x87_opcode_table(get_safe_token(device));
 	build_opcode_table(cpustate, OP_I386 | OP_FPU | OP_I486 | OP_PENTIUM | OP_CYRIX);
 	cpustate->cycle_table_rm = cycle_table_rm[CPU_CYCLES_MEDIAGX];
 	cpustate->cycle_table_pm = cycle_table_pm[CPU_CYCLES_MEDIAGX];
@@ -3750,18 +3764,10 @@ static CPU_SET_INFO( mediagx )
 	i386_state *cpustate = get_safe_token(device);
 	switch (state)
 	{
-		case CPUINFO_INT_REGISTER + X87_CTRL:			cpustate->fpu_control_word = info->i;			break;
-		case CPUINFO_INT_REGISTER + X87_STATUS:			cpustate->fpu_status_word = info->i;			break;
-		case CPUINFO_INT_REGISTER + X87_ST0:			ST(0).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST1:			ST(1).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST2:			ST(2).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST3:			ST(3).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST4:			ST(4).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST5:			ST(5).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST6:			ST(6).f = info->i;						break;
-		case CPUINFO_INT_REGISTER + X87_ST7:			ST(7).f = info->i;						break;
+		case CPUINFO_INT_REGISTER + X87_CTRL:			cpustate->x87_cw = info->i;			break;
+		case CPUINFO_INT_REGISTER + X87_STATUS:			cpustate->x87_sw = info->i;			break;
 
-		default:										CPU_SET_INFO_CALL(i386);				break;
+		default:										CPU_SET_INFO_CALL(i386);			break;
 	}
 }
 
@@ -3775,29 +3781,23 @@ CPU_GET_INFO( mediagx )
 		case CPUINFO_FCT_RESET:		    				info->reset = CPU_RESET_NAME(mediagx);	break;
 		case CPUINFO_FCT_EXIT:		    				info->exit = CPU_EXIT_NAME(mediagx);	break;
 
-		case CPUINFO_INT_REGISTER + X87_CTRL:			info->i = cpustate->fpu_control_word;			break;
-		case CPUINFO_INT_REGISTER + X87_STATUS:			info->i = cpustate->fpu_status_word;			break;
-		case CPUINFO_INT_REGISTER + X87_ST0:			info->i = ST(0).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST1:			info->i = ST(1).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST2:			info->i = ST(2).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST3:			info->i = ST(3).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST4:			info->i = ST(4).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST5:			info->i = ST(5).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST6:			info->i = ST(6).f;						break;
-		case CPUINFO_INT_REGISTER + X87_ST7:			info->i = ST(7).f;						break;
+		case CPUINFO_INT_REGISTER + X87_CTRL:			info->i = cpustate->x87_cw;				break;
+		case CPUINFO_INT_REGISTER + X87_STATUS:			info->i = cpustate->x87_sw;				break;
+		case CPUINFO_INT_REGISTER + X87_TAG:			info->i = cpustate->x87_tw;				break;
 
 		case DEVINFO_STR_NAME:							strcpy(info->s, "MEDIAGX");				break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Cyrix MediaGX");		break;
-		case CPUINFO_STR_REGISTER + X87_CTRL:			sprintf(info->s, "FPU_CW: %04X", cpustate->fpu_control_word); break;
-		case CPUINFO_STR_REGISTER + X87_STATUS:			sprintf(info->s, "FPU_SW: %04X", cpustate->fpu_status_word); break;
-		case CPUINFO_STR_REGISTER + X87_ST0:			sprintf(info->s, "ST0: %f", ST(0).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST1:			sprintf(info->s, "ST1: %f", ST(1).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST2:			sprintf(info->s, "ST2: %f", ST(2).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST3:			sprintf(info->s, "ST3: %f", ST(3).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST4:			sprintf(info->s, "ST4: %f", ST(4).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST5:			sprintf(info->s, "ST5: %f", ST(5).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST6:			sprintf(info->s, "ST6: %f", ST(6).f);	break;
-		case CPUINFO_STR_REGISTER + X87_ST7:			sprintf(info->s, "ST7: %f", ST(7).f);	break;
+		case DEVINFO_STR_FAMILY:						strcpy(info->s, "Cyrix MediaGX");		break;
+		case CPUINFO_STR_REGISTER + X87_CTRL:			sprintf(info->s, "x87_CW: %04X", cpustate->x87_cw); break;
+		case CPUINFO_STR_REGISTER + X87_STATUS:			sprintf(info->s, "x87_SW: %04X", cpustate->x87_sw); break;
+		case CPUINFO_STR_REGISTER + X87_TAG:			sprintf(info->s, "x87_TAG: %04X", cpustate->x87_tw); break;
+		case CPUINFO_STR_REGISTER + X87_ST0:			sprintf(info->s, "ST0: %f", fx80_to_double(ST(0)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST1:			sprintf(info->s, "ST1: %f", fx80_to_double(ST(1)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST2:			sprintf(info->s, "ST2: %f", fx80_to_double(ST(2)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST3:			sprintf(info->s, "ST3: %f", fx80_to_double(ST(3)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST4:			sprintf(info->s, "ST4: %f", fx80_to_double(ST(4)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST5:			sprintf(info->s, "ST5: %f", fx80_to_double(ST(5)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST6:			sprintf(info->s, "ST6: %f", fx80_to_double(ST(6)));	break;
+		case CPUINFO_STR_REGISTER + X87_ST7:			sprintf(info->s, "ST7: %f", fx80_to_double(ST(7)));	break;
 
 		default:										CPU_GET_INFO_CALL(i386);				break;
 	}
@@ -3807,3 +3807,4 @@ DEFINE_LEGACY_CPU_DEVICE(I386, i386);
 DEFINE_LEGACY_CPU_DEVICE(I486, i486);
 DEFINE_LEGACY_CPU_DEVICE(PENTIUM, pentium);
 DEFINE_LEGACY_CPU_DEVICE(MEDIAGX, mediagx);
+

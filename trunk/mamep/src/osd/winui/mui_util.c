@@ -408,7 +408,7 @@ static void UpdateController(void)
 			p = 0;
 
 			machine_config config(driver_list::driver(i), MameUIGlobal());
-			for (device_t *cfg = config.devicelist().first(); cfg != NULL; cfg = cfg->next())
+			for (device_t *cfg = config.root_device(); cfg != NULL; cfg = cfg->next())
 			{
 				if (cfg->input_ports()!=NULL) {
 					input_port_list_init(*cfg, portlist, errors);
@@ -521,7 +521,9 @@ static void UpdateController(void)
 
 int numberOfSpeakers(const machine_config *config)
 {
-	return config->devicelist().count(SPEAKER);
+//	return config->devicelist().count(SPEAKER);
+	speaker_device_iterator spkiter(machine().root_device());
+	return spkiter.count();
 }
 
 static struct DriversInfo* GetDriversInfo(int driver_index)
@@ -700,7 +702,7 @@ void FreeDriversInfo(void)
 
 BOOL DriverIsClone(int driver_index)
 {
-	return GetDriversInfo(driver_index)->isClone;
+	 return GetDriversInfo(driver_index)->isClone;
 }
 
 BOOL DriverIsBroken(int driver_index)

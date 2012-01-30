@@ -20,7 +20,7 @@ WRITE8_HANDLER( tinvader_videoram_w )
 	zac2650_state *state = space->machine().driver_data<zac2650_state>();
 	UINT8 *videoram = state->m_videoram;
 	videoram[offset] = data;
-	tilemap_mark_tile_dirty(state->m_bg_tilemap, offset);
+	state->m_bg_tilemap->mark_tile_dirty(offset);
 }
 
 READ8_HANDLER( zac_s2636_r )
@@ -79,15 +79,8 @@ static int SpriteCollision(running_machine &machine, int first,int second)
 	    {
 		    for (y = fy; y < fy + machine.gfx[expand]->height; y++)
             {
-			    if ((x < visarea.min_x) ||
-			        (x > visarea.max_x) ||
-			        (y < visarea.min_y) ||
-			        (y > visarea.max_y))
-			    {
-				    continue;
-			    }
-
-        	    Checksum += state->m_spritebitmap.pix16(y, x);
+			    if (visarea.contains(x, y))
+	        	    Checksum += state->m_spritebitmap.pix16(y, x);
             }
 	    }
 
@@ -105,15 +98,8 @@ static int SpriteCollision(running_machine &machine, int first,int second)
 	    {
 		    for (y = fy; y < fy + machine.gfx[expand]->height; y++)
             {
-			    if ((x < visarea.min_x) ||
-			        (x > visarea.max_x) ||
-			        (y < visarea.min_y) ||
-			        (y > visarea.max_y))
-			    {
-				    continue;
-			    }
-
-        	    Checksum -= state->m_spritebitmap.pix16(y, x);
+			    if (visarea.contains(x, y))
+	        	    Checksum -= state->m_spritebitmap.pix16(y, x);
             }
 	    }
 
@@ -194,19 +180,12 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	        {
 		        for (y = by; y < by + machine.gfx[expand]->height; y++)
                 {
-			        if ((x < visarea.min_x) ||
-			            (x > visarea.max_x) ||
-			            (y < visarea.min_y) ||
-			            (y > visarea.max_y))
-			        {
-				        continue;
-			        }
-
-        	        if (bitmap.pix16(y, x) != state->m_bitmap.pix16(y, x))
-        	        {
-                    	state->m_CollisionBackground = 0x80;
-				        break;
-			        }
+			        if (visarea.contains(x, y))
+	        	        if (bitmap.pix16(y, x) != state->m_bitmap.pix16(y, x))
+	        	        {
+	                    	state->m_CollisionBackground = 0x80;
+					        break;
+				        }
                 }
 	        }
 
@@ -231,7 +210,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 SCREEN_UPDATE_IND16( tinvader )
 {
 	zac2650_state *state = screen.machine().driver_data<zac2650_state>();
-	tilemap_draw(bitmap, cliprect, state->m_bg_tilemap, 0, 0);
+	state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 	draw_sprites(screen.machine(), bitmap, cliprect);
 	return 0;
 }

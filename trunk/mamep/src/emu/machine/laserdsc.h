@@ -165,7 +165,7 @@ struct laserdisc_overlay_config
 // ======================> laserdisc_device
 
 // base laserdisc class
-class laserdisc_device : 	public device_t,
+class laserdisc_device :	public device_t,
 							public device_sound_interface,
 							public laserdisc_overlay_config
 {
@@ -372,13 +372,16 @@ private:
 	bool				m_videoenable;			// is video enabled?
 	render_texture *	m_videotex;				// texture for the video
 	palette_t *			m_videopalette;			// palette for the video
-	
+
 	// overlays
 	bool				m_overenable;			// is the overlay enabled?
 	screen_bitmap		m_overbitmap[2];		// overlay bitmaps
 	int					m_overindex;			// index of the overlay bitmap
 	render_texture *	m_overtex;				// texture for the overlay
 };
+
+// iterator - interface iterator works for subclasses too
+typedef device_interface_iterator<laserdisc_device> laserdisc_device_iterator;
 
 
 

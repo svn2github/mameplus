@@ -56,7 +56,7 @@
 #define CD_MAX_SUBCODE_DATA		(96)
 
 #define CD_FRAME_SIZE			(CD_MAX_SECTOR_DATA + CD_MAX_SUBCODE_DATA)
-#define CD_FRAMES_PER_HUNK		(4)
+#define CD_FRAMES_PER_HUNK		(4) // should be 8 for v5 CDs, with a 4-frame pad at the end to maintain SHA1 compatibility
 
 #define CD_METADATA_WORDS		(1+(CD_MAX_TRACKS * 6))
 
@@ -182,12 +182,12 @@ INLINE UINT32 lba_to_msf(UINT32 lba)
 }
 
 // segacd needs it like this.. investigate
-// Angelo also says PCE tracks often start playing at the 
+// Angelo also says PCE tracks often start playing at the
 // wrong address.. related?
 INLINE UINT32 lba_to_msf_alt(int lba)
 {
 	UINT32 ret = 0;
-	
+
 	ret |= ((lba / (60 * 75))&0xff)<<16;
 	ret |= (((lba / 75) % 60)&0xff)<<8;
 	ret |= ((lba % 75)&0xff)<<0;

@@ -116,8 +116,9 @@ void atarigen_init(running_machine &machine)
 	int i;
 
 	/* allocate timers for all screens */
-	assert(machine.devicelist().count(SCREEN) <= ARRAY_LENGTH(state->m_screen_timer));
-	for (i = 0, screen = machine.first_screen(); screen != NULL; i++, screen = screen->next_screen())
+	screen_device_iterator iter(machine.root_device());
+	assert(iter.count() < ARRAY_LENGTH(state->m_screen_timer));
+	for (i = 0, screen = iter.first(); screen != NULL; i++, screen = iter.next())
 	{
 		state->m_screen_timer[i].screen = screen;
 		state->m_screen_timer[i].scanline_interrupt_timer = machine.scheduler().timer_alloc(FUNC(scanline_interrupt_callback), (void *)screen);
@@ -838,8 +839,8 @@ static TIMER_CALLBACK( delayed_6502_sound_w )
 
 void atarigen_set_vol(running_machine &machine, int volume, device_type type)
 {
-	device_sound_interface *sound = NULL;
-	for (bool gotone = machine.devicelist().first(sound); gotone; gotone = sound->next(sound))
+	sound_interface_iterator iter(machine.root_device());
+	for (device_sound_interface *sound = iter.first(); sound != NULL; sound = iter.next())
 		if (sound->device().type() == type)
 			sound->set_output_gain(ALL_OUTPUTS, volume / 100.0);
 }
@@ -953,13 +954,13 @@ static TIMER_CALLBACK( atarivc_eof_update )
 	atarimo_set_xscroll(0, state->m_atarivc_state.mo_xscroll);
 	atarimo_set_yscroll(0, state->m_atarivc_state.mo_yscroll);
 
-	tilemap_set_scrollx(state->m_playfield_tilemap, 0, state->m_atarivc_state.pf0_xscroll);
-	tilemap_set_scrolly(state->m_playfield_tilemap, 0, state->m_atarivc_state.pf0_yscroll);
+	state->m_playfield_tilemap->set_scrollx(0, state->m_atarivc_state.pf0_xscroll);
+	state->m_playfield_tilemap->set_scrolly(0, state->m_atarivc_state.pf0_yscroll);
 
 	if (state->m_atarivc_playfields > 1)
 	{
-		tilemap_set_scrollx(state->m_playfield2_tilemap, 0, state->m_atarivc_state.pf1_xscroll);
-		tilemap_set_scrolly(state->m_playfield2_tilemap, 0, state->m_atarivc_state.pf1_yscroll);
+		state->m_playfield2_tilemap->set_scrollx(0, state->m_atarivc_state.pf1_xscroll);
+		state->m_playfield2_tilemap->set_scrolly(0, state->m_atarivc_state.pf1_yscroll);
 	}
 	timer->adjust(screen.time_until_pos(0));
 
@@ -1178,7 +1179,7 @@ WRITE16_HANDLER( atarigen_alpha_w )
 {
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 	COMBINE_DATA(&state->m_alpha[offset]);
-	tilemap_mark_tile_dirty(state->m_alpha_tilemap, offset);
+	state->m_alpha_tilemap->mark_tile_dirty(offset);
 }
 
 WRITE32_HANDLER( atarigen_alpha32_w )
@@ -1186,16 +1187,16 @@ WRITE32_HANDLER( atarigen_alpha32_w )
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 	COMBINE_DATA(&state->m_alpha32[offset]);
 	if (ACCESSING_BITS_16_31)
-		tilemap_mark_tile_dirty(state->m_alpha_tilemap, offset * 2);
+		state->m_alpha_tilemap->mark_tile_dirty(offset * 2);
 	if (ACCESSING_BITS_0_15)
-		tilemap_mark_tile_dirty(state->m_alpha_tilemap, offset * 2 + 1);
+		state->m_alpha_tilemap->mark_tile_dirty(offset * 2 + 1);
 }
 
 WRITE16_HANDLER( atarigen_alpha2_w )
 {
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 	COMBINE_DATA(&state->m_alpha2[offset]);
-	tilemap_mark_tile_dirty(state->m_alpha2_tilemap, offset);
+	state->m_alpha2_tilemap->mark_tile_dirty(offset);
 }
 
 
@@ -1225,7 +1226,7 @@ WRITE16_HANDLER( atarigen_playfield_w )
 {
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 	COMBINE_DATA(&state->m_playfield[offset]);
-	tilemap_mark_tile_dirty(state->m_playfield_tilemap, offset);
+	state->m_playfield_tilemap->mark_tile_dirty(offset);
 }
 
 WRITE32_HANDLER( atarigen_playfield32_w )
@@ -1233,16 +1234,16 @@ WRITE32_HANDLER( atarigen_playfield32_w )
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 	COMBINE_DATA(&state->m_playfield32[offset]);
 	if (ACCESSING_BITS_16_31)
-		tilemap_mark_tile_dirty(state->m_playfield_tilemap, offset * 2);
+		state->m_playfield_tilemap->mark_tile_dirty(offset * 2);
 	if (ACCESSING_BITS_0_15)
-		tilemap_mark_tile_dirty(state->m_playfield_tilemap, offset * 2 + 1);
+		state->m_playfield_tilemap->mark_tile_dirty(offset * 2 + 1);
 }
 
 WRITE16_HANDLER( atarigen_playfield2_w )
 {
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 	COMBINE_DATA(&state->m_playfield2[offset]);
-	tilemap_mark_tile_dirty(state->m_playfield2_tilemap, offset);
+	state->m_playfield2_tilemap->mark_tile_dirty(offset);
 }
 
 
@@ -1256,7 +1257,7 @@ WRITE16_HANDLER( atarigen_playfield_large_w )
 {
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 	COMBINE_DATA(&state->m_playfield[offset]);
-	tilemap_mark_tile_dirty(state->m_playfield_tilemap, offset / 2);
+	state->m_playfield_tilemap->mark_tile_dirty(offset / 2);
 }
 
 
@@ -1270,7 +1271,7 @@ WRITE16_HANDLER( atarigen_playfield_upper_w )
 {
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 	COMBINE_DATA(&state->m_playfield_upper[offset]);
-	tilemap_mark_tile_dirty(state->m_playfield_tilemap, offset);
+	state->m_playfield_tilemap->mark_tile_dirty(offset);
 }
 
 
@@ -1284,8 +1285,8 @@ WRITE16_HANDLER( atarigen_playfield_dual_upper_w )
 {
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 	COMBINE_DATA(&state->m_playfield_upper[offset]);
-	tilemap_mark_tile_dirty(state->m_playfield_tilemap, offset);
-	tilemap_mark_tile_dirty(state->m_playfield2_tilemap, offset);
+	state->m_playfield_tilemap->mark_tile_dirty(offset);
+	state->m_playfield2_tilemap->mark_tile_dirty(offset);
 }
 
 
@@ -1301,7 +1302,7 @@ WRITE16_HANDLER( atarigen_playfield_latched_lsb_w )
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 
 	COMBINE_DATA(&state->m_playfield[offset]);
-	tilemap_mark_tile_dirty(state->m_playfield_tilemap, offset);
+	state->m_playfield_tilemap->mark_tile_dirty(offset);
 
 	if (state->m_playfield_latch != -1)
 		state->m_playfield_upper[offset] = (state->m_playfield_upper[offset] & ~0x00ff) | (state->m_playfield_latch & 0x00ff);
@@ -1320,7 +1321,7 @@ WRITE16_HANDLER( atarigen_playfield_latched_msb_w )
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 
 	COMBINE_DATA(&state->m_playfield[offset]);
-	tilemap_mark_tile_dirty(state->m_playfield_tilemap, offset);
+	state->m_playfield_tilemap->mark_tile_dirty(offset);
 
 	if (state->m_playfield_latch != -1)
 		state->m_playfield_upper[offset] = (state->m_playfield_upper[offset] & ~0xff00) | (state->m_playfield_latch & 0xff00);
@@ -1339,7 +1340,7 @@ WRITE16_HANDLER( atarigen_playfield2_latched_msb_w )
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 
 	COMBINE_DATA(&state->m_playfield2[offset]);
-	tilemap_mark_tile_dirty(state->m_playfield2_tilemap, offset);
+	state->m_playfield2_tilemap->mark_tile_dirty(offset);
 
 	if (state->m_playfield2_latch != -1)
 		state->m_playfield_upper[offset] = (state->m_playfield_upper[offset] & ~0xff00) | (state->m_playfield2_latch & 0xff00);

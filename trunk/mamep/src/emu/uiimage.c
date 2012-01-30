@@ -25,6 +25,7 @@
 #include "uiimage.h"
 #include "zippath.h"
 #include "unicode.h"
+#include "imagedev/floppy.h"
 #include "imagedev/cassette.h"
 #include "imagedev/bitbngr.h"
 
@@ -521,9 +522,6 @@ void ui_menu_file_selector::populate()
 	const char *volume_name;
 	const char *path = current_directory;
 
-	if(path[0])
-		fprintf(stderr, "curdir=%s\n", path);
-
 	/* open the directory */
 	err = zippath_opendir(path, &directory);
 	if (err != FILERR_NONE)
@@ -772,11 +770,11 @@ ui_menu_file_manager::ui_menu_file_manager(running_machine &machine, render_cont
 void ui_menu_file_manager::populate()
 {
 	char buffer[2048];
-	device_image_interface *image = NULL;
 	astring tmp_name;
 
 	/* cycle through all devices for this system */
-	for (bool gotone = machine().devicelist().first(image); gotone; gotone = image->next(image))
+	image_interface_iterator iter(machine().root_device());
+	for (device_image_interface *image = iter.first(); image != NULL; image = iter.next())
 	{
 		/* get the image type/id */
 		snprintf(buffer, ARRAY_LENGTH(buffer),
@@ -877,6 +875,86 @@ void ui_menu_image_info::handle()
 	process(0);
 }
 
+/*-------------------------------------------------
+    ui_menu_select_format - floppy image format
+    selection menu
+-------------------------------------------------*/
+
+ui_menu_select_format::ui_menu_select_format(running_machine &machine, render_container *container,
+											 floppy_image_format_t **_formats, int _ext_match, int _total_usable, int *_result)
+	: ui_menu(machine, container)
+{
+	formats = _formats;
+	ext_match = _ext_match;
+	total_usable = _total_usable;
+	result = _result;
+}
+
+void ui_menu_select_format::populate()
+{
+	item_append(_("Select image format"), NULL, MENU_FLAG_DISABLE, NULL);
+	for(int i=0; i<total_usable; i++) {
+		const floppy_image_format_t *fmt = formats[i];
+
+		if(i && i == ext_match)
+			item_append(MENU_SEPARATOR_ITEM, NULL, 0, NULL);
+		item_append(fmt->description(), fmt->name(), 0, (void *)(FPTR)i);
+	}
+}
+
+ui_menu_select_format::~ui_menu_select_format()
+{
+}
+
+void ui_menu_select_format::handle()
+{
+	/* process the menu */
+	const ui_menu_event *event = process(0);
+	if (event != NULL && event->iptkey == IPT_UI_SELECT)
+	{
+		*result = int(FPTR(event->itemref));
+		ui_menu::stack_pop(machine());
+	}
+}
+
+/*-------------------------------------------------
+    ui_menu_select_rw - floppy read/write
+    selection menu
+-------------------------------------------------*/
+
+ui_menu_select_rw::ui_menu_select_rw(running_machine &machine, render_container *container,
+									 bool _can_in_place, int *_result)
+	: ui_menu(machine, container)
+{
+	can_in_place = _can_in_place;
+	result = _result;
+}
+
+void ui_menu_select_rw::populate()
+{
+	item_append("Select access mode", NULL, MENU_FLAG_DISABLE, NULL);
+	item_append("Read-only", 0, 0, (void *)READONLY);
+	if(can_in_place)
+		item_append("Read-write", 0, 0, (void *)READWRITE);
+	item_append("Read this image, write to another image", 0, 0, (void *)WRITE_OTHER);
+	item_append("Read this image, write to diff", 0, 0, (void *)WRITE_DIFF);
+}
+
+ui_menu_select_rw::~ui_menu_select_rw()
+{
+}
+
+void ui_menu_select_rw::handle()
+{
+	/* process the menu */
+	const ui_menu_event *event = process(0);
+	if (event != NULL && event->iptkey == IPT_UI_SELECT)
+	{
+		*result = int(FPTR(event->itemref));
+		ui_menu::stack_pop(machine());
+	}
+}
+
 /***************************************************************************
     TYPE DEFINITIONS
 ***************************************************************************/
@@ -922,15 +1000,8 @@ ui_menu_mess_bitbanger_control::~ui_menu_mess_bitbanger_control()
 
 int ui_menu_mess_tape_control::cassette_count()
 {
-	int count = 0;
-	device_t *device = machine().devicelist().first(CASSETTE);
-
-	while ( device )
-	{
-		count++;
-		device = device->typenext();
-	}
-	return count;
+	cassette_device_iterator iter(machine().root_device());
+	return iter.count();
 }
 
 /*-------------------------------------------------
@@ -940,15 +1011,8 @@ int ui_menu_mess_tape_control::cassette_count()
 
 int ui_menu_mess_bitbanger_control::bitbanger_count()
 {
-	int count = 0;
-	device_t *device = machine().devicelist().first(BITBANGER);
-
-	while ( device )
-	{
-		count++;
-		device = device->typenext();
-	}
-	return count;
+	bitbanger_device_iterator iter(machine().root_device());
+	return iter.count();
 }
 
 /*-------------------------------------------------
@@ -1119,14 +1183,8 @@ void ui_menu_mess_tape_control::handle()
 	/* do we have to load the device? */
 	if (device == NULL)
 	{
-		int cindex = index;
-		for (bool gotone = machine().devicelist().first(device); gotone; gotone = device->next(device))
-		{
-			if(device->device().type() == CASSETTE) {
-				if (cindex==0) break;
-				cindex--;
-			}
-		}
+		cassette_device_iterator iter(machine().root_device());
+		device = iter.byindex(index);
 		reset((ui_menu_reset_options)0);
 	}
 
@@ -1208,14 +1266,8 @@ void ui_menu_mess_bitbanger_control::handle()
 	/* do we have to load the device? */
 	if (device == NULL)
 	{
-		int cindex = index;
-		for (bool gotone = machine().devicelist().first(device); gotone; gotone = device->next(device))
-		{
-			if(device->device().type() == BITBANGER) {
-				if (cindex==0) break;
-				cindex--;
-			}
-		}
+		bitbanger_device_iterator iter(machine().root_device());
+		device = iter.byindex(index);
 		reset((ui_menu_reset_options)0);
 	}
 

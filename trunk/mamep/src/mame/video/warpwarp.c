@@ -197,14 +197,14 @@ WRITE8_HANDLER( geebee_videoram_w )
 {
 	warpwarp_state *state = space->machine().driver_data<warpwarp_state>();
 	state->m_geebee_videoram[offset] = data;
-	tilemap_mark_tile_dirty(state->m_bg_tilemap,offset & 0x3ff);
+	state->m_bg_tilemap->mark_tile_dirty(offset & 0x3ff);
 }
 
 WRITE8_HANDLER( warpwarp_videoram_w )
 {
 	warpwarp_state *state = space->machine().driver_data<warpwarp_state>();
 	state->m_videoram[offset] = data;
-	tilemap_mark_tile_dirty(state->m_bg_tilemap,offset & 0x3ff);
+	state->m_bg_tilemap->mark_tile_dirty(offset & 0x3ff);
 }
 
 
@@ -217,7 +217,7 @@ WRITE8_HANDLER( warpwarp_videoram_w )
 
 INLINE void geebee_plot(bitmap_ind16 &bitmap, const rectangle &cliprect, int x, int y, pen_t pen)
 {
-	if (x >= cliprect.min_x && x <= cliprect.max_x && y >= cliprect.min_y && y <= cliprect.max_y)
+	if (cliprect.contains(x, y))
 		bitmap.pix16(y, x) = pen;
 }
 
@@ -246,7 +246,7 @@ static void draw_ball(running_machine &machine, bitmap_ind16 &bitmap, const rect
 SCREEN_UPDATE_IND16( geebee )
 {
 	warpwarp_state *state = screen.machine().driver_data<warpwarp_state>();
-	tilemap_draw(bitmap,cliprect,state->m_bg_tilemap,0,0);
+	state->m_bg_tilemap->draw(bitmap, cliprect, 0,0);
 
 	draw_ball(screen.machine(), bitmap, cliprect, state->m_ball_pen);
 	return 0;

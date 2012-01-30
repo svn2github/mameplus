@@ -136,17 +136,17 @@
     2011-Apr-01 Curt Coder
     - Set complete command delay to 16 usec (DD) / 32 usec (SD) and removed
       the external delay setting hack.
-	  
-	2011-Jun-24 Curt Coder
-	- Added device types for all known variants, and enforced inverted DAL lines.
 
-	2011-Sep-18 Curt Coder
-	- Connected Side Select Output for variants that support it.
+    2011-Jun-24 Curt Coder
+    - Added device types for all known variants, and enforced inverted DAL lines.
+
+    2011-Sep-18 Curt Coder
+    - Connected Side Select Output for variants that support it.
 
     TODO:
         - What happens if a track is read that doesn't have any id's on it?
          (e.g. unformatted disc)
-		- Rewrite into a C++ device
+        - Rewrite into a C++ device
 
 ***************************************************************************/
 
@@ -404,11 +404,11 @@ static void wd17xx_timed_read_sector_request(device_t *device);
 INLINE wd1770_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
-	assert(device->type() == FD1771 || device->type() == FD1781 || 
+	assert(device->type() == FD1771 || device->type() == FD1781 ||
 		device->type() == FD1791 || device->type() == FD1792 || device->type() == FD1793 || device->type() == FD1794 || device->type() == FD1795 || device->type() == FD1797 ||
-		device->type() == FD1761 || device->type() == FD1762 || device->type() == FD1763 || device->type() == FD1764 || device->type() == FD1765 || device->type() == FD1767 || 
+		device->type() == FD1761 || device->type() == FD1762 || device->type() == FD1763 || device->type() == FD1764 || device->type() == FD1765 || device->type() == FD1767 ||
 		device->type() == WD2791 || device->type() == WD2793 || device->type() == WD2795 || device->type() == WD2797 ||
-		device->type() == WD1770 || device->type() == WD1772 || device->type() == WD1773 || 
+		device->type() == WD1770 || device->type() == WD1772 || device->type() == WD1773 ||
 		device->type() == MB8866 || device->type() == MB8876 || device->type() == MB8877);
 
 	return (wd1770_state *)downcast<legacy_device_base *>(device)->token();
@@ -421,9 +421,9 @@ INLINE wd1770_state *get_safe_token(device_t *device)
 
 static int wd17xx_has_dal(device_t *device)
 {
-	return (device->type() == FD1793 || device->type() == FD1794 || device->type() == FD1797 || 
-			device->type() == FD1763 || device->type() == FD1764 || device->type() == FD1767 || 
-			device->type() == WD1770 || device->type() == WD1772 || device->type() == WD1773 || 
+	return (device->type() == FD1793 || device->type() == FD1794 || device->type() == FD1797 ||
+			device->type() == FD1763 || device->type() == FD1764 || device->type() == FD1767 ||
+			device->type() == WD1770 || device->type() == WD1772 || device->type() == WD1773 ||
 			device->type() == WD2793 || device->type() == WD2797 ||
 			device->type() == MB8877);
 }
@@ -1247,14 +1247,7 @@ void wd17xx_set_drive(device_t *device, UINT8 drive)
 
 	if (w->intf->floppy_drive_tags[drive] != NULL)
 	{
-		if (device->owner() != NULL) {
-			w->drive = device->owner()->subdevice(w->intf->floppy_drive_tags[drive]);
-			if (w->drive == NULL) {
-				w->drive = device->machine().device(w->intf->floppy_drive_tags[drive]);
-			}
-		}
-		else
-			w->drive = device->machine().device(w->intf->floppy_drive_tags[drive]);
+		w->drive = device->siblingdevice(w->intf->floppy_drive_tags[drive]);
 	}
 }
 
@@ -2006,7 +1999,7 @@ READ8_DEVICE_HANDLER( wd17xx_r )
 	case 2:	data = wd17xx_sector_r(device, 0); break;
 	case 3:	data = wd17xx_data_r(device, 0); break;
 	}
-	
+
 	return data;
 }
 
@@ -2083,14 +2076,7 @@ static DEVICE_RESET( wd1770 )
 		if(w->intf->floppy_drive_tags[i]!=NULL) {
 			device_t *img = NULL;
 
-			if (device->owner() != NULL)
-				img = device->owner()->subdevice(w->intf->floppy_drive_tags[i]);
-				if (img == NULL) {
-					img = device->machine().device(w->intf->floppy_drive_tags[i]);
-				}
-
-			else
-				img = device->machine().device(w->intf->floppy_drive_tags[i]);
+			img = device->siblingdevice(w->intf->floppy_drive_tags[i]);
 
 			if (img!=NULL) {
 				floppy_drive_set_controller(img,device);

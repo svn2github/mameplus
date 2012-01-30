@@ -5703,12 +5703,12 @@ static int segacd_get_active_stampmap_tilemap(void)
 #if 0
 static void segacd_mark_stampmaps_dirty(void)
 {
-	tilemap_mark_all_tiles_dirty(segacd_stampmap[segacd_get_active_stampmap_tilemap()]);
+	segacd_stampmap[segacd_get_active_stampmap_tilemap(->mark_all_dirty()]);
 
-	//tilemap_mark_all_tiles_dirty(segacd_stampmap[0]);
-	//tilemap_mark_all_tiles_dirty(segacd_stampmap[1]);
-	//tilemap_mark_all_tiles_dirty(segacd_stampmap[2]);
-	//tilemap_mark_all_tiles_dirty(segacd_stampmap[3]);
+	//segacd_stampmap[0]->mark_all_dirty();
+	//segacd_stampmap[1]->mark_all_dirty();
+	//segacd_stampmap[2]->mark_all_dirty();
+	//segacd_stampmap[3]->mark_all_dirty();
 }
 #endif
 
@@ -6514,7 +6514,7 @@ WRITE16_HANDLER( segacd_trace_vector_base_address_w )
 
 
 		int line;
-		//bitmap_ind16 *srcbitmap = tilemap_get_pixmap(segacd_stampmap[segacd_get_active_stampmap_tilemap()]);
+		//bitmap_ind16 *srcbitmap = segacd_stampmap[segacd_get_active_stampmap_tilemap(->pixmap()]);
 		bitmap_ind16 *srcbitmap = 0;
 		UINT32 bufferstart = ((segacd_imagebuffer_start_address&0xfff8)*2)<<3;
 
@@ -9483,10 +9483,7 @@ int megadrive_z80irq_hpos = 320;
 		}
 //  	mame_printf_debug("my mode %02x", megadrive_vdp_register[0x0c]);
 
-		visarea.min_x = 0;
-		visarea.max_x = scr_width-1;
-		visarea.min_y = 0;
-		visarea.max_y = megadrive_visible_scanlines-1;
+		visarea.set(0, scr_width-1, 0, megadrive_visible_scanlines-1);
 
 		screen.machine().primary_screen->configure(scr_width, megadrive_visible_scanlines, visarea, HZ_TO_ATTOSECONDS(megadriv_framerate));
 

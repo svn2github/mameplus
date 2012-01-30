@@ -777,7 +777,7 @@ bool sdl_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, bitma
    const CFIndex count = 1;
    CGRect bounding_rect, success_rect;
    CGContextRef context_ref;
-   
+
    if( chnum == ' ' )
    {
       uni_char = 'n';
@@ -849,6 +849,22 @@ static TTF_Font * TTF_OpenFont_Magic(astring name, int fsize)
 			return NULL;
 	}
 	return TTF_OpenFont(name.cstr(), POINT_SIZE);
+}
+
+static bool BDF_Check_Magic(astring name)
+{
+    emu_file file(OPEN_FLAG_READ);
+    if (file.open(name) == FILERR_NONE)
+    {
+		unsigned char buffer[9];
+		unsigned char magic[9] = { 'S', 'T', 'A', 'R', 'T', 'F', 'O', 'N', 'T' };
+		file.read(buffer, 9);
+        file.close();
+		if (!memcmp(buffer, magic, 9))
+			return true;
+    }
+
+    return false;
 }
 
 static TTF_Font *search_font_config(astring name, bool bold, bool italic, bool underline, bool &bakedstyles)
@@ -1009,7 +1025,10 @@ osd_font sdl_osd_interface::font_open(const char *_name, int &height)
 
 	if (!font)
 	{
-		printf("WARNING: Couldn't find/open TrueType font %s, using MAME default\n", name.cstr());
+        if (!BDF_Check_Magic(name))
+        {
+            printf("WARNING: font %s, is not TrueType or BDF, using MAME default\n", name.cstr());
+        }
 		return NULL;
 	}
 
@@ -1062,7 +1081,7 @@ bool sdl_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, bitma
 	SDL_Surface *drawsurf;
 	SDL_Color fcol = { 0xff, 0xff, 0xff };
 	UINT16 ustr[16];
-	
+
 	ttffont = (TTF_Font *)font;
 
 	memset(ustr,0,sizeof(ustr));

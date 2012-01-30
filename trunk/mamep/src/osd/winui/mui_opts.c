@@ -427,7 +427,7 @@ static const options_entry perGameOptions[] =
 	// per game options
 	{ "_count",                                       "0",                          OPTION_INTEGER,    NULL },
 	{ "_time",                                        "0",                          OPTION_INTEGER,    NULL },
-	{ "_rom",                                        "-1",                          OPTION_INTEGER,    NULL },
+	{ "_rom",                                   "-1",                         OPTION_INTEGER,    NULL },
 	{ "_samples",                                    "-1",                          OPTION_INTEGER,    NULL },
 //	{ "_extra",                                        "",                          OPTION_STRING,     MESS_MARK_CONSOLE_ONLY },
 	{ NULL }
@@ -569,7 +569,7 @@ BOOL OptionsInit()
  	//mamep: for save/load mameui.ini
  	hOptsMutex = CreateMutex(NULL , FALSE , MUTEX_STR);
  
- 	// create a memory pool for our data
+	// create a memory pool for our data
 	//options_memory_pool = pool_alloc_lib(memory_error);
 	//if (!options_memory_pool)
 //		return FALSE;
@@ -2987,17 +2987,17 @@ static void AddFolderFlags(winui_options &opts)
 				ptr++;
 			}
 
-			option_name = astring_assemble_2(astring_alloc(), folder_name, "_filters" );
+			astring option_name (folder_name, "_filters" );
 
 			// create entry
-			entries[0].name = astring_c(option_name);
+			entries[0].name = option_name;
 			opts.add_entries(entries);
 
 			// store entry
 			astring error_string;
-            opts.set_value(astring_c(option_name), EncodeFolderFlags(lpFolder->m_dwFlags), OPTION_PRIORITY_CMDLINE,error_string);
+			opts.set_value(option_name, EncodeFolderFlags(lpFolder->m_dwFlags), OPTION_PRIORITY_CMDLINE,error_string);
 			assert(!error_string);
-			astring_free(option_name);
+
 
 			// increment counter
 			num_entries++;
@@ -3108,7 +3108,7 @@ static void ui_parse_ini_file(windows_options &opts, const char *name)
 {
 	/* open the file; if we fail, that's ok */
 	char *inidir = utf8_from_wstring(GetIniDir());
-	astring fname(inidir, PATH_SEPARATOR, name, ".ini");
+	astring fname (inidir, PATH_SEPARATOR, name, ".ini");
 	osd_free(inidir);
 	LoadSettingsFile(opts, fname);
 }
@@ -3192,7 +3192,7 @@ void load_options(windows_options &opts, OPTIONS_TYPE opt_type, int game_num)
 
 		// then parse "<sourcefile>.ini"
 		core_filename_extract_base(basename, driver->source_file, TRUE);
-		astring srcname("source", PATH_SEPARATOR, basename);
+		astring srcname ("source", PATH_SEPARATOR, basename);
 		ui_parse_ini_file(opts, srcname);
 
 		if (opt_type == OPTIONS_SOURCE)
@@ -3283,7 +3283,7 @@ void save_options(OPTIONS_TYPE opt_type, windows_options &opts, int game_num)
 		{
 			// determine the <sourcefile>
 			core_filename_extract_base(basename, driver->source_file, TRUE);
-			astring srcname("source", PATH_SEPARATOR, basename);
+			astring srcname ("source", PATH_SEPARATOR, basename);
 			filename.cpy(srcname);
 		} else
 		if (opt_type == OPTIONS_GAME)
@@ -3325,20 +3325,20 @@ static void remove_all_source_options(void) {
 	 * then remove all the files in it that end in ini.
 	 */
 	char *inidir = utf8_from_wstring(GetIniDir());
-	astring pathname(inidir, PATH_SEPARATOR, "source");
+	astring pathname (inidir, PATH_SEPARATOR, "source");
 	osd_free(inidir);
-	astring match(pathname, PATH_SEPARATOR, "*.ini");
+	astring match (pathname, PATH_SEPARATOR, "*.ini");
 	if ((hFindFile = win_find_first_file_utf8(match, &findFileData)) != INVALID_HANDLE_VALUE)
 	{
 		utf8_filename = utf8_from_tstring(findFileData.cFileName);
-		astring match(pathname, PATH_SEPARATOR, utf8_filename );
+		astring match (pathname, PATH_SEPARATOR, utf8_filename );
 		osd_free(utf8_filename);
 		osd_rmfile(match);
 
 		while (0 != FindNextFile(hFindFile, &findFileData))
 		{
 			utf8_filename = utf8_from_tstring(findFileData.cFileName);
-			astring match(pathname, PATH_SEPARATOR, utf8_filename );
+			astring match (pathname, PATH_SEPARATOR, utf8_filename );
 			osd_free(utf8_filename);
 			osd_rmfile(match);
 		}

@@ -1126,9 +1126,14 @@ VIDEO_START( tx1 )
 
 SCREEN_VBLANK( tx1 )
 {
-	tx1_state *state = screen.machine().driver_data<tx1_state>();
-	/* /VSYNC: Update TZ113 */
-	state->m_vregs.slin_val += state->m_vregs.slin_inc;
+	// rising edge
+	if (vblank_on)
+	{
+		tx1_state *state = screen.machine().driver_data<tx1_state>();
+
+		/* /VSYNC: Update TZ113 */
+		state->m_vregs.slin_val += state->m_vregs.slin_inc;
+	}
 }
 
 static void tx1_combine_layers(running_machine &machine, bitmap_ind16 &bitmap, int screen)

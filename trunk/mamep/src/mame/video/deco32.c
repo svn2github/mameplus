@@ -587,7 +587,7 @@ SCREEN_UPDATE_IND16( captaven )
 	state->m_deco_tilegen1 = screen.machine().device("tilegen1");
 	state->m_deco_tilegen2 = screen.machine().device("tilegen2");
 
-	tilemap_set_flip_all(screen.machine(),flip_screen_get(screen.machine()) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
+	screen.machine().tilemap().set_flip_all(flip_screen_get(screen.machine()) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 
 	screen.machine().priority_bitmap.fill(0, cliprect);
 	bitmap.fill(screen.machine().pens[0x000], cliprect); // Palette index not confirmed
@@ -647,11 +647,7 @@ SCREEN_UPDATE_RGB32( dragngun )
 	// for now we only draw these 2 layers on the last update call
 	if (cliprect.max_y == 247)
 	{
-		rectangle clip;
-		clip.min_x = cliprect.min_x;
-		clip.max_x = cliprect.max_x;
-		clip.min_y = 8;
-		clip.max_y = 247;
+		rectangle clip(cliprect.min_x, cliprect.max_x, 8, 247);
 
 		dragngun_draw_sprites(screen.machine(),bitmap,clip,screen.machine().generic.buffered_spriteram.u32);
 		deco16ic_tilemap_1_draw(state->m_deco_tilegen1, bitmap, clip, 0, 0);

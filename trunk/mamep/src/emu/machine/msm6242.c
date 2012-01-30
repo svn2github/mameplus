@@ -2,12 +2,12 @@
 
     MSM6242 Real Time Clock
 
-	Note:
-	- this RTC has a y2k bug
+    Note:
+    - this RTC has a y2k bug
 
-	TODO:
-	- HOLD mechanism
-	- IRQ ACK
+    TODO:
+    - HOLD mechanism
+    - IRQ ACK
 
 ***************************************************************************/
 
@@ -121,10 +121,8 @@ TIMER_CALLBACK( msm6242_device::rtc_inc_callback )
 //  on this device
 //-------------------------------------------------
 
-bool msm6242_device::device_validity_check(emu_options &options, const game_driver &driver) const
+void msm6242_device::device_validity_check(validity_checker &valid) const
 {
-	bool error = false;
-	return error;
 }
 
 //-------------------------------------------------

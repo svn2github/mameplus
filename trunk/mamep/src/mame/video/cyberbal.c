@@ -153,14 +153,14 @@ static void video_start_cyberbal_common(running_machine &machine, int screens)
 
 	/* initialize the alphanumerics */
 	state->m_alpha_tilemap = tilemap_create(machine, get_alpha_tile_info, tilemap_scan_rows,  16,8, 64,32);
-	tilemap_set_transparent_pen(state->m_alpha_tilemap, 0);
+	state->m_alpha_tilemap->set_transparent_pen(0);
 
 	/* allocate the second screen if necessary */
 	if (screens == 2)
 	{
 		/* initialize the playfield */
 		state->m_playfield2_tilemap = tilemap_create(machine, get_playfield2_tile_info, tilemap_scan_rows,  16,8, 64,64);
-		tilemap_set_scrollx(state->m_playfield2_tilemap, 0, 0);
+		state->m_playfield2_tilemap->set_scrollx(0, 0);
 
 		/* initialize the motion objects */
 		atarimo_init(machine, 1, &mo1desc);
@@ -168,8 +168,8 @@ static void video_start_cyberbal_common(running_machine &machine, int screens)
 
 		/* initialize the alphanumerics */
 		state->m_alpha2_tilemap = tilemap_create(machine, get_alpha2_tile_info, tilemap_scan_rows,  16,8, 64,32);
-		tilemap_set_scrollx(state->m_alpha2_tilemap, 0, 0);
-		tilemap_set_transparent_pen(state->m_alpha2_tilemap, 0);
+		state->m_alpha2_tilemap->set_scrollx(0, 0);
+		state->m_alpha2_tilemap->set_transparent_pen(0);
 	}
 
 	/* save states */
@@ -267,7 +267,8 @@ void cyberbal_scanline_update(screen_device &screen, int scanline)
 	screen_device *update_screen;
 
 	/* loop over screens */
-	for (i = 0, update_screen = screen.machine().first_screen(); update_screen != NULL; i++, update_screen = update_screen->next_screen())
+	screen_device_iterator iter(screen.machine().root_device());
+	for (i = 0, update_screen = iter.first(); update_screen != NULL; i++, update_screen = iter.next())
 	{
 		UINT16 *vram = i ? state->m_alpha2 : state->m_alpha;
 		UINT16 *base = &vram[((scanline - 8) / 8) * 64 + 47];
@@ -286,7 +287,7 @@ void cyberbal_scanline_update(screen_device &screen, int scanline)
 				if (scanline > 0)
 					update_screen->update_partial(scanline - 1);
 				state->m_playfield_palette_bank[i] = (base[3] >> 1) & 7;
-				tilemap_set_palette_offset(i ? state->m_playfield2_tilemap : state->m_playfield_tilemap, state->m_playfield_palette_bank[i] << 8);
+				(i ? state->m_playfield2_tilemap : state->m_playfield_tilemap)->set_palette_offset(state->m_playfield_palette_bank[i] << 8);
 			}
 		}
 		if (!(base[4] & 1))
@@ -296,7 +297,7 @@ void cyberbal_scanline_update(screen_device &screen, int scanline)
 			{
 				if (scanline > 0)
 					update_screen->update_partial(scanline - 1);
-				tilemap_set_scrollx(i ? state->m_playfield2_tilemap : state->m_playfield_tilemap, 0, newscroll);
+				(i ? state->m_playfield2_tilemap : state->m_playfield_tilemap)->set_scrollx(0, newscroll);
 				state->m_playfield_xscroll[i] = newscroll;
 			}
 		}
@@ -308,7 +309,7 @@ void cyberbal_scanline_update(screen_device &screen, int scanline)
 			{
 				if (scanline > 0)
 					update_screen->update_partial(scanline - 1);
-				tilemap_set_scrolly(i ? state->m_playfield2_tilemap : state->m_playfield_tilemap, 0, newscroll);
+				(i ? state->m_playfield2_tilemap : state->m_playfield_tilemap)->set_scrolly(0, newscroll);
 				state->m_playfield_yscroll[i] = newscroll;
 			}
 		}
@@ -342,7 +343,7 @@ static UINT32 update_one_screen(screen_device &screen, bitmap_ind16 &bitmap, con
 	rectangle visarea = screen.visible_area();
 
 	/* draw the playfield */
-	tilemap_draw(bitmap, cliprect, (index == 0) ? state->m_playfield_tilemap : state->m_playfield2_tilemap, 0, 0);
+	((index == 0) ? state->m_playfield_tilemap : state->m_playfield2_tilemap)->draw(bitmap, cliprect, 0, 0);
 
 	/* draw the MOs -- note some kludging to get this to work correctly for 2 screens */
 	mooffset = 0;
@@ -375,7 +376,7 @@ static UINT32 update_one_screen(screen_device &screen, bitmap_ind16 &bitmap, con
 		}
 
 	/* add the alpha on top */
-	tilemap_draw(bitmap, cliprect, (index == 0) ? state->m_alpha_tilemap : state->m_alpha2_tilemap, 0, 0);
+	((index == 0) ? state->m_alpha_tilemap : state->m_alpha2_tilemap)->draw(bitmap, cliprect, 0, 0);
 	return 0;
 }
 

@@ -1188,6 +1188,39 @@ LEGACY_FLOPPY_OPTIONS_START( apple35_iigs )
 LEGACY_FLOPPY_OPTIONS_END
 
 
+/***************************************************************************
+
+    Copyright Olivier Galibert
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are
+    met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in
+          the documentation and/or other materials provided with the
+          distribution.
+        * Neither the name 'MAME' nor the names of its contributors may be
+          used to endorse or promote products derived from this software
+          without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY AARON GILES ''AS IS'' AND ANY EXPRESS OR
+    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL AARON GILES BE LIABLE FOR ANY DIRECT,
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+    IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+
+****************************************************************************/
+
 dc42_format::dc42_format() : floppy_image_format_t()
 {
 }
@@ -1254,7 +1287,7 @@ const floppy_image_format_t::desc_e dc42_format::mac_gcr[] = {
 	{ SECTOR_LOOP_END },
 	{ END },
 };
-	
+
 
 bool dc42_format::load(io_generic *io, UINT32 form_factor, floppy_image *image)
 {
@@ -1317,7 +1350,7 @@ UINT8 dc42_format::gb(const UINT8 *buf, int ts, int &pos, int &wrap)
 		if(pos == ts) {
 			pos = 0;
 			wrap++;
-		}		
+		}
 	}
 	return v;
 }
@@ -1397,8 +1430,8 @@ bool dc42_format::save(io_generic *io, floppy_image *image)
 					UINT8 tr = gcr6bw_tb[h[0]] | (v2 & 1 ? 0x40 : 0x00);
 					UINT8 se = gcr6bw_tb[h[1]];
 					UINT8 si = v2 & 0x20 ? 1 : 0;
-					//					UINT8 ds = v3 & 0x20 ? 1 : 0;
-					//					UINT8 fmt = v3 & 0x1f;
+					//                  UINT8 ds = v3 & 0x20 ? 1 : 0;
+					//                  UINT8 fmt = v3 & 0x1f;
 					UINT8 c1 = (tr^se^v2^v3) & 0x3f;
 					UINT8 chk = gcr6bw_tb[h[4]];
 					if(chk == c1 && tr == track && si == head && se < nsect) {

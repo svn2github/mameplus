@@ -120,9 +120,9 @@ static void fcrash_update_transmasks( running_machine &machine )
 		else
 			mask = 0xffff;	/* completely transparent if priority masks not defined (mercs, qad) */
 
-		tilemap_set_transmask(state->m_bg_tilemap[0], i, mask, 0x8000);
-		tilemap_set_transmask(state->m_bg_tilemap[1], i, mask, 0x8000);
-		tilemap_set_transmask(state->m_bg_tilemap[2], i, mask, 0x8000);
+		state->m_bg_tilemap[0]->set_transmask(i, mask, 0x8000);
+		state->m_bg_tilemap[1]->set_transmask(i, mask, 0x8000);
+		state->m_bg_tilemap[2]->set_transmask(i, mask, 0x8000);
 	}
 }
 
@@ -171,7 +171,7 @@ static void fcrash_render_layer( running_machine &machine, bitmap_ind16 &bitmap,
 		case 1:
 		case 2:
 		case 3:
-			tilemap_draw(bitmap, cliprect, state->m_bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER1, primask);
+			state->m_bg_tilemap[layer - 1]->draw(bitmap, cliprect, TILEMAP_DRAW_LAYER1, primask);
 			break;
 	}
 }
@@ -189,7 +189,7 @@ static void fcrash_render_high_layer( running_machine &machine, bitmap_ind16 &bi
 		case 1:
 		case 2:
 		case 3:
-			tilemap_draw(dummy_bitmap, cliprect, state->m_bg_tilemap[layer - 1], TILEMAP_DRAW_LAYER0, 1);
+			state->m_bg_tilemap[layer - 1]->draw(dummy_bitmap, cliprect, TILEMAP_DRAW_LAYER0, 1);
 			break;
 	}
 }
@@ -236,8 +236,8 @@ static SCREEN_UPDATE_IND16( fcrash )
 
 	fcrash_update_transmasks(screen.machine());
 
-	tilemap_set_scrollx(state->m_bg_tilemap[0], 0, state->m_scroll1x - 62);
-	tilemap_set_scrolly(state->m_bg_tilemap[0], 0, state->m_scroll1y);
+	state->m_bg_tilemap[0]->set_scrollx(0, state->m_scroll1x - 62);
+	state->m_bg_tilemap[0]->set_scrolly(0, state->m_scroll1y);
 
 	if (videocontrol & 0x01)	/* linescroll enable */
 	{
@@ -245,28 +245,28 @@ static SCREEN_UPDATE_IND16( fcrash )
 		int i;
 		int otheroffs;
 
-		tilemap_set_scroll_rows(state->m_bg_tilemap[1], 1024);
+		state->m_bg_tilemap[1]->set_scroll_rows(1024);
 
 		otheroffs = state->m_cps_a_regs[CPS1_ROWSCROLL_OFFS];
 
 		for (i = 0; i < 256; i++)
-			tilemap_set_scrollx(state->m_bg_tilemap[1], (i - scrly) & 0x3ff, state->m_scroll2x + state->m_other[(i + otheroffs) & 0x3ff]);
+			state->m_bg_tilemap[1]->set_scrollx((i - scrly) & 0x3ff, state->m_scroll2x + state->m_other[(i + otheroffs) & 0x3ff]);
 	}
 	else
 	{
-		tilemap_set_scroll_rows(state->m_bg_tilemap[1], 1);
-		tilemap_set_scrollx(state->m_bg_tilemap[1], 0, state->m_scroll2x - 60);
+		state->m_bg_tilemap[1]->set_scroll_rows(1);
+		state->m_bg_tilemap[1]->set_scrollx(0, state->m_scroll2x - 60);
 	}
-	tilemap_set_scrolly(state->m_bg_tilemap[1], 0, state->m_scroll2y);
-	tilemap_set_scrollx(state->m_bg_tilemap[2], 0, state->m_scroll3x - 64);
-	tilemap_set_scrolly(state->m_bg_tilemap[2], 0, state->m_scroll3y);
+	state->m_bg_tilemap[1]->set_scrolly(0, state->m_scroll2y);
+	state->m_bg_tilemap[2]->set_scrollx(0, state->m_scroll3x - 64);
+	state->m_bg_tilemap[2]->set_scrolly(0, state->m_scroll3y);
 
 
 	/* turn all tilemaps on regardless of settings in get_video_base() */
 	/* write a custom get_video_base for this bootleg hardware? */
-	tilemap_set_enable(state->m_bg_tilemap[0], 1);
-	tilemap_set_enable(state->m_bg_tilemap[1], 1);
-	tilemap_set_enable(state->m_bg_tilemap[2], 1);
+	state->m_bg_tilemap[0]->enable(1);
+	state->m_bg_tilemap[1]->enable(1);
+	state->m_bg_tilemap[2]->enable(1);
 
 	/* Blank screen */
 	bitmap.fill(0xbff, cliprect);
@@ -316,8 +316,8 @@ static SCREEN_UPDATE_IND16( kodb )
 
 	fcrash_update_transmasks(screen.machine());
 
-	tilemap_set_scrollx(state->m_bg_tilemap[0], 0, state->m_scroll1x);
-	tilemap_set_scrolly(state->m_bg_tilemap[0], 0, state->m_scroll1y);
+	state->m_bg_tilemap[0]->set_scrollx(0, state->m_scroll1x);
+	state->m_bg_tilemap[0]->set_scrolly(0, state->m_scroll1y);
 
 	if (videocontrol & 0x01)	/* linescroll enable */
 	{
@@ -325,29 +325,29 @@ static SCREEN_UPDATE_IND16( kodb )
 		int i;
 		int otheroffs;
 
-		tilemap_set_scroll_rows(state->m_bg_tilemap[1], 1024);
+		state->m_bg_tilemap[1]->set_scroll_rows(1024);
 
 		otheroffs = state->m_cps_a_regs[CPS1_ROWSCROLL_OFFS];
 
 		for (i = 0; i < 256; i++)
-			tilemap_set_scrollx(state->m_bg_tilemap[1], (i - scrly) & 0x3ff, state->m_scroll2x + state->m_other[(i + otheroffs) & 0x3ff]);
+			state->m_bg_tilemap[1]->set_scrollx((i - scrly) & 0x3ff, state->m_scroll2x + state->m_other[(i + otheroffs) & 0x3ff]);
 	}
 	else
 	{
-		tilemap_set_scroll_rows(state->m_bg_tilemap[1], 1);
-		tilemap_set_scrollx(state->m_bg_tilemap[1], 0, state->m_scroll2x);
+		state->m_bg_tilemap[1]->set_scroll_rows(1);
+		state->m_bg_tilemap[1]->set_scrollx(0, state->m_scroll2x);
 	}
 
-	tilemap_set_scrolly(state->m_bg_tilemap[1], 0, state->m_scroll2y);
-	tilemap_set_scrollx(state->m_bg_tilemap[2], 0, state->m_scroll3x);
-	tilemap_set_scrolly(state->m_bg_tilemap[2], 0, state->m_scroll3y);
+	state->m_bg_tilemap[1]->set_scrolly(0, state->m_scroll2y);
+	state->m_bg_tilemap[2]->set_scrollx(0, state->m_scroll3x);
+	state->m_bg_tilemap[2]->set_scrolly(0, state->m_scroll3y);
 
 
 	/* turn all tilemaps on regardless of settings in get_video_base() */
 	/* write a custom get_video_base for this bootleg hardware? */
-	tilemap_set_enable(state->m_bg_tilemap[0], 1);
-	tilemap_set_enable(state->m_bg_tilemap[1], 1);
-	tilemap_set_enable(state->m_bg_tilemap[2], 1);
+	state->m_bg_tilemap[0]->enable(1);
+	state->m_bg_tilemap[1]->enable(1);
+	state->m_bg_tilemap[2]->enable(1);
 
 	/* Blank screen */
 	bitmap.fill(0xbff, cliprect);
@@ -914,5 +914,24 @@ ROM_START( kodb )
 	ROM_LOAD( "2.ic19",      0x00000, 0x40000, CRC(a2db1575) SHA1(1a4a29e4b045af50700adf1665697feab12cc234) )
 ROM_END
 
+ROM_START( cawingbl )
+	ROM_REGION( 0x400000, "maincpu", 0 )      /* 68000 code */
+	ROM_LOAD16_BYTE( "caw2.bin",    0x00000, 0x80000, CRC(8125d3f0) SHA1(a0e48c326c6164ca189c9372f5c38a7c103772c1) )
+	ROM_LOAD16_BYTE( "caw1.bin",    0x00001, 0x80000, CRC(b19b10ce) SHA1(3c71f1dc830d1e8b8ba26d8a71e12f477659480c) )
+
+	ROM_REGION( 0x200000, "gfx", 0 )
+	ROMX_LOAD( "caw4.bin", 0x000000, 0x80000, CRC(4937fc41) SHA1(dac179715be483a521df8e515afc1fb7a2cd8f13) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "caw5.bin", 0x000002, 0x80000, CRC(30dd78db) SHA1(e0295001d6f5fb4a9276c432f971e88f73c5e39a) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "caw6.bin", 0x000004, 0x80000, CRC(61192f7c) SHA1(86643c62653a62a5c7541d50cfdecae9b607440d) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "caw7.bin", 0x000006, 0x80000, CRC(a045c689) SHA1(8946c55635121282ea03586a278e50de20d92633) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( 0x30000, "soundcpu", 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "caw3.bin",  0x00000, 0x20000, CRC(ffe16cdc) SHA1(8069ea69f0b89d61c35995c8040a4989d7be9c1f) )
+	ROM_RELOAD(          0x10000, 0x20000 )
+ROM_END
+
+
+
 GAME( 1990, fcrash,   ffight,  fcrash,     fcrash,   cps1,     ROT0,   "bootleg (Playmark)", "Final Crash (bootleg of Final Fight)", GAME_SUPPORTS_SAVE )
 GAME( 1991, kodb,     kod,     kodb,       kodb,     cps1,     ROT0,   "bootleg (Playmark)", "The King of Dragons (bootleg)", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )	// 910731  "ETC"
+GAME( 1990, cawingbl, cawing,  fcrash,     fcrash,   cps1,     ROT0,   "bootleg", "Carrier Air Wing (bootleg with 2xYM2203)", GAME_NOT_WORKING )

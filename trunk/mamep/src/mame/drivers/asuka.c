@@ -819,12 +819,12 @@ static const tc0100scn_interface cadash_tc0100scn_intf =
 
 static const pc090oj_interface asuka_pc090oj_intf =
 {
-	0, 0, 8, 0
+	0, 0, 8, 1
 };
 
-static const pc090oj_interface cadash_pc090oj_intf =
+static const pc090oj_interface bonzeadv_pc090oj_intf =
 {
-	0, 0, 8, 1
+	0, 0, 8, 0
 };
 
 static const tc0110pcr_interface asuka_tc0110pcr_intf =
@@ -876,6 +876,7 @@ static MACHINE_RESET( asuka )
 
 static SCREEN_VBLANK( asuka )
 {
+	// rising edge
 	if (vblank_on)
 	{
 		asuka_state *state = screen.machine().driver_data<asuka_state>();
@@ -922,7 +923,7 @@ static MACHINE_CONFIG_START( bonzeadv, asuka_state )
 	MCFG_GFXDECODE(asuka)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_PC090OJ_ADD("pc090oj", asuka_pc090oj_intf)
+	MCFG_PC090OJ_ADD("pc090oj", bonzeadv_pc090oj_intf)
 	MCFG_TC0100SCN_ADD("tc0100scn", asuka_tc0100scn_intf)
 	MCFG_TC0110PCR_ADD("tc0110pcr", asuka_tc0110pcr_intf)
 
@@ -1019,7 +1020,7 @@ static MACHINE_CONFIG_START( cadash, asuka_state )
 	MCFG_GFXDECODE(asuka)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_PC090OJ_ADD("pc090oj", cadash_pc090oj_intf)
+	MCFG_PC090OJ_ADD("pc090oj", asuka_pc090oj_intf)
 	MCFG_TC0100SCN_ADD("tc0100scn", cadash_tc0100scn_intf)
 	MCFG_TC0110PCR_ADD("tc0110pcr", asuka_tc0110pcr_intf)
 
@@ -1063,7 +1064,7 @@ static MACHINE_CONFIG_START( mofflott, asuka_state )
 	MCFG_GFXDECODE(asuka)
 	MCFG_PALETTE_LENGTH(4096)	/* only Mofflott uses full palette space */
 
-	MCFG_PC090OJ_ADD("pc090oj", asuka_pc090oj_intf)
+	MCFG_PC090OJ_ADD("pc090oj", bonzeadv_pc090oj_intf)
 	MCFG_TC0100SCN_ADD("tc0100scn", cadash_tc0100scn_intf)
 	MCFG_TC0110PCR_ADD("tc0110pcr", asuka_tc0110pcr_intf)
 
@@ -1111,7 +1112,7 @@ static MACHINE_CONFIG_START( galmedes, asuka_state )
 	MCFG_GFXDECODE(asuka)
 	MCFG_PALETTE_LENGTH(4096)	/* only Mofflott uses full palette space */
 
-	MCFG_PC090OJ_ADD("pc090oj", asuka_pc090oj_intf)
+	MCFG_PC090OJ_ADD("pc090oj", bonzeadv_pc090oj_intf)
 	MCFG_TC0100SCN_ADD("tc0100scn", cadash_tc0100scn_intf)
 	MCFG_TC0110PCR_ADD("tc0110pcr", asuka_tc0110pcr_intf)
 
@@ -1155,7 +1156,7 @@ static MACHINE_CONFIG_START( eto, asuka_state )
 	MCFG_GFXDECODE(asuka)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_PC090OJ_ADD("pc090oj", asuka_pc090oj_intf)
+	MCFG_PC090OJ_ADD("pc090oj", bonzeadv_pc090oj_intf)
 	MCFG_TC0100SCN_ADD("tc0100scn", cadash_tc0100scn_intf)
 	MCFG_TC0110PCR_ADD("tc0110pcr", asuka_tc0110pcr_intf)
 

@@ -90,10 +90,7 @@ void K053936GP_clip_enable(int chip, int status) { K053936_clip_enabled[chip] = 
 void K053936GP_set_cliprect(int chip, int minx, int maxx, int miny, int maxy)
 {
 	rectangle &cliprect = K053936_cliprect[chip];
-	cliprect.min_x = minx;
-	cliprect.max_x = maxx;
-	cliprect.min_y = miny;
-	cliprect.max_y = maxy;
+	cliprect.set(minx, maxx, miny, maxy);
 }
 
 INLINE void K053936GP_copyroz32clip( running_machine &machine,
@@ -289,7 +286,7 @@ static void K053936GP_zoom_draw(running_machine &machine,
 	UINT32 startx, starty;
 	int incxx, incxy, incyx, incyy, y, maxy, clip;
 
-	bitmap_ind16 &src_bitmap = tilemap_get_pixmap(tmap);
+	bitmap_ind16 &src_bitmap = tmap->pixmap();
 	rectangle &src_cliprect = K053936_cliprect[chip];
 	clip = K053936_clip_enabled[chip];
 
@@ -505,8 +502,8 @@ INLINE void zdrawgfxzoom32GP(
 
 	// adjust insertion points and pre-entry constants
 	eax = (dst_y - dst_miny) * GX_ZBUFW + (dst_x - dst_minx) + dst_w;
-//  db0 = z8 = (UINT8)zcode;
-//  db1 = p8 = (UINT8)pri;
+	z8 = (UINT8)zcode;
+	p8 = (UINT8)pri;
 	ozbuf_ptr += eax;
 	szbuf_ptr += eax << 1;
 	dst_ptr += dst_y * dst_pitch + dst_x + dst_w;
@@ -1056,8 +1053,8 @@ static void gx_wipezbuf(running_machine &machine, int noshadow)
 {
 	const rectangle &visarea = machine.primary_screen->visible_area();
 
-	int w = visarea.max_x - visarea.min_x + 1;
-	int h = visarea.max_y - visarea.min_y + 1;
+	int w = visarea.width();
+	int h = visarea.height();
 
 	UINT8 *zptr = gx_objzbuf;
 	int ecx = h;
@@ -1177,6 +1174,8 @@ void konamigx_mixer(running_machine &machine, bitmap_rgb32 &bitmap, const rectan
 	int nobj, i, j, k, l, temp, temp1, temp2, temp3, temp4, count;
 	int order, offs, code, color, zcode, pri = 0, spri, spri_min, shdprisel, shadow, alpha, drawmode;
 
+	// buffer can move when it's resized, so refresh the pointer
+	gx_objzbuf = &machine.priority_bitmap.pix8(0);
 
 	// abort if object database failed to initialize
 	objpool = gx_objpool;
@@ -1575,7 +1574,7 @@ void konamigx_mixer(running_machine &machine, bitmap_rgb32 &bitmap, const rectan
 					{
 						int pixeldouble_output = 0;
 						const rectangle &visarea = machine.primary_screen->visible_area();
-						int width = visarea.max_x - visarea.min_x + 1;
+						int width = visarea.width();
 
 						if (width>512) // vsnetscr case
 							pixeldouble_output = 1;
@@ -1852,7 +1851,7 @@ WRITE32_HANDLER( konamigx_type3_psac2_bank_w )
 	/* handle this by creating 2 roz tilemaps instead, otherwise performance dies completely on dual screen mode
     if (konamigx_type3_psac2_actual_bank!=konamigx_type3_psac2_actual_last_bank)
     {
-        tilemap_mark_all_tiles_dirty (gx_psac_tilemap);
+        gx_psac_tilemap->mark_all_dirty();
         konamigx_type3_psac2_actual_last_bank = konamigx_type3_psac2_actual_bank;
     }
     */
@@ -2167,7 +2166,7 @@ VIDEO_START(konamigx_type3)
 	type3_roz_temp_bitmap = auto_bitmap_ind16_alloc(machine, width, height);
 
 
-	//tilemap_set_flip(gx_psac_tilemap, TILEMAP_FLIPX| TILEMAP_FLIPY);
+	//gx_psac_tilemap->set_flip(TILEMAP_FLIPX| TILEMAP_FLIPY);
 
 	K053936_wraparound_enable(0, 1);
 //  K053936GP_set_offset(0, -30, -1);
@@ -2309,8 +2308,8 @@ VIDEO_START(opengolf)
 	gx_psac_tilemap2 = tilemap_create(machine, get_gx_psac1b_tile_info, tilemap_scan_cols,  16, 16, 128, 128);
 
 	// transparency will be handled manually in post-processing
-	//tilemap_set_transparent_pen(gx_psac_tilemap, 0);
-	//tilemap_set_transparent_pen(gx_psac_tilemap2, 0);
+	//gx_psac_tilemap->set_transparent_pen(0);
+	//gx_psac_tilemap2->set_transparent_pen(0);
 
 	gx_rozenable = 0;
 	gx_specialrozenable = 1;
@@ -2319,10 +2318,7 @@ VIDEO_START(opengolf)
 	gxtype1_roz_dstbitmap2 = auto_bitmap_ind16_alloc(machine,512,512); // BITMAP_FORMAT_IND16 because we NEED the raw pen data for post-processing
 
 
-	gxtype1_roz_dstbitmapclip.min_x = 0;
-	gxtype1_roz_dstbitmapclip.max_x = 512-1;
-	gxtype1_roz_dstbitmapclip.min_y = 0;
-	gxtype1_roz_dstbitmapclip.max_y = 512-1;
+	gxtype1_roz_dstbitmapclip.set(0, 512-1, 0, 512-1);
 
 
 	K053936_wraparound_enable(0, 1);
@@ -2350,8 +2346,8 @@ VIDEO_START(racinfrc)
 	gx_psac_tilemap2 = tilemap_create(machine, get_gx_psac1b_tile_info, tilemap_scan_cols,  16, 16, 128, 128);
 
 	// transparency will be handled manually in post-processing
-	//tilemap_set_transparent_pen(gx_psac_tilemap, 0);
-	//tilemap_set_transparent_pen(gx_psac_tilemap2, 0);
+	//gx_psac_tilemap->set_transparent_pen(0);
+	//gx_psac_tilemap2->set_transparent_pen(0);
 
 	gx_rozenable = 0;
 	gx_specialrozenable = 1;
@@ -2360,10 +2356,7 @@ VIDEO_START(racinfrc)
 	gxtype1_roz_dstbitmap2 = auto_bitmap_ind16_alloc(machine,512,512); // BITMAP_FORMAT_IND16 because we NEED the raw pen data for post-processing
 
 
-	gxtype1_roz_dstbitmapclip.min_x = 0;
-	gxtype1_roz_dstbitmapclip.max_x = 512-1;
-	gxtype1_roz_dstbitmapclip.min_y = 0;
-	gxtype1_roz_dstbitmapclip.max_y = 512-1;
+	gxtype1_roz_dstbitmapclip.set(0, 512-1, 0, 512-1);
 
 
 	K053936_wraparound_enable(0, 1);
@@ -2418,10 +2411,10 @@ SCREEN_UPDATE_RGB32(konamigx)
 
 		if (psac_colorbase != last_psac_colorbase)
 		{
-			tilemap_mark_all_tiles_dirty(gx_psac_tilemap);
+			gx_psac_tilemap->mark_all_dirty();
 			if (gx_rozenable == 3)
 			{
-				tilemap_mark_all_tiles_dirty(gx_psac_tilemap2);
+				gx_psac_tilemap2->mark_all_dirty();
 			}
 		}
 	}
@@ -2447,10 +2440,8 @@ SCREEN_UPDATE_RGB32(konamigx)
 	{
 		// we're going to throw half of this away anyway in post-process, so only render what's needed
 		rectangle temprect;
-		temprect.min_x = cliprect.min_x;
+		temprect = cliprect;
 		temprect.max_x = cliprect.min_x+320;
-		temprect.min_y = cliprect.min_y;
-		temprect.max_y = cliprect.max_y;
 
 		if (konamigx_type3_psac2_actual_bank == 1) K053936_0_zoom_draw(*type3_roz_temp_bitmap, temprect,gx_psac_tilemap_alt, 0,0,0); // soccerss playfield
 		else K053936_0_zoom_draw(*type3_roz_temp_bitmap, temprect,gx_psac_tilemap, 0,0,0); // soccerss playfield
@@ -2669,8 +2660,8 @@ WRITE32_HANDLER( konamigx_tilebank_w )
 WRITE32_HANDLER(konamigx_t1_psacmap_w)
 {
 	COMBINE_DATA(&gx_psacram[offset]);
-	tilemap_mark_tile_dirty(gx_psac_tilemap, offset/2);
-	tilemap_mark_tile_dirty(gx_psac_tilemap2, offset/2);
+	gx_psac_tilemap->mark_tile_dirty(offset/2);
+	gx_psac_tilemap2->mark_tile_dirty(offset/2);
 }
 
 // type 4 RAM-based PSAC tilemap
@@ -2678,7 +2669,7 @@ WRITE32_HANDLER( konamigx_t4_psacmap_w )
 {
 	COMBINE_DATA(&gx_psacram[offset]);
 
-	tilemap_mark_tile_dirty(gx_psac_tilemap, offset*2);
-	tilemap_mark_tile_dirty(gx_psac_tilemap, (offset*2)+1);
+	gx_psac_tilemap->mark_tile_dirty(offset*2);
+	gx_psac_tilemap->mark_tile_dirty((offset*2)+1);
 }
 

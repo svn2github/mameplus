@@ -138,15 +138,38 @@ struct rom_entry
 
 
 //mamep: moved from romload.c
-typedef struct _open_chd open_chd;
-struct _open_chd
+class open_chd
 {
-	open_chd *			next;					/* pointer to next in the list */
-	const char *		region;					/* disk region we came from */
-	chd_file *			origchd;				/* handle to the original CHD */
-	emu_file *			origfile;				/* file handle to the original CHD file */
-	chd_file *			diffchd;				/* handle to the diff CHD */
-	emu_file *			difffile;				/* file handle to the diff CHD file */
+	friend class simple_list<open_chd>;
+
+public:
+	open_chd(const char *region, emu_file &file, chd_file &chdfile, emu_file *difffile = NULL, chd_file *diffchd = NULL)
+		: m_next(NULL),
+		  m_region(region),
+		  m_origchd(&chdfile),
+		  m_origfile(&file),
+		  m_diffchd(diffchd),
+		  m_difffile(difffile) { }
+
+	~open_chd()
+	{
+		if (m_diffchd != NULL) chd_close(m_diffchd);
+		global_free(m_difffile);
+		chd_close(m_origchd);
+		global_free(m_origfile);
+	}
+
+	open_chd *next() const { return m_next; }
+	const char *region() const { return m_region; }
+	chd_file *chd() const { return (m_diffchd != NULL) ? m_diffchd : m_origchd; }
+
+private:
+	open_chd *			m_next;					/* pointer to next in the list */
+	astring				m_region;				/* disk region we came from */
+	chd_file *			m_origchd;				/* handle to the original CHD */
+	emu_file *			m_origfile;				/* file handle to the original CHD file */
+	chd_file *			m_diffchd;				/* handle to the diff CHD */
+	emu_file *			m_difffile;				/* file handle to the diff CHD file */
 };
 
 
@@ -172,8 +195,7 @@ struct _romload_private
 #ifdef USE_IPS
 	void *			patch;				/* current ips */
 #endif /* USE_IPS */
-	open_chd *		chd_list;			/* disks */
-	open_chd **		chd_list_tailptr;
+	simple_list<open_chd> chd_list;		/* disks */
 
 	memory_region *	region;				/* info about current region */
 

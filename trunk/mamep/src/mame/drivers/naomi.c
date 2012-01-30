@@ -2560,7 +2560,7 @@ MACHINE_CONFIG_END
  */
 
 static MACHINE_CONFIG_DERIVED( naomigd, naomi_base )
-	MCFG_NAOMI_GDROM_BOARD_ADD("rom_board", "gdrom", "pic", "naomibd_eeprom", "maincpu", naomi_g1_irq)
+	MCFG_NAOMI_GDROM_BOARD_ADD("rom_board", ":gdrom", "pic", "naomibd_eeprom", "maincpu", naomi_g1_irq)
 MACHINE_CONFIG_END
 
 /*
@@ -3949,6 +3949,23 @@ ROM_START( tduno2 )
     ROM_LOAD( "tduno2.key",   0x000000, 0x000004, CRC(8e0f0f3b) SHA1(914d3db8746c806d559539cc0851169161d32c04) ) 
 ROM_END
 
+ROM_START( mtkob2 )
+	NAOMI_BIOS
+	NAOMI_DEFAULT_EEPROM
+
+    ROM_REGION( 0x4000000, "rom_board", ROMREGION_ERASEFF)
+    ROM_LOAD( "epr-24217.ic11",         0x0000000, 0x0400000, CRC(5ecf807b) SHA1(f91d03a68a44d02970e360789b746bec9289275f) ) 
+    ROM_LOAD32_WORD( "mpr-24218.ic17s", 0x1000000, 0x0800000, CRC(e8c51e1d) SHA1(e81f0580e144aa7a7e8c9399ffa09227b6e93675) ) 
+    ROM_LOAD32_WORD( "mpr-24219.ic18",  0x1000002, 0x0800000, CRC(b0a5709f) SHA1(993f7a99d59a924641c37a549208723342007e5a) ) 
+    ROM_LOAD32_WORD( "mpr-24220.ic19s", 0x2000000, 0x0800000, CRC(9f6cefe2) SHA1(499e17d2c284b340db6b124b63a23c7fa5045d0f) ) 
+    ROM_LOAD32_WORD( "mpr-24221.ic20",  0x2000002, 0x0800000, CRC(73bf9cc6) SHA1(ab187cc0babd1435f5e8636331818d81de23636f) ) 
+    ROM_LOAD32_WORD( "mpr-24222.ic21s", 0x3000000, 0x0800000, CRC(7098e728) SHA1(82f4f57efcee3063467c24758cefd406dccb1ea4) ) 
+    ROM_LOAD32_WORD( "mpr-24223.ic22",  0x3000002, 0x0800000, CRC(eca13c90) SHA1(26a66906bf4ebda8697140d89eb5e493e941e8b2) ) 
+
+    ROM_REGION( 4, "rom_key", 0 )
+    ROM_LOAD( "mtkob2-key.bin", 0x000000, 0x000004, CRC(db088208) SHA1(14d65ad2555183a445abcd93907c85df4032b41d) ) 
+ROM_END
+
 ROM_START( crackndj )
 	NAOMI_BIOS
 	NAOMI_DEFAULT_EEPROM
@@ -5111,6 +5128,35 @@ ROM_START( virnbao )
 
 	ROM_REGION( 4, "rom_key", 0 )
 	ROM_LOAD( "virnbao-key.bin", 0, 4, CRC(980e3be8) SHA1(234a2f8ee408144d2c51e8083d0a033eea6026e0) )
+ROM_END
+
+ROM_START( virnbap )
+	NAOMI_BIOS
+	NAOMI_DEFAULT_EEPROM
+
+	ROM_REGION( 0xb000000, "rom_board", ROMREGION_ERASEFF)
+    ROM_LOAD("vnbaearly.ic22",0x0000000, 0x0400000, CRC(5bbf7a45) SHA1(ad71ae8e9e08d7e0a9a60d1ba51bc5dcfeb0f50c) ) 
+	ROM_LOAD("mpr-22928.ic1", 0x0800000, 0x0800000, CRC(63245c98) SHA1(a5a542244f07c6c8b66961a231fb56c89d2cf20c) )
+	ROM_LOAD("mpr-22929.ic2", 0x1000000, 0x0800000, CRC(eea89d21) SHA1(5fe184267e637f155d767f8d931462d9593eff5a) )
+	ROM_LOAD("mpr-22930.ic3", 0x1800000, 0x0800000, CRC(2fbefa9a) SHA1(a6df46cb8742022e436cdc6a9a50490c7a551421) )
+	ROM_LOAD("mpr-22931.ic4", 0x2000000, 0x0800000, CRC(7332e559) SHA1(9147b69f84713f8e6c2c84b71ccd48bae879c655) )
+	ROM_LOAD("mpr-22932.ic5", 0x2800000, 0x0800000, CRC(ef80e18c) SHA1(51406b82c66dc1822657948c62e1c4b8e628a739) )
+	ROM_LOAD("mpr-22933.ic6", 0x3000000, 0x0800000, CRC(6a374076) SHA1(3b7c1ce5e3ae027e578c60a885724deeadc07448) )
+	ROM_LOAD("mpr-22934.ic7", 0x3800000, 0x0800000, CRC(72f3ee15) SHA1(cf81e47c311769c9dc38fdbbef1a5e3f6b8a0be1) )
+	ROM_LOAD("mpr-22935.ic8", 0x4000000, 0x0800000, CRC(35fda6e9) SHA1(857b3c0f576d69d3637503fa53608bc6484eb331) )
+	ROM_LOAD("mpr-22936.ic9", 0x4800000, 0x0800000, CRC(b26df107) SHA1(900f1d06fdc9b6951de1b7e61a27ac846b2061db) )
+	ROM_LOAD("mpr-22937.ic10",0x5000000, 0x0800000, CRC(477a374b) SHA1(309b723f7d2840d6a2f24ad2f877928cc8138a12) )
+	ROM_LOAD("mpr-22938.ic11",0x5800000, 0x0800000, CRC(d59431a4) SHA1(6e3cd8cbde18a6a8672aa302cb119e486c0417e0) )
+	ROM_LOAD("mpr-22939.ic12",0x6000000, 0x0800000, CRC(b31d3e6d) SHA1(d55e56a66dc678b973c3d60d3cffb59032bc3c46) )
+	ROM_LOAD("mpr-22940.ic13",0x6800000, 0x0800000, CRC(90a81fbf) SHA1(5066b5eda80e881f6f399722f010161c0a452922) )
+	ROM_LOAD("mpr-22941.ic14",0x7000000, 0x0800000, CRC(8a72a77d) SHA1(5ce73a76c7915d5a19b05f57b1dfdcd1fe3c53a1) )
+	ROM_LOAD("mpr-22942.ic15",0x7800000, 0x0800000, CRC(710f709f) SHA1(2483f0b1106bc82710457a148772e50e83a439d8) )
+	ROM_LOAD("mpr-22943.ic16",0x8000000, 0x0800000, CRC(c544f593) SHA1(553af7b6c63d6d6221c4286b8a13840a86e55d5f) )
+	ROM_LOAD("mpr-22944.ic17",0x8800000, 0x0800000, CRC(cb096baa) SHA1(cbc267953a749dd24a03d87b65bc19b19bebf205) )
+	ROM_LOAD("mpr-22945.ic18",0x9000000, 0x0800000, CRC(f2f914e8) SHA1(ec600abde40bfb5004ec8200ee0eef9410ebca6a) )
+	ROM_LOAD("mpr-22946.ic19",0x9800000, 0x0800000, CRC(c79696c5) SHA1(4a9ac8b4ae1ce5d196e6c74fecc241b74aebc4ab) )
+	ROM_LOAD("mpr-22947.ic20",0xa000000, 0x0800000, CRC(5e5eb595) SHA1(401d4a11d436988d716bb014b36233f171dc576d) )
+	ROM_LOAD("mpr-22948.ic21",0xa800000, 0x0800000, CRC(1b0de917) SHA1(fd1742ea9bb2f1ce871ee3266171f26634e1c8e7) )
 ROM_END
 
 /*
@@ -7714,6 +7760,7 @@ ROM_END
 /* 0018 */ GAME( 1999, sgtetris, naomi,    naomim2, naomi,    naomi,    ROT0, "Sega", "Sega Tetris", GAME_FLAGS )
 /* 0019 */ GAME( 1999, dybb99,   naomi,    naomim2, dybbnao,  naomi,    ROT0, "Sega", "Dynamite Baseball '99 (JPN) / World Series '99 (USA, EXP, KOR, AUS) (Rev B)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 /* 0020 */ GAME( 1999, samba,    naomi,    naomim2, naomi,    naomi,    ROT0, "Sega", "Samba De Amigo (JPN) (Rev B)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
+/* 0021 */ GAME( 2000, virnbap,  virnba,   naomi,   naomi,    naomi,    ROT0, "Sega", "Virtua NBA (prototype)", GAME_FLAGS )
 /* 0021 */ GAME( 2000, virnbao,  virnba,   naomim2, naomi,    naomi,    ROT0, "Sega", "Virtua NBA (JPN, USA, EXP, KOR, AUS) (original)", GAME_FLAGS )
 /* 0021-01 */ GAME( 2000,virnba, naomi,    naomi,   naomi,    naomi,    ROT0, "Sega", "Virtua NBA (JPN, USA, EXP, KOR, AUS)", GAME_FLAGS )
 /* 0022 */ GAME( 2000, tduno2,   naomi,    naomim2, naomi,    naomi,    ROT0, "Sega", "Touch de Uno! 2", GAME_UNEMULATED_PROTECTION|GAME_FLAGS ) 
@@ -7746,7 +7793,7 @@ ROM_END
 /* 0126 */ GAME( 2003, oinori,   naomi,    naomi,   naomi,    naomi,    ROT0, "Sega", "Oinori-daimyoujin Matsuri", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 /* 0128 */ GAME( 2002, shootpl,  naomi,    naomim1, naomi,    naomi,    ROT0, "Sega", "Shootout Pool (JPN, USA, KOR, AUS) / Shootout Pool Prize (EXP)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 /* 0140 */ GAME( 2004, kick4csh, naomi,    naomim1, naomi,    kick4csh, ROT0, "Sega", "Kick '4' Cash", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
-// 0150 MushiKing The King Of Beetle 2K3 2ND
+/* 0150 */ GAME( 2003, mtkob2,   naomi,    naomim1, naomi,    naomi,    ROT0, "Sega", "Mushiking The King Of Beetle 2K3 2nd", GAME_UNEMULATED_PROTECTION|GAME_FLAGS ) 
 // 0164 MushiKing The King Of Beetle II ENG
 // 0166 Touch De Zunou (Japan)
 // 0166 Touch De Zunou (Japan) (Rev A)
@@ -7820,7 +7867,7 @@ ROM_END
 // 0012A Virtua Fighter 4 (Rev A)
 /* 0012B */ GAME( 2001, vf4b,      vf4,      naomi2gd, naomi,   naomi2,   ROT0, "Sega", "Virtua Fighter 4 (Rev B) (GDS-0012B)", GAME_FLAGS )
 /* 0012C */ GAME( 2001, vf4c,      vf4,      naomi2gd, naomi,   naomi2,   ROT0, "Sega", "Virtua Fighter 4 (Rev C) (GDS-0012C)", GAME_FLAGS )
-// 0013
+// 0013  Shakatto Tambourine 2K1 SPR (PIC: 253-5508-0315)
 /* 0014  */ GAME( 2001, beachspi,  naomi2,   naomi2gd, naomi,   naomi2,   ROT0, "Sega", "Beach Spikers (GDS-0014)", GAME_FLAGS )
 // 0015  Virtua Tennis 2 / Power Smash 2
 /* 0015A */ GAME( 2001, vtennis2,  naomigd,  naomigd, naomi,    naomigd,    ROT0, "Sega", "Virtua Tennis 2 / Power Smash 2 (Rev A) (GDS-0015A)", GAME_FLAGS )
@@ -7945,16 +7992,16 @@ GAME( 2001, awbios,   0,        aw2c,    aw2c,  atomiswave, ROT0, "Sammy",      
 
 GAME( 2002, maxspeed, awbios,   aw1c,    aw1w,  atomiswave, ROT0, "Sammy",                           "Maximum Speed", GAME_FLAGS )
 GAME( 2002, sprtshot, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy USA",                       "Sports Shooting USA", GAME_FLAGS )
-GAME( 2003, ggx15,    awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy / Arc System Works",        "Guilty Gear X ver. 1.5", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAME( 2003, ggx15,    awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy / Arc System Works",        "Guilty Gear X ver. 1.5", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
 GAME( 2003, demofist, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Polygon Magic / Dimps",           "Demolish Fist", GAME_FLAGS )
-GAME( 2003, dolphin,  awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy",                           "Dolphin Blue", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAME( 2003, ggisuka,  awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy / Arc System Works",        "Guilty Gear Isuka", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAME( 2004, dirtypig, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy",                           "Dirty Pigskin Football", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
-GAME( 2004, rumblef,  awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy / Dimps",                   "The Rumble Fish", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAME( 2003, dolphin,  awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy",                           "Dolphin Blue", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
+GAME( 2003, ggisuka,  awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy / Arc System Works",        "Guilty Gear Isuka", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
+GAME( 2004, dirtypig, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy",                           "Dirty Pigskin Football", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
+GAME( 2004, rumblef,  awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy / Dimps",                   "The Rumble Fish", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
 GAME( 2004, rangrmsn, awbios,   aw2c,    aw1w,  atomiswave, ROT0, "Sammy",                           "Ranger Mission", GAME_FLAGS )
 GAME( 2004, salmankt, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy",                           "Salary Man Kintarou", GAME_FLAGS )
 GAME( 2004, ftspeed,  awbios,   aw1c,    aw1w,  atomiswave, ROT0, "Sammy",                           "Faster Than Speed", GAME_FLAGS )
-GAME( 2004, kov7sprt, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy / IGS",                     "Knights of Valour - The Seven Spirits", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAME( 2004, kov7sprt, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy / IGS",                     "Knights of Valour - The Seven Spirits", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
 GAME( 2005, vfurlong, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy",                           "Net Select Keiba Victory Furlong", GAME_FLAGS )
 GAME( 2004, rumblef2, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy / Dimps",                   "The Rumble Fish 2", GAME_FLAGS )
 GAME( 2005, anmlbskt, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy / Moss",                    "Animal Basket", GAME_FLAGS )
@@ -7965,5 +8012,5 @@ GAME( 2005, fotns,    awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sega / Arc Sy
 GAME( 2005, kofnw,    awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy / SNK Playmore",            "The King of Fighters Neowave", GAME_FLAGS )
 GAME( 2005, kofnwj,   kofnw,    aw2c,    aw2c,  atomiswave, ROT0, "Sammy / SNK Playmore",            "The King of Fighters Neowave (Japan)", GAME_FLAGS )
 GAME( 2005, xtrmhunt, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sammy",                           "Extreme Hunting", GAME_FLAGS )
-GAME( 2006, mslug6,   awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sega / SNK Playmore",             "Metal Slug 6", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAME( 2006, mslug6,   awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sega / SNK Playmore",             "Metal Slug 6", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
 GAME( 2006, xtrmhnt2, awbios,   aw2c,    aw2c,  atomiswave, ROT0, "Sega",                            "Extreme Hunting 2", GAME_FLAGS )

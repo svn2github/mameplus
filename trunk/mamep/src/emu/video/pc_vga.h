@@ -10,20 +10,9 @@
 #define PC_VGA_H
 
 MACHINE_CONFIG_EXTERN( pcvideo_vga );
+MACHINE_CONFIG_EXTERN( pcvideo_vga_isa );
 
-struct pc_vga_interface
-{
-	/* VGA dipswitch (???) */
-	read8_space_func read_dipswitch;
-
-	/* where the RAM go */
-	int mem_addressspace;
-	offs_t mem_offset;
-
-	/* where the ports go */
-	int port_addressspace;
-	offs_t port_offset;
-};
+VIDEO_START( vga );
 
 struct pc_svga_interface
 {
@@ -34,10 +23,30 @@ struct pc_svga_interface
 	void (*choosevideomode)(running_machine &machine, bitmap_rgb32 &bitmap, const rectangle &cliprect, const UINT8 *sequencer, const UINT8 *crtc, const UINT8 *gc, int *width, int *height);
 };
 
-void pc_vga_init(running_machine &machine, const struct pc_vga_interface *vga_intf, const struct pc_svga_interface *svga_intf);
+void pc_vga_init(running_machine &machine, read8_space_func read_dipswitch, const struct pc_svga_interface *svga_intf);
+void pc_vga_io_init(running_machine &machine, address_space *mem_space, offs_t mem_offset, address_space *io_space, offs_t port_offset);
 void pc_vga_reset(running_machine &machine);
 void *pc_vga_memory(void);
 size_t pc_vga_memory_size(void);
+void pc_video_start(running_machine &machine);
+
+READ8_HANDLER(vga_port_03b0_r);
+READ8_HANDLER(vga_port_03c0_r);
+READ8_HANDLER(vga_port_03d0_r);
+READ8_HANDLER(vga_mem_r);
+WRITE8_HANDLER(vga_port_03b0_w);
+WRITE8_HANDLER(vga_port_03c0_w);
+WRITE8_HANDLER(vga_port_03d0_w);
+WRITE8_HANDLER(vga_mem_w);
+
+/* per-device implementations */
+READ8_HANDLER(tseng_et4k_03c0_r);
+WRITE8_HANDLER(tseng_et4k_03c0_w);
+READ8_HANDLER(tseng_et4k_03d0_r);
+WRITE8_HANDLER(tseng_et4k_03d0_w);
+READ8_HANDLER(tseng_mem_r);
+WRITE8_HANDLER(tseng_mem_w);
+
 
 /*
   pega notes (paradise)
@@ -78,20 +87,6 @@ size_t pc_vga_memory_size(void);
 
   ROM_LOAD("oakvga.bin", 0xc0000, 0x8000, CRC(318c5f43))
 */
-#if 0
-        int i;
-        UINT8 *memory=machine.region("maincpu")->base()+0xc0000;
-        UINT8 chksum;
-
-		/* oak vga */
-        /* plausibility check of retrace signals goes wrong */
-        memory[0x00f5]=memory[0x00f6]=memory[0x00f7]=0x90;
-        memory[0x00f8]=memory[0x00f9]=memory[0x00fa]=0x90;
-        for (chksum=0, i=0;i<0x7fff;i++) {
-                chksum+=memory[i];
-        }
-        memory[i]=0x100-chksum;
-#endif
 
 #endif /* PC_VGA_H */
 

@@ -2374,6 +2374,7 @@ fshark			// B02 / TP-007 (c) 1987 Taito Corporation (World)
 skyshark		// B02 / TP-007 (c) 1987 Taito America Corporation + Romstar license (US)
 hishouza		// B02 / TP-007 (c) 1987 Taito Corporation (Japan)
 fsharkbt		// bootleg
+fsharkbla
 wardner			// B25 / TP-009 (c) 1987 Taito Corporation Japan (World)
 pyros			// B25 / TP-009 (c) 1987 Taito America Corporation (US)
 wardnerj		// B25 / TP-009 (c) 1987 Taito Corporation (Japan)
@@ -2584,6 +2585,25 @@ theroes			// (c) 2001 Primetek Investments
 korokoro		// (c) 1999 Takumi
 crusherm		// (c) 1999 Takumi
 tjumpman		// (c) 1999 Namco
+
+// CAVE CV1000B Board
+//mushisam		// (c) 2004 Cave
+//mushisama		// (c) 2004 Cave
+//espgal2			// (c) 2005 Cave
+//mushitam		// (c) 2005 Cave
+//futari10		// (c) 2006 Cave
+//futari15		// (c) 2006 Cave
+//futari15a		// (c) 2006 Cave
+//futariblk		// (c) 2006 Cave
+//ibara			// (c) 2006 Cave
+//ibarablk		// (c) 2006 Cave
+//ibarablka		// (c) 2006 Cave
+//pinkswts		// (c) 2006 Cave
+//pinkswtsa		// (c) 2006 Cave
+//pinkswtsb		// (c) 2006 Cave
+//deathsml		// (c) 2007 Cave
+//mmpork			// (c) 2007 Cave
+//mmmbanc			// (c) 2007 Cave
 
 // Kyugo games
 // Kyugo only made four games: Repulse, Flash Gal, SRD Mission and Air Wolf.
@@ -2814,6 +2834,7 @@ cawing			// 12/10/1990 (c) 1990 (World)
 cawingr1		// 09/10/1990 (c) 1990 (World)
 cawingu			// 12/10/1990 (c) 1990 (USA)
 cawingj			// 12/10/1990 (c) 1990 (Japan)
+cawingbl
 nemo			// 30/11/1990 (c) 1990 (World)
 nemoj			// 20/11/1990 (c) 1990 (Japan)
 sf2				// 22/05/1991 (c) 1991 (World)
@@ -3238,6 +3259,7 @@ jojobane		// 13/09/1999 (c) 1999 (Euro)
 // Capcom ZN1
 cpzn1
 ts2			// Battle Arena Toshinden 2 (USA 951124)
+ts2a			// Battle Arena Toshinden 2 (USA 951124)
 ts2j			// Battle Arena Toshinden 2 (JAPAN 951124)
 starglad		// Star Gladiator (USA 960627)
 stargladj		// Star Gladiator (JAPAN 960627)
@@ -4811,6 +4833,7 @@ totd			// 2000.01 The Typing of the Dead (Rev A)
 tduno2			// 2000.02 Touch de UNO! 2
 virnba			// 2000.02 Virtua NBA
 virnbao			// 2000.02 Virtua NBA (original)
+virnbap			// 2000.02 Virtua NBA (prototype)
 mvsc2			// 2000.03 Marvel Vs. Capcom 2 New Age of Heroes (Rev A)
 smarinef		// 2000.03 Sega Marine Fishing
 wldkicks		// 2000.03 World Kicks
@@ -4889,7 +4912,7 @@ moeru			// 2002.12 Moeru Casinyo
 quizqgd			// 2002.?? Quiz Keitai Q mode
 shootopl		// 2002.?? Shootout Pool
 shootpl			// 2002.?? Shootout Pool / Shootout Pool Prize (Rev A)
-				// 2003.02 MushiKing The King Of Beetle
+mtkob2			// 2003.02 MushiKing The King Of Beetle
 				// 2003.03 Sega Network Taisen Mahjong MJ
 ggxxrl			// 2003.03 Guilty Gear XX # Reload (Rev A)
 shikgam2		// 2003.04 Shikigami No Shiro II / The Castle of Shikigami II
@@ -7010,14 +7033,16 @@ samsh5sp		// 0272 (c) 2004 Playmore
 samsh5sph		// 0272 (c) 2004 Playmore
 samsh5spn		// 0272 (c) 2004 Playmore
 
-// The BrezzaSoft games don't have proper ID codes
+// Unlicensed commercial releases (no game ID)
 jockeygp
 jockeygpa
 vliner
 vlinero
 
-// Nor does Digger Man
 diggerma		// No Game ID (unlicensed), (c) 2000 Kyle Hodgetts, prototype
+
+sbp			// (c)2004 Vektorlogik
+
 
 #ifndef NCP
 // Hyper NeoGeo 64 uses a 3 digit rom code?
@@ -8864,7 +8889,7 @@ drgw3100		// (c) 1998
 dwex			// (c) 1998
 killbld			// (c) 1998
 killbld104		// (c) 1998
-kov				// (c) 1999
+kov			// (c) 1999
 kovplus			// (c) 1999
 kovplusa		// (c) 1999
 kovsgqyz		// bootleg
@@ -9893,7 +9918,7 @@ dlital			// (c) 1983 Sidam
 spaceace		// (c) 1983 Cinematronics
 spaceacea2		// (c) 1983 Cinematronics
 spaceacea		// (c) 1983 Cinematronics
-spaceaceeuro		// (c) 1983 Atari
+spaceaceeuro	// (c) 1983 Atari
 aztarac			// (c) 1983 Centuri (vector game)
 mole			// (c) 1982 Yachiyo Electronics, Ltd.
 thehand			// (c) 1981 T.I.C.
@@ -10034,6 +10059,7 @@ ghoshunt		// (c) 1995? Hanaho Games
 tutstomb		// (c) 199?? Island Design
 mouseatk		// (c) 1996 ICE
 rapidfir		// (c) 1998 Hanaho Games
+rapidfira		// (c) 1998 Hanaho Games
 rapidfire		// (c) 1998 Hanaho Games
 maletmad		// (c) 1999 Hanaho Games, licensed to Capcom
 crgolf			// (c) 1984 Nasco Japan
@@ -10092,6 +10118,7 @@ nhidctch		// (c) 1999 Eolith
 landbrk			// (c) 1999 Eolith
 landbrka		// (c) 1999 Eolith
 penfan			// (c) 1999 Eolith
+stealsee		// (c) 2000 Moov Generation / Eolith
 raccoon			// (c) 1999 Eolith
 fort2b			// (c) 2001 Eolith
 fort2ba			// (c) 2001 Eolith
@@ -10149,6 +10176,7 @@ su2000			// (c) 1993 Virtuality
 
 // Nexus 3D
 
+acheart
 acheartf		// (c) 2006 Examu
 
 // Multi Amenity Cassette System
@@ -10168,6 +10196,7 @@ pbchmp95		// (c) 1995 Veltmeijer Automaten
 cardline		// (c) 199? Veltmeijer
 bmcbowl			// (c) 1994 BMC
 koftball		// (c) 1995 BMC
+popobear		// (c) 2000 BMC
 mpoker			// (c) 1983 Merit
 pitboss			// (c) 1983 Merit
 pitbossa		// (c) 1983 Merit
@@ -10666,6 +10695,7 @@ bingor3			// (c) 2002 Unknown
 bingor4			// (c) 2002 Unknown
 bingor5			// (c) 2002 Unknown
 galgame			// (c) 1971 Computer Recreations, Inc
+ichiban			// (c) 199? Excel
 
 // InterFlip / Recreativos Franco
 videopkr		// (c) 1984 InterFlip
@@ -10855,6 +10885,7 @@ lucky8			// (c) 1989 Wing Co. Ltd
 lucky8a			// (c) 1989 Wing Co. Ltd
 lucky8b			// (c) 1989 Wing Co. Ltd
 luckgrln		// (c) 1991 Wing Co. Ltd
+7smash			// (c) 1993 Sovic
 luckylad		// (c) 1985 Wing Co. Ltd
 bingowng		// (c) 1993 Wing Co. Ltd
 bingownga		// (c) 1993 Wing Co. Ltd
@@ -11244,6 +11275,13 @@ fcockt_9		// (c) 2003
 fcockt_10		// (c) 2003
 fcockt_11		// (c) 2003
 fcockt_12		// (c) 2003
+fcockt2_3
+fcockt2_4
+fcockt2_4a
+fcockt2_4b
+fcockt2_4d
+fcockt2_4f
+fcockt2_5
 
 // Lucky Haunter
 //lhaunt  		// (c) 2003
@@ -16801,8 +16839,34 @@ m1cluessr
 m1cluessrp
 m1cluesss
 m1cluesssp
-m1coderd	// Code Red Club (Maygay)
+m1coderd
+m1coderdp
 m1coro		// Coronation Street (Maygay)
+m1corop
+m1coro32g
+m1coro32gh
+m1coro12g
+m1coro12gp
+m1coro12a
+m1coro10h1
+m1coro10h2
+m1coro10h3
+m1coro81
+m1coro81p
+m1coro32n
+m1coro32np
+m1coro22n
+m1coro21n
+m1coro21np
+m1coro12n
+m1coro12np
+m1coro11n
+m1coro11np
+m1coro31
+m1coro31p
+m1coro30h
+m1coro21v
+m1coro21vp
 m1cororr	// Coronation Street - Rovers Return (Maygay)
 m1corocb	// Coronation Street Club (Maygay) 
 m1corosh	// Coronation Street Showcase (Maygay)
@@ -20579,6 +20643,4 @@ saiyukip
 tmspoker
 tonton
 kas89
-
-7smash
 #endif // !NCP

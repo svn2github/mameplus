@@ -1529,29 +1529,30 @@ static astring &warnings_string(running_machine &machine, astring &string)
 
 astring &game_info_astring(running_machine &machine, astring &string)
 {
-	int scrcount = machine.devicelist().count(SCREEN);
+	screen_device_iterator scriter(machine.root_device());
+	int scrcount = scriter.count();
 	int found_sound = FALSE;
 
 	/* print description, manufacturer, and CPU: */
 	string.printf("%s\n%s %s\n\nCPU:\n", _LST(machine.system().description), machine.system().year, _MANUFACT(machine.system().manufacturer));
 
 	/* loop over all CPUs */
-	device_execute_interface *exec = NULL;
-	for (bool gotone = machine.devicelist().first(exec); gotone; gotone = exec->next(exec))
+	execute_interface_iterator execiter(machine.root_device());
+	for (device_execute_interface *exec = execiter.first(); exec != NULL; exec = execiter.next())
 	{
 		/* get cpu specific clock that takes internal multiplier/dividers into account */
 		int clock = exec->device().clock();
 
 		/* count how many identical CPUs we have */
 		int count = 1;
-		device_execute_interface *scan = NULL;
-		for (bool gotanother = exec->next(scan); gotanother; gotanother = scan->next(scan))
+		for (device_execute_interface *scan = execiter.next(); scan != NULL; scan = execiter.next())
 		{
 			if (exec->device().type() != scan->device().type() || exec->device().clock() != scan->device().clock())
 				break;
 			count++;
 			exec = scan;
 		}
+		execiter.set_current(*exec);
 
 		/* if more than one, prepend a #x in front of the CPU name */
 		if (count > 1)
@@ -1566,8 +1567,8 @@ astring &game_info_astring(running_machine &machine, astring &string)
 	}
 
 	/* loop over all sound chips */
-	device_sound_interface *sound = NULL;
-	for (bool gotone = machine.devicelist().first(sound); gotone; gotone = sound->next(sound))
+	sound_interface_iterator snditer(machine.root_device());
+	for (device_sound_interface *sound = snditer.first(); sound != NULL; sound = snditer.next())
 	{
 		/* append the Sound: string */
 		if (!found_sound)
@@ -1576,14 +1577,14 @@ astring &game_info_astring(running_machine &machine, astring &string)
 
 		/* count how many identical sound chips we have */
 		int count = 1;
-		device_sound_interface *scan = NULL;
-		for (bool gotanother = sound->next(scan); gotanother; gotanother = scan->next(scan))
+		for (device_sound_interface *scan = snditer.next(); scan != NULL; scan = snditer.next())
 		{
 			if (sound->device().type() != scan->device().type() || sound->device().clock() != scan->device().clock())
 				break;
 			count++;
 			sound = scan;
 		}
+		snditer.set_current(*sound);
 
 		/* if more than one, prepend a #x in front of the CPU name */
 		if (count > 1)
@@ -1606,7 +1607,8 @@ astring &game_info_astring(running_machine &machine, astring &string)
 		string.cat(_("None\n"));
 	else
 	{
-		for (screen_device *screen = machine.first_screen(); screen != NULL; screen = screen->next_screen())
+		screen_device_iterator iter(machine.root_device());
+		for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
 		{
 			if (scrcount > 1)
 			{
@@ -1621,8 +1623,7 @@ astring &game_info_astring(running_machine &machine, astring &string)
 				const rectangle &visarea = screen->visible_area();
 
 				string.catprintf("%d " UTF8_MULTIPLY " %d (%s) %f" UTF8_NBSP "Hz\n",
-						visarea.max_x - visarea.min_x + 1,
-						visarea.max_y - visarea.min_y + 1,
+						visarea.width(), visarea.height(),
 						(machine.system().flags & ORIENTATION_SWAP_XY) ? "V" : "H",
 						ATTOSECONDS_TO_HZ(screen->frame_period().attoseconds));
 			}
@@ -1789,17 +1790,13 @@ void ui_paste(running_machine &machine)
 
 void ui_image_handler_ingame(running_machine &machine)
 {
-	device_image_interface *image = NULL;
-
 	/* run display routine for devices */
 	if (machine.phase() == MACHINE_PHASE_RUNNING)
 	{
-		for (bool gotone = machine.devicelist().first(image); gotone; gotone = image->next(image))
-		{
+		image_interface_iterator iter(machine.root_device());
+		for (device_image_interface *image = iter.first(); image != NULL; image = iter.next())
 			image->call_display();
-		}
 	}
-
 }
 
 
@@ -2329,7 +2326,6 @@ static slider_state *slider_init(running_machine &machine)
 {
 	input_field_config *field;
 	input_port_config *port;
-	device_t *device;
 	slider_state *listhead = NULL;
 	slider_state **tailptr = &listhead;
 	astring string;
@@ -2368,8 +2364,8 @@ static slider_state *slider_init(running_machine &machine)
 	/* add CPU overclocking (cheat only) */
 	if (machine.options().cheat())
 	{
-		device_execute_interface *exec = NULL;
-		for (bool gotone = machine.devicelist().first(exec); gotone; gotone = exec->next(exec))
+		execute_interface_iterator iter(machine.root_device());
+		for (device_execute_interface *exec = iter.first(); exec != NULL; exec = iter.next())
 		{
 			void *param = (void *)&exec->device();
 			string.printf(_("Overclock CPU %s"), exec->device().tag());
@@ -2380,7 +2376,8 @@ static slider_state *slider_init(running_machine &machine)
 	}
 
 	/* add screen parameters */
-	for (screen_device *screen = machine.first_screen(); screen != NULL; screen = screen->next_screen())
+	screen_device_iterator scriter(machine.root_device());
+	for (screen_device *screen = scriter.first(); screen != NULL; screen = scriter.next())
 	{
 		int defxscale = floor(screen->xscale() * 1000.0f + 0.5f);
 		int defyscale = floor(screen->yscale() * 1000.0f + 0.5f);
@@ -2422,10 +2419,9 @@ static slider_state *slider_init(running_machine &machine)
 		tailptr = &(*tailptr)->next;
 	}
 
-	for (device = machine.devicelist().first(); device != NULL; device = device->next())
-	{
-		laserdisc_device *laserdisc = dynamic_cast<laserdisc_device *>(device);
-		if (laserdisc != NULL && laserdisc->overlay_configured())
+	laserdisc_device_iterator lditer(machine.root_device());
+	for (laserdisc_device *laserdisc = lditer.first(); laserdisc != NULL; laserdisc = lditer.next())
+		if (laserdisc->overlay_configured())
 		{
 			laserdisc_overlay_config config;
 			laserdisc->get_overlay_config(config);
@@ -2449,9 +2445,8 @@ static slider_state *slider_init(running_machine &machine)
 			*tailptr = slider_alloc(machine, string, -500, defyoffset, 500, 2, slider_overyoffset, param);
 			tailptr = &(*tailptr)->next;
 		}
-	}
 
-	for (screen_device *screen = machine.first_screen(); screen != NULL; screen = screen->next_screen())
+	for (screen_device *screen = scriter.first(); screen != NULL; screen = scriter.next())
 		if (screen->screen_type() == SCREEN_TYPE_VECTOR)
 		{
 			/* add flicker control */

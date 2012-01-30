@@ -2553,80 +2553,39 @@ static void stv_vdp2_drawgfxzoom(
 				/* case 0: STV_TRANSPARENCY_NONE */
 				if (transparency == STV_TRANSPARENCY_NONE)
 				{
-					if (gfx->flags & GFX_ELEMENT_PACKED)
+					for( y=sy; y<ey; y++ )
 					{
-						for( y=sy; y<ey; y++ )
+						const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
+						UINT32 *dest = &dest_bmp.pix32(y);
+
+						int x, x_index = x_index_base;
+						for( x=sx; x<ex; x++ )
 						{
-							const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
-							UINT32 *dest = &dest_bmp.pix32(y);
-
-							int x, x_index = x_index_base;
-							for( x=sx; x<ex; x++ )
-							{
-								dest[x] = pal[(source[x_index>>17] >> ((x_index & 0x10000) >> 14)) & 0x0f];
-								x_index += dx;
-							}
-
-							y_index += dy;
+							dest[x] = pal[source[x_index>>16]];
+							x_index += dx;
 						}
-					}
-					else
-					{
-						for( y=sy; y<ey; y++ )
-						{
-							const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
-							UINT32 *dest = &dest_bmp.pix32(y);
 
-							int x, x_index = x_index_base;
-							for( x=sx; x<ex; x++ )
-							{
-								dest[x] = pal[source[x_index>>16]];
-								x_index += dx;
-							}
-
-							y_index += dy;
-						}
+						y_index += dy;
 					}
 				}
 
 				/* case 1: STV_TRANSPARENCY_PEN */
 				if (transparency == STV_TRANSPARENCY_PEN)
 				{
-					if (gfx->flags & GFX_ELEMENT_PACKED)
+					for( y=sy; y<ey; y++ )
 					{
-						for( y=sy; y<ey; y++ )
+						const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
+						UINT32 *dest = &dest_bmp.pix32(y);
+
+						int x, x_index = x_index_base;
+						for( x=sx; x<ex; x++ )
 						{
-							const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
-							UINT32 *dest = &dest_bmp.pix32(y);
-
-							int x, x_index = x_index_base;
-							for( x=sx; x<ex; x++ )
-							{
-								int c = (source[x_index>>17] >> ((x_index & 0x10000) >> 14)) & 0x0f;
-								if( c != transparent_color ) dest[x] = pal[c];
-								x_index += dx;
-							}
-
-							y_index += dy;
+							int c = source[x_index>>16];
+							if( c != transparent_color ) dest[x] = pal[c];
+							x_index += dx;
 						}
-					}
-					else
-					{
-						for( y=sy; y<ey; y++ )
-						{
-							const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
-							UINT32 *dest = &dest_bmp.pix32(y);
 
-							int x, x_index = x_index_base;
-							for( x=sx; x<ex; x++ )
-							{
-								int c = source[x_index>>16];
-								if( c != transparent_color ) dest[x] = pal[c];
-								x_index += dx;
-							}
-
-							y_index += dy;
-						}
+						y_index += dy;
 					}
 				}
 
@@ -2653,41 +2612,20 @@ static void stv_vdp2_drawgfxzoom(
 				/* case : STV_TRANSPARENCY_ADD_BLEND */
 				if (transparency == STV_TRANSPARENCY_ADD_BLEND )
 				{
-					if (gfx->flags & GFX_ELEMENT_PACKED)
+					for( y=sy; y<ey; y++ )
 					{
-						for( y=sy; y<ey; y++ )
+						const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
+						UINT32 *dest = &dest_bmp.pix32(y);
+
+						int x, x_index = x_index_base;
+						for( x=sx; x<ex; x++ )
 						{
-							const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
-							UINT32 *dest = &dest_bmp.pix32(y);
-
-							int x, x_index = x_index_base;
-							for( x=sx; x<ex; x++ )
-							{
-								int c = (source[x_index>>17] >> ((x_index & 0x10000) >> 14)) & 0x0f;
-								if( c != transparent_color ) dest[x] = stv_add_blend(dest[x],pal[c]);
-								x_index += dx;
-							}
-
-							y_index += dy;
+							int c = source[x_index>>16];
+							if( c != transparent_color ) dest[x] = stv_add_blend(dest[x],pal[c]);
+							x_index += dx;
 						}
-					}
-					else
-					{
-						for( y=sy; y<ey; y++ )
-						{
-							const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
-							UINT32 *dest = &dest_bmp.pix32(y);
 
-							int x, x_index = x_index_base;
-							for( x=sx; x<ex; x++ )
-							{
-								int c = source[x_index>>16];
-								if( c != transparent_color ) dest[x] = stv_add_blend(dest[x],pal[c]);
-								x_index += dx;
-							}
-
-							y_index += dy;
-						}
+						y_index += dy;
 					}
 				}
 
@@ -4223,11 +4161,7 @@ static void stv_vdp2_check_tilemap(running_machine &machine, bitmap_rgb32 &bitma
 	saturn_state *state = machine.driver_data<saturn_state>();
 
 //  int window_applied = 0;
-	rectangle mycliprect;
-	mycliprect.min_x = cliprect.min_x;
-	mycliprect.max_x = cliprect.max_x;
-	mycliprect.min_y = cliprect.min_y;
-	mycliprect.max_y = cliprect.max_y;
+	rectangle mycliprect = cliprect;
 
 	if ( stv2_current_tilemap.linescroll_enable ||
 		 stv2_current_tilemap.vertical_linescroll_enable ||
@@ -5295,10 +5229,7 @@ static void stv_vdp2_draw_rotation_screen(running_machine &machine, bitmap_rgb32
 			stv2_current_tilemap.transparency = STV_TRANSPARENCY_ALPHA;
 		}
 
-		mycliprect.min_x = cliprect.min_x;
-		mycliprect.max_x = cliprect.max_x;
-		mycliprect.min_y = cliprect.min_y;
-		mycliprect.max_y = cliprect.max_y;
+		mycliprect = cliprect;
 
 		if ( window_control )
 		{
@@ -5962,12 +5893,8 @@ void stv_vdp2_dynamic_res_change(running_machine &machine)
 
 	{
 		int vblank_period,hblank_period;
-		rectangle visarea = machine.primary_screen->visible_area();
 		attoseconds_t refresh;;
-		visarea.min_x = 0;
-		visarea.max_x = horz_res-1;
-		visarea.min_y = 0;
-		visarea.max_y = vert_res-1;
+		rectangle visarea(0, horz_res-1, 0, vert_res-1);
 
 		vblank_period = get_vblank_duration(machine);
 		hblank_period = get_hblank_duration(machine);
@@ -6362,10 +6289,7 @@ static void draw_sprites(running_machine &machine, bitmap_rgb32 &bitmap, const r
 										  (STV_VDP2_SPW0A * 0x10) |
 										  (STV_VDP2_SPW1A * 0x20) |
 										  (STV_VDP2_SPSWA * 0x40);
-	mycliprect.min_x = cliprect.min_x;
-	mycliprect.max_x = cliprect.max_x;
-	mycliprect.min_y = cliprect.min_y;
-	mycliprect.max_y = cliprect.max_y;
+	mycliprect = cliprect;
 
 	stv_vdp2_apply_window_on_layer(machine,mycliprect);
 

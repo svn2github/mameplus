@@ -84,9 +84,6 @@ public:
 	// inline configuration helpers
 	static void static_set_position(device_t &device, double x, double y, double z);
 
-	// getters
-	speaker_device *next_speaker() const { return downcast<speaker_device *>(typenext()); }
-
 	// internally for use by the sound system
 	void mix(INT32 *leftmix, INT32 *rightmix, int &samples_this_update, bool suppress);
 
@@ -104,7 +101,7 @@ protected:
 	double				m_z;
 
 	// internal state
-	sound_stream *		m_mixer_stream;			// mixing stream
+	sound_stream *			m_mixer_stream;			// mixing stream
 #ifdef MAME_DEBUG
 	INT32				m_max_sample;			// largest sample value we've seen
 	INT32				m_clipped_samples;		// total number of clipped samples
@@ -115,6 +112,10 @@ protected:
 
 // device type definition
 extern const device_type SPEAKER;
+
+
+// speaker device iterator
+typedef device_type_iterator<&device_creator<speaker_device>, speaker_device> speaker_device_iterator;
 
 
 #endif	/* __SOUND_H__ */

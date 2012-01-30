@@ -324,10 +324,7 @@ void mc6845_device::recompute_parameters(bool postload)
 
 			attoseconds_t refresh = HZ_TO_ATTOSECONDS(m_clock) * (m_horiz_char_total + 1) * vert_pix_total;
 
-			visarea.min_x = 0;
-			visarea.min_y = 0;
-			visarea.max_x = max_visible_x;
-			visarea.max_y = max_visible_y;
+			visarea.set(0, max_visible_x, 0, max_visible_y);
 
 			if (LOG) logerror("M6845 config screen: HTOTAL: 0x%x  VTOTAL: 0x%x  MAX_X: 0x%x  MAX_Y: 0x%x  HSYNC: 0x%x-0x%x  VSYNC: 0x%x-0x%x  Freq: %ffps\n",
 							  horiz_pix_total, vert_pix_total, max_visible_x, max_visible_y, hsync_on_pos, hsync_off_pos - 1, vsync_on_pos, vsync_off_pos - 1, 1 / ATTOSECONDS_TO_DOUBLE(refresh));
@@ -769,11 +766,8 @@ void mc6845_device::device_start()
 	/* get the screen device */
 	if ( m_screen_tag != NULL )
 	{
-		m_screen = downcast<screen_device *>(machine().device(m_screen_tag));
-		if (m_screen == NULL) {
-			astring tempstring;
-			m_screen = downcast<screen_device *>(machine().device(owner()->subtag(tempstring,m_screen_tag)));
-		}
+		astring tempstring;
+		m_screen = downcast<screen_device *>(machine().device(siblingtag(tempstring,m_screen_tag)));
 		assert(m_screen != NULL);
 	}
 	else

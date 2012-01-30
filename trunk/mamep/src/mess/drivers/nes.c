@@ -39,12 +39,12 @@ static WRITE8_DEVICE_HANDLER( psg_4017_w )
 static WRITE8_HANDLER(nes_vh_sprite_dma_w)
 {
 	nes_state *state = space->machine().driver_data<nes_state>();
-	ppu2c0x_spriteram_dma(space, state->m_ppu, data);
+	state->m_ppu->spriteram_dma(space, data);
 }
 
 static ADDRESS_MAP_START( nes_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_MIRROR(0x1800)					/* RAM */
-	AM_RANGE(0x2000, 0x3fff) AM_DEVREADWRITE("ppu", ppu2c0x_r, ppu2c0x_w)		/* PPU registers */
+	AM_RANGE(0x2000, 0x3fff) AM_DEVREADWRITE_MODERN("ppu", ppu2c0x_device, read, write)		/* PPU registers */
 	AM_RANGE(0x4000, 0x4013) AM_DEVREADWRITE("nessound", nes_psg_r, nes_psg_w)		/* PSG primary registers */
 	AM_RANGE(0x4014, 0x4014) AM_WRITE(nes_vh_sprite_dma_w)				/* stupid address space hole */
 	AM_RANGE(0x4015, 0x4015) AM_DEVREADWRITE("nessound", psg_4015_r, psg_4015_w)		/* PSG status / first control register */
@@ -432,6 +432,8 @@ static void ppu_nmi(device_t *device, int *ppu_regs)
 
 static const ppu2c0x_interface nes_ppu_interface =
 {
+	"maincpu",
+	"screen",
 	0,
 	0,
 	PPU_MIRROR_NONE,
@@ -506,6 +508,8 @@ static MACHINE_CONFIG_DERIVED( nespal, nes )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_REFRESH_RATE(53.355)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC((106.53/(PAL_CLOCK/1000000)) * (PPU_VBLANK_LAST_SCANLINE_PAL-PPU_VBLANK_FIRST_SCANLINE+1+2)))
+	MCFG_SCREEN_SIZE(32*8, 312)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
 	MCFG_VIDEO_START(nes)
 
 	/* sound hardware */
@@ -549,35 +553,27 @@ MACHINE_CONFIG_END
 
 /* rom regions are just place-holders: they get removed and re-allocated when a cart is loaded */
 ROM_START( nes )
-	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )  /* Main RAM + program banks */
-	ROM_REGION( 0x2000,  "gfx1", ROMREGION_ERASE00 )  /* VROM */
-	ROM_REGION( 0x4000,  "gfx2", ROMREGION_ERASE00 )  /* VRAM */
-	ROM_REGION( 0x800,   "gfx3", ROMREGION_ERASE00 )  /* CI RAM */
+	ROM_REGION( 0x10000, "maincpu", ROMREGION_ERASE00 )  /* Main RAM */
+	ROM_REGION( 0x800,   "ciram", ROMREGION_ERASE00 )  /* CI RAM */
 ROM_END
 
 ROM_START( nespal )
-	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )  /* Main RAM + program banks */
-	ROM_REGION( 0x2000,  "gfx1", ROMREGION_ERASE00 )  /* VROM */
-	ROM_REGION( 0x4000,  "gfx2", ROMREGION_ERASE00 )  /* VRAM */
-	ROM_REGION( 0x800,   "gfx3", ROMREGION_ERASE00 )  /* CI RAM */
+	ROM_REGION( 0x10000, "maincpu", ROMREGION_ERASE00 )  /* Main RAM */
+	ROM_REGION( 0x800,   "ciram", ROMREGION_ERASE00 )  /* CI RAM */
 ROM_END
 
 ROM_START( famicom )
-	ROM_REGION( 0x1000000, "maincpu", 0 )  /* Main RAM + program banks */
+	ROM_REGION( 0x10000, "maincpu", 0 )  /* Main RAM */
 	ROM_LOAD_OPTIONAL( "disksys.rom", 0xe000, 0x2000, CRC(5e607dcf) SHA1(57fe1bdee955bb48d357e463ccbf129496930b62) )
 
-	ROM_REGION( 0x2000,  "gfx1", ROMREGION_ERASE00 )  /* VROM */
-	ROM_REGION( 0x4000,  "gfx2", ROMREGION_ERASE00 )  /* VRAM */
-	ROM_REGION( 0x800,   "gfx3", ROMREGION_ERASE00 )  /* CI RAM */
+	ROM_REGION( 0x800,   "ciram", ROMREGION_ERASE00 )  /* CI RAM */
 ROM_END
 
 ROM_START( famitwin )
-	ROM_REGION( 0x1000000, "maincpu", 0 )  /* Main RAM + program banks */
+	ROM_REGION( 0x10000, "maincpu", 0 )  /* Main RAM */
 	ROM_LOAD_OPTIONAL( "disksyst.rom", 0xe000, 0x2000, CRC(4df24a6c) SHA1(e4e41472c454f928e53eb10e0509bf7d1146ecc1) )
 
-	ROM_REGION( 0x2000,  "gfx1", ROMREGION_ERASE00 )  /* VROM */
-	ROM_REGION( 0x4000,  "gfx2", ROMREGION_ERASE00 )  /* VRAM */
-	ROM_REGION( 0x800,   "gfx3", ROMREGION_ERASE00 )  /* CI RAM */
+	ROM_REGION( 0x800,   "ciram", ROMREGION_ERASE00 )  /* CI RAM */
 ROM_END
 
 ROM_START( m82 )
@@ -585,9 +581,7 @@ ROM_START( m82 )
 	/* Banks to be mapped at 0xe000? More investigations needed... */
 	ROM_LOAD( "m82_v1_0.bin", 0x10000, 0x4000, CRC(7d56840a) SHA1(cbd2d14fa073273ba58367758f40d67fd8a9106d) )
 
-	ROM_REGION( 0x2000,  "gfx1", ROMREGION_ERASE00 )  /* VROM */
-	ROM_REGION( 0x4000,  "gfx2", ROMREGION_ERASE00 )  /* VRAM */
-	ROM_REGION( 0x800,   "gfx3", ROMREGION_ERASE00 )  /* CI RAM */
+	ROM_REGION( 0x800,   "ciram", ROMREGION_ERASE00 )  /* CI RAM */
 ROM_END
 
 // see http://www.disgruntleddesigner.com/chrisc/drpcjr/index.html
@@ -600,16 +594,12 @@ ROM_START( drpcjr )
 	// Not sure if we should support this: hacked version 1.5a by Chris Covell with bugfixes and GameGenie support
 //  ROM_LOAD("drpcjr_v1_5_gg.bin", 0x10000, 0x8000, CRC(98f2033b) SHA1(93c114da787a19279d1a46667c2f69b49e25d4f1) )
 
-	ROM_REGION( 0x2000,  "gfx1", ROMREGION_ERASE00 )  /* VROM */
-	ROM_REGION( 0x4000,  "gfx2", ROMREGION_ERASE00 )  /* VRAM */
-	ROM_REGION( 0x800,   "gfx3", ROMREGION_ERASE00 )  /* CI RAM */
+	ROM_REGION( 0x800,   "ciram", ROMREGION_ERASE00 )  /* CI RAM */
 ROM_END
 
 ROM_START( dendy )
-	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )  /* Main RAM + program banks */
-	ROM_REGION( 0x2000,  "gfx1", ROMREGION_ERASE00 )  /* VROM */
-	ROM_REGION( 0x4000,  "gfx2", ROMREGION_ERASE00 )  /* VRAM */
-	ROM_REGION( 0x800,   "gfx3", ROMREGION_ERASE00 )  /* CI RAM */
+	ROM_REGION( 0x10000, "maincpu", ROMREGION_ERASE00 )  /* Main RAM */
+	ROM_REGION( 0x800,   "ciram", ROMREGION_ERASE00 )  /* CI RAM */
 ROM_END
 
 /***************************************************************************

@@ -367,7 +367,7 @@ render_texture::render_texture()
 	  m_param(NULL),
 	  m_curseq(0)
 {
-	m_sbounds.min_x = m_sbounds.min_y = m_sbounds.max_x = m_sbounds.max_y = 0;
+	m_sbounds.set(0, -1, 0, -1);
 	memset(m_scaled, 0, sizeof(m_scaled));
 }
 
@@ -417,7 +417,7 @@ void render_texture::release()
 	// invalidate references to the original bitmap as well
 	m_manager->invalidate_all(m_bitmap);
 	m_bitmap = NULL;
-	m_sbounds.min_x = m_sbounds.min_y = m_sbounds.max_x = m_sbounds.max_y = 0;
+	m_sbounds.set(0, -1, 0, -1);
 	m_format = TEXFORMAT_ARGB32;
 	m_curseq = 0;
 
@@ -506,7 +506,8 @@ bool render_texture::get_scaled(UINT32 dwidth, UINT32 dheight, render_texinfo &t
 	}
 
 	// make sure we can recover the original argb32 bitmap
-	bitmap_argb32 &srcbitmap = downcast<bitmap_argb32 &>(*m_bitmap);
+	bitmap_argb32 dummy;
+	bitmap_argb32 &srcbitmap = (m_bitmap != NULL) ? downcast<bitmap_argb32 &>(*m_bitmap) : dummy;
 
 	// is it a size we already have?
 	scaled_texture *scaled = NULL;
@@ -1120,17 +1121,15 @@ int render_target::configured_view(const char *viewname, int targetindex, int nu
 	}
 
 	// if we don't have a match, default to the nth view
-	int scrcount = m_manager.machine().devicelist().count(SCREEN);
+	screen_device_iterator iter(m_manager.machine().root_device());
+	int scrcount = iter.count();
 	if (view == NULL && scrcount > 0)
 	{
 		// if we have enough targets to be one per screen, assign in order
 		if (numtargets >= scrcount)
 		{
 			int ourindex = index() % scrcount;
-			screen_device *screen;
-			for (screen = m_manager.machine().first_screen(); screen != NULL; screen = screen->next_screen())
-				if (ourindex-- == 0)
-					break;
+			screen_device *screen = iter.byindex(ourindex);
 
 			// find the first view with this screen and this screen only
 			for (view = view_by_index(viewindex = 0); view != NULL; view = view_by_index(++viewindex))
@@ -1157,7 +1156,7 @@ int render_target::configured_view(const char *viewname, int targetindex, int nu
 				if (viewscreens.count() >= scrcount)
 				{
 					screen_device *screen;
-					for (screen = m_manager.machine().first_screen(); screen != NULL; screen = screen->next_screen())
+					for (screen = iter.first(); screen != NULL; screen = iter.next())
 						if (!viewscreens.contains(*screen))
 							break;
 					if (screen == NULL)
@@ -1342,13 +1341,13 @@ void render_target::compute_minimum_size(INT32 &minwidth, INT32 &minheight)
 				float xscale, yscale;
 				if (!(orientation_add(m_orientation, screen->container().orientation()) & ORIENTATION_SWAP_XY))
 				{
-					xscale = (float)(visarea.max_x + 1 - visarea.min_x) / (bounds.x1 - bounds.x0);
-					yscale = (float)(visarea.max_y + 1 - visarea.min_y) / (bounds.y1 - bounds.y0);
+					xscale = float(visarea.width()) / bounds.width();
+					yscale = float(visarea.height()) / bounds.height();
 				}
 				else
 				{
-					xscale = (float)(visarea.max_y + 1 - visarea.min_y) / (bounds.x1 - bounds.x0);
-					yscale = (float)(visarea.max_x + 1 - visarea.min_x) / (bounds.y1 - bounds.y0);
+					xscale = float(visarea.height()) / bounds.width();
+					yscale = float(visarea.width()) / bounds.height();
 				}
 
 				// pick the greater
@@ -1632,7 +1631,8 @@ void render_target::load_layout_files(const char *layoutfile, bool singlefile)
 		else 
 			have_default |= true;
 	}
-	int screens = m_manager.machine().devicelist().count(SCREEN);
+	screen_device_iterator iter(m_manager.machine().root_device());
+	int screens = iter.count();
 	// now do the built-in layouts for single-screen games
 	if (screens == 1)
 	{
@@ -2488,7 +2488,8 @@ render_manager::render_manager(running_machine &machine)
 	config_register(machine, "video", config_saveload_delegate(FUNC(render_manager::config_load), this), config_saveload_delegate(FUNC(render_manager::config_save), this));
 
 	// create one container per screen
-	for (screen_device *screen = machine.first_screen(); screen != NULL; screen = screen->next_screen())
+	screen_device_iterator iter(machine.root_device());
+	for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
 		screen->set_container(*container_alloc(screen));
 }
 

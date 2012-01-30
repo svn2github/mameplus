@@ -127,13 +127,14 @@ public:
 
 	/* devices */
 	device_t      *m_maincpu;
-	device_t      *m_ppu;
+	ppu2c0x_device      *m_ppu;
 	device_t      *m_sound;
 	device_t      *m_cart;
 
 	/* misc region to be allocated at init */
 	// variables which don't change at run-time
 	UINT8      *m_rom;
+	UINT8      *m_prg;
 	UINT8      *m_vrom;
 	UINT8      *m_vram;
 	UINT8      *m_wram;

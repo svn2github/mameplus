@@ -871,10 +871,7 @@ static VIDEO_START(cps3)
 	// between 0x00 and 0x80 (0x40 is normal, 0x80 would be 'view twice as much', 0x20 is 'view half as much')
 	state->m_renderbuffer_bitmap.allocate(512*2,224*2);
 
-	state->m_renderbuffer_clip.min_x = 0;
-	state->m_renderbuffer_clip.max_x = state->m_screenwidth-1;
-	state->m_renderbuffer_clip.min_y = 0;
-	state->m_renderbuffer_clip.max_y = 224-1;
+	state->m_renderbuffer_clip.set(0, state->m_screenwidth-1, 0, 224-1);
 
 	state->m_renderbuffer_bitmap.fill(0x3f, state->m_renderbuffer_clip);
 
@@ -936,10 +933,7 @@ static void cps3_draw_tilemapsprite_line(running_machine &machine, int tmnum, in
 
 		if (drawline>cliprect.max_y+4) return;
 
-		clip.min_x = cliprect.min_x;
-		clip.max_x = cliprect.max_x;
-		clip.min_y = drawline;
-		clip.max_y = drawline;
+		clip.set(cliprect.min_x, cliprect.max_x, drawline, drawline);
 
 		for (x=0;x<(cliprect.max_x/16)+2;x++)
 		{
@@ -988,8 +982,7 @@ static SCREEN_UPDATE_RGB32(cps3)
 		if (state->m_screenwidth!=496)
 		{
 			state->m_screenwidth = 496;
-			visarea.min_x = 0; visarea.max_x = 496-1;
-			visarea.min_y = 0; visarea.max_y = 224-1;
+			visarea.set(0, 496-1, 0, 224-1);
 			screen.configure(496, 224, visarea, period);
 		}
 	}
@@ -998,8 +991,7 @@ static SCREEN_UPDATE_RGB32(cps3)
 		if (state->m_screenwidth!=384)
 		{
 			state->m_screenwidth = 384;
-			visarea.min_x = 0; visarea.max_x = 384-1;
-			visarea.min_y = 0; visarea.max_y = 224-1;
+			visarea.set(0, 384-1, 0, 224-1);
 			screen.configure(384, 224, visarea, period);
 		}
 	}
@@ -2445,7 +2437,7 @@ static INTERRUPT_GEN(cps3_other_interrupt)
 static const SCSIConfigTable dev_table =
 {
 	1,                                      /* 1 SCSI device */
-	{ { SCSI_ID_1, "cdrom", SCSI_DEVICE_CDROM } } /* SCSI ID 2, using CD 0, and it's a CD-ROM */
+	{ { SCSI_ID_1, ":cdrom", SCSI_DEVICE_CDROM } } /* SCSI ID 2, using CD 0, and it's a CD-ROM */
 };
 
 static const struct WD33C93interface scsi_intf =

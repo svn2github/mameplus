@@ -322,27 +322,11 @@ PCB Layouts missing
 
 */
 
-#include "emu.h"
-#include "cpu/z80/z80.h"
-#include "machine/i8255.h"
-#include "machine/rp5c01.h"
-#include "machine/wd17xx.h"
-#include "video/tms9928a.h"
-#include "machine/ctronics.h"
-#include "includes/msx_slot.h"
-#include "includes/msx.h"
-#include "imagedev/flopdrv.h"
-#include "imagedev/cartslot.h"
-#include "imagedev/cassette.h"
-#include "formats/fmsx_cas.h"
-#include "formats/msx_dsk.h"
-#include "sound/ay8910.h"
-#include "sound/dac.h"
-#include "sound/wave.h"
-#include "sound/k051649.h"
-#include "sound/2413intf.h"
+#define ADDRESS_MAP_MODERN
 
-static ADDRESS_MAP_START (msx_memory_map, AS_PROGRAM, 8)
+#include "includes/msx.h"
+
+static ADDRESS_MAP_START ( msx_memory_map, AS_PROGRAM, 8, msx_state )
 	AM_RANGE( 0x0000, 0x1fff) AM_READ_BANK("bank1") AM_WRITE( msx_page0_w )
 	AM_RANGE( 0x2000, 0x3fff) AM_READ_BANK("bank2") AM_WRITE( msx_page0_1_w )
 	AM_RANGE( 0x4000, 0x5fff) AM_READ_BANK("bank3") AM_WRITE( msx_page1_w )
@@ -367,31 +351,31 @@ static WRITE8_DEVICE_HANDLER( msx_ay8910_w )
 }
 
 
-static ADDRESS_MAP_START (msx_io_map, AS_IO, 8)
+static ADDRESS_MAP_START ( msx_io_map, AS_IO, 8, msx_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE( 0x77, 0x77) AM_WRITE( msx_90in1_w )
 	AM_RANGE( 0x7c, 0x7d) AM_WRITE( msx_fmpac_w )
-	AM_RANGE( 0x90, 0x90) AM_DEVREADWRITE("centronics", msx_printer_status_r, msx_printer_strobe_w)
-	AM_RANGE( 0x91, 0x91) AM_DEVWRITE("centronics", msx_printer_data_w)
-	AM_RANGE( 0xa0, 0xa7) AM_DEVREADWRITE("ay8910", ay8910_r, msx_ay8910_w )
-	AM_RANGE( 0xa8, 0xab) AM_DEVREADWRITE_MODERN("ppi8255", i8255_device, read, write)
-	AM_RANGE( 0x98, 0x98) AM_DEVREADWRITE_MODERN("tms9928a", tms9928a_device, vram_read, vram_write)
-	AM_RANGE( 0x99, 0x99) AM_DEVREADWRITE_MODERN("tms9928a", tms9928a_device, register_read, register_write)
+	AM_RANGE( 0x90, 0x90) AM_DEVREADWRITE_LEGACY("centronics", msx_printer_status_r, msx_printer_strobe_w)
+	AM_RANGE( 0x91, 0x91) AM_DEVWRITE_LEGACY("centronics", msx_printer_data_w)
+	AM_RANGE( 0xa0, 0xa7) AM_DEVREADWRITE_LEGACY("ay8910", ay8910_r, msx_ay8910_w)
+	AM_RANGE( 0xa8, 0xab) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
+	AM_RANGE( 0x98, 0x98) AM_DEVREADWRITE("tms9928a", tms9928a_device, vram_read, vram_write)
+	AM_RANGE( 0x99, 0x99) AM_DEVREADWRITE("tms9928a", tms9928a_device, register_read, register_write)
 	AM_RANGE( 0xd8, 0xd9) AM_READWRITE( msx_kanji_r, msx_kanji_w )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START (msx2_io_map, AS_IO, 8)
+static ADDRESS_MAP_START ( msx2_io_map, AS_IO, 8, msx_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE( 0x77, 0x77) AM_WRITE( msx_90in1_w )
 	AM_RANGE( 0x7c, 0x7d) AM_WRITE( msx_fmpac_w )
-	AM_RANGE( 0x90, 0x90) AM_DEVREADWRITE("centronics", msx_printer_status_r, msx_printer_strobe_w)
-	AM_RANGE( 0x91, 0x91) AM_DEVWRITE("centronics", msx_printer_data_w)
-	AM_RANGE( 0xa0, 0xa7) AM_DEVREADWRITE("ay8910", ay8910_r, msx_ay8910_w )
-	AM_RANGE( 0xa8, 0xab) AM_DEVREADWRITE_MODERN("ppi8255", i8255_device, read, write)
-	AM_RANGE( 0x98, 0x9b) AM_DEVREADWRITE_MODERN("v9938", v9938_device, read, write)
+	AM_RANGE( 0x90, 0x90) AM_DEVREADWRITE_LEGACY("centronics", msx_printer_status_r, msx_printer_strobe_w)
+	AM_RANGE( 0x91, 0x91) AM_DEVWRITE_LEGACY("centronics", msx_printer_data_w)
+	AM_RANGE( 0xa0, 0xa7) AM_DEVREADWRITE_LEGACY("ay8910", ay8910_r, msx_ay8910_w)
+	AM_RANGE( 0xa8, 0xab) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
+	AM_RANGE( 0x98, 0x9b) AM_DEVREADWRITE("v9938", v9938_device, read, write)
 	AM_RANGE( 0xb4, 0xb4) AM_WRITE( msx_rtc_latch_w )
 	AM_RANGE( 0xb5, 0xb5) AM_READWRITE( msx_rtc_reg_r, msx_rtc_reg_w )
 	AM_RANGE( 0xd8, 0xd9) AM_READWRITE( msx_kanji_r, msx_kanji_w )
@@ -1124,17 +1108,11 @@ static MACHINE_CONFIG_START( msx, msx_state )
 MACHINE_CONFIG_END
 
 
-static WRITE_LINE_DEVICE_HANDLER(tms9928a_interrupt)
-{
-	cputag_set_input_line(device->machine(), "maincpu", 0, (state ? HOLD_LINE : CLEAR_LINE));
-}
-
-
 static TMS9928A_INTERFACE(msx_tms9928a_interface)
 {
 	"screen",
 	0x4000,
-	DEVCB_LINE(tms9928a_interrupt)
+	DEVCB_CPU_INPUT_LINE("maincpu", INPUT_LINE_IRQ0)
 };
 
 
@@ -4550,4 +4528,3 @@ COMP(19??, hbf9sp,   msx2p, 0,  msx2,     msx2jp,   msx,     "Sony", "HB-F9S+", 
 /* Temporary placeholders */
 COMP(19??, fsa1gt,  msx2p,  0,  msx2,     msx2jp,   msx,     "Panasonic", "FS-A1GT", GAME_NOT_WORKING)
 COMP(19??, fsa1st,  msx2p,  0,  msx2,     msx2jp,   msx,     "Panasonic", "FS-A1ST", GAME_NOT_WORKING)
-

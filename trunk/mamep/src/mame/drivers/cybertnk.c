@@ -203,24 +203,20 @@ static VIDEO_START( cybertnk )
 {
 	cybertnk_state *state = machine.driver_data<cybertnk_state>();
 	state->m_tx_tilemap = tilemap_create(machine, get_tx_tile_info,tilemap_scan_rows,8,8,128,32);
-	tilemap_set_transparent_pen(state->m_tx_tilemap,0);
+	state->m_tx_tilemap->set_transparent_pen(0);
 }
 
 static void draw_pixel( bitmap_ind16 &bitmap, const rectangle &cliprect, int y, int x, int pen)
 {
-	if (x>cliprect.max_x) return;
-	if (x<cliprect.min_x) return;
-	if (y>cliprect.max_y) return;
-	if (y<cliprect.min_y) return;
-
-	bitmap.pix16(y, x) = pen;
+	if (cliprect.contains(x, y))
+		bitmap.pix16(y, x) = pen;
 }
 
 static UINT32 update_screen(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect, int screen_shift)
 {
 	cybertnk_state *state = screen.machine().driver_data<cybertnk_state>();
 
-	tilemap_set_scrolldx(state->m_tx_tilemap, screen_shift, screen_shift);
+	state->m_tx_tilemap->set_scrolldx(screen_shift, screen_shift);
 
 
 	bitmap.fill(get_black_pen(screen.machine()), cliprect);
@@ -409,7 +405,7 @@ static UINT32 update_screen(screen_device &screen, bitmap_ind16 &bitmap, const r
 		}
 	}
 
-	tilemap_draw(bitmap,cliprect,state->m_tx_tilemap,0,0);
+	state->m_tx_tilemap->draw(bitmap, cliprect, 0,0);
 
 
 //0x62 0x9a 1c2d0
@@ -518,7 +514,7 @@ static WRITE16_HANDLER( tx_vram_w )
 {
 	cybertnk_state *state = space->machine().driver_data<cybertnk_state>();
 	COMBINE_DATA(&state->m_tx_vram[offset]);
-	tilemap_mark_tile_dirty(state->m_tx_tilemap,offset);
+	state->m_tx_tilemap->mark_tile_dirty(offset);
 }
 
 static READ16_HANDLER( io_r )
@@ -843,7 +839,19 @@ static const gfx_layout tile_8x8x4 =
     8*8
 };
 
-static GFXLAYOUT_RAW( roadlayout, 4, 1024, 1, 1024*4, 1024*4 ) // could be wrong.. needs to be 512 wide, might not be 8bpp
+// could be wrong.. needs to be 512 wide, might not be 8bpp
+static const UINT32 xoffsets[] = { STEP1024(0,4) };
+static const gfx_layout roadlayout =
+{
+	1024,1,
+	RGN_FRAC(1,1),
+	4,
+	{ STEP4(0,1) },
+	EXTENDED_XOFFS,
+	{ 0 },
+	1024*4,
+	xoffsets
+}; 
 
 static GFXDECODE_START( cybertnk )
 	GFXDECODE_ENTRY( "gfx1", 0, tile_8x8x4,     0x1400, 16 ) /*Pal offset???*/

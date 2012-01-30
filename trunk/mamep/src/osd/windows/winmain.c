@@ -283,7 +283,7 @@ static BOOL WINAPI control_handler(DWORD type);
 static int is_double_click_start(int argc);
 static DWORD WINAPI watchdog_thread_entry(LPVOID lpParameter);
 static LONG WINAPI exception_filter(struct _EXCEPTION_POINTERS *info);
-static void winui_output_error(void *param, const char *format, va_list argptr);
+static void winui_output_error(delegate_late_bind *__dummy, const char *format, va_list argptr);
 static void win_mame_file_output_callback(void *param, const char *format, va_list argptr);
 
 
@@ -481,19 +481,11 @@ int main(int argc, char *argv[])
 	if (win_is_gui_application() || is_double_click_start(argc))
 	{
 		// if we are a GUI app, output errors to message boxes
-		mame_set_output_channel(OUTPUT_CHANNEL_ERROR, winui_output_error, NULL, NULL, NULL);
+		mame_set_output_channel(OUTPUT_CHANNEL_ERROR, output_delegate(FUNC(winui_output_error), (delegate_late_bind *)0));
 
 		// make sure any console window that opened on our behalf is nuked
 		FreeConsole();
 	}
-	else
-		mame_set_output_channel(OUTPUT_CHANNEL_ERROR, win_mame_file_output_callback, stderr, NULL, NULL);
-
-	mame_set_output_channel(OUTPUT_CHANNEL_WARNING, win_mame_file_output_callback, stderr, NULL, NULL);
-	mame_set_output_channel(OUTPUT_CHANNEL_INFO, win_mame_file_output_callback, stdout, NULL, NULL);
-	mame_set_output_channel(OUTPUT_CHANNEL_DEBUG, win_mame_file_output_callback, stdout, NULL, NULL);
-	mame_set_output_channel(OUTPUT_CHANNEL_VERBOSE, win_mame_file_output_callback, stdout, NULL, NULL);
-	mame_set_output_channel(OUTPUT_CHANNEL_LOG, win_mame_file_output_callback, stderr, NULL, NULL);
 
 	// set up language for windows
 	assign_msg_catategory(UI_MSG_OSD0, "windows");
@@ -565,7 +557,7 @@ static BOOL WINAPI control_handler(DWORD type)
 //  winui_output_error
 //============================================================
 
-static void winui_output_error(void *param, const char *format, va_list argptr)
+static void winui_output_error(delegate_late_bind *param, const char *format, va_list argptr)
 {
 	char buffer[1024];
 

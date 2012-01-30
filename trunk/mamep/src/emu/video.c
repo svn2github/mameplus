@@ -308,7 +308,8 @@ astring &video_manager::speed_text(astring &string)
 
 	// display the number of partial updates as well
 	int partials = 0;
-	for (screen_device *screen = machine().first_screen(); screen != NULL; screen = screen->next_screen())
+	screen_device_iterator iter(machine().root_device());
+	for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
 		partials += screen->partial_updates();
 	if (partials > 1)
 		string.catprintf(_("\n%d partial updates"), partials);
@@ -359,7 +360,8 @@ void video_manager::save_active_screen_snapshots()
 	if (m_snap_native)
 	{
 		// write one snapshot per visible screen
-		for (screen_device *screen = machine().first_screen(); screen != NULL; screen = screen->next_screen())
+		screen_device_iterator iter(machine().root_device());
+		for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
 			if (machine().render().is_live(*screen))
 			{
 				emu_file file(machine().options().snapshot_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
@@ -544,8 +546,8 @@ void video_manager::exit()
 	machine().render().target_free(m_snap_target);
 	m_snap_bitmap.reset();
 
-	// print a final result if we have at least 5 seconds' worth of data
-	if (m_overall_emutime.seconds >= 5)
+	// print a final result if we have at least 2 seconds' worth of data
+	if (m_overall_emutime.seconds >= 1)
 	{
 		osd_ticks_t tps = osd_ticks_per_second();
 		double final_real_time = (double)m_overall_real_seconds + (double)m_overall_real_ticks / (double)tps;
@@ -652,12 +654,13 @@ inline int video_manager::original_speed_setting() const
 bool video_manager::finish_screen_updates()
 {
 	// finish updating the screens
-	for (screen_device *screen = machine().first_screen(); screen != NULL; screen = screen->next_screen())
+	screen_device_iterator iter(machine().root_device());
+	for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
 		screen->update_partial(screen->visible_area().max_y);
 
 	// now add the quads for all the screens
 	bool anything_changed = false;
-	for (screen_device *screen = machine().first_screen(); screen != NULL; screen = screen->next_screen())
+	for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
 		if (screen->update_quads())
 			anything_changed = true;
 
@@ -667,12 +670,12 @@ bool video_manager::finish_screen_updates()
 		record_frame();
 
 		// iterate over screens and update the burnin for the ones that care
-		for (screen_device *screen = machine().first_screen(); screen != NULL; screen = screen->next_screen())
+		for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
 			screen->update_burnin();
 	}
 
 	// draw any crosshairs
-	for (screen_device *screen = machine().first_screen(); screen != NULL; screen = screen->next_screen())
+	for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
 		crosshair_render(*screen);
 
 	return anything_changed;
@@ -954,7 +957,8 @@ void video_manager::update_refresh_speed()
 			// find the screen with the shortest frame period (max refresh rate)
 			// note that we first check the token since this can get called before all screens are created
 			attoseconds_t min_frame_period = ATTOSECONDS_PER_SECOND;
-			for (screen_device *screen = machine().first_screen(); screen != NULL; screen = screen->next_screen())
+			screen_device_iterator iter(machine().root_device());
+			for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
 			{
 				attoseconds_t period = screen->frame_period().attoseconds;
 				if (period != 0)
@@ -1051,12 +1055,13 @@ void video_manager::recompute_speed(attotime emutime)
 //  given screen
 //-------------------------------------------------
 
-void video_manager::create_snapshot_bitmap(device_t *screen)
+void video_manager::create_snapshot_bitmap(screen_device *screen)
 {
 	// select the appropriate view in our dummy target
 	if (m_snap_native && screen != NULL)
 	{
-		int view_index = machine().devicelist().indexof(SCREEN, screen->tag());
+		screen_device_iterator iter(machine().root_device());
+		int view_index = iter.indexof(*screen);
 		assert(view_index != -1);
 		m_snap_target->set_view(view_index);
 	}
@@ -1139,8 +1144,8 @@ file_error video_manager::open_next(emu_file &file, const char *extension)
 			//printf("check template: %s\n", snapdevname.cstr());
 
 			// verify that there is such a device for this system
-			device_image_interface *image = NULL;
-			for (bool gotone = machine().devicelist().first(image); gotone; gotone = image->next(image))
+			image_interface_iterator iter(machine().root_device());
+			for (device_image_interface *image = iter.first(); image != NULL; image = iter.next())
 			{
 				// get the device name
 				astring tempdevname(image->brief_instance_name());
@@ -1280,20 +1285,23 @@ void video_manager::record_frame()
     invalid palette index
 -------------------------------------------------*/
 
-void video_assert_out_of_range_pixels(running_machine &machine, bitmap_ind16 &bitmap)
+bool video_assert_out_of_range_pixels(running_machine &machine, bitmap_ind16 &bitmap)
 {
 #ifdef MAME_DEBUG
-	int maxindex = palette_get_max_index(machine.palette);
-	int x, y;
-
 	// iterate over rows
-	for (y = 0; y < bitmap.height(); y++)
+	int maxindex = palette_get_max_index(machine.palette);
+	for (int y = 0; y < bitmap.height(); y++)
 	{
 		UINT16 *rowbase = &bitmap.pix16(y);
-		for (x = 0; x < bitmap.width(); x++)
-			assert(rowbase[x] < maxindex);
+		for (int x = 0; x < bitmap.width(); x++)
+			if (rowbase[x] > maxindex)
+			{
+				osd_break_into_debugger("Out of range pixel");
+				return true;
+			}
 	}
 #endif
+	return false;
 }
 
 

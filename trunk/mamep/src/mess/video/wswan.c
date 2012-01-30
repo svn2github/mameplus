@@ -37,11 +37,7 @@ INLINE void wswan_fillbitmap( running_machine &machine,int pen, rectangle *rec )
 	}
 
 	if ( state->m_vdp.display_vertical ) {
-		rectangle rec2;
-		rec2.min_y = 28*8 - 1 - rec->max_x;
-		rec2.max_y = 28*8 - 1 - rec->min_x;
-		rec2.min_x = rec->min_y;
-		rec2.max_x = rec->max_y;
+		rectangle rec2(rec->min_y, rec->max_y, 28*8 - 1 - rec->max_x, 28*8 - 1 - rec->min_x);
 		state->m_bitmap.fill(pen, rec2 );
 	} else {
 		state->m_bitmap.fill(pen, *rec );
@@ -545,13 +541,10 @@ static void wswan_handle_sprites( running_machine &machine, int mask ) {
 void wswan_refresh_scanline( running_machine &machine )
 {
 	wswan_state *state = machine.driver_data<wswan_state>();
-	rectangle rec;
 
 	wswan_setup_palettes(state);
 
-	rec.min_x = 0;
-	rec.max_x = WSWAN_X_PIXELS;
-	rec.min_y = rec.max_y = state->m_vdp.current_line;
+	rectangle rec(0, WSWAN_X_PIXELS, state->m_vdp.current_line, state->m_vdp.current_line);
 	if ( state->m_ws_portram[0x14] ) {
 		/* Not sure if these background color checks and settings are correct */
 		if ( state->m_vdp.color_mode && state->m_vdp.colors_16 ) {
@@ -615,7 +608,7 @@ void wswan_refresh_scanline( running_machine &machine )
 
 void wswan_state::video_start()
 {
-	m_bitmap.allocate(machine().primary_screen->width(), machine().primary_screen->height());
+	machine().primary_screen->register_screen_bitmap(m_bitmap);
 }
 	
 UINT32 wswan_state::screen_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
