@@ -2853,7 +2853,8 @@ static INT32 slider_beam(running_machine &machine, void *arg, astring *string, I
 
 static char *slider_get_screen_desc(screen_device &screen)
 {
-	int scrcount = screen.machine().devicelist().count(SCREEN);
+	screen_device_iterator iter(screen.machine().root_device());
+	int scrcount = iter.count();
 	static char descbuf[256];
 
 	if (scrcount > 1)

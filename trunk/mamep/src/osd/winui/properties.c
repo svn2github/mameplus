@@ -746,8 +746,9 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 
 	ZeroMemory(buf, sizeof(buf));
 
-	bool gotone = config.devicelist().first(cpu);
-	while (gotone)
+	execute_interface_iterator iter(config.root_device());
+	cpu = iter.first();
+	while (cpu != NULL)
 	{
 		if (cpu->device().clock() >= 1000000)
 		{
@@ -766,7 +767,7 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 
 		wcscat(buf, TEXT("\n"));
 
-		gotone = cpu->next(cpu);
+		cpu = iter.next();
 	}
 
 	return buf;
@@ -783,8 +784,9 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 
 	/* iterate over sound chips */
 	const device_sound_interface *sound = NULL;
-	bool gotone = config.devicelist().first(sound);
-	while(gotone)
+	sound_interface_iterator iter(config.root_device());
+	sound = iter.first();
+	while(sound != NULL)
 	{
 		int clock,count;
 		device_type sound_type_;
@@ -796,14 +798,14 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 		clock = sound->device().clock();
 
 		count = 1;
-		gotone = sound->next(sound);
+		sound = iter.next();
 		/* Matching chips at the same clock are aggregated */
-		while (gotone
+		while (sound != NULL
 			&& sound->device().type() == sound_type_
 			&& sound->device().clock() == clock)
 		{
 			count++;
-			gotone = sound->next(sound);
+			sound = iter.next();
 		}
 
 		if (count > 1)
@@ -840,11 +842,12 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 {
 	static WCHAR buf[1024];
 	machine_config config(driver_list::driver(nIndex), pCurrentOpts);
+	screen_device_iterator iter(config.root_device());
 	memset(buf, '\0', 1024);
 
 	if (isDriverVector(&config))
 	{
-		const screen_device *screen = config.first_screen();
+		const screen_device *screen = iter.first();
 		if (driver_list::driver(nIndex).flags & ORIENTATION_SWAP_XY)
 		{
 			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
@@ -858,12 +861,12 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 	}
 	else
 	{
-		const screen_device *screen = config.first_screen();
+		const screen_device *screen = iter.first();
 		if (screen == NULL) {
 			wcscpy(buf, _UIW(TEXT("Screenless Game"))); 
 		}
 		else {
-			for (; screen != NULL; screen = screen->next_screen()) {
+			for (; screen != NULL; screen = iter.next()) {
 				WCHAR tmpbuf[256];
 				const rectangle &visarea = screen->visible_area();
 
@@ -3558,11 +3561,11 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 	
 	if (hCtrl)
 	{
-		const device_sound_interface *sound;
 		if ( nIndex > -1 ) {
 			machine_config config(driver_list::driver(nIndex), pCurrentOpts);
 		
-			for (bool gotone = config.devicelist().first(sound); gotone; gotone = sound->next(sound))
+			sound_interface_iterator iter(config.root_device());
+			for (device_sound_interface *sound = iter.first(); sound != NULL; sound = iter.next())
 			{
 				if (sound->device().type() == SAMPLES ||
 					sound->device().type() == VLM5030) {

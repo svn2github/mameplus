@@ -909,7 +909,6 @@ void CreateCPUFolders(int parent_index)
 	LPTREEFOLDER device_folders[512];
 	LPTREEFOLDER folder;
 	LPTREEFOLDER lpTemp;
-	const device_execute_interface *device = NULL;
 	int nFolder = numFolders;
 
 	for (i = 0; i < driver_list::total(); i++)
@@ -917,7 +916,8 @@ void CreateCPUFolders(int parent_index)
 		machine_config config(driver_list::driver(i), MameUIGlobal());
 
 		// enumerate through all devices
-		for (bool gotone = config.devicelist().first(device); gotone; gotone = device->next(device))
+		execute_interface_iterator iter(config.root_device());
+		for (device_execute_interface *device = iter.first(); device != NULL; device = iter.next())
 		{
 		
 			// get the name
@@ -971,10 +971,11 @@ void CreateSoundFolders(int parent_index)
 
 		// enumerate through all devices
 		
-		for (bool gotone = config.devicelist().first(device); gotone; gotone = device->next(device))
+		sound_interface_iterator iter(config.root_device());
+		for (device_sound_interface *sound = iter.first(); sound != NULL; sound = iter.next())
 		{
 			// get the name
-			const TCHAR *dev_name = _Unicode(device->device().name());
+			const TCHAR *dev_name = _Unicode(sound->device().name());
 
 			// do we have a folder for this device?
 			folder = NULL;

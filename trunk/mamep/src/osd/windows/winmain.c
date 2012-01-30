@@ -284,7 +284,7 @@ static int is_double_click_start(int argc);
 static DWORD WINAPI watchdog_thread_entry(LPVOID lpParameter);
 static LONG WINAPI exception_filter(struct _EXCEPTION_POINTERS *info);
 static void winui_output_error(delegate_late_bind *__dummy, const char *format, va_list argptr);
-static void win_mame_file_output_callback(void *param, const char *format, va_list argptr);
+static void win_mame_file_output_callback(delegate_late_bind *param, const char *format, va_list argptr);
 
 
 
@@ -486,6 +486,14 @@ int main(int argc, char *argv[])
 		// make sure any console window that opened on our behalf is nuked
 		FreeConsole();
 	}
+	else
+		mame_set_output_channel(OUTPUT_CHANNEL_ERROR, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stderr));
+
+	mame_set_output_channel(OUTPUT_CHANNEL_WARNING, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stderr));
+	mame_set_output_channel(OUTPUT_CHANNEL_INFO, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stdout));
+	mame_set_output_channel(OUTPUT_CHANNEL_DEBUG, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stdout));
+	mame_set_output_channel(OUTPUT_CHANNEL_VERBOSE, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stdout));
+	mame_set_output_channel(OUTPUT_CHANNEL_LOG, output_delegate(FUNC(win_mame_file_output_callback), (delegate_late_bind *)stderr));
 
 	// set up language for windows
 	assign_msg_catategory(UI_MSG_OSD0, "windows");
@@ -769,7 +777,7 @@ void windows_osd_interface::osd_exit(running_machine &machine)
 //  win_mame_file_output_callback
 //============================================================
 
-static void win_mame_file_output_callback(void *param, const char *format, va_list argptr)
+static void win_mame_file_output_callback(delegate_late_bind *param, const char *format, va_list argptr)
 {
 	char buf[5000];
 	CHAR *s;

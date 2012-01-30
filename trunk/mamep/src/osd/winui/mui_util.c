@@ -339,12 +339,8 @@ BOOL isDriverVector(const machine_config *config)
 
 int numberOfScreens(const machine_config *config)
 {
-	const screen_device *screen  = config->first_screen();
-	int i=0;
-	for (; screen != NULL; screen = screen->next_screen()) {
-		i++;
-	}
-	return i;
+	screen_device_iterator iter(config->root_device());
+	return iter.count();
 }
 
 
@@ -408,10 +404,11 @@ static void UpdateController(void)
 			p = 0;
 
 			machine_config config(driver_list::driver(i), MameUIGlobal());
-			for (device_t *cfg = config.root_device(); cfg != NULL; cfg = cfg->next())
+			device_iterator iter(config.root_device());
+			for (device_t *device = iter.first(); device != NULL; device = iter.next())
 			{
-				if (cfg->input_ports()!=NULL) {
-					input_port_list_init(*cfg, portlist, errors);
+				if (device->input_ports()!=NULL) {
+					input_port_list_init(*device, portlist, errors);
 				}
 			}
 
@@ -521,8 +518,7 @@ static void UpdateController(void)
 
 int numberOfSpeakers(const machine_config *config)
 {
-//	return config->devicelist().count(SPEAKER);
-	speaker_device_iterator spkiter(machine().root_device());
+	speaker_device_iterator spkiter(config->root_device());
 	return spkiter.count();
 }
 
@@ -579,17 +575,17 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				{
 					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 					{
-						gameinfo->usesRoms = TRUE; 
-						break; 
+						gameinfo->usesRoms = TRUE;
+						break;
 					}
 				}
 			}
 			gameinfo->usesSamples = FALSE;
-			
+
 			{
-				const device_sound_interface *sound = NULL;
 				const char * const * samplenames = NULL;
-				for (bool gotone = config.devicelist().first(sound); gotone; gotone = sound->next(sound)) {
+				sound_interface_iterator iter(config.root_device());
+				for (device_sound_interface *sound = iter.first(); sound != NULL; sound = iter.next())
 					if (sound->device().type() == SAMPLES)
 					{
 						const samples_interface *intf = (const samples_interface *)sound->device().static_config();
@@ -599,9 +595,8 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 						{
 							gameinfo->usesSamples = TRUE;
 							break;
-						}			
-					}				
-				}
+						}
+					}
 			}
 			gameinfo->numPlayers = 0;
 			gameinfo->numButtons = 0;
@@ -658,10 +653,11 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				input_port_config *port;
 				ioport_list portlist;
 				astring errors;
-				for (device_t *cfg = config.devicelist().first(); cfg != NULL; cfg = cfg->next())
+				device_iterator iter(config.root_device());
+				for (device_t *device = iter.first(); device != NULL; device = iter.next())
 				{
-					if (cfg->input_ports()!=NULL) {
-						input_port_list_init(*cfg, portlist, errors);
+					if (device->input_ports()!=NULL) {
+						input_port_list_init(*device, portlist, errors);
 					}
 				}
 

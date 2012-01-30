@@ -2060,7 +2060,7 @@ static void SetMainTitle(void)
 	SetWindowText(hMain, buffer);
 }
 
-static void winui_output_error(void *param, const char *format, va_list argptr)
+static void winui_output_error(delegate_late_bind *__dummy, const char *format, va_list argptr)
 {
 	char buffer[1024];
 
@@ -2104,7 +2104,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 	srand((unsigned)time(NULL));
 
 	// output errors to message boxes
-	mame_set_output_channel(OUTPUT_CHANNEL_ERROR, winui_output_error, NULL, NULL, NULL);
+	mame_set_output_channel(OUTPUT_CHANNEL_ERROR, output_delegate(FUNC(winui_output_error), (delegate_late_bind *)0));
 
 	//mamep: set up initial option system
 	CreateGameOptions(options, OPTIONS_TYPE_GLOBAL);

@@ -207,9 +207,11 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 			break;
 		}
 #ifdef USE_HISCORE
-		cpu[0] = firstcpu;
-		for (int cpunum = 1; cpunum < ARRAY_LENGTH(cpu) && cpu[cpunum - 1] != NULL; cpunum++)
-			cpu[cpunum] = cpu[cpunum - 1]->typenext();
+	int cpunum = 0;
+	execute_interface_iterator execiter(root_device());
+	for (device_execute_interface *device = execiter.first(); device != NULL; device = execiter.next())
+		if (cpunum < 8)
+			cpu[cpunum++] = &device->device();
 #endif /* USE_HISCORE */
 
 	screen_device_iterator screeniter(root_device());
