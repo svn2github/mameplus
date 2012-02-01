@@ -252,7 +252,7 @@ static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
 		{
 			if (rom_index != -1)
 			{
-				WCHAR *descw = driversw[rom_index]->description; swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")), 
+				WCHAR *descw = driversw[rom_index]->description; swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")),
 					driversw[rom_index]->name, UseLangList() ? _LSTW(descw) : descw);
 				SetWindowText((HWND)hDlg, buffer);
 				ProcessNextRom();
@@ -427,9 +427,9 @@ static void ProcessNextSample()
 {
 	int  retval;
 	TCHAR buffer[200];
-	
+
 	retval = MameUIVerifySampleSet(sample_index, TRUE);
-	
+
 	switch (retval)
 	{
 	case media_auditor::CORRECT:
@@ -452,7 +452,7 @@ static void ProcessNextSample()
 		SendDlgItemMessage(hAudit, IDC_SAMPLES_INCORRECT, WM_SETTEXT, 0, (LPARAM)buffer);
 		_stprintf(buffer, TEXT("%i"), samples_correct + samples_incorrect);
 		SendDlgItemMessage(hAudit, IDC_SAMPLES_TOTAL, WM_SETTEXT, 0, (LPARAM)buffer);
-		
+
 		break;
 	}
 
@@ -488,9 +488,9 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	}
 
 	va_start(marker, fmt);
-	
+
 	vswprintf(buffer, fmt, marker);
-	
+
 	va_end(marker);
 
 	//t_s = tstring_from_utf8(ConvertToWindowsNewlines(buffer));

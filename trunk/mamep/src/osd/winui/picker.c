@@ -228,7 +228,7 @@ static BOOL ListViewNotify(HWND hWnd, LPNMHDR lpNmHdr)
 	POINT pt;
 
 	// This code is for using bitmap in the background
-	// Invalidate the right side of the control when a column is resized			
+	// Invalidate the right side of the control when a column is resized
 	switch (lpNmHdr->code)
 	{
 	case HDN_ITEMCHANGINGA:
@@ -468,7 +468,7 @@ static void Picker_InternalResetColumnDisplay(HWND hWnd, BOOL bFirstTime)
 	else
 		b_res = ListView_SetTextColor(hWnd, GetListFontColor());
 
-done:		
+done:
 	if (widths)
 		free(widths);
 	if (order)
@@ -515,7 +515,7 @@ static void CALLBACK Picker_TimerProc(HWND hwndPicker, UINT uMsg,
 	// This idle procedure will loop until either idling is over, or until
 	// a specified amount of time elapses (in this case, 50ms).  This frees
 	// idle callbacks of any responsibility for balancing their workloads; the
-	// picker code will 
+	// picker code will
 	do
 	{
 		if (pPickerInfo->pCallbacks->pfnOnIdle)
@@ -745,7 +745,7 @@ int Picker_GetSelectedItem(HWND hWnd)
 void Picker_SetSelectedPick(HWND hWnd, int nIndex)
 {
 	BOOL res;
-	
+
 	if (nIndex < 0)
 		nIndex = 0;
 
@@ -1225,7 +1225,7 @@ int Picker_GetNumColumns(HWND hWnd)
 				nColumnCount++;
 		}
 	}
-	
+
 	free(shown);
 	return nColumnCount;
 }
@@ -1452,7 +1452,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	if (bDrawAsChild)
 	{
 		RECT rect;
-		
+
 		res = ListView_GetItemRect_Modified(hWnd, nItem, &rect, LVIR_ICON);
 
 		/* indent width of icon + the space between the icon and text
@@ -1491,7 +1491,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 		if (hBackground == NULL)
 		{
 			HBRUSH hBrush;
-			
+
 			hBrush = CreateSolidBrush(GetSysColor(COLOR_WINDOW));
 			FillRect(hDC, &rcAllLabels, hBrush);
 			DeleteBrush(hBrush);

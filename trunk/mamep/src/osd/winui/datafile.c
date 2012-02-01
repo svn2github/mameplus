@@ -1099,7 +1099,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 			strcat(buffer, _("The game requires external artwork files\n"));
 
 		strcat(buffer, "\n");
-	}	
+	}
 
 	flush_index_if_needed();
 
@@ -1119,7 +1119,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 		strcat(buffer, _("\n\nCLONES:\n"));
 		for (i = 0; i < driver_list::total(); i++)
 		{
-			if (!mame_stricmp (drv->parent, driver_list::driver(i).parent)) 
+			if (!mame_stricmp (drv->parent, driver_list::driver(i).parent))
 			{
 				strcat(buffer, _LST(driver_list::driver(i).description));
 				strcat(buffer, "\n");
@@ -1133,7 +1133,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 		strcat(buffer, _("\n\nCLONES:\n"));
 		for (i = 0; i < driver_list::total(); i++)
 		{
-			if (!mame_stricmp (drv->name, driver_list::driver(i).parent)) 
+			if (!mame_stricmp (drv->name, driver_list::driver(i).parent))
 			{
 				strcat(buffer, _LST(driver_list::driver(i).description));
 				strcat(buffer, "\n");

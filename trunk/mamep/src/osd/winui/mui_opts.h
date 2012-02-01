@@ -48,7 +48,7 @@ typedef enum {
 } OPTIONS_TYPE;
 
 
-enum 
+enum
 {
 	COLUMN_GAMES = 0,
 	COLUMN_ORIENTATION,
@@ -75,7 +75,7 @@ enum
 
 /* Default input */
 /*
-enum 
+enum
 {
 	INPUT_LAYOUT_STD,
 	INPUT_LAYOUT_HR,
@@ -122,7 +122,7 @@ typedef struct
 } AREA;
 
 /*
-typedef struct 
+typedef struct
 {
 	char* screen;
 	char* aspect;

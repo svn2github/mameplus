@@ -68,7 +68,7 @@ static WCHAR *MenuHelpStrings[NUM_MENUA + NUM_MENUB];
 static HFONT hTranslateFont = NULL;
 
 static BOOL force_change_font = TRUE;
-static UINT ansi_codepage; 
+static UINT ansi_codepage;
 
 void GetTranslatedFont(LOGFONTW *logfont)
 {
