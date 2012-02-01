@@ -133,7 +133,7 @@ static const TCHAR *ParseManufacturer(const TCHAR *s, int *pParsedChars );
 static const TCHAR *TrimManufacturer(const TCHAR *s);
 static void         CreateAllChildFolders(void);
 static BOOL         AddFolder(LPTREEFOLDER lpFolder);
-static LPTREEFOLDER NewFolder(const TCHAR *lpTitle, 
+static LPTREEFOLDER NewFolder(const TCHAR *lpTitle,
                               UINT nCategoryID, BOOL bTranslate, UINT nFolderId, int nParent, UINT nIconId);
 static void         DeleteFolder(LPTREEFOLDER lpFolder);
 static const TCHAR *GetFolderOrigName(LPTREEFOLDER lpFolder);
@@ -349,7 +349,7 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 	LPTREEFOLDER lpParent = NULL;
 	LPCWSTR filter_text = GetFilterText();
 	LPCWSTR search_text = GetSearchText();
-	
+
 	//Filter out the Bioses on all Folders, except for the Bios Folder
 	if( lpFolder->m_nFolderId != FOLDER_BIOS )
 	{
@@ -387,8 +387,8 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 	if (wcslen(filter_text))
 	{
 		if (MyStrStrI(UseLangList() ? _LSTW(driversw[nGame]->description) : driversw[nGame]->description, filter_text) == NULL &&
-		    MyStrStrI(driversw[nGame]->name, filter_text) == NULL && 
-		    MyStrStrI(driversw[nGame]->source_file, filter_text) == NULL && 
+		    MyStrStrI(driversw[nGame]->name, filter_text) == NULL &&
+		    MyStrStrI(driversw[nGame]->source_file, filter_text) == NULL &&
 		    MyStrStrI(UseLangList()? _MANUFACTW(driversw[nGame]->manufacturer) : driversw[nGame]->manufacturer, filter_text) == NULL)
 			return TRUE;
 	}
@@ -504,7 +504,7 @@ void CreateScreenFolders(int parent_index)
 		int screens = DriverNumScreens(jj);
 		TCHAR s[2];
 		swprintf(s, TEXT("%d"), screens);
-                			
+
 		// look for an existant screens treefolder for this game
 		// (likely to be the previous one, so start at the end)
 		for (i=numFolders-1;i>=start_folder;i--)
@@ -602,8 +602,8 @@ static const TCHAR *ParseManufacturer(const TCHAR *s, int *pParsedChars )
 	while (*s)
 	{
 		/* combinations where to end string */
-		
-		if ( 
+
+		if (
 		    ((*s == ' ') && (s[1] == '(' || s[1] == '/' || s[1] == '+')) ||
 		    (*s == ']') ||
 		    (*s == '/') ||
@@ -698,7 +698,7 @@ static const TCHAR *ParseManufacturer(const TCHAR *s, int *pParsedChars )
 			}
 			*t++ = *ptmp++;
 		}
-		
+
 		*t = '\0';
 	}
 
@@ -721,7 +721,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 	//start analyzing from the back, as these are usually suffixes
 	for (i = wcslen(s)-1; i >= 0; i--)
 	{
-		
+
 		l = wcslen(strTemp);
 		for (k=l; k>=0; k--)
 			strTemp[k+1] = strTemp[k];
@@ -755,7 +755,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, wcslen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);
 					}
 				}
 				break;
@@ -770,7 +770,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, wcslen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);
 					}
 				}
 				break;
@@ -785,7 +785,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, wcslen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);
 					}
 				}
 				break;
@@ -800,7 +800,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, wcslen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);
 					}
 				}
 				break;
@@ -815,7 +815,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, wcslen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);
 					}
 				}
 				break;
@@ -830,7 +830,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, wcslen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);
 					}
 				}
 				break;
@@ -845,7 +845,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, wcslen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);
 					}
 				}
 				break;
@@ -860,7 +860,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, wcslen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);
 					}
 				}
 				break;
@@ -875,7 +875,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, wcslen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);
 					}
 				}
 				break;
@@ -890,7 +890,7 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
-						wcsncpy(strTemp2, s, wcslen(s) - j);	
+						wcsncpy(strTemp2, s, wcslen(s) - j);
 					}
 				}
 				break;
@@ -919,7 +919,7 @@ void CreateCPUFolders(int parent_index)
 		execute_interface_iterator iter(config.root_device());
 		for (device_execute_interface *device = iter.first(); device != NULL; device = iter.next())
 		{
-		
+
 			// get the name
 			const TCHAR *dev_name = _Unicode(device->device().name());
 
@@ -962,7 +962,6 @@ void CreateSoundFolders(int parent_index)
 	LPTREEFOLDER device_folders[512];
 	LPTREEFOLDER folder;
 	LPTREEFOLDER lpTemp;
-	const device_sound_interface *device = NULL;
 	int nFolder = numFolders;
 
 	for (i = 0; i < driver_list::total(); i++)
@@ -970,12 +969,12 @@ void CreateSoundFolders(int parent_index)
 		machine_config config(driver_list::driver(i), MameUIGlobal());
 
 		// enumerate through all devices
-		
+
 		sound_interface_iterator iter(config.root_device());
-		for (device_sound_interface *sound = iter.first(); sound != NULL; sound = iter.next())
+		for (device_sound_interface *device = iter.first(); device != NULL; device = iter.next())
 		{
 			// get the name
-			const TCHAR *dev_name = _Unicode(sound->device().name());
+			const TCHAR *dev_name = _Unicode(device->device().name());
 
 			// do we have a folder for this device?
 			folder = NULL;
@@ -1090,13 +1089,13 @@ void CreateDumpingFolders(int parent_index)
 		const rom_source *source;
 		gamedrv = &driver_list::driver(jj);
 
-		if (!gamedrv->rom) 
+		if (!gamedrv->rom)
 			continue;
 		bBadDump = FALSE;
 		bNoDump = FALSE;
 		/* Allocate machine config */
 		machine_config config(*gamedrv, MameUIGlobal());
-		
+
 		for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
 		{
 			for (region = rom_first_region(*source); region; region = rom_next_region(region))
@@ -1145,7 +1144,7 @@ void CreateYearFolders(int parent_index)
 
 		if (s[0] == '\0')
 			continue;
-		
+
 		// look for an extant year treefolder for this game
 		// (likely to be the previous one, so start at the end)
 		for (i=numFolders-1;i>=start_folder;i--)
@@ -1558,7 +1557,7 @@ void ResetTreeViewFolders(void)
 
 	// currently "cached" parent
 	HTREEITEM hti_parent = NULL;
-	int index_parent = -1;			
+	int index_parent = -1;
 
 	res = TreeView_DeleteAllItems(hTreeView);
 
@@ -1673,7 +1672,7 @@ void SelectTreeViewFolder(int folder_id)
 			SetCurrentFolder((LPTREEFOLDER)tvi.lParam);
 			return;
 		}
-		
+
 		hti_next = TreeView_GetChild(hTreeView,hti);
 		if (hti_next == NULL)
 		{
@@ -1699,7 +1698,7 @@ void SelectTreeViewFolder(int folder_id)
 
 }
 
-/* 
+/*
  * Does this folder have an INI associated with it?
  * Currently only TRUE for FOLDER_VECTOR and children
  * of FOLDER_SOURCE.
@@ -1742,7 +1741,7 @@ static BOOL AddFolder(LPTREEFOLDER lpFolder)
 }
 
 /* Allocate and initialize a NEW TREEFOLDER */
-static LPTREEFOLDER NewFolder(const TCHAR *lpTitle, UINT nCategoryID, BOOL bTranslate, 
+static LPTREEFOLDER NewFolder(const TCHAR *lpTitle, UINT nCategoryID, BOOL bTranslate,
 					   UINT nFolderId, int nParent, UINT nIconId)
 {
 	LPTREEFOLDER lpFolder = (LPTREEFOLDER)malloc(sizeof(TREEFOLDER));
@@ -2002,7 +2001,7 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Draw bitmap in the background
 
 	{
-		HPALETTE hPAL;		 
+		HPALETTE hPAL;
 		HDC maskDC;
 		HBITMAP maskBitmap;
 		HDC tempDC;
@@ -2015,11 +2014,11 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		RECT rcRoot;
 
 		// Now create a mask
-		maskDC = CreateCompatibleDC(hDC);	
-		
+		maskDC = CreateCompatibleDC(hDC);
+
 		// Create monochrome bitmap for the mask
 		maskBitmap = CreateBitmap(rcClient.right - rcClient.left,
-								  rcClient.bottom - rcClient.top, 
+								  rcClient.bottom - rcClient.top,
 								  1, 1, NULL);
 
 		hOldMaskBitmap = (HBITMAP)SelectObject(maskDC, maskBitmap);
@@ -2027,7 +2026,7 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		// Create the mask from the memory DC
 		BitBlt(maskDC, 0, 0, rcClient.right - rcClient.left,
-			   rcClient.bottom - rcClient.top, memDC, 
+			   rcClient.bottom - rcClient.top, memDC,
 			   rcClient.left, rcClient.top, SRCCOPY);
 
 		tempDC = CreateCompatibleDC(hDC);
@@ -2035,7 +2034,7 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		imageDC = CreateCompatibleDC(hDC);
 		bmpImage = CreateCompatibleBitmap(hDC,
-										  rcClient.right - rcClient.left, 
+										  rcClient.right - rcClient.left,
 										  rcClient.bottom - rcClient.top);
 		hOldBmpImage = (HBITMAP)SelectObject(imageDC, bmpImage);
 
@@ -2049,7 +2048,7 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			RealizePalette(hDC);
 			SelectPalette(imageDC, hPAL, FALSE);
 		}
-		
+
 		// Get x and y offset
 		TreeView_GetItemRect(hWnd, TreeView_GetRoot(hWnd), &rcRoot, FALSE);
 		rcRoot.left = -GetScrollPos(hWnd, SB_HORZ);
@@ -2057,7 +2056,7 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// Draw bitmap in tiled manner to imageDC
 		for (i = rcRoot.left; i < rcClient.right; i += bmDesc->bmWidth)
 			for (j = rcRoot.top; j < rcClient.bottom; j += bmDesc->bmHeight)
-				BitBlt(imageDC,  i, j, bmDesc->bmWidth, bmDesc->bmHeight, 
+				BitBlt(imageDC,  i, j, bmDesc->bmWidth, bmDesc->bmHeight,
 					   tempDC, 0, 0, SRCCOPY);
 
 		// Set the background in memDC to black. Using SRCPAINT with black and any other
@@ -2071,20 +2070,20 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// Set the foreground to black. See comment above.
 		SetBkColor(imageDC, RGB(255,255,255));
 		SetTextColor(imageDC, RGB(0,0,0));
-		BitBlt(imageDC, rcClip.left, rcClip.top, rcClip.right - rcClip.left, 
+		BitBlt(imageDC, rcClip.left, rcClip.top, rcClip.right - rcClip.left,
 			   rcClip.bottom - rcClip.top,
 			   maskDC, rcClip.left, rcClip.top, SRCAND);
 
 		// Combine the foreground with the background
 		BitBlt(imageDC, rcClip.left, rcClip.top, rcClip.right - rcClip.left,
-			   rcClip.bottom - rcClip.top, 
+			   rcClip.bottom - rcClip.top,
 			   memDC, rcClip.left, rcClip.top, SRCPAINT);
 
 		// Draw the final image to the screen
 		BitBlt(hDC, rcClip.left, rcClip.top, rcClip.right - rcClip.left,
-			   rcClip.bottom - rcClip.top, 
+			   rcClip.bottom - rcClip.top,
 			   imageDC, rcClip.left, rcClip.top, SRCCOPY);
-		
+
 		SelectObject(maskDC, hOldMaskBitmap);
 		SelectObject(tempDC, hOldHBitmap);
 		SelectObject(imageDC, hOldBmpImage);
@@ -2115,7 +2114,7 @@ static LRESULT CALLBACK TreeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	if (GetBackgroundBitmap() != NULL)
 	{
 		switch (uMsg)
-		{	
+		{
 	    case WM_MOUSEMOVE:
 		{
 			if (MouseHasBeenMoved())
@@ -2421,7 +2420,7 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 
 			*p = '\0';
 			name = &readbuf[1];
-	 
+
 			/* is it [FOLDER_SETTINGS]? */
 
 			if (strcmp(name, "FOLDER_SETTINGS") == 0)
@@ -2552,7 +2551,7 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const TCHAR *new_name)
 	TCHAR filename[MAX_PATH];
 	TCHAR new_filename[MAX_PATH];
 	const TCHAR *folder_dirw = GetFolderDir();
-	
+
 	if (lpFolder->m_nParent >= 0)
 	{
 		// a child extra folder was renamed, so do the rename and save the parent
@@ -2576,7 +2575,7 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const TCHAR *new_name)
 		FreeIfAllocatedW(&old_title);
 		return TRUE;
 	}
-	
+
 	// a parent extra folder was renamed, so rename the file
 
 	snwprintf(new_filename, ARRAY_LENGTH(new_filename),
@@ -2706,7 +2705,7 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 
 	   for (i=0;i<GetNumGames();i++)
 	   {
-		   int driver_index = GetIndexFromSortedIndex(i); 
+		   int driver_index = GetIndexFromSortedIndex(i);
 		   if (TestBit(folder_data->m_lpGameBits,driver_index))
 		   {
 			   fprintf(fp, "%s\n", driver_list::driver(driver_index).name);
@@ -2722,10 +2721,10 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 			   treeFolders[folder_data->m_nParent] == root_folder)
 		   {
 			   fprintf(fp,"\n[%s]\n", _String(folder_data->m_lpTitle));
-			   
+
 			   for (i=0;i<GetNumGames();i++)
 			   {
-				   int driver_index = GetIndexFromSortedIndex(i); 
+				   int driver_index = GetIndexFromSortedIndex(i);
 				   if (TestBit(folder_data->m_lpGameBits,driver_index))
 				   {
 					   fprintf(fp, "%s\n", driver_list::driver(driver_index).name);

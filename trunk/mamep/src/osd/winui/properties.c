@@ -339,7 +339,7 @@ static struct ComboBoxVideo
 {
 	const WCHAR*	m_pText;
 	const char*		m_pData;
-} g_ComboBoxVideo[] = 
+} g_ComboBoxVideo[] =
 {
 	{ TEXT("None"),                 "none"    },
 	{ TEXT("GDI"),                  "gdi"     },
@@ -352,7 +352,7 @@ static struct ComboBoxD3DVersion
 {
 	const WCHAR*	m_pText;
 	const int		m_pData;
-} g_ComboBoxD3DVersion[] = 
+} g_ComboBoxD3DVersion[] =
 {
 	{ TEXT("Version 9"),  9   },
 	{ TEXT("Version 8"),  8   },
@@ -364,7 +364,7 @@ static struct ComboBoxSelectScreen
 {
 	const WCHAR*	m_pText;
 	const int		m_pData;
-} g_ComboBoxSelectScreen[] = 
+} g_ComboBoxSelectScreen[] =
 {
 	{ TEXT("All screens"),      0    },
 	{ TEXT("First screen"),     1    },
@@ -378,7 +378,7 @@ static struct ComboBoxView
 {
 	const WCHAR*	m_pText;
 	const char*	m_pData;
-} g_ComboBoxView[] = 
+} g_ComboBoxView[] =
 {
 	{ TEXT("Auto"),             "auto"        },
 	{ TEXT("Standard"),         "standard"    },
@@ -393,7 +393,7 @@ static struct ComboBoxDevices
 {
 	const WCHAR*	m_pText;
 	const char*	m_pData;
-} g_ComboBoxDevice[] = 
+} g_ComboBoxDevice[] =
 {
 	{ TEXT("None"),                  "none"      },
 	{ TEXT("Keyboard"),              "keyboard"  },
@@ -408,12 +408,12 @@ static struct ComboBoxSnapView
 {
 	const WCHAR*	m_pText;
 	const char*		m_pData;
-} g_ComboBoxSnapView[] = 
+} g_ComboBoxSnapView[] =
 {
 	{ TEXT("Internal"),	        "internal"    },
 	{ TEXT("Auto"),		        "auto"        },
-	{ TEXT("Standard"),         "standard"    }, 
-	{ TEXT("Pixel Aspect"),     "pixel"       }, 
+	{ TEXT("Standard"),         "standard"    },
+	{ TEXT("Pixel Aspect"),     "pixel"       },
 	{ TEXT("Cocktail"),         "cocktail"    },
 };
 #define NUMSNAPVIEW ARRAY_LENGTH(g_ComboBoxSnapView)
@@ -659,7 +659,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 
 	ZeroMemory(&pshead, sizeof(PROPSHEETHEADER));
 
-	// Set the game to audit to this game 
+	// Set the game to audit to this game
 	InitGameAudit(game_num);
 
 	// Create the property sheets
@@ -742,13 +742,12 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 {
 	static WCHAR buf[1024];
 	machine_config config(driver_list::driver(nIndex), pCurrentOpts);
-	const device_execute_interface *cpu;
 
 	ZeroMemory(buf, sizeof(buf));
 
 	execute_interface_iterator iter(config.root_device());
-	cpu = iter.first();
-	while (cpu != NULL)
+	device_execute_interface *cpu = iter.first();
+	while (cpu)
 	{
 		if (cpu->device().clock() >= 1000000)
 		{
@@ -779,14 +778,13 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 	static WCHAR buf[1024];
 
 	buf[0] = 0;
-	
+
 	machine_config config(driver_list::driver(nIndex), pCurrentOpts);
 
 	/* iterate over sound chips */
-	const device_sound_interface *sound = NULL;
 	sound_interface_iterator iter(config.root_device());
-	sound = iter.first();
-	while(sound != NULL)
+	const device_sound_interface *sound = iter.first();
+	while(sound)
 	{
 		int clock,count;
 		device_type sound_type_;
@@ -800,7 +798,7 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 		count = 1;
 		sound = iter.next();
 		/* Matching chips at the same clock are aggregated */
-		while (sound != NULL
+		while (sound
 			&& sound->device().type() == sound_type_
 			&& sound->device().clock() == clock)
 		{
@@ -862,11 +860,12 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 	else
 	{
 		const screen_device *screen = iter.first();
-		if (screen == NULL) {
-			wcscpy(buf, _UIW(TEXT("Screenless Game"))); 
-		}
-		else {
-			for (; screen != NULL; screen = iter.next()) {
+		if (screen == NULL)
+			wcscpy(buf, _UIW(TEXT("Screenless Game")));
+		else
+		{
+			for (; screen != NULL; screen = iter.next())
+			{
 				WCHAR tmpbuf[256];
 				const rectangle &visarea = screen->visible_area();
 
@@ -876,7 +875,9 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 							visarea.max_y - visarea.min_y + 1,
 							visarea.max_x - visarea.min_x + 1,
 							ATTOSECONDS_TO_HZ(screen->refresh_attoseconds()), config.m_total_colors);
-				} else {
+				}
+				else
+				{
 					swprintf(tmpbuf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)\n")),
 							visarea.max_x - visarea.min_x + 1,
 							visarea.max_y - visarea.min_y + 1,
@@ -989,7 +990,7 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 			if (DriverIsBroken(driver_index))
  			{
 				wcscpy(buffer, _UIW(TEXT("Not working")));
-				
+
 				if (driver_list::driver(driver_index).flags & GAME_UNEMULATED_PROTECTION)
 				{
 					if (*buffer != '\0')
@@ -1042,7 +1043,7 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 			else
 			{
 				wcscpy(buffer, _UIW(TEXT("Working")));
-				
+
 				if (driver_list::driver(driver_index).flags & GAME_UNEMULATED_PROTECTION)
 				{
 					if (*buffer != '\0')
@@ -1113,7 +1114,7 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 		else
 		{
 			wcscpy(buffer, _UIW(TEXT("Working")));
-		}	
+		}
 		if (driver_list::driver(driver_index).flags & GAME_UNEMULATED_PROTECTION)
 		{
 			if (*buffer != '\0')
@@ -1450,7 +1451,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				//pCurrentOpts = pDefaultOpts;
 				// repopulate the controls with the new data
 				UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
-				
+
 				g_bUseDefaults = (pCurrentOpts == pDefaultOpts);
 				// This evaluates properly
 				g_bReset = (pCurrentOpts == pOrigOpts) ? FALSE : TRUE;
@@ -1548,11 +1549,11 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 	case WM_NOTIFY:
 		{
 			// Set to true if we are exiting the properites dialog
-			BOOL bClosing = ((LPPSHNOTIFY) lParam)->lParam; 
+			BOOL bClosing = ((LPPSHNOTIFY) lParam)->lParam;
 
 			switch (((NMHDR *) lParam)->code)
 			{
-				//We'll need to use a CheckState Table 
+				//We'll need to use a CheckState Table
 				//Because this one gets called for all kinds of other things too, and not only if a check is set
 			case PSN_SETACTIVE:
 				/* Initialize the controls. */
@@ -1579,7 +1580,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 				// Copy current options to orignal options.
 				//pOrigOpts = pCurrentOpts;
-				
+
 				// Repopulate the controls?  WTF?  We just read them, they should be fine.
 				UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
 
@@ -1627,7 +1628,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 				ResetDataMap(hDlg);
 				SetWindowLongPtr(hDlg, DWLP_MSGRESULT, FALSE);
-				return 1;  
+				return 1;
 
 			case PSN_RESET:
 				// Reset to the original values. Disregard changes
@@ -1643,7 +1644,7 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 		break;
 
 #if 1 //mamep: for coloring of changed elements
-	/* FIXME 
+	/* FIXME
 	 * We need to figure out in which ini of our hierarchy the current value is set, then apply the corresponding colouring.
 	 * Is there an easy way to figure this out?
 	 * The actual colour coding should still work
@@ -1754,9 +1755,9 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 		HelpFunction((HWND)((LPHELPINFO)lParam)->hItemHandle, MAMEUICONTEXTHELP, HH_TP_HELP_WM_HELP, GetHelpIDs());
 		break;
 
-	case WM_CONTEXTMENU: 
+	case WM_CONTEXTMENU:
 		HelpFunction((HWND)wParam, MAMEUICONTEXTHELP, HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
-		break; 
+		break;
 
 	}
 	EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
@@ -2609,7 +2610,7 @@ static void SetPropEnabledControls(HWND hWnd)
 		else
 		{
 			BOOL use_lightgun;
-			// Older than XP 
+			// Older than XP
 			Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN),TRUE);
 			use_lightgun = Button_GetCheck(GetDlgItem(hWnd,IDC_LIGHTGUN));
 			Button_Enable(GetDlgItem(hWnd,IDC_DUAL_LIGHTGUN),use_lightgun);
@@ -2867,13 +2868,13 @@ static BOOL SnapViewPopulateControl(datamap *map, HWND dialog, HWND control, win
 
 static BOOL DefaultInputReadControl(datamap *map, HWND dialog, HWND control, windows_options *opts, const char *option_name)
 {
-	const char *input_option_value;	
+	const char *input_option_value;
 	int input_option_index;
 	//char *op_val = NULL;
 	astring error_string;
 
 	input_option_index = ComboBox_GetCurSel(control);
-	input_option_value = (const char *) ComboBox_GetItemData(control, input_option_index);	
+	input_option_value = (const char *) ComboBox_GetItemData(control, input_option_index);
 	//op_val = utf8_from_tstring(input_option_value);
 	opts->set_value(OPTION_CTRLR, input_option_value, OPTION_PRIORITY_CMDLINE,error_string);
 	assert(!error_string);
@@ -2926,12 +2927,12 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 	swprintf (path, TEXT("%s\\*.*"), GetCtrlrDir());
 
 	//osd_free(t_ctrldir);
-	
+
 	hFind = FindFirstFileW(path, &FindFileData);
 
 	if (hFind != INVALID_HANDLE_VALUE)
 	{
-		do 
+		do
 		{
 			// copy the filename
 			wcscpy (root,FindFileData.cFileName);
@@ -2958,12 +2959,12 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 			}
 		}
 		while (FindNextFileW (hFind, &FindFileData) != 0);
-		
+
 		FindClose (hFind);
 	}
 
 	(void)ComboBox_SetCurSel(control, selected);
-	
+
 	if( t_buf )
 		osd_free(t_buf);
 
@@ -3081,7 +3082,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 
 				}
 			}
-			if (devmode.dmDisplayFrequency >= 10 ) 
+			if (devmode.dmDisplayFrequency >= 10 )
 			{
 				// I have some devmode "vga" which specifes 1 Hz, which is probably bogus, so we filter it out
 
@@ -3245,7 +3246,7 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_AUDIO_SYNC,				DM_BOOL,	WINOPTION_AUDIO_SYNC);
 #endif /* USE_AUDIO_SYNC */
 
-	// core input options 
+	// core input options
 	datamap_add(properties_datamap, IDC_COINLOCKOUT,			DM_BOOL,	OPTION_COIN_LOCKOUT);
 	datamap_add(properties_datamap, IDC_DEFAULT_INPUT,			DM_STRING,	OPTION_CTRLR);
 	datamap_add(properties_datamap, IDC_USE_MOUSE,				DM_BOOL,	OPTION_MOUSE);
@@ -3370,48 +3371,11 @@ static void BuildDataMap(void)
 	}
 #endif /* DRIVER_SWITCH */
 
+	// show menu
+	//datamap_add(properties_datamap, IDC_SHOW_MENU,				DM_BOOL,	WINOPTION_MENU);
+
 	// hlsl
 	datamap_add(properties_datamap, IDC_HLSL_ON,				DM_BOOL,	WINOPTION_HLSL_ENABLE);
-	datamap_add(properties_datamap, IDC_HLSL_ALPHA,				DM_FLOAT,	WINOPTION_SCANLINE_AMOUNT);
-	datamap_add(properties_datamap, IDC_HLSL_ALPHADISP,			DM_FLOAT,	WINOPTION_SCANLINE_AMOUNT);
-	datamap_add(properties_datamap, IDC_HLSL_CURV,				DM_FLOAT,	WINOPTION_CURVATURE);
-	datamap_add(properties_datamap, IDC_HLSL_CURVDISP,			DM_FLOAT,	WINOPTION_CURVATURE);
-	datamap_add(properties_datamap, IDC_HLSL_SAT,				DM_FLOAT,	WINOPTION_SATURATION);
-	datamap_add(properties_datamap, IDC_HLSL_SATDISP,			DM_FLOAT,	WINOPTION_SATURATION);
-	datamap_add(properties_datamap, IDC_HLSL_SHADOW,			DM_FLOAT,	WINOPTION_SHADOW_MASK_ALPHA);
-	datamap_add(properties_datamap, IDC_HLSL_SHADOWDISP,		DM_FLOAT,	WINOPTION_SHADOW_MASK_ALPHA);
-	datamap_add(properties_datamap, IDC_HLSL_PIN,				DM_FLOAT,	WINOPTION_PINCUSHION);
-	datamap_add(properties_datamap, IDC_HLSL_PINDISP,			DM_FLOAT,	WINOPTION_PINCUSHION);
-#if 0
-	datamap_add(properties_datamap, IDC_HLSL_XFOCUS,			DM_FLOAT,	WINOPTION_DEFOCUS_X);
-	datamap_add(properties_datamap, IDC_HLSL_YFOCUS,			DM_FLOAT,	WINOPTION_DEFOCUS_Y);
-	datamap_add(properties_datamap, IDC_HLSL_XFOCUSDISP,		DM_FLOAT,	WINOPTION_DEFOCUS_X);
-	datamap_add(properties_datamap, IDC_HLSL_YFOCUSDISP,		DM_FLOAT,	WINOPTION_DEFOCUS_Y);
-	datamap_add(properties_datamap, IDC_HLSL_RSCALE,			DM_FLOAT,	WINOPTION_RED_SCALE);
-	datamap_add(properties_datamap, IDC_HLSL_GSCALE,			DM_FLOAT,	WINOPTION_GREEN_SCALE);
-	datamap_add(properties_datamap, IDC_HLSL_BSCALE,			DM_FLOAT,	WINOPTION_BLUE_SCALE);
-	datamap_add(properties_datamap, IDC_HLSL_RSCALEDISP,		DM_FLOAT,	WINOPTION_RED_SCALE);
-	datamap_add(properties_datamap, IDC_HLSL_GSCALEDISP,		DM_FLOAT,	WINOPTION_GREEN_SCALE);
-	datamap_add(properties_datamap, IDC_HLSL_BSCALEDISP,		DM_FLOAT,	WINOPTION_BLUE_SCALE);
-	datamap_add(properties_datamap, IDC_HLSL_RPOWER,			DM_FLOAT,	WINOPTION_RED_POWER);
-	datamap_add(properties_datamap, IDC_HLSL_GPOWER,			DM_FLOAT,	WINOPTION_GREEN_POWER);
-	datamap_add(properties_datamap, IDC_HLSL_BPOWER,			DM_FLOAT,	WINOPTION_BLUE_POWER);
-	datamap_add(properties_datamap, IDC_HLSL_RPOWERDISP,		DM_FLOAT,	WINOPTION_RED_POWER);
-	datamap_add(properties_datamap, IDC_HLSL_GPOWERDISP,		DM_FLOAT,	WINOPTION_GREEN_POWER);
-	datamap_add(properties_datamap, IDC_HLSL_BPOWERDISP,		DM_FLOAT,	WINOPTION_BLUE_POWER);
-	datamap_add(properties_datamap, IDC_HLSL_RPLIFE,			DM_FLOAT,	WINOPTION_RED_PHOSPHOR);
-	datamap_add(properties_datamap, IDC_HLSL_GPLIFE,			DM_FLOAT,	WINOPTION_GREEN_PHOSPHOR);
-	datamap_add(properties_datamap, IDC_HLSL_BPLIFE,			DM_FLOAT,	WINOPTION_BLUE_PHOSPHOR);
-	datamap_add(properties_datamap, IDC_HLSL_RPLIFEDISP,		DM_FLOAT,	WINOPTION_RED_PHOSPHOR);
-	datamap_add(properties_datamap, IDC_HLSL_GPLIFEDISP,		DM_FLOAT,	WINOPTION_GREEN_PHOSPHOR);
-	datamap_add(properties_datamap, IDC_HLSL_BPLIFEDISP,		DM_FLOAT,	WINOPTION_BLUE_PHOSPHOR);
-	datamap_add(properties_datamap, IDC_HLSL_RFLOOR,			DM_FLOAT,	WINOPTION_RED_FLOOR);
-	datamap_add(properties_datamap, IDC_HLSL_GFLOOR,			DM_FLOAT,	WINOPTION_GREEN_FLOOR);
-	datamap_add(properties_datamap, IDC_HLSL_BFLOOR,			DM_FLOAT,	WINOPTION_BLUE_FLOOR);
-	datamap_add(properties_datamap, IDC_HLSL_RFLOORDISP,		DM_FLOAT,	WINOPTION_RED_FLOOR);
-	datamap_add(properties_datamap, IDC_HLSL_GFLOORDISP,		DM_FLOAT,	WINOPTION_GREEN_FLOOR);
-	datamap_add(properties_datamap, IDC_HLSL_BFLOORDISP,		DM_FLOAT,	WINOPTION_BLUE_FLOOR);
-#endif
 
 	// set up callbacks
 	datamap_set_callback(properties_datamap, IDC_ROTATE,		DCT_READ_CONTROL,		RotateReadControl);
@@ -3423,7 +3387,7 @@ static void BuildDataMap(void)
 	datamap_set_callback(properties_datamap, IDC_REFRESH,		DCT_POPULATE_CONTROL,	ResolutionPopulateControl);
 	datamap_set_callback(properties_datamap, IDC_SIZES,			DCT_READ_CONTROL,		ResolutionReadControl);
 	datamap_set_callback(properties_datamap, IDC_SIZES,			DCT_POPULATE_CONTROL,	ResolutionPopulateControl);
-	datamap_set_callback(properties_datamap, IDC_DEFAULT_INPUT,	DCT_READ_CONTROL,		DefaultInputReadControl);	
+	datamap_set_callback(properties_datamap, IDC_DEFAULT_INPUT,	DCT_READ_CONTROL,		DefaultInputReadControl);
 	datamap_set_callback(properties_datamap, IDC_DEFAULT_INPUT,	DCT_POPULATE_CONTROL,	DefaultInputPopulateControl);
 	datamap_set_callback(properties_datamap, IDC_SNAPVIEW,		DCT_POPULATE_CONTROL,	SnapViewPopulateControl);
 
@@ -3457,27 +3421,6 @@ static void BuildDataMap(void)
 	datamap_set_float_format(properties_datamap, IDC_JDZDISP,			"%03.2f");
 	datamap_set_float_format(properties_datamap, IDC_JSATDISP,			"%03.2f");
 	datamap_set_float_format(properties_datamap, IDC_SPEEDDISP,			"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_ALPHADISP,	"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_CURVDISP,		"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_SATDISP,		"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_SHADOWDISP,	"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_PINDISP,		"%03.2f");
-#if 0
-	datamap_set_float_format(properties_datamap, IDC_HLSL_RFLOORDISP,	"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_GFLOORDISP,	"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_BFLOORDISP,	"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_RSCALEDISP,	"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_GSCALEDISP,	"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_BSCALEDISP,	"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_XFOCUSDISP,	"%1.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_YFOCUSDISP,	"%1.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_RPOWERDISP,	"%1.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_GPOWERDISP,	"%1.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_BPOWERDISP,	"%1.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_RPLIFEDISP,	"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_GPLIFEDISP,	"%03.2f");
-	datamap_set_float_format(properties_datamap, IDC_HLSL_BPLIFEDISP,	"%03.2f");
-#endif
 
 	// trackbar ranges - slider-name,start,end,step
 	datamap_set_trackbar_range(properties_datamap, IDC_PRESCALE,    1, 10, 1);
@@ -3497,27 +3440,6 @@ static void BuildDataMap(void)
 	datamap_set_trackbar_range(properties_datamap, IDC_BRIGHTCORRECT,0.00, 2.0,  (float)0.1);
 	datamap_set_trackbar_range(properties_datamap, IDC_CONTRAST,    0.0,   2.0,  (float)0.1);
 	datamap_set_trackbar_range(properties_datamap, IDC_PAUSEBRIGHT, 0.00,  1.00, (float)0.05);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_ALPHA,  0.00,  1.00, (float)0.05);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_CURV,   0.00,  1.00, (float)0.01);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_SAT,    0.00,  4.00, (float)0.05);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_SHADOW, 0.00,  1.00, (float)0.05);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_PIN,    0.00,  1.00, (float)0.01);
-#if 0
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_RFLOOR, 0.00,  1.00, (float)0.01);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_GFLOOR, 0.00,  1.00, (float)0.01);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_BFLOOR, 0.00,  1.00, (float)0.01);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_RSCALE, 0.00,  2.00, (float)0.01);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_GSCALE, 0.00,  2.00, (float)0.01);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_BSCALE, 0.00,  2.00, (float)0.01);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_RPOWER, 0.0,   4.0,  (float)0.05);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_GPOWER, 0.0,   4.0,  (float)0.05);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_BPOWER, 0.0,   4.0,  (float)0.05);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_XFOCUS, 0.0,   16.0, (float)0.25);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_YFOCUS, 0.0,   16.0, (float)0.25);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_RPLIFE, 0.00,  1.00, (float)0.01);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_GPLIFE, 0.00,  1.00, (float)0.01);
-	datamap_set_trackbar_range(properties_datamap, IDC_HLSL_BPLIFE, 0.00,  1.00, (float)0.01);
-#endif
 #ifdef TRANS_UI
 	datamap_set_trackbar_range(properties_datamap, IDC_TRANSPARENCY, 0, 255, 1);
 #endif /* TRANS_UI */
@@ -3558,19 +3480,18 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 
 	hCtrl = GetDlgItem(hWnd, IDC_SAMPLES);
 
-	
+
 	if (hCtrl)
 	{
-		if ( nIndex > -1 ) {
+		if ( nIndex > -1 )
+		{
 			machine_config config(driver_list::driver(nIndex), pCurrentOpts);
-		
+
 			sound_interface_iterator iter(config.root_device());
 			for (device_sound_interface *sound = iter.first(); sound != NULL; sound = iter.next())
 			{
-				if (sound->device().type() == SAMPLES ||
-					sound->device().type() == VLM5030) {
+				if ((sound->device().type() == SAMPLES) || (sound->device().type() == VLM5030))
 					enabled = TRUE;
-				}
 			}
 		}
 		enabled = enabled && bSoundEnabled;
@@ -3795,7 +3716,7 @@ static void InitializeEffectUI(HWND hwnd)
 
 		if (hFind != INVALID_HANDLE_VALUE)
 		{
-			do 
+			do
 			{
 				// copy the filename
 				wcscpy(root, FindFileData.cFileName);
@@ -3818,7 +3739,7 @@ static void InitializeEffectUI(HWND hwnd)
 				}
 			}
 			while (FindNextFileW(hFind, &FindFileData) != 0);
-			
+
 			FindClose(hFind);
 		}
 	}
@@ -4176,12 +4097,12 @@ void UpdateBackgroundBrush(HWND hwndTab)
 
 		// Create a compatible DC
 		hDCMem = CreateCompatibleDC(hDC);
-		hBmp = CreateCompatibleBitmap(hDC, 
+		hBmp = CreateCompatibleBitmap(hDC,
 				rc.right - rc.left, rc.bottom - rc.top);
 		hBmpOld = (HBITMAP)(SelectObject(hDCMem, hBmp));
 
 		// Tell the tab control to paint in our DC
-		SendMessage(hwndTab, WM_PRINTCLIENT, (WPARAM)(hDCMem), 
+		SendMessage(hwndTab, WM_PRINTCLIENT, (WPARAM)(hDCMem),
 			(LPARAM)(PRF_ERASEBKGND | PRF_CLIENT | PRF_NONCLIENT));
 
 		// Create a pattern brush from the bitmap selected in our DC
