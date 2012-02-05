@@ -11830,7 +11830,7 @@ static WRITE16_HANDLER( sbp_lowerrom_w )
 	printf("sbp_lowerrom_w offset %08x data %04x\n", realoffset, data );
 }
 
-static DRIVER_INIT(sbp )
+static DRIVER_INIT( sbp )
 {
 	// there seems to be a protection device living around here..
 	// if you nibble swap the data in the rom the game will boot
@@ -11839,6 +11839,15 @@ static DRIVER_INIT(sbp )
 	// other stuff going on as well tho, the main overlay is still missing, and p1 inputs don't work
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00200, 0x001fff, FUNC(sbp_lowerrom_r));
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x00200, 0x001fff, FUNC(sbp_lowerrom_w));
+
+	/* the game code clears the text overlay used ingame immediately after writing it.. why? protection? sloppy code that the hw ignores? imperfect emulation? */
+	{
+		UINT16* rom = (UINT16*)machine.region("maincpu")->base();
+
+		rom[0x2a6f8/2] = 0x4e71;
+		rom[0x2a6fa/2] = 0x4e71;
+		rom[0x2a6fc/2] = 0x4e71;
+	}
 
 
 }

@@ -60,12 +60,12 @@ public:
 	// inline configuration helpers
 	static void static_set_config(device_t &device, const char *list, softlist_type list_type);
 	static void static_set_filter(device_t &device, const char *filter);
-	
+
 	// getters
 	const char *list_name() const { return m_list_name; }
 	softlist_type list_type() const { return m_list_type; }
 	const char *filter() const { return m_filter; }
-	
+
 	// validation helpers
 	static void reset_checked_lists() { s_checked_lists.reset(); }
 
@@ -76,9 +76,9 @@ protected:
 
 	// configuration state
 	const char *				m_list_name;
-	softlist_type 				m_list_type;
+	softlist_type				m_list_type;
 	const char *				m_filter;
-	
+
 	// static state
 	static tagmap_t<UINT8>		s_checked_lists;
 };
@@ -192,7 +192,7 @@ const char *software_get_clone(emu_options &options, char *swlist, const char *s
 UINT32 software_get_support(emu_options &options, char *swlist, const char *swname);
 const char *software_part_get_feature(const software_part *part, const char *feature_name);
 
-bool load_software_part(emu_options &options, device_image_interface *image, const char *path, software_info **sw_info, software_part **sw_part, char **full_sw_name);
+bool load_software_part(emu_options &options, device_image_interface *image, const char *path, software_info **sw_info, software_part **sw_part, char **full_sw_name, char**list_name);
 
 void software_display_matches(const machine_config &config, emu_options &options,const char *interface,const char *swname_bckp);
 

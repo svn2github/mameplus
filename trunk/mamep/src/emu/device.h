@@ -470,17 +470,14 @@ public:
 		  m_current(NULL),
 		  m_curdepth(0),
 		  m_maxdepth(maxdepth) { }
-	
+
 	// getters
 	device_t *current() const { return m_current; }
-
-	// setters
-	void set_current(device_t &current) { m_current = &current; }
 
 	// reset and return first item
 	device_t *first()
 	{
-		m_current = m_root; 
+		m_current = m_root;
 		return m_current;
 	}
 
@@ -502,7 +499,7 @@ public:
 				return m_current;
 			}
 		}
-		
+
 		// search next for neighbors up the ownership chain
 		while (m_curdepth > 0)
 		{
@@ -511,24 +508,24 @@ public:
 			if (m_current != NULL)
 				return m_current;
 
-			// no? try our parent			
+			// no? try our parent
 			start = start->owner();
 			m_curdepth--;
 		}
-		
+
 		// returned to the top; we're done
 		return m_current = NULL;
 	}
-	
+
 	// return the number of items available
 	int count()
 	{
-		int result = 0; 
+		int result = 0;
 		for (device_t *item = first(); item != NULL; item = next())
 			result++;
 		return result;
 	}
-	
+
 	// return the index of a given item in the virtual list
 	int indexof(device_t &device)
 	{
@@ -571,9 +568,6 @@ public:
 	// getters
 	_DeviceClass *current() const { return downcast<_DeviceClass *>(m_iterator.current()); }
 
-	// setters
-	void set_current(_DeviceClass &current) { m_iterator.set_current(current); }
-
 	// reset and return first item
 	_DeviceClass *first()
 	{
@@ -591,16 +585,16 @@ public:
 				return downcast<_DeviceClass *>(device);
 		return NULL;
 	}
-	
+
 	// return the number of items available
 	int count()
 	{
-		int result = 0; 
+		int result = 0;
 		for (_DeviceClass *item = first(); item != NULL; item = next())
 			result++;
 		return result;
 	}
-	
+
 	// return the index of a given item in the virtual list
 	int indexof(_DeviceClass &device)
 	{
@@ -641,9 +635,6 @@ public:
 
 	// getters
 	_InterfaceClass *current() const { return m_current; }
-	
-	// setters
-	void set_current(_InterfaceClass &current) { m_current = &current; m_iterator.set_current(current.device()); }
 
 	// reset and return first item
 	_InterfaceClass *first()
@@ -662,16 +653,16 @@ public:
 				return m_current;
 		return NULL;
 	}
-	
+
 	// return the number of items available
 	int count()
 	{
-		int result = 0; 
+		int result = 0;
 		for (_InterfaceClass *item = first(); item != NULL; item = next())
 			result++;
 		return result;
 	}
-	
+
 	// return the index of a given item in the virtual list
 	int indexof(_InterfaceClass &intrf)
 	{
@@ -755,7 +746,7 @@ inline device_t *device_t::subdevice(const char *tag) const
 
 
 //-------------------------------------------------
-//  siblingdevice - given a tag, find the device 
+//  siblingdevice - given a tag, find the device
 //  by name relative to this device's parent
 //-------------------------------------------------
 

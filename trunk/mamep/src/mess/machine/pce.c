@@ -252,7 +252,7 @@ DEVICE_IMAGE_LOAD(pce_cart)
 }
 
 #ifdef MESS
-DRIVER_INIT( pce_mess )
+DRIVER_INIT( mess_pce )
 {
 	pce_state *state = machine.driver_data<pce_state>();
 	state->m_io_port_options = PCE_JOY_SIG | CONST_SIG;
@@ -277,7 +277,7 @@ MACHINE_START( pce )
 }
 
 #ifdef MESS
-MACHINE_RESET( pce_mess )
+MACHINE_RESET( mess_pce )
 {
 	pce_state *state = machine.driver_data<pce_state>();
 	pce_cd_t &pce_cd = state->m_cd;
@@ -301,7 +301,7 @@ MACHINE_RESET( pce_mess )
 }
 
 /* todo: how many input ports does the PCE have? */
-WRITE8_HANDLER ( pce_mess_joystick_w )
+WRITE8_HANDLER ( mess_pce_joystick_w )
 {
 	pce_state *state = space->machine().driver_data<pce_state>();
 	int joy_i;
@@ -331,7 +331,7 @@ WRITE8_HANDLER ( pce_mess_joystick_w )
     }
 }
 
-READ8_HANDLER ( pce_mess_joystick_r )
+READ8_HANDLER ( mess_pce_joystick_r )
 {
 	pce_state *state = space->machine().driver_data<pce_state>();
 	static const char *const joyname[4][5] = {

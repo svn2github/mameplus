@@ -12,6 +12,7 @@
 #include "emuopts.h"
 #include "hash.h"
 #include "softlist.h"
+#include "clifront.h"
 
 #include <ctype.h>
 
@@ -1576,7 +1577,7 @@ static void find_software_item(const machine_config &config, emu_options &option
 		software_list_device_iterator deviter(config.root_device());
 		for (software_list_device *swlist = deviter.first(); swlist != NULL; swlist = deviter.next())
 		{
-			const char *swlist_name = swlist->list_name();
+			swlist_name = (char *)swlist->list_name();
 
 			if (swlist->list_type() == SOFTWARE_LIST_ORIGINAL_SYSTEM)
 			{
@@ -1675,7 +1676,7 @@ static void find_software_item(const machine_config &config, emu_options &option
     sw_info and sw_part are also set.
 -------------------------------------------------*/
 
-bool load_software_part(emu_options &options, device_image_interface *image, const char *path, software_info **sw_info, software_part **sw_part, char **full_sw_name)
+bool load_software_part(emu_options &options, device_image_interface *image, const char *path, software_info **sw_info, software_part **sw_part, char **full_sw_name, char**list_name)
 {
 	software_list *software_list_ptr = NULL;
 	software_info *software_info_ptr = NULL;
@@ -1685,6 +1686,7 @@ bool load_software_part(emu_options &options, device_image_interface *image, con
 	bool result = false;
 	*sw_info = NULL;
 	*sw_part = NULL;
+	*list_name = NULL;
 
 	find_software_item(image->device().machine().config(), options, image, path, &software_list_ptr, &software_info_ptr, &software_part_ptr, &swlist_name);
 
@@ -1751,6 +1753,7 @@ bool load_software_part(emu_options &options, device_image_interface *image, con
 			}
 			new_part++;
 		}
+		*list_name = auto_strdup( image->device().machine(), swlist_name );
 
 		/* Tell the world which part we actually loaded */
 		*full_sw_name = auto_alloc_array( image->device().machine(), char, strlen(swlist_name) + strlen(software_info_ptr->shortname) + strlen(software_part_ptr->name) + 3 );
@@ -1919,6 +1922,9 @@ void software_list_device::device_validity_check(validity_checker &valid) const
 	// it in the future
 	if (s_checked_lists.add(m_list_name, 1, false) == TMERR_DUPLICATE)
 		return;
+
+	// do device validation only in case of validate command
+	if (strcmp(mconfig().options().command(), CLICOMMAND_VALIDATE) != 0) return;
 
 	softlist_map names;
 	softlist_map descriptions;

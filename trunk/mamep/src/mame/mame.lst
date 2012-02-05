@@ -2415,10 +2415,13 @@ snowbrosc		// MIN16-02 (c) 1990 Toaplan + Romstar license
 snowbrosj		// MIN16-02 (c) 1990 Toaplan
 snowbrosd		// MIN16-02 (c) 1990 Toaplan + Dooyong license
 wintbob			// bootleg
+// modifeid snowbros 'clone' hardware
 honeydol		// (c) 1995 Barko Corp
 twinadv			// (c) 1995 Barko Corp
 twinadvk		// (c) 1995 Barko Corp
-				// SemiCom games on snowbros like hardware
+snowbros3		// (c) 2002 Syrmex
+// SemiCom games on "SnowBros"-like hardware
+finalttr		// (c) 1993 Jeil Computer System
 hyperpac		// (c) 1995 SemiCom
 hyperpacb		// bootleg
 toppyrap		// (c) 1996 SemiCom
@@ -2429,9 +2432,8 @@ pzlbreak		// (c) 1997 SemiCom
 3in1semi		// (c) 1998 SemiCom
 moremore		// (c) 1999 SemiCom + Exit
 moremorp		// (c) 1999 SemiCom + Exit
-4in1boot		// (c) 2002 but bootleg of 1999 release?
-snowbros3		// (c) 2002 but hack / bootleg of snowbros?
-finalttr		// (c) 1993 Jeil Computer System
+4in1boot		// (c) 2002 KISoft (includes hacks of Semicom games + Snowbros)
+
 
 // More Toaplan Games
 tekipaki		// TP-020 (c) 1991 Toaplan
@@ -2585,25 +2587,6 @@ theroes			// (c) 2001 Primetek Investments
 korokoro		// (c) 1999 Takumi
 crusherm		// (c) 1999 Takumi
 tjumpman		// (c) 1999 Namco
-
-// CAVE CV1000B Board
-//mushisam		// (c) 2004 Cave
-//mushisama		// (c) 2004 Cave
-//espgal2			// (c) 2005 Cave
-//mushitam		// (c) 2005 Cave
-//futari10		// (c) 2006 Cave
-//futari15		// (c) 2006 Cave
-//futari15a		// (c) 2006 Cave
-//futariblk		// (c) 2006 Cave
-//ibara			// (c) 2006 Cave
-//ibarablk		// (c) 2006 Cave
-//ibarablka		// (c) 2006 Cave
-//pinkswts		// (c) 2006 Cave
-//pinkswtsa		// (c) 2006 Cave
-//pinkswtsb		// (c) 2006 Cave
-//deathsml		// (c) 2007 Cave
-//mmpork			// (c) 2007 Cave
-//mmmbanc			// (c) 2007 Cave
 
 // Kyugo games
 // Kyugo only made four games: Repulse, Flash Gal, SRD Mission and Air Wolf.
@@ -2912,6 +2895,7 @@ wofu			// 31/10/1992 (c) 1992 (USA) (CPS1 + QSound)
 wofa			// 05/10/1992 (c) 1992 (Asia)  (CPS1 + QSound)
 wofj			// 31/10/1992 (c) 1992 (Japan) (CPS1 + QSound)
 wofhfh			// bootleg
+sgyxz			// bootleg (All-In Electronics)
 sf2hf			// 09/12/1992 (c) 1992 (World)
 sf2hfu			// 09/12/1992 (c) 1992 (USA)
 sf2hfj			// 09/12/1992 (c) 1992 (Japan)
@@ -3469,6 +3453,7 @@ pacapp2			// 1999.07 Paca Paca Passion 2 (Japan, PKS1/VER.A)
 				// 1999.07 Bust A Move 2 (Metro)
 tektagt			// 1999.?? Tekken Tag Tournament (US, TEG3/VER.C1)
 tektagtac		// 1999.?? Tekken Tag Tournament (Asia, TEG2/VER.C1)
+tektagtac1		// 1999.?? Tekken Tag Tournament (Asia, TEG2/VER.C1) - alt mainboard & rom board
 tektagtub		// 1999.?? Tekken Tag Tournament (US, TEG3/VER.B)
 tektagtjb		// 1999.07 Tekken Tag Tournament (Japan, TEG1/VER.B)
 tektagtja		// 1999.07 Tekken Tag Tournament (Japan, TEG1/VER.A)
@@ -4049,6 +4034,9 @@ fantzn2			// (c) 1988
 opaopa
 tetrisse		// (c) 1988
 
+// Shooting Zone (SMS Gun Games on a timer)
+shtzone			// (c) 1987
+
 // other Sega 8-bit games
 turbo			// (c) 1981 Sega
 turboa			// (c) 1981 Sega
@@ -4471,12 +4459,15 @@ puyosun			// 1996.12 Puyo Puyo SUN (Compile)
 colmns97		// 1997.01 Columns 97
 shienryu		// 1997.02 Shienryu (Warashi)
 vmahjong		// 1997.02 Virtual Mahjong (Micronet)
+pclub2kc		// 1997.02 Print Club Kome Kome Club
+pclub2fc		// 1997.04 Print Club 2 Felix The Cat
 groovef			// 1997.05 Groove on Fight (Atlus)
 nclubv3			// 1997.07 Name Club Ver. 3
 pclub2			// 1997.09 Print Club 2
 thunt			// 1997.09 Puzzle & Action Treasure Hunt (Sega (Deniam License))
 thuntk
 winterht		// 1997.10 Winter Heat (Data East)
+pclub298		// 1997.10 Print Club 2 '98 Spring Ver
 cotton2			// 1997.11 Cotton 2 (Success)
 hanagumi		// 1997.11 Sakura Taisen Hanagumi Taisen Columns
 findlove		// 1997.12 Find Love (Daiki / FCF)
@@ -4492,6 +4483,8 @@ rsgun			// 1998.05 Radient Silver Gun (Treasure)
 astrass			// 1998.06 Astra Super Stars (Sunsoft)
 myfairld		// 1998.07 My Fair Lady (Micronet)
 othellos		// 1998.07 Othello Shiyouyo (Success)
+pclubol			// 1998.07 Print Club Olive
+pclb298a		// 1998.08 Print Club 2 '98 Autumn Ver
 cottonbm		// 1998.09 Cotton Boomerang (Success)
 stress			// 1998.10 Stress Busters
 elandore		// 1998.11 Touryuu Densetsu Elandore (Sai-Mate)
@@ -4502,7 +4495,10 @@ sanjeon			// 1999.04 Sanjun Sujun (Sega / Deniam)
 danchih			// 1999.06 Danchi de Hanafuda Okusan Komeya Desuyo! (Altron (Tecmo License))
 ffreveng		// 1999.09 Final Fight Revenge (Capcom)
 pclubpok		// 1999.11 Print Club Pokemon
+pclubor			// 1999.11 Print Club Goukakenran
 danchiq			// 2000.12 Danchi de Quiz Okusan Yontaku Desuyo! (Altron)
+
+
 
 // Sega Model 2 Games
 
@@ -5441,18 +5437,7 @@ tumbleb2		// bootleg
 jumpkids		// (c) 1993 Comad
 jumppop			// (c) 2001 ESD
 pangpang		// (c) 1994 Dong Gue La Mi Ltd.
-sdfight			// (c) 1996 SemiCom
-wlstar			// (c) 1995 Mijin
-wondl96			// (c) 1996 SemiCom
 fncywld			// (c) 1996 Unico
-htchctch		// (c) 1995 SemiCom
-cookbib			// (c) 1995 SemiCom
-chokchok		// (c) 1995 SemiCom
-metlsavr		// (c) 1994
-bcstry			// (c) 1997 SemiCom
-bcstrya			// (c) 1997 SemiCom
-semibase		// (c) 1997 SemiCom
-dquizgo			// (c) 1998 SemiCom
 suprtrio		// (c) 1994 GameAce
 lemmings		// prototype (c) 1991 Data East USA (US)
 				// MAQ ??
@@ -5540,6 +5525,19 @@ skullfng		// MCH (c) 1996 Data East Corporation (World)
 skullfngj		// MCH (c) 1996 Data East Corporation (Japan)
 stadhr96		// MCM (c) 1996 Data East
 stadhr96j		// MCM (c) 1996 Data East
+
+// SemiCom games on "tumblpop"-like hardware
+metlsavr		// (c) 1994 First Amusements
+wlstar			// (c) 1995 Mijin
+sdfight			// (c) 1996 SemiCom
+wondl96			// (c) 1996 SemiCom
+htchctch		// (c) 1995 SemiCom
+cookbib			// (c) 1995 SemiCom
+chokchok		// (c) 1995 SemiCom
+bcstry			// (c) 1997 SemiCom
+bcstrya			// (c) 1997 SemiCom
+semibase		// (c) 1997 SemiCom
+dquizgo			// (c) 1998 SemiCom
 
 // Tehkan / Tecmo games (Tehkan became Tecmo in 1986)
 senjyo			// (c) 1983 Tehkan
@@ -5885,6 +5883,7 @@ ssriders2		// bootleg
 xmen			// GX065 (c) 1992 (US)
 xmenj			// GX065 (c) 1992 (Japan)
 xmene			// GX065 (c) 1992 (Europe)
+xmena			// GX065 (c) 1992 (Asia)
 xmen2pe			// GX065 (c) 1992 (World)
 xmen2pa			// GX065 (c) 1992 (Asia)
 xmen2pj			// GX065 (c) 1992 (Japan)
@@ -6252,6 +6251,7 @@ asteroid2		// 035127-035145    (c) 1979
 asteroid1		// 035127-035145    no copyright notice
 asteroidb		// (bootleg)
 asterock		// Sidam bootleg    (c) 1979
+hyperspc		// Rumiano bootleg  (c) 1979
 meteorts		// VCC bootleg      (c) 1979
 meteorho		// Hoei? bootleg    (c) 1980
 astdelux		// 0351xx           (c) 1980
@@ -7476,6 +7476,7 @@ cartfury		// (c) 2000 Midway Games
 hydrthnd		// (c) 1999 Midway Games
 offrthnd		// (c) 2000 Midway Games
 arctthnd		// (c) 2001 Midway Games
+arctthndult		// (c) 2001 Midway Games
 
 // Midway Touchmaster / Galaxy Games
 tm				// (c) 1996 Midway Games
@@ -7947,6 +7948,7 @@ fromanc4		// (c) 1998 Video System Co. (Japan)
 inufuku			// (c) 1998 Video System Co. (Japan)
 
 // Psikyo games
+// 68020 board
 samuraia		// (c) 1993 (World)
 sngkace			// (c) 1993 (Japan)
 gunbird			// (c) 1994
@@ -7961,6 +7963,11 @@ s1945bl			// (c) 1995 (Hong Kong bootleg)
 s1945k			// (c) 1995
 tengai			// (c) 1996
 tengaij			// (c) 1996
+// Semicom games on "Psikyo 68020"-like hardware
+baryon			// (c) 1997 SemiCom
+dreamwld		// (c) 2000 SemiCom
+
+// SH2 board
 s1945ii			// (c) 1997
 soldivid		// (c) 1997
 sbomber			// (c) 1998
@@ -7981,6 +7988,8 @@ hotgmcki		// (c) 2001
 loderndf		// (c) 2000
 loderndfa		// (c) 2000
 hotdebut		// (c) 2000
+
+
 
 // Orca games
 marineb			// (c) 1982 Orca
@@ -8869,6 +8878,8 @@ lhzb3			// (c) 200?
 lhzb4			// (c) 200?
 klxyj			// (c) 200?
 mgfx			// (c) 200?
+gonefsh2		// (c) 200?
+chessc2			// (c) 200?
 #endif // !NCP
 
 // IGS PGM System Games
@@ -8953,6 +8964,7 @@ kov2nlo			//
 #ifndef NCP
 // IGS PC based HW
 speeddrv		// (c) 2004
+eztouch			// (c) 200?
 
 // Spirit Tech. Corp.
 dunhuang		// (c) 1995
@@ -10173,6 +10185,7 @@ sothello		// (c) 1986 Success / Fujiwara
 quake			// (c) 19?? Lazer-Tron / iD Software 
 majorpkr		// (c) 1994 PAL System.
 su2000			// (c) 1993 Virtuality
+boonggab		// (c) 2001 Taff System
 
 // Nexus 3D
 
@@ -10188,15 +10201,15 @@ cultname		// (c) 1995 I'Max
 yuka			// (c) 1999 Yubis
 yujan			// (C) 1999 Yubis
 
-onetwo			// (c) 1997 Barko
-onetwoe			// (c) 1997 Barko
-1945kiii		// (c) 2000 Oriental
-witch			// (c) 1992 Sega / Vic Tokai / Excellent Systems
-pbchmp95		// (c) 1995 Veltmeijer Automaten
-cardline		// (c) 199? Veltmeijer
+// BMC
+
 bmcbowl			// (c) 1994 BMC
 koftball		// (c) 1995 BMC
+bmcpokr			// (c) 1999 BMC
 popobear		// (c) 2000 BMC
+
+// Merit
+
 mpoker			// (c) 1983 Merit
 pitboss			// (c) 1983 Merit
 pitbossa		// (c) 1983 Merit
@@ -10260,6 +10273,13 @@ megat5nj		// (c) 1997 Merit
 megat5tg		// (c) 1997 Merit
 megat6			// (c) 1998 Merit
 suprgolf		// (c) 1989 Nasco
+
+onetwo			// (c) 1997 Barko
+onetwoe			// (c) 1997 Barko
+1945kiii		// (c) 2000 Oriental
+witch			// (c) 1992 Sega / Vic Tokai / Excellent Systems
+pbchmp95		// (c) 1995 Veltmeijer Automaten
+cardline		// (c) 199? Veltmeijer
 albatross
 hotblock		// (c) 1993 Nics? / Nix?
 pntnpuzl		// Century?
@@ -10288,12 +10308,11 @@ turbosub6		// (c) 1985 Entertainment Sciences
 pipeline		// (c) 1990 Daehyun Electronics
 ttchamp
 ttchampa
-baryon			// (c) 1997 SemiCom
-dreamwld		// (c) 2000 SemiCom
 cybertnk		// (c) 1990 Coreland
 cubeqst			// (c) 1983 Simutrek Inc.
 cubeqsta		// (c) 1983 Simutrek Inc.
 pkscram			// (c) 1993 Cosmo Electronics Corporation
+
 
 // Funworld
 jollycrd		// (c) 1985 TAB-Austria
@@ -10627,6 +10646,7 @@ esh				// (c) 1984 Funai / Gakken
 esha			// (c) 1984 Funai / Gakken
 eshb			// (c) 1984 Funai / Gakken
 comebaby		// (c) 2000 ExPotato
+bntyhunt		// (c) 200? GCTech Co., LTD
 peset038		// (c) 1987 IGT - International Gaming Technology
 pepp0043		// (c) 1987 IGT - International Gaming Technology
 pepp0065		// (c) 1987 IGT - International Gaming Technology
@@ -10668,6 +10688,7 @@ ggconnie		// (c) ???? Capcom
 paranoia		// (c) 1990 Naxat Soft
 tourvis			// (c) ???? Tourvision
 tvusapb			// (c) 1989 Aicom (Tourvision bootleg)
+tvdunexp		// (c) 1989 Hudson / Atlus (Tourvision bootleg)
 tvthbld			// (c) 1990 Sega / NEC Avenue (Tourvision bootleg)
 tvrs2			// (c) 1990 Taito (Tourvision bootleg)
 tvpwlg4			// (c) 1991 Hudson (Tourvision bootleg)

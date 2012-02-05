@@ -68,22 +68,23 @@ machine_config::machine_config(const game_driver &gamedrv, emu_options &options)
 	// construct the config
 	(*gamedrv.machine_config)(*this, NULL);
 
+	bool is_selected_driver = strcmp(gamedrv.name,options.system_name())==0;
 	// intialize slot devices - make sure that any required devices have been allocated
 	slot_interface_iterator slotiter(root_device());
-	for (device_slot_interface *slot = slotiter.first(); slot != NULL; slot = slotiter.next())
+    for (device_slot_interface *slot = slotiter.first(); slot != NULL; slot = slotiter.next())
 	{
 		const slot_interface *intf = slot->get_slot_interfaces();
 		if (intf != NULL)
 		{
 			device_t &owner = slot->device();
 			const char *selval = options.value(owner.tag()+1);
-			if (!options.exists(owner.tag()+1))
+			if (!is_selected_driver || !options.exists(owner.tag()+1))
 				selval = slot->get_default_card(*this, options);
 
-			if (selval != NULL && strlen(selval) != 0) 
+			if (selval != NULL && strlen(selval) != 0)
 			{
 				bool found = false;
-				for (int i = 0; intf[i].name != NULL; i++) 
+				for (int i = 0; intf[i].name != NULL; i++)
 				{
 					if (strcmp(selval, intf[i].name) == 0)
 					{
@@ -143,7 +144,7 @@ device_t *machine_config::device_add(device_t *owner, const char *tag, device_ty
 	// if there's an owner, let the owner do the work
 	if (owner != NULL)
 		return owner->add_subdevice(type, tag, clock);
-		
+
 	// otherwise, allocate the device directly
 	assert(m_root_device == NULL);
 	m_root_device = (*type)(*this, tag, owner, clock);
@@ -171,7 +172,7 @@ device_t *machine_config::device_replace(device_t *owner, const char *tag, devic
 		mame_printf_warning("Warning: attempting to replace non-existent device '%s'\n", tag);
 		return device_add(owner, tag, type, clock);
 	}
-	
+
 	// let the device's owner do the work
 	return device->owner()->replace_subdevice(*device, type, tag, clock);
 }

@@ -6145,7 +6145,7 @@ static DRIVER_INIT( puzzli2 )
 
 static void oldsplus_latch_init( running_machine &machine )
 {
-	oldsplus_state *state = machine.driver_data<oldsplus_state>();
+	pgm_state *state = machine.driver_data<pgm_state>();
 
 	state->m_oldsplus_key = 0;
 	state->m_oldsplus_int[0] = 0;

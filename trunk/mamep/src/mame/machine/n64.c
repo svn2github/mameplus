@@ -1,6 +1,7 @@
 /* machine/n64.c - contains N64 hardware emulation shared between MAME and MESS */
 
 #include "emu.h"
+#include "debugger.h"
 #include "cpu/mips/mips3.h"
 #include "cpu/mips/mips3com.h"
 #include "includes/n64.h"
@@ -378,7 +379,7 @@ WRITE32_MEMBER( n64_periphs::open_w )
 
 // RDRAM Interface (RI)
 
-#define RDRAM_CONFIG 		(0)
+#define RDRAM_CONFIG		(0)
 #define RDRAM_DEVICE_ID 	(1)
 #define RDRAM_DELAY			(2)
 #define RDRAM_MODE			(3)
@@ -437,20 +438,19 @@ void n64_periphs::sp_dma(int direction)
 		sp_dma_length = 0x1000 - (sp_mem_addr & 0xfff);
 	}
 
+	UINT32 *sp_mem[2] = { rsp_dmem, rsp_imem };
+
 	if(direction == 0)// RDRAM -> I/DMEM
 	{
         for(int c = 0; c <= sp_dma_count; c++)
         {
-            UINT32 src = sp_dram_addr;
-            UINT32 dst = 0x04000000 | (sp_mem_addr & 0x1fff);
+            UINT32 src = (sp_dram_addr & 0x007fffff) >> 2;
+            UINT32 dst = (sp_mem_addr & 0x1fff) >> 2;
 
-			//printf("CPU %08x -> RSP %08x\n", sp_dram_addr, 0x04000000 | sp_mem_addr);
-            for(int i = 0; i < sp_dma_length; i++)
+            for(int i = 0; i < sp_dma_length / 4; i++)
             {
-				//printf("%02x ", mem_map->read_byte((src + i)^3));
-				mem_map->write_byte(dst + i, mem_map->read_byte(src + i));
+				sp_mem[(dst + i) >> 10][(dst + i) & 0x3ff] = rdram[src + i];
             }
-            //printf("\n");
 
             sp_mem_addr += sp_dma_length;
             sp_dram_addr += sp_dma_length;
@@ -462,16 +462,13 @@ void n64_periphs::sp_dma(int direction)
 	{
         for(int c = 0; c <= sp_dma_count; c++)
         {
-            UINT32 src = 0x04000000 | (sp_mem_addr & 0x1fff);
-            UINT32 dst = sp_dram_addr;
+            UINT32 src = (sp_mem_addr & 0x1fff) >> 2;
+            UINT32 dst = (sp_dram_addr & 0x007fffff) >> 2;
 
-			//printf("RSP %08x -> CPU %08x\n", 0x04000000 | sp_mem_addr, sp_dram_addr);
-            for(int i = 0; i < sp_dma_length; i++)
+            for(int i = 0; i < sp_dma_length / 4; i++)
             {
-				//printf("%02x ", mem_map->read_byte((src + i)^3));
-				mem_map->write_byte(dst + i, mem_map->read_byte(src + i));
+				rdram[dst + i] = sp_mem[(src + i) >> 10][(src + i) & 0x3ff];
             }
-            //printf("\n");
 
             sp_mem_addr += sp_dma_length;
             sp_dram_addr += sp_dma_length;
@@ -870,7 +867,7 @@ void n64_periphs::vi_recalculate_resolution()
     if (height > 480)
         height = 480;
 
-	state->m_rdp.GetMiscState()->m_fb_height = height;
+	state->m_rdp.MiscState.FBHeight = height;
 
     visarea.max_x = width - 1;
     visarea.max_y = height - 1;
@@ -953,7 +950,7 @@ WRITE32_MEMBER( n64_periphs::vi_reg_w )
                 vi_recalculate_resolution();
 			}
             vi_width = data;
-		    state->m_rdp.GetMiscState()->m_fb_width = data;
+		    state->m_rdp.MiscState.FBWidth = data;
 			break;
 
 		case 0x0c/4:		// VI_INTR_REG
@@ -1212,7 +1209,14 @@ static TIMER_CALLBACK(pi_dma_callback)
 
 void n64_periphs::pi_dma_tick()
 {
-	//printf("pi_dma_tick\n");
+	UINT16 *cart16 = (UINT16*)machine().region("user2")->base();
+	UINT16 *dram16 = (UINT16*)rdram;
+
+	UINT32 cart_addr = (pi_cart_addr & 0x0fffffff) >> 1;
+	UINT32 dram_addr = (pi_dram_addr & 0x007fffff) >> 1;
+
+	cart_addr &= ((machine().region("user2")->bytes() >> 1) - 1);
+
 	if(pi_dma_dir == 1)
 	{
 		UINT32 dma_length = pi_wr_len + 1;
@@ -1223,13 +1227,13 @@ void n64_periphs::pi_dma_tick()
 
 		if (pi_dram_addr != 0xffffffff)
 		{
-			for(int i = 0; i < dma_length; i++)
+			for(int i = 0; i < dma_length / 2; i++)
 			{
-				UINT8 b = mem_map->read_byte(pi_cart_addr);
-				mem_map->write_byte(pi_dram_addr & 0x1fffffff, b);
-				pi_cart_addr += 1;
-				pi_dram_addr += 1;
+				dram16[BYTE_XOR_BE(dram_addr + i)] = cart16[BYTE_XOR_BE(cart_addr + i)];
 			}
+
+			pi_cart_addr += dma_length;
+			pi_dram_addr += dma_length;
 		}
 
 		if (pi_first_dma)
@@ -1250,13 +1254,13 @@ void n64_periphs::pi_dma_tick()
 
 		if (pi_dram_addr != 0xffffffff)
 		{
-			for(int i = 0; i < dma_length; i++)
+			for(int i = 0; i < dma_length / 2; i++)
 			{
-				UINT8 b = mem_map->read_byte(pi_dram_addr);
-				mem_map->write_byte(pi_cart_addr & 0x1fffffff, b);
-				pi_cart_addr += 1;
-				pi_dram_addr += 1;
+				cart16[BYTE_XOR_BE(cart_addr + i)] = dram16[BYTE_XOR_BE(dram_addr + i)];
 			}
+
+			pi_cart_addr += dma_length;
+			pi_dram_addr += dma_length;
 		}
 	}
 
@@ -1336,9 +1340,9 @@ WRITE32_MEMBER( n64_periphs::pi_reg_w )
 			pi_dma_dir = 0;
 			pi_status |= 1;
 
-   			attotime dma_period = attotime::from_hz(93750000) * (pi_rd_len + 1) * 3;
-   			//printf("want read dma in %d\n", (pi_rd_len + 1));
-   			pi_dma_timer->adjust(dma_period);
+			attotime dma_period = attotime::from_hz(93750000) * (pi_rd_len + 1) * 3;
+			//printf("want read dma in %d\n", (pi_rd_len + 1));
+			pi_dma_timer->adjust(dma_period);
 			break;
 		}
 
@@ -1348,9 +1352,9 @@ WRITE32_MEMBER( n64_periphs::pi_reg_w )
 			pi_dma_dir = 1;
 			pi_status |= 1;
 
-   			attotime dma_period = attotime::from_hz(93750000) * (pi_wr_len + 1) * 3;
-   			//printf("want write dma in %d\n", (pi_wr_len + 1));
-   			pi_dma_timer->adjust(dma_period);
+			attotime dma_period = attotime::from_hz(93750000) * (pi_wr_len + 1) * 3;
+			//printf("want write dma in %d\n", (pi_wr_len + 1));
+			pi_dma_timer->adjust(dma_period);
 			break;
 		}
 
@@ -1861,6 +1865,8 @@ MACHINE_START( n64 )
 
 	rspdrc_set_options(machine.device("rsp"), RSPDRC_STRICT_VERIFY);
 	rspdrc_flush_drc_cache(machine.device("rsp"));
+	rspdrc_add_dmem(machine.device("rsp"), rsp_dmem);
+	rspdrc_add_imem(machine.device("rsp"), rsp_imem);
 }
 
 MACHINE_RESET( n64 )

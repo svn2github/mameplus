@@ -446,7 +446,7 @@ tilemap_t::~tilemap_t()
 
 
 //-------------------------------------------------
-//  mark_tile_dirty - mark a single tile dirty 
+//  mark_tile_dirty - mark a single tile dirty
 //  based on its memory index
 //-------------------------------------------------
 
@@ -467,8 +467,8 @@ void tilemap_t::mark_tile_dirty(tilemap_memory_index memindex)
 
 
 //-------------------------------------------------
-//  map_pens_to_layer - specify the mapping of one 
-//  or more pens (where (<pen> & mask) == pen) to 
+//  map_pens_to_layer - specify the mapping of one
+//  or more pens (where (<pen> & mask) == pen) to
 //  a layer
 //-------------------------------------------------
 
@@ -503,8 +503,8 @@ void tilemap_t::map_pens_to_layer(int group, pen_t pen, pen_t mask, UINT8 layerm
 
 
 //-------------------------------------------------
-//  set_transparent_pen - set a single transparent 
-//  pen into the tilemap, mapping all other pens 
+//  set_transparent_pen - set a single transparent
+//  pen into the tilemap, mapping all other pens
 //  to layer 0
 //-------------------------------------------------
 
@@ -519,8 +519,8 @@ void tilemap_t::set_transparent_pen(pen_t pen)
 
 
 //-------------------------------------------------
-//  set_transmask - set up the first 32 pens using 
-//  a foreground mask (mapping to layer 0) and a 
+//  set_transmask - set up the first 32 pens using
+//  a foreground mask (mapping to layer 0) and a
 //  background mask (mapping to layer 1)
 //-------------------------------------------------
 
@@ -601,7 +601,7 @@ TILEMAP_MAPPER( tilemap_scan_cols_flip_xy )
 
 
 //-------------------------------------------------
-//  postload - after loading a save state 
+//  postload - after loading a save state
 //  invalidate everything
 //-------------------------------------------------
 
@@ -918,7 +918,7 @@ void tilemap_t::configure_blit_parameters(blit_parameters &blit, const rectangle
 
 
 //-------------------------------------------------
-//  draw_common - draw a tilemap to the 
+//  draw_common - draw a tilemap to the
 //  destination with clipping; pixels apply
 //  priority/priority_mask to the priority bitmap
 //-------------------------------------------------
@@ -1037,9 +1037,9 @@ void tilemap_t::draw(bitmap_rgb32 &dest, const rectangle &cliprect, UINT32 flags
 
 
 //-------------------------------------------------
-//  draw_roz - draw a tilemap to the destination 
-//  with clipping and arbitrary rotate/zoom; pixels 
-//  apply priority/priority_mask to the priority 
+//  draw_roz - draw a tilemap to the destination
+//  with clipping and arbitrary rotate/zoom; pixels
+//  apply priority/priority_mask to the priority
 //  bitmap
 //-------------------------------------------------
 
@@ -1090,8 +1090,8 @@ void tilemap_t::draw_roz(bitmap_rgb32 &dest, const rectangle &cliprect,
 
 
 //-------------------------------------------------
-//  draw_instance - draw a single instance of the 
-//  tilemap to the internal pixmap at the given 
+//  draw_instance - draw a single instance of the
+//  tilemap to the internal pixmap at the given
 //  xpos,ypos
 //-------------------------------------------------
 
@@ -1184,6 +1184,7 @@ void tilemap_t::draw_instance(_BitmapClass &dest, const blit_parameters &blit, i
 			x_end = MIN(x_end, x2);
 
 			// if we're rendering something, compute the pointers
+			const rgb_t *clut = (dest.palette() != NULL) ? palette_entry_list_raw(dest.palette()) : machine().pens;
 			if (prev_trans != WHOLLY_TRANSPARENT)
 			{
 				const UINT16 *source0 = source_baseaddr + x_start;
@@ -1200,9 +1201,9 @@ void tilemap_t::draw_instance(_BitmapClass &dest, const blit_parameters &blit, i
 						else if (sizeof(*dest0) == 2)
 							scanline_draw_opaque_ind16(reinterpret_cast<UINT16 *>(dest0), source0, x_end - x_start, pmap0, blit.tilemap_priority_code);
 						else if (sizeof(*dest0) == 4 && blit.alpha >= 0xff)
-							scanline_draw_opaque_rgb32(reinterpret_cast<UINT32 *>(dest0), source0, x_end - x_start, machine().pens, pmap0, blit.tilemap_priority_code);
+							scanline_draw_opaque_rgb32(reinterpret_cast<UINT32 *>(dest0), source0, x_end - x_start, clut, pmap0, blit.tilemap_priority_code);
 						else if (sizeof(*dest0) == 4)
-							scanline_draw_opaque_rgb32_alpha(reinterpret_cast<UINT32 *>(dest0), source0, x_end - x_start, machine().pens, pmap0, blit.tilemap_priority_code, blit.alpha);
+							scanline_draw_opaque_rgb32_alpha(reinterpret_cast<UINT32 *>(dest0), source0, x_end - x_start, clut, pmap0, blit.tilemap_priority_code, blit.alpha);
 
 						dest0 += dest_rowpixels;
 						source0 += m_pixmap.rowpixels();
@@ -1221,9 +1222,9 @@ void tilemap_t::draw_instance(_BitmapClass &dest, const blit_parameters &blit, i
 						else if (sizeof(*dest0) == 2)
 							scanline_draw_masked_ind16(reinterpret_cast<UINT16 *>(dest0), source0, mask0, blit.mask, blit.value, x_end - x_start, pmap0, blit.tilemap_priority_code);
 						else if (sizeof(*dest0) == 4 && blit.alpha >= 0xff)
-							scanline_draw_masked_rgb32(reinterpret_cast<UINT32 *>(dest0), source0, mask0, blit.mask, blit.value, x_end - x_start, machine().pens, pmap0, blit.tilemap_priority_code);
+							scanline_draw_masked_rgb32(reinterpret_cast<UINT32 *>(dest0), source0, mask0, blit.mask, blit.value, x_end - x_start, clut, pmap0, blit.tilemap_priority_code);
 						else if (sizeof(*dest0) == 4)
-							scanline_draw_masked_rgb32_alpha(reinterpret_cast<UINT32 *>(dest0), source0, mask0, blit.mask, blit.value, x_end - x_start, machine().pens, pmap0, blit.tilemap_priority_code, blit.alpha);
+							scanline_draw_masked_rgb32_alpha(reinterpret_cast<UINT32 *>(dest0), source0, mask0, blit.mask, blit.value, x_end - x_start, clut, pmap0, blit.tilemap_priority_code, blit.alpha);
 
 						dest0 += dest_rowpixels;
 						source0 += m_pixmap.rowpixels();
@@ -1277,7 +1278,7 @@ void tilemap_t::draw_roz_core(_BitmapClass &destbitmap, const blit_parameters &b
 		UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy, bool wraparound)
 {
 	// pre-cache all the inner loop values
-	const pen_t *clut = &machine().pens[blit.tilemap_priority_code >> 16];
+	const rgb_t *clut = ((destbitmap.palette() != NULL) ? palette_entry_list_raw(destbitmap.palette()) : machine().pens) + (blit.tilemap_priority_code >> 16);
 	bitmap_ind8 &priority_bitmap = machine().priority_bitmap;
 	const int xmask = m_pixmap.width() - 1;
 	const int ymask = m_pixmap.height() - 1;
@@ -1481,7 +1482,7 @@ tilemap_manager::tilemap_manager(running_machine &machine)
 
 
 //-------------------------------------------------
-//  set_flip_all - set a global flip for all the 
+//  set_flip_all - set a global flip for all the
 //  tilemaps
 //-------------------------------------------------
 
@@ -1497,7 +1498,7 @@ tilemap_t &tilemap_manager::create(tile_get_info_func tile_get_info, tilemap_map
 
 
 //-------------------------------------------------
-//  set_flip_all - set a global flip for all the 
+//  set_flip_all - set a global flip for all the
 //  tilemaps
 //-------------------------------------------------
 
@@ -1509,7 +1510,7 @@ void tilemap_manager::set_flip_all(UINT32 attributes)
 
 
 //-------------------------------------------------
-//  mark_all_dirty - mark all the tiles in all the 
+//  mark_all_dirty - mark all the tiles in all the
 //  tilemaps dirty
 //-------------------------------------------------
 

@@ -243,6 +243,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/pd4990a.o		\
 	$(EMUMACHINE)/pic8259.o		\
 	$(EMUMACHINE)/pit8253.o		\
+	$(EMUMACHINE)/pls100.o		\
 	$(EMUMACHINE)/ram.o		\
 	$(EMUMACHINE)/roc10937.o	\
 	$(EMUMACHINE)/rp5c01.o		\

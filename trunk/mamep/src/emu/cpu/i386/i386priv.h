@@ -170,6 +170,7 @@ typedef struct {
 	UINT32 base;
 	UINT32 limit;
 	int d;		// Operand size
+	bool valid;
 } I386_SREG;
 
 typedef struct
@@ -395,14 +396,14 @@ INLINE UINT32 i386_translate(i386_state *cpustate, int segment, UINT32 ip, int r
 	// TODO: segment limit access size, execution permission, handle exception thrown from exception handler
 	if(PROTECTED_MODE && !V8086_MODE && (rwn != -1))
 	{
-		if(!(cpustate->sreg[segment].selector & ~3))
-			FAULT_THROW(FAULT_GP, 0);
+		if(!(cpustate->sreg[segment].valid))
+			FAULT_THROW((segment==SS)?FAULT_SS:FAULT_GP, 0);
 		if(i386_limit_check(cpustate, segment, ip))
-			FAULT_THROW(FAULT_GP, 0);
+			FAULT_THROW((segment==SS)?FAULT_SS:FAULT_GP, 0);
 		if((rwn == 0) && ((cpustate->sreg[segment].flags & 8) && !(cpustate->sreg[segment].flags & 2)))
-			FAULT_THROW(FAULT_GP, 0);
+			FAULT_THROW((segment==SS)?FAULT_SS:FAULT_GP, 0);
 		if((rwn == 1) && ((cpustate->sreg[segment].flags & 8) || !(cpustate->sreg[segment].flags & 2)))
-			FAULT_THROW(FAULT_GP, 0);
+			FAULT_THROW((segment==SS)?FAULT_SS:FAULT_GP, 0);
 	}
 	return cpustate->sreg[segment].base + ip;
 }
@@ -458,7 +459,7 @@ INLINE int translate_address(i386_state *cpustate, int rwn, UINT32 *address, UIN
 					if(!(page_dir & 0x40) && (rwn == 1))
 						cpustate->program->write_dword(pdbr + directory * 4, page_dir | 0x60);
 					else if(!(page_dir & 0x20) && (rwn != -1))
-						cpustate->program->write_dword(pdbr + directory * 4, page_dir | 0x20);						
+						cpustate->program->write_dword(pdbr + directory * 4, page_dir | 0x20);
 					*address = (page_dir & 0xffc00000) | (a & 0x003fffff);
 				}
 			}

@@ -919,7 +919,6 @@ void CreateCPUFolders(int parent_index)
 		execute_interface_iterator iter(config.root_device());
 		for (device_execute_interface *device = iter.first(); device != NULL; device = iter.next())
 		{
-
 			// get the name
 			const TCHAR *dev_name = _Unicode(device->device().name());
 
