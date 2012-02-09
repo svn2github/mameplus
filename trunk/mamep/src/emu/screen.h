@@ -337,13 +337,13 @@ public:
 
 private:
 	void free_scale_bitmap();
-	void convert_palette_to_32(const bitmap_t *src, bitmap_t *dst, const rectangle *visarea, UINT32 palettebase);
-	void convert_palette_to_15(const bitmap_t *src, bitmap_t *dst, const rectangle *visarea, UINT32 palettebase);
-	void texture_set_scale_bitmap(const rectangle *visarea, UINT32 palettebase);
+	void convert_palette_to_32(const bitmap_t &src, bitmap_t &dst, const rectangle &visarea, UINT32 palettebase);
+	void convert_palette_to_15(const bitmap_t &src, bitmap_t &dst, const rectangle &visarea, UINT32 palettebase);
+	void texture_set_scale_bitmap(const rectangle &visarea, UINT32 palettebase);
 	void realloc_scale_bitmaps();
 
 	bitmap_rgb32 *		m_scale_bitmap[2];
-	bitmap_rgb32 *		m_work_bitmap[2];
+	bitmap_rgb32 *		m_work_bitmap[2][2];
 	int					m_scale_dirty[2];
 #endif /* USE_SCALE_EFFECTS */
 };

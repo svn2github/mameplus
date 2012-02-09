@@ -249,7 +249,7 @@ int scale_decode(const char *arg)
 }
 
 //============================================================
-//	scale_decode
+//	scale_name
 //============================================================
 
 const char *scale_name(int effect)
@@ -258,7 +258,7 @@ const char *scale_name(int effect)
 }
 
 //============================================================
-//	scale_decode
+//	scale_desc
 //============================================================
 
 const char *scale_desc(int effect)
