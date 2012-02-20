@@ -1239,7 +1239,7 @@ static void process_disk_entries(rom_load_data *romdata, const char *regiontag, 
 				if (err == CHDERR_FILE_NOT_FOUND)
 					romdata->errorstring.catprintf(_("%s NOT FOUND\n"), filename.cstr());
 				else
-					romdata->errorstring.catprintf(_("%s CHD ERROR: %s\n"), filename.cstr(), chd_error_string(err));
+					romdata->errorstring.catprintf(_("%s CHD ERROR: %s\n"), filename.cstr(), chd_file::error_string(err));
 
 				/* if this is NO_DUMP, keep going, though the system may not be able to handle it */
 				if (hashes.flag(hash_collection::FLAG_NO_DUMP))
@@ -1254,7 +1254,7 @@ static void process_disk_entries(rom_load_data *romdata, const char *regiontag, 
 
 			/* get the header and extract the SHA1 */
 			hash_collection acthashes;
-			acthashes.add_from_buffer(hash_collection::HASH_SHA1, chd->orig_chd().sha1().m_raw, sizeof(chd->orig_chd().sha1().m_raw));
+			acthashes.add_sha1(chd->orig_chd().sha1());
 
 			/* verify the hash */
 			if (hashes != acthashes)
@@ -1276,7 +1276,7 @@ static void process_disk_entries(rom_load_data *romdata, const char *regiontag, 
 				err = open_disk_diff(romdata->machine().options(), romp, chd->orig_chd(), chd->diff_chd());
 				if (err != CHDERR_NONE)
 				{
-					romdata->errorstring.catprintf(_("%s DIFF CHD ERROR: %s\n"), filename.cstr(), chd_error_string(err));
+					romdata->errorstring.catprintf(_("%s DIFF CHD ERROR: %s\n"), filename.cstr(), chd_file::error_string(err));
 					romdata->errors++;
 					global_free(chd);
 					continue;
