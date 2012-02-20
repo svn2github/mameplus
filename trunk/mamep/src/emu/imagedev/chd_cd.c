@@ -11,40 +11,6 @@
 #include "chd_cd.h"
 
 
-static const char *const error_strings[] =
-{
-	"no error",
-	"no drive interface",
-	"out of memory",
-	"invalid file",
-	"invalid parameter",
-	"invalid data",
-	"file not found",
-	"requires parent",
-	"file not writeable",
-	"read error",
-	"write error",
-	"codec error",
-	"invalid parent",
-	"hunk out of range",
-	"decompression error",
-	"compression error",
-	"can't create file",
-	"can't verify file"
-	"operation not supported",
-	"can't find metadata",
-	"invalid metadata size",
-	"unsupported CHD version"
-};
-
-static const char *chd_get_error_string(int chderr)
-{
-	if ((chderr < 0 ) || (chderr >= ARRAY_LENGTH(error_strings)))
-		return NULL;
-	return error_strings[chderr];
-}
-
-
 static OPTION_GUIDE_START(cd_option_guide)
 	OPTION_INT('K', "hunksize",			"Hunk Bytes")
 OPTION_GUIDE_END
@@ -129,10 +95,11 @@ bool cdrom_image_device::call_load()
 
 	if (software_entry() == NULL)
 	{
-		if (strstr(m_image_name,".chd")) {
-			err = chd_open_file( image_core_file(), CHD_OPEN_READ, NULL, &chd );	/* CDs are never writeable */
+		if (strstr(m_image_name,".chd") && is_loaded()) {
+			err = m_self_chd.open( *image_core_file() );	/* CDs are never writeable */
 			if ( err )
 				goto error;
+			chd = &m_self_chd;
 		}
 	} else {
 		chd  = get_disk_handle(device().machine(), device().subtag(tempstring,"cdrom"));
@@ -150,10 +117,10 @@ bool cdrom_image_device::call_load()
 	return IMAGE_INIT_PASS;
 
 error:
-	if ( chd )
-		chd_close( chd );
+	if ( chd && chd == &m_self_chd )
+		m_self_chd.close( );
 	if ( err )
-		seterror( IMAGE_ERROR_UNSPECIFIED, chd_get_error_string( err ) );
+		seterror( IMAGE_ERROR_UNSPECIFIED, chd_file::error_string( err ) );
 	return IMAGE_INIT_FAIL;
 }
 

@@ -413,14 +413,14 @@ static WRITE8_HANDLER( kroozr_op4_w )
 
 static WRITE8_HANDLER( journey_op4_w )
 {
-	device_t *samples = space->machine().device("samples");
+	samples_device *samples = space->machine().device<samples_device>("samples");
 
 	/* if we're not playing the sample yet, start it */
-	if (!sample_playing(samples, 0))
-		sample_start(samples, 0, 0, 1);
+	if (!samples->playing(0))
+		samples->start(0, 0, true);
 
 	/* bit 0 turns cassette on/off */
-	sample_set_pause(samples, 0, ~data & 1);
+	samples->pause(0, ~data & 1);
 }
 
 
@@ -433,16 +433,16 @@ static WRITE8_HANDLER( journey_op4_w )
 
 static WRITE8_HANDLER( twotiger_op4_w )
 {
-	device_t *samples = space->machine().device("samples");
+	samples_device *samples = space->machine().device<samples_device>("samples");
 
 	for (int i = 0; i < 2; i++)
 	{
 		/* play tape, and loop it */
-		if (!sample_playing(samples, i))
-			sample_start(samples, i, i, 1);
+		if (!samples->playing(i))
+			samples->start(i, i, true);
 
 		/* bit 1 turns cassette on/off */
-		sample_set_pause(samples, i, ~data & 2);
+		samples->pause(i, ~data & 2);
 	}
 
 	// bit 2: lamp control?
@@ -1660,8 +1660,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( mcr_90010_tt, mcr_90010 )
 
 	/* sound hardware */
-	MCFG_SOUND_ADD("samples", SAMPLES, 0)
-	MCFG_SOUND_CONFIG(twotiger_samples_interface)
+	MCFG_SAMPLES_ADD("samples", twotiger_samples_interface)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.25)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.25)
 MACHINE_CONFIG_END
@@ -1674,8 +1673,7 @@ static MACHINE_CONFIG_DERIVED( mcr_91475, mcr_90010 )
 	MCFG_PALETTE_LENGTH(128)
 
 	/* sound hardware */
-	MCFG_SOUND_ADD("samples", SAMPLES, 0)
-	MCFG_SOUND_CONFIG(journey_samples_interface)
+	MCFG_SAMPLES_ADD("samples", journey_samples_interface)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.25)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.25)
 MACHINE_CONFIG_END
@@ -1996,12 +1994,12 @@ ROM_END
 
 ROM_START( tron3 )
 	ROM_REGION( 0x10000, "maincpu", 0 ) /* ROM's located on the Super CPU Board (90010) */
-	ROM_LOAD( "scpu_pga.d2", 0x0000, 0x2000, CRC(fc33afd7) SHA1(99a2ed972c3db477f35a7162079563367864f207) )
-	ROM_LOAD( "scpu_pgb.d3", 0x2000, 0x2000, CRC(7d9e22ac) SHA1(16a6e9651d5f764e8762fd8d6e53d13fda7473de) )
-	ROM_LOAD( "scpu_pgc.d4", 0x4000, 0x2000, CRC(902011c6) SHA1(17ac768a0fd1278ae83414f0d67d6ac8337f4773) )
-	ROM_LOAD( "scpu_pgd.d5", 0x6000, 0x2000, CRC(86477e89) SHA1(196f0d3930d10bfe4ddee82ce8b28bb99324069e) )
-	ROM_LOAD( "scpu_pge.d6", 0x8000, 0x2000, CRC(ea198fa8) SHA1(d8c97ea87d504e77edc38c87c2953c8c4f1a405b) )
-	ROM_LOAD( "scpu_pgf.d7", 0xa000, 0x2000, CRC(4325fb08) SHA1(70727aa37354425315d8a8b3ca07bbe91f7e8f08) )
+	ROM_LOAD( "scpu_pga_3.d2", 0x0000, 0x2000, CRC(fc33afd7) SHA1(99a2ed972c3db477f35a7162079563367864f207) )
+	ROM_LOAD( "scpu_pgb_3.d3", 0x2000, 0x2000, CRC(7d9e22ac) SHA1(16a6e9651d5f764e8762fd8d6e53d13fda7473de) )
+	ROM_LOAD( "scpu_pgc_3.d4", 0x4000, 0x2000, CRC(902011c6) SHA1(17ac768a0fd1278ae83414f0d67d6ac8337f4773) )
+	ROM_LOAD( "scpu_pgd_3.d5", 0x6000, 0x2000, CRC(86477e89) SHA1(196f0d3930d10bfe4ddee82ce8b28bb99324069e) )
+	ROM_LOAD( "scpu_pge_3.d6", 0x8000, 0x2000, CRC(ea198fa8) SHA1(d8c97ea87d504e77edc38c87c2953c8c4f1a405b) )
+	ROM_LOAD( "scpu_pgf_3.d7", 0xa000, 0x2000, CRC(4325fb08) SHA1(70727aa37354425315d8a8b3ca07bbe91f7e8f08) )
 
 	ROM_REGION( 0x10000, "ssiocpu", 0 ) /* ROM's located on the Super Sound I/O Board (90913) */
 	ROM_LOAD( "ssi_0a.a7",   0x0000, 0x1000, CRC(765e6eba) SHA1(42efeefc8571dfc237c0be3368248f1e56add92e) )

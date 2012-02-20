@@ -18,6 +18,7 @@
     Date Quiz Go Go Episode 2       (c) 2000 SemiCom
     Mission Craft                   (c) 2000 Sun                (version 2.4)
     Mr. Dig                         (c) 2000 Sun
+    Diet Family                     (c) 2001 SemiCom
     Final Godori                    (c) 2001 SemiCom            (version 2.20.5915)
     Wyvern Wings                    (c) 2001 SemiCom
     Mr. Kicker                      (c) 2001 SemiCom [1]
@@ -43,7 +44,6 @@
    Red Wyvern - A semi-sequel or update?
  Same time era, but unknown hardware:
    Gaia The last Choice of the Earth (c) 1998 (might be Byron Future Assault type hardware)
-   Diet Family (c) 2001
    Choice III: Joker's Dream (c) 2001
 
 TODO:
@@ -1351,7 +1351,6 @@ ROM_START( coolmini )
 	ROM_LOAD( "cm-vrom1.020", 0x00000, 0x40000, CRC(fcc28081) SHA1(44031df0ee28ca49df12bcb73c83299fac205e21) )
 ROM_END
 
-
 /*
 
 Date Quiz Go Go Episode 2
@@ -1422,6 +1421,78 @@ ROM_START( dquizgo2 )
 
 	ROM_REGION( 0x40000, "oki", 0 ) /* Oki Samples */
 	ROM_LOAD( "vrom1", 0x00000, 0x40000, CRC(24d5b55f) SHA1(cb4d3a22440831e37df0a7fe5433bea708d60f31) )
+ROM_END
+
+/*
+
+Diet Family
+SemiCom, 2001
+
+PCB Layout
+----------
+
+F-E1-16-010
++-----------------------------------------------+
+|     VR1          YM3012  VROM1                |
+|                  YM2151  M6295   ROML03 ROMU03|
+|               CRAM2              ROML02 ROMU02|
+|               CRAM1              ROML01 ROMU01|
+|               MEM1L              ROML00 ROMU00|
+|J              MEM1U                           |
+|A              MEM2  +----------++----------+  |
+|M                    |          ||          |  |
+|M              MEM3  |Quicklogic||Quicklogic| 2|
+|A                    | QL2003-  || QL2003-  | 8|
+|               MEM6  | XPL84C   || XPL84C   | M|
+|                     |          ||          | H|
+|               MEM7  +----------++----------+ z|
+|                      GAL                      |
+|    93C46                       ROM1           |
+|P1 P2   50MHz E1-16T   DRAM1    ROM2           |
++-----------------------------------------------+
+
+Notes:
+CPU - Hyperstone E1-16T @ 50.000MHz
+
+DRAM1 - LG Semi GM71C18163 1M x16 EDO DRAM (SOJ44)
+CRAMx - W24M257AK-15 32K x8 SRAM (SOJ28)
+MEMx  - UM61256FK-15 32K x8 SRAM (SOJ28)
+
+Oki M6295 rebaged as AD-65
+YM3012/YM2151 rebaged as BS902/KA51
+
+ P1 - Reset push button
+ P2 - Setup push button
+VR1 - Volume adjust pot
+
+ROMs:
+    ROML00 & ROMH00 - Macronix MX29F1610MC-12 SOP44 16MBit FlashROM
+    ROML01 & ROMH01 - Macronix MX29F1610MC-12 SOP44 16MBit FlashROM
+    ROML02 & ROMH02 - Macronix MX29F1610MC-12 SOP44 16MBit FlashROM
+    ROML03 & ROMH03 - Unpopulated space for MX29F1610MC-12 SOP44 16MBit FlashROM
+    VROM1           - 27C040 2MBit DIP32 EPROM
+    ROM1            - 27C040 4MBit DIP32 EPROM
+    ROM2            - 27C040 4MBit DIP32 EPROM
+
+*/
+
+ROM_START( dtfamily )
+	ROM_REGION16_BE( 0x100000, "user1", ROMREGION_ERASE00 ) /* Hyperstone CPU Code */
+	ROM_LOAD( "rom1",         0x00000, 0x080000, CRC(738636d2) SHA1(ba7906df99764ee7e1f505c319d364c64c605ff0) )
+	ROM_LOAD( "rom2",         0x80000, 0x080000, CRC(0953f5e4) SHA1(ee8b3c4f9c9301c9815747eab5435e006ec84ca1) )
+
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 16x16x8 Sprites */
+	ROM_LOAD32_WORD( "roml00", 0x000000, 0x200000, CRC(7e2a7520) SHA1(0ff157fe34ff31cd8636af821fe14c12242d757f) )
+	ROM_LOAD32_WORD( "romu00", 0x000002, 0x200000, CRC(c170755f) SHA1(019d24979071f0ab2b3c93a5ec9327e6a0b2afa2) )
+	ROM_LOAD32_WORD( "roml01", 0x400000, 0x200000, CRC(3d487ffe) SHA1(c5608423d608922c0e1ac8bdfaa0de062b2c9821) )
+	ROM_LOAD32_WORD( "romu01", 0x400002, 0x200000, CRC(716efedb) SHA1(fb468d93817a49173698872c49a289c257f77a92) )
+	ROM_LOAD32_WORD( "roml02", 0x800000, 0x200000, CRC(c3dd3c96) SHA1(2707f690b5850685f782fc04a7dbd1d91f443223) )
+	ROM_LOAD32_WORD( "romu02", 0x800002, 0x200000, CRC(80830961) SHA1(b318e9e3a4d1d7dca61d7d4c9ee01f605e2b2f4a) )
+	/* roml03 empty */
+	/* romu03 empty */
+
+	ROM_REGION( 0x80000, "oki", 0 ) /* Oki Samples */
+	ROM_LOAD( "vrom1", 0x00000, 0x80000, CRC(4aacaef3) SHA1(c079170dc0ba0b91b1780cd175dc38151d640ff0) )
 ROM_END
 
 /*
@@ -1560,6 +1631,31 @@ ROM_START( wyvernwg )
 	ROM_REGION32_BE( 0x100000, "user1", ROMREGION_ERASE00 ) /* Hyperstone CPU Code */
 	ROM_LOAD( "rom1.bin", 0x000000, 0x080000, CRC(66bf3a5c) SHA1(037d5e7a6ef6f5b4ac08a9c811498c668a9d2522) )
 	ROM_LOAD( "rom2.bin", 0x080000, 0x080000, CRC(fd9b5911) SHA1(a01e8c6e5a9009024af385268ba3ba90e1ebec50) )
+
+	ROM_REGION( 0x020000, "audiocpu", 0 ) /* QDSP ('51) Code */
+	ROM_LOAD( "u7", 0x0000, 0x20000, CRC(00a3f705) SHA1(f0a6bafd16bea53d4c05c8cc108983cbd41e5757) )
+
+	ROM_REGION( 0x1000000, "gfx1", 0 )  /* gfx data */
+	ROM_LOAD32_WORD( "roml00", 0x000000, 0x200000, CRC(fb3541b6) SHA1(4f569ac7bde92c5febf005ab73f76552421ec223) )
+	ROM_LOAD32_WORD( "romh00", 0x000002, 0x200000, CRC(516aca48) SHA1(42cf5678eb4c0ee7da2ab0bd66e4e34b2735c75a) )
+	ROM_LOAD32_WORD( "roml01", 0x400000, 0x200000, CRC(1c764f95) SHA1(ba6ac1376e837b491bc0269f2a1d10577a3d40cb) )
+	ROM_LOAD32_WORD( "romh01", 0x400002, 0x200000, CRC(fee42c63) SHA1(a27b5cbca0defa9be85fee91dde1273f445d3372) )
+	ROM_LOAD32_WORD( "roml02", 0x800000, 0x200000, CRC(fc846707) SHA1(deaee15ab71927f644dcf576959e2ceaa55bfd44) )
+	ROM_LOAD32_WORD( "romh02", 0x800002, 0x200000, CRC(86141c7d) SHA1(22a82cc7d44d655b03867503a83e81f7c82d6c91) )
+	ROM_LOAD32_WORD( "roml03", 0xc00000, 0x200000, CRC(b10bf37c) SHA1(6af835b1e2573f0bb2c17057e016a7aecc8fcde8) )
+	ROM_LOAD32_WORD( "romh03", 0xc00002, 0x200000, CRC(e01c2a92) SHA1(f53c2db92d62f595d473b1835c46d426f0dbe6b3) )
+
+	ROM_REGION( 0x200000, "sfx", 0 ) /* Music data / QDSP samples (SFX) */
+	ROM_LOAD( "romsnd.u15a",  0x000000, 0x200000, CRC(fc89eedc) SHA1(2ce28bdb773cfa5b5660e4c0a9ef454cb658f2da) )
+
+	ROM_REGION( 0x080000, "wavetable", 0 ) /* QDSP wavetable rom */
+	ROM_LOAD( "qs1001a",  0x000000, 0x80000, CRC(d13c6407) SHA1(57b14f97c7d4f9b5d9745d3571a0b7115fbe3176) )
+ROM_END
+
+ROM_START( wyvernwga )
+	ROM_REGION32_BE( 0x100000, "user1", ROMREGION_ERASE00 ) /* Hyperstone CPU Code */
+	ROM_LOAD( "rom1_alt.rom", 0x000000, 0x080000, CRC(586881fd) SHA1(d335bbd91def8fa4935eb2375c9b00471a1f40eb) )
+	ROM_LOAD( "rom2_alt.rom", 0x080000, 0x080000, CRC(938049ec) SHA1(cc10944c99ceb388dd4aafc93377c40540861d14) )
 
 	ROM_REGION( 0x020000, "audiocpu", 0 ) /* QDSP ('51) Code */
 	ROM_LOAD( "u7", 0x0000, 0x20000, CRC(00a3f705) SHA1(f0a6bafd16bea53d4c05c8cc108983cbd41e5757) )
@@ -2068,8 +2164,10 @@ static READ16_HANDLER( puzlbang_speedup_r )
 
 static READ32_HANDLER( wyvernwg_speedup_r )
 {
+	int pc = cpu_get_pc(&space->device());
+
 	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
-	if(cpu_get_pc(&space->device()) == 0x10758 )
+	if(pc == 0x10758)
 	{
 		if(irq_active(space))
 			device_spin_until_interrupt(&space->device());
@@ -2079,6 +2177,24 @@ static READ32_HANDLER( wyvernwg_speedup_r )
 
 	return state->m_wram32[0x00b56fc/4];
 }
+
+static READ32_HANDLER( wyvernwga_speedup_r )
+{
+	int pc = cpu_get_pc(&space->device());
+
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+	if(pc == 0x10758)
+	{
+		if(irq_active(space))
+			device_spin_until_interrupt(&space->device());
+		else
+			device_eat_cycles(&space->device(), 50);
+	}
+
+	return state->m_wram32[0x00b74f8/4];
+}
+
+
 
 static READ32_HANDLER( finalgdr_speedup_r )
 {
@@ -2166,6 +2282,19 @@ static READ16_HANDLER( mrdig_speedup_r )
 	}
 
 	return state->m_wram[(0x00a99c / 2)+offset];
+}
+
+static READ16_HANDLER( dtfamily_speedup_r )
+{
+	vamphalf_state *state = space->machine().driver_data<vamphalf_state>();
+
+	int pc = cpu_get_pc(&space->device());
+
+	if (pc == 0x12fa6)
+		device_spin_until_interrupt(&space->device());
+
+	return state->m_wram[0xcc2a8 / 2];
+
 }
 
 static READ16_HANDLER( toyland_speedup_r )
@@ -2267,6 +2396,7 @@ static DRIVER_INIT( wyvernwg )
 {
 	vamphalf_state *state = machine.driver_data<vamphalf_state>();
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00b56fc, 0x00b56ff, FUNC(wyvernwg_speedup_r) );
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x00b74f8, 0x00b74fb, FUNC(wyvernwga_speedup_r) );
 
 	state->m_palshift = 0;
 	state->m_flip_bit = 1;
@@ -2317,6 +2447,16 @@ static DRIVER_INIT( dquizgo2 )
 	state->m_palshift = 0;
 	state->m_flip_bit = 1;
 }
+
+static DRIVER_INIT( dtfamily )
+{
+	vamphalf_state *state = machine.driver_data<vamphalf_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xcc2a8, 0xcc2a9, FUNC(dtfamily_speedup_r) );
+
+	state->m_palshift = 0;
+	state->m_flip_bit = 1;
+}
+
 
 static DRIVER_INIT( toyland )
 {
@@ -2376,9 +2516,11 @@ GAME( 1999, vamphalfk,vamphalf, vamphalf, common,   vamphafk, ROT0,   "Danbi / F
 GAME( 2000, dquizgo2, 0,        coolmini, common,   dquizgo2, ROT0,   "SemiCom",           "Date Quiz Go Go Episode 2" , 0)
 GAME( 2000, misncrft, 0,        misncrft, common,   misncrft, ROT90,  "Sun",               "Mission Craft (version 2.4)", GAME_NO_SOUND )
 GAME( 2000, mrdig,    0,        mrdig,    common,   mrdig,    ROT0,   "Sun",               "Mr. Dig", 0 )
+GAME( 2001, dtfamily, 0,        coolmini, common,   dtfamily, ROT0,   "SemiCom",           "Diet Family", 0 )
 GAME( 2001, finalgdr, 0,        finalgdr, finalgdr, finalgdr, ROT0,   "SemiCom",           "Final Godori (Korea, version 2.20.5915)", 0 )
 GAME( 2001, mrkicker, 0,        mrkicker, finalgdr, mrkicker, ROT0,   "SemiCom",           "Mr. Kicker", GAME_NOT_WORKING ) // game stops booting / working properly after you get a high score, or if you don't have a default eeprom with 'valid data.  It's never worked properly, CPU core issue?
 GAME( 2001, toyland,  0,        coolmini, common,   toyland,  ROT0,   "SemiCom",           "Toy Land Adventure", 0 )
-GAME( 2001, wyvernwg, 0,        wyvernwg, common,   wyvernwg, ROT270, "SemiCom (Game Vision license)", "Wyvern Wings", GAME_NO_SOUND )
+GAME( 2001, wyvernwg, 0,        wyvernwg, common,   wyvernwg, ROT270, "SemiCom (Game Vision license)", "Wyvern Wings (set 1)", GAME_NO_SOUND )
+GAME( 2001, wyvernwga,wyvernwg, wyvernwg, common,   wyvernwg, ROT270, "SemiCom (Game Vision license)", "Wyvern Wings (set 2)", GAME_NO_SOUND )
 GAME( 2001, aoh,      0,        aoh,      aoh,      aoh,      ROT0,   "Unico",             "Age Of Heroes - Silkroad 2 (v0.63 - 2001/02/07)", 0 )
 GAME( 2001, boonggab, 0,        boonggab, boonggab, boonggab, ROT270, "Taff System",	   "Boong-Ga Boong-Ga (Spank'em!)", 0 )

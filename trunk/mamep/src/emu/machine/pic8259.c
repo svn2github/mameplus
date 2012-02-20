@@ -146,7 +146,6 @@ static void pic8259_set_irq_line(device_t *device, int irq, int state)
 		pic8259->irq_lines &= ~mask;
 		pic8259->irr &= ~mask;
 	}
-	if (pic8259->mode & 0x02) pic8259->irr = pic8259->irq_lines;
 	pic8259_set_timer(pic8259);
 }
 
@@ -309,6 +308,8 @@ WRITE8_DEVICE_HANDLER( pic8259_w )
 								if (pic8259->isr & mask)
 								{
 									pic8259->isr &= ~mask;
+									if (pic8259->level_trig_mode)
+										pic8259->irr = pic8259->irq_lines;
 									pic8259->irr &= ~mask;
 									break;
 								}
@@ -343,6 +344,8 @@ WRITE8_DEVICE_HANDLER( pic8259_w )
 							if( pic8259->isr & mask )
 							{
 								pic8259->isr &= ~mask;
+								if (pic8259->level_trig_mode)
+									pic8259->irr = pic8259->irq_lines;
 								pic8259->irr &= ~mask;
 								pic8259->prio = (pic8259->prio + 1) & 7;
 							}

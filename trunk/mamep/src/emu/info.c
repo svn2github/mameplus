@@ -43,7 +43,6 @@
 #include "sound/samples.h"
 #include "info.h"
 #include "xmlfile.h"
-#include "hash.h"
 #include "config.h"
 
 #include <ctype.h>
@@ -415,20 +414,14 @@ void info_xml_creator::output_sampleof()
 	samples_device_iterator iter(m_drivlist.config().root_device());
 	for (samples_device *device = iter.first(); device != NULL; device = iter.next())
 	{
-		const char *const *samplenames = ((const samples_interface *)device->static_config())->samplenames;
-		if (samplenames != NULL)
+		samples_iterator sampiter(*device);
+		if (sampiter.altbasename() != NULL)
+		{
+			fprintf(m_output, " sampleof=\"%s\"", xml_normalize_string(sampiter.altbasename()));
 
-			// iterate over sample names
-			for (int sampnum = 0; samplenames[sampnum] != NULL; sampnum++)
-			{
-				// only output sampleof if different from the game name
-				const char *cursampname = samplenames[sampnum];
-				if (cursampname[0] == '*' && strcmp(cursampname + 1, m_drivlist.driver().name) != 0)
-					fprintf(m_output, " sampleof=\"%s\"", xml_normalize_string(cursampname + 1));
-
-				// must stop here, as there can only be one attribute of the same name
-				return;
-			}
+			// must stop here, as there can only be one attribute of the same name
+			return;
+		}
 	}
 }
 
@@ -529,18 +522,13 @@ void info_xml_creator::output_rom(const rom_source *source)
 					{
 						// iterate over hash function types and print m_output their values
 						astring tempstr;
-						for (hash_base *hash = hashes.first(); hash != NULL; hash = hash->next())
-							fprintf(m_output, " %s=\"%s\"", hash->name(), hash->string(tempstr));
+						fprintf(m_output, " %s", hashes.attribute_string(tempstr));
 					}
+					else
+						fprintf(m_output, " status=\"nodump\"");
 
 					// append a region name
 					fprintf(m_output, " region=\"%s\"", ROMREGION_GETTAG(region));
-
-					// add nodump/baddump flags
-					if (hashes.flag(hash_collection::FLAG_NO_DUMP))
-						fprintf(m_output, " status=\"nodump\"");
-					if (hashes.flag(hash_collection::FLAG_BAD_DUMP))
-						fprintf(m_output, " status=\"baddump\"");
 
 					// for non-disk entries, print offset
 					if (!is_disk)
@@ -573,30 +561,19 @@ void info_xml_creator::output_sample()
 {
 	// iterate over sample devices
 	samples_device_iterator iter(m_drivlist.config().root_device());
-	for (const device_t *device = iter.first(); device != NULL; device = iter.next())
+	for (samples_device *device = iter.first(); device != NULL; device = iter.next())
 	{
-		const char *const *samplenames = ((const samples_interface *)device->static_config())->samplenames;
-		if (samplenames != NULL)
+		samples_iterator sampiter(*device);
+		tagmap_t<int> already_printed;
+		for (const char *samplename = sampiter.first(); samplename != NULL; samplename = sampiter.next())
+		{
+			// filter out duplicates
+			if (already_printed.add(samplename, 1) == TMERR_DUPLICATE)
+				continue;
 
-			// iterate over sample names
-			for (int sampnum = 0; samplenames[sampnum] != NULL; sampnum++)
-			{
-				// ignore the special '*' samplename
-				const char *cursampname = samplenames[sampnum];
-				if (sampnum == 0 && cursampname[0] == '*')
-					continue;
-
-				// filter m_output duplicates
-				int dupnum;
-				for (dupnum = 0; dupnum < sampnum; dupnum++)
-					if (strcmp(samplenames[dupnum], cursampname) == 0)
-						break;
-				if (dupnum < sampnum)
-					continue;
-
-				// output the sample name
-				fprintf(m_output, "\t\t<sample name=\"%s\"/>\n", xml_normalize_string(cursampname));
-			}
+			// output the sample name
+			fprintf(m_output, "\t\t<sample name=\"%s\"/>\n", xml_normalize_string(samplename));
+		}
 	}
 }
 
@@ -1215,17 +1192,18 @@ void info_xml_creator::output_slots()
 		 */
 	
 		const slot_interface* intf = slot->get_slot_interfaces();
-		for (int i = 0; intf[i].name != NULL; i++)
-		{
-			fprintf(m_output, "\t\t\t<slotoption");
-			fprintf(m_output, " name=\"%s\"", xml_normalize_string(intf[i].name));
-			if (slot->get_default_card(m_drivlist.config(), m_drivlist.options()))
+		if (intf)
+			for (int i = 0; intf[i].name != NULL; i++)
 			{
-				if (slot->get_default_card(m_drivlist.config(), m_drivlist.options()) == intf[i].name)
-					fprintf(m_output, " default=\"yes\"");
+				fprintf(m_output, "\t\t\t<slotoption");
+				fprintf(m_output, " name=\"%s\"", xml_normalize_string(intf[i].name));
+				if (slot->get_default_card(m_drivlist.config(), m_drivlist.options()))
+				{
+					if (slot->get_default_card(m_drivlist.config(), m_drivlist.options()) == intf[i].name)
+						fprintf(m_output, " default=\"yes\"");
+				}
+				fprintf(m_output, "/>\n");
 			}
-			fprintf(m_output, "/>\n");
-		}
 
 		fprintf(m_output, "\t\t</slot>\n");
 	}

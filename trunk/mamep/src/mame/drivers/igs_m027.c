@@ -383,7 +383,7 @@ GFXDECODE_END
 
 static INTERRUPT_GEN( igs_majhong_interrupt )
 {
-	generic_pulse_irq_line(device, ARM7_FIRQ_LINE);
+	generic_pulse_irq_line(device, ARM7_FIRQ_LINE, 1);
 }
 
 
@@ -790,5 +790,5 @@ GAME( 200?,  lhzb3,		0, igs_majhong, sdwx, 0,    ROT0, "IGS", "Long Hu Zheng Ba 
 GAME( 200?,  lhzb4,		0, igs_majhong, sdwx, 0,    ROT0, "IGS", "Long Hu Zheng Ba 4", GAME_NO_SOUND | GAME_NOT_WORKING )
 GAME( 200?,  klxyj,		0, igs_majhong, sdwx, 0,    ROT0, "IGS", "Kuai Le Xi You Ji",  GAME_NO_SOUND | GAME_NOT_WORKING )
 GAME( 2000,  mgfx,		0, igs_majhong, sdwx, 0,    ROT0, "IGS", "Man Guan Fu Xing",   GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 200?,  gonefsh2,		0, igs_majhong, sdwx, 0,    ROT0, "IGS", "Gone Fishing 2",   GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 200?,  chessc2,		0, igs_majhong, sdwx, 0,    ROT0, "IGS", "Chess Challenge 2",   GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 200?,  gonefsh2,	0, igs_majhong, sdwx, 0,    ROT0, "IGS", "Gone Fishing 2",   GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 200?,  chessc2,	0, igs_majhong, sdwx, 0,    ROT0, "IGS", "Chess Challenge 2",   GAME_NO_SOUND | GAME_NOT_WORKING )

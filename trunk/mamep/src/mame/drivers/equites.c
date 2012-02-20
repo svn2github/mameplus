@@ -436,7 +436,7 @@ static WRITE8_HANDLER(equites_c0f8_w)
 
 		case 1: // c0f9: RST75 trigger (written by NMI handler)
 			// Note: solder pad CP3 on the pcb would allow to disable this
-			generic_pulse_irq_line(state->m_audio_cpu, I8085_RST75_LINE);
+			generic_pulse_irq_line(state->m_audio_cpu, I8085_RST75_LINE, 1);
 			break;
 
 		case 2: // c0fa: INTR trigger (written by NMI handler)
@@ -476,16 +476,17 @@ static WRITE8_HANDLER(equites_c0f8_w)
 static WRITE8_DEVICE_HANDLER( equites_8910porta_w )
 {
 	equites_state *state = device->machine().driver_data<equites_state>();
+	samples_device *samples = downcast<samples_device *>(device);
 
 	// bongo 1
-	sample_set_volume(device, 0, ((data & 0x30) >> 4) * 0.33);
+	samples->set_volume(0, ((data & 0x30) >> 4) * 0.33);
 	if (data & ~state->m_ay_port_a & 0x80)
-		sample_start(device, 0, 0, 0);
+		samples->start(0, 0);
 
 	// bongo 2
-	sample_set_volume(device, 1, (data & 0x03) * 0.33);
+	samples->set_volume(1, (data & 0x03) * 0.33);
 	if (data & ~state->m_ay_port_a & 0x08)
-		sample_start(device, 1, 1, 0);
+		samples->start(1, 1);
 
 	state->m_ay_port_a = data;
 
@@ -497,15 +498,16 @@ popmessage("HH %d(%d) CYM %d(%d)", state->m_hihat, BIT(state->m_ay_port_b, 6), s
 static WRITE8_DEVICE_HANDLER( equites_8910portb_w )
 {
 	equites_state *state = device->machine().driver_data<equites_state>();
+	samples_device *samples = downcast<samples_device *>(device);
 #if POPDRUMKIT
 if (data & ~state->m_ay_port_b & 0x08) state->m_cymbal++;
 if (data & ~state->m_ay_port_b & 0x04) state->m_hihat++;
 #endif
 
 	// bongo 3
-	sample_set_volume(device, 2, ((data & 0x30)>>4) * 0.33);
+	samples->set_volume(2, ((data & 0x30)>>4) * 0.33);
 	if (data & ~state->m_ay_port_b & 0x80)
-		sample_start(device, 2, 2, 0);
+		samples->start(2, 2);
 
 	// FIXME I'm just enabling the MSM5232 Noise Output for now. Proper emulation
 	// of the analog circuitry should be done instead.
@@ -1141,7 +1143,7 @@ static const ay8910_interface equites_8910intf =
 
 static const char *const alphamc07_sample_names[] =
 {
-	"*alphamc07",
+	"*equites",
 	"bongo1",
 	"bongo2",
 	"bongo3",
@@ -1193,8 +1195,7 @@ static MACHINE_CONFIG_FRAGMENT( common_sound )
 	MCFG_SOUND_ADD("dac2", DAC, 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("samples", SAMPLES, 0)
-	MCFG_SOUND_CONFIG(alphamc07_samples_interface)
+	MCFG_SAMPLES_ADD("samples", alphamc07_samples_interface)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_CONFIG_END
 

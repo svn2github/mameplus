@@ -77,17 +77,13 @@
 #include "osdepend.h"
 #include "config.h"
 #include "debugger.h"
-#include "image.h"
-#include "profiler.h"
 #include "render.h"
 #include "cheat.h"
 #include "ui.h"
-#include "uimenu.h"
 #include "uiinput.h"
 #include "crsshair.h"
 #include "validity.h"
 #include "debug/debugcon.h"
-#include "clifront.h"
 
 #include <time.h>
 

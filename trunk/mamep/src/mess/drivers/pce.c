@@ -63,7 +63,6 @@ Super System Card:
 #include "sound/c6280.h"
 #include "sound/cdda.h"
 #include "sound/msm5205.h"
-#include "hash.h"
 
 
 static ADDRESS_MAP_START( pce_mem , AS_PROGRAM, 8)
@@ -368,7 +367,8 @@ static MACHINE_CONFIG_START( pce_common, pce_state )
 
 	MCFG_VIDEO_START( pce )
 
-	MCFG_NVRAM_HANDLER( pce )
+	MCFG_NVRAM_ADD_0FILL("nvram")
+
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD(C6280_TAG, C6280, MAIN_CLOCK/6)
 	MCFG_SOUND_CONFIG(c6280_config)
@@ -418,7 +418,8 @@ static MACHINE_CONFIG_START( sgx, pce_state )
 
 	MCFG_VIDEO_START( pce )
 
-	MCFG_NVRAM_HANDLER( pce )
+	MCFG_NVRAM_ADD_0FILL("nvram")
+
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD(C6280_TAG, C6280, MAIN_CLOCK/6)
 	MCFG_SOUND_CONFIG(c6280_config)

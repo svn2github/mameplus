@@ -159,6 +159,7 @@ $(MESS_MACHINE)/nes_mmc.o:	$(MESSSRC)/machine/nes_ines.c \
 #-------------------------------------------------
 
 $(MESS_DRIVERS)/sms.o:		$(MESS_LAYOUT)/sms1.lh
+$(MESS_DRIVERS)/wswan.o:	$(MESS_LAYOUT)/wswan.lh
 
 
 #-------------------------------------------------

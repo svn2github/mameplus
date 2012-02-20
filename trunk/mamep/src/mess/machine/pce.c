@@ -273,7 +273,9 @@ DRIVER_INIT( sgx )
 
 MACHINE_START( pce )
 {
+	pce_state *state = machine.driver_data<pce_state>();
 	pce_cd_init( machine );
+	machine.device<nvram_device>("nvram")->set_base(state->m_cd.bram, PCE_BRAM_SIZE);	
 }
 
 #ifdef MESS
@@ -380,21 +382,6 @@ READ8_HANDLER ( mess_pce_joystick_r )
 	return (ret);
 }
 #endif
-NVRAM_HANDLER( pce )
-{
-	pce_state *state = machine.driver_data<pce_state>();
-	pce_cd_t &pce_cd = state->m_cd;
-	if (read_or_write)
-	{
-		file->write(pce_cd.bram, PCE_BRAM_SIZE);
-	}
-	else
-	{
-		/* load battery backed memory from disk */
-		if (file)
-			file->read(pce_cd.bram, PCE_BRAM_SIZE);
-	}
-}
 
 static void pce_set_cd_bram( running_machine &machine )
 {

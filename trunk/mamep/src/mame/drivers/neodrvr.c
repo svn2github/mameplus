@@ -7270,7 +7270,6 @@ ROM_START( matrim ) /* Encrypted Set */ /* MVS AND AES VERSION */
 	ROM_LOAD16_BYTE( "266-c8.c8", 0x3000001, 0x800000, CRC(29873d33) SHA1(dc77f129ed49b8d40d0d4241feef3f6c2f19a987) ) /* Plane 2,3 */ /* mask rom TC5364205 */
 ROM_END
 
-
 ROM_START( matrimd )
 	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "266-p1.p1",  0x000000, 0x100000, CRC(5d4c2dc7) SHA1(8d723b0d28ec344eef26009b361a2b97d300dd51) ) /* mask rom TC538200 */
@@ -9487,8 +9486,9 @@ ROM_START( sbp ) /* Unlicensed, no official game ID # */
 
 	NEO_BIOS_AUDIO_512K( "1b.bin", CRC(7b1f86f7) SHA1(15b6af7f9fbd0f1f6a1ecd912200ca8d0af2da2a) )
 
-	ROM_REGION( 0x200000, "ymsnd", 0 )
-	ROM_LOAD( "sbp.snd", 0x000000, 0x080000, NO_DUMP )
+	ROM_REGION( 0x800000, "ymsnd", 0 )
+	ROM_LOAD( "12a.bin", 0x000000, 0x400000, CRC(c96723b9) SHA1(52eec88550781d45f84efbf9b905d7e7912e96fa) )
+	ROM_LOAD( "13a.bin", 0x400000, 0x400000, CRC(08c339a5) SHA1(badc9510ae243ef2a7877977eb36efa81b1489fe) )
 
 	NO_DELTAT_REGION
 

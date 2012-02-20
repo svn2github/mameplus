@@ -456,9 +456,9 @@ static DRIVER_INIT( gunbalna )
 static DRIVER_INIT( chocovdr )
 {
 	memn_driver_init(machine);
-//	NOTE: none of the possible permutations show the Sony Computer Entertainment string at BIOS[0x84], very likely a bad dump
+//  NOTE: none of the possible permutations show the Sony Computer Entertainment string at BIOS[0x84], very likely a bad dump
 //                                             BAD? 0 or 9                             1 or 8         0 or 9
-//	                       ok!  ok!  ok!  ok!            ok!  ok!  ok!  ok!  ok!  ok!       ok!  ok!
+//                         ok!  ok!  ok!  ok!            ok!  ok!  ok!  ok!  ok!  ok!       ok!  ok!
 	decrypt_bios( machine, 0x5, 0x4, 0x6, 0x7, 0x1, 0x0, 0x2, 0x3, 0xc, 0xf, 0xe, 0xd, 0x8, 0xb, 0xa, 0x9 );
 }
 
@@ -612,8 +612,8 @@ ROM_START( ptblank3 )
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
 	ROM_REGION( 0x2100000, "user2", 0 ) /* main prg */
-	ROM_LOAD( "0.8e",         0x0000000, 0x1080000, CRC(31b39221) SHA1(7fcb14aaa26c531928a6cd704e746d0e3ae3e031) )
-	ROM_LOAD( "1.8d",         0x1080000, 0x1080000, CRC(82d2cfb5) SHA1(4b5e713a55e74a7b32b1b9b5811892df2df86256) )
+	ROM_LOAD( "gnn2a.8e",         0x0000000, 0x1080000, CRC(31b39221) SHA1(7fcb14aaa26c531928a6cd704e746d0e3ae3e031) )
+	ROM_LOAD( "gnn2a.8d",         0x1080000, 0x1080000, CRC(82d2cfb5) SHA1(4b5e713a55e74a7b32b1b9b5811892df2df86256) )
 ROM_END
 
 ROM_START( gunbalina )
@@ -621,8 +621,8 @@ ROM_START( gunbalina )
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
 	ROM_REGION( 0x2100000, "user2", 0 ) /* main prg */
-	ROM_LOAD( "0.8e",         0x0000000, 0x1080000, CRC(981b03d4) SHA1(1c55458f1b2964afe2cf4e9d84548c0699808e9f) )
-	ROM_LOAD( "1.8d",         0x1080000, 0x1080000, CRC(6cd343e0) SHA1(dcec44abae1504025895f42fe574549e5010f7d5) )
+	ROM_LOAD( "gnn1a.8e",         0x0000000, 0x1080000, CRC(981b03d4) SHA1(1c55458f1b2964afe2cf4e9d84548c0699808e9f) )
+	ROM_LOAD( "gnn1a.8d",         0x1080000, 0x1080000, CRC(6cd343e0) SHA1(dcec44abae1504025895f42fe574549e5010f7d5) )
 ROM_END
 
 ROM_START( chocovdr )

@@ -119,6 +119,7 @@ enum
     TYPE DEFINITIONS
 ***************************************************************************/
 
+class chd_file;
 class machine_config;
 class memory_region;
 class emu_options;
@@ -143,33 +144,21 @@ class open_chd
 	friend class simple_list<open_chd>;
 
 public:
-	open_chd(const char *region, emu_file &file, chd_file &chdfile, emu_file *difffile = NULL, chd_file *diffchd = NULL)
+	open_chd(const char *region)
 		: m_next(NULL),
-		  m_region(region),
-		  m_origchd(&chdfile),
-		  m_origfile(&file),
-		  m_diffchd(diffchd),
-		  m_difffile(difffile) { }
-
-	~open_chd()
-	{
-		if (m_diffchd != NULL) chd_close(m_diffchd);
-		global_free(m_difffile);
-		chd_close(m_origchd);
-		global_free(m_origfile);
-	}
+		  m_region(region) { }
 
 	open_chd *next() const { return m_next; }
 	const char *region() const { return m_region; }
-	chd_file *chd() const { return (m_diffchd != NULL) ? m_diffchd : m_origchd; }
+	chd_file &chd() { return m_diffchd.opened() ? m_diffchd : m_origchd; }
+	chd_file &orig_chd() { return m_origchd; }
+	chd_file &diff_chd() { return m_diffchd; }
 
 private:
 	open_chd *			m_next;					/* pointer to next in the list */
 	astring				m_region;				/* disk region we came from */
-	chd_file *			m_origchd;				/* handle to the original CHD */
-	emu_file *			m_origfile;				/* file handle to the original CHD file */
-	chd_file *			m_diffchd;				/* handle to the diff CHD */
-	emu_file *			m_difffile;				/* file handle to the diff CHD file */
+	chd_file			m_origchd;				/* handle to the original CHD */
+	chd_file			m_diffchd;				/* handle to the diff CHD */
 };
 
 
@@ -201,7 +190,6 @@ struct _romload_private
 
 	astring			errorstring;		/* error string */
 };
-
 
 
 /***************************************************************************
@@ -383,13 +371,13 @@ astring &rom_region_name(astring &result, const game_driver *drv, const rom_sour
 /* ----- disk handling ----- */
 
 /* open a disk image, searching up the parent and loading by checksum */
-chd_error open_disk_image(emu_options &options, const game_driver *gamedrv, const rom_entry *romp, emu_file **image_file, chd_file **image_chd,const char *locationtag);
+int open_disk_image(emu_options &options, const game_driver *gamedrv, const rom_entry *romp, chd_file &image_chd, const char *locationtag);
 
 /* return a pointer to the CHD file associated with the given region */
 chd_file *get_disk_handle(running_machine &machine, const char *region);
 
 /* set a pointer to the CHD file associated with the given region */
-void set_disk_handle(running_machine &machine, const char *region, emu_file &file, chd_file &chdfile);
+int set_disk_handle(running_machine &machine, const char *region, const char *fullpath);
 
 void load_software_part_region(device_t *device, char *swlist, char *swname, rom_entry *start_region);
 

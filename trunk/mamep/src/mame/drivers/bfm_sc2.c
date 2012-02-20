@@ -444,7 +444,7 @@ static INTERRUPT_GEN( timer_irq )
 		state->m_irq_timer_stat = 0x01;
 		state->m_irq_status     = 0x02;
 
-		generic_pulse_irq_line(device, M6809_IRQ_LINE);
+		generic_pulse_irq_line(device, M6809_IRQ_LINE, 1);
 	}
 }
 
@@ -4930,6 +4930,9 @@ ROM_START( sc2prom )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "alongtheprom.bin", 0x0000, 0x010000, CRC(0f212ba9) SHA1(34dfe67f8cbdf1cba806dcc7a3e872a8b59747d3) )
 
+	ROM_REGION( 0x20000, "matrix", 0 )
+	ROM_LOAD("alongthepromdot.bin",  0x00000, 0x10000, CRC(b5a96f4d) SHA1(716dda738e8437b13cb72a6b071e0898abceb647))
+
 	ROM_REGION( 0x200000, "upd", ROMREGION_ERASE00 )
 	ROM_LOAD( "alongthepromsnd.bin", 0x0000, 0x040000, CRC(380f56af) SHA1(9125c09e6585e6f4a2de9ea8715371662245aa9a) )
 ROM_END
@@ -5118,7 +5121,7 @@ ROM_END
 
 ROM_START( sc2scshxstar )
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "scxsp10.bin", 0x0000, 0x010000, CRC(2fe512ad) SHA1(d409f27a62405dc45f487f9351e4d158e4d35440) )
+	ROM_LOAD( "scxsp10_star.bin", 0x0000, 0x010000, CRC(2fe512ad) SHA1(d409f27a62405dc45f487f9351e4d158e4d35440) )
 	ROM_REGION( 0x200000, "altrevs", ROMREGION_ERASE00 )
 	ROM_LOAD( "cxspv1gr", 0x0000, 0x010000, CRC(67f69bd4) SHA1(ee2dd0cd98c98a4727df8c7c721de9ac49b583ff) )
 	ROM_LOAD( "cxspv2gr", 0x0000, 0x010000, CRC(2fe512ad) SHA1(d409f27a62405dc45f487f9351e4d158e4d35440) )
@@ -5474,10 +5477,9 @@ GAME( 199?, sc2scc		, 0			,  scorpion2		, drwho		, drwho		, 0,		 "Mdm",      "Sa
 // custom Global sound system?
 GAME( 199?, sc2dick		, 0			,  scorpion2		, drwho		, drwho		, 0,		 "Global",   "Spotted Dick (Global) (Scorpion 2/3)", GAME_FLAGS)
 GAME( 199?, sc2pick		, 0			,  scorpion2		, drwho		, drwho		, 0,		 "Global",   "Pick Of The Bunch (Global) (Scorpion 2/3)", GAME_FLAGS)
-GAME( 199?, sc2rock		, 0			,  scorpion2		, drwho		, drwho		, 0,		 "Global",   "How Big's Your Rock (Global) (Scorpion 2/3)", GAME_FLAGS)
+GAME( 199?, sc2rock		, 0			,  scorpion2		, drwho		, drwho		, 0,		 "Global",   "How Big's Your Rock? (Global) (Scorpion 2/3)", GAME_FLAGS)
 GAME( 199?, sc2call		, 0			,  scorpion2		, drwho		, drwho		, 0,		 "Global",   "It's Your Call (Global) (Scorpion 2/3)", GAME_FLAGS)
 
-GAME( 199?, sc2prom		, 0			,  scorpion2		, drwho		, drwho		, 0,		 "BFM",   "Along The Prom (Bellfruit) (Scorpion 2/3)", GAME_FLAGS)
 GAME( 199?, sc2payr		, 0			,  scorpion2		, drwho		, drwho		, 0,		 "BFM/Mazooma",   "Pay Roll Casino (Bellfruit/Mazooma) (Scorpion 2/3)", GAME_FLAGS)
 
 GAME( 199?, sc2bar7		, 0			,  scorpion2		, drwho		, drwho		, 0,		 "Concept",   "Bar 7 (Concept)", GAME_FLAGS)
@@ -5525,5 +5527,6 @@ GAME( 199?, sc2ptytm	, 0			,  scorpion2_dm01	, drwho		, drwho		, 0,		 "BFM",    
 GAME( 199?, sc2cops		, 0			,  scorpion2_dm01	, drwho		, drwho		, 0,		 "BFM",      "Cops 'n' Robbers (Bellfruit) (Scorpion 2/3)", GAME_FLAGS)
 GAME( 199?, sc2copcl	, 0			,  scorpion2_dm01	, drwho		, drwho		, 0,		 "BFM",      "Cops 'n' Robbers Club (Bellfruit) (Scorpion 2/3)", GAME_FLAGS)
 GAME( 199?, sc2copdc	, 0			,  scorpion2_dm01	, drwho		, drwho		, 0,		 "BFM",      "Cops 'n' Robbers Club Deluxe (Bellfruit) (Scorpion 2/3)", GAME_FLAGS)
+GAME( 199?, sc2prom		, 0			,  scorpion2_dm01	, drwho		, drwho		, 0,		 "BFM",      "Along The Prom (Bellfruit) (Scorpion 2/3)", GAME_FLAGS)
 GAME( 199?, sc2prem		, 0			,  scorpion2_dm01	, drwho		, drwho		, 0,		 "BFM",      "Premier Club Manager (Bellfruit) (Scorpion 2/3)", GAME_FLAGS)
 

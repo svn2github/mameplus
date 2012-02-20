@@ -79,6 +79,7 @@ joyman			// hack
 ctrpllrp		// hack
 eyes			// (c) 1982 Digitrex Techstar + "Rockola presents"
 eyes2			// (c) 1982 Techstar + "Rockola presents"
+eyesb			// bootleg
 eyeszac			// (c) 1982 Techstar / Zaccaria
 eyeszacb		// bootleg
 birdiy			// (c) 1983 Mama Top
@@ -936,7 +937,7 @@ ncv2j			// (c) 1996 (Japan)
 
 // Namco System 21 games
 winrun			// (c) 1988
-				// 1989, Winning Run Suzuka Grand Prix
+winrungp		// (c) 1989
 winrun91		// (c) 1991
 solvalou		// (c) 1991 (Japan)
 starblad		// (c) 1991
@@ -1344,6 +1345,7 @@ invaders		// 739 [1979]
 blueshrk		// 742 [1978]
 invad2ct		// 851 (c) 1980 Midway
 invadpt2		// 852 [1980] Taito
+invadpt2br		// Taito do Brasil
 invaddlx		// 852 [1980] Midway
 vortex			// 852 [1980] Zilec Electronics Ltd.
 moonbase		// Taito
@@ -3228,7 +3230,8 @@ sfiii3			// 08/06/1999 (c) 1999 (Euro)
 sfiii3a			// 12/05/1999 (c) 1999 (Euro)
 sfiii3u			// 08/06/1999 (c) 1999 (USA)
 sfiii3au		// 12/05/1999 (c) 1999 (USA)
-jojoba			// 13/09/1999 (c) 1999 (Japan)
+jojoba			// 27/09/1999 (c) 1999 (Japan)
+jojobaa			// 13/09/1999 (c) 1999 (Japan)
 
 sfiiin			// 04/02/1997 (c) 1997 (Asia)
 sfiii2n			// 30/09/1997 (c) 1997 (Asia)
@@ -3236,8 +3239,10 @@ jojon			// 08/01/1999 (c) 1998 (Asia)
 jojoan			// 02/12/1998 (c) 1998 (Asia)
 sfiii3n			// 08/06/1999 (c) 1999 (Japan)
 sfiii3an		// 12/05/1999 (c) 1999 (Japan)
-jojoban			// 13/09/1999 (c) 1999 (Japan)
-jojobane		// 13/09/1999 (c) 1999 (Euro)
+jojoban			// 27/09/1999 (c) 1999 (Japan)
+jojobaan		// 13/09/1999 (c) 1999 (Japan)
+jojobane		// 27/09/1999 (c) 1999 (Euro)
+jojobaane		// 13/09/1999 (c) 1999 (Euro)
 
 #ifndef NCP
 // Capcom ZN1
@@ -4121,11 +4126,11 @@ aliensyn3		// (c) 1987 (FD1089A, decrypted)
 aliensynj		// (c) 1987 (FD1089A, decrypted)
 altbeast		// (c) 1988 (8751)
 altbeastj		// (c) 1988 (8751)
-altbeast5		// (c) 1988 (8751)
+altbeast6		// (c) 1988 (8751)
+altbeast5		// (c) 1988 (FD1094, decrypted)
 altbeast4		// (c) 1988 (MC-8123B)
 altbeast2		// (c) 1988 (MC-8123B)
 altbeastj1		// (c) 1988 (protected)
-altbeastj2		// (c) 1988 (protected)
 altbeastj3		// (c) 1988 (FD1094, decrypted)
 aurail			// (c) 1990 Sega / Westone
 aurail1			// (c) 1990 Sega / Westone (FD1089B, decrypted)
@@ -4463,6 +4468,7 @@ pclub2kc		// 1997.02 Print Club Kome Kome Club
 pclub2fc		// 1997.04 Print Club 2 Felix The Cat
 groovef			// 1997.05 Groove on Fight (Atlus)
 nclubv3			// 1997.07 Name Club Ver. 3
+pclb2elk		// 1997.07 Print Club Custom
 pclub2			// 1997.09 Print Club 2
 thunt			// 1997.09 Puzzle & Action Treasure Hunt (Sega (Deniam License))
 thuntk
@@ -4519,11 +4525,9 @@ srallyc			// 1995.02 Sega Rally Championship - Rev C
 srallycb		// 1995.02 Sega Rally Championship - Rev B
 vcop2			// 1995.09 Virtua Cop 2
 vf2				// 1995.09 Virtua Fighter 2.1
-				// 1995.10 Sky Target
+skytargt		// 1995.10 Sky Target
 manxtt			// 1995.11 Manx T.T.
-				// 1996.08 Dynamite Baseball
-doaa			// 1996.11 Dead or Alive
-				// 1997.04 Dynamite Baseball '97
+doaa			// 1996.11 Dead or Alive (Model 2A)
 motoraid		// 1997.10 Motor Raid
 zeroguna		// 1997.12 Zero Gunner
 zerogunaj		// 1997.12 Zero Gunner (Japan)
@@ -4532,13 +4536,12 @@ dynamcop		// 1998.09 Dynamic Cop
 pltkidsa		// 1999.03 Pilot Kids
 
 // Model 2B-CRX (SHARC, SCSP sound board)
-vstriker		// 1995.05 virtua Striker
-vstrikero		// 1995.05 virtua Striker
+vstriker		// 1995.05 Virtua Striker
+vstrikero		// 1995.05 Virtua Striker
 rchase2			// 1995.06 Rail Chase 2 (Arcade TV Game List - P.104, Left, 12 from top)
 indy500			// 1995.07 Indy 500
 indy500d		// 1995.07 Indy 500
 indy500to		// 1995.07 Indy 500
-skytargt		// 1995.10 Sky Target
 fvipers			// 1995.11 Fighting Vipers
 von				// 1996.01 Dennou Senki Virtual-On (USA)
 vonj			// 1996.01 Dennou Senki Virtual-On (Japan)
@@ -4551,7 +4554,7 @@ lastbrnxj		// 1996.06 Last Bronx (Japan)
 sgt24h			// 1996.07 Super GT 24h
 dynabb			// 1996.08 Dynamite Baseball
 doa				// 1996.11 Dead or Alive
-				// 1997.04 Dynamite Baseball '97
+dynabb97		// 1997.04 Dynamite Baseball 97
 zerogun			// 1997.12 Zero Gunner
 zerogunj		// 1997.12 Zero Gunner (Japan)
 dyndeka2b		// 1998.05 Dynamite Deka 2
@@ -4568,7 +4571,7 @@ hotd			// 1997.03 The House of the Dead
 topskatr		// 1997.05 Top Skater
 topskatru		// 1997.05 Top Skater (USA)
 topskatrj		// 1997.05 Top Skater (Japan)
-overrev			// 1997.09 Overrev
+overrev			// 1997.09 Over Rev
 segawski		// 1997.09 Sega Water Ski
 dynamcopc		// 1998.09 Dynamite Cop
 bel				// 1998.12 Behind Enemy Lines
@@ -4992,7 +4995,7 @@ vf4c			// 2002.01.31 Virtua Fighter 4 (Rev C) (cartridge)
 kingrt66		// 2002.02 The King of Route 66 (Rev A)
 initd			// 2002.03 Initial D Arcade Stage (Japan) (Rev B)
 				// 2002.06 World Club Champion Football Serie A 2001-2002
-				// 2002.07 Soul Surfer
+soulsurf		// 2002.07 Soul Surfer
 vf4evoct		// 2002.08 Virtua Fighter 4 Evolution (cartridge)
 vf4evoa			// 2002.08 Virtua Fighter 4 Evolution
 				// 2002.11 World Club Champion Football Serie A 2001-2002 Ver.1.2
@@ -5010,6 +5013,7 @@ initdexp		// 2002.?? Initial D Arcade Stage (Export)
 				// 2004.01 Initial D Arcade Stage Ver. 3 (export)
 initdv3j		// 2004.01 Initial D Arcade Stage Ver. 3 (Japan) (Rev C)
 initdv3jb		// 2004.01 Initial D Arcade Stage Ver. 3 (Japan) (Rev B)
+initdv3e		// 2004.01 Initial D Arcade Stage Ver. 3 (Export)
 				// 2004.06 World Club Champion Football Serie A 2002-2003 Ver.2
 				// 2004.07 Virtua Fighter 4 Final Tuned
 vf4tuneda		// 2004.09 Virtua Fighter 4 Final Tuned (Rev A)
@@ -5218,7 +5222,7 @@ cscrtry2		// 38
 cppicf			// 39 1984.02 Peter Pepper's Ice Cream Factory
 cppicf2			// 39
 cfghtice		// 40 1984.04 Fighting Ice Hockey
-				// 41 1984.05 Oozumou/The Grand Sumo
+cgsumo			// 41 1984.05 Oozumou/The Grand Sumo
 				// 42 1984.08 Hellow Gateball // not a typo, this is official spelling
 				// 43 1984.08 Yellow Cab
 cbdash			// 44 1985.08 Boulder Dash
@@ -10116,6 +10120,7 @@ jmpbreak		// (c) 1999 F2 System
 vamphalf		// (c) 1999 DanBi & F2 System
 vamphalfk		// (c) 1999 DanBi & F2 System
 dquizgo2		// (c) 2000 Semicom
+dtfamily		// (c) 2001 Semicom
 toyland			// (c) 2001 Semicom
 misncrft		// (c) 2000 Sun
 mrdig			// (c) 2000 Sun
@@ -10441,6 +10446,7 @@ mosaicf2		// (c) 1999 F2 System
 finalgdr		// (c) 2001 Semicom
 mrkicker		// (c) 2001 Semicom
 wyvernwg		// (c) 2001 Semicom / Game Vision
+wyvernwga		// (c) 2001 Semicom / Game Vision
 rbmk			// (c) 1995 GMS
 go2000			// (c) 2000 SA
 mirax			// (c) 1985 Current Technologies
@@ -12064,7 +12070,7 @@ sc2pe1g		// Public Enemy No1 (Bellfruit) [German]
 sc2wwcl		// Wild West Club (Bellfruit)
 sc2dick		// Spotted Dick (Global)
 sc2pick		// Pick Of The Bunch (Global)
-sc2rock		// How Bigs Your Rock (Global)
+sc2rock		// How Big's Your Rock? (Global)
 sc2call		// It's Your Call (Glonal)
 sc2prom		// Along The Prom
 sc2payr		// Pay Roll (Mazooma)
@@ -13533,7 +13539,7 @@ sc4quartj	//
 sc4quartk	//
 sc4quartl	//
 sc4quartm	//
-sc4qmodo	// Quazzi Mo Dough (Qps)
+sc4qmodo	// Quazzi Mo' Dough (Qps)
 sc4qmodoa	//
 sc4qmodob	//
 sc4qmodoc	//
@@ -17168,7 +17174,7 @@ ep_wildf	// Wildfire (Maygay - Impulse)
 ep_xspot	// X Marks The Spot (Maygay)
 ep_braid	// Bank Raid (Unk)
 ep_bathl	// Bat Outa Hell (Global)
-ep_beavr	// Beaver Las Vegas (Global)
+ep_beavr	// Casino Beaver Las Vegas (Global)
 ep_beavra	//
 ep_bvrcl	// Beaver Las Vegas Club (Global)
 ep_bvruc	// Beaver Uncovered (Global)
@@ -17204,7 +17210,7 @@ ep_ll		// Lucky Ladders (Unk)
 ep_monrt	// Money Returns Club, The (Global)
 ep_monsh	// Moonshine Club, The (Unk)
 ep_mummy	// Mummy Talks (Impulse)
-ep_pkni		// Phoenix Knights (Global)
+ep_pkni		// The Phoenix Knights (Global)
 ep_redl		// Red Line (Unk)
 ep_rchik	// Rich Chics Club (Unk)
 ep_royrc	// Royal Roulette Club (Unk)
@@ -17221,7 +17227,7 @@ ep_utnut	// Utter Nutter (Global)
 ep_utncl	// Utter Nutter Club (Global)
 ep_wleek	// Weakest Leek Club (Global)
 ep_wud		// What's Up Doc (Global)
-ep_milhr	// Who Wants To Be A Millionhare (Global)
+ep_milhr	// Who Wants To Be A Millionhare? (Global)
 ep_mlhrc	// Who Whats To Be A Millionhare Club (Global)
 ep_wf		// Wildfire (Global)
 ep_bbars	// Balloon Bars (Maygay)
@@ -18703,6 +18709,7 @@ pr_jumpj		// Jumping Jacks (Project)
 pr_medl			// Medalist (Project)
 pr_megmn		// Mega Money (Project)
 pr_nudxs		// Nudge XS (Project)
+pr_qksht		// Quickshot (Maygay)
 pr_rags			// Rags To Riches (Project)
 pr_reflx		// Reflex (Project)
 pr_roadr		// Road Riot (Project)
@@ -19004,11 +19011,11 @@ hb_gldpl	// Golden Palace (Mazooma)
 hb_gldwn	// Golden Winner (Fairgames)
 hb_jailb	// Jail Break (Qps)
 hb_jkrwl	// Jokers Wild (Fairgames)
-hb_mrmon	// Mr Money (Qps)
+hb_mrmon	// Mr. Money (Qps)
 hb_rhv		// Red Hot Voucher (Qps)
 hb_ringb	// Ring A Bell (Jpm)
 hb_rckrl	// Rock 'n' Roll (Qps)
-hb_ydd		// Yabba Dabba Dough (Qps)
+hb_ydd		// Yabba-Dabba-Dough (Qps)
 
 /* Summit Coin */
 

@@ -11,7 +11,6 @@
 
 #include "emu.h"
 #include "emuopts.h"
-#include "hash.h"
 #include "png.h"
 #include "harddisk.h"
 #include "config.h"
@@ -43,33 +42,21 @@ class open_chd
 	friend class simple_list<open_chd>;
 
 public:
-	open_chd(const char *region, emu_file &file, chd_file &chdfile, emu_file *difffile = NULL, chd_file *diffchd = NULL)
+	open_chd(const char *region)
 		: m_next(NULL),
-		  m_region(region),
-		  m_origchd(&chdfile),
-		  m_origfile(&file),
-		  m_diffchd(diffchd),
-		  m_difffile(difffile) { }
-
-	~open_chd()
-	{
-		if (m_diffchd != NULL) chd_close(m_diffchd);
-		global_free(m_difffile);
-		chd_close(m_origchd);
-		global_free(m_origfile);
-	}
+		  m_region(region) { }
 
 	open_chd *next() const { return m_next; }
 	const char *region() const { return m_region; }
-	chd_file *chd() const { return (m_diffchd != NULL) ? m_diffchd : m_origchd; }
+	chd_file &chd() { return m_diffchd.opened() ? m_diffchd : m_origchd; }
+	chd_file &orig_chd() { return m_origchd; }
+	chd_file &diff_chd() { return m_diffchd; }
 
 private:
 	open_chd *			m_next;					/* pointer to next in the list */
 	astring				m_region;				/* disk region we came from */
-	chd_file *			m_origchd;				/* handle to the original CHD */
-	emu_file *			m_origfile;				/* file handle to the original CHD file */
-	chd_file *			m_diffchd;				/* handle to the diff CHD */
-	emu_file *			m_difffile;				/* file handle to the diff CHD file */
+	chd_file			m_origchd;				/* handle to the original CHD */
+	chd_file			m_diffchd;				/* handle to the diff CHD */
 };
 
 
@@ -114,21 +101,15 @@ static void rom_exit(running_machine &machine);
     HELPERS (also used by devimage.c)
  ***************************************************************************/
 
-file_error common_process_file(emu_options &options, const char *location, const char *ext, const rom_entry *romp, emu_file **image_file)
+file_error common_process_file(emu_options &options, const char *location, const char *ext, const rom_entry *romp, emu_file &image_file)
 {
-	*image_file = global_alloc(emu_file(options.media_path(), OPEN_FLAG_READ));
 	file_error filerr;
 
 	if (location != NULL && strcmp(location, "") != 0)
-		filerr = (*image_file)->open(location, PATH_SEPARATOR, ROM_GETNAME(romp), ext);
+		filerr = image_file.open(location, PATH_SEPARATOR, ROM_GETNAME(romp), ext);
 	else
-		filerr = (*image_file)->open(ROM_GETNAME(romp), ext);
+		filerr = image_file.open(ROM_GETNAME(romp), ext);
 
-	if (filerr != FILERR_NONE)
-	{
-		global_free(*image_file);
-		*image_file = NULL;
-	}
 	return filerr;
 }
 
@@ -164,7 +145,7 @@ chd_file *get_disk_handle(running_machine &machine, const char *region)
 {
  	for (open_chd *curdisk = machine.romload_data->chd_list.first(); curdisk != NULL; curdisk = curdisk->next())
 		if (strcmp(curdisk->region(), region) == 0)
-			return curdisk->chd();
+			return &curdisk->chd();
 	return NULL;
 }
 
@@ -174,9 +155,15 @@ chd_file *get_disk_handle(running_machine &machine, const char *region)
     file associated with the given region
 -------------------------------------------------*/
 
-void set_disk_handle(running_machine &machine, const char *region, emu_file &file, chd_file &chdfile)
+int set_disk_handle(running_machine &machine, const char *region, const char *fullpath)
 {
-	machine.romload_data->chd_list.append(*global_alloc(open_chd(region, file, chdfile)));
+	open_chd *chd = global_alloc(open_chd(region));
+	chd_error err = chd->orig_chd().open(fullpath);
+	if (err == CHDERR_NONE)
+		machine.romload_data->chd_list.append(*chd);
+	else
+		global_free(chd);
+	return err;
 }
 
 
@@ -476,14 +463,15 @@ static void dump_wrong_and_correct_checksums(rom_load_data *romdata, const hash_
 	astring tempstr;
 	romdata->errorstring.catprintf("    EXPECTED: %s\n", hashes.macro_string(tempstr));
 	romdata->errorstring.catprintf("       FOUND: %s\n", acthashes.macro_string(tempstr));
-
-	// warn about any ill-formed hashes
-	for (hash_base *hash = hashes.first(); hash != NULL; hash = hash->next())
-		if (hash->parse_error())
-		{
-			romdata->errorstring.catprintf("\tInvalid %s checksum treated as 0 (check leading zeros)\n", hash->name());
-			romdata->warnings++;
-		}
+/*
+    // warn about any ill-formed hashes
+    for (hash_base *hash = hashes.first(); hash != NULL; hash = hash->next())
+        if (hash->parse_error())
+        {
+            romdata->errorstring.catprintf("\tInvalid %s checksum treated as 0 (check leading zeros)\n", hash->name());
+            romdata->warnings++;
+        }
+*/
 }
 
 
@@ -1036,15 +1024,13 @@ static void process_rom_entries(rom_load_data *romdata, const char *regiontag, c
     checksum
 -------------------------------------------------*/
 
-chd_error open_disk_image(emu_options &options, const game_driver *gamedrv, const rom_entry *romp, emu_file **image_file, chd_file **image_chd, const char *locationtag)
+int open_disk_image(emu_options &options, const game_driver *gamedrv, const rom_entry *romp, chd_file &image_chd, const char *locationtag)
 {
+	emu_file image_file(options.media_path(), OPEN_FLAG_READ);
 	const rom_entry *region, *rom;
 	const rom_source *source;
 	file_error filerr;
 	chd_error err;
-
-	*image_file = NULL;
-	*image_chd = NULL;
 
 	/* attempt to open the properly named file, scanning up through parent directories */
 	filerr = FILERR_NOT_FOUND;
@@ -1129,14 +1115,13 @@ chd_error open_disk_image(emu_options &options, const game_driver *gamedrv, cons
 	/* did the file open succeed? */
 	if (filerr == FILERR_NONE)
 	{
+		astring fullpath(image_file.fullpath());
+		image_file.close();
+
 		/* try to open the CHD */
-		err = chd_open_file(**image_file, CHD_OPEN_READ, NULL, image_chd);
+		err = image_chd.open(fullpath);
 		if (err == CHDERR_NONE)
 			return err;
-
-		/* close the file on failure */
-		global_free(*image_file);
-		*image_file = NULL;
 	}
 	else
 		err = CHDERR_FILE_NOT_FOUND;
@@ -1167,18 +1152,16 @@ chd_error open_disk_image(emu_options &options, const game_driver *gamedrv, cons
 							/* did the file open succeed? */
 							if (filerr == FILERR_NONE)
 							{
+								astring fullpath(image_file.fullpath());
+								image_file.close();
+
 								/* try to open the CHD */
-								err = chd_open_file(**image_file, CHD_OPEN_READ, NULL, image_chd);
+								err = image_chd.open(fullpath);
 								if (err == CHDERR_NONE)
 									return err;
-
-								/* close the file on failure */
-								global_free(*image_file);
-								*image_file = NULL;
 							}
 						}
 	}
-
 	return err;
 }
 
@@ -1187,48 +1170,43 @@ chd_error open_disk_image(emu_options &options, const game_driver *gamedrv, cons
     open_disk_diff - open a DISK diff file
 -------------------------------------------------*/
 
-static chd_error open_disk_diff(emu_options &options, const rom_entry *romp, chd_file *source, emu_file **diff_file, chd_file **diff_chd)
+static chd_error open_disk_diff(emu_options &options, const rom_entry *romp, chd_file &source, chd_file &diff_chd)
 {
 	astring fname(ROM_GETNAME(romp), ".dif");
-	chd_error err;
-
-	*diff_file = NULL;
-	*diff_chd = NULL;
 
 	/* try to open the diff */
 	LOG(("Opening differencing image file: %s\n", fname.cstr()));
-	*diff_file = global_alloc(emu_file(options.diff_directory(), OPEN_FLAG_READ | OPEN_FLAG_WRITE));
-	file_error filerr = (*diff_file)->open(fname);
-	if (filerr != FILERR_NONE)
+	emu_file diff_file(options.diff_directory(), OPEN_FLAG_READ | OPEN_FLAG_WRITE);
+	file_error filerr = diff_file.open(fname);
+	if (filerr == FILERR_NONE)
 	{
+		astring fullpath(diff_file.fullpath());
+		diff_file.close();
+
+		LOG(("Opening differencing image file: %s\n", fullpath.cstr()));
+		return diff_chd.open(fullpath, true, &source);
+	}
+
 		/* didn't work; try creating it instead */
 		LOG(("Creating differencing image: %s\n", fname.cstr()));
-		(*diff_file)->set_openflags(OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
-		filerr = (*diff_file)->open(fname);
-		if (filerr != FILERR_NONE)
-		{
-			err = CHDERR_FILE_NOT_FOUND;
-			goto done;
-		}
+	diff_file.set_openflags(OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+	filerr = diff_file.open(fname);
+	if (filerr == FILERR_NONE)
+	{
+		astring fullpath(diff_file.fullpath());
+		diff_file.close();
 
 		/* create the CHD */
-		err = chd_create_file(**diff_file, 0, 0, CHDCOMPRESSION_NONE, source);
+		LOG(("Creating differencing image file: %s\n", fullpath.cstr()));
+		chd_codec_type compression[4] = { CHD_CODEC_NONE };
+		chd_error err = diff_chd.create(fullpath, source.logical_bytes(), source.hunk_bytes(), compression, source);
 		if (err != CHDERR_NONE)
-			goto done;
+			return err;
+
+		return diff_chd.clone_all_metadata(source);
 	}
 
-	LOG(("Opening differencing image file: %s\n", fname.cstr()));
-	err = chd_open_file(**diff_file, CHD_OPEN_READWRITE, source, diff_chd);
-	if (err != CHDERR_NONE)
-		goto done;
-
-done:
-	if ((err != CHDERR_NONE) && (*diff_file != NULL))
-	{
-		global_free(*diff_file);
-		*diff_file = NULL;
-	}
-	return err;
+	return CHDERR_FILE_NOT_FOUND;
 }
 
 
@@ -1245,18 +1223,17 @@ static void process_disk_entries(rom_load_data *romdata, const char *regiontag, 
 		/* handle files */
 		if (ROMENTRY_ISFILE(romp))
 		{
+			open_chd *chd = global_alloc(open_chd(regiontag));
+
 			hash_collection hashes(ROM_GETHASHDATA(romp));
-			chd_header header;
 			chd_error err;
 
 			/* make the filename of the source */
 			astring filename(ROM_GETNAME(romp), ".chd");
 
 			/* first open the source drive */
-			chd_file *origchd;
-			emu_file *origfile;
 			LOG(("Opening disk image: %s\n", filename.cstr()));
-			err = open_disk_image(romdata->machine().options(), &romdata->machine().system(), romp, &origfile, &origchd, locationtag);
+			err = chd_error(open_disk_image(romdata->machine().options(), &romdata->machine().system(), romp, chd->orig_chd(), locationtag));
 			if (err != CHDERR_NONE)
 			{
 				if (err == CHDERR_FILE_NOT_FOUND)
@@ -1271,13 +1248,13 @@ static void process_disk_entries(rom_load_data *romdata, const char *regiontag, 
 					romdata->warnings++;
 				else
 					romdata->errors++;
+				global_free(chd);
 				continue;
 			}
 
 			/* get the header and extract the SHA1 */
-			header = *chd_get_header(origchd);
 			hash_collection acthashes;
-			acthashes.add_from_buffer(hash_collection::HASH_SHA1, header.sha1, sizeof(header.sha1));
+			acthashes.add_from_buffer(hash_collection::HASH_SHA1, chd->orig_chd().sha1().m_raw, sizeof(chd->orig_chd().sha1().m_raw));
 
 			/* verify the hash */
 			if (hashes != acthashes)
@@ -1293,23 +1270,22 @@ static void process_disk_entries(rom_load_data *romdata, const char *regiontag, 
 			}
 
 			/* if not read-only, make the diff file */
-			chd_file *diffchd = NULL;
-			emu_file *difffile = NULL;
 			if (!DISK_ISREADONLY(romp))
 			{
 				/* try to open or create the diff */
-				err = open_disk_diff(romdata->machine().options(), romp, origchd, &difffile, &diffchd);
+				err = open_disk_diff(romdata->machine().options(), romp, chd->orig_chd(), chd->diff_chd());
 				if (err != CHDERR_NONE)
 				{
 					romdata->errorstring.catprintf(_("%s DIFF CHD ERROR: %s\n"), filename.cstr(), chd_error_string(err));
 					romdata->errors++;
+					global_free(chd);
 					continue;
 				}
 			}
 
 			/* we're okay, add to the list of disks */
 			LOG(("Assigning to handle %d\n", DISK_GETINDEX(romp)));
-			romdata->machine().romload_data->chd_list.append(*global_alloc(open_chd(regiontag, *origfile, *origchd, difffile, diffchd)));
+			romdata->machine().romload_data->chd_list.append(*chd);
 		}
 	}
 }

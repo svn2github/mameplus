@@ -741,15 +741,16 @@ static CPU_TRANSLATE( m68k )
 		{
 			// FIXME: mmu_tmp_sr will be overwritten in pmmu_translate_addr_with_fc
 			UINT16 mmu_tmp_sr = m68k->mmu_tmp_sr;
+			int mode = m68k->s_flag ? FUNCTION_CODE_SUPERVISOR_PROGRAM : FUNCTION_CODE_USER_PROGRAM;
 //          UINT32 va=*address;
 
 			if (CPU_TYPE_IS_040_PLUS(m68k->cpu_type))
 			{
-				*address = pmmu_translate_addr_with_fc_040(m68k, *address, FUNCTION_CODE_SUPERVISOR_PROGRAM, 1);
+				*address = pmmu_translate_addr_with_fc_040(m68k, *address, mode, 1);
 			}
 			else
 			{
-				*address = pmmu_translate_addr_with_fc(m68k, *address, FUNCTION_CODE_SUPERVISOR_PROGRAM, 1);
+				*address = pmmu_translate_addr_with_fc(m68k, *address, mode, 1);
 			}
 
 			if ((m68k->mmu_tmp_sr & M68K_MMU_SR_INVALID) != 0) {
@@ -801,7 +802,7 @@ static CPU_EXECUTE( m68k )
 	/* Make sure we're not stopped */
 	if(!m68k->stopped)
 	{
-		/* Return point if we had an address error */
+        /* Return point if we had an address error */
 		m68ki_set_address_error_trap(m68k); /* auto-disable (see m68kcpu.h) */
 
 		/* Main loop.  Keep going until we run out of clock cycles */
@@ -877,13 +878,19 @@ static CPU_EXECUTE( m68k )
 						/* Note: This is implemented for 68000 only! */
 						m68ki_stack_frame_buserr(m68k, sr);
 					}
-					else if (m68k->mmu_tmp_buserror_address == REG_PPC(m68k))
-					{
-						m68ki_stack_frame_1010(m68k, sr, EXCEPTION_BUS_ERROR, REG_PPC(m68k), m68k->mmu_tmp_buserror_address);
+					else if(!CPU_TYPE_IS_040_PLUS(m68k->cpu_type)) {
+						if (m68k->mmu_tmp_buserror_address == REG_PPC(m68k))
+						{
+							m68ki_stack_frame_1010(m68k, sr, EXCEPTION_BUS_ERROR, REG_PPC(m68k), m68k->mmu_tmp_buserror_address);
+						}
+						else
+						{
+							m68ki_stack_frame_1011(m68k, sr, EXCEPTION_BUS_ERROR, REG_PPC(m68k), m68k->mmu_tmp_buserror_address);
+						}
 					}
 					else
 					{
-						m68ki_stack_frame_1011(m68k, sr, EXCEPTION_BUS_ERROR, REG_PPC(m68k), m68k->mmu_tmp_buserror_address);
+						m68ki_stack_frame_0111(m68k, sr, EXCEPTION_BUS_ERROR, REG_PPC(m68k), m68k->mmu_tmp_buserror_address, true);
 					}
 
 					m68ki_jump_vector(m68k, EXCEPTION_BUS_ERROR);

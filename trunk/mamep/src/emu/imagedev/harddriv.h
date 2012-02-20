@@ -22,7 +22,7 @@ struct harddisk_interface
 {
 	device_image_load_func		m_device_image_load;
 	device_image_unload_func	m_device_image_unload;
-	const char *				m_interface;
+	const char *					m_interface;
 	device_image_display_info_func	m_device_displayinfo;
 };
 
@@ -44,8 +44,8 @@ public:
 	virtual void call_display_info() { if (m_device_displayinfo) m_device_displayinfo(*this); }
 	virtual bool call_softlist_load(char *swlist, char *swname, rom_entry *start_entry) { load_software_part_region(this, swlist, swname, start_entry ); return TRUE; }
 
-	virtual iodevice_t image_type() const { return IO_HARDDISK; }	
-	
+	virtual iodevice_t image_type() const { return IO_HARDDISK; }
+
 	virtual bool is_readable()  const { return 1; }
 	virtual bool is_writeable() const { return 1; }
 	virtual bool is_creatable() const { return 0; }
@@ -54,7 +54,7 @@ public:
 	virtual const char *image_interface() const { return m_interface; }
 	virtual const char *file_extensions() const { return "chd,hd"; }
 	virtual const option_guide *create_option_guide() const;
-	
+
 	// specific implementation
 	hard_disk_file *get_hard_disk_file() { return m_hard_disk_handle; }
 	chd_file *get_chd_file();
@@ -63,13 +63,14 @@ protected:
 	// device-level overrides
     virtual void device_config_complete();
 	virtual void device_start();
-	
-	int internal_load_hd(const char *metadata);
-    
+
+	int internal_load_hd();
+
 	chd_file		*m_chd;
+	chd_file		m_self_chd;
 	hard_disk_file	*m_hard_disk_handle;
 
-	image_device_format m_format;	
+	image_device_format m_format;
 };
 
 // device type definition

@@ -2,22 +2,22 @@
 #define _INCLUDES_N64_H_
 
 #include "cpu/rsp/rsp.h"
-#include "video/n64.h"
 #include "sound/dmadac.h"
-#include "includes/n64.h"
 
 /*----------- forward decls -----------*/
 
 /*----------- driver state -----------*/
 
-class _n64_state : public driver_device
+class n64_rdp;
+
+class n64_state : public driver_device
 {
 public:
-	_n64_state(const machine_config &mconfig, device_type type, const char *tag)
+	n64_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) { }
 
 	/* video-related */
-	N64::RDP::Processor m_rdp;
+	n64_rdp *m_rdp;
 };
 
 /*----------- devices -----------*/
@@ -26,6 +26,13 @@ public:
     MCFG_DEVICE_ADD(_tag, N64PERIPH, 0)
 
 #define AUDIO_DMA_DEPTH     2
+
+struct n64_savable_data_t
+{
+	UINT8 sram[0x20000];
+	UINT8 eeprom[2048];
+	UINT8 mempak[2][0x8000];
+};
 
 class n64_periphs : public device_t
 {
@@ -58,6 +65,8 @@ public:
 	DECLARE_WRITE32_MEMBER( ri_reg_w );
 	DECLARE_READ32_MEMBER( si_reg_r );
 	DECLARE_WRITE32_MEMBER( si_reg_w );
+	DECLARE_READ32_MEMBER( dd_reg_r );
+	DECLARE_WRITE32_MEMBER( dd_reg_w );
 	DECLARE_READ32_MEMBER( pif_ram_r );
 	DECLARE_WRITE32_MEMBER( pif_ram_w );
 
@@ -66,9 +75,12 @@ public:
 
 	void sp_set_status(UINT32 status);
 	void signal_rcp_interrupt(int interrupt);
+	void check_interrupts();
 
 	void ai_timer_tick();
 	void pi_dma_tick();
+	void vi_scanline_tick();
+	void reset_tick();
 
 	// Video Interface (VI) registers
 	UINT32 vi_width;
@@ -86,6 +98,19 @@ public:
 	UINT32 vi_intr;
 	UINT32 vi_vburst;
 
+	/* nvram-specific for MESS */
+	device_t *m_nvram_image;
+
+	n64_savable_data_t m_save_data;
+
+	UINT32 cart_length;
+
+	bool dd_present;
+
+	void poll_reset_button(bool button);
+
+	UINT32 dp_clock;
+
 protected:
     // device-level overrides
     virtual void device_start();
@@ -98,7 +123,13 @@ private:
 
 	void clear_rcp_interrupt(int interrupt);
 
+	bool reset_held;
+	emu_timer *reset_timer;
+
 	UINT8 is64_buffer[0x10000];
+
+	// Video interface (VI) registers and functions
+	emu_timer *vi_scanline_timer;
 
 	// Audio Interface (AI) registers and functions
 	void ai_dma();
@@ -140,7 +171,19 @@ private:
 	int sp_dma_count;
 	int sp_dma_skip;
 	UINT32 sp_semaphore;
-	UINT32 dp_clock;
+
+	// Disk Drive (DD) registers and functions
+	UINT32 dd_buffer[256];
+	UINT32 dd_sector_data[32]; // ?
+	UINT32 dd_ram_seq_data[32]; // ?
+	UINT32 dd_data_reg;
+	UINT32 dd_status_reg;
+	UINT32 dd_track_reg;
+	UINT32 dd_buf_status_reg;
+	UINT32 dd_sector_err_reg;
+	UINT32 dd_seq_status_reg;
+	UINT32 dd_seq_ctrl_reg;
+	UINT8 dd_int;
 
 	// Peripheral Interface (PI) registers and functions
 	void pi_dma();
@@ -165,7 +208,7 @@ private:
 	void pif_dma(int direction);
 	void handle_pif();
 	int pif_channel_handle_command(int channel, int slength, UINT8 *sdata, int rlength, UINT8 *rdata);
-	UINT8 calc_mempack_crc(UINT8 *buffer, int length);
+	UINT8 calc_mempak_crc(UINT8 *buffer, int length);
 	UINT8 pif_ram[0x40];
 	UINT8 pif_cmd[0x40];
 	UINT32 si_dram_addr;
@@ -173,9 +216,9 @@ private:
 	UINT32 si_pif_addr_rd64b;
 	UINT32 si_pif_addr_wr64b;
 	UINT32 si_status;
-	UINT8 eeprom[512];
-	UINT8 mempack[0x8000];
 	UINT32 cic_status;
+
+	n64_savable_data_t savable_data;
 
 	// Video Interface (VI) functions
 	void vi_recalculate_resolution();
@@ -224,6 +267,7 @@ extern SCREEN_UPDATE_RGB32( n64 );
 
 extern const rsp_config n64_rsp_config;
 
+extern UINT32 *n64_sram;
 extern UINT32 *rdram;
 extern UINT32 *rsp_imem;
 extern UINT32 *rsp_dmem;

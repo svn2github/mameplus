@@ -38,12 +38,13 @@
 ***************************************************************************/
 
 #include "emu.h"
+#include "chd.h"
 #include "emuopts.h"
-#include "hash.h"
 #include "jedparse.h"
 #include "audit.h"
 #include "info.h"
 #include "unzip.h"
+#include "un7z.h"
 #include "validity.h"
 #include "sound/samples.h"
 #include "clifront.h"
@@ -161,8 +162,76 @@ int cli_frontend::execute(int argc, char **argv)
 		driver_switch::init_assign_drivers();
 #endif /* DRIVER_SWITCH */
 
-		// parse the command line, adding any system-specific options
+		// first parse options to be able to get software from it
 		astring option_errors;
+		m_options.parse_command_line(argc, argv, option_errors);
+		if (strlen(m_options.software_name()) > 0)
+		{
+			const game_driver *system = m_options.system();
+			if (system == NULL && strlen(m_options.system_name()) > 0)
+				throw emu_fatalerror(MAMERR_NO_SUCH_GAME, "Unknown system '%s'", m_options.system_name());
+
+			machine_config config(*system, m_options);
+			software_list_device_iterator iter(config.root_device());
+			if (iter.first() == NULL)
+				throw emu_fatalerror(MAMERR_FATALERROR, "Error: unknown option: %s\n", m_options.software_name());
+
+			bool found = FALSE;
+			for (software_list_device *swlist = iter.first(); swlist != NULL; swlist = iter.next())
+			{
+				software_list *list = software_list_open(m_options, swlist->list_name(), FALSE, NULL);
+				if (list)
+				{
+					software_info *swinfo = software_list_find(list, m_options.software_name(), NULL);
+					if (swinfo != NULL)
+					{
+						// loop through all parts
+						for (software_part *swpart = software_find_part(swinfo, NULL, NULL); swpart != NULL; swpart = software_part_next(swpart))
+						{
+							const char *mount = software_part_get_feature(swpart, "automount");
+							if (is_software_compatible(swpart, swlist))
+							{
+								if (mount == NULL || strcmp(mount,"no") != 0)
+								{
+									// search for an image device with the right interface
+									image_interface_iterator imgiter(config.root_device());
+									for (device_image_interface *image = imgiter.first(); image != NULL; image = imgiter.next())
+									{
+										const char *interface = image->image_interface();
+										if (interface != NULL)
+										{
+											if (!strcmp(interface, swpart->interface_))
+											{
+												const char *option = m_options.value(image->brief_instance_name());
+												// mount only if not already mounted
+												if (strlen(option) == 0)
+												{
+													astring val;
+													val.printf("%s:%s:%s",swlist->list_name(),m_options.software_name(),swpart->name);
+													// call this in order to set slot devices according to mounting
+													m_options.parse_slot_devices(argc, argv, option_errors, image->instance_name(), val.cstr());
+													break;
+												}
+											}
+										}
+									}
+								}
+								found = TRUE;
+							}
+						}
+					}
+					software_list_close(list);
+				}
+
+				if (found) break;
+			}
+			if (!found)
+			{
+				software_display_matches(config,m_options, NULL,m_options.software_name());
+				throw emu_fatalerror(MAMERR_FATALERROR, "");
+			}
+		}
+		// parse the command line, adding any system-specific options
 		if (!m_options.parse_command_line(argc, argv, option_errors))
 		{
 			// if we failed, check for no command and a system name first; in that case error on the name
@@ -199,69 +268,6 @@ int cli_frontend::execute(int argc, char **argv)
 			const game_driver *system = m_options.system();
 			if (system == NULL && strlen(m_options.system_name()) > 0)
 				throw emu_fatalerror(MAMERR_NO_SUCH_GAME, "Unknown system '%s'", m_options.system_name());
-
-			if (strlen(m_options.software_name()) > 0)
-			{
-				machine_config config(*system, m_options);
-				software_list_device_iterator iter(config.root_device());
-				if (iter.first() == NULL)
-					throw emu_fatalerror(MAMERR_FATALERROR, "Error: unknown option: %s\n", m_options.software_name());
-
-				bool found = FALSE;
-				for (software_list_device *swlist = iter.first(); swlist != NULL; swlist = iter.next())
-				{
-					software_list *list = software_list_open(m_options, swlist->list_name(), FALSE, NULL);
-					if (list)
-					{
-						software_info *swinfo = software_list_find(list, m_options.software_name(), NULL);
-						if (swinfo != NULL)
-						{
-							// loop through all parts
-							for (software_part *swpart = software_find_part(swinfo, NULL, NULL); swpart != NULL; swpart = software_part_next(swpart))
-							{
-								const char *mount = software_part_get_feature(swpart, "automount");
-								if (is_software_compatible(swpart, swlist))
-								{
-									if (mount == NULL || strcmp(mount,"no") != 0)
-									{
-										// search for an image device with the right interface
-										image_interface_iterator imgiter(config.root_device());
-										for (device_image_interface *image = imgiter.first(); image != NULL; image = imgiter.next())
-										{
-											const char *interface = image->image_interface();
-											if (interface != NULL)
-											{
-												if (!strcmp(interface, swpart->interface_))
-												{
-													const char *option = m_options.value(image->brief_instance_name());
-													// mount only if not already mounted
-													if (strlen(option) == 0)
-													{
-														astring val;
-														val.printf("%s:%s:%s",swlist->list_name(),m_options.software_name(),swpart->name);
-														// call this in order to set slot devices according to mounting
-														m_options.parse_slot_devices(argc, argv, option_errors, image->instance_name(), val.cstr());
-														break;
-													}
-												}
-											}
-										}
-									}
-									found = TRUE;
-								}
-							}
-						}
-						software_list_close(list);
-					}
-
-					if (found) break;
-				}
-				if (!found)
-				{
-					software_display_matches(config,m_options, NULL,m_options.software_name());
-					throw emu_fatalerror(MAMERR_FATALERROR, "");
-				}
-			}
 			// otherwise just run the game
 			m_result = mame_execute(m_options, m_osd);
 		}
@@ -581,16 +587,13 @@ void cli_frontend::listsamples(const char *gamename)
 		first = false;
 		mame_printf_info(_("Samples required for driver \"%s\".\n"), drivlist.driver().name);
 
-		// iterate over samples devices
+		// iterate over samples devices and print the samples from each one
 		for (samples_device *device = iter.first(); device != NULL; device = iter.next())
-			{
-				// if the list is legit, walk it and print the sample info
-				const char *const *samplenames = reinterpret_cast<const samples_interface *>(device->static_config())->samplenames;
-				if (samplenames != NULL)
-					for (int sampnum = 0; samplenames[sampnum] != NULL; sampnum++)
-						if (samplenames[sampnum][0] != '*')
-							mame_printf_info("%s\n", samplenames[sampnum]);
-			}
+		{
+			samples_iterator sampiter(*device);
+			for (const char *samplename = sampiter.first(); samplename != NULL; samplename = sampiter.next())
+				mame_printf_info("%s\n", samplename);
+		}
 	}
 }
 
@@ -668,7 +671,7 @@ void cli_frontend::listslots(const char *gamename)
 			
 			// get the options and print them		
 			const slot_interface* intf = slot->get_slot_interfaces();
-			for (int i = 0; intf[i].name != NULL; i++)
+			for (int i = 0; intf && intf[i].name != NULL; i++)
 			{
 				device_t *dev = (*intf[i].devtype)(drivlist.config(), "dummy", &drivlist.config().root_device(), 0);
 				dev->config_complete();
@@ -1095,6 +1098,7 @@ void cli_frontend::listsoftware(const char *gamename)
 
 	drivlist.reset();
 	list_count = 0;
+	astring tempstr;
 	while (drivlist.next())
 	{
 		software_list_device_iterator iter(drivlist.config().root_device());
@@ -1174,18 +1178,8 @@ void cli_frontend::listsoftware(const char *gamename)
 											/* dump checksum information only if there is a known dump */
 											hash_collection hashes(ROM_GETHASHDATA(rom));
 											if (!hashes.flag(hash_collection::FLAG_NO_DUMP))
-											{
-												astring tempstr;
-												for (hash_base *hash = hashes.first(); hash != NULL; hash = hash->next())
-													fprintf(out, " %s=\"%s\"", hash->name(), hash->string(tempstr));
-											}
-
-											if (!is_disk)
-												fprintf( out, " offset=\"0x%x\"", ROM_GETOFFSET(rom) );
-
-											if ( hashes.flag(hash_collection::FLAG_BAD_DUMP) )
-												fprintf( out, " status=\"baddump\"" );
-											if ( hashes.flag(hash_collection::FLAG_NO_DUMP) )
+												fprintf( out, " %s", hashes.attribute_string(tempstr) );
+											else
 												fprintf( out, " status=\"nodump\"" );
 
 											if (is_disk)
@@ -1551,6 +1545,54 @@ void media_identifier::identify(const char *filename)
 	}
 
 	// if that failed, and the filename ends with .zip, identify as a ZIP file
+	if (core_filename_ends_with(filename, ".7z"))
+	{
+		// first attempt to examine it as a valid _7Z file
+		_7z_file *_7z = NULL;
+		_7z_error _7zerr = _7z_file_open(filename, &_7z);
+		if (_7zerr == _7ZERR_NONE && _7z != NULL)
+		{
+			// loop over entries in the .7z, skipping empty files and directories
+			for (int i = 0; i < _7z->db.db.NumFiles; i++)
+			{
+				const CSzFileItem *f = _7z->db.db.Files + i;
+				_7z->curr_file_idx = i;
+				int namelen = SzArEx_GetFileNameUtf16(&_7z->db, i, NULL);
+				UINT16* temp = (UINT16 *)malloc(namelen * sizeof(UINT16));
+				void* temp2 = malloc((namelen+1) * sizeof(UINT8));
+				UINT8* temp3 = (UINT8*)temp2;
+				memset(temp3, 0x00, namelen);
+				SzArEx_GetFileNameUtf16(&_7z->db, i, temp);
+				// crude, need real UTF16->UTF8 conversion ideally
+				for (int j=0;j<namelen;j++)
+				{
+					temp3[j] = (UINT8)temp[j];
+				}
+
+				if (!(f->IsDir) && (f->Size != 0))
+				{
+					UINT8 *data = global_alloc_array(UINT8, f->Size);
+					if (data != NULL)
+					{
+						// decompress data into RAM and identify it
+						_7zerr = _7z_file_decompress(_7z, data, f->Size);
+						if (_7zerr == _7ZERR_NONE)
+							identify_data((const char*)temp2, data, f->Size);
+						global_free(data);
+					}
+				}
+
+				free(temp);
+				free(temp2);
+			}
+
+			// close up
+			_7z_file_close(_7z);
+		}
+
+		// clear out any cached files
+		_7z_file_cache_clear();
+	}
 	else if (core_filename_ends_with(filename, ".zip"))
 	{
 		// first attempt to examine it as a valid ZIP file
@@ -1602,8 +1644,8 @@ void media_identifier::identify_file(const char *name)
 		m_total++;
 
 		// attempt to open as a CHD; fail if not
-		chd_file *chd;
-		chd_error err = chd_open(name, CHD_OPEN_READ, NULL, &chd);
+		chd_file chd;
+		chd_error err = chd.open(name);
 		if (err != CHDERR_NONE)
 		{
 			mame_printf_info(_("NOT A CHD\n"));
@@ -1611,26 +1653,20 @@ void media_identifier::identify_file(const char *name)
 			return;
 		}
 
-		// fetch the header and close the file
-		chd_header header = *chd_get_header(chd);
-		chd_close(chd);
-
 		// error on writable CHDs
-		if (header.flags & CHDFLAGS_IS_WRITEABLE)
+		if (!chd.compressed())
 		{
 			mame_printf_info(_("is a writeable CHD\n"));
 			return;
 		}
 
 		// otherwise, get the hash collection for this CHD
-		static const UINT8 nullhash[20] = { 0 };
 		hash_collection hashes;
-
-		if (memcmp(nullhash, header.sha1, sizeof(header.sha1)) != 0)
-			hashes.add_from_buffer(hash_collection::HASH_SHA1, header.sha1, sizeof(header.sha1));
+		if (chd.sha1() != sha1_t::null)
+			hashes.add_sha1(chd.sha1());
 
 		// determine whether this file exists
-		int found = find_by_hash(hashes, header.logicalbytes);
+		int found = find_by_hash(hashes, chd.logical_bytes());
 		if (found == 0)
 			mame_printf_info(_("NO MATCH\n"));
 		else
