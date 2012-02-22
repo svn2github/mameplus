@@ -119,10 +119,10 @@ enum
     TYPE DEFINITIONS
 ***************************************************************************/
 
-class chd_file;
 class machine_config;
 class memory_region;
 class emu_options;
+#include "chd.h"
 
 typedef device_t rom_source;
 

@@ -138,7 +138,6 @@ b) Exit the dialog.
 #include "help.h"
 #include "strconv.h"
 #include "winutf8.h"
-#include "sound/samples.h"
 #include "sound/vlm5030.h"
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
@@ -209,6 +208,9 @@ static void save_options_ex(OPTIONS_TYPE opt_type, windows_options &opts, int ga
 #define save_options	save_options_ex
 #endif /* USE_IPS */
 
+
+// device type definition
+extern const device_type SAMPLES;
 
 /***************************************************************
  * Imported function prototypes
