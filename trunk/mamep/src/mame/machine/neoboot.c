@@ -190,13 +190,13 @@ void decrypt_kof10th(running_machine &machine)
 	UINT8 *src = machine.region( "maincpu" )->base();
 	UINT16 *mem16 = (UINT16 *)machine.region( "maincpu" )->base();
 
-		memcpy(dst + 0x000000, src + 0x700000, 0x100000); // Correct (Verified in Uni-bios)
-		memcpy(dst + 0x100000, src + 0x000000, 0x800000);
+	memcpy(dst + 0x000000, src + 0x700000, 0x100000); // Correct (Verified in Uni-bios)
+	memcpy(dst + 0x100000, src + 0x000000, 0x800000);
 
-		for (i = 0; i < 0x900000; i++) {
-			j = BITSWAP24(i,23,22,21,20,19,18,17,16,15,14,13,12,11,2,9,8,7,1,5,4,3,10,6,0);
-			src[j] = dst[i];
-		}
+	for (i = 0; i < 0x900000; i++) {
+		j = BITSWAP24(i,23,22,21,20,19,18,17,16,15,14,13,12,11,2,9,8,7,1,5,4,3,10,6,0);
+		src[j] = dst[i];
+	}
 
 	auto_free(machine, dst);
 

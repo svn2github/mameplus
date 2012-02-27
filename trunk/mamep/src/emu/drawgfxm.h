@@ -853,7 +853,7 @@ do {																				\
 	assert(dest.valid());															\
 	assert(!PRIORITY_VALID(PRIORITY_TYPE) || priority.valid());						\
 	assert(dest.cliprect().contains(cliprect));										\
-	assert(!wraparound || (src.width() & (src.width() - 1)) == 0);				\
+	assert(!wraparound || (src.width() & (src.width() - 1)) == 0);					\
 	assert(!wraparound || (src.height() & (src.height() - 1)) == 0);				\
 																					\
 	/* ignore empty/invalid cliprects */											\
@@ -865,8 +865,8 @@ do {																				\
 	srcfixheight = src.height() << 16;												\
 																					\
 	/* advance the starting coordinates to the top-left of the cliprect */			\
-	startx += cliprect.min_x * incxx + cliprect.min_y * incyx;					\
-	starty += cliprect.min_x * incxy + cliprect.min_y * incyy;					\
+	startx += cliprect.min_x * incxx + cliprect.min_y * incyx;						\
+	starty += cliprect.min_x * incxy + cliprect.min_y * incyy;						\
 																					\
 	/* compute how many blocks of 4 pixels we have */								\
 	numblocks = cliprect.width() / 4;												\

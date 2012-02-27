@@ -1540,7 +1540,7 @@ static void draw_quad(d3d_info *d3d, const render_primitive *prim)
 	vertex[3].y = prim->bounds.y1 - 0.5f;
 
 	// set the texture coordinates
-	if (texture != NULL)
+	if(texture != NULL)
 	{
 		float du = texture->ustop - texture->ustart;
 		float dv = texture->vstop - texture->vstart;
@@ -1799,7 +1799,7 @@ d3d_texture_info *texture_create(d3d_info *d3d, const render_texinfo *texsource,
 
 					int ret = d3d->hlsl->register_texture(texture);
 					if (ret != 0)
-							goto error;
+						goto error;
 
 					break;
 				}
@@ -1841,7 +1841,7 @@ d3d_texture_info *texture_create(d3d_info *d3d, const render_texinfo *texsource,
 				{
 					int ret = d3d->hlsl->register_prescaled_texture(texture, scwidth, scheight);
 					if (ret != 0)
-							goto error;
+						goto error;
 
 					break;
 				}

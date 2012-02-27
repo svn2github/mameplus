@@ -374,14 +374,14 @@ union deviceinfo
 	genf *  				f;							// generic function pointers
 	char *					s;							// generic strings
 
-	device_start_func		start;				// DEVINFO_FCT_START
-	device_stop_func		stop;				// DEVINFO_FCT_STOP
-	device_reset_func		reset;				// DEVINFO_FCT_RESET
-	device_execute_func 	execute;				// DEVINFO_FCT_EXECUTE
-	device_nvram_func		nvram;				// DEVINFO_FCT_NVRAM
-	const rom_entry *		romregion;			// DEVINFO_PTR_ROM_REGION
+	device_start_func		start;						// DEVINFO_FCT_START
+	device_stop_func		stop;						// DEVINFO_FCT_STOP
+	device_reset_func		reset;						// DEVINFO_FCT_RESET
+	device_execute_func 	execute;					// DEVINFO_FCT_EXECUTE
+	device_nvram_func		nvram;						// DEVINFO_FCT_NVRAM
+	const rom_entry *		romregion;					// DEVINFO_PTR_ROM_REGION
 	machine_config_constructor machine_config;			// DEVINFO_PTR_MACHINE_CONFIG
-	ioport_constructor ipt;						// DEVINFO_PTR_INPUT_PORTS
+	ioport_constructor ipt;								// DEVINFO_PTR_INPUT_PORTS
 	address_map_constructor	internal_map8;				// DEVINFO_PTR_INTERNAL_MEMORY_MAP
 	address_map_constructor	internal_map16;				// DEVINFO_PTR_INTERNAL_MEMORY_MAP
 	address_map_constructor	internal_map32;				// DEVINFO_PTR_INTERNAL_MEMORY_MAP
@@ -473,8 +473,8 @@ public:
 	virtual device_image_partialhash_func get_partial_hash() const;
 	virtual void call_get_devices();
 
-	virtual iodevice_t image_type() const { return static_cast<iodevice_t>(get_legacy_int(DEVINFO_INT_IMAGE_TYPE)); }	
-	
+	virtual iodevice_t image_type() const { return static_cast<iodevice_t>(get_legacy_int(DEVINFO_INT_IMAGE_TYPE)); }
+
 	virtual bool is_readable()  const { return get_legacy_int(DEVINFO_INT_IMAGE_READABLE)!=0; }
 	virtual bool is_writeable() const { return get_legacy_int(DEVINFO_INT_IMAGE_WRITEABLE)!=0; }
 	virtual bool is_creatable() const { return get_legacy_int(DEVINFO_INT_IMAGE_CREATABLE)!=0; }

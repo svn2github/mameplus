@@ -75,7 +75,7 @@ static const int volume_table[3] =
 
 /* divisor lookup table. When an individual word is selected, it can be assigned one of three different 'rates'.
    These are implemented as clock divisors, and are looked up in the ROM header. More often than not, this value is 0,
-   relating to a division by 8, or nominally 8KHz sampling (based on the datasheet exampleof a 64KHz clock).*/
+   relating to a division by 8, or nominally 8KHz sampling (based on the datasheet example of a 64KHz clock).*/
 static const int divisor_table[3] =
 {
 	8,

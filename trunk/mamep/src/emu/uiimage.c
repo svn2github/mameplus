@@ -750,7 +750,7 @@ void ui_menu_file_manager::custom_render(void *selectedref, float top, float bot
 	/* access the path */
 	path = selected_device ? selected_device->filename() : NULL;
 	extra_text_render(container, top, bottom,
-		origx1, origy1, origx2, origy2, NULL, path);
+					  origx1, origy1, origx2, origy2, NULL, path);
 }
 
 
@@ -1190,7 +1190,7 @@ void ui_menu_mess_tape_control::handle()
 	populate();
 
 	cassette_image_device* cassette = dynamic_cast<cassette_image_device*>(&device->device());
-	
+
 	/* process the menu */
 	const ui_menu_event *event = process(UI_MENU_PROCESS_LR_REPEAT);
 	if (event != NULL)

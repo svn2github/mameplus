@@ -90,13 +90,13 @@ static TIMER_DEVICE_CALLBACK( gx400_interrupt )
 
 	if(scanline == 0)
 	{
-			if (state->m_irq2_on)
+		if (state->m_irq2_on)
 			device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
 	}
 
 	if(scanline == 120)
 	{
-			if (state->m_irq4_on)
+		if (state->m_irq4_on)
 			device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
 	}
 }
@@ -601,9 +601,9 @@ static ADDRESS_MAP_START( city_sound_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x9800, 0x987f) AM_DEVREADWRITE("k051649", k051649_waveform_r, k051649_waveform_w)
-	AM_RANGE(0x9880, 0x9889) AM_DEVWRITE("k051649", k051649_frequency_w)
-	AM_RANGE(0x988a, 0x988e) AM_DEVWRITE("k051649", k051649_volume_w)
-	AM_RANGE(0x988f, 0x988f) AM_DEVWRITE("k051649", k051649_keyonoff_w)
+	AM_RANGE(0x9880, 0x9889) AM_DEVWRITE(    "k051649", k051649_frequency_w)
+	AM_RANGE(0x988a, 0x988e) AM_DEVWRITE(    "k051649", k051649_volume_w)
+	AM_RANGE(0x988f, 0x988f) AM_DEVWRITE(    "k051649", k051649_keyonoff_w)
 	AM_RANGE(0x98e0, 0x98ff) AM_DEVREADWRITE("k051649", k051649_test_r, k051649_test_w)
 	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE("ymsnd", ym3812_r, ym3812_w)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE("k007232", k007232_r, k007232_w)
@@ -814,7 +814,7 @@ static INPUT_PORTS_START( rf2 )
 
 	PORT_START("DSW1")
 	PORT_BIT( 0x4f, IP_ACTIVE_LOW, IPT_UNUSED )
-	
+
 	PORT_DIPNAME( 0x30, 0x30, DEF_STR( Difficulty ) )	PORT_DIPLOCATION("SW2:5,6")
 	PORT_DIPSETTING(    0x30, DEF_STR( Easy ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Medium ) )
@@ -1308,7 +1308,7 @@ static INPUT_PORTS_START( citybomb )
 
 	PORT_START("DSW1")
 	PORT_DIPUNUSED_DIPLOC( 0x01, IP_ACTIVE_LOW, "SW2:1" )
-	PORT_DIPUNUSED_DIPLOC( 0x02, IP_ACTIVE_LOW, "SW2:2" ) 
+	PORT_DIPUNUSED_DIPLOC( 0x02, IP_ACTIVE_LOW, "SW2:2" )
 	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Cabinet ) )		PORT_DIPLOCATION("SW2:3")
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Cocktail ) )

@@ -22,8 +22,8 @@
 /*
  * 68030 and PMMU by R. Belmont and Hans Ostermeyer
  * 68040 and FPU by Ville Linde, R. Belmont, and Hans Ostermeyer
- * CPU32 by David Haywood.  ColdFire by R. Belmont. 
- *  
+ * CPU32 by David Haywood.  ColdFire by R. Belmont.
+ *
  */
 
 
@@ -804,7 +804,7 @@ static void add_opcode_output_table_entry(opcode_struct* op, char* name)
 
 	*ptr = *op;
 
-	sprintf( ptr->name, "_m68ki_cpu_core::%s", name); 
+	sprintf( ptr->name, "_m68ki_cpu_core::%s", name);
 	ptr->bits = num_bits(ptr->op_mask);
 }
 

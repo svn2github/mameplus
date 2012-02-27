@@ -128,7 +128,7 @@ void driver_switch::assign_drivers(emu_options &opts)
 			for (int c = 0; drivers_table[i].driver[c]; c++)
 				if (mame_stricmp(drivers_table[i].driver[c]->name, "___empty"))
 					if (!mechanical || !(drivers_table[i].driver[c]->flags & GAME_MECHANICAL))
-						driver_list::s_drivers_sorted[n++] = drivers_table[i].driver[c];
+					driver_list::s_drivers_sorted[n++] = drivers_table[i].driver[c];
 		}
 
 	// ___empty driver add once

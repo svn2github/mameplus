@@ -88,15 +88,15 @@ public:
 		  m_live(&m_rgb32) { }
 	screen_bitmap(bitmap_ind16 &orig)
 		: m_format(BITMAP_FORMAT_IND16),
-		  m_texformat(TEXFORMAT_PALETTE16), 
+		  m_texformat(TEXFORMAT_PALETTE16),
 		  m_live(&m_ind16),
 		  m_ind16(orig, orig.cliprect()) { }
 	screen_bitmap(bitmap_rgb32 &orig)
 		: m_format(BITMAP_FORMAT_RGB32),
-		  m_texformat(TEXFORMAT_RGB32), 
+		  m_texformat(TEXFORMAT_RGB32),
 		  m_live(&m_rgb32),
 		  m_rgb32(orig, orig.cliprect()) { }
-	
+
 	// resizing
 	void resize(int width, int height) { live().resize(width, height); }
 
@@ -104,7 +104,7 @@ public:
 	operator bitmap_t &() { return live(); }
 	bitmap_ind16 &as_ind16() { assert(m_format == BITMAP_FORMAT_IND16); return m_ind16; }
 	bitmap_rgb32 &as_rgb32() { assert(m_format == BITMAP_FORMAT_RGB32); return m_rgb32; }
-	
+
 	// getters
 	INT32 width() const { return live().width(); }
 	INT32 height() const { return live().height(); }
@@ -132,13 +132,13 @@ public:
 		m_ind16.reset();
 		m_rgb32.reset();
 	}
-	
+
 private:
 	// internal state
 	bitmap_format		m_format;
 	texture_format		m_texformat;
 	bitmap_t *			m_live;
-	bitmap_ind16	m_ind16;
+	bitmap_ind16		m_ind16;
 	bitmap_rgb32		m_rgb32;
 };
 
@@ -323,7 +323,7 @@ private:
 			: m_next(NULL),
 			  m_bitmap(bitmap) { }
 		auto_bitmap_item *next() const { return m_next; }
-		
+
 		auto_bitmap_item *			m_next;
 		bitmap_t &					m_bitmap;
 	};
@@ -427,9 +427,9 @@ typedef device_type_iterator<&device_creator<screen_device>, screen_device> scre
 
 //-------------------------------------------------
 //  screen_update_delegate_smart - collection of
-//	inline helpers which create the appropriate
-//	screen_update_delegate based on the input
-//	function type
+//  inline helpers which create the appropriate
+//  screen_update_delegate based on the input
+//  function type
 //-------------------------------------------------
 
 inline screen_update_ind16_delegate screen_update_delegate_smart(UINT32 (*callback)(device_t *, screen_device &, bitmap_ind16 &, const rectangle &), const char *name)

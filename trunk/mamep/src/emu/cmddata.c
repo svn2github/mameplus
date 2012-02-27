@@ -690,11 +690,11 @@ static int index_datafile (struct tDatafileIndex **_index)
 	if (ParseSeek (0L, SEEK_SET)) return 0;
 
 	/* allocate index */
-	idx = *_index = auto_alloc_array(*m_machine, tDatafileIndex, (num_games + 1) * sizeof (struct tDatafileIndex));
+        idx = *_index = auto_alloc_array(*m_machine, tDatafileIndex, (num_games + 1) * sizeof (struct tDatafileIndex));
 	if (NULL == idx) return 0;
 
 	/* loop through datafile */
-	while (count < num_games && TOKEN_INVALID != token)
+        while (count < num_games && TOKEN_INVALID != token)
 	{
 		UINT64 tell;
 		UINT8 *s;

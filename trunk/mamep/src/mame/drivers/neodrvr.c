@@ -647,23 +647,23 @@
 
 #define NEOGEO_BIOS \
 	ROM_REGION16_BE( 0x80000, "mainbios", 0 )													\
-	ROM_SYSTEM_BIOS( 0, "euro",       "Europe MVS (Ver. 2)" ) \
+	ROM_SYSTEM_BIOS( 0, "euro",        "Europe MVS (Ver. 2)" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS( 0, "sp-s2.sp1",    0x00000, 0x020000, CRC(9036d879) SHA1(4f5ed7105b7128794654ce82b51723e16e389543) ) /* Europe, 1 Slot, has also been found on 2 Slot and 4 Slot (the old hacks were designed for this one) */ \
-	ROM_SYSTEM_BIOS( 1, "euro-s1",    "Europe MVS (Ver. 1)" ) \
+	ROM_SYSTEM_BIOS( 1, "euro-s1",     "Europe MVS (Ver. 1)" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS( 1, "sp-s.sp1",     0x00000, 0x020000, CRC(c7f2fa45) SHA1(09576ff20b4d6b365e78e6a5698ea450262697cd) ) /* Europe, 4 Slot */ \
-	ROM_SYSTEM_BIOS( 2, "us",         "US MVS (Ver. 2?)" ) \
+	ROM_SYSTEM_BIOS( 2, "us",          "US MVS (Ver. 2?)" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS( 2, "usa_2slt.bin", 0x00000, 0x020000, CRC(e72943de) SHA1(5c6bba07d2ec8ac95776aa3511109f5e1e2e92eb) ) /* US, 2 Slot */ \
-	ROM_SYSTEM_BIOS( 3, "us-e",       "US MVS (Ver. 1)" ) \
+	ROM_SYSTEM_BIOS( 3, "us-e",        "US MVS (Ver. 1)" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS( 3, "sp-e.sp1",     0x00000, 0x020000, CRC(2723a5b5) SHA1(5dbff7531cf04886cde3ef022fb5ca687573dcb8) ) /* US, 6 Slot (V5?) */ \
-	ROM_SYSTEM_BIOS( 4, "asia",       "Asia MVS (Ver. 3)" ) \
+	ROM_SYSTEM_BIOS( 4, "asia",        "Asia MVS (Ver. 3)" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS( 4, "asia-s3.rom",  0x00000, 0x020000, CRC(91b64be3) SHA1(720a3e20d26818632aedf2c2fd16c54f213543e1) ) /* Asia */ \
-	ROM_SYSTEM_BIOS( 5, "japan",      "Japan MVS (Ver. 3)" ) \
+	ROM_SYSTEM_BIOS( 5, "japan",       "Japan MVS (Ver. 3)" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS( 5, "vs-bios.rom",  0x00000, 0x020000, CRC(f0e8f27d) SHA1(ecf01eda815909f1facec62abf3594eaa8d11075) ) /* Japan, Ver 6 VS Bios */ \
-	ROM_SYSTEM_BIOS( 6, "japan-s2",   "Japan MVS (Ver. 2)" ) \
+	ROM_SYSTEM_BIOS( 6, "japan-s2",    "Japan MVS (Ver. 2)" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS( 6, "sp-j2.sp1",    0x00000, 0x020000, CRC(acede59c) SHA1(b6f97acd282fd7e94d9426078a90f059b5e9dd91) ) /* Japan, Older */ \
-	ROM_SYSTEM_BIOS( 7, "japan-s1",   "Japan MVS (Ver. 1)" ) \
+	ROM_SYSTEM_BIOS( 7, "japan-s1",    "Japan MVS (Ver. 1)" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS( 7, "sp1.jipan.1024",0x00000, 0x020000, CRC(9fb0abe4) SHA1(18a987ce2229df79a8cf6a84f968f0e42ce4e59d) ) /* Japan, Older */ \
-	ROM_SYSTEM_BIOS( 8, "mv1c",   "NEO-MVH MV1C" ) \
+	ROM_SYSTEM_BIOS( 8, "mv1c",        "NEO-MVH MV1C" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS( 8, "sp-45.sp1",0x00000, 0x080000, CRC(03cc9f6a) SHA1(cdf1f49e3ff2bac528c21ed28449cf35b7957dc1) ) /* Latest Asia bios */ \
 	ROM_SYSTEM_BIOS( 9, "japan-j3",    "Japan MVS (J3)" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS( 9, "japan-j3.bin",0x00000, 0x020000, CRC(dff6d41f) SHA1(e92910e20092577a4523a6b39d578a71d4de7085) ) /* Latest Japan bios; correct chip label unknown */ \
@@ -852,7 +852,7 @@
     MULTI PLAY MODE:
     ================
     The NeoGeo has three games which support MULTI PLAY MODE (Riding Hero / League Bowling / Trash Rally).
-    This allows you to 'link' 4 games (MVS)/ 2 games (AES)using in game 'Multi-Play' option. To establish
+    This allows you to 'link' 4 games (MVS) / 2 games (AES) using in game 'Multi-Play' option. To establish
     a link between the carts you have to connect the carts to each other by a communicator cable. The communicatior
     cable is a regular headphone cable with stereo pin jack. It has been reported that you can also 'link' MVS <-> AES.
 
@@ -3249,7 +3249,7 @@ ROM_START( samsho2 ) /* MVS AND AES VERSION */
 ROM_END
 
 ROM_START( samsho2k ) /* KOREAN VERSION */
-// This has corrupt text if used with the Japan bios due to the replacement of the s1 rom to contain the new logo
+	// This has corrupt text if used with the Japan bios due to the replacement of the s1 rom to contain the new logo
 	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "063-p1-kan.p1", 0x100000, 0x100000, CRC(147cc6d7) SHA1(8e22305f41a0688786ff55437c25948e6c8fda58) )
 	ROM_CONTINUE( 0x000000, 0x100000 )
@@ -3829,15 +3829,15 @@ ROM_START( pbobblen ) /* MVS ONLY RELEASE */
 	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "d96-07.ep1", 0x000000, 0x080000, CRC(6102ca14) SHA1(328429d11de5b327a0654ae0548da4d0025a2ae6) ) /* 27C240 */
 
-	NEO_SFIX_128K( "d96-04.s1", CRC(9caae538) SHA1 (cf2d90a7c1a42107c0bb8b9a61397634286dbe0a) ) /* mask rom TC531000 */
+	NEO_SFIX_128K( "d96-04.s1", CRC(9caae538) SHA1(cf2d90a7c1a42107c0bb8b9a61397634286dbe0a) ) /* mask rom TC531000 */
 
-	NEO_BIOS_AUDIO_128K( "d96-06.m1", CRC(f424368a) SHA1 (5e5bbcaeb82bed2ee17df08f005ca20ad1030723) ) /* mask rom TC531001 */
+	NEO_BIOS_AUDIO_128K( "d96-06.m1", CRC(f424368a) SHA1(5e5bbcaeb82bed2ee17df08f005ca20ad1030723) ) /* mask rom TC531001 */
 
 	ROM_REGION( 0x380000, "ymsnd", 0 )
 	ROM_LOAD( "068-v1.v1", 0x000000, 0x100000, CRC(2ced86df) SHA1(d6b73d1f31efbd74fb745200d4dade5f80b71541) ) /* unused */ /* mask rom TC538200 */
 	ROM_LOAD( "068-v2.v2", 0x100000, 0x100000, CRC(970851ab) SHA1(6c9b04e9cc6b92133f1154e5bdd9d38d8ef050a7) ) /* unused */ /* mask rom TC538200 */
-	ROM_LOAD( "d96-01.v3", 0x200000, 0x100000, CRC(0840cbc4) SHA1 (1adbd7aef44fa80832f63dfb8efdf69fd7256a57) ) /* mask rom TC538200 */
-	ROM_LOAD( "d96-05.v4", 0x300000, 0x080000, CRC(0a548948) SHA1 (e1e4afd17811cb60401c14fbcf0465035165f4fb) ) /* mask rom TC534200 */
+	ROM_LOAD( "d96-01.v3", 0x200000, 0x100000, CRC(0840cbc4) SHA1(1adbd7aef44fa80832f63dfb8efdf69fd7256a57) ) /* mask rom TC538200 */
+	ROM_LOAD( "d96-05.v4", 0x300000, 0x080000, CRC(0a548948) SHA1(e1e4afd17811cb60401c14fbcf0465035165f4fb) ) /* mask rom TC534200 */
 
 	NO_DELTAT_REGION
 
@@ -3846,8 +3846,8 @@ ROM_START( pbobblen ) /* MVS ONLY RELEASE */
 	ROM_LOAD16_BYTE( "068-c2.c2", 0x000001, 0x100000, CRC(20912873) SHA1(2df8766b531e47ffc30457e41c63b83557b4f468) ) /* unused */ /* mask rom TC538200 */
 	ROM_LOAD16_BYTE( "068-c3.c3", 0x200000, 0x100000, CRC(4b641ba1) SHA1(7a9c42a30163eda455f7bde2302402b1a5de7178) ) /* unused */ /* mask rom TC538200 */
 	ROM_LOAD16_BYTE( "068-c4.c4", 0x200001, 0x100000, CRC(35072596) SHA1(4150a21041f06514c97592bd8af686504b06e187) ) /* unused */ /* mask rom TC538200 */
-	ROM_LOAD16_BYTE( "d96-02.c5", 0x400000, 0x80000, CRC(e89ad494) SHA1 (69c9ea415773af94ac44c48af05d55ada222b138) ) /* Plane 0,1 */ /* mask rom TC534200 */
-	ROM_LOAD16_BYTE( "d96-03.c6", 0x400001, 0x80000, CRC(4b42d7eb) SHA1 (042ae50a528cea21cf07771d3915c57aa16fd5af) ) /* Plane 2,3 */ /* mask rom TC534200 */
+	ROM_LOAD16_BYTE( "d96-02.c5", 0x400000, 0x80000, CRC(e89ad494) SHA1(69c9ea415773af94ac44c48af05d55ada222b138) ) /* Plane 0,1 */ /* mask rom TC534200 */
+	ROM_LOAD16_BYTE( "d96-03.c6", 0x400001, 0x80000, CRC(4b42d7eb) SHA1(042ae50a528cea21cf07771d3915c57aa16fd5af) ) /* Plane 2,3 */ /* mask rom TC534200 */
 ROM_END
 
 /****************************************
@@ -4744,7 +4744,7 @@ ROM_END
 
 ROM_START( kof96h )
 	ROM_REGION( 0x300000, "maincpu", 0 )
-	ROM_LOAD16_WORD_SWAP( "214-pg1.p1",0x000000, 0x100000, CRC(bd3757c9) SHA1(35392a044117e46c088ff0fdd07d69a3faa4f96e) )
+	ROM_LOAD16_WORD_SWAP( "214-pg1.p1", 0x000000, 0x100000, CRC(bd3757c9) SHA1(35392a044117e46c088ff0fdd07d69a3faa4f96e) )
 	ROM_LOAD16_WORD_SWAP( "214-p2.sp2", 0x100000, 0x200000, CRC(002ccb73) SHA1(3ae8df682c75027ca82db25491021eeba00a267e) ) /* TC5316200 */
 
 	NEO_SFIX_128K( "214-s1.s1", CRC(1254cbdb) SHA1(fce5cf42588298711a3633e9c9c1d4dcb723ac76) ) /* TC531000 */
@@ -7929,7 +7929,7 @@ ROM_END
 ****************************************/
 
 ROM_START( svcpcba ) /* Encrypted Set, JAMMA PCB */
-/* alt PCB version, this one has the same program roms as the MVS set, and different GFX / Sound rom arrangements */
+	/* alt PCB version, this one has the same program roms as the MVS set, and different GFX / Sound rom arrangements */
 	ROM_REGION( 0x800000, "maincpu", 0 )
 	ROM_LOAD32_WORD_SWAP( "269-p1a.p1", 0x000000, 0x400000, CRC(38e2005e) SHA1(1b902905916a30969282f1399a756e32ff069097)  )
 	ROM_LOAD32_WORD_SWAP( "269-p2a.p1", 0x000002, 0x400000, CRC(6d13797c) SHA1(3cb71a95cea6b006b44cac0f547df88aec0007b7)  )
@@ -10533,7 +10533,7 @@ ROM_END
 
 /****************************************************************************/
 
-/* Game specific input definitions */
+	/* Game specific input definitions */
 
 
 static INPUT_PORTS_START( svcpcb )
@@ -11028,14 +11028,14 @@ static DRIVER_INIT( cthd2k3d )
 	cthd2003_AES_protection(machine);
 }
 
-static DRIVER_INIT( ct2k3sp )
+static DRIVER_INIT ( ct2k3sp )
 {
 	DRIVER_INIT_CALL(neogeo);
 	decrypt_ct2k3sp(machine);
 	patch_cthd2003(machine);
 }
 
-static DRIVER_INIT( ct2k3sa )
+static DRIVER_INIT ( ct2k3sa )
 {
 	DRIVER_INIT_CALL(neogeo);
 	decrypt_ct2k3sa(machine);
@@ -11856,17 +11856,17 @@ static DRIVER_INIT( sbp )
 // handle protected carts
 void mvs_install_protection(device_image_interface& image)
 {
-//	neogeo_state *state = image.device().machine().driver_data<neogeo_state>();
+//  neogeo_state *state = image.device().machine().driver_data<neogeo_state>();
 	const char *crypt_feature = image.get_feature( "crypt" );
 
 	if(crypt_feature == NULL)
 	{
-		neo_gameinit = driver_init_neogeo; 
+		neo_gameinit = driver_init_neogeo;
 	}
 	else
 	{
 		/* work out which Driver Init decryption function to call based on flag in softlist
-		 - note this is called AFTER the regular DRIVER_INIT */
+         - note this is called AFTER the regular DRIVER_INIT */
 
 		if(strcmp(crypt_feature,"mslugx_prot") == 0)		{ neo_gameinit = driver_init_mslugx; }
 		else if(strcmp(crypt_feature,"fatfury2_prot") == 0)	{ neo_gameinit = driver_init_fatfury2; }
@@ -11967,7 +11967,7 @@ void mvs_install_protection(device_image_interface& image)
 /*    YEAR  NAME       PARENT    COMPAT    MACHINE   INPUT     INIT     */
 CONS( 1990, neogeo,    0,        0,        mvs,	     neogeo,   mvs,  "SNK", "Neo-Geo", GAME_IS_BIOS_ROOT | GAME_SUPPORTS_SAVE )
 
-/*    YEAR  NAME      PARENT    MACHINE   INPUT     INIT      MONITOR  */
+/*    YEAR  NAME       PARENT    MACHINE   INPUT     INIT      MONITOR  */
 /* SNK */
 GAME( 1990, nam1975,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "NAM-1975 (NGM-001)(NGH-001)", GAME_SUPPORTS_SAVE )
 GAME( 1990, bstars,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Baseball Stars Professional (NGM-002)", GAME_SUPPORTS_SAVE )
@@ -12233,7 +12233,7 @@ GAME( 1994, fightfeva, fightfev, neogeo,   neogeo,   neogeo,   ROT0, "Viccom", "
 GAME( 1994, pspikes2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Video System Co.", "Power Spikes II (NGM-068)", GAME_SUPPORTS_SAVE )
 GAME( 1994, sonicwi2,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Video System Co.", "Aero Fighters 2 / Sonic Wings 2", GAME_SUPPORTS_SAVE )
 GAME( 1995, sonicwi3,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Video System Co.", "Aero Fighters 3 / Sonic Wings 3", GAME_SUPPORTS_SAVE )
-GAME( 1997, popbounc, neogeo,   neogeo,   popbounc, popbounc, ROT0, "Video System Co.", "Pop 'n Bounce / Gapporin", GAME_SUPPORTS_SAVE )
+GAME( 1997, popbounc,  neogeo,   neogeo,   popbounc, popbounc, ROT0, "Video System Co.", "Pop 'n Bounce / Gapporin", GAME_SUPPORTS_SAVE )
 
 /* Visco */
 GAME( 1992, androdun,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Andro Dunos (NGM-049)(NGH-049)", GAME_SUPPORTS_SAVE )
@@ -12271,7 +12271,7 @@ GAME( 2001, vliner,    neogeo,   neogeo,   vliner,   vliner,   ROT0, "Dyna / Bre
 GAME( 2001, vlinero,   vliner,   neogeo,   vliner,   vliner,   ROT0, "Dyna / BrezzaSoft", "V-Liner (set 2)", GAME_SUPPORTS_SAVE )
 
 /* Kyle Hodgetts */
-GAME( 2000, diggerma, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Kyle Hodgetts", "Digger Man (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 2000, diggerma,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Kyle Hodgetts", "Digger Man (prototype)", GAME_SUPPORTS_SAVE )
 
 /* Vektorlogic */
 GAME( 2004, sbp,  neogeo,   neogeo,   neogeo,   sbp,   ROT0, "Vektorlogic", "Super Bubble Pop", GAME_NOT_WORKING )
@@ -12284,79 +12284,76 @@ GAME( 2004, sbp,  neogeo,   neogeo,   neogeo,   sbp,   ROT0, "Vektorlogic", "Sup
 // GunLord (c)2012 - MVS/AES
 
 /* Neo Geo bootleg */
-GAME( 1996, kof96ep,  kof96,    neogeo,   neogeo,   kof96ep,  ROT0, "bootleg", "The King of Fighters '96 (bootleg / hack)", GAME_SUPPORTS_SAVE )
-GAME( 2003, kof97pla, kof97,    neogeo,   neogeo,   kof97pla, ROT0, "bootleg", "The King of Fighters '97 Plus 2003 (bootleg / hack)", GAME_SUPPORTS_SAVE )
-GAME( 2002, kf2k1pls, kof2001,  neogeo,   neogeo,   kf2k1pls, ROT0, "bootleg", "The King of Fighters 2001 Plus (set 1, bootleg / hack)", GAME_SUPPORTS_SAVE )
-GAME( 2002, kf2k1pa,  kof2001,  neogeo,   neogeo,   kf2k1pa,  ROT0, "bootleg", "The King of Fighters 2001 Plus (set 2, bootleg / hack)", GAME_SUPPORTS_SAVE )
-GAME( 2003, cthd2k3a, kof2001,  neogeo,   neogeo,   cthd2k3a, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg, set 2)", GAME_SUPPORTS_SAVE ) /* Protected Hack / Bootleg of kof2001 */
-GAME( 2002, kf2k2plb, kof2002,  neogeo,   neogeo,   kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 3, bootleg / hack)", GAME_SUPPORTS_SAVE ) /* Encrypted GFX */
-GAME( 2002, kf2k2plc, kof2002,  neogeo,   neogeo,   kf2k2plc, ROT0, "bootleg", "The King of Fighters 2002 Super (set 4, bootleg / hack)", GAME_SUPPORTS_SAVE ) /* Encrypted GFX */
-GAME( 2004, kf2k4pls, kof2002,  neogeo,   neogeo,   kf2k4pls, ROT0, "bootleg", "The King of Fighters Special Edition 2004 Plus (The King of Fighters 2002 bootleg)", GAME_SUPPORTS_SAVE ) /* Hack / Bootleg of kof2002 */
-GAME( 2003, mslug5b,  mslug5,   neogeo,   neogeo,   mslug5b,  ROT0, "bootleg", "Metal Slug 5 (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1996, kof96ep,   kof96,    neogeo,   neogeo,   kof96ep,  ROT0, "bootleg", "The King of Fighters '96 (bootleg / hack)", GAME_SUPPORTS_SAVE )
+GAME( 2003, kof97pla,  kof97,    neogeo,   neogeo,   kof97pla, ROT0, "bootleg", "The King of Fighters '97 Plus 2003 (bootleg / hack)", GAME_SUPPORTS_SAVE )
+GAME( 2002, kf2k1pls,  kof2001,  neogeo,   neogeo,   kf2k1pls, ROT0, "bootleg", "The King of Fighters 2001 Plus (set 1, bootleg / hack)", GAME_SUPPORTS_SAVE )
+GAME( 2002, kf2k1pa,   kof2001,  neogeo,   neogeo,   kf2k1pa,  ROT0, "bootleg", "The King of Fighters 2001 Plus (set 2, bootleg / hack)", GAME_SUPPORTS_SAVE )
+GAME( 2003, cthd2k3a,  kof2001,  neogeo,   neogeo,   cthd2k3a, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg, set 2)", GAME_SUPPORTS_SAVE ) /* Protected Hack / Bootleg of kof2001 */
+GAME( 2002, kf2k2plb,  kof2002,  neogeo,   neogeo,   kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 3, bootleg / hack)", GAME_SUPPORTS_SAVE ) /* Encrypted GFX */
+GAME( 2002, kf2k2plc,  kof2002,  neogeo,   neogeo,   kf2k2plc, ROT0, "bootleg", "The King of Fighters 2002 Super (set 4, bootleg / hack)", GAME_SUPPORTS_SAVE ) /* Encrypted GFX */
+GAME( 2004, kf2k4pls,  kof2002,  neogeo,   neogeo,   kf2k4pls, ROT0, "bootleg", "The King of Fighters Special Edition 2004 Plus (The King of Fighters 2002 bootleg)", GAME_SUPPORTS_SAVE ) /* Hack / Bootleg of kof2002 */
+GAME( 2003, mslug5b,   mslug5,   neogeo,   neogeo,   mslug5b,  ROT0, "bootleg", "Metal Slug 5 (bootleg)", GAME_SUPPORTS_SAVE )
 
 /* Neo Geo prototype */
-GAME( 2000, bangbedp, bangbead, neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Bang Bead (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 2000, bangbedp,  bangbead, neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Bang Bead (prototype)", GAME_SUPPORTS_SAVE )
 
 /* CD to MVS Conversion */
-GAME( 1996, zintrkcd, zintrckb, neogeo,   neogeo,   neogeo,   ROT0, "hack", "Zintrick / Oshidashi Zentrix (CD to MVS Conversion, Hack)", GAME_SUPPORTS_SAVE )
-GAME( 1995, fr2ch,    neogeo,   neogeo,   neogeo,   fr2ch,    ROT0, "hack", "Idol Mahjong - final romance 2 (CD to MVS Conversion, Hack)", GAME_SUPPORTS_SAVE )
-GAME( 1994, sthoopcd, strhoop,  neogeo,    neogeo,   neogeo,   ROT0, "hack / bootleg", "Street Hoop / Street Slam / Dunk Dream (CD to MVS Conversion, Hack)", GAME_SUPPORTS_SAVE )
-
-/* Wii Virtual Console to MVS Conversion */
-//GAME( 1996, ironclad, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Saurus", "Ironclad / Choutetsu Brikin'ger (Wii Virtual Console to MVS Conversion)", GAME_SUPPORTS_SAVE )
+GAME( 1996, zintrkcd,  zintrckb, neogeo,   neogeo,   neogeo,   ROT0, "hack", "Zintrick / Oshidashi Zentrix (CD to MVS Conversion, Hack)", GAME_SUPPORTS_SAVE )
+GAME( 1995, fr2ch,     neogeo,   neogeo,   neogeo,   fr2ch,    ROT0, "hack", "Idol Mahjong - final romance 2 (CD to MVS Conversion, Hack)", GAME_SUPPORTS_SAVE )
+GAME( 1994, sthoopcd,  strhoop,  neogeo,    neogeo,   neogeo,   ROT0, "hack / bootleg", "Street Hoop / Street Slam / Dunk Dream (CD to MVS Conversion, Hack)", GAME_SUPPORTS_SAVE )
 
 /* AES Conversion */
-GAME( 2007, lhcdb,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "NG:Dev.Team", "Last Hope (AES Beta Conversion)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 2007, lhcdb,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "NG:Dev.Team", "Last Hope (AES Beta Conversion)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 
 /* Neo Geo decrypted */
-GAME( 1999, kof99d,   kof99,    neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (not encrypted P, decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 1999, garoud,   garou,    neogeo,   neogeo,   garoud,   ROT0, "SNK", "Garou - Mark of the Wolves (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2000, mslug3d,  mslug3,   neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "Metal Slug 3 (not encrypted P, decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2000, kof2000d, kof2000,  neogeo,   neogeo,   kof2000d, ROT0, "SNK", "The King of Fighters 2000 (not encrypted P, decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2001, zupapad,  zupapa,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Zupapa! (custom decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2001, sengok3d, sengoku3, neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "Sengoku 3 (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2001, kof2001d, kof2001,  neogeo,   neogeo,   kof2001d, ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 2, decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2002, kof2002d, kof2002,  neogeo,   neogeo,   kof2002d, ROT0, "Eolith / Playmore", "The King of Fighters 2002 (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2000, nitdd,    nitd,     neogeo,   neogeo,   gfxdec42, ROT0, "Eleven / Gavaking", "Nightmare in the Dark (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 1999, s1945pd,  s1945p,   neogeo,   neogeo,   gfxdec42, ROT0, "Psikyo", "Strikers 1945 Plus (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 1999, preisl2d, preisle2, neogeo,   neogeo,   gfxdec42, ROT0, "Yumekobo", "Prehistoric Isle 2 (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 1999, ganryud,  ganryu,   neogeo,   neogeo,   gfxdec42, ROT0, "Visco", "Ganryu / Musashi Ganryuki (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2002, rotdd,    rotd,     neogeo,   neogeo,   rotdd,    ROT0, "Evoga / Playmore", "Rage of the Dragons (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2003, ct2k3ad,  kof2001,  neogeo,   neogeo,   cthd2k3d, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 2 fully decrypted)", GAME_SUPPORTS_SAVE )
-GAME( 2003, cthd2k3d, kof2001,  neogeo,   neogeo,   cthd2k3d, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 1 fully decrypted)", GAME_SUPPORTS_SAVE )
-GAME( 2004, kof10thd, kof2002,  neogeo,   neogeo,   kof10thd, ROT0, "bootleg", "The King of Fighters 10th Anniversary - All Team Battle (The King of Fighters 2002 bootleg / Fully Decrypted)", GAME_SUPPORTS_SAVE ) // fake SNK copyright
-GAME( 2003, kof2003d, kof2003,  neogeo,   neogeo,   kof2003d, ROT0, "SNK Playmore", "The King of Fighters 2003 (Decrypted P&C)", GAME_SUPPORTS_SAVE ) /* Encrypted Code & Sound */
-GAME( 2002, matrimd,  matrim,   neogeo,   neogeo,   matrimd,  ROT0, "Noise Factory / Atlus", "Matrimelee / Shin Gouketsuji Ichizoku Toukon (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2002, mslug4d,  mslug4,   neogeo,   neogeo,   mslug4d,  ROT0, "Mega", "Metal Slug 4 (Custom Decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2003, mslug5d,  mslug5,   neogeo,   neogeo,   mslug5d,  ROT0, "SNK / Playmore", "Metal Slug 5 (fully decrypted)", GAME_SUPPORTS_SAVE )
-GAME( 2003, samsho5d, samsho5,  neogeo,   neogeo,   samsho5d, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V / Samurai Spirits Zero (decrypted C)", GAME_SUPPORTS_SAVE ) // different program scrambling
-GAME( 2003, samsh5sd, samsh5sp, neogeo,   neogeo,   samsh5sd, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V Special / Samurai Spirits Zero Special (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2004, lans2k4d, shocktr2, neogeo,   neogeo,   neogeo,   ROT0, "bootleg", "Lansquenet 2004 (Shock Troopers - 2nd Squad Bootleg / fully decrypted)", GAME_SUPPORTS_SAVE )
-GAME( 2003, svcd,     svc,      neogeo,   neogeo,   svcd,     ROT0, "SNK Playmore", "SNK vs. CAPCOM SVC CHAOS (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2001, jckeygpd, jockeygp, neogeo,   jockeygp, jckeygpd, ROT0, "Sun Amusement / BrezzaSoft", "Jockey Grand Prix (decrypted C)", GAME_SUPPORTS_SAVE )
-GAME( 2003, kf2k3pcd, kf2k3pcb, neogeo,   neogeo,   kf2k3pcd, ROT0, "SNK Playmore", "The King of Fighters 2003 (Japan, JAMMA PCB / decrypted C&Bios)", GAME_SUPPORTS_SAVE ) /* Encrypted Code & Sound */
-GAME( 2005, kogd,     kof97,    neogeo,   kog,      neogeo,   ROT0, "bootleg", "King of Gladiator (The King of Fighters '97 bootleg / fully decrypted)", GAME_SUPPORTS_SAVE )
-GAME( 2003, pnyaad,   pnyaa,    neogeo,   neogeo,   pnyaad,   ROT0, "Aiky / Taito", "Pochi and Nyaa (decrypted C)", GAME_SUPPORTS_SAVE ) /* Encrypted Sound */
+GAME( 1999, kof99d,   kof99,     neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (not encrypted P, decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 1999, garoud,   garou,     neogeo,   neogeo,   garoud,   ROT0, "SNK", "Garou - Mark of the Wolves (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2000, mslug3d,  mslug3,    neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "Metal Slug 3 (not encrypted P, decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2000, kof2000d, kof2000,   neogeo,   neogeo,   kof2000d, ROT0, "SNK", "The King of Fighters 2000 (not encrypted P, decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2001, zupapad,  zupapa,    neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Zupapa! (custom decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2001, sengok3d, sengoku3,  neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "Sengoku 3 (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2001, kof2001d, kof2001,   neogeo,   neogeo,   kof2001d, ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 2, decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2002, kof2002d, kof2002,   neogeo,   neogeo,   kof2002d, ROT0, "Eolith / Playmore", "The King of Fighters 2002 (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2000, nitdd,    nitd,      neogeo,   neogeo,   gfxdec42, ROT0, "Eleven / Gavaking", "Nightmare in the Dark (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 1999, s1945pd,  s1945p,    neogeo,   neogeo,   gfxdec42, ROT0, "Psikyo", "Strikers 1945 Plus (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 1999, preisl2d, preisle2,  neogeo,   neogeo,   gfxdec42, ROT0, "Yumekobo", "Prehistoric Isle 2 (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 1999, ganryud,  ganryu,    neogeo,   neogeo,   gfxdec42, ROT0, "Visco", "Ganryu / Musashi Ganryuki (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2002, rotdd,    rotd,      neogeo,   neogeo,   rotdd,    ROT0, "Evoga / Playmore", "Rage of the Dragons (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2003, ct2k3ad,  kof2001,   neogeo,   neogeo,   cthd2k3d, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 2 fully decrypted)", GAME_SUPPORTS_SAVE )
+GAME( 2003, cthd2k3d, kof2001,   neogeo,   neogeo,   cthd2k3d, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg / set 1 fully decrypted)", GAME_SUPPORTS_SAVE )
+GAME( 2004, kof10thd, kof2002,   neogeo,   neogeo,   kof10thd, ROT0, "bootleg", "The King of Fighters 10th Anniversary - All Team Battle (The King of Fighters 2002 bootleg / Fully Decrypted)", GAME_SUPPORTS_SAVE ) // fake SNK copyright
+GAME( 2003, kof2003d, kof2003,   neogeo,   neogeo,   kof2003d, ROT0, "SNK Playmore", "The King of Fighters 2003 (Decrypted P&C)", GAME_SUPPORTS_SAVE ) /* Encrypted Code & Sound */
+GAME( 2002, matrimd,  matrim,    neogeo,   neogeo,   matrimd,  ROT0, "Noise Factory / Atlus", "Matrimelee / Shin Gouketsuji Ichizoku Toukon (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2002, mslug4d,  mslug4,    neogeo,   neogeo,   mslug4d,  ROT0, "Mega", "Metal Slug 4 (Custom Decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2003, mslug5d,  mslug5,    neogeo,   neogeo,   mslug5d,  ROT0, "SNK / Playmore", "Metal Slug 5 (fully decrypted)", GAME_SUPPORTS_SAVE )
+GAME( 2003, samsho5d, samsho5,   neogeo,   neogeo,   samsho5d, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V / Samurai Spirits Zero (decrypted C)", GAME_SUPPORTS_SAVE ) // different program scrambling
+GAME( 2003, samsh5sd, samsh5sp,  neogeo,   neogeo,   samsh5sd, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V Special / Samurai Spirits Zero Special (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2004, lans2k4d, shocktr2,  neogeo,   neogeo,   neogeo,   ROT0, "bootleg", "Lansquenet 2004 (Shock Troopers - 2nd Squad Bootleg / fully decrypted)", GAME_SUPPORTS_SAVE )
+GAME( 2003, svcd,     svc,       neogeo,   neogeo,   svcd,     ROT0, "SNK Playmore", "SNK vs. CAPCOM SVC CHAOS (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2001, jckeygpd, jockeygp,  neogeo,   jockeygp, jckeygpd, ROT0, "Sun Amusement / BrezzaSoft", "Jockey Grand Prix (decrypted C)", GAME_SUPPORTS_SAVE )
+GAME( 2003, kf2k3pcd, kf2k3pcb,  neogeo,   neogeo,   kf2k3pcd, ROT0, "SNK Playmore", "The King of Fighters 2003 (Japan, JAMMA PCB / decrypted C&Bios)", GAME_SUPPORTS_SAVE ) /* Encrypted Code & Sound */
+GAME( 2005, kogd,     kof97,     neogeo,   kog,      neogeo,   ROT0, "bootleg", "King of Gladiator (The King of Fighters '97 bootleg / fully decrypted)", GAME_SUPPORTS_SAVE )
+GAME( 2003, pnyaad,   pnyaa,     neogeo,   neogeo,   pnyaad,   ROT0, "Aiky / Taito", "Pochi and Nyaa (decrypted C)", GAME_SUPPORTS_SAVE ) /* Encrypted Sound */
 
 /* Neo Geo homebrew */
-GAME( 1989, beast,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Psygnosis", "Shadow of the Beast (Homebrew, No sound edition)", GAME_SUPPORTS_SAVE )
-GAME( 2003, poknight, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "JMK", "Poker Night (Homebrew, No sound edition)", GAME_SUPPORTS_SAVE )
-GAME( 2002, neonopon, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo No Panepon (Beta, Homebrew)", GAME_SUPPORTS_SAVE )
-GAME( 2002, neopong,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Neodev", "Neo Pong (ver 1.1, Homebrew)", GAME_SUPPORTS_SAVE )
-GAME( 2002, neoponga, neopong,  neogeo,   neogeo,   neogeo,   ROT0, "Neodev", "Neo Pong (ver 1.0, Homebrew)", GAME_SUPPORTS_SAVE )
-GAME( 200?, syscheck, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo System Check (ver 1.0b, Homebrew)", GAME_SUPPORTS_SAVE )
-GAME( 2006, frogfest, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Rastersoft", "Frog Feast (Homebrew)", GAME_SUPPORTS_SAVE )
-GAME( 2005, ltorb1,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Jonas Indiana and the Lost Temple of RA (050717, Homebrew)", GAME_SUPPORTS_SAVE )
-GAME( 2002, neodemo,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Chaos", "Neo-Demo (Homebrew)", GAME_SUPPORTS_SAVE )
-GAME( 2006, cnbe,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Codename: Blut Engel (060119, Homebrew)", GAME_SUPPORTS_SAVE )
-GAME( 2006, ngem2k,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "NGEM2K (Beta 060118, Homebrew)", GAME_SUPPORTS_SAVE )
-GAME( 2004, neo2500,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo 2500 Demo (Homebrew)", GAME_SUPPORTS_SAVE )
+GAME( 1989, beast,    neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "Psygnosis", "Shadow of the Beast (Homebrew, No sound edition)", GAME_SUPPORTS_SAVE )
+GAME( 2003, poknight, neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "JMK", "Poker Night (Homebrew, No sound edition)", GAME_SUPPORTS_SAVE )
+GAME( 2002, neonopon, neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo No Panepon (Beta, Homebrew)", GAME_SUPPORTS_SAVE )
+GAME( 2002, neopong,  neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "Neodev", "Neo Pong (ver 1.1, Homebrew)", GAME_SUPPORTS_SAVE )
+GAME( 2002, neoponga, neopong,   neogeo,   neogeo,   neogeo,   ROT0, "Neodev", "Neo Pong (ver 1.0, Homebrew)", GAME_SUPPORTS_SAVE )
+GAME( 200?, syscheck, neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo System Check (ver 1.0b, Homebrew)", GAME_SUPPORTS_SAVE )
+GAME( 2006, frogfest, neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "Rastersoft", "Frog Feast (Homebrew)", GAME_SUPPORTS_SAVE )
+GAME( 2005, ltorb1,   neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Jonas Indiana and the Lost Temple of RA (050717, Homebrew)", GAME_SUPPORTS_SAVE )
+GAME( 2002, neodemo,  neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "Chaos", "Neo-Demo (Homebrew)", GAME_SUPPORTS_SAVE )
+GAME( 2006, cnbe,     neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Codename: Blut Engel (060119, Homebrew)", GAME_SUPPORTS_SAVE )
+GAME( 2006, ngem2k,   neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "NGEM2K (Beta 060118, Homebrew)", GAME_SUPPORTS_SAVE )
+GAME( 2004, neo2500,  neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo 2500 Demo (Homebrew)", GAME_SUPPORTS_SAVE )
 
 /* Neo Geo hack */
-GAME( 200?, kof96cn,  kof96,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 (Chinese Edition ver 1.0, hack)", GAME_SUPPORTS_SAVE )
-GAME( 2007, kof96ae,  kof96,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 (Anniversary Edition, EGHT hack)", GAME_SUPPORTS_SAVE )
-GAME( 2007, kof97cn,  kof97,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '97 (10th Anniversary Chinese Edition, EGHT hack)", GAME_SUPPORTS_SAVE )
-GAME( 2007, kof97xt,  kof97,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '97 - Final Battle (hack)", GAME_SUPPORTS_SAVE )
-GAME( 2009, kof98ae,  kof98,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '98 (Anniversary Edition, EGHT hack)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 2007, kf2k2ps2, kof2002,	neogeo,   neogeo,   kf2k2ps2, ROT0, "hack", "The King of Fighters 2002 (PlayStation 2 ver 0.4, EGHT hack)", GAME_SUPPORTS_SAVE )
-GAME( 1990, columnsh, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "hack", "Columns (Sega hardware hack, No sound edition)", GAME_SUPPORTS_SAVE )
+GAME( 200?, kof96cn,  kof96,     neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 (Chinese Edition ver 1.0, hack)", GAME_SUPPORTS_SAVE )
+GAME( 2007, kof96ae,  kof96,     neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 (Anniversary Edition, EGHT hack)", GAME_SUPPORTS_SAVE )
+GAME( 2007, kof97cn,  kof97,     neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '97 (10th Anniversary Chinese Edition, EGHT hack)", GAME_SUPPORTS_SAVE )
+GAME( 2007, kof97xt,  kof97,     neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '97 - Final Battle (hack)", GAME_SUPPORTS_SAVE )
+GAME( 2009, kof98ae,  kof98,     neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '98 (Anniversary Edition, EGHT hack)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 2007, kf2k2ps2, kof2002,	 neogeo,   neogeo,   kf2k2ps2, ROT0, "hack", "The King of Fighters 2002 (PlayStation 2 ver 0.4, EGHT hack)", GAME_SUPPORTS_SAVE )
+GAME( 1990, columnsh, neogeo,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "Columns (Sega hardware hack, No sound edition)", GAME_SUPPORTS_SAVE )

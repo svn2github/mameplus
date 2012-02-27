@@ -189,7 +189,7 @@ enum
 #define OPTION_JOYSTICK_DEADZONE		"joystick_deadzone"
 #define OPTION_JOYSTICK_SATURATION		"joystick_saturation"
 #define OPTION_NATURAL_KEYBOARD			"natural"
-#define OPTION_JOYSTICK_CONTRADICTORY	"joystick_contradictory"
+#define OPTION_JOYSTICK_CONTRADICTORY		"joystick_contradictory"
 #define OPTION_COIN_IMPULSE			"coin_impulse"
 
 // input autoenable options

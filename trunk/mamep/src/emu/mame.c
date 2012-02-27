@@ -51,7 +51,7 @@
                 - calls debugger_init() [debugger.c] to set up the debugger
                 - calls the driver's MACHINE_START, SOUND_START, and VIDEO_START callbacks
                 - calls cheat_init() [cheat.c] to initialize the cheat system
-				- calls image_init() [image.c] to initialize the image system
+                - calls image_init() [image.c] to initialize the image system
 
             - calls config_load_settings() [config.c] to load the configuration file
             - calls nvram_load [machine/generic.c] to load NVRAM

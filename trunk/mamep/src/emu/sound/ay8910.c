@@ -446,7 +446,7 @@ INLINE UINT16 mix_3D(ay8910_context *psg)
 			else
 			{
 				indx |= (1 << (chan+15)) | ( psg->vol_enabled[chan] ? psg->env_volume << (chan*5) : 0);
-			}	
+			}
 		}
 		else
 		{

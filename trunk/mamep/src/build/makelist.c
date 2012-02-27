@@ -86,7 +86,7 @@ bool isignored(const char *drivname)
 }
 
 //-------------------------------------------------
-//  parse_file - parse a single file, may be 
+//  parse_file - parse a single file, may be
 //  called recursively
 //-------------------------------------------------
 
@@ -101,7 +101,7 @@ int parse_file(const char *srcfile)
 		fprintf(stderr, "Unable to read source file '%s'\n", srcfile);
 		return 1;
 	}
-	
+
 	// rip through it to find all drivers
 	char *srcptr = (char *)buffer;
 	char *endptr = srcptr + length;
@@ -110,7 +110,7 @@ int parse_file(const char *srcfile)
 	while (srcptr < endptr)
 	{
 		char c = *srcptr++;
-		
+
 		// count newlines
 		if (c == 13 || c == 10)
 		{
@@ -119,11 +119,11 @@ int parse_file(const char *srcfile)
 			linenum++;
 			continue;
 		}
-	
+
 		// skip any spaces
 		if (isspace(c))
 			continue;
-		
+
 		// look for end of C comment
 		if (in_comment && c == '*' && *srcptr == '/')
 		{
@@ -131,11 +131,11 @@ int parse_file(const char *srcfile)
 			in_comment = false;
 			continue;
 		}
-		
+
 		// skip anything else inside a C comment
 		if (in_comment)
 			continue;
-		
+
 		// look for start of C comment
 		if (c == '/' && *srcptr == '*')
 		{
@@ -189,7 +189,7 @@ int parse_file(const char *srcfile)
 			ignorelst[ignorecount++] = name;
 			continue;
 		}
-		
+
 		// otherwise treat as a driver name
 		char drivname[32];
 		drivname[0] = 0;
@@ -220,9 +220,9 @@ int parse_file(const char *srcfile)
 #endif /* DRIVER_SWITCH */
 		}
 	}
-	
+
 	osd_free(buffer);
-	
+
 	return 0;
 }
 
@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
 
 	// add a reference to the ___empty driver
 	drivlist[drivcount++] = "___empty";
-	
+
 	// output a count
 	if (drivcount == 0)
 	{
@@ -313,14 +313,14 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	fprintf(stderr, "%d drivers found\n", drivcount);
-	
+
 	// sort the list
 	qsort(drivlist, drivcount, sizeof(*drivlist), sort_callback);
-	
+
 	// start with a header
 	if (!header_outputed)
-	printf("#include \"emu.h\"\n\n");
-	
+		printf("#include \"emu.h\"\n\n");
+
 	// output the list of externs first
 	for (int index = 0; index < drivcount; index++)
 		printf("GAME_EXTERN(%s);\n", drivlist[index]);
@@ -337,7 +337,7 @@ int main(int argc, char *argv[])
 		printf("\t&GAME_NAME(%s)%s\n", drivlist[index], (index == drivcount - 1) ? "" : ",");
 	printf("};\n");
 	printf("\n");
-	
+
 	// also output a global count
 	printf("int driver_list::s_driver_count = %d;\n", drivcount);
 

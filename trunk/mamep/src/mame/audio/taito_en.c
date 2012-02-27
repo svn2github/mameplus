@@ -3,7 +3,7 @@
 #include "taito_en.h"
 
 static int counter,vector_reg,imr_status;
-static UINT16 es5510_dsp_ram[0x200];
+static UINT16   es5510_dsp_ram[0x200];
 static UINT32	es5510_gpr[0xc0];
 static UINT32   es5510_dram[1<<24];
 static UINT32   es5510_dol_latch;
@@ -12,7 +12,7 @@ static UINT32   es5510_dadr_latch;
 static UINT32	es5510_gpr_latch;
 static UINT8    es5510_ram_sel;
 static int timer_mode,m68681_imr;
-static UINT32 *f3_shared_ram;
+static UINT32   *f3_shared_ram;
 
 //static int es_tmp=1;
 

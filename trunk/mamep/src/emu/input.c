@@ -154,7 +154,7 @@ class input_device_relative_item : public input_device_item
 public:
 	// construction/destruction
 	input_device_relative_item(input_device &device, const char *name, void *internal, input_item_id itemid, item_get_state_func getstate);
-	
+
 	// readers
 	virtual INT32 read_as_switch(input_item_modifier modifier);
 	virtual INT32 read_as_relative(input_item_modifier modifier);
@@ -170,7 +170,7 @@ class input_device_absolute_item : public input_device_item
 public:
 	// construction/destruction
 	input_device_absolute_item(input_device &device, const char *name, void *internal, input_item_id itemid, item_get_state_func getstate);
-	
+
 	// readers
 	virtual INT32 read_as_switch(input_item_modifier modifier);
 	virtual INT32 read_as_relative(input_item_modifier modifier);
@@ -184,7 +184,7 @@ public:
 struct code_string_table
 {
 	UINT32 operator[](const char *string) const
-{
+	{
 		for (const code_string_table *current = this; current->m_code != ~0; current++)
 			if (strcmp(current->m_string, string) == 0)
 				return current->m_code;
@@ -602,7 +602,7 @@ const char *joystick_map::to_string(astring &string) const
 		string.catprintf("  ");
 		for (int colnum = 0; colnum < 9; colnum++)
 			switch (m_map[rownum][colnum])
-{
+			{
 				case JOYSTICK_MAP_UP | JOYSTICK_MAP_LEFT:	string.catprintf("7");	break;
 				case JOYSTICK_MAP_UP:						string.catprintf("8");	break;
 				case JOYSTICK_MAP_UP | JOYSTICK_MAP_RIGHT:	string.catprintf("9");	break;
@@ -651,7 +651,7 @@ UINT8 joystick_map::update(INT32 xaxisval, INT32 yaxisval)
 //**************************************************************************
 
 //-------------------------------------------------
-//  input_code - construct an input code from a 
+//  input_code - construct an input code from a
 //  device/item pair
 //-------------------------------------------------
 
@@ -670,7 +670,7 @@ input_code::input_code(input_device &device, input_item_id itemid)
 //**************************************************************************
 
 //-------------------------------------------------
-//  operator+= - append a code to the end of an 
+//  operator+= - append a code to the end of an
 //  input sequence
 //-------------------------------------------------
 
@@ -688,8 +688,8 @@ input_seq &input_seq::operator+=(input_code code)
 
 
 //-------------------------------------------------
-//  operator|= - append a code to a sequence; if 
-//  the sequence is non-empty, insert an OR 
+//  operator|= - append a code to a sequence; if
+//  the sequence is non-empty, insert an OR
 //  before the new code
 //-------------------------------------------------
 
@@ -724,7 +724,7 @@ int input_seq::length() const
 
 
 //-------------------------------------------------
-//  is_valid - return true if a given sequence is 
+//  is_valid - return true if a given sequence is
 //  valid
 //-------------------------------------------------
 
@@ -818,7 +818,7 @@ void input_seq::set(input_code code0, input_code code1, input_code code2, input_
 
 
 //-------------------------------------------------
-//  backspace - "backspace" over the last entry in 
+//  backspace - "backspace" over the last entry in
 //  a sequence
 //-------------------------------------------------
 
@@ -909,7 +909,7 @@ input_item_id input_device::add_item(const char *name, input_item_id itemid, ite
 
 	// make sure we don't have any overlap
 	assert(m_item[itemid] == NULL);
-	
+
 	// determine the class and create the appropriate item class
 	input_device_item *item = NULL;
 	switch (m_class.standard_item_class(originalid))
@@ -1041,7 +1041,7 @@ input_device *input_class::add_device(const char *name, void *internal)
 	for (devindex = 0; devindex < DEVICE_INDEX_MAXIMUM; devindex++)
 		if (m_device[devindex] == NULL)
 			break;
-	
+
 	// call through
 	return add_device(devindex, name, internal);
 }
@@ -1065,7 +1065,7 @@ input_device *input_class::add_device(int devindex, const char *name, void *inte
 
 
 //-------------------------------------------------
-//  standard_item_class - return the class of a 
+//  standard_item_class - return the class of a
 //  standard item
 //-------------------------------------------------
 
@@ -1130,7 +1130,7 @@ input_manager::input_manager(running_machine &machine)
 
 
 //-------------------------------------------------
-//  code_value - return the value of a given 
+//  code_value - return the value of a given
 //  input code
 //-------------------------------------------------
 
@@ -1146,7 +1146,7 @@ INT32 input_manager::code_value(input_code code)
 		input_device *device = device_from_code(code);
 		if (device == NULL)
 			break;
-		
+
 		// also return 0 if the device class is disabled
 		input_class &devclass = *m_class[code.device_class()];
 		if (!devclass.enabled())
@@ -1201,8 +1201,8 @@ INT32 input_manager::code_value(input_code code)
 
 
 //-------------------------------------------------
-//  code_pressed_once - return non-zero if a given 
-//  input code has transitioned from off to on 
+//  code_pressed_once - return non-zero if a given
+//  input code has transitioned from off to on
 //  since the last call
 //-------------------------------------------------
 
@@ -1353,7 +1353,7 @@ input_code input_manager::poll_switches()
 
 
 //-------------------------------------------------
-//  poll_keyboard_switches - poll for any 
+//  poll_keyboard_switches - poll for any
 //  keyboard-specific input
 //-------------------------------------------------
 
@@ -1386,7 +1386,7 @@ input_code input_manager::poll_keyboard_switches()
 
 
 //-------------------------------------------------
-//  code_check_axis - see if axis has moved far 
+//  code_check_axis - see if axis has moved far
 //  enough to trigger a read when polling
 //-------------------------------------------------
 
@@ -1399,7 +1399,7 @@ bool input_manager::code_check_axis(input_device_item &item, input_code code)
     // ignore min/max for lightguns
     // so the selection will not be affected by a gun going out of range
 	INT32 curval = code_value(code);
-    if (code.device_class() == DEVICE_CLASS_LIGHTGUN && 
+    if (code.device_class() == DEVICE_CLASS_LIGHTGUN &&
 		(code.item_id() == ITEM_ID_XAXIS || code.item_id() == ITEM_ID_YAXIS) &&
 		(curval == INPUT_ABSOLUTE_MAX || curval == INPUT_ABSOLUTE_MIN))
         return false;
@@ -1487,14 +1487,14 @@ input_device_item *input_manager::item_from_code(input_code code) const
 	input_device *device = device_from_code(code);
 	if (device == NULL)
 		return NULL;
-	
+
 	// then return the device's item
 	return device->item(code.item_id());
 }
 
 
 //-------------------------------------------------
-//  reset_memory - reset the array of memory for 
+//  reset_memory - reset the array of memory for
 //  pressed switches
 //-------------------------------------------------
 
@@ -1507,7 +1507,7 @@ void input_manager::reset_memory()
 
 
 //-------------------------------------------------
-//  code_from_itemid - translates an input_item_id 
+//  code_from_itemid - translates an input_item_id
 //  to an input_code
 //-------------------------------------------------
 
@@ -1626,7 +1626,7 @@ const char *input_manager::code_to_token(astring &string, input_code code) const
 
 
 //-------------------------------------------------
-//  code_from_token - extract an input code from a 
+//  code_from_token - extract an input code from a
 //  token
 //-------------------------------------------------
 
@@ -1730,7 +1730,7 @@ input_code input_manager::code_from_token(const char *_token)
 
 
 //-------------------------------------------------
-//  seq_pressed - return true if the given sequence 
+//  seq_pressed - return true if the given sequence
 //  of switch inputs is "pressed"
 //-------------------------------------------------
 
@@ -1782,7 +1782,7 @@ bool input_manager::seq_pressed(const input_seq &seq)
 
 
 //-------------------------------------------------
-//  seq_axis_value - return the value of an axis 
+//  seq_axis_value - return the value of an axis
 //  defined in an input sequence
 //-------------------------------------------------
 
@@ -1867,7 +1867,7 @@ INT32 input_manager::seq_axis_value(const input_seq &seq, input_item_class &item
 
 
 //-------------------------------------------------
-//  seq_poll_start - begin polling for a new 
+//  seq_poll_start - begin polling for a new
 //  sequence of the given itemclass
 //-------------------------------------------------
 
@@ -1991,7 +1991,7 @@ bool input_manager::seq_poll()
 
 
 //-------------------------------------------------
-//  seq_name - generate the friendly name of a 
+//  seq_name - generate the friendly name of a
 //  sequence
 //-------------------------------------------------
 
@@ -2044,7 +2044,7 @@ const char *input_manager::seq_name(astring &string, const input_seq &seq) const
 
 
 //-------------------------------------------------
-//  seq_to_tokens - generate the tokenized form of 
+//  seq_to_tokens - generate the tokenized form of
 //  a sequence
 //-------------------------------------------------
 
@@ -2079,7 +2079,7 @@ const char *input_manager::seq_to_tokens(astring &string, const input_seq &seq) 
 
 
 //-------------------------------------------------
-//  seq_from_tokens - generate the tokenized form 
+//  seq_from_tokens - generate the tokenized form
 //  of a sequence
 //-------------------------------------------------
 
@@ -2131,7 +2131,7 @@ void input_manager::seq_from_tokens(input_seq &seq, const char *string)
 
 
 //-------------------------------------------------
-//  set_global_joystick_map - set the joystick map 
+//  set_global_joystick_map - set the joystick map
 //  for all devices
 //-------------------------------------------------
 
@@ -2361,7 +2361,7 @@ INT32 input_device_absolute_item::read_as_switch(input_item_modifier modifier)
 	// start with the current value
 	INT32 result = m_device.apply_deadzone_and_saturation(update_value());
 	assert(result >= INPUT_ABSOLUTE_MIN && result <= INPUT_ABSOLUTE_MAX);
-	
+
 	// left/right/up/down: if this is a joystick, fetch the paired X/Y axis values and convert
 	if (m_device.devclass() == DEVICE_CLASS_JOYSTICK && modifier >= ITEM_MODIFIER_LEFT && modifier <= ITEM_MODIFIER_DOWN)
 	{
@@ -2393,7 +2393,7 @@ INT32 input_device_absolute_item::read_as_switch(input_item_modifier modifier)
 
 
 //-------------------------------------------------
-//  read_as_relative - return the absolute input 
+//  read_as_relative - return the absolute input
 //  as a relative axis value
 //-------------------------------------------------
 
@@ -2415,7 +2415,7 @@ INT32 input_device_absolute_item::read_as_absolute(input_item_modifier modifier)
 	// start with the current value
 	INT32 result = m_device.apply_deadzone_and_saturation(update_value());
 	assert(result >= INPUT_ABSOLUTE_MIN && result <= INPUT_ABSOLUTE_MAX);
-	
+
 	// if we're doing a lightgun reload hack, override the value
 	if (m_device.devclass() == DEVICE_CLASS_LIGHTGUN && m_device.lightgun_reload_button())
 	{

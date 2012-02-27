@@ -657,7 +657,7 @@ void cli_frontend::listslots(const char *gamename)
 		throw emu_fatalerror(MAMERR_NO_SUCH_GAME, "No matching games found for '%s'", gamename);
 
 	// print header
-	printf(" SYSTEM      SLOT NAME    SLOT OPTIONS    SLOT DEVICE NAME     \n");
+	printf(_(" SYSTEM      SLOT NAME    SLOT OPTIONS    SLOT DEVICE NAME     \n"));
 	printf("----------  -----------  --------------  ----------------------\n");
 
 	// iterate over drivers
@@ -670,8 +670,8 @@ void cli_frontend::listslots(const char *gamename)
 		{
 			// output the line, up to the list of extensions
 			printf("%-13s%-10s   ", first ? drivlist.driver().name : "", slot->device().tag()+1);
-			
-			// get the options and print them		
+
+			// get the options and print them
 			const slot_interface* intf = slot->get_slot_interfaces();
 			for (int i = 0; intf && intf[i].name != NULL; i++)
 			{
@@ -849,17 +849,17 @@ void cli_frontend::verifyroms(const char *gamename)
 						switch (summary)
 						{
 							case media_auditor::INCORRECT:
-								mame_printf_info("is bad\n");
+								mame_printf_info(_("is bad\n"));
 								incorrect++;
 								break;
 
 							case media_auditor::CORRECT:
-								mame_printf_info("is good\n");
+								mame_printf_info(_("is good\n"));
 								correct++;
 								break;
 
 							case media_auditor::BEST_AVAILABLE:
-								mame_printf_info("is best available\n");
+								mame_printf_info(_("is best available\n"));
 								correct++;
 								break;
 
@@ -915,17 +915,17 @@ void cli_frontend::verifyroms(const char *gamename)
 								switch (summary)
 								{
 									case media_auditor::INCORRECT:
-										mame_printf_info("is bad\n");
+										mame_printf_info(_("is bad\n"));
 										incorrect++;
 										break;
 
 									case media_auditor::CORRECT:
-										mame_printf_info("is good\n");
+										mame_printf_info(_("is good\n"));
 										correct++;
 										break;
 
 									case media_auditor::BEST_AVAILABLE:
-										mame_printf_info("is best available\n");
+										mame_printf_info(_("is best available\n"));
 										correct++;
 										break;
 
@@ -1525,9 +1525,9 @@ void cli_frontend::execute_commands(const char *exename)
 		{ CLICOMMAND_VERIFYROMS,	&cli_frontend::verifyroms },
 		{ CLICOMMAND_VERIFYSAMPLES,	&cli_frontend::verifysamples },
 		{ CLICOMMAND_LISTMEDIA,		&cli_frontend::listmedia },
-		{ CLICOMMAND_LISTSOFTWARE,  &cli_frontend::listsoftware },
+		{ CLICOMMAND_LISTSOFTWARE,	&cli_frontend::listsoftware },
 		{ CLICOMMAND_ROMIDENT,		&cli_frontend::romident },
-		{ CLICOMMAND_GETSOFTLIST,   &cli_frontend::getsoftlist },
+		{ CLICOMMAND_GETSOFTLIST,	&cli_frontend::getsoftlist },
 		{ CLICOMMAND_LISTGAMES,		&cli_frontend::listgames }		// for make tp_manufact.txt
 	};
 

@@ -613,7 +613,7 @@ const rgb_t *render_texture::get_adjusted_palette(render_container &container)
 			// if no adjustment necessary, return NULL
 			if (!container.has_brightness_contrast_gamma_changes())
 				return NULL;
-				return container.bcg_lookup_table(m_format);
+			return container.bcg_lookup_table(m_format);
 
 		default:
 			assert(FALSE);
@@ -1614,7 +1614,7 @@ void render_target::load_layout_files(const char *layoutfile, bool singlefile)
 	const game_driver &system = m_manager.machine().system();
 	if (!load_layout_file(basename, system.name))
 		have_default |= load_layout_file(basename, "default");
-	else 
+	else
 		have_default |= true;
 
 	// if a default view has been specified, use that as a fallback
@@ -1628,7 +1628,7 @@ void render_target::load_layout_files(const char *layoutfile, bool singlefile)
 	if (cloneof != -1) {
 		if (!load_layout_file(driver_list::driver(cloneof).name, driver_list::driver(cloneof).name))
 			have_default |= load_layout_file(driver_list::driver(cloneof).name, "default");
-		else 
+		else
 			have_default |= true;
 	}
 	screen_device_iterator iter(m_manager.machine().root_device());
@@ -1642,10 +1642,10 @@ void render_target::load_layout_files(const char *layoutfile, bool singlefile)
 			load_layout_file(NULL, layout_horizont);
 		assert_always(m_filelist.count() > 0, "Couldn't parse default layout??");
 	}
-	if (!have_default) 
+	if (!have_default)
 	{
 		if (screens == 0)
-		{			
+		{
 			load_layout_file(NULL, layout_noscreens);
 			assert_always(m_filelist.count() > 0, "Couldn't parse default layout??");
 		}

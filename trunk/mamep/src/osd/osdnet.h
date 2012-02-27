@@ -20,7 +20,7 @@ typedef struct netdev_entry
 class netdev
 {
 public:
-	netdev(class device_network_interface *ifdev, int rate); 
+	netdev(class device_network_interface *ifdev, int rate);
 	virtual ~netdev();
 
 	virtual int send(UINT8 *buf, int len);
@@ -35,7 +35,7 @@ protected:
 
 private:
 	void recv(void *ptr, int param);
-	
+
 	class device_network_interface *m_dev;
 };
 

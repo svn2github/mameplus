@@ -74,7 +74,7 @@ READ8_DEVICE_HANDLER(atari_pia_pb_r)
 
 WRITE8_DEVICE_HANDLER(a600xl_pia_pb_w) { a600xl_mmu(device->machine(), data); }
 
-WRITE_LINE_DEVICE_HANDLER(atari_pia_cb2_w) { } // This is used by Floppy drive on Atari 8bits Home Computers
+WRITE_LINE_DEVICE_HANDLER(atari_pia_cb2_w) { }	// This is used by Floppy drive on Atari 8bits Home Computers
 
 const pia6821_interface atarixl_pia_interface =
 {

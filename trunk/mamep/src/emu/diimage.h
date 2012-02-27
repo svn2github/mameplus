@@ -279,11 +279,11 @@ protected:
 	static const image_device_type_info *find_device_type(iodevice_t type);
 	static const image_device_type_info m_device_info_array[];
 
-    /* error related info */
-    image_error_t m_err;
-    astring m_err_message;
+	/* error related info */
+	image_error_t m_err;
+	astring m_err_message;
 
-    /* variables that are only non-zero when an image is mounted */
+	/* variables that are only non-zero when an image is mounted */
 	core_file *m_file;
 	emu_file *m_mame_file;
 	astring m_image_name;
@@ -300,29 +300,29 @@ protected:
 	software_part *m_software_part_ptr;
 	char *m_software_list_name;
 
-    /* info read from the hash file/software list */
+	/* info read from the hash file/software list */
 	astring m_longname;
 	astring m_manufacturer;
 	astring m_year;
 	UINT32  m_supported;
 
-    /* flags */
-    bool m_readonly;
-    bool m_created;
+	/* flags */
+	bool m_readonly;
+	bool m_created;
 	bool m_init_phase;
 	bool m_from_swlist;
 
-    /* special - used when creating */
-    int m_create_format;
-    option_resolution *m_create_args;
+	/* special - used when creating */
+	int m_create_format;
+	option_resolution *m_create_args;
 
 	hash_collection m_hash;
 
 	astring m_brief_instance_name;
 	astring m_instance_name;
 
-    /* creation info */
-    image_device_format *m_formatlist;
+	/* creation info */
+	image_device_format *m_formatlist;
 
 	bool m_is_loading;
 };

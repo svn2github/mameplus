@@ -332,9 +332,9 @@ const options_entry windows_options::s_option_entries[] =
 	{ WINOPTION_FILTER ";d3dfilter;flt",              "1",        OPTION_BOOLEAN,    "enable bilinear filtering on screen output" },
 
 	// post-processing options
-	{ NULL,                                              		NULL,        OPTION_HEADER,     "DIRECT3D POST-PROCESSING OPTIONS" },
-	{ WINOPTION_HLSL_ENABLE";hlsl",            					"0",       	 OPTION_BOOLEAN,    "enable HLSL post-processing (PS3.0 required)" },
-	{ WINOPTION_HLSLPATH,                                    	"hlsl",   	 OPTION_STRING,     "path to hlsl files" },
+	{ NULL,                                             		NULL,        OPTION_HEADER,     "DIRECT3D POST-PROCESSING OPTIONS" },
+	{ WINOPTION_HLSL_ENABLE";hlsl",         					"0",         OPTION_BOOLEAN,    "enable HLSL post-processing (PS3.0 required)" },
+	{ WINOPTION_HLSLPATH,                                   	"hlsl",      OPTION_STRING,     "path to hlsl files" },
 	{ WINOPTION_HLSL_INI_READ,									"0",		 OPTION_BOOLEAN,	"enable HLSL INI reading" },
 	{ WINOPTION_HLSL_INI_WRITE,									"0",		 OPTION_BOOLEAN,	"enable HLSL INI writing" },
 	{ WINOPTION_HLSL_INI_NAME,      							"%g",        OPTION_STRING,     "HLSL INI file name for this game" },
@@ -342,23 +342,23 @@ const options_entry windows_options::s_option_entries[] =
 	{ WINOPTION_HLSL_PRESCALE_Y,        						"0",         OPTION_INTEGER,    "HLSL pre-scale override factor for Y (0 for auto)" },
 	{ WINOPTION_HLSL_PRESET";(-1-3)",                           "-1",        OPTION_INTEGER,    "HLSL preset to use (0-3)" },
 	{ WINOPTION_HLSL_WRITE,         					        NULL,        OPTION_STRING,     "enable HLSL AVI writing (huge disk bandwidth suggested)" },
-	{ WINOPTION_HLSL_SNAP_WIDTH,         					    "2048",      OPTION_STRING,     "HLSL upscaled-snapshot width" },
-	{ WINOPTION_HLSL_SNAP_HEIGHT,         					    "1536",      OPTION_STRING,     "HLSL upscaled-snapshot height" },
-	{ WINOPTION_SHADOW_MASK_ALPHA";fs_shadwa(0.0-1.0)",         "0.0",     	 OPTION_FLOAT,    	"shadow mask alpha-blend value (1.0 is fully blended, 0.0 is no mask)" },
+	{ WINOPTION_HLSL_SNAP_WIDTH,        					    "2048",      OPTION_STRING,     "HLSL upscaled-snapshot width" },
+	{ WINOPTION_HLSL_SNAP_HEIGHT,       					    "1536",      OPTION_STRING,     "HLSL upscaled-snapshot height" },
+	{ WINOPTION_SHADOW_MASK_ALPHA";fs_shadwa(0.0-1.0)",         "0.0",       OPTION_FLOAT,      "shadow mask alpha-blend value (1.0 is fully blended, 0.0 is no mask)" },
 	{ WINOPTION_SHADOW_MASK_TEXTURE";fs_shadwt(0.0-1.0)",       "aperture.png", OPTION_STRING,  "shadow mask texture name" },
 	{ WINOPTION_SHADOW_MASK_COUNT_X";fs_shadww",				"320",		 OPTION_INTEGER,	"shadow mask width, in phosphor dots" },
 	{ WINOPTION_SHADOW_MASK_COUNT_Y";fs_shadwh",				"240",		 OPTION_INTEGER,	"shadow mask height, in phosphor dots" },
 	{ WINOPTION_SHADOW_MASK_USIZE";fs_shadwu(0.0-1.0)",			"0.09375",	 OPTION_FLOAT,		"shadow mask texture size in U direction" },
 	{ WINOPTION_SHADOW_MASK_VSIZE";fs_shadwv(0.0-1.0)",			"0.109375",	 OPTION_FLOAT,		"shadow mask texture size in V direction" },
-	{ WINOPTION_CURVATURE";fs_curv(0.0-4.0)",            		"0.0",       OPTION_FLOAT,    	"screen curvature amount" },
+	{ WINOPTION_CURVATURE";fs_curv(0.0-4.0)",           		"0.0",       OPTION_FLOAT,  	"screen curvature amount" },
 	/* Beam-related values below this line*/
-	{ WINOPTION_PINCUSHION";fs_pin(0.0-4.0)",            		"0.0",       OPTION_FLOAT,    	"pincushion amount" },
-	{ WINOPTION_SCANLINE_AMOUNT";fs_scanam(0.0-4.0)",       	"0.0",       OPTION_FLOAT,    	"overall alpha scaling value for scanlines" },
-	{ WINOPTION_SCANLINE_SCALE";fs_scansc(0.0-4.0)",        	"1.0",       OPTION_FLOAT,    	"overall height scaling value for scanlines" },
+	{ WINOPTION_PINCUSHION";fs_pin(0.0-4.0)",           		"0.0",       OPTION_FLOAT,  	"pincushion amount" },
+	{ WINOPTION_SCANLINE_AMOUNT";fs_scanam(0.0-4.0)",       	"0.0",       OPTION_FLOAT,  	"overall alpha scaling value for scanlines" },
+	{ WINOPTION_SCANLINE_SCALE";fs_scansc(0.0-4.0)",        	"1.0",       OPTION_FLOAT,  	"overall height scaling value for scanlines" },
 	{ WINOPTION_SCANLINE_HEIGHT";fs_scanh(0.0-4.0)",        	"0.7",       OPTION_FLOAT,  	"individual height scaling value for scanlines" },
 	{ WINOPTION_SCANLINE_BRIGHT_SCALE";fs_scanbs(0.0-2.0)", 	"1.0",       OPTION_FLOAT,  	"overall brightness scaling value for scanlines (multiplicative)" },
 	{ WINOPTION_SCANLINE_BRIGHT_OFFSET";fs_scanbo(0.0-1.0)",	"0.0",       OPTION_FLOAT,  	"overall brightness offset value for scanlines (additive)" },
-	{ WINOPTION_SCANLINE_OFFSET";fs_scanjt(0.0-4.0)",       	"0.0",       OPTION_FLOAT,    	"overall interlace jitter scaling value for scanlines" },
+	{ WINOPTION_SCANLINE_OFFSET";fs_scanjt(0.0-4.0)",       	"0.0",       OPTION_FLOAT,  	"overall interlace jitter scaling value for scanlines" },
 	{ WINOPTION_DEFOCUS";fs_focus",				            	"0.0,0.0",   OPTION_STRING,     "overall defocus value in screen-relative coords" },
 	{ WINOPTION_CONVERGE_X";fs_convx",      					"0.0,0.0,0.0",OPTION_STRING,	"convergence in screen-relative X direction" },
 	{ WINOPTION_CONVERGE_Y";fs_convy",      					"0.0,0.0,0.0",OPTION_STRING,	"convergence in screen-relative Y direction" },
@@ -375,7 +375,7 @@ const options_entry windows_options::s_option_entries[] =
 	{ WINOPTION_FLOOR";fs_floor",           					"0.0,0.0,0.0",OPTION_STRING,    "signal floor level" },
 	{ WINOPTION_PHOSPHOR";fs_phosphor",         				"0.0,0.0,0.0",OPTION_STRING,    "phosphorescence decay rate (0.0 is instant, 1.0 is forever)" },
 	/* NTSC simulation below this line */
-	{ WINOPTION_YIQ_ENABLE";yiq",            					"0",       	 OPTION_BOOLEAN,    "enable YIQ-space HLSL post-processing" },
+	{ WINOPTION_YIQ_ENABLE";yiq",           					"0",    	 OPTION_BOOLEAN,    "enable YIQ-space HLSL post-processing" },
 	{ WINOPTION_YIQ_CCVALUE";yiqcc",							"3.59754545",OPTION_FLOAT,		"Color Carrier frequency for NTSC signal processing" },
 	{ WINOPTION_YIQ_AVALUE";yiqa",								"0.5",		 OPTION_FLOAT,		"A value for NTSC signal processing" },
 	{ WINOPTION_YIQ_BVALUE";yiqb",								"0.5",  	 OPTION_FLOAT,		"B value for NTSC signal processing" },
@@ -420,7 +420,7 @@ const options_entry windows_options::s_option_entries[] =
 	{ WINOPTION_TRIPLEBUFFER ";tb",                   "0",        OPTION_BOOLEAN,    "enable triple buffering" },
 	{ WINOPTION_SWITCHRES,                            "0",        OPTION_BOOLEAN,    "enable resolution switching" },
 	{ WINOPTION_FULLSCREENBRIGHTNESS ";fsb(0.1-2.0)", "1.0",      OPTION_FLOAT,      "brightness value in full screen mode" },
-	{ WINOPTION_FULLSCREENCONTRAST ";fsc(0.1-2.0)",  "1.0",      OPTION_FLOAT,      "contrast value in full screen mode" },
+	{ WINOPTION_FULLSCREENCONTRAST ";fsc(0.1-2.0)",   "1.0",      OPTION_FLOAT,      "contrast value in full screen mode" },
 	{ WINOPTION_FULLSCREENGAMMA ";fsg(0.1-3.0)",      "1.0",      OPTION_FLOAT,      "gamma value in full screen mode" },
 
 	// sound options
@@ -716,8 +716,8 @@ void windows_osd_interface::init(running_machine &machine)
 	}
 
 	// initialize sockets
-	win_init_sockets();	
-	
+	win_init_sockets();
+
 	// note the existence of a machine
 	g_current_machine = &machine;
 }
@@ -734,7 +734,7 @@ void windows_osd_interface::osd_exit(running_machine &machine)
 
 	// cleanup sockets
 	win_cleanup_sockets();
-	
+
 	#ifdef USE_NETWORK
 	winnetdev_deinit(machine);
 	#endif
@@ -913,7 +913,7 @@ bool windows_osd_interface::font_get_bitmap(osd_font font, unicode_char chnum, b
 	info.bmiHeader.biClrUsed = 0;
 	info.bmiHeader.biClrImportant = 0;
 	RGBQUAD col1 = info.bmiColors[0];
-	RGBQUAD col2 = info.bmiColors[1];	
+	RGBQUAD col2 = info.bmiColors[1];
 	col1.rgbBlue = col1.rgbGreen = col1.rgbRed = 0x00;
 	col2.rgbBlue = col2.rgbGreen = col2.rgbRed = 0xff;
 

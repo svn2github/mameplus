@@ -50,8 +50,8 @@
 //**************************************************************************
 
 // core commands
-#define CLICOMMAND_HELP					"help"
-#define CLICOMMAND_VALIDATE				"validate"
+#define CLICOMMAND_HELP				"help"
+#define CLICOMMAND_VALIDATE			"validate"
 
 // configuration commands
 #define CLICOMMAND_CREATECONFIG			"createconfig"
@@ -59,17 +59,17 @@
 #define CLICOMMAND_SHOWUSAGE			"showusage"
 
 // frontend commands
-#define CLICOMMAND_LISTXML				"listxml"
-#define CLICOMMAND_LISTFULL				"listfull"
+#define CLICOMMAND_LISTXML			"listxml"
+#define CLICOMMAND_LISTFULL			"listfull"
 #define CLICOMMAND_LISTSOURCE			"listsource"
 #define CLICOMMAND_LISTCLONES			"listclones"
 #define CLICOMMAND_LISTBROTHERS			"listbrothers"
-#define CLICOMMAND_LISTCRC				"listcrc"
-#define CLICOMMAND_LISTROMS				"listroms"
+#define CLICOMMAND_LISTCRC			"listcrc"
+#define CLICOMMAND_LISTROMS			"listroms"
 #define CLICOMMAND_LISTSAMPLES			"listsamples"
 #define CLICOMMAND_VERIFYROMS			"verifyroms"
 #define CLICOMMAND_VERIFYSAMPLES		"verifysamples"
-#define CLICOMMAND_ROMIDENT				"romident"
+#define CLICOMMAND_ROMIDENT			"romident"
 #define CLICOMMAND_LISTDEVICES			"listdevices"
 #define CLICOMMAND_LISTSLOTS			"listslots"
 #define CLICOMMAND_LISTMEDIA			"listmedia"		// needed by MESS

@@ -421,7 +421,7 @@ public:
 	const pen_t *			pens;				// remapped palette pen numbers
 	colortable_t *			colortable;			// global colortable for remapping
 	pen_t *					shadow_table;		// table for looking up a shadowed pen
-	bitmap_ind8			priority_bitmap;	// priority bitmap
+	bitmap_ind8				priority_bitmap;	// priority bitmap
 
 	// debugger-related information
 	UINT32					debug_flags;		// the current debug flags
@@ -698,7 +698,7 @@ protected:
 
 	legacy_callback_func	m_callbacks[CB_COUNT];		// generic legacy callbacks
 	palette_init_func		m_palette_init;				// one-time palette init callback
-	
+
 	// generic pointers
 	optional_shared_ptr<UINT8> m_generic_paletteram;
 	optional_shared_ptr<UINT16> m_generic_paletteram16;

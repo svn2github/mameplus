@@ -320,7 +320,7 @@ static astring &nvram_filename(astring &result, device_t &device)
 {
 	running_machine &machine = device.machine();
 
-	// start with either basename or basename_biosnum	
+	// start with either basename or basename_biosnum
 	result.cpy(machine.basename());
 	if (rom_system_bios(machine) != 0 && rom_default_bios(machine) != rom_system_bios(machine))
 		result.catprintf("_%d", rom_system_bios(machine) - 1);
@@ -343,10 +343,10 @@ void nvram_load(running_machine &machine)
 {
 	if (machine.config().m_nvram_handler != NULL)
 	{
-	astring filename;
-	emu_file file(machine.options().nvram_directory(), OPEN_FLAG_READ);
+		astring filename;
+		emu_file file(machine.options().nvram_directory(), OPEN_FLAG_READ);
 		if (file.open(nvram_filename(filename, machine.root_device()), ".nv") == FILERR_NONE)
-	{
+		{
 			(*machine.config().m_nvram_handler)(machine, &file, FALSE);
 			file.close();
 		}

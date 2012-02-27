@@ -66,9 +66,9 @@ void cdrom_image_device::device_config_complete()
 	format->m_extensions  = "chd,cue,toc,nrg,gdi";
 	format->m_optspec     = cd_option_spec;
 	format->m_next		  = NULL;
-	
+
 	m_formatlist = format;
-	
+
 	// set brief and instance name
 	update_names();
 }

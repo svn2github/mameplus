@@ -931,7 +931,7 @@ done:
 		if(m_err) clear();
 		return m_err ? IMAGE_INIT_FAIL : IMAGE_INIT_PASS;
 	}
-    if (m_err!=0) {
+	if (m_err!=0) {
 		if (!m_init_phase)
 		{
 			if (device().machine().phase() == MACHINE_PHASE_RUNNING)

@@ -142,7 +142,7 @@ private:
 	void					end_avi_recording();
 	void					begin_avi_recording(const char *name);
 
-	bool 					screen_encountered[9];		// whether a given screen was encountered this frame
+	bool					screen_encountered[9];		// whether a given screen was encountered this frame
 
 	d3d *                   d3dintf;					// D3D interface
 	win_window_info *       window;						// D3D window info
@@ -198,10 +198,10 @@ private:
 
 	// render targets
 	int						raw_target_idx[9];			// Number of targets currently in use
-	int				target_use_count[9];		// Whether or not a target has been used yet
+	int						target_use_count[9];		// Whether or not a target has been used yet
 	d3d_texture_info *		target_in_use[9];			// Target texture that is currently in use
-	int				target_width[9];			// Render target width
-	int				target_height[9];			// Render target height
+	int						target_width[9];			// Render target width
+	int						target_height[9];			// Render target height
 	d3d_surface *			last_target[9];				// Render target surface pointer for each screen's previous frame
 	d3d_texture *			last_texture[9];			// Render target texture pointer for each screen's previous frame
 	d3d_surface *			prescaletarget0[9];			// Render target surface pointer (prescale, if necessary)

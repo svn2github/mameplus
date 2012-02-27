@@ -88,7 +88,7 @@ const char *driverpath = m_enumerator.config().root_device().searchpath();
 	{
 		// determine the search path for this source and iterate through the regions
 		m_searchpath = device->searchpath();
-		
+
 		// now iterate over regions and ROMs within
 		for (const rom_entry *region = rom_first_region(*device); region != NULL; region = rom_next_region(region))
 		{
@@ -110,7 +110,7 @@ m_searchpath = combinedpath;
 					if (shared_device != NULL)
 						shared_required++;
 				}
-				
+
 				// audit a file
 				audit_record *record = NULL;
 				if (ROMREGION_ISROMDATA(region))
@@ -119,7 +119,7 @@ m_searchpath = combinedpath;
 				// audit a disk
 				else if (ROMREGION_ISDISKDATA(region))
 					record = audit_one_disk(rom);
-				
+
 				if (record != NULL)
 				{
 					// count the number of files that are found.
@@ -142,14 +142,14 @@ m_searchpath = combinedpath;
 		m_record_list.reset();
 		return NOTFOUND;
 	}
-	
+
 	// return a summary
 	return summarize(m_enumerator.driver().name);
 }
 
 
 //-------------------------------------------------
-//  audit_device - audit the device 
+//  audit_device - audit the device
 //-------------------------------------------------
 
 media_auditor::summary media_auditor::audit_device(device_t *device, const char *validation)
@@ -219,7 +219,7 @@ media_auditor::summary media_auditor::audit_samples()
 	int found = 0;
 
 	// iterate over sample entries
-	samples_device_iterator iter(m_enumerator.config().root_device()); 
+	samples_device_iterator iter(m_enumerator.config().root_device());
 	for (samples_device *device = iter.first(); device != NULL; device = iter.next())
 	{
 		// by default we just search using the driver name
@@ -259,7 +259,7 @@ media_auditor::summary media_auditor::audit_samples()
 			}
 		}
 	}
-	
+
 	if (found == 0 && required > 0)
 	{
 		m_record_list.reset();
@@ -335,7 +335,7 @@ media_auditor::summary media_auditor::summarize(const char *name, astring *strin
 					device_t *shared_device = record->shared_device();
 					if (shared_device == NULL)
 						string->catprintf(_("NOT FOUND\n"));
-					else
+					else 
 						string->catprintf(_("NOT FOUND (%s)\n"), shared_device->shortname());
 				}
 				break;
@@ -386,7 +386,7 @@ audit_record *media_auditor::audit_one_rom(const rom_entry *rom)
 			filerr = file.open(curpath, crc);
 		else
 			filerr = file.open(curpath);
-		
+
 		// if it worked, get the actual length and hashes, then stop
 		if (filerr == FILERR_NONE)
 		{
@@ -413,7 +413,7 @@ audit_record *media_auditor::audit_one_disk(const rom_entry *rom)
 	// open the disk
 	chd_file source;
 	chd_error err = chd_error(open_disk_image(m_enumerator.options(), &m_enumerator.driver(), rom, source, NULL));
-	
+
 	// if we succeeded, get the hashes
 	if (err == CHDERR_NONE)
 	{
@@ -422,11 +422,11 @@ audit_record *media_auditor::audit_one_disk(const rom_entry *rom)
 		// if there's a SHA1 hash, add them to the output hash
 		if (source.sha1() != sha1_t::null)
 			hashes.add_sha1(source.sha1());
-		
+
 		// update the actual values
 		record.set_actual(hashes);
 	}
-	
+
 	// compute the final status
 	compute_status(record, rom, err == CHDERR_NONE);
 	return &record;

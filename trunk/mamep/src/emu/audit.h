@@ -89,16 +89,16 @@ public:
 	// substatus values
 	enum audit_substatus
 	{
-	SUBSTATUS_GOOD = 0,
-	SUBSTATUS_GOOD_NEEDS_REDUMP,
-	SUBSTATUS_FOUND_NODUMP,
-	SUBSTATUS_FOUND_BAD_CHECKSUM,
-	SUBSTATUS_FOUND_WRONG_LENGTH,
-	SUBSTATUS_NOT_FOUND,
-	SUBSTATUS_NOT_FOUND_NODUMP,
-	SUBSTATUS_NOT_FOUND_OPTIONAL,
-	SUBSTATUS_ERROR = 100
-};
+		SUBSTATUS_GOOD = 0,
+		SUBSTATUS_GOOD_NEEDS_REDUMP,
+		SUBSTATUS_FOUND_NODUMP,
+		SUBSTATUS_FOUND_BAD_CHECKSUM,
+		SUBSTATUS_FOUND_WRONG_LENGTH,
+		SUBSTATUS_NOT_FOUND,
+		SUBSTATUS_NOT_FOUND_NODUMP,
+		SUBSTATUS_NOT_FOUND_OPTIONAL,
+		SUBSTATUS_ERROR = 100
+	};
 
 	// construction/destruction
 	audit_record(const rom_entry &media, media_type type);
@@ -143,7 +143,7 @@ private:
 	const char *		m_name;					/* name of item */
 	UINT64				m_explength;			/* expected length of item */
 	UINT64				m_length;				/* actual length of item */
-	hash_collection		m_exphashes;      		/* expected hash data */
+	hash_collection		m_exphashes;    		/* expected hash data */
 	hash_collection		m_hashes;				/* actual hash information */
 	device_t *			m_shared_device;		/* device that shares the rom */
 };
@@ -167,7 +167,7 @@ public:
 
 	// construction/destruction
 	media_auditor(const driver_enumerator &enumerator);
-	
+
 	// getters
 	audit_record *first() const { return m_record_list.first(); }
 	int count() const { return m_record_list.count(); }
@@ -177,7 +177,7 @@ public:
 	summary audit_device(device_t *device, const char *validation = AUDIT_VALIDATE_FULL);
 	summary audit_samples();
 	summary summarize(const char *name,astring *output = NULL);
-	
+
 private:
 	// internal helpers
 	audit_record *audit_one_rom(const rom_entry *rom);

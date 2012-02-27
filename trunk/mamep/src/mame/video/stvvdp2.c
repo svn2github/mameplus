@@ -2989,10 +2989,10 @@ static void stv_vdp2_draw_basic_bitmap(running_machine &machine, bitmap_rgb32 &b
 						{
 							if (((xcnt + 1) <= screen_x) && (ycnt <= screen_y))
 							{
-							if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
-								bitmap.pix32(ycnt, xcnt+1) = machine.pens[((gfxdata[0] & 0x0f) >> 0) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset];
-							else
-								bitmap.pix32(ycnt, xcnt+1) = alpha_blend_r32(bitmap.pix32(ycnt, xcnt+1), machine.pens[((gfxdata[0] & 0x0f) >> 0) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset], stv2_current_tilemap.alpha);
+								if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
+									bitmap.pix32(ycnt, xcnt+1) = machine.pens[((gfxdata[0] & 0x0f) >> 0) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset];
+								else
+									bitmap.pix32(ycnt, xcnt+1) = alpha_blend_r32(bitmap.pix32(ycnt, xcnt+1), machine.pens[((gfxdata[0] & 0x0f) >> 0) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset], stv2_current_tilemap.alpha);
 							}
 						}
 					}
@@ -3002,10 +3002,10 @@ static void stv_vdp2_draw_basic_bitmap(running_machine &machine, bitmap_rgb32 &b
 						{
 							if (((xcnt + 0) <= screen_x) && (ycnt <= screen_y))
 							{
-							if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
-								bitmap.pix32(ycnt, xcnt) = machine.pens[((gfxdata[0] & 0xf0) >> 4) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset];
-							else
-								bitmap.pix32(ycnt, xcnt) = alpha_blend_r32(bitmap.pix32(ycnt, xcnt), machine.pens[((gfxdata[0] & 0xf0) >> 4) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset], stv2_current_tilemap.alpha);
+								if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
+									bitmap.pix32(ycnt, xcnt) = machine.pens[((gfxdata[0] & 0xf0) >> 4) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset];
+								else
+									bitmap.pix32(ycnt, xcnt) = alpha_blend_r32(bitmap.pix32(ycnt, xcnt), machine.pens[((gfxdata[0] & 0xf0) >> 4) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset], stv2_current_tilemap.alpha);
 							}
 						}
 					}
@@ -3034,10 +3034,10 @@ static void stv_vdp2_draw_basic_bitmap(running_machine &machine, bitmap_rgb32 &b
 							{
 								if (((xcnt + 0) <= screen_x) && (ycnt <= screen_y))
 								{
-								if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
-									bitmap.pix32(ycnt, xcnt) = machine.pens[(gfxdata[xs] & 0xff) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset];
-								else
-									bitmap.pix32(ycnt, xcnt) = alpha_blend_r32(bitmap.pix32(ycnt, xcnt), machine.pens[(gfxdata[xs] & 0xff) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset], stv2_current_tilemap.alpha);
+									if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
+										bitmap.pix32(ycnt, xcnt) = machine.pens[(gfxdata[xs] & 0xff) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset];
+									else
+										bitmap.pix32(ycnt, xcnt) = alpha_blend_r32(bitmap.pix32(ycnt, xcnt), machine.pens[(gfxdata[xs] & 0xff) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset], stv2_current_tilemap.alpha);
 								}
 							}
 						}
@@ -3076,10 +3076,10 @@ static void stv_vdp2_draw_basic_bitmap(running_machine &machine, bitmap_rgb32 &b
 							{
 								if (((xcnt + 0) <= screen_x) && (ycnt <= screen_y))
 								{
-								if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
-									bitmap.pix32(ycnt, xcnt) = machine.pens[(gfxdata[xs] & 0xff) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset];
-								else
-									bitmap.pix32(ycnt, xcnt) = alpha_blend_r32(bitmap.pix32(ycnt, xcnt), machine.pens[(gfxdata[xs] & 0xff) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset], stv2_current_tilemap.alpha);
+									if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
+										bitmap.pix32(ycnt, xcnt) = machine.pens[(gfxdata[xs] & 0xff) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset];
+									else
+										bitmap.pix32(ycnt, xcnt) = alpha_blend_r32(bitmap.pix32(ycnt, xcnt), machine.pens[(gfxdata[xs] & 0xff) | (stv2_current_tilemap.bitmap_palette_number * 0x100) | pal_color_offset], stv2_current_tilemap.alpha);
 								}
 							}
 						}
@@ -3101,10 +3101,10 @@ static void stv_vdp2_draw_basic_bitmap(running_machine &machine, bitmap_rgb32 &b
 						{
 							if (((xcnt + 0) <= screen_x) && (ycnt <= screen_y))
 							{
-							if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
-								bitmap.pix32(ycnt, xcnt) = machine.pens[((gfxdata[0] & 0x07) * 0x100) | (gfxdata[1] & 0xff) | pal_color_offset];
-							else
-								bitmap.pix32(ycnt, xcnt) = alpha_blend_r32(bitmap.pix32(ycnt, xcnt), machine.pens[((gfxdata[0] & 0x07) * 0x100) | (gfxdata[1] & 0xff) | pal_color_offset], stv2_current_tilemap.alpha);
+								if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
+									bitmap.pix32(ycnt, xcnt) = machine.pens[((gfxdata[0] & 0x07) * 0x100) | (gfxdata[1] & 0xff) | pal_color_offset];
+								else
+									bitmap.pix32(ycnt, xcnt) = alpha_blend_r32(bitmap.pix32(ycnt, xcnt), machine.pens[((gfxdata[0] & 0x07) * 0x100) | (gfxdata[1] & 0xff) | pal_color_offset], stv2_current_tilemap.alpha);
 							}
 						}
 					}
@@ -3148,10 +3148,10 @@ static void stv_vdp2_draw_basic_bitmap(running_machine &machine, bitmap_rgb32 &b
 							{
 								if (((xcnt + 0) <= screen_x) && (ycnt <= screen_y))
 								{
-								if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
-									destline[xcnt] = MAKE_RGB(r, g, b);
-								else
-									destline[xcnt] = alpha_blend_r32( destline[xcnt], MAKE_RGB(r, g, b), stv2_current_tilemap.alpha );
+									if ( stv2_current_tilemap.colour_calculation_enabled == 0 )
+										destline[xcnt] = MAKE_RGB(r, g, b);
+									else
+										destline[xcnt] = alpha_blend_r32( destline[xcnt], MAKE_RGB(r, g, b), stv2_current_tilemap.alpha );
 								}
 							}
 						}

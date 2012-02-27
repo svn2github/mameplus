@@ -143,7 +143,7 @@ file_error common_process_file(emu_options &options, const char *location, bool 
 
 chd_file *get_disk_handle(running_machine &machine, const char *region)
 {
- 	for (open_chd *curdisk = machine.romload_data->chd_list.first(); curdisk != NULL; curdisk = curdisk->next())
+	for (open_chd *curdisk = machine.romload_data->chd_list.first(); curdisk != NULL; curdisk = curdisk->next())
 		if (strcmp(curdisk->region(), region) == 0)
 			return &curdisk->chd();
 	return NULL;
@@ -1137,8 +1137,8 @@ static chd_error open_disk_diff(emu_options &options, const rom_entry *romp, chd
 		return diff_chd.open(fullpath, true, &source);
 	}
 
-		/* didn't work; try creating it instead */
-		LOG(("Creating differencing image: %s\n", fname.cstr()));
+	/* didn't work; try creating it instead */
+	LOG(("Creating differencing image: %s\n", fname.cstr()));
 	diff_file.set_openflags(OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 	filerr = diff_file.open(fname);
 	if (filerr == FILERR_NONE)

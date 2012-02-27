@@ -230,7 +230,7 @@ static void hiscore_load (running_machine &machine)
 				UINT8 *data = global_alloc_array(UINT8, mem_range->num_bytes);
 				if (data)
 				{
-					/*  this buffer will almost certainly be small
+			/*  this buffer will almost certainly be small
                         enough to be dynamically allocated, but let's
                         avoid memory trashing just in case */
 					f.read(data, mem_range->num_bytes);

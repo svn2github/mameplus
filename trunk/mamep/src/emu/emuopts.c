@@ -307,14 +307,14 @@ bool emu_options::add_slot_options(bool isfirst)
 
 		// retrieve info about the device instance
 		if (!exists(slot->device().tag() + 1)) {
-		
+
 			// add the option
 			entry[0].name = slot->device().tag() + 1;
 			entry[0].description = NULL;
 			entry[0].flags = OPTION_STRING | OPTION_FLAG_DEVICE;
 			entry[0].defvalue = (slot->get_slot_interfaces() != NULL) ? slot->get_default_card(config,*this) : NULL;
 			add_entries(entry, true);
-			
+
 			added = true;
 		}
 	}
@@ -322,8 +322,8 @@ bool emu_options::add_slot_options(bool isfirst)
 }
 
 //-------------------------------------------------
-// update_slot_options - update slot values
-// depending of image mounted
+//  update_slot_options - update slot values
+//  depending of image mounted
 //-------------------------------------------------
 
 void emu_options::update_slot_options()

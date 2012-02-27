@@ -105,7 +105,7 @@ void legacy_image_device_base::device_config_complete()
 	}
 
 	update_names();
-	
+
 	// Override in case of hardcoded values
 	if (strlen(get_legacy_string(DEVINFO_STR_IMAGE_INSTANCE_NAME))>0) {
 		m_instance_name = get_legacy_string(DEVINFO_STR_IMAGE_INSTANCE_NAME);

@@ -178,7 +178,7 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 	hash_collection hashes;
 	astring all_functions;
 	char functions;
-//	iodevice_t device;
+//  iodevice_t device;
 	int i;
 
 	switch(state->pos)
@@ -198,7 +198,7 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 			{
 				// we are now examining a hash tag
 				name = NULL;
-//				device = IO_COUNT;
+//              device = IO_COUNT;
 
 				while(attributes[0])
 				{
@@ -226,7 +226,7 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 							unknown_attribute_value(state, attributes[0], attributes[1]);
 						else
 						{
-	 //   						device = (iodevice_t) i;
+	 //                         device = (iodevice_t) i;
 						}
 					}
 					else
@@ -556,7 +556,7 @@ const char *read_hash_config(device_image_interface &image, const char *sysname)
 		return NULL;
 	}
 
-	extra_info = auto_strdup(image.device().machine(),info->extrainfo);
+	extra_info = auto_strdup(image.device().machine(), info->extrainfo);
 	if (!extra_info)
 	{
 		hashfile_close(hashfile);

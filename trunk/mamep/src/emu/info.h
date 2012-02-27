@@ -53,7 +53,7 @@ class info_xml_creator
 public:
 	// construction/destruction
 	info_xml_creator(driver_enumerator &drivlist);
-	
+
 	// output
 	void output(FILE *out);
 
@@ -79,7 +79,7 @@ private:
 
 	void output_one_device(device_t &device, const char *devtag);
 	void output_devices();
-	
+
 	const char *get_merge_name(const hash_collection &romhashes);
 
 	// internal state

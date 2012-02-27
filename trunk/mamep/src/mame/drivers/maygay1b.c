@@ -4633,7 +4633,7 @@ GAME( 1993, m1coro30h	,m1coro		,m1,m1,m1, ROT0, "Maygay", "Coronation Street (Ma
 GAME( 1993, m1coro21v	,m1coro		,m1,m1,m1, ROT0, "Maygay", "Coronation Street (Maygay) v2.1 (Multivend) (M1A/B)",GAME_FLAGS )
 GAME( 1993, m1coro21vp	,m1coro		,m1,m1,m1, ROT0, "Maygay", "Coronation Street (Maygay) v2.1 (Multivend) (Protocol)(M1A/B)",GAME_FLAGS )
 
-GAME( 1995, m1cororr	,0			,m1,m1,m1, ROT0, "Maygay", "Coronation Street - Rovers Return (Maygay) (set 1) (M1A/B)",GAME_FLAGS )
+GAME( 1995, m1cororr	,0		,m1,m1,m1, ROT0, "Maygay", "Coronation Street - Rovers Return (Maygay) (set 1) (M1A/B)",GAME_FLAGS )
 GAME( 1995, m1cororrp	,m1cororr	,m1,m1,m1, ROT0, "Maygay", "Coronation Street - Rovers Return (Maygay) (set 1) (Protocol) (M1A/B)",GAME_FLAGS )
 GAME( 1995, m1cororra	,m1cororr	,m1,m1,m1, ROT0, "Maygay", "Coronation Street - Rovers Return (Maygay) (set 1) (Alternate) (M1A/B)",GAME_FLAGS )
 GAME( 1995, m1cororrb	,m1cororr	,m1,m1,m1, ROT0, "Maygay", "Coronation Street - Rovers Return (Maygay) (set 2) (M1A/B)",GAME_FLAGS )

@@ -102,7 +102,7 @@
 #define WINOPTION_SCANLINE_SCALE			"scanline_size"
 #define WINOPTION_SCANLINE_HEIGHT			"scanline_height"
 #define WINOPTION_SCANLINE_BRIGHT_SCALE 	"scanline_bright_scale"
-#define WINOPTION_SCANLINE_BRIGHT_OFFSET 	"scanline_bright_offset"
+#define WINOPTION_SCANLINE_BRIGHT_OFFSET	"scanline_bright_offset"
 #define WINOPTION_SCANLINE_OFFSET			"scanline_jitter"
 #define WINOPTION_DEFOCUS					"defocus"
 #define WINOPTION_CONVERGE_X				"converge_x"

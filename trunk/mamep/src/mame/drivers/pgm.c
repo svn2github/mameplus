@@ -115,7 +115,7 @@ ASIC 27A(55857F/55857G):
     The Killing Blade Plus
     Spectral VS Generation
 
-	The 55857G variant appears to be protected against reading even from native code.
+    The 55857G variant appears to be protected against reading even from native code.
 
 there are probably more...
 
@@ -4109,7 +4109,7 @@ ROM_START( oldsplus )
 	ROM_LOAD( "oldsplus_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
 	ROM_REGION( 0x800000, "user1", ROMREGION_ERASE00 )
-	
+
 	ROM_REGION( 0xc00000, "tiles", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	PGM_VIDEO_BIOS
 	ROM_LOAD( "t05301.rom",   0x180000, 0x800000, CRC(8257bbb0) SHA1(b48067b7e7081a15fddf21739b641d677c2df3d9) )
@@ -4806,7 +4806,7 @@ static DRIVER_INIT( kov )
 static DRIVER_INIT( kovboot )
 {
 	pgm_basic_init(machine);
-//	pgm_kov_decrypt(machine);
+//  pgm_kov_decrypt(machine);
 	kovsh_latch_init(machine);
 	install_protection_asic_sim_kov(machine);
 }
@@ -4895,7 +4895,7 @@ static DRIVER_INIT( martmast )
 {
 	pgm_basic_init(machine);
 	pgm_mm_decrypt(machine);
- 	kov2_latch_init(machine);
+	kov2_latch_init(machine);
 }
 
 
@@ -5593,7 +5593,7 @@ static WRITE16_HANDLER( puzzli2_asic_w )
 					//if (state->m_value0 == 6) {
 						state->m_valueresponse = (0x74<<16)|1; // |1?
 					//} else {
-					//	state->m_valueresponse = 0x74<<16;
+					//  state->m_valueresponse = 0x74<<16;
 					//}
 				}
 				break;
@@ -6138,7 +6138,7 @@ static DRIVER_INIT( puzzli2 )
 
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x500000, 0x500005, FUNC(ddp3_asic_r), FUNC(puzzli2_asic_w));
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x4f0000, 0x4fffff, FUNC(sango_protram_r));
-	
+
 	// doesn't like this irq??
 	state->m_irq4_disabled = 1;
 }
@@ -6269,7 +6269,7 @@ GAME( 2000, kov2100,      kov2,      kov2speed, kov2,   kov2,       ROT0,   "IGS
 GAME( 2001, kov2p,        pgm,       kov2speed,kov2,    kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons / Sangoku Senki 2 Plus - Nine Dragons (ver. M204XX)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) /* need internal rom of IGS027A */
 GAME( 2001, kov2p205,     kov2p,     kov2speed,kov2,    kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons / Sangoku Senki 2 Plus - Nine Dragons (ver. M205XX)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) /* need internal rom of IGS027A */
 
-GAME( 2001, martmast,     pgm,       kov2speed,martmast, martmast,  ROT0,   "IGS", "Martial Masters (ver. 104, 102, 102US)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // 68k V104, Ext Arm 102, Int Arm 102US
+GAME( 2001, martmast,     pgm,       kov2speed,martmast,martmast,   ROT0,   "IGS", "Martial Masters (ver. 104, 102, 102US)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // 68k V104, Ext Arm 102, Int Arm 102US
 GAME( 2001, martmastc,    martmast,  kov2speed,martmastc,martmast,  ROT0,   "IGS", "Martial Masters (ver. 104, 102, 101CN)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // 68k V104, Ext Arm 102, Int Arm 101CN
 GAME( 2001, martmastc102, martmast,  kov2speed,martmastc,martmast,  ROT0,   "IGS", "Martial Masters (ver. 102, 101, 101CN)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // 68k V102, Ext Arm 101, Int Arm 101CN
 #else
@@ -6383,3 +6383,4 @@ GAME( 2002, keta,         ket,       cavepgm,    pgm,     ket,       ROT270, "Ca
 GAME( 2002, ketb,         ket,       cavepgm,    pgm,     ket,       ROT270, "Cave", "Ketsui: Kizuna Jigoku Tachi (2003/01/01 Master Ver)",   GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 
 GAME( 2003, espgal,       0,         cavepgm,    pgm,     espgal,    ROT270, "Cave", "Espgaluda (2003/10/15 Master Ver)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+

@@ -981,8 +981,8 @@ time_t input_port_init(running_machine &machine)
 #else /* USE_CUSTOM_BUTTON */
 		input_port_list_init(*device, machine.m_portlist, errors);
 #endif /* USE_CUSTOM_BUTTON */
-			if (errors)
-				mame_printf_error("Input port errors:\n%s", errors.cstr());
+		if (errors)
+			mame_printf_error("Input port errors:\n%s", errors.cstr());
 	}
 
 	init_port_state(machine);
@@ -1034,7 +1034,7 @@ void input_port_list_init(device_t &device, ioport_list &portlist, astring &erro
 	/* detokenize into the list */
 	(*constructor)(device, portlist, errorbuf);
 
-	// collapse fields and sort the list 
+	// collapse fields and sort the list
 	for (input_port_config *port = portlist.first(); port != NULL; port = port->next())
 		port->collapse_fields(errorbuf);
 }
@@ -3181,7 +3181,7 @@ input_field_config::input_field_config(input_port_config &port, int _type, input
 	memset(&condition, 0, sizeof(condition));
 	for (int seqtype = 0; seqtype < ARRAY_LENGTH(seq); seqtype++)
 		seq[seqtype].set_default();
-	chars[0] = chars[1] = chars[2] = (unicode_char) 0;		
+	chars[0] = chars[1] = chars[2] = (unicode_char) 0;
 }
 
 

@@ -484,7 +484,7 @@ void ui_menu_slot_devices::populate()
 		item_append(slot->device().tag()+1, strcmp(title,"")==0 ? "------" : title, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)slot);
 	}
 	item_append(MENU_SEPARATOR_ITEM, NULL, 0, NULL);
-	item_append("Reset",  NULL, 0, NULL);
+	item_append(_("Reset"),  NULL, 0, NULL);
 }
 
 ui_menu_slot_devices::~ui_menu_slot_devices()
@@ -2201,7 +2201,7 @@ ui_menu_video_options::ui_menu_video_options(running_machine &machine, render_co
 
 void ui_menu_video_options::populate()
 {
- 	const char *subtext = "";
+	const char *subtext = "";
 	astring tempstring;
 	int viewnum;
 	int enabled;

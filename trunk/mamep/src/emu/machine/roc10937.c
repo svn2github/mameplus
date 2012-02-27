@@ -66,7 +66,7 @@ This means our segment maths needs to be more than 16-bit to work!
 */
 
 static const UINT32 roc10937charset[]=
-{           // 11 10 FEDC BA98 7654 3210
+{            // 11 10 FEDC BA98 7654 3210
 	0x0507F, //  0  0 0101 0000 0111 1111 @.
 	0x044CF, //  0  0 0100 0100 1100 1111 A.
 	0x0153F, //  0  0 0001 0101 0011 1111 B.
@@ -290,7 +290,7 @@ int ROC10937_newdata(int id, int data)
 	if ( data & 0x80 )
 	{ // Control data received
 		if ( (data & 0xF0) == 0xA0 ) // 1010 xxxx
-		{ // 1010 xxxx Buffer Pointer control
+		{ // 1 010 xxxx Buffer Pointer control
 			roc10937[id].cursor_pos = roc10937poslut[data & 0x0F];
 		}
 		else if ( (data & 0xF0) == 0xC0 ) // 1100 xxxx

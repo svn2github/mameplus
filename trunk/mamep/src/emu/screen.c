@@ -459,7 +459,7 @@ void screen_device::static_set_screen_update(device_t &device, screen_update_rgb
 
 
 //-------------------------------------------------
-//  static_set_screen_vblank - set the screen 
+//  static_set_screen_vblank - set the screen
 //  VBLANK callback in the device configuration
 //-------------------------------------------------
 
@@ -507,7 +507,7 @@ void screen_device::device_start()
 	m_screen_update_ind16.bind_relative_to(*owner());
 	m_screen_update_rgb32.bind_relative_to(*owner());
 	m_screen_vblank.bind_relative_to(*owner());
-	
+
 	// configure bitmap formats and allocate screen bitmaps
 	texture_format texformat = !m_screen_update_ind16.isnull() ? TEXFORMAT_PALETTE16 : TEXFORMAT_RGB32;
 	for (int index = 0; index < ARRAY_LENGTH(m_bitmap); index++)
@@ -625,17 +625,17 @@ void screen_device::device_timer(emu_timer &timer, device_timer_id id, int param
 		case TID_VBLANK_START:
 			vblank_begin();
 			break;
-		
+
 		// signal VBLANK end
 		case TID_VBLANK_END:
 			vblank_end();
 			break;
-		
+
 		// first visible scanline
 		case TID_SCANLINE0:
 			reset_partial_updates();
 			break;
-		
+
 		// subsequent scanlines when scanline updates are enabled
 		case TID_SCANLINE:
 
@@ -663,8 +663,8 @@ void screen_device::configure(int width, int height, const rectangle &visarea, a
 	assert(height > 0);
 	assert(visarea.min_x >= 0);
 	assert(visarea.min_y >= 0);
-//	assert(visarea.max_x < width);
-//	assert(visarea.max_y < height);
+//  assert(visarea.max_x < width);
+//  assert(visarea.max_y < height);
 	assert(m_type == SCREEN_TYPE_VECTOR || visarea.min_x < width);
 	assert(m_type == SCREEN_TYPE_VECTOR || visarea.min_y < height);
 	assert(frame_period > 0);
@@ -1103,7 +1103,7 @@ void screen_device::register_screen_bitmap(bitmap_t &bitmap)
 
 
 //-------------------------------------------------
-//  vblank_begin - call any external callbacks to 
+//  vblank_begin - call any external callbacks to
 //  signal the VBLANK period has begun
 //-------------------------------------------------
 
@@ -1135,7 +1135,7 @@ void screen_device::vblank_begin()
 
 
 //-------------------------------------------------
-//  vblank_end - call any external callbacks to 
+//  vblank_end - call any external callbacks to
 //  signal the VBLANK period has ended
 //-------------------------------------------------
 
@@ -1240,7 +1240,7 @@ void screen_device::update_burnin()
 			}
 			break;
 		}
-		
+
 		case BITMAP_FORMAT_RGB32:
 		{
 			// iterate over rows in the destination
@@ -1326,7 +1326,7 @@ void screen_device::finalize_burnin()
 		char text[256];
 
 		// add two text entries describing the image
-		sprintf(text, "%s %s", emulator_info::get_appname(), build_version);
+		sprintf(text,"%s %s", emulator_info::get_appname(), build_version);
 		png_add_text(&pnginfo, "Software", text);
 		sprintf(text, "%s %s", machine().system().manufacturer, machine().system().description);
 		png_add_text(&pnginfo, "System", text);

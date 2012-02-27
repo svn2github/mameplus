@@ -870,7 +870,7 @@ public:
 	simple_list<input_field_config> &fieldlist() { return m_fieldlist; }
 	const char *tag() const { return m_tag; }
 	int modcount() const { return m_modcount; }
-	
+
 	void bump_modcount() { m_modcount++; }
 
 	void collapse_fields(astring &errorbuf);
@@ -892,7 +892,7 @@ private:
 class input_type_entry
 {
 	friend class simple_list<input_type_entry>;
-	
+
 public:
 	input_type_entry(UINT32 type, ioport_group group, int player, const char *token, const char *name, input_seq standard);
 	input_type_entry(UINT32 type, ioport_group group, int player, const char *token, const char *name, input_seq standard, input_seq decrement, input_seq increment);

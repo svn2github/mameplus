@@ -564,7 +564,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	dkong_state *state = machine.driver_data<dkong_state>();
 	int offs;
 	int scanline_vf;	/* buffering scanline including flip */
-	int scanline_vfc;		/* line buffering scanline including flip - this is the cached scanline_vf*/
+	int scanline_vfc;	/* line buffering scanline including flip - this is the cached scanline_vf */
 	int scanline;		/* current scanline */
 	int add_y;
 	int add_x;

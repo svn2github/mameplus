@@ -296,7 +296,7 @@ inline UINT8 chd_file::bits_for_value(UINT64 value)
 
 chd_file::chd_file()
 	: m_file(NULL),
-      m_owns_file(false)
+	  m_owns_file(false)
 {
 	// reset state
 	memset(m_decompressor, 0, sizeof(m_decompressor));

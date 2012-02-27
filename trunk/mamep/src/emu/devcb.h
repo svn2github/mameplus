@@ -171,7 +171,7 @@ void devcb_stub16(device_t *device, offs_t offset, UINT16 data)
 #define DEVCB_LINE_VCC							DEVCB_CONSTANT(1)
 
 // read/write handlers for a given CPU's address space
-#define DEVCB_MEMORY_HANDLER(cpu,space,func) 	{ DEVCB_TYPE_LEGACY_SPACE, AS_##space, (cpu), #func, NULL, NULL, func }
+#define DEVCB_MEMORY_HANDLER(cpu,space,func)	{ DEVCB_TYPE_LEGACY_SPACE, AS_##space, (cpu), #func, NULL, NULL, func }
 
 // read handlers for an I/O port by tag
 #define DEVCB_INPUT_PORT(tag)					{ DEVCB_TYPE_IOPORT, 0, (tag), NULL, NULL, NULL, NULL }
@@ -265,10 +265,10 @@ public:
 
 	// resolution
 	void resolve(const devcb_read_line &desc, device_t &device);
-	
+
 	// override parent class' notion of NULL
 	bool isnull() const { return m_helper.null_indicator == &s_null; }
-	
+
 private:
 	// internal helpers
 	int from_port();
@@ -276,7 +276,7 @@ private:
 	int from_constant();
 
 	// internal state
-	devcb_resolved_objects 			m_object;
+	devcb_resolved_objects			m_object;
 	devcb_resolved_read_helpers 	m_helper;
 	static UINT8					s_null;
 };
@@ -314,10 +314,10 @@ public:
 
 	// resolution
 	void resolve(const devcb_write_line &desc, device_t &device);
-	
+
 	// override parent class' notion of NULL
 	bool isnull() const { return m_helper.null_indicator == &s_null; }
-	
+
 private:
 	// internal helpers
 	void to_null(int state);
@@ -326,8 +326,8 @@ private:
 	void to_input(int state);
 
 	// internal state
-	devcb_resolved_objects 			m_object;
-	devcb_resolved_write_helpers 	m_helper;
+	devcb_resolved_objects			m_object;
+	devcb_resolved_write_helpers	m_helper;
 	static UINT8					s_null;
 };
 
@@ -364,10 +364,10 @@ public:
 
 	// resolution
 	void resolve(const devcb_read8 &desc, device_t &device);
-	
+
 	// override parent class' notion of NULL
 	bool isnull() const { return m_helper.null_indicator == &s_null; }
-	
+
 private:
 	// internal helpers
 	UINT8 from_port(offs_t offset);
@@ -375,7 +375,7 @@ private:
 	UINT8 from_constant(offs_t offset);
 
 	// internal state
-	devcb_resolved_objects 			m_object;
+	devcb_resolved_objects			m_object;
 	devcb_resolved_read_helpers 	m_helper;
 	static UINT8					s_null;
 };
@@ -413,10 +413,10 @@ public:
 
 	// resolution
 	void resolve(const devcb_write8 &desc, device_t &device);
-	
+
 	// override parent class' notion of NULL
 	bool isnull() const { return m_helper.null_indicator == &s_null; }
-	
+
 private:
 	// internal helpers
 	void to_null(offs_t offset, UINT8 data);
@@ -425,8 +425,8 @@ private:
 	void to_input(offs_t offset, UINT8 data);
 
 	// internal state
-	devcb_resolved_objects 			m_object;
-	devcb_resolved_write_helpers 	m_helper;
+	devcb_resolved_objects			m_object;
+	devcb_resolved_write_helpers	m_helper;
 	static UINT8					s_null;
 };
 
@@ -463,10 +463,10 @@ public:
 
 	// resolution
 	void resolve(const devcb_read16 &desc, device_t &device);
-	
+
 	// override parent class' notion of NULL
 	bool isnull() const { return m_helper.null_indicator == &s_null; }
-	
+
 private:
 	// internal helpers
 	UINT16 from_port(offs_t offset, UINT16 mask);
@@ -474,7 +474,7 @@ private:
 	UINT16 from_constant(offs_t offset, UINT16 mask);
 
 	// internal state
-	devcb_resolved_objects 			m_object;
+	devcb_resolved_objects			m_object;
 	devcb_resolved_read_helpers 	m_helper;
 	static UINT8					s_null;
 };
@@ -512,10 +512,10 @@ public:
 
 	// resolution
 	void resolve(const devcb_write16 &desc, device_t &device);
-	
+
 	// override parent class' notion of NULL
 	bool isnull() const { return m_helper.null_indicator == &s_null; }
-	
+
 private:
 	// internal helpers
 	void to_null(offs_t offset, UINT16 data, UINT16 mask);
@@ -524,8 +524,8 @@ private:
 	void to_input(offs_t offset, UINT16 data, UINT16 mask);
 
 	// internal state
-	devcb_resolved_objects 			m_object;
-	devcb_resolved_write_helpers 	m_helper;
+	devcb_resolved_objects			m_object;
+	devcb_resolved_write_helpers	m_helper;
 	static UINT8					s_null;
 };
 
