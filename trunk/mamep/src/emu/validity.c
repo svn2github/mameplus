@@ -60,11 +60,6 @@ UINT8 your_ptr64_flag_is_wrong[(int)(5 - sizeof(void *))];
 //  TYPE DEFINITIONS
 //**************************************************************************
 
-extern const device_type *s_devices_sorted[];
-extern int m_device_count;
-
-
-
 //**************************************************************************
 //  INLINE FUNCTIONS
 //**************************************************************************
@@ -302,7 +297,6 @@ void validity_checker::validate_one(const game_driver &driver)
 		validate_display();
 		validate_gfx();
 		validate_devices();
-		validate_slots();
 	}
 	catch (emu_fatalerror &err)
 	{
@@ -616,10 +610,11 @@ void validity_checker::validate_driver()
 void validity_checker::validate_roms()
 {
 	// iterate, starting with the driver's ROMs and continuing with device ROMs
-	for (const rom_source *source = rom_first_source(*m_current_config); source != NULL; source = rom_next_source(*source))
+	device_iterator deviter(m_current_config->root_device());
+	for (device_t *device = deviter.first(); device != NULL; device = deviter.next())
 	{
 		// for non-root devices, track the current device
-		m_current_device = (source == &m_current_config->root_device()) ? NULL : source;
+		m_current_device = (device->owner() == NULL) ? NULL : device;
 
 		// scan the ROM entries for this device
 		const char *last_region_name = "???";
@@ -628,7 +623,7 @@ void validity_checker::validate_roms()
 		int items_since_region = 1;
 		int last_bios = 0;
 		int total_files = 0;
-		for (const rom_entry *romp = rom_first_region(*source); !ROMENTRY_ISEND(romp); romp++)
+		for (const rom_entry *romp = rom_first_region(*device); romp != NULL && !ROMENTRY_ISEND(romp); romp++)
 		{
 			// if this is a region, make sure it's valid, and record the length
 			if (ROMENTRY_ISREGION(romp))
@@ -654,7 +649,7 @@ void validity_checker::validate_roms()
 
 				// generate the full tag
 				astring fulltag;
-				rom_region_name(fulltag, m_current_driver, source, romp);
+				rom_region_name(fulltag, *device, romp);
 
 				// attempt to add it to the map, reporting duplicates as errors
 				current_length = ROMREGION_GETLENGTH(romp);
@@ -705,22 +700,6 @@ void validity_checker::validate_roms()
 		if (items_since_region == 0)
 			mame_printf_warning("Empty ROM region '%s' (warning)\n", last_region_name);
 
-		// make sure each device is listed in the device list if it loads ROMs
-		if (m_current_device != NULL && total_files > 0)
-		{
-			// scan the list of devices for this device type
-			bool found = false;
-			for (int i = 0; i < m_device_count; i++)
-				if (m_current_device->type() == *s_devices_sorted[i])
-				{
-					found = true;
-					break;
-				}
-
-			// if not found, report an error
-			if (!found)
-				mame_printf_error("Device %s is not listed in device list (mame_dev.lst / mess_dev.lst)\n", m_current_device->shortname());
-		}
 
 		// reset the current device
 		m_current_device = NULL;
@@ -1115,7 +1094,7 @@ void validity_checker::validate_devices()
 
 		// if we have a ROM region, we must have a shortname
 		if (device->rom_region() != NULL && strcmp(device->shortname(), "") == 0)
-			mame_printf_error("Device %s has ROM definition but does not have short name defined\n", device->name());
+			mame_printf_error("Device has ROM definition but does not have short name defined\n");
 
 		// check for device-specific validity check
 		device->validity_check(*this);
@@ -1123,58 +1102,35 @@ void validity_checker::validate_devices()
 		// done with this device
 		m_current_device = NULL;
 	}
-}
 
-
-//-------------------------------------------------
-//  validate_slots - run per-slot validity
-//  checks
-//-------------------------------------------------
-
-void validity_checker::validate_slots()
-{
-	// iterate over slots
-	slot_interface_iterator iter(m_current_config->root_device());
-	for (const device_slot_interface *slot = iter.first(); slot != NULL; slot = iter.next())
+	// if device is slot cart device, we must have a shortname
+	int_map slot_device_map;
+	slot_interface_iterator slotiter(m_current_config->root_device());
+	for (const device_slot_interface *slot = slotiter.first(); slot != NULL; slot = slotiter.next())
 	{
-		// iterate over interfaces
-		const slot_interface *intf = slot->get_slot_interfaces();
-		for (int j = 0; intf && intf[j].name != NULL; j++)
+		const slot_interface* intf = slot->get_slot_interfaces();
+		for (int i = 0; intf && intf[i].name != NULL; i++)
 		{
-			// instantiate the device
-			device_t *dev = (*intf[j].devtype)(*m_current_config, "dummy", &m_current_config->root_device(), 0);
-			dev->config_complete();
+			astring temptag("_");
+			temptag.cat(intf[i].name);
+			device_t *dev = const_cast<machine_config &>(*m_current_config).device_add(&m_current_config->root_device(), temptag.cstr(), intf[i].devtype, 0);
 
-			// if a ROM region is present
-			if (dev->rom_region() != NULL)
-			{
-				bool has_romfiles = false;
-				for (const rom_entry *romp = rom_first_region(*dev); !ROMENTRY_ISEND(romp); romp++)
-					if (ROMENTRY_ISFILE(romp))
-					{
-						has_romfiles = true;
-						break;
-					}
+			// notify this device and all its subdevices that they are now configured
+			device_iterator subiter(*dev);
+			for (device_t *device = subiter.first(); device != NULL; device = subiter.next())
+				if (!device->configured())
+					device->config_complete();
 
-				if (has_romfiles)
-				{
-					// scan the list of devices for this device type
-					bool found = false;
-					for (int i = 0; i < m_device_count; i++)
-						if (dev->type() == *s_devices_sorted[i])
-						{
-							found = true;
-							break;
-						}
-
-					// if not found, report an error
-					if (!found)
-						mame_printf_error("Device %s in slot %s is not listed in device list (mame_dev.lst / mess_dev.lst)\n", dev->shortname(), intf[j].name);
-				}
+			if (strcmp(dev->shortname(), "") == 0) {
+				if (slot_device_map.add(dev->name(), 0, false) != TMERR_DUPLICATE)
+					mame_printf_error("Device '%s' is slot cart device but does not have short name defined\n",dev->name());
 			}
+
+			const_cast<machine_config &>(*m_current_config).device_remove(&m_current_config->root_device(), temptag.cstr());
 			global_free(dev);
 		}
 	}
+
 }
 
 

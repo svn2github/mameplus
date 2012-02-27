@@ -74,6 +74,7 @@
 #define CLICOMMAND_LISTSLOTS			"listslots"
 #define CLICOMMAND_LISTMEDIA			"listmedia"		// needed by MESS
 #define CLICOMMAND_LISTSOFTWARE			"listsoftware"
+#define CLICOMMAND_GETSOFTLIST			"getsoftlist"
 #define CLICOMMAND_LISTGAMES			"listgames"		// for make tp_manufact.txt
 
 
@@ -97,6 +98,7 @@ private:
 // cli_frontend handles command-line processing and emulator execution
 class cli_frontend
 {
+	typedef tagmap_t<FPTR> int_map;
 public:
 	// construction/destruction
 	cli_frontend(cli_options &options, osd_interface &osd);
@@ -121,6 +123,7 @@ public:
 	void verifyroms(const char *gamename = "*");
 	void verifysamples(const char *gamename = "*");
 	void romident(const char *filename);
+	void getsoftlist(const char *gamename = "*");
 	void listgames(const char *gamename = "*");		// for make tp_manufact.txt
 
 private:
@@ -128,6 +131,7 @@ private:
 	void execute_commands(const char *exename);
 	void display_help();
 	void display_suggestions(const char *gamename);
+	void output_single_softlist(FILE *out,software_list *list, const char *listname);
 
 	// internal state
 	cli_options &		m_options;

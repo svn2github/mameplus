@@ -535,7 +535,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			struct DriversInfo *gameinfo = &drivers_info[ndriver];
 			const rom_entry *region, *rom;
 			machine_config config(*gamedrv, MameUIGlobal());
-			const rom_source *source;
 			int num_speakers;
 
 			gameinfo->isClone = (GetParentRomSetIndex(gamedrv) != -1);
@@ -543,8 +542,9 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->supportsSaveState = ((gamedrv->flags & GAME_SUPPORTS_SAVE) != 0);
 			gameinfo->isHarddisk = FALSE;
 			gameinfo->isVertical = (gamedrv->flags & ORIENTATION_SWAP_XY) ? TRUE : FALSE;
-			for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
-				for (region = rom_first_region(*source); region; region = rom_next_region(region))
+			device_iterator deviter(config.root_device());
+			for (device_t *device = deviter.first(); device != NULL; device = deviter.next())
+				for (region = rom_first_region(*device); region; region = rom_next_region(region))
 					if (ROMREGION_ISDISKDATA(region))
 						gameinfo->isHarddisk = TRUE;
 
@@ -563,8 +563,8 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->screenCount = numberOfScreens(&config);
 			gameinfo->isVector = isDriverVector(&config); // ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
 			gameinfo->usesRoms = FALSE;
-			for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
-				for (region = rom_first_region(*source); region; region = rom_next_region(region))
+			for (device_t *device = deviter.first(); device != NULL; device = deviter.next())
+				for (region = rom_first_region(*device); region; region = rom_next_region(region))
 					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 					{
 						gameinfo->usesRoms = TRUE;

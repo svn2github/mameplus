@@ -2242,6 +2242,8 @@ static void init_port_state(running_machine &machine)
 			{
 				*readdevicetail = init_field_device_info(field, port->owner().subtag(devicetag, field->read_device));
 				field->read.late_bind(*(*readdevicetail)->device);
+				if (!field->read.has_object())
+					fatalerror("Input port %s, unable to find valid device with tag '%s'", port->tag(), devicetag.cstr());
 				readdevicetail = &(*readdevicetail)->next;
 			}
 
@@ -2250,6 +2252,8 @@ static void init_port_state(running_machine &machine)
 			{
 				*writedevicetail = init_field_device_info(field, port->owner().subtag(devicetag, field->write_device));
 				field->write.late_bind(*(*writedevicetail)->device);
+				if (!field->write.has_object())
+					fatalerror("Input port %s, unable to find valid device with tag '%s'", port->tag(), devicetag.cstr());
 				writedevicetail = &(*writedevicetail)->next;
 			}
 

@@ -38,6 +38,7 @@
 ***************************************************************************/
 
 #include "emu.h"
+#include "emuopts.h"
 #include "ui.h"
 #include "zippath.h"
 #include "uiimage.h"
@@ -845,7 +846,7 @@ bool device_image_interface::load_software(char *swlist, char *swname, rom_entry
     load_internal - core image loading
 -------------------------------------------------*/
 
-bool device_image_interface::load_internal(const char *path, bool is_create, int create_format, option_resolution *create_args)
+bool device_image_interface::load_internal(const char *path, bool is_create, int create_format, option_resolution *create_args, bool just_load)
 {
     UINT32 open_plan[4];
     int i;
@@ -872,7 +873,7 @@ bool device_image_interface::load_internal(const char *path, bool is_create, int
         goto done;
 
 	/* Check if there's a software list defined for this device and use that if we're not creating an image */
-	if (!filename_has_period)
+	if (!filename_has_period && !just_load)
 	{
 		softload = load_software_part( device().machine().options(), this, path, &m_software_info_ptr, &m_software_part_ptr, &m_full_software_name, &m_software_list_name );
 		// if we had launched from softlist with a specified part, e.g. "shortname:part"
@@ -926,6 +927,10 @@ bool device_image_interface::load_internal(const char *path, bool is_create, int
     /* success! */
 
 done:
+	if (just_load) {
+		if(m_err) clear();
+		return m_err ? IMAGE_INIT_FAIL : IMAGE_INIT_PASS;
+	}
     if (m_err!=0) {
 		if (!m_init_phase)
 		{
@@ -962,9 +967,26 @@ done:
 
 bool device_image_interface::load(const char *path)
 {
-    return load_internal(path, FALSE, 0, NULL);
+    return load_internal(path, FALSE, 0, NULL, FALSE);
 }
 
+/*-------------------------------------------------
+    open_image_file - opening plain image file
+-------------------------------------------------*/
+
+bool device_image_interface::open_image_file(emu_options &options)
+{
+	const char* path = options.value(instance_name());
+	if (strlen(path)>0)
+	{
+		set_init_phase();
+		if (load_internal(path, FALSE, 0, NULL, TRUE)==IMAGE_INIT_PASS)
+		{
+			if (software_entry()==NULL) return true;
+		}
+	}
+	return false;
+}
 
 /*-------------------------------------------------
     image_finish_load - special call - only use
@@ -1016,7 +1038,7 @@ bool device_image_interface::finish_load()
 bool device_image_interface::create(const char *path, const image_device_format *create_format, option_resolution *create_args)
 {
     int format_index = (create_format != NULL) ? create_format->m_index : 0;
-    return load_internal(path, TRUE, format_index, create_args);
+    return load_internal(path, TRUE, format_index, create_args, FALSE);
 }
 
 

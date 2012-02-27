@@ -1085,7 +1085,6 @@ void CreateDumpingFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		const rom_source *source;
 		gamedrv = &driver_list::driver(jj);
 
 		if (!gamedrv->rom)
@@ -1095,9 +1094,10 @@ void CreateDumpingFolders(int parent_index)
 		/* Allocate machine config */
 		machine_config config(*gamedrv, MameUIGlobal());
 
-		for (source = rom_first_source(config); source != NULL; source = rom_next_source(*source))
+		device_iterator deviter(config.root_device());
+		for (device_t *device = deviter.first(); device != NULL; device = deviter.next())
 		{
-			for (region = rom_first_region(*source); region; region = rom_next_region(region))
+			for (region = rom_first_region(*device); region; region = rom_next_region(region))
 			{
 				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 				{

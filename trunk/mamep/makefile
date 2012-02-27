@@ -655,7 +655,6 @@ endif
 OBJDIRS = $(OBJ)
 
 
-
 #-------------------------------------------------
 # define standard libarires for CPU and sounds
 #-------------------------------------------------
@@ -670,10 +669,8 @@ LIBOSD = $(OBJ)/libosd.a
 
 VERSIONOBJ = $(OBJ)/version.o
 EMUINFOOBJ = $(OBJ)/$(TARGET)/$(TARGET).o
-DRIVLISTSRC = $(OBJ)/drivlist.c
-DRIVLISTOBJ = $(OBJ)/drivlist.o
-DEVLISTSRC = $(OBJ)/devlist.c
-DEVLISTOBJ = $(OBJ)/devlist.o
+DRIVLISTSRC = $(OBJ)/$(TARGET)/drivlist.c
+DRIVLISTOBJ = $(OBJ)/$(TARGET)/drivlist.o
 
 
 
@@ -745,6 +742,7 @@ include $(SRC)/osd/$(OSD)/$(OSD).mak
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
+-include $(SRC)/$(TARGET)/osd/$(OSD)/$(OSD).mak
 include $(SRC)/emu/emu.mak
 include $(SRC)/lib/lib.mak
 include $(SRC)/build/build.mak
@@ -827,14 +825,14 @@ $(sort $(OBJDIRS)):
 ifndef EXECUTABLE_DEFINED
 
 # always recompile the version string
-$(VERSIONOBJ): $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(LIBOCORE) $(RESFILE)
+$(VERSIONOBJ): $(EMUINFOOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(LIBOCORE) $(RESFILE)
 
-$(EMULATOR): $(VERSIONOBJ) $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DEVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(ZLIB) $(LIBOCORE) $(RESFILE) $(CLIRESFILE)
+$(EMULATOR): $(VERSIONOBJ) $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(ZLIB) $(LIBOCORE) $(RESFILE) $(CLIRESFILE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@
 
 ifneq ($(WINUI),)
-$(MAMEUIEXE): $(VERSIONOBJ) $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DEVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(ZLIB) $(LIBOCORE_NOMAIN) $(RESFILE) $(GUIRESFILE)
+$(MAMEUIEXE): $(VERSIONOBJ) $(EMUINFOOBJ) $(DRIVLISTOBJ) $(DRVLIBS) $(LIBOSD) $(LIBCPU) $(LIBEMU) $(LIBDASM) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(SOFTFLOAT) $(JPEG_LIB) $(FLAC_LIB) $(7Z_LIB) $(FORMATS_LIB) $(ZLIB) $(LIBOCORE_NOMAIN) $(RESFILE) $(GUIRESFILE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@
 endif
@@ -895,17 +893,9 @@ $(DRIVLISTOBJ): $(DRIVLISTSRC)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
 
-$(DEVLISTOBJ): $(DEVLISTSRC)
-	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
-
 $(DRIVLISTSRC): $(DRVLIST) $(MAKELIST_TARGET)
 	@echo Building driver list $<...
 	@$(MAKELIST) $^ >$@
-
-$(DEVLISTSRC): $(SRC)/$(TARGET)/$(SUBTARGET)_dev.lst $(MAKEDEV_TARGET)
-	@echo Building device list $<...
-	@$(MAKEDEV) $< >$@
 
 $(OBJ)/%.a:
 	@echo Archiving $@...

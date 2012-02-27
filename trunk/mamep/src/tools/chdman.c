@@ -87,6 +87,7 @@ const UINT32 TEMP_BUFFER_SIZE = 32 * 1024 * 1024;
 #define COMMAND_COPY "copy"
 #define COMMAND_ADD_METADATA "addmeta"
 #define COMMAND_DEL_METADATA "delmeta"
+#define COMMAND_DUMP_METADATA "dumpmeta"
 
 // option strings
 #define OPTION_INPUT "input"
@@ -137,6 +138,7 @@ static void do_extract_cd(parameters_t &params);
 static void do_extract_ld(parameters_t &params);
 static void do_add_metadata(parameters_t &params);
 static void do_del_metadata(parameters_t &params);
+static void do_dump_metadata(parameters_t &params);
 
 
 
@@ -431,12 +433,15 @@ public:
 				}
 
 				// assemble the data into final form
-				avhuff_error averr = avhuff_encoder::assemble_data(m_rawdata, m_rawdata.count(), subbitmap, channels, samples, samplesptr);
+				avhuff_error averr = avhuff_encoder::assemble_data(m_rawdata, subbitmap, channels, samples, samplesptr);
 				if (averr != AVHERR_NONE)
 					report_error(1, "Error assembling data for frame %d", framenum);
-				UINT32 rawsize = avhuff_encoder::raw_data_size(m_rawdata);
-				if (rawsize < m_rawdata.count())
-					memset(&m_rawdata[rawsize], 0, m_rawdata.count() - rawsize);
+				if (m_rawdata.count() < m_info.bytes_per_frame)
+				{
+					UINT32 delta = m_info.bytes_per_frame - m_rawdata.count();
+					m_rawdata.resize(m_info.bytes_per_frame, true);
+					memset(&m_rawdata[m_info.bytes_per_frame - delta], 0, delta);
+				}
 
 				// copy to the destination
 				UINT64 start_offset = UINT64(framenum) * UINT64(m_info.bytes_per_frame);
@@ -476,8 +481,8 @@ static clock_t lastprogress = 0;
 
 
 // default compressors
-static const chd_codec_type s_default_raw_compression[4] = { CHD_CODEC_LZMA, CHD_CODEC_ZLIB, CHD_CODEC_HUFFMAN };
-static const chd_codec_type s_default_hd_compression[4] = { CHD_CODEC_LZMA, CHD_CODEC_ZLIB, CHD_CODEC_HUFFMAN };
+static const chd_codec_type s_default_raw_compression[4] = { CHD_CODEC_LZMA, CHD_CODEC_ZLIB, CHD_CODEC_HUFFMAN, CHD_CODEC_FLAC };
+static const chd_codec_type s_default_hd_compression[4] = { CHD_CODEC_LZMA, CHD_CODEC_ZLIB, CHD_CODEC_HUFFMAN, CHD_CODEC_FLAC };
 static const chd_codec_type s_default_cd_compression[4] = { CHD_CODEC_LZMA, CHD_CODEC_ZLIB, CHD_CODEC_HUFFMAN, CHD_CODEC_CD_FLAC };
 static const chd_codec_type s_default_ld_compression[4] = { CHD_CODEC_AVHUFF };
 
@@ -683,6 +688,16 @@ static const command_description s_commands[] =
 	{ COMMAND_DEL_METADATA, do_del_metadata, ": remove metadata from the CHD",
 		{
 			REQUIRED OPTION_INPUT,
+			REQUIRED OPTION_TAG,
+			OPTION_INDEX
+		}
+	},
+
+	{ COMMAND_DUMP_METADATA, do_dump_metadata, ": dump metadata from the CHD to stdout or to a file",
+		{
+			REQUIRED OPTION_INPUT,
+			OPTION_OUTPUT,
+			OPTION_OUTPUT_FORCE,
 			REQUIRED OPTION_TAG,
 			OPTION_INDEX
 		}
@@ -1608,9 +1623,10 @@ static void do_create_hd(parameters_t &params)
 	parse_hunk_size(params, sector_size, hunk_size);
 
 	// process input start/end (needs to know hunk_size)
-	UINT64 input_start;
-	UINT64 input_end;
-	parse_input_start_end(params, core_fsize(input_file), hunk_size, hunk_size, input_start, input_end);
+	UINT64 input_start = 0;
+	UINT64 input_end = 0;
+	if (input_file != NULL)
+		parse_input_start_end(params, core_fsize(input_file), hunk_size, hunk_size, input_start, input_end);
 
 	// process compression
 	chd_codec_type compression[4];
@@ -1756,7 +1772,7 @@ static void do_create_cd(parameters_t &params)
 	{
 		chd_error err = chdcd_parse_toc(*input_file_str, toc, track_info);
 		if (err != CHDERR_NONE)
-			report_error(1, "Error parsing input file (%s: %s\n", input_file_str->cstr(), chd_file::error_string(err));
+			report_error(1, "Error parsing input file (%s: %s)\n", input_file_str->cstr(), chd_file::error_string(err));
 	}
 
 	// process output CHD
@@ -2224,8 +2240,23 @@ static void do_extract_cd(parameters_t &params)
 			const cdrom_track_info &trackinfo = toc->tracks[tracknum];
 			output_track_metadata(cuemode, output_toc_file, tracknum, trackinfo, *output_bin_file_str, discoffs, outputoffs);
 
+			UINT32 output_frame_size;
+
+            // If this is bin/cue output and the CHD contains subdata, warn the user and don't include
+            // the subdata size in the buffer calculation.
+            if ((trackinfo.subtype != CD_SUB_NONE) && (cuemode))
+            {
+                printf("Warning: Track %d has subcode data.  bin/cue format cannot contain subcode data and it will be omitted.\n", tracknum+1);
+                printf("       : This may affect usage of the output image.  Use bin/toc output to keep all data.\n");
+
+                output_frame_size = trackinfo.datasize;
+            }
+            else
+            {
+                output_frame_size = trackinfo.datasize + ((trackinfo.subtype != CD_SUB_NONE) ? trackinfo.subsize : 0);
+            }
+
 			// resize the buffer for the track
-			UINT32 output_frame_size = trackinfo.datasize + ((trackinfo.subtype != CD_SUB_NONE) ? trackinfo.subsize : 0);
 			buffer.resize((TEMP_BUFFER_SIZE / output_frame_size) * output_frame_size);
 
 			// now read and output the actual data
@@ -2249,10 +2280,10 @@ static void do_extract_cd(parameters_t &params)
 				discoffs++;
 
 				// read the subcode data
-				if (trackinfo.subtype != CD_SUB_NONE)
+				if ((trackinfo.subtype != CD_SUB_NONE) && (!cuemode))
 				{
-					cdrom_read_subcode(cdrom, cdrom_get_track_start(cdrom, tracknum) + frame, &buffer[bufferoffs]);
-					bufferoffs += trackinfo.subsize;
+                    cdrom_read_subcode(cdrom, cdrom_get_track_start(cdrom, tracknum) + frame, &buffer[bufferoffs]);
+                    bufferoffs += trackinfo.subsize;
 				}
 
 				// write it out if we need to
@@ -2553,6 +2584,83 @@ static void do_del_metadata(parameters_t &params)
 		report_error(1, "Error removing metadata: %s", chd_file::error_string(err));
 	else
 		printf("Metadata removed\n");
+}
+
+
+//-------------------------------------------------
+//  do_dump_metadata - dump metadata from a CHD
+//-------------------------------------------------
+
+static void do_dump_metadata(parameters_t &params)
+{
+	// parse out input files
+	chd_file input_parent_chd;
+	chd_file input_chd;
+	parse_input_chd_parameters(params, input_chd, input_parent_chd);
+
+	// verify output file doesn't exist
+	astring *output_file_str = params.find(OPTION_OUTPUT);
+	if (output_file_str != NULL)
+		check_existing_output_file(params, *output_file_str);
+
+	// process tag
+	chd_metadata_tag tag = CHD_MAKE_TAG('?','?','?','?');
+	astring *tag_str = params.find(OPTION_TAG);
+	if (tag_str != NULL)
+	{
+		tag_str->cat("    ");
+		tag = CHD_MAKE_TAG((*tag_str)[0], (*tag_str)[1], (*tag_str)[2], (*tag_str)[3]);
+	}
+
+	// process index
+	UINT32 index = 0;
+	astring *index_str = params.find(OPTION_INDEX);
+	if (index_str != NULL)
+		index = atoi(*index_str);
+
+	// write the metadata
+	dynamic_buffer buffer;
+	chd_error err = input_chd.read_metadata(tag, index, buffer);
+	if (err != CHDERR_NONE)
+		report_error(1, "Error reading metadata: %s", chd_file::error_string(err));
+
+	// catch errors so we can close & delete the output file
+	core_file *output_file = NULL;
+	try
+	{
+		// create the file
+		if (output_file_str != NULL)
+		{
+			file_error filerr = core_fopen(*output_file_str, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &output_file);
+			if (filerr != FILERR_NONE)
+				report_error(1, "Unable to open file (%s)", output_file_str->cstr());
+
+			// output the metadata
+			UINT32 count = core_fwrite(output_file, buffer, buffer.count());
+			if (count != buffer.count())
+				report_error(1, "Error writing file (%s)", output_file_str->cstr());
+			core_fclose(output_file);
+
+			// provide some feedback
+			astring tempstr;
+			printf("File (%s) written, %s bytes\n", output_file_str->cstr(), big_int_string(tempstr, buffer.count()));
+		}
+
+		// flush to stdout
+		else
+		{
+			fwrite(buffer, 1, buffer.count(), stdout);
+			fflush(stdout);
+		}
+	}
+	catch (...)
+	{
+		// delete the output file
+		if (output_file != NULL)
+			core_fclose(output_file);
+		osd_rmfile(*output_file_str);
+		throw;
+	}
 }
 
 
