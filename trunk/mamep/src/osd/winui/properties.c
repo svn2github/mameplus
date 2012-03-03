@@ -131,13 +131,12 @@ b) Exit the dialog.
 #include "resource.h"
 #include "dijoystick.h"     /* For DIJoystick avalibility. */
 #include "mui_util.h"
-#include "directdraw.h"
-#include "properties.h"
 #include "winui.h"
 #include "datamap.h"
 #include "help.h"
 #include "strconv.h"
 #include "winutf8.h"
+#include "sound/samples.h"
 #include "sound/vlm5030.h"
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
@@ -153,11 +152,8 @@ b) Exit the dialog.
 #define snprintf _snprintf
 #endif
 
-#ifdef MESS
-// done like this until I figure out a better idea
-#include "resourcems.h"
-#include "propertiesms.h"
-#endif
+#include "directdraw.h" /* has to be after samples.h */
+#include "properties.h"
 
 #if defined(__GNUC__)
 /* fix warning: cast does not match function type */
@@ -208,9 +204,6 @@ static void save_options_ex(OPTIONS_TYPE opt_type, windows_options &opts, int ga
 #define save_options	save_options_ex
 #endif /* USE_IPS */
 
-
-// device type definition
-extern const device_type SAMPLES;
 
 /***************************************************************
  * Imported function prototypes
