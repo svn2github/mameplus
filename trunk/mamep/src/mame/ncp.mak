@@ -132,7 +132,7 @@ $(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neodrvr.c
 # mamep: driver list dependencies
 #-------------------------------------------------
 
-#FXIXME
+#FIXME
 $(MAMEOBJ)/%.lst:	$(MAMESRC)/%.lst
 	@echo Generating $@...
 	@echo #include "$<" > $@.h

@@ -157,7 +157,7 @@ $(MAMEOBJ)/mamedriv.o:	$(LAYOUT)/pinball.lh
 # mamep: driver list dependencies
 #-------------------------------------------------
 
-#FXIXME
+#FIXME
 $(MAMEOBJ)/%.lst:	$(MAMESRC)/%.lst
 	@echo Generating $@...
 	@echo #include "$<" > $@.h

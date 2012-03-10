@@ -172,7 +172,7 @@ include $(MESSSRC)/osd/$(OSD)/$(OSD).mak
 # mamep: driver list dependencies
 #-------------------------------------------------
 
-#FXIXME
+#FIXME
 $(MESSOBJ)/%.lst:	$(MESSSRC)/%.lst
 	@echo Generating $@...
 	@echo #include "$<" > $@.h

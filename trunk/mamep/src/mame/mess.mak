@@ -175,7 +175,7 @@ $(MACHINE)/nes_mmc.o:	$(MAMESRC)/machine/nes_ines.c \
 # mamep: driver list dependencies
 #-------------------------------------------------
 
-#FXIXME
+#FIXME
 $(MAMEOBJ)/mame.lst:	$(MAMESRC)/mess.lst
 	@echo Generating $@...
 	@echo #include "$<" > $@.h
