@@ -1,9 +1,11 @@
+#include "video/bufsprite.h"
 
 class dec8_state : public driver_device
 {
 public:
 	dec8_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_spriteram(*this, "spriteram") { }
 
 	/* memory pointers */
 	UINT8 *  m_videoram;
@@ -12,7 +14,6 @@ public:
 	UINT8 *  m_row;
 //  UINT8 *  m_paletteram;    // currently this uses generic palette handling
 //  UINT8 *  m_paletteram_2;  // currently this uses generic palette handling
-//  UINT8 *  m_spriteram; // currently this uses buffered_spriteram in some games
 	size_t   m_videoram_size;
 	UINT16   m_buffered_spriteram16[0x800/2]; // for the mxc06 sprite chip emulation (oscar, cobra)
 
@@ -32,8 +33,14 @@ public:
 	int      m_nmi_enable;
 	int      m_i8751_return;
 	int      m_i8751_value;
+	int      m_coinage_id;
 	int      m_coin1;
 	int      m_coin2;
+	int      m_need1;
+	int      m_need2;
+	int      m_cred1;
+	int      m_cred2;
+	int      m_credits;
 	int      m_latch;
 	int      m_snd;
 	int      m_msm5205next;
@@ -44,6 +51,7 @@ public:
 	device_t *m_subcpu;
 	device_t *m_audiocpu;
 	device_t *m_mcu;
+	required_device<buffered_spriteram8_device> m_spriteram;
 };
 
 /*----------- defined in video/dec8.c -----------*/

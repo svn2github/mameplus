@@ -1,4 +1,20 @@
-/* Popo Bear - BMC-A00211
+/*******************************************************************************************
+
+    Popo Bear (c) 2000 BMC
+
+    preliminary driver by Angelo Salese
+
+    TODO:
+    - auto-animation speed is erratic (way too fast);
+    - sprites;
+    - tilemap effects (scrolling, colscroll, linescroll);
+    - BGM seems quite off, YM2413 core bug?
+    - I/Os;
+    - IRQ generation;
+    - Port 0x620000 is quite a mystery, some silly protection?
+
+============================================================================================
+Popo Bear - BMC-A00211
 (c) 2000 - Bao Ma Technology Co., LTD
 
 |-----------------------------------------|
@@ -54,10 +70,8 @@ Component Side   A   B   Solder Side
                 26   26
            GND  27   27  GND
            GND  28   28  GND
-*/
+*******************************************************************************************/
 
-// looks like some kind of blitter
-// IGS-like?
 
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
@@ -72,69 +86,233 @@ public:
 		m_maincpu(*this,"maincpu")
 		{ }
 
-
-	UINT16 *popobear_vram;
+	UINT16 *m_vregs;
+	UINT16 *m_vram;
+	UINT16 *m_spr;
 	required_device<cpu_device> m_maincpu;
 };
 
-/* stub read handlers */
+VIDEO_START(popobear)
+{
 
-static READ16_HANDLER( popo_480001_r ) { static int i = 0x00;i ^=0xff;return i;}
-static READ16_HANDLER( popo_48001c_r ) { static int i = 0x00;i ^=0xff;return i;}
-static READ16_HANDLER( popo_480020_r ) { static int i = 0x00;i ^=0xff;return i;}
-static READ16_HANDLER( popo_48003a_r ) { static int i = 0x00;i ^=0xff;return i;}
+}
 
-static READ16_HANDLER( popo_500000_r ) { static int i = 0x00;i ^=0xff;return i;}
-static READ16_HANDLER( popo_520000_r ) { static int i = 0x00;i ^=0xff;return i;}
+static void draw_layer(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect, UINT8 layer_n)
+{
+	popobear_state *state = machine.driver_data<popobear_state>();
+	UINT8* vram = (UINT8 *)state->m_vram;
+	UINT16* vreg = (UINT16 *)state->m_vregs;
+	int count;
+	const UINT8 vreg_base[] = { 0x10/2, 0x14/2 };
+	int xscroll,yscroll;
 
-static READ16_HANDLER( popo_620000_r ) { static int i = 0x00;i ^=0xff;return i;}
+//  count = (state->m_vregs[vreg_base[layer_n]]<<5);
+//  count &= 0xfc000;
+	count = (0xf0000+layer_n*0x4000);
+	if(layer_n & 2)
+	{
+		xscroll = vreg[vreg_base[(layer_n & 1) ^ 1]+2/2] & 0x1ff;
+		yscroll = vreg[vreg_base[(layer_n & 1) ^ 1]+0/2] & 0x1ff;
+	}
+	else
+	{
+		xscroll = 0;
+		yscroll = 0;
+	}
 
-/* stub write handlers */
+	popmessage("%04x %04x",vreg[vreg_base[0]+0/2],vreg[vreg_base[1]+0/2]);
 
-static WRITE16_HANDLER( popo_480001_w ) { }
-static WRITE16_HANDLER( popo_480018_w ) { }
-static WRITE16_HANDLER( popo_48001a_w ) { }
-static WRITE16_HANDLER( popo_48001c_w ) { }
-static WRITE16_HANDLER( popo_480020_w ) { }
-static WRITE16_HANDLER( popo_480028_w ) { }
-static WRITE16_HANDLER( popo_48002c_w ) { }
-static WRITE16_HANDLER( popo_480030_w ) { }
-static WRITE16_HANDLER( popo_48003a_w ) { }
+	for(int y=0;y<64;y++)
+	{
+		for(int x=0;x<128;x++)
+		{
+			int tile,xtile,ytile;
 
-static WRITE16_HANDLER( popo_550000_w ) { }
-static WRITE16_HANDLER( popo_550002_w ) { }
+			tile = vram[count+0]|(vram[count+1]<<8);
+			xtile = tile & 0x7f;
+			xtile *= 8;
+			ytile = tile >> 7;
+			ytile *= 1024*8;
 
-static WRITE16_HANDLER( popo_600000_w ) { }
-static WRITE16_HANDLER( popo_620000_w ) { }
+			for(int yi=0;yi<8;yi++)
+			{
+				for(int xi=0;xi<8;xi+=2)
+				{
+					UINT8 color;
+					int xoffs,yoffs;
 
+					xoffs = x*8+xi - xscroll;
+					yoffs = y*8+yi - yscroll;
+
+					color = (vram[((xi+yi*1024)+xtile+ytile) & 0xfffff] & 0xff);
+
+					if(cliprect.contains(xoffs+1, yoffs) && color)
+						bitmap.pix16(yoffs, xoffs+1) = machine.pens[color];
+
+					if(cliprect.contains(xoffs+1, yoffs+512) && color)
+						bitmap.pix16(yoffs+512, xoffs+1) = machine.pens[color];
+
+					//if(cliprect.contains(xoffs+1, yoffs+256) && color)
+					//  bitmap.pix16(yoffs+512, xoffs+1) = machine.pens[color];
+
+					color = (vram[((xi+1+yi*1024)+xtile+ytile) & 0xfffff] & 0xff);
+
+					if(cliprect.contains(xoffs, yoffs) && color)
+						bitmap.pix16(yoffs, xoffs) = machine.pens[color];
+
+					if(cliprect.contains(xoffs, yoffs+512) && color)
+						bitmap.pix16(yoffs+512, xoffs) = machine.pens[color];
+				}
+			}
+
+			count+=2;
+		}
+	}
+}
+
+static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect)
+{
+	popobear_state *state = machine.driver_data<popobear_state>();
+	UINT8* vram = (UINT8 *)state->m_spr;
+	int i;
+	#if 0
+	static int bank_test = 1;
+
+	if(machine.input().code_pressed_once(KEYCODE_Z))
+		bank_test<<=1;
+
+	if(machine.input().code_pressed_once(KEYCODE_X))
+		bank_test>>=1;
+
+	popmessage("%02x",bank_test);
+	#endif
+
+	/*
+    ???? ---- ---- ---- unused?
+    ---- xxxx ---- ---- priority?
+    ---- ---- x--- ---- Y direction
+    ---- ---- -x-- ---- X direction
+    ---- ---- --xx ---- width
+    ---- ---- ---- xx-- color bank
+    ---- ---- ---- --xx height?
+    */
+
+	/* 0x106 = 8 x 8 */
+	/* 0x*29 = 32 x 32 */
+	for(i = 0x800-8;i >= 0; i-=8)
+	{
+		int y = vram[i+0x7f800+2]|(vram[i+0x7f800+3]<<8);
+		int x = vram[i+0x7f800+4]|(vram[i+0x7f800+5]<<8);
+		int spr_num = vram[i+0x7f800+6]|(vram[i+0x7f800+7]<<8);
+		int param = vram[i+0x7f800+0]|(vram[i+0x7f800+1]<<8);
+		int width = 8 << ((param & 0x30)>>4);
+		int height = 32;
+		int color_bank = ((param & 0xc)<<4);
+		int x_dir = param & 0x40;
+		int y_dir = param & 0x80;
+
+		if((param & 0x3) == 3) // actually sprite mode?
+			color_bank |= 0x20;
+
+		if(param == 0)
+			continue;
+
+		//if(param & bank_test)
+		//  continue;
+
+		spr_num <<= 3;
+
+		for(int yi=0;yi<height;yi++)
+		{
+			for(int xi=0;xi<width;xi+=2)
+			{
+				UINT8 color;
+				int x_res,y_res;
+
+				color = (vram[spr_num] & 0xff);
+				x_res = (x_dir) ? x+0+(width - xi) : x+1+xi;
+				y_res = (y_dir) ? y+(height - yi) : y+yi;
+
+				if(cliprect.contains(x_res, y_res) && color)
+					bitmap.pix16(y_res, x_res) = machine.pens[color+0x100+color_bank];
+
+				color = (vram[spr_num+1] & 0xff);
+				x_res = (x_dir) ? x+1+(width - xi) : x+0+xi;
+				y_res = (y_dir) ? y+(height - yi) : y+yi;
+
+				if(cliprect.contains(x_res, y_res) && color)
+					bitmap.pix16(y_res, x_res) = machine.pens[color+0x100+color_bank];
+
+				spr_num+=2;
+			}
+		}
+	}
+}
+
+SCREEN_UPDATE_IND16( popobear )
+{
+//  popobear_state *state = screen.machine().driver_data<popobear_state>();
+
+	bitmap.fill(0, cliprect);
+
+	//popmessage("%04x",state->m_vregs[0/2]);
+
+	draw_layer(screen.machine(),bitmap,cliprect,3);
+	draw_layer(screen.machine(),bitmap,cliprect,2);
+	draw_layer(screen.machine(),bitmap,cliprect,1);
+	draw_layer(screen.machine(),bitmap,cliprect,0);
+	draw_sprites(screen.machine(),bitmap,cliprect);
+
+	return 0;
+}
+
+/* ??? */
+static READ8_HANDLER( popo_620000_r )
+{
+	return 9;
+}
+
+static WRITE8_HANDLER( popobear_irq_ack_w )
+{
+	popobear_state *state = space->machine().driver_data<popobear_state>();
+	int i;
+
+	for(i=0;i<8;i++)
+	{
+		if(data & 1 << i)
+			device_set_input_line(state->m_maincpu, i, CLEAR_LINE);
+	}
+}
 
 static ADDRESS_MAP_START( popobear_mem, AS_PROGRAM, 16 )
+	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x210000, 0x21ffff) AM_RAM
-	AM_RANGE(0x3E0000, 0x3EFFFF) AM_RAM  AM_BASE_MEMBER(popobear_state, popobear_vram)
+	AM_RANGE(0x280000, 0x2fffff) AM_RAM AM_BASE_MEMBER(popobear_state, m_spr) // unknown boundaries, 0x2ff800 contains a sprite list
+	AM_RANGE(0x300000, 0x3fffff) AM_RAM AM_BASE_MEMBER(popobear_state, m_vram)
 
-	/* Blitter stuff? */
-	AM_RANGE(0x480000, 0x480001) AM_READ(popo_480001_r) AM_WRITE(popo_480001_w)
-	AM_RANGE(0x480018, 0x480019) AM_WRITE(popo_480018_w)
-	AM_RANGE(0x48001a, 0x48001b) AM_WRITE(popo_48001a_w)
-	AM_RANGE(0x48001c, 0x48001d) AM_READ(popo_48001c_r) AM_WRITE(popo_48001c_w)
-	AM_RANGE(0x480020, 0x480021) AM_READ(popo_480020_r) AM_WRITE(popo_480020_w)
-	AM_RANGE(0x480028, 0x480029) AM_WRITE(popo_480028_w)
-	AM_RANGE(0x48002c, 0x48002d) AM_WRITE(popo_48002c_w)
-	AM_RANGE(0x480030, 0x480031) AM_WRITE(popo_480030_w)
-	AM_RANGE(0x48003a, 0x48003b) AM_READ(popo_48003a_r) AM_WRITE(popo_48003a_w)
+	/* Most if not all of these are vregs */
+	AM_RANGE(0x480000, 0x48001f) AM_RAM AM_BASE_MEMBER(popobear_state, m_vregs)
+	AM_RANGE(0x480020, 0x480023) AM_RAM
+	AM_RANGE(0x480028, 0x48002d) AM_RAM
+//  AM_RANGE(0x480020, 0x480021) AM_NOP //AM_READ(popo_480020_r) AM_WRITE(popo_480020_w)
+//  AM_RANGE(0x480028, 0x480029) AM_NOP //AM_WRITE(popo_480028_w)
+//  AM_RANGE(0x48002c, 0x48002d) AM_NOP //AM_WRITE(popo_48002c_w)
+	AM_RANGE(0x480030, 0x480031) AM_WRITE8(popobear_irq_ack_w, 0x00ff)
+	AM_RANGE(0x480034, 0x480035) AM_RAM // coin counter or coin lockout
+	AM_RANGE(0x48003a, 0x48003b) AM_RAM //AM_READ(popo_48003a_r) AM_WRITE(popo_48003a_w)
 
-	AM_RANGE(0x480400, 0x48041f) AM_RAM AM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram) // looks palette like at least
+	AM_RANGE(0x480400, 0x4807ff) AM_RAM AM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC(paletteram)
 
-	/* I/O maybe? */
-	AM_RANGE(0x500000, 0x500001) AM_READ(popo_500000_r)
-	AM_RANGE(0x520000, 0x520001) AM_READ(popo_520000_r)
-	AM_RANGE(0x550000, 0x550001) AM_WRITE(popo_550000_w)
-	AM_RANGE(0x550002, 0x550003) AM_WRITE(popo_550002_w)
+	AM_RANGE(0x500000, 0x500001) AM_READ_PORT("IN0")
+	AM_RANGE(0x520000, 0x520001) AM_READ_PORT("IN1")
+	AM_RANGE(0x540000, 0x540001) AM_DEVREADWRITE8_MODERN("oki", okim6295_device, read, write, 0x00ff)
+	AM_RANGE(0x550000, 0x550003) AM_DEVWRITE8( "ymsnd", ym2413_w, 0x00ff )
 
-	/* these could be where the OKI hooks up? */
-	AM_RANGE(0x600000, 0x600001) AM_WRITE(popo_600000_w)
-	AM_RANGE(0x620000, 0x620001) AM_READ(popo_620000_r) AM_WRITE(popo_620000_w)
+	AM_RANGE(0x600000, 0x600001) AM_WRITENOP
+	AM_RANGE(0x620000, 0x620001) AM_READ8(popo_620000_r,0xff00) AM_WRITENOP
+	AM_RANGE(0x800000, 0x9fffff) AM_ROM AM_REGION("gfx1", 0) // u5 & u6
+	AM_RANGE(0xa00000, 0xbfffff) AM_ROM AM_REGION("gfx2", 0) // u7 & u8
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( popobear )
@@ -189,135 +367,93 @@ static INPUT_PORTS_START( popobear )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
-	PORT_START("DSW3")
-	PORT_DIPNAME( 0x01, 0x00, "DSW3:1" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x00, "DSW3:2" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x00, "DSW3:3" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x00, "DSW3:4" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x00, "DSW3:5" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, "DSW3:6" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, "DSW3:7" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x00, "DSW3:8" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
+	PORT_START("IN0")
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START("DSW4")
-	PORT_DIPNAME( 0x01, 0x00, "DSW4:1" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x00, "DSW4:2" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x00, "DSW4:3" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x00, "DSW4:4" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x00, "DSW4:5" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, "DSW4:6" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, "DSW4:7" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x00, "DSW4:8" )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
-
+	PORT_START("IN1")
+	PORT_DIPNAME( 0x01, 0x01, "DSWA" )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_IMPULSE(2)
+	PORT_DIPNAME( 0x0200, 0x0200, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x0200, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0400, 0x0400, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x0400, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0800, 0x0800, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x0800, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x1000, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x2000, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x0000, DEF_STR( On ) )
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_START2 )
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START1 )
 INPUT_PORTS_END
 
-
-static const gfx_layout tilelayout =
-{
-	4,8,
-	RGN_FRAC(1,1),
-	8,
-	{ 0,1,2,3,4,5,6,7 },
-	{ 24, 16, 8, 0 },
-	{ 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
-	8*32
-};
-
-// gfx don't seem to be tiles..
-static GFXDECODE_START( popobear )
-	GFXDECODE_ENTRY( "gfx1", 0, tilelayout,  0, 1 )
-	GFXDECODE_ENTRY( "gfx2", 0, tilelayout,  0, 1 )
-GFXDECODE_END
-
-
-SCREEN_UPDATE_IND16( popobear )
-{
-	popobear_state *state = screen.machine().driver_data<popobear_state>();
-	bitmap.fill(0, cliprect);
-
-	UINT16* popobear_vram = state->popobear_vram;
-	int count = 0;
-	for (int y=0;y<256;y++)
-	{
-		for (int x=0;x<128;x++)
-		{
-			UINT8 dat;
-			dat = (popobear_vram[count]&0xf000)>>12;
-			bitmap.pix16(y, (x*4)+0) =dat;
-
-			dat = (popobear_vram[count]&0x0f00)>>8;
-			bitmap.pix16(y, (x*4)+1) =dat;
-
-			dat = (popobear_vram[count]&0x00f0)>>4;
-			bitmap.pix16(y, (x*4)+2) =dat;
-
-			dat = (popobear_vram[count]&0x000f)>>0;
-			bitmap.pix16(y, (x*4)+3) =dat;
-
-			count++;
-		}
-	}
-
-	return 0;
-}
-
-VIDEO_START(popobear)
-{
-
-}
 
 static TIMER_DEVICE_CALLBACK( popobear_irq )
 {
 	popobear_state *state = timer.machine().driver_data<popobear_state>();
 	int scanline = param;
 
+	/* Order is trusted (5 as vblank-out makes the title screen logo spinning to behave wrongly) */
 	if(scanline == 240)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		device_set_input_line(state->m_maincpu, 3, ASSERT_LINE);
 
-	if(scanline == 128)
-		device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+	if(scanline == 0)
+		device_set_input_line(state->m_maincpu, 5, ASSERT_LINE);
 
-	if(scanline == 32)
-		device_set_input_line(state->m_maincpu, 5, HOLD_LINE);
+	/* TODO: actually a timer irq, tied with YM2413 sound chip (controls BGM tempo) */
+	if(scanline == 64 || scanline == 192)
+		device_set_input_line(state->m_maincpu, 2, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( popobear, popobear_state )
 	MCFG_CPU_ADD("maincpu", M68000, XTAL_42MHz/4)  // XTAL CORRECT, DIVISOR GUESSED
 	MCFG_CPU_PROGRAM_MAP(popobear_mem)
 	// levels 2,3,5 look interesting
-	//MCFG_CPU_VBLANK_INT("screen",irq3_line_hold)
+	//MCFG_CPU_VBLANK_INT("screen",irq5_line_assert)
+	//MCFG_CPU_PERIODIC_INT(irq2_line_assert,120)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", popobear_irq, "screen", 0, 1)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -325,23 +461,21 @@ static MACHINE_CONFIG_START( popobear, popobear_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
 	MCFG_SCREEN_UPDATE_STATIC(popobear)
 
-	MCFG_GFXDECODE(popobear)
+//  MCFG_GFXDECODE(popobear)
 
-	MCFG_SCREEN_SIZE(64*8, 32*8)
+	MCFG_SCREEN_SIZE(128*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 32*8-1)
-	MCFG_PALETTE_LENGTH(256)
+	MCFG_PALETTE_LENGTH(256*2)
 
 	MCFG_VIDEO_START(popobear)
 
-	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
+	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ym2413", YM2413, XTAL_42MHz/10)  // XTAL CORRECT, DIVISOR GUESSED
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.00)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.00)
+	MCFG_SOUND_ADD("ymsnd", YM2413, XTAL_42MHz/16)  // XTAL CORRECT, DIVISOR GUESSED
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_OKIM6295_ADD("oki", XTAL_42MHz/10/4, OKIM6295_PIN7_LOW)  // XTAL CORRECT, DIVISOR GUESSED
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.50)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.50)
+	MCFG_OKIM6295_ADD("oki", XTAL_42MHz/32, OKIM6295_PIN7_LOW)  // XTAL CORRECT, DIVISOR GUESSED
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
 
@@ -351,15 +485,15 @@ ROM_START( popobear )
 	ROM_LOAD16_BYTE( "popobear_en-a-401_1.6.u4", 0x000000, 0x20000, CRC(0568af9c) SHA1(920531dbc4bbde2d1db062bd5c48b97dd50b7185) )
 
 	ROM_REGION( 0x200000, "gfx1", 0 )
-	ROM_LOAD16_BYTE(	"popobear_en-a-501.u5", 0x000000, 0x100000, CRC(185901a9) SHA1(7ff82b5751645df53435eaa66edce589684cc5c7) )
-	ROM_LOAD16_BYTE(	"popobear_en-a-601.u6", 0x000001, 0x100000, CRC(84fa9f3f) SHA1(34dd7873f88b0dae5fb81fe84e82d2b6b49f7332) )
+	ROM_LOAD16_BYTE( "popobear_en-a-501.u5", 0x000000, 0x100000, CRC(185901a9) SHA1(7ff82b5751645df53435eaa66edce589684cc5c7) )
+	ROM_LOAD16_BYTE( "popobear_en-a-601.u6", 0x000001, 0x100000, CRC(84fa9f3f) SHA1(34dd7873f88b0dae5fb81fe84e82d2b6b49f7332) )
 
 	ROM_REGION( 0x200000, "gfx2", 0 )
-	ROM_LOAD16_BYTE(	"popobear_en-a-701.u7", 0x000000, 0x100000, CRC(45eba6d0) SHA1(0278602ed57ac45040619d590e6cc85e2cfeed31) )
-	ROM_LOAD16_BYTE(	"popobear_en-a-801.u8", 0x000001, 0x100000, CRC(2760f2e6) SHA1(58af59f486c9df930f7c124f89154f8f389a5bd7) )
+	ROM_LOAD16_BYTE( "popobear_en-a-701.u7", 0x000000, 0x100000, CRC(45eba6d0) SHA1(0278602ed57ac45040619d590e6cc85e2cfeed31) )
+	ROM_LOAD16_BYTE( "popobear_en-a-801.u8", 0x000001, 0x100000, CRC(2760f2e6) SHA1(58af59f486c9df930f7c124f89154f8f389a5bd7) )
 
 	ROM_REGION( 0x040000, "oki", 0 ) /* Samples */
 	ROM_LOAD( "popobear_ta-a-901.u9", 0x00000, 0x40000,  CRC(f1e94926) SHA1(f4d6f5b5811d90d0069f6efbb44d725ff0d07e1c) )
 ROM_END
 
-GAME( 2000, popobear,    0, popobear,    popobear,    0, ROT0,  "BMC", "PoPo Bear", GAME_NOT_WORKING | GAME_IS_SKELETON )
+GAME( 2000, popobear,    0, popobear,    popobear,    0, ROT0,  "BMC", "PoPo Bear", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )

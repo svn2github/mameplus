@@ -57,7 +57,6 @@ EMUOBJS = \
 	$(EMUOBJ)/devcb.o \
 	$(EMUOBJ)/devcpu.o \
 	$(EMUOBJ)/device.o \
-	$(EMUOBJ)/devimage.o \
 	$(EMUOBJ)/devlegcy.o \
 	$(EMUOBJ)/didisasm.o \
 	$(EMUOBJ)/diexec.o \
@@ -285,6 +284,7 @@ EMUMACHINEOBJS = \
 
 EMUVIDEOOBJS = \
 	$(EMUVIDEO)/315_5124.o		\
+	$(EMUVIDEO)/bufsprite.o		\
 	$(EMUVIDEO)/cdp1861.o		\
 	$(EMUVIDEO)/cdp1862.o		\
 	$(EMUVIDEO)/crt9007.o		\

@@ -34,7 +34,6 @@
 #endif /* USE_SHOW_TIME */
 
 
-
 /***************************************************************************
     CONSTANTS
 ***************************************************************************/
@@ -1527,12 +1526,9 @@ static astring &warnings_string(running_machine &machine, astring &string)
 
 astring &game_info_astring(running_machine &machine, astring &string)
 {
-	screen_device_iterator scriter(machine.root_device());
-	int scrcount = scriter.count();
-	int found_sound = FALSE;
-
 	/* print description, manufacturer, and CPU: */
-	string.printf("%s\n%s %s\n\nCPU:\n", _LST(machine.system().description), machine.system().year, _MANUFACT(machine.system().manufacturer));
+	astring tempstr;
+	string.printf("%s\n%s %s\nDriver: %s\n\nCPU:\n", _LST(machine.system().description), machine.system().year, _MANUFACT(machine.system().manufacturer), core_filename_extract_base(tempstr, machine.system().source_file).cstr());
 
 	/* loop over all CPUs */
 	execute_interface_iterator execiter(machine.root_device());
@@ -1569,6 +1565,7 @@ astring &game_info_astring(running_machine &machine, astring &string)
 	/* loop over all sound chips */
 	sound_interface_iterator snditer(machine.root_device());
 	tagmap_t<UINT8> soundtags;
+	bool found_sound = false;
 	for (device_sound_interface *sound = snditer.first(); sound != NULL; sound = snditer.next())
 	{
 		if (soundtags.add(sound->device().tag(), 1, FALSE) == TMERR_DUPLICATE)
@@ -1577,7 +1574,7 @@ astring &game_info_astring(running_machine &machine, astring &string)
 		/* append the Sound: string */
 		if (!found_sound)
 			string.cat(_("\nSound:\n"));
-		found_sound = TRUE;
+		found_sound = true;
 
 		/* count how many identical sound chips we have */
 		int count = 1;
@@ -1605,12 +1602,13 @@ astring &game_info_astring(running_machine &machine, astring &string)
 
 	/* display screen information */
 	string.cat(_("\nVideo:\n"));
+	screen_device_iterator scriter(machine.root_device());
+	int scrcount = scriter.count();
 	if (scrcount == 0)
 		string.cat(_("None\n"));
 	else
 	{
-		screen_device_iterator iter(machine.root_device());
-		for (screen_device *screen = iter.first(); screen != NULL; screen = iter.next())
+		for (screen_device *screen = scriter.first(); screen != NULL; screen = scriter.next())
 		{
 			if (scrcount > 1)
 			{
@@ -2338,8 +2336,8 @@ static slider_state *slider_init(running_machine &machine)
 	tailptr = &(*tailptr)->next;
 
 	/* add per-channel volume */
-	speaker_input info;
-	for (item = 0; machine.sound().indexed_speaker_input(item, info); item++)
+	mixer_input info;
+	for (item = 0; machine.sound().indexed_mixer_input(item, info); item++)
 	{
 		INT32 maxval = 2000;
 		INT32 defval = info.stream->initial_input_gain(info.inputnum) * 1000.0f + 0.5f;
@@ -2500,8 +2498,8 @@ static INT32 slider_volume(running_machine &machine, void *arg, astring *string,
 
 static INT32 slider_mixervol(running_machine &machine, void *arg, astring *string, INT32 newval)
 {
-	speaker_input info;
-	if (!machine.sound().indexed_speaker_input((FPTR)arg, info))
+	mixer_input info;
+	if (!machine.sound().indexed_mixer_input((FPTR)arg, info))
 		return 0;
 	if (newval != SLIDER_NOCHANGE)
 	{

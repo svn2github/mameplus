@@ -535,6 +535,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			struct DriversInfo *gameinfo = &drivers_info[ndriver];
 			const rom_entry *region, *rom;
 			machine_config config(*gamedrv, MameUIGlobal());
+
 			int num_speakers;
 
 			gameinfo->isClone = (GetParentRomSetIndex(gamedrv) != -1);

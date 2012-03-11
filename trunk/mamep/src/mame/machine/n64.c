@@ -22,6 +22,7 @@ static TIMER_CALLBACK(vi_scanline_callback);
 
 n64_periphs::n64_periphs(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
     : device_t(mconfig, N64PERIPH, "N64 Periphal Chips", tag, owner, clock)
+    , m_nvram_image(NULL)
 {
 }
 
@@ -1299,7 +1300,7 @@ void n64_periphs::ai_dma()
     ai_status |= 0x40000000;
 
    // adjust the timer
-   period = attotime::from_hz(DACRATE_NTSC) * ((ai_dacrate + 1) * (current->length / 8));
+   period = attotime::from_hz(DACRATE_NTSC) * ((ai_dacrate + 1) * (current->length / 4));
    ai_timer->adjust(period);
 }
 
@@ -1339,7 +1340,7 @@ READ32_MEMBER( n64_periphs::ai_reg_r )
             {
                 double secs_left = (ai_timer->expire() - machine().time()).as_double();
                 unsigned int samples_left = (UINT32)(secs_left * (double)DACRATE_NTSC / (double)(ai_dacrate + 1));
-                ret = samples_left * 8;
+                ret = samples_left * 4;
             }
             else
             {
@@ -2387,6 +2388,9 @@ WRITE32_MEMBER( n64_periphs::pif_ram_w )
 static void n64_machine_stop(running_machine &machine)
 {
 	n64_periphs *periphs = machine.device<n64_periphs>("rcp");
+
+	if( periphs->m_nvram_image == NULL )
+		return;
 
 	device_image_interface *image = dynamic_cast<device_image_interface *>(periphs->m_nvram_image);
 	//printf("Saving stuff\n");

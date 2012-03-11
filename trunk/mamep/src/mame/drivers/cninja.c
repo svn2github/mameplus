@@ -185,8 +185,8 @@ static ADDRESS_MAP_START( cninja_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x190000, 0x190007) AM_READWRITE(cninja_irq_r, cninja_irq_w)
 	AM_RANGE(0x19c000, 0x19dfff) AM_RAM_DEVWRITE("deco_common", decocomn_nonbuffered_palette_w) AM_BASE_GENERIC(paletteram)
 
-	AM_RANGE(0x1a4000, 0x1a47ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)			/* Sprites */
-	AM_RANGE(0x1b4000, 0x1b4001) AM_WRITE(buffer_spriteram16_w) /* DMA flag */
+	AM_RANGE(0x1a4000, 0x1a47ff) AM_RAM AM_SHARE("spriteram")			/* Sprites */
+	AM_RANGE(0x1b4000, 0x1b4001) AM_DEVWRITE_MODERN("spriteram", buffered_spriteram16_device, write) /* DMA flag */
 	AM_RANGE(0x1bc000, 0x1bc0ff) AM_WRITE(deco16_104_cninja_prot_w) AM_BASE(&deco16_prot_ram)		/* Protection writes */
 	AM_RANGE(0x1bc000, 0x1bcfff) AM_READ(deco16_104_cninja_prot_r) AM_BASE(&deco16_prot_ram)		/* Protection device */
 
@@ -196,7 +196,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( cninjabl_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x0bffff) AM_ROM
 
-	AM_RANGE(0x138000, 0x1387ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram) /* bootleg sprite-ram (sprites rewritten here in new format) */
+	AM_RANGE(0x138000, 0x1387ff) AM_RAM AM_SHARE("spriteram") /* bootleg sprite-ram (sprites rewritten here in new format) */
 
 	AM_RANGE(0x140000, 0x14000f) AM_WRITE(cninja_pf12_control_w)
 	AM_RANGE(0x144000, 0x144fff) AM_DEVREADWRITE("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
@@ -220,7 +220,7 @@ static ADDRESS_MAP_START( cninjabl_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x190000, 0x190007) AM_READWRITE(cninja_irq_r, cninja_irq_w)
 	AM_RANGE(0x19c000, 0x19dfff) AM_RAM_DEVWRITE("deco_common", decocomn_nonbuffered_palette_w) AM_BASE_GENERIC(paletteram)
 
-	AM_RANGE(0x1b4000, 0x1b4001) AM_WRITE(buffer_spriteram16_w) /* DMA flag */
+	AM_RANGE(0x1b4000, 0x1b4001) AM_DEVWRITE_MODERN("spriteram", buffered_spriteram16_device, write) /* DMA flag */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( edrandy_map, AS_PROGRAM, 16 )
@@ -245,8 +245,8 @@ static ADDRESS_MAP_START( edrandy_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x199750, 0x199751) AM_WRITENOP /* Looks like a bug in game code, a protection write is referenced off a5 instead of a6 and ends up here */
 
 	AM_RANGE(0x1a4000, 0x1a4007) AM_READWRITE(cninja_irq_r, cninja_irq_w)
-	AM_RANGE(0x1ac000, 0x1ac001) AM_WRITE(buffer_spriteram16_w) /* DMA flag */
-	AM_RANGE(0x1bc000, 0x1bc7ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram) /* Sprites */
+	AM_RANGE(0x1ac000, 0x1ac001) AM_DEVWRITE_MODERN("spriteram", buffered_spriteram16_device, write) /* DMA flag */
+	AM_RANGE(0x1bc000, 0x1bc7ff) AM_RAM AM_SHARE("spriteram") /* Sprites */
 	AM_RANGE(0x1bc800, 0x1bcfff) AM_WRITENOP /* Another bug in game code?  Sprite list can overrun.  Doesn't seem to mirror */
 ADDRESS_MAP_END
 
@@ -266,11 +266,11 @@ static ADDRESS_MAP_START( robocop2_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x15c000, 0x15c7ff) AM_RAM AM_BASE_MEMBER(cninja_state, m_pf3_rowscroll)
 	AM_RANGE(0x15e000, 0x15e7ff) AM_RAM AM_BASE_MEMBER(cninja_state, m_pf4_rowscroll)
 
-	AM_RANGE(0x180000, 0x1807ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
+	AM_RANGE(0x180000, 0x1807ff) AM_RAM AM_SHARE("spriteram")
 //  AM_RANGE(0x18c000, 0x18c0ff) AM_WRITE(cninja_loopback_w) /* Protection writes */
 	AM_RANGE(0x18c000, 0x18c7ff) AM_READ(robocop2_prot_r) /* Protection device */
 	AM_RANGE(0x18c064, 0x18c065) AM_WRITE(cninja_sound_w)
-	AM_RANGE(0x198000, 0x198001) AM_WRITE(buffer_spriteram16_w) /* DMA flag */
+	AM_RANGE(0x198000, 0x198001) AM_DEVWRITE_MODERN("spriteram", buffered_spriteram16_device, write) /* DMA flag */
 	AM_RANGE(0x1a8000, 0x1a9fff) AM_RAM_DEVWRITE("deco_common", decocomn_nonbuffered_palette_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x1b0000, 0x1b0007) AM_READWRITE(cninja_irq_r, cninja_irq_w)
 	AM_RANGE(0x1b8000, 0x1bbfff) AM_RAM AM_BASE_MEMBER(cninja_state, m_ram) /* Main ram */
@@ -281,14 +281,14 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( mutantf_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x100000, 0x103fff) AM_RAM
-	AM_RANGE(0x120000, 0x1207ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram)
-	AM_RANGE(0x140000, 0x1407ff) AM_RAM AM_BASE_SIZE_GENERIC(spriteram2)
+	AM_RANGE(0x120000, 0x1207ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x140000, 0x1407ff) AM_RAM AM_SHARE("spriteram2")
 	AM_RANGE(0x160000, 0x161fff) AM_RAM_DEVWRITE("deco_common", decocomn_nonbuffered_palette_w) AM_BASE_GENERIC(paletteram)
 	AM_RANGE(0x180000, 0x180001) AM_DEVWRITE("deco_common", decocomn_priority_w)
 	AM_RANGE(0x180002, 0x180003) AM_WRITENOP /* VBL irq ack */
 	AM_RANGE(0x1a0000, 0x1a07ff) AM_READWRITE(deco16_66_prot_r, deco16_66_prot_w) AM_BASE(&deco16_prot_ram) /* Protection device */
-	AM_RANGE(0x1c0000, 0x1c0001) AM_WRITE(buffer_spriteram16_w) AM_DEVREAD("deco_common", decocomn_71_r)
-	AM_RANGE(0x1e0000, 0x1e0001) AM_WRITE(buffer_spriteram16_2_w)
+	AM_RANGE(0x1c0000, 0x1c0001) AM_DEVWRITE_MODERN("spriteram", buffered_spriteram16_device, write) AM_DEVREAD("deco_common", decocomn_71_r)
+	AM_RANGE(0x1e0000, 0x1e0001) AM_DEVWRITE_MODERN("spriteram2", buffered_spriteram16_device, write)
 
 	AM_RANGE(0x300000, 0x30000f) AM_WRITE(cninja_pf12_control_w)
 	AM_RANGE(0x304000, 0x305fff) AM_DEVREADWRITE("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
@@ -924,8 +924,6 @@ static MACHINE_CONFIG_START( cninja, cninja_state )
 	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_BUFFERS_SPRITERAM)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(58)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
@@ -934,6 +932,8 @@ static MACHINE_CONFIG_START( cninja, cninja_state )
 
 	MCFG_GFXDECODE(cninja)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 
 	MCFG_DECOCOMN_ADD("deco_common", cninja_decocomn_intf)
 
@@ -978,8 +978,6 @@ static MACHINE_CONFIG_START( stoneage, cninja_state )
 	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_BUFFERS_SPRITERAM)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(58)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
@@ -990,6 +988,8 @@ static MACHINE_CONFIG_START( stoneage, cninja_state )
 	MCFG_PALETTE_LENGTH(2048)
 
 	MCFG_VIDEO_START(stoneage)
+
+	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 
 	MCFG_DECOCOMN_ADD("deco_common", cninja_decocomn_intf)
 
@@ -1032,8 +1032,6 @@ static MACHINE_CONFIG_START( cninjabl, cninja_state )
 	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_BUFFERS_SPRITERAM)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(58)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
@@ -1042,6 +1040,8 @@ static MACHINE_CONFIG_START( cninjabl, cninja_state )
 
 	MCFG_GFXDECODE(cninjabl)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 
 	MCFG_DECOCOMN_ADD("deco_common", cninja_decocomn_intf)
 
@@ -1077,8 +1077,6 @@ static MACHINE_CONFIG_START( edrandy, cninja_state )
 	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_BUFFERS_SPRITERAM)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(58)
 	MCFG_SCREEN_SIZE(32*8, 32*8)
@@ -1087,6 +1085,8 @@ static MACHINE_CONFIG_START( edrandy, cninja_state )
 
 	MCFG_GFXDECODE(cninja)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 
 	MCFG_DECOCOMN_ADD("deco_common", cninja_decocomn_intf)
 
@@ -1131,8 +1131,6 @@ static MACHINE_CONFIG_START( robocop2, cninja_state )
 	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_BUFFERS_SPRITERAM)
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
@@ -1141,6 +1139,8 @@ static MACHINE_CONFIG_START( robocop2, cninja_state )
 
 	MCFG_GFXDECODE(robocop2)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 
 	MCFG_DECOCOMN_ADD("deco_common", cninja_decocomn_intf)
 
@@ -1186,8 +1186,6 @@ static MACHINE_CONFIG_START( mutantf, cninja_state )
 	MCFG_MACHINE_RESET(cninja)
 
 	/* video hardware */
-	MCFG_VIDEO_ATTRIBUTES(VIDEO_BUFFERS_SPRITERAM )
-
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_SIZE(40*8, 32*8)
@@ -1198,6 +1196,9 @@ static MACHINE_CONFIG_START( mutantf, cninja_state )
 
 	MCFG_GFXDECODE(mutantf)
 	MCFG_PALETTE_LENGTH(2048)
+
+	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
+	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram2")
 
 	MCFG_DECOCOMN_ADD("deco_common", cninja_decocomn_intf)
 
@@ -1318,6 +1319,47 @@ ROM_START( cninjau ) /* US ver 4 */
 	ROM_LOAD16_BYTE( "gm-05-2.3k", 0x00001, 0x20000, CRC(7417d3fb) SHA1(24c65101585955d56440b63a307021b5c137d7b9) )
 	ROM_LOAD16_BYTE( "gm-01-2.1j", 0x40000, 0x20000, CRC(72041f7e) SHA1(cad62d6f3d77e361c7bb642401544baf01aec40d) )
 	ROM_LOAD16_BYTE( "gm-04-2.3j", 0x40001, 0x20000, CRC(2104d005) SHA1(7fcb33745f1200024a05feb87a35b82de6030bd2) )
+	ROM_LOAD16_BYTE( "gn-00.rom",  0x80000, 0x20000, CRC(0b110b16) SHA1(a967c8aeae3f0cee1f354583cf26ee736636aaf8) )
+	ROM_LOAD16_BYTE( "gn-03.rom",  0x80001, 0x20000, CRC(1e28e697) SHA1(2313e97f3a34892dfdc338944c0f00538fcae800) )
+
+	ROM_REGION( 0x10000, "audiocpu", 0 ) /* Sound CPU */
+	ROM_LOAD( "gl-07.rom",  0x00000,  0x10000,  CRC(ca8bef96) SHA1(fcdbd598c85e339a3389a2ef58cf2d5b3a2779af) )
+
+	ROM_REGION( 0x020000, "gfx1", 0 )
+	ROM_LOAD16_BYTE( "gl-08.rom",  0x00001,  0x10000,  CRC(33a2b400) SHA1(fdb8de315f33705719c0ac03a61fb56ffbfdf597) )	/* chars */
+	ROM_LOAD16_BYTE( "gl-09.rom",  0x00000,  0x10000,  CRC(5a2d4752) SHA1(617dd10a99b5b55ca64dcdd22a0f133b0d6b770d) )
+
+	ROM_REGION( 0x080000, "gfx2", 0 )
+	ROM_LOAD( "mag-02.rom", 0x000000, 0x80000,  CRC(de89c69a) SHA1(b41bdf859854b5541c7eae7cd541b910cea1f839) )	/* tiles 3 */
+
+	ROM_REGION( 0x100000, "gfx3", 0 )
+	ROM_LOAD( "mag-00.rom", 0x000000, 0x40000,  CRC(a8f05d33) SHA1(a1330bc9ca4648219403db087622badfc632b47d) )	/* tiles 1 */
+	ROM_CONTINUE(           0x080000, 0x40000 )
+	ROM_LOAD( "mag-01.rom", 0x040000, 0x40000,  CRC(5b399eed) SHA1(490f8f9c0c557b0ba94c6019e3fe680641a0787e) )	/* tiles 2 */
+	ROM_CONTINUE(           0x0c0000, 0x40000 )
+
+	ROM_REGION( 0x200000, "gfx4", 0 )
+	ROM_LOAD16_BYTE( "mag-03.rom", 0x000000, 0x80000,  CRC(2220eb9f) SHA1(bdf0bd6e6ba375f0770b9d08a7efa32201cbb6ef) )	/* sprites */
+	ROM_LOAD16_BYTE( "mag-05.rom", 0x000001, 0x80000,  CRC(56a53254) SHA1(10940cfdc6fbe9013865107de3394ca7f782d9c7) )
+	ROM_LOAD16_BYTE( "mag-04.rom", 0x100000, 0x80000,  CRC(144b94cc) SHA1(d982508608942a714b428a2b721bf24e1627cbb6) )
+	ROM_LOAD16_BYTE( "mag-06.rom", 0x100001, 0x80000,  CRC(82d44749) SHA1(c471fa573e00c2f8ae44068439ba6d849a124c68) )
+
+	ROM_REGION( 0x40000, "oki1", 0 ) /* Oki samples */
+	ROM_LOAD( "gl-06.rom",  0x00000,  0x20000,  CRC(d92e519d) SHA1(08238f12bf7058a3965ab6348b468e3d35d4cd23) )
+
+	ROM_REGION( 0x80000, "oki2", 0 ) /* Extra Oki samples */
+	ROM_LOAD( "mag-07.rom", 0x00000,  0x80000,  CRC(08eb5264) SHA1(3e33085f00b758acfc78034dc9a75fd6921fc3fe) )	/* banked */
+
+	ROM_REGION( 1024, "proms", 0 )
+	ROM_LOAD( "mb7122h.7v", 0x00000,  0x400,  CRC(a1267336) SHA1(d11ea9d78526ac3c0dc6e57a2da5914273ad1e3f) )	/* Priority  Unused */
+ROM_END
+
+ROM_START( cninjaa )
+	ROM_REGION( 0xc0000, "maincpu", 0 ) /* 68000 code */
+	ROM_LOAD16_BYTE( "1.1k",       0x00000, 0x20000, CRC(a6c40959) SHA1(01d223b76a7798d5bd8b542b9ce8e3ca203205be) )
+	ROM_LOAD16_BYTE( "4.3k",       0x00001, 0x20000, CRC(2e01d1fd) SHA1(14ba377c86535c409b7b01deddf6fb5681fa3397) )
+	ROM_LOAD16_BYTE( "2.2j",       0x40000, 0x20000, CRC(18f0527c) SHA1(17b7ea68909c7c8b819578e2039f5be4a640ea75) )
+	ROM_LOAD16_BYTE( "5.3j",       0x40001, 0x20000, CRC(ea4b6d53) SHA1(263319750524756319587b6e51dfead0265809cb) )
 	ROM_LOAD16_BYTE( "gn-00.rom",  0x80000, 0x20000, CRC(0b110b16) SHA1(a967c8aeae3f0cee1f354583cf26ee736636aaf8) )
 	ROM_LOAD16_BYTE( "gn-03.rom",  0x80001, 0x20000, CRC(1e28e697) SHA1(2313e97f3a34892dfdc338944c0f00538fcae800) )
 
@@ -2052,6 +2094,7 @@ GAME( 1990, edrandy1, edrandy, edrandy,  edrandc, 0,        ROT0, "Data East Cor
 GAME( 1990, edrandyj, edrandy, edrandy,  edrandc, 0,        ROT0, "Data East Corporation", "The Cliffhanger - Edward Randy (Japan ver 3)", GAME_SUPPORTS_SAVE )
 GAME( 1991, cninja,   0,       cninja,   cninja,  cninja,   ROT0, "Data East Corporation", "Caveman Ninja (World ver 4)", GAME_SUPPORTS_SAVE )
 GAME( 1991, cninja1,  cninja,  cninja,   cninja,  cninja,   ROT0, "Data East Corporation", "Caveman Ninja (World ver 1)", GAME_SUPPORTS_SAVE )
+GAME( 1991, cninjaa,  cninja,  cninja,   cninja,  cninja,   ROT0, "Data East Corporation", "Caveman Ninja (alternate)", GAME_SUPPORTS_SAVE )
 GAME( 1991, cninjau,  cninja,  cninja,   cninjau, cninja,   ROT0, "Data East Corporation", "Caveman Ninja (US ver 4)", GAME_SUPPORTS_SAVE )
 GAME( 1991, joemac,   cninja,  cninja,   cninja,  cninja,   ROT0, "Data East Corporation", "Tatakae Genshizin Joe & Mac (Japan ver 1)", GAME_SUPPORTS_SAVE )
 GAME( 1991, stoneage, cninja,  stoneage, cninja,  stoneage, ROT0, "bootleg", "Stoneage (bootleg of Caveman Ninja)", GAME_SUPPORTS_SAVE )

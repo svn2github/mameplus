@@ -52,7 +52,7 @@
 #include <ctype.h>
 #include <new>
 
-#define NUM_PROCESSORS_SUPPORTED 1
+
 
 //**************************************************************************
 //  CONSTANTS & DEFINES
@@ -63,6 +63,11 @@ const UINT32 IDE_SECTOR_SIZE = 512;
 
 // temporary input buffer size
 const UINT32 TEMP_BUFFER_SIZE = 32 * 1024 * 1024;
+
+// modes
+const int MODE_NORMAL = 0;
+const int MODE_CUEBIN = 1;
+const int MODE_GDI = 2;
 
 // command modifier
 #define REQUIRED "~"
@@ -111,7 +116,6 @@ const UINT32 TEMP_BUFFER_SIZE = 32 * 1024 * 1024;
 #define OPTION_VERBOSE "verbose"
 #define OPTION_FIX "fix"
 #define OPTION_NUMPROCESSORS "numprocessors"
-
 
 
 //**************************************************************************
@@ -318,17 +322,25 @@ public:
 				UINT32 bytesperframe = trackinfo.datasize + trackinfo.subsize;
 				UINT64 src_track_start = m_info.track[tracknum].offset;
 				UINT64 src_track_end = src_track_start + bytesperframe * trackinfo.frames;
+				UINT64 pad_track_start = src_track_end - (m_toc.tracks[tracknum].padframes * bytesperframe);
 				while (length_remaining != 0 && offset < endoffs)
 				{
 					// determine start of current frame
 					UINT64 src_frame_start = src_track_start + ((offset - startoffs) / CD_FRAME_SIZE) * bytesperframe;
 					if (src_frame_start < src_track_end)
 					{
-						// read it in
-						core_fseek(m_file, src_frame_start, SEEK_SET);
-						UINT32 count = core_fread(m_file, dest, bytesperframe);
-						if (count != bytesperframe)
-							report_error(1, "Error reading input file (%s)'", m_lastfile.cstr());
+						// read it in, or pad if we're into the padframes
+						if (src_frame_start >= pad_track_start)
+						{
+							memset(dest, 0, bytesperframe);
+						}
+						else
+						{
+							core_fseek(m_file, src_frame_start, SEEK_SET);
+							UINT32 count = core_fread(m_file, dest, bytesperframe);
+							if (count != bytesperframe)
+								report_error(1, "Error reading input file (%s)'", m_lastfile.cstr());
+						}
 
 						// swap if appropriate
 						if (m_info.track[tracknum].swap)
@@ -507,9 +519,7 @@ static const option_description s_options[] =
 	{ OPTION_INDEX,					"ix",	true, " <index>: indexed instance of this metadata tag" },
 	{ OPTION_VALUE_TEXT,			"vt",	true, " <text>: text for the metadata" },
 	{ OPTION_VALUE_FILE,			"vf",	true, " <file>: file containing data to add" },
-#if NUM_PROCESSORS_SUPPORTED
 	{ OPTION_NUMPROCESSORS,			"np",	true, " <processors>: limit the number of processors to use during compression" },
-#endif
 	{ OPTION_NO_CHECKSUM,			"nocs",	false, ": do not include this metadata information in the overall SHA-1" },
 	{ OPTION_FIX,					"f",	false, ": fix the SHA-1 if it is incorrect" },
 	{ OPTION_VERBOSE,				"v",	false, ": output additional information" },
@@ -546,9 +556,7 @@ static const command_description s_commands[] =
 			REQUIRED OPTION_HUNK_SIZE,
 			REQUIRED OPTION_UNIT_SIZE,
 			OPTION_COMPRESSION,
-#if NUM_PROCESSORS_SUPPORTED
 			OPTION_NUMPROCESSORS
-#endif
 		}
 	},
 
@@ -567,9 +575,7 @@ static const command_description s_commands[] =
 			OPTION_IDENT,
 			OPTION_CHS,
 			OPTION_SECTOR_SIZE,
-#if NUM_PROCESSORS_SUPPORTED
 			OPTION_NUMPROCESSORS
-#endif
 		}
 	},
 
@@ -581,9 +587,7 @@ static const command_description s_commands[] =
 			REQUIRED OPTION_INPUT,
 			OPTION_HUNK_SIZE,
 			OPTION_COMPRESSION,
-#if NUM_PROCESSORS_SUPPORTED
 			OPTION_NUMPROCESSORS
-#endif
 		}
 	},
 
@@ -597,9 +601,7 @@ static const command_description s_commands[] =
 			OPTION_INPUT_LENGTH_FRAMES,
 			OPTION_HUNK_SIZE,
 			OPTION_COMPRESSION,
-#if NUM_PROCESSORS_SUPPORTED
 			OPTION_NUMPROCESSORS
-#endif
 		}
 	},
 
@@ -663,9 +665,7 @@ static const command_description s_commands[] =
 			OPTION_INPUT_LENGTH_HUNKS,
 			OPTION_HUNK_SIZE,
 			OPTION_COMPRESSION,
-#if NUM_PROCESSORS_SUPPORTED
 			OPTION_NUMPROCESSORS
-#endif
 		}
 	},
 
@@ -1096,7 +1096,6 @@ static void parse_compression(const parameters_t &params, chd_codec_type compres
 
 static void parse_numprocessors(const parameters_t &params)
 {
-#if NUM_PROCESSORS_SUPPORTED
 	astring *numprocessors_str = params.find(OPTION_NUMPROCESSORS);
 	if (numprocessors_str == NULL)
 		return;
@@ -1107,7 +1106,6 @@ static void parse_numprocessors(const parameters_t &params)
 		extern int osd_num_processors;
 		osd_num_processors = count;
 	}
-#endif
 }
 
 
@@ -1170,10 +1168,57 @@ static void compress_common(chd_file_compressor &chd)
 //  to a CUE file
 //-------------------------------------------------
 
-void output_track_metadata(bool cuemode, core_file *file, int tracknum, const cdrom_track_info &info, const char *filename, UINT32 frameoffs, UINT64 discoffs)
+void output_track_metadata(int mode, core_file *file, int tracknum, const cdrom_track_info &info, const char *filename, UINT32 frameoffs, UINT64 discoffs)
 {
-	// CUE mode?
-	if (cuemode)
+	if (mode == MODE_GDI)
+	{
+		int mode = 0, size = 2048;
+
+		switch (info.trktype)
+		{
+			case CD_TRACK_MODE1:
+				mode = 0;
+				size = 2048;
+				break;
+
+			case CD_TRACK_MODE1_RAW:
+				mode = 4;
+				size = 2352;
+				break;
+
+			case CD_TRACK_MODE2:
+				mode = 4;
+				size = 2336;
+				break;
+
+			case CD_TRACK_MODE2_FORM1:
+				mode = 4;
+				size = 2048;
+				break;
+
+			case CD_TRACK_MODE2_FORM2:
+				mode = 4;
+				size = 2324;
+				break;
+
+			case CD_TRACK_MODE2_FORM_MIX:
+				mode = 4;
+				size = 2336;
+				break;
+
+			case CD_TRACK_MODE2_RAW:
+				mode = 4;
+				size = 2352;
+				break;
+
+			case CD_TRACK_AUDIO:
+				mode = 0;
+				size = 2352;
+				break;
+		}
+		core_fprintf(file, "%d %d %d %d %s %" I64FMT "d\n", tracknum+1, frameoffs, mode, size, filename, discoffs);
+	}
+	else if (mode == MODE_CUEBIN)
 	{
 		// first track specifies the file
 		if (tracknum == 0)
@@ -1215,9 +1260,8 @@ void output_track_metadata(bool cuemode, core_file *file, int tracknum, const cd
 		if (info.postgap > 0)
 			core_fprintf(file, "    POSTGAP %s\n", msf_string_from_frames(tempstr, info.postgap));
 	}
-
 	// non-CUE mode
-	else
+	else if (mode == MODE_NORMAL)
 	{
 		// header on the first track
 		if (tracknum == 0)
@@ -1552,24 +1596,26 @@ static void do_create_raw(parameters_t &params)
 	printf("Logical size: %s\n", big_int_string(tempstr, input_end - input_start));
 
 	// catch errors so we can close & delete the output file
+	chd_rawfile_compressor *chd = NULL;
 	try
 	{
 		// create the new CHD
-		chd_rawfile_compressor chd(input_file, input_start, input_end);
+		chd = new chd_rawfile_compressor(input_file, input_start, input_end);
 		chd_error err;
 		if (output_parent.opened())
-			err = chd.create(*output_chd_str, input_end - input_start, hunk_size, compression, output_parent);
+			err = chd->create(*output_chd_str, input_end - input_start, hunk_size, compression, output_parent);
 		else
-			err = chd.create(*output_chd_str, input_end - input_start, hunk_size, unit_size, compression);
+			err = chd->create(*output_chd_str, input_end - input_start, hunk_size, unit_size, compression);
 		if (err != CHDERR_NONE)
 			report_error(1, "Error creating CHD file (%s): %s", output_chd_str->cstr(), chd_file::error_string(err));
 
 		// if we have a parent, copy forward all the metadata
 		if (output_parent.opened())
-			chd.clone_all_metadata(output_parent);
+			chd->clone_all_metadata(output_parent);
 
 		// compress it generically
-		compress_common(chd);
+		compress_common(*chd);
+		delete chd;
 	}
 	catch (...)
 	{
@@ -1577,6 +1623,7 @@ static void do_create_raw(parameters_t &params)
 		astring *output_chd_str = params.find(OPTION_OUTPUT);
 		if (output_chd_str != NULL)
 			osd_rmfile(*output_chd_str);
+		delete chd;
 		throw;
 	}
 }
@@ -1710,36 +1757,38 @@ static void do_create_hd(parameters_t &params)
 	printf("Logical size: %s\n", big_int_string(tempstr, UINT64(totalsectors) * UINT64(sector_size)));
 
 	// catch errors so we can close & delete the output file
+	chd_rawfile_compressor *chd = NULL;
 	try
 	{
 		// create the new hard drive
-		chd_rawfile_compressor chd(input_file, input_start, input_end);
+		chd = new chd_rawfile_compressor(input_file, input_start, input_end);
 		chd_error err;
 		if (output_parent.opened())
-			err = chd.create(*output_chd_str, UINT64(totalsectors) * UINT64(sector_size), hunk_size, compression, output_parent);
+			err = chd->create(*output_chd_str, UINT64(totalsectors) * UINT64(sector_size), hunk_size, compression, output_parent);
 		else
-			err = chd.create(*output_chd_str, UINT64(totalsectors) * UINT64(sector_size), hunk_size, sector_size, compression);
+			err = chd->create(*output_chd_str, UINT64(totalsectors) * UINT64(sector_size), hunk_size, sector_size, compression);
 		if (err != CHDERR_NONE)
 			report_error(1, "Error creating CHD file (%s): %s", output_chd_str->cstr(), chd_file::error_string(err));
 
 		// add the standard hard disk metadata
 		astring metadata;
 		metadata.format(HARD_DISK_METADATA_FORMAT, cylinders, heads, sectors, sector_size);
-		err = chd.write_metadata(HARD_DISK_METADATA_TAG, 0, metadata);
+		err = chd->write_metadata(HARD_DISK_METADATA_TAG, 0, metadata);
 		if (err != CHDERR_NONE)
 			report_error(1, "Error adding hard disk metadata: %s", chd_file::error_string(err));
 
 		// write the ident if present
 		if (identdata.count() > 0)
 		{
-			err = chd.write_metadata(HARD_DISK_IDENT_METADATA_TAG, 0, identdata);
+			err = chd->write_metadata(HARD_DISK_IDENT_METADATA_TAG, 0, identdata);
 			if (err != CHDERR_NONE)
 				report_error(1, "Error adding hard disk metadata: %s", chd_file::error_string(err));
 		}
 
 		// compress it generically
 		if (input_file != NULL)
-			compress_common(chd);
+			compress_common(*chd);
+		delete chd;
 	}
 	catch (...)
 	{
@@ -1747,6 +1796,7 @@ static void do_create_hd(parameters_t &params)
 		astring *output_chd_str = params.find(OPTION_OUTPUT);
 		if (output_chd_str != NULL)
 			osd_rmfile(*output_chd_str);
+		delete chd;
 		throw;
 	}
 }
@@ -1810,25 +1860,27 @@ static void do_create_cd(parameters_t &params)
 	printf("Logical size: %s\n", big_int_string(tempstr, UINT64(totalsectors) * CD_FRAME_SIZE));
 
 	// catch errors so we can close & delete the output file
+	chd_cd_compressor *chd = NULL;
 	try
 	{
-		// create the new hard drive
-		chd_cd_compressor chd(toc, track_info);
+		// create the new CD
+		chd = new chd_cd_compressor(toc, track_info);
 		chd_error err;
 		if (output_parent.opened())
-			err = chd.create(*output_chd_str, UINT64(totalsectors) * UINT64(CD_FRAME_SIZE), hunk_size, compression, output_parent);
+			err = chd->create(*output_chd_str, UINT64(totalsectors) * UINT64(CD_FRAME_SIZE), hunk_size, compression, output_parent);
 		else
-			err = chd.create(*output_chd_str, UINT64(totalsectors) * UINT64(CD_FRAME_SIZE), hunk_size, CD_FRAME_SIZE, compression);
+			err = chd->create(*output_chd_str, UINT64(totalsectors) * UINT64(CD_FRAME_SIZE), hunk_size, CD_FRAME_SIZE, compression);
 		if (err != CHDERR_NONE)
 			report_error(1, "Error creating CHD file (%s): %s", output_chd_str->cstr(), chd_file::error_string(err));
 
 		// add the standard CD metadata; we do this even if we have a parent because it might be different
-		err = cdrom_write_metadata(&chd, &toc);
+		err = cdrom_write_metadata(chd, &toc);
 		if (err != CHDERR_NONE)
 			report_error(1, "Error adding CD metadata: %s", chd_file::error_string(err));
 
 		// compress it generically
-		compress_common(chd);
+		compress_common(*chd);
+		delete chd;
 	}
 	catch (...)
 	{
@@ -1836,6 +1888,7 @@ static void do_create_cd(parameters_t &params)
 		astring *output_chd_str = params.find(OPTION_OUTPUT);
 		if (output_chd_str != NULL)
 			osd_rmfile(*output_chd_str);
+		delete chd;
 		throw;
 	}
 }
@@ -1922,35 +1975,37 @@ static void do_create_ld(parameters_t &params)
 	printf("Logical size: %s\n", big_int_string(tempstr, UINT64(input_end - input_start) * hunk_size));
 
 	// catch errors so we can close & delete the output file
+	chd_avi_compressor *chd = NULL;
 	try
 	{
 		// create the new CHD
-		chd_avi_compressor chd(*input_file, info, input_start, input_end);
+		chd = new chd_avi_compressor(*input_file, info, input_start, input_end);
 		chd_error err;
 		if (output_parent.opened())
-			err = chd.create(*output_chd_str, UINT64(input_end - input_start) * hunk_size, hunk_size, compression, output_parent);
+			err = chd->create(*output_chd_str, UINT64(input_end - input_start) * hunk_size, hunk_size, compression, output_parent);
 		else
-			err = chd.create(*output_chd_str, UINT64(input_end - input_start) * hunk_size, hunk_size, info.bytes_per_frame, compression);
+			err = chd->create(*output_chd_str, UINT64(input_end - input_start) * hunk_size, hunk_size, info.bytes_per_frame, compression);
 		if (err != CHDERR_NONE)
 			report_error(1, "Error creating CHD file (%s): %s", output_chd_str->cstr(), chd_file::error_string(err));
 
 		// write the core A/V metadata
 		astring metadata;
 		metadata.format(AV_METADATA_FORMAT, info.fps_times_1million / 1000000, info.fps_times_1million % 1000000, info.width, info.height, info.interlaced, info.channels, info.rate);
-		err = chd.write_metadata(AV_METADATA_TAG, 0, metadata);
+		err = chd->write_metadata(AV_METADATA_TAG, 0, metadata);
 		if (err != CHDERR_NONE)
 			report_error(1, "Error adding AV metadata: %s\n", chd_file::error_string(err));
 
 		// create the compressor and then run it generically
-		compress_common(chd);
+		compress_common(*chd);
 
 		// write the final LD metadata
 		if (info.height == 524/2 || info.height == 624/2)
 		{
-			err = chd.write_metadata(AV_LD_METADATA_TAG, 0, chd.ldframedata());
+			err = chd->write_metadata(AV_LD_METADATA_TAG, 0, chd->ldframedata(), 0);
 			if (err != CHDERR_NONE)
 				report_error(1, "Error adding AVLD metadata: %s\n", chd_file::error_string(err));
 		}
+		delete chd;
 	}
 	catch (...)
 	{
@@ -1958,6 +2013,7 @@ static void do_create_ld(parameters_t &params)
 		astring *output_chd_str = params.find(OPTION_OUTPUT);
 		if (output_chd_str != NULL)
 			osd_rmfile(*output_chd_str);
+		delete chd;
 		throw;
 	}
 }
@@ -2026,15 +2082,16 @@ static void do_copy(parameters_t &params)
 	printf("Logical size: %s\n", big_int_string(tempstr, input_end - input_start));
 
 	// catch errors so we can close & delete the output file
+	chd_chdfile_compressor *chd = NULL;
 	try
 	{
 		// create the new CHD
-		chd_chdfile_compressor chd(input_chd, input_start, input_end);
+		chd = new chd_chdfile_compressor(input_chd, input_start, input_end);
 		chd_error err;
 		if (output_parent.opened())
-			err = chd.create(*output_chd_str, input_end - input_start, hunk_size, compression, output_parent);
+			err = chd->create(*output_chd_str, input_end - input_start, hunk_size, compression, output_parent);
 		else
-			err = chd.create(*output_chd_str, input_end - input_start, hunk_size, input_chd.unit_bytes(), compression);
+			err = chd->create(*output_chd_str, input_end - input_start, hunk_size, input_chd.unit_bytes(), compression);
 		if (err != CHDERR_NONE)
 			report_error(1, "Error creating CHD file (%s): %s", output_chd_str->cstr(), chd_file::error_string(err));
 
@@ -2054,7 +2111,7 @@ static void do_copy(parameters_t &params)
 			}
 
 			// otherwise, clone it
-			err = chd.write_metadata(metatag, CHDMETAINDEX_APPEND, metadata);
+			err = chd->write_metadata(metatag, CHDMETAINDEX_APPEND, metadata, metaflags);
 			if (err != CHDERR_NONE)
 				report_error(1, "Error writing cloned metadata: %s", chd_file::error_string(err));
 		}
@@ -2066,13 +2123,14 @@ static void do_copy(parameters_t &params)
 			if (cdrom == NULL)
 				report_error(1, "Error upgrading CD metadata");
 			const cdrom_toc *toc = cdrom_get_toc(cdrom);
-			err = cdrom_write_metadata(&chd, toc);
+			err = cdrom_write_metadata(chd, toc);
 			if (err != CHDERR_NONE)
 				report_error(1, "Error writing upgraded CD metadata: %s", chd_file::error_string(err));
 		}
 
 		// compress it generically
-		compress_common(chd);
+		compress_common(*chd);
+		delete chd;
 	}
 	catch (...)
 	{
@@ -2080,6 +2138,7 @@ static void do_copy(parameters_t &params)
 		astring *output_chd_str = params.find(OPTION_OUTPUT);
 		if (output_chd_str != NULL)
 			osd_rmfile(*output_chd_str);
+		delete chd;
 		throw;
 	}
 }
@@ -2193,6 +2252,8 @@ static void do_extract_cd(parameters_t &params)
 	int chop = default_name.rchr(0, '.');
 	if (chop != -1)
 		default_name.substr(0, chop);
+	char basename[128];
+	strncpy(basename, default_name.cstr(), 127);
 	default_name.cat(".bin");
 	if (output_bin_file_str == NULL)
 		output_bin_file_str = &default_name;
@@ -2209,21 +2270,40 @@ static void do_extract_cd(parameters_t &params)
 	core_file *output_toc_file = NULL;
 	try
 	{
+		int mode = MODE_NORMAL;
+
+		if (output_file_str->find(".cue") != -1)
+		{
+			mode = MODE_CUEBIN;
+		}
+		else if (output_file_str->find(".gdi") != -1)
+		{
+			mode = MODE_GDI;
+		}
+
 		// process output file
 		file_error filerr = core_fopen(*output_file_str, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_NO_BOM, &output_toc_file);
 		if (filerr != FILERR_NONE)
 			report_error(1, "Unable to open file (%s)", output_file_str->cstr());
-		bool cuemode = (output_file_str->find(".cue") != -1);
 
 		// process output BIN file
-		filerr = core_fopen(*output_bin_file_str, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &output_bin_file);
-		if (filerr != FILERR_NONE)
-			report_error(1, "Unable to open file (%s)", output_bin_file_str->cstr());
+		if (mode != MODE_GDI)
+		{
+			filerr = core_fopen(*output_bin_file_str, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &output_bin_file);
+			if (filerr != FILERR_NONE)
+				report_error(1, "Unable to open file (%s)", output_bin_file_str->cstr());
+		}
 
 		// determine total frames
 		UINT64 total_bytes = 0;
 		for (int tracknum = 0; tracknum < toc->numtrks; tracknum++)
 			total_bytes += toc->tracks[tracknum].frames * (toc->tracks[tracknum].datasize + toc->tracks[tracknum].subsize);
+
+		// GDI must start with the # of tracks
+		if (mode == MODE_GDI)
+		{
+			core_fprintf(output_toc_file, "%d\n", toc->numtrks);
+		}
 
 		// iterate over tracks and copy all data
 		UINT64 outputoffs = 0;
@@ -2231,32 +2311,56 @@ static void do_extract_cd(parameters_t &params)
 		dynamic_buffer buffer;
 		for (int tracknum = 0; tracknum < toc->numtrks; tracknum++)
 		{
+			astring trackbin_name(basename);
+
+			if (mode == MODE_GDI)
+			{
+				char temp[8];
+				sprintf(temp, "%02d", tracknum+1);
+				trackbin_name.cat(temp);
+				trackbin_name.cat(".bin");
+
+				if (output_bin_file)
+				{
+					core_fclose(output_bin_file);
+					output_bin_file = NULL;
+				}
+
+				filerr = core_fopen(trackbin_name, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &output_bin_file);
+				if (filerr != FILERR_NONE)
+					report_error(1, "Unable to open file (%s)", trackbin_name.cstr());
+
+				outputoffs = 0;
+			}
+
 			// output the metadata about the track to the TOC file
 			const cdrom_track_info &trackinfo = toc->tracks[tracknum];
-			output_track_metadata(cuemode, output_toc_file, tracknum, trackinfo, *output_bin_file_str, discoffs, outputoffs);
-
-			UINT32 output_frame_size;
+			if (mode == MODE_GDI)
+			{
+				output_track_metadata(mode, output_toc_file, tracknum, trackinfo, trackbin_name, discoffs, outputoffs);
+			}
+			else
+			{
+				output_track_metadata(mode, output_toc_file, tracknum, trackinfo, *output_bin_file_str, discoffs, outputoffs);
+			}
 
             // If this is bin/cue output and the CHD contains subdata, warn the user and don't include
             // the subdata size in the buffer calculation.
-            if ((trackinfo.subtype != CD_SUB_NONE) && (cuemode))
-            {
-                printf("Warning: Track %d has subcode data.  bin/cue format cannot contain subcode data and it will be omitted.\n", tracknum+1);
-                printf("       : This may affect usage of the output image.  Use bin/toc output to keep all data.\n");
-
-                output_frame_size = trackinfo.datasize;
-            }
-            else
-            {
-                output_frame_size = trackinfo.datasize + ((trackinfo.subtype != CD_SUB_NONE) ? trackinfo.subsize : 0);
-            }
+			UINT32 output_frame_size = trackinfo.datasize + ((trackinfo.subtype != CD_SUB_NONE) ? trackinfo.subsize : 0);
+			if (trackinfo.subtype != CD_SUB_NONE && ((mode == MODE_CUEBIN) || (mode == MODE_GDI)))
+			{
+				printf("Warning: Track %d has subcode data.  bin/cue and gdi formats cannot contain subcode data and it will be omitted.\n", tracknum+1);
+				printf("       : This may affect usage of the output image.  Use bin/toc output to keep all data.\n");
+				output_frame_size = trackinfo.datasize;
+			}
 
 			// resize the buffer for the track
 			buffer.resize((TEMP_BUFFER_SIZE / output_frame_size) * output_frame_size);
 
 			// now read and output the actual data
 			UINT32 bufferoffs = 0;
-			for (int frame = 0; frame < trackinfo.frames; frame++)
+			UINT32 actualframes = trackinfo.frames - trackinfo.padframes;
+			for (UINT32 frame = 0; frame < actualframes; frame++)
 			{
 				progress(false, "Extracting, %.1f%% complete... \r", 100.0 * double(outputoffs) / double(total_bytes));
 
@@ -2264,7 +2368,7 @@ static void do_extract_cd(parameters_t &params)
 				cdrom_read_data(cdrom, cdrom_get_track_start(cdrom, tracknum) + frame, &buffer[bufferoffs], trackinfo.trktype);
 
 				// for CDRWin, audio tracks must be reversed
-				if (cuemode && (trackinfo.trktype == CD_TRACK_AUDIO))
+				if ((mode == MODE_CUEBIN) && (trackinfo.trktype == CD_TRACK_AUDIO))
 					for (int swapindex = 0; swapindex < trackinfo.datasize; swapindex += 2)
 					{
 						UINT8 swaptemp = buffer[bufferoffs + swapindex];
@@ -2275,14 +2379,14 @@ static void do_extract_cd(parameters_t &params)
 				discoffs++;
 
 				// read the subcode data
-				if ((trackinfo.subtype != CD_SUB_NONE) && (!cuemode))
+				if (trackinfo.subtype != CD_SUB_NONE && (mode == MODE_NORMAL))
 				{
                     cdrom_read_subcode(cdrom, cdrom_get_track_start(cdrom, tracknum) + frame, &buffer[bufferoffs]);
                     bufferoffs += trackinfo.subsize;
 				}
 
 				// write it out if we need to
-				if (bufferoffs == buffer.count() || frame == trackinfo.frames - 1)
+				if (bufferoffs == buffer.count() || frame == actualframes - 1)
 				{
 					core_fseek(output_bin_file, outputoffs, SEEK_SET);
 					UINT32 byteswritten = core_fwrite(output_bin_file, buffer, bufferoffs);
@@ -2292,6 +2396,8 @@ static void do_extract_cd(parameters_t &params)
 					bufferoffs = 0;
 				}
 			}
+
+			discoffs += trackinfo.padframes;
 		}
 
 		// finish up

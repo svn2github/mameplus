@@ -254,6 +254,8 @@ const chd_metadata_tag CDROM_TRACK_METADATA_TAG = CHD_MAKE_TAG('C','H','T','R');
 extern const char *CDROM_TRACK_METADATA_FORMAT;
 const chd_metadata_tag CDROM_TRACK_METADATA2_TAG = CHD_MAKE_TAG('C','H','T','2');
 extern const char *CDROM_TRACK_METADATA2_FORMAT;
+const chd_metadata_tag GDROM_TRACK_METADATA_TAG = CHD_MAKE_TAG('C','H','G','T');
+extern const char *GDROM_TRACK_METADATA_FORMAT;
 
 // standard A/V metadata
 const chd_metadata_tag AV_METADATA_TAG = CHD_MAKE_TAG('A','V','A','V');
@@ -378,8 +380,8 @@ public:
 	chd_error read_metadata(chd_metadata_tag searchtag, UINT32 searchindex, void *output, UINT32 outputlen, UINT32 &resultlen);
 	chd_error read_metadata(chd_metadata_tag searchtag, UINT32 searchindex, dynamic_buffer &output, chd_metadata_tag &resulttag, UINT8 &resultflags);
 	chd_error write_metadata(chd_metadata_tag metatag, UINT32 metaindex, const void *inputbuf, UINT32 inputlen, UINT8 flags = CHD_MDFLAGS_CHECKSUM);
-	chd_error write_metadata(chd_metadata_tag metatag, UINT32 metaindex, const astring &input, UINT8 flags = CHD_MDFLAGS_CHECKSUM) { return write_metadata(metatag, metaindex, input.cstr(), input.len() + 1, flags = CHD_MDFLAGS_CHECKSUM); }
-	chd_error write_metadata(chd_metadata_tag metatag, UINT32 metaindex, const dynamic_buffer &input, UINT8 flags = CHD_MDFLAGS_CHECKSUM) { return write_metadata(metatag, metaindex, input, input.count(), flags = CHD_MDFLAGS_CHECKSUM); }
+	chd_error write_metadata(chd_metadata_tag metatag, UINT32 metaindex, const astring &input, UINT8 flags = CHD_MDFLAGS_CHECKSUM) { return write_metadata(metatag, metaindex, input.cstr(), input.len() + 1, flags); }
+	chd_error write_metadata(chd_metadata_tag metatag, UINT32 metaindex, const dynamic_buffer &input, UINT8 flags = CHD_MDFLAGS_CHECKSUM) { return write_metadata(metatag, metaindex, input, input.count(), flags); }
 	chd_error delete_metadata(chd_metadata_tag metatag, UINT32 metaindex);
 	chd_error clone_all_metadata(chd_file &source);
 
