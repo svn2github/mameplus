@@ -113,13 +113,13 @@ void init_pcap()
 	catch (DWORD e)
 	{
 		FreeLibrary(handle);
-		mame_printf_verbose("Unable to load winpcap: %lx\n", e);
+		mame_printf_verbose(_WINDOWS("Unable to load winpcap: %lx\n"), e);
 		return;
 	}
 	if(pcap_findalldevs_dl(&devs, errbuf) == -1)
 	{
 		FreeLibrary(handle);
-		mame_printf_verbose("Unable to get network devices: %s\n", errbuf);
+		mame_printf_verbose(_WINDOWS("Unable to get network devices: %s\n"), errbuf);
 		return;
 	}
 

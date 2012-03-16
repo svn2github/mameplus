@@ -1347,7 +1347,7 @@ static void pick_best_mode(win_window_info *window)
 		final_score = size_score + refresh_score;
 
 		// best so far?
-		mame_printf_verbose(_WINDOWS("  %4dx%4d@%3dHz -> %f\n"), mode.Width, mode.Height, mode.RefreshRate, final_score * 1000.0f);
+		mame_printf_verbose("  %4dx%4d@%3dHz -> %f\n", mode.Width, mode.Height, mode.RefreshRate, final_score * 1000.0f);
 		if (final_score > best_score)
 		{
 			best_score = final_score;

@@ -82,7 +82,7 @@ ATW USA, Inc.
 Able
 
 
-# Baluba-louk no Densetsu
+# Baluba-louk no Densetsu (Japan)
 Able Corp, Ltd.
 
 
@@ -262,7 +262,7 @@ Art & Magic
 Artic
 
 
-# Donchan no Hanabi de Doon
+# Hanabi de Doon! - Don-chan Puzzle
 Aruze
 
 
@@ -424,6 +424,10 @@ Bung
 
 # Cluedo (Maygay/BwB) v1.1 (M1A/B)
 BwB
+
+
+# Coronation Street (Maygay) v1.2 (Newer, G?) (M1A/B)
+BwB?
 
 
 # Always Eight (Bwb) (MPS)
@@ -982,8 +986,12 @@ Evona Electronic
 ExPotato
 
 
-# Arcana Heart Full
+# Arcana Heart
 Examu
+
+
+# Ichi Ban Jyan
+Excel
 
 
 # Aquarium (Japan)
@@ -1038,7 +1046,7 @@ Fascination Int.
 First Amusement
 
 
-# Forte Card (English)
+# Forte Card (Ver 103, English)
 Fortex Ltd
 
 
@@ -1068,6 +1076,10 @@ G.T Enterprise Inc
 
 # Happy Tour
 GAV Company
+
+
+# Bounty Hunter (GCTech Co., LTD)
+GCTech Co., LTD
 
 
 # Abscam
@@ -1658,6 +1670,10 @@ Mega
 Merit
 
 
+# Mann, oh-Mann
+Merkur
+
+
 # Bal Cube
 Metro
 
@@ -1756,6 +1772,10 @@ Monolith Corp.
 
 # Stars & Strikes (Bowler)
 Monroe Bowling Co.
+
+
+# Steal See (& Get Land)
+Moov Generation
 
 
 # Dakar
@@ -1994,12 +2014,20 @@ PAL System
 PCP
 
 
+# Casino Poker (Ver PM86LO-35-5, German)
+PM
+
+
 # PMA Poker
 PMA
 
 
 # The Amazing Adventures of Mr. F. Lea
 Pacific Novelty
+
+
+# Pacom Invader
+Pacom Corporation
 
 
 # Magical Odds (set 1)
@@ -2048,10 +2076,6 @@ Pioneer
 
 # Johnny Nero Action Hero
 Play Mechanix
-
-
-# PlayMan Poker (German)
-PlayMan
 
 
 # Number Dieci (Poker)
@@ -2454,6 +2478,10 @@ South West Research
 Southern Systems & Assembly
 
 
+# 7 Smash
+Sovic
+
+
 # Mosaic
 Space
 
@@ -2630,6 +2658,10 @@ TDS & Mints
 TVG
 
 
+# Boong-Ga Boong-Ga (Spank'em!)
+Taff System
+
+
 # Anteater
 Tago Electronics
 
@@ -2662,7 +2694,7 @@ Taito Corporation Japan
 Taito Europe Corporation
 
 
-# Galactica - Batalha Espacial
+# Cavaleiro Negro
 Taito do Brasil
 
 
@@ -2730,7 +2762,7 @@ Tecnoplay
 Tehkan
 
 
-# Beam Invader (set 1)
+# Beam Invader
 Tekunon Kougyou
 
 
@@ -2806,6 +2838,10 @@ Tuning
 U.S. Games
 
 
+# Pot O' Gold (U.S. Games, v400x?)
+U.S. Games Inc.
+
+
 # Ark Area
 UPL
 
@@ -2874,6 +2910,10 @@ Valley
 Vectorbeam
 
 
+# Super Bubble Pop
+Vektorlogic
+
+
 # Card Line
 Veltmeijer
 
@@ -2930,6 +2970,10 @@ Videojet/Timlex/Cougar
 Videotronics
 
 
+# SU2000
+Virtuality
+
+
 # Andro Dunos (NGM-049)(NGH-049)
 Visco
 
@@ -2970,7 +3014,7 @@ Wave
 Web Picmatic
 
 
-# Caesar's Palace (Whitbread / Crystal) (IMPACT, set 1)
+# Caesars Palace (Whitbread / Crystal) (IMPACT, set 1)
 Whitbread
 
 
