@@ -94,7 +94,7 @@ ATW USA, Inc.
 Able
 
 
-# Baluba-louk no Densetsu
+# Baluba-louk no Densetsu (Japan)
 Able Corp, Ltd.
 
 
@@ -274,7 +274,7 @@ Art & Magic
 Artic
 
 
-# Donchan no Hanabi de Doon
+# Hanabi de Doon! - Don-chan Puzzle
 Aruze
 
 
@@ -436,6 +436,10 @@ Bung
 
 # Cluedo (Maygay/BwB) v1.1 (M1A/B)
 BwB
+
+
+# Coronation Street (Maygay) v1.2 (Newer, G?) (M1A/B)
+BwB?
 
 
 # Always Eight (Bwb) (MPS)
@@ -622,7 +626,7 @@ Craul Denshi
 Creative Electronics & Software
 
 
-# Country Club Classic
+# Country Club Classic (v1.10 03-apr-1997)
 Creative Electronics And Software
 
 
@@ -854,6 +858,10 @@ Eastern Corp.
 Eastern Micro Electronics, Inc.
 
 
+# Melty Blood Actress Again
+Ecole
+
+
 # Musapey's Choco Marker (Rev A) (GDL-0014A)
 Ecole Software
 
@@ -990,8 +998,12 @@ Evona Electronic
 ExPotato
 
 
-# Arcana Heart Full
+# Arcana Heart
 Examu
+
+
+# Ichi Ban Jyan
+Excel
 
 
 # Aquarium (Japan)
@@ -1046,7 +1058,7 @@ Fascination Int.
 First Amusement
 
 
-# Forte Card
+# Forte Card (Ver 103, English)
 Fortex Ltd
 
 
@@ -1076,6 +1088,10 @@ G.T Enterprise Inc
 
 # Happy Tour
 GAV Company
+
+
+# Bounty Hunter (GCTech Co., LTD)
+GCTech Co., LTD
 
 
 # Abscam
@@ -1250,7 +1266,7 @@ Hot-B
 Hudson
 
 
-# Blazing Lazers
+# Alien Crush
 Hudson Soft
 
 
@@ -1366,7 +1382,7 @@ Invi Image
 Irem
 
 
-# Atomic Punk (US)
+# Gunforce - Battle Fire Engulfed Terror Island (US)
 Irem America
 
 
@@ -1606,6 +1622,10 @@ Make Software
 MakeSoft
 
 
+# Birdiy
+Mama Top
+
+
 # Hotdog Storm (International)
 Marble
 
@@ -1660,6 +1680,10 @@ Mega
 
 # Big Apple Games
 Merit
+
+
+# Mann, oh-Mann
+Merkur
 
 
 # Bal Cube
@@ -1762,12 +1786,20 @@ Monolith Corp.
 Monroe Bowling Co.
 
 
+# Steal See (& Get Land)
+Moov Generation
+
+
 # Dakar
 Mr Game
 
 
 # The Three Stooges In Brides Is Brides
 Mylstar
+
+
+# Last Hope (AES Beta Conversion)
+NG:Dev.Team
 
 
 # Genix Family
@@ -1994,12 +2026,20 @@ PAL System
 PCP
 
 
+# Casino Poker (Ver PM86LO-35-5, German)
+PM
+
+
 # PMA Poker
 PMA
 
 
 # The Amazing Adventures of Mr. F. Lea
 Pacific Novelty
+
+
+# Pacom Invader
+Pacom Corporation
 
 
 # Magical Odds (set 1)
@@ -2048,10 +2088,6 @@ Pioneer
 
 # Johnny Nero Action Hero
 Play Mechanix
-
-
-# PlayMan Poker (German)
-PlayMan
 
 
 # Number Dieci (Poker)
@@ -2454,6 +2490,10 @@ South West Research
 Southern Systems & Assembly
 
 
+# 7 Smash
+Sovic
+
+
 # Mosaic
 Space
 
@@ -2630,6 +2670,10 @@ TDS & Mints
 TVG
 
 
+# Boong-Ga Boong-Ga (Spank'em!)
+Taff System
+
+
 # Anteater
 Tago Electronics
 
@@ -2650,6 +2694,10 @@ Taito America Corporation
 Taito Corporation
 
 
+# The Ninja Warriors (US)
+Taito Corporation America
+
+
 # Aqua Jack (World)
 Taito Corporation Japan
 
@@ -2658,7 +2706,7 @@ Taito Corporation Japan
 Taito Europe Corporation
 
 
-# Galactica - Batalha Espacial
+# Cavaleiro Negro
 Taito do Brasil
 
 
@@ -2726,7 +2774,7 @@ Tecnoplay
 Tehkan
 
 
-# Beam Invader (set 1)
+# Beam Invader
 Tekunon Kougyou
 
 
@@ -2802,6 +2850,10 @@ Tuning
 U.S. Games
 
 
+# Pot O' Gold (U.S. Games, v400x?)
+U.S. Games Inc.
+
+
 # Ark Area
 UPL
 
@@ -2870,6 +2922,10 @@ Valley
 Vectorbeam
 
 
+# Super Bubble Pop
+Vektorlogic
+
+
 # Card Line
 Veltmeijer
 
@@ -2926,6 +2982,10 @@ Videojet/Timlex/Cougar
 Videotronics
 
 
+# SU2000
+Virtuality
+
+
 # Andro Dunos (NGM-049)(NGH-049)
 Visco
 
@@ -2966,7 +3026,7 @@ Wave
 Web Picmatic
 
 
-# Caesar's Palace (Whitbread / Crystal) (IMPACT, set 1)
+# Caesars Palace (Whitbread / Crystal) (IMPACT, set 1)
 Whitbread
 
 
