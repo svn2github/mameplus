@@ -800,7 +800,7 @@ aspect ratio of the third screen; 'auto' here will try to make a best guess
 
 # osd/windows/winmain.c: 311
 benchmark for the given number of emulated seconds; implies -video none -nosound -nothrottle
-ㄌ倒ぉ计秈︽家览蝶代 -video none -nosound -nothrottle 把计
+ㄌ倒ぉ计家览计秈︽蝶代;  -video none -nosound -nothrottle 把计
 
 # osd/windows/winmain.c: 422
 brightness value in full screen mode
