@@ -349,7 +349,7 @@ static MACHINE_CONFIG_START( pce_common, pce_state )
 	MCFG_CPU_IO_MAP(pce_io)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", pce_interrupt, "screen", 0, 1)
 
-//	MCFG_QUANTUM_TIME(attotime::from_hz(60))
+//  MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
 	MCFG_MACHINE_START( pce )
 	MCFG_MACHINE_RESET( mess_pce )
@@ -454,6 +454,6 @@ ROM_END
 #define rom_sgx rom_pce
 
 /*    YEAR  NAME    PARENT  COMPAT  MACHINE INPUT    INIT   COMPANY  FULLNAME */
-CONS( 1987, pce,    0,      0,      pce,    pce,     mess_pce,		"Nippon Electronic Company", "PC Engine", GAME_IMPERFECT_SOUND)
-CONS( 1989, tg16,   pce,    0,      tg16,   pce,     tg16,		"Nippon Electronic Company", "TurboGrafx 16", GAME_IMPERFECT_SOUND)
-CONS( 1989, sgx,    pce,    0,      sgx,    pce,     sgx,		"Nippon Electronic Company", "SuperGrafx", GAME_IMPERFECT_SOUND)
+CONS( 1987, pce,    0,      0,      pce,    pce,     mess_pce,   "Nippon Electronic Company", "PC Engine", GAME_IMPERFECT_SOUND)
+CONS( 1989, tg16,   pce,    0,      tg16,   pce,     tg16,		 "Nippon Electronic Company", "TurboGrafx 16", GAME_IMPERFECT_SOUND)
+CONS( 1989, sgx,    pce,    0,      sgx,    pce,     sgx,		 "Nippon Electronic Company", "SuperGrafx", GAME_IMPERFECT_SOUND)

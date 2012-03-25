@@ -1894,7 +1894,7 @@ static void setup_cart_banks( running_machine &machine )
 		state->m_banking_cart[5] = state->m_cartridge[state->m_current_cartridge].ROM + ((2 < rom_page_count) ? 0x8000 : 0);
 		state->m_banking_cart[7] = state->m_cartridge[state->m_current_cartridge].ROM + 0x2000;
 		/* Codemasters mapper points to bank 0 for page 2 */
-		if (state->m_cartridge[state->m_current_cartridge].features & CF_CODEMASTERS_MAPPER)
+		if ( state->m_cartridge[state->m_current_cartridge].features & CF_CODEMASTERS_MAPPER )
 		{
 			state->m_banking_cart[5] = state->m_cartridge[state->m_current_cartridge].ROM;
 		}
@@ -1990,19 +1990,19 @@ MACHINE_RESET( mess_sms )
 
 	state->m_bios_port = 0;
 
-	if (state->m_cartridge[state->m_current_cartridge].features & CF_CODEMASTERS_MAPPER)
+	if ( state->m_cartridge[state->m_current_cartridge].features & CF_CODEMASTERS_MAPPER )
 	{
 		/* Install special memory handlers */
 		space->install_legacy_write_handler(0x0000, 0x0000, FUNC(sms_codemasters_page0_w));
 		space->install_legacy_write_handler(0x4000, 0x4000, FUNC(sms_codemasters_page1_w));
 	}
 
-	if (state->m_cartridge[state->m_current_cartridge].features & CF_KOREAN_ZEMINA_MAPPER)
+	if ( state->m_cartridge[state->m_current_cartridge].features & CF_KOREAN_ZEMINA_MAPPER )
 	{
 		space->install_legacy_write_handler(0x0000, 0x0003, FUNC(sms_korean_zemina_banksw_w));
 	}
 
-	if (state->m_cartridge[state->m_current_cartridge].features & CF_JANGGUN_MAPPER)
+	if ( state->m_cartridge[state->m_current_cartridge].features & CF_JANGGUN_MAPPER )
 	{
 		space->install_legacy_write_handler(0x4000, 0x4000, FUNC(sms_janggun_bank0_w));
 		space->install_legacy_write_handler(0x6000, 0x6000, FUNC(sms_janggun_bank1_w));
@@ -2010,14 +2010,14 @@ MACHINE_RESET( mess_sms )
 		space->install_legacy_write_handler(0xA000, 0xA000, FUNC(sms_janggun_bank3_w));
 	}
 
-	if (state->m_cartridge[state->m_current_cartridge].features & CF_4PAK_MAPPER)
+	if ( state->m_cartridge[state->m_current_cartridge].features & CF_4PAK_MAPPER )
 	{
 		space->install_legacy_write_handler(0x3ffe, 0x3ffe, FUNC(sms_4pak_page0_w));
 		space->install_legacy_write_handler(0x7fff, 0x7fff, FUNC(sms_4pak_page1_w));
 		space->install_legacy_write_handler(0xbfff, 0xbfff, FUNC(sms_4pak_page2_w));
 	}
 
-	if (state->m_cartridge[state->m_current_cartridge].features & CF_TVDRAW )
+	if ( state->m_cartridge[state->m_current_cartridge].features & CF_TVDRAW )
 	{
 		space->install_legacy_write_handler(0x6000, 0x6000, FUNC(sms_tvdraw_axis_w));
 		space->install_legacy_read_handler(0x8000, 0x8000, FUNC(sms_tvdraw_status_r));

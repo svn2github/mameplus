@@ -367,8 +367,8 @@ name    size  proc   ea   bit pattern       A+-DXWLdxI  0 1 2 3 4 2 F  000 010 0
 M68KMAKE_TABLE_START
 1010       0  .     .     1010............  ..........  U U U U U U U   4   4   4   4   4   4   4
 1111       0  .     .     1111............  ..........  U U U U U U U   4   4   4   4   4   4   4
-040fpu0   32  .     .     11110010........  ..........  . . . U U U .   .   .   .   0   0   0   .
-040fpu1   32  .     .     11110011........  ..........  . . . U U U .   .   .   .   0   0   0   .
+040fpu0   32  .     .     11110010........  ..........  . . U U U U .   .   .   0   0   0   0   .
+040fpu1   32  .     .     11110011........  ..........  . . U U U U .   .   .   0   0   0   0   .
 abcd       8  rr    .     1100...100000...  ..........  U U U U U U U   6   6   4   4   4   4   4
 abcd       8  mm    ax7   1100111100001...  ..........  U U U U U U U  18  18  16  16  16  16  16
 abcd       8  mm    ay7   1100...100001111  ..........  U U U U U U U  18  18  16  16  16  16  16
@@ -759,8 +759,8 @@ pack      16  mm    ay7   1000...101001111  ..........  . . U U U U U   .   .  1
 pack      16  mm    axy7  1000111101001111  ..........  . . U U U U U   .   .  13  13  13  13  13
 pack      16  mm    .     1000...101001...  ..........  . . U U U U U   .   .  13  13  13  13  13
 pea       32  .     .     0100100001......  A..DXWLdx.  U U U U U U U   6   6   5   5   5   5   5
-pflush    32  .     .     1111010100011000  ..........  . . . . S S .   .   .   .   .   4   4   4 TODO: correct timing
-pflushan  32  .     .     1111010100010000  ..........  . . . . S S .   .   .   .   .   4   4   4 TODO: correct timing
+pflusha   32  .     .     1111010100011...  ..........  . . . . S S .   .   .   .   .   4   4   4 TODO: correct timing
+pflushan  32  .     .     1111010100010...  ..........  . . . . S S .   .   .   .   .   4   4   4 TODO: correct timing
 pmmu      32  .     .     1111000.........  ..........  . . S S S S S   .   .   8   8   8   8   8
 ptest     32  .     .     1111010101.01...  ..........  . . . . S . .   .   .   .   .   8   .   .
 reset      0  .     .     0100111001110000  ..........  S S S S S S S   0   0   0   0   0   0   0
@@ -8205,11 +8205,11 @@ M68KMAKE_OP(pea, 32, ., .)
 	m68ki_push_32((mc68kcpu), ea);
 }
 
-M68KMAKE_OP(pflush, 32, ., .)
+M68KMAKE_OP(pflusha, 32, ., .)
 {
 	if ((CPU_TYPE_IS_EC020_PLUS((mc68kcpu)->cpu_type)) && ((mc68kcpu)->has_pmmu))
 	{
-		logerror("68040: unhandled PFLUSH\n");
+		logerror("68040: unhandled PFLUSHA (ir=%04x)\n", mc68kcpu->ir);
 		return;
 	}
 	m68ki_exception_1111(mc68kcpu);
@@ -8219,7 +8219,7 @@ M68KMAKE_OP(pflushan, 32, ., .)
 {
 	if ((CPU_TYPE_IS_EC020_PLUS((mc68kcpu)->cpu_type)) && ((mc68kcpu)->has_pmmu))
 	{
-		logerror("68040: unhandled PFLUSHAN\n");
+		logerror("68040: unhandled PFLUSHAN (ir=%04x)\n", mc68kcpu->ir);
 		return;
 	}
 	m68ki_exception_1111(mc68kcpu);

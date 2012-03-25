@@ -2,7 +2,7 @@
  Contributors:
 
     Marat Fayzullin (MG source)
-    Charles Mac Donald
+    Charles MacDonald
     Mathis Rosenhauer
     Brad Oliver
     Michael Luong
@@ -277,11 +277,11 @@ static INPUT_PORTS_START( smsj )
 
 	PORT_START("TVDRAW_X")
 	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_NAME("Tablet - X Axis") PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_PLAYER(1)
-		PORT_CONDITION("TVDRAW", 0x01, PORTCOND_EQUALS, 0x01)
+	PORT_CONDITION("TVDRAW", 0x01, PORTCOND_EQUALS, 0x01)
 
 	PORT_START("TVDRAW_Y")
 	PORT_BIT( 0xff, 0x60, IPT_LIGHTGUN_Y ) PORT_NAME("Tablet - Y Axis") PORT_CROSSHAIR(Y, 1.0, 0.0, 0) PORT_MINMAX(0, 191) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_PLAYER(1)
-		PORT_CONDITION("TVDRAW", 0x01, PORTCOND_EQUALS, 0x01)
+	PORT_CONDITION("TVDRAW", 0x01, PORTCOND_EQUALS, 0x01)
 
 	PORT_START("TVDRAW_PEN")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Tablet - Pen") PORT_CONDITION("TVDRAW", 0x01, PORTCOND_EQUALS, 0x01)
@@ -665,7 +665,7 @@ ROM_START(sg1000m3)
 ROM_END
 
 ROM_START(smsj) /* PCB Label: "SEGA(R) IC BOARD M4J MAIN // 837-6418"; has "YM2413 // 78 04 71 G" at IC10; Back of pcb has traces marked "171-5541 (C)SEGA 1987 MADE IN JAPAN"
-	see http://www.smspower.org/Development/JapaneseSMS837-6418 */ 
+    see http://www.smspower.org/Development/JapaneseSMS837-6418 */
 	ROM_REGION(0x4000, "maincpu", 0)
 	ROM_FILL(0x0000, 0x4000, 0xff)
 

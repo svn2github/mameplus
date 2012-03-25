@@ -59,7 +59,7 @@ static void wswan_ch_set_freq( running_machine &machine, struct CHAN *ch, UINT16
 {
 	freq &= 0x7ff;	// docs say freq is 11bits and a few games (Morita Shougi, World Stadium + others) write 0x800 causing a divide by 0 crash
 	ch->freq = freq;
-	ch->period = machine.sample_rate() / ( 3072000  / ( ( 2048 - freq ) << 5 ) );
+	ch->period = machine.sample_rate() / (3072000 / ((2048 - freq) << 5));
 }
 
 WRITE8_DEVICE_HANDLER( wswan_sound_port_w )

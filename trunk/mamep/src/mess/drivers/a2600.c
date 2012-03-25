@@ -137,14 +137,14 @@ static int detect_modeDC(running_machine &machine)
 static int detect_modef6(running_machine &machine)
 {
 	a2600_state *state = machine.driver_data<a2600_state>();
-	int i,numfound = 0;
+	int i, numfound = 0;
 	static const unsigned char signature[3] = { 0x8d, 0xf6, 0xff };
 	if (state->m_cart_size == 0x4000)
 	{
 		UINT8 *cart = CART;
 		for (i = 0; i < state->m_cart_size - sizeof signature; i++)
 		{
-			if (!memcmp(&cart[i], signature,sizeof signature))
+			if (!memcmp(&cart[i], signature, sizeof signature))
 			{
 				numfound = 1;
 			}
@@ -480,7 +480,7 @@ static DEVICE_IMAGE_LOAD( a2600_cart )
 	UINT8 *cart = CART;
 
 	if (image.software_entry() == NULL)
-	state->m_cart_size = image.length();
+		state->m_cart_size = image.length();
 	else
 		state->m_cart_size = image.get_software_region_length("rom");
 
@@ -1595,7 +1595,7 @@ static unsigned long detect_2600controllers(running_machine &machine)
 #define AMSE 0x200
 #define CX22 0x400
 #define CX80 0x800
-	
+
 	unsigned int left,right;
 	int i,j,foundkeypad = 0;
 	UINT8 *cart;
@@ -1629,7 +1629,7 @@ static unsigned long detect_2600controllers(running_machine &machine)
 	left = JOYS+PADD; right = JOYS+PADD;
 	// default for bad dumps and roms too large to have special controllers
 	if ((state->m_cart_size > 0x4000) || (state->m_cart_size & 0x7ff)) return (left << 16) + right;
-	
+
 	cart = CART;
 	for (i = 0; i < state->m_cart_size - (sizeof signatures/sizeof signatures[0]); i++)
 	{

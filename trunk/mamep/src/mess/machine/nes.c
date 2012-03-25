@@ -311,8 +311,8 @@ MACHINE_START( nes )
 			state->m_chr_map[i].origin = i * 0x400; // for save state uses!
 			state->m_chr_map[i].access = &state->m_vram[state->m_chr_map[i].origin];
 		}
-	}	
-	
+	}
+
 	state->m_irq_timer = machine.scheduler().timer_alloc(FUNC(nes_irq_callback));
 	nes_state_register(machine);
 }
@@ -1346,7 +1346,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 
 		// Allocate class pointers for PRG/VROM/VRAM/WRAM and copy data there from the temp copies
 		state->m_prg = auto_alloc_array(image.device().machine(), UINT8, prg_size);
-		
+
 		if (chr_size)
 			state->m_vrom = auto_alloc_array(image.device().machine(), UINT8, chr_size);
 

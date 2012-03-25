@@ -63,6 +63,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	UINT16 *destline;
 	UINT8 *priline;
 	UINT8 *sprdata = machine.region("gfx1")->base();
+	int sprmask = machine.region("gfx1")->bytes()-1;
 
 	int xstart, xend, xinc;
 	int ystart, yend, yinc;
@@ -129,19 +130,21 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 					{
 						drawxpos = x + xcnt - global_x;
 
-						if((priline[drawxpos] < pri))
+						if ((drawxpos >= cliprect.min_x) && (drawxpos <= cliprect.max_x))
 						{
-							if (offset >= 0x500000 * 2)
-								offset = 0;
-							pix = sprdata[offset / 2];
+							if((priline[drawxpos] < pri))
+							{
+								pix = sprdata[(offset / 2)&sprmask];
 
-							if (offset & 1)
-								pix = pix >> 4;
-							pix &= 0x0f;
+								if (offset & 1)
+									pix = pix >> 4;
+								pix &= 0x0f;
 
-							if ((drawxpos >= cliprect.min_x) && (drawxpos <= cliprect.max_x) && pix)
-								destline[drawxpos] = (pix + (pen << 4));
+								if (pix)
+									destline[drawxpos] = (pix + (pen << 4));
+							}
 						}
+
 						offset++;
 					}
 				}
