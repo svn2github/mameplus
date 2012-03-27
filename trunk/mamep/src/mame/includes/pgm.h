@@ -9,6 +9,10 @@
 
 #define PGMARM7LOGERROR 0
 
+//mamep: hack defs
+#define PGMSPEEDHACK 1
+//#define PGMREGIONHACK 1
+
 class pgm_state : public driver_device
 {
 public:

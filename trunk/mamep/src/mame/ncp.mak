@@ -103,6 +103,12 @@ $(MAMEOBJ)/igs.a: \
 	$(DRIVERS)/pgm2.o \
 	$(MACHINE)/pgmcrypt.o \
 	$(MACHINE)/pgmprot.o \
+	$(MACHINE)/pgmprot1.o \
+	$(MACHINE)/pgmprot2.o \
+	$(MACHINE)/pgmprot3.o \
+	$(MACHINE)/pgmprot4.o \
+	$(MACHINE)/pgmprot5.o \
+	$(MACHINE)/pgmprot6.o \
 
 $(MAMEOBJ)/neogeo.a: \
 	$(DRIVERS)/neogeo.o $(VIDEO)/neogeo.o \

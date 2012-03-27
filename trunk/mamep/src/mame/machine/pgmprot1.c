@@ -54,11 +54,24 @@
 /**************************** EMULATION *******************************/
 /* used by photoy2k, kovsh */
 
+#if PGMSPEEDHACK
+#define KOVSH_68K_SUSPEND	device_suspend(space->machine().device("maincpu"),SUSPEND_REASON_SPIN,1)
+#define KOVSH_ARM_SUSPEND	device_suspend(space->machine().device("prot"),SUSPEND_REASON_SPIN,1)
+
+#define KOVSH_68K_RESUME	device_resume(space->machine().device("maincpu"),SUSPEND_REASON_SPIN)
+#define KOVSH_ARM_RESUME	device_resume(space->machine().device("prot"),SUSPEND_REASON_SPIN)
+
+#define KOVSH_68K_2_ARM		do { KOVSH_68K_SUSPEND; KOVSH_ARM_RESUME; } while (0)
+#define KOVSH_ARM_2_68K		do { KOVSH_ARM_SUSPEND; KOVSH_68K_RESUME; } while (0)
+#endif
+
 static READ32_HANDLER( kovsh_arm7_protlatch_r )
 {
 	pgm_state *state = space->machine().driver_data<pgm_state>();
 
+#if !PGMSPEEDHACK
 	space->machine().scheduler().synchronize(); // force resync
+#endif /* !PGMSPEEDHACK */
 
 	return (state->m_kovsh_highlatch_68k_w << 16) | (state->m_kovsh_lowlatch_68k_w);
 }
@@ -67,7 +80,9 @@ static WRITE32_HANDLER( kovsh_arm7_protlatch_w )
 {
 	pgm_state *state = space->machine().driver_data<pgm_state>();
 
+#if !PGMSPEEDHACK
 	space->machine().scheduler().synchronize(); // force resync
+#endif /* !PGMSPEEDHACK */
 
 	if (ACCESSING_BITS_16_31)
 	{
@@ -79,13 +94,21 @@ static WRITE32_HANDLER( kovsh_arm7_protlatch_w )
 		state->m_kovsh_lowlatch_arm_w = data;
 		state->m_kovsh_lowlatch_68k_w = 0;
 	}
+#if PGMSPEEDHACK
+	if((state->m_kovsh_highlatch_arm_w & 0xff00)!=0)
+	{
+		KOVSH_ARM_2_68K;
+	}
+#endif /* PGMSPEEDHACK */
 }
 
 static READ16_HANDLER( kovsh_68k_protlatch_r )
 {
 	pgm_state *state = space->machine().driver_data<pgm_state>();
 
+#if !PGMSPEEDHACK
 	space->machine().scheduler().synchronize(); // force resync
+#endif /* !PGMSPEEDHACK */
 
 	switch (offset)
 	{
@@ -99,12 +122,19 @@ static WRITE16_HANDLER( kovsh_68k_protlatch_w )
 {
 	pgm_state *state = space->machine().driver_data<pgm_state>();
 
+#if !PGMSPEEDHACK
 	space->machine().scheduler().synchronize(); // force resync
+#endif /* !PGMSPEEDHACK */
 
 	switch (offset)
 	{
 		case 1:
 			state->m_kovsh_highlatch_68k_w = data;
+			{
+#if PGMSPEEDHACK
+				KOVSH_68K_2_ARM;
+#endif
+			}
 			break;
 
 		case 0:
