@@ -390,14 +390,15 @@ static void pce_set_cd_bram( running_machine &machine )
 	memory_set_bankptr( machine, "bank10", pce_cd.bram + ( pce_cd.bram_locked ? PCE_BRAM_SIZE : 0 ) );
 }
 
-static void adpcm_stop(running_machine &machine)
+static void adpcm_stop(running_machine &machine, UINT8 irq_flag)
 {
 	pce_state *state = machine.driver_data<pce_state>();
 	pce_cd_t &pce_cd = state->m_cd;
 	pce_cd.regs[0x0c] |= PCE_CD_ADPCM_STOP_FLAG;
 	pce_cd.regs[0x0c] &= ~PCE_CD_ADPCM_PLAY_FLAG;
 	//pce_cd.regs[0x03] = (pce_cd.regs[0x03] & ~0x0c) | (PCE_CD_SAMPLE_STOP_PLAY);
-	pce_cd_set_irq_line( machine, PCE_CD_IRQ_SAMPLE_FULL_PLAY, ASSERT_LINE );
+	if(irq_flag)
+		pce_cd_set_irq_line( machine, PCE_CD_IRQ_SAMPLE_FULL_PLAY, ASSERT_LINE );
 	pce_cd.regs[0x0d] &= ~0x60;
 	pce_cd.msm_idle = 1;
 }
@@ -450,7 +451,7 @@ static void pce_cd_msm5205_int(device_t *device)
 		{
 			//pce_cd_set_irq_line( device->machine(), PCE_CD_IRQ_SAMPLE_HALF_PLAY, CLEAR_LINE );
 			//pce_cd_set_irq_line( device->machine(), PCE_CD_IRQ_SAMPLE_FULL_PLAY, CLEAR_LINE );
-			adpcm_stop(device->machine());
+			adpcm_stop(device->machine(),1);
 			msm5205_reset_w(device, 1);
 		}
 	}
@@ -1412,17 +1413,15 @@ WRITE8_HANDLER( pce_cd_intf_w )
 			pce_cd.msm_end_addr = 0;
 			pce_cd.msm_half_addr = 0;
 			pce_cd.msm_nibble = 0;
-			adpcm_stop(space->machine());
+			adpcm_stop(space->machine(), 0);
 			msm5205_reset_w( space->machine().device( "msm5205"), 1 );
 		}
-
-		if(data & 0x20)
-			pce_cd.msm_half_addr = (pce_cd.adpcm_read_ptr + (pce_cd.adpcm_length / ((data & 0x40) ? 2 : 1))) & 0xffff;
 
 		if ( ( data & 0x40) && ((pce_cd.regs[0x0D] & 0x40) == 0) ) // ADPCM play
 		{
 			pce_cd.msm_start_addr = (pce_cd.adpcm_read_ptr);
 			pce_cd.msm_end_addr = (pce_cd.adpcm_read_ptr + pce_cd.adpcm_length) & 0xffff;
+			pce_cd.msm_half_addr = (pce_cd.adpcm_read_ptr + (pce_cd.adpcm_length / 2)) & 0xffff;
 			pce_cd.msm_nibble = 0;
 			adpcm_play(space->machine());
 			msm5205_reset_w( space->machine().device( "msm5205"), 0 );
@@ -1432,9 +1431,11 @@ WRITE8_HANDLER( pce_cd_intf_w )
 		else if ( (data & 0x40) == 0 )
 		{
 			/* used by Buster Bros to cancel an in-flight sample */
-			adpcm_stop(space->machine());
+			adpcm_stop(space->machine(), 0);
 			msm5205_reset_w( space->machine().device( "msm5205"), 1 );
 		}
+
+		pce_cd.msm_repeat = (data & 0x20) >> 5;
 
 		if ( data & 0x10 ) //ADPCM set length
 		{
