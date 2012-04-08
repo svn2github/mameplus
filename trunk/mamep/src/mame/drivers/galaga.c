@@ -713,67 +713,66 @@ TODO:
 
 
 
-static READ8_HANDLER( bosco_dsw_r )
+READ8_MEMBER(galaga_state::bosco_dsw_r)
 {
 	int bit0,bit1;
 
-	bit0 = (input_port_read(space->machine(), "DSWB") >> offset) & 1;
-	bit1 = (input_port_read(space->machine(), "DSWA") >> offset) & 1;
+	bit0 = (input_port_read(machine(), "DSWB") >> offset) & 1;
+	bit1 = (input_port_read(machine(), "DSWA") >> offset) & 1;
 
 	return bit0 | (bit1 << 1);
 }
 
-static WRITE8_HANDLER( galaga_flip_screen_w )
+WRITE8_MEMBER(galaga_state::galaga_flip_screen_w)
 {
-	flip_screen_set(space->machine(), data & 1);
+	flip_screen_set(machine(), data & 1);
 }
 
-static WRITE8_HANDLER( bosco_flip_screen_w )
+WRITE8_MEMBER(bosco_state::bosco_flip_screen_w)
 {
-	flip_screen_set(space->machine(), ~data & 1);
+	flip_screen_set(machine(), ~data & 1);
 }
 
 
-static WRITE8_HANDLER( bosco_latch_w )
+WRITE8_MEMBER(galaga_state::bosco_latch_w)
 {
-	galaga_state *state = space->machine().driver_data<galaga_state>();
 
 	switch (offset)
 	{
 		case 0x00:	/* IRQ1 */
-			state->m_main_irq_mask = data & 1;
-			if (!state->m_main_irq_mask)
-				cputag_set_input_line(space->machine(), "maincpu", 0, CLEAR_LINE);
+			m_main_irq_mask = data & 1;
+			if (!m_main_irq_mask)
+				cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
 			break;
 
 		case 0x01:	/* IRQ2 */
-			state->m_sub_irq_mask = data & 1;
-			if (!state->m_sub_irq_mask)
-				cputag_set_input_line(space->machine(), "sub", 0, CLEAR_LINE);
+			m_sub_irq_mask = data & 1;
+			if (!m_sub_irq_mask)
+				cputag_set_input_line(machine(), "sub", 0, CLEAR_LINE);
 			break;
 
 		case 0x02:	/* NMION */
-			state->m_sub2_nmi_mask = !(data & 1);
+			m_sub2_nmi_mask = !(data & 1);
 			break;
 
 		case 0x03:	/* RESET */
-			cputag_set_input_line(space->machine(), "sub", INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
-			cputag_set_input_line(space->machine(), "sub2", INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+			cputag_set_input_line(machine(), "sub", INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+			cputag_set_input_line(machine(), "sub2", INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
 			break;
 
 		case 0x04:	/* n.c. */
 			break;
 
 		case 0x05:	/* MOD 0 (xevious: n.c.) */
-			state->m_custom_mod = (state->m_custom_mod & ~0x01) | ((data & 1) << 0);
+			m_custom_mod = (m_custom_mod & ~0x01) | ((data & 1) << 0);
 			break;
 
 		case 0x06:	/* MOD 1 (xevious: n.c.) */
-			state->m_custom_mod = (state->m_custom_mod & ~0x02) | ((data & 1) << 1);
+			m_custom_mod = (m_custom_mod & ~0x02) | ((data & 1) << 1);
 			break;
 
 		case 0x07:	/* MOD 2 (xevious: n.c.) */
-			state->m_custom_mod = (state->m_custom_mod & ~0x04) | ((data & 1) << 2);
+			m_custom_mod = (m_custom_mod & ~0x04) | ((data & 1) << 2);
 			break;
 	}
 }
@@ -891,12 +890,13 @@ static MACHINE_START( galaga )
 
 static void bosco_latch_reset(running_machine &machine)
 {
+	bosco_state *state = machine.driver_data<bosco_state>();
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	/* Reset all latches */
 	for (i = 0;i < 8;i++)
-		bosco_latch_w(space,i,0);
+		state->bosco_latch_w(*space,i,0);
 }
 
 static MACHINE_RESET( galaga )
@@ -917,102 +917,102 @@ static MACHINE_RESET( battles )
 
 
 /* the same memory map is used by all three CPUs; all RAM areas are shared */
-static ADDRESS_MAP_START( bosco_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( bosco_map, AS_PROGRAM, 8, bosco_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM AM_WRITENOP			/* the only area different for each CPU */
 	AM_RANGE(0x6800, 0x6807) AM_READ(bosco_dsw_r)
-	AM_RANGE(0x6800, 0x681f) AM_DEVWRITE("namco", pacman_sound_w)
+	AM_RANGE(0x6800, 0x681f) AM_DEVWRITE_LEGACY("namco", pacman_sound_w)
 	AM_RANGE(0x6820, 0x6827) AM_WRITE(bosco_latch_w)						/* misc latches */
 	AM_RANGE(0x6830, 0x6830) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x7000, 0x70ff) AM_DEVREADWRITE("06xx_0", namco_06xx_data_r, namco_06xx_data_w)
-	AM_RANGE(0x7100, 0x7100) AM_DEVREADWRITE("06xx_0", namco_06xx_ctrl_r, namco_06xx_ctrl_w)
+	AM_RANGE(0x7000, 0x70ff) AM_DEVREADWRITE_LEGACY("06xx_0", namco_06xx_data_r, namco_06xx_data_w)
+	AM_RANGE(0x7100, 0x7100) AM_DEVREADWRITE_LEGACY("06xx_0", namco_06xx_ctrl_r, namco_06xx_ctrl_w)
 	AM_RANGE(0x7800, 0x7fff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x8000, 0x8fff) AM_RAM_WRITE(bosco_videoram_w) AM_BASE_MEMBER(bosco_state, m_videoram) AM_SHARE("bvr")	/* + sprite registers */
-	AM_RANGE(0x9000, 0x90ff) AM_DEVREADWRITE("06xx_1", namco_06xx_data_r, namco_06xx_data_w)
-	AM_RANGE(0x9100, 0x9100) AM_DEVREADWRITE("06xx_1", namco_06xx_ctrl_r, namco_06xx_ctrl_w)
-	AM_RANGE(0x9800, 0x980f) AM_WRITEONLY AM_SHARE("share2") AM_BASE_MEMBER(bosco_state, m_bosco_radarattr)
-	AM_RANGE(0x9810, 0x9810) AM_WRITE(bosco_scrollx_w)
-	AM_RANGE(0x9820, 0x9820) AM_WRITE(bosco_scrolly_w)
-	AM_RANGE(0x9830, 0x9830) AM_WRITEONLY AM_BASE_MEMBER(bosco_state, m_bosco_starcontrol) AM_SHARE("bsc")
-	AM_RANGE(0x9840, 0x9840) AM_WRITE(bosco_starclr_w)
+	AM_RANGE(0x8000, 0x8fff) AM_RAM_WRITE_LEGACY(bosco_videoram_w) AM_BASE(m_videoram) AM_SHARE("bvr")	/* + sprite registers */
+	AM_RANGE(0x9000, 0x90ff) AM_DEVREADWRITE_LEGACY("06xx_1", namco_06xx_data_r, namco_06xx_data_w)
+	AM_RANGE(0x9100, 0x9100) AM_DEVREADWRITE_LEGACY("06xx_1", namco_06xx_ctrl_r, namco_06xx_ctrl_w)
+	AM_RANGE(0x9800, 0x980f) AM_WRITEONLY AM_SHARE("share2") AM_BASE(m_bosco_radarattr)
+	AM_RANGE(0x9810, 0x9810) AM_WRITE_LEGACY(bosco_scrollx_w)
+	AM_RANGE(0x9820, 0x9820) AM_WRITE_LEGACY(bosco_scrolly_w)
+	AM_RANGE(0x9830, 0x9830) AM_WRITEONLY AM_BASE(m_bosco_starcontrol) AM_SHARE("bsc")
+	AM_RANGE(0x9840, 0x9840) AM_WRITE_LEGACY(bosco_starclr_w)
 	AM_RANGE(0x9870, 0x9870) AM_WRITE(bosco_flip_screen_w)
-	AM_RANGE(0x9874, 0x9875) AM_WRITEONLY AM_BASE_MEMBER(bosco_state, m_bosco_starblink) AM_SHARE("bsb")
+	AM_RANGE(0x9874, 0x9875) AM_WRITEONLY AM_BASE(m_bosco_starblink) AM_SHARE("bsb")
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( galaga_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( galaga_map, AS_PROGRAM, 8, galaga_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM AM_WRITENOP			/* the only area different for each CPU */
 	AM_RANGE(0x6800, 0x6807) AM_READ(bosco_dsw_r)
-	AM_RANGE(0x6800, 0x681f) AM_DEVWRITE("namco", pacman_sound_w)
+	AM_RANGE(0x6800, 0x681f) AM_DEVWRITE_LEGACY("namco", pacman_sound_w)
 	AM_RANGE(0x6820, 0x6827) AM_WRITE(bosco_latch_w)						/* misc latches */
 	AM_RANGE(0x6830, 0x6830) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x7000, 0x70ff) AM_DEVREADWRITE("06xx", namco_06xx_data_r, namco_06xx_data_w)
-	AM_RANGE(0x7100, 0x7100) AM_DEVREADWRITE("06xx", namco_06xx_ctrl_r, namco_06xx_ctrl_w)
-	AM_RANGE(0x8000, 0x87ff) AM_RAM_WRITE(galaga_videoram_w) AM_BASE_MEMBER(galaga_state, m_videoram) AM_SHARE("gvr")
-	AM_RANGE(0x8800, 0x8bff) AM_RAM AM_SHARE("share1") AM_BASE_MEMBER(galaga_state, m_galaga_ram1)
-	AM_RANGE(0x9000, 0x93ff) AM_RAM AM_SHARE("share2") AM_BASE_MEMBER(galaga_state, m_galaga_ram2)
-	AM_RANGE(0x9800, 0x9bff) AM_RAM AM_SHARE("share3") AM_BASE_MEMBER(galaga_state, m_galaga_ram3)
-	AM_RANGE(0xa000, 0xa005) AM_WRITEONLY AM_BASE_MEMBER(galaga_state, m_galaga_starcontrol) AM_SHARE("gsc")
+	AM_RANGE(0x7000, 0x70ff) AM_DEVREADWRITE_LEGACY("06xx", namco_06xx_data_r, namco_06xx_data_w)
+	AM_RANGE(0x7100, 0x7100) AM_DEVREADWRITE_LEGACY("06xx", namco_06xx_ctrl_r, namco_06xx_ctrl_w)
+	AM_RANGE(0x8000, 0x87ff) AM_RAM_WRITE(galaga_videoram_w) AM_BASE(m_videoram) AM_SHARE("gvr")
+	AM_RANGE(0x8800, 0x8bff) AM_RAM AM_SHARE("share1") AM_BASE(m_galaga_ram1)
+	AM_RANGE(0x9000, 0x93ff) AM_RAM AM_SHARE("share2") AM_BASE(m_galaga_ram2)
+	AM_RANGE(0x9800, 0x9bff) AM_RAM AM_SHARE("share3") AM_BASE(m_galaga_ram3)
+	AM_RANGE(0xa000, 0xa005) AM_WRITEONLY AM_BASE(m_galaga_starcontrol) AM_SHARE("gsc")
 	AM_RANGE(0xa007, 0xa007) AM_WRITE(galaga_flip_screen_w)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( xevious_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( xevious_map, AS_PROGRAM, 8, xevious_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM AM_WRITENOP			/* the only area different for each CPU */
 	AM_RANGE(0x6800, 0x6807) AM_READ(bosco_dsw_r)
-	AM_RANGE(0x6800, 0x681f) AM_DEVWRITE("namco", pacman_sound_w)
+	AM_RANGE(0x6800, 0x681f) AM_DEVWRITE_LEGACY("namco", pacman_sound_w)
 	AM_RANGE(0x6820, 0x6827) AM_WRITE(bosco_latch_w)	/* misc latches */
 	AM_RANGE(0x6830, 0x6830) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x7000, 0x70ff) AM_DEVREADWRITE("06xx", namco_06xx_data_r, namco_06xx_data_w)
-	AM_RANGE(0x7100, 0x7100) AM_DEVREADWRITE("06xx", namco_06xx_ctrl_r, namco_06xx_ctrl_w)
+	AM_RANGE(0x7000, 0x70ff) AM_DEVREADWRITE_LEGACY("06xx", namco_06xx_data_r, namco_06xx_data_w)
+	AM_RANGE(0x7100, 0x7100) AM_DEVREADWRITE_LEGACY("06xx", namco_06xx_ctrl_r, namco_06xx_ctrl_w)
 	AM_RANGE(0x7800, 0x7fff) AM_RAM AM_SHARE("share1")							/* work RAM */
-	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("share2") AM_BASE_MEMBER(xevious_state, m_xevious_sr1)	/* work RAM + sprite registers */
-	AM_RANGE(0x9000, 0x97ff) AM_RAM AM_SHARE("share3") AM_BASE_MEMBER(xevious_state, m_xevious_sr2)	/* work RAM + sprite registers */
-	AM_RANGE(0xa000, 0xa7ff) AM_RAM AM_SHARE("share4") AM_BASE_MEMBER(xevious_state, m_xevious_sr3)	/* work RAM + sprite registers */
-	AM_RANGE(0xb000, 0xb7ff) AM_RAM_WRITE(xevious_fg_colorram_w) AM_BASE_MEMBER(xevious_state, m_xevious_fg_colorram) AM_SHARE("fgc")
-	AM_RANGE(0xb800, 0xbfff) AM_RAM_WRITE(xevious_bg_colorram_w) AM_BASE_MEMBER(xevious_state, m_xevious_bg_colorram) AM_SHARE("bgc")
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(xevious_fg_videoram_w) AM_BASE_MEMBER(xevious_state, m_xevious_fg_videoram) AM_SHARE("fgv")
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(xevious_bg_videoram_w) AM_BASE_MEMBER(xevious_state, m_xevious_bg_videoram) AM_SHARE("bgv")
-	AM_RANGE(0xd000, 0xd07f) AM_WRITE(xevious_vh_latch_w)
-	AM_RANGE(0xf000, 0xffff) AM_READWRITE(xevious_bb_r, xevious_bs_w)
+	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("share2") AM_BASE(m_xevious_sr1)	/* work RAM + sprite registers */
+	AM_RANGE(0x9000, 0x97ff) AM_RAM AM_SHARE("share3") AM_BASE(m_xevious_sr2)	/* work RAM + sprite registers */
+	AM_RANGE(0xa000, 0xa7ff) AM_RAM AM_SHARE("share4") AM_BASE(m_xevious_sr3)	/* work RAM + sprite registers */
+	AM_RANGE(0xb000, 0xb7ff) AM_RAM_WRITE_LEGACY(xevious_fg_colorram_w) AM_BASE(m_xevious_fg_colorram) AM_SHARE("fgc")
+	AM_RANGE(0xb800, 0xbfff) AM_RAM_WRITE_LEGACY(xevious_bg_colorram_w) AM_BASE(m_xevious_bg_colorram) AM_SHARE("bgc")
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE_LEGACY(xevious_fg_videoram_w) AM_BASE(m_xevious_fg_videoram) AM_SHARE("fgv")
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE_LEGACY(xevious_bg_videoram_w) AM_BASE(m_xevious_bg_videoram) AM_SHARE("bgv")
+	AM_RANGE(0xd000, 0xd07f) AM_WRITE_LEGACY(xevious_vh_latch_w)
+	AM_RANGE(0xf000, 0xffff) AM_READWRITE_LEGACY(xevious_bb_r, xevious_bs_w)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( digdug_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( digdug_map, AS_PROGRAM, 8, digdug_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM AM_WRITENOP			/* the only area different for each CPU */
-	AM_RANGE(0x6800, 0x681f) AM_DEVWRITE("namco", pacman_sound_w)
+	AM_RANGE(0x6800, 0x681f) AM_DEVWRITE_LEGACY("namco", pacman_sound_w)
 	AM_RANGE(0x6820, 0x6827) AM_WRITE(bosco_latch_w)						/* misc latches */
 	AM_RANGE(0x6830, 0x6830) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x7000, 0x70ff) AM_DEVREADWRITE("06xx", namco_06xx_data_r, namco_06xx_data_w)
-	AM_RANGE(0x7100, 0x7100) AM_DEVREADWRITE("06xx", namco_06xx_ctrl_r, namco_06xx_ctrl_w)
-	AM_RANGE(0x8000, 0x83ff) AM_RAM_WRITE(digdug_videoram_w) AM_BASE_MEMBER(digdug_state, m_videoram)	AM_SHARE("dvr")/* tilemap RAM (bottom half of RAM 0 */
+	AM_RANGE(0x7000, 0x70ff) AM_DEVREADWRITE_LEGACY("06xx", namco_06xx_data_r, namco_06xx_data_w)
+	AM_RANGE(0x7100, 0x7100) AM_DEVREADWRITE_LEGACY("06xx", namco_06xx_ctrl_r, namco_06xx_ctrl_w)
+	AM_RANGE(0x8000, 0x83ff) AM_RAM_WRITE_LEGACY(digdug_videoram_w) AM_BASE(m_videoram)	AM_SHARE("dvr")/* tilemap RAM (bottom half of RAM 0 */
 	AM_RANGE(0x8400, 0x87ff) AM_RAM AM_SHARE("share1")							/* work RAM (top half for RAM 0 */
-	AM_RANGE(0x8800, 0x8bff) AM_RAM AM_SHARE("share2") AM_BASE_MEMBER(digdug_state, m_digdug_objram)	/* work RAM + sprite registers */
-	AM_RANGE(0x9000, 0x93ff) AM_RAM AM_SHARE("share3") AM_BASE_MEMBER(digdug_state, m_digdug_posram)	/* work RAM + sprite registers */
-	AM_RANGE(0x9800, 0x9bff) AM_RAM AM_SHARE("share4") AM_BASE_MEMBER(digdug_state, m_digdug_flpram)	/* work RAM + sprite registers */
-	AM_RANGE(0xa000, 0xa007) AM_READNOP AM_WRITE(digdug_PORT_w)		/* video latches (spurious reads when setting latch bits) */
-	AM_RANGE(0xb800, 0xb83f) AM_DEVREADWRITE_MODERN("earom", atari_vg_earom_device, read, write)	/* non volatile memory data */
-	AM_RANGE(0xb840, 0xb840) AM_DEVWRITE_MODERN("earom", atari_vg_earom_device, ctrl_w)					/* non volatile memory control */
+	AM_RANGE(0x8800, 0x8bff) AM_RAM AM_SHARE("share2") AM_BASE(m_digdug_objram)	/* work RAM + sprite registers */
+	AM_RANGE(0x9000, 0x93ff) AM_RAM AM_SHARE("share3") AM_BASE(m_digdug_posram)	/* work RAM + sprite registers */
+	AM_RANGE(0x9800, 0x9bff) AM_RAM AM_SHARE("share4") AM_BASE(m_digdug_flpram)	/* work RAM + sprite registers */
+	AM_RANGE(0xa000, 0xa007) AM_READNOP AM_WRITE_LEGACY(digdug_PORT_w)		/* video latches (spurious reads when setting latch bits) */
+	AM_RANGE(0xb800, 0xb83f) AM_DEVREADWRITE("earom", atari_vg_earom_device, read, write)	/* non volatile memory data */
+	AM_RANGE(0xb840, 0xb840) AM_DEVWRITE("earom", atari_vg_earom_device, ctrl_w)					/* non volatile memory control */
 ADDRESS_MAP_END
 
 
 
 /* bootleg 4th CPU replacing the 5xXX chips */
-static ADDRESS_MAP_START( galaga_mem4, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( galaga_mem4, AS_PROGRAM, 8, galaga_state )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x1000, 0x107f) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( battles_mem4, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( battles_mem4, AS_PROGRAM, 8, galaga_state )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
-	AM_RANGE(0x4000, 0x4003) AM_READ(battles_input_port_r)
-	AM_RANGE(0x4001, 0x4001) AM_WRITE(battles_CPU4_coin_w)
-	AM_RANGE(0x5000, 0x5000) AM_WRITE(battles_noise_sound_w)
-	AM_RANGE(0x6000, 0x6000) AM_READWRITE(battles_customio3_r, battles_customio3_w)
-	AM_RANGE(0x7000, 0x7000) AM_READWRITE(battles_customio_data3_r, battles_customio_data3_w)
+	AM_RANGE(0x4000, 0x4003) AM_READ_LEGACY(battles_input_port_r)
+	AM_RANGE(0x4001, 0x4001) AM_WRITE_LEGACY(battles_CPU4_coin_w)
+	AM_RANGE(0x5000, 0x5000) AM_WRITE_LEGACY(battles_noise_sound_w)
+	AM_RANGE(0x6000, 0x6000) AM_READWRITE_LEGACY(battles_customio3_r, battles_customio3_w)
+	AM_RANGE(0x7000, 0x7000) AM_READWRITE_LEGACY(battles_customio_data3_r, battles_customio_data3_w)
 	AM_RANGE(0x8000, 0x80ff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( dzigzag_mem4, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( dzigzag_mem4, AS_PROGRAM, 8, galaga_state )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x1000, 0x107f) AM_RAM
 	AM_RANGE(0x4000, 0x4007) AM_READONLY	// dip switches? bits 0 & 1 used
@@ -3279,7 +3279,8 @@ static DRIVER_INIT (gatsbee)
 	DRIVER_INIT_CALL(galaga);
 
 	/* Gatsbee has a larger character ROM, we need a handler for banking */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x1000, 0x1000, FUNC(gatsbee_bank_w));
+	galaga_state *state =  machine.driver_data<galaga_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x1000, 0x1000, write8_delegate(FUNC(galaga_state::gatsbee_bank_w),state));
 }
 
 

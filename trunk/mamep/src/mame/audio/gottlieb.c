@@ -38,7 +38,6 @@
     POSSIBILITY OF SUCH DAMAGE.
 
 ***************************************************************************/
-#define ADDRESS_MAP_MODERN
 
 #include "emu.h"
 #include "includes/gottlieb.h"
@@ -162,7 +161,8 @@ logerror("Votrax: intonation %d, phoneme %02x %s\n",data >> 6,data & 0x3f,Phonem
 			}
 
 			mame_printf_debug("Votrax played '%s'\n", phonemes);
-			if (strcmp(phonemes, "[0] HEH3LOOW     AH1EH3I3YMTERI2NDAHN") == 0)	  /* Q-Bert - Hello, I am turned on */
+
+			if (strcmp(phonemes, "[0] HEH3LOOW     AH1EH3I3YMTERI2NDAHN") == 0)	  /* Q-Bert & Tylz - Hello, I am turned on */
 				m_samples->start(0, 42);
 			else if (strcmp(phonemes, "[0]BAH1EH1Y") == 0)							  /* Q-Bert - Bye, bye */
 				m_samples->start(0, 43);

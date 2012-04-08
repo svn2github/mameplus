@@ -120,6 +120,11 @@ public:
 	size_t m_stats_ram_size;
 	int m_clr_offset;
 	int m_bmc_input;
+	DECLARE_READ16_MEMBER(bmc_random_read);
+	DECLARE_READ16_MEMBER(bmc_protection_r);
+	DECLARE_WRITE16_MEMBER(bmc_RAMDAC_offset_w);
+	DECLARE_WRITE16_MEMBER(bmc_RAMDAC_color_w);
+	DECLARE_WRITE16_MEMBER(scroll_w);
 };
 
 
@@ -181,17 +186,17 @@ static SCREEN_UPDATE_IND16( bmcbowl )
 	return 0;
 }
 
-static READ16_HANDLER( bmc_random_read )
+READ16_MEMBER(bmcbowl_state::bmc_random_read)
 {
-	return space->machine().rand();
+	return machine().rand();
 }
 
-static READ16_HANDLER( bmc_protection_r )
+READ16_MEMBER(bmcbowl_state::bmc_protection_r)
 {
-	switch(cpu_get_previouspc(&space->device()))
+	switch(cpu_get_previouspc(&space.device()))
 	{
 		case 0xca68:
-			switch(cpu_get_reg(&space->device(), M68K_D2))
+			switch(cpu_get_reg(&space.device(), M68K_D2))
 			{
 				case 0: 		 return 0x37<<8;
 				case 0x1013: return 0;
@@ -199,25 +204,23 @@ static READ16_HANDLER( bmc_protection_r )
 			}
 			break;
 	}
-	logerror("Protection read @ %X\n",cpu_get_previouspc(&space->device()));
-	return space->machine().rand();
+	logerror("Protection read @ %X\n",cpu_get_previouspc(&space.device()));
+	return machine().rand();
 }
 
-static WRITE16_HANDLER( bmc_RAMDAC_offset_w )
+WRITE16_MEMBER(bmcbowl_state::bmc_RAMDAC_offset_w)
 {
-	bmcbowl_state *state = space->machine().driver_data<bmcbowl_state>();
-	state->m_clr_offset=data*3;
+	m_clr_offset=data*3;
 }
 
-static WRITE16_HANDLER( bmc_RAMDAC_color_w )
+WRITE16_MEMBER(bmcbowl_state::bmc_RAMDAC_color_w)
 {
-	bmcbowl_state *state = space->machine().driver_data<bmcbowl_state>();
-	state->m_bmc_colorram[state->m_clr_offset]=data;
-	palette_set_color_rgb(space->machine(),state->m_clr_offset/3,pal6bit(state->m_bmc_colorram[(state->m_clr_offset/3)*3]),pal6bit(state->m_bmc_colorram[(state->m_clr_offset/3)*3+1]),pal6bit(state->m_bmc_colorram[(state->m_clr_offset/3)*3+2]));
-	state->m_clr_offset=(state->m_clr_offset+1)%768;
+	m_bmc_colorram[m_clr_offset]=data;
+	palette_set_color_rgb(machine(),m_clr_offset/3,pal6bit(m_bmc_colorram[(m_clr_offset/3)*3]),pal6bit(m_bmc_colorram[(m_clr_offset/3)*3+1]),pal6bit(m_bmc_colorram[(m_clr_offset/3)*3+2]));
+	m_clr_offset=(m_clr_offset+1)%768;
 }
 
-static WRITE16_HANDLER( scroll_w )
+WRITE16_MEMBER(bmcbowl_state::scroll_w)
 {
 	//TODO - scroll
 }
@@ -323,7 +326,7 @@ static NVRAM_HANDLER( bmcbowl )
 
 }
 
-static ADDRESS_MAP_START( bmcbowl_mem, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( bmcbowl_mem, AS_PROGRAM, 16, bmcbowl_state )
 	AM_RANGE(0x000000, 0x01ffff) AM_ROM
 
 	AM_RANGE(0x090000, 0x090001) AM_WRITE(bmc_RAMDAC_offset_w)
@@ -334,20 +337,20 @@ static ADDRESS_MAP_START( bmcbowl_mem, AS_PROGRAM, 16 )
 	AM_RANGE(0x091000, 0x091001) AM_WRITENOP
 	AM_RANGE(0x091800, 0x091801) AM_WRITE(scroll_w)
 
-	AM_RANGE(0x092000, 0x09201f) AM_DEVREADWRITE8_MODERN("via6522_0", via6522_device, read, write, 0x00ff)
+	AM_RANGE(0x092000, 0x09201f) AM_DEVREADWRITE8("via6522_0", via6522_device, read, write, 0x00ff)
 
 	AM_RANGE(0x093000, 0x093003) AM_WRITENOP  // related to music
-	AM_RANGE(0x092800, 0x092803) AM_DEVWRITE8("aysnd", ay8910_data_address_w, 0xff00)
-	AM_RANGE(0x092802, 0x092803) AM_DEVREAD8("aysnd", ay8910_r, 0xff00)
+	AM_RANGE(0x092800, 0x092803) AM_DEVWRITE8_LEGACY("aysnd", ay8910_data_address_w, 0xff00)
+	AM_RANGE(0x092802, 0x092803) AM_DEVREAD8_LEGACY("aysnd", ay8910_r, 0xff00)
 	AM_RANGE(0x093802, 0x093803) AM_READ_PORT("IN0")
-	AM_RANGE(0x095000, 0x095fff) AM_RAM AM_BASE_MEMBER(bmcbowl_state, m_stats_ram) AM_SIZE_MEMBER(bmcbowl_state, m_stats_ram_size) /* 8 bit */
+	AM_RANGE(0x095000, 0x095fff) AM_RAM AM_BASE(m_stats_ram) AM_SIZE(m_stats_ram_size) /* 8 bit */
 	AM_RANGE(0x097000, 0x097001) AM_READNOP
 	AM_RANGE(0x140000, 0x1bffff) AM_ROM
-	AM_RANGE(0x1c0000, 0x1effff) AM_RAM AM_BASE_MEMBER(bmcbowl_state, m_vid1)
+	AM_RANGE(0x1c0000, 0x1effff) AM_RAM AM_BASE(m_vid1)
 	AM_RANGE(0x1f0000, 0x1fffff) AM_RAM
-	AM_RANGE(0x200000, 0x21ffff) AM_RAM AM_BASE_MEMBER(bmcbowl_state, m_vid2)
+	AM_RANGE(0x200000, 0x21ffff) AM_RAM AM_BASE(m_vid2)
 
-	AM_RANGE(0x28c000, 0x28c001) AM_DEVREADWRITE8_MODERN("oki", okim6295_device, read, write, 0xff00)
+	AM_RANGE(0x28c000, 0x28c001) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0xff00)
 
 	/* protection device*/
 	AM_RANGE(0x30c000, 0x30c001) AM_WRITENOP

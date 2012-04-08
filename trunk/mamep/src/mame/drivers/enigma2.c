@@ -78,6 +78,9 @@ public:
 	/* devices */
 	device_t *m_maincpu;
 	device_t *m_audiocpu;
+	DECLARE_READ8_MEMBER(dip_switch_r);
+	DECLARE_WRITE8_MEMBER(sound_data_w);
+	DECLARE_WRITE8_MEMBER(enigma2_flip_screen_w);
 };
 
 
@@ -346,25 +349,24 @@ static SCREEN_UPDATE_RGB32( enigma2a )
 
 
 
-static READ8_HANDLER( dip_switch_r )
+READ8_MEMBER(enigma2_state::dip_switch_r)
 {
-	enigma2_state *state = space->machine().driver_data<enigma2_state>();
 	UINT8 ret = 0x00;
 
-	if (LOG_PROT) logerror("DIP SW Read: %x at %x (prot data %x)\n", offset, cpu_get_pc(&space->device()), state->m_protection_data);
+	if (LOG_PROT) logerror("DIP SW Read: %x at %x (prot data %x)\n", offset, cpu_get_pc(&space.device()), m_protection_data);
 	switch (offset)
 	{
 	case 0x01:
 		/* For the DIP switches to be read, protection_data must be
            0xff on reset. The AY8910 reset ensures this. */
-		if (state->m_protection_data != 0xff)
-			ret = state->m_protection_data ^ 0x88;
+		if (m_protection_data != 0xff)
+			ret = m_protection_data ^ 0x88;
 		else
-			ret = input_port_read(space->machine(), "DSW");
+			ret = input_port_read(machine(), "DSW");
 		break;
 
 	case 0x02:
-		if (cpu_get_pc(&space->device()) == 0x07e5)
+		if (cpu_get_pc(&space.device()) == 0x07e5)
 			ret = 0xaa;
 		else
 			ret = 0xf4;
@@ -379,16 +381,15 @@ static READ8_HANDLER( dip_switch_r )
 }
 
 
-static WRITE8_HANDLER( sound_data_w )
+WRITE8_MEMBER(enigma2_state::sound_data_w)
 {
-	enigma2_state *state = space->machine().driver_data<enigma2_state>();
 	/* clock sound latch shift register on rising edge of D2 */
-	if (!(data & 0x04) && (state->m_last_sound_data & 0x04))
-		state->m_sound_latch = (state->m_sound_latch << 1) | (~data & 0x01);
+	if (!(data & 0x04) && (m_last_sound_data & 0x04))
+		m_sound_latch = (m_sound_latch << 1) | (~data & 0x01);
 
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, (data & 0x02) ? ASSERT_LINE : CLEAR_LINE);
+	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, (data & 0x02) ? ASSERT_LINE : CLEAR_LINE);
 
-	state->m_last_sound_data = data;
+	m_last_sound_data = data;
 }
 
 
@@ -407,10 +408,9 @@ static WRITE8_DEVICE_HANDLER( protection_data_w )
 }
 
 
-static WRITE8_HANDLER( enigma2_flip_screen_w )
+WRITE8_MEMBER(enigma2_state::enigma2_flip_screen_w)
 {
-	enigma2_state *state = space->machine().driver_data<enigma2_state>();
-	state->m_flip_screen = ((data >> 5) & 0x01) && ((input_port_read(space->machine(), "DSW") & 0x20) == 0x20);
+	m_flip_screen = ((data >> 5) & 0x01) && ((input_port_read(machine(), "DSW") & 0x20) == 0x20);
 }
 
 
@@ -443,10 +443,10 @@ static const ay8910_interface ay8910_config =
 
 
 
-static ADDRESS_MAP_START( engima2_main_cpu_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( engima2_main_cpu_map, AS_PROGRAM, 8, enigma2_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x1fff) AM_ROM AM_WRITENOP
-	AM_RANGE(0x2000, 0x3fff) AM_MIRROR(0x4000) AM_RAM AM_BASE_MEMBER(enigma2_state, m_videoram)
+	AM_RANGE(0x2000, 0x3fff) AM_MIRROR(0x4000) AM_RAM AM_BASE(m_videoram)
 	AM_RANGE(0x4000, 0x4fff) AM_ROM AM_WRITENOP
 	AM_RANGE(0x5000, 0x57ff) AM_READ(dip_switch_r) AM_WRITENOP
 	AM_RANGE(0x5800, 0x5800) AM_MIRROR(0x07f8) AM_NOP
@@ -459,16 +459,16 @@ static ADDRESS_MAP_START( engima2_main_cpu_map, AS_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( engima2a_main_cpu_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( engima2a_main_cpu_map, AS_PROGRAM, 8, enigma2_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM AM_WRITENOP
-	AM_RANGE(0x2000, 0x3fff) AM_MIRROR(0x4000) AM_RAM AM_BASE_MEMBER(enigma2_state, m_videoram)
+	AM_RANGE(0x2000, 0x3fff) AM_MIRROR(0x4000) AM_RAM AM_BASE(m_videoram)
 	AM_RANGE(0x4000, 0x4fff) AM_ROM AM_WRITENOP
 	AM_RANGE(0x5000, 0x57ff) AM_READ(dip_switch_r) AM_WRITENOP
 	AM_RANGE(0x5800, 0x5fff) AM_NOP
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( engima2a_main_cpu_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( engima2a_main_cpu_io_map, AS_IO, 8, enigma2_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_NOP
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN0") AM_WRITENOP
@@ -480,12 +480,12 @@ static ADDRESS_MAP_START( engima2a_main_cpu_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( engima2_audio_cpu_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( engima2_audio_cpu_map, AS_PROGRAM, 8, enigma2_state )
 	AM_RANGE(0x0000, 0x0fff) AM_MIRROR(0x1000) AM_ROM AM_WRITENOP
 	AM_RANGE(0x2000, 0x7fff) AM_NOP
 	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x1c00) AM_RAM
-	AM_RANGE(0xa000, 0xa001) AM_MIRROR(0x1ffc) AM_DEVWRITE("aysnd", ay8910_address_data_w)
-	AM_RANGE(0xa002, 0xa002) AM_MIRROR(0x1ffc) AM_DEVREAD("aysnd", ay8910_r)
+	AM_RANGE(0xa000, 0xa001) AM_MIRROR(0x1ffc) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
+	AM_RANGE(0xa002, 0xa002) AM_MIRROR(0x1ffc) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
 	AM_RANGE(0xa003, 0xa003) AM_MIRROR(0x1ffc) AM_NOP
 	AM_RANGE(0xc000, 0xffff) AM_NOP
 ADDRESS_MAP_END

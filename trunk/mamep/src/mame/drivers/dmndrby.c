@@ -70,36 +70,38 @@ public:
 	tilemap_t *m_racetrack_tilemap;
 	UINT8 m_io_port[8];
 	int m_bg;
+	DECLARE_WRITE8_MEMBER(dderby_sound_w);
+	DECLARE_READ8_MEMBER(input_r);
+	DECLARE_WRITE8_MEMBER(output_w);
 };
 
 
-static WRITE8_HANDLER( dderby_sound_w )
+WRITE8_MEMBER(dmndrby_state::dderby_sound_w)
 {
 	soundlatch_w(space,0,data);
-	cputag_set_input_line(space->machine(), "audiocpu", 0, HOLD_LINE);
+	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
 }
 
 
-static READ8_HANDLER( input_r )
+READ8_MEMBER(dmndrby_state::input_r)
 {
 	switch(offset & 7)
 	{
-		case 0: return input_port_read(space->machine(), "IN0");
-		case 1: return input_port_read(space->machine(), "IN1");
-		case 2: return input_port_read(space->machine(), "IN2");
-		case 3: return input_port_read(space->machine(), "IN3");
-		case 4: return input_port_read(space->machine(), "IN4");
-		case 5: return input_port_read(space->machine(), "IN5");
-		case 6: return input_port_read(space->machine(), "IN6");
-		case 7: return input_port_read(space->machine(), "IN7");
+		case 0: return input_port_read(machine(), "IN0");
+		case 1: return input_port_read(machine(), "IN1");
+		case 2: return input_port_read(machine(), "IN2");
+		case 3: return input_port_read(machine(), "IN3");
+		case 4: return input_port_read(machine(), "IN4");
+		case 5: return input_port_read(machine(), "IN5");
+		case 6: return input_port_read(machine(), "IN6");
+		case 7: return input_port_read(machine(), "IN7");
 	}
 
 	return 0xff;
 }
 
-static WRITE8_HANDLER( output_w )
+WRITE8_MEMBER(dmndrby_state::output_w)
 {
-	dmndrby_state *state = space->machine().driver_data<dmndrby_state>();
 	/*
     ---- x--- refill meter [4]
     ---- x--- token out meter [5]
@@ -111,11 +113,11 @@ static WRITE8_HANDLER( output_w )
     ---- --x- coin lockout [0-3]
     ---- ---x lamp [0-6]
     */
-	state->m_io_port[offset] = data;
-//  popmessage("%02x|%02x|%02x|%02x|%02x|%02x|%02x|%02x|",state->m_io_port[0],state->m_io_port[1],state->m_io_port[2],state->m_io_port[3],state->m_io_port[4],state->m_io_port[5],state->m_io_port[6],state->m_io_port[7]);
+	m_io_port[offset] = data;
+//  popmessage("%02x|%02x|%02x|%02x|%02x|%02x|%02x|%02x|",m_io_port[0],m_io_port[1],m_io_port[2],m_io_port[3],m_io_port[4],m_io_port[5],m_io_port[6],m_io_port[7]);
 }
 
-static ADDRESS_MAP_START( memmap, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( memmap, AS_PROGRAM, 8, dmndrby_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0xc000, 0xc007) AM_READ(input_r)
@@ -126,18 +128,18 @@ static ADDRESS_MAP_START( memmap, AS_PROGRAM, 8 )
 	AM_RANGE(0xca01, 0xca01) AM_WRITENOP //watchdog
 	AM_RANGE(0xca02, 0xca02) AM_RAM_WRITE(dderby_sound_w)
 	AM_RANGE(0xca03, 0xca03) AM_WRITENOP//(timer_irq_w) //???
-	AM_RANGE(0xcc00, 0xcc05) AM_RAM AM_BASE_MEMBER(dmndrby_state, m_scroll_ram)
-	AM_RANGE(0xce08, 0xce1f) AM_RAM AM_BASE_MEMBER(dmndrby_state, m_sprite_ram) // horse sprites
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM AM_BASE_MEMBER(dmndrby_state, m_dderby_vidchars) // char ram
-	AM_RANGE(0xd400, 0xd7ff) AM_RAM AM_BASE_MEMBER(dmndrby_state, m_dderby_vidattribs) // colours/ attrib ram
+	AM_RANGE(0xcc00, 0xcc05) AM_RAM AM_BASE(m_scroll_ram)
+	AM_RANGE(0xce08, 0xce1f) AM_RAM AM_BASE(m_sprite_ram) // horse sprites
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM AM_BASE(m_dderby_vidchars) // char ram
+	AM_RANGE(0xd400, 0xd7ff) AM_RAM AM_BASE(m_dderby_vidattribs) // colours/ attrib ram
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( dderby_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( dderby_sound_map, AS_PROGRAM, 8, dmndrby_state )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x1000, 0x1000) AM_RAM //???
-	AM_RANGE(0x4000, 0x4001) AM_DEVWRITE("ay1", ay8910_address_data_w)
+	AM_RANGE(0x4000, 0x4001) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
 	AM_RANGE(0x4000, 0x4000) AM_READ(soundlatch_r)
-	AM_RANGE(0x4001, 0x4001) AM_DEVREAD("ay1", ay8910_r)
+	AM_RANGE(0x4001, 0x4001) AM_DEVREAD_LEGACY("ay1", ay8910_r)
 	AM_RANGE(0x6000, 0x67ff) AM_RAM
 ADDRESS_MAP_END
 

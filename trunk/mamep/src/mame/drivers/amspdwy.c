@@ -52,14 +52,14 @@ static UINT8 amspdwy_wheel_r( running_machine &machine, int index )
 	return state->m_wheel_return[index] | input_port_read(machine, portnames[index]);
 }
 
-static READ8_HANDLER( amspdwy_wheel_0_r )
+READ8_MEMBER(amspdwy_state::amspdwy_wheel_0_r)
 {
-	return amspdwy_wheel_r(space->machine(), 0);
+	return amspdwy_wheel_r(machine(), 0);
 }
 
-static READ8_HANDLER( amspdwy_wheel_1_r )
+READ8_MEMBER(amspdwy_state::amspdwy_wheel_1_r)
 {
-	return amspdwy_wheel_r(space->machine(), 1);
+	return amspdwy_wheel_r(machine(), 1);
 }
 
 static READ8_DEVICE_HANDLER( amspdwy_sound_r )
@@ -67,18 +67,17 @@ static READ8_DEVICE_HANDLER( amspdwy_sound_r )
 	return (ym2151_status_port_r(device, 0) & ~ 0x30) | input_port_read(device->machine(), "IN0");
 }
 
-static WRITE8_HANDLER( amspdwy_sound_w )
+WRITE8_MEMBER(amspdwy_state::amspdwy_sound_w)
 {
-	amspdwy_state *state = space->machine().driver_data<amspdwy_state>();
 	soundlatch_w(space, 0, data);
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static ADDRESS_MAP_START( amspdwy_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( amspdwy_map, AS_PROGRAM, 8, amspdwy_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM												// ROM
-	AM_RANGE(0x8000, 0x801f) AM_WRITE(amspdwy_paletteram_w) AM_BASE_GENERIC(paletteram)// Palette
-	AM_RANGE(0x9000, 0x93ff) AM_MIRROR(0x0400) AM_RAM_WRITE(amspdwy_videoram_w) AM_BASE_MEMBER(amspdwy_state, m_videoram)	// Layer, mirrored?
-	AM_RANGE(0x9800, 0x9bff) AM_RAM_WRITE(amspdwy_colorram_w) AM_BASE_MEMBER(amspdwy_state, m_colorram)	// Layer
+	AM_RANGE(0x8000, 0x801f) AM_WRITE(amspdwy_paletteram_w) AM_SHARE("paletteram")// Palette
+	AM_RANGE(0x9000, 0x93ff) AM_MIRROR(0x0400) AM_RAM_WRITE(amspdwy_videoram_w) AM_BASE(m_videoram)	// Layer, mirrored?
+	AM_RANGE(0x9800, 0x9bff) AM_RAM_WRITE(amspdwy_colorram_w) AM_BASE(m_colorram)	// Layer
 	AM_RANGE(0x9c00, 0x9fff) AM_RAM												// Unused?
 //  AM_RANGE(0xa000, 0xa000) AM_WRITENOP                                        // ?
 	AM_RANGE(0xa000, 0xa000) AM_READ_PORT("DSW1")
@@ -86,19 +85,19 @@ static ADDRESS_MAP_START( amspdwy_map, AS_PROGRAM, 8 )
 	AM_RANGE(0xa800, 0xa800) AM_READ(amspdwy_wheel_0_r)							// Player 1
 	AM_RANGE(0xac00, 0xac00) AM_READ(amspdwy_wheel_1_r)							// Player 2
 	AM_RANGE(0xb000, 0xb000) AM_WRITENOP										// ? Exiting IRQ
-	AM_RANGE(0xb400, 0xb400) AM_DEVREAD("ymsnd", amspdwy_sound_r) AM_WRITE(amspdwy_sound_w)		// YM2151 status, To Sound CPU
-	AM_RANGE(0xc000, 0xc0ff) AM_RAM AM_BASE_SIZE_MEMBER(amspdwy_state, m_spriteram, m_spriteram_size)// Sprites
+	AM_RANGE(0xb400, 0xb400) AM_DEVREAD_LEGACY("ymsnd", amspdwy_sound_r) AM_WRITE(amspdwy_sound_w)		// YM2151 status, To Sound CPU
+	AM_RANGE(0xc000, 0xc0ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)// Sprites
 	AM_RANGE(0xe000, 0xe7ff) AM_RAM												// Work RAM
 ADDRESS_MAP_END
 
 
-static READ8_HANDLER( amspdwy_port_r )
+READ8_MEMBER(amspdwy_state::amspdwy_port_r)
 {
-	UINT8 *tracks = space->machine().region("maincpu")->base() + 0x10000;
+	UINT8 *tracks = machine().region("maincpu")->base() + 0x10000;
 	return tracks[offset];
 }
 
-static ADDRESS_MAP_START( amspdwy_portmap, AS_IO, 8 )
+static ADDRESS_MAP_START( amspdwy_portmap, AS_IO, 8, amspdwy_state )
 	AM_RANGE(0x0000, 0x7fff) AM_READ(amspdwy_port_r)
 ADDRESS_MAP_END
 
@@ -112,11 +111,11 @@ ADDRESS_MAP_END
 
 ***************************************************************************/
 
-static ADDRESS_MAP_START( amspdwy_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( amspdwy_sound_map, AS_PROGRAM, 8, amspdwy_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM									// ROM
 //  AM_RANGE(0x8000, 0x8000) AM_WRITENOP                            // ? Written with 0 at the start
 	AM_RANGE(0x9000, 0x9000) AM_READ(soundlatch_r)					// From Main CPU
-	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)			//
+	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)			//
 	AM_RANGE(0xc000, 0xdfff) AM_RAM									// Work RAM
 	AM_RANGE(0xffff, 0xffff) AM_READNOP								// ??? IY = FFFF at the start ?
 ADDRESS_MAP_END

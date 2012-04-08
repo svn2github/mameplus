@@ -27,65 +27,60 @@ TODO:
 #include "includes/laserbat.h"
 
 
-static WRITE8_HANDLER( laserbat_videoram_w )
+WRITE8_MEMBER(laserbat_state::laserbat_videoram_w)
 {
-	laserbat_state *state = space->machine().driver_data<laserbat_state>();
 
-	if (state->m_video_page == 0)
+	if (m_video_page == 0)
 	{
-		state->m_videoram[offset] = data;
-		state->m_bg_tilemap->mark_tile_dirty(offset);
+		m_videoram[offset] = data;
+		m_bg_tilemap->mark_tile_dirty(offset);
 	}
-	else if (state->m_video_page == 1)
+	else if (m_video_page == 1)
 	{
-		state->m_colorram[offset] = data;
-		state->m_bg_tilemap->mark_tile_dirty(offset); // wrong!
+		m_colorram[offset] = data;
+		m_bg_tilemap->mark_tile_dirty(offset); // wrong!
 	}
 }
 
-static WRITE8_HANDLER( video_extra_w )
+WRITE8_MEMBER(laserbat_state::video_extra_w)
 {
-	laserbat_state *state = space->machine().driver_data<laserbat_state>();
 
-	state->m_video_page = (data & 0x10) >> 4;
-	state->m_sprite_enable = (data & 1) ^ 1;
-	state->m_sprite_code = (data & 0xe0) >> 5;
-	state->m_sprite_color = (data & 0x0e) >> 1;
+	m_video_page = (data & 0x10) >> 4;
+	m_sprite_enable = (data & 1) ^ 1;
+	m_sprite_code = (data & 0xe0) >> 5;
+	m_sprite_color = (data & 0x0e) >> 1;
 }
 
-static WRITE8_HANDLER( sprite_x_y_w )
+WRITE8_MEMBER(laserbat_state::sprite_x_y_w)
 {
-	laserbat_state *state = space->machine().driver_data<laserbat_state>();
 
 	if (offset == 0)
-		state->m_sprite_x = 256 - data;
+		m_sprite_x = 256 - data;
 	else
-		state->m_sprite_y = 256 - data;
+		m_sprite_y = 256 - data;
 }
 
-static WRITE8_HANDLER( laserbat_input_mux_w )
+WRITE8_MEMBER(laserbat_state::laserbat_input_mux_w)
 {
-	laserbat_state *state = space->machine().driver_data<laserbat_state>();
 
-	state->m_input_mux = (data & 0x30) >> 4;
+	m_input_mux = (data & 0x30) >> 4;
 
-	flip_screen_set_no_update(space->machine(), data & 0x08);
+	flip_screen_set_no_update(machine(), data & 0x08);
 
-	coin_counter_w(space->machine(), 0,data & 1);
+	coin_counter_w(machine(), 0,data & 1);
 
 	//data & 0x02 ?
 	//data & 0x04 ?
 }
 
-static READ8_HANDLER( laserbat_input_r )
+READ8_MEMBER(laserbat_state::laserbat_input_r)
 {
-	laserbat_state *state = space->machine().driver_data<laserbat_state>();
 	static const char *const portnames[] = { "IN0", "IN1", "IN2", "IN3" };
 
-	return input_port_read(space->machine(), portnames[state->m_input_mux]);
+	return input_port_read(machine(), portnames[m_input_mux]);
 }
 
-static WRITE8_HANDLER( laserbat_cnteff_w )
+WRITE8_MEMBER(laserbat_state::laserbat_cnteff_w)
 {
 	// 0x01 = _ABEFF1
 	// 0x02 = _ABEFF2
@@ -98,7 +93,7 @@ static WRITE8_HANDLER( laserbat_cnteff_w )
 }
 
 #ifdef UNUSED_FUNCTION
-static WRITE8_HANDLER( laserbat_cntmov_w )
+WRITE8_MEMBER(laserbat_state::laserbat_cntmov_w)
 {
 	// 0x01 = AB MOVE
 	// 0x02 = CLH0
@@ -166,7 +161,7 @@ static WRITE8_HANDLER( laserbat_cntmov_w )
 
 */
 
-static ADDRESS_MAP_START( laserbat_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( laserbat_map, AS_PROGRAM, 8, laserbat_state )
 	AM_RANGE(0x0000, 0x13ff) AM_ROM
 	AM_RANGE(0x2000, 0x33ff) AM_ROM
 	AM_RANGE(0x3800, 0x3bff) AM_ROM
@@ -175,25 +170,25 @@ static ADDRESS_MAP_START( laserbat_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x7800, 0x7bff) AM_ROM
 
 	AM_RANGE(0x1400, 0x14ff) AM_MIRROR(0x6000) AM_WRITENOP // always 0 (bullet ram in Quasar)
-	AM_RANGE(0x1500, 0x15ff) AM_MIRROR(0x6000) AM_DEVREADWRITE("s2636_1", s2636_work_ram_r, s2636_work_ram_w)
-	AM_RANGE(0x1600, 0x16ff) AM_MIRROR(0x6000) AM_DEVREADWRITE("s2636_2", s2636_work_ram_r, s2636_work_ram_w)
-	AM_RANGE(0x1700, 0x17ff) AM_MIRROR(0x6000) AM_DEVREADWRITE("s2636_3", s2636_work_ram_r, s2636_work_ram_w)
+	AM_RANGE(0x1500, 0x15ff) AM_MIRROR(0x6000) AM_DEVREADWRITE_LEGACY("s2636_1", s2636_work_ram_r, s2636_work_ram_w)
+	AM_RANGE(0x1600, 0x16ff) AM_MIRROR(0x6000) AM_DEVREADWRITE_LEGACY("s2636_2", s2636_work_ram_r, s2636_work_ram_w)
+	AM_RANGE(0x1700, 0x17ff) AM_MIRROR(0x6000) AM_DEVREADWRITE_LEGACY("s2636_3", s2636_work_ram_r, s2636_work_ram_w)
 	AM_RANGE(0x1800, 0x1bff) AM_MIRROR(0x6000) AM_WRITE(laserbat_videoram_w)
 	AM_RANGE(0x1c00, 0x1fff) AM_MIRROR(0x6000) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( laserbat_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( laserbat_io_map, AS_IO, 8, laserbat_state )
 	AM_RANGE(0x00, 0x00) AM_WRITE(laserbat_cnteff_w)
 	AM_RANGE(0x01, 0x01) AM_WRITE(video_extra_w)
-	AM_RANGE(0x02, 0x02) AM_READ(laserbat_input_r) AM_WRITE(laserbat_csound1_w)
+	AM_RANGE(0x02, 0x02) AM_READ(laserbat_input_r) AM_WRITE_LEGACY(laserbat_csound1_w)
 	AM_RANGE(0x04, 0x05) AM_WRITE(sprite_x_y_w)
 	AM_RANGE(0x06, 0x06) AM_WRITE(laserbat_input_mux_w)
-	AM_RANGE(0x07, 0x07) AM_WRITE(laserbat_csound2_w)
+	AM_RANGE(0x07, 0x07) AM_WRITE_LEGACY(laserbat_csound2_w)
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ_PORT("SENSE")
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( catnmous_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( catnmous_io_map, AS_IO, 8, laserbat_state )
 	AM_RANGE(0x00, 0x00) AM_WRITE(soundlatch_w) // soundlatch ?
 	AM_RANGE(0x01, 0x01) AM_WRITE(video_extra_w)
 	AM_RANGE(0x02, 0x02) AM_READ(laserbat_input_r)
@@ -205,9 +200,9 @@ static ADDRESS_MAP_START( catnmous_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 // the same as in zaccaria.c ?
-static ADDRESS_MAP_START( catnmous_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( catnmous_sound_map, AS_PROGRAM, 8, laserbat_state )
 	AM_RANGE(0x0000, 0x007f) AM_RAM
-	AM_RANGE(0x500c, 0x500f) AM_DEVREADWRITE_MODERN("pia", pia6821_device, read, write)
+	AM_RANGE(0x500c, 0x500f) AM_DEVREADWRITE("pia", pia6821_device, read, write)
 	AM_RANGE(0xf000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -655,7 +650,7 @@ static const ay8910_interface ay8910_config =
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
 	DEVCB_NULL,
-	DEVCB_MEMORY_HANDLER("audiocpu", PROGRAM, soundlatch_r),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_r),
 	DEVCB_NULL,//ay8910_port0a_w,
 	DEVCB_NULL
 };

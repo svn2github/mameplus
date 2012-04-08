@@ -42,36 +42,33 @@ Notes:
 #include "includes/aquarium.h"
 
 
-static READ16_HANDLER( aquarium_coins_r )
+READ16_MEMBER(aquarium_state::aquarium_coins_r)
 {
-	aquarium_state *state = space->machine().driver_data<aquarium_state>();
 
 	int data;
-	data = (input_port_read(space->machine(), "SYSTEM") & 0x7fff);
-	data |= state->m_aquarium_snd_ack;
-	state->m_aquarium_snd_ack = 0;
+	data = (input_port_read(machine(), "SYSTEM") & 0x7fff);
+	data |= m_aquarium_snd_ack;
+	m_aquarium_snd_ack = 0;
 
 	return data;
 }
 
-static WRITE8_HANDLER( aquarium_snd_ack_w )
+WRITE8_MEMBER(aquarium_state::aquarium_snd_ack_w)
 {
-	aquarium_state *state = space->machine().driver_data<aquarium_state>();
-	state->m_aquarium_snd_ack = 0x8000;
+	m_aquarium_snd_ack = 0x8000;
 }
 
-static WRITE16_HANDLER( aquarium_sound_w )
+WRITE16_MEMBER(aquarium_state::aquarium_sound_w)
 {
 //  popmessage("sound write %04x",data);
-	aquarium_state *state = space->machine().driver_data<aquarium_state>();
 
 	soundlatch_w(space, 1, data & 0xff);
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, PULSE_LINE );
+	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE );
 }
 
-static WRITE8_HANDLER( aquarium_z80_bank_w )
+WRITE8_MEMBER(aquarium_state::aquarium_z80_bank_w)
 {
-	memory_set_bank(space->machine(), "bank1", data & 0x07);
+	memory_set_bank(machine(), "bank1", data & 0x07);
 }
 
 static UINT8 aquarium_snd_bitswap( UINT8 scrambled_data )
@@ -90,30 +87,30 @@ static UINT8 aquarium_snd_bitswap( UINT8 scrambled_data )
 	return data;
 }
 
-static READ8_HANDLER( aquarium_oki_r )
+READ8_MEMBER(aquarium_state::aquarium_oki_r)
 {
-	okim6295_device *oki = space->machine().device<okim6295_device>("oki");
-	return aquarium_snd_bitswap(oki->read(*space, offset));
+	okim6295_device *oki = machine().device<okim6295_device>("oki");
+	return aquarium_snd_bitswap(oki->read(space, offset));
 }
 
-static WRITE8_HANDLER( aquarium_oki_w )
+WRITE8_MEMBER(aquarium_state::aquarium_oki_w)
 {
-	logerror("%s:Writing %04x to the OKI M6295\n", space->machine().describe_context(), aquarium_snd_bitswap(data));
-	okim6295_device *oki = space->machine().device<okim6295_device>("oki");
-	oki->write(*space, offset, (aquarium_snd_bitswap(data)));
+	logerror("%s:Writing %04x to the OKI M6295\n", machine().describe_context(), aquarium_snd_bitswap(data));
+	okim6295_device *oki = machine().device<okim6295_device>("oki");
+	oki->write(space, offset, (aquarium_snd_bitswap(data)));
 }
 
 
 
 
-static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, aquarium_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0xc00000, 0xc00fff) AM_RAM_WRITE(aquarium_mid_videoram_w) AM_BASE_MEMBER(aquarium_state, m_mid_videoram)
-	AM_RANGE(0xc01000, 0xc01fff) AM_RAM_WRITE(aquarium_bak_videoram_w) AM_BASE_MEMBER(aquarium_state, m_bak_videoram)
-	AM_RANGE(0xc02000, 0xc03fff) AM_RAM_WRITE(aquarium_txt_videoram_w) AM_BASE_MEMBER(aquarium_state, m_txt_videoram)
-	AM_RANGE(0xc80000, 0xc81fff) AM_RAM AM_BASE_SIZE_MEMBER(aquarium_state, m_spriteram, m_spriteram_size)
-	AM_RANGE(0xd00000, 0xd00fff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0xd80014, 0xd8001f) AM_WRITEONLY AM_BASE_MEMBER(aquarium_state, m_scroll)
+	AM_RANGE(0xc00000, 0xc00fff) AM_RAM_WRITE(aquarium_mid_videoram_w) AM_BASE(m_mid_videoram)
+	AM_RANGE(0xc01000, 0xc01fff) AM_RAM_WRITE(aquarium_bak_videoram_w) AM_BASE(m_bak_videoram)
+	AM_RANGE(0xc02000, 0xc03fff) AM_RAM_WRITE(aquarium_txt_videoram_w) AM_BASE(m_txt_videoram)
+	AM_RANGE(0xc80000, 0xc81fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd00000, 0xd00fff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd80014, 0xd8001f) AM_WRITEONLY AM_BASE(m_scroll)
 	AM_RANGE(0xd80068, 0xd80069) AM_WRITENOP		/* probably not used */
 	AM_RANGE(0xd80080, 0xd80081) AM_READ_PORT("DSW")
 	AM_RANGE(0xd80082, 0xd80083) AM_READNOP	/* stored but not read back ? check code at 0x01f440 */
@@ -124,15 +121,15 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16 )
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( snd_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( snd_map, AS_PROGRAM, 8, aquarium_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x7800, 0x7fff) AM_RAM
 	AM_RANGE(0x8000, 0xffff) AM_ROMBANK("bank1")
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( snd_portmap, AS_IO, 8 )
+static ADDRESS_MAP_START( snd_portmap, AS_IO, 8, aquarium_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0x02, 0x02) AM_READWRITE(aquarium_oki_r, aquarium_oki_w)
 	AM_RANGE(0x04, 0x04) AM_READ(soundlatch_r)
 	AM_RANGE(0x06, 0x06) AM_WRITE(aquarium_snd_ack_w)

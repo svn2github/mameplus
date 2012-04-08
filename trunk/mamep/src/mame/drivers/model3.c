@@ -1625,23 +1625,25 @@ static WRITE64_HANDLER( model3_sys_w )
 
 static READ64_HANDLER( model3_rtc_r )
 {
+	model3_state *state = space->machine().driver_data<model3_state>();
 	UINT64 r = 0;
 	if(ACCESSING_BITS_56_63) {
-		r |= (UINT64)rtc72421_r(space, (offset*2)+0, (UINT32)(mem_mask >> 32)) << 32;
+		r |= (UINT64)state->rtc72421_r(*space, (offset*2)+0, (UINT32)(mem_mask >> 32)) << 32;
 	}
 	if(ACCESSING_BITS_24_31) {
-		r |= (UINT64)rtc72421_r(space, (offset*2)+1, (UINT32)(mem_mask));
+		r |= (UINT64)state->rtc72421_r(*space, (offset*2)+1, (UINT32)(mem_mask));
 	}
 	return r;
 }
 
 static WRITE64_HANDLER( model3_rtc_w )
 {
+	model3_state *state = space->machine().driver_data<model3_state>();
 	if(ACCESSING_BITS_56_63) {
-		rtc72421_w(space, (offset*2)+0, (UINT32)(data >> 32), (UINT32)(mem_mask >> 32));
+		state->rtc72421_w(*space, (offset*2)+0, (UINT32)(data >> 32), (UINT32)(mem_mask >> 32));
 	}
 	if(ACCESSING_BITS_24_31) {
-		rtc72421_w(space, (offset*2)+1, (UINT32)(data), (UINT32)(mem_mask));
+		state->rtc72421_w(*space, (offset*2)+1, (UINT32)(data), (UINT32)(mem_mask));
 	}
 }
 
@@ -1873,26 +1875,26 @@ static WRITE64_HANDLER(daytona2_rombank_w)
 	}
 }
 
-static ADDRESS_MAP_START( model3_mem, AS_PROGRAM, 64)
-	AM_RANGE(0x00000000, 0x007fffff) AM_RAM	AM_BASE_MEMBER(model3_state, m_work_ram)	/* work RAM */
+static ADDRESS_MAP_START( model3_mem, AS_PROGRAM, 64, model3_state )
+	AM_RANGE(0x00000000, 0x007fffff) AM_RAM	AM_BASE(m_work_ram)	/* work RAM */
 
-	AM_RANGE(0x84000000, 0x8400003f) AM_READ( real3d_status_r )
-	AM_RANGE(0x88000000, 0x88000007) AM_WRITE( real3d_cmd_w )
-	AM_RANGE(0x8e000000, 0x8e0fffff) AM_WRITE( real3d_display_list_w )
-	AM_RANGE(0x98000000, 0x980fffff) AM_WRITE( real3d_polygon_ram_w )
+	AM_RANGE(0x84000000, 0x8400003f) AM_READ_LEGACY(real3d_status_r )
+	AM_RANGE(0x88000000, 0x88000007) AM_WRITE(real3d_cmd_w )
+	AM_RANGE(0x8e000000, 0x8e0fffff) AM_WRITE(real3d_display_list_w )
+	AM_RANGE(0x98000000, 0x980fffff) AM_WRITE(real3d_polygon_ram_w )
 
-	AM_RANGE(0xf0040000, 0xf004003f) AM_MIRROR(0x0e000000) AM_READWRITE( model3_ctrl_r, model3_ctrl_w )
-	AM_RANGE(0xf0080000, 0xf008ffff) AM_MIRROR(0x0e000000) AM_WRITE8( model3_sound_w, U64(0xffffffffffffffff) )
+	AM_RANGE(0xf0040000, 0xf004003f) AM_MIRROR(0x0e000000) AM_READWRITE_LEGACY(model3_ctrl_r, model3_ctrl_w )
+	AM_RANGE(0xf0080000, 0xf008ffff) AM_MIRROR(0x0e000000) AM_WRITE8_LEGACY(model3_sound_w, U64(0xffffffffffffffff) )
 	AM_RANGE(0xf00c0000, 0xf00dffff) AM_MIRROR(0x0e000000) AM_RAM AM_SHARE("backup")	/* backup SRAM */
-	AM_RANGE(0xf0100000, 0xf010003f) AM_MIRROR(0x0e000000) AM_READWRITE( model3_sys_r, model3_sys_w )
-	AM_RANGE(0xf0140000, 0xf014003f) AM_MIRROR(0x0e000000) AM_READWRITE( model3_rtc_r, model3_rtc_w )
+	AM_RANGE(0xf0100000, 0xf010003f) AM_MIRROR(0x0e000000) AM_READWRITE_LEGACY(model3_sys_r, model3_sys_w )
+	AM_RANGE(0xf0140000, 0xf014003f) AM_MIRROR(0x0e000000) AM_READWRITE_LEGACY(model3_rtc_r, model3_rtc_w )
 	AM_RANGE(0xf0180000, 0xf019ffff) AM_MIRROR(0x0e000000) AM_RAM							/* Security Board RAM */
-	AM_RANGE(0xf01a0000, 0xf01a003f) AM_MIRROR(0x0e000000) AM_READ( model3_security_r )	/* Security board */
+	AM_RANGE(0xf01a0000, 0xf01a003f) AM_MIRROR(0x0e000000) AM_READ_LEGACY(model3_security_r )	/* Security board */
 
-	AM_RANGE(0xf1000000, 0xf10f7fff) AM_READWRITE( model3_char_r, model3_char_w )	/* character RAM */
-	AM_RANGE(0xf10f8000, 0xf10fffff) AM_READWRITE( model3_tile_r, model3_tile_w )	/* tilemaps */
-	AM_RANGE(0xf1100000, 0xf111ffff) AM_READWRITE( model3_palette_r, model3_palette_w ) AM_BASE_MEMBER(model3_state, m_paletteram64) /* palette */
-	AM_RANGE(0xf1180000, 0xf11800ff) AM_READWRITE( model3_vid_reg_r, model3_vid_reg_w )
+	AM_RANGE(0xf1000000, 0xf10f7fff) AM_READWRITE(model3_char_r, model3_char_w )	/* character RAM */
+	AM_RANGE(0xf10f8000, 0xf10fffff) AM_READWRITE(model3_tile_r, model3_tile_w )	/* tilemaps */
+	AM_RANGE(0xf1100000, 0xf111ffff) AM_READWRITE(model3_palette_r, model3_palette_w ) AM_BASE(m_paletteram64) /* palette */
+	AM_RANGE(0xf1180000, 0xf11800ff) AM_READWRITE(model3_vid_reg_r, model3_vid_reg_w )
 
 	AM_RANGE(0xff800000, 0xffffffff) AM_ROM AM_REGION("user1", 0)
 ADDRESS_MAP_END
@@ -3208,7 +3210,7 @@ ROM_START( vs298 )	/* Step 2.0, Sega ID# 833-13346, ROM board ID# 834-13347 */
 	ROM_FILL( 0x000000, 0x80000, 0 )
 ROM_END
 
-ROM_START( vs29815 )	/* Step 1.5 */
+ROM_START( vs29815 )	/* Step 1.5, ROM board ID# 834-13495 VS2 VER98 STEP 1.5 */
 	ROM_REGION64_BE( 0x4800000, "user1", 0 ) /* program + data ROMs */
 	// CROM
 	ROM_LOAD64_WORD_SWAP( "epr-20909.17",  0x600006, 0x080000, CRC(3dff0d7e) SHA1(c6a6a103f499cd451796ae2480b8c38c3e87a143) )
@@ -4656,7 +4658,7 @@ ROM_START( spikeout )	/* Step 2.1 */
 	ROM_FILL( 0x000000, 0x80000, 0 )
 ROM_END
 
-ROM_START( spikeofe )	/* Step 2.1, Sega game ID# is 833-13746, ROM board ID# 834-13747 SPK F/E */
+ROM_START( spikeofe )	/* Step 2.1, Sega game ID# is 833-13746, ROM board ID# 834-13747 SPK F/E, Security board ID# 837-13726-COM */
 	ROM_REGION64_BE( 0x8800000, "user1", 0 ) /* program + data ROMs */
 	// CROM
 	ROM_LOAD64_WORD_SWAP( "epr-21653.17", 0x000006, 0x200000, CRC(f4bd9c3c) SHA1(de509c25226939d7a9c1b402ab6923844c12314e) )
@@ -4733,7 +4735,7 @@ ROM_START( spikeofe )	/* Step 2.1, Sega game ID# is 833-13746, ROM board ID# 834
 	ROM_FILL( 0x000000, 0x80000, 0 )
 ROM_END
 
-ROM_START( eca )	/* Step 2.1 */
+ROM_START( eca )	/* Step 2.1, Sega game ID# is 833-13427, ROM board ID# 834-13428, MAIN board ID# 837-13022-1, Security board ID# 837-13947-COM */
 	ROM_REGION64_BE( 0x4800000, "user1", 0 ) /* program + data ROMs */
 	// CROM
 	ROM_LOAD64_WORD_SWAP( "epr-22895.17", 0x000006, 0x200000, CRC(07df16a0) SHA1(a9ad2b229854a5f4f761565141db738adde28720) )
@@ -5083,12 +5085,12 @@ static WRITE16_HANDLER( model3snd_ctrl )
 	}
 }
 
-static ADDRESS_MAP_START( model3_snd, AS_PROGRAM, 16 )
-	AM_RANGE(0x000000, 0x07ffff) AM_RAM AM_REGION("scsp1", 0) AM_BASE_MEMBER(model3_state, m_soundram)
-	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE("scsp1", scsp_r, scsp_w)
+static ADDRESS_MAP_START( model3_snd, AS_PROGRAM, 16, model3_state )
+	AM_RANGE(0x000000, 0x07ffff) AM_RAM AM_REGION("scsp1", 0) AM_BASE(m_soundram)
+	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE_LEGACY("scsp1", scsp_r, scsp_w)
 	AM_RANGE(0x200000, 0x27ffff) AM_RAM AM_REGION("scsp2", 0)
-	AM_RANGE(0x300000, 0x300fff) AM_DEVREADWRITE("scsp2", scsp_r, scsp_w)
-	AM_RANGE(0x400000, 0x400001) AM_WRITE(model3snd_ctrl)
+	AM_RANGE(0x300000, 0x300fff) AM_DEVREADWRITE_LEGACY("scsp2", scsp_r, scsp_w)
+	AM_RANGE(0x400000, 0x400001) AM_WRITE_LEGACY(model3snd_ctrl)
 	AM_RANGE(0x600000, 0x67ffff) AM_ROM AM_REGION("audiocpu", 0x80000)
 	AM_RANGE(0x800000, 0x9fffff) AM_ROM AM_REGION("samples", 0)
 	AM_RANGE(0xa00000, 0xdfffff) AM_ROMBANK("bank4")

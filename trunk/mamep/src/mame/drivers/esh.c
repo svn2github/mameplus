@@ -39,6 +39,11 @@ public:
 	UINT8 *m_tile_ram;
 	UINT8 *m_tile_control_ram;
 	UINT8 m_ld_video_visible;
+	DECLARE_READ8_MEMBER(ldp_read);
+	DECLARE_WRITE8_MEMBER(ldp_write);
+	DECLARE_WRITE8_MEMBER(misc_write);
+	DECLARE_WRITE8_MEMBER(led_writes);
+	DECLARE_WRITE8_MEMBER(nmi_line_w);
 };
 
 
@@ -81,34 +86,31 @@ static SCREEN_UPDATE_IND16( esh )
 
 
 /* MEMORY HANDLERS */
-static READ8_HANDLER(ldp_read)
+READ8_MEMBER(esh_state::ldp_read)
 {
-	esh_state *state = space->machine().driver_data<esh_state>();
-	return state->m_laserdisc->status_r();
+	return m_laserdisc->status_r();
 }
 
-static WRITE8_HANDLER(ldp_write)
+WRITE8_MEMBER(esh_state::ldp_write)
 {
-	esh_state *state = space->machine().driver_data<esh_state>();
-	state->m_laserdisc->data_w(data);
+	m_laserdisc->data_w(data);
 }
 
-static WRITE8_HANDLER(misc_write)
+WRITE8_MEMBER(esh_state::misc_write)
 {
-	esh_state *state = space->machine().driver_data<esh_state>();
 	/* Bit 0 unknown */
 
 	if (data & 0x02)
 		logerror("BEEP!\n");
 
 	/* Bit 2 unknown */
-	state->m_ld_video_visible = !((data & 0x08) >> 3);
+	m_ld_video_visible = !((data & 0x08) >> 3);
 
 	/* Bits 4-7 unknown */
 	/* They cycle through a repeating pattern though */
 }
 
-static WRITE8_HANDLER(led_writes)
+WRITE8_MEMBER(esh_state::led_writes)
 {
 	switch(offset)
 	{
@@ -139,12 +141,12 @@ static WRITE8_HANDLER(led_writes)
 	}
 }
 
-static WRITE8_HANDLER(nmi_line_w)
+WRITE8_MEMBER(esh_state::nmi_line_w)
 {
 	if (data == 0x00)
-		cputag_set_input_line(space->machine(), "maincpu", INPUT_LINE_NMI, ASSERT_LINE);
+		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, ASSERT_LINE);
 	if (data == 0x01)
-		cputag_set_input_line(space->machine(), "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
+		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
 
 	if (data != 0x00 && data != 0x01)
 		logerror("NMI line got a weird value!\n");
@@ -152,16 +154,16 @@ static WRITE8_HANDLER(nmi_line_w)
 
 
 /* PROGRAM MAPS */
-static ADDRESS_MAP_START( z80_0_mem, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( z80_0_mem, AS_PROGRAM, 8, esh_state )
 	AM_RANGE(0x0000,0x3fff) AM_ROM
 	AM_RANGE(0xe000,0xe7ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0xf000,0xf3ff) AM_RAM AM_BASE_MEMBER(esh_state, m_tile_ram)
-	AM_RANGE(0xf400,0xf7ff) AM_RAM AM_BASE_MEMBER(esh_state, m_tile_control_ram)
+	AM_RANGE(0xf000,0xf3ff) AM_RAM AM_BASE(m_tile_ram)
+	AM_RANGE(0xf400,0xf7ff) AM_RAM AM_BASE(m_tile_control_ram)
 ADDRESS_MAP_END
 
 
 /* IO MAPS */
-static ADDRESS_MAP_START( z80_0_io, AS_IO, 8 )
+static ADDRESS_MAP_START( z80_0_io, AS_IO, 8, esh_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0xf0,0xf0) AM_READ_PORT("IN0")
 	AM_RANGE(0xf1,0xf1) AM_READ_PORT("IN1")

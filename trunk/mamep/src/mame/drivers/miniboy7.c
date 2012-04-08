@@ -161,6 +161,8 @@ public:
 	UINT8 *m_videoram;
 	UINT8 *m_colorram;
 	tilemap_t *m_bg_tilemap;
+	DECLARE_WRITE8_MEMBER(miniboy7_videoram_w);
+	DECLARE_WRITE8_MEMBER(miniboy7_colorram_w);
 };
 
 
@@ -168,18 +170,16 @@ public:
 *          Video Hardware          *
 ***********************************/
 
-static WRITE8_HANDLER( miniboy7_videoram_w )
+WRITE8_MEMBER(miniboy7_state::miniboy7_videoram_w)
 {
-	miniboy7_state *state = space->machine().driver_data<miniboy7_state>();
-	state->m_videoram[offset] = data;
-	state->m_bg_tilemap->mark_tile_dirty(offset);
+	m_videoram[offset] = data;
+	m_bg_tilemap->mark_tile_dirty(offset);
 }
 
-static WRITE8_HANDLER( miniboy7_colorram_w )
+WRITE8_MEMBER(miniboy7_state::miniboy7_colorram_w)
 {
-	miniboy7_state *state = space->machine().driver_data<miniboy7_state>();
-	state->m_colorram[offset] = data;
-	state->m_bg_tilemap->mark_tile_dirty(offset);
+	m_colorram[offset] = data;
+	m_bg_tilemap->mark_tile_dirty(offset);
 }
 
 static TILE_GET_INFO( get_bg_tile_info )
@@ -266,16 +266,16 @@ static PALETTE_INIT( miniboy7 )
 *      Memory Map Information      *
 ***********************************/
 
-static ADDRESS_MAP_START( miniboy7_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( miniboy7_map, AS_PROGRAM, 8, miniboy7_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM	AM_SHARE("nvram") /* battery backed RAM? */
-	AM_RANGE(0x0800, 0x0fff) AM_RAM_WRITE(miniboy7_videoram_w) AM_BASE_MEMBER(miniboy7_state, m_videoram)
-	AM_RANGE(0x1000, 0x17ff) AM_RAM_WRITE(miniboy7_colorram_w) AM_BASE_MEMBER(miniboy7_state, m_colorram)
+	AM_RANGE(0x0800, 0x0fff) AM_RAM_WRITE(miniboy7_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x1000, 0x17ff) AM_RAM_WRITE(miniboy7_colorram_w) AM_BASE(m_colorram)
 	AM_RANGE(0x1800, 0x25ff) AM_RAM	/* looks like videoram */
 	AM_RANGE(0x2600, 0x27ff) AM_RAM
-	AM_RANGE(0x2800, 0x2800) AM_DEVWRITE_MODERN("crtc", mc6845_device, address_w)
-	AM_RANGE(0x2801, 0x2801) AM_DEVREADWRITE_MODERN("crtc", mc6845_device, register_r, register_w)
-	AM_RANGE(0x3000, 0x3001) AM_DEVREADWRITE("ay8910", ay8910_r, ay8910_address_data_w)	// FIXME
-	AM_RANGE(0x3080, 0x3083) AM_DEVREADWRITE_MODERN("pia0", pia6821_device, read, write)
+	AM_RANGE(0x2800, 0x2800) AM_DEVWRITE("crtc", mc6845_device, address_w)
+	AM_RANGE(0x2801, 0x2801) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
+	AM_RANGE(0x3000, 0x3001) AM_DEVREADWRITE_LEGACY("ay8910", ay8910_r, ay8910_address_data_w)	// FIXME
+	AM_RANGE(0x3080, 0x3083) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x3800, 0x3800) AM_READNOP	// R (right after each read, another value is loaded to the ACCU, so it lacks of sense)
 	AM_RANGE(0x4000, 0xffff) AM_ROM
 ADDRESS_MAP_END

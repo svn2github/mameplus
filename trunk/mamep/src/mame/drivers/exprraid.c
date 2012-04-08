@@ -217,13 +217,12 @@ Stephh's notes (based on the games M6502 code and some tests) :
 /* Emulate Protection ( only for original express raider, code is cracked on the bootleg */
 /*****************************************************************************************/
 
-static READ8_HANDLER( exprraid_protection_r )
+READ8_MEMBER(exprraid_state::exprraid_protection_r)
 {
-	exprraid_state *state = space->machine().driver_data<exprraid_state>();
 	switch (offset)
 	{
 	case 0:
-		return state->m_main_ram[0x02a9];
+		return m_main_ram[0x02a9];
 	case 1:
 		return 0x02;
 	}
@@ -231,23 +230,22 @@ static READ8_HANDLER( exprraid_protection_r )
 	return 0;
 }
 
-static WRITE8_HANDLER( sound_cpu_command_w )
+WRITE8_MEMBER(exprraid_state::sound_cpu_command_w)
 {
-	exprraid_state *state = space->machine().driver_data<exprraid_state>();
 	soundlatch_w(space, 0, data);
-	device_set_input_line(state->m_slave, INPUT_LINE_NMI, PULSE_LINE);
+	device_set_input_line(m_slave, INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static READ8_HANDLER( vblank_r )
+READ8_MEMBER(exprraid_state::vblank_r)
 {
-	return input_port_read(space->machine(), "IN0");
+	return input_port_read(machine(), "IN0");
 }
 
-static ADDRESS_MAP_START( master_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x05ff) AM_RAM AM_BASE_MEMBER(exprraid_state, m_main_ram)
-	AM_RANGE(0x0600, 0x07ff) AM_RAM AM_BASE_SIZE_MEMBER(exprraid_state, m_spriteram, m_spriteram_size)
-	AM_RANGE(0x0800, 0x0bff) AM_RAM_WRITE(exprraid_videoram_w) AM_BASE_MEMBER(exprraid_state, m_videoram)
-	AM_RANGE(0x0c00, 0x0fff) AM_RAM_WRITE(exprraid_colorram_w) AM_BASE_MEMBER(exprraid_state, m_colorram)
+static ADDRESS_MAP_START( master_map, AS_PROGRAM, 8, exprraid_state )
+	AM_RANGE(0x0000, 0x05ff) AM_RAM AM_BASE(m_main_ram)
+	AM_RANGE(0x0600, 0x07ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x0800, 0x0bff) AM_RAM_WRITE(exprraid_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0c00, 0x0fff) AM_RAM_WRITE(exprraid_colorram_w) AM_BASE(m_colorram)
 	AM_RANGE(0x1317, 0x1317) AM_READNOP // ???
 	AM_RANGE(0x1700, 0x1700) AM_READNOP // ???
 	AM_RANGE(0x1800, 0x1800) AM_READ_PORT("DSW0")	/* DSW 0 */
@@ -266,14 +264,14 @@ static ADDRESS_MAP_START( master_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x4000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( master_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( master_io_map, AS_IO, 8, exprraid_state )
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN0")
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( slave_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( slave_map, AS_PROGRAM, 8, exprraid_state )
 	AM_RANGE(0x0000, 0x1fff) AM_RAM
-	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE("ym1", ym2203_r, ym2203_w)
-	AM_RANGE(0x4000, 0x4001) AM_DEVREADWRITE("ym2", ym3526_r, ym3526_w)
+	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE_LEGACY("ym1", ym2203_r, ym2203_w)
+	AM_RANGE(0x4000, 0x4001) AM_DEVREADWRITE_LEGACY("ym2", ym3526_r, ym3526_w)
 	AM_RANGE(0x6000, 0x6000) AM_READ(soundlatch_r)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -777,13 +775,15 @@ static DRIVER_INIT( exprraid )
 
 static DRIVER_INIT( wexpressb )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x3800, 0x3800, FUNC(vblank_r));
+	exprraid_state *state = machine.driver_data<exprraid_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x3800, 0x3800, read8_delegate(FUNC(exprraid_state::vblank_r),state));
 	exprraid_gfx_expand(machine);
 }
 
 static DRIVER_INIT( wexpressb2 )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xFFC0, 0xFFC0, FUNC(vblank_r));
+	exprraid_state *state = machine.driver_data<exprraid_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xFFC0, 0xFFC0, read8_delegate(FUNC(exprraid_state::vblank_r),state));
 	exprraid_gfx_expand(machine);
 }
 

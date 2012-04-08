@@ -34,18 +34,17 @@
 #include "sound/ay8910.h"
 #include "includes/epos.h"
 
-static WRITE8_HANDLER( dealer_decrypt_rom )
+WRITE8_MEMBER(epos_state::dealer_decrypt_rom)
 {
-	epos_state *state = space->machine().driver_data<epos_state>();
 
 	if (offset & 0x04)
-		state->m_counter = (state->m_counter + 1) & 0x03;
+		m_counter = (m_counter + 1) & 0x03;
 	else
-		state->m_counter = (state->m_counter - 1) & 0x03;
+		m_counter = (m_counter - 1) & 0x03;
 
-//  logerror("PC %08x: ctr=%04x\n",cpu_get_pc(&space->device()), state->m_counter);
+//  logerror("PC %08x: ctr=%04x\n",cpu_get_pc(&space.device()), m_counter);
 
-	memory_set_bank(space->machine(), "bank1", state->m_counter);
+	memory_set_bank(machine(), "bank1", m_counter);
 
 	// is the 2nd bank changed by the counter or it always uses the 1st key?
 }
@@ -57,18 +56,18 @@ static WRITE8_HANDLER( dealer_decrypt_rom )
  *
  *************************************/
 
-static ADDRESS_MAP_START( epos_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( epos_map, AS_PROGRAM, 8, epos_state )
 	AM_RANGE(0x0000, 0x77ff) AM_ROM
 	AM_RANGE(0x7800, 0x7fff) AM_RAM
-	AM_RANGE(0x8000, 0xffff) AM_RAM AM_BASE_SIZE_MEMBER(epos_state, m_videoram, m_videoram_size)
+	AM_RANGE(0x8000, 0xffff) AM_RAM AM_BASE_SIZE(m_videoram, m_videoram_size)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( dealer_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( dealer_map, AS_PROGRAM, 8, epos_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x6000, 0x6fff) AM_ROMBANK("bank2")
 	AM_RANGE(0x7000, 0x7fff) AM_RAM
-	AM_RANGE(0x8000, 0xffff) AM_RAM AM_BASE_SIZE_MEMBER(epos_state, m_videoram, m_videoram_size)
+	AM_RANGE(0x8000, 0xffff) AM_RAM AM_BASE_SIZE(m_videoram, m_videoram_size)
 ADDRESS_MAP_END
 
 /*************************************
@@ -77,18 +76,18 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( io_map, AS_IO, 8, epos_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("DSW") AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("SYSTEM") AM_WRITE(epos_port_1_w)
-	AM_RANGE(0x02, 0x02) AM_READ_PORT("INPUTS") AM_DEVWRITE("aysnd", ay8910_data_w)
+	AM_RANGE(0x02, 0x02) AM_READ_PORT("INPUTS") AM_DEVWRITE_LEGACY("aysnd", ay8910_data_w)
 	AM_RANGE(0x03, 0x03) AM_READ_PORT("UNK")
-	AM_RANGE(0x06, 0x06) AM_DEVWRITE("aysnd", ay8910_address_w)
+	AM_RANGE(0x06, 0x06) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( dealer_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( dealer_io_map, AS_IO, 8, epos_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE("ppi8255", ppi8255_r, ppi8255_w)
+	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE_LEGACY("ppi8255", ppi8255_r, ppi8255_w)
 	AM_RANGE(0x20, 0x24) AM_WRITE(dealer_decrypt_rom)
 	AM_RANGE(0x38, 0x38) AM_READ_PORT("DSW")
 //  AM_RANGE(0x40, 0x40) AM_WRITE(watchdog_reset_w)

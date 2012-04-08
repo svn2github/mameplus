@@ -45,7 +45,7 @@ static INPUT_CHANGED( coin_inserted )
 
 
 /* is it protection? */
-static READ8_HANDLER( fcombat_protection_r )
+READ8_MEMBER(fcombat_state::fcombat_protection_r)
 {
 	/* Must match ONE of these values after a "and  $3E" intruction :
 
@@ -59,68 +59,61 @@ static READ8_HANDLER( fcombat_protection_r )
 
 /* same as exerion again */
 
-static READ8_HANDLER( fcombat_port01_r )
+READ8_MEMBER(fcombat_state::fcombat_port01_r)
 {
-	fcombat_state *state = space->machine().driver_data<fcombat_state>();
 	/* the cocktail flip bit muxes between ports 0 and 1 */
-	return state->m_cocktail_flip ? input_port_read(space->machine(), "IN1") : input_port_read(space->machine(), "IN0");
+	return m_cocktail_flip ? input_port_read(machine(), "IN1") : input_port_read(machine(), "IN0");
 }
 
 
 //bg scrolls
 
-static WRITE8_HANDLER(e900_w)
+WRITE8_MEMBER(fcombat_state::e900_w)
 {
-	fcombat_state *state = space->machine().driver_data<fcombat_state>();
-	state->m_fcombat_sh = data;
+	m_fcombat_sh = data;
 }
 
-static WRITE8_HANDLER(ea00_w)
+WRITE8_MEMBER(fcombat_state::ea00_w)
 {
-	fcombat_state *state = space->machine().driver_data<fcombat_state>();
-	state->m_fcombat_sv = (state->m_fcombat_sv & 0xff00) | data;
+	m_fcombat_sv = (m_fcombat_sv & 0xff00) | data;
 }
 
-static WRITE8_HANDLER(eb00_w)
+WRITE8_MEMBER(fcombat_state::eb00_w)
 {
-	fcombat_state *state = space->machine().driver_data<fcombat_state>();
-	state->m_fcombat_sv = (state->m_fcombat_sv & 0xff) | (data << 8);
+	m_fcombat_sv = (m_fcombat_sv & 0xff) | (data << 8);
 }
 
 
 // terrain info (ec00=x, ed00=y, return val in e300
 
-static WRITE8_HANDLER(ec00_w)
+WRITE8_MEMBER(fcombat_state::ec00_w)
 {
-	fcombat_state *state = space->machine().driver_data<fcombat_state>();
-	state->m_tx = data;
+	m_tx = data;
 }
 
-static WRITE8_HANDLER(ed00_w)
+WRITE8_MEMBER(fcombat_state::ed00_w)
 {
-	fcombat_state *state = space->machine().driver_data<fcombat_state>();
-	state->m_ty = data;
+	m_ty = data;
 }
 
-static READ8_HANDLER(e300_r)
+READ8_MEMBER(fcombat_state::e300_r)
 {
-	fcombat_state *state = space->machine().driver_data<fcombat_state>();
-	int wx = (state->m_tx + state->m_fcombat_sh) / 16;
-	int wy = (state->m_ty * 2 + state->m_fcombat_sv) / 16;
+	int wx = (m_tx + m_fcombat_sh) / 16;
+	int wy = (m_ty * 2 + m_fcombat_sv) / 16;
 
-	return space->machine().region("user2")->base()[wx * 32 * 16 + wy];
+	return machine().region("user2")->base()[wx * 32 * 16 + wy];
 }
 
-static WRITE8_HANDLER(ee00_w)
+WRITE8_MEMBER(fcombat_state::ee00_w)
 {
 
 }
 
-static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, fcombat_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_BASE_SIZE_MEMBER(fcombat_state, m_videoram, m_videoram_size)
-	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_BASE_SIZE_MEMBER(fcombat_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
 	AM_RANGE(0xe000, 0xe000) AM_READ(fcombat_port01_r)
 	AM_RANGE(0xe100, 0xe100) AM_READ_PORT("DSW0")
 	AM_RANGE(0xe200, 0xe200) AM_READ_PORT("DSW1")
@@ -137,16 +130,16 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( audio_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( audio_map, AS_PROGRAM, 8, fcombat_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x47ff) AM_RAM
 	AM_RANGE(0x6000, 0x6000) AM_READ(soundlatch_r)
-	AM_RANGE(0x8001, 0x8001) AM_DEVREAD("ay1", ay8910_r)
-	AM_RANGE(0x8002, 0x8003) AM_DEVWRITE("ay1", ay8910_data_address_w)
-	AM_RANGE(0xa001, 0xa001) AM_DEVREAD("ay2", ay8910_r)
-	AM_RANGE(0xa002, 0xa003) AM_DEVWRITE("ay2", ay8910_data_address_w)
-	AM_RANGE(0xc001, 0xc001) AM_DEVREAD("ay3", ay8910_r)
-	AM_RANGE(0xc002, 0xc003) AM_DEVWRITE("ay3", ay8910_data_address_w)
+	AM_RANGE(0x8001, 0x8001) AM_DEVREAD_LEGACY("ay1", ay8910_r)
+	AM_RANGE(0x8002, 0x8003) AM_DEVWRITE_LEGACY("ay1", ay8910_data_address_w)
+	AM_RANGE(0xa001, 0xa001) AM_DEVREAD_LEGACY("ay2", ay8910_r)
+	AM_RANGE(0xa002, 0xa003) AM_DEVWRITE_LEGACY("ay2", ay8910_data_address_w)
+	AM_RANGE(0xc001, 0xc001) AM_DEVREAD_LEGACY("ay3", ay8910_r)
+	AM_RANGE(0xc002, 0xc003) AM_DEVWRITE_LEGACY("ay3", ay8910_data_address_w)
 ADDRESS_MAP_END
 
 

@@ -63,6 +63,12 @@ public:
 	/* devices */
 	device_t *m_maincpu;
 	device_t *m_audiocpu;
+	DECLARE_WRITE8_MEMBER(onetwo_fgram_w);
+	DECLARE_WRITE8_MEMBER(onetwo_cpubank_w);
+	DECLARE_WRITE8_MEMBER(onetwo_coin_counters_w);
+	DECLARE_WRITE8_MEMBER(onetwo_soundlatch_w);
+	DECLARE_WRITE8_MEMBER(palette1_w);
+	DECLARE_WRITE8_MEMBER(palette2_w);
 };
 
 
@@ -103,30 +109,28 @@ static SCREEN_UPDATE_IND16( onetwo )
  *
  *************************************/
 
-static WRITE8_HANDLER( onetwo_fgram_w )
+WRITE8_MEMBER(onetwo_state::onetwo_fgram_w)
 {
-	onetwo_state *state = space->machine().driver_data<onetwo_state>();
-	state->m_fgram[offset] = data;
-	state->m_fg_tilemap->mark_tile_dirty(offset / 2);
+	m_fgram[offset] = data;
+	m_fg_tilemap->mark_tile_dirty(offset / 2);
 }
 
-static WRITE8_HANDLER( onetwo_cpubank_w )
+WRITE8_MEMBER(onetwo_state::onetwo_cpubank_w)
 {
-	memory_set_bank(space->machine(), "bank1", data);
+	memory_set_bank(machine(), "bank1", data);
 }
 
-static WRITE8_HANDLER( onetwo_coin_counters_w )
+WRITE8_MEMBER(onetwo_state::onetwo_coin_counters_w)
 {
-	watchdog_reset(space->machine());
-	coin_counter_w(space->machine(), 0, BIT(data, 1));
-	coin_counter_w(space->machine(), 1, BIT(data, 2));
+	watchdog_reset(machine());
+	coin_counter_w(machine(), 0, BIT(data, 1));
+	coin_counter_w(machine(), 1, BIT(data, 2));
 }
 
-static WRITE8_HANDLER( onetwo_soundlatch_w )
+WRITE8_MEMBER(onetwo_state::onetwo_soundlatch_w)
 {
-	onetwo_state *state = space->machine().driver_data<onetwo_state>();
 	soundlatch_w(space, 0, data);
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static void set_color(running_machine &machine, int offset)
@@ -140,18 +144,16 @@ static void set_color(running_machine &machine, int offset)
 	palette_set_color_rgb(machine, offset, pal5bit(r), pal5bit(g), pal5bit(b));
 }
 
-static WRITE8_HANDLER(palette1_w)
+WRITE8_MEMBER(onetwo_state::palette1_w)
 {
-	onetwo_state *state = space->machine().driver_data<onetwo_state>();
-	state->m_paletteram[offset] = data;
-	set_color(space->machine(), offset);
+	m_paletteram[offset] = data;
+	set_color(machine(), offset);
 }
 
-static WRITE8_HANDLER(palette2_w)
+WRITE8_MEMBER(onetwo_state::palette2_w)
 {
-	onetwo_state *state = space->machine().driver_data<onetwo_state>();
-	state->m_paletteram2[offset] = data;
-	set_color(space->machine(), offset);
+	m_paletteram2[offset] = data;
+	set_color(machine(), offset);
 }
 
 /*************************************
@@ -160,16 +162,16 @@ static WRITE8_HANDLER(palette2_w)
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_cpu, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_cpu, AS_PROGRAM, 8, onetwo_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM AM_REGION("maincpu", 0x10000)
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc800, 0xc87f) AM_RAM_WRITE(palette1_w) AM_BASE_MEMBER(onetwo_state, m_paletteram)
-	AM_RANGE(0xc900, 0xc97f) AM_RAM_WRITE(palette2_w) AM_BASE_MEMBER(onetwo_state, m_paletteram2)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(onetwo_fgram_w) AM_BASE_MEMBER(onetwo_state, m_fgram)
+	AM_RANGE(0xc800, 0xc87f) AM_RAM_WRITE(palette1_w) AM_BASE(m_paletteram)
+	AM_RANGE(0xc900, 0xc97f) AM_RAM_WRITE(palette2_w) AM_BASE(m_paletteram2)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(onetwo_fgram_w) AM_BASE(m_fgram)
 	AM_RANGE(0xe000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( main_cpu_io, AS_IO, 8 )
+static ADDRESS_MAP_START( main_cpu_io, AS_IO, 8, onetwo_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("DSW1") AM_WRITE(onetwo_coin_counters_w)
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("DSW2") AM_WRITE(onetwo_soundlatch_w)
@@ -178,17 +180,17 @@ static ADDRESS_MAP_START( main_cpu_io, AS_IO, 8 )
 	AM_RANGE(0x04, 0x04) AM_READ_PORT("SYSTEM")
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_cpu, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_cpu, AS_PROGRAM, 8, onetwo_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
 	AM_RANGE(0xf800, 0xf800) AM_READ(soundlatch_r)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_cpu_io, AS_IO, 8 )
+static ADDRESS_MAP_START( sound_cpu_io, AS_IO, 8, onetwo_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_DEVREADWRITE("ymsnd", ym3812_status_port_r, ym3812_control_port_w)
-	AM_RANGE(0x20, 0x20) AM_DEVWRITE("ymsnd", ym3812_write_port_w)
-	AM_RANGE(0x40, 0x40) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
+	AM_RANGE(0x00, 0x00) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_status_port_r, ym3812_control_port_w)
+	AM_RANGE(0x20, 0x20) AM_DEVWRITE_LEGACY("ymsnd", ym3812_write_port_w)
+	AM_RANGE(0x40, 0x40) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xc0, 0xc0) AM_WRITE(soundlatch_clear_w)
 ADDRESS_MAP_END
 

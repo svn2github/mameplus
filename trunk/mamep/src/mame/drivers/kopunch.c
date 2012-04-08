@@ -14,27 +14,27 @@ static INTERRUPT_GEN( kopunch_interrupt )
 	device_set_input_line(device, I8085_RST75_LINE, CLEAR_LINE);
 }
 
-static READ8_HANDLER( kopunch_in_r )
+READ8_MEMBER(kopunch_state::kopunch_in_r)
 {
 	/* port 31 + low 3 bits of port 32 contain the punch strength */
 	if (offset == 0)
-		return space->machine().rand();
+		return machine().rand();
 	else
-		return (space->machine().rand() & 0x07) | input_port_read(space->machine(), "SYSTEM");
+		return (machine().rand() & 0x07) | input_port_read(machine(), "SYSTEM");
 }
 
-static WRITE8_HANDLER( kopunch_lamp_w )
+WRITE8_MEMBER(kopunch_state::kopunch_lamp_w)
 {
-	set_led_status(space->machine(), 0, ~data & 0x80);
+	set_led_status(machine(), 0, ~data & 0x80);
 
 //  if ((data & 0x7f) != 0x7f)
 //      popmessage("port 38 = %02x",data);
 }
 
-static WRITE8_HANDLER( kopunch_coin_w )
+WRITE8_MEMBER(kopunch_state::kopunch_coin_w)
 {
-	coin_counter_w(space->machine(), 0, ~data & 0x80);
-	coin_counter_w(space->machine(), 1, ~data & 0x40);
+	coin_counter_w(machine(), 0, ~data & 0x80);
+	coin_counter_w(machine(), 1, ~data & 0x40);
 
 //  if ((data & 0x3f) != 0x3f)
 //      popmessage("port 34 = %02x",data);
@@ -42,15 +42,15 @@ static WRITE8_HANDLER( kopunch_coin_w )
 
 
 
-static ADDRESS_MAP_START( kopunch_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( kopunch_map, AS_PROGRAM, 8, kopunch_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x2000, 0x23ff) AM_RAM
-	AM_RANGE(0x6000, 0x63ff) AM_RAM_WRITE(kopunch_videoram_w) AM_BASE_MEMBER(kopunch_state, m_videoram)
-	AM_RANGE(0x7000, 0x70ff) AM_RAM_WRITE(kopunch_videoram2_w) AM_BASE_MEMBER(kopunch_state, m_videoram2)
+	AM_RANGE(0x6000, 0x63ff) AM_RAM_WRITE(kopunch_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x7000, 0x70ff) AM_RAM_WRITE(kopunch_videoram2_w) AM_BASE(m_videoram2)
 	AM_RANGE(0x7100, 0x7aff) AM_RAM	// ???
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( kopunch_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( kopunch_io_map, AS_IO, 8, kopunch_state )
 	AM_RANGE(0x30, 0x30) AM_READ_PORT("P1")
 	AM_RANGE(0x31, 0x32) AM_READ(kopunch_in_r)
 	AM_RANGE(0x33, 0x33) AM_WRITENOP

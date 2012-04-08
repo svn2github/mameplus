@@ -30,6 +30,7 @@ public:
 
 	/* devices */
 	device_t *m_main_cpu;
+	DECLARE_WRITE8_MEMBER(dorachan_ctrl_w);
 };
 
 
@@ -120,10 +121,9 @@ static SCREEN_UPDATE_RGB32( dorachan )
 }
 
 
-static WRITE8_HANDLER(dorachan_ctrl_w)
+WRITE8_MEMBER(dorachan_state::dorachan_ctrl_w)
 {
-	dorachan_state *state = space->machine().driver_data<dorachan_state>();
-	state->m_flip_screen = (data >> 6) & 0x01;
+	m_flip_screen = (data >> 6) & 0x01;
 }
 
 
@@ -143,7 +143,7 @@ static CUSTOM_INPUT( dorachan_v128_r )
  *
  *************************************/
 
-static ADDRESS_MAP_START( dorachan_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( dorachan_map, AS_PROGRAM, 8, dorachan_state )
 	AM_RANGE(0x0000, 0x17ff) AM_ROM
 	AM_RANGE(0x1800, 0x1fff) AM_RAM
 	AM_RANGE(0x2000, 0x23ff) AM_ROM
@@ -151,7 +151,7 @@ static ADDRESS_MAP_START( dorachan_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x2800, 0x2800) AM_MIRROR(0x03ff) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x2c00, 0x2c00) AM_MIRROR(0x03ff) AM_READ_PORT("JOY")
 	AM_RANGE(0x3800, 0x3800) AM_MIRROR(0x03ff) AM_READ_PORT("V128")
-	AM_RANGE(0x4000, 0x5fff) AM_RAM AM_BASE_SIZE_MEMBER(dorachan_state, m_videoram, m_videoram_size)
+	AM_RANGE(0x4000, 0x5fff) AM_RAM AM_BASE_SIZE(m_videoram, m_videoram_size)
 	AM_RANGE(0x6000, 0x77ff) AM_ROM
 ADDRESS_MAP_END
 
@@ -163,7 +163,7 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( dorachan_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( dorachan_io_map, AS_IO, 8, dorachan_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x01, 0x01) AM_WRITENOP
 	AM_RANGE(0x02, 0x02) AM_WRITENOP

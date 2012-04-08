@@ -165,38 +165,35 @@
  *
  *************************************/
 
-static READ8_HANDLER( mw8080bw_shift_result_rev_r )
+READ8_MEMBER(mw8080bw_state::mw8080bw_shift_result_rev_r)
 {
-	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
-	UINT8 ret = mb14241_shift_result_r(state->m_mb14241, 0);
+	UINT8 ret = mb14241_shift_result_r(m_mb14241, 0);
 
 	return BITSWAP8(ret,0,1,2,3,4,5,6,7);
 }
 
 
-static READ8_HANDLER( mw8080bw_reversable_shift_result_r )
+READ8_MEMBER(mw8080bw_state::mw8080bw_reversable_shift_result_r)
 {
-	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 	UINT8 ret;
 
-	if (state->m_rev_shift_res)
+	if (m_rev_shift_res)
 	{
 		ret = mw8080bw_shift_result_rev_r(space, 0);
 	}
 	else
 	{
-		ret = mb14241_shift_result_r(state->m_mb14241, 0);
+		ret = mb14241_shift_result_r(m_mb14241, 0);
 	}
 
 	return ret;
 }
 
-static WRITE8_HANDLER( mw8080bw_reversable_shift_count_w)
+WRITE8_MEMBER(mw8080bw_state::mw8080bw_reversable_shift_count_w)
 {
-	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
-	mb14241_shift_count_w(state->m_mb14241, offset, data);
+	mb14241_shift_count_w(m_mb14241, offset, data);
 
-	state->m_rev_shift_res = data & 0x08;
+	m_rev_shift_res = data & 0x08;
 }
 
 
@@ -207,10 +204,10 @@ static WRITE8_HANDLER( mw8080bw_reversable_shift_count_w)
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x1fff) AM_ROM AM_WRITENOP
-	AM_RANGE(0x2000, 0x3fff) AM_MIRROR(0x4000) AM_RAM AM_BASE_SIZE_MEMBER(mw8080bw_state, m_main_ram, m_main_ram_size)
+	AM_RANGE(0x2000, 0x3fff) AM_MIRROR(0x4000) AM_RAM AM_BASE_SIZE(m_main_ram, m_main_ram_size)
 	AM_RANGE(0x4000, 0x5fff) AM_ROM AM_WRITENOP
 ADDRESS_MAP_END
 
@@ -248,7 +245,7 @@ MACHINE_CONFIG_END
 #define SEAWOLF_ERASE_DIP_PORT_TAG	("ERASEDIP")
 
 
-static WRITE8_HANDLER( seawolf_explosion_lamp_w )
+WRITE8_MEMBER(mw8080bw_state::seawolf_explosion_lamp_w)
 {
 /*  D0-D3 are column drivers and D4-D7 are row drivers.
     The following table shows values that light up individual lamps.
@@ -300,7 +297,7 @@ static WRITE8_HANDLER( seawolf_explosion_lamp_w )
 }
 
 
-static WRITE8_HANDLER( seawolf_periscope_lamp_w )
+WRITE8_MEMBER(mw8080bw_state::seawolf_periscope_lamp_w)
 {
 	/* the schematics and the connecting diagrams show the
        torpedo light order differently, but this order is
@@ -323,18 +320,18 @@ static CUSTOM_INPUT( seawolf_erase_input_r )
 }
 
 
-static ADDRESS_MAP_START( seawolf_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( seawolf_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ(mw8080bw_shift_result_rev_r)
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN1")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
 	AM_RANGE(0x01, 0x01) AM_WRITE(seawolf_explosion_lamp_w)
 	AM_RANGE(0x02, 0x02) AM_WRITE(seawolf_periscope_lamp_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x04, 0x04) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x05, 0x05) AM_WRITE(seawolf_audio_w)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x04, 0x04) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x05, 0x05) AM_WRITE_LEGACY(seawolf_audio_w)
 ADDRESS_MAP_END
 
 
@@ -421,27 +418,26 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static WRITE8_HANDLER( gunfight_io_w )
+WRITE8_MEMBER(mw8080bw_state::gunfight_io_w)
 {
-	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 	if (offset & 0x01)
-		gunfight_audio_w(space, 0, data);
+		gunfight_audio_w(&space, 0, data);
 
 	if (offset & 0x02)
-		mb14241_shift_count_w(state->m_mb14241, 0, data);
+		mb14241_shift_count_w(m_mb14241, 0, data);
 
 	if (offset & 0x04)
-		mb14241_shift_data_w(state->m_mb14241, 0, data);
+		mb14241_shift_data_w(m_mb14241, 0, data);
 
 }
 
 
-static ADDRESS_MAP_START( gunfight_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( gunfight_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN2")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
 	/* no decoder, just 3 AND gates */
 	AM_RANGE(0x00, 0x07) AM_WRITE(gunfight_io_w)
@@ -617,27 +613,26 @@ static CUSTOM_INPUT( tornbase_score_input_r )
 }
 
 
-static WRITE8_HANDLER( tornbase_io_w )
+WRITE8_MEMBER(mw8080bw_state::tornbase_io_w)
 {
-	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 
 	if (offset & 0x01)
-		tornbase_audio_w(space->machine().device("discrete"), 0, data);
+		tornbase_audio_w(machine().device("discrete"), 0, data);
 
 	if (offset & 0x02)
-		mb14241_shift_count_w(state->m_mb14241, 0, data);
+		mb14241_shift_count_w(m_mb14241, 0, data);
 
 	if (offset & 0x04)
-		mb14241_shift_data_w(state->m_mb14241, 0, data);
+		mb14241_shift_data_w(m_mb14241, 0, data);
 }
 
 
-static ADDRESS_MAP_START( tornbase_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( tornbase_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN2")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
 	/* no decoder, just 3 AND gates */
 	AM_RANGE(0x00, 0x07) AM_WRITE(tornbase_io_w)
@@ -752,17 +747,17 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( zzzap_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( zzzap_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN2")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
-	AM_RANGE(0x02, 0x02) AM_WRITE(zzzap_audio_1_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x04, 0x04) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x05, 0x05) AM_WRITE(zzzap_audio_2_w)
+	AM_RANGE(0x02, 0x02) AM_WRITE_LEGACY(zzzap_audio_1_w)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x04, 0x04) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x05, 0x05) AM_WRITE_LEGACY(zzzap_audio_2_w)
 	AM_RANGE(0x07, 0x07) AM_WRITE(watchdog_reset_w)
 ADDRESS_MAP_END
 
@@ -903,15 +898,15 @@ static MACHINE_START( maze )
 }
 
 
-static WRITE8_HANDLER( maze_coin_counter_w )
+WRITE8_MEMBER(mw8080bw_state::maze_coin_counter_w)
 {
 	/* the data is not used, just pulse the counter */
-	coin_counter_w(space->machine(), 0, 0);
-	coin_counter_w(space->machine(), 0, 1);
+	coin_counter_w(machine(), 0, 0);
+	coin_counter_w(machine(), 0, 1);
 }
 
 
-static WRITE8_HANDLER( maze_io_w )
+WRITE8_MEMBER(mw8080bw_state::maze_io_w)
 {
 	if (offset & 0x01)  maze_coin_counter_w(space, 0, data);
 
@@ -919,7 +914,7 @@ static WRITE8_HANDLER( maze_io_w )
 }
 
 
-static ADDRESS_MAP_START( maze_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( maze_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x3)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN1")
@@ -989,7 +984,7 @@ static MACHINE_START( boothill )
 }
 
 
-static ADDRESS_MAP_START( boothill_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( boothill_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -997,11 +992,11 @@ static ADDRESS_MAP_START( boothill_io_map, AS_IO, 8 )
 	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_READ(mw8080bw_reversable_shift_result_r)
 
 	AM_RANGE(0x01, 0x01) AM_WRITE(mw8080bw_reversable_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE("discrete", boothill_audio_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("discrete", boothill_audio_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_DEVWRITE("discrete", midway_tone_generator_lo_w)
-	AM_RANGE(0x06, 0x06) AM_DEVWRITE("discrete", midway_tone_generator_hi_w)
+	AM_RANGE(0x05, 0x05) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_lo_w)
+	AM_RANGE(0x06, 0x06) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_hi_w)
 ADDRESS_MAP_END
 
 
@@ -1073,17 +1068,16 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static WRITE8_HANDLER( checkmat_io_w )
+WRITE8_MEMBER(mw8080bw_state::checkmat_io_w)
 {
-	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 
-	if (offset & 0x01)  checkmat_audio_w(state->m_discrete, 0, data);
+	if (offset & 0x01)  checkmat_audio_w(m_discrete, 0, data);
 
 	if (offset & 0x02)  watchdog_reset_w(space, 0, data);
 }
 
 
-static ADDRESS_MAP_START( checkmat_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( checkmat_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x3)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN1")
@@ -1219,20 +1213,20 @@ static CUSTOM_INPUT( desertgu_dip_sw_0_1_r )
 }
 
 
-static ADDRESS_MAP_START( desertgu_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( desertgu_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ(mw8080bw_shift_result_rev_r)
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN1")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
-	AM_RANGE(0x01, 0x01) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE("discrete", desertgu_audio_1_w)
+	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("discrete", desertgu_audio_1_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_DEVWRITE("discrete", midway_tone_generator_lo_w)
-	AM_RANGE(0x06, 0x06) AM_DEVWRITE("discrete", midway_tone_generator_hi_w)
-	AM_RANGE(0x07, 0x07) AM_DEVWRITE("discrete", desertgu_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_lo_w)
+	AM_RANGE(0x06, 0x06) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_hi_w)
+	AM_RANGE(0x07, 0x07) AM_DEVWRITE_LEGACY("discrete", desertgu_audio_2_w)
 ADDRESS_MAP_END
 
 
@@ -1341,19 +1335,19 @@ static CUSTOM_INPUT( dplay_pitch_right_input_r )
 }
 
 
-static ADDRESS_MAP_START( dplay_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( dplay_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN2")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
-	AM_RANGE(0x01, 0x01) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE("discrete", dplay_audio_w)
+	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("discrete", dplay_audio_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_DEVWRITE("discrete", midway_tone_generator_lo_w)
-	AM_RANGE(0x06, 0x06) AM_DEVWRITE("discrete", midway_tone_generator_hi_w)
+	AM_RANGE(0x05, 0x05) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_lo_w)
+	AM_RANGE(0x06, 0x06) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_hi_w)
 ADDRESS_MAP_END
 
 
@@ -1519,7 +1513,7 @@ static MACHINE_START( gmissile )
 }
 
 
-static ADDRESS_MAP_START( gmissile_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( gmissile_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -1527,12 +1521,12 @@ static ADDRESS_MAP_START( gmissile_io_map, AS_IO, 8 )
 	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_READ(mw8080bw_reversable_shift_result_r)
 
 	AM_RANGE(0x01, 0x01) AM_WRITE(mw8080bw_reversable_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_WRITE(gmissile_audio_1_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x03, 0x03) AM_WRITE_LEGACY(gmissile_audio_1_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_WRITE(gmissile_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_WRITE_LEGACY(gmissile_audio_2_w)
 	/* also writes 0x00 to 0x06, but it is not connected */
-	AM_RANGE(0x07, 0x07) AM_WRITE(gmissile_audio_3_w)
+	AM_RANGE(0x07, 0x07) AM_WRITE_LEGACY(gmissile_audio_3_w)
 ADDRESS_MAP_END
 
 
@@ -1615,7 +1609,7 @@ static MACHINE_START( m4 )
 }
 
 
-static ADDRESS_MAP_START( m4_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( m4_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
@@ -1623,10 +1617,10 @@ static ADDRESS_MAP_START( m4_io_map, AS_IO, 8 )
 	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_READ(mw8080bw_reversable_shift_result_r)
 
 	AM_RANGE(0x01, 0x01) AM_WRITE(mw8080bw_reversable_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_WRITE(m4_audio_1_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x03, 0x03) AM_WRITE_LEGACY(m4_audio_1_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_WRITE(m4_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_WRITE_LEGACY(m4_audio_2_w)
 ADDRESS_MAP_END
 
 
@@ -1731,20 +1725,20 @@ static CUSTOM_INPUT( clowns_controller_r )
 }
 
 
-static ADDRESS_MAP_START( clowns_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( clowns_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN2")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
-	AM_RANGE(0x01, 0x01) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_WRITE(clowns_audio_1_w)
+	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x03, 0x03) AM_WRITE_LEGACY(clowns_audio_1_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_DEVWRITE("discrete", midway_tone_generator_lo_w)
-	AM_RANGE(0x06, 0x06) AM_DEVWRITE("discrete", midway_tone_generator_hi_w)
-	AM_RANGE(0x07, 0x07) AM_DEVWRITE("discrete", clowns_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_lo_w)
+	AM_RANGE(0x06, 0x06) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_hi_w)
+	AM_RANGE(0x07, 0x07) AM_DEVWRITE_LEGACY("discrete", clowns_audio_2_w)
 ADDRESS_MAP_END
 
 
@@ -1868,21 +1862,21 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( spacwalk_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( spacwalk_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("IN1")
 	AM_RANGE(0x02, 0x02) AM_READ_PORT("IN2")
-	AM_RANGE(0x03, 0x03) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
-	AM_RANGE(0x01, 0x01) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE("discrete", spacwalk_audio_1_w)
+	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("discrete", spacwalk_audio_1_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_DEVWRITE("discrete", midway_tone_generator_lo_w)
-	AM_RANGE(0x06, 0x06) AM_DEVWRITE("discrete", midway_tone_generator_hi_w)
-	AM_RANGE(0x07, 0x07) AM_DEVWRITE("discrete", spacwalk_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_lo_w)
+	AM_RANGE(0x06, 0x06) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_hi_w)
+	AM_RANGE(0x07, 0x07) AM_DEVWRITE_LEGACY("discrete", spacwalk_audio_2_w)
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( spacwalk )
@@ -1962,20 +1956,20 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( shuffle_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( shuffle_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)	/* yes, 4, and no mirroring on the read handlers */
-	AM_RANGE(0x01, 0x01) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x01, 0x01) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 	AM_RANGE(0x02, 0x02) AM_READ_PORT("IN0")
 	AM_RANGE(0x03, 0x03) AM_READ(mw8080bw_shift_result_rev_r)
 	AM_RANGE(0x04, 0x04) AM_READ_PORT("IN1")
 	AM_RANGE(0x05, 0x05) AM_READ_PORT("IN2")
 	AM_RANGE(0x06, 0x06) AM_READ_PORT("IN3")
 
-	AM_RANGE(0x01, 0x01) AM_MIRROR(0x08) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_MIRROR(0x08) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x01, 0x01) AM_MIRROR(0x08) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x02, 0x02) AM_MIRROR(0x08) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
 	AM_RANGE(0x04, 0x04) AM_MIRROR(0x08) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_MIRROR(0x08) AM_DEVWRITE("discrete", shuffle_audio_1_w)
-	AM_RANGE(0x06, 0x06) AM_MIRROR(0x08) AM_DEVWRITE("discrete", shuffle_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_MIRROR(0x08) AM_DEVWRITE_LEGACY("discrete", shuffle_audio_1_w)
+	AM_RANGE(0x06, 0x06) AM_MIRROR(0x08) AM_DEVWRITE_LEGACY("discrete", shuffle_audio_2_w)
 ADDRESS_MAP_END
 
 
@@ -2042,19 +2036,19 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( dogpatch_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( dogpatch_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN2")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
-	AM_RANGE(0x01, 0x01) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE("discrete", dogpatch_audio_w)
+	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("discrete", dogpatch_audio_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_DEVWRITE("discrete", midway_tone_generator_lo_w)
-	AM_RANGE(0x06, 0x06) AM_DEVWRITE("discrete", midway_tone_generator_hi_w)
+	AM_RANGE(0x05, 0x05) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_lo_w)
+	AM_RANGE(0x06, 0x06) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_hi_w)
 ADDRESS_MAP_END
 
 
@@ -2173,39 +2167,38 @@ UINT8 spcenctr_get_trench_slope( *running_machine &machine , UINT8 addr )
 }
 #endif
 
-static WRITE8_HANDLER( spcenctr_io_w )
+WRITE8_MEMBER(mw8080bw_state::spcenctr_io_w)
 {												/* A7 A6 A5 A4 A3 A2 A1 A0 */
-	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 
 	if ((offset & 0x07) == 0x02)
 		watchdog_reset_w(space, 0, data);		/*  -  -  -  -  -  0  1  0 */
 
 	else if ((offset & 0x5f) == 0x01)
-		spcenctr_audio_1_w(state->m_discrete, 0, data);	/*  -  0  -  0  0  0  0  1 */
+		spcenctr_audio_1_w(m_discrete, 0, data);	/*  -  0  -  0  0  0  0  1 */
 
 	else if ((offset & 0x5f) == 0x09)
-		spcenctr_audio_2_w(state->m_discrete, 0, data);	/*  -  0  -  0  1  0  0  1 */
+		spcenctr_audio_2_w(m_discrete, 0, data);	/*  -  0  -  0  1  0  0  1 */
 
 	else if ((offset & 0x5f) == 0x11)
-		spcenctr_audio_3_w(state->m_discrete, 0, data);	/*  -  0  -  1  0  0  0  1 */
+		spcenctr_audio_3_w(m_discrete, 0, data);	/*  -  0  -  1  0  0  0  1 */
 
 	else if ((offset & 0x07) == 0x03)
 	{											/*  -  -  -  -  -  0  1  1 */
 		UINT8 addr = ((offset & 0xc0) >> 4) | ((offset & 0x18) >> 3);
-		state->m_spcenctr_trench_slope[addr] = data;
+		m_spcenctr_trench_slope[addr] = data;
 	}
 	else if ((offset & 0x07) == 0x04)
-		state->m_spcenctr_trench_center = data;			/*  -  -  -  -  -  1  0  0 */
+		m_spcenctr_trench_center = data;			/*  -  -  -  -  -  1  0  0 */
 
 	else if ((offset & 0x07) == 0x07)
-		state->m_spcenctr_trench_width = data;			/*  -  -  -  -  -  1  1  1 */
+		m_spcenctr_trench_width = data;			/*  -  -  -  -  -  1  1  1 */
 
 	else
-		logerror("%04x:  Unmapped I/O port write to %02x = %02x\n", cpu_get_pc(&space->device()), offset, data);
+		logerror("%04x:  Unmapped I/O port write to %02x = %02x\n", cpu_get_pc(&space.device()), offset, data);
 }
 
 
-static ADDRESS_MAP_START( spcenctr_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( spcenctr_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0xfc) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0xfc) AM_READ_PORT("IN1")
@@ -2312,18 +2305,18 @@ static MACHINE_START( phantom2 )
 }
 
 
-static ADDRESS_MAP_START( phantom2_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( phantom2_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ(mw8080bw_shift_result_rev_r)
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN1")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
-	AM_RANGE(0x01, 0x01) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_WRITE(phantom2_audio_1_w)
-	AM_RANGE(0x06, 0x06) AM_WRITE(phantom2_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_WRITE_LEGACY(phantom2_audio_1_w)
+	AM_RANGE(0x06, 0x06) AM_WRITE_LEGACY(phantom2_audio_2_w)
 ADDRESS_MAP_END
 
 
@@ -2392,17 +2385,16 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static READ8_HANDLER( bowler_shift_result_r )
+READ8_MEMBER(mw8080bw_state::bowler_shift_result_r)
 {
 	/* ZV - not too sure why this is needed, I don't see
        anything unusual on the schematics that would cause
        the bits to flip */
-	mw8080bw_state *state = space->machine().driver_data<mw8080bw_state>();
 
-	return ~mb14241_shift_result_r(state->m_mb14241, 0);
+	return ~mb14241_shift_result_r(m_mb14241, 0);
 }
 
-static WRITE8_HANDLER( bowler_lights_1_w )
+WRITE8_MEMBER(mw8080bw_state::bowler_lights_1_w)
 {
 	output_set_value("200_LEFT_LIGHT",  (data >> 0) & 0x01);
 
@@ -2423,7 +2415,7 @@ static WRITE8_HANDLER( bowler_lights_1_w )
 }
 
 
-static WRITE8_HANDLER( bowler_lights_2_w )
+WRITE8_MEMBER(mw8080bw_state::bowler_lights_2_w)
 {
 	output_set_value("REGULATION_GAME_LIGHT", ( data >> 0) & 0x01);
 	output_set_value("FLASH_GAME_LIGHT",      (~data >> 0) & 0x01);
@@ -2438,7 +2430,7 @@ static WRITE8_HANDLER( bowler_lights_2_w )
 }
 
 
-static ADDRESS_MAP_START( bowler_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( bowler_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)  /* no masking on the reads, all 4 bits are decoded */
 	AM_RANGE(0x01, 0x01) AM_READ(bowler_shift_result_r)
 	AM_RANGE(0x02, 0x02) AM_READ_PORT("IN0")
@@ -2447,17 +2439,17 @@ static ADDRESS_MAP_START( bowler_io_map, AS_IO, 8 )
 	AM_RANGE(0x05, 0x05) AM_READ_PORT("IN2")
 	AM_RANGE(0x06, 0x06) AM_READ_PORT("IN3")
 
-	AM_RANGE(0x01, 0x01) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_DEVWRITE("discrete", bowler_audio_1_w)
-	AM_RANGE(0x06, 0x06) AM_WRITE(bowler_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_DEVWRITE_LEGACY("discrete", bowler_audio_1_w)
+	AM_RANGE(0x06, 0x06) AM_WRITE_LEGACY(bowler_audio_2_w)
 	AM_RANGE(0x07, 0x07) AM_WRITE(bowler_lights_1_w)
-	AM_RANGE(0x08, 0x08) AM_WRITE(bowler_audio_3_w)
-	AM_RANGE(0x09, 0x09) AM_WRITE(bowler_audio_4_w)
-	AM_RANGE(0x0a, 0x0a) AM_WRITE(bowler_audio_5_w)
+	AM_RANGE(0x08, 0x08) AM_WRITE_LEGACY(bowler_audio_3_w)
+	AM_RANGE(0x09, 0x09) AM_WRITE_LEGACY(bowler_audio_4_w)
+	AM_RANGE(0x0a, 0x0a) AM_WRITE_LEGACY(bowler_audio_5_w)
 	AM_RANGE(0x0e, 0x0e) AM_WRITE(bowler_lights_2_w)
-	AM_RANGE(0x0f, 0x0f) AM_WRITE(bowler_audio_6_w)
+	AM_RANGE(0x0f, 0x0f) AM_WRITE_LEGACY(bowler_audio_6_w)
 ADDRESS_MAP_END
 
 
@@ -2629,17 +2621,17 @@ int invaders_is_cabinet_cocktail(running_machine &machine)
 }
 
 
-static ADDRESS_MAP_START( invaders_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( invaders_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN2")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE("discrete", invaders_audio_1_w)
-	AM_RANGE(0x04, 0x04) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x05, 0x05) AM_DEVWRITE("discrete", invaders_audio_2_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("discrete", invaders_audio_1_w)
+	AM_RANGE(0x04, 0x04) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x05, 0x05) AM_DEVWRITE_LEGACY("discrete", invaders_audio_2_w)
 	AM_RANGE(0x06, 0x06) AM_WRITE(watchdog_reset_w)
 ADDRESS_MAP_END
 
@@ -2760,16 +2752,16 @@ static CUSTOM_INPUT( blueshrk_coin_input_r )
 }
 
 
-static ADDRESS_MAP_START( blueshrk_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( blueshrk_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ(mw8080bw_shift_result_rev_r)
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN1")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
-	AM_RANGE(0x01, 0x01) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE("discrete", blueshrk_audio_w)
+	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("discrete", blueshrk_audio_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
 ADDRESS_MAP_END
 
@@ -2840,20 +2832,20 @@ static UINT32 invad2ct_coin_input_r(void *param)
 #endif
 
 
-static ADDRESS_MAP_START( invad2ct_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( invad2ct_io_map, AS_IO, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7)
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x04) AM_READ_PORT("IN0")
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x04) AM_READ_PORT("IN1")
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN2")
-	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD("mb14241", mb14241_shift_result_r)
+	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
-	AM_RANGE(0x01, 0x01) AM_DEVWRITE("discrete", invad2ct_audio_3_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE("discrete", invad2ct_audio_1_w)
-	AM_RANGE(0x04, 0x04) AM_DEVWRITE("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x05, 0x05) AM_DEVWRITE("discrete", invad2ct_audio_2_w)
+	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("discrete", invad2ct_audio_3_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("discrete", invad2ct_audio_1_w)
+	AM_RANGE(0x04, 0x04) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
+	AM_RANGE(0x05, 0x05) AM_DEVWRITE_LEGACY("discrete", invad2ct_audio_2_w)
 	AM_RANGE(0x06, 0x06) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x07, 0x07) AM_DEVWRITE("discrete", invad2ct_audio_4_w)
+	AM_RANGE(0x07, 0x07) AM_DEVWRITE_LEGACY("discrete", invad2ct_audio_4_w)
 ADDRESS_MAP_END
 
 

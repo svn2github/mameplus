@@ -99,56 +99,56 @@ static WRITE8_HANDLER( narc_slave_sync_w );
 ****************************************************************************/
 
 /* CVSD readmem/writemem structures */
-static ADDRESS_MAP_START( williams_cvsd_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( williams_cvsd_map, AS_PROGRAM, 8, driver_device )
 	AM_RANGE(0x0000, 0x07ff) AM_MIRROR(0x1800) AM_RAM
-	AM_RANGE(0x2000, 0x2001) AM_MIRROR(0x1ffe) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x4000, 0x4003) AM_MIRROR(0x1ffc) AM_DEVREADWRITE_MODERN("cvsdpia", pia6821_device, read, write)
-	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x07ff) AM_DEVWRITE("cvsd", cvsd_digit_clock_clear_w)
-	AM_RANGE(0x6800, 0x6800) AM_MIRROR(0x07ff) AM_DEVWRITE("cvsd", cvsd_clock_set_w)
-	AM_RANGE(0x7800, 0x7800) AM_MIRROR(0x07ff) AM_WRITE(cvsd_bank_select_w)
+	AM_RANGE(0x2000, 0x2001) AM_MIRROR(0x1ffe) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x4000, 0x4003) AM_MIRROR(0x1ffc) AM_DEVREADWRITE("cvsdpia", pia6821_device, read, write)
+	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x07ff) AM_DEVWRITE_LEGACY("cvsd", cvsd_digit_clock_clear_w)
+	AM_RANGE(0x6800, 0x6800) AM_MIRROR(0x07ff) AM_DEVWRITE_LEGACY("cvsd", cvsd_clock_set_w)
+	AM_RANGE(0x7800, 0x7800) AM_MIRROR(0x07ff) AM_WRITE_LEGACY(cvsd_bank_select_w)
 	AM_RANGE(0x8000, 0xffff) AM_ROMBANK("bank5")
 ADDRESS_MAP_END
 
 
 /* NARC master readmem/writemem structures */
-static ADDRESS_MAP_START( williams_narc_master_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( williams_narc_master_map, AS_PROGRAM, 8, driver_device )
 	AM_RANGE(0x0000, 0x1fff) AM_RAM
-	AM_RANGE(0x2000, 0x2001) AM_MIRROR(0x03fe) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x2800, 0x2800) AM_MIRROR(0x03ff) AM_WRITE(narc_master_talkback_w)
-	AM_RANGE(0x2c00, 0x2c00) AM_MIRROR(0x03ff) AM_WRITE(narc_command2_w)
-	AM_RANGE(0x3000, 0x3000) AM_MIRROR(0x03ff) AM_DEVWRITE("dac1", dac_w)
-	AM_RANGE(0x3400, 0x3400) AM_MIRROR(0x03ff) AM_READ(narc_command_r)
-	AM_RANGE(0x3800, 0x3800) AM_MIRROR(0x03ff) AM_WRITE(narc_master_bank_select_w)
-	AM_RANGE(0x3c00, 0x3c00) AM_MIRROR(0x03ff) AM_WRITE(narc_master_sync_w)
+	AM_RANGE(0x2000, 0x2001) AM_MIRROR(0x03fe) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x2800, 0x2800) AM_MIRROR(0x03ff) AM_WRITE_LEGACY(narc_master_talkback_w)
+	AM_RANGE(0x2c00, 0x2c00) AM_MIRROR(0x03ff) AM_WRITE_LEGACY(narc_command2_w)
+	AM_RANGE(0x3000, 0x3000) AM_MIRROR(0x03ff) AM_DEVWRITE_LEGACY("dac1", dac_w)
+	AM_RANGE(0x3400, 0x3400) AM_MIRROR(0x03ff) AM_READ_LEGACY(narc_command_r)
+	AM_RANGE(0x3800, 0x3800) AM_MIRROR(0x03ff) AM_WRITE_LEGACY(narc_master_bank_select_w)
+	AM_RANGE(0x3c00, 0x3c00) AM_MIRROR(0x03ff) AM_WRITE_LEGACY(narc_master_sync_w)
 	AM_RANGE(0x4000, 0xbfff) AM_ROMBANK("bank5")
 	AM_RANGE(0xc000, 0xffff) AM_ROMBANK("bank6")
 ADDRESS_MAP_END
 
 /* NARC slave readmem/writemem structures */
-static ADDRESS_MAP_START( williams_narc_slave_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( williams_narc_slave_map, AS_PROGRAM, 8, driver_device )
 	AM_RANGE(0x0000, 0x1fff) AM_RAM
-	AM_RANGE(0x2000, 0x2000) AM_MIRROR(0x03ff) AM_DEVWRITE("cvsd", cvsd_clock_set_w)
-	AM_RANGE(0x2400, 0x2400) AM_MIRROR(0x03ff) AM_DEVWRITE("cvsd", cvsd_digit_clock_clear_w)
-	AM_RANGE(0x2800, 0x2800) AM_MIRROR(0x03ff) AM_WRITE(narc_slave_talkback_w)
-	AM_RANGE(0x3000, 0x3000) AM_MIRROR(0x03ff) AM_DEVWRITE("dac2", dac_w)
-	AM_RANGE(0x3400, 0x3400) AM_MIRROR(0x03ff) AM_READ(narc_command2_r)
-	AM_RANGE(0x3800, 0x3800) AM_MIRROR(0x03ff) AM_WRITE(narc_slave_bank_select_w)
-	AM_RANGE(0x3c00, 0x3c00) AM_MIRROR(0x03ff) AM_WRITE(narc_slave_sync_w)
+	AM_RANGE(0x2000, 0x2000) AM_MIRROR(0x03ff) AM_DEVWRITE_LEGACY("cvsd", cvsd_clock_set_w)
+	AM_RANGE(0x2400, 0x2400) AM_MIRROR(0x03ff) AM_DEVWRITE_LEGACY("cvsd", cvsd_digit_clock_clear_w)
+	AM_RANGE(0x2800, 0x2800) AM_MIRROR(0x03ff) AM_WRITE_LEGACY(narc_slave_talkback_w)
+	AM_RANGE(0x3000, 0x3000) AM_MIRROR(0x03ff) AM_DEVWRITE_LEGACY("dac2", dac_w)
+	AM_RANGE(0x3400, 0x3400) AM_MIRROR(0x03ff) AM_READ_LEGACY(narc_command2_r)
+	AM_RANGE(0x3800, 0x3800) AM_MIRROR(0x03ff) AM_WRITE_LEGACY(narc_slave_bank_select_w)
+	AM_RANGE(0x3c00, 0x3c00) AM_MIRROR(0x03ff) AM_WRITE_LEGACY(narc_slave_sync_w)
 	AM_RANGE(0x4000, 0xbfff) AM_ROMBANK("bank7")
 	AM_RANGE(0xc000, 0xffff) AM_ROMBANK("bank8")
 ADDRESS_MAP_END
 
 
 /* ADPCM readmem/writemem structures */
-static ADDRESS_MAP_START( williams_adpcm_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( williams_adpcm_map, AS_PROGRAM, 8, driver_device )
 	AM_RANGE(0x0000, 0x1fff) AM_RAM
-	AM_RANGE(0x2000, 0x2000) AM_MIRROR(0x03ff) AM_WRITE(adpcm_bank_select_w)
-	AM_RANGE(0x2400, 0x2401) AM_MIRROR(0x03fe) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x2800, 0x2800) AM_MIRROR(0x03ff) AM_DEVWRITE("dac", dac_w)
-	AM_RANGE(0x2c00, 0x2c00) AM_MIRROR(0x03ff) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
-	AM_RANGE(0x3000, 0x3000) AM_MIRROR(0x03ff) AM_READ(adpcm_command_r)
-	AM_RANGE(0x3400, 0x3400) AM_MIRROR(0x03ff) AM_DEVWRITE("oki", adpcm_6295_bank_select_w)
-	AM_RANGE(0x3c00, 0x3c00) AM_MIRROR(0x03ff) AM_WRITE(adpcm_talkback_w)
+	AM_RANGE(0x2000, 0x2000) AM_MIRROR(0x03ff) AM_WRITE_LEGACY(adpcm_bank_select_w)
+	AM_RANGE(0x2400, 0x2401) AM_MIRROR(0x03fe) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x2800, 0x2800) AM_MIRROR(0x03ff) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0x2c00, 0x2c00) AM_MIRROR(0x03ff) AM_DEVREADWRITE("oki", okim6295_device, read, write)
+	AM_RANGE(0x3000, 0x3000) AM_MIRROR(0x03ff) AM_READ_LEGACY(adpcm_command_r)
+	AM_RANGE(0x3400, 0x3400) AM_MIRROR(0x03ff) AM_DEVWRITE_LEGACY("oki", adpcm_6295_bank_select_w)
+	AM_RANGE(0x3c00, 0x3c00) AM_MIRROR(0x03ff) AM_WRITE_LEGACY(adpcm_talkback_w)
 	AM_RANGE(0x4000, 0xbfff) AM_ROMBANK("bank5")
 	AM_RANGE(0xc000, 0xffff) AM_ROMBANK("bank6")
 ADDRESS_MAP_END
@@ -541,18 +541,18 @@ static WRITE8_HANDLER( narc_slave_bank_select_w )
 static READ8_HANDLER( narc_command_r )
 {
 	williams_audio_state *state = &audio;
-
+	driver_device *drvstate = space->machine().driver_data<driver_device>();
 	device_set_input_line(state->sound_cpu, M6809_IRQ_LINE, CLEAR_LINE);
 	state->sound_int_state = 0;
-	return soundlatch_r(space, 0);
+	return drvstate->soundlatch_r(*space, 0);
 }
 
 
 static WRITE8_HANDLER( narc_command2_w )
 {
 	williams_audio_state *state = &audio;
-
-	soundlatch2_w(space, 0, data & 0xff);
+	driver_device *drvstate = space->machine().driver_data<driver_device>();
+	drvstate->soundlatch2_w(*space, 0, data & 0xff);
 	device_set_input_line(state->soundalt_cpu, M6809_FIRQ_LINE, ASSERT_LINE);
 }
 
@@ -560,9 +560,9 @@ static WRITE8_HANDLER( narc_command2_w )
 static READ8_HANDLER( narc_command2_r )
 {
 	williams_audio_state *state = &audio;
-
+	driver_device *drvstate = space->machine().driver_data<driver_device>();
 	device_set_input_line(state->soundalt_cpu, M6809_FIRQ_LINE, CLEAR_LINE);
-	return soundlatch2_r(space, 0);
+	return drvstate->soundlatch2_r(*space, 0);
 }
 
 
@@ -618,8 +618,8 @@ void williams_narc_data_w(running_machine &machine, int data)
 	williams_audio_state *state = &audio;
 	device_t *sound_cpu = state->sound_cpu;
 	address_space *space = sound_cpu->memory().space(AS_PROGRAM);
-
-	soundlatch_w(space, 0, data & 0xff);
+	driver_device *drvstate = space->machine().driver_data<driver_device>();
+	drvstate->soundlatch_w(*space, 0, data & 0xff);
 	device_set_input_line(sound_cpu, INPUT_LINE_NMI, (data & 0x100) ? CLEAR_LINE : ASSERT_LINE);
 	if (!(data & 0x200))
 	{
@@ -696,7 +696,8 @@ static READ8_HANDLER( adpcm_command_r )
 	/* don't clear the external IRQ state for a short while; this allows the
        self-tests to pass */
 	space->machine().scheduler().timer_set(attotime::from_usec(10), FUNC(clear_irq_state));
-	return soundlatch_r(space, 0);
+	driver_device *drvstate = space->machine().driver_data<driver_device>();
+	return drvstate->soundlatch_r(*space, 0);
 }
 
 
@@ -718,7 +719,8 @@ void williams_adpcm_data_w(running_machine &machine, int data)
 	williams_audio_state *state = &audio;
 	device_t *sound_cpu = state->sound_cpu;
 	address_space *space = sound_cpu->memory().space(AS_PROGRAM);
-	soundlatch_w(space, 0, data & 0xff);
+	driver_device *drvstate = space->machine().driver_data<driver_device>();
+	drvstate->soundlatch_w(*space, 0, data & 0xff);
 	if (!(data & 0x200))
 	{
 		device_set_input_line(sound_cpu, M6809_IRQ_LINE, ASSERT_LINE);

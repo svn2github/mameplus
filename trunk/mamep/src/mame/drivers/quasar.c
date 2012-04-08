@@ -99,41 +99,44 @@ static WRITE8_HANDLER( quasar_sh_command_w )
 	// lower nibble = command to I8035
 	// not necessarily like this, but it seems to work better than direct mapping
 	// (although schematics has it as direct - but then the schematics are wrong elsewhere to!)
-	soundlatch_w(space, 0, (data & 8) + ((data >> 1) & 3) + ((data << 2) & 4));
+	quasar_state *state = space->machine().driver_data<quasar_state>();
+	state->soundlatch_w(*space, 0, (data & 8) + ((data >> 1) & 3) + ((data << 2) & 4));
 }
 
 static READ8_HANDLER( quasar_sh_command_r )
 {
-	return soundlatch_r(space, 0) + (input_port_read(space->machine(), "DSW2") & 0x30);
+	quasar_state *state = space->machine().driver_data<quasar_state>();
+	return state->soundlatch_r(*space, 0) + (input_port_read(space->machine(), "DSW2") & 0x30);
 }
 
 static READ8_HANDLER( audio_t1_r )
 {
-	return (soundlatch_r(space, 0) == 0);
+	quasar_state *state = space->machine().driver_data<quasar_state>();
+	return (state->soundlatch_r(*space, 0) == 0);
 }
 
 // memory map taken from the manual
 
-static ADDRESS_MAP_START( quasar, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( quasar, AS_PROGRAM, 8, quasar_state )
 	AM_RANGE(0x0000, 0x13ff) AM_ROM
-	AM_RANGE(0x1400, 0x14ff) AM_MIRROR(0x6000) AM_READWRITE(cvs_bullet_ram_or_palette_r, quasar_bullet_w) AM_BASE_MEMBER(quasar_state, m_bullet_ram)
+	AM_RANGE(0x1400, 0x14ff) AM_MIRROR(0x6000) AM_READ(cvs_bullet_ram_or_palette_r) AM_WRITE_LEGACY(quasar_bullet_w) AM_BASE(m_bullet_ram)
 	AM_RANGE(0x1500, 0x15ff) AM_MIRROR(0x6000) AM_READWRITE(cvs_s2636_0_or_character_ram_r, cvs_s2636_0_or_character_ram_w)
 	AM_RANGE(0x1600, 0x16ff) AM_MIRROR(0x6000) AM_READWRITE(cvs_s2636_1_or_character_ram_r, cvs_s2636_1_or_character_ram_w)
 	AM_RANGE(0x1700, 0x17ff) AM_MIRROR(0x6000) AM_READWRITE(cvs_s2636_2_or_character_ram_r, cvs_s2636_2_or_character_ram_w)
-	AM_RANGE(0x1800, 0x1bff) AM_MIRROR(0x6000) AM_READWRITE(cvs_video_or_color_ram_r, quasar_video_w) AM_BASE_MEMBER(quasar_state, m_video_ram)
+	AM_RANGE(0x1800, 0x1bff) AM_MIRROR(0x6000) AM_READ(cvs_video_or_color_ram_r) AM_WRITE_LEGACY(quasar_video_w) AM_BASE(m_video_ram)
 	AM_RANGE(0x1c00, 0x1fff) AM_MIRROR(0x6000) AM_RAM
 	AM_RANGE(0x2000, 0x33ff) AM_ROM
 	AM_RANGE(0x4000, 0x53ff) AM_ROM
 	AM_RANGE(0x6000, 0x73ff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( quasar_io, AS_IO, 8 )
-	AM_RANGE(0x00, 0x03) AM_READWRITE(quasar_IO_r, video_page_select_w)
-	AM_RANGE(0x08, 0x0b) AM_WRITE(io_page_select_w)
-	AM_RANGE(S2650_DATA_PORT,  S2650_DATA_PORT) AM_READWRITE(cvs_collision_clear, quasar_sh_command_w)
+static ADDRESS_MAP_START( quasar_io, AS_IO, 8, quasar_state )
+	AM_RANGE(0x00, 0x03) AM_READWRITE_LEGACY(quasar_IO_r, video_page_select_w)
+	AM_RANGE(0x08, 0x0b) AM_WRITE_LEGACY(io_page_select_w)
+	AM_RANGE(S2650_DATA_PORT,  S2650_DATA_PORT) AM_READ(cvs_collision_clear) AM_WRITE_LEGACY(quasar_sh_command_w)
 	AM_RANGE(S2650_CTRL_PORT,  S2650_CTRL_PORT) AM_READ(cvs_collision_r) AM_WRITENOP
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ_PORT("SENSE")
-	AM_RANGE(S2650_FO_PORT, S2650_FO_PORT) AM_RAM AM_BASE_MEMBER(quasar_state, m_fo_state)
+	AM_RANGE(S2650_FO_PORT, S2650_FO_PORT) AM_RAM AM_BASE(m_fo_state)
 ADDRESS_MAP_END
 
 /*************************************
@@ -142,15 +145,15 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, quasar_state )
 	AM_RANGE(0x0000, 0x07ff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_portmap, AS_IO, 8 )
+static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, quasar_state )
 	AM_RANGE(0x00, 0x7f) AM_RAM
-	AM_RANGE(0x80, 0x80) AM_READ(quasar_sh_command_r)
-	AM_RANGE(MCS48_PORT_T1, MCS48_PORT_T1) AM_READ(audio_t1_r)
-	AM_RANGE(MCS48_PORT_P1, MCS48_PORT_P1) AM_DEVWRITE("dac", dac_signed_w)
+	AM_RANGE(0x80, 0x80) AM_READ_LEGACY(quasar_sh_command_r)
+	AM_RANGE(MCS48_PORT_T1, MCS48_PORT_T1) AM_READ_LEGACY(audio_t1_r)
+	AM_RANGE(MCS48_PORT_P1, MCS48_PORT_P1) AM_DEVWRITE_LEGACY("dac", dac_signed_w)
 ADDRESS_MAP_END
 
 /************************************************************************

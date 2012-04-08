@@ -136,10 +136,10 @@ static TIMER_CALLBACK( capbowl_update )
  *
  *************************************/
 
-static WRITE8_HANDLER( capbowl_rom_select_w )
+WRITE8_MEMBER(capbowl_state::capbowl_rom_select_w)
 {
 	// 2009-11 FP: shall we add a check to be sure that bank < 6?
-	memory_set_bank(space->machine(), "bank1", ((data & 0x0c) >> 1) + (data & 0x01));
+	memory_set_bank(machine(), "bank1", ((data & 0x0c) >> 1) + (data & 0x01));
 }
 
 
@@ -150,27 +150,24 @@ static WRITE8_HANDLER( capbowl_rom_select_w )
  *
  *************************************/
 
-static READ8_HANDLER( track_0_r )
+READ8_MEMBER(capbowl_state::track_0_r)
 {
-	capbowl_state *state = space->machine().driver_data<capbowl_state>();
-	return (input_port_read(space->machine(), "IN0") & 0xf0) | ((input_port_read(space->machine(), "TRACKY") - state->m_last_trackball_val[0]) & 0x0f);
+	return (input_port_read(machine(), "IN0") & 0xf0) | ((input_port_read(machine(), "TRACKY") - m_last_trackball_val[0]) & 0x0f);
 }
 
 
-static READ8_HANDLER( track_1_r )
+READ8_MEMBER(capbowl_state::track_1_r)
 {
-	capbowl_state *state = space->machine().driver_data<capbowl_state>();
-	return (input_port_read(space->machine(), "IN1") & 0xf0) | ((input_port_read(space->machine(), "TRACKX") - state->m_last_trackball_val[1]) & 0x0f);
+	return (input_port_read(machine(), "IN1") & 0xf0) | ((input_port_read(machine(), "TRACKX") - m_last_trackball_val[1]) & 0x0f);
 }
 
 
-static WRITE8_HANDLER( track_reset_w )
+WRITE8_MEMBER(capbowl_state::track_reset_w)
 {
-	capbowl_state *state = space->machine().driver_data<capbowl_state>();
 
 	/* reset the trackball counters */
-	state->m_last_trackball_val[0] = input_port_read(space->machine(), "TRACKY");
-	state->m_last_trackball_val[1] = input_port_read(space->machine(), "TRACKX");
+	m_last_trackball_val[0] = input_port_read(machine(), "TRACKY");
+	m_last_trackball_val[1] = input_port_read(machine(), "TRACKX");
 
 	watchdog_reset_w(space, offset, data);
 }
@@ -183,10 +180,9 @@ static WRITE8_HANDLER( track_reset_w )
  *
  *************************************/
 
-static WRITE8_HANDLER( capbowl_sndcmd_w )
+WRITE8_MEMBER(capbowl_state::capbowl_sndcmd_w)
 {
-	capbowl_state *state = space->machine().driver_data<capbowl_state>();
-	device_set_input_line(state->m_audiocpu, M6809_IRQ_LINE, HOLD_LINE);
+	device_set_input_line(m_audiocpu, M6809_IRQ_LINE, HOLD_LINE);
 	soundlatch_w(space, offset, data);
 }
 
@@ -229,9 +225,9 @@ void capbowl_state::init_nvram(nvram_device &nvram, void *base, size_t size)
  *
  *************************************/
 
-static ADDRESS_MAP_START( capbowl_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( capbowl_map, AS_PROGRAM, 8, capbowl_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROMBANK("bank1")
-	AM_RANGE(0x4000, 0x4000) AM_WRITEONLY AM_BASE_MEMBER(capbowl_state, m_rowaddress)
+	AM_RANGE(0x4000, 0x4000) AM_WRITEONLY AM_BASE(m_rowaddress)
 	AM_RANGE(0x4800, 0x4800) AM_WRITE(capbowl_rom_select_w)
 	AM_RANGE(0x5000, 0x57ff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0x5800, 0x5fff) AM_READWRITE(capbowl_tms34061_r, capbowl_tms34061_w)
@@ -243,9 +239,9 @@ static ADDRESS_MAP_START( capbowl_map, AS_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( bowlrama_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( bowlrama_map, AS_PROGRAM, 8, capbowl_state )
 	AM_RANGE(0x0000, 0x001f) AM_READWRITE(bowlrama_blitter_r, bowlrama_blitter_w)
-	AM_RANGE(0x4000, 0x4000) AM_WRITEONLY AM_BASE_MEMBER(capbowl_state, m_rowaddress)
+	AM_RANGE(0x4000, 0x4000) AM_WRITEONLY AM_BASE(m_rowaddress)
 	AM_RANGE(0x5000, 0x57ff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0x5800, 0x5fff) AM_READWRITE(capbowl_tms34061_r, capbowl_tms34061_w)
 	AM_RANGE(0x6000, 0x6000) AM_WRITE(capbowl_sndcmd_w)
@@ -263,11 +259,11 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, capbowl_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
-	AM_RANGE(0x1000, 0x1001) AM_DEVREADWRITE("ymsnd", ym2203_r, ym2203_w)
+	AM_RANGE(0x1000, 0x1001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
 	AM_RANGE(0x2000, 0x2000) AM_WRITENOP				/* Not hooked up according to the schematics */
-	AM_RANGE(0x6000, 0x6000) AM_DEVWRITE("dac", dac_w)
+	AM_RANGE(0x6000, 0x6000) AM_DEVWRITE_LEGACY("dac", dac_w)
 	AM_RANGE(0x7000, 0x7000) AM_READ(soundlatch_r)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END

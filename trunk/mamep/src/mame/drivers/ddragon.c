@@ -268,7 +268,7 @@ static WRITE8_HANDLER( darktowr_mcu_bank_w )
 static WRITE8_HANDLER( darktowr_bankswitch_w )
 {
 	ddragon_state *state = space->machine().driver_data<ddragon_state>();
-	int oldbank = memory_get_bank(space->machine(), "bank1");
+	int oldbank = space->machine().memory().bank("bank1");
 	int newbank = (data & 0xe0) >> 5;
 
 	state->m_scrollx_hi = (data & 0x01);
@@ -316,7 +316,7 @@ static WRITE8_HANDLER( ddragon_interrupt_w )
 			break;
 
 		case 3: /* 380e - SND irq */
-			soundlatch_w(space, 0, data);
+			state->soundlatch_w(*space, 0, data);
 			device_set_input_line(state->m_snd_cpu, state->m_sound_irq, (state->m_sound_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
 			break;
 
@@ -501,44 +501,44 @@ static READ8_HANDLER( dd_adpcm_status_r )
  *
  *************************************/
 
-static ADDRESS_MAP_START( ddragon_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x0fff) AM_RAM AM_BASE_MEMBER(ddragon_state, m_rambase)
-	AM_RANGE(0x1000, 0x11ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x1200, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_BASE_GENERIC(paletteram2)
+static ADDRESS_MAP_START( ddragon_map, AS_PROGRAM, 8, ddragon_state )
+	AM_RANGE(0x0000, 0x0fff) AM_RAM AM_BASE(m_rambase)
+	AM_RANGE(0x1000, 0x11ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1200, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x1400, 0x17ff) AM_RAM
-	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(ddragon_fgvideoram_w) AM_BASE_MEMBER(ddragon_state, m_fgvideoram)
-	AM_RANGE(0x2000, 0x2fff) AM_READWRITE(ddragon_spriteram_r, ddragon_spriteram_w) AM_BASE_MEMBER(ddragon_state, m_spriteram)
-	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(ddragon_bgvideoram_w) AM_BASE_MEMBER(ddragon_state, m_bgvideoram)
+	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(ddragon_fgvideoram_w) AM_BASE(m_fgvideoram)
+	AM_RANGE(0x2000, 0x2fff) AM_READWRITE_LEGACY(ddragon_spriteram_r, ddragon_spriteram_w) AM_BASE(m_spriteram)
+	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(ddragon_bgvideoram_w) AM_BASE(m_bgvideoram)
 	AM_RANGE(0x3800, 0x3800) AM_READ_PORT("P1")
 	AM_RANGE(0x3801, 0x3801) AM_READ_PORT("P2")
 	AM_RANGE(0x3802, 0x3802) AM_READ_PORT("EXTRA")
 	AM_RANGE(0x3803, 0x3803) AM_READ_PORT("DSW0")
 	AM_RANGE(0x3804, 0x3804) AM_READ_PORT("DSW1")
-	AM_RANGE(0x3808, 0x3808) AM_WRITE(ddragon_bankswitch_w)
-	AM_RANGE(0x3809, 0x3809) AM_WRITEONLY AM_BASE_MEMBER(ddragon_state, m_scrollx_lo)
-	AM_RANGE(0x380a, 0x380a) AM_WRITEONLY AM_BASE_MEMBER(ddragon_state, m_scrolly_lo)
-	AM_RANGE(0x380b, 0x380f) AM_WRITE(ddragon_interrupt_w)
+	AM_RANGE(0x3808, 0x3808) AM_WRITE_LEGACY(ddragon_bankswitch_w)
+	AM_RANGE(0x3809, 0x3809) AM_WRITEONLY AM_BASE(m_scrollx_lo)
+	AM_RANGE(0x380a, 0x380a) AM_WRITEONLY AM_BASE(m_scrolly_lo)
+	AM_RANGE(0x380b, 0x380f) AM_WRITE_LEGACY(ddragon_interrupt_w)
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( dd2_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( dd2_map, AS_PROGRAM, 8, ddragon_state )
 	AM_RANGE(0x0000, 0x17ff) AM_RAM
-	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(ddragon_fgvideoram_w) AM_BASE_MEMBER(ddragon_state, m_fgvideoram)
-	AM_RANGE(0x2000, 0x2fff) AM_READWRITE(ddragon_spriteram_r, ddragon_spriteram_w) AM_BASE_MEMBER(ddragon_state, m_spriteram)
-	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(ddragon_bgvideoram_w) AM_BASE_MEMBER(ddragon_state, m_bgvideoram)
+	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(ddragon_fgvideoram_w) AM_BASE(m_fgvideoram)
+	AM_RANGE(0x2000, 0x2fff) AM_READWRITE_LEGACY(ddragon_spriteram_r, ddragon_spriteram_w) AM_BASE(m_spriteram)
+	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(ddragon_bgvideoram_w) AM_BASE(m_bgvideoram)
 	AM_RANGE(0x3800, 0x3800) AM_READ_PORT("P1")
 	AM_RANGE(0x3801, 0x3801) AM_READ_PORT("P2")
 	AM_RANGE(0x3802, 0x3802) AM_READ_PORT("EXTRA")
 	AM_RANGE(0x3803, 0x3803) AM_READ_PORT("DSW0")
 	AM_RANGE(0x3804, 0x3804) AM_READ_PORT("DSW1")
-	AM_RANGE(0x3808, 0x3808) AM_WRITE(ddragon_bankswitch_w)
-	AM_RANGE(0x3809, 0x3809) AM_WRITEONLY AM_BASE_MEMBER(ddragon_state, m_scrollx_lo)
-	AM_RANGE(0x380a, 0x380a) AM_WRITEONLY AM_BASE_MEMBER(ddragon_state, m_scrolly_lo)
-	AM_RANGE(0x380b, 0x380f) AM_WRITE(ddragon_interrupt_w)
-	AM_RANGE(0x3c00, 0x3dff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x3e00, 0x3fff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_BASE_GENERIC(paletteram2)
+	AM_RANGE(0x3808, 0x3808) AM_WRITE_LEGACY(ddragon_bankswitch_w)
+	AM_RANGE(0x3809, 0x3809) AM_WRITEONLY AM_BASE(m_scrollx_lo)
+	AM_RANGE(0x380a, 0x380a) AM_WRITEONLY AM_BASE(m_scrolly_lo)
+	AM_RANGE(0x380b, 0x380f) AM_WRITE_LEGACY(ddragon_interrupt_w)
+	AM_RANGE(0x3c00, 0x3dff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("paletteram")
+	AM_RANGE(0x3e00, 0x3fff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -551,26 +551,26 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sub_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x001f) AM_READWRITE(ddragon_hd63701_internal_registers_r, ddragon_hd63701_internal_registers_w)
+static ADDRESS_MAP_START( sub_map, AS_PROGRAM, 8, ddragon_state )
+	AM_RANGE(0x0000, 0x001f) AM_READWRITE_LEGACY(ddragon_hd63701_internal_registers_r, ddragon_hd63701_internal_registers_w)
 	AM_RANGE(0x001f, 0x0fff) AM_RAM
-	AM_RANGE(0x8000, 0x8fff) AM_READWRITE(ddragon_spriteram_r, ddragon_spriteram_w)
+	AM_RANGE(0x8000, 0x8fff) AM_READWRITE_LEGACY(ddragon_spriteram_r, ddragon_spriteram_w)
 	AM_RANGE(0xc000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( ddragonba_sub_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( ddragonba_sub_map, AS_PROGRAM, 8, ddragon_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
-	AM_RANGE(0x8000, 0x8fff) AM_READWRITE(ddragon_spriteram_r, ddragon_spriteram_w)
+	AM_RANGE(0x8000, 0x8fff) AM_READWRITE_LEGACY(ddragon_spriteram_r, ddragon_spriteram_w)
 	AM_RANGE(0xc000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( dd2_sub_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( dd2_sub_map, AS_PROGRAM, 8, ddragon_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
-	AM_RANGE(0xc000, 0xc3ff) AM_READWRITE(ddragon_spriteram_r, ddragon_spriteram_w)
-	AM_RANGE(0xd000, 0xd000) AM_WRITE(ddragon2_sub_irq_ack_w)
-	AM_RANGE(0xe000, 0xe000) AM_WRITE(ddragon2_sub_irq_w)
+	AM_RANGE(0xc000, 0xc3ff) AM_READWRITE_LEGACY(ddragon_spriteram_r, ddragon_spriteram_w)
+	AM_RANGE(0xd000, 0xd000) AM_WRITE_LEGACY(ddragon2_sub_irq_ack_w)
+	AM_RANGE(0xe000, 0xe000) AM_WRITE_LEGACY(ddragon2_sub_irq_w)
 ADDRESS_MAP_END
 
 /* might not be 100% accurate, check bits written */
@@ -581,8 +581,8 @@ static WRITE8_HANDLER( ddragonba_port_w )
 	device_set_input_line(state->m_sub_cpu, state->m_sprite_irq, CLEAR_LINE );
 }
 
-static ADDRESS_MAP_START( ddragonba_sub_portmap, AS_IO, 8 )
-	AM_RANGE(0x0000, 0xffff) AM_WRITE(ddragonba_port_w)
+static ADDRESS_MAP_START( ddragonba_sub_portmap, AS_IO, 8, ddragon_state )
+	AM_RANGE(0x0000, 0xffff) AM_WRITE_LEGACY(ddragonba_port_w)
 ADDRESS_MAP_END
 
 
@@ -593,21 +593,21 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, ddragon_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
 	AM_RANGE(0x1000, 0x1000) AM_READ(soundlatch_r)
-	AM_RANGE(0x1800, 0x1800) AM_READ(dd_adpcm_status_r)
-	AM_RANGE(0x2800, 0x2801) AM_DEVREADWRITE("fmsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x3800, 0x3807) AM_WRITE(dd_adpcm_w)
+	AM_RANGE(0x1800, 0x1800) AM_READ_LEGACY(dd_adpcm_status_r)
+	AM_RANGE(0x2800, 0x2801) AM_DEVREADWRITE_LEGACY("fmsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x3800, 0x3807) AM_WRITE_LEGACY(dd_adpcm_w)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( dd2_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( dd2_sound_map, AS_PROGRAM, 8, ddragon_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE("fmsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
+	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE_LEGACY("fmsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xA000, 0xA000) AM_READ(soundlatch_r)
 ADDRESS_MAP_END
 
@@ -619,9 +619,9 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( mcu_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( mcu_map, AS_PROGRAM, 8, ddragon_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7ff)
-	AM_RANGE(0x0000, 0x0007) AM_RAM_WRITE(darktowr_mcu_w) AM_BASE_MEMBER(ddragon_state, m_darktowr_mcu_ports)
+	AM_RANGE(0x0000, 0x0007) AM_RAM_WRITE_LEGACY(darktowr_mcu_w) AM_BASE(m_darktowr_mcu_ports)
 	AM_RANGE(0x0008, 0x007f) AM_RAM
 	AM_RANGE(0x0080, 0x07ff) AM_ROM
 ADDRESS_MAP_END

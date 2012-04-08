@@ -18,6 +18,7 @@
 #include <ctype.h>
 #include "emu.h"
 #include "emuopts.h"
+#include "drivenum.h"
 #include "cmddata.h"
 
 

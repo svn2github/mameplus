@@ -37,36 +37,33 @@ static INTERRUPT_GEN( fromanc2_interrupt )
 }
 
 
-static WRITE16_HANDLER( fromanc2_sndcmd_w )
+WRITE16_MEMBER(fromanc2_state::fromanc2_sndcmd_w)
 {
-	fromanc2_state *state = space->machine().driver_data<fromanc2_state>();
 
 	soundlatch_w(space, offset, (data >> 8) & 0xff);	// 1P (LEFT)
 	soundlatch2_w(space, offset, data & 0xff);			// 2P (RIGHT)
 
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
-	state->m_sndcpu_nmi_flag = 0;
+	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+	m_sndcpu_nmi_flag = 0;
 }
 
-static WRITE16_HANDLER( fromanc2_portselect_w )
+WRITE16_MEMBER(fromanc2_state::fromanc2_portselect_w)
 {
-	fromanc2_state *state = space->machine().driver_data<fromanc2_state>();
-	state->m_portselect = data;
+	m_portselect = data;
 }
 
-static READ16_HANDLER( fromanc2_keymatrix_r )
+READ16_MEMBER(fromanc2_state::fromanc2_keymatrix_r)
 {
-	fromanc2_state *state = space->machine().driver_data<fromanc2_state>();
 	UINT16 ret;
 
-	switch (state->m_portselect)
+	switch (m_portselect)
 	{
-	case 0x01:	ret = input_port_read(space->machine(), "KEY0"); break;
-	case 0x02:	ret = input_port_read(space->machine(), "KEY1"); break;
-	case 0x04:	ret = input_port_read(space->machine(), "KEY2"); break;
-	case 0x08:	ret = input_port_read(space->machine(), "KEY3"); break;
+	case 0x01:	ret = input_port_read(machine(), "KEY0"); break;
+	case 0x02:	ret = input_port_read(machine(), "KEY1"); break;
+	case 0x04:	ret = input_port_read(machine(), "KEY2"); break;
+	case 0x08:	ret = input_port_read(machine(), "KEY3"); break;
 	default:	ret = 0xffff;
-			logerror("PC:%08X unknown %02X\n", cpu_get_pc(&space->device()), state->m_portselect);
+			logerror("PC:%08X unknown %02X\n", cpu_get_pc(&space.device()), m_portselect);
 			break;
 	}
 
@@ -91,92 +88,84 @@ static CUSTOM_INPUT( subcpu_nmi_r )
 	return state->m_subcpu_nmi_flag & 0x01;
 }
 
-static WRITE16_HANDLER( fromanc2_eeprom_w )
+WRITE16_MEMBER(fromanc2_state::fromanc2_eeprom_w)
 {
 	if (ACCESSING_BITS_8_15)
-		input_port_write(space->machine(), "EEPROMOUT", data, 0xffff);
+		input_port_write(machine(), "EEPROMOUT", data, 0xffff);
 }
 
-static WRITE16_HANDLER( fromancr_eeprom_w )
+WRITE16_MEMBER(fromanc2_state::fromancr_eeprom_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		fromancr_gfxbank_w(space->machine(), data & 0xfff8);
-		input_port_write(space->machine(), "EEPROMOUT", data, 0xff);
+		fromancr_gfxbank_w(machine(), data & 0xfff8);
+		input_port_write(machine(), "EEPROMOUT", data, 0xff);
 	}
 }
 
-static WRITE16_HANDLER( fromanc4_eeprom_w )
+WRITE16_MEMBER(fromanc2_state::fromanc4_eeprom_w)
 {
 	if (ACCESSING_BITS_0_7)
-		input_port_write(space->machine(), "EEPROMOUT", data, 0xff);
+		input_port_write(machine(), "EEPROMOUT", data, 0xff);
 }
 
-static WRITE16_HANDLER( fromanc2_subcpu_w )
+WRITE16_MEMBER(fromanc2_state::fromanc2_subcpu_w)
 {
-	fromanc2_state *state = space->machine().driver_data<fromanc2_state>();
-	state->m_datalatch1 = data;
+	m_datalatch1 = data;
 
-	device_set_input_line(state->m_subcpu, 0, HOLD_LINE);
-	state->m_subcpu_int_flag = 0;
+	device_set_input_line(m_subcpu, 0, HOLD_LINE);
+	m_subcpu_int_flag = 0;
 }
 
-static READ16_HANDLER( fromanc2_subcpu_r )
+READ16_MEMBER(fromanc2_state::fromanc2_subcpu_r)
 {
-	fromanc2_state *state = space->machine().driver_data<fromanc2_state>();
-	device_set_input_line(state->m_subcpu, INPUT_LINE_NMI, PULSE_LINE);
-	state->m_subcpu_nmi_flag = 0;
+	device_set_input_line(m_subcpu, INPUT_LINE_NMI, PULSE_LINE);
+	m_subcpu_nmi_flag = 0;
 
-	return (state->m_datalatch_2h << 8) | state->m_datalatch_2l;
+	return (m_datalatch_2h << 8) | m_datalatch_2l;
 }
 
-static READ8_HANDLER( fromanc2_maincpu_r_l )
+READ8_MEMBER(fromanc2_state::fromanc2_maincpu_r_l)
 {
-	fromanc2_state *state = space->machine().driver_data<fromanc2_state>();
-	return state->m_datalatch1 & 0x00ff;
+	return m_datalatch1 & 0x00ff;
 }
 
-static READ8_HANDLER( fromanc2_maincpu_r_h )
+READ8_MEMBER(fromanc2_state::fromanc2_maincpu_r_h)
 {
-	fromanc2_state *state = space->machine().driver_data<fromanc2_state>();
-	state->m_subcpu_int_flag = 1;
+	m_subcpu_int_flag = 1;
 
-	return (state->m_datalatch1 & 0xff00) >> 8;
+	return (m_datalatch1 & 0xff00) >> 8;
 }
 
-static WRITE8_HANDLER( fromanc2_maincpu_w_l )
+WRITE8_MEMBER(fromanc2_state::fromanc2_maincpu_w_l)
 {
-	fromanc2_state *state = space->machine().driver_data<fromanc2_state>();
-	state->m_datalatch_2l = data;
+	m_datalatch_2l = data;
 }
 
-static WRITE8_HANDLER( fromanc2_maincpu_w_h )
+WRITE8_MEMBER(fromanc2_state::fromanc2_maincpu_w_h)
 {
-	fromanc2_state *state = space->machine().driver_data<fromanc2_state>();
-	state->m_datalatch_2h = data;
+	m_datalatch_2h = data;
 }
 
-static WRITE8_HANDLER( fromanc2_subcpu_nmi_clr )
+WRITE8_MEMBER(fromanc2_state::fromanc2_subcpu_nmi_clr)
 {
-	fromanc2_state *state = space->machine().driver_data<fromanc2_state>();
-	state->m_subcpu_nmi_flag = 1;
+	m_subcpu_nmi_flag = 1;
 }
 
-static READ8_HANDLER( fromanc2_sndcpu_nmi_clr )
+READ8_MEMBER(fromanc2_state::fromanc2_sndcpu_nmi_clr)
 {
-	fromanc2_state *state = space->machine().driver_data<fromanc2_state>();
-	state->m_sndcpu_nmi_flag = 1;
+	m_sndcpu_nmi_flag = 1;
 
 	return 0xff;
 }
 
-static WRITE8_HANDLER( fromanc2_subcpu_rombank_w )
+WRITE8_MEMBER(fromanc2_state::fromanc2_subcpu_rombank_w)
 {
 	// Change ROM BANK
-	memory_set_bank(space->machine(), "bank1", data & 0x03);
+	memory_set_bank(machine(), "bank1", data & 0x03);
 
 	// Change RAM BANK
-	memory_set_bank(space->machine(), "bank2", (data & 0x0c) >> 2);
+	memory_set_bank(machine(), "bank2", (data & 0x0c) >> 2);
 }
 
 
@@ -186,7 +175,7 @@ static WRITE8_HANDLER( fromanc2_subcpu_rombank_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( fromanc2_main_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( fromanc2_main_map, AS_PROGRAM, 16, fromanc2_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM									// MAIN ROM
 
 	AM_RANGE(0x802000, 0x802fff) AM_READNOP								// ???
@@ -219,7 +208,7 @@ static ADDRESS_MAP_START( fromanc2_main_map, AS_PROGRAM, 16 )
 	AM_RANGE(0xd80000, 0xd8ffff) AM_RAM									// WORK RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( fromancr_main_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( fromancr_main_map, AS_PROGRAM, 16, fromanc2_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM									// MAIN ROM
 
 	AM_RANGE(0x800000, 0x803fff) AM_WRITE(fromancr_videoram_0_w)		// VRAM BG (1P/2P)
@@ -247,7 +236,7 @@ static ADDRESS_MAP_START( fromancr_main_map, AS_PROGRAM, 16 )
 	AM_RANGE(0xd80000, 0xd8ffff) AM_RAM									// WORK RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( fromanc4_main_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( fromanc4_main_map, AS_PROGRAM, 16, fromanc2_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM								// MAIN ROM
 	AM_RANGE(0x400000, 0x7fffff) AM_ROM								// DATA ROM
 
@@ -283,14 +272,14 @@ static ADDRESS_MAP_START( fromanc4_main_map, AS_PROGRAM, 16 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( fromanc2_sub_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( fromanc2_sub_map, AS_PROGRAM, 8, fromanc2_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM								// ROM
 	AM_RANGE(0x4000, 0x7fff) AM_RAMBANK("bank1")						// ROM(BANK) (is this comment correct?  It was in the split address maps in a RAM configuration...
 	AM_RANGE(0x8000, 0xbfff) AM_RAM								// RAM(WORK)
 	AM_RANGE(0xc000, 0xffff) AM_RAMBANK("bank2")						// RAM(BANK)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( fromanc2_sub_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( fromanc2_sub_io_map, AS_IO, 8, fromanc2_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_WRITE(fromanc2_subcpu_rombank_w)
 	AM_RANGE(0x02, 0x02) AM_READWRITE(fromanc2_maincpu_r_l, fromanc2_maincpu_w_l)	// to/from MAIN CPU
@@ -299,16 +288,16 @@ static ADDRESS_MAP_START( fromanc2_sub_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( fromanc2_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( fromanc2_sound_map, AS_PROGRAM, 8, fromanc2_state )
 	AM_RANGE(0x0000, 0xdfff) AM_ROM
 	AM_RANGE(0xe000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( fromanc2_sound_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( fromanc2_sound_io_map, AS_IO, 8, fromanc2_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ(soundlatch_r) AM_WRITENOP			// snd cmd (1P) / ?
 	AM_RANGE(0x04, 0x04) AM_READ(soundlatch2_r)							// snd cmd (2P)
-	AM_RANGE(0x08, 0x0b) AM_DEVREADWRITE("ymsnd", ym2610_r, ym2610_w)
+	AM_RANGE(0x08, 0x0b) AM_DEVREADWRITE_LEGACY("ymsnd", ym2610_r, ym2610_w)
 	AM_RANGE(0x0c, 0x0c) AM_READ(fromanc2_sndcpu_nmi_clr)
 ADDRESS_MAP_END
 

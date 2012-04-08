@@ -25,27 +25,32 @@ public:
 	mw18w_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) { }
 
+	DECLARE_WRITE8_MEMBER(mw18w_sound0_w);
+	DECLARE_WRITE8_MEMBER(mw18w_sound1_w);
+	DECLARE_WRITE8_MEMBER(mw18w_lamps_w);
+	DECLARE_WRITE8_MEMBER(mw18w_led_display_w);
+	DECLARE_WRITE8_MEMBER(mw18w_irq0_clear_w);
 };
 
 
-static WRITE8_HANDLER( mw18w_sound0_w )
+WRITE8_MEMBER(mw18w_state::mw18w_sound0_w)
 {
 	// sound write (airhorn, brake, crash) plus motor speed for backdrop, and coin counter
-	coin_counter_w(space->machine(), 0, data&1);
+	coin_counter_w(machine(), 0, data&1);
 }
 
-static WRITE8_HANDLER( mw18w_sound1_w )
+WRITE8_MEMBER(mw18w_state::mw18w_sound1_w)
 {
 	// sound write (bell, engine) plus lamp dim control for backdrop lamp
 	;
 }
 
-static WRITE8_HANDLER( mw18w_lamps_w )
+WRITE8_MEMBER(mw18w_state::mw18w_lamps_w)
 {
 	;
 }
 
-static WRITE8_HANDLER( mw18w_led_display_w )
+WRITE8_MEMBER(mw18w_state::mw18w_led_display_w)
 {
 	// d0-3: 7448 (BCD to LED segment)
 	const UINT8 ls48_map[16] =
@@ -56,9 +61,9 @@ static WRITE8_HANDLER( mw18w_led_display_w )
 	output_set_digit_value(data>>4, ls48_map[data&0xf]);
 }
 
-static WRITE8_HANDLER( mw18w_irq0_clear_w )
+WRITE8_MEMBER(mw18w_state::mw18w_irq0_clear_w)
 {
-	cputag_set_input_line(space->machine(), "maincpu", 0, CLEAR_LINE);
+	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
 }
 
 static CUSTOM_INPUT( mw18w_sensors_r )
@@ -71,12 +76,12 @@ static CUSTOM_INPUT( mw18w_sensors_r )
 
 
 
-static ADDRESS_MAP_START( mw18w_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( mw18w_map, AS_PROGRAM, 8, mw18w_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x2000, 0x23ff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( mw18w_portmap, AS_IO, 8 )
+static ADDRESS_MAP_START( mw18w_portmap, AS_IO, 8, mw18w_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("IN0") AM_WRITE(mw18w_sound0_w)

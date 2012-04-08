@@ -75,7 +75,7 @@ const UINT8 okim6295_device::s_volume_table[16] =
 };
 
 // default address map
-static ADDRESS_MAP_START( okim6295, AS_0, 8 )
+static ADDRESS_MAP_START( okim6295, AS_0, 8, okim6295_device )
 	AM_RANGE(0x00000, 0x3ffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -216,10 +216,10 @@ void okim6295_device::sound_stream_update(sound_stream &stream, stream_sample_t 
 void okim6295_device::set_bank_base(offs_t base, bool bDontUpdateStream)
 {
 	// flush out anything pending (but not on e.g. a state load)
-	if (!bDontUpdateStream)
-	{
-		m_stream->update();
-	}
+    if (!bDontUpdateStream)
+    {
+        m_stream->update();
+    }
 
 	// if we are setting a non-zero base, and we have no bank, allocate one
 	if (!m_bank_installed && base != 0)

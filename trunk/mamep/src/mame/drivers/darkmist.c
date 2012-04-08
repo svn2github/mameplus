@@ -29,34 +29,33 @@ TODO:
 #include "includes/darkmist.h"
 
 
-static WRITE8_HANDLER(darkmist_hw_w)
+WRITE8_MEMBER(darkmist_state::darkmist_hw_w)
 {
-	darkmist_state *state = space->machine().driver_data<darkmist_state>();
-	state->m_hw=data;
-	memory_set_bankptr(space->machine(), "bank1",&space->machine().region("maincpu")->base()[0x010000+((data&0x80)?0x4000:0)]);
+	m_hw=data;
+	memory_set_bankptr(machine(), "bank1",&machine().region("maincpu")->base()[0x010000+((data&0x80)?0x4000:0)]);
 }
 
-static ADDRESS_MAP_START( memmap, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( memmap, AS_PROGRAM, 8, darkmist_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc801, 0xc801) AM_READ_PORT("P1")
 	AM_RANGE(0xc802, 0xc802) AM_READ_PORT("P2")
 	AM_RANGE(0xc803, 0xc803) AM_READ_PORT("START")
 	AM_RANGE(0xc804, 0xc804) AM_WRITE(darkmist_hw_w)
-	AM_RANGE(0xc805, 0xc805) AM_WRITEONLY AM_BASE_MEMBER(darkmist_state, m_spritebank)
+	AM_RANGE(0xc805, 0xc805) AM_WRITEONLY AM_BASE(m_spritebank)
 	AM_RANGE(0xc806, 0xc806) AM_READ_PORT("DSW1")
 	AM_RANGE(0xc807, 0xc807) AM_READ_PORT("DSW2")
 	AM_RANGE(0xc808, 0xc808) AM_READ_PORT("UNK")
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0xd400, 0xd41f) AM_RAM AM_BASE_MEMBER(darkmist_state, m_scroll)
-	AM_RANGE(0xd600, 0xd67f) AM_READWRITE(t5182_sharedram_r, t5182_sharedram_w)
-	AM_RANGE(0xd680, 0xd680) AM_WRITE(t5182_sound_irq_w)
-	AM_RANGE(0xd681, 0xd681) AM_READ(t5182_sharedram_semaphore_snd_r)
-	AM_RANGE(0xd682, 0xd682) AM_WRITE(t5182_sharedram_semaphore_main_acquire_w)
-	AM_RANGE(0xd683, 0xd683) AM_WRITE(t5182_sharedram_semaphore_main_release_w)
-	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_BASE_MEMBER(darkmist_state, m_videoram)
-	AM_RANGE(0xe000, 0xefff) AM_RAM AM_BASE_MEMBER(darkmist_state, m_workram)
-	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_SIZE_MEMBER(darkmist_state, m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM AM_SHARE("paletteram")
+	AM_RANGE(0xd400, 0xd41f) AM_RAM AM_BASE(m_scroll)
+	AM_RANGE(0xd600, 0xd67f) AM_READWRITE_LEGACY(t5182_sharedram_r, t5182_sharedram_w)
+	AM_RANGE(0xd680, 0xd680) AM_WRITE_LEGACY(t5182_sound_irq_w)
+	AM_RANGE(0xd681, 0xd681) AM_READ_LEGACY(t5182_sharedram_semaphore_snd_r)
+	AM_RANGE(0xd682, 0xd682) AM_WRITE_LEGACY(t5182_sharedram_semaphore_main_acquire_w)
+	AM_RANGE(0xd683, 0xd683) AM_WRITE_LEGACY(t5182_sharedram_semaphore_main_release_w)
+	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_BASE(m_videoram)
+	AM_RANGE(0xe000, 0xefff) AM_RAM AM_BASE(m_workram)
+	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
 ADDRESS_MAP_END
 
 

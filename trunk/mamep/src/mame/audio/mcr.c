@@ -398,9 +398,10 @@ READ8_HANDLER( ssio_input_port_r )
 
 WRITE8_HANDLER( ssio_output_port_w )
 {
+	mcr_state *state = space->machine().driver_data<mcr_state>();
 	int which = offset >> 2;
 	if (which == 0)
-		mcr_control_port_w(space, offset, data);
+		state->mcr_control_port_w(*space, offset, data);
 	if (ssio_custom_output[which])
 		(*ssio_custom_output[which])(space, offset, data & ssio_custom_output_mask[which]);
 }
@@ -443,20 +444,20 @@ static const ay8910_interface ssio_ay8910_interface_2 =
 /********* memory interfaces ***********/
 
 /* address map verified from schematics */
-static ADDRESS_MAP_START( ssio_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( ssio_map, AS_PROGRAM, 8, driver_device )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x0c00) AM_RAM
-	AM_RANGE(0x9000, 0x9003) AM_MIRROR(0x0ffc) AM_READ(ssio_data_r)
-	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x0ffc) AM_DEVWRITE("ssio.1", ay8910_address_w)
-	AM_RANGE(0xa001, 0xa001) AM_MIRROR(0x0ffc) AM_DEVREAD("ssio.1", ay8910_r)
-	AM_RANGE(0xa002, 0xa002) AM_MIRROR(0x0ffc) AM_DEVWRITE("ssio.1", ay8910_data_w)
-	AM_RANGE(0xb000, 0xb000) AM_MIRROR(0x0ffc) AM_DEVWRITE("ssio.2", ay8910_address_w)
-	AM_RANGE(0xb001, 0xb001) AM_MIRROR(0x0ffc) AM_DEVREAD("ssio.2", ay8910_r)
-	AM_RANGE(0xb002, 0xb002) AM_MIRROR(0x0ffc) AM_DEVWRITE("ssio.2", ay8910_data_w)
-	AM_RANGE(0xc000, 0xcfff) AM_READNOP AM_WRITE(ssio_status_w)
+	AM_RANGE(0x9000, 0x9003) AM_MIRROR(0x0ffc) AM_READ_LEGACY(ssio_data_r)
+	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x0ffc) AM_DEVWRITE_LEGACY("ssio.1", ay8910_address_w)
+	AM_RANGE(0xa001, 0xa001) AM_MIRROR(0x0ffc) AM_DEVREAD_LEGACY("ssio.1", ay8910_r)
+	AM_RANGE(0xa002, 0xa002) AM_MIRROR(0x0ffc) AM_DEVWRITE_LEGACY("ssio.1", ay8910_data_w)
+	AM_RANGE(0xb000, 0xb000) AM_MIRROR(0x0ffc) AM_DEVWRITE_LEGACY("ssio.2", ay8910_address_w)
+	AM_RANGE(0xb001, 0xb001) AM_MIRROR(0x0ffc) AM_DEVREAD_LEGACY("ssio.2", ay8910_r)
+	AM_RANGE(0xb002, 0xb002) AM_MIRROR(0x0ffc) AM_DEVWRITE_LEGACY("ssio.2", ay8910_data_w)
+	AM_RANGE(0xc000, 0xcfff) AM_READNOP AM_WRITE_LEGACY(ssio_status_w)
 	AM_RANGE(0xd000, 0xdfff) AM_WRITENOP	/* low bit controls yellow LED */
-	AM_RANGE(0xe000, 0xefff) AM_READ(ssio_irq_clear)
+	AM_RANGE(0xe000, 0xefff) AM_READ_LEGACY(ssio_irq_clear)
 	AM_RANGE(0xf000, 0xffff) AM_READ_PORT("SSIO.DIP")	/* 6 DIP switches */
 ADDRESS_MAP_END
 
@@ -533,18 +534,18 @@ static READ16_DEVICE_HANDLER( csdeluxe_pia_r )
 	/* low bytes. */
 	pia6821_device *pia = downcast<pia6821_device *>(device);
 	if (ACCESSING_BITS_8_15)
-		return pia->read_alt(*memory_nonspecific_space(device->machine()), offset) << 8;
+		return pia->read_alt(*device->machine().memory().first_space(), offset) << 8;
 	else
-		return pia->read_alt(*memory_nonspecific_space(device->machine()), offset);
+		return pia->read_alt(*device->machine().memory().first_space(), offset);
 }
 
 static WRITE16_DEVICE_HANDLER( csdeluxe_pia_w )
 {
 	pia6821_device *pia = downcast<pia6821_device *>(device);
 	if (ACCESSING_BITS_8_15)
-		pia->write_alt(*memory_nonspecific_space(device->machine()), offset, data >> 8);
+		pia->write_alt(*device->machine().memory().first_space(), offset, data >> 8);
 	else
-		pia->write_alt(*memory_nonspecific_space(device->machine()), offset, data);
+		pia->write_alt(*device->machine().memory().first_space(), offset, data);
 }
 
 
@@ -568,11 +569,11 @@ void csdeluxe_reset_w(running_machine &machine, int state)
 /********* memory interfaces ***********/
 
 /* address map determined by PAL; not verified */
-static ADDRESS_MAP_START( csdeluxe_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( csdeluxe_map, AS_PROGRAM, 16, driver_device )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0x1ffff)
 	AM_RANGE(0x000000, 0x007fff) AM_ROM
-	AM_RANGE(0x018000, 0x018007) AM_DEVREADWRITE("csdpia", csdeluxe_pia_r, csdeluxe_pia_w)
+	AM_RANGE(0x018000, 0x018007) AM_DEVREADWRITE_LEGACY("csdpia", csdeluxe_pia_r, csdeluxe_pia_w)
 	AM_RANGE(0x01c000, 0x01cfff) AM_RAM
 ADDRESS_MAP_END
 
@@ -688,11 +689,11 @@ void soundsgood_reset_w(running_machine &machine, int state)
 /********* memory interfaces ***********/
 
 /* address map determined by PAL; not verified */
-static ADDRESS_MAP_START( soundsgood_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( soundsgood_map, AS_PROGRAM, 16, driver_device )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0x7ffff)
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
-	AM_RANGE(0x060000, 0x060007) AM_DEVREADWRITE8_MODERN("sgpia", pia6821_device, read_alt, write_alt, 0xff00)
+	AM_RANGE(0x060000, 0x060007) AM_DEVREADWRITE8("sgpia", pia6821_device, read_alt, write_alt, 0xff00)
 	AM_RANGE(0x070000, 0x070fff) AM_RAM
 ADDRESS_MAP_END
 
@@ -792,10 +793,10 @@ void turbocs_reset_w(running_machine &machine, int state)
 /********* memory interfaces ***********/
 
 /* address map verified from schematics */
-static ADDRESS_MAP_START( turbocs_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( turbocs_map, AS_PROGRAM, 8, driver_device )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x07ff) AM_MIRROR(0x3800) AM_RAM
-	AM_RANGE(0x4000, 0x4003) AM_MIRROR(0x3ffc) AM_DEVREADWRITE_MODERN("tcspia", pia6821_device, read_alt, write_alt)
+	AM_RANGE(0x4000, 0x4003) AM_MIRROR(0x3ffc) AM_DEVREADWRITE("tcspia", pia6821_device, read_alt, write_alt)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -923,24 +924,24 @@ void squawkntalk_reset_w(running_machine &machine, int state)
 /* address map verified from schematics */
 /* note that jumpers control the ROM sizes; if these are changed, use the alternate */
 /* address map below */
-static ADDRESS_MAP_START( squawkntalk_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( squawkntalk_map, AS_PROGRAM, 8, driver_device )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x007f) AM_RAM		/* internal RAM */
-	AM_RANGE(0x0080, 0x0083) AM_MIRROR(0x4f6c) AM_DEVREADWRITE_MODERN("sntpia0", pia6821_device, read, write)
-	AM_RANGE(0x0090, 0x0093) AM_MIRROR(0x4f6c) AM_DEVREADWRITE_MODERN("sntpia1", pia6821_device, read, write)
-	AM_RANGE(0x1000, 0x1fff) AM_MIRROR(0x4000) AM_WRITE(squawkntalk_dac_w)
+	AM_RANGE(0x0080, 0x0083) AM_MIRROR(0x4f6c) AM_DEVREADWRITE("sntpia0", pia6821_device, read, write)
+	AM_RANGE(0x0090, 0x0093) AM_MIRROR(0x4f6c) AM_DEVREADWRITE("sntpia1", pia6821_device, read, write)
+	AM_RANGE(0x1000, 0x1fff) AM_MIRROR(0x4000) AM_WRITE_LEGACY(squawkntalk_dac_w)
 	AM_RANGE(0x8000, 0xbfff) AM_MIRROR(0x4000) AM_ROM
 ADDRESS_MAP_END
 
 /* alternate address map if the ROM jumpers are changed to support a smaller */
 /* ROM size of 2k */
 #ifdef UNUSED_FUNCTION
-ADDRESS_MAP_START( squawkntalk_alt_map, AS_PROGRAM, 8 )
+ADDRESS_MAP_START( squawkntalk_alt_map, AS_PROGRAM, 8, driver_device )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x007f) AM_RAM		/* internal RAM */
-	AM_RANGE(0x0080, 0x0083) AM_MIRROR(0x676c) AM_DEVREADWRITE_MODERN("sntpia0", pia6821_device, read, write)
-	AM_RANGE(0x0090, 0x0093) AM_MIRROR(0x676c) AM_DEVREADWRITE_MODERN("sntpia1", pia6821_device, read, write)
-	AM_RANGE(0x0800, 0x0fff) AM_MIRROR(0x6000) AM_WRITE(squawkntalk_dac_w)
+	AM_RANGE(0x0080, 0x0083) AM_MIRROR(0x676c) AM_DEVREADWRITE("sntpia0", pia6821_device, read, write)
+	AM_RANGE(0x0090, 0x0093) AM_MIRROR(0x676c) AM_DEVREADWRITE("sntpia1", pia6821_device, read, write)
+	AM_RANGE(0x0800, 0x0fff) AM_MIRROR(0x6000) AM_WRITE_LEGACY(squawkntalk_dac_w)
 	AM_RANGE(0x8000, 0x9fff) AM_MIRROR(0x6000) AM_ROM
 ADDRESS_MAP_END
 #endif

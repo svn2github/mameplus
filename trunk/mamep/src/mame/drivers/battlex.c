@@ -75,16 +75,16 @@ static CUSTOM_INPUT( battlex_in0_b4_r )
  *
  *************************************/
 
-static ADDRESS_MAP_START( battlex_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( battlex_map, AS_PROGRAM, 8, battlex_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
-	AM_RANGE(0x8000, 0x8fff) AM_RAM_WRITE(battlex_videoram_w) AM_BASE_MEMBER(battlex_state, m_videoram)
-	AM_RANGE(0x9000, 0x91ff) AM_RAM AM_BASE_MEMBER(battlex_state, m_spriteram)
+	AM_RANGE(0x8000, 0x8fff) AM_RAM_WRITE(battlex_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x9000, 0x91ff) AM_RAM AM_BASE(m_spriteram)
 	AM_RANGE(0xa000, 0xa3ff) AM_RAM
 	AM_RANGE(0xe000, 0xe03f) AM_RAM_WRITE(battlex_palette_w)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( io_map, AS_IO, 8, battlex_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READ_PORT("DSW1")
 	AM_RANGE(0x01, 0x01) AM_READ_PORT("SYSTEM")
@@ -93,7 +93,7 @@ static ADDRESS_MAP_START( io_map, AS_IO, 8 )
 	AM_RANGE(0x10, 0x10) AM_WRITE(battlex_flipscreen_w)
 
 	/* verify all of these */
-	AM_RANGE(0x22, 0x23) AM_DEVWRITE("aysnd", ay8910_data_address_w)
+	AM_RANGE(0x22, 0x23) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_address_w)
 	AM_RANGE(0x30, 0x30) AM_WRITE(battlex_scroll_starfield_w)
 	AM_RANGE(0x32, 0x32) AM_WRITE(battlex_scroll_x_lsb_w)
 	AM_RANGE(0x33, 0x33) AM_WRITE(battlex_scroll_x_msb_w)

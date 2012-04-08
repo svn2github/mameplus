@@ -225,17 +225,17 @@ static CUSTOM_INPUT( jankenmn_hopper_status_r )
 *           Memory Map Definition            *
 *********************************************/
 
-static ADDRESS_MAP_START( jankenmn_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( jankenmn_map, AS_PROGRAM, 8, jankenmn_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xe000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( jankenmn_port_map, AS_IO, 8 )
+static ADDRESS_MAP_START( jankenmn_port_map, AS_IO, 8, jankenmn_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE("ctc", z80ctc_r, z80ctc_w)
-	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE_MODERN("ppi8255_0", i8255_device, read, write)
-	AM_RANGE(0x20, 0x23) AM_DEVREADWRITE_MODERN("ppi8255_1", i8255_device, read, write)
+	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE_LEGACY("ctc", z80ctc_r, z80ctc_w)
+	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE("ppi8255_0", i8255_device, read, write)
+	AM_RANGE(0x20, 0x23) AM_DEVREADWRITE("ppi8255_1", i8255_device, read, write)
 	AM_RANGE(0x30, 0x30) AM_WRITENOP // ???
 ADDRESS_MAP_END
 

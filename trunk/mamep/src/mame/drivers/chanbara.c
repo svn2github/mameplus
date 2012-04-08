@@ -74,6 +74,10 @@ public:
 
 	/* devices */
 	device_t *m_maincpu;
+	DECLARE_WRITE8_MEMBER(chanbara_videoram_w);
+	DECLARE_WRITE8_MEMBER(chanbara_colorram_w);
+	DECLARE_WRITE8_MEMBER(chanbara_videoram2_w);
+	DECLARE_WRITE8_MEMBER(chanbara_colorram2_w);
 };
 
 
@@ -91,36 +95,32 @@ static PALETTE_INIT( chanbara )
 	}
 }
 
-static WRITE8_HANDLER( chanbara_videoram_w )
+WRITE8_MEMBER(chanbara_state::chanbara_videoram_w)
 {
-	chanbara_state *state = space->machine().driver_data<chanbara_state>();
 
-	state->m_videoram[offset] = data;
-	state->m_bg_tilemap->mark_tile_dirty(offset);
+	m_videoram[offset] = data;
+	m_bg_tilemap->mark_tile_dirty(offset);
 }
 
-static WRITE8_HANDLER( chanbara_colorram_w )
+WRITE8_MEMBER(chanbara_state::chanbara_colorram_w)
 {
-	chanbara_state *state = space->machine().driver_data<chanbara_state>();
 
-	state->m_colorram[offset] = data;
-	state->m_bg_tilemap->mark_tile_dirty(offset);
+	m_colorram[offset] = data;
+	m_bg_tilemap->mark_tile_dirty(offset);
 }
 
-static WRITE8_HANDLER( chanbara_videoram2_w )
+WRITE8_MEMBER(chanbara_state::chanbara_videoram2_w)
 {
-	chanbara_state *state = space->machine().driver_data<chanbara_state>();
 
-	state->m_videoram2[offset] = data;
-	state->m_bg2_tilemap->mark_tile_dirty(offset);
+	m_videoram2[offset] = data;
+	m_bg2_tilemap->mark_tile_dirty(offset);
 }
 
-static WRITE8_HANDLER( chanbara_colorram2_w )
+WRITE8_MEMBER(chanbara_state::chanbara_colorram2_w)
 {
-	chanbara_state *state = space->machine().driver_data<chanbara_state>();
 
-	state->m_colorram2[offset] = data;
-	state->m_bg2_tilemap->mark_tile_dirty(offset);
+	m_colorram2[offset] = data;
+	m_bg2_tilemap->mark_tile_dirty(offset);
 }
 
 
@@ -207,18 +207,18 @@ static SCREEN_UPDATE_IND16( chanbara )
 
 /***************************************************************************/
 
-static ADDRESS_MAP_START( chanbara_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( chanbara_map, AS_PROGRAM, 8, chanbara_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
-	AM_RANGE(0x0800, 0x0bff) AM_RAM_WRITE(chanbara_videoram_w) AM_BASE_MEMBER(chanbara_state, m_videoram)
-	AM_RANGE(0x0c00, 0x0fff) AM_RAM_WRITE(chanbara_colorram_w) AM_BASE_MEMBER(chanbara_state, m_colorram)
-	AM_RANGE(0x1000, 0x10ff) AM_RAM AM_BASE_MEMBER(chanbara_state, m_spriteram)
-	AM_RANGE(0x1800, 0x19ff) AM_RAM_WRITE(chanbara_videoram2_w) AM_BASE_MEMBER(chanbara_state, m_videoram2)
-	AM_RANGE(0x1a00, 0x1bff) AM_RAM_WRITE(chanbara_colorram2_w) AM_BASE_MEMBER(chanbara_state, m_colorram2)
+	AM_RANGE(0x0800, 0x0bff) AM_RAM_WRITE(chanbara_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0c00, 0x0fff) AM_RAM_WRITE(chanbara_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x1000, 0x10ff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x1800, 0x19ff) AM_RAM_WRITE(chanbara_videoram2_w) AM_BASE(m_videoram2)
+	AM_RANGE(0x1a00, 0x1bff) AM_RAM_WRITE(chanbara_colorram2_w) AM_BASE(m_colorram2)
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("DSW1")
 	AM_RANGE(0x2001, 0x2001) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x2002, 0x2002) AM_READ_PORT("P2")
 	AM_RANGE(0x2003, 0x2003) AM_READ_PORT("P1")
-	AM_RANGE(0x3800, 0x3801) AM_DEVREADWRITE("ymsnd", ym2203_r, ym2203_w)
+	AM_RANGE(0x3800, 0x3801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
