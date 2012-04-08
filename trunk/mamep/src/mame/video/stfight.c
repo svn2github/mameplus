@@ -69,11 +69,12 @@ PALETTE_INIT( stfight )
 
 static void set_pens(running_machine &machine)
 {
+	stfight_state *state = machine.driver_data<stfight_state>();
 	int i;
 
 	for (i = 0; i < 0x100; i++)
 	{
-		UINT16 data = machine.generic.paletteram.u8[i] | (machine.generic.paletteram2.u8[i] << 8);
+		UINT16 data = state->m_generic_paletteram_8[i] | (state->m_generic_paletteram2_8[i] << 8);
 		rgb_t color = MAKE_RGB(pal4bit(data >> 4), pal4bit(data >> 0), pal4bit(data >> 8));
 
 		colortable_palette_set_color(machine.colortable, i, color);
@@ -173,67 +174,63 @@ VIDEO_START( stfight )
 
 ***************************************************************************/
 
-WRITE8_HANDLER( stfight_text_char_w )
+WRITE8_MEMBER(stfight_state::stfight_text_char_w)
 {
-	stfight_state *state = space->machine().driver_data<stfight_state>();
-	state->m_text_char_ram[offset] = data;
-	state->m_tx_tilemap->mark_tile_dirty(offset);
+	m_text_char_ram[offset] = data;
+	m_tx_tilemap->mark_tile_dirty(offset);
 }
 
-WRITE8_HANDLER( stfight_text_attr_w )
+WRITE8_MEMBER(stfight_state::stfight_text_attr_w)
 {
-	stfight_state *state = space->machine().driver_data<stfight_state>();
-	state->m_text_attr_ram[offset] = data;
-	state->m_tx_tilemap->mark_tile_dirty(offset);
+	m_text_attr_ram[offset] = data;
+	m_tx_tilemap->mark_tile_dirty(offset);
 }
 
-WRITE8_HANDLER( stfight_sprite_bank_w )
+WRITE8_MEMBER(stfight_state::stfight_sprite_bank_w)
 {
-	stfight_state *state = space->machine().driver_data<stfight_state>();
-	state->m_sprite_base = ( ( data & 0x04 ) << 7 ) |
+	m_sprite_base = ( ( data & 0x04 ) << 7 ) |
 				          ( ( data & 0x01 ) << 8 );
 }
 
-WRITE8_HANDLER( stfight_vh_latch_w )
+WRITE8_MEMBER(stfight_state::stfight_vh_latch_w)
 {
-	stfight_state *state = space->machine().driver_data<stfight_state>();
 	int scroll;
 
 
-	state->m_vh_latch_ram[offset] = data;
+	m_vh_latch_ram[offset] = data;
 
 	switch( offset )
 	{
 		case 0x00:
 		case 0x01:
-			scroll = (state->m_vh_latch_ram[1] << 8) | state->m_vh_latch_ram[0];
-			state->m_fg_tilemap->set_scrollx(0,scroll);
+			scroll = (m_vh_latch_ram[1] << 8) | m_vh_latch_ram[0];
+			m_fg_tilemap->set_scrollx(0,scroll);
 			break;
 
 		case 0x02:
 		case 0x03:
-			scroll = (state->m_vh_latch_ram[3] << 8) | state->m_vh_latch_ram[2];
-			state->m_fg_tilemap->set_scrolly(0,scroll);
+			scroll = (m_vh_latch_ram[3] << 8) | m_vh_latch_ram[2];
+			m_fg_tilemap->set_scrolly(0,scroll);
 			break;
 
 		case 0x04:
 		case 0x05:
-			scroll = (state->m_vh_latch_ram[5] << 8) | state->m_vh_latch_ram[4];
-			state->m_bg_tilemap->set_scrollx(0,scroll);
+			scroll = (m_vh_latch_ram[5] << 8) | m_vh_latch_ram[4];
+			m_bg_tilemap->set_scrollx(0,scroll);
 			break;
 
 		case 0x06:
 		case 0x08:
-			scroll = (state->m_vh_latch_ram[8] << 8) | state->m_vh_latch_ram[6];
-			state->m_bg_tilemap->set_scrolly(0,scroll);
+			scroll = (m_vh_latch_ram[8] << 8) | m_vh_latch_ram[6];
+			m_bg_tilemap->set_scrolly(0,scroll);
 			break;
 
 		case 0x07:
-			state->m_tx_tilemap->enable(data & 0x80);
+			m_tx_tilemap->enable(data & 0x80);
 			/* 0x40 = sprites */
-			state->m_bg_tilemap->enable(data & 0x20);
-			state->m_fg_tilemap->enable(data & 0x10);
-			flip_screen_set(space->machine(), data & 0x01);
+			m_bg_tilemap->enable(data & 0x20);
+			m_fg_tilemap->enable(data & 0x10);
+			flip_screen_set(machine(), data & 0x01);
 			break;
 	}
 }

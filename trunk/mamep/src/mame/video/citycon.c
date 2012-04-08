@@ -70,35 +70,32 @@ VIDEO_START( citycon )
 
 ***************************************************************************/
 
-WRITE8_HANDLER( citycon_videoram_w )
+WRITE8_MEMBER(citycon_state::citycon_videoram_w)
 {
-	citycon_state *state = space->machine().driver_data<citycon_state>();
-	state->m_videoram[offset] = data;
-	state->m_fg_tilemap->mark_tile_dirty(offset);
+	m_videoram[offset] = data;
+	m_fg_tilemap->mark_tile_dirty(offset);
 }
 
 
-WRITE8_HANDLER( citycon_linecolor_w )
+WRITE8_MEMBER(citycon_state::citycon_linecolor_w)
 {
-	citycon_state *state = space->machine().driver_data<citycon_state>();
-	state->m_linecolor[offset] = data;
+	m_linecolor[offset] = data;
 }
 
 
-WRITE8_HANDLER( citycon_background_w )
+WRITE8_MEMBER(citycon_state::citycon_background_w)
 {
-	citycon_state *state = space->machine().driver_data<citycon_state>();
 
 	/* bits 4-7 control the background image */
-	if (state->m_bg_image != (data >> 4))
+	if (m_bg_image != (data >> 4))
 	{
-		state->m_bg_image = (data >> 4);
-		state->m_bg_tilemap->mark_all_dirty();
+		m_bg_image = (data >> 4);
+		m_bg_tilemap->mark_all_dirty();
 	}
 
 	/* bit 0 flips screen */
 	/* it is also used to multiplex player 1 and player 2 controls */
-	flip_screen_set(space->machine(), data & 0x01);
+	flip_screen_set(machine(), data & 0x01);
 
 	/* bits 1-3 are unknown */
 //  if ((data & 0x0e) != 0) logerror("background register = %02x\n", data);
@@ -136,7 +133,8 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 
 INLINE void changecolor_RRRRGGGGBBBBxxxx( running_machine &machine, int color, int indx )
 {
-	int data = machine.generic.paletteram.u8[2 * indx | 1] | (machine.generic.paletteram.u8[2 * indx] << 8);
+	citycon_state *state = machine.driver_data<citycon_state>();
+	int data = state->m_generic_paletteram_8[2 * indx | 1] | (state->m_generic_paletteram_8[2 * indx] << 8);
 	palette_set_color_rgb(machine, color, pal4bit(data >> 12), pal4bit(data >> 8), pal4bit(data >> 4));
 }
 

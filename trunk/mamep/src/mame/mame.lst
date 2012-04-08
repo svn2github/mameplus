@@ -1924,11 +1924,12 @@ dariusj			// A96 (c) 1986 Taito Corporation (Japan)
 dariuso			// A96 (c) 1986 Taito Corporation (Japan)
 dariuse			// A96 (c) 1986 Taito Corporation (Japan)
 rastan			// B04 (c) 1987 Taito Corporation Japan (World)
-rastan2 		// B04 (c) 1987 Taito Corporation Japan (World)
+rastana 		// B04 (c) 1987 Taito Corporation Japan (World)
 rastanu			// B04 (c) 1987 Taito America Corporation (US)
-rastanu2		// B04 (c) 1987 Taito America Corporation (US)
+rastanua		// B04 (c) 1987 Taito America Corporation (US)
+rastanub		// B04 (c) 1987 Taito America Corporation (US)
 rastsaga		// B04 (c) 1987 Taito Corporation (Japan)
-rastsaga1		// B04 (c) 1987 Taito Corporation (Japan)
+rastsagaa		// B04 (c) 1987 Taito Corporation (Japan)
 topspeed		// B14 (c) 1987 Taito Corporation Japan (World)
 topspeedu		// B14 (c) 1987 Taito America Corporation (US)
 fullthrl		// B14 (c) 1987 Taito Corporation (Japan)
@@ -6221,6 +6222,7 @@ mf_flip			// (c) 1983 Exidy / First Star Software
 mf_bdash		// (c) 1984 Exidy / First Star Software
 
 // Atari b/w games
+quizshow		// 005464           1976/04 [2650]
 tank8			// ??????           1976/04 [6800]
 tank8a			// ??????           1976/04 [6800]
 tank8b			// ??????           1976/04 [6800]
@@ -6718,6 +6720,7 @@ pballoonr		// (c) 1982 SNK (Rock-Ola license)
 nibbler			// (c) 1982 Rock-ola (version 9)
 nibbler8		// (c) 1982 Rock-ola (version 8)
 nibbler6		// (c) 1982 Rock-ola (vresion 6)
+nibblerp		// (c) 1982 Rock-ola (pballoon conversion)
 nibblero		// (c) 1983 Olympia/Rock-Ola (version 8)
 
 // later SNK games, each game can be identified by PCB code and ROM
@@ -7017,7 +7020,7 @@ kof99k			// 0152 (c) 1999 SNK
 kof99p			// 0251 (c) 1999 SNK
 ganryu			// 0252 (c) 1999 Visco
 garou			// 0253 (c) 1999 SNK
-garouo			// 0253 (c) 1999 SNK
+garouh			// 0253 (c) 1999 SNK
 garoup			// 0253 (c) 1999 SNK
 garoubl			// bootleg
 s1945p			// 0254 (c) 1999 Psikyo
@@ -8996,6 +8999,7 @@ theglad			// (c) 2001
 theglada		// (c) 2001
 thegladpcb
 dw2001			// (c) 2001
+dwpc			// (c) 2001
 py2k2			// (c) 2001
 dmnfrnt			// (c) 2002
 dmnfrnta		// (c) 2002
@@ -10464,6 +10468,7 @@ sigma2k			// (c) 2000 Sigma
 
 
 attckufo		// (c) 1980 Ryoto Electric Co.
+unkhorse
 fortecar
 fortecrd
 jackpool		// (c) 1997 Electronic Projects
@@ -11222,6 +11227,7 @@ bugfeverd		// (c) 2006 Amcoe
 bugfeverv		// (c) 2006 Amcoe
 bugfeverv2		// (c) 2006 Amcoe
 funriver		// (c) 2005 Amcoe - Fun River
+funriverd1		// (c) 2005 Amcoe
 funriverv		// (c) 2005 Amcoe
 dvisland		// (c) 2006 Amcoe - Devil's Island
 dvislando		// (c) 2006 Amcoe

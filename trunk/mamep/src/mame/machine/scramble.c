@@ -162,7 +162,7 @@ const ppi8255_interface scramble_ppi_1_intf =
 	DEVCB_NULL,												/* Port A read */
 	DEVCB_NULL,												/* Port B read */
 	DEVCB_NULL,												/* Port C read */
-	DEVCB_MEMORY_HANDLER("maincpu", PROGRAM, soundlatch_w),	/* Port A write */
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_w),	/* Port A write */
 	DEVCB_HANDLER(scramble_sh_irqtrigger_w),				/* Port B write */
 	DEVCB_NULL												/* Port C write */
 };
@@ -173,7 +173,7 @@ const ppi8255_interface stratgyx_ppi_1_intf =
 	DEVCB_NULL,												/* Port A read */
 	DEVCB_NULL,												/* Port B read */
 	DEVCB_INPUT_PORT("IN3"),								/* Port C read */
-	DEVCB_MEMORY_HANDLER("maincpu", PROGRAM, soundlatch_w),	/* Port A write */
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_w),	/* Port A write */
 	DEVCB_HANDLER(scramble_sh_irqtrigger_w),				/* Port B write */
 	DEVCB_NULL												/* Port C write */
 };
@@ -184,7 +184,7 @@ const ppi8255_interface scramble_protection_ppi_1_intf =
 	DEVCB_NULL,												/* Port A read */
 	DEVCB_NULL,												/* Port B read */
 	DEVCB_HANDLER(scramble_protection_r),					/* Port C read */
-	DEVCB_MEMORY_HANDLER("maincpu", PROGRAM, soundlatch_w),	/* Port A write */
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_w),	/* Port A write */
 	DEVCB_HANDLER(scramble_sh_irqtrigger_w),				/* Port B write */
 	DEVCB_HANDLER(scramble_protection_w)					/* Port C write */
 };
@@ -195,7 +195,7 @@ const ppi8255_interface mrkougar_ppi_1_intf =
 	DEVCB_NULL,												/* Port A read */
 	DEVCB_NULL,												/* Port B read */
 	DEVCB_NULL,												/* Port C read */
-	DEVCB_MEMORY_HANDLER("maincpu", PROGRAM, soundlatch_w),	/* Port A write */
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_w),	/* Port A write */
 	DEVCB_HANDLER(mrkougar_sh_irqtrigger_w),				/* Port B write */
 	DEVCB_NULL												/* Port C write */
 };
@@ -207,7 +207,8 @@ DRIVER_INIT( scramble_ppi )
 
 static DRIVER_INIT( scobra )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xa803, 0xa803, FUNC(scrambold_background_enable_w));
+	scramble_state *state = machine.driver_data<scramble_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xa803, 0xa803, write8_delegate(FUNC(scramble_state::scrambold_background_enable_w),state));
 }
 
 #ifdef UNUSED_FUNCTION
@@ -224,14 +225,16 @@ DRIVER_INIT( scramble )
 
 DRIVER_INIT( stratgyx )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xb000, 0xb000, FUNC(scrambold_background_green_w));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xb002, 0xb002, FUNC(scrambold_background_blue_w));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xb00a, 0xb00a, FUNC(scrambold_background_red_w));
+	scramble_state *state = machine.driver_data<scramble_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb000, 0xb000, write8_delegate(FUNC(scramble_state::scrambold_background_green_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb002, 0xb002, write8_delegate(FUNC(scramble_state::scrambold_background_blue_w),state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb00a, 0xb00a, write8_delegate(FUNC(scramble_state::scrambold_background_red_w),state));
 }
 
 DRIVER_INIT( tazmani2 )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xb002, 0xb002, FUNC(scrambold_background_enable_w));
+	scramble_state *state = machine.driver_data<scramble_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb002, 0xb002, write8_delegate(FUNC(scramble_state::scrambold_background_enable_w),state));
 }
 
 DRIVER_INIT( ckongs )
@@ -345,7 +348,8 @@ DRIVER_INIT( cavelon )
 
 DRIVER_INIT( darkplnt )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xb00a, 0xb00a, FUNC(darkplnt_bullet_color_w));
+	scramble_state *state = machine.driver_data<scramble_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb00a, 0xb00a, write8_delegate(FUNC(scramble_state::darkplnt_bullet_color_w),state));
 }
 
 DRIVER_INIT( mimonkey )
@@ -380,18 +384,20 @@ DRIVER_INIT( mimonkey )
 		ROM[A] = ROM[A] ^ xortable[line][col];
 		ctr++;
 	}
-
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xa804, 0xa804, FUNC(scrambold_background_enable_w));
+	scramble_state *state = machine.driver_data<scramble_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xa804, 0xa804, write8_delegate(FUNC(scramble_state::scrambold_background_enable_w),state));
 }
 
 DRIVER_INIT( mimonsco )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xa804, 0xa804, FUNC(scrambold_background_enable_w));
+	scramble_state *state = machine.driver_data<scramble_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xa804, 0xa804, write8_delegate(FUNC(scramble_state::scrambold_background_enable_w),state));
 }
 
 DRIVER_INIT( mimonscr )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x6804, 0x6804, FUNC(scrambold_background_enable_w));
+	scramble_state *state = machine.driver_data<scramble_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x6804, 0x6804, write8_delegate(FUNC(scramble_state::scrambold_background_enable_w),state));
 }
 
 

@@ -1,5 +1,5 @@
 /***********************************************************************
- PGM IGA027A (55857E* type) ARM protection simulations & emulation
+ PGM IGS027A (55857E* type) ARM protection simulations & emulation
    *guess, the part number might not be directly tied to behavior, see note below
 
  these are simulations of the 'kov' type ARM device
@@ -170,21 +170,21 @@ static WRITE32_HANDLER( pgm_arm7_type1_shareram_w )
 /* 55857E? */
 /* Knights of Valor, Photo Y2k */
 /*  no execute only space? */
-static ADDRESS_MAP_START( kov_map, AS_PROGRAM, 16)
+static ADDRESS_MAP_START( kov_map, AS_PROGRAM, 16, pgm_arm_type1_state )
 	AM_IMPORT_FROM(pgm_mem)
 	AM_RANGE(0x100000, 0x4effff) AM_ROMBANK("bank1") /* Game ROM */
-	AM_RANGE(0x4f0000, 0x4f003f) AM_READWRITE(pgm_arm7_type1_ram_r, pgm_arm7_type1_ram_w) /* ARM7 Shared RAM */
-	AM_RANGE(0x500000, 0x500005) AM_READWRITE(pgm_arm7_type1_68k_protlatch_r, pgm_arm7_type1_68k_protlatch_w) /* ARM7 Latch */
+	AM_RANGE(0x4f0000, 0x4f003f) AM_READWRITE_LEGACY(pgm_arm7_type1_ram_r, pgm_arm7_type1_ram_w) /* ARM7 Shared RAM */
+	AM_RANGE(0x500000, 0x500005) AM_READWRITE_LEGACY(pgm_arm7_type1_68k_protlatch_r, pgm_arm7_type1_68k_protlatch_w) /* ARM7 Latch */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( 55857E_arm7_map, AS_PROGRAM, 32 )
+static ADDRESS_MAP_START( 55857E_arm7_map, AS_PROGRAM, 32, pgm_arm_type1_state )
 	AM_RANGE(0x00000000, 0x00003fff) AM_ROM
-	AM_RANGE(0x08100000, 0x083fffff) AM_READ(pgm_arm7_type1_exrom_r) // unpopulated, returns 0 to keep checksum happy
+	AM_RANGE(0x08100000, 0x083fffff) AM_READ_LEGACY(pgm_arm7_type1_exrom_r) // unpopulated, returns 0 to keep checksum happy
 	AM_RANGE(0x10000000, 0x100003ff) AM_RAM // internal ram for asic
-	AM_RANGE(0x40000000, 0x40000003) AM_READWRITE(pgm_arm7_type1_protlatch_r, pgm_arm7_type1_protlatch_w)
+	AM_RANGE(0x40000000, 0x40000003) AM_READWRITE_LEGACY(pgm_arm7_type1_protlatch_r, pgm_arm7_type1_protlatch_w)
 	AM_RANGE(0x40000008, 0x4000000b) AM_WRITENOP // ?
-	AM_RANGE(0x4000000c, 0x4000000f) AM_READ(pgm_arm7_type1_unk_r)
-	AM_RANGE(0x50800000, 0x5080003f) AM_READWRITE(pgm_arm7_type1_shareram_r, pgm_arm7_type1_shareram_w) AM_BASE_MEMBER(pgm_arm_type1_state, m_arm7_shareram)
+	AM_RANGE(0x4000000c, 0x4000000f) AM_READ_LEGACY(pgm_arm7_type1_unk_r)
+	AM_RANGE(0x50800000, 0x5080003f) AM_READWRITE_LEGACY(pgm_arm7_type1_shareram_r, pgm_arm7_type1_shareram_w) AM_BASE(m_arm7_shareram)
 	AM_RANGE(0x50000000, 0x500003ff) AM_RAM // uploads xor table to decrypt 68k rom here
 ADDRESS_MAP_END
 
@@ -193,12 +193,12 @@ ADDRESS_MAP_END
 
 /**************************** SIMULATIONS *****************************/
 
-static ADDRESS_MAP_START( kov_sim_map, AS_PROGRAM, 16)
+static ADDRESS_MAP_START( kov_sim_map, AS_PROGRAM, 16, pgm_arm_type1_state )
 	AM_IMPORT_FROM(pgm_mem)
 	AM_RANGE(0x100000, 0x4effff) AM_ROMBANK("bank1") /* Game ROM */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( cavepgm_mem, AS_PROGRAM, 16)
+static ADDRESS_MAP_START( cavepgm_mem, AS_PROGRAM, 16, pgm_arm_type1_state )
 	AM_IMPORT_FROM(pgm_base_mem)
 	AM_RANGE(0x000000, 0x3fffff) AM_ROM
 	/* protection devices installed (simulated) later */
@@ -229,7 +229,7 @@ MACHINE_CONFIG_START( pgm_arm_type1_cave, pgm_arm_type1_state )
 	MCFG_CPU_PROGRAM_MAP(cavepgm_mem)
 
 	MCFG_MACHINE_START( pgm_arm_type1 )
-	
+
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_REFRESH_RATE(59.17) // verified on pcb
 MACHINE_CONFIG_END

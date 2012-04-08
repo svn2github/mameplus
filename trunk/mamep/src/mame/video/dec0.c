@@ -11,35 +11,35 @@
 
 /******************************************************************************/
 
-WRITE16_HANDLER( dec0_update_sprites_w )
+WRITE16_MEMBER(dec0_state::dec0_update_sprites_w)
 {
-	dec0_state *state = space->machine().driver_data<dec0_state>();
-	memcpy(state->m_buffered_spriteram,state->m_spriteram,0x800);
+	memcpy(m_buffered_spriteram,m_spriteram,0x800);
 }
 
 /******************************************************************************/
 
 static void update_24bitcol(running_machine &machine, int offset)
 {
+	dec0_state *state = machine.driver_data<dec0_state>();
 	int r,g,b;
 
-	r = (machine.generic.paletteram.u16[offset] >> 0) & 0xff;
-	g = (machine.generic.paletteram.u16[offset] >> 8) & 0xff;
-	b = (machine.generic.paletteram2.u16[offset] >> 0) & 0xff;
+	r = (state->m_generic_paletteram_16[offset] >> 0) & 0xff;
+	g = (state->m_generic_paletteram_16[offset] >> 8) & 0xff;
+	b = (state->m_generic_paletteram2_16[offset] >> 0) & 0xff;
 
 	palette_set_color(machine,offset,MAKE_RGB(r,g,b));
 }
 
-WRITE16_HANDLER( dec0_paletteram_rg_w )
+WRITE16_MEMBER(dec0_state::dec0_paletteram_rg_w)
 {
-	COMBINE_DATA(&space->machine().generic.paletteram.u16[offset]);
-	update_24bitcol(space->machine(), offset);
+	COMBINE_DATA(&m_generic_paletteram_16[offset]);
+	update_24bitcol(machine(), offset);
 }
 
-WRITE16_HANDLER( dec0_paletteram_b_w )
+WRITE16_MEMBER(dec0_state::dec0_paletteram_b_w)
 {
-	COMBINE_DATA(&space->machine().generic.paletteram2.u16[offset]);
-	update_24bitcol(space->machine(), offset);
+	COMBINE_DATA(&m_generic_paletteram2_16[offset]);
+	update_24bitcol(machine(), offset);
 }
 
 /******************************************************************************/
@@ -249,10 +249,9 @@ SCREEN_UPDATE_IND16( midres )
 }
 
 
-WRITE16_HANDLER( dec0_priority_w )
+WRITE16_MEMBER(dec0_state::dec0_priority_w)
 {
-	dec0_state *state = space->machine().driver_data<dec0_state>();
-	COMBINE_DATA(&state->m_pri);
+	COMBINE_DATA(&m_pri);
 }
 
 VIDEO_START( dec0_nodma )

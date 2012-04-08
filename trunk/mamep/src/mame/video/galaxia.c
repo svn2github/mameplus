@@ -27,11 +27,11 @@ PALETTE_INIT( galaxia )
 		0, 3, 6, 2,
 		0, 1, 4, 5, // unused?
 		0, 3, 1, 7,
-		
+
 		// sprites
 		0, 4, 3, 6, 1, 5, 2, 7
 	};
-	
+
 	for (int i = 0; i < 0x18; i++)
 		palette_set_color_rgb(machine, i, pal1bit(lut_clr[i] >> 0), pal1bit(lut_clr[i] >> 1), pal1bit(lut_clr[i] >> 2));
 
@@ -58,7 +58,7 @@ PALETTE_INIT( astrowar )
 	// stars/bullets
 	palette_set_color_rgb(machine, STAR_PEN, pal1bit(1), pal1bit(1), pal1bit(1));
 	palette_set_color_rgb(machine, BULLET_PEN, pal1bit(1), pal1bit(1), pal1bit(0));
-	}
+}
 
 static TILE_GET_INFO( get_galaxia_bg_tile_info )
 {
@@ -88,7 +88,7 @@ VIDEO_START( galaxia )
 {
 	galaxia_state *state = machine.driver_data<galaxia_state>();
 	init_common(machine);
-	
+
 	state->m_bg_tilemap = tilemap_create(machine, get_galaxia_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
 	state->m_bg_tilemap->set_transparent_pen(0);
 	state->m_bg_tilemap->set_scroll_cols(8);

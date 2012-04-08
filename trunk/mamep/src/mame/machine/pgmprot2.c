@@ -1,5 +1,5 @@
 /***********************************************************************
- PGM IGA027A (55857F* type) ARM protection emulation
+ PGM IGS027A (55857F* type) ARM protection emulation
   *guess, the part number might not be directly tied to behavior, see note below
 
  these are emulation of the 'kov2' type ARM device
@@ -16,6 +16,7 @@
  ROMs are not yet dumped
 
  Dragon World 2001 (dw2001)
+ Dragon World Pretty Chance (dwpc)
 
  ----
 
@@ -119,21 +120,21 @@ static WRITE16_HANDLER( arm7_ram_w )
 /* 55857F? */
 /* Knights of Valor 2, Martial Masters, DoDonpachi 2 */
 /*  no execute only space? */
-static ADDRESS_MAP_START( kov2_mem, AS_PROGRAM, 16)
+static ADDRESS_MAP_START( kov2_mem, AS_PROGRAM, 16, pgm_arm_type2_state )
 	AM_IMPORT_FROM(pgm_mem)
 	AM_RANGE(0x100000, 0x5fffff) AM_ROMBANK("bank1") /* Game ROM */
-	AM_RANGE(0xd00000, 0xd0ffff) AM_READWRITE(arm7_ram_r, arm7_ram_w) /* ARM7 Shared RAM */
-	AM_RANGE(0xd10000, 0xd10001) AM_READWRITE(arm7_latch_68k_r, arm7_latch_68k_w) /* ARM7 Latch */
+	AM_RANGE(0xd00000, 0xd0ffff) AM_READWRITE_LEGACY(arm7_ram_r, arm7_ram_w) /* ARM7 Shared RAM */
+	AM_RANGE(0xd10000, 0xd10001) AM_READWRITE_LEGACY(arm7_latch_68k_r, arm7_latch_68k_w) /* ARM7 Latch */
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( 55857F_arm7_map, AS_PROGRAM, 32 )
+static ADDRESS_MAP_START( 55857F_arm7_map, AS_PROGRAM, 32, pgm_arm_type2_state )
 	AM_RANGE(0x00000000, 0x00003fff) AM_ROM
 	AM_RANGE(0x08000000, 0x083fffff) AM_ROM AM_REGION("user1", 0)
 	AM_RANGE(0x10000000, 0x100003ff) AM_RAM
-	AM_RANGE(0x18000000, 0x1800ffff) AM_RAM AM_BASE_MEMBER(pgm_arm_type2_state, m_arm_ram)
-	AM_RANGE(0x38000000, 0x38000003) AM_READWRITE(arm7_latch_arm_r, arm7_latch_arm_w) /* 68k Latch */
-	AM_RANGE(0x48000000, 0x4800ffff) AM_READWRITE(arm7_shareram_r, arm7_shareram_w) AM_BASE_MEMBER(pgm_arm_type2_state, m_arm7_shareram)
+	AM_RANGE(0x18000000, 0x1800ffff) AM_RAM AM_BASE(m_arm_ram)
+	AM_RANGE(0x38000000, 0x38000003) AM_READWRITE_LEGACY(arm7_latch_arm_r, arm7_latch_arm_w) /* 68k Latch */
+	AM_RANGE(0x48000000, 0x4800ffff) AM_READWRITE_LEGACY(arm7_shareram_r, arm7_shareram_w) AM_BASE(m_arm7_shareram)
 	AM_RANGE(0x50000000, 0x500003ff) AM_RAM
 ADDRESS_MAP_END
 
@@ -327,6 +328,41 @@ DRIVER_INIT( dw2001 )
 	mem16[0x11eaf8 / 2] = 0x4e71;
 
 	mem16[0x11eb04 / 2] = 0x4e71;
+
+	/* patch ARM area with fake code */
+	UINT16 *temp16 = (UINT16 *)machine.region("prot")->base();
+	temp16[(0x0000)/2] = 0xd088;
+	temp16[(0x0002)/2] = 0xe59f;
+	temp16[(0x0004)/2] = 0x0680;
+	temp16[(0x0006)/2] = 0xe3a0;
+	temp16[(0x0008)/2] = 0x0001;
+	temp16[(0x000a)/2] = 0xe280;
+	temp16[(0x000c)/2] = 0xff10;
+	temp16[(0x000e)/2] = 0xe12f;
+
+	temp16[(0x0090)/2] = 0x0400;
+	temp16[(0x0092)/2] = 0x1000;
+}
+
+DRIVER_INIT( dwpc )
+{
+	//pgm_arm_type2_state *state = machine.driver_data<pgm_arm_type2_state>();
+	UINT16 *mem16 = (UINT16 *)machine.region("maincpu")->base();
+
+	pgm_basic_init(machine);
+	kov2_latch_init(machine);
+	pgm_mm_decrypt(machine); // encryption is the same as martial masters
+
+	mem16[0x11EDDA / 2] = 0x4e71;
+	mem16[0x11EDDC / 2] = 0x4e71;
+
+	mem16[0x11EDE8 / 2] = 0x4e71;
+
+	mem16[0x11EFC4 / 2] = 0x4e71;
+	mem16[0x11EFC6 / 2] = 0x4e71;
+
+	mem16[0x11EFD2 / 2] = 0x4e71;
+
 
 	/* patch ARM area with fake code */
 	UINT16 *temp16 = (UINT16 *)machine.region("prot")->base();

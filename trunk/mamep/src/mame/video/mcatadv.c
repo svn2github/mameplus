@@ -24,12 +24,11 @@ static TILE_GET_INFO( get_mcatadv_tile_info1 )
 	tileinfo.category = pri;
 }
 
-WRITE16_HANDLER( mcatadv_videoram1_w )
+WRITE16_MEMBER(mcatadv_state::mcatadv_videoram1_w)
 {
-	mcatadv_state *state = space->machine().driver_data<mcatadv_state>();
 
-	COMBINE_DATA(&state->m_videoram1[offset]);
-	state->m_tilemap1->mark_tile_dirty(offset / 2);
+	COMBINE_DATA(&m_videoram1[offset]);
+	m_tilemap1->mark_tile_dirty(offset / 2);
 }
 
 static TILE_GET_INFO( get_mcatadv_tile_info2 )
@@ -43,12 +42,11 @@ static TILE_GET_INFO( get_mcatadv_tile_info2 )
 	tileinfo.category = pri;
 }
 
-WRITE16_HANDLER( mcatadv_videoram2_w )
+WRITE16_MEMBER(mcatadv_state::mcatadv_videoram2_w)
 {
-	mcatadv_state *state = space->machine().driver_data<mcatadv_state>();
 
-	COMBINE_DATA(&state->m_videoram2[offset]);
-	state->m_tilemap2->mark_tile_dirty(offset / 2);
+	COMBINE_DATA(&m_videoram2[offset]);
+	m_tilemap2->mark_tile_dirty(offset / 2);
 }
 
 
@@ -56,7 +54,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 {
 	mcatadv_state *state = machine.driver_data<mcatadv_state>();
 	UINT16 *source = state->m_spriteram_old;
-	UINT16 *finish = source + (state->m_spriteram_size / 2) / 2;
+	UINT16 *finish = source + (state->m_spriteram_size / 2) /2;
 	int global_x = state->m_vidregs[0] - 0x184;
 	int global_y = state->m_vidregs[1] - 0x1f1;
 

@@ -1,5 +1,5 @@
 /***********************************************************************
- PGM IGA027A (55857G* type) ARM protection emulation
+ PGM IGS027A (55857G* type) ARM protection emulation
   *guess, the part number might not be directly tied to behavior, see note below
 
  these are emulation of the 'dmnfrnt' type ARM device
@@ -29,7 +29,7 @@
 
  IGS027A type 55857G has also been seen on various IGS gambling boards
  as the main CPU (eg. Haunted House, see igs_m027a)
- 
+
  55857G is also used on the Cave single board PGM systems, but in those
  cases it behaves like the 55857E (pgmprot1.c)
 
@@ -132,24 +132,24 @@ static WRITE32_HANDLER( svg_latch_arm_w )
 /* 55857G? */
 /* Demon Front, The Gladiator, Happy 6-in-1, Spectral Vs. Generation, Killing Blade EX */
 /*  the ones with an EXECUTE ONLY region of ARM space? */
-static ADDRESS_MAP_START( svg_68k_mem, AS_PROGRAM, 16)
+static ADDRESS_MAP_START( svg_68k_mem, AS_PROGRAM, 16, pgm_arm_type3_state )
 	AM_IMPORT_FROM(pgm_mem)
 	AM_RANGE(0x100000, 0x1fffff) AM_ROMBANK("bank1")  /* Game ROM */
 
-	AM_RANGE(0x500000, 0x51ffff) AM_READWRITE(svg_m68k_ram_r, svg_m68k_ram_w)    /* ARM7 Shared RAM */
-	AM_RANGE(0x5c0000, 0x5c0001) AM_READWRITE(svg_68k_nmi_r, svg_68k_nmi_w)      /* ARM7 FIQ */
-	AM_RANGE(0x5c0300, 0x5c0301) AM_READWRITE(svg_latch_68k_r, svg_latch_68k_w) /* ARM7 Latch */
+	AM_RANGE(0x500000, 0x51ffff) AM_READWRITE_LEGACY(svg_m68k_ram_r, svg_m68k_ram_w)    /* ARM7 Shared RAM */
+	AM_RANGE(0x5c0000, 0x5c0001) AM_READWRITE_LEGACY(svg_68k_nmi_r, svg_68k_nmi_w)      /* ARM7 FIQ */
+	AM_RANGE(0x5c0300, 0x5c0301) AM_READWRITE_LEGACY(svg_latch_68k_r, svg_latch_68k_w) /* ARM7 Latch */
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( 55857G_arm7_map, AS_PROGRAM, 32 )
+static ADDRESS_MAP_START( 55857G_arm7_map, AS_PROGRAM, 32, pgm_arm_type3_state )
 	AM_RANGE(0x00000000, 0x00003fff) AM_ROM
 	AM_RANGE(0x08000000, 0x087fffff) AM_ROM AM_REGION("user1", 0)
 	AM_RANGE(0x10000000, 0x100003ff) AM_RAM
-	AM_RANGE(0x18000000, 0x1803ffff) AM_RAM AM_BASE_MEMBER(pgm_arm_type3_state, m_arm_ram)
-	AM_RANGE(0x38000000, 0x3801ffff) AM_READWRITE(svg_arm7_shareram_r, svg_arm7_shareram_w)
-	AM_RANGE(0x48000000, 0x48000003) AM_READWRITE(svg_latch_arm_r, svg_latch_arm_w) /* 68k Latch */
-	AM_RANGE(0x40000018, 0x4000001b) AM_WRITE(svg_arm7_ram_sel_w) /* RAM SEL */
+	AM_RANGE(0x18000000, 0x1803ffff) AM_RAM AM_BASE(m_arm_ram)
+	AM_RANGE(0x38000000, 0x3801ffff) AM_READWRITE_LEGACY(svg_arm7_shareram_r, svg_arm7_shareram_w)
+	AM_RANGE(0x48000000, 0x48000003) AM_READWRITE_LEGACY(svg_latch_arm_r, svg_latch_arm_w) /* 68k Latch */
+	AM_RANGE(0x40000018, 0x4000001b) AM_WRITE_LEGACY(svg_arm7_ram_sel_w) /* RAM SEL */
 	AM_RANGE(0x50000000, 0x500003ff) AM_RAM
 ADDRESS_MAP_END
 
