@@ -17,6 +17,14 @@ public:
 	int m_ball_sizey;
 	int m_handle_joystick;
 	tilemap_t *m_bg_tilemap;
+	DECLARE_READ8_MEMBER(geebee_in_r);
+	DECLARE_WRITE8_MEMBER(geebee_out6_w);
+	DECLARE_WRITE8_MEMBER(geebee_out7_w);
+	DECLARE_READ8_MEMBER(warpwarp_sw_r);
+	DECLARE_WRITE8_MEMBER(warpwarp_out0_w);
+	DECLARE_WRITE8_MEMBER(warpwarp_out3_w);
+	DECLARE_WRITE8_MEMBER(geebee_videoram_w);
+	DECLARE_WRITE8_MEMBER(warpwarp_videoram_w);
 };
 
 
@@ -29,8 +37,6 @@ VIDEO_START( geebee );
 VIDEO_START( navarone );
 VIDEO_START( warpwarp );
 SCREEN_UPDATE_IND16( geebee );
-WRITE8_HANDLER( warpwarp_videoram_w );
-WRITE8_HANDLER( geebee_videoram_w );
 
 
 /*----------- defined in audio/geebee.c -----------*/

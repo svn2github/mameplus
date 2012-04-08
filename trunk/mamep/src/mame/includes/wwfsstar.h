@@ -12,6 +12,12 @@ public:
 	UINT16 *m_bg0_videoram;
 	tilemap_t *m_fg0_tilemap;
 	tilemap_t *m_bg0_tilemap;
+	DECLARE_WRITE16_MEMBER(wwfsstar_scrollwrite);
+	DECLARE_WRITE16_MEMBER(wwfsstar_soundwrite);
+	DECLARE_WRITE16_MEMBER(wwfsstar_flipscreen_w);
+	DECLARE_WRITE16_MEMBER(wwfsstar_irqack_w);
+	DECLARE_WRITE16_MEMBER(wwfsstar_fg0_videoram_w);
+	DECLARE_WRITE16_MEMBER(wwfsstar_bg0_videoram_w);
 };
 
 
@@ -19,5 +25,3 @@ public:
 
 VIDEO_START( wwfsstar );
 SCREEN_UPDATE_IND16( wwfsstar );
-WRITE16_HANDLER( wwfsstar_fg0_videoram_w );
-WRITE16_HANDLER( wwfsstar_bg0_videoram_w );

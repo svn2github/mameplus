@@ -16,6 +16,17 @@ public:
 	UINT8 *m_spriteram;
 	UINT8 *m_spriteram2;
 	UINT8 m_nmi_mask;
+	DECLARE_READ8_MEMBER(zaccaria_dsw_r);
+	DECLARE_WRITE8_MEMBER(sound_command_w);
+	DECLARE_WRITE8_MEMBER(sound1_command_w);
+	DECLARE_READ8_MEMBER(zaccaria_prot1_r);
+	DECLARE_READ8_MEMBER(zaccaria_prot2_r);
+	DECLARE_WRITE8_MEMBER(coin_w);
+	DECLARE_WRITE8_MEMBER(nmi_mask_w);
+	DECLARE_WRITE8_MEMBER(zaccaria_videoram_w);
+	DECLARE_WRITE8_MEMBER(zaccaria_attributes_w);
+	DECLARE_WRITE8_MEMBER(zaccaria_flip_screen_x_w);
+	DECLARE_WRITE8_MEMBER(zaccaria_flip_screen_y_w);
 };
 
 
@@ -23,8 +34,4 @@ public:
 
 PALETTE_INIT( zaccaria );
 VIDEO_START( zaccaria );
-WRITE8_HANDLER( zaccaria_videoram_w );
-WRITE8_HANDLER( zaccaria_attributes_w );
-WRITE8_HANDLER( zaccaria_flip_screen_x_w );
-WRITE8_HANDLER( zaccaria_flip_screen_y_w );
 SCREEN_UPDATE_IND16( zaccaria );

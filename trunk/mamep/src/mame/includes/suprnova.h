@@ -69,6 +69,31 @@ public:
 
 	required_device<cpu_device> m_maincpu;
 	required_shared_ptr<UINT32> m_spriteram;
+	DECLARE_WRITE32_MEMBER(skns_hit_w);
+	DECLARE_WRITE32_MEMBER(skns_hit2_w);
+	DECLARE_READ32_MEMBER(skns_hit_r);
+	DECLARE_WRITE32_MEMBER(skns_io_w);
+	DECLARE_WRITE32_MEMBER(skns_v3t_w);
+	DECLARE_READ32_MEMBER(gutsn_speedup_r);
+	DECLARE_READ32_MEMBER(cyvern_speedup_r);
+	DECLARE_READ32_MEMBER(puzzloopj_speedup_r);
+	DECLARE_READ32_MEMBER(puzzloopa_speedup_r);
+	DECLARE_READ32_MEMBER(puzzloopu_speedup_r);
+	DECLARE_READ32_MEMBER(puzzloope_speedup_r);
+	DECLARE_READ32_MEMBER(senknow_speedup_r);
+	DECLARE_READ32_MEMBER(teljan_speedup_r);
+	DECLARE_READ32_MEMBER(jjparads_speedup_r);
+	DECLARE_READ32_MEMBER(jjparad2_speedup_r);
+	DECLARE_READ32_MEMBER(ryouran_speedup_r);
+	DECLARE_READ32_MEMBER(galpans2_speedup_r);
+	DECLARE_READ32_MEMBER(panicstr_speedup_r);
+	DECLARE_READ32_MEMBER(sengekis_speedup_r);
+	DECLARE_READ32_MEMBER(sengekij_speedup_r);
+	DECLARE_WRITE32_MEMBER(skns_pal_regs_w);
+	DECLARE_WRITE32_MEMBER(skns_palette_ram_w);
+	DECLARE_WRITE32_MEMBER(skns_tilemapA_w);
+	DECLARE_WRITE32_MEMBER(skns_tilemapB_w);
+	DECLARE_WRITE32_MEMBER(skns_v3_regs_w);
 };
 
 
@@ -81,11 +106,6 @@ void skns_draw_sprites(
 	UINT8* gfx_source, size_t gfx_length,
 	UINT32* sprite_regs );
 
-WRITE32_HANDLER ( skns_tilemapA_w );
-WRITE32_HANDLER ( skns_tilemapB_w );
-WRITE32_HANDLER ( skns_v3_regs_w );
-WRITE32_HANDLER ( skns_pal_regs_w );
-WRITE32_HANDLER ( skns_palette_ram_w );
 VIDEO_START(skns);
 VIDEO_RESET(skns);
 SCREEN_VBLANK(skns);

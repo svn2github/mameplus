@@ -13,12 +13,16 @@ public:
 
 	UINT8 m_main_irq_mask;
 	UINT8 m_sound_irq_mask;
+	DECLARE_READ8_MEMBER(ports_r);
+	DECLARE_WRITE8_MEMBER(subcpu_reset_w);
+	DECLARE_WRITE8_MEMBER(main_irq_mask_w);
+	DECLARE_WRITE8_MEMBER(sound_irq_mask_w);
+	DECLARE_WRITE8_MEMBER(wiping_flipscreen_w);
 };
 
 
 /*----------- defined in video/wiping.c -----------*/
 
-WRITE8_HANDLER( wiping_flipscreen_w );
 PALETTE_INIT( wiping );
 SCREEN_UPDATE_IND16( wiping );
 

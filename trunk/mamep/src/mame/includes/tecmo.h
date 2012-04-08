@@ -18,17 +18,24 @@ public:
 	UINT8 m_bgscroll[3];
 	UINT8 *m_spriteram;
 	size_t m_spriteram_size;
+	DECLARE_WRITE8_MEMBER(tecmo_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(tecmo_sound_command_w);
+	DECLARE_WRITE8_MEMBER(tecmo_adpcm_end_w);
+	DECLARE_READ8_MEMBER(tecmo_dswa_l_r);
+	DECLARE_READ8_MEMBER(tecmo_dswa_h_r);
+	DECLARE_READ8_MEMBER(tecmo_dswb_l_r);
+	DECLARE_READ8_MEMBER(tecmo_dswb_h_r);
+	DECLARE_WRITE8_MEMBER(tecmo_txvideoram_w);
+	DECLARE_WRITE8_MEMBER(tecmo_fgvideoram_w);
+	DECLARE_WRITE8_MEMBER(tecmo_bgvideoram_w);
+	DECLARE_WRITE8_MEMBER(tecmo_fgscroll_w);
+	DECLARE_WRITE8_MEMBER(tecmo_bgscroll_w);
+	DECLARE_WRITE8_MEMBER(tecmo_flipscreen_w);
 };
 
 
 /*----------- defined in video/tecmo.c -----------*/
 
-WRITE8_HANDLER( tecmo_txvideoram_w );
-WRITE8_HANDLER( tecmo_fgvideoram_w );
-WRITE8_HANDLER( tecmo_bgvideoram_w );
-WRITE8_HANDLER( tecmo_fgscroll_w );
-WRITE8_HANDLER( tecmo_bgscroll_w );
-WRITE8_HANDLER( tecmo_flipscreen_w );
 
 VIDEO_START( tecmo );
 SCREEN_UPDATE_IND16( tecmo );

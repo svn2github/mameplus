@@ -25,15 +25,18 @@ public:
 
 	/* devices */
 	device_t *m_audiocpu;
+	DECLARE_WRITE8_MEMBER(sonson_sh_irqtrigger_w);
+	DECLARE_WRITE8_MEMBER(sonson_coin1_counter_w);
+	DECLARE_WRITE8_MEMBER(sonson_coin2_counter_w);
+	DECLARE_WRITE8_MEMBER(sonson_videoram_w);
+	DECLARE_WRITE8_MEMBER(sonson_colorram_w);
+	DECLARE_WRITE8_MEMBER(sonson_scrollx_w);
+	DECLARE_WRITE8_MEMBER(sonson_flipscreen_w);
 };
 
 
 /*----------- defined in video/sonson.c -----------*/
 
-WRITE8_HANDLER( sonson_videoram_w );
-WRITE8_HANDLER( sonson_colorram_w );
-WRITE8_HANDLER( sonson_scrollx_w );
-WRITE8_HANDLER( sonson_flipscreen_w );
 
 PALETTE_INIT( sonson );
 VIDEO_START( sonson );

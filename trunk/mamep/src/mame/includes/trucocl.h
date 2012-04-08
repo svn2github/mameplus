@@ -11,13 +11,14 @@ public:
 	tilemap_t *m_bg_tilemap;
 
 	UINT8 m_irq_mask;
+	DECLARE_WRITE8_MEMBER(irq_enable_w);
+	DECLARE_WRITE8_MEMBER(trucocl_videoram_w);
+	DECLARE_WRITE8_MEMBER(trucocl_colorram_w);
 };
 
 
 /*----------- defined in video/trucocl.c -----------*/
 
-WRITE8_HANDLER( trucocl_videoram_w );
-WRITE8_HANDLER( trucocl_colorram_w );
 PALETTE_INIT( trucocl );
 VIDEO_START( trucocl );
 SCREEN_UPDATE_IND16( trucocl );

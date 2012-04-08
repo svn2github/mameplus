@@ -79,6 +79,17 @@ public:
 	UINT8		m_buckrog_command;
 	UINT8		m_buckrog_myship;
 	int m_last_sound_a;
+	DECLARE_READ8_MEMBER(turbo_8279_r);
+	DECLARE_WRITE8_MEMBER(turbo_8279_w);
+	DECLARE_READ8_MEMBER(turbo_collision_r);
+	DECLARE_WRITE8_MEMBER(turbo_collision_clear_w);
+	DECLARE_WRITE8_MEMBER(turbo_analog_reset_w);
+	DECLARE_WRITE8_MEMBER(turbo_coin_and_lamp_w);
+	DECLARE_READ8_MEMBER(buckrog_cpu2_command_r);
+	DECLARE_READ8_MEMBER(buckrog_port_2_r);
+	DECLARE_READ8_MEMBER(buckrog_port_3_r);
+	DECLARE_WRITE8_MEMBER(turbo_videoram_w);
+	DECLARE_WRITE8_MEMBER(buckrog_bitmap_w);
 };
 
 
@@ -113,5 +124,3 @@ PALETTE_INIT( buckrog );
 VIDEO_START( buckrog );
 SCREEN_UPDATE_IND16( buckrog );
 
-WRITE8_HANDLER( turbo_videoram_w );
-WRITE8_HANDLER( buckrog_bitmap_w );

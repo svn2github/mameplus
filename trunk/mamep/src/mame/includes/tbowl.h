@@ -19,23 +19,33 @@ public:
 	UINT16 m_yscroll;
 	UINT16 m_bg2xscroll;
 	UINT16 m_bg2yscroll;
+	DECLARE_WRITE8_MEMBER(tbowl_coin_counter_w);
+	DECLARE_WRITE8_MEMBER(tbowlb_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(tbowlc_bankswitch_w);
+	DECLARE_READ8_MEMBER(shared_r);
+	DECLARE_WRITE8_MEMBER(shared_w);
+	DECLARE_WRITE8_MEMBER(tbowl_sound_command_w);
+	DECLARE_WRITE8_MEMBER(tbowl_trigger_nmi);
+	DECLARE_WRITE8_MEMBER(tbowl_adpcm_start_w);
+	DECLARE_WRITE8_MEMBER(tbowl_adpcm_end_w);
+	DECLARE_WRITE8_MEMBER(tbowl_adpcm_vol_w);
+	DECLARE_WRITE8_MEMBER(tbowl_txvideoram_w);
+	DECLARE_WRITE8_MEMBER(tbowl_bg2videoram_w);
+	DECLARE_WRITE8_MEMBER(tbowl_bgxscroll_lo);
+	DECLARE_WRITE8_MEMBER(tbowl_bgxscroll_hi);
+	DECLARE_WRITE8_MEMBER(tbowl_bgyscroll_lo);
+	DECLARE_WRITE8_MEMBER(tbowl_bgyscroll_hi);
+	DECLARE_WRITE8_MEMBER(tbowl_bgvideoram_w);
+	DECLARE_WRITE8_MEMBER(tbowl_bg2xscroll_lo);
+	DECLARE_WRITE8_MEMBER(tbowl_bg2xscroll_hi);
+	DECLARE_WRITE8_MEMBER(tbowl_bg2yscroll_lo);
+	DECLARE_WRITE8_MEMBER(tbowl_bg2yscroll_hi);
 };
 
 
 /*----------- defined in video/tbowl.c -----------*/
 
-WRITE8_HANDLER( tbowl_bg2videoram_w );
-WRITE8_HANDLER( tbowl_bgvideoram_w );
-WRITE8_HANDLER( tbowl_txvideoram_w );
 
-WRITE8_HANDLER( tbowl_bg2xscroll_lo );
-WRITE8_HANDLER( tbowl_bg2xscroll_hi );
-WRITE8_HANDLER( tbowl_bg2yscroll_lo );
-WRITE8_HANDLER( tbowl_bg2yscroll_hi );
-WRITE8_HANDLER( tbowl_bgxscroll_lo );
-WRITE8_HANDLER( tbowl_bgxscroll_hi );
-WRITE8_HANDLER( tbowl_bgyscroll_lo );
-WRITE8_HANDLER( tbowl_bgyscroll_hi );
 
 VIDEO_START( tbowl );
 SCREEN_UPDATE_IND16( tbowl_left );

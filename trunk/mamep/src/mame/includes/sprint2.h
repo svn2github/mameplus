@@ -36,6 +36,23 @@ public:
 	tilemap_t* m_bg_tilemap;
 	bitmap_ind16 m_helper;
 	int m_collision[2];
+	DECLARE_READ8_MEMBER(sprint2_wram_r);
+	DECLARE_READ8_MEMBER(sprint2_dip_r);
+	DECLARE_READ8_MEMBER(sprint2_input_A_r);
+	DECLARE_READ8_MEMBER(sprint2_input_B_r);
+	DECLARE_READ8_MEMBER(sprint2_sync_r);
+	DECLARE_READ8_MEMBER(sprint2_steering1_r);
+	DECLARE_READ8_MEMBER(sprint2_steering2_r);
+	DECLARE_WRITE8_MEMBER(sprint2_steering_reset1_w);
+	DECLARE_WRITE8_MEMBER(sprint2_steering_reset2_w);
+	DECLARE_WRITE8_MEMBER(sprint2_wram_w);
+	DECLARE_WRITE8_MEMBER(sprint2_lamp1_w);
+	DECLARE_WRITE8_MEMBER(sprint2_lamp2_w);
+	DECLARE_READ8_MEMBER(sprint2_collision1_r);
+	DECLARE_READ8_MEMBER(sprint2_collision2_r);
+	DECLARE_WRITE8_MEMBER(sprint2_collision_reset1_w);
+	DECLARE_WRITE8_MEMBER(sprint2_collision_reset2_w);
+	DECLARE_WRITE8_MEMBER(sprint2_video_ram_w);
 };
 
 
@@ -48,12 +65,7 @@ DISCRETE_SOUND_EXTERN( dominos );
 
 /*----------- defined in video/sprint2.c -----------*/
 
-READ8_HANDLER( sprint2_collision1_r );
-READ8_HANDLER( sprint2_collision2_r );
 
-WRITE8_HANDLER( sprint2_collision_reset1_w );
-WRITE8_HANDLER( sprint2_collision_reset2_w );
-WRITE8_HANDLER( sprint2_video_ram_w );
 
 PALETTE_INIT( sprint2 );
 SCREEN_UPDATE_IND16( sprint2 );

@@ -43,16 +43,26 @@ public:
 	device_t *m_subcpu;
 	device_t *m_tc0100scn;
 	device_t *m_tc0140syt;
+	DECLARE_READ16_MEMBER(sharedram_r);
+	DECLARE_WRITE16_MEMBER(sharedram_w);
+	DECLARE_WRITE16_MEMBER(cpua_ctrl_w);
+	DECLARE_READ16_MEMBER(lan_status_r);
+	DECLARE_WRITE16_MEMBER(rotate_port_w);
+	DECLARE_READ16_MEMBER(wgp_adinput_r);
+	DECLARE_WRITE16_MEMBER(wgp_adinput_w);
+	DECLARE_WRITE8_MEMBER(sound_bankswitch_w);
+	DECLARE_WRITE16_MEMBER(wgp_sound_w);
+	DECLARE_READ16_MEMBER(wgp_sound_r);
+	DECLARE_READ16_MEMBER(wgp_pivram_word_r);
+	DECLARE_WRITE16_MEMBER(wgp_pivram_word_w);
+	DECLARE_READ16_MEMBER(wgp_piv_ctrl_word_r);
+	DECLARE_WRITE16_MEMBER(wgp_piv_ctrl_word_w);
 };
 
 
 /*----------- defined in video/wgp.c -----------*/
 
-READ16_HANDLER ( wgp_pivram_word_r );
-WRITE16_HANDLER( wgp_pivram_word_w );
 
-READ16_HANDLER ( wgp_piv_ctrl_word_r );
-WRITE16_HANDLER( wgp_piv_ctrl_word_w );
 
 VIDEO_START( wgp );
 VIDEO_START( wgp2 );

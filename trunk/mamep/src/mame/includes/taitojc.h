@@ -60,15 +60,53 @@ public:
 	double m_speed_meter;
 	double m_brake_meter;
 	UINT32 m_outputs;
+	DECLARE_READ32_MEMBER(taitojc_palette_r);
+	DECLARE_WRITE32_MEMBER(taitojc_palette_w);
+	DECLARE_READ32_MEMBER(jc_control_r);
+	DECLARE_WRITE32_MEMBER(jc_coin_counters_w);
+	DECLARE_WRITE32_MEMBER(jc_control_w);
+	DECLARE_WRITE32_MEMBER(jc_control1_w);
+	DECLARE_READ32_MEMBER(mcu_comm_r);
+	DECLARE_WRITE32_MEMBER(mcu_comm_w);
+	DECLARE_READ8_MEMBER(jc_pcbid_r);
+	DECLARE_READ32_MEMBER(dsp_shared_r);
+	DECLARE_WRITE32_MEMBER(dsp_shared_w);
+	DECLARE_READ32_MEMBER(f3_share_r);
+	DECLARE_WRITE32_MEMBER(f3_share_w);
+	DECLARE_WRITE32_MEMBER(jc_meters_w);
+	DECLARE_READ32_MEMBER(jc_lan_r);
+	DECLARE_READ8_MEMBER(hc11_comm_r);
+	DECLARE_WRITE8_MEMBER(hc11_comm_w);
+	DECLARE_READ8_MEMBER(hc11_data_r);
+	DECLARE_WRITE8_MEMBER(hc11_data_w);
+	DECLARE_READ8_MEMBER(hc11_analog_r);
+	DECLARE_READ16_MEMBER(dsp_rom_r);
+	DECLARE_WRITE16_MEMBER(dsp_rom_w);
+	DECLARE_WRITE16_MEMBER(dsp_texture_w);
+	DECLARE_READ16_MEMBER(dsp_texaddr_r);
+	DECLARE_WRITE16_MEMBER(dsp_texaddr_w);
+	DECLARE_WRITE16_MEMBER(dsp_polygon_fifo_w);
+	DECLARE_READ16_MEMBER(dsp_unk_r);
+	DECLARE_WRITE16_MEMBER(dsp_viewport_w);
+	DECLARE_WRITE16_MEMBER(dsp_projection_w);
+	DECLARE_READ16_MEMBER(dsp_projection_r);
+	DECLARE_WRITE16_MEMBER(dsp_unk2_w);
+	DECLARE_WRITE16_MEMBER(dsp_intersection_w);
+	DECLARE_READ16_MEMBER(dsp_intersection_r);
+	DECLARE_READ16_MEMBER(dsp_to_main_r);
+	DECLARE_WRITE16_MEMBER(dsp_to_main_w);
+	DECLARE_READ16_MEMBER(taitojc_dsp_idle_skip_r);
+	DECLARE_READ16_MEMBER(dendego2_dsp_idle_skip_r);
+	DECLARE_WRITE16_MEMBER(dsp_idle_skip_w);
+	DECLARE_READ32_MEMBER(taitojc_tile_r);
+	DECLARE_READ32_MEMBER(taitojc_char_r);
+	DECLARE_WRITE32_MEMBER(taitojc_tile_w);
+	DECLARE_WRITE32_MEMBER(taitojc_char_w);
 };
 
 
 /*----------- defined in video/taitojc.c -----------*/
 
-READ32_HANDLER(taitojc_tile_r);
-WRITE32_HANDLER(taitojc_tile_w);
-READ32_HANDLER(taitojc_char_r);
-WRITE32_HANDLER(taitojc_char_w);
 void taitojc_clear_frame(running_machine &machine);
 void taitojc_render_polygons(running_machine &machine, UINT16 *polygon_fifo, int length);
 

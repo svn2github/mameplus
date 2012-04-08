@@ -19,13 +19,17 @@ public:
 	tilemap_t *m_fg_tilemap;
 
 	UINT8 m_sub_irq_mask;
+	DECLARE_READ8_MEMBER(tp84_sh_timer_r);
+	DECLARE_WRITE8_MEMBER(tp84_filter_w);
+	DECLARE_WRITE8_MEMBER(tp84_sh_irqtrigger_w);
+	DECLARE_WRITE8_MEMBER(sub_irq_mask_w);
+	DECLARE_WRITE8_MEMBER(tp84_spriteram_w);
+	DECLARE_READ8_MEMBER(tp84_scanline_r);
 };
 
 
 /*----------- defined in video/tp84.c -----------*/
 
-WRITE8_HANDLER( tp84_spriteram_w );
-READ8_HANDLER( tp84_scanline_r );
 
 PALETTE_INIT( tp84 );
 VIDEO_START( tp84 );

@@ -37,16 +37,27 @@ public:
 	struct sprite *m_sprite_list;
 	struct sprite **m_spr_ptr_list;
 	UINT16 *m_spriteram;
+	DECLARE_READ16_MEMBER(wecleman_protection_r);
+	DECLARE_WRITE16_MEMBER(wecleman_protection_w);
+	DECLARE_WRITE16_MEMBER(irqctrl_w);
+	DECLARE_WRITE16_MEMBER(selected_ip_w);
+	DECLARE_READ16_MEMBER(selected_ip_r);
+	DECLARE_WRITE16_MEMBER(blitter_w);
+	DECLARE_READ8_MEMBER(multiply_r);
+	DECLARE_WRITE8_MEMBER(multiply_w);
+	DECLARE_WRITE16_MEMBER(hotchase_soundlatch_w);
+	DECLARE_WRITE8_MEMBER(hotchase_sound_control_w);
+	DECLARE_WRITE16_MEMBER(wecleman_soundlatch_w);
+	DECLARE_WRITE16_MEMBER(wecleman_txtram_w);
+	DECLARE_WRITE16_MEMBER(wecleman_pageram_w);
+	DECLARE_WRITE16_MEMBER(wecleman_videostatus_w);
+	DECLARE_WRITE16_MEMBER(hotchase_paletteram16_SBGRBBBBGGGGRRRR_word_w);
+	DECLARE_WRITE16_MEMBER(wecleman_paletteram16_SSSSBBBBGGGGRRRR_word_w);
 };
 
 
 /*----------- defined in video/wecleman.c -----------*/
 
-WRITE16_HANDLER( hotchase_paletteram16_SBGRBBBBGGGGRRRR_word_w );
-WRITE16_HANDLER( wecleman_paletteram16_SSSSBBBBGGGGRRRR_word_w );
-WRITE16_HANDLER( wecleman_videostatus_w );
-WRITE16_HANDLER( wecleman_pageram_w );
-WRITE16_HANDLER( wecleman_txtram_w );
 SCREEN_UPDATE_RGB32( wecleman );
 VIDEO_START( wecleman );
 SCREEN_UPDATE_IND16( hotchase );

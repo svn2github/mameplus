@@ -20,12 +20,16 @@ public:
 
 	/* devices */
 	cpu_device *m_maincpu;
+	DECLARE_WRITE8_MEMBER(irq_enable_w);
+	DECLARE_WRITE8_MEMBER(tutankhm_bankselect_w);
+	DECLARE_WRITE8_MEMBER(sound_mute_w);
+	DECLARE_WRITE8_MEMBER(tutankhm_coin_counter_w);
+	DECLARE_WRITE8_MEMBER(tutankhm_flip_screen_x_w);
+	DECLARE_WRITE8_MEMBER(tutankhm_flip_screen_y_w);
 };
 
 
 /*----------- defined in video/tutankhm.c -----------*/
 
-WRITE8_HANDLER( tutankhm_flip_screen_x_w );
-WRITE8_HANDLER( tutankhm_flip_screen_y_w );
 
 SCREEN_UPDATE_RGB32( tutankhm );

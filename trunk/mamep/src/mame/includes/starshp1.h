@@ -60,16 +60,19 @@ public:
 	UINT16 *m_LSFR;
 	bitmap_ind16 m_helper;
 	tilemap_t *m_bg_tilemap;
+	DECLARE_WRITE8_MEMBER(starshp1_collision_reset_w);
+	DECLARE_WRITE8_MEMBER(starshp1_analog_in_w);
+	DECLARE_WRITE8_MEMBER(starshp1_misc_w);
+	DECLARE_READ8_MEMBER(starshp1_rng_r);
+	DECLARE_WRITE8_MEMBER(starshp1_ssadd_w);
+	DECLARE_WRITE8_MEMBER(starshp1_sspic_w);
+	DECLARE_WRITE8_MEMBER(starshp1_playfield_w);
 };
 
 
 /*----------- defined in video/starshp1.c -----------*/
 
-READ8_HANDLER( starshp1_rng_r );
 
-WRITE8_HANDLER( starshp1_sspic_w );
-WRITE8_HANDLER( starshp1_ssadd_w );
-WRITE8_HANDLER( starshp1_playfield_w );
 
 PALETTE_INIT( starshp1 );
 SCREEN_UPDATE_IND16( starshp1 );

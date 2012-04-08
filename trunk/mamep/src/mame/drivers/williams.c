@@ -509,10 +509,10 @@
  *
  *************************************/
 
-static ADDRESS_MAP_START( defender_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0xbfff) AM_RAM AM_BASE_MEMBER(williams_state, m_videoram)
+static ADDRESS_MAP_START( defender_map, AS_PROGRAM, 8, williams_state )
+	AM_RANGE(0x0000, 0xbfff) AM_RAM AM_BASE(m_videoram)
 	/* range from 0xc000-0xcfff is mapped programmatically below */
-	AM_RANGE(0xc000, 0xc00f) AM_BASE_GENERIC(paletteram)
+	AM_RANGE(0xc000, 0xc00f) AM_SHARE("paletteram")
 	AM_RANGE(0xc400, 0xc4ff) AM_SHARE("nvram")
 	AM_RANGE(0xc000, 0xcfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xd000, 0xdfff) AM_WRITE(defender_bank_select_w)
@@ -522,20 +522,21 @@ ADDRESS_MAP_END
 
 void defender_install_io_space(address_space *space)
 {
+	williams_state *state = space->machine().driver_data<williams_state>();
 	pia6821_device *pia_0 = space->machine().device<pia6821_device>("pia_0");
 	pia6821_device *pia_1 = space->machine().device<pia6821_device>("pia_1");
 
 	/* this routine dynamically installs the memory mapped above from c000-cfff */
 	space->install_write_bank    (0xc000, 0xc00f, 0, 0x03e0, "bank4");
-	space->install_legacy_write_handler    (0xc010, 0xc01f, 0, 0x03e0, FUNC(defender_video_control_w));
-	space->install_legacy_write_handler    (0xc3ff, 0xc3ff, FUNC(williams_watchdog_reset_w));
+	space->install_write_handler    (0xc010, 0xc01f, 0, 0x03e0, write8_delegate(FUNC(williams_state::defender_video_control_w),state));
+	space->install_write_handler    (0xc3ff, 0xc3ff, write8_delegate(FUNC(williams_state::williams_watchdog_reset_w),state));
 	space->install_read_bank(0xc400, 0xc4ff, 0, 0x0300, "bank3");
-	space->install_legacy_write_handler(0xc400, 0xc4ff, 0, 0x0300, FUNC(williams_cmos_w));
-	space->install_legacy_read_handler     (0xc800, 0xcbff, 0, 0x03e0, FUNC(williams_video_counter_r));
+	space->install_write_handler(0xc400, 0xc4ff, 0, 0x0300, write8_delegate(FUNC(williams_state::williams_cmos_w),state));
+	space->install_read_handler     (0xc800, 0xcbff, 0, 0x03e0, read8_delegate(FUNC(williams_state::williams_video_counter_r),state));
 	space->install_readwrite_handler(0xcc00, 0xcc03, 0, 0x03e0, read8_delegate(FUNC(pia6821_device::read), pia_1), write8_delegate(FUNC(pia6821_device::write), pia_1));
 	space->install_readwrite_handler(0xcc04, 0xcc07, 0, 0x03e0, read8_delegate(FUNC(pia6821_device::read), pia_0), write8_delegate(FUNC(pia6821_device::write), pia_0));
 	memory_set_bankptr(space->machine(), "bank3", space->machine().driver_data<williams_state>()->m_nvram);
-	memory_set_bankptr(space->machine(), "bank4", space->machine().generic.paletteram.v);
+	memory_set_bankptr(space->machine(), "bank4", space->machine().driver_data<williams_state>()->m_generic_paletteram_8);
 }
 
 
@@ -546,12 +547,12 @@ void defender_install_io_space(address_space *space)
  *
  *************************************/
 
-static ADDRESS_MAP_START( williams_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x8fff) AM_READ_BANK("bank1") AM_WRITEONLY AM_BASE_MEMBER(williams_state, m_videoram)
+static ADDRESS_MAP_START( williams_map, AS_PROGRAM, 8, williams_state )
+	AM_RANGE(0x0000, 0x8fff) AM_READ_BANK("bank1") AM_WRITEONLY AM_BASE(m_videoram)
 	AM_RANGE(0x9000, 0xbfff) AM_RAM
-	AM_RANGE(0xc000, 0xc00f) AM_MIRROR(0x03f0) AM_WRITEONLY AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0xc804, 0xc807) AM_MIRROR(0x00f0) AM_DEVREADWRITE_MODERN("pia_0", pia6821_device, read, write)
-	AM_RANGE(0xc80c, 0xc80f) AM_MIRROR(0x00f0) AM_DEVREADWRITE_MODERN("pia_1", pia6821_device, read, write)
+	AM_RANGE(0xc000, 0xc00f) AM_MIRROR(0x03f0) AM_WRITEONLY AM_SHARE("paletteram")
+	AM_RANGE(0xc804, 0xc807) AM_MIRROR(0x00f0) AM_DEVREADWRITE("pia_0", pia6821_device, read, write)
+	AM_RANGE(0xc80c, 0xc80f) AM_MIRROR(0x00f0) AM_DEVREADWRITE("pia_1", pia6821_device, read, write)
 	AM_RANGE(0xc900, 0xc9ff) AM_WRITE(williams_vram_select_w)
 	AM_RANGE(0xca00, 0xca07) AM_MIRROR(0x00f8) AM_WRITE(williams_blitter_w)
 	AM_RANGE(0xcb00, 0xcbff) AM_READ(williams_video_counter_r)
@@ -561,12 +562,12 @@ static ADDRESS_MAP_START( williams_map, AS_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( williams_extra_ram_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x8fff) AM_READ_BANK("bank1") AM_WRITEONLY AM_BASE_MEMBER(williams_state, m_videoram)
+static ADDRESS_MAP_START( williams_extra_ram_map, AS_PROGRAM, 8, williams_state )
+	AM_RANGE(0x0000, 0x8fff) AM_READ_BANK("bank1") AM_WRITEONLY AM_BASE(m_videoram)
 	AM_RANGE(0x9000, 0xbfff) AM_RAM
-	AM_RANGE(0xc000, 0xc00f) AM_MIRROR(0x03f0) AM_WRITEONLY AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0xc804, 0xc807) AM_MIRROR(0x00f0) AM_DEVREADWRITE_MODERN("pia_0", pia6821_device, read, write)
-	AM_RANGE(0xc80c, 0xc80f) AM_MIRROR(0x00f0) AM_DEVREADWRITE_MODERN("pia_1", pia6821_device, read, write)
+	AM_RANGE(0xc000, 0xc00f) AM_MIRROR(0x03f0) AM_WRITEONLY AM_SHARE("paletteram")
+	AM_RANGE(0xc804, 0xc807) AM_MIRROR(0x00f0) AM_DEVREADWRITE("pia_0", pia6821_device, read, write)
+	AM_RANGE(0xc80c, 0xc80f) AM_MIRROR(0x00f0) AM_DEVREADWRITE("pia_1", pia6821_device, read, write)
 	AM_RANGE(0xc900, 0xc9ff) AM_WRITE(sinistar_vram_select_w)
 	AM_RANGE(0xca00, 0xca07) AM_MIRROR(0x00f8) AM_WRITE(williams_blitter_w)
 	AM_RANGE(0xcb00, 0xcbff) AM_READ(williams_video_counter_r)
@@ -584,15 +585,15 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( blaster_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x3fff) AM_READ_BANK("bank1") AM_WRITEONLY AM_BASE_MEMBER(williams_state, m_videoram)
+static ADDRESS_MAP_START( blaster_map, AS_PROGRAM, 8, williams_state )
+	AM_RANGE(0x0000, 0x3fff) AM_READ_BANK("bank1") AM_WRITEONLY AM_BASE(m_videoram)
 	AM_RANGE(0x4000, 0x8fff) AM_READ_BANK("bank2") AM_WRITEONLY
-	AM_RANGE(0xbb00, 0xbbff) AM_WRITEONLY AM_BASE_MEMBER(williams_state, m_blaster_palette_0)
-	AM_RANGE(0xbc00, 0xbcff) AM_WRITEONLY AM_BASE_MEMBER(williams_state, m_blaster_scanline_control)
+	AM_RANGE(0xbb00, 0xbbff) AM_WRITEONLY AM_BASE(m_blaster_palette_0)
+	AM_RANGE(0xbc00, 0xbcff) AM_WRITEONLY AM_BASE(m_blaster_scanline_control)
 	AM_RANGE(0x9000, 0xbfff) AM_RAM
-	AM_RANGE(0xc000, 0xc00f) AM_MIRROR(0x03f0) AM_WRITEONLY AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0xc804, 0xc807) AM_MIRROR(0x00f0) AM_DEVREADWRITE_MODERN("pia_0", pia6821_device, read, write)
-	AM_RANGE(0xc80c, 0xc80f) AM_MIRROR(0x00f0) AM_DEVREADWRITE_MODERN("pia_1", pia6821_device, read, write)
+	AM_RANGE(0xc000, 0xc00f) AM_MIRROR(0x03f0) AM_WRITEONLY AM_SHARE("paletteram")
+	AM_RANGE(0xc804, 0xc807) AM_MIRROR(0x00f0) AM_DEVREADWRITE("pia_0", pia6821_device, read, write)
+	AM_RANGE(0xc80c, 0xc80f) AM_MIRROR(0x00f0) AM_DEVREADWRITE("pia_1", pia6821_device, read, write)
 	AM_RANGE(0xc900, 0xc93f) AM_WRITE(blaster_vram_select_w)
 	AM_RANGE(0xc940, 0xc97f) AM_WRITE(blaster_remap_select_w)
 	AM_RANGE(0xc980, 0xc9bf) AM_WRITE(blaster_bank_select_w)
@@ -612,15 +613,15 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( williams2_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x7fff) AM_READ_BANK("bank1") AM_WRITEONLY AM_BASE_MEMBER(williams_state, m_videoram)
+static ADDRESS_MAP_START( williams2_map, AS_PROGRAM, 8, williams_state )
+	AM_RANGE(0x0000, 0x7fff) AM_READ_BANK("bank1") AM_WRITEONLY AM_BASE(m_videoram)
 	AM_RANGE(0x8000, 0xbfff) AM_RAM
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(williams2_tileram_w) AM_BASE_MEMBER(williams_state, m_williams2_tileram)
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(williams2_tileram_w) AM_BASE(m_williams2_tileram)
 	AM_RANGE(0xc800, 0xc87f) AM_WRITE(williams2_bank_select_w)
 	AM_RANGE(0xc880, 0xc887) AM_MIRROR(0x0078) AM_WRITE(williams_blitter_w)
 	AM_RANGE(0xc900, 0xc97f) AM_WRITE(williams2_watchdog_reset_w)
-	AM_RANGE(0xc980, 0xc983) AM_MIRROR(0x0070) AM_DEVREADWRITE_MODERN("pia_1", pia6821_device, read, write)
-	AM_RANGE(0xc984, 0xc987) AM_MIRROR(0x0070) AM_DEVREADWRITE_MODERN("pia_0", pia6821_device, read, write)
+	AM_RANGE(0xc980, 0xc983) AM_MIRROR(0x0070) AM_DEVREADWRITE("pia_1", pia6821_device, read, write)
+	AM_RANGE(0xc984, 0xc987) AM_MIRROR(0x0070) AM_DEVREADWRITE("pia_0", pia6821_device, read, write)
 	AM_RANGE(0xc98c, 0xc98f) AM_MIRROR(0x0070) AM_WRITE(williams2_7segment_w)
 	AM_RANGE(0xcb00, 0xcb1f) AM_WRITE(williams2_fg_select_w)
 	AM_RANGE(0xcb20, 0xcb3f) AM_WRITE(williams2_bg_select_w)
@@ -634,15 +635,15 @@ static ADDRESS_MAP_START( williams2_map, AS_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( williams2_extra_ram_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x7fff) AM_READ_BANK("bank1") AM_WRITEONLY AM_BASE_MEMBER(williams_state, m_videoram)
+static ADDRESS_MAP_START( williams2_extra_ram_map, AS_PROGRAM, 8, williams_state )
+	AM_RANGE(0x0000, 0x7fff) AM_READ_BANK("bank1") AM_WRITEONLY AM_BASE(m_videoram)
 	AM_RANGE(0x8000, 0xbfff) AM_RAM
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(williams2_tileram_w) AM_BASE_MEMBER(williams_state, m_williams2_tileram)
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(williams2_tileram_w) AM_BASE(m_williams2_tileram)
 	AM_RANGE(0xc800, 0xc87f) AM_WRITE(williams2_bank_select_w)
 	AM_RANGE(0xc880, 0xc887) AM_MIRROR(0x0078) AM_WRITE(williams_blitter_w)
 	AM_RANGE(0xc900, 0xc97f) AM_WRITE(williams2_watchdog_reset_w)
-	AM_RANGE(0xc980, 0xc983) AM_MIRROR(0x0070) AM_DEVREADWRITE_MODERN("pia_1", pia6821_device, read, write)
-	AM_RANGE(0xc984, 0xc987) AM_MIRROR(0x0070) AM_DEVREADWRITE_MODERN("pia_0", pia6821_device, read, write)
+	AM_RANGE(0xc980, 0xc983) AM_MIRROR(0x0070) AM_DEVREADWRITE("pia_1", pia6821_device, read, write)
+	AM_RANGE(0xc984, 0xc987) AM_MIRROR(0x0070) AM_DEVREADWRITE("pia_0", pia6821_device, read, write)
 	AM_RANGE(0xc98c, 0xc98f) AM_MIRROR(0x0070) AM_WRITE(williams2_7segment_w)
 	AM_RANGE(0xcb00, 0xcb1f) AM_WRITE(williams2_fg_select_w)
 	AM_RANGE(0xcb20, 0xcb3f) AM_WRITE(williams2_bg_select_w)
@@ -664,25 +665,25 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( defender_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( defender_sound_map, AS_PROGRAM, 8, williams_state )
 	AM_RANGE(0x0000, 0x007f) AM_RAM		/* internal RAM */
-	AM_RANGE(0x0400, 0x0403) AM_MIRROR(0x8000) AM_DEVREADWRITE_MODERN("pia_2", pia6821_device, read, write)
+	AM_RANGE(0x0400, 0x0403) AM_MIRROR(0x8000) AM_DEVREADWRITE("pia_2", pia6821_device, read, write)
 	AM_RANGE(0xb000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, williams_state )
 	AM_RANGE(0x0000, 0x007f) AM_RAM		/* internal RAM */
 	AM_RANGE(0x0080, 0x00ff) AM_RAM		/* MC6810 RAM */
-	AM_RANGE(0x0400, 0x0403) AM_MIRROR(0x8000) AM_DEVREADWRITE_MODERN("pia_2", pia6821_device, read, write)
+	AM_RANGE(0x0400, 0x0403) AM_MIRROR(0x8000) AM_DEVREADWRITE("pia_2", pia6821_device, read, write)
 	AM_RANGE(0xb000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 /* Same as above, but for second sound board */
-static ADDRESS_MAP_START( sound_map_b, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map_b, AS_PROGRAM, 8, williams_state )
 	AM_RANGE(0x0000, 0x007f) AM_RAM		/* internal RAM */
 	AM_RANGE(0x0080, 0x00ff) AM_RAM		/* MC6810 RAM */
-	AM_RANGE(0x0400, 0x0403) AM_MIRROR(0x8000) AM_DEVREADWRITE_MODERN("pia_2b", pia6821_device, read, write)
+	AM_RANGE(0x0400, 0x0403) AM_MIRROR(0x8000) AM_DEVREADWRITE("pia_2b", pia6821_device, read, write)
 	AM_RANGE(0xb000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -694,10 +695,10 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( williams2_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( williams2_sound_map, AS_PROGRAM, 8, williams_state )
 	AM_RANGE(0x0000, 0x007f) AM_RAM		/* internal RAM */
 	AM_RANGE(0x0080, 0x00ff) AM_RAM		/* MC6810 RAM */
-	AM_RANGE(0x2000, 0x2003) AM_MIRROR(0x1ffc) AM_DEVREADWRITE_MODERN("pia_2", pia6821_device, read, write)
+	AM_RANGE(0x2000, 0x2003) AM_MIRROR(0x1ffc) AM_DEVREADWRITE("pia_2", pia6821_device, read, write)
 	AM_RANGE(0xe000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -2747,7 +2748,7 @@ static DRIVER_INIT( mayday )
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_NONE, 0x0000);
 
 	/* install a handler to catch protection checks */
-	state->m_mayday_protection = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0xa190, 0xa191, FUNC(mayday_protection_r));
+	state->m_mayday_protection = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa190, 0xa191, read8_delegate(FUNC(williams_state::mayday_protection_r),state));
 }
 
 
@@ -2785,7 +2786,7 @@ static DRIVER_INIT( bubbles )
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
 
 	/* bubbles has a full 8-bit-wide CMOS */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xcc00, 0xcfff, FUNC(bubbles_cmos_w));
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xcc00, 0xcfff, write8_delegate(FUNC(williams_state::bubbles_cmos_w),state));
 }
 
 

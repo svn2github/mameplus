@@ -24,6 +24,12 @@ public:
 	tilemap_t *m_bg_tilemap;
 	UINT8 *m_spriteram;
 	size_t m_spriteram_size;
+	DECLARE_WRITE8_MEMBER(wc90_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(wc90_bankswitch1_w);
+	DECLARE_WRITE8_MEMBER(wc90_sound_command_w);
+	DECLARE_WRITE8_MEMBER(wc90_bgvideoram_w);
+	DECLARE_WRITE8_MEMBER(wc90_fgvideoram_w);
+	DECLARE_WRITE8_MEMBER(wc90_txvideoram_w);
 };
 
 
@@ -31,7 +37,4 @@ public:
 
 VIDEO_START( wc90 );
 VIDEO_START( wc90t );
-WRITE8_HANDLER( wc90_fgvideoram_w );
-WRITE8_HANDLER( wc90_bgvideoram_w );
-WRITE8_HANDLER( wc90_txvideoram_w );
 SCREEN_UPDATE_IND16( wc90 );

@@ -173,14 +173,14 @@ static WRITE8_HANDLER( wardner_ramrom_bank_sw )
 		}
 		else
 		{
-			mainspace->install_legacy_read_handler(0x8000, 0x8fff, FUNC(wardner_sprite_r));
+			mainspace->install_read_handler(0x8000, 0x8fff, read8_delegate(FUNC(wardner_state::wardner_sprite_r),state));
 			mainspace->install_read_bank(0xa000, 0xadff, "bank4");
 			mainspace->install_read_bank(0xae00, 0xafff, "bank2");
 			mainspace->install_read_bank(0xc000, 0xc7ff, "bank3");
 			memory_set_bankptr(space->machine(), "bank1", &RAM[0x0000]);
 			memory_set_bankptr(space->machine(), "bank2", state->m_rambase_ae00);
 			memory_set_bankptr(space->machine(), "bank3", state->m_rambase_c000);
-			memory_set_bankptr(space->machine(), "bank4", space->machine().generic.paletteram.v);
+			memory_set_bankptr(space->machine(), "bank4", state->m_generic_paletteram_8);
 		}
 	}
 }
@@ -197,7 +197,7 @@ void wardner_restore_bank(running_machine &machine)
 
 /***************************** Z80 Main Memory Map **************************/
 
-static ADDRESS_MAP_START( main_program_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_program_map, AS_PROGRAM, 8, wardner_state )
 	AM_RANGE(0x0000, 0x6fff) AM_ROM
 	AM_RANGE(0x7000, 0x7fff) AM_RAM
 
@@ -205,17 +205,17 @@ static ADDRESS_MAP_START( main_program_map, AS_PROGRAM, 8 )
 
 	AM_RANGE(0x8000, 0x8fff) AM_WRITE(wardner_sprite_w) AM_SHARE("spriteram")
 	AM_RANGE(0x9000, 0x9fff) AM_ROM
-	AM_RANGE(0xa000, 0xadff) AM_WRITE(paletteram_xBBBBBGGGGGRRRRR_le_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0xae00, 0xafff) AM_RAM AM_BASE_MEMBER(wardner_state, m_rambase_ae00)
+	AM_RANGE(0xa000, 0xadff) AM_WRITE(paletteram_xBBBBBGGGGGRRRRR_le_w) AM_SHARE("paletteram")
+	AM_RANGE(0xae00, 0xafff) AM_RAM AM_BASE(m_rambase_ae00)
 	AM_RANGE(0xb000, 0xbfff) AM_ROM
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_BASE_MEMBER(wardner_state, m_rambase_c000) AM_SHARE("share1")	/* Shared RAM with Sound Z80 */
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_BASE(m_rambase_c000) AM_SHARE("share1")	/* Shared RAM with Sound Z80 */
 	AM_RANGE(0xc800, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( main_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( main_io_map, AS_IO, 8, wardner_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_DEVWRITE_MODERN("crtc", mc6845_device, address_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE_MODERN("crtc", mc6845_device, register_w)
+	AM_RANGE(0x00, 0x00) AM_DEVWRITE("crtc", mc6845_device, address_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE("crtc", mc6845_device, register_w)
 	AM_RANGE(0x10, 0x13) AM_WRITE(wardner_txscroll_w)		/* scroll text layer */
 	AM_RANGE(0x14, 0x15) AM_WRITE(wardner_txlayer_w)		/* offset in text video RAM */
 	AM_RANGE(0x20, 0x23) AM_WRITE(wardner_bgscroll_w)		/* scroll bg layer */
@@ -231,13 +231,13 @@ static ADDRESS_MAP_START( main_io_map, AS_IO, 8 )
 	AM_RANGE(0x5a, 0x5a) AM_WRITE(wardner_coin_dsp_w)		/* Machine system control */
 	AM_RANGE(0x5c, 0x5c) AM_WRITE(wardner_control_w)		/* Machine system control */
 	AM_RANGE(0x60, 0x65) AM_READWRITE(wardner_videoram_r, wardner_videoram_w)		/* data from video layer RAM */
-	AM_RANGE(0x70, 0x70) AM_WRITE(wardner_ramrom_bank_sw)	/* ROM bank select */
+	AM_RANGE(0x70, 0x70) AM_WRITE_LEGACY(wardner_ramrom_bank_sw)	/* ROM bank select */
 ADDRESS_MAP_END
 
 
 /***************************** Z80 Sound Memory Map *************************/
 
-static ADDRESS_MAP_START( sound_program_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_program_map, AS_PROGRAM, 8, wardner_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x807f) AM_RAM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("share1")	/* Shared RAM with Main Z80 */
@@ -245,21 +245,21 @@ static ADDRESS_MAP_START( sound_program_map, AS_PROGRAM, 8 )
 
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( sound_io_map, AS_IO, 8, wardner_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE("ymsnd", ym3812_r, ym3812_w)
+	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_r, ym3812_w)
 ADDRESS_MAP_END
 
 
 /***************************** TMS32010 Memory Map **************************/
 
-static ADDRESS_MAP_START( DSP_program_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( DSP_program_map, AS_PROGRAM, 16, wardner_state )
 	AM_RANGE(0x000, 0x5ff) AM_ROM
 ADDRESS_MAP_END
 
 	/* $000 - 08F  TMS32010 Internal Data RAM in Data Address Space */
 
-static ADDRESS_MAP_START( DSP_io_map, AS_IO, 16 )
+static ADDRESS_MAP_START( DSP_io_map, AS_IO, 16, wardner_state )
 	AM_RANGE(0, 0) AM_WRITE(wardner_dsp_addrsel_w)
 	AM_RANGE(1, 1) AM_READWRITE(wardner_dsp_r, wardner_dsp_w)
 	AM_RANGE(3, 3) AM_WRITE(twincobr_dsp_bio_w)

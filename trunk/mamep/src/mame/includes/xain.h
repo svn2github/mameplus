@@ -31,6 +31,32 @@ public:
 	UINT8 m_scrollyP1[2];
 	UINT8 *m_spriteram;
 	size_t m_spriteram_size;
+	DECLARE_WRITE8_MEMBER(xainCPUA_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(xainCPUB_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(xain_sound_command_w);
+	DECLARE_WRITE8_MEMBER(xain_main_irq_w);
+	DECLARE_WRITE8_MEMBER(xain_irqA_assert_w);
+	DECLARE_WRITE8_MEMBER(xain_irqB_clear_w);
+	DECLARE_READ8_MEMBER(xain_68705_r);
+	DECLARE_WRITE8_MEMBER(xain_68705_w);
+	DECLARE_READ8_MEMBER(xain_68705_port_a_r);
+	DECLARE_WRITE8_MEMBER(xain_68705_port_a_w);
+	DECLARE_WRITE8_MEMBER(xain_68705_ddr_a_w);
+	DECLARE_READ8_MEMBER(xain_68705_port_b_r);
+	DECLARE_WRITE8_MEMBER(xain_68705_port_b_w);
+	DECLARE_WRITE8_MEMBER(xain_68705_ddr_b_w);
+	DECLARE_READ8_MEMBER(xain_68705_port_c_r);
+	DECLARE_WRITE8_MEMBER(xain_68705_port_c_w);
+	DECLARE_WRITE8_MEMBER(xain_68705_ddr_c_w);
+	DECLARE_READ8_MEMBER(mcu_comm_reset_r);
+	DECLARE_WRITE8_MEMBER(xain_bgram0_w);
+	DECLARE_WRITE8_MEMBER(xain_bgram1_w);
+	DECLARE_WRITE8_MEMBER(xain_charram_w);
+	DECLARE_WRITE8_MEMBER(xain_scrollxP0_w);
+	DECLARE_WRITE8_MEMBER(xain_scrollyP0_w);
+	DECLARE_WRITE8_MEMBER(xain_scrollxP1_w);
+	DECLARE_WRITE8_MEMBER(xain_scrollyP1_w);
+	DECLARE_WRITE8_MEMBER(xain_flipscreen_w);
 };
 
 
@@ -38,11 +64,3 @@ public:
 
 SCREEN_UPDATE_IND16( xain );
 VIDEO_START( xain );
-WRITE8_HANDLER( xain_scrollxP0_w );
-WRITE8_HANDLER( xain_scrollyP0_w );
-WRITE8_HANDLER( xain_scrollxP1_w );
-WRITE8_HANDLER( xain_scrollyP1_w );
-WRITE8_HANDLER( xain_charram_w );
-WRITE8_HANDLER( xain_bgram0_w );
-WRITE8_HANDLER( xain_bgram1_w );
-WRITE8_HANDLER( xain_flipscreen_w );
