@@ -16,6 +16,31 @@ public:
 	int m_backcolor;
 	const UINT8 *m_tile_address_prom;
 	int m_copy_sprites;
+	DECLARE_WRITE8_MEMBER(bankswitch1_w);
+	DECLARE_WRITE8_MEMBER(bankswitch1_ext_w);
+	DECLARE_WRITE8_MEMBER(bankswitch2_w);
+	DECLARE_READ8_MEMBER(dsw0_r);
+	DECLARE_READ8_MEMBER(dsw1_r);
+	DECLARE_WRITE8_MEMBER(int_ack1_w);
+	DECLARE_WRITE8_MEMBER(int_ack2_w);
+	DECLARE_WRITE8_MEMBER(watchdog1_w);
+	DECLARE_WRITE8_MEMBER(watchdog2_w);
+	DECLARE_WRITE8_MEMBER(namcos86_coin_w);
+	DECLARE_WRITE8_MEMBER(namcos86_led_w);
+	DECLARE_WRITE8_MEMBER(cus115_w);
+	DECLARE_READ8_MEMBER(readFF);
+	DECLARE_READ8_MEMBER(rthunder_videoram1_r);
+	DECLARE_WRITE8_MEMBER(rthunder_videoram1_w);
+	DECLARE_READ8_MEMBER(rthunder_videoram2_r);
+	DECLARE_WRITE8_MEMBER(rthunder_videoram2_w);
+	DECLARE_WRITE8_MEMBER(rthunder_tilebank_select_w);
+	DECLARE_WRITE8_MEMBER(rthunder_scroll0_w);
+	DECLARE_WRITE8_MEMBER(rthunder_scroll1_w);
+	DECLARE_WRITE8_MEMBER(rthunder_scroll2_w);
+	DECLARE_WRITE8_MEMBER(rthunder_scroll3_w);
+	DECLARE_WRITE8_MEMBER(rthunder_backcolor_w);
+	DECLARE_READ8_MEMBER(rthunder_spriteram_r);
+	DECLARE_WRITE8_MEMBER(rthunder_spriteram_w);
 };
 
 
@@ -26,15 +51,3 @@ VIDEO_START( namcos86 );
 SCREEN_UPDATE_IND16( namcos86 );
 SCREEN_VBLANK( namcos86 );
 
-READ8_HANDLER( rthunder_videoram1_r );
-WRITE8_HANDLER( rthunder_videoram1_w );
-READ8_HANDLER( rthunder_videoram2_r );
-WRITE8_HANDLER( rthunder_videoram2_w );
-WRITE8_HANDLER( rthunder_scroll0_w );
-WRITE8_HANDLER( rthunder_scroll1_w );
-WRITE8_HANDLER( rthunder_scroll2_w );
-WRITE8_HANDLER( rthunder_scroll3_w );
-WRITE8_HANDLER( rthunder_backcolor_w );
-WRITE8_HANDLER( rthunder_tilebank_select_w );
-READ8_HANDLER( rthunder_spriteram_r );
-WRITE8_HANDLER( rthunder_spriteram_w );

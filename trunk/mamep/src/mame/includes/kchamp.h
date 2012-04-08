@@ -28,14 +28,20 @@ public:
 
 	/* devices */
 	device_t *m_audiocpu;
+	DECLARE_WRITE8_MEMBER(control_w);
+	DECLARE_WRITE8_MEMBER(sound_reset_w);
+	DECLARE_WRITE8_MEMBER(sound_command_w);
+	DECLARE_WRITE8_MEMBER(sound_msm_w);
+	DECLARE_READ8_MEMBER(sound_reset_r);
+	DECLARE_WRITE8_MEMBER(kc_sound_control_w);
+	DECLARE_WRITE8_MEMBER(kchamp_videoram_w);
+	DECLARE_WRITE8_MEMBER(kchamp_colorram_w);
+	DECLARE_WRITE8_MEMBER(kchamp_flipscreen_w);
 };
 
 
 /*----------- defined in video/kchamp.c -----------*/
 
-WRITE8_HANDLER( kchamp_videoram_w );
-WRITE8_HANDLER( kchamp_colorram_w );
-WRITE8_HANDLER( kchamp_flipscreen_w );
 
 PALETTE_INIT( kchamp );
 VIDEO_START( kchamp );

@@ -39,6 +39,27 @@ public:
 	UINT8 *m_spriteram;
 
 	required_device<cpu_device> m_maincpu;
+	DECLARE_WRITE8_MEMBER(sound_w);
+	DECLARE_READ8_MEMBER(mcu_reset_r);
+	DECLARE_WRITE8_MEMBER(mcu_w);
+	DECLARE_READ8_MEMBER(mcu_r);
+	DECLARE_WRITE8_MEMBER(bankswitch_w);
+	DECLARE_WRITE8_MEMBER(renegade_coin_counter_w);
+	void mcu_process_command();
+	DECLARE_READ8_MEMBER(renegade_68705_port_a_r);
+	DECLARE_WRITE8_MEMBER(renegade_68705_port_a_w);
+	DECLARE_WRITE8_MEMBER(renegade_68705_ddr_a_w);
+	DECLARE_READ8_MEMBER(renegade_68705_port_b_r);
+	DECLARE_WRITE8_MEMBER(renegade_68705_port_b_w);
+	DECLARE_WRITE8_MEMBER(renegade_68705_ddr_b_w);
+	DECLARE_READ8_MEMBER(renegade_68705_port_c_r);
+	DECLARE_WRITE8_MEMBER(renegade_68705_port_c_w);
+	DECLARE_WRITE8_MEMBER(renegade_68705_ddr_c_w);
+	DECLARE_WRITE8_MEMBER(renegade_videoram_w);
+	DECLARE_WRITE8_MEMBER(renegade_videoram2_w);
+	DECLARE_WRITE8_MEMBER(renegade_flipscreen_w);
+	DECLARE_WRITE8_MEMBER(renegade_scroll0_w);
+	DECLARE_WRITE8_MEMBER(renegade_scroll1_w);
 };
 
 
@@ -46,8 +67,3 @@ public:
 
 SCREEN_UPDATE_IND16( renegade );
 VIDEO_START( renegade );
-WRITE8_HANDLER( renegade_scroll0_w );
-WRITE8_HANDLER( renegade_scroll1_w );
-WRITE8_HANDLER( renegade_videoram_w );
-WRITE8_HANDLER( renegade_videoram2_w );
-WRITE8_HANDLER( renegade_flipscreen_w );

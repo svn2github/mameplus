@@ -81,16 +81,48 @@ public:
 	optional_device<okim6295_device> m_oki;
 	optional_device<device_t> m_ymsnd;
 	optional_device<k053936_device> m_k053936;
+	DECLARE_READ16_MEMBER(metro_irq_cause_r);
+	DECLARE_WRITE16_MEMBER(metro_irq_cause_w);
+	DECLARE_WRITE16_MEMBER(mouja_irq_timer_ctrl_w);
+	DECLARE_WRITE16_MEMBER(metro_soundlatch_w);
+	DECLARE_READ16_MEMBER(metro_soundstatus_r);
+	DECLARE_WRITE16_MEMBER(metro_soundstatus_w);
+	DECLARE_WRITE8_MEMBER(metro_sound_rombank_w);
+	DECLARE_WRITE8_MEMBER(daitorid_sound_rombank_w);
+	DECLARE_READ8_MEMBER(metro_porta_r);
+	DECLARE_WRITE8_MEMBER(metro_porta_w);
+	DECLARE_WRITE8_MEMBER(metro_portb_w);
+	DECLARE_WRITE8_MEMBER(daitorid_portb_w);
+	DECLARE_WRITE16_MEMBER(metro_coin_lockout_1word_w);
+	DECLARE_WRITE16_MEMBER(metro_coin_lockout_4words_w);
+	DECLARE_READ16_MEMBER(metro_bankedrom_r);
+	DECLARE_WRITE16_MEMBER(metro_blitter_w);
+	DECLARE_READ16_MEMBER(balcube_dsw_r);
+	DECLARE_READ16_MEMBER(karatour_vram_0_r);
+	DECLARE_READ16_MEMBER(karatour_vram_1_r);
+	DECLARE_READ16_MEMBER(karatour_vram_2_r);
+	DECLARE_WRITE16_MEMBER(karatour_vram_0_w);
+	DECLARE_WRITE16_MEMBER(karatour_vram_1_w);
+	DECLARE_WRITE16_MEMBER(karatour_vram_2_w);
+	DECLARE_READ16_MEMBER(gakusai_input_r);
+	DECLARE_WRITE16_MEMBER(blzntrnd_sound_w);
+	DECLARE_WRITE8_MEMBER(blzntrnd_sh_bankswitch_w);
+	DECLARE_WRITE16_MEMBER(puzzlet_irq_enable_w);
+	DECLARE_WRITE16_MEMBER(vram_0_clr_w);
+	DECLARE_WRITE16_MEMBER(vram_1_clr_w);
+	DECLARE_WRITE16_MEMBER(vram_2_clr_w);
+	DECLARE_WRITE8_MEMBER(puzzlet_portb_w);
+	DECLARE_WRITE16_MEMBER(metro_k053936_w);
+	DECLARE_WRITE16_MEMBER(metro_vram_0_w);
+	DECLARE_WRITE16_MEMBER(metro_vram_1_w);
+	DECLARE_WRITE16_MEMBER(metro_vram_2_w);
+	DECLARE_WRITE16_MEMBER(metro_window_w);
+	void blt_write( address_space *space, const int tmap, const offs_t offs, const UINT16 data, const UINT16 mask );
 };
 
 
 /*----------- defined in video/metro.c -----------*/
 
-WRITE16_HANDLER( metro_window_w );
-WRITE16_HANDLER( metro_vram_0_w );
-WRITE16_HANDLER( metro_vram_1_w );
-WRITE16_HANDLER( metro_vram_2_w );
-WRITE16_HANDLER( metro_k053936_w );
 
 VIDEO_START( metro_14100 );
 VIDEO_START( metro_14220 );

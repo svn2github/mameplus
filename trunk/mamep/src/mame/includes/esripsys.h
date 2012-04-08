@@ -64,6 +64,27 @@ public:
 	UINT8 *m_scale_table;
 	int m_video_firq;
 	UINT8 m_bg_intensity;
+	DECLARE_WRITE8_MEMBER(uart_w);
+	DECLARE_READ8_MEMBER(uart_r);
+	DECLARE_READ8_MEMBER(g_status_r);
+	DECLARE_WRITE8_MEMBER(g_status_w);
+	DECLARE_READ8_MEMBER(f_status_r);
+	DECLARE_WRITE8_MEMBER(f_status_w);
+	DECLARE_WRITE8_MEMBER(frame_w);
+	DECLARE_READ8_MEMBER(fdt_r);
+	DECLARE_WRITE8_MEMBER(fdt_w);
+	DECLARE_WRITE8_MEMBER(g_iobus_w);
+	DECLARE_READ8_MEMBER(g_iobus_r);
+	DECLARE_WRITE8_MEMBER(g_ioadd_w);
+	DECLARE_READ8_MEMBER(s_200e_r);
+	DECLARE_WRITE8_MEMBER(s_200e_w);
+	DECLARE_WRITE8_MEMBER(s_200f_w);
+	DECLARE_READ8_MEMBER(s_200f_r);
+	DECLARE_READ8_MEMBER(tms5220_r);
+	DECLARE_WRITE8_MEMBER(tms5220_w);
+	DECLARE_WRITE8_MEMBER(control_w);
+	DECLARE_WRITE8_MEMBER(volume_dac_w);
+	DECLARE_WRITE8_MEMBER(esripsys_bg_intensity_w);
 };
 
 
@@ -72,7 +93,6 @@ public:
 VIDEO_START( esripsys );
 SCREEN_UPDATE_RGB32( esripsys );
 
-WRITE8_HANDLER( esripsys_bg_intensity_w );
 INTERRUPT_GEN( esripsys_vblank_irq );
 
 int esripsys_draw(running_machine &machine, int l, int r, int fig, int attr, int addr, int col, int x_scale, int bank);

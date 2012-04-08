@@ -24,15 +24,18 @@ public:
 
 	/* devices */
 	device_t *m_maincpu;
+	DECLARE_READ8_MEMBER(kopunch_in_r);
+	DECLARE_WRITE8_MEMBER(kopunch_lamp_w);
+	DECLARE_WRITE8_MEMBER(kopunch_coin_w);
+	DECLARE_WRITE8_MEMBER(kopunch_videoram_w);
+	DECLARE_WRITE8_MEMBER(kopunch_videoram2_w);
+	DECLARE_WRITE8_MEMBER(kopunch_scroll_x_w);
+	DECLARE_WRITE8_MEMBER(kopunch_scroll_y_w);
+	DECLARE_WRITE8_MEMBER(kopunch_gfxbank_w);
 };
 
 /*----------- defined in video/kopunch.c -----------*/
 
-WRITE8_HANDLER( kopunch_videoram_w );
-WRITE8_HANDLER( kopunch_videoram2_w );
-WRITE8_HANDLER( kopunch_scroll_x_w );
-WRITE8_HANDLER( kopunch_scroll_y_w );
-WRITE8_HANDLER( kopunch_gfxbank_w );
 
 PALETTE_INIT( kopunch );
 VIDEO_START( kopunch );

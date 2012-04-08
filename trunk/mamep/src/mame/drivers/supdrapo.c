@@ -75,6 +75,12 @@ public:
 	UINT8 *m_col_line;
 	UINT8 *m_videoram;
 	UINT8 m_wdog;
+	DECLARE_READ8_MEMBER(sdpoker_rng_r);
+	DECLARE_WRITE8_MEMBER(wdog8000_w);
+	DECLARE_WRITE8_MEMBER(debug8004_w);
+	DECLARE_WRITE8_MEMBER(debug7c00_w);
+	DECLARE_WRITE8_MEMBER(coinin_w);
+	DECLARE_WRITE8_MEMBER(payout_w);
 };
 
 
@@ -147,12 +153,12 @@ static PALETTE_INIT( sdpoker )
                             R/W Handlers
 **********************************************************************/
 
-static READ8_HANDLER( sdpoker_rng_r )
+READ8_MEMBER(supdrapo_state::sdpoker_rng_r)
 {
-	return space->machine().rand();
+	return machine().rand();
 }
 
-static WRITE8_HANDLER( wdog8000_w )
+WRITE8_MEMBER(supdrapo_state::wdog8000_w)
 {
 /*  Kind of state watchdog alternating 0x00 & 0x01 writes.
     Used when exit the test mode (writes 2 consecutive 0's).
@@ -179,19 +185,19 @@ static WRITE8_HANDLER( wdog8000_w )
   Watchdog: 00
 
 */
-	supdrapo_state *state = space->machine().driver_data<supdrapo_state>();
 
-	if (state->m_wdog == data)
+
+	if (m_wdog == data)
 	{
 		watchdog_reset_w(space, 0, 0);	/* Reset */
 	}
 
-	state->m_wdog = data;
+	m_wdog = data;
 //  logerror("Watchdog: %02X\n", data);
 }
 
 
-static WRITE8_HANDLER( debug8004_w )
+WRITE8_MEMBER(supdrapo_state::debug8004_w)
 {
 /*  Writes 0x00 each time the machine is initialized */
 
@@ -199,7 +205,7 @@ static WRITE8_HANDLER( debug8004_w )
 //  popmessage("written : %02X", data);
 }
 
-static WRITE8_HANDLER( debug7c00_w )
+WRITE8_MEMBER(supdrapo_state::debug7c00_w)
 {
 /*  This one write 0's constantly when the input test mode is running */
 	logerror("debug7c00: %02X\n", data);
@@ -210,14 +216,14 @@ static WRITE8_HANDLER( debug7c00_w )
                          Coin I/O Counters
 **********************************************************************/
 
-static WRITE8_HANDLER( coinin_w )
+WRITE8_MEMBER(supdrapo_state::coinin_w)
 {
-	coin_counter_w(space->machine(), 0, data & 0x01);	/* Coin In */
+	coin_counter_w(machine(), 0, data & 0x01);	/* Coin In */
 }
 
-static WRITE8_HANDLER( payout_w )
+WRITE8_MEMBER(supdrapo_state::payout_w)
 {
-	coin_counter_w(space->machine(), 1, data & 0x01);	/* Payout */
+	coin_counter_w(machine(), 1, data & 0x01);	/* Payout */
 }
 
 
@@ -241,14 +247,14 @@ static MACHINE_RESET( supdrapo )
                               Memory Map
 **********************************************************************/
 
-static ADDRESS_MAP_START( sdpoker_mem, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sdpoker_mem, AS_PROGRAM, 8, supdrapo_state )
 	AM_RANGE(0x0000, 0x4fff) AM_ROM
 	AM_RANGE(0x5000, 0x50ff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0x57ff, 0x57ff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x5800, 0x58ff) AM_RAM AM_SHARE("share1") AM_BASE_MEMBER(supdrapo_state,m_col_line)
+	AM_RANGE(0x5800, 0x58ff) AM_RAM AM_SHARE("share1") AM_BASE(m_col_line)
 	AM_RANGE(0x6000, 0x67ff) AM_RAM //work ram
-	AM_RANGE(0x6800, 0x6bff) AM_RAM AM_BASE_MEMBER(supdrapo_state,m_videoram)
-	AM_RANGE(0x6c00, 0x6fff) AM_RAM AM_BASE_MEMBER(supdrapo_state,m_char_bank)
+	AM_RANGE(0x6800, 0x6bff) AM_RAM AM_BASE(m_videoram)
+	AM_RANGE(0x6c00, 0x6fff) AM_RAM AM_BASE(m_char_bank)
 	AM_RANGE(0x7000, 0x7bff) AM_RAM //$7600 seems watchdog
 	AM_RANGE(0x7c00, 0x7c00) AM_WRITE(debug7c00_w)
 	AM_RANGE(0x8000, 0x8000) AM_READ_PORT("IN4") AM_WRITE(wdog8000_w)
@@ -260,7 +266,7 @@ static ADDRESS_MAP_START( sdpoker_mem, AS_PROGRAM, 8 )
 	AM_RANGE(0x8006, 0x8006) AM_READ_PORT("SW2")
 	AM_RANGE(0x9000, 0x90ff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0x9400, 0x9400) AM_READ(sdpoker_rng_r)
-	AM_RANGE(0x9800, 0x9801) AM_DEVWRITE("aysnd", ay8910_data_address_w)
+	AM_RANGE(0x9800, 0x9801) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_address_w)
 ADDRESS_MAP_END
 
 

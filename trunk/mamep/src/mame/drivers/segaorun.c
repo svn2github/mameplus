@@ -369,7 +369,7 @@ static TIMER_CALLBACK( delayed_sound_data_w )
 {
 	segas1x_state *state = machine.driver_data<segas1x_state>();
 	address_space *space = state->m_maincpu->memory().space(AS_PROGRAM);
-	soundlatch_w(space, 0, param);
+	state->soundlatch_w(*space, 0, param);
 	device_set_input_line(state->m_soundcpu, INPUT_LINE_NMI, ASSERT_LINE);
 }
 
@@ -385,7 +385,7 @@ static READ8_HANDLER( sound_data_r )
 	segas1x_state *state = space->machine().driver_data<segas1x_state>();
 
 	device_set_input_line(state->m_soundcpu, INPUT_LINE_NMI, CLEAR_LINE);
-	return soundlatch_r(space, offset);
+	return state->soundlatch_r(*space, offset);
 }
 
 
@@ -673,7 +673,7 @@ static READ16_HANDLER( outrun_custom_io_r )
 		}
 
 		case 0x60/2:
-			return watchdog_reset_r(space,0);
+			return state->watchdog_reset_r(*space,0);
 	}
 
 	logerror("%06X:outrun_custom_io_r - unknown read access to address %04X\n", cpu_get_pc(&space->device()), offset * 2);
@@ -709,7 +709,7 @@ static WRITE16_HANDLER( outrun_custom_io_w )
 			return;
 
 		case 0x60/2:
-			watchdog_reset_w(space,0,0);
+			state->watchdog_reset_w(*space,0,0);
 			return;
 
 		case 0x70/2:
@@ -771,7 +771,7 @@ static WRITE16_HANDLER( shangon_custom_io_w )
 			return;
 
 		case 0x3000/2:
-			watchdog_reset_w(space, 0, 0);
+			state->watchdog_reset_w(*space, 0, 0);
 			return;
 
 		case 0x3020/2:
@@ -789,9 +789,9 @@ static WRITE16_HANDLER( shangon_custom_io_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( outrun_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( outrun_map, AS_PROGRAM, 16, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
-	AM_RANGE(0x000000, 0xffffff) AM_READWRITE(segaic16_memory_mapper_lsb_r, segaic16_memory_mapper_lsb_w)
+	AM_RANGE(0x000000, 0xffffff) AM_READWRITE_LEGACY(segaic16_memory_mapper_lsb_r, segaic16_memory_mapper_lsb_w)
 ADDRESS_MAP_END
 
 
@@ -802,13 +802,13 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sub_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( sub_map, AS_PROGRAM, 16, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xfffff)
-	AM_RANGE(0x000000, 0x05ffff) AM_ROM AM_BASE(&cpu1rom)
-	AM_RANGE(0x060000, 0x067fff) AM_MIRROR(0x018000) AM_RAM AM_BASE(&cpu1ram)
-	AM_RANGE(0x080000, 0x080fff) AM_MIRROR(0x00f000) AM_RAM AM_BASE(&segaic16_roadram_0)
-	AM_RANGE(0x090000, 0x09ffff) AM_READWRITE(segaic16_road_control_0_r, segaic16_road_control_0_w)
+	AM_RANGE(0x000000, 0x05ffff) AM_ROM AM_BASE_LEGACY(&cpu1rom)
+	AM_RANGE(0x060000, 0x067fff) AM_MIRROR(0x018000) AM_RAM AM_BASE_LEGACY(&cpu1ram)
+	AM_RANGE(0x080000, 0x080fff) AM_MIRROR(0x00f000) AM_RAM AM_BASE_LEGACY(&segaic16_roadram_0)
+	AM_RANGE(0x090000, 0x09ffff) AM_READWRITE_LEGACY(segaic16_road_control_0_r, segaic16_road_control_0_w)
 ADDRESS_MAP_END
 
 
@@ -819,18 +819,18 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0xefff) AM_ROM
-	AM_RANGE(0xf000, 0xf0ff) AM_MIRROR(0x0700) AM_DEVREADWRITE("pcm", sega_pcm_r, sega_pcm_w)
+	AM_RANGE(0xf000, 0xf0ff) AM_MIRROR(0x0700) AM_DEVREADWRITE_LEGACY("pcm", sega_pcm_r, sega_pcm_w)
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_portmap, AS_IO, 8 )
+static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x01) AM_MIRROR(0x3e) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x40, 0x40) AM_MIRROR(0x3f) AM_READ(sound_data_r)
+	AM_RANGE(0x00, 0x01) AM_MIRROR(0x3e) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x40, 0x40) AM_MIRROR(0x3f) AM_READ_LEGACY(sound_data_r)
 ADDRESS_MAP_END
 
 

@@ -69,6 +69,60 @@ public:
 	UINT32 m_vram_mask;
 	UINT32 m_vram_xmask;
 	UINT32 m_vram_ymask;
+	DECLARE_WRITE16_MEMBER(int1_ack_w);
+	DECLARE_READ16_MEMBER(trackball_r);
+	DECLARE_READ32_MEMBER(trackball32_8bit_r);
+	DECLARE_READ32_MEMBER(trackball32_4bit_p1_r);
+	DECLARE_READ32_MEMBER(trackball32_4bit_p2_r);
+	DECLARE_READ32_MEMBER(trackball32_4bit_combined_r);
+	DECLARE_READ32_MEMBER(drivedge_steering_r);
+	DECLARE_READ32_MEMBER(drivedge_gas_r);
+	DECLARE_READ16_MEMBER(wcbowl_prot_result_r);
+	DECLARE_READ32_MEMBER(itech020_prot_result_r);
+	DECLARE_READ32_MEMBER(gt2kp_prot_result_r);
+	DECLARE_READ32_MEMBER(gtclass_prot_result_r);
+	DECLARE_WRITE8_MEMBER(sound_bank_w);
+	DECLARE_WRITE16_MEMBER(sound_data_w);
+	DECLARE_READ32_MEMBER(sound_data32_r);
+	DECLARE_WRITE32_MEMBER(sound_data32_w);
+	DECLARE_READ8_MEMBER(sound_data_r);
+	DECLARE_WRITE8_MEMBER(sound_return_w);
+	DECLARE_READ8_MEMBER(sound_data_buffer_r);
+	DECLARE_WRITE8_MEMBER(firq_clear_w);
+	DECLARE_WRITE32_MEMBER(tms_reset_assert_w);
+	DECLARE_WRITE32_MEMBER(tms_reset_clear_w);
+	DECLARE_WRITE32_MEMBER(tms1_68k_ram_w);
+	DECLARE_WRITE32_MEMBER(tms2_68k_ram_w);
+	DECLARE_WRITE32_MEMBER(tms1_trigger_w);
+	DECLARE_WRITE32_MEMBER(tms2_trigger_w);
+	DECLARE_READ32_MEMBER(drivedge_tms1_speedup_r);
+	DECLARE_READ32_MEMBER(drivedge_tms2_speedup_r);
+	DECLARE_WRITE32_MEMBER(int1_ack32_w);
+	DECLARE_READ32_MEMBER(test1_r);
+	DECLARE_WRITE32_MEMBER(test1_w);
+	DECLARE_READ32_MEMBER(test2_r);
+	DECLARE_WRITE32_MEMBER(test2_w);
+	DECLARE_WRITE16_MEMBER(timekill_colora_w);
+	DECLARE_WRITE16_MEMBER(timekill_colorbc_w);
+	DECLARE_WRITE16_MEMBER(timekill_intensity_w);
+	DECLARE_WRITE16_MEMBER(bloodstm_color1_w);
+	DECLARE_WRITE16_MEMBER(bloodstm_color2_w);
+	DECLARE_WRITE16_MEMBER(bloodstm_plane_w);
+	DECLARE_WRITE32_MEMBER(drivedge_color0_w);
+	DECLARE_WRITE32_MEMBER(itech020_color1_w);
+	DECLARE_WRITE32_MEMBER(itech020_color2_w);
+	DECLARE_WRITE32_MEMBER(itech020_plane_w);
+	DECLARE_WRITE16_MEMBER(timekill_paletteram_w);
+	DECLARE_WRITE16_MEMBER(bloodstm_paletteram_w);
+	DECLARE_WRITE32_MEMBER(drivedge_paletteram_w);
+	DECLARE_WRITE32_MEMBER(itech020_paletteram_w);
+	DECLARE_WRITE16_MEMBER(itech32_video_w);
+	DECLARE_READ16_MEMBER(itech32_video_r);
+	DECLARE_WRITE16_MEMBER(bloodstm_video_w);
+	DECLARE_READ16_MEMBER(bloodstm_video_r);
+	DECLARE_WRITE32_MEMBER(itech020_video_w);
+	DECLARE_WRITE32_MEMBER(drivedge_zbuf_control_w);
+	DECLARE_READ32_MEMBER(itech020_video_r);
 };
 
 
@@ -81,32 +135,11 @@ void itech32_update_interrupts(running_machine &machine, int vint, int xint, int
 
 VIDEO_START( itech32 );
 
-WRITE16_HANDLER( timekill_colora_w );
-WRITE16_HANDLER( timekill_colorbc_w );
-WRITE16_HANDLER( timekill_intensity_w );
 
-WRITE16_HANDLER( bloodstm_color1_w );
-WRITE16_HANDLER( bloodstm_color2_w );
-WRITE16_HANDLER( bloodstm_plane_w );
 
-WRITE32_HANDLER( drivedge_color0_w );
 
-WRITE32_HANDLER( itech020_color1_w );
-WRITE32_HANDLER( itech020_color2_w );
-WRITE32_HANDLER( itech020_plane_w );
 
-WRITE16_HANDLER( timekill_paletteram_w );
-WRITE16_HANDLER( bloodstm_paletteram_w );
-WRITE32_HANDLER( drivedge_paletteram_w );
-WRITE32_HANDLER( itech020_paletteram_w );
 
-WRITE16_HANDLER( itech32_video_w );
-READ16_HANDLER( itech32_video_r );
 
-WRITE16_HANDLER( bloodstm_video_w );
-READ16_HANDLER( bloodstm_video_r );
-WRITE32_HANDLER( itech020_video_w );
-READ32_HANDLER( itech020_video_r );
-WRITE32_HANDLER( drivedge_zbuf_control_w );
 
 SCREEN_UPDATE_IND16( itech32 );

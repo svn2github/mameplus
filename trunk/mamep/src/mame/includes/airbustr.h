@@ -37,16 +37,28 @@ public:
 	device_t *m_slave;
 	device_t *m_audiocpu;
 	device_t *m_pandora;
+	DECLARE_READ8_MEMBER(devram_r);
+	DECLARE_WRITE8_MEMBER(master_nmi_trigger_w);
+	DECLARE_WRITE8_MEMBER(master_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(slave_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(sound_bankswitch_w);
+	DECLARE_READ8_MEMBER(soundcommand_status_r);
+	DECLARE_READ8_MEMBER(soundcommand_r);
+	DECLARE_READ8_MEMBER(soundcommand2_r);
+	DECLARE_WRITE8_MEMBER(soundcommand_w);
+	DECLARE_WRITE8_MEMBER(soundcommand2_w);
+	DECLARE_WRITE8_MEMBER(airbustr_paletteram_w);
+	DECLARE_WRITE8_MEMBER(airbustr_coin_counter_w);
+	DECLARE_WRITE8_MEMBER(airbustr_videoram_w);
+	DECLARE_WRITE8_MEMBER(airbustr_colorram_w);
+	DECLARE_WRITE8_MEMBER(airbustr_videoram2_w);
+	DECLARE_WRITE8_MEMBER(airbustr_colorram2_w);
+	DECLARE_WRITE8_MEMBER(airbustr_scrollregs_w);
 };
 
 
 /*----------- defined in video/airbustr.c -----------*/
 
-WRITE8_HANDLER( airbustr_videoram_w );
-WRITE8_HANDLER( airbustr_colorram_w );
-WRITE8_HANDLER( airbustr_videoram2_w );
-WRITE8_HANDLER( airbustr_colorram2_w );
-WRITE8_HANDLER( airbustr_scrollregs_w );
 
 VIDEO_START( airbustr );
 SCREEN_UPDATE_IND16( airbustr );

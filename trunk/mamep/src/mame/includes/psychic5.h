@@ -26,24 +26,29 @@ public:
 	int m_sy2;
 	UINT8 *m_spriteram;
 	size_t m_spriteram_size;
+	DECLARE_READ8_MEMBER(psychic5_bankselect_r);
+	DECLARE_WRITE8_MEMBER(psychic5_bankselect_w);
+	DECLARE_WRITE8_MEMBER(bombsa_bankselect_w);
+	DECLARE_WRITE8_MEMBER(psychic5_coin_counter_w);
+	DECLARE_WRITE8_MEMBER(bombsa_flipscreen_w);
+	DECLARE_READ8_MEMBER(psychic5_vram_page_select_r);
+	DECLARE_WRITE8_MEMBER(psychic5_vram_page_select_w);
+	DECLARE_WRITE8_MEMBER(psychic5_title_screen_w);
+	DECLARE_READ8_MEMBER(psychic5_paged_ram_r);
+	DECLARE_WRITE8_MEMBER(psychic5_paged_ram_w);
+	DECLARE_WRITE8_MEMBER(bombsa_paged_ram_w);
+	DECLARE_WRITE8_MEMBER(bombsa_unknown_w);
 };
 
 
 /*----------- defined in video/psychic5.c -----------*/
 
-WRITE8_HANDLER( psychic5_paged_ram_w );
-WRITE8_HANDLER( psychic5_vram_page_select_w );
-WRITE8_HANDLER( psychic5_title_screen_w );
 
-READ8_HANDLER( psychic5_paged_ram_r );
-READ8_HANDLER( psychic5_vram_page_select_r );
 
 VIDEO_START( psychic5 );
 VIDEO_RESET( psychic5 );
 SCREEN_UPDATE_RGB32( psychic5 );
 
-WRITE8_HANDLER( bombsa_paged_ram_w );
-WRITE8_HANDLER( bombsa_unknown_w );
 
 VIDEO_START( bombsa );
 VIDEO_RESET( bombsa );

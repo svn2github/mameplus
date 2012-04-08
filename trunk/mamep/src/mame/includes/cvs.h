@@ -63,6 +63,26 @@ public:
 	UINT8      m_character_ram[3 * 0x800];	/* only half is used, but
                                                by allocating twice the amount,
                                                we can use the same gfx_layout */
+	DECLARE_READ8_MEMBER(cvs_input_r);
+	DECLARE_READ8_MEMBER(cvs_393hz_clock_r);
+	DECLARE_WRITE8_MEMBER(cvs_speech_rom_address_lo_w);
+	DECLARE_WRITE8_MEMBER(cvs_speech_rom_address_hi_w);
+	DECLARE_READ8_MEMBER(cvs_speech_command_r);
+	DECLARE_WRITE8_MEMBER(audio_command_w);
+	DECLARE_READ8_MEMBER(cvs_video_or_color_ram_r);
+	DECLARE_WRITE8_MEMBER(cvs_video_or_color_ram_w);
+	DECLARE_READ8_MEMBER(cvs_bullet_ram_or_palette_r);
+	DECLARE_WRITE8_MEMBER(cvs_bullet_ram_or_palette_w);
+	DECLARE_READ8_MEMBER(cvs_s2636_0_or_character_ram_r);
+	DECLARE_WRITE8_MEMBER(cvs_s2636_0_or_character_ram_w);
+	DECLARE_READ8_MEMBER(cvs_s2636_1_or_character_ram_r);
+	DECLARE_WRITE8_MEMBER(cvs_s2636_1_or_character_ram_w);
+	DECLARE_READ8_MEMBER(cvs_s2636_2_or_character_ram_r);
+	DECLARE_WRITE8_MEMBER(cvs_s2636_2_or_character_ram_w);
+	DECLARE_WRITE8_MEMBER(cvs_video_fx_w);
+	DECLARE_READ8_MEMBER(cvs_collision_r);
+	DECLARE_READ8_MEMBER(cvs_collision_clear);
+	DECLARE_WRITE8_MEMBER(cvs_scroll_w);
 };
 
 
@@ -71,29 +91,12 @@ public:
 MACHINE_START( cvs );
 MACHINE_RESET( cvs );
 
-READ8_HANDLER( cvs_video_or_color_ram_r );
-WRITE8_HANDLER( cvs_video_or_color_ram_w );
-
-READ8_HANDLER( cvs_bullet_ram_or_palette_r );
-WRITE8_HANDLER( cvs_bullet_ram_or_palette_w );
-
-READ8_HANDLER( cvs_s2636_0_or_character_ram_r );
-WRITE8_HANDLER( cvs_s2636_0_or_character_ram_w );
-READ8_HANDLER( cvs_s2636_1_or_character_ram_r );
-WRITE8_HANDLER( cvs_s2636_1_or_character_ram_w );
-READ8_HANDLER( cvs_s2636_2_or_character_ram_r );
-WRITE8_HANDLER( cvs_s2636_2_or_character_ram_w );
-
 /*----------- defined in video/cvs.c -----------*/
 
-WRITE8_HANDLER( cvs_scroll_w );
-WRITE8_HANDLER( cvs_video_fx_w );
 
-READ8_HANDLER( cvs_collision_r );
-READ8_HANDLER( cvs_collision_clear );
 
 void cvs_init_stars( running_machine &machine );
-void cvs_scroll_stars(running_machine &machine);
+void cvs_scroll_stars( running_machine &machine );
 void cvs_update_stars(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, const pen_t star_pen, bool update_always);
 
 PALETTE_INIT( cvs );

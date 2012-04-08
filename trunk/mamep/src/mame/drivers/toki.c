@@ -43,13 +43,13 @@ for now. Even at 12 this slowdown still happens a little.
 #include "sound/3812intf.h"
 #include "includes/toki.h"
 
-static WRITE16_HANDLER( tokib_soundcommand16_w )
+WRITE16_MEMBER(toki_state::tokib_soundcommand16_w)
 {
 	soundlatch_w(space, 0, data & 0xff);
-	cputag_set_input_line(space->machine(), "audiocpu", 0, HOLD_LINE);
+	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
 }
 
-static READ16_HANDLER( pip16_r )
+READ16_MEMBER(toki_state::pip16_r)
 {
 	return ~0;
 }
@@ -81,45 +81,44 @@ static WRITE8_DEVICE_HANDLER( toki_adpcm_control_w )
 	msm5205_reset_w(device,data & 0x08);
 }
 
-static WRITE8_HANDLER( toki_adpcm_data_w )
+WRITE8_MEMBER(toki_state::toki_adpcm_data_w)
 {
-	toki_state *state = space->machine().driver_data<toki_state>();
-	state->m_msm5205next = data;
+	m_msm5205next = data;
 }
 
 
 /*****************************************************************************/
 
-static ADDRESS_MAP_START( toki_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( toki_map, AS_PROGRAM, 16, toki_state )
 	AM_RANGE(0x000000, 0x05ffff) AM_ROM
 	AM_RANGE(0x060000, 0x06d7ff) AM_RAM
 	AM_RANGE(0x06d800, 0x06dfff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x06e000, 0x06e7ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x06e800, 0x06efff) AM_RAM_WRITE(toki_background1_videoram16_w) AM_BASE_MEMBER(toki_state, m_background1_videoram16)
-	AM_RANGE(0x06f000, 0x06f7ff) AM_RAM_WRITE(toki_background2_videoram16_w) AM_BASE_MEMBER(toki_state, m_background2_videoram16)
-	AM_RANGE(0x06f800, 0x06ffff) AM_RAM_WRITE(toki_foreground_videoram16_w) AM_BASE_MEMBER(toki_state, m_videoram)
-	AM_RANGE(0x080000, 0x08000d) AM_READWRITE(seibu_main_word_r, seibu_main_word_w)
-	AM_RANGE(0x0a0000, 0x0a005f) AM_WRITE(toki_control_w) AM_BASE_MEMBER(toki_state, m_scrollram16)
+	AM_RANGE(0x06e000, 0x06e7ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x06e800, 0x06efff) AM_RAM_WRITE(toki_background1_videoram16_w) AM_BASE(m_background1_videoram16)
+	AM_RANGE(0x06f000, 0x06f7ff) AM_RAM_WRITE(toki_background2_videoram16_w) AM_BASE(m_background2_videoram16)
+	AM_RANGE(0x06f800, 0x06ffff) AM_RAM_WRITE(toki_foreground_videoram16_w) AM_BASE(m_videoram)
+	AM_RANGE(0x080000, 0x08000d) AM_READWRITE_LEGACY(seibu_main_word_r, seibu_main_word_w)
+	AM_RANGE(0x0a0000, 0x0a005f) AM_WRITE(toki_control_w) AM_BASE(m_scrollram16)
 	AM_RANGE(0x0c0000, 0x0c0001) AM_READ_PORT("DSW")
 	AM_RANGE(0x0c0002, 0x0c0003) AM_READ_PORT("INPUTS")
 	AM_RANGE(0x0c0004, 0x0c0005) AM_READ_PORT("SYSTEM")
 ADDRESS_MAP_END
 
 /* In the bootleg, sound and sprites are remapped to 0x70000 */
-static ADDRESS_MAP_START( tokib_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( tokib_map, AS_PROGRAM, 16, toki_state )
 	AM_RANGE(0x000000, 0x05ffff) AM_ROM
 	AM_RANGE(0x060000, 0x06dfff) AM_RAM
-	AM_RANGE(0x06e000, 0x06e7ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x06e800, 0x06efff) AM_RAM_WRITE(toki_background1_videoram16_w) AM_BASE_MEMBER(toki_state, m_background1_videoram16)
-	AM_RANGE(0x06f000, 0x06f7ff) AM_RAM_WRITE(toki_background2_videoram16_w) AM_BASE_MEMBER(toki_state, m_background2_videoram16)
-	AM_RANGE(0x06f800, 0x06ffff) AM_RAM_WRITE(toki_foreground_videoram16_w) AM_BASE_MEMBER(toki_state, m_videoram)
+	AM_RANGE(0x06e000, 0x06e7ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x06e800, 0x06efff) AM_RAM_WRITE(toki_background1_videoram16_w) AM_BASE(m_background1_videoram16)
+	AM_RANGE(0x06f000, 0x06f7ff) AM_RAM_WRITE(toki_background2_videoram16_w) AM_BASE(m_background2_videoram16)
+	AM_RANGE(0x06f800, 0x06ffff) AM_RAM_WRITE(toki_foreground_videoram16_w) AM_BASE(m_videoram)
 	AM_RANGE(0x071000, 0x071001) AM_WRITENOP	/* sprite related? seems another scroll register */
 				/* gets written the same value as 75000a (bg2 scrollx) */
 	AM_RANGE(0x071804, 0x071807) AM_WRITENOP	/* sprite related, always 01be0100 */
 	AM_RANGE(0x07180e, 0x071e45) AM_WRITEONLY AM_SHARE("spriteram")
 	AM_RANGE(0x072000, 0x072001) AM_READ(watchdog_reset16_r)   /* probably */
 	AM_RANGE(0x075000, 0x075001) AM_WRITE(tokib_soundcommand16_w)
-	AM_RANGE(0x075004, 0x07500b) AM_WRITEONLY AM_BASE_MEMBER(toki_state, m_scrollram16)
+	AM_RANGE(0x075004, 0x07500b) AM_WRITEONLY AM_BASE(m_scrollram16)
 	AM_RANGE(0x0c0000, 0x0c0001) AM_READ_PORT("DSW")
 	AM_RANGE(0x0c0002, 0x0c0003) AM_READ_PORT("INPUTS")
 	AM_RANGE(0x0c0004, 0x0c0005) AM_READ_PORT("SYSTEM")
@@ -130,12 +129,12 @@ ADDRESS_MAP_END
 
 /*****************************************************************************/
 
-static ADDRESS_MAP_START( tokib_audio_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( tokib_audio_map, AS_PROGRAM, 8, toki_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("msm", toki_adpcm_control_w)	/* MSM5205 + ROM bank */
+	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE_LEGACY("msm", toki_adpcm_control_w)	/* MSM5205 + ROM bank */
 	AM_RANGE(0xe400, 0xe400) AM_WRITE(toki_adpcm_data_w)
-	AM_RANGE(0xec00, 0xec01) AM_MIRROR(0x0008) AM_DEVREADWRITE("ymsnd", ym3812_r, ym3812_w)
+	AM_RANGE(0xec00, 0xec01) AM_MIRROR(0x0008) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_r, ym3812_w)
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
 	AM_RANGE(0xf800, 0xf800) AM_READ(soundlatch_r)
 ADDRESS_MAP_END

@@ -122,6 +122,48 @@ public:
 	UINT8 m_vblank_vector;
 	UINT8 m_timer0_vector;
 	UINT8 m_timer1_vector;
+	DECLARE_WRITE8_MEMBER(regs_w);
+	DECLARE_READ8_MEMBER(regs_r);
+	DECLARE_WRITE8_MEMBER(regs2_w);
+	DECLARE_READ8_MEMBER(regs2_r);
+	DECLARE_WRITE8_MEMBER(c4_w);
+	DECLARE_WRITE8_MEMBER(c6_w);
+	DECLARE_WRITE8_MEMBER(c8_w);
+	DECLARE_WRITE8_MEMBER(animalc_rombank_w);
+	DECLARE_READ8_MEMBER(animalc_rombank_r);
+	DECLARE_WRITE8_MEMBER(animalc_rambank_w);
+	DECLARE_READ8_MEMBER(animalc_rambank_r);
+	DECLARE_READ8_MEMBER(unk_34_r);
+	DECLARE_READ8_MEMBER(vblank_r);
+	DECLARE_WRITE8_MEMBER(vblank_w);
+	DECLARE_WRITE8_MEMBER(sammymdl_coin_w);
+	DECLARE_WRITE8_MEMBER(sammymdl_leds_w);
+	DECLARE_WRITE8_MEMBER(sammymdl_hopper_w);
+	DECLARE_READ8_MEMBER(sammymdl_coin_hopper_r);
+	DECLARE_WRITE8_MEMBER(haekaka_rombank_w);
+	DECLARE_READ8_MEMBER(haekaka_rombank_r);
+	DECLARE_WRITE8_MEMBER(haekaka_rambank_w);
+	DECLARE_READ8_MEMBER(haekaka_rambank_r);
+	DECLARE_READ8_MEMBER(haekaka_vblank_r);
+	DECLARE_READ8_MEMBER(haekaka_b000_r);
+	DECLARE_WRITE8_MEMBER(haekaka_b000_w);
+	DECLARE_WRITE8_MEMBER(haekaka_leds_w);
+	DECLARE_WRITE8_MEMBER(haekaka_coin_w);
+	DECLARE_WRITE8_MEMBER(itazuram_rombank_w);
+	DECLARE_READ8_MEMBER(itazuram_rombank_r);
+	DECLARE_WRITE8_MEMBER(itazuram_rambank_w);
+	DECLARE_READ8_MEMBER(itazuram_rambank_r);
+	DECLARE_WRITE8_MEMBER(itazuram_nvram_palette_w);
+	DECLARE_WRITE8_MEMBER(itazuram_palette_w);
+	DECLARE_READ8_MEMBER(itazuram_palette_r);
+	DECLARE_WRITE8_MEMBER(tdoboon_rombank_w);
+	DECLARE_READ8_MEMBER(tdoboon_rombank_r);
+	DECLARE_WRITE8_MEMBER(tdoboon_rambank_w);
+	DECLARE_READ8_MEMBER(tdoboon_rambank_r);
+	DECLARE_READ8_MEMBER(tdoboon_c000_r);
+	DECLARE_WRITE8_MEMBER(tdoboon_c000_w);
+	void show_outputs();
+	void show_3_outputs();
 };
 
 
@@ -289,90 +331,86 @@ static SCREEN_UPDATE_IND16(sigmab98)
 ***************************************************************************/
 
 // rombank
-static WRITE8_HANDLER( regs_w )
+WRITE8_MEMBER(sigmab98_state::regs_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
 	{
-		state->m_reg = data;
+		m_reg = data;
 		return;
 	}
 
-	switch ( state->m_reg )
+	switch ( m_reg )
 	{
 		case 0x1f:
-			state->m_rombank = data;
+			m_rombank = data;
 			if (data >= 0x18)
-				logerror("%s: unknown rom bank = %02x\n", space->machine().describe_context(), data);
+				logerror("%s: unknown rom bank = %02x\n", machine().describe_context(), data);
 			else
-				memory_set_bank(space->machine(), "rombank", data);
+				memory_set_bank(machine(), "rombank", data);
 			break;
 
 		default:
-			logerror("%s: unknown reg written: %02x = %02x\n", space->machine().describe_context(), state->m_reg, data);
+			logerror("%s: unknown reg written: %02x = %02x\n", machine().describe_context(), m_reg, data);
 	}
 }
-static READ8_HANDLER( regs_r )
+READ8_MEMBER(sigmab98_state::regs_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
-		return state->m_reg;
+		return m_reg;
 
-	switch ( state->m_reg )
+	switch ( m_reg )
 	{
 		case 0x1f:
-			return state->m_rombank;
+			return m_rombank;
 
 		default:
-			logerror("%s: unknown reg read: %02x\n", space->machine().describe_context(), state->m_reg);
+			logerror("%s: unknown reg read: %02x\n", machine().describe_context(), m_reg);
 			return 0x00;
 	}
 }
 
 // rambank
-static WRITE8_HANDLER( regs2_w )
+WRITE8_MEMBER(sigmab98_state::regs2_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
 	{
-		state->m_reg2 = data;
+		m_reg2 = data;
 		return;
 	}
 
-	switch ( state->m_reg2 )
+	switch ( m_reg2 )
 	{
 		case 0xb5:
-			state->m_rambank = data;
+			m_rambank = data;
 			switch (data)
 			{
 				case 0x32:
-					memory_set_bank(space->machine(), "rambank", 0);
+					memory_set_bank(machine(), "rambank", 0);
 					break;
 				case 0x36:
-					memory_set_bank(space->machine(), "rambank", 1);
+					memory_set_bank(machine(), "rambank", 1);
 					break;
 				default:
-					logerror("%s: unknown ram bank = %02x\n", space->machine().describe_context(), data);
+					logerror("%s: unknown ram bank = %02x\n", machine().describe_context(), data);
 			}
 			break;
 
 		default:
-			logerror("%s: unknown reg2 written: %02x = %02x\n", space->machine().describe_context(), state->m_reg2, data);
+			logerror("%s: unknown reg2 written: %02x = %02x\n", machine().describe_context(), m_reg2, data);
 	}
 }
-static READ8_HANDLER( regs2_r )
+READ8_MEMBER(sigmab98_state::regs2_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
-		return state->m_reg2;
+		return m_reg2;
 
-	switch ( state->m_reg2 )
+	switch ( m_reg2 )
 	{
 		case 0xb5:
-			return state->m_rambank;
+			return m_rambank;
 
 		default:
-			logerror("%s: unknown reg2 read: %02x\n", space->machine().describe_context(), state->m_reg2);
+			logerror("%s: unknown reg2 read: %02x\n", machine().describe_context(), m_reg2);
 			return 0x00;
 	}
 }
@@ -380,10 +418,10 @@ static READ8_HANDLER( regs2_r )
 
 // Outputs
 
-static void show_outputs(sigmab98_state *state)
+void sigmab98_state::show_outputs()
 {
 #ifdef MAME_DEBUG
-//  popmessage("0: %02X  4: %02X  6: %02X  8: %02X",state->m_c0,state->m_c4,state->m_c6,state->m_c8);
+//  popmessage("0: %02X  4: %02X  6: %02X  8: %02X",m_c0,m_c4,m_c6,m_c8);
 #endif
 }
 
@@ -403,18 +441,17 @@ static WRITE8_DEVICE_HANDLER( eeprom_w )
 	eeprom->set_clock_line((data & 0x10) ? ASSERT_LINE : CLEAR_LINE);
 
 	state->m_c0 = data;
-	show_outputs(state);
+	//show_outputs(state);
 }
 
 // Port c4
 // 10 led?
-static WRITE8_HANDLER( c4_w )
+WRITE8_MEMBER(sigmab98_state::c4_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	set_led_status(space->machine(), 0, (data & 0x10));
+	set_led_status(machine(), 0, (data & 0x10));
 
-	state->m_c4 = data;
-	show_outputs(state);
+	m_c4 = data;
+	show_outputs();
 }
 
 // Port c6
@@ -423,40 +460,38 @@ static WRITE8_HANDLER( c4_w )
 // 08 always blinks
 // 10 led?
 // 20 blinks after coin up
-static WRITE8_HANDLER( c6_w )
+WRITE8_MEMBER(sigmab98_state::c6_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	coin_lockout_w(space->machine(), 0, (~data) & 0x02);
+	coin_lockout_w(machine(), 0, (~data) & 0x02);
 
-	coin_counter_w(space->machine(), 0,   data  & 0x04);
+	coin_counter_w(machine(), 0,   data  & 0x04);
 
-	set_led_status(space->machine(), 1,   data  & 0x08);
-	set_led_status(space->machine(), 2,   data  & 0x10);
-	set_led_status(space->machine(), 3,   data  & 0x20);	//
+	set_led_status(machine(), 1,   data  & 0x08);
+	set_led_status(machine(), 2,   data  & 0x10);
+	set_led_status(machine(), 3,   data  & 0x20);	//
 
-	state->m_c6 = data;
-	show_outputs(state);
+	m_c6 = data;
+	show_outputs();
 }
 
 // Port c8
 // 01 hopper enable?
 // 02 hopper motor on (active low)?
-static WRITE8_HANDLER( c8_w )
+WRITE8_MEMBER(sigmab98_state::c8_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	ticket_dispenser_w(space->machine().device("hopper"), 0, (!(data & 0x02) && (data & 0x01)) ? 0x00 : 0x80);
+	ticket_dispenser_w(machine().device("hopper"), 0, (!(data & 0x02) && (data & 0x01)) ? 0x00 : 0x80);
 
-	state->m_c8 = data;
-	show_outputs(state);
+	m_c8 = data;
+	show_outputs();
 }
 
-static ADDRESS_MAP_START( gegege_mem_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( gegege_mem_map, AS_PROGRAM, 8, sigmab98_state )
 	AM_RANGE( 0x0000, 0x7fff ) AM_ROM
 	AM_RANGE( 0x8000, 0x9fff ) AM_ROMBANK("rombank")
 
-	AM_RANGE( 0xa000, 0xafff ) AM_RAM AM_BASE_SIZE_MEMBER(sigmab98_state, m_spriteram, m_spriteram_size)
+	AM_RANGE( 0xa000, 0xafff ) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
 
-	AM_RANGE( 0xc000, 0xc1ff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_be_w) AM_BASE_GENERIC(paletteram)
+	AM_RANGE( 0xc000, 0xc1ff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_be_w) AM_SHARE("paletteram")
 
 	AM_RANGE( 0xc800, 0xc87f ) AM_RAM
 
@@ -468,26 +503,26 @@ static ADDRESS_MAP_START( gegege_mem_map, AS_PROGRAM, 8 )
 	AM_RANGE( 0xf000, 0xffff ) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( gegege_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( gegege_io_map, AS_IO, 8, sigmab98_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 
-	AM_RANGE( 0x00, 0x01 ) AM_DEVWRITE( "ymz", ymz280b_w )
+	AM_RANGE( 0x00, 0x01 ) AM_DEVWRITE_LEGACY("ymz", ymz280b_w )
 
-	AM_RANGE( 0xa0, 0xa1 ) AM_READWRITE( regs_r,  regs_w )
+	AM_RANGE( 0xa0, 0xa1 ) AM_READWRITE(regs_r,  regs_w )
 //  AM_RANGE( 0xa2, 0xa3 )
-	AM_RANGE( 0xa4, 0xa5 ) AM_READWRITE( regs2_r, regs2_w )
+	AM_RANGE( 0xa4, 0xa5 ) AM_READWRITE(regs2_r, regs2_w )
 
 	AM_RANGE( 0xc0, 0xc0 ) AM_READ_PORT( "EEPROM" )
-	AM_RANGE( 0xc0, 0xc0 ) AM_DEVWRITE("eeprom", eeprom_w)
+	AM_RANGE( 0xc0, 0xc0 ) AM_DEVWRITE_LEGACY("eeprom", eeprom_w)
 
 	AM_RANGE( 0xc2, 0xc2 ) AM_READ_PORT( "IN1" )
 
 	AM_RANGE( 0xc4, 0xc4 ) AM_READ_PORT( "IN2" )
-	AM_RANGE( 0xc4, 0xc4 ) AM_WRITE( c4_w )
+	AM_RANGE( 0xc4, 0xc4 ) AM_WRITE(c4_w )
 
-	AM_RANGE( 0xc6, 0xc6 ) AM_WRITE( c6_w )
+	AM_RANGE( 0xc6, 0xc6 ) AM_WRITE(c6_w )
 
-	AM_RANGE( 0xc8, 0xc8 ) AM_WRITE( c8_w )
+	AM_RANGE( 0xc8, 0xc8 ) AM_WRITE(c8_w )
 
 	AM_RANGE( 0xe5, 0xe5 ) AM_READNOP	// during irq
 ADDRESS_MAP_END
@@ -498,66 +533,63 @@ ADDRESS_MAP_END
 ***************************************************************************/
 
 // rombank
-static WRITE8_HANDLER( animalc_rombank_w )
+WRITE8_MEMBER(sigmab98_state::animalc_rombank_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
 	{
-		state->m_reg = data;
+		m_reg = data;
 		return;
 	}
 
-	UINT8 *rom = space->machine().region("maincpu")->base();
-	switch ( state->m_reg )
+	UINT8 *rom = machine().region("maincpu")->base();
+	switch ( m_reg )
 	{
 		case 0x0f:
-			state->m_rombank = data;
+			m_rombank = data;
 			switch (data)
 			{
-				case 0x10:	memory_set_bankptr(space->machine(), "rombank", rom + 0x400 + 0x4000);	break;
-				case 0x14:	memory_set_bankptr(space->machine(), "rombank", rom + 0x400 + 0x8000);	break;
-				case 0x18:	memory_set_bankptr(space->machine(), "rombank", rom + 0x400 + 0xc000);	break;
+				case 0x10:	memory_set_bankptr(machine(), "rombank", rom + 0x400 + 0x4000);	break;
+				case 0x14:	memory_set_bankptr(machine(), "rombank", rom + 0x400 + 0x8000);	break;
+				case 0x18:	memory_set_bankptr(machine(), "rombank", rom + 0x400 + 0xc000);	break;
 				default:
-					logerror("%s: unknown rom bank = %02x, reg = %02x\n", space->machine().describe_context(), data, state->m_reg);
+					logerror("%s: unknown rom bank = %02x, reg = %02x\n", machine().describe_context(), data, m_reg);
 			}
 			break;
 
 		default:
-			logerror("%s: unknown reg written: %02x = %02x\n", space->machine().describe_context(), state->m_reg, data);
+			logerror("%s: unknown reg written: %02x = %02x\n", machine().describe_context(), m_reg, data);
 	}
 }
-static READ8_HANDLER( animalc_rombank_r )
+READ8_MEMBER(sigmab98_state::animalc_rombank_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
-		return state->m_reg;
+		return m_reg;
 
-	switch ( state->m_reg )
+	switch ( m_reg )
 	{
 		case 0x0f:
-			return state->m_rombank;
+			return m_rombank;
 
 		default:
-			logerror("%s: unknown reg read: %02x\n", space->machine().describe_context(), state->m_reg);
+			logerror("%s: unknown reg read: %02x\n", machine().describe_context(), m_reg);
 			return 0x00;
 	}
 }
 
 // rambank
-static WRITE8_HANDLER( animalc_rambank_w )
+WRITE8_MEMBER(sigmab98_state::animalc_rambank_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
 	{
-		state->m_reg2 = data;
+		m_reg2 = data;
 		return;
 	}
 
 	int bank = 0;
-	switch ( state->m_reg2 )
+	switch ( m_reg2 )
 	{
 		case 0x1f:
-			state->m_rambank = data;
+			m_rambank = data;
 			switch (data)
 			{
 				case 0x58:	bank = 0;	break;
@@ -566,31 +598,30 @@ static WRITE8_HANDLER( animalc_rambank_w )
 				case 0x64:	bank = 3;	break;
 				case 0x65:	bank = 4;	break;
 				default:
-					logerror("%s: unknown ram bank = %02x, reg2 = %02x\n", space->machine().describe_context(), data, state->m_reg2);
+					logerror("%s: unknown ram bank = %02x, reg2 = %02x\n", machine().describe_context(), data, m_reg2);
 					return;
 			}
-			memory_set_bank(space->machine(), "rambank", bank);
+			memory_set_bank(machine(), "rambank", bank);
 			if ( (bank == 1) || (bank == 2) || (bank == 3) )
-				memory_set_bank(space->machine(), "sprbank", bank-1);
+				memory_set_bank(machine(), "sprbank", bank-1);
 			break;
 
 		default:
-			logerror("%s: unknown reg2 written: %02x = %02x\n", space->machine().describe_context(), state->m_reg2, data);
+			logerror("%s: unknown reg2 written: %02x = %02x\n", machine().describe_context(), m_reg2, data);
 	}
 }
-static READ8_HANDLER( animalc_rambank_r )
+READ8_MEMBER(sigmab98_state::animalc_rambank_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
-		return state->m_reg2;
+		return m_reg2;
 
-	switch ( state->m_reg2 )
+	switch ( m_reg2 )
 	{
 		case 0x1f:
-			return state->m_rambank;
+			return m_rambank;
 
 		default:
-			logerror("%s: unknown reg2 read: %02x\n", space->machine().describe_context(), state->m_reg2);
+			logerror("%s: unknown reg2 read: %02x\n", machine().describe_context(), m_reg2);
 			return 0x00;
 	}
 }
@@ -618,24 +649,22 @@ static WRITE8_DEVICE_HANDLER( sammymdl_eeprom_w )
 		logerror("%s: unknown eeeprom bits written %02x\n", device->machine().describe_context(), data);
 }
 
-static READ8_HANDLER( unk_34_r )
+READ8_MEMBER(sigmab98_state::unk_34_r)
 {
 	// mask 0x01?
 	return 0x01;
 }
 
-static READ8_HANDLER( vblank_r )
+READ8_MEMBER(sigmab98_state::vblank_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	// mask 0x04 must be set before writing sprite list
 	// mask 0x10 must be set or irq/00 hangs?
-	return	state->m_vblank | 0x14;
+	return	m_vblank | 0x14;
 }
 
-static WRITE8_HANDLER( vblank_w )
+WRITE8_MEMBER(sigmab98_state::vblank_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	state->m_vblank = (state->m_vblank & ~0x03) | (data & 0x03);
+	m_vblank = (m_vblank & ~0x03) | (data & 0x03);
 }
 
 static SCREEN_VBLANK( sammymdl )
@@ -648,94 +677,91 @@ static SCREEN_VBLANK( sammymdl )
 	}
 }
 
-static void show_3_outputs(sigmab98_state *state)
+void sigmab98_state::show_3_outputs()
 {
 #ifdef MAME_DEBUG
-//  popmessage("COIN: %02X  LED: %02X  HOP: %02X", state->m_out[0], state->m_out[1], state->m_out[2]);
+//  popmessage("COIN: %02X  LED: %02X  HOP: %02X", m_out[0], m_out[1], m_out[2]);
 #endif
 }
 // Port 31
-static WRITE8_HANDLER( sammymdl_coin_w )
+WRITE8_MEMBER(sigmab98_state::sammymdl_coin_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	coin_counter_w(space->machine(), 0,   data  & 0x01 );	// coin1 in
-	coin_counter_w(space->machine(), 1,   data  & 0x02 );	// coin2 in
-	coin_counter_w(space->machine(), 2,   data  & 0x04 );	// medal in
+	coin_counter_w(machine(), 0,   data  & 0x01 );	// coin1 in
+	coin_counter_w(machine(), 1,   data  & 0x02 );	// coin2 in
+	coin_counter_w(machine(), 2,   data  & 0x04 );	// medal in
 
-//  coin_lockout_w(space->machine(), 1, (~data) & 0x08 ); // coin2 lockout?
-//  coin_lockout_w(space->machine(), 0, (~data) & 0x10 ); // coin1 lockout
-//  coin_lockout_w(space->machine(), 2, (~data) & 0x20 ); // medal lockout?
+//  coin_lockout_w(machine(), 1, (~data) & 0x08 ); // coin2 lockout?
+//  coin_lockout_w(machine(), 0, (~data) & 0x10 ); // coin1 lockout
+//  coin_lockout_w(machine(), 2, (~data) & 0x20 ); // medal lockout?
 
-	state->m_out[0] = data;
-	show_3_outputs(state);
+	m_out[0] = data;
+	show_3_outputs();
 }
 
 // Port 32
-static WRITE8_HANDLER( sammymdl_leds_w )
+WRITE8_MEMBER(sigmab98_state::sammymdl_leds_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	set_led_status(space->machine(), 0,	data & 0x01);	// button
+	set_led_status(machine(), 0,	data & 0x01);	// button
 
-	state->m_out[1] = data;
-	show_3_outputs(state);
+	m_out[1] = data;
+	show_3_outputs();
 }
 
 // Port b0
 // 02 hopper enable?
 // 01 hopper motor on (active low)?
-static WRITE8_HANDLER( sammymdl_hopper_w )
+WRITE8_MEMBER(sigmab98_state::sammymdl_hopper_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	ticket_dispenser_w(space->machine().device("hopper"), 0, (!(data & 0x01) && (data & 0x02)) ? 0x00 : 0x80);
+	ticket_dispenser_w(machine().device("hopper"), 0, (!(data & 0x01) && (data & 0x02)) ? 0x00 : 0x80);
 
-	state->m_out[2] = data;
-	show_3_outputs(state);
+	m_out[2] = data;
+	show_3_outputs();
 }
 
-static READ8_HANDLER( sammymdl_coin_hopper_r )
+READ8_MEMBER(sigmab98_state::sammymdl_coin_hopper_r)
 {
-	UINT8 ret = input_port_read(space->machine(), "COIN");
+	UINT8 ret = input_port_read(machine(), "COIN");
 
-//  if ( !ticket_dispenser_r(space->machine().device("hopper"), 0) )
+//  if ( !ticket_dispenser_r(machine().device("hopper"), 0) )
 //      ret &= ~0x01;
 
 	return ret;
 }
 
-static ADDRESS_MAP_START( animalc_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( animalc_map, AS_PROGRAM, 8, sigmab98_state )
 	AM_RANGE( 0x0000, 0x3fff ) AM_ROM
 	AM_RANGE( 0x4000, 0x7fff ) AM_ROMBANK( "rombank" )
-	AM_RANGE( 0x8000, 0x8fff ) AM_RAMBANK( "rambank" ) AM_SHARE( "nvram" ) AM_BASE_MEMBER( sigmab98_state, m_nvram )
+	AM_RANGE( 0x8000, 0x8fff ) AM_RAMBANK( "rambank" ) AM_SHARE( "nvram" ) AM_BASE(m_nvram )
 
 	AM_RANGE( 0x9000, 0x9fff ) AM_RAM
 	AM_RANGE( 0xa000, 0xafff ) AM_RAM
 	AM_RANGE( 0xb000, 0xbfff ) AM_RAMBANK("sprbank")
 
-	AM_RANGE( 0xd000, 0xd1ff ) AM_RAM_WRITE( paletteram_xRRRRRGGGGGBBBBB_be_w ) AM_BASE_GENERIC( paletteram )
+	AM_RANGE( 0xd000, 0xd1ff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_be_w ) AM_SHARE("paletteram")
 	AM_RANGE( 0xd800, 0xd87f ) AM_RAM	// table?
 
 	AM_RANGE( 0xe011, 0xe011 ) AM_WRITENOP	// IRQ Enable? Screen disable?
-	AM_RANGE( 0xe013, 0xe013 ) AM_READWRITE( vblank_r, vblank_w )	// IRQ Ack?
+	AM_RANGE( 0xe013, 0xe013 ) AM_READWRITE(vblank_r, vblank_w )	// IRQ Ack?
 
 	AM_RANGE( 0xfe00, 0xffff ) AM_RAM	// High speed internal RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( animalc_io, AS_IO, 8 )
+static ADDRESS_MAP_START( animalc_io, AS_IO, 8, sigmab98_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE( 0x02, 0x03 ) AM_READWRITE( animalc_rombank_r, animalc_rombank_w )
-	AM_RANGE( 0x04, 0x05 ) AM_READWRITE( animalc_rambank_r, animalc_rambank_w )
+	AM_RANGE( 0x02, 0x03 ) AM_READWRITE(animalc_rombank_r, animalc_rombank_w )
+	AM_RANGE( 0x04, 0x05 ) AM_READWRITE(animalc_rambank_r, animalc_rambank_w )
 
-	AM_RANGE( 0x2c, 0x2c ) AM_DEVREADWRITE( "eeprom", sammymdl_eeprom_r, sammymdl_eeprom_w )
-	AM_RANGE( 0x2e, 0x2e ) AM_READ( sammymdl_coin_hopper_r )
+	AM_RANGE( 0x2c, 0x2c ) AM_DEVREADWRITE_LEGACY("eeprom", sammymdl_eeprom_r, sammymdl_eeprom_w )
+	AM_RANGE( 0x2e, 0x2e ) AM_READ(sammymdl_coin_hopper_r )
 	AM_RANGE( 0x30, 0x30 ) AM_READ_PORT( "BUTTON" )
-	AM_RANGE( 0x31, 0x31 ) AM_WRITE( sammymdl_coin_w )
-	AM_RANGE( 0x32, 0x32 ) AM_WRITE( sammymdl_leds_w )
-	AM_RANGE( 0x34, 0x34 ) AM_READ( unk_34_r )
-	AM_RANGE( 0x90, 0x90 ) AM_DEVWRITE_MODERN("oki", okim9810_device, write )
-	AM_RANGE( 0x91, 0x91 ) AM_DEVWRITE_MODERN("oki", okim9810_device, write_TMP_register )
-	AM_RANGE( 0x92, 0x92 ) AM_DEVREAD_MODERN("oki", okim9810_device, read )
-	AM_RANGE( 0xb0, 0xb0 ) AM_WRITE( sammymdl_hopper_w )
-	AM_RANGE( 0xc0, 0xc0 ) AM_WRITE( watchdog_reset_w )	// 1
+	AM_RANGE( 0x31, 0x31 ) AM_WRITE(sammymdl_coin_w )
+	AM_RANGE( 0x32, 0x32 ) AM_WRITE(sammymdl_leds_w )
+	AM_RANGE( 0x34, 0x34 ) AM_READ(unk_34_r )
+	AM_RANGE( 0x90, 0x90 ) AM_DEVWRITE("oki", okim9810_device, write )
+	AM_RANGE( 0x91, 0x91 ) AM_DEVWRITE("oki", okim9810_device, write_TMP_register )
+	AM_RANGE( 0x92, 0x92 ) AM_DEVREAD("oki", okim9810_device, read )
+	AM_RANGE( 0xb0, 0xb0 ) AM_WRITE(sammymdl_hopper_w )
+	AM_RANGE( 0xc0, 0xc0 ) AM_WRITE(watchdog_reset_w )	// 1
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -743,19 +769,18 @@ ADDRESS_MAP_END
 ***************************************************************************/
 
 // rombank
-static WRITE8_HANDLER( haekaka_rombank_w )
+WRITE8_MEMBER(sigmab98_state::haekaka_rombank_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
 	{
-		state->m_reg = data;
+		m_reg = data;
 		return;
 	}
 
-	switch ( state->m_reg )
+	switch ( m_reg )
 	{
 		case 0x2b:
-			state->m_rombank = data;
+			m_rombank = data;
 			switch (data)
 			{
 				case 0x10:	// ROM
@@ -780,85 +805,81 @@ static WRITE8_HANDLER( haekaka_rombank_w )
 					break;
 
 				default:
-					logerror("%s: unknown rom bank = %02x, reg = %02x\n", space->machine().describe_context(), data, state->m_reg);
+					logerror("%s: unknown rom bank = %02x, reg = %02x\n", machine().describe_context(), data, m_reg);
 			}
 			break;
 
 		default:
-			logerror("%s: unknown reg written: %02x = %02x\n", space->machine().describe_context(), state->m_reg, data);
+			logerror("%s: unknown reg written: %02x = %02x\n", machine().describe_context(), m_reg, data);
 	}
 }
-static READ8_HANDLER( haekaka_rombank_r )
+READ8_MEMBER(sigmab98_state::haekaka_rombank_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
-		return state->m_reg;
+		return m_reg;
 
-	switch ( state->m_reg )
+	switch ( m_reg )
 	{
 		case 0x2b:
-			return state->m_rombank;
+			return m_rombank;
 
 		default:
-			logerror("%s: unknown reg read: %02x\n", space->machine().describe_context(), state->m_reg);
+			logerror("%s: unknown reg read: %02x\n", machine().describe_context(), m_reg);
 			return 0x00;
 	}
 }
 
 // rambank
-static WRITE8_HANDLER( haekaka_rambank_w )
+WRITE8_MEMBER(sigmab98_state::haekaka_rambank_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
 	{
-		state->m_reg2 = data;
+		m_reg2 = data;
 		return;
 	}
 
-	switch ( state->m_reg2 )
+	switch ( m_reg2 )
 	{
 		case 0x33:
-			state->m_rambank = data;
+			m_rambank = data;
 			switch (data)
 			{
 				case 0x53:
 					break;
 
 				default:
-					logerror("%s: unknown ram bank = %02x, reg2 = %02x\n", space->machine().describe_context(), data, state->m_reg2);
+					logerror("%s: unknown ram bank = %02x, reg2 = %02x\n", machine().describe_context(), data, m_reg2);
 			}
 			break;
 
 		default:
-			logerror("%s: unknown reg2 written: %02x = %02x\n", space->machine().describe_context(), state->m_reg2, data);
+			logerror("%s: unknown reg2 written: %02x = %02x\n", machine().describe_context(), m_reg2, data);
 	}
 }
-static READ8_HANDLER( haekaka_rambank_r )
+READ8_MEMBER(sigmab98_state::haekaka_rambank_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
-		return state->m_reg2;
+		return m_reg2;
 
-	switch ( state->m_reg2 )
+	switch ( m_reg2 )
 	{
 		case 0x33:
-			return state->m_rambank;
+			return m_rambank;
 
 		default:
-			logerror("%s: unknown reg2 read: %02x\n", space->machine().describe_context(), state->m_reg2);
+			logerror("%s: unknown reg2 read: %02x\n", machine().describe_context(), m_reg2);
 			return 0x00;
 	}
 }
 
-static READ8_HANDLER( haekaka_vblank_r )
+READ8_MEMBER(sigmab98_state::haekaka_vblank_r)
 {
-	return space->machine().primary_screen->vblank() ? 0 : 0x1c;
+	return machine().primary_screen->vblank() ? 0 : 0x1c;
 }
 
-static READ8_HANDLER( haekaka_b000_r )
+READ8_MEMBER(sigmab98_state::haekaka_b000_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	switch (state->m_rombank)
+	switch (m_rombank)
 	{
 		case 0x10:	// ROM
 		case 0x11:
@@ -876,33 +897,32 @@ static READ8_HANDLER( haekaka_b000_r )
 		case 0x1d:
 		case 0x1e:
 		case 0x1f:
-			return space->machine().region("maincpu")->base()[offset + 0xb400 + 0x1000 * (state->m_rombank-0x10)];
+			return machine().region("maincpu")->base()[offset + 0xb400 + 0x1000 * (m_rombank-0x10)];
 
 		case 0x65:	// SPRITERAM
 			if (offset < 0x1000)
-				return state->m_spriteram[offset];
+				return m_spriteram[offset];
 
 		case 0x67:	// PALETTERAM + TABLE? + REGS
 			if (offset < 0x200)
-				return space->machine().generic.paletteram.u8[offset];
+				return m_generic_paletteram_8[offset];
 			else if (offset == (0xc013-0xb000))
 				return haekaka_vblank_r(space, offset);
 			break;
 	}
 
-	logerror("%s: unknown read from %02x with rombank = %02x\n", space->machine().describe_context(), offset+0xb000, state->m_rombank);
+	logerror("%s: unknown read from %02x with rombank = %02x\n", machine().describe_context(), offset+0xb000, m_rombank);
 	return 0x00;
 }
 
-static WRITE8_HANDLER( haekaka_b000_w )
+WRITE8_MEMBER(sigmab98_state::haekaka_b000_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	switch (state->m_rombank)
+	switch (m_rombank)
 	{
 		case 0x65:	// SPRITERAM
 			if (offset < 0x1000)
 			{
-				state->m_spriteram[offset] = data;
+				m_spriteram[offset] = data;
 				return;
 			}
 			break;
@@ -911,7 +931,7 @@ static WRITE8_HANDLER( haekaka_b000_w )
 			if (offset < 0x200)
 			{
 				paletteram_xRRRRRGGGGGBBBBB_be_w(space, offset, data);
-//              space->machine().generic.paletteram.u8[offset] = data;
+//              m_generic_paletteram_8[offset] = data;
 				return;
 			}
 			else if ((offset >= 0x800) && (offset < 0x880))
@@ -922,60 +942,58 @@ static WRITE8_HANDLER( haekaka_b000_w )
 			break;
 	}
 
-	logerror("%s: unknown write to %02x = %02x with rombank = %02x\n", space->machine().describe_context(), offset+0xb000, data, state->m_rombank);
+	logerror("%s: unknown write to %02x = %02x with rombank = %02x\n", machine().describe_context(), offset+0xb000, data, m_rombank);
 }
 
-static WRITE8_HANDLER( haekaka_leds_w )
+WRITE8_MEMBER(sigmab98_state::haekaka_leds_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	// All used
-	set_led_status(space->machine(), 0,	data & 0x01);
-	set_led_status(space->machine(), 1,	data & 0x02);
-	set_led_status(space->machine(), 2,	data & 0x04);
-	set_led_status(space->machine(), 3,	data & 0x08);
-	set_led_status(space->machine(), 4,	data & 0x10);
-	set_led_status(space->machine(), 5,	data & 0x20);
-	set_led_status(space->machine(), 6,	data & 0x40);
-	set_led_status(space->machine(), 7,	data & 0x80);
+	set_led_status(machine(), 0,	data & 0x01);
+	set_led_status(machine(), 1,	data & 0x02);
+	set_led_status(machine(), 2,	data & 0x04);
+	set_led_status(machine(), 3,	data & 0x08);
+	set_led_status(machine(), 4,	data & 0x10);
+	set_led_status(machine(), 5,	data & 0x20);
+	set_led_status(machine(), 6,	data & 0x40);
+	set_led_status(machine(), 7,	data & 0x80);
 
-	state->m_out[1] = data;
-	show_3_outputs(state);
+	m_out[1] = data;
+	show_3_outputs();
 }
 
-static WRITE8_HANDLER( haekaka_coin_w )
+WRITE8_MEMBER(sigmab98_state::haekaka_coin_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	coin_counter_w(space->machine(), 0,   data & 0x01 );	// medal out
+	coin_counter_w(machine(), 0,   data & 0x01 );	// medal out
 //                                      data & 0x02 ?
 //                                      data & 0x04 ?
 //                                      data & 0x10 ?
 
-	state->m_out[0] = data;
-	show_3_outputs(state);
+	m_out[0] = data;
+	show_3_outputs();
 }
 
-static ADDRESS_MAP_START( haekaka_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( haekaka_map, AS_PROGRAM, 8, sigmab98_state )
 	AM_RANGE( 0x0000, 0x7fff ) AM_ROM
-	AM_RANGE( 0xb000, 0xcfff ) AM_READWRITE( haekaka_b000_r, haekaka_b000_w )
-	AM_RANGE( 0xd000, 0xefff ) AM_RAM AM_SHARE( "nvram" ) AM_BASE_MEMBER( sigmab98_state, m_nvram )
+	AM_RANGE( 0xb000, 0xcfff ) AM_READWRITE(haekaka_b000_r, haekaka_b000_w )
+	AM_RANGE( 0xd000, 0xefff ) AM_RAM AM_SHARE( "nvram" ) AM_BASE(m_nvram )
 	AM_RANGE( 0xfe00, 0xffff ) AM_RAM	// High speed internal RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( haekaka_io, AS_IO, 8 )
+static ADDRESS_MAP_START( haekaka_io, AS_IO, 8, sigmab98_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE( 0x02, 0x03 ) AM_READWRITE( haekaka_rombank_r, haekaka_rombank_w )
-	AM_RANGE( 0x04, 0x05 ) AM_READWRITE( haekaka_rambank_r, haekaka_rambank_w )
+	AM_RANGE( 0x02, 0x03 ) AM_READWRITE(haekaka_rombank_r, haekaka_rombank_w )
+	AM_RANGE( 0x04, 0x05 ) AM_READWRITE(haekaka_rambank_r, haekaka_rambank_w )
 
-	AM_RANGE( 0x2c, 0x2c ) AM_DEVREADWRITE( "eeprom", sammymdl_eeprom_r, sammymdl_eeprom_w )
-	AM_RANGE( 0x2e, 0x2e ) AM_READ( sammymdl_coin_hopper_r )
+	AM_RANGE( 0x2c, 0x2c ) AM_DEVREADWRITE_LEGACY("eeprom", sammymdl_eeprom_r, sammymdl_eeprom_w )
+	AM_RANGE( 0x2e, 0x2e ) AM_READ(sammymdl_coin_hopper_r )
 	AM_RANGE( 0x30, 0x30 ) AM_READ_PORT( "BUTTON" )
-	AM_RANGE( 0x31, 0x31 ) AM_WRITE( haekaka_coin_w )
-	AM_RANGE( 0x32, 0x32 ) AM_WRITE( haekaka_leds_w )
-	AM_RANGE( 0x90, 0x90 ) AM_DEVWRITE_MODERN("oki", okim9810_device, write )
-	AM_RANGE( 0x91, 0x91 ) AM_DEVWRITE_MODERN("oki", okim9810_device, write_TMP_register )
-	AM_RANGE( 0x92, 0x92 ) AM_DEVREAD_MODERN("oki", okim9810_device, read )
-	AM_RANGE( 0xb0, 0xb0 ) AM_WRITE( sammymdl_hopper_w )
-	AM_RANGE( 0xc0, 0xc0 ) AM_WRITE( watchdog_reset_w )	// 1
+	AM_RANGE( 0x31, 0x31 ) AM_WRITE(haekaka_coin_w )
+	AM_RANGE( 0x32, 0x32 ) AM_WRITE(haekaka_leds_w )
+	AM_RANGE( 0x90, 0x90 ) AM_DEVWRITE("oki", okim9810_device, write )
+	AM_RANGE( 0x91, 0x91 ) AM_DEVWRITE("oki", okim9810_device, write_TMP_register )
+	AM_RANGE( 0x92, 0x92 ) AM_DEVREAD("oki", okim9810_device, read )
+	AM_RANGE( 0xb0, 0xb0 ) AM_WRITE(sammymdl_hopper_w )
+	AM_RANGE( 0xc0, 0xc0 ) AM_WRITE(watchdog_reset_w )	// 1
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -983,251 +1001,246 @@ ADDRESS_MAP_END
 ***************************************************************************/
 
 // rombank
-static WRITE8_HANDLER( itazuram_rombank_w )
+WRITE8_MEMBER(sigmab98_state::itazuram_rombank_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
 	{
-		state->m_reg = data;
+		m_reg = data;
 		return;
 	}
 
-	UINT8 *rom = space->machine().region("maincpu")->base();
-	switch ( state->m_reg )
+	UINT8 *rom = machine().region("maincpu")->base();
+	switch ( m_reg )
 	{
 		case 0x0d:
-			state->m_rombank = data;
+			m_rombank = data;
 			switch (data)
 			{
 				case 0x11:	// 3800 IS ROM
-					memory_set_bankptr(space->machine(), "rombank0", rom + 0x4c00);
-					memory_set_bankptr(space->machine(), "rombank1", rom + 0x5c00);
-					memory_set_bankptr(space->machine(), "sprbank0", state->m_spriteram + 0x1000*4);	// scratch
-					memory_set_bankptr(space->machine(), "sprbank1", state->m_spriteram + 0x1000*4);	// scratch
+					memory_set_bankptr(machine(), "rombank0", rom + 0x4c00);
+					memory_set_bankptr(machine(), "rombank1", rom + 0x5c00);
+					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*4);	// scratch
+					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);	// scratch
 					break;
 
 				default:
-					logerror("%s: unknown rom bank = %02x, reg = %02x\n", space->machine().describe_context(), data, state->m_reg);
+					logerror("%s: unknown rom bank = %02x, reg = %02x\n", machine().describe_context(), data, m_reg);
 			}
 			break;
 
 		case 0x4d:
-			state->m_rombank = data;
+			m_rombank = data;
 			switch (data)
 			{
 				case 0x14:	// 3800 IS ROM
-					memory_set_bankptr(space->machine(), "rombank0", rom + 0x8000);
-					memory_set_bankptr(space->machine(), "rombank1", rom + 0x9000);
-					memory_set_bankptr(space->machine(), "sprbank0", state->m_spriteram + 0x1000*4);	// scratch
-					memory_set_bankptr(space->machine(), "sprbank1", state->m_spriteram + 0x1000*4);	// scratch
+					memory_set_bankptr(machine(), "rombank0", rom + 0x8000);
+					memory_set_bankptr(machine(), "rombank1", rom + 0x9000);
+					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*4);	// scratch
+					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);	// scratch
 					break;
 
 				default:
-					logerror("%s: unknown rom bank = %02x, reg = %02x\n", space->machine().describe_context(), data, state->m_reg);
+					logerror("%s: unknown rom bank = %02x, reg = %02x\n", machine().describe_context(), data, m_reg);
 			}
 			break;
 
 		case 0x8d:
-			state->m_rombank = data;
+			m_rombank = data;
 			switch (data)
 			{
 				case 0x0f:	// 3800 IS ROM
-					memory_set_bankptr(space->machine(), "rombank0", rom + 0x3400);
-					memory_set_bankptr(space->machine(), "rombank1", rom + 0x4400);
-					memory_set_bankptr(space->machine(), "sprbank0", state->m_spriteram + 0x1000*4);	// scratch
-					memory_set_bankptr(space->machine(), "sprbank1", state->m_spriteram + 0x1000*4);	// scratch
+					memory_set_bankptr(machine(), "rombank0", rom + 0x3400);
+					memory_set_bankptr(machine(), "rombank1", rom + 0x4400);
+					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*4);	// scratch
+					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);	// scratch
 					break;
 
 				case 0x12:	// 3800 IS ROM
-					memory_set_bankptr(space->machine(), "rombank0", rom + 0x6400);
-					memory_set_bankptr(space->machine(), "rombank1", rom + 0x7400);
-					memory_set_bankptr(space->machine(), "sprbank0", state->m_spriteram + 0x1000*4);	// scratch
-					memory_set_bankptr(space->machine(), "sprbank1", state->m_spriteram + 0x1000*4);	// scratch
+					memory_set_bankptr(machine(), "rombank0", rom + 0x6400);
+					memory_set_bankptr(machine(), "rombank1", rom + 0x7400);
+					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*4);	// scratch
+					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);	// scratch
 					break;
 
 				// used in test mode:
-//              case 0x5c:  memory_set_bankptr(space->machine(), "rombank", rom + 0x400 + 0x0000);    break;  // 3800 IS RAM! (8000 bytes)
+//              case 0x5c:  memory_set_bankptr(machine(), "rombank", rom + 0x400 + 0x0000);    break;  // 3800 IS RAM! (8000 bytes)
 
 				case 0x5e:	// 3800 IS RAM! (1404 bytes)
-					memory_set_bankptr(space->machine(), "rombank0", state->m_spriteram + 0x1000*1);
-					memory_set_bankptr(space->machine(), "sprbank0", state->m_spriteram + 0x1000*1);
-					memory_set_bankptr(space->machine(), "rombank1", state->m_spriteram + 0x1000*2);
-					memory_set_bankptr(space->machine(), "sprbank1", state->m_spriteram + 0x1000*2);
+					memory_set_bankptr(machine(), "rombank0", m_spriteram + 0x1000*1);
+					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*1);
+					memory_set_bankptr(machine(), "rombank1", m_spriteram + 0x1000*2);
+					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*2);
 					break;
 
 				case 0x6c:	// 3800 IS RAM! (1000 bytes) - SPRITERAM
-					memory_set_bankptr(space->machine(), "rombank0", state->m_spriteram);
-					memory_set_bankptr(space->machine(), "sprbank0", state->m_spriteram);
-//                  memory_set_bankptr(space->machine(), "sprbank1", state->m_spriteram + 0x1000*4);    // scratch
+					memory_set_bankptr(machine(), "rombank0", m_spriteram);
+					memory_set_bankptr(machine(), "sprbank0", m_spriteram);
+//                  memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);    // scratch
 					break;
 
 				default:
-					logerror("%s: unknown rom bank = %02x, reg = %02x\n", space->machine().describe_context(), data, state->m_reg);
+					logerror("%s: unknown rom bank = %02x, reg = %02x\n", machine().describe_context(), data, m_reg);
 			}
 			break;
 
 		case 0xcd:
-			state->m_rombank = data;
+			m_rombank = data;
 			switch (data)
 			{
 				case 0x14:	// 3800 IS ROM
-					memory_set_bankptr(space->machine(), "rombank0", rom + 0x8800);
-					memory_set_bankptr(space->machine(), "rombank1", rom + 0x9800);
-					memory_set_bankptr(space->machine(), "sprbank0", state->m_spriteram + 0x1000*4);	// scratch
-					memory_set_bankptr(space->machine(), "sprbank1", state->m_spriteram + 0x1000*4);	// scratch
+					memory_set_bankptr(machine(), "rombank0", rom + 0x8800);
+					memory_set_bankptr(machine(), "rombank1", rom + 0x9800);
+					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*4);	// scratch
+					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);	// scratch
 					break;
 
 				default:
-					logerror("%s: unknown rom bank = %02x, reg = %02x\n", space->machine().describe_context(), data, state->m_reg);
+					logerror("%s: unknown rom bank = %02x, reg = %02x\n", machine().describe_context(), data, m_reg);
 			}
 			break;
 
 		default:
-			logerror("%s: unknown reg written: %02x = %02x\n", space->machine().describe_context(), state->m_reg, data);
+			logerror("%s: unknown reg written: %02x = %02x\n", machine().describe_context(), m_reg, data);
 	}
 }
-static READ8_HANDLER( itazuram_rombank_r )
+READ8_MEMBER(sigmab98_state::itazuram_rombank_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
-		return state->m_reg;
+		return m_reg;
 
-	switch ( state->m_reg )
+	switch ( m_reg )
 	{
 		// FIXME different registers
 		case 0x0d:
 		case 0x4d:
 		case 0x8d:
 		case 0xcd:
-			return state->m_rombank;
+			return m_rombank;
 
 		default:
-			logerror("%s: unknown reg read: %02x\n", space->machine().describe_context(), state->m_reg);
+			logerror("%s: unknown reg read: %02x\n", machine().describe_context(), m_reg);
 			return 0x00;
 	}
 }
 
 // rambank
-static WRITE8_HANDLER( itazuram_rambank_w )
+WRITE8_MEMBER(sigmab98_state::itazuram_rambank_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
 	{
-		state->m_reg2 = data;
+		m_reg2 = data;
 		return;
 	}
 
-	switch ( state->m_reg2 )
+	switch ( m_reg2 )
 	{
 		case 0x76:
-			state->m_rambank = data;
+			m_rambank = data;
 			switch (data)
 			{
-				case 0x52:	memory_set_bankptr(space->machine(), "palbank", state->m_nvram);									break;
-				case 0x64:	memory_set_bankptr(space->machine(), "palbank", space->machine().generic.paletteram.u8);	break;
+				case 0x52:	memory_set_bankptr(machine(), "palbank", m_nvram);									break;
+				case 0x64:	memory_set_bankptr(machine(), "palbank", m_generic_paletteram_8);	break;
 				default:
-					logerror("%s: unknown ram bank = %02x, reg2 = %02x\n", space->machine().describe_context(), data, state->m_reg2);
+					logerror("%s: unknown ram bank = %02x, reg2 = %02x\n", machine().describe_context(), data, m_reg2);
 					return;
 			}
 			break;
 
 		default:
-			logerror("%s: unknown reg2 written: %02x = %02x\n", space->machine().describe_context(), state->m_reg2, data);
+			logerror("%s: unknown reg2 written: %02x = %02x\n", machine().describe_context(), m_reg2, data);
 	}
 }
 
-static READ8_HANDLER( itazuram_rambank_r )
+READ8_MEMBER(sigmab98_state::itazuram_rambank_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
-		return state->m_reg2;
+		return m_reg2;
 
-	switch ( state->m_reg2 )
+	switch ( m_reg2 )
 	{
 		case 0x76:
-			return state->m_rambank;
+			return m_rambank;
 
 		default:
-			logerror("%s: unknown reg2 read: %02x\n", space->machine().describe_context(), state->m_reg2);
+			logerror("%s: unknown reg2 read: %02x\n", machine().describe_context(), m_reg2);
 			return 0x00;
 	}
 }
 
-static WRITE8_HANDLER( itazuram_nvram_palette_w )
+WRITE8_MEMBER(sigmab98_state::itazuram_nvram_palette_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	if (state->m_rambank == 0x64)
+	if (m_rambank == 0x64)
 	{
 		paletteram_xRRRRRGGGGGBBBBB_be_w(space, offset, data);
-//      space->machine().generic.paletteram.u8[offset] = data;
+//      m_generic_paletteram_8[offset] = data;
 	}
-	else if (state->m_rambank == 0x52)
+	else if (m_rambank == 0x52)
 	{
-		state->m_nvram[offset] = data;
+		m_nvram[offset] = data;
 	}
 	else
 	{
-		logerror("%s: itazuram_nvram_palette_w offset = %03x with unknown bank = %02x\n", space->machine().describe_context(), offset, state->m_rambank);
+		logerror("%s: itazuram_nvram_palette_w offset = %03x with unknown bank = %02x\n", machine().describe_context(), offset, m_rambank);
 	}
 }
 
-static WRITE8_HANDLER( itazuram_palette_w )
+WRITE8_MEMBER(sigmab98_state::itazuram_palette_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	if (state->m_rombank == 0x6c)
+	if (m_rombank == 0x6c)
 	{
 		if (offset < 0x200)
 			paletteram_xRRRRRGGGGGBBBBB_be_w(space, offset, data);
-//          space->machine().generic.paletteram.u8[offset] = data;
+//          m_generic_paletteram_8[offset] = data;
 	}
 	else
 	{
-		logerror("%s: itazuram_palette_w offset = %03x with unknown bank = %02x\n", space->machine().describe_context(), offset, state->m_rombank);
+		logerror("%s: itazuram_palette_w offset = %03x with unknown bank = %02x\n", machine().describe_context(), offset, m_rombank);
 	}
 }
-static READ8_HANDLER( itazuram_palette_r )
+
+READ8_MEMBER(sigmab98_state::itazuram_palette_r)
 {
-	return space->machine().generic.paletteram.u8[offset];
+	return m_generic_paletteram_8[offset];
 }
 
-static ADDRESS_MAP_START( itazuram_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( itazuram_map, AS_PROGRAM, 8, sigmab98_state )
 	AM_RANGE( 0x0000, 0x37ff ) AM_ROM
 	AM_RANGE( 0x3800, 0x47ff ) AM_READ_BANK( "rombank0" ) AM_WRITE_BANK( "sprbank0" )
 	AM_RANGE( 0x4800, 0x57ff ) AM_READ_BANK( "rombank1" ) AM_WRITE_BANK( "sprbank1" )
 
-	AM_RANGE( 0x5800, 0x59ff ) AM_READWRITE( itazuram_palette_r, itazuram_palette_w )
+	AM_RANGE( 0x5800, 0x59ff ) AM_READWRITE(itazuram_palette_r, itazuram_palette_w )
 	AM_RANGE( 0x6000, 0x607f ) AM_RAM	// table?
 
 	AM_RANGE( 0x6811, 0x6811 ) AM_WRITENOP	// IRQ Enable? Screen disable?
 	AM_RANGE( 0x6813, 0x6813 ) AM_WRITENOP	// IRQ Ack?
-	AM_RANGE( 0xdc00, 0xfdff ) AM_READ_BANK( "palbank" ) AM_WRITE( itazuram_nvram_palette_w ) AM_SHARE( "nvram" ) AM_BASE_MEMBER( sigmab98_state, m_nvram )	// nvram | paletteram
+	AM_RANGE( 0xdc00, 0xfdff ) AM_READ_BANK( "palbank" ) AM_WRITE(itazuram_nvram_palette_w ) AM_SHARE( "nvram" ) AM_BASE(m_nvram )	// nvram | paletteram
 
 	AM_RANGE( 0xfe00, 0xffff ) AM_RAM	// High speed internal RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( itazuram_io, AS_IO, 8 )
+static ADDRESS_MAP_START( itazuram_io, AS_IO, 8, sigmab98_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE( 0x02, 0x03 ) AM_READWRITE( itazuram_rombank_r, itazuram_rombank_w )
-	AM_RANGE( 0x04, 0x05 ) AM_READWRITE( itazuram_rambank_r, itazuram_rambank_w )
+	AM_RANGE( 0x02, 0x03 ) AM_READWRITE(itazuram_rombank_r, itazuram_rombank_w )
+	AM_RANGE( 0x04, 0x05 ) AM_READWRITE(itazuram_rambank_r, itazuram_rambank_w )
 
-	AM_RANGE( 0x2c, 0x2c ) AM_DEVREADWRITE( "eeprom", sammymdl_eeprom_r, sammymdl_eeprom_w )
-	AM_RANGE( 0x2e, 0x2e ) AM_READ( sammymdl_coin_hopper_r )
+	AM_RANGE( 0x2c, 0x2c ) AM_DEVREADWRITE_LEGACY("eeprom", sammymdl_eeprom_r, sammymdl_eeprom_w )
+	AM_RANGE( 0x2e, 0x2e ) AM_READ(sammymdl_coin_hopper_r )
 	AM_RANGE( 0x30, 0x30 ) AM_READ_PORT( "BUTTON" )
-	AM_RANGE( 0x31, 0x31 ) AM_WRITE( sammymdl_coin_w )
-	AM_RANGE( 0x32, 0x32 ) AM_WRITE( sammymdl_leds_w )
-	AM_RANGE( 0x90, 0x90 ) AM_DEVWRITE_MODERN("oki", okim9810_device, write )
-	AM_RANGE( 0x91, 0x91 ) AM_DEVWRITE_MODERN("oki", okim9810_device, write_TMP_register )
-	AM_RANGE( 0x92, 0x92 ) AM_DEVREAD_MODERN("oki", okim9810_device, read )
-	AM_RANGE( 0xb0, 0xb0 ) AM_WRITE( sammymdl_hopper_w )
-	AM_RANGE( 0xc0, 0xc0 ) AM_WRITE( watchdog_reset_w )	// 1
+	AM_RANGE( 0x31, 0x31 ) AM_WRITE(sammymdl_coin_w )
+	AM_RANGE( 0x32, 0x32 ) AM_WRITE(sammymdl_leds_w )
+	AM_RANGE( 0x90, 0x90 ) AM_DEVWRITE("oki", okim9810_device, write )
+	AM_RANGE( 0x91, 0x91 ) AM_DEVWRITE("oki", okim9810_device, write_TMP_register )
+	AM_RANGE( 0x92, 0x92 ) AM_DEVREAD("oki", okim9810_device, read )
+	AM_RANGE( 0xb0, 0xb0 ) AM_WRITE(sammymdl_hopper_w )
+	AM_RANGE( 0xc0, 0xc0 ) AM_WRITE(watchdog_reset_w )	// 1
 ADDRESS_MAP_END
 
 /***************************************************************************
                              Pye-nage Taikai
 ***************************************************************************/
 
-static ADDRESS_MAP_START( pyenaget_io, AS_IO, 8 )
-	AM_RANGE( 0x31, 0x31 ) AM_WRITE( sammymdl_coin_w )
+static ADDRESS_MAP_START( pyenaget_io, AS_IO, 8, sigmab98_state )
+	AM_RANGE( 0x31, 0x31 ) AM_WRITE(sammymdl_coin_w )
 	AM_IMPORT_FROM( haekaka_io )
 ADDRESS_MAP_END
 
@@ -1236,19 +1249,18 @@ ADDRESS_MAP_END
 ***************************************************************************/
 
 // rombank
-static WRITE8_HANDLER( tdoboon_rombank_w )
+WRITE8_MEMBER(sigmab98_state::tdoboon_rombank_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
 	{
-		state->m_reg = data;
+		m_reg = data;
 		return;
 	}
 
-	switch ( state->m_reg )
+	switch ( m_reg )
 	{
 		case 0x2f:
-			state->m_rombank = data;
+			m_rombank = data;
 			switch (data)
 			{
 				case 0x10:	// ROM
@@ -1274,80 +1286,76 @@ static WRITE8_HANDLER( tdoboon_rombank_w )
 					break;
 
 				default:
-					logerror("%s: unknown rom bank = %02x, reg = %02x\n", space->machine().describe_context(), data, state->m_reg);
+					logerror("%s: unknown rom bank = %02x, reg = %02x\n", machine().describe_context(), data, m_reg);
 			}
 			break;
 
 		default:
-			logerror("%s: unknown reg written: %02x = %02x\n", space->machine().describe_context(), state->m_reg, data);
+			logerror("%s: unknown reg written: %02x = %02x\n", machine().describe_context(), m_reg, data);
 	}
 }
-static READ8_HANDLER( tdoboon_rombank_r )
+READ8_MEMBER(sigmab98_state::tdoboon_rombank_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
-		return state->m_reg;
+		return m_reg;
 
-	switch ( state->m_reg )
+	switch ( m_reg )
 	{
 		case 0x2f:
-			return state->m_rombank;
+			return m_rombank;
 
 		default:
-			logerror("%s: unknown reg read: %02x\n", space->machine().describe_context(), state->m_reg);
+			logerror("%s: unknown reg read: %02x\n", machine().describe_context(), m_reg);
 			return 0x00;
 	}
 }
 
 // rambank
-static WRITE8_HANDLER( tdoboon_rambank_w )
+WRITE8_MEMBER(sigmab98_state::tdoboon_rambank_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
 	{
-		state->m_reg2 = data;
+		m_reg2 = data;
 		return;
 	}
 
-	switch ( state->m_reg2 )
+	switch ( m_reg2 )
 	{
 		case 0x33:
-			state->m_rambank = data;
+			m_rambank = data;
 			switch (data)
 			{
 				case 0x53:
 					break;
 
 				default:
-					logerror("%s: unknown ram bank = %02x, reg2 = %02x\n", space->machine().describe_context(), data, state->m_reg2);
+					logerror("%s: unknown ram bank = %02x, reg2 = %02x\n", machine().describe_context(), data, m_reg2);
 			}
 			break;
 
 		default:
-			logerror("%s: unknown reg2 written: %02x = %02x\n", space->machine().describe_context(), state->m_reg2, data);
+			logerror("%s: unknown reg2 written: %02x = %02x\n", machine().describe_context(), m_reg2, data);
 	}
 }
-static READ8_HANDLER( tdoboon_rambank_r )
+READ8_MEMBER(sigmab98_state::tdoboon_rambank_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
 	if (offset == 0)
-		return state->m_reg2;
+		return m_reg2;
 
-	switch ( state->m_reg2 )
+	switch ( m_reg2 )
 	{
 		case 0x33:
-			return state->m_rambank;
+			return m_rambank;
 
 		default:
-			logerror("%s: unknown reg2 read: %02x\n", space->machine().describe_context(), state->m_reg2);
+			logerror("%s: unknown reg2 read: %02x\n", machine().describe_context(), m_reg2);
 			return 0x00;
 	}
 }
 
-static READ8_HANDLER( tdoboon_c000_r )
+READ8_MEMBER(sigmab98_state::tdoboon_c000_r)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	switch (state->m_rombank)
+	switch (m_rombank)
 	{
 		case 0x10:	// ROM
 		case 0x11:
@@ -1365,16 +1373,16 @@ static READ8_HANDLER( tdoboon_c000_r )
 		case 0x1d:
 		case 0x1e:
 		case 0x1f:
-			return space->machine().region("maincpu")->base()[offset + 0xc400 + 0x1000 * (state->m_rombank-0x10)];
+			return machine().region("maincpu")->base()[offset + 0xc400 + 0x1000 * (m_rombank-0x10)];
 
 		case 0x64:	// SPRITERAM
 			if (offset < 0x1000)
-				return state->m_spriteram[offset];
+				return m_spriteram[offset];
 			break;
 
 		case 0x66:	// PALETTERAM + TABLE?
 			if (offset < 0x200)
-				return space->machine().generic.paletteram.u8[offset];
+				return m_generic_paletteram_8[offset];
 			break;
 
 		case 0x67:	// REGS
@@ -1383,19 +1391,18 @@ static READ8_HANDLER( tdoboon_c000_r )
 			break;
 	}
 
-	logerror("%s: unknown read from %02x with rombank = %02x\n", space->machine().describe_context(), offset+0xc000, state->m_rombank);
+	logerror("%s: unknown read from %02x with rombank = %02x\n", machine().describe_context(), offset+0xc000, m_rombank);
 	return 0x00;
 }
 
-static WRITE8_HANDLER( tdoboon_c000_w )
+WRITE8_MEMBER(sigmab98_state::tdoboon_c000_w)
 {
-	sigmab98_state *state = space->machine().driver_data<sigmab98_state>();
-	switch (state->m_rombank)
+	switch (m_rombank)
 	{
 		case 0x64:	// SPRITERAM
 			if (offset < 0x1000)
 			{
-				state->m_spriteram[offset] = data;
+				m_spriteram[offset] = data;
 				return;
 			}
 			break;
@@ -1404,7 +1411,7 @@ static WRITE8_HANDLER( tdoboon_c000_w )
 			if (offset < 0x200)
 			{
 				paletteram_xRRRRRGGGGGBBBBB_be_w(space, offset, data);
-//              space->machine().generic.paletteram.u8[offset] = data;
+//              m_generic_paletteram_8[offset] = data;
 				return;
 			}
 			else if ((offset >= 0x800) && (offset < 0x880))
@@ -1415,31 +1422,31 @@ static WRITE8_HANDLER( tdoboon_c000_w )
 			break;
 	}
 
-	logerror("%s: unknown write to %02x = %02x with rombank = %02x\n", space->machine().describe_context(), offset+0xc000, data, state->m_rombank);
+	logerror("%s: unknown write to %02x = %02x with rombank = %02x\n", machine().describe_context(), offset+0xc000, data, m_rombank);
 }
 
-static ADDRESS_MAP_START( tdoboon_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( tdoboon_map, AS_PROGRAM, 8, sigmab98_state )
 	AM_RANGE( 0x0000, 0xbfff ) AM_ROM
-	AM_RANGE( 0xc000, 0xcfff ) AM_READWRITE( tdoboon_c000_r, tdoboon_c000_w )
-	AM_RANGE( 0xd000, 0xefff ) AM_RAM AM_SHARE( "nvram" ) AM_BASE_MEMBER( sigmab98_state, m_nvram )
+	AM_RANGE( 0xc000, 0xcfff ) AM_READWRITE(tdoboon_c000_r, tdoboon_c000_w )
+	AM_RANGE( 0xd000, 0xefff ) AM_RAM AM_SHARE( "nvram" ) AM_BASE(m_nvram )
 	AM_RANGE( 0xfe00, 0xffff ) AM_RAM	// High speed internal RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( tdoboon_io, AS_IO, 8 )
+static ADDRESS_MAP_START( tdoboon_io, AS_IO, 8, sigmab98_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE( 0x02, 0x03 ) AM_READWRITE( tdoboon_rombank_r, tdoboon_rombank_w )
-	AM_RANGE( 0x04, 0x05 ) AM_READWRITE( tdoboon_rambank_r, tdoboon_rambank_w )
+	AM_RANGE( 0x02, 0x03 ) AM_READWRITE(tdoboon_rombank_r, tdoboon_rombank_w )
+	AM_RANGE( 0x04, 0x05 ) AM_READWRITE(tdoboon_rambank_r, tdoboon_rambank_w )
 
-	AM_RANGE( 0x2c, 0x2c ) AM_DEVREADWRITE( "eeprom", sammymdl_eeprom_r, sammymdl_eeprom_w )
-	AM_RANGE( 0x2e, 0x2e ) AM_READ( sammymdl_coin_hopper_r )
+	AM_RANGE( 0x2c, 0x2c ) AM_DEVREADWRITE_LEGACY("eeprom", sammymdl_eeprom_r, sammymdl_eeprom_w )
+	AM_RANGE( 0x2e, 0x2e ) AM_READ(sammymdl_coin_hopper_r )
 	AM_RANGE( 0x30, 0x30 ) AM_READ_PORT( "BUTTON" )
-	AM_RANGE( 0x31, 0x31 ) AM_WRITE( sammymdl_coin_w )
-	AM_RANGE( 0x32, 0x32 ) AM_WRITE( sammymdl_leds_w )
-	AM_RANGE( 0x90, 0x90 ) AM_DEVWRITE_MODERN("oki", okim9810_device, write )
-	AM_RANGE( 0x91, 0x91 ) AM_DEVWRITE_MODERN("oki", okim9810_device, write_TMP_register )
-	AM_RANGE( 0x92, 0x92 ) AM_DEVREAD_MODERN("oki", okim9810_device, read )
-	AM_RANGE( 0xb0, 0xb0 ) AM_WRITE( sammymdl_hopper_w )
-	AM_RANGE( 0xc0, 0xc0 ) AM_WRITE( watchdog_reset_w )	// 1
+	AM_RANGE( 0x31, 0x31 ) AM_WRITE(sammymdl_coin_w )
+	AM_RANGE( 0x32, 0x32 ) AM_WRITE(sammymdl_leds_w )
+	AM_RANGE( 0x90, 0x90 ) AM_DEVWRITE("oki", okim9810_device, write )
+	AM_RANGE( 0x91, 0x91 ) AM_DEVWRITE("oki", okim9810_device, write_TMP_register )
+	AM_RANGE( 0x92, 0x92 ) AM_DEVREAD("oki", okim9810_device, read )
+	AM_RANGE( 0xb0, 0xb0 ) AM_WRITE(sammymdl_hopper_w )
+	AM_RANGE( 0xc0, 0xc0 ) AM_WRITE(watchdog_reset_w )	// 1
 ADDRESS_MAP_END
 
 
@@ -2149,9 +2156,9 @@ static DRIVER_INIT( itazuram )
 	state->m_rombank = 0x0f;
 
 	// RAM banks
-	machine.generic.paletteram.u8 = auto_alloc_array(machine, UINT8, 0x3000);
-	memset(machine.generic.paletteram.u8, 0, 0x3000);
-	memory_set_bankptr(machine, "palbank", machine.generic.paletteram.u8);
+	state->m_generic_paletteram_8.allocate(0x3000);
+	memset(state->m_generic_paletteram_8, 0, 0x3000);
+	memory_set_bankptr(machine, "palbank", state->m_generic_paletteram_8);
 	state->m_rambank = 0x64;
 
 	state->m_spriteram = auto_alloc_array(machine, UINT8, 0x1000 * 5);
@@ -2263,8 +2270,8 @@ static DRIVER_INIT( haekaka )
 {
 	sigmab98_state *state = machine.driver_data<sigmab98_state>();
 	// RAM banks
-	machine.generic.paletteram.u8 = auto_alloc_array(machine, UINT8, 0x200);
-	memset(machine.generic.paletteram.u8, 0, 0x200);
+	state->m_generic_paletteram_8.allocate(0x200);
+	memset(state->m_generic_paletteram_8, 0, 0x200);
 
 	state->m_spriteram = auto_alloc_array(machine, UINT8, 0x1000);
 	memset(state->m_spriteram, 0, 0x1000);

@@ -69,6 +69,37 @@ public:
 	UINT8 m_profpac_writemode;
 	UINT16 m_profpac_writemask;
 	UINT8 m_profpac_vw;
+	DECLARE_WRITE8_MEMBER(protected_ram_enable_w);
+	DECLARE_READ8_MEMBER(protected_ram_r);
+	DECLARE_WRITE8_MEMBER(protected_ram_w);
+	DECLARE_WRITE8_MEMBER(seawolf2_lamps_w);
+	DECLARE_WRITE8_MEMBER(seawolf2_sound_1_w);
+	DECLARE_WRITE8_MEMBER(seawolf2_sound_2_w);
+	DECLARE_WRITE8_MEMBER(ebases_trackball_select_w);
+	DECLARE_WRITE8_MEMBER(ebases_coin_w);
+	DECLARE_READ8_MEMBER(spacezap_io_r);
+	DECLARE_READ8_MEMBER(wow_io_r);
+	DECLARE_READ8_MEMBER(gorf_io_1_r);
+	DECLARE_READ8_MEMBER(gorf_io_2_r);
+	DECLARE_READ8_MEMBER(robby_io_r);
+	DECLARE_READ8_MEMBER(profpac_io_1_r);
+	DECLARE_READ8_MEMBER(profpac_io_2_r);
+	DECLARE_WRITE8_MEMBER(profpac_banksw_w);
+	DECLARE_READ8_MEMBER(demndrgn_io_r);
+	DECLARE_WRITE8_MEMBER(demndrgn_sound_w);
+	DECLARE_WRITE8_MEMBER(tenpindx_sound_w);
+	DECLARE_WRITE8_MEMBER(tenpindx_lamp_w);
+	DECLARE_WRITE8_MEMBER(tenpindx_counter_w);
+	DECLARE_WRITE8_MEMBER(tenpindx_lights_w);
+	DECLARE_READ8_MEMBER(astrocade_data_chip_register_r);
+	DECLARE_WRITE8_MEMBER(astrocade_data_chip_register_w);
+	DECLARE_WRITE8_MEMBER(astrocade_funcgen_w);
+	DECLARE_WRITE8_MEMBER(astrocade_pattern_board_w);
+	DECLARE_WRITE8_MEMBER(profpac_page_select_w);
+	DECLARE_READ8_MEMBER(profpac_intercept_r);
+	DECLARE_WRITE8_MEMBER(profpac_screenram_ctrl_w);
+	DECLARE_READ8_MEMBER(profpac_videoram_r);
+	DECLARE_WRITE8_MEMBER(profpac_videoram_w);
 };
 
 
@@ -83,16 +114,7 @@ VIDEO_START( profpac );
 SCREEN_UPDATE_IND16( astrocde );
 SCREEN_UPDATE_IND16( profpac );
 
-WRITE8_HANDLER( astrocade_pattern_board_w );
-READ8_HANDLER( astrocade_data_chip_register_r );
-WRITE8_HANDLER( astrocade_data_chip_register_w );
-WRITE8_HANDLER( astrocade_funcgen_w );
 
-READ8_HANDLER( profpac_videoram_r );
-WRITE8_HANDLER( profpac_videoram_w );
-READ8_HANDLER( profpac_intercept_r );
-WRITE8_HANDLER( profpac_page_select_w );
-WRITE8_HANDLER( profpac_screenram_ctrl_w );
 
 
 /*----------- defined in audio/wow.c -----------*/

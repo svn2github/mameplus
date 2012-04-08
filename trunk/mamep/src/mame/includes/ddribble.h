@@ -33,14 +33,20 @@ public:
 	device_t *m_filter1;
 	device_t *m_filter2;
 	device_t *m_filter3;
+	DECLARE_WRITE8_MEMBER(ddribble_bankswitch_w);
+	DECLARE_READ8_MEMBER(ddribble_sharedram_r);
+	DECLARE_WRITE8_MEMBER(ddribble_sharedram_w);
+	DECLARE_READ8_MEMBER(ddribble_snd_sharedram_r);
+	DECLARE_WRITE8_MEMBER(ddribble_snd_sharedram_w);
+	DECLARE_WRITE8_MEMBER(ddribble_coin_counter_w);
+	DECLARE_WRITE8_MEMBER(K005885_0_w);
+	DECLARE_WRITE8_MEMBER(K005885_1_w);
+	DECLARE_WRITE8_MEMBER(ddribble_fg_videoram_w);
+	DECLARE_WRITE8_MEMBER(ddribble_bg_videoram_w);
 };
 
 /*----------- defined in video/ddribble.c -----------*/
 
-WRITE8_HANDLER( ddribble_fg_videoram_w );
-WRITE8_HANDLER( ddribble_bg_videoram_w );
-WRITE8_HANDLER( K005885_0_w );
-WRITE8_HANDLER( K005885_1_w );
 
 PALETTE_INIT( ddribble );
 VIDEO_START( ddribble );

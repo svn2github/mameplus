@@ -22,6 +22,7 @@ public:
 	UINT8 *m_ram;
 	UINT8 m_flip_screen;
 	UINT8 *m_proms;
+	DECLARE_WRITE8_MEMBER(port_w);
 };
 
 
@@ -129,24 +130,23 @@ static SCREEN_UPDATE_RGB32( sstrngr2 )
 }
 
 
-static WRITE8_HANDLER( port_w )
+WRITE8_MEMBER(sstrangr_state::port_w)
 {
-	sstrangr_state *state = space->machine().driver_data<sstrangr_state>();
 
-	state->m_flip_screen = data & 0x20;
+	m_flip_screen = data & 0x20;
 }
 
 
 
-static ADDRESS_MAP_START( sstrangr_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sstrangr_map, AS_PROGRAM, 8, sstrangr_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
-	AM_RANGE(0x2000, 0x3fff) AM_RAM AM_BASE_MEMBER(sstrangr_state,m_ram)
+	AM_RANGE(0x2000, 0x3fff) AM_RAM AM_BASE(m_ram)
 	AM_RANGE(0x6000, 0x63ff) AM_ROM
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( sstrangr_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( sstrangr_io_map, AS_IO, 8, sstrangr_state )
 	AM_RANGE(0x41, 0x41) AM_READ_PORT("DSW")
 	AM_RANGE(0x42, 0x42) AM_READ_PORT("INPUTS")
 	AM_RANGE(0x44, 0x44) AM_READ_PORT("EXT") AM_WRITE(port_w)

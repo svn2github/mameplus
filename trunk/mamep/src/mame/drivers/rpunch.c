@@ -165,26 +165,24 @@ static TIMER_CALLBACK( sound_command_w_callback )
 }
 
 
-static WRITE16_HANDLER( sound_command_w )
+WRITE16_MEMBER(rpunch_state::sound_command_w)
 {
 	if (ACCESSING_BITS_0_7)
-		space->machine().scheduler().synchronize(FUNC(sound_command_w_callback), data & 0xff);
+		machine().scheduler().synchronize(FUNC(sound_command_w_callback), data & 0xff);
 }
 
 
-static READ8_HANDLER( sound_command_r )
+READ8_MEMBER(rpunch_state::sound_command_r)
 {
-	rpunch_state *state = space->machine().driver_data<rpunch_state>();
-	state->m_sound_busy = 0;
-	cputag_set_input_line(space->machine(), "audiocpu", 0, (state->m_ym2151_irq | state->m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
-	return state->m_sound_data;
+	m_sound_busy = 0;
+	cputag_set_input_line(machine(), "audiocpu", 0, (m_ym2151_irq | m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
+	return m_sound_data;
 }
 
 
-static READ16_HANDLER( sound_busy_r )
+READ16_MEMBER(rpunch_state::sound_busy_r)
 {
-	rpunch_state *state = space->machine().driver_data<rpunch_state>();
-	return state->m_sound_busy;
+	return m_sound_busy;
 }
 
 
@@ -223,13 +221,13 @@ static WRITE8_DEVICE_HANDLER( upd_data_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, rpunch_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xfffff)
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
-	AM_RANGE(0x040000, 0x04ffff) AM_RAM AM_BASE_MEMBER(rpunch_state, m_bitmapram) AM_SIZE_MEMBER(rpunch_state, m_bitmapram_size)
-	AM_RANGE(0x060000, 0x060fff) AM_RAM AM_BASE_MEMBER(rpunch_state, m_spriteram)
-	AM_RANGE(0x080000, 0x083fff) AM_RAM_WRITE(rpunch_videoram_w) AM_BASE_MEMBER(rpunch_state, m_videoram)
-	AM_RANGE(0x0a0000, 0x0a07ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE_GENERIC(paletteram)
+	AM_RANGE(0x040000, 0x04ffff) AM_RAM AM_BASE(m_bitmapram) AM_SIZE(m_bitmapram_size)
+	AM_RANGE(0x060000, 0x060fff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x080000, 0x083fff) AM_RAM_WRITE(rpunch_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0a0000, 0x0a07ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x0c0000, 0x0c0007) AM_WRITE(rpunch_scrollreg_w)
 	AM_RANGE(0x0c0008, 0x0c0009) AM_WRITE(rpunch_crtc_data_w)
 	AM_RANGE(0x0c000c, 0x0c000d) AM_WRITE(rpunch_videoreg_w)
@@ -251,12 +249,12 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, rpunch_state )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
-	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0xf200, 0xf200) AM_READ(sound_command_r)
-	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE("upd", upd_control_w)
-	AM_RANGE(0xf600, 0xf600) AM_DEVWRITE("upd", upd_data_w)
+	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE_LEGACY("upd", upd_control_w)
+	AM_RANGE(0xf600, 0xf600) AM_DEVWRITE_LEGACY("upd", upd_data_w)
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 

@@ -9,6 +9,12 @@ public:
 	UINT8* m_sprite_ram;
 	tilemap_t *m_bg_tilemap;
 	int m_tile_bank;
+	DECLARE_READ8_MEMBER(runaway_input_r);
+	DECLARE_WRITE8_MEMBER(runaway_led_w);
+	DECLARE_WRITE8_MEMBER(runaway_irq_ack_w);
+	DECLARE_WRITE8_MEMBER(runaway_paletteram_w);
+	DECLARE_WRITE8_MEMBER(runaway_video_ram_w);
+	DECLARE_WRITE8_MEMBER(runaway_tile_bank_w);
 };
 
 
@@ -19,6 +25,3 @@ VIDEO_START( qwak );
 SCREEN_UPDATE_IND16( runaway );
 SCREEN_UPDATE_IND16( qwak );
 
-WRITE8_HANDLER( runaway_paletteram_w );
-WRITE8_HANDLER( runaway_video_ram_w );
-WRITE8_HANDLER( runaway_tile_bank_w );

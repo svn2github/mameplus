@@ -42,22 +42,33 @@ public:
 
 	/* devices */
 	device_t *m_audiocpu;
+	DECLARE_WRITE8_MEMBER(sound_command_w);
+	DECLARE_WRITE8_MEMBER(nmi_disable_w);
+	DECLARE_WRITE8_MEMBER(nmi_enable_w);
+	DECLARE_WRITE8_MEMBER(flip_screen_w);
+	DECLARE_WRITE8_MEMBER(msisaac_coin_counter_w);
+	DECLARE_WRITE8_MEMBER(ms_unknown_w);
+	DECLARE_READ8_MEMBER(msisaac_mcu_r);
+	DECLARE_READ8_MEMBER(msisaac_mcu_status_r);
+	DECLARE_WRITE8_MEMBER(msisaac_mcu_w);
+	DECLARE_WRITE8_MEMBER(sound_control_1_w);
+	DECLARE_WRITE8_MEMBER(msisaac_fg_scrolly_w);
+	DECLARE_WRITE8_MEMBER(msisaac_fg_scrollx_w);
+	DECLARE_WRITE8_MEMBER(msisaac_bg2_scrolly_w);
+	DECLARE_WRITE8_MEMBER(msisaac_bg2_scrollx_w);
+	DECLARE_WRITE8_MEMBER(msisaac_bg_scrolly_w);
+	DECLARE_WRITE8_MEMBER(msisaac_bg_scrollx_w);
+	DECLARE_WRITE8_MEMBER(msisaac_textbank1_w);
+	DECLARE_WRITE8_MEMBER(msisaac_bg2_textbank_w);
+	DECLARE_WRITE8_MEMBER(msisaac_bg_videoram_w);
+	DECLARE_WRITE8_MEMBER(msisaac_bg2_videoram_w);
+	DECLARE_WRITE8_MEMBER(msisaac_fg_videoram_w);
 };
 
 
 /*----------- defined in video/msisaac.c -----------*/
 
-WRITE8_HANDLER( msisaac_fg_scrolly_w );
-WRITE8_HANDLER( msisaac_fg_scrollx_w );
-WRITE8_HANDLER( msisaac_bg_scrolly_w );
-WRITE8_HANDLER( msisaac_bg_scrollx_w );
-WRITE8_HANDLER( msisaac_bg2_scrolly_w );
-WRITE8_HANDLER( msisaac_bg2_scrollx_w );
-WRITE8_HANDLER( msisaac_bg2_textbank_w );
 
-WRITE8_HANDLER( msisaac_bg_videoram_w );
-WRITE8_HANDLER( msisaac_bg2_videoram_w );
-WRITE8_HANDLER( msisaac_fg_videoram_w );
 
 SCREEN_UPDATE_IND16( msisaac );
 VIDEO_START( msisaac );

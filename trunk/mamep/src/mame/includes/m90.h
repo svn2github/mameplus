@@ -15,6 +15,12 @@ public:
 	UINT8 m_last_pf1;
 	UINT8 m_last_pf2;
 	device_t *m_audio;
+	DECLARE_WRITE16_MEMBER(m90_coincounter_w);
+	DECLARE_WRITE16_MEMBER(quizf1_bankswitch_w);
+	DECLARE_WRITE16_MEMBER(dynablsb_sound_command_w);
+	DECLARE_WRITE16_MEMBER(unknown_w);
+	DECLARE_WRITE16_MEMBER(m90_video_control_w);
+	DECLARE_WRITE16_MEMBER(m90_video_w);
 };
 
 
@@ -26,5 +32,3 @@ VIDEO_START( bomblord );
 SCREEN_UPDATE_IND16( m90 );
 SCREEN_UPDATE_IND16( dynablsb );
 SCREEN_UPDATE_IND16( bomblord );
-WRITE16_HANDLER( m90_video_w );
-WRITE16_HANDLER( m90_video_control_w );

@@ -35,10 +35,10 @@ Verified Dip locations and recommended settings with manual
                                 Sky Fox
 ***************************************************************************/
 
-static ADDRESS_MAP_START( skyfox_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( skyfox_map, AS_PROGRAM, 8, skyfox_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM							// ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM							// RAM
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM AM_BASE_SIZE_MEMBER(skyfox_state, m_spriteram, m_spriteram_size)	// Sprites
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)	// Sprites
 	AM_RANGE(0xd400, 0xdfff) AM_RAM							// RAM?
 	AM_RANGE(0xe000, 0xe000) AM_READ_PORT("INPUTS")			// Input Ports
 	AM_RANGE(0xe001, 0xe001) AM_READ_PORT("DSW0")			//
@@ -63,13 +63,13 @@ ADDRESS_MAP_END
 ***************************************************************************/
 
 
-static ADDRESS_MAP_START( skyfox_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( skyfox_sound_map, AS_PROGRAM, 8, skyfox_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM								// ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM								// RAM
 //  AM_RANGE(0x9000, 0x9001) AM_WRITENOP                        // ??
-	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE("ym1", ym2203_r,ym2203_w)	// YM2203 #1
+	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ym1", ym2203_r,ym2203_w)	// YM2203 #1
 //  AM_RANGE(0xb000, 0xb001) AM_WRITENOP                        // ??
-	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ym2", ym2203_r,ym2203_w)	// YM2203 #2
+	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ym2", ym2203_r,ym2203_w)	// YM2203 #2
 	AM_RANGE(0xb000, 0xb000) AM_READ(soundlatch_r)				// From Main CPU
 ADDRESS_MAP_END
 

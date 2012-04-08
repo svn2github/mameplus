@@ -11,6 +11,11 @@ public:
 	tilemap_t *m_background;
 	UINT8 *m_spriteram;
 	size_t m_spriteram_size;
+	DECLARE_WRITE8_MEMBER(portrait_ctrl_w);
+	DECLARE_WRITE8_MEMBER(portrait_positive_scroll_w);
+	DECLARE_WRITE8_MEMBER(portrait_negative_scroll_w);
+	DECLARE_WRITE8_MEMBER(portrait_bgvideo_write);
+	DECLARE_WRITE8_MEMBER(portrait_fgvideo_write);
 };
 
 
@@ -19,5 +24,3 @@ public:
 PALETTE_INIT( portrait );
 VIDEO_START( portrait );
 SCREEN_UPDATE_IND16( portrait );
-WRITE8_HANDLER( portrait_bgvideo_write );
-WRITE8_HANDLER( portrait_fgvideo_write );

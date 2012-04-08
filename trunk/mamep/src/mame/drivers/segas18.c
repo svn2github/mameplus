@@ -142,7 +142,7 @@ static void sound_w(running_machine &machine, UINT8 data)
 	segas1x_state *state = machine.driver_data<segas1x_state>();
 	address_space *space = state->m_maincpu->memory().space(AS_PROGRAM);
 
-	soundlatch_w(space, 0, data & 0xff);
+	state->soundlatch_w(*space, 0, data & 0xff);
 	device_set_input_line(state->m_soundcpu, INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -606,9 +606,9 @@ static WRITE8_HANDLER( mcu_data_w )
  *
  *************************************/
 
-static ADDRESS_MAP_START( system18_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( system18_map, AS_PROGRAM, 16, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
-	AM_RANGE(0x000000, 0xffffff) AM_READWRITE(segaic16_memory_mapper_lsb_r, segaic16_memory_mapper_lsb_w)
+	AM_RANGE(0x000000, 0xffffff) AM_READWRITE_LEGACY(segaic16_memory_mapper_lsb_r, segaic16_memory_mapper_lsb_w)
 ADDRESS_MAP_END
 
 
@@ -619,22 +619,22 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x9fff) AM_ROM AM_REGION("soundcpu", 0x10000)
 	AM_RANGE(0xa000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xc00f) AM_MIRROR(0x0ff0) AM_DEVWRITE("rfsnd", rf5c68_w)
-	AM_RANGE(0xd000, 0xdfff) AM_DEVREADWRITE("rfsnd", rf5c68_mem_r, rf5c68_mem_w)
+	AM_RANGE(0xc000, 0xc00f) AM_MIRROR(0x0ff0) AM_DEVWRITE_LEGACY("rfsnd", rf5c68_w)
+	AM_RANGE(0xd000, 0xdfff) AM_DEVREADWRITE_LEGACY("rfsnd", rf5c68_mem_r, rf5c68_mem_w)
 	AM_RANGE(0xe000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_portmap, AS_IO, 8 )
+static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x80, 0x83) AM_MIRROR(0x0c) AM_DEVREADWRITE("ym1", ym3438_r, ym3438_w)
-	AM_RANGE(0x90, 0x93) AM_MIRROR(0x0c) AM_DEVREADWRITE("ym2", ym3438_r, ym3438_w)
-	AM_RANGE(0xa0, 0xa0) AM_MIRROR(0x1f) AM_WRITE(soundbank_w)
-	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x1f) AM_READWRITE(soundlatch_r, mcu_data_w)
+	AM_RANGE(0x80, 0x83) AM_MIRROR(0x0c) AM_DEVREADWRITE_LEGACY("ym1", ym3438_r, ym3438_w)
+	AM_RANGE(0x90, 0x93) AM_MIRROR(0x0c) AM_DEVREADWRITE_LEGACY("ym2", ym3438_r, ym3438_w)
+	AM_RANGE(0xa0, 0xa0) AM_MIRROR(0x1f) AM_WRITE_LEGACY(soundbank_w)
+	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x1f) AM_READ(soundlatch_r) AM_WRITE_LEGACY(mcu_data_w)
 ADDRESS_MAP_END
 
 
@@ -645,10 +645,10 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( mcu_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( mcu_io_map, AS_IO, 8, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	/* port 2 not used for high order address byte */
-	AM_RANGE(0x0000, 0x001f) AM_MIRROR(0xff00) AM_READWRITE(segaic16_memory_mapper_r, segaic16_memory_mapper_w)
+	AM_RANGE(0x0000, 0x001f) AM_MIRROR(0xff00) AM_READWRITE_LEGACY(segaic16_memory_mapper_r, segaic16_memory_mapper_w)
 ADDRESS_MAP_END
 
 

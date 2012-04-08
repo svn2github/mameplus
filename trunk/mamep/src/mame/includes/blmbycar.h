@@ -27,15 +27,21 @@ public:
 	UINT8       m_pot_wheel;	// blmbycar
 	int         m_old_val;	// blmbycar
 	int         m_retvalue;	// waterball
+	DECLARE_WRITE16_MEMBER(blmbycar_okibank_w);
+	DECLARE_WRITE16_MEMBER(blmbycar_pot_wheel_reset_w);
+	DECLARE_WRITE16_MEMBER(blmbycar_pot_wheel_shift_w);
+	DECLARE_READ16_MEMBER(blmbycar_pot_wheel_r);
+	DECLARE_READ16_MEMBER(blmbycar_opt_wheel_r);
+	DECLARE_READ16_MEMBER(waterball_unk_r);
+	DECLARE_WRITE16_MEMBER(blmbycar_palette_w);
+	DECLARE_WRITE16_MEMBER(blmbycar_vram_0_w);
+	DECLARE_WRITE16_MEMBER(blmbycar_vram_1_w);
 };
 
 
 /*----------- defined in video/blmbycar.c -----------*/
 
-WRITE16_HANDLER( blmbycar_palette_w );
 
-WRITE16_HANDLER( blmbycar_vram_0_w );
-WRITE16_HANDLER( blmbycar_vram_1_w );
 
 VIDEO_START( blmbycar );
 SCREEN_UPDATE_IND16( blmbycar );

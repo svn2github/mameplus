@@ -40,13 +40,22 @@ public:
 	/* devices */
 	samples_device *m_samples;
 	device_t *m_dac;
+	DECLARE_WRITE8_MEMBER(panic_sound_output_w);
+	DECLARE_WRITE8_MEMBER(panic_sound_output2_w);
+	DECLARE_WRITE8_MEMBER(cosmicg_output_w);
+	DECLARE_WRITE8_MEMBER(cosmica_sound_output_w);
+	DECLARE_READ8_MEMBER(cosmica_pixel_clock_r);
+	DECLARE_READ8_MEMBER(cosmicg_port_0_r);
+	DECLARE_READ8_MEMBER(magspot_coinage_dip_r);
+	DECLARE_READ8_MEMBER(nomnlnd_port_0_1_r);
+	DECLARE_WRITE8_MEMBER(flip_screen_w);
+	DECLARE_WRITE8_MEMBER(cosmic_color_register_w);
+	DECLARE_WRITE8_MEMBER(cosmic_background_enable_w);
 };
 
 
 /*----------- defined in video/cosmic.c -----------*/
 
-WRITE8_HANDLER( cosmic_color_register_w );
-WRITE8_HANDLER( cosmic_background_enable_w );
 
 PALETTE_INIT( panic );
 PALETTE_INIT( cosmica );

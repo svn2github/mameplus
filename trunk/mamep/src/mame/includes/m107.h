@@ -29,13 +29,22 @@ public:
 	UINT16 m_control[0x10];
 	UINT16 *m_spriteram;
 	UINT16 *m_buffered_spriteram;
+	DECLARE_WRITE16_MEMBER(m107_coincounter_w);
+	DECLARE_WRITE16_MEMBER(m107_bankswitch_w);
+	DECLARE_WRITE16_MEMBER(m107_soundlatch_w);
+	DECLARE_READ16_MEMBER(m107_sound_status_r);
+	DECLARE_READ16_MEMBER(m107_soundlatch_r);
+	DECLARE_WRITE16_MEMBER(m107_sound_irq_ack_w);
+	DECLARE_WRITE16_MEMBER(m107_sound_status_w);
+	DECLARE_WRITE16_MEMBER(m107_sound_reset_w);
+	DECLARE_WRITE16_MEMBER(wpksoc_output_w);
+	DECLARE_WRITE16_MEMBER(m107_vram_w);
+	DECLARE_WRITE16_MEMBER(m107_control_w);
+	DECLARE_WRITE16_MEMBER(m107_spritebuffer_w);
 };
 
 
 /*----------- defined in video/m107.c -----------*/
 
-WRITE16_HANDLER( m107_spritebuffer_w );
 SCREEN_UPDATE_IND16( m107 );
 VIDEO_START( m107 );
-WRITE16_HANDLER( m107_control_w );
-WRITE16_HANDLER( m107_vram_w );

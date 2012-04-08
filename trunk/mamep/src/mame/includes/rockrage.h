@@ -21,12 +21,14 @@ public:
 	device_t *m_audiocpu;
 	device_t *m_k007342;
 	device_t *m_k007420;
+	DECLARE_WRITE8_MEMBER(rockrage_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(rockrage_sh_irqtrigger_w);
+	DECLARE_WRITE8_MEMBER(rockrage_vreg_w);
 };
 
 
 /*----------- defined in video/rockrage.c -----------*/
 
-WRITE8_HANDLER( rockrage_vreg_w );
 
 SCREEN_UPDATE_IND16( rockrage );
 PALETTE_INIT( rockrage );

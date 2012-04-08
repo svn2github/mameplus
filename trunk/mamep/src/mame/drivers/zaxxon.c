@@ -306,13 +306,11 @@ static INTERRUPT_GEN( vblank_int )
 }
 
 
-static WRITE8_HANDLER( int_enable_w )
+WRITE8_MEMBER(zaxxon_state::int_enable_w)
 {
-	zaxxon_state *state = space->machine().driver_data<zaxxon_state>();
-
-	state->m_int_enabled = data & 1;
-	if (!state->m_int_enabled)
-		cputag_set_input_line(space->machine(), "maincpu", 0, CLEAR_LINE);
+	m_int_enabled = data & 1;
+	if (!m_int_enabled)
+		cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
 }
 
 
@@ -341,15 +339,14 @@ static MACHINE_START( zaxxon )
  *
  *************************************/
 
-static READ8_HANDLER( razmataz_counter_r )
+READ8_MEMBER(zaxxon_state::razmataz_counter_r)
 {
-	zaxxon_state *state = space->machine().driver_data<zaxxon_state>();
 
 	/* this behavior is really unknown; however, the code is using this */
 	/* counter as a sort of timeout when talking to the sound board */
 	/* it needs to be increasing at a reasonable rate but not too fast */
 	/* or else the sound will mess up */
-	return state->m_razmataz_counter++ >> 8;
+	return m_razmataz_counter++ >> 8;
 }
 
 
@@ -386,21 +383,20 @@ static CUSTOM_INPUT( razmataz_dial_r )
  *
  *************************************/
 
-static WRITE8_HANDLER( zaxxon_coin_counter_w )
+WRITE8_MEMBER(zaxxon_state::zaxxon_coin_counter_w)
 {
-	coin_counter_w(space->machine(), offset, data & 0x01);
+	coin_counter_w(machine(), offset, data & 0x01);
 }
 
 
 // There is no external coin lockout circuitry; instead, the pcb simply latches
 // the coin input, which then needs to be explicitly cleared by the game.
-static WRITE8_HANDLER( zaxxon_coin_enable_w )
+WRITE8_MEMBER(zaxxon_state::zaxxon_coin_enable_w)
 {
-	zaxxon_state *state = space->machine().driver_data<zaxxon_state>();
 
-	state->m_coin_enable[offset] = data & 1;
-	if (!state->m_coin_enable[offset])
-		state->m_coin_status[offset] = 0;
+	m_coin_enable[offset] = data & 1;
+	if (!m_coin_enable[offset])
+		m_coin_status[offset] = 0;
 }
 
 
@@ -431,11 +427,11 @@ static CUSTOM_INPUT( zaxxon_coin_r )
  *************************************/
 
 /* complete memory map derived from schematics */
-static ADDRESS_MAP_START( zaxxon_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( zaxxon_map, AS_PROGRAM, 8, zaxxon_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x6fff) AM_RAM
-	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x1c00) AM_RAM_WRITE(zaxxon_videoram_w) AM_BASE_MEMBER(zaxxon_state,m_videoram)
-	AM_RANGE(0xa000, 0xa0ff) AM_MIRROR(0x1f00) AM_RAM AM_BASE_MEMBER(zaxxon_state,m_spriteram)
+	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x1c00) AM_RAM_WRITE(zaxxon_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0xa000, 0xa0ff) AM_MIRROR(0x1f00) AM_RAM AM_BASE(m_spriteram)
 	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x18fc) AM_READ_PORT("SW00")
 	AM_RANGE(0xc001, 0xc001) AM_MIRROR(0x18fc) AM_READ_PORT("SW01")
 	AM_RANGE(0xc002, 0xc002) AM_MIRROR(0x18fc) AM_READ_PORT("DSW02")
@@ -444,7 +440,7 @@ static ADDRESS_MAP_START( zaxxon_map, AS_PROGRAM, 8 )
 	AM_RANGE(0xc000, 0xc002) AM_MIRROR(0x18f8) AM_WRITE(zaxxon_coin_enable_w)
 	AM_RANGE(0xc003, 0xc004) AM_MIRROR(0x18f8) AM_WRITE(zaxxon_coin_counter_w)
 	AM_RANGE(0xc006, 0xc006) AM_MIRROR(0x18f8) AM_WRITE(zaxxon_flipscreen_w)
-	AM_RANGE(0xe03c, 0xe03f) AM_MIRROR(0x1f00) AM_DEVREADWRITE("ppi8255", ppi8255_r, ppi8255_w)
+	AM_RANGE(0xe03c, 0xe03f) AM_MIRROR(0x1f00) AM_DEVREADWRITE_LEGACY("ppi8255", ppi8255_r, ppi8255_w)
 	AM_RANGE(0xe0f0, 0xe0f0) AM_MIRROR(0x1f00) AM_WRITE(int_enable_w)
 	AM_RANGE(0xe0f1, 0xe0f1) AM_MIRROR(0x1f00) AM_WRITE(zaxxon_fg_color_w)
 	AM_RANGE(0xe0f8, 0xe0f9) AM_MIRROR(0x1f00) AM_WRITE(zaxxon_bg_position_w)
@@ -454,11 +450,11 @@ ADDRESS_MAP_END
 
 
 /* complete memory map derived from schematics */
-static ADDRESS_MAP_START( congo_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( congo_map, AS_PROGRAM, 8, zaxxon_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0xa000, 0xa3ff) AM_MIRROR(0x1800) AM_RAM_WRITE(zaxxon_videoram_w) AM_BASE_MEMBER(zaxxon_state,m_videoram)
-	AM_RANGE(0xa400, 0xa7ff) AM_MIRROR(0x1800) AM_RAM_WRITE(congo_colorram_w) AM_BASE_MEMBER(zaxxon_state,m_colorram)
+	AM_RANGE(0xa000, 0xa3ff) AM_MIRROR(0x1800) AM_RAM_WRITE(zaxxon_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0xa400, 0xa7ff) AM_MIRROR(0x1800) AM_RAM_WRITE(congo_colorram_w) AM_BASE(m_colorram)
 	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fc4) AM_READ_PORT("SW00")
 	AM_RANGE(0xc001, 0xc001) AM_MIRROR(0x1fc4) AM_READ_PORT("SW01")
 	AM_RANGE(0xc002, 0xc002) AM_MIRROR(0x1fc4) AM_READ_PORT("DSW02")
@@ -480,12 +476,12 @@ ADDRESS_MAP_END
 
 
 /* complete memory map derived from schematics */
-static ADDRESS_MAP_START( congo_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( congo_sound_map, AS_PROGRAM, 8, zaxxon_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x4000, 0x47ff) AM_MIRROR(0x1800) AM_RAM
-	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_DEVWRITE("sn1", sn76496_w)
-	AM_RANGE(0x8000, 0x8003) AM_MIRROR(0x1ffc) AM_DEVREADWRITE("ppi8255", ppi8255_r, ppi8255_w)
-	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_DEVWRITE("sn2", sn76496_w)
+	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
+	AM_RANGE(0x8000, 0x8003) AM_MIRROR(0x1ffc) AM_DEVREADWRITE_LEGACY("ppi8255", ppi8255_r, ppi8255_w)
+	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
 ADDRESS_MAP_END
 
 
@@ -881,7 +877,7 @@ static const ppi8255_interface zaxxon_ppi_intf =
 
 static const ppi8255_interface congo_ppi_intf =
 {
-	DEVCB_MEMORY_HANDLER("maincpu", PROGRAM, soundlatch_r),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_r),
 	DEVCB_NULL,
 	DEVCB_NULL,
 	DEVCB_NULL,
@@ -1509,7 +1505,7 @@ static DRIVER_INIT( razmataz )
 	pgmspace->install_read_port(0xc00c, 0xc00c, 0, 0x18f3, "SW0C");
 
 	/* unknown behavior expected here */
-	pgmspace->install_legacy_read_handler(0xc80a, 0xc80a, FUNC(razmataz_counter_r));
+	pgmspace->install_read_handler(0xc80a, 0xc80a, read8_delegate(FUNC(zaxxon_state::razmataz_counter_r),state));
 
 	/* connect the universal sound board */
 	pgmspace->install_legacy_readwrite_handler(*usbsnd, 0xe03c, 0xe03c, 0, 0x1f00, FUNC(sega_usb_status_r), FUNC(sega_usb_data_w));

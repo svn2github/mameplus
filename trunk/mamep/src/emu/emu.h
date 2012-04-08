@@ -116,7 +116,7 @@ typedef device_t * (*machine_config_constructor)(machine_config &config, device_
 
 // machine and driver configuration
 #include "mconfig.h"
-#include "driver.h"
+#include "gamedrv.h"
 
 // image-related
 #include "softlist.h"
@@ -127,6 +127,7 @@ typedef device_t * (*machine_config_constructor)(machine_config &config, device_
 
 // the running machine
 #include "machine.h"
+#include "driver.h"
 #include "mame.h"
 
 // video-related

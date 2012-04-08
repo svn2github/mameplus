@@ -40,6 +40,32 @@ public:
 	tilemap_t *m_fg_tilemap;
 	UINT16 *m_spriteram;
 	size_t m_spriteram_size;
+	DECLARE_READ16_MEMBER(zwackery_6840_r);
+	DECLARE_WRITE16_MEMBER(xenophobe_control_w);
+	DECLARE_WRITE16_MEMBER(blasted_control_w);
+	DECLARE_READ16_MEMBER(spyhunt2_port_0_r);
+	DECLARE_READ16_MEMBER(spyhunt2_port_1_r);
+	DECLARE_WRITE16_MEMBER(spyhunt2_control_w);
+	DECLARE_READ16_MEMBER(archrivl_port_1_r);
+	DECLARE_WRITE16_MEMBER(archrivl_control_w);
+	DECLARE_WRITE16_MEMBER(pigskin_protection_w);
+	DECLARE_READ16_MEMBER(pigskin_protection_r);
+	DECLARE_READ16_MEMBER(pigskin_port_1_r);
+	DECLARE_READ16_MEMBER(pigskin_port_2_r);
+	DECLARE_READ16_MEMBER(trisport_port_1_r);
+	DECLARE_WRITE16_MEMBER(mcr68_6840_upper_w);
+	DECLARE_WRITE16_MEMBER(mcr68_6840_lower_w);
+	DECLARE_READ16_MEMBER(mcr68_6840_upper_r);
+	DECLARE_READ16_MEMBER(mcr68_6840_lower_r);
+	DECLARE_WRITE8_MEMBER(mcr68_6840_w_common);
+	DECLARE_READ16_MEMBER(mcr68_6840_r_common);
+	void reload_count(int counter);
+	UINT16 compute_counter(int counter);
+	DECLARE_WRITE16_MEMBER(mcr68_paletteram_w);
+	DECLARE_WRITE16_MEMBER(zwackery_paletteram_w);
+	DECLARE_WRITE16_MEMBER(mcr68_videoram_w);
+	DECLARE_WRITE16_MEMBER(zwackery_videoram_w);
+	DECLARE_WRITE16_MEMBER(zwackery_spriteram_w);
 };
 
 
@@ -60,25 +86,16 @@ MACHINE_RESET( mcr68 );
 MACHINE_START( zwackery );
 MACHINE_RESET( zwackery );
 
-WRITE16_HANDLER( mcr68_6840_upper_w );
-WRITE16_HANDLER( mcr68_6840_lower_w );
-READ16_HANDLER( mcr68_6840_upper_r );
-READ16_HANDLER( mcr68_6840_lower_r );
 
 INTERRUPT_GEN( mcr68_interrupt );
 
 
 /*----------- defined in video/mcr68.c -----------*/
 
-WRITE16_HANDLER( mcr68_paletteram_w );
-WRITE16_HANDLER( mcr68_videoram_w );
 
 VIDEO_START( mcr68 );
 SCREEN_UPDATE_IND16( mcr68 );
 
-WRITE16_HANDLER( zwackery_paletteram_w );
-WRITE16_HANDLER( zwackery_videoram_w );
-WRITE16_HANDLER( zwackery_spriteram_w );
 
 VIDEO_START( zwackery );
 SCREEN_UPDATE_IND16( zwackery );

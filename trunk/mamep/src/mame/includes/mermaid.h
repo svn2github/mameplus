@@ -48,22 +48,28 @@ public:
 	device_t *m_ay2;
 
 	UINT8    m_nmi_mask;
+	DECLARE_WRITE8_MEMBER(mermaid_ay8910_write_port_w);
+	DECLARE_WRITE8_MEMBER(mermaid_ay8910_control_port_w);
+	DECLARE_WRITE8_MEMBER(nmi_mask_w);
+	DECLARE_WRITE8_MEMBER(rougien_sample_rom_lo_w);
+	DECLARE_WRITE8_MEMBER(rougien_sample_rom_hi_w);
+	DECLARE_WRITE8_MEMBER(rougien_sample_playback_w);
+	DECLARE_WRITE8_MEMBER(mermaid_videoram2_w);
+	DECLARE_WRITE8_MEMBER(mermaid_videoram_w);
+	DECLARE_WRITE8_MEMBER(mermaid_colorram_w);
+	DECLARE_WRITE8_MEMBER(mermaid_flip_screen_x_w);
+	DECLARE_WRITE8_MEMBER(mermaid_flip_screen_y_w);
+	DECLARE_WRITE8_MEMBER(mermaid_bg_scroll_w);
+	DECLARE_WRITE8_MEMBER(mermaid_fg_scroll_w);
+	DECLARE_WRITE8_MEMBER(rougien_gfxbankswitch1_w);
+	DECLARE_WRITE8_MEMBER(rougien_gfxbankswitch2_w);
+	DECLARE_READ8_MEMBER(mermaid_collision_r);
 };
 
 
 
 /*----------- defined in video/mermaid.c -----------*/
 
-WRITE8_HANDLER( mermaid_videoram2_w );
-WRITE8_HANDLER( mermaid_videoram_w );
-WRITE8_HANDLER( mermaid_colorram_w );
-WRITE8_HANDLER( mermaid_flip_screen_x_w );
-WRITE8_HANDLER( mermaid_flip_screen_y_w );
-WRITE8_HANDLER( mermaid_bg_scroll_w );
-WRITE8_HANDLER( mermaid_fg_scroll_w );
-WRITE8_HANDLER( rougien_gfxbankswitch1_w );
-WRITE8_HANDLER( rougien_gfxbankswitch2_w );
-READ8_HANDLER( mermaid_collision_r );
 
 PALETTE_INIT( mermaid );
 PALETTE_INIT( rougien );

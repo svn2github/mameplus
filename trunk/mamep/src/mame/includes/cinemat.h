@@ -36,6 +36,18 @@ public:
 	UINT8 m_last_control;
 	int m_qb3_lastx;
 	int m_qb3_lasty;
+	DECLARE_READ8_MEMBER(inputs_r);
+	DECLARE_READ8_MEMBER(switches_r);
+	DECLARE_READ8_MEMBER(coin_input_r);
+	DECLARE_WRITE8_MEMBER(coin_reset_w);
+	DECLARE_WRITE8_MEMBER(mux_select_w);
+	DECLARE_READ8_MEMBER(speedfrk_wheel_r);
+	DECLARE_READ8_MEMBER(speedfrk_gear_r);
+	DECLARE_READ8_MEMBER(sundance_inputs_r);
+	DECLARE_READ8_MEMBER(boxingb_dial_r);
+	DECLARE_READ8_MEMBER(qb3_frame_r);
+	DECLARE_WRITE8_MEMBER(qb3_ram_bank_w);
+	DECLARE_WRITE8_MEMBER(cinemat_vector_control_w);
 };
 
 
@@ -69,7 +81,6 @@ MACHINE_CONFIG_EXTERN( qb3_sound );
 /*----------- defined in video/cinemat.c -----------*/
 
 void cinemat_vector_callback(device_t *device, INT16 sx, INT16 sy, INT16 ex, INT16 ey, UINT8 shift);
-WRITE8_HANDLER( cinemat_vector_control_w );
 
 VIDEO_START( cinemat_bilevel );
 VIDEO_START( cinemat_16level );

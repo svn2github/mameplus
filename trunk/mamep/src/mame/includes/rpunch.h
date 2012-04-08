@@ -19,6 +19,15 @@ public:
 	UINT8 m_bins;
 	UINT8 m_gins;
 	UINT16 *m_spriteram;
+	DECLARE_WRITE16_MEMBER(sound_command_w);
+	DECLARE_READ8_MEMBER(sound_command_r);
+	DECLARE_READ16_MEMBER(sound_busy_r);
+	DECLARE_WRITE16_MEMBER(rpunch_videoram_w);
+	DECLARE_WRITE16_MEMBER(rpunch_videoreg_w);
+	DECLARE_WRITE16_MEMBER(rpunch_scrollreg_w);
+	DECLARE_WRITE16_MEMBER(rpunch_crtc_data_w);
+	DECLARE_WRITE16_MEMBER(rpunch_crtc_register_w);
+	DECLARE_WRITE16_MEMBER(rpunch_ins_w);
 };
 
 
@@ -27,9 +36,3 @@ public:
 VIDEO_START( rpunch );
 SCREEN_UPDATE_IND16( rpunch );
 
-WRITE16_HANDLER( rpunch_videoram_w );
-WRITE16_HANDLER( rpunch_videoreg_w );
-WRITE16_HANDLER( rpunch_scrollreg_w );
-WRITE16_HANDLER( rpunch_ins_w );
-WRITE16_HANDLER( rpunch_crtc_data_w );
-WRITE16_HANDLER( rpunch_crtc_register_w );

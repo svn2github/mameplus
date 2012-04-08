@@ -22,16 +22,21 @@ public:
 	UINT8 *m_sharedram;
 
 	UINT8 m_nmi_mask;
+	DECLARE_WRITE8_MEMBER(vastar_hold_cpu2_w);
+	DECLARE_READ8_MEMBER(vastar_sharedram_r);
+	DECLARE_WRITE8_MEMBER(vastar_sharedram_w);
+	DECLARE_WRITE8_MEMBER(flip_screen_w);
+	DECLARE_WRITE8_MEMBER(nmi_mask_w);
+	DECLARE_WRITE8_MEMBER(vastar_fgvideoram_w);
+	DECLARE_WRITE8_MEMBER(vastar_bg1videoram_w);
+	DECLARE_WRITE8_MEMBER(vastar_bg2videoram_w);
+	DECLARE_READ8_MEMBER(vastar_bg1videoram_r);
+	DECLARE_READ8_MEMBER(vastar_bg2videoram_r);
 };
 
 
 /*----------- defined in video/vastar.c -----------*/
 
-WRITE8_HANDLER( vastar_bg1videoram_w );
-WRITE8_HANDLER( vastar_bg2videoram_w );
-WRITE8_HANDLER( vastar_fgvideoram_w );
-READ8_HANDLER( vastar_bg1videoram_r );
-READ8_HANDLER( vastar_bg2videoram_r );
 
 VIDEO_START( vastar );
 SCREEN_UPDATE_IND16( vastar );

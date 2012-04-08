@@ -42,6 +42,12 @@ public:
 	required_device<cpu_device> m_maincpu;
 	required_device<okim6295_device> m_oki;
 	required_device<msm5205_device> m_msm;
+	DECLARE_READ16_MEMBER(ioc_r);
+	DECLARE_WRITE16_MEMBER(ioc_w);
+	DECLARE_READ16_MEMBER(gcpinbal_tilemaps_word_r);
+	DECLARE_WRITE16_MEMBER(gcpinbal_tilemaps_word_w);
+	DECLARE_READ16_MEMBER(gcpinbal_ctrl_word_r);
+	DECLARE_WRITE16_MEMBER(gcpinbal_ctrl_word_w);
 };
 
 
@@ -50,5 +56,3 @@ public:
 VIDEO_START( gcpinbal );
 SCREEN_UPDATE_IND16( gcpinbal );
 
-READ16_HANDLER ( gcpinbal_tilemaps_word_r );
-WRITE16_HANDLER( gcpinbal_tilemaps_word_w );

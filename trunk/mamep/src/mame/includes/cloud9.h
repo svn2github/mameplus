@@ -40,6 +40,18 @@ public:
 	/* devices */
 	required_device<m6502_device> m_maincpu;
 	required_device<x2212_device> m_nvram;
+	DECLARE_WRITE8_MEMBER(irq_ack_w);
+	DECLARE_WRITE8_MEMBER(cloud9_led_w);
+	DECLARE_WRITE8_MEMBER(cloud9_coin_counter_w);
+	DECLARE_READ8_MEMBER(leta_r);
+	DECLARE_WRITE8_MEMBER(nvram_recall_w);
+	DECLARE_WRITE8_MEMBER(nvram_store_w);
+	DECLARE_WRITE8_MEMBER(cloud9_video_control_w);
+	DECLARE_WRITE8_MEMBER(cloud9_paletteram_w);
+	DECLARE_WRITE8_MEMBER(cloud9_videoram_w);
+	DECLARE_READ8_MEMBER(cloud9_bitmode_r);
+	DECLARE_WRITE8_MEMBER(cloud9_bitmode_w);
+	DECLARE_WRITE8_MEMBER(cloud9_bitmode_addr_w);
 };
 
 
@@ -48,11 +60,5 @@ public:
 VIDEO_START( cloud9 );
 SCREEN_UPDATE_IND16( cloud9 );
 
-WRITE8_HANDLER( cloud9_video_control_w );
 
-WRITE8_HANDLER( cloud9_paletteram_w );
-WRITE8_HANDLER( cloud9_videoram_w );
 
-READ8_HANDLER( cloud9_bitmode_r );
-WRITE8_HANDLER( cloud9_bitmode_w );
-WRITE8_HANDLER( cloud9_bitmode_addr_w );

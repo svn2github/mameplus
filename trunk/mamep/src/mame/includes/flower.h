@@ -17,6 +17,16 @@ public:
 	tilemap_t *m_bg1_tilemap;
 	tilemap_t *m_text_tilemap;
 	tilemap_t *m_text_right_tilemap;
+	DECLARE_WRITE8_MEMBER(flower_maincpu_irq_ack);
+	DECLARE_WRITE8_MEMBER(flower_subcpu_irq_ack);
+	DECLARE_WRITE8_MEMBER(flower_soundcpu_irq_ack);
+	DECLARE_WRITE8_MEMBER(flower_coin_counter_w);
+	DECLARE_WRITE8_MEMBER(flower_coin_lockout_w);
+	DECLARE_WRITE8_MEMBER(sound_command_w);
+	DECLARE_WRITE8_MEMBER(flower_textram_w);
+	DECLARE_WRITE8_MEMBER(flower_bg0ram_w);
+	DECLARE_WRITE8_MEMBER(flower_bg1ram_w);
+	DECLARE_WRITE8_MEMBER(flower_flipscreen_w);
 };
 
 
@@ -30,10 +40,6 @@ DECLARE_LEGACY_SOUND_DEVICE(FLOWER, flower_sound);
 
 /*----------- defined in video/flower.c -----------*/
 
-WRITE8_HANDLER( flower_textram_w );
-WRITE8_HANDLER( flower_bg0ram_w );
-WRITE8_HANDLER( flower_bg1ram_w );
-WRITE8_HANDLER( flower_flipscreen_w );
 
 SCREEN_UPDATE_IND16( flower );
 VIDEO_START( flower );

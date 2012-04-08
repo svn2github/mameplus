@@ -28,6 +28,10 @@ public:
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
+	DECLARE_READ8_MEMBER(canyon_switches_r);
+	DECLARE_READ8_MEMBER(canyon_options_r);
+	DECLARE_WRITE8_MEMBER(canyon_led_w);
+	DECLARE_WRITE8_MEMBER(canyon_videoram_w);
 };
 
 
@@ -46,4 +50,3 @@ DISCRETE_SOUND_EXTERN( canyon );
 VIDEO_START( canyon );
 SCREEN_UPDATE_IND16( canyon );
 
-WRITE8_HANDLER( canyon_videoram_w );

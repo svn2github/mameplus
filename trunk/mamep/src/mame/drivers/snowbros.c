@@ -75,10 +75,10 @@ out of the sprite list at that point.. (verify on real hw)
 #include "cpu/mcs51/mcs51.h" // for semicom mcu
 
 
-static WRITE16_HANDLER( snowbros_flipscreen_w )
+WRITE16_MEMBER(snowbros_state::snowbros_flipscreen_w)
 {
 	if (ACCESSING_BITS_8_15)
-		flip_screen_set(space->machine(), ~data & 0x8000);
+		flip_screen_set(machine(), ~data & 0x8000);
 }
 
 
@@ -105,19 +105,19 @@ static SCREEN_VBLANK( snowbros )
 
 
 
-static WRITE16_HANDLER( snowbros_irq4_ack_w )
+WRITE16_MEMBER(snowbros_state::snowbros_irq4_ack_w)
 {
-	cputag_set_input_line(space->machine(), "maincpu", 4, CLEAR_LINE);
+	cputag_set_input_line(machine(), "maincpu", 4, CLEAR_LINE);
 }
 
-static WRITE16_HANDLER( snowbros_irq3_ack_w )
+WRITE16_MEMBER(snowbros_state::snowbros_irq3_ack_w)
 {
-	cputag_set_input_line(space->machine(), "maincpu", 3, CLEAR_LINE);
+	cputag_set_input_line(machine(), "maincpu", 3, CLEAR_LINE);
 }
 
-static WRITE16_HANDLER( snowbros_irq2_ack_w )
+WRITE16_MEMBER(snowbros_state::snowbros_irq2_ack_w)
 {
-	cputag_set_input_line(space->machine(), "maincpu", 2, CLEAR_LINE);
+	cputag_set_input_line(machine(), "maincpu", 2, CLEAR_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK( snowbros_irq )
@@ -173,29 +173,29 @@ static TIMER_DEVICE_CALLBACK( snowbros3_irq )
 
 /* Sound Routines */
 
-static READ16_HANDLER( snowbros_68000_sound_r )
+READ16_MEMBER(snowbros_state::snowbros_68000_sound_r)
 {
 	return soundlatch_r(space,offset);
 }
 
 
-static WRITE16_HANDLER( snowbros_68000_sound_w )
+WRITE16_MEMBER(snowbros_state::snowbros_68000_sound_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_w(space, offset, data & 0xff);
-		cputag_set_input_line(space->machine(), "soundcpu", INPUT_LINE_NMI, PULSE_LINE);
+		cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
-static WRITE16_HANDLER( semicom_soundcmd_w )
+WRITE16_MEMBER(snowbros_state::semicom_soundcmd_w)
 {
 	if (ACCESSING_BITS_0_7) soundlatch_w(space,0,data & 0xff);
 }
 
 /* Snow Bros Memory Map */
 
-static ADDRESS_MAP_START( snowbros_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( snowbros_map, AS_PROGRAM, 16, snowbros_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x100000, 0x103fff) AM_RAM
 	AM_RANGE(0x200000, 0x200001) AM_WRITE(watchdog_reset16_w)
@@ -204,27 +204,27 @@ static ADDRESS_MAP_START( snowbros_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x500000, 0x500001) AM_READ_PORT("DSW1")
 	AM_RANGE(0x500002, 0x500003) AM_READ_PORT("DSW2")
 	AM_RANGE(0x500004, 0x500005) AM_READ_PORT("SYSTEM")
-	AM_RANGE(0x600000, 0x6001ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x700000, 0x701fff) AM_DEVREADWRITE("pandora", pandora_spriteram_LSB_r, pandora_spriteram_LSB_w)
+	AM_RANGE(0x600000, 0x6001ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x700000, 0x701fff) AM_DEVREADWRITE_LEGACY("pandora", pandora_spriteram_LSB_r, pandora_spriteram_LSB_w)
 	AM_RANGE(0x800000, 0x800001) AM_WRITE(snowbros_irq4_ack_w)	/* IRQ 4 acknowledge */
 	AM_RANGE(0x900000, 0x900001) AM_WRITE(snowbros_irq3_ack_w)	/* IRQ 3 acknowledge */
 	AM_RANGE(0xa00000, 0xa00001) AM_WRITE(snowbros_irq2_ack_w)	/* IRQ 2 acknowledge */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, snowbros_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( sound_io_map, AS_IO, 8, snowbros_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x02, 0x03) AM_DEVREADWRITE("ymsnd", ym3812_r, ym3812_w)
+	AM_RANGE(0x02, 0x03) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_r, ym3812_w)
 	AM_RANGE(0x04, 0x04) AM_READWRITE(soundlatch_r, soundlatch_w)	/* goes back to the main CPU, checked during boot */
 ADDRESS_MAP_END
 
 
 
-static READ8_HANDLER( prot_io_r )
+READ8_MEMBER(snowbros_state::prot_io_r)
 {
 	// never read?
 	return 0x00;
@@ -232,30 +232,29 @@ static READ8_HANDLER( prot_io_r )
 
 
 // probably not endian safe
-static WRITE8_HANDLER( prot_io_w )
+WRITE8_MEMBER(snowbros_state::prot_io_w)
 {
-	snowbros_state *state = space->machine().driver_data<snowbros_state>();
 	switch (offset)
 	{
 		case 0x00:
 		{
-			UINT16 word = state->m_hyperpac_ram[(0xe000/2)+state->m_semicom_prot_offset];
+			UINT16 word = m_hyperpac_ram[(0xe000/2)+m_semicom_prot_offset];
 			word = (word & 0xff00) | (data << 0);
-			state->m_hyperpac_ram[(0xe000/2)+state->m_semicom_prot_offset] = word;
+			m_hyperpac_ram[(0xe000/2)+m_semicom_prot_offset] = word;
 			break;
 		}
 
 		case 0x01:
 		{
-			UINT16 word = state->m_hyperpac_ram[(0xe000/2)+state->m_semicom_prot_offset];
+			UINT16 word = m_hyperpac_ram[(0xe000/2)+m_semicom_prot_offset];
 			word = (word & 0x00ff) | (data << 8);
-			state->m_hyperpac_ram[(0xe000/2)+state->m_semicom_prot_offset] = word;
+			m_hyperpac_ram[(0xe000/2)+m_semicom_prot_offset] = word;
 			break;
 		}
 
 		case 0x02: // offset
 		{
-			state->m_semicom_prot_offset = data;
+			m_semicom_prot_offset = data;
 			break;
 		}
 
@@ -268,17 +267,17 @@ static WRITE8_HANDLER( prot_io_w )
 }
 
 /* Semicom AT89C52 MCU */
-static ADDRESS_MAP_START( protection_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( protection_map, AS_PROGRAM, 8, snowbros_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( protection_iomap, AS_IO, 8 )
+static ADDRESS_MAP_START( protection_iomap, AS_IO, 8, snowbros_state )
 	AM_RANGE(MCS51_PORT_P0, MCS51_PORT_P3) AM_READWRITE(prot_io_r,prot_io_w)
 ADDRESS_MAP_END
 
 /* Winter Bobble - bootleg GFX chip */
 
-static ADDRESS_MAP_START( wintbob_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( wintbob_map, AS_PROGRAM, 16, snowbros_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x100000, 0x103fff) AM_RAM
 	AM_RANGE(0x200000, 0x200001) AM_WRITE(watchdog_reset16_w)
@@ -287,8 +286,8 @@ static ADDRESS_MAP_START( wintbob_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x500000, 0x500001) AM_READ_PORT("DSW1")
 	AM_RANGE(0x500002, 0x500003) AM_READ_PORT("DSW2")
 	AM_RANGE(0x500004, 0x500005) AM_READ_PORT("SYSTEM")
-	AM_RANGE(0x600000, 0x6001ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x700000, 0x701fff) AM_RAM AM_BASE_SIZE_MEMBER(snowbros_state, m_bootleg_spriteram16, m_spriteram_size)
+	AM_RANGE(0x600000, 0x6001ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x700000, 0x701fff) AM_RAM AM_BASE_SIZE(m_bootleg_spriteram16, m_spriteram_size)
 	AM_RANGE(0x800000, 0x800001) AM_WRITE(snowbros_irq4_ack_w)	/* IRQ 4 acknowledge */
 	AM_RANGE(0x900000, 0x900001) AM_WRITE(snowbros_irq3_ack_w)	/* IRQ 3 acknowledge */
 	AM_RANGE(0xa00000, 0xa00001) AM_WRITE(snowbros_irq2_ack_w)	/* IRQ 2 acknowledge */
@@ -296,9 +295,9 @@ ADDRESS_MAP_END
 
 /* Honey Dolls */
 
-static ADDRESS_MAP_START( honeydol_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( honeydol_map, AS_PROGRAM, 16, snowbros_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
-	AM_RANGE(0x100000, 0x10ffff) AM_RAM AM_BASE_MEMBER(snowbros_state, m_hyperpac_ram)
+	AM_RANGE(0x100000, 0x10ffff) AM_RAM AM_BASE(m_hyperpac_ram)
 	AM_RANGE(0x200000, 0x200001) AM_WRITENOP	/* ? */
 	AM_RANGE(0x300000, 0x300001) AM_WRITE(snowbros_68000_sound_w)	/* ? */
 	AM_RANGE(0x400000, 0x400001) AM_WRITE(snowbros_irq4_ack_w)	/* IRQ 4 acknowledge */
@@ -308,34 +307,34 @@ static ADDRESS_MAP_START( honeydol_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x900000, 0x900001) AM_READ_PORT("DSW1")
 	AM_RANGE(0x900002, 0x900003) AM_READ_PORT("DSW2")
 	AM_RANGE(0x900004, 0x900005) AM_READ_PORT("SYSTEM")
-	AM_RANGE(0xa00000, 0xa007ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0xb00000, 0xb01fff) AM_RAM AM_BASE_SIZE_MEMBER(snowbros_state, m_bootleg_spriteram16, m_spriteram_size)
+	AM_RANGE(0xa00000, 0xa007ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xb00000, 0xb01fff) AM_RAM AM_BASE_SIZE(m_bootleg_spriteram16, m_spriteram_size)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( honeydol_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( honeydol_sound_map, AS_PROGRAM, 8, snowbros_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xe010, 0xe010) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
+	AM_RANGE(0xe010, 0xe010) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( honeydol_sound_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( honeydol_sound_io_map, AS_IO, 8, snowbros_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x02, 0x03) AM_DEVREADWRITE("ymsnd", ym3812_r, ym3812_w)								// not connected?
+	AM_RANGE(0x02, 0x03) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_r, ym3812_w)								// not connected?
 	AM_RANGE(0x04, 0x04) AM_READWRITE(soundlatch_r, soundlatch_w)	/* goes back to the main CPU, checked during boot */
 ADDRESS_MAP_END
 
 /* Twin Adventure */
 
-static WRITE16_HANDLER( twinadv_68000_sound_w )
+WRITE16_MEMBER(snowbros_state::twinadv_68000_sound_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_w(space, offset, data & 0xff);
-		cputag_set_input_line(space->machine(), "soundcpu", INPUT_LINE_NMI, PULSE_LINE);
+		cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
-static ADDRESS_MAP_START( twinadv_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( twinadv_map, AS_PROGRAM, 16, snowbros_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x100000, 0x10ffff) AM_RAM
 	AM_RANGE(0x200000, 0x200001) AM_WRITE(watchdog_reset16_w)
@@ -345,8 +344,8 @@ static ADDRESS_MAP_START( twinadv_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x500000, 0x500001) AM_READ_PORT("DSW1")
 	AM_RANGE(0x500002, 0x500003) AM_READ_PORT("DSW2")
 	AM_RANGE(0x500004, 0x500005) AM_READ_PORT("SYSTEM")
-	AM_RANGE(0x600000, 0x6001ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x700000, 0x701fff) AM_RAM AM_BASE_SIZE_MEMBER(snowbros_state, m_bootleg_spriteram16, m_spriteram_size)
+	AM_RANGE(0x600000, 0x6001ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x700000, 0x701fff) AM_RAM AM_BASE_SIZE(m_bootleg_spriteram16, m_spriteram_size)
 	AM_RANGE(0x800000, 0x800001) AM_WRITE(snowbros_irq4_ack_w)	/* IRQ 4 acknowledge */
 	AM_RANGE(0x900000, 0x900001) AM_WRITE(snowbros_irq3_ack_w)	/* IRQ 3 acknowledge */
 	AM_RANGE(0xa00000, 0xa00001) AM_WRITE(snowbros_irq2_ack_w)	/* IRQ 2 acknowledge */
@@ -361,11 +360,11 @@ static WRITE8_DEVICE_HANDLER( twinadv_oki_bank_w )
 	downcast<okim6295_device *>(device)->set_bank_base(bank * 0x40000);
 }
 
-static ADDRESS_MAP_START( twinadv_sound_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( twinadv_sound_io_map, AS_IO, 8, snowbros_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x02, 0x02) AM_READWRITE(soundlatch_r, soundlatch_w) // back to 68k?
-	AM_RANGE(0x04, 0x04) AM_DEVWRITE("oki", twinadv_oki_bank_w) // oki bank?
-	AM_RANGE(0x06, 0x06) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
+	AM_RANGE(0x04, 0x04) AM_DEVWRITE_LEGACY("oki", twinadv_oki_bank_w) // oki bank?
+	AM_RANGE(0x06, 0x06) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 ADDRESS_MAP_END
 
 
@@ -376,33 +375,33 @@ sound hardware is also different
 
 */
 
-static ADDRESS_MAP_START( hyperpac_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( hyperpac_map, AS_PROGRAM, 16, snowbros_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x100000, 0x10ffff) AM_RAM AM_BASE_MEMBER(snowbros_state, m_hyperpac_ram)
+	AM_RANGE(0x100000, 0x10ffff) AM_RAM AM_BASE(m_hyperpac_ram)
 	AM_RANGE(0x300000, 0x300001) AM_WRITE(semicom_soundcmd_w)
 //  AM_RANGE(0x400000, 0x400001) ???
 	AM_RANGE(0x500000, 0x500001) AM_READ_PORT("DSW1")
 	AM_RANGE(0x500002, 0x500003) AM_READ_PORT("DSW2")
 	AM_RANGE(0x500004, 0x500005) AM_READ_PORT("SYSTEM")
 
-	AM_RANGE(0x600000, 0x6001ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x700000, 0x701fff) AM_DEVREADWRITE("pandora", pandora_spriteram_LSB_r,pandora_spriteram_LSB_w)
+	AM_RANGE(0x600000, 0x6001ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x700000, 0x701fff) AM_DEVREADWRITE_LEGACY("pandora", pandora_spriteram_LSB_r,pandora_spriteram_LSB_w)
 	AM_RANGE(0x800000, 0x800001) AM_WRITE(snowbros_irq4_ack_w)	/* IRQ 4 acknowledge */
 	AM_RANGE(0x900000, 0x900001) AM_WRITE(snowbros_irq3_ack_w)	/* IRQ 3 acknowledge */
 	AM_RANGE(0xa00000, 0xa00001) AM_WRITE(snowbros_irq2_ack_w)	/* IRQ 2 acknowledge */
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( hyperpac_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( hyperpac_sound_map, AS_PROGRAM, 8, snowbros_state )
 	AM_RANGE(0x0000, 0xcfff) AM_ROM
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
-	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE("ymsnd", ym2151_r,ym2151_w)
-	AM_RANGE(0xf002, 0xf002) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
+	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
+	AM_RANGE(0xf002, 0xf002) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xf008, 0xf008) AM_READ(soundlatch_r)
 ADDRESS_MAP_END
 
 /* Same volume used for all samples at the Moment, could be right, we have no
    way of knowing .. */
-static READ16_HANDLER( sb3_sound_r )
+READ16_MEMBER(snowbros_state::sb3_sound_r)
 {
 	return 0x0003;
 }
@@ -510,18 +509,18 @@ static WRITE16_DEVICE_HANDLER( sb3_sound_w )
 
 
 
-static ADDRESS_MAP_START( snowbros3_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( snowbros3_map, AS_PROGRAM, 16, snowbros_state )
 	AM_RANGE( 0x000000, 0x03ffff) AM_ROM
 	AM_RANGE( 0x100000, 0x103fff) AM_RAM
 	AM_RANGE( 0x200000, 0x200001) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE( 0x300000, 0x300001) AM_READ(sb3_sound_r) // ?
-	AM_RANGE( 0x300000, 0x300001) AM_DEVWRITE("oki", sb3_sound_w)  // ?
+	AM_RANGE( 0x300000, 0x300001) AM_DEVWRITE_LEGACY("oki", sb3_sound_w)  // ?
 	AM_RANGE( 0x400000, 0x400001) AM_WRITE(snowbros_flipscreen_w)
 	AM_RANGE( 0x500000, 0x500001) AM_READ_PORT("DSW1")
 	AM_RANGE( 0x500002, 0x500003) AM_READ_PORT("DSW2")
 	AM_RANGE( 0x500004, 0x500005) AM_READ_PORT("SYSTEM")
-	AM_RANGE( 0x600000, 0x6003ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC (paletteram)
-	AM_RANGE( 0x700000, 0x7021ff) AM_RAM AM_BASE_SIZE_MEMBER(snowbros_state, m_bootleg_spriteram16, m_spriteram_size)
+	AM_RANGE( 0x600000, 0x6003ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE( 0x700000, 0x7021ff) AM_RAM AM_BASE_SIZE(m_bootleg_spriteram16, m_spriteram_size)
 	AM_RANGE(0x800000, 0x800001) AM_WRITE(snowbros_irq4_ack_w)	/* IRQ 4 acknowledge */
 	AM_RANGE(0x900000, 0x900001) AM_WRITE(snowbros_irq3_ack_w)	/* IRQ 3 acknowledge */
 	AM_RANGE(0xa00000, 0xa00001) AM_WRITE(snowbros_irq2_ack_w)	/* IRQ 2 acknowledge */
@@ -529,9 +528,9 @@ ADDRESS_MAP_END
 
 /* Final Tetris */
 
-static ADDRESS_MAP_START( finalttr_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( finalttr_map, AS_PROGRAM, 16, snowbros_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x100000, 0x103fff) AM_RAM AM_BASE_MEMBER(snowbros_state, m_hyperpac_ram)
+	AM_RANGE(0x100000, 0x103fff) AM_RAM AM_BASE(m_hyperpac_ram)
 	AM_RANGE(0x300000, 0x300001) AM_WRITE(semicom_soundcmd_w)
 //  AM_RANGE(0x400000, 0x400001) ???
 
@@ -539,8 +538,8 @@ static ADDRESS_MAP_START( finalttr_map, AS_PROGRAM, 16 )
 	AM_RANGE(0x500002, 0x500003) AM_READ_PORT("DSW2")
 	AM_RANGE(0x500004, 0x500005) AM_READ_PORT("SYSTEM")
 
-	AM_RANGE(0x600000, 0x6001ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_BASE_GENERIC(paletteram)
-	AM_RANGE(0x700000, 0x701fff) AM_DEVREADWRITE("pandora", pandora_spriteram_LSB_r, pandora_spriteram_LSB_w)
+	AM_RANGE(0x600000, 0x6001ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x700000, 0x701fff) AM_DEVREADWRITE_LEGACY("pandora", pandora_spriteram_LSB_r, pandora_spriteram_LSB_w)
 	AM_RANGE(0x800000, 0x800001) AM_WRITE(snowbros_irq4_ack_w)	/* IRQ 4 acknowledge */
 	AM_RANGE(0x900000, 0x900001) AM_WRITE(snowbros_irq3_ack_w)	/* IRQ 3 acknowledge */
 	AM_RANGE(0xa00000, 0xa00001) AM_WRITE(snowbros_irq2_ack_w)	/* IRQ 2 acknowledge */
@@ -2330,7 +2329,7 @@ ROM_START( finalttr )
 	ROM_LOAD( "9.1h",     0xc0000, 0x40000, CRC(2ebd316d) SHA1(2f1249ebd2a0bb0cc15259f7187201576a365fa6) )
 ROM_END
 
-static READ16_HANDLER ( moremorp_0a_read )
+READ16_MEMBER(snowbros_state::moremorp_0a_read)
 {
 	return 0x000a;
 }
@@ -2345,7 +2344,8 @@ static DRIVER_INIT( moremorp )
 //      state->m_hyperpac_ram[0xf000/2 + i] = PROTDATA[i];
 
 	/* explicit check in the code */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x200000, 0x200001, FUNC(moremorp_0a_read) );
+	snowbros_state *state = machine.driver_data<snowbros_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::moremorp_0a_read),state));
 }
 
 
@@ -2711,7 +2711,7 @@ static DRIVER_INIT( hyperpac )
 }
 #endif
 
-static READ16_HANDLER ( _4in1_02_read )
+READ16_MEMBER(snowbros_state::_4in1_02_read)
 {
 	return 0x0202;
 }
@@ -2746,7 +2746,8 @@ static DRIVER_INIT(4in1boot)
 		memcpy(src,buffer,len);
 		auto_free(machine, buffer);
 	}
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x200000, 0x200001, FUNC(_4in1_02_read) );
+	snowbros_state *state = machine.driver_data<snowbros_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::_4in1_02_read),state));
 }
 
 static DRIVER_INIT(snowbro3)
@@ -2766,24 +2767,26 @@ static DRIVER_INIT(snowbro3)
 	}
 }
 
-static READ16_HANDLER( _3in1_read )
+READ16_MEMBER(snowbros_state::_3in1_read)
 {
 	return 0x0a0a;
 }
 
 static DRIVER_INIT( 3in1semi )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x200000, 0x200001, FUNC(_3in1_read) );
+	snowbros_state *state = machine.driver_data<snowbros_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::_3in1_read),state));
 }
 
-static READ16_HANDLER( cookbib3_read )
+READ16_MEMBER(snowbros_state::cookbib3_read)
 {
 	return 0x2a2a;
 }
 
 static DRIVER_INIT( cookbib3 )
 {
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x200000, 0x200001, FUNC(cookbib3_read) );
+	snowbros_state *state = machine.driver_data<snowbros_state>();
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x200000, 0x200001, read16_delegate(FUNC(snowbros_state::cookbib3_read),state));
 }
 
 static DRIVER_INIT( pzlbreak )

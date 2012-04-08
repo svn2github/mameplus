@@ -49,6 +49,16 @@ public:
 
 	/* devices */
 	device_t *m_maincpu;
+	DECLARE_READ8_MEMBER(fcombat_protection_r);
+	DECLARE_READ8_MEMBER(fcombat_port01_r);
+	DECLARE_WRITE8_MEMBER(e900_w);
+	DECLARE_WRITE8_MEMBER(ea00_w);
+	DECLARE_WRITE8_MEMBER(eb00_w);
+	DECLARE_WRITE8_MEMBER(ec00_w);
+	DECLARE_WRITE8_MEMBER(ed00_w);
+	DECLARE_READ8_MEMBER(e300_r);
+	DECLARE_WRITE8_MEMBER(ee00_w);
+	DECLARE_WRITE8_MEMBER(fcombat_videoreg_w);
 };
 
 
@@ -59,4 +69,3 @@ PALETTE_INIT( fcombat );
 VIDEO_START( fcombat );
 SCREEN_UPDATE_IND16( fcombat );
 
-WRITE8_HANDLER( fcombat_videoreg_w );

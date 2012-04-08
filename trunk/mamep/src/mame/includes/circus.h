@@ -22,6 +22,10 @@ public:
 
 	/* game id */
 	int m_game_id;
+	DECLARE_READ8_MEMBER(circus_paddle_r);
+	DECLARE_WRITE8_MEMBER(circus_videoram_w);
+	DECLARE_WRITE8_MEMBER(circus_clown_x_w);
+	DECLARE_WRITE8_MEMBER(circus_clown_y_w);
 };
 
 
@@ -40,10 +44,7 @@ extern const samples_interface robotbwl_samples_interface;
 
 /*----------- defined in video/circus.c -----------*/
 
-extern WRITE8_HANDLER( circus_clown_x_w );
-extern WRITE8_HANDLER( circus_clown_y_w );
 
-extern WRITE8_HANDLER( circus_videoram_w );
 
 extern VIDEO_START( circus );
 extern SCREEN_UPDATE_IND16( crash );

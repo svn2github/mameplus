@@ -30,6 +30,10 @@ public:
 	device_t *m_k007121;
 
 	required_device<cpu_device> m_maincpu;
+	DECLARE_WRITE8_MEMBER(k007121_registers_w);
+	DECLARE_WRITE8_MEMBER(fastlane_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(fastlane_vram1_w);
+	DECLARE_WRITE8_MEMBER(fastlane_vram2_w);
 };
 
 
@@ -37,8 +41,6 @@ public:
 
 /*----------- defined in video/fastlane.c -----------*/
 
-WRITE8_HANDLER( fastlane_vram1_w );
-WRITE8_HANDLER( fastlane_vram2_w );
 
 PALETTE_INIT( fastlane );
 VIDEO_START( fastlane );

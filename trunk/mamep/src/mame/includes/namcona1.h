@@ -54,20 +54,43 @@ public:
 
 	required_device<cpu_device> m_maincpu;
 	required_device<cpu_device> m_mcu;
+	DECLARE_READ16_MEMBER(namcona1_nvram_r);
+	DECLARE_WRITE16_MEMBER(namcona1_nvram_w);
+	DECLARE_READ16_MEMBER(custom_key_r);
+	DECLARE_WRITE16_MEMBER(custom_key_w);
+	DECLARE_READ16_MEMBER(namcona1_vreg_r);
+	DECLARE_WRITE16_MEMBER(namcona1_vreg_w);
+	DECLARE_READ16_MEMBER(mcu_mailbox_r);
+	DECLARE_WRITE16_MEMBER(mcu_mailbox_w_68k);
+	DECLARE_WRITE16_MEMBER(mcu_mailbox_w_mcu);
+	DECLARE_READ16_MEMBER(na1mcu_shared_r);
+	DECLARE_WRITE16_MEMBER(na1mcu_shared_w);
+	DECLARE_READ8_MEMBER(port4_r);
+	DECLARE_WRITE8_MEMBER(port4_w);
+	DECLARE_READ8_MEMBER(port5_r);
+	DECLARE_WRITE8_MEMBER(port5_w);
+	DECLARE_READ8_MEMBER(port6_r);
+	DECLARE_WRITE8_MEMBER(port6_w);
+	DECLARE_READ8_MEMBER(port7_r);
+	DECLARE_WRITE8_MEMBER(port7_w);
+	DECLARE_READ8_MEMBER(port8_r);
+	DECLARE_WRITE8_MEMBER(port8_w);
+	DECLARE_READ8_MEMBER(portana_r);
+	void write_version_info();
+	DECLARE_WRITE16_MEMBER(namcona1_videoram_w);
+	DECLARE_READ16_MEMBER(namcona1_videoram_r);
+	DECLARE_READ16_MEMBER(namcona1_paletteram_r);
+	DECLARE_WRITE16_MEMBER(namcona1_paletteram_w);
+	DECLARE_READ16_MEMBER(namcona1_gfxram_r);
+	DECLARE_WRITE16_MEMBER(namcona1_gfxram_w);
 };
 
 
 /*----------- defined in video/namcona1.c -----------*/
 
 
-extern WRITE16_HANDLER( namcona1_videoram_w );
-extern READ16_HANDLER( namcona1_videoram_r );
 
-extern READ16_HANDLER( namcona1_gfxram_r );
-extern WRITE16_HANDLER( namcona1_gfxram_w );
 
-extern READ16_HANDLER( namcona1_paletteram_r );
-extern WRITE16_HANDLER( namcona1_paletteram_w );
 
 extern SCREEN_UPDATE_IND16( namcona1 );
 extern VIDEO_START( namcona1 );

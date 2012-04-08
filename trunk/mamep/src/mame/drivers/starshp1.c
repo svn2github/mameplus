@@ -58,10 +58,9 @@ static WRITE8_DEVICE_HANDLER( starshp1_audio_w )
 }
 
 
-static WRITE8_HANDLER( starshp1_collision_reset_w )
+WRITE8_MEMBER(starshp1_state::starshp1_collision_reset_w)
 {
-	starshp1_state *state = space->machine().driver_data<starshp1_state>();
-	state->m_collision_latch = 0;
+	m_collision_latch = 0;
 }
 
 
@@ -97,10 +96,9 @@ static CUSTOM_INPUT( collision_latch_r )
 }
 
 
-static WRITE8_HANDLER( starshp1_analog_in_w )
+WRITE8_MEMBER(starshp1_state::starshp1_analog_in_w)
 {
-	starshp1_state *state = space->machine().driver_data<starshp1_state>();
-	state->m_analog_in_select = offset & 3;
+	m_analog_in_select = offset & 3;
 }
 
 
@@ -134,42 +132,41 @@ static WRITE8_DEVICE_HANDLER( starshp1_analog_out_w )
 }
 
 
-static WRITE8_HANDLER( starshp1_misc_w )
+WRITE8_MEMBER(starshp1_state::starshp1_misc_w)
 {
-	starshp1_state *state = space->machine().driver_data<starshp1_state>();
 	data &= 1;
 
 	switch (offset & 7)
 	{
 	case 0:
-		state->m_ship_explode = data;
+		m_ship_explode = data;
 		break;
 	case 1:
-		state->m_circle_mod = data;
+		m_circle_mod = data;
 		break;
 	case 2:
-		state->m_circle_kill = !data;
+		m_circle_kill = !data;
 		break;
 	case 3:
-		state->m_starfield_kill = data;
+		m_starfield_kill = data;
 		break;
 	case 4:
-		state->m_inverse = data;
+		m_inverse = data;
 		break;
 	case 5:
 		/* BLACK HOLE, not used */
 		break;
 	case 6:
-		state->m_mux = data;
+		m_mux = data;
 		break;
 	case 7:
-		set_led_status(space->machine(), 0, !data);
+		set_led_status(machine(), 0, !data);
 		break;
 	}
 }
 
 
-static ADDRESS_MAP_START( starshp1_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( starshp1_map, AS_PROGRAM, 8, starshp1_state )
 	AM_RANGE(0x0000, 0x00ff) AM_RAM AM_MIRROR(0x100)
 	AM_RANGE(0x2c00, 0x3fff) AM_ROM
 	AM_RANGE(0xa000, 0xa000) AM_READ_PORT("SYSTEM")
@@ -177,16 +174,16 @@ static ADDRESS_MAP_START( starshp1_map, AS_PROGRAM, 8 )
 	AM_RANGE(0xc300, 0xc3ff) AM_WRITE(starshp1_sspic_w) /* spaceship picture */
 	AM_RANGE(0xc400, 0xc400) AM_READ_PORT("COINAGE")
 	AM_RANGE(0xc400, 0xc4ff) AM_WRITE(starshp1_ssadd_w) /* spaceship address */
-	AM_RANGE(0xc800, 0xc9ff) AM_RAM_WRITE(starshp1_playfield_w) AM_BASE_MEMBER(starshp1_state, m_playfield_ram)
-	AM_RANGE(0xcc00, 0xcc0f) AM_WRITEONLY AM_BASE_MEMBER(starshp1_state, m_hpos_ram)
-	AM_RANGE(0xd000, 0xd00f) AM_WRITEONLY AM_BASE_MEMBER(starshp1_state, m_vpos_ram)
-	AM_RANGE(0xd400, 0xd40f) AM_WRITEONLY AM_BASE_MEMBER(starshp1_state, m_obj_ram)
+	AM_RANGE(0xc800, 0xc9ff) AM_RAM_WRITE(starshp1_playfield_w) AM_BASE(m_playfield_ram)
+	AM_RANGE(0xcc00, 0xcc0f) AM_WRITEONLY AM_BASE(m_hpos_ram)
+	AM_RANGE(0xd000, 0xd00f) AM_WRITEONLY AM_BASE(m_vpos_ram)
+	AM_RANGE(0xd400, 0xd40f) AM_WRITEONLY AM_BASE(m_obj_ram)
 	AM_RANGE(0xd800, 0xd800) AM_READ(starshp1_rng_r)
 	AM_RANGE(0xd800, 0xd80f) AM_WRITE(starshp1_collision_reset_w)
 	AM_RANGE(0xdc00, 0xdc0f) AM_WRITE(starshp1_misc_w)
 	AM_RANGE(0xdd00, 0xdd0f) AM_WRITE(starshp1_analog_in_w)
-	AM_RANGE(0xde00, 0xde0f) AM_DEVWRITE("discrete", starshp1_audio_w)
-	AM_RANGE(0xdf00, 0xdf0f) AM_DEVWRITE("discrete", starshp1_analog_out_w)
+	AM_RANGE(0xde00, 0xde0f) AM_DEVWRITE_LEGACY("discrete", starshp1_audio_w)
+	AM_RANGE(0xdf00, 0xdf0f) AM_DEVWRITE_LEGACY("discrete", starshp1_analog_out_w)
 	AM_RANGE(0xf000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 

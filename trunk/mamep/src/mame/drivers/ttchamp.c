@@ -53,6 +53,11 @@ public:
 
 	UINT16 *m_peno_vram;
 	UINT16 m_paloff;
+	DECLARE_WRITE16_MEMBER(paloff_w);
+	DECLARE_WRITE16_MEMBER(pcup_prgbank_w);
+	DECLARE_WRITE16_MEMBER(paldat_w);
+	DECLARE_READ16_MEMBER(peno_rand);
+	DECLARE_READ16_MEMBER(peno_rand2);
 };
 
 
@@ -93,52 +98,50 @@ static SCREEN_UPDATE_IND16(ttchamp)
 }
 
 
-static WRITE16_HANDLER( paloff_w )
+WRITE16_MEMBER(ttchamp_state::paloff_w)
 {
-	ttchamp_state *state = space->machine().driver_data<ttchamp_state>();
-    COMBINE_DATA(&state->m_paloff);
+    COMBINE_DATA(&m_paloff);
 }
 
 #ifdef UNUSED_FUNCTION
-static WRITE16_HANDLER( pcup_prgbank_w )
+WRITE16_MEMBER(ttchamp_state::pcup_prgbank_w)
 {
     int bank;
-    UINT8 *ROM1 = space->machine().region("user1")->base();
+    UINT8 *ROM1 = machine().region("user1")->base();
 
     if (ACCESSING_BITS_0_7)
     {
         bank = (data>>4) &0x07;
-        memory_set_bankptr(space->machine(), "bank2",&ROM1[0x80000*(bank)]);
+        memory_set_bankptr(machine(), "bank2",&ROM1[0x80000*(bank)]);
     }
 }
 #endif
 
-static WRITE16_HANDLER( paldat_w )
+WRITE16_MEMBER(ttchamp_state::paldat_w)
 {
-	ttchamp_state *state = space->machine().driver_data<ttchamp_state>();
-    palette_set_color_rgb(space->machine(),state->m_paloff & 0x7fff,pal5bit(data>>0),pal5bit(data>>5),pal5bit(data>>10));
+    palette_set_color_rgb(machine(),m_paloff & 0x7fff,pal5bit(data>>0),pal5bit(data>>5),pal5bit(data>>10));
 }
 
-static READ16_HANDLER( peno_rand )
+READ16_MEMBER(ttchamp_state::peno_rand)
 {
-    return 0xffff;// space->machine().rand();
+    return 0xffff;// machine().rand();
 }
 
 #ifdef UNUSED_FUNCTION
-static READ16_HANDLER( peno_rand2 )
+READ16_MEMBER(ttchamp_state::peno_rand2)
 {
-    return space->machine().rand();
+    return machine().rand();
 }
 #endif
 
-static ADDRESS_MAP_START( ttchamp_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( ttchamp_map, AS_PROGRAM, 16, ttchamp_state )
     AM_RANGE(0x00000, 0x0ffff) AM_RAM
-    AM_RANGE(0x10000, 0x1ffff) AM_RAM AM_BASE_MEMBER(ttchamp_state, m_peno_vram)
+    AM_RANGE(0x10000, 0x1ffff) AM_RAM AM_BASE(m_peno_vram)
     AM_RANGE(0x20000, 0x7ffff) AM_ROMBANK("bank1") // ?
     AM_RANGE(0x80000, 0xfffff) AM_ROMBANK("bank2") // ?
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( ttchamp_io, AS_IO, 16 )
+static ADDRESS_MAP_START( ttchamp_io, AS_IO, 16, ttchamp_state )
     AM_RANGE(0x0000, 0x0001) AM_WRITENOP
 
     AM_RANGE(0x0002, 0x0003) AM_READ_PORT("SYSTEM")

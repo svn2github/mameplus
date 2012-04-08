@@ -29,13 +29,16 @@ public:
 	/* devices */
 	device_t *m_maincpu;
 	device_t *m_audiocpu;
+	DECLARE_WRITE8_MEMBER(mnchmobl_nmi_enable_w);
+	DECLARE_WRITE8_MEMBER(mnchmobl_soundlatch_w);
+	DECLARE_WRITE8_MEMBER(sound_nmi_ack_w);
+	DECLARE_WRITE8_MEMBER(mnchmobl_palette_bank_w);
+	DECLARE_WRITE8_MEMBER(mnchmobl_flipscreen_w);
 };
 
 
 /*----------- defined in video/munchmo.c -----------*/
 
-WRITE8_HANDLER( mnchmobl_palette_bank_w );
-WRITE8_HANDLER( mnchmobl_flipscreen_w );
 
 PALETTE_INIT( mnchmobl );
 VIDEO_START( mnchmobl );

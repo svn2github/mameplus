@@ -38,23 +38,46 @@ public:
 	device_t *m_ym;
 	device_t *m_sn;
 	UINT8 m_prot_data;
+	DECLARE_READ8_MEMBER(mrokumei_keyboard_r);
+	DECLARE_WRITE8_MEMBER(mrokumei_keyboard_select_w);
+	DECLARE_READ8_MEMBER(mrokumei_sound_io_r);
+	DECLARE_WRITE8_MEMBER(mrokumei_sound_bank_w);
+	DECLARE_WRITE8_MEMBER(mrokumei_sound_io_w);
+	DECLARE_WRITE8_MEMBER(mrokumei_sound_cmd_w);
+	DECLARE_READ8_MEMBER(reikaids_upd7807_porta_r);
+	DECLARE_WRITE8_MEMBER(reikaids_upd7807_porta_w);
+	DECLARE_WRITE8_MEMBER(reikaids_upd7807_portc_w);
+	DECLARE_READ8_MEMBER(reikaids_io_r);
+	DECLARE_READ8_MEMBER(reikaids_snd_command_r);
+	DECLARE_WRITE8_MEMBER(reikaids_snd_command_w);
+	DECLARE_WRITE8_MEMBER(pteacher_snd_command_w);
+	DECLARE_READ8_MEMBER(pteacher_snd_r);
+	DECLARE_READ8_MEMBER(pteacher_io_r);
+	DECLARE_READ8_MEMBER(pteacher_keyboard_r);
+	DECLARE_READ8_MEMBER(pteacher_upd7807_porta_r);
+	DECLARE_WRITE8_MEMBER(pteacher_snd_answer_w);
+	DECLARE_WRITE8_MEMBER(pteacher_upd7807_porta_w);
+	DECLARE_WRITE8_MEMBER(pteacher_upd7807_portc_w);
+	DECLARE_WRITE8_MEMBER(bankswitch_w);
+	DECLARE_READ8_MEMBER(mirderby_prot_r);
+	DECLARE_WRITE8_MEMBER(mirderby_prot_w);
+	DECLARE_WRITE8_MEMBER(mrokumei_videoram_w);
+	DECLARE_WRITE8_MEMBER(reikaids_videoram_w);
+	DECLARE_WRITE8_MEMBER(reikaids_gfx_bank_w);
+	DECLARE_WRITE8_MEMBER(pteacher_gfx_bank_w);
+	DECLARE_WRITE8_MEMBER(homedata_blitter_param_w);
+	DECLARE_WRITE8_MEMBER(mrokumei_blitter_bank_w);
+	DECLARE_WRITE8_MEMBER(reikaids_blitter_bank_w);
+	DECLARE_WRITE8_MEMBER(pteacher_blitter_bank_w);
+	DECLARE_WRITE8_MEMBER(mrokumei_blitter_start_w);
+	DECLARE_WRITE8_MEMBER(reikaids_blitter_start_w);
+	DECLARE_WRITE8_MEMBER(pteacher_blitter_start_w);
 };
 
 
 
 /*----------- defined in video/homedata.c -----------*/
 
-WRITE8_HANDLER( mrokumei_videoram_w );
-WRITE8_HANDLER( reikaids_videoram_w );
-WRITE8_HANDLER( reikaids_gfx_bank_w );
-WRITE8_HANDLER( pteacher_gfx_bank_w );
-WRITE8_HANDLER( homedata_blitter_param_w );
-WRITE8_HANDLER( mrokumei_blitter_bank_w );
-WRITE8_HANDLER( reikaids_blitter_bank_w );
-WRITE8_HANDLER( pteacher_blitter_bank_w );
-WRITE8_HANDLER( mrokumei_blitter_start_w );
-WRITE8_HANDLER( reikaids_blitter_start_w );
-WRITE8_HANDLER( pteacher_blitter_start_w );
 
 PALETTE_INIT( mrokumei );
 PALETTE_INIT( reikaids );

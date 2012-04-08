@@ -298,7 +298,6 @@ covert megatech / megaplay drivers to use new code etc. etc.
 
 */
 
-#define ADDRESS_MAP_MODERN
 
 #include "emu.h"
 #include "cpu/z80/z80.h"
@@ -370,8 +369,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( io_map, AS_IO, 8, systeme_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 
-	AM_RANGE(0x7b, 0x7b) AM_DEVWRITE_LEGACY( "sn1", sn76496_w )
-	AM_RANGE(0x7e, 0x7f) AM_DEVWRITE_LEGACY( "sn2", sn76496_w )
+	AM_RANGE(0x7b, 0x7b) AM_DEVWRITE_LEGACY("sn1", sn76496_w )
+	AM_RANGE(0x7e, 0x7f) AM_DEVWRITE_LEGACY("sn2", sn76496_w )
 	AM_RANGE(0x7e, 0x7e) AM_DEVREAD( "vdp1", sega315_5124_device, vcount_read )
 	AM_RANGE(0xba, 0xba) AM_DEVREADWRITE( "vdp1", sega315_5124_device, vram_read, vram_write )
 	AM_RANGE(0xbb, 0xbb) AM_DEVREADWRITE( "vdp1", sega315_5124_device, register_read, register_write )

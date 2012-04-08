@@ -98,12 +98,47 @@ public:
 
 	required_device<cpu_device> m_maincpu;
 
+	DECLARE_READ32_MEMBER(hng64_random_read);
+	DECLARE_READ32_MEMBER(hng64_com_r);
+	DECLARE_WRITE32_MEMBER(hng64_com_w);
+	DECLARE_WRITE32_MEMBER(hng64_com_share_w);
+	DECLARE_READ32_MEMBER(hng64_com_share_r);
+	DECLARE_WRITE32_MEMBER(hng64_pal_w);
+	DECLARE_READ32_MEMBER(hng64_sysregs_r);
+	DECLARE_WRITE32_MEMBER(hng64_sysregs_w);
+	DECLARE_READ32_MEMBER(fight_io_r);
+	DECLARE_READ32_MEMBER(samsho_io_r);
+	DECLARE_READ32_MEMBER(shoot_io_r);
+	DECLARE_READ32_MEMBER(racing_io_r);
+	DECLARE_READ32_MEMBER(hng64_dualport_r);
+	DECLARE_WRITE32_MEMBER(hng64_dualport_w);
+	DECLARE_READ32_MEMBER(hng64_3d_1_r);
+	DECLARE_READ32_MEMBER(hng64_3d_2_r);
+	DECLARE_WRITE32_MEMBER(hng64_3d_2_w);
+	DECLARE_WRITE32_MEMBER(dl_w);
+	DECLARE_READ32_MEMBER(dl_r);
+	DECLARE_WRITE32_MEMBER(dl_control_w);
+	DECLARE_WRITE32_MEMBER(tcram_w);
+	DECLARE_READ32_MEMBER(tcram_r);
+	DECLARE_READ32_MEMBER(unk_vreg_r);
+	DECLARE_WRITE32_MEMBER(hng64_soundram_w);
+	DECLARE_READ32_MEMBER(hng64_soundram_r);
+	DECLARE_WRITE32_MEMBER(hng64_sprite_clear_even_w);
+	DECLARE_WRITE32_MEMBER(hng64_sprite_clear_odd_w);
+	DECLARE_READ8_MEMBER(hng64_comm_memory_r);
+	DECLARE_WRITE8_MEMBER(hng64_comm_memory_w);
+	DECLARE_WRITE8_MEMBER(hng64_comm_io_mmu);
+	DECLARE_WRITE32_MEMBER(trap_write);
+	DECLARE_WRITE32_MEMBER(hng64_3d_1_w);
+	DECLARE_WRITE32_MEMBER(activate_3d_buffer);
+	DECLARE_READ8_MEMBER(hng64_comm_shared_r);
+	DECLARE_WRITE8_MEMBER(hng64_comm_shared_w);
+	DECLARE_WRITE32_MEMBER(hng64_videoram_w);
 };
 
 
 /*----------- defined in video/hng64.c -----------*/
 
-WRITE32_HANDLER( hng64_videoram_w );
 void hng64_command3d(running_machine& machine, const UINT16* packet);
 
 VIDEO_START( hng64 );

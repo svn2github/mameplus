@@ -13,13 +13,21 @@ public:
 	UINT8 m_flipscreen;
 	UINT8 m_palette_1;
 	UINT8 m_palette_2;
+	DECLARE_READ8_MEMBER(sharedram_r);
+	DECLARE_WRITE8_MEMBER(sharedram_w);
+	DECLARE_WRITE8_MEMBER(route16_sharedram_w);
+	DECLARE_WRITE8_MEMBER(ttmahjng_input_port_matrix_w);
+	DECLARE_READ8_MEMBER(ttmahjng_input_port_matrix_r);
+	DECLARE_READ8_MEMBER(speakres_in3_r);
+	DECLARE_WRITE8_MEMBER(speakres_out2_w);
+	DECLARE_READ8_MEMBER(routex_prot_read);
+	DECLARE_WRITE8_MEMBER(route16_out0_w);
+	DECLARE_WRITE8_MEMBER(route16_out1_w);
 };
 
 
 /*----------- defined in video/route16.c -----------*/
 
-WRITE8_HANDLER( route16_out0_w );
-WRITE8_HANDLER( route16_out1_w );
 SCREEN_UPDATE_RGB32( route16 );
 SCREEN_UPDATE_RGB32( stratvox );
 SCREEN_UPDATE_RGB32( ttmahjng );

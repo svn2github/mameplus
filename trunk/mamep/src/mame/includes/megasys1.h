@@ -51,6 +51,28 @@ public:
 
 	int m_mcu_hs;
 	UINT16 m_mcu_hs_ram[0x10];
+	DECLARE_READ16_MEMBER(ip_select_r);
+	DECLARE_WRITE16_MEMBER(ip_select_w);
+	DECLARE_READ16_MEMBER(protection_peekaboo_r);
+	DECLARE_WRITE16_MEMBER(protection_peekaboo_w);
+	DECLARE_READ16_MEMBER(megasys1A_mcu_hs_r);
+	DECLARE_WRITE16_MEMBER(megasys1A_mcu_hs_w);
+	DECLARE_READ16_MEMBER(edfbl_input_r);
+	DECLARE_READ16_MEMBER(iganinju_mcu_hs_r);
+	DECLARE_WRITE16_MEMBER(iganinju_mcu_hs_w);
+	DECLARE_READ16_MEMBER(soldamj_spriteram16_r);
+	DECLARE_WRITE16_MEMBER(soldamj_spriteram16_w);
+	DECLARE_READ16_MEMBER(stdragon_mcu_hs_r);
+	DECLARE_WRITE16_MEMBER(stdragon_mcu_hs_w);
+	DECLARE_READ16_MEMBER(monkelf_input_r);
+	DECLARE_WRITE16_MEMBER(megasys1_scrollram_0_w);
+	DECLARE_WRITE16_MEMBER(megasys1_scrollram_1_w);
+	DECLARE_WRITE16_MEMBER(megasys1_scrollram_2_w);
+	DECLARE_WRITE16_MEMBER(megasys1_vregs_A_w);
+	DECLARE_READ16_MEMBER(megasys1_vregs_C_r);
+	DECLARE_WRITE16_MEMBER(megasys1_vregs_C_w);
+	DECLARE_WRITE16_MEMBER(megasys1_vregs_D_w);
+	void megasys1_set_vreg_flag(int which, int data);
 };
 
 
@@ -62,12 +84,5 @@ SCREEN_VBLANK( megasys1 );
 
 PALETTE_INIT( megasys1 );
 
-READ16_HANDLER( megasys1_vregs_C_r );
 
-WRITE16_HANDLER( megasys1_vregs_A_w );
-WRITE16_HANDLER( megasys1_vregs_C_w );
-WRITE16_HANDLER( megasys1_vregs_D_w );
 
-WRITE16_HANDLER( megasys1_scrollram_0_w );
-WRITE16_HANDLER( megasys1_scrollram_1_w );
-WRITE16_HANDLER( megasys1_scrollram_2_w );

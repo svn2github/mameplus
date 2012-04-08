@@ -198,12 +198,12 @@ MAIN BOARD:
 #define VLM_CLOCK             XTAL_3_579545MHz
 
 
-static WRITE8_HANDLER( coin_w )
+WRITE8_MEMBER(trackfld_state::coin_w)
 {
-	coin_counter_w(space->machine(), offset, data & 1);
+	coin_counter_w(machine(), offset, data & 1);
 }
 
-static WRITE8_HANDLER( questions_bank_w )
+WRITE8_MEMBER(trackfld_state::questions_bank_w)
 {
 	int i;
 
@@ -211,23 +211,22 @@ static WRITE8_HANDLER( questions_bank_w )
 	{
 		if((data & 1 << i) == 0) // check first bit active low, change ROM bank according to the correlated bit
 		{
-			memory_set_bank(space->machine(), "bank1", i);
+			memory_set_bank(machine(), "bank1", i);
 			return;
 		}
 	}
 }
 
-static WRITE8_HANDLER( irq_mask_w )
+WRITE8_MEMBER(trackfld_state::irq_mask_w)
 {
-	trackfld_state *state = space->machine().driver_data<trackfld_state>();
 
-	state->m_irq_mask = data & 1;
+	m_irq_mask = data & 1;
 }
 
-static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x1000, 0x1000) AM_MIRROR(0x007f) AM_WRITE(watchdog_reset_w)		/* AFE */
 	AM_RANGE(0x1080, 0x1080) AM_MIRROR(0x0078) AM_WRITE(trackfld_flipscreen_w)	/* FLIP */
-	AM_RANGE(0x1081, 0x1081) AM_MIRROR(0x0078) AM_WRITE(konami_sh_irqtrigger_w)	/* 26 */ /* cause interrupt on audio CPU */
+	AM_RANGE(0x1081, 0x1081) AM_MIRROR(0x0078) AM_WRITE_LEGACY(konami_sh_irqtrigger_w)	/* 26 */ /* cause interrupt on audio CPU */
 	AM_RANGE(0x1082, 0x1082) AM_MIRROR(0x0078) AM_WRITENOP						/* 25 */
 	AM_RANGE(0x1083, 0x1084) AM_MIRROR(0x0078) AM_WRITE(coin_w)					/* 24, 23 */
 	AM_RANGE(0x1085, 0x1085) AM_MIRROR(0x0078) AM_WRITENOP						/* CN3.2 */
@@ -240,34 +239,33 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x1282, 0x1282) AM_MIRROR(0x007c) AM_READ_PORT("IN1")
 	AM_RANGE(0x1283, 0x1283) AM_MIRROR(0x007c) AM_READ_PORT("DSW1")
 	/* not used according to schems: AM_RANGE(0x1300, 0x1300) AM_MIRROR(0x007f) AM_READ_PORT("DSW3") */
-	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_spriteram2)
-	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_scroll)
+	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE(m_spriteram2)
+	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE(m_scroll)
 	AM_RANGE(0x1860, 0x1bff) AM_RAM
-	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE_MEMBER(trackfld_state, m_spriteram, m_spriteram_size)
-	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_scroll2)
+	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE(m_scroll2)
 	AM_RANGE(0x1c60, 0x1fff) AM_RAM
 	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE_MEMBER(trackfld_state, m_videoram)
-	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE_MEMBER(trackfld_state, m_colorram)
+	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE(m_colorram)
 	AM_RANGE(0x6000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static WRITE8_HANDLER( yieartf_nmi_mask_w )
+WRITE8_MEMBER(trackfld_state::yieartf_nmi_mask_w)
 {
-	trackfld_state *state = space->machine().driver_data<trackfld_state>();
 
-	state->m_yieartf_nmi_mask = data & 1;
+	m_yieartf_nmi_mask = data & 1;
 }
 
 
-static ADDRESS_MAP_START( yieartf_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x0000) AM_DEVREAD("vlm", yiear_speech_r) AM_WRITE(konami_SN76496_latch_w)
-	AM_RANGE(0x0001, 0x0001) AM_DEVWRITE("snsnd", konami_SN76496_w)
-	AM_RANGE(0x0002, 0x0002) AM_DEVWRITE("vlm", yiear_VLM5030_control_w)
-	AM_RANGE(0x0003, 0x0003) AM_DEVWRITE("vlm", vlm5030_data_w)
+static ADDRESS_MAP_START( yieartf_map, AS_PROGRAM, 8, trackfld_state )
+	AM_RANGE(0x0000, 0x0000) AM_DEVREAD_LEGACY("vlm", yiear_speech_r) AM_WRITE_LEGACY(konami_SN76496_latch_w)
+	AM_RANGE(0x0001, 0x0001) AM_DEVWRITE_LEGACY("snsnd", konami_SN76496_w)
+	AM_RANGE(0x0002, 0x0002) AM_DEVWRITE_LEGACY("vlm", yiear_VLM5030_control_w)
+	AM_RANGE(0x0003, 0x0003) AM_DEVWRITE_LEGACY("vlm", vlm5030_data_w)
 	AM_RANGE(0x1000, 0x1000) AM_MIRROR(0x007f) AM_WRITE(watchdog_reset_w)		/* AFE */
 	AM_RANGE(0x1080, 0x1080) AM_MIRROR(0x0078) AM_WRITE(trackfld_flipscreen_w)	/* FLIP */
-	AM_RANGE(0x1081, 0x1081) AM_MIRROR(0x0078) AM_WRITE(konami_sh_irqtrigger_w)	/* 26 */ /* cause interrupt on audio CPU */
+	AM_RANGE(0x1081, 0x1081) AM_MIRROR(0x0078) AM_WRITE_LEGACY(konami_sh_irqtrigger_w)	/* 26 */ /* cause interrupt on audio CPU */
 	AM_RANGE(0x1082, 0x1082) AM_MIRROR(0x0078) AM_WRITE(yieartf_nmi_mask_w)		/* 25 */
 	AM_RANGE(0x1083, 0x1084) AM_MIRROR(0x0078) AM_WRITE(coin_w)					/* 24, 23 */
 	AM_RANGE(0x1085, 0x1085) AM_MIRROR(0x0078) AM_WRITENOP						/* CN3.2 */
@@ -280,24 +278,24 @@ static ADDRESS_MAP_START( yieartf_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x1282, 0x1282) AM_MIRROR(0x007c) AM_READ_PORT("IN1")
 	AM_RANGE(0x1283, 0x1283) AM_MIRROR(0x007c) AM_READ_PORT("DSW1")
 	AM_RANGE(0x1300, 0x1300) AM_MIRROR(0x007f) AM_READ_PORT("DSW3")
-	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_spriteram2)
-	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_scroll)
+	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE(m_spriteram2)
+	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE(m_scroll)
 	AM_RANGE(0x1860, 0x1bff) AM_RAM
-	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE_MEMBER(trackfld_state, m_spriteram, m_spriteram_size)
-	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_scroll2)
+	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE(m_scroll2)
 	AM_RANGE(0x1c60, 0x1fff) AM_RAM
 	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE_MEMBER(trackfld_state, m_videoram)
-	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE_MEMBER(trackfld_state, m_colorram)
+	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE(m_colorram)
 	AM_RANGE(0x6000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( reaktor_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( reaktor_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	/* all usual addresses +0x8000 */
 	AM_RANGE(0x9000, 0x9000) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x9080, 0x9080) AM_WRITE(trackfld_flipscreen_w)
-	AM_RANGE(0x9081, 0x9081) AM_WRITE(konami_sh_irqtrigger_w)  /* cause interrupt on audio CPU */
+	AM_RANGE(0x9081, 0x9081) AM_WRITE_LEGACY(konami_sh_irqtrigger_w)  /* cause interrupt on audio CPU */
 	AM_RANGE(0x9083, 0x9084) AM_WRITE(coin_w)
 	AM_RANGE(0x9087, 0x9087) AM_WRITE(irq_mask_w)
 	AM_RANGE(0x9100, 0x9100) AM_WRITE(soundlatch_w)
@@ -306,20 +304,20 @@ static ADDRESS_MAP_START( reaktor_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x9281, 0x9281) AM_READ_PORT("IN0")
 	AM_RANGE(0x9282, 0x9282) AM_READ_PORT("IN1")
 	AM_RANGE(0x9283, 0x9283) AM_READ_PORT("DSW1")
-	AM_RANGE(0x9800, 0x983f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_spriteram2)
-	AM_RANGE(0x9840, 0x985f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_scroll)
+	AM_RANGE(0x9800, 0x983f) AM_RAM AM_BASE(m_spriteram2)
+	AM_RANGE(0x9840, 0x985f) AM_RAM AM_BASE(m_scroll)
 	AM_RANGE(0x9860, 0x9bff) AM_RAM
-	AM_RANGE(0x9c00, 0x9c3f) AM_RAM AM_BASE_SIZE_MEMBER(trackfld_state, m_spriteram, m_spriteram_size)
-	AM_RANGE(0x9c40, 0x9c5f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_scroll2)
+	AM_RANGE(0x9c00, 0x9c3f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x9c40, 0x9c5f) AM_RAM AM_BASE(m_scroll2)
 	AM_RANGE(0x9c60, 0x9fff) AM_RAM
 	AM_RANGE(0xa800, 0xabff) AM_RAM
 	AM_RANGE(0xac00, 0xafff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0xb000, 0xb7ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE_MEMBER(trackfld_state, m_videoram)
-	AM_RANGE(0xb800, 0xbfff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE_MEMBER(trackfld_state, m_colorram)
+	AM_RANGE(0xb000, 0xb7ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0xb800, 0xbfff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE(m_colorram)
 ADDRESS_MAP_END
 
 /* Reaktor reads / writes some I/O ports, no idea what they're connected to, if anything */
-static ADDRESS_MAP_START( reaktor_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( reaktor_io_map, AS_IO, 8, trackfld_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_WRITENOP
 	AM_RANGE(0x01, 0x01) AM_NOP
@@ -327,10 +325,10 @@ static ADDRESS_MAP_START( reaktor_io_map, AS_IO, 8 )
 	AM_RANGE(0x03, 0x03) AM_WRITENOP
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( mastkin_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( mastkin_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x1000, 0x1000) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x10b0, 0x10b0) AM_WRITE(trackfld_flipscreen_w)
-	AM_RANGE(0x10b1, 0x10b1) AM_READNOP AM_WRITE(konami_sh_irqtrigger_w)
+	AM_RANGE(0x10b1, 0x10b1) AM_READNOP AM_WRITE_LEGACY(konami_sh_irqtrigger_w)
 	AM_RANGE(0x10b3, 0x10b4) AM_WRITE(coin_w) // actually not used
 	AM_RANGE(0x10b7, 0x10b7) AM_READNOP AM_WRITE(irq_mask_w)
 	AM_RANGE(0x1100, 0x1100) AM_WRITE(soundlatch_w)
@@ -339,25 +337,25 @@ static ADDRESS_MAP_START( mastkin_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x1281, 0x1281) AM_READ_PORT("IN0")
 //  AM_RANGE(0x1282, 0x1282) AM_READ_PORT("IN1") /* unused */
 	AM_RANGE(0x1283, 0x1283) AM_READ_PORT("DSW1")
-	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_spriteram2)
-	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_scroll)
+	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE(m_spriteram2)
+	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE(m_scroll)
 	AM_RANGE(0x1860, 0x1bff) AM_RAM
-	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE_MEMBER(trackfld_state, m_spriteram, m_spriteram_size)
-	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_scroll2)
+	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE(m_scroll2)
 	AM_RANGE(0x1c60, 0x1fff) AM_RAM
 	AM_RANGE(0x2000, 0x27ff) AM_RAM // initialized at POST
 	AM_RANGE(0x2800, 0x2bff) AM_RAM
 	AM_RANGE(0x2c00, 0x2fff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE_MEMBER(trackfld_state, m_videoram)
-	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE_MEMBER(trackfld_state, m_colorram)
+	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE(m_colorram)
 	AM_RANGE(0x6000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( wizzquiz_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( wizzquiz_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x0000, 0x007f) AM_RAM
 	AM_RANGE(0x1000, 0x1000) AM_READWRITE(watchdog_reset_r, watchdog_reset_w)
 	AM_RANGE(0x1080, 0x1080) AM_WRITE(trackfld_flipscreen_w)
-	AM_RANGE(0x1081, 0x1081) AM_WRITE(konami_sh_irqtrigger_w)  /* cause interrupt on audio CPU */
+	AM_RANGE(0x1081, 0x1081) AM_WRITE_LEGACY(konami_sh_irqtrigger_w)  /* cause interrupt on audio CPU */
 	AM_RANGE(0x1083, 0x1084) AM_WRITE(coin_w)
 	AM_RANGE(0x1087, 0x1087) AM_WRITE(irq_mask_w)
 	AM_RANGE(0x1100, 0x1100) AM_WRITE(soundlatch_w)
@@ -366,16 +364,16 @@ static ADDRESS_MAP_START( wizzquiz_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x1281, 0x1281) AM_READ_PORT("IN0")
 	AM_RANGE(0x1282, 0x1282) AM_READ_PORT("IN1")
 	AM_RANGE(0x1283, 0x1283) AM_READ_PORT("DSW1")
-	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_spriteram2)
-	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_scroll)
+	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE(m_spriteram2)
+	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE(m_scroll)
 	AM_RANGE(0x1860, 0x1bff) AM_RAM
-	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE_MEMBER(trackfld_state, m_spriteram, m_spriteram_size)
-	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE_MEMBER(trackfld_state, m_scroll2)
+	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE(m_scroll2)
 	AM_RANGE(0x1c60, 0x1fff) AM_RAM
 	AM_RANGE(0x2800, 0x2bff) AM_RAM
 	AM_RANGE(0x2c00, 0x2fff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE_MEMBER(trackfld_state, m_videoram)
-	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE_MEMBER(trackfld_state, m_colorram)
+	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE(m_colorram)
 	AM_RANGE(0xc000, 0xc000) AM_WRITE(questions_bank_w)
 	AM_RANGE(0x6000, 0xdfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xe000, 0xffff) AM_ROM
@@ -388,32 +386,32 @@ READ8_DEVICE_HANDLER( trackfld_SN76496_r )
 	return 0xff; // ?
 }
 
-static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x1c00) AM_RAM
 	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_READ(soundlatch_r)
-	AM_RANGE(0x8000, 0x8000) AM_MIRROR(0x1fff) AM_READ(trackfld_sh_timer_r)
-	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_WRITE(konami_SN76496_latch_w)
-	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fff) AM_DEVREADWRITE("snsnd", trackfld_SN76496_r, konami_SN76496_w)
-	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x1ff8) AM_DEVWRITE("dac", dac_w)
+	AM_RANGE(0x8000, 0x8000) AM_MIRROR(0x1fff) AM_READ_LEGACY(trackfld_sh_timer_r)
+	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_WRITE_LEGACY(konami_SN76496_latch_w)
+	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fff) AM_DEVREADWRITE_LEGACY("snsnd", trackfld_SN76496_r, konami_SN76496_w)
+	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x1ff8) AM_DEVWRITE_LEGACY("dac", dac_w)
 	AM_RANGE(0xe001, 0xe001) AM_MIRROR(0x1ff8) AM_NOP			/* watch dog ?; reaktor reads here */
-	AM_RANGE(0xe002, 0xe002) AM_MIRROR(0x1ff8) AM_DEVREAD("vlm", trackfld_speech_r)
-	AM_RANGE(0xe003, 0xe003) AM_MIRROR(0x1ff8) AM_MASK(0x0380) AM_DEVWRITE("vlm", trackfld_sound_w)
-	AM_RANGE(0xe004, 0xe004) AM_MIRROR(0x1ff8) AM_DEVWRITE("vlm", vlm5030_data_w)
+	AM_RANGE(0xe002, 0xe002) AM_MIRROR(0x1ff8) AM_DEVREAD_LEGACY("vlm", trackfld_speech_r)
+	AM_RANGE(0xe003, 0xe003) AM_MIRROR(0x1ff8) AM_MASK(0x0380) AM_DEVWRITE_LEGACY("vlm", trackfld_sound_w)
+	AM_RANGE(0xe004, 0xe004) AM_MIRROR(0x1ff8) AM_DEVWRITE_LEGACY("vlm", vlm5030_data_w)
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( hyprolyb_sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( hyprolyb_sound_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x1c00) AM_RAM
 	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_READ(soundlatch_r)
-	AM_RANGE(0x8000, 0x8000) AM_MIRROR(0x1fff) AM_READ(trackfld_sh_timer_r)
-	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_WRITE(konami_SN76496_latch_w)
-	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fff) AM_DEVREADWRITE("snsnd", trackfld_SN76496_r, konami_SN76496_w)
-	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x1ff8) AM_DEVWRITE("dac", dac_w)
+	AM_RANGE(0x8000, 0x8000) AM_MIRROR(0x1fff) AM_READ_LEGACY(trackfld_sh_timer_r)
+	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_WRITE_LEGACY(konami_SN76496_latch_w)
+	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fff) AM_DEVREADWRITE_LEGACY("snsnd", trackfld_SN76496_r, konami_SN76496_w)
+	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x1ff8) AM_DEVWRITE_LEGACY("dac", dac_w)
 	AM_RANGE(0xe001, 0xe001) AM_MIRROR(0x1ff8) AM_NOP			/* watch dog ?; reaktor reads here */
-	AM_RANGE(0xe002, 0xe002) AM_MIRROR(0x1ff8) AM_DEVREAD("hyprolyb_adpcm", hyprolyb_adpcm_busy_r)
+	AM_RANGE(0xe002, 0xe002) AM_MIRROR(0x1ff8) AM_DEVREAD_LEGACY("hyprolyb_adpcm", hyprolyb_adpcm_busy_r)
 	AM_RANGE(0xe003, 0xe003) AM_MIRROR(0x1ff8) AM_WRITENOP
-	AM_RANGE(0xe004, 0xe004) AM_MIRROR(0x1ff8) AM_DEVWRITE("hyprolyb_adpcm", hyprolyb_adpcm_w)
+	AM_RANGE(0xe004, 0xe004) AM_MIRROR(0x1ff8) AM_DEVWRITE_LEGACY("hyprolyb_adpcm", hyprolyb_adpcm_w)
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( trackfld )
@@ -1439,7 +1437,8 @@ static DRIVER_INIT( atlantol )
 
 	space->set_decrypted_region(0x0000, 0xffff, decrypt);
 
-	space->install_legacy_write_handler(0x0800, 0x0800, FUNC(atlantol_gfxbank_w));
+	trackfld_state *state = machine.driver_data<trackfld_state>();
+	space->install_write_handler(0x0800, 0x0800, write8_delegate(FUNC(trackfld_state::atlantol_gfxbank_w),state));
 	space->nop_write(0x1000, 0x1000);
 
 	/* unmapped areas read as ROM */

@@ -15,13 +15,16 @@ public:
 	size_t m_spriteram_size;
 
 	required_device<cpu_device> m_maincpu;
+	DECLARE_WRITE8_MEMBER(cashquiz_question_bank_high_w);
+	DECLARE_WRITE8_MEMBER(cashquiz_question_bank_low_w);
+	DECLARE_WRITE8_MEMBER(coin_w);
+	DECLARE_WRITE8_MEMBER(pingpong_videoram_w);
+	DECLARE_WRITE8_MEMBER(pingpong_colorram_w);
 };
 
 
 /*----------- defined in video/pingpong.c -----------*/
 
-WRITE8_HANDLER( pingpong_videoram_w );
-WRITE8_HANDLER( pingpong_colorram_w );
 
 PALETTE_INIT( pingpong );
 VIDEO_START( pingpong );

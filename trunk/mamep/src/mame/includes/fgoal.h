@@ -25,6 +25,21 @@ public:
 	/* devices */
 	device_t *m_maincpu;
 	device_t *m_mb14241;
+	DECLARE_READ8_MEMBER(fgoal_analog_r);
+	DECLARE_READ8_MEMBER(fgoal_nmi_reset_r);
+	DECLARE_READ8_MEMBER(fgoal_irq_reset_r);
+	DECLARE_READ8_MEMBER(fgoal_row_r);
+	DECLARE_WRITE8_MEMBER(fgoal_row_w);
+	DECLARE_WRITE8_MEMBER(fgoal_col_w);
+	DECLARE_READ8_MEMBER(fgoal_address_hi_r);
+	DECLARE_READ8_MEMBER(fgoal_address_lo_r);
+	DECLARE_READ8_MEMBER(fgoal_shifter_r);
+	DECLARE_READ8_MEMBER(fgoal_shifter_reverse_r);
+	DECLARE_WRITE8_MEMBER(fgoal_sound1_w);
+	DECLARE_WRITE8_MEMBER(fgoal_sound2_w);
+	DECLARE_WRITE8_MEMBER(fgoal_color_w);
+	DECLARE_WRITE8_MEMBER(fgoal_ypos_w);
+	DECLARE_WRITE8_MEMBER(fgoal_xpos_w);
 };
 
 
@@ -33,7 +48,4 @@ public:
 VIDEO_START( fgoal );
 SCREEN_UPDATE_IND16( fgoal );
 
-WRITE8_HANDLER( fgoal_color_w );
-WRITE8_HANDLER( fgoal_xpos_w );
-WRITE8_HANDLER( fgoal_ypos_w );
 

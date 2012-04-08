@@ -17,6 +17,14 @@ public:
 	tilemap_t *m_bg_tilemap;
 	UINT8 *m_spriteram;
 	size_t m_spriteram_size;
+	DECLARE_WRITE8_MEMBER(vball_irq_ack_w);
+	DECLARE_WRITE8_MEMBER(vb_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(cpu_sound_command_w);
+	DECLARE_WRITE8_MEMBER(vb_scrollx_hi_w);
+	DECLARE_WRITE8_MEMBER(vb_scrollx_lo_w);
+	DECLARE_WRITE8_MEMBER(vb_videoram_w);
+	DECLARE_READ8_MEMBER(vb_attrib_r);
+	DECLARE_WRITE8_MEMBER(vb_attrib_w);
 };
 
 
@@ -26,6 +34,4 @@ VIDEO_START( vb );
 SCREEN_UPDATE_IND16( vb );
 void vb_bgprombank_w(running_machine &machine, int bank);
 void vb_spprombank_w(running_machine &machine, int bank);
-WRITE8_HANDLER( vb_attrib_w );
-WRITE8_HANDLER( vb_videoram_w );
 void vb_mark_all_dirty(running_machine &machine);

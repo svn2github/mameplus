@@ -103,6 +103,15 @@ public:
 	UINT16 m_tempbuf[8];
 
 	required_device<cpu_device> m_maincpu;
+	DECLARE_WRITE16_MEMBER(fifo_data_w);
+	DECLARE_WRITE16_MEMBER(fifo_clear_w);
+	DECLARE_WRITE16_MEMBER(fifo_flush_w);
+	DECLARE_WRITE16_MEMBER(jpeg1_w);
+	DECLARE_WRITE16_MEMBER(jpeg2_w);
+	DECLARE_WRITE16_MEMBER(io_offset_w);
+	DECLARE_WRITE16_MEMBER(io_data_w);
+	DECLARE_WRITE16_MEMBER(sound_w);
+	DECLARE_WRITE8_MEMBER(oki_setbank);
 };
 
 static void plot_pixel_rgb(sliver_state *state, int x, int y, UINT32 r, UINT32 g, UINT32 b)
@@ -130,25 +139,24 @@ static void plot_pixel_pal(running_machine &machine, int x, int y, int addr)
 	state->m_bitmap_fg.pix32(y, x) = r | (g<<8) | (b<<16);
 }
 
-static WRITE16_HANDLER( fifo_data_w )
+WRITE16_MEMBER(sliver_state::fifo_data_w)
 {
-	sliver_state *state = space->machine().driver_data<sliver_state>();
 
-	if (state->m_tmp_counter < 8)
+	if (m_tmp_counter < 8)
 	{
-		COMBINE_DATA(&state->m_tempbuf[state->m_tmp_counter]);
-		state->m_tmp_counter++;
-		if (state->m_tmp_counter == 8) // copy 8 bytes to fifo,  every byte should be copied directly, but it's easier to copy whole commands
+		COMBINE_DATA(&m_tempbuf[m_tmp_counter]);
+		m_tmp_counter++;
+		if (m_tmp_counter == 8) // copy 8 bytes to fifo,  every byte should be copied directly, but it's easier to copy whole commands
 		{
 			do
 			{
-				state->m_fifo[state->m_fptr++]=state->m_tempbuf[8-state->m_tmp_counter];
-				if (state->m_fptr > (FIFO_SIZE - 1))
+				m_fifo[m_fptr++]=m_tempbuf[8-m_tmp_counter];
+				if (m_fptr > (FIFO_SIZE - 1))
 				{
-					state->m_fptr=FIFO_SIZE-1;
+					m_fptr=FIFO_SIZE-1;
 				}
 			}
-			while (--state->m_tmp_counter > 0);
+			while (--m_tmp_counter > 0);
 		}
 	}
 }
@@ -187,26 +195,24 @@ static void blit_gfx(running_machine &machine)
 	}
 }
 
-static WRITE16_HANDLER( fifo_clear_w )
+WRITE16_MEMBER(sliver_state::fifo_clear_w)
 {
-	sliver_state *state = space->machine().driver_data<sliver_state>();
 
-	state->m_bitmap_fg.fill(0);
-	state->m_fptr=0;
-	state->m_tmp_counter=0;
+	m_bitmap_fg.fill(0);
+	m_fptr=0;
+	m_tmp_counter=0;
 }
 
-static WRITE16_HANDLER( fifo_flush_w )
+WRITE16_MEMBER(sliver_state::fifo_flush_w)
 {
-	blit_gfx(space->machine());
+	blit_gfx(machine());
 }
 
 
-static WRITE16_HANDLER( jpeg1_w )
+WRITE16_MEMBER(sliver_state::jpeg1_w)
 {
-	sliver_state *state = space->machine().driver_data<sliver_state>();
 
-	COMBINE_DATA(&state->m_jpeg1);
+	COMBINE_DATA(&m_jpeg1);
 }
 
 static void render_jpeg(running_machine &machine)
@@ -266,60 +272,57 @@ static void render_jpeg(running_machine &machine)
 
 }
 
-static WRITE16_HANDLER( jpeg2_w )
+WRITE16_MEMBER(sliver_state::jpeg2_w)
 {
-	sliver_state *state = space->machine().driver_data<sliver_state>();
 
-	COMBINE_DATA(&state->m_jpeg2);
+	COMBINE_DATA(&m_jpeg2);
 
-	render_jpeg(space->machine());
+	render_jpeg(machine());
 
 }
 
-static WRITE16_HANDLER(io_offset_w)
+WRITE16_MEMBER(sliver_state::io_offset_w)
 {
-	sliver_state *state = space->machine().driver_data<sliver_state>();
 
-	COMBINE_DATA(&state->m_io_offset);
+	COMBINE_DATA(&m_io_offset);
 }
 
-static WRITE16_HANDLER(io_data_w)
+WRITE16_MEMBER(sliver_state::io_data_w)
 {
-	sliver_state *state = space->machine().driver_data<sliver_state>();
 
-	if (state->m_io_offset < IO_SIZE)
+	if (m_io_offset < IO_SIZE)
 	{
 		int tmpx, tmpy;
-		COMBINE_DATA(&state->m_io_reg[state->m_io_offset]);
+		COMBINE_DATA(&m_io_reg[m_io_offset]);
 
-		tmpy = state->m_io_reg[0x1a] + (state->m_io_reg[0x1b] << 8) - state->m_io_reg[0x20]; //0x20  ???
-		tmpx = state->m_io_reg[0x1e] + (state->m_io_reg[0x1f] << 8);
+		tmpy = m_io_reg[0x1a] + (m_io_reg[0x1b] << 8) - m_io_reg[0x20]; //0x20  ???
+		tmpx = m_io_reg[0x1e] + (m_io_reg[0x1f] << 8);
 
-		if (tmpy != state->m_jpeg_y || tmpx != state->m_jpeg_x)
+		if (tmpy != m_jpeg_y || tmpx != m_jpeg_x)
 		{
-			state->m_jpeg_x = tmpx;
-			state->m_jpeg_y = tmpy;
-			render_jpeg(space->machine());
+			m_jpeg_x = tmpx;
+			m_jpeg_y = tmpy;
+			render_jpeg(machine());
 		}
 	}
 	else
 	{
-		logerror("I/O access out of range: %x\n", state->m_io_offset);
+		logerror("I/O access out of range: %x\n", m_io_offset);
 	}
 }
 
-static WRITE16_HANDLER(sound_w)
+WRITE16_MEMBER(sliver_state::sound_w)
 {
 	soundlatch_w(space, 0, data & 0xff);
-	cputag_set_input_line(space->machine(), "audiocpu", MCS51_INT0_LINE, HOLD_LINE);
+	cputag_set_input_line(machine(), "audiocpu", MCS51_INT0_LINE, HOLD_LINE);
 }
 
-static ADDRESS_MAP_START( sliver_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( sliver_map, AS_PROGRAM, 16, sliver_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 
-	AM_RANGE(0x100000, 0x100001) AM_DEVWRITE8_MODERN("ramdac", ramdac_device, index_w, 0x00ff)
-	AM_RANGE(0x100002, 0x100003) AM_DEVWRITE8_MODERN("ramdac", ramdac_device, pal_w, 0x00ff)
-	AM_RANGE(0x100004, 0x100005) AM_DEVWRITE8_MODERN("ramdac", ramdac_device, mask_w, 0x00ff)
+	AM_RANGE(0x100000, 0x100001) AM_DEVWRITE8("ramdac", ramdac_device, index_w, 0x00ff)
+	AM_RANGE(0x100002, 0x100003) AM_DEVWRITE8("ramdac", ramdac_device, pal_w, 0x00ff)
+	AM_RANGE(0x100004, 0x100005) AM_DEVWRITE8("ramdac", ramdac_device, mask_w, 0x00ff)
 
 	AM_RANGE(0x300002, 0x300003) AM_NOP // bit 0 tested, writes 0xe0 and 0xc0 - both r and w at the end of interrupt code
 
@@ -344,22 +347,22 @@ ADDRESS_MAP_END
 
 // Sound CPU
 
-static WRITE8_HANDLER(oki_setbank)
+WRITE8_MEMBER(sliver_state::oki_setbank)
 {
-	UINT8 *sound = space->machine().region("oki")->base();
+	UINT8 *sound = machine().region("oki")->base();
 	int bank=(data^0xff)&3; //xor or not ?
 	memcpy(sound+0x20000, sound+0x100000+0x20000*bank, 0x20000);
 }
 
-static ADDRESS_MAP_START( soundmem_prg, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( soundmem_prg, AS_PROGRAM, 8, sliver_state )
 	AM_RANGE(0x0000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( soundmem_io, AS_IO, 8 )
-	AM_RANGE(0x0100, 0x0100) AM_DEVREADWRITE_MODERN("oki", okim6295_device, read, write)
+static ADDRESS_MAP_START( soundmem_io, AS_IO, 8, sliver_state )
+	AM_RANGE(0x0100, 0x0100) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0x0101, 0x0101) AM_READ(soundlatch_r)
 	/* ports */
-	AM_RANGE(MCS51_PORT_P1, MCS51_PORT_P1) AM_WRITE( oki_setbank )
+	AM_RANGE(MCS51_PORT_P1, MCS51_PORT_P1) AM_WRITE(oki_setbank )
 ADDRESS_MAP_END
 
 static VIDEO_START(sliver)
@@ -449,8 +452,8 @@ static INPUT_PORTS_START( sliver )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 INPUT_PORTS_END
 
-static ADDRESS_MAP_START( ramdac_map, AS_0, 8 )
-	AM_RANGE(0x000, 0x3ff) AM_RAM AM_BASE_MEMBER(sliver_state,m_colorram)
+static ADDRESS_MAP_START( ramdac_map, AS_0, 8, sliver_state )
+	AM_RANGE(0x000, 0x3ff) AM_RAM AM_BASE(m_colorram)
 ADDRESS_MAP_END
 
 static RAMDAC_INTERFACE( ramdac_intf )

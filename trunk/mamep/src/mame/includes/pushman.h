@@ -29,13 +29,21 @@ public:
 	device_t *m_maincpu;
 	device_t *m_audiocpu;
 	device_t *m_mcu;
+	DECLARE_WRITE16_MEMBER(pushman_flipscreen_w);
+	DECLARE_WRITE16_MEMBER(pushman_control_w);
+	DECLARE_READ16_MEMBER(pushman_68705_r);
+	DECLARE_WRITE16_MEMBER(pushman_68705_w);
+	DECLARE_READ16_MEMBER(bballs_68705_r);
+	DECLARE_WRITE16_MEMBER(bballs_68705_w);
+	DECLARE_READ8_MEMBER(pushman_68000_r);
+	DECLARE_WRITE8_MEMBER(pushman_68000_w);
+	DECLARE_WRITE16_MEMBER(pushman_scroll_w);
+	DECLARE_WRITE16_MEMBER(pushman_videoram_w);
 };
 
 
 /*----------- defined in video/pushman.c -----------*/
 
-WRITE16_HANDLER( pushman_scroll_w );
-WRITE16_HANDLER( pushman_videoram_w );
 
 VIDEO_START( pushman );
 

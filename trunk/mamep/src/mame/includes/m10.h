@@ -61,15 +61,23 @@ public:
 	device_t *m_ic8j1;
 	device_t *m_ic8j2;
 	samples_device *m_samples;
+	DECLARE_WRITE8_MEMBER(m10_ctrl_w);
+	DECLARE_WRITE8_MEMBER(m11_ctrl_w);
+	DECLARE_WRITE8_MEMBER(m15_ctrl_w);
+	DECLARE_WRITE8_MEMBER(m10_a500_w);
+	DECLARE_WRITE8_MEMBER(m11_a100_w);
+	DECLARE_WRITE8_MEMBER(m15_a100_w);
+	DECLARE_READ8_MEMBER(m10_a700_r);
+	DECLARE_READ8_MEMBER(m11_a700_r);
+	DECLARE_WRITE8_MEMBER(m10_colorram_w);
+	DECLARE_WRITE8_MEMBER(m10_chargen_w);
+	DECLARE_WRITE8_MEMBER(m15_chargen_w);
 };
 
 
 /*----------- defined in video/m10.c -----------*/
 
 
-WRITE8_HANDLER( m10_colorram_w );
-WRITE8_HANDLER( m10_chargen_w );
-WRITE8_HANDLER( m15_chargen_w );
 
 SCREEN_UPDATE_IND16( m10 );
 SCREEN_UPDATE_IND16( m15 );

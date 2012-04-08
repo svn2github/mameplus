@@ -191,19 +191,17 @@ int vicdual_is_cabinet_color(running_machine &machine)
  *************************************/
 
 
-static WRITE8_HANDLER( vicdual_videoram_w )
+WRITE8_MEMBER(vicdual_state::vicdual_videoram_w)
 {
-	vicdual_state *state = space->machine().driver_data<vicdual_state>();
-	space->machine().primary_screen->update_now();
-	state->m_videoram[offset] = data;
+	machine().primary_screen->update_now();
+	m_videoram[offset] = data;
 }
 
 
-static WRITE8_HANDLER( vicdual_characterram_w )
+WRITE8_MEMBER(vicdual_state::vicdual_characterram_w)
 {
-	vicdual_state *state = space->machine().driver_data<vicdual_state>();
-	space->machine().primary_screen->update_now();
-	state->m_characterram[offset] = data;
+	machine().primary_screen->update_now();
+	m_characterram[offset] = data;
 }
 
 
@@ -232,33 +230,33 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static READ8_HANDLER( depthch_io_r )
+READ8_MEMBER(vicdual_state::depthch_io_r)
 {
 	UINT8 ret = 0;
 
-	if (offset & 0x01)  ret = input_port_read(space->machine(), "IN0");
-	if (offset & 0x08)  ret = input_port_read(space->machine(), "IN1");
+	if (offset & 0x01)  ret = input_port_read(machine(), "IN0");
+	if (offset & 0x08)  ret = input_port_read(machine(), "IN1");
 
 	return ret;
 }
 
 
-static WRITE8_HANDLER( depthch_io_w )
+WRITE8_MEMBER(vicdual_state::depthch_io_w)
 {
-	if (offset & 0x01)  assert_coin_status(space->machine());
-	if (offset & 0x04)  depthch_audio_w(space, 0, data);
+	if (offset & 0x01)  assert_coin_status(machine());
+	if (offset & 0x04)  depthch_audio_w(&space, 0, data);
 }
 
 
-static ADDRESS_MAP_START( depthch_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( depthch_map, AS_PROGRAM, 8, vicdual_state )
 	AM_RANGE(0x0000, 0x3fff) AM_MIRROR(0x4000) AM_ROM
-	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE_MEMBER(vicdual_state, m_videoram)
+	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE(m_videoram)
 	AM_RANGE(0x8400, 0x87ff) AM_MIRROR(0x7000) AM_RAM
-	AM_RANGE(0x8800, 0x8fff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE_MEMBER(vicdual_state, m_characterram)
+	AM_RANGE(0x8800, 0x8fff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE(m_characterram)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( depthch_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( depthch_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)
 
 	/* no decoder, just logic gates, so in theory the
@@ -314,35 +312,35 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static READ8_HANDLER( safari_io_r )
+READ8_MEMBER(vicdual_state::safari_io_r)
 {
 	UINT8 ret = 0;
 
-	if (offset & 0x01)  ret = input_port_read(space->machine(), "IN0");
-	if (offset & 0x08)  ret = input_port_read(space->machine(), "IN1");
+	if (offset & 0x01)  ret = input_port_read(machine(), "IN0");
+	if (offset & 0x08)  ret = input_port_read(machine(), "IN1");
 
 	return ret;
 }
 
 
-static WRITE8_HANDLER( safari_io_w )
+WRITE8_MEMBER(vicdual_state::safari_io_w)
 {
-	if (offset & 0x01)  assert_coin_status(space->machine());
+	if (offset & 0x01)  assert_coin_status(machine());
 	if (offset & 0x02) { /* safari_audio_w(0, data) */ }
 }
 
 
-static ADDRESS_MAP_START( safari_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( safari_map, AS_PROGRAM, 8, vicdual_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
     AM_RANGE(0x4000, 0x7fff) AM_NOP	/* unused */
 	AM_RANGE(0x8000, 0x8fff) AM_MIRROR(0x3000) AM_RAM
-	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE_MEMBER(vicdual_state, m_videoram)
+	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE(m_videoram)
 	AM_RANGE(0xc400, 0xc7ff) AM_MIRROR(0x3000) AM_RAM
-	AM_RANGE(0xc800, 0xcfff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE_MEMBER(vicdual_state, m_characterram)
+	AM_RANGE(0xc800, 0xcfff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE(m_characterram)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( safari_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( safari_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)
 
 	/* no decoder, just logic gates, so in theory the
@@ -398,33 +396,33 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static READ8_HANDLER( frogs_io_r )
+READ8_MEMBER(vicdual_state::frogs_io_r)
 {
 	UINT8 ret = 0;
 
-	if (offset & 0x01)  ret = input_port_read(space->machine(), "IN0");
-	if (offset & 0x08)  ret = input_port_read(space->machine(), "IN1");
+	if (offset & 0x01)  ret = input_port_read(machine(), "IN0");
+	if (offset & 0x08)  ret = input_port_read(machine(), "IN1");
 
 	return ret;
 }
 
 
-static WRITE8_HANDLER( frogs_io_w )
+WRITE8_MEMBER(vicdual_state::frogs_io_w)
 {
-	if (offset & 0x01)  assert_coin_status(space->machine());
-	if (offset & 0x02)  frogs_audio_w(space, 0, data);
+	if (offset & 0x01)  assert_coin_status(machine());
+	if (offset & 0x02)  frogs_audio_w(&space, 0, data);
 }
 
 
-static ADDRESS_MAP_START( frogs_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( frogs_map, AS_PROGRAM, 8, vicdual_state )
 	AM_RANGE(0x0000, 0x3fff) AM_MIRROR(0x4000) AM_ROM
-	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE_MEMBER(vicdual_state, m_videoram)
+	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE(m_videoram)
 	AM_RANGE(0x8400, 0x87ff) AM_MIRROR(0x7000) AM_RAM
-	AM_RANGE(0x8800, 0x8fff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE_MEMBER(vicdual_state, m_characterram)
+	AM_RANGE(0x8800, 0x8fff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE(m_characterram)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( frogs_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( frogs_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)
 
 	/* no decoder, just logic gates, so in theory the
@@ -506,47 +504,47 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static READ8_HANDLER( headon_io_r )
+READ8_MEMBER(vicdual_state::headon_io_r)
 {
 	UINT8 ret = 0;
 
-	if (offset & 0x01)  ret = input_port_read(space->machine(), "IN0");
-	if (offset & 0x08)  ret = input_port_read(space->machine(), "IN1");
+	if (offset & 0x01)  ret = input_port_read(machine(), "IN0");
+	if (offset & 0x08)  ret = input_port_read(machine(), "IN1");
 
 	return ret;
 }
 
 
-static READ8_HANDLER( sspaceat_io_r )
+READ8_MEMBER(vicdual_state::sspaceat_io_r)
 {
 	UINT8 ret = 0;
 
-	if (offset & 0x01)  ret = input_port_read(space->machine(), "IN0");
-	if (offset & 0x04)  ret = input_port_read(space->machine(), "IN1");
-	if (offset & 0x08)  ret = input_port_read(space->machine(), "IN2");
+	if (offset & 0x01)  ret = input_port_read(machine(), "IN0");
+	if (offset & 0x04)  ret = input_port_read(machine(), "IN1");
+	if (offset & 0x08)  ret = input_port_read(machine(), "IN2");
 
 	return ret;
 }
 
 
-static WRITE8_HANDLER( headon_io_w )
+WRITE8_MEMBER(vicdual_state::headon_io_w)
 {
-	if (offset & 0x01)  assert_coin_status(space->machine());
-	if (offset & 0x02)  headon_audio_w(space, 0, data);
+	if (offset & 0x01)  assert_coin_status(machine());
+	if (offset & 0x02)  headon_audio_w(&space, 0, data);
 	if (offset & 0x04) { /* vicdual_palette_bank_w(0, data)  */ }	 /* not written to */
 }
 
 
-static ADDRESS_MAP_START( headon_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( headon_map, AS_PROGRAM, 8, vicdual_state )
 	AM_RANGE(0x0000, 0x1fff) AM_MIRROR(0x6000) AM_ROM
     AM_RANGE(0x8000, 0xbfff) AM_NOP	/* unused */
-	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE_MEMBER(vicdual_state, m_videoram)
+	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE(m_videoram)
 	AM_RANGE(0xc400, 0xc7ff) AM_MIRROR(0x3000) AM_RAM
-	AM_RANGE(0xc800, 0xcfff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE_MEMBER(vicdual_state, m_characterram)
+	AM_RANGE(0xc800, 0xcfff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE(m_characterram)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( headon_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( headon_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)
 
 	/* no decoder, just logic gates, so in theory the
@@ -555,7 +553,7 @@ static ADDRESS_MAP_START( headon_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( sspaceat_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( sspaceat_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)
 
 	/* no decoder, just logic gates, so in theory the
@@ -716,24 +714,24 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static READ8_HANDLER( headon2_io_r )
+READ8_MEMBER(vicdual_state::headon2_io_r)
 {
 	UINT8 ret = 0;
 
-	if (offset & 0x01)  ret = input_port_read(space->machine(), "IN0");
+	if (offset & 0x01)  ret = input_port_read(machine(), "IN0");
 	if (offset & 0x02)  /* schematics show this as in input port, but never read from */
-	if (offset & 0x04)  ret = input_port_read(space->machine(), "IN1");
-	if (offset & 0x08)  ret = input_port_read(space->machine(), "IN2");
+	if (offset & 0x04)  ret = input_port_read(machine(), "IN1");
+	if (offset & 0x08)  ret = input_port_read(machine(), "IN2");
 	if (offset & 0x12)  logerror("********* Read from port %x\n", offset);
 
 	return ret;
 }
 
 
-static WRITE8_HANDLER( headon2_io_w )
+WRITE8_MEMBER(vicdual_state::headon2_io_w)
 {
-	if (offset & 0x01)  assert_coin_status(space->machine());
-	if (offset & 0x02)  headon_audio_w(space, 0, data);
+	if (offset & 0x01)  assert_coin_status(machine());
+	if (offset & 0x02)  headon_audio_w(&space, 0, data);
 	if (offset & 0x04)  vicdual_palette_bank_w(space, 0, data);
     if (offset & 0x08) { /* schematics show this as going into a shifer circuit, but never written to */ }
     if (offset & 0x10) { /* schematics show this as going to an edge connector, but never written to */ }
@@ -741,9 +739,9 @@ static WRITE8_HANDLER( headon2_io_w )
 }
 
 
-static WRITE8_HANDLER( digger_io_w )
+WRITE8_MEMBER(vicdual_state::digger_io_w)
 {
-	if (offset & 0x01)  assert_coin_status(space->machine());
+	if (offset & 0x01)  assert_coin_status(machine());
 	if (offset & 0x02) { /* digger_audio_1_w(0, data) */ }
 	if (offset & 0x04)
 	{
@@ -757,16 +755,16 @@ static WRITE8_HANDLER( digger_io_w )
 }
 
 
-static ADDRESS_MAP_START( headon2_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( headon2_map, AS_PROGRAM, 8, vicdual_state )
 	AM_RANGE(0x0000, 0x1fff) AM_MIRROR(0x6000) AM_ROM
  /* AM_RANGE(0x8000, 0x80ff) AM_MIRROR(0x3f00) */  /* schematics show this as battery backed RAM, but doesn't appear to be used */
-	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE_MEMBER(vicdual_state, m_videoram)
+	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE(m_videoram)
 	AM_RANGE(0xc400, 0xc7ff) AM_MIRROR(0x3000) AM_RAM
-	AM_RANGE(0xc800, 0xcfff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE_MEMBER(vicdual_state, m_characterram)
+	AM_RANGE(0xc800, 0xcfff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE(m_characterram)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( headon2_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( headon2_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x1f)
 
 	/* no decoder, just logic gates, so in theory the
@@ -775,7 +773,7 @@ static ADDRESS_MAP_START( headon2_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( digger_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( digger_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x1f)
 
 	/* no decoder, just logic gates, so in theory the
@@ -944,77 +942,77 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static WRITE8_HANDLER( invho2_io_w )
+WRITE8_MEMBER(vicdual_state::invho2_io_w)
 {
-	if (offset & 0x01)  invho2_audio_w(space, 0, data);
-	if (offset & 0x02)  invinco_audio_w(space, 0, data);
-	if (offset & 0x08)  assert_coin_status(space->machine());
+	if (offset & 0x01)  invho2_audio_w(&space, 0, data);
+	if (offset & 0x02)  invinco_audio_w(&space, 0, data);
+	if (offset & 0x08)  assert_coin_status(machine());
 	if (offset & 0x40)  vicdual_palette_bank_w(space, 0, data);
 }
 
 
-static WRITE8_HANDLER( invds_io_w )
+WRITE8_MEMBER(vicdual_state::invds_io_w)
 {
-	if (offset & 0x01)  invinco_audio_w(space, 0, data);
+	if (offset & 0x01)  invinco_audio_w(&space, 0, data);
 	if (offset & 0x02) { /* deepscan_audio_w(0, data) */ }
-	if (offset & 0x08)  assert_coin_status(space->machine());
+	if (offset & 0x08)  assert_coin_status(machine());
 	if (offset & 0x40)  vicdual_palette_bank_w(space, 0, data);
 }
 
 
-static WRITE8_HANDLER( sspacaho_io_w )
+WRITE8_MEMBER(vicdual_state::sspacaho_io_w)
 {
-	if (offset & 0x01)  invho2_audio_w(space, 0, data);
-	if (offset & 0x02) { /* sspaceatt_audio_w(space, 0, data) */ }
-	if (offset & 0x08)  assert_coin_status(space->machine());
+	if (offset & 0x01)  invho2_audio_w(&space, 0, data);
+	if (offset & 0x02) { /* s&spaceatt_audio_w(&space, 0, data) */ }
+	if (offset & 0x08)  assert_coin_status(machine());
 	if (offset & 0x40)  vicdual_palette_bank_w(space, 0, data);
 }
 
 
-static WRITE8_HANDLER( tranqgun_io_w )
+WRITE8_MEMBER(vicdual_state::tranqgun_io_w)
 {
-	if (offset & 0x01) { /* tranqgun_audio_w(space, 0, data) */ }
+	if (offset & 0x01) { /* tranqgun_audio_w(&space, 0, data) */ }
 	if (offset & 0x02)  vicdual_palette_bank_w(space, 0, data);
-	if (offset & 0x08)  assert_coin_status(space->machine());
+	if (offset & 0x08)  assert_coin_status(machine());
 }
 
 
-static WRITE8_HANDLER( spacetrk_io_w )
+WRITE8_MEMBER(vicdual_state::spacetrk_io_w)
 {
-	if (offset & 0x01) { /* spacetrk_audio_w(space, 0, data) */ }
-	if (offset & 0x02) { /* spacetrk_audio_w(space, 0, data) */ }
-	if (offset & 0x08)  assert_coin_status(space->machine());
+	if (offset & 0x01) { /* &spacetrk_audio_w(&space, 0, data) */ }
+	if (offset & 0x02) { /* &spacetrk_audio_w(&space, 0, data) */ }
+	if (offset & 0x08)  assert_coin_status(machine());
 	if (offset & 0x40)  vicdual_palette_bank_w(space, 0, data);
 }
 
 
-static WRITE8_HANDLER( carnival_io_w )
+WRITE8_MEMBER(vicdual_state::carnival_io_w)
 {
-	if (offset & 0x01)  carnival_audio_1_w(space, 0, data);
-	if (offset & 0x02)  carnival_audio_2_w(space, 0, data);
-	if (offset & 0x08)  assert_coin_status(space->machine());
+	if (offset & 0x01)  carnival_audio_1_w(&space, 0, data);
+	if (offset & 0x02)  carnival_audio_2_w(&space, 0, data);
+	if (offset & 0x08)  assert_coin_status(machine());
 	if (offset & 0x40)  vicdual_palette_bank_w(space, 0, data);
 }
 
 
-static WRITE8_HANDLER( brdrline_io_w )
+WRITE8_MEMBER(vicdual_state::brdrline_io_w)
 {
-	if (offset & 0x01) { /* brdrline_audio_w(space, 0, data) */ }
+	if (offset & 0x01) { /* brdrline_audio_w(&space, 0, data) */ }
 	if (offset & 0x02)  vicdual_palette_bank_w(space, 0, data);
-	if (offset & 0x08)  assert_coin_status(space->machine());
+	if (offset & 0x08)  assert_coin_status(machine());
 }
 
 
-static WRITE8_HANDLER( pulsar_io_w )
+WRITE8_MEMBER(vicdual_state::pulsar_io_w)
 {
-	if (offset & 0x01)  pulsar_audio_1_w(space, 0, data);
-	if (offset & 0x02)  pulsar_audio_2_w(space, 0, data);
-	if (offset & 0x08)  assert_coin_status(space->machine());
+	if (offset & 0x01)  pulsar_audio_1_w(&space, 0, data);
+	if (offset & 0x02)  pulsar_audio_2_w(&space, 0, data);
+	if (offset & 0x08)  assert_coin_status(machine());
 	if (offset & 0x40)  vicdual_palette_bank_w(space, 0, data);
 }
 
 
-static WRITE8_HANDLER( heiankyo_io_w )
+WRITE8_MEMBER(vicdual_state::heiankyo_io_w)
 {
 	if (offset & 0x01) { /* heiankyo_audio_1_w(0, data) */ }
 
@@ -1024,28 +1022,28 @@ static WRITE8_HANDLER( heiankyo_io_w )
 		/* heiankyo_audio_2_w(0, data & 0x3f); */
 	}
 
-	if (offset & 0x08)  assert_coin_status(space->machine());
+	if (offset & 0x08)  assert_coin_status(machine());
 }
 
 
-static WRITE8_HANDLER( alphaho_io_w )
+WRITE8_MEMBER(vicdual_state::alphaho_io_w)
 {
 	if (offset & 0x01) { /* headon_audio_w(0, data) */ }
 	if (offset & 0x02) { /* alphaf_audio_w(0, data) */ }
-	if (offset & 0x08)  assert_coin_status(space->machine());
+	if (offset & 0x08)  assert_coin_status(machine());
 	if (offset & 0x40)  vicdual_palette_bank_w(space, 0, data);
 }
 
 
-static ADDRESS_MAP_START( vicdual_dualgame_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( vicdual_dualgame_map, AS_PROGRAM, 8, vicdual_state )
 	AM_RANGE(0x0000, 0x3fff) AM_MIRROR(0x4000) AM_ROM
-	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE_MEMBER(vicdual_state, m_videoram)
+	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE(m_videoram)
 	AM_RANGE(0x8400, 0x87ff) AM_MIRROR(0x7000) AM_RAM
-	AM_RANGE(0x8800, 0x8fff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE_MEMBER(vicdual_state, m_characterram)
+	AM_RANGE(0x8800, 0x8fff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE(m_characterram)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( invho2_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( invho2_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7f)
 
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x7c) AM_READ_PORT("IN0")
@@ -1059,7 +1057,7 @@ static ADDRESS_MAP_START( invho2_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( invds_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( invds_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7f)
 
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x7c) AM_READ_PORT("IN0")
@@ -1073,7 +1071,7 @@ static ADDRESS_MAP_START( invds_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( sspacaho_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( sspacaho_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7f)
 
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x7c) AM_READ_PORT("IN0")
@@ -1087,7 +1085,7 @@ static ADDRESS_MAP_START( sspacaho_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( tranqgun_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( tranqgun_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)
 
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x0c) AM_READ_PORT("IN0")
@@ -1101,7 +1099,7 @@ static ADDRESS_MAP_START( tranqgun_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( spacetrk_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( spacetrk_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7f)
 
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x7c) AM_READ_PORT("IN0")
@@ -1115,7 +1113,7 @@ static ADDRESS_MAP_START( spacetrk_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( carnival_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( carnival_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7f)
 
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x7c) AM_READ_PORT("IN0")
@@ -1129,7 +1127,7 @@ static ADDRESS_MAP_START( carnival_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( brdrline_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( brdrline_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)
 
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x0c) AM_READ_PORT("IN0")
@@ -1143,7 +1141,7 @@ static ADDRESS_MAP_START( brdrline_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( pulsar_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( pulsar_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7f)
 
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x7c) AM_READ_PORT("IN0")
@@ -1157,7 +1155,7 @@ static ADDRESS_MAP_START( pulsar_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( heiankyo_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( heiankyo_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)
 
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x0c) AM_READ_PORT("IN0")
@@ -1171,7 +1169,7 @@ static ADDRESS_MAP_START( heiankyo_io_map, AS_IO, 8 )
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( alphaho_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( alphaho_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7f)
 
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x7c) AM_READ_PORT("IN0")
@@ -2043,10 +2041,9 @@ MACHINE_CONFIG_END
  *************************************/
 
 
-static WRITE8_HANDLER( samurai_protection_w )
+WRITE8_MEMBER(vicdual_state::samurai_protection_w)
 {
-	vicdual_state *state = space->machine().driver_data<vicdual_state>();
-	state->m_samurai_protection_data = data;
+	m_samurai_protection_data = data;
 }
 
 
@@ -2065,24 +2062,24 @@ static CUSTOM_INPUT( samurai_protection_r )
 }
 
 
-static WRITE8_HANDLER( samurai_io_w )
+WRITE8_MEMBER(vicdual_state::samurai_io_w)
 {
 	if (offset & 0x02) { /* samurai_audio_w(0, data) */ }
-	if (offset & 0x08)  assert_coin_status(space->machine());
+	if (offset & 0x08)  assert_coin_status(machine());
 	if (offset & 0x40)  vicdual_palette_bank_w(space, 0, data);
 }
 
 
 /* dual game hardware */
-static ADDRESS_MAP_START( samurai_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( samurai_map, AS_PROGRAM, 8, vicdual_state )
 	AM_RANGE(0x0000, 0x3fff) AM_MIRROR(0x4000) AM_ROM AM_WRITE(samurai_protection_w)
-	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE_MEMBER(vicdual_state, m_videoram)
+	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE(m_videoram)
 	AM_RANGE(0x8400, 0x87ff) AM_MIRROR(0x7000) AM_RAM
-	AM_RANGE(0x8800, 0x8fff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE_MEMBER(vicdual_state, m_characterram)
+	AM_RANGE(0x8800, 0x8fff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE(m_characterram)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( samurai_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( samurai_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7f)
 
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x7c) AM_READ_PORT("IN0")
@@ -2168,35 +2165,35 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static READ8_HANDLER( nsub_io_r )
+READ8_MEMBER(vicdual_state::nsub_io_r)
 {
 	UINT8 ret = 0;
 
-	if (offset & 0x01)  ret = input_port_read(space->machine(), "IN0");
-	if (offset & 0x08)  ret = input_port_read(space->machine(), "IN1");
+	if (offset & 0x01)  ret = input_port_read(machine(), "IN0");
+	if (offset & 0x08)  ret = input_port_read(machine(), "IN1");
 
 	return ret;
 }
 
 
-static WRITE8_HANDLER( nsub_io_w )
+WRITE8_MEMBER(vicdual_state::nsub_io_w)
 {
-	if (offset & 0x01)  assert_coin_status(space->machine());
+	if (offset & 0x01)  assert_coin_status(machine());
 	if (offset & 0x02) { /* nsub_audio_w(0, data) */ }
 	if (offset & 0x04)  vicdual_palette_bank_w(space, 0, data);
 }
 
 
-static ADDRESS_MAP_START( nsub_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( nsub_map, AS_PROGRAM, 8, vicdual_state )
 	AM_RANGE(0x0000, 0x3fff) AM_MIRROR(0x4000) AM_ROM
     AM_RANGE(0x8000, 0xbfff) AM_NOP	/* unused */
-	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE_MEMBER(vicdual_state, m_videoram)
+	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE(m_videoram)
 	AM_RANGE(0xc400, 0xc7ff) AM_MIRROR(0x3000) AM_RAM
-	AM_RANGE(0xc800, 0xcfff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE_MEMBER(vicdual_state, m_characterram)
+	AM_RANGE(0xc800, 0xcfff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE(m_characterram)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( nsub_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( nsub_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)
 
 	/* no decoder, just logic gates, so in theory the
@@ -2263,36 +2260,36 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static READ8_HANDLER( invinco_io_r )
+READ8_MEMBER(vicdual_state::invinco_io_r)
 {
 	UINT8 ret = 0;
 
-	if (offset & 0x01)  ret = input_port_read(space->machine(), "IN0");
-	if (offset & 0x02)  ret = input_port_read(space->machine(), "IN1");
-	if (offset & 0x08)  ret = input_port_read(space->machine(), "IN2");
+	if (offset & 0x01)  ret = input_port_read(machine(), "IN0");
+	if (offset & 0x02)  ret = input_port_read(machine(), "IN1");
+	if (offset & 0x08)  ret = input_port_read(machine(), "IN2");
 
 	return ret;
 }
 
 
-static WRITE8_HANDLER( invinco_io_w )
+WRITE8_MEMBER(vicdual_state::invinco_io_w)
 {
-	if (offset & 0x01)  assert_coin_status(space->machine());
-	if (offset & 0x02)  invinco_audio_w(space, 0, data);
+	if (offset & 0x01)  assert_coin_status(machine());
+	if (offset & 0x02)  invinco_audio_w(&space, 0, data);
 	if (offset & 0x04)  vicdual_palette_bank_w(space, 0, data);
 }
 
 
-static ADDRESS_MAP_START( invinco_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( invinco_map, AS_PROGRAM, 8, vicdual_state )
 	AM_RANGE(0x0000, 0x3fff) AM_MIRROR(0x4000) AM_ROM
     AM_RANGE(0x8000, 0xbfff) AM_NOP	/* unused */
-	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE_MEMBER(vicdual_state, m_videoram)
+	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_videoram_w) AM_BASE(m_videoram)
 	AM_RANGE(0xc400, 0xc7ff) AM_MIRROR(0x3000) AM_RAM
-	AM_RANGE(0xc800, 0xcfff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE_MEMBER(vicdual_state, m_characterram)
+	AM_RANGE(0xc800, 0xcfff) AM_MIRROR(0x3000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE(m_characterram)
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( invinco_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( invinco_io_map, AS_IO, 8, vicdual_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xf)
 
 	/* no decoder, just logic gates, so in theory the

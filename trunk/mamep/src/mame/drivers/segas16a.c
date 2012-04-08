@@ -194,7 +194,7 @@ static const ppi8255_interface single_ppi_intf =
 	DEVCB_NULL,
 	DEVCB_NULL,
 	DEVCB_NULL,
-	DEVCB_MEMORY_HANDLER("maincpu", PROGRAM, soundlatch_w),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_w),
 	DEVCB_HANDLER(video_control_w),
 	DEVCB_HANDLER(tilemap_sound_w)
 };
@@ -433,7 +433,7 @@ static READ8_HANDLER( sound_data_r )
 
 	/* assert ACK */
 	ppi8255_set_port_c(state->m_ppi8255, 0x00);
-	return soundlatch_r(space, offset);
+	return state->soundlatch_r(*space, offset);
 }
 
 
@@ -953,7 +953,7 @@ static READ8_HANDLER( mcu_io_r )
 	{
 		case 0:
 			if (offset >= 0x0000 && offset < 0x3fff)
-				return watchdog_reset_r(space, 0);		/* unsure about this one */
+				return state->watchdog_reset_r(*space, 0);		/* unsure about this one */
 			else if (offset >= 0x4000 && offset < 0x8000)
 				return maincpu_byte_r(space->machine(), 0xc70001 ^ (offset & 0x3fff));
 			else if (offset >= 0x8000 && offset < 0xc000)
@@ -1005,16 +1005,16 @@ static INTERRUPT_GEN( mcu_irq_assert )
  *
  *************************************/
 
-static ADDRESS_MAP_START( system16a_map, AS_PROGRAM, 16 )
+static ADDRESS_MAP_START( system16a_map, AS_PROGRAM, 16, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x000000, 0x03ffff) AM_MIRROR(0x380000) AM_ROM
-	AM_RANGE(0x400000, 0x407fff) AM_MIRROR(0xb88000) AM_RAM_WRITE(segaic16_tileram_0_w) AM_BASE(&segaic16_tileram_0)
-	AM_RANGE(0x410000, 0x410fff) AM_MIRROR(0xb8f000) AM_RAM_WRITE(segaic16_textram_0_w) AM_BASE(&segaic16_textram_0)
-	AM_RANGE(0x440000, 0x4407ff) AM_MIRROR(0x3bf800) AM_RAM AM_BASE(&segaic16_spriteram_0)
-	AM_RANGE(0x840000, 0x840fff) AM_MIRROR(0x3bf000) AM_RAM_WRITE(segaic16_paletteram_w) AM_BASE(&segaic16_paletteram)
-	AM_RANGE(0xc40000, 0xc43fff) AM_MIRROR(0x39c000) AM_READWRITE(misc_io_r, misc_io_w)
+	AM_RANGE(0x400000, 0x407fff) AM_MIRROR(0xb88000) AM_RAM_WRITE_LEGACY(segaic16_tileram_0_w) AM_BASE_LEGACY(&segaic16_tileram_0)
+	AM_RANGE(0x410000, 0x410fff) AM_MIRROR(0xb8f000) AM_RAM_WRITE_LEGACY(segaic16_textram_0_w) AM_BASE_LEGACY(&segaic16_textram_0)
+	AM_RANGE(0x440000, 0x4407ff) AM_MIRROR(0x3bf800) AM_RAM AM_BASE_LEGACY(&segaic16_spriteram_0)
+	AM_RANGE(0x840000, 0x840fff) AM_MIRROR(0x3bf000) AM_RAM_WRITE_LEGACY(segaic16_paletteram_w) AM_BASE_LEGACY(&segaic16_paletteram)
+	AM_RANGE(0xc40000, 0xc43fff) AM_MIRROR(0x39c000) AM_READWRITE_LEGACY(misc_io_r, misc_io_w)
 	AM_RANGE(0xc60000, 0xc6ffff) AM_READ(watchdog_reset16_r)
-	AM_RANGE(0xc70000, 0xc73fff) AM_MIRROR(0x38c000) AM_RAM AM_BASE(&workram) AM_SHARE("nvram")
+	AM_RANGE(0xc70000, 0xc73fff) AM_MIRROR(0x38c000) AM_RAM AM_BASE_LEGACY(&workram) AM_SHARE("nvram")
 ADDRESS_MAP_END
 
 
@@ -1025,19 +1025,19 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0xe800, 0xe800) AM_READ(sound_data_r)
+	AM_RANGE(0xe800, 0xe800) AM_READ_LEGACY(sound_data_r)
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
-static ADDRESS_MAP_START( sound_portmap, AS_IO, 8 )
+static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x01) AM_MIRROR(0x3e) AM_DEVREADWRITE("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x80, 0x80) AM_MIRROR(0x3f) AM_WRITE(n7751_command_w)
-	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x3f) AM_READ(sound_data_r)
+	AM_RANGE(0x00, 0x01) AM_MIRROR(0x3e) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
+	AM_RANGE(0x80, 0x80) AM_MIRROR(0x3f) AM_WRITE_LEGACY(n7751_command_w)
+	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x3f) AM_READ_LEGACY(sound_data_r)
 ADDRESS_MAP_END
 
 
@@ -1048,12 +1048,12 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( n7751_portmap, AS_IO, 8 )
-	AM_RANGE(MCS48_PORT_BUS,  MCS48_PORT_BUS)  AM_READ(n7751_rom_r)
-	AM_RANGE(MCS48_PORT_T1,   MCS48_PORT_T1)   AM_READ(n7751_t1_r)
-	AM_RANGE(MCS48_PORT_P1,   MCS48_PORT_P1)   AM_DEVWRITE("dac", dac_w)
-	AM_RANGE(MCS48_PORT_P2,   MCS48_PORT_P2)   AM_DEVREADWRITE("n7751_8243", n7751_p2_r, n7751_p2_w)
-	AM_RANGE(MCS48_PORT_PROG, MCS48_PORT_PROG) AM_DEVWRITE("n7751_8243", i8243_prog_w)
+static ADDRESS_MAP_START( n7751_portmap, AS_IO, 8, segas1x_state )
+	AM_RANGE(MCS48_PORT_BUS,  MCS48_PORT_BUS)  AM_READ_LEGACY(n7751_rom_r)
+	AM_RANGE(MCS48_PORT_T1,   MCS48_PORT_T1)   AM_READ_LEGACY(n7751_t1_r)
+	AM_RANGE(MCS48_PORT_P1,   MCS48_PORT_P1)   AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(MCS48_PORT_P2,   MCS48_PORT_P2)   AM_DEVREADWRITE_LEGACY("n7751_8243", n7751_p2_r, n7751_p2_w)
+	AM_RANGE(MCS48_PORT_PROG, MCS48_PORT_PROG) AM_DEVWRITE_LEGACY("n7751_8243", i8243_prog_w)
 ADDRESS_MAP_END
 
 
@@ -1064,10 +1064,10 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( mcu_io_map, AS_IO, 8 )
+static ADDRESS_MAP_START( mcu_io_map, AS_IO, 8, segas1x_state )
 	ADDRESS_MAP_UNMAP_HIGH
-	AM_RANGE(0x0000, 0xffff) AM_READWRITE(mcu_io_r, mcu_io_w)
-	AM_RANGE(MCS51_PORT_P1, MCS51_PORT_P1) AM_READNOP AM_WRITE(mcu_control_w)
+	AM_RANGE(0x0000, 0xffff) AM_READWRITE_LEGACY(mcu_io_r, mcu_io_w)
+	AM_RANGE(MCS51_PORT_P1, MCS51_PORT_P1) AM_READNOP AM_WRITE_LEGACY(mcu_control_w)
 	AM_RANGE(MCS51_PORT_P3, MCS51_PORT_P3) AM_READNOP	/* read during jb int0 */
 ADDRESS_MAP_END
 

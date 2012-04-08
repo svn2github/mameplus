@@ -61,17 +61,30 @@ public:
 	sVS920A* m_VS920A_cur_chip;
 	tMB60553 *m_MB60553_cur_chip;
 	tCG10103* m_CG10103_cur_chip;
+	DECLARE_READ16_MEMBER(dmmy_8f);
+	DECLARE_WRITE16_MEMBER(sound_command_w);
+	DECLARE_READ16_MEMBER(pending_command_r);
+	DECLARE_WRITE8_MEMBER(gs_sh_pending_command_clear_w);
+	DECLARE_WRITE8_MEMBER(gs_sh_bankswitch_w);
+	DECLARE_WRITE16_MEMBER(twrldc94_mcu_w);
+	DECLARE_READ16_MEMBER(twrldc94_mcu_r);
+	DECLARE_WRITE16_MEMBER(twrldc94_prot_reg_w);
+	DECLARE_READ16_MEMBER(twrldc94_prot_reg_r);
+	DECLARE_READ16_MEMBER(vbl_toggle_r);
+	DECLARE_WRITE16_MEMBER(vbl_toggle_w);
+	DECLARE_WRITE16_MEMBER(VS920A_0_vram_w);
+	DECLARE_WRITE16_MEMBER(VS920A_1_vram_w);
+	DECLARE_WRITE16_MEMBER(MB60553_0_regs_w);
+	DECLARE_WRITE16_MEMBER(MB60553_1_regs_w);
+	DECLARE_WRITE16_MEMBER(MB60553_0_vram_w);
+	DECLARE_WRITE16_MEMBER(MB60553_1_vram_w);
+	DECLARE_WRITE16_MEMBER(gsx_videoram3_w);
+	void MB60553_reg_written(int numchip, int num_reg);
 };
 
 
 /*----------- defined in video/gstriker.c -----------*/
 
-WRITE16_HANDLER( VS920A_0_vram_w );
-WRITE16_HANDLER( VS920A_1_vram_w );
-WRITE16_HANDLER( MB60553_0_regs_w );
-WRITE16_HANDLER( MB60553_1_regs_w );
-WRITE16_HANDLER( MB60553_0_vram_w );
-WRITE16_HANDLER( MB60553_1_vram_w );
 
 SCREEN_UPDATE_IND16( gstriker );
 VIDEO_START( gstriker );

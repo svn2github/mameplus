@@ -35,6 +35,8 @@ public:
 	/* devices */
 	device_t *m_maincpu;
 	device_t *m_discrete;
+	DECLARE_WRITE8_MEMBER(orbit_misc_w);
+	DECLARE_WRITE8_MEMBER(orbit_playfield_w);
 };
 
 
@@ -52,4 +54,3 @@ DISCRETE_SOUND_EXTERN( orbit );
 VIDEO_START( orbit );
 SCREEN_UPDATE_IND16( orbit );
 
-WRITE8_HANDLER( orbit_playfield_w );

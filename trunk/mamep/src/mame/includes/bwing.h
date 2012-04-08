@@ -46,6 +46,19 @@ public:
 	device_t *m_maincpu;
 	device_t *m_subcpu;
 	device_t *m_audiocpu;
+	DECLARE_WRITE8_MEMBER(bwp12_sharedram1_w);
+	DECLARE_WRITE8_MEMBER(bwp3_u8F_w);
+	DECLARE_WRITE8_MEMBER(bwp3_nmimask_w);
+	DECLARE_WRITE8_MEMBER(bwp3_nmiack_w);
+	DECLARE_READ8_MEMBER(bwp1_io_r);
+	DECLARE_WRITE8_MEMBER(bwp1_ctrl_w);
+	DECLARE_WRITE8_MEMBER(bwp2_ctrl_w);
+	DECLARE_WRITE8_MEMBER(bwing_spriteram_w);
+	DECLARE_WRITE8_MEMBER(bwing_videoram_w);
+	DECLARE_READ8_MEMBER(bwing_scrollram_r);
+	DECLARE_WRITE8_MEMBER(bwing_scrollram_w);
+	DECLARE_WRITE8_MEMBER(bwing_scrollreg_w);
+	DECLARE_WRITE8_MEMBER(bwing_paletteram_w);
 };
 
 
@@ -53,12 +66,6 @@ public:
 
 extern const gfx_layout bwing_tilelayout;
 
-WRITE8_HANDLER( bwing_paletteram_w );
-WRITE8_HANDLER( bwing_videoram_w );
-WRITE8_HANDLER( bwing_spriteram_w );
-WRITE8_HANDLER( bwing_scrollreg_w );
-WRITE8_HANDLER( bwing_scrollram_w );
-READ8_HANDLER( bwing_scrollram_r );
 
 VIDEO_START( bwing );
 SCREEN_UPDATE_IND16( bwing );

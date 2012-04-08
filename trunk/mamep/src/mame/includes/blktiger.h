@@ -39,21 +39,27 @@ public:
 	device_t *m_mcu;
 	device_t *m_audiocpu;
 	required_device<buffered_spriteram8_device> m_spriteram;
+	DECLARE_READ8_MEMBER(blktiger_from_mcu_r);
+	DECLARE_WRITE8_MEMBER(blktiger_to_mcu_w);
+	DECLARE_READ8_MEMBER(blktiger_from_main_r);
+	DECLARE_WRITE8_MEMBER(blktiger_to_main_w);
+	DECLARE_WRITE8_MEMBER(blktiger_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(blktiger_coinlockout_w);
+	DECLARE_WRITE8_MEMBER(blktiger_txvideoram_w);
+	DECLARE_READ8_MEMBER(blktiger_bgvideoram_r);
+	DECLARE_WRITE8_MEMBER(blktiger_bgvideoram_w);
+	DECLARE_WRITE8_MEMBER(blktiger_bgvideoram_bank_w);
+	DECLARE_WRITE8_MEMBER(blktiger_scrolly_w);
+	DECLARE_WRITE8_MEMBER(blktiger_scrollx_w);
+	DECLARE_WRITE8_MEMBER(blktiger_video_control_w);
+	DECLARE_WRITE8_MEMBER(blktiger_video_enable_w);
+	DECLARE_WRITE8_MEMBER(blktiger_screen_layout_w);
 };
 
 
 /*----------- defined in video/blktiger.c -----------*/
 
-WRITE8_HANDLER( blktiger_screen_layout_w );
 
-READ8_HANDLER( blktiger_bgvideoram_r );
-WRITE8_HANDLER( blktiger_bgvideoram_w );
-WRITE8_HANDLER( blktiger_txvideoram_w );
-WRITE8_HANDLER( blktiger_video_control_w );
-WRITE8_HANDLER( blktiger_video_enable_w );
-WRITE8_HANDLER( blktiger_bgvideoram_bank_w );
-WRITE8_HANDLER( blktiger_scrollx_w );
-WRITE8_HANDLER( blktiger_scrolly_w );
 
 VIDEO_START( blktiger );
 SCREEN_UPDATE_IND16( blktiger );

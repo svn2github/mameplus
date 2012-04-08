@@ -29,14 +29,15 @@ public:
 	device_t *m_k007121;
 
 	required_device<cpu_device> m_maincpu;
+	DECLARE_WRITE8_MEMBER(labyrunr_bankswitch_w);
+	DECLARE_WRITE8_MEMBER(labyrunr_vram1_w);
+	DECLARE_WRITE8_MEMBER(labyrunr_vram2_w);
 };
 
 
 /*----------- defined in video/labyrunr.c -----------*/
 
 
-WRITE8_HANDLER( labyrunr_vram1_w );
-WRITE8_HANDLER( labyrunr_vram2_w );
 
 PALETTE_INIT( labyrunr );
 VIDEO_START( labyrunr );

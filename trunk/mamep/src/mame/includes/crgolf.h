@@ -32,11 +32,20 @@ public:
 	/* devices */
 	device_t *m_maincpu;
 	device_t *m_audiocpu;
+	DECLARE_WRITE8_MEMBER(rom_bank_select_w);
+	DECLARE_READ8_MEMBER(switch_input_r);
+	DECLARE_READ8_MEMBER(analog_input_r);
+	DECLARE_WRITE8_MEMBER(switch_input_select_w);
+	DECLARE_WRITE8_MEMBER(unknown_w);
+	DECLARE_WRITE8_MEMBER(main_to_sound_w);
+	DECLARE_READ8_MEMBER(main_to_sound_r);
+	DECLARE_WRITE8_MEMBER(sound_to_main_w);
+	DECLARE_READ8_MEMBER(sound_to_main_r);
+	DECLARE_WRITE8_MEMBER(crgolf_videoram_w);
+	DECLARE_READ8_MEMBER(crgolf_videoram_r);
 };
 
 /*----------- defined in video/crgolf.c -----------*/
 
-WRITE8_HANDLER( crgolf_videoram_w );
-READ8_HANDLER( crgolf_videoram_r );
 
 MACHINE_CONFIG_EXTERN( crgolf_video );

@@ -29,6 +29,14 @@ public:
 	UINT8 m_0c03;
 	tilemap_t *m_bg_tilemap;
 	UINT8 *m_spriteram;
+	DECLARE_READ8_MEMBER(hsync_chain_r);
+	DECLARE_READ8_MEMBER(vsync_chain_hi_r);
+	DECLARE_READ8_MEMBER(vsync_chain_lo_r);
+	DECLARE_WRITE8_MEMBER(meadows_audio_w);
+	DECLARE_WRITE8_MEMBER(audio_hardware_w);
+	DECLARE_READ8_MEMBER(audio_hardware_r);
+	DECLARE_WRITE8_MEMBER(meadows_videoram_w);
+	DECLARE_WRITE8_MEMBER(meadows_spriteram_w);
 };
 
 
@@ -43,6 +51,4 @@ void meadows_sh_update(running_machine &machine);
 
 VIDEO_START( meadows );
 SCREEN_UPDATE_IND16( meadows );
-WRITE8_HANDLER( meadows_videoram_w );
-WRITE8_HANDLER( meadows_spriteram_w );
 

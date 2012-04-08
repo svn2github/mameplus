@@ -71,12 +71,11 @@ static WRITE8_DEVICE_HANDLER( zaccaria_dsw_sel_w )
 	}
 }
 
-static READ8_HANDLER( zaccaria_dsw_r )
+READ8_MEMBER(zaccaria_state::zaccaria_dsw_r)
 {
-	zaccaria_state *state = space->machine().driver_data<zaccaria_state>();
 	static const char *const dswnames[] = { "IN0", "DSW0", "DSW1" };
 
-	return input_port_read(space->machine(), dswnames[state->m_dsw]);
+	return input_port_read(machine(), dswnames[m_dsw]);
 }
 
 
@@ -183,15 +182,15 @@ static WRITE8_DEVICE_HANDLER( zaccaria_port1b_w )
 }
 
 
-static WRITE8_HANDLER( sound_command_w )
+WRITE8_MEMBER(zaccaria_state::sound_command_w)
 {
 	soundlatch_w(space, 0, data);
-	cputag_set_input_line(space->machine(), "audio2", 0, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
+	cputag_set_input_line(machine(), "audio2", 0, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
 }
 
-static WRITE8_HANDLER( sound1_command_w )
+WRITE8_MEMBER(zaccaria_state::sound1_command_w)
 {
-	pia6821_device *pia0 = space->machine().device<pia6821_device>("pia0");
+	pia6821_device *pia0 = machine().device<pia6821_device>("pia0");
 	pia0->ca1_w(data & 0x80);
 	soundlatch2_w(space, 0, data);
 }
@@ -204,7 +203,7 @@ static WRITE8_DEVICE_HANDLER( mc1408_data_w )
 
 GAME_EXTERN(monymony);
 
-static READ8_HANDLER( zaccaria_prot1_r )
+READ8_MEMBER(zaccaria_state::zaccaria_prot1_r)
 {
 	switch (offset)
 	{
@@ -215,7 +214,7 @@ static READ8_HANDLER( zaccaria_prot1_r )
 			return 0x40;    /* Jack Rabbit */
 
 		case 6:
-			if (&space->machine().system() == &GAME_NAME(monymony))
+			if (&machine().system() == &GAME_NAME(monymony))
 				return 0x70;    /* Money Money */
 			return 0xa0;    /* Jack Rabbit */
 
@@ -224,12 +223,12 @@ static READ8_HANDLER( zaccaria_prot1_r )
 	}
 }
 
-static READ8_HANDLER( zaccaria_prot2_r )
+READ8_MEMBER(zaccaria_state::zaccaria_prot2_r)
 {
 	switch (offset)
 	{
 		case 0:
-			return input_port_read(space->machine(), "COINS");   /* bits 4 and 5 must be 0 in Jack Rabbit */
+			return input_port_read(machine(), "COINS");   /* bits 4 and 5 must be 0 in Jack Rabbit */
 
 		case 2:
 			return 0x10;    /* Jack Rabbit */
@@ -246,26 +245,25 @@ static READ8_HANDLER( zaccaria_prot2_r )
 }
 
 
-static WRITE8_HANDLER( coin_w )
+WRITE8_MEMBER(zaccaria_state::coin_w)
 {
-	coin_counter_w(space->machine(), 0,data & 1);
+	coin_counter_w(machine(), 0,data & 1);
 }
 
-static WRITE8_HANDLER( nmi_mask_w )
+WRITE8_MEMBER(zaccaria_state::nmi_mask_w)
 {
-	zaccaria_state *state = space->machine().driver_data<zaccaria_state>();
 
-	state->m_nmi_mask = data & 1;
+	m_nmi_mask = data & 1;
 }
 
-static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, zaccaria_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x63ff) AM_READONLY
 	AM_RANGE(0x6400, 0x6407) AM_READ(zaccaria_prot1_r)
-	AM_RANGE(0x6000, 0x67ff) AM_WRITE(zaccaria_videoram_w) AM_BASE_MEMBER(zaccaria_state, m_videoram)	/* 6400-67ff is 4 bits wide */
-	AM_RANGE(0x6800, 0x683f) AM_WRITE(zaccaria_attributes_w) AM_BASE_MEMBER(zaccaria_state, m_attributesram)
-	AM_RANGE(0x6840, 0x685f) AM_RAM AM_BASE_MEMBER(zaccaria_state, m_spriteram)
-	AM_RANGE(0x6881, 0x68c0) AM_RAM AM_BASE_MEMBER(zaccaria_state, m_spriteram2)
+	AM_RANGE(0x6000, 0x67ff) AM_WRITE(zaccaria_videoram_w) AM_BASE(m_videoram)	/* 6400-67ff is 4 bits wide */
+	AM_RANGE(0x6800, 0x683f) AM_WRITE(zaccaria_attributes_w) AM_BASE(m_attributesram)
+	AM_RANGE(0x6840, 0x685f) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x6881, 0x68c0) AM_RAM AM_BASE(m_spriteram2)
 	AM_RANGE(0x6c00, 0x6c00) AM_WRITE(zaccaria_flip_screen_x_w)
 	AM_RANGE(0x6c01, 0x6c01) AM_WRITE(zaccaria_flip_screen_y_w)
 	AM_RANGE(0x6c02, 0x6c02) AM_WRITENOP    /* sound reset */
@@ -274,7 +272,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
 	AM_RANGE(0x6c00, 0x6c07) AM_READ(zaccaria_prot2_r)
 	AM_RANGE(0x6e00, 0x6e00) AM_READWRITE(zaccaria_dsw_r, sound_command_w)
 	AM_RANGE(0x7000, 0x77ff) AM_RAM
-	AM_RANGE(0x7800, 0x7803) AM_DEVREADWRITE("ppi8255", ppi8255_r, ppi8255_w)
+	AM_RANGE(0x7800, 0x7803) AM_DEVREADWRITE_LEGACY("ppi8255", ppi8255_r, ppi8255_w)
 	AM_RANGE(0x7c00, 0x7c00) AM_READ(watchdog_reset_r)
 	AM_RANGE(0x8000, 0xdfff) AM_ROM
 ADDRESS_MAP_END
@@ -300,9 +298,9 @@ ADDRESS_MAP_END
 
      6821 PIA: CA1 comes from the master sound cpu's latch bit 7 (which is also connected to the AY chip at 4G's IOB1); CB1 comes from a periodic counter clocked by the 6802's clock, divided by 4096. CA2 and CB2 are disconnected. PA0-7 connect to the data busses of the AY-3-8910 chips; PB0 and PB1 connect to the BC1 and BDIR pins of the AY chip at 4G; PB2 and PB3 connect to the BC1 and BDIR pins of the AY chip at 4H.
 */
-static ADDRESS_MAP_START( sound_map_1, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map_1, AS_PROGRAM, 8, zaccaria_state )
 	AM_RANGE(0x0000, 0x007f) AM_RAM
-	AM_RANGE(0x500c, 0x500f) AM_DEVREADWRITE_MODERN("pia0", pia6821_device, read, write) AM_MIRROR(0x1ff0)
+	AM_RANGE(0x500c, 0x500f) AM_DEVREADWRITE("pia0", pia6821_device, read, write) AM_MIRROR(0x1ff0)
 	AM_RANGE(0x8000, 0x9fff) AM_ROM AM_MIRROR(0x2000) // rom 13
 	AM_RANGE(0xc000, 0xdfff) AM_ROM AM_MIRROR(0x2000) // rom 9
 ADDRESS_MAP_END
@@ -327,10 +325,10 @@ ADDRESS_MAP_END
 
      6821 PIA: PA0-7, CA2 and CB1 connect to the TMS5200; CA1 and CB2 are disconnected, though the test mode assumes there's something connected to CB2 (possibly another LED like the one connected to PB4); PB3 connects to 'ACS' which goes to the z80.
 */
-static ADDRESS_MAP_START( sound_map_2, AS_PROGRAM, 8 )
+static ADDRESS_MAP_START( sound_map_2, AS_PROGRAM, 8, zaccaria_state )
 	AM_RANGE(0x0000, 0x007f) AM_RAM /* 6802 internal ram */
-	AM_RANGE(0x0090, 0x0093) AM_DEVREADWRITE_MODERN("pia1", pia6821_device, read, write) AM_MIRROR(0x8F6C)
-	AM_RANGE(0x1000, 0x1000) AM_DEVWRITE("dac2", mc1408_data_w) AM_MIRROR(0x83FF) /* MC1408 */
+	AM_RANGE(0x0090, 0x0093) AM_DEVREADWRITE("pia1", pia6821_device, read, write) AM_MIRROR(0x8F6C)
+	AM_RANGE(0x1000, 0x1000) AM_DEVWRITE_LEGACY("dac2", mc1408_data_w) AM_MIRROR(0x83FF) /* MC1408 */
 	AM_RANGE(0x1400, 0x1400) AM_WRITE(sound1_command_w) AM_MIRROR(0xC3FF)
 	AM_RANGE(0x1800, 0x1800) AM_READ(soundlatch_r) AM_MIRROR(0xC3FF)
 	AM_RANGE(0x2000, 0x2fff) AM_ROM AM_MIRROR(0x8000) // rom 8 with A12 low
@@ -534,7 +532,7 @@ static const ay8910_interface ay8910_config =
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
 	DEVCB_NULL,
-	DEVCB_MEMORY_HANDLER("audiocpu", PROGRAM, soundlatch2_r),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch2_r),
 	DEVCB_HANDLER(ay8910_port0a_w),
 	DEVCB_NULL
 };

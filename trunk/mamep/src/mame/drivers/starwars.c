@@ -57,7 +57,7 @@ static MACHINE_RESET( starwars )
 		memcpy(state->m_slapstic_base, &state->m_slapstic_source[state->m_slapstic_current_bank * 0x2000], 0x2000);
 
 		/* reset all the banks */
-		starwars_out_w(space, 4, 0);
+		state->starwars_out_w(*space, 4, 0);
 	}
 
 	/* reset the matrix processor */
@@ -72,9 +72,9 @@ static MACHINE_RESET( starwars )
  *
  *************************************/
 
-static WRITE8_HANDLER( irq_ack_w )
+WRITE8_MEMBER(starwars_state::irq_ack_w)
 {
-	cputag_set_input_line(space->machine(), "maincpu", M6809_IRQ_LINE, CLEAR_LINE);
+	cputag_set_input_line(machine(), "maincpu", M6809_IRQ_LINE, CLEAR_LINE);
 }
 
 
@@ -99,18 +99,17 @@ static void esb_slapstic_tweak(address_space *space, offs_t offset)
 }
 
 
-static READ8_HANDLER( esb_slapstic_r )
+READ8_MEMBER(starwars_state::esb_slapstic_r)
 {
-	starwars_state *state = space->machine().driver_data<starwars_state>();
-	int result = state->m_slapstic_base[offset];
-	esb_slapstic_tweak(space, offset);
+	int result = m_slapstic_base[offset];
+	esb_slapstic_tweak(&space, offset);
 	return result;
 }
 
 
-static WRITE8_HANDLER( esb_slapstic_w )
+WRITE8_MEMBER(starwars_state::esb_slapstic_w)
 {
-	esb_slapstic_tweak(space, offset);
+	esb_slapstic_tweak(&space, offset);
 }
 
 
@@ -153,31 +152,31 @@ DIRECT_UPDATE_HANDLER( esb_setdirect )
  *
  *************************************/
 
-static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x2fff) AM_RAM AM_BASE(&avgdvg_vectorram) AM_SIZE(&avgdvg_vectorram_size) AM_REGION("maincpu", 0)
+static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, starwars_state )
+	AM_RANGE(0x0000, 0x2fff) AM_RAM AM_BASE_LEGACY(&avgdvg_vectorram) AM_SIZE_LEGACY(&avgdvg_vectorram_size) AM_REGION("maincpu", 0)
 	AM_RANGE(0x3000, 0x3fff) AM_ROM								/* vector_rom */
 	AM_RANGE(0x4300, 0x431f) AM_READ_PORT("IN0")
 	AM_RANGE(0x4320, 0x433f) AM_READ_PORT("IN1")
 	AM_RANGE(0x4340, 0x435f) AM_READ_PORT("DSW0")
 	AM_RANGE(0x4360, 0x437f) AM_READ_PORT("DSW1")
 	AM_RANGE(0x4380, 0x439f) AM_READ(starwars_adc_r)			/* a-d control result */
-	AM_RANGE(0x4400, 0x4400) AM_READWRITE(starwars_main_read_r, starwars_main_wr_w)
-	AM_RANGE(0x4401, 0x4401) AM_READ(starwars_main_ready_flag_r)
-	AM_RANGE(0x4500, 0x45ff) AM_DEVREADWRITE_MODERN("x2212", x2212_device, read, write)
-	AM_RANGE(0x4600, 0x461f) AM_WRITE(avgdvg_go_w)
-	AM_RANGE(0x4620, 0x463f) AM_WRITE(avgdvg_reset_w)
+	AM_RANGE(0x4400, 0x4400) AM_READWRITE_LEGACY(starwars_main_read_r, starwars_main_wr_w)
+	AM_RANGE(0x4401, 0x4401) AM_READ_LEGACY(starwars_main_ready_flag_r)
+	AM_RANGE(0x4500, 0x45ff) AM_DEVREADWRITE("x2212", x2212_device, read, write)
+	AM_RANGE(0x4600, 0x461f) AM_WRITE_LEGACY(avgdvg_go_w)
+	AM_RANGE(0x4620, 0x463f) AM_WRITE_LEGACY(avgdvg_reset_w)
 	AM_RANGE(0x4640, 0x465f) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x4660, 0x467f) AM_WRITE(irq_ack_w)
 	AM_RANGE(0x4680, 0x469f) AM_READNOP AM_WRITE(starwars_out_w)
 	AM_RANGE(0x46a0, 0x46bf) AM_WRITE(starwars_nstore_w)
 	AM_RANGE(0x46c0, 0x46c2) AM_WRITE(starwars_adc_select_w)
-	AM_RANGE(0x46e0, 0x46e0) AM_WRITE(starwars_soundrst_w)
+	AM_RANGE(0x46e0, 0x46e0) AM_WRITE_LEGACY(starwars_soundrst_w)
 	AM_RANGE(0x4700, 0x4707) AM_WRITE(starwars_math_w)
 	AM_RANGE(0x4700, 0x4700) AM_READ(starwars_div_reh_r)
 	AM_RANGE(0x4701, 0x4701) AM_READ(starwars_div_rel_r)
 	AM_RANGE(0x4703, 0x4703) AM_READ(starwars_prng_r)			/* pseudo random number generator */
 	AM_RANGE(0x4800, 0x4fff) AM_RAM								/* CPU and Math RAM */
-	AM_RANGE(0x5000, 0x5fff) AM_RAM AM_BASE_MEMBER(starwars_state, m_mathram)	/* CPU and Math RAM */
+	AM_RANGE(0x5000, 0x5fff) AM_RAM AM_BASE(m_mathram)	/* CPU and Math RAM */
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank1")						/* banked ROM */
 	AM_RANGE(0x8000, 0xffff) AM_ROM								/* rest of main_rom */
 ADDRESS_MAP_END
@@ -190,12 +189,12 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x07ff) AM_WRITE(starwars_sout_w)
-	AM_RANGE(0x0800, 0x0fff) AM_READ(starwars_sin_r)		/* SIN Read */
+static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, starwars_state )
+	AM_RANGE(0x0000, 0x07ff) AM_WRITE_LEGACY(starwars_sout_w)
+	AM_RANGE(0x0800, 0x0fff) AM_READ_LEGACY(starwars_sin_r)		/* SIN Read */
 	AM_RANGE(0x1000, 0x107f) AM_RAM							/* 6532 ram */
-	AM_RANGE(0x1080, 0x109f) AM_DEVREADWRITE("riot", riot6532_r, riot6532_w)
-	AM_RANGE(0x1800, 0x183f) AM_WRITE(quad_pokey_w)
+	AM_RANGE(0x1080, 0x109f) AM_DEVREADWRITE_LEGACY("riot", riot6532_r, riot6532_w)
+	AM_RANGE(0x1800, 0x183f) AM_WRITE_LEGACY(quad_pokey_w)
 	AM_RANGE(0x2000, 0x27ff) AM_RAM							/* program RAM */
 	AM_RANGE(0x4000, 0x7fff) AM_ROM							/* sound roms */
 	AM_RANGE(0xb000, 0xffff) AM_ROM							/* more sound roms */
@@ -524,7 +523,7 @@ static DRIVER_INIT( esb )
 	space->set_direct_update_handler(direct_update_delegate(FUNC(esb_setdirect), &machine));
 
 	/* install read/write handlers for it */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x8000, 0x9fff, FUNC(esb_slapstic_r), FUNC(esb_slapstic_w));
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x8000, 0x9fff, read8_delegate(FUNC(starwars_state::esb_slapstic_r),state), write8_delegate(FUNC(starwars_state::esb_slapstic_w),state));
 
 	/* install additional banking */
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xa000, 0xffff, "bank2");

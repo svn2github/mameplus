@@ -22,20 +22,27 @@ public:
 	UINT8 m_main_irq_mask;
 	UINT8 m_sub_irq_mask;
 	UINT8 m_sub2_irq_mask;
+	DECLARE_READ8_MEMBER(gaplus_spriteram_r);
+	DECLARE_WRITE8_MEMBER(gaplus_spriteram_w);
+	DECLARE_WRITE8_MEMBER(gaplus_irq_1_ctrl_w);
+	DECLARE_WRITE8_MEMBER(gaplus_irq_2_ctrl_w);
+	DECLARE_WRITE8_MEMBER(gaplus_irq_3_ctrl_w);
+	DECLARE_WRITE8_MEMBER(gaplus_sreset_w);
+	DECLARE_WRITE8_MEMBER(gaplus_freset_w);
+	DECLARE_WRITE8_MEMBER(gaplus_customio_3_w);
+	DECLARE_READ8_MEMBER(gaplus_customio_3_r);
+	DECLARE_READ8_MEMBER(gaplus_videoram_r);
+	DECLARE_WRITE8_MEMBER(gaplus_videoram_w);
+	DECLARE_WRITE8_MEMBER(gaplus_starfield_control_w);
 };
 
 
 /*----------- defined in machine/gaplus.c -----------*/
 
-WRITE8_HANDLER( gaplus_customio_3_w );
-READ8_HANDLER( gaplus_customio_3_r );
 
 
 /*----------- defined in video/gaplus.c -----------*/
 
-READ8_HANDLER( gaplus_videoram_r );
-WRITE8_HANDLER( gaplus_videoram_w );
-WRITE8_HANDLER( gaplus_starfield_control_w );
 VIDEO_START( gaplus );
 PALETTE_INIT( gaplus );
 SCREEN_UPDATE_IND16( gaplus );

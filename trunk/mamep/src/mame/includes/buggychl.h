@@ -34,16 +34,21 @@ public:
 
 	/* devices */
 	device_t *m_audiocpu;
+	DECLARE_WRITE8_MEMBER(bankswitch_w);
+	DECLARE_WRITE8_MEMBER(sound_command_w);
+	DECLARE_WRITE8_MEMBER(nmi_disable_w);
+	DECLARE_WRITE8_MEMBER(nmi_enable_w);
+	DECLARE_WRITE8_MEMBER(sound_enable_w);
+	DECLARE_WRITE8_MEMBER(buggychl_chargen_w);
+	DECLARE_WRITE8_MEMBER(buggychl_sprite_lookup_bank_w);
+	DECLARE_WRITE8_MEMBER(buggychl_sprite_lookup_w);
+	DECLARE_WRITE8_MEMBER(buggychl_ctrl_w);
+	DECLARE_WRITE8_MEMBER(buggychl_bg_scrollx_w);
 };
 
 
 /*----------- defined in video/buggychl.c -----------*/
 
-WRITE8_HANDLER( buggychl_chargen_w );
-WRITE8_HANDLER( buggychl_sprite_lookup_bank_w );
-WRITE8_HANDLER( buggychl_sprite_lookup_w );
-WRITE8_HANDLER( buggychl_ctrl_w );
-WRITE8_HANDLER( buggychl_bg_scrollx_w );
 
 PALETTE_INIT( buggychl );
 VIDEO_START( buggychl );

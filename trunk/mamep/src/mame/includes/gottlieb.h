@@ -240,16 +240,24 @@ public:
 	tilemap_t *m_bg_tilemap;
 	double m_weights[4];
 	UINT8 *m_spriteram;
+	DECLARE_WRITE8_MEMBER(gottlieb_analog_reset_w);
+	DECLARE_WRITE8_MEMBER(general_output_w);
+	DECLARE_WRITE8_MEMBER(reactor_output_w);
+	DECLARE_WRITE8_MEMBER(stooges_output_w);
+	DECLARE_READ8_MEMBER(laserdisc_status_r);
+	DECLARE_WRITE8_MEMBER(laserdisc_select_w);
+	DECLARE_WRITE8_MEMBER(laserdisc_command_w);
+	DECLARE_WRITE8_MEMBER(gottlieb_sh_w);
+	DECLARE_WRITE8_MEMBER(gottlieb_paletteram_w);
+	DECLARE_WRITE8_MEMBER(gottlieb_video_control_w);
+	DECLARE_WRITE8_MEMBER(gottlieb_laserdisc_video_control_w);
+	DECLARE_WRITE8_MEMBER(gottlieb_videoram_w);
+	DECLARE_WRITE8_MEMBER(gottlieb_charram_w);
 };
 
 
 /*----------- defined in video/gottlieb.c -----------*/
 
-extern WRITE8_HANDLER( gottlieb_videoram_w );
-extern WRITE8_HANDLER( gottlieb_charram_w );
-extern WRITE8_HANDLER( gottlieb_video_control_w );
-extern WRITE8_HANDLER( gottlieb_laserdisc_video_control_w );
-extern WRITE8_HANDLER( gottlieb_paletteram_w );
 
 VIDEO_START( gottlieb );
 VIDEO_START( screwloo );

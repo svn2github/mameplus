@@ -109,19 +109,50 @@ public:
 	required_device<timer_device> m_int_timer;
 	int m_rasflag;
 	int m_old_rasflag;
+	DECLARE_READ16_MEMBER(cave_irq_cause_r);
+	DECLARE_READ8_MEMBER(soundflags_r);
+	DECLARE_READ16_MEMBER(soundflags_ack_r);
+	DECLARE_WRITE16_MEMBER(sound_cmd_w);
+	DECLARE_READ8_MEMBER(soundlatch_lo_r);
+	DECLARE_READ8_MEMBER(soundlatch_hi_r);
+	DECLARE_READ16_MEMBER(soundlatch_ack_r);
+	DECLARE_WRITE8_MEMBER(soundlatch_ack_w);
+	DECLARE_WRITE16_MEMBER(gaia_coin_lsb_w);
+	DECLARE_READ16_MEMBER(donpachi_videoregs_r);
+	DECLARE_WRITE16_MEMBER(korokoro_leds_w);
+	DECLARE_WRITE16_MEMBER(pwrinst2_vctrl_0_w);
+	DECLARE_WRITE16_MEMBER(pwrinst2_vctrl_1_w);
+	DECLARE_WRITE16_MEMBER(pwrinst2_vctrl_2_w);
+	DECLARE_WRITE16_MEMBER(pwrinst2_vctrl_3_w);
+	DECLARE_READ16_MEMBER(sailormn_input0_r);
+	DECLARE_WRITE16_MEMBER(tjumpman_leds_w);
+	DECLARE_WRITE16_MEMBER(pacslot_leds_w);
+	DECLARE_WRITE8_MEMBER(hotdogst_rombank_w);
+	DECLARE_WRITE8_MEMBER(hotdogst_okibank_w);
+	DECLARE_WRITE8_MEMBER(mazinger_rombank_w);
+	DECLARE_WRITE8_MEMBER(metmqstr_rombank_w);
+	DECLARE_WRITE8_MEMBER(metmqstr_okibank0_w);
+	DECLARE_WRITE8_MEMBER(metmqstr_okibank1_w);
+	DECLARE_WRITE8_MEMBER(pwrinst2_rombank_w);
+	DECLARE_READ8_MEMBER(mirror_ram_r);
+	DECLARE_WRITE8_MEMBER(mirror_ram_w);
+	DECLARE_WRITE8_MEMBER(sailormn_rombank_w);
+	DECLARE_WRITE8_MEMBER(sailormn_okibank0_w);
+	DECLARE_WRITE8_MEMBER(sailormn_okibank1_w);
+	DECLARE_WRITE16_MEMBER(donpachi_videoregs_w);
+	DECLARE_WRITE16_MEMBER(cave_vram_0_w);
+	DECLARE_WRITE16_MEMBER(cave_vram_1_w);
+	DECLARE_WRITE16_MEMBER(cave_vram_2_w);
+	DECLARE_WRITE16_MEMBER(cave_vram_3_w);
+	DECLARE_WRITE16_MEMBER(cave_vram_0_8x8_w);
+	DECLARE_WRITE16_MEMBER(cave_vram_1_8x8_w);
+	DECLARE_WRITE16_MEMBER(cave_vram_2_8x8_w);
+	DECLARE_WRITE16_MEMBER(cave_vram_3_8x8_w);
 };
 
 /*----------- defined in video/cave.c -----------*/
 
-WRITE16_HANDLER( cave_vram_0_w );
-WRITE16_HANDLER( cave_vram_1_w );
-WRITE16_HANDLER( cave_vram_2_w );
-WRITE16_HANDLER( cave_vram_3_w );
 
-WRITE16_HANDLER( cave_vram_0_8x8_w );
-WRITE16_HANDLER( cave_vram_1_8x8_w );
-WRITE16_HANDLER( cave_vram_2_8x8_w );
-WRITE16_HANDLER( cave_vram_3_8x8_w );
 
 PALETTE_INIT( cave );
 PALETTE_INIT( ddonpach );

@@ -37,26 +37,57 @@ public:
 	UINT8 m_lucky8_nmi_enable;
 	int m_tile_bank;
 
+	DECLARE_WRITE8_MEMBER(protection_w);
+	DECLARE_READ8_MEMBER(protection_r);
+	DECLARE_WRITE8_MEMBER(ncb3_port81_w);
+	DECLARE_WRITE8_MEMBER(cm_outport1_w);
+	DECLARE_WRITE8_MEMBER(lucky8_outport_w);
+	DECLARE_WRITE8_MEMBER(magodds_outb850_w);
+	DECLARE_WRITE8_MEMBER(magodds_outb860_w);
+	DECLARE_WRITE8_MEMBER(ladylinr_outport_w);
+	DECLARE_READ8_MEMBER(unkch_unk_r);
+	DECLARE_WRITE8_MEMBER(unkcm_0x02_w);
+	DECLARE_WRITE8_MEMBER(unkcm_0x03_w);
+	DECLARE_WRITE8_MEMBER(unkcm_0x11_w);
+	DECLARE_WRITE8_MEMBER(unkcm_0x12_w);
+	DECLARE_READ8_MEMBER(fixedvalb4_r);
+	DECLARE_READ8_MEMBER(fixedvala8_r);
+	DECLARE_READ8_MEMBER(fixedval38_r);
+	DECLARE_READ8_MEMBER(fixedvalea_r);
+	DECLARE_READ8_MEMBER(fixedval68_r);
+	DECLARE_READ8_MEMBER(fixedval58_r);
+	DECLARE_READ8_MEMBER(fixedval80_r);
+	DECLARE_READ8_MEMBER(fixedval96_r);
+	DECLARE_READ8_MEMBER(fixedvalaa_r);
+	DECLARE_READ8_MEMBER(fixedvalbe_r);
+	DECLARE_READ8_MEMBER(fixedval90_r);
+	DECLARE_READ8_MEMBER(fixedval84_r);
+	DECLARE_READ8_MEMBER(fixedvalb2_r);
+	DECLARE_READ8_MEMBER(fixedval48_r);
+	DECLARE_READ8_MEMBER(fixedval09_r);
+	DECLARE_READ8_MEMBER(fixedval74_r);
+	DECLARE_READ8_MEMBER(fixedvale4_r);
+	DECLARE_READ8_MEMBER(fixedvalc7_r);
+	DECLARE_WRITE8_MEMBER(cm_girl_scroll_w);
+	DECLARE_WRITE8_MEMBER(cm_outport0_w);
+	DECLARE_WRITE8_MEMBER(goldstar_fg_vidram_w);
+	DECLARE_WRITE8_MEMBER(goldstar_fg_atrram_w);
+	DECLARE_WRITE8_MEMBER(goldstar_reel1_ram_w);
+	DECLARE_WRITE8_MEMBER(goldstar_reel2_ram_w);
+	DECLARE_WRITE8_MEMBER(goldstar_reel3_ram_w);
+	DECLARE_WRITE8_MEMBER(unkch_reel1_attrram_w);
+	DECLARE_WRITE8_MEMBER(unkch_reel2_attrram_w);
+	DECLARE_WRITE8_MEMBER(unkch_reel3_attrram_w);
+	DECLARE_WRITE8_MEMBER(goldstar_fa00_w);
+	DECLARE_WRITE8_MEMBER(cm_background_col_w);
 };
 
 
 /*----------- defined in video/goldstar.c -----------*/
 
-WRITE8_HANDLER( goldstar_reel1_ram_w );
-WRITE8_HANDLER( goldstar_reel2_ram_w );
-WRITE8_HANDLER( goldstar_reel3_ram_w );
 
-WRITE8_HANDLER( unkch_reel1_attrram_w );
-WRITE8_HANDLER( unkch_reel2_attrram_w );
-WRITE8_HANDLER( unkch_reel3_attrram_w );
 
-WRITE8_HANDLER( goldstar_fg_vidram_w );
-WRITE8_HANDLER( goldstar_fg_atrram_w );
-WRITE8_HANDLER( cm_girl_scroll_w );
 
-WRITE8_HANDLER( goldstar_fa00_w );
-WRITE8_HANDLER( cm_background_col_w );
-WRITE8_HANDLER( cm_outport0_w );
 VIDEO_START( goldstar );
 VIDEO_START( bingowng );
 VIDEO_START( cherrym );

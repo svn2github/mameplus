@@ -39,6 +39,20 @@ public:
 	tilemap_t *	m_right_tilemap;
 
 	rgb_t		m_bgcolor[0x20];
+	DECLARE_WRITE8_MEMBER(cpu0_outputs_w);
+	DECLARE_WRITE8_MEMBER(led_board_w);
+	DECLARE_WRITE8_MEMBER(cpu1_outputs_w);
+	DECLARE_READ8_MEMBER(pc3259_0_r);
+	DECLARE_READ8_MEMBER(pc3259_1_r);
+	DECLARE_READ8_MEMBER(pc3259_2_r);
+	DECLARE_READ8_MEMBER(pc3259_3_r);
+	DECLARE_READ8_MEMBER(sub_to_main_comm_r);
+	DECLARE_WRITE8_MEMBER(main_to_sub_comm_w);
+	DECLARE_READ8_MEMBER(main_to_sub_comm_r);
+	UINT8 get_pc3259_bits(int offs);
+	DECLARE_WRITE8_MEMBER(grchamp_left_w);
+	DECLARE_WRITE8_MEMBER(grchamp_center_w);
+	DECLARE_WRITE8_MEMBER(grchamp_right_w);
 };
 
 /* Discrete Sound Input Nodes */
@@ -61,6 +75,3 @@ DISCRETE_SOUND_EXTERN( grchamp );
 PALETTE_INIT( grchamp );
 VIDEO_START( grchamp );
 SCREEN_UPDATE_RGB32( grchamp );
-WRITE8_HANDLER( grchamp_left_w );
-WRITE8_HANDLER( grchamp_center_w );
-WRITE8_HANDLER( grchamp_right_w );

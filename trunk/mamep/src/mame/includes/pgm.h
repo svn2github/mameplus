@@ -9,10 +9,6 @@
 
 #define PGMARM7LOGERROR 0
 
-//mamep: hack defs
-//#define PGMSPEEDHACK 1
-//#define PGMREGIONHACK 1
-
 class pgm_state : public driver_device
 {
 public:
@@ -63,6 +59,16 @@ public:
 	system_time  m_systime;
 
 
+	DECLARE_READ16_MEMBER(pgm_videoram_r);
+	DECLARE_WRITE16_MEMBER(pgm_videoram_w);
+	DECLARE_READ16_MEMBER(z80_ram_r);
+	DECLARE_WRITE16_MEMBER(z80_ram_w);
+	DECLARE_WRITE16_MEMBER(z80_reset_w);
+	DECLARE_WRITE16_MEMBER(z80_ctrl_w);
+	DECLARE_WRITE16_MEMBER(m68k_l1_w);
+	DECLARE_WRITE8_MEMBER(z80_l3_w);
+	DECLARE_WRITE16_MEMBER(pgm_tx_videoram_w);
+	DECLARE_WRITE16_MEMBER(pgm_bg_videoram_w);
 };
 
 
@@ -114,7 +120,7 @@ public:
 	UINT16 m_kov_c0_value;
 	UINT16 m_kov_cb_value;
 	UINT16 m_kov_fe_value;
-	UINT16        m_extra_ram[0x100];
+	UINT16 m_extra_ram[0x100];
 	// puzzli2
 	INT32 m_puzzli_54_trigger;
 
@@ -319,6 +325,7 @@ DRIVER_INIT( ddp2 );
 /* simulations (or missing) */
 
 DRIVER_INIT( dw2001 );
+DRIVER_INIT( dwpc );
 
 INPUT_PORTS_EXTERN( ddp2 );
 INPUT_PORTS_EXTERN( kov2 );
@@ -365,8 +372,6 @@ INPUT_PORTS_EXTERN( olds );
 
 /*----------- defined in video/pgm.c -----------*/
 
-WRITE16_HANDLER( pgm_tx_videoram_w );
-WRITE16_HANDLER( pgm_bg_videoram_w );
 
 VIDEO_START( pgm );
 SCREEN_VBLANK( pgm );

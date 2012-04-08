@@ -16,6 +16,18 @@ public:
 	int m_collision[4];
 	tilemap_t* m_playfield;
 	bitmap_ind16 m_helper;
+	DECLARE_READ8_MEMBER(ultratnk_wram_r);
+	DECLARE_READ8_MEMBER(ultratnk_analog_r);
+	DECLARE_READ8_MEMBER(ultratnk_coin_r);
+	DECLARE_READ8_MEMBER(ultratnk_collision_r);
+	DECLARE_READ8_MEMBER(ultratnk_options_r);
+	DECLARE_WRITE8_MEMBER(ultratnk_wram_w);
+	DECLARE_WRITE8_MEMBER(ultratnk_collision_reset_w);
+	DECLARE_WRITE8_MEMBER(ultratnk_da_latch_w);
+	DECLARE_WRITE8_MEMBER(ultratnk_led_1_w);
+	DECLARE_WRITE8_MEMBER(ultratnk_led_2_w);
+	DECLARE_WRITE8_MEMBER(ultratnk_lockout_w);
+	DECLARE_WRITE8_MEMBER(ultratnk_video_ram_w);
 };
 
 
@@ -26,4 +38,3 @@ VIDEO_START( ultratnk );
 SCREEN_UPDATE_IND16( ultratnk );
 SCREEN_VBLANK( ultratnk );
 
-WRITE8_HANDLER( ultratnk_video_ram_w );

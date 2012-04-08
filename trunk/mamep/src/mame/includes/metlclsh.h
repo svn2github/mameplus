@@ -29,15 +29,21 @@ public:
 	/* devices */
 	device_t *m_maincpu;
 	device_t *m_subcpu;
+	DECLARE_WRITE8_MEMBER(metlclsh_cause_irq);
+	DECLARE_WRITE8_MEMBER(metlclsh_ack_nmi);
+	DECLARE_WRITE8_MEMBER(metlclsh_cause_nmi2);
+	DECLARE_WRITE8_MEMBER(metlclsh_ack_irq2);
+	DECLARE_WRITE8_MEMBER(metlclsh_ack_nmi2);
+	DECLARE_WRITE8_MEMBER(metlclsh_flipscreen_w);
+	DECLARE_WRITE8_MEMBER(metlclsh_rambank_w);
+	DECLARE_WRITE8_MEMBER(metlclsh_gfxbank_w);
+	DECLARE_WRITE8_MEMBER(metlclsh_bgram_w);
+	DECLARE_WRITE8_MEMBER(metlclsh_fgram_w);
 };
 
 
 /*----------- defined in video/metlclsh.c -----------*/
 
-WRITE8_HANDLER( metlclsh_bgram_w );
-WRITE8_HANDLER( metlclsh_fgram_w );
-WRITE8_HANDLER( metlclsh_gfxbank_w );
-WRITE8_HANDLER( metlclsh_rambank_w );
 
 VIDEO_START( metlclsh );
 SCREEN_UPDATE_IND16( metlclsh );

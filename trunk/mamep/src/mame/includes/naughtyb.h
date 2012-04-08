@@ -15,13 +15,19 @@ public:
 	UINT8 m_palreg;
 	int m_bankreg;
 	bitmap_ind16 m_tmpbitmap;
+	DECLARE_READ8_MEMBER(in0_port_r);
+	DECLARE_READ8_MEMBER(dsw0_port_r);
+	DECLARE_READ8_MEMBER(popflame_protection_r);
+	DECLARE_WRITE8_MEMBER(popflame_protection_w);
+	DECLARE_READ8_MEMBER(trvmstr_questions_r);
+	DECLARE_WRITE8_MEMBER(trvmstr_questions_w);
+	DECLARE_WRITE8_MEMBER(naughtyb_videoreg_w);
+	DECLARE_WRITE8_MEMBER(popflame_videoreg_w);
 };
 
 
 /*----------- defined in video/naughtyb.c -----------*/
 
-WRITE8_HANDLER( naughtyb_videoreg_w );
-WRITE8_HANDLER( popflame_videoreg_w );
 
 VIDEO_START( naughtyb );
 PALETTE_INIT( naughtyb );

@@ -15,15 +15,19 @@ public:
 	tilemap_t *m_fg_tilemap;
 
 	required_device<cpu_device> m_maincpu;
+	DECLARE_WRITE8_MEMBER(iqblock_prot_w);
+	DECLARE_WRITE8_MEMBER(grndtour_prot_w);
+	DECLARE_WRITE8_MEMBER(iqblock_irqack_w);
+	DECLARE_READ8_MEMBER(extrarom_r);
+	DECLARE_WRITE8_MEMBER(iqblock_fgvideoram_w);
+	DECLARE_WRITE8_MEMBER(iqblock_bgvideoram_w);
+	DECLARE_READ8_MEMBER(iqblock_bgvideoram_r);
+	DECLARE_WRITE8_MEMBER(iqblock_fgscroll_w);
 };
 
 
 /*----------- defined in video/iqblock.c -----------*/
 
-WRITE8_HANDLER( iqblock_fgvideoram_w );
-WRITE8_HANDLER( iqblock_bgvideoram_w );
-READ8_HANDLER( iqblock_bgvideoram_r );
-WRITE8_HANDLER( iqblock_fgscroll_w );
 
 VIDEO_START( iqblock );
 SCREEN_UPDATE_IND16( iqblock );
