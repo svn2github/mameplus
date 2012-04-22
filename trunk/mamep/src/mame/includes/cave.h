@@ -25,17 +25,23 @@ class cave_state : public driver_device
 {
 public:
 	cave_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag), m_int_timer(*this, "int_timer") { }
+		: driver_device(mconfig, type, tag),
+		  m_videoregs(*this, "videoregs"),
+		  m_vram(*this, "vram"),
+		  m_vctrl(*this, "vctrl"),
+		  m_spriteram(*this, "spriteram"),
+		  m_spriteram_2(*this, "spriteram_2"),
+		  m_paletteram(*this, "paletteram"),
+		  m_mirror_ram(*this, "mirror_ram"),
+		  m_int_timer(*this, "int_timer") { }
 
 	/* memory pointers */
-	UINT16 *     m_videoregs;
-	UINT16 *     m_vram[4];
-	UINT16 *     m_vctrl[4];
-	UINT16 *     m_spriteram;
-	UINT16 *     m_spriteram_2;
-	UINT16 *     m_paletteram;
-	size_t       m_spriteram_size;
-	size_t       m_paletteram_size;
+	required_shared_ptr<UINT16> m_videoregs;
+	optional_shared_ptr_array<UINT16, 4> m_vram;
+	optional_shared_ptr_array<UINT16, 4> m_vctrl;
+	required_shared_ptr<UINT16> m_spriteram;
+	optional_shared_ptr<UINT16> m_spriteram_2;
+	required_shared_ptr<UINT16> m_paletteram;
 
 	/* video-related */
 	struct sprite_cave *m_sprite;
@@ -98,7 +104,7 @@ public:
 	/* game specific */
 	// sailormn
 	int          m_sailormn_tilebank;
-	UINT8        *m_mirror_ram;
+	optional_shared_ptr<UINT8> m_mirror_ram;
 	// korokoro
 	UINT16       m_leds[2];
 	int          m_hopper;
@@ -148,6 +154,8 @@ public:
 	DECLARE_WRITE16_MEMBER(cave_vram_1_8x8_w);
 	DECLARE_WRITE16_MEMBER(cave_vram_2_8x8_w);
 	DECLARE_WRITE16_MEMBER(cave_vram_3_8x8_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(korokoro_hopper_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(tjumpman_hopper_r);
 };
 
 /*----------- defined in video/cave.c -----------*/

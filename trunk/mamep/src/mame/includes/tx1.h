@@ -102,19 +102,24 @@ class tx1_state : public driver_device
 {
 public:
 	tx1_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_z80_ram(*this, "z80_ram"),
+		  m_math_ram(*this, "math_ram"),
+		  m_vram(*this, "vram"),
+		  m_objram(*this, "objram"),
+		  m_rcram(*this, "rcram") { }
 
 	math_t m_math;
 	sn74s516_t m_sn74s516;
-	UINT8 *m_z80_ram;
+	required_shared_ptr<UINT8> m_z80_ram;
 	UINT8 m_ppi_latch_a;
 	UINT8 m_ppi_latch_b;
 	UINT32 m_ts;
-	UINT16 *m_math_ram;
+	required_shared_ptr<UINT16> m_math_ram;
 	vregs_t m_vregs;
-	UINT16 *m_vram;
-	UINT16 *m_objram;
-	UINT16 *m_rcram;
+	required_shared_ptr<UINT16> m_vram;
+	required_shared_ptr<UINT16> m_objram;
+	required_shared_ptr<UINT16> m_rcram;
 	emu_timer *m_interrupt_timer;
 	UINT8 *m_chr_bmp;
 	UINT8 *m_obj_bmp;
@@ -140,6 +145,18 @@ public:
 	DECLARE_WRITE16_MEMBER(buggyboy_gas_w);
 	DECLARE_WRITE16_MEMBER(buggyboy_sky_w);
 	DECLARE_WRITE16_MEMBER(buggyboy_scolst_w);
+	DECLARE_WRITE16_MEMBER(z80_busreq_w);
+	DECLARE_WRITE16_MEMBER(resume_math_w);
+	DECLARE_WRITE16_MEMBER(halt_math_w);
+	DECLARE_WRITE8_MEMBER(z80_intreq_w);
+	DECLARE_READ16_MEMBER(z80_shared_r);
+	DECLARE_WRITE16_MEMBER(z80_shared_w);
+	DECLARE_READ16_MEMBER(dipswitches_r);
+	DECLARE_WRITE8_MEMBER(ts_w);
+	DECLARE_READ8_MEMBER(ts_r);
+	DECLARE_WRITE8_MEMBER(tx1_ppi_latch_w);
+	DECLARE_READ8_MEMBER(bb_analog_r);
+	DECLARE_READ8_MEMBER(bbjr_analog_r);
 };
 
 

@@ -4,10 +4,11 @@ class circus_state : public driver_device
 {
 public:
 	circus_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"){ }
 
 	/* memory pointers */
-	UINT8 * m_videoram;
+	required_shared_ptr<UINT8> m_videoram;
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -26,13 +27,13 @@ public:
 	DECLARE_WRITE8_MEMBER(circus_videoram_w);
 	DECLARE_WRITE8_MEMBER(circus_clown_x_w);
 	DECLARE_WRITE8_MEMBER(circus_clown_y_w);
+	DECLARE_WRITE8_MEMBER(circus_clown_z_w);
 };
 
 
 
 /*----------- defined in audio/circus.c -----------*/
 
-extern WRITE8_HANDLER( circus_clown_z_w );
 
 DISCRETE_SOUND_EXTERN( circus );
 DISCRETE_SOUND_EXTERN( robotbwl );

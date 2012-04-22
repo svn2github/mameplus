@@ -34,7 +34,9 @@ class mario_state : public driver_device
 {
 public:
 	mario_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_spriteram(*this, "spriteram"),
+		m_videoram(*this, "videoram"){ }
 
 	/* memory pointers */
 
@@ -53,8 +55,8 @@ public:
 
 	/* driver general */
 
-	UINT8	*m_spriteram;
-	UINT8	*m_videoram;
+	required_shared_ptr<UINT8> m_spriteram;
+	required_shared_ptr<UINT8> m_videoram;
 	size_t	m_spriteram_size;
 	tilemap_t *m_bg_tilemap;
 	int m_monitor;
@@ -66,6 +68,16 @@ public:
 	DECLARE_WRITE8_MEMBER(mario_palettebank_w);
 	DECLARE_WRITE8_MEMBER(mario_scroll_w);
 	DECLARE_WRITE8_MEMBER(mario_flip_w);
+	DECLARE_READ8_MEMBER(mario_sh_p1_r);
+	DECLARE_READ8_MEMBER(mario_sh_p2_r);
+	DECLARE_READ8_MEMBER(mario_sh_t0_r);
+	DECLARE_READ8_MEMBER(mario_sh_t1_r);
+	DECLARE_READ8_MEMBER(mario_sh_tune_r);
+	DECLARE_WRITE8_MEMBER(mario_sh_p1_w);
+	DECLARE_WRITE8_MEMBER(mario_sh_p2_w);
+	DECLARE_WRITE8_MEMBER(masao_sh_irqtrigger_w);
+	DECLARE_WRITE8_MEMBER(mario_sh_tuneselect_w);
+	DECLARE_WRITE8_MEMBER(mario_sh3_w);
 };
 
 /*----------- defined in video/mario.c -----------*/
@@ -80,10 +92,7 @@ SCREEN_UPDATE_IND16( mario );
 
 WRITE8_DEVICE_HANDLER( mario_sh1_w );
 WRITE8_DEVICE_HANDLER( mario_sh2_w );
-WRITE8_HANDLER( mario_sh3_w );
 
-WRITE8_HANDLER( mario_sh_tuneselect_w );
-WRITE8_HANDLER( masao_sh_irqtrigger_w );
 
 MACHINE_CONFIG_EXTERN( mario_audio );
 MACHINE_CONFIG_EXTERN( masao_audio );

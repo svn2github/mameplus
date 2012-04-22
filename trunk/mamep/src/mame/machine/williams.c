@@ -5,7 +5,6 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "audio/williams.h"
 #include "cpu/m6800/m6800.h"
 #include "cpu/m6809/m6809.h"
 #include "machine/6821pia.h"
@@ -122,7 +121,7 @@ const pia6821_interface williams_snd_pia_b_intf =
 const pia6821_interface lottofun_pia_0_intf =
 {
 	/*inputs : A/B,CA/B1,CA/B2 */ DEVCB_INPUT_PORT("IN0"), DEVCB_INPUT_PORT("IN1"), DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL,
-	/*outputs: A/B,CA/B2       */ DEVCB_NULL, DEVCB_DEVICE_HANDLER("ticket", ticket_dispenser_w), DEVCB_HANDLER(lottofun_coin_lock_w), DEVCB_NULL,
+	/*outputs: A/B,CA/B2       */ DEVCB_NULL, DEVCB_DEVICE_MEMBER("ticket", ticket_dispenser_device, write), DEVCB_HANDLER(lottofun_coin_lock_w), DEVCB_NULL,
 	/*irqs   : A/B             */ DEVCB_NULL, DEVCB_NULL
 };
 
@@ -369,8 +368,8 @@ static MACHINE_START( williams_common )
 {
 	williams_state *state = machine.driver_data<williams_state>();
 	/* configure the memory bank */
-	memory_configure_bank(machine, "bank1", 0, 1, state->m_videoram, 0);
-	memory_configure_bank(machine, "bank1", 1, 1, machine.region("maincpu")->base() + 0x10000, 0);
+	state->membank("bank1")->configure_entry(0, state->m_videoram);
+	state->membank("bank1")->configure_entry(1, state->memregion("maincpu")->base() + 0x10000);
 
 	state_save_register_global(machine, state->m_vram_bank);
 }
@@ -467,8 +466,8 @@ MACHINE_START( williams2 )
 {
 	williams_state *state = machine.driver_data<williams_state>();
 	/* configure memory banks */
-	memory_configure_bank(machine, "bank1", 0, 1, state->m_videoram, 0);
-	memory_configure_bank(machine, "bank1", 1, 4, machine.region("maincpu")->base() + 0x10000, 0x10000);
+	state->membank("bank1")->configure_entry(0, state->m_videoram);
+	state->membank("bank1")->configure_entries(1, 4, state->memregion("maincpu")->base() + 0x10000, 0x10000);
 
 	/* register for save states */
 	state_save_register_global(machine, state->m_vram_bank);
@@ -505,7 +504,7 @@ WRITE8_MEMBER(williams_state::williams_vram_select_w)
 {
 	/* VRAM/ROM banking from bit 0 */
 	m_vram_bank = data & 0x01;
-	memory_set_bank(machine(), "bank1", m_vram_bank);
+	membank("bank1")->set_entry(m_vram_bank);
 
 	/* cocktail flip from bit 1 */
 	m_cocktail = data & 0x02;
@@ -523,8 +522,8 @@ WRITE8_MEMBER(williams_state::williams2_bank_select_w)
 		case 0:
 			space.install_read_bank(0x0000, 0x8fff, "bank1");
 			space.install_write_bank(0x8000, 0x87ff, "bank4");
-			memory_set_bank(machine(), "bank1", 0);
-			memory_set_bankptr(machine(), "bank4", &m_videoram[0x8000]);
+			membank("bank1")->set_entry(0);
+			membank("bank4")->set_base(&m_videoram[0x8000]);
 			break;
 
 		/* pages 1 and 2 are ROM */
@@ -532,16 +531,16 @@ WRITE8_MEMBER(williams_state::williams2_bank_select_w)
 		case 2:
 			space.install_read_bank(0x0000, 0x8fff, "bank1");
 			space.install_write_bank(0x8000, 0x87ff, "bank4");
-			memory_set_bank(machine(), "bank1", 1 + ((m_vram_bank & 6) >> 1));
-			memory_set_bankptr(machine(), "bank4", &m_videoram[0x8000]);
+			membank("bank1")->set_entry(1 + ((m_vram_bank & 6) >> 1));
+			membank("bank4")->set_base(&m_videoram[0x8000]);
 			break;
 
 		/* page 3 accesses palette RAM; the remaining areas are as if page 1 ROM was selected */
 		case 3:
 			space.install_read_bank(0x8000, 0x87ff, "bank4");
 			space.install_write_handler(0x8000, 0x87ff, write8_delegate(FUNC(williams_state::williams2_paletteram_w),this));
-			memory_set_bank(machine(), "bank1", 1 + ((m_vram_bank & 4) >> 1));
-			memory_set_bankptr(machine(), "bank4", m_generic_paletteram_8);
+			membank("bank1")->set_entry(1 + ((m_vram_bank & 4) >> 1));
+			membank("bank4")->set_base(m_generic_paletteram_8);
 			break;
 	}
 }
@@ -616,15 +615,14 @@ WRITE8_DEVICE_HANDLER( williams_port_select_w )
 	state->m_port_select = data;
 }
 
-CUSTOM_INPUT( williams_mux_r )
+CUSTOM_INPUT_MEMBER(williams_state::williams_mux_r)
 {
-	williams_state *state = field.machine().driver_data<williams_state>();
 	const char *tag = (const char *)param;
 
-	if (state->m_port_select != 0)
+	if (m_port_select != 0)
 		tag += strlen(tag) + 1;
 
-	return input_port_read(field.machine(), tag);
+	return input_port_read(machine(), tag);
 }
 
 /*
@@ -774,7 +772,7 @@ MACHINE_START( defender )
 	MACHINE_START_CALL(williams_common);
 
 	/* configure the banking and make sure it is reset to 0 */
-	memory_configure_bank(machine, "bank1", 0, 9, &machine.region("maincpu")->base()[0x10000], 0x1000);
+	machine.root_device().membank("bank1")->configure_entries(0, 9, &machine.root_device().memregion("maincpu")->base()[0x10000], 0x1000);
 
 	machine.save().register_postload(save_prepost_delegate(FUNC(defender_postload), &machine));
 }
@@ -821,7 +819,7 @@ WRITE8_MEMBER(williams_state::defender_bank_select_w)
 		case 9:
 			space.install_read_bank(0xc000, 0xcfff, "bank1");
 			space.unmap_write(0xc000, 0xcfff);
-			memory_set_bank(machine(), "bank1", m_vram_bank - 1);
+			membank("bank1")->set_entry(m_vram_bank - 1);
 			break;
 
 		/* pages A-F are not connected */
@@ -880,11 +878,11 @@ MACHINE_START( blaster )
 	MACHINE_START_CALL(williams_common);
 
 	/* banking is different for blaster */
-	memory_configure_bank(machine, "bank1", 0, 1, state->m_videoram, 0);
-	memory_configure_bank(machine, "bank1", 1, 16, machine.region("maincpu")->base() + 0x18000, 0x4000);
+	state->membank("bank1")->configure_entry(0, state->m_videoram);
+	state->membank("bank1")->configure_entries(1, 16, machine.root_device().memregion("maincpu")->base() + 0x18000, 0x4000);
 
-	memory_configure_bank(machine, "bank2", 0, 1, state->m_videoram + 0x4000, 0);
-	memory_configure_bank(machine, "bank2", 1, 16, machine.region("maincpu")->base() + 0x10000, 0x0000);
+	state->membank("bank2")->configure_entry(0, state->m_videoram + 0x4000);
+	state->membank("bank2")->configure_entries(1, 16, state->memregion("maincpu")->base() + 0x10000, 0x0000);
 
 	state_save_register_global(machine, state->m_blaster_bank);
 }
@@ -899,8 +897,8 @@ MACHINE_RESET( blaster )
 INLINE void update_blaster_banking(running_machine &machine)
 {
 	williams_state *state = machine.driver_data<williams_state>();
-	memory_set_bank(machine, "bank1", state->m_vram_bank * (state->m_blaster_bank + 1));
-	memory_set_bank(machine, "bank2", state->m_vram_bank * (state->m_blaster_bank + 1));
+	state->membank("bank1")->set_entry(state->m_vram_bank * (state->m_blaster_bank + 1));
+	state->membank("bank2")->set_entry(state->m_vram_bank * (state->m_blaster_bank + 1));
 }
 
 
@@ -989,18 +987,13 @@ MACHINE_START( joust2 )
 {
 	williams_state *state = machine.driver_data<williams_state>();
 	MACHINE_START_CALL(williams2);
-	williams_cvsd_init(machine);
 	state_save_register_global(machine, state->m_joust2_current_sound_data);
 }
 
 
 MACHINE_RESET( joust2 )
 {
-	pia6821_device *pia_3 = machine.device<pia6821_device>("cvsdpia");
-
-	/* standard init */
 	MACHINE_RESET_CALL(williams2);
-	pia_3->ca1_w(1);
 }
 
 
@@ -1014,10 +1007,8 @@ static TIMER_CALLBACK( joust2_deferred_snd_cmd_w )
 static WRITE8_DEVICE_HANDLER( joust2_pia_3_cb1_w )
 {
 	williams_state *state = device->machine().driver_data<williams_state>();
-	pia6821_device *pia_3 = device->machine().device<pia6821_device>("cvsdpia");
-
 	state->m_joust2_current_sound_data = (state->m_joust2_current_sound_data & ~0x100) | ((data << 8) & 0x100);
-	pia_3->cb1_w(data);
+	state->m_cvsd_sound->write(*device->machine().memory().first_space(), 0, state->m_joust2_current_sound_data);
 }
 
 
@@ -1025,6 +1016,6 @@ static WRITE8_DEVICE_HANDLER( joust2_snd_cmd_w )
 {
 	williams_state *state = device->machine().driver_data<williams_state>();
 	state->m_joust2_current_sound_data = (state->m_joust2_current_sound_data & ~0xff) | (data & 0xff);
-	williams_cvsd_data_w(device->machine(), state->m_joust2_current_sound_data);
+	state->m_cvsd_sound->write(*device->machine().memory().first_space(), 0, state->m_joust2_current_sound_data);
 	device->machine().scheduler().synchronize(FUNC(joust2_deferred_snd_cmd_w), state->m_joust2_current_sound_data);
 }

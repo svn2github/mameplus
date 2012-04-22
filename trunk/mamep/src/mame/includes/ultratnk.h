@@ -9,9 +9,10 @@ class ultratnk_state : public driver_device
 {
 public:
 	ultratnk_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"){ }
 
-	UINT8 *m_videoram;
+	required_shared_ptr<UINT8> m_videoram;
 	int m_da_latch;
 	int m_collision[4];
 	tilemap_t* m_playfield;
@@ -28,6 +29,8 @@ public:
 	DECLARE_WRITE8_MEMBER(ultratnk_led_2_w);
 	DECLARE_WRITE8_MEMBER(ultratnk_lockout_w);
 	DECLARE_WRITE8_MEMBER(ultratnk_video_ram_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(get_collision);
+	DECLARE_CUSTOM_INPUT_MEMBER(get_joystick);
 };
 
 

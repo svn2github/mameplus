@@ -4885,7 +4885,7 @@ deathcox		// 2000.10 Death Crimson OX
 cspike			// 2000.10 Gun Spike / Cannon Spike
 sstrkfgt		// 2000.10 Sega Strike Fighter (Rev A)
 confmiss		// 2000.11 Confidential Mission												// First GD-ROM game?
-				// 2000.11 Ninja Assault
+ninjaslt		// 2000.11 Ninja Assault
 				// 2000.11 Shakatto Tambourine
 wwfroyal		// 2000.11 WWF Royal Rumble
 pjustic			// 2000.12 Moero Justice Gakuen / Project Justice
@@ -8941,83 +8941,87 @@ haunthig		// (c) 200?
 #endif // !NCP
 
 // IGS PGM System Games
-pgm
-orlegend		// (c) 1997
-orlegende		// (c) 1997
-orlegendc		// (c) 1997
-orlegendca		// (c) 1997
-orlegend111c		// (c) 1997
-orlegend105k		// (c) 1997
-drgw2			// (c) 1997
-dw2v100x		// (c) 1997
-drgw2c			// (c) 1997
-drgw2j			// (c) 1997
-drgw3			// (c) 1998
-drgw3105		// (c) 1998
-drgw3100		// (c) 1998
-dwex			// (c) 1998
-killbld			// (c) 1998
-killbld104		// (c) 1998
-kov			// (c) 1999
-kovplus			// (c) 1999
-kovplusa		// (c) 1999
+pgm				// Base Unit
+orlegend		// (c) 1997 Oriental Legend
+orlegende		//
+orlegendc		//
+orlegendca		//
+orlegend111c	//
+orlegend105k	//
+drgw2			// (c) 1997 Dragon World 2
+dw2v100x		//
+drgw2c			//
+drgw2j			//
+drgw3			// (c) 1998 Dragon World 3
+drgw3105		//
+drgw3100		//
+dwex			// (c) 1998 Dragon World 3 EX
+killbld			// (c) 1998 The Killing Blade
+killbld104		//
+kov				// (c) 1999 Knights of Valor
+kov115			//
+kov100			//
+kovplus			// (c) 1999 Knights of Valor Plus (aka 10 Character version)
+kovplusa		//
 kovsgqyz		// bootleg
 kovsgqyza		// bootleg
 kovsgqyzb		// bootleg
-kov115			// (c) 1999
-kov100			// (c) 1999
-kovsh			// (c) 1999
-kovsh103		// (c) 1999
+kovsh			// (c) 1999 Knights of Valor Superheroes
+kovsh103		//
 kovqhsgs		// bootleg
+photoy2k		// (c) 1999 Photo Y2k
+photoy2k102		//
+photoy2k104		//
+puzlstar		// (c) 1999 Puzzle Star
+olds			// (c) 1999 Oriental Legend Super / Special
+olds100			//
+olds100a		//
+kov2			// (c) 2000 Knights of Valor 2
+kov2106			//
+kov2103			//
+kov2102			//
+kov2101			//
+kov2100			//
+kov2p			// (c) 2000 Knights of Valor 2 Nine Dragons
+kov2p205		//
+ddp2			// (c) 2001 DoDonPachi 2 - Bee Storm
+ddp2100			//
+ddp2101			//
+puzzli2			// (c) 2001 Puzzli 2
+martmast		// (c) 2001 Martial Masters
+martmastc		//
+martmastc102	//
+theglad			// (c) 2001 The Gladiator
+theglada		//
+thegladpcb		//
+dw2001			// (c) 2001 Dragon World 2001
+dwpc			// (c) 2001 Dragon World Pretty Chance
+py2k2			// (c) 2001 Photo Y2K2
+dmnfrnt			// (c) 2002 Demon Front
+dmnfrnta		//
+dmnfrntpcb		//
+kovshp			// (c) 200? Knights of Valor Superheroes PLUS
+kovshxas		// bootleg
 kovlsqh			// bootleg
 kovlsqh2		// bootleg
 kovlsjb			// bootleg
 kovlsjba		// bootleg
-photoy2k		// (c) 1999
-photoy2k102		// (c) 1999
-photoy2k104		// (c) 1999
-puzlstar		// (c) 1999
-olds			// (c) 1999
-olds100			// (c) 1999
-olds100a		// (c) 1999
-kov2			// (c) 2000
-kov2106			// (c) 2000
-kov2103			// (c) 2000
-kov2102			// (c) 2000
-kov2101			// (c) 2000
-kov2100			// (c) 2000
-kov2p			// (c) 2000
-kov2p205		// (c) 2000
-ddp2			// (c) 2001
-ddp2100			// (c) 2001
-ddp2101			// (c) 2001
-puzzli2			// (c) 2001
-martmast		// (c) 2001
-martmastc		// (c) 2001
-martmastc102		// (c) 2001
-theglad			// (c) 2001
-theglada		// (c) 2001
-thegladpcb
-dw2001			// (c) 2001
-dwpc			// (c) 2001
-py2k2			// (c) 2001
-dmnfrnt			// (c) 2002
-dmnfrnta		// (c) 2002
-dmnfrntpcb
-kovshp
-oldsplus
-killbldp
-happy6
-svg
-svgpcb
-ket			// (c) 2002 Cave
-keta			// (c) 2002 Cave
-ketb			// (c) 2002 Cave
-ddpdoj			// (c) 2002 Cave
-ddpdoja			// (c) 2002 Cave
-ddpdojb			// (c) 2002 Cave
-ddpdojblk		// (c) 2002 Cave
-espgal			// (c) 2003 Cave
+oldsplus		// (c) 2004 Oriental Legend Super Plus
+killbldp		// (c) 2004 Killing Blade Plus
+happy6			// (c) 200? Happy 6
+svg				// (c) 2003 Spectral vs Generation
+svgpcb			//
+ket				// (c) 2002 Ketsui
+keta			//
+ketb			//
+ddpdoj			// (c) 2002 DoDonPachi Dai-Ou-Jou
+ddpdoja			//
+ddpdojb			//
+ddpdojblk		//
+espgal			// (c) 2003 Espgaluda
+
+// IGS PGM2 Platform
+
 orleg2			// (c) 2007
 orleg2o			//
 kov2nl			// (c) 2008
@@ -10083,6 +10087,7 @@ genix			// (c) 199? NIX
 fitfight		// bootleg of Art of Fighting
 histryma		// bootleg of Fighter's History
 bbprot			// unfinished prototype
+hotmindff		// (c) Playmark
 beaminv			// (c) 1979 Tekunon Kougyou (Arcade TV Game List - P.95, Left, 9 from top)
 pacominv		// (c) 1979 Pacom Corporation
 mcatadv			// (c) 1993 Wintechno
@@ -10225,6 +10230,7 @@ supertnk		// (c) 1981 VIDEO GAMES GmbH, W.-GERMANY
 crospang		// (c) 1998 F2 System
 heuksun			// (c) 1998 Oksan / F2 System
 bestri			// (c) F2 System
+silvmil			// (c) 1995 Para
 funybubl		// (c) 1999 In Chang Electronic Co
 funybublc		// (c) 1999 Comad Industries
 dcheese			// (c) 1993 HAR
@@ -10265,6 +10271,10 @@ kisekaeh		// (c) 1995 I'Max
 cultname		// (c) 1995 I'Max
 yuka			// (c) 1999 Yubis
 yujan			// (C) 1999 Yubis
+
+// Team Play, Inc.
+
+voyager			// (c) 2002 Team Play, Inc.
 
 // BMC
 
@@ -10362,10 +10372,11 @@ dambustra		// (c) 1981 South West Research
 dambustruk		// (c) 1981 South West Research
 gunpey			// (c) 2000 Banpresto
 spaceg			// (c) 19??
-wldarrow		// (c) 1982
-unkmeyco		// (c) 198?
-mdrawpkr		// (c) 19??
-mdrawpkra		// (c) 19??
+gldarrow		// (c) 1984 Meyco Games
+wldarrow		// (c) 1982 Meyco Games
+casbjack		// (c) 1983 Meyco Games
+mdrawpkr		// (c) 1984 Meyco Games
+mdrawpkra		// (c) 1984 Meyco Games
 laserbas		// (c) 1981 Amstar/HOEI
 laserbasa		// (c) 1981 Amstar/HOEI
 futflash		// (c) 1981 HOEI (Arcade TV Game List - P.96, Right, 18 from top)
@@ -13913,7 +13924,6 @@ sc4mclbd	//
 sc4mclbe	//
 sc4mdlx		// Monopoly Deluxe (Mazooma)
 sc4mondxg   //
-sc4mowowd   //
 sc4mont		// Montego Pay (Qps)
 sc4monta	//
 sc4montb	//
@@ -13955,9 +13965,9 @@ sc4outlwc	//
 sc4pacmn	// Pac Man (Mazooma)
 sc4pacmna	//
 sc4pacmnb	//
-sc4pacmnc	//
-sc4pacmnd	//
-sc4pacmne	//
+sc4pacqp	//
+sc4pacqpa	//
+sc4pacqpb	//
 sc4paccs	// Pac Man Casino (Mazooma)
 sc4paccsa	//
 sc4paccsb	//
@@ -15093,22 +15103,22 @@ sc4gball	//
 sc4gballa	//
 sc4gballb	//
 sc4gballc	//
-sc4ggame	// Golden Game (Mazooma)
+sc4ggtb	    // Golden Game (Mazooma) Top Box
+sc4ggtba	//
+sc4ggtbb	//
+sc4ggame	// Golden Game
 sc4ggamea	//
 sc4ggameb	//
 sc4ggamec	//
 sc4ggamed	//
-sc4ggamee	//
 sc4ggamef	//
 sc4ggameg	//
-sc4ggameh	//
 sc4ggamei	//
 sc4ggamej	//
 sc4ggamek	//
 sc4ggamel	//
 sc4ggamem	//
 sc4ggamen	//
-sc4ggameo	//
 sc4ggamep	//
 sc4ggameq	//
 sc4ggamer	//
@@ -15143,8 +15153,9 @@ sc4ggdlxd	//
 sc4ggdlxe	//
 sc4ggdlxf	//
 sc4ggdlxg	//
-sc4ggg		// Grand Golden Game (Mazooma)
-sc4ggga		//
+sc4gggtb	// Grand Golden Game (Mazooma)
+sc4gggtba	//
+sc4ggg		//
 sc4gggb		//
 sc4gggc		//
 sc4gggd		//
@@ -15153,7 +15164,6 @@ sc4gggf		//
 sc4gggg		//
 sc4gggh		//
 sc4gggi		//
-sc4gggj		//
 sc4gggk		//
 sc4gggl		//
 sc4gggm		//
@@ -15652,16 +15662,17 @@ sc4dndbem	//
 sc4dndben	//
 sc4dndbc	// Deal Or No Deal Box Clever (Bellfruit)
 sc4dndbca	//
+sc4bwow		// Wheel of Wealth (Bellfruit)
+sc4bwowa	//
 sc4mowow	// Monopoly Wheel Of Wealth (Mazooma)
 sc4mowowa	//
 sc4mowowb	//
 sc4mowowc	//
-sc4mowowe	//
-sc4mowowf	//
-sc4mowowg	//
-sc4mowowh	//
-sc4mowowi	//
-sc4mowowj	//
+sc4mwwtb	//
+sc4mwwtba	//
+sc4mwwtbb	//
+sc4mwwtbc	//
+sc4mwwtbd	//
 sc4nunsm	// Nuns 'n' Roses (Mazooma)
 sc4nunsmb	//
 sc4nunsmc	//
@@ -17230,7 +17241,6 @@ ad5rsrr		// Ronnie O'Sullivan's Rocket Ronnie (Bellfruit)
 ad5tornc	// Tornado Club (Bellfruit)
 ad5vpa		// Video Poker Ace (Bellfruit)
 ad5vlv		// Viva Las Vegas (Bellfruit)
-ad5u1337	// Unknown Scorpion '39211337' (Mazooma)
 
 
 
@@ -19662,12 +19672,23 @@ hg_frd		// Fruit Deuce
 /* Global Games 'Stealth' */
 
 gl_dow		// Deals On Wheels (Global)
+gl_dowp
 gl_dowcl	// Deals On Wheels Club (Global)
+gl_dowclp
 gl_wywh		// Wish You Were Here Club (Global)
+gl_wywhp
+gl_wywh24
+gl_wywh24p
 gl_coc		// Carry On Clubbin' (Global)
+gl_cocp
+gl_coc29
+gl_coc29p
 gl_uyr		// Up Yer Riggin Club (Global)
+gl_uyrp
 gl_hbh		// Heartbreak Hotel (Global)
 gl_hbhcl	// Heartbreak Hotel Club (Global)
+gl_hbhclp
+gl_hbhcla
 
 /* Unknown, Pluto? */
 
@@ -20308,6 +20329,7 @@ empsback
 
 // icecold.c
 icecold
+zekepeak
 
 // inder.c
 ind250cc

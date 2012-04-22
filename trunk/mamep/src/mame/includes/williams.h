@@ -6,20 +6,28 @@
 
 
 #include "machine/6821pia.h"
+#include "audio/williams.h"
 
 class williams_state : public driver_device
 {
 public:
 	williams_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		  m_nvram(*this, "nvram") { }
+		  m_cvsd_sound(*this, "cvsd"),
+		  m_nvram(*this, "nvram") ,
+		m_videoram(*this, "videoram"),
+		m_blaster_palette_0(*this, "blaster_pal0"),
+		m_blaster_scanline_control(*this, "blaster_scan"),
+		m_williams2_tileram(*this, "williams2_tile"){ }
+
+	optional_device<williams_cvsd_sound_device> m_cvsd_sound;
 
 	required_shared_ptr<UINT8>	m_nvram;
 	UINT8 *m_mayday_protection;
-	UINT8 *m_videoram;
-	UINT8 *m_williams2_tileram;
-	UINT8 *m_blaster_palette_0;
-	UINT8 *m_blaster_scanline_control;
+	required_shared_ptr<UINT8> m_videoram;
+	optional_shared_ptr<UINT8> m_blaster_palette_0;
+	optional_shared_ptr<UINT8> m_blaster_scanline_control;
+	optional_shared_ptr<UINT8> m_williams2_tileram;
 	UINT8 m_blitter_config;
 	UINT16 m_blitter_clip_address;
 	UINT8 m_blitter_window_enable;
@@ -65,6 +73,7 @@ public:
 	DECLARE_WRITE8_MEMBER(blaster_video_control_w);
 	DECLARE_WRITE8_MEMBER(williams_blitter_w);
 	DECLARE_WRITE8_MEMBER(williams2_blit_window_enable_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(williams_mux_r);
 };
 
 
@@ -123,9 +132,6 @@ MACHINE_START( joust2 );
 MACHINE_RESET( joust2 );
 
 /* banking */
-
-/* misc */
-CUSTOM_INPUT( williams_mux_r );
 
 /* Mayday protection */
 

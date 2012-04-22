@@ -8,13 +8,16 @@ class polygonet_state : public driver_device
 {
 public:
 	polygonet_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_shared_ram(*this, "shared_ram"),
+		m_dsp56k_p_mirror(*this, "dsp56k_p_mirror"),
+		m_dsp56k_p_8000(*this, "dsp56k_p_8000"){ }
 
 	/* 68k-side shared ram */
-	UINT32* m_shared_ram;
+	required_shared_ptr<UINT32> m_shared_ram;
 
-	UINT16* m_dsp56k_p_mirror;
-	UINT16* m_dsp56k_p_8000;
+	required_shared_ptr<UINT16> m_dsp56k_p_mirror;
+	required_shared_ptr<UINT16> m_dsp56k_p_8000;
 	int m_cur_sound_region;
 
 	direct_update_delegate m_dsp56k_update_handler;
@@ -60,6 +63,7 @@ public:
 	DECLARE_WRITE32_MEMBER(polygonet_ttl_ram_w);
 	DECLARE_READ32_MEMBER(polygonet_roz_ram_r);
 	DECLARE_WRITE32_MEMBER(polygonet_roz_ram_w);
+	DIRECT_UPDATE_MEMBER(plygonet_dsp56k_direct_handler);
 };
 
 /*----------- defined in video/plygonet.c -----------*/

@@ -5,12 +5,13 @@ public:
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
 		m_nvram(*this, "nvram")
-		{ }
+		,
+		m_workram(*this, "workram"){ }
 
 	required_device<cpu_device> m_maincpu;
-	required_shared_ptr<UINT8>	m_nvram;
+	required_shared_ptr<UINT16>	m_nvram;
 	UINT8 *m_sndram;
-	UINT16 *m_workram;
+	required_shared_ptr<UINT16> m_workram;
 	UINT16 m_control;
 	INT32 m_gp2_irq_control;
 	INT32 m_pal;
@@ -24,6 +25,8 @@ public:
 	DECLARE_READ16_MEMBER(sndram_r);
 	DECLARE_WRITE16_MEMBER(sndram_w);
 	DECLARE_READ16_MEMBER(gp2_ide_std_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(inputs_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(battery_sensor_r);
 };
 
 /*----------- defined in video/qdrmfgp.c -----------*/

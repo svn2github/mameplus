@@ -118,7 +118,7 @@ static WRITE16_HANDLER( pgm_arm7_type1_68k_protlatch_w )
 static READ16_HANDLER( pgm_arm7_type1_ram_r )
 {
 	pgm_arm_type1_state *state = space->machine().driver_data<pgm_arm_type1_state>();
-	UINT16 *share16 = (UINT16 *)state->m_arm7_shareram;
+	UINT16 *share16 = reinterpret_cast<UINT16 *>(state->m_arm7_shareram.target());
 
 	if (PGMARM7LOGERROR)
 		logerror("M68K: ARM7 Shared RAM Read: %04x = %04x (%08x) (%06x)\n", BYTE_XOR_LE(offset), share16[BYTE_XOR_LE(offset)], mem_mask, cpu_get_pc(&space->device()));
@@ -128,7 +128,7 @@ static READ16_HANDLER( pgm_arm7_type1_ram_r )
 static WRITE16_HANDLER( pgm_arm7_type1_ram_w )
 {
 	pgm_arm_type1_state *state = space->machine().driver_data<pgm_arm_type1_state>();
-	UINT16 *share16 = (UINT16 *)state->m_arm7_shareram;
+	UINT16 *share16 = reinterpret_cast<UINT16 *>(state->m_arm7_shareram.target());
 
 	if (PGMARM7LOGERROR)
 		logerror("M68K: ARM7 Shared RAM Write: %04x = %04x (%04x) (%06x)\n", BYTE_XOR_LE(offset), data, mem_mask, cpu_get_pc(&space->device()));
@@ -184,7 +184,7 @@ static ADDRESS_MAP_START( 55857E_arm7_map, AS_PROGRAM, 32, pgm_arm_type1_state )
 	AM_RANGE(0x40000000, 0x40000003) AM_READWRITE_LEGACY(pgm_arm7_type1_protlatch_r, pgm_arm7_type1_protlatch_w)
 	AM_RANGE(0x40000008, 0x4000000b) AM_WRITENOP // ?
 	AM_RANGE(0x4000000c, 0x4000000f) AM_READ_LEGACY(pgm_arm7_type1_unk_r)
-	AM_RANGE(0x50800000, 0x5080003f) AM_READWRITE_LEGACY(pgm_arm7_type1_shareram_r, pgm_arm7_type1_shareram_w) AM_BASE(m_arm7_shareram)
+	AM_RANGE(0x50800000, 0x5080003f) AM_READWRITE_LEGACY(pgm_arm7_type1_shareram_r, pgm_arm7_type1_shareram_w) AM_SHARE("arm7_shareram")
 	AM_RANGE(0x50000000, 0x500003ff) AM_RAM // uploads xor table to decrypt 68k rom here
 ADDRESS_MAP_END
 
@@ -277,7 +277,7 @@ static READ16_HANDLER( kovsh_fake_region_r )
 	if (regionhack != 0xff) return regionhack;
 
 	offset = 0x4;
-	UINT16 *share16 = (UINT16 *)state->m_arm7_shareram;
+	UINT16 *share16 = reinterpret_cast<UINT16 *>(state->m_arm7_shareram.target());
 	return share16[BYTE_XOR_LE(offset << 1)];
 }
 
@@ -299,21 +299,94 @@ DRIVER_INIT( kovsh )
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x4f0008, 0x4f0009, FUNC(kovsh_fake_region_r));
 }
 
+/* Fake remapping of ASIC commands to the ones used by KOVSH due to the lack of the real ARM rom for this set */
+WRITE16_HANDLER( kovshp_asic27a_write_word )
+{
+	pgm_arm_type1_state *state = space->machine().driver_data<pgm_arm_type1_state>();
+
+	switch (offset)
+	{
+		case 0:
+			state->m_pgm_arm_type1_lowlatch_68k_w = data;
+		return;
+
+		case 1:
+		{
+			unsigned char asic_key = data >> 8;
+			unsigned char asic_cmd = (data & 0xff) ^ asic_key;
+
+			switch (asic_cmd)
+			{
+				case 0x9a: asic_cmd = 0x99; break; // kovshxas
+
+                case 0x38: asic_cmd = 0xad; break;
+                case 0x43: asic_cmd = 0xca; break;
+                case 0x56: asic_cmd = 0xac; break;
+                case 0x73: asic_cmd = 0x93; break;
+                case 0x84: asic_cmd = 0xb3; break;
+                case 0x87: asic_cmd = 0xb1; break;
+                case 0x89: asic_cmd = 0xb6; break;
+                case 0x93: asic_cmd = 0x73; break;
+                case 0xa5: asic_cmd = 0xa9; break;
+                case 0xac: asic_cmd = 0x56; break;
+                case 0xad: asic_cmd = 0x38; break;
+                case 0xb1: asic_cmd = 0x87; break;
+                case 0xb3: asic_cmd = 0x84; break;
+                case 0xb4: asic_cmd = 0x90; break;
+                case 0xb6: asic_cmd = 0x89; break;
+                case 0xc5: asic_cmd = 0x8c; break;
+                case 0xca: asic_cmd = 0x43; break;
+                case 0xcc: asic_cmd = 0xf0; break;
+                case 0xd0: asic_cmd = 0xe0; break;
+                case 0xe0: asic_cmd = 0xd0; break;
+                case 0xe7: asic_cmd = 0x70; break;
+                case 0xed: asic_cmd = 0xcb; break;
+                case 0xf0: asic_cmd = 0xcc; break;
+                case 0xf1: asic_cmd = 0xf5; break;
+                case 0xf2: asic_cmd = 0xf1; break;
+                case 0xf4: asic_cmd = 0xf2; break;
+                case 0xf5: asic_cmd = 0xf4; break;
+                case 0xfc: asic_cmd = 0xc0; break;
+                case 0xfe: asic_cmd = 0xc3; break;
+
+				case 0xa6: asic_cmd = 0xa9; break;
+				case 0xaa: asic_cmd = 0x56; break;
+				case 0xf8: asic_cmd = 0xf3; break;
+			}
+
+			state->m_pgm_arm_type1_highlatch_68k_w = asic_cmd ^ (asic_key | (asic_key << 8));
+		}
+		return;
+	}
+}
+
+
 DRIVER_INIT( kovshp )
 {
 	pgm_basic_init(machine);
 	pgm_kovshp_decrypt(machine);
 	pgm_arm7_type1_latch_init(machine);
-	/* we only have a china internal ROM dumped for now.. allow region to be changed for debugging (to ensure all alt titles / regions can be seen) */
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x4f0008, 0x4f0009, FUNC(kovsh_fake_region_r));
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x500000, 0x500005, FUNC(kovshp_asic27a_write_word));
 }
 
+
+
 /* bootleg inits */
+
+DRIVER_INIT( kovshxas )
+{
+	pgm_basic_init(machine);
+//  pgm_kovshp_decrypt(machine);
+	pgm_arm7_type1_latch_init(machine);
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x4f0008, 0x4f0009, FUNC(kovsh_fake_region_r));
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x500000, 0x500005, FUNC(kovshp_asic27a_write_word));
+}
 
 static void pgm_decode_kovlsqh2_tiles( running_machine &machine )
 {
 	int i, j;
-	UINT16 *src = (UINT16 *)(machine.region("tiles")->base() + 0x180000);
+	UINT16 *src = (UINT16 *)(machine.root_device().memregion("tiles")->base() + 0x180000);
 	UINT16 *dst = auto_alloc_array(machine, UINT16, 0x800000);
 
 	for (i = 0; i < 0x800000 / 2; i++)
@@ -348,7 +421,7 @@ static void pgm_decode_kovlsqh2_sprites( running_machine &machine, UINT8 *src )
 static void pgm_decode_kovlsqh2_samples( running_machine &machine )
 {
 	int i;
-	UINT8 *src = (UINT8 *)(machine.region("ics")->base() + 0x400000);
+	UINT8 *src = (UINT8 *)(machine.root_device().memregion("ics")->base() + 0x400000);
 
 	for (i = 0; i < 0x400000; i+=2) {
 		src[i + 0x000001] = src[i + 0x400001];
@@ -360,7 +433,7 @@ static void pgm_decode_kovlsqh2_samples( running_machine &machine )
 static void pgm_decode_kovqhsgs_program( running_machine &machine )
 {
 	int i;
-	UINT16 *src = (UINT16 *)(machine.region("maincpu")->base() + 0x100000);
+	UINT16 *src = (UINT16 *)(machine.root_device().memregion("maincpu")->base() + 0x100000);
 	UINT16 *dst = auto_alloc_array(machine, UINT16, 0x400000);
 
 	for (i = 0; i < 0x400000 / 2; i++)
@@ -378,7 +451,7 @@ static void pgm_decode_kovqhsgs_program( running_machine &machine )
 static void pgm_decode_kovqhsgs2_program( running_machine &machine )
 {
 	int i;
-	UINT16 *src = (UINT16 *)(machine.region("maincpu")->base() + 0x100000);
+	UINT16 *src = (UINT16 *)(machine.root_device().memregion("maincpu")->base() + 0x100000);
 	UINT16 *dst = auto_alloc_array(machine, UINT16, 0x400000);
 
 	for (i = 0; i < 0x400000 / 2; i++)
@@ -399,20 +472,20 @@ DRIVER_INIT( kovlsqh2 )
 	pgm_decode_kovqhsgs2_program(machine);
 	pgm_decode_kovlsqh2_tiles(machine);
 
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x0000000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x0800000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x1000000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x1800000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x2000000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x2800000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprmask")->base() + 0x0000000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprmask")->base() + 0x0800000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x0000000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x0800000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x1000000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x1800000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x2000000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x2800000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprmask")->base() + 0x0000000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprmask")->base() + 0x0800000);
 
 	pgm_decode_kovlsqh2_samples(machine);
 	pgm_basic_init(machine);
 	pgm_arm7_type1_latch_init(machine);
-	/* we only have a china internal ROM dumped for now.. allow region to be changed for debugging (to ensure all alt titles / regions can be seen) */
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x4f0008, 0x4f0009, FUNC(kovsh_fake_region_r));
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x500000, 0x500005, FUNC(kovshp_asic27a_write_word));
 }
 
 DRIVER_INIT( kovqhsgs )
@@ -420,14 +493,14 @@ DRIVER_INIT( kovqhsgs )
 	pgm_decode_kovqhsgs_program(machine);
 	pgm_decode_kovlsqh2_tiles(machine);
 
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x0000000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x0800000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x1000000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x1800000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x2000000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprcol")->base() + 0x2800000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprmask")->base() + 0x0000000);
-	pgm_decode_kovlsqh2_sprites(machine, machine.region("sprmask")->base() + 0x0800000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x0000000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x0800000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x1000000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x1800000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x2000000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprcol")->base() + 0x2800000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprmask")->base() + 0x0000000);
+	pgm_decode_kovlsqh2_sprites(machine, machine.root_device().memregion("sprmask")->base() + 0x0800000);
 
 	pgm_decode_kovlsqh2_samples(machine);
 	pgm_basic_init(machine);

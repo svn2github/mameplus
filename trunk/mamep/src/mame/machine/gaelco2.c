@@ -22,10 +22,10 @@ static void gaelco2_ROM16_split_gfx(running_machine &machine, const char *src_re
 	int i;
 
 	/* get a pointer to the source data */
-	UINT8 *src = (UINT8 *)machine.region(src_reg)->base();
+	UINT8 *src = (UINT8 *)machine.root_device().memregion(src_reg)->base();
 
 	/* get a pointer to the destination data */
-	UINT8 *dst = (UINT8 *)machine.region(dst_reg)->base();
+	UINT8 *dst = (UINT8 *)machine.root_device().memregion(dst_reg)->base();
 
 	/* fill destination areas with the proper data */
 	for (i = 0; i < length/2; i++){
@@ -218,11 +218,10 @@ TIMER_DEVICE_CALLBACK( bang_irq )
 ***************************************************************************/
 
 
-CUSTOM_INPUT( wrally2_analog_bit_r )
+CUSTOM_INPUT_MEMBER(gaelco2_state::wrally2_analog_bit_r)
 {
-	gaelco2_state *state = field.machine().driver_data<gaelco2_state>();
 	int which = (FPTR)param;
-	return (state->m_analog_ports[which] >> 7) & 0x01;
+	return (m_analog_ports[which] >> 7) & 0x01;
 }
 
 

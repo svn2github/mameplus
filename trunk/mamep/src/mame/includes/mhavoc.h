@@ -19,10 +19,12 @@ class mhavoc_state : public driver_device
 {
 public:
 	mhavoc_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_zram0(*this, "zram0"),
+		m_zram1(*this, "zram1"){ }
 
-	UINT8 *m_zram0;
-	UINT8 *m_zram1;
+	required_shared_ptr<UINT8> m_zram0;
+	required_shared_ptr<UINT8> m_zram1;
 	UINT8 m_alpha_data;
 	UINT8 m_alpha_rcvd;
 	UINT8 m_alpha_xmtd;
@@ -50,6 +52,13 @@ public:
 	DECLARE_WRITE8_MEMBER(mhavoc_out_1_w);
 	DECLARE_WRITE8_MEMBER(mhavocrv_speech_data_w);
 	DECLARE_WRITE8_MEMBER(mhavocrv_speech_strobe_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(tms5220_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(mhavoc_bit67_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(gamma_rcvd_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(gamma_xmtd_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(alpha_rcvd_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(alpha_xmtd_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(clock_r);
 };
 
 
@@ -61,16 +70,5 @@ TIMER_DEVICE_CALLBACK( mhavoc_cpu_irq_clock );
 MACHINE_START( mhavoc );
 MACHINE_RESET( mhavoc );
 DRIVER_INIT( mhavocrv );
-
-
-
-
-CUSTOM_INPUT( tms5220_r );
-CUSTOM_INPUT( gamma_rcvd_r );
-CUSTOM_INPUT( gamma_xmtd_r );
-CUSTOM_INPUT( alpha_rcvd_r );
-CUSTOM_INPUT( alpha_xmtd_r );
-CUSTOM_INPUT( mhavoc_bit67_r );
-
 
 

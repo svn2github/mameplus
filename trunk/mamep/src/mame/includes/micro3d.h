@@ -16,9 +16,12 @@ class micro3d_state : public driver_device
 {
 public:
 	micro3d_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_shared_ram(*this, "shared_ram"),
+		m_mac_sram(*this, "mac_sram"),
+		m_micro3d_sprite_vram(*this, "sprite_vram"){ }
 
-	UINT16				*m_shared_ram;
+	required_shared_ptr<UINT16> m_shared_ram;
 	device_t			*m_duart68681;
 	UINT8				m_m68681_tx0;
 
@@ -38,7 +41,7 @@ public:
 	UINT8				m_botssa_latch;
 
 	/* MAC */
-	UINT32				*m_mac_sram;
+	required_shared_ptr<UINT32> m_mac_sram;
 	UINT32				m_sram_r_addr;
 	UINT32				m_sram_w_addr;
 	UINT32				m_vtx_addr;
@@ -47,7 +50,7 @@ public:
 	UINT32				m_mac_inst;
 
 	/* 2D video */
-	UINT16				*m_micro3d_sprite_vram;
+	required_shared_ptr<UINT16> m_micro3d_sprite_vram;
 	UINT16				m_creg;
 	UINT16				m_xfer3dk;
 
@@ -99,6 +102,11 @@ public:
 	DECLARE_WRITE32_MEMBER(micro3d_fifo_w);
 	DECLARE_WRITE32_MEMBER(micro3d_alt_fifo_w);
 	DECLARE_READ32_MEMBER(micro3d_pipe_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(botssa_hwchk_r);
+	DECLARE_WRITE8_MEMBER(micro3d_snd_dac_a);
+	DECLARE_WRITE8_MEMBER(micro3d_snd_dac_b);
+	DECLARE_WRITE8_MEMBER(micro3d_sound_io_w);
+	DECLARE_READ8_MEMBER(micro3d_sound_io_r);
 };
 
 typedef struct _micro3d_vtx_
@@ -111,11 +119,6 @@ typedef struct _micro3d_vtx_
 
 
 
-
-
-
-
-CUSTOM_INPUT( botssa_hwchk_r );
 
 
 
@@ -133,10 +136,6 @@ DRIVER_INIT( botssa );
 /*----------- defined in audio/micro3d.c -----------*/
 
 WRITE8_DEVICE_HANDLER( micro3d_upd7759_w );
-WRITE8_HANDLER( micro3d_snd_dac_a );
-WRITE8_HANDLER( micro3d_snd_dac_b );
-READ8_HANDLER( micro3d_sound_io_r );
-WRITE8_HANDLER( micro3d_sound_io_w );
 
 void micro3d_noise_sh_w(running_machine &machine, UINT8 data);
 

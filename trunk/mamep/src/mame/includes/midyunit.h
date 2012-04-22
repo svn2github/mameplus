@@ -5,6 +5,7 @@
 **************************************************************************/
 
 #include "cpu/tms34010/tms34010.h"
+#include "audio/williams.h"
 #include "machine/nvram.h"
 
 /* protection data types */
@@ -31,12 +32,19 @@ class midyunit_state : public driver_device
 {
 public:
 	midyunit_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_narc_sound(*this, "narcsnd"),
+		  m_cvsd_sound(*this, "cvsd"),
+		  m_adpcm_sound(*this, "adpcm"),
+		  m_gfx_rom(*this, "gfx_rom", 16) { }
+
+	optional_device<williams_narc_sound_device> m_narc_sound;
+	optional_device<williams_cvsd_sound_device> m_cvsd_sound;
+	optional_device<williams_adpcm_sound_device> m_adpcm_sound;
 
 	UINT16 *m_cmos_ram;
 	UINT32 m_cmos_page;
-	UINT8 *	m_gfx_rom;
-	size_t m_gfx_rom_size;
+	optional_shared_ptr<UINT8> m_gfx_rom;
 	UINT16 m_prot_result;
 	UINT16 m_prot_sequence[3];
 	UINT8 m_prot_index;
@@ -75,6 +83,9 @@ public:
 	DECLARE_WRITE16_MEMBER(midyunit_paletteram_w);
 	DECLARE_READ16_MEMBER(midyunit_dma_r);
 	DECLARE_WRITE16_MEMBER(midyunit_dma_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(narc_talkback_strobe_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(narc_talkback_data_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(adpcm_irq_state_r);
 };
 
 

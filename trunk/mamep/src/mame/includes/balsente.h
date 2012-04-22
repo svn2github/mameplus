@@ -38,15 +38,19 @@ public:
 		  m_cem3(*this, "cem3"),
 		  m_cem4(*this, "cem4"),
 		  m_cem5(*this, "cem5"),
-		  m_cem6(*this, "cem6") { }
+		  m_cem6(*this, "cem6") ,
+		m_spriteram(*this, "spriteram"),
+		m_videoram(*this, "videoram"),
+		m_shrike_io(*this, "shrike_io"),
+		m_shrike_shared(*this, "shrike_shared"){ }
+
+	required_device<timer_device> m_scanline_timer;
 
 	/* global data */
 	UINT8 m_shooter;
 	UINT8 m_shooter_x;
 	UINT8 m_shooter_y;
 	UINT8 m_adc_shift;
-	UINT16 *m_shrike_shared;
-	UINT16 *m_shrike_io;
 
 	/* 8253 counter state */
 	struct
@@ -62,7 +66,6 @@ public:
 		UINT8 writebyte;
 	} m_counter[3];
 
-	required_device<timer_device> m_scanline_timer;
 
 	/* manually clocked counter 0 states */
 	UINT8 m_counter_control;
@@ -115,14 +118,18 @@ public:
 	UINT8 m_grudge_last_steering[3];
 
 	/* video data */
-	UINT8 *m_videoram;
 	UINT8 m_expanded_videoram[256*256];
 	UINT8 *m_sprite_data;
 	UINT32 m_sprite_mask;
 	UINT8 *m_sprite_bank[2];
 
 	UINT8 m_palettebank_vis;
-	UINT8 *m_spriteram;
+
+	required_shared_ptr<UINT8> m_spriteram;
+	required_shared_ptr<UINT8> m_videoram;
+	optional_shared_ptr<UINT16> m_shrike_io;
+	optional_shared_ptr<UINT16> m_shrike_shared;
+
 	DECLARE_WRITE8_MEMBER(balsente_random_reset_w);
 	DECLARE_READ8_MEMBER(balsente_random_num_r);
 	DECLARE_WRITE8_MEMBER(balsente_rombank_select_w);
@@ -158,6 +165,7 @@ public:
 	DECLARE_WRITE8_MEMBER(balsente_palette_select_w);
 	DECLARE_WRITE8_MEMBER(balsente_paletteram_w);
 	DECLARE_WRITE8_MEMBER(shrike_sprite_select_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(nstocker_bits_r);
 };
 
 
@@ -183,8 +191,6 @@ TIMER_DEVICE_CALLBACK( balsente_counter_callback );
 TIMER_DEVICE_CALLBACK( balsente_clock_counter_0_ff );
 
 
-
-CUSTOM_INPUT( nstocker_bits_r );
 
 
 

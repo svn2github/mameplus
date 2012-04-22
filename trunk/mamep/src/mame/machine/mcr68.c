@@ -5,7 +5,8 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "audio/mcr.h"
+#include "audio/midway.h"
+#include "includes/mcr.h"
 #include "includes/mcr68.h"
 
 #define VERBOSE 0
@@ -170,9 +171,6 @@ static void mcr68_common_init(running_machine &machine)
 
 	/* initialize the clock */
 	state->m_m6840_internal_counter_period = attotime::from_hz(machine.device("maincpu")->unscaled_clock() / 10);
-
-	/* initialize the sound */
-	mcr_sound_reset(machine);
 }
 
 
@@ -276,7 +274,7 @@ static TIMER_CALLBACK( mcr68_493_callback )
 WRITE8_DEVICE_HANDLER( zwackery_pia0_w )
 {
 	/* bit 7 is the watchdog */
-	if (!(data & 0x80)) watchdog_reset(device->machine());
+	if (!(data & 0x80)) device->machine().watchdog_reset();
 
 	/* bits 5 and 6 control hflip/vflip */
 	/* bits 3 and 4 control coin counters? */
@@ -295,7 +293,7 @@ WRITE_LINE_DEVICE_HANDLER( zwackery_ca2_w )
 {
 	mcr68_state *drvstate = device->machine().driver_data<mcr68_state>();
 	address_space *space = device->machine().device("maincpu")->memory().space(AS_PROGRAM);
-	csdeluxe_data_w(space, 0, (state << 4) | drvstate->m_zwackery_sound_data);
+	drvstate->m_chip_squeak_deluxe->write(*space, 0, (state << 4) | drvstate->m_zwackery_sound_data);
 }
 
 

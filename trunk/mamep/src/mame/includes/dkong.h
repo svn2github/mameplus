@@ -73,12 +73,13 @@ class dkong_state : public driver_device
 {
 public:
 	dkong_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_video_ram(*this,"video_ram"),
+		m_sprite_ram(*this,"sprite_ram") { }
 
 	/* memory pointers */
-	UINT8 *           m_video_ram;
-	UINT8 *           m_sprite_ram;
-	size_t            m_sprite_ram_size;
+	required_shared_ptr<UINT8> m_video_ram;
+	required_shared_ptr<UINT8> m_sprite_ram;
 
 	/* devices */
 	device_t *m_dev_n2a03a;
@@ -223,6 +224,8 @@ public:
 	DECLARE_WRITE8_MEMBER(radarscp_grid_color_w);
 	DECLARE_WRITE8_MEMBER(dkong_flipscreen_w);
 	DECLARE_WRITE8_MEMBER(dkong_spritebank_w);
+	DECLARE_WRITE8_MEMBER(dkong_voice_w);
+	DECLARE_WRITE8_MEMBER(dkong_audio_irq_w);
 };
 
 /*----------- defined in video/dkong.c -----------*/
@@ -241,7 +244,6 @@ SCREEN_UPDATE_IND16( spclforc );
 
 /*----------- defined in audio/dkong.c -----------*/
 
-WRITE8_HANDLER( dkong_audio_irq_w );
 
 MACHINE_CONFIG_EXTERN( radarscp_audio );
 MACHINE_CONFIG_EXTERN( dkong2b_audio );

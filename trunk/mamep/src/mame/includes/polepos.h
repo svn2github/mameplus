@@ -12,7 +12,11 @@ class polepos_state : public driver_device
 {
 public:
 	polepos_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_sprite16_memory(*this, "sprite16_memory"),
+		m_road16_memory(*this, "road16_memory"),
+		m_alpha16_memory(*this, "alpha16_memory"),
+		m_view16_memory(*this, "view16_memory"){ }
 
 	UINT8 m_steer_last;
 	UINT8 m_steer_delta;
@@ -22,10 +26,10 @@ public:
 	UINT8 m_last_unsigned;
 	int m_adc_input;
 	int m_auto_start_mask;
-	UINT16 *m_view16_memory;
-	UINT16 *m_road16_memory;
-	UINT16 *m_alpha16_memory;
-	UINT16 *m_sprite16_memory;
+	required_shared_ptr<UINT16> m_sprite16_memory;
+	required_shared_ptr<UINT16> m_road16_memory;
+	required_shared_ptr<UINT16> m_alpha16_memory;
+	required_shared_ptr<UINT16> m_view16_memory;
 	UINT16 m_vertical_position_modifier[256];
 	UINT16 m_road16_vscroll;
 	tilemap_t *m_bg_tilemap;
@@ -58,6 +62,9 @@ public:
 	DECLARE_WRITE16_MEMBER(polepos_alpha16_w);
 	DECLARE_READ8_MEMBER(polepos_alpha_r);
 	DECLARE_WRITE8_MEMBER(polepos_alpha_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(high_port_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(low_port_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(auto_start_r);
 };
 
 

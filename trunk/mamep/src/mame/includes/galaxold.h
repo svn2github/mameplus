@@ -24,18 +24,23 @@ class galaxold_state : public driver_device
 {
 public:
 	galaxold_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_videoram(*this,"videoram"),
+		  m_spriteram(*this,"spriteram"),
+		  m_spriteram2(*this,"spriteram2"),
+		  m_attributesram(*this,"attributesram"),
+		  m_bulletsram(*this,"bulletsram"),
+		  m_rockclim_videoram(*this,"rockclim_vram"),
+		  m_racknrol_tiles_bank(*this,"racknrol_tbank") { }
 
-	UINT8 *m_videoram;
-	UINT8 *m_spriteram;
-	UINT8 *m_spriteram2;
-	UINT8 *m_attributesram;
-	UINT8 *m_bulletsram;
-	UINT8 *m_rockclim_videoram;
-	UINT8 *m_racknrol_tiles_bank;
-	size_t m_spriteram_size;
-	size_t m_spriteram2_size;
-	size_t m_bulletsram_size;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_spriteram;
+	optional_shared_ptr<UINT8> m_spriteram2;
+	required_shared_ptr<UINT8> m_attributesram;
+	optional_shared_ptr<UINT8> m_bulletsram;
+	optional_shared_ptr<UINT8> m_rockclim_videoram;
+	optional_shared_ptr<UINT8> m_racknrol_tiles_bank;
+
 	int m_irq_line;
 	UINT8 m__4in1_bank;
 	tilemap_t *m_bg_tilemap;
@@ -123,6 +128,10 @@ public:
 	DECLARE_READ8_MEMBER(rockclim_videoram_r);
 	DECLARE_WRITE8_MEMBER(dambustr_bg_split_line_w);
 	DECLARE_WRITE8_MEMBER(dambustr_bg_color_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(_4in1_fake_port_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(vpool_lives_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(ckongg_coinage_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(dkongjrm_coinage_r);
 };
 
 
@@ -192,7 +201,6 @@ MACHINE_RESET( hunchbkg );
 #define galaxold_coin_counter_0_w galaxold_coin_counter_w
 
 
-CUSTOM_INPUT( _4in1_fake_port_r );
 
 INTERRUPT_GEN( hunchbks_vh_interrupt );
 

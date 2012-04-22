@@ -320,7 +320,7 @@ WRITE32_MEMBER(micro3d_state::micro3d_mac2_w)
 		case 0x08:
 		{
 			int i;
-			const UINT16 *rom = (UINT16*)machine().region("vertex")->base();
+			const UINT16 *rom = (UINT16*)machine().root_device().memregion("vertex")->base();
 
 			for (i = 0; i <= cnt; ++i)
 			{
@@ -359,7 +359,7 @@ WRITE32_MEMBER(micro3d_state::micro3d_mac2_w)
 		case 0x0c:
 		{
 			int i;
-			const UINT16 *rom = (UINT16*)machine().region("vertex")->base();
+			const UINT16 *rom = (UINT16*)machine().root_device().memregion("vertex")->base();
 
 			for (i = 0; i <= cnt; ++i)
 			{
@@ -392,7 +392,7 @@ WRITE32_MEMBER(micro3d_state::micro3d_mac2_w)
 		case 0x0f:
 		{
 			int i;
-			const UINT16 *rom = (UINT16*)machine().region("vertex")->base();
+			const UINT16 *rom = (UINT16*)machine().root_device().memregion("vertex")->base();
 
 			for (i = 0; i <= cnt; ++i, vtx_addr += 4)
 			{
@@ -537,11 +537,10 @@ WRITE16_MEMBER(micro3d_state::micro3d_adc_w)
 	machine().scheduler().timer_set(attotime::from_usec(40), FUNC(adc_done_callback), data & ~4);
 }
 
-CUSTOM_INPUT( botssa_hwchk_r )
+CUSTOM_INPUT_MEMBER(micro3d_state::botssa_hwchk_r)
 {
-	micro3d_state *state = field.machine().driver_data<micro3d_state>();
 
-	return state->m_botssa_latch;
+	return m_botssa_latch;
 }
 
 READ16_MEMBER(micro3d_state::botssa_140000_r)

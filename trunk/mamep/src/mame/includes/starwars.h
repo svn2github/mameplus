@@ -11,7 +11,8 @@ class starwars_state : public driver_device
 {
 public:
 	starwars_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_mathram(*this, "mathram"){ }
 
 	UINT8 m_sound_data;
 	UINT8 m_main_data;
@@ -22,7 +23,7 @@ public:
 	offs_t m_slapstic_last_pc;
 	offs_t m_slapstic_last_address;
 	UINT8 m_is_esb;
-	UINT8 *m_mathram;
+	required_shared_ptr<UINT8> m_mathram;
 	UINT8 m_control_num;
 	int m_MPA;
 	int m_BIC;
@@ -50,13 +51,18 @@ public:
 	DECLARE_READ8_MEMBER(starwars_div_reh_r);
 	DECLARE_READ8_MEMBER(starwars_div_rel_r);
 	DECLARE_WRITE8_MEMBER(starwars_math_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(matrix_flag_r);
+	DECLARE_READ8_MEMBER(starwars_sin_r);
+	DECLARE_WRITE8_MEMBER(starwars_sout_w);
+	DECLARE_READ8_MEMBER(starwars_main_read_r);
+	DECLARE_READ8_MEMBER(starwars_main_ready_flag_r);
+	DECLARE_WRITE8_MEMBER(starwars_main_wr_w);
+	DECLARE_WRITE8_MEMBER(starwars_soundrst_w);
+	DECLARE_DIRECT_UPDATE_MEMBER(esb_setdirect);
 };
 
 
 /*----------- defined in machine/starwars.c -----------*/
-
-
-CUSTOM_INPUT( matrix_flag_r );
 
 
 void starwars_mproc_init(running_machine &machine);
@@ -71,10 +77,4 @@ extern const riot6532_interface starwars_riot6532_intf;
 
 SOUND_START( starwars );
 
-READ8_HANDLER( starwars_main_read_r );
-READ8_HANDLER( starwars_main_ready_flag_r );
-WRITE8_HANDLER( starwars_main_wr_w );
-WRITE8_HANDLER( starwars_soundrst_w );
 
-READ8_HANDLER( starwars_sin_r );
-WRITE8_HANDLER( starwars_sout_w );

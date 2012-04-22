@@ -12,13 +12,15 @@ class champbas_state : public driver_device
 {
 public:
 	champbas_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_bg_videoram(*this, "bg_videoram"),
+		m_spriteram(*this, "spriteram"),
+		m_spriteram_2(*this, "spriteram_2"){ }
 
 	/* memory pointers */
-	UINT8 *        m_bg_videoram;
-	UINT8 *        m_spriteram;
-	UINT8 *        m_spriteram_2;
-	size_t         m_spriteram_size;
+	required_shared_ptr<UINT8> m_bg_videoram;
+	required_shared_ptr<UINT8> m_spriteram;
+	required_shared_ptr<UINT8> m_spriteram_2;
 
 	/* video-related */
 	tilemap_t        *m_bg_tilemap;
@@ -43,6 +45,7 @@ public:
 	DECLARE_WRITE8_MEMBER(champbas_gfxbank_w);
 	DECLARE_WRITE8_MEMBER(champbas_palette_bank_w);
 	DECLARE_WRITE8_MEMBER(champbas_flipscreen_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(champbas_watchdog_bit2);
 };
 
 
